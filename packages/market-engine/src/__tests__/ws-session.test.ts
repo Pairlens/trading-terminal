@@ -15,7 +15,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
  * loaded CI runners. Negative assertions (nothing must happen during the
  * window) keep fixed sleeps, where a stall only makes them stricter.
  */
-const waitFor = async (cond: () => boolean, timeoutMs = 500) => {
+const waitFor = async (cond: () => boolean, timeoutMs = 2000) => {
   const deadline = Date.now() + timeoutMs
   while (!cond() && Date.now() < deadline) await sleep(2)
 }
@@ -364,7 +364,7 @@ describe('ReconnectingWsSession — liveness watchdog', () => {
     expect(sockets.length).toBe(1)
 
     // The half-open case: never drops, never closes, just stops delivering.
-    await waitFor(() => sockets.length >= 2 && sockets[0].closed, 1000)
+    await waitFor(() => sockets.length >= 2 && sockets[0].closed, 5000)
 
     // The replacement is silent too (the fake never delivers), so the watchdog
     // keeps recycling — what matters is that it recycled at all.

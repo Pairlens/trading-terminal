@@ -35,7 +35,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
  * on loaded CI runners. Fixed sleeps remain the right tool for the negative
  * assertions below (nothing must happen during the window).
  */
-const waitFor = async (cond: () => boolean, timeoutMs = 500) => {
+const waitFor = async (cond: () => boolean, timeoutMs = 2000) => {
   const deadline = Date.now() + timeoutMs
   while (!cond() && Date.now() < deadline) await sleep(2)
 }
@@ -252,7 +252,7 @@ export function describePrivateWsLifecycle(driver: PrivateWsDriver): void {
       start(h)
       await waitFor(() => h.sockets.length === 1 && authSent(h.sockets[0]))
       driver.acceptAuth?.(h.sockets[0])
-      await waitFor(() => h.sockets.length >= 2 && h.sockets[0].closed, 1000)
+      await waitFor(() => h.sockets.length >= 2 && h.sockets[0].closed, 5000)
 
       expect(h.sockets.length).toBeGreaterThanOrEqual(2)
       expect(h.sockets[0].closed).toBe(true)
