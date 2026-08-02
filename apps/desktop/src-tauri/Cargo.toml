@@ -1,6 +1,6 @@
 [package]
 name = "pairlens-desktop"
-version = "0.1.0"
+version = "0.1.1"
 description = "Pairlens Desktop — AI-native crypto spot trading terminal"
 authors = ["Pairlens"]
 license = "FSL-1.1-Apache-2.0"
