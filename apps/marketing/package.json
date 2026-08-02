@@ -25,7 +25,7 @@
     "@fontsource-variable/hanken-grotesk": "^5.2.8",
     "@fontsource-variable/jetbrains-mono": "^5.2.5",
     "@fontsource-variable/space-grotesk": "^5.2.10",
-    "@pairlens/fast-financial-charts": "github:Pairlens/fast-financial-charts#dc6415e58c6390ed67fbadcee434f1db065bb4ef",
+    "@pairlens/fast-financial-charts": "^1.5.2",
     "@pairlens/shared": "workspace:*",
     "@pairlens/ui": "workspace:*",
     "@tailwindcss/vite": "^4.2.0",
