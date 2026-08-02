@@ -8,6 +8,18 @@ import type { WsAdapterEvents, WsConnection } from '../ws-adapter'
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
+/**
+ * Poll until cond() holds, bailing after timeoutMs so a genuine failure still
+ * lands on the assertion that follows. Positive expectations wait for their
+ * event like this — fixed sleeps sized to the tiny test backoffs flake on
+ * loaded CI runners. Negative assertions (nothing must happen during the
+ * window) keep fixed sleeps, where a stall only makes them stricter.
+ */
+const waitFor = async (cond: () => boolean, timeoutMs = 500) => {
+  const deadline = Date.now() + timeoutMs
+  while (!cond() && Date.now() < deadline) await sleep(2)
+}
+
 class FakeSocket implements WsConnection {
   sent: Array<string> = []
   closed = false
@@ -182,7 +194,7 @@ describe('ReconnectingWsSession — connection lifecycle', () => {
     session.acquire('a', candleSpec([], 'a'), () => {})
     session.acquire('b', candleSpec([], 'b'), () => {})
     session.acquire('c', candleSpec([], 'c'), () => {})
-    await sleep(10)
+    await waitFor(() => session.isOpen)
 
     expect(connectAttempts()).toBe(1)
     expect(session.isOpen).toBe(true)
@@ -200,7 +212,7 @@ describe('ReconnectingWsSession — connection lifecycle', () => {
     log.length = 0
 
     sockets[0].drop()
-    await sleep(20) // backoff at attempt 0 = base * 2^0 = 2ms
+    await waitFor(() => sockets.length === 2 && session.isOpen)
 
     expect(session.isOpen).toBe(true)
     expect(sockets.length).toBe(2)
@@ -220,7 +232,7 @@ describe('ReconnectingWsSession — connection lifecycle', () => {
 
     session.acquire('a', candleSpec([], 'a'), () => {})
     // attempt 1 fails -> retry after 2ms; attempt 2 fails -> retry after 4ms; attempt 3 opens
-    await sleep(30)
+    await waitFor(() => connectAttempts() === 3 && session.isOpen)
 
     expect(connectAttempts()).toBe(3)
     expect(session.isOpen).toBe(true)
@@ -237,7 +249,7 @@ describe('ReconnectingWsSession — connection lifecycle', () => {
 
     release()
     expect(session.isOpen).toBe(true) // still within grace period
-    await sleep(20)
+    await waitFor(() => !session.isOpen && sockets[0].closed)
 
     expect(session.isOpen).toBe(false)
     expect(sockets[0].closed).toBe(true)
@@ -295,7 +307,10 @@ describe('ReconnectingWsSession — connection lifecycle', () => {
     })
 
     session.acquire('a', candleSpec([], 'a'), () => {})
-    await sleep(18)
+    await waitFor(
+      () =>
+        (sockets[0]?.sent.filter((f) => f.includes('ping')).length ?? 0) >= 2,
+    )
 
     const pings = sockets[0].sent.filter((s) => s.includes('ping'))
     expect(pings.length).toBeGreaterThanOrEqual(2)
@@ -349,7 +364,7 @@ describe('ReconnectingWsSession — liveness watchdog', () => {
     expect(sockets.length).toBe(1)
 
     // The half-open case: never drops, never closes, just stops delivering.
-    await sleep(60)
+    await waitFor(() => sockets.length >= 2 && sockets[0].closed, 1000)
 
     // The replacement is silent too (the fake never delivers), so the watchdog
     // keeps recycling — what matters is that it recycled at all.
@@ -423,7 +438,7 @@ describe('ReconnectingWsSession — suspend/resume', () => {
     expect(sockets.length).toBe(1)
 
     wake()
-    await sleep(20)
+    await waitFor(() => sockets.length === 2 && session.isOpen)
 
     expect(sockets.length).toBe(2)
     expect(session.isOpen).toBe(true)
@@ -440,7 +455,7 @@ describe('ReconnectingWsSession — suspend/resume', () => {
     log.length = 0
 
     wake()
-    await sleep(20)
+    await waitFor(() => log.includes('revive:BTC') && log.includes('sub:BTC'))
 
     expect(log).toContain('revive:BTC')
     expect(log).toContain('sub:BTC')
@@ -458,12 +473,16 @@ describe('ReconnectingWsSession — suspend/resume', () => {
     })
 
     session.acquire('a', candleSpec([], 'a'), () => {})
-    await sleep(150) // three attempts burned; next one is not due until ~280ms
+    // Three attempts burned (t≈0/40/120); the 4th is not due until ~280ms.
+    await waitFor(() => connectAttempts() === 3)
     const attemptsBeforeWake = connectAttempts()
     expect(session.isOpen).toBe(false)
 
     wake()
-    await sleep(70) // the counter reset puts the retry back at the base delay
+    // Bounded well below the ~160ms the pending backoff still had to run —
+    // only the wake short-circuit (counter reset to base delay) connects
+    // this fast.
+    await waitFor(() => session.isOpen, 100)
 
     expect(connectAttempts()).toBeGreaterThan(attemptsBeforeWake)
     expect(session.isOpen).toBe(true)
@@ -517,7 +536,7 @@ describe('ReconnectingWsSession — release cancels pending work', () => {
     await sleep(20)
 
     session.acquire('a', candleSpec([], 'a'), () => {})
-    await sleep(20)
+    await waitFor(() => session.isOpen)
 
     expect(connectAttempts()).toBe(2)
     expect(session.isOpen).toBe(true)
@@ -545,7 +564,7 @@ describe('ReconnectingWsSession — authenticate gate', () => {
     expect(log.filter((l) => l === 'sub:orders').length).toBe(1)
 
     releaseAuth?.()
-    await sleep(10)
+    await waitFor(() => log.filter((l) => l === 'sub:orders').length === 2)
     expect(log.filter((l) => l === 'sub:orders').length).toBe(2)
 
     session.destroy()
@@ -572,7 +591,7 @@ describe('ReconnectingWsSession — authenticate gate', () => {
     order.length = 0
 
     sockets[0].drop()
-    await sleep(20)
+    await waitFor(() => order.length >= 2)
 
     expect(order).toEqual(['auth', 'sub'])
 
@@ -590,12 +609,14 @@ describe('ReconnectingWsSession — authenticate gate', () => {
     })
 
     session.acquire('orders', candleSpec([], 'orders'), () => {})
-    await sleep(60)
+    await waitFor(() => attempts >= 2)
 
     // Retried with backoff, not spun. Each failed login closed its socket, so
-    // no half-authenticated connection is left live.
-    expect(attempts).toBeGreaterThanOrEqual(2)
-    expect(connectAttempts()).toBeLessThan(8)
+    // no half-authenticated connection is left live. Hot-loop guard: a fixed
+    // window admits only a few backoff retries; a spin creates hundreds.
+    const before = connectAttempts()
+    await sleep(60)
+    expect(connectAttempts() - before).toBeLessThan(8)
     expect(session.isOpen).toBe(false)
     for (const socket of sockets) expect(socket.closed).toBe(true)
 
@@ -613,7 +634,7 @@ describe('ReconnectingWsSession — authenticate gate', () => {
     })
 
     session.acquire('orders', candleSpec([], 'orders'), () => {})
-    await sleep(20)
+    await waitFor(() => errors.length > 0)
 
     expect(errors[0]).toBe('login timeout')
 
@@ -655,7 +676,7 @@ describe('ReconnectingWsSession — retired sockets', () => {
     await sleep(5)
 
     session.restart()
-    await sleep(20)
+    await waitFor(() => connectAttempts() === 2 && session.isOpen)
     expect(connectAttempts()).toBe(2)
     expect(session.isOpen).toBe(true)
 
