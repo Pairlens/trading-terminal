@@ -36,8 +36,9 @@ export const OS_GUIDES: Record<string, OsGuide> = {
       },
       {
         n: '03',
-        title: 'Launch it',
-        body: 'macOS asks once before opening an app from outside the App Store: right-click Pairlens, choose Open, and confirm. Venue keys go to your Keychain when you connect one.',
+        title: 'Let it past Gatekeeper',
+        body: 'Until our Apple Developer signing lands, macOS flags the download and may claim the app is "damaged" — it isn\'t. Run this once in Terminal to clear the flag, then launch Pairlens from Applications. Venue keys go to your Keychain when you connect one.',
+        cmd: 'xattr -cr /Applications/Pairlens.app',
       },
     ],
   },

@@ -20,26 +20,41 @@ function burst(x: number, y: number) {
     x: x / window.innerWidth,
     y: y / window.innerHeight,
   }
+  // A pop where the click landed…
   confetti({
-    particleCount: 90,
-    spread: 70,
+    particleCount: 80,
+    spread: 75,
     startVelocity: 34,
     scalar: 0.9,
-    ticks: 130,
+    ticks: 140,
     origin,
     colors: CONFETTI_COLORS,
     disableForReducedMotion: true,
   })
-  confetti({
-    particleCount: 40,
-    spread: 120,
-    startVelocity: 20,
-    scalar: 0.7,
-    ticks: 110,
-    origin,
-    colors: CONFETTI_COLORS,
-    disableForReducedMotion: true,
-  })
+  // …and cannons from both viewport edges so the moment fills the screen.
+  const cannon = (originX: number, angle: number) =>
+    confetti({
+      particleCount: 70,
+      angle,
+      spread: 65,
+      startVelocity: 58,
+      scalar: 1,
+      ticks: 170,
+      origin: { x: originX, y: 0.65 },
+      colors: CONFETTI_COLORS,
+      disableForReducedMotion: true,
+    })
+  cannon(0, 60)
+  cannon(1, 120)
+  // Two follow-up volleys keep it raining instead of one thin puff.
+  window.setTimeout(() => {
+    cannon(0, 55)
+    cannon(1, 125)
+  }, 180)
+  window.setTimeout(() => {
+    cannon(0, 68)
+    cannon(1, 112)
+  }, 380)
 }
 
 function startedFlow(page: Element, anchor: HTMLAnchorElement, ev: MouseEvent) {
