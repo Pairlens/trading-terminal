@@ -28,6 +28,18 @@ import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
+/**
+ * Poll until cond() holds, bailing after timeoutMs so a genuine failure still
+ * lands on the assertion that follows. Positive expectations must wait for
+ * their event like this — fixed sleeps sized to the tiny test backoffs flake
+ * on loaded CI runners. Fixed sleeps remain the right tool for the negative
+ * assertions below (nothing must happen during the window).
+ */
+const waitFor = async (cond: () => boolean, timeoutMs = 500) => {
+  const deadline = Date.now() + timeoutMs
+  while (!cond() && Date.now() < deadline) await sleep(2)
+}
+
 export class FakePrivateSocket implements WsConnection {
   sent: Array<string> = []
   closed = false
@@ -115,6 +127,17 @@ export function describePrivateWsLifecycle(driver: PrivateWsDriver): void {
     return { client, sockets }
   }
 
+  /**
+   * True once the client has sent its auth frame on this socket (or the venue
+   * has no separate auth round-trip). Auth frames are sent asynchronously
+   * (HMAC signing), so the venue's accept/reject response must never be
+   * pushed before this holds — the client would have nothing to correlate it
+   * with.
+   */
+  function authSent(socket: FakePrivateSocket) {
+    return !driver.sentAuth || driver.sentAuth(socket)
+  }
+
   function start(h: ReturnType<typeof harness>) {
     h.client.connect(
       driver.credentials as never,
@@ -129,11 +152,11 @@ export function describePrivateWsLifecycle(driver: PrivateWsDriver): void {
     it('connects and subscribes', async () => {
       const h = harness()
       start(h)
-      await sleep(5)
+      await waitFor(() => h.sockets.length === 1 && authSent(h.sockets[0]))
 
       expect(h.sockets.length).toBe(1)
       driver.acceptAuth?.(h.sockets[0])
-      await sleep(5)
+      await waitFor(() => driver.sentSubscribe(h.sockets[0]))
 
       expect(driver.sentSubscribe(h.sockets[0])).toBe(true)
       h.client.destroy()
@@ -143,14 +166,16 @@ export function describePrivateWsLifecycle(driver: PrivateWsDriver): void {
       it('authenticates before it subscribes', async () => {
         const h = harness()
         start(h)
-        await sleep(5)
+        await waitFor(
+          () => h.sockets.length === 1 && driver.sentAuth!(h.sockets[0]),
+        )
 
         expect(driver.sentAuth!(h.sockets[0])).toBe(true)
         // The gate must hold the subscribe until the venue accepts the key.
         expect(driver.sentSubscribe(h.sockets[0])).toBe(false)
 
         driver.acceptAuth!(h.sockets[0])
-        await sleep(5)
+        await waitFor(() => driver.sentSubscribe(h.sockets[0]))
         expect(driver.sentSubscribe(h.sockets[0])).toBe(true)
 
         h.client.destroy()
@@ -159,19 +184,21 @@ export function describePrivateWsLifecycle(driver: PrivateWsDriver): void {
       it('re-authenticates before resubscribing after a drop', async () => {
         const h = harness()
         start(h)
-        await sleep(5)
+        await waitFor(() => h.sockets.length === 1 && authSent(h.sockets[0]))
         driver.acceptAuth!(h.sockets[0])
-        await sleep(5)
+        await waitFor(() => driver.sentSubscribe(h.sockets[0]))
 
         h.sockets[0].drop()
-        await sleep(20)
+        await waitFor(
+          () => h.sockets.length === 2 && driver.sentAuth!(h.sockets[1]),
+        )
         expect(h.sockets.length).toBe(2)
 
         expect(driver.sentAuth!(h.sockets[1])).toBe(true)
         expect(driver.sentSubscribe(h.sockets[1])).toBe(false)
 
         driver.acceptAuth!(h.sockets[1])
-        await sleep(5)
+        await waitFor(() => driver.sentSubscribe(h.sockets[1]))
         expect(driver.sentSubscribe(h.sockets[1])).toBe(true)
 
         h.client.destroy()
@@ -181,15 +208,19 @@ export function describePrivateWsLifecycle(driver: PrivateWsDriver): void {
         it('backs off on a rejected auth instead of hot-looping', async () => {
           const h = harness()
           start(h)
-          await sleep(5)
+          await waitFor(() => h.sockets.length === 1 && authSent(h.sockets[0]))
 
           driver.rejectAuth!(h.sockets[0])
-          await sleep(40)
+          await waitFor(() => h.sockets.length >= 2 && h.sockets[0].closed)
 
           expect(h.sockets.length).toBeGreaterThanOrEqual(2)
           // The rejected socket must be closed, not left half-authenticated.
           expect(h.sockets[0].closed).toBe(true)
-          expect(h.sockets.length).toBeLessThan(12)
+          // Hot-loop guard: with backoff (base 2ms, max 20ms) a fixed window
+          // admits only a handful of new sockets; a hot loop creates hundreds.
+          const before = h.sockets.length
+          await sleep(40)
+          expect(h.sockets.length - before).toBeLessThan(12)
 
           h.client.destroy()
         })
@@ -199,16 +230,16 @@ export function describePrivateWsLifecycle(driver: PrivateWsDriver): void {
     it('reconnects and resubscribes after a drop', async () => {
       const h = harness()
       start(h)
-      await sleep(5)
+      await waitFor(() => h.sockets.length === 1 && authSent(h.sockets[0]))
       driver.acceptAuth?.(h.sockets[0])
-      await sleep(5)
+      await waitFor(() => driver.sentSubscribe(h.sockets[0]))
 
       h.sockets[0].drop()
-      await sleep(20)
+      await waitFor(() => h.sockets.length === 2 && authSent(h.sockets[1]))
 
       expect(h.sockets.length).toBe(2)
       driver.acceptAuth?.(h.sockets[1])
-      await sleep(5)
+      await waitFor(() => driver.sentSubscribe(h.sockets[1]))
       expect(driver.sentSubscribe(h.sockets[1])).toBe(true)
 
       h.client.destroy()
@@ -219,9 +250,9 @@ export function describePrivateWsLifecycle(driver: PrivateWsDriver): void {
       // the only thing that can notice this socket is dead.
       const h = harness({ livenessTimeoutMs: 20 })
       start(h)
-      await sleep(5)
+      await waitFor(() => h.sockets.length === 1 && authSent(h.sockets[0]))
       driver.acceptAuth?.(h.sockets[0])
-      await sleep(60)
+      await waitFor(() => h.sockets.length >= 2 && h.sockets[0].closed, 1000)
 
       expect(h.sockets.length).toBeGreaterThanOrEqual(2)
       expect(h.sockets[0].closed).toBe(true)
@@ -244,12 +275,12 @@ export function describePrivateWsLifecycle(driver: PrivateWsDriver): void {
         },
       })
       start(h)
-      await sleep(5)
+      await waitFor(() => h.sockets.length === 1 && authSent(h.sockets[0]))
       driver.acceptAuth?.(h.sockets[0])
-      await sleep(5)
+      await waitFor(() => driver.sentSubscribe(h.sockets[0]))
 
       wake.fire?.()
-      await sleep(20)
+      await waitFor(() => h.sockets.length === 2)
 
       expect(h.sockets.length).toBe(2)
       h.client.destroy()
@@ -258,12 +289,12 @@ export function describePrivateWsLifecycle(driver: PrivateWsDriver): void {
     it('closes the socket and stops reconnecting on destroy', async () => {
       const h = harness()
       start(h)
-      await sleep(5)
+      await waitFor(() => h.sockets.length === 1 && authSent(h.sockets[0]))
       driver.acceptAuth?.(h.sockets[0])
-      await sleep(5)
+      await waitFor(() => driver.sentSubscribe(h.sockets[0]))
 
       h.client.destroy()
-      await sleep(10)
+      await waitFor(() => h.sockets[0].closed)
       expect(h.sockets[0].closed).toBe(true)
 
       h.sockets[0].drop()
@@ -277,9 +308,9 @@ export function describePrivateWsLifecycle(driver: PrivateWsDriver): void {
       // authenticated socket nothing held a reference to.
       const h = harness()
       start(h)
-      await sleep(5)
+      await waitFor(() => h.sockets.length === 1 && authSent(h.sockets[0]))
       driver.acceptAuth?.(h.sockets[0])
-      await sleep(5)
+      await waitFor(() => driver.sentSubscribe(h.sockets[0]))
 
       h.sockets[0].drop()
       h.client.destroy()
