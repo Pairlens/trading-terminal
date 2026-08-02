@@ -1,0 +1,61 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Download link that leads with the visitor's own platform. All three labels
+// are rendered; macOS shows without JS and the page's OS switch swaps in the
+// detected one. The switch lives on the page so it binds once per document.
+import appleIcon from '@/components/marketing/os/apple.svg?raw'
+import windowsIcon from '@/components/marketing/os/windows.svg?raw'
+import linuxIcon from '@/components/marketing/os/linux.svg?raw'
+
+interface Props {
+  href?: string
+  /** Utility classes for the anchor (global Tailwind — scoped CSS can't reach it). */
+  class?: string
+  /** Inline overrides for values with no utility, e.g. the marble palette. */
+  style?: string
+}
+const { href = '/install', class: className = '', style } = Astro.props
+
+const TARGETS = [
+  { key: 'mac', label: 'Download for macOS', icon: appleIcon },
+  { key: 'win', label: 'Download for Windows', icon: windowsIcon },
+  { key: 'linux', label: 'Download for Linux', icon: linuxIcon },
+  // Phones can't install the terminal; the link already points at /install,
+  // where the carry-on card explains the desktop-only story.
+  { key: 'mobile', label: 'Get Pairlens for desktop', icon: null },
+]
+---
+
+<a href={href} class={className} style={style}>
+  {
+    TARGETS.map((t) => (
+      <span
+        data-os-face={t.key}
+        class:list={['os-face', t.key === 'mac' && 'is-on']}
+      >
+        {t.icon && <span class="os-glyph" set:html={t.icon} />}
+        {t.label}
+      </span>
+    ))
+  }
+</a>
+
+<style>
+  .os-face {
+    display: none;
+    align-items: center;
+    gap: 11px;
+  }
+  .os-face.is-on {
+    display: inline-flex;
+  }
+  .os-glyph {
+    display: inline-flex;
+  }
+  /* The glyph arrives through set:html, so it never carries the scope hash. */
+  .os-glyph :global(svg) {
+    width: 18px;
+    height: 18px;
+  }
+</style>

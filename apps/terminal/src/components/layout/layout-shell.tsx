@@ -1,0 +1,394 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  defaultAnnouncements,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import { useTranslation } from 'react-i18next'
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@pairlens/ui/components/ui/resizable'
+import { useIsMobile } from '@pairlens/ui/hooks/use-mobile'
+import { LayoutColumn } from './layout-column'
+import { LayoutMobileShell } from './layout-mobile-shell'
+import type {
+  Announcements,
+  DragEndEvent,
+  DragMoveEvent,
+  DragStartEvent,
+} from '@dnd-kit/core'
+
+import type { DropZone } from '@/lib/layout/types'
+import { useLayout } from '@/lib/layout/context'
+import { getPaneIcon } from '@/lib/layout/pane-icons'
+import { usePaneRegistry } from '@/lib/layout/pane-registry'
+
+type DragData = { paneId: string; paneType: string }
+
+const EDGE_THRESHOLD = 0.25
+
+export function LayoutShell() {
+  const { layout, dispatch, pendingAddPaneType, cancelAddPane } = useLayout()
+  const isMobile = useIsMobile()
+  const [activeDrag, setActiveDrag] = useState<DragData | null>(null)
+  const [dropZone, setDropZone] = useState<DropZone | null>(null)
+  const dropZoneRef = useRef<DropZone | null>(null)
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor),
+  )
+
+  // Cancel placement mode on Escape
+  useEffect(() => {
+    if (!pendingAddPaneType) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        cancelAddPane()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [pendingAddPaneType, cancelAddPane])
+
+  // Show a "grabbing" cursor everywhere while a pane is being dragged, and
+  // suppress text selection so dragging across panes feels clean.
+  useEffect(() => {
+    if (!activeDrag) return
+    document.body.classList.add('is-dragging-pane')
+    return () => document.body.classList.remove('is-dragging-pane')
+  }, [activeDrag])
+
+  // Screen-reader announcements describing the drag in terms users understand.
+  const announcements = useMemo<Announcements>(
+    () => ({
+      ...defaultAnnouncements,
+      onDragStart({ active }) {
+        const type = (active.data.current as DragData | undefined)?.paneType
+        return `Picked up ${type ?? 'pane'}. Use arrow keys to move, space to drop, escape to cancel.`
+      },
+      onDragOver({ over }) {
+        const z = dropZoneRef.current?.zone
+        if (!over) return 'No drop target.'
+        if (!z || z === 'center') return 'Drop to stack as a tab here.'
+        if (z === 'top') return 'Drop to split above.'
+        if (z === 'bottom') return 'Drop to split below.'
+        return 'Drop to create a new column.'
+      },
+      onDragEnd({ over }) {
+        return over ? 'Pane moved.' : 'Drag cancelled, pane returned.'
+      },
+      onDragCancel() {
+        return 'Drag cancelled, pane returned to its original position.'
+      },
+    }),
+    [],
+  )
+
+  const handleDragStart = useCallback(
+    (event: DragStartEvent) => {
+      const data = event.active.data.current as DragData | undefined
+      if (data) setActiveDrag(data)
+      // Cancel placement mode if user starts dragging
+      if (pendingAddPaneType) cancelAddPane()
+    },
+    [pendingAddPaneType, cancelAddPane],
+  )
+
+  const handleDragMove = useCallback((event: DragMoveEvent) => {
+    const { over, active, activatorEvent, delta } = event
+    if (!over) {
+      dropZoneRef.current = null
+      setDropZone(null)
+      return
+    }
+
+    const activeData = active.data.current as
+      | { type?: string; cellId?: string }
+      | undefined
+    const overData = over.data.current as
+      | { cellId?: string; type?: string }
+      | undefined
+
+    // If hovering over a sortable tab, suppress cell drop indicators
+    // (sortable handles its own visual shift feedback)
+    if (overData?.type === 'tab') {
+      dropZoneRef.current = null
+      setDropZone(null)
+      return
+    }
+
+    // Suppress indicators when a tab is dragged over its own cell
+    // (tab reordering is handled by SortableContext, not cell drop zones)
+    if (
+      activeData?.type === 'tab' &&
+      overData?.type === 'cell' &&
+      activeData.cellId === overData.cellId
+    ) {
+      dropZoneRef.current = null
+      setDropZone(null)
+      return
+    }
+
+    if (overData?.type !== 'cell' || !overData.cellId) {
+      dropZoneRef.current = null
+      setDropZone(null)
+      return
+    }
+
+    const pe = activatorEvent as PointerEvent
+    const px = pe.clientX + delta.x
+    const py = pe.clientY + delta.y
+    const rect = over.rect
+    const relX = (px - rect.left) / rect.width
+    const relY = (py - rect.top) / rect.height
+
+    let zone: DropZone['zone'] = 'center'
+    if (relY < EDGE_THRESHOLD) zone = 'top'
+    else if (relY > 1 - EDGE_THRESHOLD) zone = 'bottom'
+    else if (relX < EDGE_THRESHOLD) zone = 'left'
+    else if (relX > 1 - EDGE_THRESHOLD) zone = 'right'
+
+    const newZone: DropZone = { cellId: overData.cellId, zone }
+    dropZoneRef.current = newZone
+    setDropZone((prev) => {
+      if (prev?.cellId === newZone.cellId && prev?.zone === newZone.zone)
+        return prev
+      return newZone
+    })
+  }, [])
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const zone = dropZoneRef.current
+      setActiveDrag(null)
+      setDropZone(null)
+      dropZoneRef.current = null
+
+      const { active, over } = event
+      if (!over) return
+
+      const activeData = active.data.current as
+        | (DragData & { type?: string; cellId?: string })
+        | undefined
+      const paneId = activeData?.paneId
+      if (!paneId) return
+
+      const overData = over.data.current as
+        | { cellId?: string; type?: string; paneId?: string }
+        | undefined
+
+      // Tab reorder within the same cell
+      if (
+        activeData?.type === 'tab' &&
+        overData?.type === 'tab' &&
+        activeData.cellId === overData.cellId &&
+        overData.paneId
+      ) {
+        const tabCellId = activeData.cellId!
+        for (const col of layout.columns) {
+          const cell = col.cells.find((c) => c.id === tabCellId)
+          if (cell) {
+            const oldIndex = cell.panes.findIndex((p) => p.id === paneId)
+            const newIndex = cell.panes.findIndex(
+              (p) => p.id === overData.paneId,
+            )
+            if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+              dispatch({
+                type: 'REORDER_TABS',
+                cellId: tabCellId,
+                oldIndex,
+                newIndex,
+              })
+            }
+            break
+          }
+        }
+        return
+      }
+
+      // Drop on a tab in a different cell — move pane to that cell
+      if (overData?.type === 'tab' && overData.cellId) {
+        dispatch({
+          type: 'MOVE_PANE',
+          paneId,
+          targetCellId: overData.cellId,
+        })
+        return
+      }
+
+      if (overData?.type !== 'cell' || !overData.cellId) return
+
+      const cellId = overData.cellId
+
+      // If pane is already in this cell and no edge zone, skip (no-op)
+      const sourceCell = layout.columns
+        .flatMap((col) => col.cells)
+        .find((c) => c.panes.some((p) => p.id === paneId))
+      if (
+        sourceCell?.id === cellId &&
+        (!zone || zone.cellId !== cellId || zone.zone === 'center')
+      ) {
+        return
+      }
+
+      if (!zone || zone.cellId !== cellId || zone.zone === 'center') {
+        dispatch({ type: 'MOVE_PANE', paneId, targetCellId: cellId })
+        return
+      }
+
+      switch (zone.zone) {
+        case 'top':
+        case 'bottom': {
+          for (const col of layout.columns) {
+            const cellIdx = col.cells.findIndex((c) => c.id === cellId)
+            if (cellIdx !== -1) {
+              dispatch({
+                type: 'MOVE_PANE_NEW_CELL',
+                paneId,
+                targetColumnId: col.id,
+                cellIndex: zone.zone === 'top' ? cellIdx : cellIdx + 1,
+              })
+              break
+            }
+          }
+          break
+        }
+        case 'left':
+        case 'right': {
+          const colIdx = layout.columns.findIndex((col) =>
+            col.cells.some((c) => c.id === cellId),
+          )
+          if (colIdx !== -1) {
+            dispatch({
+              type: 'MOVE_PANE_NEW_COLUMN',
+              paneId,
+              columnIndex: zone.zone === 'left' ? colIdx : colIdx + 1,
+            })
+          }
+          break
+        }
+      }
+    },
+    [dispatch, layout.columns],
+  )
+
+  const handleDragCancel = useCallback(() => {
+    setActiveDrag(null)
+    setDropZone(null)
+    dropZoneRef.current = null
+  }, [])
+
+  if (isMobile) {
+    return <LayoutMobileShell />
+  }
+
+  const activeDropZone = activeDrag ? dropZone : null
+
+  if (layout.columns.length === 1) {
+    const col = layout.columns[0]!
+    return (
+      <DndContext
+        sensors={sensors}
+        accessibility={{ announcements }}
+        onDragStart={handleDragStart}
+        onDragMove={handleDragMove}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
+      >
+        <div className="relative min-h-0 flex-1">
+          <LayoutColumn column={col} dropZone={activeDropZone} />
+          {activeDrag && (
+            <div
+              data-slot="drag-overlay"
+              className="pointer-events-none fixed inset-0 z-10 bg-black/5 animate-in fade-in duration-200"
+            />
+          )}
+        </div>
+        <DragOverlay dropAnimation={null}>
+          {activeDrag && <DragOverlayContent paneType={activeDrag.paneType} />}
+        </DragOverlay>
+      </DndContext>
+    )
+  }
+
+  return (
+    <DndContext
+      sensors={sensors}
+      accessibility={{ announcements }}
+      onDragStart={handleDragStart}
+      onDragMove={handleDragMove}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
+      <div className="relative min-h-0 flex-1">
+        <ResizablePanelGroup
+          orientation="horizontal"
+          className="h-full"
+          onLayoutChanged={(sizes) => {
+            const widths = layout.columns.map(
+              (col) => sizes[col.id] ?? col.widthPercent,
+            )
+            // Skip dispatch if sizes haven't changed
+            const changed = widths.some(
+              (w, i) => Math.abs(w - layout.columns[i]!.widthPercent) > 0.01,
+            )
+            if (changed) dispatch({ type: 'RESIZE_COLUMNS', widths })
+          }}
+        >
+          {layout.columns.map((col, i) => (
+            <Fragment key={col.id}>
+              {i > 0 && <ResizableHandle withHandle />}
+              <ResizablePanel
+                id={col.id}
+                defaultSize={col.widthPercent}
+                minSize={15}
+              >
+                <LayoutColumn column={col} dropZone={activeDropZone} />
+              </ResizablePanel>
+            </Fragment>
+          ))}
+        </ResizablePanelGroup>
+        {activeDrag && (
+          <div
+            data-slot="drag-overlay"
+            className="pointer-events-none fixed inset-0 z-10 bg-black/5 animate-in fade-in duration-200"
+          />
+        )}
+      </div>
+      <DragOverlay dropAnimation={null}>
+        {activeDrag && <DragOverlayContent paneType={activeDrag.paneType} />}
+      </DragOverlay>
+    </DndContext>
+  )
+}
+
+function DragOverlayContent({ paneType }: { paneType: string }) {
+  const { t } = useTranslation()
+  const registry = usePaneRegistry()
+  const def = registry.getDefinition(paneType)
+  const Icon = getPaneIcon(def?.icon ?? 'LayoutGrid')
+  return (
+    <div className="flex h-9 rotate-2 cursor-grabbing items-center gap-2 rounded-lg border border-primary/40 bg-background/95 px-3 shadow-2xl ring-1 ring-primary/25 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-150">
+      <Icon className="size-4 text-primary" />
+      <span className="text-sm font-medium">
+        {def ? t(def.labelKey) : paneType}
+      </span>
+    </div>
+  )
+}

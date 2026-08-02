@@ -1,0 +1,35 @@
+{
+  "name": "@pairlens/plugin-sdk",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pairlens/trading-terminal.git",
+    "directory": "packages/plugin-sdk"
+  },
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "bun run build:sdk && cp dist/plugin-sdk.js ../../apps/terminal/public/_sdk/plugin-sdk.js",
+    "build:sdk": "bun build src/index.ts --outfile dist/plugin-sdk.js --format esm --external react --external @tanstack/react-query --target browser --minify"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./host-context": "./src/host-context.ts",
+    "./types": "./src/types/index.ts",
+    "./theme.css": "./theme.css"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "@tanstack/react-query": "^5.0.0"
+  },
+  "dependencies": {
+    "@pairlens/plugin-system": "workspace:*",
+    "@pairlens/workflow-engine": "workspace:*"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "@types/react": "^19.0.0",
+    "typescript": "^5.9.3"
+  }
+}

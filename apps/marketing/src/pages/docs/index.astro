@@ -1,0 +1,33 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// The docs home is the Quickstart. Internal links point straight at
+// /docs/quickstart (see lib/site.ts) so in-site navigation never routes
+// through here; this page only catches direct visits and old external links.
+// It is hand-written instead of Astro.redirect() because in a static build
+// that helper emits an unstyled blank page — a white flash before the docs
+// load. This one paints the site background while it redirects.
+const target = '/docs/quickstart'
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pairlens Docs</title>
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <link rel="canonical" href={new URL(target, Astro.site)} />
+    <meta name="robots" content="noindex" />
+    <script is:inline define:vars={{ target }}>
+      window.location.replace(target)
+    </script>
+    <style>
+      /* Matches dark --background in @pairlens/ui styles.css (warm graphite). */
+      html {
+        background: oklch(13.5% 0.006 74);
+      }
+    </style>
+  </head>
+  <body></body>
+</html>

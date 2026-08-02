@@ -1,0 +1,1001 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// "What it is": one section that both explains the product and indexes the
+// features. Three centred serif paragraphs where nine coloured phrases are
+// buttons into the nine feature cards on the rail below; a band of white
+// sweeps word-by-word through the statement as it scrolls. Clicking a phrase
+// or a card opens that feature's dialog (FeatureDialog.tsx — a real
+// @pairlens/ui Dialog), which also parks the rail on the feature last read.
+import { Image, getImage } from 'astro:assets'
+import FeatureDialog from '@/components/marketing/FeatureDialog'
+import alertsShot from '@/assets/screens/alerts.webp'
+import browserShot from '@/assets/screens/embedded_browser.webp'
+import indicatorsShot from '@/assets/screens/indicators.png'
+import omnisearchShot from '@/assets/screens/omnisearch.webp'
+import pluginsStoreShot from '@/assets/screens/plugins_store.webp'
+import tradingShot from '@/assets/screens/trading.webp'
+import accountsShot from '@/assets/screens/user_accounts.webp'
+import workflowsShot from '@/assets/screens/workflows.webp'
+import workspacesShot from '@/assets/screens/workspaces.webp'
+
+const FEATURES = [
+  {
+    n: '01',
+    name: 'AI co-pilot in every panel',
+    accent: 'var(--pl-magenta)',
+    phrase: 'reads your charts with you',
+    shot: tradingShot,
+    alt: 'The Pairlens trading view with the AI Lens panel beside a BTC-USDT chart',
+    copy: 'Charts, order books, news and signals are all visible to it. Ask it to mark a level, explain a candle, or execute inside the guardrails you set.',
+    detail:
+      'Charts, order books, news and signals are all visible to it. Ask it to mark a level, explain a candle, or execute inside the guardrails you set. Bring your own key for Claude, OpenAI, Groq or OpenRouter, and add Exa or Tavily when it needs to search the web.',
+  },
+  {
+    n: '02',
+    name: 'A desk you arrange',
+    accent: 'var(--pl-amber)',
+    phrase: 'arranges itself the way you think',
+    shot: workspacesShot,
+    alt: 'A Comparer workspace with four synchronized charts: BTC, ETH, SOL and DOGE',
+    copy: 'Drag panels into the layout you think in, pop them onto a second monitor, pick from 17 themes, and save the whole desk as a workspace.',
+    detail:
+      'Drag panels into the layout you think in, pop them onto a second monitor, pick from 17 themes, and save the whole desk as a workspace. Every workspace is a file, so you can duplicate it, keep it under version control, or move it to another machine.',
+  },
+  {
+    n: '03',
+    name: 'Indicators and Bots in real Python',
+    accent: 'var(--pl-green)',
+    phrase: 'runs the Python you write',
+    shot: indicatorsShot,
+    alt: 'The Pairlens indicators editor: a SuperTrend indicator written in Python beside the live chart it paints on',
+    copy: 'numpy, pandas and the pairlens.ta library, running against live candles. Export it as a plugin when ready, or run it 24/7 as a bot.',
+    detail:
+      'numpy, pandas and the pairlens.ta library, running against live candles. The code you write in the editor is the code that paints on the chart — nothing is transpiled away. Export it as a plugin when it is ready, or leave it running 24/7 as a bot.',
+  },
+  {
+    n: '04',
+    name: 'Workflows that watch for you',
+    accent: 'var(--pl-orange)',
+    phrase: 'watches the market while you sleep',
+    shot: workflowsShot,
+    alt: 'The Pairlens workflow builder wiring a market condition to an action',
+    copy: 'Deterministic strategies that fire on your conditions, even while you are away.',
+    detail:
+      'Deterministic strategies that fire on your conditions, even while you are away. Wire a market condition to an action and the same input always produces the same order — no model sits in the loop unless you put one there.',
+  },
+  {
+    n: '05',
+    name: 'Alerts that never blink',
+    accent: 'var(--pl-cyan)',
+    phrase: 'says something the moment a level breaks',
+    shot: alertsShot,
+    alt: 'The Pairlens alerts panel listing price and signal alerts',
+    copy: 'Levels, fills, signals and closes, routed to toasts, OS notifications or webhooks.',
+    detail:
+      'Levels, fills, signals and closes, routed to toasts, OS notifications or webhooks. Point a webhook at anything that accepts one and the terminal keeps firing while it runs, whether or not the window is in front of you.',
+  },
+  {
+    n: '06',
+    name: 'The web, docked',
+    accent: 'var(--pl-green)',
+    phrase: 'docks the web beside your chart',
+    shot: browserShot,
+    alt: 'A web page pinned as a panel beside a Pairlens chart',
+    copy: 'Pin any site as a panel inside a workspace. Stop alt-tabbing mid-trade.',
+    detail:
+      'Pin any site as a panel inside a workspace. Research, socials and dashboards sit beside the chart instead of in another window, and they are saved with the desk like every other panel.',
+  },
+  {
+    n: '07',
+    name: '⌘K finds everything',
+    accent: 'var(--pl-iris)',
+    phrase: 'finds anything you can name in one keystroke',
+    shot: omnisearchShot,
+    alt: 'The Pairlens omnisearch palette open over a chart',
+    copy: 'Pairs, plugins, commands and settings — one keystroke from anywhere.',
+    detail:
+      'Pairs, plugins, commands and settings — one keystroke from anywhere. Start typing a ticker to jump straight to its chart, or a command to run it without ever leaving the keyboard.',
+  },
+  {
+    n: '08',
+    name: 'Keys stay in your keychain',
+    accent: 'var(--pl-red)',
+    phrase: 'keys never leave the machine',
+    shot: accountsShot,
+    alt: 'The Pairlens accounts screen showing venue keys held in the OS keychain',
+    copy: 'Venue keys are written to the OS keychain and never leave the machine.',
+    detail:
+      'Venue keys are written to the OS keychain and never leave the machine. Orders go straight from your computer to the exchange you chose, so nothing about what you trade passes through us.',
+  },
+  {
+    n: '09',
+    name: '34 sandboxed plugins',
+    accent: 'var(--pl-magenta)',
+    phrase: 'Thirty-four plugins',
+    shot: pluginsStoreShot,
+    alt: 'The Pairlens plugin store listing venue, brain and asset plugins',
+    copy: 'Venues, brains, assets and themes, each shipped with its source.',
+    detail:
+      'Venues, brains, assets and themes, each shipped with its source. Install and activate without a restart, read any plugin before you trust it, or build your own and publish it to the store.',
+  },
+]
+
+// The statement, paragraph by paragraph: plain strings and the index of the
+// phrase that opens each feature. Phrases render with `set:text` — template
+// whitespace inside the span would underline a space at each end. The leading
+// spectrum "Pairlens" of the first paragraph is written in the markup.
+const P1: Array<string | number> = [
+  ' is a free trading terminal that runs on your own machine. It ',
+  0,
+  ', ',
+  1,
+  ', and ',
+  2,
+  ' against live candles.',
+]
+const P2: Array<string | number> = [
+  'It ',
+  3,
+  ', ',
+  4,
+  ', ',
+  5,
+  ', and ',
+  6,
+  '.',
+]
+const P3: Array<string | number> = [
+  'Your ',
+  7,
+  '. ',
+  8,
+  ', every one of them open.',
+]
+const PARAGRAPHS = [P1, P2, P3]
+
+const total = String(FEATURES.length).padStart(2, '0')
+
+// Full-size renditions for the dialog, resolved at build. The dialog island
+// only mounts on open, so nothing here weighs on the page load.
+const fullShots = await Promise.all(
+  FEATURES.map((f) =>
+    getImage({ src: f.shot, format: 'webp', width: 1600, quality: 85 }),
+  ),
+)
+
+const dialogFeatures = FEATURES.map((f, i) => ({
+  n: f.n,
+  name: f.name,
+  detail: f.detail,
+  alt: f.alt,
+  accent: f.accent,
+  shot: fullShots[i].src,
+}))
+---
+
+<section id="features" class="features" data-feature-index>
+  {
+    /* client:idle, NOT client:visible — this island renders nothing until
+       opened, so the astro-island is a boxless display:contents element and
+       an IntersectionObserver never fires for it: visible-gating means it
+       never hydrates and phrase clicks go nowhere. Idle keeps React off the
+       critical path; clicks that beat hydration are parked and replayed on
+       mount. */
+  }
+  <FeatureDialog client:idle features={dialogFeatures} />
+  <div class="features-inner">
+    <div class="statement">
+      {
+        PARAGRAPHS.map((parts, pi) => (
+          <p
+            class="statement-p"
+            data-wt
+            data-reveal
+            data-reveal-delay={90 + pi * 60}
+          >
+            {pi === 0 && <span class="pl-spectrum-text">Pairlens</span>}
+            {parts.map((part) =>
+              typeof part === 'string' ? (
+                part
+              ) : (
+                <span
+                  class="phrase"
+                  role="button"
+                  tabindex="0"
+                  aria-haspopup="dialog"
+                  data-phrase={part}
+                  style={`--phrase-accent: ${FEATURES[part].accent}`}
+                  set:text={FEATURES[part].phrase}
+                />
+              ),
+            )}
+          </p>
+        ))
+      }
+    </div>
+
+    <div class="rail" data-rail>
+      {
+        FEATURES.map((f, i) => (
+          <div
+            class:list={['fcard', { 'is-open': i === 0 }]}
+            role="button"
+            tabindex="0"
+            aria-haspopup="dialog"
+            aria-label={`Open ${f.name}`}
+            data-card
+            data-name={f.name}
+            data-accent={f.accent}
+            style={`--card-accent: ${f.accent}`}
+          >
+            <span class="edge-light" aria-hidden="true"></span>
+            <div class="fcard-shot">
+              {/* The phone `sizes` is 2/3 of the rendered 84vw on purpose: it
+                  caps 3x iPhones at the 2x-density rendition, which is
+                  indistinguishable for a 330px-wide screenshot and ~40%
+                  fewer bytes. Same trick on the laptop shot. */}
+              <Image
+                src={f.shot}
+                alt={f.alt}
+                widths={[560, 672, 1120]}
+                sizes="(max-width: 720px) 56vw, 560px"
+                format="webp"
+                quality={82}
+              />
+            </div>
+            <div class="fcard-body">
+              <div class="fcard-top">
+                <span
+                  class="fcard-n"
+                  style={`color: ${f.accent}`}
+                  set:text={f.n}
+                />
+                <svg
+                  class="fchev"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </div>
+              <h3 class="fcard-title">{f.name}</h3>
+              <div class="fdisc">
+                <div>
+                  <p>{f.copy}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="rail-nav" data-reveal data-reveal-delay="60">
+      <div class="rail-meta">
+        <p class="rail-count">
+          <span data-rail-pos>01</span> / {total}
+        </p>
+        <p
+          class="rail-name"
+          data-rail-name
+          style={`color: ${FEATURES[0].accent}`}
+        >
+          {FEATURES[0].name}
+        </p>
+      </div>
+      <div class="rail-buttons">
+        <button type="button" data-rail-prev aria-label="Previous feature">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg
+          >
+        </button>
+        <button type="button" data-rail-next aria-label="Next feature">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg
+          >
+        </button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  // Feature rail + word sweep. The active card is whichever one the rail is
+  // scrolled to; clicking a phrase or a card glides there AND opens the
+  // feature dialog (a React island — clicks that land before it hydrates are
+  // parked on `window.__plFeaturePending` and replayed on mount). The dialog
+  // echoes its own steps back over `pl:feature-sync` so the rail follows.
+  const GLIDE_MS = 720
+  const SWEEP_HALF = 6
+
+  function armFeatureIndex() {
+    const root = document.querySelector<HTMLElement>('[data-feature-index]')
+    if (!root || root.dataset.armed) return
+    root.dataset.armed = '1'
+
+    const reducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches
+    const coarsePointer = window.matchMedia('(pointer: coarse)').matches
+
+    const rail = root.querySelector<HTMLElement>('[data-rail]')
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-card]'))
+    const posEl = root.querySelector<HTMLElement>('[data-rail-pos]')
+    const nameEl = root.querySelector<HTMLElement>('[data-rail-name]')
+    if (!rail || cards.length === 0) return
+
+    let index = 0
+    let locked = false
+    let lockTimer = 0
+
+    const offsetOf = (i: number) => cards[i].offsetLeft - cards[0].offsetLeft
+
+    const render = () => {
+      cards.forEach((card, i) => {
+        card.classList.toggle('is-open', i === index)
+      })
+      const active = cards[index]
+      if (posEl) posEl.textContent = String(index + 1).padStart(2, '0')
+      if (nameEl) {
+        nameEl.textContent = active.dataset.name ?? ''
+        nameEl.style.color = active.dataset.accent ?? ''
+      }
+    }
+
+    const jump = (next: number) => {
+      index = Math.max(0, Math.min(cards.length - 1, next))
+      const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)')
+        .matches
+      // Hold the index steady while the rail glides, so cards in between
+      // don't flash open.
+      locked = smooth
+      window.clearTimeout(lockTimer)
+      lockTimer = window.setTimeout(() => {
+        locked = false
+      }, GLIDE_MS)
+      rail.scrollTo({
+        left: Math.min(offsetOf(index), rail.scrollWidth - rail.clientWidth),
+        behavior: smooth ? 'smooth' : 'auto',
+      })
+      render()
+    }
+
+    const openDialog = (i: number) => {
+      jump(i)
+      window.__plFeaturePending = i
+      window.dispatchEvent(
+        new CustomEvent('pl:feature-open', { detail: { index: i } }),
+      )
+    }
+
+    // Scroll-aware edge fades: a side only fades while content hides there.
+    const paintFades = () => {
+      const max = rail.scrollWidth - rail.clientWidth
+      rail.style.setProperty('--fade-l', rail.scrollLeft > 8 ? '5%' : '0%')
+      rail.style.setProperty(
+        '--fade-r',
+        rail.scrollLeft < max - 8 ? '5%' : '0%',
+      )
+    }
+    paintFades()
+
+    rail.addEventListener(
+      'scroll',
+      () => {
+        paintFades()
+        if (locked) return
+        const max = rail.scrollWidth - rail.clientWidth
+        let next = cards.length - 1
+        // The rail's last page shows more than one card, so anything at the
+        // terminal offset counts as the final index.
+        if (rail.scrollLeft < max - 2) {
+          let best = Number.POSITIVE_INFINITY
+          for (let i = 0; i < cards.length; i++) {
+            const distance = Math.abs(offsetOf(i) - rail.scrollLeft)
+            if (distance < best) {
+              best = distance
+              next = i
+            }
+          }
+        }
+        if (next !== index) {
+          index = next
+          render()
+        }
+      },
+      { passive: true },
+    )
+
+    cards.forEach((card, i) => {
+      card.addEventListener('click', () => openDialog(i))
+      card.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return
+        event.preventDefault()
+        openDialog(i)
+      })
+    })
+
+    for (const phrase of root.querySelectorAll<HTMLElement>('[data-phrase]')) {
+      const target = Number(phrase.dataset.phrase)
+      phrase.addEventListener('click', () => openDialog(target))
+      phrase.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return
+        event.preventDefault()
+        openDialog(target)
+      })
+    }
+
+    root
+      .querySelector('[data-rail-prev]')
+      ?.addEventListener('click', () => jump(index - 1))
+    root
+      .querySelector('[data-rail-next]')
+      ?.addEventListener('click', () => jump(index + 1))
+
+    window.addEventListener('pl:feature-sync', (event) => {
+      const i = (event as CustomEvent<{ index: number }>).detail?.index
+      if (typeof i === 'number') jump(i)
+    })
+
+    // — Rail height pinning — the rail is as tall as its tallest OPEN card,
+    // measured with transitions suppressed, so expanding a card can never
+    // push the sections below it down.
+    const sizeRail = () => {
+      const wasOpen = cards.map((c) => c.classList.contains('is-open'))
+      rail.style.minHeight = ''
+      rail.setAttribute('data-measuring', '1')
+      for (const card of cards) card.classList.add('is-open')
+      const tallest = Math.max(
+        ...cards.map((c) => c.getBoundingClientRect().height),
+      )
+      cards.forEach((card, i) => {
+        if (!wasOpen[i]) card.classList.remove('is-open')
+      })
+      rail.removeAttribute('data-measuring')
+      rail.style.minHeight = `${Math.ceil(tallest) + 32}px`
+    }
+    sizeRail()
+    document.fonts?.ready.then(sizeRail)
+    let sizeTimer = 0
+    window.addEventListener(
+      'resize',
+      () => {
+        window.clearTimeout(sizeTimer)
+        sizeTimer = window.setTimeout(() => {
+          sizeRail()
+          paintFades()
+        }, 160)
+      },
+      { passive: true },
+    )
+
+    // Border glow: steer each card's conic-masked border and outer glow
+    // toward the cursor. Pointer-driven by nature, so touch devices skip it
+    // entirely (the layers also stay hidden without :hover).
+    if (!reducedMotion && !coarsePointer) {
+      rail.addEventListener(
+        'pointermove',
+        (event) => {
+          const card =
+            event.target instanceof Element
+              ? event.target.closest<HTMLElement>('[data-card]')
+              : null
+          if (!card) return
+          const rect = card.getBoundingClientRect()
+          const x = event.clientX - rect.left
+          const y = event.clientY - rect.top
+          const cx = rect.width / 2
+          const cy = rect.height / 2
+          const dx = x - cx
+          const dy = y - cy
+          const kx = dx === 0 ? Infinity : cx / Math.abs(dx)
+          const ky = dy === 0 ? Infinity : cy / Math.abs(dy)
+          const edge = Math.min(Math.max(1 / Math.min(kx, ky), 0), 1)
+          let degrees = Math.atan2(dy, dx) * (180 / Math.PI) + 90
+          if (degrees < 0) degrees += 360
+          card.style.setProperty('--edge-proximity', (edge * 100).toFixed(2))
+          card.style.setProperty('--cursor-angle', `${degrees.toFixed(2)}deg`)
+        },
+        { passive: true },
+      )
+    }
+
+    // — Word sweep — split the statement into word spans once, each carrying
+    // its own resting colour (--wc), then let scroll drive a band of white
+    // through them. Colour-only (no layout, no transform), so unlike the
+    // parallax it survives touch scrolling's bursty events: the per-word
+    // .5s colour transition smooths the band between bursts. Reduced motion
+    // leaves the statement resting in its own colours.
+    if (reducedMotion) return
+
+    const paragraphs = Array.from(
+      root.querySelectorAll<HTMLElement>('[data-wt]'),
+    )
+    const words: Array<HTMLElement> = []
+    for (const p of paragraphs) {
+      const walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT, null)
+      const nodes: Array<Text> = []
+      while (walker.nextNode()) nodes.push(walker.currentNode as Text)
+      for (const node of nodes) {
+        if (!node.nodeValue?.trim()) continue
+        const parent = node.parentElement
+        if (!parent || parent.closest('.pl-spectrum-text')) continue
+        const resting = getComputedStyle(parent).color
+        const frag = document.createDocumentFragment()
+        for (const part of node.nodeValue.split(/(\s+)/)) {
+          if (!part) continue
+          if (!part.trim()) {
+            frag.appendChild(document.createTextNode(part))
+            continue
+          }
+          const span = document.createElement('span')
+          span.textContent = part
+          span.style.setProperty('--wc', resting)
+          span.style.color = 'var(--wc)'
+          span.style.transition = 'color .5s var(--ease-out)'
+          frag.appendChild(span)
+          words.push(span)
+        }
+        node.parentNode?.replaceChild(frag, node)
+      }
+    }
+    if (words.length === 0) return
+
+    const lit = new Array<boolean>(words.length).fill(false)
+    let raf = 0
+    const sweep = () => {
+      raf = 0
+      const vh = window.innerHeight || 900
+      const first = paragraphs[0].getBoundingClientRect()
+      const last = paragraphs[paragraphs.length - 1].getBoundingClientRect()
+      const top = first.top
+      const height = last.bottom - first.top
+      const progress = Math.min(
+        1,
+        Math.max(0, (vh * 0.85 - top) / (height + vh * 0.85)),
+      )
+      const head = progress * (words.length + SWEEP_HALF * 2) - SWEEP_HALF
+      for (let i = 0; i < words.length; i++) {
+        const on = Math.abs(i - head) <= SWEEP_HALF
+        if (lit[i] === on) continue
+        lit[i] = on
+        words[i].style.color = on ? '#fff' : 'var(--wc)'
+      }
+    }
+    const queueSweep = () => {
+      if (!raf) raf = requestAnimationFrame(sweep)
+    }
+    window.addEventListener('scroll', queueSweep, { passive: true })
+    window.addEventListener('resize', queueSweep, { passive: true })
+    queueSweep()
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        window.removeEventListener('scroll', queueSweep)
+        window.removeEventListener('resize', queueSweep)
+        if (raf) cancelAnimationFrame(raf)
+      },
+      { once: true },
+    )
+  }
+
+  armFeatureIndex()
+  document.addEventListener('astro:page-load', armFeatureIndex)
+</script>
+
+<style>
+  .features {
+    padding: 112px 0 104px;
+    background: #000;
+    color: var(--foreground);
+    scroll-margin-top: 5rem;
+  }
+  .features-inner {
+    margin: 0 auto;
+    max-width: 1264px;
+  }
+
+  .statement {
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 0 32px;
+    text-align: center;
+  }
+  .statement-p {
+    margin: 26px auto 0;
+    max-width: 32ch;
+    font-family: var(--font-serif);
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1.36;
+    letter-spacing: -0.024em;
+    text-wrap: pretty;
+    color: color-mix(in oklch, var(--muted-foreground) 92%, transparent);
+  }
+  .statement-p:first-child {
+    margin-top: 0;
+  }
+  .phrase {
+    cursor: pointer;
+    color: var(--phrase-accent);
+    text-decoration-line: underline;
+    text-decoration-color: color-mix(
+      in oklch,
+      var(--phrase-accent) 20%,
+      transparent
+    );
+    text-decoration-thickness: 1px;
+    text-underline-offset: 7px;
+    transition:
+      text-decoration-color 0.25s var(--ease-out),
+      text-decoration-thickness 0.25s var(--ease-out);
+  }
+  .phrase:hover,
+  .phrase:focus-visible {
+    text-decoration-color: var(--phrase-accent);
+    text-decoration-thickness: 2px;
+  }
+
+  .rail {
+    /* Edge fades like the venue marquee — but scroll-aware: each side only
+       fades while there is actually content hiding behind it. The script
+       drives --fade-l / --fade-r from scrollLeft. */
+    --fade-l: 0%;
+    --fade-r: 5%;
+    margin-top: 64px;
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 32px;
+    padding: 6px 32px 26px;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--fade-l),
+      #000 calc(100% - var(--fade-r)),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--fade-l),
+      #000 calc(100% - var(--fade-r)),
+      transparent
+    );
+  }
+  .rail[data-measuring] .fcard,
+  .rail[data-measuring] .fdisc {
+    transition: none !important;
+  }
+
+  .fcard {
+    /* Border-glow layers (adapted from react-bits' BorderGlow, MIT): a
+       conic-masked gradient border plus an outer glow, both steered by
+       --cursor-angle / --edge-proximity from the pointer handler. The glow
+       bleeds past the card, so clipping lives on .fcard-shot instead of
+       here. */
+    --edge-proximity: 0;
+    --cursor-angle: 45deg;
+    position: relative;
+    isolation: isolate;
+    align-self: start;
+    flex: 0 0 560px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    border: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
+    background: var(--pl-inset);
+    cursor: pointer;
+    transition:
+      border-color 0.35s var(--ease-out),
+      box-shadow 0.35s var(--ease-out);
+  }
+  .fcard.is-open {
+    border-color: color-mix(in oklch, var(--foreground) 16%, transparent);
+    box-shadow: 0 26px 54px -40px rgba(0, 0, 0, 0.85);
+  }
+  .fcard:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  /* Colored gradient border, revealed in a cone facing the cursor. */
+  .fcard::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--pl-inset) 0 100%) padding-box,
+      radial-gradient(
+          at 80% 55%,
+          var(--card-accent) 0px,
+          transparent 50%
+        )
+        border-box,
+      radial-gradient(
+          at 8% 6%,
+          color-mix(in oklch, var(--card-accent) 55%, white) 0px,
+          transparent 50%
+        )
+        border-box,
+      radial-gradient(
+          at 41% 38%,
+          color-mix(in oklch, var(--card-accent) 70%, white) 0px,
+          transparent 50%
+        )
+        border-box,
+      radial-gradient(
+          at 86% 85%,
+          var(--card-accent) 0px,
+          transparent 50%
+        )
+        border-box,
+      linear-gradient(var(--card-accent) 0 100%) border-box;
+    -webkit-mask-image: conic-gradient(
+      from var(--cursor-angle) at center,
+      black 25%,
+      transparent 40%,
+      transparent 60%,
+      black 75%
+    );
+    mask-image: conic-gradient(
+      from var(--cursor-angle) at center,
+      black 25%,
+      transparent 40%,
+      transparent 60%,
+      black 75%
+    );
+    opacity: calc((var(--edge-proximity) - 50) / 50);
+    transition: opacity 0.25s ease-out;
+  }
+
+  /* Outer glow bleeding past the edge, in a tighter cone. */
+  .fcard .edge-light {
+    position: absolute;
+    inset: -28px;
+    z-index: 1;
+    border-radius: inherit;
+    pointer-events: none;
+    mix-blend-mode: plus-lighter;
+    -webkit-mask-image: conic-gradient(
+      from var(--cursor-angle) at center,
+      black 2.5%,
+      transparent 10%,
+      transparent 90%,
+      black 97.5%
+    );
+    mask-image: conic-gradient(
+      from var(--cursor-angle) at center,
+      black 2.5%,
+      transparent 10%,
+      transparent 90%,
+      black 97.5%
+    );
+    opacity: calc((var(--edge-proximity) - 30) / 70);
+    transition: opacity 0.25s ease-out;
+  }
+  .fcard .edge-light::before {
+    content: '';
+    position: absolute;
+    inset: 28px;
+    border-radius: 18px;
+    box-shadow:
+      inset 0 0 0 1px
+        color-mix(in oklch, var(--card-accent) 90%, transparent),
+      inset 0 0 6px 0 color-mix(in oklch, var(--card-accent) 40%, transparent),
+      inset 0 0 15px 0 color-mix(in oklch, var(--card-accent) 30%, transparent),
+      0 0 3px 0 color-mix(in oklch, var(--card-accent) 50%, transparent),
+      0 0 6px 0 color-mix(in oklch, var(--card-accent) 40%, transparent),
+      0 0 15px 0 color-mix(in oklch, var(--card-accent) 30%, transparent),
+      0 0 25px 2px color-mix(in oklch, var(--card-accent) 20%, transparent);
+  }
+  .fcard:not(:hover)::before,
+  .fcard:not(:hover) .edge-light {
+    opacity: 0;
+    transition: opacity 0.75s ease-in-out;
+  }
+
+  .fcard-shot {
+    overflow: hidden;
+    height: 300px;
+    border-radius: 17px 17px 0 0;
+    border-bottom: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
+  }
+  .fcard-shot :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 0;
+  }
+  .fcard-body {
+    padding: 28px 30px 32px;
+  }
+  .fcard-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .fcard-n {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+  }
+  .fchev {
+    width: 18px;
+    height: 18px;
+    opacity: 0.38;
+    color: var(--foreground);
+    transition:
+      transform 0.42s var(--ease-out),
+      opacity 0.3s var(--ease-out);
+  }
+  .fcard.is-open .fchev,
+  .fcard:hover .fchev {
+    opacity: 0.85;
+    transform: rotate(180deg);
+  }
+  .fcard-title {
+    margin: 14px 0 0;
+    font-family: var(--font-serif);
+    font-size: 27px;
+    font-weight: 600;
+    line-height: 1.16;
+    letter-spacing: -0.024em;
+    color: var(--foreground);
+  }
+
+  .fdisc {
+    display: grid;
+    grid-template-rows: 0fr;
+    margin-top: 0;
+    opacity: 0;
+    transition:
+      grid-template-rows 0.52s var(--ease-out),
+      margin-top 0.52s var(--ease-out),
+      opacity 0.3s var(--ease-out);
+  }
+  .fdisc > div {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .fdisc p {
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.7;
+    text-wrap: pretty;
+    color: var(--muted-foreground);
+  }
+  .fcard.is-open .fdisc,
+  .fcard:hover .fdisc,
+  .fcard:focus-within .fdisc {
+    grid-template-rows: 1fr;
+    margin-top: 12px;
+    opacity: 1;
+  }
+
+  .rail-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 4px 32px 0;
+  }
+  .rail-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    min-width: 0;
+  }
+  .rail-count {
+    margin: 0;
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: color-mix(in oklch, var(--muted-foreground) 76%, transparent);
+  }
+  .rail-count span {
+    color: var(--foreground);
+  }
+  .rail-name {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.018em;
+    transition: color 0.3s var(--ease-out);
+  }
+  .rail-buttons {
+    display: flex;
+    flex: none;
+    gap: 10px;
+  }
+  .rail-buttons button {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    background: var(--pl-inset);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: background 0.2s var(--ease-out);
+  }
+  .rail-buttons button:hover {
+    background: var(--card);
+  }
+  .rail-buttons svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  @media (max-width: 860px) {
+    .statement-p {
+      font-size: 29px;
+    }
+    .fcard-title {
+      font-size: 22px;
+    }
+  }
+  @media (max-width: 720px) {
+    .features {
+      padding: 96px 0 80px;
+    }
+    .statement {
+      padding: 0 20px;
+    }
+    .rail {
+      scroll-padding-left: 20px;
+      padding: 6px 20px 26px;
+    }
+    .rail-nav {
+      padding: 4px 20px 0;
+    }
+    .fcard {
+      flex: 0 0 84vw;
+    }
+    .fcard-shot {
+      height: 220px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fchev,
+    .fdisc,
+    .rail-name,
+    .fcard {
+      transition: none;
+    }
+    /* Disclosures read open rather than animating shut. */
+    .fdisc {
+      grid-template-rows: 1fr;
+      margin-top: 12px;
+      opacity: 1;
+    }
+  }
+</style>

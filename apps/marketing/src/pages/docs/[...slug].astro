@@ -1,0 +1,40 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { getCollection, render } from 'astro:content'
+import DocsLayout from '@/layouts/DocsLayout.astro'
+import { buildDocsNav, docEditUrl, flattenDocs } from '@/lib/docs'
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs')
+  return docs.map((doc) => ({ params: { slug: doc.id }, props: { doc } }))
+}
+
+const { doc } = Astro.props
+const { Content, headings } = await render(doc)
+
+const allDocs = await getCollection('docs')
+const nav = buildDocsNav(allDocs)
+const pages = flattenDocs(allDocs).map((d) => ({
+  id: d.id,
+  title: d.data.title,
+  href: `/docs/${d.id}`,
+  group: d.data.group ?? '',
+}))
+---
+
+<DocsLayout
+  title={doc.data.title}
+  description={doc.data.description}
+  eyebrow={doc.data.eyebrow}
+  group={doc.data.group}
+  updated={doc.data.updated}
+  readTime={doc.data.readTime}
+  editUrl={docEditUrl(doc)}
+  nav={nav}
+  headings={headings}
+  pages={pages}
+  currentId={doc.id}
+>
+  <Content />
+</DocsLayout>

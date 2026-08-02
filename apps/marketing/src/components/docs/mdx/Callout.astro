@@ -1,0 +1,116 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+interface Props {
+  type?: 'tip' | 'note' | 'warn' | 'success'
+  title?: string
+}
+const { type = 'tip', title } = Astro.props
+
+const ACCENT = {
+  tip: 'var(--primary)',
+  note: 'var(--pl-cyan)',
+  warn: 'var(--pl-amber)',
+  success: 'var(--pl-green)',
+} as const
+
+const LABEL = {
+  tip: 'Tip',
+  note: 'Note',
+  warn: 'Heads up',
+  success: 'Good to know',
+} as const
+
+const color = ACCENT[type]
+const label = title ?? LABEL[type]
+---
+
+<div
+  class="mt-[22px] rounded-[14px] px-[18px] pt-[15px] pb-4"
+  style={`border: 1px solid color-mix(in oklch, ${color} 27%, transparent); background: color-mix(in oklch, ${color} 7%, transparent); box-shadow: inset 3px 0 0 ${color};`}
+>
+  <p
+    class="flex items-center gap-[7px] font-mono text-[10.5px] font-bold tracking-[0.16em] uppercase"
+    style={`color: ${color}`}
+  >
+    {
+      type === 'tip' && (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          style="width: 12px; height: 12px;"
+        >
+          <path d="M12 3v2" />
+          <path d="M12 19v2" />
+          <path d="M5 12H3" />
+          <path d="M21 12h-2" />
+          <circle cx="12" cy="12" r="4" />
+        </svg>
+      )
+    }
+    {
+      type === 'note' && (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          style="width: 12px; height: 12px;"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        </svg>
+      )
+    }
+    {
+      type === 'warn' && (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          style="width: 12px; height: 12px;"
+        >
+          <path d="M10.3 3.5 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3l-8.5-14.5a2 2 0 0 0-3.4 0Z" />
+          <path d="M12 9v4" />
+          <path d="M12 17h.01" />
+        </svg>
+      )
+    }
+    {
+      type === 'success' && (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          style="width: 12px; height: 12px;"
+        >
+          <path d="M20 6 9 17l-5-5" />
+        </svg>
+      )
+    }
+    {label}
+  </p>
+  <div
+    class="mt-2 text-[14.5px] leading-[1.7] [&>*+*]:mt-2"
+    style="color: color-mix(in oklch, var(--foreground) 86%, transparent);"
+  >
+    <slot />
+  </div>
+</div>

@@ -1,0 +1,581 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Long-form layout for the legal documents (/privacy, /terms): a marble header
+// band carrying the document switcher, the plain-language summary and a facts
+// rail, then a graphite document body with a sticky section rail whose right
+// edge lands on the footer's.
+//
+// The switcher is real navigation between the two routes rather than a
+// client-side tab: both documents stay independently linkable, crawlable and
+// printable, and ClientRouter makes the swap feel like a tab anyway.
+//
+// While `LEGAL_ENTITY.configured` is false the page wears a DRAFT banner and
+// is excluded from search indexes: an unfinished policy full of placeholders
+// must never read as if it were in force.
+import type { MarkdownHeading } from 'astro'
+import SiteLayout from '@/layouts/SiteLayout.astro'
+import SiteHeader from '@/components/SiteHeader.astro'
+import SiteFooter from '@/components/SiteFooter.astro'
+import {
+  LEGAL_CONTACT,
+  LEGAL_DOCS,
+  LEGAL_ENTITY,
+  LEGAL_TOC_SHORT,
+  type LegalDocId,
+} from '@/lib/legal'
+import { SITE } from '@/lib/site'
+
+interface Props {
+  title: string
+  description: string
+  /** Date this version took effect, in prose. */
+  effective: string
+  /** Plain-language precis rendered above the document body. */
+  summary: string
+  headings: MarkdownHeading[]
+  /** Which document this is, so the rail and cross-links can adapt. */
+  doc: LegalDocId
+  /** Path of the source file in the repo, for the version-history link. */
+  sourcePath: string
+}
+
+const { title, description, effective, summary, headings, doc, sourcePath } =
+  Astro.props
+
+const draft = !LEGAL_ENTITY.configured
+const other = doc === 'privacy' ? LEGAL_DOCS.terms : LEGAL_DOCS.privacy
+const historyUrl = `${SITE.repo}/blob/main/apps/marketing/${sourcePath}`
+
+// The rail counts what the document actually contains rather than a number
+// typed into frontmatter, so a new section can never leave the count stale.
+const sections = headings.filter((h) => h.depth === 2)
+const contact = doc === 'privacy' ? LEGAL_CONTACT.privacy : LEGAL_CONTACT.legal
+const partyLabel = doc === 'privacy' ? 'Controller' : 'Counterparty'
+
+const facts = [
+  { label: 'Effective', value: effective },
+  { label: partyLabel, value: LEGAL_ENTITY.legalName },
+  {
+    label: 'Sections',
+    value: `${sections.length} · ${LEGAL_DOCS[doc].readMinutes} min read`,
+  },
+]
+---
+
+<SiteLayout
+  title={`${title} · Pairlens`}
+  description={description}
+  noindex={draft}
+>
+  <SiteHeader />
+
+  <main>
+    <!-- Marble header band -->
+    <section class="pl-marble px-8 pb-[72px] pt-32 max-[720px]:px-5">
+      <div class="mx-auto max-w-[1200px]">
+        {
+          draft && (
+            <div
+              role="status"
+              data-reveal
+              class="mb-10 max-w-[760px] rounded-[14px] border border-[color-mix(in_oklch,var(--pl-amber)_52%,transparent)] bg-[color-mix(in_oklch,var(--pl-amber)_13%,transparent)] px-5 py-[18px]"
+            >
+              <p class="flex items-center gap-2 font-mono text-[10.5px] font-bold uppercase tracking-[0.18em] text-[color-mix(in_oklch,var(--pl-amber)_62%,black)]">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                  class="size-[13px]"
+                >
+                  <path d="M12 9v4" />
+                  <path d="M12 17h.01" />
+                  <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
+                </svg>
+                Draft · not yet in force
+              </p>
+              <p class="mt-2.5 max-w-[70ch] text-[14px] leading-[1.68] text-[color-mix(in_oklch,var(--ml-fg)_82%,transparent)]">
+                This document is still being prepared. It contains unfilled
+                placeholders, has not been reviewed by counsel, and does not yet
+                bind anyone. Questions in the meantime:{' '}
+                <a
+                  href={`mailto:${LEGAL_CONTACT.legal}`}
+                  class="text-[var(--ml-fg)] underline underline-offset-4"
+                >
+                  {LEGAL_CONTACT.legal}
+                </a>
+                .
+              </p>
+            </div>
+          )
+        }
+
+        <p class="pl-eyebrow text-[var(--ml-muted)]" data-reveal>Legal</p>
+
+        <nav
+          aria-label="Legal documents"
+          data-reveal
+          style="--reveal-delay: 60ms"
+          class="pl-switch mt-[22px] inline-flex gap-1 rounded-full border border-[var(--ml-border)] bg-[color-mix(in_oklch,var(--ml-card)_72%,transparent)] p-1"
+        >
+          {
+            (['privacy', 'terms'] as const).map((id) => (
+              <a
+                href={LEGAL_DOCS[id].href}
+                aria-current={id === doc ? 'page' : undefined}
+                class="rounded-full px-[18px] py-[9px] text-[13.5px] font-semibold"
+              >
+                {LEGAL_DOCS[id].label}
+              </a>
+            ))
+          }
+        </nav>
+
+        <div
+          class="mt-[26px] grid grid-cols-[minmax(0,1fr)_300px] items-start gap-[72px] max-[1080px]:grid-cols-[minmax(0,1fr)] max-[1080px]:gap-10"
+        >
+          <div>
+            <h1
+              data-reveal
+              style="--reveal-delay: 110ms"
+              class="max-w-[15ch] font-serif text-[60px] font-semibold leading-[0.96] tracking-[-0.038em] text-[var(--ml-fg)] max-[860px]:text-[38px] max-[480px]:text-[30px]"
+            >
+              {title}
+            </h1>
+            <p
+              data-reveal
+              style="--reveal-delay: 160ms"
+              class="mt-[22px] max-w-[56ch] text-[18px] leading-[1.62] text-pretty text-[var(--ml-muted)]"
+            >
+              {description}
+            </p>
+
+            <!-- Plain-language summary. Not a substitute for the document, and says so. -->
+            <div
+              data-reveal
+              style="--reveal-delay: 220ms"
+              class="mt-[30px] rounded-[18px] border border-[var(--ml-border)] bg-[color-mix(in_oklch,var(--ml-card)_80%,transparent)] px-[26px] py-6"
+            >
+              <p
+                class="font-mono text-[10.5px] font-bold uppercase tracking-[0.2em] text-[color-mix(in_oklch,var(--ml-fg)_55%,transparent)]"
+              >
+                The short version
+              </p>
+              <p
+                class="mt-3.5 text-[15.5px] leading-[1.74] text-pretty text-[var(--ml-fg)]"
+              >
+                {summary}
+              </p>
+              <p
+                class="mt-3 text-[13px] leading-[1.7] text-[color-mix(in_oklch,var(--ml-muted)_88%,transparent)]"
+              >
+                This summary is here to be read, not to be relied on. The
+                document below is what governs.
+              </p>
+            </div>
+          </div>
+
+          <div
+            data-reveal
+            style="--reveal-delay: 200ms"
+            class="border-l border-[var(--ml-border)] pl-8 max-[1080px]:border-l-0 max-[1080px]:border-t max-[1080px]:pl-0 max-[1080px]:pt-[22px]"
+          >
+            {
+              facts.map((fact) => (
+                <div class="border-b border-[var(--ml-border)] py-3">
+                  <p class="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[color-mix(in_oklch,var(--ml-fg)_42%,transparent)]">
+                    {fact.label}
+                  </p>
+                  <p class="mt-[5px] font-serif text-[19px] font-semibold tracking-[-0.02em] text-[var(--ml-fg)]">
+                    {fact.value}
+                  </p>
+                </div>
+              ))
+            }
+            <div class="py-3">
+              <p
+                class="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[color-mix(in_oklch,var(--ml-fg)_42%,transparent)]"
+              >
+                Questions
+              </p>
+              <p class="mt-[5px] text-[15px] font-semibold">
+                <a href={`mailto:${contact}`} class="text-[var(--ml-fg)]"
+                  >{contact}</a
+                >
+              </p>
+            </div>
+            <a
+              href={historyUrl}
+              target="_blank"
+              rel="noopener"
+              class="mt-[18px] inline-flex items-center gap-[7px] font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ml-muted)] transition-colors hover:text-[var(--ml-fg)]"
+            >
+              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" class="size-[13px]">
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+                ></path>
+              </svg>
+              Version history
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Graphite document body -->
+    <section
+      class="border-t border-[color-mix(in_oklch,var(--border)_60%,transparent)] bg-background px-8 pb-24 pt-16 max-[720px]:px-5"
+    >
+      <div
+        class="mx-auto flex max-w-[1200px] items-start justify-between gap-16"
+      >
+        <article class="min-w-0 max-w-[760px] flex-1">
+          <div class="pl-legal">
+            <slot />
+          </div>
+
+          <nav
+            aria-label="Related"
+            class="mt-16 grid grid-cols-2 gap-3 border-t border-[color-mix(in_oklch,var(--border)_62%,transparent)] pt-8 max-[720px]:grid-cols-1"
+          >
+            <a href={other.href} class="pl-legal-cross">
+              <span
+                class="block font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-[color-mix(in_oklch,var(--muted-foreground)_62%,transparent)]"
+                >Also read</span
+              >
+              <span class="mt-[7px] block text-[15px] font-semibold text-foreground"
+                >{other.label}</span
+              >
+            </a>
+            <a href="/licensing" class="pl-legal-cross">
+              <span
+                class="block font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-[color-mix(in_oklch,var(--muted-foreground)_62%,transparent)]"
+                >Software licensing</span
+              >
+              <span class="mt-[7px] block text-[15px] font-semibold text-foreground"
+                >FSL, and what you may do with the code</span
+              >
+            </a>
+          </nav>
+        </article>
+
+        <aside
+          aria-label="On this page"
+          class="sticky top-[104px] h-fit w-[212px] flex-none max-[1099px]:hidden"
+        >
+          <p
+            class="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-[color-mix(in_oklch,var(--muted-foreground)_58%,transparent)]"
+          >
+            On this page
+          </p>
+          <ul
+            class="max-h-[calc(100vh-220px)] overflow-y-auto border-l border-[color-mix(in_oklch,var(--border)_80%,transparent)]"
+          >
+            {
+              sections.map((h) => (
+                <li>
+                  <a
+                    href={`#${h.slug}`}
+                    class="pl-toc-link"
+                    data-legal-toc={h.slug}
+                  >
+                    {LEGAL_TOC_SHORT[h.text] ?? h.text}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</SiteLayout>
+
+<style>
+  /* Segmented switcher. Two real links, so the selected one is the current
+     page rather than a pressed control. */
+  .pl-switch a {
+    color: var(--ml-muted);
+    background-color: rgb(0 0 0 / 0);
+    transition:
+      background-color 0.22s var(--ease-out),
+      color 0.22s var(--ease-out);
+  }
+  .pl-switch a:hover {
+    color: var(--ml-fg);
+  }
+  .pl-switch a[aria-current='page'] {
+    background-color: var(--ml-fg);
+    color: var(--ml-bg);
+  }
+
+  .pl-legal-cross {
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    padding: 18px 20px;
+    transition:
+      border-color 0.22s var(--ease-out),
+      transform 0.22s var(--ease-out);
+  }
+  .pl-legal-cross:hover {
+    border-color: color-mix(in oklch, var(--primary) 42%, var(--border));
+    transform: translateY(-2px);
+  }
+
+  .pl-toc-link {
+    display: block;
+    margin-left: -1px;
+    border-left: 1px solid transparent;
+    padding: 5px 0 5px 14px;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--muted-foreground);
+    transition:
+      color 0.2s var(--ease-out),
+      border-color 0.2s var(--ease-out);
+  }
+  .pl-toc-link:hover {
+    color: var(--foreground);
+  }
+  .pl-toc-link.is-on {
+    color: var(--foreground);
+    border-left-color: var(--primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pl-legal-cross,
+    .pl-switch a,
+    .pl-toc-link {
+      transition: none;
+    }
+    .pl-legal-cross:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Long-form legal prose. Kept as a cascade rather than per-element classes,
+     like the source documents, so a policy amendment stays a text edit. */
+  .pl-legal {
+    color: color-mix(in oklch, var(--foreground) 80%, var(--muted-foreground));
+    font-size: 15.5px;
+    line-height: 1.78;
+  }
+  .pl-legal > * + * {
+    margin-top: 1em;
+  }
+  .pl-legal h2 {
+    margin: 2.9em 0 0.55em;
+    padding-top: 0.9em;
+    border-top: 1px solid color-mix(in oklch, var(--border) 62%, transparent);
+    font-family: var(--font-serif);
+    font-size: 27px;
+    font-weight: 600;
+    letter-spacing: -0.026em;
+    color: var(--foreground);
+    scroll-margin-top: 120px;
+  }
+  .pl-legal h2:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .pl-legal h3 {
+    margin: 1.9em 0 0.4em;
+    font-family: var(--font-serif);
+    font-size: 18.5px;
+    font-weight: 600;
+    letter-spacing: -0.014em;
+    color: var(--foreground);
+    scroll-margin-top: 120px;
+  }
+  .pl-legal p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+  .pl-legal strong {
+    font-weight: 600;
+    color: var(--foreground);
+  }
+  .pl-legal a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--primary) 38%, transparent);
+    text-underline-offset: 3px;
+  }
+  .pl-legal ul {
+    margin: 1em 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pl-legal ul li {
+    position: relative;
+    padding-left: 20px;
+  }
+  .pl-legal ul li + li {
+    margin-top: 0.6em;
+  }
+  .pl-legal ul li::before {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 0.72em;
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: color-mix(in oklch, var(--primary) 62%, transparent);
+  }
+  .pl-legal table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.2em;
+    font-size: 14px;
+  }
+  .pl-legal th,
+  .pl-legal td {
+    border-bottom: 1px solid color-mix(in oklch, var(--border) 62%, transparent);
+    padding: 11px 14px 11px 0;
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .pl-legal th {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--muted-foreground) 78%, transparent);
+  }
+  /* Anchors are appended client-side (no rehype-autolink in this app), so the
+     document reads identically without JS. */
+  .pl-legal .pl-anchor {
+    opacity: 0;
+    margin-left: 0.35em;
+    font-family: var(--font-mono);
+    font-size: 0.62em;
+    font-weight: 400;
+    color: var(--primary);
+    text-decoration: none;
+  }
+  .pl-legal h2:hover .pl-anchor,
+  .pl-legal h3:hover .pl-anchor,
+  .pl-legal .pl-anchor:focus-visible {
+    opacity: 0.55;
+  }
+
+  /* The wide GDPR / retention / subprocessor tables scroll rather than blow
+     out the page on a phone. */
+  @media (max-width: 720px) {
+    .pl-legal table {
+      display: block;
+      overflow-x: auto;
+      font-size: 13px;
+    }
+  }
+</style>
+
+<script>
+  // Section rail: scroll-spy plus smooth jumps, and the `#` anchors on each
+  // heading. Re-armed on every view transition — /privacy and /terms share
+  // this layout, so the module itself only ever executes once.
+  const SPY_MARGIN = '-120px 0px -70% 0px'
+  const JUMP_OFFSET = 118
+
+  let spy: IntersectionObserver | null = null
+
+  function setActive(id: string) {
+    for (const link of document.querySelectorAll<HTMLElement>(
+      '[data-legal-toc]',
+    )) {
+      link.classList.toggle('is-on', link.dataset.legalToc === id)
+    }
+  }
+
+  function headingsInOrder() {
+    return Array.from(
+      document.querySelectorAll<HTMLElement>('[data-legal-toc]'),
+    )
+      .map((link) => document.getElementById(link.dataset.legalToc ?? ''))
+      .filter((el): el is HTMLElement => el !== null)
+  }
+
+  function armAnchors() {
+    for (const heading of document.querySelectorAll<HTMLElement>(
+      '.pl-legal h2[id], .pl-legal h3[id]',
+    )) {
+      if (heading.querySelector('.pl-anchor')) continue
+      const anchor = document.createElement('a')
+      anchor.className = 'pl-anchor'
+      anchor.href = `#${heading.id}`
+      anchor.textContent = '#'
+      anchor.setAttribute(
+        'aria-label',
+        `Link to section: ${heading.textContent ?? heading.id}`,
+      )
+      heading.append(anchor)
+    }
+  }
+
+  function armSpy() {
+    spy?.disconnect()
+    const headings = headingsInOrder()
+    if (headings.length === 0) return
+
+    const onScreen = new Set<string>()
+    spy = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) onScreen.add(entry.target.id)
+          else onScreen.delete(entry.target.id)
+        }
+        // Only ever move the marker to a heading that is actually in the band:
+        // clearing it when none is blanks the rail at the top of the page.
+        const first = headings.find((h) => onScreen.has(h.id))
+        if (first) setActive(first.id)
+      },
+      { rootMargin: SPY_MARGIN, threshold: 0 },
+    )
+    for (const heading of headings) spy.observe(heading)
+    setActive(headings[0].id)
+  }
+
+  function armJumps() {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    for (const link of document.querySelectorAll<HTMLAnchorElement>(
+      '[data-legal-toc]',
+    )) {
+      if (link.dataset.bound) continue
+      link.dataset.bound = '1'
+      link.addEventListener('click', (event) => {
+        const id = link.dataset.legalToc ?? ''
+        const target = document.getElementById(id)
+        if (!target) return
+        event.preventDefault()
+        window.scrollTo({
+          top: target.getBoundingClientRect().top + window.scrollY - JUMP_OFFSET,
+          behavior: reduced ? 'auto' : 'smooth',
+        })
+        setActive(id)
+        history.replaceState(null, '', `#${id}`)
+      })
+    }
+  }
+
+  function arm() {
+    armAnchors()
+    armJumps()
+    armSpy()
+  }
+
+  arm()
+  document.addEventListener('astro:page-load', arm)
+</script>

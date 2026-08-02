@@ -1,0 +1,308 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Closing CTA — back onto the marble, with the hand resting on the mouse. The
+// lead button carries the visitor's own OS (swapped by the inline script in
+// pages/index.astro); the other two builds stay one click away.
+import { Image } from 'astro:assets'
+import { SITE } from '@/lib/site'
+import marbleHand from '@/assets/marble-hand.png'
+import appleIcon from '@/components/marketing/os/apple.svg?raw'
+import windowsIcon from '@/components/marketing/os/windows.svg?raw'
+import linuxIcon from '@/components/marketing/os/linux.svg?raw'
+
+const releases = `${SITE.repo}/releases/latest`
+---
+
+<section id="download" class="cta pl-marble">
+  <div class="cta-hand">
+    <Image
+      src={marbleHand}
+      alt="A marble hand resting on a black marble mouse, prism light glowing beneath it"
+      widths={[660, 1320]}
+      sizes="(max-width: 1320px) 50vw, 660px"
+      format="webp"
+      quality={82}
+      loading="lazy"
+    />
+  </div>
+
+  <div class="cta-inner">
+    <div class="cta-col">
+      <p class="pl-eyebrow cta-eyebrow" data-reveal>Get Pairlens</p>
+
+      <h2 class="cta-title" data-reveal data-reveal-delay="70">
+        Free forever.<br />Works on your device.
+      </h2>
+
+      <p class="cta-lede" data-reveal data-reveal-delay="140">
+        Download the desktop app, or clone the repository and build it
+        yourself. There is nothing to sign up for either way.
+      </p>
+
+      <div class="cta-row" data-reveal data-reveal-delay="200">
+        <a href={releases} class="cta-primary" data-os-download>
+          <span class="os-face" data-os-face="mac">
+            <span class="os-glyph" set:html={appleIcon} />Download for macOS
+          </span>
+          <span class="os-face" data-os-face="win" hidden>
+            <span class="os-glyph" set:html={windowsIcon} />Download for Windows
+          </span>
+          <span class="os-face" data-os-face="linux" hidden>
+            <span class="os-glyph" set:html={linuxIcon} />Download for Linux
+          </span>
+          <span class="os-face" data-os-face="mobile" hidden>
+            Get Pairlens for desktop
+          </span>
+        </a>
+
+        <a
+          href={SITE.repo}
+          target="_blank"
+          rel="noopener"
+          class="cta-secondary"
+        >
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+            ></path>
+          </svg>
+          Read the source code
+        </a>
+      </div>
+
+      <div class="cta-alt" data-reveal data-reveal-delay="260">
+        <span class="cta-alt-label">Also available for</span>
+        <a href="/install" class="cta-chip" data-os-alt="mac" hidden>
+          <span class="os-glyph" set:html={appleIcon} />macOS
+        </a>
+        <a href="/install" class="cta-chip" data-os-alt="win">
+          <span class="os-glyph" set:html={windowsIcon} />Windows
+        </a>
+        <a href="/install" class="cta-chip" data-os-alt="linux">
+          <span class="os-glyph" set:html={linuxIcon} />Linux
+        </a>
+      </div>
+
+      <div class="cta-badges">
+        <span>FSL-1.1-Apache-2.0</span>
+        <span>No account required</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    /* Ground and texture come from .pl-marble. */
+    position: relative;
+    overflow: hidden;
+    color: var(--ml-fg);
+    padding: 108px 32px 112px;
+    scroll-margin-top: 5rem;
+  }
+  .cta-hand {
+    pointer-events: none;
+    position: absolute;
+    right: -48px;
+    bottom: 8px;
+    width: min(660px, 50vw);
+  }
+  .cta-hand :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(-14px 26px 44px rgba(60, 50, 30, 0.24));
+  }
+  .cta-inner {
+    position: relative;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  .cta-col {
+    position: relative;
+    max-width: 660px;
+  }
+  .cta-eyebrow {
+    margin: 0;
+    color: color-mix(in oklch, var(--ml-fg) 62%, transparent);
+  }
+  .cta-title {
+    margin: 26px 0 0;
+    font-family: var(--font-serif);
+    font-size: clamp(2.6rem, 4.6vw, 3.6rem);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--ml-fg);
+  }
+  .cta-lede {
+    margin: 24px 0 0;
+    max-width: 46ch;
+    font-size: 17px;
+    line-height: 1.68;
+    color: var(--ml-muted);
+  }
+
+  .cta-row {
+    margin-top: 38px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .cta-primary {
+    display: inline-flex;
+    height: 56px;
+    align-items: center;
+    gap: 11px;
+    border-radius: 16px;
+    background: var(--ml-fg);
+    padding: 0 26px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ml-bg);
+    transition: transform 0.2s var(--ease-out);
+  }
+  .cta-primary:hover {
+    color: var(--ml-bg);
+    transform: scale(1.03);
+  }
+  .cta-secondary {
+    display: inline-flex;
+    white-space: nowrap;
+    height: 56px;
+    align-items: center;
+    gap: 11px;
+    border-radius: 16px;
+    border: 1px solid var(--ml-border);
+    background: var(--ml-card);
+    padding: 0 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ml-fg);
+    transition:
+      transform 0.2s var(--ease-out),
+      border-color 0.2s ease;
+  }
+  .cta-secondary:hover {
+    color: var(--ml-fg);
+    transform: scale(1.03);
+    border-color: color-mix(in oklch, var(--ml-fg) 28%, var(--ml-border));
+  }
+  .cta-secondary svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .os-face {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .os-face[hidden] {
+    display: none;
+  }
+  /* `set:html` content sits outside the scope attribute — reach it globally. */
+  .os-glyph :global(svg) {
+    display: block;
+    width: 19px;
+    height: 19px;
+  }
+  .cta-chip .os-glyph :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+
+  .cta-alt {
+    margin-top: 26px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .cta-alt-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 50%, transparent);
+  }
+  .cta-chip {
+    display: inline-flex;
+    height: 44px;
+    align-items: center;
+    gap: 9px;
+    border-radius: 12px;
+    border: 1px solid var(--ml-border);
+    background: var(--ml-card);
+    padding: 0 16px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ml-fg);
+    transition:
+      transform 0.2s var(--ease-out),
+      border-color 0.2s ease;
+  }
+  .cta-chip:hover {
+    color: var(--ml-fg);
+    transform: translateY(-2px);
+    border-color: color-mix(in oklch, var(--ml-fg) 28%, var(--ml-border));
+  }
+  .cta-chip[hidden] {
+    display: none;
+  }
+
+  .cta-badges {
+    margin-top: 42px;
+    padding-top: 22px;
+    border-top: 1px solid var(--ml-border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 55%, transparent);
+  }
+
+  @media (max-width: 860px) {
+    .cta-title {
+      font-size: 34px;
+    }
+  }
+  @media (max-width: 720px) {
+    .cta {
+      padding: 88px 20px;
+    }
+    /* The hand needs room the small layout doesn't have; the copy wins. */
+    .cta-hand {
+      display: none;
+    }
+  }
+  @media (max-width: 620px) {
+    .cta-row {
+      flex-wrap: wrap;
+    }
+  }
+  @media (max-width: 480px) {
+    .cta-title {
+      font-size: 30px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-primary,
+    .cta-secondary,
+    .cta-chip {
+      transition: none;
+    }
+    .cta-primary:hover,
+    .cta-secondary:hover,
+    .cta-chip:hover {
+      transform: none;
+    }
+  }
+</style>

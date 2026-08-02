@@ -1,0 +1,70 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Pairlens",
+  "version": "0.1.0",
+  "identifier": "finance.pairlens.desktop",
+  "build": {
+    "beforeDevCommand": "bun scripts/ensure-terminal.ts",
+    "beforeBuildCommand": "bun run --cwd ../../apps/terminal build && bun scripts/prepare-dist.ts",
+    "devUrl": "http://localhost:3000",
+    "frontendDist": "../../terminal/dist/client"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "label": "splashscreen",
+        "url": "/splashscreen.html",
+        "width": 480,
+        "height": 320,
+        "resizable": false,
+        "decorations": false,
+        "center": true,
+        "alwaysOnTop": true,
+        "visible": false,
+        "backgroundColor": [10, 8, 6, 255]
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "createUpdaterArtifacts": true,
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "category": "Finance",
+    "shortDescription": "AI-native crypto spot trading terminal",
+    "longDescription": "Pairlens is a desktop trading terminal with deterministic strategy signals, an AI co-pilot for contextual analysis, and user-configurable risk guardrails. Market data streams directly from exchanges via market connector plugins.",
+    "copyright": "Copyright (c) 2026 Juan Ignacio Molina Estrada. Functional Source License 1.1 (FSL-1.1-Apache-2.0).",
+    "macOS": {
+      "minimumSystemVersion": "11.0"
+    },
+    "windows": {
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      }
+    }
+  },
+  "plugins": {
+    "shell": {
+      "open": true
+    },
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IERGODVGNTVDRjJBRjJEQTMKUldTakxhL3lYUFdGM3lWbkcxQ0xlTm83cCt3eEllMGdiQkg5N1pIWndGVG85YW5qcGZlQmZkd0oK",
+      "endpoints": [
+        "https://github.com/Pairlens/trading-terminal/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  }
+}

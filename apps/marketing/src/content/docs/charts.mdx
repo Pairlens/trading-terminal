@@ -1,0 +1,175 @@
+---
+title: Fast Financial Charts
+description: Use the WebGL2 charting engine that powers Pairlens in your own app. Free, MIT-licensed, with 90 indicators, drawings, multi-pane layouts, and an MCP tool surface.
+group: builders
+order: 5
+eyebrow: For builders
+updated: JUL 2026
+readTime: 3 min read
+---
+
+import { CodeTabs } from '@/components/docs/mdx/CodeTabs.tsx'
+import Callout from '@/components/docs/mdx/Callout.astro'
+import NextSteps from '@/components/docs/mdx/NextSteps.astro'
+
+The chart you see in the terminal is not a licensed SDK; it's our own WebGL2
+engine, [Fast Financial Charts](https://github.com/Pairlens/fast-financial-charts),
+and it's a standalone open-source library you can use in any app. No license
+tiers, no watermark: MIT, free forever.
+
+It is **headless by design**: the engine owns the canvases and the render hot
+path; your app owns every pixel of chrome (toolbars, HUDs, menus), so it drops
+into any design system. The [/charts page](/charts) runs a live demo rendered
+by the library itself.
+
+## Install
+
+<CodeTabs
+  client:visible
+  tabs={[
+    { label: 'bun', code: '$ bun add fast-financial-charts' },
+    { label: 'pnpm', code: '$ pnpm add fast-financial-charts' },
+    { label: 'npm', code: '$ npm i fast-financial-charts' },
+  ]}
+/>
+
+Published to NPM, semver-versioned, MIT.
+
+<Callout type="note">
+  The package ships TypeScript source: entry points resolve to `.ts`/`.tsx`
+  files. Use a bundler that understands TypeScript (Vite, esbuild, Bun, Rspack,
+  webpack + TS loader). With Vite, exclude `fast-financial-charts` from
+  `optimizeDeps` so the indicator Web Worker (`new Worker(new URL(...))`)
+  resolves correctly.
+</Callout>
+
+## Quick start (React)
+
+React bindings live under the `fast-financial-charts/react` entry point. The core
+engine has no React dependency at all; React 19+ is only needed for the
+`/react` entries.
+
+```tsx
+import { useRef } from 'react'
+import { FastFinancialChart } from 'fast-financial-charts/react'
+import type { FastFinancialChartRef } from 'fast-financial-charts/types'
+
+export function PairChart({ bars }) {
+  const chartRef = useRef<FastFinancialChartRef>(null)
+
+  return (
+    <FastFinancialChart
+      ref={chartRef}
+      style={{ height: '100%' }} // the chart fills its container, size it
+      series={[{ id: 'BTC-USD', label: 'BTC/USD', bars, pricePrecision: 2 }]}
+      timeframe="1m"
+      indicators={[
+        {
+          type: 'EMA',
+          seriesId: 'BTC-USD',
+          params: { period: 21 },
+          pane: 'overlay',
+        },
+        {
+          type: 'RSI',
+          seriesId: 'BTC-USD',
+          params: { period: 14 },
+          pane: 'separate',
+        },
+      ]}
+    />
+  )
+}
+```
+
+## Live ticks: the imperative hot path
+
+For high-frequency feeds, push updates through the ref; ticks mutate the last
+bar in place (or roll into a new one) without a React re-render:
+
+```tsx
+chartRef.current?.applyTick({
+  seriesId: 'BTC-USD',
+  ts: Date.now(),
+  price: 64020.5,
+  volume: 0.12,
+})
+
+chartRef.current?.applyTicks(batchOfTicks) // burst ingestion for batched feeds
+```
+
+## What's in the box
+
+- **Sixteen chart types**, all GPU-accelerated: candles, Heikin-Ashi, hollow
+  candles, OHLC bars, high-low, line, step line, area, HLC area, baseline,
+  histogram, column, Renko, line break, Kagi, point and figure.
+- **90 built-in indicators** computed off the main thread in a Web Worker:
+  moving averages, oscillators, bands, trend, volume, volatility, statistical.
+- **Drawings** with magnet snapping, measurement labels, and undo/redo; custom
+  shapes via `DrawingShapeDefinition`.
+- **Multi-pane layouts** with resizable separators and per-pane price scales.
+- **Four price-scale modes** (linear, log, percentage, indexed-to-100),
+  configurable time scale, crosshair modes, watermarks, price lines, markers,
+  and localization.
+- **An MCP-compatible tool surface**: 52 deterministic tools
+  (`addIndicator`, `setViewport`, `getVisibleData`, `screenshot`, …) so an AI
+  agent or your automation can drive the chart the way a user does. This is
+  the same surface the Pairlens co-pilot uses. See
+  [the MCP tool surface](/docs/chart-mcp).
+
+## Entry points
+
+Targeted imports keep bundles small (`sideEffects: false`):
+
+| Entry point                        | What it exports                                   |
+| ---------------------------------- | ------------------------------------------------- |
+| `fast-financial-charts`            | Core engine (no React), theme tokens              |
+| `fast-financial-charts/react`      | `<FastFinancialChart />`, `<DepthChart />`, hooks |
+| `fast-financial-charts/types`      | All public types                                  |
+| `fast-financial-charts/mcp`        | MCP schema + executor                             |
+| `fast-financial-charts/theme`      | Theme presets and resolution                      |
+| `fast-financial-charts/indicators` | Indicator registry                                |
+| `fast-financial-charts/drawings`   | Drawing tools                                     |
+
+## Theming
+
+Pass a partial theme and override only what you need, or start from a preset:
+
+```tsx
+import { getThemePreset } from 'fast-financial-charts/theme'
+;<FastFinancialChart theme={getThemePreset('dark')} />
+```
+
+Runtime theme updates only trigger the relevant overlay redraw paths.
+
+<Callout type="note">
+  Inside the terminal, `fast-financial-charts` and `fast-financial-charts/react`
+  are also plugin runtime modules; plugins mark them as build externals and the
+  host provides its own instances, so the WebGL engine is never duplicated into
+  a plugin bundle. See the [Plugin SDK](/docs/plugin-sdk).
+</Callout>
+
+<NextSteps
+  items={[
+    {
+      tag: 'AI',
+      title: 'Drive the chart with the MCP tool surface',
+      href: '/docs/chart-mcp',
+    },
+    {
+      tag: 'GitHub',
+      title: 'Full API docs in the README',
+      href: 'https://github.com/Pairlens/fast-financial-charts#readme',
+    },
+    {
+      tag: 'Live demo',
+      title: 'See the engine running on /charts',
+      href: '/charts',
+    },
+    {
+      tag: 'Builders',
+      title: 'Extend the terminal with the Plugin SDK',
+      href: '/docs/plugin-sdk',
+    },
+  ]}
+/>

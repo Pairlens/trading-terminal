@@ -1,0 +1,119 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { FOOTER_COLUMNS, FOOTER_LEGAL_LINKS, SITE } from '@/lib/site'
+import BrandLogo from '@/components/BrandLogo.astro'
+import LegalDisclaimer from '@/components/LegalDisclaimer.astro'
+
+---
+
+{
+  (
+    <footer class="border-t border-border bg-background">
+      <div class="pl-foot-shell">
+        <div class="pl-foot-cols">
+          <div>
+            <BrandLogo size={26} textSize={19} href={null} />
+            <p class="mt-4 max-w-[34ch] text-[14px] leading-[1.7] text-muted-foreground">
+              The source-available, AI-native trading terminal that keeps its
+              hands off your money.
+            </p>
+            <p class="pl-eyebrow mt-6 text-muted-foreground/70">
+              FSL License · © 2026
+            </p>
+          </div>
+          {FOOTER_COLUMNS.map((col) => (
+            <div>
+              <p class="pl-eyebrow text-muted-foreground/70">{col.title}</p>
+              <ul class="mt-4 flex flex-col gap-2.5">
+                {col.links.map((link) => (
+                  <li>
+                    <a
+                      href={link.href}
+                      {...link.href.startsWith('http')
+                        ? { target: '_blank', rel: 'noopener' }
+                        : {}}
+                      class="text-[14px] text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div id="legal" class="mt-14 border-t border-border pt-8">
+          <LegalDisclaimer />
+          <nav
+            aria-label="Legal"
+            class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px]"
+          >
+            {FOOTER_LEGAL_LINKS.map((link) => (
+              <a
+                href={link.href}
+                class="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+          <div class="pl-foot-bottom">
+            <p class="pl-eyebrow text-muted-foreground/60">
+              {SITE.name} · Built in the open
+            </p>
+            <p class="pl-eyebrow text-muted-foreground/60">
+              Your keys · Your machine · Your rules
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+<style>
+  /* The footer rides the same 1264/32 shell as every page section, so its
+     vertical edges line up with the content column above it. */
+  .pl-foot-shell {
+    margin: 0 auto;
+    max-width: 1264px;
+    padding: 56px 32px;
+  }
+
+  .pl-foot-cols {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+
+  .pl-foot-bottom {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .pl-foot-cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 720px) {
+    .pl-foot-shell {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .pl-foot-cols {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+    .pl-foot-bottom {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  }
+</style>

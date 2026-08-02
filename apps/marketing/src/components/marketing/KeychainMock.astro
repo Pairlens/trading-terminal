@@ -1,0 +1,72 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import AppWindow from '@/components/marketing/AppWindow.astro'
+
+interface Props {
+  class?: string
+}
+const { class: className = '' } = Astro.props
+
+const menu = ['Account', 'Credentials', 'Risk limits', 'Appearance']
+const rows = [
+  { name: 'OKX', key: 'sk-••••••3f' },
+  { name: 'Binance', key: 'sk-••••••a1' },
+  { name: 'Wallet · EVM', key: '0x••••••7c' },
+]
+---
+
+<AppWindow title="Settings · Credentials" class={className}>
+  <div class="grid grid-cols-[110px_1fr] text-[11px]">
+    <div class="border-r border-border/70 p-2">
+      {
+        menu.map((m) => (
+          <div
+            class:list={[
+              'rounded-md px-2 py-1.5',
+              m === 'Credentials'
+                ? 'bg-primary/12 font-medium text-primary'
+                : 'text-muted-foreground',
+            ]}
+          >
+            {m}
+          </div>
+        ))
+      }
+    </div>
+    <div class="p-3">
+      <div class="flex items-center justify-between">
+        <span class="font-medium text-foreground/90">Exchange credentials</span>
+        <span
+          class="rounded-md border border-primary/40 bg-primary/10 px-1.5 py-0.5 font-mono text-[9px] text-primary"
+          >+ Add</span
+        >
+      </div>
+      <div class="mt-2.5 space-y-1.5">
+        {
+          rows.map((r) => (
+            <div class="flex items-center gap-2 rounded-lg border border-border/70 bg-background/40 px-2.5 py-2">
+              <span class="font-medium text-foreground/85">{r.name}</span>
+              <span class="ml-auto font-mono text-[10px] text-muted-foreground">
+                {r.key}
+              </span>
+              <span
+                class="rounded border px-1.5 py-0.5 font-mono text-[8.5px] font-semibold tracking-[0.1em]"
+                style="color: var(--pl-green); border-color: color-mix(in oklch, var(--pl-green) 35%, transparent); background: color-mix(in oklch, var(--pl-green) 10%, transparent);"
+              >
+                KEYCHAIN
+              </span>
+            </div>
+          ))
+        }
+      </div>
+      <div
+        class="mt-2.5 flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-[10px]"
+        style="color: var(--pl-green); background: color-mix(in oklch, var(--pl-green) 8%, transparent);"
+      >
+        <span>🔒</span>
+        <span>Stored in your OS keychain · 0 bytes sent</span>
+      </div>
+    </div>
+  </div>
+</AppWindow>

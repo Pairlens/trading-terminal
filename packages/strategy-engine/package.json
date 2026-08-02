@@ -1,0 +1,31 @@
+{
+  "name": "@pairlens/strategy-engine",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pairlens/trading-terminal.git",
+    "directory": "packages/strategy-engine"
+  },
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc --project tsconfig.json --noEmit",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test": "bun test"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./indicators": "./src/indicators/index.ts",
+    "./strategies": "./src/strategies/index.ts",
+    "./regime": "./src/regime.ts",
+    "./compute": "./src/compute.ts",
+    "./types": "./src/types.ts"
+  },
+  "dependencies": {
+    "@pairlens/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

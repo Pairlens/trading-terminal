@@ -1,0 +1,276 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// "The terminal": the MacBook shot rising out of the black hero ground into
+// graphite, the download row directly under it, and the full venue marquee.
+// Parallax and the scroll-lit filter come from scripts/landing-fx.ts through
+// [data-par] / [data-alive]; the per-OS download face is swapped by the
+// inline script in pages/index.astro.
+import { Image } from 'astro:assets'
+import { SITE, VENUES } from '@/lib/site'
+import { VenueIcon } from '@/components/marketing/VenueIcon'
+import laptopShot from '@/assets/mbp-hands-soft.png'
+import appleIcon from '@/components/marketing/os/apple.svg?raw'
+import windowsIcon from '@/components/marketing/os/windows.svg?raw'
+import linuxIcon from '@/components/marketing/os/linux.svg?raw'
+
+// Double the track so the -50% translate loops seamlessly.
+const track = [...VENUES, ...VENUES]
+const releases = `${SITE.repo}/releases/latest`
+---
+
+<section class="terminal">
+  <div class="laptop" data-alive data-par="30">
+    <Image
+      src={laptopShot}
+      alt="Two hands holding a MacBook Pro running the Pairlens trading terminal: a BTC-USDT candlestick chart with EMA overlays, an order book and the AI Lens panel"
+      widths={[640, 960, 1280, 1500, 2400, 3000]}
+      sizes="(max-width: 720px) 67vw, (max-width: 1548px) 100vw, 1500px"
+      format="webp"
+      quality={86}
+      loading="lazy"
+    />
+  </div>
+
+  <div class="cta-wrap">
+    <div class="cta-row" data-reveal>
+      <a href={releases} class="cta-primary" data-specular="16" data-os-download>
+        <span class="os-face" data-os-face="mac">
+          <span class="os-glyph" set:html={appleIcon} />Download for macOS
+        </span>
+        <span class="os-face" data-os-face="win" hidden>
+          <span class="os-glyph" set:html={windowsIcon} />Download for Windows
+        </span>
+        <span class="os-face" data-os-face="linux" hidden>
+          <span class="os-glyph" set:html={linuxIcon} />Download for Linux
+        </span>
+        <span class="os-face" data-os-face="mobile" hidden>
+          Get Pairlens for desktop
+        </span>
+        <span class="free-tag">Yes, it's free</span>
+      </a>
+
+      <a href={SITE.repo} target="_blank" rel="noopener" class="cta-secondary">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+          ></path>
+        </svg>
+        Read the source
+      </a>
+    </div>
+  </div>
+
+  <div class="marquee-block">
+    <p class="marquee-label" data-reveal>
+      One terminal, every market: direct connections to 15+ exchanges, brokers
+      &amp; DEXs
+    </p>
+    <div class="pl-fade-x relative overflow-hidden">
+      <div class="pl-marquee gap-10 pr-10">
+        {
+          track.map((v, i) => (
+            <div
+              class="flex shrink-0 items-center gap-3"
+              aria-hidden={i >= VENUES.length ? 'true' : undefined}
+            >
+              <VenueIcon
+                id={v.id}
+                name={v.name}
+                mono={v.mono}
+                hue={v.hue}
+                size={36}
+              />
+              <span class="venue-name">{v.name}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .terminal {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #000 0%, #000 34%, var(--background) 64%);
+    padding: 0 0 68px;
+    border-bottom: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
+  }
+
+  .laptop {
+    margin: 0 auto;
+    max-width: 1500px;
+    padding: 0 24px;
+    pointer-events: none;
+    translate: 0 var(--par-y, 0px);
+  }
+  .laptop :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: brightness(calc(0.6 + 0.4 * var(--alive, 1)))
+      saturate(calc(0.5 + 0.5 * var(--alive, 1)));
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      #000 0,
+      #000 74%,
+      rgb(0 0 0 / 0) 92%
+    );
+    mask-image: linear-gradient(180deg, #000 0, #000 74%, rgb(0 0 0 / 0) 92%);
+  }
+
+  .cta-wrap {
+    position: relative;
+    margin: -8px auto 0;
+    max-width: 1200px;
+    padding: 0 32px;
+  }
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .cta-primary {
+    /* Dark glass, not the filled iris: the specular rim
+       (scripts/specular-fx.ts) IS this button's light, and a white streak
+       needs a dark ground to read. The iris identity moves to the free tag.
+       The 1px border is the resting edge for touch devices, where the
+       shader never arms. */
+    position: relative;
+    display: inline-flex;
+    white-space: nowrap;
+    height: 56px;
+    align-items: center;
+    gap: 11px;
+    border-radius: 16px;
+    border: 1px solid color-mix(in oklch, var(--border) 90%, transparent);
+    background: color-mix(in oklch, var(--card) 72%, transparent);
+    padding: 0 18px 0 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--foreground);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.05),
+      0 8px 24px rgb(0 0 0 / 0.3);
+    transition: background 0.25s var(--ease-out);
+  }
+  .cta-primary:hover {
+    color: var(--foreground);
+    background: color-mix(in oklch, var(--card) 92%, transparent);
+  }
+  .os-face {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .os-face[hidden] {
+    display: none;
+  }
+  /* `set:html` content is outside the scope attribute — reach it globally. */
+  .os-glyph :global(svg) {
+    display: block;
+    width: 18px;
+    height: 18px;
+  }
+  .free-tag {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    background: var(--primary);
+    padding: 4px 9px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--primary-foreground);
+  }
+  .cta-secondary {
+    display: inline-flex;
+    white-space: nowrap;
+    height: 56px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 16px;
+    border: 1px solid color-mix(in oklch, var(--border) 90%, transparent);
+    background: transparent;
+    padding: 0 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--foreground);
+    transition: border-color 0.2s var(--ease-out);
+  }
+  .cta-secondary:hover {
+    color: var(--foreground);
+    border-color: color-mix(in oklch, var(--foreground) 34%, transparent);
+  }
+  .cta-secondary svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .marquee-block {
+    margin-top: 88px;
+  }
+  .marquee-label {
+    margin: 0 auto 30px;
+    max-width: 900px;
+    padding: 0 32px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    line-height: 1.8;
+    color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+  }
+  .venue-name {
+    font-size: 17.5px;
+    font-weight: 600;
+    color: color-mix(in oklch, var(--foreground) 80%, transparent);
+  }
+
+  /* Touch devices never arm the specular shader, and a dark glass button
+     with nothing lighting it reads as secondary — give the primary its iris
+     fill back there, with the tag inverting to keep its contrast. */
+  @media (pointer: coarse) {
+    .cta-primary {
+      border-color: transparent;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      box-shadow: 0 0 22px -8px
+        color-mix(in oklch, var(--primary) 70%, transparent);
+    }
+    .free-tag {
+      background: var(--primary-foreground);
+      color: var(--primary);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .cta-wrap {
+      padding: 0 20px;
+    }
+    .marquee-block {
+      margin-top: 64px;
+    }
+    .marquee-label {
+      padding: 0 20px;
+    }
+    /* The scroll-lit filter is flattened on touch devices by landing-fx; drop
+       it at the CSS level too so the phone GPU never pays for a masked
+       full-width brightness pass that changes nothing. */
+    .laptop :global(img) {
+      filter: none;
+    }
+  }
+</style>

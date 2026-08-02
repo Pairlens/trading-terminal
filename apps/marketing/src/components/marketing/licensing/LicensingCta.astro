@@ -1,0 +1,314 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Marble closing CTA. The download button leads with the visitor's own
+// platform; the other two stay one click away. Server-rendered as macOS, so
+// the button is never empty without JS.
+import { Image } from 'astro:assets'
+import marbleHand from '@/assets/marble-hand.png'
+import appleIcon from '@/components/marketing/os/apple.svg?raw'
+import windowsIcon from '@/components/marketing/os/windows.svg?raw'
+import linuxIcon from '@/components/marketing/os/linux.svg?raw'
+import { SITE } from '@/lib/site'
+
+const OS = [
+  { key: 'mac', label: 'macOS', icon: appleIcon },
+  { key: 'win', label: 'Windows', icon: windowsIcon },
+  { key: 'linux', label: 'Linux', icon: linuxIcon },
+] as const
+---
+
+<section data-licensing-cta class="pl-marble lic-cta">
+  <div aria-hidden="true" class="lic-cta-hand">
+    <Image
+      src={marbleHand}
+      alt=""
+      widths={[660, 1320]}
+      sizes="(max-width: 1320px) 50vw, 660px"
+      quality={90}
+      loading="lazy"
+    />
+  </div>
+  <div class="relative mx-auto max-w-[1200px]">
+    <h2 data-reveal class="lic-cta-title">
+      The terminal you love, yours for good.
+    </h2>
+    <p data-reveal data-reveal-delay="70" class="lic-cta-lede">
+      Download it free, read every line of the source, and know the licence
+      guarantees it stays that way.
+    </p>
+
+    <div data-reveal data-reveal-delay="140" class="lic-cta-row">
+      <a href="/install" class="lic-cta-primary">
+        {
+          OS.map((os) => (
+            <span data-os={os.key} class="lic-cta-oslabel">
+              <span class="lic-cta-glyph" set:html={os.icon} />
+              Download for {os.label}
+            </span>
+          ))
+        }
+        <span data-os="mobile" class="lic-cta-oslabel">
+          Get Pairlens for desktop
+        </span>
+      </a>
+      <a
+        href={SITE.repo}
+        target="_blank"
+        rel="noopener"
+        class="lic-cta-secondary"
+      >
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+          ></path>
+        </svg>
+        Browse the source
+      </a>
+    </div>
+
+    <div data-reveal data-reveal-delay="200" class="lic-cta-alt">
+      <span class="lic-cta-alt-label">Also available for</span>
+      {
+        OS.map((os) => (
+          <a href="/install" data-osalt={os.key} class="lic-cta-chip">
+            <span class="lic-cta-glyph lic-cta-glyph--sm" set:html={os.icon} />
+            {os.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  // Lead with the visitor's own platform; the other two stay one click away.
+  // Scoped to this section: the listener outlives view-transition navigations,
+  // and other pages carry their own `data-os` markup.
+  function applyLicensingOs() {
+    const root = document.querySelector<HTMLElement>('[data-licensing-cta]')
+    if (!root) return
+
+    const ua = navigator.userAgent || ''
+    const platform =
+      (navigator as Navigator & { userAgentData?: { platform?: string } })
+        .userAgentData?.platform ||
+      navigator.platform ||
+      ''
+
+    let os = 'mac'
+    // Phones and tablets can't install the terminal; the CTA already points
+    // at /install, whose carry-on card explains the desktop-only story.
+    if (
+      (navigator as Navigator & { userAgentData?: { mobile?: boolean } })
+        .userAgentData?.mobile ||
+      /android|iphone|ipod|ipad/i.test(ua) ||
+      (/mac/i.test(platform) && navigator.maxTouchPoints > 1)
+    )
+      os = 'mobile'
+    else if (/win/i.test(platform) || /windows/i.test(ua)) os = 'win'
+    else if (/linux|x11|cros/i.test(platform) || /linux|x11|cros/i.test(ua))
+      os = 'linux'
+
+    for (const el of root.querySelectorAll<HTMLElement>('[data-os]')) {
+      el.style.display = el.dataset.os === os ? 'inline-flex' : 'none'
+    }
+    for (const el of root.querySelectorAll<HTMLElement>('[data-osalt]')) {
+      // On mobile every alt chip is a desktop build: hide the whole row.
+      el.style.display =
+        os === 'mobile' || el.dataset.osalt === os ? 'none' : 'inline-flex'
+    }
+  }
+
+  applyLicensingOs()
+  document.addEventListener('astro:page-load', applyLicensingOs)
+</script>
+
+<style>
+  /* The marble hand overhangs the right edge on purpose: clip that axis only.
+     `overflow: hidden` would also clip the block axis and break sticky. */
+  .lic-cta {
+    position: relative;
+    overflow-x: clip;
+    padding: 96px 32px 104px;
+  }
+  .lic-cta-hand {
+    pointer-events: none;
+    position: absolute;
+    right: -48px;
+    bottom: 0;
+    width: min(660px, 50vw);
+    opacity: 0.92;
+  }
+  .lic-cta-hand :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .lic-cta-title {
+    margin: 0;
+    max-width: 18ch;
+    font-family: var(--font-serif);
+    font-size: 54px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.036em;
+    color: var(--ml-fg);
+  }
+  .lic-cta-lede {
+    margin: 20px 0 0;
+    max-width: 52ch;
+    font-size: 17px;
+    line-height: 1.68;
+    color: var(--ml-muted);
+  }
+
+  .lic-cta-row {
+    margin-top: 34px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .lic-cta-primary {
+    display: inline-flex;
+    white-space: nowrap;
+    height: 54px;
+    align-items: center;
+    border-radius: 16px;
+    background: var(--ml-fg);
+    padding: 0 26px;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--ml-bg);
+    transition: transform 0.2s var(--ease-out);
+  }
+  .lic-cta-primary:hover {
+    color: var(--ml-bg);
+    transform: translateY(-2px);
+  }
+  .lic-cta-oslabel {
+    display: none;
+    align-items: center;
+    gap: 11px;
+  }
+  .lic-cta-oslabel:first-child {
+    display: inline-flex;
+  }
+  .lic-cta-glyph :global(svg) {
+    display: block;
+    width: 19px;
+    height: 19px;
+  }
+  .lic-cta-glyph--sm :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+  .lic-cta-secondary {
+    display: inline-flex;
+    height: 54px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 16px;
+    border: 1px solid var(--ml-border);
+    background: color-mix(in oklch, var(--ml-card) 70%, transparent);
+    padding: 0 26px;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--ml-fg);
+    transition:
+      transform 0.2s var(--ease-out),
+      border-color 0.2s ease;
+  }
+  .lic-cta-secondary:hover {
+    color: var(--ml-fg);
+    transform: translateY(-2px);
+    border-color: color-mix(in oklch, var(--ml-fg) 28%, var(--ml-border));
+  }
+  .lic-cta-secondary svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+  }
+
+  .lic-cta-alt {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .lic-cta-alt-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 50%, transparent);
+  }
+  .lic-cta-chip {
+    display: inline-flex;
+    height: 44px;
+    align-items: center;
+    gap: 9px;
+    border-radius: 12px;
+    border: 1px solid var(--ml-border);
+    background: var(--ml-card);
+    padding: 0 16px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ml-fg);
+    transition:
+      transform 0.2s var(--ease-out),
+      border-color 0.2s ease;
+  }
+  .lic-cta-chip:first-of-type {
+    display: none;
+  }
+  .lic-cta-chip:hover {
+    color: var(--ml-fg);
+    transform: translateY(-2px);
+    border-color: color-mix(in oklch, var(--ml-fg) 28%, var(--ml-border));
+  }
+
+  @media (max-width: 1000px) {
+    .lic-cta-hand {
+      width: 440px;
+    }
+  }
+  @media (max-width: 860px) {
+    .lic-cta-hand {
+      display: none;
+    }
+    .lic-cta-title {
+      font-size: 36px;
+    }
+  }
+  @media (max-width: 720px) {
+    .lic-cta {
+      padding: 80px 20px 88px;
+    }
+  }
+  @media (max-width: 620px) {
+    .lic-cta-row {
+      flex-wrap: wrap;
+    }
+  }
+  @media (max-width: 480px) {
+    .lic-cta-title {
+      font-size: 30px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lic-cta-primary,
+    .lic-cta-secondary,
+    .lic-cta-chip {
+      transition: none;
+    }
+    .lic-cta-primary:hover,
+    .lic-cta-secondary:hover,
+    .lic-cta-chip:hover {
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,557 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import type { MarkdownHeading } from 'astro'
+import type { NavGroup } from '@/lib/docs'
+import { groupLabel, parentTitle } from '@/lib/docs'
+import SiteLayout from '@/layouts/SiteLayout.astro'
+import SiteFooter from '@/components/SiteFooter.astro'
+import DocsHeader from '@/components/docs/DocsHeader.astro'
+import DocsSidebar from '@/components/docs/DocsSidebar.astro'
+import DocsTOC from '@/components/docs/DocsTOC.astro'
+import { DocsCommand } from '@/components/docs/DocsCommand'
+
+interface PageMeta {
+  id: string
+  title: string
+  href: string
+  group: string
+}
+
+interface Props {
+  title: string
+  description: string
+  eyebrow?: string
+  group?: string
+  updated?: string
+  readTime?: string
+  /** Absolute GitHub URL of the source file behind this page. */
+  editUrl: string
+  nav: NavGroup[]
+  headings: MarkdownHeading[]
+  pages: PageMeta[]
+  currentId: string
+}
+
+const {
+  title,
+  description,
+  eyebrow,
+  group,
+  updated,
+  readTime,
+  editUrl,
+  nav,
+  headings,
+  pages,
+  currentId,
+} = Astro.props
+
+const eyebrowText = eyebrow ?? groupLabel(group)
+const idx = pages.findIndex((p) => p.id === currentId)
+const prev = idx > 0 ? pages[idx - 1] : null
+const next = idx >= 0 && idx < pages.length - 1 ? pages[idx + 1] : null
+const parent = parentTitle(nav, currentId)
+
+const shellRule = 'color-mix(in oklch, var(--border) 55%, transparent)'
+const cellRule = 'color-mix(in oklch, var(--border) 70%, transparent)'
+const softRule = 'color-mix(in oklch, var(--border) 62%, transparent)'
+---
+
+<SiteLayout title={`${title} · Pairlens Docs`} description={description}>
+  <DocsHeader />
+
+  <div class="mx-auto mt-[60px] w-full max-w-[1264px] px-8 max-[720px]:px-5">
+    <div class="flex border-x" style={`border-color: ${shellRule}`}>
+      <div aria-hidden="true" data-docs-scrim class="docs-scrim"></div>
+      <aside
+        transition:persist="docs-sidebar"
+        data-docs-drawer
+        class="docs-side sticky top-[60px] h-[calc(100vh-60px)] w-[264px] flex-none overflow-y-auto border-r px-[18px] pt-[26px] pb-12"
+        style={`background: var(--pl-band); border-color: ${cellRule}`}
+      >
+        <DocsSidebar nav={nav} currentId={currentId} />
+      </aside>
+
+      <div
+        class="flex min-w-0 flex-1 gap-14 px-7 pt-[52px] pb-[88px] lg:pr-0 lg:pl-14"
+      >
+        <main class="min-w-0 flex-1">
+          <nav
+            aria-label="Breadcrumb"
+            data-reveal
+            class="font-mono text-[11px] tracking-[0.04em]"
+            style="color: color-mix(in oklch, var(--muted-foreground) 58%, transparent);"
+          >
+            <a href="/docs/quickstart" class="text-inherit hover:text-foreground"
+              >Docs</a
+            >
+            <span aria-hidden="true" class="px-1.5">/</span>
+            <span>{groupLabel(group)}</span>
+            {
+              parent && (
+                <>
+                  <span aria-hidden="true" class="px-1.5">
+                    /
+                  </span>
+                  <span>{parent}</span>
+                </>
+              )
+            }
+            <span aria-hidden="true" class="px-1.5">/</span>
+            <span style="color: color-mix(in oklch, var(--foreground) 74%, transparent);"
+              >{title}</span
+            >
+          </nav>
+
+          <p
+            data-reveal
+            data-reveal-delay="60"
+            class="mt-4 inline-flex items-center gap-2 rounded-full border py-1.5 pr-[13px] pl-[11px] font-mono text-[11px] font-bold tracking-[0.16em] uppercase text-primary"
+            style="border-color: color-mix(in oklch, var(--primary) 40%, transparent); background: color-mix(in oklch, var(--primary) 12%, transparent);"
+          >
+            <span
+              aria-hidden="true"
+              class="block size-1.5 rounded-full bg-current"></span>
+            {eyebrowText}
+          </p>
+
+          <h1
+            data-reveal
+            data-reveal-delay="110"
+            class="mt-[18px] font-serif text-[46px] leading-[1.06] font-semibold tracking-[-0.03em] text-balance text-foreground max-[860px]:text-[33px] max-[480px]:text-[30px]"
+          >
+            {title}
+          </h1>
+
+          <p
+            data-reveal
+            data-reveal-delay="160"
+            class="mt-5 text-[18.5px] leading-[1.62] text-pretty text-muted-foreground"
+          >
+            {description}
+          </p>
+
+          <div
+            data-reveal
+            data-reveal-delay="210"
+            class="mt-[22px] flex flex-wrap items-center gap-x-3.5 gap-y-2 border-t pt-[18px] font-mono text-[10.5px] font-semibold tracking-[0.14em] uppercase"
+            style={`border-color: ${softRule}; color: color-mix(in oklch, var(--muted-foreground) 58%, transparent);`}
+          >
+            {updated && <span>Updated {updated}</span>}
+            {
+              readTime && (
+                <>
+                  <span aria-hidden="true">·</span>
+                  <span>{readTime}</span>
+                </>
+              )
+            }
+            <span aria-hidden="true">·</span>
+            <a
+              href={editUrl}
+              target="_blank"
+              rel="noopener"
+              class="tracking-[0.14em] text-primary">Edit on GitHub ↗</a
+            >
+          </div>
+
+          <article id="pl-article" class="docs-prose docs-article mt-10">
+            <slot />
+          </article>
+
+          <nav
+            aria-label="Pagination"
+            class="mt-14 grid grid-cols-2 border-t max-[720px]:grid-cols-1"
+            style={`border-color: ${softRule}`}
+          >
+            {
+              prev ? (
+                <a
+                  href={prev.href}
+                  class="docs-pager border-r py-[22px] pr-[22px]"
+                  style={`border-color: ${softRule}`}
+                >
+                  <span
+                    class="block font-mono text-[10px] font-semibold tracking-[0.2em] uppercase"
+                    style="color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);"
+                  >
+                    ‹ Previous
+                  </span>
+                  <span class="mt-2 block font-serif text-[18px] font-semibold tracking-[-0.02em] text-foreground">
+                    {prev.title}
+                  </span>
+                </a>
+              ) : (
+                <span
+                  class="border-r max-[720px]:hidden"
+                  style={`border-color: ${softRule}`}
+                />
+              )
+            }
+            {
+              next && (
+                <a
+                  href={next.href}
+                  class="docs-pager py-[22px] pl-[22px] text-right max-[720px]:pl-0 max-[720px]:text-left"
+                >
+                  <span
+                    class="block font-mono text-[10px] font-semibold tracking-[0.2em] uppercase"
+                    style="color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);"
+                  >
+                    Next ›
+                  </span>
+                  <span class="mt-2 block font-serif text-[18px] font-semibold tracking-[-0.02em] text-foreground">
+                    {next.title}
+                  </span>
+                </a>
+              )
+            }
+          </nav>
+
+          <div
+            class="mt-8 flex flex-wrap items-center gap-2.5 border-t pt-[22px] text-[13.5px] text-muted-foreground"
+            style={`border-color: ${softRule}`}
+          >
+            <span>Was this page helpful?</span>
+            <button type="button" class="pl-vote" data-vote="yes">Yes</button>
+            <button type="button" class="pl-vote" data-vote="no">No</button>
+            <span
+              class="pl-thanks font-mono text-[11px] tracking-[0.14em] uppercase"
+              style="color: var(--pl-green);"
+              aria-live="polite">Thanks — noted</span
+            >
+          </div>
+        </main>
+
+        <aside
+          class="sticky top-[92px] hidden h-fit w-[220px] flex-none pr-[18px] xl:block"
+        >
+          <DocsTOC headings={headings} editUrl={editUrl} />
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <SiteFooter />
+
+  <DocsCommand
+    pages={pages.map(({ title, href, group }) => ({
+      title,
+      href,
+      group: groupLabel(group),
+    }))}
+    client:load
+  />
+</SiteLayout>
+
+<style>
+  /* Below lg the sidebar has no column to live in, so it becomes an off-canvas
+     drawer under the 60px header, opened from the hamburger in DocsHeader.
+     These scoped rules out-specify the aside's utility classes (the Astro
+     scope attribute adds a level), so `position: fixed` wins over `sticky`. */
+  @media (max-width: 1023.98px) {
+    .docs-side {
+      position: fixed;
+      top: 60px;
+      bottom: 0;
+      left: 0;
+      z-index: 60;
+      width: min(320px, 86vw);
+      /* iOS viewport units lie under the toolbars — anchor both edges. */
+      height: auto;
+      transform: translateX(-104%);
+      visibility: hidden;
+      box-shadow: 28px 0 60px -34px rgba(0, 0, 0, 0.6);
+      transition:
+        transform 0.32s var(--ease-out),
+        visibility 0.32s;
+    }
+    .docs-side.is-open {
+      transform: none;
+      visibility: visible;
+    }
+
+    .docs-scrim {
+      position: fixed;
+      inset: 60px 0 0;
+      z-index: 59;
+      background: rgb(0 0 0 / 0.44);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 0.28s var(--ease-out),
+        visibility 0.28s;
+    }
+    .docs-scrim.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  @media (min-width: 1024px) {
+    .docs-scrim {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .docs-side,
+    .docs-scrim {
+      transition: none;
+    }
+  }
+
+  .docs-pager {
+    transition: background 0.22s var(--ease-out);
+  }
+  .docs-pager:hover {
+    background: color-mix(in oklch, var(--foreground) 4%, transparent);
+  }
+
+  .pl-vote {
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: none;
+    padding: 5px 13px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition:
+      border-color 0.2s var(--ease-out),
+      color 0.2s var(--ease-out);
+  }
+  .pl-vote:hover {
+    border-color: color-mix(in oklch, var(--primary) 42%, var(--border));
+    color: var(--foreground);
+  }
+  .pl-vote.is-sel {
+    border-color: color-mix(in oklch, var(--primary) 45%, transparent);
+    color: var(--primary);
+  }
+
+  .pl-thanks {
+    display: none;
+  }
+  .pl-thanks.is-on {
+    display: inline;
+  }
+</style>
+
+<style is:global>
+  /* Article layer on top of `.docs-prose` (globals.css): the docs redesign's
+     reading measure, 15.5px/1.78 prose, and the hairline-ruled H2 rhythm.
+     Selectors carry both classes so they out-specify the base prose rules
+     regardless of stylesheet order. */
+  .docs-prose.docs-article {
+    font-size: 15.5px;
+    line-height: 1.78;
+    color: color-mix(in oklch, var(--foreground) 80%, var(--muted-foreground));
+  }
+  .docs-prose.docs-article > * + * {
+    margin-top: 22px;
+  }
+  .docs-prose.docs-article p {
+    color: color-mix(in oklch, var(--foreground) 80%, var(--muted-foreground));
+    text-wrap: pretty;
+  }
+  .docs-prose.docs-article strong {
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .docs-prose.docs-article h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 54px 0 16px;
+    padding-top: 30px;
+    border-top: 1px solid color-mix(in oklch, var(--border) 55%, transparent);
+    font-size: 27px;
+    letter-spacing: -0.026em;
+    scroll-margin-top: 120px;
+  }
+  .docs-prose.docs-article h3 {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    margin: 34px 0 12px;
+    font-size: 19px;
+    letter-spacing: -0.02em;
+    scroll-margin-top: 120px;
+  }
+  .docs-prose.docs-article h2 + h3 {
+    margin-top: 22px;
+  }
+
+  /* `#` deep-link, added client-side; fades in on hover, always visible to a
+     keyboard user who tabs onto it. */
+  .docs-prose.docs-article .pl-anchor {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--primary);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.2s var(--ease-out);
+  }
+  .docs-prose.docs-article h3 .pl-anchor {
+    font-size: 13px;
+  }
+  .docs-prose.docs-article h2:hover .pl-anchor,
+  .docs-prose.docs-article h3:hover .pl-anchor {
+    opacity: 0.55;
+  }
+  .docs-prose.docs-article .pl-anchor:focus-visible {
+    opacity: 1;
+  }
+
+  /* Top-level ordered lists are step sequences: mono counters in a hairline
+     ledger rather than browser numerals. Nested lists keep their defaults. */
+  .docs-prose.docs-article > ol {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    list-style: none;
+    padding-left: 0;
+    /* A row is `display: flex`, which stops incrementing the built-in
+       list-item counter — hence an explicit one. */
+    counter-reset: pl-step;
+  }
+  .docs-prose.docs-article > ol > li {
+    counter-increment: pl-step;
+    display: flex;
+    gap: 14px;
+    margin-top: 0;
+    border-bottom: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
+    padding: 14px 0;
+    line-height: 1.72;
+  }
+  .docs-prose.docs-article > ol > li::before {
+    content: counter(pl-step, decimal-leading-zero);
+    flex: none;
+    width: 20px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 700;
+    line-height: 1.85;
+    color: color-mix(in oklch, var(--primary) 78%, transparent);
+  }
+  .docs-prose.docs-article > ol > li > * {
+    min-width: 0;
+  }
+
+  .docs-prose.docs-article pre {
+    border-radius: 14px;
+    padding: 16px 18px;
+    font-size: 12.5px;
+    line-height: 1.85;
+  }
+
+  /* Mock panels (console, code tabs) draw their own frame, so the base prose
+     <pre> chrome must not double it. The base sets the background !important,
+     which only an !important of its own can undo. */
+  .docs-prose.docs-article .pl-mock pre {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent !important;
+    color: color-mix(in oklch, var(--foreground) 84%, transparent);
+  }
+  .docs-prose.docs-article .pl-mock-console pre {
+    padding: 14px 16px;
+    line-height: 1.7;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .docs-prose.docs-article .pl-anchor {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Heading deep-links. Astro slugs every heading; this hangs a `#` anchor off
+  // the H2/H3s so a section can be linked without a rehype plugin in the chain.
+  function armAnchors() {
+    const article = document.getElementById('pl-article')
+    if (!article) return
+    for (const heading of article.querySelectorAll<HTMLElement>(
+      'h2[id], h3[id]',
+    )) {
+      if (heading.querySelector('.pl-anchor')) continue
+      const anchor = document.createElement('a')
+      anchor.className = 'pl-anchor'
+      anchor.href = `#${heading.id}`
+      anchor.textContent = '#'
+      anchor.setAttribute('aria-label', `Link to “${heading.textContent}”`)
+      heading.append(anchor)
+    }
+  }
+
+  function armVotes() {
+    for (const button of document.querySelectorAll<HTMLButtonElement>(
+      '.pl-vote',
+    )) {
+      if (button.dataset.bound) continue
+      button.dataset.bound = '1'
+      button.addEventListener('click', () => {
+        for (const other of document.querySelectorAll('.pl-vote')) {
+          other.classList.toggle('is-sel', other === button)
+        }
+        document.querySelector('.pl-thanks')?.classList.add('is-on')
+      })
+    }
+  }
+
+  function arm() {
+    armAnchors()
+    armVotes()
+  }
+
+  // Mobile drawer. The header button, the drawer and the scrim are all
+  // transition-persisted, so everything is delegated on the document — bound
+  // once per module, never per navigation.
+  function setDrawer(open: boolean) {
+    document
+      .querySelector('[data-docs-drawer]')
+      ?.classList.toggle('is-open', open)
+    document
+      .querySelector('[data-docs-scrim]')
+      ?.classList.toggle('is-open', open)
+    document
+      .querySelector('[data-docs-nav-toggle]')
+      ?.setAttribute('aria-expanded', open ? 'true' : 'false')
+  }
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement | null
+    if (!target) return
+    if (target.closest('[data-docs-nav-toggle]')) {
+      const drawer = document.querySelector('[data-docs-drawer]')
+      setDrawer(!drawer?.classList.contains('is-open'))
+      return
+    }
+    if (target.closest('[data-docs-scrim]')) {
+      setDrawer(false)
+      return
+    }
+    // Picking a page or opening search is a destination — the drawer's job
+    // is done, get out of the way.
+    if (
+      target.closest('[data-docs-drawer]') &&
+      (target.closest('a') || target.closest('[data-docs-search]'))
+    ) {
+      setDrawer(false)
+    }
+  })
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setDrawer(false)
+  })
+  document.addEventListener('astro:before-swap', () => setDrawer(false))
+
+  arm()
+  document.addEventListener('astro:page-load', arm)
+</script>

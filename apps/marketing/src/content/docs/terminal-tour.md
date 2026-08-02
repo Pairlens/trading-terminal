@@ -1,0 +1,96 @@
+---
+title: Terminal tour
+description: The left nav, the workspace grid, the pair header, and the search palette. Learn where everything lives before you start trading.
+group: get-started
+order: 3
+eyebrow: Get started
+updated: AUG 2026
+readTime: 4 min read
+---
+
+Pairlens opens on a live chart. Everything else is one click or one keystroke
+away. Here is the map.
+
+## The left nav
+
+The rail down the left side is how you move between the big surfaces.
+
+| Entry             | What lives there                                                             |
+| ----------------- | ---------------------------------------------------------------------------- |
+| **Pairs**         | Every instrument your installed connectors can reach, plus your recent pairs |
+| **Charts**        | Your workspaces and workspace folders                                        |
+| **Accounts**      | Exchange keys, broker keys, and on-chain wallets, plus a portfolio overview  |
+| **Notifications** | Alert rules and their delivery channels                                      |
+| **Workflows**     | The order-automation canvas                                                  |
+| **Indicators**    | The Python workbench for indicators and strategies                           |
+| **Bots**          | Strategies deployed to a market, running on paper or live                    |
+| **Plugins**       | The Plugin Store and everything you have installed                           |
+
+Below those sit your workspaces, your recent pairs, and the Workspace Store.
+
+## The workspace grid
+
+A workspace is a saved arrangement of panels. Every panel is contributed by a
+plugin, which is why the catalogue grows when you install one. Panels fall into
+four categories:
+
+**Discovery.** Markets, Watchlist, Recent Tickers, Top Coins, Heatmap, News,
+Fear and Greed, Web.
+
+**Charting and data.** Chart, Order Book, Market Depth, Liquidity Heatmap, Pair
+Info, Data Log.
+
+**Trading.** Trade Entry, Positions, Portfolio, Risk.
+
+**AI and research.** AI Lens, Research, Social, Symbol News.
+
+Drag a separator to resize. Use the pane menu to split, replace, or close.
+Panels marked as singletons can only appear once per workspace. Full details in
+[panels](/docs/panels), and the layout model in
+[workspaces](/docs/workspaces).
+
+## The pair header
+
+Above the grid sits the active pair: its price, 24-hour change, and the venue
+it is streaming from. Click the symbol to switch markets. A connection dot
+shows stream health, and turns to **Reconnecting** if a socket goes quiet, for
+instance after your laptop wakes from sleep.
+
+Turn on the recent-tickers marquee in **Settings → Appearance** if you want a
+running strip of live prices for the pairs you have been looking at.
+
+## Search everything
+
+Press <kbd>⌘K</kbd> (<kbd>Ctrl</kbd>+<kbd>K</kbd> on Windows and Linux) to open
+the omni-search palette. It searches across:
+
+- Pairs, including ones you have never opened
+- Pages, workspaces, workflows, and notification rules
+- Panels you can add to the current layout
+- Plugins
+- Actions such as switching theme, opening settings, toggling light and dark, or
+  opening a new window
+
+It is the fastest route to almost anything. If you learn one shortcut, learn
+this one.
+
+## Multiple windows
+
+On desktop you can pull any view into its own window with <kbd>⌘N</kbd>, from
+the titlebar button, or from the omni-search **New window** action. Windows
+stay in sync through a shared channel, and exactly one is elected leader so a
+notification fires once rather than once per window.
+
+## Signed in or not
+
+Everything above works with no account. Signing in with your email adds
+cross-device sync for workspaces, chart layouts, alerts, workflows, your trade
+journal, and AI conversations. It never adds anything to the credential path:
+exchange keys stay in your OS keychain either way.
+
+## Where to next
+
+- [The chart](/docs/chart-panel) for chart types, drawings, and indicators
+- [Trading](/docs/trading) to connect a venue and place your first order
+- [Keyboard shortcuts](/docs/keyboard-shortcuts) for the full chord list
+- [Settings](/docs/settings) for themes, language, region routing, and privacy

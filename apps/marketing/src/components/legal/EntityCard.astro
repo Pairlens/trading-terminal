@@ -1,0 +1,67 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// The formal identity block: who the controller / contracting party is, how to
+// reach them, and (when the company sits outside the EEA) the Art. 27 EU
+// representative. Shared by both legal documents so the two can never drift.
+import { LEGAL_CONTACT, LEGAL_ENTITY, registeredAddressLine } from '@/lib/legal'
+
+interface Props {
+  /** Which mailbox to foreground — and which side of the deal this states. */
+  contact?: 'privacy' | 'legal'
+}
+const { contact = 'privacy' } = Astro.props
+const email = LEGAL_CONTACT[contact]
+const label = contact === 'privacy' ? 'Controller' : 'Counterparty'
+const rep = LEGAL_ENTITY.euEstablished ? null : LEGAL_ENTITY.euRepresentative
+
+const rows: Array<{ term: string; value: string; mono?: boolean }> = [
+  { term: 'Legal name', value: LEGAL_ENTITY.legalName },
+  { term: 'Trading as', value: LEGAL_ENTITY.tradingName },
+  { term: 'Company number', value: LEGAL_ENTITY.companyNumber, mono: true },
+  ...(LEGAL_ENTITY.vatNumber
+    ? [{ term: 'VAT number', value: LEGAL_ENTITY.vatNumber, mono: true }]
+    : []),
+  { term: 'Registered office', value: registeredAddressLine },
+]
+---
+
+<div class="rounded-2xl border border-border bg-card px-6 py-[22px]">
+  <p
+    class="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[color-mix(in_oklch,var(--muted-foreground)_62%,transparent)]"
+  >
+    {label}
+  </p>
+  <dl
+    class="mt-3.5 grid grid-cols-[150px_minmax(0,1fr)] gap-x-5 gap-y-2.5 text-[14px] max-[720px]:grid-cols-[minmax(0,1fr)] max-[720px]:gap-y-1.5"
+  >
+    {
+      rows.map((row) => (
+        <>
+          <dt class="text-muted-foreground">{row.term}</dt>
+          <dd
+            class:list={[
+              'text-foreground',
+              row.mono && 'font-mono text-[13px]',
+            ]}
+          >
+            {row.value}
+          </dd>
+        </>
+      ))
+    }
+    <dt class="text-muted-foreground">Contact</dt>
+    <dd><a href={`mailto:${email}`}>{email}</a></dd>
+    {
+      rep && (
+        <>
+          <dt class="text-muted-foreground">EU representative</dt>
+          <dd class="text-foreground">
+            {rep.name}
+            <span class="text-muted-foreground">, {rep.address}</span>
+          </dd>
+        </>
+      )
+    }
+  </dl>
+</div>

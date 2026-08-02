@@ -1,0 +1,107 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import SiteLayout from '@/layouts/SiteLayout.astro'
+import SiteHeader from '@/components/SiteHeader.astro'
+import SiteFooter from '@/components/SiteFooter.astro'
+import ZeusHero from '@/components/marketing/ZeusHero.astro'
+import TerminalShowcase from '@/components/marketing/TerminalShowcase.astro'
+import Principles from '@/components/marketing/Principles.astro'
+import FeatureIndex from '@/components/marketing/FeatureIndex.astro'
+import DeskBuilder from '@/components/marketing/DeskBuilder.astro'
+import DownloadCTA from '@/components/marketing/DownloadCTA.astro'
+import { SITE } from '@/lib/site'
+
+const title = 'Pairlens: The AI trading terminal that never touches your money'
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE.name,
+    url: SITE.url,
+    description: SITE.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: SITE.name,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'macOS, Windows, Linux',
+    description: SITE.description,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    license: `${SITE.repo}/blob/main/LICENSE.md`,
+  },
+]
+---
+
+<SiteLayout title={title} jsonLd={jsonLd}>
+  <SiteHeader />
+  <main data-zeus-page>
+    <ZeusHero />
+
+    <script is:inline>
+      ;(() => {
+        // Lead every download button with the visitor's own platform and drop
+        // that build from the "also available for" row. Inline and placed
+        // right after the hero so the swap lands before first paint — a
+        // Windows visitor never sees "Download for macOS" flash first.
+        function detectOs() {
+          const ua = navigator.userAgent || ''
+          const platform =
+            (navigator.userAgentData && navigator.userAgentData.platform) ||
+            navigator.platform ||
+            ''
+          // Phones and tablets can't install the terminal at all — route them
+          // to /install, where the carry-on card lives. Modern iPads report
+          // as Macintosh but expose multi-touch.
+          if (
+            (navigator.userAgentData && navigator.userAgentData.mobile) ||
+            /android|iphone|ipod|ipad/i.test(ua) ||
+            (/mac/i.test(platform) && navigator.maxTouchPoints > 1)
+          ) {
+            return 'mobile'
+          }
+          if (/win/i.test(platform) || /windows/i.test(ua)) return 'win'
+          if (/linux|x11|cros/i.test(platform) || /linux|x11|cros/i.test(ua)) {
+            return 'linux'
+          }
+          return 'mac'
+        }
+
+        function apply() {
+          const os = detectOs()
+          for (const el of document.querySelectorAll('[data-os-face]')) {
+            el.hidden = el.getAttribute('data-os-face') !== os
+          }
+          // On mobile the "also available for" row is noise: every chip is a
+          // desktop build the visitor can't install where they stand.
+          for (const el of document.querySelectorAll('[data-os-alt]')) {
+            el.hidden = os === 'mobile' || el.getAttribute('data-os-alt') === os
+          }
+          for (const a of document.querySelectorAll('a[data-os-download]')) {
+            if (os === 'mobile') a.setAttribute('href', '/install')
+          }
+        }
+
+        apply()
+        document.addEventListener('astro:page-load', apply)
+      })()
+    </script>
+
+    <FeatureIndex />
+    <TerminalShowcase />
+    <Principles />
+    <DeskBuilder />
+    <DownloadCTA />
+  </main>
+  <SiteFooter />
+  <script>
+    import '@/scripts/landing-fx.ts'
+    import '@/scripts/specular-fx.ts'
+  </script>
+</SiteLayout>

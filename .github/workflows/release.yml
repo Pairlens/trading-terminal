@@ -1,0 +1,155 @@
+# Desktop release pipeline.
+#
+# Trigger: push a `v*` tag (use `bun run release` to bump versions + tag).
+# Builds installers for macOS (Apple Silicon + Intel), Windows and Linux,
+# publishes them to a DRAFT release on this repo, and attaches the signed
+# updater manifest (latest.json) that the in-app auto-updater polls.
+#
+# Publishing the draft (GitHub UI or `gh release edit <tag> --draft=false`)
+# is the human gate that ships the update to users —
+# `releases/latest/download/latest.json` only resolves for published releases.
+# NOTE: installed apps can only reach that URL while the repo is public — the
+# repo is slated to go public; until then updater checks fail quietly.
+#
+# Required secrets (Settings → Secrets → Actions):
+#   TAURI_SIGNING_PRIVATE_KEY            updater minisign private key
+#   TAURI_SIGNING_PRIVATE_KEY_PASSWORD   its password ('' if none)
+# Optional secrets (macOS code signing + notarization — without them macOS
+# builds are unsigned and Gatekeeper warns on first launch):
+#   APPLE_CERTIFICATE, APPLE_CERTIFICATE_PASSWORD, APPLE_SIGNING_IDENTITY,
+#   APPLE_ID, APPLE_PASSWORD, APPLE_TEAM_ID
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+# The default GITHUB_TOKEN creates the release and uploads assets — releases
+# live on this same repo, so no cross-repo PAT is involved.
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      release_id: ${{ steps.release.outputs.release_id }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify tag matches app version
+        run: |
+          CONF_VERSION=$(python3 -c "import json; print(json.load(open('apps/desktop/src-tauri/tauri.conf.json'))['version'])")
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [ "$CONF_VERSION" != "$TAG_VERSION" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match tauri.conf.json version $CONF_VERSION"
+            echo "Bump versions with 'bun run release' so the tag and app agree."
+            exit 1
+          fi
+      - name: Create (or reuse) draft release
+        id: release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_REPO: ${{ github.repository }}
+        run: |
+          # Reruns of a failed pipeline reuse the existing draft for this tag.
+          EXISTING=$(gh api "repos/$RELEASE_REPO/releases" --paginate \
+            --jq "[.[] | select(.tag_name == \"$GITHUB_REF_NAME\")][0].id // empty")
+          if [ -n "$EXISTING" ]; then
+            echo "Reusing release $EXISTING for $GITHUB_REF_NAME"
+            echo "release_id=$EXISTING" >> "$GITHUB_OUTPUT"
+          else
+            ID=$(gh api "repos/$RELEASE_REPO/releases" \
+              -f tag_name="$GITHUB_REF_NAME" \
+              -f name="Pairlens $GITHUB_REF_NAME" \
+              -f body="Pairlens $GITHUB_REF_NAME — download the installer for your platform below. Existing installs update automatically." \
+              -F draft=true \
+              --jq .id)
+            echo "release_id=$ID" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    needs: create-release
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+          - platform: macos-latest
+            target: x86_64-apple-darwin
+          - platform: windows-latest
+            target: ''
+          - platform: ubuntu-22.04
+            target: ''
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Tauri system dependencies (Linux)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev \
+            librsvg2-dev patchelf libgtk-3-dev build-essential file libssl-dev
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.8
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/src-tauri
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build and upload installers
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          # Production App Server for auth/persistence/AI features.
+          VITE_APP_SERVER_URL: ${{ vars.APP_SERVER_URL || 'https://api.pairlens.finance' }}
+          # PostHog product analytics (opt-in; analytics disabled when unset).
+          VITE_POSTHOG_KEY: ${{ vars.POSTHOG_KEY }}
+          VITE_POSTHOG_HOST: ${{ vars.POSTHOG_HOST || 'https://eu.i.posthog.com' }}
+          # macOS code signing + notarization (skipped when unset).
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        with:
+          projectPath: apps/desktop
+          # Unambiguous package name — plain `bunx tauri` can resolve to the
+          # abandoned v1 `tauri` npm package when the local bin isn't found.
+          tauriScript: bunx @tauri-apps/cli
+          releaseId: ${{ needs.create-release.outputs.release_id }}
+          args: ${{ matrix.target != '' && format('--target {0}', matrix.target) || '' }}
+
+  # Rebuild latest.json from the final asset list. Deterministic — immune to
+  # the per-job manifest merge races, and the single place that defines the
+  # public download URLs the updater will hit after the release is published.
+  updater-manifest:
+    needs: [create-release, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.8
+      - name: Attach latest.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_REPO: ${{ github.repository }}
+          RELEASE_ID: ${{ needs.create-release.outputs.release_id }}
+          TAG: ${{ github.ref_name }}
+        run: bun scripts/release/updater-manifest.ts

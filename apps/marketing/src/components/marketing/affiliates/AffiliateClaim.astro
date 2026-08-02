@@ -1,0 +1,93 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// The claim form band. The section supplies the heading and the surface; the
+// island carries its own card shell so the React layout owns its breakpoints.
+import { AffiliateFlow } from '@/components/marketing/AffiliateFlow'
+---
+
+<section id="claim" class="aff-claim scroll-mt-[110px]">
+  <div class="mx-auto max-w-[1200px]">
+    <div class="aff-claim-head">
+      <div>
+        <p class="pl-eyebrow aff-claim-eyebrow" data-reveal>Claim your venues</p>
+        <h2 class="aff-claim-h2" data-reveal data-reveal-delay="70">
+          Everything on one page.
+        </h2>
+      </div>
+      <p class="aff-claim-lede" data-reveal data-reveal-delay="140">
+        Enter your Pairlens code if you have one, pick the venues it routes,
+        paste the referral codes you already hold, and say where to send your
+        link. No account, and nothing to install.
+      </p>
+    </div>
+
+    <div class="aff-claim-island" data-reveal data-reveal-delay="200">
+      <AffiliateFlow client:load />
+    </div>
+  </div>
+</section>
+
+<style>
+  .aff-claim {
+    background: var(--background);
+    padding: 100px 32px 104px;
+  }
+
+  .aff-claim-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 56px;
+    align-items: end;
+  }
+  .aff-claim-eyebrow {
+    margin: 0;
+    color: var(--primary);
+  }
+  .aff-claim-h2 {
+    margin: 22px 0 0;
+    font-family: var(--font-serif);
+    font-size: 46px;
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.032em;
+    color: var(--foreground);
+  }
+  .aff-claim-lede {
+    margin: 0 0 6px;
+    font-size: 15.5px;
+    line-height: 1.72;
+    text-wrap: pretty;
+    color: var(--muted-foreground);
+  }
+
+  /* Only the wrapper is styled: Astro's <astro-island> is display:contents and
+     its hydration <style>/<script> ride inside it as siblings, so any rule
+     reaching into this element would style those too. */
+  .aff-claim-island {
+    margin-top: 44px;
+  }
+
+  @media (max-width: 1000px) {
+    .aff-claim-head {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+  }
+  @media (max-width: 860px) {
+    .aff-claim-h2 {
+      font-size: 33px;
+    }
+  }
+  @media (max-width: 720px) {
+    .aff-claim {
+      padding: 84px 20px 88px;
+    }
+  }
+  @media (max-width: 480px) {
+    .aff-claim-h2 {
+      font-size: 30px;
+    }
+  }
+</style>

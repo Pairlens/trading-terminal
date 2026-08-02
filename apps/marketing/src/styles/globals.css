@@ -1,0 +1,773 @@
+/*
+ * Copyright (c) 2026 Juan Ignacio Molina Estrada
+ * SPDX-License-Identifier: FSL-1.1-Apache-2.0
+ */
+@import '@pairlens/ui/styles.css';
+@source "../**/*.{astro,html,js,jsx,ts,tsx,md,mdx}";
+
+/* ============================================================
+   PAIRLENS MARKETING — built on the Warm Precision design system.
+   We reuse @pairlens/ui tokens verbatim (surfaces, text, borders,
+   --primary iris, --chart-2 green, --destructive red) and only add
+   what the marketing surfaces need on top: a few section-accent
+   aliases mapped onto the DS chart palette, deeper "band" surfaces,
+   and the motion library the landing page choreographs.
+   Fonts stay the DS fonts: Space Grotesk (display) · Hanken Grotesk
+   (body) · JetBrains Mono (mono).
+   ============================================================ */
+
+/* — Metric-matched font fallbacks — the DS families load with
+   font-display: swap, and on slow connections the swap lands seconds after
+   first paint. These local fallbacks are size-adjusted to the web fonts'
+   metrics (computed from @capsizecss/metrics with the fontaine formula), so
+   the swap changes glyphs without moving a single line box — no layout
+   shift, whole page. Marketing-only: the stacks are re-declared below so
+   the terminal's tokens stay untouched. */
+@font-face {
+  font-family: 'Hanken Grotesk Fallback';
+  src: local('Arial');
+  size-adjust: 100.94%;
+  ascent-override: 99.07%;
+  descent-override: 30.02%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Space Grotesk Fallback';
+  src: local('Arial');
+  size-adjust: 109.69%;
+  ascent-override: 89.71%;
+  descent-override: 26.62%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Courier New');
+  size-adjust: 99.98%;
+  ascent-override: 102.02%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+}
+
+:root {
+  --font-sans:
+    'Hanken Grotesk Variable', 'Hanken Grotesk Fallback', ui-sans-serif,
+    system-ui, sans-serif;
+  --font-serif:
+    'Space Grotesk Variable', 'Space Grotesk Fallback', ui-sans-serif,
+    system-ui, sans-serif;
+  --font-mono:
+    'JetBrains Mono Variable', 'JetBrains Mono Fallback', ui-monospace,
+    monospace;
+
+  /* Section accents — aliases onto the DS palette so every marketing hue
+     traces back to a real design-system token. Six legible identities for
+     the numbered principles / feature bento. */
+  --pl-iris: var(--primary); /* 01 Private · primary actions      */
+  --pl-green: var(--chart-2); /* 02 No middleman · profit / KEYCHAIN */
+  --pl-magenta: var(--chart-5); /* 03 AI-native · co-pilot          */
+  --pl-amber: var(--chart-4); /* 04 Make it yours                 */
+  --pl-orange: oklch(0.72 0.16 55); /* 05 Automate (warm, DS-consistent) */
+  --pl-cyan: var(--magic-3); /* 06 Markets & signals             */
+  --pl-red: var(--destructive); /* loss / down                      */
+
+  /* Deeper "band" + inset surfaces for full-bleed sections and app mocks,
+     derived from --background/--card so they track the theme. */
+  --pl-band: color-mix(in oklch, var(--background) 82%, black);
+  --pl-inset: color-mix(in oklch, var(--card) 78%, black);
+  --pl-glass: color-mix(in oklch, var(--card) 60%, transparent);
+
+  /* Marble — the light "arrival + document" surface family from the 2026-08
+     redesign. Classicism against the graphite product ground: heroes, the
+     licensing/legal documents and closing CTAs sit on these. */
+  --ml-bg: oklch(96.5% 0.008 83);
+  --ml-fg: oklch(0.24 0.012 66);
+  --ml-card: oklch(99.3% 0.004 84);
+  --ml-muted: oklch(0.5 0.014 70);
+  --ml-border: oklch(89.5% 0.01 83);
+}
+
+/* Marble section shell: warm stone ground + the tiling marble texture under a
+   soft daylight gradient. Apply to any full-bleed light section. */
+.pl-marble {
+  color: var(--ml-fg);
+  background-color: var(--ml-bg);
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.32),
+      rgba(60, 50, 30, 0.05) 60%,
+      rgba(60, 50, 30, 0.1)
+    ),
+    url('../assets/marble-tile.webp');
+  background-size:
+    cover,
+    1150px auto;
+  background-position:
+    center,
+    center top;
+  background-repeat: no-repeat, repeat;
+}
+
+/* Registered angle for the animated conic CTA ring */
+@property --pl-ang {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* ============================================================
+   MARKETING MOTION LIBRARY
+   Choreography named in the design handoff, rebuilt as CSS so the
+   pages ship near-zero animation JS. Every effect is flattened under
+   prefers-reduced-motion at the bottom of this block.
+   ============================================================ */
+
+/* — Scroll reveal — content is visible by default (SEO / no-JS safe).
+   Only once the client marks the root .reveal-ready do we hide-then-rise.
+   Uses a keyframe animation (not a transition) so the enter reliably fires
+   when JS toggles the class, even programmatically. */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  will-change: opacity, transform;
+}
+.reveal-ready [data-reveal].is-revealed {
+  animation: pl-reveal 0.7s var(--ease-out) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+@keyframes pl-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* — Hero rainbow: "touches your money" shimmers through the P&L spectrum,
+   built entirely from DS chart hues (green profit → red loss → iris → …). */
+.pl-spectrum-text {
+  background: linear-gradient(
+    100deg,
+    var(--chart-3) 0%,
+    var(--chart-2) 22%,
+    var(--chart-4) 42%,
+    var(--chart-1) 60%,
+    var(--chart-5) 80%,
+    var(--chart-3) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: pl-grad 6s linear infinite;
+}
+@keyframes pl-grad {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 220% 50%;
+  }
+}
+
+/* — Hover sibling of .pl-spectrum-text: headings keep their normal color until
+   hovered, then a wipe sweeps left→right revealing the same P&L spectrum.
+   Two background layers clipped to the glyphs: the spectrum underneath and a
+   currentColor cover on top whose position slides away on hover (the spectrum
+   layer slides too, so hues shimmer through the letters as they color in).
+   Guarded by @supports so text never goes invisible where clip:text is
+   missing; no `transparent` inside oklch interpolation (WebKit black-out). */
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .pl-spectrum-hover {
+    background-image:
+      linear-gradient(
+        90deg,
+        rgb(0 0 0 / 0) 0%,
+        rgb(0 0 0 / 0) 46%,
+        currentcolor 54%,
+        currentcolor 100%
+      ),
+      linear-gradient(
+        100deg,
+        var(--chart-3) 0%,
+        var(--chart-2) 22%,
+        var(--chart-4) 42%,
+        var(--chart-1) 60%,
+        var(--chart-5) 80%,
+        var(--chart-3) 100%
+      );
+    background-size:
+      220% 100%,
+      220% 100%;
+    background-position:
+      100% 0%,
+      0% 50%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: background-position 0.9s var(--ease-out, ease);
+  }
+  .pl-spectrum-hover:hover {
+    background-position:
+      0% 0%,
+      110% 50%;
+  }
+}
+
+/* — Drifting radial glow behind the hero / CTAs — */
+.pl-glow {
+  animation: pl-drift 26s var(--ease-inout) infinite alternate;
+}
+@keyframes pl-drift {
+  from {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(4%, 3%, 0) scale(1.08);
+  }
+}
+
+/* — Animated conic ring around the primary CTA —
+   Drawn as a border ON the element edge (inset: 0 + border-radius: inherit) so
+   it always tracks the button's own radius — no matter what rounded-* it uses —
+   plus a soft primary glow for the premium halo, which is blur-based and so
+   radius-agnostic. */
+.pl-ring {
+  position: relative;
+  box-shadow: 0 0 22px -8px color-mix(in oklch, var(--primary) 70%, transparent);
+}
+.pl-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2.5px;
+  background: conic-gradient(
+    from var(--pl-ang),
+    var(--chart-3),
+    var(--chart-2),
+    var(--chart-5),
+    var(--chart-3)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: pl-ang 4s linear infinite;
+}
+@keyframes pl-ang {
+  to {
+    --pl-ang: 360deg;
+  }
+}
+
+/* — Infinite venue marquee (doubled track → -50%) — */
+.pl-marquee {
+  display: flex;
+  width: max-content;
+  animation: pl-marq 46s linear infinite;
+}
+.pl-marquee:hover {
+  animation-play-state: paused;
+}
+@keyframes pl-marq {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* — Chart scan-line sweep — */
+.pl-scan {
+  animation: pl-scan 5.5s var(--ease-inout) infinite;
+}
+@keyframes pl-scan {
+  0% {
+    transform: translateX(-8%);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(108%);
+    opacity: 0;
+  }
+}
+
+/* — Slow spin (co-pilot ring) — */
+.pl-spin {
+  animation: pl-spin 16s linear infinite;
+}
+@keyframes pl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* — Reel settle (slot machine) — */
+.pl-reel-settle {
+  animation: pl-reel-settle 0.5s var(--ease-out);
+}
+@keyframes pl-reel-settle {
+  0% {
+    transform: translateY(6px);
+    opacity: 0.4;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* — Confirmation check pop — */
+.pl-pop {
+  animation: pl-pop 0.5s var(--ease-out) both;
+}
+@keyframes pl-pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* — Workspace panels breathing between layouts (lightweight morph) — */
+.pl-ws-a {
+  animation: pl-ws-a 9s var(--ease-inout) infinite;
+}
+.pl-ws-b {
+  animation: pl-ws-b 9s var(--ease-inout) infinite;
+}
+@keyframes pl-ws-a {
+  0%,
+  100% {
+    flex: 1.6;
+  }
+  33% {
+    flex: 1;
+  }
+  66% {
+    flex: 2.2;
+  }
+}
+@keyframes pl-ws-b {
+  0%,
+  100% {
+    flex: 1;
+  }
+  33% {
+    flex: 1.8;
+  }
+  66% {
+    flex: 0.8;
+  }
+}
+
+/* Reel vertical fade mask (slot machine) */
+.pl-fade-y {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 28%,
+    #000 72%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 28%,
+    #000 72%,
+    transparent
+  );
+}
+
+/* Marquee edge fade mask */
+.pl-fade-x {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+}
+
+/* Eyebrow — the JetBrains-mono uppercase micro-label used everywhere */
+.pl-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   BENTO TILES — shared shell for the feature grid.
+   A tile carries `--tile-accent`; hover lifts it, warms the border
+   toward the accent, and a cursor-following spotlight (--sx/--sy set
+   by scripts/landing-fx.ts) sweeps the surface. All decoration lives
+   on ::before so tile content stays untouched.
+   ============================================================ */
+.pl-tile {
+  --tile-accent: var(--primary);
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem; /* rounded-2xl */
+  border: 1px solid var(--border);
+  background: var(--card);
+  transition:
+    border-color 0.35s ease,
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s ease;
+}
+.pl-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    240px circle at var(--sx, 50%) var(--sy, 0%),
+    color-mix(in oklch, var(--tile-accent) 9%, transparent),
+    transparent 70%
+  );
+  transition: opacity 0.35s ease;
+}
+.pl-tile > * {
+  position: relative;
+  z-index: 1;
+}
+@media (hover: hover) {
+  .pl-tile:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in oklch, var(--tile-accent) 32%, var(--border));
+    box-shadow: 0 24px 48px -28px
+      color-mix(in oklch, var(--tile-accent) 35%, transparent);
+  }
+  .pl-tile:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Screenshot wells: the floating app window swells slightly on hover. */
+.pl-shot img {
+  transition: transform 0.8s var(--ease-out);
+}
+@media (hover: hover) {
+  .pl-tile:hover .pl-shot img {
+    transform: scale(1.025);
+  }
+}
+
+/* ============================================================
+   PRINCIPLES — stepped vertical parallax.
+   Cards stack: all stick to the same offset so each card rides over
+   the previous one; scripts/landing-fx.ts drives `--stack-p` per
+   covered card (0→1 as the next card covers it) and flags the active
+   step on the left rail.
+   ============================================================ */
+.pl-stack-card {
+  border-radius: 22px;
+}
+@media (min-width: 1024px) {
+  .pl-stack-card {
+    position: sticky;
+    top: 6rem;
+  }
+  .pl-stack-card:not(:last-child) {
+    position: sticky;
+    transform: scale(calc(1 - 0.05 * var(--stack-p, 0)))
+      translateY(calc(-10px * var(--stack-p, 0)));
+    transform-origin: top center;
+  }
+  .pl-stack-card:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    pointer-events: none;
+    background: var(--background);
+    opacity: calc(0.45 * var(--stack-p, 0));
+  }
+}
+
+/* Left-rail step list: spine fill + active step states. */
+.pl-step {
+  transition: opacity 0.4s ease;
+  opacity: 0.45;
+}
+.pl-step.is-active {
+  opacity: 1;
+}
+.pl-step .pl-step-line {
+  transform: scaleX(0.35);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease-out);
+}
+.pl-step.is-active .pl-step-line {
+  transform: none;
+}
+.pl-spine-fill {
+  transform: scaleY(var(--spine-p, 0));
+  transform-origin: top;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-tile,
+  .pl-tile::before,
+  .pl-shot img,
+  .pl-step,
+  .pl-step .pl-step-line {
+    transition: none !important;
+  }
+  .pl-tile:hover {
+    transform: none;
+  }
+  .pl-tile:hover .pl-shot img {
+    transform: none;
+  }
+  .pl-stack-card:not(:last-child) {
+    transform: none;
+  }
+  .pl-stack-card:not(:last-child)::after {
+    opacity: 0;
+  }
+}
+
+/* Grid dot canvas for workflow mocks */
+.pl-dotgrid {
+  background-image: radial-gradient(
+    color-mix(in oklch, var(--foreground) 12%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 14px 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-spectrum-text,
+  .pl-glow,
+  .pl-ring::before,
+  .pl-marquee,
+  .pl-scan,
+  .pl-spin,
+  .pl-reel-settle,
+  .pl-pop,
+  .pl-ws-a,
+  .pl-ws-b,
+  .reveal-ready [data-reveal].is-revealed {
+    animation: none !important;
+  }
+  .reveal-ready [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   Astro view transitions — a soft cross-fade + lift between pages.
+   ============================================================ */
+@keyframes pl-vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pl-vt-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+::view-transition-old(root) {
+  animation: pl-vt-out 0.26s var(--ease-inout) both;
+}
+::view-transition-new(root) {
+  animation: pl-vt-in 0.34s var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Docs prose — markdown themed with design-system tokens.
+   ============================================================ */
+.docs-prose {
+  color: color-mix(in oklch, var(--foreground) 90%, var(--muted-foreground));
+  line-height: 1.75;
+  font-size: 0.9375rem;
+}
+
+.docs-prose > * + * {
+  margin-top: 1em;
+}
+
+.docs-prose h2 {
+  margin-top: 2.2em;
+  margin-bottom: 0.2em;
+  scroll-margin-top: 5rem;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+
+.docs-prose h3 {
+  margin-top: 1.6em;
+  scroll-margin-top: 5rem;
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}
+
+.docs-prose p {
+  color: color-mix(in oklch, var(--foreground) 82%, var(--muted-foreground));
+}
+
+.docs-prose a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in oklch, var(--primary) 40%, transparent);
+  transition: text-decoration-color var(--dur-base) ease;
+}
+.docs-prose a:hover {
+  text-decoration-color: var(--primary);
+}
+
+.docs-prose ul,
+.docs-prose ol {
+  padding-left: 1.4rem;
+}
+.docs-prose ul {
+  list-style: disc;
+}
+.docs-prose ol {
+  list-style: decimal;
+}
+.docs-prose li + li {
+  margin-top: 0.375rem;
+}
+.docs-prose li::marker {
+  color: var(--muted-foreground);
+}
+
+.docs-prose code {
+  border-radius: calc(var(--radius) - 5px);
+  background: color-mix(in oklch, var(--muted) 70%, transparent);
+  border: 1px solid var(--border);
+  padding: 0.1rem 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  color: color-mix(in oklch, var(--foreground) 92%, var(--primary));
+}
+
+/* Keyboard chords in the shortcut tables: a physical-key look, distinct from
+   inline code so a table mixing `--flag` and ⌘K reads at a glance. */
+.docs-prose kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  border-radius: calc(var(--radius) - 4px);
+  background: color-mix(in oklch, var(--muted) 55%, var(--background));
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  padding: 0.05rem 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap;
+  color: color-mix(in oklch, var(--foreground) 95%, transparent);
+}
+
+.docs-prose pre {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--pl-inset) !important;
+  padding: 1rem 1.1rem;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+.docs-prose pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+.docs-prose blockquote {
+  border-left: 3px solid var(--primary);
+  padding: 0.2rem 0 0.2rem 1rem;
+  color: var(--muted-foreground);
+  background: color-mix(in oklch, var(--primary) 6%, transparent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.docs-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  display: block;
+  overflow-x: auto;
+}
+.docs-prose th,
+.docs-prose td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.docs-prose th {
+  background: var(--muted);
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.docs-prose hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.4em 0;
+}
+
+.docs-prose h2 + h3 {
+  margin-top: 0.8em;
+}

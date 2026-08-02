@@ -1,0 +1,65 @@
+[package]
+name = "pairlens-desktop"
+version = "0.1.0"
+description = "Pairlens Desktop — AI-native crypto spot trading terminal"
+authors = ["Pairlens"]
+license = "FSL-1.1-Apache-2.0"
+edition = "2021"
+
+[[bin]]
+name = "Pairlens"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[dependencies]
+# `unstable` is required for multi-webview: the in-app web pane creates child
+# webviews (`new Webview()` from @tauri-apps/api in web-pane.tsx).
+tauri = { version = "2.0", features = ["unstable"] }
+tauri-plugin-websocket = "2.0"
+tauri-plugin-shell = "2.0"
+# Connector REST from the Rust side. The webview's own fetch enforces CORS just
+# like a browser, and several exchanges (OKX EEA, Coinbase Advanced Trade,
+# KuCoin, Bitfinex, MEXC, Gate, HTX) send no Access-Control-Allow-Origin at all,
+# so market history is unreachable from a packaged build over webview fetch.
+# Reachable hosts are pinned by scope in capabilities/default.json.
+tauri-plugin-http = "2"
+# Auto-update: checks the release manifest, downloads + installs signed
+# update packages (Spotify/Figma-style in-place updates).
+tauri-plugin-updater = "2"
+# Relaunch after an update is installed.
+tauri-plugin-process = "2"
+# Focus the existing window instead of launching a second app instance
+# (duplicate instances would double WS connections and notifications).
+tauri-plugin-single-instance = "2"
+# Remember window size/position across launches.
+tauri-plugin-window-state = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# CSP script nonces (csp.rs): the SPA shell boots via inline scripts, allowed
+# per-response by nonce + 'strict-dynamic' instead of 'unsafe-inline'.
+base64 = "0.22"
+getrandom = "0.2"
+# OS credential storage: macOS Keychain / Windows Credential Manager / Linux Secret Service
+# Idle-sleep inhibition while trading bots are armed (awake.rs). Bots run
+# locally, so a machine that suspends mid-position stops managing it.
+keepawake = { version = "0.6", default-features = false }
+keyring = { version = "3", features = [
+    "apple-native",
+    "windows-native",
+    "sync-secret-service",
+] }
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+# Production profile (Tauri-recommended): single codegen unit + fat LTO for
+# better optimization, stripped symbols and abort-on-panic for a smaller
+# binary. Release builds get slower to compile; dev builds are unaffected.
+[profile.release]
+codegen-units = 1
+lto = true
+strip = true
+panic = "abort"

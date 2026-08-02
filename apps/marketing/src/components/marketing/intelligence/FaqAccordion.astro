@@ -1,0 +1,105 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// FAQ disclosure list. Panels collapse with the grid-template-rows 0fr → 1fr
+// technique (animates to content height without measuring it) and are closed by
+// CSS from the first painted frame, so nothing expands then jumps.
+
+interface Props {
+  items: ReadonlyArray<{ q: string; a: string }>
+}
+const { items } = Astro.props
+---
+
+<div class="flex flex-col gap-3">
+  {
+    items.map((item, i) => (
+      <div class="pl-acc overflow-hidden rounded-xl border border-border bg-card">
+        <h3 class="m-0">
+          <button
+            type="button"
+            data-acc-toggle
+            aria-expanded="false"
+            aria-controls={`faq-panel-${i}`}
+            id={`faq-label-${i}`}
+            class="flex w-full cursor-pointer items-center justify-between gap-4 border-0 bg-transparent px-6 py-5 text-left font-sans text-[15.5px] font-semibold text-foreground"
+          >
+            {item.q}
+            <svg
+              class="pl-accx size-4 shrink-0 text-muted-foreground"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </button>
+        </h3>
+        <div
+          class="pl-accp"
+          id={`faq-panel-${i}`}
+          role="region"
+          aria-labelledby={`faq-label-${i}`}
+        >
+          <div>
+            <p class="m-0 max-w-[70ch] px-6 pb-[22px] text-[14.5px] leading-[1.72] text-muted-foreground">
+              {item.a}
+            </p>
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<script is:inline>
+  ;(() => {
+    // Delegated so it survives view transitions without rebinding per panel.
+    if (window.__plAccBound) return
+    window.__plAccBound = true
+    document.addEventListener('click', (event) => {
+      const target = event.target
+      if (!target || !target.closest) return
+      const button = target.closest('[data-acc-toggle]')
+      if (!button) return
+      const open = button.getAttribute('aria-expanded') === 'true'
+      button.setAttribute('aria-expanded', open ? 'false' : 'true')
+      const box = button.closest('.pl-acc')
+      if (box) box.classList.toggle('is-open', !open)
+    })
+  })()
+</script>
+
+<style>
+  .pl-accp {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 0.4s var(--ease-out),
+      opacity 0.28s ease;
+  }
+  .pl-accp > div {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .pl-acc.is-open .pl-accp {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+  .pl-accx {
+    transition: transform 0.34s var(--ease-out);
+  }
+  .pl-acc.is-open .pl-accx {
+    transform: rotate(45deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pl-accp,
+    .pl-accx {
+      transition: none;
+    }
+  }
+</style>

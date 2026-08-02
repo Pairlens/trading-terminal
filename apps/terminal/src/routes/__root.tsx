@@ -1,0 +1,253 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Initialize plugin runtime globals before any plugin module loads
+import '@/lib/plugin-runtime-globals'
+
+import { useEffect } from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+import {
+  HeadContent,
+  Scripts,
+  createRootRouteWithContext,
+  useRouter,
+} from '@tanstack/react-router'
+import { ThemeProvider } from 'next-themes'
+import { useTranslation } from 'react-i18next'
+import { TooltipProvider } from '@pairlens/ui/components/ui/tooltip'
+
+import appCss from '../styles.css?url'
+
+import type { QueryClient } from '@tanstack/react-query'
+import { isStandalone } from '@/lib/platform'
+import { attachNavHistory } from '@/lib/nav-history'
+
+export interface RouterContext {
+  queryClient: QueryClient
+}
+
+// Dev-only per-component render counter for re-render profiling (dropped
+// from production builds via the import.meta.env.DEV guard at the <script>
+// below). Counts fibers that rendered in each commit via the DevTools hook.
+// Uses actualStartTime (profiler timer, on in dev builds) to decide whether
+// a fiber rendered in THIS pass — bailed-out fibers are shared between
+// commits and keep stale PerformedWork flags, so flags alone overcount.
+const RENDER_COUNTER_SCRIPT = `(function(){
+  try {
+    if (localStorage.getItem('pairlens:render-count') !== '1') return;
+    var counts = new Map();
+    var origins = new Map();
+    var lastCommit = 0;
+    function nameOf(t) {
+      if (typeof t === 'function') return t.displayName || t.name || null;
+      if (t && typeof t === 'object') {
+        if (t.displayName) return t.displayName;
+        if (typeof t.render === 'function') return t.render.displayName || t.render.name || 'ForwardRef';
+        if (t.type) { var inner = nameOf(t.type); return inner ? 'Memo(' + inner + ')' : null; }
+      }
+      return null;
+    }
+    function renderedThisPass(f, now) {
+      if ((f.flags & 1) !== 1) return false;
+      if (typeof f.actualStartTime !== 'number') return true;
+      return f.actualStartTime > lastCommit && f.actualStartTime <= now;
+    }
+    function bump(f, isOrigin) {
+      var n = nameOf(f.type);
+      if (!n) return;
+      var e = counts.get(n);
+      if (!e) { e = { count: 0, time: 0 }; counts.set(n, e); }
+      e.count++;
+      if (isOrigin) origins.set(n, (origins.get(n) || 0) + 1);
+      if (typeof f.actualDuration === 'number') {
+        var self = f.actualDuration;
+        var c = f.child;
+        while (c) { if (typeof c.actualDuration === 'number') self -= c.actualDuration; c = c.sibling; }
+        e.time += Math.max(0, self);
+      }
+    }
+    function walk(root, now) {
+      var stack = [{ f: root, p: false }];
+      while (stack.length) {
+        var it = stack.pop();
+        var f = it.f;
+        if (!f) continue;
+        var r = renderedThisPass(f, now);
+        if (r && typeof f.type === 'function' || (r && f.type && typeof f.type === 'object')) bump(f, !it.p);
+        if (f.child) stack.push({ f: f.child, p: r || it.p });
+        if (f.sibling) stack.push({ f: f.sibling, p: it.p });
+      }
+    }
+    function onCommit(root) {
+      try {
+        if (root && root.current) {
+          var now = performance.now();
+          walk(root.current, now);
+          lastCommit = now;
+        }
+      } catch (e) {}
+    }
+    var existing = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    if (existing && typeof existing.onCommitFiberRoot === 'function') {
+      var orig = existing.onCommitFiberRoot.bind(existing);
+      existing.onCommitFiberRoot = function(id, root, p, d) { onCommit(root); return orig(id, root, p, d); };
+    } else {
+      var ids = 0;
+      window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
+        renderers: new Map(),
+        supportsFiber: true,
+        isDisabled: false,
+        checkDCE: function(){},
+        onScheduleFiberRoot: function(){},
+        onCommitFiberUnmount: function(){},
+        onPostCommitFiberRoot: function(){},
+        inject: function(r) { var id = ++ids; this.renderers.set(id, r); return id; },
+        onCommitFiberRoot: function(id, root) { onCommit(root); },
+      };
+    }
+    window.__resetRenderReport = function() { counts = new Map(); origins = new Map(); };
+    window.__getRenderReport = function() {
+      return Array.from(counts, function(kv) {
+        return { name: kv[0], count: kv[1].count, time: Math.round(kv[1].time * 100) / 100 };
+      }).sort(function(a, b) { return b.count - a.count; });
+    };
+    window.__getOrigins = function() {
+      return Array.from(origins, function(kv) {
+        return { name: kv[0], count: kv[1] };
+      }).sort(function(a, b) { return b.count - a.count; });
+    };
+  } catch (e) {}
+})()`
+
+export const Route = createRootRouteWithContext<RouterContext>()({
+  ssr: false,
+  head: () => ({
+    meta: [
+      {
+        charSet: 'utf-8',
+      },
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1',
+      },
+      {
+        title: 'Pairlens Terminal',
+      },
+    ],
+    links: [
+      {
+        rel: 'stylesheet',
+        href: appCss,
+      },
+    ],
+  }),
+  shellComponent: RootDocument,
+})
+
+function RootDocument({ children }: { children: React.ReactNode }) {
+  const { i18n } = useTranslation()
+  const router = useRouter()
+
+  // Feed the router's history stack to the back/forward tracker the desktop
+  // titlebar arrows and the native menu entries both read from. Idempotent.
+  useEffect(() => {
+    attachNavHistory(router.history)
+  }, [router])
+
+  // Disable native browser context menu in Tauri (WebKit shows it
+  // alongside our React menus — Chrome suppresses it from component
+  // handlers but Safari/WebKit does not)
+  useEffect(() => {
+    if (!isStandalone) return
+
+    const handler = (e: MouseEvent) => {
+      e.preventDefault()
+    }
+    document.addEventListener('contextmenu', handler)
+    return () => document.removeEventListener('contextmenu', handler)
+  }, [])
+
+  // Desktop menu commands: native menubar on macOS, in-app keyboard
+  // accelerators on Windows/Linux (no window menu there). No-op in browsers.
+  useEffect(() => {
+    void import('@/lib/desktop-menu').then((m) => m.initDesktopMenu())
+    void import('@/lib/menu-shortcuts').then((m) => m.initMenuShortcuts())
+    // Auto-update checks (desktop only; no-op in browsers).
+    void import('@/lib/updater').then((m) => m.initUpdater())
+    // Opt-in analytics (no-op until the user consents; inert without a key).
+    void import('@/lib/analytics').then((m) => m.initAnalytics())
+  }, [])
+
+  // First-touch affiliate referral attribution (?ref=<code>)
+  useEffect(() => {
+    void import('@/lib/referral').then((m) => m.captureReferralFromUrl())
+  }, [])
+
+  return (
+    <html lang={i18n.language} suppressHydrationWarning>
+      <head>
+        {/* Import map MUST come before any module scripts — required by spec */}
+        <script
+          type="importmap"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              imports: {
+                react: '/_sdk/react.js',
+                'react/jsx-runtime': '/_sdk/react-jsx-runtime.js',
+                'react/jsx-dev-runtime': '/_sdk/react-jsx-dev-runtime.js',
+                'react-dom': '/_sdk/react-dom.js',
+                '@pairlens/plugin-sdk': '/_sdk/plugin-sdk.js',
+                '@tanstack/react-query': '/_sdk/tanstack-react-query.js',
+                '@pairlens/ui': '/_sdk/pairlens-ui.js',
+                'fast-financial-charts': '/_sdk/fast-financial-charts.js',
+                'fast-financial-charts/react':
+                  '/_sdk/fast-financial-charts-react.js',
+              },
+            }),
+          }}
+        />
+        <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var c=localStorage.getItem("pairlens:theme.cachedCss");if(c){var s=document.createElement("style");s.id="pairlens-theme-override";s.textContent=c;document.head.appendChild(s)}}catch(e){}})()`,
+          }}
+        />
+        {import.meta.env.DEV && (
+          // Dev-only render counter for re-render profiling.
+          // Classic inline script so it runs before any module script —
+          // the DevTools hook must exist before React injects its renderer.
+          // Enable: localStorage.setItem('pairlens:render-count', '1')
+          // Read:   window.__getRenderReport() / window.__getOrigins() /
+          //         window.__resetRenderReport()
+          <script
+            dangerouslySetInnerHTML={{
+              __html: RENDER_COUNTER_SCRIPT,
+            }}
+          />
+        )}
+      </head>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          disableTransitionOnChange
+          enableSystem
+        >
+          <TooltipProvider>{children}</TooltipProvider>
+        </ThemeProvider>
+        <TanStackDevtools
+          config={{
+            position: 'bottom-right',
+          }}
+          plugins={[
+            {
+              name: 'Tanstack Router',
+              render: <TanStackRouterDevtoolsPanel />,
+            },
+          ]}
+        />
+        <Scripts />
+      </body>
+    </html>
+  )
+}

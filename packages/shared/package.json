@@ -1,0 +1,40 @@
+{
+  "name": "@pairlens/shared",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pairlens/trading-terminal.git",
+    "directory": "packages/shared"
+  },
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --project tsconfig.json --noEmit",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "fflate": "^0.8.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./ws": "./src/ws.ts",
+    "./types": "./src/types.ts",
+    "./persistence-types": "./src/persistence-types.ts",
+    "./plugin-types": "./src/plugin-types.ts",
+    "./instrument-types": "./src/instrument-types.ts",
+    "./registry-types": "./src/registry-types.ts",
+    "./plugin-manifest-schema": "./src/plugin-manifest-schema.ts",
+    "./plugin-package": "./src/plugin-package.ts",
+    "./plugin-signing": "./src/plugin-signing.ts",
+    "./publisher-keys": "./src/publisher-keys.ts",
+    "./pane-categories": "./src/pane-categories.ts",
+    "./capability-meta": "./src/capability-meta.ts",
+    "./affiliates": "./src/affiliates.ts",
+    "./billing-types": "./src/billing-types.ts",
+    "./account-types": "./src/account-types.ts"
+  }
+}

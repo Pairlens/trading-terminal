@@ -1,0 +1,69 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+interface Props {
+  title?: string
+  sub?: string
+  /** Right-aligned status pill text, e.g. "LIVE" / "RUNNING". */
+  status?: string
+  /** Status color CSS var, e.g. "var(--pl-green)". */
+  statusColor?: string
+  class?: string
+  bodyClass?: string
+}
+const {
+  title,
+  sub,
+  status,
+  statusColor = 'var(--pl-green)',
+  class: className = '',
+  bodyClass = '',
+} = Astro.props
+---
+
+<div
+  class:list={[
+    'overflow-hidden rounded-xl border border-border bg-[var(--pl-inset)]',
+    className,
+  ]}
+>
+  <div class="flex items-center gap-2.5 border-b border-border/70 px-3 py-2">
+    <div class="flex items-center gap-1.5">
+      <span class="size-2.5 rounded-full" style="background: var(--pl-red)"
+      ></span>
+      <span class="size-2.5 rounded-full" style="background: var(--pl-amber)"
+      ></span>
+      <span class="size-2.5 rounded-full" style="background: var(--pl-green)"
+      ></span>
+    </div>
+    {
+      (title || sub) && (
+        <div class="ml-1 flex items-baseline gap-1.5 truncate text-[11px]">
+          {title && (
+            <span class="font-medium text-foreground/90">{title}</span>
+          )}
+          {sub && <span class="font-mono text-muted-foreground">{sub}</span>}
+        </div>
+      )
+    }
+    {
+      status && (
+        <div class="ml-auto inline-flex items-center gap-1.5">
+          <span
+            class="live-dot size-1.5 rounded-full"
+            style={`background: ${statusColor}`}
+          />
+          <span
+            class="font-mono text-[9.5px] font-semibold tracking-[0.14em]"
+            style={`color: ${statusColor}`}
+          >
+            {status}
+          </span>
+        </div>
+      )
+    }
+  </div>
+  <div class:list={[bodyClass]}>
+    <slot />
+  </div>
+</div>

@@ -1,0 +1,17 @@
+#!/bin/sh
+# Pre-push quality gate — mirrors the first two CI steps so a push that
+# would fail CI is rejected locally first.
+#
+#   bypass in an emergency:  git push --no-verify
+#
+# Lint is cached (node_modules/.cache/eslint), so warm runs take seconds.
+
+set -e
+
+echo '[pre-push] prettier --check .'
+bunx prettier --check .
+
+echo '[pre-push] bun run lint'
+bun run lint
+
+echo '[pre-push] ok'

@@ -1,0 +1,28 @@
+{
+  "name": "@pairlens/notification-engine",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pairlens/trading-terminal.git",
+    "directory": "packages/notification-engine"
+  },
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc --project tsconfig.json --noEmit",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test": "bun test"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./step-registry": "./src/step-registry.ts",
+    "./core-steps": "./src/core-steps.ts",
+    "./validator": "./src/validator.ts",
+    "./evaluator": "./src/evaluator.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

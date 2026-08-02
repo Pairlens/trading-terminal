@@ -1,0 +1,178 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import SiteLayout from '@/layouts/SiteLayout.astro'
+import SiteHeader from '@/components/SiteHeader.astro'
+import SiteFooter from '@/components/SiteFooter.astro'
+import InstallHero from '@/components/marketing/install/InstallHero.astro'
+import AfterDownload from '@/components/marketing/install/AfterDownload.astro'
+import BuildFromSource from '@/components/marketing/install/BuildFromSource.astro'
+import { SITE } from '@/lib/site'
+
+const title = 'Install Pairlens: Desktop app for macOS, Windows & Linux'
+const description =
+  'Download the Pairlens desktop trading terminal for macOS, Windows, or Linux. Free, source-available, code-signed, and auto-updating. Or clone the repo and build it from source.'
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: SITE.name,
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'macOS, Windows, Linux',
+  description,
+  downloadUrl: `${SITE.repo}/releases/latest`,
+  softwareLicense: `${SITE.repo}/blob/main/LICENSE.md`,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+}
+---
+
+<SiteLayout title={title} description={description} jsonLd={jsonLd}>
+  <SiteHeader />
+  <main data-install-page>
+    <InstallHero />
+    <AfterDownload />
+    <BuildFromSource />
+  </main>
+  <SiteFooter />
+
+  <style is:global>
+    /* Phone visit: nothing on this page installs, so the OS tiles, the
+       post-download walkthrough and the source build would only muddy the one
+       useful action — carrying the link to a desk. The hero's carry-on card
+       is the whole story there. */
+    [data-install-page].is-mobile .ins-tiles,
+    [data-install-page].is-mobile .ins-after,
+    [data-install-page].is-mobile .ins-source {
+      display: none;
+    }
+  </style>
+
+  <script is:inline>
+    ;(() => {
+      const DEFAULT_OS = 'macOS'
+      const copyTimers = new WeakMap()
+
+      /** Progressive enhancement only — every platform stays one click away. */
+      function detectOs() {
+        const ua = (navigator.userAgent || '').toLowerCase()
+        // Android reports "linux" and iPhone reports "mac os x" in their UAs,
+        // but neither is a target — rule both out before the desktop checks.
+        if (/android|iphone|ipod|ipad/.test(ua)) return null
+        if (/macintosh|mac os x/.test(ua)) return 'macOS'
+        if (/windows/.test(ua)) return 'Windows'
+        if (/linux|x11|cros/.test(ua)) return 'Linux'
+        return null
+      }
+
+      /** Phones and tablets: nothing to install, swap in the carry-on card.
+          Modern iPads report as Macintosh but expose multi-touch. */
+      function isMobile() {
+        const ua = (navigator.userAgent || '').toLowerCase()
+        if (navigator.userAgentData && navigator.userAgentData.mobile)
+          return true
+        if (/android|iphone|ipod|ipad/.test(ua)) return true
+        return /macintosh/.test(ua) && navigator.maxTouchPoints > 1
+      }
+
+      function selectOs(page, os) {
+        let href = null
+        for (const tile of page.querySelectorAll('[data-os-tile]')) {
+          const on = tile.getAttribute('data-os-tile') === os
+          tile.classList.toggle('is-sel', on)
+          tile.setAttribute('aria-pressed', on ? 'true' : 'false')
+          if (on) href = tile.getAttribute('data-os-href')
+        }
+        for (const el of page.querySelectorAll('[data-os-name]')) {
+          el.textContent = os
+        }
+        for (const el of page.querySelectorAll('[data-os-sub]')) {
+          el.classList.toggle('is-active', el.getAttribute('data-os-sub') === os)
+        }
+        // Toggling display cancels and restarts the step stagger, so switching
+        // platform deals the three cards again.
+        for (const el of page.querySelectorAll('[data-os-panel]')) {
+          el.classList.toggle('is-active', el.getAttribute('data-os-panel') === os)
+        }
+        const cta = page.querySelector('[data-os-download]')
+        if (cta && href) cta.setAttribute('href', href)
+      }
+
+      function copyCommand(btn) {
+        const cmd = btn.getAttribute('data-install-copy')
+        if (!cmd) return
+        if (navigator.clipboard) navigator.clipboard.writeText(cmd).catch(() => {})
+        btn.classList.add('is-copied')
+        clearTimeout(copyTimers.get(btn))
+        copyTimers.set(
+          btn,
+          setTimeout(() => btn.classList.remove('is-copied'), 1300),
+        )
+      }
+
+      function bind() {
+        const page = document.querySelector('[data-install-page]')
+        if (!page || page.dataset.bound) return
+        page.dataset.bound = '1'
+
+        page.addEventListener('click', (e) => {
+          const tile = e.target.closest('[data-os-tile]')
+          if (tile) {
+            selectOs(page, tile.getAttribute('data-os-tile'))
+            return
+          }
+          const copy = e.target.closest('[data-install-copy]')
+          if (copy) {
+            copyCommand(copy)
+            return
+          }
+          const carryCopy = e.target.closest('[data-mobile-copy]')
+          if (carryCopy) {
+            const url = location.origin + '/install'
+            if (navigator.clipboard)
+              navigator.clipboard.writeText(url).catch(() => {})
+            carryCopy.classList.add('is-copied')
+            clearTimeout(copyTimers.get(carryCopy))
+            copyTimers.set(
+              carryCopy,
+              setTimeout(() => carryCopy.classList.remove('is-copied'), 1300),
+            )
+            return
+          }
+          const share = e.target.closest('[data-mobile-share]')
+          if (share && navigator.share) {
+            navigator
+              .share({
+                title: 'Pairlens',
+                text: 'Install the Pairlens trading terminal',
+                url: location.origin + '/install',
+              })
+              .catch(() => {})
+          }
+        })
+
+        // On a phone the platform sections are hidden entirely, so never mark
+        // a tile "Your system" there — a phone has no system to install on.
+        if (isMobile()) {
+          page.classList.add('is-mobile')
+          const share = page.querySelector('[data-mobile-share]')
+          if (share && navigator.share) share.hidden = false
+          return
+        }
+
+        const detected = detectOs()
+        if (detected) {
+          const tile = page.querySelector('[data-os-tile="' + detected + '"]')
+          if (tile) tile.classList.add('is-you')
+        }
+        selectOs(page, detected || DEFAULT_OS)
+      }
+
+      bind()
+      document.addEventListener('astro:page-load', bind)
+    })()
+  </script>
+</SiteLayout>

@@ -1,0 +1,405 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// The one site header: the floating marble pill. The docs shell renders its
+// own bar (components/docs/DocsHeader.astro) instead of this component.
+import { NAV, SITE } from '@/lib/site'
+import { getRepoStars } from '@/lib/github'
+
+const stars = await getRepoStars()
+---
+
+<header transition:persist="site-header-pill" class="pl-hdr">
+  <div data-site-hdr class="pl-hdr-strip">
+    <div class="pl-hdr-pill">
+      <a href="/" class="pl-hdr-brand" aria-label="Pairlens home">
+        <img
+          src="/logo.svg"
+          alt=""
+          width="54"
+          height="25"
+          loading="eager"
+          decoding="async"
+          draggable="false"
+        />
+        <span class="pl-hdr-word">{SITE.name}</span>
+      </a>
+
+      <span aria-hidden="true" class="pl-hdr-div"></span>
+
+      <nav aria-label="Primary" class="pl-hdr-nav">
+        {NAV.map((link) => <a href={link.href}>{link.label}</a>)}
+      </nav>
+
+      <span aria-hidden="true" class="pl-hdr-div pl-hdr-div--after-nav"></span>
+
+      <a
+        href={SITE.repo}
+        target="_blank"
+        rel="noopener"
+        aria-label={`Pairlens on GitHub — ${stars} stars`}
+        class="pl-hdr-gh"
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z"
+          ></path>
+        </svg>
+        {stars}
+      </a>
+
+      <a href="/install" class="pl-hdr-cta">
+        Get Pairlens
+        <span>FREE</span>
+      </a>
+
+      <button
+        type="button"
+        class="pl-hdr-menu"
+        data-hdr-menu
+        aria-expanded="false"
+        aria-controls="pl-hdr-sheet"
+        aria-label="Open navigation"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path class="pl-hdr-menu-bars" d="M4 7h16M4 12h16M4 17h16"></path>
+          <path class="pl-hdr-menu-x" d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </button>
+    </div>
+
+    <nav id="pl-hdr-sheet" class="pl-hdr-sheet" aria-label="Primary, mobile">
+      {NAV.map((link) => <a href={link.href}>{link.label}</a>)}
+      <a href={SITE.repo} target="_blank" rel="noopener" class="pl-hdr-sheet-gh">
+        GitHub
+        <span>★ {stars}</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+
+<script>
+  // Auto-hide the floating pill: once past 140px, scrolling down slides it out,
+  // scrolling up brings it back. Sub-4px deltas are ignored so it cannot
+  // flicker, and one rAF-throttled listener drives the whole site. The header
+  // persists across view transitions, so the transform is reset after a swap
+  // (the new page starts at the top with the pill down).
+  const flags = window as unknown as { __plHeaderBound?: boolean }
+  if (!flags.__plHeaderBound) {
+    flags.__plHeaderBound = true
+
+    const strip = () => document.querySelector<HTMLElement>('[data-site-hdr]')
+    let last = window.scrollY
+    let raf = 0
+
+    const sync = () => {
+      raf = 0
+      const el = strip()
+      if (!el) return
+      const y = window.scrollY
+      const delta = y - last
+      if (Math.abs(delta) <= 4) return
+      el.style.transform = delta > 0 && y > 140 ? 'translateY(-130%)' : 'none'
+      last = y
+    }
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!raf) raf = requestAnimationFrame(sync)
+      },
+      { passive: true },
+    )
+
+    document.addEventListener('astro:after-swap', () => {
+      last = window.scrollY
+      const el = strip()
+      if (el) el.style.transform = 'none'
+    })
+
+    // Mobile sheet: the ≤940px nav lives in a dropdown under the pill. One
+    // delegated listener because the header is transition:persist'ed.
+    const menuButton = () =>
+      document.querySelector<HTMLElement>('[data-hdr-menu]')
+    const sheet = () => document.querySelector<HTMLElement>('.pl-hdr-sheet')
+
+    const setMenu = (open: boolean) => {
+      menuButton()?.setAttribute('aria-expanded', String(open))
+      sheet()?.classList.toggle('is-open', open)
+    }
+
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement | null
+      if (target?.closest('[data-hdr-menu]')) {
+        setMenu(menuButton()?.getAttribute('aria-expanded') !== 'true')
+        return
+      }
+      // A tap on a sheet link navigates; anywhere else just closes.
+      if (sheet()?.classList.contains('is-open')) setMenu(false)
+    })
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setMenu(false)
+    })
+    document.addEventListener('astro:before-swap', () => setMenu(false))
+  }
+</script>
+
+<style>
+  /* Floating pill — a full-width transparent strip that lets clicks (and the
+     marble ground) through, with the pill itself the only live surface. It is
+     painted in the MARBLE tokens on purpose: the same pill has to read over the
+     light hero grounds and the graphite product sections. */
+  .pl-hdr {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  .pl-hdr-strip {
+    display: flex;
+    /* Column, not row: the mobile sheet lives in this strip below the pill.
+       In a row the sheet becomes a sibling flex item and the stretched pill
+       balloons into an ellipse behind it. */
+    flex-direction: column;
+    align-items: center;
+    padding: 18px 32px;
+    transition: transform 0.34s var(--ease-out);
+  }
+
+  .pl-hdr-pill {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 100%;
+    border-radius: 9999px;
+    border: 1px solid var(--ml-border);
+    background: color-mix(in oklch, var(--ml-card) 88%, transparent);
+    padding: 8px 10px 8px 20px;
+    white-space: nowrap;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 16px 38px -18px oklch(0.24 0.012 66 / 0.42);
+  }
+
+  /* Six nav items will happily squeeze the logo and the CTA into two lines
+     unless every child refuses to shrink. */
+  .pl-hdr-pill > * {
+    flex: none;
+    white-space: nowrap;
+  }
+
+  .pl-hdr-pill a:focus-visible {
+    outline: 2px solid var(--ml-fg);
+    outline-offset: 2px;
+  }
+
+  .pl-hdr-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .pl-hdr-brand img {
+    display: block;
+    height: 25px;
+    width: auto;
+    user-select: none;
+  }
+  .pl-hdr-word {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    font-size: 19.5px;
+    color: var(--ml-fg);
+  }
+
+  .pl-hdr-div {
+    width: 1px;
+    height: 20px;
+    background: color-mix(in oklch, var(--ml-fg) 20%, transparent);
+  }
+
+  .pl-hdr-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .pl-hdr-nav a {
+    border-radius: 9999px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ml-muted);
+    transition:
+      background 0.18s var(--ease-out),
+      color 0.18s var(--ease-out);
+  }
+  .pl-hdr-nav a:hover,
+  .pl-hdr-nav a:focus-visible {
+    background: color-mix(in oklch, var(--ml-fg) 7%, transparent);
+    color: var(--ml-fg);
+  }
+
+  .pl-hdr-gh {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ml-muted);
+    transition: color 0.18s var(--ease-out);
+  }
+  .pl-hdr-gh:hover,
+  .pl-hdr-gh:focus-visible {
+    color: var(--ml-fg);
+  }
+  .pl-hdr-gh svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .pl-hdr-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 9999px;
+    background: var(--ml-fg);
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ml-bg);
+    transition: transform 0.2s var(--ease-out);
+  }
+  .pl-hdr-cta:hover {
+    transform: scale(1.03);
+  }
+  .pl-hdr-cta:active {
+    transform: none;
+  }
+  .pl-hdr-cta span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    opacity: 0.62;
+  }
+
+  /* The menu button and its sheet only exist below 940px, where the inline
+     nav has gone. */
+  .pl-hdr-menu {
+    display: none;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 0;
+    border-radius: 9999px;
+    background: none;
+    color: var(--ml-fg);
+    cursor: pointer;
+  }
+  .pl-hdr-menu svg {
+    width: 19px;
+    height: 19px;
+  }
+  .pl-hdr-menu .pl-hdr-menu-x,
+  .pl-hdr-menu[aria-expanded='true'] .pl-hdr-menu-bars {
+    display: none;
+  }
+  .pl-hdr-menu[aria-expanded='true'] .pl-hdr-menu-x {
+    display: block;
+  }
+
+  .pl-hdr-sheet {
+    pointer-events: auto;
+    display: none;
+    flex-direction: column;
+    width: min(340px, calc(100vw - 28px));
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 22px;
+    border: 1px solid var(--ml-border);
+    background: color-mix(in oklch, var(--ml-card) 96%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 24px 54px -22px oklch(0.24 0.012 66 / 0.5);
+  }
+  .pl-hdr-sheet a {
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ml-fg);
+  }
+  .pl-hdr-sheet a:hover,
+  .pl-hdr-sheet a:focus-visible {
+    background: color-mix(in oklch, var(--ml-fg) 7%, transparent);
+  }
+  .pl-hdr-sheet-gh {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 4px;
+    border-top: 1px solid var(--ml-border);
+    border-radius: 0 0 14px 14px;
+  }
+  .pl-hdr-sheet-gh span {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ml-muted);
+  }
+
+  /* The six-item nav is the first thing to go; its trailing divider goes with
+     it so the pill keeps a single rule between the brand and the actions. The
+     menu button takes its place. */
+  @media (max-width: 940px) {
+    .pl-hdr-nav,
+    .pl-hdr-div--after-nav {
+      display: none;
+    }
+    .pl-hdr-menu {
+      display: grid;
+    }
+    .pl-hdr-sheet.is-open {
+      display: flex;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .pl-hdr-strip {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+    .pl-hdr-pill {
+      gap: 10px;
+      padding: 7px 8px 7px 14px;
+    }
+    .pl-hdr-gh {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Neutralises the inline transform the scroll listener writes, so the pill
+       simply stays put rather than jumping in and out. */
+    .pl-hdr-strip {
+      transition: none;
+      transform: none !important;
+    }
+    .pl-hdr-cta,
+    .pl-hdr-nav a,
+    .pl-hdr-gh {
+      transition: none;
+    }
+    .pl-hdr-cta:hover {
+      transform: none;
+    }
+  }
+</style>

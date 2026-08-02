@@ -1,0 +1,906 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { Image } from 'astro:assets'
+import SiteLayout from '@/layouts/SiteLayout.astro'
+import SiteHeader from '@/components/SiteHeader.astro'
+import SiteFooter from '@/components/SiteFooter.astro'
+import { ChartsLiveDemo } from '@/components/marketing/ChartsLiveDemo'
+import { ChartGallery } from '@/components/marketing/charts/ChartGallery'
+import { StyleShowcase } from '@/components/marketing/charts/StyleShowcase'
+import { QuickStartChart } from '@/components/marketing/charts/QuickStartChart'
+import SkinBar from '@/components/marketing/charts/SkinBar.astro'
+import { SITE } from '@/lib/site'
+import tradingShot from '@/assets/screens/trading.webp'
+
+const title =
+  'Fast Financial Charts: free, MIT-licensed WebGL2 charting library'
+const description =
+  'The WebGL2 financial charting engine that powers Pairlens, offered standalone and 100% free. 90 indicators, 7 chart types, drawings, multi-pane layouts, React bindings, and an MCP-compatible AI control surface. No license tiers, no watermark.'
+
+const npmUrl = 'https://www.npmjs.com/package/fast-financial-charts'
+const installCmd = 'bun add fast-financial-charts'
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareSourceCode',
+  name: 'Fast Financial Charts',
+  description,
+  codeRepository: SITE.chartsRepo,
+  programmingLanguage: 'TypeScript',
+  license: 'https://opensource.org/licenses/MIT',
+  isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+}
+
+const FEATURES = [
+  {
+    accent: 'var(--chart-3)',
+    stat: '765k',
+    statLabel: 'tick updates / sec',
+    title: 'WebGL2, built for the hot path',
+    body: 'GPU-instanced candles, layered canvases with a dirty-flag scheduler, and O(1) pan/zoom via shader uniforms. Ticks mutate the last bar in place; React is never in the loop.',
+  },
+  {
+    accent: 'var(--chart-2)',
+    stat: '90',
+    statLabel: 'built-in indicators',
+    title: 'Indicators, off the main thread',
+    body: 'Moving averages, oscillators, bands, trend, volume and volatility — all computed in a Web Worker and committed once, so the chart never stutters under analysis.',
+  },
+  {
+    accent: 'var(--chart-4)',
+    stat: '0',
+    statLabel: 'CSS classes shipped',
+    title: 'Headless by design',
+    body: 'The engine owns the canvases; your app owns every pixel of chrome. Toolbars, HUDs, context menus and modals are yours, so it drops into any design system.',
+  },
+  {
+    accent: 'var(--chart-1)',
+    stat: '52',
+    statLabel: 'MCP tools',
+    title: 'AI-native control surface',
+    body: 'A deterministic, MCP-compatible tool schema and executor lets an AI agent — or your own automation — drive the chart exactly the way a user does.',
+  },
+  {
+    accent: 'var(--chart-5)',
+    stat: '7',
+    statLabel: 'chart types, all GPU',
+    title: 'Trader-grade features',
+    body: 'Four price-scale modes, multi-pane layouts, drawings with magnet snapping and undo/redo, price lines, markers, compare modes, localization.',
+  },
+  {
+    accent: 'var(--chart-2)',
+    stat: 'MIT',
+    statLabel: 'free forever',
+    title: 'Actually open',
+    body: 'No tiers, no watermark, no "contact sales" features. Fork it, extend it, ship it. Commercial use included, forever.',
+  },
+]
+
+/** Syntax tones for the quick-start snippets — the same six DS hues the
+ *  charts themselves are painted with, so code and canvas read as one set. */
+const TONE = {
+  kw: 'var(--chart-5)',
+  fn: 'var(--chart-4)',
+  str: 'var(--chart-2)',
+  num: 'var(--chart-3)',
+  com: 'color-mix(in oklch, var(--muted-foreground) 70%, transparent)',
+} as const
+
+/** A code line is a run of tokens; `null` is a blank line between stanzas. */
+type Token = { t: string; c?: keyof typeof TONE }
+
+const EXAMPLES: Array<{
+  id: string
+  label: string
+  lines: Array<Array<Token> | null>
+}> = [
+  {
+    id: 'e1',
+    label: 'minimal.tsx',
+    lines: [
+      [
+        { t: 'import', c: 'kw' },
+        { t: ' { ' },
+        { t: 'FastFinancialChart', c: 'fn' },
+        { t: ' }' },
+      ],
+      [
+        { t: '  ' },
+        { t: 'from', c: 'kw' },
+        { t: ' ' },
+        { t: "'fast-financial-charts/react'", c: 'str' },
+      ],
+      null,
+      [
+        { t: 'export function', c: 'kw' },
+        { t: ' ' },
+        { t: 'Minimal', c: 'fn' },
+        { t: '({ bars }) {' },
+      ],
+      [{ t: '  ' }, { t: 'return', c: 'kw' }, { t: ' (' }],
+      [{ t: '    <' }, { t: 'FastFinancialChart', c: 'fn' }],
+      [
+        { t: '      series={[{ id: ' },
+        { t: "'BTC-USD'", c: 'str' },
+        { t: ', bars }]}' },
+      ],
+      [{ t: '      timeframe=' }, { t: '"1m"', c: 'str' }],
+      [{ t: '    />' }],
+      [{ t: '  )' }],
+      [{ t: '}' }],
+    ],
+  },
+  {
+    id: 'e2',
+    label: 'indicators.tsx',
+    lines: [
+      [{ t: '// 90 built in. Each one names the', c: 'com' }],
+      [{ t: '// series it reads, and whether it', c: 'com' }],
+      [{ t: '// overlays price or gets its own pane.', c: 'com' }],
+      [{ t: '<' }, { t: 'FastFinancialChart', c: 'fn' }],
+      [
+        { t: '  series={[{ id: ' },
+        { t: "'BTC-USD'", c: 'str' },
+        { t: ', bars }]}' },
+      ],
+      [{ t: '  indicators={[' }],
+      [
+        { t: '    { type: ' },
+        { t: "'EMA'", c: 'str' },
+        { t: ', seriesId: ' },
+        { t: "'BTC-USD'", c: 'str' },
+        { t: ',' },
+      ],
+      [{ t: '      params: { period: ' }, { t: '21', c: 'num' }, { t: ' } },' }],
+      [
+        { t: '    { type: ' },
+        { t: "'RSI'", c: 'str' },
+        { t: ', seriesId: ' },
+        { t: "'BTC-USD'", c: 'str' },
+        { t: ',' },
+      ],
+      [{ t: '      pane: ' }, { t: "'separate'", c: 'str' }, { t: ' },' }],
+      [{ t: '  ]}' }],
+      [{ t: '/>' }],
+    ],
+  },
+  {
+    id: 'e3',
+    label: 'live-ticks.ts',
+    lines: [
+      [{ t: '// Same-bucket ticks mutate the last bar', c: 'com' }],
+      [{ t: '// in place; a tick past the boundary', c: 'com' }],
+      [{ t: '// rolls a new bar automatically.', c: 'com' }],
+      [{ t: 'chartRef.current?.' }, { t: 'applyTick', c: 'fn' }, { t: '({' }],
+      [{ t: '  seriesId: ' }, { t: "'BTC-USD'", c: 'str' }, { t: ',' }],
+      [{ t: '  ts: ' }, { t: 'Date', c: 'fn' }, { t: '.now(),' }],
+      [{ t: '  price: ' }, { t: '64020.5', c: 'num' }, { t: ',' }],
+      [{ t: '  volume: ' }, { t: '0.12', c: 'num' }, { t: ',' }],
+      [{ t: '})' }],
+      null,
+      [{ t: '// Burst ingestion for batched feeds', c: 'com' }],
+      [
+        { t: 'chartRef.current?.' },
+        { t: 'applyTicks', c: 'fn' },
+        { t: '(batch)' },
+      ],
+    ],
+  },
+  {
+    id: 'e4',
+    label: 'ai-tools.ts',
+    lines: [
+      [
+        { t: 'import', c: 'kw' },
+        { t: ' { ' },
+        { t: 'createChartMcpAdapter', c: 'fn' },
+        { t: ' }' },
+      ],
+      [
+        { t: '  ' },
+        { t: 'from', c: 'kw' },
+        { t: ' ' },
+        { t: "'fast-financial-charts/mcp'", c: 'str' },
+      ],
+      null,
+      [{ t: '// 52 deterministic, MCP-ready tools.', c: 'com' }],
+      [
+        { t: 'const', c: 'kw' },
+        { t: ' mcp = ' },
+        { t: 'createChartMcpAdapter', c: 'fn' },
+        { t: '(' },
+      ],
+      [{ t: '  chartRef.current,' }],
+      [{ t: ')' }],
+      null,
+      [
+        { t: 'await', c: 'kw' },
+        { t: ' mcp.' },
+        { t: 'execute', c: 'fn' },
+        { t: '(' },
+        { t: "'addIndicator'", c: 'str' },
+        { t: ', {' },
+      ],
+      [{ t: '  type: ' }, { t: "'BollingerBands'", c: 'str' }, { t: ',' }],
+      [{ t: '  seriesId: ' }, { t: "'BTC-USD'", c: 'str' }, { t: ',' }],
+      [
+        { t: '  params: { period: ' },
+        { t: '20', c: 'num' },
+        { t: ', stdDev: ' },
+        { t: '2', c: 'num' },
+        { t: ' },' },
+      ],
+      [{ t: '})' }],
+    ],
+  },
+]
+---
+
+<SiteLayout title={title} description={description} jsonLd={jsonLd}>
+  <SiteHeader />
+  <main>
+    <!-- Hero. overflow-x: clip, never hidden — the live card below hangs 80px
+         into the next band and `hidden` would slice it off. -->
+    <section
+      class="relative overflow-x-clip bg-background px-5 pt-[112px] min-[721px]:px-8 min-[721px]:pt-[150px]"
+    >
+      <div
+        aria-hidden="true"
+        class="pl-glow pointer-events-none absolute top-[-90px] left-1/2 -ml-[430px] h-[440px] w-[860px] rounded-full opacity-55"
+        style="filter: blur(100px); background: radial-gradient(closest-side, color-mix(in oklch, var(--primary) 26%, transparent), rgb(0 0 0 / 0));"
+      >
+      </div>
+
+      <div
+        class="relative mx-auto flex max-w-[1200px] flex-col items-center text-center"
+      >
+        <p data-reveal class="pl-eyebrow text-primary">
+          Open source · MIT · WebGL2
+        </p>
+        <h1
+          data-reveal
+          data-reveal-delay="70"
+          class="charts-d66 mt-[22px] max-w-[17ch] text-balance font-serif font-semibold text-foreground"
+        >
+          The charting engine we built for Pairlens. <span
+            class="pl-spectrum-text">Now it's yours.</span
+          >
+        </h1>
+        <p
+          data-reveal
+          data-reveal-delay="140"
+          class="mt-6 max-w-[62ch] text-[18px] leading-[1.62] text-muted-foreground"
+        >
+          High-frequency ticks, 90 indicators computed off the main thread,
+          drawings, multi-pane layouts and an AI-ready MCP control surface.
+          Standalone, free, MIT-licensed.
+        </p>
+        <div
+          data-reveal
+          data-reveal-delay="210"
+          class="mt-8 flex flex-wrap items-center justify-center gap-3"
+        >
+          <a
+            href={SITE.chartsRepo}
+            target="_blank"
+            rel="noopener"
+            class="pl-ring inline-flex h-[52px] items-center gap-2.5 rounded-2xl bg-primary px-6 text-[15.5px] font-semibold text-primary-foreground"
+          >
+            <svg
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              aria-hidden="true"
+              class="size-[18px]"
+            >
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+              ></path>
+            </svg>
+            View on GitHub
+          </a>
+          <button
+            type="button"
+            data-copy={installCmd}
+            class="inline-flex h-[52px] cursor-pointer items-center gap-3 rounded-2xl border border-border bg-card px-5 font-mono text-[13.5px] text-foreground transition-colors hover:bg-muted"
+          >
+            <span class="text-muted-foreground">$</span>
+            {installCmd}
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              class="size-[15px] text-muted-foreground"
+            >
+              <rect width="14" height="14" x="8" y="8" rx="2"></rect>
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+              ></path>
+            </svg>
+            <span class="sr-only">Copy install command</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- The card floats over the band below. Its frame is page-owned chrome
+           (the engine ships none), which also means it paints with the first
+           HTML and the island drops into a box that is already the right size. -->
+      <div
+        data-reveal
+        data-reveal-delay="260"
+        data-chart-root
+        data-skin-radius
+        class="charts-island relative z-[2] mx-auto mt-13 -mb-20 min-h-[533px] max-w-[1200px] overflow-hidden rounded-[18px] border border-border bg-card"
+        style="box-shadow: 0 54px 90px -50px rgba(0,0,0,.95);"
+      >
+        <ChartsLiveDemo client:only="react" />
+      </div>
+    </section>
+
+    <!-- Gallery + feature grid -->
+    <section
+      class="px-5 pt-[132px] pb-24 min-[721px]:px-8"
+      style="background: var(--pl-band); border-top: 1px solid color-mix(in oklch, var(--border) 60%, transparent);"
+    >
+      <div class="mx-auto max-w-[1200px]">
+        <div
+          class="mt-24 flex flex-col gap-6 min-[1001px]:flex-row min-[1001px]:items-end min-[1001px]:justify-between min-[1001px]:gap-12"
+        >
+          <div>
+            <p data-reveal class="pl-eyebrow text-primary">
+              One engine, every layout
+            </p>
+            <h2
+              data-reveal
+              data-reveal-delay="70"
+              class="charts-d40 mt-[18px] max-w-[20ch] font-serif font-semibold text-foreground"
+            >
+              Seven chart types. Any pane arrangement.
+            </h2>
+          </div>
+          <p
+            data-reveal
+            data-reveal-delay="140"
+            class="max-w-[46ch] text-[15px] leading-[1.7] text-muted-foreground min-[1001px]:mb-1.5"
+          >
+            Six more live instances, each a different instrument, timeframe and
+            indicator stack. Every chip below is real: click one and that chart
+            reconfigures on the spot.
+          </p>
+        </div>
+
+        <div class="charts-island mt-8">
+          <ChartGallery client:only="react" />
+        </div>
+
+        <div
+          class="mt-[72px] grid gap-5 min-[721px]:grid-cols-2 min-[1001px]:grid-cols-3"
+        >
+          {
+            FEATURES.map((f) => (
+              <article
+                data-reveal
+                class="relative overflow-hidden rounded-[18px] border border-border bg-card p-[26px]"
+              >
+                <div
+                  aria-hidden="true"
+                  class="pointer-events-none absolute inset-0"
+                  style={`background: radial-gradient(120% 90% at 90% -12%, color-mix(in oklch, ${f.accent} 9%, transparent), rgb(0 0 0 / 0) 55%);`}
+                />
+                <div class="relative flex items-baseline gap-2.5">
+                  <span
+                    class="font-serif text-[30px] font-semibold tracking-[-0.03em]"
+                    style={`color: ${f.accent};`}
+                  >
+                    {f.stat}
+                  </span>
+                  <span class="font-mono text-[10.5px] font-semibold tracking-[0.16em] text-muted-foreground/75 uppercase">
+                    {f.statLabel}
+                  </span>
+                </div>
+                <h3 class="relative mt-[18px] text-[17px] font-semibold text-foreground">
+                  {f.title}
+                </h3>
+                <p class="relative mt-2.5 text-[14.5px] leading-[1.68] text-pretty text-muted-foreground">
+                  {f.body}
+                </p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- One series, three products -->
+    <section class="bg-background px-5 py-24 min-[721px]:px-8">
+      <div class="mx-auto max-w-[1200px]">
+        <div
+          class="flex flex-col gap-6 min-[1001px]:flex-row min-[1001px]:items-end min-[1001px]:justify-between min-[1001px]:gap-12"
+        >
+          <div>
+            <p data-reveal class="pl-eyebrow text-primary">Headless by design</p>
+            <h2
+              data-reveal
+              data-reveal-delay="70"
+              class="charts-d40 mt-[18px] max-w-[24ch] font-serif font-semibold text-foreground"
+            >
+              One series. Three products that share nothing but the engine.
+            </h2>
+          </div>
+          <p
+            data-reveal
+            data-reveal-delay="140"
+            class="max-w-[44ch] text-[15px] leading-[1.7] text-muted-foreground min-[1001px]:mb-1.5"
+          >
+            Identical bars, identical indicators, identical integration code.
+            The engine ships zero CSS classes, so the palette, the typography
+            and every piece of chrome are yours to write.
+          </p>
+        </div>
+
+        <div data-reveal data-reveal-delay="190" class="charts-island mt-9">
+          <StyleShowcase client:only="react" />
+        </div>
+
+        <p
+          class="mt-[22px] text-center font-mono text-[11.5px] tracking-[0.1em] text-muted-foreground/70"
+        >
+          Same bars. Same EMA and volume pane. Same &lt;FastFinancialChart /&gt;
+          call. Everything else is your HTML.
+        </p>
+      </div>
+    </section>
+
+    <!-- Quick start: the code on the left is running on the right -->
+    <section class="bg-background px-5 pb-24 min-[721px]:px-8">
+      <div class="mx-auto max-w-[1200px]">
+        <div
+          class="flex flex-col gap-6 min-[1001px]:flex-row min-[1001px]:items-end min-[1001px]:justify-between min-[1001px]:gap-12"
+        >
+          <div>
+            <p data-reveal class="pl-eyebrow text-primary">Quick start</p>
+            <h2
+              data-reveal
+              data-reveal-delay="70"
+              class="charts-d40 mt-[18px] max-w-[22ch] font-serif font-semibold text-foreground"
+            >
+              The code on the left is running on the right.
+            </h2>
+          </div>
+          <div
+            data-reveal
+            data-reveal-delay="140"
+            class="max-w-[42ch] min-[1001px]:pb-1.5"
+          >
+            <p class="text-[15px] leading-[1.7] text-muted-foreground">
+              Declare series and indicators as props; push live ticks through
+              the ref so high-frequency updates never touch React. Pick a tab to
+              see each snippet and the chart it produces.
+            </p>
+            <a
+              href={`${SITE.chartsRepo}#readme`}
+              target="_blank"
+              rel="noopener"
+              class="mt-3.5 inline-flex items-center gap-[7px] text-[14.5px] font-semibold text-primary transition-colors hover:text-foreground"
+            >
+              Read the full API docs
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                class="size-3.5"
+              >
+                <path d="M7 7h10v10M7 17 17 7"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div
+          data-code-card
+          class="mt-8 overflow-hidden border border-border"
+          style="background: var(--pl-inset);"
+        >
+          <div class="flex items-center gap-2 border-b border-border px-4 py-2.5">
+            <span
+              class="size-[9px] shrink-0 rounded-full bg-foreground/15"
+              aria-hidden="true"></span>
+            <span
+              class="size-[9px] shrink-0 rounded-full bg-foreground/15"
+              aria-hidden="true"></span>
+            <span
+              class="size-[9px] shrink-0 rounded-full bg-foreground/15"
+              aria-hidden="true"></span>
+            <div
+              role="tablist"
+              aria-label="Quick-start examples"
+              class="ml-2.5 flex flex-wrap gap-1"
+            >
+              {
+                EXAMPLES.map((ex, i) => (
+                  <button
+                    type="button"
+                    role="tab"
+                    id={`tab-${ex.id}`}
+                    aria-controls={`panel-${ex.id}`}
+                    data-code-tab={ex.id}
+                    aria-selected={i === 0 ? 'true' : 'false'}
+                    class:list={[
+                      'cursor-pointer rounded-lg px-3 py-1.5 font-mono text-[11.5px] whitespace-nowrap transition-colors',
+                      i === 0
+                        ? 'bg-muted text-foreground'
+                        : 'text-muted-foreground hover:text-foreground',
+                    ]}
+                  >
+                    {ex.label}
+                  </button>
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="grid min-h-[330px] items-stretch min-[721px]:grid-cols-2">
+            <div>
+              {
+                EXAMPLES.map((ex, i) => (
+                  <div
+                    role="tabpanel"
+                    id={`panel-${ex.id}`}
+                    aria-labelledby={`tab-${ex.id}`}
+                    data-code-panel={ex.id}
+                    class:list={[i !== 0 && 'hidden']}
+                  >
+                    <pre class="charts-code m-0 overflow-auto px-[26px] py-6 font-mono text-[12.5px] leading-[1.72]">{ex.lines.map((line) => (line === null ? <div class="charts-code-gap" /> : <div>{line.map((tok) => (tok.c ? <span style={`color: ${TONE[tok.c]};`}>{tok.t}</span> : tok.t))}</div>))}</pre>
+                  </div>
+                ))
+              }
+            </div>
+            <div class="charts-chart-cell">
+              <QuickStartChart client:only="react" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- It ships inside a real terminal -->
+    <section class="bg-background px-5 pb-24 min-[721px]:px-8">
+      <div
+        data-reveal
+        class="mx-auto max-w-[1200px] overflow-hidden rounded-[22px] border border-border bg-card"
+      >
+        <div
+          class="grid items-center gap-8 px-6 pt-8 min-[721px]:px-10 min-[721px]:pt-10 min-[1081px]:grid-cols-[1fr_1.2fr]"
+        >
+          <div class="pb-10">
+            <p class="pl-eyebrow text-primary">Battle-tested daily</p>
+            <h2
+              class="charts-d34 mt-4 font-serif font-semibold text-foreground"
+            >
+              It ships inside a real trading terminal.
+            </h2>
+            <p
+              class="mt-3.5 max-w-[46ch] text-[15px] leading-[1.7] text-muted-foreground"
+            >
+              This isn't a demo project. It's the engine rendering live markets
+              in the Pairlens desktop terminal every day: streaming order flow,
+              indicator stacks, drawings, and an AI co-pilot driving the chart
+              through the same MCP tools you get.
+            </p>
+            <a
+              href="/"
+              class="mt-[22px] inline-flex items-center gap-[7px] text-[14.5px] font-semibold text-primary transition-colors hover:text-foreground"
+            >
+              Meet the Pairlens terminal
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                class="size-3.5"
+              >
+                <path d="M5 12h14m-6-6 6 6-6 6"></path>
+              </svg>
+            </a>
+          </div>
+          <!-- The shot bleeds off the card's right edge; the wrapper carries
+               the bleed so the widths track the section gutter. -->
+          <div
+            class="-mr-6 w-[calc(100%+24px)] self-end min-[721px]:-mr-10 min-[721px]:w-[calc(100%+40px)]"
+          >
+            <Image
+              src={tradingShot}
+              alt="Pairlens desktop rendering BTC-USDT on OKX with indicators, order book and AI analysis"
+              widths={[720, 1080, 1688]}
+              sizes="(min-width: 1081px) 700px, 92vw"
+              quality={95}
+              class="block w-full max-w-none rounded-tl-[14px] border-t border-l border-border"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing CTA. The extra bottom padding is the skin bar's berth: it
+         docks over the footer, so this is the last band it can float above. -->
+    <section
+      class="relative overflow-hidden px-5 pt-[90px] pb-[152px] min-[721px]:px-8"
+      style="background: var(--pl-band); border-top: 1px solid color-mix(in oklch, var(--border) 60%, transparent);"
+    >
+      <div
+        class="relative mx-auto flex max-w-[720px] flex-col items-center text-center"
+      >
+        <h2
+          data-reveal
+          class="charts-d46 font-serif font-semibold text-foreground"
+        >
+          Fork it. Extend it. <span class="pl-spectrum-text">Ship it.</span>
+        </h2>
+        <p
+          data-reveal
+          data-reveal-delay="70"
+          class="mt-[18px] max-w-[52ch] text-[16.5px] leading-[1.7] text-muted-foreground"
+        >
+          Everything in the repo is yours under MIT, commercial products
+          included. If you build something with it, we'd love to see it.
+        </p>
+        <div
+          data-reveal
+          data-reveal-delay="140"
+          class="mt-[34px] flex flex-wrap items-center justify-center gap-3"
+        >
+          <a
+            href={SITE.chartsRepo}
+            target="_blank"
+            rel="noopener"
+            class="pl-ring inline-flex h-[52px] items-center gap-2.5 rounded-2xl bg-primary px-6 text-[15.5px] font-semibold whitespace-nowrap text-primary-foreground"
+          >
+            <svg
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              aria-hidden="true"
+              class="size-[19px]"
+            >
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+              ></path>
+            </svg>
+            Get the library on GitHub
+          </a>
+          <a
+            href={npmUrl}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex h-[52px] items-center gap-2.5 rounded-2xl border border-border bg-card px-6 text-[15.5px] font-semibold whitespace-nowrap text-foreground transition-colors hover:bg-muted"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+              class="size-[19px]"
+            >
+              <path
+                d="M0 7.334v8h6.666v1.332H12v-1.332h12v-8H0zm6.666 6.664H5.334v-4H4v4H1.334V8.667h5.332v5.331zm4 0v1.336H8.001V8.667h5.334v5.332h-2.669zm12.001 0h-1.33v-4h-1.336v4h-1.335v-4h-1.33v4h-2.671V8.667h8.002v5.331zM10.665 10H12v2.667h-1.335V10z"
+              ></path>
+            </svg>
+            View on npm
+          </a>
+        </div>
+        <button
+          type="button"
+          data-copy={installCmd}
+          data-reveal
+          data-reveal-delay="200"
+          class="charts-copy-dashed mt-3.5 inline-flex h-[46px] cursor-pointer items-center gap-3 rounded-[14px] border border-dashed px-[18px] font-mono text-[13.5px] text-foreground"
+        >
+          <span class="text-muted-foreground">$</span>
+          {installCmd}
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            class="size-[15px] text-muted-foreground"
+          >
+            <rect width="14" height="14" x="8" y="8" rx="2"></rect>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+            ></path>
+          </svg>
+          <span class="sr-only">Copy install command</span>
+        </button>
+      </div>
+    </section>
+  </main>
+  <SkinBar />
+  <SiteFooter />
+
+  <style>
+    /* Display type, stepped exactly as the shared breakpoint spec asks. */
+    .charts-d66 {
+      font-size: 66px;
+      line-height: 0.96;
+      letter-spacing: -0.038em;
+    }
+    .charts-d46 {
+      font-size: 46px;
+      line-height: 1.04;
+      letter-spacing: -0.032em;
+    }
+    .charts-d40 {
+      font-size: 40px;
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+    }
+    .charts-d34 {
+      font-size: 34px;
+      line-height: 1.08;
+      letter-spacing: -0.026em;
+    }
+    @media (max-width: 860px) {
+      .charts-d66 {
+        font-size: 40px;
+      }
+      .charts-d46 {
+        font-size: 33px;
+      }
+      .charts-d40 {
+        font-size: 29px;
+      }
+      .charts-d34 {
+        font-size: 26px;
+      }
+    }
+    @media (max-width: 480px) {
+      .charts-d66 {
+        font-size: 36px;
+      }
+      .charts-d46 {
+        font-size: 30px;
+      }
+    }
+
+    .charts-code {
+      color: color-mix(in oklch, var(--foreground) 88%, transparent);
+    }
+    /* Blank line between code stanzas — one line-height of the block. */
+    .charts-code-gap {
+      height: 21.5px;
+    }
+
+    .charts-copy-dashed {
+      border-color: color-mix(in oklch, var(--border) 130%, transparent);
+      background: color-mix(in oklch, var(--card) 60%, transparent);
+      transition:
+        border-color 0.2s var(--ease-out),
+        background 0.2s var(--ease-out);
+    }
+    .charts-copy-dashed:hover {
+      border-color: color-mix(in oklch, var(--foreground) 34%, transparent);
+      background: var(--card);
+    }
+  </style>
+
+  <style is:global>
+    /* The skin bar re-points design tokens on each chart root, so the chrome
+       inside one — labels, chips, rules, the price — re-skins with the canvas.
+       Corners are a token too, on the roots that are cards in their own right;
+       an attribute pair out-specifies the utility class that sets them. */
+    [data-chart-root][data-skin-radius] {
+      border-radius: var(--pl-skin-radius, 18px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      [data-chart-root] {
+        transition:
+          background-color 0.3s var(--ease-out),
+          border-color 0.3s var(--ease-out),
+          border-radius 0.3s var(--ease-out);
+      }
+    }
+
+    /* Astro wraps every island in an <astro-island>, which is an unknown —
+       therefore inline — element. Both rules below exist to get past it. */
+
+    /* Island content is block-level (cards, grids), so the wrapper has to be.
+       Astro also injects its hydration <style>/<script> as siblings inside the
+       island wrapper — a bare `> *` would display:block those too, rendering
+       the runtime source as page text. */
+    .charts-island > astro-island {
+      display: block;
+    }
+
+    /* The quick-start chart has to fill the grid row the code column sets, and
+       the island wrapper Astro emits sits between the cell and the component —
+       so the stretch has to be handed down explicitly. */
+    .charts-chart-cell,
+    .charts-chart-cell > astro-island,
+    .charts-chart-cell > astro-island > * {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+  </style>
+
+  <script>
+    import '@/scripts/reveal.ts'
+  </script>
+
+  <script is:inline>
+    ;(() => {
+      // Quick-start tabs: swap the code panel and tell the live pane which
+      // snippet it is now running.
+      function bindTabs() {
+        for (const card of document.querySelectorAll('[data-code-card]')) {
+          if (card.dataset.bound) continue
+          card.dataset.bound = '1'
+          card.addEventListener('click', (event) => {
+            const tab = event.target.closest('[data-code-tab]')
+            if (!tab) return
+            const id = tab.getAttribute('data-code-tab')
+            for (const other of card.querySelectorAll('[data-code-tab]')) {
+              const on = other === tab
+              other.setAttribute('aria-selected', on ? 'true' : 'false')
+              other.classList.toggle('bg-muted', on)
+              other.classList.toggle('text-foreground', on)
+              other.classList.toggle('text-muted-foreground', !on)
+              other.classList.toggle('hover:text-foreground', !on)
+            }
+            for (const panel of card.querySelectorAll('[data-code-panel]')) {
+              panel.classList.toggle(
+                'hidden',
+                panel.getAttribute('data-code-panel') !== id,
+              )
+            }
+            document.dispatchEvent(
+              new CustomEvent('pairlens:charts-example', { detail: { id } }),
+            )
+          })
+        }
+      }
+
+      // Copy buttons: the icon goes green for a beat, no layout change.
+      function bindCopy() {
+        for (const btn of document.querySelectorAll('[data-copy]')) {
+          if (btn.dataset.bound) continue
+          btn.dataset.bound = '1'
+          btn.addEventListener('click', async () => {
+            try {
+              await navigator.clipboard.writeText(
+                btn.getAttribute('data-copy') || '',
+              )
+            } catch {
+              return
+            }
+            const icon = btn.querySelector('svg')
+            if (!icon) return
+            icon.style.color = 'var(--chart-2)'
+            setTimeout(() => {
+              icon.style.color = ''
+            }, 1100)
+          })
+        }
+      }
+
+      function bind() {
+        bindTabs()
+        bindCopy()
+      }
+      bind()
+      document.addEventListener('astro:page-load', bind)
+    })()
+  </script>
+</SiteLayout>

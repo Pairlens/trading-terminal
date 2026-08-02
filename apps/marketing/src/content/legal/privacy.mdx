@@ -1,0 +1,381 @@
+---
+title: Privacy Policy
+description: >-
+  What Pairlens does and does not know about you, why, for how long, and how to
+  make us stop. Written against the GDPR, and against what the code actually
+  does.
+effective: 31 July 2026
+summary: >-
+  The terminal runs on your machine. Your exchange keys, your wallet secrets,
+  and your order flow never reach us, by design and by architecture. What we do
+  hold is the small amount tied to a Pairlens account, which is your email
+  address, whatever you choose to sync to the cloud, and your AI conversations
+  if you use Pairlens Intelligence. Analytics is off by default in the app and
+  cookieless by default on this site. You can export all of it, or delete all of
+  it, from Settings in the app without asking us.
+---
+
+import EntityCard from '@/components/legal/EntityCard.astro'
+import SubprocessorTable from '@/components/legal/SubprocessorTable.astro'
+import { DATA_SOURCES, LEGAL_CONTACT, LEGAL_ENTITY } from '@/lib/legal'
+
+## 1. Who we are
+
+Pairlens is operated by the company below. For the purposes of the EU General
+Data Protection Regulation (GDPR) and the UK GDPR, that company is the
+**controller** of the personal data described in this policy.
+
+<EntityCard contact="privacy" />
+
+We are a small team. There is no separate Data Protection Officer, because we
+are not required to appoint one. Data-protection questions go to <a href={`mailto:${LEGAL_CONTACT.privacy}`}>{LEGAL_CONTACT.privacy}</a>
+and reach a person, not a queue.
+
+## 2. What this policy covers
+
+This policy covers the services we run:
+
+- **pairlens.finance**, this website, including the documentation and the plugin and workspace stores.
+- **Pairlens accounts**, the sign-in and account system used across Pairlens services.
+- **Cloud sync**, the optional storage of your workspaces, layouts, and other terminal state on our servers.
+- **Pairlens Intelligence**, our hosted AI co-pilot and research service.
+- **The plugin registry**, which serves plugin listings and downloads to the terminal.
+
+It does **not** cover:
+
+- **Running the open-source software yourself.** The Pairlens terminal, the CLI, and the Fast Financial Charts library are source-available software you can run without an account and without any connection to us. If you run it standalone or self-host the account server, you are the controller of your own data and this policy does not apply to it. See the [licensing page](/licensing) for the terms the code itself is under.
+- **The venues you connect to.** Exchanges, brokers, DEXs, and wallet providers are independent companies with their own privacy policies. The terminal connects to them directly from your device, on your instruction, using your credentials. We are not a party to that relationship and we do not see it.
+- **Third-party plugins.** Plugins published by other developers run inside the terminal on your machine. What they do with your data is governed by their own terms. The terminal sandboxes them and holds them to a network allowlist you consent to, but it cannot make promises on their behalf.
+- **Bring-your-own-key AI providers.** If you plug your own OpenAI, Anthropic, Groq, or OpenRouter key into the terminal, your prompts go from your machine straight to that provider under your own account with them. They never pass through us.
+
+## 3. What we never receive
+
+This is the part worth reading twice, because it is the part most trading
+software cannot say.
+
+- **Your exchange and broker API keys, and your wallet private keys and seed phrases.** On the desktop app these live in your operating system's keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service). In browser builds they are encrypted at rest in your browser with AES-256-GCM. They are never transmitted to us, and our database is built so it cannot hold them: the account server strips any field that looks like an API secret, passphrase, private key, or seed phrase before writing anything to disk.
+- **Your funds.** We are not a custodian, a broker, or an exchange. We never hold, move, or have the technical ability to move your assets.
+- **Your orders and positions, unless you ask us to store them.** When you place a trade, the request goes from your device directly to the venue. It does not travel through our servers and we have no record of it. The exception is deliberate and yours to make: if you write an entry in the trade journal and you have cloud sync enabled, that entry is stored on our servers because that is what you asked for.
+- **Your market data.** Prices, candles, and order books stream directly from the exchange to your device over connections your app opens. We are not in the path.
+- **Your indicator code.** Custom Python indicators are compiled and executed locally in a sandboxed worker on your machine. The code never leaves it unless you publish it as a plugin.
+
+One honest consequence of that design: because your device talks to these
+third parties directly, **they see your IP address**. Exchanges, DEX APIs, the
+public package registries that serve Python wheels, and any plugin you install
+all observe connections coming from you rather than from us. That is the price
+of not putting a middleman in the path, and we think it is the right trade,
+but you should know it is the trade.
+
+## 4. The personal data we process
+
+### 4.1 Your account
+
+Creating a Pairlens account gives us:
+
+- **Your email address**, and whether it has been verified. It is your identifier and how we send sign-in codes.
+- **A display name and avatar image**, if you choose to set them. The avatar is stored in our object storage.
+- **Sign-in codes**, held only until they are used or expire, which is a matter of minutes.
+- **Session records**: an opaque session token, its expiry, and the IP address and browser or app user agent that created it. We keep these to keep you signed in and to let you and us spot a session that should not exist.
+- **Timestamps** for creation and last update.
+
+We do not ask for your name, your address, your date of birth, your phone
+number, or any identity documents, because we are not a regulated financial
+institution and we have no reason to.
+
+### 4.2 What you sync to the cloud
+
+Cloud sync is optional. The terminal keeps everything locally by default and
+works fully without an account. When you sign in and enable sync, these are
+stored on our servers so they follow you between devices:
+
+- Workspaces and terminal layouts, including any panels and variables they define.
+- Chart state per instrument: indicators, drawings, and view settings.
+- Plugin pins, that is which plugin you prefer for a given capability and market.
+- Plugin settings, encrypted at rest with AES-256-GCM. Trading credentials are stripped before storage, as described in section 3.
+- Notification rules and workflow definitions.
+- Risk configuration and the daily counters that enforce it.
+- Preferences such as your AI persona and whether the terminal is in paper or live mode.
+- Signals your strategies produced, where you have chosen to keep them.
+- Trade journal entries: market, pair, side, price, quantity, your own notes, and your own tags.
+
+Two of those deserve a flag. **Trade journal notes and workflow definitions are
+free text you write**, so they contain exactly what you type into them. And a
+**workspace you publish to the Workspace Store becomes public**: its layout,
+name, description, tags, and the display name you had at the time are visible
+to everyone. Wallet defaults are stripped server-side before publication, but
+treat anything you publish as permanently public.
+
+### 4.3 Pairlens Intelligence
+
+Section 5 covers this in full, because it deserves its own section.
+
+### 4.4 Billing
+
+If you subscribe to Pairlens Intelligence, we store your Polar customer
+identifier, the product and price you bought, your subscription status, the
+current period end, whether you have scheduled a cancellation, and a ledger of
+expired credit packs.
+
+**We never see your card.** Checkout, payment processing, invoicing, and sales
+tax are handled by Polar as our merchant of record. Your payment details go to
+them and their payment processors, not to us. Their privacy policy governs
+that part.
+
+### 4.5 Analytics and error reporting
+
+- **In the terminal**, product analytics is **off by default**. Nothing is captured, and the analytics library is not even downloaded, until you turn it on during onboarding or in Settings under Privacy. If you do turn it on, we capture screen views, explicit product events, and uncaught errors. There is no autocapture and no session recording, deliberately: a trading terminal renders balances, orders, and API-key forms, and we are not going to harvest that. The consent flag is stored on the device, not in your synced account, so consenting on one machine never quietly enables it on another.
+- **On this website**, analytics runs **cookieless and anonymous** from the first page load. No cookie, no cross-site tracking, no advertising. The banner offers an upgrade rather than demanding one: accept and a single first-party cookie remembers you between visits, decline or ignore it and measurement stays cookieless.
+- **On our servers**, we record the business events only the server knows: that an account was created, that a sign-in code was sent, subscription lifecycle events, and metered AI usage as model name, token counts, and credits. These are keyed to your opaque user id. They never contain your email address, your name, or the content of any message or prompt.
+
+### 4.6 Logs and abuse prevention
+
+Our servers keep short-lived operational logs (request paths, status codes,
+timing, and IP addresses) and rate-limiting counters. We use them to keep the
+service up, to debug failures, and to stop abuse. They are not used to build a
+profile of you.
+
+## 5. Pairlens Intelligence and AI processing
+
+Pairlens Intelligence is the optional hosted AI service. If you never use it,
+none of this section applies to you.
+
+### 5.1 What gets sent
+
+When you send a message to the co-pilot or run a research query, the request
+that leaves your device carries:
+
+- **Your message**, and the earlier messages in that conversation, so the model has context.
+- **The market context the terminal attaches**, which can include the instrument you are looking at, recent candles, computed indicator values, and the results of any tool the co-pilot ran on your behalf. If a tool reads your balances or open positions to answer your question, that reading is in the request.
+- **Your account identifier**, for authentication, rate limiting, and billing.
+
+Because the co-pilot can pull your portfolio into a request, treat the chat
+box the way you would treat any cloud service: **do not paste API keys, seed
+phrases, or passwords into it**. Nothing in the product needs them there.
+
+### 5.2 Where it goes
+
+The account server is a proxy. It does no agentic work of its own: it
+authenticates you, meters your credits, picks which model serves the request,
+and streams the answer back. The request itself is forwarded to the **Vercel AI
+Gateway**, which routes it to the model provider that serves the model we have
+selected for that workload. Today those providers are large commercial AI
+companies including OpenAI, Anthropic, xAI, and Google. Which one handles a
+given request depends on the model configured for the co-pilot or for
+research, and we change that configuration as better models ship.
+
+**The model provider's own terms govern what happens to your content inside
+their systems.** We choose providers whose commercial API terms state that API
+inputs and outputs are not used to train their models, and we rely on those
+terms, but we cannot give you a guarantee on behalf of a company we do not
+control. If that residual uncertainty is not acceptable for your use case, use
+a bring-your-own-key provider plugin, where the traffic goes straight from your
+machine to a provider you have your own contract with, or do not use AI
+features at all. The terminal is fully functional without them.
+
+Web research works the same way: your query text is sent through the gateway
+to a search-capable model, and the pages it retrieves come from the public
+internet.
+
+### 5.3 What we promise
+
+- **We do not train models.** We have no models of our own, and we do not build training sets out of your conversations, your market context, or your portfolio.
+- **We do not sell your data**, to anyone, for any purpose. We do not run advertising.
+- **We do not read your conversations** except where you explicitly ask us to look at one to debug a problem, or where we are legally compelled to.
+- **Your chat history is yours to delete.** It is stored so your conversations survive a restart and follow you across devices. Delete a conversation and it is gone from our database.
+
+## 6. Why we are allowed to process it
+
+Under Article 6 of the GDPR, every processing activity needs a legal basis.
+Ours are:
+
+| What                                                | Legal basis                                                                             |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Creating and running your account, signing you in   | Performance of a contract, Art. 6(1)(b)                                                 |
+| Storing and syncing the data you choose to sync     | Performance of a contract, Art. 6(1)(b)                                                 |
+| Running Pairlens Intelligence requests you make     | Performance of a contract, Art. 6(1)(b)                                                 |
+| Subscription billing and credit metering            | Performance of a contract, Art. 6(1)(b)                                                 |
+| Keeping invoices and tax records                    | Legal obligation, Art. 6(1)(c)                                                          |
+| Security, rate limiting, fraud and abuse prevention | Legitimate interests, Art. 6(1)(f): keeping the service available and safe for everyone |
+| Short-lived operational logs and debugging          | Legitimate interests, Art. 6(1)(f): running a service that works                        |
+| Product analytics in the terminal                   | Consent, Art. 6(1)(a), off until you turn it on                                         |
+| The optional analytics cookie on this website       | Consent, Art. 6(1)(a)                                                                   |
+| Publishing a workspace you chose to share           | Consent, Art. 6(1)(a)                                                                   |
+
+Where we rely on consent you can withdraw it at any time, and withdrawing it
+is as easy as giving it: one toggle in Settings under Privacy, or one click in
+the cookie banner. Withdrawal does not affect processing that already happened.
+
+Where we rely on legitimate interests, we have weighed our interest against
+your rights and concluded the processing is limited, expected, and something
+you can object to. You can object using the contact details in section 12.
+
+## 7. Cookies and local storage
+
+**This website** sets no cookie at all unless you accept one. Analytics runs
+cookieless by default and identity is a privacy-preserving server-side hash.
+Accepting sets a single first-party analytics cookie, and your accept or
+decline decision is itself remembered in your browser's local storage so we do
+not ask again. There are no advertising cookies, no third-party trackers, and
+no cross-site tracking.
+
+**The terminal** does not use cookies for its own state. It uses your
+browser's or the desktop app's local storage for your settings and workspaces,
+your operating system's keychain for credentials, and IndexedDB for encryption
+keys in browser builds. When you sign in, the session token is kept in local
+storage rather than a cookie, because the desktop app talks to our API
+cross-origin, where a cookie would simply be blocked.
+
+## 8. Who else touches your data
+
+We keep the list short on purpose. These are the processors we use, what each
+one does, and where.
+
+<SubprocessorTable />
+
+We also call a handful of market-data providers server to server. They receive
+a symbol or a query and nothing that identifies you, which is why they are not
+in the list above:
+
+<ul>
+  {DATA_SOURCES.map((s) => (
+    <li>
+      <strong>{s.name}</strong>: {s.purpose}
+    </li>
+  ))}
+</ul>
+
+Beyond that, we disclose personal data only where we are legally required to,
+for example in response to a valid, binding order from a competent authority.
+If we are ever compelled to hand over data about you, we will tell you unless
+the law forbids it.
+
+If the company is ever acquired or merged, your data may transfer to the
+acquirer as part of the business. You would be told before it happened, and
+this policy would keep applying until you were given notice of a replacement.
+
+## 9. International transfers
+
+**Our production infrastructure runs in the United States.** The database,
+cache, application servers, and object storage are hosted with Railway in a US
+region, and several of the providers listed above are US companies. If you are
+in the European Economic Area or the United Kingdom, your personal data is
+therefore transferred outside it.
+
+For each of those transfers we rely on the European Commission's **Standard
+Contractual Clauses**, incorporated into our data processing agreement with the
+provider, and where a provider is certified under the **EU-US Data Privacy
+Framework**, on that certification. We have assessed these transfers and apply
+supplementary measures: everything is encrypted in transit with TLS, sensitive
+configuration is encrypted at rest, credentials are never sent to our servers
+in the first place, and we minimise what is stored to the categories listed in
+section 4.
+
+Product analytics is the exception that runs the other way: it is hosted in
+the European Union and stays there.
+
+You can ask us for a copy of the transfer safeguards we rely on, and we will
+send them.
+
+## 10. How long we keep it
+
+| Data                           | Retention                                                                         |
+| ------------------------------ | --------------------------------------------------------------------------------- |
+| Account record and synced data | For as long as your account exists                                                |
+| After you delete your account  | Erased from live systems at once, and from backups as they rotate, inside 30 days |
+| Session records                | Until the session expires, then pruned                                            |
+| Sign-in codes                  | Minutes. Deleted on use or expiry                                                 |
+| AI conversations               | Until you delete the conversation or your account                                 |
+| Invoices and payment records   | As long as tax and accounting law requires, typically up to 10 years              |
+| Product analytics events       | Up to 12 months, or erased at once when you delete your account                   |
+| Operational server logs        | Days, not months                                                                  |
+| Published community workspaces | Until you unpublish them or delete your account                                   |
+
+Data you never synced, which is the default, lives only on your device. We
+cannot delete it for you, and we cannot see it. Uninstalling the app or
+clearing the site data removes it.
+
+## 11. Your rights
+
+If the GDPR or the UK GDPR applies to you, you have the right to:
+
+- **Access** the personal data we hold about you, and get a copy of it.
+- **Rectify** anything inaccurate or incomplete.
+- **Erase** your data. This is the big one, and we do not make it hard.
+- **Restrict** processing while a dispute about accuracy or lawfulness is resolved.
+- **Portability**: receive the data you gave us in a structured, machine-readable format, or have it sent to another provider where technically feasible.
+- **Object** to processing based on legitimate interests, including profiling. We do not profile you, but the right stands.
+- **Withdraw consent** at any time, wherever consent is the basis.
+- **Complain** to a data protection authority.
+
+**Deletion and export do not need us at all.** Both are controls in the app,
+under Settings, then Privacy:
+
+- **Export your data** writes a JSON file containing everything our servers
+  hold for your account: your profile, workspaces, chart layouts, AI
+  conversations, trade journal, workflows, alerts, plugin settings and billing
+  history. That covers access and portability, on your own schedule.
+- **Delete account** erases your account and everything synced to it, straight
+  away. That includes your product-analytics profile and its events, if you
+  ever turned analytics on. You confirm by typing your email address, and any
+  active Intelligence subscription is cancelled in the same step. There is no
+  undo and no recovery.
+
+Two things outlive a deletion, both deliberately. Invoices and payment records
+stay for as long as tax and accounting law requires, per the retention table
+above. And data that never left your device, which is most of it, was never
+ours to erase; sign out and uninstall to clear that.
+
+For the other rights, or if you cannot get into your account, email <a href={`mailto:${LEGAL_CONTACT.privacy}`}>{LEGAL_CONTACT.privacy}</a> from the
+address on your account. We will answer within one month. If a request is
+genuinely complex we may extend that by up to two further months, and we will
+tell you why within the first month. We do not charge for this.
+
+You can also complain to your local supervisory authority. Our lead authority
+is {LEGAL_ENTITY.supervisoryAuthority}. You have the right to complain to the
+authority where you live or work regardless, and you do not have to talk to us
+first, though we would rather you gave us the chance to fix it.
+
+## 12. Automated decision-making
+
+**We do not make decisions about you by automated means that produce legal
+effects or similarly significantly affect you.** The AI co-pilot produces
+analysis and suggestions, and it is wrong sometimes. It cannot place an order.
+Every trade requires your explicit confirmation on your own device, and the
+risk guardrails that can block a trade are deterministic rules that you
+configure and can change.
+
+## 13. Children
+
+Pairlens is not for children. The services are available only to people aged
+18 or over, and we do not knowingly collect data from anyone under 18. If you
+believe a child has created an account, tell us and we will delete it.
+
+## 14. How we protect it
+
+- Everything travels over TLS.
+- Sessions are opaque bearer tokens with an expiry, not guessable identifiers.
+- Synced plugin settings are encrypted at rest with AES-256-GCM, and fields that could carry trading credentials are stripped before they are ever written.
+- Credentials live in your operating system's keychain, on your machine, and our database is architecturally incapable of holding them.
+- Plugins run inside a sandbox with a network allowlist. Plugin code is signed with Ed25519 and verified against pinned publisher keys, and community-tier plugins are clamped to the sandbox with no full-trust option.
+- The desktop app ships a strict Content Security Policy, so it can only talk to hosts you have consented to.
+- Access to production systems is limited to those who need it.
+
+No system is perfectly secure. If we ever suffer a breach that is likely to
+put your rights at risk, we will notify the relevant supervisory authority
+within 72 hours and tell you directly without undue delay. If you think you
+have found a vulnerability, please report it as described in our
+[security policy](https://github.com/Pairlens/trading-terminal/blob/main/SECURITY.md).
+
+## 15. Changes to this policy
+
+We will update this policy when the product changes, and the effective date at
+the top always tells you which version you are reading. Every revision is in
+the public git history of this site, so you can diff them. For a change that
+materially reduces your rights or expands what we collect, we will tell you by
+email or in the app before it takes effect.
+
+## 16. Contact
+
+Data-protection questions, requests, and complaints: <a href={`mailto:${LEGAL_CONTACT.privacy}`}>{LEGAL_CONTACT.privacy}</a>.
+Everything else legal: <a href={`mailto:${LEGAL_CONTACT.legal}`}>{LEGAL_CONTACT.legal}</a>.
+Postal address is in section 1.

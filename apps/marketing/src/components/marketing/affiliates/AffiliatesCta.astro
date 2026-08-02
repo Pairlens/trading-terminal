@@ -1,0 +1,193 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Marble close. The payout runs venue → affiliate, so the brand promise ("never
+// touches your money") holds for commissions too; that is the note to end on.
+import { SITE } from '@/lib/site'
+
+const PATH = [
+  { k: 'You claim', v: 'A venue, with your code' },
+  { k: 'Pairlens routes', v: 'The signup link' },
+  { k: 'The venue pays', v: 'You, on its own terms' },
+]
+---
+
+<section class="pl-marble aff-close">
+  <div class="aff-close-grid mx-auto max-w-[1200px]">
+    <div>
+      <h2 class="aff-close-h2" data-reveal>
+        We never touch your money. Your commission included.
+      </h2>
+      <p class="aff-close-lede" data-reveal data-reveal-delay="70">
+        Every payout comes from the venue, under the venue’s own referral
+        program and on its own schedule. Pairlens never sits between you and the
+        money, never holds a balance for you, and never asks for a wallet or an
+        exchange key. All we route is the link.
+      </p>
+
+    <div class="aff-close-row" data-reveal data-reveal-delay="140">
+      <a href={SITE.x} target="_blank" rel="noopener" class="aff-close-primary">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"
+          ></path>
+        </svg>
+        Request a code on X
+      </a>
+    </div>
+
+      <p class="aff-close-note" data-reveal data-reveal-delay="200">
+        <a href="#claim">No code needed for Bronze. Claim two venues now →</a>
+      </p>
+    </div>
+
+    <ol class="aff-path" data-reveal data-reveal-delay="140">
+      {
+        PATH.map((row) => (
+          <li class="aff-path-row">
+            <span class="aff-path-k">{row.k}</span>
+            <span class="aff-path-v">{row.v}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .aff-close {
+    padding: 96px 32px 104px;
+  }
+  .aff-close-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 72px;
+    align-items: start;
+  }
+  .aff-close-h2 {
+    margin: 0;
+    max-width: 17ch;
+    font-family: var(--font-serif);
+    font-size: 54px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.036em;
+    color: var(--ml-fg);
+  }
+  .aff-close-lede {
+    margin: 20px 0 0;
+    max-width: 56ch;
+    font-size: 17px;
+    line-height: 1.68;
+    text-wrap: pretty;
+    color: var(--ml-muted);
+  }
+
+  .aff-close-row {
+    margin-top: 34px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .aff-close-primary {
+    display: inline-flex;
+    height: 54px;
+    align-items: center;
+    gap: 11px;
+    white-space: nowrap;
+    border-radius: 16px;
+    background: var(--ml-fg);
+    padding: 0 26px;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--ml-bg);
+    transition: transform 0.2s var(--ease-out);
+  }
+  .aff-close-primary:hover {
+    color: var(--ml-bg);
+    transform: translateY(-2px);
+  }
+  .aff-close-primary svg {
+    width: 17px;
+    height: 17px;
+    flex: none;
+  }
+
+  .aff-close-note {
+    margin: 24px 0 0;
+  }
+  .aff-close-note a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 62%, transparent);
+    transition: color 0.2s var(--ease-out);
+  }
+  .aff-close-note a:hover {
+    color: var(--ml-fg);
+  }
+
+  /* The payout path, as three hairline rows: who does what, in order. */
+  .aff-path {
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--ml-border);
+  }
+  .aff-path-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border-bottom: 1px solid var(--ml-border);
+    padding: 16px 0;
+  }
+  .aff-path-k {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 42%, transparent);
+  }
+  .aff-path-v {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ml-fg);
+  }
+
+  @media (max-width: 1080px) {
+    .aff-close-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+  }
+  @media (max-width: 860px) {
+    .aff-close-h2 {
+      font-size: 36px;
+    }
+  }
+  @media (max-width: 720px) {
+    .aff-close {
+      padding: 80px 20px 88px;
+    }
+  }
+  @media (max-width: 480px) {
+    .aff-close-h2 {
+      font-size: 30px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .aff-close-primary,
+    .aff-close-note a {
+      transition: none;
+    }
+    .aff-close-primary:hover {
+      transform: none;
+    }
+  }
+</style>

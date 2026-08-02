@@ -1,0 +1,46 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import SiteLayout from '@/layouts/SiteLayout.astro'
+import SiteHeader from '@/components/SiteHeader.astro'
+import SiteFooter from '@/components/SiteFooter.astro'
+import LicensingHero from '@/components/marketing/licensing/LicensingHero.astro'
+import LicensingClauses from '@/components/marketing/licensing/LicensingClauses.astro'
+import LicensingTimeline from '@/components/marketing/licensing/LicensingTimeline.astro'
+import LicensingFaq from '@/components/marketing/licensing/LicensingFaq.astro'
+import LicensingCta from '@/components/marketing/licensing/LicensingCta.astro'
+import { FAQ } from '@/components/marketing/licensing/content'
+
+const title = 'Pairlens licensing: free for you, off-limits to copycats'
+const description =
+  'Pairlens is source-available under the Functional Source License (FSL): free to use, read, modify, and self-host. Every release becomes Apache 2.0 open source two years after it ships. The charting engine is MIT.'
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+]
+---
+
+<SiteLayout title={title} description={description} jsonLd={jsonLd}>
+  <SiteHeader />
+  <main>
+    <!-- Marble document: hero, clauses and the conversion timeline share one
+         continuous stone ground; the FAQ drops back to the graphite product
+         surface before the closing CTA returns to marble. -->
+    <div class="pl-marble">
+      <LicensingHero />
+      <LicensingClauses />
+      <LicensingTimeline />
+    </div>
+    <LicensingFaq />
+    <LicensingCta />
+  </main>
+  <SiteFooter />
+</SiteLayout>

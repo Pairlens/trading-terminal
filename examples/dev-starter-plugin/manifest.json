@@ -1,0 +1,28 @@
+{
+  "id": "dev-starter",
+  "name": "Dev Starter",
+  "version": "0.1.0",
+  "author": "Pairlens",
+  "description": "A starter plugin demonstrating the Plugin SDK — use as a template for building your own plugins",
+  "homepage": "https://pairlens.finance",
+  "capabilities": [],
+  "config": {},
+  "contributes": {
+    "panels": [
+      {
+        "id": "hello",
+        "label": "Hello World",
+        "icon": "Sparkles",
+        "category": "discovery",
+        "description": "A demo panel showing SDK hooks in action"
+      }
+    ],
+    "commands": [
+      {
+        "id": "greet",
+        "label": "Dev Starter: Say Hello",
+        "icon": "Sparkles"
+      }
+    ]
+  }
+}

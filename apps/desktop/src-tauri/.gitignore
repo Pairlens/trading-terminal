@@ -1,0 +1,8 @@
+# Cargo build output
+target/
+
+# Compiled binaries (desktop build artifacts)
+binaries/
+
+# Generated schemas (created by tauri build)
+gen/

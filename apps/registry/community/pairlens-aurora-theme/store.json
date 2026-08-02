@@ -1,0 +1,6 @@
+{
+  "githubUser": "pairlens",
+  "category": "themes",
+  "tagline": "Polar-night palette with aurora greens and a violet glow",
+  "longDescription": "A community theme inspired by the northern lights. Deep polar-night backgrounds set the stage for aurora-green candles, teal accents, and soft violet highlights that shimmer without shouting. This plugin is also the reference community submission — copy its folder layout (manifest.json, store.json, src/) to publish your own."
+}

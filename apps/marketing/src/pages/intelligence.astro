@@ -1,0 +1,964 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { Image } from 'astro:assets'
+import SiteLayout from '@/layouts/SiteLayout.astro'
+import SiteHeader from '@/components/SiteHeader.astro'
+import SiteFooter from '@/components/SiteFooter.astro'
+import FaqAccordion from '@/components/marketing/intelligence/FaqAccordion.astro'
+import OsDownloadLink from '@/components/marketing/intelligence/OsDownloadLink.astro'
+import bustImage from '@/assets/intelligence-bust.png'
+import appleIcon from '@/components/marketing/os/apple.svg?raw'
+import windowsIcon from '@/components/marketing/os/windows.svg?raw'
+import linuxIcon from '@/components/marketing/os/linux.svg?raw'
+import { SITE } from '@/lib/site'
+import {
+  CREDIT_PACK_EXPIRY_DAYS,
+  CREDIT_PACK_IDS,
+  CREDIT_PACKS,
+  INTELLIGENCE_PLANS,
+  WEB_RESEARCH_CREDITS_PER_SEARCH,
+} from '@pairlens/shared/billing-types'
+
+const title = 'Pairlens Intelligence: hosted AI for your trading terminal'
+const description =
+  'The simplest way to power AI in the Pairlens terminal: hosted copilot, research reports, and web search on the best frontier models, with automatic fallbacks. One subscription, no API keys, and entirely optional: your own provider keys always work, free.'
+
+const fmt = (n: number) => n.toLocaleString('en-US')
+
+// Prices, budgets and pack sizes come from the billing contract rather than the
+// page, so marketing figures can never drift from what the terminal charges.
+const pro = INTELLIGENCE_PLANS.pro
+const max = INTELLIGENCE_PLANS.max
+const packs = CREDIT_PACK_IDS.map((id) => CREDIT_PACKS[id])
+
+const HERO_STATS = [
+  { stat: '0', label: 'API keys to create' },
+  { stat: 'Auto', label: 'model per task' },
+  { stat: `$${pro.priceUsdMonthly}`, label: 'a month, cancel anytime' },
+]
+
+/** BYOK provider plugins — always free, never gated by a subscription. */
+const PROVIDERS = [
+  { id: 'anthropic', name: 'Anthropic' },
+  { id: 'openai', name: 'OpenAI' },
+  { id: 'groq', name: 'Groq' },
+  { id: 'openrouter', name: 'OpenRouter' },
+  { id: 'tavily', name: 'Tavily' },
+  { id: 'exa', name: 'Exa' },
+]
+
+const FEATURES = [
+  {
+    accent: 'var(--pl-iris)',
+    stat: '0',
+    statLabel: 'API keys to manage',
+    title: 'Sign in and it just works',
+    body: 'No provider accounts, no separate billing dashboards, no keys pasted into a terminal. Subscribe once and the copilot, research reports and web search all light up.',
+  },
+  {
+    accent: 'var(--chart-1)',
+    stat: 'Auto',
+    statLabel: 'model routing',
+    title: 'Always the right model',
+    body: 'Each request is routed to the frontier model that fits the job: fast for chat, deep for research. We keep the lineup current as models improve.',
+  },
+  {
+    accent: 'var(--pl-green)',
+    stat: 'Multi',
+    statLabel: 'provider fallbacks',
+    title: 'More reliable than one key',
+    body: 'One provider having a bad day won’t take your copilot down: requests reroute across providers automatically. A single bring-your-own key can’t do that.',
+  },
+  {
+    accent: 'var(--chart-4)',
+    stat: '1',
+    statLabel: 'credit meter',
+    title: 'One budget for everything',
+    body: 'Copilot chat, research reports and web search draw from the same transparent budget, metered live in Settings → Intelligence.',
+  },
+  {
+    accent: 'var(--chart-5)',
+    stat: '$0.001',
+    statLabel: 'per credit',
+    title: 'Priced to be boring',
+    body: 'Credits map directly to underlying AI cost, so the meter is honest and the plans are generous for most trading days. No automatic overage billing, ever.',
+  },
+  {
+    accent: 'var(--pl-iris)',
+    stat: `${CREDIT_PACK_EXPIRY_DAYS}d`,
+    statLabel: 'on-demand packs',
+    title: 'Extra compute when it counts',
+    body: 'Deep-research week? Max subscribers can add one-time credit packs that stack on the monthly budget.',
+  },
+]
+
+const PLAN_BULLETS = [
+  'Hosted AI copilot on frontier models',
+  'AI research reports',
+  `Hosted web search (${WEB_RESEARCH_CREDITS_PER_SEARCH} credits per search)`,
+  'Automatic model routing with multi-provider fallbacks',
+  'Live usage meter in the terminal',
+]
+
+type Plan = {
+  billedBy: string
+  label: string
+  tagline: string
+  price: string
+  priceUnit: string
+  meta: string
+  accent: string
+  border: string
+  ctaBg: string
+  ctaFg: string
+  cta: string
+  ctaHref: string
+  popular: boolean
+  showProviders: boolean
+  bullets: ReadonlyArray<string>
+}
+
+const PRICING: ReadonlyArray<Plan> = [
+  {
+    billedBy: 'Billed by your provider',
+    label: 'Your own keys',
+    tagline: 'Plug an API key into a provider plugin and pay them directly.',
+    price: 'Variable cost',
+    priceUnit: 'at market rates',
+    meta: '$0 to Pairlens — you pay your provider directly',
+    accent: 'var(--pl-green)',
+    border: 'var(--border)',
+    ctaBg: 'transparent',
+    ctaFg: 'var(--foreground)',
+    cta: 'See provider plugins',
+    ctaHref: '/docs/plugin-sdk',
+    popular: false,
+    showProviders: true,
+    bullets: [
+      'Every AI feature in the terminal, unlocked',
+      'You pick the model and the provider',
+      'You manage the keys, accounts and rate limits',
+      'Free forever — never gated behind a subscription',
+    ],
+  },
+  {
+    billedBy: 'Billed by Pairlens · flat rate',
+    label: pro.label,
+    tagline: 'Hosted AI copilot and research for active traders.',
+    price: `$${pro.priceUsdMonthly}`,
+    priceUnit: '/ month',
+    meta: `${fmt(pro.monthlyCredits)} credits every month`,
+    accent: 'var(--primary)',
+    border: 'color-mix(in oklch, var(--primary) 50%, transparent)',
+    ctaBg: 'var(--primary)',
+    ctaFg: 'var(--primary-foreground)',
+    cta: 'Start with Pro',
+    ctaHref: '/install',
+    popular: true,
+    showProviders: false,
+    bullets: PLAN_BULLETS,
+  },
+  {
+    billedBy: 'Billed by Pairlens · flat rate',
+    label: max.label,
+    tagline: 'Heavy research and automation workloads, 5× the budget.',
+    price: `$${max.priceUsdMonthly}`,
+    priceUnit: '/ month',
+    meta: `${fmt(max.monthlyCredits)} credits every month`,
+    accent: 'var(--chart-1)',
+    border: 'var(--border)',
+    ctaBg: 'transparent',
+    ctaFg: 'var(--foreground)',
+    cta: 'Go Max',
+    ctaHref: '/install',
+    popular: false,
+    showProviders: false,
+    bullets: [
+      'Everything in Pro',
+      'Over 5× the monthly budget of Pro',
+      'On-demand credit packs for the heaviest work',
+      'Room for long research sessions and automation',
+    ],
+  },
+]
+
+const FAQ = [
+  {
+    q: 'Do I need Pairlens Intelligence to use Pairlens?',
+    a: 'No. The terminal is free, its source is public, and it is fully functional without it — including every AI feature, which also runs on your own provider keys. Intelligence is an optional convenience subscription, never a gate.',
+  },
+  {
+    q: 'Can I use my own Anthropic, OpenAI, or other provider keys instead?',
+    a: 'Yes, always. Bring-your-own-key plugins for Anthropic, OpenAI, Groq and OpenRouter (inference) plus Tavily and Exa (web search) are free forever and installed from the Plugins page in the terminal. You pay your provider directly and nothing is gated behind a subscription.',
+  },
+  {
+    q: 'What is a credit?',
+    a: `One credit equals $0.001 of underlying AI usage cost. All hosted AI draws from the same monthly budget; a hosted web search uses a flat ${WEB_RESEARCH_CREDITS_PER_SEARCH} credits plus the tokens of the request that triggers it.`,
+  },
+  {
+    q: 'What happens if I run out of credits mid-month?',
+    a: 'Hosted AI features pause until your budget resets; you are never billed overage automatically. Max subscribers can top up instantly with a credit pack, Pro subscribers can upgrade, and your own provider keys keep working regardless.',
+  },
+  {
+    q: 'Does my trading data or my exchange keys ever reach your servers?',
+    a: 'Your exchange API keys and wallets never leave your machine; they live in your OS keychain and Pairlens servers cannot store them. AI requests carry only the market context you invoke, like the chart or pair you ask about.',
+  },
+]
+
+const PACK_BLURB = `One-time top-ups that stack on your monthly budget for the hardest AI work. Pack credits are spent first and expire ${CREDIT_PACK_EXPIRY_DAYS} days after purchase.`
+
+const OS_ALTS = [
+  { key: 'mac', label: 'macOS', icon: appleIcon },
+  { key: 'win', label: 'Windows', icon: windowsIcon },
+  { key: 'linux', label: 'Linux', icon: linuxIcon },
+]
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'Pairlens Intelligence',
+    description,
+    brand: { '@type': 'Brand', name: SITE.name },
+    offers: [pro, max].map((p) => ({
+      '@type': 'Offer',
+      name: p.label,
+      price: p.priceUsdMonthly,
+      priceCurrency: 'USD',
+      description: `${fmt(p.monthlyCredits)} credits per month · ${p.tagline}`,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+]
+---
+
+<SiteLayout title={title} description={description} jsonLd={jsonLd}>
+  <SiteHeader />
+  <main>
+    <!-- Hero — marble arrival; the bust sits flush on the marble boundary -->
+    <section class="pl-marble relative overflow-clip">
+      <div
+        class="relative z-[1] mx-auto max-w-[1264px] px-8 pt-[130px] max-[720px]:px-5 max-[720px]:pt-28"
+      >
+        <div class="hero-grid">
+          <div class="pb-20 max-[1000px]:pb-10">
+            <p
+              data-reveal
+              class="pl-eyebrow m-0"
+              style="color: var(--ml-muted);"
+            >
+              Pairlens Intelligence · Optional add-on
+            </p>
+            <h1
+              data-reveal
+              style="--reveal-delay: 70ms; font-size: clamp(44px, 5.9vw, 76px); letter-spacing: -0.042em; color: var(--ml-fg);"
+              class="mt-[26px] max-w-[13ch] font-serif font-semibold leading-[0.94]"
+            >
+              AI superpowers,<br /><span class="pl-spectrum-text"
+                >in one click.</span
+              >
+            </h1>
+            <p
+              data-reveal
+              style="--reveal-delay: 140ms; color: var(--ml-muted);"
+              class="mt-[30px] max-w-[48ch] text-pretty text-[18px] leading-[1.62]"
+            >
+              Intelligence is the hosted brain for your terminal: copilot,
+              research reports and web search running on the best frontier
+              models, with automatic fallbacks across providers. One
+              subscription, zero setup and entirely optional.
+            </p>
+            <div
+              data-reveal
+              style="--reveal-delay: 210ms;"
+              class="mt-9 flex items-center gap-3 max-[620px]:flex-wrap"
+            >
+              <a
+                href="#pricing"
+                class="pl-ring inline-flex h-[52px] items-center whitespace-nowrap rounded-xl px-6 text-[15.5px] font-semibold"
+                style="background: var(--ml-fg); color: var(--ml-bg);"
+              >
+                See plans &amp; pricing
+              </a>
+              <OsDownloadLink
+                class="inline-flex h-[52px] items-center gap-[10px] whitespace-nowrap rounded-xl border px-[22px] text-[15.5px] font-semibold"
+                style="border-color: var(--ml-border); background: color-mix(in oklch, var(--ml-card) 70%, transparent); color: var(--ml-fg);"
+              />
+            </div>
+            <div
+              data-reveal
+              style="--reveal-delay: 280ms; border-color: var(--ml-border);"
+              class="mt-10 flex items-stretch gap-7 border-t pt-[22px]"
+            >
+              {
+                HERO_STATS.map((s) => (
+                  <div>
+                    <p
+                      class="m-0 font-serif text-[26px] font-semibold"
+                      style="letter-spacing: -0.028em; color: var(--ml-fg);"
+                    >
+                      {s.stat}
+                    </p>
+                    <p
+                      class="mt-[3px] font-mono text-[10px] font-semibold uppercase"
+                      style="letter-spacing: 0.16em; color: color-mix(in oklch, var(--ml-fg) 45%, transparent);"
+                    >
+                      {s.label}
+                    </p>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="hero-bust" data-reveal style="--reveal-delay: 260ms">
+            <Image
+              src={bustImage}
+              alt="A marble bust in a laurel crown wearing sunglasses with prism-lit lenses, one finger raised to its temple"
+              widths={[24, 448, 896]}
+              sizes="(max-width: 720px) 1px, (max-width: 1000px) 300px, 448px"
+              format="webp"
+              quality={80}
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why traders pick Intelligence -->
+    <section
+      class="border-t px-8 py-[104px] max-[720px]:px-5"
+      style="background: var(--pl-band); border-color: color-mix(in oklch, var(--border) 60%, transparent);"
+    >
+      <div class="mx-auto max-w-[1200px]">
+        <div class="band-head">
+          <div>
+            <p data-reveal class="pl-eyebrow m-0 text-primary">
+              Why traders pick Intelligence
+            </p>
+            <h2
+              data-reveal
+              style="--reveal-delay: 70ms;"
+              class="hd-46 mt-5 max-w-[20ch] font-serif font-semibold leading-[1.04] tracking-[-0.03em] text-foreground"
+            >
+              The simplest path to an <br />AI-powered desk.
+            </h2>
+          </div>
+          <p
+            data-reveal
+            style="--reveal-delay: 140ms;"
+            class="mb-1.5 max-w-[40ch] text-[15px] leading-[1.7] text-muted-foreground"
+          >
+            Six things you stop thinking about the moment you turn it on.
+          </p>
+        </div>
+        <div
+          class="mt-11 grid grid-cols-2 gap-x-[72px] max-[720px]:grid-cols-1"
+        >
+          {
+            FEATURES.map((f) => (
+              <article
+                data-reveal
+                class="grid grid-cols-[128px_minmax(0,1fr)] items-baseline gap-6 border-t border-border py-[26px] max-[720px]:grid-cols-1 max-[720px]:gap-x-0 max-[720px]:gap-y-1.5"
+              >
+                <div>
+                  <p
+                    class="m-0 font-serif text-[30px] font-semibold"
+                    style={`letter-spacing: -0.032em; color: ${f.accent};`}
+                  >
+                    {f.stat}
+                  </p>
+                  <p
+                    class="mt-[3px] font-mono text-[9.5px] font-semibold uppercase"
+                    style="letter-spacing: 0.16em; color: color-mix(in oklch, var(--muted-foreground) 72%, transparent);"
+                  >
+                    {f.statLabel}
+                  </p>
+                </div>
+                <div>
+                  <h3 class="m-0 text-[17px] font-semibold text-foreground">
+                    {f.title}
+                  </h3>
+                  <p class="mt-2 text-pretty text-[14.5px] leading-[1.68] text-muted-foreground">
+                    {f.body}
+                  </p>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Plans & pricing -->
+    <section
+      id="pricing"
+      class="scroll-mt-[110px] bg-background px-8 py-[104px] max-[720px]:px-5"
+    >
+      <div class="mx-auto max-w-[1200px]">
+        <div class="max-w-[760px]">
+          <p class="pl-eyebrow m-0 text-primary">Plans &amp; pricing</p>
+          <h2
+            class="hd-48 mt-5 font-serif font-semibold leading-[1.04] tracking-[-0.03em] text-foreground"
+          >
+            At cost, or at a flat rate.
+          </h2>
+          <p
+            class="mt-[18px] max-w-[66ch] text-pretty text-[16px] leading-[1.7] text-muted-foreground"
+          >
+            Every AI feature works either way. Plug in your own provider key and
+            pay that provider directly at whatever they charge — or let Pairlens
+            host the whole thing for one predictable monthly price.
+          </p>
+        </div>
+
+        <div
+          class="mt-12 grid grid-cols-3 gap-5 max-[1000px]:grid-cols-2 max-[720px]:grid-cols-1"
+        >
+          {
+            PRICING.map((p) => (
+              <article
+                data-reveal
+                class="relative flex flex-col overflow-hidden rounded-[22px] border bg-card p-[30px]"
+                style={`border-color: ${p.border};`}
+              >
+                <div
+                  aria-hidden="true"
+                  class="pointer-events-none absolute inset-0"
+                  style={`background: radial-gradient(120% 80% at 50% -10%, color-mix(in oklch, ${p.accent} 12%, transparent), transparent 60%);`}
+                />
+
+                <div class="relative flex min-h-[30px] items-center justify-between gap-2.5">
+                  <h3 class="m-0 whitespace-nowrap font-serif text-2xl font-semibold tracking-[-0.024em] text-foreground">
+                    {p.label}
+                  </h3>
+                  {p.popular && (
+                    <span
+                      class="shrink-0 rounded-full px-[9px] py-[3px] font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-primary"
+                      style="background: color-mix(in oklch, var(--primary) 18%, transparent);"
+                    >
+                      Popular
+                    </span>
+                  )}
+                </div>
+                <p class="relative mt-2 min-h-[44px] text-[14px] leading-[1.55] text-muted-foreground">
+                  {p.tagline}
+                </p>
+
+                <p class="relative mt-[22px] flex items-baseline gap-[7px]">
+                  <span
+                    class="font-serif font-semibold tracking-[-0.035em] text-foreground"
+                    style={`font-size: ${p.price.length > 4 ? '34px' : '48px'};`}
+                  >
+                    {p.price}
+                  </span>
+                  <span class="text-[13.5px] text-muted-foreground">
+                    {p.priceUnit}
+                  </span>
+                </p>
+                <p
+                  class="relative mt-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em]"
+                  style={`color: ${p.accent};`}
+                >
+                  {p.billedBy}
+                </p>
+                <p class="relative mb-5 mt-1.5 text-[14px] font-semibold text-foreground">
+                  {p.meta}
+                </p>
+
+                {p.showProviders && (
+                  <div class="relative flex flex-wrap gap-[7px] border-t border-border pt-[18px]">
+                    {PROVIDERS.map((v) => (
+                      <span class="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 py-1 pl-1 pr-2.5 text-[12px] text-foreground">
+                        <img
+                          src={`/venues/${v.id}.png`}
+                          alt=""
+                          width="18"
+                          height="18"
+                          loading="lazy"
+                          decoding="async"
+                          class="size-[18px] rounded-full"
+                        />
+                        {v.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <ul class="relative mb-[30px] mt-5 flex list-none flex-col gap-2.5 p-0">
+                  {p.bullets.map((b) => (
+                    <li class="flex items-start gap-2.5 text-[13.5px] leading-[1.55] text-muted-foreground">
+                      <svg
+                        class="mt-[3px] size-3.5 shrink-0"
+                        style={`color: ${p.accent};`}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m5 13 4 4L19 7" />
+                      </svg>
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+
+                <a
+                  href={p.ctaHref}
+                  data-plan-dialog={
+                    p.billedBy.startsWith('Billed by Pairlens')
+                      ? p.label
+                      : undefined
+                  }
+                  data-plan-accent={p.accent}
+                  class="plan-cta relative mt-auto inline-flex h-[46px] w-full shrink-0 items-center justify-center rounded-[14px] border text-[14.5px] font-semibold"
+                  style={`background: ${p.ctaBg}; border-color: ${p.border}; color: ${p.ctaFg};`}
+                >
+                  {p.cta}
+                </a>
+              </article>
+            ))
+          }
+        </div>
+
+        <div
+          data-reveal
+          class="mt-5 rounded-[22px] border border-border bg-card p-[30px]"
+        >
+          <div class="flex flex-wrap items-baseline justify-between gap-2.5">
+            <h3
+              class="m-0 font-serif text-[21px] font-semibold tracking-[-0.02em] text-foreground"
+            >
+              Extra credits, on demand
+            </h3>
+            <p
+              class="m-0 font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em]"
+              style="color: color-mix(in oklch, var(--muted-foreground) 75%, transparent);"
+            >
+              Intelligence Max only
+            </p>
+          </div>
+          <p
+            class="mt-2.5 max-w-[64ch] text-[14.5px] leading-[1.7] text-muted-foreground"
+          >
+            {PACK_BLURB}
+          </p>
+          <div
+            class="mt-5 grid grid-cols-4 gap-3 max-[900px]:grid-cols-2 max-[720px]:grid-cols-1"
+          >
+            {
+              packs.map((k) => (
+                <div class="rounded-[14px] border border-border bg-background/60 p-3.5 text-center">
+                  <p class="m-0 font-serif text-[22px] font-semibold tracking-[-0.02em] text-foreground">
+                    ${k.priceUsd}
+                  </p>
+                  <p class="mt-[3px] text-[12.5px] text-muted-foreground">
+                    {fmt(k.credits)} credits
+                  </p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section
+      id="faq"
+      class="scroll-mt-[110px] bg-background px-8 pb-[104px] max-[720px]:px-5"
+    >
+      <div class="mx-auto max-w-[820px]">
+        <p data-reveal class="pl-eyebrow m-0 text-primary">FAQ</p>
+        <h2
+          data-reveal
+          style="--reveal-delay: 70ms;"
+          class="hd-44 mt-5 font-serif font-semibold leading-[1.04] tracking-[-0.03em] text-foreground"
+        >
+          Questions, answered straight.
+        </h2>
+        <div data-reveal style="--reveal-delay: 140ms;" class="mt-[34px]">
+          <FaqAccordion items={FAQ} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing CTA -->
+    <section
+      class="relative overflow-clip border-t px-8 pb-[104px] pt-24 max-[720px]:px-5"
+      style="background: var(--pl-band); border-color: color-mix(in oklch, var(--border) 60%, transparent);"
+    >
+      <div
+        aria-hidden="true"
+        class="pl-glow pointer-events-none absolute left-1/2 top-[-60px] -ml-[410px] h-[420px] w-[820px] rounded-full opacity-[0.45]"
+        style="filter: blur(104px); background: radial-gradient(closest-side, color-mix(in oklch, var(--primary) 24%, transparent), transparent);"
+      >
+      </div>
+      <div
+        class="relative mx-auto flex max-w-[720px] flex-col items-center text-center"
+      >
+        <h2
+          data-reveal
+          class="hd-48 m-0 font-serif font-semibold leading-[1.04] tracking-[-0.03em] text-foreground"
+        >
+          Your desk, <span class="pl-spectrum-text">thinking with you.</span>
+        </h2>
+        <p
+          data-reveal
+          style="--reveal-delay: 70ms;"
+          class="mt-[18px] max-w-[54ch] text-[16.5px] leading-[1.7] text-muted-foreground"
+        >
+          Download the terminal free, then flip on Intelligence from Settings
+          whenever you want the hosted brain, or plug in your own AI providers
+          keys. Either way, your exchange credentials never leave your machine.
+        </p>
+        <div
+          data-reveal
+          style="--reveal-delay: 140ms;"
+          class="mt-[34px] flex items-center justify-center gap-3 max-[620px]:flex-wrap"
+        >
+          <OsDownloadLink
+            class="pl-ring inline-flex h-[52px] items-center gap-[11px] whitespace-nowrap rounded-xl bg-primary px-6 text-[15.5px] font-semibold text-primary-foreground"
+          />
+          <a
+            href="/docs/quickstart"
+            class="inline-flex h-[52px] items-center whitespace-nowrap rounded-xl border border-border bg-background/40 px-6 text-[15.5px] font-semibold text-foreground transition-colors hover:bg-muted"
+          >
+            Read the quickstart
+          </a>
+        </div>
+        <div
+          data-reveal
+          style="--reveal-delay: 200ms;"
+          class="mt-6 flex flex-wrap items-center justify-center gap-3"
+        >
+          <span
+            class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em]"
+            style="color: color-mix(in oklch, var(--muted-foreground) 70%, transparent);"
+          >
+            Also available for
+          </span>
+          {
+            OS_ALTS.map((o) => (
+              <a
+                href="/install"
+                data-os-alt={o.key}
+                class="os-alt inline-flex h-11 items-center gap-[9px] rounded-lg border border-border bg-card px-4 text-[14.5px] font-semibold text-foreground"
+              >
+                <span class="os-alt-glyph" set:html={o.icon} />
+                {o.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+
+  <!-- Subscribing happens inside the terminal (Settings → Intelligence opens
+       the hosted checkout), so the plan CTAs explain the path instead of
+       pretending the website can sell the plan. No-JS falls back to /install. -->
+  <dialog
+    data-plan-dialog-el
+    aria-label="How to subscribe"
+    class="plan-dialog m-auto w-[min(560px,calc(100vw-40px))] rounded-[22px] border border-border bg-card p-0 text-foreground"
+  >
+    <div class="p-8 sm:p-10">
+      <p
+        class="pl-eyebrow m-0"
+        data-plan-dialog-plan
+        style="color: var(--primary);"
+      >
+        Intelligence Pro
+      </p>
+      <h3
+        class="m-0 mt-3 font-serif text-[27px] leading-[1.08] font-semibold tracking-[-0.02em]"
+      >
+        You subscribe from inside the terminal.
+      </h3>
+      <p class="m-0 mt-3.5 text-[15px] leading-relaxed text-muted-foreground">
+        Billing is tied to your Pairlens account, so the plan is switched on
+        where it runs. Three steps:
+      </p>
+      <ol class="m-0 mt-6 list-none space-y-4 p-0">
+        {
+          [
+            {
+              t: 'Open Pairlens',
+              d: 'The terminal is a free download. Already installed? Skip ahead.',
+            },
+            {
+              t: 'Sign in with your email',
+              d: 'A one-time code, no password. The subscription follows this account onto every device.',
+            },
+            {
+              t: 'Pick your plan in Settings → Intelligence',
+              d: 'Checkout opens in your browser; the plan is live in the terminal the moment it completes.',
+            },
+          ].map((step, i) => (
+            <li class="flex gap-3.5">
+              <span class="grid size-7 shrink-0 place-items-center rounded-full border border-border font-mono text-[12px] font-semibold text-muted-foreground">
+                {i + 1}
+              </span>
+              <div>
+                <p class="m-0 text-[14.5px] font-semibold">{step.t}</p>
+                <p class="m-0 mt-1 text-[13.5px] leading-relaxed text-muted-foreground">
+                  {step.d}
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a
+          href="/install"
+          class="inline-flex h-11 items-center rounded-xl bg-primary px-5 text-[14px] font-semibold text-primary-foreground transition-transform hover:scale-[1.03] active:scale-100"
+        >
+          Get Pairlens free
+        </a>
+        <button
+          type="button"
+          data-plan-dialog-close
+          class="inline-flex h-11 cursor-pointer items-center rounded-xl border border-border bg-transparent px-5 text-[14px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    // Plan CTAs: intercept the /install fallback and show the how-to dialog.
+    function armPlanDialog() {
+      const dialog = document.querySelector<HTMLDialogElement>(
+        '[data-plan-dialog-el]',
+      )
+      if (!dialog || dialog.dataset.armed) return
+      dialog.dataset.armed = '1'
+      const planEl = dialog.querySelector<HTMLElement>('[data-plan-dialog-plan]')
+
+      for (const cta of document.querySelectorAll<HTMLAnchorElement>(
+        'a[data-plan-dialog]',
+      )) {
+        cta.addEventListener('click', (event) => {
+          event.preventDefault()
+          if (planEl) {
+            planEl.textContent = cta.dataset.planDialog ?? ''
+            planEl.style.color = cta.dataset.planAccent ?? 'var(--primary)'
+          }
+          dialog.showModal()
+        })
+      }
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close()
+      })
+      dialog
+        .querySelector('[data-plan-dialog-close]')
+        ?.addEventListener('click', () => dialog.close())
+    }
+    armPlanDialog()
+    document.addEventListener('astro:page-load', armPlanDialog)
+  </script>
+
+  <script is:inline>
+    ;(() => {
+      // Lead with the visitor's own platform; the other two stay one click away.
+      function detect() {
+        const ua = navigator.userAgent || ''
+        const plat =
+          (navigator.userAgentData && navigator.userAgentData.platform) ||
+          navigator.platform ||
+          ''
+        // Phones and tablets can't install the terminal; the link already
+        // points at /install, whose carry-on card explains the story. Modern
+        // iPads report as Macintosh but expose multi-touch.
+        if (
+          (navigator.userAgentData && navigator.userAgentData.mobile) ||
+          /android|iphone|ipod|ipad/i.test(ua) ||
+          (/mac/i.test(plat) && navigator.maxTouchPoints > 1)
+        ) {
+          return 'mobile'
+        }
+        if (/win/i.test(plat) || /windows/i.test(ua)) return 'win'
+        if (/linux|x11|cros/i.test(plat) || /linux|x11|cros/i.test(ua))
+          return 'linux'
+        return 'mac'
+      }
+
+      function apply() {
+        const os = detect()
+        for (const el of document.querySelectorAll('[data-os-face]')) {
+          el.classList.toggle('is-on', el.getAttribute('data-os-face') === os)
+        }
+        for (const el of document.querySelectorAll('[data-os-alt]')) {
+          el.classList.toggle('is-off', el.getAttribute('data-os-alt') === os)
+        }
+      }
+
+      apply()
+      if (!window.__plOsSwitchBound) {
+        window.__plOsSwitchBound = true
+        document.addEventListener('astro:page-load', apply)
+      }
+    })()
+  </script>
+
+  <style>
+    /* Hero: copy against a bust that stands on the marble boundary. Stacks
+       before the 300px minimum of the art column starts squeezing the copy. */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 448px);
+      gap: clamp(40px, 5vw, 72px);
+      align-items: end;
+    }
+    .hero-bust {
+      align-self: end;
+      filter: drop-shadow(26px 34px 52px rgba(60, 50, 30, 0.34));
+    }
+    /* The bust is rendered by <Image>, so it never carries the scope hash. */
+    .hero-bust :global(img) {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    @media (max-width: 1000px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+      }
+      .hero-bust {
+        width: min(300px, 56%);
+        justify-self: end;
+      }
+    }
+    /* On a phone the bust has no boundary to stand on — it just floats under
+       the copy, so it steps off entirely. The <Image> sizes attribute serves
+       a 24px rendition at this width, so the hidden eager image is free. */
+    @media (max-width: 720px) {
+      .hero-bust {
+        display: none;
+      }
+    }
+
+    .band-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 56px;
+    }
+    @media (max-width: 860px) {
+      .band-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+    }
+
+    /* Display type steps down with the shared breakpoint spec. */
+    .hd-46 {
+      font-size: 46px;
+    }
+    .hd-48 {
+      font-size: 48px;
+    }
+    .hd-44 {
+      font-size: 44px;
+    }
+    @media (max-width: 860px) {
+      .hd-46 {
+        font-size: 33px;
+      }
+      .hd-48 {
+        font-size: 34px;
+      }
+      .hd-44 {
+        font-size: 32px;
+      }
+    }
+    @media (max-width: 480px) {
+      .hd-46,
+      .hd-48,
+      .hd-44 {
+        font-size: 30px;
+      }
+    }
+
+    .plan-cta {
+      transition: transform 0.2s var(--ease-out);
+    }
+    .plan-dialog::backdrop {
+      background: rgb(0 0 0 / 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .plan-dialog[open] {
+      animation: plan-dialog-in 0.3s var(--ease-out) both;
+    }
+    @keyframes plan-dialog-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+    .os-alt {
+      transition:
+        transform 0.2s var(--ease-out),
+        border-color 0.2s ease;
+    }
+    .os-alt.is-off {
+      display: none;
+    }
+    .os-alt-glyph {
+      display: inline-flex;
+    }
+    .os-alt-glyph :global(svg) {
+      width: 16px;
+      height: 16px;
+    }
+    @media (hover: hover) {
+      .plan-cta:hover,
+      .os-alt:hover {
+        transform: translateY(-2px);
+      }
+      /* Plan CTAs carry their border colour inline (per-card accent), so only
+         the neutral OS links warm theirs on hover. */
+      .os-alt:hover {
+        border-color: color-mix(in oklch, var(--foreground) 28%, var(--border));
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .plan-dialog[open] {
+        animation: none;
+      }
+      .plan-cta,
+      .os-alt {
+        transition: none;
+      }
+      .plan-cta:hover,
+      .os-alt:hover {
+        transform: none;
+      }
+    }
+  </style>
+</SiteLayout>

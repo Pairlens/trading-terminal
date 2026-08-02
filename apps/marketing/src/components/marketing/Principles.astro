@@ -1,0 +1,185 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// The three promises, set as an inscription: a numbered mono rail, a serif
+// claim and the plain-language reason, separated by hairlines.
+import { SITE } from '@/lib/site'
+
+const PRINCIPLES = [
+  {
+    n: '01',
+    label: 'Private',
+    accent: 'var(--pl-iris)',
+    title: 'Your keys never leave your device.',
+    copy: 'Local-only by design. Exchange keys and wallet secrets sit securely in your OS keychain, and nothing about your trades is uploaded anywhere.',
+  },
+  {
+    n: '02',
+    label: 'Direct',
+    accent: 'var(--pl-green)',
+    title: 'Your orders go straight to the market.',
+    copy: 'Pairlens terminal simply sends the trades directly from your machine to the exchange you chose. No relay in between means no commission on top, and nobody deciding what you are allowed to trade.',
+  },
+  {
+    n: '03',
+    label: 'Yours',
+    accent: 'var(--pl-amber)',
+    title: 'Free and open forever, guaranteed by our license.',
+    copy: 'There is no tier above the one you have. Every line is published, so you can read it, fork it, and keep running your own build for as long as you like. Our own licensing protects you from us ever changing our mind.',
+  },
+]
+---
+
+<section id="principles" class="principles">
+  <div class="principles-inner">
+    <div class="principles-head">
+      <h2 class="principles-title" data-reveal>
+        Three principles, <span class="pl-spectrum-text">auditable</span>.
+      </h2>
+    </div>
+
+    {
+      PRINCIPLES.map((p, i) => (
+        <div
+          class:list={['principle', { 'is-last': i === PRINCIPLES.length - 1 }]}
+          data-reveal
+        >
+          <div>
+            <p class="principle-n" style={`color: ${p.accent}`}>
+              {p.n}
+            </p>
+            <p class="principle-label">{p.label}</p>
+          </div>
+          <h3 class="principle-title">{p.title}</h3>
+          <p class="principle-copy">{p.copy}</p>
+        </div>
+      ))
+    }
+
+    <p class="principles-foot">
+      Don't take our word for it,&nbsp;<a
+        href={SITE.repo}
+        target="_blank"
+        rel="noopener">read the repository</a
+      >.
+    </p>
+  </div>
+</section>
+
+<style>
+  .principles {
+    padding: 104px 32px;
+    scroll-margin-top: 5rem;
+  }
+  .principles-inner {
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  .principles-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 56px;
+    padding-bottom: 44px;
+  }
+  .principles-title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: var(--foreground);
+  }
+
+  .principle {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 48px;
+    align-items: start;
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+  }
+  .principle.is-last {
+    border-bottom: 1px solid var(--border);
+  }
+  .principle-n {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .principle-label {
+    margin: 10px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--muted-foreground) 70%, transparent);
+  }
+  .principle-title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--foreground);
+  }
+  .principle-copy {
+    margin: 4px 0 0;
+    font-size: 16px;
+    line-height: 1.72;
+    color: var(--muted-foreground);
+  }
+
+  .principles-foot {
+    margin: 30px 0 0;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    color: color-mix(in oklch, var(--muted-foreground) 70%, transparent);
+  }
+  .principles-foot a {
+    color: var(--pl-iris);
+  }
+
+  @media (max-width: 1000px) {
+    .principle {
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 20px 40px;
+    }
+    .principle-copy {
+      grid-column: 2;
+      margin-top: 0;
+    }
+  }
+  @media (max-width: 860px) {
+    .principles-title {
+      font-size: 34px;
+    }
+    .principle-title {
+      font-size: 26px;
+    }
+  }
+  @media (max-width: 720px) {
+    .principles {
+      padding: 80px 20px;
+    }
+    .principle {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+      padding: 32px 0;
+    }
+    .principle-copy {
+      grid-column: auto;
+    }
+  }
+  @media (max-width: 480px) {
+    .principles-title {
+      font-size: 30px;
+    }
+  }
+</style>

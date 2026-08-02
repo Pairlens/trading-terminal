@@ -1,0 +1,30 @@
+{
+  "name": "@pairlens/persistence",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pairlens/trading-terminal.git",
+    "directory": "packages/persistence"
+  },
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc --project tsconfig.json --noEmit",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test": "bun test"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./adapter": "./src/adapter.ts",
+    "./local": "./src/local-adapter.ts",
+    "./remote": "./src/remote-adapter.ts"
+  },
+  "dependencies": {
+    "@pairlens/shared": "workspace:*",
+    "@pairlens/workflow-engine": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,279 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import type { NavGroup } from '@/lib/docs'
+
+interface Props {
+  nav: NavGroup[]
+  currentId?: string
+}
+const { nav, currentId } = Astro.props
+
+const isActive = (id: string) => id === currentId
+// Server-rendered open state: a collapsed group must be collapsed in the first
+// painted frame, never by JS that resolves later, or the nav paints expanded
+// and jumps.
+const holdsCurrent = (item: NavGroup['items'][number]) =>
+  isActive(item.id) || item.children.some((c) => isActive(c.id))
+---
+
+<button
+  type="button"
+  data-docs-search
+  class="docs-search flex w-full items-center gap-[9px] rounded-[11px] border border-border px-3 py-[9px] pr-2.5 text-left text-muted-foreground"
+  style="background: color-mix(in oklch, var(--background) 60%, transparent);"
+>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    aria-hidden="true"
+    class="size-3.5 flex-none"
+  >
+    <circle cx="11" cy="11" r="7"></circle>
+    <path d="m20 20-3.5-3.5"></path>
+  </svg>
+  <span class="flex-1 text-[13px]">Search docs</span>
+  <kbd
+    class="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border px-1 font-sans text-[10px] leading-none font-medium"
+    style="border-color: color-mix(in oklch, var(--border) 70%, transparent); background: color-mix(in oklch, var(--muted) 40%, transparent); color: color-mix(in oklch, var(--muted-foreground) 80%, transparent);"
+    >⌘K</kbd
+  >
+</button>
+
+<nav aria-label="Docs" class="mt-[26px] flex flex-col gap-5">
+  {
+    nav.map((group) => (
+      <div
+        class="border-t pt-4"
+        style="border-color: color-mix(in oklch, var(--border) 62%, transparent);"
+      >
+        <p
+          class="mb-[9px] pl-2.5 font-mono text-[11px] font-bold tracking-[0.18em] uppercase"
+          style="color: color-mix(in oklch, var(--foreground) 68%, transparent);"
+        >
+          {group.label}
+        </p>
+        <ul class="flex flex-col gap-px">
+          {group.items.map((item) =>
+            item.children.length > 0 ? (
+              <li data-nav-parent>
+                <div class="flex items-center gap-0.5">
+                  <a
+                    href={item.href}
+                    data-nav-link
+                    data-id={item.id}
+                    class:list={[
+                      'pl-nav-link min-w-0 flex-1',
+                      isActive(item.id) && 'is-active',
+                    ]}
+                  >
+                    {item.title}
+                  </a>
+                  <button
+                    type="button"
+                    data-nav-toggle
+                    aria-expanded={holdsCurrent(item) ? 'true' : 'false'}
+                    aria-controls={`docs-kids-${item.id}`}
+                    aria-label={`Toggle ${item.title}`}
+                    class="pl-toggle grid size-6 flex-none place-items-center rounded-[7px]"
+                  >
+                    <svg
+                      class:list={['pl-chev', holdsCurrent(item) && 'is-open']}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                      style="width: 13px; height: 13px;"
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
+                </div>
+                <ul
+                  id={`docs-kids-${item.id}`}
+                  data-nav-children
+                  class:list={['pl-kids', holdsCurrent(item) && 'is-open']}
+                >
+                  {item.children.map((child) => (
+                    <li>
+                      <a
+                        href={child.href}
+                        data-nav-link
+                        data-id={child.id}
+                        class:list={[
+                          'pl-nav-kid',
+                          isActive(child.id) && 'is-active',
+                        ]}
+                      >
+                        {child.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ) : (
+              <li>
+                <a
+                  href={item.href}
+                  data-nav-link
+                  data-id={item.id}
+                  class:list={[
+                    'pl-nav-link block',
+                    isActive(item.id) && 'is-active',
+                  ]}
+                >
+                  {item.title}
+                </a>
+              </li>
+            ),
+          )}
+        </ul>
+      </div>
+    ))
+  }
+</nav>
+
+<style>
+  .docs-search {
+    font-family: inherit;
+    cursor: pointer;
+    transition:
+      border-color 0.2s var(--ease-out),
+      color 0.2s var(--ease-out);
+  }
+  .docs-search:hover {
+    border-color: color-mix(in oklch, var(--primary) 40%, var(--border));
+    color: var(--foreground);
+  }
+
+  .pl-nav-link {
+    border-radius: 9px;
+    padding: 7px 10px;
+    font-size: 13.5px;
+    color: var(--muted-foreground);
+    transition:
+      background 0.18s var(--ease-out),
+      color 0.18s var(--ease-out);
+  }
+  .pl-nav-link:hover {
+    background: color-mix(in oklch, var(--foreground) 5%, transparent);
+    color: var(--foreground);
+  }
+  .pl-nav-link.is-active {
+    background: color-mix(in oklch, var(--primary) 14%, transparent);
+    color: var(--primary);
+    font-weight: 600;
+    box-shadow: inset 2px 0 0 var(--primary);
+  }
+
+  .pl-nav-kid {
+    display: block;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+    color: color-mix(in oklch, var(--muted-foreground) 88%, transparent);
+    transition: color 0.18s var(--ease-out);
+  }
+  .pl-nav-kid:hover {
+    color: var(--foreground);
+  }
+  .pl-nav-kid.is-active {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .pl-toggle {
+    border: 0;
+    background: none;
+    color: color-mix(in oklch, var(--muted-foreground) 62%, transparent);
+    cursor: pointer;
+    transition: color 0.18s var(--ease-out);
+  }
+  .pl-toggle:hover {
+    color: var(--foreground);
+  }
+
+  /* Children are hidden by a class, not an attribute resolved after mount. */
+  .pl-kids {
+    display: none;
+    flex-direction: column;
+    gap: 1px;
+    margin: 2px 0 0 12px;
+    padding-left: 10px;
+    border-left: 1px solid color-mix(in oklch, var(--border) 80%, transparent);
+  }
+  .pl-kids.is-open {
+    display: flex;
+  }
+
+  .pl-chev {
+    transform: rotate(-90deg);
+    transition: transform 0.3s var(--ease-out);
+  }
+  .pl-chev.is-open {
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pl-chev {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // The sidebar is persisted across view transitions (it keeps its scroll
+  // position), so the server-rendered active state goes stale on navigation —
+  // re-apply it from the URL, and open the section that holds the new page.
+  function apply() {
+    const path = location.pathname.replace(/\/$/, '')
+    for (const link of document.querySelectorAll<HTMLAnchorElement>(
+      '[data-nav-link]',
+    )) {
+      const active = link.getAttribute('href')?.replace(/\/$/, '') === path
+      link.classList.toggle('is-active', active)
+      if (!active) continue
+      const parent = link.closest('[data-nav-parent]')
+      const toggle = parent?.querySelector<HTMLButtonElement>('[data-nav-toggle]')
+      if (toggle) setOpen(toggle, true)
+    }
+  }
+
+  function setOpen(toggle: HTMLButtonElement, open: boolean) {
+    const parent = toggle.closest('[data-nav-parent]')
+    parent?.querySelector('[data-nav-children]')?.classList.toggle('is-open', open)
+    toggle.querySelector('.pl-chev')?.classList.toggle('is-open', open)
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false')
+  }
+
+  function bind() {
+    for (const toggle of document.querySelectorAll<HTMLButtonElement>(
+      '[data-nav-toggle]',
+    )) {
+      if (toggle.dataset.bound) continue
+      toggle.dataset.bound = '1'
+      toggle.addEventListener('click', () => {
+        setOpen(toggle, toggle.getAttribute('aria-expanded') !== 'true')
+      })
+    }
+    for (const trigger of document.querySelectorAll<HTMLElement>(
+      '[data-docs-search]',
+    )) {
+      if (trigger.dataset.bound) continue
+      trigger.dataset.bound = '1'
+      trigger.addEventListener('click', () => {
+        document.dispatchEvent(new CustomEvent('pairlens:open-command'))
+      })
+    }
+    apply()
+  }
+
+  bind()
+  document.addEventListener('astro:page-load', bind)
+</script>

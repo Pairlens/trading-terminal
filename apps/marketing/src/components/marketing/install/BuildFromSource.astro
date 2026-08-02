@@ -1,0 +1,295 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// The deliberately demoted developer band. Most visitors are traders and are
+// already done above: darker ground, a hard hairline above, no card — just
+// hairline-separated command rows beside a quiet label rail.
+import { BUILD_FROM_SOURCE, SITE } from '@/lib/site'
+---
+
+<section class="ins-source">
+  <div class="ins-source-grid mx-auto max-w-[1200px]" data-reveal>
+    <div class="ins-source-rail">
+      <p class="ins-dev-pill">
+        <svg
+          class="ins-dev-ic"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="m5 8 4 4-4 4"></path>
+          <path d="M13 16h6"></path>
+        </svg>
+        For developers
+      </p>
+      <p class="ins-source-copy">
+        If you came here to trade, you’re already done — the installer above is
+        the whole thing. The rest of this page is for reading the code and
+        running it yourself.
+      </p>
+      <span class="ins-source-req">Bun + Rust toolchain</span>
+    </div>
+
+    <div>
+      <ol class="ins-cmds">
+        {
+          BUILD_FROM_SOURCE.steps.map((step, i) => (
+            <li class="ins-cmd-row">
+              <div class="ins-cmd-line">
+                <span class="ins-cmd-i">{i + 1}</span>
+                <span aria-hidden="true" class="ins-cmd-prompt">
+                  $
+                </span>
+                <code class="ins-cmd-code">{step.cmd}</code>
+                <button
+                  type="button"
+                  class="ins-copy"
+                  data-install-copy={step.cmd}
+                  aria-label={`Copy command: ${step.cmd}`}
+                >
+                  <svg
+                    class="ins-copy-ic"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect width="13" height="13" x="9" y="9" rx="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                  <svg
+                    class="ins-copy-ok"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                </button>
+              </div>
+              <p class="ins-cmd-note">{step.note}</p>
+            </li>
+          ))
+        }
+      </ol>
+
+      <p class="ins-source-hint">
+        No Rust toolchain? <code class="ins-source-hint-code"
+          >{BUILD_FROM_SOURCE.browserHint.cmd}</code
+        > serves the terminal in your browser at localhost:3000 instead.
+      </p>
+
+      <div class="ins-source-links">
+        <a class="ins-source-link" href="/docs/quickstart">Quickstart guide →</a>
+        <a
+          class="ins-source-link is-quiet"
+          href={SITE.repo}
+          target="_blank"
+          rel="noopener">View source on GitHub →</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ins-source {
+    border-top: 1px solid var(--border);
+    padding: 64px 32px 88px;
+    background: var(--background);
+    color: var(--foreground);
+  }
+  .ins-source-grid {
+    display: grid;
+    grid-template-columns: 288px minmax(0, 1fr);
+    gap: 64px;
+    align-items: start;
+  }
+
+  .ins-dev-pill {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in oklch, var(--pl-green) 42%, transparent);
+    background: color-mix(in oklch, var(--pl-green) 12%, transparent);
+    padding: 7px 15px 7px 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--pl-green);
+  }
+  .ins-dev-ic {
+    width: 14px;
+    height: 14px;
+  }
+  .ins-source-copy {
+    margin: 16px 0 0;
+    max-width: 30ch;
+    font-size: 14.5px;
+    line-height: 1.68;
+    text-wrap: pretty;
+    color: color-mix(in oklch, var(--muted-foreground) 82%, transparent);
+  }
+  .ins-source-req {
+    margin-top: 18px;
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--muted-foreground) 52%, transparent);
+  }
+
+  /* No card here on purpose — bare rows under a hairline. */
+  .ins-cmds {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid color-mix(in oklch, var(--border) 74%, transparent);
+  }
+  .ins-cmd-row {
+    border-bottom: 1px solid color-mix(in oklch, var(--border) 74%, transparent);
+    padding: 15px 0 16px;
+  }
+  .ins-cmd-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ins-cmd-i {
+    flex: none;
+    width: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: color-mix(in oklch, var(--muted-foreground) 42%, transparent);
+  }
+  .ins-cmd-prompt {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: color-mix(in oklch, var(--muted-foreground) 45%, transparent);
+  }
+  .ins-cmd-code {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    overflow-wrap: anywhere;
+    color: color-mix(in oklch, var(--foreground) 80%, transparent);
+  }
+  .ins-cmd-note {
+    margin: 5px 0 0;
+    padding-left: 38px;
+    font-size: 12.5px;
+    color: color-mix(in oklch, var(--muted-foreground) 58%, transparent);
+  }
+
+  .ins-copy {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    border: 0;
+    background: none;
+    color: color-mix(in oklch, var(--muted-foreground) 62%, transparent);
+    cursor: pointer;
+    transition:
+      background 0.2s var(--ease-out),
+      color 0.2s var(--ease-out);
+  }
+  .ins-copy:hover {
+    background: var(--muted);
+    color: var(--foreground);
+  }
+  .ins-copy-ic,
+  .ins-copy-ok {
+    width: 13px;
+    height: 13px;
+  }
+  .ins-copy-ok {
+    display: none;
+  }
+  .ins-copy.is-copied .ins-copy-ic {
+    display: none;
+  }
+  .ins-copy.is-copied .ins-copy-ok {
+    display: block;
+    color: var(--pl-green);
+  }
+
+  .ins-source-hint {
+    margin: 20px 0 0;
+    max-width: 64ch;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: color-mix(in oklch, var(--muted-foreground) 66%, transparent);
+  }
+  .ins-source-hint-code {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: color-mix(in oklch, var(--foreground) 78%, transparent);
+  }
+
+  .ins-source-links {
+    margin-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 26px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .ins-source-link {
+    color: color-mix(in oklch, var(--foreground) 82%, transparent);
+    transition: color 0.2s var(--ease-out);
+  }
+  .ins-source-link:hover {
+    color: var(--primary);
+  }
+  .ins-source-link.is-quiet {
+    color: color-mix(in oklch, var(--muted-foreground) 80%, transparent);
+  }
+  .ins-source-link.is-quiet:hover {
+    color: var(--foreground);
+  }
+
+  @media (max-width: 1080px) {
+    .ins-source-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+    /* Once stacked, the label rail reads better after the commands. */
+    .ins-source-rail {
+      order: 2;
+    }
+  }
+  @media (max-width: 720px) {
+    .ins-source {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ins-copy,
+    .ins-source-link {
+      transition: none;
+    }
+  }
+</style>

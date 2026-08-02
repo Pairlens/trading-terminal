@@ -1,0 +1,157 @@
+---
+title: Quickstart
+description: Get trading in about five minutes. Download the desktop app, watch live market data stream in, and connect an exchange. Your keys never leave your machine. Builders can run the whole terminal from source instead.
+group: get-started
+order: 2
+eyebrow: Get started
+updated: JUL 2026
+readTime: 4 min read
+---
+
+import Prereqs from '@/components/docs/mdx/Prereqs.astro'
+import { CodeTabs } from '@/components/docs/mdx/CodeTabs.tsx'
+import Callout from '@/components/docs/mdx/Callout.astro'
+import ConsoleMock from '@/components/docs/mdx/ConsoleMock.astro'
+import KeychainMock from '@/components/marketing/KeychainMock.astro'
+import NextSteps from '@/components/docs/mdx/NextSteps.astro'
+
+There are two ways into Pairlens. Most people should **download the desktop
+app**: it's free, code-signed, auto-updating, and needs no account. If you'd
+rather read the code you're about to trust, you can **run everything from
+source**: same terminal, same features.
+
+## Get the app
+
+Grab the installer for macOS, Windows, or Linux from the
+[install page](/install) (or straight from the
+[latest GitHub release](https://github.com/Pairlens/trading-terminal/releases/latest)),
+open it, and you're on a live chart.
+
+1. Launch Pairlens: the terminal opens with a live chart, streaming directly
+   from the exchange. No sign-up, nothing to configure.
+2. Pick a market (BTC-USDT is the default) and watch candles stream in.
+3. Sign in with your email **only if** you want workspaces synced across
+   devices; everything works without it, stored locally.
+
+## Connect an exchange
+
+Open **Accounts** in the left nav, hit **Connect Account**, and pick your
+venue. Paste the API key it issued you. Keys are written to your OS keychain
+and used only to sign requests to that venue. They never touch a Pairlens
+server.
+
+<KeychainMock class="my-5" />
+
+<Callout type="success" title="Your keys stay put">
+  Pairlens has no server that could hold your secrets. Credentials live in the
+  macOS Keychain, Windows Credential Manager, or Linux Secret Service.
+</Callout>
+
+Not ready to risk real funds? Most venues issue demo keys. Choose **Paper**
+when the wizard asks for a trading mode and rehearse the whole flow against the
+exchange's own sandbox: same charts, same signals, no money at stake. See
+[Connect an exchange](/docs/connect-an-exchange) for key-scoping advice and
+[paper trading](/docs/paper-trading) for the three ways to practise.
+
+## Run it from source
+
+Everything the app does is in the public monorepo. Building it yourself
+takes one tool (two for the native desktop shell):
+
+<Prereqs
+  items={[
+    {
+      letter: 'B',
+      name: 'Bun ≥ 1.3',
+      desc: 'JavaScript runtime, bundler & package manager.',
+      status: 'REQUIRED',
+    },
+    {
+      letter: 'G',
+      name: 'Git',
+      desc: 'To clone the repository.',
+      status: 'REQUIRED',
+    },
+    {
+      letter: 'R',
+      name: 'Rust toolchain',
+      desc: 'Only for the Tauri desktop build.',
+      status: 'OPTIONAL',
+    },
+  ]}
+/>
+
+Clone the repository and install workspace dependencies. Pairlens is a Bun
+monorepo; one install wires up every app and package.
+
+<CodeTabs
+  client:visible
+  tabs={[
+    {
+      label: 'bun',
+      code: '$ git clone https://github.com/Pairlens/trading-terminal\n$ cd pairlens\n$ bun install',
+    },
+    {
+      label: 'npm',
+      code: '$ git clone https://github.com/Pairlens/trading-terminal\n$ cd pairlens\n$ npm install',
+    },
+  ]}
+/>
+
+<Callout type="tip">
+  The maintainers use Bun and commit a `bun.lock`. `bun install` is the fastest
+  path and the one CI runs against.
+</Callout>
+
+`bun run dev` boots the terminal in your browser on `http://localhost:3000`;
+`bun run dev:desktop` builds the native desktop app (needs Rust).
+
+<CodeTabs
+  client:visible
+  tabs={[
+    { label: 'browser', code: '$ bun run dev' },
+    { label: 'desktop', code: '$ bun run dev:desktop' },
+  ]}
+/>
+
+<ConsoleMock
+  title="pairlens · dev"
+  lines={[
+    { text: 'terminal ready  http://localhost:3000', ok: true },
+    { text: 'market data streaming direct from exchanges', ok: true },
+    { text: 'App Server: Pairlens Cloud (api.pairlens.finance)', ok: true },
+    { text: '[auth] sign in with your email · OTP sent', dim: true },
+  ]}
+/>
+
+<Callout type="note">
+  The browser build is for development and testing. Live-trading secrets belong
+  in the desktop app, where they're stored in your OS keychain.
+</Callout>
+
+## Next steps
+
+<NextSteps
+  items={[
+    {
+      tag: 'Learn',
+      title: 'Take the terminal tour',
+      href: '/docs/terminal-tour',
+    },
+    {
+      tag: 'Trade',
+      title: 'Connect an exchange',
+      href: '/docs/connect-an-exchange',
+    },
+    {
+      tag: 'Chart',
+      title: 'Everything in the chart panel',
+      href: '/docs/chart-panel',
+    },
+    {
+      tag: 'Automate',
+      title: 'Build a workflow',
+      href: '/docs/build-a-workflow',
+    },
+  ]}
+/>

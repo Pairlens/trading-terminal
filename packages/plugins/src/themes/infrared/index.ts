@@ -1,0 +1,145 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import type {
+  PluginExecuteParams,
+  PluginInstance,
+  PluginManifest,
+} from '@pairlens/plugin-system/types'
+import type { ThemeDefinition } from '../types.ts'
+
+const theme: ThemeDefinition = {
+  id: 'infrared',
+  name: 'Infrared',
+  light: {
+    '--background': 'oklch(0.97 0.006 10)',
+    '--foreground': 'oklch(0.18 0.02 15)',
+    '--card': 'oklch(0.98 0.005 10)',
+    '--card-foreground': 'oklch(0.18 0.02 15)',
+    '--popover': 'oklch(0.98 0.005 10)',
+    '--popover-foreground': 'oklch(0.18 0.02 15)',
+    '--primary': 'oklch(0.55 0.22 15)',
+    '--primary-foreground': 'oklch(0.98 0 0)',
+    '--secondary': 'oklch(0.94 0.008 10)',
+    '--secondary-foreground': 'oklch(0.25 0.02 15)',
+    '--muted': 'oklch(0.95 0.005 10)',
+    '--muted-foreground': 'oklch(0.52 0.015 10)',
+    '--accent': 'oklch(0.93 0.015 10)',
+    '--accent-foreground': 'oklch(0.18 0.02 15)',
+    '--destructive': 'oklch(0.55 0.22 15)',
+    '--destructive-foreground': 'oklch(0.98 0 0)',
+    '--border': 'oklch(0.91 0.008 10)',
+    '--input': 'oklch(0.91 0.008 10)',
+    '--ring': 'oklch(0.55 0.22 15)',
+    '--chart-1': 'oklch(0.55 0.22 15)',
+    '--chart-2': 'oklch(0.65 0.10 350)',
+    '--chart-3': 'oklch(0.52 0.015 10)',
+    '--chart-4': 'oklch(0.72 0.01 10)',
+    '--chart-5': 'oklch(0.90 0.006 10)',
+    '--sidebar': 'oklch(0.16 0.025 10)',
+    '--sidebar-foreground': 'oklch(0.85 0.015 5)',
+    '--sidebar-primary': 'oklch(0.85 0.015 5)',
+    '--sidebar-primary-foreground': 'oklch(0.16 0.025 10)',
+    '--sidebar-accent': 'oklch(0.26 0.04 15)',
+    '--sidebar-accent-foreground': 'oklch(0.85 0.015 5)',
+    '--sidebar-border': 'oklch(0.31 0.03 10)',
+    '--sidebar-ring': 'oklch(0.85 0.015 5)',
+    '--orb-bg': 'transparent',
+    '--orb-c1': 'oklch(0.58 0.22 15)',
+    '--orb-c2': 'oklch(0.55 0.15 350)',
+    '--orb-c3': 'oklch(0.50 0.10 30)',
+    '--noise-opacity': '0.04',
+    '--radius': '0.375rem',
+  },
+  dark: {
+    '--background': 'oklch(0.13 0.015 10)',
+    '--foreground': 'oklch(0.88 0.012 5)',
+    '--card': 'oklch(0.17 0.02 10)',
+    '--card-foreground': 'oklch(0.88 0.012 5)',
+    '--popover': 'oklch(0.15 0.018 10)',
+    '--popover-foreground': 'oklch(0.88 0.012 5)',
+    '--primary': 'oklch(0.65 0.20 15)',
+    '--primary-foreground': 'oklch(0.98 0 0)',
+    '--secondary': 'oklch(0.20 0.02 10)',
+    '--secondary-foreground': 'oklch(0.88 0.012 5)',
+    '--muted': 'oklch(0.18 0.012 10)',
+    '--muted-foreground': 'oklch(0.55 0.015 8)',
+    '--accent': 'oklch(0.25 0.04 15)',
+    '--accent-foreground': 'oklch(0.88 0.012 5)',
+    '--destructive': 'oklch(0.65 0.20 15)',
+    '--destructive-foreground': 'oklch(0.98 0 0)',
+    '--border': 'oklch(0.26 0.025 10)',
+    '--input': 'oklch(0.26 0.025 10)',
+    '--ring': 'oklch(0.65 0.20 15)',
+    '--chart-1': 'oklch(0.65 0.20 15)',
+    '--chart-2': 'oklch(0.60 0.12 350)',
+    '--chart-3': 'oklch(0.55 0.015 8)',
+    '--chart-4': 'oklch(0.38 0.02 10)',
+    '--chart-5': 'oklch(0.26 0.02 10)',
+    '--sidebar': 'oklch(0.11 0.02 8)',
+    '--sidebar-foreground': 'oklch(0.82 0.015 5)',
+    '--sidebar-primary': 'oklch(0.82 0.015 5)',
+    '--sidebar-primary-foreground': 'oklch(0.11 0.02 8)',
+    '--sidebar-accent': 'oklch(0.20 0.04 15)',
+    '--sidebar-accent-foreground': 'oklch(0.82 0.015 5)',
+    '--sidebar-border': 'oklch(0.26 0.025 10)',
+    '--sidebar-ring': 'oklch(0.82 0.015 5)',
+    '--orb-bg': 'transparent',
+    '--orb-c1': 'oklch(0.65 0.20 15)',
+    '--orb-c2': 'oklch(0.58 0.16 350)',
+    '--orb-c3': 'oklch(0.55 0.12 30)',
+    '--noise-opacity': '0.12',
+    '--radius': '0.375rem',
+  },
+  chart: {
+    background: '#1a1214',
+    upCandle: '#e8e8e8',
+    downCandle: '#e53935',
+    crosshair: '#b05050',
+    grid: '#281a1e',
+    axisText: '#906060',
+    axisBackground: '#140e10',
+    hudBg: 'rgba(26, 18, 20, 0.94)',
+    hudText: '#e0c8c8',
+    volumeUp: '#e8e8e844',
+    volumeDown: '#e5393544',
+  },
+}
+
+export const infraredManifest: PluginManifest = {
+  id: 'infrared',
+  name: 'Infrared',
+  version: '0.1.0',
+  author: 'Pairlens',
+  description:
+    'Ultra-modern red-toned theme with crimson accents and sharp aesthetics',
+  capabilities: [
+    {
+      id: 'theme:override',
+      singleton: true,
+      markets: ['*'],
+      priority: 5,
+      streaming: false,
+    },
+  ],
+  config: {},
+  theme: {
+    entry: 'infrared',
+    previewColors: {
+      light: ['#cc2a2a', '#e53935', '#b05050', '#906060', '#f5e8e8'],
+      dark: ['#ff4444', '#e53935', '#b05050', '#906060', '#1a1214'],
+    },
+  },
+}
+
+export function createInfraredPlugin(manifest: PluginManifest): PluginInstance {
+  async function execute(_params: PluginExecuteParams): Promise<unknown> {
+    return theme
+  }
+
+  return {
+    manifest,
+    status: 'installed',
+    config: {},
+    execute,
+  }
+}

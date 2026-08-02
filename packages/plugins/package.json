@@ -1,0 +1,63 @@
+{
+  "name": "@pairlens/plugins",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pairlens/trading-terminal.git",
+    "directory": "packages/plugins"
+  },
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test": "bun test src/__tests__"
+  },
+  "private": true,
+  "exports": {
+    "./groq-inference": "./src/groq-inference/index.ts",
+    "./openai-inference": "./src/openai-inference/index.ts",
+    "./anthropic-inference": "./src/anthropic-inference/index.ts",
+    "./pairlens-intelligence": "./src/pairlens-intelligence/index.ts",
+    "./pairlens-core": "./src/pairlens-core/index.ts",
+    "./basic-symbols": "./src/basic-symbols/index.ts",
+    "./themes": "./src/themes/index.ts",
+    "./okx-market-connector": "./src/okx-market-connector/index.ts",
+    "./binance-market-connector": "./src/binance-market-connector/index.ts",
+    "./bybit-market-connector": "./src/bybit-market-connector/index.ts",
+    "./bitvavo-market-connector": "./src/bitvavo-market-connector/index.ts",
+    "./mexc-market-connector": "./src/mexc-market-connector/index.ts",
+    "./kucoin-market-connector": "./src/kucoin-market-connector/index.ts",
+    "./gate-market-connector": "./src/gate-market-connector/index.ts",
+    "./coinbase-market-connector": "./src/coinbase-market-connector/index.ts",
+    "./bitget-market-connector": "./src/bitget-market-connector/index.ts",
+    "./kraken-market-connector": "./src/kraken-market-connector/index.ts",
+    "./htx-market-connector": "./src/htx-market-connector/index.ts",
+    "./cryptocom-market-connector": "./src/cryptocom-market-connector/index.ts",
+    "./bitfinex-market-connector": "./src/bitfinex-market-connector/index.ts",
+    "./upbit-market-connector": "./src/upbit-market-connector/index.ts",
+    "./alpaca-market-connector": "./src/alpaca-market-connector/index.ts",
+    "./dexpaprika-data-provider": "./src/dexpaprika-data-provider/index.ts",
+    "./geckoterminal-data-provider": "./src/geckoterminal-data-provider/index.ts",
+    "./jupiter-dex-connector": "./src/jupiter-dex-connector/index.ts",
+    "./evm-dex-connector": "./src/evm-dex-connector/index.ts",
+    "./all": "./src/index.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^3",
+    "@ai-sdk/openai-compatible": "^2",
+    "@pairlens/market-engine": "workspace:*",
+    "@pairlens/plugin-system": "workspace:*",
+    "@pairlens/shared": "workspace:*",
+    "@pairlens/strategy-engine": "workspace:*",
+    "@pairlens/workflow-engine": "workspace:*",
+    "@solana/spl-token": "^0.4.12",
+    "@solana/web3.js": "^1.98.0",
+    "bs58": "^6.0.0",
+    "viem": "^2.52.2"
+  },
+  "devDependencies": {
+    "bun-types": "^1.3.9",
+    "tweetnacl": "^1.0.3",
+    "typescript": "^5.9.3"
+  }
+}
