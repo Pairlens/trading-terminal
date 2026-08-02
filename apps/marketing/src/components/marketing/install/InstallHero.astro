@@ -4,8 +4,10 @@
 // /install arrival: marble ground, a facts rail, and the three OS tiles that
 // drive the rest of the page. Rendered with macOS selected so the page is
 // complete without JS; the page script re-selects the detected platform and
-// badges it "Your system". Every tile carries its own release href, which the
-// download button mirrors.
+// badges it "Your system". The tiles ARE the download — each is a direct
+// link to its installer alias, as is the big button. A click hands the hero
+// to the "download started" card (scripts/install-flow.ts) while the inline
+// page script keeps selection state in sync.
 import { INSTALLERS, SITE } from '@/lib/site'
 import { DEFAULT_OS, OS_GUIDES } from './os-guides'
 import appleIcon from '@/components/marketing/os/apple.svg?raw'
@@ -75,12 +77,14 @@ const defaultHref =
       {
         INSTALLERS.map((it, i) => (
           <div class="ins-tile-wrap" data-reveal data-reveal-delay={240 + i * 60}>
-            <button
-              type="button"
+            <a
+              href={it.href}
               class:list={['ins-tile', it.os === DEFAULT_OS && 'is-sel']}
               data-os-tile={it.os}
               data-os-href={it.href}
-              aria-pressed={it.os === DEFAULT_OS ? 'true' : 'false'}
+              data-os-download
+              data-os={it.os}
+              aria-label={`Download Pairlens for ${it.os}`}
             >
               <span class="ins-tile-top">
                 <span
@@ -96,7 +100,7 @@ const defaultHref =
                   <span class="ins-chip">{f}</span>
                 ))}
               </span>
-            </button>
+            </a>
           </div>
         ))
       }
@@ -167,6 +171,54 @@ const defaultHref =
           >.
         </p>
       </div>
+    </div>
+
+    <!-- Takes the chooser's place once a download starts: confirmation, a
+         retry link, the sibling formats, and the way back. Shown by
+         scripts/install-flow.ts via `.is-downloaded` on the page root. -->
+    <div class="ins-started" data-dl-started>
+      <p class="ins-started-eyebrow">Download started</p>
+      <p class="ins-started-title">
+        Pairlens for <span data-dl-os>{DEFAULT_OS}</span> is on its way.
+      </p>
+      <p class="ins-started-body">
+        Keep this page open — your install steps are right below. Didn’t
+        start? <a class="ins-link" data-dl-retry href={defaultHref}
+          >Download again</a
+        >.
+      </p>
+      <p class="ins-started-alt">
+        <span
+          class:list={['ins-sub', isDefault('macOS') && 'is-active']}
+          data-os-sub="macOS"
+        >
+          On an Intel Mac? <a class="ins-link" href={ALTS['macOS'][0].href}
+            >Grab the Intel build</a
+          > instead.
+        </span>
+        <span
+          class:list={['ins-sub', isDefault('Windows') && 'is-active']}
+          data-os-sub="Windows"
+        >
+          Prefer the Windows installer format? <a
+            class="ins-link"
+            href={ALTS['Windows'][0].href}>Get the .msi</a
+          > instead.
+        </span>
+        <span
+          class:list={['ins-sub', isDefault('Linux') && 'is-active']}
+          data-os-sub="Linux"
+        >
+          Debian or Fedora native? Take the <a
+            class="ins-link"
+            href={ALTS['Linux'][0].href}>.deb</a
+          > or the <a class="ins-link" href={ALTS['Linux'][1].href}>.rpm</a>
+          instead.
+        </span>
+      </p>
+      <button type="button" class="ins-started-back" data-dl-back>
+        ← Choose a different system
+      </button>
     </div>
 
     <!-- Swapped in for the download CTA on phones: there is nothing to
@@ -366,6 +418,80 @@ const defaultHref =
     align-items: center;
     flex-wrap: wrap;
     gap: 14px 26px;
+  }
+
+  /* Download-started card: hidden until install-flow.ts stamps
+     `.is-downloaded` on the page root, then it takes the chooser's place. */
+  .ins-started {
+    display: none;
+    margin-top: 32px;
+    max-width: 560px;
+    border-radius: 18px;
+    border: 1px solid var(--ml-border);
+    background: var(--ml-card);
+    padding: 26px 28px;
+    box-shadow: 0 22px 46px -38px rgba(60, 50, 30, 0.5);
+  }
+  :global([data-install-page].is-downloaded) .ins-tiles,
+  :global([data-install-page].is-downloaded) .ins-cta {
+    display: none;
+  }
+  :global([data-install-page].is-downloaded) .ins-started {
+    display: block;
+    animation: ins-started-rise 0.45s var(--ease-out) both;
+  }
+  @keyframes ins-started-rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .ins-started-eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--pl-green, #3f9d63);
+  }
+  .ins-started-title {
+    margin: 10px 0 0;
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ml-fg);
+  }
+  .ins-started-body,
+  .ins-started-alt {
+    margin: 8px 0 0;
+    font-size: 14.5px;
+    line-height: 1.65;
+    text-wrap: pretty;
+    color: var(--ml-muted);
+  }
+  .ins-started-back {
+    margin-top: 18px;
+    display: inline-flex;
+    height: 42px;
+    align-items: center;
+    padding: 0 18px;
+    border-radius: 12px;
+    border: 1px solid var(--ml-border);
+    background: color-mix(in oklch, var(--ml-card) 70%, transparent);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ml-fg);
+    cursor: pointer;
+  }
+  .ins-started-back:hover {
+    border-color: color-mix(in oklch, var(--ml-fg) 20%, var(--ml-border));
   }
 
   /* Phone path: the JS stamps `.is-mobile` on the page root and this card

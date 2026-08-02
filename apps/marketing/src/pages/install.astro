@@ -39,6 +39,10 @@ const jsonLd = {
   </main>
   <SiteFooter />
 
+  <script>
+    import '@/scripts/install-flow'
+  </script>
+
   <style is:global>
     /* Phone visit: nothing on this page installs, so the OS tiles, the
        post-download walkthrough and the source build would only muddy the one
@@ -83,7 +87,6 @@ const jsonLd = {
         for (const tile of page.querySelectorAll('[data-os-tile]')) {
           const on = tile.getAttribute('data-os-tile') === os
           tile.classList.toggle('is-sel', on)
-          tile.setAttribute('aria-pressed', on ? 'true' : 'false')
           if (on) href = tile.getAttribute('data-os-href')
         }
         for (const el of page.querySelectorAll('[data-os-name]')) {
