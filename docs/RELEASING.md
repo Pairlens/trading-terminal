@@ -53,13 +53,18 @@ compromised download host alone cannot ship malicious updates.
    Release creation and asset uploads use the workflow's built-in
    `GITHUB_TOKEN` — no PAT needed.
 
-2. _(Optional but recommended)_ **macOS code signing + notarization.** Without
-   it, builds still work and still auto-update, but Gatekeeper makes users
-   right-click → Open on first launch. With an Apple Developer ID certificate,
-   set these secrets and the workflow picks them up automatically:
+2. **macOS code signing + notarization** (configured 2026-08 with the
+   Pairlens Apple Developer account; the cert key material lives in
+   `~/.tauri/apple/`). All six secrets are required — the workflow passes
+   them unconditionally, and an unset repo secret arrives as an empty
+   string that breaks the Tauri bundler:
    `APPLE_CERTIFICATE` (base64 .p12), `APPLE_CERTIFICATE_PASSWORD`,
-   `APPLE_SIGNING_IDENTITY`, `APPLE_ID`, `APPLE_PASSWORD` (app-specific
-   password), `APPLE_TEAM_ID`.
+   `APPLE_SIGNING_IDENTITY` (`Developer ID Application: <name> (<team>)`),
+   `APPLE_ID`, `APPLE_PASSWORD` (app-specific password), `APPLE_TEAM_ID`.
+   The Developer ID certificate is minted from a CSR
+   (`~/.tauri/apple/pairlens-developer-id.csr`); to rotate, re-issue at
+   developer.apple.com from a fresh CSR, rebuild the .p12 and reset the
+   first three secrets.
 
 3. _(Optional)_ **Windows code signing** (SmartScreen reputation): Azure
    Trusted Signing or an EV certificate — see the Tauri docs when ready; not
@@ -69,7 +74,7 @@ compromised download host alone cannot ship malicious updates.
 
 ```bash
 bun run release patch        # or minor / major / 1.2.3
-git push official HEAD --follow-tags
+git push origin HEAD --follow-tags
 ```
 
 `bun run release` bumps the version in `tauri.conf.json`, `Cargo.toml`,
