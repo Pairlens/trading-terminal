@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "pairlens",
+      "dependencies": {
+        "@pairlens/fast-financial-charts": "^1.5.3",
+      },
       "devDependencies": {
         "@tanstack/eslint-config": "^0.3.4",
         "eslint": "^9.39.2",
@@ -854,7 +857,7 @@
 
     "@pairlens/desktop": ["@pairlens/desktop@workspace:apps/desktop"],
 
-    "@pairlens/fast-financial-charts": ["@pairlens/fast-financial-charts@1.5.2", "", { "peerDependencies": { "react": ">=19", "react-dom": ">=19" }, "optionalPeers": ["react", "react-dom"] }, "sha512-6zkz15ngRmy8EY1zYz5xHFgu4jh8Qa81bdpgqJf1f4QCaML1ct5yVMKWv9pI+G4+i31J3vfb+rRHvflETXtjQw=="],
+    "@pairlens/fast-financial-charts": ["@pairlens/fast-financial-charts@1.5.3", "", { "peerDependencies": { "react": ">=19", "react-dom": ">=19" }, "optionalPeers": ["react", "react-dom"] }, "sha512-aKKsi+pvVoZl8eT6x8yjvkAL3bLKNWkwgBlzpl+/6ehtyn6m6rqmqMQXYVAgtAI6bYei4lFFHxxCJH/CsVhr/A=="],
 
     "@pairlens/market-engine": ["@pairlens/market-engine@workspace:packages/market-engine"],
 

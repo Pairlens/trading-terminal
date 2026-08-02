@@ -47,5 +47,8 @@
     "prettier": "^3.8.1",
     "turbo": "^2.8.13",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@pairlens/fast-financial-charts": "^1.5.3"
   }
 }
