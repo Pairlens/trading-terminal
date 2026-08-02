@@ -1747,7 +1747,7 @@
     "buildStepInstallNote": "Kurulu sekmesine git ve şunu kullan",
     "buildStepInstallNote2": "— ya da masaüstünde, klasörü eklentiler dizinine bırak.",
     "buildRuntimeTitle": "Eklentilerin kullanabilecekleri",
-    "buildRuntimeNote": "Ana uygulama çalışma zamanında React, @pairlens/plugin-sdk (hook'lar), @pairlens/ui tasarım sistemi (paket kökünden içe aktarılır) ve fast-financial-charts sağlar — bunları derlemende harici olarak işaretle. Tasarım sistemi bileşenleri ana uygulama tarafından stillendirilir; özel CSS için eklentinle birlikte bir styles.css gönder.",
+    "buildRuntimeNote": "Ana uygulama çalışma zamanında React, @pairlens/plugin-sdk (hook'lar), @pairlens/ui tasarım sistemi (paket kökünden içe aktarılır) ve @pairlens/fast-financial-charts sağlar — bunları derlemende harici olarak işaretle. Tasarım sistemi bileşenleri ana uygulama tarafından stillendirilir; özel CSS için eklentinle birlikte bir styles.css gönder.",
     "buildExamplesNote": "Çalışan referanslar için repodaki dev-starter ve dev-sync örneklerine bak.",
     "applied": "Uygulandı",
     "applyTheme": "Temayı uygula",

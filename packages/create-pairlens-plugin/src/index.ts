@@ -143,7 +143,7 @@ const buildCmd =
   'bun build src/index.ts --outfile dist/module.js --format esm ' +
   "--external react --external 'react/jsx-runtime' " +
   '--external @pairlens/plugin-sdk --external @pairlens/ui ' +
-  '--external fast-financial-charts --external fast-financial-charts/react ' +
+  '--external @pairlens/fast-financial-charts --external @pairlens/fast-financial-charts/react ' +
   '--target browser --minify'
 
 const pkgJson =
@@ -229,7 +229,7 @@ plugins directory ("Open folder").
 ## Runtime contract
 
 React, \`@pairlens/plugin-sdk\`, \`@pairlens/ui\` (design system, import from the
-**root**), and \`fast-financial-charts\` are provided by the host at runtime — they are
+**root**), and \`@pairlens/fast-financial-charts\` are provided by the host at runtime — they are
 marked \`--external\` in the build. Design-system components are styled by the
 host; for ad-hoc CSS ship your own \`styles.css\`.
 `

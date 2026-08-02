@@ -34,7 +34,7 @@ import {
 } from './bot-python'
 import { getBotOrderSource } from './bot-order-source'
 import type { PluginManager } from '@pairlens/plugin-system'
-import type { ChartBar } from 'fast-financial-charts/types'
+import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 import type {
   BotDefinition,
   BotEvent,

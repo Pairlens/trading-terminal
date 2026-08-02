@@ -9,7 +9,7 @@ import {
 } from '../bot-executor'
 import { setBotOrderSource } from '../bot-order-source'
 import type { BotOrderIntent } from '@pairlens/bot-engine/types'
-import type { ChartBar } from 'fast-financial-charts/types'
+import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 import type { CustomIndicatorStrategySpec } from '@pairlens/shared/plugin-types'
 import type { OrderResult } from '@pairlens/market-engine/types'
 import { runBacktest } from '@/lib/indicators/backtest'

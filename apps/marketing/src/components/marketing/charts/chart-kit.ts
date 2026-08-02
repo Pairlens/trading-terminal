@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 // Shared plumbing for /charts. Every chart on that page is a real
-// fast-financial-charts instance, so this module owns the three things they all
+// @pairlens/fast-financial-charts instance, so this module owns the three things they all
 // need: a palette the engine can parse, the seeded synthetic market they
 // render, and the tick stream that keeps them moving. Chrome lives in the
 // components; nothing here draws anything.
@@ -12,7 +12,7 @@ import type {
   ChartType,
   IndicatorInstanceInput,
   Timeframe,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 
 /**
  * Colours handed to the engine must be literal `#rrggbb`: the WebGL price pass

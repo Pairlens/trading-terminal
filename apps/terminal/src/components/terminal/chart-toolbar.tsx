@@ -48,7 +48,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
-import type { CrosshairMode, PriceScaleMode } from 'fast-financial-charts/types'
+import type {
+  CrosshairMode,
+  PriceScaleMode,
+} from '@pairlens/fast-financial-charts/types'
 import type { ChartType } from '@/hooks/use-chart-terminal-state'
 import { CompareMenu } from '@/components/terminal/compare-symbol-menu'
 import { ShortcutHint } from '@/components/shortcut-hints'

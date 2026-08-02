@@ -27,9 +27,9 @@ by the library itself.
 <CodeTabs
   client:visible
   tabs={[
-    { label: 'bun', code: '$ bun add fast-financial-charts' },
-    { label: 'pnpm', code: '$ pnpm add fast-financial-charts' },
-    { label: 'npm', code: '$ npm i fast-financial-charts' },
+    { label: 'bun', code: '$ bun add @pairlens/fast-financial-charts' },
+    { label: 'pnpm', code: '$ pnpm add @pairlens/fast-financial-charts' },
+    { label: 'npm', code: '$ npm i @pairlens/fast-financial-charts' },
   ]}
 />
 
@@ -38,21 +38,21 @@ Published to NPM, semver-versioned, MIT.
 <Callout type="note">
   The package ships TypeScript source: entry points resolve to `.ts`/`.tsx`
   files. Use a bundler that understands TypeScript (Vite, esbuild, Bun, Rspack,
-  webpack + TS loader). With Vite, exclude `fast-financial-charts` from
-  `optimizeDeps` so the indicator Web Worker (`new Worker(new URL(...))`)
+  webpack + TS loader). With Vite, exclude `@pairlens/fast-financial-charts`
+  from `optimizeDeps` so the indicator Web Worker (`new Worker(new URL(...))`)
   resolves correctly.
 </Callout>
 
 ## Quick start (React)
 
-React bindings live under the `fast-financial-charts/react` entry point. The core
+React bindings live under the `@pairlens/fast-financial-charts/react` entry point. The core
 engine has no React dependency at all; React 19+ is only needed for the
 `/react` entries.
 
 ```tsx
 import { useRef } from 'react'
-import { FastFinancialChart } from 'fast-financial-charts/react'
-import type { FastFinancialChartRef } from 'fast-financial-charts/types'
+import { FastFinancialChart } from '@pairlens/fast-financial-charts/react'
+import type { FastFinancialChartRef } from '@pairlens/fast-financial-charts/types'
 
 export function PairChart({ bars }) {
   const chartRef = useRef<FastFinancialChartRef>(null)
@@ -121,32 +121,33 @@ chartRef.current?.applyTicks(batchOfTicks) // burst ingestion for batched feeds
 
 Targeted imports keep bundles small (`sideEffects: false`):
 
-| Entry point                        | What it exports                                   |
-| ---------------------------------- | ------------------------------------------------- |
-| `fast-financial-charts`            | Core engine (no React), theme tokens              |
-| `fast-financial-charts/react`      | `<FastFinancialChart />`, `<DepthChart />`, hooks |
-| `fast-financial-charts/types`      | All public types                                  |
-| `fast-financial-charts/mcp`        | MCP schema + executor                             |
-| `fast-financial-charts/theme`      | Theme presets and resolution                      |
-| `fast-financial-charts/indicators` | Indicator registry                                |
-| `fast-financial-charts/drawings`   | Drawing tools                                     |
+| Entry point                                  | What it exports                                   |
+| -------------------------------------------- | ------------------------------------------------- |
+| `@pairlens/fast-financial-charts`            | Core engine (no React), theme tokens              |
+| `@pairlens/fast-financial-charts/react`      | `<FastFinancialChart />`, `<DepthChart />`, hooks |
+| `@pairlens/fast-financial-charts/types`      | All public types                                  |
+| `@pairlens/fast-financial-charts/mcp`        | MCP schema + executor                             |
+| `@pairlens/fast-financial-charts/theme`      | Theme presets and resolution                      |
+| `@pairlens/fast-financial-charts/indicators` | Indicator registry                                |
+| `@pairlens/fast-financial-charts/drawings`   | Drawing tools                                     |
 
 ## Theming
 
 Pass a partial theme and override only what you need, or start from a preset:
 
 ```tsx
-import { getThemePreset } from 'fast-financial-charts/theme'
+import { getThemePreset } from '@pairlens/fast-financial-charts/theme'
 ;<FastFinancialChart theme={getThemePreset('dark')} />
 ```
 
 Runtime theme updates only trigger the relevant overlay redraw paths.
 
 <Callout type="note">
-  Inside the terminal, `fast-financial-charts` and `fast-financial-charts/react`
-  are also plugin runtime modules; plugins mark them as build externals and the
-  host provides its own instances, so the WebGL engine is never duplicated into
-  a plugin bundle. See the [Plugin SDK](/docs/plugin-sdk).
+  Inside the terminal, `@pairlens/fast-financial-charts` and
+  `@pairlens/fast-financial-charts/react` are also plugin runtime modules;
+  plugins mark them as build externals and the host provides its own instances,
+  so the WebGL engine is never duplicated into a plugin bundle. See the [Plugin
+  SDK](/docs/plugin-sdk).
 </Callout>
 
 <NextSteps

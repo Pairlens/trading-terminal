@@ -48,7 +48,7 @@ so your bundle stays small and the WebGL chart engine is never duplicated:
 - React
 - `@pairlens/plugin-sdk` (hooks)
 - `@pairlens/ui` (the design system, imported from the package root)
-- `fast-financial-charts` and `fast-financial-charts/react`
+- `@pairlens/fast-financial-charts` and `@pairlens/fast-financial-charts/react`
 
 ## In this section
 

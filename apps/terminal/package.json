@@ -34,7 +34,7 @@
     "@fontsource-variable/geist": "^5.2.8",
     "@lezer/highlight": "^1.2.1",
     "@pairlens/bot-engine": "workspace:*",
-    "fast-financial-charts": "^1.5.0",
+    "@pairlens/fast-financial-charts": "github:Pairlens/fast-financial-charts#dc6415e58c6390ed67fbadcee434f1db065bb4ef",
     "@pairlens/market-engine": "workspace:*",
     "@pairlens/notification-engine": "workspace:*",
     "@pairlens/persistence": "workspace:*",

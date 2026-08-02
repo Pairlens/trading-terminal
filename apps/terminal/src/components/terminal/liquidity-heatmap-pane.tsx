@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Loader2 } from 'lucide-react'
 
-import { FastFinancialChart } from 'fast-financial-charts/react'
+import { FastFinancialChart } from '@pairlens/fast-financial-charts/react'
 import { usePanePair } from '@pairlens/plugin-sdk'
 import type {
   ChartSeriesInput,
@@ -11,7 +11,7 @@ import type {
   PrimitiveCoordinateHelpers,
   PrimitivePaneRenderContext,
   Timeframe,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 
 import type {
   HeatmapDataStore,

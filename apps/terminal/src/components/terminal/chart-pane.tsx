@@ -22,7 +22,7 @@ import { IntelligenceStrip } from './intelligence-strip'
 import { TerminalChart } from './terminal-chart'
 import { TextInputDialog } from './text-input-dialog'
 import type { SignalPayload } from '@pairlens/shared/types'
-import type { ChartCommand } from 'fast-financial-charts/types'
+import type { ChartCommand } from '@pairlens/fast-financial-charts/types'
 import {
   useOptionalCandleData,
   useOptionalChartActions,

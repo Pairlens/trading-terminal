@@ -5,7 +5,7 @@ import type {
   IndicatorDefinition,
   IndicatorParams,
   IndicatorValuePoint,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 import type {
   CustomIndicatorInputSpec,
   CustomIndicatorMeta,

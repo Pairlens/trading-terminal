@@ -3,10 +3,10 @@
 import { useCallback, useMemo, useRef } from 'react'
 import { Loader2 } from 'lucide-react'
 
-import { DARK_DEPTH_THEME } from 'fast-financial-charts/depth-chart'
-import { DepthChart } from 'fast-financial-charts/react'
+import { DARK_DEPTH_THEME } from '@pairlens/fast-financial-charts/depth-chart'
+import { DepthChart } from '@pairlens/fast-financial-charts/react'
 import { usePanePair } from '@pairlens/plugin-sdk'
-import type { DepthChartHoverInfo } from 'fast-financial-charts/depth-chart'
+import type { DepthChartHoverInfo } from '@pairlens/fast-financial-charts/depth-chart'
 import type { OrderbookStreamValue } from '@/lib/chart-terminal-context'
 import {
   useOptionalChartConfig,

@@ -9,7 +9,7 @@ updated: AUG 2026
 readTime: 4 min read
 ---
 
-`fast-financial-charts` ships an MCP-compatible tools layer: a machine-readable
+`@pairlens/fast-financial-charts` ships an MCP-compatible tools layer: a machine-readable
 schema plus an executor, so a model can add indicators, draw, navigate, read
 data back, and take screenshots without you writing a per-action bridge.
 
@@ -20,7 +20,7 @@ chart rather than a description of drawings.
 ## Wiring it up
 
 ```ts
-import { createChartMcpAdapter } from 'fast-financial-charts/mcp'
+import { createChartMcpAdapter } from '@pairlens/fast-financial-charts/mcp'
 
 const mcp = createChartMcpAdapter(chartRef.current)
 
@@ -121,7 +121,7 @@ between a correct read of a pattern and a confident wrong one.
 
 ## Notes
 
-- The tool surface is in `fast-financial-charts/mcp`, which has no React dependency.
+- The tool surface is in `@pairlens/fast-financial-charts/mcp`, which has no React dependency.
 - Tool names are stable across minor versions. New tools are additive.
 - Full argument shapes live in
   [the README](https://github.com/Pairlens/fast-financial-charts#ai--mcp-integration).

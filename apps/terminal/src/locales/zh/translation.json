@@ -1747,7 +1747,7 @@
     "buildStepInstallNote": "前往“已安装”标签页并使用",
     "buildStepInstallNote2": "—— 或者在桌面端,将文件夹拖入插件目录。",
     "buildRuntimeTitle": "插件可以使用的资源",
-    "buildRuntimeNote": "宿主环境在运行时提供 React、@pairlens/plugin-sdk(hooks)、@pairlens/ui 设计系统(从包根目录导入)以及 fast-financial-charts —— 请在构建时将它们标记为外部依赖。设计系统组件的样式由宿主控制;如需自定义 CSS,请随插件一起提供 styles.css。",
+    "buildRuntimeNote": "宿主环境在运行时提供 React、@pairlens/plugin-sdk(hooks)、@pairlens/ui 设计系统(从包根目录导入)以及 @pairlens/fast-financial-charts —— 请在构建时将它们标记为外部依赖。设计系统组件的样式由宿主控制;如需自定义 CSS,请随插件一起提供 styles.css。",
     "buildExamplesNote": "参见仓库中的 dev-starter 和 dev-sync 示例以获取可运行的参考。",
     "applied": "已应用",
     "applyTheme": "应用主题",

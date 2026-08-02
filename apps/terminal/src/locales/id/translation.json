@@ -1747,7 +1747,7 @@
     "buildStepInstallNote": "Buka tab Terpasang dan gunakan",
     "buildStepInstallNote2": "— atau, di desktop, seret folder ke direktori plugin.",
     "buildRuntimeTitle": "Apa yang bisa digunakan plugin",
-    "buildRuntimeNote": "Host menyediakan React, @pairlens/plugin-sdk (hooks), design system @pairlens/ui (impor dari root paket), dan fast-financial-charts saat runtime — tandai sebagai external pada build Anda. Komponen design system distyle oleh host; untuk CSS kustom, sertakan styles.css dengan plugin Anda.",
+    "buildRuntimeNote": "Host menyediakan React, @pairlens/plugin-sdk (hooks), design system @pairlens/ui (impor dari root paket), dan @pairlens/fast-financial-charts saat runtime — tandai sebagai external pada build Anda. Komponen design system distyle oleh host; untuk CSS kustom, sertakan styles.css dengan plugin Anda.",
     "buildExamplesNote": "Lihat contoh dev-starter dan dev-sync di repo untuk referensi yang berfungsi.",
     "applied": "Diterapkan",
     "applyTheme": "Terapkan tema",

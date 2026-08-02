@@ -28,11 +28,11 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {
-      // fast-financial-charts must stay unbundled: its indicator worker is created
+      // @pairlens/fast-financial-charts must stay unbundled: its indicator worker is created
       // via `new URL('./indicator.worker.ts', import.meta.url)`, which breaks
       // when the package is prebundled into .vite/deps (same rule as the
       // terminal's vite config).
-      exclude: ['fast-financial-charts'],
+      exclude: ['@pairlens/fast-financial-charts'],
     },
   },
 })

@@ -1751,7 +1751,7 @@
     "buildStepInstallNote": "Przejdź do zakładki Zainstalowane i użyj",
     "buildStepInstallNote2": "— lub, na desktopie, upuść folder w katalogu wtyczek.",
     "buildRuntimeTitle": "Czego mogą używać wtyczki",
-    "buildRuntimeNote": "Host dostarcza React, @pairlens/plugin-sdk (hooki), system projektowania @pairlens/ui (importuj z katalogu głównego pakietu) oraz fast-financial-charts w czasie działania — oznacz je jako zewnętrzne w swojej kompilacji. Komponenty systemu projektowania są stylizowane przez hosta; dla niestandardowego CSS dołącz do wtyczki plik styles.css.",
+    "buildRuntimeNote": "Host dostarcza React, @pairlens/plugin-sdk (hooki), system projektowania @pairlens/ui (importuj z katalogu głównego pakietu) oraz @pairlens/fast-financial-charts w czasie działania — oznacz je jako zewnętrzne w swojej kompilacji. Komponenty systemu projektowania są stylizowane przez hosta; dla niestandardowego CSS dołącz do wtyczki plik styles.css.",
     "buildExamplesNote": "Zobacz przykłady dev-starter i dev-sync w repozytorium jako działające wzorce.",
     "applied": "Zastosowano",
     "applyTheme": "Zastosuj motyw",

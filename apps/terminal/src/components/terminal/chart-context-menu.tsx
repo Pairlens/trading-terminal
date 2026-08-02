@@ -11,7 +11,7 @@ import {
   ContextMenuShortcut,
   ContextMenuTrigger,
 } from '@pairlens/ui/components/ui/context-menu'
-import type { ChartContextMenuPayload } from 'fast-financial-charts/types'
+import type { ChartContextMenuPayload } from '@pairlens/fast-financial-charts/types'
 
 type ChartContextMenuProps = {
   state: (ChartContextMenuPayload & { clientX: number; clientY: number }) | null

@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { memo, useCallback, useMemo } from 'react'
-import { FastFinancialChart } from 'fast-financial-charts/react'
+import { FastFinancialChart } from '@pairlens/fast-financial-charts/react'
 import { ChartHud } from './chart-hud'
 import { ChartIndicatorsBar } from './chart-indicators-bar'
 import type { RefObject } from 'react'
@@ -19,7 +19,7 @@ import type {
   FastFinancialChartRef,
   PriceScaleMode,
   Timeframe,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 import { formatChartPrice } from '@/lib/format-price'
 import { usePairlensChartTheme } from '@/hooks/use-chart-theme'
 

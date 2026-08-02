@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { describe, expect, it } from 'bun:test'
 import { resolveTargets, runBacktest } from '../backtest'
-import type { ChartBar } from 'fast-financial-charts/types'
+import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 import type { CustomIndicatorStrategySpec } from '@pairlens/shared/plugin-types'
 
 const START = 1_700_000_000_000

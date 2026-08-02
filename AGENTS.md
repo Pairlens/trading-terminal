@@ -1,6 +1,6 @@
 # Pairlens — Agent Guide
 
-Pairlens is an AI-native crypto spot trading terminal, distributed primarily as a Tauri desktop app. This repo is the public, source-available side (licensed FSL-1.1-Apache-2.0): the terminal, desktop shell, CLI, plugin registry, marketing site, and all shared packages. The optional App Server backend (auth, sync, AI proxy) lives in a separate private repo; the charting library (`fast-financial-charts`) lives in the public `pairlens-charts` repo (MIT) and is consumed as a GitHub dependency.
+Pairlens is an AI-native crypto spot trading terminal, distributed primarily as a Tauri desktop app. This repo is the public, source-available side (licensed FSL-1.1-Apache-2.0): the terminal, desktop shell, CLI, plugin registry, marketing site, and all shared packages. The optional App Server backend (auth, sync, AI proxy) lives in a separate private repo; the charting library (`@pairlens/fast-financial-charts`) lives in the public `pairlens-charts` repo (MIT) and is consumed as a GitHub dependency.
 
 **Full project guidance — architecture, commands, code style, environment, key patterns — lives in [CLAUDE.md](CLAUDE.md). Read it before working in this repo.** The essentials:
 

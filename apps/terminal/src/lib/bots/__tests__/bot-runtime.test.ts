@@ -3,7 +3,7 @@
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 
 import type { BotDefinition } from '@pairlens/bot-engine/types'
-import type { ChartBar } from 'fast-financial-charts/types'
+import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 import type { CustomIndicatorMeta } from '@pairlens/shared/plugin-types'
 import type { PluginManager } from '@pairlens/plugin-system'
 

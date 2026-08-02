@@ -17,7 +17,7 @@ import type {
   PriceLine,
   PriceScaleMode,
   Timeframe,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 import type { PluginCandle } from '@/hooks/use-candle-stream'
 import { track } from '@/lib/analytics-events'
 import { emitWrite } from '@/lib/sync/sync-channel'

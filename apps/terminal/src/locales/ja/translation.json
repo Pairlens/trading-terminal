@@ -1747,7 +1747,7 @@
     "buildStepInstallNote": "「インストール済み」タブに移動して使用",
     "buildStepInstallNote2": "— またはデスクトップの場合、フォルダをプラグインディレクトリにドロップします。",
     "buildRuntimeTitle": "プラグインが使用できるもの",
-    "buildRuntimeNote": "ホストはReact、@pairlens/plugin-sdk（フック）、@pairlens/uiデザインシステム（パッケージルートからインポート）、そしてfast-financial-chartsをランタイムで提供します — ビルド時にexternal指定してください。デザインシステムのコンポーネントはホストによってスタイル付けされます。カスタムCSSが必要な場合は、プラグインにstyles.cssを同梱してください。",
+    "buildRuntimeNote": "ホストはReact、@pairlens/plugin-sdk（フック）、@pairlens/uiデザインシステム（パッケージルートからインポート）、そして@pairlens/fast-financial-chartsをランタイムで提供します — ビルド時にexternal指定してください。デザインシステムのコンポーネントはホストによってスタイル付けされます。カスタムCSSが必要な場合は、プラグインにstyles.cssを同梱してください。",
     "buildExamplesNote": "動作するリファレンスについては、リポジトリ内のdev-starterおよびdev-syncのサンプルをご覧ください。",
     "applied": "適用済み",
     "applyTheme": "テーマを適用",

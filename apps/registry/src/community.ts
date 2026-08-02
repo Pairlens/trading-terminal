@@ -55,8 +55,8 @@ const BUILD_EXTERNALS = [
   'react/jsx-runtime',
   '@pairlens/plugin-sdk',
   '@pairlens/ui',
-  'fast-financial-charts',
-  'fast-financial-charts/react',
+  '@pairlens/fast-financial-charts',
+  '@pairlens/fast-financial-charts/react',
 ]
 
 /** Store metadata each community submission provides in store.json. */

@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'bun:test'
 
 import { fetchHistoryDepth } from '../fetch-depth'
-import type { ChartBar } from 'fast-financial-charts/types'
+import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 
 const MINUTE = 60_000
 

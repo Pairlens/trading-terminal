@@ -1747,7 +1747,7 @@
     "buildStepInstallNote": "Go to the Installed tab and use",
     "buildStepInstallNote2": "— or, on desktop, drop the folder into the plugins directory.",
     "buildRuntimeTitle": "What plugins can use",
-    "buildRuntimeNote": "The host provides React, @pairlens/plugin-sdk (hooks), the @pairlens/ui design system (import from the package root), and fast-financial-charts at runtime — mark them external in your build. Design-system components are styled by the host; for custom CSS, ship a styles.css with your plugin.",
+    "buildRuntimeNote": "The host provides React, @pairlens/plugin-sdk (hooks), the @pairlens/ui design system (import from the package root), and @pairlens/fast-financial-charts at runtime — mark them external in your build. Design-system components are styled by the host; for custom CSS, ship a styles.css with your plugin.",
     "buildExamplesNote": "See the dev-starter and dev-sync examples in the repo for working references.",
     "applied": "Applied",
     "applyTheme": "Apply theme",

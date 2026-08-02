@@ -16,15 +16,15 @@ Plugins are loaded at runtime and resolve a fixed set of **shared** dependencies
 from the host via an import map — so there is exactly one React, one design
 system, etc. Mark these **external** in your build (do not bundle them):
 
-| Import specifier              | What it gives you                                                                                     |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `react`, `react/jsx-runtime`  | The host's React 19 instance                                                                          |
-| `react-dom`                   | `createPortal`, `createRoot`, …                                                                       |
-| `@tanstack/react-query`       | The host's Query client (`useQuery`, `useMutation`)                                                   |
-| `@pairlens/plugin-sdk`        | Hooks: `usePanePair`, `useAuth`, `useNotify`, `useStream`, `useServiceRegistry`, `usePluginConfig`, … |
-| `@pairlens/ui`                | Design system — import from the **root** only: `import { Button, Badge, Dialog } from '@pairlens/ui'` |
-| `fast-financial-charts`       | Chart engine + theme tokens                                                                           |
-| `fast-financial-charts/react` | `FastFinancialChart`, `DepthChart`, chart hooks                                                       |
+| Import specifier                        | What it gives you                                                                                     |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `react`, `react/jsx-runtime`            | The host's React 19 instance                                                                          |
+| `react-dom`                             | `createPortal`, `createRoot`, …                                                                       |
+| `@tanstack/react-query`                 | The host's Query client (`useQuery`, `useMutation`)                                                   |
+| `@pairlens/plugin-sdk`                  | Hooks: `usePanePair`, `useAuth`, `useNotify`, `useStream`, `useServiceRegistry`, `usePluginConfig`, … |
+| `@pairlens/ui`                          | Design system — import from the **root** only: `import { Button, Badge, Dialog } from '@pairlens/ui'` |
+| `@pairlens/fast-financial-charts`       | Chart engine + theme tokens                                                                           |
+| `@pairlens/fast-financial-charts/react` | `FastFinancialChart`, `DepthChart`, chart hooks                                                       |
 
 Example build (single-file ESM, externals shared deps):
 
@@ -32,7 +32,7 @@ Example build (single-file ESM, externals shared deps):
 bun build src/index.ts --outfile dist/my-plugin.js --format esm \
   --external react --external 'react/jsx-runtime' \
   --external @pairlens/plugin-sdk --external @pairlens/ui \
-  --external fast-financial-charts --external fast-financial-charts/react \
+  --external @pairlens/fast-financial-charts --external @pairlens/fast-financial-charts/react \
   --target browser --minify
 ```
 

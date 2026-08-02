@@ -1,12 +1,12 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-// One live fast-financial-charts instance, sized by its host. Shared by every card
+// One live @pairlens/fast-financial-charts instance, sized by its host. Shared by every card
 // on /charts: the hero, the six-up gallery, the three skinned cards and the
 // quick-start pane. The engine is only constructed once the card comes near
 // the viewport (a WebGL2 context each, and browsers cap those), and the tick
 // subscription is dropped again the moment it leaves.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { FastFinancialChart } from 'fast-financial-charts/react'
+import { FastFinancialChart } from '@pairlens/fast-financial-charts/react'
 import {
   buildIndicators,
   decimalsFor,
@@ -19,7 +19,7 @@ import type {
   ChartHudPayload,
   FastFinancialChartRef,
   Timeframe,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 import type { ChartConfig, ChartSkin, LiveTick, TickStream } from './chart-kit'
 
 type LiveChartProps = {

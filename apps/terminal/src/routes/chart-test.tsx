@@ -3,7 +3,7 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { useRef, useState } from 'react'
 
-import { FastFinancialChart } from 'fast-financial-charts/react'
+import { FastFinancialChart } from '@pairlens/fast-financial-charts/react'
 import type {
   BuiltInIndicatorType,
   ChartBar,
@@ -12,7 +12,7 @@ import type {
   FastFinancialChartRef,
   IndicatorInstanceInput,
   Timeframe,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 
 // Generate realistic-looking mock OHLCV data
 function generateMockBars(count: number): Array<ChartBar> {

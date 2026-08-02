@@ -3,7 +3,7 @@
 import { afterEach, describe, expect, it, mock } from 'bun:test'
 
 import type { CandleArrays } from '@/lib/python/python-runtime'
-import type { ChartBar } from 'fast-financial-charts/types'
+import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 
 type ComputeCall = {
   id: string

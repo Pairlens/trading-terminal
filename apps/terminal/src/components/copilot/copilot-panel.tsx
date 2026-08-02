@@ -28,7 +28,7 @@ import type { UIMessage } from 'ai'
 import type {
   FastFinancialChartRef,
   IndicatorInstanceInput,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 
 import type { SignalPayload } from '@pairlens/shared/types'
 import type { PluginCandle } from '@/hooks/use-candle-stream'

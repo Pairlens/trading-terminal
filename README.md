@@ -77,7 +77,7 @@ ALSO
 - **Market connector plugins** (`packages/plugins/`): each connector implements the `MarketAdapter` interface and owns its exchange WebSocket/REST connections, candle buffers, and order routing.
 - **Strategy engine** (`packages/strategy-engine/`): pure TypeScript signal math (EMA, ATR, breakout, pullback, mean reversion, regime detection), computed on demand by the terminal and CLI. No I/O.
 - **AI co-pilot**: the agentic loop runs entirely client-side in the terminal (~60 tools: chart control, market/portfolio reads, workspace actions, confirm-gated trading). Inference goes through bring-your-own-key provider plugins.
-- **Charts**: [Fast Financial Charts](https://github.com/Pairlens/fast-financial-charts), a standalone MIT-licensed WebGL2 charting engine (own repo), consumed by the terminal as the `fast-financial-charts` dependency. React bindings ship under `fast-financial-charts/react`.
+- **Charts**: [Fast Financial Charts](https://github.com/Pairlens/fast-financial-charts), a standalone MIT-licensed WebGL2 charting engine (own repo), consumed by the terminal as the `@pairlens/fast-financial-charts` dependency. React bindings ship under `@pairlens/fast-financial-charts/react`.
 - **CLI** (`apps/cli/`): headless access to the same connectors and strategy engine.
 - **Plugin registry** (`apps/registry/`): distribution point for third-party plugins built with `packages/plugin-sdk/`.
 

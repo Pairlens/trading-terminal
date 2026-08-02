@@ -13,7 +13,7 @@
  * fraction of their own bar duration, so a daily series refreshes rarely and
  * a 1m series stays live.
  */
-import type { ChartBar } from 'fast-financial-charts/types'
+import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 import type { CustomIndicatorRequestSpec } from '@pairlens/shared/plugin-types'
 import type { CandleArrays, RequestSeries } from '@/lib/python/python-runtime'
 import { fetchHistoryDepth } from '@/lib/indicators/fetch-depth'

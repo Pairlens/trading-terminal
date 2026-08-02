@@ -9,7 +9,7 @@
  * we page backwards from the oldest bar we hold until we reach the target or
  * the venue stops giving us history.
  */
-import type { ChartBar } from 'fast-financial-charts/types'
+import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 
 /** One page of candles, ending strictly before `endTs` when given. */
 export type HistoryPageFetcher = (

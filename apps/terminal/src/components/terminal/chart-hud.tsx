@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import type { ChartHudPayload } from 'fast-financial-charts/types'
+import type { ChartHudPayload } from '@pairlens/fast-financial-charts/types'
 
 const fmt = (value: number, digits = 2) =>
   value.toLocaleString(undefined, {

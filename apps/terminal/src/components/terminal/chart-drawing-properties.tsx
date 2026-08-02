@@ -21,7 +21,7 @@ import type {
   DrawingToolType,
   FastFinancialChartRef,
   LineStyleType,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 
 const COLORS = [
   '#ffb020',

@@ -12,7 +12,7 @@
  * folded into a small palette in Python and the value points carry float
  * indices into it under `<key>:c`.
  *
- * The scale math mirrors `fast-financial-charts`' own presenters so an overlay
+ * The scale math mirrors `@pairlens/fast-financial-charts`' own presenters so an overlay
  * plot lands exactly on the candles it was computed from.
  */
 import type {
@@ -20,7 +20,7 @@ import type {
   ChartTheme,
   IndicatorPresenter,
   IndicatorPresenterContext,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 import type {
   CustomIndicatorFillSpec,
   CustomIndicatorHLine,

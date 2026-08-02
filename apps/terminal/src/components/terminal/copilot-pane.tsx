@@ -6,7 +6,7 @@ import { usePanePair, usePluginService } from '@pairlens/plugin-sdk'
 import type {
   FastFinancialChartRef,
   IndicatorInstanceInput,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 
 import {
   useOptionalChartActions,

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ChartCandlestick } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { FastFinancialChart } from 'fast-financial-charts/react'
+import { FastFinancialChart } from '@pairlens/fast-financial-charts/react'
 import {
   Empty,
   EmptyDescription,
@@ -19,7 +19,7 @@ import type {
   FastFinancialChartRef,
   IndicatorValuePoint,
   Timeframe,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 import type { CustomIndicatorMeta } from '@pairlens/shared/plugin-types'
 import type { BacktestResult } from '@/lib/indicators/backtest'
 import { createCustomIndicatorPresenter } from '@/lib/indicators/custom-indicator-presenter'

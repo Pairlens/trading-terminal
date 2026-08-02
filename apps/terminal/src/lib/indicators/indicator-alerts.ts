@@ -10,7 +10,7 @@
  * simply stays true does not re-notify.
  */
 import type { NotificationEventPayload } from '@pairlens/notification-engine/types'
-import type { ChartBar } from 'fast-financial-charts/types'
+import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 import type { CustomIndicatorMeta } from '@pairlens/shared/plugin-types'
 import { notificationRuntime } from '@/lib/notifications/notification-runtime'
 

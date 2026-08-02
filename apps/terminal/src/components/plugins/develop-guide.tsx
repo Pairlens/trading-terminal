@@ -137,7 +137,7 @@ export function DevelopGuide() {
         <p className="text-xs text-muted-foreground">
           {t(
             'pluginStore.buildRuntimeNote',
-            'The host provides React, @pairlens/plugin-sdk (hooks), the @pairlens/ui design system (import from the package root), and fast-financial-charts at runtime — mark them external in your build. Design-system components are styled by the host; for custom CSS, ship a styles.css with your plugin.',
+            'The host provides React, @pairlens/plugin-sdk (hooks), the @pairlens/ui design system (import from the package root), and @pairlens/fast-financial-charts at runtime — mark them external in your build. Design-system components are styled by the host; for custom CSS, ship a styles.css with your plugin.',
           )}
         </p>
         <p className="text-xs text-muted-foreground">

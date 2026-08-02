@@ -8,7 +8,10 @@ import { LiveChart } from './LiveChart'
 import { TONE, TickStream, formatPrice, makeBars } from './chart-kit'
 import { usePageSkin } from './use-page-skin'
 import type { CSSProperties } from 'react'
-import type { ChartType, Timeframe } from 'fast-financial-charts/types'
+import type {
+  ChartType,
+  Timeframe,
+} from '@pairlens/fast-financial-charts/types'
 import type { ChartConfig, IndicatorKey, LiveTick } from './chart-kit'
 
 type GalleryEntry = {

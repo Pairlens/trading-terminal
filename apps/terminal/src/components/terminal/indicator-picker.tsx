@@ -28,7 +28,7 @@ import { ScrollArea } from '@pairlens/ui/components/ui/scroll-area'
 import type {
   IndicatorInstanceInput,
   IndicatorType,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 
 import type {
   IndicatorTemplate,

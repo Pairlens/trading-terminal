@@ -1747,7 +1747,7 @@
     "buildStepInstallNote": "Vá para a aba Instalados e use",
     "buildStepInstallNote2": "— ou, no desktop, arraste a pasta para o diretório de plugins.",
     "buildRuntimeTitle": "O que os plugins podem usar",
-    "buildRuntimeNote": "O host fornece React, @pairlens/plugin-sdk (hooks), o design system @pairlens/ui (importado a partir da raiz do pacote) e fast-financial-charts em tempo de execução — marque-os como externos na sua build. Os componentes do design system são estilizados pelo host; para CSS personalizado, distribua um styles.css com seu plugin.",
+    "buildRuntimeNote": "O host fornece React, @pairlens/plugin-sdk (hooks), o design system @pairlens/ui (importado a partir da raiz do pacote) e @pairlens/fast-financial-charts em tempo de execução — marque-os como externos na sua build. Os componentes do design system são estilizados pelo host; para CSS personalizado, distribua um styles.css com seu plugin.",
     "buildExamplesNote": "Veja os exemplos dev-starter e dev-sync no repositório para referências funcionais.",
     "applied": "Aplicado",
     "applyTheme": "Aplicar tema",

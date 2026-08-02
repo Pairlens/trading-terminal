@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-// The hero card on /charts: one real fast-financial-charts instance streaming a
+// The hero card on /charts: one real @pairlens/fast-financial-charts instance streaming a
 // seeded synthetic BTC-USD, under page-owned chrome. Every chip is plain HTML
 // driving plain library props — the engine ships no CSS classes, so the frame,
 // the labels and the price readout are all ours.
@@ -8,7 +8,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { LiveChart } from './charts/LiveChart'
 import { TONE, TickStream, formatPrice, makeBars } from './charts/chart-kit'
 import { usePageSkin } from './charts/use-page-skin'
-import type { ChartType } from 'fast-financial-charts/types'
+import type { ChartType } from '@pairlens/fast-financial-charts/types'
 import type { ChartConfig, IndicatorKey, LiveTick } from './charts/chart-kit'
 
 const SERIES_ID = 'BTC-USD'

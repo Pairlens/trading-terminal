@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { useTheme } from 'next-themes'
 
-import type { ChartThemeInput } from 'fast-financial-charts/types'
+import type { ChartThemeInput } from '@pairlens/fast-financial-charts/types'
 
 import { useThemePluginContext } from '@/hooks/use-theme-plugin'
 

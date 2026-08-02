@@ -1747,7 +1747,7 @@
     "buildStepInstallNote": "설치됨 탭으로 가서 다음을 사용하세요",
     "buildStepInstallNote2": "— 또는 데스크톱에서는 플러그인 디렉터리에 폴더를 넣으세요.",
     "buildRuntimeTitle": "플러그인이 사용할 수 있는 것",
-    "buildRuntimeNote": "호스트는 런타임에 React, @pairlens/plugin-sdk(훅), @pairlens/ui 디자인 시스템(패키지 루트에서 import), fast-financial-charts를 제공합니다 — 빌드 시 이들을 external로 표시하세요. 디자인 시스템 컴포넌트는 호스트가 스타일링하며, 커스텀 CSS가 필요하면 플러그인에 styles.css를 포함하세요.",
+    "buildRuntimeNote": "호스트는 런타임에 React, @pairlens/plugin-sdk(훅), @pairlens/ui 디자인 시스템(패키지 루트에서 import), @pairlens/fast-financial-charts를 제공합니다 — 빌드 시 이들을 external로 표시하세요. 디자인 시스템 컴포넌트는 호스트가 스타일링하며, 커스텀 CSS가 필요하면 플러그인에 styles.css를 포함하세요.",
     "buildExamplesNote": "저장소의 dev-starter 및 dev-sync 예제에서 실제 참고 사례를 확인하세요.",
     "applied": "적용됨",
     "applyTheme": "테마 적용",

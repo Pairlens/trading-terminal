@@ -75,7 +75,7 @@ import {
 import type {
   DrawingToolMode,
   DrawingToolType,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 import { ShortcutHint } from '@/components/shortcut-hints'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 

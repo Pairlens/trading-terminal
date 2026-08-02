@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { evaluateRisk, updateExtreme } from '@pairlens/bot-engine/risk'
 import type { BotPosition } from '@pairlens/bot-engine/types'
-import type { ChartBar } from 'fast-financial-charts/types'
+import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 import type { CustomIndicatorStrategySpec } from '@pairlens/shared/plugin-types'
 
 // ---------------------------------------------------------------------------

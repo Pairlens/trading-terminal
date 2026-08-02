@@ -10,7 +10,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "bun build src/index.ts --outfile dist/dev-starter.js --format esm --external react --external 'react/jsx-runtime' --external @pairlens/plugin-sdk --external @pairlens/ui --external fast-financial-charts --external fast-financial-charts/react --target browser --minify",
+    "build": "bun build src/index.ts --outfile dist/dev-starter.js --format esm --external react --external 'react/jsx-runtime' --external @pairlens/plugin-sdk --external @pairlens/ui --external @pairlens/fast-financial-charts --external @pairlens/fast-financial-charts/react --target browser --minify",
     "package": "bun run scripts/package.ts"
   },
   "devDependencies": {

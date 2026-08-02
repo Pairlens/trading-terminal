@@ -10,7 +10,7 @@ import { hasEditableParams } from './indicator-params'
 import type {
   ChartTopBarPayload,
   IndicatorInstance,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 import { getIndicatorDisplayLabel } from '@/lib/indicators/custom-indicator-definitions'
 import { useOptionalChartActions } from '@/lib/chart-terminal-context'
 

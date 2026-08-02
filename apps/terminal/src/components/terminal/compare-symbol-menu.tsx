@@ -26,7 +26,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
-import type { CompareMode } from 'fast-financial-charts/types'
+import type { CompareMode } from '@pairlens/fast-financial-charts/types'
 import type { Instrument } from '@pairlens/shared/instrument-types'
 import { compareSeriesId } from '@/hooks/use-chart-terminal-state'
 import { useMarketData } from '@/lib/market-data-provider'

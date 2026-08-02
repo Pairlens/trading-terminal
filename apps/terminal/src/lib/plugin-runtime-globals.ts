@@ -17,8 +17,8 @@ import * as ReactJSX from 'react/jsx-runtime'
 import * as ReactJSXDev from 'react/jsx-dev-runtime'
 import * as ReactDOM from 'react-dom'
 import * as TanStackQuery from '@tanstack/react-query'
-import * as PairlensCharts from 'fast-financial-charts'
-import * as PairlensChartsReact from 'fast-financial-charts/react'
+import * as PairlensCharts from '@pairlens/fast-financial-charts'
+import * as PairlensChartsReact from '@pairlens/fast-financial-charts/react'
 
 declare global {
   interface Window {

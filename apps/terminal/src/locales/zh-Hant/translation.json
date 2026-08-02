@@ -1747,7 +1747,7 @@
     "buildStepInstallNote": "前往「已安裝」分頁並使用",
     "buildStepInstallNote2": "——或在桌面版中，將資料夾拖放到外掛目錄。",
     "buildRuntimeTitle": "外掛可使用的資源",
-    "buildRuntimeNote": "主程式提供 React、@pairlens/plugin-sdk（hooks）、@pairlens/ui 設計系統（從套件根目錄匯入）以及執行階段的 fast-financial-charts——請在建置時將它們標記為外部相依套件。設計系統元件由主程式套用樣式；如需自訂 CSS，請隨外掛一併提供 styles.css。",
+    "buildRuntimeNote": "主程式提供 React、@pairlens/plugin-sdk（hooks）、@pairlens/ui 設計系統（從套件根目錄匯入）以及執行階段的 @pairlens/fast-financial-charts——請在建置時將它們標記為外部相依套件。設計系統元件由主程式套用樣式；如需自訂 CSS，請隨外掛一併提供 styles.css。",
     "buildExamplesNote": "請參考版本庫中的 dev-starter 與 dev-sync 範例作為實作參考。",
     "applied": "已套用",
     "applyTheme": "套用主題",

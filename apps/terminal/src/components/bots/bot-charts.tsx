@@ -9,7 +9,7 @@
  * the only way to notice a strategy that quietly stopped firing while its P&L
  * line stayed flat and looked fine.
  *
- * Recharts, via the shadcn wrapper, and deliberately not `fast-financial-charts`:
+ * Recharts, via the shadcn wrapper, and deliberately not `@pairlens/fast-financial-charts`:
  * that engine exists to stream candles at 60fps and would be a WebGL context
  * per panel to plot a few dozen points that change once a trade.
  */

@@ -27,7 +27,7 @@ import { getCatalogEntry, getIndicatorParamSpecs } from './indicator-params'
 import type {
   IndicatorInstanceInput,
   IndicatorParams,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 import type { IndicatorParamSpec } from './indicator-params'
 import {
   customIndicatorDefaultParams,

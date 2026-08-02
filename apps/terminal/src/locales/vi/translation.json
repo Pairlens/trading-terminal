@@ -1747,7 +1747,7 @@
     "buildStepInstallNote": "Vào tab Đã cài đặt và dùng",
     "buildStepInstallNote2": "— hoặc, trên desktop, kéo thư mục vào thư mục plugin.",
     "buildRuntimeTitle": "Những gì plugin có thể dùng",
-    "buildRuntimeNote": "Host cung cấp React, @pairlens/plugin-sdk (hooks), hệ thống thiết kế @pairlens/ui (import từ package gốc), và fast-financial-charts tại runtime — đánh dấu chúng là external trong build của bạn. Các component của hệ thống thiết kế được host tạo kiểu; để dùng CSS tùy chỉnh, kèm theo styles.css với plugin của bạn.",
+    "buildRuntimeNote": "Host cung cấp React, @pairlens/plugin-sdk (hooks), hệ thống thiết kế @pairlens/ui (import từ package gốc), và @pairlens/fast-financial-charts tại runtime — đánh dấu chúng là external trong build của bạn. Các component của hệ thống thiết kế được host tạo kiểu; để dùng CSS tùy chỉnh, kèm theo styles.css với plugin của bạn.",
     "buildExamplesNote": "Xem ví dụ dev-starter và dev-sync trong repo để tham khảo cách hoạt động.",
     "applied": "Đã áp dụng",
     "applyTheme": "Áp dụng giao diện",

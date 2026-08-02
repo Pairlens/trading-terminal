@@ -199,8 +199,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 '@pairlens/plugin-sdk': '/_sdk/plugin-sdk.js',
                 '@tanstack/react-query': '/_sdk/tanstack-react-query.js',
                 '@pairlens/ui': '/_sdk/pairlens-ui.js',
-                'fast-financial-charts': '/_sdk/fast-financial-charts.js',
-                'fast-financial-charts/react':
+                '@pairlens/fast-financial-charts':
+                  '/_sdk/fast-financial-charts.js',
+                '@pairlens/fast-financial-charts/react':
                   '/_sdk/fast-financial-charts-react.js',
               },
             }),

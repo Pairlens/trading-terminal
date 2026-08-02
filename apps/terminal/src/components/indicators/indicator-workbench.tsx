@@ -71,7 +71,7 @@ import type {
   ChartBar,
   IndicatorValuePoint,
   Timeframe,
-} from 'fast-financial-charts/types'
+} from '@pairlens/fast-financial-charts/types'
 import type { PythonRuntimeStatus } from '@/lib/python/python-runtime'
 import type { CustomIndicatorMeta } from '@pairlens/shared/plugin-types'
 import type {

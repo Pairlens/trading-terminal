@@ -18,7 +18,7 @@
  *
  * Bots also never compute on a tick. Only on a closed bar (see `bot-runtime`).
  */
-import type { ChartBar } from 'fast-financial-charts/types'
+import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 import type { CustomIndicatorModule } from '@pairlens/shared/plugin-types'
 import {
   PythonScriptError,
