@@ -11,6 +11,7 @@
   "type": "module",
   "scripts": {
     "dev": "tauri dev",
+    "tauri": "tauri",
     "build": "tauri build",
     "typecheck": "echo \"Typecheck handled by cargo via tauri build\"",
     "test": "echo \"No tests configured for desktop scaffold yet\""

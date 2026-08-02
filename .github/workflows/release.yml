@@ -115,6 +115,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          # The terminal Vite build (beforeBuildCommand) peaks over Node's
+          # default old-space cap — same fix as ci.yml.
+          NODE_OPTIONS: --max-old-space-size=6144
           # Production App Server for auth/persistence/AI features.
           VITE_APP_SERVER_URL: ${{ vars.APP_SERVER_URL || 'https://api.pairlens.finance' }}
           # PostHog product analytics (opt-in; analytics disabled when unset).
@@ -129,9 +132,12 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
           projectPath: apps/desktop
-          # Unambiguous package name — plain `bunx tauri` can resolve to the
-          # abandoned v1 `tauri` npm package when the local bin isn't found.
-          tauriScript: bunx @tauri-apps/cli
+          # Package script, not bunx: `bunx tauri` can resolve to the
+          # abandoned v1 `tauri` npm package, and `bunx @tauri-apps/cli`
+          # resolves to Mono's /usr/bin/cli on Ubuntu runners (bunx checks
+          # PATH for the trailing name first). `bun run tauri` always uses
+          # the workspace's own @tauri-apps/cli bin.
+          tauriScript: bun run tauri
           releaseId: ${{ needs.create-release.outputs.release_id }}
           args: ${{ matrix.target != '' && format('--target {0}', matrix.target) || '' }}
 
