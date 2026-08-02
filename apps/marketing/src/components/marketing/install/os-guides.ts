@@ -36,9 +36,8 @@ export const OS_GUIDES: Record<string, OsGuide> = {
       },
       {
         n: '03',
-        title: 'Let it past Gatekeeper',
-        body: 'Until our Apple Developer signing lands, macOS flags the download and may claim the app is "damaged" — it isn\'t. Run this once in Terminal to clear the flag, then launch Pairlens from Applications. Venue keys go to your Keychain when you connect one.',
-        cmd: 'xattr -cr /Applications/Pairlens.app',
+        title: 'Launch it',
+        body: 'Open Pairlens from Applications. Every build is signed with our Apple Developer ID and notarized by Apple, so macOS opens it without ceremony. Venue keys go to your Keychain when you connect one.',
       },
     ],
   },
