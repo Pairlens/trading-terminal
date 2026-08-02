@@ -14,10 +14,14 @@
 # Required secrets (Settings → Secrets → Actions):
 #   TAURI_SIGNING_PRIVATE_KEY            updater minisign private key
 #   TAURI_SIGNING_PRIVATE_KEY_PASSWORD   its password ('' if none)
-# Optional secrets (macOS code signing + notarization — without them macOS
-# builds are unsigned and Gatekeeper warns on first launch):
-#   APPLE_CERTIFICATE, APPLE_CERTIFICATE_PASSWORD, APPLE_SIGNING_IDENTITY,
-#   APPLE_ID, APPLE_PASSWORD, APPLE_TEAM_ID
+# macOS code signing + notarization (all six required — an unset repo secret
+# becomes an EMPTY STRING in env, which breaks the Tauri bundler):
+#   APPLE_CERTIFICATE            base64 of the Developer ID Application .p12
+#   APPLE_CERTIFICATE_PASSWORD   the .p12 password
+#   APPLE_SIGNING_IDENTITY       "Developer ID Application: <name> (<team id>)"
+#   APPLE_ID                     Apple ID email
+#   APPLE_PASSWORD               app-specific password (not the account password)
+#   APPLE_TEAM_ID                10-char team id from the developer portal
 
 name: Release
 
@@ -126,15 +130,16 @@ jobs:
           # macOS code signing + notarization. NOTE: unset repo secrets become
           # EMPTY STRINGS here, not absent env vars — Tauri's bundler then
           # tries to import an empty certificate and the build fails
-          # ("SecKeychainItemImport: ... parameters ... not valid"). Keep
-          # these commented out until the APPLE_* secrets actually exist,
-          # then uncomment. Unsigned builds = Gatekeeper right-click-to-open.
-          # APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          # APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          # APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          # APPLE_ID: ${{ secrets.APPLE_ID }}
-          # APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          # APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # ("SecKeychainItemImport: ... parameters ... not valid"). All six
+          # secrets must exist before cutting a release; if signing ever has
+          # to be dropped, comment this whole block out rather than deleting
+          # individual secrets.
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
           projectPath: apps/desktop
           # Package script, not bunx: `bunx tauri` can resolve to the
