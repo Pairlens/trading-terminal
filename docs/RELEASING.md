@@ -69,7 +69,7 @@ compromised download host alone cannot ship malicious updates.
 
 ```bash
 bun run release patch        # or minor / major / 1.2.3
-git push origin HEAD --follow-tags
+git push official HEAD --follow-tags
 ```
 
 `bun run release` bumps the version in `tauri.conf.json`, `Cargo.toml`,

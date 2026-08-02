@@ -17,7 +17,9 @@
  *   apps/desktop/src-tauri/Cargo.lock
  *   apps/desktop/package.json
  *
- * Pushing is left to the human: `git push origin main --follow-tags`.
+ * Pushing is left to the human: `git push official main --follow-tags`
+ * (the `official` remote is Pairlens/trading-terminal; `origin` is the
+ * pre-migration personal backup and must not receive new tags).
  * See docs/RELEASING.md for the full pipeline.
  */
 
@@ -127,7 +129,7 @@ console.log(`
 [release] v${next} committed and tagged.
 
 Next steps:
-  git push origin HEAD --follow-tags   # triggers the Release workflow
+  git push official HEAD --follow-tags   # triggers the Release workflow
   # CI builds installers for macOS/Windows/Linux and attaches latest.json
   # to a DRAFT release on the public releases repo. Publish the draft to
   # ship the update to users.
