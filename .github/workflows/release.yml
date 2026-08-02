@@ -123,13 +123,18 @@ jobs:
           # PostHog product analytics (opt-in; analytics disabled when unset).
           VITE_POSTHOG_KEY: ${{ vars.POSTHOG_KEY }}
           VITE_POSTHOG_HOST: ${{ vars.POSTHOG_HOST || 'https://eu.i.posthog.com' }}
-          # macOS code signing + notarization (skipped when unset).
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # macOS code signing + notarization. NOTE: unset repo secrets become
+          # EMPTY STRINGS here, not absent env vars — Tauri's bundler then
+          # tries to import an empty certificate and the build fails
+          # ("SecKeychainItemImport: ... parameters ... not valid"). Keep
+          # these commented out until the APPLE_* secrets actually exist,
+          # then uncomment. Unsigned builds = Gatekeeper right-click-to-open.
+          # APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          # APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          # APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          # APPLE_ID: ${{ secrets.APPLE_ID }}
+          # APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          # APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
           projectPath: apps/desktop
           # Package script, not bunx: `bunx tauri` can resolve to the
