@@ -7,7 +7,7 @@
 // [data-par] / [data-alive]; the per-OS download face is swapped by the
 // inline script in pages/index.astro.
 import { Image } from 'astro:assets'
-import { SITE, VENUES } from '@/lib/site'
+import { downloadAsset, SITE, VENUES } from '@/lib/site'
 import { VenueIcon } from '@/components/marketing/VenueIcon'
 import laptopShot from '@/assets/mbp-hands-soft.png'
 import appleIcon from '@/components/marketing/os/apple.svg?raw'
@@ -16,7 +16,9 @@ import linuxIcon from '@/components/marketing/os/linux.svg?raw'
 
 // Double the track so the -50% translate loops seamlessly.
 const track = [...VENUES, ...VENUES]
-const releases = `${SITE.repo}/releases/latest`
+// Server-rendered default matches the default 'mac' face; the inline
+// script in pages/index.astro re-points it at the visitor's own build.
+const releases = downloadAsset('Pairlens-macOS-AppleSilicon.dmg')
 ---
 
 <section class="terminal">

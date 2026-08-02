@@ -5,13 +5,15 @@
 // lead button carries the visitor's own OS (swapped by the inline script in
 // pages/index.astro); the other two builds stay one click away.
 import { Image } from 'astro:assets'
-import { SITE } from '@/lib/site'
+import { downloadAsset, SITE } from '@/lib/site'
 import marbleHand from '@/assets/marble-hand.png'
 import appleIcon from '@/components/marketing/os/apple.svg?raw'
 import windowsIcon from '@/components/marketing/os/windows.svg?raw'
 import linuxIcon from '@/components/marketing/os/linux.svg?raw'
 
-const releases = `${SITE.repo}/releases/latest`
+// Server-rendered default matches the default 'mac' face; the inline
+// script in pages/index.astro re-points it at the visitor's own build.
+const releases = downloadAsset('Pairlens-macOS-AppleSilicon.dmg')
 ---
 
 <section id="download" class="cta pl-marble">

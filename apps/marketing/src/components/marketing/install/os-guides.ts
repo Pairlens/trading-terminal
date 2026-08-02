@@ -22,7 +22,7 @@ export const DEFAULT_OS = 'macOS'
 
 export const OS_GUIDES: Record<string, OsGuide> = {
   macOS: {
-    sub: 'Universal .dmg — Apple silicon and Intel',
+    sub: 'Apple silicon .dmg — Intel build linked below',
     steps: [
       {
         n: '01',
@@ -37,22 +37,22 @@ export const OS_GUIDES: Record<string, OsGuide> = {
       {
         n: '03',
         title: 'Launch it',
-        body: 'Builds are code-signed, so it opens on the first try. Venue keys go to your Keychain when you connect one.',
+        body: 'macOS asks once before opening an app from outside the App Store: right-click Pairlens, choose Open, and confirm. Venue keys go to your Keychain when you connect one.',
       },
     ],
   },
   Windows: {
-    sub: '.msi installer — Windows 10 and 11, 64-bit',
+    sub: '.exe setup — Windows 10 and 11, 64-bit',
     steps: [
       {
         n: '01',
-        title: 'Run the .msi',
-        body: 'Double-click the installer and pick a folder. The .exe is there too if you would rather not run the Windows installer.',
+        title: 'Run the setup',
+        body: 'Double-click the setup you just downloaded and pick a folder. Prefer the Windows installer format? The .msi link sits right under the download button.',
       },
       {
         n: '02',
-        title: 'Check the publisher',
-        body: 'Windows shows the signature before it installs anything. It reads Pairlens — every build is code-signed.',
+        title: 'Get past SmartScreen',
+        body: 'Windows may warn about an unrecognized app while our builds earn their reputation. Choose More info, then Run anyway — every build ships from public CI you can read.',
       },
       {
         n: '03',
@@ -62,24 +62,24 @@ export const OS_GUIDES: Record<string, OsGuide> = {
     ],
   },
   Linux: {
-    sub: '.deb and .AppImage — Debian, Ubuntu, Fedora',
+    sub: 'AppImage — .deb and .rpm linked below',
     steps: [
       {
         n: '01',
         title: 'Pick a format',
-        body: 'Take the .deb on Debian and Ubuntu. The .AppImage runs anywhere without installing.',
+        body: 'The AppImage you just downloaded runs anywhere without installing. On Debian and Ubuntu the .deb integrates better; Fedora takes the .rpm.',
       },
       {
         n: '02',
         title: 'Install the .deb',
         body: 'apt resolves the dependencies for you.',
-        cmd: 'sudo apt install ./pairlens_amd64.deb',
+        cmd: 'sudo apt install ./Pairlens-Linux.deb',
       },
       {
         n: '03',
         title: 'Or run the AppImage',
         body: 'Mark it executable once, then launch it like any other binary.',
-        cmd: 'chmod +x Pairlens.AppImage',
+        cmd: 'chmod +x Pairlens-Linux.AppImage',
       },
     ],
   },

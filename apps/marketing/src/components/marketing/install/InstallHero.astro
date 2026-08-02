@@ -30,9 +30,13 @@ const OS_GLYPH: Record<string, string> = {
 const FACTS = [
   { label: 'Price', value: 'Free forever' },
   { label: 'Account', value: 'Not required' },
-  { label: 'Builds', value: 'Code-signed' },
+  { label: 'License', value: 'Source-available' },
   { label: 'Updates', value: 'Automatic' },
 ]
+
+const ALTS = Object.fromEntries(INSTALLERS.map((it) => [it.os, it.alts]))
+/** DEFAULT_OS is a literal type; widen so per-OS comparisons typecheck. */
+const isDefault = (os: string) => os === (DEFAULT_OS as string)
 
 const defaultHref =
   INSTALLERS.find((it) => it.os === DEFAULT_OS)?.href ??
@@ -51,7 +55,7 @@ const defaultHref =
         </h1>
         <p class="ins-lede" data-reveal data-reveal-delay="140">
           One download, no account, nothing to configure before it opens. Every
-          build is code-signed and keeps itself up to date.
+          build ships from public CI and keeps itself up to date.
         </p>
       </div>
 
@@ -99,13 +103,7 @@ const defaultHref =
     </div>
 
     <div class="ins-cta" data-reveal data-reveal-delay="420">
-      <a
-        class="pl-ring ins-download"
-        data-os-download
-        href={defaultHref}
-        target="_blank"
-        rel="noopener"
-      >
+      <a class="pl-ring ins-download" data-os-download href={defaultHref}>
         <svg
           class="ins-download-ic"
           viewBox="0 0 24 24"
@@ -135,6 +133,32 @@ const defaultHref =
           }
         </p>
         <p class="ins-cta-note">
+          <span
+            class:list={['ins-sub', isDefault('macOS') && 'is-active']}
+            data-os-sub="macOS"
+          >
+            On an Intel Mac? <a class="ins-link" href={ALTS['macOS'][0].href}
+              >Download the Intel build</a
+            >.{' '}
+          </span>
+          <span
+            class:list={['ins-sub', isDefault('Windows') && 'is-active']}
+            data-os-sub="Windows"
+          >
+            Prefer the Windows installer format? <a
+              class="ins-link"
+              href={ALTS['Windows'][0].href}>Get the .msi</a
+            >.{' '}
+          </span>
+          <span
+            class:list={['ins-sub', isDefault('Linux') && 'is-active']}
+            data-os-sub="Linux"
+          >
+            Debian or Fedora native? <a
+              class="ins-link"
+              href={ALTS['Linux'][0].href}>.deb</a
+            > · <a class="ins-link" href={ALTS['Linux'][1].href}>.rpm</a>.{' '}
+          </span>
           Need a checksum, an older build or the changelog? <a
             class="ins-link"
             href={`${SITE.repo}/releases`}

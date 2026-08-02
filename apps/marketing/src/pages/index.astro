@@ -83,8 +83,18 @@ const jsonLd = [
           for (const el of document.querySelectorAll('[data-os-alt]')) {
             el.hidden = os === 'mobile' || el.getAttribute('data-os-alt') === os
           }
+          // Direct-download aliases: the release workflow uploads version-less
+          // copies of each installer, so these URLs always serve the latest
+          // build. Kept in sync with INSTALLERS in src/lib/site.ts.
+          const DL_BASE =
+            'https://github.com/Pairlens/trading-terminal/releases/latest/download/'
+          const DL = {
+            mac: DL_BASE + 'Pairlens-macOS-AppleSilicon.dmg',
+            win: DL_BASE + 'Pairlens-Windows-Setup.exe',
+            linux: DL_BASE + 'Pairlens-Linux.AppImage',
+          }
           for (const a of document.querySelectorAll('a[data-os-download]')) {
-            if (os === 'mobile') a.setAttribute('href', '/install')
+            a.setAttribute('href', os === 'mobile' ? '/install' : DL[os])
           }
         }
 

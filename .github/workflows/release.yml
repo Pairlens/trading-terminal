@@ -164,3 +164,33 @@ jobs:
           RELEASE_ID: ${{ needs.create-release.outputs.release_id }}
           TAG: ${{ github.ref_name }}
         run: bun scripts/release/updater-manifest.ts
+
+      # Evergreen download aliases: version-less copies of each installer so
+      # the marketing site can link `releases/latest/download/<alias>` and a
+      # click downloads the right build directly — no GitHub release page,
+      # no filename that rots on the next version bump.
+      - name: Attach evergreen download aliases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          V="${TAG#v}"
+          declare -A ALIASES=(
+            ["Pairlens_${V}_aarch64.dmg"]="Pairlens-macOS-AppleSilicon.dmg"
+            ["Pairlens_${V}_x64.dmg"]="Pairlens-macOS-Intel.dmg"
+            ["Pairlens_${V}_x64-setup.exe"]="Pairlens-Windows-Setup.exe"
+            ["Pairlens_${V}_x64_en-US.msi"]="Pairlens-Windows.msi"
+            ["Pairlens_${V}_amd64.AppImage"]="Pairlens-Linux.AppImage"
+            ["Pairlens_${V}_amd64.deb"]="Pairlens-Linux.deb"
+            ["Pairlens-${V}-1.x86_64.rpm"]="Pairlens-Linux.rpm"
+          )
+          mkdir -p aliases && cd aliases
+          for src in "${!ALIASES[@]}"; do
+            dst="${ALIASES[$src]}"
+            gh release download "$TAG" -R "$RELEASE_REPO" --pattern "$src" -O "$dst"
+            gh release upload "$TAG" -R "$RELEASE_REPO" "$dst" --clobber
+            rm -f "$dst"
+            echo "aliased $src -> $dst"
+          done

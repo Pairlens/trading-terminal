@@ -265,13 +265,19 @@ export const LEGAL_DISCLAIMER = {
 } as const
 
 /**
- * Per-OS installers for the dedicated `/install` page. Release assets are
- * versioned (e.g. `Pairlens_1.4.2_aarch64.dmg`), so every card links to the
- * GitHub "latest release" page — where the OS-specific asset is chosen — rather
- * than hard-coding a filename that 404s on the next version bump. `icon` maps
- * to a bundled glyph in `components/marketing/os/<icon>.svg`.
+ * Per-OS installers. The release workflow uploads version-less alias copies
+ * of every installer (`Pairlens-macOS-AppleSilicon.dmg`, ...), so
+ * `releases/latest/download/<alias>` is an evergreen direct-download URL:
+ * one click saves the right build, and the link survives every version bump.
+ * `href` is the build the big button downloads; `alts` are the same OS's
+ * other formats, offered as small links next to it. `icon` maps to a bundled
+ * glyph in `components/marketing/os/<icon>.svg`.
  */
 export type OsIcon = 'apple' | 'windows' | 'linux'
+
+/** Evergreen direct-download URL for a release-asset alias. */
+export const downloadAsset = (alias: string) =>
+  `${SITE.repo}/releases/latest/download/${alias}`
 
 export const INSTALLERS: ReadonlyArray<{
   os: string
@@ -279,27 +285,38 @@ export const INSTALLERS: ReadonlyArray<{
   tagline: string
   formats: ReadonlyArray<string>
   href: string
+  alts: ReadonlyArray<{ label: string; href: string }>
 }> = [
   {
     os: 'macOS',
     icon: 'apple',
     tagline: 'Apple silicon & Intel',
-    formats: ['.dmg', 'Universal'],
-    href: `${SITE.repo}/releases/latest`,
+    formats: ['.dmg'],
+    href: downloadAsset('Pairlens-macOS-AppleSilicon.dmg'),
+    alts: [
+      { label: 'Intel Mac', href: downloadAsset('Pairlens-macOS-Intel.dmg') },
+    ],
   },
   {
     os: 'Windows',
     icon: 'windows',
     tagline: 'Windows 10 & 11 · 64-bit',
-    formats: ['.msi', '.exe'],
-    href: `${SITE.repo}/releases/latest`,
+    formats: ['.exe', '.msi'],
+    href: downloadAsset('Pairlens-Windows-Setup.exe'),
+    alts: [
+      { label: '.msi installer', href: downloadAsset('Pairlens-Windows.msi') },
+    ],
   },
   {
     os: 'Linux',
     icon: 'linux',
     tagline: 'Debian · Ubuntu · Fedora',
-    formats: ['.deb', '.AppImage'],
-    href: `${SITE.repo}/releases/latest`,
+    formats: ['.AppImage', '.deb', '.rpm'],
+    href: downloadAsset('Pairlens-Linux.AppImage'),
+    alts: [
+      { label: '.deb', href: downloadAsset('Pairlens-Linux.deb') },
+      { label: '.rpm', href: downloadAsset('Pairlens-Linux.rpm') },
+    ],
   },
 ]
 
