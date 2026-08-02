@@ -1,0 +1,30 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
+    "types": ["bun-types"]
+  },
+  "include": [
+    "*.js",
+    "*.ts",
+    "scripts/**/*.ts",
+    "apps/*/scripts/**/*.ts",
+    "examples/*/scripts/**/*.ts",
+    "apps/*/src/**/*.ts",
+    "apps/*/src/**/*.tsx",
+    "apps/registry/community/*/src/**/*.ts",
+    "apps/*/*.config.ts",
+    "apps/*/*.config.js",
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.tsx",
+    "packages/*/*.config.ts",
+    "examples/*/src/**/*.ts",
+    "examples/*/src/**/*.tsx"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/dist",
+    "apps/terminal/src/routeTree.gen.ts"
+  ]
+}

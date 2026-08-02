@@ -1,0 +1,7 @@
+{
+  "githubUser": "pairlens",
+  "category": "intelligence",
+  "tagline": "Three example Python indicators — a working template for building your own indicator plugins",
+  "longDescription": "A reference community plugin for the chart:indicator capability. Ships three educational Python indicators that run in the terminal's local Python runtime and render as first-class chart indicators: a rolling Z-Score (sub-pane, hlines, source input), an EMA Ribbon (multi-series overlay), and Volume Impulse (up/down histogram over volume with choice and bool inputs). The source is the template to copy: each indicator is a plain Python script targeting the pairlens SDK, embedded in a tiny sandbox-safe module that returns descriptors from execute(). Fork this folder, swap in your own scripts, and publish your own indicator pack.",
+  "homepage": "https://pairlens.finance"
+}

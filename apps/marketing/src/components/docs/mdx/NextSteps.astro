@@ -1,0 +1,58 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+interface Item {
+  tag: string
+  title: string
+  href: string
+}
+interface Props {
+  items: Item[]
+}
+const { items } = Astro.props
+---
+
+<div class="mt-5 grid grid-cols-2 gap-3 max-[720px]:grid-cols-1">
+  {
+    items.map((it) => (
+      <a
+        href={it.href}
+        class="next-step rounded-[14px] border border-border bg-card px-[18px] py-4"
+      >
+        <span
+          class="block font-mono text-[10px] font-semibold tracking-[0.2em] uppercase"
+          style="color: color-mix(in oklch, var(--muted-foreground) 62%, transparent);"
+        >
+          {it.tag}
+        </span>
+        <span class="mt-[7px] flex items-center gap-[7px] text-[14.5px] font-semibold text-foreground">
+          {it.title}
+          <span aria-hidden="true" class="text-primary">
+            →
+          </span>
+        </span>
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .next-step {
+    transition:
+      border-color 0.22s var(--ease-out),
+      transform 0.22s var(--ease-out);
+  }
+  .next-step:hover {
+    border-color: color-mix(in oklch, var(--primary) 42%, var(--border));
+    transform: translateY(-2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .next-step {
+      transition: border-color 0.22s var(--ease-out);
+    }
+    .next-step:hover {
+      transform: none;
+    }
+  }
+</style>

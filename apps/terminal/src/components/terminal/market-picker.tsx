@@ -1,0 +1,227 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useMemo, useState } from 'react'
+import { ChevronDown, Search } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { cn } from '@pairlens/ui'
+import { Button } from '@pairlens/ui/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@pairlens/ui/components/ui/dropdown-menu'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@pairlens/ui/components/ui/tooltip'
+
+import type { AssetClass } from '@pairlens/market-engine'
+import type { MarketOption } from '@/hooks/use-available-markets'
+
+// ---------------------------------------------------------------------------
+// Venue picker — the one place venues are chosen, so every surface gets the
+// same venue marks, search box and asset-class grouping (terminal top bar,
+// indicator workbench preview target, ...).
+// ---------------------------------------------------------------------------
+
+const ASSET_CLASS_ORDER: Array<AssetClass> = [
+  'crypto-spot',
+  'crypto-perp',
+  'dex',
+  'stocks',
+  'prediction',
+]
+
+const ASSET_CLASS_LABELS: Record<AssetClass, string> = {
+  'crypto-spot': 'CEX (Spot)',
+  'crypto-perp': 'CEX (Perpetuals)',
+  dex: 'DEX',
+  stocks: 'Stocks',
+  prediction: 'Predictions',
+}
+
+/** Venue mark, falling back to nothing when the connector ships no icon. */
+function MarketIcon({
+  option,
+  className,
+}: {
+  option: Pick<MarketOption, 'iconUrl'>
+  className?: string
+}) {
+  if (!option.iconUrl) return null
+  return (
+    <img
+      src={option.iconUrl}
+      alt=""
+      className={cn('size-4 rounded-full', className)}
+    />
+  )
+}
+
+type MarketPickerProps = {
+  market: string
+  marketOptions: Array<MarketOption>
+  onMarketChange: (market: string) => void
+  /** Speculative pre-connect when a venue in the dropdown is hovered/focused. */
+  onMarketHover?: (market: string) => void
+  /** Extra classes for the trigger button (sizing lives with the caller). */
+  className?: string
+  'aria-label'?: string
+}
+
+export function MarketPicker({
+  market,
+  marketOptions,
+  onMarketChange,
+  onMarketHover,
+  className,
+  'aria-label': ariaLabel,
+}: MarketPickerProps) {
+  const activeMarket = marketOptions.find((o) => o.value === market) ??
+    marketOptions[0] ?? { value: market, label: market.toUpperCase() }
+
+  return (
+    <DropdownMenu>
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className={cn('gap-1 text-xs', className)}
+                  aria-label={ariaLabel}
+                />
+              }
+            />
+          }
+        >
+          <MarketIcon option={activeMarket} />
+          {activeMarket.label}
+          <ChevronDown className="size-3" />
+        </TooltipTrigger>
+        <TooltipContent>{activeMarket.label}</TooltipContent>
+      </Tooltip>
+      <MarketDropdownContent
+        market={market}
+        marketOptions={marketOptions}
+        onMarketChange={onMarketChange}
+        onMarketHover={onMarketHover}
+      />
+    </DropdownMenu>
+  )
+}
+
+function MarketDropdownContent({
+  market,
+  marketOptions,
+  onMarketChange,
+  onMarketHover,
+}: {
+  market: string
+  marketOptions: Array<MarketOption>
+  onMarketChange: (market: string) => void
+  onMarketHover?: (market: string) => void
+}) {
+  const { t } = useTranslation()
+  const [filter, setFilter] = useState('')
+
+  // Filter markets (case-insensitive)
+  const filtered = useMemo(() => {
+    if (!filter) return marketOptions
+    const q = filter.toLowerCase()
+    return marketOptions.filter(
+      (o) =>
+        o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q),
+    )
+  }, [marketOptions, filter])
+
+  // Group by primary asset class
+  const groups = useMemo(() => {
+    const map = new Map<AssetClass, Array<MarketOption>>()
+    for (const opt of filtered) {
+      const primaryClass = opt.assetClasses[0] ?? 'crypto-spot'
+      const arr = map.get(primaryClass) ?? []
+      arr.push(opt)
+      map.set(primaryClass, arr)
+    }
+    return map
+  }, [filtered])
+
+  return (
+    <DropdownMenuContent
+      align="start"
+      className="w-auto min-w-56 max-h-80 overflow-y-auto"
+    >
+      {/* Filter input */}
+      <div className="flex items-center gap-2 border-b border-border px-2 pb-1.5 pt-1">
+        <Search className="size-3.5 shrink-0 text-muted-foreground" />
+        <input
+          type="text"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          onKeyDown={(e) => {
+            // Let navigation keys propagate to the dropdown (arrow keys,
+            // Enter, Escape, Tab) but block printable characters so the
+            // dropdown's typeahead doesn't hijack them.
+            if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+              e.stopPropagation()
+            }
+          }}
+          placeholder={t('terminal.market')}
+          className="h-7 w-full bg-transparent text-xs outline-none placeholder:text-muted-foreground/60"
+          autoFocus
+        />
+      </div>
+
+      <DropdownMenuRadioGroup value={market} onValueChange={onMarketChange}>
+        {ASSET_CLASS_ORDER.map((ac) => {
+          const items = groups.get(ac)
+          if (!items?.length) return null
+
+          return (
+            <DropdownMenuGroup key={ac}>
+              <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                {ASSET_CLASS_LABELS[ac]}
+              </DropdownMenuLabel>
+              {items.map((option) => (
+                <DropdownMenuRadioItem
+                  key={option.value}
+                  value={option.value}
+                  className="whitespace-nowrap"
+                  // Hovering (or keyboard-focusing) a venue pre-connects its
+                  // market-data streams so the actual switch renders instantly.
+                  onPointerEnter={() => onMarketHover?.(option.value)}
+                  onFocus={() => onMarketHover?.(option.value)}
+                >
+                  <span className="flex items-center gap-2 font-medium">
+                    <MarketIcon option={option} />
+                    {option.label}
+                  </span>
+                </DropdownMenuRadioItem>
+              ))}
+              <DropdownMenuSeparator />
+            </DropdownMenuGroup>
+          )
+        })}
+
+        {filtered.length === 0 && (
+          <DropdownMenuItem disabled>
+            <span className="text-xs text-muted-foreground">
+              No markets found
+            </span>
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuRadioGroup>
+    </DropdownMenuContent>
+  )
+}

@@ -1,0 +1,140 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useEffect, useState } from 'react'
+import { Bot, MonitorSmartphone, Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@pairlens/ui/components/ui/alert'
+import { Button } from '@pairlens/ui/components/ui/button'
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@pairlens/ui/components/ui/empty'
+
+import { ArmLiveDialog } from './arm-live-dialog'
+import { BotDetail } from './bot-detail'
+import { BotList } from './bot-list'
+import { CreateBotDialog } from './create-bot-dialog'
+
+import type { BotDefinition } from '@pairlens/bot-engine/types'
+import { useBotRunsStore } from '@/stores/bot-runs-store'
+import { useBotsStore } from '@/stores/bots-store'
+
+/**
+ * The bots surface, as master-detail: the deployments down the left, one bot's
+ * whole life in the middle.
+ *
+ * Same shell as the indicator workbench, for the same reason — a bot's ledger,
+ * event log and settings are dense enough that they need the room, and picking
+ * a different bot should never cost more than a click.
+ */
+export function BotsPage() {
+  const bots = useBotsStore((s) => s.bots)
+  const loaded = useBotsStore((s) => s.loaded)
+  const loadBots = useBotsStore((s) => s.load)
+  const loadRuns = useBotRunsStore((s) => s.load)
+
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [createOpen, setCreateOpen] = useState(false)
+  const [armTarget, setArmTarget] = useState<BotDefinition | null>(null)
+
+  useEffect(() => {
+    loadBots()
+    loadRuns()
+  }, [loadBots, loadRuns])
+
+  // Auto-select the first bot, and re-select after a delete: an empty main
+  // area while bots exist reads as "nothing here" when there plainly is.
+  useEffect(() => {
+    if (!loaded) return
+    if (selectedId && bots.some((bot) => bot.id === selectedId)) return
+    setSelectedId(bots[0]?.id ?? null)
+  }, [loaded, bots, selectedId])
+
+  const selected = bots.find((bot) => bot.id === selectedId) ?? null
+
+  // The arm dialog holds a snapshot; re-read it so a rename or a mode change
+  // made elsewhere doesn't get confirmed against stale text.
+  const armBot = armTarget
+    ? (bots.find((bot) => bot.id === armTarget.id) ?? null)
+    : null
+
+  return (
+    <div className="flex h-full min-h-0">
+      <BotList
+        selectedId={selectedId}
+        onSelect={setSelectedId}
+        onCreate={() => setCreateOpen(true)}
+        onRequestArm={setArmTarget}
+      />
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        {selected ? (
+          <BotDetail
+            key={selected.id}
+            bot={selected}
+            onRequestArm={setArmTarget}
+          />
+        ) : (
+          <BotsEmptyState onCreate={() => setCreateOpen(true)} />
+        )}
+      </div>
+
+      <CreateBotDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onCreated={setSelectedId}
+      />
+
+      <ArmLiveDialog
+        bot={armBot}
+        onOpenChange={(open) => !open && setArmTarget(null)}
+        onArmed={setSelectedId}
+      />
+    </div>
+  )
+}
+
+/**
+ * Nothing selected — in practice, no bots at all.
+ *
+ * This is where the "runs on your machine" caveat lives now. It has to be read
+ * once, before the first bot exists, not sit above the list forever eating the
+ * rows it was meant to explain.
+ */
+function BotsEmptyState({ onCreate }: { onCreate: () => void }) {
+  const { t } = useTranslation()
+
+  return (
+    <div className="flex h-full items-center justify-center p-6">
+      <Empty className="max-w-lg border-none">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Bot />
+          </EmptyMedia>
+          <EmptyTitle>{t('botsPage.emptyTitle')}</EmptyTitle>
+          <EmptyDescription>{t('botsPage.emptyDescription')}</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent className="max-w-none">
+          <Button size="sm" onClick={onCreate}>
+            <Plus className="size-3.5" />
+            {t('botsPage.newBot')}
+          </Button>
+          <Alert>
+            <MonitorSmartphone />
+            <AlertTitle>{t('botsPage.localTitle')}</AlertTitle>
+            <AlertDescription>{t('botsPage.localBody')}</AlertDescription>
+          </Alert>
+        </EmptyContent>
+      </Empty>
+    </div>
+  )
+}

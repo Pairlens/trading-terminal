@@ -1,0 +1,617 @@
+/*
+ * Copyright (c) 2026 Juan Ignacio Molina Estrada
+ * SPDX-License-Identifier: FSL-1.1-Apache-2.0
+ */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@fontsource-variable/hanken-grotesk';
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource-variable/jetbrains-mono';
+@source "./**/*.{ts,tsx}";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   WARM PRECISION — Pairlens base theme
+   Light = warm paper · Dark ("Graphite") = warm charcoal (primary).
+   Neutrals carry a whisper of warm hue (~74°) + a touch of chroma.
+   The blue primary becomes a friendlier iris. Green/red stay sacred
+   for P&L. The "magic" gradient (iris→periwinkle→cyan) is reserved
+   for AI surfaces only.
+   ============================================================ */
+
+:root {
+  /* ── LIGHT — warm paper ── */
+  --background: oklch(96.5% 0.008 83);
+  --foreground: oklch(0.24 0.012 66);
+  --card: oklch(99.3% 0.004 84);
+  --card-foreground: oklch(0.24 0.012 66);
+  --popover: oklch(99.7% 0.003 84);
+  --popover-foreground: oklch(0.24 0.012 66);
+  --primary: oklch(0.52 0.16 278);
+  --primary-foreground: oklch(0.99 0.006 278);
+  --secondary: oklch(93.5% 0.008 83);
+  --secondary-foreground: oklch(0.3 0.01 70);
+  --muted: oklch(94.5% 0.007 83);
+  --muted-foreground: oklch(0.5 0.014 70);
+  --accent: oklch(93% 0.025 278);
+  --accent-foreground: oklch(0.3 0.02 278);
+  --destructive: oklch(0.55 0.2 24);
+  --destructive-foreground: oklch(0.99 0.01 84);
+  --border: oklch(89.5% 0.01 83);
+  --input: oklch(91.5% 0.01 83);
+  --ring: oklch(0.52 0.16 278);
+  --chart-1: oklch(0.55 0.2 25);
+  --chart-2: oklch(0.56 0.14 158);
+  --chart-3: oklch(0.52 0.16 278);
+  --chart-4: oklch(0.62 0.14 70);
+  --chart-5: oklch(0.56 0.18 320);
+  /* P&L semantics — use everywhere for up/down instead of raw chart tokens */
+  --up: var(--chart-2);
+  --down: var(--destructive);
+  /* AI "magic" gradient stops — reserve for AI surfaces only */
+  --magic-1: oklch(0.6 0.17 288);
+  --magic-2: oklch(0.58 0.15 250);
+  --magic-3: oklch(0.62 0.14 200);
+
+  /* Sidebar — the terminal chrome stays deep in both modes */
+  --sidebar: oklch(0.14 0.006 74);
+  --sidebar-foreground: oklch(0.88 0.005 74);
+  --sidebar-primary: oklch(0.72 0.13 278);
+  --sidebar-primary-foreground: oklch(0.14 0.02 278);
+  --sidebar-accent: oklch(0.22 0.008 74);
+  --sidebar-accent-foreground: oklch(0.9 0.005 74);
+  --sidebar-border: oklch(0.24 0.008 74);
+  --sidebar-ring: oklch(0.72 0.13 278);
+
+  /* AI orb — aligned to the magic palette */
+  --orb-bg: transparent;
+  --orb-c1: oklch(0.6 0.17 288);
+  --orb-c2: oklch(0.58 0.15 250);
+  --orb-c3: oklch(0.62 0.14 200);
+
+  /* Type */
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  /* Radius (8px → 12px): cards 16–20px, inputs/buttons 10–12px, chips 8–9px */
+  --radius: 0.75rem;
+  --spacing: 0.25rem;
+  --tracking-normal: 0em;
+
+  /* Motion scale */
+  --dur-fast: 120ms;
+  --dur-base: 190ms;
+  --dur-slow: 340ms;
+  --ease-soft: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Elevation — depth over division */
+  --shadow-x: 0px;
+  --shadow-y: 4px;
+  --shadow-blur: 9px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.05;
+  --shadow-color: #000000;
+  --shadow-2xs: 0px 1px 2px 0px hsl(60 8% 10% / 0.04);
+  --shadow-xs: 0px 1px 2px 0px hsl(60 8% 10% / 0.05);
+  --shadow-sm:
+    0px 2px 4px -1px hsl(60 8% 10% / 0.06),
+    0px 1px 2px -1px hsl(60 8% 10% / 0.06);
+  --shadow:
+    0px 4px 10px -2px hsl(60 8% 10% / 0.07),
+    0px 2px 4px -2px hsl(60 8% 10% / 0.06);
+  --shadow-md:
+    0px 8px 18px -4px hsl(60 8% 10% / 0.08),
+    0px 3px 6px -3px hsl(60 8% 10% / 0.06);
+  --shadow-lg:
+    0px 16px 32px -8px hsl(60 8% 10% / 0.1),
+    0px 4px 8px -4px hsl(60 8% 10% / 0.06);
+  --shadow-xl:
+    0px 24px 48px -12px hsl(60 8% 10% / 0.12),
+    0px 8px 12px -6px hsl(60 8% 10% / 0.07);
+  --shadow-2xl: 0px 32px 64px -16px hsl(60 8% 10% / 0.18);
+  /* Panel elevation — soft diffuse shadow + inset top highlight */
+  --elevation-panel:
+    0 1px 0 color-mix(in oklch, white 55%, transparent) inset,
+    0 24px 48px -30px hsl(60 8% 10% / 0.25);
+  --noise-opacity: 0.03;
+}
+
+.dark {
+  /* ── DARK — Graphite (warm charcoal), the primary mode ── */
+  --background: oklch(13.5% 0.006 74);
+  --foreground: oklch(94% 0.005 74);
+  --card: oklch(16.8% 0.008 74);
+  --card-foreground: oklch(94% 0.005 74);
+  --popover: oklch(19.5% 0.009 74);
+  --popover-foreground: oklch(95% 0.005 74);
+  --primary: oklch(0.72 0.13 278);
+  --primary-foreground: oklch(0.15 0.02 278);
+  --secondary: oklch(0.23 0.008 74);
+  --secondary-foreground: oklch(0.9 0.005 74);
+  --muted: oklch(19.5% 0.007 74);
+  --muted-foreground: oklch(0.66 0.009 74);
+  --accent: oklch(0.27 0.03 278);
+  --accent-foreground: oklch(0.96 0.005 74);
+  --destructive: oklch(0.64 0.19 22);
+  --destructive-foreground: oklch(0.98 0.01 74);
+  --border: oklch(26.5% 0.008 74);
+  --input: oklch(0.24 0.008 74);
+  --ring: oklch(0.72 0.13 278);
+  --chart-1: oklch(0.64 0.2 25);
+  --chart-2: oklch(0.74 0.15 158);
+  --chart-3: oklch(0.7 0.14 278);
+  --chart-4: oklch(0.78 0.13 85);
+  --chart-5: oklch(0.7 0.16 320);
+  --up: var(--chart-2);
+  --down: var(--destructive);
+  --magic-1: oklch(0.74 0.15 288);
+  --magic-2: oklch(0.7 0.13 250);
+  --magic-3: oklch(0.76 0.12 200);
+
+  /* Chrome frame — a hair LIGHTER than the content (--background 0.135). It
+     backs the app frame and the gaps between panes, so this gentle tone reads
+     as soft separators that frame each pane without shouting. Near-black
+     frames (< content) were imperceptible in dark mode; this sits just into
+     the visible range for a subtle, not stark, container edge. */
+  --sidebar: oklch(0.165 0.007 74);
+  --sidebar-foreground: oklch(0.82 0.005 74);
+  --sidebar-primary: oklch(0.72 0.13 278);
+  --sidebar-primary-foreground: oklch(0.15 0.02 278);
+  --sidebar-accent: oklch(0.24 0.008 74);
+  --sidebar-accent-foreground: oklch(0.92 0.005 74);
+  --sidebar-border: oklch(0.24 0.008 74);
+  --sidebar-ring: oklch(0.72 0.13 278);
+
+  --orb-bg: transparent;
+  --orb-c1: oklch(0.74 0.15 288);
+  --orb-c2: oklch(0.7 0.13 250);
+  --orb-c3: oklch(0.76 0.12 200);
+
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  --radius: 0.75rem;
+  --spacing: 0.25rem;
+  --tracking-normal: 0em;
+
+  --dur-fast: 120ms;
+  --dur-base: 190ms;
+  --dur-slow: 340ms;
+  --ease-soft: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --shadow-x: 0px;
+  --shadow-y: 6px;
+  --shadow-blur: 9px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.5;
+  --shadow-color: #000000;
+  --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.24);
+  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.3);
+  --shadow-sm:
+    0px 2px 6px -1px hsl(0 0% 0% / 0.4), 0px 1px 2px -1px hsl(0 0% 0% / 0.35);
+  --shadow:
+    0px 8px 20px -6px hsl(0 0% 0% / 0.45), 0px 2px 5px -2px hsl(0 0% 0% / 0.4);
+  --shadow-md:
+    0px 14px 30px -10px hsl(0 0% 0% / 0.5), 0px 3px 8px -3px hsl(0 0% 0% / 0.4);
+  --shadow-lg:
+    0px 22px 44px -14px hsl(0 0% 0% / 0.55),
+    0px 5px 10px -5px hsl(0 0% 0% / 0.4);
+  --shadow-xl:
+    0px 34px 64px -20px hsl(0 0% 0% / 0.62),
+    0px 8px 14px -8px hsl(0 0% 0% / 0.45);
+  --shadow-2xl: 0px 44px 80px -28px hsl(0 0% 0% / 0.75);
+  --elevation-panel:
+    0 1px 0 color-mix(in oklch, white 6%, transparent) inset,
+    0 30px 60px -44px black;
+  --noise-opacity: 0.06;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  /* P&L + AI semantic utilities: bg-up / text-down / border-magic-1 … */
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --color-magic-1: var(--magic-1);
+  --color-magic-2: var(--magic-2);
+  --color-magic-3: var(--magic-3);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-orb-bg: var(--orb-bg);
+  --color-orb-c1: var(--orb-c1);
+  --color-orb-c2: var(--orb-c2);
+  --color-orb-c3: var(--orb-c3);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+
+  --ease-soft: var(--ease-soft);
+  --ease-out: var(--ease-out);
+  --ease-inout: var(--ease-inout);
+
+  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+  --tracking-normal: var(--tracking-normal);
+  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply font-sans bg-background text-foreground;
+    letter-spacing: var(--tracking-normal);
+  }
+  html {
+    @apply font-sans;
+  }
+  /* Numerics render tabular by default wherever the mono face is used */
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ============================================================
+   MOTION LIBRARY — Warm Precision micro-interactions
+   Fast where you act, gentle where you read. All named
+   interactions from the design handoff, as reusable utilities.
+   ============================================================ */
+
+/* AI "magic" gradient — reserve for AI surfaces (co-pilot, thinking, focus glows) */
+.magic-gradient {
+  background: linear-gradient(
+    120deg,
+    var(--magic-1),
+    var(--magic-2),
+    var(--magic-3),
+    var(--magic-1)
+  );
+  background-size: 200% 100%;
+  animation: magic-drift 7s linear infinite;
+}
+.magic-text {
+  background: linear-gradient(
+    110deg,
+    var(--magic-1),
+    var(--magic-2),
+    var(--magic-3)
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: magic-drift 7s linear infinite;
+}
+@keyframes magic-drift {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
+
+/* Soft diffuse panel elevation (depth over division) */
+.elevated-panel {
+  box-shadow: var(--elevation-panel);
+}
+
+/* Hover-lift — translateY −3px, soft ease */
+.hover-lift {
+  transition:
+    transform var(--dur-base) var(--ease-soft),
+    box-shadow var(--dur-base) ease,
+    border-color var(--dur-base) ease;
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+}
+
+/* Price tick flash — bg flash on value change, fades out ~550ms.
+   Toggle .tick-up / .tick-down on a price cell when its value changes. */
+.tick-cell {
+  border-radius: 5px;
+  padding: 1px 5px;
+  margin: -1px -5px;
+}
+.tick-up {
+  animation: tick-flash-up 550ms var(--ease-soft);
+}
+.tick-down {
+  animation: tick-flash-down 550ms var(--ease-soft);
+}
+@keyframes tick-flash-up {
+  0% {
+    background-color: color-mix(in oklch, var(--up) 24%, transparent);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+@keyframes tick-flash-down {
+  0% {
+    background-color: color-mix(in oklch, var(--down) 24%, transparent);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* Panel rise — enter transition for surfaces/stages */
+.panel-rise {
+  animation: panel-rise var(--dur-slow) var(--ease-out) both;
+}
+@keyframes panel-rise {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Live pulse dot */
+.live-dot {
+  animation: live-blink 1.6s ease-in-out infinite;
+}
+@keyframes live-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magic-gradient,
+  .magic-text,
+  .live-dot {
+    animation: none;
+  }
+  .hover-lift {
+    transition: none;
+  }
+  .hover-lift:hover {
+    transform: none;
+  }
+  .tick-up,
+  .tick-down,
+  .panel-rise {
+    animation: none;
+  }
+}
+
+/* AI Orb — animated gradient sphere */
+@property --orb-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.ai-orb {
+  display: grid;
+  grid-template-areas: 'stack';
+  overflow: hidden;
+  border-radius: 50%;
+  /* WebKit drops the rounded overflow clip on children that carry a filter,
+     so the blurred gradient bleeds to the layer's square bounds ("cut sides"
+     on desktop). clip-path survives where border-radius clipping does not. */
+  clip-path: circle(50%);
+  position: relative;
+  background: var(--background);
+  /* Promote to its own device-resolution compositing layer. Without this, when
+     the orb sits inside a backdrop-filter ancestor (e.g. a glass panel or a
+     translucent/vibrancy window), the browser rasterizes the orb's blur /
+     backdrop-filter / mask layers at 1x and the gradient looks pixelated on
+     hi-DPR screens. This is visually neutral in normal contexts. */
+  transform: translateZ(0);
+  /* Zero-alpha twins of the orb colors. Gradient stops must fade to these, not
+     to `transparent`: WebKit interpolates `transparent` as zero-alpha *black*,
+     which smears dark wedges through the conic gradients. */
+  --orb-c1-clear: oklch(from var(--orb-c1-local) l c h / 0);
+  --orb-c2-clear: oklch(from var(--orb-c2-local) l c h / 0);
+  --orb-c3-clear: oklch(from var(--orb-c3-local) l c h / 0);
+  transition:
+    box-shadow 600ms ease,
+    filter 600ms ease;
+}
+
+.ai-orb--thinking {
+  box-shadow:
+    0 0 12px 2px oklch(0.7 0.13 250 / 0.45),
+    0 0 4px 1px oklch(0.74 0.15 288 / 0.35);
+  filter: brightness(1.2);
+}
+
+.ai-orb::before,
+.ai-orb::after {
+  content: '';
+  display: block;
+  grid-area: stack;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.ai-orb::before {
+  background:
+    conic-gradient(
+      from calc(var(--orb-angle) * 2) at 25% 70%,
+      var(--orb-c3-local),
+      var(--orb-c3-clear) 20% 80%,
+      var(--orb-c3-local)
+    ),
+    conic-gradient(
+      from calc(var(--orb-angle) * 2) at 45% 75%,
+      var(--orb-c2-local),
+      var(--orb-c2-clear) 30% 60%,
+      var(--orb-c2-local)
+    ),
+    conic-gradient(
+      from calc(var(--orb-angle) * -3) at 80% 20%,
+      var(--orb-c1-local),
+      var(--orb-c1-clear) 40% 60%,
+      var(--orb-c1-local)
+    ),
+    conic-gradient(
+      from calc(var(--orb-angle) * 2) at 15% 5%,
+      var(--orb-c2-local),
+      var(--orb-c2-clear) 10% 90%,
+      var(--orb-c2-local)
+    ),
+    conic-gradient(
+      from calc(var(--orb-angle) * 1) at 20% 80%,
+      var(--orb-c1-local),
+      var(--orb-c1-clear) 10% 90%,
+      var(--orb-c1-local)
+    ),
+    conic-gradient(
+      from calc(var(--orb-angle) * -2) at 85% 10%,
+      var(--orb-c3-local),
+      var(--orb-c3-clear) 20% 80%,
+      var(--orb-c3-local)
+    );
+  box-shadow: inset var(--orb-bg-local) 0 0 var(--orb-shadow)
+    calc(var(--orb-shadow) * 0.2);
+  filter: blur(var(--orb-blur)) contrast(var(--orb-contrast));
+  animation: orb-rotate var(--orb-duration) linear infinite;
+}
+
+.ai-orb::after {
+  background-image: radial-gradient(
+    circle at center,
+    var(--orb-bg-local) var(--orb-dot),
+    transparent var(--orb-dot)
+  );
+  background-size: calc(var(--orb-dot) * 2) calc(var(--orb-dot) * 2);
+  backdrop-filter: blur(calc(var(--orb-blur) * 2))
+    contrast(calc(var(--orb-contrast) * 2));
+  mix-blend-mode: overlay;
+  mask-image: radial-gradient(black var(--orb-mask), transparent 75%);
+}
+
+.ai-orb[style*='--orb-mask: 0%']::after {
+  mask-image: none;
+}
+
+/* WebKit (Safari / Tauri WKWebView) never composites the ::after
+   backdrop-filter pass, so the glossy contrast boost and the fill it lends to
+   the gradients' transparent gaps are lost — the orb reads flat with a dark
+   bite where all conics are clear. Swap in painted equivalents: a color
+   underlay beneath the conics and a specular gloss instead of the backdrop
+   pass. The component adds this class after engine detection. */
+.ai-orb--webkit {
+  background:
+    radial-gradient(
+      circle at 46% 40%,
+      oklch(from var(--orb-c3-local) l c h / 0.5),
+      oklch(from var(--orb-c1-local) l c h / 0.38) 78%
+    ),
+    var(--background);
+}
+
+.ai-orb--webkit::after {
+  backdrop-filter: none;
+  background:
+    radial-gradient(
+      circle at 38% 30%,
+      oklch(0.97 0.03 210 / 0.55),
+      oklch(0.97 0.03 210 / 0) 60%
+    ),
+    radial-gradient(
+      circle at 70% 80%,
+      oklch(from var(--orb-c1-local) l c h / 0.38),
+      var(--orb-c1-clear) 55%
+    );
+  background-size: auto;
+}
+
+@keyframes orb-rotate {
+  to {
+    --orb-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-orb::before {
+    animation: none;
+  }
+}
+
+/* Noise texture on sidebar wrapper (area outside content inset) */
+[data-slot='sidebar-wrapper'] {
+  position: relative;
+}
+
+[data-slot='sidebar-wrapper']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+    repeat;
+  background-size: 200px 200px;
+  opacity: var(--noise-opacity);
+  pointer-events: none;
+}

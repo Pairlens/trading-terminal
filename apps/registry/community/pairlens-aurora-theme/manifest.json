@@ -1,0 +1,25 @@
+{
+  "id": "pairlens-aurora-theme",
+  "name": "Aurora Borealis",
+  "version": "0.1.0",
+  "author": "Pairlens Community",
+  "description": "Polar-night theme with aurora greens, teal candles, and a violet glow",
+  "homepage": "https://pairlens.finance",
+  "capabilities": [
+    {
+      "id": "theme:override",
+      "singleton": true,
+      "markets": ["*"],
+      "priority": 5,
+      "streaming": false
+    }
+  ],
+  "config": {},
+  "theme": {
+    "entry": "pairlens-aurora-theme",
+    "previewColors": {
+      "light": ["#0f9d76", "#14b8a6", "#8b5cf6", "#5b7a8f", "#eaf4f0"],
+      "dark": ["#2dd4a7", "#14b8a6", "#a78bfa", "#4f7a6f", "#0b1418"]
+    }
+  }
+}

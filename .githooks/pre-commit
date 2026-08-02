@@ -1,0 +1,17 @@
+#!/bin/sh
+# Pre-commit gate — staged source files must carry the SPDX license header.
+#
+#   bypass in an emergency:  git commit --no-verify
+#   add missing headers:     bun run license-headers:fix
+
+set -e
+
+cd "$(git rev-parse --show-toplevel)"
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -z "$staged" ] && exit 0
+
+echo '[pre-commit] license-headers --check (staged files)'
+printf '%s\n' "$staged" | tr '\n' '\0' | xargs -0 bun scripts/license-headers.ts --check
+
+echo '[pre-commit] ok'

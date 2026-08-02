@@ -1,0 +1,349 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Two-phase FSL → Apache 2.0 timeline. The bar wipes in when the card is
+// revealed rather than on load, so it is never over before it is on screen.
+---
+
+<section class="lic-tl">
+  <div class="mx-auto max-w-[1200px]">
+    <div class="lic-tl-head">
+      <div>
+        <p data-reveal class="lic-tl-eyebrow">The irrevocable part</p>
+        <h2 data-reveal data-reveal-delay="70" class="lic-tl-title">
+          The path to Apache 2.0, in two phases.
+        </h2>
+      </div>
+      <p data-reveal data-reveal-delay="140" class="lic-tl-lede">
+        Not a roadmap item, not a pledge — a grant already written into the
+        licence. If Pairlens is acquired, abandoned or changes direction, every
+        release older than two years is permanently free and forkable.
+      </p>
+    </div>
+
+    <div data-reveal class="lic-tl-card">
+      <div class="lic-tl-bar">
+        <div class="lic-tl-seg lic-tl-seg--fsl">
+          <span class="lic-tl-seg-label">Source-available · FSL 1.1</span>
+          <span class="lic-tl-seg-label lic-tl-seg-label--soft">2 years</span>
+        </div>
+        <div class="lic-tl-seg lic-tl-seg--apache">
+          <span class="lic-tl-seg-label">Apache 2.0 · open source</span>
+          <span class="lic-tl-seg-label lic-tl-seg-label--soft">Forever →</span>
+        </div>
+      </div>
+
+      <div class="lic-tl-ticks">
+        <div aria-hidden="true" class="lic-tl-rule"></div>
+        <div class="lic-tl-tick lic-tl-tick--start">
+          <span aria-hidden="true" class="lic-tl-pin"></span>
+          <span class="lic-tl-tick-label">Release ships</span>
+        </div>
+        <div class="lic-tl-tick lic-tl-tick--mid">
+          <span aria-hidden="true" class="lic-tl-pin"></span>
+          <span class="lic-tl-tick-label lic-tl-tick-label--strong">
+            Second anniversary
+          </span>
+        </div>
+        <div class="lic-tl-tick lic-tl-tick--end">
+          <span aria-hidden="true" class="lic-tl-pin"></span>
+          <span class="lic-tl-tick-label">No end date</span>
+        </div>
+      </div>
+
+      <div class="lic-tl-body">
+        <div>
+          <h3 class="lic-tl-h">Everything except reselling it</h3>
+          <p class="lic-tl-p">
+            From the day a release ships, its source is public. Read it, run it,
+            fork it, patch it, self-host it — personally or across an entire
+            company — and a patent licence covers that use. The one excluded
+            purpose is selling a competing product built from the code.
+          </p>
+        </div>
+        <div>
+          <h3 class="lic-tl-h">Then yours, irrevocably</h3>
+          <p class="lic-tl-p">
+            On its second anniversary the release converts to Apache 2.0, patent
+            grant included. The clause is already in the licence text, so the
+            conversion does not depend on us still being here to honour it.
+          </p>
+        </div>
+      </div>
+
+      <p class="lic-tl-spdx">SPDX: FSL-1.1-Apache-2.0</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lic-tl {
+    padding: 0 32px 104px;
+  }
+  .lic-tl-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 56px;
+  }
+  .lic-tl-eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 45%, transparent);
+  }
+  .lic-tl-title {
+    margin: 18px 0 0;
+    max-width: 22ch;
+    font-family: var(--font-serif);
+    font-size: 44px;
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.032em;
+    color: var(--ml-fg);
+  }
+  .lic-tl-lede {
+    margin: 0 0 6px;
+    max-width: 44ch;
+    font-size: 15.5px;
+    line-height: 1.72;
+    color: var(--ml-muted);
+  }
+
+  .lic-tl-card {
+    margin-top: 48px;
+    border-radius: 22px;
+    border: 1px solid var(--ml-border);
+    background: color-mix(in oklch, var(--ml-card) 74%, transparent);
+    padding: 40px 40px 36px;
+  }
+
+  .lic-tl-bar {
+    display: flex;
+    gap: 4px;
+  }
+  .lic-tl-seg {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 52px;
+    padding: 0 18px;
+  }
+  .lic-tl-seg--fsl {
+    flex: 0 0 54%;
+    border-radius: 14px 4px 4px 14px;
+    background: linear-gradient(90deg, var(--chart-3), var(--chart-5));
+    color: oklch(0.99 0 0);
+  }
+  .lic-tl-seg--apache {
+    flex: 1;
+    border-radius: 4px 14px 14px 4px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--chart-2) 88%, white),
+      var(--chart-2)
+    );
+    color: oklch(0.24 0.05 158);
+  }
+  .lic-tl-seg-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .lic-tl-seg-label--soft {
+    opacity: 0.64;
+  }
+
+  .lic-tl-ticks {
+    position: relative;
+    margin-top: 12px;
+    height: 22px;
+  }
+  .lic-tl-rule {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    background: color-mix(in oklch, var(--ml-fg) 14%, transparent);
+  }
+  .lic-tl-tick {
+    position: absolute;
+    top: 0;
+  }
+  .lic-tl-tick--start {
+    left: 0;
+  }
+  .lic-tl-tick--mid {
+    left: calc(54% + 2px);
+    transform: translateX(-50%);
+    text-align: center;
+  }
+  .lic-tl-tick--end {
+    right: 0;
+    text-align: right;
+  }
+  .lic-tl-pin {
+    display: block;
+    width: 1px;
+    height: 7px;
+    background: color-mix(in oklch, var(--ml-fg) 30%, transparent);
+  }
+  .lic-tl-tick--mid .lic-tl-pin {
+    margin: 0 auto;
+  }
+  .lic-tl-tick--end .lic-tl-pin {
+    margin-left: auto;
+  }
+  .lic-tl-tick-label {
+    display: block;
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 48%, transparent);
+  }
+  .lic-tl-tick-label--strong {
+    color: var(--ml-fg);
+  }
+
+  .lic-tl-body {
+    margin-top: 40px;
+    display: flex;
+    gap: 4px;
+  }
+  .lic-tl-body > :first-child {
+    flex: 0 0 54%;
+    padding-right: 56px;
+  }
+  .lic-tl-body > :last-child {
+    flex: 1;
+    padding-left: 4px;
+  }
+  .lic-tl-h {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    color: var(--ml-fg);
+  }
+  .lic-tl-p {
+    margin: 10px 0 0;
+    font-size: 15px;
+    line-height: 1.7;
+    text-wrap: pretty;
+    color: var(--ml-muted);
+  }
+  .lic-tl-spdx {
+    margin: 34px 0 0;
+    border-top: 1px solid var(--ml-border);
+    padding-top: 22px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    color: color-mix(in oklch, var(--ml-fg) 52%, transparent);
+  }
+
+  /* The bar fills left-to-right as the card comes into view. `.reveal-ready`
+     only lands with JS and never under reduced motion, so the un-clipped bar
+     stays the default state. */
+  @keyframes lic-tl-fill {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  :global(html.reveal-ready) [data-reveal].is-revealed .lic-tl-bar {
+    animation: lic-tl-fill 1.5s var(--ease-out) both;
+  }
+
+  @media (max-width: 1000px) {
+    .lic-tl-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .lic-tl-lede {
+      margin-bottom: 0;
+    }
+  }
+  @media (max-width: 860px) {
+    .lic-tl-title {
+      font-size: 32px;
+    }
+    .lic-tl-seg {
+      height: auto;
+      min-height: 48px;
+      flex-wrap: wrap;
+      gap: 2px 12px;
+      padding: 9px 14px;
+    }
+    .lic-tl-seg-label {
+      font-size: 9.5px;
+      letter-spacing: 0.1em;
+    }
+    .lic-tl-body {
+      flex-direction: column;
+      gap: 28px;
+    }
+    .lic-tl-body > :first-child {
+      flex: none;
+      padding-right: 0;
+    }
+    .lic-tl-body > :last-child {
+      padding-left: 0;
+    }
+  }
+  /* Absolute ticks have no room to line up under a narrow bar: the rail
+     becomes three plain columns instead. */
+  @media (max-width: 720px) {
+    .lic-tl {
+      padding: 0 20px 88px;
+    }
+    .lic-tl-card {
+      padding: 24px 20px 22px;
+    }
+    .lic-tl-ticks {
+      position: static;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      height: auto;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid color-mix(in oklch, var(--ml-fg) 14%, transparent);
+    }
+    .lic-tl-rule,
+    .lic-tl-pin {
+      display: none;
+    }
+    .lic-tl-tick {
+      position: static;
+      transform: none;
+    }
+    .lic-tl-tick-label {
+      margin-top: 0;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+    }
+  }
+  @media (max-width: 480px) {
+    .lic-tl-title {
+      font-size: 30px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.reveal-ready) [data-reveal].is-revealed .lic-tl-bar {
+      animation: none;
+    }
+  }
+</style>

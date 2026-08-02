@@ -1,0 +1,216 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Graphite FAQ band. Disclosures are buttons driving `aria-expanded`; the CSS
+// animates grid-template-rows 0fr → 1fr off that attribute, so the collapsed
+// state is painted from the first frame with no JS involved.
+import { FAQ } from '@/components/marketing/licensing/content'
+import { SITE } from '@/lib/site'
+
+const licenseHref = `${SITE.repo}/blob/main/LICENSE.md`
+---
+
+<section id="faq" class="lic-faq scroll-mt-24">
+  <div class="lic-faq-grid mx-auto max-w-[1200px]">
+    <div>
+      <p data-reveal class="pl-eyebrow text-primary">FAQ</p>
+      <h2 data-reveal data-reveal-delay="70" class="lic-faq-title">
+        Licensing, answered straight.
+      </h2>
+      <p class="lic-faq-note">
+        Plain-language summary, not legal advice. <a
+          href={licenseHref}
+          target="_blank"
+          rel="noopener">LICENSE.md</a
+        > is what governs.
+      </p>
+    </div>
+
+    <div data-reveal data-reveal-delay="140" class="flex flex-col">
+      {
+        FAQ.map((item, i) => (
+          <div class="lic-acc">
+            <button
+              type="button"
+              data-licensing-acc
+              id={`licensing-faq-q${i}`}
+              aria-expanded="false"
+              aria-controls={`licensing-faq-a${i}`}
+              class="lic-acc-t"
+            >
+              {item.q}
+              <svg
+                class="lic-acc-x"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </button>
+            <div id={`licensing-faq-a${i}`} class="lic-acc-p">
+              <div>
+                <p>{item.a}</p>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  // Click toggles `aria-expanded`; CSS does the rest. Idempotent, and re-armed
+  // after Astro view-transition navigations.
+  function armLicensingFaq() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>(
+      '[data-licensing-acc]',
+    )
+    for (const btn of buttons) {
+      if (btn.dataset.bound) continue
+      btn.dataset.bound = '1'
+      btn.addEventListener('click', () => {
+        const open = btn.getAttribute('aria-expanded') === 'true'
+        btn.setAttribute('aria-expanded', String(!open))
+      })
+    }
+  }
+
+  armLicensingFaq()
+  document.addEventListener('astro:page-load', armLicensingFaq)
+</script>
+
+<style>
+  .lic-faq {
+    padding: 96px 32px 104px;
+    background: var(--background);
+    color: var(--foreground);
+  }
+  .lic-faq-grid {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .lic-faq-title {
+    margin: 18px 0 0;
+    font-family: var(--font-serif);
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.028em;
+    color: var(--foreground);
+  }
+  .lic-faq-note {
+    margin: 16px 0 0;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: color-mix(in oklch, var(--muted-foreground) 78%, transparent);
+  }
+  .lic-faq-note a {
+    color: var(--foreground);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--border);
+    transition: text-decoration-color 0.2s ease;
+  }
+  .lic-faq-note a:hover {
+    text-decoration-color: var(--foreground);
+  }
+
+  .lic-acc {
+    border-bottom: 1px solid var(--border);
+  }
+  .lic-acc-t {
+    display: flex;
+    width: 100%;
+    cursor: pointer;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border: 0;
+    background: none;
+    padding: 20px 0;
+    text-align: left;
+    font-family: inherit;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+  .lic-acc-t:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+  }
+  .lic-acc-x {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    color: var(--muted-foreground);
+    transition: transform 0.34s var(--ease-out);
+  }
+  .lic-acc-t[aria-expanded='true'] .lic-acc-x {
+    transform: rotate(45deg);
+  }
+
+  /* `visibility` keeps a collapsed answer out of the tab order and out of the
+     screen-reader tree; delaying it by the full duration lets it stay painted
+     while the row animates shut. */
+  .lic-acc-p {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      grid-template-rows 0.4s var(--ease-out),
+      opacity 0.28s ease,
+      visibility 0s linear 0.4s;
+  }
+  .lic-acc-p > div {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .lic-acc-p p {
+    margin: 0;
+    padding: 0 0 20px;
+    max-width: 76ch;
+    font-size: 14.5px;
+    line-height: 1.72;
+    color: var(--muted-foreground);
+  }
+  .lic-acc-t[aria-expanded='true'] + .lic-acc-p {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    transition:
+      grid-template-rows 0.4s var(--ease-out),
+      opacity 0.28s ease,
+      visibility 0s;
+  }
+
+  @media (max-width: 1080px) {
+    .lic-faq-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+  }
+  @media (max-width: 860px) {
+    .lic-faq-title {
+      font-size: 26px;
+    }
+  }
+  @media (max-width: 720px) {
+    .lic-faq {
+      padding: 80px 20px 88px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lic-acc-x,
+    .lic-acc-p {
+      transition: none;
+    }
+  }
+</style>

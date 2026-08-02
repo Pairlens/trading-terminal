@@ -1,0 +1,402 @@
+---
+title: Terms & Conditions
+description: >-
+  The agreement covering the Pairlens website, Pairlens accounts, and Pairlens
+  Intelligence. The open-source software is governed by its own licence, not by
+  this document.
+effective: 31 July 2026
+summary: >-
+  Three different things live under the Pairlens name, and only two of them are
+  governed by this document. The terminal, the CLI, and the charting engine are
+  software you get under an open licence, as is, with no warranty and no
+  contract with us. The website and the hosted services (your Pairlens account,
+  cloud sync, and Pairlens Intelligence) are services we run, and these Terms
+  cover those. Throughout all of it, one thing does not change. We are not a
+  broker, we never hold your money, and every order is placed by you, from your
+  machine, to a venue you chose.
+---
+
+import EntityCard from '@/components/legal/EntityCard.astro'
+import { courtsSentenceCase, LEGAL_CONTACT, LEGAL_ENTITY } from '@/lib/legal'
+
+## 1. Who you are contracting with
+
+<EntityCard contact="legal" />
+
+In this document, "we", "us", and "Pairlens" mean that company. "You" means
+you, whether you are using Pairlens personally or on behalf of an
+organisation. If you are agreeing on behalf of an organisation, you confirm
+you are authorised to bind it, and "you" then means that organisation.
+
+## 2. What these Terms cover
+
+Pairlens is three separate things, and it matters which one you are using.
+
+**The software.** The Pairlens terminal, the command-line interface, the
+plugin SDK, and the Fast Financial Charts library are source-available
+software. They are licensed to you under the licences in their repositories,
+not under this document: the terminal and its monorepo under the Functional
+Source License 1.1 with an Apache 2.0 future licence (FSL-1.1-Apache-2.0),
+and Fast Financial Charts under the MIT licence. **Those licences govern your
+use of the code, and nothing in these Terms restricts, replaces, or adds
+conditions to the rights they grant you.** You can download the terminal, run
+it, modify it, and self-host every part of it without ever agreeing to this
+document, because you would not be using any service of ours. The
+[licensing page](/licensing) explains the deal in plain language.
+
+**This website.** pairlens.finance, its documentation, and its stores.
+
+**The hosted services.** Your Pairlens account, cloud sync, Pairlens
+Intelligence, and the plugin registry we operate. These are services we
+provide, and sections 4 onwards are about them.
+
+These Terms apply when you use the website or any hosted service. Where a
+conflict exists between these Terms and a software licence, **the software
+licence wins for the software**.
+
+## 3. Accepting these Terms
+
+You accept these Terms by creating a Pairlens account or by using the website
+or any hosted service. If you do not accept them, do not create an account.
+You can still use the software.
+
+## 4. Eligibility
+
+To create a Pairlens account you must:
+
+- Be at least **18 years old** and have the legal capacity to enter a contract.
+- Not be located in, ordinarily resident in, or acting on behalf of anyone in a country subject to comprehensive sanctions by the EU, the UK, or the US, and not appear on any applicable sanctions or restricted-party list.
+- Not be barred from using the services under the law that applies to you.
+
+Some exchanges and brokers are unavailable in some countries, and the terminal
+will tell you when a venue is blocked in your region. Working around a
+geographic restriction imposed by a venue is between you and that venue, and it
+may break their terms or your local law. That is your call and your risk.
+
+## 5. Your account
+
+You are responsible for the security of your account and for everything done
+through it. Sign-in uses a one-time code sent to your email address, so
+**whoever controls your email controls your account**. Keep it secure, use a
+distinct strong password on it, and turn on two-factor authentication with your
+email provider.
+
+Tell us at <a href={`mailto:${LEGAL_CONTACT.legal}`}>{LEGAL_CONTACT.legal}</a>
+promptly if you believe your account has been accessed by someone else.
+
+Keep your email address current. If we cannot reach you, we cannot send you a
+sign-in code, and we cannot recover an account whose email you have lost access
+to.
+
+One account per person. Do not share it, sell it, or let someone else use it.
+
+## 6. Pairlens is not a broker, and this is not advice
+
+This section is the most important one in the document.
+
+**We are not a broker, dealer, exchange, custodian, money transmitter,
+investment adviser, or financial institution of any kind.** We are not
+registered as one in any jurisdiction, and we do not perform any regulated
+activity.
+
+**Nothing Pairlens produces is financial, investment, legal, or tax advice**,
+and nothing in it is a solicitation, recommendation, endorsement, or offer to
+buy or sell any asset. Signals, indicators, regime labels, AI analysis,
+research summaries, watchlists, and anything else the product renders are
+information and tooling. What you do with them is your decision alone.
+
+**We never take custody of anything.** We do not hold your funds, your assets,
+your private keys, or your exchange credentials, and we have no technical
+ability to move them. Your credentials live on your own device.
+
+**We do not execute or route your trades.** When you place an order, your
+device sends it directly to the venue you selected, authenticated with your own
+credentials. We are not in the path, we are not your counterparty, and we have
+no relationship with the venue on your behalf.
+
+**Your relationship with each venue is yours.** Whether an order is accepted,
+at what price, with what fees, subject to what limits, and whether your funds
+are safe there, all of that is governed by your agreement with that venue and
+by the law that applies to it. Take up problems with executions, settlement,
+withdrawals, or account access with them.
+
+## 7. Trading risk
+
+Trading and investing carry real risk of loss. Prices can move against you
+quickly and without warning. Digital assets in particular are volatile,
+sometimes illiquid, thinly regulated in many places, and can lose their entire
+value. Leverage, where a venue offers it, magnifies losses as readily as gains.
+
+**You can lose some or all of the money you put in.** Do not trade with money
+you cannot afford to lose. Past performance, backtests, and historical signal
+accuracy tell you nothing reliable about future results.
+
+You are responsible for:
+
+- Every order you place and every automation you enable.
+- **Verifying your executions on the venue itself.** Software has bugs, connections drop, and displays go stale. Confirm on the exchange that each order did what you intended.
+- Your own tax position and reporting, in every jurisdiction you owe it.
+- Complying with every law and regulation that applies to you, including market-abuse rules and any restrictions on your trading imposed by an employer or regulator.
+
+**Automation and risk guardrails are tools, not guarantees.** Workflows,
+alerts, stop losses, daily trade caps, and every other guardrail depend on your
+device running, your network working, the venue's API responding, and your own
+configuration being correct. They can fail, and they can fail exactly when
+markets are moving hardest. Never treat one as a substitute for your own
+attention or for a protective order held at the venue.
+
+Paper mode is a simulation. It does not model slippage, partial fills,
+liquidity, or venue outages faithfully, and results in it mean nothing about
+live results.
+
+## 8. AI features
+
+Pairlens Intelligence, and any AI feature you use with your own provider key,
+generates output using probabilistic language models.
+
+**AI output can be confidently wrong.** It can misread a chart, invent a fact,
+misstate a number, or reason badly, and it will do so in fluent prose. Verify
+anything you would act on. An APPROVE, BLOCK, or WATCH verdict is a heuristic
+opinion, not a signal of quality control.
+
+**The AI cannot trade for you.** It can propose an order. Placing one always
+requires your explicit confirmation on your own device, and your risk
+guardrails apply to it exactly as they apply to an order you typed yourself.
+We will not build a mode that removes that confirmation.
+
+We choose which models serve Pairlens Intelligence and we change that choice
+as better models ship. Quality, latency, and behaviour will vary over time.
+Section 5 of the [Privacy Policy](/privacy) explains where your prompts go and
+what happens to them.
+
+Do not paste credentials, private keys, or seed phrases into any AI feature.
+
+## 9. Pairlens Intelligence subscriptions
+
+The terminal is free. Pairlens Intelligence is the optional paid service that
+provides hosted AI without you bringing your own provider key.
+
+**Plans.** Intelligence Pro is 19 USD per month and includes 13,000 credits
+per billing cycle. Intelligence Max is 99 USD per month and includes 70,000
+credits per cycle. Prices exclude any VAT or sales tax, which is calculated at
+checkout.
+
+**Credits.** Credits meter what your requests actually cost to serve, based on
+the model used and the tokens consumed. Your monthly allowance **resets at the
+start of each billing cycle and does not roll over**. When the allowance is
+exhausted, hosted AI stops working until the cycle resets or you top up.
+Everything else in the terminal keeps working, including AI through your own
+provider key.
+
+**Credit packs.** Intelligence Max subscribers can buy one-off top-ups (10, 20,
+50, or 100 USD, for 5,000, 10,000, 25,000, or 50,000 credits). Pack credits are
+spent before your monthly allowance, and **any unused pack credits expire 30
+days after purchase**.
+
+**Billing.** Polar acts as our merchant of record. Your purchase contract for
+payment purposes is with Polar, their terms apply to the payment itself, and
+they handle invoicing and tax. Subscriptions renew automatically each month
+until cancelled. We will give you at least 30 days' notice by email before any
+price increase takes effect, and you can cancel before it does.
+
+**Cancelling.** Cancel at any time from the billing portal. Your subscription
+runs to the end of the period you have paid for and then stops. We do not
+pro-rate a partial month.
+
+**Withdrawal and refunds.** If you are a consumer in the EU or the UK you
+normally have 14 days to withdraw from a purchase of digital services. Because
+Intelligence starts working the moment you subscribe, you are asked at checkout
+to request that it begin immediately and to acknowledge that you lose the
+right of withdrawal once we have fully performed, which for a credit pack means
+once you start spending it. Nothing here removes a right you have under
+mandatory consumer law. Beyond that, if the service did not work as described,
+tell us at <a href={`mailto:${LEGAL_CONTACT.legal}`}>{LEGAL_CONTACT.legal}</a>
+and we will sort it out.
+
+**Fair use.** Rate limits apply. Do not resell access, share one subscription
+across multiple people, or drive traffic through automated bulk pipelines that
+are not you using the product. We may throttle or suspend an account that does.
+
+## 10. Plugins, the registry, and community content
+
+The terminal is extensible, and most of what it can reach is a plugin.
+
+**Bundled plugins** ship with the app under the same licence as the terminal.
+
+**Third-party plugins** are published by other developers. **They are not our
+software and we do not warrant them.** We verify signatures and enforce a
+sandbox and a network allowlist, and you approve the capabilities and hosts a
+plugin may use before it gets them, but that is containment, not endorsement.
+Installing a plugin is your decision and your risk. Community-tier plugins are
+built and signed by our registry from source in the public repository and are
+permanently clamped to the sandbox.
+
+**If you publish a plugin or a workspace**, you confirm you have the right to
+publish it, that it does not infringe anyone's rights, that it contains no
+malware or hidden data collection, and that it complies with the registry's
+policies. You keep ownership of what you publish, and you grant us a
+worldwide, non-exclusive, royalty-free licence to host, reproduce, display, and
+distribute it through Pairlens for as long as you keep it published, plus the
+right to keep serving copies already installed by other users.
+
+**A published workspace is public.** Its layout, name, description, tags, and
+your display name at the time of publication are visible to everyone.
+
+We may remove or refuse any submission, without notice where there is a
+security or legal reason, and we may delist a plugin that turns out to be
+harmful, abandoned, or infringing.
+
+## 11. Acceptable use
+
+Do not:
+
+- Use Pairlens for anything illegal where you are, or to help someone else break the law.
+- Engage in market manipulation, wash trading, spoofing, layering, insider dealing, or any other market abuse.
+- Break, probe, or circumvent our authentication, rate limits, credit metering, or sandboxing.
+- Scrape, bulk-download, or hammer our services beyond ordinary use, or resell access to them.
+- Upload or distribute malware, or anything designed to exfiltrate another user's data or credentials.
+- Publish content that infringes intellectual property, is unlawful, or impersonates someone else.
+- Use our name, logo, or brand in a way that suggests we endorse you when we do not.
+- Present Pairlens output to other people as financial advice, or build a service on top of it that does, unless you are properly licensed to give that advice and you take responsibility for it.
+
+We may suspend or terminate an account that breaks these rules. Where it is
+reasonable and lawful to do so, we will tell you first and give you a chance to
+put it right.
+
+## 12. Availability, changes, and beta features
+
+The hosted services are provided on an "as available" basis. **There is no
+service level agreement and no uptime guarantee.** We will do our best to keep
+things running, and we will not always succeed.
+
+We change the product continuously. Features arrive, change, and occasionally
+go away. Some ship explicitly marked as beta or experimental, and those may be
+unstable or removed without notice.
+
+If we ever discontinue a hosted service, we will give you reasonable notice by
+email and, where the data is yours, a way to export it before it goes. Because
+the terminal keeps everything locally by default and the source is public, you
+are never locked in: worst case, you keep running it yourself.
+
+## 13. Intellectual property
+
+The source code is licensed to you as described in section 2, and those rights
+are not affected by anything here.
+
+**The Pairlens name, the logo, and our brand assets are not covered by those
+licences.** We reserve them. You can use the name to refer to the project
+truthfully, including in a fork or a derived work, but not in a way that
+suggests we made, endorse, or support what you built.
+
+Feedback you send us is welcome, and we can use it freely without owing you
+anything for it. Contributions to the repositories are governed by the
+contributor licence agreement described in CONTRIBUTING.md.
+
+## 14. Disclaimer of warranties
+
+To the fullest extent permitted by law, the website and the hosted services are
+provided **"as is" and "as available", without warranty of any kind**, express
+or implied, including any implied warranty of merchantability, fitness for a
+particular purpose, accuracy, or non-infringement.
+
+We do not warrant that the services will be uninterrupted, timely, secure, or
+error-free, that market data will be accurate, complete, or delivered without
+delay, that signals or AI output will be correct or profitable, or that defects
+will be fixed.
+
+The software carries the disclaimer set out in its own licence.
+
+**If you are a consumer, you have rights under mandatory consumer protection
+law that cannot be excluded, and nothing here limits them.**
+
+## 15. Limitation of liability
+
+To the fullest extent permitted by law:
+
+- **We are not liable for trading losses.** Not for losses from a signal, an AI verdict, a missed alert, a failed workflow, stale or wrong market data, a guardrail that did not fire, an order that did not reach a venue, or an order that reached it twice.
+- We are not liable for indirect, incidental, special, consequential, or punitive damages, or for lost profits, lost revenue, lost opportunity, or lost or corrupted data, even if we were told such damages were possible.
+- We are not liable for anything a venue, a payment provider, an AI provider, or a third-party plugin does or fails to do.
+- **Our total aggregate liability** to you for all claims arising out of or relating to these Terms or the hosted services is limited to the greater of the amounts you actually paid us in the 12 months before the event giving rise to the claim, or 100 EUR.
+
+Nothing in these Terms excludes or limits our liability for death or personal
+injury caused by our negligence, for fraud or fraudulent misrepresentation, or
+for anything else that cannot lawfully be excluded or limited, including your
+mandatory rights as a consumer.
+
+Because the software is free and provided under an open licence, our liability
+for the software itself is whatever that licence provides, which is none.
+
+## 16. Indemnity
+
+If you are using Pairlens other than as a consumer, you will indemnify us
+against claims, damages, and reasonable costs arising from your breach of
+these Terms, your violation of law, your infringement of someone else's rights,
+or content you published through our services.
+
+## 17. Term and termination
+
+These Terms apply for as long as you use the website or hold an account.
+
+**You** can stop at any time. Delete account, under Settings then Privacy in
+the app, erases your account and its data and cancels any active subscription
+in one step. If you cannot reach the app, email <a href={`mailto:${LEGAL_CONTACT.privacy}`}>{LEGAL_CONTACT.privacy}</a>
+instead.
+
+**We** can suspend or terminate your access if you materially breach these
+Terms, if we are required to by law, or if keeping your account open creates a
+security or legal risk. Except where that is impossible or unlawful, we will
+tell you why.
+
+On termination, your right to use the hosted services ends and we delete your
+account data as described in the Privacy Policy. Sections that by their nature
+should survive do survive, including sections 6, 7, 13, 14, 15, 16, and 19.
+Your rights under the software licences are unaffected by termination: no
+account is needed to keep running the terminal.
+
+## 18. Changes to these Terms
+
+We will update these Terms as the product changes. The effective date at the
+top tells you which version you are reading, and every revision is in the
+public git history.
+
+For material changes we will give you reasonable notice by email or in the app
+before they take effect. Continuing to use the services after that means you
+accept the new version. If you do not accept it, stop using the hosted
+services and, if you like, delete your account. Nothing stops you from
+continuing to run the software.
+
+## 19. Governing law and disputes
+
+These Terms are governed by {LEGAL_ENTITY.governingLaw}, without regard to its
+conflict-of-law rules. {courtsSentenceCase} have jurisdiction.
+
+**If you are a consumer**, this does not deprive you of the protection of the
+mandatory law of the country where you live, and you may bring proceedings in
+the courts of that country. We will always try to resolve a complaint directly
+first: write to <a href={`mailto:${LEGAL_CONTACT.legal}`}>{LEGAL_CONTACT.legal}</a>
+and we will respond.
+
+## 20. General
+
+**Entire agreement.** These Terms, the Privacy Policy, and any terms presented
+at checkout are the whole agreement between us about the hosted services, and
+replace anything said before.
+
+**Severability.** If a provision is unenforceable, the rest stands and the
+provision is read down to the minimum extent needed to make it enforceable.
+
+**No waiver.** Not enforcing a right once does not waive it.
+
+**Assignment.** You may not assign these Terms without our consent. We may
+assign them to a successor in a merger, acquisition, or sale of assets, on
+notice to you.
+
+**No third-party beneficiaries.** Nobody other than you and us can enforce
+these Terms.
+
+**Notices.** We reach you at the email address on your account. You reach us
+at <a href={`mailto:${LEGAL_CONTACT.legal}`}>{LEGAL_CONTACT.legal}</a>, or at
+the registered office in section 1.
+
+**Language.** These Terms are written in English. A translation, if we ever
+publish one, is for convenience, and the English version governs.

@@ -1,0 +1,20 @@
+{
+  "id": "pairlens-example-indicators",
+  "name": "Example Indicators",
+  "version": "0.1.0",
+  "author": "Pairlens",
+  "description": "Three example Python chart indicators — a working template for building your own indicator plugins",
+  "homepage": "https://pairlens.finance",
+  "icon": "SquareFunction",
+  "capabilities": [
+    {
+      "id": "chart:indicator",
+      "singleton": false,
+      "markets": ["*"],
+      "priority": 50,
+      "streaming": false
+    }
+  ],
+  "config": {},
+  "network": { "hosts": [] }
+}

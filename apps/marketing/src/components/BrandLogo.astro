@@ -1,0 +1,54 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+interface Props {
+  /** Logo mark height in px. */
+  size?: number
+  /** Show the "Pairlens" serif wordmark next to the mark. */
+  withText?: boolean
+  /** Wordmark font-size in px. */
+  textSize?: number
+  href?: string | null
+  class?: string
+}
+
+const {
+  size = 24,
+  withText = true,
+  textSize = 17,
+  href = '/',
+  class: className = '',
+} = Astro.props
+
+const Tag = href ? 'a' : 'div'
+---
+
+<Tag
+  {...href ? { href } : {}}
+  class:list={[
+    'group inline-flex items-center gap-2.5 no-underline',
+    className,
+  ]}
+  aria-label="Pairlens home"
+>
+  <img
+    src="/logo.svg"
+    alt=""
+    height={size}
+    style={`height:${size}px;width:auto`}
+    class="block shrink-0 select-none transition-transform duration-300 group-hover:-rotate-3"
+    loading="eager"
+    decoding="async"
+    draggable="false"
+  />
+  {
+    withText && (
+      <span
+        class="font-serif font-semibold tracking-tight text-foreground"
+        style={`font-size:${textSize}px`}
+      >
+        Pairlens
+      </span>
+    )
+  }
+</Tag>

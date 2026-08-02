@@ -1,0 +1,146 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import type {
+  PluginExecuteParams,
+  PluginInstance,
+  PluginManifest,
+} from '@pairlens/plugin-system/types'
+import type { ThemeDefinition } from '../types.ts'
+
+const theme: ThemeDefinition = {
+  id: 'arctic-blue',
+  name: 'Arctic Blue',
+  light: {
+    '--background': 'oklch(0.97 0.008 230)',
+    '--foreground': 'oklch(0.20 0.025 235)',
+    '--card': 'oklch(0.98 0.006 230)',
+    '--card-foreground': 'oklch(0.20 0.025 235)',
+    '--popover': 'oklch(0.98 0.006 230)',
+    '--popover-foreground': 'oklch(0.20 0.025 235)',
+    '--primary': 'oklch(0.55 0.18 240)',
+    '--primary-foreground': 'oklch(0.98 0 0)',
+    '--secondary': 'oklch(0.93 0.012 230)',
+    '--secondary-foreground': 'oklch(0.28 0.025 235)',
+    '--muted': 'oklch(0.95 0.008 230)',
+    '--muted-foreground': 'oklch(0.52 0.02 235)',
+    '--accent': 'oklch(0.92 0.02 220)',
+    '--accent-foreground': 'oklch(0.20 0.025 235)',
+    '--destructive': 'oklch(0.58 0.20 25)',
+    '--destructive-foreground': 'oklch(0.98 0 0)',
+    '--border': 'oklch(0.90 0.012 230)',
+    '--input': 'oklch(0.90 0.012 230)',
+    '--ring': 'oklch(0.55 0.18 240)',
+    '--chart-1': 'oklch(0.55 0.18 240)',
+    '--chart-2': 'oklch(0.62 0.12 200)',
+    '--chart-3': 'oklch(0.52 0.02 235)',
+    '--chart-4': 'oklch(0.72 0.015 230)',
+    '--chart-5': 'oklch(0.88 0.008 230)',
+    '--sidebar': 'oklch(0.20 0.04 235)',
+    '--sidebar-foreground': 'oklch(0.85 0.02 220)',
+    '--sidebar-primary': 'oklch(0.85 0.02 220)',
+    '--sidebar-primary-foreground': 'oklch(0.20 0.04 235)',
+    '--sidebar-accent': 'oklch(0.30 0.05 235)',
+    '--sidebar-accent-foreground': 'oklch(0.85 0.02 220)',
+    '--sidebar-border': 'oklch(0.35 0.04 235)',
+    '--sidebar-ring': 'oklch(0.85 0.02 220)',
+    '--orb-bg': 'transparent',
+    '--orb-c1': 'oklch(0.60 0.16 240)',
+    '--orb-c2': 'oklch(0.55 0.12 210)',
+    '--orb-c3': 'oklch(0.65 0.10 260)',
+    '--noise-opacity': '0.05',
+    '--radius': '0.625rem',
+  },
+  dark: {
+    '--background': 'oklch(0.14 0.025 235)',
+    '--foreground': 'oklch(0.88 0.015 220)',
+    '--card': 'oklch(0.18 0.03 235)',
+    '--card-foreground': 'oklch(0.88 0.015 220)',
+    '--popover': 'oklch(0.16 0.025 235)',
+    '--popover-foreground': 'oklch(0.88 0.015 220)',
+    '--primary': 'oklch(0.65 0.16 240)',
+    '--primary-foreground': 'oklch(0.98 0 0)',
+    '--secondary': 'oklch(0.22 0.03 235)',
+    '--secondary-foreground': 'oklch(0.88 0.015 220)',
+    '--muted': 'oklch(0.19 0.02 235)',
+    '--muted-foreground': 'oklch(0.58 0.02 230)',
+    '--accent': 'oklch(0.26 0.04 240)',
+    '--accent-foreground': 'oklch(0.88 0.015 220)',
+    '--destructive': 'oklch(0.62 0.18 25)',
+    '--destructive-foreground': 'oklch(0.98 0 0)',
+    '--border': 'oklch(0.28 0.035 235)',
+    '--input': 'oklch(0.28 0.035 235)',
+    '--ring': 'oklch(0.65 0.16 240)',
+    '--chart-1': 'oklch(0.65 0.16 240)',
+    '--chart-2': 'oklch(0.60 0.12 200)',
+    '--chart-3': 'oklch(0.58 0.02 230)',
+    '--chart-4': 'oklch(0.40 0.025 235)',
+    '--chart-5': 'oklch(0.28 0.025 235)',
+    '--sidebar': 'oklch(0.12 0.03 240)',
+    '--sidebar-foreground': 'oklch(0.82 0.02 220)',
+    '--sidebar-primary': 'oklch(0.82 0.02 220)',
+    '--sidebar-primary-foreground': 'oklch(0.12 0.03 240)',
+    '--sidebar-accent': 'oklch(0.22 0.04 240)',
+    '--sidebar-accent-foreground': 'oklch(0.82 0.02 220)',
+    '--sidebar-border': 'oklch(0.27 0.03 235)',
+    '--sidebar-ring': 'oklch(0.82 0.02 220)',
+    '--orb-bg': 'transparent',
+    '--orb-c1': 'oklch(0.65 0.16 240)',
+    '--orb-c2': 'oklch(0.58 0.14 210)',
+    '--orb-c3': 'oklch(0.60 0.10 260)',
+    '--noise-opacity': '0.10',
+    '--radius': '0.625rem',
+  },
+  chart: {
+    background: '#141c28',
+    upCandle: '#2196f3',
+    downCandle: '#ff7043',
+    crosshair: '#5c8db8',
+    grid: '#1c2838',
+    axisText: '#6888a8',
+    axisBackground: '#101820',
+    hudBg: 'rgba(20, 28, 40, 0.94)',
+    hudText: '#b8d4f0',
+    volumeUp: '#2196f344',
+    volumeDown: '#ff704344',
+  },
+}
+
+export const arcticBlueManifest: PluginManifest = {
+  id: 'arctic-blue',
+  name: 'Arctic Blue',
+  version: '0.1.0',
+  author: 'Pairlens',
+  description: 'Cool blue monochrome theme with icy tones and clean lines',
+  capabilities: [
+    {
+      id: 'theme:override',
+      singleton: true,
+      markets: ['*'],
+      priority: 5,
+      streaming: false,
+    },
+  ],
+  config: {},
+  theme: {
+    entry: 'arctic-blue',
+    previewColors: {
+      light: ['#2962cc', '#2196f3', '#ff7043', '#6888a8', '#e0ecf8'],
+      dark: ['#4da6ff', '#2196f3', '#ff7043', '#5c8db8', '#141c28'],
+    },
+  },
+}
+
+export function createArcticBluePlugin(
+  manifest: PluginManifest,
+): PluginInstance {
+  async function execute(_params: PluginExecuteParams): Promise<unknown> {
+    return theme
+  }
+
+  return {
+    manifest,
+    status: 'installed',
+    config: {},
+    execute,
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "@pairlens/registry",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pairlens/trading-terminal.git",
+    "directory": "apps/registry"
+  },
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun --watch src/index.ts",
+    "build": "tsc --project tsconfig.json --noEmit",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@pairlens/shared": "workspace:*",
+    "@pairlens/plugins": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.11",
+    "bun-types": "^1.3.9",
+    "typescript": "^5.9.3"
+  }
+}

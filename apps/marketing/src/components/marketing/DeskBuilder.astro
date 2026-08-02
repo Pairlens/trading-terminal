@@ -1,0 +1,636 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// "Mix and match": one sentence with three rotating slots — asset, brain,
+// venue — that only ever settle on pairings the terminal can actually route
+// (a crypto venue never lands next to a stock), plus what ships in the box and
+// where to find the in-terminal plugin store.
+import { DESK_POOLS } from '@/lib/site'
+
+// The desk pools also carry the web-search providers; the sentence reads
+// "trade X with Y", so only inference providers belong in the brain slot.
+const BRAIN_IDS = ['groq', 'openai', 'anthropic', 'openrouter']
+
+const pools = {
+  asset: DESK_POOLS.asset.map((a) => ({
+    id: a.id,
+    name: a.name,
+    class: a.class,
+  })),
+  brain: DESK_POOLS.brain
+    .filter((b) => BRAIN_IDS.includes(b.id))
+    .map((b) => ({ id: b.id, name: b.name })),
+  venue: DESK_POOLS.venue.map((v) => ({
+    id: v.id,
+    name: v.name,
+    classes: v.classes,
+  })),
+}
+
+const SLOTS = [
+  { key: 'asset', label: 'Change asset', accent: 'var(--pl-green)', w: 170 },
+  { key: 'brain', label: 'Change model', accent: 'var(--pl-magenta)', w: 282 },
+  { key: 'venue', label: 'Change venue', accent: 'var(--pl-iris)', w: 232 },
+] as const
+
+const first = {
+  asset: pools.asset[0],
+  brain: pools.brain[0],
+  venue: pools.venue[0],
+}
+
+const CARDS = [
+  {
+    eyebrow: 'Pairs & tickers',
+    accent: 'var(--pl-green)',
+    figure: 'Thousands',
+    copy: 'Spot and US equities, or whatever the venues you connect happen to list.',
+    logos: ['btc', 'eth', 'sol', 'doge', 'aapl', 'tsla'],
+  },
+  {
+    eyebrow: 'Intelligence',
+    accent: 'var(--pl-magenta)',
+    figure: '6 AI providers',
+    copy: 'Four AI providers (Claude, OpenAI, Groq, OpenRouter) out of the box, plus Exa and Tavily for agentic search. Bring your own keys.',
+    logos: ['anthropic', 'openai', 'groq', 'openrouter', 'exa', 'tavily'],
+  },
+  {
+    eyebrow: 'Markets',
+    accent: 'var(--pl-iris)',
+    figure: '21 venues',
+    copy: 'Fourteen exchanges, six chains and a US equities broker to get started.',
+    logos: ['binance', 'coinbase', 'okx', 'kraken', 'jupiter', 'alpaca'],
+  },
+]
+
+const STORE_POINTS = [
+  { mark: '+', accent: 'var(--pl-green)', text: 'Install and activate without a restart' },
+  { mark: '+', accent: 'var(--pl-magenta)', text: "Read any plugin's source before you trust it" },
+  { mark: '+', accent: 'var(--pl-iris)', text: 'Or build your own' },
+]
+---
+
+<section id="plugins" class="desk">
+  <div aria-hidden="true" class="pl-glow desk-glow"></div>
+
+  <div class="desk-inner" data-desk>
+    <script
+      type="application/json"
+      is:inline
+      data-desk-pools
+      set:html={JSON.stringify(pools)}
+    />
+
+    <div class="desk-head">
+      <h2 class="desk-title" data-reveal>
+        Mix and match&nbsp;<span class="pl-spectrum-text">your terminal</span>.
+      </h2>
+    </div>
+
+    <div class="desk-sentence" data-reveal data-reveal-delay="80">
+      <span>Trade</span>
+      {
+        SLOTS.map((slot, i) => (
+          <>
+            <button
+              type="button"
+              class="slot"
+              data-slot={slot.key}
+              aria-label={slot.label}
+              style={`--slot-accent: ${slot.accent}; --slot-width: ${slot.w}px`}
+            >
+              <span class="slot-chip">
+                <img
+                  src={`/venues/${first[slot.key].id}.png`}
+                  alt=""
+                  width="34"
+                  height="34"
+                  decoding="async"
+                />
+              </span>
+              <span data-slot-name>{first[slot.key].name}</span>
+            </button>
+            {i === 0 && <span>with</span>}
+            {i === 1 && <span>on</span>}
+            {i === 2 && <span aria-hidden="true" class="desk-stop" set:text="." />}
+          </>
+        ))
+      }
+    </div>
+
+    <p class="desk-lede" data-reveal data-reveal-delay="140">
+      Batteries included for the most important pairs, markets and AI tools.
+    </p>
+
+    <div class="desk-cards">
+      {
+        CARDS.map((card, i) => (
+          <div
+            class="desk-card"
+            style={`--card-accent: ${card.accent}`}
+            data-reveal
+            data-reveal-delay={60 * i}
+          >
+            <p class="desk-card-eyebrow">{card.eyebrow}</p>
+            <p class="desk-card-figure">{card.figure}</p>
+            <p class="desk-card-copy">{card.copy}</p>
+            <div class="logo-row">
+              {card.logos.map((id) => (
+                <span class="logo-chip">
+                  <img
+                    src={`/venues/${id}.png`}
+                    alt=""
+                    width="34"
+                    height="34"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="store" data-reveal>
+      <div class="store-copy">
+        <p class="store-eyebrow">Plugin store</p>
+        <p class="store-title">
+          Want a venue, model or feed that isn't here?
+        </p>
+        <p class="store-body">
+          Find the plugin store inside the terminal. Open <span class="store-kbd"
+            >Plugins → Store</span
+          > to add markets, models, data providers and themes to your desk.
+        </p>
+      </div>
+      <div class="store-points">
+        {
+          STORE_POINTS.map((point) => (
+            <p>
+              <span style={`color: ${point.accent}`}>{point.mark}</span>
+              {point.text}
+            </p>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // The three slots take turns, one every beat, and a slot only ever settles
+  // on something the terminal could actually route: switching to Alpaca drags
+  // the asset over to a stock, switching to BTC drags the venue back to crypto.
+  type Asset = { id: string; name: string; class: string }
+  type Brain = { id: string; name: string }
+  type Venue = { id: string; name: string; classes: Array<string> }
+  type Pools = { asset: Array<Asset>; brain: Array<Brain>; venue: Array<Venue> }
+  type SlotKey = keyof Pools
+
+  // Fast enough that a visitor scrolling past still catches a swap or two.
+  const BEAT_MS = 1200
+  const TURNS: Array<SlotKey> = ['asset', 'brain', 'venue']
+
+  function armDesk() {
+    const root = document.querySelector<HTMLElement>('[data-desk]')
+    if (!root || root.dataset.armed) return
+    root.dataset.armed = '1'
+
+    const payload = root.querySelector<HTMLElement>('[data-desk-pools]')
+    if (!payload?.textContent) return
+    const pools = JSON.parse(payload.textContent) as Pools
+
+    const slots = {} as Record<SlotKey, HTMLElement | null>
+    for (const key of TURNS) {
+      slots[key] = root.querySelector<HTMLElement>(`[data-slot="${key}"]`)
+    }
+
+    const at = { asset: 0, brain: 0, venue: 0 }
+    const beat = { asset: 0, brain: 0, venue: 0 }
+    let turn = 0
+    let paused = false
+
+    const paint = (key: SlotKey) => {
+      const el = slots[key]
+      if (!el) return
+      const item = pools[key][at[key]]
+      const img = el.querySelector('img')
+      const name = el.querySelector<HTMLElement>('[data-slot-name]')
+      if (img) img.src = `/venues/${item.id}.png`
+      if (name) name.textContent = item.name
+      // Alternate the two identical keyframes so the swap replays without a
+      // forced reflow.
+      const even = beat[key] % 2 === 0
+      for (const target of [el.querySelector('.slot-chip'), name]) {
+        target?.classList.remove('swap-a', 'swap-b')
+        target?.classList.add(even ? 'swap-a' : 'swap-b')
+      }
+    }
+
+    const advance = (key: SlotKey) => {
+      at[key] = (at[key] + 1) % pools[key].length
+      beat[key] += 1
+
+      // Keep the pairing routable: pull the asset onto the venue's class.
+      let dragged = false
+      if (key !== 'brain') {
+        const wanted = pools.venue[at.venue].classes
+        if (!wanted.includes(pools.asset[at.asset].class)) {
+          const from = at.asset
+          for (let step = 1; step <= pools.asset.length; step++) {
+            const next = (from + step) % pools.asset.length
+            if (wanted.includes(pools.asset[next].class)) {
+              at.asset = next
+              break
+            }
+          }
+          beat.asset += 1
+          dragged = true
+        }
+      }
+
+      paint(key)
+      if (dragged && key !== 'asset') paint('asset')
+    }
+
+    for (const key of TURNS) {
+      slots[key]?.addEventListener('click', () => advance(key))
+    }
+
+    // Ambient rotation only: pointer or keyboard attention holds it still, and
+    // reduced motion leaves the slots entirely under the visitor's control.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const hold = () => {
+      paused = true
+    }
+    const resume = () => {
+      paused = false
+    }
+    root.addEventListener('pointerenter', hold)
+    root.addEventListener('pointerleave', resume)
+    root.addEventListener('focusin', hold)
+    root.addEventListener('focusout', resume)
+
+    const timer = window.setInterval(() => {
+      if (paused || document.hidden) return
+      advance(TURNS[turn % TURNS.length])
+      turn += 1
+    }, BEAT_MS)
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => window.clearInterval(timer),
+      { once: true },
+    )
+  }
+
+  armDesk()
+  document.addEventListener('astro:page-load', armDesk)
+</script>
+
+<style>
+  .desk {
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
+    border-bottom: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
+    padding: 116px 32px;
+    background: var(--pl-band);
+    scroll-margin-top: 5rem;
+  }
+  .desk-glow {
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    top: 8%;
+    width: 760px;
+    height: 400px;
+    margin-left: -380px;
+    border-radius: 9999px;
+    filter: blur(104px);
+    opacity: 0.4;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in oklch, var(--pl-magenta) 20%, transparent),
+      transparent
+    );
+  }
+  .desk-inner {
+    position: relative;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  .desk-head {
+    padding-bottom: 52px;
+  }
+  .desk-title {
+    margin: 0;
+    max-width: 24ch;
+    font-family: var(--font-serif);
+    font-size: 46px;
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    color: var(--foreground);
+  }
+
+  .desk-sentence {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--font-serif);
+    font-size: 34px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: color-mix(in oklch, var(--muted-foreground) 90%, transparent);
+  }
+  .desk-stop {
+    margin-left: -12px;
+  }
+  .slot {
+    display: inline-flex;
+    white-space: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    /* Fixed per-slot widths: the label swaps every beat and the sentence must
+       not reflow around it. */
+    width: var(--slot-width);
+    height: 62px;
+    border-radius: 15px;
+    border: 1px solid color-mix(in oklch, var(--slot-accent) 34%, transparent);
+    background: color-mix(in oklch, var(--slot-accent) 9%, var(--pl-inset));
+    box-shadow: inset 0 -2px 0
+      color-mix(in oklch, var(--slot-accent) 55%, transparent);
+    padding: 0 15px;
+    font-family: var(--font-serif);
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--foreground);
+    cursor: pointer;
+    transition:
+      background 0.25s ease,
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  .slot:hover {
+    background: color-mix(in oklch, var(--slot-accent) 18%, var(--pl-inset));
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 -2px 0 color-mix(in oklch, var(--slot-accent) 85%, transparent),
+      0 16px 32px -20px color-mix(in oklch, var(--slot-accent) 50%, transparent);
+  }
+  .slot:focus-visible {
+    outline: 2px solid var(--slot-accent);
+    outline-offset: 3px;
+  }
+  .slot-chip {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+    overflow: hidden;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: #f4f4f5;
+  }
+  .slot-chip img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 6px;
+  }
+
+  .swap-a {
+    animation: desk-swap-a 420ms var(--ease-out) both;
+  }
+  .swap-b {
+    animation: desk-swap-b 420ms var(--ease-out) both;
+  }
+  @keyframes desk-swap-a {
+    from {
+      opacity: 0;
+      transform: translateY(7px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes desk-swap-b {
+    from {
+      opacity: 0;
+      transform: translateY(7px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .desk-lede {
+    margin: 26px 0 0;
+    max-width: 56ch;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.55;
+    color: var(--muted-foreground);
+  }
+
+  .desk-cards {
+    margin-top: 52px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .desk-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    border: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
+    background: var(--pl-inset);
+    box-shadow: inset 0 -2px 0
+      color-mix(in oklch, var(--card-accent) 38%, transparent);
+    padding: 24px;
+  }
+  .desk-card-eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--card-accent);
+  }
+  .desk-card-figure {
+    margin: 14px 0 0;
+    font-family: var(--font-serif);
+    font-size: 42px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--foreground);
+  }
+  .desk-card-copy {
+    margin: 12px 0 0;
+    font-size: 14.5px;
+    line-height: 1.65;
+    text-wrap: pretty;
+    color: var(--muted-foreground);
+  }
+  .logo-row {
+    margin-top: auto;
+    padding-top: 22px;
+    display: flex;
+    align-items: center;
+  }
+  .logo-chip {
+    display: inline-grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    margin-right: -7px;
+    border-radius: 10px;
+    background: #f4f4f5;
+    box-shadow: 0 0 0 1.5px var(--pl-band);
+  }
+  .logo-chip:last-child {
+    margin-right: 0;
+  }
+  .logo-chip img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 5px;
+  }
+
+  .store {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    border-radius: 18px;
+    border: 1px dashed color-mix(in oklch, var(--border) 95%, transparent);
+    background: color-mix(in oklch, var(--pl-inset) 55%, transparent);
+    padding: 28px;
+  }
+  .store-copy {
+    flex: 1 1 440px;
+    min-width: 300px;
+  }
+  .store-eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+  .store-title {
+    margin: 12px 0 0;
+    font-family: var(--font-serif);
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+  }
+  .store-body {
+    margin: 10px 0 0;
+    font-size: 14.5px;
+    line-height: 1.7;
+    text-wrap: pretty;
+    color: var(--muted-foreground);
+  }
+  .store-kbd {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    border-radius: 7px;
+    border: 1px solid color-mix(in oklch, var(--border) 80%, transparent);
+    background: var(--pl-inset);
+    padding: 3px 8px;
+    white-space: nowrap;
+    color: var(--foreground);
+  }
+  .store-points {
+    display: grid;
+    gap: 10px;
+  }
+  .store-points p {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+    color: var(--muted-foreground);
+  }
+  .store-points span {
+    font-weight: 700;
+  }
+
+  @media (max-width: 1000px) {
+    .desk-cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 860px) {
+    .desk-title {
+      font-size: 33px;
+    }
+    .desk-sentence {
+      font-size: 26px;
+      gap: 10px;
+    }
+    .slot {
+      /* Scale the fixed widths with the smaller type instead of dropping to
+         content width — auto width made every swap reflow the sentence. */
+      width: calc(var(--slot-width) * 0.78);
+      height: 52px;
+      font-size: 26px;
+      padding: 0 12px;
+    }
+    .desk-card-figure {
+      font-size: 32px;
+    }
+  }
+  @media (max-width: 720px) {
+    .desk {
+      padding: 88px 20px;
+    }
+    .desk-cards {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 480px) {
+    .desk-title {
+      font-size: 30px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swap-a,
+    .swap-b {
+      animation: none;
+    }
+    .slot {
+      transition: none;
+    }
+    .slot:hover {
+      transform: none;
+    }
+  }
+</style>

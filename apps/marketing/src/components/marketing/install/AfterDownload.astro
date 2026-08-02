@@ -1,0 +1,272 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// The graphite "after the download" band: three steps per platform. All three
+// sets are server-rendered and switched by a class, so the panel for the
+// selected OS is right from the first painted frame. Hiding a panel cancels its
+// stagger, so showing one deals the cards again on every switch.
+import { INSTALLERS } from '@/lib/site'
+import { DEFAULT_OS, OS_GUIDES } from './os-guides'
+---
+
+<section class="ins-after">
+  <div aria-hidden="true" class="pl-glow ins-after-glow"></div>
+  <div class="relative mx-auto max-w-[1200px]">
+    <p class="pl-eyebrow ins-after-eyebrow" data-reveal>After the download</p>
+    <h2 class="ins-after-h2" data-reveal data-reveal-delay="70">
+      Three moves on <span data-os-name>{DEFAULT_OS}</span>, then you’re
+      trading.
+    </h2>
+
+    {
+      INSTALLERS.map((it) => (
+        <div
+          class:list={['ins-steps', it.os === DEFAULT_OS && 'is-active']}
+          data-os-panel={it.os}
+        >
+          {(OS_GUIDES[it.os]?.steps ?? []).map((step) => (
+            <article class="ins-step-card">
+              <span class="ins-step-n">{step.n}</span>
+              <h3 class="ins-step-title">{step.title}</h3>
+              <p class="ins-step-body">{step.body}</p>
+              {step.cmd && (
+                <div class="ins-cmd">
+                  <span aria-hidden="true" class="ins-cmd-prompt">
+                    $
+                  </span>
+                  <code class="ins-cmd-code">{step.cmd}</code>
+                  <button
+                    type="button"
+                    class="ins-copy"
+                    data-install-copy={step.cmd}
+                    aria-label={`Copy command: ${step.cmd}`}
+                  >
+                    <svg
+                      class="ins-copy-ic"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <rect width="13" height="13" x="9" y="9" rx="2" />
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                    <svg
+                      class="ins-copy-ok"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .ins-after {
+    position: relative;
+    overflow: hidden;
+    padding: 104px 32px 96px;
+    background: var(--pl-band);
+    color: var(--foreground);
+  }
+  .ins-after-glow {
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    top: -80px;
+    width: 760px;
+    height: 360px;
+    margin-left: -380px;
+    border-radius: 9999px;
+    filter: blur(104px);
+    opacity: 0.34;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in oklch, var(--primary) 22%, rgb(0 0 0 / 0)),
+      rgb(0 0 0 / 0)
+    );
+  }
+
+  .ins-after-eyebrow {
+    margin: 0;
+    color: var(--primary);
+  }
+  .ins-after-h2 {
+    margin: 22px 0 0;
+    max-width: 24ch;
+    font-family: var(--font-serif);
+    font-size: 46px;
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.032em;
+    color: var(--foreground);
+  }
+
+  .ins-steps {
+    margin-top: 52px;
+    display: none;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .ins-steps.is-active {
+    display: grid;
+  }
+
+  .ins-step-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: var(--pl-inset);
+    padding: 26px 26px 28px;
+    animation: ins-step-in 0.58s var(--ease-out) both;
+  }
+  .ins-step-card:nth-child(2) {
+    animation-delay: 90ms;
+  }
+  .ins-step-card:nth-child(3) {
+    animation-delay: 180ms;
+  }
+  @keyframes ins-step-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .ins-step-n {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--primary);
+  }
+  .ins-step-title {
+    margin: 14px 0 0;
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: -0.022em;
+    color: var(--foreground);
+  }
+  .ins-step-body {
+    margin: 10px 0 0;
+    font-size: 15px;
+    line-height: 1.68;
+    text-wrap: pretty;
+    color: var(--muted-foreground);
+  }
+
+  .ins-cmd {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: color-mix(in oklch, var(--background) 70%, transparent);
+    padding: 9px 10px 9px 13px;
+  }
+  .ins-cmd-prompt {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+  }
+  .ins-cmd-code {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    overflow-wrap: anywhere;
+    color: color-mix(in oklch, var(--foreground) 88%, transparent);
+  }
+  .ins-copy {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition:
+      background 0.2s var(--ease-out),
+      color 0.2s var(--ease-out);
+  }
+  .ins-copy:hover {
+    background: var(--muted);
+    color: var(--foreground);
+  }
+  .ins-copy-ic,
+  .ins-copy-ok {
+    width: 14px;
+    height: 14px;
+  }
+  .ins-copy-ok {
+    display: none;
+  }
+  .ins-copy.is-copied .ins-copy-ic {
+    display: none;
+  }
+  .ins-copy.is-copied .ins-copy-ok {
+    display: block;
+    color: var(--pl-green);
+  }
+
+  @media (max-width: 1000px) {
+    .ins-steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 860px) {
+    .ins-after-h2 {
+      font-size: 33px;
+    }
+  }
+  @media (max-width: 720px) {
+    .ins-after {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .ins-steps {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 480px) {
+    .ins-after-h2 {
+      font-size: 30px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ins-step-card {
+      animation: none;
+    }
+    .ins-copy {
+      transition: none;
+    }
+  }
+</style>

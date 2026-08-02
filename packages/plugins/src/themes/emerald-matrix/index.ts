@@ -1,0 +1,147 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import type {
+  PluginExecuteParams,
+  PluginInstance,
+  PluginManifest,
+} from '@pairlens/plugin-system/types'
+import type { ThemeDefinition } from '../types.ts'
+
+const theme: ThemeDefinition = {
+  id: 'emerald-matrix',
+  name: 'Emerald Matrix',
+  light: {
+    '--background': 'oklch(0.96 0.012 155)',
+    '--foreground': 'oklch(0.20 0.03 160)',
+    '--card': 'oklch(0.97 0.010 155)',
+    '--card-foreground': 'oklch(0.20 0.03 160)',
+    '--popover': 'oklch(0.97 0.010 155)',
+    '--popover-foreground': 'oklch(0.20 0.03 160)',
+    '--primary': 'oklch(0.55 0.16 160)',
+    '--primary-foreground': 'oklch(0.98 0 0)',
+    '--secondary': 'oklch(0.92 0.015 155)',
+    '--secondary-foreground': 'oklch(0.25 0.03 160)',
+    '--muted': 'oklch(0.94 0.010 155)',
+    '--muted-foreground': 'oklch(0.50 0.02 155)',
+    '--accent': 'oklch(0.92 0.025 155)',
+    '--accent-foreground': 'oklch(0.20 0.03 160)',
+    '--destructive': 'oklch(0.58 0.20 25)',
+    '--destructive-foreground': 'oklch(0.98 0 0)',
+    '--border': 'oklch(0.89 0.015 155)',
+    '--input': 'oklch(0.89 0.015 155)',
+    '--ring': 'oklch(0.55 0.16 160)',
+    '--chart-1': 'oklch(0.55 0.16 160)',
+    '--chart-2': 'oklch(0.65 0.10 130)',
+    '--chart-3': 'oklch(0.50 0.02 155)',
+    '--chart-4': 'oklch(0.72 0.015 155)',
+    '--chart-5': 'oklch(0.89 0.010 155)',
+    '--sidebar': 'oklch(0.18 0.035 160)',
+    '--sidebar-foreground': 'oklch(0.82 0.03 155)',
+    '--sidebar-primary': 'oklch(0.82 0.03 155)',
+    '--sidebar-primary-foreground': 'oklch(0.18 0.035 160)',
+    '--sidebar-accent': 'oklch(0.28 0.05 160)',
+    '--sidebar-accent-foreground': 'oklch(0.82 0.03 155)',
+    '--sidebar-border': 'oklch(0.33 0.04 160)',
+    '--sidebar-ring': 'oklch(0.82 0.03 155)',
+    '--orb-bg': 'transparent',
+    '--orb-c1': 'oklch(0.60 0.16 160)',
+    '--orb-c2': 'oklch(0.55 0.10 130)',
+    '--orb-c3': 'oklch(0.50 0.12 180)',
+    '--noise-opacity': '0.06',
+    '--radius': '0.5rem',
+  },
+  dark: {
+    '--background': 'oklch(0.13 0.02 160)',
+    '--foreground': 'oklch(0.85 0.03 155)',
+    '--card': 'oklch(0.17 0.025 160)',
+    '--card-foreground': 'oklch(0.85 0.03 155)',
+    '--popover': 'oklch(0.15 0.02 160)',
+    '--popover-foreground': 'oklch(0.85 0.03 155)',
+    '--primary': 'oklch(0.68 0.16 160)',
+    '--primary-foreground': 'oklch(0.13 0.02 160)',
+    '--secondary': 'oklch(0.20 0.025 160)',
+    '--secondary-foreground': 'oklch(0.85 0.03 155)',
+    '--muted': 'oklch(0.18 0.018 160)',
+    '--muted-foreground': 'oklch(0.56 0.02 155)',
+    '--accent': 'oklch(0.25 0.04 160)',
+    '--accent-foreground': 'oklch(0.85 0.03 155)',
+    '--destructive': 'oklch(0.62 0.18 25)',
+    '--destructive-foreground': 'oklch(0.98 0 0)',
+    '--border': 'oklch(0.26 0.03 160)',
+    '--input': 'oklch(0.26 0.03 160)',
+    '--ring': 'oklch(0.68 0.16 160)',
+    '--chart-1': 'oklch(0.68 0.16 160)',
+    '--chart-2': 'oklch(0.60 0.10 130)',
+    '--chart-3': 'oklch(0.56 0.02 155)',
+    '--chart-4': 'oklch(0.38 0.02 160)',
+    '--chart-5': 'oklch(0.26 0.02 160)',
+    '--sidebar': 'oklch(0.11 0.025 165)',
+    '--sidebar-foreground': 'oklch(0.80 0.04 155)',
+    '--sidebar-primary': 'oklch(0.80 0.04 155)',
+    '--sidebar-primary-foreground': 'oklch(0.11 0.025 165)',
+    '--sidebar-accent': 'oklch(0.20 0.04 160)',
+    '--sidebar-accent-foreground': 'oklch(0.80 0.04 155)',
+    '--sidebar-border': 'oklch(0.26 0.03 160)',
+    '--sidebar-ring': 'oklch(0.80 0.04 155)',
+    '--orb-bg': 'transparent',
+    '--orb-c1': 'oklch(0.68 0.16 160)',
+    '--orb-c2': 'oklch(0.58 0.12 130)',
+    '--orb-c3': 'oklch(0.55 0.10 180)',
+    '--noise-opacity': '0.14',
+    '--radius': '0.5rem',
+  },
+  chart: {
+    background: '#101c16',
+    upCandle: '#00c853',
+    downCandle: '#ff5252',
+    crosshair: '#4a9a6a',
+    grid: '#182a20',
+    axisText: '#5a8a6a',
+    axisBackground: '#0c1610',
+    hudBg: 'rgba(16, 28, 22, 0.94)',
+    hudText: '#a8e0b8',
+    volumeUp: '#00c85344',
+    volumeDown: '#ff525244',
+  },
+}
+
+export const emeraldMatrixManifest: PluginManifest = {
+  id: 'emerald-matrix',
+  name: 'Emerald Matrix',
+  version: '0.1.0',
+  author: 'Pairlens',
+  description:
+    'Deep green theme with emerald tones, vivid green candles, and a terminal-hacker energy',
+  capabilities: [
+    {
+      id: 'theme:override',
+      singleton: true,
+      markets: ['*'],
+      priority: 5,
+      streaming: false,
+    },
+  ],
+  config: {},
+  theme: {
+    entry: 'emerald-matrix',
+    previewColors: {
+      light: ['#1a8a4a', '#00c853', '#ff5252', '#5a8a6a', '#d0f0d8'],
+      dark: ['#00e676', '#00c853', '#ff5252', '#4a9a6a', '#101c16'],
+    },
+  },
+}
+
+export function createEmeraldMatrixPlugin(
+  manifest: PluginManifest,
+): PluginInstance {
+  async function execute(_params: PluginExecuteParams): Promise<unknown> {
+    return theme
+  }
+
+  return {
+    manifest,
+    status: 'installed',
+    config: {},
+    execute,
+  }
+}

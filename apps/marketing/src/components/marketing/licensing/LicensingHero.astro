@@ -1,0 +1,153 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Marble hero: the inscription on the left, an "at a glance" rail on the right.
+import { GLANCE } from '@/components/marketing/licensing/content'
+import { SITE } from '@/lib/site'
+
+const licenseHref = `${SITE.repo}/blob/main/LICENSE.md`
+---
+
+<section class="lic-hero">
+  <div class="lic-hero-grid mx-auto max-w-[1200px]">
+    <div>
+      <p data-reveal class="pl-eyebrow text-[var(--ml-muted)]">
+        Functional Source License 1.1 · Apache 2.0 future
+      </p>
+      <h1 data-reveal data-reveal-delay="70" class="lic-hero-title">
+        Free for you. Off-limits to copycats.
+      </h1>
+      <p
+        data-reveal
+        data-reveal-delay="140"
+        class="mt-8 max-w-[58ch] text-[19px] leading-[1.6] text-pretty text-[var(--ml-muted)]"
+      >
+        A licence written to protect you from us, and us from them. Four
+        clauses, in plain words, and one of them is a promise we cannot take
+        back.
+      </p>
+    </div>
+
+    <div data-reveal data-reveal-delay="200" class="lic-hero-rail">
+      {
+        GLANCE.map((g) => (
+          <div class="lic-glance">
+            <p class="lic-glance-k">{g.k}</p>
+            <p class="lic-glance-v">{g.v}</p>
+          </div>
+        ))
+      }
+      <a
+        href={licenseHref}
+        target="_blank"
+        rel="noopener"
+        class="lic-license-btn"
+      >
+        Read LICENSE.md
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lic-hero {
+    padding: 150px 32px 88px;
+  }
+  .lic-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 72px;
+    align-items: start;
+  }
+  .lic-hero-title {
+    margin: 28px 0 0;
+    max-width: 14ch;
+    font-family: var(--font-serif);
+    font-size: 88px;
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.044em;
+    color: var(--ml-fg);
+  }
+
+  /* The rail's hairline is vertical beside the copy, horizontal above it once
+     the two columns stack — bound to the same breakpoint as the collapse. */
+  .lic-hero-rail {
+    border-left: 1px solid var(--ml-border);
+    padding-left: 32px;
+  }
+  .lic-glance {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--ml-border);
+  }
+  .lic-glance-k {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 42%, transparent);
+  }
+  .lic-glance-v {
+    margin: 6px 0 0;
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ml-fg);
+  }
+  .lic-license-btn {
+    margin-top: 22px;
+    display: inline-flex;
+    height: 46px;
+    align-items: center;
+    border-radius: 14px;
+    background: var(--ml-fg);
+    padding: 0 20px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ml-bg);
+    transition: transform 0.2s var(--ease-out);
+  }
+  .lic-license-btn:hover {
+    color: var(--ml-bg);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 1080px) {
+    .lic-hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+    .lic-hero-rail {
+      border-left: 0;
+      padding-left: 0;
+      border-top: 1px solid var(--ml-border);
+      padding-top: 22px;
+    }
+  }
+  @media (max-width: 860px) {
+    .lic-hero-title {
+      font-size: 46px;
+    }
+  }
+  @media (max-width: 720px) {
+    .lic-hero {
+      padding: 112px 20px 72px;
+    }
+  }
+  @media (max-width: 480px) {
+    .lic-hero-title {
+      font-size: 36px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lic-license-btn {
+      transition: none;
+    }
+    .lic-license-btn:hover {
+      transform: none;
+    }
+  }
+</style>

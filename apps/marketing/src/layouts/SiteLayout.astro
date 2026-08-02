@@ -1,0 +1,146 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import '../styles/globals.css'
+// Latin subsets of the three DS families, preloaded below. `?url` resolves to
+// the same hashed asset the fontsource CSS references, so the browser starts
+// the downloads with the HTML instead of after the stylesheet parses — without
+// this, slow connections paint fallback text and reflow once per arriving
+// family (the laptop under the landing headline visibly jumped on phones).
+import hankenWoff2 from '@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2?url'
+import spaceGroteskWoff2 from '@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2?url'
+import jetbrainsWoff2 from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url'
+import { ClientRouter } from 'astro:transitions'
+import Analytics from '@vercel/analytics/astro'
+import CookieBanner from '@/components/CookieBanner.astro'
+import { SITE } from '@/lib/site'
+
+interface Props {
+  title: string
+  description?: string
+  /** Absolute or root-relative OG image. */
+  image?: string
+  /** Structured-data JSON-LD object(s) to embed. */
+  jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>
+  noindex?: boolean
+  /** Extra classes for <body> (e.g. per-page background treatment). */
+  bodyClass?: string
+}
+
+const {
+  title,
+  description = SITE.description,
+  image = '/og.png',
+  jsonLd,
+  noindex = false,
+  bodyClass = '',
+} = Astro.props
+
+const canonical = new URL(Astro.url.pathname, Astro.site)
+const ogImage = new URL(image, Astro.site)
+const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Layout stability: border-box must apply before any async stylesheet
+         (else the 1264px shell first lays out ~1330px wide and snaps), and a
+         stable scrollbar gutter stops centred containers re-centring when the
+         streaming document first overflows the viewport. -->
+    <style is:inline>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        scrollbar-gutter: stable;
+      }
+      /* During a view transition the incoming page's stylesheets can land a
+         frame late; an inline SVG with only a viewBox then defaults to 100%
+         width and paints viewport-sized — "the icon takes the full screen".
+         Zero-specificity fallback (any real stylesheet rule wins) keeps
+         unstyled icons text-sized for that frame. Inline styles apply
+         synchronously with the swap, so this can never itself arrive late. */
+      :where(svg:not([width])) {
+        width: 1em;
+        height: 1em;
+      }
+    </style>
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href={hankenWoff2}
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href={spaceGroteskWoff2}
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href={jetbrainsWoff2}
+    />
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#161719" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:image" content={ogImage} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {
+      jsonLdArray.map((data) => (
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={JSON.stringify(data)}
+        />
+      ))
+    }
+
+    <ClientRouter />
+    <Analytics />
+  </head>
+  <body
+    class:list={[
+      'min-h-screen bg-background font-sans text-foreground antialiased selection:bg-primary/25',
+      bodyClass,
+    ]}
+  >
+    <slot />
+
+    <CookieBanner />
+
+    <script>
+      import '@/scripts/reveal.ts'
+      import '@/scripts/analytics.ts'
+    </script>
+  </body>
+</html>

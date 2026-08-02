@@ -1,0 +1,47 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+interface Line {
+  text: string
+  ok?: boolean
+  dim?: boolean
+  accent?: string
+}
+interface Props {
+  title?: string
+  lines: Line[]
+}
+const { title = 'Terminal', lines } = Astro.props
+---
+
+<div
+  class="pl-mock pl-mock-console mt-[22px] overflow-hidden rounded-[14px] border border-border"
+  style="background: var(--pl-inset);"
+>
+  <div
+    class="flex items-center gap-[7px] border-b px-3.5 py-2.5"
+    style="border-color: color-mix(in oklch, var(--border) 70%, transparent);"
+  >
+    <span
+      aria-hidden="true"
+      class="size-[9px] rounded-full"
+      style="background: var(--pl-red);"></span>
+    <span
+      aria-hidden="true"
+      class="size-[9px] rounded-full"
+      style="background: var(--pl-amber);"></span>
+    <span
+      aria-hidden="true"
+      class="size-[9px] rounded-full"
+      style="background: var(--pl-green);"></span>
+    <span class="ml-[5px] font-mono text-[10.5px] text-muted-foreground"
+      >{title}</span
+    >
+  </div>
+  <pre class="overflow-x-auto font-mono"><code>{lines.map((l) => (
+      <div style={l.dim ? 'opacity: .55' : ''}>
+        {l.ok && <span style="color: var(--pl-green)">✓ </span>}
+        <span style={l.accent ? `color:${l.accent}` : l.ok ? 'color: var(--foreground)' : 'color: color-mix(in oklch, var(--foreground) 82%, var(--muted-foreground))'}>{l.text}</span>
+      </div>
+    ))}</code></pre>
+</div>

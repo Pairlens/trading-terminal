@@ -1,0 +1,93 @@
+/*
+ * Copyright (c) 2026 Juan Ignacio Molina Estrada
+ * SPDX-License-Identifier: FSL-1.1-Apache-2.0
+ */
+/* Storefront aesthetic — aurora drift, orb ring spin, hero content enter.
+   Shared by the Plugins store and the Workspace store. */
+
+@keyframes pl-store-aurora1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(5%, -4%) scale(1.13);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes pl-store-aurora2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-6%, 5%) scale(1.15);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes pl-store-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pl-store-spin-reverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* Hero slide change: fade / blur-up on the content block. */
+@keyframes pl-store-heroin {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+.pl-store-heroin {
+  animation: pl-store-heroin 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Horizontal shelf track — scrollable, scrollbar hidden. */
+.pl-store-track {
+  scrollbar-width: none;
+}
+.pl-store-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Poster card hover lift. */
+.pl-store-lift {
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease;
+}
+.pl-store-lift:hover {
+  transform: translateY(-5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-store-aurora,
+  .pl-store-ring {
+    animation: none !important;
+  }
+  .pl-store-heroin {
+    animation-duration: 0.01ms;
+  }
+  .pl-store-lift,
+  .pl-store-lift:hover {
+    transform: none;
+    transition: none;
+  }
+}

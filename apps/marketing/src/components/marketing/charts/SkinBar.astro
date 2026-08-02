@@ -1,0 +1,436 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// The bar pinned to the bottom of /charts: restyle every live chart on the
+// page — palette, surface, type, corners, gridlines — and watch the cards
+// around them follow. Static markup driving a tiny store; the charts are
+// React islands but this needs no renderer of its own.
+import { DEFAULT_PAGE_SKIN, PALETTES, RADIUS_STEPS, SURFACES } from './skin'
+
+const FONTS = [
+  { id: 'mono', title: 'Monospace', label: 'Monospace type' },
+  { id: 'sans', title: 'Sans', label: 'Sans type' },
+  { id: 'serif', title: 'Serif', label: 'Serif type' },
+]
+
+const CORNERS: Record<number, { title: string; radius: string }> = {
+  0: { title: 'Square corners', radius: '0' },
+  18: { title: 'Soft corners', radius: '4px' },
+  30: { title: 'Round corners', radius: '9px' },
+}
+
+const skin = DEFAULT_PAGE_SKIN
+---
+
+<div
+  data-skinbar
+  class="skinbar"
+  role="group"
+  aria-label="Restyle every chart on this page"
+>
+  <div class="skinbar-group">
+    <span class="skinbar-legend">Color</span>
+    <div class="skinbar-well">
+      {
+        PALETTES.map((palette) => (
+          <button
+            type="button"
+            data-skin={`palette:${palette.id}`}
+            title={palette.name}
+            aria-label={`${palette.name} palette`}
+            aria-pressed={skin.palette === palette.id}
+            class="skinbar-swatch"
+          >
+            <span aria-hidden="true" style={`background: ${palette.up};`} />
+            <span aria-hidden="true" style={`background: ${palette.down};`} />
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="skinbar-group">
+    <span class="skinbar-legend">Surface</span>
+    <div class="skinbar-well">
+      {
+        SURFACES.map((surface) => (
+          <button
+            type="button"
+            data-skin={`surface:${surface.id}`}
+            aria-pressed={skin.surface === surface.id}
+            class="skinbar-chip"
+          >
+            {surface.name}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="skinbar-well">
+    {
+      FONTS.map((font) => (
+        <button
+          type="button"
+          data-skin={`font:${font.id}`}
+          title={font.title}
+          aria-label={font.label}
+          aria-pressed={skin.font === font.id}
+          class:list={['skinbar-glyph', `skinbar-glyph-${font.id}`]}
+        >
+          Aa
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="skinbar-well">
+    {
+      RADIUS_STEPS.map((step) => (
+        <button
+          type="button"
+          data-skin={`radius:${step}`}
+          title={CORNERS[step].title}
+          aria-label={CORNERS[step].title}
+          aria-pressed={skin.radius === step}
+          class="skinbar-corner"
+        >
+          <span
+            aria-hidden="true"
+            style={`border-radius: ${CORNERS[step].radius};`}
+          />
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="skinbar-well">
+    <button
+      type="button"
+      data-skin="grid:toggle"
+      aria-pressed={skin.grid}
+      class="skinbar-chip"
+    >
+      Gridlines
+    </button>
+  </div>
+
+  <button type="button" data-skin="reset:1" class="skinbar-reset">Reset</button>
+</div>
+
+<style>
+  .skinbar {
+    position: fixed;
+    right: 0;
+    bottom: 22px;
+    left: 0;
+    /* Under the site's z-50 overlays (header pill, cookie consent) — the bar
+       is page furniture, not a layer that should outrank a modal. */
+    z-index: 40;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px 14px;
+    width: fit-content;
+    max-width: calc(100vw - 32px);
+    margin-inline: auto;
+    padding: 9px 12px;
+    border: 1px solid color-mix(in oklch, var(--foreground) 20%, transparent);
+    border-radius: 20px;
+    /* A fixed graphite: the bar sits outside every chart root, so no skin
+       reaches it and it stays legible against a Paper page. */
+    background: oklch(0.195 0.008 74);
+    box-shadow:
+      0 34px 70px -18px rgba(0, 0, 0, 0.95),
+      inset 0 2px 0 0 color-mix(in oklch, var(--foreground) 8%, transparent);
+  }
+
+  /* Docked while the footer is on screen — it is the one band the bar would
+     otherwise sit on top of. */
+  .skinbar.is-docked {
+    transform: translateY(calc(100% + 34px));
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .skinbar-group {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .skinbar-legend {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--foreground) 58%, transparent);
+  }
+
+  .skinbar-well {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px;
+    border-radius: 13px;
+    background: color-mix(in oklch, var(--background) 70%, transparent);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  /* No `background` in this reset: compiled with Astro's scope attributes,
+     `.skinbar button` outweighs `.skinbar-chip[aria-pressed='true']`, so a
+     background here would beat every pressed state below (dark-on-dark,
+     illegible controls). Tailwind's preflight already paints buttons
+     transparent at layer-base priority. */
+  .skinbar button {
+    cursor: pointer;
+    border: 0;
+  }
+
+  .skinbar button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  .skinbar-swatch {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 7px 8px;
+    border-radius: 10px;
+  }
+
+  .skinbar-swatch span {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+  }
+
+  .skinbar-chip {
+    padding: 6px 11px;
+    border-radius: 10px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: color-mix(in oklch, var(--foreground) 62%, transparent);
+  }
+
+  .skinbar-glyph,
+  .skinbar-corner {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 28px;
+    border-radius: 10px;
+    color: color-mix(in oklch, var(--foreground) 62%, transparent);
+  }
+
+  .skinbar-glyph-mono {
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  .skinbar-glyph-sans {
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+
+  .skinbar-glyph-serif {
+    font-family: var(--font-serif);
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+
+  .skinbar-corner span {
+    display: block;
+    width: 13px;
+    height: 13px;
+    border: 1.5px solid currentColor;
+  }
+
+  .skinbar-reset {
+    padding: 8px 14px;
+    border: 1px solid color-mix(in oklch, var(--foreground) 26%, transparent);
+    border-radius: 12px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .skinbar-swatch[aria-pressed='true'] {
+    background: color-mix(in oklch, var(--foreground) 15%, transparent);
+    box-shadow: inset 0 0 0 1.5px
+      color-mix(in oklch, var(--foreground) 85%, transparent);
+  }
+
+  .skinbar-chip[aria-pressed='true'],
+  .skinbar-glyph[aria-pressed='true'],
+  .skinbar-corner[aria-pressed='true'] {
+    background: var(--foreground);
+    color: oklch(0.16 0.008 74);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Phones: the full bar wraps into a tall block that eats half the screen.
+     Drop the legends and shrink every control so it stays a slim two-row pill. */
+  @media (max-width: 720px) {
+    .skinbar {
+      bottom: 12px;
+      gap: 4px 6px;
+      max-width: calc(100vw - 20px);
+      padding: 6px 7px;
+      border-radius: 16px;
+    }
+    .skinbar-legend {
+      display: none;
+    }
+    .skinbar-group {
+      gap: 0;
+    }
+    .skinbar-well {
+      gap: 2px;
+      padding: 2px;
+      border-radius: 11px;
+    }
+    .skinbar-swatch {
+      gap: 3px;
+      padding: 6px;
+    }
+    .skinbar-swatch span {
+      width: 9px;
+      height: 9px;
+    }
+    .skinbar-chip {
+      padding: 5px 9px;
+      font-size: 10.5px;
+    }
+    .skinbar-glyph,
+    .skinbar-corner {
+      width: 28px;
+      height: 25px;
+    }
+    .skinbar-glyph-mono {
+      font-size: 11px;
+    }
+    .skinbar-glyph-sans,
+    .skinbar-glyph-serif {
+      font-size: 12px;
+    }
+    .skinbar-corner span {
+      width: 11px;
+      height: 11px;
+    }
+    .skinbar-reset {
+      padding: 6px 10px;
+      font-size: 10.5px;
+      border-radius: 10px;
+    }
+  }
+
+  @media (hover: hover) {
+    .skinbar-chip:hover:not([aria-pressed='true']),
+    .skinbar-glyph:hover:not([aria-pressed='true']),
+    .skinbar-corner:hover:not([aria-pressed='true']) {
+      color: var(--foreground);
+    }
+
+    .skinbar-reset:hover {
+      background: color-mix(in oklch, var(--foreground) 12%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .skinbar {
+      transition:
+        transform 0.34s var(--ease-out),
+        visibility 0.34s var(--ease-out),
+        opacity 0.2s var(--ease-out);
+    }
+
+    .skinbar button {
+      transition:
+        background 0.16s var(--ease-out),
+        color 0.16s var(--ease-out);
+    }
+  }
+</style>
+
+<script>
+  import {
+    applySkinControl,
+    getPageSkin,
+    isSkinControlOn,
+    pageSkinView,
+    setPageSkin,
+    subscribePageSkin,
+  } from '@/components/marketing/charts/skin'
+
+  function paint() {
+    const skin = getPageSkin()
+    const { vars } = pageSkinView(skin)
+
+    // Chart roots authored in the page (the hero's frame) get the tokens
+    // stamped here; roots rendered by an island carry the same values from
+    // the store, so a card that hydrates after a click is never stale.
+    for (const root of document.querySelectorAll<HTMLElement>(
+      '[data-chart-root]',
+    )) {
+      for (const [name, value] of Object.entries(vars)) {
+        root.style.setProperty(name, value)
+      }
+    }
+
+    const controls = document.querySelectorAll<HTMLElement>('[data-skin]')
+    for (const control of controls) {
+      const on = isSkinControlOn(skin, control.dataset.skin || '')
+      if (on === null) continue
+      control.setAttribute('aria-pressed', on ? 'true' : 'false')
+    }
+  }
+
+  let observer: IntersectionObserver | null = null
+
+  function bind() {
+    const bar = document.querySelector<HTMLElement>('[data-skinbar]')
+    if (!bar) return
+    paint()
+    if (bar.dataset.bound) return
+    bar.dataset.bound = '1'
+
+    bar.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement | null
+      const control = target?.closest<HTMLElement>('[data-skin]')
+      if (!control) return
+      const next = applySkinControl(getPageSkin(), control.dataset.skin || '')
+      if (next) setPageSkin(next)
+    })
+
+    // The footer is the one band the bar would sit on top of, so dock there.
+    const footer = document.querySelector('footer')
+    if (!footer) return
+    observer?.disconnect()
+    observer = new IntersectionObserver(
+      (entries) => {
+        const last = entries[entries.length - 1]
+        bar.classList.toggle('is-docked', last?.isIntersecting ?? false)
+      },
+      // Positive bottom margin: the footer counts as "here" while it is still
+      // below the fold, so the bar is gone before the two would ever meet.
+      { rootMargin: '0px 0px 90px 0px' },
+    )
+    observer.observe(footer)
+  }
+
+  // Subscribed once per module, not per navigation: the charts and the bar
+  // both read the same store, and re-binding on every soft nav would stack
+  // listeners on a page the visitor may pass through repeatedly.
+  subscribePageSkin(paint)
+  bind()
+  document.addEventListener('astro:page-load', bind)
+</script>

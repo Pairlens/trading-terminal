@@ -1,0 +1,36 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Renders the subprocessor list from @/lib/legal so the Privacy Policy never
+// carries a hand-maintained copy of it. A real four-column table: the reader
+// is comparing rows (who, why, where, under what safeguard), and `.pl-legal`
+// scrolls it horizontally rather than shrinking it below 720px.
+import { SUBPROCESSORS } from '@/lib/legal'
+---
+
+<table>
+  <thead>
+    <tr>
+      <th>Processor</th>
+      <th>Purpose</th>
+      <th>Location</th>
+      <th>Safeguard</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      SUBPROCESSORS.map((p) => (
+        <tr>
+          <td>
+            <a href={p.href} target="_blank" rel="noopener">
+              {p.name}
+            </a>
+          </td>
+          <td>{p.purpose}</td>
+          <td>{p.location}</td>
+          <td>{p.safeguard}</td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>

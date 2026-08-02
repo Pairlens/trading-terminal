@@ -1,0 +1,31 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import SiteLayout from '@/layouts/SiteLayout.astro'
+import SiteHeader from '@/components/SiteHeader.astro'
+import SiteFooter from '@/components/SiteFooter.astro'
+import AffiliatesHero from '@/components/marketing/affiliates/AffiliatesHero.astro'
+import AffiliateTiers from '@/components/marketing/affiliates/AffiliateTiers.astro'
+import AffiliateClaim from '@/components/marketing/affiliates/AffiliateClaim.astro'
+import AffiliatesCta from '@/components/marketing/affiliates/AffiliatesCta.astro'
+
+const title = 'Pairlens Affiliates: Earn with your referral codes'
+const description =
+  'Join the Pairlens affiliate program. Pick your venues, paste the exchange referral codes you already hold, and Pairlens routes signups through your links.'
+---
+
+<SiteLayout title={title} description={description}>
+  <SiteHeader />
+  <main>
+    <!-- One stone ground carries the offer and the tier ladder; the claim
+         form drops to the graphite product surface before the close returns
+         to marble. -->
+    <div class="pl-marble">
+      <AffiliatesHero />
+      <AffiliateTiers />
+    </div>
+    <AffiliateClaim />
+    <AffiliatesCta />
+  </main>
+  <SiteFooter />
+</SiteLayout>

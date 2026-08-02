@@ -1,0 +1,21 @@
+{
+  "name": "@pairlens-examples/dev-sync-plugin",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pairlens/trading-terminal.git",
+    "directory": "examples/dev-sync-plugin"
+  },
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun build src/index.ts --outfile dist/dev-sync.js --format esm --external react --external react/jsx-runtime --external @pairlens/plugin-sdk --target browser --minify"
+  },
+  "devDependencies": {
+    "@pairlens/plugin-sdk": "workspace:*",
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0",
+    "typescript": "^5.9.3"
+  }
+}

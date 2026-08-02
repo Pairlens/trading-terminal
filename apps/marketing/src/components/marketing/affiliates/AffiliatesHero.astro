@@ -1,0 +1,277 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Marble arrival for /affiliates: the offer on the left, the program's hard
+// numbers on the right, and the claimable board underneath. Every number comes
+// from the shared catalog, so nothing here can drift from the routing code.
+import { AFFILIATE_VENUES } from '@pairlens/shared/affiliates'
+import { VenueIcon } from '@/components/marketing/VenueIcon'
+import { VENUE_BRAND } from '@/lib/site'
+import { CLAIMABLE_VENUES, TIERS, UNCLAIMABLE_VENUES } from './content'
+
+const FACTS = [
+  {
+    label: 'Claimable venues',
+    value: `${CLAIMABLE_VENUES.length} of ${AFFILIATE_VENUES.length}`,
+  },
+  { label: 'Venues per tier', value: TIERS.map((t) => t.cap).join(' · ') },
+  { label: 'Cost to join', value: '$0' },
+  { label: 'Who pays you', value: 'The venue' },
+]
+
+const brand = (id: string) =>
+  VENUE_BRAND[id] ?? { mono: id.slice(0, 2).toUpperCase(), hue: 'oklch(0.7 0 0)' }
+---
+
+<section class="aff-hero">
+  <div class="mx-auto max-w-[1200px]">
+    <div class="aff-hero-rail">
+      <div>
+        <p class="pl-eyebrow aff-eyebrow" data-reveal>
+          Pairlens Affiliates · {CLAIMABLE_VENUES.length} venues you can claim
+        </p>
+        <h1 class="aff-h1" data-reveal data-reveal-delay="70">
+          You send the traders. You keep the commission.
+        </h1>
+        <p class="aff-lede" data-reveal data-reveal-delay="140">
+          Nobody trades without an account somewhere, and Pairlens points new
+          users straight at the venues. Those links are ours by default. Claim a
+          venue with a referral code you already hold and every signup that
+          arrives through your link carries your code instead.
+        </p>
+        <div class="aff-cta" data-reveal data-reveal-delay="210">
+          <a href="#claim" class="aff-btn">Claim your venues</a>
+          <a href="#tiers" class="aff-btn-ghost">Compare the tiers</a>
+        </div>
+      </div>
+
+      <dl class="aff-facts" data-reveal data-reveal-delay="260">
+        {
+          FACTS.map((fact) => (
+            <div class="aff-fact">
+              <dt class="aff-fact-k">{fact.label}</dt>
+              <dd class="aff-fact-v">{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+
+    <div class="aff-board" data-reveal data-reveal-delay="320">
+      <p class="aff-board-k">Claimable today</p>
+      <ul class="aff-board-list">
+        {
+          CLAIMABLE_VENUES.map((v) => (
+            <li class="aff-chip">
+              <VenueIcon
+                id={v.id}
+                name={v.label}
+                mono={brand(v.id).mono}
+                hue={brand(v.id).hue}
+                size={26}
+                radius={7}
+              />
+              {v.label}
+            </li>
+          ))
+        }
+      </ul>
+      <p class="aff-board-note">
+        {UNCLAIMABLE_VENUES.map((v) => v.label).join(' and ')} run no public code-based
+        program, so they stay on Pairlens links whatever your tier.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .aff-hero {
+    padding: 150px 32px 84px;
+  }
+
+  .aff-hero-rail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 72px;
+    align-items: start;
+  }
+
+  .aff-eyebrow {
+    margin: 0;
+    color: var(--ml-muted);
+  }
+  .aff-h1 {
+    margin: 28px 0 0;
+    max-width: 15ch;
+    font-family: var(--font-serif);
+    font-size: 88px;
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.044em;
+    color: var(--ml-fg);
+  }
+  .aff-lede {
+    margin: 32px 0 0;
+    max-width: 56ch;
+    font-size: 19px;
+    line-height: 1.6;
+    text-wrap: pretty;
+    color: var(--ml-muted);
+  }
+
+  .aff-cta {
+    margin-top: 34px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .aff-btn {
+    display: inline-flex;
+    height: 54px;
+    align-items: center;
+    border-radius: 16px;
+    background: var(--ml-fg);
+    padding: 0 26px;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--ml-bg);
+    transition: transform 0.2s var(--ease-out);
+  }
+  .aff-btn:hover {
+    color: var(--ml-bg);
+    transform: translateY(-2px);
+  }
+  .aff-btn-ghost {
+    display: inline-flex;
+    height: 54px;
+    align-items: center;
+    border-radius: 16px;
+    border: 1px solid var(--ml-border);
+    background: color-mix(in oklch, var(--ml-card) 70%, transparent);
+    padding: 0 24px;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--ml-fg);
+    transition:
+      transform 0.2s var(--ease-out),
+      border-color 0.2s ease;
+  }
+  .aff-btn-ghost:hover {
+    color: var(--ml-fg);
+    transform: translateY(-2px);
+    border-color: color-mix(in oklch, var(--ml-fg) 28%, var(--ml-border));
+  }
+
+  /* Facts rail: a hairline column beside the copy, a hairline band once stacked. */
+  .aff-facts {
+    margin: 0;
+    border-left: 1px solid var(--ml-border);
+    padding-left: 32px;
+  }
+  .aff-fact {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--ml-border);
+  }
+  .aff-fact-k {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 42%, transparent);
+  }
+  .aff-fact-v {
+    margin: 6px 0 0;
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ml-fg);
+  }
+
+  .aff-board {
+    margin-top: 64px;
+    border-top: 1px solid var(--ml-border);
+    padding-top: 22px;
+  }
+  .aff-board-k {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 42%, transparent);
+  }
+  .aff-board-list {
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .aff-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    border-radius: 12px;
+    border: 1px solid var(--ml-border);
+    background: color-mix(in oklch, var(--ml-card) 74%, transparent);
+    padding: 6px 14px 6px 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ml-fg);
+  }
+  .aff-board-note {
+    margin: 18px 0 0;
+    max-width: 62ch;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--ml-muted);
+  }
+
+  @media (max-width: 1080px) {
+    .aff-hero-rail {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+    .aff-facts {
+      border-left: 0;
+      padding-left: 0;
+      border-top: 1px solid var(--ml-border);
+      padding-top: 22px;
+    }
+  }
+  @media (max-width: 860px) {
+    .aff-h1 {
+      font-size: 46px;
+    }
+  }
+  @media (max-width: 720px) {
+    .aff-hero {
+      padding: 112px 20px 72px;
+    }
+    .aff-board {
+      margin-top: 48px;
+    }
+  }
+  @media (max-width: 480px) {
+    .aff-h1 {
+      font-size: 36px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aff-btn,
+    .aff-btn-ghost {
+      transition: none;
+    }
+    .aff-btn:hover,
+    .aff-btn-ghost:hover {
+      transform: none;
+    }
+  }
+</style>

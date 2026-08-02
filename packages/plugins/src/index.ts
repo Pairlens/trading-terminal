@@ -1,0 +1,161 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+export {
+  pairlensCoreManifest,
+  createPairlensCorePlugin,
+} from './pairlens-core/index.ts'
+export {
+  okxMarketConnectorManifest,
+  createOkxMarketConnectorPlugin,
+  OKX_ADAPTER_INFO,
+} from './okx-market-connector/index.ts'
+export {
+  binanceMarketConnectorManifest,
+  createBinanceMarketConnectorPlugin,
+  BINANCE_ADAPTER_INFO,
+} from './binance-market-connector/index.ts'
+export {
+  bybitMarketConnectorManifest,
+  createBybitMarketConnectorPlugin,
+  BYBIT_ADAPTER_INFO,
+} from './bybit-market-connector/index.ts'
+export {
+  bitvavoMarketConnectorManifest,
+  createBitvavoMarketConnectorPlugin,
+  BITVAVO_ADAPTER_INFO,
+} from './bitvavo-market-connector/index.ts'
+export {
+  mexcMarketConnectorManifest,
+  createMexcMarketConnectorPlugin,
+  MEXC_ADAPTER_INFO,
+} from './mexc-market-connector/index.ts'
+export {
+  kucoinMarketConnectorManifest,
+  createKucoinMarketConnectorPlugin,
+  KUCOIN_ADAPTER_INFO,
+} from './kucoin-market-connector/index.ts'
+export {
+  gateMarketConnectorManifest,
+  createGateMarketConnectorPlugin,
+  GATE_ADAPTER_INFO,
+} from './gate-market-connector/index.ts'
+export {
+  coinbaseMarketConnectorManifest,
+  createCoinbaseMarketConnectorPlugin,
+  COINBASE_ADAPTER_INFO,
+} from './coinbase-market-connector/index.ts'
+export {
+  bitgetMarketConnectorManifest,
+  createBitgetMarketConnectorPlugin,
+  BITGET_ADAPTER_INFO,
+} from './bitget-market-connector/index.ts'
+export {
+  krakenMarketConnectorManifest,
+  createKrakenMarketConnectorPlugin,
+  KRAKEN_ADAPTER_INFO,
+} from './kraken-market-connector/index.ts'
+export {
+  htxMarketConnectorManifest,
+  createHtxMarketConnectorPlugin,
+  HTX_ADAPTER_INFO,
+} from './htx-market-connector/index.ts'
+export {
+  cryptocomMarketConnectorManifest,
+  createCryptocomMarketConnectorPlugin,
+  CRYPTOCOM_ADAPTER_INFO,
+} from './cryptocom-market-connector/index.ts'
+export {
+  bitfinexMarketConnectorManifest,
+  createBitfinexMarketConnectorPlugin,
+  BITFINEX_ADAPTER_INFO,
+} from './bitfinex-market-connector/index.ts'
+export {
+  upbitMarketConnectorManifest,
+  createUpbitMarketConnectorPlugin,
+  UPBIT_ADAPTER_INFO,
+} from './upbit-market-connector/index.ts'
+export {
+  alpacaMarketConnectorManifest,
+  createAlpacaMarketConnectorPlugin,
+  ALPACA_ADAPTER_INFO,
+} from './alpaca-market-connector/index.ts'
+export {
+  groqInferenceManifest,
+  createGroqInferencePlugin,
+} from './groq-inference/index.ts'
+export {
+  openaiInferenceManifest,
+  createOpenaiInferencePlugin,
+} from './openai-inference/index.ts'
+export {
+  anthropicInferenceManifest,
+  createAnthropicInferencePlugin,
+} from './anthropic-inference/index.ts'
+export {
+  openrouterInferenceManifest,
+  createOpenrouterInferencePlugin,
+} from './openrouter-inference/index.ts'
+export {
+  pairlensIntelligenceManifest,
+  createPairlensIntelligencePlugin,
+} from './pairlens-intelligence/index.ts'
+export {
+  tavilySearchManifest,
+  createTavilySearchPlugin,
+} from './tavily-search/index.ts'
+export { exaSearchManifest, createExaSearchPlugin } from './exa-search/index.ts'
+// basic-symbols is deprecated — its functionality is absorbed into pairlens-core.
+// Kept for backward compatibility with Registry catalog but not used in terminal.
+export {
+  basicSymbolsManifest,
+  createBasicSymbolsPlugin,
+} from './basic-symbols/index.ts'
+export {
+  pairlensThemeManifest,
+  createPairlensThemePlugin,
+  zenTradingManifest,
+  createZenTradingPlugin,
+  cyberpunkNeonManifest,
+  createCyberpunkNeonPlugin,
+  earthTonesManifest,
+  createEarthTonesPlugin,
+  terminalClassicManifest,
+  createTerminalClassicPlugin,
+  cryptoGoldManifest,
+  createCryptoGoldPlugin,
+  arcticBlueManifest,
+  createArcticBluePlugin,
+  infraredManifest,
+  createInfraredPlugin,
+  emeraldMatrixManifest,
+  createEmeraldMatrixPlugin,
+  royalVioletManifest,
+  createRoyalVioletPlugin,
+  midnightEmberManifest,
+  createMidnightEmberPlugin,
+  sakuraBloomManifest,
+  createSakuraBloomPlugin,
+  electricLimeManifest,
+  createElectricLimePlugin,
+  burntOrangeManifest,
+  createBurntOrangePlugin,
+  nightCityManifest,
+  createNightCityPlugin,
+  eyeComfortManifest,
+  createEyeComfortPlugin,
+  highContrastManifest,
+  createHighContrastPlugin,
+} from './themes/index.ts'
+export type { ThemeDefinition, ThemeVariableMap } from './themes/index.ts'
+export {
+  dexpaprikaDataProviderManifest,
+  createDexpaprikaDataProviderPlugin,
+} from './dexpaprika-data-provider/index.ts'
+export {
+  geckoterminalDataProviderManifest,
+  createGeckoterminalDataProviderPlugin,
+} from './geckoterminal-data-provider/index.ts'
+export {
+  jupiterDexConnectorManifest,
+  createJupiterDexConnectorPlugin,
+} from './jupiter-dex-connector/index.ts'

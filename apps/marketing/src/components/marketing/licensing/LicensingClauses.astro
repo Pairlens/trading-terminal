@@ -1,0 +1,132 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// The four clauses, numbered, each with the matching line from the licence.
+import { CLAUSES } from '@/components/marketing/licensing/content'
+---
+
+<section class="lic-clauses">
+  <div class="lic-clauses-inner mx-auto max-w-[1200px]">
+    {
+      CLAUSES.map((c) => (
+        <article data-reveal class="lic-clause">
+          <p class="lic-clause-n">{c.n}</p>
+          <div>
+            <h2 class="lic-clause-title">{c.title}</h2>
+            <p class="lic-clause-body">{c.body}</p>
+          </div>
+          <div class="lic-clause-cite">
+            <p class="lic-clause-cite-k">In the licence text</p>
+            <p class="lic-clause-cite-v">{c.cite}</p>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .lic-clauses {
+    padding: 0 32px 96px;
+  }
+  .lic-clauses-inner {
+    border-top: 2px solid color-mix(in oklch, var(--ml-fg) 22%, transparent);
+    padding-top: 8px;
+  }
+  .lic-clause {
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr) 320px;
+    gap: 40px;
+    align-items: start;
+    border-bottom: 1px solid var(--ml-border);
+    padding: 40px 0;
+  }
+  .lic-clause-n {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 46px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: color-mix(in oklch, var(--ml-fg) 24%, transparent);
+  }
+  .lic-clause-title {
+    margin: 0;
+    max-width: 22ch;
+    font-family: var(--font-serif);
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.028em;
+    color: var(--ml-fg);
+  }
+  .lic-clause-body {
+    margin: 14px 0 0;
+    max-width: 52ch;
+    font-size: 16.5px;
+    line-height: 1.7;
+    text-wrap: pretty;
+    color: var(--ml-muted);
+  }
+  .lic-clause-cite {
+    border-left: 1px solid var(--ml-border);
+    padding-left: 28px;
+  }
+  .lic-clause-cite-k {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 40%, transparent);
+  }
+  .lic-clause-cite-v {
+    margin: 10px 0 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: color-mix(in oklch, var(--ml-fg) 62%, transparent);
+  }
+
+  /* The citation rail runs out of room long before the clause column does, so
+     it drops under the copy — still in the copy's column — before the whole
+     row stacks. */
+  @media (max-width: 1000px) {
+    .lic-clause {
+      grid-template-columns: 104px minmax(0, 1fr);
+      gap: 24px 40px;
+    }
+    .lic-clause-cite {
+      grid-column: 2;
+    }
+  }
+  @media (max-width: 860px) {
+    .lic-clause-n {
+      font-size: 33px;
+    }
+    .lic-clause-title {
+      font-size: 26px;
+    }
+  }
+  @media (max-width: 720px) {
+    .lic-clauses {
+      padding: 0 20px 72px;
+    }
+    .lic-clause {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 6px 0;
+      padding: 32px 0;
+    }
+    .lic-clause-cite {
+      grid-column: 1;
+      margin-top: 18px;
+      padding-left: 18px;
+    }
+  }
+  @media (max-width: 480px) {
+    .lic-clause-n {
+      font-size: 30px;
+    }
+  }
+</style>

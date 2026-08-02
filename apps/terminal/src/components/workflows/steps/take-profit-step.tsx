@@ -1,0 +1,134 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { Handle, Position } from '@xyflow/react'
+import { TrendingUp } from 'lucide-react'
+import { cn } from '@pairlens/ui'
+import { Slider } from '@pairlens/ui/components/ui/slider'
+import { useStepDataUpdate } from '../use-step-data'
+import type { NodeProps } from '@xyflow/react'
+import type { TakeProfitStepData } from '@pairlens/workflow-engine/types'
+
+export function TakeProfitStep({ id, data }: NodeProps) {
+  const d = data as unknown as TakeProfitStepData
+  const triggerMode = d.triggerMode ?? 'percent'
+  const triggerValue = d.triggerValue ?? 5
+  const sizePercent = d.sizePercent ?? 100
+
+  const updateStepData = useStepDataUpdate()
+  const handleChange = (key: string, value: unknown) =>
+    updateStepData(id, { [key]: value })
+
+  return (
+    <div
+      className={cn(
+        'w-[210px] rounded-lg border border-green-500/40 bg-card px-3 py-2.5',
+        'shadow-sm shadow-green-500/10',
+      )}
+    >
+      <Handle
+        type="target"
+        position={Position.Top}
+        className="!size-3 !rounded-full !border-2 !border-green-500 !bg-background"
+      />
+
+      <div className="flex items-center gap-2">
+        <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-green-500/15">
+          <TrendingUp className="size-3.5 text-green-400" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-xs font-semibold text-foreground">
+            Take Profit
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-2 space-y-1.5">
+        {/* Trigger mode */}
+        <div>
+          <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
+            Trigger when price
+          </div>
+          <div className="nodrag nopan nowheel mt-0.5 flex overflow-hidden rounded border border-border text-[9px]">
+            <button
+              type="button"
+              className={cn(
+                'flex-1 px-1.5 py-0.5 transition-colors',
+                triggerMode === 'percent'
+                  ? 'bg-green-500/15 text-green-400'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+              onClick={() => handleChange('triggerMode', 'percent')}
+            >
+              % from entry
+            </button>
+            <button
+              type="button"
+              className={cn(
+                'flex-1 px-1.5 py-0.5 transition-colors',
+                triggerMode === 'absolute'
+                  ? 'bg-green-500/15 text-green-400'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+              onClick={() => handleChange('triggerMode', 'absolute')}
+            >
+              Reaches price
+            </button>
+          </div>
+        </div>
+
+        {/* Trigger value */}
+        <div>
+          <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
+            {triggerMode === 'percent' ? 'Gain %' : 'Price level'}
+          </div>
+          <div className="mt-0.5 flex items-center gap-1">
+            {triggerMode === 'percent' && (
+              <span className="text-[10px] text-green-400">+</span>
+            )}
+            <input
+              type="number"
+              className="nodrag nopan nowheel h-6 w-full rounded border border-border bg-background px-1.5 font-mono text-[10px] text-foreground outline-none focus:border-primary"
+              value={triggerValue}
+              onChange={(e) =>
+                handleChange('triggerValue', parseFloat(e.target.value) || 0)
+              }
+            />
+            {triggerMode === 'percent' && (
+              <span className="text-[10px] text-muted-foreground">%</span>
+            )}
+          </div>
+        </div>
+
+        {/* Close % */}
+        <div>
+          <div className="flex items-center justify-between">
+            <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
+              Sell
+            </div>
+            <div className="font-mono text-[10px] font-medium text-green-400">
+              {sizePercent}%
+            </div>
+          </div>
+          <Slider
+            className="nodrag nopan nowheel mt-1"
+            value={[sizePercent]}
+            min={1}
+            max={100}
+            onValueChange={(value) =>
+              handleChange(
+                'sizePercent',
+                Array.isArray(value) ? value[0] : value,
+              )
+            }
+          />
+        </div>
+      </div>
+
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className="!size-3 !rounded-full !border-2 !border-green-500 !bg-background"
+      />
+    </div>
+  )
+}

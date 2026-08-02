@@ -1,0 +1,59 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+interface Item {
+  letter: string
+  name: string
+  desc: string
+  status: 'REQUIRED' | 'OPTIONAL'
+}
+interface Props {
+  items: Item[]
+}
+const { items } = Astro.props
+
+const rule = 'color-mix(in oklch, var(--border) 55%, transparent)'
+---
+
+<div class="mt-[22px] border-t" style={`border-color: ${rule}`}>
+  {
+    items.map((it) => {
+      const required = it.status === 'REQUIRED'
+      return (
+        <div
+          class="flex items-center gap-3.5 border-b py-3.5"
+          style={`border-color: ${rule}`}
+        >
+          <span
+            class="grid size-[34px] flex-none place-items-center rounded-[10px] font-mono text-[14px] font-bold"
+            style={
+              required
+                ? 'background: color-mix(in oklch, var(--primary) 13%, transparent); color: var(--primary);'
+                : 'background: color-mix(in oklch, var(--foreground) 7%, transparent); color: var(--muted-foreground);'
+            }
+          >
+            {it.letter}
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-[14.5px] font-semibold text-foreground">
+              {it.name}
+            </span>
+            <span class="block text-[13px] text-muted-foreground">
+              {it.desc}
+            </span>
+          </span>
+          <span
+            class="flex-none rounded-[7px] border px-2 py-[3px] font-mono text-[9.5px] font-bold tracking-[0.12em]"
+            style={
+              required
+                ? 'border-color: color-mix(in oklch, var(--pl-red) 32%, transparent); background: color-mix(in oklch, var(--pl-red) 9%, transparent); color: var(--pl-red);'
+                : 'border-color: var(--border); color: var(--muted-foreground);'
+            }
+          >
+            {it.status}
+          </span>
+        </div>
+      )
+    })
+  }
+</div>

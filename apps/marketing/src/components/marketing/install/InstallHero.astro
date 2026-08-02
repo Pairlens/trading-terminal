@@ -1,0 +1,531 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// /install arrival: marble ground, a facts rail, and the three OS tiles that
+// drive the rest of the page. Rendered with macOS selected so the page is
+// complete without JS; the page script re-selects the detected platform and
+// badges it "Your system". Every tile carries its own release href, which the
+// download button mirrors.
+import { INSTALLERS, SITE } from '@/lib/site'
+import { DEFAULT_OS, OS_GUIDES } from './os-guides'
+import appleIcon from '@/components/marketing/os/apple.svg?raw'
+import windowsIcon from '@/components/marketing/os/windows.svg?raw'
+import linuxIcon from '@/components/marketing/os/linux.svg?raw'
+
+const OS_ICON: Record<string, string> = {
+  apple: appleIcon,
+  windows: windowsIcon,
+  linux: linuxIcon,
+}
+
+// Each mark is drawn at its own optical size. Written as literal utility
+// strings so Tailwind sees them; the raw SVG is injected, so a scoped
+// `> svg` rule would never reach it.
+const OS_GLYPH: Record<string, string> = {
+  apple: '[&>svg]:size-[24px]',
+  windows: '[&>svg]:size-[21px]',
+  linux: '[&>svg]:size-[23px]',
+}
+
+const FACTS = [
+  { label: 'Price', value: 'Free forever' },
+  { label: 'Account', value: 'Not required' },
+  { label: 'Builds', value: 'Code-signed' },
+  { label: 'Updates', value: 'Automatic' },
+]
+
+const defaultHref =
+  INSTALLERS.find((it) => it.os === DEFAULT_OS)?.href ??
+  `${SITE.repo}/releases/latest`
+---
+
+<section class="pl-marble ins-hero">
+  <div class="mx-auto max-w-[1200px]">
+    <div class="ins-rail">
+      <div>
+        <p class="pl-eyebrow ins-eyebrow" data-reveal>
+          Install Pairlens · macOS · Windows · Linux
+        </p>
+        <h1 class="ins-h1" data-reveal data-reveal-delay="70">
+          It runs on your desk, not ours.
+        </h1>
+        <p class="ins-lede" data-reveal data-reveal-delay="140">
+          One download, no account, nothing to configure before it opens. Every
+          build is code-signed and keeps itself up to date.
+        </p>
+      </div>
+
+      <dl class="ins-facts" data-reveal data-reveal-delay="200">
+        {
+          FACTS.map((fact) => (
+            <div class="ins-fact">
+              <dt class="ins-fact-label">{fact.label}</dt>
+              <dd class="ins-fact-value">{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+
+    <div role="group" aria-label="Choose your platform" class="ins-tiles">
+      {
+        INSTALLERS.map((it, i) => (
+          <div class="ins-tile-wrap" data-reveal data-reveal-delay={240 + i * 60}>
+            <button
+              type="button"
+              class:list={['ins-tile', it.os === DEFAULT_OS && 'is-sel']}
+              data-os-tile={it.os}
+              data-os-href={it.href}
+              aria-pressed={it.os === DEFAULT_OS ? 'true' : 'false'}
+            >
+              <span class="ins-tile-top">
+                <span
+                  class:list={['ins-glyph', OS_GLYPH[it.icon]]}
+                  set:html={OS_ICON[it.icon]}
+                />
+                <span class="ins-you">Your system</span>
+              </span>
+              <span class="ins-tile-name">{it.os}</span>
+              <span class="ins-tile-sub">{it.tagline}</span>
+              <span class="ins-chips">
+                {it.formats.map((f) => (
+                  <span class="ins-chip">{f}</span>
+                ))}
+              </span>
+            </button>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="ins-cta" data-reveal data-reveal-delay="420">
+      <a
+        class="pl-ring ins-download"
+        data-os-download
+        href={defaultHref}
+        target="_blank"
+        rel="noopener"
+      >
+        <svg
+          class="ins-download-ic"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 3v12m0 0 4-4m-4 4-4-4"></path>
+          <path d="M5 21h14"></path>
+        </svg>
+        <span>Download for <span data-os-name>{DEFAULT_OS}</span></span>
+      </a>
+      <div>
+        <p class="ins-cta-sub">
+          {
+            INSTALLERS.map((it) => (
+              <span
+                class:list={['ins-sub', it.os === DEFAULT_OS && 'is-active']}
+                data-os-sub={it.os}
+              >
+                {OS_GUIDES[it.os]?.sub}
+              </span>
+            ))
+          }
+        </p>
+        <p class="ins-cta-note">
+          Need a checksum, an older build or the changelog? <a
+            class="ins-link"
+            href={`${SITE.repo}/releases`}
+            target="_blank"
+            rel="noopener">Browse all releases</a
+          >.
+        </p>
+      </div>
+    </div>
+
+    <!-- Swapped in for the download CTA on phones: there is nothing to
+         install there, so the useful action is carrying the link to a desk. -->
+    <div class="ins-mobile" data-reveal data-reveal-delay="420">
+      <p class="ins-mobile-eyebrow">You’re on a phone</p>
+      <p class="ins-mobile-title">Pairlens is a desktop app.</p>
+      <p class="ins-mobile-body">
+        The terminal installs on macOS, Windows and Linux — there’s nothing to
+        download here. Send yourself this page and pick it up at your desk.
+      </p>
+      <div class="ins-mobile-row">
+        <button type="button" class="ins-mobile-copy" data-mobile-copy>
+          <span class="ins-mobile-copy-idle">Copy link</span>
+          <span class="ins-mobile-copy-done">Link copied ✓</span>
+        </button>
+        <button type="button" class="ins-mobile-share" data-mobile-share hidden>
+          Share…
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ins-hero {
+    padding: 150px 32px 96px;
+  }
+
+  .ins-rail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 72px;
+    align-items: start;
+  }
+
+  .ins-eyebrow {
+    margin: 0;
+    color: var(--ml-muted);
+  }
+  .ins-h1 {
+    margin: 28px 0 0;
+    max-width: 15ch;
+    font-family: var(--font-serif);
+    font-size: 88px;
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.044em;
+    color: var(--ml-fg);
+  }
+  .ins-lede {
+    margin: 32px 0 0;
+    max-width: 56ch;
+    font-size: 19px;
+    line-height: 1.6;
+    text-wrap: pretty;
+    color: var(--ml-muted);
+  }
+
+  /* Facts rail — a hairline column that becomes a hairline band once stacked. */
+  .ins-facts {
+    margin: 0;
+    border-left: 1px solid var(--ml-border);
+    padding-left: 32px;
+  }
+  .ins-fact {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--ml-border);
+  }
+  .ins-fact-label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 42%, transparent);
+  }
+  .ins-fact-value {
+    margin: 6px 0 0;
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ml-fg);
+  }
+
+  .ins-tiles {
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  /* The reveal animation fills forwards, so it would win over the tile's own
+     hover transform — reveal the wrapper and leave the button free to lift. */
+  .ins-tile-wrap {
+    display: flex;
+  }
+  .ins-tile {
+    position: relative;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    border-radius: 20px;
+    padding: 20px 24px 22px;
+    border: 1px solid var(--ml-border);
+    background: color-mix(in oklch, var(--ml-card) 66%, transparent);
+    transition:
+      transform 0.26s var(--ease-out),
+      border-color 0.26s var(--ease-out),
+      background 0.26s var(--ease-out),
+      box-shadow 0.26s var(--ease-out);
+  }
+  .ins-tile:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in oklch, var(--ml-fg) 20%, var(--ml-border));
+  }
+  .ins-tile:focus-visible {
+    outline: 2px solid var(--ml-fg);
+    outline-offset: 3px;
+  }
+  .ins-tile.is-sel {
+    background: var(--ml-card);
+    box-shadow:
+      inset 0 0 0 1.5px color-mix(in oklch, var(--ml-fg) 32%, transparent),
+      0 22px 46px -32px rgba(60, 50, 30, 0.62);
+  }
+
+  .ins-tile-top {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .ins-glyph {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    border: 1px solid var(--ml-border);
+    background: color-mix(in oklch, var(--ml-bg) 60%, transparent);
+    color: var(--ml-fg);
+  }
+  .ins-you {
+    display: none;
+    align-items: center;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in oklch, var(--ml-fg) 26%, transparent);
+    padding: 4px 9px;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ml-fg);
+  }
+  .ins-tile.is-you .ins-you {
+    display: inline-flex;
+  }
+  .ins-tile-name {
+    margin-top: 18px;
+    font-family: var(--font-serif);
+    font-size: 23px;
+    font-weight: 600;
+    letter-spacing: -0.024em;
+    color: var(--ml-fg);
+  }
+  .ins-tile-sub {
+    margin-top: 4px;
+    font-size: 14.5px;
+    color: var(--ml-muted);
+  }
+  .ins-chips {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .ins-chip {
+    border-radius: 7px;
+    border: 1px solid var(--ml-border);
+    padding: 3px 8px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--ml-muted);
+  }
+
+  .ins-cta {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px 26px;
+  }
+
+  /* Phone path: the JS stamps `.is-mobile` on the page root and this card
+     replaces the download row. Hidden by default so desktop and no-JS keep
+     the normal CTA. */
+  .ins-mobile {
+    display: none;
+    margin-top: 32px;
+    max-width: 520px;
+    border-radius: 18px;
+    border: 1px solid var(--ml-border);
+    background: var(--ml-card);
+    padding: 24px 26px;
+    box-shadow: 0 22px 46px -38px rgba(60, 50, 30, 0.5);
+  }
+  :global([data-install-page].is-mobile) .ins-cta {
+    display: none;
+  }
+  :global([data-install-page].is-mobile) .ins-mobile {
+    display: block;
+  }
+  .ins-mobile-eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 52%, transparent);
+  }
+  .ins-mobile-title {
+    margin: 10px 0 0;
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ml-fg);
+  }
+  .ins-mobile-body {
+    margin: 8px 0 0;
+    font-size: 14.5px;
+    line-height: 1.65;
+    text-wrap: pretty;
+    color: var(--ml-muted);
+  }
+  .ins-mobile-row {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .ins-mobile-copy,
+  .ins-mobile-share {
+    display: inline-flex;
+    height: 46px;
+    align-items: center;
+    padding: 0 20px;
+    border-radius: 14px;
+    border: 0;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .ins-mobile-copy {
+    background: var(--ml-fg);
+    color: var(--ml-bg);
+  }
+  .ins-mobile-share {
+    border: 1px solid var(--ml-border);
+    background: color-mix(in oklch, var(--ml-card) 70%, transparent);
+    color: var(--ml-fg);
+  }
+  .ins-mobile-copy-done {
+    display: none;
+    color: var(--pl-green);
+  }
+  .ins-mobile-copy.is-copied .ins-mobile-copy-idle {
+    display: none;
+  }
+  .ins-mobile-copy.is-copied .ins-mobile-copy-done {
+    display: inline;
+  }
+  .ins-download {
+    display: inline-flex;
+    height: 60px;
+    align-items: center;
+    gap: 12px;
+    border-radius: 18px;
+    background: var(--ml-fg);
+    padding: 0 28px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ml-bg);
+    transition: transform 0.2s var(--ease-out);
+  }
+  .ins-download:hover {
+    transform: scale(1.02);
+    color: var(--ml-bg);
+  }
+  .ins-download-ic {
+    width: 19px;
+    height: 19px;
+  }
+  .ins-cta-sub {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: color-mix(in oklch, var(--ml-fg) 62%, transparent);
+  }
+  .ins-sub {
+    display: none;
+  }
+  .ins-sub.is-active {
+    display: inline;
+  }
+  .ins-cta-note {
+    margin: 5px 0 0;
+    font-size: 13px;
+    color: var(--ml-muted);
+  }
+  .ins-link {
+    color: var(--ml-fg);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--ml-fg) 28%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s var(--ease-out);
+  }
+  .ins-link:hover {
+    text-decoration-color: var(--ml-fg);
+  }
+
+  @media (max-width: 1080px) {
+    .ins-rail {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+    .ins-facts {
+      border-left: 0;
+      padding-left: 0;
+      border-top: 1px solid var(--ml-border);
+      padding-top: 22px;
+    }
+  }
+  @media (max-width: 1000px) {
+    .ins-tiles {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 860px) {
+    .ins-h1 {
+      font-size: 46px;
+    }
+  }
+  @media (max-width: 720px) {
+    .ins-hero {
+      padding: 112px 20px 96px;
+    }
+    .ins-tiles {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    /* Two columns on phones: the facts are trust chips, not the main event —
+       kept short so the carry-on card lands near the fold. */
+    .ins-facts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 24px;
+    }
+  }
+  @media (max-width: 480px) {
+    .ins-h1 {
+      font-size: 36px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ins-tile,
+    .ins-download,
+    .ins-link {
+      transition: none;
+    }
+    .ins-tile:hover,
+    .ins-download:hover {
+      transform: none;
+    }
+  }
+</style>

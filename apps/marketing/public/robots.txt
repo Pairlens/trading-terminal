@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pairlens.finance/sitemap-index.xml
+
+# For AI agents & LLM crawlers: a structured map of this site lives at
+# https://pairlens.finance/llms.txt (full docs corpus: /llms-full.txt)

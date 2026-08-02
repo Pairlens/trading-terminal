@@ -1,0 +1,112 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// Cookie dialog backed by PostHog's native consent management
+// (scripts/analytics.ts). Analytics runs cookieless and anonymous by default —
+// accepting only adds a single first-party cookie that remembers the visitor
+// between visits — but the choice itself is a gate: the dialog dims the page
+// and locks scroll until one of the two options is picked, because the old
+// bottom strip was ignored by everyone. The scrim is a PLAIN translucent
+// fill, never backdrop-filter: a full-viewport backdrop blur composited over
+// the landing's already-blurred hero layers is exactly the tile-memory load
+// that held iOS Safari on a black screen for seconds on first visit (and
+// desktop WebKit quietly skips the blur anyway). Rendered only when a PostHog key is
+// configured; hidden until the script confirms no explicit choice exists, so
+// returning visitors never see a flash. Accept/decline is persisted by PostHog
+// itself (opt_in_capturing / opt_out_capturing).
+const enabled = Boolean(import.meta.env.PUBLIC_POSTHOG_KEY)
+---
+
+{
+  enabled && (
+    <div
+      data-cookie-banner
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-label="Cookie choice"
+      class="fixed inset-0 z-50 flex items-end justify-center bg-background/70 p-5 sm:items-center"
+    >
+      <div class="w-full max-w-xl rounded-[22px] border border-border bg-card p-7 shadow-[0_26px_54px_-40px_rgba(0,0,0,0.85)] sm:p-9">
+        <p class="pl-eyebrow text-muted-foreground">One cookie, maybe</p>
+        <h2 class="mt-3 font-serif text-[27px] leading-[1.08] font-semibold tracking-[-0.02em] text-foreground">
+          Remember you next time?
+        </h2>
+        <p class="mt-3.5 text-[15px] leading-relaxed text-muted-foreground">
+          Our analytics is anonymous and cookieless. No ads, no cross-site
+          tracking. Accept and a single first-party cookie remembers you
+          between visits. Decline and nothing is stored at all. See the{' '}
+          <a
+            href="/privacy"
+            class="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+          >
+            Privacy Policy
+          </a>
+          .
+        </p>
+        <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
+          <button
+            type="button"
+            data-cookie-decline
+            class="rounded-xl border border-border px-5 py-3 text-[14.5px] font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+          >
+            Stay cookieless
+          </button>
+          <button
+            type="button"
+            data-cookie-accept
+            class="rounded-xl bg-primary px-6 py-3 text-[14.5px] font-semibold text-primary-foreground transition-transform hover:scale-[1.03] active:scale-100"
+          >
+            Accept
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  import {
+    acceptCookies,
+    consentStatus,
+    declineCookies,
+  } from '@/scripts/analytics'
+
+  // No-ops when the banner isn't rendered (no PostHog key configured).
+  function bind() {
+    for (const banner of document.querySelectorAll<HTMLElement>(
+      '[data-cookie-banner]',
+    )) {
+      if (banner.dataset.bound) continue
+      banner.dataset.bound = '1'
+      if (consentStatus() !== 'pending') continue
+      // Two frames after first paint, not immediately: on a slow first load
+      // the gate would otherwise be the very first thing the page ever
+      // renders, over content that hasn't painted yet.
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          banner.hidden = false
+          document.documentElement.style.overflow = 'hidden'
+        }),
+      )
+      const close = () => {
+        banner.hidden = true
+        document.documentElement.style.overflow = ''
+      }
+      banner
+        .querySelector('[data-cookie-accept]')
+        ?.addEventListener('click', () => {
+          acceptCookies()
+          close()
+        })
+      banner
+        .querySelector('[data-cookie-decline]')
+        ?.addEventListener('click', () => {
+          declineCookies()
+          close()
+        })
+    }
+  }
+  bind()
+  document.addEventListener('astro:page-load', bind)
+</script>

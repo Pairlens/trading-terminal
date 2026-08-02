@@ -1,0 +1,31 @@
+{
+  "name": "@pairlens/bot-engine",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pairlens/trading-terminal.git",
+    "directory": "packages/bot-engine"
+  },
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc --project tsconfig.json --noEmit",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test": "bun test"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./decide": "./src/decide.ts",
+    "./risk": "./src/risk.ts",
+    "./guards": "./src/guards.ts",
+    "./sizing": "./src/sizing.ts"
+  },
+  "dependencies": {
+    "@pairlens/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

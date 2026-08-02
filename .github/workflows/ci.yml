@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  monorepo-checks:
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.8
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Format check
+        run: bunx prettier --check .
+      - name: License headers
+        run: bun run license-headers
+      - name: Lint
+        run: bun run lint
+      - name: Typecheck
+        run: bunx turbo run typecheck --filter='!@pairlens/desktop'
+      - name: Test
+        run: bunx turbo run test --filter='!@pairlens/desktop'
+      # Build verifies production bundles (Vite terminal build, Astro marketing
+      # site, plugin SDK bundle) beyond what typecheck covers. Serialized: the
+      # terminal build alone peaks at ~4 GB RSS, and running the workspace
+      # builds in parallel OOM-kills the 7 GB private-repo runner (exit 137).
+      - name: Build
+        env:
+          # The terminal build needs ~4 GB of JS heap — above Node's default
+          # old-space cap derived from the 7 GB runner.
+          NODE_OPTIONS: --max-old-space-size=6144
+        run: bunx turbo run build --filter='!@pairlens/desktop' --concurrency=1
+
+  # Desktop (Tauri) Rust gate — cargo check + clippy (-D warnings) on the
+  # src-tauri crate. Blocking; cargo artifacts are cached so it stays fast.
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Tauri system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libgtk-3-dev
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/src-tauri
+      - name: Stub frontend bundle
+        # cargo check/clippy compile only the Rust — they don't need the real
+        # web bundle — but tauri::generate_context! panics at compile time when
+        # frontendDist (apps/terminal/dist/client) is missing. A minimal stub
+        # lets the Rust checks run without a full terminal build.
+        run: |
+          mkdir -p apps/terminal/dist/client
+          echo '<!doctype html><title>ci</title>' > apps/terminal/dist/client/index.html
+      - name: Cargo check
+        run: cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml
+      - name: Clippy
+        run: cargo clippy --manifest-path apps/desktop/src-tauri/Cargo.toml -- -D warnings

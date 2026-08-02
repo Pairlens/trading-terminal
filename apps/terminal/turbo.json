@@ -1,0 +1,9 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": ["dist/**", ".output/**", ".vercel/output/**"],
+      "env": ["MODE", "VITE_APP_SERVER_URL"]
+    }
+  }
+}

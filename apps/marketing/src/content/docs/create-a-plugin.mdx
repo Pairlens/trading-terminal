@@ -1,0 +1,94 @@
+---
+title: Create a plugin
+description: Scaffold a plugin with create-pairlens-plugin, implement a capability, build a zip, and load it into a running terminal.
+group: builders
+parent: plugin-sdk
+order: 1
+eyebrow: For builders
+updated: AUG 2026
+readTime: 4 min read
+---
+
+import { CodeTabs } from '@/components/docs/mdx/CodeTabs.tsx'
+import Callout from '@/components/docs/mdx/Callout.astro'
+
+## Scaffold
+
+<CodeTabs
+  client:visible
+  tabs={[
+    { label: 'npx', code: '$ npx create-pairlens-plugin my-plugin' },
+    { label: 'monorepo', code: '$ bun run create:plugin my-plugin' },
+  ]}
+/>
+
+You get a ready-to-build folder: a `manifest.json`, a sample panel built with
+`@pairlens/ui` and `@pairlens/plugin-sdk`, and `build` and `package` scripts.
+
+## Declare a capability
+
+The manifest is the contract. It carries your plugin's id, version, the
+`capabilities` it provides, the network `hosts` it needs, and a `contributes`
+block for panels.
+
+What you implement depends on what you declared:
+
+- A market connector implements the
+  [`MarketAdapter`](/docs/marketadapter-api) interface
+- An AI provider exposes `getLanguageModel()`
+- A theme provides `theme:override`
+- A panel exports a React component named in `contributes.panels`
+- An indicator provider ships `chart:indicator`
+
+Declare the minimum. Every capability and every host is something a user has to
+agree to, and something a reviewer will question.
+
+## Build and package
+
+```bash
+bun run build     # bundles src/index.ts to dist/module.js as ESM
+bun run package   # zips manifest.json + module.js (+ styles.css if present)
+```
+
+The output is a single `.zip`. That is the distributable unit.
+
+<Callout type="note">
+  Mark React, `@pairlens/plugin-sdk`, `@pairlens/ui`, and
+  `fast-financial-charts` as build externals. The host provides them at runtime,
+  so bundling your own copies bloats the package and duplicates the WebGL chart
+  engine.
+</Callout>
+
+## Load it
+
+In the terminal, go to **Plugins → Installed** and use **Import plugin**, or
+drag the zip onto the page. On desktop you can also drop the folder into the
+plugins directory.
+
+Rebuild, re-import, and iterate. The
+[`dev-starter-plugin`](https://github.com/Pairlens/trading-terminal/tree/main/examples/dev-starter-plugin)
+and
+[`dev-sync-plugin`](https://github.com/Pairlens/trading-terminal/tree/main/examples/dev-sync-plugin)
+examples in the repo are working references.
+
+## Styling
+
+Design-system components are styled by the host, so importing from
+`@pairlens/ui` gets you the user's active theme for free, across all seventeen
+of them. For anything custom, ship a `styles.css` alongside your module and the
+packager includes it.
+
+Use the theme's CSS variables rather than hard-coded colours. A plugin that
+looks right in the default dark theme and unreadable in High Contrast is a
+plugin people uninstall.
+
+<Callout type="note">
+  During development your plugin runs with the same sandbox and network
+  allowlist it will have in production, so you catch permission gaps early
+  rather than after publishing.
+</Callout>
+
+## Next
+
+- [MarketAdapter API](/docs/marketadapter-api) if you are adding a venue
+- [Publish to the registry](/docs/publish-to-registry) when it is ready to ship

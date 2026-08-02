@@ -1,0 +1,207 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import type { CapabilityId, PluginManifest } from './plugin-types'
+
+/**
+ * Runtime validation for plugin manifests loaded from untrusted sources
+ * (registry / URL / local folder). Bootstrap plugins are TypeScript-typed at
+ * build time and do not need this, but every externally-loaded plugin manifest
+ * must pass `validateManifest` before it is installed.
+ *
+ * Kept dependency-free (no ajv) so it can run anywhere — terminal, CLI, registry.
+ */
+
+export const VALID_CAPABILITY_IDS: ReadonlyArray<CapabilityId> = [
+  'market-data:discovery',
+  'market-data:discovery:search',
+  'market-data:candles',
+  'market-data:ticker',
+  'market-data:ticker-snapshot',
+  'market-data:orderbook',
+  'market-data:history',
+  'market-data:symbol-logo',
+  'ai:inference',
+  'ai:web-search',
+  'trading:orders',
+  'trading:balances',
+  'workflow:step-types',
+  'notification:channel',
+  'theme:override',
+  'workspace-store:catalog',
+  'chart:indicator',
+]
+
+const CONFIG_FIELD_TYPES = ['string', 'secret', 'number', 'boolean', 'select']
+
+export type ManifestValidationResult =
+  | { valid: true; manifest: PluginManifest; errors: [] }
+  | { valid: false; manifest: null; errors: Array<string> }
+
+function isPlainObject(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null && !Array.isArray(v)
+}
+
+// Plugin ids are used as folder names and resolution keys — keep them tame.
+const ID_RE = /^[a-z0-9][a-z0-9-]{1,63}$/
+
+/**
+ * Ids reserved for first-party, non-plugin providers (e.g. the built-in
+ * workspace-store providers). A third-party plugin must never claim one, or it
+ * could shadow a first-party provider in an id-keyed registry.
+ */
+export const RESERVED_PLUGIN_IDS: ReadonlyArray<string> = [
+  'builtin',
+  'pairlens-community',
+]
+
+// Network allowlist entries: exact hostname or single leading '*.' wildcard.
+// Hostnames only — no scheme, port, path, or credentials.
+const HOST_RE =
+  /^(\*\.)?[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/
+
+const VALID_PERMISSIONS = ['network', 'market-data', 'credentials', 'storage']
+
+/**
+ * Validate an unknown value as a PluginManifest. Returns the typed manifest on
+ * success, or a list of human-readable errors on failure.
+ */
+export function validateManifest(input: unknown): ManifestValidationResult {
+  const errors: Array<string> = []
+  const fail = (): ManifestValidationResult => ({
+    valid: false,
+    manifest: null,
+    errors,
+  })
+
+  if (!isPlainObject(input)) {
+    errors.push('Manifest must be an object')
+    return fail()
+  }
+  const m = input
+
+  // Required string fields
+  for (const key of [
+    'id',
+    'name',
+    'version',
+    'author',
+    'description',
+  ] as const) {
+    if (typeof m[key] !== 'string' || m[key].length === 0) {
+      errors.push(`"${key}" is required and must be a non-empty string`)
+    }
+  }
+
+  if (typeof m['id'] === 'string' && !ID_RE.test(m['id'])) {
+    errors.push(
+      '"id" must be lowercase alphanumeric with dashes (2-64 chars), e.g. "my-plugin"',
+    )
+  }
+
+  if (typeof m['id'] === 'string' && RESERVED_PLUGIN_IDS.includes(m['id'])) {
+    errors.push(`"id" "${m['id']}" is reserved and cannot be used by a plugin`)
+  }
+
+  // Optional string fields
+  for (const key of ['homepage', 'icon', 'minTerminalVersion'] as const) {
+    if (m[key] !== undefined && typeof m[key] !== 'string') {
+      errors.push(`"${key}" must be a string when present`)
+    }
+  }
+
+  // capabilities[]
+  if (!Array.isArray(m['capabilities'])) {
+    errors.push('"capabilities" must be an array')
+  } else {
+    m['capabilities'].forEach((cap, i) => {
+      if (!isPlainObject(cap)) {
+        errors.push(`capabilities[${i}] must be an object`)
+        return
+      }
+      if (!VALID_CAPABILITY_IDS.includes(cap['id'] as CapabilityId)) {
+        errors.push(
+          `capabilities[${i}].id "${String(cap['id'])}" is not a known capability`,
+        )
+      }
+      if (typeof cap['singleton'] !== 'boolean') {
+        errors.push(`capabilities[${i}].singleton must be a boolean`)
+      }
+      if (
+        !Array.isArray(cap['markets']) ||
+        !(cap['markets'] as Array<unknown>).every((x) => typeof x === 'string')
+      ) {
+        errors.push(`capabilities[${i}].markets must be a string[]`)
+      }
+      if (typeof cap['priority'] !== 'number') {
+        errors.push(`capabilities[${i}].priority must be a number`)
+      }
+      if (typeof cap['streaming'] !== 'boolean') {
+        errors.push(`capabilities[${i}].streaming must be a boolean`)
+      }
+    })
+  }
+
+  // config: Record<string, PluginConfigField>
+  if (m['config'] !== undefined) {
+    if (!isPlainObject(m['config'])) {
+      errors.push('"config" must be an object')
+    } else {
+      for (const [fieldKey, field] of Object.entries(m['config'])) {
+        if (!isPlainObject(field)) {
+          errors.push(`config.${fieldKey} must be an object`)
+          continue
+        }
+        if (!CONFIG_FIELD_TYPES.includes(field['type'] as string)) {
+          errors.push(
+            `config.${fieldKey}.type must be one of ${CONFIG_FIELD_TYPES.join(', ')}`,
+          )
+        }
+        if (typeof field['label'] !== 'string') {
+          errors.push(`config.${fieldKey}.label must be a string`)
+        }
+      }
+    }
+  } else {
+    errors.push('"config" is required (use {} if there are no settings)')
+  }
+
+  // permissions?: PluginPermission[]
+  if (m['permissions'] !== undefined) {
+    if (
+      !Array.isArray(m['permissions']) ||
+      !(m['permissions'] as Array<unknown>).every(
+        (p) => typeof p === 'string' && VALID_PERMISSIONS.includes(p),
+      )
+    ) {
+      errors.push(
+        `"permissions" must be an array of ${VALID_PERMISSIONS.join(' | ')}`,
+      )
+    }
+  }
+
+  // network?: { hosts: string[] } — enforced allowlist for sandboxed plugins
+  if (m['network'] !== undefined) {
+    if (!isPlainObject(m['network'])) {
+      errors.push('"network" must be an object with a "hosts" array')
+    } else {
+      const hosts = m['network']['hosts']
+      if (!Array.isArray(hosts)) {
+        errors.push('"network.hosts" must be a string[]')
+      } else {
+        hosts.forEach((h, i) => {
+          if (typeof h !== 'string' || !HOST_RE.test(h.toLowerCase())) {
+            errors.push(
+              `network.hosts[${i}] "${String(h)}" is not a valid hostname (exact or "*." wildcard, no scheme/port/path)`,
+            )
+          }
+        })
+        if (hosts.length > 64) {
+          errors.push('"network.hosts" must not exceed 64 entries')
+        }
+      }
+    }
+  }
+
+  if (errors.length > 0) return fail()
+  return { valid: true, manifest: input as PluginManifest, errors: [] }
+}

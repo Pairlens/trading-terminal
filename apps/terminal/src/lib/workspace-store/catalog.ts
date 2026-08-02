@@ -1,0 +1,1055 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import type {
+  LayoutCell,
+  LayoutColumn,
+  PaneInstance,
+  TerminalLayout,
+  WorkspaceVariableDefinition,
+} from '@/lib/layout/types'
+import type {
+  AssetClass,
+  ScreenSize,
+  TemplateContext,
+  TraderType,
+  WorkspaceTemplate,
+} from './types'
+import {
+  FOURK_COMMAND_CENTER,
+  LAPTOP_FOCUSED,
+  LAPTOP_SPLIT,
+  PRESET_ANALYSIS,
+  PRESET_CHART_FOCUS,
+  PRESET_DEFAULT,
+  PRESET_DUAL_CHARTS,
+  PRESET_QUAD_CHARTS,
+  PRESET_TRADING,
+  PRESET_TRIPLE_CHARTS,
+  ULTRAWIDE_FULL_DASHBOARD,
+  ULTRAWIDE_WIDE_TRADING,
+} from '@/lib/layout/presets'
+import {
+  DISCOVERY_ANALYSIS,
+  DISCOVERY_HOME,
+  DISCOVERY_MARKETS,
+  DISCOVERY_NEWS,
+  DISCOVERY_OVERVIEW,
+} from '@/lib/layout/workspaces/discovery-presets'
+
+// ── Facet display metadata ──────────────────────────────────────────
+//
+// Ordered so the filter bar renders deterministically. Labels default to
+// English; the store wraps them with i18n fallbacks at render time.
+
+export const TRADER_TYPES: Array<TraderType> = [
+  'scalper',
+  'day-trader',
+  'swing-trader',
+  'position-investor',
+  'news-trader',
+  'dex-degen',
+  'quant',
+]
+
+export const TRADER_TYPE_META: Record<
+  TraderType,
+  { label: string; description: string }
+> = {
+  scalper: {
+    label: 'Scalper',
+    description: 'Fast in-and-out on tight spreads',
+  },
+  'day-trader': {
+    label: 'Day Trader',
+    description: 'Intraday momentum & flow',
+  },
+  'swing-trader': {
+    label: 'Swing Trader',
+    description: 'Multi-day trend positions',
+  },
+  'position-investor': {
+    label: 'Investor',
+    description: 'Longer-horizon portfolio focus',
+  },
+  'news-trader': {
+    label: 'News Trader',
+    description: 'Headline- and catalyst-driven',
+  },
+  'dex-degen': {
+    label: 'DEX Degen',
+    description: 'On-chain & memecoin hunting',
+  },
+  quant: { label: 'Quant', description: 'Signal- and data-heavy workflows' },
+}
+
+export const ASSET_CLASSES: Array<AssetClass> = [
+  'crypto-spot',
+  'dex',
+  'equities',
+  'multi-asset',
+]
+
+export const ASSET_CLASS_META: Record<
+  AssetClass,
+  { label: string; description: string }
+> = {
+  'crypto-spot': { label: 'Crypto Spot', description: 'Centralised exchanges' },
+  dex: { label: 'DEX', description: 'On-chain / decentralised' },
+  equities: { label: 'Equities', description: 'Stocks & ETFs' },
+  'multi-asset': { label: 'Multi-Asset', description: 'Mixed markets' },
+}
+
+export const SCREEN_SIZES: Array<ScreenSize> = [
+  'compact',
+  'standard',
+  'wide',
+  'multi',
+]
+
+export const SCREEN_SIZE_META: Record<
+  ScreenSize,
+  { label: string; description: string }
+> = {
+  compact: { label: 'Compact', description: 'Laptop · 1–2 columns' },
+  standard: { label: 'Standard', description: 'Desktop · 2–3 columns' },
+  wide: { label: 'Wide', description: 'Ultrawide · 3–4 columns' },
+  multi: { label: 'Multi-Monitor', description: '4+ columns' },
+}
+
+// ── Layout builder ──────────────────────────────────────────────────
+//
+// A tiny DSL so template layouts stay readable. Panes that structurally need
+// an active pair / wallet are auto-bound to the template's variables, matching
+// how the layout reducer wires panes when they're added interactively.
+
+const PANES_NEEDING_PAIR = new Set([
+  'chart',
+  'data-log',
+  'depth',
+  'orderbook',
+  'pair-info',
+  'liquidity-heatmap',
+  'trade-entry',
+  'copilot',
+  'research',
+  'symbol-news',
+])
+
+const PANES_NEEDING_WALLET = new Set(['trade-entry', 'positions', 'portfolio'])
+
+type CellSpec = { h: number; panes: Array<string> }
+type ColSpec = { w: number; cells: Array<CellSpec> }
+type BuildOpts = { pairVar?: string; walletVar?: string }
+
+function buildLayout(
+  prefix: string,
+  cols: Array<ColSpec>,
+  opts: BuildOpts = {},
+): TerminalLayout {
+  const { pairVar, walletVar } = opts
+  const columns: Array<LayoutColumn> = cols.map((col, ci) => {
+    const cells: Array<LayoutCell> = col.cells.map((cell, ei) => {
+      const panes: Array<PaneInstance> = cell.panes.map((type, pi) => {
+        const pane: PaneInstance = {
+          id: `${prefix}-p-${ci}-${ei}-${pi}`,
+          type,
+        }
+        const bindings: Record<string, string> = {}
+        if (pairVar && PANES_NEEDING_PAIR.has(type)) {
+          bindings['active-pair'] = pairVar
+        }
+        if (walletVar && PANES_NEEDING_WALLET.has(type)) {
+          bindings['active-wallet'] = walletVar
+        }
+        if (Object.keys(bindings).length > 0) pane.bindings = bindings
+        return pane
+      })
+      return {
+        id: `${prefix}-c-${ci}-${ei}`,
+        panes,
+        activeTabIndex: 0,
+        heightPercent: cell.h,
+      }
+    })
+    return { id: `${prefix}-col-${ci}`, cells, widthPercent: col.w }
+  })
+  return { version: 1, columns }
+}
+
+/** A `$pair` variable defaulting to a concrete market so charts render on open. */
+function pairVariable(
+  pairKey: string,
+  market: string,
+): WorkspaceVariableDefinition {
+  return {
+    name: '$pair',
+    label: 'Pair',
+    type: 'pair',
+    defaultValue: { pairKey, market },
+  }
+}
+
+/** A `$wallet` variable — no default, so the user picks a connected account. */
+const WALLET_VARIABLE: WorkspaceVariableDefinition = {
+  name: '$wallet',
+  label: 'Account',
+  type: 'wallet',
+}
+
+const PAIR = '$pair'
+const WALLET = '$wallet'
+
+// ── Binding + copy ──────────────────────────────────────────────────
+
+function layoutPaneTypes(layout: TerminalLayout): Set<string> {
+  const types = new Set<string>()
+  for (const col of layout.columns ?? []) {
+    for (const cell of col.cells ?? []) {
+      for (const pane of cell.panes ?? []) {
+        if (pane?.type) types.add(pane.type)
+      }
+    }
+  }
+  return types
+}
+
+/** Derive the variables a raw layout needs from the panes it contains. */
+function variablesForLayout(
+  layout: TerminalLayout,
+): Array<WorkspaceVariableDefinition> {
+  const types = layoutPaneTypes(layout)
+  const vars: Array<WorkspaceVariableDefinition> = []
+  if ([...types].some((t) => PANES_NEEDING_PAIR.has(t))) {
+    vars.push(pairVariable('BTC-USDT', 'okx'))
+  }
+  if ([...types].some((t) => PANES_NEEDING_WALLET.has(t))) {
+    vars.push(WALLET_VARIABLE)
+  }
+  return vars
+}
+
+/**
+ * Clone a layout, binding pair-/wallet-consuming panes to the template's
+ * variables. Idempotent — panes that already declare a binding keep it. Applied
+ * on copy so a template's raw `.layout` can double as an in-place route preset.
+ */
+export function bindLayoutVariables(
+  layout: TerminalLayout,
+  variables: ReadonlyArray<WorkspaceVariableDefinition>,
+): TerminalLayout {
+  const pairVar = variables.find((v) => v.type === 'pair')?.name
+  const walletVar = variables.find((v) => v.type === 'wallet')?.name
+  return {
+    version: 1,
+    columns: (layout.columns ?? []).map((col) => ({
+      ...col,
+      cells: (col.cells ?? []).map((cell) => ({
+        ...cell,
+        panes: (cell.panes ?? []).map((pane) => {
+          const bindings: Record<string, string> = { ...pane.bindings }
+          if (
+            pairVar &&
+            PANES_NEEDING_PAIR.has(pane.type) &&
+            !bindings['active-pair']
+          ) {
+            bindings['active-pair'] = pairVar
+          }
+          if (
+            walletVar &&
+            PANES_NEEDING_WALLET.has(pane.type) &&
+            !bindings['active-wallet']
+          ) {
+            bindings['active-wallet'] = walletVar
+          }
+          return Object.keys(bindings).length > 0
+            ? { ...pane, bindings }
+            : { ...pane }
+        }),
+      })),
+    })),
+  }
+}
+
+/** Map a template to the params `createWorkspace` expects (bindings applied). */
+export function templateToWorkspaceParams(template: WorkspaceTemplate): {
+  name: string
+  description?: string
+  icon?: string
+  variables: Array<WorkspaceVariableDefinition>
+  defaultLayout: TerminalLayout
+} {
+  return {
+    name: template.name,
+    description: template.description,
+    icon: template.icon,
+    variables: template.variables,
+    defaultLayout: bindLayoutVariables(template.layout, template.variables),
+  }
+}
+
+// ── The catalog ─────────────────────────────────────────────────────
+
+const STANDALONE_TEMPLATES: Array<WorkspaceTemplate> = [
+  {
+    id: 'template:scalpers-cockpit',
+    name: "Scalper's Cockpit",
+    tagline: 'Chart, book, and one-click entry — nothing else.',
+    description:
+      'A minimal two-column cockpit for fast execution: a chart beside a live order book, market depth, and a trade-entry ticket. Built for speed on a single screen.',
+    icon: 'Crosshair',
+    author: 'Pairlens',
+    featured: true,
+    facets: {
+      traderTypes: ['scalper', 'day-trader'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['compact', 'standard'],
+    },
+    tags: ['execution', 'orderbook', 'fast'],
+    variables: [pairVariable('BTC-USDT', 'okx')],
+    layout: buildLayout(
+      'scalp',
+      [
+        { w: 62, cells: [{ h: 100, panes: ['chart'] }] },
+        {
+          w: 38,
+          cells: [
+            { h: 55, panes: ['orderbook'] },
+            { h: 45, panes: ['trade-entry'] },
+          ],
+        },
+      ],
+      { pairVar: PAIR, walletVar: WALLET },
+    ),
+  },
+  {
+    id: 'template:day-trader-pro',
+    name: 'Day Trader Pro',
+    tagline: 'Scan, chart, and trade the intraday session.',
+    description:
+      'A balanced three-column desk: a markets scanner on the left, a large chart in the middle, and an order book plus trade ticket and open positions on the right. The everyday driver for active crypto trading.',
+    icon: 'Zap',
+    author: 'Pairlens',
+    featured: true,
+    facets: {
+      traderTypes: ['day-trader', 'scalper'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['intraday', 'scanner', 'execution'],
+    variables: [pairVariable('BTC-USDT', 'okx'), WALLET_VARIABLE],
+    layout: buildLayout(
+      'daytrade',
+      [
+        { w: 26, cells: [{ h: 100, panes: ['markets'] }] },
+        { w: 46, cells: [{ h: 100, panes: ['chart'] }] },
+        {
+          w: 28,
+          cells: [
+            { h: 45, panes: ['orderbook'] },
+            { h: 30, panes: ['trade-entry'] },
+            { h: 25, panes: ['positions'] },
+          ],
+        },
+      ],
+      { pairVar: PAIR, walletVar: WALLET },
+    ),
+  },
+  {
+    id: 'template:swing-overview',
+    name: 'Swing Overview',
+    tagline: 'Trend context with a watchlist and the movers.',
+    description:
+      'A calmer layout for multi-day positions: a full chart alongside your watchlist, the top movers, and pair fundamentals. Enough context to size a swing without the noise of an execution desk.',
+    icon: 'Activity',
+    author: 'Pairlens',
+    facets: {
+      traderTypes: ['swing-trader', 'position-investor'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['standard'],
+    },
+    tags: ['trend', 'watchlist', 'context'],
+    variables: [pairVariable('BTC-USDT', 'okx')],
+    layout: buildLayout(
+      'swing',
+      [
+        {
+          w: 64,
+          cells: [
+            { h: 70, panes: ['chart'] },
+            { h: 30, panes: ['pair-info'] },
+          ],
+        },
+        {
+          w: 36,
+          cells: [
+            { h: 50, panes: ['watchlist'] },
+            { h: 50, panes: ['top-coins'] },
+          ],
+        },
+      ],
+      { pairVar: PAIR },
+    ),
+  },
+  {
+    id: 'template:ai-research-desk',
+    name: 'AI Research Desk',
+    tagline: 'Copilot, research, and the news wire beside your chart.',
+    description:
+      'Pair a chart with the AI Copilot, deep research, and both the global and symbol news feeds. Built for catalyst-driven trading where the story matters as much as the tape. Needs an AI inference provider for Copilot and Research.',
+    icon: 'Brain',
+    author: 'Pairlens',
+    featured: true,
+    facets: {
+      traderTypes: ['news-trader', 'swing-trader'],
+      assetClasses: ['multi-asset', 'crypto-spot'],
+      screenSizes: ['wide', 'standard'],
+    },
+    tags: ['ai', 'news', 'research'],
+    variables: [pairVariable('BTC-USDT', 'okx')],
+    layout: buildLayout(
+      'airesearch',
+      [
+        { w: 44, cells: [{ h: 100, panes: ['chart'] }] },
+        { w: 30, cells: [{ h: 100, panes: ['copilot', 'research'] }] },
+        {
+          w: 26,
+          cells: [
+            { h: 55, panes: ['symbol-news'] },
+            { h: 45, panes: ['news'] },
+          ],
+        },
+      ],
+      { pairVar: PAIR },
+    ),
+  },
+  {
+    id: 'template:market-discovery',
+    name: 'Market Discovery',
+    tagline: 'Find what is moving before you commit.',
+    description:
+      'A pure discovery board: the markets scanner, top movers, a sector heatmap, your watchlist, and the Fear & Greed gauge. No chart, no ticket — just for hunting the next setup.',
+    icon: 'Compass',
+    author: 'Pairlens',
+    facets: {
+      traderTypes: ['day-trader', 'swing-trader', 'news-trader'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['discovery', 'heatmap', 'movers'],
+    variables: [],
+    layout: buildLayout('discover', [
+      { w: 46, cells: [{ h: 100, panes: ['markets'] }] },
+      {
+        w: 30,
+        cells: [
+          { h: 60, panes: ['heatmap'] },
+          { h: 40, panes: ['top-coins'] },
+        ],
+      },
+      {
+        w: 24,
+        cells: [
+          { h: 60, panes: ['watchlist'] },
+          { h: 40, panes: ['fear-greed'] },
+        ],
+      },
+    ]),
+  },
+  {
+    id: 'template:portfolio-command',
+    name: 'Portfolio Command',
+    tagline: 'Balances, positions, and risk at a glance.',
+    description:
+      'An account-centric cockpit: your portfolio breakdown, open positions, live risk guardrails, and a watchlist to keep an eye on the rest of the book. For managing what you already hold.',
+    icon: 'Shield',
+    author: 'Pairlens',
+    facets: {
+      traderTypes: ['position-investor', 'swing-trader'],
+      assetClasses: ['multi-asset', 'crypto-spot'],
+      screenSizes: ['standard'],
+    },
+    tags: ['portfolio', 'risk', 'positions'],
+    variables: [WALLET_VARIABLE],
+    layout: buildLayout(
+      'portfolio',
+      [
+        {
+          w: 58,
+          cells: [
+            { h: 55, panes: ['portfolio'] },
+            { h: 45, panes: ['positions'] },
+          ],
+        },
+        {
+          w: 42,
+          cells: [
+            { h: 50, panes: ['risk'] },
+            { h: 50, panes: ['watchlist'] },
+          ],
+        },
+      ],
+      { walletVar: WALLET },
+    ),
+  },
+  {
+    id: 'template:dex-degen',
+    name: 'DEX Degen',
+    tagline: 'On-chain charts, swaps, and the social feed.',
+    description:
+      'Built for on-chain hunting: a chart with a swap ticket, recent tickers to catch new listings, and the social feed for alpha. Route swaps through a DEX connector such as Jupiter.',
+    icon: 'Rocket',
+    author: 'Pairlens',
+    facets: {
+      traderTypes: ['dex-degen', 'scalper'],
+      assetClasses: ['dex'],
+      screenSizes: ['compact', 'standard'],
+    },
+    tags: ['dex', 'onchain', 'memecoins'],
+    variables: [pairVariable('SOL-USDC', 'jupiter'), WALLET_VARIABLE],
+    requiredPlugins: [
+      {
+        pluginId: 'jupiter-dex-connector',
+        reason: 'Routes Solana swaps and streams on-chain prices',
+      },
+    ],
+    layout: buildLayout(
+      'dex',
+      [
+        {
+          w: 60,
+          cells: [
+            { h: 68, panes: ['chart'] },
+            { h: 32, panes: ['trade-entry'] },
+          ],
+        },
+        {
+          w: 40,
+          cells: [
+            { h: 50, panes: ['recent-tickers'] },
+            { h: 50, panes: ['social'] },
+          ],
+        },
+      ],
+      { pairVar: PAIR, walletVar: WALLET },
+    ),
+  },
+  {
+    id: 'template:quant-signals',
+    name: 'Quant Signals',
+    tagline: 'Data log, heatmap, and risk for signal-driven trading.',
+    description:
+      'A data-first desk: a chart paired with the raw data log, a liquidity heatmap, live risk state, and the markets scanner. For traders who read the tape as numbers, not candles.',
+    icon: 'Scan',
+    author: 'Pairlens',
+    facets: {
+      traderTypes: ['quant', 'day-trader'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['wide'],
+    },
+    tags: ['data', 'signals', 'heatmap'],
+    variables: [pairVariable('BTC-USDT', 'okx')],
+    layout: buildLayout(
+      'quant',
+      [
+        {
+          w: 40,
+          cells: [
+            { h: 60, panes: ['chart'] },
+            { h: 40, panes: ['data-log'] },
+          ],
+        },
+        { w: 34, cells: [{ h: 100, panes: ['liquidity-heatmap'] }] },
+        {
+          w: 26,
+          cells: [
+            { h: 45, panes: ['risk'] },
+            { h: 55, panes: ['markets'] },
+          ],
+        },
+      ],
+      { pairVar: PAIR },
+    ),
+  },
+  {
+    id: 'template:equities-desk',
+    name: 'Equities Desk',
+    tagline: 'Trade stocks with a scanner, chart, and positions.',
+    description:
+      'A stock-trading layout: the markets scanner, a chart, open positions, and the news wire. Connect the Alpaca broker plugin to stream US equities and route orders.',
+    icon: 'BarChart3',
+    author: 'Pairlens',
+    facets: {
+      traderTypes: ['day-trader', 'position-investor'],
+      assetClasses: ['equities'],
+      screenSizes: ['standard'],
+    },
+    tags: ['equities', 'stocks', 'broker'],
+    variables: [pairVariable('AAPL', 'alpaca'), WALLET_VARIABLE],
+    requiredPlugins: [
+      {
+        pluginId: 'alpaca-market-connector',
+        reason: 'Streams US equities data and routes stock orders',
+      },
+    ],
+    layout: buildLayout(
+      'equities',
+      [
+        { w: 28, cells: [{ h: 100, panes: ['markets'] }] },
+        {
+          w: 46,
+          cells: [
+            { h: 68, panes: ['chart'] },
+            { h: 32, panes: ['positions'] },
+          ],
+        },
+        { w: 26, cells: [{ h: 100, panes: ['news'] }] },
+      ],
+      { pairVar: PAIR, walletVar: WALLET },
+    ),
+  },
+  {
+    id: 'template:ultrawide-trading-floor',
+    name: 'Ultrawide Trading Floor',
+    tagline: 'Everything, everywhere — for the big screen.',
+    description:
+      'A four-column command center that fills an ultrawide or second monitor: scanner, chart, order book and depth, a trade ticket with positions, and the AI Copilot. The maximalist layout.',
+    icon: 'Layers',
+    author: 'Pairlens',
+    facets: {
+      traderTypes: ['day-trader', 'scalper', 'quant'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['multi', 'wide'],
+    },
+    tags: ['ultrawide', 'multi-monitor', 'everything'],
+    variables: [pairVariable('BTC-USDT', 'okx'), WALLET_VARIABLE],
+    layout: buildLayout(
+      'floor',
+      [
+        { w: 20, cells: [{ h: 100, panes: ['markets'] }] },
+        { w: 38, cells: [{ h: 100, panes: ['chart'] }] },
+        {
+          w: 22,
+          cells: [
+            { h: 55, panes: ['orderbook'] },
+            { h: 45, panes: ['depth'] },
+          ],
+        },
+        {
+          w: 20,
+          cells: [
+            { h: 34, panes: ['trade-entry'] },
+            { h: 33, panes: ['positions'] },
+            { h: 33, panes: ['copilot'] },
+          ],
+        },
+      ],
+      { pairVar: PAIR, walletVar: WALLET },
+    ),
+  },
+]
+
+// ── Migrated route presets ──────────────────────────────────────────
+//
+// The former ⌘⇧L "Workspaces" dropdown presets (pair + discovery routes),
+// promoted to first-class store templates. Their raw `.layout` is reused
+// verbatim as the in-place route preset (see `routePresets`); on copy it's
+// bound to the derived variables. `author`/`variables` are filled in for each.
+
+function presetTemplate(
+  input: Omit<WorkspaceTemplate, 'author' | 'variables'>,
+): WorkspaceTemplate {
+  return {
+    author: 'Pairlens',
+    ...input,
+    variables: variablesForLayout(input.layout),
+  }
+}
+
+/**
+ * A chart-only preset where each chart pane gets its OWN pair variable, so the
+ * charts stay independent when copied (the whole point of these layouts). On
+ * the pair route the bindings are inert (no variables provider) and every chart
+ * falls back to the route pair, matching the in-place preset. `chartDefaults`
+ * seeds a different pair per chart, in document order.
+ */
+function multiChartPreset(
+  input: Omit<WorkspaceTemplate, 'author' | 'variables' | 'layout'> & {
+    layout: TerminalLayout
+    chartDefaults: Array<{ pairKey: string; market: string }>
+  },
+): WorkspaceTemplate {
+  const { chartDefaults, layout: raw, ...rest } = input
+  const variables: Array<WorkspaceVariableDefinition> = []
+  let chartIdx = 0
+  const layout: TerminalLayout = {
+    version: 1,
+    columns: raw.columns.map((col) => ({
+      ...col,
+      cells: col.cells.map((cell) => ({
+        ...cell,
+        panes: cell.panes.map((pane) => {
+          if (pane.type !== 'chart') return { ...pane }
+          const n = chartIdx + 1
+          const name = `$chart${n}`
+          variables.push({
+            name,
+            label: `Chart ${n}`,
+            type: 'pair',
+            defaultValue: chartDefaults[chartIdx] ?? {
+              pairKey: 'BTC-USDT',
+              market: 'okx',
+            },
+          })
+          chartIdx += 1
+          return {
+            ...pane,
+            bindings: { ...pane.bindings, 'active-pair': name },
+          }
+        }),
+      })),
+    })),
+  }
+  return { author: 'Pairlens', ...rest, variables, layout }
+}
+
+const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
+  // ── Pair-route layouts (quick-apply in the pair layout menu) ──
+  presetTemplate({
+    id: 'template:classic-terminal',
+    name: 'Classic Terminal',
+    menuLabel: 'Default',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'CandlestickChart',
+    tagline: 'The classic Pairlens desk — chart, data, trade, copilot.',
+    description:
+      'The default terminal layout: a large chart with a tabbed data strip and risk bar on the left, and a trade ticket over the AI Copilot on the right.',
+    facets: {
+      traderTypes: ['day-trader'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['default', 'balanced'],
+    layout: PRESET_DEFAULT,
+  }),
+  presetTemplate({
+    id: 'template:chart-focus',
+    name: 'Chart Focus',
+    menuLabel: 'Chart Focus',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Target',
+    tagline: 'One big chart with tabbed data underneath.',
+    description:
+      'A single-column layout that gives the chart maximum room, with positions, data log, copilot, and the trade ticket tucked into a tab strip below.',
+    facets: {
+      traderTypes: ['scalper', 'day-trader'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['compact', 'standard'],
+    },
+    tags: ['chart', 'minimal'],
+    layout: PRESET_CHART_FOCUS,
+  }),
+  presetTemplate({
+    id: 'template:trading',
+    name: 'Trading',
+    menuLabel: 'Trading',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Zap',
+    tagline: 'Order book and ticket flanking a central chart.',
+    description:
+      'A three-column execution desk: order book and trade ticket on the left, chart with positions and risk in the middle, and the AI Copilot on the right.',
+    facets: {
+      traderTypes: ['day-trader', 'scalper'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['execution', 'orderbook'],
+    layout: PRESET_TRADING,
+  }),
+  presetTemplate({
+    id: 'template:chart-analysis',
+    name: 'Chart Analysis',
+    menuLabel: 'Analysis',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Activity',
+    tagline: 'Chart and data left, copilot and execution right.',
+    description:
+      'A study-oriented split: chart, data, research, and risk on the left; copilot, order book, and trade ticket on the right.',
+    facets: {
+      traderTypes: ['swing-trader', 'day-trader'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['wide', 'standard'],
+    },
+    tags: ['analysis', 'research'],
+    layout: PRESET_ANALYSIS,
+  }),
+  multiChartPreset({
+    id: 'template:dual-charts',
+    name: 'Dual Charts',
+    menuLabel: 'Dual Charts',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Layers',
+    tagline: 'Two side-by-side charts.',
+    description:
+      'Two independent chart panes side by side — each keeps its own market, timeframe, and chart type. Set a different pair per pane with its pair picker.',
+    facets: {
+      traderTypes: ['quant', 'day-trader'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['wide', 'multi'],
+    },
+    tags: ['multi-chart', 'compare'],
+    layout: PRESET_DUAL_CHARTS,
+    chartDefaults: [
+      { pairKey: 'BTC-USDT', market: 'okx' },
+      { pairKey: 'ETH-USDT', market: 'okx' },
+    ],
+  }),
+  multiChartPreset({
+    id: 'template:triple-charts',
+    name: 'Triple Charts',
+    menuLabel: 'Triple Charts',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Layers',
+    tagline: 'One large chart with two stacked beside it.',
+    description:
+      'A large primary chart with two smaller charts stacked to the right — each independent, for watching a lead pair against two others.',
+    facets: {
+      traderTypes: ['quant', 'day-trader'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['wide', 'multi'],
+    },
+    tags: ['multi-chart', 'compare'],
+    layout: PRESET_TRIPLE_CHARTS,
+    chartDefaults: [
+      { pairKey: 'BTC-USDT', market: 'okx' },
+      { pairKey: 'ETH-USDT', market: 'okx' },
+      { pairKey: 'SOL-USDT', market: 'okx' },
+    ],
+  }),
+  multiChartPreset({
+    id: 'template:quad-charts',
+    name: 'Quad Charts',
+    menuLabel: 'Quad Charts',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Scan',
+    tagline: 'A 2×2 grid of charts.',
+    description:
+      'Four independent charts in a 2×2 grid — a full multi-chart cockpit for tracking several markets at once.',
+    facets: {
+      traderTypes: ['quant', 'day-trader'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['multi', 'wide'],
+    },
+    tags: ['multi-chart', 'grid'],
+    layout: PRESET_QUAD_CHARTS,
+    chartDefaults: [
+      { pairKey: 'BTC-USDT', market: 'okx' },
+      { pairKey: 'ETH-USDT', market: 'okx' },
+      { pairKey: 'SOL-USDT', market: 'okx' },
+      { pairKey: 'BNB-USDT', market: 'okx' },
+    ],
+  }),
+  // ── Screen-tuned pair layouts (store-only, via the Screen filter) ──
+  presetTemplate({
+    id: 'template:laptop-focus',
+    name: 'Laptop Focus',
+    context: 'pair',
+    icon: 'Eye',
+    tagline: 'Vertical single-column layout tuned for laptops.',
+    description:
+      'A compact, vertical layout that fits a laptop screen: chart on top, a data tab strip, and a slim risk bar.',
+    facets: {
+      traderTypes: ['day-trader'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['compact'],
+    },
+    tags: ['laptop', 'compact'],
+    layout: LAPTOP_FOCUSED,
+  }),
+  presetTemplate({
+    id: 'template:laptop-split',
+    name: 'Laptop Split',
+    context: 'pair',
+    icon: 'Layers',
+    tagline: 'Chart + data left, trade + copilot right — for smaller screens.',
+    description:
+      'A two-column split sized for laptops: chart and positions on the left, trade ticket over copilot on the right.',
+    facets: {
+      traderTypes: ['day-trader'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['compact', 'standard'],
+    },
+    tags: ['laptop', 'split'],
+    layout: LAPTOP_SPLIT,
+  }),
+  presetTemplate({
+    id: 'template:ultrawide-dashboard',
+    name: 'Ultrawide Dashboard',
+    context: 'pair',
+    icon: 'Radio',
+    tagline: 'Every panel spread across an ultrawide monitor.',
+    description:
+      'A four-column dashboard for ultrawide displays: order book, chart with risk, positions and research, and a trade + copilot column.',
+    facets: {
+      traderTypes: ['day-trader'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['wide', 'multi'],
+    },
+    tags: ['ultrawide', 'dashboard'],
+    layout: ULTRAWIDE_FULL_DASHBOARD,
+  }),
+  presetTemplate({
+    id: 'template:ultrawide-trading',
+    name: 'Ultrawide Trading',
+    context: 'pair',
+    icon: 'Zap',
+    tagline: 'Order book, depth, chart, and execution across the width.',
+    description:
+      'An ultrawide execution layout: order book and market depth on the left, chart with positions in the center, and a trade + copilot column on the right.',
+    facets: {
+      traderTypes: ['day-trader', 'scalper'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['wide', 'multi'],
+    },
+    tags: ['ultrawide', 'execution'],
+    layout: ULTRAWIDE_WIDE_TRADING,
+  }),
+  presetTemplate({
+    id: 'template:command-center',
+    name: '4K Command Center',
+    context: 'pair',
+    icon: 'Diamond',
+    tagline: 'The full command center for a 4K display.',
+    description:
+      'Everything on screen for a 4K monitor: order book and pair info, chart with research and risk, positions and social, and a trade + copilot column.',
+    facets: {
+      traderTypes: ['day-trader'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['multi'],
+    },
+    tags: ['4k', 'command-center'],
+    layout: FOURK_COMMAND_CENTER,
+  }),
+  // ── Discovery-route layouts (quick-apply in the home layout menu) ──
+  presetTemplate({
+    id: 'template:home-pulse',
+    name: 'Home',
+    menuLabel: 'Home',
+    context: 'discovery',
+    routeMenu: true,
+    icon: 'Home',
+    tagline: 'The default board: scanner, sentiment, movers, and news.',
+    description:
+      'The default home board — markets scanner, a market-pulse rail with the Fear & Greed gauge and top coins tabbed with your watchlist, and a full-height news column. Everything on it works without an account.',
+    facets: {
+      traderTypes: ['day-trader', 'swing-trader', 'news-trader'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['discovery', 'home', 'news'],
+    layout: DISCOVERY_HOME,
+  }),
+  presetTemplate({
+    id: 'template:markets-board',
+    name: 'Markets Board',
+    menuLabel: 'Markets',
+    context: 'discovery',
+    routeMenu: true,
+    icon: 'Compass',
+    tagline: 'Just the markets scanner, full-screen.',
+    description:
+      'The full-width markets scanner — the simplest way to browse and sort every tradable pair.',
+    facets: {
+      traderTypes: ['day-trader', 'swing-trader'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['compact', 'standard'],
+    },
+    tags: ['discovery', 'scanner'],
+    layout: DISCOVERY_MARKETS,
+  }),
+  presetTemplate({
+    id: 'template:markets-overview',
+    name: 'Markets Overview',
+    menuLabel: 'Overview',
+    context: 'discovery',
+    routeMenu: true,
+    icon: 'Eye',
+    tagline: 'Scanner beside your movers and watchlist.',
+    description:
+      'The markets scanner alongside the top movers and your watchlist — a balanced home for finding and tracking setups.',
+    facets: {
+      traderTypes: ['swing-trader', 'day-trader'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['standard'],
+    },
+    tags: ['discovery', 'watchlist'],
+    layout: DISCOVERY_OVERVIEW,
+  }),
+  presetTemplate({
+    id: 'template:sector-analysis',
+    name: 'Sector Analysis',
+    menuLabel: 'Analysis',
+    context: 'discovery',
+    routeMenu: true,
+    icon: 'Gauge',
+    tagline: 'Scanner, heatmap, movers, and watchlist.',
+    description:
+      'A discovery board with a sector heatmap in the middle: scanner on the left, heatmap in the center, and movers over your watchlist on the right.',
+    facets: {
+      traderTypes: ['swing-trader'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['discovery', 'heatmap'],
+    layout: DISCOVERY_ANALYSIS,
+  }),
+  presetTemplate({
+    id: 'template:news-board',
+    name: 'News Board',
+    menuLabel: 'News',
+    context: 'discovery',
+    routeMenu: true,
+    icon: 'Globe',
+    tagline: 'Markets alongside movers and the news feed.',
+    description:
+      'The markets scanner beside the top movers and the live news feed — a home base for catalyst-driven trading.',
+    facets: {
+      traderTypes: ['news-trader'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['standard'],
+    },
+    tags: ['discovery', 'news'],
+    layout: DISCOVERY_NEWS,
+  }),
+]
+
+export const BUILTIN_WORKSPACE_TEMPLATES: Array<WorkspaceTemplate> = [
+  ...STANDALONE_TEMPLATES,
+  ...PRESET_TEMPLATES,
+]
+
+export type RoutePreset = { label: string; layout: TerminalLayout }
+
+/**
+ * In-place layout presets for a route's ⌘⇧L menu, derived from the catalog —
+ * the store is the single source. Returns the raw (unbound) layout; on the
+ * pair/home routes those bindings would be inert anyway (no variables provider),
+ * so panes resolve against the route's active pair.
+ */
+export function routePresets(
+  context: TemplateContext,
+): Record<string, RoutePreset> {
+  const out: Record<string, RoutePreset> = {}
+  for (const t of BUILTIN_WORKSPACE_TEMPLATES) {
+    if ((t.context ?? 'standalone') === context && t.routeMenu) {
+      out[t.id] = { label: t.menuLabel ?? t.name, layout: t.layout }
+    }
+  }
+  return out
+}

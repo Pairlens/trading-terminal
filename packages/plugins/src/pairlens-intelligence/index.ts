@@ -1,0 +1,437 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
+import {
+  formatBillingErrorMessage,
+  isBillingErrorCode,
+} from '@pairlens/shared/billing-types'
+import { queryInstruments } from '../catalog'
+import type {
+  PluginExecuteParams,
+  PluginInstance,
+  PluginManifest,
+} from '@pairlens/plugin-system/types'
+import type {
+  Instrument,
+  InstrumentCategory,
+} from '@pairlens/shared/instrument-types'
+import type { WebSearchResponse } from '@pairlens/shared/plugin-types'
+
+/** App Server backend for plugin features (logos, instrument discovery, AI) */
+const PAIRLENS_APP_SERVER_URL = 'https://plugins.pairlens.finance'
+
+export const pairlensIntelligenceManifest: PluginManifest = {
+  id: 'pairlens-intelligence',
+  name: 'Pairlens Intelligence',
+  version: '0.1.0',
+  author: 'Pairlens',
+  description:
+    'AI inference, instrument discovery, news feeds, and market intelligence powered by the Pairlens backend',
+  homepage: 'https://pairlens.finance',
+  icon: 'https://pairlens.finance/favicon.svg',
+  // Hosted AI is the paid Pairlens Intelligence add-on: signed-in users start
+  // at 'free' (no hosted AI); an active subscription grants 'intelligence'
+  // via /api/entitlements. BYOK AI provider plugins are never gated.
+  accessLevels: ['free', 'intelligence'],
+  capabilities: [
+    {
+      id: 'ai:inference',
+      singleton: false,
+      markets: ['*'],
+      priority: 90,
+      streaming: false,
+      requiresAuth: true,
+      requiredAccessLevel: 'intelligence',
+    },
+    {
+      id: 'ai:web-search',
+      singleton: false,
+      markets: ['*'],
+      priority: 90,
+      streaming: false,
+      requiresAuth: true,
+      requiredAccessLevel: 'intelligence',
+    },
+    {
+      id: 'market-data:discovery',
+      singleton: false,
+      markets: ['*'],
+      priority: 5,
+      streaming: false,
+    },
+    {
+      id: 'market-data:discovery:search',
+      singleton: false,
+      markets: ['*'],
+      priority: 5,
+      streaming: false,
+    },
+    {
+      id: 'market-data:symbol-logo',
+      singleton: false,
+      markets: ['*'],
+      priority: 5,
+      streaming: false,
+    },
+  ],
+  config: {},
+  contributes: {
+    panels: [
+      {
+        id: 'copilot',
+        label: 'AI Copilot',
+        labelKey: 'panes.aiLens',
+        descriptionKey: 'paneDescriptions.aiLens',
+        icon: 'Brain',
+        category: 'ai-research',
+        minHeight: 200,
+        singleton: true,
+        requires: ['workspace:active-pair'],
+      },
+      {
+        id: 'research',
+        label: 'Research',
+        labelKey: 'panes.research',
+        descriptionKey: 'paneDescriptions.research',
+        icon: 'Search',
+        category: 'ai-research',
+        minHeight: 100,
+        requires: ['workspace:active-pair'],
+      },
+      {
+        id: 'news',
+        label: 'News Feed',
+        labelKey: 'panes.news',
+        descriptionKey: 'paneDescriptions.news',
+        icon: 'Newspaper',
+        category: 'ai-research',
+        singleton: true,
+      },
+      {
+        id: 'symbol-news',
+        label: 'Symbol News',
+        labelKey: 'panes.symbolNews',
+        descriptionKey: 'paneDescriptions.symbolNews',
+        icon: 'Newspaper',
+        category: 'ai-research',
+        minHeight: 100,
+        requires: ['workspace:active-pair'],
+      },
+      {
+        id: 'social',
+        label: 'Social',
+        labelKey: 'panes.social',
+        descriptionKey: 'paneDescriptions.social',
+        icon: 'Globe',
+        category: 'ai-research',
+        minHeight: 100,
+      },
+      {
+        id: 'top-coins',
+        label: 'Top Coins',
+        labelKey: 'panes.topCoins',
+        descriptionKey: 'paneDescriptions.topCoins',
+        icon: 'TrendingUp',
+        category: 'discovery',
+        singleton: true,
+      },
+      {
+        id: 'heatmap',
+        label: 'Heatmap',
+        labelKey: 'panes.heatmap',
+        descriptionKey: 'paneDescriptions.heatmap',
+        icon: 'Grid3X3',
+        category: 'discovery',
+        singleton: true,
+      },
+      {
+        id: 'fear-greed',
+        label: 'Fear & Greed',
+        labelKey: 'panes.fearGreed',
+        descriptionKey: 'paneDescriptions.fearGreed',
+        icon: 'Gauge',
+        category: 'discovery',
+        minHeight: 100,
+      },
+    ],
+  },
+}
+
+export function createPairlensIntelligencePlugin(
+  manifest: PluginManifest,
+): PluginInstance {
+  let config: Record<string, unknown> = {}
+
+  function getAppServerUrl(): string {
+    return String(config['appServerUrl'] ?? PAIRLENS_APP_SERVER_URL)
+  }
+
+  /** Resolve relative URLs from App Server responses against the base URL */
+  function resolveAppServerUrl(url: string | null): string | null {
+    if (!url) return null
+    if (url.startsWith('/')) return `${getAppServerUrl()}${url}`
+    return url
+  }
+
+  async function resolveAuthToken(): Promise<string> {
+    const token = config['authToken']
+    if (typeof token === 'function') return String(await token())
+    return String(token ?? '')
+  }
+
+  async function authHeaders(): Promise<Record<string, string>> {
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${await resolveAuthToken()}`,
+    }
+  }
+
+  /**
+   * Surface the App Server's typed billing 402s (subscription required /
+   * credits exhausted) with the code encoded in the message, so the copilot
+   * and research UIs can show an upgrade prompt instead of a generic failure.
+   */
+  async function throwIfBillingError(response: Response): Promise<void> {
+    if (response.status !== 402) return
+    try {
+      const body = (await response.clone().json()) as {
+        error?: unknown
+        message?: unknown
+      }
+      if (isBillingErrorCode(body.error)) {
+        throw new Error(
+          formatBillingErrorMessage(
+            body.error,
+            typeof body.message === 'string'
+              ? body.message
+              : 'Pairlens Intelligence subscription required',
+          ),
+        )
+      }
+    } catch (err) {
+      if (err instanceof Error && err.message.includes('pairlens-billing')) {
+        throw err
+      }
+      // Unparseable 402 — fall through to the generic error path.
+    }
+  }
+
+  async function execute(params: PluginExecuteParams): Promise<unknown> {
+    const { capability, params: p } = params
+    const appUrl = getAppServerUrl()
+    const headers = await authHeaders()
+
+    if (capability === 'ai:inference') {
+      // Non-streaming completion through the App Server's OpenAI-compatible
+      // inference proxy (the server decides the actual model)
+      const response = await fetch(`${appUrl}/api/ai/v1/chat/completions`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          model: 'pairlens-default',
+          messages: p['messages'] ?? [],
+          temperature: p['temperature'],
+          max_tokens: p['maxTokens'],
+        }),
+      })
+      if (!response.ok) {
+        await throwIfBillingError(response)
+        throw new Error(
+          `pairlens-intelligence: ai inference failed (${response.status})`,
+        )
+      }
+      const data = (await response.json()) as {
+        choices: Array<{ message: { content: string } }>
+        model: string
+        usage?: { prompt_tokens: number; completion_tokens: number }
+      }
+      return {
+        content: data.choices[0]?.message.content ?? '',
+        model: data.model,
+        usage: {
+          promptTokens: data.usage?.prompt_tokens ?? 0,
+          completionTokens: data.usage?.completion_tokens ?? 0,
+        },
+      }
+    }
+
+    if (capability === 'ai:web-search') {
+      // Web search through the App Server's search proxy (gateway-backed).
+      // The terminal owns the research prompts — this just returns raw
+      // results for the client-side loop to format.
+      const response = await fetch(`${appUrl}/api/ai/v1/search`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          objective: String(p['objective'] ?? ''),
+          search_queries: p['search_queries'] ?? [],
+          max_results: p['max_results'],
+        }),
+      })
+      if (!response.ok) {
+        await throwIfBillingError(response)
+        throw new Error(
+          `pairlens-intelligence: web search failed (${response.status})`,
+        )
+      }
+      return (await response.json()) as WebSearchResponse
+    }
+
+    if (capability === 'market-data:discovery') {
+      const market = p['market'] ? String(p['market']) : undefined
+      const q = p['q'] ? String(p['q']) : undefined
+      const category = p['category'] ? String(p['category']) : undefined
+      const assetClass = p['assetClass'] ? String(p['assetClass']) : undefined
+      const symbolsRaw = p['symbols'] ? String(p['symbols']) : undefined
+      const offset = typeof p['offset'] === 'number' ? p['offset'] : 0
+      const limit = typeof p['limit'] === 'number' ? p['limit'] : 50
+
+      try {
+        const qs = new URLSearchParams()
+        if (market) qs.set('market', market)
+        if (q) qs.set('q', q)
+        const qsStr = qs.toString()
+        const url = `${appUrl}/api/instruments${qsStr ? `?${qsStr}` : ''}`
+        const response = await fetch(url)
+        if (!response.ok) {
+          throw new Error(
+            `pairlens-intelligence: instruments fetch failed (${response.status})`,
+          )
+        }
+        const rawItems = (await response.json()) as Array<Instrument>
+
+        const seen = new Map<string, Instrument>()
+        for (const inst of rawItems) {
+          if (!seen.has(inst.symbol)) {
+            seen.set(inst.symbol, inst)
+          }
+        }
+        let items = Array.from(seen.values())
+
+        if (assetClass) {
+          items = items.filter((inst) => inst.assetClass === assetClass)
+        }
+
+        if (symbolsRaw) {
+          const symbolSet = new Set(symbolsRaw.split(',').filter(Boolean))
+          items = items.filter((inst) => symbolSet.has(inst.symbol))
+          return { items, total: items.length, hasMore: false }
+        }
+
+        if (category) {
+          items = items.filter((inst) =>
+            inst.categories.includes(category as InstrumentCategory),
+          )
+        }
+
+        const total = items.length
+        const paged = items.slice(offset, offset + limit)
+        return { items: paged, total, hasMore: offset + limit < total }
+      } catch {
+        // App Server unreachable (offline / standalone desktop) — fall back to
+        // the bundled local catalog so Discovery is never blank.
+        return queryInstruments(market ?? '', p)
+      }
+    }
+
+    if (capability === 'market-data:discovery:search') {
+      const query = String(p['query'] ?? '')
+      const assetClass = p['assetClass'] ? String(p['assetClass']) : undefined
+      try {
+        const qs = new URLSearchParams({ q: query })
+        const url = `${appUrl}/api/instruments?${qs}`
+        const response = await fetch(url)
+        if (!response.ok) {
+          throw new Error(
+            `pairlens-intelligence: instrument search failed (${response.status})`,
+          )
+        }
+        const searchRaw = (await response.json()) as Array<Instrument>
+        const searchSeen = new Map<string, Instrument>()
+        for (const inst of searchRaw) {
+          if (!searchSeen.has(inst.symbol)) {
+            searchSeen.set(inst.symbol, inst)
+          }
+        }
+        let searchItems = Array.from(searchSeen.values())
+        if (assetClass) {
+          searchItems = searchItems.filter(
+            (inst) => inst.assetClass === assetClass,
+          )
+        }
+        return { items: searchItems, total: searchItems.length, hasMore: false }
+      } catch {
+        // App Server unreachable — fall back to the bundled local catalog.
+        if (!query) return { items: [], total: 0, hasMore: false }
+        return queryInstruments('', { ...p, q: query })
+      }
+    }
+
+    if (capability === 'market-data:symbol-logo') {
+      const symbol = String(p['symbol'] ?? '').toLowerCase()
+      if (!symbol)
+        throw new Error(
+          'pairlens-intelligence: symbol-logo requires a symbol param',
+        )
+      const assetClass = p['assetClass'] ? String(p['assetClass']) : undefined
+      const logoQs = assetClass === 'stocks' ? '?type=ticker' : ''
+      const url = `${appUrl}/api/symbol-logo/${encodeURIComponent(symbol)}${logoQs}`
+      const response = await fetch(url)
+      if (!response.ok) {
+        throw new Error(
+          `pairlens-intelligence: symbol-logo failed (${response.status})`,
+        )
+      }
+      const data = (await response.json()) as { url: string | null }
+      return { url: resolveAppServerUrl(data.url) }
+    }
+
+    throw new Error(
+      `pairlens-intelligence: unsupported capability '${capability}'`,
+    )
+  }
+
+  // AI SDK model for the host-run agentic loop. Points at the App Server's
+  // OpenAI-compatible inference proxy — the server decides the real model,
+  // so the id here is a placeholder the server maps per workload. Auth is
+  // injected per request since the session token rotates.
+  function getLanguageModel(purpose?: 'chat' | 'research'): unknown {
+    const authedFetch = async (
+      input: RequestInfo | URL,
+      init?: RequestInit,
+    ): Promise<Response> => {
+      const headers = new Headers(init?.headers)
+      headers.set('Authorization', `Bearer ${await resolveAuthToken()}`)
+      const response = await fetch(input, { ...init, headers })
+      // Typed billing 402s must survive the AI SDK's error mapping — throw
+      // here so the stream fails with our recognizable message.
+      await throwIfBillingError(response)
+      return response
+    }
+    return createOpenAICompatible({
+      name: 'pairlens-intelligence',
+      baseURL: `${getAppServerUrl()}/api/ai/v1`,
+      fetch: authedFetch as typeof fetch,
+    }).chatModel(
+      purpose === 'research' ? 'pairlens-research' : 'pairlens-default',
+    )
+  }
+
+  async function initialize(cfg: Record<string, unknown>): Promise<void> {
+    config = cfg
+  }
+
+  async function destroy(): Promise<void> {
+    // No transport to clean up — pure REST plugin
+  }
+
+  return {
+    manifest,
+    status: 'installed',
+    config,
+    execute,
+    getLanguageModel,
+    initialize,
+    destroy,
+  }
+}

@@ -1,0 +1,49 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+count.txt
+.env
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+todos.json
+.turbo
+.astro
+# Vercel CLI project link (created by `vercel link`, per-machine)
+.vercel
+.venv
+__pycache__
+*.pyc
+.claude/worktrees/
+# Per-worktree dev-server config: holds a static port that differs per worktree
+# (ports are derived per worktree), so it must not be shared via git.
+.claude/launch.json
+
+# Rust / Tauri
+target/
+.gitnexus
+
+# design-sync (claude.ai/design system sync)
+/.ds-sync/
+/ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules
+packages/ui/.ds-tmp/
+
+# Local editor/agent tooling config (leaks internal dashboard URLs)
+.codex/
+
+# Internal working documents (design notes, migration reports) — not for the public repo
+documents/
+
+# Community plugin bundles — built from source at registry startup, never committed
+apps/registry/static/modules/community/
+
+# Pyodide runtime assets — staged from node_modules/pyodide by
+# apps/terminal/scripts/copy-pyodide.ts on dev/build, never committed
+apps/terminal/public/_pyodide/

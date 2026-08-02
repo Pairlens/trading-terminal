@@ -1,0 +1,147 @@
+---
+title: MarketAdapter API
+description: The interface every market connector implements to stream candles, tickers, and order books, and to route orders.
+group: builders
+parent: plugin-sdk
+order: 2
+eyebrow: For builders
+updated: AUG 2026
+readTime: 5 min read
+---
+
+import Callout from '@/components/docs/mdx/Callout.astro'
+
+A market connector is any plugin that implements `MarketAdapter` from
+`@pairlens/market-engine`. It owns its exchange connections, candle buffers,
+and order execution.
+
+## The interface
+
+```typescript
+import type { MarketAdapter } from '@pairlens/market-engine/adapter'
+
+export interface MarketAdapter {
+  getInfo: () => MarketAdapterInfo
+
+  // Streaming. Each returns its own unsubscribe function.
+  subscribeCandles: (
+    pair: string,
+    timeframe: string,
+    country: string,
+    cb: CandleCallback,
+  ) => () => void
+  subscribeTicker: (
+    pair: string,
+    country: string,
+    cb: TickerCallback,
+  ) => () => void
+  subscribeOrderbook: (
+    pair: string,
+    country: string,
+    cb: OrderbookCallback,
+  ) => () => void
+
+  // One-shot data
+  fetchHistoricalCandles: (
+    pair: string,
+    timeframe: string,
+    limit: number,
+    country: string,
+  ) => Promise<Array<Candle>>
+  fetchTicker: (pair: string, country: string) => Promise<TickerSnapshot>
+  getInstruments: (filter?: InstrumentFilter) => Promise<Array<Instrument>>
+
+  // Trading, only when capabilities include 'trade'
+  placeOrder?: (params: OrderParams) => Promise<OrderResult>
+  cancelOrder?: (orderId: string) => Promise<OrderResult>
+  setCredentials?: (credentials: Record<string, string>) => void
+
+  destroy: () => void
+}
+```
+
+Note the `country` parameter threaded through every data call. It is how
+regional endpoint routing works, and ignoring it is the most common reason a
+connector fails for users outside your own region.
+
+## Describing yourself
+
+`getInfo()` returns the metadata the terminal uses to decide what to show and
+what to allow:
+
+```typescript
+type MarketAdapterInfo = {
+  marketId: string
+  displayName: string
+  assetClasses: Array<
+    'crypto-spot' | 'crypto-perp' | 'stocks' | 'prediction' | 'dex'
+  >
+  capabilities: Array<'read' | 'trade'>
+  credentialSchema: Array<CredentialField>
+  supportedTimeframes: Array<string>
+  iconUrl?: string
+  walletChain?: 'solana' | 'ethereum' | 'bitcoin'
+  /** DEX venues only: the connector supports resting limit orders. */
+  dexLimitOrders?: boolean
+  /** Exchange-native trigger (TP/SL) orders via OrderParams.trigger. */
+  triggerOrders?: boolean
+}
+```
+
+`credentialSchema` drives the connect wizard's form, so declare exactly the
+fields your venue needs (an API key and secret, plus a passphrase where the
+venue uses one) and mark secrets with `type: 'secret'`.
+
+<Callout type="note">
+  `triggerOrders` is load-bearing. Declare it only if your venue really rests
+  native stop and take-profit orders. Workflow steps check this flag, and a
+  stop-loss is refused rather than faked on a venue without it, which is the
+  behaviour that keeps a trader from believing they are protected when they are
+  not.
+</Callout>
+
+## Conformance
+
+A shared harness in `packages/plugins/src/test-utils/conformance.ts` checks that
+your adapter emits well-formed candles, tickers, and books, that reconnection
+and backfill behave, and that order placement and cancellation return the
+shapes the terminal expects. Run it against your connector before publishing:
+
+```bash
+bun test packages/plugins
+```
+
+There are separate suites for golden-file parsing, order conformance, and
+private WebSocket behaviour. A connector that passes all three behaves
+correctly in the terminal without you having to click through it.
+
+<Callout type="tip">
+  Fourteen CEX connectors are built from one shared factory,
+  `createCexConnectorPlugin`. If your venue looks like a standard CEX, start
+  from that factory instead of the raw interface. It handles the parts that are
+  the same everywhere.
+</Callout>
+
+## Credentials at runtime
+
+Adapters receive credentials through `setCredentials` at the moment they are
+needed for order routing. They never read them from disk or from a server. The
+terminal hands them over straight from the OS keychain.
+
+Never log a credential, never include one in an error message, and never send
+one to a host outside your declared allowlist. All three are things a reviewer
+will look for.
+
+## Transport notes
+
+**WebSockets.** Use port 443. Non-standard ports get blocked by corporate
+firewalls, and the failure looks like "the app is broken" rather than "your
+network blocked it".
+
+**REST on desktop.** Absolute-URL REST calls route through the native HTTP
+transport, which sidesteps CORS entirely. In the browser dev build they go
+through the Vite dev proxy. Write the calls once; the host picks the path.
+
+**Declared hosts.** Every host your connector touches must be in your
+manifest's declared hosts, or the desktop CSP will block it. That includes any
+fallback or regional endpoint.

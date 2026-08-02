@@ -1,0 +1,25 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// /privacy — the document itself lives in src/content/legal/privacy.mdx.
+// Kept as its own route rather than a /legal/[slug] catch-all because the
+// short URL is what gets linked from the app, the stores, and app listings.
+import { getEntry, render } from 'astro:content'
+import LegalLayout from '@/layouts/LegalLayout.astro'
+
+const entry = await getEntry('legal', 'privacy')
+if (!entry) throw new Error('Missing src/content/legal/privacy.mdx')
+const { Content, headings } = await render(entry)
+---
+
+<LegalLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  effective={entry.data.effective}
+  summary={entry.data.summary}
+  headings={headings}
+  doc="privacy"
+  sourcePath="src/content/legal/privacy.mdx"
+>
+  <Content />
+</LegalLayout>

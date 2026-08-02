@@ -1,0 +1,24 @@
+{
+  "name": "create-pairlens-plugin",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pairlens/trading-terminal.git",
+    "directory": "packages/create-pairlens-plugin"
+  },
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Scaffold a new Pairlens plugin",
+  "bin": {
+    "create-pairlens-plugin": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test": "echo \"No tests for create-pairlens-plugin yet\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.11",
+    "typescript": "^5.9.3"
+  }
+}

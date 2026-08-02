@@ -1,0 +1,203 @@
+---
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// The docs chrome is its own bar, not the floating site pill: 60px tall, on
+// the same 1264/32 grid as the body below, with vertical hairlines that cap
+// the sidebar (264px) and the TOC (220px) columns exactly.
+import { APP_NAV, SITE } from '@/lib/site'
+import { getRepoStars } from '@/lib/github'
+
+interface Props {
+  /** Which APP_NAV entry is highlighted. */
+  active?: (typeof APP_NAV)[number]['key']
+}
+const { active = 'documentation' } = Astro.props
+const stars = await getRepoStars()
+
+const shellRule = 'color-mix(in oklch, var(--border) 55%, transparent)'
+const cellRule = 'color-mix(in oklch, var(--border) 70%, transparent)'
+---
+
+<header
+  transition:persist="docs-header"
+  class="fixed inset-x-0 top-0 z-50 border-b backdrop-blur-[18px]"
+  style="border-color: color-mix(in oklch, var(--border) 78%, transparent); background: color-mix(in oklch, var(--pl-band) 88%, transparent);"
+>
+  <div class="mx-auto w-full max-w-[1264px] px-8 max-[720px]:px-5">
+    <div
+      class="flex h-[60px] items-stretch border-x"
+      style={`border-color: ${shellRule}`}
+    >
+      <a
+        href="/"
+        class="flex w-[264px] flex-none items-center gap-[9px] border-r px-[18px] max-lg:w-auto max-lg:border-r-0 max-[640px]:pl-3.5 max-[640px]:pr-3"
+        style={`border-color: ${cellRule}`}
+        aria-label="Pairlens home"
+      >
+        <img
+          src="/logo.svg"
+          alt=""
+          height="22"
+          class="block h-[22px] w-auto shrink-0 select-none"
+          loading="eager"
+          decoding="async"
+          draggable="false"
+        />
+        <span
+          class="font-serif text-[17.5px] font-semibold tracking-[-0.025em] text-foreground"
+          >Pairlens</span
+        >
+        <span
+          class="rounded-md border px-1.5 py-0.5 font-mono text-[9.5px] font-bold tracking-[0.16em] text-primary"
+          style="border-color: color-mix(in oklch, var(--primary) 40%, transparent); background: color-mix(in oklch, var(--primary) 12%, transparent);"
+          >DOCS</span
+        >
+      </a>
+
+      <nav
+        aria-label="Documentation"
+        class="flex min-w-0 flex-1 items-center gap-0.5 px-6 max-lg:hidden"
+      >
+        {
+          APP_NAV.map((item) => (
+            <a
+              href={item.href}
+              class:list={[
+                'docs-nav-link rounded-[9px] px-[11px] py-[7px] text-[13px] font-semibold whitespace-nowrap',
+                item.key === active && 'is-on',
+              ]}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div
+        class="ml-auto flex w-[220px] flex-none items-center justify-end gap-3.5 border-l px-[18px] max-lg:w-auto max-[640px]:gap-3 max-[640px]:px-3.5"
+        style={`border-color: ${cellRule}`}
+      >
+        <a
+          href={SITE.repo}
+          target="_blank"
+          rel="noopener"
+          aria-label={`Pairlens on GitHub — ${stars} stars`}
+          class="inline-flex items-center gap-1.5 font-mono text-[12px] text-muted-foreground transition-colors hover:text-foreground max-[640px]:hidden"
+        >
+          <svg
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            aria-hidden="true"
+            class="size-3.5"
+          >
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+            ></path>
+          </svg>
+          {stars}
+        </a>
+        <a
+          href="/install"
+          class="docs-cta inline-flex items-center rounded-full bg-foreground px-3.5 py-2 text-[12.5px] font-semibold whitespace-nowrap text-background"
+          >Get Pairlens</a
+        >
+        <button
+          type="button"
+          data-docs-nav-toggle
+          aria-label="Toggle docs navigation"
+          aria-expanded="false"
+          class="hidden size-8 flex-none cursor-pointer place-items-center rounded-[9px] border-0 bg-transparent text-muted-foreground transition-colors hover:text-foreground max-lg:grid"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+            class="size-[18px]"
+          >
+            <path d="M4 6h16M4 12h16M4 18h10"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    aria-hidden="true"
+    class="absolute inset-x-0 -bottom-px h-0.5"
+    style="background: color-mix(in oklch, var(--foreground) 6%, transparent);"
+  >
+    <div
+      data-docs-progress
+      class="h-full w-0"
+      style="background: linear-gradient(90deg, var(--chart-3), var(--chart-2)); transition: width 0.12s linear;"
+    >
+    </div>
+  </div>
+</header>
+
+<style>
+  .docs-nav-link {
+    color: var(--muted-foreground);
+    transition:
+      background 0.18s var(--ease-out),
+      color 0.18s var(--ease-out);
+  }
+  .docs-nav-link:hover {
+    background: color-mix(in oklch, var(--foreground) 6%, transparent);
+    color: var(--foreground);
+  }
+  .docs-nav-link.is-on,
+  .docs-nav-link.is-on:hover {
+    background: color-mix(in oklch, var(--primary) 13%, transparent);
+    color: var(--primary);
+  }
+
+  .docs-cta {
+    transition: transform 0.2s var(--ease-out);
+  }
+  .docs-cta:hover {
+    transform: scale(1.03);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .docs-cta:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  // Reading progress: the 2px rule on the header's bottom edge fills against
+  // the article's own scroll span, so it reads 0% at the title and 100% at the
+  // last paragraph rather than tracking the whole document (footer included).
+  let frame = 0
+  let bar: HTMLElement | null = null
+  let article: HTMLElement | null = null
+
+  function paint() {
+    frame = 0
+    if (!bar || !article) return
+    const start = article.getBoundingClientRect().top + window.scrollY - 160
+    const span = article.offsetHeight
+    const p = span > 0 ? (window.scrollY - start) / span : 0
+    bar.style.width = `${(Math.max(0, Math.min(1, p)) * 100).toFixed(1)}%`
+  }
+
+  function schedule() {
+    if (!frame) frame = requestAnimationFrame(paint)
+  }
+
+  function arm() {
+    bar = document.querySelector<HTMLElement>('[data-docs-progress]')
+    article = document.getElementById('pl-article')
+    paint()
+  }
+
+  window.addEventListener('scroll', schedule, { passive: true })
+  window.addEventListener('resize', schedule, { passive: true })
+  arm()
+  document.addEventListener('astro:page-load', arm)
+</script>
