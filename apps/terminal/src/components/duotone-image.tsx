@@ -28,11 +28,16 @@ type Rgb = [number, number, number]
 // mid-tones tinted toward the primary. STOP_T are the gray positions and
 // TINT_W how strongly each pulls toward --primary — calibrated so the stock
 // dark theme reproduces the original iris-cast graphite/slate/lavender ramp.
-// TINT_W[0] must stay 0: the ground stop maps the artwork's black ground to
-// the page background EXACTLY, which is what lets the image sit frameless on
-// any theme.
+// TINT_W[0] stays 0 so near-ground pixels that survive the alpha key still
+// land on an untinted darkest stop.
 const STOP_T = [0, 0.18, 0.42, 0.7, 0.96]
 const TINT_W = [0, 0.2, 0.24, 0.16, 0.05]
+
+// The artwork's ground is pure black; real content (sunglass frames incl.)
+// stays above ~0.05 luminance. Keying the ground to transparent is what lets
+// the statue float frameless on ANY page ground, in both value directions.
+const KEY_LUM_IN = 0.012
+const KEY_LUM_OUT = 0.05
 
 // Chromatic pixels (the statues' lenses and their rainbow spill) pull toward
 // flat vivid inks by hue bucket — the one place the duotone gets color.
@@ -67,10 +72,19 @@ function resolveCssColor(css: string): Rgb | null {
   return [r, g, b]
 }
 
+function luminance([r, g, b]: Rgb): number {
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+}
+
 /**
  * Read the theme in scope at `el` and build the ink ramp. Reading from the
  * element (not the root) is what makes `dark`-scoped panels resolve their
  * dark palette even when the app is in light mode.
+ *
+ * The ramp always runs darkest → lightest theme color by VALUE, so the
+ * statue keeps its real lighting in light mode (shadows in ink, highlights
+ * in paper) instead of rendering as a negative. The artwork's black ground
+ * is alpha-keyed out in renderDuotone, so it never depends on stop 0.
  */
 function readThemeRamp(el: Element): Array<Rgb> {
   const styles = getComputedStyle(el)
@@ -79,8 +93,12 @@ function readThemeRamp(el: Element): Array<Rgb> {
   const background = pick('--background', [10, 8, 6])
   const foreground = pick('--foreground', [243, 242, 250])
   const primary = pick('--primary', [139, 140, 245])
+  const [darkest, lightest] =
+    luminance(background) <= luminance(foreground)
+      ? [background, foreground]
+      : [foreground, background]
   return STOP_T.map((t, i) =>
-    mix(mix(background, foreground, t), primary, TINT_W[i]),
+    mix(mix(darkest, lightest, t), primary, TINT_W[i]),
   )
 }
 
@@ -146,7 +164,8 @@ export function renderDuotone(
         hue *= 60
       }
 
-      const lum = shape((0.2126 * r + 0.7152 * g + 0.0722 * b) / 255)
+      const rawLum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+      const lum = shape(rawLum)
       const base = rampColor(ramp, lum + grain(x, y) * 0.015)
 
       // The statues' own chroma is exclusively warm (orange range), so warm
@@ -176,6 +195,7 @@ export function renderDuotone(
       px[i] = out[0]
       px[i + 1] = out[1]
       px[i + 2] = out[2]
+      px[i + 3] = Math.round(255 * smoothstep(KEY_LUM_IN, KEY_LUM_OUT, rawLum))
     }
   }
   ctx.putImageData(frame, 0, 0)

@@ -20,7 +20,7 @@ const EDGE_MASK =
  * the statue's chest so the headline never sits on busy marble.
  */
 const GROUND_WASH =
-  'linear-gradient(to top, var(--background) 26%, color-mix(in oklch, var(--background) 72%, transparent) 52%, transparent 86%)'
+  'linear-gradient(to top, var(--background) 8%, color-mix(in oklch, var(--background) 70%, transparent) 30%, transparent 62%)'
 
 /**
  * Mounted for the whole flow (one canvas pass, done during the language
