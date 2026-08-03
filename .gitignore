@@ -25,6 +25,8 @@ __pycache__
 
 # Rust / Tauri
 target/
+# Shared Cargo cache used across worktrees (CARGO_TARGET_DIR)
+target-shared/
 .gitnexus
 
 # design-sync (claude.ai/design system sync)
