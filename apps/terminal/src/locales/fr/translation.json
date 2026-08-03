@@ -413,6 +413,7 @@
       "plugins": "Plugins",
       "notifications": "Notifications",
       "appearance": "Apparence",
+      "keyboard": "Clavier",
       "performance": "Performance",
       "connection": "Connexion",
       "language": "Langue",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Bureau",
       "browser": "Navigateur"
+    },
+    "keyboard": {
+      "title": "Raccourcis clavier",
+      "description": "Tous les raccourcis du terminal sont modifiables. Partez d’un préréglage, puis réassignez ce que vous voulez.",
+      "presetTitle": "Préréglage",
+      "presetDescription": "Le point de départ de chaque commande. Vos modifications restent par-dessus le préréglage choisi.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "Les valeurs par défaut.",
+        "tradingview": "Style TradingView",
+        "tradingviewDescription": "Les raccourcis de dessin et de rétablissement suivent les habitudes de TradingView.",
+        "bloomberg": "Style Bloomberg",
+        "bloombergDescription": "Les touches de fonction passent d’une section à l’autre, comme sur un clavier Bloomberg."
+      },
+      "searchPlaceholder": "Rechercher des commandes...",
+      "resetAll": "Tout réinitialiser",
+      "resetAllTitle": "Réinitialiser tous les raccourcis ?",
+      "resetAllDescription": "Chaque commande revient à ce que dit le préréglage actuel. Vos personnalisations seront perdues.",
+      "restoreDefault": "Rétablir la valeur par défaut",
+      "addBinding": "Ajouter un raccourci",
+      "removeBinding": "Supprimer ce raccourci",
+      "recording": "Appuyez sur une combinaison de touches",
+      "stopRecording": "Arrêter",
+      "unbound": "Non attribué",
+      "customized": "Personnalisé",
+      "conflictsTitle": "Conflits de raccourcis",
+      "conflictsDescription": "Ces combinaisons répondent à plusieurs commandes. Seule la première de la liste s’exécute.",
+      "conflictWith": "Également attribué à {{commands}}",
+      "risky": "Le navigateur ou le système peut intercepter ce raccourci avant Pairlens.",
+      "chartScope": "Panneaux de graphique",
+      "noResults": "Aucune commande ne correspond à cette recherche.",
+      "categories": {
+        "general": "Général",
+        "navigation": "Navigation",
+        "workspace": "Espace de travail",
+        "chart": "Graphique",
+        "timeframe": "Unités de temps",
+        "drawing": "Outils de dessin"
+      },
+      "commands": {
+        "workspaceTree": "Afficher/masquer l’arborescence des espaces",
+        "workspaceMenu": "Menu des espaces de travail",
+        "chartCancel": "Annuler l’outil / quitter le plein écran"
+      }
     }
   },
   "nav": {

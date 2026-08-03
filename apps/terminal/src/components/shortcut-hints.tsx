@@ -166,5 +166,8 @@ export function ShortcutHint({
   /** Display label, e.g. `⌘I`, `⌘⇧L`, `⌥T`, `1-9`. */
   keys: string
 }) {
+  // Unbound commands render no marker at all, so a control the user stripped
+  // the shortcut from stops advertising one.
+  if (!keys) return null
   return <span hidden data-shortcut-hint={keys} />
 }

@@ -520,6 +520,12 @@ export function useOmniSearchResults(
         keywords: ['theme', 'colors', 'font'],
       },
       {
+        id: 'keyboard',
+        nameKey: 'settings.nav.keyboard',
+        icon: 'Keyboard',
+        keywords: ['shortcuts', 'keybindings', 'hotkeys', 'keymap'],
+      },
+      {
         id: 'performance',
         nameKey: 'settings.nav.performance',
         icon: 'Gauge',

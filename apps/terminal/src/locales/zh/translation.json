@@ -413,6 +413,7 @@
       "plugins": "插件",
       "notifications": "通知",
       "appearance": "外观",
+      "keyboard": "键盘",
       "performance": "性能",
       "connection": "连接",
       "language": "语言",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "桌面版",
       "browser": "浏览器"
+    },
+    "keyboard": {
+      "title": "键盘快捷键",
+      "description": "终端的每个快捷键都可以修改。先选一个预设，再随意重新绑定。",
+      "presetTitle": "预设",
+      "presetDescription": "每个命令的起点。你的修改会叠加在所选预设之上。",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "出厂默认设置。",
+        "tradingview": "TradingView 风格",
+        "tradingviewDescription": "绘图快捷键与重做遵循 TradingView 的习惯。",
+        "bloomberg": "Bloomberg 风格",
+        "bloombergDescription": "用功能键在各版块之间跳转，就像 Bloomberg 键盘那样。"
+      },
+      "searchPlaceholder": "搜索命令...",
+      "resetAll": "全部重置",
+      "resetAllTitle": "重置所有快捷键？",
+      "resetAllDescription": "每个命令都会回到当前预设的设定，你的自定义将丢失。",
+      "restoreDefault": "恢复默认",
+      "addBinding": "添加快捷键",
+      "removeBinding": "删除此快捷键",
+      "recording": "请按下一组按键",
+      "stopRecording": "停止",
+      "unbound": "未绑定",
+      "customized": "自定义",
+      "conflictsTitle": "快捷键冲突",
+      "conflictsDescription": "这些组合对应多个命令，只有列表中的第一个会生效。",
+      "conflictWith": "也绑定到 {{commands}}",
+      "risky": "浏览器或系统可能会在 Pairlens 之前拦截这个组合。",
+      "chartScope": "图表面板",
+      "noResults": "没有匹配的命令。",
+      "categories": {
+        "general": "通用",
+        "navigation": "导航",
+        "workspace": "工作区",
+        "chart": "图表",
+        "timeframe": "周期",
+        "drawing": "绘图工具"
+      },
+      "commands": {
+        "workspaceTree": "显示/隐藏工作区树",
+        "workspaceMenu": "工作区菜单",
+        "chartCancel": "取消工具 / 退出全屏"
+      }
     }
   },
   "nav": {

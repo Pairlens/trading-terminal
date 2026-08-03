@@ -12,6 +12,7 @@ import type { MenuNode } from '@/lib/settings/menu-model'
 import i18n from '@/lib/i18n'
 import { isMacDesktop } from '@/lib/platform'
 import { createMenuModel } from '@/lib/settings/menu-model'
+import { subscribeKeybindings } from '@/lib/keybindings/store'
 
 // `@tauri-apps/api/menu` doesn't export the item union as a named type, so we
 // mirror the shape its append/insert/items APIs use.
@@ -264,8 +265,10 @@ export async function initDesktopMenu(): Promise<void> {
   if (!isMacDesktop || initialized) return
   initialized = true
 
-  // Re-translate the whole menu when the UI language changes.
+  // Re-translate the whole menu when the UI language changes, and re-issue the
+  // accelerators when the user rebinds a keyboard shortcut.
   i18n.on('languageChanged', scheduleRebuild)
+  subscribeKeybindings(scheduleRebuild)
 
   await enqueueBuild('[desktop-menu] failed to initialize app menu:')
 }

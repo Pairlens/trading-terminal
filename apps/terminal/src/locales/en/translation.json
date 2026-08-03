@@ -413,6 +413,7 @@
       "plugins": "Plugins",
       "notifications": "Notifications",
       "appearance": "Appearance",
+      "keyboard": "Keyboard",
       "performance": "Performance",
       "connection": "Connection",
       "language": "Language",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Desktop",
       "browser": "Browser"
+    },
+    "keyboard": {
+      "title": "Keyboard shortcuts",
+      "description": "Every shortcut in the terminal, yours to change. Start from a preset, then rebind whatever you like.",
+      "presetTitle": "Preset",
+      "presetDescription": "The starting point for every command. Your own edits stay on top of whichever preset you pick.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "The shipped defaults.",
+        "tradingview": "TradingView style",
+        "tradingviewDescription": "Drawing chords and redo follow TradingView habits.",
+        "bloomberg": "Bloomberg style",
+        "bloombergDescription": "Function keys jump between sections, the way a Bloomberg keyboard works."
+      },
+      "searchPlaceholder": "Search commands...",
+      "resetAll": "Reset all",
+      "resetAllTitle": "Reset all shortcuts?",
+      "resetAllDescription": "Every command goes back to what the current preset says. Your customizations are lost.",
+      "restoreDefault": "Restore default",
+      "addBinding": "Add a shortcut",
+      "removeBinding": "Remove this shortcut",
+      "recording": "Press a key combination",
+      "stopRecording": "Stop",
+      "unbound": "Not bound",
+      "customized": "Custom",
+      "conflictsTitle": "Shortcut conflicts",
+      "conflictsDescription": "These chords answer to more than one command. Only the first one listed runs.",
+      "conflictWith": "Also bound to {{commands}}",
+      "risky": "The browser or the system may claim this one before Pairlens sees it.",
+      "chartScope": "Chart panes",
+      "noResults": "No command matches that search.",
+      "categories": {
+        "general": "General",
+        "navigation": "Navigation",
+        "workspace": "Workspace",
+        "chart": "Chart",
+        "timeframe": "Timeframes",
+        "drawing": "Drawing tools"
+      },
+      "commands": {
+        "workspaceTree": "Toggle workspaces tree",
+        "workspaceMenu": "Workspace menu",
+        "chartCancel": "Cancel tool / exit fullscreen"
+      }
     }
   },
   "nav": {

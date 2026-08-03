@@ -57,6 +57,7 @@ import type { AccountView } from './spotlight-account'
 import type { RenderOption } from './spotlight-bodies'
 import type { OnboardingThemeOption } from './onboarding-themes'
 import type { SpotlightStep } from './spotlight-steps'
+import type { ReactNode } from 'react'
 import type { ColorMode } from '@/lib/settings/color-mode'
 import type {
   OnboardingAssetClass,
@@ -112,6 +113,13 @@ const WORD_DURATION_MS = 380
 const STORY_HERO_BEAT_MS = 420
 const STORY_MEDIA_LAYOUT = { scale: 0.42, orbTop: '14%', stageTop: '25%' }
 
+/**
+ * Width of the seat the welcome headline holds open for the shrunken orb
+ * (132px × 0.24 ≈ 32px of orb, 43px counting its ring) — the slack is the
+ * air between the last word and the orb.
+ */
+const ORB_LOCKUP_WIDTH = 64
+
 type Timers = {
   advance?: ReturnType<typeof setTimeout>
   pulse?: ReturnType<typeof setTimeout>
@@ -141,8 +149,10 @@ export function OnboardingSpotlight() {
   const [busy, setBusy] = useState(false)
   const [storyPhase, setStoryPhase] = useState<'hero' | 'media'>('hero')
 
+  const rootRef = useRef<HTMLDivElement>(null)
   const orbRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
+  const lockupRef = useRef<HTMLSpanElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const auroraRef = useRef<HTMLDivElement>(null)
   const legalCardRef = useRef<HTMLDivElement>(null)
@@ -172,14 +182,26 @@ export function OnboardingSpotlight() {
       : LAYOUT_PRESETS[layoutTypeOf(target)]
     const orb = orbRef.current
     const stage = stageRef.current
+    const stageTop = target.stageTop ?? preset.stageTop
     if (orb) {
       orb.style.top = target.orbTop ?? preset.orbTop
       // The horizontal drift is a hero-phase flourish; the retreated orb
       // re-centers so it doesn't hang over the vignette.
       orb.style.left = mediaPhase ? '50%' : (target.orbLeft ?? '50%')
       orb.style.transform = `translate(-50%, -50%) scale(${target.orbScale ?? preset.scale})`
+      // The welcome lockup is measured, not guessed: the step's percentages
+      // only hold for one headline width, so short windows and the longer
+      // locales walked the orb onto the title. Take the seat the headline
+      // reserved (see ORB_LOCKUP_WIDTH) and land on its center instead.
+      if (target.kind === 'welcome') {
+        const seat = seatCenter(lockupRef.current, stage, stageTop)
+        if (seat) {
+          orb.style.left = `${seat.x}px`
+          orb.style.top = `${seat.y}px`
+        }
+      }
     }
-    if (stage) stage.style.top = target.stageTop ?? preset.stageTop
+    if (stage) stage.style.top = stageTop
   }, [])
 
   const applySplashLayout = useCallback(() => {
@@ -292,6 +314,23 @@ export function OnboardingSpotlight() {
     applyLayout(stepIndex, true)
     pulse()
   }, [storyPhase])
+
+  // Re-layout on any geometry change. Every other step is pure percentages
+  // and lands back on the same numbers, but the welcome lockup is measured in
+  // px — it would drift off the headline the moment the window resized or the
+  // title reflowed. Observing boxes rather than listening for `resize` also
+  // covers reflow with no viewport change (font swap, wrapping).
+  useEffect(() => {
+    const frame = rootRef.current
+    const stage = stageRef.current
+    if (launched || !frame || !stage) return
+    const observer = new ResizeObserver(() =>
+      applyLayout(stepIndex, storyPhase === 'media'),
+    )
+    observer.observe(frame)
+    observer.observe(stage)
+    return () => observer.disconnect()
+  }, [applyLayout, launched, stepIndex, storyPhase])
 
   // ── Navigation + selection ────────────────────────────────────────
 
@@ -705,7 +744,10 @@ export function OnboardingSpotlight() {
   // ── Render ────────────────────────────────────────────────────────
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-background font-sans text-foreground transition-colors duration-600">
+    <div
+      ref={rootRef}
+      className="fixed inset-0 overflow-hidden bg-background font-sans text-foreground transition-colors duration-600"
+    >
       {/* Aurora background */}
       <div
         ref={auroraRef}
@@ -848,6 +890,22 @@ export function OnboardingSpotlight() {
                         ? 'text-[44px] leading-[1.04] max-md:text-4xl'
                         : 'text-[34px] leading-[1.07] max-md:text-[28px]',
                     )}
+                    trailing={
+                      step.kind === 'welcome' ? (
+                        <span
+                          ref={lockupRef}
+                          aria-hidden
+                          className="inline-block align-middle"
+                          style={{
+                            // Glued to the last word: an inline seat the orb
+                            // is measured into, so the headline reflows around
+                            // it in every locale instead of running under it.
+                            width: `${ORB_LOCKUP_WIDTH}px`,
+                            height: '0.6em',
+                          }}
+                        />
+                      ) : undefined
+                    }
                   />
                 )}
                 <p className="max-w-[52ch] text-pretty text-[15.5px] leading-[1.55] text-muted-foreground">
@@ -918,6 +976,42 @@ export function OnboardingSpotlight() {
       </div>
     </div>
   )
+}
+
+/**
+ * Center of the seat the welcome headline holds open for the orb, in frame
+ * coordinates — or null while the seat isn't mounted (every other step).
+ *
+ * Offsets, not client rects: this runs while the stage is still transitioning
+ * to `stageTop` and the content carries its enter transform, so a rect would
+ * report where the headline is rather than where it lands. offsetTop/offsetLeft
+ * are pure layout, which is exactly the settled geometry we're aiming at.
+ */
+function seatCenter(
+  seat: HTMLElement | null,
+  stage: HTMLElement | null,
+  stageTop: string,
+): { x: number; y: number } | null {
+  const frame = stage?.offsetParent
+  if (!seat || !stage || !(frame instanceof HTMLElement)) return null
+  const top = stageTop.trim().endsWith('%')
+    ? (parseFloat(stageTop) / 100) * frame.clientHeight
+    : parseFloat(stageTop)
+  if (!Number.isFinite(top)) return null
+
+  let x = seat.offsetWidth / 2
+  let y = seat.offsetHeight / 2
+  let node: HTMLElement | null = seat
+  while (node && node !== stage) {
+    x += node.offsetLeft
+    y += node.offsetTop
+    node = node.offsetParent instanceof HTMLElement ? node.offsetParent : null
+  }
+  if (node !== stage) return null
+
+  // The stage sits at left:50% with a -50% translate, so its offsetLeft is the
+  // frame's midline — back out half its width to reach its visual left edge.
+  return { x: stage.offsetLeft - stage.offsetWidth / 2 + x, y: top + y }
 }
 
 // ── Step body dispatch ────────────────────────────────────────────────
@@ -1091,17 +1185,28 @@ function StepBody({
  * Narrative headings reveal one word at a time (staggered rise + deblur).
  * Real spaces between the inline-block spans keep line wrapping intact.
  * Key this by step so the CSS animation re-runs on every step change.
+ *
+ * `trailing` rides along at the end of the last line — the welcome frame
+ * uses it to reserve the orb's seat inside the headline.
  */
 function WordRevealTitle({
   text,
   animate,
   className,
+  trailing,
 }: {
   text: string
   animate: boolean
   className?: string
+  trailing?: ReactNode
 }) {
-  if (!animate) return <h2 className={className}>{text}</h2>
+  if (!animate)
+    return (
+      <h2 className={className}>
+        {text}
+        {trailing}
+      </h2>
+    )
   const words = text.split(' ')
   return (
     <h2 className={className} aria-label={text}>
@@ -1119,6 +1224,7 @@ function WordRevealTitle({
           </span>
         </span>
       ))}
+      {trailing}
     </h2>
   )
 }

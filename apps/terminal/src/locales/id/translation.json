@@ -413,6 +413,7 @@
       "plugins": "Plugin",
       "notifications": "Notifikasi",
       "appearance": "Tampilan",
+      "keyboard": "Papan ketik",
       "performance": "Performa",
       "connection": "Koneksi",
       "language": "Bahasa",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Desktop",
       "browser": "Peramban"
+    },
+    "keyboard": {
+      "title": "Pintasan papan ketik",
+      "description": "Semua pintasan di terminal bisa diubah. Mulai dari preset, lalu petakan ulang sesuka kamu.",
+      "presetTitle": "Preset",
+      "presetDescription": "Titik awal untuk setiap perintah. Perubahanmu tetap berada di atas preset yang dipilih.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "Setelan bawaan.",
+        "tradingview": "Gaya TradingView",
+        "tradingviewDescription": "Pintasan menggambar dan ulangi mengikuti kebiasaan TradingView.",
+        "bloomberg": "Gaya Bloomberg",
+        "bloombergDescription": "Tombol fungsi berpindah antarbagian, seperti pada papan ketik Bloomberg."
+      },
+      "searchPlaceholder": "Cari perintah...",
+      "resetAll": "Setel ulang semua",
+      "resetAllTitle": "Setel ulang semua pintasan?",
+      "resetAllDescription": "Setiap perintah kembali ke preset saat ini. Kustomisasimu akan hilang.",
+      "restoreDefault": "Kembalikan ke bawaan",
+      "addBinding": "Tambah pintasan",
+      "removeBinding": "Hapus pintasan ini",
+      "recording": "Tekan kombinasi tombol",
+      "stopRecording": "Berhenti",
+      "unbound": "Belum dipetakan",
+      "customized": "Kustom",
+      "conflictsTitle": "Konflik pintasan",
+      "conflictsDescription": "Kombinasi ini terpakai oleh lebih dari satu perintah. Hanya yang pertama dalam daftar yang jalan.",
+      "conflictWith": "Juga dipetakan ke {{commands}}",
+      "risky": "Peramban atau sistem bisa mengambil kombinasi ini sebelum Pairlens melihatnya.",
+      "chartScope": "Panel grafik",
+      "noResults": "Tidak ada perintah yang cocok dengan pencarian itu.",
+      "categories": {
+        "general": "Umum",
+        "navigation": "Navigasi",
+        "workspace": "Ruang kerja",
+        "chart": "Grafik",
+        "timeframe": "Rentang waktu",
+        "drawing": "Alat gambar"
+      },
+      "commands": {
+        "workspaceTree": "Tampilkan/sembunyikan pohon ruang kerja",
+        "workspaceMenu": "Menu ruang kerja",
+        "chartCancel": "Batalkan alat / keluar dari layar penuh"
+      }
     }
   },
   "nav": {

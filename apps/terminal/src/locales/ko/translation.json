@@ -413,6 +413,7 @@
       "plugins": "플러그인",
       "notifications": "알림",
       "appearance": "화면",
+      "keyboard": "키보드",
       "performance": "성능",
       "connection": "연결",
       "language": "언어",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "데스크톱",
       "browser": "브라우저"
+    },
+    "keyboard": {
+      "title": "키보드 단축키",
+      "description": "터미널의 모든 단축키를 바꿀 수 있습니다. 프리셋에서 시작한 뒤 원하는 대로 다시 지정하세요.",
+      "presetTitle": "프리셋",
+      "presetDescription": "모든 명령의 출발점입니다. 직접 수정한 내용은 선택한 프리셋 위에 그대로 남습니다.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "기본 제공 설정.",
+        "tradingview": "TradingView 스타일",
+        "tradingviewDescription": "그리기 단축키와 다시 실행이 TradingView 방식을 따릅니다.",
+        "bloomberg": "Bloomberg 스타일",
+        "bloombergDescription": "Bloomberg 키보드처럼 기능 키로 섹션 사이를 이동합니다."
+      },
+      "searchPlaceholder": "명령 검색...",
+      "resetAll": "모두 초기화",
+      "resetAllTitle": "모든 단축키를 초기화할까요?",
+      "resetAllDescription": "모든 명령이 현재 프리셋 설정으로 돌아가고 사용자 지정은 사라집니다.",
+      "restoreDefault": "기본값 복원",
+      "addBinding": "단축키 추가",
+      "removeBinding": "이 단축키 제거",
+      "recording": "키 조합을 누르세요",
+      "stopRecording": "중지",
+      "unbound": "지정 안 됨",
+      "customized": "사용자 지정",
+      "conflictsTitle": "단축키 충돌",
+      "conflictsDescription": "이 조합은 두 개 이상의 명령에 지정되어 있습니다. 목록의 첫 번째만 실행됩니다.",
+      "conflictWith": "{{commands}}에도 지정됨",
+      "risky": "브라우저나 시스템이 Pairlens보다 먼저 이 조합을 가져갈 수 있습니다.",
+      "chartScope": "차트 패널",
+      "noResults": "검색과 일치하는 명령이 없습니다.",
+      "categories": {
+        "general": "일반",
+        "navigation": "내비게이션",
+        "workspace": "워크스페이스",
+        "chart": "차트",
+        "timeframe": "타임프레임",
+        "drawing": "그리기 도구"
+      },
+      "commands": {
+        "workspaceTree": "워크스페이스 트리 표시 전환",
+        "workspaceMenu": "워크스페이스 메뉴",
+        "chartCancel": "도구 취소 / 전체 화면 종료"
+      }
     }
   },
   "nav": {

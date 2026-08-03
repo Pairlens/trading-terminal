@@ -413,6 +413,7 @@
       "plugins": "Plugins",
       "notifications": "Notificações",
       "appearance": "Aparência",
+      "keyboard": "Teclado",
       "performance": "Desempenho",
       "connection": "Conexão",
       "language": "Idioma",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Desktop",
       "browser": "Navegador"
+    },
+    "keyboard": {
+      "title": "Atalhos de teclado",
+      "description": "Todos os atalhos do terminal podem ser alterados. Comece por uma predefinição e reatribua o que quiser.",
+      "presetTitle": "Predefinição",
+      "presetDescription": "O ponto de partida de cada comando. As suas edições ficam por cima da predefinição escolhida.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "Os valores de origem.",
+        "tradingview": "Estilo TradingView",
+        "tradingviewDescription": "Os atalhos de desenho e de refazer seguem os hábitos do TradingView.",
+        "bloomberg": "Estilo Bloomberg",
+        "bloombergDescription": "As teclas de função saltam entre secções, como num teclado Bloomberg."
+      },
+      "searchPlaceholder": "Procurar comandos...",
+      "resetAll": "Repor tudo",
+      "resetAllTitle": "Repor todos os atalhos?",
+      "resetAllDescription": "Cada comando volta ao que diz a predefinição atual. As suas personalizações serão perdidas.",
+      "restoreDefault": "Repor predefinição",
+      "addBinding": "Adicionar um atalho",
+      "removeBinding": "Remover este atalho",
+      "recording": "Prima uma combinação de teclas",
+      "stopRecording": "Parar",
+      "unbound": "Sem atribuição",
+      "customized": "Personalizado",
+      "conflictsTitle": "Conflitos de atalhos",
+      "conflictsDescription": "Estas combinações respondem a mais do que um comando. Só a primeira da lista é executada.",
+      "conflictWith": "Também atribuído a {{commands}}",
+      "risky": "O navegador ou o sistema podem ficar com este atalho antes de o Pairlens o ver.",
+      "chartScope": "Painéis de gráfico",
+      "noResults": "Nenhum comando corresponde a essa procura.",
+      "categories": {
+        "general": "Geral",
+        "navigation": "Navegação",
+        "workspace": "Área de trabalho",
+        "chart": "Gráfico",
+        "timeframe": "Períodos",
+        "drawing": "Ferramentas de desenho"
+      },
+      "commands": {
+        "workspaceTree": "Mostrar/ocultar a árvore de áreas de trabalho",
+        "workspaceMenu": "Menu de áreas de trabalho",
+        "chartCancel": "Cancelar ferramenta / sair do ecrã inteiro"
+      }
     }
   },
   "nav": {

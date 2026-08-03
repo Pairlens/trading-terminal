@@ -413,6 +413,7 @@
       "plugins": "Wtyczki",
       "notifications": "Powiadomienia",
       "appearance": "Wygląd",
+      "keyboard": "Klawiatura",
       "performance": "Wydajność",
       "connection": "Połączenie",
       "language": "Język",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Desktop",
       "browser": "Przeglądarka"
+    },
+    "keyboard": {
+      "title": "Skróty klawiszowe",
+      "description": "Każdy skrót w terminalu można zmienić. Zacznij od gotowego zestawu, a potem przypisz co chcesz.",
+      "presetTitle": "Zestaw",
+      "presetDescription": "Punkt wyjścia dla każdego polecenia. Twoje zmiany pozostają nad wybranym zestawem.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "Ustawienia domyślne.",
+        "tradingview": "Styl TradingView",
+        "tradingviewDescription": "Skróty do rysowania i ponawiania jak w TradingView.",
+        "bloomberg": "Styl Bloomberg",
+        "bloombergDescription": "Klawisze funkcyjne przeskakują między sekcjami, jak na klawiaturze Bloomberga."
+      },
+      "searchPlaceholder": "Szukaj poleceń...",
+      "resetAll": "Zresetuj wszystko",
+      "resetAllTitle": "Zresetować wszystkie skróty?",
+      "resetAllDescription": "Każde polecenie wróci do bieżącego zestawu. Twoje ustawienia zostaną utracone.",
+      "restoreDefault": "Przywróć domyślny",
+      "addBinding": "Dodaj skrót",
+      "removeBinding": "Usuń ten skrót",
+      "recording": "Naciśnij kombinację klawiszy",
+      "stopRecording": "Zatrzymaj",
+      "unbound": "Nieprzypisany",
+      "customized": "Własny",
+      "conflictsTitle": "Konflikty skrótów",
+      "conflictsDescription": "Te kombinacje odpowiadają więcej niż jednemu poleceniu. Zadziała tylko pierwsze z listy.",
+      "conflictWith": "Przypisane także do {{commands}}",
+      "risky": "Przeglądarka lub system mogą przejąć ten skrót, zanim zobaczy go Pairlens.",
+      "chartScope": "Panele wykresu",
+      "noResults": "Żadne polecenie nie pasuje do tego wyszukiwania.",
+      "categories": {
+        "general": "Ogólne",
+        "navigation": "Nawigacja",
+        "workspace": "Obszar roboczy",
+        "chart": "Wykres",
+        "timeframe": "Interwały",
+        "drawing": "Narzędzia rysowania"
+      },
+      "commands": {
+        "workspaceTree": "Pokaż/ukryj drzewo obszarów roboczych",
+        "workspaceMenu": "Menu obszarów roboczych",
+        "chartCancel": "Anuluj narzędzie / wyjdź z pełnego ekranu"
+      }
     }
   },
   "nav": {

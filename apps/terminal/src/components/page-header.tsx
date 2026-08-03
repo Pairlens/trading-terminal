@@ -9,7 +9,7 @@ import { Separator } from '@pairlens/ui/components/ui/separator'
 import type { ReactNode } from 'react'
 
 import { useOmniSearch } from '@/components/omni-search/omni-search-provider'
-import { metaKeySymbol } from '@/hooks/use-keyboard-shortcuts'
+import { useKeybindingLabel } from '@/hooks/use-keybindings'
 
 type PageHeaderProps = {
   /** Left-aligned content (title, pair info, etc.) */
@@ -21,6 +21,7 @@ type PageHeaderProps = {
 export function PageHeader({ children, actions }: PageHeaderProps) {
   const { t } = useTranslation()
   const { open } = useOmniSearch()
+  const searchShortcut = useKeybindingLabel('general.commandPalette')
 
   return (
     <header className="flex h-10 shrink-0 items-center gap-2 border-b px-3">
@@ -40,7 +41,7 @@ export function PageHeader({ children, actions }: PageHeaderProps) {
       >
         <Search className="size-3.5" />
         <span className="hidden sm:inline">{t('search.placeholder')}</span>
-        <Kbd>{metaKeySymbol}K</Kbd>
+        {searchShortcut ? <Kbd>{searchShortcut}</Kbd> : null}
       </Button>
     </header>
   )

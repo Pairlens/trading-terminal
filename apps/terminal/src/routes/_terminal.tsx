@@ -80,10 +80,11 @@ import { track } from '@/lib/analytics-events'
 import { useAvailableUpdateCount } from '@/stores/plugin-updates-store'
 import { IdleGuard } from '@/components/idle-guard'
 import { ShortcutHint, ShortcutHintListener } from '@/components/shortcut-hints'
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
 import {
-  altKeySymbol,
-  useKeyboardShortcuts,
-} from '@/hooks/use-keyboard-shortcuts'
+  useKeybindingLabel,
+  useKeybindingLabels,
+} from '@/hooks/use-keybindings'
 import { BillingStateSync } from '@/components/billing/billing-state-sync'
 import { SectionTour } from '@/components/onboarding/section-tour'
 import { isOnboardingComplete } from '@/lib/onboarding-state'
@@ -208,23 +209,21 @@ function TerminalLayout() {
     }
   }, [activeItem])
 
-  // ⌥1–⌥9 jump between sections, mirroring the sidebar top-to-bottom.
+  // Section jumps + the app-wide chords. Each names a keybinding command; what
+  // chord that command answers to is the user's call (see lib/keybindings).
   const [recentPairs] = usePersistedState<Array<string>>(
     'pair-picker.recent',
     [],
   )
   const lastPair = recentPairs[0]
-  const navShortcuts = useMemo<Array<ShortcutDefinition>>(() => {
-    const defs: Array<
-      Pick<ShortcutDefinition, 'key' | 'action' | 'description'>
-    > = [
+  const navShortcuts = useMemo<Array<ShortcutDefinition>>(
+    () => [
       {
-        key: '1',
+        commandId: 'navigation.pairs',
         action: () => void navigate({ to: '/' }),
-        description: 'Go to Pairs',
       },
       {
-        key: '2',
+        commandId: 'navigation.charts',
         action: () => {
           if (lastPair) {
             void navigate({ to: '/pair/$pair', params: { pair: lastPair } })
@@ -232,58 +231,48 @@ function TerminalLayout() {
             void navigate({ to: '/' })
           }
         },
-        description: 'Go to Charts',
       },
       {
-        key: '3',
+        commandId: 'navigation.notifications',
         action: () => void navigate({ to: '/notifications' }),
-        description: 'Go to Notifications',
       },
       {
-        key: '4',
+        commandId: 'navigation.workflows',
         action: () => void navigate({ to: '/workflows' }),
-        description: 'Go to Workflows',
       },
       {
-        key: '5',
+        commandId: 'navigation.indicators',
         action: () => void navigate({ to: '/indicators' }),
-        description: 'Go to Indicators',
       },
       {
-        key: '6',
+        commandId: 'navigation.accounts',
         action: () => void navigate({ to: '/accounts' }),
-        description: 'Go to Accounts',
       },
       {
-        key: '7',
+        commandId: 'navigation.plugins',
         action: () => void navigate({ to: '/plugins' }),
-        description: 'Go to Plugins',
       },
       {
-        key: '8',
+        commandId: 'navigation.workspaceTree',
         action: () => setWorkspaceTreeOpen((prev) => !prev),
-        description: 'Toggle Workspaces tree',
       },
       {
-        key: '9',
+        commandId: 'navigation.workspaceStore',
         action: () => void navigate({ to: '/workspace-store' }),
-        description: 'Go to Workspace Store',
       },
-      // ⌥1–⌥9 are all spoken for, so Bots takes a mnemonic letter instead of
-      // renumbering (and so relearning) every section above it.
       {
-        key: 'b',
+        commandId: 'navigation.bots',
         action: () => void navigate({ to: '/bots' }),
-        description: 'Go to Bots',
       },
-    ]
-    return defs.map((def) => ({
-      ...def,
-      modifiers: { alt: true },
-      label: `${altKeySymbol}${def.key.toUpperCase()}`,
-    }))
-  }, [navigate, lastPair])
+      {
+        commandId: 'general.settings',
+        action: () => useSettingsDialogStore.getState().open(),
+      },
+    ],
+    [navigate, lastPair, setWorkspaceTreeOpen],
+  )
   useKeyboardShortcuts(navShortcuts)
+  const shortcutLabel = useKeybindingLabels()
 
   const sectionLabelMap: Record<string, string> = {
     pairs: t('discovery.title'),
@@ -365,7 +354,9 @@ function TerminalLayout() {
                                 <span className="sr-only">
                                   {t('nav.pairs')}
                                 </span>
-                                <ShortcutHint keys={`${altKeySymbol}1`} />
+                                <ShortcutHint
+                                  keys={shortcutLabel('navigation.pairs')}
+                                />
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <ChartsNavItem isActive={activeItem === 'charts'} />
@@ -384,7 +375,11 @@ function TerminalLayout() {
                                 <span className="sr-only">
                                   {t('nav.notifications')}
                                 </span>
-                                <ShortcutHint keys={`${altKeySymbol}3`} />
+                                <ShortcutHint
+                                  keys={shortcutLabel(
+                                    'navigation.notifications',
+                                  )}
+                                />
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
@@ -401,7 +396,9 @@ function TerminalLayout() {
                                 <span className="sr-only">
                                   {t('nav.workflows')}
                                 </span>
-                                <ShortcutHint keys={`${altKeySymbol}4`} />
+                                <ShortcutHint
+                                  keys={shortcutLabel('navigation.workflows')}
+                                />
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
@@ -418,7 +415,9 @@ function TerminalLayout() {
                                 <span className="sr-only">
                                   {t('nav.indicators')}
                                 </span>
-                                <ShortcutHint keys={`${altKeySymbol}5`} />
+                                <ShortcutHint
+                                  keys={shortcutLabel('navigation.indicators')}
+                                />
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
@@ -431,7 +430,9 @@ function TerminalLayout() {
                               >
                                 <Bot size={16} />
                                 <span className="sr-only">{t('nav.bots')}</span>
-                                <ShortcutHint keys={`${altKeySymbol}B`} />
+                                <ShortcutHint
+                                  keys={shortcutLabel('navigation.bots')}
+                                />
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarSeparator className="my-1" />
@@ -456,7 +457,11 @@ function TerminalLayout() {
                                     {t(item.labelKey)}
                                   </span>
                                   <ShortcutHint
-                                    keys={`${altKeySymbol}${item.id === 'accounts' ? 6 : 7}`}
+                                    keys={shortcutLabel(
+                                      item.id === 'accounts'
+                                        ? 'navigation.accounts'
+                                        : 'navigation.plugins',
+                                    )}
                                   />
                                   {item.id === 'plugins' && (
                                     <PluginUpdateBadge />
@@ -482,7 +487,11 @@ function TerminalLayout() {
                                 <span className="sr-only">
                                   {t('layout.workspaces')}
                                 </span>
-                                <ShortcutHint keys={`${altKeySymbol}8`} />
+                                <ShortcutHint
+                                  keys={shortcutLabel(
+                                    'navigation.workspaceTree',
+                                  )}
+                                />
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
@@ -499,7 +508,11 @@ function TerminalLayout() {
                                 <span className="sr-only">
                                   {t('nav.workspaceStore')}
                                 </span>
-                                <ShortcutHint keys={`${altKeySymbol}9`} />
+                                <ShortcutHint
+                                  keys={shortcutLabel(
+                                    'navigation.workspaceStore',
+                                  )}
+                                />
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                           </SidebarMenu>
@@ -613,6 +626,7 @@ function PluginUpdateBadge() {
 function ChartsNavItem({ isActive }: { isActive: boolean }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const chartsShortcut = useKeybindingLabel('navigation.charts')
   const [recentPairs] = usePersistedState<Array<string>>(
     'pair-picker.recent',
     [],
@@ -637,7 +651,7 @@ function ChartsNavItem({ isActive }: { isActive: boolean }) {
         >
           <ChartLineIcon size={16} />
           <span className="sr-only">{t('nav.charts')}</span>
-          <ShortcutHint keys={`${altKeySymbol}2`} />
+          <ShortcutHint keys={chartsShortcut} />
         </DropdownMenuTrigger>
         <DropdownMenuContent
           side="right"

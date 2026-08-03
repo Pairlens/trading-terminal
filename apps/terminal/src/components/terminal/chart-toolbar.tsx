@@ -55,7 +55,15 @@ import type {
 import type { ChartType } from '@/hooks/use-chart-terminal-state'
 import { CompareMenu } from '@/components/terminal/compare-symbol-menu'
 import { ShortcutHint } from '@/components/shortcut-hints'
-import { metaKeySymbol } from '@/hooks/use-keyboard-shortcuts'
+import {
+  useKeybindingLabel,
+  useKeybindingsVersion,
+} from '@/hooks/use-keybindings'
+import {
+  getCommandLabel,
+  getTimeframeShortcutSummary,
+} from '@/lib/keybindings/store'
+import { timeframeCommandId } from '@/lib/keybindings/commands'
 import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
 import {
   canRevealSavedFiles,
@@ -68,68 +76,56 @@ const TIMEFRAME_OPTIONS: Array<{
   value: string
   short: string
   longKey: string
-  /** Keyboard shortcut key — omitted for timeframes without a shortcut. */
-  shortcutKey?: string
 }> = [
   {
     value: '1m',
     short: '1m',
     longKey: 'chart.timeframes.1m',
-    shortcutKey: '1',
   },
   {
     value: '5m',
     short: '5m',
     longKey: 'chart.timeframes.5m',
-    shortcutKey: '2',
   },
   {
     value: '15m',
     short: '15m',
     longKey: 'chart.timeframes.15m',
-    shortcutKey: '3',
   },
   {
     value: '30m',
     short: '30m',
     longKey: 'chart.timeframes.30m',
-    shortcutKey: '4',
   },
   {
     value: '1h',
     short: '1h',
     longKey: 'chart.timeframes.1h',
-    shortcutKey: '5',
   },
   {
     value: '2h',
     short: '2h',
     longKey: 'chart.timeframes.2h',
-    shortcutKey: '6',
   },
   {
     value: '4h',
     short: '4h',
     longKey: 'chart.timeframes.4h',
-    shortcutKey: '7',
   },
   {
     value: '1d',
     short: '1D',
     longKey: 'chart.timeframes.1d',
-    shortcutKey: '8',
   },
   {
     value: '3d',
     short: '3D',
     longKey: 'chart.timeframes.3d',
-    shortcutKey: '0',
   },
   {
     value: '1w',
     short: '1W',
     longKey: 'chart.timeframes.1w',
-    shortcutKey: '9',
   },
   {
     value: '1M',
@@ -137,13 +133,6 @@ const TIMEFRAME_OPTIONS: Array<{
     longKey: 'chart.timeframes.1M',
   },
 ]
-
-/** Maps number keys (1-9, 0) to timeframe values for keyboard shortcuts */
-export const TIMEFRAME_SHORTCUT_MAP = Object.fromEntries(
-  TIMEFRAME_OPTIONS.flatMap((o) =>
-    o.shortcutKey ? [[o.shortcutKey, o.value] as const] : [],
-  ),
-) as Record<string, string>
 
 const CHART_TYPE_OPTIONS: Array<{
   value: ChartType
@@ -311,6 +300,11 @@ export function ChartToolbar() {
     [chartRef, chartSeries, t, timeframe],
   )
 
+  // Re-render on rebind so every shortcut label below stays truthful.
+  useKeybindingsVersion()
+  const indicatorsShortcut = useKeybindingLabel('chart.indicators')
+  const timeframeSummary = getTimeframeShortcutSummary()
+
   const activeChartOption =
     CHART_TYPE_OPTIONS.find((o) => o.value === chartType) ??
     CHART_TYPE_OPTIONS[0]
@@ -333,7 +327,7 @@ export function ChartToolbar() {
               <Clock className="size-3.5" />
               {TIMEFRAME_OPTIONS.find((o) => o.value === timeframe)?.short ??
                 timeframe}
-              <ShortcutHint keys="1-9" />
+              <ShortcutHint keys={timeframeSummary} />
             </TooltipTrigger>
             <TooltipContent>{t('chart.toolbar.timeframe')}</TooltipContent>
           </Tooltip>
@@ -351,8 +345,10 @@ export function ChartToolbar() {
                   <span className="flex-1 text-muted-foreground">
                     {t(option.longKey)}
                   </span>
-                  {option.shortcutKey ? (
-                    <MenubarShortcut>{option.shortcutKey}</MenubarShortcut>
+                  {getCommandLabel(timeframeCommandId(option.value)) ? (
+                    <MenubarShortcut>
+                      {getCommandLabel(timeframeCommandId(option.value))}
+                    </MenubarShortcut>
                   ) : null}
                 </MenubarRadioItem>
               ))}
@@ -502,11 +498,13 @@ export function ChartToolbar() {
         >
           <Sparkles className="size-3.5" />
           {t('chart.toolbar.indicators')}
-          <ShortcutHint keys={`${metaKeySymbol}I`} />
+          <ShortcutHint keys={indicatorsShortcut} />
         </TooltipTrigger>
         <TooltipContent>
           {t('chart.toolbar.addIndicator')}{' '}
-          <Kbd className="ml-1.5">{metaKeySymbol}I</Kbd>
+          {indicatorsShortcut ? (
+            <Kbd className="ml-1.5">{indicatorsShortcut}</Kbd>
+          ) : null}
         </TooltipContent>
       </Tooltip>
 

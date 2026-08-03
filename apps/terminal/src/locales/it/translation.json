@@ -413,6 +413,7 @@
       "plugins": "Plugin",
       "notifications": "Notifiche",
       "appearance": "Aspetto",
+      "keyboard": "Tastiera",
       "performance": "Prestazioni",
       "connection": "Connessione",
       "language": "Lingua",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Desktop",
       "browser": "Browser"
+    },
+    "keyboard": {
+      "title": "Scorciatoie da tastiera",
+      "description": "Ogni scorciatoia del terminale è modificabile. Parti da un preset e riassegna quello che vuoi.",
+      "presetTitle": "Preset",
+      "presetDescription": "Il punto di partenza per ogni comando. Le tue modifiche restano sopra il preset scelto.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "I valori predefiniti.",
+        "tradingview": "Stile TradingView",
+        "tradingviewDescription": "Le scorciatoie di disegno e di ripristino seguono le abitudini di TradingView.",
+        "bloomberg": "Stile Bloomberg",
+        "bloombergDescription": "I tasti funzione saltano da una sezione all’altra, come su una tastiera Bloomberg."
+      },
+      "searchPlaceholder": "Cerca comandi...",
+      "resetAll": "Reimposta tutto",
+      "resetAllTitle": "Reimpostare tutte le scorciatoie?",
+      "resetAllDescription": "Ogni comando torna a quanto indica il preset attuale. Le tue personalizzazioni andranno perse.",
+      "restoreDefault": "Ripristina predefinito",
+      "addBinding": "Aggiungi una scorciatoia",
+      "removeBinding": "Rimuovi questa scorciatoia",
+      "recording": "Premi una combinazione di tasti",
+      "stopRecording": "Ferma",
+      "unbound": "Non assegnata",
+      "customized": "Personalizzata",
+      "conflictsTitle": "Conflitti fra scorciatoie",
+      "conflictsDescription": "Queste combinazioni rispondono a più comandi. Viene eseguito solo il primo dell’elenco.",
+      "conflictWith": "Assegnata anche a {{commands}}",
+      "risky": "Il browser o il sistema potrebbero intercettare questa combinazione prima di Pairlens.",
+      "chartScope": "Pannelli del grafico",
+      "noResults": "Nessun comando corrisponde a questa ricerca.",
+      "categories": {
+        "general": "Generale",
+        "navigation": "Navigazione",
+        "workspace": "Spazio di lavoro",
+        "chart": "Grafico",
+        "timeframe": "Intervalli",
+        "drawing": "Strumenti di disegno"
+      },
+      "commands": {
+        "workspaceTree": "Mostra/nascondi l’albero degli spazi di lavoro",
+        "workspaceMenu": "Menu degli spazi di lavoro",
+        "chartCancel": "Annulla strumento / esci da schermo intero"
+      }
     }
   },
   "nav": {

@@ -13,6 +13,7 @@ import {
   Fingerprint,
   Gauge,
   Globe,
+  Keyboard,
   Loader2,
   LogIn,
   MapPin,
@@ -110,6 +111,13 @@ const LazyPrivacySection = React.lazy(() =>
 const LazyIntelligenceSection = React.lazy(() =>
   loadSections().then((m) => ({ default: m.IntelligenceSection })),
 )
+// Keyboard lives in its own chunk: it pulls in the whole command catalog and
+// almost nobody opens it, so it shouldn't ride along with the common sections.
+const LazyKeyboardSection = React.lazy(() =>
+  import('./settings/keyboard-section').then((m) => ({
+    default: m.KeyboardSection,
+  })),
+)
 
 function SectionFallback() {
   return (
@@ -127,6 +135,7 @@ const SETTINGS_NAV = [
   { id: 'currency', nameKey: 'settings.nav.currency', icon: Coins },
   { id: 'risk', nameKey: 'settings.nav.risk', icon: ShieldCheck },
   { id: 'appearance', nameKey: 'settings.nav.appearance', icon: Paintbrush },
+  { id: 'keyboard', nameKey: 'settings.nav.keyboard', icon: Keyboard },
   { id: 'performance', nameKey: 'settings.nav.performance', icon: Gauge },
   { id: 'privacy', nameKey: 'settings.nav.privacy', icon: Fingerprint },
   { id: 'language', nameKey: 'settings.nav.language', icon: Globe },
@@ -301,7 +310,11 @@ export default function UserSettingsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="overflow-hidden p-0 md:h-[500px] md:max-h-[calc(100dvh-2rem)] md:max-w-[720px] lg:max-w-[820px]">
+      {/* Roomy on purpose: the settings surface has grown past a dozen
+          sections, and the keyboard editor needs a wide row for command name +
+          chord chips + row actions without wrapping. Height tracks the viewport
+          so short laptop screens still get a dialog that fits. */}
+      <DialogContent className="overflow-hidden p-0 md:h-[min(46rem,calc(100dvh-3rem))] md:max-h-[calc(100dvh-2rem)] md:max-w-[56rem] lg:max-w-[66rem]">
         <DialogTitle className="sr-only">{t('settings.title')}</DialogTitle>
         <DialogDescription className="sr-only">
           {t('settings.description')}
@@ -339,7 +352,7 @@ export default function UserSettingsDialog({
             </SidebarContent>
             <AppVersionFooter />
           </Sidebar>
-          <main className="flex h-[480px] flex-1 flex-col overflow-hidden md:h-full">
+          <main className="flex h-[34rem] flex-1 flex-col overflow-hidden md:h-full">
             <header className="flex h-16 shrink-0 items-center border-b">
               <div className="flex items-center gap-2 px-4">
                 <Breadcrumb>
@@ -491,6 +504,8 @@ export default function UserSettingsDialog({
                     <LazyRiskSection />
                   ) : activeSection === 'privacy' ? (
                     <LazyPrivacySection />
+                  ) : activeSection === 'keyboard' ? (
+                    <LazyKeyboardSection />
                   ) : activeSection === 'billing' ? (
                     <LazyIntelligenceSection />
                   ) : (

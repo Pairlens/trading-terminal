@@ -413,6 +413,7 @@
       "plugins": "Plugins",
       "notifications": "Notificaciones",
       "appearance": "Apariencia",
+      "keyboard": "Teclado",
       "performance": "Rendimiento",
       "connection": "Conexión",
       "language": "Idioma y región",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Escritorio",
       "browser": "Navegador"
+    },
+    "keyboard": {
+      "title": "Atajos de teclado",
+      "description": "Todos los atajos del terminal, tuyos para cambiar. Empieza con un preajuste y reasigna lo que quieras.",
+      "presetTitle": "Preajuste",
+      "presetDescription": "El punto de partida de cada comando. Tus cambios se mantienen sobre el preajuste que elijas.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "Los valores por defecto.",
+        "tradingview": "Estilo TradingView",
+        "tradingviewDescription": "Los atajos de dibujo y rehacer siguen las costumbres de TradingView.",
+        "bloomberg": "Estilo Bloomberg",
+        "bloombergDescription": "Las teclas de función saltan entre secciones, como en un teclado Bloomberg."
+      },
+      "searchPlaceholder": "Buscar comandos...",
+      "resetAll": "Restablecer todo",
+      "resetAllTitle": "¿Restablecer todos los atajos?",
+      "resetAllDescription": "Cada comando vuelve a lo que indica el preajuste actual. Se pierden tus personalizaciones.",
+      "restoreDefault": "Restaurar valor por defecto",
+      "addBinding": "Añadir un atajo",
+      "removeBinding": "Quitar este atajo",
+      "recording": "Pulsa una combinación de teclas",
+      "stopRecording": "Detener",
+      "unbound": "Sin asignar",
+      "customized": "Personalizado",
+      "conflictsTitle": "Conflictos de atajos",
+      "conflictsDescription": "Estas combinaciones responden a más de un comando. Solo se ejecuta la primera de la lista.",
+      "conflictWith": "También asignado a {{commands}}",
+      "risky": "El navegador o el sistema pueden quedarse con este atajo antes de que Pairlens lo vea.",
+      "chartScope": "Paneles de gráfico",
+      "noResults": "Ningún comando coincide con esa búsqueda.",
+      "categories": {
+        "general": "General",
+        "navigation": "Navegación",
+        "workspace": "Espacio de trabajo",
+        "chart": "Gráfico",
+        "timeframe": "Temporalidades",
+        "drawing": "Herramientas de dibujo"
+      },
+      "commands": {
+        "workspaceTree": "Mostrar u ocultar el árbol de espacios",
+        "workspaceMenu": "Menú de espacios de trabajo",
+        "chartCancel": "Cancelar herramienta / salir de pantalla completa"
+      }
     }
   },
   "nav": {

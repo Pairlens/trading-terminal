@@ -413,6 +413,7 @@
       "plugins": "Plugin",
       "notifications": "Thông báo",
       "appearance": "Giao diện",
+      "keyboard": "Bàn phím",
       "performance": "Hiệu suất",
       "connection": "Kết nối",
       "language": "Ngôn ngữ",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Máy tính",
       "browser": "Trình duyệt"
+    },
+    "keyboard": {
+      "title": "Phím tắt",
+      "description": "Mọi phím tắt trong terminal đều có thể đổi. Bắt đầu từ một bộ dựng sẵn rồi gán lại tuỳ ý.",
+      "presetTitle": "Bộ dựng sẵn",
+      "presetDescription": "Điểm khởi đầu cho mọi lệnh. Các thay đổi của bạn vẫn nằm trên bộ dựng sẵn đã chọn.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "Thiết lập mặc định.",
+        "tradingview": "Kiểu TradingView",
+        "tradingviewDescription": "Phím tắt vẽ và làm lại theo thói quen của TradingView.",
+        "bloomberg": "Kiểu Bloomberg",
+        "bloombergDescription": "Các phím chức năng chuyển giữa các mục, như trên bàn phím Bloomberg."
+      },
+      "searchPlaceholder": "Tìm lệnh...",
+      "resetAll": "Đặt lại tất cả",
+      "resetAllTitle": "Đặt lại toàn bộ phím tắt?",
+      "resetAllDescription": "Mọi lệnh sẽ quay về bộ dựng sẵn hiện tại. Các tuỳ chỉnh của bạn sẽ mất.",
+      "restoreDefault": "Khôi phục mặc định",
+      "addBinding": "Thêm phím tắt",
+      "removeBinding": "Bỏ phím tắt này",
+      "recording": "Nhấn một tổ hợp phím",
+      "stopRecording": "Dừng",
+      "unbound": "Chưa gán",
+      "customized": "Tuỳ chỉnh",
+      "conflictsTitle": "Xung đột phím tắt",
+      "conflictsDescription": "Các tổ hợp này gắn với nhiều lệnh. Chỉ lệnh đầu tiên trong danh sách chạy.",
+      "conflictWith": "Cũng gán cho {{commands}}",
+      "risky": "Trình duyệt hoặc hệ điều hành có thể chiếm tổ hợp này trước khi Pairlens thấy nó.",
+      "chartScope": "Khung biểu đồ",
+      "noResults": "Không có lệnh nào khớp với tìm kiếm đó.",
+      "categories": {
+        "general": "Chung",
+        "navigation": "Điều hướng",
+        "workspace": "Không gian làm việc",
+        "chart": "Biểu đồ",
+        "timeframe": "Khung thời gian",
+        "drawing": "Công cụ vẽ"
+      },
+      "commands": {
+        "workspaceTree": "Bật/tắt cây không gian làm việc",
+        "workspaceMenu": "Menu không gian làm việc",
+        "chartCancel": "Huỷ công cụ / thoát toàn màn hình"
+      }
     }
   },
   "nav": {

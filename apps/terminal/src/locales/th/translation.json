@@ -413,6 +413,7 @@
       "plugins": "ปลั๊กอิน",
       "notifications": "การแจ้งเตือน",
       "appearance": "รูปลักษณ์",
+      "keyboard": "แป้นพิมพ์",
       "performance": "ประสิทธิภาพ",
       "connection": "การเชื่อมต่อ",
       "language": "ภาษา",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "เดสก์ท็อป",
       "browser": "เบราว์เซอร์"
+    },
+    "keyboard": {
+      "title": "แป้นพิมพ์ลัด",
+      "description": "ทุกแป้นลัดในเทอร์มินัลแก้ไขได้ เริ่มจากชุดสำเร็จรูปแล้วกำหนดใหม่ได้ตามใจ",
+      "presetTitle": "ชุดสำเร็จรูป",
+      "presetDescription": "จุดเริ่มต้นของทุกคำสั่ง การแก้ไขของคุณจะอยู่ทับชุดที่เลือกไว้",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "ค่าเริ่มต้นที่มากับโปรแกรม",
+        "tradingview": "สไตล์ TradingView",
+        "tradingviewDescription": "แป้นลัดสำหรับวาดและทำซ้ำเป็นไปตามแบบของ TradingView",
+        "bloomberg": "สไตล์ Bloomberg",
+        "bloombergDescription": "ใช้ปุ่มฟังก์ชันสลับระหว่างส่วนต่าง ๆ เหมือนคีย์บอร์ด Bloomberg"
+      },
+      "searchPlaceholder": "ค้นหาคำสั่ง...",
+      "resetAll": "รีเซ็ตทั้งหมด",
+      "resetAllTitle": "รีเซ็ตแป้นลัดทั้งหมดหรือไม่",
+      "resetAllDescription": "ทุกคำสั่งจะกลับไปตามชุดสำเร็จรูปปัจจุบัน การปรับแต่งของคุณจะหายไป",
+      "restoreDefault": "คืนค่าเริ่มต้น",
+      "addBinding": "เพิ่มแป้นลัด",
+      "removeBinding": "ลบแป้นลัดนี้",
+      "recording": "กดชุดปุ่มที่ต้องการ",
+      "stopRecording": "หยุด",
+      "unbound": "ยังไม่ได้กำหนด",
+      "customized": "กำหนดเอง",
+      "conflictsTitle": "แป้นลัดชนกัน",
+      "conflictsDescription": "ชุดปุ่มเหล่านี้ผูกกับหลายคำสั่ง จะทำงานเฉพาะคำสั่งแรกในรายการ",
+      "conflictWith": "ผูกกับ {{commands}} ด้วย",
+      "risky": "เบราว์เซอร์หรือระบบอาจดักชุดปุ่มนี้ก่อนที่ Pairlens จะเห็น",
+      "chartScope": "แผงกราฟ",
+      "noResults": "ไม่มีคำสั่งที่ตรงกับการค้นหา",
+      "categories": {
+        "general": "ทั่วไป",
+        "navigation": "การนำทาง",
+        "workspace": "พื้นที่ทำงาน",
+        "chart": "กราฟ",
+        "timeframe": "กรอบเวลา",
+        "drawing": "เครื่องมือวาด"
+      },
+      "commands": {
+        "workspaceTree": "เปิด/ปิดแผนผังพื้นที่ทำงาน",
+        "workspaceMenu": "เมนูพื้นที่ทำงาน",
+        "chartCancel": "ยกเลิกเครื่องมือ / ออกจากเต็มจอ"
+      }
     }
   },
   "nav": {

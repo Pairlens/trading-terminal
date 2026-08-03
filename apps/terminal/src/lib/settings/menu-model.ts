@@ -5,6 +5,8 @@ import { getDesktopBridge, onDesktopBridgeChange } from './desktop-bridge'
 import { COLOR_MODES, readStoredColorMode } from './color-mode'
 import type { ColorMode } from './color-mode'
 import type { RiskConfig } from '@/stores/risk-config-store'
+import { getCommandChords } from '@/lib/keybindings/store'
+import { chordToAccelerator, parseChord } from '@/lib/keybindings/chord'
 import i18n from '@/lib/i18n'
 import { hasAppServer } from '@/lib/auth-client'
 import { openTerminalWindow } from '@/lib/platform'
@@ -70,6 +72,12 @@ export type MenuCommand = {
   kind: 'command'
   id: string
   text: Translated
+  /**
+   * Keybinding command id. The accelerator is resolved from the user's current
+   * bindings at build time, so rebinding ⌘N in settings moves the native menu
+   * item's key equivalent with it (`desktop-menu` rebuilds on every change).
+   */
+  keybindingId?: string
   accelerator?: string
   run: () => void
   isEnabled?: () => boolean
@@ -213,7 +221,7 @@ const newWindowCommand: MenuCommand = {
   kind: 'command',
   id: 'new-window',
   text: () => t('menu.newWindow', 'New Window'),
-  accelerator: 'CmdOrCtrl+N',
+  keybindingId: 'general.newWindow',
   run: () =>
     void openTerminalWindow(window.location.pathname + window.location.search),
 }
@@ -225,7 +233,7 @@ const backCommand: MenuCommand = {
   kind: 'command',
   id: 'nav-back',
   text: () => t('menu.back', 'Back'),
-  accelerator: 'CmdOrCtrl+[',
+  keybindingId: 'general.back',
   run: () => goBack(),
   isEnabled: () => getCanGoBack(),
   subscribe: (onChange) => subscribeNavHistory(onChange),
@@ -235,7 +243,7 @@ const forwardCommand: MenuCommand = {
   kind: 'command',
   id: 'nav-forward',
   text: () => t('menu.forward', 'Forward'),
-  accelerator: 'CmdOrCtrl+]',
+  keybindingId: 'general.forward',
   run: () => goForward(),
   isEnabled: () => getCanGoForward(),
   subscribe: (onChange) => subscribeNavHistory(onChange),
@@ -258,7 +266,7 @@ const openSettingsCommand: MenuCommand = {
   kind: 'command',
   id: 'open-settings',
   text: () => t('menu.settings', 'Settings…'),
-  accelerator: 'CmdOrCtrl+,',
+  keybindingId: 'general.settings',
   run: () => useSettingsDialogStore.getState().open(),
 }
 
@@ -318,6 +326,31 @@ const setRegionCommand: MenuCommand = {
   run: () => useSettingsDialogStore.getState().open('region'),
 }
 
+/**
+ * Resolve every descriptor's `keybindingId` into the Tauri accelerator string
+ * the native menu wants. Done once per model build so the menu, the in-app
+ * Windows/Linux accelerator runner and the settings UI all read one source.
+ */
+function withAccelerators(nodes: Array<MenuNode>): Array<MenuNode> {
+  return nodes.map((node) => {
+    if (node.kind === 'command' && node.keybindingId) {
+      return { ...node, accelerator: acceleratorFor(node.keybindingId) }
+    }
+    if (node.kind === 'submenu') {
+      return { ...node, items: withAccelerators(node.items) }
+    }
+    return node
+  })
+}
+
+/** The first chord bound to a command, as a Tauri accelerator. */
+function acceleratorFor(keybindingId: string): string | undefined {
+  const serialized = getCommandChords(keybindingId)[0]
+  if (!serialized) return undefined
+  const chord = parseChord(serialized)
+  return (chord && chordToAccelerator(chord)) ?? undefined
+}
+
 export function createMenuModel(): MenuModel {
   const appMenu: Array<MenuNode> = [
     { kind: 'separator' },
@@ -357,5 +390,10 @@ export function createMenuModel(): MenuModel {
     ],
   }
 
-  return { appMenu, file, view, extraMenus: [trading] }
+  return {
+    appMenu: withAccelerators(appMenu),
+    file: withAccelerators(file),
+    view: withAccelerators(view),
+    extraMenus: withAccelerators([trading]) as Array<MenuSubmenu>,
+  }
 }

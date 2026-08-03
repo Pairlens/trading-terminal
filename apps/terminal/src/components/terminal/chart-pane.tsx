@@ -15,25 +15,33 @@ import { ChartContextMenu } from './chart-context-menu'
 
 import { ChartDrawingProperties } from './chart-drawing-properties'
 import { ChartDrawingToolbar } from './chart-drawing-toolbar'
-import { ChartToolbar, TIMEFRAME_SHORTCUT_MAP } from './chart-toolbar'
+import { ChartToolbar } from './chart-toolbar'
 import { ReplayControls } from './replay-controls'
 import { IndicatorPicker } from './indicator-picker'
 import { IntelligenceStrip } from './intelligence-strip'
 import { TerminalChart } from './terminal-chart'
 import { TextInputDialog } from './text-input-dialog'
 import type { SignalPayload } from '@pairlens/shared/types'
-import type { ChartCommand } from '@pairlens/fast-financial-charts/types'
+import type {
+  ChartCommand,
+  DrawingToolType,
+} from '@pairlens/fast-financial-charts/types'
 import {
   useOptionalCandleData,
   useOptionalChartActions,
   useOptionalChartConfig,
 } from '@/lib/chart-terminal-context'
 import { useChartPaneShortcuts } from '@/lib/chart-shortcuts'
+import { matchCommand } from '@/lib/keybindings/store'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useNotificationStore } from '@/stores/notification-store'
+
+/** Command-id prefixes the chart dispatches generically. */
+const TOOL_COMMAND_PREFIX = 'chart.tool.'
+const TIMEFRAME_COMMAND_PREFIX = 'chart.timeframe.'
 
 export function ChartPane() {
   const candleData = useOptionalCandleData()
@@ -186,73 +194,39 @@ const ChartPaneInner = memo(function ChartPaneInner({
 
   // Keyboard shortcuts delivered by the window-level router — they work no
   // matter where DOM focus sits, targeting the active (last-used) chart pane.
+  // Chords come from the keybinding store: this resolves the event to a command
+  // id and dispatches on that, so every one of them is user-rebindable.
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      const meta = e.metaKey || e.ctrlKey
-      const alt = e.altKey
-      const shift = e.shiftKey
-      const key = e.key.toLowerCase()
-      // Use e.code for Alt shortcuts — on macOS, Option+key produces
-      // composed characters (e.g. Option+T → †) so e.key won't match.
-      const code = e.code
+      const commandId = matchCommand(e, 'chart')
+      if (!commandId) return
 
       let handled = true
 
-      if (meta && !alt && !shift && key === 'i') {
+      if (commandId.startsWith(TOOL_COMMAND_PREFIX)) {
+        applyTool(
+          commandId.slice(TOOL_COMMAND_PREFIX.length) as DrawingToolType,
+        )
+      } else if (commandId.startsWith(TIMEFRAME_COMMAND_PREFIX)) {
+        setTimeframe(commandId.slice(TIMEFRAME_COMMAND_PREFIX.length))
+      } else if (commandId === 'chart.indicators') {
         setIndicatorPaletteOpen(true)
-      } else if (meta && !alt && !shift && key === 'z') {
+      } else if (commandId === 'chart.undo') {
         runCommand({ type: 'undo', payload: {} })
-      } else if (meta && !alt && shift && key === 'z') {
+      } else if (commandId === 'chart.redo') {
         runCommand({ type: 'redo', payload: {} })
-      } else if (!meta && alt && !shift && code === 'KeyT') {
-        applyTool('line')
-      } else if (!meta && alt && !shift && code === 'KeyH') {
-        applyTool('hline')
-      } else if (!meta && alt && !shift && code === 'KeyV') {
-        applyTool('vline')
-      } else if (!meta && alt && !shift && code === 'KeyR') {
-        applyTool('rectangle')
-      } else if (!meta && alt && !shift && code === 'KeyM') {
-        applyTool('measure')
-      } else if (!meta && alt && !shift && code === 'KeyF') {
-        applyTool('fibonacci')
-      } else if (!meta && alt && !shift && code === 'KeyX') {
-        applyTool('text')
-      } else if (!meta && alt && !shift && code === 'KeyY') {
-        applyTool('ray')
-      } else if (!meta && alt && !shift && code === 'KeyE') {
-        applyTool('xline')
-      } else if (!meta && alt && !shift && code === 'KeyA') {
-        applyTool('arrow')
-      } else if (!meta && alt && !shift && code === 'KeyI') {
-        applyTool('info-line')
-      } else if (!meta && alt && !shift && code === 'KeyC') {
-        applyTool('crossline')
-      } else if (!meta && alt && !shift && code === 'KeyL') {
-        applyTool('long-position')
-      } else if (!meta && alt && !shift && code === 'KeyS') {
-        applyTool('short-position')
-      } else if (!meta && alt && !shift && code === 'KeyD') {
-        applyTool('date-range')
-      } else if (!meta && !alt && !shift && key === 'escape') {
+      } else if (commandId === 'chart.cancel') {
         if (isFullscreen) setIsFullscreen(false)
         else if (indicatorPaletteOpen) setIndicatorPaletteOpen(false)
         else applyTool(null)
-      } else if (
-        !meta &&
-        !alt &&
-        !shift &&
-        (key === 'backspace' || key === 'delete')
-      ) {
-        const snapshot = chartRef.current?.getSnapshot()
-        const selected = snapshot?.selectedDrawingId
+      } else if (commandId === 'chart.deleteDrawing') {
+        const selected = chartRef.current?.getSnapshot()?.selectedDrawingId
         if (selected) {
           runCommand({ type: 'removeDrawing', payload: { id: selected } })
         } else {
+          // Nothing selected: leave Delete/Backspace to whoever else wants it.
           handled = false
         }
-      } else if (!meta && !alt && !shift && key in TIMEFRAME_SHORTCUT_MAP) {
-        setTimeframe(TIMEFRAME_SHORTCUT_MAP[key])
       } else {
         handled = false
       }

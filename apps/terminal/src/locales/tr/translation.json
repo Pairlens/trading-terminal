@@ -413,6 +413,7 @@
       "plugins": "Eklentiler",
       "notifications": "Bildirimler",
       "appearance": "Görünüm",
+      "keyboard": "Klavye",
       "performance": "Performans",
       "connection": "Bağlantı",
       "language": "Dil",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Masaüstü",
       "browser": "Tarayıcı"
+    },
+    "keyboard": {
+      "title": "Klavye kısayolları",
+      "description": "Terminaldeki her kısayol değiştirilebilir. Bir hazır ayarla başla, sonra istediğini yeniden ata.",
+      "presetTitle": "Hazır ayar",
+      "presetDescription": "Her komutun başlangıç noktası. Kendi değişikliklerin seçtiğin hazır ayarın üstünde kalır.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "Varsayılan ayarlar.",
+        "tradingview": "TradingView tarzı",
+        "tradingviewDescription": "Çizim kısayolları ve yinele, TradingView alışkanlıklarını izler.",
+        "bloomberg": "Bloomberg tarzı",
+        "bloombergDescription": "İşlev tuşları, Bloomberg klavyesindeki gibi bölümler arasında geçiş yapar."
+      },
+      "searchPlaceholder": "Komut ara...",
+      "resetAll": "Tümünü sıfırla",
+      "resetAllTitle": "Tüm kısayollar sıfırlansın mı?",
+      "resetAllDescription": "Her komut geçerli hazır ayara döner. Özelleştirmelerin kaybolur.",
+      "restoreDefault": "Varsayılanı geri yükle",
+      "addBinding": "Kısayol ekle",
+      "removeBinding": "Bu kısayolu kaldır",
+      "recording": "Bir tuş birleşimine bas",
+      "stopRecording": "Durdur",
+      "unbound": "Atanmadı",
+      "customized": "Özel",
+      "conflictsTitle": "Kısayol çakışmaları",
+      "conflictsDescription": "Bu birleşimler birden fazla komuta atanmış. Yalnızca listedeki ilki çalışır.",
+      "conflictWith": "Şuna da atanmış: {{commands}}",
+      "risky": "Tarayıcı ya da sistem bu birleşimi Pairlens görmeden alabilir.",
+      "chartScope": "Grafik panelleri",
+      "noResults": "Bu aramayla eşleşen komut yok.",
+      "categories": {
+        "general": "Genel",
+        "navigation": "Gezinme",
+        "workspace": "Çalışma alanı",
+        "chart": "Grafik",
+        "timeframe": "Zaman aralıkları",
+        "drawing": "Çizim araçları"
+      },
+      "commands": {
+        "workspaceTree": "Çalışma alanı ağacını aç/kapat",
+        "workspaceMenu": "Çalışma alanı menüsü",
+        "chartCancel": "Aracı iptal et / tam ekrandan çık"
+      }
     }
   },
   "nav": {
