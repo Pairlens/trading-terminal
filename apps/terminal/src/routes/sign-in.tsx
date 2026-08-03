@@ -67,7 +67,7 @@ function SignInPage() {
       : 'email'
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
+    <div className="relative grid min-h-screen lg:grid-cols-2">
       {/* Left panel — dithered statue + benefits. Scoped `dark` so the panel
           keeps its gallery-dark look (matching the artwork's black ground) in
           both color modes. */}
@@ -76,6 +76,17 @@ function SignInPage() {
 
         {/* Fade the artwork toward the panel floor so the benefits read. */}
         <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+
+        {/* Continuation of the form side's magenta aurora so its glow drifts
+            across the seam instead of dying at the panel edge. */}
+        <div
+          aria-hidden
+          className="pl-si-aurora pointer-events-none absolute -bottom-[8%] -right-[12%] h-[48%] w-[46%] rounded-full opacity-20 blur-[100px]"
+          style={{
+            background:
+              'radial-gradient(circle at 50% 50%, oklch(60% .2 320 / .45), transparent 68%)',
+          }}
+        />
 
         {/* Benefits story card */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex justify-center pb-[10%]">
@@ -101,6 +112,14 @@ function SignInPage() {
         onVerify={flow.onVerify}
         onBack={flow.onBack}
         onResend={flow.onResend}
+      />
+
+      {/* Seam blend — melts the statue panel's black into the form side's
+          background color. Lives outside the panel's `dark` scope so the
+          gradient targets the actual (theme-aware) form background. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-48 -translate-x-full bg-gradient-to-r from-transparent to-background lg:block"
       />
     </div>
   )
