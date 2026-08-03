@@ -28,6 +28,7 @@ import {
   fromCryptocomTimeframe,
   parseCryptocomCandle,
   parseCryptocomTicker,
+  parseCryptocomTrade,
   toCryptocomSymbol,
   toCryptocomTimeframe,
 } from './parser'
@@ -37,6 +38,7 @@ import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
@@ -53,6 +55,8 @@ type CandleSub = {
 }
 
 type TickerSub = { pair: string; instrument: string }
+
+type TradeSub = { pair: string; instrument: string }
 type BookSub = { pair: string; instrument: string }
 
 let msgId = 1
@@ -182,6 +186,25 @@ export class CryptocomWsClient {
     )
   }
 
+  subscribeTrades(
+    pair: string,
+    _country: string,
+    cb: TradesCallback,
+  ): () => void {
+    const instrument = toCryptocomSymbol(pair)
+    const key = `trades:${pair}`
+    return this.session.acquire(
+      key,
+      {
+        state: { pair, instrument } satisfies TradeSub,
+        subscribe: (s: TradeSub) =>
+          this.sendSubAfterConnectDelay(key, [`trade.${s.instrument}`]),
+        unsubscribe: (s: TradeSub) => this.sendUnsub([`trade.${s.instrument}`]),
+      },
+      cb as (data: unknown) => void,
+    )
+  }
+
   destroy(): void {
     this.session.destroy()
   }
@@ -287,7 +310,25 @@ export class CryptocomWsClient {
       this.handleTicker(subscription, data)
     } else if (subscription.startsWith('book.')) {
       this.handleBook(subscription, result)
+    } else if (subscription.startsWith('trade.')) {
+      this.handleTrades(subscription, data)
     }
+  }
+
+  private handleTrades(subscription: string, data: Array<unknown>): void {
+    // subscription = "trade.BTC_USDT"
+    const instrument = subscription.slice('trade.'.length)
+    const pair = fromCryptocomSymbol(instrument)
+    if (!pair || data.length === 0) return
+
+    // Crypto.com orders rows newest-first; the tape appends chronologically.
+    const trades = []
+    for (let i = data.length - 1; i >= 0; i--) {
+      const trade = parseCryptocomTrade(data[i] as Record<string, unknown>)
+      if (trade) trades.push(trade)
+    }
+    if (trades.length === 0) return
+    this.session.emit(`trades:${pair}`, { type: 'update', trades })
   }
 
   private handleCandle(subscription: string, data: Array<unknown>): void {

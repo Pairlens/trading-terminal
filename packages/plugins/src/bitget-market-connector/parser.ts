@@ -13,7 +13,7 @@ import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
  */
 
 import type { Candle } from '@pairlens/shared/types'
-import type { TickerSnapshot } from '@pairlens/market-engine/types'
+import type { TickerSnapshot, Trade } from '@pairlens/market-engine/types'
 
 // ── Pair normalization ──
 
@@ -149,4 +149,32 @@ export function parseBitgetBulkTickerRow(
   const price = Number(data['lastPr'] ?? 0)
   if (!Number.isFinite(price) || price <= 0) return null
   return { symbol, price, change24h: Number(data['change24h'] ?? 0) * 100 }
+}
+
+// ── Trade parsing ──
+
+/**
+ * One row of Bitget's `trade` channel:
+ * `{ ts, price, size, side: 'buy'|'sell', tradeId }`
+ *
+ * Bitget documents `side` as the taker's direction; the live cross-check
+ * against top-of-book agrees.
+ */
+export function parseBitgetTrade(data: Record<string, unknown>): Trade | null {
+  const id = String(data['tradeId'] ?? '')
+  const price = Number(data['price'] ?? 0)
+  const size = Number(data['size'] ?? 0)
+  const side = String(data['side'] ?? '')
+  if (!id) return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(size) || size <= 0) return null
+  if (side !== 'buy' && side !== 'sell') return null
+  const ts = Number(data['ts'] ?? 0)
+  return {
+    id,
+    price,
+    size,
+    side,
+    ts: Number.isFinite(ts) && ts > 0 ? ts : Date.now(),
+  }
 }

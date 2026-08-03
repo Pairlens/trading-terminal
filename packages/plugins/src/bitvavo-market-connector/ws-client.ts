@@ -31,6 +31,7 @@ import {
   parseBitvavoBookLevels,
   parseBitvavoCandle,
   parseBitvavoTicker,
+  parseBitvavoTrade,
   toInterval,
   toMarket,
 } from './parser'
@@ -41,6 +42,7 @@ import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
@@ -66,6 +68,8 @@ type CandleSub = {
 }
 
 type TickerSub = { pair: string; market: string }
+
+type TradeSub = { pair: string; market: string }
 
 type BookDelta = {
   nonce: number
@@ -207,6 +211,26 @@ export class BitvavoWsClient {
     )
   }
 
+  subscribeTrades(
+    pair: string,
+    _country: string,
+    cb: TradesCallback,
+  ): () => void {
+    const market = toMarket(pair)
+    // Keyed by the venue market id, since that is what the push carries.
+    const key = `trades:${market}`
+    const sub = this.session.getState<TradeSub>(key) ?? { pair, market }
+    return this.session.acquire(
+      key,
+      {
+        state: sub,
+        subscribe: (s) => this.sendSubscribe('trades', s.market),
+        unsubscribe: (s) => this.sendUnsubscribe('trades', s.market),
+      },
+      cb as (data: unknown) => void,
+    )
+  }
+
   destroy(): void {
     this.session.destroy()
   }
@@ -311,10 +335,21 @@ export class BitvavoWsClient {
       case 'book':
         this.handleBookDelta(msg)
         break
+      case 'trade':
+        this.handleTrade(msg)
+        break
       // 'subscribed' / 'unsubscribed' / 'authenticate' / 'error' — ignored.
       default:
         break
     }
+  }
+
+  private handleTrade(msg: Record<string, unknown>): void {
+    // Bitvavo pushes the trade fields on the event itself, not under `data`.
+    const market = String(msg['market'] ?? '')
+    const trade = parseBitvavoTrade(msg)
+    if (!market || !trade) return
+    this.session.emit(`trades:${market}`, { type: 'update', trades: [trade] })
   }
 
   private handleCandle(msg: Record<string, unknown>): void {

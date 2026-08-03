@@ -75,6 +75,7 @@ export const bitgetMarketConnectorManifest: PluginManifest =
     triggerOrders: true,
     headerImage:
       'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=600&q=80',
+    trades: true,
   })
 
 type BitgetCredentials = {

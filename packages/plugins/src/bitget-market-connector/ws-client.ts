@@ -26,6 +26,7 @@ import {
   normalizePair,
   parseBitgetCandle,
   parseBitgetTicker,
+  parseBitgetTrade,
 } from './parser'
 import { fetchBitgetCandles } from './rest-client'
 import { resolveBitgetUrls } from './regions'
@@ -33,6 +34,7 @@ import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
@@ -47,6 +49,8 @@ type CandleSub = {
 }
 
 type TickerSub = { pair: string }
+
+type TradeSub = { pair: string }
 type BookSub = { pair: string }
 
 export class BitgetWsClient {
@@ -168,6 +172,39 @@ export class BitgetWsClient {
     )
   }
 
+  subscribeTrades(
+    pair: string,
+    _country: string,
+    cb: TradesCallback,
+  ): () => void {
+    const normalized = normalizePair(pair)
+    return this.session.acquire(
+      `trades:${normalized}`,
+      {
+        state: { pair: normalized } satisfies TradeSub,
+        subscribe: (s: TradeSub) => this.sendSubscribe('trade', s.pair),
+        unsubscribe: (s: TradeSub) => this.sendUnsubscribe('trade', s.pair),
+      },
+      cb as (data: unknown) => void,
+    )
+  }
+
+  private handleTrades(
+    instId: string,
+    rows: Array<Record<string, unknown>>,
+  ): void {
+    if (!instId || !rows.length) return
+    // Bitget's initial `snapshot` action carries recent history newest-first;
+    // reverse so the tape appends in chronological order.
+    const trades = []
+    for (let i = rows.length - 1; i >= 0; i--) {
+      const trade = parseBitgetTrade(rows[i])
+      if (trade) trades.push(trade)
+    }
+    if (trades.length === 0) return
+    this.session.emit(`trades:${instId}`, { type: 'update', trades })
+  }
+
   destroy(): void {
     this.session.destroy()
   }
@@ -222,6 +259,8 @@ export class BitgetWsClient {
       this.handleCandle(channel, instId ?? '', data as Array<Array<string>>)
     } else if (channel === 'ticker') {
       this.handleTicker(instId ?? '', data as Array<Record<string, string>>)
+    } else if (channel === 'trade') {
+      this.handleTrades(instId ?? '', data as Array<Record<string, unknown>>)
     } else if (channel === 'books15' || channel === 'books5') {
       this.handleOrderbook(
         instId ?? '',

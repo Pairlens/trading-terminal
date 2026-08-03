@@ -62,6 +62,7 @@ export const coinbaseMarketConnectorManifest: PluginManifest =
     triggerOrders: true,
     headerImage:
       'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=600&q=80',
+    trades: true,
   })
 
 type CoinbaseCredentials = { apiKey: string; apiSecret: string }

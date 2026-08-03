@@ -57,6 +57,7 @@ export const gateMarketConnectorManifest: PluginManifest =
     triggerOrders: true,
     headerImage:
       'https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=600&q=80',
+    trades: true,
   })
 
 type GateCredentials = { apiKey: string; apiSecret: string }

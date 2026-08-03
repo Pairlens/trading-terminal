@@ -26,6 +26,7 @@ import { fetchKucoinCandles, fetchKucoinStats } from './rest-client'
 import {
   mapTimeframeToKucoinType,
   normalizePair,
+  parseKucoinTrade,
   parseKucoinWsKline,
 } from './parser'
 import { resolveKucoinRestBase } from './regions'
@@ -34,6 +35,7 @@ import type {
   OrderbookCallback,
   TickerCallback,
   TickerSnapshot,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
@@ -60,6 +62,11 @@ type TickerSub = {
 type BookSub = {
   pair: string
   topic: string // e.g. /spotMarket/level2Depth50:BTC-USDT
+}
+
+type TradeSub = {
+  pair: string
+  topic: string // e.g. /market/match:BTC-USDT
 }
 
 type BulletToken = {
@@ -246,6 +253,26 @@ export class KucoinWsClient {
 
   // ── Lifecycle ──
 
+  subscribeTrades(
+    pair: string,
+    country: string,
+    cb: TradesCallback,
+  ): () => void {
+    this.country = country
+    const normalized = normalizePair(pair)
+    const key = `trades:${normalized}`
+    const topic = `/market/match:${normalized}`
+    const sub = this.session.getState<TradeSub>(key) ?? {
+      pair: normalized,
+      topic,
+    }
+    return this.session.acquire(
+      key,
+      this.topicSpec(key, topic, sub),
+      cb as (data: unknown) => void,
+    )
+  }
+
   destroy(): void {
     if (this.tokenRefreshTimer) {
       clearTimeout(this.tokenRefreshTimer)
@@ -395,8 +422,18 @@ export class KucoinWsClient {
         this.handleTicker(msg.topic, msg.data)
       } else if (msg.topic.startsWith('/spotMarket/level2Depth')) {
         this.handleOrderbook(msg.topic, msg.data)
+      } else if (msg.topic.startsWith('/market/match:')) {
+        this.handleTrade(msg.topic, msg.data)
       }
     }
+  }
+
+  private handleTrade(topic: string, data: Record<string, unknown>): void {
+    const key = this.topicToKey.get(topic)
+    if (!key) return
+    const trade = parseKucoinTrade(data)
+    if (!trade) return
+    this.session.emit(key, { type: 'update', trades: [trade] })
   }
 
   private handleKline(topic: string, data: Record<string, unknown>): void {

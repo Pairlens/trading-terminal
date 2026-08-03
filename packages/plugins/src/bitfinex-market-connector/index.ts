@@ -57,6 +57,7 @@ export const bitfinexMarketConnectorManifest: PluginManifest =
     triggerOrders: true,
     headerImage:
       'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600&q=80',
+    trades: true,
   })
 
 type BitfinexCredentials = { apiKey: string; apiSecret: string }

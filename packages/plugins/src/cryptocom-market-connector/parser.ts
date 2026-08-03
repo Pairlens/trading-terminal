@@ -10,7 +10,11 @@ import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
  * All numeric values in API responses are strings.
  */
 
-import type { Candle, TickerSnapshot } from '@pairlens/market-engine/types'
+import type {
+  Candle,
+  TickerSnapshot,
+  Trade,
+} from '@pairlens/market-engine/types'
 
 // ── Pair normalization ──
 
@@ -133,5 +137,35 @@ export function parseCryptocomBulkTickerRow(
     symbol: fromCryptocomSymbol(instrument),
     price,
     change24h: Number(data['c'] ?? 0) * 100,
+  }
+}
+
+// ── Trade parsing ──
+
+/**
+ * One row of Crypto.com's `trade.{instrument}` channel:
+ * `{ d: tradeId, t: ts, p: price, q: qty, s: 'BUY'|'SELL' }`
+ *
+ * `s` is uppercase and documented as the taker's side; the live cross-check
+ * against top-of-book agrees.
+ */
+export function parseCryptocomTrade(
+  data: Record<string, unknown>,
+): Trade | null {
+  const id = String(data['d'] ?? '')
+  const price = Number(data['p'] ?? 0)
+  const size = Number(data['q'] ?? 0)
+  const side = String(data['s'] ?? '').toLowerCase()
+  if (!id) return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(size) || size <= 0) return null
+  if (side !== 'buy' && side !== 'sell') return null
+  const ts = Number(data['t'] ?? 0)
+  return {
+    id,
+    price,
+    size,
+    side,
+    ts: Number.isFinite(ts) && ts > 0 ? ts : Date.now(),
   }
 }

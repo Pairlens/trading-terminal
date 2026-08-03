@@ -10,7 +10,11 @@ import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
  * Quirk: `amount` = base volume, `vol` = quote volume (opposite of many exchanges).
  */
 
-import type { Candle, TickerSnapshot } from '@pairlens/market-engine/types'
+import type {
+  Candle,
+  TickerSnapshot,
+  Trade,
+} from '@pairlens/market-engine/types'
 
 // ── Pair normalization ──
 
@@ -139,5 +143,34 @@ export function parseHtxBulkTickerRow(
     symbol,
     price: close,
     change24h: open > 0 ? ((close - open) / open) * 100 : 0,
+  }
+}
+
+// ── Trade parsing ──
+
+/**
+ * One row of HTX's `market.{symbol}.trade.detail` tick:
+ * `{ tradeId, ts, amount, price, direction: 'buy'|'sell' }`
+ *
+ * Amounts arrive in scientific notation (`9.99E-4`), which Number() handles.
+ * `direction` is documented as the taker's direction; the live cross-check
+ * against top-of-book agrees.
+ */
+export function parseHtxTrade(data: Record<string, unknown>): Trade | null {
+  const id = data['tradeId'] ?? data['id']
+  const price = Number(data['price'] ?? 0)
+  const size = Number(data['amount'] ?? 0)
+  const dir = String(data['direction'] ?? '')
+  if (id === undefined || id === null || id === '') return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(size) || size <= 0) return null
+  if (dir !== 'buy' && dir !== 'sell') return null
+  const ts = Number(data['ts'] ?? 0)
+  return {
+    id: String(id),
+    price,
+    size,
+    side: dir,
+    ts: Number.isFinite(ts) && ts > 0 ? ts : Date.now(),
   }
 }

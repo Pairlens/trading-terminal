@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
 import type { Candle } from '@pairlens/shared/types'
-import type { TickerSnapshot } from '@pairlens/market-engine/types'
+import type { TickerSnapshot, Trade } from '@pairlens/market-engine/types'
 
 // ── Pair normalization ──
 
@@ -169,5 +169,34 @@ export function parseGateBulkTickerRow(
     symbol: pair.replace(/_/g, '-'),
     price,
     change24h: Number(data['change_percentage'] ?? 0),
+  }
+}
+
+// ── Trade parsing ──
+
+/**
+ * One `spot.trades` result:
+ * `{ id, create_time_ms, side: 'buy'|'sell', amount, price }`
+ *
+ * Gate emits one execution per frame (not a batch) and documents `side` as
+ * the taker's side; the live cross-check against top-of-book agrees.
+ * `create_time_ms` arrives as a fractional-millisecond STRING.
+ */
+export function parseGateTrade(data: Record<string, unknown>): Trade | null {
+  const id = data['id']
+  const price = Number(data['price'] ?? 0)
+  const size = Number(data['amount'] ?? 0)
+  const side = String(data['side'] ?? '')
+  if (id === undefined || id === null || id === '') return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(size) || size <= 0) return null
+  if (side !== 'buy' && side !== 'sell') return null
+  const ts = Math.trunc(Number(data['create_time_ms'] ?? 0))
+  return {
+    id: String(id),
+    price,
+    size,
+    side,
+    ts: Number.isFinite(ts) && ts > 0 ? ts : Date.now(),
   }
 }

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
 import type { Candle } from '@pairlens/shared/types'
-import type { TickerSnapshot } from '@pairlens/market-engine/types'
+import type { TickerSnapshot, Trade } from '@pairlens/market-engine/types'
 
 // ── Pair normalization ──
 
@@ -147,4 +147,28 @@ export function parseKucoinBulkTickerRow(
   const price = Number(data['last'] ?? 0)
   if (!Number.isFinite(price) || price <= 0) return null
   return { symbol, price, change24h: Number(data['changeRate'] ?? 0) * 100 }
+}
+
+// ── Trade parsing ──
+
+/**
+ * A KuCoin `/market/match` push:
+ * `{ tradeId, price, size, side: 'buy'|'sell', time, makerOrderId, takerOrderId }`
+ *
+ * `time` is NANOSECONDS since epoch — dividing by 1e6 is required or every
+ * print lands ~50,000 years in the future. `side` is documented as the taker's
+ * side; the live cross-check against top-of-book agrees.
+ */
+export function parseKucoinTrade(data: Record<string, unknown>): Trade | null {
+  const id = String(data['tradeId'] ?? '')
+  const price = Number(data['price'] ?? 0)
+  const size = Number(data['size'] ?? 0)
+  const side = String(data['side'] ?? '')
+  if (!id) return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(size) || size <= 0) return null
+  if (side !== 'buy' && side !== 'sell') return null
+  const ns = Number(data['time'] ?? 0)
+  const ts = Number.isFinite(ns) && ns > 0 ? Math.trunc(ns / 1e6) : 0
+  return { id, price, size, side, ts: ts > 0 ? ts : Date.now() }
 }

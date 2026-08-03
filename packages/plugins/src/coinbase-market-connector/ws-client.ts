@@ -33,13 +33,20 @@
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
-import { normalizePair, parseCoinbaseTicker, timeframeToMs } from './parser'
+import {
+  normalizePair,
+  parseCoinbaseTicker,
+  parseCoinbaseTrade,
+  timeframeToMs,
+} from './parser'
 import { fetchCoinbaseCandles } from './rest-client'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  Trade,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
 
@@ -64,6 +71,8 @@ type CandleSub = {
 
 type TickerSub = { pair: string }
 
+type TradeSub = { pair: string }
+
 type LocalBook = {
   bids: Map<number, number>
   asks: Map<number, number>
@@ -81,6 +90,7 @@ export class CoinbaseWsClient {
   // Gates the ticker unsubscribe frame and feeds the batched on-open frame.
   private tickerDemand = new Map<string, Set<string>>()
   private bookPairs = new Set<string>()
+  private tradePairs = new Set<string>()
   // Per-candle-entry REST volume-sync timers (also cleared on destroy, since
   // session.destroy() drops entries without running unsubscribe hooks).
   private restSyncTimers = new Map<string, ReturnType<typeof setInterval>>()
@@ -248,6 +258,39 @@ export class CoinbaseWsClient {
     )
   }
 
+  subscribeTrades(
+    pair: string,
+    _country: string,
+    cb: TradesCallback,
+  ): () => void {
+    const normalized = normalizePair(pair)
+    const key = `trades:${normalized}`
+    return this.session.acquire(
+      key,
+      {
+        state: { pair: normalized } satisfies TradeSub,
+        subscribe: (s: TradeSub) => {
+          this.tradePairs.add(s.pair)
+          if (this.suppressEntrySubscribes) return
+          this.sendWs({
+            type: 'subscribe',
+            channel: 'market_trades',
+            product_ids: [s.pair],
+          })
+        },
+        unsubscribe: (s: TradeSub) => {
+          this.tradePairs.delete(s.pair)
+          this.sendWs({
+            type: 'unsubscribe',
+            channel: 'market_trades',
+            product_ids: [s.pair],
+          })
+        },
+      },
+      cb as (data: unknown) => void,
+    )
+  }
+
   destroy(): void {
     for (const timer of this.restSyncTimers.values()) clearInterval(timer)
     this.restSyncTimers.clear()
@@ -345,6 +388,16 @@ export class CoinbaseWsClient {
         product_ids: [...this.bookPairs],
       })
     }
+
+    // market_trades — same registry treatment as level2, or a reconnect would
+    // silently drop the tape (the per-entry hooks are suppressed above).
+    if (this.tradePairs.size > 0) {
+      this.sendWs({
+        type: 'subscribe',
+        channel: 'market_trades',
+        product_ids: [...this.tradePairs],
+      })
+    }
   }
 
   private sendWs(msg: Record<string, unknown>): void {
@@ -402,8 +455,34 @@ export class CoinbaseWsClient {
       this.handleTickerEvents(events)
     } else if (channel === 'l2_data') {
       this.handleL2Events(events)
+    } else if (channel === 'market_trades') {
+      this.handleTradeEvents(events)
     }
     // heartbeats: no action needed
+  }
+
+  private handleTradeEvents(events: Array<Record<string, unknown>>): void {
+    for (const event of events) {
+      const rows = event['trades'] as Array<Record<string, unknown>> | undefined
+      if (!rows?.length) continue
+
+      // Coinbase orders rows newest-first, in both the initial `snapshot`
+      // event and later `update`s; the tape appends in arrival order.
+      const byPair = new Map<string, Array<Trade>>()
+      for (let i = rows.length - 1; i >= 0; i--) {
+        const trade = parseCoinbaseTrade(rows[i])
+        if (!trade) continue
+        const pair = normalizePair(String(rows[i]['product_id'] ?? ''))
+        if (!pair) continue
+        const list = byPair.get(pair)
+        if (list) list.push(trade)
+        else byPair.set(pair, [trade])
+      }
+
+      for (const [pair, trades] of byPair) {
+        this.session.emit(`trades:${pair}`, { type: 'update', trades })
+      }
+    }
   }
 
   private handleTickerEvents(events: Array<Record<string, unknown>>): void {

@@ -16,7 +16,11 @@ import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
  * - REST response keys may have X/Z prefixes on legacy assets
  */
 
-import type { Candle, TickerSnapshot } from '@pairlens/market-engine/types'
+import type {
+  Candle,
+  TickerSnapshot,
+  Trade,
+} from '@pairlens/market-engine/types'
 
 // ── Pair normalization ──
 
@@ -197,5 +201,34 @@ export function parseKrakenBulkEntry(
     symbol,
     price: last,
     change24h: open > 0 ? ((last - open) / open) * 100 : 0,
+  }
+}
+
+// ── Trade parsing ──
+
+/**
+ * One row of Kraken v2's `trade` channel:
+ * `{ symbol, side: 'buy'|'sell', price, qty, ord_type, trade_id, timestamp }`
+ *
+ * Numbers arrive as JSON numbers (not strings, unlike most venues) and
+ * `timestamp` is ISO-8601. `side` is documented as the taker's side; the live
+ * cross-check against top-of-book agrees.
+ */
+export function parseKrakenTrade(data: Record<string, unknown>): Trade | null {
+  const id = data['trade_id']
+  const price = Number(data['price'] ?? 0)
+  const size = Number(data['qty'] ?? 0)
+  const side = String(data['side'] ?? '')
+  if (id === undefined || id === null || id === '') return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(size) || size <= 0) return null
+  if (side !== 'buy' && side !== 'sell') return null
+  const ts = Date.parse(String(data['timestamp'] ?? ''))
+  return {
+    id: String(id),
+    price,
+    size,
+    side,
+    ts: Number.isFinite(ts) && ts > 0 ? ts : Date.now(),
   }
 }

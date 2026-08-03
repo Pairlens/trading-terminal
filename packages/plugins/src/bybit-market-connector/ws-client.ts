@@ -25,9 +25,11 @@ import {
   buildBookTopic,
   buildKlineTopic,
   buildTickerTopic,
+  buildTradeTopic,
   mapBybitIntervalToTimeframe,
   normalizePair,
   parseBybitTicker,
+  parseBybitTrade,
   parseBybitWsKline,
   parseKlineTopic,
 } from './parser'
@@ -37,6 +39,7 @@ import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
@@ -50,6 +53,8 @@ type CandleSub = {
 }
 
 type TickerSub = { pair: string }
+
+type TradeSub = { pair: string }
 
 /** Local orderbook state for incremental delta updates. */
 type BookSub = {
@@ -206,6 +211,25 @@ export class BybitWsClient {
     )
   }
 
+  subscribeTrades(
+    pair: string,
+    country: string,
+    cb: TradesCallback,
+  ): () => void {
+    this.setCountry(country)
+    const normalized = normalizePair(pair)
+    return this.session.acquire(
+      `trades:${normalized}`,
+      {
+        state: { pair: normalized } satisfies TradeSub,
+        subscribe: (s: TradeSub) => this.sendSubscribe(buildTradeTopic(s.pair)),
+        unsubscribe: (s: TradeSub) =>
+          this.sendUnsubscribe(buildTradeTopic(s.pair)),
+      },
+      cb as (data: unknown) => void,
+    )
+  }
+
   destroy(): void {
     this.session.destroy()
   }
@@ -275,6 +299,29 @@ export class BybitWsClient {
       this.handleBook(topic, msg.type, msg.data as Record<string, unknown>)
       return
     }
+
+    // Public trades
+    if (topic.startsWith('publicTrade.')) {
+      this.handleTrades(topic, msg.data as Array<Record<string, unknown>>)
+      return
+    }
+  }
+
+  private handleTrades(
+    topic: string,
+    rows: Array<Record<string, unknown>>,
+  ): void {
+    const pair = topic.slice('publicTrade.'.length)
+    if (!pair || !rows?.length) return
+
+    // ByBit batches oldest-first already; keep arrival order.
+    const trades = []
+    for (const row of rows) {
+      const trade = parseBybitTrade(row)
+      if (trade) trades.push(trade)
+    }
+    if (trades.length === 0) return
+    this.session.emit(`trades:${pair}`, { type: 'update', trades })
   }
 
   private handleKline(

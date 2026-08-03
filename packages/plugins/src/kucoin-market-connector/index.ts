@@ -74,6 +74,7 @@ export const kucoinMarketConnectorManifest: PluginManifest =
     triggerOrders: true,
     headerImage:
       'https://assets.staticimg.com/cms/media/7feiEEHmJE61RECXMyp8rTcA5Qcsl0zSv6rz9NVjg.png',
+    trades: true,
   })
 
 type KucoinCredentials = {
