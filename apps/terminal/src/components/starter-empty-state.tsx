@@ -29,6 +29,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from '@pairlens/ui/components/ui/item'
+import { Spinner } from '@pairlens/ui/components/ui/spinner'
 
 import type { LucideIcon } from 'lucide-react'
 
@@ -54,6 +55,17 @@ type StarterEmptyStateProps = {
   onCreateBlank: () => void
   /** One line of small print under the shelf — caveats, where things run. */
   footnote?: string
+  /**
+   * Divider label over the shelf. Defaults to English for the surfaces that
+   * are not localized; localized pages pass their own.
+   */
+  shelfLabel?: string
+  /**
+   * Template whose work is still in flight, if picking one is not instant.
+   * That card spins and the rest go inert, so a second click can't start a
+   * second job while the first is still booting.
+   */
+  pendingId?: string | null
 }
 
 export function StarterEmptyState({
@@ -66,6 +78,8 @@ export function StarterEmptyState({
   blankLabel,
   onCreateBlank,
   footnote,
+  shelfLabel = 'Start from a template',
+  pendingId = null,
 }: StarterEmptyStateProps) {
   return (
     <div className="relative flex min-w-0 flex-1 overflow-y-auto">
@@ -114,7 +128,7 @@ export function StarterEmptyState({
             <div className="flex w-full items-center gap-3">
               <span className="h-px flex-1 bg-border" />
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                Start from a template
+                {shelfLabel}
               </span>
               <span className="h-px flex-1 bg-border" />
             </div>
@@ -124,12 +138,19 @@ export function StarterEmptyState({
                 <TemplateCard
                   key={template.id}
                   template={template}
+                  pending={pendingId === template.id}
+                  disabled={pendingId !== null && pendingId !== template.id}
                   onPick={() => onPickTemplate(template)}
                 />
               ))}
             </div>
 
-            <Button variant="ghost" size="sm" onClick={onCreateBlank}>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={pendingId !== null}
+              onClick={onCreateBlank}
+            >
               {blankLabel}
             </Button>
 
@@ -147,27 +168,39 @@ export function StarterEmptyState({
 
 function TemplateCard({
   template,
+  pending = false,
+  disabled = false,
   onPick,
 }: {
   template: StarterTemplate
+  pending?: boolean
+  disabled?: boolean
   onPick: () => void
 }) {
   const Icon = template.icon
+  const inert = pending || disabled
   return (
     <Item
       variant="outline"
       size="sm"
       className={cn(
-        'h-full cursor-pointer items-start text-left transition-colors',
-        'hover:border-primary/45 hover:bg-primary/[0.04]',
+        'h-full items-start text-left transition-colors',
+        inert
+          ? 'cursor-default opacity-60'
+          : 'cursor-pointer hover:border-primary/45 hover:bg-primary/[0.04]',
+        pending && 'border-primary/45 opacity-100',
       )}
-      render={<button type="button" onClick={onPick} />}
+      render={<button type="button" disabled={inert} onClick={onPick} />}
     >
       <ItemMedia
         variant="icon"
         className="mt-0.5 size-7 rounded-lg bg-muted text-muted-foreground"
       >
-        <Icon className="size-3.5" />
+        {pending ? (
+          <Spinner className="size-3.5" />
+        ) : (
+          <Icon className="size-3.5" />
+        )}
       </ItemMedia>
       <ItemContent className="gap-1.5">
         <ItemTitle className="text-[13px]">{template.title}</ItemTitle>

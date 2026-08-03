@@ -1,27 +1,11 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useState } from 'react'
-import { Bot, MonitorSmartphone, Plus } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from '@pairlens/ui/components/ui/alert'
-import { Button } from '@pairlens/ui/components/ui/button'
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@pairlens/ui/components/ui/empty'
 
 import { ArmLiveDialog } from './arm-live-dialog'
 import { BotDetail } from './bot-detail'
 import { BotList } from './bot-list'
+import { BotsEmptyState } from './bots-empty-state'
 import { CreateBotDialog } from './create-bot-dialog'
 
 import type { BotDefinition } from '@pairlens/bot-engine/types'
@@ -84,7 +68,10 @@ export function BotsPage() {
             onRequestArm={setArmTarget}
           />
         ) : (
-          <BotsEmptyState onCreate={() => setCreateOpen(true)} />
+          <BotsEmptyState
+            onCreate={() => setCreateOpen(true)}
+            onCreated={setSelectedId}
+          />
         )}
       </div>
 
@@ -99,42 +86,6 @@ export function BotsPage() {
         onOpenChange={(open) => !open && setArmTarget(null)}
         onArmed={setSelectedId}
       />
-    </div>
-  )
-}
-
-/**
- * Nothing selected — in practice, no bots at all.
- *
- * This is where the "runs on your machine" caveat lives now. It has to be read
- * once, before the first bot exists, not sit above the list forever eating the
- * rows it was meant to explain.
- */
-function BotsEmptyState({ onCreate }: { onCreate: () => void }) {
-  const { t } = useTranslation()
-
-  return (
-    <div className="flex h-full items-center justify-center p-6">
-      <Empty className="max-w-lg border-none">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <Bot />
-          </EmptyMedia>
-          <EmptyTitle>{t('botsPage.emptyTitle')}</EmptyTitle>
-          <EmptyDescription>{t('botsPage.emptyDescription')}</EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent className="max-w-none">
-          <Button size="sm" onClick={onCreate}>
-            <Plus className="size-3.5" />
-            {t('botsPage.newBot')}
-          </Button>
-          <Alert>
-            <MonitorSmartphone />
-            <AlertTitle>{t('botsPage.localTitle')}</AlertTitle>
-            <AlertDescription>{t('botsPage.localBody')}</AlertDescription>
-          </Alert>
-        </EmptyContent>
-      </Empty>
     </div>
   )
 }

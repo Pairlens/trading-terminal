@@ -12,7 +12,6 @@ import {
   BookOpen,
   Bot,
   CircleDot,
-  FilePlus2,
   Package,
   Play,
   Save,
@@ -23,14 +22,6 @@ import { useTranslation } from 'react-i18next'
 
 import { Badge } from '@pairlens/ui/components/ui/badge'
 import { Button } from '@pairlens/ui/components/ui/button'
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@pairlens/ui/components/ui/empty'
 import {
   ResizableHandle,
   ResizablePanel,
@@ -61,6 +52,7 @@ import { MetaInspector } from './meta-inspector'
 import { PreviewPairPicker } from './preview-pair-picker'
 import { PreviewParamsBar, defaultPreviewParams } from './preview-params'
 import { ImportScriptDialog } from './import-script-dialog'
+import { IndicatorsEmptyState } from './indicators-empty-state'
 import { ScriptList } from './script-list'
 import { SdkReferenceDialog } from './sdk-reference'
 import { VersionHistoryDialog } from './version-history'
@@ -95,7 +87,6 @@ import {
   PythonScriptError,
   getPythonRuntime,
 } from '@/lib/python/python-runtime'
-import { BLANK_SCRIPT, EXAMPLE_SCRIPTS } from '@/lib/python/examples'
 import { useMarketData } from '@/lib/market-data-provider'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { usePythonConsole } from '@/hooks/use-python-console'
@@ -900,7 +891,7 @@ export function IndicatorWorkbench() {
             </ResizablePanelGroup>
           </>
         ) : (
-          <WorkbenchEmptyState />
+          <IndicatorsEmptyState />
         )}
       </div>
 
@@ -932,67 +923,6 @@ export function IndicatorWorkbench() {
           setImportOpen(false)
         }}
       />
-    </div>
-  )
-}
-
-/** No scripts yet — offer the example templates as starting points. */
-function WorkbenchEmptyState() {
-  const { t } = useTranslation()
-  const scripts = useIndicatorScriptsStore((s) => s.scripts)
-  const createScript = useIndicatorScriptsStore((s) => s.createScript)
-
-  return (
-    <div className="flex h-full items-center justify-center p-6">
-      <Empty className="max-w-lg border-none">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <SquareFunction />
-          </EmptyMedia>
-          <EmptyTitle>{t('indicatorsPage.emptyTitle')}</EmptyTitle>
-          <EmptyDescription>
-            {t('indicatorsPage.emptyDescription')}
-          </EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          {/* The workbench auto-selects the first script on creation. */}
-          <Button
-            size="sm"
-            onClick={() =>
-              createScript(t('indicatorsPage.blankName'), BLANK_SCRIPT)
-            }
-          >
-            <FilePlus2 className="size-3.5" />
-            {t('indicatorsPage.startFromScratch')}
-          </Button>
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            {t('indicatorsPage.startFromTemplate')}
-          </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {/* Strategies carry the bot icon so the two kinds read apart at a
-                glance, here as in the sidebar. */}
-            {EXAMPLE_SCRIPTS.map((example) => (
-              <Button
-                key={example.name}
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  if (!scripts.some((s) => s.name === example.name)) {
-                    createScript(example.name, example.source, example.modules)
-                  }
-                }}
-              >
-                {example.kind === 'strategy' ? (
-                  <Bot className="size-3.5" />
-                ) : (
-                  <SquareFunction className="size-3.5" />
-                )}
-                {example.name}
-              </Button>
-            ))}
-          </div>
-        </EmptyContent>
-      </Empty>
     </div>
   )
 }
