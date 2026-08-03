@@ -49,6 +49,13 @@ capabilities and always run sandboxed.
 This is the right path for indicators, panels, themes, and read-only data
 sources.
 
+Like any pull request to the terminal repo, a community submission needs a
+signed Contributor License Agreement before it can be merged. The bot comments
+on your first PR with a one-line instruction, you post it once, and the `cla`
+check goes green. The
+[contributing guide](https://github.com/Pairlens/trading-terminal/blob/main/CONTRIBUTING.md#contributor-license-agreement)
+has the details, including the corporate route if your employer owns your work.
+
 ## Trust model
 
 Non-bootstrap plugins install sandboxed. Full trust, meaning unrestricted

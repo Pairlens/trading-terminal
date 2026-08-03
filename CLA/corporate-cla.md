@@ -120,8 +120,11 @@ Licensor.
 
 ## Signature
 
-To execute this Agreement, send a completed and signed copy to the Licensor
-(contact: see the repository's SECURITY.md or the Pairlens website), including:
+To execute this Agreement, open an issue titled "Corporate CLA" on
+[Pairlens/trading-terminal](https://github.com/Pairlens/trading-terminal/issues/new)
+naming your company and your GitHub organization. The Licensor replies with a
+private channel for the signed copy — do not post the completed table or
+Schedule A in a public issue. The completed copy includes:
 
 | Field                          | Value |
 | ------------------------------ | ----- |
