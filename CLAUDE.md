@@ -279,11 +279,11 @@ Server-side variables (`DATABASE_URL`, `BETTER_AUTH_SECRET`, `AI_GATEWAY_API_KEY
 
 ### Plugin System
 
-Capability-based plugin resolution in `packages/plugin-system/`. Plugins declare capabilities (market-data:candles, market-data:ticker, market-data:orderbook, market-data:history, trading:orders, ai:inference, theme:override, etc.) via manifests. The `PluginResolver` finds the best plugin for a requested capability.
+Capability-based plugin resolution in `packages/plugin-system/`. Plugins declare capabilities (market-data:candles, market-data:ticker, market-data:orderbook, market-data:trades, market-data:history, trading:orders, ai:inference, theme:override, etc.) via manifests. The `PluginResolver` finds the best plugin for a requested capability.
 
 The terminal integrates via `PairlensProvider` (`src/lib/pairlens-provider.tsx`) for plugin lifecycle, and `MarketDataProvider` (`src/lib/market-data-provider.tsx`) for market data streaming. Market connector plugins connect directly to exchange WebSockets — no intermediate server. Candle streaming uses `pluginManager.subscribe('market-data:candles', ...)`.
 
-**Capability IDs** (source of truth: `packages/shared/src/plugin-types.ts`): `market-data:discovery`, `market-data:discovery:search`, `market-data:candles`, `market-data:ticker`, `market-data:ticker-snapshot`, `market-data:orderbook`, `market-data:history`, `market-data:symbol-logo`, `ai:inference`, `ai:web-search`, `trading:orders`, `trading:balances`, `workflow:step-types`, `theme:override`, `chart:indicator` (plus `notification:channel` and `workspace-store:catalog`, defined in the type but with no bundled provider yet). Note: there is no `ai:context` or `ai:search` — AI capabilities are exactly `ai:inference` and `ai:web-search`; chat vs research is a runtime `purpose` selector on `ai:inference`, not a capability.
+**Capability IDs** (source of truth: `packages/shared/src/plugin-types.ts`): `market-data:discovery`, `market-data:discovery:search`, `market-data:candles`, `market-data:ticker`, `market-data:ticker-snapshot`, `market-data:orderbook`, `market-data:trades`, `market-data:history`, `market-data:symbol-logo`, `ai:inference`, `ai:web-search`, `trading:orders`, `trading:balances`, `workflow:step-types`, `theme:override`, `chart:indicator` (plus `notification:channel` and `workspace-store:catalog`, defined in the type but with no bundled provider yet). Note: there is no `ai:context` or `ai:search` — AI capabilities are exactly `ai:inference` and `ai:web-search`; chat vs research is a runtime `purpose` selector on `ai:inference`, not a capability.
 
 ### Custom Python Indicators
 

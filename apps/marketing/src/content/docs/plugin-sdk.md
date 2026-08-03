@@ -20,6 +20,7 @@ the best plugin for each requested capability at runtime.
 | `market-data:ticker`           | Streaming tickers                |
 | `market-data:ticker-snapshot`  | Point-in-time ticker reads       |
 | `market-data:orderbook`        | Streaming order books            |
+| `market-data:trades`           | Streaming public trades          |
 | `market-data:history`          | Historical candle backfill       |
 | `market-data:discovery`        | Instrument listing               |
 | `market-data:discovery:search` | Instrument search                |
