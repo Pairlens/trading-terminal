@@ -30,10 +30,20 @@ fn close_splashscreen(window: WebviewWindow) {
 /// invokes `close_splashscreen`. If that signal never arrives (a boot error, a
 /// route that doesn't emit it), show the window anyway so the app never looks
 /// hung on the splash — or worse, invisible.
-fn spawn_show_watchdog(window: WebviewWindow) {
+///
+/// `slow_boot` is for the main window, which boots the whole app behind a splash
+/// screen the user can see. A secondary window has no splash to look at, so it
+/// waits far less before showing itself: an empty dark window beats nothing at
+/// all happening after a New Window click.
+fn spawn_show_watchdog(window: WebviewWindow, slow_boot: bool) {
     // Dev builds load from the Vite dev server, whose cold compile can take
     // far longer than a production boot.
-    let timeout = if cfg!(debug_assertions) { 60 } else { 15 };
+    let timeout = match (slow_boot, cfg!(debug_assertions)) {
+        (true, true) => 60,
+        (true, false) => 15,
+        (false, true) => 20,
+        (false, false) => 5,
+    };
     std::thread::spawn(move || {
         std::thread::sleep(std::time::Duration::from_secs(timeout));
         if !window.is_visible().unwrap_or(true) {
@@ -45,19 +55,84 @@ fn spawn_show_watchdog(window: WebviewWindow) {
     });
 }
 
+/// Build the app's main window.
+///
+/// Extracted from `setup` so every path that needs a main window — first launch,
+/// the macOS dock-reopen, a second app launch caught by single-instance — builds
+/// it identically. Most importantly they all keep the `on_web_resource_request`
+/// hook that injects the runtime CSP; a window rebuilt without it would run the
+/// SPA with no network policy at all.
+fn build_main_window(app: &AppHandle) -> tauri::Result<WebviewWindow> {
+    let csp_handle = app.clone();
+    #[allow(unused_mut)]
+    let mut builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::App("/".into()))
+        .title("Pairlens")
+        .inner_size(1440.0, 900.0)
+        .min_inner_size(800.0, 600.0)
+        .resizable(true)
+        .center()
+        .on_web_resource_request(move |_req, resp| csp::inject_csp(&csp_handle, resp))
+        // Hidden until the frontend signals readiness via close_splashscreen
+        // (prevents white flash on boot).
+        .visible(false)
+        .background_color(WINDOW_BG);
+    #[cfg(target_os = "macos")]
+    {
+        builder = builder
+            .title_bar_style(tauri::TitleBarStyle::Overlay)
+            .hidden_title(true);
+    }
+    let window = builder.build()?;
+    spawn_show_watchdog(window.clone(), true);
+    Ok(window)
+}
+
+/// Bring the main window to the front, rebuilding it when it no longer exists
+/// (macOS keeps the app alive after its last window closes — see the run-loop
+/// handler at the bottom of this file).
+///
+/// The work runs on a spawned thread, never the caller's. Both call sites (the
+/// single-instance handler and the macOS dock-reopen event) fire from inside the
+/// event loop on the main thread, and building a webview from there deadlocks on
+/// Windows — the same WebView2 constraint that broke "New Window".
+fn focus_main_window(app: &AppHandle) {
+    let app = app.clone();
+    std::thread::spawn(move || {
+        if let Some(window) = app.get_webview_window("main") {
+            let _ = window.unminimize();
+            let _ = window.show();
+            let _ = window.set_focus();
+            return;
+        }
+        if let Err(e) = build_main_window(&app) {
+            eprintln!("[pairlens] failed to recreate the main window: {e}");
+        }
+    });
+}
+
 // ── Multi-window ────────────────────────────────────────────────────
 //
 // Additional terminal windows carry labels `terminal-2`, `terminal-3`, …
-// (the first window keeps the label `main` from tauri.conf.json). The
-// capability file allowlists `terminal-*` so secondary windows get the
-// same permission set as the main window. Each window loads the same SPA;
-// the frontend passes a path (e.g. a workspace route) so the new window
-// opens on the content the user asked for.
+// (the first window keeps the label `main`). The capability file allowlists
+// `terminal-*` so secondary windows get the same permission set as the main
+// window. Each window loads the same SPA; the frontend passes a path (e.g. a
+// workspace route) so the new window opens on the content the user asked for.
 
-/// Spawn a new terminal window. Sync command: macOS requires window
-/// creation on the main thread. Returns the new window's label.
+static WINDOW_SPAWN_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
+/// Spawn a new terminal window. Returns the new window's label.
+///
+/// `async` on purpose, and load-bearing on Windows: Tauri runs *synchronous*
+/// commands on the main thread, inside the webview's own IPC callback. Creating
+/// a webview from there deadlocks WebView2 (it cannot initialize a new
+/// controller while the message loop is servicing the callback that asked for
+/// it), which is exactly why New Window opened nothing on Windows. An async
+/// command runs on the async runtime instead, so window creation is dispatched
+/// to the event loop and handled on a clean stack. macOS/Linux are unaffected
+/// either way — Tauri marshals the actual window construction to the main thread
+/// itself, so this needs no platform branch.
 #[tauri::command]
-fn open_terminal_window(
+async fn open_terminal_window(
     app: AppHandle,
     window: WebviewWindow,
     path: Option<String>,
@@ -67,6 +142,15 @@ fn open_terminal_window(
     if !path.starts_with('/') || path.starts_with("//") {
         return Err(format!("Invalid window path: {path}"));
     }
+
+    // Serializes label allocation. Now that this command runs on the async
+    // runtime, two New Window invocations can execute concurrently on different
+    // threads and would otherwise both claim the same free label — the second
+    // build then fails with "window label already exists". Held across the build
+    // (which is where the label gets registered); no await runs under it.
+    let _spawn_guard = WINDOW_SPAWN_LOCK
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
 
     let mut n: u32 = 2;
     while app.get_webview_window(&format!("terminal-{n}")).is_some() {
@@ -96,8 +180,15 @@ fn open_terminal_window(
             .hidden_title(true);
     }
 
-    let new_window = builder.build().map_err(|e| e.to_string())?;
-    spawn_show_watchdog(new_window.clone());
+    // Surface build failures on both sides of the IPC: the frontend toasts the
+    // returned message, and stderr keeps a record for a packaged build whose
+    // devtools nobody has open.
+    let new_window = builder.build().map_err(|e| {
+        let message = e.to_string();
+        eprintln!("[pairlens] failed to open window {label}: {message}");
+        message
+    })?;
+    spawn_show_watchdog(new_window.clone(), false);
 
     // Cascade from the window that spawned us so new windows don't stack
     // exactly on top of each other.
@@ -403,11 +494,10 @@ pub fn run() {
         // existing main window instead of starting a duplicate instance —
         // duplicates would double WS connections and notifications.
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-            if let Some(window) = app.get_webview_window("main") {
-                let _ = window.show();
-                let _ = window.unminimize();
-                let _ = window.set_focus();
-            }
+            // Rebuilds the main window when it is gone — on macOS the app
+            // outlives its last window, so "focus the existing window" is not
+            // always something that can be done by focusing alone.
+            focus_main_window(app);
         }))
         .plugin(tauri_plugin_websocket::init())
         .plugin(tauri_plugin_shell::init())
@@ -456,30 +546,10 @@ pub fn run() {
             awake::sleep_block_active
         ])
         .setup(|app| {
-            // The main window is built here (not in tauri.conf.json) so the
+            // The main window is built in Rust (not in tauri.conf.json) so the
             // dynamic-CSP hook can attach to its served document — a config-defined
             // window offers no way to intercept its response headers.
-            let csp_handle = app.handle().clone();
-            #[allow(unused_mut)]
-            let mut builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::App("/".into()))
-                .title("Pairlens")
-                .inner_size(1440.0, 900.0)
-                .min_inner_size(800.0, 600.0)
-                .resizable(true)
-                .center()
-                .on_web_resource_request(move |_req, resp| csp::inject_csp(&csp_handle, resp))
-                // Hidden until the frontend signals readiness via
-                // close_splashscreen (prevents white flash on boot).
-                .visible(false)
-                .background_color(WINDOW_BG);
-            #[cfg(target_os = "macos")]
-            {
-                builder = builder
-                    .title_bar_style(tauri::TitleBarStyle::Overlay)
-                    .hidden_title(true);
-            }
-            let window = builder.build()?;
-            spawn_show_watchdog(window.clone());
+            let window = build_main_window(app.handle())?;
 
             // First launch only: default the main window to ~80% of the
             // screen, centered. On later launches tauri-plugin-window-state
@@ -519,8 +589,30 @@ pub fn run() {
 
             Ok(())
         })
-        .run(tauri::generate_context!())
+        .build(tauri::generate_context!())
         .expect("error while running pairlens desktop")
+        .run(|_app, _event| {
+            // macOS: closing the last window must not quit the app. The app
+            // stays in the Dock and clicking its icon reopens the terminal —
+            // standard Mac behaviour, and the one users expect from a terminal
+            // they leave running all day.
+            //
+            // `code` distinguishes the two exit paths: `None` means the event
+            // loop is unwinding because its last window was destroyed, `Some`
+            // means something asked for it deliberately (`app.exit()`, the
+            // updater's restart). Cmd+Q goes through AppKit's `terminate:`,
+            // which tears the process down without an ExitRequested round-trip
+            // at all, so quitting keeps working.
+            #[cfg(target_os = "macos")]
+            match &_event {
+                tauri::RunEvent::ExitRequested { code, api, .. } if code.is_none() => {
+                    api.prevent_exit();
+                }
+                // Dock icon click (NSApplicationDelegate applicationShouldHandleReopen).
+                tauri::RunEvent::Reopen { .. } => focus_main_window(_app),
+                _ => {}
+            }
+        })
 }
 
 #[cfg(test)]

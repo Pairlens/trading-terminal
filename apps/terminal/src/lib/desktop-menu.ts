@@ -10,7 +10,7 @@ import type {
 
 import type { MenuNode } from '@/lib/settings/menu-model'
 import i18n from '@/lib/i18n'
-import { isStandalone } from '@/lib/platform'
+import { isMacDesktop } from '@/lib/platform'
 import { createMenuModel } from '@/lib/settings/menu-model'
 
 // `@tauri-apps/api/menu` doesn't export the item union as a named type, so we
@@ -258,8 +258,10 @@ function scheduleRebuild(): void {
 }
 
 export async function initDesktopMenu(): Promise<void> {
-  if (!isStandalone || initialized) return
-  if (!/Mac/i.test(navigator.userAgent)) return
+  // macOS only. Windows/Linux ship no window menu, so the same commands are
+  // bound as in-app accelerators by `menu-shortcuts.ts` instead — New Window
+  // must have a working trigger on every desktop platform.
+  if (!isMacDesktop || initialized) return
   initialized = true
 
   // Re-translate the whole menu when the UI language changes.

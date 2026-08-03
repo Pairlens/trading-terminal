@@ -184,7 +184,7 @@ function NewWindowButton() {
       <AppWindow className="size-3.5" />
       {t('titlebar.newWindow')}
       <Kbd className="h-4 bg-transparent px-0 text-[10px] text-muted-foreground/70">
-        ⌘N
+        {metaKeySymbol}N
       </Kbd>
     </Button>
   )

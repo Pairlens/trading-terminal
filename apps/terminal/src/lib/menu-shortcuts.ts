@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import type { MenuCommand, MenuNode } from '@/lib/settings/menu-model'
-import { isStandalone } from '@/lib/platform'
+import { isMacDesktop, isStandalone } from '@/lib/platform'
 import { createMenuModel } from '@/lib/settings/menu-model'
 
 /**
@@ -69,9 +69,8 @@ function parseAccelerator(command: MenuCommand): Binding | null {
 let initialized = false
 
 export function initMenuShortcuts(): void {
-  if (!isStandalone || initialized) return
-  // macOS gets these accelerators from the native menubar.
-  if (/Mac/i.test(navigator.userAgent)) return
+  // macOS gets these accelerators from the native menubar instead.
+  if (!isStandalone || isMacDesktop || initialized) return
   initialized = true
 
   const commands: Array<MenuCommand> = []
