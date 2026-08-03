@@ -15,6 +15,7 @@ import type {
   CopilotOrderRequest,
 } from './copilot-order-card'
 import type { UIMessage } from 'ai'
+import { formatToolLabel } from '@/lib/copilot/tool-labels'
 
 type CopilotChatMessageProps = {
   message: UIMessage
@@ -116,7 +117,10 @@ export function CopilotChatMessage({ message }: CopilotChatMessageProps) {
                 )}
                 <Wrench className="size-3 shrink-0" />
                 <span className="truncate">
-                  {formatToolName(toolName)}
+                  {formatToolLabel(
+                    toolName,
+                    isError ? 'error' : isComplete ? 'done' : 'running',
+                  )}
                   {errorText ? ` — ${errorText}` : ''}
                 </span>
               </div>
@@ -215,11 +219,4 @@ function MarkdownContent({ text }: { text: string }) {
       {text}
     </ReactMarkdown>
   )
-}
-
-function formatToolName(name: string): string {
-  return name
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/^./, (s) => s.toUpperCase())
-    .trim()
 }

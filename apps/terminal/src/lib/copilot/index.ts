@@ -10,6 +10,12 @@ import { SCHEDULE_TOOL_NAMES, buildTimeTools } from './time-tools'
 import type { CopilotToolDeps } from './tool-deps'
 
 export type { CopilotToolDeps } from './tool-deps'
+export type { ToolPhase } from './tool-labels'
+export {
+  COPILOT_TOOL_LABELS,
+  formatToolLabel,
+  humanizeToolName,
+} from './tool-labels'
 export {
   CHART_ACTION_TOOL_NAMES,
   NAVIGATION_TOOL_NAMES,
