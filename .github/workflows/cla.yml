@@ -41,7 +41,7 @@ jobs:
           path-to-signatures: 'signatures/version1/cla.json'
           path-to-document: 'https://github.com/Pairlens/trading-terminal/blob/main/CLA/individual-cla.md'
           branch: 'cla-signatures'
-          allowlist: dependabot[bot],github-actions[bot],claude[bot]
+          allowlist: juanignaciomolina,dependabot[bot],github-actions[bot],claude[bot]
           custom-pr-sign-comment: 'I have read the CLA Document and I hereby sign the CLA'
           custom-notsigned-prcomment: >
             Thanks for the contribution! Before we can merge this, we need you
