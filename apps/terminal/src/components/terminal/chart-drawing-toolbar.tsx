@@ -77,6 +77,11 @@ import type {
   DrawingToolType,
 } from '@pairlens/fast-financial-charts/types'
 import { ShortcutHint } from '@/components/shortcut-hints'
+import {
+  useKeybindingLabel,
+  useKeybindingLabels,
+} from '@/hooks/use-keybindings'
+import { drawingToolCommandId } from '@/lib/keybindings/commands'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 
 type IconComponent = React.ComponentType<{ className?: string }>
@@ -84,7 +89,6 @@ type IconComponent = React.ComponentType<{ className?: string }>
 type DrawingToolOption = {
   tool: DrawingToolType
   labelKey: string
-  shortcutLabel: string
   icon: IconComponent
   /** Extra metadata passed to the chart engine (e.g., path preset). */
   meta?: Record<string, unknown>
@@ -113,55 +117,46 @@ const TOOL_CATEGORIES: Array<ToolCategory> = [
       {
         tool: 'line',
         labelKey: 'chart.drawing.trendLine',
-        shortcutLabel: '⌥T',
         icon: PencilLine,
       },
       {
         tool: 'ray',
         labelKey: 'chart.drawing.ray',
-        shortcutLabel: '⌥Y',
         icon: MoveRight,
       },
       {
         tool: 'xline',
         labelKey: 'chart.drawing.extendedLine',
-        shortcutLabel: '⌥E',
         icon: Maximize2,
       },
       {
         tool: 'info-line',
         labelKey: 'chart.drawing.infoLine',
-        shortcutLabel: '⌥I',
         icon: Slash,
       },
       {
         tool: 'trend-angle',
         labelKey: 'chart.drawing.trendAngle',
-        shortcutLabel: '',
         icon: ArrowDownRight,
       },
       {
         tool: 'hline',
         labelKey: 'chart.drawing.horizontalLine',
-        shortcutLabel: '⌥H',
         icon: Minus,
       },
       {
         tool: 'hray',
         labelKey: 'chart.drawing.horizontalRay',
-        shortcutLabel: '',
         icon: MoveRight,
       },
       {
         tool: 'vline',
         labelKey: 'chart.drawing.verticalLine',
-        shortcutLabel: '⌥V',
         icon: MoveVertical,
       },
       {
         tool: 'crossline',
         labelKey: 'chart.drawing.crossLine',
-        shortcutLabel: '⌥C',
         icon: Crosshair,
       },
     ],
@@ -174,19 +169,16 @@ const TOOL_CATEGORIES: Array<ToolCategory> = [
       {
         tool: 'channel',
         labelKey: 'chart.drawing.channel',
-        shortcutLabel: '',
         icon: Columns2,
       },
       {
         tool: 'pitchfork',
         labelKey: 'chart.drawing.pitchfork',
-        shortcutLabel: '',
         icon: GitBranch,
       },
       {
         tool: 'polyline',
         labelKey: 'chart.drawing.polyline',
-        shortcutLabel: '',
         icon: Pen,
       },
     ],
@@ -199,59 +191,50 @@ const TOOL_CATEGORIES: Array<ToolCategory> = [
       {
         tool: 'rectangle',
         labelKey: 'chart.drawing.rectangle',
-        shortcutLabel: '⌥R',
         icon: SeparatorHorizontal,
       },
       {
         tool: 'circle',
         labelKey: 'chart.drawing.circle',
-        shortcutLabel: '',
         icon: Circle,
       },
       {
         tool: 'ellipse',
         labelKey: 'chart.drawing.ellipse',
-        shortcutLabel: '',
         icon: EllipseIcon,
       },
       {
         tool: 'path',
         labelKey: 'chart.drawing.triangle',
-        shortcutLabel: '',
         icon: Triangle,
         meta: { preset: 'triangle' },
       },
       {
         tool: 'path',
         labelKey: 'chart.drawing.diamond',
-        shortcutLabel: '',
         icon: Diamond,
         meta: { preset: 'diamond' },
       },
       {
         tool: 'path',
         labelKey: 'chart.drawing.star',
-        shortcutLabel: '',
         icon: Star,
         meta: { preset: 'star' },
       },
       {
         tool: 'path',
         labelKey: 'chart.drawing.hexagon',
-        shortcutLabel: '',
         icon: Hexagon,
         meta: { preset: 'hexagon' },
       },
       {
         tool: 'rotated-rectangle',
         labelKey: 'chart.drawing.rotatedRectangle',
-        shortcutLabel: '',
         icon: RotateCw,
       },
       {
         tool: 'arc',
         labelKey: 'chart.drawing.arc',
-        shortcutLabel: '',
         icon: Spline,
       },
     ],
@@ -264,31 +247,26 @@ const TOOL_CATEGORIES: Array<ToolCategory> = [
       {
         tool: 'text',
         labelKey: 'chart.drawing.text',
-        shortcutLabel: '⌥X',
         icon: Type,
       },
       {
         tool: 'arrow',
         labelKey: 'chart.drawing.arrow',
-        shortcutLabel: '⌥A',
         icon: ArrowUpRight,
       },
       {
         tool: 'callout',
         labelKey: 'chart.drawing.callout',
-        shortcutLabel: '',
         icon: MessageSquare,
       },
       {
         tool: 'brush',
         labelKey: 'chart.drawing.brush',
-        shortcutLabel: '',
         icon: Paintbrush,
       },
       {
         tool: 'highlighter',
         labelKey: 'chart.drawing.highlighter',
-        shortcutLabel: '',
         icon: Highlighter,
       },
     ],
@@ -301,31 +279,26 @@ const TOOL_CATEGORIES: Array<ToolCategory> = [
       {
         tool: 'fibonacci',
         labelKey: 'chart.drawing.fibonacci',
-        shortcutLabel: '⌥F',
         icon: TrendingUp,
       },
       {
         tool: 'fib-extension',
         labelKey: 'chart.drawing.fibExtension',
-        shortcutLabel: '',
         icon: Spline,
       },
       {
         tool: 'fib-channel',
         labelKey: 'chart.drawing.fibChannel',
-        shortcutLabel: '',
         icon: Columns2,
       },
       {
         tool: 'fib-time-zone',
         labelKey: 'chart.drawing.fibTimeZone',
-        shortcutLabel: '',
         icon: Columns3,
       },
       {
         tool: 'fib-wedge',
         labelKey: 'chart.drawing.fibWedge',
-        shortcutLabel: '',
         icon: Radar,
       },
     ],
@@ -338,13 +311,11 @@ const TOOL_CATEGORIES: Array<ToolCategory> = [
       {
         tool: 'gann-fan',
         labelKey: 'chart.drawing.gannFan',
-        shortcutLabel: '',
         icon: Fan,
       },
       {
         tool: 'gann-box',
         labelKey: 'chart.drawing.gannBox',
-        shortcutLabel: '',
         icon: Grid3x3,
       },
     ],
@@ -357,31 +328,26 @@ const TOOL_CATEGORIES: Array<ToolCategory> = [
       {
         tool: 'triangle-pattern',
         labelKey: 'chart.drawing.trianglePattern',
-        shortcutLabel: '',
         icon: Triangle,
       },
       {
         tool: 'abcd-pattern',
         labelKey: 'chart.drawing.abcdPattern',
-        shortcutLabel: '',
         icon: Activity,
       },
       {
         tool: 'xabcd-pattern',
         labelKey: 'chart.drawing.xabcdPattern',
-        shortcutLabel: '',
         icon: Octagon,
       },
       {
         tool: 'head-shoulders',
         labelKey: 'chart.drawing.headShoulders',
-        shortcutLabel: '',
         icon: Activity,
       },
       {
         tool: 'elliott-wave',
         labelKey: 'chart.drawing.elliottWave',
-        shortcutLabel: '',
         icon: Waves,
       },
     ],
@@ -394,25 +360,21 @@ const TOOL_CATEGORIES: Array<ToolCategory> = [
       {
         tool: 'long-position',
         labelKey: 'chart.drawing.longPosition',
-        shortcutLabel: '⌥L',
         icon: TrendingUp,
       },
       {
         tool: 'short-position',
         labelKey: 'chart.drawing.shortPosition',
-        shortcutLabel: '⌥S',
         icon: TrendingDown,
       },
       {
         tool: 'forecast',
         labelKey: 'chart.drawing.forecast',
-        shortcutLabel: '',
         icon: Target,
       },
       {
         tool: 'anchored-vwap',
         labelKey: 'chart.drawing.anchoredVwap',
-        shortcutLabel: '',
         icon: LineChart,
       },
     ],
@@ -425,19 +387,16 @@ const TOOL_CATEGORIES: Array<ToolCategory> = [
       {
         tool: 'measure',
         labelKey: 'chart.drawing.measure',
-        shortcutLabel: '⌥M',
         icon: RulerIcon,
       },
       {
         tool: 'date-range',
         labelKey: 'chart.drawing.dateRange',
-        shortcutLabel: '⌥D',
         icon: CalendarRange,
       },
       {
         tool: 'price-date-range',
         labelKey: 'chart.drawing.priceDateRange',
-        shortcutLabel: '',
         icon: Scaling,
       },
     ],
@@ -485,6 +444,9 @@ function CategoryGroup({
   onToolChange: (tool: DrawingToolType, meta?: Record<string, unknown>) => void
 }) {
   const { t } = useTranslation()
+  const keybindingLabel = useKeybindingLabels()
+  const shortcutFor = (option: DrawingToolOption) =>
+    keybindingLabel(drawingToolCommandId(option.tool))
   const [lastUsedKey, setLastUsedKey] = usePersistedState<string>(
     category.persistKey,
     toolKey(category.tools[0]),
@@ -517,13 +479,13 @@ function CategoryGroup({
           }
         >
           <tool.icon className="size-3.5" />
-          {tool.shortcutLabel && <ShortcutHint keys={tool.shortcutLabel} />}
+          <ShortcutHint keys={shortcutFor(tool)} />
         </TooltipTrigger>
         <TooltipContent side="right" className="flex items-center gap-2">
           {t(tool.labelKey)}
-          {tool.shortcutLabel && (
-            <Kbd className="ml-1">{tool.shortcutLabel}</Kbd>
-          )}
+          {shortcutFor(tool) ? (
+            <Kbd className="ml-1">{shortcutFor(tool)}</Kbd>
+          ) : null}
         </TooltipContent>
       </Tooltip>
     )
@@ -548,15 +510,13 @@ function CategoryGroup({
             }
           >
             <Icon className="size-3.5" />
-            {displayTool.shortcutLabel && (
-              <ShortcutHint keys={displayTool.shortcutLabel} />
-            )}
+            <ShortcutHint keys={shortcutFor(displayTool)} />
           </TooltipTrigger>
           <TooltipContent side="right" className="flex items-center gap-2">
             {t(displayTool.labelKey)}
-            {displayTool.shortcutLabel && (
-              <Kbd className="ml-1">{displayTool.shortcutLabel}</Kbd>
-            )}
+            {shortcutFor(displayTool) ? (
+              <Kbd className="ml-1">{shortcutFor(displayTool)}</Kbd>
+            ) : null}
           </TooltipContent>
         </Tooltip>
         <PopoverTrigger
@@ -588,11 +548,9 @@ function CategoryGroup({
             >
               <option.icon className="size-3.5" />
               {t(option.labelKey)}
-              {option.shortcutLabel && (
-                <Kbd className="ml-auto text-[10px]">
-                  {option.shortcutLabel}
-                </Kbd>
-              )}
+              {shortcutFor(option) ? (
+                <Kbd className="ml-auto text-[10px]">{shortcutFor(option)}</Kbd>
+              ) : null}
             </Button>
           ))}
         </div>
@@ -616,6 +574,8 @@ export function ChartDrawingToolbar({
   onRedo,
 }: ChartDrawingToolbarProps) {
   const { t } = useTranslation()
+  const undoShortcut = useKeybindingLabel('chart.undo')
+  const redoShortcut = useKeybindingLabel('chart.redo')
   const StickyModeIcon = toolMode === 'sticky' ? Pin : PinOff
   const activeToolKey = activeKey(activeTool, activeToolMeta)
 
@@ -734,10 +694,11 @@ export function ChartDrawingToolbar({
             }
           >
             <Undo2 className="size-3.5" />
-            <ShortcutHint keys="⌘Z" />
+            <ShortcutHint keys={undoShortcut} />
           </TooltipTrigger>
           <TooltipContent side="right" className="flex items-center gap-2">
-            {t('chart.drawing.undo')} <Kbd className="ml-1">⌘Z</Kbd>
+            {t('chart.drawing.undo')}
+            {undoShortcut ? <Kbd className="ml-1">{undoShortcut}</Kbd> : null}
           </TooltipContent>
         </Tooltip>
         <Tooltip>
@@ -754,10 +715,11 @@ export function ChartDrawingToolbar({
             }
           >
             <Redo2 className="size-3.5" />
-            <ShortcutHint keys="⌘⇧Z" />
+            <ShortcutHint keys={redoShortcut} />
           </TooltipTrigger>
           <TooltipContent side="right" className="flex items-center gap-2">
-            {t('chart.drawing.redo')} <Kbd className="ml-1">⌘⇧Z</Kbd>
+            {t('chart.drawing.redo')}
+            {redoShortcut ? <Kbd className="ml-1">{redoShortcut}</Kbd> : null}
           </TooltipContent>
         </Tooltip>
       </div>

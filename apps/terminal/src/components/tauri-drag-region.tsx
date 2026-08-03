@@ -12,7 +12,7 @@ import {
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
 import { isStandalone, openTerminalWindow } from '@/lib/platform'
-import { metaKeySymbol } from '@/hooks/use-keyboard-shortcuts'
+import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import {
   getCanGoBack,
   getCanGoForward,
@@ -102,6 +102,8 @@ export function TauriDragRegion({ sectionLabel }: { sectionLabel?: string }) {
  */
 function HistoryNavButtons() {
   const { t } = useTranslation()
+  const backShortcut = useKeybindingLabel('general.back')
+  const forwardShortcut = useKeybindingLabel('general.forward')
   const canBack = useSyncExternalStore(
     subscribeNavHistory,
     getCanGoBack,
@@ -136,7 +138,7 @@ function HistoryNavButtons() {
         </TooltipTrigger>
         <TooltipContent>
           {t('titlebar.back')}
-          <Kbd className="ml-1">{metaKeySymbol}[</Kbd>
+          {backShortcut ? <Kbd className="ml-1">{backShortcut}</Kbd> : null}
         </TooltipContent>
       </Tooltip>
       <Tooltip>
@@ -156,7 +158,9 @@ function HistoryNavButtons() {
         </TooltipTrigger>
         <TooltipContent>
           {t('titlebar.forward')}
-          <Kbd className="ml-1">{metaKeySymbol}]</Kbd>
+          {forwardShortcut ? (
+            <Kbd className="ml-1">{forwardShortcut}</Kbd>
+          ) : null}
         </TooltipContent>
       </Tooltip>
     </div>
@@ -170,6 +174,7 @@ function HistoryNavButtons() {
  */
 function NewWindowButton() {
   const { t } = useTranslation()
+  const newWindowShortcut = useKeybindingLabel('general.newWindow')
   return (
     <Button
       size="xs"
@@ -183,9 +188,11 @@ function NewWindowButton() {
     >
       <AppWindow className="size-3.5" />
       {t('titlebar.newWindow')}
-      <Kbd className="h-4 bg-transparent px-0 text-[10px] text-muted-foreground/70">
-        {metaKeySymbol}N
-      </Kbd>
+      {newWindowShortcut ? (
+        <Kbd className="h-4 bg-transparent px-0 text-[10px] text-muted-foreground/70">
+          {newWindowShortcut}
+        </Kbd>
+      ) : null}
     </Button>
   )
 }

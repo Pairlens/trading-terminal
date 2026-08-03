@@ -413,6 +413,7 @@
       "plugins": "外掛",
       "notifications": "通知",
       "appearance": "外觀",
+      "keyboard": "鍵盤",
       "performance": "效能",
       "connection": "連線",
       "language": "語言",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "桌面版",
       "browser": "瀏覽器"
+    },
+    "keyboard": {
+      "title": "鍵盤快速鍵",
+      "description": "終端機的每個快速鍵都能修改。先選一個預設，再隨意重新綁定。",
+      "presetTitle": "預設",
+      "presetDescription": "每個指令的起點。你的修改會疊加在所選預設之上。",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "出廠預設值。",
+        "tradingview": "TradingView 風格",
+        "tradingviewDescription": "繪圖快速鍵與重做沿用 TradingView 的習慣。",
+        "bloomberg": "Bloomberg 風格",
+        "bloombergDescription": "用功能鍵在各區塊之間跳轉，就像 Bloomberg 鍵盤那樣。"
+      },
+      "searchPlaceholder": "搜尋指令...",
+      "resetAll": "全部重設",
+      "resetAllTitle": "重設所有快速鍵？",
+      "resetAllDescription": "每個指令都會回到目前預設的設定，你的自訂將會遺失。",
+      "restoreDefault": "還原預設",
+      "addBinding": "新增快速鍵",
+      "removeBinding": "移除這個快速鍵",
+      "recording": "請按下一組按鍵",
+      "stopRecording": "停止",
+      "unbound": "未綁定",
+      "customized": "自訂",
+      "conflictsTitle": "快速鍵衝突",
+      "conflictsDescription": "這些組合對應多個指令，只有清單中的第一個會生效。",
+      "conflictWith": "也綁定到 {{commands}}",
+      "risky": "瀏覽器或系統可能會在 Pairlens 之前攔截這個組合。",
+      "chartScope": "圖表面板",
+      "noResults": "沒有符合的指令。",
+      "categories": {
+        "general": "一般",
+        "navigation": "導覽",
+        "workspace": "工作區",
+        "chart": "圖表",
+        "timeframe": "週期",
+        "drawing": "繪圖工具"
+      },
+      "commands": {
+        "workspaceTree": "顯示/隱藏工作區樹狀圖",
+        "workspaceMenu": "工作區選單",
+        "chartCancel": "取消工具 / 離開全螢幕"
+      }
     }
   },
   "nav": {
