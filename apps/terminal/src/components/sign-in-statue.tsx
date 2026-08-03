@@ -8,7 +8,6 @@ import { cn } from '@pairlens/ui/lib/utils'
 import statueUrl from './sign-in-statue.webp'
 import { DuotoneImage } from '@/components/duotone-image'
 
-
 /**
  * The full statue panel: gallery-dark ground, duotone statue, floor fade,
  * and the magenta aurora continuation that lets the form side's glow drift
@@ -26,14 +25,16 @@ export function SignInStatueScene({
   return (
     <div
       className={cn(
-        'dark relative overflow-hidden bg-black text-sidebar-foreground',
+        'dark relative overflow-hidden bg-background text-sidebar-foreground',
         className,
       )}
     >
       <SignInStatue className="absolute inset-0" />
 
-      {/* Fade the artwork toward the panel floor. */}
-      <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+      {/* Fade the artwork toward the panel floor. Uses the (dark-scoped)
+          background so active theme plugins recolor the ground with the
+          artwork — the duotone ramp reads the same scoped variables. */}
+      <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-background/85 via-background/35 to-transparent" />
 
       {/* Continuation of the form side's magenta aurora so its glow drifts
           across the seam instead of dying at the panel edge. */}

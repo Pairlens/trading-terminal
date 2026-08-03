@@ -1,29 +1,26 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-// Welcome-frame hero: the Pairlens statue as a gallery backdrop behind the
-// first headline, in the same duotone language as the sign-in scene. The
-// treatment itself lives in components/duotone-image.tsx.
+// Welcome-frame hero: the Pairlens statue, big — the marketing landing's
+// opening shot translated into the spotlight. The duotone treatment maps the
+// artwork onto the active theme's own palette (components/duotone-image.tsx),
+// so its ground IS the page background in every mode and no vignette box is
+// needed; only a bottom wash seats the headline copy.
 
 import { cn } from '@pairlens/ui'
 
 import statueUrl from './welcome-statue.webp'
 import { DuotoneImage } from '@/components/duotone-image'
 
-/**
- * Elliptical falloff centered on the bust. The artwork's ground is pure
- * black, so without this it would read as a pasted rectangle over the
- * onboarding page's warm-graphite (dark) or paper (light) ground — the mask
- * dissolves every edge into whatever `--background` happens to be.
- */
-const STATUE_MASK =
-  'radial-gradient(64% 58% at 50% 34%, #000 24%, rgba(0,0,0,.5) 54%, transparent 88%)'
+/** Side fades so the artwork's edges never cut hard on narrow viewports. */
+const EDGE_MASK =
+  'linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%)'
 
 /**
  * The ground wash that seats the stage copy: the page background rises over
  * the statue's chest so the headline never sits on busy marble.
  */
 const GROUND_WASH =
-  'linear-gradient(to top, var(--background) 30%, color-mix(in oklch, var(--background) 78%, transparent) 55%, transparent 88%)'
+  'linear-gradient(to top, var(--background) 26%, color-mix(in oklch, var(--background) 72%, transparent) 52%, transparent 86%)'
 
 /**
  * Mounted for the whole flow (one canvas pass, done during the language
@@ -50,11 +47,23 @@ export function WelcomeStatue({
         transform: reduceMotion || active ? 'none' : 'scale(1.035)',
       }}
     >
+      {/* Glow seated behind the head — the marketing hero's halo, in the
+          active theme's primary. */}
       <div
-        className="absolute left-1/2 top-[2%] aspect-[1600/901] w-[min(1040px,106vw)] -translate-x-1/2 bg-black"
-        style={{ maskImage: STATUE_MASK, WebkitMaskImage: STATUE_MASK }}
+        className="absolute left-1/2 top-[-6%] h-[46%] w-[min(1100px,80vw)] -translate-x-1/2 rounded-full opacity-25 blur-[120px]"
+        style={{
+          background:
+            'radial-gradient(closest-side, var(--primary), transparent 72%)',
+        }}
+      />
+
+      {/* The statue itself — near full-bleed so the face dominates the top
+          of the frame the way the landing page opens. */}
+      <div
+        className="absolute left-1/2 top-[-7%] aspect-[1600/901] w-[min(1560px,140vw)] -translate-x-1/2"
+        style={{ maskImage: EDGE_MASK, WebkitMaskImage: EDGE_MASK }}
       >
-        <DuotoneImage src={statueUrl} className="opacity-90" />
+        <DuotoneImage src={statueUrl} />
       </div>
 
       <div className="absolute inset-0" style={{ background: GROUND_WASH }} />

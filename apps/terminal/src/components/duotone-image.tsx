@@ -1,7 +1,14 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-// Brand duotone treatment: a smooth iris gradient map with vivid rainbow
-// accents, rendered in a single Canvas-2D pass at load.
+// Brand duotone treatment: a smooth gradient map onto the ACTIVE THEME's
+// palette with vivid rainbow accents, rendered in a Canvas-2D pass at load
+// and re-rendered when the theme changes.
+//
+// The ink ramp is derived from the CSS variables in scope at the canvas
+// element (--background → --foreground, mid-tones cast toward --primary), so
+// the artwork always sits on the page's own ground: gallery-dark inside a
+// `dark`-scoped panel, paper-toned in light mode, and recolored live by
+// theme:override plugins.
 //
 // Deliberately boring technology — no WebGL, no animation loop, no WASM — so
 // it can never take down a desktop webview renderer the way live GL contexts
@@ -12,27 +19,25 @@ import { useEffect, useRef, useState } from 'react'
 
 import { cn } from '@pairlens/ui/lib/utils'
 
-// Cap on the longest processed edge — the treatment is a smooth gradient
-// map, so this is about keeping the one-shot pass cheap, not about style.
+// Cap on the longest processed edge — keeps the one-shot pass cheap.
 const MAX_RENDER_SIZE = 1600
 
-// Luminance is gradient-mapped onto this ramp (black ground → iris-cast
-// graphite → slate → lavender-gray → cool paper), interpolating smoothly
-// between stops. Cool, slightly iris-tinted neutrals so treated artwork sits
-// in the same palette as the product's dark ground and iris accents.
-// prettier-ignore
-const INK_RAMP: Array<[number, number, number]> = [
-  [0, 0, 0],        // ground — blends into gallery-black panels
-  [50, 47, 62],     // iris-cast graphite
-  [115, 111, 138],  // slate
-  [186, 182, 207],  // lavender-gray
-  [243, 242, 250],  // cool paper
-]
+type Rgb = [number, number, number]
 
-// Chromatic pixels (the statue's lenses and their rainbow spill) pull toward
+// Ramp construction: five stops between background and foreground, with the
+// mid-tones tinted toward the primary. STOP_T are the gray positions and
+// TINT_W how strongly each pulls toward --primary — calibrated so the stock
+// dark theme reproduces the original iris-cast graphite/slate/lavender ramp.
+// TINT_W[0] must stay 0: the ground stop maps the artwork's black ground to
+// the page background EXACTLY, which is what lets the image sit frameless on
+// any theme.
+const STOP_T = [0, 0.18, 0.42, 0.7, 0.96]
+const TINT_W = [0, 0.2, 0.24, 0.16, 0.05]
+
+// Chromatic pixels (the statues' lenses and their rainbow spill) pull toward
 // flat vivid inks by hue bucket — the one place the duotone gets color.
 // prettier-ignore
-const VIVID_INKS: Array<[number, number, number]> = [
+const VIVID_INKS: Array<Rgb> = [
   [255, 82, 82],    // red
   [255, 176, 46],   // orange
   [255, 224, 79],   // yellow
@@ -41,8 +46,45 @@ const VIVID_INKS: Array<[number, number, number]> = [
   [151, 105, 245],  // violet
 ]
 
-// Mild S-curve so shadows sink into the black ground and highlights keep
-// their sheen.
+function mix(a: Rgb, b: Rgb, t: number): Rgb {
+  return [
+    a[0] + (b[0] - a[0]) * t,
+    a[1] + (b[1] - a[1]) * t,
+    a[2] + (b[2] - a[2]) * t,
+  ]
+}
+
+/** Resolve any CSS color (oklch, hsl, hex, var-resolved) to 0-255 rgb. */
+function resolveCssColor(css: string): Rgb | null {
+  const probe = document.createElement('canvas')
+  probe.width = probe.height = 1
+  const ctx = probe.getContext('2d')
+  if (!ctx || !css) return null
+  ctx.fillStyle = '#f0f'
+  ctx.fillStyle = css
+  ctx.fillRect(0, 0, 1, 1)
+  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data
+  return [r, g, b]
+}
+
+/**
+ * Read the theme in scope at `el` and build the ink ramp. Reading from the
+ * element (not the root) is what makes `dark`-scoped panels resolve their
+ * dark palette even when the app is in light mode.
+ */
+function readThemeRamp(el: Element): Array<Rgb> {
+  const styles = getComputedStyle(el)
+  const pick = (name: string, fallback: Rgb): Rgb =>
+    resolveCssColor(styles.getPropertyValue(name).trim()) ?? fallback
+  const background = pick('--background', [10, 8, 6])
+  const foreground = pick('--foreground', [243, 242, 250])
+  const primary = pick('--primary', [139, 140, 245])
+  return STOP_T.map((t, i) =>
+    mix(mix(background, foreground, t), primary, TINT_W[i]),
+  )
+}
+
+// Mild S-curve so shadows sink into the ground and highlights keep sheen.
 function shape(lum: number): number {
   const s = lum * lum * (3 - 2 * lum)
   return (lum + s) / 2
@@ -60,23 +102,17 @@ function grain(x: number, y: number): number {
   return (((h ^ (h >> 16)) & 0xff) / 255) * 2 - 1
 }
 
-function rampColor(lum: number): [number, number, number] {
-  const pos = Math.min(1, Math.max(0, lum)) * (INK_RAMP.length - 1)
+function rampColor(ramp: Array<Rgb>, lum: number): Rgb {
+  const pos = Math.min(1, Math.max(0, lum)) * (ramp.length - 1)
   const lo = Math.floor(pos)
-  const hi = Math.min(INK_RAMP.length - 1, lo + 1)
-  const t = pos - lo
-  const a = INK_RAMP[lo]
-  const b = INK_RAMP[hi]
-  return [
-    a[0] + (b[0] - a[0]) * t,
-    a[1] + (b[1] - a[1]) * t,
-    a[2] + (b[2] - a[2]) * t,
-  ]
+  const hi = Math.min(ramp.length - 1, lo + 1)
+  return mix(ramp[lo], ramp[hi], pos - lo)
 }
 
 export function renderDuotone(
   canvas: HTMLCanvasElement,
   image: HTMLImageElement,
+  ramp: Array<Rgb>,
 ): void {
   const scale = Math.min(
     1,
@@ -111,14 +147,14 @@ export function renderDuotone(
       }
 
       const lum = shape((0.2126 * r + 0.7152 * g + 0.0722 * b) / 255)
-      const base = rampColor(lum + grain(x, y) * 0.015)
+      const base = rampColor(ramp, lum + grain(x, y) * 0.015)
 
       // The statues' own chroma is exclusively warm (orange range), so warm
       // hues need high saturation to read as rainbow, while cool hues — the
       // lens colors and their spill — blend in at moderate saturation. The
       // smoothstep mix keeps the rainbow's edges soft instead of stamped.
       const isWarmHue = hue >= 15 && hue < 70
-      const mix =
+      const vivid =
         max > 50
           ? isWarmHue
             ? smoothstep(0.55, 0.8, saturation)
@@ -126,7 +162,7 @@ export function renderDuotone(
           : 0
 
       let out = base
-      if (mix > 0) {
+      if (vivid > 0) {
         const ink =
           hue < 25 || hue >= 330
             ? VIVID_INKS[0]
@@ -135,11 +171,7 @@ export function renderDuotone(
               ]
         // Vivid inks carry the source brightness so glass keeps its depth.
         const lift = 0.45 + 0.55 * lum
-        out = [
-          base[0] + (ink[0] * lift - base[0]) * mix,
-          base[1] + (ink[1] * lift - base[1]) * mix,
-          base[2] + (ink[2] * lift - base[2]) * mix,
-        ]
+        out = mix(base, [ink[0] * lift, ink[1] * lift, ink[2] * lift], vivid)
       }
       px[i] = out[0]
       px[i + 1] = out[1]
@@ -150,9 +182,10 @@ export function renderDuotone(
 }
 
 /**
- * An image with the brand duotone treatment applied once at load. Behaves
- * like an `<img>`: size and crop from the parent via className (object-cover
- * etc. apply to canvases). Falls back to the untreated image on any failure.
+ * An image with the brand duotone treatment applied at load and re-applied
+ * on theme changes. Behaves like an `<img>`: size and crop from the parent
+ * via className (object-cover etc. apply to canvases). Falls back to the
+ * untreated image on any failure.
  */
 export function DuotoneImage({
   src,
@@ -168,20 +201,49 @@ export function DuotoneImage({
     const canvas = canvasRef.current
     if (!canvas) return
     let cancelled = false
+    let scheduled: ReturnType<typeof setTimeout> | undefined
+    let loaded: HTMLImageElement | null = null
+
+    const render = () => {
+      if (cancelled || !loaded) return
+      try {
+        renderDuotone(canvas, loaded, readThemeRamp(canvas))
+      } catch {
+        setFailed(true)
+      }
+    }
+
     const image = new Image()
     image.decoding = 'async'
     image.src = src
     image
       .decode()
       .then(() => {
-        if (cancelled) return
-        renderDuotone(canvas, image)
+        loaded = image
+        render()
       })
       .catch(() => {
         if (!cancelled) setFailed(true)
       })
+
+    // Re-render when the theme changes: color-mode flips toggle classes on
+    // <html>, theme plugins swap a <style> tag in <head>. Debounced — the
+    // pass is one-shot but not free.
+    const schedule = () => {
+      clearTimeout(scheduled)
+      scheduled = setTimeout(render, 120)
+    }
+    const observer = new MutationObserver(schedule)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class', 'style', 'data-theme'],
+    })
+    observer.observe(document.head, { childList: true })
+
     return () => {
       cancelled = true
+      clearTimeout(scheduled)
+      observer.disconnect()
     }
   }, [src])
 
