@@ -1,0 +1,62 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+/**
+ * What the Workflows canvas shows when there is nothing to draw.
+ *
+ * Two shades of empty, and they are not the same problem:
+ *  - no workflows at all (the state right after the first-open tour closes) —
+ *    the user needs to be told what this page is for and handed a template;
+ *  - workflows exist but none is open — they only need a nudge to click one.
+ */
+import { Workflow } from 'lucide-react'
+
+import { StarterEmptyState } from '../starter-empty-state'
+import { WORKFLOW_TEMPLATES, applyWorkflowTemplate } from './workflow-templates'
+import type { StarterTemplate } from '../starter-empty-state'
+import { useWorkflowStore } from '@/stores/workflow-store'
+
+export function WorkflowsEmptyState() {
+  const workflows = useWorkflowStore((s) => s.workflows)
+  const loaded = useWorkflowStore((s) => s.loaded)
+  const createWorkflow = useWorkflowStore((s) => s.createWorkflow)
+  const selectWorkflow = useWorkflowStore((s) => s.selectWorkflow)
+  const startEditing = useWorkflowStore((s) => s.startEditing)
+
+  // The builder hydrates from localStorage in an effect; until it has, "no
+  // workflows" is a guess, and flashing the pitch at a returning user is worse
+  // than a blank frame.
+  if (!loaded) return <div className="flex-1" />
+
+  if (workflows.length > 0) {
+    return (
+      <div className="flex flex-1 items-center justify-center px-6 text-center text-sm text-muted-foreground">
+        Pick a workflow on the left to open it on the canvas.
+      </div>
+    )
+  }
+
+  const handlePick = (template: StarterTemplate) => {
+    const full = WORKFLOW_TEMPLATES.find((t) => t.id === template.id)
+    if (full) applyWorkflowTemplate(full)
+  }
+
+  const handleBlank = () => {
+    const id = createWorkflow('Untitled workflow')
+    selectWorkflow(id)
+    startEditing(id)
+  }
+
+  return (
+    <StarterEmptyState
+      eyebrow="Workflows"
+      title="Every order can bring its own plan"
+      description="A workflow hangs off an order you place from the trade panel. The moment it fills, the steps below it run — brackets, ladders, staged exits, timed checks — so the plan is already in place instead of something you remember to do later."
+      icon={Workflow}
+      templates={WORKFLOW_TEMPLATES}
+      onPickTemplate={handlePick}
+      blankLabel="Start from a blank canvas"
+      onCreateBlank={handleBlank}
+      footnote="Templates open as a draft: edit any step, then Commit to save it. Attach a saved workflow to an order from the trade panel to run it."
+    />
+  )
+}

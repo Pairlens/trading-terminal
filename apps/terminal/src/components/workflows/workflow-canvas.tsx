@@ -25,6 +25,7 @@ import { findCycleEdgeIds } from '@pairlens/workflow-engine/validator'
 
 import { CommitBar } from './commit-bar'
 import { StepPalette, clearDragStepType, getDragStepType } from './step-palette'
+import { WorkflowsEmptyState } from './workflows-empty-state'
 import type { DragEvent } from 'react'
 import type { Connection, Edge, Node } from '@xyflow/react'
 import { useWorkflowStore } from '@/stores/workflow-store'
@@ -514,11 +515,7 @@ export function WorkflowCanvas() {
   )
 
   if (!draft) {
-    return (
-      <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-        Select a workflow or create a new one
-      </div>
-    )
+    return <WorkflowsEmptyState />
   }
 
   return (

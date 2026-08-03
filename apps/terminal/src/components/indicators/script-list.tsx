@@ -52,6 +52,11 @@ import {
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
 
+import {
+  MASTER_DETAIL_LIST_CLASS,
+  MASTER_DETAIL_LIST_HEADER_CLASS,
+} from '../master-detail'
+
 import type {
   IndicatorModule,
   IndicatorScript,
@@ -172,8 +177,8 @@ export function ScriptList({
   const deleteTarget = scripts.find((s) => s.id === deleteId)
 
   return (
-    <div className="flex w-60 shrink-0 flex-col border-r border-border bg-background">
-      <div className="flex items-center justify-between border-b border-border px-3 py-2">
+    <div className={MASTER_DETAIL_LIST_CLASS}>
+      <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
         <span className="text-xs font-semibold uppercase tracking-wider">
           {t('indicatorsPage.scripts')}
         </span>

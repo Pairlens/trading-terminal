@@ -47,6 +47,10 @@ import {
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
 
+import {
+  MASTER_DETAIL_LIST_CLASS,
+  MASTER_DETAIL_LIST_HEADER_CLASS,
+} from '../master-detail'
 import { KeepAwakeToggle } from './keep-awake-toggle'
 import {
   TONE_FILL,
@@ -119,11 +123,8 @@ export function BotList({
   }
 
   return (
-    <div className="flex w-60 shrink-0 flex-col border-r border-border bg-background">
-      {/* `h-10` rather than padding: the detail header opposite uses the same
-          fixed height, so the two rules line up across the divider whatever
-          either side happens to contain. */}
-      <div className="flex h-10 shrink-0 items-center justify-between border-b border-border px-3">
+    <div className={MASTER_DETAIL_LIST_CLASS}>
+      <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
         <span className="text-xs font-semibold uppercase tracking-wider">
           {t('botsPage.sidebarTitle')}
         </span>

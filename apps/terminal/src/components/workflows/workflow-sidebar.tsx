@@ -14,6 +14,10 @@ import {
   DialogTitle,
 } from '@pairlens/ui/components/ui/dialog'
 
+import {
+  MASTER_DETAIL_LIST_CLASS,
+  MASTER_DETAIL_LIST_HEADER_CLASS,
+} from '../master-detail'
 import type { WorkflowRunRecord } from '@/stores/workflow-run-store'
 import { useWorkflowStore } from '@/stores/workflow-store'
 import { useWorkflowRunStore } from '@/stores/workflow-run-store'
@@ -64,9 +68,9 @@ export function WorkflowSidebar() {
   }
 
   return (
-    <div className="flex w-56 shrink-0 flex-col border-r border-border bg-background">
+    <div className={MASTER_DETAIL_LIST_CLASS}>
       {/* Header with tabs */}
-      <div className="flex items-center justify-between border-b border-border px-3 py-2">
+      <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
         <div className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider">
           <button
             type="button"

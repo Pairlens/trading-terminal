@@ -24,6 +24,7 @@ import { getStepType } from '@pairlens/notification-engine/step-registry'
 import { findCycleEdgeIds } from '@pairlens/notification-engine/validator'
 
 import { CommitBar } from './commit-bar'
+import { NotificationsEmptyState } from './notifications-empty-state'
 import { StepPalette } from './step-palette'
 import type { Connection, Edge, Node } from '@xyflow/react'
 import { useNotificationStore } from '@/stores/notification-store'
@@ -485,11 +486,7 @@ export function NotificationCanvas() {
   )
 
   if (!draft) {
-    return (
-      <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-        Select a rule or create a new one
-      </div>
-    )
+    return <NotificationsEmptyState />
   }
 
   return (
