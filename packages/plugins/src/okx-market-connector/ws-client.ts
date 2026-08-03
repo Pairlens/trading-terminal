@@ -24,6 +24,7 @@ import {
   normalizePair,
   parseOkxCandleRow,
   parseOkxTicker,
+  parseOkxTrade,
 } from './parser'
 import { fetchOkxCandles } from './rest-client'
 import { hasSeqGap, okxBookChecksum } from './orderbook'
@@ -33,6 +34,7 @@ import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
@@ -47,6 +49,8 @@ type CandleSub = {
 }
 
 type TickerSub = { pair: string }
+
+type TradeSub = { pair: string }
 
 /** Local orderbook state for incremental `books` channel. */
 type LocalBook = {
@@ -219,6 +223,28 @@ export class OkxWsClient {
     )
   }
 
+  // ── Trade subscriptions ──
+
+  subscribeTrades(
+    pair: string,
+    country: string,
+    cb: TradesCallback,
+  ): () => void {
+    this.setCountry(country)
+    const normalized = normalizePair(pair)
+    return this.publicSession.acquire(
+      `trades:${normalized}`,
+      {
+        state: { pair: normalized } satisfies TradeSub,
+        subscribe: (s: TradeSub) =>
+          this.sendPublic('subscribe', 'trades', s.pair),
+        unsubscribe: (s: TradeSub) =>
+          this.sendPublic('unsubscribe', 'trades', s.pair),
+      },
+      cb as (data: unknown) => void,
+    )
+  }
+
   destroy(): void {
     this.businessSession.destroy()
     this.publicSession.destroy()
@@ -318,6 +344,19 @@ export class OkxWsClient {
       this.publicSession.emit(`ticker:${pair}`, {
         type: 'ticker' as const,
         ticker: parseOkxTicker(msg.data[0]),
+      })
+    } else if (msg.arg.channel === 'trades') {
+      // OKX batches executions into one frame and orders them newest-first;
+      // the tape wants oldest-first so consumers can append in arrival order.
+      const trades = []
+      for (let i = msg.data.length - 1; i >= 0; i--) {
+        const trade = parseOkxTrade(msg.data[i])
+        if (trade) trades.push(trade)
+      }
+      if (trades.length === 0) return
+      this.publicSession.emit(`trades:${pair}`, {
+        type: 'update' as const,
+        trades,
       })
     } else if (msg.arg.channel === 'books') {
       const key = `book:${pair}`

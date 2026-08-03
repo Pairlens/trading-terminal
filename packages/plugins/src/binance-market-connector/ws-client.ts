@@ -7,9 +7,11 @@ import {
   buildBookStream,
   buildKlineStream,
   buildTickerStream,
+  buildTradeStream,
   mapBinanceIntervalToTimeframe,
   normalizePair,
   parseBinanceTicker,
+  parseBinanceTrade,
   parseBinanceWsKline,
 } from './parser'
 import { fetchBinanceCandles } from './rest-client'
@@ -18,6 +20,7 @@ import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
@@ -42,6 +45,8 @@ type CandleSub = {
 }
 
 type TickerSub = { pair: string }
+
+type TradeSub = { pair: string }
 
 /** Local orderbook state, rebuilt wholesale from each @depth20 snapshot. */
 type BookSub = {
@@ -231,6 +236,26 @@ export class BinanceWsClient {
     )
   }
 
+  // ── Trade subscriptions ──
+
+  subscribeTrades(
+    pair: string,
+    country: string,
+    cb: TradesCallback,
+  ): () => void {
+    this.country = country
+    const normalized = normalizePair(pair)
+    const key = `trades:${normalized}`
+    const state =
+      this.session.getState<TradeSub>(key) ??
+      ({ pair: normalized } satisfies TradeSub)
+    return this.session.acquire(
+      key,
+      this.streamSpec(key, buildTradeStream(normalized), state),
+      cb as (data: unknown) => void,
+    )
+  }
+
   destroy(): void {
     this.clearPendingAcks()
     this.session.destroy()
@@ -372,6 +397,23 @@ export class BinanceWsClient {
       this.handleBook(stream, data)
       return
     }
+    // Checked after '@ticker' and '@kline_', which '@trade' cannot collide
+    // with — the suffixes are disjoint.
+    if (stream.includes('@trade')) {
+      this.handleTrade(data)
+      return
+    }
+  }
+
+  private handleTrade(data: Record<string, unknown>): void {
+    if (data['e'] !== 'trade') return
+
+    const trade = parseBinanceTrade(data)
+    if (!trade) return
+
+    const symbol = String(data['s'] ?? '').toUpperCase()
+    // One execution per frame on this stream, unlike OKX's batched rows.
+    this.session.emit(`trades:${symbol}`, { type: 'update', trades: [trade] })
   }
 
   private handleKline(data: Record<string, unknown>): void {

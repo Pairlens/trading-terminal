@@ -73,6 +73,7 @@ export const okxMarketConnectorManifest: PluginManifest =
     abbr: 'OKX',
     triggerOrders: true,
     tickerSnapshot: true,
+    trades: true,
     headerImage:
       'https://s.yimg.com/ny/api/res/1.2/YcL1Jo0JCQlMJdZnj6SkYg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTY0MTtjZj13ZWJw/https://media.zenfs.com/en/reuters-finance.com/852f3f6259d5f775f388a1786a9f4a17',
   })

@@ -14,6 +14,7 @@ export type CapabilityId =
   | 'market-data:ticker'
   | 'market-data:ticker-snapshot'
   | 'market-data:orderbook'
+  | 'market-data:trades'
   | 'market-data:history'
   | 'ai:inference'
   | 'ai:web-search'

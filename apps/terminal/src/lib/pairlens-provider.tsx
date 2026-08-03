@@ -132,6 +132,11 @@ const FIRST_PARTY_COMPONENTS: Record<
         default: m.OrderbookPane,
       })),
     ),
+    trades: lazy(() =>
+      import('@/components/terminal/trades-pane').then((m) => ({
+        default: m.TradesPane,
+      })),
+    ),
     'pair-info': lazy(() =>
       import('@/components/terminal/pair-info-pane').then((m) => ({
         default: m.PairInfoPane,

@@ -66,6 +66,7 @@ export const binanceMarketConnectorManifest: PluginManifest =
     abbr: 'BN',
     tickerSnapshot: true,
     triggerOrders: true,
+    trades: true,
     headerImage:
       'https://public.bnbstatic.com/image/cms/blog/20240531/6422bedf-f72e-44e8-be9e-bf77d329bdbd.png',
   })

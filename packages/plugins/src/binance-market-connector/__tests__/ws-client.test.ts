@@ -6,6 +6,7 @@ import type {
   WsAdapterEvents,
   WsConnection,
 } from '@pairlens/market-engine/ws-adapter'
+import type { TradesUpdate } from '@pairlens/market-engine/types'
 
 // These pin the lost-SUBSCRIBE watchdog. The client tracks subscribed streams
 // optimistically, so a SUBSCRIBE that never reaches Binance (e.g. a transport
@@ -206,5 +207,79 @@ describe('BinanceWsClient candle backfill', () => {
 
     client.destroy()
     globalThis.fetch = realFetch
+  })
+})
+
+describe('BinanceWsClient — trade stream', () => {
+  // The parser's aggressor mapping is pinned in __tests__/trade-parsers.test.ts;
+  // what's left to prove here is the wiring: that subscribeTrades asks for the
+  // right stream and that an inbound frame is routed to the right session key
+  // rather than being swallowed by the ticker/kline/depth branches.
+  it('subscribes to the venue trade stream', async () => {
+    const { state, client } = makeClient(5_000)
+    client.subscribeTrades('BTC-USDT', 'US', () => {})
+    await tick(60)
+
+    const sub = lastSubscribe(state.sent)
+    expect(sub?.params).toContain('btcusdt@trade')
+    client.destroy()
+  })
+
+  it('routes an inbound trade frame to its subscriber', async () => {
+    const { state, client } = makeClient(5_000)
+    const received: Array<TradesUpdate> = []
+    client.subscribeTrades('BTC-USDT', 'US', (u) => received.push(u))
+    await tick(60)
+
+    state.events?.onMessage?.(
+      JSON.stringify({
+        stream: 'btcusdt@trade',
+        data: {
+          e: 'trade',
+          s: 'BTCUSDT',
+          t: 42,
+          p: '63000.10',
+          q: '0.5',
+          T: 1700000000000,
+          m: true, // buyer was the maker → the seller crossed
+        },
+      }),
+    )
+
+    expect(received).toHaveLength(1)
+    expect(received[0].trades[0]).toEqual({
+      id: '42',
+      price: 63000.1,
+      size: 0.5,
+      side: 'sell',
+      ts: 1700000000000,
+    })
+    client.destroy()
+  })
+
+  it('does not deliver a trade frame to a ticker subscriber', async () => {
+    // Routing is substring-based, so this guards the branch order.
+    const { state, client } = makeClient(5_000)
+    const tickerUpdates: Array<unknown> = []
+    client.subscribeTicker('BTC-USDT', 'US', (u) => tickerUpdates.push(u))
+    await tick(60)
+
+    state.events?.onMessage?.(
+      JSON.stringify({
+        stream: 'btcusdt@trade',
+        data: {
+          e: 'trade',
+          s: 'BTCUSDT',
+          t: 1,
+          p: '1',
+          q: '1',
+          T: 1,
+          m: false,
+        },
+      }),
+    )
+
+    expect(tickerUpdates).toHaveLength(0)
+    client.destroy()
   })
 })
