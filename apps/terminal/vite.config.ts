@@ -37,7 +37,6 @@ function pyodideAssets(): Plugin {
 }
 
 const config = defineConfig({
-  assetsInclude: ['**/*.glb'],
   define: {
     __APP_VERSION__: JSON.stringify(appVersion),
   },

@@ -11,10 +11,7 @@ import { WorkflowIcon } from '@pairlens/ui/components/ui/workflow'
 
 import type { SignInPhase } from '@/components/sign-in-experience'
 import { SignInExperience } from '@/components/sign-in-experience'
-import {
-  SignInBackdrop,
-  SignInBadge,
-} from '@/components/lanyard/sign-in-visuals'
+import { SignInStatue } from '@/components/sign-in-statue'
 import { useOptimisticSession } from '@/lib/session'
 import { useSignInFlow } from '@/hooks/use-sign-in-flow'
 
@@ -23,52 +20,10 @@ export const Route = createFileRoute('/sign-in')({ component: SignInPage })
 // Success splash beat — long enough to land, short enough to not annoy.
 const SPLASH_MS = 1900
 
-/** Resolve any CSS color string (oklch, hsl, rgb, hex) to [r, g, b] in 0..1. */
-function cssColorToRgb(cssColor: string): [number, number, number] | null {
-  const canvas = document.createElement('canvas')
-  canvas.width = canvas.height = 1
-  const ctx = canvas.getContext('2d')
-  if (!ctx) return null
-  ctx.clearRect(0, 0, 1, 1)
-  ctx.fillStyle = cssColor
-  ctx.fillRect(0, 0, 1, 1)
-  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data
-  return [r / 255, g / 255, b / 255]
-}
-
-/** Read the CSS --primary color and convert to [r,g,b] in 0..1 range. */
-function usePrimaryColor(): [number, number, number] {
-  const [color, setColor] = useState<[number, number, number]>([
-    0.15, 0.1, 0.35,
-  ])
-
-  useEffect(() => {
-    const read = () => {
-      const raw = getComputedStyle(document.documentElement)
-        .getPropertyValue('--primary')
-        .trim()
-      if (!raw) return
-      const rgb = cssColorToRgb(raw)
-      if (rgb) setColor(rgb)
-    }
-    read()
-    // Re-read when theme changes (class or style attribute on <html>)
-    const observer = new MutationObserver(read)
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class', 'style'],
-    })
-    return () => observer.disconnect()
-  }, [])
-
-  return color
-}
-
 function SignInPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { session, isCheckingSession } = useOptimisticSession()
-  const ditherColor = usePrimaryColor()
   const reduceMotion = useReducedMotion() ?? false
 
   // A fresh sign-in holds the page for a "You're in." beat before entering.
@@ -113,20 +68,17 @@ function SignInPage() {
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
-      {/* Left panel — lanyard + benefits */}
-      <div className="relative hidden overflow-hidden bg-sidebar text-sidebar-foreground lg:flex lg:flex-col">
-        {/* Dither background (static gradient where WebGL is off-limits) */}
-        <div className="absolute inset-0 opacity-50">
-          <SignInBackdrop waveColor={ditherColor} />
-        </div>
+      {/* Left panel — dithered statue + benefits. Scoped `dark` so the panel
+          keeps its gallery-dark look (matching the artwork's black ground) in
+          both color modes. */}
+      <div className="dark relative hidden overflow-hidden bg-black text-sidebar-foreground lg:block">
+        <SignInStatue className="absolute inset-0" />
 
-        {/* Lanyard badge (static access pass where WebGL is off-limits) */}
-        <div className="relative z-20 min-h-0 flex-1">
-          <SignInBadge />
-        </div>
+        {/* Fade the artwork toward the panel floor so the benefits read. */}
+        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
 
         {/* Benefits story card */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex justify-center pb-[14%]">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex justify-center pb-[10%]">
           <div className="pointer-events-auto px-8">
             <SignInBenefits />
           </div>
@@ -155,7 +107,7 @@ function SignInPage() {
 }
 
 // ── Benefits story card ─────────────────────────────────────────────────
-// Story-style glass card over the lanyard panel: segmented progress bars
+// Story-style glass card over the statue panel: segmented progress bars
 // drive an auto-advancing carousel (advance on fill completion, pause on
 // hover, click a segment to jump) in the onboarding design language.
 

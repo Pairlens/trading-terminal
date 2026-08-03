@@ -205,19 +205,6 @@ export interface AnalyticsEvents {
     platform: 'desktop' | 'web'
   }
 
-  // ── Diagnostics ───────────────────────────────────────────────────
-  /**
-   * A sign-in 3D surface (dither backdrop or lanyard badge) was disabled at
-   * runtime and replaced by its static fallback. `detail` is a truncated
-   * library error message (≤200 chars), never user data.
-   */
-  signin_webgl_surface_failed: {
-    surface: 'dither' | 'lanyard'
-    reason: string
-    detail?: string
-    platform: 'desktop' | 'web'
-  }
-
   // ── Lifecycle & personalization ───────────────────────────────────
   onboarding_completed: Record<string, never>
   /** Sign-in funnel: OTP email requested → signed_in (OTP verified). */
