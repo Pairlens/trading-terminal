@@ -654,7 +654,8 @@
     "newWorkspace": "พื้นที่ทำงานใหม่",
     "workspaceStore": "Workspace Store",
     "signIn": "เข้าสู่ระบบ",
-    "reportBug": "รายงานข้อผิดพลาด"
+    "feedback": "ความคิดเห็น",
+    "getDesktopApp": "ดาวน์โหลดแอปเดสก์ท็อป"
   },
   "feedback": {
     "title": "รายงานข้อผิดพลาด",
@@ -673,7 +674,28 @@
     "unavailableNotice": "บิลด์นี้ไม่มีคีย์วิเคราะห์ จึงส่งรายงานจากแอปไม่ได้ คัดลอกรายงานแล้วเปิด issue บน GitHub แทน",
     "copy": "คัดลอกรายงาน",
     "copied": "คัดลอกรายงานไปยังคลิปบอร์ดแล้ว",
-    "openIssue": "เปิด issues บน GitHub"
+    "openIssue": "เปิด issues บน GitHub",
+    "dialogTitle": "ความคิดเห็น",
+    "tabSurvey": "ส่งความคิดเห็น",
+    "optional": "(ไม่บังคับ)",
+    "surveySubmit": "ส่งความคิดเห็น",
+    "surveySent": "ขอบคุณ ความเห็นนี้ช่วยได้มาก",
+    "surveyOpenPlaceholder": "สิ่งที่คุณอยากเปลี่ยน เพิ่ม หรือเอาออก",
+    "surveyOtherPlaceholder": "เล่าเพิ่มเติม"
+  },
+  "desktopCta": {
+    "title": "Pairlens บนเดสก์ท็อปของคุณ",
+    "description": "เวอร์ชันบนเบราว์เซอร์ไว้ลองเล่น ส่วนแอปเดสก์ท็อปคือตัวที่เราปล่อยจริง",
+    "benefitKeychain": "คีย์ของกระดานเทรดอยู่ในคีย์เชนของระบบปฏิบัติการ ไม่เคยอยู่บนเซิร์ฟเวอร์ของเรา",
+    "benefitPerformance": "หน้าต่างเนทีฟ กราฟทำงานบน GPU ไม่มีแท็บเบราว์เซอร์มาแย่งทรัพยากร",
+    "benefitUpdates": "อัปเดตที่เซ็นรับรองติดตั้งเงียบ ๆ เบื้องหลัง",
+    "downloadFor": "ดาวน์โหลดสำหรับ {{os}}",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "แพลตฟอร์มอื่น",
+    "sourceNote": "ทุกบิลด์เปิดซอร์สและมีลายเซ็น",
+    "releaseNotes": "บันทึกการปล่อยเวอร์ชัน"
   },
   "userMenu": {
     "accountMenu": "เมนูบัญชี",

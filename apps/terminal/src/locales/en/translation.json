@@ -654,7 +654,8 @@
     "newWorkspace": "New Workspace",
     "workspaceStore": "Workspace Store",
     "signIn": "Sign in",
-    "reportBug": "Report a bug"
+    "feedback": "Feedback",
+    "getDesktopApp": "Get the desktop app"
   },
   "feedback": {
     "title": "Report a bug",
@@ -673,7 +674,28 @@
     "unavailableNotice": "This build has no analytics key, so reports can't be sent from the app. Copy yours and open a GitHub issue instead.",
     "copy": "Copy report",
     "copied": "Report copied to your clipboard",
-    "openIssue": "Open GitHub issues"
+    "openIssue": "Open GitHub issues",
+    "dialogTitle": "Feedback",
+    "tabSurvey": "Share feedback",
+    "optional": "(optional)",
+    "surveySubmit": "Send feedback",
+    "surveySent": "Thanks — that really helps.",
+    "surveyOpenPlaceholder": "Anything you'd change, add, or remove",
+    "surveyOtherPlaceholder": "Tell us more"
+  },
+  "desktopCta": {
+    "title": "Pairlens on your desktop",
+    "description": "The browser build is for tinkering. The desktop app is the one we ship.",
+    "benefitKeychain": "Exchange keys stay in your OS keychain, never on our servers",
+    "benefitPerformance": "Native window, GPU charts, no browser tab competing for them",
+    "benefitUpdates": "Signed updates install quietly in the background",
+    "downloadFor": "Download for {{os}}",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "Other platforms",
+    "sourceNote": "Every build is source-available and signed.",
+    "releaseNotes": "Release notes"
   },
   "userMenu": {
     "accountMenu": "Account menu",

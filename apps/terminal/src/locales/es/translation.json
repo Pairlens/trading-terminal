@@ -654,7 +654,8 @@
     "newWorkspace": "Nuevo espacio de trabajo",
     "workspaceStore": "Tienda de espacios",
     "signIn": "Iniciar sesión",
-    "reportBug": "Reportar un error"
+    "feedback": "Comentarios",
+    "getDesktopApp": "Descargar la app de escritorio"
   },
   "feedback": {
     "title": "Reportar un error",
@@ -673,7 +674,28 @@
     "unavailableNotice": "Esta versión no tiene clave de analíticas, así que no se pueden enviar informes desde la app. Copia el tuyo y abre una incidencia en GitHub.",
     "copy": "Copiar informe",
     "copied": "Informe copiado al portapapeles",
-    "openIssue": "Abrir incidencias en GitHub"
+    "openIssue": "Abrir incidencias en GitHub",
+    "dialogTitle": "Comentarios",
+    "tabSurvey": "Enviar comentarios",
+    "optional": "(opcional)",
+    "surveySubmit": "Enviar comentarios",
+    "surveySent": "Gracias, nos ayuda mucho.",
+    "surveyOpenPlaceholder": "Lo que cambiarías, añadirías o quitarías",
+    "surveyOtherPlaceholder": "Cuéntanos más"
+  },
+  "desktopCta": {
+    "title": "Pairlens en tu escritorio",
+    "description": "La versión del navegador es para probar. La app de escritorio es la que publicamos.",
+    "benefitKeychain": "Las claves del exchange se quedan en el llavero del sistema, nunca en nuestros servidores",
+    "benefitPerformance": "Ventana nativa, gráficos por GPU y ninguna pestaña compitiendo por ellos",
+    "benefitUpdates": "Las actualizaciones firmadas se instalan solas en segundo plano",
+    "downloadFor": "Descargar para {{os}}",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "Otras plataformas",
+    "sourceNote": "Todas las versiones son de código abierto y están firmadas.",
+    "releaseNotes": "Notas de la versión"
   },
   "userMenu": {
     "accountMenu": "Menú de cuenta",

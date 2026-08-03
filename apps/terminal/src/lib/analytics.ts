@@ -155,6 +155,24 @@ export function initAnalytics(): void {
 }
 
 /**
+ * The live PostHog client, or null when analytics is unconfigured, declined,
+ * or still loading. Starts the client on demand when consent is already
+ * granted.
+ *
+ * Almost nothing should need this — events go through `track()`. The one
+ * caller is the in-app feedback survey, which has to read survey definitions
+ * off PostHog's own API (`getSurveys`). Treat null as "no survey today" and
+ * degrade, never as a reason to bypass the consent gate.
+ */
+export async function getPostHogClient(): Promise<PostHog | null> {
+  if (!isAnalyticsConfigured() || !analyticsSetting.get()) return null
+  // A load already in flight makes start() a no-op; the caller retries.
+  if (!client) await start()
+  if (!client || client.has_opted_out_capturing()) return null
+  return client
+}
+
+/**
  * Tie events to the signed-in user; pass null on sign-out. Identified by the
  * opaque account id only — email (PII) stays in the App Server DB, where the
  * id can be joined back when genuinely needed.

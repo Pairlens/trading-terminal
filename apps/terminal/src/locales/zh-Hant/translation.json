@@ -654,7 +654,8 @@
     "newWorkspace": "新增工作區",
     "workspaceStore": "工作區商店",
     "signIn": "登入",
-    "reportBug": "回報問題"
+    "feedback": "意見回饋",
+    "getDesktopApp": "取得桌面應用程式"
   },
   "feedback": {
     "title": "回報問題",
@@ -673,7 +674,28 @@
     "unavailableNotice": "此版本沒有分析金鑰，無法從應用程式內送出回報。請複製內容並到 GitHub 開 issue。",
     "copy": "複製回報",
     "copied": "回報已複製到剪貼簿",
-    "openIssue": "開啟 GitHub issues"
+    "openIssue": "開啟 GitHub issues",
+    "dialogTitle": "意見回饋",
+    "tabSurvey": "分享意見",
+    "optional": "（選填）",
+    "surveySubmit": "送出意見",
+    "surveySent": "謝謝，這對我們很有幫助。",
+    "surveyOpenPlaceholder": "你想調整、增加或拿掉什麼",
+    "surveyOtherPlaceholder": "再多說一點"
+  },
+  "desktopCta": {
+    "title": "把 Pairlens 裝到桌面",
+    "description": "瀏覽器版本用來試玩，我們真正發行的是桌面應用程式。",
+    "benefitKeychain": "交易所金鑰留在系統鑰匙圈裡，絕不會上傳到我們的伺服器",
+    "benefitPerformance": "原生視窗、GPU 圖表，沒有瀏覽器分頁來搶資源",
+    "benefitUpdates": "已簽章的更新會在背景安靜安裝",
+    "downloadFor": "下載 {{os}} 版",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "其他平台",
+    "sourceNote": "每個版本都公開原始碼並已簽章。",
+    "releaseNotes": "發行說明"
   },
   "userMenu": {
     "accountMenu": "帳戶選單",

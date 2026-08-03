@@ -654,7 +654,8 @@
     "newWorkspace": "Ruang Kerja Baru",
     "workspaceStore": "Workspace Store",
     "signIn": "Masuk",
-    "reportBug": "Laporkan bug"
+    "feedback": "Masukan",
+    "getDesktopApp": "Unduh aplikasi desktop"
   },
   "feedback": {
     "title": "Laporkan bug",
@@ -673,7 +674,28 @@
     "unavailableNotice": "Build ini tidak punya kunci analitik, jadi laporan tidak bisa dikirim dari aplikasi. Salin laporanmu dan buka issue di GitHub.",
     "copy": "Salin laporan",
     "copied": "Laporan disalin ke papan klip",
-    "openIssue": "Buka issue GitHub"
+    "openIssue": "Buka issue GitHub",
+    "dialogTitle": "Masukan",
+    "tabSurvey": "Beri masukan",
+    "optional": "(opsional)",
+    "surveySubmit": "Kirim masukan",
+    "surveySent": "Terima kasih — ini sangat membantu.",
+    "surveyOpenPlaceholder": "Apa yang ingin kamu ubah, tambah, atau hapus",
+    "surveyOtherPlaceholder": "Ceritakan lebih lanjut"
+  },
+  "desktopCta": {
+    "title": "Pairlens di desktopmu",
+    "description": "Versi browser untuk coba-coba. Aplikasi desktop adalah yang kami rilis.",
+    "benefitKeychain": "Kunci bursa tetap di keychain sistem operasi, tidak pernah di server kami",
+    "benefitPerformance": "Jendela native, grafik GPU, tanpa tab browser yang berebut sumber daya",
+    "benefitUpdates": "Pembaruan bertanda tangan terpasang diam-diam di latar belakang",
+    "downloadFor": "Unduh untuk {{os}}",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "Platform lain",
+    "sourceNote": "Setiap build sumbernya terbuka dan bertanda tangan.",
+    "releaseNotes": "Catatan rilis"
   },
   "userMenu": {
     "accountMenu": "Menu akun",

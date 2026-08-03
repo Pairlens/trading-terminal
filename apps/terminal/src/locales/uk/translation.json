@@ -654,7 +654,8 @@
     "newWorkspace": "Новий робочий простір",
     "workspaceStore": "Магазин робочих просторів",
     "signIn": "Увійти",
-    "reportBug": "Повідомити про помилку"
+    "feedback": "Відгуки",
+    "getDesktopApp": "Завантажити десктоп-застосунок"
   },
   "feedback": {
     "title": "Повідомити про помилку",
@@ -673,7 +674,28 @@
     "unavailableNotice": "У цій збірці немає ключа аналітики, тож надіслати звіт із застосунку не вийде. Скопіюйте його та створіть issue на GitHub.",
     "copy": "Скопіювати звіт",
     "copied": "Звіт скопійовано в буфер обміну",
-    "openIssue": "Відкрити issues на GitHub"
+    "openIssue": "Відкрити issues на GitHub",
+    "dialogTitle": "Відгуки",
+    "tabSurvey": "Поділитися думкою",
+    "optional": "(необов’язково)",
+    "surveySubmit": "Надіслати",
+    "surveySent": "Дякуємо — це дуже допомагає.",
+    "surveyOpenPlaceholder": "Що б ви змінили, додали чи прибрали",
+    "surveyOtherPlaceholder": "Розкажіть докладніше"
+  },
+  "desktopCta": {
+    "title": "Pairlens на вашому комп’ютері",
+    "description": "Збірка для браузера — щоб спробувати. Випускаємо ми десктопний застосунок.",
+    "benefitKeychain": "Ключі бірж залишаються у сховищі ключів ОС і ніколи не потрапляють на наші сервери",
+    "benefitPerformance": "Нативне вікно, графіки на GPU і жодної вкладки браузера поруч",
+    "benefitUpdates": "Підписані оновлення встановлюються тихо у фоні",
+    "downloadFor": "Завантажити для {{os}}",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "Інші платформи",
+    "sourceNote": "Кожна збірка має відкритий код і підписана.",
+    "releaseNotes": "Нотатки до випуску"
   },
   "userMenu": {
     "accountMenu": "Меню облікового запису",

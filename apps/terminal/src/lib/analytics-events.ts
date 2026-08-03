@@ -176,6 +176,19 @@ export interface AnalyticsEvents {
    * OS-notification permissions. */
   alert_delivery: { channel: string; ok: boolean }
 
+  // ── Desktop conversion ────────────────────────────────────────────
+  /**
+   * Browser build only: a desktop installer link was opened. `os` is the
+   * build that was downloaded, `current_os` the machine that asked — the gap
+   * between them is the interesting part (people fetching a build for another
+   * machine), and `asset` names our own release artifact.
+   */
+  desktop_download_clicked: {
+    os: string
+    current_os: string
+    asset: string
+  }
+
   // ── User-submitted feedback ───────────────────────────────────────
   /**
    * A bug report / idea the user deliberately typed and sent from the

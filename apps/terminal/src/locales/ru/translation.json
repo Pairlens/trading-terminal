@@ -654,7 +654,8 @@
     "newWorkspace": "Новое рабочее пространство",
     "workspaceStore": "Магазин рабочих пространств",
     "signIn": "Войти",
-    "reportBug": "Сообщить об ошибке"
+    "feedback": "Обратная связь",
+    "getDesktopApp": "Скачать десктоп-приложение"
   },
   "feedback": {
     "title": "Сообщить об ошибке",
@@ -673,7 +674,28 @@
     "unavailableNotice": "В этой сборке нет ключа аналитики, поэтому отправить отчёт из приложения нельзя. Скопируйте его и создайте issue на GitHub.",
     "copy": "Скопировать отчёт",
     "copied": "Отчёт скопирован в буфер обмена",
-    "openIssue": "Открыть issues на GitHub"
+    "openIssue": "Открыть issues на GitHub",
+    "dialogTitle": "Обратная связь",
+    "tabSurvey": "Поделиться мнением",
+    "optional": "(необязательно)",
+    "surveySubmit": "Отправить",
+    "surveySent": "Спасибо — это очень помогает.",
+    "surveyOpenPlaceholder": "Что бы вы изменили, добавили или убрали",
+    "surveyOtherPlaceholder": "Расскажите подробнее"
+  },
+  "desktopCta": {
+    "title": "Pairlens на вашем компьютере",
+    "description": "Сборка для браузера — чтобы попробовать. Выпускаем мы десктопное приложение.",
+    "benefitKeychain": "Ключи бирж остаются в связке ключей ОС и никогда не попадают на наши серверы",
+    "benefitPerformance": "Нативное окно, графики на GPU и никакой вкладки браузера рядом",
+    "benefitUpdates": "Подписанные обновления ставятся тихо в фоне",
+    "downloadFor": "Скачать для {{os}}",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "Другие платформы",
+    "sourceNote": "Каждая сборка с открытым исходным кодом и подписана.",
+    "releaseNotes": "Заметки о выпуске"
   },
   "userMenu": {
     "accountMenu": "Меню аккаунта",

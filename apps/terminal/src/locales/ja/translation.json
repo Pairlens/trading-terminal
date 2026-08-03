@@ -654,7 +654,8 @@
     "newWorkspace": "新しいワークスペース",
     "workspaceStore": "ワークスペースストア",
     "signIn": "サインイン",
-    "reportBug": "バグを報告"
+    "feedback": "フィードバック",
+    "getDesktopApp": "デスクトップアプリを入手"
   },
   "feedback": {
     "title": "バグを報告",
@@ -673,7 +674,28 @@
     "unavailableNotice": "このビルドには分析キーがないため、アプリからは送信できません。コピーして GitHub の issue を作成してください。",
     "copy": "レポートをコピー",
     "copied": "レポートをクリップボードにコピーしました",
-    "openIssue": "GitHub の issues を開く"
+    "openIssue": "GitHub の issues を開く",
+    "dialogTitle": "フィードバック",
+    "tabSurvey": "意見を送る",
+    "optional": "(任意)",
+    "surveySubmit": "送信",
+    "surveySent": "ありがとうございます。とても参考になります。",
+    "surveyOpenPlaceholder": "変えたいところ、足したいもの、要らないもの",
+    "surveyOtherPlaceholder": "もう少し詳しく"
+  },
+  "desktopCta": {
+    "title": "デスクトップで使う Pairlens",
+    "description": "ブラウザ版はお試し用です。実際に提供しているのはデスクトップアプリです。",
+    "benefitKeychain": "取引所の API キーは OS のキーチェーンに保存され、サーバーには送りません",
+    "benefitPerformance": "ネイティブウィンドウと GPU チャート。ブラウザのタブに邪魔されません",
+    "benefitUpdates": "署名済みのアップデートがバックグラウンドで静かに入ります",
+    "downloadFor": "{{os}} 版をダウンロード",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "ほかのプラットフォーム",
+    "sourceNote": "すべてのビルドはソース公開で署名済みです。",
+    "releaseNotes": "リリースノート"
   },
   "userMenu": {
     "accountMenu": "アカウントメニュー",

@@ -654,7 +654,8 @@
     "newWorkspace": "Nowy obszar roboczy",
     "workspaceStore": "Workspace Store",
     "signIn": "Zaloguj się",
-    "reportBug": "Zgłoś błąd"
+    "feedback": "Opinie",
+    "getDesktopApp": "Pobierz aplikację na komputer"
   },
   "feedback": {
     "title": "Zgłoś błąd",
@@ -673,7 +674,28 @@
     "unavailableNotice": "Ta kompilacja nie ma klucza analityki, więc nie wyśle zgłoszenia. Skopiuj je i załóż zgłoszenie na GitHubie.",
     "copy": "Kopiuj zgłoszenie",
     "copied": "Zgłoszenie skopiowane do schowka",
-    "openIssue": "Otwórz zgłoszenia na GitHubie"
+    "openIssue": "Otwórz zgłoszenia na GitHubie",
+    "dialogTitle": "Opinie",
+    "tabSurvey": "Podziel się opinią",
+    "optional": "(opcjonalnie)",
+    "surveySubmit": "Wyślij opinię",
+    "surveySent": "Dziękujemy — to naprawdę pomaga.",
+    "surveyOpenPlaceholder": "Co byś zmienił, dodał albo usunął",
+    "surveyOtherPlaceholder": "Napisz więcej"
+  },
+  "desktopCta": {
+    "title": "Pairlens na Twoim komputerze",
+    "description": "Wersja w przeglądarce służy do testów. Wydajemy aplikację desktopową.",
+    "benefitKeychain": "Klucze giełd zostają w pęku kluczy systemu, nigdy na naszych serwerach",
+    "benefitPerformance": "Natywne okno, wykresy na GPU, bez karty przeglądarki w tle",
+    "benefitUpdates": "Podpisane aktualizacje instalują się po cichu w tle",
+    "downloadFor": "Pobierz dla {{os}}",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "Inne platformy",
+    "sourceNote": "Każda kompilacja ma dostępne źródła i jest podpisana.",
+    "releaseNotes": "Informacje o wydaniu"
   },
   "userMenu": {
     "accountMenu": "Menu konta",

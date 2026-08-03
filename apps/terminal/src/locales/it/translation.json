@@ -654,7 +654,8 @@
     "newWorkspace": "Nuovo spazio di lavoro",
     "workspaceStore": "Workspace Store",
     "signIn": "Accedi",
-    "reportBug": "Segnala un bug"
+    "feedback": "Feedback",
+    "getDesktopApp": "Scarica l'app desktop"
   },
   "feedback": {
     "title": "Segnala un bug",
@@ -673,7 +674,28 @@
     "unavailableNotice": "Questa build non ha una chiave di analytics, quindi non può inviare segnalazioni. Copia la tua e apri una issue su GitHub.",
     "copy": "Copia segnalazione",
     "copied": "Segnalazione copiata negli appunti",
-    "openIssue": "Apri le issue su GitHub"
+    "openIssue": "Apri le issue su GitHub",
+    "dialogTitle": "Feedback",
+    "tabSurvey": "Lascia un feedback",
+    "optional": "(facoltativo)",
+    "surveySubmit": "Invia feedback",
+    "surveySent": "Grazie, ci aiuta davvero.",
+    "surveyOpenPlaceholder": "Cosa cambieresti, aggiungeresti o toglieresti",
+    "surveyOtherPlaceholder": "Raccontaci di più"
+  },
+  "desktopCta": {
+    "title": "Pairlens sul tuo desktop",
+    "description": "La build nel browser serve per provare. L'app desktop è quella che pubblichiamo.",
+    "benefitKeychain": "Le chiavi degli exchange restano nel portachiavi del sistema, mai sui nostri server",
+    "benefitPerformance": "Finestra nativa, grafici su GPU, nessuna scheda del browser di mezzo",
+    "benefitUpdates": "Gli aggiornamenti firmati si installano in silenzio in background",
+    "downloadFor": "Scarica per {{os}}",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "Altre piattaforme",
+    "sourceNote": "Ogni build è a sorgente aperto e firmata.",
+    "releaseNotes": "Note di rilascio"
   },
   "userMenu": {
     "accountMenu": "Menu account",

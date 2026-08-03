@@ -654,7 +654,8 @@
     "newWorkspace": "Yeni Çalışma Alanı",
     "workspaceStore": "Çalışma Alanı Mağazası",
     "signIn": "Giriş yap",
-    "reportBug": "Hata bildir"
+    "feedback": "Geri bildirim",
+    "getDesktopApp": "Masaüstü uygulamasını indir"
   },
   "feedback": {
     "title": "Hata bildir",
@@ -673,7 +674,28 @@
     "unavailableNotice": "Bu sürümde analitik anahtarı yok, bu yüzden uygulamadan bildirim gönderilemez. Kopyala ve GitHub'da bir issue aç.",
     "copy": "Bildirimi kopyala",
     "copied": "Bildirim panoya kopyalandı",
-    "openIssue": "GitHub issue'larını aç"
+    "openIssue": "GitHub issue'larını aç",
+    "dialogTitle": "Geri bildirim",
+    "tabSurvey": "Görüşünü paylaş",
+    "optional": "(isteğe bağlı)",
+    "surveySubmit": "Gönder",
+    "surveySent": "Teşekkürler — bu gerçekten yardımcı oluyor.",
+    "surveyOpenPlaceholder": "Neyi değiştirir, ekler ya da çıkarırdın",
+    "surveyOtherPlaceholder": "Biraz daha anlat"
+  },
+  "desktopCta": {
+    "title": "Masaüstünde Pairlens",
+    "description": "Tarayıcı sürümü denemek için. Yayınladığımız asıl ürün masaüstü uygulaması.",
+    "benefitKeychain": "Borsa anahtarların işletim sisteminin anahtar zincirinde kalır, sunucularımızda asla",
+    "benefitPerformance": "Yerel pencere, GPU grafikleri, arada tarayıcı sekmesi yok",
+    "benefitUpdates": "İmzalı güncellemeler arka planda sessizce kurulur",
+    "downloadFor": "{{os}} için indir",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "Diğer platformlar",
+    "sourceNote": "Her sürüm kaynağı açık ve imzalıdır.",
+    "releaseNotes": "Sürüm notları"
   },
   "userMenu": {
     "accountMenu": "Hesap menüsü",

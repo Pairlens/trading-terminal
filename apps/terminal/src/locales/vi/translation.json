@@ -654,7 +654,8 @@
     "newWorkspace": "Không gian làm việc mới",
     "workspaceStore": "Workspace Store",
     "signIn": "Đăng nhập",
-    "reportBug": "Báo lỗi"
+    "feedback": "Phản hồi",
+    "getDesktopApp": "Tải ứng dụng máy tính"
   },
   "feedback": {
     "title": "Báo lỗi",
@@ -673,7 +674,28 @@
     "unavailableNotice": "Bản dựng này không có khóa phân tích nên không gửi được báo cáo từ ứng dụng. Hãy sao chép và mở issue trên GitHub.",
     "copy": "Sao chép báo cáo",
     "copied": "Đã sao chép báo cáo vào bộ nhớ tạm",
-    "openIssue": "Mở issue trên GitHub"
+    "openIssue": "Mở issue trên GitHub",
+    "dialogTitle": "Phản hồi",
+    "tabSurvey": "Gửi phản hồi",
+    "optional": "(không bắt buộc)",
+    "surveySubmit": "Gửi phản hồi",
+    "surveySent": "Cảm ơn bạn — điều này rất hữu ích.",
+    "surveyOpenPlaceholder": "Điều bạn muốn thay đổi, thêm hoặc bỏ đi",
+    "surveyOtherPlaceholder": "Kể thêm cho chúng tôi"
+  },
+  "desktopCta": {
+    "title": "Pairlens trên máy tính của bạn",
+    "description": "Bản chạy trên trình duyệt để dùng thử. Ứng dụng máy tính mới là bản chúng tôi phát hành.",
+    "benefitKeychain": "Khóa sàn nằm trong keychain của hệ điều hành, không bao giờ trên máy chủ của chúng tôi",
+    "benefitPerformance": "Cửa sổ gốc, biểu đồ chạy GPU, không có tab trình duyệt tranh tài nguyên",
+    "benefitUpdates": "Bản cập nhật có chữ ký tự cài lặng lẽ ở nền",
+    "downloadFor": "Tải cho {{os}}",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "Nền tảng khác",
+    "sourceNote": "Mọi bản dựng đều mở mã nguồn và được ký.",
+    "releaseNotes": "Ghi chú phát hành"
   },
   "userMenu": {
     "accountMenu": "Menu tài khoản",

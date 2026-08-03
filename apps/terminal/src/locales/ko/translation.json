@@ -654,7 +654,8 @@
     "newWorkspace": "새 워크스페이스",
     "workspaceStore": "워크스페이스 스토어",
     "signIn": "로그인",
-    "reportBug": "버그 신고"
+    "feedback": "피드백",
+    "getDesktopApp": "데스크톱 앱 받기"
   },
   "feedback": {
     "title": "버그 신고",
@@ -673,7 +674,28 @@
     "unavailableNotice": "이 빌드에는 분석 키가 없어 앱에서 신고를 보낼 수 없습니다. 내용을 복사해 GitHub 이슈를 열어주세요.",
     "copy": "신고 복사",
     "copied": "신고를 클립보드에 복사했습니다",
-    "openIssue": "GitHub 이슈 열기"
+    "openIssue": "GitHub 이슈 열기",
+    "dialogTitle": "피드백",
+    "tabSurvey": "의견 보내기",
+    "optional": "(선택)",
+    "surveySubmit": "보내기",
+    "surveySent": "감사합니다. 큰 도움이 됩니다.",
+    "surveyOpenPlaceholder": "바꾸거나 더하거나 빼고 싶은 것",
+    "surveyOtherPlaceholder": "조금 더 알려주세요"
+  },
+  "desktopCta": {
+    "title": "내 데스크톱의 Pairlens",
+    "description": "브라우저 빌드는 체험용입니다. 실제로 배포하는 것은 데스크톱 앱입니다.",
+    "benefitKeychain": "거래소 키는 OS 키체인에 남고 서버로는 절대 가지 않습니다",
+    "benefitPerformance": "네이티브 창과 GPU 차트, 자원을 다투는 브라우저 탭 없음",
+    "benefitUpdates": "서명된 업데이트가 백그라운드에서 조용히 설치됩니다",
+    "downloadFor": "{{os}}용 다운로드",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "다른 플랫폼",
+    "sourceNote": "모든 빌드는 소스가 공개되어 있고 서명되어 있습니다.",
+    "releaseNotes": "릴리스 노트"
   },
   "userMenu": {
     "accountMenu": "계정 메뉴",

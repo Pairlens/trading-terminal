@@ -654,7 +654,8 @@
     "newWorkspace": "新建工作区",
     "workspaceStore": "工作区商店",
     "signIn": "登录",
-    "reportBug": "报告问题"
+    "feedback": "反馈",
+    "getDesktopApp": "获取桌面应用"
   },
   "feedback": {
     "title": "报告问题",
@@ -673,7 +674,28 @@
     "unavailableNotice": "此版本没有分析密钥，无法从应用内发送报告。请复制内容并在 GitHub 上提交 issue。",
     "copy": "复制报告",
     "copied": "报告已复制到剪贴板",
-    "openIssue": "打开 GitHub issues"
+    "openIssue": "打开 GitHub issues",
+    "dialogTitle": "反馈",
+    "tabSurvey": "分享反馈",
+    "optional": "（选填）",
+    "surveySubmit": "发送反馈",
+    "surveySent": "谢谢，这对我们很有帮助。",
+    "surveyOpenPlaceholder": "你想改动、增加或去掉什么",
+    "surveyOtherPlaceholder": "再多说一点"
+  },
+  "desktopCta": {
+    "title": "把 Pairlens 装到桌面",
+    "description": "浏览器版本用来试玩，我们真正发布的是桌面应用。",
+    "benefitKeychain": "交易所密钥保存在系统钥匙串里，绝不上传到我们的服务器",
+    "benefitPerformance": "原生窗口、GPU 图表，没有浏览器标签页来抢资源",
+    "benefitUpdates": "已签名的更新在后台悄悄安装",
+    "downloadFor": "下载 {{os}} 版",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "其他平台",
+    "sourceNote": "每个版本都开放源码并已签名。",
+    "releaseNotes": "发行说明"
   },
   "userMenu": {
     "accountMenu": "账户菜单",

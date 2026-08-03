@@ -20,6 +20,7 @@ import {
   LogIn,
   LogOut,
   Monitor,
+  MonitorDown,
   Moon,
   Settings2,
   ShieldCheck,
@@ -93,7 +94,8 @@ import { api, clearSessionCache, queryKeys, resolveUrl } from '@/lib/api'
 import { PairlensProvider } from '@/lib/pairlens-provider'
 import { MarketDataProvider } from '@/lib/market-data-provider'
 import { GeoRestrictionDialog } from '@/components/geo-restriction-dialog'
-import { closeSplashScreen, isStandalone } from '@/lib/platform'
+import { closeSplashScreen, isHosted, isStandalone } from '@/lib/platform'
+import { DESKTOP_CTA_SEEN_KEY } from '@/lib/desktop-download'
 import { DesktopMenuBridge } from '@/components/desktop-menu-bridge'
 import {
   TauriDragRegion,
@@ -111,7 +113,8 @@ import {
   usePerformanceModeSync,
 } from '@/hooks/use-performance-mode'
 import { WorkspaceTreeSidebar } from '@/components/workspace/workspace-tree-sidebar'
-import { BugReportDialog } from '@/components/feedback/bug-report-dialog'
+import { FeedbackDialog } from '@/components/feedback/feedback-dialog'
+import { DesktopDownloadDialog } from '@/components/feedback/desktop-download-dialog'
 
 import UserSettingsDialog from '@/components/user-settings-dialog'
 
@@ -170,7 +173,13 @@ function TerminalLayout() {
   const { t } = useTranslation()
   const perfMode = usePerformanceModeState()
   const [workspaceTreeOpen, setWorkspaceTreeOpen] = useState(false)
-  const [bugReportOpen, setBugReportOpen] = useState(false)
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
+  const [desktopCtaOpen, setDesktopCtaOpen] = useState(false)
+  // Device-local: the ping badge is a one-time nudge, not a permanent decoration.
+  const [desktopCtaSeen, setDesktopCtaSeen] = usePersistedState<boolean>(
+    DESKTOP_CTA_SEEN_KEY,
+    false,
+  )
 
   const activeItem = location.pathname.startsWith('/notifications')
     ? 'notifications'
@@ -313,10 +322,16 @@ function TerminalLayout() {
                 <IdleGuard />
                 <ShortcutHintListener />
                 <GeoRestrictionDialog />
-                <BugReportDialog
-                  open={bugReportOpen}
-                  onOpenChange={setBugReportOpen}
+                <FeedbackDialog
+                  open={feedbackOpen}
+                  onOpenChange={setFeedbackOpen}
                 />
+                {isHosted && (
+                  <DesktopDownloadDialog
+                    open={desktopCtaOpen}
+                    onOpenChange={setDesktopCtaOpen}
+                  />
+                )}
                 <BillingStateSync />
                 <SidebarProvider
                   className={cn(
@@ -494,17 +509,34 @@ function TerminalLayout() {
 
                     <SidebarFooter className="p-2">
                       <SidebarMenu className="items-center">
+                        {isHosted && (
+                          <SidebarMenuItem>
+                            <SidebarMenuButton
+                              aria-label={t('nav.getDesktopApp')}
+                              className="relative size-9 justify-center p-0"
+                              onClick={() => {
+                                setDesktopCtaOpen(true)
+                                setDesktopCtaSeen(true)
+                              }}
+                              type="button"
+                            >
+                              <MonitorDown size={16} />
+                              <span className="sr-only">
+                                {t('nav.getDesktopApp')}
+                              </span>
+                              {!desktopCtaSeen && <DesktopCtaBadge />}
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        )}
                         <SidebarMenuItem>
                           <SidebarMenuButton
-                            aria-label={t('nav.reportBug')}
+                            aria-label={t('nav.feedback')}
                             className="size-9 justify-center p-0"
-                            onClick={() => setBugReportOpen(true)}
+                            onClick={() => setFeedbackOpen(true)}
                             type="button"
                           >
                             <Bug size={16} />
-                            <span className="sr-only">
-                              {t('nav.reportBug')}
-                            </span>
+                            <span className="sr-only">{t('nav.feedback')}</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                       </SidebarMenu>
@@ -552,6 +584,19 @@ function TerminalLayout() {
         </MarketDataProvider>
       </PairlensProvider>
     </PerformanceModeContext.Provider>
+  )
+}
+
+/**
+ * One-time nudge on the desktop-download button: a soft ping until the user
+ * opens the dialog once, then gone for good on this device.
+ */
+function DesktopCtaBadge() {
+  return (
+    <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex size-2.5">
+      <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
+      <span className="relative inline-flex size-2.5 rounded-full bg-primary" />
+    </span>
   )
 }
 

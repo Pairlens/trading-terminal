@@ -654,7 +654,8 @@
     "newWorkspace": "Neuer Workspace",
     "workspaceStore": "Workspace Store",
     "signIn": "Anmelden",
-    "reportBug": "Fehler melden"
+    "feedback": "Feedback",
+    "getDesktopApp": "Desktop-App holen"
   },
   "feedback": {
     "title": "Fehler melden",
@@ -673,7 +674,28 @@
     "unavailableNotice": "Dieser Build hat keinen Analyse-Schlüssel, Berichte lassen sich also nicht aus der App senden. Kopiere deinen und öffne ein GitHub-Issue.",
     "copy": "Bericht kopieren",
     "copied": "Bericht in die Zwischenablage kopiert",
-    "openIssue": "GitHub-Issues öffnen"
+    "openIssue": "GitHub-Issues öffnen",
+    "dialogTitle": "Feedback",
+    "tabSurvey": "Feedback geben",
+    "optional": "(optional)",
+    "surveySubmit": "Feedback senden",
+    "surveySent": "Danke – das hilft uns wirklich.",
+    "surveyOpenPlaceholder": "Was du ändern, ergänzen oder weglassen würdest",
+    "surveyOtherPlaceholder": "Erzähl uns mehr"
+  },
+  "desktopCta": {
+    "title": "Pairlens auf deinem Desktop",
+    "description": "Der Browser-Build ist zum Ausprobieren. Ausgeliefert wird die Desktop-App.",
+    "benefitKeychain": "Exchange-Schlüssel bleiben im Schlüsselbund des Systems, nie auf unseren Servern",
+    "benefitPerformance": "Natives Fenster, GPU-Charts, kein Browser-Tab, der sie ausbremst",
+    "benefitUpdates": "Signierte Updates installieren sich still im Hintergrund",
+    "downloadFor": "Für {{os}} herunterladen",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "Andere Plattformen",
+    "sourceNote": "Jeder Build ist quelloffen und signiert.",
+    "releaseNotes": "Release Notes"
   },
   "userMenu": {
     "accountMenu": "Kontomenü",

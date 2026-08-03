@@ -654,7 +654,8 @@
     "newWorkspace": "Nouvel espace de travail",
     "workspaceStore": "Workspace Store",
     "signIn": "Se connecter",
-    "reportBug": "Signaler un bug"
+    "feedback": "Retours",
+    "getDesktopApp": "Télécharger l'app de bureau"
   },
   "feedback": {
     "title": "Signaler un bug",
@@ -673,7 +674,28 @@
     "unavailableNotice": "Cette version n'a pas de clé d'analytique : impossible d'envoyer un rapport depuis l'app. Copiez le vôtre et ouvrez un ticket GitHub.",
     "copy": "Copier le rapport",
     "copied": "Rapport copié dans le presse-papiers",
-    "openIssue": "Ouvrir les tickets GitHub"
+    "openIssue": "Ouvrir les tickets GitHub",
+    "dialogTitle": "Retours",
+    "tabSurvey": "Donner un avis",
+    "optional": "(facultatif)",
+    "surveySubmit": "Envoyer",
+    "surveySent": "Merci, ça nous aide beaucoup.",
+    "surveyOpenPlaceholder": "Ce que vous changeriez, ajouteriez ou retireriez",
+    "surveyOtherPlaceholder": "Dites-nous en plus"
+  },
+  "desktopCta": {
+    "title": "Pairlens sur votre bureau",
+    "description": "La version navigateur sert aux tests. L'app de bureau est celle que nous publions.",
+    "benefitKeychain": "Vos clés d'exchange restent dans le trousseau du système, jamais sur nos serveurs",
+    "benefitPerformance": "Fenêtre native, graphiques GPU, sans onglet qui leur dispute la machine",
+    "benefitUpdates": "Les mises à jour signées s'installent discrètement en arrière-plan",
+    "downloadFor": "Télécharger pour {{os}}",
+    "macos": "macOS",
+    "windows": "Windows",
+    "linux": "Linux",
+    "otherPlatforms": "Autres plateformes",
+    "sourceNote": "Chaque build est à code ouvert et signé.",
+    "releaseNotes": "Notes de version"
   },
   "userMenu": {
     "accountMenu": "Menu du compte",
