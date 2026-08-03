@@ -361,10 +361,11 @@ const softRule = 'color-mix(in oklch, var(--border) 62%, transparent)'
     color: var(--foreground);
   }
 
+  /* Headings stay block, not flex: the `#` anchor is one more inline box at
+     the end of the text, and a flex row would make every inline child of a
+     heading — the code span in "## The ta library" — its own column, unable
+     to wrap with the words around it. */
   .docs-prose.docs-article h2 {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
     margin: 54px 0 16px;
     padding-top: 30px;
     border-top: 1px solid color-mix(in oklch, var(--border) 55%, transparent);
@@ -373,9 +374,6 @@ const softRule = 'color-mix(in oklch, var(--border) 62%, transparent)'
     scroll-margin-top: 120px;
   }
   .docs-prose.docs-article h3 {
-    display: flex;
-    align-items: baseline;
-    gap: 9px;
     margin: 34px 0 12px;
     font-size: 19px;
     letter-spacing: -0.02em;
@@ -388,7 +386,8 @@ const softRule = 'color-mix(in oklch, var(--border) 62%, transparent)'
   /* `#` deep-link, added client-side; fades in on hover, always visible to a
      keyboard user who tabs onto it. */
   .docs-prose.docs-article .pl-anchor {
-    flex: none;
+    /* Was the second flex item; now an inline box carrying its own gutter. */
+    margin-left: 10px;
     font-family: var(--font-mono);
     font-size: 16px;
     font-weight: 400;
@@ -398,6 +397,7 @@ const softRule = 'color-mix(in oklch, var(--border) 62%, transparent)'
     transition: opacity 0.2s var(--ease-out);
   }
   .docs-prose.docs-article h3 .pl-anchor {
+    margin-left: 9px;
     font-size: 13px;
   }
   .docs-prose.docs-article h2:hover .pl-anchor,
@@ -416,31 +416,35 @@ const softRule = 'color-mix(in oklch, var(--border) 62%, transparent)'
     gap: 2px;
     list-style: none;
     padding-left: 0;
-    /* A row is `display: flex`, which stops incrementing the built-in
-       list-item counter — hence an explicit one. */
+    /* A row is a flex item, so it is blockified out of `display: list-item`
+       and stops incrementing the built-in counter — hence an explicit one. */
     counter-reset: pl-step;
   }
+  /* The counter is absolutely positioned rather than a second flex/grid track:
+     both of those blockify every child of the row, so a step written as
+     "your email **only if** you want…" would break its own sentence into one
+     column per inline element. The row has to stay a normal block. */
   .docs-prose.docs-article > ol > li {
     counter-increment: pl-step;
-    display: flex;
-    gap: 14px;
+    position: relative;
     margin-top: 0;
     border-bottom: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
-    padding: 14px 0;
+    /* 20px counter + 14px gutter. */
+    padding: 14px 0 14px 34px;
     line-height: 1.72;
   }
   .docs-prose.docs-article > ol > li::before {
     content: counter(pl-step, decimal-leading-zero);
-    flex: none;
+    position: absolute;
+    left: 0;
+    /* Sits on the row's first line: matches the padding-top above. */
+    top: 14px;
     width: 20px;
     font-family: var(--font-mono);
     font-size: 11.5px;
     font-weight: 700;
     line-height: 1.85;
     color: color-mix(in oklch, var(--primary) 78%, transparent);
-  }
-  .docs-prose.docs-article > ol > li > * {
-    min-width: 0;
   }
 
   .docs-prose.docs-article pre {
