@@ -33,9 +33,12 @@ type Rgb = [number, number, number]
 const STOP_T = [0, 0.18, 0.42, 0.7, 0.96]
 const TINT_W = [0, 0.2, 0.24, 0.16, 0.05]
 
-// The artwork's ground is pure black; real content (sunglass frames incl.)
-// stays above ~0.05 luminance. Keying the ground to transparent is what lets
-// the statue float frameless on ANY page ground, in both value directions.
+// The artwork's ground is pure black. Keying it to transparent is what lets
+// the statue float frameless on ANY page ground, in both value directions —
+// but dark pixels also exist INSIDE the artwork (lens glass, frame cores),
+// and keying those punches light-mode holes. So only dark pixels flood-fill
+// connected to the image border (the actual ground) are keyed; enclosed dark
+// pixels stay opaque.
 const KEY_LUM_IN = 0.012
 const KEY_LUM_OUT = 0.05
 
@@ -145,6 +148,9 @@ export function renderDuotone(
   ctx.drawImage(image, 0, 0, width, height)
   const frame = ctx.getImageData(0, 0, width, height)
   const px = frame.data
+  // Raw source luminance per pixel, kept for the ground key after the color
+  // pass overwrites the buffer.
+  const lum255 = new Uint8ClampedArray(width * height)
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const i = (y * width + x) * 4
@@ -165,6 +171,7 @@ export function renderDuotone(
       }
 
       const rawLum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+      lum255[y * width + x] = rawLum * 255
       const lum = shape(rawLum)
       const base = rampColor(ramp, lum + grain(x, y) * 0.015)
 
@@ -195,10 +202,58 @@ export function renderDuotone(
       px[i] = out[0]
       px[i + 1] = out[1]
       px[i + 2] = out[2]
-      px[i + 3] = Math.round(255 * smoothstep(KEY_LUM_IN, KEY_LUM_OUT, rawLum))
     }
   }
+  keyGround(px, lum255, width, height)
   ctx.putImageData(frame, 0, 0)
+}
+
+/**
+ * Fade the artwork's ground to transparent: flood-fill the below-threshold
+ * region from the image borders and alpha-key only what it reaches. Dark
+ * pixels enclosed by the artwork (lens glass, frame cores) never key, so
+ * light grounds can't bleed through them.
+ */
+function keyGround(
+  px: Uint8ClampedArray,
+  lum255: Uint8ClampedArray,
+  width: number,
+  height: number,
+): void {
+  const keyMax = KEY_LUM_OUT * 255
+  const visited = new Uint8Array(width * height)
+  const queue = new Int32Array(width * height)
+  let head = 0
+  let tail = 0
+  const push = (idx: number) => {
+    if (!visited[idx] && lum255[idx] < keyMax) {
+      visited[idx] = 1
+      queue[tail++] = idx
+    }
+  }
+  for (let x = 0; x < width; x++) {
+    push(x)
+    push((height - 1) * width + x)
+  }
+  for (let y = 0; y < height; y++) {
+    push(y * width)
+    push(y * width + width - 1)
+  }
+  while (head < tail) {
+    const idx = queue[head++]
+    const x = idx % width
+    if (x > 0) push(idx - 1)
+    if (x < width - 1) push(idx + 1)
+    if (idx >= width) push(idx - width)
+    if (idx < (height - 1) * width) push(idx + width)
+  }
+  for (let idx = 0; idx < visited.length; idx++) {
+    if (visited[idx]) {
+      px[idx * 4 + 3] = Math.round(
+        255 * smoothstep(KEY_LUM_IN, KEY_LUM_OUT, lum255[idx] / 255),
+      )
+    }
+  }
 }
 
 /**

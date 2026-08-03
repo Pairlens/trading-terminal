@@ -56,13 +56,13 @@ export const STEPS: Array<SpotlightStep> = [
   // and the terminal itself — render in the user's language from the start.
   { id: 'language', kind: 'choice', field: 'language', layout: 'grid' },
   // The statue hero owns this frame: the stage drops low so more of the bust
-  // shows, and the orb shrinks to sit inline beside the headline (it sweeps
-  // back to the story preset on the next step).
+  // shows, and the orb shrinks to sit inline right after the headline — one
+  // "Meet Pairlens ●" lockup (it sweeps back to the story preset next step).
   {
     id: 'welcome',
     kind: 'welcome',
-    orbLeft: '36.5%',
-    orbTop: '66%',
+    orbLeft: '62.5%',
+    orbTop: '63.5%',
     orbScale: 0.24,
     stageTop: '60%',
   },

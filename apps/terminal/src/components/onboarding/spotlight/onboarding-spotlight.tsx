@@ -813,8 +813,10 @@ export function OnboardingSpotlight() {
             </>
           ) : (
             <>
-              {/* Status / eyebrow */}
-              {isNarrative || step.kind === 'summary' ? (
+              {/* Status / eyebrow. The welcome frame drops it — the statue
+                  hero + headline carry the moment on their own. */}
+              {step.kind === 'welcome' ? null : isNarrative ||
+                step.kind === 'summary' ? (
                 <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-primary">
                   {t(`onboarding.${step.id}.eyebrow`)}
                 </span>
