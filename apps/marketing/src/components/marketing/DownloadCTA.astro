@@ -21,8 +21,8 @@ const releases = downloadAsset('Pairlens-macOS-AppleSilicon.dmg')
     <Image
       src={marbleHand}
       alt="A marble hand resting on a black marble mouse, prism light glowing beneath it"
-      widths={[660, 1320]}
-      sizes="(max-width: 1320px) 50vw, 660px"
+      widths={[660, 1320, 1700]}
+      sizes="(max-width: 1320px) 50vw, (max-width: 1920px) 660px, 34vw"
       format="webp"
       quality={82}
       loading="lazy"
@@ -108,7 +108,13 @@ const releases = downloadAsset('Pairlens-macOS-AppleSilicon.dmg')
     position: absolute;
     right: -48px;
     bottom: 8px;
-    width: min(660px, 50vw);
+    /* The hand has to keep bleeding off the right edge — its sleeve ends on a
+       hard crop, so anything that parks it mid-marble reads as a pasted
+       cutout. Past 1920px it instead grows with the section, which closes the
+       gap that opened up between the copy and a 660px hand stranded at the
+       far edge of an ultra-wide monitor. 34vw crosses 660px at exactly
+       1920px, so nothing below that moves. */
+    width: min(50vw, max(660px, 34vw), 880px);
   }
   .cta-hand :global(img) {
     display: block;

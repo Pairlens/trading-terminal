@@ -68,7 +68,7 @@ const releases = downloadAsset('Pairlens-macOS-AppleSilicon.dmg')
       One terminal, every market: direct connections to 15+ exchanges, brokers
       &amp; DEXs
     </p>
-    <div class="pl-fade-x relative overflow-hidden">
+    <div class="marquee-viewport pl-fade-x relative overflow-hidden">
       <div class="pl-marquee gap-10 pr-10">
         {
           track.map((v, i) => (
@@ -221,6 +221,15 @@ const releases = downloadAsset('Pairlens-macOS-AppleSilicon.dmg')
 
   .marquee-block {
     margin-top: 88px;
+  }
+  /* The venue track runs edge to edge, which reads as full-bleed up to a
+     normal desktop but as a stray band on an ultra-wide monitor, where every
+     other element on the page is capped. Stop the viewport growing past
+     1920px: below that nothing moves, above it the strip keeps the framing a
+     1920px screen gets. */
+  .marquee-viewport {
+    margin-inline: auto;
+    max-width: 1920px;
   }
   .marquee-label {
     margin: 0 auto 30px;

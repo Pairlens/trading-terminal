@@ -126,7 +126,6 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
     }
 
     <ClientRouter />
-    <Analytics />
   </head>
   <body
     class:list={[
@@ -137,6 +136,16 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
     <slot />
 
     <CookieBanner />
+
+    <!-- Analytics renders a <vercel-analytics> custom element. An unknown
+         element inside <head> ends head parsing on the spot, and everything
+         Astro emits after it — including the page's stylesheet links — is
+         re-parented into <body>. Body stylesheets don't block the first
+         paint, and ClientRouter can't persist them across a swap (it only
+         matches head links by href), so every client-side navigation threw
+         the styles away and repainted unstyled until the CSS came back.
+         Keep this in the body. -->
+    <Analytics />
 
     <script>
       import '@/scripts/reveal.ts'
