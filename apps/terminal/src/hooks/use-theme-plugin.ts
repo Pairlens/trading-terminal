@@ -54,7 +54,13 @@ function injectStyleTag(vars: Record<string, string>, selector: string) {
   return `${selector} {\n${rules}\n}`
 }
 
-function applyTheme(theme: ThemeDefinition | null) {
+/**
+ * Swap the `theme:override` style tag (and the cache the blocking script in
+ * `__root` restores on next load). Exported so the onboarding route — which
+ * mounts outside the terminal shell and its plugin manager — applies a theme
+ * through this exact path instead of a parallel one.
+ */
+export function applyTheme(theme: ThemeDefinition | null) {
   let tag = document.getElementById(STYLE_ID) as HTMLStyleElement | null
 
   if (!theme) {

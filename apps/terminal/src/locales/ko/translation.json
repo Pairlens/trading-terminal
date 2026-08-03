@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "화면 밝기 조정 중",
-      "title": "라이트 모드? 다크 모드?",
-      "sub": "Pairlens는 둘 다 세밀하게 튜닝되어 있습니다. 원하는 쪽을 선택하세요 — 나중에 언제든 바꿀 수 있습니다.",
+      "title": "어떤 모습이 좋으세요?",
+      "sub": "Pairlens는 라이트와 다크 모두에 맞춰져 있습니다. 모드와 팔레트를 고르세요 — 둘 다 나중에 바꿀 수 있습니다.",
       "light": "라이트",
       "dark": "다크",
+      "system": "자동",
+      "paletteTitle": "팔레트",
+      "defaultTheme": "기본값",
       "label": "테마"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "숙련도",
         "risk": "리스크 프로필",
         "theme": "테마",
+        "palette": "팔레트",
         "analytics": "분석"
       },
       "label": "준비 완료"

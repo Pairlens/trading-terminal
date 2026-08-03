@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "Réglage de la luminosité",
-      "title": "Clair ou sombre ?",
-      "sub": "Pairlens est optimisé pour les deux. Choisissez ce qui convient à votre poste — vous pourrez changer plus tard.",
+      "title": "À quoi doit-il ressembler ?",
+      "sub": "Pairlens est calibré pour le clair comme pour le sombre. Choisissez un mode et une palette — vous pourrez tout changer plus tard.",
       "light": "Clair",
       "dark": "Sombre",
+      "system": "Automatique",
+      "paletteTitle": "Palette",
+      "defaultTheme": "Par défaut",
       "label": "Thème"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "Expérience",
         "risk": "Profil de risque",
         "theme": "Thème",
+        "palette": "Palette",
         "analytics": "Analytique"
       },
       "label": "Prêt"

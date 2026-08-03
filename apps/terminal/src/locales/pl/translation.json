@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "Dostosowywanie oświetlenia",
-      "title": "Jasny czy ciemny?",
-      "sub": "Pairlens jest dopracowany dla obu trybów. Wybierz to, co pasuje do Twojego biurka — możesz to zmienić później.",
+      "title": "Jak ma wyglądać?",
+      "sub": "Pairlens jest dopracowany w jasnym i ciemnym wariancie. Wybierz tryb i paletę — obie rzeczy zmienisz później.",
       "light": "Jasny",
       "dark": "Ciemny",
+      "system": "Automatyczny",
+      "paletteTitle": "Paleta",
+      "defaultTheme": "Domyślny",
       "label": "Motyw"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "Doświadczenie",
         "risk": "Profil ryzyka",
         "theme": "Motyw",
+        "palette": "Paleta",
         "analytics": "Analityka"
       },
       "label": "Gotowe"

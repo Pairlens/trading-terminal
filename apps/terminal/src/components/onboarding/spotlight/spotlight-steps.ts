@@ -55,7 +55,15 @@ export const STEPS: Array<SpotlightStep> = [
   // Language leads (Apple-style hello screen) so the rest of the flow —
   // and the terminal itself — render in the user's language from the start.
   { id: 'language', kind: 'choice', field: 'language', layout: 'grid' },
-  { id: 'welcome', kind: 'welcome' },
+  // The statue hero owns the center of this frame, so the orb drifts off to
+  // the right of the bust (and shrinks) instead of landing on its face.
+  {
+    id: 'welcome',
+    kind: 'welcome',
+    orbLeft: '75%',
+    orbTop: '21%',
+    orbScale: 0.68,
+  },
   {
     id: 'oneTerminal',
     kind: 'story',

@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "Adjusting the light",
-      "title": "Light or dark?",
-      "sub": "Pairlens is tuned for both. Choose what suits your desk — you can flip it later.",
+      "title": "How should it look?",
+      "sub": "Pairlens is tuned for light and dark. Pick a mode and a palette — you can change both later.",
       "light": "Light",
       "dark": "Dark",
+      "system": "Auto",
+      "paletteTitle": "Palette",
+      "defaultTheme": "Default",
       "label": "Theme"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "Experience",
         "risk": "Risk profile",
         "theme": "Theme",
+        "palette": "Palette",
         "analytics": "Analytics"
       },
       "label": "Ready"

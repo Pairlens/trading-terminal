@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "Ajustando a luz",
-      "title": "Claro ou escuro?",
-      "sub": "O Pairlens é otimizado para ambos. Escolha o que combina com sua mesa — você pode trocar depois.",
+      "title": "Qual deve ser o visual?",
+      "sub": "O Pairlens é afinado para claro e escuro. Escolha um modo e uma paleta — dá para mudar os dois depois.",
       "light": "Claro",
       "dark": "Escuro",
+      "system": "Automático",
+      "paletteTitle": "Paleta",
+      "defaultTheme": "Padrão",
       "label": "Tema"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "Experiência",
         "risk": "Perfil de risco",
         "theme": "Tema",
+        "palette": "Paleta",
         "analytics": "Análises"
       },
       "label": "Pronto"

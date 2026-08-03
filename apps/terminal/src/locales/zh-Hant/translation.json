@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "調整亮度",
-      "title": "淺色還是深色？",
-      "sub": "Pairlens 兩種模式皆已調校完善。選一個適合你的工作環境——之後隨時可以切換。",
+      "title": "想要什麼樣子？",
+      "sub": "Pairlens 對淺色與深色都做了打磨。選一個模式與一套配色 — 之後隨時可以更改。",
       "light": "淺色",
       "dark": "深色",
+      "system": "跟隨系統",
+      "paletteTitle": "配色",
+      "defaultTheme": "預設",
       "label": "佈景主題"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "經驗程度",
         "risk": "風險偏好",
         "theme": "佈景主題",
+        "palette": "配色",
         "analytics": "使用分析"
       },
       "label": "已就緒"

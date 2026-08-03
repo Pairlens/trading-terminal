@@ -13,12 +13,14 @@ import { WorkflowIcon } from '@pairlens/ui/components/ui/workflow'
 
 import type { ComponentType } from 'react'
 import type { PointIcon } from './spotlight-steps'
+import type { ColorMode } from '@/lib/settings/color-mode'
 import {
   COUNTRIES,
   POPULAR_COUNTRY_CODES,
   countryFlag,
   countryName,
 } from '@/lib/countries'
+import { COLOR_MODES } from '@/lib/settings/color-mode'
 
 // ── Shared bits ─────────────────────────────────────────────────────
 
@@ -548,16 +550,26 @@ export function AssetCards({ options }: { options: Array<RenderOption> }) {
 
 // ── Theme tiles ─────────────────────────────────────────────────────
 
-function ThemePreview({ mode }: { mode: 'light' | 'dark' }) {
+/** One mock window in a single color mode; positioned by the caller. */
+function ModePanel({
+  mode,
+  className,
+  style,
+}: {
+  mode: 'light' | 'dark'
+  className?: string
+  style?: React.CSSProperties
+}) {
   const light = mode === 'light'
   return (
     <span
-      className="relative block h-[66px] w-full overflow-hidden rounded-[10px]"
+      className={cn('block overflow-hidden', className)}
       style={{
         background: light ? 'oklch(98% 0 0)' : 'oklch(13% 0 0)',
         border: light
           ? '1px solid rgba(0,0,0,.08)'
           : '1px solid rgba(255,255,255,.08)',
+        ...style,
       }}
     >
       <span
@@ -578,33 +590,145 @@ function ThemePreview({ mode }: { mode: 'light' | 'dark' }) {
   )
 }
 
+/**
+ * Tile artwork per color mode. `system` shows both halves split on the
+ * diagonal — the same visual shorthand the OS uses for "follow the system".
+ */
+function ThemePreview({ mode }: { mode: ColorMode }) {
+  if (mode !== 'system') {
+    return (
+      <ModePanel
+        mode={mode}
+        className="relative h-[66px] w-full rounded-[10px]"
+      />
+    )
+  }
+  return (
+    <span className="relative block h-[66px] w-full overflow-hidden rounded-[10px]">
+      <ModePanel mode="light" className="absolute inset-0 rounded-[10px]" />
+      <ModePanel
+        mode="dark"
+        className="absolute inset-0 rounded-[10px]"
+        style={{ clipPath: 'polygon(100% 0, 0 100%, 100% 100%)' }}
+      />
+    </span>
+  )
+}
+
 export function ThemeTiles({
   theme,
   onPick,
 }: {
-  theme: 'light' | 'dark'
-  onPick: (theme: 'light' | 'dark') => void
+  theme: ColorMode
+  onPick: (theme: ColorMode) => void
 }) {
   const { t } = useTranslation()
   return (
-    <div className="mx-auto grid w-full max-w-[440px] grid-cols-2 gap-[13px]">
-      {(['light', 'dark'] as const).map((mode) => (
+    <div className="mx-auto grid w-full max-w-[560px] grid-cols-3 gap-[13px] max-md:grid-cols-1">
+      {COLOR_MODES.map(({ value }) => (
         <button
-          key={mode}
+          key={value}
           type="button"
-          onClick={() => onPick(mode)}
+          onClick={() => onPick(value)}
           className={cn(
             'relative flex cursor-pointer flex-col gap-2.5 rounded-[15px] border border-border bg-card p-[13px] transition-[transform,border-color] duration-200 hover:-translate-y-[3px]',
             HOVER_BORDER,
           )}
         >
-          <ThemePreview mode={mode} />
+          <ThemePreview mode={value} />
           <span className="text-[13.5px] font-semibold text-foreground">
-            {t(`onboarding.themeStep.${mode}`)}
+            {t(`onboarding.themeStep.${value}`)}
           </span>
-          {theme === mode && <SelectedRing radius={15} />}
+          {theme === value && <SelectedRing radius={15} />}
         </button>
       ))}
+    </div>
+  )
+}
+
+// ── Palette picker ──────────────────────────────────────────────────
+// The bundled `theme:override` plugins, offered right where the color mode
+// is chosen. Names and swatches come from each plugin's manifest, so this
+// row shows exactly what Settings → Appearance shows later.
+
+/** The stock Warm Precision look — mirrors the settings section's chips. */
+const DEFAULT_SWATCHES = {
+  light: ['#2e2c27', '#e8e4d9', '#9a9589'],
+  dark: ['#e8e4d9', '#1a1a1a', '#9a9589'],
+}
+
+export function ThemePalettes({
+  themes,
+  activeId,
+  isDark,
+  onPick,
+}: {
+  themes: Array<{
+    id: string
+    name: string
+    swatches: { light: Array<string>; dark: Array<string> }
+  }>
+  activeId: string | null
+  isDark: boolean
+  onPick: (id: string | null) => void
+}) {
+  const { t } = useTranslation()
+  const mode = isDark ? 'dark' : 'light'
+  const chips = [
+    {
+      id: null,
+      name: t('onboarding.themeStep.defaultTheme'),
+      colors: DEFAULT_SWATCHES[mode],
+    },
+    ...themes.map((theme) => ({
+      id: theme.id,
+      name: theme.name,
+      colors: theme.swatches[mode].slice(0, 3),
+    })),
+  ]
+
+  return (
+    <div className="mx-auto flex w-full max-w-[600px] flex-col items-center gap-2.5">
+      <span className="font-mono text-[10.5px] uppercase tracking-[0.08em] text-muted-foreground">
+        {t('onboarding.themeStep.paletteTitle')}
+      </span>
+      {/* Seventeen bundled themes: three rows sit on stage, the rest scroll —
+          the bottom fade is the only hint the step needs. */}
+      <div
+        className="flex max-h-[min(178px,25vh)] w-full flex-wrap justify-center gap-2 overflow-y-auto px-1 pb-1"
+        style={{
+          maskImage:
+            'linear-gradient(to bottom, #000 74%, rgba(0,0,0,.35) 94%, transparent)',
+          WebkitMaskImage:
+            'linear-gradient(to bottom, #000 74%, rgba(0,0,0,.35) 94%, transparent)',
+        }}
+      >
+        {chips.map((chip) => (
+          <button
+            key={chip.id ?? 'default'}
+            type="button"
+            onClick={() => onPick(chip.id)}
+            className={cn(
+              'relative flex cursor-pointer items-center gap-2 rounded-full border border-border bg-card py-1.5 pl-2.5 pr-3.5 text-foreground transition-[transform,border-color] duration-200 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-px',
+              HOVER_BORDER,
+            )}
+          >
+            <span aria-hidden className="flex -space-x-1">
+              {chip.colors.map((color, i) => (
+                <span
+                  key={i}
+                  className="size-[11px] rounded-full ring-1 ring-[color-mix(in_oklch,var(--foreground)_14%,transparent)]"
+                  style={{ background: color }}
+                />
+              ))}
+            </span>
+            <span className="text-[12.5px] font-medium tracking-[-0.01em]">
+              {chip.name}
+            </span>
+            {activeId === chip.id && <SelectedRing radius={999} />}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }

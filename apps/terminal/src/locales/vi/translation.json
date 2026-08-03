@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "Đang điều chỉnh ánh sáng",
-      "title": "Sáng hay tối?",
-      "sub": "Pairlens được tinh chỉnh cho cả hai. Chọn giao diện phù hợp với bạn — có thể đổi lại sau.",
+      "title": "Bạn muốn giao diện thế nào?",
+      "sub": "Pairlens được tinh chỉnh cho cả sáng và tối. Chọn một chế độ và một bảng màu — bạn có thể đổi lại sau.",
       "light": "Sáng",
       "dark": "Tối",
+      "system": "Tự động",
+      "paletteTitle": "Bảng màu",
+      "defaultTheme": "Mặc định",
       "label": "Giao diện"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "Kinh nghiệm",
         "risk": "Hồ sơ rủi ro",
         "theme": "Giao diện",
+        "palette": "Bảng màu",
         "analytics": "Phân tích"
       },
       "label": "Sẵn sàng"

@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "Regolazione della luminosità",
-      "title": "Chiaro o scuro?",
-      "sub": "Pairlens è ottimizzato per entrambi. Scegli ciò che si adatta alla tua postazione — puoi cambiarlo in seguito.",
+      "title": "Che aspetto deve avere?",
+      "sub": "Pairlens è calibrato per chiaro e scuro. Scegli una modalità e una palette — puoi cambiarle quando vuoi.",
       "light": "Chiaro",
       "dark": "Scuro",
+      "system": "Automatico",
+      "paletteTitle": "Palette",
+      "defaultTheme": "Predefinito",
       "label": "Tema"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "Esperienza",
         "risk": "Profilo di rischio",
         "theme": "Tema",
+        "palette": "Palette",
         "analytics": "Analisi"
       },
       "label": "Pronto"

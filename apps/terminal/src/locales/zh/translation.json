@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "调整亮度",
-      "title": "浅色还是深色？",
-      "sub": "Pairlens 对两者都做了调优。选择适合你的桌面 —— 之后随时可以切换。",
+      "title": "想要什么样子？",
+      "sub": "Pairlens 对浅色和深色都做了打磨。选一个模式和一套配色 — 之后随时可以更改。",
       "light": "浅色",
       "dark": "深色",
+      "system": "跟随系统",
+      "paletteTitle": "配色",
+      "defaultTheme": "默认",
       "label": "主题"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "经验水平",
         "risk": "风险画像",
         "theme": "主题",
+        "palette": "配色",
         "analytics": "分析"
       },
       "label": "已就绪"

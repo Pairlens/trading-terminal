@@ -35,11 +35,14 @@ import {
   StoryPointsHorizontal,
   StoryPointsVertical,
   SummaryGrid,
+  ThemePalettes,
   ThemeTiles,
   VenueChips,
   summaryValue,
 } from './spotlight-bodies'
 import { AccountStep } from './spotlight-account'
+import { WelcomeStatue } from './welcome-statue'
+import { useOnboardingThemes } from './onboarding-themes'
 import {
   EXPERIENCE_VALUES,
   LAYOUT_PRESETS,
@@ -52,7 +55,9 @@ import {
 } from './spotlight-steps'
 import type { AccountView } from './spotlight-account'
 import type { RenderOption } from './spotlight-bodies'
+import type { OnboardingThemeOption } from './onboarding-themes'
 import type { SpotlightStep } from './spotlight-steps'
+import type { ColorMode } from '@/lib/settings/color-mode'
 import type {
   OnboardingAssetClass,
   OnboardingSelections,
@@ -119,7 +124,7 @@ export function OnboardingSpotlight() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const needsTitlebar = useNeedsTitlebar()
-  const { setTheme } = useTheme()
+  const { setTheme, resolvedTheme } = useTheme()
   const reduceMotion = useReducedMotion() ?? false
 
   const [stepIndex, setStepIndex] = useState(0)
@@ -372,12 +377,30 @@ export function OnboardingSpotlight() {
   )
 
   const pickTheme = useCallback(
-    (theme: 'light' | 'dark') => {
+    (theme: ColorMode) => {
       pulse()
       setSelections((prev) => ({ ...prev, theme }))
+      // next-themes owns the color mode everywhere in the app — it persists
+      // the choice and toggles the `.dark` class, including the OS listener
+      // behind 'system'.
       setTheme(theme)
     },
     [pulse, setTheme],
+  )
+
+  // Bundled `theme:override` plugins — loaded (and applied live) once the
+  // theme step is on stage.
+  const { themes, activeThemeId, selectTheme } = useOnboardingThemes(
+    step.kind === 'theme',
+  )
+
+  const pickPalette = useCallback(
+    (id: string | null) => {
+      pulse()
+      selectTheme(id)
+      setSelections((prev) => ({ ...prev, palette: id }))
+    },
+    [pulse, selectTheme],
   )
 
   // ── Legal flip card ───────────────────────────────────────────────
@@ -622,13 +645,19 @@ export function OnboardingSpotlight() {
         value: t(`onboarding.themeStep.${selections.theme}`),
       },
       {
+        label: t('onboarding.summary.labels.palette'),
+        value:
+          themes.find((theme) => theme.id === activeThemeId)?.name ??
+          t('onboarding.themeStep.defaultTheme'),
+      },
+      {
         label: t('onboarding.summary.labels.analytics'),
         value: t(
           `onboarding.analytics.${selections.analytics === 'enabled' ? 'on' : 'off'}`,
         ),
       },
     ]
-  }, [step.kind, selections, t, i18n.language])
+  }, [step.kind, selections, themes, activeThemeId, t, i18n.language])
 
   const legalItems = useMemo(
     () =>
@@ -700,6 +729,12 @@ export function OnboardingSpotlight() {
           }}
         />
       </div>
+
+      {/* Welcome-frame hero — sits above the aurora, under orb and stage. */}
+      <WelcomeStatue
+        active={!launched && step.kind === 'welcome'}
+        reduceMotion={reduceMotion}
+      />
 
       {/* Titlebar drag strip — the onboarding route mounts outside the
           terminal shell, so it provides its own drag region on desktop. */}
@@ -827,6 +862,10 @@ export function OnboardingSpotlight() {
                 onPickCountry={pickSingle('country')}
                 theme={selections.theme}
                 onPickTheme={pickTheme}
+                themes={themes}
+                activeThemeId={activeThemeId}
+                isDark={resolvedTheme !== 'light'}
+                onPickPalette={pickPalette}
                 legalCardRef={legalCardRef}
                 legalItems={legalItems}
                 legalAccepted={legalAccepted}
@@ -890,6 +929,10 @@ function StepBody({
   onPickCountry,
   theme,
   onPickTheme,
+  themes,
+  activeThemeId,
+  isDark,
+  onPickPalette,
   legalCardRef,
   legalItems,
   legalAccepted,
@@ -907,8 +950,12 @@ function StepBody({
   options: Array<RenderOption>
   country: string | undefined
   onPickCountry: (code: string) => void
-  theme: 'light' | 'dark'
-  onPickTheme: (theme: 'light' | 'dark') => void
+  theme: ColorMode
+  onPickTheme: (theme: ColorMode) => void
+  themes: Array<OnboardingThemeOption>
+  activeThemeId: string | null
+  isDark: boolean
+  onPickPalette: (id: string | null) => void
   legalCardRef: React.RefObject<HTMLDivElement | null>
   legalItems: Array<string>
   legalAccepted: Array<number>
@@ -993,7 +1040,17 @@ function StepBody({
   }
 
   if (step.kind === 'theme') {
-    return <ThemeTiles theme={theme} onPick={onPickTheme} />
+    return (
+      <div className="flex w-full flex-col items-center gap-[18px]">
+        <ThemeTiles theme={theme} onPick={onPickTheme} />
+        <ThemePalettes
+          themes={themes}
+          activeId={activeThemeId}
+          isDark={isDark}
+          onPick={onPickPalette}
+        />
+      </div>
+    )
   }
 
   if (step.kind === 'legal') {

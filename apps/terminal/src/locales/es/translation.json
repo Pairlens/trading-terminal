@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "Ajustando la luz",
-      "title": "¿Claro u oscuro?",
-      "sub": "Pairlens está afinado para ambos. Elige lo que mejor va con tu escritorio — puedes cambiarlo luego.",
+      "title": "¿Cómo quieres que se vea?",
+      "sub": "Pairlens está afinado para claro y oscuro. Elige un modo y una paleta — puedes cambiar ambos más tarde.",
       "light": "Claro",
       "dark": "Oscuro",
+      "system": "Automático",
+      "paletteTitle": "Paleta",
+      "defaultTheme": "Predeterminado",
       "label": "Tema"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "Experiencia",
         "risk": "Perfil de riesgo",
         "theme": "Tema",
+        "palette": "Paleta",
         "analytics": "Analítica"
       },
       "label": "Listo"

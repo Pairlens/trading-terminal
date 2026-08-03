@@ -6,6 +6,8 @@
  * (`use-section-tour.ts`) and the settings "replay" action share these keys.
  */
 
+import type { ColorMode } from '@/lib/settings/color-mode'
+
 export const ONBOARDING_KEY = 'pairlens:onboarding-completed'
 const SELECTIONS_KEY = 'pairlens:onboarding-selections'
 const LEGAL_ACK_KEY = 'pairlens:legal-acknowledged'
@@ -26,7 +28,10 @@ export type OnboardingSelections = {
   venues: Array<string>
   experience?: OnboardingExperience
   risk?: OnboardingRisk
-  theme: 'light' | 'dark'
+  /** Color mode — 'system' follows the OS. Same values next-themes takes. */
+  theme: ColorMode
+  /** `theme:override` plugin id; undefined/null = the stock Pairlens look. */
+  palette?: string | null
   /** Opt-in product analytics; undefined = step never answered (off). */
   analytics?: 'enabled' | 'disabled'
 }

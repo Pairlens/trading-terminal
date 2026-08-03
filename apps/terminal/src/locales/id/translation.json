@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "Menyesuaikan pencahayaan",
-      "title": "Terang atau gelap?",
-      "sub": "Pairlens disetel untuk keduanya. Pilih yang sesuai untuk meja kerja Anda — Anda bisa mengubahnya nanti.",
+      "title": "Mau tampil seperti apa?",
+      "sub": "Pairlens disetel untuk mode terang dan gelap. Pilih mode dan palet — keduanya bisa diubah nanti.",
       "light": "Terang",
       "dark": "Gelap",
+      "system": "Otomatis",
+      "paletteTitle": "Palet",
+      "defaultTheme": "Default",
       "label": "Tema"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "Pengalaman",
         "risk": "Profil risiko",
         "theme": "Tema",
+        "palette": "Palet",
         "analytics": "Analitik"
       },
       "label": "Siap"

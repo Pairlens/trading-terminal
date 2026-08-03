@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "Işık ayarlanıyor",
-      "title": "Açık mı, koyu mu?",
-      "sub": "Pairlens ikisi için de ayarlandı. Masana uyanı seç — istediğin zaman değiştirebilirsin.",
+      "title": "Nasıl görünsün?",
+      "sub": "Pairlens hem açık hem koyu için ayarlandı. Bir mod ve bir palet seç — ikisini de sonra değiştirebilirsin.",
       "light": "Açık",
       "dark": "Koyu",
+      "system": "Otomatik",
+      "paletteTitle": "Palet",
+      "defaultTheme": "Varsayılan",
       "label": "Tema"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "Deneyim",
         "risk": "Risk profili",
         "theme": "Tema",
+        "palette": "Palet",
         "analytics": "Analitik"
       },
       "label": "Hazır"

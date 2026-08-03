@@ -165,10 +165,13 @@
     },
     "themeStep": {
       "status": "Beleuchtung wird angepasst",
-      "title": "Hell oder dunkel?",
-      "sub": "Pairlens ist für beides optimiert. Wähle, was zu deinem Setup passt — du kannst es später jederzeit umstellen.",
+      "title": "Wie soll es aussehen?",
+      "sub": "Pairlens ist für Hell und Dunkel abgestimmt. Wähle einen Modus und eine Palette — beides lässt sich später ändern.",
       "light": "Hell",
       "dark": "Dunkel",
+      "system": "Automatisch",
+      "paletteTitle": "Palette",
+      "defaultTheme": "Standard",
       "label": "Design"
     },
     "legal": {
@@ -256,6 +259,7 @@
         "experience": "Erfahrung",
         "risk": "Risikoprofil",
         "theme": "Design",
+        "palette": "Palette",
         "analytics": "Analyse"
       },
       "label": "Bereit"
