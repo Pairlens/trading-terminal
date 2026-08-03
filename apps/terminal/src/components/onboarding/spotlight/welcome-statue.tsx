@@ -16,6 +16,21 @@ const EDGE_MASK =
   'linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%)'
 
 /**
+ * Width of the artwork box (its height follows the 1600×901 source aspect).
+ * Both terms are floors, and together they keep the hero covering the frame
+ * at any window size — an absolute px cap left it floating as an island on
+ * large desktop windows: faded side edges and a hard cut across the chest.
+ *
+ * - `192vh` drives normal windows: 192/1.776 ≈ 108vh tall, so against the
+ *   -7% top bleed the artwork's cropped bottom always lands past the fold,
+ *   whatever the aspect ratio.
+ * - `112vw` takes over on very wide, short windows, where that height is no
+ *   longer enough to reach both sides — the artwork keeps bleeding past the
+ *   edges, so the side fades read as a vignette instead of a cut.
+ */
+const HERO_WIDTH = 'max(112vw, 192vh)'
+
+/**
  * The ground wash that seats the stage copy: the page background rises over
  * the statue's chest so the headline never sits on busy marble.
  */
@@ -57,11 +72,15 @@ export function WelcomeStatue({
         }}
       />
 
-      {/* The statue itself — near full-bleed so the face dominates the top
-          of the frame the way the landing page opens. */}
+      {/* The statue itself — full-bleed so the face dominates the top of the
+          frame the way the landing page opens. */}
       <div
-        className="absolute left-1/2 top-[-7%] aspect-[1600/901] w-[min(1560px,140vw)] -translate-x-1/2"
-        style={{ maskImage: EDGE_MASK, WebkitMaskImage: EDGE_MASK }}
+        className="absolute left-1/2 top-[-7%] aspect-[1600/901] -translate-x-1/2"
+        style={{
+          width: HERO_WIDTH,
+          maskImage: EDGE_MASK,
+          WebkitMaskImage: EDGE_MASK,
+        }}
       >
         <DuotoneImage src={statueUrl} />
       </div>
