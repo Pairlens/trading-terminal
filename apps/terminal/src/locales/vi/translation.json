@@ -633,6 +633,10 @@
       "packsTitle": "Tín dụng bổ sung",
       "packsDescription": "Gói nạp một lần cộng thêm vào ngân sách hằng tháng. Tín dụng của gói nạp hết hạn 30 ngày sau khi mua và không gia hạn.",
       "packActive": "{{credits}} tín dụng bổ sung — hết hạn {{date}}"
+    },
+    "about": {
+      "desktop": "Máy tính",
+      "browser": "Trình duyệt"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "Duyệt tất cả các cặp",
     "newWorkspace": "Không gian làm việc mới",
     "workspaceStore": "Workspace Store",
-    "signIn": "Đăng nhập"
+    "signIn": "Đăng nhập",
+    "reportBug": "Báo lỗi"
+  },
+  "feedback": {
+    "title": "Báo lỗi",
+    "description": "Cho chúng tôi biết điều gì hỏng hoặc bạn muốn Pairlens làm gì. Gửi thẳng tới nhóm phát triển.",
+    "categoryLabel": "Danh mục",
+    "categoryBug": "Lỗi",
+    "categoryIdea": "Ý tưởng",
+    "categoryOther": "Khác",
+    "messageLabel": "Chuyện gì đã xảy ra?",
+    "messagePlaceholder": "Mô tả vấn đề, điều bạn mong đợi và cách tái hiện.",
+    "submit": "Gửi báo cáo",
+    "sent": "Đã gửi báo cáo. Cảm ơn bạn.",
+    "attached": "Gửi kèm v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "Báo cáo đi qua phân tích sử dụng, hiện đang tắt trên thiết bị này. Gửi sẽ bật nó — bạn có thể tắt lại trong cài đặt Quyền riêng tư.",
+    "enableAndSend": "Bật phân tích và gửi",
+    "unavailableNotice": "Bản dựng này không có khóa phân tích nên không gửi được báo cáo từ ứng dụng. Hãy sao chép và mở issue trên GitHub.",
+    "copy": "Sao chép báo cáo",
+    "copied": "Đã sao chép báo cáo vào bộ nhớ tạm",
+    "openIssue": "Mở issue trên GitHub"
   },
   "userMenu": {
     "accountMenu": "Menu tài khoản",

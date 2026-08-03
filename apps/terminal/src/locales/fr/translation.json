@@ -633,6 +633,10 @@
       "packsTitle": "Crédits supplémentaires",
       "packsDescription": "Recharges ponctuelles qui s’ajoutent à votre budget mensuel. Les crédits de recharge expirent 30 jours après l’achat et ne se renouvellent pas.",
       "packActive": "{{credits}} crédits supplémentaires — expirent le {{date}}"
+    },
+    "about": {
+      "desktop": "Bureau",
+      "browser": "Navigateur"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "Parcourir toutes les paires",
     "newWorkspace": "Nouvel espace de travail",
     "workspaceStore": "Workspace Store",
-    "signIn": "Se connecter"
+    "signIn": "Se connecter",
+    "reportBug": "Signaler un bug"
+  },
+  "feedback": {
+    "title": "Signaler un bug",
+    "description": "Dites-nous ce qui ne va pas, ou ce que Pairlens devrait faire. Le message part directement à l'équipe.",
+    "categoryLabel": "Catégorie",
+    "categoryBug": "Bug",
+    "categoryIdea": "Idée",
+    "categoryOther": "Autre",
+    "messageLabel": "Que s'est-il passé ?",
+    "messagePlaceholder": "Décrivez le problème, ce que vous attendiez et comment le reproduire.",
+    "submit": "Envoyer le rapport",
+    "sent": "Rapport envoyé. Merci.",
+    "attached": "Envoyé avec v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "Les rapports passent par les statistiques d'utilisation, désactivées sur cet appareil. L'envoi les active ; vous pouvez les désactiver dans Confidentialité.",
+    "enableAndSend": "Activer les statistiques et envoyer",
+    "unavailableNotice": "Cette version n'a pas de clé d'analytique : impossible d'envoyer un rapport depuis l'app. Copiez le vôtre et ouvrez un ticket GitHub.",
+    "copy": "Copier le rapport",
+    "copied": "Rapport copié dans le presse-papiers",
+    "openIssue": "Ouvrir les tickets GitHub"
   },
   "userMenu": {
     "accountMenu": "Menu du compte",

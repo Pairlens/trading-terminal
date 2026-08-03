@@ -633,6 +633,10 @@
       "packsTitle": "Créditos extras",
       "packsDescription": "Recargas avulsas que se somam ao seu orçamento mensal. Créditos de recarga expiram 30 dias após a compra e não se renovam.",
       "packActive": "{{credits}} créditos extras — expiram em {{date}}"
+    },
+    "about": {
+      "desktop": "Desktop",
+      "browser": "Navegador"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "Explorar todos os pares",
     "newWorkspace": "Novo Workspace",
     "workspaceStore": "Workspace Store",
-    "signIn": "Entrar"
+    "signIn": "Entrar",
+    "reportBug": "Relatar um erro"
+  },
+  "feedback": {
+    "title": "Relatar um erro",
+    "description": "Conte o que quebrou ou o que você gostaria que o Pairlens fizesse. Vai direto para a equipe.",
+    "categoryLabel": "Categoria",
+    "categoryBug": "Erro",
+    "categoryIdea": "Ideia",
+    "categoryOther": "Outro",
+    "messageLabel": "O que aconteceu?",
+    "messagePlaceholder": "Descreva o problema, o que você esperava e como reproduzir.",
+    "submit": "Enviar relato",
+    "sent": "Relato enviado. Obrigado.",
+    "attached": "Enviado com v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "Os relatos são enviados pelas análises de uso, desativadas neste dispositivo. Enviar ativa; você pode desativar de novo em Privacidade.",
+    "enableAndSend": "Ativar análises e enviar",
+    "unavailableNotice": "Esta build não tem chave de análise, então não dá para enviar relatos pelo app. Copie o seu e abra uma issue no GitHub.",
+    "copy": "Copiar relato",
+    "copied": "Relato copiado para a área de transferência",
+    "openIssue": "Abrir issues no GitHub"
   },
   "userMenu": {
     "accountMenu": "Menu da conta",

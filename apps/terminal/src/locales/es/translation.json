@@ -633,6 +633,10 @@
       "packsTitle": "Créditos extra",
       "packsDescription": "Recargas únicas que se suman a tu presupuesto mensual. Los créditos de recarga caducan 30 días después de la compra y no se renuevan.",
       "packActive": "{{credits}} créditos extra — caducan el {{date}}"
+    },
+    "about": {
+      "desktop": "Escritorio",
+      "browser": "Navegador"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "Ver todos los pares",
     "newWorkspace": "Nuevo espacio de trabajo",
     "workspaceStore": "Tienda de espacios",
-    "signIn": "Iniciar sesión"
+    "signIn": "Iniciar sesión",
+    "reportBug": "Reportar un error"
+  },
+  "feedback": {
+    "title": "Reportar un error",
+    "description": "Cuéntanos qué ha fallado o qué te gustaría que hiciera Pairlens. Llega directo al equipo.",
+    "categoryLabel": "Categoría",
+    "categoryBug": "Error",
+    "categoryIdea": "Idea",
+    "categoryOther": "Otro",
+    "messageLabel": "¿Qué ha pasado?",
+    "messagePlaceholder": "Describe el problema, qué esperabas y cómo reproducirlo.",
+    "submit": "Enviar informe",
+    "sent": "Informe enviado. Gracias.",
+    "attached": "Se envía con v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "Los informes se envían a través de las analíticas de uso, desactivadas en este dispositivo. Al enviar se activan; puedes volver a desactivarlas en Privacidad.",
+    "enableAndSend": "Activar analíticas y enviar",
+    "unavailableNotice": "Esta versión no tiene clave de analíticas, así que no se pueden enviar informes desde la app. Copia el tuyo y abre una incidencia en GitHub.",
+    "copy": "Copiar informe",
+    "copied": "Informe copiado al portapapeles",
+    "openIssue": "Abrir incidencias en GitHub"
   },
   "userMenu": {
     "accountMenu": "Menú de cuenta",

@@ -633,6 +633,10 @@
       "packsTitle": "追加クレジット",
       "packsDescription": "月間バジェットに上乗せされる単発チャージです。チャージ分のクレジットは購入から30日で失効し、更新されません。",
       "packActive": "追加クレジット {{credits}} — {{date}} に失効"
+    },
+    "about": {
+      "desktop": "デスクトップ",
+      "browser": "ブラウザ"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "すべてのペアを見る",
     "newWorkspace": "新しいワークスペース",
     "workspaceStore": "ワークスペースストア",
-    "signIn": "サインイン"
+    "signIn": "サインイン",
+    "reportBug": "バグを報告"
+  },
+  "feedback": {
+    "title": "バグを報告",
+    "description": "うまく動かないことや、Pairlens に望むことを教えてください。チームに直接届きます。",
+    "categoryLabel": "カテゴリ",
+    "categoryBug": "バグ",
+    "categoryIdea": "アイデア",
+    "categoryOther": "その他",
+    "messageLabel": "何が起きましたか？",
+    "messagePlaceholder": "問題、期待していた動作、再現手順を書いてください。",
+    "submit": "レポートを送信",
+    "sent": "レポートを送信しました。ありがとうございます。",
+    "attached": "送信内容: v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "レポートは利用状況の分析経由で送信されますが、この端末ではオフです。送信するとオンになります（プライバシー設定でいつでもオフにできます）。",
+    "enableAndSend": "分析をオンにして送信",
+    "unavailableNotice": "このビルドには分析キーがないため、アプリからは送信できません。コピーして GitHub の issue を作成してください。",
+    "copy": "レポートをコピー",
+    "copied": "レポートをクリップボードにコピーしました",
+    "openIssue": "GitHub の issues を開く"
   },
   "userMenu": {
     "accountMenu": "アカウントメニュー",

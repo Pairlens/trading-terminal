@@ -633,6 +633,10 @@
       "packsTitle": "Kredit ekstra",
       "packsDescription": "Isi ulang sekali beli yang ditambahkan ke anggaran bulanan Anda. Kredit isi ulang kedaluwarsa 30 hari setelah pembelian dan tidak diperpanjang.",
       "packActive": "{{credits}} kredit ekstra — kedaluwarsa {{date}}"
+    },
+    "about": {
+      "desktop": "Desktop",
+      "browser": "Peramban"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "Jelajahi semua pair",
     "newWorkspace": "Ruang Kerja Baru",
     "workspaceStore": "Workspace Store",
-    "signIn": "Masuk"
+    "signIn": "Masuk",
+    "reportBug": "Laporkan bug"
+  },
+  "feedback": {
+    "title": "Laporkan bug",
+    "description": "Ceritakan apa yang rusak atau apa yang kamu inginkan dari Pairlens. Langsung ke tim.",
+    "categoryLabel": "Kategori",
+    "categoryBug": "Bug",
+    "categoryIdea": "Ide",
+    "categoryOther": "Lainnya",
+    "messageLabel": "Apa yang terjadi?",
+    "messagePlaceholder": "Jelaskan masalahnya, apa yang kamu harapkan, dan cara mengulanginya.",
+    "submit": "Kirim laporan",
+    "sent": "Laporan terkirim. Terima kasih.",
+    "attached": "Dikirim dengan v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "Laporan dikirim lewat analitik penggunaan, yang mati di perangkat ini. Mengirim akan menyalakannya — bisa dimatikan lagi di pengaturan Privasi.",
+    "enableAndSend": "Nyalakan analitik & kirim",
+    "unavailableNotice": "Build ini tidak punya kunci analitik, jadi laporan tidak bisa dikirim dari aplikasi. Salin laporanmu dan buka issue di GitHub.",
+    "copy": "Salin laporan",
+    "copied": "Laporan disalin ke papan klip",
+    "openIssue": "Buka issue GitHub"
   },
   "userMenu": {
     "accountMenu": "Menu akun",

@@ -633,6 +633,10 @@
       "packsTitle": "Extra-Credits",
       "packsDescription": "Einmalige Aufladungen zusätzlich zu deinem Monatsbudget. Aufladungs-Credits verfallen 30 Tage nach dem Kauf und verlängern sich nicht.",
       "packActive": "{{credits}} Extra-Credits — verfallen am {{date}}"
+    },
+    "about": {
+      "desktop": "Desktop",
+      "browser": "Browser"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "Alle Paare durchsuchen",
     "newWorkspace": "Neuer Workspace",
     "workspaceStore": "Workspace Store",
-    "signIn": "Anmelden"
+    "signIn": "Anmelden",
+    "reportBug": "Fehler melden"
+  },
+  "feedback": {
+    "title": "Fehler melden",
+    "description": "Sag uns, was kaputt ist oder was Pairlens können sollte. Geht direkt ans Team.",
+    "categoryLabel": "Kategorie",
+    "categoryBug": "Fehler",
+    "categoryIdea": "Idee",
+    "categoryOther": "Sonstiges",
+    "messageLabel": "Was ist passiert?",
+    "messagePlaceholder": "Beschreibe das Problem, was du erwartet hast und wie es sich reproduzieren lässt.",
+    "submit": "Bericht senden",
+    "sent": "Bericht gesendet. Danke.",
+    "attached": "Gesendet mit v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "Berichte laufen über die Nutzungsanalyse, die auf diesem Gerät aus ist. Beim Senden wird sie aktiviert – in den Datenschutz-Einstellungen kannst du sie wieder ausschalten.",
+    "enableAndSend": "Analyse aktivieren & senden",
+    "unavailableNotice": "Dieser Build hat keinen Analyse-Schlüssel, Berichte lassen sich also nicht aus der App senden. Kopiere deinen und öffne ein GitHub-Issue.",
+    "copy": "Bericht kopieren",
+    "copied": "Bericht in die Zwischenablage kopiert",
+    "openIssue": "GitHub-Issues öffnen"
   },
   "userMenu": {
     "accountMenu": "Kontomenü",

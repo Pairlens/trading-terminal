@@ -176,6 +176,35 @@ export interface AnalyticsEvents {
    * OS-notification permissions. */
   alert_delivery: { channel: string; ok: boolean }
 
+  // ── User-submitted feedback ───────────────────────────────────────
+  /**
+   * A bug report / idea the user deliberately typed and sent from the
+   * feedback dialog. The one sanctioned exception to the no-free-text rule
+   * above: the text IS the payload, the user wrote it knowing it is sent,
+   * and the dialog says so before it goes. `route` is the matched route
+   * template (`/_terminal/pair/$pair`), never a resolved path with ids in it.
+   */
+  bug_report: {
+    category: 'bug' | 'idea' | 'other'
+    message: string
+    app_version: string
+    route: string
+    platform: 'desktop' | 'web'
+  }
+
+  // ── Diagnostics ───────────────────────────────────────────────────
+  /**
+   * A sign-in 3D surface (dither backdrop or lanyard badge) was disabled at
+   * runtime and replaced by its static fallback. `detail` is a truncated
+   * library error message (≤200 chars), never user data.
+   */
+  signin_webgl_surface_failed: {
+    surface: 'dither' | 'lanyard'
+    reason: string
+    detail?: string
+    platform: 'desktop' | 'web'
+  }
+
   // ── Lifecycle & personalization ───────────────────────────────────
   onboarding_completed: Record<string, never>
   /** Sign-in funnel: OTP email requested → signed_in (OTP verified). */

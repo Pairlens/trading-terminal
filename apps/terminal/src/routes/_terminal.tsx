@@ -12,6 +12,7 @@ import {
 import {
   ArrowRight,
   Bot,
+  Bug,
   Clock,
   EllipsisVertical,
   House,
@@ -110,6 +111,7 @@ import {
   usePerformanceModeSync,
 } from '@/hooks/use-performance-mode'
 import { WorkspaceTreeSidebar } from '@/components/workspace/workspace-tree-sidebar'
+import { BugReportDialog } from '@/components/feedback/bug-report-dialog'
 
 import UserSettingsDialog from '@/components/user-settings-dialog'
 
@@ -168,6 +170,7 @@ function TerminalLayout() {
   const { t } = useTranslation()
   const perfMode = usePerformanceModeState()
   const [workspaceTreeOpen, setWorkspaceTreeOpen] = useState(false)
+  const [bugReportOpen, setBugReportOpen] = useState(false)
 
   const activeItem = location.pathname.startsWith('/notifications')
     ? 'notifications'
@@ -310,6 +313,10 @@ function TerminalLayout() {
                 <IdleGuard />
                 <ShortcutHintListener />
                 <GeoRestrictionDialog />
+                <BugReportDialog
+                  open={bugReportOpen}
+                  onOpenChange={setBugReportOpen}
+                />
                 <BillingStateSync />
                 <SidebarProvider
                   className={cn(
@@ -486,6 +493,21 @@ function TerminalLayout() {
                     </SidebarContent>
 
                     <SidebarFooter className="p-2">
+                      <SidebarMenu className="items-center">
+                        <SidebarMenuItem>
+                          <SidebarMenuButton
+                            aria-label={t('nav.reportBug')}
+                            className="size-9 justify-center p-0"
+                            onClick={() => setBugReportOpen(true)}
+                            type="button"
+                          >
+                            <Bug size={16} />
+                            <span className="sr-only">
+                              {t('nav.reportBug')}
+                            </span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </SidebarMenu>
                       <TerminalUserMenu
                         initials={initials || 'PL'}
                         isSigningOut={signOut.isPending}

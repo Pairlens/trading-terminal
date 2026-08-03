@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { readFileSync } from 'node:fs'
 import { defineConfig } from 'vite'
 import { devtools } from '@tanstack/devtools-vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
@@ -10,6 +11,19 @@ import { copyPyodideAssets } from './scripts/copy-pyodide'
 import type { Plugin } from 'vite'
 
 const terminalPort = Number.parseInt(process.env.TERMINAL_PORT ?? '', 10)
+
+// The desktop bundle's version is the single version of record — browser and
+// dev builds report the same number so "which build am I running" has one
+// answer everywhere (desktop reads the installed bundle at runtime instead,
+// see src/lib/app-version.ts).
+const appVersion = (
+  JSON.parse(
+    readFileSync(
+      new URL('../desktop/src-tauri/tauri.conf.json', import.meta.url),
+      'utf8',
+    ),
+  ) as { version: string }
+).version
 
 // Stage the pyodide core runtime into public/_pyodide/ (gitignored) so both
 // `vite dev` and `vite build` serve it same-origin for the Python worker.
@@ -24,6 +38,9 @@ function pyodideAssets(): Plugin {
 
 const config = defineConfig({
   assetsInclude: ['**/*.glb'],
+  define: {
+    __APP_VERSION__: JSON.stringify(appVersion),
+  },
   server: {
     port: Number.isFinite(terminalPort) ? terminalPort : 3000,
     proxy: {

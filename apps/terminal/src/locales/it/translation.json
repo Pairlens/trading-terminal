@@ -633,6 +633,10 @@
       "packsTitle": "Crediti extra",
       "packsDescription": "Ricariche una tantum che si sommano al budget mensile. I crediti delle ricariche scadono 30 giorni dopo l’acquisto e non si rinnovano.",
       "packActive": "{{credits}} crediti extra — scadono il {{date}}"
+    },
+    "about": {
+      "desktop": "Desktop",
+      "browser": "Browser"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "Sfoglia tutte le coppie",
     "newWorkspace": "Nuovo spazio di lavoro",
     "workspaceStore": "Workspace Store",
-    "signIn": "Accedi"
+    "signIn": "Accedi",
+    "reportBug": "Segnala un bug"
+  },
+  "feedback": {
+    "title": "Segnala un bug",
+    "description": "Dicci cosa non ha funzionato o cosa vorresti da Pairlens. Arriva dritto al team.",
+    "categoryLabel": "Categoria",
+    "categoryBug": "Bug",
+    "categoryIdea": "Idea",
+    "categoryOther": "Altro",
+    "messageLabel": "Cosa è successo?",
+    "messagePlaceholder": "Descrivi il problema, cosa ti aspettavi e come riprodurlo.",
+    "submit": "Invia segnalazione",
+    "sent": "Segnalazione inviata. Grazie.",
+    "attached": "Inviato con v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "Le segnalazioni passano dalle statistiche d'uso, disattivate su questo dispositivo. Inviando le attivi; puoi disattivarle di nuovo in Privacy.",
+    "enableAndSend": "Attiva statistiche e invia",
+    "unavailableNotice": "Questa build non ha una chiave di analytics, quindi non può inviare segnalazioni. Copia la tua e apri una issue su GitHub.",
+    "copy": "Copia segnalazione",
+    "copied": "Segnalazione copiata negli appunti",
+    "openIssue": "Apri le issue su GitHub"
   },
   "userMenu": {
     "accountMenu": "Menu account",

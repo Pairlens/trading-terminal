@@ -633,6 +633,10 @@
       "packsTitle": "額外點數",
       "packsDescription": "一次性加值,疊加在每月預算之上。加值點數自購買起 30 天後到期,不會續期。",
       "packActive": "{{credits}} 額外點數 — {{date}} 到期"
+    },
+    "about": {
+      "desktop": "桌面版",
+      "browser": "瀏覽器"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "瀏覽所有交易對",
     "newWorkspace": "新增工作區",
     "workspaceStore": "工作區商店",
-    "signIn": "登入"
+    "signIn": "登入",
+    "reportBug": "回報問題"
+  },
+  "feedback": {
+    "title": "回報問題",
+    "description": "告訴我們哪裡出了問題，或你希望 Pairlens 做到什麼。直接送到團隊手上。",
+    "categoryLabel": "類別",
+    "categoryBug": "問題",
+    "categoryIdea": "想法",
+    "categoryOther": "其他",
+    "messageLabel": "發生了什麼事？",
+    "messagePlaceholder": "描述問題、你預期的結果，以及重現步驟。",
+    "submit": "送出回報",
+    "sent": "回報已送出，謝謝。",
+    "attached": "一併送出：v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "回報透過使用分析送出，而本裝置上的分析已關閉。送出將開啟分析，你可以隨時在隱私設定中關閉。",
+    "enableAndSend": "開啟分析並送出",
+    "unavailableNotice": "此版本沒有分析金鑰，無法從應用程式內送出回報。請複製內容並到 GitHub 開 issue。",
+    "copy": "複製回報",
+    "copied": "回報已複製到剪貼簿",
+    "openIssue": "開啟 GitHub issues"
   },
   "userMenu": {
     "accountMenu": "帳戶選單",

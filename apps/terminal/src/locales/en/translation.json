@@ -633,6 +633,10 @@
       "packsTitle": "Extra credits",
       "packsDescription": "One-time top-ups that stack on your monthly budget. Pack credits expire 30 days after purchase and don’t renew.",
       "packActive": "{{credits}} extra credits — expire {{date}}"
+    },
+    "about": {
+      "desktop": "Desktop",
+      "browser": "Browser"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "Browse all pairs",
     "newWorkspace": "New Workspace",
     "workspaceStore": "Workspace Store",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "reportBug": "Report a bug"
+  },
+  "feedback": {
+    "title": "Report a bug",
+    "description": "Tell us what broke, or what you wish Pairlens did. It goes straight to the team.",
+    "categoryLabel": "Category",
+    "categoryBug": "Bug",
+    "categoryIdea": "Idea",
+    "categoryOther": "Other",
+    "messageLabel": "What happened?",
+    "messagePlaceholder": "Describe the problem, what you expected instead, and how to reproduce it.",
+    "submit": "Send report",
+    "sent": "Report sent. Thank you.",
+    "attached": "Sent with v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "Reports are delivered through usage analytics, which is off on this device. Sending turns it on — you can switch it back off in Privacy settings.",
+    "enableAndSend": "Enable analytics & send",
+    "unavailableNotice": "This build has no analytics key, so reports can't be sent from the app. Copy yours and open a GitHub issue instead.",
+    "copy": "Copy report",
+    "copied": "Report copied to your clipboard",
+    "openIssue": "Open GitHub issues"
   },
   "userMenu": {
     "accountMenu": "Account menu",

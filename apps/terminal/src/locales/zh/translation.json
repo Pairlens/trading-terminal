@@ -633,6 +633,10 @@
       "packsTitle": "额外积分",
       "packsDescription": "一次性充值,叠加在每月预算之上。充值积分自购买起 30 天后过期,不会续期。",
       "packActive": "{{credits}} 额外积分 — {{date}} 过期"
+    },
+    "about": {
+      "desktop": "桌面版",
+      "browser": "浏览器"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "浏览所有交易对",
     "newWorkspace": "新建工作区",
     "workspaceStore": "工作区商店",
-    "signIn": "登录"
+    "signIn": "登录",
+    "reportBug": "报告问题"
+  },
+  "feedback": {
+    "title": "报告问题",
+    "description": "告诉我们哪里出了问题，或者你希望 Pairlens 做什么。直接发给团队。",
+    "categoryLabel": "类别",
+    "categoryBug": "问题",
+    "categoryIdea": "想法",
+    "categoryOther": "其他",
+    "messageLabel": "发生了什么？",
+    "messagePlaceholder": "描述问题、你期望的结果，以及复现步骤。",
+    "submit": "发送报告",
+    "sent": "报告已发送，谢谢。",
+    "attached": "随附发送：v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "报告通过使用分析发送，而本设备上的分析已关闭。发送将开启分析，你可以随时在隐私设置中关闭。",
+    "enableAndSend": "开启分析并发送",
+    "unavailableNotice": "此版本没有分析密钥，无法从应用内发送报告。请复制内容并在 GitHub 上提交 issue。",
+    "copy": "复制报告",
+    "copied": "报告已复制到剪贴板",
+    "openIssue": "打开 GitHub issues"
   },
   "userMenu": {
     "accountMenu": "账户菜单",

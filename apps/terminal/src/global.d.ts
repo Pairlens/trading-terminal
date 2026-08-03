@@ -3,6 +3,13 @@
 declare module '*.glb'
 declare module '*.png'
 
+/**
+ * App version injected by the terminal's vite config from
+ * apps/desktop/src-tauri/tauri.conf.json. Undefined outside vite (bun test),
+ * so read it through `@/lib/app-version`, never directly.
+ */
+declare const __APP_VERSION__: string
+
 interface ImportMetaEnv {
   /** PostHog project key — opt-in analytics is fully disabled when unset. */
   readonly VITE_POSTHOG_KEY?: string

@@ -633,6 +633,10 @@
       "packsTitle": "Dodatkowe kredyty",
       "packsDescription": "Jednorazowe doładowania dodawane do miesięcznego budżetu. Kredyty z doładowań wygasają 30 dni po zakupie i nie odnawiają się.",
       "packActive": "{{credits}} dodatkowych kredytów — wygasają {{date}}"
+    },
+    "about": {
+      "desktop": "Desktop",
+      "browser": "Przeglądarka"
     }
   },
   "nav": {
@@ -649,7 +653,27 @@
     "browseAllPairs": "Przeglądaj wszystkie pary",
     "newWorkspace": "Nowy obszar roboczy",
     "workspaceStore": "Workspace Store",
-    "signIn": "Zaloguj się"
+    "signIn": "Zaloguj się",
+    "reportBug": "Zgłoś błąd"
+  },
+  "feedback": {
+    "title": "Zgłoś błąd",
+    "description": "Napisz, co się zepsuło albo czego brakuje w Pairlens. Trafia prosto do zespołu.",
+    "categoryLabel": "Kategoria",
+    "categoryBug": "Błąd",
+    "categoryIdea": "Pomysł",
+    "categoryOther": "Inne",
+    "messageLabel": "Co się stało?",
+    "messagePlaceholder": "Opisz problem, czego oczekiwałeś i jak go odtworzyć.",
+    "submit": "Wyślij zgłoszenie",
+    "sent": "Zgłoszenie wysłane. Dziękujemy.",
+    "attached": "Wysyłane z v{{version}} · {{platform}} · {{route}}",
+    "consentNotice": "Zgłoszenia idą przez analitykę użycia, która jest wyłączona na tym urządzeniu. Wysłanie ją włączy — możesz ją wyłączyć ponownie w ustawieniach Prywatności.",
+    "enableAndSend": "Włącz analitykę i wyślij",
+    "unavailableNotice": "Ta kompilacja nie ma klucza analityki, więc nie wyśle zgłoszenia. Skopiuj je i załóż zgłoszenie na GitHubie.",
+    "copy": "Kopiuj zgłoszenie",
+    "copied": "Zgłoszenie skopiowane do schowka",
+    "openIssue": "Otwórz zgłoszenia na GitHubie"
   },
   "userMenu": {
     "accountMenu": "Menu konta",

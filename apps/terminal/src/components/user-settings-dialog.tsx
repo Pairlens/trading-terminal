@@ -56,6 +56,7 @@ import { Input } from '@pairlens/ui/components/ui/input'
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
@@ -68,6 +69,8 @@ import { track } from '@/lib/analytics-events'
 import { authClient, hasAppServer } from '@/lib/auth-client'
 import { api, queryKeys } from '@/lib/api'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
+import { useAppVersion } from '@/lib/app-version'
+import { isStandalone } from '@/lib/platform'
 
 import {
   SECTION_TOURS_DISABLED_KEY,
@@ -306,7 +309,10 @@ export default function UserSettingsDialog({
         <SidebarProvider className="items-start">
           <Sidebar
             collapsible="none"
-            className="hidden border-r md:flex md:w-64"
+            // Same height as <main> so the version footer lands on the dialog's
+            // bottom edge instead of overflowing past it (the provider is
+            // items-start, so the column would otherwise size to its content).
+            className="hidden border-r md:flex md:h-[480px] md:w-64"
           >
             <SidebarContent>
               <SidebarGroup>
@@ -328,6 +334,7 @@ export default function UserSettingsDialog({
                 </SidebarGroupContent>
               </SidebarGroup>
             </SidebarContent>
+            <AppVersionFooter />
           </Sidebar>
           <main className="flex h-[480px] flex-1 flex-col overflow-hidden">
             <header className="flex h-16 shrink-0 items-center border-b">
@@ -500,6 +507,30 @@ export default function UserSettingsDialog({
         </SidebarProvider>
       </DialogContent>
     </Dialog>
+  )
+}
+
+/**
+ * Which build is running — the answer to "what version am I on?", parked
+ * where people already go looking for it. Desktop reports the installed
+ * bundle's version (from Tauri), browser builds the version baked in at
+ * build time; see @/lib/app-version.
+ */
+function AppVersionFooter() {
+  const { t } = useTranslation()
+  const version = useAppVersion()
+  const platform = isStandalone
+    ? t('settings.about.desktop')
+    : t('settings.about.browser')
+
+  return (
+    <SidebarFooter className="border-t">
+      <p className="px-2 text-xs text-muted-foreground tabular-nums">
+        Pairlens v{version}
+        <span className="px-1">·</span>
+        {platform}
+      </p>
+    </SidebarFooter>
   )
 }
 
