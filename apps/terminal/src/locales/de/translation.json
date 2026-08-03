@@ -413,6 +413,7 @@
       "plugins": "Plugins",
       "notifications": "Benachrichtigungen",
       "appearance": "Erscheinungsbild",
+      "keyboard": "Tastatur",
       "performance": "Leistung",
       "connection": "Verbindung",
       "language": "Sprache",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Desktop",
       "browser": "Browser"
+    },
+    "keyboard": {
+      "title": "Tastenkürzel",
+      "description": "Jedes Kürzel im Terminal lässt sich ändern. Mit einer Vorlage starten und dann frei neu belegen.",
+      "presetTitle": "Vorlage",
+      "presetDescription": "Der Ausgangspunkt für jeden Befehl. Deine eigenen Änderungen bleiben über der gewählten Vorlage bestehen.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "Die ausgelieferten Standardwerte.",
+        "tradingview": "TradingView-Stil",
+        "tradingviewDescription": "Zeichen-Kürzel und Wiederholen folgen den Gewohnheiten von TradingView.",
+        "bloomberg": "Bloomberg-Stil",
+        "bloombergDescription": "Funktionstasten springen zwischen den Bereichen, wie auf einer Bloomberg-Tastatur."
+      },
+      "searchPlaceholder": "Befehle suchen...",
+      "resetAll": "Alle zurücksetzen",
+      "resetAllTitle": "Alle Tastenkürzel zurücksetzen?",
+      "resetAllDescription": "Jeder Befehl geht auf die aktuelle Vorlage zurück. Deine Anpassungen gehen verloren.",
+      "restoreDefault": "Standard wiederherstellen",
+      "addBinding": "Kürzel hinzufügen",
+      "removeBinding": "Dieses Kürzel entfernen",
+      "recording": "Tastenkombination drücken",
+      "stopRecording": "Stopp",
+      "unbound": "Nicht belegt",
+      "customized": "Angepasst",
+      "conflictsTitle": "Kürzel-Konflikte",
+      "conflictsDescription": "Diese Kombinationen gehören zu mehreren Befehlen. Nur der erste in der Liste wird ausgeführt.",
+      "conflictWith": "Auch belegt mit {{commands}}",
+      "risky": "Browser oder System fangen dieses Kürzel womöglich ab, bevor Pairlens es sieht.",
+      "chartScope": "Chart-Bereiche",
+      "noResults": "Kein Befehl passt zu dieser Suche.",
+      "categories": {
+        "general": "Allgemein",
+        "navigation": "Navigation",
+        "workspace": "Arbeitsbereich",
+        "chart": "Chart",
+        "timeframe": "Zeitrahmen",
+        "drawing": "Zeichenwerkzeuge"
+      },
+      "commands": {
+        "workspaceTree": "Arbeitsbereichs-Baum ein-/ausblenden",
+        "workspaceMenu": "Arbeitsbereichs-Menü",
+        "chartCancel": "Werkzeug abbrechen / Vollbild verlassen"
+      }
     }
   },
   "nav": {

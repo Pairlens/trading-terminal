@@ -12,6 +12,7 @@ import {
   Gauge,
   Globe,
   Home,
+  Keyboard,
   LogOut,
   MapPin,
   Moon,
@@ -88,6 +89,7 @@ const ACTION_ICONS: Record<string, LucideIcon> = {
   Coins,
   ShieldCheck,
   Paintbrush,
+  Keyboard,
   Gauge,
   Globe,
 }

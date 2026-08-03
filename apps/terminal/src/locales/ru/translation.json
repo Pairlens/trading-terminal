@@ -413,6 +413,7 @@
       "plugins": "Плагины",
       "notifications": "Уведомления",
       "appearance": "Внешний вид",
+      "keyboard": "Клавиатура",
       "performance": "Производительность",
       "connection": "Подключение",
       "language": "Язык",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Десктоп",
       "browser": "Браузер"
+    },
+    "keyboard": {
+      "title": "Сочетания клавиш",
+      "description": "Любое сочетание в терминале можно изменить. Начните с пресета и переназначьте всё, что нужно.",
+      "presetTitle": "Пресет",
+      "presetDescription": "Отправная точка для всех команд. Ваши правки сохраняются поверх выбранного пресета.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "Настройки по умолчанию.",
+        "tradingview": "В стиле TradingView",
+        "tradingviewDescription": "Сочетания для рисования и повтора — как в TradingView.",
+        "bloomberg": "В стиле Bloomberg",
+        "bloombergDescription": "Функциональные клавиши переключают разделы, как на клавиатуре Bloomberg."
+      },
+      "searchPlaceholder": "Поиск команд...",
+      "resetAll": "Сбросить всё",
+      "resetAllTitle": "Сбросить все сочетания?",
+      "resetAllDescription": "Все команды вернутся к текущему пресету. Ваши настройки будут потеряны.",
+      "restoreDefault": "Вернуть по умолчанию",
+      "addBinding": "Добавить сочетание",
+      "removeBinding": "Удалить это сочетание",
+      "recording": "Нажмите сочетание клавиш",
+      "stopRecording": "Стоп",
+      "unbound": "Не назначено",
+      "customized": "Изменено",
+      "conflictsTitle": "Конфликты сочетаний",
+      "conflictsDescription": "Эти сочетания закреплены за несколькими командами. Сработает только первая в списке.",
+      "conflictWith": "Также назначено на {{commands}}",
+      "risky": "Браузер или система могут перехватить это сочетание раньше Pairlens.",
+      "chartScope": "Панели графика",
+      "noResults": "Ни одна команда не подходит под этот запрос.",
+      "categories": {
+        "general": "Общее",
+        "navigation": "Навигация",
+        "workspace": "Рабочая область",
+        "chart": "График",
+        "timeframe": "Таймфреймы",
+        "drawing": "Инструменты рисования"
+      },
+      "commands": {
+        "workspaceTree": "Показать/скрыть дерево рабочих областей",
+        "workspaceMenu": "Меню рабочих областей",
+        "chartCancel": "Отменить инструмент / выйти из полноэкранного режима"
+      }
     }
   },
   "nav": {

@@ -413,6 +413,7 @@
       "plugins": "Плагіни",
       "notifications": "Сповіщення",
       "appearance": "Зовнішній вигляд",
+      "keyboard": "Клавіатура",
       "performance": "Продуктивність",
       "connection": "З'єднання",
       "language": "Мова",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "Десктоп",
       "browser": "Браузер"
+    },
+    "keyboard": {
+      "title": "Комбінації клавіш",
+      "description": "Будь-яку комбінацію в терміналі можна змінити. Почніть із пресету, а тоді перепризначте що завгодно.",
+      "presetTitle": "Пресет",
+      "presetDescription": "Відправна точка для всіх команд. Ваші правки лишаються поверх обраного пресету.",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "Налаштування за замовчуванням.",
+        "tradingview": "У стилі TradingView",
+        "tradingviewDescription": "Комбінації для малювання та повтору — як у TradingView.",
+        "bloomberg": "У стилі Bloomberg",
+        "bloombergDescription": "Функціональні клавіші перемикають розділи, як на клавіатурі Bloomberg."
+      },
+      "searchPlaceholder": "Пошук команд...",
+      "resetAll": "Скинути все",
+      "resetAllTitle": "Скинути всі комбінації?",
+      "resetAllDescription": "Усі команди повернуться до поточного пресету. Ваші налаштування буде втрачено.",
+      "restoreDefault": "Повернути за замовчуванням",
+      "addBinding": "Додати комбінацію",
+      "removeBinding": "Прибрати цю комбінацію",
+      "recording": "Натисніть комбінацію клавіш",
+      "stopRecording": "Стоп",
+      "unbound": "Не призначено",
+      "customized": "Змінено",
+      "conflictsTitle": "Конфлікти комбінацій",
+      "conflictsDescription": "Ці комбінації належать кільком командам. Спрацює лише перша у списку.",
+      "conflictWith": "Також призначено на {{commands}}",
+      "risky": "Браузер або система можуть перехопити цю комбінацію раніше за Pairlens.",
+      "chartScope": "Панелі графіка",
+      "noResults": "Жодна команда не відповідає цьому запиту.",
+      "categories": {
+        "general": "Загальне",
+        "navigation": "Навігація",
+        "workspace": "Робоча область",
+        "chart": "Графік",
+        "timeframe": "Таймфрейми",
+        "drawing": "Інструменти малювання"
+      },
+      "commands": {
+        "workspaceTree": "Показати/сховати дерево робочих областей",
+        "workspaceMenu": "Меню робочих областей",
+        "chartCancel": "Скасувати інструмент / вийти з повного екрана"
+      }
     }
   },
   "nav": {

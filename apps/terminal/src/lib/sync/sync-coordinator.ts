@@ -25,6 +25,7 @@ const TS_PREFIX = 'pairlens:sync-ts:'
 const TIER1_KEYS = new Set([
   'plugin-registry-settings',
   'language',
+  'keybindings',
   'theme.activePluginId',
   'performance-mode',
   'terminal.market',

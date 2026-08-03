@@ -413,6 +413,7 @@
       "plugins": "プラグイン",
       "notifications": "通知",
       "appearance": "外観",
+      "keyboard": "キーボード",
       "performance": "パフォーマンス",
       "connection": "接続",
       "language": "言語",
@@ -641,6 +642,50 @@
     "about": {
       "desktop": "デスクトップ",
       "browser": "ブラウザ"
+    },
+    "keyboard": {
+      "title": "キーボードショートカット",
+      "description": "ターミナルのショートカットはすべて変更できます。プリセットから始めて、好きなように割り当て直してください。",
+      "presetTitle": "プリセット",
+      "presetDescription": "すべてのコマンドの出発点です。あなたの変更は選んだプリセットの上に残ります。",
+      "keymaps": {
+        "pairlens": "Pairlens",
+        "pairlensDescription": "出荷時の既定値。",
+        "tradingview": "TradingView スタイル",
+        "tradingviewDescription": "描画のショートカットとやり直しが TradingView の流儀に従います。",
+        "bloomberg": "Bloomberg スタイル",
+        "bloombergDescription": "Bloomberg のキーボードのように、ファンクションキーでセクションを移動します。"
+      },
+      "searchPlaceholder": "コマンドを検索...",
+      "resetAll": "すべてリセット",
+      "resetAllTitle": "すべてのショートカットをリセットしますか？",
+      "resetAllDescription": "すべてのコマンドが現在のプリセットの設定に戻り、カスタマイズは失われます。",
+      "restoreDefault": "既定に戻す",
+      "addBinding": "ショートカットを追加",
+      "removeBinding": "このショートカットを削除",
+      "recording": "キーの組み合わせを押してください",
+      "stopRecording": "停止",
+      "unbound": "未割り当て",
+      "customized": "カスタム",
+      "conflictsTitle": "ショートカットの競合",
+      "conflictsDescription": "これらの組み合わせは複数のコマンドに割り当てられています。実行されるのは一覧の最初のものだけです。",
+      "conflictWith": "{{commands}} にも割り当て済み",
+      "risky": "ブラウザーやシステムが Pairlens より先にこの組み合わせを受け取る場合があります。",
+      "chartScope": "チャートペイン",
+      "noResults": "一致するコマンドはありません。",
+      "categories": {
+        "general": "一般",
+        "navigation": "ナビゲーション",
+        "workspace": "ワークスペース",
+        "chart": "チャート",
+        "timeframe": "時間足",
+        "drawing": "描画ツール"
+      },
+      "commands": {
+        "workspaceTree": "ワークスペースツリーの表示切り替え",
+        "workspaceMenu": "ワークスペースメニュー",
+        "chartCancel": "ツールを解除 / 全画面を終了"
+      }
     }
   },
   "nav": {

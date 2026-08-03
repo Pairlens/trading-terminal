@@ -4,11 +4,13 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
+  useMemo,
   useState,
 } from 'react'
 
 import { OmniSearchPalette } from './omni-search-palette'
+import type { ShortcutDefinition } from '@/hooks/use-keyboard-shortcuts'
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
 
 type OmniSearchContextValue = {
   isOpen: boolean
@@ -28,17 +30,19 @@ export function OmniSearchProvider({
   const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
 
-  // Global Cmd+K handler
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setIsOpen(true)
-      }
-    }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [])
+  // The palette answers from anywhere, including while a field has focus —
+  // it's the one shortcut that has to work mid-typing.
+  const shortcuts = useMemo<Array<ShortcutDefinition>>(
+    () => [
+      {
+        commandId: 'general.commandPalette',
+        action: () => setIsOpen(true),
+        allowInInput: true,
+      },
+    ],
+    [],
+  )
+  useKeyboardShortcuts(shortcuts)
 
   return (
     <OmniSearchContext.Provider value={{ isOpen, open, close }}>

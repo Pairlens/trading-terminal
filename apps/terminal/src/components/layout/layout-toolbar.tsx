@@ -59,10 +59,8 @@ import { track } from '@/lib/analytics-events'
 import { useLayout } from '@/lib/layout/context'
 import { useWorkspace } from '@/lib/layout/workspace-context'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
-import {
-  metaKeySymbol,
-  useKeyboardShortcuts,
-} from '@/hooks/use-keyboard-shortcuts'
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
+import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { ShortcutHint } from '@/components/shortcut-hints'
 import { createGridLayout, mergeGridIntoLayout } from '@/lib/layout/presets'
 
@@ -93,29 +91,25 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false)
   const { presets, screenPresets, defaultPreset } = workspace
 
-  // ⌘⇧L toggles the workspaces dropdown, ⌘⇧P opens add pane dialog
+  // Add-pane and the workspaces dropdown, on whatever chords the user bound.
   const shortcuts = useMemo<Array<ShortcutDefinition>>(() => {
     const defs: Array<ShortcutDefinition> = [
       {
-        key: 'p',
-        modifiers: { meta: true, shift: true },
+        commandId: 'workspace.addPane',
         action: () => setAddPaneOpen(true),
-        description: 'Add pane',
-        label: '⌘⇧P',
       },
     ]
     if (onOpenChange) {
       defs.push({
-        key: 'l',
-        modifiers: { meta: true, shift: true },
+        commandId: 'workspace.menu',
         action: () => onOpenChange(!open),
-        description: 'Toggle workspaces menu',
-        label: '⌘⇧L',
       })
     }
     return defs
   }, [onOpenChange, open])
   useKeyboardShortcuts(shortcuts)
+  const menuShortcut = useKeybindingLabel('workspace.menu')
+  const addPaneShortcut = useKeybindingLabel('workspace.addPane')
 
   const workspaceKind = workspaceAnalyticsKind(workspace.storageKey)
 
@@ -217,11 +211,11 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
           >
             <Layout className="size-3.5" />
             {t('layout.workspaces')}
-            <ShortcutHint keys={`${metaKeySymbol}⇧L`} />
+            <ShortcutHint keys={menuShortcut} />
           </TooltipTrigger>
           <TooltipContent>
             {t('layout.workspaces')}{' '}
-            <Kbd className="ml-1.5">{metaKeySymbol}&#8679;L</Kbd>
+            {menuShortcut ? <Kbd className="ml-1.5">{menuShortcut}</Kbd> : null}
           </TooltipContent>
         </Tooltip>
         <DropdownMenuContent align="end" className="w-60">
@@ -313,7 +307,9 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
           <DropdownMenuItem onClick={() => setAddPaneOpen(true)}>
             <Plus className="size-3.5" />
             {t('layout.addPane')}
-            <Kbd className="ml-auto">{metaKeySymbol}⇧P</Kbd>
+            {addPaneShortcut ? (
+              <Kbd className="ml-auto">{addPaneShortcut}</Kbd>
+            ) : null}
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
