@@ -11,7 +11,7 @@ import { WorkflowIcon } from '@pairlens/ui/components/ui/workflow'
 
 import type { SignInPhase } from '@/components/sign-in-experience'
 import { SignInExperience } from '@/components/sign-in-experience'
-import { SignInStatue } from '@/components/sign-in-statue'
+import { SignInStatueScene } from '@/components/sign-in-statue'
 import { useOptimisticSession } from '@/lib/session'
 import { useSignInFlow } from '@/hooks/use-sign-in-flow'
 
@@ -68,33 +68,14 @@ function SignInPage() {
 
   return (
     <div className="relative grid min-h-screen lg:grid-cols-2">
-      {/* Left panel — dithered statue + benefits. Scoped `dark` so the panel
-          keeps its gallery-dark look (matching the artwork's black ground) in
-          both color modes. */}
-      <div className="dark relative hidden overflow-hidden bg-black text-sidebar-foreground lg:block">
-        <SignInStatue className="absolute inset-0" />
-
-        {/* Fade the artwork toward the panel floor so the benefits read. */}
-        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
-
-        {/* Continuation of the form side's magenta aurora so its glow drifts
-            across the seam instead of dying at the panel edge. */}
-        <div
-          aria-hidden
-          className="pl-si-aurora pointer-events-none absolute -bottom-[8%] -right-[12%] h-[48%] w-[46%] rounded-full opacity-20 blur-[100px]"
-          style={{
-            background:
-              'radial-gradient(circle at 50% 50%, oklch(60% .2 320 / .45), transparent 68%)',
-          }}
-        />
-
-        {/* Benefits story card */}
+      {/* Left panel — statue scene + benefits. */}
+      <SignInStatueScene className="hidden lg:block">
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex justify-center pb-[10%]">
           <div className="pointer-events-auto px-8">
             <SignInBenefits />
           </div>
         </div>
-      </div>
+      </SignInStatueScene>
 
       {/* Right panel — choreographed sign-in experience */}
       <SignInExperience

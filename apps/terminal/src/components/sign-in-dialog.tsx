@@ -12,6 +12,7 @@ import {
 
 import type { SignInPhase } from '@/components/sign-in-experience'
 import { SignInExperience } from '@/components/sign-in-experience'
+import { SignInStatueScene } from '@/components/sign-in-statue'
 import { useOptimisticSession } from '@/lib/session'
 import { useSignInFlow } from '@/hooks/use-sign-in-flow'
 
@@ -68,31 +69,44 @@ export function SignInDialog({ children }: SignInDialogProps) {
       <span onClick={openFresh}>{children}</span>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
-          className="gap-0 overflow-clip p-0 sm:max-w-md"
+          className="gap-0 overflow-clip p-0 sm:max-w-md md:max-w-[760px]"
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">Sign in</DialogTitle>
           <DialogDescription className="sr-only">
             Sign in to access this feature
           </DialogDescription>
-          <SignInExperience
-            variant="dialog"
-            phase={phase}
-            email={flow.email}
-            otp={flow.otp}
-            otpSentTo={flow.otpSentTo}
-            errorMessage={flow.errorMessage}
-            isSendingOtp={flow.isSendingOtp}
-            isVerifyingOtp={flow.isVerifyingOtp}
-            resendSecondsLeft={flow.resendSecondsLeft}
-            onEmailChange={flow.onEmailChange}
-            onOtpChange={flow.onOtpChange}
-            onSendOtp={flow.onSendOtp}
-            onVerify={flow.onVerify}
-            onBack={flow.onBack}
-            onResend={flow.onResend}
-            onSkip={() => setOpen(false)}
-          />
+          {/* Statue band + form: the /sign-in page composition at dialog
+              scale. The statue column only appears at md+; mobile keeps the
+              single-column form. */}
+          <div className="relative grid md:grid-cols-[280px_1fr]">
+            <SignInStatueScene className="hidden md:block" />
+            <SignInExperience
+              variant="dialog"
+              phase={phase}
+              email={flow.email}
+              otp={flow.otp}
+              otpSentTo={flow.otpSentTo}
+              errorMessage={flow.errorMessage}
+              isSendingOtp={flow.isSendingOtp}
+              isVerifyingOtp={flow.isVerifyingOtp}
+              resendSecondsLeft={flow.resendSecondsLeft}
+              onEmailChange={flow.onEmailChange}
+              onOtpChange={flow.onOtpChange}
+              onSendOtp={flow.onSendOtp}
+              onVerify={flow.onVerify}
+              onBack={flow.onBack}
+              onResend={flow.onResend}
+              onSkip={() => setOpen(false)}
+            />
+            {/* Seam blend — melts the statue band into the form's background.
+                Outside the scene's `dark` scope so it targets the actual
+                (theme-aware) form background. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 left-[280px] hidden w-20 -translate-x-full bg-gradient-to-r from-transparent to-background md:block"
+            />
+          </div>
         </DialogContent>
       </Dialog>
     </>

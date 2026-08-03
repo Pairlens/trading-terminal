@@ -148,6 +148,48 @@ function renderDuotone(
 }
 
 /**
+ * The full statue panel: gallery-dark ground, duotone statue, floor fade,
+ * and the magenta aurora continuation that lets the form side's glow drift
+ * across the seam. Scoped `dark` so it keeps the same look in both color
+ * modes. Shared by the /sign-in page and the sign-in dialog; extra content
+ * (the page's benefits card) rides in as children.
+ */
+export function SignInStatueScene({
+  className,
+  children,
+}: {
+  className?: string
+  children?: React.ReactNode
+}) {
+  return (
+    <div
+      className={cn(
+        'dark relative overflow-hidden bg-black text-sidebar-foreground',
+        className,
+      )}
+    >
+      <SignInStatue className="absolute inset-0" />
+
+      {/* Fade the artwork toward the panel floor. */}
+      <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+
+      {/* Continuation of the form side's magenta aurora so its glow drifts
+          across the seam instead of dying at the panel edge. */}
+      <div
+        aria-hidden
+        className="pl-si-aurora pointer-events-none absolute -bottom-[8%] -right-[12%] h-[48%] w-[46%] rounded-full opacity-20 blur-[100px]"
+        style={{
+          background:
+            'radial-gradient(circle at 50% 50%, oklch(60% .2 320 / .45), transparent 68%)',
+        }}
+      />
+
+      {children}
+    </div>
+  )
+}
+
+/**
  * Duotone statue visual. The canvas behaves like an `<img>`: size and crop
  * it from the parent via className (object-cover etc. apply to canvases).
  */
