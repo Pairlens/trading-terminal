@@ -15,8 +15,8 @@ First PR here? The CLA bot will comment with a one-line signing instruction and
 the `cla` check stays red until you post it. Signing takes one comment, once per
 contributor, and it is what lets us ship your work under the FSL and its
 two-year Apache 2.0 conversion. Details in
-[CONTRIBUTING.md](../blob/main/CONTRIBUTING.md#contributor-license-agreement).
+[CONTRIBUTING.md](https://github.com/Pairlens/trading-terminal/blob/main/CONTRIBUTING.md#contributor-license-agreement).
 
 If your employer owns your work, they execute the
-[Corporate CLA](../blob/main/CLA/corporate-cla.md) instead and list you as a
-designated contributor.
+[Corporate CLA](https://github.com/Pairlens/trading-terminal/blob/main/CLA/corporate-cla.md)
+instead and list you as a designated contributor.
