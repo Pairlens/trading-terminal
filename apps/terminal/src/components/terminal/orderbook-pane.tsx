@@ -12,6 +12,12 @@ import {
   useOptionalOrderbookData,
 } from '@/lib/chart-terminal-context'
 import { formatBookPrice } from '@/lib/format-price'
+import {
+  computeMagnitudeReference,
+  magnitudeFillColor,
+  magnitudeIntensity,
+  magnitudeTextColor,
+} from '@/components/terminal/magnitude-intensity'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
@@ -135,14 +141,18 @@ const OrderBookRow = memo(
   function OrderBookRow({
     row,
     maxCumulative,
+    sizeReference,
     side,
   }: {
     row: RowWithCumulative
     maxCumulative: number
+    sizeReference: number
     side: 'bid' | 'ask'
   }) {
     const depthPct =
       maxCumulative > 0 ? (row.cumulative / maxCumulative) * 100 : 0
+    // Bar length = cumulative depth, bar strength = this level's own size.
+    const intensity = magnitudeIntensity(row.size, sizeReference)
 
     return (
       <div className="relative grid grid-cols-3 gap-1 px-2 py-[1px] font-mono text-[11px] leading-[18px]">
@@ -151,11 +161,13 @@ const OrderBookRow = memo(
           style={{
             width: `${depthPct}%`,
             [side === 'bid' ? 'left' : 'right']: 0,
-            backgroundColor:
-              side === 'bid'
-                ? 'color-mix(in oklch, var(--up) 13%, transparent)'
-                : 'color-mix(in oklch, var(--down) 13%, transparent)',
-            transition: 'width 300ms ease-out',
+            backgroundColor: magnitudeFillColor(
+              side === 'bid' ? 'up' : 'down',
+              intensity,
+            ),
+            // Colour eases on the same curve as width so a level filling in
+            // reads as one motion, not a resize plus a separate flash.
+            transition: 'width 300ms ease-out, background-color 300ms ease-out',
           }}
         />
         <span
@@ -166,7 +178,13 @@ const OrderBookRow = memo(
         >
           {formatBookPrice(row.price)}
         </span>
-        <span className="relative z-10 text-right text-foreground">
+        <span
+          className="relative z-10 text-right"
+          style={{
+            color: magnitudeTextColor(intensity),
+            transition: 'color 300ms ease-out',
+          }}
+        >
           {formatSize(row.size)}
         </span>
         <span className="relative z-10 text-right text-muted-foreground">
@@ -180,6 +198,7 @@ const OrderBookRow = memo(
     prev.row.size === next.row.size &&
     prev.row.cumulative === next.row.cumulative &&
     prev.maxCumulative === next.maxCumulative &&
+    prev.sizeReference === next.sizeReference &&
     prev.side === next.side,
 )
 
@@ -398,6 +417,17 @@ function OrderbookPaneInner({
     return Math.max(maxBid, maxAsk)
   }, [bids, asks])
 
+  // One reference for both sides — a bid and an ask of equal size must paint
+  // identically or the book misreports which side is heavier.
+  const sizeReference = useMemo(
+    () =>
+      computeMagnitudeReference(
+        bids.map((r) => r.size),
+        asks.map((r) => r.size),
+      ),
+    [bids, asks],
+  )
+
   const spread = useMemo(() => {
     if (!bids.length || !asks.length) return null
     const bestBid = bids[0].price
@@ -461,6 +491,7 @@ function OrderbookPaneInner({
             key={row.price}
             row={row}
             maxCumulative={maxCumulative}
+            sizeReference={sizeReference}
             side="ask"
           />
         ))}
@@ -488,6 +519,7 @@ function OrderbookPaneInner({
             key={row.price}
             row={row}
             maxCumulative={maxCumulative}
+            sizeReference={sizeReference}
             side="bid"
           />
         ))}

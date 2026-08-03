@@ -2,8 +2,12 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useCallback, useMemo, useRef } from 'react'
 import { Loader2 } from 'lucide-react'
+import { useTheme } from 'next-themes'
 
-import { DARK_DEPTH_THEME } from '@pairlens/fast-financial-charts/depth-chart'
+import {
+  DARK_DEPTH_THEME,
+  LIGHT_DEPTH_THEME,
+} from '@pairlens/fast-financial-charts/depth-chart'
 import { DepthChart } from '@pairlens/fast-financial-charts/react'
 import { usePanePair } from '@pairlens/plugin-sdk'
 import type { DepthChartHoverInfo } from '@pairlens/fast-financial-charts/depth-chart'
@@ -51,6 +55,13 @@ function DepthPaneInner({
   const marketLabel = markets.find((m) => m.value === market)?.label ?? market
   const { phase, display: book } = useSwitchTransition(market, orderbook)
 
+  // The canvas engine takes a resolved theme object, so the pane has to pick
+  // it — passing the dark one unconditionally left light mode with dark-tuned
+  // axis text (a washed-out grey on paper) and the brighter dark strokes.
+  const { resolvedTheme } = useTheme()
+  const depthTheme =
+    resolvedTheme === 'light' ? LIGHT_DEPTH_THEME : DARK_DEPTH_THEME
+
   const hoverPanelRef = useRef<HTMLDivElement>(null)
   const hoverBadgeRef = useRef<HTMLSpanElement>(null)
   const hoverPriceRef = useRef<HTMLSpanElement>(null)
@@ -73,15 +84,17 @@ function DepthPaneInner({
     const cum = hoverCumRef.current
     if (!badge || !price || !cum) return
 
+    // The panel is DOM, not canvas, so it can use the P&L tokens directly and
+    // follow whatever theme plugin is active — unlike the chart body, whose
+    // themes still bake in fixed hexes upstream.
     const isBid = info.side === 'bid'
+    const token = isBid ? '--up' : '--down'
     badge.textContent = isBid ? 'Bid' : 'Ask'
-    badge.style.background = isBid
-      ? 'rgba(34,197,94,0.15)'
-      : 'rgba(239,68,68,0.15)'
-    badge.style.color = isBid ? '#4ade80' : '#f87171'
+    badge.style.background = `color-mix(in oklch, var(${token}) 15%, transparent)`
+    badge.style.color = `var(${token})`
     price.textContent = formatBookPrice(info.price)
     cum.textContent = formatSize(info.cumulative)
-    cum.style.color = isBid ? '#4ade80' : '#f87171'
+    cum.style.color = `var(${token})`
   }, [])
 
   // Trim orderbook to a symmetric price range around the mid-price.
@@ -148,7 +161,7 @@ function DepthPaneInner({
       >
         <DepthChart
           data={trimmedOrderbook ?? book}
-          resolvedTheme={DARK_DEPTH_THEME}
+          resolvedTheme={depthTheme}
           onHover={handleHover}
           style={{ width: '100%', height: '100%' }}
         />
