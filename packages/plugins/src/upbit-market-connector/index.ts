@@ -55,6 +55,7 @@ export const upbitMarketConnectorManifest: PluginManifest =
     tickerSnapshot: true,
     headerImage:
       'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600&q=80',
+    trades: true,
   })
 
 type UpbitCredentials = { apiKey: string; apiSecret: string }

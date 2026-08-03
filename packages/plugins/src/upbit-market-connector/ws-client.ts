@@ -33,6 +33,7 @@ import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import {
   parseUpbitCandle,
   parseUpbitTicker,
+  parseUpbitTrade,
   toUpbitCode,
   toUpbitWsCandle,
 } from './parser'
@@ -42,6 +43,7 @@ import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
@@ -58,12 +60,15 @@ type CandleSub = {
 }
 
 type TickerSub = { pair: string; code: string }
+
+type TradeSub = { pair: string; code: string }
 type BookSub = { pair: string; code: string }
 
 /** What each active key contributes to the full subscription array. */
 type SubDescriptor =
   | { kind: 'ticker'; code: string }
   | { kind: 'book'; code: string }
+  | { kind: 'trades'; code: string }
   | { kind: 'candle'; code: string; wsType: string }
 
 export class UpbitWsClient {
@@ -198,6 +203,31 @@ export class UpbitWsClient {
     )
   }
 
+  subscribeTrades(
+    pair: string,
+    country: string,
+    cb: TradesCallback,
+  ): () => void {
+    const code = toUpbitCode(pair)
+    this.country = country
+    const key = `trades:${pair}`
+    return this.session.acquire(
+      key,
+      {
+        state: { pair, code } satisfies TradeSub,
+        subscribe: (s: TradeSub) => {
+          this.registry.set(key, { kind: 'trades', code: s.code })
+          this.scheduleResync()
+        },
+        unsubscribe: () => {
+          this.registry.delete(key)
+          this.scheduleResync()
+        },
+      },
+      cb as (data: unknown) => void,
+    )
+  }
+
   destroy(): void {
     this.destroyed = true
     if (this.resyncTimer) {
@@ -256,12 +286,15 @@ export class UpbitWsClient {
     // Collect all ticker codes
     const tickerCodes: Array<string> = []
     const bookCodes: Array<string> = []
+    const tradeCodes: Array<string> = []
     const candleGroups = new Map<string, Array<string>>()
     for (const desc of this.registry.values()) {
       if (desc.kind === 'ticker') {
         tickerCodes.push(desc.code)
       } else if (desc.kind === 'book') {
         bookCodes.push(desc.code)
+      } else if (desc.kind === 'trades') {
+        tradeCodes.push(desc.code)
       } else {
         const codes = candleGroups.get(desc.wsType) ?? []
         codes.push(desc.code)
@@ -274,6 +307,11 @@ export class UpbitWsClient {
     }
     if (bookCodes.length > 0) {
       msg.push({ type: 'orderbook', codes: bookCodes, is_only_realtime: false })
+    }
+    if (tradeCodes.length > 0) {
+      // is_only_realtime: the tape wants live prints, not the snapshot of
+      // recent history Upbit would otherwise replay on every resync.
+      msg.push({ type: 'trade', codes: tradeCodes, is_only_realtime: true })
     }
     // Candle subscriptions grouped by WS type
     for (const [wsType, codes] of candleGroups) {
@@ -321,6 +359,8 @@ export class UpbitWsClient {
       this.handleTicker(msg)
     } else if (type === 'orderbook') {
       this.handleOrderbook(msg)
+    } else if (type === 'trade') {
+      this.handleTrade(msg)
     } else if (type.startsWith('candle')) {
       this.handleCandle(msg)
     }
@@ -339,6 +379,16 @@ export class UpbitWsClient {
       return key
     }
     return undefined
+  }
+
+  private handleTrade(msg: Record<string, unknown>): void {
+    const code = msg['code'] as string
+    if (!code) return
+    const key = this.findKey('trades', code)
+    if (!key) return
+    const trade = parseUpbitTrade(msg)
+    if (!trade) return
+    this.session.emit(key, { type: 'update', trades: [trade] })
   }
 
   private handleTicker(msg: Record<string, unknown>): void {

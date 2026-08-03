@@ -5,6 +5,7 @@ import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
 import type {
   OrderbookLevel,
   TickerSnapshot,
+  Trade,
 } from '@pairlens/market-engine/types'
 
 // ── Pair normalization ──
@@ -146,6 +147,35 @@ export function parseOkxBookLevels(
   levels: Array<Array<string>>,
 ): Array<OrderbookLevel> {
   return levels.map((l) => [Number(l[0]), Number(l[1])])
+}
+
+// ── Trade parsing ──
+
+/**
+ * One row of the OKX `trades` channel.
+ *
+ * OKX reports `side` as the TAKER's side already, so it maps straight onto
+ * Trade.side (the aggressor) with no inversion. Rows missing an id, or with a
+ * non-positive price or size, are dropped rather than rendered as a zero
+ * print.
+ */
+export function parseOkxTrade(data: Record<string, string>): Trade | null {
+  const id = data['tradeId'] ?? ''
+  const price = Number(data['px'] ?? 0)
+  const size = Number(data['sz'] ?? 0)
+  const side = data['side']
+  if (!id) return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(size) || size <= 0) return null
+  if (side !== 'buy' && side !== 'sell') return null
+  const ts = Number(data['ts'] ?? 0)
+  return {
+    id,
+    price,
+    size,
+    side,
+    ts: Number.isFinite(ts) && ts > 0 ? ts : Date.now(),
+  }
 }
 
 // ── Utils ──

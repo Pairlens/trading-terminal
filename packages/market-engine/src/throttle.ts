@@ -2,16 +2,35 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 export type ThrottleMode = 'performance' | 'balanced' | 'energy-saver'
 
-type ThrottleConfig = {
+export type ThrottleConfig = {
   candles: number
   ticker: number
   orderbook: number
+  trades: number
 }
 
+/** Streams the throttle knows how to rate-limit. */
+export type ThrottleStream = keyof ThrottleConfig
+
+/**
+ * `trades` is pinned to 0 in every mode, and must stay that way.
+ *
+ * This throttle is lossy on purpose: a queued frame is REPLACED by the next
+ * arrival (`pending = data`), because for candles, ticker and orderbook each
+ * frame supersedes the last — dropping intermediates just skips redundant
+ * paints of state that was about to be overwritten anyway.
+ *
+ * A trade frame is not state, it is an event: every frame is a distinct
+ * execution that no later frame contains. Throttling it would silently delete
+ * prints from the tape, and a tape with holes is worse than no tape. Consumers
+ * bound their own render cost instead by buffering arrivals and publishing on
+ * a fixed cadence (see use-trades-stream), which costs nothing per trade and
+ * loses nothing.
+ */
 const CONFIGS: Record<ThrottleMode, ThrottleConfig> = {
-  performance: { candles: 0, ticker: 0, orderbook: 0 },
-  balanced: { candles: 500, ticker: 250, orderbook: 250 },
-  'energy-saver': { candles: 2000, ticker: 1000, orderbook: 1000 },
+  performance: { candles: 0, ticker: 0, orderbook: 0, trades: 0 },
+  balanced: { candles: 500, ticker: 250, orderbook: 250, trades: 0 },
+  'energy-saver': { candles: 2000, ticker: 1000, orderbook: 1000, trades: 0 },
 }
 
 /**
@@ -50,7 +69,7 @@ export class StreamThrottle {
    * tick on the new pair, and leaks the timer + callback reference.
    */
   wrap<T>(
-    streamType: 'candles' | 'ticker' | 'orderbook',
+    streamType: keyof ThrottleConfig,
     callback: (data: T) => void,
   ): ((data: T) => void) & { cancel: () => void } {
     let lastCall = 0

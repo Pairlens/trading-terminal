@@ -58,6 +58,17 @@ export type CexManifestOptions = {
    * walks to the next venue when one is unreachable or geo-blocked.
    */
   tickerSnapshot?: boolean
+  /**
+   * The connector implements `market-data:trades` (public time and sales).
+   *
+   * Opt-in rather than standard because the capability is only correct once a
+   * venue's aggressor-side semantics are pinned down — venues report the taker
+   * and the maker side interchangeably, and a wrong mapping inverts every
+   * buy/sell in the tape without failing loudly. A venue that hasn't been
+   * verified declares nothing, and the terminal shows the tape as unsupported
+   * there rather than showing it backwards.
+   */
+  trades?: boolean
 }
 
 export function createCexConnectorManifest(
@@ -94,6 +105,17 @@ export function createCexConnectorManifest(
             } satisfies PluginCapabilityDeclaration,
           ]
         : []),
+      ...(opts.trades
+        ? [
+            {
+              id: 'market-data:trades',
+              singleton: false,
+              markets: [opts.marketId],
+              priority: 1,
+              streaming: true,
+            } satisfies PluginCapabilityDeclaration,
+          ]
+        : []),
     ],
     metadata: {
       assetClass: 'crypto-spot',
@@ -127,6 +149,12 @@ export interface CexPublicWsClient {
     callback: (data: unknown) => void,
   ) => () => void
   subscribeOrderbook: (
+    pair: string,
+    country: string,
+    callback: (data: unknown) => void,
+  ) => () => void
+  /** Present only on venues whose manifest declares `trades`. */
+  subscribeTrades?: (
     pair: string,
     country: string,
     callback: (data: unknown) => void,
@@ -379,6 +407,18 @@ export function createCexConnectorPlugin<TCredentials extends CexCredentials>(
 
     if (capability === 'market-data:orderbook') {
       return getWsClient().subscribeOrderbook(pair, country, callback)
+    }
+
+    if (capability === 'market-data:trades') {
+      const client = getWsClient()
+      // Reachable only if the manifest declared `trades`, so a missing client
+      // method is a connector wiring bug, not a runtime condition to absorb.
+      if (!client.subscribeTrades) {
+        throw new Error(
+          `${spec.id}: declares market-data:trades but its WS client has no subscribeTrades`,
+        )
+      }
+      return client.subscribeTrades(pair, country, callback)
     }
 
     if (capability === 'trading:orders') {

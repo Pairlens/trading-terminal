@@ -88,3 +88,52 @@ describe('StreamThrottle', () => {
     wrapped.cancel()
   })
 })
+
+describe('StreamThrottle — trades are lossless', () => {
+  // The throttle is lossy by construction: a queued frame is replaced by the
+  // next arrival. That is correct for state streams (latest wins) and wrong
+  // for the trade tape, where each frame is an execution no later frame
+  // contains. These pin the invariant so a future tuning pass can't quietly
+  // start deleting prints.
+  it('never drops a trade frame in any mode', () => {
+    for (const mode of ['performance', 'balanced', 'energy-saver'] as const) {
+      const throttle = new StreamThrottle()
+      throttle.setMode(mode)
+      const received: Array<number> = []
+      const wrapped = throttle.wrap<number>('trades', (d) => received.push(d))
+
+      // A burst that would collapse to one frame on any throttled stream.
+      for (let i = 1; i <= 25; i++) wrapped(i)
+
+      expect(received).toHaveLength(25)
+      expect(received[0]).toBe(1)
+      expect(received[24]).toBe(25)
+      wrapped.cancel()
+    }
+  })
+
+  it('delivers trades synchronously, with nothing left pending', () => {
+    const throttle = new StreamThrottle()
+    throttle.setMode('energy-saver')
+    const received: Array<number> = []
+    const wrapped = throttle.wrap<number>('trades', (d) => received.push(d))
+
+    wrapped(1)
+    // No timer involved at interval 0 — the frame is already out.
+    expect(received).toEqual([1])
+    wrapped.cancel()
+    expect(received).toEqual([1])
+  })
+
+  it('still collapses an orderbook burst — the contrast that makes it lossy', () => {
+    const throttle = new StreamThrottle()
+    throttle.setMode('balanced')
+    const received: Array<number> = []
+    const wrapped = throttle.wrap<number>('orderbook', (d) => received.push(d))
+
+    for (let i = 1; i <= 25; i++) wrapped(i)
+
+    expect(received).toEqual([1])
+    wrapped.cancel()
+  })
+})

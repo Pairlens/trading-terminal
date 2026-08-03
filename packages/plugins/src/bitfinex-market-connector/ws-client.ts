@@ -35,6 +35,7 @@ import {
   fromBfxTimeframe,
   parseBfxCandle,
   parseBfxTicker,
+  parseBfxTrade,
   toBfxSymbol,
   toBfxTimeframe,
 } from './parser'
@@ -44,6 +45,7 @@ import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
@@ -69,6 +71,12 @@ type BookSub = {
   chanId?: number
   bids: Map<number, [number, number]> // price → [count, amount]
   asks: Map<number, [number, number]>
+}
+
+type TradeSub = {
+  pair: string
+  symbol: string
+  chanId?: number
 }
 
 type ChanState = { chanId?: number }
@@ -220,6 +228,33 @@ export class BfxWsClient {
     )
   }
 
+  subscribeTrades(
+    pair: string,
+    _country: string,
+    cb: TradesCallback,
+  ): () => void {
+    const symbol = toBfxSymbol(pair)
+    const key = `trades:${pair}`
+    const sub = this.session.getState<TradeSub>(key) ?? { pair, symbol }
+    return this.session.acquire(
+      key,
+      {
+        state: sub,
+        subscribe: (s) =>
+          this.session.send(
+            JSON.stringify({
+              event: 'subscribe',
+              channel: 'trades',
+              symbol: s.symbol,
+            }),
+          ),
+        unsubscribe: (s) => this.releaseChan(s),
+        revive: (s) => this.dropChan(s),
+      },
+      cb as (data: unknown) => void,
+    )
+  }
+
   destroy(): void {
     this.session.destroy()
     this.chanMap.clear()
@@ -321,6 +356,12 @@ export class BfxWsClient {
       if (!sub) return
       sub.chanId = chanId
       this.chanMap.set(chanId, { type: 'book', key })
+    } else if (channel === 'trades') {
+      const key = `trades:${fromBfxSymbol(symbol)}`
+      const sub = this.session.getState<TradeSub>(key)
+      if (!sub) return
+      sub.chanId = chanId
+      this.chanMap.set(chanId, { type: 'trades', key })
     }
   }
 
@@ -340,7 +381,38 @@ export class BfxWsClient {
       this.handleTickerData(mapping.key, payload as Array<number>)
     } else if (mapping.type === 'book') {
       this.handleBookData(mapping.key, payload)
+    } else if (mapping.type === 'trades') {
+      this.handleTradeData(mapping.key, msg)
     }
+  }
+
+  /**
+   * Trade frames come in two shapes:
+   *   snapshot: [chanId, [[ID, MTS, AMOUNT, PRICE], ...]]
+   *   update:   [chanId, 'te'|'tu', [ID, MTS, AMOUNT, PRICE]]
+   *
+   * 'te' (executed) and 'tu' (updated) describe the SAME execution — Bitfinex
+   * sends both. Only 'te' is taken, or every print would appear twice.
+   */
+  private handleTradeData(key: string, msg: Array<unknown>): void {
+    const second = msg[1]
+
+    if (Array.isArray(second)) {
+      // Snapshot — newest-first, so reverse for chronological append.
+      const trades = []
+      for (let i = second.length - 1; i >= 0; i--) {
+        const trade = parseBfxTrade(second[i] as Array<number>)
+        if (trade) trades.push(trade)
+      }
+      if (trades.length === 0) return
+      this.session.emit(key, { type: 'update', trades })
+      return
+    }
+
+    if (second !== 'te') return
+    const trade = parseBfxTrade(msg[2] as Array<number>)
+    if (!trade) return
+    this.session.emit(key, { type: 'update', trades: [trade] })
   }
 
   private handleCandleData(key: string, payload: unknown): void {

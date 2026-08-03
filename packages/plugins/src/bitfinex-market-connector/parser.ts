@@ -21,7 +21,11 @@ import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
  * Amount sign encodes side: positive = buy/bid, negative = sell/ask.
  */
 
-import type { Candle, TickerSnapshot } from '@pairlens/market-engine/types'
+import type {
+  Candle,
+  TickerSnapshot,
+  Trade,
+} from '@pairlens/market-engine/types'
 
 // ── Currency aliasing ──
 // Bitfinex uses abbreviated currency codes in pair names
@@ -194,4 +198,29 @@ export function parseBfxBulkTickerRow(
   const price = Number(row[7] ?? 0)
   if (!Number.isFinite(price) || price <= 0) return null
   return { symbol, price, change24h: Number(row[6] ?? 0) * 100 }
+}
+
+// ── Trade parsing ──
+
+/**
+ * One Bitfinex trade tuple: `[ID, MTS, AMOUNT, PRICE]`.
+ *
+ * Bitfinex has no side field — the SIGN OF AMOUNT carries it. A positive
+ * amount means the taker bought, negative means the taker sold. The absolute
+ * value is the size, so dropping the sign before reading the side loses the
+ * only direction information in the frame.
+ */
+export function parseBfxTrade(row: Array<number>): Trade | null {
+  if (!Array.isArray(row) || row.length < 4) return null
+  const [id, mts, amount, price] = row
+  if (!Number.isFinite(id)) return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(amount) || amount === 0) return null
+  return {
+    id: String(id),
+    price,
+    size: Math.abs(amount),
+    side: amount > 0 ? 'buy' : 'sell',
+    ts: Number.isFinite(mts) && mts > 0 ? mts : Date.now(),
+  }
 }

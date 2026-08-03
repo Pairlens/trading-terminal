@@ -27,6 +27,7 @@ import {
   mapTimeframeToGateInterval,
   normalizePair,
   parseGateTicker,
+  parseGateTrade,
   parseGateWsKline,
 } from './parser'
 import { resolveGateWsUrl } from './regions'
@@ -34,6 +35,7 @@ import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
@@ -48,6 +50,8 @@ type CandleSub = {
 }
 
 type TickerSub = { pair: string }
+
+type TradeSub = { pair: string }
 
 type BookSub = { pair: string }
 
@@ -184,6 +188,24 @@ export class GateWsClient {
     )
   }
 
+  subscribeTrades(
+    pair: string,
+    _country: string,
+    cb: TradesCallback,
+  ): () => void {
+    const normalized = normalizePair(pair)
+    return this.session.acquire(
+      `trades:${normalized}`,
+      {
+        state: { pair: normalized } satisfies TradeSub,
+        subscribe: (s: TradeSub) => this.sendSubscribe('spot.trades', [s.pair]),
+        unsubscribe: (s: TradeSub) =>
+          this.sendUnsubscribe('spot.trades', [s.pair]),
+      },
+      cb as (data: unknown) => void,
+    )
+  }
+
   destroy(): void {
     this.session.destroy()
   }
@@ -241,8 +263,17 @@ export class GateWsClient {
         this.handleTicker(msg.result)
       } else if (msg.channel === 'spot.order_book') {
         this.handleOrderbook(msg.result)
+      } else if (msg.channel === 'spot.trades') {
+        this.handleTrade(msg.result)
       }
     }
+  }
+
+  private handleTrade(data: Record<string, unknown>): void {
+    const pair = String(data['currency_pair'] ?? '')
+    const trade = parseGateTrade(data)
+    if (!pair || !trade) return
+    this.session.emit(`trades:${pair}`, { type: 'update', trades: [trade] })
   }
 
   private handleKline(data: Record<string, unknown>): void {

@@ -5,6 +5,7 @@ import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
 import type {
   OrderbookLevel,
   TickerSnapshot,
+  Trade,
 } from '@pairlens/market-engine/types'
 
 // ── Pair normalization ──
@@ -75,6 +76,11 @@ export function buildTickerStream(pair: string): string {
 /** Build the orderbook partial depth stream: e.g. "btcusdt@depth20@100ms" */
 export function buildBookStream(pair: string): string {
   return `${toStreamSymbol(pair)}@depth20@100ms`
+}
+
+/** Build the raw trade stream: e.g. "btcusdt@trade" */
+export function buildTradeStream(pair: string): string {
+  return `${toStreamSymbol(pair)}@trade`
 }
 
 // ── Candle parsing ──
@@ -211,6 +217,36 @@ export function parseBinanceBookLevels(
   levels: Array<[string, string]>,
 ): Array<OrderbookLevel> {
   return levels.map((l) => [Number(l[0]), Number(l[1])])
+}
+
+// ── Trade parsing ──
+
+/**
+ * Parse a Binance `@trade` event:
+ * `{ e: 'trade', t: id, p: price, q: qty, T: tradeTime, m: buyerIsMaker }`
+ *
+ * `m` answers "was the BUYER the maker?", which is the inverse of what the
+ * tape shows. Buyer-is-maker means the resting bid was hit by an incoming
+ * sell, so the aggressor is the SELLER — `m === true` maps to 'sell'. Reading
+ * `m` as the aggressor directly is the classic way to invert an entire tape.
+ */
+export function parseBinanceTrade(data: Record<string, unknown>): Trade | null {
+  const id = data['t']
+  const price = parseNum(data['p'])
+  const size = parseNum(data['q'])
+  const buyerIsMaker = data['m']
+  if (id === undefined || id === null || id === '') return null
+  if (price === null || !Number.isFinite(price) || price <= 0) return null
+  if (size === null || !Number.isFinite(size) || size <= 0) return null
+  if (typeof buyerIsMaker !== 'boolean') return null
+  const ts = parseNum(data['T'])
+  return {
+    id: String(id),
+    price,
+    size,
+    side: buyerIsMaker ? 'sell' : 'buy',
+    ts: ts !== null && Number.isFinite(ts) && ts > 0 ? ts : Date.now(),
+  }
 }
 
 // ── Utils ──

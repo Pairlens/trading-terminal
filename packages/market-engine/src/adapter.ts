@@ -10,6 +10,7 @@ import type {
   OrderbookCallback,
   TickerCallback,
   TickerSnapshot,
+  TradesCallback,
 } from './types'
 
 export type AssetClass =
@@ -65,6 +66,17 @@ export interface MarketAdapter {
     pair: string,
     country: string,
     cb: OrderbookCallback,
+  ) => () => void
+  /**
+   * Public trade feed (time and sales). Optional: a venue only implements it
+   * once its aggressor-side semantics are established, since a wrong mapping
+   * inverts the whole tape. Callers must treat its absence as "this venue has
+   * no trade feed" rather than an error.
+   */
+  subscribeTrades?: (
+    pair: string,
+    country: string,
+    cb: TradesCallback,
   ) => () => void
 
   // One-shot data

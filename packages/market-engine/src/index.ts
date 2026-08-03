@@ -28,7 +28,11 @@ export type {
 } from './types'
 export { CandleBuffer } from './candle-buffer'
 export { aggregateCandles } from './candle-aggregator'
-export { StreamThrottle, type ThrottleMode } from './throttle'
+export {
+  StreamThrottle,
+  type ThrottleMode,
+  type ThrottleStream,
+} from './throttle'
 export { hmacSign, hmacSignHex } from './hmac-signer'
 export {
   connectWs,

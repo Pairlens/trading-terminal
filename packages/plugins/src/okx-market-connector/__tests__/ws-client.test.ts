@@ -70,3 +70,102 @@ describe('OkxWsClient candle backfill', () => {
     client.destroy()
   })
 })
+
+describe('OkxWsClient trade stream', () => {
+  it('subscribes to the trades channel', async () => {
+    const { client, sockets } = makeClient()
+    client.subscribeTrades('BTC-USDT', '', () => {})
+    await sleep(30)
+
+    const frames = sockets.flatMap((s) => s.sent).join('\n')
+    expect(frames).toContain('"channel":"trades"')
+    expect(frames).toContain('"instId":"BTC-USDT"')
+    client.destroy()
+  })
+
+  it('reverses OKX batches so the tape reads oldest-first', async () => {
+    // OKX sends newest-first within a frame. Consumers append in arrival
+    // order, so emitting the raw order would print a batch backwards.
+    const { client, sockets } = makeClient()
+    const received: Array<{ trades: Array<{ id: string }> }> = []
+    client.subscribeTrades('BTC-USDT', '', (u) => received.push(u))
+    await sleep(30)
+
+    sockets[0]?.events.onMessage?.(
+      JSON.stringify({
+        arg: { channel: 'trades', instId: 'BTC-USDT' },
+        data: [
+          {
+            tradeId: '3',
+            px: '100',
+            sz: '1',
+            side: 'buy',
+            ts: '1700000000300',
+          },
+          {
+            tradeId: '2',
+            px: '100',
+            sz: '1',
+            side: 'sell',
+            ts: '1700000000200',
+          },
+          {
+            tradeId: '1',
+            px: '100',
+            sz: '1',
+            side: 'buy',
+            ts: '1700000000100',
+          },
+        ],
+      }),
+    )
+
+    expect(received).toHaveLength(1)
+    expect(received[0].trades.map((t) => t.id)).toEqual(['1', '2', '3'])
+    client.destroy()
+  })
+
+  it('drops malformed rows without discarding the rest of the batch', async () => {
+    const { client, sockets } = makeClient()
+    const received: Array<{ trades: Array<{ id: string }> }> = []
+    client.subscribeTrades('BTC-USDT', '', (u) => received.push(u))
+    await sleep(30)
+
+    sockets[0]?.events.onMessage?.(
+      JSON.stringify({
+        arg: { channel: 'trades', instId: 'BTC-USDT' },
+        data: [
+          {
+            tradeId: '2',
+            px: '100',
+            sz: '1',
+            side: 'buy',
+            ts: '1700000000200',
+          },
+          { tradeId: '', px: '100', sz: '1', side: 'buy', ts: '1700000000150' },
+          { tradeId: '1', px: '0', sz: '1', side: 'buy', ts: '1700000000100' },
+        ],
+      }),
+    )
+
+    expect(received[0]?.trades.map((t) => t.id)).toEqual(['2'])
+    client.destroy()
+  })
+
+  it('emits nothing when every row in a batch is unusable', async () => {
+    const { client, sockets } = makeClient()
+    const received: Array<unknown> = []
+    client.subscribeTrades('BTC-USDT', '', (u) => received.push(u))
+    await sleep(30)
+
+    sockets[0]?.events.onMessage?.(
+      JSON.stringify({
+        arg: { channel: 'trades', instId: 'BTC-USDT' },
+        data: [{ tradeId: '', px: '0', sz: '0', side: '', ts: '' }],
+      }),
+    )
+
+    expect(received).toHaveLength(0)
+    client.destroy()
+  })
+})

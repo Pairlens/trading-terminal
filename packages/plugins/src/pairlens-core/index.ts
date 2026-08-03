@@ -85,6 +85,16 @@ export const pairlensCoreManifest: PluginManifest = {
         requires: ['workspace:active-pair'],
       },
       {
+        id: 'trades',
+        label: 'Trades',
+        labelKey: 'panes.trades',
+        descriptionKey: 'paneDescriptions.trades',
+        icon: 'Receipt',
+        category: 'charting',
+        minHeight: 100,
+        requires: ['workspace:active-pair'],
+      },
+      {
         id: 'pair-info',
         label: 'Pair Info',
         labelKey: 'panes.pairInfo',

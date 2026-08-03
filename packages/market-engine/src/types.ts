@@ -34,6 +34,32 @@ export type OrderbookUpdate = {
   ts: number
 }
 
+/**
+ * A single public execution off the venue's trade feed (time and sales).
+ *
+ * `side` is the AGGRESSOR — the taker who crossed the spread — not the maker
+ * whose resting order was hit. Venues disagree about which side they report
+ * (Binance sends "was the buyer the maker?", OKX sends the taker directly),
+ * so each connector normalizes to this meaning. Getting it backwards silently
+ * inverts every buy/sell in the tape, so connectors must not guess: a venue
+ * whose semantics aren't established simply doesn't declare the capability.
+ *
+ * `id` is the venue's own trade id, used to drop duplicates across a
+ * reconnect — feeds commonly replay a few executions after a resubscribe.
+ */
+export type Trade = {
+  id: string
+  price: number
+  size: number
+  side: OrderSide
+  ts: number
+}
+
+export type TradesUpdate = {
+  type: 'snapshot' | 'update'
+  trades: Array<Trade>
+}
+
 export type OrderSide = 'buy' | 'sell'
 export type OrderType = 'market' | 'limit'
 
@@ -97,6 +123,7 @@ export type Instrument = {
 export type CandleCallback = (update: CandleUpdate) => void
 export type TickerCallback = (update: TickerUpdate) => void
 export type OrderbookCallback = (update: OrderbookUpdate) => void
+export type TradesCallback = (update: TradesUpdate) => void
 
 // ── Normalized trading types ─────────────────────────────────────────
 // Exchange-agnostic types emitted by all connectors via trading:orders

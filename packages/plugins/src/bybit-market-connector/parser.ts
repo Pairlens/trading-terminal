@@ -5,6 +5,7 @@ import type { Candle } from '@pairlens/shared/types'
 import type {
   OrderbookLevel,
   TickerSnapshot,
+  Trade,
 } from '@pairlens/market-engine/types'
 
 // ── Pair normalization ──
@@ -67,6 +68,11 @@ export function buildTickerTopic(pair: string): string {
 }
 
 /** Build the orderbook topic: e.g. "orderbook.50.BTCUSDT" */
+/** Build the public trade topic: e.g. "publicTrade.BTCUSDT" */
+export function buildTradeTopic(pair: string): string {
+  return `publicTrade.${normalizePair(pair)}`
+}
+
 export function buildBookTopic(pair: string): string {
   return `orderbook.50.${normalizePair(pair)}`
 }
@@ -215,4 +221,32 @@ export function parseBybitBulkTickerRow(
   const price = Number(data['lastPrice'] ?? 0)
   if (!Number.isFinite(price) || price <= 0) return null
   return { symbol, price, change24h: Number(data['price24hPcnt'] ?? 0) * 100 }
+}
+
+// ── Trade parsing ──
+
+/**
+ * One row of ByBit's `publicTrade` topic:
+ * `{ i: tradeId, T: ts, p: price, v: size, S: 'Buy'|'Sell' }`
+ *
+ * `S` is title-cased. ByBit documents it as the taker's side, which the
+ * live cross-check against top-of-book confirms.
+ */
+export function parseBybitTrade(data: Record<string, unknown>): Trade | null {
+  const id = String(data['i'] ?? '')
+  const price = Number(data['p'] ?? 0)
+  const size = Number(data['v'] ?? 0)
+  const side = String(data['S'] ?? '').toLowerCase()
+  if (!id) return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(size) || size <= 0) return null
+  if (side !== 'buy' && side !== 'sell') return null
+  const ts = Number(data['T'] ?? 0)
+  return {
+    id,
+    price,
+    size,
+    side,
+    ts: Number.isFinite(ts) && ts > 0 ? ts : Date.now(),
+  }
 }

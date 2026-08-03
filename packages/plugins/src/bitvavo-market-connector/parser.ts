@@ -16,7 +16,11 @@
  *   window open vs. last: (last - open) / open * 100.
  */
 
-import type { Candle, TickerSnapshot } from '@pairlens/market-engine/types'
+import type {
+  Candle,
+  TickerSnapshot,
+  Trade,
+} from '@pairlens/market-engine/types'
 
 // ── Pair normalization (Bitvavo format matches Pairlens) ──
 
@@ -128,4 +132,32 @@ export function parseBitvavoBookLevels(
     out.push([price, size])
   }
   return out
+}
+
+// ── Trade parsing ──
+
+/**
+ * A Bitvavo `trades` event:
+ * `{ id, amount, price, timestamp, market, side: 'buy'|'sell' }`
+ *
+ * One execution per event, and `side` is documented as the taker's side; the
+ * live cross-check against top-of-book agrees.
+ */
+export function parseBitvavoTrade(data: Record<string, unknown>): Trade | null {
+  const id = String(data['id'] ?? '')
+  const price = Number(data['price'] ?? 0)
+  const size = Number(data['amount'] ?? 0)
+  const side = String(data['side'] ?? '')
+  if (!id) return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(size) || size <= 0) return null
+  if (side !== 'buy' && side !== 'sell') return null
+  const ts = Number(data['timestamp'] ?? 0)
+  return {
+    id,
+    price,
+    size,
+    side,
+    ts: Number.isFinite(ts) && ts > 0 ? ts : Date.now(),
+  }
 }

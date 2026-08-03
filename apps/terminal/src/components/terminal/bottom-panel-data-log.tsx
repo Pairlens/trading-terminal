@@ -1,7 +1,15 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useMemo } from 'react'
+
 import type { PluginCandle } from '@/hooks/use-candle-stream'
 import { formatBookPrice } from '@/lib/format-price'
+import {
+  computeMagnitudeReference,
+  magnitudeFillColor,
+  magnitudeIntensity,
+  magnitudeTextColor,
+} from '@/components/terminal/magnitude-intensity'
 
 const formatVolume = (value: number) =>
   value.toLocaleString(undefined, { maximumFractionDigits: 2 })
@@ -22,7 +30,16 @@ export function BottomPanelDataLog({
   candles,
   latestCandle,
 }: BottomPanelDataLogProps) {
-  const recentCandles = candles.slice(-20).reverse()
+  const recentCandles = useMemo(() => candles.slice(-20).reverse(), [candles])
+
+  // Volume is the one column here worth scanning for outliers, and unlike the
+  // order book nothing else competes for the row's colour — so the tint is
+  // scaled by volume and tinted by the candle's own direction, which says
+  // whether the heavy bar was bought or sold into.
+  const volumeReference = useMemo(
+    () => computeMagnitudeReference(recentCandles.map((c) => c.volume)),
+    [recentCandles],
+  )
 
   return (
     <div className="flex h-full gap-3 overflow-hidden">
@@ -36,8 +53,8 @@ export function BottomPanelDataLog({
             <p
               className={`text-lg font-semibold font-mono ${
                 latestCandle.close >= latestCandle.open
-                  ? 'text-emerald-500'
-                  : 'text-red-400'
+                  ? 'text-up'
+                  : 'text-down'
               }`}
             >
               {formatBookPrice(latestCandle.close)}
@@ -91,6 +108,10 @@ export function BottomPanelDataLog({
           <tbody className="font-mono">
             {recentCandles.map((candle) => {
               const isUp = candle.close >= candle.open
+              const intensity = magnitudeIntensity(
+                candle.volume,
+                volumeReference,
+              )
               return (
                 <tr
                   key={candle.ts}
@@ -110,12 +131,21 @@ export function BottomPanelDataLog({
                   </td>
                   <td
                     className={`py-0.5 pr-3 text-right font-medium ${
-                      isUp ? 'text-emerald-500' : 'text-red-400'
+                      isUp ? 'text-up' : 'text-down'
                     }`}
                   >
                     {formatBookPrice(candle.close)}
                   </td>
-                  <td className="py-0.5 text-right">
+                  <td
+                    className="py-0.5 pl-2 text-right transition-colors duration-300 ease-out"
+                    style={{
+                      backgroundColor: magnitudeFillColor(
+                        isUp ? 'up' : 'down',
+                        intensity,
+                      ),
+                      color: magnitudeTextColor(intensity),
+                    }}
+                  >
                     {formatVolume(candle.volume)}
                   </td>
                 </tr>

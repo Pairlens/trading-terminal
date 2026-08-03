@@ -17,7 +17,7 @@ import { streamHealth } from './stream-health'
 import { setIndicatorHistorySource } from './indicators/request-data'
 import { setBotOrderSource } from './bots/bot-order-source'
 import { PositionLedger } from './risk/position-ledger'
-import type { ThrottleMode } from '@pairlens/market-engine'
+import type { ThrottleMode, ThrottleStream } from '@pairlens/market-engine'
 import type { Candle } from '@pairlens/shared/types'
 import type {
   AssetClass,
@@ -30,6 +30,7 @@ import type {
   OrderResult,
 } from '@pairlens/market-engine/types'
 import type {
+  CapabilityId,
   PluginInstance,
   PluginLifecycleListener,
 } from '@pairlens/plugin-system/types'
@@ -143,6 +144,24 @@ type MarketDataContextValue = {
     pair: string,
     cb: (data: unknown) => void,
   ) => () => void
+  /**
+   * Public trade feed. Not every venue provides one (see Trade.side on why
+   * the capability is opt-in), so this resolves to a no-op unsubscribe when
+   * the active market has no `market-data:trades` provider — pair it with
+   * `hasCapability` to tell "no feed here" apart from "no trades yet".
+   */
+  subscribeTrades: (
+    market: string,
+    pair: string,
+    cb: (data: unknown) => void,
+  ) => () => void
+  /**
+   * Whether any active plugin provides `capability` for `market`.
+   *
+   * Distinct from `getCapabilities`, which reports the venue's adapter-level
+   * read/trade role rather than plugin capability ids.
+   */
+  hasCapability: (capability: CapabilityId, market: string) => boolean
   /**
    * Speculatively pre-open the streams a switch to `market` would need
    * (candles, ticker, orderbook), so the actual switch finds a warm socket
@@ -753,7 +772,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
   const multiplex = useCallback(
     (
       key: string,
-      channel: 'candles' | 'ticker' | 'orderbook',
+      channel: ThrottleStream,
       start: (dispatch: (data: unknown) => void) => () => void,
       shouldCache: (data: unknown) => boolean,
       cb: (data: unknown) => void,
@@ -919,6 +938,49 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         )
       } catch {
         // No plugin provides orderbook for this market (e.g. DEX/AMM)
+        return () => {}
+      }
+    },
+    [pluginManager, multiplex],
+  )
+
+  const hasCapability = useCallback(
+    (capability: CapabilityId, market: string): boolean =>
+      pluginManager.getPluginsForCapability(capability, market).length > 0,
+    // pluginsReady/pluginVersion are not tracked here: the callback reads the
+    // manager live, and consumers re-run it whenever their own market changes.
+    [pluginManager],
+  )
+
+  const subscribeTrades = useCallback(
+    (
+      market: string,
+      pair: string,
+      cb: (data: unknown) => void,
+    ): (() => void) => {
+      try {
+        return multiplex(
+          `trades:${market}:${pair}`,
+          'trades',
+          (dispatch) => {
+            pluginManager.setContext({
+              market,
+              pair,
+              country: getCountrySetting(),
+            })
+            return pluginManager.subscribe(
+              'market-data:trades',
+              { pair },
+              dispatch,
+            )
+          },
+          // No snapshot frame on this capability — a tape is inherently
+          // incremental, so there is nothing to replay to a late joiner.
+          () => false,
+          cb,
+        )
+      } catch {
+        // Venue has no trade feed — the pane renders an unsupported state.
         return () => {}
       }
     },
@@ -1233,6 +1295,8 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       subscribe,
       subscribeTicker,
       subscribeOrderbook,
+      subscribeTrades,
+      hasCapability,
       warmupMarket,
       fetchHistory,
       placeOrder,
@@ -1252,6 +1316,8 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       subscribe,
       subscribeTicker,
       subscribeOrderbook,
+      subscribeTrades,
+      hasCapability,
       warmupMarket,
       fetchHistory,
       placeOrder,

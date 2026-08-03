@@ -55,6 +55,7 @@ export const bitvavoMarketConnectorManifest: PluginManifest =
     triggerOrders: true,
     headerImage:
       'https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?w=600&q=80',
+    trades: true,
   })
 
 const bitvavoSpec: CexConnectorSpec<BitvavoCredentials> = {

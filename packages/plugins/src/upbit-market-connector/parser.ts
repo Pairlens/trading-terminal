@@ -11,7 +11,11 @@ import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
  *   opening_price, high_price, low_price, trade_price (close), candle_acc_trade_volume
  */
 
-import type { Candle, TickerSnapshot } from '@pairlens/market-engine/types'
+import type {
+  Candle,
+  TickerSnapshot,
+  Trade,
+} from '@pairlens/market-engine/types'
 
 // ── Pair normalization ──
 
@@ -137,5 +141,35 @@ export function parseUpbitBulkTickerRow(
     symbol,
     price,
     change24h: Number(data['signed_change_rate'] ?? 0) * 100,
+  }
+}
+
+// ── Trade parsing ──
+
+/**
+ * An Upbit `trade` push:
+ * `{ sequential_id, trade_price, trade_volume, trade_timestamp, ask_bid }`
+ *
+ * `ask_bid` names the side the TAKER was on: 'BID' is 매수 (the taker bought),
+ * 'ASK' is 매도 (the taker sold). Upbit is the one venue that ships
+ * `best_bid_price`/`best_ask_price` inside the same frame, so the mapping is
+ * self-evident from live data: a print at best_ask carries 'BID'.
+ */
+export function parseUpbitTrade(data: Record<string, unknown>): Trade | null {
+  const id = data['sequential_id']
+  const price = Number(data['trade_price'] ?? 0)
+  const size = Number(data['trade_volume'] ?? 0)
+  const askBid = String(data['ask_bid'] ?? '').toUpperCase()
+  if (id === undefined || id === null || id === '') return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(size) || size <= 0) return null
+  if (askBid !== 'BID' && askBid !== 'ASK') return null
+  const ts = Number(data['trade_timestamp'] ?? 0)
+  return {
+    id: String(id),
+    price,
+    size,
+    side: askBid === 'BID' ? 'buy' : 'sell',
+    ts: Number.isFinite(ts) && ts > 0 ? ts : Date.now(),
   }
 }

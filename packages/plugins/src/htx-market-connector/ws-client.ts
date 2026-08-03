@@ -28,6 +28,7 @@ import {
   fromHtxSymbol,
   parseHtxCandle,
   parseHtxTicker,
+  parseHtxTrade,
   toHtxPeriod,
   toHtxSymbol,
 } from './parser'
@@ -37,6 +38,7 @@ import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsMessage } from '@pairlens/market-engine/ws-adapter'
@@ -49,6 +51,8 @@ type CandleSub = {
   htxPeriod: string
   buffer: CandleBuffer
 }
+
+type TradeSub = { pair: string; htxSymbol: string }
 
 type TickerSub = {
   pair: string
@@ -210,6 +214,26 @@ export class HtxWsClient {
     )
   }
 
+  subscribeTrades(
+    pair: string,
+    _country: string,
+    cb: TradesCallback,
+  ): () => void {
+    const htxSymbol = toHtxSymbol(pair)
+    const key = `trades:${pair}`
+    return this.session.acquire(
+      key,
+      {
+        state: { pair, htxSymbol } satisfies TradeSub,
+        subscribe: (s: TradeSub) =>
+          this.sendSub(`market.${s.htxSymbol}.trade.detail`),
+        unsubscribe: (s: TradeSub) =>
+          this.sendUnsub(`market.${s.htxSymbol}.trade.detail`),
+      },
+      cb as (data: unknown) => void,
+    )
+  }
+
   destroy(): void {
     this.session.destroy()
   }
@@ -271,6 +295,11 @@ export class HtxWsClient {
 
     if (ch.includes('.kline.')) {
       this.handleKline(ch, tick)
+    } else if (ch.includes('.trade.detail')) {
+      // MUST precede the '.detail' branch below: the trade channel is
+      // `market.{sym}.trade.detail`, so a plain '.detail' test swallows it
+      // and the tape silently receives nothing.
+      this.handleTrades(ch, tick)
     } else if (ch.includes('.depth.')) {
       this.handleDepth(ch, tick)
     } else if (ch.includes('.detail')) {
@@ -278,6 +307,22 @@ export class HtxWsClient {
     } else if (ch.includes('.bbo')) {
       this.handleBbo(ch, tick)
     }
+  }
+
+  private handleTrades(ch: string, tick: Record<string, unknown>): void {
+    // ch = "market.btcusdt.trade.detail"
+    const htxSymbol = ch.split('.')[1] ?? ''
+    const pair = fromHtxSymbol(htxSymbol)
+    const rows = tick['data'] as Array<Record<string, unknown>> | undefined
+    if (!pair || !rows?.length) return
+
+    const trades = []
+    for (const row of rows) {
+      const trade = parseHtxTrade(row)
+      if (trade) trades.push(trade)
+    }
+    if (trades.length === 0) return
+    this.session.emit(`trades:${pair}`, { type: 'update', trades })
   }
 
   private handleKline(ch: string, tick: Record<string, unknown>): void {

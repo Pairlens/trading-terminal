@@ -23,6 +23,7 @@ import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import {
   fromInterval,
   fromWsPair,
+  parseKrakenTrade,
   parseWsCandle,
   parseWsTicker,
   toInterval,
@@ -34,6 +35,8 @@ import type {
   CandleCallback,
   OrderbookCallback,
   TickerCallback,
+  Trade,
+  TradesCallback,
 } from '@pairlens/market-engine/types'
 import type { BackfillRetryOption } from '@pairlens/market-engine/candle-backfill'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
@@ -53,6 +56,8 @@ type CandleSub = {
 }
 
 type TickerSub = { pair: string; wsPair: string }
+
+type TradeSub = { pair: string; wsPair: string }
 type BookSub = {
   pair: string
   wsPair: string
@@ -195,6 +200,47 @@ export class KrakenWsClient {
     )
   }
 
+  subscribeTrades(
+    pair: string,
+    _country: string,
+    cb: TradesCallback,
+  ): () => void {
+    const wsPair = toWsPair(pair)
+    const key = `trades:${pair}`
+    const sub = this.session.getState<TradeSub>(key) ?? { pair, wsPair }
+    return this.session.acquire(
+      key,
+      {
+        state: sub,
+        // snapshot: false — a resubscribe would otherwise replay up to 1000
+        // historical prints, which the tape would render as a burst of "new"
+        // trades every reconnect.
+        subscribe: (s) =>
+          this.sendSubscribe('trade', [s.wsPair], { snapshot: false }),
+        unsubscribe: (s) => this.sendUnsubscribe('trade', [s.wsPair]),
+      },
+      cb as (data: unknown) => void,
+    )
+  }
+
+  private handleTrades(rows: Array<Record<string, unknown>>): void {
+    if (!rows?.length) return
+    // Kraken batches by symbol within one frame; rows are oldest-first.
+    const byPair = new Map<string, Array<Trade>>()
+    for (const row of rows) {
+      const trade = parseKrakenTrade(row)
+      if (!trade) continue
+      const pair = fromWsPair(String(row['symbol'] ?? ''))
+      if (!pair) continue
+      const list = byPair.get(pair)
+      if (list) list.push(trade)
+      else byPair.set(pair, [trade])
+    }
+    for (const [pair, trades] of byPair) {
+      this.session.emit(`trades:${pair}`, { type: 'update', trades })
+    }
+  }
+
   destroy(): void {
     this.session.destroy()
   }
@@ -272,6 +318,8 @@ export class KrakenWsClient {
       this.handleOhlc(type ?? 'update', data)
     } else if (channel === 'ticker') {
       this.handleTicker(data)
+    } else if (channel === 'trade') {
+      this.handleTrades(data as Array<Record<string, unknown>>)
     } else if (channel === 'book') {
       this.handleBook(type ?? 'snapshot', data)
     }

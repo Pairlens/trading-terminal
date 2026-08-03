@@ -10,7 +10,7 @@
 
 import type { Candle } from '@pairlens/shared/types'
 import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
-import type { TickerSnapshot } from '@pairlens/market-engine/types'
+import type { TickerSnapshot, Trade } from '@pairlens/market-engine/types'
 
 // ── Pair normalization (Coinbase format matches Pairlens) ──
 
@@ -125,5 +125,42 @@ export function parseCoinbaseBulkProduct(
     symbol,
     price,
     change24h: Number(data['price_percentage_change_24h'] ?? 0),
+  }
+}
+
+// ── Trade parsing ──
+
+/**
+ * One row of the Advanced Trade `market_trades` channel:
+ * `{ trade_id, product_id, price, size, side: 'BUY'|'SELL', time }`
+ *
+ * COINBASE REPORTS THE MAKER'S SIDE, so this INVERTS it. `side: 'BUY'` means
+ * the resting order was a bid, which an incoming sell hit — the aggressor is
+ * the SELLER. Coinbase is the only venue in this repo that reports the maker
+ * rather than the taker, and it is not documented as such.
+ *
+ * This is measured, not assumed: correlating 282 live prints against
+ * top-of-book gave 11% agreement with the direct reading (252 of them
+ * contradicted it), against 100% for the OKX and Binance controls in the same
+ * run. `time` is ISO-8601 here rather than the usual epoch-ms.
+ */
+export function parseCoinbaseTrade(
+  data: Record<string, unknown>,
+): Trade | null {
+  const id = String(data['trade_id'] ?? '')
+  const price = Number(data['price'] ?? 0)
+  const size = Number(data['size'] ?? 0)
+  const rawSide = String(data['side'] ?? '').toUpperCase()
+  if (!id) return null
+  if (!Number.isFinite(price) || price <= 0) return null
+  if (!Number.isFinite(size) || size <= 0) return null
+  if (rawSide !== 'BUY' && rawSide !== 'SELL') return null
+  const ts = Date.parse(String(data['time'] ?? ''))
+  return {
+    id,
+    price,
+    size,
+    side: rawSide === 'BUY' ? 'sell' : 'buy',
+    ts: Number.isFinite(ts) && ts > 0 ? ts : Date.now(),
   }
 }

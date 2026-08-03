@@ -57,6 +57,7 @@ export const htxMarketConnectorManifest: PluginManifest =
     triggerOrders: true,
     headerImage:
       'https://images.unsplash.com/photo-1642790551116-18e150f248e5?w=600&q=80',
+    trades: true,
   })
 
 type HtxCredentials = { apiKey: string; apiSecret: string }

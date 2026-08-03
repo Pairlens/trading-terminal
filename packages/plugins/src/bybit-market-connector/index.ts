@@ -69,6 +69,7 @@ export const bybitMarketConnectorManifest: PluginManifest =
     triggerOrders: true,
     headerImage:
       'https://cdn.prod.website-files.com/67ed326db9d26b1dc1df7929/680180233aeb270c28777c41_67b3e61a44517e3aa323445d_bybit%2520supported%2520and%2520restricted%2520countries.webp',
+    trades: true,
   })
 
 type BybitCredentials = { apiKey: string; apiSecret: string }
