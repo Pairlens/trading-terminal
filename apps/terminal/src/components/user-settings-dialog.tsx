@@ -301,18 +301,21 @@ export default function UserSettingsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="overflow-hidden p-0 md:max-h-[500px] md:max-w-[720px] lg:max-w-[820px]">
+      <DialogContent className="overflow-hidden p-0 md:h-[500px] md:max-h-[calc(100dvh-2rem)] md:max-w-[720px] lg:max-w-[820px]">
         <DialogTitle className="sr-only">{t('settings.title')}</DialogTitle>
         <DialogDescription className="sr-only">
           {t('settings.description')}
         </DialogDescription>
-        <SidebarProvider className="items-start">
+        {/* The dialog owns the height; provider and both columns fill it, so
+            the version footer always sits flush on the dialog's bottom edge.
+            Fixed column heights clipped the footer on desktop, where webview
+            font metrics render the nav slightly taller than in Chrome. The
+            provider's own min-h-svh must be neutralized at md or it stretches
+            the columns to viewport height inside the clipped dialog. */}
+        <SidebarProvider className="items-start md:h-full md:min-h-0">
           <Sidebar
             collapsible="none"
-            // Same height as <main> so the version footer lands on the dialog's
-            // bottom edge instead of overflowing past it (the provider is
-            // items-start, so the column would otherwise size to its content).
-            className="hidden border-r md:flex md:h-[480px] md:w-64"
+            className="hidden border-r md:flex md:h-full md:w-64"
           >
             <SidebarContent>
               <SidebarGroup>
@@ -336,7 +339,7 @@ export default function UserSettingsDialog({
             </SidebarContent>
             <AppVersionFooter />
           </Sidebar>
-          <main className="flex h-[480px] flex-1 flex-col overflow-hidden">
+          <main className="flex h-[480px] flex-1 flex-col overflow-hidden md:h-full">
             <header className="flex h-16 shrink-0 items-center border-b">
               <div className="flex items-center gap-2 px-4">
                 <Breadcrumb>
@@ -524,8 +527,8 @@ function AppVersionFooter() {
     : t('settings.about.browser')
 
   return (
-    <SidebarFooter className="border-t">
-      <p className="px-2 text-xs text-muted-foreground tabular-nums">
+    <SidebarFooter className="shrink-0 border-t">
+      <p className="truncate px-2 text-xs text-muted-foreground tabular-nums">
         Pairlens v{version}
         <span className="px-1">·</span>
         {platform}
