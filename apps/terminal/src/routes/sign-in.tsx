@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
@@ -11,11 +11,12 @@ import { WorkflowIcon } from '@pairlens/ui/components/ui/workflow'
 
 import type { SignInPhase } from '@/components/sign-in-experience'
 import { SignInExperience } from '@/components/sign-in-experience'
+import {
+  SignInBackdrop,
+  SignInBadge,
+} from '@/components/lanyard/sign-in-visuals'
 import { useOptimisticSession } from '@/lib/session'
 import { useSignInFlow } from '@/hooks/use-sign-in-flow'
-
-const Dither = lazy(() => import('@/components/dither'))
-const Lanyard = lazy(() => import('@/components/lanyard/lanyard'))
 
 export const Route = createFileRoute('/sign-in')({ component: SignInPage })
 
@@ -114,28 +115,14 @@ function SignInPage() {
     <div className="grid min-h-screen lg:grid-cols-2">
       {/* Left panel — lanyard + benefits */}
       <div className="relative hidden overflow-hidden bg-sidebar text-sidebar-foreground lg:flex lg:flex-col">
-        {/* Dither background */}
+        {/* Dither background (static gradient where WebGL is off-limits) */}
         <div className="absolute inset-0 opacity-50">
-          <Suspense fallback={null}>
-            <Dither
-              waveColor={ditherColor}
-              disableAnimation={false}
-              enableMouseInteraction={true}
-              mouseRadius={0.3}
-              colorNum={3}
-              pixelSize={1}
-              waveAmplitude={0.3}
-              waveFrequency={5}
-              waveSpeed={0.04}
-            />
-          </Suspense>
+          <SignInBackdrop waveColor={ditherColor} />
         </div>
 
-        {/* Lanyard badge */}
+        {/* Lanyard badge (static access pass where WebGL is off-limits) */}
         <div className="relative z-20 min-h-0 flex-1">
-          <Suspense fallback={null}>
-            <Lanyard position={[0, 0, 24]} gravity={[0, -40, 0]} />
-          </Suspense>
+          <SignInBadge />
         </div>
 
         {/* Benefits story card */}
