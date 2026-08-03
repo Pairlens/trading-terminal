@@ -19,16 +19,18 @@ import statueUrl from './sign-in-statue.webp'
 // up with image-rendering: pixelated.
 const GRID_SIZE = 288
 
-// The marble is reduced to a fixed warm ink ramp (black ground → graphite →
-// stone → bone → paper), Bayer-dithered between adjacent inks. Matches the
-// Warm Precision palette rather than the photo's own tones.
+// The marble is reduced to a fixed ink ramp (black ground → iris-cast
+// graphite → slate → lavender-gray → cool paper), Bayer-dithered between
+// adjacent inks. Cool, slightly iris-tinted neutrals so the panel sits in
+// the same palette as the sign-in form beside it (dark ground, iris
+// accents) instead of the photo's own warm marble tones.
 // prettier-ignore
 const INK_RAMP: Array<[number, number, number]> = [
   [0, 0, 0],        // ground — blends into the panel's black
-  [58, 50, 42],     // warm graphite
-  [128, 117, 104],  // stone
-  [211, 199, 183],  // bone
-  [246, 240, 230],  // paper
+  [50, 47, 62],     // iris-cast graphite
+  [115, 111, 138],  // slate
+  [186, 182, 207],  // lavender-gray
+  [243, 242, 250],  // cool paper
 ]
 
 // Saturated pixels (the lenses and the rainbow spill) snap to flat vivid
@@ -87,7 +89,7 @@ function renderPoster(
       // lens colors and their spill — go vivid at moderate saturation.
       const isWarmHue = hue >= 15 && hue < 70
       const isVivid =
-        max > 60 && (isWarmHue ? saturation > 0.52 : saturation > 0.24)
+        max > 60 && (isWarmHue ? saturation > 0.62 : saturation > 0.24)
 
       let ink: [number, number, number]
       if (isVivid) {
