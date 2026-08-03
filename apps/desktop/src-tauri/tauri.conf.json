@@ -50,6 +50,15 @@
     "windows": {
       "webviewInstallMode": {
         "type": "downloadBootstrapper"
+      },
+      "wix": {
+        "bannerPath": "icons/installer-banner.bmp",
+        "dialogImagePath": "icons/installer-dialog.bmp"
+      },
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "headerImage": "icons/installer-header.bmp",
+        "sidebarImage": "icons/installer-sidebar.bmp"
       }
     }
   },
