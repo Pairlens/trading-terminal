@@ -428,6 +428,11 @@
       "billing": "Intelligence",
       "security": "Sicurezza"
     },
+    "search": {
+      "placeholder": "Cerca nelle impostazioni...",
+      "title": "Risultati della ricerca",
+      "noResults": "Nessun risultato per \"{{query}}\""
+    },
     "comingSoon": "Questa sezione è in arrivo.",
     "privacy": {
       "title": "Analisi di utilizzo",
@@ -524,6 +529,7 @@
       "displayName": "Nome visualizzato",
       "namePlaceholder": "Il tuo nome",
       "email": "Email",
+      "notSignedIn": "Non hai effettuato l'accesso",
       "saveChanges": "Salva modifiche",
       "saving": "Salvataggio in corso...",
       "savedSuccess": "Impostazioni del profilo salvate.",
