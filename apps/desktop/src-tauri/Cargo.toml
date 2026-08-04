@@ -32,6 +32,10 @@ tauri-plugin-http = "2"
 tauri-plugin-updater = "2"
 # Relaunch after an update is installed.
 tauri-plugin-process = "2"
+# Native OS notifications (Notification Center / toast). The webview
+# Notification API is not implemented by WKWebView, so without this plugin
+# alerts in background mode (hidden window) would vanish silently on macOS.
+tauri-plugin-notification = "2"
 # Focus the existing window instead of launching a second app instance
 # (duplicate instances would double WS connections and notifications).
 tauri-plugin-single-instance = "2"

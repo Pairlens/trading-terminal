@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "Historique du chat IA",
-          "description": "Vos conversations avec le copilote, paire par paire."
+          "description": "Vos conversations avec le copilote, paire par paire.",
+          "caveat": "Tant que c'est désactivé, effacer l'historique de chat n'efface que cet appareil. Les conversations déjà présentes dans votre compte sont conservées et réapparaîtront quand vous réactiverez la synchronisation."
         },
         "trades": {
           "title": "Journal de trading",

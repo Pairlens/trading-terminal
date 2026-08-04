@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "Historial de chat con la IA",
-          "description": "Tus conversaciones con el copiloto, por par."
+          "description": "Tus conversaciones con el copiloto, por par.",
+          "caveat": "Mientras esté desactivado, borrar el historial de chat solo lo borra en este dispositivo. Las conversaciones que ya están en tu cuenta se conservan y reaparecerán cuando vuelvas a activar la sincronización."
         },
         "trades": {
           "title": "Diario de operaciones",

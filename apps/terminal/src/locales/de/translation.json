@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "KI-Chatverlauf",
-          "description": "Deine Copilot-Unterhaltungen, pro Paar."
+          "description": "Deine Copilot-Unterhaltungen, pro Paar.",
+          "caveat": "Solange das aus ist, leert das Löschen des Chatverlaufs nur dieses Gerät. Unterhaltungen in deinem Konto bleiben erhalten und tauchen wieder auf, sobald du die Synchronisierung wieder einschaltest."
         },
         "trades": {
           "title": "Trade-Journal",

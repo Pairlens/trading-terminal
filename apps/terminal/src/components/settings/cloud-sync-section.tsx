@@ -141,6 +141,14 @@ export function CloudSyncSection() {
                       <span>{t('settings.cloudSync.cloudOnlyWarning')}</span>
                     </p>
                   ) : null}
+                  {/* Only meaningful while the row is off — it describes what
+                    deletions do NOT reach while syncing is paused. */}
+                  {domain.caveatKey && !on && master ? (
+                    <p className="mt-1.5 flex items-start gap-1.5 text-xs text-amber-600 dark:text-amber-400">
+                      <TriangleAlert className="mt-0.5 size-3.5 shrink-0" />
+                      <span>{t(domain.caveatKey)}</span>
+                    </p>
+                  ) : null}
                 </div>
                 <Switch
                   className="mt-0.5"

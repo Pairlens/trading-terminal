@@ -573,6 +573,10 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
+        // Native OS notifications — WKWebView has no Notification API, so this
+        // is the only delivery path on macOS, and the only one a hidden
+        // (background-mode) window has anywhere.
+        .plugin(tauri_plugin_notification::init())
         // Remember window size/position across launches (saved to
         // .window-state.json in the app config dir on exit, restored when a
         // window with the same label is created). VISIBLE is excluded because

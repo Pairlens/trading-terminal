@@ -94,6 +94,11 @@ export type SyncDomain = {
    * not "recorded locally". The UI has to say so.
    */
   cloudOnly?: boolean
+  /**
+   * Domain-specific footnote rendered under the description. Same literal-key
+   * rule as labelKey/descriptionKey.
+   */
+  caveatKey?: string
 }
 
 export const SYNC_DOMAINS: ReadonlyArray<SyncDomain> = [
@@ -127,6 +132,10 @@ export const SYNC_DOMAINS: ReadonlyArray<SyncDomain> = [
     labelKey: 'settings.cloudSync.domains.copilot.title',
     descriptionKey: 'settings.cloudSync.domains.copilot.description',
     cloudOnly: true,
+    // "Clear history" while this is off clears only this device; the copy in
+    // the account survives and reappears on re-enable (api.ts no-ops the
+    // remote DELETE on purpose — disabling sync must never erase remote data).
+    caveatKey: 'settings.cloudSync.domains.copilot.caveat',
   },
   {
     id: 'trades',

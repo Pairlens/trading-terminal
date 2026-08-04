@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "Yapay zekâ sohbet geçmişi",
-          "description": "Parite bazında copilot konuşmaların."
+          "description": "Parite bazında copilot konuşmaların.",
+          "caveat": "Bu kapalıyken sohbet geçmişini temizlemek yalnızca bu cihazı temizler. Hesabında kayıtlı konuşmalar durur ve senkronizasyonu tekrar açtığında yeniden görünür."
         },
         "trades": {
           "title": "İşlem günlüğü",

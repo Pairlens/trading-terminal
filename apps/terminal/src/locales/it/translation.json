@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "Cronologia chat IA",
-          "description": "Le tue conversazioni con il copilota, coppia per coppia."
+          "description": "Le tue conversazioni con il copilota, coppia per coppia.",
+          "caveat": "Finché è disattivato, cancellare la cronologia della chat la cancella solo su questo dispositivo. Le conversazioni già nel tuo account restano e riappariranno quando riattiverai la sincronizzazione."
         },
         "trades": {
           "title": "Diario delle operazioni",
