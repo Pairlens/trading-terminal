@@ -26,8 +26,13 @@ the login keychain.
 
 ```bash
 APPLE_SIGNING_IDENTITY="Developer ID Application: Juan Ignacio Molina Estrada (UMJ33RFLWS)" \
-  bun run tauri build -- --config ./src-tauri/tauri.provisioned.conf.json
+  CI=true bun run tauri build --config ./src-tauri/tauri.provisioned.conf.json
 ```
+
+(No `--` before `--config` — bun forwards the literal `--` and the Tauri CLI
+then hands everything after it to cargo, whose own `--config` flag chokes on
+the path. `CI=true` skips the DMG Finder styling, which needs an interactive
+Automation grant.)
 
 Install and launch the bundled app from
 `apps/desktop/src-tauri/target/release/bundle/macos/`. Quit any running
