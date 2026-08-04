@@ -396,7 +396,9 @@
     "chooseIcon": "選擇圖示",
     "clear": "清除",
     "showInFolder": "在資料夾中顯示",
-    "updated": "更新於 {{time}}"
+    "updated": "更新於 {{time}}",
+    "back": "返回",
+    "dismiss": "關閉"
   },
   "legal": {
     "terms": "服務條款",
@@ -773,7 +775,7 @@
       "newPassword": "新密碼",
       "confirmPassword": "確認密碼",
       "currentPassword": "目前密碼",
-      "passwordTooShort": "至少 6 個字元。",
+      "passwordTooShort": "至少 {{min}} 個字元。",
       "passwordMismatch": "兩次輸入的密碼不一致。",
       "passwordWrong": "密碼不正確。",
       "noRecoveryWarning": "沒有密碼找回。一旦忘記，唯一重新進入的方式就是清除本裝置的資料。現在就把它存進密碼管理員。",
@@ -804,7 +806,35 @@
       "resetButton": "重設並清除",
       "resetConfirmTitle": "清除這台裝置？",
       "resetConfirmBody": "這會清除這台電腦上所有交易所 API 金鑰、錢包金鑰、工作區、圖表版面與聊天紀錄。無法復原，也沒有密碼找回。如果你已登入，雲端同步的設定會在再次登入後回來，但 API 金鑰與錢包金鑰永遠不會，因為它們只儲存在這裡。",
-      "resetConfirmPhrase": "輸入 {{phrase}} 以確認。"
+      "resetConfirmPhrase": "輸入 {{phrase}} 以確認。",
+      "vaultTitle": "憑證保險庫",
+      "vaultDescription": "以密碼或通行金鑰加密你的交易所 API 金鑰與錢包金鑰。",
+      "vaultStatusNone": "尚未設定。",
+      "vaultStatusReady_one": "受 1 種解鎖方式保護。",
+      "vaultStatusReady_other": "受 {{count}} 種解鎖方式保護。",
+      "vaultSetUp": "設定保險庫",
+      "vaultAddProtector": "新增另一種進入方式",
+      "vaultRemoveProtector": "移除",
+      "vaultRemoveLastBlocked": "這是進入保險庫的唯一方式。移除前請先新增另一種。",
+      "vaultProtectsBody": "有了保險庫，你的 API 金鑰與錢包金鑰會以加密形式儲存。複製這個瀏覽器設定檔 — 或這台電腦的磁碟 — 的人只會拿到沒有你的密碼或通行金鑰就打不開的密文。",
+      "vaultCeiling": "它不保護使用中的金鑰。這個頁面裡執行的任何程式碼都能像應用本身一樣，向已解鎖的保險庫索取金鑰。對最貴重的金鑰，我們仍然推薦桌面應用程式。",
+      "vaultNoRecovery": "沒有找回途徑。失去全部進入方式，加密的金鑰就沒了 — 回到應用程式的唯一辦法會清除本裝置的資料。",
+      "vaultDesktopToggleHint": "你的金鑰已經在系統鑰匙圈裡。開啟此項可在其上再加一層密碼或通行金鑰。",
+      "vaultDesktopOptOutTitle": "關閉憑證保險庫？",
+      "vaultDesktopOptOutBody": "你的金鑰將重新只由系統鑰匙圈保護。不會刪除任何內容，之後你也可以重新開啟保險庫。",
+      "vaultDesktopOptOutConfirm": "關閉保險庫",
+      "vaultLegacyBody": "你的金鑰僅由這個瀏覽器設定檔保護。新增密碼或通行金鑰來加密它們。",
+      "vaultLegacyAction": "立即設定",
+      "vaultMigrating": "正在將已儲存的金鑰移入保險庫…",
+      "vaultMigrationFailed": "保險庫設定未完成。你的金鑰仍可讀取 — 開啟保險庫以完成設定。",
+      "vaultSharedBackoff": "保險庫與鎖定畫面共用同一個嘗試次數上限，因此密碼錯誤過多會同時延遲兩者。",
+      "vaultCliNote": "命令列工具透過參數接收 API 金鑰，從不讀取保險庫。",
+      "hardLockTitle": "強鎖定",
+      "hardLockDescription": "鎖定保險庫，而不只是畫面。",
+      "hardLockButton": "強鎖定",
+      "hardLockWarning": "鎖定保險庫，而不只是畫面。實盤機器人與自動化將停止交易，直到你解鎖。模擬機器人繼續執行。",
+      "hardLockConfirmTitle": "封存你的憑證保險庫？",
+      "hardLockConfirmBody": "實盤機器人與自動化將停止交易，直到你再次解鎖。模擬機器人繼續執行。"
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "上一頁",
     "forward": "下一頁",
     "checkForUpdates": "檢查更新…",
-    "lockTerminal": "鎖定終端機"
+    "lockTerminal": "鎖定終端機",
+    "hardLock": "強鎖定（封存保險庫）…"
   },
   "titlebar": {
     "newWindow": "新視窗",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "ARM LIVE",
     "armConfirm": "啟用實盤",
     "armNoCredential": "沒有為 {{venue}} 儲存 API 憑證，因此這個機器人無法下實盤訂單。先到帳戶中新增一個，再回來。",
-    "armAddCredential": "前往帳戶"
+    "armAddCredential": "前往帳戶",
+    "statusWaitingUnlock": "等待解鎖"
   },
   "indicatorsPage": {
     "scripts": "我的指標",
@@ -2070,7 +2102,8 @@
       "switchTheme": "主題：{{name}}",
       "reload": "重新載入視窗",
       "settingsSection": "設定：{{name}}",
-      "fullscreen": "切換全螢幕"
+      "fullscreen": "切換全螢幕",
+      "hardLock": "強鎖定（封存保險庫）"
     },
     "footer": {
       "navigate": "移動",
@@ -2180,7 +2213,9 @@
     "hasAccountNo": "還沒有",
     "hasAccountNoDesc": "開立免費的 {{exchange}} 帳戶",
     "importKey": "匯入私鑰",
-    "affiliateDisclosure": "部分開戶連結可能為 Pairlens 帶來聯盟佣金，不會為你增加任何額外費用。"
+    "affiliateDisclosure": "部分開戶連結可能為 Pairlens 帶來聯盟佣金，不會為你增加任何額外費用。",
+    "vaultSealedBody": "你的憑證保險庫已鎖定。你的帳戶仍在這裡 — 解鎖即可檢視與使用。",
+    "credentialsUnreadable": "無法讀取此裝置上儲存的金鑰。資料沒有遺失，請重試或重新啟動 Pairlens。"
   },
   "workspaceStore": {
     "title": "工作區商店",
@@ -2423,7 +2458,8 @@
         "idle": "閒置一段時間後已鎖定。",
         "periodic": "已依排程鎖定。",
         "wake": "電腦睡眠期間已鎖定。",
-        "manual": "你鎖定了終端機。"
+        "manual": "你鎖定了終端機。",
+        "hard": "你鎖定了保險庫。即時自動化已暫停。"
       }
     },
     "challenge": {
@@ -2431,6 +2467,38 @@
       "description": "輸入密碼以送出此委託。",
       "confirm": "確認",
       "cancel": "取消"
+    },
+    "vault": {
+      "enrollTitle": "保護你的金鑰",
+      "enrollSubtitle": "選擇你要如何解鎖本裝置上儲存的金鑰。",
+      "enrollRecommendBoth": "建議同時設定通行金鑰與密碼。兩者都能打開你的保險庫，因此第二種就是你遺失第一種時的退路。",
+      "enrollButton": "繼續",
+      "secondTitle": "再新增一種進入方式？",
+      "secondSubtitle": "你只有一種方式解鎖保險庫。第二種代表遺失一台裝置、忘記一組密碼都不是終點。",
+      "doneButton": "完成",
+      "choosePasskey": "通行金鑰",
+      "choosePasskeyHint": "Touch ID、Windows Hello 或 USB 安全金鑰。",
+      "choosePassword": "密碼",
+      "choosePasswordHint": "與解鎖本終端相同的密碼。",
+      "passkeyUnsupported": "此處無法使用通行金鑰。",
+      "passkeyUnsupportedHint": "此瀏覽器或裝置無法從通行金鑰衍生金鑰。請改用密碼。",
+      "passkeyCancelled": "通行金鑰提示已被關閉。",
+      "passkeyNoMatch": "該通行金鑰未在此保險庫註冊。",
+      "useExistingPassword": "使用你已為此終端設定的密碼。",
+      "unlockTitle": "解鎖你的金鑰",
+      "unlockSubtitle": "你的 API 金鑰與錢包金鑰已加密。解鎖後即可使用。",
+      "unlockWithPasskey": "以通行金鑰解鎖",
+      "unlockWithPassword": "解鎖",
+      "unlocking": "正在解鎖…",
+      "sealed": "你的憑證保險庫已鎖定。",
+      "sealedBanner_one": "1 個實盤機器人已暫停 — 解鎖 Pairlens 以恢復交易。",
+      "sealedBanner_other": "{{count}} 個實盤機器人已暫停 — 解鎖 Pairlens 以恢復交易。",
+      "sealedBannerAction": "解鎖",
+      "botsPausedTitle": "實盤機器人已暫停",
+      "botsPausedBody": "解鎖 Pairlens 以恢復實盤交易。模擬機器人不受影響。",
+      "orderBlocked": "你的憑證保險庫已鎖定 — 解鎖 Pairlens 才能下實盤委託。",
+      "insecureContext": "在不安全的連線上無法加密。請透過 HTTPS 或在 localhost 開啟 Pairlens 來設定保險庫。",
+      "diverged": "終端已解鎖，但該密碼沒能打開你的憑證保險庫。請在 設定 → 安全性 中變更密碼，讓兩者重新一致。"
     }
   },
   "fullscreen": {

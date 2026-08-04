@@ -107,6 +107,8 @@ import { StatusBar } from '@/components/layout/status-bar'
 import { WatchlistsProvider } from '@/lib/watchlists-provider'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { lockNow } from '@/lib/security/lock-store'
+import { startVaultBootstrap } from '@/lib/security/vault/vault-bootstrap'
+import { VaultSealedBanner } from '@/components/security/vault-sealed-banner'
 import { useOptimisticSession } from '@/lib/session'
 import { ThemePluginContext, useThemePlugin } from '@/hooks/use-theme-plugin'
 import {
@@ -144,6 +146,14 @@ function TerminalLayout() {
   // Close splash screen once the terminal shell renders
   useEffect(() => {
     closeSplashScreen()
+  }, [])
+
+  // Read the vault record and, if a sibling window already holds the data key,
+  // ask for it. A window opened after another one unlocked has no other way to
+  // learn the key exists — the announcement it would have followed was
+  // broadcast before this window was listening. Idempotent per window.
+  useEffect(() => {
+    startVaultBootstrap()
   }, [])
 
   const { data: currentUser } = useQuery({
@@ -272,6 +282,12 @@ function TerminalLayout() {
       {
         commandId: 'general.lockTerminal',
         action: () => lockNow('manual'),
+      },
+      {
+        // Never fires the seal directly — it opens the confirm, because this
+        // one stops live automations and the user has to see that first.
+        commandId: 'general.hardLock',
+        action: () => useSettingsDialogStore.getState().open('security'),
       },
     ],
     [navigate, lastPair, setWorkspaceTreeOpen],
@@ -590,6 +606,10 @@ function TerminalLayout() {
                         </div>
                       </div>
                       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                        {/* Above the routed content, not inside it: parked
+                            live bots must be visible from any screen, not
+                            only from the bots page. */}
+                        <VaultSealedBanner />
                         <Outlet />
                       </div>
                     </div>

@@ -93,6 +93,13 @@ describe('isBlocked', () => {
     expect(isBlocked('custom-publisher-keys')).toBe(true)
     expect(isBlocked('desktop.closeBehavior')).toBe(true)
     expect(isBlocked('security.lock')).toBe(true)
+    // The vault record holds every wrapped copy of the data key. It is
+    // ciphertext, but it is also the ONLY thing standing between a stolen
+    // password and the credentials — it must never leave the device, and the
+    // UI mirror must not either (a server that could write it could tell a
+    // terminal "no vault here" and watch the next credential land unwrapped).
+    expect(isBlocked('security.vault')).toBe(true)
+    expect(isBlocked('security.vault-ui')).toBe(true)
     expect(isBlocked('credentials-store:binance')).toBe(true)
     expect(isBlocked('keychain:okx')).toBe(true)
     expect(isBlocked('pairlens:keychain:okx')).toBe(true)

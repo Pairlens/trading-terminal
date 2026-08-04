@@ -15,10 +15,17 @@
  * existing passwords.
  */
 
+import { LOCK_VERIFIER_KEY } from './keys'
 import { deleteCredential, getCredential, saveCredential } from '@/lib/keychain'
 
-/** Keychain slot. Follows the `cred:<id>` / `wallet:<id>` convention. */
-export const LOCK_VERIFIER_KEY = 'security:lock-verifier'
+/**
+ * Keychain slot. Follows the `cred:<id>` / `wallet:<id>` convention.
+ *
+ * Declared in `./keys` and re-exported here: `lib/keychain.ts` needs the name
+ * to exempt this slot from vault encryption, and it cannot import this module
+ * (this module imports it).
+ */
+export { LOCK_VERIFIER_KEY }
 
 /** OWASP-current for PBKDF2-HMAC-SHA256 at the time of writing. */
 export const PBKDF2_ITERATIONS = 600_000

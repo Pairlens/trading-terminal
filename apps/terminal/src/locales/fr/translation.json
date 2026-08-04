@@ -396,7 +396,9 @@
     "chooseIcon": "Choisir une icône",
     "clear": "Effacer",
     "showInFolder": "Afficher dans le dossier",
-    "updated": "Mis à jour {{time}}"
+    "updated": "Mis à jour {{time}}",
+    "back": "Retour",
+    "dismiss": "Ignorer"
   },
   "legal": {
     "terms": "Conditions générales",
@@ -773,7 +775,7 @@
       "newPassword": "Nouveau mot de passe",
       "confirmPassword": "Confirmer le mot de passe",
       "currentPassword": "Mot de passe actuel",
-      "passwordTooShort": "Utilise au moins 6 caractères.",
+      "passwordTooShort": "Utilise au moins {{min}} caractères.",
       "passwordMismatch": "Les deux mots de passe ne correspondent pas.",
       "passwordWrong": "Ce mot de passe n'est pas correct.",
       "noRecoveryWarning": "Il n'existe aucune récupération de mot de passe. Si tu l'oublies, le seul retour possible efface les données de cet appareil. Enregistre-le dès maintenant dans ton gestionnaire de mots de passe.",
@@ -804,7 +806,35 @@
       "resetButton": "Réinitialiser et effacer",
       "resetConfirmTitle": "Effacer cet appareil ?",
       "resetConfirmBody": "Cela efface toutes les clés API, clés de portefeuille, espaces de travail, dispositions de graphique et conversations de cet ordinateur. Aucun retour en arrière, aucune récupération de mot de passe. Si tu es connecté, les réglages synchronisés reviennent à la prochaine connexion — jamais les clés API ni les clés de portefeuille, car elles ne sont stockées qu'ici.",
-      "resetConfirmPhrase": "Tape {{phrase}} pour confirmer."
+      "resetConfirmPhrase": "Tape {{phrase}} pour confirmer.",
+      "vaultTitle": "Coffre d'identifiants",
+      "vaultDescription": "Chiffrez vos clés API d'exchange et vos clés de wallet avec un mot de passe ou une passkey.",
+      "vaultStatusNone": "Non configuré.",
+      "vaultStatusReady_one": "Protégé par 1 moyen de déverrouillage.",
+      "vaultStatusReady_other": "Protégé par {{count}} moyens de déverrouillage.",
+      "vaultSetUp": "Configurer le coffre",
+      "vaultAddProtector": "Ajouter un autre moyen d'entrer",
+      "vaultRemoveProtector": "Retirer",
+      "vaultRemoveLastBlocked": "C'est le seul moyen d'entrer dans votre coffre. Ajoutez-en un autre avant de le retirer.",
+      "vaultProtectsBody": "Avec un coffre, vos clés API et de wallet sont stockées chiffrées. Qui copie ce profil de navigateur — ou le disque de cet ordinateur — obtient un texte chiffré qu'il ne peut pas ouvrir sans votre mot de passe ou votre passkey.",
+      "vaultCeiling": "Cela ne protège pas les clés pendant que vous les utilisez. Tout ce qui s'exécute dans cette page peut demander une clé au coffre déverrouillé, exactement comme le fait l'application. L'application de bureau reste la recommandation pour vos clés les plus précieuses.",
+      "vaultNoRecovery": "Il n'y a aucune récupération. Perdez tous les moyens d'entrer et les clés chiffrées sont perdues — le seul retour dans l'application efface les données de cet appareil.",
+      "vaultDesktopToggleHint": "Vos clés sont déjà dans le trousseau du système. Activez ceci pour ajouter par-dessus un mot de passe ou une passkey.",
+      "vaultDesktopOptOutTitle": "Désactiver le coffre d'identifiants ?",
+      "vaultDesktopOptOutBody": "Vos clés redeviennent protégées par le seul trousseau du système. Rien n'est supprimé, et vous pourrez réactiver le coffre plus tard.",
+      "vaultDesktopOptOutConfirm": "Désactiver le coffre",
+      "vaultLegacyBody": "Vos clés sont protégées uniquement par ce profil de navigateur. Ajoutez un mot de passe ou une passkey pour les chiffrer.",
+      "vaultLegacyAction": "Configurer maintenant",
+      "vaultMigrating": "Déplacement de vos clés stockées dans le coffre…",
+      "vaultMigrationFailed": "La configuration du coffre ne s'est pas terminée. Vos clés restent lisibles — ouvrez le coffre pour la finir.",
+      "vaultSharedBackoff": "Le coffre et l'écran de verrouillage partagent une même limite de tentatives : trop de mots de passe erronés retardent les deux.",
+      "vaultCliNote": "L'outil en ligne de commande reçoit les clés API en arguments et ne lit jamais le coffre.",
+      "hardLockTitle": "Verrouillage total",
+      "hardLockDescription": "Verrouille le coffre, pas seulement l'écran.",
+      "hardLockButton": "Verrouillage total",
+      "hardLockWarning": "Verrouille le coffre, pas seulement l'écran. Les bots en réel et les automatisations cessent de trader jusqu'au déverrouillage. Les bots en papier continuent.",
+      "hardLockConfirmTitle": "Sceller votre coffre d'identifiants ?",
+      "hardLockConfirmBody": "Les bots en réel et les automatisations cessent de trader jusqu'à ce que vous déverrouilliez de nouveau. Les bots en papier continuent."
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "Précédent",
     "forward": "Suivant",
     "checkForUpdates": "Vérifier les mises à jour…",
-    "lockTerminal": "Verrouiller le terminal"
+    "lockTerminal": "Verrouiller le terminal",
+    "hardLock": "Verrouillage total (sceller le coffre)…"
   },
   "titlebar": {
     "newWindow": "Nouvelle fenêtre",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "ARMER LIVE",
     "armConfirm": "Armer en réel",
     "armNoCredential": "Aucun identifiant API n’est enregistré pour {{venue}}, ce bot ne peut donc pas passer d’ordres réels. Ajoutez-en un dans Comptes, puis revenez.",
-    "armAddCredential": "Aller aux Comptes"
+    "armAddCredential": "Aller aux Comptes",
+    "statusWaitingUnlock": "En attente de déverrouillage"
   },
   "indicatorsPage": {
     "scripts": "Mes indicateurs",
@@ -2070,7 +2102,8 @@
       "switchTheme": "Thème : {{name}}",
       "reload": "Recharger la fenêtre",
       "settingsSection": "Paramètres : {{name}}",
-      "fullscreen": "Basculer le plein écran"
+      "fullscreen": "Basculer le plein écran",
+      "hardLock": "Verrouillage total (sceller le coffre)"
     },
     "footer": {
       "navigate": "Naviguer",
@@ -2180,7 +2213,9 @@
     "hasAccountNo": "Pas encore",
     "hasAccountNoDesc": "Ouvrir un compte {{exchange}} gratuit",
     "importKey": "Importer une clé privée",
-    "affiliateDisclosure": "Certains liens d’inscription peuvent rapporter une commission à Pairlens, sans coût supplémentaire pour vous."
+    "affiliateDisclosure": "Certains liens d’inscription peuvent rapporter une commission à Pairlens, sans coût supplémentaire pour vous.",
+    "vaultSealedBody": "Votre coffre d'identifiants est verrouillé. Vos comptes sont toujours là — déverrouillez pour les voir et les utiliser.",
+    "credentialsUnreadable": "Impossible de lire les clés enregistrées sur cet appareil. Rien n’est perdu : réessaie ou redémarre Pairlens."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2423,7 +2458,8 @@
         "idle": "Verrouillé après un moment d'inactivité.",
         "periodic": "Verrouillé comme prévu.",
         "wake": "Verrouillé pendant la veille de l'ordinateur.",
-        "manual": "Tu as verrouillé le terminal."
+        "manual": "Tu as verrouillé le terminal.",
+        "hard": "Vous avez verrouillé le coffre. Les automatisations en direct sont en pause."
       }
     },
     "challenge": {
@@ -2431,6 +2467,38 @@
       "description": "Saisis ton mot de passe pour passer cet ordre.",
       "confirm": "Confirmer",
       "cancel": "Annuler"
+    },
+    "vault": {
+      "enrollTitle": "Protégez vos clés",
+      "enrollSubtitle": "Choisissez comment vous déverrouillerez les clés stockées sur cet appareil.",
+      "enrollRecommendBoth": "Nous recommandons de configurer à la fois une passkey et un mot de passe. Chacun ouvre votre coffre, donc le second est votre porte de secours si vous perdez le premier.",
+      "enrollButton": "Continuer",
+      "secondTitle": "Ajouter un deuxième moyen d'entrer ?",
+      "secondSubtitle": "Vous n'avez qu'un moyen de déverrouiller votre coffre. Un deuxième fait que perdre un appareil, ou oublier un mot de passe, n'est pas définitif.",
+      "doneButton": "Terminé",
+      "choosePasskey": "Passkey",
+      "choosePasskeyHint": "Touch ID, Windows Hello ou une clé de sécurité USB.",
+      "choosePassword": "Mot de passe",
+      "choosePasswordHint": "Le même mot de passe que celui qui déverrouille ce terminal.",
+      "passkeyUnsupported": "Les passkeys ne sont pas disponibles ici.",
+      "passkeyUnsupportedHint": "Ce navigateur ou cet appareil ne peut pas dériver une clé depuis une passkey. Utilisez plutôt un mot de passe.",
+      "passkeyCancelled": "La demande de passkey a été annulée.",
+      "passkeyNoMatch": "Cette passkey n'est pas enregistrée sur ce coffre.",
+      "useExistingPassword": "Utilisez le mot de passe que vous avez déjà défini pour ce terminal.",
+      "unlockTitle": "Déverrouillez vos clés",
+      "unlockSubtitle": "Vos clés API et de wallet sont chiffrées. Déverrouillez pour les utiliser.",
+      "unlockWithPasskey": "Déverrouiller avec une passkey",
+      "unlockWithPassword": "Déverrouiller",
+      "unlocking": "Déverrouillage…",
+      "sealed": "Votre coffre d'identifiants est verrouillé.",
+      "sealedBanner_one": "1 bot en réel est en pause — déverrouillez Pairlens pour reprendre le trading.",
+      "sealedBanner_other": "{{count}} bots en réel sont en pause — déverrouillez Pairlens pour reprendre le trading.",
+      "sealedBannerAction": "Déverrouiller",
+      "botsPausedTitle": "Les bots en réel sont en pause",
+      "botsPausedBody": "Déverrouillez Pairlens pour reprendre le trading réel. Les bots en papier ne sont pas affectés.",
+      "orderBlocked": "Votre coffre d'identifiants est verrouillé — déverrouillez Pairlens pour passer des ordres réels.",
+      "insecureContext": "Le chiffrement est indisponible sur une connexion non sécurisée. Ouvrez Pairlens en HTTPS, ou sur localhost, pour configurer un coffre.",
+      "diverged": "Votre terminal est déverrouillé, mais ce mot de passe n'a pas ouvert votre coffre d'identifiants. Changez votre mot de passe dans Paramètres → Sécurité pour les resynchroniser."
     }
   },
   "fullscreen": {

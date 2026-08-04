@@ -39,6 +39,13 @@ export type BotStatus =
   | 'error'
   /** Halted by a guard (daily loss cap, trade cap...). */
   | 'halted'
+  /**
+   * A live bot whose credential vault is sealed. Deliberately NOT `halted`:
+   * the bot is still armed and resumes by itself the moment the vault opens,
+   * so disabling the definition (which is what halting does) would turn "I
+   * rebooted my laptop" into "all my bots are off and nobody told me".
+   */
+  | 'waiting-unlock'
 
 /** How much to commit per entry. */
 export type BotSizing =

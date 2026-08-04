@@ -396,7 +396,9 @@
     "chooseIcon": "Wybierz ikonę",
     "clear": "Wyczyść",
     "showInFolder": "Pokaż w folderze",
-    "updated": "Zaktualizowano {{time}}"
+    "updated": "Zaktualizowano {{time}}",
+    "back": "Wstecz",
+    "dismiss": "Odrzuć"
   },
   "legal": {
     "terms": "Regulamin",
@@ -773,7 +775,7 @@
       "newPassword": "Nowe hasło",
       "confirmPassword": "Potwierdź hasło",
       "currentPassword": "Obecne hasło",
-      "passwordTooShort": "Użyj co najmniej 6 znaków.",
+      "passwordTooShort": "Użyj co najmniej {{min}} znaków.",
       "passwordMismatch": "Hasła nie są takie same.",
       "passwordWrong": "To hasło jest nieprawidłowe.",
       "noRecoveryWarning": "Nie ma odzyskiwania hasła. Jeśli je zapomnisz, jedyna droga powrotu kasuje dane tego urządzenia. Zapisz je teraz w menedżerze haseł.",
@@ -804,7 +806,37 @@
       "resetButton": "Zresetuj i wymaż",
       "resetConfirmTitle": "Wymazać to urządzenie?",
       "resetConfirmBody": "To usuwa każdy klucz API, klucz portfela, przestrzeń roboczą, układ wykresu i czat na tym komputerze. Nie da się tego cofnąć i nie ma odzyskiwania hasła. Jeśli jesteś zalogowany, ustawienia synchronizowane wrócą po ponownym zalogowaniu — klucze API i portfela nigdy, bo istnieją tylko tutaj.",
-      "resetConfirmPhrase": "Wpisz {{phrase}}, aby potwierdzić."
+      "resetConfirmPhrase": "Wpisz {{phrase}}, aby potwierdzić.",
+      "vaultTitle": "Sejf poświadczeń",
+      "vaultDescription": "Zaszyfruj klucze API giełd i klucze portfela hasłem lub passkey.",
+      "vaultStatusNone": "Nieskonfigurowany.",
+      "vaultStatusReady_one": "Chroniony przez 1 sposób odblokowania.",
+      "vaultStatusReady_few": "Chroniony przez {{count}} sposobów odblokowania.",
+      "vaultStatusReady_many": "Chroniony przez {{count}} sposobów odblokowania.",
+      "vaultStatusReady_other": "Chroniony przez {{count}} sposobów odblokowania.",
+      "vaultSetUp": "Skonfiguruj sejf",
+      "vaultAddProtector": "Dodaj kolejny sposób wejścia",
+      "vaultRemoveProtector": "Usuń",
+      "vaultRemoveLastBlocked": "To jedyny sposób wejścia do sejfu. Dodaj kolejny, zanim go usuniesz.",
+      "vaultProtectsBody": "Z sejfem klucze API i klucze portfela są przechowywane w postaci zaszyfrowanej. Kto skopiuje ten profil przeglądarki — albo dysk tego komputera — dostanie szyfrogram, którego nie otworzy bez Twojego hasła lub passkey.",
+      "vaultCeiling": "Nie chroni kluczy, gdy z nich korzystasz. Wszystko, co działa na tej stronie, może poprosić odblokowany sejf o klucz dokładnie tak, jak robi to aplikacja. Do najcenniejszych kluczy nadal rekomendujemy aplikację desktopową.",
+      "vaultNoRecovery": "Nie ma odzyskiwania. Jeśli stracisz wszystkie sposoby wejścia, zaszyfrowane klucze przepadają — jedyny powrót do aplikacji kasuje dane tego urządzenia.",
+      "vaultDesktopToggleHint": "Twoje klucze są już w pęku kluczy systemu. Włącz to, aby dodać na wierzchu hasło lub passkey.",
+      "vaultDesktopOptOutTitle": "Wyłączyć sejf poświadczeń?",
+      "vaultDesktopOptOutBody": "Twoje klucze wracają pod ochronę samego pęku kluczy systemu. Nic nie zostaje usunięte, a sejf możesz włączyć ponownie później.",
+      "vaultDesktopOptOutConfirm": "Wyłącz sejf",
+      "vaultLegacyBody": "Twoje klucze chroni wyłącznie ten profil przeglądarki. Dodaj hasło lub passkey, aby je zaszyfrować.",
+      "vaultLegacyAction": "Skonfiguruj teraz",
+      "vaultMigrating": "Przenoszenie zapisanych kluczy do sejfu…",
+      "vaultMigrationFailed": "Konfiguracja sejfu nie została ukończona. Klucze są nadal czytelne — otwórz sejf, aby ją dokończyć.",
+      "vaultSharedBackoff": "Sejf i ekran blokady mają wspólny limit prób, więc zbyt wiele błędnych haseł opóźnia oba.",
+      "vaultCliNote": "Narzędzie wiersza poleceń przyjmuje klucze API jako argumenty i nigdy nie czyta sejfu.",
+      "hardLockTitle": "Twarda blokada",
+      "hardLockDescription": "Blokuje sejf, nie tylko ekran.",
+      "hardLockButton": "Twarda blokada",
+      "hardLockWarning": "Blokuje sejf, nie tylko ekran. Boty na żywo i automatyzacje przestają handlować do czasu odblokowania. Boty papierowe działają dalej.",
+      "hardLockConfirmTitle": "Zapieczętować sejf poświadczeń?",
+      "hardLockConfirmBody": "Boty na żywo i automatyzacje przestają handlować, dopóki znów nie odblokujesz. Boty papierowe działają dalej."
     }
   },
   "nav": {
@@ -900,7 +932,8 @@
     "back": "Wstecz",
     "forward": "Dalej",
     "checkForUpdates": "Sprawdź aktualizacje…",
-    "lockTerminal": "Zablokuj terminal"
+    "lockTerminal": "Zablokuj terminal",
+    "hardLock": "Twarda blokada (zapieczętuj sejf)…"
   },
   "titlebar": {
     "newWindow": "Nowe okno",
@@ -1380,7 +1413,8 @@
     "armConfirmPhrase": "UZBRAJAM LIVE",
     "armConfirm": "Uzbrój na żywo",
     "armNoCredential": "Dla {{venue}} nie zapisano danych API, więc ten bot nie może składać prawdziwych zleceń. Dodaj je w sekcji Konta i wróć.",
-    "armAddCredential": "Przejdź do Kont"
+    "armAddCredential": "Przejdź do Kont",
+    "statusWaitingUnlock": "Czeka na odblokowanie"
   },
   "indicatorsPage": {
     "scripts": "Moje wskaźniki",
@@ -2074,7 +2108,8 @@
       "switchTheme": "Motyw: {{name}}",
       "reload": "Przeładuj okno",
       "settingsSection": "Ustawienia: {{name}}",
-      "fullscreen": "Przełącz pełny ekran"
+      "fullscreen": "Przełącz pełny ekran",
+      "hardLock": "Twarda blokada (zapieczętuj sejf)"
     },
     "footer": {
       "navigate": "Nawiguj",
@@ -2184,7 +2219,9 @@
     "hasAccountNo": "Jeszcze nie",
     "hasAccountNoDesc": "Otwórz darmowe konto {{exchange}}",
     "importKey": "Zaimportuj klucz prywatny",
-    "affiliateDisclosure": "Niektóre linki rejestracyjne mogą przynieść Pairlens prowizję, bez dodatkowych kosztów dla Ciebie."
+    "affiliateDisclosure": "Niektóre linki rejestracyjne mogą przynieść Pairlens prowizję, bez dodatkowych kosztów dla Ciebie.",
+    "vaultSealedBody": "Twój sejf poświadczeń jest zablokowany. Twoje konta wciąż tu są — odblokuj, aby je zobaczyć i z nich korzystać.",
+    "credentialsUnreadable": "Nie udało się odczytać kluczy zapisanych na tym urządzeniu. Nic nie zginęło — spróbuj ponownie lub uruchom Pairlens jeszcze raz."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2431,7 +2468,8 @@
         "idle": "Zablokowano po okresie bezczynności.",
         "periodic": "Zablokowano zgodnie z harmonogramem.",
         "wake": "Zablokowano, gdy komputer spał.",
-        "manual": "Terminal został zablokowany przez ciebie."
+        "manual": "Terminal został zablokowany przez ciebie.",
+        "hard": "Zablokowałeś sejf. Automatyzacje na żywo są wstrzymane."
       }
     },
     "challenge": {
@@ -2439,6 +2477,40 @@
       "description": "Podaj hasło, aby złożyć to zlecenie.",
       "confirm": "Potwierdź",
       "cancel": "Anuluj"
+    },
+    "vault": {
+      "enrollTitle": "Chroń swoje klucze",
+      "enrollSubtitle": "Wybierz, jak będziesz odblokowywać klucze zapisane na tym urządzeniu.",
+      "enrollRecommendBoth": "Zalecamy skonfigurowanie zarówno passkey, jak i hasła. Każde z nich otwiera sejf, więc drugie jest drogą powrotną, gdy stracisz pierwsze.",
+      "enrollButton": "Dalej",
+      "secondTitle": "Dodać drugi sposób wejścia?",
+      "secondSubtitle": "Masz tylko jeden sposób odblokowania sejfu. Drugi sprawia, że utrata urządzenia albo zapomniane hasło to jeszcze nie koniec.",
+      "doneButton": "Gotowe",
+      "choosePasskey": "Passkey",
+      "choosePasskeyHint": "Touch ID, Windows Hello albo klucz bezpieczeństwa USB.",
+      "choosePassword": "Hasło",
+      "choosePasswordHint": "To samo hasło, które odblokowuje ten terminal.",
+      "passkeyUnsupported": "Passkey nie są tu dostępne.",
+      "passkeyUnsupportedHint": "Ta przeglądarka lub to urządzenie nie potrafi wyprowadzić klucza z passkey. Użyj hasła.",
+      "passkeyCancelled": "Monit o passkey został zamknięty.",
+      "passkeyNoMatch": "Ten passkey nie jest zarejestrowany w tym sejfie.",
+      "useExistingPassword": "Użyj hasła, które już ustawiłeś dla tego terminala.",
+      "unlockTitle": "Odblokuj swoje klucze",
+      "unlockSubtitle": "Twoje klucze API i portfela są zaszyfrowane. Odblokuj, aby ich użyć.",
+      "unlockWithPasskey": "Odblokuj passkey",
+      "unlockWithPassword": "Odblokuj",
+      "unlocking": "Odblokowywanie…",
+      "sealed": "Twój sejf poświadczeń jest zablokowany.",
+      "sealedBanner_one": "1 bot na żywo jest wstrzymany — odblokuj Pairlens, aby wznowić handel.",
+      "sealedBanner_few": "Boty na żywo wstrzymane: {{count}} — odblokuj Pairlens, aby wznowić handel.",
+      "sealedBanner_many": "Boty na żywo wstrzymane: {{count}} — odblokuj Pairlens, aby wznowić handel.",
+      "sealedBanner_other": "Boty na żywo wstrzymane: {{count}} — odblokuj Pairlens, aby wznowić handel.",
+      "sealedBannerAction": "Odblokuj",
+      "botsPausedTitle": "Boty na żywo są wstrzymane",
+      "botsPausedBody": "Odblokuj Pairlens, aby wznowić handel na żywo. Boty papierowe działają dalej.",
+      "orderBlocked": "Twój sejf poświadczeń jest zablokowany — odblokuj Pairlens, aby składać zlecenia na żywo.",
+      "insecureContext": "Szyfrowanie jest niedostępne na niezabezpieczonym połączeniu. Otwórz Pairlens przez HTTPS lub na localhost, aby skonfigurować sejf.",
+      "diverged": "Terminal jest odblokowany, ale to hasło nie otworzyło sejfu poświadczeń. Zmień hasło w Ustawieniach → Bezpieczeństwo, aby je ponownie zsynchronizować."
     }
   },
   "fullscreen": {

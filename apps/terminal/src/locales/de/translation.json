@@ -396,7 +396,9 @@
     "chooseIcon": "Symbol wählen",
     "clear": "Leeren",
     "showInFolder": "Im Ordner anzeigen",
-    "updated": "Aktualisiert {{time}}"
+    "updated": "Aktualisiert {{time}}",
+    "back": "Zurück",
+    "dismiss": "Ausblenden"
   },
   "legal": {
     "terms": "Nutzungsbedingungen",
@@ -773,7 +775,7 @@
       "newPassword": "Neues Passwort",
       "confirmPassword": "Passwort bestätigen",
       "currentPassword": "Aktuelles Passwort",
-      "passwordTooShort": "Mindestens 6 Zeichen verwenden.",
+      "passwordTooShort": "Mindestens {{min}} Zeichen verwenden.",
       "passwordMismatch": "Die beiden Passwörter stimmen nicht überein.",
       "passwordWrong": "Dieses Passwort ist nicht korrekt.",
       "noRecoveryWarning": "Es gibt keine Passwort-Wiederherstellung. Wenn du es vergisst, führt der einzige Weg zurück über das Löschen aller Daten dieses Geräts. Speichere es jetzt in deinem Passwort-Manager.",
@@ -804,7 +806,35 @@
       "resetButton": "Zurücksetzen und löschen",
       "resetConfirmTitle": "Dieses Gerät löschen?",
       "resetConfirmBody": "Das löscht jeden API-Schlüssel, jeden Wallet-Schlüssel, jeden Workspace, jedes Chart-Layout und jeden Chat auf diesem Rechner. Es gibt kein Zurück und keine Passwort-Wiederherstellung. Wenn du angemeldet bist, kommen synchronisierte Einstellungen bei der nächsten Anmeldung zurück — API- und Wallet-Schlüssel nie, denn die liegen nur hier.",
-      "resetConfirmPhrase": "Tippe {{phrase}} zur Bestätigung."
+      "resetConfirmPhrase": "Tippe {{phrase}} zur Bestätigung.",
+      "vaultTitle": "Zugangsdaten-Tresor",
+      "vaultDescription": "Verschlüssele deine Exchange-API- und Wallet-Schlüssel mit einem Passwort oder einem Passkey.",
+      "vaultStatusNone": "Nicht eingerichtet.",
+      "vaultStatusReady_one": "Durch 1 Entsperrmethode geschützt.",
+      "vaultStatusReady_other": "Durch {{count}} Entsperrmethoden geschützt.",
+      "vaultSetUp": "Tresor einrichten",
+      "vaultAddProtector": "Weiteren Weg hinein hinzufügen",
+      "vaultRemoveProtector": "Entfernen",
+      "vaultRemoveLastBlocked": "Das ist der einzige Weg in deinen Tresor. Füge einen weiteren hinzu, bevor du ihn entfernst.",
+      "vaultProtectsBody": "Mit einem Tresor werden deine API- und Wallet-Schlüssel verschlüsselt gespeichert. Wer dieses Browserprofil — oder die Festplatte dieses Rechners — kopiert, bekommt Chiffrat, das er ohne dein Passwort oder deinen Passkey nicht öffnen kann.",
+      "vaultCeiling": "Es schützt die Schlüssel nicht, während du sie benutzt. Alles, was in dieser Seite läuft, kann den entsperrten Tresor genauso nach einem Schlüssel fragen wie die App selbst. Für deine wertvollsten Schlüssel bleibt die Desktop-App die Empfehlung.",
+      "vaultNoRecovery": "Es gibt keine Wiederherstellung. Verlierst du jeden Weg hinein, sind die verschlüsselten Schlüssel weg — der einzige Weg zurück in die App löscht die Daten dieses Geräts.",
+      "vaultDesktopToggleHint": "Deine Schlüssel liegen bereits im Systemschlüsselbund. Aktiviere dies, um zusätzlich ein Passwort oder einen Passkey davorzusetzen.",
+      "vaultDesktopOptOutTitle": "Zugangsdaten-Tresor deaktivieren?",
+      "vaultDesktopOptOutBody": "Deine Schlüssel sind dann wieder allein durch den Systemschlüsselbund geschützt. Nichts wird gelöscht, und du kannst den Tresor später wieder aktivieren.",
+      "vaultDesktopOptOutConfirm": "Tresor deaktivieren",
+      "vaultLegacyBody": "Deine Schlüssel sind nur durch dieses Browserprofil geschützt. Füge ein Passwort oder einen Passkey hinzu, um sie zu verschlüsseln.",
+      "vaultLegacyAction": "Jetzt einrichten",
+      "vaultMigrating": "Deine gespeicherten Schlüssel werden in den Tresor verschoben…",
+      "vaultMigrationFailed": "Die Tresor-Einrichtung wurde nicht abgeschlossen. Deine Schlüssel sind weiterhin lesbar — öffne den Tresor, um sie zu beenden.",
+      "vaultSharedBackoff": "Tresor und Sperrbildschirm teilen sich ein Versuchslimit, zu viele falsche Passwörter verzögern also beides.",
+      "vaultCliNote": "Das Kommandozeilen-Tool erhält API-Schlüssel als Argumente und liest den Tresor nie.",
+      "hardLockTitle": "Hartes Sperren",
+      "hardLockDescription": "Sperrt den Tresor, nicht nur den Bildschirm.",
+      "hardLockButton": "Hartes Sperren",
+      "hardLockWarning": "Sperrt den Tresor, nicht nur den Bildschirm. Live-Bots und Automatisierungen handeln nicht mehr, bis du entsperrst. Paper-Bots laufen weiter.",
+      "hardLockConfirmTitle": "Zugangsdaten-Tresor versiegeln?",
+      "hardLockConfirmBody": "Live-Bots und Automatisierungen handeln nicht mehr, bis du wieder entsperrst. Paper-Bots laufen weiter."
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "Zurück",
     "forward": "Vorwärts",
     "checkForUpdates": "Nach Updates suchen…",
-    "lockTerminal": "Terminal sperren"
+    "lockTerminal": "Terminal sperren",
+    "hardLock": "Hartes Sperren (Tresor versiegeln)…"
   },
   "titlebar": {
     "newWindow": "Neues Fenster",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "LIVE SCHARF",
     "armConfirm": "Scharfschalten",
     "armNoCredential": "Für {{venue}} sind keine API-Zugangsdaten hinterlegt, deshalb kann dieser Bot keine Live-Orders platzieren. Lege sie unter Konten an und komm zurück.",
-    "armAddCredential": "Zu den Konten"
+    "armAddCredential": "Zu den Konten",
+    "statusWaitingUnlock": "Wartet auf Entsperrung"
   },
   "indicatorsPage": {
     "scripts": "Meine Indikatoren",
@@ -2070,7 +2102,8 @@
       "switchTheme": "Design: {{name}}",
       "reload": "Fenster neu laden",
       "settingsSection": "Einstellungen: {{name}}",
-      "fullscreen": "Vollbild umschalten"
+      "fullscreen": "Vollbild umschalten",
+      "hardLock": "Hartes Sperren (Tresor versiegeln)"
     },
     "footer": {
       "navigate": "Navigieren",
@@ -2180,7 +2213,9 @@
     "hasAccountNo": "Noch nicht",
     "hasAccountNoDesc": "Ein kostenloses {{exchange}}-Konto eröffnen",
     "importKey": "Einen privaten Schlüssel importieren",
-    "affiliateDisclosure": "Manche Anmeldelinks können Pairlens eine Provision einbringen, ohne zusätzliche Kosten für dich."
+    "affiliateDisclosure": "Manche Anmeldelinks können Pairlens eine Provision einbringen, ohne zusätzliche Kosten für dich.",
+    "vaultSealedBody": "Dein Zugangsdaten-Tresor ist gesperrt. Deine Konten sind weiterhin da — entsperre, um sie zu sehen und zu nutzen.",
+    "credentialsUnreadable": "Die auf diesem Gerät gespeicherten Schlüssel konnten nicht gelesen werden. Es ist nichts verloren — versuche es erneut oder starte Pairlens neu."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2423,7 +2458,8 @@
         "idle": "Nach einer Weile ohne Aktivität gesperrt.",
         "periodic": "Planmäßig gesperrt.",
         "wake": "Gesperrt, während der Rechner schlief.",
-        "manual": "Du hast das Terminal gesperrt."
+        "manual": "Du hast das Terminal gesperrt.",
+        "hard": "Sie haben den Tresor gesperrt. Live-Automatisierungen sind pausiert."
       }
     },
     "challenge": {
@@ -2431,6 +2467,38 @@
       "description": "Gib dein Passwort ein, um diese Order aufzugeben.",
       "confirm": "Bestätigen",
       "cancel": "Abbrechen"
+    },
+    "vault": {
+      "enrollTitle": "Schütze deine Schlüssel",
+      "enrollSubtitle": "Wähle, wie du die auf diesem Gerät gespeicherten Schlüssel entsperrst.",
+      "enrollRecommendBoth": "Wir empfehlen, sowohl einen Passkey als auch ein Passwort einzurichten. Beide öffnen deinen Tresor, das zweite ist also dein Weg zurück, falls du das erste verlierst.",
+      "enrollButton": "Weiter",
+      "secondTitle": "Einen zweiten Weg hinein hinzufügen?",
+      "secondSubtitle": "Du hast nur einen Weg, deinen Tresor zu entsperren. Mit einem zweiten ist ein verlorenes Gerät oder ein vergessenes Passwort nicht das Ende.",
+      "doneButton": "Fertig",
+      "choosePasskey": "Passkey",
+      "choosePasskeyHint": "Touch ID, Windows Hello oder ein USB-Sicherheitsschlüssel.",
+      "choosePassword": "Passwort",
+      "choosePasswordHint": "Dasselbe Passwort, das dieses Terminal entsperrt.",
+      "passkeyUnsupported": "Passkeys sind hier nicht verfügbar.",
+      "passkeyUnsupportedHint": "Dieser Browser oder dieses Gerät kann keinen Schlüssel aus einem Passkey ableiten. Nutze stattdessen ein Passwort.",
+      "passkeyCancelled": "Die Passkey-Abfrage wurde abgebrochen.",
+      "passkeyNoMatch": "Dieser Passkey ist für diesen Tresor nicht registriert.",
+      "useExistingPassword": "Nutze das Passwort, das du für dieses Terminal bereits gesetzt hast.",
+      "unlockTitle": "Schlüssel entsperren",
+      "unlockSubtitle": "Deine API- und Wallet-Schlüssel sind verschlüsselt. Entsperre sie, um sie zu nutzen.",
+      "unlockWithPasskey": "Mit Passkey entsperren",
+      "unlockWithPassword": "Entsperren",
+      "unlocking": "Entsperren…",
+      "sealed": "Dein Zugangsdaten-Tresor ist gesperrt.",
+      "sealedBanner_one": "1 Live-Bot pausiert — entsperre Pairlens, um das Trading fortzusetzen.",
+      "sealedBanner_other": "{{count}} Live-Bots pausieren — entsperre Pairlens, um das Trading fortzusetzen.",
+      "sealedBannerAction": "Entsperren",
+      "botsPausedTitle": "Live-Bots pausieren",
+      "botsPausedBody": "Entsperre Pairlens, um das Live-Trading fortzusetzen. Paper-Bots sind nicht betroffen.",
+      "orderBlocked": "Dein Zugangsdaten-Tresor ist gesperrt — entsperre Pairlens, um Live-Orders zu platzieren.",
+      "insecureContext": "Verschlüsselung ist über eine unsichere Verbindung nicht verfügbar. Öffne Pairlens über HTTPS oder auf localhost, um einen Tresor einzurichten.",
+      "diverged": "Dein Terminal ist entsperrt, aber dieses Passwort hat deinen Zugangsdaten-Tresor nicht geöffnet. Ändere dein Passwort unter Einstellungen → Sicherheit, um beide wieder abzugleichen."
     }
   },
   "fullscreen": {

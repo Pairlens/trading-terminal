@@ -473,6 +473,17 @@ export function useOmniSearchResults(
         keywords: ['create workspace', 'add workspace', 'layout'],
         execute: () => useCreateWorkspaceDialogStore.getState().open(),
       },
+      // Hard lock. Routed through Security settings rather than fired
+      // directly: this stops live automations, and an action with that
+      // consequence must not be one Enter keystroke away from a fuzzy match.
+      {
+        type: 'action',
+        id: 'hard-lock',
+        label: t('search.actions.hardLock'),
+        icon: 'ShieldOff',
+        keywords: ['lock', 'seal', 'vault', 'stop bots', 'panic'],
+        execute: () => openSettings('security'),
+      },
     ]
 
     // Deep links into every settings section

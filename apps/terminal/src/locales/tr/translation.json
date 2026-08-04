@@ -396,7 +396,9 @@
     "chooseIcon": "Simge seç",
     "clear": "Temizle",
     "showInFolder": "Klasörde göster",
-    "updated": "{{time}} güncellendi"
+    "updated": "{{time}} güncellendi",
+    "back": "Geri",
+    "dismiss": "Kapat"
   },
   "legal": {
     "terms": "Şartlar ve Koşullar",
@@ -773,7 +775,7 @@
       "newPassword": "Yeni parola",
       "confirmPassword": "Parolayı doğrula",
       "currentPassword": "Mevcut parola",
-      "passwordTooShort": "En az 6 karakter kullan.",
+      "passwordTooShort": "En az {{min}} karakter kullan.",
       "passwordMismatch": "İki parola eşleşmiyor.",
       "passwordWrong": "Bu parola doğru değil.",
       "noRecoveryWarning": "Parola kurtarma yok. Unutursan geri dönmenin tek yolu bu cihazdaki verileri siler. Parolanı şimdi parola yöneticine kaydet.",
@@ -804,7 +806,35 @@
       "resetButton": "Sıfırla ve sil",
       "resetConfirmTitle": "Bu cihaz silinsin mi?",
       "resetConfirmBody": "Bu, bu bilgisayardaki tüm borsa API anahtarlarını, cüzdan anahtarlarını, çalışma alanlarını, grafik düzenlerini ve sohbetleri siler. Geri alınamaz ve parola kurtarma yoktur. Oturum açtıysan buluta eşitlenen ayarlar tekrar giriş yapınca geri gelir — API ve cüzdan anahtarları asla, çünkü sadece burada tutulur.",
-      "resetConfirmPhrase": "Onaylamak için {{phrase}} yaz."
+      "resetConfirmPhrase": "Onaylamak için {{phrase}} yaz.",
+      "vaultTitle": "Kimlik bilgisi kasası",
+      "vaultDescription": "Borsa API anahtarlarını ve cüzdan anahtarlarını bir parola veya passkey ile şifrele.",
+      "vaultStatusNone": "Kurulmadı.",
+      "vaultStatusReady_one": "1 kilit açma yöntemiyle korunuyor.",
+      "vaultStatusReady_other": "{{count}} kilit açma yöntemiyle korunuyor.",
+      "vaultSetUp": "Kasayı kur",
+      "vaultAddProtector": "Başka bir giriş yolu ekle",
+      "vaultRemoveProtector": "Kaldır",
+      "vaultRemoveLastBlocked": "Bu, kasana giren tek yol. Kaldırmadan önce bir tane daha ekle.",
+      "vaultProtectsBody": "Kasa ile API ve cüzdan anahtarların şifreli olarak saklanır. Bu tarayıcı profilini — ya da bu bilgisayarın diskini — kopyalayan biri, parolan veya passkey'in olmadan açamayacağı şifreli metin elde eder.",
+      "vaultCeiling": "Anahtarları kullanırken korumaz. Bu sayfada çalışan her şey, tıpkı uygulamanın yaptığı gibi açık kasadan bir anahtar isteyebilir. En değerli anahtarların için önerimiz hâlâ masaüstü uygulaması.",
+      "vaultNoRecovery": "Kurtarma yoktur. Tüm giriş yollarını kaybedersen şifreli anahtarlar da gider — uygulamaya geri dönmenin tek yolu bu cihazın verilerini siler.",
+      "vaultDesktopToggleHint": "Anahtarların zaten sistem anahtar zincirinde. Üstüne bir parola veya passkey eklemek için bunu aç.",
+      "vaultDesktopOptOutTitle": "Kimlik bilgisi kasası kapatılsın mı?",
+      "vaultDesktopOptOutBody": "Anahtarların yeniden yalnızca sistem anahtar zinciriyle korunur. Hiçbir şey silinmez ve kasayı daha sonra tekrar açabilirsin.",
+      "vaultDesktopOptOutConfirm": "Kasayı kapat",
+      "vaultLegacyBody": "Anahtarların yalnızca bu tarayıcı profiliyle korunuyor. Şifrelemek için bir parola veya passkey ekle.",
+      "vaultLegacyAction": "Şimdi kur",
+      "vaultMigrating": "Saklanan anahtarların kasaya taşınıyor…",
+      "vaultMigrationFailed": "Kasa kurulumu tamamlanmadı. Anahtarların hâlâ okunabilir — tamamlamak için kasayı aç.",
+      "vaultSharedBackoff": "Kasa ve kilit ekranı tek bir deneme sınırını paylaşır, bu yüzden çok fazla yanlış parola ikisini birden geciktirir.",
+      "vaultCliNote": "Komut satırı aracı API anahtarlarını argüman olarak alır ve kasayı hiç okumaz.",
+      "hardLockTitle": "Sert kilit",
+      "hardLockDescription": "Yalnızca ekranı değil, kasayı da kilitler.",
+      "hardLockButton": "Sert kilit",
+      "hardLockWarning": "Yalnızca ekranı değil, kasayı da kilitler. Canlı botlar ve otomasyonlar sen kilidi açana kadar işlem yapmaz. Kâğıt botlar çalışmaya devam eder.",
+      "hardLockConfirmTitle": "Kimlik bilgisi kasan mühürlensin mi?",
+      "hardLockConfirmBody": "Canlı botlar ve otomasyonlar sen tekrar kilidi açana kadar işlem yapmaz. Kâğıt botlar çalışmaya devam eder."
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "Geri",
     "forward": "İleri",
     "checkForUpdates": "Güncellemeleri Kontrol Et…",
-    "lockTerminal": "Terminali kilitle"
+    "lockTerminal": "Terminali kilitle",
+    "hardLock": "Sert kilit (kasayı mühürle)…"
   },
   "titlebar": {
     "newWindow": "Yeni pencere",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "CANLI MOD",
     "armConfirm": "Gerçek işlemi aç",
     "armNoCredential": "{{venue}} için kayıtlı bir API kimlik bilgisi yok, bu yüzden bu bot gerçek emir veremez. Hesaplar bölümünden bir tane ekleyip geri dön.",
-    "armAddCredential": "Hesaplar’a git"
+    "armAddCredential": "Hesaplar’a git",
+    "statusWaitingUnlock": "Kilit açılmasını bekliyor"
   },
   "indicatorsPage": {
     "scripts": "Göstergelerim",
@@ -2070,7 +2102,8 @@
       "switchTheme": "Tema: {{name}}",
       "reload": "Pencereyi yeniden yükle",
       "settingsSection": "Ayarlar: {{name}}",
-      "fullscreen": "Tam ekranı aç/kapat"
+      "fullscreen": "Tam ekranı aç/kapat",
+      "hardLock": "Sert kilit (kasayı mühürle)"
     },
     "footer": {
       "navigate": "Gezin",
@@ -2180,7 +2213,9 @@
     "hasAccountNo": "Henüz yok",
     "hasAccountNoDesc": "Ücretsiz bir {{exchange}} hesabı aç",
     "importKey": "Bir özel anahtar içe aktar",
-    "affiliateDisclosure": "Bazı kayıt bağlantıları, sana ek maliyet çıkarmadan Pairlens'e komisyon kazandırabilir."
+    "affiliateDisclosure": "Bazı kayıt bağlantıları, sana ek maliyet çıkarmadan Pairlens'e komisyon kazandırabilir.",
+    "vaultSealedBody": "Kimlik bilgisi kasan kilitli. Hesapların hâlâ burada — görmek ve kullanmak için kilidi aç.",
+    "credentialsUnreadable": "Bu cihazda saklanan anahtarlar okunamadı. Hiçbir şey kaybolmadı — tekrar dene ya da Pairlens’i yeniden başlat."
   },
   "workspaceStore": {
     "title": "Çalışma Alanı Mağazası",
@@ -2423,7 +2458,8 @@
         "idle": "Bir süre hareketsiz kalınca kilitlendi.",
         "periodic": "Planlandığı gibi kilitlendi.",
         "wake": "Bilgisayar uykudayken kilitlendi.",
-        "manual": "Terminali sen kilitledin."
+        "manual": "Terminali sen kilitledin.",
+        "hard": "Kasayı kilitlediniz. Canlı otomasyonlar duraklatıldı."
       }
     },
     "challenge": {
@@ -2431,6 +2467,38 @@
       "description": "Bu emri göndermek için parolanı gir.",
       "confirm": "Onayla",
       "cancel": "İptal"
+    },
+    "vault": {
+      "enrollTitle": "Anahtarlarını koru",
+      "enrollSubtitle": "Bu cihazda saklanan anahtarların kilidini nasıl açacağını seç.",
+      "enrollRecommendBoth": "Hem bir passkey hem de bir parola kurmanı öneririz. İkisi de kasanı açar, yani ilkini kaybedersen ikincisi geri dönüş yolundur.",
+      "enrollButton": "Devam",
+      "secondTitle": "İkinci bir giriş yolu eklensin mi?",
+      "secondSubtitle": "Kasanı açmanın tek bir yolu var. İkincisi, bir cihazı kaybetmenin ya da bir parolayı unutmanın son olmadığı anlamına gelir.",
+      "doneButton": "Bitti",
+      "choosePasskey": "Passkey",
+      "choosePasskeyHint": "Touch ID, Windows Hello veya bir USB güvenlik anahtarı.",
+      "choosePassword": "Parola",
+      "choosePasswordHint": "Bu terminali açan parolanın aynısı.",
+      "passkeyUnsupported": "Passkey burada kullanılamıyor.",
+      "passkeyUnsupportedHint": "Bu tarayıcı veya cihaz bir passkey'den anahtar türetemiyor. Bunun yerine parola kullan.",
+      "passkeyCancelled": "Passkey istemi kapatıldı.",
+      "passkeyNoMatch": "Bu passkey bu kasaya kayıtlı değil.",
+      "useExistingPassword": "Bu terminal için zaten belirlediğin parolayı kullan.",
+      "unlockTitle": "Anahtarlarının kilidini aç",
+      "unlockSubtitle": "API ve cüzdan anahtarların şifreli. Kullanmak için kilidi aç.",
+      "unlockWithPasskey": "Passkey ile aç",
+      "unlockWithPassword": "Kilidi aç",
+      "unlocking": "Açılıyor…",
+      "sealed": "Kimlik bilgisi kasan kilitli.",
+      "sealedBanner_one": "1 canlı bot duraklatıldı — işlemlere devam etmek için Pairlens'in kilidini aç.",
+      "sealedBanner_other": "{{count}} canlı bot duraklatıldı — işlemlere devam etmek için Pairlens'in kilidini aç.",
+      "sealedBannerAction": "Kilidi aç",
+      "botsPausedTitle": "Canlı botlar duraklatıldı",
+      "botsPausedBody": "Canlı işlemlere devam etmek için Pairlens'in kilidini aç. Kâğıt botlar etkilenmez.",
+      "orderBlocked": "Kimlik bilgisi kasan kilitli — canlı emir göndermek için Pairlens'in kilidini aç.",
+      "insecureContext": "Güvenli olmayan bir bağlantıda şifreleme kullanılamaz. Kasa kurmak için Pairlens'i HTTPS üzerinden veya localhost'ta aç.",
+      "diverged": "Terminalin açık, ama bu parola kimlik bilgisi kasanı açmadı. İkisini yeniden eşitlemek için parolanı Ayarlar → Güvenlik'ten değiştir."
     }
   },
   "fullscreen": {

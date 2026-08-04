@@ -25,7 +25,8 @@
 import { clearLockConfig } from './lock-config'
 import { clearLockState } from './lock-store'
 import { postLock } from './lock-channel'
-import { LOCK_VERIFIER_KEY } from './lock-verifier'
+import { LOCK_VERIFIER_KEY, VAULT_RECORD_KEY } from './keys'
+import { clearUiMirror } from './vault/vault-storage'
 import { deleteCredential, getCredential } from '@/lib/keychain'
 import { CREDENTIALS_INDEX_KEY } from '@/stores/credentials-store'
 import { WALLETS_INDEX_KEY } from '@/stores/wallets-store'
@@ -73,6 +74,17 @@ export async function resetAndErase(): Promise<void> {
   await forget(CREDENTIALS_INDEX_KEY)
   await forget(WALLETS_INDEX_KEY)
   await forget(LOCK_VERIFIER_KEY)
+  // The vault record. On browser it is a `pairlens:` localStorage key and step
+  // 3 would sweep it anyway; on desktop it is an OS keychain entry with no
+  // such prefix, and leaving it behind orphans a wrapped data key in the
+  // user's Keychain forever.
+  //
+  // Deleted AFTER the enumeration above, deliberately: with a vault enrolled
+  // and sealed, `readIds` cannot read the indexes and the `cred:*` entries
+  // survive on desktop. Destroying the record last is what makes that
+  // leftover ciphertext permanently unopenable rather than merely deleted-ish.
+  await forget(VAULT_RECORD_KEY)
+  clearUiMirror()
 
   // 2. Lock config and mirror before anything else local, so a failure
   //    partway through still leaves a bootable app.

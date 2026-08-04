@@ -396,7 +396,9 @@
     "chooseIcon": "Escolher ícone",
     "clear": "Limpar",
     "showInFolder": "Mostrar na pasta",
-    "updated": "Atualizado {{time}}"
+    "updated": "Atualizado {{time}}",
+    "back": "Voltar",
+    "dismiss": "Dispensar"
   },
   "legal": {
     "terms": "Termos e Condições",
@@ -773,7 +775,7 @@
       "newPassword": "Nova palavra-passe",
       "confirmPassword": "Confirmar palavra-passe",
       "currentPassword": "Palavra-passe atual",
-      "passwordTooShort": "Usa pelo menos 6 caracteres.",
+      "passwordTooShort": "Usa pelo menos {{min}} caracteres.",
       "passwordMismatch": "As duas palavras-passe não coincidem.",
       "passwordWrong": "Essa palavra-passe não está correta.",
       "noRecoveryWarning": "Não existe recuperação de palavra-passe. Se a esqueceres, a única forma de voltar a entrar apaga os dados deste dispositivo. Guarda-a já no teu gestor de palavras-passe.",
@@ -804,7 +806,35 @@
       "resetButton": "Repor e apagar",
       "resetConfirmTitle": "Apagar este dispositivo?",
       "resetConfirmBody": "Isto apaga todas as chaves API, chaves de carteira, espaços de trabalho, disposições de gráfico e conversas neste computador. Não há como desfazer nem recuperar a palavra-passe. Se tiveres sessão iniciada, as definições sincronizadas voltam ao entrares de novo — as chaves API e de carteira nunca, porque só existem aqui.",
-      "resetConfirmPhrase": "Escreve {{phrase}} para confirmar."
+      "resetConfirmPhrase": "Escreve {{phrase}} para confirmar.",
+      "vaultTitle": "Cofre de credenciais",
+      "vaultDescription": "Criptografe suas chaves de API de corretoras e de carteiras com uma senha ou uma passkey.",
+      "vaultStatusNone": "Não configurado.",
+      "vaultStatusReady_one": "Protegido por 1 forma de desbloqueio.",
+      "vaultStatusReady_other": "Protegido por {{count}} formas de desbloqueio.",
+      "vaultSetUp": "Configurar cofre",
+      "vaultAddProtector": "Adicionar outra forma de entrar",
+      "vaultRemoveProtector": "Remover",
+      "vaultRemoveLastBlocked": "Esta é a única forma de entrar no seu cofre. Adicione outra antes de removê-la.",
+      "vaultProtectsBody": "Com um cofre, suas chaves de API e de carteira ficam guardadas criptografadas. Quem copiar este perfil do navegador — ou o disco deste computador — recebe texto cifrado que não consegue abrir sem sua senha ou sua passkey.",
+      "vaultCeiling": "Ele não protege as chaves enquanto você as usa. Qualquer coisa em execução nesta página pode pedir uma chave ao cofre desbloqueado, do mesmo jeito que o app faz. Para as chaves mais valiosas, o app de desktop continua sendo a recomendação.",
+      "vaultNoRecovery": "Não há recuperação. Perca todas as formas de entrar e as chaves criptografadas se vão — o único caminho de volta ao app apaga os dados deste dispositivo.",
+      "vaultDesktopToggleHint": "Suas chaves já estão no chaveiro do sistema. Ative isto para acrescentar uma senha ou uma passkey por cima.",
+      "vaultDesktopOptOutTitle": "Desativar o cofre de credenciais?",
+      "vaultDesktopOptOutBody": "Suas chaves voltam a ser protegidas apenas pelo chaveiro do sistema. Nada é apagado, e você pode reativar o cofre depois.",
+      "vaultDesktopOptOutConfirm": "Desativar cofre",
+      "vaultLegacyBody": "Suas chaves estão protegidas somente por este perfil do navegador. Adicione uma senha ou uma passkey para criptografá-las.",
+      "vaultLegacyAction": "Configurar agora",
+      "vaultMigrating": "Movendo suas chaves guardadas para o cofre…",
+      "vaultMigrationFailed": "A configuração do cofre não terminou. Suas chaves continuam legíveis — abra o cofre para concluí-la.",
+      "vaultSharedBackoff": "O cofre e a tela de bloqueio compartilham um mesmo limite de tentativas, então senhas erradas demais atrasam os dois.",
+      "vaultCliNote": "A ferramenta de linha de comando recebe chaves de API como argumentos e nunca lê o cofre.",
+      "hardLockTitle": "Bloqueio total",
+      "hardLockDescription": "Bloqueia o cofre, não apenas a tela.",
+      "hardLockButton": "Bloqueio total",
+      "hardLockWarning": "Bloqueia o cofre, não apenas a tela. Bots ao vivo e automações param de operar até você desbloquear. Bots em papel continuam.",
+      "hardLockConfirmTitle": "Selar seu cofre de credenciais?",
+      "hardLockConfirmBody": "Bots ao vivo e automações param de operar até você desbloquear de novo. Bots em papel continuam."
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "Voltar",
     "forward": "Avançar",
     "checkForUpdates": "Verificar Atualizações…",
-    "lockTerminal": "Bloquear terminal"
+    "lockTerminal": "Bloquear terminal",
+    "hardLock": "Bloqueio total (selar cofre)…"
   },
   "titlebar": {
     "newWindow": "Nova janela",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "ARMAR REAL",
     "armConfirm": "Armar real",
     "armNoCredential": "Não há credencial de API salva para {{venue}}, então este bot não pode enviar ordens reais. Adicione uma em Contas e volte.",
-    "armAddCredential": "Ir para Contas"
+    "armAddCredential": "Ir para Contas",
+    "statusWaitingUnlock": "Aguardando desbloqueio"
   },
   "indicatorsPage": {
     "scripts": "Meus Indicadores",
@@ -2070,7 +2102,8 @@
       "switchTheme": "Tema: {{name}}",
       "reload": "Recarregar janela",
       "settingsSection": "Configurações: {{name}}",
-      "fullscreen": "Alternar ecrã inteiro"
+      "fullscreen": "Alternar ecrã inteiro",
+      "hardLock": "Bloqueio total (selar cofre)"
     },
     "footer": {
       "navigate": "Navegar",
@@ -2180,7 +2213,9 @@
     "hasAccountNo": "Ainda não",
     "hasAccountNoDesc": "Abra uma conta gratuita na {{exchange}}",
     "importKey": "Importar uma chave privada",
-    "affiliateDisclosure": "Alguns links de cadastro podem gerar uma comissão para o Pairlens, sem nenhum custo extra para você."
+    "affiliateDisclosure": "Alguns links de cadastro podem gerar uma comissão para o Pairlens, sem nenhum custo extra para você.",
+    "vaultSealedBody": "Seu cofre de credenciais está bloqueado. Suas contas continuam aqui — desbloqueie para vê-las e usá-las.",
+    "credentialsUnreadable": "Não foi possível ler as chaves guardadas neste dispositivo. Nada se perdeu — tenta de novo ou reinicia o Pairlens."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2423,7 +2458,8 @@
         "idle": "Bloqueado após um período de inatividade.",
         "periodic": "Bloqueado conforme agendado.",
         "wake": "Bloqueado enquanto o computador esteve suspenso.",
-        "manual": "Bloqueaste o terminal."
+        "manual": "Bloqueaste o terminal.",
+        "hard": "Você bloqueou o cofre. As automações ao vivo estão pausadas."
       }
     },
     "challenge": {
@@ -2431,6 +2467,38 @@
       "description": "Introduz a tua palavra-passe para enviar esta ordem.",
       "confirm": "Confirmar",
       "cancel": "Cancelar"
+    },
+    "vault": {
+      "enrollTitle": "Proteja suas chaves",
+      "enrollSubtitle": "Escolha como você vai desbloquear as chaves guardadas neste dispositivo.",
+      "enrollRecommendBoth": "Recomendamos configurar uma passkey e uma senha. Qualquer uma abre seu cofre, então a segunda é seu caminho de volta se você perder a primeira.",
+      "enrollButton": "Continuar",
+      "secondTitle": "Adicionar uma segunda forma de entrar?",
+      "secondSubtitle": "Você tem uma única forma de desbloquear o cofre. Com uma segunda, perder um dispositivo ou esquecer uma senha deixa de ser o fim.",
+      "doneButton": "Concluir",
+      "choosePasskey": "Passkey",
+      "choosePasskeyHint": "Touch ID, Windows Hello ou uma chave de segurança USB.",
+      "choosePassword": "Senha",
+      "choosePasswordHint": "A mesma senha que desbloqueia este terminal.",
+      "passkeyUnsupported": "Passkeys não estão disponíveis aqui.",
+      "passkeyUnsupportedHint": "Este navegador ou dispositivo não consegue derivar uma chave de uma passkey. Use uma senha.",
+      "passkeyCancelled": "O pedido de passkey foi cancelado.",
+      "passkeyNoMatch": "Essa passkey não está registrada neste cofre.",
+      "useExistingPassword": "Use a senha que você já definiu para este terminal.",
+      "unlockTitle": "Desbloqueie suas chaves",
+      "unlockSubtitle": "Suas chaves de API e de carteira estão criptografadas. Desbloqueie para usá-las.",
+      "unlockWithPasskey": "Desbloquear com passkey",
+      "unlockWithPassword": "Desbloquear",
+      "unlocking": "Desbloqueando…",
+      "sealed": "Seu cofre de credenciais está bloqueado.",
+      "sealedBanner_one": "1 bot ao vivo está pausado — desbloqueie o Pairlens para retomar as operações.",
+      "sealedBanner_other": "{{count}} bots ao vivo estão pausados — desbloqueie o Pairlens para retomar as operações.",
+      "sealedBannerAction": "Desbloquear",
+      "botsPausedTitle": "Bots ao vivo pausados",
+      "botsPausedBody": "Desbloqueie o Pairlens para retomar as operações reais. Bots em papel não são afetados.",
+      "orderBlocked": "Seu cofre de credenciais está bloqueado — desbloqueie o Pairlens para enviar ordens reais.",
+      "insecureContext": "A criptografia não está disponível em uma conexão insegura. Abra o Pairlens por HTTPS, ou em localhost, para configurar um cofre.",
+      "diverged": "Seu terminal está desbloqueado, mas essa senha não abriu o cofre de credenciais. Altere sua senha em Configurações → Segurança para sincronizar os dois novamente."
     }
   },
   "fullscreen": {

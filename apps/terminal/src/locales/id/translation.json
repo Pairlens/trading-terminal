@@ -396,7 +396,9 @@
     "chooseIcon": "Pilih ikon",
     "clear": "Bersihkan",
     "showInFolder": "Tampilkan di folder",
-    "updated": "Diperbarui {{time}}"
+    "updated": "Diperbarui {{time}}",
+    "back": "Kembali",
+    "dismiss": "Tutup"
   },
   "legal": {
     "terms": "Syarat & Ketentuan",
@@ -773,7 +775,7 @@
       "newPassword": "Kata sandi baru",
       "confirmPassword": "Konfirmasi kata sandi",
       "currentPassword": "Kata sandi saat ini",
-      "passwordTooShort": "Gunakan minimal 6 karakter.",
+      "passwordTooShort": "Gunakan minimal {{min}} karakter.",
       "passwordMismatch": "Kedua kata sandi tidak sama.",
       "passwordWrong": "Kata sandi itu salah.",
       "noRecoveryWarning": "Tidak ada pemulihan kata sandi. Kalau lupa, satu-satunya jalan masuk kembali menghapus data perangkat ini. Simpan sekarang di pengelola kata sandimu.",
@@ -804,7 +806,35 @@
       "resetButton": "Setel ulang dan hapus",
       "resetConfirmTitle": "Hapus perangkat ini?",
       "resetConfirmBody": "Ini menghapus setiap kunci API bursa, kunci dompet, ruang kerja, tata letak grafik, dan obrolan di komputer ini. Tidak bisa dibatalkan dan tidak ada pemulihan kata sandi. Kalau kamu masuk akun, pengaturan yang tersinkron kembali saat kamu masuk lagi — kunci API dan dompet tidak pernah, karena hanya tersimpan di sini.",
-      "resetConfirmPhrase": "Ketik {{phrase}} untuk konfirmasi."
+      "resetConfirmPhrase": "Ketik {{phrase}} untuk konfirmasi.",
+      "vaultTitle": "Brankas kredensial",
+      "vaultDescription": "Enkripsi kunci API bursa dan kunci dompet Anda dengan kata sandi atau passkey.",
+      "vaultStatusNone": "Belum disiapkan.",
+      "vaultStatusReady_one": "Dilindungi oleh 1 cara membuka.",
+      "vaultStatusReady_other": "Dilindungi oleh {{count}} cara membuka.",
+      "vaultSetUp": "Siapkan brankas",
+      "vaultAddProtector": "Tambah cara masuk lain",
+      "vaultRemoveProtector": "Hapus",
+      "vaultRemoveLastBlocked": "Ini satu-satunya cara masuk ke brankas Anda. Tambahkan yang lain sebelum menghapusnya.",
+      "vaultProtectsBody": "Dengan brankas, kunci API dan dompet Anda disimpan terenkripsi. Siapa pun yang menyalin profil peramban ini — atau disk komputer ini — hanya mendapat teks tersandi yang tidak bisa dibuka tanpa kata sandi atau passkey Anda.",
+      "vaultCeiling": "Ini tidak melindungi kunci saat Anda memakainya. Apa pun yang berjalan di dalam halaman ini bisa meminta kunci pada brankas yang terbuka, persis seperti aplikasi. Untuk kunci paling berharga, aplikasi desktop tetap rekomendasinya.",
+      "vaultNoRecovery": "Tidak ada pemulihan. Kehilangan semua cara masuk berarti kunci terenkripsi hilang — satu-satunya jalan kembali ke aplikasi menghapus data perangkat ini.",
+      "vaultDesktopToggleHint": "Kunci Anda sudah ada di keychain sistem. Aktifkan ini untuk menambahkan kata sandi atau passkey di atasnya.",
+      "vaultDesktopOptOutTitle": "Matikan brankas kredensial?",
+      "vaultDesktopOptOutBody": "Kunci Anda kembali dilindungi oleh keychain sistem saja. Tidak ada yang dihapus, dan Anda bisa mengaktifkan brankas lagi nanti.",
+      "vaultDesktopOptOutConfirm": "Matikan brankas",
+      "vaultLegacyBody": "Kunci Anda hanya dilindungi oleh profil peramban ini. Tambahkan kata sandi atau passkey untuk mengenkripsinya.",
+      "vaultLegacyAction": "Siapkan sekarang",
+      "vaultMigrating": "Memindahkan kunci tersimpan ke brankas…",
+      "vaultMigrationFailed": "Penyiapan brankas belum selesai. Kunci Anda masih bisa dibaca — buka brankas untuk menyelesaikannya.",
+      "vaultSharedBackoff": "Brankas dan layar kunci berbagi satu batas percobaan, jadi terlalu banyak kata sandi salah menunda keduanya.",
+      "vaultCliNote": "Alat baris perintah menerima kunci API sebagai argumen dan tidak pernah membaca brankas.",
+      "hardLockTitle": "Kunci penuh",
+      "hardLockDescription": "Mengunci brankas, bukan hanya layar.",
+      "hardLockButton": "Kunci penuh",
+      "hardLockWarning": "Mengunci brankas, bukan hanya layar. Bot live dan otomasi berhenti trading sampai Anda membukanya. Bot paper tetap berjalan.",
+      "hardLockConfirmTitle": "Segel brankas kredensial Anda?",
+      "hardLockConfirmBody": "Bot live dan otomasi berhenti trading sampai Anda membuka lagi. Bot paper tetap berjalan."
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "Kembali",
     "forward": "Maju",
     "checkForUpdates": "Periksa Pembaruan…",
-    "lockTerminal": "Kunci terminal"
+    "lockTerminal": "Kunci terminal",
+    "hardLock": "Kunci penuh (segel brankas)…"
   },
   "titlebar": {
     "newWindow": "Jendela baru",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "AKTIFKAN LIVE",
     "armConfirm": "Aktifkan live",
     "armNoCredential": "Tidak ada kredensial API tersimpan untuk {{venue}}, jadi bot ini tidak bisa mengirim order live. Tambahkan satu di Akun lalu kembali ke sini.",
-    "armAddCredential": "Buka Akun"
+    "armAddCredential": "Buka Akun",
+    "statusWaitingUnlock": "Menunggu dibuka"
   },
   "indicatorsPage": {
     "scripts": "Indikator Saya",
@@ -2070,7 +2102,8 @@
       "switchTheme": "Tema: {{name}}",
       "reload": "Muat ulang jendela",
       "settingsSection": "Pengaturan: {{name}}",
-      "fullscreen": "Alihkan layar penuh"
+      "fullscreen": "Alihkan layar penuh",
+      "hardLock": "Kunci penuh (segel brankas)"
     },
     "footer": {
       "navigate": "Navigasi",
@@ -2180,7 +2213,9 @@
     "hasAccountNo": "Belum",
     "hasAccountNoDesc": "Buka akun {{exchange}} gratis",
     "importKey": "Impor private key",
-    "affiliateDisclosure": "Beberapa tautan pendaftaran dapat memberikan komisi kepada Pairlens, tanpa biaya tambahan bagi Anda."
+    "affiliateDisclosure": "Beberapa tautan pendaftaran dapat memberikan komisi kepada Pairlens, tanpa biaya tambahan bagi Anda.",
+    "vaultSealedBody": "Brankas kredensial Anda terkunci. Akun Anda masih ada — buka untuk melihat dan menggunakannya.",
+    "credentialsUnreadable": "Kunci yang tersimpan di perangkat ini tidak bisa dibaca. Tidak ada yang hilang — coba lagi atau mulai ulang Pairlens."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2423,7 +2458,8 @@
         "idle": "Terkunci setelah beberapa saat tanpa aktivitas.",
         "periodic": "Terkunci sesuai jadwal.",
         "wake": "Terkunci saat komputer tidur.",
-        "manual": "Kamu mengunci terminal."
+        "manual": "Kamu mengunci terminal.",
+        "hard": "Anda mengunci brankas. Otomatisasi live dijeda."
       }
     },
     "challenge": {
@@ -2431,6 +2467,38 @@
       "description": "Masukkan kata sandi untuk mengirim order ini.",
       "confirm": "Konfirmasi",
       "cancel": "Batal"
+    },
+    "vault": {
+      "enrollTitle": "Lindungi kunci Anda",
+      "enrollSubtitle": "Pilih cara Anda membuka kunci yang tersimpan di perangkat ini.",
+      "enrollRecommendBoth": "Kami menyarankan menyiapkan passkey sekaligus kata sandi. Keduanya membuka brankas Anda, jadi yang kedua adalah jalan masuk cadangan jika yang pertama hilang.",
+      "enrollButton": "Lanjutkan",
+      "secondTitle": "Tambahkan cara masuk kedua?",
+      "secondSubtitle": "Anda hanya punya satu cara membuka brankas. Cara kedua membuat kehilangan satu perangkat, atau lupa satu kata sandi, bukan akhir segalanya.",
+      "doneButton": "Selesai",
+      "choosePasskey": "Passkey",
+      "choosePasskeyHint": "Touch ID, Windows Hello, atau kunci keamanan USB.",
+      "choosePassword": "Kata sandi",
+      "choosePasswordHint": "Kata sandi yang sama dengan yang membuka terminal ini.",
+      "passkeyUnsupported": "Passkey tidak tersedia di sini.",
+      "passkeyUnsupportedHint": "Peramban atau perangkat ini tidak dapat menurunkan kunci dari passkey. Gunakan kata sandi saja.",
+      "passkeyCancelled": "Permintaan passkey ditutup.",
+      "passkeyNoMatch": "Passkey itu tidak terdaftar pada brankas ini.",
+      "useExistingPassword": "Gunakan kata sandi yang sudah Anda setel untuk terminal ini.",
+      "unlockTitle": "Buka kunci Anda",
+      "unlockSubtitle": "Kunci API dan dompet Anda terenkripsi. Buka untuk menggunakannya.",
+      "unlockWithPasskey": "Buka dengan passkey",
+      "unlockWithPassword": "Buka",
+      "unlocking": "Membuka…",
+      "sealed": "Brankas kredensial Anda terkunci.",
+      "sealedBanner_one": "1 bot live dijeda — buka Pairlens untuk melanjutkan trading.",
+      "sealedBanner_other": "{{count}} bot live dijeda — buka Pairlens untuk melanjutkan trading.",
+      "sealedBannerAction": "Buka",
+      "botsPausedTitle": "Bot live dijeda",
+      "botsPausedBody": "Buka Pairlens untuk melanjutkan trading live. Bot paper tidak terpengaruh.",
+      "orderBlocked": "Brankas kredensial Anda terkunci — buka Pairlens untuk mengirim order live.",
+      "insecureContext": "Enkripsi tidak tersedia pada koneksi yang tidak aman. Buka Pairlens melalui HTTPS, atau di localhost, untuk menyiapkan brankas.",
+      "diverged": "Terminal Anda terbuka, tetapi kata sandi itu tidak membuka brankas kredensial. Ubah kata sandi di Pengaturan → Keamanan agar keduanya selaras kembali."
     }
   },
   "fullscreen": {

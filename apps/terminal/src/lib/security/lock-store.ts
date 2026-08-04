@@ -24,7 +24,10 @@ import { useSyncExternalStore } from 'react'
 
 import { onLockMessage, postLock } from './lock-channel'
 import { getLockConfig, subscribeLockConfig } from './lock-config'
+import { isVaultEnrolled, isVaultUnlocked } from './vault/vault-session'
 import type { LockReason } from './lock-config'
+// vault-session imports the lock CHANNEL, not this module, so this direction
+// is the acyclic one. `hardLock` lives in its own module for the same reason.
 import { track } from '@/lib/analytics-events'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 
@@ -392,6 +395,13 @@ function settleChallenge(ok: boolean, outcome: ChallengeOutcome): void {
  */
 export function requireUnlockForTrade(): Promise<boolean> {
   ensureInit()
+  // A sealed vault is a hard stop for INTERACTIVE trading regardless of the
+  // lock's own configuration: the credential needed to sign the order cannot
+  // be read, so letting this resolve `true` would only move the failure one
+  // layer down into `placeOrderGuarded` with a worse message. The unattended
+  // path deliberately does not come through here — see `placeUnattendedOrder`.
+  if (isVaultEnrolled() && !isVaultUnlocked()) return Promise.resolve(false)
+
   const config = getLockConfig()
   if (!config.enabled || !config.triggers.beforeTrade.enabled) {
     return Promise.resolve(true)

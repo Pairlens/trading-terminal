@@ -396,7 +396,9 @@
     "chooseIcon": "Scegli icona",
     "clear": "Cancella",
     "showInFolder": "Mostra nella cartella",
-    "updated": "Aggiornato {{time}}"
+    "updated": "Aggiornato {{time}}",
+    "back": "Indietro",
+    "dismiss": "Ignora"
   },
   "legal": {
     "terms": "Termini e Condizioni",
@@ -773,7 +775,7 @@
       "newPassword": "Nuova password",
       "confirmPassword": "Conferma password",
       "currentPassword": "Password attuale",
-      "passwordTooShort": "Usa almeno 6 caratteri.",
+      "passwordTooShort": "Usa almeno {{min}} caratteri.",
       "passwordMismatch": "Le due password non coincidono.",
       "passwordWrong": "Questa password non è corretta.",
       "noRecoveryWarning": "Non esiste alcun recupero della password. Se la dimentichi, l’unico modo per rientrare cancella i dati di questo dispositivo. Salvala subito nel tuo gestore di password.",
@@ -804,7 +806,35 @@
       "resetButton": "Reimposta e cancella",
       "resetConfirmTitle": "Cancellare questo dispositivo?",
       "resetConfirmBody": "Questo cancella ogni chiave API, chiave del wallet, workspace, layout dei grafici e chat su questo computer. Non si torna indietro e non c’è recupero della password. Se hai effettuato l’accesso, le impostazioni sincronizzate tornano al prossimo accesso — le chiavi API e del wallet mai, perché stanno solo qui.",
-      "resetConfirmPhrase": "Scrivi {{phrase}} per confermare."
+      "resetConfirmPhrase": "Scrivi {{phrase}} per confermare.",
+      "vaultTitle": "Cassaforte delle credenziali",
+      "vaultDescription": "Cifra le tue chiavi API degli exchange e le chiavi di wallet con una password o una passkey.",
+      "vaultStatusNone": "Non configurata.",
+      "vaultStatusReady_one": "Protetta da 1 modo di sblocco.",
+      "vaultStatusReady_other": "Protetta da {{count}} modi di sblocco.",
+      "vaultSetUp": "Configura cassaforte",
+      "vaultAddProtector": "Aggiungi un altro modo per entrare",
+      "vaultRemoveProtector": "Rimuovi",
+      "vaultRemoveLastBlocked": "Questo è l'unico modo per entrare nella cassaforte. Aggiungine un altro prima di rimuoverlo.",
+      "vaultProtectsBody": "Con una cassaforte, le tue chiavi API e di wallet sono salvate cifrate. Chi copia questo profilo del browser — o il disco di questo computer — ottiene testo cifrato che non può aprire senza la tua password o la tua passkey.",
+      "vaultCeiling": "Non protegge le chiavi mentre le stai usando. Qualsiasi cosa in esecuzione in questa pagina può chiedere una chiave alla cassaforte sbloccata, esattamente come fa l'app. Per le chiavi più preziose l'app desktop resta la raccomandazione.",
+      "vaultNoRecovery": "Non c'è recupero. Se perdi ogni modo di entrare, le chiavi cifrate sono perse: l'unico modo di rientrare nell'app cancella i dati di questo dispositivo.",
+      "vaultDesktopToggleHint": "Le tue chiavi sono già nel portachiavi di sistema. Attiva questa opzione per aggiungere sopra una password o una passkey.",
+      "vaultDesktopOptOutTitle": "Disattivare la cassaforte delle credenziali?",
+      "vaultDesktopOptOutBody": "Le tue chiavi tornano a essere protette dal solo portachiavi di sistema. Nulla viene eliminato e potrai riattivare la cassaforte più avanti.",
+      "vaultDesktopOptOutConfirm": "Disattiva cassaforte",
+      "vaultLegacyBody": "Le tue chiavi sono protette solo da questo profilo del browser. Aggiungi una password o una passkey per cifrarle.",
+      "vaultLegacyAction": "Configura ora",
+      "vaultMigrating": "Spostamento delle chiavi salvate nella cassaforte…",
+      "vaultMigrationFailed": "La configurazione della cassaforte non è stata completata. Le tue chiavi sono ancora leggibili: apri la cassaforte per completarla.",
+      "vaultSharedBackoff": "La cassaforte e la schermata di blocco condividono un unico limite di tentativi, quindi troppe password sbagliate ritardano entrambe.",
+      "vaultCliNote": "Lo strumento a riga di comando riceve le chiavi API come argomenti e non legge mai la cassaforte.",
+      "hardLockTitle": "Blocco totale",
+      "hardLockDescription": "Blocca la cassaforte, non solo lo schermo.",
+      "hardLockButton": "Blocco totale",
+      "hardLockWarning": "Blocca la cassaforte, non solo lo schermo. I bot live e le automazioni smettono di operare finché non sblocchi. I bot in paper continuano.",
+      "hardLockConfirmTitle": "Sigillare la cassaforte delle credenziali?",
+      "hardLockConfirmBody": "I bot live e le automazioni smettono di operare finché non sblocchi di nuovo. I bot in paper continuano."
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "Indietro",
     "forward": "Avanti",
     "checkForUpdates": "Verifica aggiornamenti…",
-    "lockTerminal": "Blocca terminale"
+    "lockTerminal": "Blocca terminale",
+    "hardLock": "Blocco totale (sigilla cassaforte)…"
   },
   "titlebar": {
     "newWindow": "Nuova finestra",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "ARMA LIVE",
     "armConfirm": "Arma live",
     "armNoCredential": "Per {{venue}} non è salvata alcuna credenziale API, quindi questo bot non può inviare ordini reali. Aggiungine una in Account e torna qui.",
-    "armAddCredential": "Vai ad Account"
+    "armAddCredential": "Vai ad Account",
+    "statusWaitingUnlock": "In attesa di sblocco"
   },
   "indicatorsPage": {
     "scripts": "I miei indicatori",
@@ -2070,7 +2102,8 @@
       "switchTheme": "Tema: {{name}}",
       "reload": "Ricarica finestra",
       "settingsSection": "Impostazioni: {{name}}",
-      "fullscreen": "Attiva/disattiva schermo intero"
+      "fullscreen": "Attiva/disattiva schermo intero",
+      "hardLock": "Blocco totale (sigilla cassaforte)"
     },
     "footer": {
       "navigate": "Naviga",
@@ -2180,7 +2213,9 @@
     "hasAccountNo": "Non ancora",
     "hasAccountNoDesc": "Apri un account {{exchange}} gratuito",
     "importKey": "Importa una chiave privata",
-    "affiliateDisclosure": "Alcuni link di registrazione possono generare una commissione per Pairlens, senza costi aggiuntivi per te."
+    "affiliateDisclosure": "Alcuni link di registrazione possono generare una commissione per Pairlens, senza costi aggiuntivi per te.",
+    "vaultSealedBody": "La tua cassaforte delle credenziali è bloccata. I tuoi account sono ancora qui: sblocca per vederli e usarli.",
+    "credentialsUnreadable": "Non è stato possibile leggere le chiavi salvate su questo dispositivo. Non è andato perso nulla: riprova o riavvia Pairlens."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2423,7 +2458,8 @@
         "idle": "Bloccato dopo un periodo di inattività.",
         "periodic": "Bloccato come programmato.",
         "wake": "Bloccato mentre il computer era sospeso.",
-        "manual": "Hai bloccato il terminale."
+        "manual": "Hai bloccato il terminale.",
+        "hard": "Hai bloccato la cassaforte. Le automazioni live sono in pausa."
       }
     },
     "challenge": {
@@ -2431,6 +2467,38 @@
       "description": "Inserisci la password per inviare questo ordine.",
       "confirm": "Conferma",
       "cancel": "Annulla"
+    },
+    "vault": {
+      "enrollTitle": "Proteggi le tue chiavi",
+      "enrollSubtitle": "Scegli come sbloccherai le chiavi salvate su questo dispositivo.",
+      "enrollRecommendBoth": "Consigliamo di configurare sia una passkey sia una password. Entrambe aprono la tua cassaforte, quindi la seconda è il modo per rientrare se perdi la prima.",
+      "enrollButton": "Continua",
+      "secondTitle": "Aggiungere un secondo modo per entrare?",
+      "secondSubtitle": "Hai un solo modo per sbloccare la cassaforte. Con un secondo, perdere un dispositivo o dimenticare una password non è la fine.",
+      "doneButton": "Fatto",
+      "choosePasskey": "Passkey",
+      "choosePasskeyHint": "Touch ID, Windows Hello o una chiave di sicurezza USB.",
+      "choosePassword": "Password",
+      "choosePasswordHint": "La stessa password che sblocca questo terminale.",
+      "passkeyUnsupported": "Le passkey non sono disponibili qui.",
+      "passkeyUnsupportedHint": "Questo browser o dispositivo non può derivare una chiave da una passkey. Usa una password.",
+      "passkeyCancelled": "La richiesta della passkey è stata annullata.",
+      "passkeyNoMatch": "Quella passkey non è registrata su questa cassaforte.",
+      "useExistingPassword": "Usa la password che hai già impostato per questo terminale.",
+      "unlockTitle": "Sblocca le tue chiavi",
+      "unlockSubtitle": "Le tue chiavi API e di wallet sono cifrate. Sbloccale per usarle.",
+      "unlockWithPasskey": "Sblocca con passkey",
+      "unlockWithPassword": "Sblocca",
+      "unlocking": "Sblocco…",
+      "sealed": "La tua cassaforte delle credenziali è bloccata.",
+      "sealedBanner_one": "1 bot live è in pausa: sblocca Pairlens per riprendere a fare trading.",
+      "sealedBanner_other": "{{count}} bot live sono in pausa: sblocca Pairlens per riprendere a fare trading.",
+      "sealedBannerAction": "Sblocca",
+      "botsPausedTitle": "I bot live sono in pausa",
+      "botsPausedBody": "Sblocca Pairlens per riprendere il trading live. I bot in paper non sono interessati.",
+      "orderBlocked": "La tua cassaforte delle credenziali è bloccata: sblocca Pairlens per inviare ordini live.",
+      "insecureContext": "La cifratura non è disponibile su una connessione non sicura. Apri Pairlens via HTTPS, o su localhost, per configurare una cassaforte.",
+      "diverged": "Il terminale è sbloccato, ma quella password non ha aperto la cassaforte delle credenziali. Cambia la password in Impostazioni → Sicurezza per riallinearle."
     }
   },
   "fullscreen": {

@@ -9,12 +9,22 @@
  * `'missing'` self-heals the lock, a *throw* keeps it locked. Both are
  * exercised here.
  */
-import { beforeEach, describe, expect, mock, test } from 'bun:test'
+import { afterAll, beforeEach, describe, expect, mock, test } from 'bun:test'
 
 // Stand-in keychain: the real one branches on Tauri vs browser storage,
 // neither of which exists in a test process.
 const store = new Map<string, string>()
 let failNext = false
+
+// `mock.module` is process-global and bun runs test files one after another
+// in the same process, so a stub left in place here becomes every later
+// file's keychain — including the ones that test the real credential vault
+// against real storage. Capture the genuine module first and put it back when
+// this file is done.
+const realKeychain = { ...(await import('@/lib/keychain')) }
+afterAll(() => {
+  void mock.module('@/lib/keychain', () => realKeychain)
+})
 
 void mock.module('@/lib/keychain', () => ({
   saveCredential: async (key: string, value: string) => {

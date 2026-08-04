@@ -128,6 +128,12 @@ export const KEYBINDING_COMMANDS: Array<KeybindingCommand> = [
     labelKey: 'menu.lockTerminal',
   },
   {
+    id: 'general.hardLock',
+    categoryId: 'general',
+    scope: 'global',
+    labelKey: 'menu.hardLock',
+  },
+  {
     id: 'general.toggleFullscreen',
     categoryId: 'general',
     scope: 'global',
@@ -322,6 +328,10 @@ const PAIRLENS_BINDINGS: Record<string, Array<string>> = {
   // Keyboard settings section makes an unbound command discoverable and
   // assignable, which is a better answer than stealing a chord.
   'general.lockTerminal': [],
+  // Unbound for a stronger reason than the one above: this one stops live
+  // automations. A chord a user could hit by accident is the wrong default
+  // for an action whose whole point is that it has consequences.
+  'general.hardLock': [],
   // TradingView's fullscreen chord too, so the TV preset agrees for free.
   // F11 stays untouched: browsers reserve it for their own window fullscreen.
   'general.toggleFullscreen': ['Shift+F'],

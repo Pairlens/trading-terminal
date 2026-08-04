@@ -65,6 +65,7 @@ import { useWorkflowStore } from '@/stores/workflow-store'
 import { useWorkflowRunStore } from '@/stores/workflow-run-store'
 import { showLiveWorkflowToast } from '@/components/workflows/workflow-execution-toast'
 import { requireUnlockForTrade } from '@/lib/security/lock-store'
+import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
 import i18n from '@/lib/i18n'
 
 // ── Trade toast ───────────────────────────────────────────────────────
@@ -358,6 +359,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   const [submitting, setSubmitting] = useState(false)
   const [presetsConfigOpen, setPresetsConfigOpen] = useState(false)
   const [regionHintDismissed, setRegionHintDismissed] = useState(false)
+  const [unlockOpen, setUnlockOpen] = useState(false)
 
   const baseAsset = pairKey.split('-')[0] ?? pairKey
   const quoteAsset = pairKey.split('-')[1] ?? 'USDT'
@@ -377,9 +379,14 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   const wallet = usePaneWallet()
   const credentials = useCredentialsStore((s) => s.credentials)
   const loaded = useCredentialsStore((s) => s.loaded)
+  // A sealed vault empties the store because it could not read, not because
+  // there is nothing there — so "Connect account" would send a user who
+  // already has keys off to enter them a second time.
+  const credentialsSealed = useCredentialsStore((s) => s.sealed)
   const load = useCredentialsStore((s) => s.load)
   const cryptoWallets = useWalletsStore((s) => s.wallets)
   const walletsLoaded = useWalletsStore((s) => s.loaded)
+  const walletsSealed = useWalletsStore((s) => s.sealed)
   const loadWallets = useWalletsStore((s) => s.load)
   const wfWorkflows = useWorkflowStore((s) => s.workflows)
   const wfLoad = useWorkflowStore((s) => s.load)
@@ -887,29 +894,42 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     <div className="flex shrink-0 flex-col">
       <div className="flex flex-col gap-2.5 p-2.5">
         {/* Wallet status */}
-        {isDex
-          ? walletsLoaded &&
-            !selectedWallet && (
-              <Link
-                to="/accounts"
-                className="text-center text-xs text-muted-foreground hover:text-foreground"
-              >
-                {cryptoWallets.some((w) => w.chain === marketInfo?.walletChain)
-                  ? 'Select wallet in top bar →'
-                  : `Connect ${marketInfo?.walletChain ?? 'crypto'} wallet →`}
-              </Link>
-            )
-          : loaded &&
-            !selectedCred && (
-              <Link
-                to="/accounts"
-                className="text-center text-xs text-muted-foreground hover:text-foreground"
-              >
-                {marketCreds.length === 0
-                  ? `Connect ${exchangeLabel} account →`
-                  : 'Select account in top bar →'}
-              </Link>
-            )}
+        {(isDex ? walletsSealed : credentialsSealed) ? (
+          <button
+            type="button"
+            className="text-center text-xs text-amber-600 hover:underline dark:text-amber-400"
+            onClick={() => setUnlockOpen(true)}
+          >
+            {i18n.t('security.vault.sealed')}{' '}
+            {i18n.t('security.vault.sealedBannerAction')} →
+          </button>
+        ) : isDex ? (
+          walletsLoaded &&
+          !selectedWallet && (
+            <Link
+              to="/accounts"
+              className="text-center text-xs text-muted-foreground hover:text-foreground"
+            >
+              {cryptoWallets.some((w) => w.chain === marketInfo?.walletChain)
+                ? 'Select wallet in top bar →'
+                : `Connect ${marketInfo?.walletChain ?? 'crypto'} wallet →`}
+            </Link>
+          )
+        ) : (
+          loaded &&
+          !selectedCred && (
+            <Link
+              to="/accounts"
+              className="text-center text-xs text-muted-foreground hover:text-foreground"
+            >
+              {marketCreds.length === 0
+                ? `Connect ${exchangeLabel} account →`
+                : 'Select account in top bar →'}
+            </Link>
+          )
+        )}
+
+        <VaultUnlockDialog open={unlockOpen} onOpenChange={setUnlockOpen} />
 
         {showRegionHint && (
           <div className="flex items-start gap-2 rounded-md bg-amber-500/10 px-3 py-2 text-[11px] text-amber-700 dark:text-amber-400">

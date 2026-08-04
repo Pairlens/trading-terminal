@@ -3,6 +3,8 @@
 import { create } from 'zustand'
 
 import { deleteCredential, getCredential, saveCredential } from '@/lib/keychain'
+import { isVaultSealed } from '@/lib/security/vault/vault-errors'
+import { assertCanAddCredential } from '@/lib/security/vault/vault-policy'
 
 export type ExchangeCredential = {
   id: string
@@ -204,10 +206,36 @@ export function getExpiryStatus(cred: ExchangeCredential): {
   }
 }
 
+/**
+ * Why this is not a boolean.
+ *
+ * The old `loaded` flag latched true on any outcome, including the catch — so
+ * a locked credential vault presented as "you have no accounts". Downstream
+ * that means the Accounts page shows its first-run hero, live bots decide they
+ * have no credential, and the user re-enters API keys on top of a vault they
+ * cannot open. `sealed` has to be its own state, everywhere it is read.
+ */
+export type CredentialsStatus =
+  | 'idle'
+  | 'loading'
+  | 'ready'
+  | 'sealed'
+  | 'error'
+
 type CredentialsState = {
   credentials: Array<ExchangeCredential>
+  /**
+   * "The load finished" — true for `sealed` and `error` too, so the UI paints
+   * its answer instead of spinning forever. Never read this to mean "there is
+   * nothing stored"; read `status` for that.
+   */
   loaded: boolean
+  status: CredentialsStatus
+  /** Convenience mirror of `status === 'sealed'` for render paths. */
+  sealed: boolean
   load: () => Promise<void>
+  /** Force a re-read — the vault-unlock subscription calls this. */
+  reload: () => Promise<void>
   addCredential: (
     cred: Omit<ExchangeCredential, 'id' | 'createdAt'>,
   ) => Promise<void>
@@ -221,37 +249,80 @@ function generateId(): string {
   return Math.random().toString(36).slice(2, 10)
 }
 
+async function readAll(
+  set: (partial: Partial<CredentialsState>) => void,
+): Promise<void> {
+  set({ status: 'loading' })
+  try {
+    const indexRaw = await getCredential(CREDENTIALS_INDEX_KEY)
+    if (!indexRaw) {
+      set({ credentials: [], loaded: true, status: 'ready', sealed: false })
+      return
+    }
+    const ids = JSON.parse(indexRaw) as Array<string>
+    const loaded: Array<ExchangeCredential> = []
+    for (const id of ids) {
+      const raw = await getCredential(`cred:${id}`)
+      if (raw) {
+        try {
+          loaded.push(JSON.parse(raw) as ExchangeCredential)
+        } catch {
+          // Corrupted entry — skip
+        }
+      }
+    }
+    set({ credentials: loaded, loaded: true, status: 'ready', sealed: false })
+  } catch (err) {
+    // The one branch that must never collapse into "ready with nothing".
+    if (isVaultSealed(err)) {
+      set({ credentials: [], loaded: true, status: 'sealed', sealed: true })
+      return
+    }
+    set({ credentials: [], loaded: true, status: 'error', sealed: false })
+  }
+}
+
+/**
+ * The read in flight, so concurrent callers await the same one.
+ *
+ * `load()` resolving means "the credentials are in memory" — the bot runtime
+ * arms live bots off exactly that promise. Short-circuiting on
+ * `status === 'loading'` would resolve immediately while the keychain read was
+ * still going, and every armed live bot would be disabled for having no
+ * credential. Whoever asks second waits for the same answer as the first.
+ */
+let inFlight: Promise<void> | null = null
+
+function startRead(set: (partial: Partial<CredentialsState>) => void) {
+  const read = readAll(set).finally(() => {
+    if (inFlight === read) inFlight = null
+  })
+  inFlight = read
+  return read
+}
+
 export const useCredentialsStore = create<CredentialsState>((set, get) => ({
   credentials: [],
   loaded: false,
+  status: 'idle',
+  sealed: false,
 
   load: async () => {
-    if (get().loaded) return
-    try {
-      const indexRaw = await getCredential(CREDENTIALS_INDEX_KEY)
-      if (!indexRaw) {
-        set({ loaded: true })
-        return
-      }
-      const ids = JSON.parse(indexRaw) as Array<string>
-      const loaded: Array<ExchangeCredential> = []
-      for (const id of ids) {
-        const raw = await getCredential(`cred:${id}`)
-        if (raw) {
-          try {
-            loaded.push(JSON.parse(raw) as ExchangeCredential)
-          } catch {
-            // Corrupted entry — skip
-          }
-        }
-      }
-      set({ credentials: loaded, loaded: true })
-    } catch {
-      set({ loaded: true })
-    }
+    // A sealed or errored store retries; only a settled read short-circuits.
+    if (get().status === 'ready') return
+    await (inFlight ?? startRead(set))
+  },
+
+  reload: async () => {
+    // Always a fresh read — an unlock has to see past whatever a sealed read
+    // in flight is about to conclude.
+    await startRead(set)
   },
 
   addCredential: async (cred) => {
+    // Enforced here rather than at the call site so every future writer —
+    // copilot, onboarding, a workspace template — is gated by construction.
+    await assertCanAddCredential()
     const id = generateId()
     const entry: ExchangeCredential = {
       ...cred,

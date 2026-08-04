@@ -105,7 +105,16 @@ export type BotExecuteResult =
       ts: number
       orderId?: string
     }
-  | { ok: false; error: string }
+  | {
+      ok: false
+      error: string
+      /**
+       * The original throw, when there was one. The runtime branches on its
+       * TYPE — a sealed vault parks the bot, everything else halts it — and a
+       * message string cannot carry that distinction reliably.
+       */
+      cause?: unknown
+    }
 
 /**
  * Global serialization chain for LIVE orders.
@@ -198,6 +207,7 @@ export async function executeBotOrder(
       return {
         ok: false as const,
         error: err instanceof Error ? err.message : String(err),
+        cause: err,
       }
     }
   })

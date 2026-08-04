@@ -25,6 +25,8 @@ export function statusLabelKey(status: BotStatus): string {
       return 'botsPage.statusError'
     case 'halted':
       return 'botsPage.statusHalted'
+    case 'waiting-unlock':
+      return 'botsPage.statusWaitingUnlock'
     case 'stopped':
     default:
       return 'botsPage.statusStopped'
@@ -50,7 +52,11 @@ export function rowTone(status: BotStatus, needsRearm: boolean): BotRowTone {
     case 'running':
     case 'warming-up':
       return 'active'
+    // `waiting-unlock` is armed and waiting, not switched off — it reads as
+    // attention for the same reason `needsRearm` does: the user has a
+    // decision to make.
     case 'halted':
+    case 'waiting-unlock':
       return 'attention'
     case 'error':
       return 'error'
@@ -89,6 +95,7 @@ export function statusDotClass(status: BotStatus): string {
     case 'error':
       return 'bg-destructive'
     case 'halted':
+    case 'waiting-unlock':
       return 'bg-amber-500'
     case 'stopped':
     default:

@@ -48,6 +48,11 @@ import { usePairlens } from '@/lib/pairlens-provider'
 import { useMarketData } from '@/lib/market-data-provider'
 import { PluginChatTransport } from '@/lib/plugin-chat-transport'
 import { useCredentialsStore } from '@/stores/credentials-store'
+import {
+  isVaultEnrolled,
+  isVaultUnlocked,
+} from '@/lib/security/vault/vault-session'
+import i18n from '@/lib/i18n'
 import { normalizePair, normalizeTimeframe } from '@/lib/copilot/tool-deps'
 import { AuthRequiredPrompt } from '@/components/capability-gate'
 import {
@@ -555,6 +560,16 @@ function CopilotChatInner({
       placeOrder: async (req: CopilotOrderRequest, mode) => {
         const md = marketDataRef.current
         if (!md) return { success: false, error: 'Trading is unavailable.' }
+        // A sealed vault is checked BEFORE the credential lookup: the store is
+        // empty because it could not read, not because nothing is stored, and
+        // "add API keys in Accounts" would be exactly the wrong advice — the
+        // user's keys are already there.
+        if (isVaultEnrolled() && !isVaultUnlocked()) {
+          return {
+            success: false,
+            error: i18n.t('security.vault.orderBlocked'),
+          }
+        }
         const cred = useCredentialsStore
           .getState()
           .getCredentialForMarket(req.market)
