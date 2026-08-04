@@ -3,12 +3,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'bun:test'
 
 import { BitvavoWsClient } from '../ws-client'
+import { sleep, waitFor } from '../../test-utils/async'
 import type {
   WsAdapterEvents,
   WsConnection,
 } from '@pairlens/market-engine/ws-adapter'
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 class FakeSocket implements WsConnection {
   sent: Array<string> = []
@@ -249,7 +248,7 @@ describe('BitvavoWsClient on ReconnectingWsSession', () => {
 
     // Reconnect resets the book; a fresh getBook is requested + applied.
     sockets[0].drop()
-    await sleep(15)
+    await waitFor(() => sockets.length === 2 && sockets[1].sent.length > 0)
     expect(sockets.length).toBe(2)
     expect(sockets[1].actionFrames('getBook').length).toBe(1)
     sockets[1].push({

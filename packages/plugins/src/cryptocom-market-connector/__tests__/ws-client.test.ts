@@ -3,12 +3,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'bun:test'
 
 import { CryptocomWsClient } from '../ws-client'
+import { sleep, waitFor } from '../../test-utils/async'
 import type {
   WsAdapterEvents,
   WsConnection,
 } from '@pairlens/market-engine/ws-adapter'
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 class FakeSocket implements WsConnection {
   sent: Array<string> = []
@@ -145,7 +144,10 @@ describe('CryptocomWsClient on ReconnectingWsSession', () => {
     expect(sockets[0].frames('subscribe').length).toBe(1)
 
     sockets[0].drop()
-    await sleep(50)
+    // Only that the replacement opened — deliberately NOT that it has sent
+    // anything, since the very next assertion is that it has not yet. This
+    // venue holds its subscribe back for a second past every open.
+    await waitFor(() => sockets.length === 2)
     expect(sockets.length).toBe(2)
     // Still inside the fresh socket's post-connect window
     expect(sockets[1].frames('subscribe').length).toBe(0)
@@ -169,9 +171,11 @@ describe('CryptocomWsClient on ReconnectingWsSession', () => {
 
     const { client } = makeClient()
     client.subscribeCandles('BTC-USDT', '1h', '', () => {})
-    await sleep(30)
+    await waitFor(() => fetches >= 2)
 
-    // One initial attempt + exactly one paced retry — no retry storm.
+    // One initial attempt + exactly one paced retry. The fixed window is
+    // the no-retry-storm half of the claim: negative, so it stays a sleep.
+    await sleep(30)
     expect(fetches).toBe(2)
 
     client.destroy()

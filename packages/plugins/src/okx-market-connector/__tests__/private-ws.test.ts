@@ -3,6 +3,7 @@
 import { describe, expect, it } from 'bun:test'
 
 import { OkxPrivateWsClient } from '../private-ws'
+import { sleep, waitFor } from '../../test-utils/async'
 import type {
   WsAdapterEvents,
   WsConnection,
@@ -11,8 +12,6 @@ import type {
   NormalizedBalance,
   NormalizedOrderUpdate,
 } from '@pairlens/market-engine/types'
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 const CREDS = { apiKey: 'k', apiSecret: 's', passphrase: 'p' }
 
@@ -80,9 +79,11 @@ async function connected(index = 0) {
     (u) => orders.push(u),
     (b) => balances.push(b),
   )
-  await sleep(5)
+  // The login frame is signed asynchronously; pushing OKX's acceptance before
+  // it goes out would leave the client nothing to correlate the reply with.
+  await waitFor(() => h.sockets[index]?.ops('login').length > 0)
   h.sockets[index].acceptLogin()
-  await sleep(5)
+  await waitFor(() => h.sockets[index].ops('subscribe').length > 0)
   return { ...h, orders, balances }
 }
 
@@ -90,7 +91,7 @@ describe('OkxPrivateWsClient — handshake', () => {
   it('signs a login and withholds the subscribe until OKX accepts it', async () => {
     const { client, sockets } = makeClient()
     client.connect(CREDS, '', false, () => {})
-    await sleep(5)
+    await waitFor(() => sockets[0]?.ops('login').length > 0)
 
     const socket = sockets[0]
     const login = socket.ops('login')[0]
@@ -105,7 +106,7 @@ describe('OkxPrivateWsClient — handshake', () => {
     expect(socket.ops('subscribe').length).toBe(0)
 
     socket.acceptLogin()
-    await sleep(5)
+    await waitFor(() => socket.ops('subscribe').length > 0)
 
     const sub = socket.ops('subscribe')[0]
     expect(sub).toBeDefined()
@@ -121,7 +122,9 @@ describe('OkxPrivateWsClient — handshake', () => {
     const { client, sockets } = await connected()
 
     sockets[0].drop()
-    await sleep(20)
+    await waitFor(
+      () => sockets.length === 2 && sockets[1].ops('login').length > 0,
+    )
     expect(sockets.length).toBe(2)
 
     const second = sockets[1]
@@ -130,7 +133,7 @@ describe('OkxPrivateWsClient — handshake', () => {
     expect(second.ops('subscribe').length).toBe(0)
 
     second.acceptLogin()
-    await sleep(5)
+    await waitFor(() => second.ops('subscribe').length > 0)
     expect(second.ops('subscribe').length).toBe(1)
 
     client.destroy()
@@ -139,15 +142,19 @@ describe('OkxPrivateWsClient — handshake', () => {
   it('backs off on a rejected login instead of hot-looping', async () => {
     const { client, sockets } = makeClient()
     client.connect(CREDS, '', false, () => {})
-    await sleep(5)
+    await waitFor(() => sockets[0]?.ops('login').length > 0)
 
     sockets[0].push({ event: 'login', code: '60009', msg: 'Login failed.' })
-    await sleep(30)
+    await waitFor(() => sockets.length >= 2)
 
     // Retried, but the rejected socket was closed rather than left live.
     expect(sockets.length).toBeGreaterThanOrEqual(2)
     expect(sockets[0].closed).toBe(true)
-    expect(sockets.length).toBeLessThan(10)
+    // Hot-loop guard: a fixed window admits a handful of backed-off retries
+    // and hundreds of hot-looping ones. Negative, so the sleep stays.
+    const before = sockets.length
+    await sleep(30)
+    expect(sockets.length - before).toBeLessThan(10)
 
     client.destroy()
   })
@@ -155,11 +162,11 @@ describe('OkxPrivateWsClient — handshake', () => {
   it('treats a bare error frame during login as a login failure', async () => {
     const { client, sockets } = makeClient()
     client.connect(CREDS, '', false, () => {})
-    await sleep(5)
+    await waitFor(() => sockets[0]?.ops('login').length > 0)
 
     // Fails fast rather than waiting out the 10s login timeout.
     sockets[0].push({ event: 'error', code: '60006', msg: 'Timestamp expired' })
-    await sleep(20)
+    await waitFor(() => sockets.length >= 2)
 
     expect(sockets.length).toBeGreaterThanOrEqual(2)
 
@@ -180,9 +187,9 @@ describe('OkxPrivateWsClient — keepalive', () => {
       },
     })
     client.connect(CREDS, '', false, () => {})
-    await sleep(5)
+    await waitFor(() => sockets[0]?.ops('login').length > 0)
     sockets[0].acceptLogin()
-    await sleep(20)
+    await waitFor(() => sockets[0].sent.filter((s) => s === 'ping').length > 1)
 
     expect(sockets[0].sent.filter((s) => s === 'ping').length).toBeGreaterThan(
       1,
@@ -198,7 +205,7 @@ describe('OkxPrivateWsClient — endpoint selection', () => {
   it('uses the paper endpoint in paper mode', async () => {
     const { client, urls } = makeClient()
     client.connect(CREDS, '', true, () => {})
-    await sleep(5)
+    await waitFor(() => urls.length > 0)
 
     expect(urls[0]).toContain('wspap.okx.com')
 
@@ -210,7 +217,7 @@ describe('OkxPrivateWsClient — endpoint selection', () => {
     expect(urls[0]).toContain('wss://ws.okx.com')
 
     client.connect(CREDS, '', true, () => {})
-    await sleep(20)
+    await waitFor(() => urls.length > 1 && sockets[0].closed)
 
     expect(urls[1]).toContain('wspap.okx.com')
     expect(sockets[0].closed).toBe(true)
@@ -328,7 +335,7 @@ describe('OkxPrivateWsClient — teardown', () => {
     const { client, sockets, orders } = await connected()
 
     client.destroy()
-    await sleep(10)
+    await waitFor(() => sockets[0].closed)
 
     expect(sockets[0].closed).toBe(true)
 
@@ -357,7 +364,7 @@ describe('OkxPrivateWsClient — teardown', () => {
     const { client, sockets } = await connected()
 
     sockets[0].drop()
-    await sleep(30)
+    await waitFor(() => sockets.length === 2 && sockets[1].sent.length > 0)
     // Still wanted, so it came back.
     expect(sockets.length).toBe(2)
 

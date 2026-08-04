@@ -4,12 +4,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'bun:test'
 import { gzipSync } from 'bun'
 
 import { HtxWsClient } from '../ws-client'
+import { sleep, waitFor } from '../../test-utils/async'
 import type {
   WsAdapterEvents,
   WsConnection,
 } from '@pairlens/market-engine/ws-adapter'
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 class FakeSocket implements WsConnection {
   sent: Array<string> = []
@@ -88,7 +87,7 @@ describe('HtxWsClient on ReconnectingWsSession', () => {
     const { client, sockets } = makeClient()
 
     const unsub = client.subscribeCandles('BTC-USDT', '1h', '', () => {})
-    await sleep(10)
+    await waitFor(() => (sockets[0]?.frames('sub').length ?? 0) > 0)
 
     const subs = sockets[0].frames('sub')
     expect(subs).toEqual([
@@ -108,10 +107,10 @@ describe('HtxWsClient on ReconnectingWsSession', () => {
     const seen: Array<unknown> = []
 
     client.subscribeCandles('BTC-USDT', '1h', '', (d) => seen.push(d))
-    await sleep(10)
+    await waitFor(() => (sockets[0]?.frames('sub').length ?? 0) > 0)
 
     sockets[0].pushGzip(KLINE_PUSH)
-    await sleep(10) // async gunzip
+    await waitFor(() => seen.length > 0) // gunzip is async
     expect(seen.length).toBe(1)
     expect(seen[0]).toEqual({
       type: 'update',
@@ -128,7 +127,7 @@ describe('HtxWsClient on ReconnectingWsSession', () => {
     })
 
     sockets[0].pushGzip({ ping: 424242 })
-    await sleep(10)
+    await waitFor(() => sockets[0].frames('pong').length > 0)
     expect(sockets[0].frames('pong')).toEqual([{ pong: 424242 }])
 
     client.destroy()
@@ -140,14 +139,14 @@ describe('HtxWsClient on ReconnectingWsSession', () => {
     const seenB: Array<unknown> = []
 
     client.subscribeCandles('BTC-USDT', '1h', '', (d) => seenA.push(d))
-    await sleep(10)
+    await waitFor(() => (sockets[0]?.frames('sub').length ?? 0) > 0)
 
     sockets[0].pushGzip(KLINE_PUSH)
-    await sleep(10)
+    await waitFor(() => seenA.length > 0)
     expect(seenA.length).toBe(1)
 
     client.subscribeCandles('BTC-USDT', '1h', '', (d) => seenB.push(d))
-    await sleep(10)
+    await waitFor(() => seenB.length > 0)
 
     // No second wire subscribe — the key is shared
     expect(sockets[0].frames('sub').length).toBe(1)
@@ -157,7 +156,7 @@ describe('HtxWsClient on ReconnectingWsSession', () => {
 
     // …and BOTH keep receiving live updates
     sockets[0].pushGzip(KLINE_PUSH)
-    await sleep(10)
+    await waitFor(() => seenA.length > 1 && seenB.length > 1)
     expect(seenA.length).toBe(2)
     expect(seenB.length).toBe(2)
 
@@ -172,7 +171,7 @@ describe('HtxWsClient on ReconnectingWsSession', () => {
       tickers.push((d as { ticker: (typeof tickers)[number] }).ticker),
     )
     const unsubB = client.subscribeTicker('BTC-USDT', '', () => {})
-    await sleep(10)
+    await waitFor(() => (sockets[0]?.frames('sub').length ?? 0) >= 2)
 
     // One logical ticker = exactly two wire subs (detail + bbo), sent once
     expect(sockets[0].frames('sub').map((f) => f['sub'])).toEqual([
@@ -184,12 +183,12 @@ describe('HtxWsClient on ReconnectingWsSession', () => {
       ch: 'market.btcusdt.bbo',
       tick: { bid: 104.9, ask: 105.1 },
     })
-    await sleep(10)
+    await waitFor(() => tickers.length > 0)
     sockets[0].pushGzip({
       ch: 'market.btcusdt.detail',
       tick: { open: 100, close: 105, high: 120, low: 90, amount: 5000 },
     })
-    await sleep(10)
+    await waitFor(() => tickers.length > 1)
 
     // Second emit carries the merged state from BOTH channels
     expect(tickers.length).toBe(2)
@@ -214,10 +213,12 @@ describe('HtxWsClient on ReconnectingWsSession', () => {
 
     client.subscribeCandles('BTC-USDT', '1h', '', () => {})
     client.subscribeOrderbook('BTC-USDT', '', () => {})
-    await sleep(10)
+    await waitFor(() => (sockets[0]?.frames('sub').length ?? 0) >= 2)
 
     sockets[0].drop()
-    await sleep(15)
+    await waitFor(
+      () => sockets.length === 2 && sockets[1].frames('sub').length >= 2,
+    )
 
     expect(sockets.length).toBe(2)
     expect(sockets[1].frames('sub').map((f) => f['sub'])).toEqual([
@@ -237,9 +238,11 @@ describe('HtxWsClient on ReconnectingWsSession', () => {
 
     const { client } = makeClient()
     client.subscribeCandles('BTC-USDT', '1h', '', () => {})
-    await sleep(30)
+    await waitFor(() => fetches >= 2)
 
-    // One initial attempt + exactly one paced retry — no retry storm.
+    // One initial attempt + exactly one paced retry. The fixed window is the
+    // no-retry-storm half of the claim: negative, so it stays a sleep.
+    await sleep(30)
     expect(fetches).toBe(2)
 
     client.destroy()

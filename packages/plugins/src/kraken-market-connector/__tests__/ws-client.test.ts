@@ -3,12 +3,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'bun:test'
 
 import { KrakenWsClient } from '../ws-client'
+import { sleep, waitFor } from '../../test-utils/async'
 import type {
   WsAdapterEvents,
   WsConnection,
 } from '@pairlens/market-engine/ws-adapter'
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 class FakeSocket implements WsConnection {
   sent: Array<string> = []
@@ -148,7 +147,7 @@ describe('KrakenWsClient on ReconnectingWsSession', () => {
     await sleep(10)
 
     sockets[0].drop()
-    await sleep(15)
+    await waitFor(() => sockets.length === 2 && sockets[1].sent.length > 0)
 
     expect(sockets.length).toBe(2)
     const resubs = sockets[1].frames('subscribe', 'ohlc')
@@ -167,9 +166,11 @@ describe('KrakenWsClient on ReconnectingWsSession', () => {
 
     const { client } = makeClient()
     client.subscribeCandles('BTC-USDT', '1h', '', () => {})
-    await sleep(30)
+    await waitFor(() => fetches >= 2)
 
-    // One initial attempt + exactly one paced retry — no retry storm.
+    // One initial attempt + exactly one paced retry. The fixed window is
+    // the no-retry-storm half of the claim: negative, so it stays a sleep.
+    await sleep(30)
     expect(fetches).toBe(2)
 
     client.destroy()
