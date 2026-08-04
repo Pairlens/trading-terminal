@@ -19,6 +19,7 @@
 import { loadPyodide, version as pyodideVersion } from 'pyodide'
 
 import { alignOutputs } from './align'
+import { KNOWN_IMPORT_DISTS } from './libraries'
 import {
   parseIndicatorMeta,
   resolveParams,
@@ -219,9 +220,42 @@ async function installRequirements(
   const reqsPy = py.toPy(requirements) as { destroy: () => void }
   try {
     await micropip.install(reqsPy)
+  } catch (err) {
+    throw friendlyInstallError(err, requirements)
   } finally {
     reqsPy.destroy()
   }
+}
+
+/**
+ * Translate micropip's failure modes into something a script author can act
+ * on. The stock messages assume the reader knows what a wheel tag is; ours
+ * name the boundary that actually matters here — only packages built into
+ * the runtime or shipped as pure-Python wheels can install, because there is
+ * no compiler in the browser.
+ */
+function friendlyInstallError(
+  err: unknown,
+  requirements: Array<string>,
+): Error {
+  const message = err instanceof Error ? err.message : String(err)
+  const named = requirements.join(', ')
+  if (/pure python 3 wheel/i.test(message)) {
+    return new Error(
+      `'${named}' ships compiled code and is not part of the Python runtime, ` +
+        `so it cannot be installed. Only packages built into the runtime ` +
+        `(see the Libraries catalog in the editor) or pure-Python wheels ` +
+        `from PyPI are available.`,
+    )
+  }
+  if (/can't fetch metadata|no known package/i.test(message)) {
+    return new Error(
+      `Could not resolve '${named}' on PyPI. Check the spelling — the name ` +
+        `in packages=[...] must be the PyPI distribution name (for example ` +
+        `'scikit-learn', not 'sklearn').`,
+    )
+  }
+  return err instanceof Error ? err : new Error(message)
 }
 
 /**
@@ -290,9 +324,12 @@ async function handleRegister(
     // Second chance for pure-python PyPI imports: micropip-install the
     // missing module and retry once. A missing module the script itself was
     // supposed to provide is a typo, not a dependency — don't ask PyPI.
+    // Import names that famously differ from their distribution are mapped
+    // first (`dotenv` → `python-dotenv`), because installing the bare module
+    // name would miss — or, for `sklearn`, hit a tombstone dist.
     const missing = missingModuleName(err)
     if (!missing || ownModuleNames(modules).has(missing)) throw err
-    await installRequirements(py, [missing])
+    await installRequirements(py, [KNOWN_IMPORT_DISTS[missing] ?? missing])
     metaProxy = register()
   }
   const rawMeta = metaProxy.toJs({

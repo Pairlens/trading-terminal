@@ -12,6 +12,7 @@ import {
   BookOpen,
   Bot,
   CircleDot,
+  Library,
   Package,
   Play,
   Save,
@@ -53,6 +54,7 @@ import { PreviewPairPicker } from './preview-pair-picker'
 import { PreviewParamsBar, defaultPreviewParams } from './preview-params'
 import { ImportScriptDialog } from './import-script-dialog'
 import { IndicatorsEmptyState } from './indicators-empty-state'
+import { LibrariesDialog } from './libraries-dialog'
 import { ScriptList } from './script-list'
 import { SdkReferenceDialog } from './sdk-reference'
 import { VersionHistoryDialog } from './version-history'
@@ -445,6 +447,7 @@ export function IndicatorWorkbench() {
   )
   const [importOpen, setImportOpen] = useState(false)
   const [referenceOpen, setReferenceOpen] = useState(false)
+  const [librariesOpen, setLibrariesOpen] = useState(false)
   /** Set by the editor once CodeMirror is live; null while it is not. */
   const insertRef = useRef<((text: string) => void) | null>(null)
 
@@ -662,6 +665,24 @@ export function IndicatorWorkbench() {
                   </TooltipTrigger>
                   <TooltipContent>
                     {t('indicatorsPage.sdkRefTitle')}
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-7"
+                        onClick={() => setLibrariesOpen(true)}
+                        aria-label={t('indicatorsPage.librariesTitle')}
+                      />
+                    }
+                  >
+                    <Library className="size-3.5" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {t('indicatorsPage.librariesTitle')}
                   </TooltipContent>
                 </Tooltip>
                 <Tooltip>
@@ -906,6 +927,15 @@ export function IndicatorWorkbench() {
         onInsert={(snippet) => {
           insertRef.current?.(snippet)
           setReferenceOpen(false)
+        }}
+      />
+
+      <LibrariesDialog
+        open={librariesOpen}
+        onOpenChange={setLibrariesOpen}
+        onInsert={(snippet) => {
+          insertRef.current?.(snippet)
+          setLibrariesOpen(false)
         }}
       />
 

@@ -37,7 +37,7 @@ from pairlens.ta import ema, atr, crossover   # the function library
 | `fills`     | list of `fill.*`       | Shaded regions                                           |
 | `alerts`    | list of `alert.*`      | Outputs exposed as alert conditions                      |
 | `requests`  | list of `request.*`    | Extra candle series to fetch                             |
-| `packages`  | list of str            | Python packages to install before the script runs        |
+| `packages`  | list of str            | PyPI requirements to install first (`['ta==0.11.0']`)    |
 | `min_bars`  | int                    | Minimum candles before output is meaningful              |
 | `precision` | int                    | Decimal places for the legend readout                    |
 | `format`    | str                    | Value formatting hint                                    |
