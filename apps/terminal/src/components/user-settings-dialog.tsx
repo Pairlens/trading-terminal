@@ -446,25 +446,29 @@ export default function UserSettingsDialog({
             collapsible="none"
             className="hidden border-r md:flex md:h-full md:w-64"
           >
-            <SidebarHeader className="gap-2 pb-0">
-              <div className="relative">
-                <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
-                <SidebarInput
-                  className="pl-8"
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Escape' && isSearching) {
-                      event.stopPropagation()
-                      setSearchQuery('')
-                    } else if (event.key === 'Enter' && searchResults[0]) {
-                      openSection(searchResults[0].section)
-                    }
-                  }}
-                  placeholder={t('settings.search.placeholder')}
-                  value={searchQuery}
-                />
+            <SidebarHeader className="gap-0 p-0">
+              {/* Same h-16 + border-b as the main pane's breadcrumb header, so
+                  the divider runs as one line across the whole dialog. */}
+              <div className="flex h-16 shrink-0 items-center border-b px-2">
+                <div className="relative w-full">
+                  <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <SidebarInput
+                    className="pl-8"
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Escape' && isSearching) {
+                        event.stopPropagation()
+                        setSearchQuery('')
+                      } else if (event.key === 'Enter' && searchResults[0]) {
+                        openSection(searchResults[0].section)
+                      }
+                    }}
+                    placeholder={t('settings.search.placeholder')}
+                    value={searchQuery}
+                  />
+                </div>
               </div>
-              <SidebarMenu>
+              <SidebarMenu className="px-2 pt-3">
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     isActive={!isSearching && activeSection === 'profile'}
