@@ -356,6 +356,22 @@ export class ReconnectingWsSession {
       if (!this.destroyed && this.entries.size > 0) this.scheduleReconnect()
     } finally {
       this.connecting = false
+      // Anything that wanted a reconnect WHILE this attempt was in flight had
+      // it swallowed: ensureConnected() returns early on `connecting`, and the
+      // reconnect timer clears itself before making that call, so the intent
+      // is gone and nothing else is left to retry. The window is real on every
+      // authenticated venue — a close arriving during the auth round-trip (or
+      // the liveness watchdog calling restart()) left the session with no
+      // socket and no pending retry, permanently. Re-arm here, where the
+      // in-flight attempt is finally out of the way.
+      if (
+        !this.destroyed &&
+        !this.ws &&
+        this.entries.size > 0 &&
+        !this.reconnectTimer
+      ) {
+        this.scheduleReconnect()
+      }
     }
   }
 

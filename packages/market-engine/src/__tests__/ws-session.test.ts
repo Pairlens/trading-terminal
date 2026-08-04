@@ -666,6 +666,62 @@ describe('ReconnectingWsSession — authenticate gate', () => {
 
     session.destroy()
   })
+
+  // The login round-trip is the one window where `connecting` stays true long
+  // enough for a close to land inside it. Everything that wants a reconnect
+  // there — the drop itself, or a watchdog restart() — is refused by
+  // ensureConnected() because an attempt is already in flight, and the
+  // reconnect timer has already cleared itself by then. Without a re-arm the
+  // session is left with no socket AND no pending retry, which on a private
+  // venue means orders and balances silently stop for good.
+  it('reconnects after a drop that lands during the login round-trip', async () => {
+    const log: Array<string> = []
+    let releaseAuth: (() => void) | null = null
+    const { session, sockets } = makeSession({
+      authenticate: () =>
+        new Promise<void>((resolve) => {
+          releaseAuth = resolve
+        }),
+    })
+
+    session.acquire('orders', candleSpec(log, 'orders'), () => {})
+    await waitFor(() => sockets.length === 1)
+
+    // The venue drops the socket before it ever answered the login.
+    sockets[0].drop()
+    // Let the backoff fire while the login is still pending — that attempt is
+    // the one that gets swallowed.
+    await sleep(30)
+    releaseAuth?.()
+
+    await waitFor(() => sockets.length === 2)
+    expect(sockets.length).toBe(2)
+
+    session.destroy()
+  })
+
+  it('reconnects after a watchdog restart during the login round-trip', async () => {
+    const log: Array<string> = []
+    let releaseAuth: (() => void) | null = null
+    const { session, sockets } = makeSession({
+      authenticate: () =>
+        new Promise<void>((resolve) => {
+          releaseAuth = resolve
+        }),
+    })
+
+    session.acquire('orders', candleSpec(log, 'orders'), () => {})
+    await waitFor(() => sockets.length === 1)
+
+    session.restart()
+    await sleep(30)
+    releaseAuth?.()
+
+    await waitFor(() => sockets.length === 2)
+    expect(sockets.length).toBe(2)
+
+    session.destroy()
+  })
 })
 
 describe('ReconnectingWsSession — retired sockets', () => {
