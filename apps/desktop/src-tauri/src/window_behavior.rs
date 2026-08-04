@@ -378,6 +378,12 @@ pub fn request_quit(app: &AppHandle) {
 
 /// Whether a deliberate quit is in progress. Read by the run-loop handler so a
 /// requested exit is never prevented.
+///
+/// Gated to macOS like its only caller: the ExitRequested arm in lib.rs is
+/// macOS-only, because that is the platform that keeps the app alive after its
+/// last window closes. Ungated, this is dead code everywhere else and clippy's
+/// `-D warnings` fails the Linux build on it.
+#[cfg(target_os = "macos")]
 pub fn is_quitting() -> bool {
     QUITTING.load(Ordering::Acquire)
 }
