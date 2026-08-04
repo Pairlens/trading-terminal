@@ -16,9 +16,11 @@ The reasoning behind this model is written up on [pairlens.finance/licensing](ht
 
 Before we can merge your first pull request, you need to sign the [Individual CLA](CLA/individual-cla.md). It gives the project the right to distribute your contribution under the licensing model above (including the two-year Apache 2.0 conversion) and includes a patent grant that protects every user of the software. You keep the copyright to your work.
 
-Signing is automatic: when you open your first PR, the CLA bot comments with instructions. You post a single comment ("I have read the CLA Document and I hereby sign the CLA") and the bot records your signature in the repo. That's it, once per contributor, and the PR check flips to green.
+Signing is automatic: when you open your first PR, the CLA bot comments with instructions. You post a single comment ("I have read the CLA Document and I hereby sign the CLA") and the bot records your signature in the repo. That's it, once per contributor, and the `cla` check flips to green. It's a required check, so an unsigned PR can't be merged — that's the only thing standing between a good patch and `main`.
 
-If you contribute as part of your job and your employer owns your work, your employer signs the [Corporate CLA](CLA/corporate-cla.md) instead and lists you as a designated contributor. Reach out via an issue if you need to set that up.
+The bot checks the author of every commit in the PR, not just whoever opened it. If you co-author or cherry-pick someone else's commits, they need to sign too, and commits authored from an email that isn't attached to a GitHub account show up as unknown. `git commit --amend --reset-author` on your own commits fixes that.
+
+If you contribute as part of your job and your employer owns your work, your employer signs the [Corporate CLA](CLA/corporate-cla.md) instead and lists you as a designated contributor. Open an issue titled "Corporate CLA" to start that; the signed copy is exchanged privately, not in the issue.
 
 ## License headers
 
