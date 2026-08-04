@@ -67,7 +67,11 @@ keyring = { version = "3", features = [
 # Swift and Kotlin sides shipped for iOS/Android, with no desktop
 # implementation to call.
 [target.'cfg(target_os = "macos")'.dependencies]
-security-framework = "3"
+# OSX_10_15 unlocks `PasswordOptions::use_protected_keychain()` —
+# kSecUseDataProtectionKeychain — which biometric.rs sets on every call so the
+# Touch ID item deterministically lives in the data protection keychain
+# rather than wherever the ACL happens to route it.
+security-framework = { version = "3", features = ["OSX_10_15"] }
 objc2-local-authentication = { version = "0.3", default-features = false, features = [
     "std",
     "LABase",

@@ -66,7 +66,31 @@ compromised download host alone cannot ship malicious updates.
    developer.apple.com from a fresh CSR, rebuild the .p12 and reset the
    first three secrets.
 
-3. _(Optional)_ **Windows code signing** (SmartScreen reputation): Azure
+3. **macOS provisioning profile** (required for the Touch ID vault
+   protector). The data protection keychain — the only keychain that accepts
+   the biometric access control `src-tauri/src/biometric.rs` asks for —
+   refuses any process without the `com.apple.application-identifier`
+   entitlement, and codesign only honours that restricted entitlement when
+   the app embeds a provisioning profile authorising it. At
+   [developer.apple.com](https://developer.apple.com/account/resources):
+   1. **Identifiers** → register an explicit macOS App ID for
+      `finance.pairlens.desktop` (no extra capabilities needed).
+   2. **Profiles** → new profile → Distribution → **Developer ID** → select
+      that App ID and the Developer ID Application certificate → download.
+   3. Commit the downloaded file as
+      `apps/desktop/src-tauri/Pairlens_DevID.provisionprofile` (profiles
+      contain no secrets — every shipped app embeds its profile in plain
+      sight).
+
+   The Release workflow auto-detects the committed profile and adds
+   `--config ./src-tauri/tauri.provisioned.conf.json` (entitlements + profile
+   embedding). Without the profile, builds still succeed but the Touch ID
+   protector reports itself unavailable — the availability probe dry-runs the
+   keychain store, so the UI never offers what the build cannot finish. Note
+   the profile pins the signing certificate: after rotating the Developer ID
+   cert (step 2), regenerate the profile too.
+
+4. _(Optional)_ **Windows code signing** (SmartScreen reputation): Azure
    Trusted Signing or an EV certificate — see the Tauri docs when ready; not
    wired into the workflow yet.
 
