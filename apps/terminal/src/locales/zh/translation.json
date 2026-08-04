@@ -2453,6 +2453,17 @@
     "articleDetails": "文章详情",
     "tickerSentiment": "标的情绪",
     "visitArticle": "查看原文",
+    "reader": {
+      "title": "新闻阅读器",
+      "searchPlaceholder": "搜索新闻...",
+      "noMatches": "没有符合搜索条件的新闻",
+      "clearSearch": "清除搜索",
+      "loadOlder": "加载更早的新闻",
+      "loadingMore": "正在加载更多新闻...",
+      "caughtUp": "已看完全部新闻",
+      "previousArticle": "上一篇",
+      "nextArticle": "下一篇"
+    },
     "topic": {
       "blockchain": "区块链",
       "technology": "科技",

@@ -2453,6 +2453,17 @@
     "articleDetails": "Detail artikel",
     "tickerSentiment": "Sentimen Ticker",
     "visitArticle": "Kunjungi Artikel",
+    "reader": {
+      "title": "Pembaca berita",
+      "searchPlaceholder": "Cari berita...",
+      "noMatches": "Tidak ada yang cocok dengan pencarian Anda",
+      "clearSearch": "Hapus pencarian",
+      "loadOlder": "Muat berita lama",
+      "loadingMore": "Memuat berita lainnya...",
+      "caughtUp": "Anda sudah membaca semuanya",
+      "previousArticle": "Artikel sebelumnya",
+      "nextArticle": "Artikel berikutnya"
+    },
     "topic": {
       "blockchain": "Blockchain",
       "technology": "Teknologi",

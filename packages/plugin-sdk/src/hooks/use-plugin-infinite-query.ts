@@ -3,18 +3,20 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { usePluginHost } from './use-plugin-host'
 import type {
+  InfiniteData,
   QueryKey,
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
 } from '@tanstack/react-query'
 
 export function usePluginInfiniteQuery<
-  TData = unknown,
+  TQueryFnData = unknown,
   TError = Error,
   TPageParam = unknown,
+  TData = InfiniteData<TQueryFnData, TPageParam>,
 >(
   options: Omit<
-    UseInfiniteQueryOptions<TData, TError, TData, QueryKey, TPageParam>,
+    UseInfiniteQueryOptions<TQueryFnData, TError, TData, QueryKey, TPageParam>,
     'queryKey'
   > & {
     queryKey: ReadonlyArray<unknown>
@@ -24,5 +26,11 @@ export function usePluginInfiniteQuery<
   return useInfiniteQuery({
     ...options,
     queryKey: [`plugin:${host.pluginId}`, ...options.queryKey],
-  } as UseInfiniteQueryOptions<TData, TError, TData, QueryKey, TPageParam>)
+  } as UseInfiniteQueryOptions<
+    TQueryFnData,
+    TError,
+    TData,
+    QueryKey,
+    TPageParam
+  >)
 }

@@ -2453,6 +2453,17 @@
     "articleDetails": "文章詳情",
     "tickerSentiment": "商品情緒",
     "visitArticle": "前往文章",
+    "reader": {
+      "title": "新聞閱讀器",
+      "searchPlaceholder": "搜尋新聞...",
+      "noMatches": "沒有符合搜尋條件的新聞",
+      "clearSearch": "清除搜尋",
+      "loadOlder": "載入較舊的新聞",
+      "loadingMore": "正在載入更多新聞...",
+      "caughtUp": "已看完全部新聞",
+      "previousArticle": "上一篇",
+      "nextArticle": "下一篇"
+    },
     "topic": {
       "blockchain": "區塊鏈",
       "technology": "科技",

@@ -2465,6 +2465,17 @@
     "articleDetails": "Деталі статті",
     "tickerSentiment": "Настрій щодо тікера",
     "visitArticle": "Перейти до статті",
+    "reader": {
+      "title": "Переглядач новин",
+      "searchPlaceholder": "Пошук новин...",
+      "noMatches": "Нічого не знайдено за вашим запитом",
+      "clearSearch": "Очистити пошук",
+      "loadOlder": "Завантажити давніші новини",
+      "loadingMore": "Завантаження новин...",
+      "caughtUp": "Ви все переглянули",
+      "previousArticle": "Попередня стаття",
+      "nextArticle": "Наступна стаття"
+    },
     "topic": {
       "blockchain": "Блокчейн",
       "technology": "Технології",
