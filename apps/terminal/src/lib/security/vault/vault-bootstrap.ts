@@ -26,6 +26,7 @@ import {
   initVaultSession,
   subscribeVault,
 } from './vault-session'
+import { sweepLegacyBrowserStorage } from './legacy-sweep'
 import { onWindowLeader } from '@/lib/window-leader'
 import { useVaultAttentionStore } from '@/stores/vault-attention-store'
 
@@ -104,6 +105,10 @@ export function startVaultBootstrap(): () => void {
   })
 
   watchParkedBots()
+  // Before the session reads anything: the pre-vault browser format has no
+  // reader any more, so what it leaves behind is unopenable bytes sitting in
+  // the slots the vault is about to claim.
+  sweepLegacyBrowserStorage()
   void initVaultSession()
 
   return () => {

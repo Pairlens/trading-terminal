@@ -3,8 +3,9 @@
 /**
  * Vault primitives. Pure crypto — no storage, no DOM state, no React.
  *
- *   password ─PBKDF2-SHA256(salt, iters)→ 32B ─HKDF-SHA256(salt, INFO_PW)→ KEK
- *   passkey  ─WebAuthn PRF(prfSalt)─────→ 32B ─HKDF-SHA256(salt, INFO_PK)→ KEK
+ *   password  ─PBKDF2-SHA256(salt, iters)→ 32B ─HKDF-SHA256(salt, INFO_PW)→ KEK
+ *   passkey   ─WebAuthn PRF(prfSalt)─────→ 32B ─HKDF-SHA256(salt, INFO_PK)→ KEK
+ *   biometric ─OS keychain, Touch ID gate→ 32B ─HKDF-SHA256(salt, INFO_BIO)→ KEK
  *   KEK ─AES-256-GCM(iv, aad)→ wrapped DEK
  *   raw DEK ─importKey(extractable=false)→ the runtime DEK
  *   DEK ─AES-256-GCM(iv, aad=key name)→ every credential value
@@ -31,11 +32,15 @@ import type { VaultProtector } from './vault-record'
 export const DEK_BYTES = 32
 export const KEK_INFO_PASSWORD = 'pairlens/vault/kek/password/v1'
 export const KEK_INFO_PASSKEY = 'pairlens/vault/kek/passkey/v1'
+export const KEK_INFO_BIOMETRIC = 'pairlens/vault/kek/biometric/v1'
 
 /** OWASP-current for PBKDF2-HMAC-SHA256, matching lock-verifier.ts. */
 export const VAULT_PBKDF2_ITERATIONS = 600_000
 export const PASSWORD_SALT_BYTES = 16
 export const PASSKEY_SALT_BYTES = 32
+export const BIOMETRIC_SALT_BYTES = 32
+/** Bytes of the KEK the OS holds behind the biometric gate. */
+export const BIOMETRIC_KEK_BYTES = 32
 export const IV_BYTES = 12
 
 /** Value-format discriminator for DEK-encrypted credential values. */

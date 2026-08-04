@@ -3,7 +3,13 @@
 'use client'
 
 import * as React from 'react'
-import { Fingerprint, KeyRound, ShieldCheck, TriangleAlert } from 'lucide-react'
+import {
+  Fingerprint,
+  KeyRound,
+  ScanFace,
+  ShieldCheck,
+  TriangleAlert,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
@@ -36,10 +42,18 @@ type Step = 'choose' | 'password' | 'authorize' | 'second'
 /**
  * Setting up the credential vault.
  *
- * Two protectors are offered and both are real: a passkey (WebAuthn PRF —
+ * Two protectors can start a vault and both are real: a passkey (WebAuthn PRF —
  * Touch ID, Windows Hello, or a USB security key) and a password. The copy
  * recommends enrolling both and does not force it, because the failure mode of
  * forcing is a user who abandons setup and stores keys unprotected instead.
+ *
+ * A third, Touch ID on macOS, can only be ADDED to a vault that already exists.
+ * That asymmetry is deliberate and lives in `createVault`: the OS invalidates
+ * the key whenever the enrolled fingerprints change, so a vault with nothing
+ * else in it would be one System Settings visit away from unopenable. It also
+ * only appears where the probe says a prompt can actually be raised — the
+ * packaged desktop app cannot use passkeys at all (`tauri://localhost` is not a
+ * WebAuthn origin), which is exactly the gap it fills.
  *
  * The password is deliberately THE SAME password as the terminal lock. A
  * second secret for the same device would be remembered worse, not better, and
@@ -68,11 +82,27 @@ export function VaultEnrollmentDialog({
   const [passkeySupported, setPasskeySupported] = React.useState<
     boolean | null
   >(null)
+  /**
+   * Null until probed. Gated on the PROBE and never on `isStandalone`: a Mac
+   * mini has no sensor and Windows has no implementation, so the platform is
+   * not the question — whether this machine can actually raise a prompt is.
+   */
+  const [biometricSupported, setBiometricSupported] = React.useState<
+    boolean | null
+  >(null)
   /** Null until probed. True when the terminal lock already has a password. */
   const [hasLockPassword, setHasLockPassword] = React.useState<boolean | null>(
     null,
   )
   const [migrated, setMigrated] = React.useState(0)
+  /**
+   * What the `authorize` step is proving a password FOR. Without this the step
+   * would always enroll a passkey, and the Touch ID card would silently add
+   * the wrong kind of protector.
+   */
+  const [pendingEnroll, setPendingEnroll] = React.useState<
+    'passkey' | 'biometric'
+  >('passkey')
   const blockedSeconds = useBlockedSeconds()
 
   const secureContext =
@@ -86,15 +116,24 @@ export function VaultEnrollmentDialog({
       setError(null)
       setBusy(false)
       setMigrated(0)
+      setPendingEnroll('passkey')
       return
     }
     let cancelled = false
     void (async () => {
-      const [{ isPasskeySupported }, { loadVerifier }] = await Promise.all([
+      const [
+        { isPasskeySupported },
+        { isBiometricSupported },
+        { loadVerifier },
+      ] = await Promise.all([
         import('@/lib/security/vault/vault-passkey'),
+        import('@/lib/security/vault/vault-biometric'),
         import('@/lib/security/lock-verifier'),
       ])
-      const supported = await isPasskeySupported()
+      const [supported, biometric] = await Promise.all([
+        isPasskeySupported(),
+        isBiometricSupported(),
+      ])
       let verifier = false
       try {
         verifier = (await loadVerifier()) !== null
@@ -104,6 +143,7 @@ export function VaultEnrollmentDialog({
       }
       if (cancelled) return
       setPasskeySupported(supported)
+      setBiometricSupported(biometric)
       setHasLockPassword(verifier)
     })()
     return () => {
@@ -116,18 +156,71 @@ export function VaultEnrollmentDialog({
     onEnrolled?.()
   }
 
-  const describeError = (err: unknown): string => {
+  const describeError = (
+    err: unknown,
+    kind: 'password' | 'passkey' | 'biometric' = 'passkey',
+  ): string => {
     if (err instanceof VaultProtectorError) {
       if (err.kind === 'wrong-password') {
         return t('settings.security.passwordWrong')
       }
-      if (err.kind === 'cancelled') return t('security.vault.passkeyCancelled')
+      if (err.kind === 'cancelled') {
+        // Naming the prompt the user actually dismissed. Both kinds cancel
+        // identically, so only the caller can tell them apart.
+        return kind === 'biometric'
+          ? t('security.vault.biometricCancelled')
+          : t('security.vault.passkeyCancelled')
+      }
       if (err.kind === 'prf-unsupported') {
         return t('security.vault.passkeyUnsupportedHint')
       }
       if (err.kind === 'no-match') return t('security.vault.passkeyNoMatch')
+      if (err.kind === 'invalidated') {
+        return t('security.vault.biometricInvalidated')
+      }
     }
     return err instanceof Error ? err.message : String(err)
+  }
+
+  /**
+   * Touch ID is only ever ADDED to an existing vault — `createVault` refuses to
+   * make it the first protector, because the OS invalidates the key whenever
+   * the enrolled fingerprints change and a biometric-only vault is one System
+   * Settings visit away from unopenable.
+   */
+  const enrollBiometric = async () => {
+    if (busy) return
+    if (vault.hasPassword) {
+      // Prove the password first — the same shape the passkey path uses, and
+      // for the same reason: the runtime data key is non-extractable, so the
+      // raw bytes have to come back out of a protector the user can answer.
+      setError(null)
+      setPassword('')
+      setPendingEnroll('biometric')
+      setStep('authorize')
+      return
+    }
+    setBusy(true)
+    setError(null)
+    try {
+      const { addProtector } =
+        await import('@/lib/security/vault/vault-protectors')
+      // A passkey-only vault: the passkey authorizes.
+      await addProtector(
+        { kind: 'passkey' },
+        {
+          kind: 'biometric',
+          label: t('security.vault.biometricLabel'),
+          reason: t('security.vault.biometricPromptReason'),
+        },
+      )
+      track('security_vault_enrolled', { protector: 'biometric' })
+      finish()
+    } catch (err) {
+      setError(describeError(err, 'biometric'))
+    } finally {
+      setBusy(false)
+    }
   }
 
   const enrollPasskey = async () => {
@@ -142,6 +235,7 @@ export function VaultEnrollmentDialog({
     if (vault.enrolled && vault.hasPassword) {
       setError(null)
       setPassword('')
+      setPendingEnroll('passkey')
       setStep('authorize')
       return
     }
@@ -172,7 +266,7 @@ export function VaultEnrollmentDialog({
     }
   }
 
-  /** The second-protector path: prove the password, enroll the passkey. */
+  /** The second-protector path: prove the password, enroll what was chosen. */
   const submitAuthorize = async (event: React.FormEvent) => {
     event.preventDefault()
     if (busy) return
@@ -183,13 +277,19 @@ export function VaultEnrollmentDialog({
         await import('@/lib/security/vault/vault-protectors')
       await addProtector(
         { kind: 'password', password },
-        { kind: 'passkey', label: t('security.vault.choosePasskey') },
+        pendingEnroll === 'biometric'
+          ? {
+              kind: 'biometric',
+              label: t('security.vault.biometricLabel'),
+              reason: t('security.vault.biometricPromptReason'),
+            }
+          : { kind: 'passkey', label: t('security.vault.choosePasskey') },
       )
-      track('security_vault_enrolled', { protector: 'passkey' })
+      track('security_vault_enrolled', { protector: pendingEnroll })
       setPassword('')
       finish()
     } catch (err) {
-      setError(describeError(err))
+      setError(describeError(err, pendingEnroll))
     } finally {
       setBusy(false)
     }
@@ -239,12 +339,17 @@ export function VaultEnrollmentDialog({
           },
         )
       } else {
-        const record = await createVault({
+        // `migrated` is the number of keys that were already on this device
+        // and have just moved under the vault — a desktop-only quantity, and
+        // zero on browser. Counting protectors here (what this used to do)
+        // claimed "we moved your keys" on every fresh enrollment that moved
+        // nothing.
+        const created = await createVault({
           kind: 'password',
           password,
           label: t('security.vault.choosePassword'),
         })
-        setMigrated(record.protectors.length)
+        setMigrated(created.migrated)
       }
       // The verifier is written AFTER the protector, never before: a crash
       // between the two must not leave a password that passes the lock screen
@@ -330,6 +435,25 @@ export function VaultEnrollmentDialog({
               </p>
             )}
 
+            {/* Additive only, and deliberately so: Touch ID is never the first
+                protector (createVault refuses), because macOS invalidates the
+                key whenever the enrolled fingerprints change — a vault with
+                nothing else in it would be one System Settings visit from
+                unopenable. Gated on the probe, so a Mac with no sensor and
+                every non-Mac simply never see it. */}
+            {biometricSupported === true &&
+              vault.enrolled &&
+              !vault.hasBiometric && (
+                <ProtectorCard
+                  icon={ScanFace}
+                  title={t('security.vault.chooseBiometric')}
+                  hint={t('security.vault.chooseBiometricHint')}
+                  disabled={busy || blockedSeconds > 0}
+                  busy={busy}
+                  onClick={() => void enrollBiometric()}
+                />
+              )}
+
             {!vault.hasPassword ? (
               <ProtectorCard
                 icon={KeyRound}
@@ -347,6 +471,17 @@ export function VaultEnrollmentDialog({
                 }}
               />
             ) : null}
+
+            {/* Reported HERE, not on the form that triggered it: the form is
+                replaced the instant enrollment resolves, so a line rendered
+                there is a line nobody ever sees. Desktop-only in practice —
+                on browser a protector is a precondition for the first
+                credential, so there is never anything to move. */}
+            {step === 'second' && migrated > 0 && (
+              <p className="text-xs text-muted-foreground">
+                {t('settings.security.vaultMigrated', { count: migrated })}
+              </p>
+            )}
 
             {error && <p className="text-destructive text-xs">{error}</p>}
 
@@ -425,11 +560,6 @@ export function VaultEnrollmentDialog({
             )}
             {error && blockedSeconds === 0 && (
               <p className="text-destructive text-xs">{error}</p>
-            )}
-            {migrated > 0 && (
-              <p className="text-xs text-muted-foreground">
-                {t('settings.security.vaultMigrating')}
-              </p>
             )}
             <p className="text-xs text-muted-foreground">
               {t('settings.security.vaultSharedBackoff')}

@@ -83,7 +83,7 @@ beforeEach(() => {
 
 describe('createVault', () => {
   test('persists a record and leaves the vault open', async () => {
-    const record = await createVault(pw('correct horse'))
+    const { record } = await createVault(pw('correct horse'))
 
     expect(record.state).toBe('ready')
     expect(record.protectors).toHaveLength(1)
@@ -167,7 +167,7 @@ describe('unlockVault', () => {
 
 describe('addProtector', () => {
   test('a second password is added under the same data key', async () => {
-    const first = await createVault(pw('alpha'))
+    const { record: first } = await createVault(pw('alpha'))
     const stored = await encryptWithDek(getDekOrThrow(), 'cred:a', 'sk')
 
     const next = await addProtector(
@@ -229,7 +229,7 @@ describe('removeProtector', () => {
   })
 
   test('refuses to remove the last way into a vault holding secrets', async () => {
-    const record = await createVault(pw('alpha'))
+    const { record } = await createVault(pw('alpha'))
     await saveCredential('cred:okx', 'sk-live')
 
     const promise = removeProtector(record.protectors[0].id)
@@ -242,7 +242,7 @@ describe('removeProtector', () => {
   })
 
   test('removing the last protector of an empty vault ends the vault', async () => {
-    const record = await createVault(pw('alpha'))
+    const { record } = await createVault(pw('alpha'))
     expect(await removeProtector(record.protectors[0].id)).toBeNull()
     // The record is deleted rather than left as a husk that parses as null
     // and silently downgrades the next write.
@@ -251,7 +251,7 @@ describe('removeProtector', () => {
   })
 
   test('requires an unlocked vault', async () => {
-    const record = await createVault(pw('alpha'))
+    const { record } = await createVault(pw('alpha'))
     sealVault({ broadcast: false })
     await expect(
       removeProtector(record.protectors[0].id),
@@ -268,7 +268,7 @@ describe('removeProtector', () => {
   })
 
   test('the has-values check can be injected and is honoured', async () => {
-    const record = await createVault(pw('alpha'))
+    const { record } = await createVault(pw('alpha'))
     await expect(
       removeProtector(record.protectors[0].id, {
         hasValues: async () => true,
@@ -377,9 +377,188 @@ describe('passkeys through the orchestration layer', () => {
   })
 })
 
+describe('biometrics through the orchestration layer', () => {
+  /**
+   * The same fake OS gate vault-biometric.test.ts drives: one KEK per account,
+   * with the failure modes the real keychain produces. Only the prompt is
+   * missing.
+   */
+  function gate() {
+    const keys = new Map<string, Uint8Array<ArrayBuffer>>()
+    const state = { cancel: false, removed: [] as Array<string> }
+    const port = {
+      async probe() {
+        return { available: true, kind: 'touch-id' } as const
+      },
+      async create(account: string) {
+        const kek = randomBytes(32)
+        keys.set(account, new Uint8Array(kek))
+        return kek
+      },
+      async read(account: string) {
+        if (state.cancel) {
+          throw new VaultProtectorError('dismissed', 'cancelled')
+        }
+        const kek = keys.get(account)
+        if (!kek) throw new VaultProtectorError('gone', 'invalidated')
+        return new Uint8Array(kek)
+      },
+      async remove(account: string) {
+        state.removed.push(account)
+        keys.delete(account)
+      },
+    }
+    return { port, state }
+  }
+
+  test('Touch ID added beside a password opens the same vault', async () => {
+    const { port } = gate()
+    await createVault(pw('alpha'))
+    const stored = await encryptWithDek(getDekOrThrow(), 'cred:a', 'sk')
+
+    const next = await addProtector(
+      { kind: 'password', password: 'alpha' },
+      { kind: 'biometric', port },
+    )
+    expect(next.protectors).toHaveLength(2)
+
+    __resetVaultSessionForTests()
+    await unlockVault({ kind: 'biometric', port })
+    expect(await decryptWithDek(getDekOrThrow(), 'cred:a', stored)).toBe('sk')
+  })
+
+  test('it is refused as the only way into a new vault', async () => {
+    const { port } = gate()
+    // macOS invalidates the key whenever the enrolled fingerprints change, so
+    // a biometric-only vault is one System Settings visit from unopenable —
+    // and a record whose only protector an older build cannot parse reads as
+    // "no vault", which the next enrollment would overwrite.
+    const promise = createVault({ kind: 'biometric', port })
+    await expect(promise).rejects.toBeInstanceOf(VaultProtectorError)
+    await promise.catch((err: InstanceType<typeof VaultProtectorError>) => {
+      expect(err.kind).toBe('unavailable')
+    })
+    expect(storage.getItem(RECORD_KEY)).toBeNull()
+  })
+
+  test('a cancelled prompt is never counted as a guess', async () => {
+    const { port, state } = gate()
+    await createVault(pw('alpha'))
+    await addProtector(
+      { kind: 'password', password: 'alpha' },
+      { kind: 'biometric', port },
+    )
+    __resetVaultSessionForTests()
+
+    state.cancel = true
+    const promise = unlockVault({ kind: 'biometric', port })
+    await expect(promise).rejects.toBeInstanceOf(VaultProtectorError)
+    await promise.catch((err: InstanceType<typeof VaultProtectorError>) => {
+      expect(err.kind).toBe('cancelled')
+    })
+    // The OS already enforces its own Touch ID retry limit. Counting failures
+    // here on top of that would let someone mashing the wrong finger lock the
+    // owner out of the shared lock-screen prompt too.
+    expect(backoff.failures).toBe(0)
+    expect(isVaultUnlocked()).toBe(false)
+  })
+
+  test('an invalidated key is never counted as a guess either', async () => {
+    const { port } = gate()
+    await createVault(pw('alpha'))
+    const next = await addProtector(
+      { kind: 'password', password: 'alpha' },
+      { kind: 'biometric', port },
+    )
+    // As if the user re-enrolled a fingerprint in System Settings.
+    const biometric = next.protectors.find((p) => p.type === 'biometric')!
+    await port.remove(biometric.id)
+    __resetVaultSessionForTests()
+
+    const promise = unlockVault({ kind: 'biometric', port })
+    await promise.catch((err: InstanceType<typeof VaultProtectorError>) => {
+      expect(err.kind).toBe('invalidated')
+    })
+    await expect(promise).rejects.toBeInstanceOf(VaultProtectorError)
+    expect(backoff.failures).toBe(0)
+  })
+
+  test('an active lockout still blocks the biometric path', async () => {
+    const { port } = gate()
+    await createVault(pw('alpha'))
+    await addProtector(
+      { kind: 'password', password: 'alpha' },
+      { kind: 'biometric', port },
+    )
+    __resetVaultSessionForTests()
+    blockedMs = 7_000
+
+    // Serving a penalty earned with wrong passwords must not be walkable
+    // around with a fingerprint — the counter gates the screen lock too.
+    await expect(
+      unlockVault({ kind: 'biometric', port }),
+    ).rejects.toBeInstanceOf(VaultProtectorError)
+  })
+
+  test('and it is refused as the only way LEFT in one too', async () => {
+    const { port } = gate()
+    const { record } = await createVault(pw('alpha'))
+    await addProtector(
+      { kind: 'password', password: 'alpha' },
+      { kind: 'biometric', port },
+    )
+    await saveCredential('cred:okx', 'sk-live')
+
+    // Password + Touch ID, drop the password, and the vault is in exactly the
+    // state `createVault` calls one System Settings visit from unopenable. An
+    // invariant enforced only on the way up is not an invariant.
+    const promise = removeProtector(record.protectors[0].id, {
+      biometricPort: port,
+    })
+    await expect(promise).rejects.toBeInstanceOf(VaultProtectorError)
+    await promise.catch((err: InstanceType<typeof VaultProtectorError>) => {
+      expect(err.kind).toBe('unavailable')
+    })
+    expect((await ensureVaultLoaded())?.protectors).toHaveLength(2)
+    expect(await getCredential('cred:okx')).toBe('sk-live')
+  })
+
+  test('with nothing to strand, the same removal goes through', async () => {
+    const { port } = gate()
+    const { record } = await createVault(pw('alpha'))
+    await addProtector(
+      { kind: 'password', password: 'alpha' },
+      { kind: 'biometric', port },
+    )
+
+    // The rule protects VALUES, not the record: an empty vault has nothing to
+    // lose, and refusing here would trap someone mid-setup.
+    const next = await removeProtector(record.protectors[0].id, {
+      biometricPort: port,
+    })
+    expect(next?.protectors).toHaveLength(1)
+  })
+
+  test('removing the protector removes the OS key material', async () => {
+    const { port, state } = gate()
+    await createVault(pw('alpha'))
+    const next = await addProtector(
+      { kind: 'password', password: 'alpha' },
+      { kind: 'biometric', port },
+    )
+    const biometric = next.protectors.find((p) => p.type === 'biometric')!
+
+    await removeProtector(biometric.id, { biometricPort: port })
+
+    // Left behind, the item would sit in the user's Keychain forever, behind a
+    // Touch ID prompt, opening nothing.
+    expect(state.removed).toEqual([biometric.id])
+  })
+})
+
 describe('changeVaultPassword', () => {
   test('rotates and persists in one write, keeping the data key', async () => {
-    const before = await createVault(pw('old pw'))
+    const { record: before } = await createVault(pw('old pw'))
     await saveCredential('cred:okx', 'sk-live')
 
     const after = await changeVaultPassword('old pw', 'new pw')
@@ -391,7 +570,7 @@ describe('changeVaultPassword', () => {
   })
 
   test('a wrong old password aborts before writing anything', async () => {
-    const before = await createVault(pw('old pw'))
+    const { record: before } = await createVault(pw('old pw'))
 
     await expect(changeVaultPassword('wrong', 'new pw')).rejects.toBeInstanceOf(
       VaultProtectorError,

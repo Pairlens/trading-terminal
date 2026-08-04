@@ -5,8 +5,8 @@
  *
  * What it is: one random 256-bit data key encrypts every stored credential;
  * each enrolled protector (a password, a passkey with the WebAuthn PRF
- * extension) independently wraps that data key. Any one protector opens the
- * vault, and nothing but ciphertext is ever at rest.
+ * extension, Touch ID on a Mac) independently wraps that data key. Any one
+ * protector opens the vault, and nothing but ciphertext is ever at rest.
  *
  * What it is not, and the UI must say so: this protects stored keys against
  * someone who copies the browser profile or the disk. It does not protect
@@ -35,11 +35,14 @@ export type { VaultProtectorErrorKind } from './vault-errors'
 export {
   PRF_SALT_BYTES,
   VAULT_RECORD_VERSION,
+  biometricProtectors,
   parseVaultRecord,
   passkeyProtectors,
   passwordProtectors,
+  removalStrandsVault,
 } from './vault-record'
 export type {
+  BiometricProtector,
   PasskeyProtector,
   PasswordProtector,
   VaultProtector,
@@ -71,6 +74,12 @@ export { isPasskeySupported } from './vault-passkey'
 export type { PasskeyPrfPort, VaultIdentity } from './vault-passkey'
 
 export {
+  isBiometricSupported,
+  removeAllBiometricMaterial,
+} from './vault-biometric'
+export type { BiometricAvailability, BiometricPort } from './vault-biometric'
+
+export {
   addProtector,
   changeVaultPassword,
   createVault,
@@ -97,3 +106,4 @@ export { disableVault, listVaultedKeys } from './vault-teardown'
 export type { TeardownResult } from './vault-teardown'
 
 export { startVaultBootstrap } from './vault-bootstrap'
+export { sweepLegacyBrowserStorage } from './legacy-sweep'

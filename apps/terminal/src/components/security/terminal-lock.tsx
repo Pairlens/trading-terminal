@@ -3,7 +3,7 @@
 'use client'
 
 import * as React from 'react'
-import { Fingerprint, LockKeyhole, ShieldAlert } from 'lucide-react'
+import { Fingerprint, LockKeyhole, ScanFace, ShieldAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -95,6 +95,12 @@ type VerifyState =
    * destructive reset.
    */
   | 'vault-diverged'
+  /**
+   * The OS key behind the Touch ID protector is gone — the fingerprint set on
+   * this Mac changed. No retry will ever work, so this must not read as "wrong"
+   * and must point at the only thing that fixes it.
+   */
+  | 'biometric-invalidated'
 
 // ── Full-screen lock ─────────────────────────────────────────────────
 
@@ -117,24 +123,42 @@ function LockOverlay({ reason }: { reason: string }) {
     dismissPrePaintShield()
   }, [])
 
-  const unlockWithPasskey = async () => {
+  /**
+   * The non-password doors. WebAuthn user verification and a Touch ID gesture
+   * are both identity checks — they satisfy the screen lock exactly the way the
+   * password does, and they open the vault in the same step.
+   */
+  const unlockWithProtector = async (kind: 'passkey' | 'biometric') => {
     if (status === 'checking' || blockedSeconds > 0) return
     setStatus('checking')
     try {
       const { unlockVault } =
         await import('@/lib/security/vault/vault-protectors')
-      await unlockVault({ kind: 'passkey' })
-      track('security_vault_unlocked', { protector: 'passkey' })
+      await unlockVault(
+        kind === 'passkey'
+          ? { kind: 'passkey' }
+          : {
+              kind: 'biometric',
+              reason: t('security.vault.biometricPromptReason'),
+            },
+      )
+      track('security_vault_unlocked', { protector: kind })
       setStatus('idle')
       unlockNow()
     } catch (err) {
+      const { VaultProtectorError } =
+        await import('@/lib/security/vault/vault-errors')
       // A dismissed biometric prompt is not a failed guess — it must not
       // count against the backoff, and the vault layer already makes sure it
       // doesn't. Just put the user back where they were.
-      const { VaultProtectorError } =
-        await import('@/lib/security/vault/vault-errors')
       if (err instanceof VaultProtectorError && err.kind === 'cancelled') {
         setStatus('idle')
+        return
+      }
+      // The protector is dead rather than refused. Saying "wrong" here sends
+      // someone who did nothing wrong toward the destructive reset.
+      if (err instanceof VaultProtectorError && err.kind === 'invalidated') {
+        setStatus('biometric-invalidated')
         return
       }
       setStatus('wrong')
@@ -276,6 +300,11 @@ function LockOverlay({ reason }: { reason: string }) {
                   {t('security.vault.diverged')}
                 </p>
               )}
+              {status === 'biometric-invalidated' && (
+                <p className="text-destructive text-xs">
+                  {t('security.vault.biometricInvalidated')}
+                </p>
+              )}
 
               <Button
                 type="submit"
@@ -291,19 +320,36 @@ function LockOverlay({ reason }: { reason: string }) {
               </Button>
             </form>
 
-            {/* WebAuthn user verification IS an identity check — a biometric
-                or security-key gesture satisfies the screen lock exactly the
-                way the password does, and it opens the vault in the same
-                step. Offered only when a passkey is actually enrolled. */}
+            {/* Offered only when the protector is actually enrolled — the
+                record is what knows, and a button that cannot raise a prompt
+                is worse than no button. */}
             {vault.hasPasskey && (
               <Button
                 variant="outline"
                 className="mt-2 w-full"
                 disabled={status === 'checking' || blockedSeconds > 0}
-                onClick={() => void unlockWithPasskey()}
+                onClick={() => void unlockWithProtector('passkey')}
               >
                 <Fingerprint className="size-4" />
                 {t('security.vault.unlockWithPasskey')}
+              </Button>
+            )}
+
+            {vault.hasBiometric && (
+              <Button
+                variant="outline"
+                className="mt-2 w-full"
+                disabled={
+                  status === 'checking' ||
+                  blockedSeconds > 0 ||
+                  // Once it is dead, keep it dead: re-prompting only produces
+                  // the same failure and reads as a flaky sensor.
+                  status === 'biometric-invalidated'
+                }
+                onClick={() => void unlockWithProtector('biometric')}
+              >
+                <ScanFace className="size-4" />
+                {t('security.vault.unlockWithBiometric')}
               </Button>
             )}
 

@@ -7,6 +7,7 @@ import {
   Fingerprint,
   KeyRound,
   Lock,
+  ScanFace,
   ShieldCheck,
   ShieldOff,
   Trash2,
@@ -36,6 +37,7 @@ import { Spinner } from '@pairlens/ui/components/ui/spinner'
 import { Switch } from '@pairlens/ui/components/ui/switch'
 
 import type { LockConfig } from '@/lib/security/lock-config'
+import type { VaultRecord } from '@/lib/security/vault/vault-record'
 import {
   IDLE_MINUTE_OPTIONS,
   PERIODIC_MINUTE_OPTIONS,
@@ -50,6 +52,7 @@ import {
   hasPasswordProtector,
   useVaultState,
 } from '@/lib/security/vault/vault-session'
+import { removalStrandsVault } from '@/lib/security/vault/vault-record'
 import { MIN_PASSWORD_LENGTH } from '@/lib/security/vault/vault-policy'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
@@ -295,10 +298,14 @@ export function SecuritySection() {
  *
  * The removal rule is the load-bearing part: a protector can only be removed
  * while the vault is UNLOCKED (otherwise someone at an unattended terminal
- * strips the passkey and leaves only a password to guess), and the last one
- * cannot be removed while anything is stored. Those two rules hold each other
- * up on desktop, where "is anything stored?" can only be answered by reading
- * the vaulted indexes — do not weaken either on its own.
+ * strips the passkey and leaves only a password to guess), and a removal that
+ * would strand stored values is refused — the last protector, and equally the
+ * second-to-last one when what remains is only Touch ID, which macOS
+ * invalidates whenever the fingerprint set changes. Those rules hold each
+ * other up on desktop, where "is anything stored?" can only be answered by
+ * reading the vaulted indexes — do not weaken any of them on its own. The
+ * button below asks `removalStrandsVault` so it cannot drift from what
+ * `removeProtector` will actually allow.
  */
 function VaultCard() {
   const { t } = useTranslation()
@@ -346,6 +353,7 @@ function VaultCard() {
   }
 
   const record = useVaultRecord(vault)
+  const biometricSupported = useBiometricSupported()
 
   return (
     <section className="rounded-xl border p-4">
@@ -384,17 +392,14 @@ function VaultCard() {
           {t('settings.security.vaultDesktopToggleHint')}
         </p>
       )}
-      {!isStandalone && !vault.enrolled && (
-        <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">
-          {t('settings.security.vaultLegacyBody')}
-        </p>
-      )}
-
-      {/* An interrupted migration has to be finishable from here. Saying "open
-          the vault to complete it" and offering nothing that completes it
-          leaves the remaining values outside the vault permanently — and a
-          second "Set up vault" only produces a conflict, because the record is
-          already on disk. */}
+      {/* An interrupted migration has to be finishable from here. This is the
+          desktop opt-in path only — browser enrollment has nothing to move,
+          because a protector is a precondition for the first credential — and
+          on desktop the values it did not reach are still PLAINTEXT in the OS
+          keychain. Saying "open the vault to complete it" and offering nothing
+          that completes it leaves them there permanently, under a panel that
+          claims protection; a second "Set up vault" only produces a conflict,
+          because the record is already on disk. */}
       {vault.migrating && (
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <p className="min-w-0 flex-1 text-xs text-amber-600 dark:text-amber-400">
@@ -427,12 +432,18 @@ function VaultCard() {
             >
               {protector.type === 'passkey' ? (
                 <Fingerprint className="size-4 shrink-0 text-muted-foreground" />
+              ) : protector.type === 'biometric' ? (
+                <ScanFace className="size-4 shrink-0 text-muted-foreground" />
               ) : (
                 <KeyRound className="size-4 shrink-0 text-muted-foreground" />
               )}
               <span className="min-w-0 flex-1 truncate text-sm">
                 {protector.label}
               </span>
+              {/* Disabled on the same rule the library enforces
+                  (`removalStrandsVault`), so the button never offers a removal
+                  that comes back as an error — and never offers the one that
+                  leaves Touch ID alone holding the vault. */}
               <Button
                 size="icon"
                 variant="ghost"
@@ -440,12 +451,16 @@ function VaultCard() {
                 title={
                   record.protectors.length === 1
                     ? t('settings.security.vaultRemoveLastBlocked')
-                    : !vault.unlocked
-                      ? t('security.vault.sealed')
-                      : t('settings.security.vaultRemoveProtector')
+                    : removalStrandsVault(record, protector.id)
+                      ? t('settings.security.vaultRemoveBiometricOnlyBlocked')
+                      : !vault.unlocked
+                        ? t('security.vault.sealed')
+                        : t('settings.security.vaultRemoveProtector')
                 }
                 disabled={
-                  busy || record.protectors.length === 1 || !vault.unlocked
+                  busy ||
+                  removalStrandsVault(record, protector.id) ||
+                  !vault.unlocked
                 }
                 onClick={() => void removeProtector(protector.id)}
               >
@@ -459,7 +474,10 @@ function VaultCard() {
       {error && <p className="mt-2 text-destructive text-xs">{error}</p>}
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        {(!vault.enrolled || !vault.hasPasskey || !vault.hasPassword) && (
+        {(!vault.enrolled ||
+          !vault.hasPasskey ||
+          !vault.hasPassword ||
+          (biometricSupported && !vault.hasBiometric)) && (
           <Button
             size="sm"
             variant="outline"
@@ -500,13 +518,38 @@ function VaultCard() {
 }
 
 /**
+ * Whether this machine can actually raise a biometric prompt.
+ *
+ * The probe, never `isStandalone`: a Mac mini has no Touch ID sensor and the
+ * Windows/Linux builds have no implementation, so offering "Add Touch ID"
+ * there would be a button that cannot finish what it starts. The result is
+ * cached at module level inside `isBiometricSupported`, so mounting the panel
+ * repeatedly costs one IPC call in total.
+ */
+function useBiometricSupported(): boolean {
+  const [supported, setSupported] = React.useState(false)
+  React.useEffect(() => {
+    let cancelled = false
+    void import('@/lib/security/vault/vault-biometric').then(async (m) => {
+      const ok = await m.isBiometricSupported().catch(() => false)
+      if (!cancelled) setSupported(ok)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  return supported
+}
+
+/**
  * The protector list needs the record, not just the summary state. Re-read on
  * every vault change — this is a settings panel, not a hot path.
  */
 function useVaultRecord(vault: { protectors: number; enrolled: boolean }) {
-  const [record, setRecord] = React.useState<{
-    protectors: Array<{ id: string; type: string; label: string }>
-  } | null>(null)
+  // The real record type rather than a structural stand-in: the removal button
+  // asks `removalStrandsVault` whether it may be offered, and that rule reads
+  // protector KINDS. A loose shape would let a `type: string` drift past it.
+  const [record, setRecord] = React.useState<VaultRecord | null>(null)
   React.useEffect(() => {
     let cancelled = false
     void import('@/lib/security/vault/vault-session').then(async (m) => {

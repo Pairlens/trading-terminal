@@ -173,9 +173,39 @@ describe('the record', () => {
       protectors: 1,
       hasPasskey: false,
       hasPassword: true,
+      hasBiometric: false,
       state: 'ready',
     })
     expect(getVaultState().enrolled).toBe(true)
+  })
+
+  test('the snapshot reports which protector kinds are enrolled', async () => {
+    // Every unlock surface renders its buttons off this — a wrong flag is
+    // either a missing way in or a button that cannot raise a prompt.
+    setVaultRecord(
+      {
+        ...record,
+        protectors: [
+          ...record.protectors,
+          {
+            id: 'b1',
+            type: 'biometric' as const,
+            createdAt: 1,
+            label: 'Touch ID on this Mac',
+            platform: 'macos' as const,
+            salt: 'c2FsdA==',
+            iv: 'aXY=',
+            wrapped: 'dw==',
+          },
+        ],
+      },
+      { broadcast: false },
+    )
+    const state = getVaultState()
+    expect(state.hasPassword).toBe(true)
+    expect(state.hasBiometric).toBe(true)
+    expect(state.hasPasskey).toBe(false)
+    expect(state.protectors).toBe(2)
   })
 })
 

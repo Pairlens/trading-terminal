@@ -3,7 +3,7 @@
 'use client'
 
 import * as React from 'react'
-import { Fingerprint, LockKeyhole } from 'lucide-react'
+import { Fingerprint, LockKeyhole, ScanFace } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
@@ -62,17 +62,29 @@ export function VaultUnlockDialog({
     }
   }, [open])
 
-  const describe = (err: unknown): string => {
+  const describe = (
+    err: unknown,
+    kind: 'password' | 'passkey' | 'biometric',
+  ): string => {
     if (err instanceof VaultProtectorError) {
       switch (err.kind) {
         case 'wrong-password':
           return t('security.lock.wrongPassword')
         case 'cancelled':
-          return t('security.vault.passkeyCancelled')
+          // Both prompts cancel the same way; only the caller knows which one
+          // the user actually dismissed, and naming the wrong one reads as a
+          // bug in a dialog that is already asking for trust.
+          return kind === 'biometric'
+            ? t('security.vault.biometricCancelled')
+            : t('security.vault.passkeyCancelled')
         case 'no-match':
           return t('security.vault.passkeyNoMatch')
         case 'prf-unsupported':
           return t('security.vault.passkeyUnsupportedHint')
+        case 'invalidated':
+          // Not "wrong" and not "try again": nothing the user does at this
+          // prompt will ever open it, so the copy has to point at Settings.
+          return t('security.vault.biometricInvalidated')
         default:
           return err.message
       }
@@ -80,7 +92,7 @@ export function VaultUnlockDialog({
     return err instanceof Error ? err.message : String(err)
   }
 
-  const run = async (kind: 'password' | 'passkey') => {
+  const run = async (kind: 'password' | 'passkey' | 'biometric') => {
     if (busy) return
     setBusy(true)
     setError(null)
@@ -90,14 +102,19 @@ export function VaultUnlockDialog({
       await unlockVault(
         kind === 'password'
           ? { kind: 'password', password }
-          : { kind: 'passkey' },
+          : kind === 'biometric'
+            ? {
+                kind: 'biometric',
+                reason: t('security.vault.biometricPromptReason'),
+              }
+            : { kind: 'passkey' },
       )
       track('security_vault_unlocked', { protector: kind })
       setPassword('')
       onOpenChange(false)
       onUnlocked?.()
     } catch (err) {
-      setError(describe(err))
+      setError(describe(err, kind))
     } finally {
       setBusy(false)
     }
@@ -127,6 +144,23 @@ export function VaultUnlockDialog({
           >
             <Fingerprint className="size-4" />
             {t('security.vault.unlockWithPasskey')}
+          </Button>
+        )}
+
+        {/* Shown on `hasBiometric`, not on a platform check: the record is what
+            knows whether there is an OS key to read, and a button offered
+            without one is a prompt that cannot appear. Disabled during a
+            lockout for the same reason the passkey button is — a penalty
+            earned with wrong passwords must not be walked around. */}
+        {vault.hasBiometric && (
+          <Button
+            variant="outline"
+            className="w-full"
+            disabled={busy || blockedSeconds > 0}
+            onClick={() => void run('biometric')}
+          >
+            <ScanFace className="size-4" />
+            {t('security.vault.unlockWithBiometric')}
           </Button>
         )}
 

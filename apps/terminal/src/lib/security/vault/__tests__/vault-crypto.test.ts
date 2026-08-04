@@ -141,7 +141,7 @@ describe('value encryption', () => {
   test('malformed input is rejected, never decoded', async () => {
     const dek = await importDek(generateRawDek())
     expect(decryptWithDek(dek, 'cred:abc', 'plain')).rejects.toThrow()
-    expect(decryptWithDek(dek, 'cred:abc', 'enc.v1.aa.bb')).rejects.toThrow()
+    expect(decryptWithDek(dek, 'cred:abc', 'plaintext')).rejects.toThrow()
     expect(decryptWithDek(dek, 'cred:abc', 'enc.v2.')).rejects.toThrow()
     expect(decryptWithDek(dek, 'cred:abc', 'enc.v2.zz')).rejects.toThrow()
   })

@@ -22,6 +22,12 @@
 import type { LockReason } from '@/lib/security/lock-config'
 import { captureEvent } from '@/lib/analytics'
 
+/**
+ * Which kind of vault protector answered. The kind only — never how many are
+ * enrolled, which would describe how hard the vault is to open.
+ */
+export type VaultProtectorKind = 'password' | 'passkey' | 'biometric'
+
 /** Coarse trading mode — never mixes with amounts. */
 export type TradeMode = 'paper' | 'live'
 
@@ -148,10 +154,10 @@ export interface AnalyticsEvents {
   /** A credential-vault protector was enrolled. Kind only — never key material,
    * never how many protectors exist (that describes how hard the vault is to
    * open). */
-  security_vault_enrolled: { protector: 'password' | 'passkey' }
-  security_vault_removed: { protector: 'password' | 'passkey' }
+  security_vault_enrolled: { protector: VaultProtectorKind }
+  security_vault_removed: { protector: VaultProtectorKind }
   /** The vault was opened. Which protector answered, never how long it took. */
-  security_vault_unlocked: { protector: 'password' | 'passkey' }
+  security_vault_unlocked: { protector: VaultProtectorKind }
   /** The vault was sealed by the explicit hard lock. */
   security_vault_hard_locked: Record<string, never>
   /** Desktop only: the opt-in app-level vault was turned on or off. */

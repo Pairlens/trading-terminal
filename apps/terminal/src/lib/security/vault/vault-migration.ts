@@ -3,15 +3,17 @@
 /**
  * Moving what is already stored under the vault DEK.
  *
- * Both platforms need this and neither is optional, which is the correction
- * this module carries: an opt-in that only covers keys added AFTERWARDS is a
- * switch that reports protection it never applied.
+ * This is the desktop opt-in path, and it is not optional: on desktop the
+ * exchange keys and wallet secrets already sitting in the OS keychain are
+ * PLAINTEXT, so an enrollment that only covered keys added AFTERWARDS would be
+ * a switch that reports protection it never applied. They are enumerated from
+ * the credential and wallet indexes, because the keychain has no `list`
+ * command, and re-encrypted under the DEK.
  *
- *   Browser   Existing values are `enc.v1` — AES-GCM under a non-extractable
- *             IndexedDB key. Enrollment re-encrypts them under the DEK.
- *   Desktop   Existing values are PLAINTEXT in the OS keychain. Enrollment
- *             re-encrypts those, enumerated from the credential and wallet
- *             indexes, because the keychain has no `list` command.
+ * On browser there is nothing to move: a protector is a precondition for the
+ * first credential (vault-policy.ts), so the indexes cannot exist before the
+ * vault does and the same walk simply yields an empty map. One code path, two
+ * honest answers — not a platform `if` in the middle of the ordering.
  *
  * The ordering below is the entire design and must not be rearranged:
  *
@@ -25,21 +27,13 @@
  *   4. Re-encrypt each value in place, and read it back to prove it landed —
  *      a backend that accepts a write and stores nothing would otherwise be
  *      discovered only by the user, as a plaintext key under a switch that
- *      says "protected". A crash here leaves a mix of formats, which is
- *      exactly why `getCredential` reads both, permanently.
+ *      says "protected". A crash here leaves a mix of plaintext and `enc.v2`,
+ *      which is exactly what `getCredential` reads correctly on desktop.
  *   5. Flip the record to `ready`.
  *
  * Failure at 4 leaves `state: 'migrating'` and every value readable in one
  * format or the other; the operation is idempotent and re-runnable, and
  * Security settings offers to finish it.
- *
- * Deviation from the original plan, on purpose: the legacy IndexedDB key is
- * NOT deleted at the end. The lock verifier is deliberately exempt from vault
- * encryption (it has to be answerable while the vault is sealed), so on
- * browser it is still stored under that key — deleting it would leave the
- * user staring at a lock screen whose password can never be checked. After a
- * complete migration the key opens nothing but a salted PBKDF2 digest, which
- * is what a verifier is designed to be.
  */
 
 import { VaultMigrationError } from './vault-errors'
@@ -52,19 +46,13 @@ import {
 } from './vault-crypto'
 import { listIndexedKeys } from './vault-values'
 import type { VaultRecord } from './vault-record'
-import { isStandalone } from '@/lib/platform'
-import {
-  decryptLegacyValue,
-  listLegacyEntries,
-  readStoredValue,
-  writeStoredValue,
-} from '@/lib/keychain'
+import { readStoredValue, writeStoredValue } from '@/lib/keychain'
 
 export type MigrationDeps = {
   /**
    * Steps 1-2: everything that must move under the DEK, as slot key →
-   * plaintext. Platform-shaped, which is why it is one function and not an
-   * `if` in the middle of the ordering below.
+   * plaintext. Injected rather than called directly so the ordering guarantees
+   * below can be tested against a fake store.
    */
   collect: (dek: CryptoKey) => Promise<Map<string, string>>
   writeValue: (key: string, stored: string) => Promise<void>
@@ -77,36 +65,7 @@ export type MigrationDeps = {
 }
 
 /**
- * Browser: the `enc.v1` slots, decrypted with the legacy IndexedDB key.
- *
- * A failure here aborts before a single write, so the user still has
- * everything they had — hence the whole map is built before returning.
- */
-export async function collectLegacyValues(
-  _dek: CryptoKey,
-  deps: {
-    listLegacy?: () => Array<{ key: string; stored: string }>
-    decryptLegacy?: (stored: string) => Promise<string>
-  } = {},
-): Promise<Map<string, string>> {
-  const listLegacy = deps.listLegacy ?? listLegacyEntries
-  const decryptLegacy = deps.decryptLegacy ?? decryptLegacyValue
-  const pending = new Map<string, string>()
-  for (const entry of listLegacy()) {
-    try {
-      pending.set(entry.key, await decryptLegacy(entry.stored))
-    } catch (err) {
-      throw new VaultMigrationError(
-        `Could not read the stored credential "${entry.key}". Nothing was changed.`,
-        err,
-      )
-    }
-  }
-  return pending
-}
-
-/**
- * Desktop: the indexes, because the OS keychain has no listing command.
+ * The indexes, because the OS keychain has no listing command.
  *
  * Everything there is plaintext until a vault exists, which is exactly why
  * this has to run — an enrollment that skipped it would leave every key the
@@ -129,8 +88,12 @@ export async function collectStoredPlaintexts(
   try {
     for (const key of await listIndexedKeys(readPlain)) {
       const stored = await read(key)
-      // Already under the data key — an interrupted run, nothing to do.
-      if (stored === null || stored.startsWith(CIPHER_V2)) continue
+      if (stored === null) continue
+      // Already under the data key — an interrupted run, nothing to do. The
+      // wider `enc.` guard is the belt: an unrecognised ciphertext must never
+      // be mistaken for plaintext and encrypted a second time, which would
+      // bury the real value under two layers and one recoverable key.
+      if (stored.startsWith('enc.')) continue
       pending.set(key, stored)
     }
   } catch (err) {
@@ -143,7 +106,7 @@ export async function collectStoredPlaintexts(
 }
 
 const defaultDeps: MigrationDeps = {
-  collect: isStandalone ? collectStoredPlaintexts : collectLegacyValues,
+  collect: collectStoredPlaintexts,
   writeValue: writeStoredValue,
   readValue: readStoredValue,
   writeRecord: writeVaultRecord,
@@ -189,7 +152,7 @@ async function writeVaulted(
  * revision set to what should land on disk. `expectedRevision` is the CAS
  * token — `null` when creating the vault.
  */
-export async function migrateLegacyValues(
+export async function migrateStoredValues(
   rawDek: Uint8Array<ArrayBuffer>,
   record: VaultRecord,
   expectedRevision: number | null,

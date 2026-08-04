@@ -47,6 +47,16 @@ export type VaultProtectorErrorKind =
   | 'cancelled'
   /** The authenticator answered with a credential this vault does not know. */
   | 'no-match'
+  /**
+   * The OS key behind a biometric protector was invalidated — on macOS, the
+   * enrolled fingerprint set changed, which is exactly what
+   * `kSecAccessControlBiometryCurrentSet` is there to detect. The protector is
+   * dead: it can be removed and set up again, but no retry will ever open it.
+   * Distinct from `wrong-password` and from `cancelled` because the action the
+   * user has to take is different from both, and because telling someone their
+   * fingerprint was "wrong" sends them to the destructive reset.
+   */
+  | 'invalidated'
   /** The operation needs an unlocked vault (or a protector) and has neither. */
   | 'unavailable'
 
@@ -62,9 +72,10 @@ export class VaultProtectorError extends Error {
 }
 
 /**
- * A v1 → vault migration that could not complete. The migration is ordered so
- * that every failure leaves a readable state (see vault-migration.ts); this
- * error means "nothing was lost, try again", never "your secrets are gone".
+ * A move of already-stored values under the DEK that could not complete. The
+ * migration is ordered so that every failure leaves a readable state (see
+ * vault-migration.ts); this error means "nothing was lost, try again", never
+ * "your secrets are gone".
  */
 export class VaultMigrationError extends Error {
   readonly code = 'vault-migration'

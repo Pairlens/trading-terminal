@@ -11,16 +11,22 @@ import { describe, expect, test } from 'bun:test'
 
 import {
   assertRevision,
+  biometricProtectors,
   bumpRevision,
   parseVaultRecord,
   passkeyProtectors,
   passwordProtectors,
+  removalStrandsVault,
   serializeVaultRecord,
   withProtector,
   withoutProtector,
 } from '../vault-record'
 import { VaultConflictError } from '../vault-errors'
-import type { PasswordProtector, VaultRecord } from '../vault-record'
+import type {
+  BiometricProtector,
+  PasswordProtector,
+  VaultRecord,
+} from '../vault-record'
 
 const password = (id: string): PasswordProtector => ({
   id,
@@ -29,6 +35,17 @@ const password = (id: string): PasswordProtector => ({
   label: 'Password',
   kdf: 'PBKDF2-SHA256',
   iterations: 600_000,
+  salt: 'c2FsdA==',
+  iv: 'aXYtYnl0ZXM=',
+  wrapped: 'd3JhcHBlZA==',
+})
+
+const biometric = (id: string): BiometricProtector => ({
+  id,
+  type: 'biometric',
+  createdAt: 4,
+  label: 'Touch ID on this Mac',
+  platform: 'macos',
   salt: 'c2FsdA==',
   iv: 'aXYtYnl0ZXM=',
   wrapped: 'd3JhcHBlZA==',
@@ -177,5 +194,80 @@ describe('selectors', () => {
     })
     expect(passwordProtectors(mixed).map((p) => p.id)).toEqual(['a'])
     expect(passkeyProtectors(mixed).map((p) => p.id)).toEqual(['k'])
+    expect(biometricProtectors(mixed)).toEqual([])
+  })
+
+  test('a password + biometric record keeps both', () => {
+    const mixed = record({ protectors: [password('a'), biometric('b')] })
+    expect(passwordProtectors(mixed).map((p) => p.id)).toEqual(['a'])
+    expect(biometricProtectors(mixed).map((p) => p.id)).toEqual(['b'])
+  })
+})
+
+describe('biometric protectors', () => {
+  test('round trip through the parser', () => {
+    const original = record({ protectors: [password('a'), biometric('b')] })
+    expect(parseVaultRecord(serializeVaultRecord(original))).toEqual(original)
+  })
+
+  test('an unknown platform is dropped rather than defaulted', () => {
+    // Defaulting to 'macos' would offer the user a Touch ID button backed by
+    // no OS key at all — a prompt that can never appear. The password beside
+    // it must survive, which is the same rule a damaged passkey follows.
+    const raw = JSON.stringify({
+      ...record({ protectors: [password('a'), biometric('b')] }),
+      protectors: [password('a'), { ...biometric('b'), platform: 'windows' }],
+    })
+    const parsed = parseVaultRecord(raw)
+    expect(parsed?.protectors.map((p) => p.id)).toEqual(['a'])
+  })
+
+  test('a biometric-only record with a bad platform parses as no vault', () => {
+    // Nothing left to open it with is indistinguishable from no vault — which
+    // is exactly why `createVault` refuses to make biometrics the only way in.
+    const raw = JSON.stringify({
+      ...record({ protectors: [biometric('b')] }),
+      protectors: [{ ...biometric('b'), platform: 'windows' }],
+    })
+    expect(parseVaultRecord(raw)).toBeNull()
+  })
+})
+
+describe('removalStrandsVault', () => {
+  test('the last protector strands it', () => {
+    expect(removalStrandsVault(record(), 'a')).toBe(true)
+  })
+
+  test('leaving only Touch ID strands it too', () => {
+    // The state `createVault` refuses to create, reachable from the removal
+    // side: macOS invalidates the item whenever the fingerprint set changes.
+    const both = record({ protectors: [password('a'), biometric('b')] })
+    expect(removalStrandsVault(both, 'a')).toBe(true)
+    // The mirror image is fine — a password is still there afterwards.
+    expect(removalStrandsVault(both, 'b')).toBe(false)
+  })
+
+  test('a passkey beside Touch ID is a real way in', () => {
+    const mixed = record({
+      protectors: [
+        biometric('b'),
+        {
+          id: 'k',
+          type: 'passkey',
+          createdAt: 2,
+          label: 'Key',
+          credentialId: 'Y3JlZA==',
+          salt: 'c2FsdA==',
+          iv: 'aXY=',
+          wrapped: 'dw==',
+        },
+      ],
+    })
+    expect(removalStrandsVault(mixed, 'b')).toBe(false)
+  })
+
+  test('an id that is not on the record changes nothing', () => {
+    const both = record({ protectors: [password('a'), password('b')] })
+    expect(removalStrandsVault(both, 'nope')).toBe(false)
   })
 })

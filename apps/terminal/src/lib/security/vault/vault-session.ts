@@ -63,6 +63,13 @@ export type VaultState = {
    * and a vault with both is not the same as a vault with one of each.
    */
   hasPassword: boolean
+  /**
+   * Whether a biometric protector (Touch ID) is enrolled. Separate again for
+   * the same reason: "add a way in" has to offer exactly the kinds that are
+   * missing, and the unlock surfaces have to show exactly the buttons that can
+   * actually work.
+   */
+  hasBiometric: boolean
   migrating: boolean
 }
 
@@ -73,6 +80,7 @@ const SERVER_STATE: VaultState = Object.freeze({
   protectors: 0,
   hasPasskey: false,
   hasPassword: false,
+  hasBiometric: false,
   migrating: false,
 })
 
@@ -97,6 +105,9 @@ function computeSnapshot(): VaultState {
     hasPassword: loaded
       ? (record?.protectors.some((p) => p.type === 'password') ?? false)
       : (mirror?.hasPassword ?? false),
+    hasBiometric: loaded
+      ? (record?.protectors.some((p) => p.type === 'biometric') ?? false)
+      : (mirror?.hasBiometric ?? false),
     migrating: loaded
       ? record?.state === 'migrating'
       : mirror?.state === 'migrating',

@@ -27,6 +27,7 @@ import {
 } from './vault-errors'
 import {
   VAULT_RECORD_VERSION,
+  removalStrandsVault,
   withProtector,
   withoutProtector,
 } from './vault-record'
@@ -41,6 +42,11 @@ import {
   newVaultIdentity,
   recoverRawDekWithPasskey,
 } from './vault-passkey'
+import {
+  enrollBiometricProtector,
+  recoverRawDekWithBiometric,
+  removeBiometricMaterial,
+} from './vault-biometric'
 import { deleteVaultRecord, writeVaultRecord } from './vault-storage'
 import {
   ensureVaultLoaded,
@@ -51,7 +57,7 @@ import {
   setDek,
   setVaultRecord,
 } from './vault-session'
-import { finishMigration, migrateLegacyValues } from './vault-migration'
+import { finishMigration, migrateStoredValues } from './vault-migration'
 import { hasVaultedValues } from './vault-values'
 import {
   blockedForMs,
@@ -59,6 +65,7 @@ import {
   recordFailedAttempt,
 } from './vault-attempts'
 import type { PasskeyPrfPort } from './vault-passkey'
+import type { BiometricPort } from './vault-biometric'
 import type { VaultProtector, VaultRecord } from './vault-record'
 
 export type EnrollInput =
@@ -81,12 +88,25 @@ export type EnrollInput =
       userDisplayName?: string
       port?: PasskeyPrfPort
     }
+  | {
+      kind: 'biometric'
+      label?: string
+      /**
+       * Localized sentence the OS composes its prompt around. Applied as the
+       * keychain item's label at CREATE time — see biometric.rs for why it
+       * cannot be attached to the read.
+       */
+      reason?: string
+      port?: BiometricPort
+    }
 
 export type UnlockInput =
   | { kind: 'password'; password: string }
   | { kind: 'passkey'; port?: PasskeyPrfPort }
+  | { kind: 'biometric'; reason?: string; port?: BiometricPort }
 
 const DEFAULT_PASSKEY_USER = 'Pairlens vault'
+const DEFAULT_BIOMETRIC_REASON = 'Unlock your Pairlens credential vault'
 
 async function buildProtector(
   input: EnrollInput,
@@ -98,6 +118,16 @@ async function buildProtector(
       label: input.label ?? 'Password',
       ...(input.iterations ? { iterations: input.iterations } : {}),
     })
+  }
+  if (input.kind === 'biometric') {
+    return await enrollBiometricProtector(
+      rawDek,
+      {
+        label: input.label ?? 'Touch ID',
+        reason: input.reason ?? DEFAULT_BIOMETRIC_REASON,
+      },
+      input.port,
+    )
   }
   return await enrollPasskeyProtector(
     identity,
@@ -111,12 +141,43 @@ async function buildProtector(
   )
 }
 
+async function recoverWith(
+  record: VaultRecord,
+  unlock: UnlockInput,
+): Promise<Uint8Array<ArrayBuffer>> {
+  switch (unlock.kind) {
+    case 'password':
+      return await recoverRawDekWithPassword(record, unlock.password)
+    case 'passkey':
+      return await recoverRawDekWithPasskey(record, unlock.port)
+    case 'biometric':
+      return await recoverRawDekWithBiometric(
+        record,
+        unlock.reason ?? DEFAULT_BIOMETRIC_REASON,
+        unlock.port,
+      )
+  }
+}
+
 /**
  * Recover the raw DEK from one protector. Callers MUST zeroize.
  *
- * Failure bookkeeping lives here so every entry point shares it: a wrong
- * password counts against the backoff, a dismissed passkey prompt never does
- * (cancelling a biometric prompt is not a guess).
+ * Failure bookkeeping lives here so every entry point shares it, and the rule
+ * is narrow on purpose: ONLY `wrong-password` counts against the backoff.
+ *
+ * Biometrics never do, and that is a decision rather than an oversight. macOS
+ * enforces its own Touch ID retry limit and falls back to the account password
+ * on its own; there is no offline guessing surface here, because the KEK exists
+ * only behind the keychain ACL and never in a form anyone can grind. Counting
+ * failed touches on top of that would let someone mashing the wrong finger at a
+ * borrowed laptop lock the owner out of their own password prompt — the shared
+ * counter also gates the terminal lock. The alternative (count them, on the
+ * theory that a stranger's finger IS a guess) buys nothing the OS is not
+ * already doing, and costs exactly that.
+ *
+ * The INCOMING gate still applies to every kind: an active lockout blocks the
+ * biometric path too, matching the shipped passkey behaviour. Someone serving a
+ * penalty for wrong passwords must not walk around it with a fingerprint.
  */
 async function recoverRawDek(
   record: VaultRecord,
@@ -130,10 +191,7 @@ async function recoverRawDek(
     )
   }
   try {
-    const raw =
-      unlock.kind === 'password'
-        ? await recoverRawDekWithPassword(record, unlock.password)
-        : await recoverRawDekWithPasskey(record, unlock.port)
+    const raw = await recoverWith(record, unlock)
     clearAttempts()
     return raw
   } catch (err) {
@@ -157,11 +215,31 @@ async function recoverRawDek(
  *
  * Leaves the vault unlocked — the user just proved themselves by choosing the
  * secret, and sealing immediately would only make them do it twice.
+ *
+ * Returns the migration count alongside the record: "we moved N keys you
+ * already had" is a claim the UI can only make truthfully if this hands it the
+ * number, and the alternative it reached for before — counting protectors —
+ * said "1" on every fresh browser enrollment that moved nothing.
  */
-export async function createVault(input: EnrollInput): Promise<VaultRecord> {
+export async function createVault(
+  input: EnrollInput,
+): Promise<{ record: VaultRecord; migrated: number }> {
   const existing = await ensureVaultLoaded()
   if (existing) {
     throw new VaultConflictError('A vault already exists on this device')
+  }
+  // Touch ID is never the ONLY way in, and the reason is not politeness. The OS
+  // invalidates the item whenever the enrolled fingerprints change, so a
+  // biometric-only vault is one System Settings visit away from unopenable.
+  // There is a second, quieter failure too: a record whose protectors are all
+  // of a kind the running build cannot parse degrades to zero protectors,
+  // `parseVaultRecord` returns null, and the next `createVault` overwrites it —
+  // orphaning every value it was protecting.
+  if (input.kind === 'biometric') {
+    throw new VaultProtectorError(
+      'Set up a password first — Touch ID is an extra way in, never the only one.',
+      'unavailable',
+    )
   }
 
   const identity = newVaultIdentity()
@@ -179,10 +257,10 @@ export async function createVault(input: EnrollInput): Promise<VaultRecord> {
     }
     // Writes the record first, then re-encrypts — the wrapped DEK must exist
     // on disk before the first value that needs it.
-    const { record } = await migrateLegacyValues(rawDek, draft, null)
+    const { record, migrated } = await migrateStoredValues(rawDek, draft, null)
     setDek(await importDek(rawDek), { broadcast: true })
     setVaultRecord(record, { broadcast: true })
-    return record
+    return { record, migrated }
   } catch (err) {
     // The draft may already be on disk as `migrating` while this session still
     // believes there is no vault. That stale "null" is what turns a retry into
@@ -226,10 +304,18 @@ export async function addProtector(
 /**
  * Delete one protector's blob. Nothing is re-wrapped — each protector wraps
  * the same DEK independently, which is the entire reason removal is cheap.
+ *
+ * Refused while it would strand values behind a door nobody can count on
+ * opening — `removalStrandsVault` (vault-record.ts) is the shared rule, and it
+ * covers the biometric-only shape as well as the empty one.
  */
 export async function removeProtector(
   id: string,
-  deps: { hasValues?: () => Promise<boolean> } = {},
+  deps: {
+    hasValues?: () => Promise<boolean>
+    /** The OS biometric store. Injected so removal can be tested headlessly. */
+    biometricPort?: BiometricPort
+  } = {},
 ): Promise<VaultRecord | null> {
   const record = await ensureVaultLoaded()
   if (!record) {
@@ -242,14 +328,23 @@ export async function removeProtector(
     throw new VaultProtectorError('No such protector', 'no-match')
   }
 
+  // Both refusals below are the same rule: never leave values behind a door
+  // the user cannot count on opening. "No protectors left" is the obvious
+  // shape; "only Touch ID left" is the one `createVault` already refuses to
+  // create, and refusing it only on the way up would let two clicks produce
+  // the state that path calls unrecoverable.
   const hasValues = deps.hasValues ?? hasVaultedValues
-  if (record.protectors.length === 1 && (await hasValues())) {
+  const strands = removalStrandsVault(record, id)
+  if (strands && (await hasValues())) {
     throw new VaultProtectorError(
-      'This is the only way into your vault. Add another before removing it.',
+      record.protectors.length === 1
+        ? 'This is the only way into your vault. Add another before removing it.'
+        : 'Touch ID cannot be the only way into your vault. Add a password or a passkey before removing this one.',
       'unavailable',
     )
   }
 
+  const removed = record.protectors.find((p) => p.id === id)
   const next = withoutProtector(record, id)
   if (next.protectors.length === 0) {
     // Nothing left to protect and nothing left to protect it with: the vault
@@ -258,11 +353,33 @@ export async function removeProtector(
     await deleteVaultRecord()
     setVaultRecord(null, { broadcast: true })
     sealVault({ broadcast: true })
-    return null
+  } else {
+    await writeVaultRecord(next, record.revision)
+    setVaultRecord(next, { broadcast: true })
   }
-  await writeVaultRecord(next, record.revision)
-  setVaultRecord(next, { broadcast: true })
-  return next
+
+  // AFTER the record, never before. The record is authoritative: once the
+  // wrapped blob is gone the leftover OS key opens nothing, so a failure here
+  // is litter rather than a security hole — and throwing over litter would
+  // turn a completed removal into a visible error the user cannot act on.
+  // Skipping it entirely is the thing to avoid: a Touch-ID-guarded item nobody
+  // references stays in the user's Keychain forever.
+  await forgetBiometricMaterial(removed, deps.biometricPort)
+
+  return next.protectors.length === 0 ? null : next
+}
+
+/** Best-effort OS-side cleanup for a protector that is already off the record. */
+async function forgetBiometricMaterial(
+  protector: VaultProtector | undefined,
+  port?: BiometricPort,
+): Promise<void> {
+  if (protector?.type !== 'biometric') return
+  try {
+    await removeBiometricMaterial(protector, port)
+  } catch (err) {
+    console.warn('[vault] could not remove the biometric key material:', err)
+  }
 }
 
 /** Open the vault for this window (and offer the key to siblings). */

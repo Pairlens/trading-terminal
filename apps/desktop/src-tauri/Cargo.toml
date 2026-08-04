@@ -57,6 +57,25 @@ keyring = { version = "3", features = [
     "sync-secret-service",
 ] }
 
+# Touch ID protector for the credential vault (src/biometric.rs).
+#
+# `security-framework` is already in the lock file via `keyring`, so naming it
+# here adds no new crates; `objc2-local-authentication` adds exactly one, since
+# its objc2 / objc2-foundation / block2 dependencies are already pulled in by
+# Tauri. The official `tauri-plugin-biometric` is deliberately NOT used: its
+# dependency list carries no platform crates at all — it is a bridge to the
+# Swift and Kotlin sides shipped for iOS/Android, with no desktop
+# implementation to call.
+[target.'cfg(target_os = "macos")'.dependencies]
+security-framework = "3"
+objc2-local-authentication = { version = "0.3", default-features = false, features = [
+    "std",
+    "LABase",
+    "LAContext",
+    "LAError",
+] }
+zeroize = "1"
+
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]

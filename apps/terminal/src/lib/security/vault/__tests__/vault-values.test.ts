@@ -33,8 +33,8 @@ describe('hasVaultedValues (browser)', () => {
     expect(await hasVaultedValues()).toBe(true)
   })
 
-  test('legacy values do not count — they are not what a protector opens', async () => {
-    storage.setItem(`${SLOT}cred:okx`, 'enc.v1.aXY=.ZGF0YQ==')
+  test('anything that is not enc.v2 does not count — it is not what a protector opens', async () => {
+    storage.setItem(`${SLOT}cred:okx`, 'not-a-vault-value')
     expect(await hasVaultedValues()).toBe(false)
   })
 
@@ -45,7 +45,7 @@ describe('hasVaultedValues (browser)', () => {
   })
 
   test('one vaulted value among many is enough', async () => {
-    storage.setItem(`${SLOT}cred:a`, 'enc.v1.aXY=.ZGF0YQ==')
+    storage.setItem(`${SLOT}cred:a`, 'not-a-vault-value')
     storage.setItem(`${SLOT}cred:b`, 'plaintext-from-2024')
     storage.setItem(`${SLOT}wallet:sol:secret`, 'enc.v2.aXY=.ZGF0YQ==')
     expect(await hasVaultedValues()).toBe(true)

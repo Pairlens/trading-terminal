@@ -31,6 +31,7 @@
 import { CIPHER_V2 } from './vault-crypto'
 import { VaultProtectorError, VaultSealedError } from './vault-errors'
 import { listIndexedKeys } from './vault-values'
+import { removeAllBiometricMaterial } from './vault-biometric'
 import { deleteVaultRecord } from './vault-storage'
 import {
   ensureVaultLoaded,
@@ -116,7 +117,11 @@ export async function disableVault(): Promise<TeardownResult> {
     restored++
   }
 
-  // 4. The record goes last, so a crash above is always recoverable.
+  // 4. The record goes last, so a crash above is always recoverable. The OS
+  //    biometric items go just before it, while the record still names them —
+  //    afterwards nothing remembers those accounts exist and they would sit in
+  //    the user's Keychain forever, behind a Touch ID prompt, opening nothing.
+  await removeAllBiometricMaterial(record)
   await deleteVaultRecord()
   setVaultRecord(null, { broadcast: true })
   sealVault({ broadcast: true })

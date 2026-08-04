@@ -125,15 +125,26 @@ describe('the UI mirror', () => {
             iv: 'aXY=',
             wrapped: 'dw==',
           },
+          {
+            id: 'b1',
+            type: 'biometric',
+            createdAt: 1,
+            label: 'Touch ID on this Mac',
+            platform: 'macos',
+            salt: 'c2FsdA==',
+            iv: 'aXY=',
+            wrapped: 'dw==',
+          },
         ],
       },
       null,
     )
     expect(readUiMirror()).toEqual({
       enrolled: true,
-      protectors: 2,
+      protectors: 3,
       hasPasskey: true,
       hasPassword: true,
+      hasBiometric: true,
       state: 'ready',
     })
   })

@@ -52,6 +52,7 @@ export type VaultUiMirror = {
   protectors: number
   hasPasskey: boolean
   hasPassword: boolean
+  hasBiometric: boolean
   state: 'ready' | 'migrating'
 }
 
@@ -116,6 +117,7 @@ export function writeUiMirror(record: VaultRecord | null): void {
       protectors: record.protectors.length,
       hasPasskey: record.protectors.some((p) => p.type === 'passkey'),
       hasPassword: record.protectors.some((p) => p.type === 'password'),
+      hasBiometric: record.protectors.some((p) => p.type === 'biometric'),
       state: record.state,
     }
     localStorage.setItem(UI_MIRROR_KEY, JSON.stringify(mirror))
@@ -146,6 +148,7 @@ export function readUiMirror(): VaultUiMirror | null {
       protectors: typeof parsed.protectors === 'number' ? parsed.protectors : 0,
       hasPasskey: parsed.hasPasskey === true,
       hasPassword: parsed.hasPassword === true,
+      hasBiometric: parsed.hasBiometric === true,
       state: parsed.state === 'migrating' ? 'migrating' : 'ready',
     }
   } catch {

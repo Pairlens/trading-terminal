@@ -7,6 +7,7 @@ use serde::Serialize;
 use tauri::{AppHandle, Emitter, Manager, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
 
 mod awake;
+mod biometric;
 mod csp;
 mod tray;
 mod window_behavior;
@@ -611,6 +612,10 @@ pub fn run() {
             keychain_set,
             keychain_get,
             keychain_delete,
+            biometric::biometric_available,
+            biometric::biometric_create,
+            biometric::biometric_read,
+            biometric::biometric_delete,
             list_plugin_dirs,
             read_plugin,
             write_plugin,

@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
  * `lib/keychain.ts` with the vault layer in front of it, against the real
- * module and real storage (a fake localStorage + a fake IndexedDB wide enough
- * for the pre-vault format).
+ * module and real storage (a fake localStorage).
  *
  * The regression that matters most is in the second block: a sealed vault
  * must THROW, never resolve `null`. Callers all over the app treat absence as
@@ -14,20 +13,22 @@
  * The browser path is the one under test because that is where the vault is
  * mandatory. The desktop branch differs only in which store the bytes go to
  * (`keychain_set` instead of localStorage); the format decisions below are
- * the same code either way.
+ * the same code either way — except for the one place they must differ, which
+ * the first block covers: with no vault, desktop writes plaintext to the OS
+ * keychain and browser refuses to write at all.
  */
 import { beforeEach, describe, expect, test } from 'bun:test'
 
-import { installBrowserGlobals, installFakeIndexedDb } from './test-globals'
+import { installBrowserGlobals } from './test-globals'
 
 const storage = installBrowserGlobals()
-installFakeIndexedDb()
 
 const { deleteCredential, getCredential, saveCredential } =
   await import('@/lib/keychain')
 const { CIPHER_V2, generateRawDek, importDek, randomBytes, toBase64 } =
   await import('../vault-crypto')
-const { VaultSealedError } = await import('../vault-errors')
+const { VaultEnrollmentRequiredError, VaultSealedError } =
+  await import('../vault-errors')
 const { __resetVaultSessionForTests, sealVault, setDek, setVaultRecord } =
   await import('../vault-session')
 const { LOCK_VERIFIER_KEY } = await import('../../keys')
@@ -66,15 +67,17 @@ beforeEach(() => {
   __resetVaultSessionForTests()
 })
 
-describe('with no vault', () => {
-  test('uses the pre-vault format, unchanged', async () => {
+describe('with no vault, on browser', () => {
+  test('a credential write refuses rather than landing unencrypted', async () => {
     setVaultRecord(null, { broadcast: false })
-    await saveCredential('cred:okx', 'sk-live-1')
-
-    const stored = storage.getItem(`${SLOT}cred:okx`)!
-    expect(stored.startsWith('enc.v1.')).toBe(true)
-    expect(stored).not.toContain('sk-live-1')
-    expect(await getCredential('cred:okx')).toBe('sk-live-1')
+    // vault-policy already gates this at the store, so reaching here means the
+    // gate was bypassed. Writing plaintext anyway is the exact outcome the
+    // policy exists to prevent — say so instead, and let the caller open
+    // enrollment and retry (accounts-page does).
+    await expect(
+      saveCredential('cred:okx', 'sk-live-1'),
+    ).rejects.toBeInstanceOf(VaultEnrollmentRequiredError)
+    expect(storage.getItem(`${SLOT}cred:okx`)).toBeNull()
   })
 
   test('an absent key is null, which is the one honest null', async () => {
@@ -82,17 +85,26 @@ describe('with no vault', () => {
     expect(await getCredential('cred:nothing')).toBeNull()
   })
 
-  test('a value with no prefix predates encryption and reads as absent', async () => {
+  test('an un-prefixed value was not written by us and is not trusted', async () => {
     setVaultRecord(null, { broadcast: false })
-    storage.setItem(`${SLOT}cred:ancient`, 'plaintext-from-2024')
-    expect(await getCredential('cred:ancient')).toBeNull()
+    // Anyone who can write localStorage could otherwise plant a credential
+    // here and have a connector pick it up as real.
+    storage.setItem(`${SLOT}cred:planted`, 'sk-attacker')
+    expect(await getCredential('cred:planted')).toBeNull()
   })
 
-  test('delete removes it', async () => {
+  test('the lock verifier round-trips as plaintext', async () => {
     setVaultRecord(null, { broadcast: false })
-    await saveCredential('cred:okx', 'sk-live-1')
-    await deleteCredential('cred:okx')
-    expect(await getCredential('cred:okx')).toBeNull()
+    await saveCredential(LOCK_VERIFIER_KEY, '{"v":1}')
+    expect(storage.getItem(`${SLOT}${LOCK_VERIFIER_KEY}`)).toBe('{"v":1}')
+    expect(await getCredential(LOCK_VERIFIER_KEY)).toBe('{"v":1}')
+  })
+
+  test('delete removes the verifier', async () => {
+    setVaultRecord(null, { broadcast: false })
+    await saveCredential(LOCK_VERIFIER_KEY, '{"v":1}')
+    await deleteCredential(LOCK_VERIFIER_KEY)
+    expect(await getCredential(LOCK_VERIFIER_KEY)).toBeNull()
   })
 })
 
@@ -151,11 +163,12 @@ describe('with an enrolled vault', () => {
   test('the lock verifier is exempt and stays answerable while sealed', async () => {
     await enrollAndUnlock()
     await saveCredential(LOCK_VERIFIER_KEY, '{"v":1}')
-    // Not vault-encrypted: the lock screen has to be able to check a password
-    // precisely when the vault is closed.
-    expect(
-      storage.getItem(`${SLOT}${LOCK_VERIFIER_KEY}`)?.startsWith(CIPHER_V2),
-    ).toBe(false)
+    // Stored as-is, in the clear, on every platform: the lock screen has to be
+    // able to check a password precisely when the vault is closed, and the
+    // verifier is a salted PBKDF2 digest with nothing secret in it. This is
+    // the assertion that catches an "encrypt everything" refactor turning the
+    // lock screen into a prompt that can never be answered.
+    expect(storage.getItem(`${SLOT}${LOCK_VERIFIER_KEY}`)).toBe('{"v":1}')
 
     sealVault({ broadcast: false })
     expect(await getCredential(LOCK_VERIFIER_KEY)).toBe('{"v":1}')
@@ -175,25 +188,9 @@ describe('with an enrolled vault', () => {
     await expect(getCredential('cred:binance')).rejects.toThrow()
   })
 
-  test('legacy values stay readable — an interrupted migration is survivable', async () => {
-    // Write one value before enrolling, then enroll without migrating it.
-    setVaultRecord(null, { broadcast: false })
-    await saveCredential('cred:old', 'sk-from-before')
-
+  test('undecryptable enc.v2 ciphertext throws instead of reading as absent', async () => {
     await enrollAndUnlock()
-    await saveCredential('cred:new', 'sk-from-after')
-
-    expect(storage.getItem(`${SLOT}cred:old`)?.startsWith('enc.v1.')).toBe(true)
-    expect(storage.getItem(`${SLOT}cred:new`)?.startsWith(CIPHER_V2)).toBe(true)
-    // Both formats read. Deleting the v1 branch later would brick exactly this
-    // user.
-    expect(await getCredential('cred:old')).toBe('sk-from-before')
-    expect(await getCredential('cred:new')).toBe('sk-from-after')
-  })
-
-  test('undecryptable legacy ciphertext throws instead of reading as absent', async () => {
-    setVaultRecord(null, { broadcast: false })
-    storage.setItem(`${SLOT}cred:broken`, 'enc.v1.notbase64.alsonot')
+    storage.setItem(`${SLOT}cred:broken`, `${CIPHER_V2}notbase64.alsonot`)
     await expect(getCredential('cred:broken')).rejects.toThrow()
   })
 })

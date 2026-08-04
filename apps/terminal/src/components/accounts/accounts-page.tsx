@@ -57,10 +57,8 @@ import {
 import { useMarketData } from '@/lib/market-data-provider'
 import { usePortfolioValue } from '@/hooks/use-portfolio-value'
 import { PageHeader } from '@/components/page-header'
-import { isStandalone } from '@/lib/platform'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
-import { useVaultState } from '@/lib/security/vault/vault-session'
 import { isVaultEnrollmentRequired } from '@/lib/security/vault/vault-errors'
 import { mustEnrollFirst } from '@/lib/security/vault/vault-policy'
 
@@ -208,7 +206,6 @@ export function AccountsPage() {
     addCredential,
     removeCredential,
   } = useCredentialsStore()
-  const vault = useVaultState()
 
   // Crypto wallets
   const {
@@ -615,27 +612,6 @@ export function AccountsPage() {
                       </span>
                       <Button size="sm" onClick={() => void reload()}>
                         {t('common.retry')}
-                      </Button>
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {/* Legacy (pre-vault) browser storage: a nag, never a wall.
-                    Reading and trading keep working; the wall only appears at
-                    the next add. */}
-                {!sealed && !vault.enrolled && !isStandalone && (
-                  <Alert className="mb-6">
-                    <KeyRound className="size-4" />
-                    <AlertDescription className="flex flex-wrap items-center gap-3">
-                      <span className="min-w-0 flex-1">
-                        {t('settings.security.vaultLegacyBody')}
-                      </span>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setEnrollOpen(true)}
-                      >
-                        {t('settings.security.vaultLegacyAction')}
                       </Button>
                     </AlertDescription>
                   </Alert>
