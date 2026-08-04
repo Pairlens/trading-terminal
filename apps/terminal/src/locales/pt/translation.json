@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "Histórico de chat com a IA",
-          "description": "As suas conversas com o copiloto, por par."
+          "description": "As suas conversas com o copiloto, por par.",
+          "caveat": "Enquanto estiver desligado, limpar o histórico de chat limpa apenas este dispositivo. As conversas que já estão na sua conta mantêm-se e voltarão a aparecer quando reativar a sincronização."
         },
         "trades": {
           "title": "Diário de operações",

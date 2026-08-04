@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "AI 대화 기록",
-          "description": "페어별 copilot 대화."
+          "description": "페어별 copilot 대화.",
+          "caveat": "이 항목이 꺼져 있는 동안 채팅 기록 지우기는 이 기기에서만 지워집니다. 계정에 이미 저장된 대화는 남아 있으며 동기화를 다시 켜면 다시 나타납니다."
         },
         "trades": {
           "title": "매매 일지",

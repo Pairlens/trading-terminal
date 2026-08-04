@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "Lịch sử trò chuyện AI",
-          "description": "Các cuộc trò chuyện với copilot, theo từng cặp."
+          "description": "Các cuộc trò chuyện với copilot, theo từng cặp.",
+          "caveat": "Khi mục này đang tắt, xóa lịch sử trò chuyện chỉ xóa trên thiết bị này. Các cuộc trò chuyện đã có trong tài khoản vẫn được giữ và sẽ xuất hiện lại khi bật đồng bộ trở lại."
         },
         "trades": {
           "title": "Nhật ký giao dịch",

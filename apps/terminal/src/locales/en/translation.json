@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "AI chat history",
-          "description": "Your copilot conversations, per pair."
+          "description": "Your copilot conversations, per pair.",
+          "caveat": "While this is off, clearing chat history only clears this device. Conversations already in your account are kept and will reappear when you switch syncing back on."
         },
         "trades": {
           "title": "Trade journal",

@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "Riwayat obrolan AI",
-          "description": "Percakapanmu dengan copilot, per pasangan."
+          "description": "Percakapanmu dengan copilot, per pasangan.",
+          "caveat": "Selama ini mati, menghapus riwayat chat hanya menghapusnya di perangkat ini. Percakapan yang sudah ada di akunmu tetap tersimpan dan akan muncul lagi saat sinkronisasi dinyalakan kembali."
         },
         "trades": {
           "title": "Jurnal transaksi",

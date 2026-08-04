@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "Historia czatu z AI",
-          "description": "Twoje rozmowy z copilotem, osobno dla każdej pary."
+          "description": "Twoje rozmowy z copilotem, osobno dla każdej pary.",
+          "caveat": "Dopóki to jest wyłączone, wyczyszczenie historii czatu czyści tylko to urządzenie. Rozmowy zapisane na Twoim koncie zostają i pojawią się ponownie po włączeniu synchronizacji."
         },
         "trades": {
           "title": "Dziennik transakcji",

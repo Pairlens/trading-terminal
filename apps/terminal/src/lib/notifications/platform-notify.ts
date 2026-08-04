@@ -4,44 +4,42 @@ import { isStandalone } from '@/lib/platform'
 
 /**
  * Send an OS-level notification. Prefers the Tauri notification plugin on
- * desktop, falling back to the webview's own Notification API.
+ * desktop (crate + `notification:default` capability wired in
+ * apps/desktop/src-tauri), falling back to the webview's own Notification API.
  *
- * NOTE: `@tauri-apps/plugin-notification` is NOT currently a dependency of this
- * app — there is no `tauri-plugin-notification` crate in src-tauri/Cargo.toml,
- * it is not registered in lib.rs, and `notification:default` is not granted in
- * capabilities/default.json. So on desktop the import below always fails today
- * and we land on the webview fallback. Wiring the plugin up (JS dep + crate +
- * capability) is what makes the native path live; until then the fall-through
- * is what actually delivers, which is why a failed attempt must NOT return.
+ * The native path is the only one that works on macOS — WKWebView does not
+ * implement the Notification API — and the only one a hidden window has in
+ * background mode, where alert delivery is the whole point of keeping the
+ * process alive. The fall-through on failure must stay: returning early on an
+ * unpermitted/broken plugin would drop the notification entirely in browser
+ * dev builds.
  */
 export async function sendOsNotification(
   title: string,
   body: string,
-  _opts?: { sound?: boolean },
+  opts?: { sound?: boolean },
 ): Promise<void> {
   if (isStandalone) {
     try {
-      // Dynamic import — only resolves when Tauri runtime is present.
-      // The module name is constructed at runtime to prevent both Vite static
-      // analysis and TypeScript module resolution from failing.
-      const mod = '@tauri-apps/plugin-notification'
-
-      const tauri = await import(/* @vite-ignore */ mod)
+      const tauri = await import('@tauri-apps/plugin-notification')
       let permitted = await tauri.isPermissionGranted()
       if (!permitted) {
         const result = await tauri.requestPermission()
         permitted = result === 'granted'
       }
       if (permitted) {
-        tauri.sendNotification({ title, body })
+        tauri.sendNotification({
+          title,
+          body,
+          ...(opts?.sound === false ? {} : { sound: 'default' }),
+        })
         return
       }
     } catch (err) {
       console.warn('[notifications] Tauri notification failed:', err)
     }
     // Fall through to the webview Notification API — either the plugin is
-    // absent/unpermitted, or it threw. Returning here would drop the
-    // notification entirely.
+    // unpermitted or it threw. Returning here would drop the notification.
   }
 
   // Browser / webview fallback

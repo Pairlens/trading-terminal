@@ -503,7 +503,8 @@
         },
         "copilot": {
           "title": "AI 聊天记录",
-          "description": "你与 copilot 的对话，按交易对区分。"
+          "description": "你与 copilot 的对话，按交易对区分。",
+          "caveat": "关闭期间，清除聊天记录只会清除这台设备上的内容。账号里已有的对话会保留，重新开启同步后会再次出现。"
         },
         "trades": {
           "title": "交易日志",
