@@ -120,10 +120,23 @@ export const KEYBINDING_COMMANDS: Array<KeybindingCommand> = [
     labelKey: 'menu.settings',
   },
   {
+    id: 'general.lockTerminal',
+    categoryId: 'general',
+    scope: 'global',
+    labelKey: 'menu.lockTerminal',
+  },
+  {
     id: 'general.newWindow',
     categoryId: 'general',
     scope: 'global',
     labelKey: 'menu.newWindow',
+    desktopOnly: true,
+  },
+  {
+    id: 'general.quit',
+    categoryId: 'general',
+    scope: 'global',
+    labelKey: 'menu.quit',
     desktopOnly: true,
   },
   {
@@ -295,7 +308,16 @@ export type Keymap = {
 const PAIRLENS_BINDINGS: Record<string, Array<string>> = {
   'general.commandPalette': ['Mod+K'],
   'general.settings': ['Mod+,'],
+  // Shipped unbound on purpose: ⌘⇧L is the workspace menu, ⌘L is the
+  // browser's focus-address-bar, and ⌃⌘Q is the macOS system lock. The
+  // Keyboard settings section makes an unbound command discoverable and
+  // assignable, which is a better answer than stealing a chord.
+  'general.lockTerminal': [],
   'general.newWindow': ['Mod+N'],
+  // On macOS the native menubar consumes ⌘Q before the webview sees it, so
+  // this chord only ever arms on Windows/Linux — where it is the only way to
+  // quit from the keyboard.
+  'general.quit': ['Mod+Q'],
   'general.back': ['Mod+['],
   'general.forward': ['Mod+]'],
 

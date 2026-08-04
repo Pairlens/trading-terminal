@@ -16,6 +16,8 @@ import {
   clearStoredAuthToken,
   hasAppServer,
 } from '@/lib/auth-client'
+import { isDomainSyncEnabled } from '@/lib/sync/sync-preferences'
+import { getInstallableEntries } from '@/lib/plugins/plugin-ledger'
 
 // ---------------------------------------------------------------------------
 // Base URLs
@@ -206,6 +208,20 @@ export type PluginStateResponse = {
   config: Record<string, unknown>
 }
 
+/**
+ * The plugin states this device holds, in the shape the server returns them.
+ * The install ledger is the device source of truth for what is installed and
+ * how it is configured, so it is the honest answer whenever the account is not
+ * being consulted.
+ */
+function localPluginStates(): Array<PluginStateResponse> {
+  return getInstallableEntries().map((entry) => ({
+    pluginId: entry.pluginId,
+    enabled: entry.enabled,
+    config: entry.config,
+  }))
+}
+
 export type PluginPinResponse = {
   capability: string
   market: string
@@ -329,6 +345,28 @@ export type RemoteRiskConfig = {
 }
 
 // ---------------------------------------------------------------------------
+// Cloud-sync gating
+//
+// Two domains reach the App Server without going through the SyncCoordinator:
+// plugin state/pins, and the cloud-only records (AI chat history, trade
+// journal). Their switches are enforced here rather than at the ~13 call
+// sites, so callers stay unaware.
+//
+// Reads degrade to the empty shape, which every caller already treats as
+// "nothing on the server, the local ledger is authoritative". Writes resolve
+// as typed no-ops so TanStack mutations keep working. Deletes are skipped
+// outright: turning sync off must never erase the copy already in the account.
+// ---------------------------------------------------------------------------
+
+/** Thrown when a call would have recorded something that now goes nowhere. */
+export class SyncDisabledError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'SyncDisabledError'
+  }
+}
+
+// ---------------------------------------------------------------------------
 // API functions — routed to App Server
 // ---------------------------------------------------------------------------
 
@@ -365,50 +403,77 @@ export const api = {
     return { avatarUrl: resolveUrl(result.avatarUrl) ?? result.avatarUrl }
   },
 
-  getPluginStates: () => fetchApi<Array<PluginStateResponse>>('/api/plugins'),
+  // With the domain off, the answer is the device ledger — never `[]`. The
+  // Plugins UI reads a plugin's saved *config* out of this response (the
+  // enable toggle, the Configure dialog's form, the market-connector list),
+  // so an empty array would activate a configured plugin with `{}`, render
+  // blank fields over a real config, and write that blank back on submit.
+  getPluginStates: () =>
+    isDomainSyncEnabled('plugins')
+      ? fetchApi<Array<PluginStateResponse>>('/api/plugins')
+      : Promise.resolve<Array<PluginStateResponse>>(localPluginStates()),
 
   setPluginState: (data: {
     pluginId: string
     enabled: boolean
     config: Record<string, unknown>
   }) =>
-    fetchApi<PluginStateResponse>(
-      `/api/plugins/${encodeURIComponent(data.pluginId)}`,
-      {
-        method: 'PUT',
-        body: JSON.stringify(data),
-      },
-    ),
+    isDomainSyncEnabled('plugins')
+      ? fetchApi<PluginStateResponse>(
+          `/api/plugins/${encodeURIComponent(data.pluginId)}`,
+          {
+            method: 'PUT',
+            body: JSON.stringify(data),
+          },
+        )
+      : Promise.resolve<PluginStateResponse>({
+          pluginId: data.pluginId,
+          enabled: data.enabled,
+          config: data.config,
+        }),
 
   removePluginState: (pluginId: string) =>
-    fetchApi<{ ok: boolean }>(`/api/plugins/${encodeURIComponent(pluginId)}`, {
-      method: 'DELETE',
-    }),
+    isDomainSyncEnabled('plugins')
+      ? fetchApi<{ ok: boolean }>(
+          `/api/plugins/${encodeURIComponent(pluginId)}`,
+          { method: 'DELETE' },
+        )
+      : Promise.resolve({ ok: true }),
 
-  getPluginPins: () => fetchApi<Array<PluginPinResponse>>('/api/plugins/pins'),
+  getPluginPins: () =>
+    isDomainSyncEnabled('plugins')
+      ? fetchApi<Array<PluginPinResponse>>('/api/plugins/pins')
+      : Promise.resolve<Array<PluginPinResponse>>([]),
 
   setPluginPin: (data: {
     capability: string
     market: string
     pluginId: string
   }) =>
-    fetchApi<PluginPinResponse>('/api/plugins/pins', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    isDomainSyncEnabled('plugins')
+      ? fetchApi<PluginPinResponse>('/api/plugins/pins', {
+          method: 'POST',
+          body: JSON.stringify(data),
+        })
+      : Promise.resolve<PluginPinResponse>({ ...data }),
 
   removePluginPin: (capability: string, market: string) =>
-    fetchApi<{ ok: boolean }>(
-      `/api/plugins/pins?capability=${encodeURIComponent(capability)}&market=${encodeURIComponent(market)}`,
-      { method: 'DELETE' },
-    ),
+    isDomainSyncEnabled('plugins')
+      ? fetchApi<{ ok: boolean }>(
+          `/api/plugins/pins?capability=${encodeURIComponent(capability)}&market=${encodeURIComponent(market)}`,
+          { method: 'DELETE' },
+        )
+      : Promise.resolve({ ok: true }),
 
   removeAllPluginPins: () =>
-    fetchApi<{ ok: boolean }>('/api/plugins/pins', {
-      method: 'DELETE',
-    }),
+    isDomainSyncEnabled('plugins')
+      ? fetchApi<{ ok: boolean }>('/api/plugins/pins', {
+          method: 'DELETE',
+        })
+      : Promise.resolve({ ok: true }),
 
   getAiMessages: async (market: string, pairKey: string) => {
+    if (!isDomainSyncEnabled('copilot')) return []
     try {
       const rows = await fetchApi<
         Array<{ id: string; role: string; content: string }>
@@ -431,25 +496,31 @@ export const api = {
     pairKey: string,
     message: { role: string; parts?: Array<{ type: string; text?: string }> },
   ) =>
-    fetchApi<{ ok: boolean }>('/api/ai-messages', {
-      method: 'POST',
-      body: JSON.stringify({
-        market,
-        pairKey,
-        role: message.role,
-        content:
-          message.parts
-            ?.filter((p) => p.type === 'text' && p.text)
-            .map((p) => p.text)
-            .join('\n') ?? '',
-      }),
-    }),
+    isDomainSyncEnabled('copilot')
+      ? fetchApi<{ ok: boolean }>('/api/ai-messages', {
+          method: 'POST',
+          body: JSON.stringify({
+            market,
+            pairKey,
+            role: message.role,
+            content:
+              message.parts
+                ?.filter((p) => p.type === 'text' && p.text)
+                .map((p) => p.text)
+                .join('\n') ?? '',
+          }),
+        })
+      : Promise.resolve({ ok: true }),
 
+  // The panel clears itself locally either way; with the domain off, the copy
+  // already in the account is deliberately left alone.
   clearAiMessages: (market: string, pairKey: string) =>
-    fetchApi<{ ok: boolean }>(
-      `/api/ai-messages?market=${encodeURIComponent(market)}&pairKey=${encodeURIComponent(pairKey)}`,
-      { method: 'DELETE' },
-    ),
+    isDomainSyncEnabled('copilot')
+      ? fetchApi<{ ok: boolean }>(
+          `/api/ai-messages?market=${encodeURIComponent(market)}&pairKey=${encodeURIComponent(pairKey)}`,
+          { method: 'DELETE' },
+        )
+      : Promise.resolve({ ok: true }),
 
   getEntitlements: () => fetchApi<EntitlementResponse>('/api/entitlements'),
 
@@ -524,6 +595,9 @@ export const api = {
     pairKey?: string
     limit?: number
   }) => {
+    if (!isDomainSyncEnabled('trades')) {
+      return Promise.resolve<Array<TradeJournalEntry>>([])
+    }
     const qs = new URLSearchParams()
     if (params?.market) qs.set('market', params.market)
     if (params?.pairKey) qs.set('pairKey', params.pairKey)
@@ -532,6 +606,10 @@ export const api = {
     return fetchApi<Array<TradeJournalEntry>>(`/api/trade-journal${suffix}`)
   },
 
+  // The one gated write that throws instead of pretending. The journal has no
+  // local sink, so a synthesized entry would let the copilot report "logged to
+  // your journal" for something that exists nowhere; the copilot's tool catches
+  // this and tells the truth instead.
   addTradeJournalEntry: (entry: {
     market: string
     pairKey: string
@@ -540,11 +618,19 @@ export const api = {
     quantity: number
     notes?: string
     tags?: Array<string>
-  }) =>
-    fetchApi<TradeJournalEntry>('/api/trade-journal', {
+  }) => {
+    if (!isDomainSyncEnabled('trades')) {
+      return Promise.reject(
+        new SyncDisabledError(
+          'Trade journal sync is switched off in Settings → Cloud Sync, so this entry was not recorded.',
+        ),
+      )
+    }
+    return fetchApi<TradeJournalEntry>('/api/trade-journal', {
       method: 'POST',
       body: JSON.stringify(entry),
-    }),
+    })
+  },
 
   getUserConfig: () => fetchApi<UserConfig>('/api/user/config'),
 

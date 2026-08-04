@@ -4,15 +4,31 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use serde::Serialize;
-use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
+use tauri::{AppHandle, Emitter, Manager, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
 
 mod awake;
 mod csp;
+mod tray;
+mod window_behavior;
 
 /// Window background while the webview has unpainted regions — matches the
 /// app's dark `--background` token (oklch(13.5% 0.006 74) ≈ rgb(10, 8, 6)) so
 /// early frames never flash white.
 const WINDOW_BG: tauri::window::Color = tauri::window::Color(10, 8, 6, 255);
+
+/// Extra WebView2 command-line switches (Windows only).
+///
+/// Chromium throttles timers in hidden pages, and after a few minutes escalates
+/// to "intensive" throttling that coalesces them to roughly once a minute. In
+/// background mode the window is hidden by design and the bot runtime, the
+/// alert scheduler and the sync coordinator all still have work to do, so the
+/// throttles have to come off.
+///
+/// The `--disable-features=` group is **Tauri's own default** and is repeated
+/// deliberately: setting `additional_browser_args` replaces the defaults rather
+/// than appending to them, so omitting it would silently turn those back on.
+#[cfg(target_os = "windows")]
+const WEBVIEW2_ARGS: &str = "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --disable-background-timer-throttling --disable-renderer-backgrounding --disable-backgrounding-occluded-windows";
 
 /// Called from the terminal frontend once the UI is ready to show.
 #[tauri::command]
@@ -82,26 +98,70 @@ fn build_main_window(app: &AppHandle) -> tauri::Result<WebviewWindow> {
             .title_bar_style(tauri::TitleBarStyle::Overlay)
             .hidden_title(true);
     }
+    #[cfg(target_os = "windows")]
+    {
+        builder = builder.additional_browser_args(WEBVIEW2_ARGS);
+    }
     let window = builder.build()?;
     spawn_show_watchdog(window.clone(), true);
     Ok(window)
 }
 
-/// Bring the main window to the front, rebuilding it when it no longer exists
-/// (macOS keeps the app alive after its last window closes — see the run-loop
-/// handler at the bottom of this file).
+/// The terminal window a "show me the app" gesture should land on: the main
+/// window when it exists, otherwise the lowest-numbered secondary window.
 ///
-/// The work runs on a spawned thread, never the caller's. Both call sites (the
-/// single-instance handler and the macOS dock-reopen event) fire from inside the
-/// event loop on the main thread, and building a webview from there deadlocks on
-/// Windows — the same WebView2 constraint that broke "New Window".
+/// Looking only for the label `"main"` was fine while a closed window meant a
+/// destroyed window. Background mode makes hidden windows normal, and with it
+/// the case where `main` is gone but `terminal-2` is merely hidden — a
+/// main-only lookup would build a *second* main window and orphan the hidden
+/// one, which the user has no way left to reach.
+fn front_terminal_window(app: &AppHandle) -> Option<WebviewWindow> {
+    if let Some(window) = app.get_webview_window("main") {
+        return Some(window);
+    }
+    let mut labels: Vec<String> = app
+        .webview_windows()
+        .into_keys()
+        .filter(|label| label.starts_with("terminal-"))
+        .collect();
+    // Numeric, not lexicographic: `terminal-10` must not sort before `terminal-2`.
+    labels.sort_by_key(|label| {
+        label
+            .trim_start_matches("terminal-")
+            .parse::<u32>()
+            .unwrap_or(u32::MAX)
+    });
+    labels
+        .first()
+        .and_then(|label| app.get_webview_window(label))
+}
+
+/// Bring a terminal window to the front — showing it when background mode hid
+/// it, and rebuilding one only when none is left at all (macOS keeps the app
+/// alive after its last window closes — see the run-loop handler at the bottom
+/// of this file).
+///
+/// The work runs on a spawned thread, never the caller's. Every call site (the
+/// single-instance handler, the macOS dock-reopen event, the tray) fires from
+/// inside the event loop on the main thread, and building a webview from there
+/// deadlocks on Windows — the same WebView2 constraint that broke "New Window".
 fn focus_main_window(app: &AppHandle) {
     let app = app.clone();
     std::thread::spawn(move || {
-        if let Some(window) = app.get_webview_window("main") {
+        if let Some(window) = front_terminal_window(&app) {
             let _ = window.unminimize();
             let _ = window.show();
             let _ = window.set_focus();
+            window_behavior::mark_visible(window.label());
+            // Tell the webview it is on screen again: it may have paused work
+            // (idle guard, deferred update prompt) while it was hidden.
+            // Addressed to this window only — a broadcast would tell every
+            // other window it is visible too.
+            let _ = window.emit_to(
+                tauri::EventTarget::webview_window(window.label()),
+                window_behavior::WINDOW_HIDDEN_EVENT,
+                false,
+            );
             return;
         }
         if let Err(e) = build_main_window(&app) {
@@ -178,6 +238,10 @@ async fn open_terminal_window(
         builder = builder
             .title_bar_style(tauri::TitleBarStyle::Overlay)
             .hidden_title(true);
+    }
+    #[cfg(target_os = "windows")]
+    {
+        builder = builder.additional_browser_args(WEBVIEW2_ARGS);
     }
 
     // Surface build failures on both sides of the IPC: the frontend toasts the
@@ -523,8 +587,20 @@ pub fn run() {
                 .with_denylist(&["splashscreen"])
                 .build(),
         )
+        // "When the last window closes": hide it and keep running, or let the
+        // close go through and quit. Registered as a global window-event
+        // handler so it covers every window, including ones opened later.
+        .on_window_event(|window, event| match event {
+            tauri::WindowEvent::CloseRequested { api, .. } => {
+                window_behavior::handle_close_requested(window, api)
+            }
+            tauri::WindowEvent::Destroyed => window_behavior::handle_destroyed(window),
+            _ => {}
+        })
         // Holds the idle-sleep assertion while trading bots are armed.
         .manage(awake::AwakeState::default())
+        // Tray icon (Windows/Linux) — the way back to a hidden window.
+        .manage(tray::TrayState::default())
         .invoke_handler(tauri::generate_handler![
             close_splashscreen,
             open_terminal_window,
@@ -543,13 +619,35 @@ pub fn run() {
             csp::network_grant_revoke,
             csp::network_baseline_hosts,
             awake::sleep_block_set,
-            awake::sleep_block_active
+            awake::sleep_block_active,
+            window_behavior::close_behavior_get,
+            window_behavior::close_behavior_set,
+            window_behavior::app_quit,
+            tray::tray_set_labels
         ])
         .setup(|app| {
+            // Before the first window exists: the close behavior has to be in
+            // force from the very first frame, and it is read from a window
+            // callback that has no way to ask the frontend.
+            window_behavior::load(app.handle());
+
             // The main window is built in Rust (not in tauri.conf.json) so the
             // dynamic-CSP hook can attach to its served document — a config-defined
             // window offers no way to intercept its response headers.
             let window = build_main_window(app.handle())?;
+
+            // Windows/Linux: the tray must already exist when the user closes
+            // their last window, not be created in the same breath as the hide.
+            // A persisted `background` can outlive the desktop that could show
+            // one (a KDE session's setting restored under GNOME with no
+            // AppIndicator extension), so a failure here is not something to
+            // shrug at: record the fall back to quit so the setting the user
+            // reads matches what closing the window will do.
+            if window_behavior::current() == window_behavior::CloseBehavior::Background
+                && !tray::ensure(app.handle())
+            {
+                window_behavior::downgrade_to_quit(app.handle());
+            }
 
             // First launch only: default the main window to ~80% of the
             // screen, centered. On later launches tauri-plugin-window-state
@@ -592,10 +690,10 @@ pub fn run() {
         .build(tauri::generate_context!())
         .expect("error while running pairlens desktop")
         .run(|_app, _event| {
-            // macOS: closing the last window must not quit the app. The app
-            // stays in the Dock and clicking its icon reopens the terminal —
-            // standard Mac behaviour, and the one users expect from a terminal
-            // they leave running all day.
+            // macOS: in background mode, closing the last window must not quit
+            // the app. It stays in the Dock and clicking its icon brings the
+            // window back — standard Mac behaviour, and the one users expect
+            // from a terminal they leave running all day.
             //
             // `code` distinguishes the two exit paths: `None` means the event
             // loop is unwinding because its last window was destroyed, `Some`
@@ -603,9 +701,21 @@ pub fn run() {
             // updater's restart). Cmd+Q goes through AppKit's `terminate:`,
             // which tears the process down without an ExitRequested round-trip
             // at all, so quitting keeps working.
+            //
+            // Preventing the exit here is belt-and-braces for background mode:
+            // the close handler normally hides the window rather than letting
+            // it be destroyed, but `window.destroy()` from JS or a webview
+            // crash can still take the last window down without a
+            // CloseRequested. In quit mode we let the exit through — that is
+            // exactly what the user asked for.
             #[cfg(target_os = "macos")]
             match &_event {
-                tauri::RunEvent::ExitRequested { code, api, .. } if code.is_none() => {
+                tauri::RunEvent::ExitRequested { code, api, .. }
+                    if code.is_none()
+                        && !window_behavior::is_quitting()
+                        && window_behavior::current()
+                            == window_behavior::CloseBehavior::Background =>
+                {
                     api.prevent_exit();
                 }
                 // Dock icon click (NSApplicationDelegate applicationShouldHandleReopen).

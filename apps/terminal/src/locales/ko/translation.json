@@ -411,17 +411,20 @@
     "nav": {
       "profile": "프로필",
       "plugins": "플러그인",
+      "cloudSync": "클라우드 동기화",
       "notifications": "알림",
       "appearance": "화면",
       "keyboard": "키보드",
       "performance": "성능",
+      "desktop": "데스크톱",
       "connection": "연결",
       "language": "언어",
       "region": "국가",
       "currency": "통화",
       "risk": "리스크 관리",
       "privacy": "개인정보 보호",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "보안"
     },
     "comingSoon": "이 섹션은 곧 제공됩니다.",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "계정 유지",
       "confirmAction": "영구 삭제",
       "deleteDoneAnalyticsFailed": "계정은 삭제되었지만 분석 제공업체에 연결하지 못해 사용 분석 프로필을 지우지 못했습니다. privacy@pairlens.finance로 메일을 주시면 직접 처리해 드립니다."
+    },
+    "cloudSync": {
+      "masterTitle": "클라우드 동기화",
+      "masterDescription": "모든 기기에서 계정 상태를 맞춰 둡니다. 아래 스위치는 그대로 두고 여기서 일시 중지할 수 있습니다.",
+      "pausedNotice": "일시 중지됨. 지금은 아무것도 동기화되지 않습니다.",
+      "title": "계정에 동기화되는 항목",
+      "description": "다른 기기에서 이어받을 항목을 고르세요. 끈 항목은 이 기기에만 남습니다.",
+      "deviceOnly": "이 스위치는 이 기기에만 적용되며, 스위치 자체는 절대 동기화되지 않습니다.",
+      "nothingDeleted": "끈다고 해서 무언가 삭제되지는 않습니다. 데이터는 이 기기에 남고, 계정에 이미 있는 사본도 그대로 유지됩니다. 다만 더는 갱신되지 않아 오래된 상태가 됩니다.",
+      "resumeNote": "다시 켜면 양쪽이 병합되며 더 최근 변경이 우선합니다. 꺼져 있는 동안 삭제한 항목은 계정에 남아 있다면 다시 나타날 수 있습니다.",
+      "cloudOnlyWarning": "이 항목은 계정에만 저장되므로, 끄면 어디에도 기록되지 않습니다.",
+      "signedOutTitle": "로그인하지 않음",
+      "signedOut": "아무것도 동기화되지 않습니다. 하는 모든 작업이 이 기기에 남습니다.",
+      "status": {
+        "synced": "모두 최신 상태입니다.",
+        "syncing": "동기화 중…",
+        "error": "마지막 동기화가 완료되지 않았습니다. 다음 변경 때 다시 시도합니다.",
+        "idle": "지금 보낼 항목이 없습니다."
+      },
+      "domains": {
+        "preferences": {
+          "title": "설정과 환경설정",
+          "description": "언어, 테마, 키보드 단축키, 국가, 플러그인 레지스트리 설정, 열어 둔 페어."
+        },
+        "charts": {
+          "title": "차트 구성",
+          "description": "지표, 드로잉, 차트 종류, 기본 드로잉 스타일."
+        },
+        "workspaces": {
+          "title": "워크스페이스와 레이아웃",
+          "description": "사용자 워크스페이스, 폴더, 패널 레이아웃, 워크스페이스 변수."
+        },
+        "automation": {
+          "title": "워크플로와 알림",
+          "description": "자동화 워크플로, 알림 규칙, 그리고 감시 중인 페어."
+        },
+        "plugins": {
+          "title": "플러그인",
+          "description": "활성화한 플러그인, 그 설정, 고정한 제공자. 설정에는 AI 제공자 키처럼 플러그인 설정 화면에 입력한 API 키도 포함됩니다. 거래소 API 키와 지갑 비밀키는 절대 포함되지 않으며 키체인에 남습니다. 고정한 제공자는 계정에만 보관되므로, 이 항목이 꺼져 있으면 앱을 종료할 때까지만 유지됩니다."
+        },
+        "copilot": {
+          "title": "AI 대화 기록",
+          "description": "페어별 copilot 대화."
+        },
+        "trades": {
+          "title": "매매 일지",
+          "description": "사용자나 copilot이 일지에 기록한 매매."
+        }
+      }
     },
     "profile": {
       "image": "프로필 이미지",
@@ -543,6 +595,29 @@
       "balancedDescription": "티커와 호가창은 250ms, 캔들은 500ms. 반응성과 효율성의 균형이 좋습니다.",
       "energySaver": "절전 모드",
       "energySaverDescription": "티커와 호가창은 1초, 캔들은 2초. 수동적인 모니터링이나 배터리 사용 노트북에 적합합니다."
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "마지막 창을 닫을 때",
+        "description": "알림, 봇, 워크플로는 Pairlens가 실행 중일 때만 동작합니다. 마지막 창을 닫았을 때의 동작을 선택하세요.",
+        "quit": "Pairlens 종료",
+        "quitDescription": "마지막 창을 닫으면 앱이 종료됩니다. 알림, 봇, 워크플로가 중지됩니다.",
+        "background": "백그라운드에서 계속 실행",
+        "backgroundDescriptionDock": "창은 닫히지만 Pairlens는 계속 실행됩니다. 알림, 봇, 워크플로가 계속 동작합니다. Dock 아이콘을 클릭하면 창이 다시 나타납니다.",
+        "backgroundDescriptionTray": "창은 닫히지만 Pairlens는 시스템 트레이에서 계속 실행됩니다. 알림, 봇, 워크플로가 계속 동작합니다. 트레이 아이콘을 클릭하면 창이 다시 나타납니다.",
+        "alwaysQuitsNote": "두 모드 모두에서 Pairlens를 종료하면 알림, 봇, 워크플로가 항상 중지됩니다.",
+        "trayNeeded": "시스템 트레이가 필요합니다. 일부 Linux 데스크톱(AppIndicator 확장이 없는 GNOME 등)에는 트레이가 없어 Pairlens가 돌아갈 곳이 없습니다.",
+        "trayUnavailable": "이 데스크톱에는 시스템 트레이가 없어 Pairlens가 돌아올 수 없습니다. 대신 마지막 창을 닫으면 종료됩니다."
+      },
+      "quit": {
+        "title": "Pairlens 종료",
+        "description": "앱과 실행 중인 모든 작업을 중지합니다.",
+        "button": "종료",
+        "confirmTitle": "Pairlens를 종료할까요?",
+        "confirmDescription_one": "봇 {{count}}개가 활성화되어 있습니다. 종료하면 중지됩니다.",
+        "confirmDescription_other": "봇 {{count}}개가 활성화되어 있습니다. 종료하면 중지됩니다.",
+        "confirmAction": "종료"
+      }
     },
     "language": {
       "title": "언어",
@@ -686,6 +761,49 @@
         "workspaceMenu": "워크스페이스 메뉴",
         "chartCancel": "도구 취소 / 전체 화면 종료"
       }
+    },
+    "security": {
+      "lockTitle": "터미널 잠금",
+      "lockDescription": "이 기기에서 터미널을 쓰기 전에 비밀번호를 요구합니다.",
+      "setPassword": "비밀번호 설정",
+      "changePassword": "비밀번호 변경",
+      "turnOff": "잠금 끄기",
+      "turnOffDescription": "이 기기에서 잠금을 없애려면 현재 비밀번호를 입력하세요.",
+      "newPassword": "새 비밀번호",
+      "confirmPassword": "비밀번호 확인",
+      "currentPassword": "현재 비밀번호",
+      "passwordTooShort": "6자 이상 사용하세요.",
+      "passwordMismatch": "두 비밀번호가 일치하지 않습니다.",
+      "passwordWrong": "비밀번호가 올바르지 않습니다.",
+      "noRecoveryWarning": "비밀번호 복구는 없습니다. 잊어버리면 다시 들어오는 유일한 방법은 이 기기의 데이터를 지우는 것입니다. 지금 비밀번호 관리자에 저장하세요.",
+      "triggersTitle": "언제 잠글지",
+      "triggersDescription": "비밀번호를 물어볼 순간을 고르세요.",
+      "triggerStartup": "앱을 시작할 때",
+      "triggerStartupHint": "콜드 스타트에서 비밀번호를 묻습니다.",
+      "triggerIdle": "사용이 없을 때",
+      "triggerIdleHint": "마우스와 키보드 입력 없이 {{minutes}}분이 지나면 잠급니다.",
+      "triggerPeriodic": "일정 주기로",
+      "triggerPeriodicHint": "세션이 아무리 바빠도 정해진 시간이 지나면 다시 잠급니다.",
+      "triggerWake": "컴퓨터가 깨어난 뒤",
+      "triggerWakeHint": "기기가 절전에서 돌아오면 잠급니다.",
+      "triggerTrade": "주문을 내기 전",
+      "triggerTradeHint": "직접 또는 코파일럿으로 내는 주문을 확인합니다. 자동 승인된 제안도 포함됩니다. 봇에게는 절대 묻지 않습니다.",
+      "afterMinutes": "{{minutes}}분 후",
+      "everyHours": "{{hours}}시간마다",
+      "graceNever": "매번",
+      "graceMinutes": "{{minutes}}분 동안",
+      "protectsTitle": "무엇을 보호하나",
+      "protectsBody": "터미널 앞에 전체 화면 비밀번호 창을 세워, 자리에 다가온 사람이 포지션을 훑거나 잔고를 읽거나 주문을 내지 못하게 합니다. 하지만 아무것도 암호화하지 않습니다. 거래소 API 키와 지갑 키는 있던 자리에 그대로 있고, 잠금이 풀린 컴퓨터와 약간의 기술만 있으면 이 화면을 보지 않고도 앱의 로컬 데이터를 읽을 수 있습니다.",
+      "protectsBots": "가동 중인 봇은 터미널이 잠겨 있어도 계속 거래합니다. 화면 잠금은 전략 일시정지가 아닙니다.",
+      "protectsDesktop": "비밀번호 검증 정보는 시스템 키체인에 저장되며 이 컴퓨터를 벗어나지 않습니다.",
+      "protectsBrowser": "이 빌드는 검증 정보를 브라우저 저장소에 둡니다. 사이트 데이터를 지우면 잠금도 사라집니다. 데스크톱 앱이 이 기능에 알맞은 곳입니다.",
+      "lockNowTitle": "지금 잠그기",
+      "lockNowDescription": "설정을 닫고 터미널을 즉시 잠급니다.",
+      "lockNow": "잠그기",
+      "resetButton": "초기화하고 지우기",
+      "resetConfirmTitle": "이 기기를 지울까요?",
+      "resetConfirmBody": "이 컴퓨터의 모든 거래소 API 키, 지갑 키, 워크스페이스, 차트 레이아웃, 채팅을 지웁니다. 되돌릴 수 없고 비밀번호 복구도 없습니다. 로그인 상태라면 클라우드 동기화 설정은 다시 로그인할 때 돌아오지만, API 키와 지갑 키는 여기에만 저장되므로 절대 돌아오지 않습니다.",
+      "resetConfirmPhrase": "확인하려면 {{phrase}}를 입력하세요."
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "모든 주문 잠금 해제",
     "setRegion": "지역 설정…",
     "newWindow": "새 창",
+    "quit": "Pairlens 종료",
     "back": "뒤로",
     "forward": "앞으로",
-    "checkForUpdates": "업데이트 확인…"
+    "checkForUpdates": "업데이트 확인…",
+    "lockTerminal": "터미널 잠금"
   },
   "titlebar": {
     "newWindow": "새 창",
@@ -2278,6 +2398,37 @@
       "finance": "금융",
       "financial_markets": "금융 시장",
       "economy_macro": "거시 경제"
+    }
+  },
+  "tray": {
+    "show": "Pairlens 표시",
+    "quit": "Pairlens 종료"
+  },
+  "security": {
+    "lock": {
+      "title": "터미널 잠김",
+      "subtitle": "계속하려면 비밀번호를 입력하세요.",
+      "passwordLabel": "비밀번호",
+      "unlock": "잠금 해제",
+      "unlocking": "확인 중…",
+      "wrongPassword": "비밀번호가 올바르지 않습니다.",
+      "tooManyAttempts": "시도가 너무 많습니다. {{seconds}}초 후 다시 시도하세요.",
+      "forgot": "비밀번호를 잊으셨나요?",
+      "keychainUnavailable": "지금은 시스템 키체인을 쓸 수 없습니다. 잠시 후 다시 시도하세요.",
+      "orderCancelled": "주문이 취소되었습니다. 터미널이 잠겨 있습니다.",
+      "reason": {
+        "startup": "계속하려면 비밀번호를 입력하세요.",
+        "idle": "한동안 사용이 없어 잠겼습니다.",
+        "periodic": "예정대로 잠겼습니다.",
+        "wake": "컴퓨터가 절전 상태인 동안 잠겼습니다.",
+        "manual": "직접 터미널을 잠갔습니다."
+      }
+    },
+    "challenge": {
+      "title": "본인 확인",
+      "description": "이 주문을 내려면 비밀번호를 입력하세요.",
+      "confirm": "확인",
+      "cancel": "취소"
     }
   }
 }

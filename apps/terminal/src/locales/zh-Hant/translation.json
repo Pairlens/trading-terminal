@@ -411,17 +411,20 @@
     "nav": {
       "profile": "個人資料",
       "plugins": "外掛",
+      "cloudSync": "雲端同步",
       "notifications": "通知",
       "appearance": "外觀",
       "keyboard": "鍵盤",
       "performance": "效能",
+      "desktop": "桌面",
       "connection": "連線",
       "language": "語言",
       "region": "國家",
       "currency": "幣別",
       "risk": "風險管理",
       "privacy": "隱私",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "安全"
     },
     "comingSoon": "此區塊即將推出。",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "保留我的帳戶",
       "confirmAction": "永久刪除",
       "deleteDoneAnalyticsFailed": "你的帳戶已刪除，但我們無法連上分析服務商來清除你的使用檔案。請寄信到 privacy@pairlens.finance，我們會手動完成。"
+    },
+    "cloudSync": {
+      "masterTitle": "雲端同步",
+      "masterDescription": "讓帳號在各裝置上保持一致。可以在這裡暫停，而不更動下面的開關。",
+      "pausedNotice": "已暫停。目前沒有任何內容在同步。",
+      "title": "會同步到帳號的內容",
+      "description": "選擇另一台裝置應該接手的內容。關掉的內容只留在這台裝置上。",
+      "deviceOnly": "這些開關只對這台裝置生效，其本身永遠不會被同步。",
+      "nothingDeleted": "關掉某一項從不會刪除任何東西。資料仍在這台裝置上，帳號裡既有的副本也原樣保留，只是不再更新、逐漸過期。",
+      "resumeNote": "重新開啟後兩邊會合併，以最新的變更為準。關閉期間刪除的內容，如果帳號裡還留著，可能會再次出現。",
+      "cloudOnlyWarning": "這一項只儲存在帳號裡，關掉就代表它不會被記錄在任何地方。",
+      "signedOutTitle": "尚未登入",
+      "signedOut": "沒有任何內容在同步。你做的一切都留在這台裝置上。",
+      "status": {
+        "synced": "一切都是最新的。",
+        "syncing": "同步中…",
+        "error": "上次同步沒有成功，下次變更時會再試一次。",
+        "idle": "目前沒有要傳送的內容。"
+      },
+      "domains": {
+        "preferences": {
+          "title": "設定與偏好",
+          "description": "語言、主題、鍵盤快速鍵、國家、外掛登錄檔設定，以及你開著的交易對。"
+        },
+        "charts": {
+          "title": "圖表設定",
+          "description": "指標、畫線、圖表類型以及你的預設繪圖樣式。"
+        },
+        "workspaces": {
+          "title": "工作區與版面",
+          "description": "自訂工作區、資料夾、面板版面和工作區變數。"
+        },
+        "automation": {
+          "title": "工作流程與提醒",
+          "description": "自動化工作流程、提醒規則，以及它們監看的交易對。"
+        },
+        "plugins": {
+          "title": "外掛",
+          "description": "你啟用了哪些外掛、它們的設定以及你釘選的服務商。設定也包括你在外掛自己的設定裡填過的 API 金鑰，例如 AI 服務商的金鑰。交易所 API 金鑰與錢包密鑰永遠不包含在內，它們留在你的鑰匙圈裡。釘選的服務商只儲存在帳號裡，關掉後它們只在應用程式結束前有效。"
+        },
+        "copilot": {
+          "title": "AI 聊天記錄",
+          "description": "你與 copilot 的對話，依交易對區分。"
+        },
+        "trades": {
+          "title": "交易日誌",
+          "description": "你或 copilot 記入日誌的交易。"
+        }
+      }
     },
     "profile": {
       "image": "個人頭像",
@@ -543,6 +595,29 @@
       "balancedDescription": "報價與委託簿每 250 毫秒更新一次，K 線每 500 毫秒更新一次。在即時性與效率間取得平衡。",
       "energySaver": "省電模式",
       "energySaverDescription": "報價與委託簿每 1 秒更新一次，K 線每 2 秒更新一次。最適合被動監控或使用電池的筆電。"
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "關閉最後一個視窗時",
+        "description": "提醒、機器人與工作流程只有在 Pairlens 執行時才會運作。請選擇關閉最後一個視窗時的行為。",
+        "quit": "結束 Pairlens",
+        "quitDescription": "關閉最後一個視窗即結束應用程式。提醒、機器人與工作流程將停止運作。",
+        "background": "在背景繼續執行",
+        "backgroundDescriptionDock": "視窗關閉，但 Pairlens 會繼續執行。提醒、機器人與工作流程照常運作。點按 Dock 圖示即可重新開啟視窗。",
+        "backgroundDescriptionTray": "視窗關閉，但 Pairlens 會在系統匣繼續執行。提醒、機器人與工作流程照常運作。點擊系統匣圖示即可重新開啟視窗。",
+        "alwaysQuitsNote": "無論哪種模式，結束 Pairlens 都會停止提醒、機器人與工作流程。",
+        "trayNeeded": "需要系統匣。部分 Linux 桌面（例如未安裝 AppIndicator 擴充套件的 GNOME）沒有系統匣，Pairlens 將無處可去。",
+        "trayUnavailable": "此桌面沒有系統匣，Pairlens 無法再回來。因此關閉最後一個視窗將直接結束。"
+      },
+      "quit": {
+        "title": "結束 Pairlens",
+        "description": "停止應用程式與其正在執行的一切。",
+        "button": "結束",
+        "confirmTitle": "要結束 Pairlens 嗎？",
+        "confirmDescription_one": "有 {{count}} 個機器人已啟用，結束會將其停止。",
+        "confirmDescription_other": "有 {{count}} 個機器人已啟用，結束會將它們停止。",
+        "confirmAction": "結束"
+      }
     },
     "language": {
       "title": "語言",
@@ -686,6 +761,49 @@
         "workspaceMenu": "工作區選單",
         "chartCancel": "取消工具 / 離開全螢幕"
       }
+    },
+    "security": {
+      "lockTitle": "終端機鎖",
+      "lockDescription": "在本裝置上使用此終端機前先要求輸入密碼。",
+      "setPassword": "設定密碼",
+      "changePassword": "變更密碼",
+      "turnOff": "關閉鎖定",
+      "turnOffDescription": "輸入目前密碼以從本裝置移除鎖定。",
+      "newPassword": "新密碼",
+      "confirmPassword": "確認密碼",
+      "currentPassword": "目前密碼",
+      "passwordTooShort": "至少 6 個字元。",
+      "passwordMismatch": "兩次輸入的密碼不一致。",
+      "passwordWrong": "密碼不正確。",
+      "noRecoveryWarning": "沒有密碼找回。一旦忘記，唯一重新進入的方式就是清除本裝置的資料。現在就把它存進密碼管理員。",
+      "triggersTitle": "何時鎖定",
+      "triggersDescription": "選擇需要跳出密碼提示的時機。",
+      "triggerStartup": "應用程式啟動時",
+      "triggerStartupHint": "冷啟動時要求輸入密碼。",
+      "triggerIdle": "閒置之後",
+      "triggerIdleHint": "在沒有滑鼠與鍵盤操作 {{minutes}} 分鐘後鎖定。",
+      "triggerPeriodic": "按固定週期",
+      "triggerPeriodicHint": "無論工作階段多忙，經過固定時間後再次鎖定。",
+      "triggerWake": "電腦喚醒之後",
+      "triggerWakeHint": "裝置從睡眠恢復時鎖定。",
+      "triggerTrade": "下單之前",
+      "triggerTradeHint": "確認你手動或透過副駕下的委託，包括自動核准的提案。機器人永遠不會被詢問。",
+      "afterMinutes": "{{minutes}} 分鐘後",
+      "everyHours": "每 {{hours}} 小時",
+      "graceNever": "每次都問",
+      "graceMinutes": "{{minutes}} 分鐘內",
+      "protectsTitle": "它能保護什麼",
+      "protectsBody": "它在終端機前放一個全螢幕密碼提示，讓經過你座位的人無法點看部位、讀取餘額或下單。但它不加密任何東西：交易所 API 金鑰與錢包金鑰仍在原處，任何拿到你已解鎖電腦、又略懂技術的人，都能在完全看不到這個提示的情況下讀取應用程式的本機資料。",
+      "protectsBots": "終端機鎖定期間，已啟用的機器人仍在交易。鎖定畫面不等於暫停你的策略。",
+      "protectsDesktop": "密碼驗證資訊存放在系統鑰匙圈中，絕不會離開這台電腦。",
+      "protectsBrowser": "此版本把驗證資訊放在瀏覽器儲存空間。清除網站資料會一併移除鎖定。桌面應用程式才是它應有的歸宿。",
+      "lockNowTitle": "立即鎖定",
+      "lockNowDescription": "關閉設定並立刻鎖定終端機。",
+      "lockNow": "鎖定",
+      "resetButton": "重設並清除",
+      "resetConfirmTitle": "清除這台裝置？",
+      "resetConfirmBody": "這會清除這台電腦上所有交易所 API 金鑰、錢包金鑰、工作區、圖表版面與聊天紀錄。無法復原，也沒有密碼找回。如果你已登入，雲端同步的設定會在再次登入後回來，但 API 金鑰與錢包金鑰永遠不會，因為它們只儲存在這裡。",
+      "resetConfirmPhrase": "輸入 {{phrase}} 以確認。"
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "解鎖所有訂單",
     "setRegion": "設定地區…",
     "newWindow": "新視窗",
+    "quit": "結束 Pairlens",
     "back": "上一頁",
     "forward": "下一頁",
-    "checkForUpdates": "檢查更新…"
+    "checkForUpdates": "檢查更新…",
+    "lockTerminal": "鎖定終端機"
   },
   "titlebar": {
     "newWindow": "新視窗",
@@ -2278,6 +2398,37 @@
       "finance": "金融",
       "financial_markets": "金融市場",
       "economy_macro": "總體經濟"
+    }
+  },
+  "tray": {
+    "show": "顯示 Pairlens",
+    "quit": "結束 Pairlens"
+  },
+  "security": {
+    "lock": {
+      "title": "終端機已鎖定",
+      "subtitle": "輸入密碼以繼續。",
+      "passwordLabel": "密碼",
+      "unlock": "解鎖",
+      "unlocking": "驗證中…",
+      "wrongPassword": "密碼不正確。",
+      "tooManyAttempts": "嘗試次數過多。請在 {{seconds}} 秒後再試。",
+      "forgot": "忘記密碼？",
+      "keychainUnavailable": "系統鑰匙圈暫時無法使用。請稍後再試。",
+      "orderCancelled": "訂單已取消。終端機處於鎖定狀態。",
+      "reason": {
+        "startup": "輸入密碼以繼續。",
+        "idle": "閒置一段時間後已鎖定。",
+        "periodic": "已依排程鎖定。",
+        "wake": "電腦睡眠期間已鎖定。",
+        "manual": "你鎖定了終端機。"
+      }
+    },
+    "challenge": {
+      "title": "確認是你本人",
+      "description": "輸入密碼以送出此委託。",
+      "confirm": "確認",
+      "cancel": "取消"
     }
   }
 }

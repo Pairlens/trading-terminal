@@ -7,12 +7,14 @@ import {
   Blocks,
   Bot,
   CircleUser,
+  Cloud,
   Coins,
   FileText,
   Gauge,
   Globe,
   Home,
   Keyboard,
+  Lock,
   LogOut,
   MapPin,
   Moon,
@@ -23,6 +25,7 @@ import {
   RefreshCw,
   Settings2,
   ShieldCheck,
+  Sparkles,
   SquarePlus,
   Star,
   Store,
@@ -92,6 +95,9 @@ const ACTION_ICONS: Record<string, LucideIcon> = {
   Keyboard,
   Gauge,
   Globe,
+  Lock,
+  Cloud,
+  Sparkles,
 }
 
 // ── Match highlighting ──────────────────────────────────────────────

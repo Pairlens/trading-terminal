@@ -106,6 +106,7 @@ import { OmniSearchProvider } from '@/components/omni-search/omni-search-provide
 import { StatusBar } from '@/components/layout/status-bar'
 import { WatchlistsProvider } from '@/lib/watchlists-provider'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
+import { lockNow } from '@/lib/security/lock-store'
 import { useOptimisticSession } from '@/lib/session'
 import { ThemePluginContext, useThemePlugin } from '@/hooks/use-theme-plugin'
 import {
@@ -267,6 +268,10 @@ function TerminalLayout() {
       {
         commandId: 'general.settings',
         action: () => useSettingsDialogStore.getState().open(),
+      },
+      {
+        commandId: 'general.lockTerminal',
+        action: () => lockNow('manual'),
       },
     ],
     [navigate, lastPair, setWorkspaceTreeOpen],

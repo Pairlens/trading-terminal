@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 
 import { eventMatchesCommand } from '@/lib/keybindings/store'
 import { useKeybindingsVersion } from '@/hooks/use-keybindings'
+import { isTerminalLocked } from '@/lib/security/lock-store'
 
 /**
  * Bind global (non-chart) actions to keybinding commands.
@@ -53,6 +54,10 @@ export function useKeyboardShortcuts(
     if (!enabled) return
 
     const handler = (e: KeyboardEvent) => {
+      // The lock overlay is a modal, but window-level listeners keep firing
+      // behind it — and `allowInInput` chords (⌘K) fire even with focus in
+      // the password field. Nothing global works on a locked terminal.
+      if (isTerminalLocked()) return
       const editable = isEditableTarget(e.target)
       for (const shortcut of shortcutsRef.current) {
         if (editable && !shortcut.allowInInput) continue

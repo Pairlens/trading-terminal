@@ -411,17 +411,20 @@
     "nav": {
       "profile": "Perfil",
       "plugins": "Plugins",
+      "cloudSync": "Sincronização",
       "notifications": "Notificações",
       "appearance": "Aparência",
       "keyboard": "Teclado",
       "performance": "Desempenho",
+      "desktop": "Desktop",
       "connection": "Conexão",
       "language": "Idioma",
       "region": "País",
       "currency": "Moeda",
       "risk": "Gestão de Risco",
       "privacy": "Privacidade",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "Segurança"
     },
     "comingSoon": "Esta seção estará disponível em breve.",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "Manter a minha conta",
       "confirmAction": "Eliminar definitivamente",
       "deleteDoneAnalyticsFailed": "A sua conta foi eliminada, mas não conseguimos contactar o fornecedor de analítica para apagar o seu perfil de utilização. Escreva para privacy@pairlens.finance e terminamos à mão."
+    },
+    "cloudSync": {
+      "masterTitle": "Sincronização na nuvem",
+      "masterDescription": "Mantenha a sua conta em dia em todos os dispositivos. Pause aqui sem mexer nos interruptores abaixo.",
+      "pausedNotice": "Em pausa. Neste momento nada está a sincronizar.",
+      "title": "O que sincroniza com a sua conta",
+      "description": "Escolha o que um segundo dispositivo deve encontrar. Tudo o que desligar fica neste dispositivo.",
+      "deviceOnly": "Estes interruptores valem só para este dispositivo e nunca são sincronizados.",
+      "nothingDeleted": "Desligar algo nunca apaga nada. Fica neste dispositivo e a cópia que já está na sua conta permanece intacta: apenas deixa de ser atualizada e fica desatualizada.",
+      "resumeNote": "Volte a ligar e os dois lados são combinados, ganhando a alteração mais recente. Algo que apagou enquanto estava desligado pode voltar se a sua conta ainda o tiver.",
+      "cloudOnlyWarning": "Isto só é guardado na sua conta, por isso desligá-lo significa que não fica registado em lado nenhum.",
+      "signedOutTitle": "Sessão não iniciada",
+      "signedOut": "Nada está a sincronizar. Tudo o que fizer fica neste dispositivo.",
+      "status": {
+        "synced": "Está tudo atualizado.",
+        "syncing": "A sincronizar…",
+        "error": "A última sincronização não passou. Vai tentar de novo na sua próxima alteração.",
+        "idle": "Nada para enviar por agora."
+      },
+      "domains": {
+        "preferences": {
+          "title": "Definições e preferências",
+          "description": "Idioma, tema, atalhos de teclado, país, definições do registo de plugins e o par que tinha aberto."
+        },
+        "charts": {
+          "title": "Configuração do gráfico",
+          "description": "Indicadores, desenhos, tipo de gráfico e os seus estilos de desenho predefinidos."
+        },
+        "workspaces": {
+          "title": "Espaços de trabalho e disposições",
+          "description": "Espaços de trabalho personalizados, pastas, disposições de painéis e variáveis do espaço de trabalho."
+        },
+        "automation": {
+          "title": "Fluxos e alertas",
+          "description": "Fluxos de automação, regras de alerta e os pares que vigiam."
+        },
+        "plugins": {
+          "title": "Plugins",
+          "description": "Que plugins tem ativados, as suas definições e os fornecedores que fixou. As definições incluem qualquer chave de API que tenha escrito nas definições de um plugin, por exemplo a de um fornecedor de IA. As chaves de API das exchanges e os segredos das carteiras nunca são incluídos: ficam no seu porta-chaves. Os fornecedores fixados só são guardados na sua conta, por isso com isto desligado duram até fechar a aplicação."
+        },
+        "copilot": {
+          "title": "Histórico de chat com a IA",
+          "description": "As suas conversas com o copiloto, por par."
+        },
+        "trades": {
+          "title": "Diário de operações",
+          "description": "Operações que você ou o copiloto registam no diário."
+        }
+      }
     },
     "profile": {
       "image": "Imagem de perfil",
@@ -543,6 +595,29 @@
       "balancedDescription": "Ticker e livro de ofertas a 250 ms, candles a 500 ms. Bom equilíbrio entre responsividade e eficiência.",
       "energySaver": "Economia de Energia",
       "energySaverDescription": "Ticker e livro de ofertas a 1 s, candles a 2 s. Ideal para monitoramento passivo ou notebooks na bateria."
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "Ao fechar a última janela",
+        "description": "Alertas, bots e fluxos de trabalho só funcionam enquanto o Pairlens estiver em execução. Escolha o que deve acontecer ao fechar a última janela.",
+        "quit": "Sair do Pairlens",
+        "quitDescription": "Fechar a última janela encerra o aplicativo. Alertas, bots e fluxos de trabalho param de funcionar.",
+        "background": "Continuar em segundo plano",
+        "backgroundDescriptionDock": "A janela fecha e o Pairlens continua em execução. Alertas, bots e fluxos de trabalho continuam funcionando. Clique no ícone do Dock para trazer a janela de volta.",
+        "backgroundDescriptionTray": "A janela fecha e o Pairlens continua em execução na bandeja do sistema. Alertas, bots e fluxos de trabalho continuam funcionando. Clique no ícone da bandeja para trazer a janela de volta.",
+        "alwaysQuitsNote": "Sair do Pairlens sempre interrompe alertas, bots e fluxos de trabalho, nos dois modos.",
+        "trayNeeded": "Precisa de uma bandeja do sistema. Alguns desktops Linux (GNOME sem a extensão AppIndicator) não têm uma, e o Pairlens não teria para onde ir.",
+        "trayUnavailable": "Este desktop não tem bandeja do sistema, então o Pairlens não conseguiria voltar. Em vez disso, fechar a última janela encerra o aplicativo."
+      },
+      "quit": {
+        "title": "Sair do Pairlens",
+        "description": "Encerra o aplicativo e tudo o que ele está executando.",
+        "button": "Sair",
+        "confirmTitle": "Sair do Pairlens?",
+        "confirmDescription_one": "{{count}} bot está armado. Sair vai pará-lo.",
+        "confirmDescription_other": "{{count}} bots estão armados. Sair vai pará-los.",
+        "confirmAction": "Sair"
+      }
     },
     "language": {
       "title": "Idioma",
@@ -686,6 +761,49 @@
         "workspaceMenu": "Menu de áreas de trabalho",
         "chartCancel": "Cancelar ferramenta / sair do ecrã inteiro"
       }
+    },
+    "security": {
+      "lockTitle": "Bloqueio do terminal",
+      "lockDescription": "Pedir uma palavra-passe antes de este terminal poder ser usado neste dispositivo.",
+      "setPassword": "Definir palavra-passe",
+      "changePassword": "Alterar palavra-passe",
+      "turnOff": "Desativar bloqueio",
+      "turnOffDescription": "Introduz a tua palavra-passe atual para retirar o bloqueio deste dispositivo.",
+      "newPassword": "Nova palavra-passe",
+      "confirmPassword": "Confirmar palavra-passe",
+      "currentPassword": "Palavra-passe atual",
+      "passwordTooShort": "Usa pelo menos 6 caracteres.",
+      "passwordMismatch": "As duas palavras-passe não coincidem.",
+      "passwordWrong": "Essa palavra-passe não está correta.",
+      "noRecoveryWarning": "Não existe recuperação de palavra-passe. Se a esqueceres, a única forma de voltar a entrar apaga os dados deste dispositivo. Guarda-a já no teu gestor de palavras-passe.",
+      "triggersTitle": "Quando bloquear",
+      "triggersDescription": "Escolhe os momentos em que a palavra-passe deve ser pedida.",
+      "triggerStartup": "Ao iniciar a app",
+      "triggerStartupHint": "Pedir a palavra-passe num arranque a frio.",
+      "triggerIdle": "Após inatividade",
+      "triggerIdleHint": "Bloquear após {{minutes}} minutos sem rato nem teclado.",
+      "triggerPeriodic": "Periodicamente",
+      "triggerPeriodicHint": "Bloquear de novo passado um tempo fixo, por mais ativa que a sessão esteja.",
+      "triggerWake": "Ao acordar o computador",
+      "triggerWakeHint": "Bloquear quando a máquina volta da suspensão.",
+      "triggerTrade": "Antes de enviar uma ordem",
+      "triggerTradeHint": "Confirmar ordens colocadas por ti ou pelo copiloto, incluindo propostas aprovadas automaticamente. Os bots nunca são questionados.",
+      "afterMinutes": "Após {{minutes}} min",
+      "everyHours": "A cada {{hours}} h",
+      "graceNever": "Sempre",
+      "graceMinutes": "Durante {{minutes}} min",
+      "protectsTitle": "O que isto protege",
+      "protectsBody": "Coloca um ecrã de palavra-passe à frente do terminal, para que ninguém que passe pela tua secretária possa mexer nas tuas posições, ler os teus saldos ou enviar uma ordem. Não cifra nada: as tuas chaves API e chaves de carteira ficam onde estavam, e quem tiver o teu computador desbloqueado e algum conhecimento técnico consegue ler os dados locais da app sem nunca ver este ecrã.",
+      "protectsBots": "Os bots ativos continuam a operar com o terminal bloqueado. Bloquear o ecrã não é pausar as tuas estratégias.",
+      "protectsDesktop": "A verificação da palavra-passe fica no porta-chaves do sistema e nunca sai deste computador.",
+      "protectsBrowser": "Esta versão guarda a verificação no armazenamento do navegador. Limpar os dados do site remove o bloqueio. A app de secretária é o lugar indicado para isto.",
+      "lockNowTitle": "Bloquear agora",
+      "lockNowDescription": "Fechar as definições e bloquear o terminal de imediato.",
+      "lockNow": "Bloquear",
+      "resetButton": "Repor e apagar",
+      "resetConfirmTitle": "Apagar este dispositivo?",
+      "resetConfirmBody": "Isto apaga todas as chaves API, chaves de carteira, espaços de trabalho, disposições de gráfico e conversas neste computador. Não há como desfazer nem recuperar a palavra-passe. Se tiveres sessão iniciada, as definições sincronizadas voltam ao entrares de novo — as chaves API e de carteira nunca, porque só existem aqui.",
+      "resetConfirmPhrase": "Escreve {{phrase}} para confirmar."
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "Desbloquear Todas as Ordens",
     "setRegion": "Definir Região…",
     "newWindow": "Nova Janela",
+    "quit": "Sair do Pairlens",
     "back": "Voltar",
     "forward": "Avançar",
-    "checkForUpdates": "Verificar Atualizações…"
+    "checkForUpdates": "Verificar Atualizações…",
+    "lockTerminal": "Bloquear terminal"
   },
   "titlebar": {
     "newWindow": "Nova janela",
@@ -2278,6 +2398,37 @@
       "finance": "Finanças",
       "financial_markets": "Mercados Financeiros",
       "economy_macro": "Macroeconomia"
+    }
+  },
+  "tray": {
+    "show": "Mostrar Pairlens",
+    "quit": "Sair do Pairlens"
+  },
+  "security": {
+    "lock": {
+      "title": "Terminal bloqueado",
+      "subtitle": "Introduz a tua palavra-passe para continuar.",
+      "passwordLabel": "Palavra-passe",
+      "unlock": "Desbloquear",
+      "unlocking": "A verificar…",
+      "wrongPassword": "Essa palavra-passe não está correta.",
+      "tooManyAttempts": "Demasiadas tentativas. Tenta de novo em {{seconds}} s.",
+      "forgot": "Esqueceste-te da palavra-passe?",
+      "keychainUnavailable": "O porta-chaves do sistema está indisponível neste momento. Tenta daqui a pouco.",
+      "orderCancelled": "Ordem cancelada. O terminal está bloqueado.",
+      "reason": {
+        "startup": "Introduz a tua palavra-passe para continuar.",
+        "idle": "Bloqueado após um período de inatividade.",
+        "periodic": "Bloqueado conforme agendado.",
+        "wake": "Bloqueado enquanto o computador esteve suspenso.",
+        "manual": "Bloqueaste o terminal."
+      }
+    },
+    "challenge": {
+      "title": "Confirma que és tu",
+      "description": "Introduz a tua palavra-passe para enviar esta ordem.",
+      "confirm": "Confirmar",
+      "cancel": "Cancelar"
     }
   }
 }

@@ -22,6 +22,9 @@ const hydrateListeners = new Set<Listener>()
 // backends, and the cached theme CSS is large and re-derived per window.
 function isBridgeBlocked(key: string): boolean {
   if (key === 'theme.cachedCss') return true
+  // The terminal lock has its own cross-window channel; keeping its keys off
+  // this one means a hydrate event can never move lock state.
+  if (key.startsWith('security.')) return true
   if (key.startsWith('credentials-store:')) return true
   if (key.startsWith('keychain:')) return true
   if (key.startsWith('pairlens:keychain:')) return true

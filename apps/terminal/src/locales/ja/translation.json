@@ -411,17 +411,20 @@
     "nav": {
       "profile": "プロフィール",
       "plugins": "プラグイン",
+      "cloudSync": "クラウド同期",
       "notifications": "通知",
       "appearance": "外観",
       "keyboard": "キーボード",
       "performance": "パフォーマンス",
+      "desktop": "デスクトップ",
       "connection": "接続",
       "language": "言語",
       "region": "国",
       "currency": "通貨",
       "risk": "リスク管理",
       "privacy": "プライバシー",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "セキュリティ"
     },
     "comingSoon": "このセクションは近日公開予定です。",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "アカウントを残す",
       "confirmAction": "完全に削除",
       "deleteDoneAnalyticsFailed": "アカウントは削除されましたが、分析プロバイダーに接続できず利用状況のプロファイルを消去できませんでした。privacy@pairlens.finance までご連絡いただければ手動で対応します。"
+    },
+    "cloudSync": {
+      "masterTitle": "クラウド同期",
+      "masterDescription": "すべての端末でアカウントの状態をそろえます。下のスイッチはそのままに、ここで一時停止できます。",
+      "pausedNotice": "一時停止中です。現在、何も同期されていません。",
+      "title": "アカウントに同期される内容",
+      "description": "別の端末で引き継ぎたいものを選んでください。オフにしたものはこの端末に残ります。",
+      "deviceOnly": "これらのスイッチはこの端末だけに適用され、スイッチ自体が同期されることはありません。",
+      "nothingDeleted": "オフにしても何かが削除されることはありません。データはこの端末に残り、アカウント側のコピーもそのままです。更新が止まって古くなるだけです。",
+      "resumeNote": "オンに戻すと両方が統合され、新しい変更が優先されます。オフの間に削除したものは、アカウント側に残っていれば戻ってくることがあります。",
+      "cloudOnlyWarning": "これはアカウントにしか保存されないため、オフにするとどこにも記録されません。",
+      "signedOutTitle": "サインインしていません",
+      "signedOut": "何も同期されていません。行った操作はすべてこの端末に残ります。",
+      "status": {
+        "synced": "すべて最新です。",
+        "syncing": "同期中…",
+        "error": "前回の同期が完了しませんでした。次の変更時に再試行します。",
+        "idle": "いま送信するものはありません。"
+      },
+      "domains": {
+        "preferences": {
+          "title": "設定と環境設定",
+          "description": "言語、テーマ、キーボードショートカット、国、プラグインレジストリの設定、開いていたペア。"
+        },
+        "charts": {
+          "title": "チャート構成",
+          "description": "インジケーター、描画、チャートの種類、既定の描画スタイル。"
+        },
+        "workspaces": {
+          "title": "ワークスペースとレイアウト",
+          "description": "カスタムワークスペース、フォルダ、パネルのレイアウト、ワークスペース変数。"
+        },
+        "automation": {
+          "title": "ワークフローとアラート",
+          "description": "自動化ワークフロー、アラートのルール、監視対象のペア。"
+        },
+        "plugins": {
+          "title": "プラグイン",
+          "description": "有効にしているプラグイン、その設定、固定したプロバイダー。設定には、AI プロバイダーのキーなど、プラグインの設定画面に入力した API キーも含まれます。取引所の API キーやウォレットの秘密情報は決して含まれず、キーチェーンに残ります。固定したプロバイダーはアカウントにしか残らないため、オフの間はアプリを終了するまでしか保持されません。"
+        },
+        "copilot": {
+          "title": "AI チャット履歴",
+          "description": "ペアごとの copilot との会話。"
+        },
+        "trades": {
+          "title": "トレードジャーナル",
+          "description": "あなたや copilot がジャーナルに記録したトレード。"
+        }
+      }
     },
     "profile": {
       "image": "プロフィール画像",
@@ -543,6 +595,29 @@
       "balancedDescription": "ティッカーと板は250ms、ローソク足は500ms。応答性と効率のバランスが良好です。",
       "energySaver": "省エネモード",
       "energySaverDescription": "ティッカーと板は1秒、ローソク足は2秒。パッシブな監視やバッテリー駆動のノートPCに最適です。"
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "最後のウィンドウを閉じたとき",
+        "description": "アラート、ボット、ワークフローは Pairlens の実行中だけ動作します。最後のウィンドウを閉じたときの動作を選んでください。",
+        "quit": "Pairlens を終了",
+        "quitDescription": "最後のウィンドウを閉じるとアプリが終了します。アラート、ボット、ワークフローは停止します。",
+        "background": "バックグラウンドで実行を続ける",
+        "backgroundDescriptionDock": "ウィンドウは閉じますが、Pairlens は動作を続けます。アラート、ボット、ワークフローはそのまま動きます。Dock アイコンをクリックするとウィンドウが戻ります。",
+        "backgroundDescriptionTray": "ウィンドウは閉じますが、Pairlens は通知領域で動作を続けます。アラート、ボット、ワークフローはそのまま動きます。通知領域のアイコンをクリックするとウィンドウが戻ります。",
+        "alwaysQuitsNote": "どちらのモードでも、Pairlens を終了するとアラート、ボット、ワークフローは必ず停止します。",
+        "trayNeeded": "通知領域が必要です。一部の Linux デスクトップ（AppIndicator 拡張のない GNOME など）には通知領域がなく、Pairlens の戻り先がなくなります。",
+        "trayUnavailable": "このデスクトップには通知領域がないため、Pairlens は戻れません。代わりに、最後のウィンドウを閉じると終了します。"
+      },
+      "quit": {
+        "title": "Pairlens を終了",
+        "description": "アプリと実行中のすべてを停止します。",
+        "button": "終了",
+        "confirmTitle": "Pairlens を終了しますか？",
+        "confirmDescription_one": "{{count}} 個のボットが有効です。終了すると停止します。",
+        "confirmDescription_other": "{{count}} 個のボットが有効です。終了すると停止します。",
+        "confirmAction": "終了"
+      }
     },
     "language": {
       "title": "言語",
@@ -686,6 +761,49 @@
         "workspaceMenu": "ワークスペースメニュー",
         "chartCancel": "ツールを解除 / 全画面を終了"
       }
+    },
+    "security": {
+      "lockTitle": "ターミナルロック",
+      "lockDescription": "この端末でターミナルを使う前にパスワードを求めます。",
+      "setPassword": "パスワードを設定",
+      "changePassword": "パスワードを変更",
+      "turnOff": "ロックを解除する",
+      "turnOffDescription": "現在のパスワードを入力して、この端末からロックを外します。",
+      "newPassword": "新しいパスワード",
+      "confirmPassword": "パスワードの確認",
+      "currentPassword": "現在のパスワード",
+      "passwordTooShort": "6文字以上にしてください。",
+      "passwordMismatch": "2つのパスワードが一致しません。",
+      "passwordWrong": "そのパスワードは正しくありません。",
+      "noRecoveryWarning": "パスワードの復旧手段はありません。忘れた場合、戻る唯一の方法はこの端末のデータを消去することです。今すぐパスワードマネージャーに保存してください。",
+      "triggersTitle": "ロックするタイミング",
+      "triggersDescription": "パスワードを求める場面を選びます。",
+      "triggerStartup": "アプリ起動時",
+      "triggerStartupHint": "コールドスタート時にパスワードを求めます。",
+      "triggerIdle": "一定時間操作がないとき",
+      "triggerIdleHint": "マウスもキーボードも使われないまま{{minutes}}分でロックします。",
+      "triggerPeriodic": "一定時間ごと",
+      "triggerPeriodicHint": "セッションがどれだけ忙しくても、一定時間が過ぎたら再びロックします。",
+      "triggerWake": "スリープ復帰後",
+      "triggerWakeHint": "マシンがスリープから戻ったときにロックします。",
+      "triggerTrade": "注文を出す前",
+      "triggerTradeHint": "手動またはコパイロット経由の注文を確認します。自動承認された提案も含みます。ボットには一切求めません。",
+      "afterMinutes": "{{minutes}}分後",
+      "everyHours": "{{hours}}時間ごと",
+      "graceNever": "毎回",
+      "graceMinutes": "{{minutes}}分間",
+      "protectsTitle": "これが守るもの",
+      "protectsBody": "ターミナルの前に全画面のパスワード入力を置き、席に来た人がポジションを見て回ったり、残高を読んだり、注文を出したりできないようにします。ただし暗号化は行いません。取引所のAPIキーやウォレットキーは元の場所のままで、ロック解除済みのPCと多少の技術があれば、この画面を見ずにアプリのローカルデータを読めます。",
+      "protectsBots": "ロック中もアーム済みのボットは取引を続けます。画面をロックしても戦略は止まりません。",
+      "protectsDesktop": "パスワードの照合情報はシステムのキーチェーンに保存され、このコンピュータから出ることはありません。",
+      "protectsBrowser": "このビルドは照合情報をブラウザのストレージに保存します。サイトデータを消すとロックも消えます。本来はデスクトップアプリ向けの機能です。",
+      "lockNowTitle": "今すぐロック",
+      "lockNowDescription": "設定を閉じて、ただちにターミナルをロックします。",
+      "lockNow": "ロック",
+      "resetButton": "リセットして消去",
+      "resetConfirmTitle": "この端末を消去しますか？",
+      "resetConfirmBody": "このコンピュータ上のすべての取引所APIキー、ウォレットキー、ワークスペース、チャートレイアウト、チャットを消去します。取り消しはできず、パスワードの復旧もありません。サインインしていれば、クラウド同期される設定は再ログイン時に戻りますが、APIキーとウォレットキーは戻りません。ここにしか保存されていないからです。",
+      "resetConfirmPhrase": "確認のため {{phrase}} と入力してください。"
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "すべての注文ロックを解除",
     "setRegion": "地域を設定…",
     "newWindow": "新しいウィンドウ",
+    "quit": "Pairlens を終了",
     "back": "戻る",
     "forward": "進む",
-    "checkForUpdates": "アップデートを確認…"
+    "checkForUpdates": "アップデートを確認…",
+    "lockTerminal": "ターミナルをロック"
   },
   "titlebar": {
     "newWindow": "新しいウィンドウ",
@@ -2278,6 +2398,37 @@
       "finance": "金融",
       "financial_markets": "金融市場",
       "economy_macro": "マクロ経済"
+    }
+  },
+  "tray": {
+    "show": "Pairlens を表示",
+    "quit": "Pairlens を終了"
+  },
+  "security": {
+    "lock": {
+      "title": "ターミナルはロック中",
+      "subtitle": "続けるにはパスワードを入力してください。",
+      "passwordLabel": "パスワード",
+      "unlock": "ロック解除",
+      "unlocking": "確認中…",
+      "wrongPassword": "そのパスワードは正しくありません。",
+      "tooManyAttempts": "試行が多すぎます。{{seconds}}秒後にもう一度。",
+      "forgot": "パスワードをお忘れですか？",
+      "keychainUnavailable": "システムのキーチェーンに今アクセスできません。少ししてからお試しください。",
+      "orderCancelled": "注文をキャンセルしました。ターミナルはロック中です。",
+      "reason": {
+        "startup": "続けるにはパスワードを入力してください。",
+        "idle": "しばらく操作がなかったためロックしました。",
+        "periodic": "予定どおりロックしました。",
+        "wake": "コンピュータがスリープしている間にロックしました。",
+        "manual": "あなたがターミナルをロックしました。"
+      }
+    },
+    "challenge": {
+      "title": "本人確認",
+      "description": "この注文を出すにはパスワードを入力してください。",
+      "confirm": "確認",
+      "cancel": "キャンセル"
     }
   }
 }

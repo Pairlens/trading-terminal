@@ -60,3 +60,24 @@ pub fn sleep_block_active(state: tauri::State<'_, AwakeState>) -> Result<bool, S
     let guard = state.0.lock().map_err(|e| e.to_string())?;
     Ok(guard.is_some())
 }
+
+/// Drop the assertion from the Rust side, with no webview involved.
+///
+/// The assertion is normally released by the bot runtime, which lives in the
+/// webview. When the last window is destroyed that runtime dies without ever
+/// getting the chance — and the process outlives it (macOS keeps the app in the
+/// Dock), so the machine would be held awake for bots that no longer exist,
+/// for as long as the app is open. Called from the last-window-destroyed
+/// handler; releasing an assertion nobody holds is a no-op.
+pub fn release(app: &tauri::AppHandle) {
+    use tauri::Manager;
+    let Some(state) = app.try_state::<AwakeState>() else {
+        return;
+    };
+    let mut guard = match state.0.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => poisoned.into_inner(),
+    };
+    // Dropping the assertion is what releases it.
+    *guard = None;
+}

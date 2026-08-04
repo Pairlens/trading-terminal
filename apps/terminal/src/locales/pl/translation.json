@@ -411,17 +411,20 @@
     "nav": {
       "profile": "Profil",
       "plugins": "Wtyczki",
+      "cloudSync": "Synchronizacja",
       "notifications": "Powiadomienia",
       "appearance": "Wygląd",
       "keyboard": "Klawiatura",
       "performance": "Wydajność",
+      "desktop": "Pulpit",
       "connection": "Połączenie",
       "language": "Język",
       "region": "Kraj",
       "currency": "Waluta",
       "risk": "Zarządzanie ryzykiem",
       "privacy": "Prywatność",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "Bezpieczeństwo"
     },
     "comingSoon": "Ta sekcja pojawi się wkrótce.",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "Zostaw moje konto",
       "confirmAction": "Usuń na zawsze",
       "deleteDoneAnalyticsFailed": "Twoje konto zostało usunięte, ale nie udało się połączyć z dostawcą analityki, aby skasować profil użycia. Napisz na privacy@pairlens.finance, a dokończymy to ręcznie."
+    },
+    "cloudSync": {
+      "masterTitle": "Synchronizacja w chmurze",
+      "masterDescription": "Trzymaj konto w tym samym stanie na wszystkich urządzeniach. Tutaj wstrzymasz ją bez ruszania przełączników poniżej.",
+      "pausedNotice": "Wstrzymana. W tej chwili nic się nie synchronizuje.",
+      "title": "Co trafia na Twoje konto",
+      "description": "Wybierz, co ma zastać na drugim urządzeniu. Wszystko wyłączone zostaje na tym urządzeniu.",
+      "deviceOnly": "Te przełączniki dotyczą tylko tego urządzenia i same nigdy się nie synchronizują.",
+      "nothingDeleted": "Wyłączenie czegoś niczego nie usuwa. Zostaje na tym urządzeniu, a kopia w Twoim koncie pozostaje nietknięta — po prostu przestaje się aktualizować i traci aktualność.",
+      "resumeNote": "Po ponownym włączeniu obie strony są scalane, a wygrywa nowsza zmiana. To, co usunąłeś przy wyłączonej synchronizacji, może wrócić, jeśli konto wciąż to ma.",
+      "cloudOnlyWarning": "To jest przechowywane wyłącznie na Twoim koncie, więc wyłączenie oznacza, że nie zapisze się nigdzie.",
+      "signedOutTitle": "Nie zalogowano",
+      "signedOut": "Nic się nie synchronizuje. Wszystko, co robisz, zostaje na tym urządzeniu.",
+      "status": {
+        "synced": "Wszystko jest aktualne.",
+        "syncing": "Synchronizowanie…",
+        "error": "Ostatnia synchronizacja nie przeszła. Spróbuje ponownie przy kolejnej zmianie.",
+        "idle": "Na razie nie ma nic do wysłania."
+      },
+      "domains": {
+        "preferences": {
+          "title": "Ustawienia i preferencje",
+          "description": "Język, motyw, skróty klawiszowe, kraj, ustawienia rejestru wtyczek i para, którą miałeś otwartą."
+        },
+        "charts": {
+          "title": "Ustawienia wykresu",
+          "description": "Wskaźniki, rysunki, typ wykresu i Twoje domyślne style rysowania."
+        },
+        "workspaces": {
+          "title": "Przestrzenie robocze i układy",
+          "description": "Własne przestrzenie robocze, foldery, układy paneli i zmienne przestrzeni roboczej."
+        },
+        "automation": {
+          "title": "Przepływy i alerty",
+          "description": "Przepływy automatyzacji, reguły alertów i pary, które obserwują."
+        },
+        "plugins": {
+          "title": "Wtyczki",
+          "description": "Które wtyczki masz włączone, ich ustawienia i przypięci dostawcy. Ustawienia obejmują też każdy klucz API wpisany w ustawieniach wtyczki, na przykład dostawcy AI. Klucze API giełd i sekrety portfeli nigdy się tu nie znajdą — zostają w Twoim pęku kluczy. Przypięci dostawcy są zapisywani tylko na koncie, więc przy wyłączonej opcji przetrwają do zamknięcia aplikacji."
+        },
+        "copilot": {
+          "title": "Historia czatu z AI",
+          "description": "Twoje rozmowy z copilotem, osobno dla każdej pary."
+        },
+        "trades": {
+          "title": "Dziennik transakcji",
+          "description": "Transakcje, które Ty lub copilot zapisujecie w dzienniku."
+        }
+      }
     },
     "profile": {
       "image": "Zdjęcie profilowe",
@@ -543,6 +595,29 @@
       "balancedDescription": "Ticker i arkusz zleceń co 250 ms, świece co 500 ms. Dobry balans między responsywnością a wydajnością.",
       "energySaver": "Oszczędzanie energii",
       "energySaverDescription": "Ticker i arkusz zleceń co 1 s, świece co 2 s. Najlepsze do biernego monitorowania lub laptopów na baterii."
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "Po zamknięciu ostatniego okna",
+        "description": "Alerty, boty i przepływy pracy działają tylko wtedy, gdy Pairlens jest uruchomiony. Wybierz, co ma się stać po zamknięciu ostatniego okna.",
+        "quit": "Zakończ Pairlens",
+        "quitDescription": "Zamknięcie ostatniego okna zamyka aplikację. Alerty, boty i przepływy pracy przestają działać.",
+        "background": "Działaj dalej w tle",
+        "backgroundDescriptionDock": "Okno się zamyka, a Pairlens działa dalej. Alerty, boty i przepływy pracy nadal działają. Kliknij ikonę w Docku, aby przywrócić okno.",
+        "backgroundDescriptionTray": "Okno się zamyka, a Pairlens działa dalej w zasobniku systemowym. Alerty, boty i przepływy pracy nadal działają. Kliknij ikonę w zasobniku, aby przywrócić okno.",
+        "alwaysQuitsNote": "Zakończenie Pairlens zawsze zatrzymuje alerty, boty i przepływy pracy, w obu trybach.",
+        "trayNeeded": "Wymaga zasobnika systemowego. Niektóre środowiska Linux (GNOME bez rozszerzenia AppIndicator) go nie mają i Pairlens nie miałby dokąd trafić.",
+        "trayUnavailable": "To środowisko nie ma zasobnika systemowego, więc Pairlens nie mógłby wrócić. Zamiast tego zamknięcie ostatniego okna kończy aplikację."
+      },
+      "quit": {
+        "title": "Zakończ Pairlens",
+        "description": "Zatrzymuje aplikację i wszystko, co uruchamia.",
+        "button": "Zakończ",
+        "confirmTitle": "Zakończyć Pairlens?",
+        "confirmDescription_one": "{{count}} bot jest uzbrojony. Zakończenie go zatrzyma.",
+        "confirmDescription_other": "Uzbrojone boty: {{count}}. Zakończenie je zatrzyma.",
+        "confirmAction": "Zakończ"
+      }
     },
     "language": {
       "title": "Język",
@@ -686,6 +761,49 @@
         "workspaceMenu": "Menu obszarów roboczych",
         "chartCancel": "Anuluj narzędzie / wyjdź z pełnego ekranu"
       }
+    },
+    "security": {
+      "lockTitle": "Blokada terminala",
+      "lockDescription": "Pytaj o hasło, zanim tego terminala będzie można użyć na tym urządzeniu.",
+      "setPassword": "Ustaw hasło",
+      "changePassword": "Zmień hasło",
+      "turnOff": "Wyłącz blokadę",
+      "turnOffDescription": "Podaj obecne hasło, aby usunąć blokadę z tego urządzenia.",
+      "newPassword": "Nowe hasło",
+      "confirmPassword": "Potwierdź hasło",
+      "currentPassword": "Obecne hasło",
+      "passwordTooShort": "Użyj co najmniej 6 znaków.",
+      "passwordMismatch": "Hasła nie są takie same.",
+      "passwordWrong": "To hasło jest nieprawidłowe.",
+      "noRecoveryWarning": "Nie ma odzyskiwania hasła. Jeśli je zapomnisz, jedyna droga powrotu kasuje dane tego urządzenia. Zapisz je teraz w menedżerze haseł.",
+      "triggersTitle": "Kiedy blokować",
+      "triggersDescription": "Wybierz momenty, w których ma pojawić się hasło.",
+      "triggerStartup": "Przy starcie aplikacji",
+      "triggerStartupHint": "Pytaj o hasło po zimnym starcie.",
+      "triggerIdle": "Po bezczynności",
+      "triggerIdleHint": "Zablokuj po {{minutes}} minutach bez myszy i klawiatury.",
+      "triggerPeriodic": "Co jakiś czas",
+      "triggerPeriodicHint": "Blokuj ponownie po stałym czasie, niezależnie od aktywności sesji.",
+      "triggerWake": "Po wybudzeniu komputera",
+      "triggerWakeHint": "Zablokuj, gdy komputer wraca z uśpienia.",
+      "triggerTrade": "Przed złożeniem zlecenia",
+      "triggerTradeHint": "Potwierdzaj zlecenia składane ręcznie lub przez copilota, także propozycje zatwierdzane automatycznie. Boty nigdy nie są pytane.",
+      "afterMinutes": "Po {{minutes}} min",
+      "everyHours": "Co {{hours}} godz.",
+      "graceNever": "Za każdym razem",
+      "graceMinutes": "Przez {{minutes}} min",
+      "protectsTitle": "Co to chroni",
+      "protectsBody": "Stawia pełnoekranowe pytanie o hasło przed terminalem, żeby ktoś przy twoim biurku nie mógł przeglądać twoich pozycji, czytać sald ani złożyć zlecenia. Nic nie jest szyfrowane: klucze API giełd i klucze portfela zostają tam, gdzie były, a każdy, kto ma twój odblokowany komputer i trochę wiedzy technicznej, odczyta lokalne dane aplikacji, nigdy nie widząc tego ekranu.",
+      "protectsBots": "Uzbrojone boty handlują dalej, gdy terminal jest zablokowany. Blokada ekranu nie wstrzymuje twoich strategii.",
+      "protectsDesktop": "Weryfikacja hasła leży w pęku kluczy systemu i nigdy nie opuszcza tego komputera.",
+      "protectsBrowser": "Ta wersja trzyma weryfikację w pamięci przeglądarki. Wyczyszczenie danych witryny usuwa blokadę. Aplikacja desktopowa to właściwe miejsce na to.",
+      "lockNowTitle": "Zablokuj teraz",
+      "lockNowDescription": "Zamknij ustawienia i natychmiast zablokuj terminal.",
+      "lockNow": "Zablokuj",
+      "resetButton": "Zresetuj i wymaż",
+      "resetConfirmTitle": "Wymazać to urządzenie?",
+      "resetConfirmBody": "To usuwa każdy klucz API, klucz portfela, przestrzeń roboczą, układ wykresu i czat na tym komputerze. Nie da się tego cofnąć i nie ma odzyskiwania hasła. Jeśli jesteś zalogowany, ustawienia synchronizowane wrócą po ponownym zalogowaniu — klucze API i portfela nigdy, bo istnieją tylko tutaj.",
+      "resetConfirmPhrase": "Wpisz {{phrase}}, aby potwierdzić."
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "Odblokuj wszystkie zlecenia",
     "setRegion": "Ustaw region…",
     "newWindow": "Nowe okno",
+    "quit": "Zakończ Pairlens",
     "back": "Wstecz",
     "forward": "Dalej",
-    "checkForUpdates": "Sprawdź aktualizacje…"
+    "checkForUpdates": "Sprawdź aktualizacje…",
+    "lockTerminal": "Zablokuj terminal"
   },
   "titlebar": {
     "newWindow": "Nowe okno",
@@ -2286,6 +2406,37 @@
       "finance": "Finanse",
       "financial_markets": "Rynki finansowe",
       "economy_macro": "Makroekonomia"
+    }
+  },
+  "tray": {
+    "show": "Pokaż Pairlens",
+    "quit": "Zakończ Pairlens"
+  },
+  "security": {
+    "lock": {
+      "title": "Terminal zablokowany",
+      "subtitle": "Podaj hasło, aby kontynuować.",
+      "passwordLabel": "Hasło",
+      "unlock": "Odblokuj",
+      "unlocking": "Sprawdzanie…",
+      "wrongPassword": "To hasło jest nieprawidłowe.",
+      "tooManyAttempts": "Za dużo prób. Spróbuj ponownie za {{seconds}} s.",
+      "forgot": "Nie pamiętasz hasła?",
+      "keychainUnavailable": "Pęk kluczy systemu jest teraz niedostępny. Spróbuj za chwilę.",
+      "orderCancelled": "Zlecenie anulowane. Terminal jest zablokowany.",
+      "reason": {
+        "startup": "Podaj hasło, aby kontynuować.",
+        "idle": "Zablokowano po okresie bezczynności.",
+        "periodic": "Zablokowano zgodnie z harmonogramem.",
+        "wake": "Zablokowano, gdy komputer spał.",
+        "manual": "Terminal został zablokowany przez ciebie."
+      }
+    },
+    "challenge": {
+      "title": "Potwierdź, że to ty",
+      "description": "Podaj hasło, aby złożyć to zlecenie.",
+      "confirm": "Potwierdź",
+      "cancel": "Anuluj"
     }
   }
 }

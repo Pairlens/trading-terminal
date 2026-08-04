@@ -95,7 +95,10 @@ jobs:
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
+          # libayatana-appindicator3-dev is the backend Tauri 2's tray prefers;
+          # the older libappindicator3-dev stays as a fallback.
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev \
+            libayatana-appindicator3-dev \
             librsvg2-dev patchelf libgtk-3-dev build-essential file libssl-dev
 
       - uses: oven-sh/setup-bun@v2
