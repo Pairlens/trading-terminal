@@ -100,7 +100,9 @@ const listeners = new Set<() => void>()
 
 /** Commands that exist in this build (desktop-only ones are hidden on web). */
 export function availableCommands(): Array<KeybindingCommand> {
-  return KEYBINDING_COMMANDS.filter((c) => !c.desktopOnly || isStandalone)
+  return KEYBINDING_COMMANDS.filter(
+    (c) => (!c.desktopOnly || isStandalone) && (!c.webOnly || !isStandalone),
+  )
 }
 
 function resolve(): Resolved {

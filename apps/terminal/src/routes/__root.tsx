@@ -23,6 +23,7 @@ import { isStandalone } from '@/lib/platform'
 import { attachNavHistory } from '@/lib/nav-history'
 import { TerminalLock } from '@/components/security/terminal-lock'
 import { QuitConfirm } from '@/components/quit-confirm'
+import { FullscreenShortcut } from '@/components/fullscreen-toggle'
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -305,6 +306,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               take without asking — the accelerator runner fires Ctrl+Q
               regardless of focus. Inert in the browser. */}
           <QuitConfirm />
+          {/* One registration for the whole app, not one per PageHeader —
+              two live handlers would toggle twice and cancel out. Inert on
+              desktop. */}
+          <FullscreenShortcut />
         </ThemeProvider>
         <TanStackDevtools
           config={{

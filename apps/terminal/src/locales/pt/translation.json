@@ -2071,7 +2071,8 @@
       "resetTheme": "Restaurar tema padrão",
       "switchTheme": "Tema: {{name}}",
       "reload": "Recarregar janela",
-      "settingsSection": "Configurações: {{name}}"
+      "settingsSection": "Configurações: {{name}}",
+      "fullscreen": "Alternar ecrã inteiro"
     },
     "footer": {
       "navigate": "Navegar",
@@ -2433,5 +2434,9 @@
       "confirm": "Confirmar",
       "cancel": "Cancelar"
     }
+  },
+  "fullscreen": {
+    "enter": "Ecrã inteiro",
+    "exit": "Sair do ecrã inteiro"
   }
 }

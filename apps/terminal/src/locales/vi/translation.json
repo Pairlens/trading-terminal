@@ -2071,7 +2071,8 @@
       "resetTheme": "Đặt lại giao diện mặc định",
       "switchTheme": "Giao diện: {{name}}",
       "reload": "Tải lại cửa sổ",
-      "settingsSection": "Cài đặt: {{name}}"
+      "settingsSection": "Cài đặt: {{name}}",
+      "fullscreen": "Bật/tắt toàn màn hình"
     },
     "footer": {
       "navigate": "Điều hướng",
@@ -2433,5 +2434,9 @@
       "confirm": "Xác nhận",
       "cancel": "Huỷ"
     }
+  },
+  "fullscreen": {
+    "enter": "Toàn màn hình",
+    "exit": "Thoát toàn màn hình"
   }
 }

@@ -2071,7 +2071,8 @@
       "resetTheme": "기본 테마로 재설정",
       "switchTheme": "테마: {{name}}",
       "reload": "창 새로고침",
-      "settingsSection": "설정: {{name}}"
+      "settingsSection": "설정: {{name}}",
+      "fullscreen": "전체 화면 전환"
     },
     "footer": {
       "navigate": "이동",
@@ -2433,5 +2434,9 @@
       "confirm": "확인",
       "cancel": "취소"
     }
+  },
+  "fullscreen": {
+    "enter": "전체 화면",
+    "exit": "전체 화면 종료"
   }
 }

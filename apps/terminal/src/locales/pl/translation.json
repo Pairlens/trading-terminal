@@ -2075,7 +2075,8 @@
       "resetTheme": "Przywróć domyślny motyw",
       "switchTheme": "Motyw: {{name}}",
       "reload": "Przeładuj okno",
-      "settingsSection": "Ustawienia: {{name}}"
+      "settingsSection": "Ustawienia: {{name}}",
+      "fullscreen": "Przełącz pełny ekran"
     },
     "footer": {
       "navigate": "Nawiguj",
@@ -2441,5 +2442,9 @@
       "confirm": "Potwierdź",
       "cancel": "Anuluj"
     }
+  },
+  "fullscreen": {
+    "enter": "Pełny ekran",
+    "exit": "Wyjdź z pełnego ekranu"
   }
 }

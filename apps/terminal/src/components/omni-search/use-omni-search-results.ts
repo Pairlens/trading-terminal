@@ -25,6 +25,7 @@ import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useThemePluginContext } from '@/hooks/use-theme-plugin'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
 import { usePairlens } from '@/lib/pairlens-provider'
+import { toggleFullscreen } from '@/lib/fullscreen'
 import { isStandalone, openTerminalWindow } from '@/lib/platform'
 import { useOptimisticSession } from '@/lib/session'
 import { authClient, hasAppServer } from '@/lib/auth-client'
@@ -451,6 +452,19 @@ export function useOmniSearchResults(
         keywords: ['refresh', 'restart'],
         execute: () => window.location.reload(),
       },
+      // Web only: on desktop the native window controls own fullscreen.
+      ...(isStandalone
+        ? []
+        : [
+            {
+              type: 'action',
+              id: 'toggle-fullscreen',
+              label: t('search.actions.fullscreen'),
+              icon: 'Maximize',
+              keywords: ['full screen', 'maximize', 'focus', 'zen'],
+              execute: () => void toggleFullscreen(),
+            } satisfies ActionResult,
+          ]),
       {
         type: 'action',
         id: 'new-workspace',

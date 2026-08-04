@@ -2071,7 +2071,8 @@
       "resetTheme": "Varsayılan temaya sıfırla",
       "switchTheme": "Tema: {{name}}",
       "reload": "Pencereyi yeniden yükle",
-      "settingsSection": "Ayarlar: {{name}}"
+      "settingsSection": "Ayarlar: {{name}}",
+      "fullscreen": "Tam ekranı aç/kapat"
     },
     "footer": {
       "navigate": "Gezin",
@@ -2433,5 +2434,9 @@
       "confirm": "Onayla",
       "cancel": "İptal"
     }
+  },
+  "fullscreen": {
+    "enter": "Tam ekran",
+    "exit": "Tam ekrandan çık"
   }
 }

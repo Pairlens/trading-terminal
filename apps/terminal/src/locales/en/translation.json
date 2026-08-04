@@ -2071,7 +2071,8 @@
       "resetTheme": "Reset to default theme",
       "switchTheme": "Theme: {{name}}",
       "reload": "Reload window",
-      "settingsSection": "Settings: {{name}}"
+      "settingsSection": "Settings: {{name}}",
+      "fullscreen": "Toggle full screen"
     },
     "footer": {
       "navigate": "Navigate",
@@ -2433,5 +2434,9 @@
       "confirm": "Confirm",
       "cancel": "Cancel"
     }
+  },
+  "fullscreen": {
+    "enter": "Full screen",
+    "exit": "Exit full screen"
   }
 }

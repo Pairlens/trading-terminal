@@ -2071,7 +2071,8 @@
       "resetTheme": "重設為預設主題",
       "switchTheme": "主題：{{name}}",
       "reload": "重新載入視窗",
-      "settingsSection": "設定：{{name}}"
+      "settingsSection": "設定：{{name}}",
+      "fullscreen": "切換全螢幕"
     },
     "footer": {
       "navigate": "移動",
@@ -2433,5 +2434,9 @@
       "confirm": "確認",
       "cancel": "取消"
     }
+  },
+  "fullscreen": {
+    "enter": "全螢幕",
+    "exit": "離開全螢幕"
   }
 }

@@ -8,6 +8,7 @@ import { Kbd } from '@pairlens/ui/components/ui/kbd'
 import { Separator } from '@pairlens/ui/components/ui/separator'
 import type { ReactNode } from 'react'
 
+import { FullscreenToggleButton } from '@/components/fullscreen-toggle'
 import { useOmniSearch } from '@/components/omni-search/omni-search-provider'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
 
@@ -43,6 +44,7 @@ export function PageHeader({ children, actions }: PageHeaderProps) {
         <span className="hidden sm:inline">{t('search.placeholder')}</span>
         {searchShortcut ? <Kbd>{searchShortcut}</Kbd> : null}
       </Button>
+      <FullscreenToggleButton />
     </header>
   )
 }
