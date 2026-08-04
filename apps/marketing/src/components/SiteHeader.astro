@@ -5,7 +5,6 @@
 // own bar (components/docs/DocsHeader.astro) instead of this component.
 import { NAV, SITE } from '@/lib/site'
 import { getRepoStars } from '@/lib/github'
-import browserIcon from '@/components/marketing/os/browser.svg?raw'
 
 const stars = await getRepoStars()
 ---
@@ -69,8 +68,11 @@ const stars = await getRepoStars()
         <span class="pl-hdr-dl-word">Download</span>
       </a>
 
+      <!-- No glyph on this one, unlike the Download button beside it: "Launch"
+           is already the motion verb, the filled pill already reads as the
+           primary action, and a third mark in a 40px pill that also carries
+           six nav items and a star count is where it starts to look busy. -->
       <a href={SITE.launchUrl} class="pl-hdr-cta" data-launch-terminal="header">
-        <span class="pl-hdr-cta-glyph" set:html={browserIcon} />
         Launch Terminal
         <span class="pl-hdr-cta-tag">FREE</span>
       </a>
@@ -343,19 +345,6 @@ const stars = await getRepoStars()
     font-size: 11px;
     opacity: 0.62;
   }
-  /* The browser frame says "this opens right here"; the download glyph on the
-     sibling button says the other thing. `set:html` content sits outside the
-     scope attribute, so the svg has to be reached globally. */
-  .pl-hdr-cta-glyph {
-    display: inline-flex;
-    margin-right: -2px;
-    opacity: 0.75;
-  }
-  .pl-hdr-cta-glyph :global(svg) {
-    display: block;
-    width: 15px;
-    height: 15px;
-  }
 
   /* The menu button and its sheet only exist below 940px, where the inline
      nav has gone. */
@@ -471,10 +460,7 @@ const stars = await getRepoStars()
       gap: 10px;
       padding: 7px 8px 7px 14px;
     }
-    .pl-hdr-gh,
-    /* Phone pill: brand, CTA and menu button already fill the width. Of the
-       CTA's two ornaments the price is the one worth keeping. */
-    .pl-hdr-cta-glyph {
+    .pl-hdr-gh {
       display: none;
     }
   }
