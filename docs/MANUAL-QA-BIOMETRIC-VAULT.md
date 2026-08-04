@@ -11,18 +11,28 @@ AAD binding and the error mapping against a fake port. A real Touch ID prompt
 cannot be raised headlessly, so the list below is the only thing that covers
 the parts that matter.
 
-Run it on a Mac with a Touch ID sensor. Steps 10 and 11 need a second machine
-or a release build.
+Run it on a Mac with a Touch ID sensor, **on a provisioned build**. A `tauri
+dev` binary is ad-hoc signed with no entitlements, and the data protection
+keychain — the only keychain that accepts a biometric access control — refuses
+it (`errSecMissingEntitlement`, -34018). On a dev build the availability probe
+answers false and the Touch ID card simply never appears; that is correct
+behaviour, not a QA pass.
 
 ## Setup
 
+Requires `Pairlens_DevID.provisionprofile` in `apps/desktop/src-tauri/` (see
+docs/RELEASING.md, "Provisioning profile") and the Developer ID certificate in
+the login keychain.
+
 ```bash
-bun run dev:desktop
+APPLE_SIGNING_IDENTITY="Developer ID Application: Juan Ignacio Molina Estrada (UMJ33RFLWS)" \
+  bun run tauri build -- --config ./src-tauri/tauri.provisioned.conf.json
 ```
 
-Note the single-instance handoff: if a Pairlens app is already running, this
-exits 0 and focuses that one. Quit any running instance first, or you will QA
-the wrong binary.
+Install and launch the bundled app from
+`apps/desktop/src-tauri/target/release/bundle/macos/`. Quit any running
+Pairlens instance first — the single-instance handoff would focus the wrong
+binary.
 
 ## Cases
 
@@ -38,30 +48,23 @@ the wrong binary.
    A second prompt here means the create path is updating an existing item
    instead of replacing it.
 
-3. **The keychain item exists, and the guard is real rather than merely
-   requested.** Keychain Access → search `finance.pairlens.desktop.biometric` →
-   the item is there, and its Access Control tab shows the biometric
-   constraint. It must NOT be in the `finance.pairlens.desktop` service
-   alongside ordinary credentials.
-
-   Then ask a **different binary** to read it, from Terminal:
+3. **The item is isolated where it should be.** The KEK lives in the **data
+   protection keychain** (`kSecUseDataProtectionKeychain` on every call), which
+   the legacy tooling cannot see. From Terminal:
 
    ```bash
    security find-generic-password -s finance.pairlens.desktop.biometric -w
    ```
 
-   Expected: a Touch ID prompt, or a refusal. **A finding, and a blocker:** the
-   KEK printed to the terminal with no gesture at all.
+   Expected: **"could not be found"** — the `security` CLI only reads
+   file-based keychains, and Keychain Access will not list the item either.
+   **A finding, and a blocker:** the KEK printed to the terminal, which would
+   mean the item landed in the file-based keychain after all and the access
+   control story needs re-verification from scratch.
 
-   _Why this half of the step exists:_ the item lands in the macOS
-   **file-based** keychain (`use_protected_keychain()` needs
-   `features = ["OSX_10_15"]` plus an entitlement — see step 11), where
-   `kSecAttrAccessible*` is not what governs access and the biometric ACL is the
-   OS's behaviour to demonstrate rather than something `SecItemAdd` returning
-   `Ok` proves. Pairlens cannot ask this question of itself — the creating app
-   is the one identity the ACL is most likely to wave through. If the bytes come
-   out unguarded, the protector is decoration: pull the Touch ID card rather
-   than ship the copy in `security.vault.biometricInvalidated`.
+   The biometric ACL itself is exercised by steps 4–7: every read must cost a
+   gesture. `SecItemAdd` returning `Ok` proves the item stored, not that the
+   constraint is enforced — the unlock steps are what prove that.
 
 4. **Unlock after a hard lock.** Settings → Security → Hard lock. The unlock
    dialog offers "Unlock with Touch ID" → touch → the vault opens and the
@@ -99,36 +102,27 @@ the wrong binary.
    _Why:_ the record is the only thing that remembers the keychain account, so
    an item left behind here can never be found or removed again.
 
-10. **Absence is silent.** On a Mac with no Touch ID sensor, and on a Windows
-    or Linux build: no Touch ID card in enrollment, no Touch ID button in the
-    unlock dialog, none on the lock screen. The probe — not `isStandalone` —
-    is what gates every one of them.
+10. **Absence is silent.** On a Mac with no Touch ID sensor, on a Windows or
+    Linux build, **and on any unprovisioned build** (`tauri dev`, or a build
+    without the profile): no Touch ID card in enrollment, no Touch ID button
+    in the unlock dialog, none on the lock screen. The probe — a dry-run of
+    the actual keychain store, not `isStandalone`, not the LAContext hardware
+    check alone — is what gates every one of them.
 
-11. **Release build.** `bun run tauri build` (Developer ID signed), install on
-    a clean profile, repeat 2, 3, 4 and 7.
-    _Why this one is not optional:_ macOS file-based keychain ACLs are bound to
-    the creating app's code signature. An item created by the ad-hoc-signed dev
-    binary and read by the Developer-ID-signed release binary can produce an
-    unexpected "wants to access" prompt or `errSecAuthFailed`, which this code
-    reports as `invalidated`. The dev build cannot surface that difference.
-    If it bites: the data-protection keychain
-    (`PasswordOptions::use_protected_keychain()`) needs
-    `security-framework = { version = "3", features = ["OSX_10_15"] }` **and** a
-    keychain-access-groups / application-identifier entitlement that Developer
-    ID signing does not grant by default (`errSecMissingEntitlement`, -34018).
-    That is a materially bigger change — do not assume it works.
+11. **The shipped artifact.** Repeat 2, 3, 4 and 7 on an installer produced by
+    the Release workflow (which applies the same provisioned overlay when the
+    profile is committed), not just the local build from Setup. Same signing
+    identity, but notarization and the DMG path are only proven by the real
+    pipeline.
 
 ## The one open question
 
-The second half of step 3, and step 7, are not routine regression checks.
-Together they are the only
-evidence that the two properties this protector rests on — an access control the
-OS enforces, and invalidation when the fingerprint set changes — hold on the
-**file-based** keychain the item actually lives in. Nothing in the code proves
-either: `SecItemAdd` returning `Ok` says the item was stored, not that the ACL
-was honoured, and `kSecAttrAccessible*` is documented against the data
-protection keychain. Until both steps pass on a release build, treat Touch ID as
-an unverified convenience and keep the copy that promises invalidation out of
+Step 7 is not a routine regression check. It is the only evidence that
+invalidation-on-fingerprint-change — the property `BiometryCurrentSet` is for,
+and the one the copy in `security.vault.biometricInvalidated` promises — holds
+in practice. `SecItemAdd` returning `Ok` says the item stored, not that the
+constraint is enforced. Until step 7 passes on a provisioned build, treat
+Touch ID as an unverified convenience and keep the invalidation promise out of
 anything a user reads outside the app.
 
 ## Known limits

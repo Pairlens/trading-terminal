@@ -22,23 +22,24 @@
 //! which is why the frontend has an explicit "set it up again" path instead of
 //! a silent retry.
 //!
-//! WHICH KEYCHAIN, and why it is a caveat rather than a footnote: this item
-//! goes into the macOS FILE-BASED keychain. The data protection keychain would
-//! need `PasswordOptions::use_protected_keychain()`, which is not merely
-//! uncalled here — on macOS it is not compiled at all without
-//! `security-framework = { features = ["OSX_10_15"] }`, and turning that on
-//! additionally needs a keychain-access-groups / application-identifier
-//! entitlement that Developer ID signing does not grant by default. On the
-//! file-based keychain `kSecAttrAccessible*` is not the attribute that governs
-//! access, so the `ProtectionMode` below is a request rather than a property we
-//! obtain, and whether the biometry constraint invalidates on a fingerprint
-//! change is the OS's behaviour to demonstrate, not ours to assert. Two
-//! consequences are handled rather than assumed: a rejected access control
-//! comes back as `errSecParam` and is mapped to `unavailable` (an honest "not
-//! here" beats a raw OSStatus), and steps 3 and 7 of
-//! docs/MANUAL-QA-BIOMETRIC-VAULT.md are what actually decide whether the
-//! guarantee the UI describes is real on a shipped build — step 3 by having a
-//! DIFFERENT binary try to read the item.
+//! WHICH KEYCHAIN: the DATA PROTECTION keychain, explicitly —
+//! `use_protected_keychain()` is set on every query this module builds. That
+//! is not a preference but a consequence: `SecItemAdd` refuses to combine a
+//! biometric `SecAccessControl` with the legacy file-based keychain at all
+//! (measured: `errSecMissingEntitlement`, -34018, from an unentitled binary),
+//! so the data protection keychain is the only place this item can exist. Its
+//! price is that the process must carry the `com.apple.application-identifier`
+//! entitlement, which only arrives via code signing with an embedded
+//! provisioning profile — see Entitlements.plist and
+//! tauri.provisioned.conf.json next to this crate. A `tauri dev` binary is
+//! ad-hoc signed and carries no entitlements, so on dev builds every store
+//! fails with -34018. That is why `available()` does not stop at the LAContext
+//! hardware check: it dry-runs the exact store `create` would perform, and a
+//! build that cannot finish an enrollment answers "unavailable" up front
+//! instead of offering a Touch ID card that fails at the last step. Whether
+//! the biometry constraint truly invalidates on a fingerprint change remains
+//! the OS's behaviour to demonstrate — steps 3 and 7 of
+//! docs/MANUAL-QA-BIOMETRIC-VAULT.md decide that on a provisioned build.
 //!
 //! THE TRADEOFF, stated rather than left implicit: the KEK crosses the Tauri
 //! IPC boundary as base64 and lives in a JS string until the wrap/unwrap
@@ -134,23 +135,69 @@ mod imp {
     /// A query naming exactly one item. Deliberately carries no label: a label
     /// pushed here becomes a MATCH constraint, so a user who switched the app's
     /// language would stop finding their own key.
+    ///
+    /// Every path goes through here, so every path targets the data protection
+    /// keychain. Splitting that — adding to one keychain and searching the
+    /// other — is the failure mode `kSecUseDataProtectionKeychain` exists to
+    /// prevent, and it must be set on reads and deletes, not just the add.
     fn query(account: &str) -> PasswordOptions {
-        PasswordOptions::new_generic_password(SERVICE, account)
+        let mut options = PasswordOptions::new_generic_password(SERVICE, account);
+        options.use_protected_keychain();
+        options
     }
 
-    /// True when this Mac can evaluate a biometric policy right now — Touch ID
-    /// hardware present, a finger enrolled, the sensor usable.
+    /// The `SecAccessControl` every store uses — the probe must ask for exactly
+    /// what `create` asks for, or it answers a different question.
+    fn biometric_access_control() -> Result<SecAccessControl, SfError> {
+        SecAccessControl::create_with_protection(
+            // No passcode means nothing to fall back to and nothing to bind
+            // to; `ThisDeviceOnly` keeps the key out of any keychain sync.
+            Some(ProtectionMode::AccessibleWhenPasscodeSetThisDeviceOnly),
+            AccessControlOptions::BIOMETRY_CURRENT_SET.bits(),
+        )
+    }
+
+    /// True when this Mac can COMPLETE a biometric enrollment — hardware
+    /// present AND this build allowed to store an item behind a biometric ACL.
+    ///
+    /// The second half matters as much as the first: the data protection
+    /// keychain refuses processes without the application-identifier
+    /// entitlement (-34018), which an ad-hoc-signed dev binary never has. The
+    /// LAContext check alone would offer a Touch ID card whose final step
+    /// cannot succeed.
     pub fn available() -> bool {
         use objc2_local_authentication::{LAContext, LAPolicy};
         // SAFETY: `LAContext` has no initialization preconditions, and both
         // selectors are plain Objective-C calls on a context this scope owns
         // and drops. No pointer crosses the boundary.
-        unsafe {
+        let hardware = unsafe {
             let context = LAContext::new();
             context
                 .canEvaluatePolicy_error(LAPolicy::DeviceOwnerAuthenticationWithBiometrics)
                 .is_ok()
+        };
+        hardware && can_store_biometric_item()
+    }
+
+    /// Dry-run of the exact store `create` performs, then clean up.
+    ///
+    /// Writes behind a biometric ACL never prompt — only reads do — so this is
+    /// silent. The fixed account cannot collide with a real protector: those
+    /// use freshly generated UUIDs. The stored byte is a constant; nothing
+    /// secret exists before the delete.
+    fn can_store_biometric_item() -> bool {
+        const PROBE_ACCOUNT: &str = "availability-probe";
+        let _ = delete_generic_password_options(query(PROBE_ACCOUNT));
+        let Ok(access) = biometric_access_control() else {
+            return false;
+        };
+        let mut options = query(PROBE_ACCOUNT);
+        options.set_access_control(access);
+        let stored = set_generic_password_options(&[0u8], options).is_ok();
+        if stored {
+            let _ = delete_generic_password_options(query(PROBE_ACCOUNT));
         }
+        stored
     }
 
     /// Generate a KEK, store it behind the biometric ACL, and hand it back ONCE.
@@ -162,17 +209,7 @@ mod imp {
     pub fn create(account: &str, label: &str) -> Result<String, String> {
         let _ = delete_generic_password_options(query(account));
 
-        let access = SecAccessControl::create_with_protection(
-            // Asked for, not obtained: `kSecAttrAccessible*` governs the data
-            // protection keychain, and this item lands in the file-based one
-            // (see the module header). Kept because it is the right request —
-            // no passcode means nothing to fall back to and nothing to bind to
-            // — and because it is what the item needs the day the entitlement
-            // work happens. It is not a property to write copy against.
-            Some(ProtectionMode::AccessibleWhenPasscodeSetThisDeviceOnly),
-            AccessControlOptions::BIOMETRY_CURRENT_SET.bits(),
-        )
-        .map_err(describe)?;
+        let access = biometric_access_control().map_err(describe)?;
 
         let mut options = query(account);
         options.set_access_control(access);

@@ -116,6 +116,22 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      # Touch ID vault protector (src-tauri/src/biometric.rs): its keychain
+      # item can only live in the data protection keychain, which requires the
+      # application-identifier entitlement, which codesign only honours with an
+      # embedded provisioning profile. Apply the provisioned overlay ONLY when
+      # the profile is committed — signing with restricted entitlements and no
+      # profile produces an app macOS kills at launch.
+      - name: Enable provisioned signing (macOS)
+        if: startsWith(matrix.platform, 'macos')
+        run: |
+          if [ -f apps/desktop/src-tauri/Pairlens_DevID.provisionprofile ]; then
+            echo "PROVISIONED_CONFIG=--config ./src-tauri/tauri.provisioned.conf.json" >> "$GITHUB_ENV"
+            echo "Provisioning profile present - signing with entitlements"
+          else
+            echo "No provisioning profile committed - Touch ID protector will be unavailable in this build"
+          fi
+
       - name: Build and upload installers
         uses: tauri-apps/tauri-action@v0
         env:
@@ -152,7 +168,7 @@ jobs:
           # the workspace's own @tauri-apps/cli bin.
           tauriScript: bun run tauri
           releaseId: ${{ needs.create-release.outputs.release_id }}
-          args: ${{ matrix.target != '' && format('--target {0}', matrix.target) || '' }}
+          args: ${{ matrix.target != '' && format('--target {0}', matrix.target) || '' }} ${{ env.PROVISIONED_CONFIG }}
 
   # Rebuild latest.json from the final asset list. Deterministic — immune to
   # the per-job manifest merge races, and the single place that defines the
