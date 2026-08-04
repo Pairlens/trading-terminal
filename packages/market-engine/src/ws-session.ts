@@ -255,18 +255,29 @@ export class ReconnectingWsSession {
   }
 
   /**
-   * Drop the current socket and its timers, scheduling nothing. Retiring the
-   * generation is what lets callers stop waiting on `onClose`: a half-open
-   * socket may never fire it at all, and one that fires it late must not tear
-   * down the replacement or queue a second reconnect.
+   * Retire the current generation: drop the socket reference and its timers,
+   * scheduling nothing and closing nothing. Bumping the id is what lets work
+   * already in flight for this socket — a pending connect, a login round-trip
+   * — notice it has been superseded and stop instead of talking to a
+   * connection nobody is listening to any more.
    */
-  private retireSocket(): void {
-    const ws = this.ws
+  private retireGeneration(): void {
     this.ws = null
     this.connectionId++
     this.stopPingTimer()
     this.stopStableTimer()
     this.stopLivenessTimer()
+  }
+
+  /**
+   * Retire the generation AND close the socket. For callers that are walking
+   * away from a connection still believed to be open: a half-open socket may
+   * never fire `onClose` at all, and one that fires it late must not tear down
+   * the replacement or queue a second reconnect.
+   */
+  private retireSocket(): void {
+    const ws = this.ws
+    this.retireGeneration()
     ws?.close()
   }
 
@@ -379,10 +390,13 @@ export class ReconnectingWsSession {
     // A retired socket's late close must not tear down its replacement or
     // queue a duplicate reconnect — restart() already handled that generation.
     if (connectionId !== this.connectionId) return
-    this.ws = null
-    this.stopPingTimer()
-    this.stopStableTimer()
-    this.stopLivenessTimer()
+    // Retire, don't just drop: a close can land while this generation's login
+    // round-trip is still in flight, and without the id bump that login would
+    // resolve and run the whole resubscribe loop against the socket that just
+    // died. Retiring without closing, because this socket closed itself — that
+    // is why we are here, and the transports are not all reliably idempotent
+    // about a second close.
+    this.retireGeneration()
     if (!this.destroyed && this.entries.size > 0) this.scheduleReconnect()
   }
 

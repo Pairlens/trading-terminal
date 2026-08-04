@@ -667,6 +667,67 @@ describe('ReconnectingWsSession — authenticate gate', () => {
     session.destroy()
   })
 
+  it('discards a socket whose close fired before connect() resolved', async () => {
+    const log: Array<string> = []
+    const created: Array<FakeSocket> = []
+    let openFirstConnect: (() => void) | null = null
+
+    const { session } = makeSession({
+      connect: async (_url, events) => {
+        const socket = new FakeSocket(events)
+        created.push(socket)
+        // Hold the first connect open so the close can land inside it.
+        if (created.length === 1) {
+          await new Promise<void>((resolve) => {
+            openFirstConnect = resolve
+          })
+        }
+        return socket
+      },
+    })
+
+    session.acquire('orders', candleSpec(log, 'orders'), () => {})
+    await waitFor(() => created.length === 1)
+
+    // The transport reports the close before it ever handed the socket back.
+    created[0].events.onClose?.(1006, 'dropped')
+    openFirstConnect?.()
+
+    // Adopting it would leave `ws` pointing at a dead socket with no further
+    // close coming — invisible until the liveness watchdog eventually noticed.
+    await waitFor(() => created.length === 2 && session.isOpen)
+    expect(created[0].closed).toBe(true)
+    expect(session.isOpen).toBe(true)
+
+    session.destroy()
+  })
+
+  it('does not resubscribe on a socket that closed mid-login', async () => {
+    const log: Array<string> = []
+    let releaseAuth: (() => void) | null = null
+    const { session, sockets } = makeSession({
+      authenticate: () =>
+        new Promise<void>((resolve) => {
+          releaseAuth = resolve
+        }),
+    })
+
+    session.acquire('orders', candleSpec(log, 'orders'), () => {})
+    await waitFor(() => sockets.length === 1)
+    log.length = 0
+
+    // The venue drops the socket while its login is still unanswered, then the
+    // login resolves anyway. That generation is dead: its resubscribe would go
+    // to a socket nobody is listening to.
+    sockets[0].drop()
+    releaseAuth?.()
+    await sleep(5)
+
+    expect(log).not.toContain('sub:orders')
+
+    session.destroy()
+  })
+
   // The login round-trip is the one window where `connecting` stays true long
   // enough for a close to land inside it. Everything that wants a reconnect
   // there — the drop itself, or a watchdog restart() — is refused by
