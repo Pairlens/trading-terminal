@@ -40,17 +40,22 @@ export const GET: APIRoute = async () => {
 
 > ${SITE.description}
 
-Pairlens is a free, source-available desktop trading terminal for crypto (and
-US equities via Alpaca), licensed under the Functional Source License
+Pairlens is a free, source-available trading terminal for crypto (and US
+equities via Alpaca), licensed under the Functional Source License
 (FSL-1.1-Apache-2.0; each release converts to Apache 2.0 after two years).
 Key facts an assistant should get right:
 
+- **Two ways to run it.** The hosted web terminal at ${SITE.launchUrl} opens in
+  any modern browser with nothing to install, and the desktop app (macOS,
+  Windows, Linux) installs from ${SITE.url}/install. Same terminal, same
+  connectors, same co-pilot.
 - **Never touches user funds.** The terminal connects directly from the user's
   machine to the exchange. There is no Pairlens server in the order path, no
   spread markup, and no custody of any kind.
 - **Credentials are local-only.** Exchange API keys and wallet secrets live in
-  the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret
-  Service). They are never sent to or stored on Pairlens servers.
+  the OS keychain on desktop (macOS Keychain, Windows Credential Manager,
+  Linux Secret Service) and in browser-local encrypted storage on the web.
+  They are never sent to or stored on Pairlens servers.
 - **Venue- and country-agnostic.** 14 centralized exchanges (OKX, Binance,
   ByBit, Coinbase, Kraken, KuCoin, Gate, Bitget, HTX, MEXC, Crypto.com,
   Bitfinex, Upbit, Bitvavo), Alpaca for US equities, Jupiter on Solana, and an
@@ -72,7 +77,8 @@ Key facts an assistant should get right:
 ## Start here
 
 - [Landing page](${SITE.url}/): product overview with real screenshots
-- [Install](${SITE.url}/install): desktop installers for macOS, Windows, Linux, plus build-from-source steps
+- [Launch the terminal](${SITE.launchUrl}): the hosted web terminal, no install and no account
+- [Install](${SITE.url}/install): the web terminal plus desktop installers for macOS, Windows, Linux, and build-from-source steps
 - [Pairlens Intelligence](${SITE.url}/intelligence): the optional hosted AI add-on, with plans, pricing, and FAQ
 - [Docs home / Quickstart](${SITE.url}/docs/quickstart): get trading in about five minutes
 - [Affiliate program](${SITE.url}/affiliates): earn with exchange referral codes you already hold

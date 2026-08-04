@@ -9,17 +9,18 @@ import AfterDownload from '@/components/marketing/install/AfterDownload.astro'
 import BuildFromSource from '@/components/marketing/install/BuildFromSource.astro'
 import { SITE } from '@/lib/site'
 
-const title = 'Install Pairlens: Desktop app for macOS, Windows & Linux'
+const title = 'Get Pairlens: Run it in your browser or install the desktop app'
 const description =
-  'Download the Pairlens desktop trading terminal for macOS, Windows, or Linux. Free, source-available, and auto-updating. Or clone the repo and build it from source.'
+  'Launch the Pairlens trading terminal in your browser, or download the desktop app for macOS, Windows, or Linux. Free, source-available, and auto-updating. Or clone the repo and build it from source.'
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: SITE.name,
   applicationCategory: 'FinanceApplication',
-  operatingSystem: 'macOS, Windows, Linux',
+  operatingSystem: 'Web browser, macOS, Windows, Linux',
   description,
+  url: SITE.launchUrl,
   downloadUrl: `${SITE.repo}/releases/latest`,
   softwareLicense: `${SITE.repo}/blob/main/LICENSE.md`,
   offers: {
@@ -44,10 +45,10 @@ const jsonLd = {
   </script>
 
   <style is:global>
-    /* Phone visit: nothing on this page installs, so the OS tiles, the
-       post-download walkthrough and the source build would only muddy the one
-       useful action — carrying the link to a desk. The hero's carry-on card
-       is the whole story there. */
+    /* Phone visit: none of the installers run there, so the OS tiles, the
+       post-download walkthrough and the source build would only muddy the two
+       actions that do work — launching the web terminal from the hero's web
+       lane, or sending this page to a desk from the carry-on card. */
     [data-install-page].is-mobile .ins-tiles,
     [data-install-page].is-mobile .ins-after,
     [data-install-page].is-mobile .ins-source {

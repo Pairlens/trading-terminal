@@ -7,11 +7,16 @@ export const SITE = {
   name: 'Pairlens',
   tagline: 'The terminal that never touches your money.',
   description:
-    'A free, source-available, AI-native desktop trading terminal. Trade crypto and stocks on 15+ exchanges, brokers and DEXs straight from your machine. Your keys, any venue, any country. No middleman, no lock-in.',
+    'A free, source-available, AI-native trading terminal. Run it in your browser or install it on your desktop, and trade crypto and stocks on 15+ exchanges, brokers and DEXs. Your keys, any venue, any country. No middleman, no lock-in.',
   url: 'https://pairlens.finance',
   repo: 'https://github.com/Pairlens/trading-terminal',
   chartsRepo: 'https://github.com/Pairlens/fast-financial-charts',
-  launchUrl: 'https://app.pairlens.finance',
+  /**
+   * The hosted terminal. This is the site's primary call to action: every
+   * "Launch terminal" button points here, and the desktop installers on
+   * /install are the second path rather than the only one.
+   */
+  launchUrl: 'https://terminal.pairlens.finance',
   x: 'https://x.com/pairlens',
 } as const
 
@@ -40,7 +45,8 @@ export const FOOTER_COLUMNS = [
   {
     title: 'Product',
     links: [
-      { label: 'Download', href: '/install' },
+      { label: 'Launch terminal', href: SITE.launchUrl },
+      { label: 'Download for desktop', href: '/install' },
       { label: 'Terminal', href: '/#features' },
       { label: 'Co-pilot', href: '/#features' },
       { label: 'Intelligence', href: '/intelligence' },

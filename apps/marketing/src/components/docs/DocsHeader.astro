@@ -96,10 +96,17 @@ const cellRule = 'color-mix(in oklch, var(--border) 70%, transparent)'
           </svg>
           {stars}
         </a>
+        <!-- No browser glyph and no download button beside it, unlike the
+             marketing pill: this cell is locked to 220px so its right rule
+             caps the TOC column, and either ornament overflows that (262px
+             measured, vs 196px for star + CTA — headroom the star count needs
+             as it grows digits). Docs readers reach the desktop build from
+             the footer and from the quickstart. -->
         <a
-          href="/install"
+          href={SITE.launchUrl}
+          data-launch-terminal="docs-header"
           class="docs-cta inline-flex items-center rounded-full bg-foreground px-3.5 py-2 text-[12.5px] font-semibold whitespace-nowrap text-background"
-          >Get Pairlens</a
+          >Launch Terminal</a
         >
         <button
           type="button"

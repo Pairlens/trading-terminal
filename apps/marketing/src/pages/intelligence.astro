@@ -154,7 +154,7 @@ const PRICING: ReadonlyArray<Plan> = [
     ctaBg: 'var(--primary)',
     ctaFg: 'var(--primary-foreground)',
     cta: 'Start with Pro',
-    ctaHref: '/install',
+    ctaHref: SITE.launchUrl,
     popular: true,
     showProviders: false,
     bullets: PLAN_BULLETS,
@@ -171,7 +171,7 @@ const PRICING: ReadonlyArray<Plan> = [
     ctaBg: 'transparent',
     ctaFg: 'var(--foreground)',
     cta: 'Go Max',
-    ctaHref: '/install',
+    ctaHref: SITE.launchUrl,
     popular: false,
     showProviders: false,
     bullets: [
@@ -622,7 +622,7 @@ const jsonLd = [
           style="--reveal-delay: 70ms;"
           class="mt-[18px] max-w-[54ch] text-[16.5px] leading-[1.7] text-muted-foreground"
         >
-          Download the terminal free, then flip on Intelligence from Settings
+          Open the terminal free, then flip on Intelligence from Settings
           whenever you want the hosted brain, or plug in your own AI providers
           keys. Either way, your exchange credentials never leave your machine.
         </p>
@@ -631,16 +631,40 @@ const jsonLd = [
           style="--reveal-delay: 140ms;"
           class="mt-[34px] flex items-center justify-center gap-3 max-[620px]:flex-wrap"
         >
-          <OsDownloadLink
-            class="pl-ring inline-flex h-[52px] items-center gap-[11px] whitespace-nowrap rounded-xl bg-primary px-6 text-[15.5px] font-semibold text-primary-foreground"
-          />
           <a
-            href="/docs/quickstart"
-            class="inline-flex h-[52px] items-center whitespace-nowrap rounded-xl border border-border bg-background/40 px-6 text-[15.5px] font-semibold text-foreground transition-colors hover:bg-muted"
+            href={SITE.launchUrl}
+            data-launch-terminal="intelligence"
+            class="pl-ring inline-flex h-[52px] items-center gap-[11px] whitespace-nowrap rounded-xl bg-primary px-6 text-[15.5px] font-semibold text-primary-foreground"
           >
-            Read the quickstart
+            Launch the terminal
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              class="size-[18px]"
+            >
+              <path d="M5 12h14m-6-6 6 6-6 6"></path>
+            </svg>
           </a>
+          <OsDownloadLink
+            class="inline-flex h-[52px] items-center gap-[11px] whitespace-nowrap rounded-xl border border-border bg-background/40 px-6 text-[15.5px] font-semibold text-foreground transition-colors hover:bg-muted"
+          />
         </div>
+        <p
+          data-reveal
+          style="--reveal-delay: 170ms;"
+          class="mt-4 text-[14px] text-muted-foreground"
+        >
+          New here? <a
+            href="/docs/quickstart"
+            class="text-foreground underline decoration-foreground/30 underline-offset-[3px] hover:decoration-foreground"
+            >Read the quickstart</a
+          >.
+        </p>
         <div
           data-reveal
           style="--reveal-delay: 200ms;"
@@ -672,7 +696,8 @@ const jsonLd = [
 
   <!-- Subscribing happens inside the terminal (Settings → Intelligence opens
        the hosted checkout), so the plan CTAs explain the path instead of
-       pretending the website can sell the plan. No-JS falls back to /install. -->
+       pretending the website can sell the plan. No-JS falls back to the hosted
+       terminal, where Settings → Intelligence lives. -->
   <dialog
     data-plan-dialog-el
     aria-label="How to subscribe"
@@ -700,7 +725,7 @@ const jsonLd = [
           [
             {
               t: 'Open Pairlens',
-              d: 'The terminal is a free download. Already installed? Skip ahead.',
+              d: 'Launch it in your browser or open the desktop app — both are free. Already there? Skip ahead.',
             },
             {
               t: 'Sign in with your email',
@@ -727,10 +752,11 @@ const jsonLd = [
       </ol>
       <div class="mt-8 flex flex-wrap items-center gap-3">
         <a
-          href="/install"
+          href={SITE.launchUrl}
+          data-launch-terminal="intelligence-plan-dialog"
           class="inline-flex h-11 items-center rounded-xl bg-primary px-5 text-[14px] font-semibold text-primary-foreground transition-transform hover:scale-[1.03] active:scale-100"
         >
-          Get Pairlens free
+          Launch Pairlens free
         </a>
         <button
           type="button"
@@ -744,7 +770,7 @@ const jsonLd = [
   </dialog>
 
   <script>
-    // Plan CTAs: intercept the /install fallback and show the how-to dialog.
+    // Plan CTAs: intercept the launch-URL fallback and show the how-to dialog.
     function armPlanDialog() {
       const dialog = document.querySelector<HTMLDialogElement>(
         '[data-plan-dialog-el]',

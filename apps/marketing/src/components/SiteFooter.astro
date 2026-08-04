@@ -30,9 +30,16 @@ import LegalDisclaimer from '@/components/LegalDisclaimer.astro'
                   <li>
                     <a
                       href={link.href}
-                      {...link.href.startsWith('http')
+                      {...(link.href.startsWith('http') &&
+                      // The hosted terminal is our own product, not a
+                      // reference: it opens in place, like every other
+                      // "Launch terminal" button on the site.
+                      link.href !== SITE.launchUrl
                         ? { target: '_blank', rel: 'noopener' }
-                        : {}}
+                        : {})}
+                      {...(link.href === SITE.launchUrl
+                        ? { 'data-launch-terminal': 'footer' }
+                        : {})}
                       class="text-[14px] text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {link.label}

@@ -48,9 +48,33 @@ const stars = await getRepoStars()
         {stars}
       </a>
 
-      <a href="/install" class="pl-hdr-cta">
-        Get Pairlens
-        <span>FREE</span>
+      <a
+        href="/install"
+        class="pl-hdr-dl"
+        aria-label="Download Pairlens for desktop"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 3v12m0 0 4-4m-4 4-4-4"></path>
+          <path d="M5 21h14"></path>
+        </svg>
+        <span class="pl-hdr-dl-word">Download</span>
+      </a>
+
+      <!-- No glyph on this one, unlike the Download button beside it: "Launch"
+           is already the motion verb, the filled pill already reads as the
+           primary action, and a third mark in a 40px pill that also carries
+           six nav items and a star count is where it starts to look busy. -->
+      <a href={SITE.launchUrl} class="pl-hdr-cta" data-launch-terminal="header">
+        Launch Terminal
+        <span class="pl-hdr-cta-tag">FREE</span>
       </a>
 
       <button
@@ -77,6 +101,10 @@ const stars = await getRepoStars()
 
     <nav id="pl-hdr-sheet" class="pl-hdr-sheet" aria-label="Primary, mobile">
       {NAV.map((link) => <a href={link.href}>{link.label}</a>)}
+      <a href="/install" class="pl-hdr-sheet-dl">
+        Download
+        <span>macOS · Windows · Linux</span>
+      </a>
       <a href={SITE.repo} target="_blank" rel="noopener" class="pl-hdr-sheet-gh">
         GitHub
         <span>★ {stars}</span>
@@ -267,6 +295,33 @@ const stars = await getRepoStars()
     height: 13px;
   }
 
+  /* The desktop path, kept beside the launch CTA rather than under it. Reads
+     as a quiet outline button so the pill still has exactly one loud action. */
+  .pl-hdr-dl {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in oklch, var(--ml-fg) 20%, transparent);
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ml-fg);
+    transition:
+      background 0.18s var(--ease-out),
+      border-color 0.18s var(--ease-out);
+  }
+  .pl-hdr-dl:hover,
+  .pl-hdr-dl:focus-visible {
+    color: var(--ml-fg);
+    background: color-mix(in oklch, var(--ml-fg) 7%, transparent);
+    border-color: color-mix(in oklch, var(--ml-fg) 34%, transparent);
+  }
+  .pl-hdr-dl svg {
+    width: 15px;
+    height: 15px;
+  }
+
   .pl-hdr-cta {
     display: inline-flex;
     align-items: center;
@@ -285,7 +340,7 @@ const stars = await getRepoStars()
   .pl-hdr-cta:active {
     transform: none;
   }
-  .pl-hdr-cta span {
+  .pl-hdr-cta-tag {
     font-family: var(--font-mono);
     font-size: 11px;
     opacity: 0.62;
@@ -342,14 +397,24 @@ const stars = await getRepoStars()
   .pl-hdr-sheet a:focus-visible {
     background: color-mix(in oklch, var(--ml-fg) 7%, transparent);
   }
+  /* The pill keeps "Launch Terminal" at every width, so the sheet only has to
+     carry the second path — the desktop download. */
+  .pl-hdr-sheet-dl,
   .pl-hdr-sheet-gh {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
+    gap: 12px;
+  }
+  .pl-hdr-sheet-dl {
     margin-top: 4px;
     border-top: 1px solid var(--ml-border);
+    border-radius: 0;
+  }
+  .pl-hdr-sheet-gh {
     border-radius: 0 0 14px 14px;
   }
+  .pl-hdr-sheet-dl span,
   .pl-hdr-sheet-gh span {
     font-family: var(--font-mono);
     font-size: 12px;
@@ -359,9 +424,23 @@ const stars = await getRepoStars()
   /* The six-item nav is the first thing to go; its trailing divider goes with
      it so the pill keeps a single rule between the brand and the actions. The
      menu button takes its place. */
+  /* Six nav items, a star count and two buttons stop fitting here — the
+     download button drops to its glyph before anything else has to move. */
+  @media (max-width: 1140px) {
+    .pl-hdr-dl {
+      padding: 9px 11px;
+    }
+    .pl-hdr-dl-word {
+      display: none;
+    }
+  }
+
   @media (max-width: 940px) {
     .pl-hdr-nav,
-    .pl-hdr-div--after-nav {
+    .pl-hdr-div--after-nav,
+    /* Below the nav breakpoint the sheet carries the download row, so the
+       pill keeps only the launch CTA and the menu button. */
+    .pl-hdr-dl {
       display: none;
     }
     .pl-hdr-menu {

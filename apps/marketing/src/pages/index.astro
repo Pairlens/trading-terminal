@@ -27,8 +27,10 @@ const jsonLd = [
     '@type': 'SoftwareApplication',
     name: SITE.name,
     applicationCategory: 'FinanceApplication',
-    operatingSystem: 'macOS, Windows, Linux',
+    operatingSystem: 'Web browser, macOS, Windows, Linux',
     description: SITE.description,
+    url: SITE.launchUrl,
+    browserRequirements: 'Requires a modern browser with WebGL2',
     offers: {
       '@type': 'Offer',
       price: '0',
@@ -56,9 +58,9 @@ const jsonLd = [
             (navigator.userAgentData && navigator.userAgentData.platform) ||
             navigator.platform ||
             ''
-          // Phones and tablets can't install the terminal at all — route them
-          // to /install, where the carry-on card lives. Modern iPads report
-          // as Macintosh but expose multi-touch.
+          // Phones and tablets can't run an installer — route their download
+          // buttons to /install, where the web lane and the carry-on card
+          // live. Modern iPads report as Macintosh but expose multi-touch.
           if (
             (navigator.userAgentData && navigator.userAgentData.mobile) ||
             /android|iphone|ipod|ipad/i.test(ua) ||

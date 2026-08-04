@@ -11,6 +11,7 @@ import {
   CommandList,
 } from '@pairlens/ui/components/ui/command'
 import type { ReactNode } from 'react'
+import { SITE } from '@/lib/site'
 
 type Page = { title: string; href: string; group: string }
 type Section = { label: string; items: Array<Page> }
@@ -183,9 +184,7 @@ export function DocsCommand({ pages }: { pages: Array<Page> }) {
             <CommandItem
               value="ask the co-pilot ai assistant"
               onSelect={() =>
-                select(() =>
-                  window.location.assign('https://app.pairlens.finance'),
-                )
+                select(() => window.location.assign(SITE.launchUrl))
               }
               className={itemClass}
             >
