@@ -25,7 +25,7 @@ import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useThemePluginContext } from '@/hooks/use-theme-plugin'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
 import { usePairlens } from '@/lib/pairlens-provider'
-import { openTerminalWindow } from '@/lib/platform'
+import { isStandalone, openTerminalWindow } from '@/lib/platform'
 import { useOptimisticSession } from '@/lib/session'
 import { authClient, hasAppServer } from '@/lib/auth-client'
 import { useCreateWorkspaceDialogStore } from '@/stores/create-workspace-dialog-store'
@@ -514,6 +514,12 @@ export function useOmniSearchResults(
         keywords: ['guardrails', 'limits', 'stop loss'],
       },
       {
+        id: 'security',
+        nameKey: 'settings.nav.security',
+        icon: 'Lock',
+        keywords: ['lock', 'password', 'privacy', 'screen lock'],
+      },
+      {
         id: 'appearance',
         nameKey: 'settings.nav.appearance',
         icon: 'Paintbrush',
@@ -538,6 +544,34 @@ export function useOmniSearchResults(
         keywords: ['locale', 'translation', 'idioma'],
       },
     ]
+    // Only meaningful when there is an account to sync with — a standalone
+    // build has no App Server and hides the section entirely.
+    if (hasAppServer) {
+      settingsSections.push({
+        id: 'cloud-sync',
+        nameKey: 'settings.nav.cloudSync',
+        icon: 'Cloud',
+        keywords: ['sync', 'cloud', 'backup', 'account', 'devices'],
+      })
+    }
+    // Desktop-only section: the deep link would open an empty pane in a
+    // browser build, so it isn't offered there.
+    if (isStandalone) {
+      settingsSections.push({
+        id: 'desktop',
+        nameKey: 'settings.nav.desktop',
+        icon: 'AppWindow',
+        keywords: [
+          'close',
+          'window',
+          'background',
+          'tray',
+          'quit',
+          'dock',
+          'menu bar',
+        ],
+      })
+    }
     for (const section of settingsSections) {
       items.push({
         type: 'action',

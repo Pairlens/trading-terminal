@@ -16,7 +16,9 @@ tauri-build = { version = "2.0", features = [] }
 [dependencies]
 # `unstable` is required for multi-webview: the in-app web pane creates child
 # webviews (`new Webview()` from @tauri-apps/api in web-pane.tsx).
-tauri = { version = "2.0", features = ["unstable"] }
+# `tray-icon` backs background mode on Windows/Linux (tray.rs) — the only way
+# back to a window that was hidden instead of closed. macOS uses the Dock icon.
+tauri = { version = "2.0", features = ["unstable", "tray-icon"] }
 tauri-plugin-websocket = "2.0"
 tauri-plugin-shell = "2.0"
 # Connector REST from the Rust side. The webview's own fetch enforces CORS just

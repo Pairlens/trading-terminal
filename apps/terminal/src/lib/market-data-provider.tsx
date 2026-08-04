@@ -56,6 +56,8 @@ import {
 } from '@/stores/credentials-store'
 import { useWalletsStore } from '@/stores/wallets-store'
 import { useRiskConfigStore } from '@/stores/risk-config-store'
+import { requireUnlockForTrade } from '@/lib/security/lock-store'
+import i18n from '@/lib/i18n'
 
 export type MarketDataStatus = 'disconnected' | 'connecting' | 'connected'
 
@@ -178,6 +180,22 @@ type MarketDataContextValue = {
     endTs?: number,
   ) => Promise<Array<Candle>>
   placeOrder: (params: Record<string, unknown>) => Promise<OrderResult>
+  /**
+   * The same risk guards, without the before-trade identity check.
+   *
+   * For orders that fire long after the person who authorized them walked
+   * away — a workflow's stop-loss behind a `wait` step of up to 24 hours.
+   * Nobody is there to answer a password prompt, and `requireUnlockForTrade`
+   * resolves `false` outright on an already-locked terminal, so routing these
+   * through `placeOrder` silently cancels the protective order and leaves a
+   * live position naked. Same trade the bot runtime already makes: freezing
+   * something mid-position is strictly more dangerous than the shoulder-surfing
+   * the lock defends against. Callers gate the run itself, once, while the user
+   * is still there.
+   */
+  placeUnattendedOrder: (
+    params: Record<string, unknown>,
+  ) => Promise<OrderResult>
   cancelOrder: (
     market: string,
     orderId: string,
@@ -1079,7 +1097,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
     [pluginManager],
   )
 
-  const placeOrder = useCallback(
+  const placeOrderGuarded = useCallback(
     async (params: Record<string, unknown>): Promise<OrderResult> => {
       const analytics = orderAnalyticsProps(params)
       track('trade_submitted', analytics)
@@ -1193,6 +1211,28 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
     [pluginManager],
   )
 
+  /**
+   * The attended order path: an optional identity check in front of the risk
+   * guards above.
+   *
+   * Gating lives here rather than at the two UI call sites (trade panel,
+   * copilot confirm card) because this callback is the single choke point
+   * every attended order already goes through — a future third trade surface
+   * is covered by construction. The bot runtime gets `placeOrderGuarded`
+   * instead (see `setBotOrderSource` below), and so does anything deferred —
+   * see `placeUnattendedOrder`.
+   */
+  const placeOrder = useCallback(
+    async (params: Record<string, unknown>): Promise<OrderResult> => {
+      const allowed = await requireUnlockForTrade()
+      if (!allowed) {
+        throw new Error(i18n.t('security.lock.orderCancelled'))
+      }
+      return placeOrderGuarded(params)
+    },
+    [placeOrderGuarded],
+  )
+
   const cancelOrder = useCallback(
     async (
       market: string,
@@ -1300,6 +1340,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       warmupMarket,
       fetchHistory,
       placeOrder,
+      placeUnattendedOrder: placeOrderGuarded,
       cancelOrder,
       refreshWalletBalances,
       streamVersion,
@@ -1321,6 +1362,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       warmupMarket,
       fetchHistory,
       placeOrder,
+      placeOrderGuarded,
       cancelOrder,
       refreshWalletBalances,
       streamVersion,
@@ -1345,15 +1387,20 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
   // history paging, and read-only access to prices the app already streams.
   // Clearing on unmount is what stops a torn-down provider from placing an
   // order through a stale closure.
+  //
+  // Deliberately the UNGATED callback: a headless runtime cannot answer a
+  // password prompt, and freezing a bot mid-position is strictly more
+  // dangerous than the shoulder-surfing the lock defends against. The
+  // Security settings section says so out loud.
   useEffect(() => {
     setBotOrderSource({
-      placeOrder,
+      placeOrder: placeOrderGuarded,
       fetchHistory,
       getLastPrice: (market, pair) =>
         cachedLastPrice(muxRef.current, market, pair),
     })
     return () => setBotOrderSource(null)
-  }, [placeOrder, fetchHistory])
+  }, [placeOrderGuarded, fetchHistory])
 
   return (
     <MarketDataContext.Provider value={contextValue}>

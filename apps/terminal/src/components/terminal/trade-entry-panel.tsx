@@ -64,6 +64,8 @@ import { upsertOrderEvent } from '@/stores/order-events-store'
 import { useWorkflowStore } from '@/stores/workflow-store'
 import { useWorkflowRunStore } from '@/stores/workflow-run-store'
 import { showLiveWorkflowToast } from '@/components/workflows/workflow-execution-toast'
+import { requireUnlockForTrade } from '@/lib/security/lock-store'
+import i18n from '@/lib/i18n'
 
 // ── Trade toast ───────────────────────────────────────────────────────
 
@@ -367,6 +369,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
 
   const {
     placeOrder,
+    placeUnattendedOrder,
     status: mdStatus,
     availableMarkets,
     refreshWalletBalances,
@@ -652,10 +655,22 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           }
         }
 
+        // One identity check for the whole run, here, while the user is still
+        // in front of the screen. The steps below deliberately do NOT go
+        // through the gated `placeOrder`: a workflow can hold a `wait` of up
+        // to 24 hours before it places the stop-loss it owes, by which time
+        // the idle trigger has locked the terminal and the gate would cancel
+        // that order outright — leaving a live position unprotected.
+        const allowed = await requireUnlockForTrade()
+        if (!allowed) {
+          toast.error(i18n.t('security.lock.orderCancelled'))
+          return
+        }
+
         // Build OrderExecutor from plugin manager
         const orderExecutor: OrderExecutor = {
           placeMarketOrder: async (params) => {
-            const r = await placeOrder({
+            const r = await placeUnattendedOrder({
               market: params.market,
               pair: params.pair,
               side: params.side,
@@ -668,7 +683,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             return r
           },
           placeLimitOrder: async (params) => {
-            const r = await placeOrder({
+            const r = await placeUnattendedOrder({
               market: params.market,
               pair: params.pair,
               side: params.side,
@@ -685,7 +700,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             // native trigger order that rests on the venue and activates at
             // the trigger price (market or limit execution).
             if (marketInfo?.triggerOrders) {
-              const r = await placeOrder({
+              const r = await placeUnattendedOrder({
                 market: params.market,
                 pair: params.pair,
                 side: params.side,
@@ -717,7 +732,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                   'Stop-loss needs exchange-native trigger orders, which this connector does not support — no order was placed',
               }
             }
-            const r = await placeOrder({
+            const r = await placeUnattendedOrder({
               market: params.market,
               pair: params.pair,
               side: params.side,

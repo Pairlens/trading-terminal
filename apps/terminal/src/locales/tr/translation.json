@@ -411,17 +411,20 @@
     "nav": {
       "profile": "Profil",
       "plugins": "Eklentiler",
+      "cloudSync": "Bulut Eşitleme",
       "notifications": "Bildirimler",
       "appearance": "Görünüm",
       "keyboard": "Klavye",
       "performance": "Performans",
+      "desktop": "Masaüstü",
       "connection": "Bağlantı",
       "language": "Dil",
       "region": "Ülke",
       "currency": "Para birimi",
       "risk": "Risk Yönetimi",
       "privacy": "Gizlilik",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "Güvenlik"
     },
     "comingSoon": "Bu bölüm yakında geliyor.",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "Hesabımı koru",
       "confirmAction": "Kalıcı olarak sil",
       "deleteDoneAnalyticsFailed": "Hesabınız silindi, ancak kullanım profilinizi silmek için analiz sağlayıcısına ulaşamadık. privacy@pairlens.finance adresine yazın, kalanını elle tamamlayalım."
+    },
+    "cloudSync": {
+      "masterTitle": "Bulut eşitleme",
+      "masterDescription": "Hesabını tüm cihazlarında aynı hizada tut. Aşağıdaki anahtarlara dokunmadan buradan duraklatabilirsin.",
+      "pausedNotice": "Duraklatıldı. Şu anda hiçbir şey eşitlenmiyor.",
+      "title": "Hesabınla eşitlenenler",
+      "description": "İkinci bir cihazın neyi bulmasını istediğini seç. Kapattığın her şey bu cihazda kalır.",
+      "deviceOnly": "Bu anahtarlar yalnızca bu cihaz için geçerlidir ve kendileri asla eşitlenmez.",
+      "nothingDeleted": "Bir şeyi kapatmak hiçbir şeyi silmez. Bu cihazda kalır ve hesabındaki mevcut kopyaya dokunulmaz; sadece güncellenmeyi bırakır ve eskir.",
+      "resumeNote": "Tekrar açtığında iki taraf birleşir ve en yeni değişiklik kazanır. Kapalıyken sildiğin bir şey, hesabında hâlâ duruyorsa geri gelebilir.",
+      "cloudOnlyWarning": "Bu yalnızca hesabında saklanır; kapatmak hiçbir yere kaydedilmemesi demektir.",
+      "signedOutTitle": "Oturum açılmadı",
+      "signedOut": "Hiçbir şey eşitlenmiyor. Yaptığın her şey bu cihazda kalır.",
+      "status": {
+        "synced": "Her şey güncel.",
+        "syncing": "Eşitleniyor…",
+        "error": "Son eşitleme tamamlanamadı. Bir sonraki değişikliğinde yeniden denenecek.",
+        "idle": "Şu an gönderilecek bir şey yok."
+      },
+      "domains": {
+        "preferences": {
+          "title": "Ayarlar ve tercihler",
+          "description": "Dil, tema, klavye kısayolları, ülke, eklenti kayıt defteri ayarları ve açık bıraktığın parite."
+        },
+        "charts": {
+          "title": "Grafik kurulumu",
+          "description": "Göstergeler, çizimler, grafik türü ve varsayılan çizim stillerin."
+        },
+        "workspaces": {
+          "title": "Çalışma alanları ve düzenler",
+          "description": "Özel çalışma alanları, klasörler, panel düzenleri ve çalışma alanı değişkenleri."
+        },
+        "automation": {
+          "title": "İş akışları ve uyarılar",
+          "description": "Otomasyon iş akışları, uyarı kuralları ve izledikleri pariteler."
+        },
+        "plugins": {
+          "title": "Eklentiler",
+          "description": "Hangi eklentileri açtığın, ayarları ve sabitlediğin sağlayıcılar. Ayarlara, bir eklentinin kendi ayarlarına girdiğin API anahtarları da dahildir; örneğin bir yapay zekâ sağlayıcısının anahtarı. Borsa API anahtarları ve cüzdan sırları buna asla dahil değildir, anahtar zincirinde kalır. Sabitlenen sağlayıcılar yalnızca hesabında tutulur; bu kapalıyken uygulamayı kapatana kadar geçerli olurlar."
+        },
+        "copilot": {
+          "title": "Yapay zekâ sohbet geçmişi",
+          "description": "Parite bazında copilot konuşmaların."
+        },
+        "trades": {
+          "title": "İşlem günlüğü",
+          "description": "Senin ya da copilot'un günlüğe kaydettiği işlemler."
+        }
+      }
     },
     "profile": {
       "image": "Profil görseli",
@@ -543,6 +595,29 @@
       "balancedDescription": "Ticker ve emir defteri 250ms'de, mumlar 500ms'de. Duyarlılık ve verimlilik arasında iyi bir denge.",
       "energySaver": "Enerji Tasarrufu",
       "energySaverDescription": "Ticker ve emir defteri 1s'de, mumlar 2s'de. Pasif izleme veya pil gücündeki dizüstü bilgisayarlar için en iyisi."
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "Son pencereyi kapattığınızda",
+        "description": "Uyarılar, botlar ve iş akışları yalnızca Pairlens çalışırken çalışır. Son pencere kapandığında ne olacağını seçin.",
+        "quit": "Pairlens'ten çık",
+        "quitDescription": "Son pencereyi kapatmak uygulamayı kapatır. Uyarılar, botlar ve iş akışları durur.",
+        "background": "Arka planda çalışmaya devam et",
+        "backgroundDescriptionDock": "Pencere kapanır, Pairlens çalışmaya devam eder. Uyarılar, botlar ve iş akışları çalışmayı sürdürür. Pencereyi geri getirmek için Dock simgesine tıklayın.",
+        "backgroundDescriptionTray": "Pencere kapanır, Pairlens sistem tepsisinde çalışmaya devam eder. Uyarılar, botlar ve iş akışları çalışmayı sürdürür. Pencereyi geri getirmek için tepsi simgesine tıklayın.",
+        "alwaysQuitsNote": "Pairlens'ten çıkmak her iki modda da uyarıları, botları ve iş akışlarını her zaman durdurur.",
+        "trayNeeded": "Sistem tepsisi gerekir. Bazı Linux masaüstlerinde (AppIndicator eklentisi olmayan GNOME gibi) tepsi yoktur ve Pairlens'in gidecek yeri kalmaz.",
+        "trayUnavailable": "Bu masaüstünde sistem tepsisi yok, bu yüzden Pairlens geri dönemez. Bunun yerine son pencereyi kapatmak uygulamadan çıkar."
+      },
+      "quit": {
+        "title": "Pairlens'ten çık",
+        "description": "Uygulamayı ve çalıştırdığı her şeyi durdurur.",
+        "button": "Çık",
+        "confirmTitle": "Pairlens'ten çıkılsın mı?",
+        "confirmDescription_one": "{{count}} bot etkin. Çıkmak onu durdurur.",
+        "confirmDescription_other": "{{count}} bot etkin. Çıkmak onları durdurur.",
+        "confirmAction": "Çık"
+      }
     },
     "language": {
       "title": "Dil",
@@ -686,6 +761,49 @@
         "workspaceMenu": "Çalışma alanı menüsü",
         "chartCancel": "Aracı iptal et / tam ekrandan çık"
       }
+    },
+    "security": {
+      "lockTitle": "Terminal kilidi",
+      "lockDescription": "Bu terminal bu cihazda kullanılmadan önce parola sor.",
+      "setPassword": "Parola belirle",
+      "changePassword": "Parolayı değiştir",
+      "turnOff": "Kilidi kapat",
+      "turnOffDescription": "Kilidi bu cihazdan kaldırmak için mevcut parolanı gir.",
+      "newPassword": "Yeni parola",
+      "confirmPassword": "Parolayı doğrula",
+      "currentPassword": "Mevcut parola",
+      "passwordTooShort": "En az 6 karakter kullan.",
+      "passwordMismatch": "İki parola eşleşmiyor.",
+      "passwordWrong": "Bu parola doğru değil.",
+      "noRecoveryWarning": "Parola kurtarma yok. Unutursan geri dönmenin tek yolu bu cihazdaki verileri siler. Parolanı şimdi parola yöneticine kaydet.",
+      "triggersTitle": "Ne zaman kilitlensin",
+      "triggersDescription": "Parola isteminin çıkacağı anları seç.",
+      "triggerStartup": "Uygulama açılırken",
+      "triggerStartupHint": "Soğuk başlatmada parola sor.",
+      "triggerIdle": "Hareketsizlikten sonra",
+      "triggerIdleHint": "Fare ve klavye olmadan {{minutes}} dakika geçince kilitle.",
+      "triggerPeriodic": "Belirli aralıklarla",
+      "triggerPeriodicHint": "Oturum ne kadar yoğun olursa olsun, sabit bir süre sonra yeniden kilitle.",
+      "triggerWake": "Bilgisayar uyanınca",
+      "triggerWakeHint": "Makine uykudan döndüğünde kilitle.",
+      "triggerTrade": "Emir göndermeden önce",
+      "triggerTradeHint": "Elle ya da copilot üzerinden verdiğin emirleri doğrula; otomatik onaylanan öneriler dahil. Botlara asla sorulmaz.",
+      "afterMinutes": "{{minutes}} dk sonra",
+      "everyHours": "Her {{hours}} sa",
+      "graceNever": "Her seferinde",
+      "graceMinutes": "{{minutes}} dk boyunca",
+      "protectsTitle": "Bu neyi korur",
+      "protectsBody": "Terminalin önüne tam ekran bir parola istemi koyar; böylece masana uğrayan biri pozisyonlarını karıştıramaz, bakiyelerini okuyamaz ya da emir gönderemez. Hiçbir şeyi şifrelemez: borsa API anahtarların ve cüzdan anahtarların olduğu yerde kalır ve kilidi açık bilgisayarına erişen, biraz teknik bilgisi olan biri bu istemi hiç görmeden uygulamanın yerel verilerini okuyabilir.",
+      "protectsBots": "Etkin botlar terminal kilitliyken de işlem yapmaya devam eder. Ekranı kilitlemek stratejilerini duraklatmaz.",
+      "protectsDesktop": "Parola kontrolü sistem anahtar zincirinde tutulur ve bu bilgisayardan asla çıkmaz.",
+      "protectsBrowser": "Bu sürüm parola kontrolünü tarayıcı deposunda tutar. Site verilerini temizlemek kilidi kaldırır. Bunun asıl yeri masaüstü uygulamasıdır.",
+      "lockNowTitle": "Şimdi kilitle",
+      "lockNowDescription": "Ayarları kapat ve terminali hemen kilitle.",
+      "lockNow": "Kilitle",
+      "resetButton": "Sıfırla ve sil",
+      "resetConfirmTitle": "Bu cihaz silinsin mi?",
+      "resetConfirmBody": "Bu, bu bilgisayardaki tüm borsa API anahtarlarını, cüzdan anahtarlarını, çalışma alanlarını, grafik düzenlerini ve sohbetleri siler. Geri alınamaz ve parola kurtarma yoktur. Oturum açtıysan buluta eşitlenen ayarlar tekrar giriş yapınca geri gelir — API ve cüzdan anahtarları asla, çünkü sadece burada tutulur.",
+      "resetConfirmPhrase": "Onaylamak için {{phrase}} yaz."
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "Tüm Emirlerin Kilidini Aç",
     "setRegion": "Bölge Belirle…",
     "newWindow": "Yeni Pencere",
+    "quit": "Pairlens'ten çık",
     "back": "Geri",
     "forward": "İleri",
-    "checkForUpdates": "Güncellemeleri Kontrol Et…"
+    "checkForUpdates": "Güncellemeleri Kontrol Et…",
+    "lockTerminal": "Terminali kilitle"
   },
   "titlebar": {
     "newWindow": "Yeni pencere",
@@ -2280,6 +2400,37 @@
       "finance": "Finans",
       "financial_markets": "Finansal Piyasalar",
       "economy_macro": "Ekonomi Makro"
+    }
+  },
+  "tray": {
+    "show": "Pairlens'i göster",
+    "quit": "Pairlens'ten çık"
+  },
+  "security": {
+    "lock": {
+      "title": "Terminal kilitli",
+      "subtitle": "Devam etmek için parolanı gir.",
+      "passwordLabel": "Parola",
+      "unlock": "Kilidi aç",
+      "unlocking": "Kontrol ediliyor…",
+      "wrongPassword": "Bu parola doğru değil.",
+      "tooManyAttempts": "Çok fazla deneme. {{seconds}} sn sonra tekrar dene.",
+      "forgot": "Parolanı mı unuttun?",
+      "keychainUnavailable": "Sistem anahtar zinciri şu anda kullanılamıyor. Birazdan tekrar dene.",
+      "orderCancelled": "Emir iptal edildi. Terminal kilitli.",
+      "reason": {
+        "startup": "Devam etmek için parolanı gir.",
+        "idle": "Bir süre hareketsiz kalınca kilitlendi.",
+        "periodic": "Planlandığı gibi kilitlendi.",
+        "wake": "Bilgisayar uykudayken kilitlendi.",
+        "manual": "Terminali sen kilitledin."
+      }
+    },
+    "challenge": {
+      "title": "Sen olduğunu doğrula",
+      "description": "Bu emri göndermek için parolanı gir.",
+      "confirm": "Onayla",
+      "cancel": "İptal"
     }
   }
 }

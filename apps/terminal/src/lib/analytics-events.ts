@@ -19,6 +19,7 @@
 //   venue ids, theme ids, workflow step types) — they describe the product,
 //   not the person.
 
+import type { LockReason } from '@/lib/security/lock-config'
 import { captureEvent } from '@/lib/analytics'
 
 /** Coarse trading mode — never mixes with amounts. */
@@ -126,6 +127,21 @@ export interface AnalyticsEvents {
   risk_setting_changed: { setting: string }
   /** Regional routing choice (drives which venues are offered). */
   region_changed: { country: string }
+  /** A cloud-sync switch moved. Domain id ('all' = the master), never data. */
+  cloud_sync_toggled: { domain: string; enabled: boolean }
+
+  // ── Security (local terminal lock) ────────────────────────────────
+  /** The device-local screen lock was turned on or off. */
+  security_lock_enabled: Record<string, never>
+  security_lock_disabled: Record<string, never>
+  /** Which trigger fired. Never attempt counts or unlock timings — those
+   * describe how guessable someone's password is. */
+  security_locked: { reason: LockReason }
+  security_unlocked: { reason: LockReason }
+  /** A before-trade identity check was answered. */
+  security_trade_challenge: { outcome: 'passed' | 'failed' | 'cancelled' }
+  /** The forgotten-password path erased this device. */
+  security_lock_reset: Record<string, never>
 
   // ── Plugins & connections ─────────────────────────────────────────
   /** Store product page opened — top of the install funnel. */

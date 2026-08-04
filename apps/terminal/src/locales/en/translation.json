@@ -411,17 +411,20 @@
     "nav": {
       "profile": "Profile",
       "plugins": "Plugins",
+      "cloudSync": "Cloud Sync",
       "notifications": "Notifications",
       "appearance": "Appearance",
       "keyboard": "Keyboard",
       "performance": "Performance",
+      "desktop": "Desktop",
       "connection": "Connection",
       "language": "Language",
       "region": "Country",
       "currency": "Currency",
       "risk": "Risk Management",
       "privacy": "Privacy",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "Security"
     },
     "comingSoon": "This section is coming soon.",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "Keep my account",
       "confirmAction": "Delete permanently",
       "deleteDoneAnalyticsFailed": "Your account is gone, but we could not reach the analytics provider to erase your usage profile. Email privacy@pairlens.finance and we will finish it by hand."
+    },
+    "cloudSync": {
+      "masterTitle": "Cloud sync",
+      "masterDescription": "Keep your account in step across devices. Pause it here without changing the switches below.",
+      "pausedNotice": "Paused. Nothing is syncing right now.",
+      "title": "What syncs to your account",
+      "description": "Pick what a second device should pick up. Anything switched off stays on this device.",
+      "deviceOnly": "These switches apply to this device only and are never synced themselves.",
+      "nothingDeleted": "Switching something off never deletes anything. It stays on this device, and the copy already in your account is left untouched. It just stops updating and goes stale.",
+      "resumeNote": "Switch it back on and both sides merge, with the newest change winning. Something you deleted while it was off can come back if your account still has it.",
+      "cloudOnlyWarning": "This one is only ever stored in your account, so switching it off means it is not recorded anywhere.",
+      "signedOutTitle": "Not signed in",
+      "signedOut": "Nothing is syncing. Everything you do stays on this device.",
+      "status": {
+        "synced": "Everything is up to date.",
+        "syncing": "Syncing…",
+        "error": "The last sync did not go through. It will try again on your next change.",
+        "idle": "Nothing to send right now."
+      },
+      "domains": {
+        "preferences": {
+          "title": "Settings and preferences",
+          "description": "Language, theme, keyboard shortcuts, country, plugin registry settings, and the pair you had open."
+        },
+        "charts": {
+          "title": "Chart setup",
+          "description": "Indicators, drawings, chart type and your default drawing styles."
+        },
+        "workspaces": {
+          "title": "Workspaces and layouts",
+          "description": "Custom workspaces, folders, panel layouts and workspace variables."
+        },
+        "automation": {
+          "title": "Workflows and alerts",
+          "description": "Automation workflows, alert rules and the pairs they watch."
+        },
+        "plugins": {
+          "title": "Plugins",
+          "description": "Which plugins you have enabled, their settings and your provider pins. Settings include any API key you typed into a plugin's own settings, such as an AI provider key. Exchange API keys and wallet secrets are never included, they stay in your keychain. Provider pins are only kept in your account, so with this off they last until you quit the app."
+        },
+        "copilot": {
+          "title": "AI chat history",
+          "description": "Your copilot conversations, per pair."
+        },
+        "trades": {
+          "title": "Trade journal",
+          "description": "Trades you or the copilot log to the journal."
+        }
+      }
     },
     "profile": {
       "image": "Profile image",
@@ -543,6 +595,29 @@
       "balancedDescription": "Ticker and order book at 250ms, candles at 500ms. Good balance between responsiveness and efficiency.",
       "energySaver": "Energy Saver",
       "energySaverDescription": "Ticker and order book at 1s, candles at 2s. Best for passive monitoring or laptops on battery."
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "When you close the last window",
+        "description": "Alerts, bots and workflows only run while Pairlens is running. Choose what closing the last window should do.",
+        "quit": "Quit Pairlens",
+        "quitDescription": "Closing the last window quits the app. Alerts, bots and workflows stop running.",
+        "background": "Keep running in the background",
+        "backgroundDescriptionDock": "The window closes, Pairlens keeps running. Alerts, bots and workflows keep working. Click the Dock icon to bring the window back.",
+        "backgroundDescriptionTray": "The window closes, Pairlens keeps running in the system tray. Alerts, bots and workflows keep working. Click the tray icon to bring the window back.",
+        "alwaysQuitsNote": "Quitting Pairlens always stops alerts, bots and workflows, in either mode.",
+        "trayNeeded": "Needs a system tray. Some Linux desktops (GNOME without the AppIndicator extension) have none, and Pairlens would have nowhere to go.",
+        "trayUnavailable": "This desktop has no system tray, so Pairlens would have no way back. Closing the last window quits instead."
+      },
+      "quit": {
+        "title": "Quit Pairlens",
+        "description": "Stops the app and everything it is running.",
+        "button": "Quit",
+        "confirmTitle": "Quit Pairlens?",
+        "confirmDescription_one": "{{count}} bot is armed. Quitting stops it.",
+        "confirmDescription_other": "{{count}} bots are armed. Quitting stops them.",
+        "confirmAction": "Quit"
+      }
     },
     "language": {
       "title": "Language",
@@ -686,6 +761,49 @@
         "workspaceMenu": "Workspace menu",
         "chartCancel": "Cancel tool / exit fullscreen"
       }
+    },
+    "security": {
+      "lockTitle": "Terminal lock",
+      "lockDescription": "Ask for a password before this terminal can be used on this device.",
+      "setPassword": "Set password",
+      "changePassword": "Change password",
+      "turnOff": "Turn off lock",
+      "turnOffDescription": "Enter your current password to remove the lock from this device.",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "currentPassword": "Current password",
+      "passwordTooShort": "Use at least 6 characters.",
+      "passwordMismatch": "The two passwords don't match.",
+      "passwordWrong": "That password is not correct.",
+      "noRecoveryWarning": "There is no password recovery. If you forget it, the only way back in erases this device's data. Save it in your password manager now.",
+      "triggersTitle": "When to lock",
+      "triggersDescription": "Choose the moments the password prompt should appear.",
+      "triggerStartup": "When the app starts",
+      "triggerStartupHint": "Ask for the password on a cold start.",
+      "triggerIdle": "After inactivity",
+      "triggerIdleHint": "Lock after {{minutes}} minutes with no mouse or keyboard.",
+      "triggerPeriodic": "On a schedule",
+      "triggerPeriodicHint": "Lock again after a fixed time, however busy the session is.",
+      "triggerWake": "After the computer wakes",
+      "triggerWakeHint": "Lock when the machine comes back from sleep.",
+      "triggerTrade": "Before placing an order",
+      "triggerTradeHint": "Confirm an order you place by hand or through the copilot, including auto-approved proposals. Bots are never asked.",
+      "afterMinutes": "After {{minutes}} min",
+      "everyHours": "Every {{hours}} h",
+      "graceNever": "Every time",
+      "graceMinutes": "For {{minutes}} min",
+      "protectsTitle": "What this protects",
+      "protectsBody": "It puts a full-screen password prompt in front of the terminal, so someone at your desk cannot click around your positions, read your balances, or place an order. It encrypts nothing: your exchange API keys and wallet keys stay exactly where they were, and anyone with your unlocked computer and some technical skill can read this app’s local data without ever seeing the prompt.",
+      "protectsBots": "Armed bots keep trading while the terminal is locked. Locking the screen is not pausing your strategies.",
+      "protectsDesktop": "Your password check is stored in the system keychain and never leaves this computer.",
+      "protectsBrowser": "This build stores the password check in browser storage. Clearing site data removes the lock. The desktop app is the supported home for this.",
+      "lockNowTitle": "Lock now",
+      "lockNowDescription": "Close settings and lock the terminal immediately.",
+      "lockNow": "Lock",
+      "resetButton": "Reset and erase",
+      "resetConfirmTitle": "Erase this device?",
+      "resetConfirmBody": "This erases every exchange API key, wallet key, workspace, chart layout and chat on this computer. There is no undo and no password recovery. If you are signed in, settings that sync to the cloud come back when you sign in again — API keys and wallet keys never do, because they are only ever stored here.",
+      "resetConfirmPhrase": "Type {{phrase}} to confirm."
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "Unlock All Orders",
     "setRegion": "Set Region…",
     "newWindow": "New Window",
+    "quit": "Quit Pairlens",
     "back": "Back",
     "forward": "Forward",
-    "checkForUpdates": "Check for Updates…"
+    "checkForUpdates": "Check for Updates…",
+    "lockTerminal": "Lock Terminal"
   },
   "titlebar": {
     "newWindow": "New window",
@@ -2280,6 +2400,37 @@
       "finance": "Finance",
       "financial_markets": "Financial Markets",
       "economy_macro": "Economy Macro"
+    }
+  },
+  "tray": {
+    "show": "Show Pairlens",
+    "quit": "Quit Pairlens"
+  },
+  "security": {
+    "lock": {
+      "title": "Terminal locked",
+      "subtitle": "Enter your password to continue.",
+      "passwordLabel": "Password",
+      "unlock": "Unlock",
+      "unlocking": "Checking…",
+      "wrongPassword": "That password is not correct.",
+      "tooManyAttempts": "Too many attempts. Try again in {{seconds}}s.",
+      "forgot": "Forgot your password?",
+      "keychainUnavailable": "The system keychain is unavailable right now. Try again in a moment.",
+      "orderCancelled": "Order cancelled. The terminal is locked.",
+      "reason": {
+        "startup": "Enter your password to continue.",
+        "idle": "Locked after a spell of inactivity.",
+        "periodic": "Locked on schedule.",
+        "wake": "Locked while the computer was asleep.",
+        "manual": "You locked the terminal."
+      }
+    },
+    "challenge": {
+      "title": "Confirm it's you",
+      "description": "Enter your password to place this order.",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
     }
   }
 }

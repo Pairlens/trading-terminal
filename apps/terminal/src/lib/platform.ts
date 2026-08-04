@@ -13,6 +13,18 @@ export const isMacDesktop =
   /Mac/i.test(navigator.userAgent)
 
 /**
+ * True in the Tauri desktop app on Linux. Used where the honest answer differs
+ * there and nowhere else — a system tray is not something a Linux desktop is
+ * guaranteed to have (GNOME ships none without the AppIndicator extension), so
+ * UI that depends on one has to say so.
+ */
+export const isLinuxDesktop =
+  isStandalone &&
+  typeof navigator !== 'undefined' &&
+  /Linux/i.test(navigator.userAgent) &&
+  !/Android/i.test(navigator.userAgent)
+
+/**
  * Open an additional terminal window at the given app path (e.g.
  * `/workspace/abc` or `/pair/BTC-USDT`). On desktop this spawns a new
  * Tauri window; in the browser it opens a new tab. Every window runs the

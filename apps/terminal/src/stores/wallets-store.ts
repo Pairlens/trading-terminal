@@ -61,7 +61,8 @@ export const WALLET_SCHEMAS: Record<
   },
 }
 
-const WALLETS_INDEX_KEY = 'pairlens:wallets-index'
+/** Keychain slot listing every stored wallet id. */
+export const WALLETS_INDEX_KEY = 'pairlens:wallets-index'
 
 type WalletsState = {
   wallets: Array<CryptoWallet>

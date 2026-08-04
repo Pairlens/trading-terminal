@@ -411,17 +411,20 @@
     "nav": {
       "profile": "Profil",
       "plugins": "Plugins",
+      "cloudSync": "Cloud-Sync",
       "notifications": "Benachrichtigungen",
       "appearance": "Erscheinungsbild",
       "keyboard": "Tastatur",
       "performance": "Leistung",
+      "desktop": "Desktop",
       "connection": "Verbindung",
       "language": "Sprache",
       "region": "Land",
       "currency": "Währung",
       "risk": "Risikomanagement",
       "privacy": "Datenschutz",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "Sicherheit"
     },
     "comingSoon": "Dieser Bereich kommt bald.",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "Konto behalten",
       "confirmAction": "Endgültig löschen",
       "deleteDoneAnalyticsFailed": "Dein Konto ist weg, aber wir konnten den Analyse-Anbieter nicht erreichen, um dein Nutzungsprofil zu löschen. Schreib an privacy@pairlens.finance, dann erledigen wir das von Hand."
+    },
+    "cloudSync": {
+      "masterTitle": "Cloud-Sync",
+      "masterDescription": "Halte dein Konto auf allen Geräten auf demselben Stand. Hier pausierst du alles, ohne die Schalter unten zu ändern.",
+      "pausedNotice": "Pausiert. Gerade wird nichts synchronisiert.",
+      "title": "Was mit deinem Konto synchronisiert wird",
+      "description": "Entscheide, was ein zweites Gerät übernehmen soll. Alles Abgeschaltete bleibt auf diesem Gerät.",
+      "deviceOnly": "Diese Schalter gelten nur für dieses Gerät und werden selbst nie synchronisiert.",
+      "nothingDeleted": "Etwas abzuschalten löscht nie etwas. Es bleibt auf diesem Gerät, und die Kopie in deinem Konto bleibt unangetastet – sie wird nur nicht mehr aktualisiert und veraltet.",
+      "resumeNote": "Schaltest du es wieder ein, werden beide Seiten zusammengeführt und die neueste Änderung gewinnt. Was du im abgeschalteten Zustand gelöscht hast, kann zurückkommen, wenn dein Konto es noch hat.",
+      "cloudOnlyWarning": "Das hier liegt ausschließlich in deinem Konto – abgeschaltet wird es also nirgendwo festgehalten.",
+      "signedOutTitle": "Nicht angemeldet",
+      "signedOut": "Es wird nichts synchronisiert. Alles, was du tust, bleibt auf diesem Gerät.",
+      "status": {
+        "synced": "Alles ist auf dem neuesten Stand.",
+        "syncing": "Wird synchronisiert…",
+        "error": "Die letzte Synchronisierung ist nicht durchgegangen. Beim nächsten Wechsel wird es erneut versucht.",
+        "idle": "Im Moment gibt es nichts zu senden."
+      },
+      "domains": {
+        "preferences": {
+          "title": "Einstellungen und Präferenzen",
+          "description": "Sprache, Theme, Tastenkürzel, Land, Plugin-Registry-Einstellungen und das zuletzt geöffnete Paar."
+        },
+        "charts": {
+          "title": "Chart-Einrichtung",
+          "description": "Indikatoren, Zeichnungen, Chart-Typ und deine Standard-Zeichenstile."
+        },
+        "workspaces": {
+          "title": "Arbeitsbereiche und Layouts",
+          "description": "Eigene Arbeitsbereiche, Ordner, Panel-Layouts und Arbeitsbereichsvariablen."
+        },
+        "automation": {
+          "title": "Workflows und Alarme",
+          "description": "Automatisierungs-Workflows, Alarmregeln und die Paare, die sie beobachten."
+        },
+        "plugins": {
+          "title": "Plugins",
+          "description": "Welche Plugins du aktiviert hast, ihre Einstellungen und deine Anbieter-Pins. Zu den Einstellungen gehört auch jeder API-Schlüssel, den du in den Einstellungen eines Plugins eingetragen hast, etwa für einen KI-Anbieter. API-Schlüssel von Börsen und Wallet-Secrets sind nie dabei, die bleiben in deinem Schlüsselbund. Anbieter-Pins liegen nur in deinem Konto – abgeschaltet halten sie nur bis zum Beenden der App."
+        },
+        "copilot": {
+          "title": "KI-Chatverlauf",
+          "description": "Deine Copilot-Unterhaltungen, pro Paar."
+        },
+        "trades": {
+          "title": "Trade-Journal",
+          "description": "Trades, die du oder der Copilot ins Journal einträgst."
+        }
+      }
     },
     "profile": {
       "image": "Profilbild",
@@ -543,6 +595,29 @@
       "balancedDescription": "Ticker und Orderbuch alle 250 ms, Kerzen alle 500 ms. Gute Balance zwischen Reaktionsfähigkeit und Effizienz.",
       "energySaver": "Energiesparmodus",
       "energySaverDescription": "Ticker und Orderbuch alle 1 s, Kerzen alle 2 s. Am besten für passive Beobachtung oder Laptops im Akkubetrieb."
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "Wenn du das letzte Fenster schließt",
+        "description": "Alarme, Bots und Workflows laufen nur, solange Pairlens läuft. Lege fest, was beim Schließen des letzten Fensters passieren soll.",
+        "quit": "Pairlens beenden",
+        "quitDescription": "Das Schließen des letzten Fensters beendet die App. Alarme, Bots und Workflows werden gestoppt.",
+        "background": "Im Hintergrund weiterlaufen lassen",
+        "backgroundDescriptionDock": "Das Fenster schließt sich, Pairlens läuft weiter. Alarme, Bots und Workflows arbeiten weiter. Klicke auf das Dock-Symbol, um das Fenster zurückzuholen.",
+        "backgroundDescriptionTray": "Das Fenster schließt sich, Pairlens läuft im Infobereich weiter. Alarme, Bots und Workflows arbeiten weiter. Klicke auf das Symbol im Infobereich, um das Fenster zurückzuholen.",
+        "alwaysQuitsNote": "Das Beenden von Pairlens stoppt Alarme, Bots und Workflows immer, in beiden Modi.",
+        "trayNeeded": "Benötigt einen Infobereich. Manche Linux-Desktops (GNOME ohne die AppIndicator-Erweiterung) haben keinen, dann hätte Pairlens keinen Platz.",
+        "trayUnavailable": "Dieser Desktop hat keinen Infobereich, Pairlens käme nicht zurück. Stattdessen beendet das Schließen des letzten Fensters die App."
+      },
+      "quit": {
+        "title": "Pairlens beenden",
+        "description": "Stoppt die App und alles, was sie ausführt.",
+        "button": "Beenden",
+        "confirmTitle": "Pairlens beenden?",
+        "confirmDescription_one": "{{count}} Bot ist scharfgeschaltet. Beenden stoppt ihn.",
+        "confirmDescription_other": "{{count}} Bots sind scharfgeschaltet. Beenden stoppt sie.",
+        "confirmAction": "Beenden"
+      }
     },
     "language": {
       "title": "Sprache",
@@ -686,6 +761,49 @@
         "workspaceMenu": "Arbeitsbereichs-Menü",
         "chartCancel": "Werkzeug abbrechen / Vollbild verlassen"
       }
+    },
+    "security": {
+      "lockTitle": "Terminal-Sperre",
+      "lockDescription": "Ein Passwort verlangen, bevor dieses Terminal auf diesem Gerät benutzt werden kann.",
+      "setPassword": "Passwort festlegen",
+      "changePassword": "Passwort ändern",
+      "turnOff": "Sperre ausschalten",
+      "turnOffDescription": "Gib dein aktuelles Passwort ein, um die Sperre von diesem Gerät zu entfernen.",
+      "newPassword": "Neues Passwort",
+      "confirmPassword": "Passwort bestätigen",
+      "currentPassword": "Aktuelles Passwort",
+      "passwordTooShort": "Mindestens 6 Zeichen verwenden.",
+      "passwordMismatch": "Die beiden Passwörter stimmen nicht überein.",
+      "passwordWrong": "Dieses Passwort ist nicht korrekt.",
+      "noRecoveryWarning": "Es gibt keine Passwort-Wiederherstellung. Wenn du es vergisst, führt der einzige Weg zurück über das Löschen aller Daten dieses Geräts. Speichere es jetzt in deinem Passwort-Manager.",
+      "triggersTitle": "Wann gesperrt wird",
+      "triggersDescription": "Wähle die Momente, in denen die Passwortabfrage erscheinen soll.",
+      "triggerStartup": "Beim Start der App",
+      "triggerStartupHint": "Nach einem Kaltstart das Passwort verlangen.",
+      "triggerIdle": "Nach Inaktivität",
+      "triggerIdleHint": "Nach {{minutes}} Minuten ohne Maus oder Tastatur sperren.",
+      "triggerPeriodic": "Nach Zeitplan",
+      "triggerPeriodicHint": "Nach einer festen Zeit erneut sperren, egal wie aktiv die Sitzung ist.",
+      "triggerWake": "Nach dem Aufwachen",
+      "triggerWakeHint": "Sperren, wenn der Rechner aus dem Ruhezustand kommt.",
+      "triggerTrade": "Vor einer Order",
+      "triggerTradeHint": "Orders bestätigen, die du selbst oder über den Copilot aufgibst, auch automatisch freigegebene Vorschläge. Bots werden nie gefragt.",
+      "afterMinutes": "Nach {{minutes}} Min.",
+      "everyHours": "Alle {{hours}} Std.",
+      "graceNever": "Jedes Mal",
+      "graceMinutes": "Für {{minutes}} Min.",
+      "protectsTitle": "Was das schützt",
+      "protectsBody": "Es legt eine bildschirmfüllende Passwortabfrage vor das Terminal, damit niemand an deinem Schreibtisch durch deine Positionen klicken, deine Guthaben lesen oder eine Order aufgeben kann. Verschlüsselt wird dabei nichts: Deine API-Schlüssel und Wallet-Schlüssel bleiben genau dort, wo sie waren, und wer deinen entsperrten Rechner und etwas technisches Wissen hat, liest die lokalen Daten der App, ohne diese Abfrage je zu sehen.",
+      "protectsBots": "Scharfe Bots handeln weiter, während das Terminal gesperrt ist. Den Bildschirm zu sperren pausiert deine Strategien nicht.",
+      "protectsDesktop": "Die Passwortprüfung liegt im Schlüsselbund des Systems und verlässt diesen Rechner nie.",
+      "protectsBrowser": "Dieser Build legt die Passwortprüfung im Browser-Speicher ab. Werden die Website-Daten gelöscht, ist die Sperre weg. Die Desktop-App ist der vorgesehene Ort dafür.",
+      "lockNowTitle": "Jetzt sperren",
+      "lockNowDescription": "Einstellungen schließen und das Terminal sofort sperren.",
+      "lockNow": "Sperren",
+      "resetButton": "Zurücksetzen und löschen",
+      "resetConfirmTitle": "Dieses Gerät löschen?",
+      "resetConfirmBody": "Das löscht jeden API-Schlüssel, jeden Wallet-Schlüssel, jeden Workspace, jedes Chart-Layout und jeden Chat auf diesem Rechner. Es gibt kein Zurück und keine Passwort-Wiederherstellung. Wenn du angemeldet bist, kommen synchronisierte Einstellungen bei der nächsten Anmeldung zurück — API- und Wallet-Schlüssel nie, denn die liegen nur hier.",
+      "resetConfirmPhrase": "Tippe {{phrase}} zur Bestätigung."
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "Alle Orders entsperren",
     "setRegion": "Region festlegen…",
     "newWindow": "Neues Fenster",
+    "quit": "Pairlens beenden",
     "back": "Zurück",
     "forward": "Vorwärts",
-    "checkForUpdates": "Nach Updates suchen…"
+    "checkForUpdates": "Nach Updates suchen…",
+    "lockTerminal": "Terminal sperren"
   },
   "titlebar": {
     "newWindow": "Neues Fenster",
@@ -2280,6 +2400,37 @@
       "finance": "Finanzen",
       "financial_markets": "Finanzmärkte",
       "economy_macro": "Makroökonomie"
+    }
+  },
+  "tray": {
+    "show": "Pairlens anzeigen",
+    "quit": "Pairlens beenden"
+  },
+  "security": {
+    "lock": {
+      "title": "Terminal gesperrt",
+      "subtitle": "Gib dein Passwort ein, um fortzufahren.",
+      "passwordLabel": "Passwort",
+      "unlock": "Entsperren",
+      "unlocking": "Wird geprüft…",
+      "wrongPassword": "Dieses Passwort ist nicht korrekt.",
+      "tooManyAttempts": "Zu viele Versuche. Versuch es in {{seconds}} s erneut.",
+      "forgot": "Passwort vergessen?",
+      "keychainUnavailable": "Der Schlüsselbund des Systems ist gerade nicht erreichbar. Versuch es gleich noch einmal.",
+      "orderCancelled": "Order abgebrochen. Das Terminal ist gesperrt.",
+      "reason": {
+        "startup": "Gib dein Passwort ein, um fortzufahren.",
+        "idle": "Nach einer Weile ohne Aktivität gesperrt.",
+        "periodic": "Planmäßig gesperrt.",
+        "wake": "Gesperrt, während der Rechner schlief.",
+        "manual": "Du hast das Terminal gesperrt."
+      }
+    },
+    "challenge": {
+      "title": "Bestätige, dass du es bist",
+      "description": "Gib dein Passwort ein, um diese Order aufzugeben.",
+      "confirm": "Bestätigen",
+      "cancel": "Abbrechen"
     }
   }
 }

@@ -176,7 +176,8 @@ export function isBrokerMarket(market: string): boolean {
   return CREDENTIAL_SCHEMAS[market]?.kind === 'broker'
 }
 
-const CREDENTIALS_INDEX_KEY = 'pairlens:credentials-index'
+/** Keychain slot listing every stored credential id. */
+export const CREDENTIALS_INDEX_KEY = 'pairlens:credentials-index'
 
 const MS_PER_DAY = 86_400_000
 

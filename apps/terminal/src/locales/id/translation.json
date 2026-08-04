@@ -411,17 +411,20 @@
     "nav": {
       "profile": "Profil",
       "plugins": "Plugin",
+      "cloudSync": "Sinkronisasi",
       "notifications": "Notifikasi",
       "appearance": "Tampilan",
       "keyboard": "Papan ketik",
       "performance": "Performa",
+      "desktop": "Desktop",
       "connection": "Koneksi",
       "language": "Bahasa",
       "region": "Negara",
       "currency": "Mata Uang",
       "risk": "Manajemen Risiko",
       "privacy": "Privasi",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "Keamanan"
     },
     "comingSoon": "Bagian ini akan segera hadir.",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "Pertahankan akun saya",
       "confirmAction": "Hapus permanen",
       "deleteDoneAnalyticsFailed": "Akun Anda sudah dihapus, tetapi kami tidak dapat menghubungi penyedia analitik untuk menghapus profil penggunaan Anda. Kirim email ke privacy@pairlens.finance dan kami selesaikan secara manual."
+    },
+    "cloudSync": {
+      "masterTitle": "Sinkronisasi cloud",
+      "masterDescription": "Jaga akunmu tetap selaras di semua perangkat. Jeda dari sini tanpa mengubah sakelar di bawah.",
+      "pausedNotice": "Dijeda. Saat ini tidak ada yang disinkronkan.",
+      "title": "Yang disinkronkan ke akunmu",
+      "description": "Pilih apa yang harus ditemukan perangkat kedua. Apa pun yang dimatikan tetap di perangkat ini.",
+      "deviceOnly": "Sakelar ini hanya berlaku untuk perangkat ini dan tidak pernah ikut disinkronkan.",
+      "nothingDeleted": "Mematikan sesuatu tidak pernah menghapus apa pun. Datanya tetap di perangkat ini, dan salinan yang sudah ada di akunmu dibiarkan utuh — hanya berhenti diperbarui dan menjadi usang.",
+      "resumeNote": "Nyalakan lagi dan kedua sisi digabung, perubahan terbaru yang menang. Sesuatu yang kamu hapus saat mati bisa muncul lagi kalau akunmu masih menyimpannya.",
+      "cloudOnlyWarning": "Yang ini hanya disimpan di akunmu, jadi mematikannya berarti tidak tercatat di mana pun.",
+      "signedOutTitle": "Belum masuk",
+      "signedOut": "Tidak ada yang disinkronkan. Semua yang kamu lakukan tetap di perangkat ini.",
+      "status": {
+        "synced": "Semuanya sudah terbaru.",
+        "syncing": "Menyinkronkan…",
+        "error": "Sinkronisasi terakhir gagal. Akan dicoba lagi pada perubahan berikutnya.",
+        "idle": "Belum ada yang perlu dikirim."
+      },
+      "domains": {
+        "preferences": {
+          "title": "Pengaturan dan preferensi",
+          "description": "Bahasa, tema, pintasan keyboard, negara, pengaturan registry plugin, dan pasangan yang terakhir kamu buka."
+        },
+        "charts": {
+          "title": "Penyiapan grafik",
+          "description": "Indikator, gambar, jenis grafik, dan gaya gambar bawaanmu."
+        },
+        "workspaces": {
+          "title": "Ruang kerja dan tata letak",
+          "description": "Ruang kerja kustom, folder, tata letak panel, dan variabel ruang kerja."
+        },
+        "automation": {
+          "title": "Alur kerja dan peringatan",
+          "description": "Alur kerja otomatisasi, aturan peringatan, dan pasangan yang dipantau."
+        },
+        "plugins": {
+          "title": "Plugin",
+          "description": "Plugin mana yang kamu aktifkan, pengaturannya, dan penyedia yang kamu sematkan. Pengaturan termasuk kunci API apa pun yang kamu isikan di setelan sebuah plugin, misalnya kunci penyedia AI. Kunci API bursa dan rahasia dompet tidak pernah ikut, semuanya tetap di keychain-mu. Penyedia yang disematkan hanya disimpan di akunmu, jadi saat ini dimatikan mereka bertahan sampai aplikasi ditutup."
+        },
+        "copilot": {
+          "title": "Riwayat obrolan AI",
+          "description": "Percakapanmu dengan copilot, per pasangan."
+        },
+        "trades": {
+          "title": "Jurnal transaksi",
+          "description": "Transaksi yang kamu atau copilot catat ke jurnal."
+        }
+      }
     },
     "profile": {
       "image": "Gambar profil",
@@ -543,6 +595,29 @@
       "balancedDescription": "Ticker dan order book pada 250ms, candle pada 500ms. Keseimbangan baik antara responsivitas dan efisiensi.",
       "energySaver": "Hemat Energi",
       "energySaverDescription": "Ticker dan order book pada 1d, candle pada 2d. Terbaik untuk pemantauan pasif atau laptop dengan baterai."
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "Saat Anda menutup jendela terakhir",
+        "description": "Peringatan, bot, dan alur kerja hanya berjalan selama Pairlens berjalan. Pilih apa yang terjadi saat jendela terakhir ditutup.",
+        "quit": "Keluar dari Pairlens",
+        "quitDescription": "Menutup jendela terakhir akan menutup aplikasi. Peringatan, bot, dan alur kerja berhenti berjalan.",
+        "background": "Tetap berjalan di latar belakang",
+        "backgroundDescriptionDock": "Jendela ditutup, Pairlens tetap berjalan. Peringatan, bot, dan alur kerja tetap bekerja. Klik ikon Dock untuk menampilkan jendela kembali.",
+        "backgroundDescriptionTray": "Jendela ditutup, Pairlens tetap berjalan di baki sistem. Peringatan, bot, dan alur kerja tetap bekerja. Klik ikon baki sistem untuk menampilkan jendela kembali.",
+        "alwaysQuitsNote": "Keluar dari Pairlens selalu menghentikan peringatan, bot, dan alur kerja, di kedua mode.",
+        "trayNeeded": "Membutuhkan baki sistem. Sebagian desktop Linux (GNOME tanpa ekstensi AppIndicator) tidak memilikinya, dan Pairlens tidak akan punya tempat untuk kembali.",
+        "trayUnavailable": "Desktop ini tidak memiliki baki sistem, jadi Pairlens tidak bisa kembali. Sebagai gantinya, menutup jendela terakhir akan keluar dari aplikasi."
+      },
+      "quit": {
+        "title": "Keluar dari Pairlens",
+        "description": "Menghentikan aplikasi dan semua yang sedang dijalankannya.",
+        "button": "Keluar",
+        "confirmTitle": "Keluar dari Pairlens?",
+        "confirmDescription_one": "{{count}} bot aktif. Keluar akan menghentikannya.",
+        "confirmDescription_other": "{{count}} bot aktif. Keluar akan menghentikannya.",
+        "confirmAction": "Keluar"
+      }
     },
     "language": {
       "title": "Bahasa",
@@ -686,6 +761,49 @@
         "workspaceMenu": "Menu ruang kerja",
         "chartCancel": "Batalkan alat / keluar dari layar penuh"
       }
+    },
+    "security": {
+      "lockTitle": "Kunci terminal",
+      "lockDescription": "Minta kata sandi sebelum terminal ini bisa dipakai di perangkat ini.",
+      "setPassword": "Atur kata sandi",
+      "changePassword": "Ubah kata sandi",
+      "turnOff": "Matikan kunci",
+      "turnOffDescription": "Masukkan kata sandi saat ini untuk melepas kunci dari perangkat ini.",
+      "newPassword": "Kata sandi baru",
+      "confirmPassword": "Konfirmasi kata sandi",
+      "currentPassword": "Kata sandi saat ini",
+      "passwordTooShort": "Gunakan minimal 6 karakter.",
+      "passwordMismatch": "Kedua kata sandi tidak sama.",
+      "passwordWrong": "Kata sandi itu salah.",
+      "noRecoveryWarning": "Tidak ada pemulihan kata sandi. Kalau lupa, satu-satunya jalan masuk kembali menghapus data perangkat ini. Simpan sekarang di pengelola kata sandimu.",
+      "triggersTitle": "Kapan mengunci",
+      "triggersDescription": "Pilih saat-saat permintaan kata sandi muncul.",
+      "triggerStartup": "Saat aplikasi dimulai",
+      "triggerStartupHint": "Minta kata sandi pada mulai dingin.",
+      "triggerIdle": "Setelah tidak aktif",
+      "triggerIdleHint": "Kunci setelah {{minutes}} menit tanpa mouse atau keyboard.",
+      "triggerPeriodic": "Secara berkala",
+      "triggerPeriodicHint": "Kunci lagi setelah waktu tetap, seaktif apa pun sesinya.",
+      "triggerWake": "Setelah komputer bangun",
+      "triggerWakeHint": "Kunci saat mesin kembali dari mode tidur.",
+      "triggerTrade": "Sebelum mengirim order",
+      "triggerTradeHint": "Konfirmasi order yang kamu kirim manual atau lewat copilot, termasuk usulan yang disetujui otomatis. Bot tidak pernah ditanya.",
+      "afterMinutes": "Setelah {{minutes}} mnt",
+      "everyHours": "Tiap {{hours}} jam",
+      "graceNever": "Setiap kali",
+      "graceMinutes": "Selama {{minutes}} mnt",
+      "protectsTitle": "Apa yang dilindungi",
+      "protectsBody": "Ini menaruh permintaan kata sandi layar penuh di depan terminal, supaya orang yang lewat di mejamu tidak bisa mengklik-klik posisimu, membaca saldomu, atau mengirim order. Tidak ada yang dienkripsi: kunci API bursa dan kunci dompetmu tetap di tempatnya, dan siapa pun dengan komputermu yang tidak terkunci serta sedikit kemampuan teknis bisa membaca data lokal aplikasi tanpa pernah melihat layar ini.",
+      "protectsBots": "Bot yang aktif tetap berdagang selagi terminal terkunci. Mengunci layar bukan menjeda strategimu.",
+      "protectsDesktop": "Pemeriksaan kata sandi disimpan di keychain sistem dan tidak pernah meninggalkan komputer ini.",
+      "protectsBrowser": "Build ini menyimpan pemeriksaan di penyimpanan browser. Menghapus data situs menghilangkan kuncinya. Aplikasi desktop adalah tempat yang tepat untuk ini.",
+      "lockNowTitle": "Kunci sekarang",
+      "lockNowDescription": "Tutup pengaturan dan kunci terminal seketika.",
+      "lockNow": "Kunci",
+      "resetButton": "Setel ulang dan hapus",
+      "resetConfirmTitle": "Hapus perangkat ini?",
+      "resetConfirmBody": "Ini menghapus setiap kunci API bursa, kunci dompet, ruang kerja, tata letak grafik, dan obrolan di komputer ini. Tidak bisa dibatalkan dan tidak ada pemulihan kata sandi. Kalau kamu masuk akun, pengaturan yang tersinkron kembali saat kamu masuk lagi — kunci API dan dompet tidak pernah, karena hanya tersimpan di sini.",
+      "resetConfirmPhrase": "Ketik {{phrase}} untuk konfirmasi."
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "Buka Kunci Semua Order",
     "setRegion": "Atur Wilayah…",
     "newWindow": "Jendela Baru",
+    "quit": "Keluar dari Pairlens",
     "back": "Kembali",
     "forward": "Maju",
-    "checkForUpdates": "Periksa Pembaruan…"
+    "checkForUpdates": "Periksa Pembaruan…",
+    "lockTerminal": "Kunci terminal"
   },
   "titlebar": {
     "newWindow": "Jendela baru",
@@ -2280,6 +2400,37 @@
       "finance": "Keuangan",
       "financial_markets": "Pasar Keuangan",
       "economy_macro": "Ekonomi Makro"
+    }
+  },
+  "tray": {
+    "show": "Tampilkan Pairlens",
+    "quit": "Keluar dari Pairlens"
+  },
+  "security": {
+    "lock": {
+      "title": "Terminal terkunci",
+      "subtitle": "Masukkan kata sandimu untuk lanjut.",
+      "passwordLabel": "Kata sandi",
+      "unlock": "Buka kunci",
+      "unlocking": "Memeriksa…",
+      "wrongPassword": "Kata sandi itu salah.",
+      "tooManyAttempts": "Terlalu banyak percobaan. Coba lagi dalam {{seconds}} dtk.",
+      "forgot": "Lupa kata sandi?",
+      "keychainUnavailable": "Keychain sistem sedang tidak tersedia. Coba lagi sebentar.",
+      "orderCancelled": "Order dibatalkan. Terminal sedang terkunci.",
+      "reason": {
+        "startup": "Masukkan kata sandimu untuk lanjut.",
+        "idle": "Terkunci setelah beberapa saat tanpa aktivitas.",
+        "periodic": "Terkunci sesuai jadwal.",
+        "wake": "Terkunci saat komputer tidur.",
+        "manual": "Kamu mengunci terminal."
+      }
+    },
+    "challenge": {
+      "title": "Konfirmasi ini kamu",
+      "description": "Masukkan kata sandi untuk mengirim order ini.",
+      "confirm": "Konfirmasi",
+      "cancel": "Batal"
     }
   }
 }

@@ -4,6 +4,7 @@ import type { MenuCommand, MenuNode } from '@/lib/settings/menu-model'
 import { isMacDesktop, isStandalone } from '@/lib/platform'
 import { createMenuModel } from '@/lib/settings/menu-model'
 import { eventMatchesCommand } from '@/lib/keybindings/store'
+import { isTerminalLocked } from '@/lib/security/lock-store'
 
 /**
  * In-app keyboard accelerators for Windows/Linux desktop builds.
@@ -45,6 +46,10 @@ export function initMenuShortcuts(): void {
   collectCommands(model.extraMenus, commands)
 
   document.addEventListener('keydown', (e) => {
+    // This runner has no editable-target check by design (a menu accelerator
+    // fires regardless of focus), which is exactly why it needs the lock
+    // check the most.
+    if (isTerminalLocked()) return
     for (const command of commands) {
       if (!eventMatchesCommand(e, command.keybindingId)) continue
       if (command.isEnabled && !command.isEnabled()) return

@@ -62,6 +62,7 @@ import { fetchHistoryDepth } from '@/lib/indicators/fetch-depth'
 import { getCountrySetting } from '@/lib/region-settings'
 import {
   isKeepAwakeEnabled,
+  refreshSleepBlocked,
   setSleepBlocked,
   subscribeKeepAwake,
 } from '@/lib/keep-awake'
@@ -323,6 +324,16 @@ export class BotRuntime {
     // while a bot trades should release the machine, not wait for the bot to
     // stop.
     this.keepAwakeUnsub = subscribeKeepAwake(() => {
+      void this.syncSleepBlock()
+    })
+    // Ask the OS what it is actually holding before trusting our own field.
+    // A webview reload — or a whole new window after the process outlived its
+    // last one — starts this class at `sleepHeld: false` while the Rust side
+    // may still be holding an assertion from the previous life. Without this
+    // the "nothing changed" short-circuit below would never issue the release
+    // and the machine would stay awake for bots that no longer exist.
+    void refreshSleepBlocked().then((held) => {
+      this.sleepHeld = held
       void this.syncSleepBlock()
     })
     this.announceRearms()

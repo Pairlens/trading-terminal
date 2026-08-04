@@ -14,6 +14,7 @@ import {
 
 import { useMarketData } from '@/lib/market-data-provider'
 import { usePersistedState } from '@/hooks/use-persisted-state'
+import { useWindowHidden } from '@/hooks/use-window-hidden'
 
 const IDLE_TIMEOUT_MS = 60 * 60 * 1000 // 1 hour
 const ACTIVITY_THROTTLE_MS = 30_000 // reset timer at most every 30s
@@ -38,6 +39,12 @@ export function IdleGuard() {
   const { t } = useTranslation()
   const { pauseStreams, resumeStreams } = useMarketData()
   const [enabled] = useIdleGuardEnabled()
+  // A window hidden in the background has, by construction, no mousemove and
+  // no keydown ever again — so the inactivity timer would fire an hour after
+  // every hide and starve the bots and alerts that background mode exists to
+  // keep running. "No user activity" is only evidence of inactivity while
+  // there is a user who could have been active.
+  const windowHidden = useWindowHidden()
   const [isIdle, setIsIdle] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const idleRef = useRef(false)
@@ -45,13 +52,13 @@ export function IdleGuard() {
 
   const startTimer = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current)
-    if (!enabled) return
+    if (!enabled || windowHidden) return
     timerRef.current = setTimeout(() => {
       idleRef.current = true
       setIsIdle(true)
       pauseStreams()
     }, IDLE_TIMEOUT_MS)
-  }, [pauseStreams, enabled])
+  }, [pauseStreams, enabled, windowHidden])
 
   const handleReconnect = useCallback(() => {
     idleRef.current = false
@@ -62,8 +69,10 @@ export function IdleGuard() {
   }, [resumeStreams, startTimer])
 
   useEffect(() => {
-    if (!enabled) {
-      // If disabled while idle, resume immediately
+    if (!enabled || windowHidden) {
+      // If disabled (or hidden) while idle, resume immediately: a background
+      // window with paused streams is the exact failure this guard must not
+      // cause.
       if (idleRef.current) {
         handleReconnect()
       }
@@ -90,7 +99,7 @@ export function IdleGuard() {
       }
       if (timerRef.current) clearTimeout(timerRef.current)
     }
-  }, [startTimer, enabled, handleReconnect])
+  }, [startTimer, enabled, windowHidden, handleReconnect])
 
   if (!isIdle) return null
 

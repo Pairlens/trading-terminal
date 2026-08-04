@@ -411,17 +411,20 @@
     "nav": {
       "profile": "Hồ sơ",
       "plugins": "Plugin",
+      "cloudSync": "Đồng bộ đám mây",
       "notifications": "Thông báo",
       "appearance": "Giao diện",
       "keyboard": "Bàn phím",
       "performance": "Hiệu suất",
+      "desktop": "Máy tính để bàn",
       "connection": "Kết nối",
       "language": "Ngôn ngữ",
       "region": "Quốc gia",
       "currency": "Tiền tệ",
       "risk": "Quản lý rủi ro",
       "privacy": "Quyền riêng tư",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "Bảo mật"
     },
     "comingSoon": "Phần này sắp ra mắt.",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "Giữ tài khoản của tôi",
       "confirmAction": "Xóa vĩnh viễn",
       "deleteDoneAnalyticsFailed": "Tài khoản của bạn đã bị xóa, nhưng chúng tôi không kết nối được với nhà cung cấp phân tích để xóa hồ sơ sử dụng. Hãy gửi email tới privacy@pairlens.finance và chúng tôi sẽ hoàn tất thủ công."
+    },
+    "cloudSync": {
+      "masterTitle": "Đồng bộ đám mây",
+      "masterDescription": "Giữ tài khoản của bạn nhất quán trên mọi thiết bị. Tạm dừng ở đây mà không cần đổi các công tắc bên dưới.",
+      "pausedNotice": "Đã tạm dừng. Hiện không có gì được đồng bộ.",
+      "title": "Những gì được đồng bộ lên tài khoản",
+      "description": "Chọn thứ mà một thiết bị khác nên nhận được. Mọi thứ bị tắt sẽ ở lại thiết bị này.",
+      "deviceOnly": "Các công tắc này chỉ áp dụng cho thiết bị này và bản thân chúng không bao giờ được đồng bộ.",
+      "nothingDeleted": "Tắt một mục không bao giờ xoá gì cả. Nó vẫn ở lại thiết bị này, và bản sao đã có trong tài khoản của bạn được giữ nguyên — chỉ là ngừng cập nhật và trở nên cũ.",
+      "resumeNote": "Bật lại thì hai bên sẽ hợp nhất, thay đổi mới nhất thắng. Thứ bạn đã xoá trong lúc tắt có thể quay lại nếu tài khoản vẫn còn giữ.",
+      "cloudOnlyWarning": "Mục này chỉ được lưu trong tài khoản, nên tắt đi nghĩa là nó không được ghi lại ở đâu cả.",
+      "signedOutTitle": "Chưa đăng nhập",
+      "signedOut": "Không có gì được đồng bộ. Mọi thứ bạn làm đều ở lại thiết bị này.",
+      "status": {
+        "synced": "Mọi thứ đã được cập nhật.",
+        "syncing": "Đang đồng bộ…",
+        "error": "Lần đồng bộ gần nhất không thành công. Sẽ thử lại ở thay đổi kế tiếp.",
+        "idle": "Hiện chưa có gì để gửi."
+      },
+      "domains": {
+        "preferences": {
+          "title": "Cài đặt và tuỳ chọn",
+          "description": "Ngôn ngữ, giao diện, phím tắt, quốc gia, cài đặt registry plugin và cặp bạn đang mở."
+        },
+        "charts": {
+          "title": "Thiết lập biểu đồ",
+          "description": "Chỉ báo, hình vẽ, loại biểu đồ và kiểu vẽ mặc định của bạn."
+        },
+        "workspaces": {
+          "title": "Không gian làm việc và bố cục",
+          "description": "Không gian làm việc tuỳ chỉnh, thư mục, bố cục bảng và biến không gian làm việc."
+        },
+        "automation": {
+          "title": "Quy trình và cảnh báo",
+          "description": "Quy trình tự động hoá, quy tắc cảnh báo và các cặp mà chúng theo dõi."
+        },
+        "plugins": {
+          "title": "Plugin",
+          "description": "Những plugin bạn đã bật, cài đặt của chúng và các nhà cung cấp bạn ghim. Cài đặt bao gồm cả khoá API bạn nhập trong phần cài đặt của chính plugin đó, ví dụ khoá của nhà cung cấp AI. Khoá API sàn và bí mật ví không bao giờ nằm trong đó, chúng ở lại trong keychain của bạn. Nhà cung cấp đã ghim chỉ được giữ trong tài khoản, nên khi tắt mục này chúng chỉ tồn tại đến khi bạn đóng ứng dụng."
+        },
+        "copilot": {
+          "title": "Lịch sử trò chuyện AI",
+          "description": "Các cuộc trò chuyện với copilot, theo từng cặp."
+        },
+        "trades": {
+          "title": "Nhật ký giao dịch",
+          "description": "Các giao dịch mà bạn hoặc copilot ghi vào nhật ký."
+        }
+      }
     },
     "profile": {
       "image": "Ảnh hồ sơ",
@@ -543,6 +595,29 @@
       "balancedDescription": "Ticker và sổ lệnh ở 250ms, nến ở 500ms. Cân bằng tốt giữa độ phản hồi và hiệu quả.",
       "energySaver": "Tiết kiệm năng lượng",
       "energySaverDescription": "Ticker và sổ lệnh ở 1s, nến ở 2s. Tốt nhất cho theo dõi thụ động hoặc laptop dùng pin."
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "Khi bạn đóng cửa sổ cuối cùng",
+        "description": "Cảnh báo, bot và quy trình chỉ chạy khi Pairlens đang chạy. Hãy chọn điều gì sẽ xảy ra khi đóng cửa sổ cuối cùng.",
+        "quit": "Thoát Pairlens",
+        "quitDescription": "Đóng cửa sổ cuối cùng sẽ thoát ứng dụng. Cảnh báo, bot và quy trình sẽ ngừng chạy.",
+        "background": "Tiếp tục chạy nền",
+        "backgroundDescriptionDock": "Cửa sổ đóng lại nhưng Pairlens vẫn chạy. Cảnh báo, bot và quy trình vẫn hoạt động. Nhấp vào biểu tượng trên Dock để mở lại cửa sổ.",
+        "backgroundDescriptionTray": "Cửa sổ đóng lại nhưng Pairlens vẫn chạy trong khay hệ thống. Cảnh báo, bot và quy trình vẫn hoạt động. Nhấp vào biểu tượng trong khay hệ thống để mở lại cửa sổ.",
+        "alwaysQuitsNote": "Ở cả hai chế độ, thoát Pairlens luôn dừng cảnh báo, bot và quy trình.",
+        "trayNeeded": "Cần có khay hệ thống. Một số môi trường Linux (GNOME không có tiện ích AppIndicator) không có khay, và Pairlens sẽ không có chỗ để quay lại.",
+        "trayUnavailable": "Máy này không có khay hệ thống nên Pairlens không thể quay lại. Thay vào đó, đóng cửa sổ cuối cùng sẽ thoát ứng dụng."
+      },
+      "quit": {
+        "title": "Thoát Pairlens",
+        "description": "Dừng ứng dụng và mọi thứ nó đang chạy.",
+        "button": "Thoát",
+        "confirmTitle": "Thoát Pairlens?",
+        "confirmDescription_one": "{{count}} bot đang được kích hoạt. Thoát sẽ dừng bot.",
+        "confirmDescription_other": "{{count}} bot đang được kích hoạt. Thoát sẽ dừng chúng.",
+        "confirmAction": "Thoát"
+      }
     },
     "language": {
       "title": "Ngôn ngữ",
@@ -686,6 +761,49 @@
         "workspaceMenu": "Menu không gian làm việc",
         "chartCancel": "Huỷ công cụ / thoát toàn màn hình"
       }
+    },
+    "security": {
+      "lockTitle": "Khoá terminal",
+      "lockDescription": "Yêu cầu mật khẩu trước khi có thể dùng terminal này trên thiết bị này.",
+      "setPassword": "Đặt mật khẩu",
+      "changePassword": "Đổi mật khẩu",
+      "turnOff": "Tắt khoá",
+      "turnOffDescription": "Nhập mật khẩu hiện tại để gỡ khoá khỏi thiết bị này.",
+      "newPassword": "Mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "currentPassword": "Mật khẩu hiện tại",
+      "passwordTooShort": "Dùng ít nhất 6 ký tự.",
+      "passwordMismatch": "Hai mật khẩu không khớp.",
+      "passwordWrong": "Mật khẩu không đúng.",
+      "noRecoveryWarning": "Không có khôi phục mật khẩu. Nếu quên, cách duy nhất để vào lại là xoá sạch dữ liệu trên thiết bị này. Hãy lưu vào trình quản lý mật khẩu ngay bây giờ.",
+      "triggersTitle": "Khi nào khoá",
+      "triggersDescription": "Chọn thời điểm hiện lời nhắc mật khẩu.",
+      "triggerStartup": "Khi mở ứng dụng",
+      "triggerStartupHint": "Hỏi mật khẩu khi khởi động nguội.",
+      "triggerIdle": "Sau khi không hoạt động",
+      "triggerIdleHint": "Khoá sau {{minutes}} phút không dùng chuột hay bàn phím.",
+      "triggerPeriodic": "Theo lịch",
+      "triggerPeriodicHint": "Khoá lại sau một khoảng thời gian cố định, dù phiên có bận đến đâu.",
+      "triggerWake": "Sau khi máy thức dậy",
+      "triggerWakeHint": "Khoá khi máy quay lại từ chế độ ngủ.",
+      "triggerTrade": "Trước khi đặt lệnh",
+      "triggerTradeHint": "Xác nhận lệnh bạn đặt bằng tay hoặc qua copilot, kể cả đề xuất được duyệt tự động. Bot không bao giờ bị hỏi.",
+      "afterMinutes": "Sau {{minutes}} phút",
+      "everyHours": "Mỗi {{hours}} giờ",
+      "graceNever": "Mỗi lần",
+      "graceMinutes": "Trong {{minutes}} phút",
+      "protectsTitle": "Điều này bảo vệ gì",
+      "protectsBody": "Nó đặt một lời nhắc mật khẩu toàn màn hình trước terminal, để người ghé qua bàn bạn không thể bấm quanh các vị thế, đọc số dư hay đặt lệnh. Nó không mã hoá gì cả: khoá API sàn và khoá ví vẫn nằm nguyên chỗ cũ, và bất kỳ ai có máy tính đã mở khoá của bạn cùng chút kỹ năng kỹ thuật đều đọc được dữ liệu cục bộ của ứng dụng mà không hề thấy lời nhắc này.",
+      "protectsBots": "Bot đang bật vẫn giao dịch trong khi terminal bị khoá. Khoá màn hình không phải là tạm dừng chiến lược.",
+      "protectsDesktop": "Phần kiểm tra mật khẩu nằm trong keychain của hệ thống và không bao giờ rời khỏi máy này.",
+      "protectsBrowser": "Bản dựng này lưu phần kiểm tra trong bộ nhớ trình duyệt. Xoá dữ liệu trang sẽ gỡ khoá. Ứng dụng máy tính mới là nơi phù hợp cho việc này.",
+      "lockNowTitle": "Khoá ngay",
+      "lockNowDescription": "Đóng cài đặt và khoá terminal ngay lập tức.",
+      "lockNow": "Khoá",
+      "resetButton": "Đặt lại và xoá",
+      "resetConfirmTitle": "Xoá thiết bị này?",
+      "resetConfirmBody": "Thao tác này xoá mọi khoá API sàn, khoá ví, không gian làm việc, bố cục biểu đồ và cuộc trò chuyện trên máy này. Không thể hoàn tác và không có khôi phục mật khẩu. Nếu bạn đã đăng nhập, các cài đặt đồng bộ sẽ trở lại khi đăng nhập lại — khoá API và khoá ví thì không bao giờ, vì chúng chỉ được lưu ở đây.",
+      "resetConfirmPhrase": "Gõ {{phrase}} để xác nhận."
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "Mở khóa tất cả lệnh",
     "setRegion": "Đặt khu vực…",
     "newWindow": "Cửa sổ mới",
+    "quit": "Thoát Pairlens",
     "back": "Quay lại",
     "forward": "Tiến tới",
-    "checkForUpdates": "Kiểm tra cập nhật…"
+    "checkForUpdates": "Kiểm tra cập nhật…",
+    "lockTerminal": "Khoá terminal"
   },
   "titlebar": {
     "newWindow": "Cửa sổ mới",
@@ -2280,6 +2400,37 @@
       "finance": "Tài chính",
       "financial_markets": "Thị trường tài chính",
       "economy_macro": "Kinh tế vĩ mô"
+    }
+  },
+  "tray": {
+    "show": "Hiện Pairlens",
+    "quit": "Thoát Pairlens"
+  },
+  "security": {
+    "lock": {
+      "title": "Terminal đã khoá",
+      "subtitle": "Nhập mật khẩu để tiếp tục.",
+      "passwordLabel": "Mật khẩu",
+      "unlock": "Mở khoá",
+      "unlocking": "Đang kiểm tra…",
+      "wrongPassword": "Mật khẩu không đúng.",
+      "tooManyAttempts": "Quá nhiều lần thử. Thử lại sau {{seconds}} giây.",
+      "forgot": "Quên mật khẩu?",
+      "keychainUnavailable": "Keychain hệ thống hiện không dùng được. Thử lại sau giây lát.",
+      "orderCancelled": "Đã huỷ lệnh. Terminal đang bị khoá.",
+      "reason": {
+        "startup": "Nhập mật khẩu để tiếp tục.",
+        "idle": "Đã khoá sau một lúc không hoạt động.",
+        "periodic": "Đã khoá theo lịch.",
+        "wake": "Đã khoá khi máy tính ngủ.",
+        "manual": "Bạn đã khoá terminal."
+      }
+    },
+    "challenge": {
+      "title": "Xác nhận là bạn",
+      "description": "Nhập mật khẩu để đặt lệnh này.",
+      "confirm": "Xác nhận",
+      "cancel": "Huỷ"
     }
   }
 }

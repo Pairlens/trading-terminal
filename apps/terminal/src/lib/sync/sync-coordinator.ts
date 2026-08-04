@@ -10,10 +10,28 @@
  * workspace / chart-state endpoints.
  *
  * All reads remain local — sync is a background side-effect.
+ *
+ * What may leave the machine at all is the user's call: every key is routed to
+ * a domain (see ./sync-domains) and every domain has a switch (see
+ * ./sync-preferences). A key whose domain is off is neither pushed nor
+ * hydrated — but its local clock is still stamped, so re-enabling merges
+ * newest-wins instead of letting a stale server copy overwrite live work.
  */
 
+import {
+  domainForSyncKey,
+  isBlocked,
+  isTier1,
+  localKeysForDomain,
+} from './sync-domains'
+import {
+  enabledSyncDomains,
+  subscribeCloudSyncPreferences,
+} from './sync-preferences'
 import { emitHydrate, onWrite } from './sync-channel'
+import type { SyncDomainId } from './sync-domains'
 import { handleUnauthorized } from '@/lib/api'
+import { getInstallableEntries } from '@/lib/plugins/plugin-ledger'
 
 export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'error'
 
@@ -21,51 +39,61 @@ const TIER1_DEBOUNCE_MS = 1500
 const TIER2_DEBOUNCE_MS = 800
 const TS_PREFIX = 'pairlens:sync-ts:'
 
-// Tier 1 keys (flat preferences stored in user_configs.preferences JSONB)
-const TIER1_KEYS = new Set([
-  'plugin-registry-settings',
-  'language',
-  'keybindings',
-  'theme.activePluginId',
-  'performance-mode',
-  'terminal.market',
-  'terminal.timeframe',
-  'terminal.chartType',
-  'terminal.crosshairMode',
-  'terminal.priceScaleMode',
-  'terminal.drawingToolMode',
-  'copilot.persona',
-  'pair-picker.assetClass',
-  'pair-picker.category',
-  'pair-picker.viewMode',
-  'pair-picker.recent',
-  'pair-picker.assetClassMap',
-  'region.okx',
-  'region.binance',
-  'region.bybit',
-])
-
-function isTier1(key: string): boolean {
-  if (TIER1_KEYS.has(key)) return true
-  // drawing-last-* prefix match
-  if (key.startsWith('drawing-last-')) return true
-  return false
+/**
+ * Record that this device changed a key at `now`, without sending anything.
+ *
+ * This is what makes switching a domain back on non-destructive: the merge is
+ * `remote.updatedAt > localTs`, so a value edited while sync was off needs a
+ * fresh local stamp or the server's older copy wins and eats it.
+ */
+function stampLocalWrite(key: string): void {
+  try {
+    localStorage.setItem(`${TS_PREFIX}${key}`, String(Date.now()))
+  } catch {
+    // Ignore storage errors
+  }
 }
 
-// Keys that must NEVER be synced (credentials, caches, trust anchors).
-// custom-publisher-keys is a local trust decision: syncing it would let a
-// hijacked account push a malicious publisher key to every signed-in device.
-const BLOCKLIST = new Set(['theme.cachedCss', 'custom-publisher-keys'])
-function isBlocked(key: string): boolean {
-  if (BLOCKLIST.has(key)) return true
-  if (key.startsWith('credentials-store:')) return true
-  if (key.startsWith('keychain:')) return true
-  // Browser-fallback credential storage prefix (see lib/keychain.ts)
-  if (key.startsWith('pairlens:keychain:')) return true
-  return false
+function readLocalValue(key: string): unknown {
+  try {
+    const raw = localStorage.getItem(`pairlens:${key}`)
+    if (raw === null) return undefined
+    return JSON.parse(raw)
+  } catch {
+    return undefined
+  }
 }
 
-type StatusListener = (status: SyncStatus) => void
+// ── Status bus ───────────────────────────────────────────────────────
+//
+// Module-level, not per-instance, and deliberately so: coordinators are
+// disposable. PairlensProvider's plugin effect re-runs on its own deps, its
+// cleanup calls `destroy()`, and the replacement is constructed on the next
+// render — an observer bound to the instance it found at subscribe time would
+// keep listening to the dead one and show 'Syncing…' for the rest of the
+// session. The status is a property of "syncing", not of any one object.
+
+let currentStatus: SyncStatus = 'idle'
+const statusListeners = new Set<() => void>()
+
+/** The live transport status. `'idle'` with no coordinator running. */
+export function currentSyncStatus(): SyncStatus {
+  return currentStatus
+}
+
+/** Observe status changes across coordinator replacements. */
+export function onSyncStatusChange(listener: () => void): () => void {
+  statusListeners.add(listener)
+  return () => {
+    statusListeners.delete(listener)
+  }
+}
+
+function publishStatus(status: SyncStatus): void {
+  if (status === currentStatus) return
+  currentStatus = status
+  for (const listener of [...statusListeners]) listener()
+}
 
 // ── Structured collection helpers ─────────────────────────────────────
 
@@ -141,40 +169,83 @@ function mergeCollections(
   return { merged: [...byId.values()], localAhead }
 }
 
+/**
+ * The live coordinator, for surfaces that need its status without a prop
+ * chain (the Cloud Sync settings section). Null in standalone builds, where
+ * no coordinator is ever constructed.
+ */
+let activeCoordinator: SyncCoordinator | null = null
+
+export function getSyncCoordinator(): SyncCoordinator | null {
+  return activeCoordinator
+}
+
 export class SyncCoordinator {
   private appServerUrl: string
   private getToken: () => Promise<string | null>
   private userId: string | null = null
-  private status: SyncStatus = 'idle'
-  private statusListeners = new Set<StatusListener>()
   private tier1Dirty = new Map<string, unknown>()
   private tier1Timer: ReturnType<typeof setTimeout> | null = null
   private tier2Timers = new Map<string, ReturnType<typeof setTimeout>>()
   private unsubWrite: (() => void) | null = null
+  private unsubPreferences: (() => void) | null = null
+  private enabledDomains: Set<SyncDomainId>
 
   constructor(appServerUrl: string, getToken: () => Promise<string | null>) {
     this.appServerUrl = appServerUrl.replace(/\/+$/, '')
     this.getToken = getToken
+    this.enabledDomains = enabledSyncDomains()
 
     // Listen to all writes from usePersistedState
     this.unsubWrite = onWrite((key, value) => {
       this.markDirty(key, value)
     })
+
+    // A domain switched off must stop pushing in *every* window, so the cancel
+    // half runs on both edges. The resume half only runs on the window that
+    // made the change, so N windows don't pull and push the same payload.
+    this.unsubPreferences = subscribeCloudSyncPreferences((source) => {
+      this.applyDomainFlags(source === 'write')
+    })
+
+    activeCoordinator = this
   }
 
   /** Called when session state changes. Triggers pull-and-merge on login. */
   async setSession(userId: string | null): Promise<void> {
     this.userId = userId
-    if (userId) {
-      await this.pullAndMerge()
-      await this.pullStructuredCollections()
-    }
+    if (!userId) return
+    // Paused means paused in both directions: with nothing that could hydrate,
+    // the GET would pull the whole preferences blob down only for
+    // applyRemoteEntries to discard every entry.
+    if (this.canHydratePreferences()) await this.pullAndMerge()
+    await this.pullStructuredCollections()
+  }
+
+  /**
+   * Whether `GET /api/sync/preferences` could hydrate anything right now.
+   * Mirrors the domain gate in {@link applyRemoteEntries}: those are the only
+   * two domains a tier-1 key ever routes to.
+   */
+  private canHydratePreferences(): boolean {
+    return (
+      this.enabledDomains.has('preferences') ||
+      this.enabledDomains.has('charts')
+    )
   }
 
   /** Mark a key as dirty — schedule sync. */
   markDirty(key: string, value: unknown): void {
     if (!this.userId) return
     if (isBlocked(key)) return
+
+    const domain = domainForSyncKey(key)
+    if (domain && !this.enabledDomains.has(domain)) {
+      // Nothing leaves, but this device did change the value — stamping the
+      // clock is what makes it win the merge when sync comes back on.
+      if (isTier1(key)) stampLocalWrite(key)
+      return
+    }
 
     if (isTier1(key)) {
       this.tier1Dirty.set(key, value)
@@ -184,20 +255,151 @@ export class SyncCoordinator {
     }
   }
 
-  getSyncStatus(): SyncStatus {
-    return this.status
-  }
-
-  subscribeSyncStatus(cb: StatusListener): () => void {
-    this.statusListeners.add(cb)
-    return () => this.statusListeners.delete(cb)
-  }
-
   destroy(): void {
     this.unsubWrite?.()
+    this.unsubPreferences?.()
     if (this.tier1Timer) clearTimeout(this.tier1Timer)
     for (const t of this.tier2Timers.values()) clearTimeout(t)
     this.tier2Timers.clear()
+    if (activeCoordinator === this) {
+      activeCoordinator = null
+      // Nothing is transporting anything any more; a lingering 'syncing' would
+      // be a lie until the replacement happens to set it again.
+      publishStatus('idle')
+    }
+  }
+
+  // ── Per-domain gating ────────────────────────────────────────────
+
+  /**
+   * React to a change in the cloud-sync switches: stop what a newly-disabled
+   * domain still had queued, and (only in the window that flipped the switch)
+   * reconcile a newly-enabled one.
+   */
+  private applyDomainFlags(allowResume: boolean): void {
+    const next = enabledSyncDomains()
+    const previous = this.enabledDomains
+    this.enabledDomains = next
+    for (const id of previous) {
+      if (!next.has(id)) this.cancelDomain(id)
+    }
+    if (!allowResume) return
+    // Resumed together, not one at a time: the master switch turns every
+    // domain back on at once, and `preferences` and `charts` share a single
+    // GET — resuming them independently fires the same request twice.
+    const resumed = [...next].filter((id) => !previous.has(id))
+    if (resumed.length > 0) void this.resumeDomains(resumed)
+  }
+
+  /**
+   * Drop everything queued for a domain. The debounces are 1.5s / 0.8s, so a
+   * write from a moment ago would otherwise escape after the switch is off.
+   * A request already in flight cannot be recalled — the settings copy says so.
+   */
+  private cancelDomain(id: SyncDomainId): void {
+    for (const key of [...this.tier1Dirty.keys()]) {
+      if (domainForSyncKey(key) === id) this.tier1Dirty.delete(key)
+    }
+    if (this.tier1Dirty.size === 0 && this.tier1Timer) {
+      clearTimeout(this.tier1Timer)
+      this.tier1Timer = null
+    }
+    for (const [key, timer] of [...this.tier2Timers]) {
+      if (domainForSyncKey(key) === id) {
+        clearTimeout(timer)
+        this.tier2Timers.delete(key)
+      }
+    }
+  }
+
+  /**
+   * Re-enabling merges: nothing is discarded on either side, newest change
+   * wins. Same rule as login, so there is one mental model — and turning a
+   * switch back on can never destroy work on either device.
+   *
+   * `workspaces` and the indicators/drawings half of `charts` have no GET
+   * endpoint at all, so for those "resume" can only mean "upload what this
+   * device has". `plugins` has no timestamp on either side, so it re-uploads
+   * the local ledger (see {@link resumePluginStates}). `copilot` and `trades`
+   * converge on their next read/write; there is nothing local to reconcile.
+   */
+  private async resumeDomains(ids: Array<SyncDomainId>): Promise<void> {
+    if (!this.userId) return
+
+    // Pull first: where the server is ahead, applyRemoteEntries rewrites
+    // localStorage, so the pushes below re-send the winning value — a no-op
+    // rather than a clobber. One GET covers both tier-1 domains.
+    if (ids.includes('preferences') || ids.includes('charts')) {
+      await this.pullAndMerge()
+    }
+    if (ids.includes('automation')) await this.pullStructuredCollections()
+    if (ids.includes('plugins')) await this.resumePluginStates()
+
+    for (const id of ids) {
+      // Handled above (automation) or nothing local to send (the rest).
+      if (
+        id === 'automation' ||
+        id === 'plugins' ||
+        id === 'copilot' ||
+        id === 'trades'
+      ) {
+        continue
+      }
+      for (const key of localKeysForDomain(id)) {
+        const value = readLocalValue(key)
+        if (value === undefined) continue
+        this.markDirty(key, value)
+      }
+    }
+  }
+
+  /**
+   * Re-upload every installed plugin's enable state and config.
+   *
+   * Plugin state is the one domain that cannot do newest-wins: neither side
+   * carries a timestamp. While the switch was off `api.setPluginState`
+   * resolved as a no-op, so the server row froze at whatever it last held
+   * while the local ledger kept recording every toggle — and the boot merge
+   * in `pairlens-provider` assigns the server's `enabled`/`config` over the
+   * ledger unconditionally. Without this push, re-enabling the switch would
+   * quietly resurrect a connector the user had turned off on the next start.
+   *
+   * So this device wins, which is the same rule the ledger already states:
+   * it is the device source of truth for what is installed. The cost is that
+   * a plugin toggled on another device while this one was paused is
+   * overwritten — unavoidable without a timestamp, and the smaller surprise.
+   *
+   * Tombstoned (uninstalled) entries are left alone: boot skips them, so the
+   * stale server row is inert, and pushing `enabled: false` for them would
+   * write rows for plugins this device no longer has.
+   */
+  private async resumePluginStates(): Promise<void> {
+    // `resumeDomains` awaits two network round trips before it gets here, and
+    // the user can switch the domain back off during them. Every sibling
+    // resume path re-reads the live snapshot; this one bulk-PUTs over a raw
+    // `this.fetch`, so it has to check for itself.
+    if (!this.enabledDomains.has('plugins')) return
+    const entries = getInstallableEntries()
+    if (entries.length === 0) return
+    try {
+      this.setStatus('syncing')
+      const results = await Promise.all(
+        entries.map((entry) =>
+          this.fetch(`/api/plugins/${encodeURIComponent(entry.pluginId)}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+              pluginId: entry.pluginId,
+              enabled: entry.enabled,
+              config: entry.config,
+            }),
+          }),
+        ),
+      )
+      if (results.some((res) => !res.ok)) throw new Error('plugin state PUT')
+      this.setStatus('synced')
+    } catch {
+      this.setStatus('error')
+    }
   }
 
   // ── Tier 1: batched preferences ──────────────────────────────────
@@ -354,6 +556,21 @@ export class SyncCoordinator {
     entries: Record<string, { value: unknown; updatedAt: number }>,
   ): void {
     for (const [key, remote] of Object.entries(entries)) {
+      // Download is gated as hard as upload. This endpoint only ever received
+      // tier-1 preference keys from this app, so anything else in the response
+      // is a server writing a slot no client offered it — and the blocklist is
+      // named explicitly because that is the list this gate exists for: a
+      // pinned publisher key (arbitrary code execution), the terminal-lock
+      // switch, a credential slot. Both checks stay, so neither one silently
+      // becomes the only thing holding the line.
+      if (isBlocked(key) || !isTier1(key)) continue
+
+      // A domain that is off doesn't hydrate either: the remote copy goes
+      // stale rather than reaching back into this device. An unroutable key
+      // has no switch that could permit it, so it never lands.
+      const domain = domainForSyncKey(key)
+      if (!domain || !this.enabledDomains.has(domain)) continue
+
       const localTsStr = localStorage.getItem(`${TS_PREFIX}${key}`)
       const localTs = localTsStr ? parseInt(localTsStr, 10) : 0
 
@@ -379,6 +596,7 @@ export class SyncCoordinator {
   // an item deleted offline reappears if the server still has it.
 
   private async pullStructuredCollections(): Promise<void> {
+    if (!this.enabledDomains.has('automation')) return
     await Promise.allSettled([this.pullWorkflows(), this.pullNotifications()])
   }
 
@@ -459,7 +677,6 @@ export class SyncCoordinator {
   }
 
   private setStatus(status: SyncStatus): void {
-    this.status = status
-    for (const fn of this.statusListeners) fn(status)
+    publishStatus(status)
   }
 }

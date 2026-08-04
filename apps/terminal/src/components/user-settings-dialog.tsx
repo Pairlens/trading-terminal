@@ -6,6 +6,7 @@ import * as React from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import {
+  AppWindow,
   CircleUser,
   Cloud,
   CloudUpload,
@@ -15,6 +16,7 @@ import {
   Globe,
   Keyboard,
   Loader2,
+  Lock,
   LogIn,
   MapPin,
   Paintbrush,
@@ -118,6 +120,28 @@ const LazyKeyboardSection = React.lazy(() =>
     default: m.KeyboardSection,
   })),
 )
+// Security is its own chunk for the same reason as Keyboard: it carries its
+// own dialogs and a page of threat-model copy that nobody who never opens it
+// should have to download.
+const LazySecuritySection = React.lazy(() =>
+  import('./settings/security-section').then((m) => ({
+    default: m.SecuritySection,
+  })),
+)
+// Desktop is its own chunk too: it only exists in the Tauri build, so a
+// browser bundle should never carry it.
+const LazyDesktopSection = React.lazy(() =>
+  import('./settings/desktop-section').then((m) => ({
+    default: m.DesktopSection,
+  })),
+)
+// Cloud Sync only exists when an App Server is configured, and it drags in the
+// sync taxonomy — its own chunk, same reasoning as Desktop.
+const LazyCloudSyncSection = React.lazy(() =>
+  import('./settings/cloud-sync-section').then((m) => ({
+    default: m.CloudSyncSection,
+  })),
+)
 
 function SectionFallback() {
   return (
@@ -131,17 +155,39 @@ const SETTINGS_NAV = [
   { id: 'profile', nameKey: 'settings.nav.profile', icon: CircleUser },
   { id: 'billing', nameKey: 'settings.nav.billing', icon: Sparkles },
   { id: 'plugins', nameKey: 'settings.nav.plugins', icon: Puzzle },
+  { id: 'cloud-sync', nameKey: 'settings.nav.cloudSync', icon: Cloud },
   { id: 'region', nameKey: 'settings.nav.region', icon: MapPin },
   { id: 'currency', nameKey: 'settings.nav.currency', icon: Coins },
   { id: 'risk', nameKey: 'settings.nav.risk', icon: ShieldCheck },
+  { id: 'security', nameKey: 'settings.nav.security', icon: Lock },
   { id: 'appearance', nameKey: 'settings.nav.appearance', icon: Paintbrush },
   { id: 'keyboard', nameKey: 'settings.nav.keyboard', icon: Keyboard },
   { id: 'performance', nameKey: 'settings.nav.performance', icon: Gauge },
+  { id: 'desktop', nameKey: 'settings.nav.desktop', icon: AppWindow },
   { id: 'privacy', nameKey: 'settings.nav.privacy', icon: Fingerprint },
   { id: 'language', nameKey: 'settings.nav.language', icon: Globe },
 ] as const
 
 type SettingsNavId = (typeof SETTINGS_NAV)[number]['id']
+
+/** Sections that only exist in the Tauri build. */
+const DESKTOP_ONLY_SECTIONS = new Set<string>(['desktop'])
+
+/** Sections that only mean anything when there is an account to sync with. */
+const APP_SERVER_ONLY_SECTIONS = new Set<string>(['cloud-sync'])
+
+/**
+ * What the sidebar actually renders, and what a deep link may resolve to. An
+ * additive filter over `SETTINGS_NAV` rather than a second list, so the nav
+ * order and typing stay derived from one place — and so a stale `?section=`
+ * deep link in a browser build falls back to Profile instead of opening an
+ * empty pane.
+ */
+const VISIBLE_SETTINGS_NAV = SETTINGS_NAV.filter(
+  (item) =>
+    (isStandalone || !DESKTOP_ONLY_SECTIONS.has(item.id)) &&
+    (hasAppServer || !APP_SERVER_ONLY_SECTIONS.has(item.id)),
+)
 
 type UserSettingsDialogProps = {
   open: boolean
@@ -169,7 +215,7 @@ export default function UserSettingsDialog({
   const fileInputRef = React.useRef<HTMLInputElement>(null)
   const [activeSection, setActiveSection] = React.useState<SettingsNavId>(
     () =>
-      SETTINGS_NAV.find(
+      VISIBLE_SETTINGS_NAV.find(
         (n) => n.id === useSettingsDialogStore.getState().section,
       )?.id ?? 'profile',
   )
@@ -194,7 +240,7 @@ export default function UserSettingsDialog({
     // Honor a requested section (deep links from omni search, risk pane,
     // geo dialog, …); default to profile otherwise.
     setActiveSection(
-      SETTINGS_NAV.find(
+      VISIBLE_SETTINGS_NAV.find(
         (n) => n.id === useSettingsDialogStore.getState().section,
       )?.id ?? 'profile',
     )
@@ -334,7 +380,7 @@ export default function UserSettingsDialog({
               <SidebarGroup>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {SETTINGS_NAV.map((item) => (
+                    {VISIBLE_SETTINGS_NAV.map((item) => (
                       <SidebarMenuItem key={item.id}>
                         <SidebarMenuButton
                           isActive={item.id === activeSection}
@@ -504,8 +550,14 @@ export default function UserSettingsDialog({
                     <LazyRiskSection />
                   ) : activeSection === 'privacy' ? (
                     <LazyPrivacySection />
+                  ) : activeSection === 'security' ? (
+                    <LazySecuritySection />
                   ) : activeSection === 'keyboard' ? (
                     <LazyKeyboardSection />
+                  ) : activeSection === 'desktop' ? (
+                    <LazyDesktopSection />
+                  ) : activeSection === 'cloud-sync' ? (
+                    <LazyCloudSyncSection />
                   ) : activeSection === 'billing' ? (
                     <LazyIntelligenceSection />
                   ) : (

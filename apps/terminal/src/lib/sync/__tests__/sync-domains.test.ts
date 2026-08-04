@@ -1,0 +1,144 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+/**
+ * The routing table behind every Cloud Sync switch.
+ *
+ * Two things go wrong quietly here. A key the coordinator really does sync but
+ * that maps to no domain would keep syncing with every switch off — the switch
+ * would be a lie. And a mistake in the blocklist would start shipping exchange
+ * credentials to a server that legally must never hold them.
+ */
+import { describe, expect, test } from 'bun:test'
+
+import {
+  SYNC_DOMAINS,
+  SYNC_DOMAIN_IDS,
+  TIER1_KEYS,
+  domainForSyncKey,
+  isBlocked,
+  isSyncDomainId,
+  isTier1,
+} from '../sync-domains'
+
+describe('domainForSyncKey', () => {
+  test('every tier-1 key belongs to a domain', () => {
+    const orphans = [...TIER1_KEYS].filter((k) => domainForSyncKey(k) === null)
+    expect(orphans).toEqual([])
+  })
+
+  test('every tier-2 branch the coordinator routes belongs to a domain', () => {
+    // One sample per if/else branch in flushTier2, including the two dynamic
+    // families a static list could never enumerate.
+    const tier2 = [
+      'custom-workspaces',
+      'terminal.layout',
+      'discovery.layout',
+      'workspace.abc.layout',
+      'workspace-vars:abc',
+      'terminal.indicators',
+      'terminal.drawings',
+      'workflows',
+      'notification-rules',
+      'notification-bindings',
+    ]
+    const orphans = tier2.filter((k) => domainForSyncKey(k) === null)
+    expect(orphans).toEqual([])
+  })
+
+  test('routes each family to the domain its label promises', () => {
+    expect(domainForSyncKey('language')).toBe('preferences')
+    expect(domainForSyncKey('keybindings')).toBe('preferences')
+    expect(domainForSyncKey('terminal.market')).toBe('preferences')
+    expect(domainForSyncKey('terminal.indicators')).toBe('charts')
+    expect(domainForSyncKey('terminal.chartType')).toBe('charts')
+    expect(domainForSyncKey('drawing-last-lines')).toBe('charts')
+    expect(domainForSyncKey('custom-workspaces')).toBe('workspaces')
+    expect(domainForSyncKey('workspace.abc.layout')).toBe('workspaces')
+    expect(domainForSyncKey('workspace-vars:abc')).toBe('workspaces')
+    expect(domainForSyncKey('workflows')).toBe('automation')
+    expect(domainForSyncKey('notification-bindings')).toBe('automation')
+  })
+
+  test('keys the coordinator drops map to no domain', () => {
+    // These are emitted on the bus but hit the "unknown tier 2 key — skip"
+    // branch. Claiming a domain for them would put a switch on a feature that
+    // does not sync at all.
+    for (const key of [
+      'risk-config',
+      'bots',
+      'bot-runs',
+      'indicator-scripts',
+      'indicator-templates',
+      'workflow-runs',
+      'notification-log',
+      'terminal.compareSymbols',
+    ]) {
+      expect(domainForSyncKey(key)).toBeNull()
+    }
+  })
+})
+
+describe('isTier1', () => {
+  test('covers the flat preference set plus the drawing-style prefix', () => {
+    expect(isTier1('language')).toBe(true)
+    expect(isTier1('drawing-last-fibonacci')).toBe(true)
+    expect(isTier1('custom-workspaces')).toBe(false)
+    expect(isTier1('terminal.indicators')).toBe(false)
+  })
+})
+
+describe('isBlocked', () => {
+  test('nothing secret or device-local can reach the server', () => {
+    expect(isBlocked('theme.cachedCss')).toBe(true)
+    expect(isBlocked('custom-publisher-keys')).toBe(true)
+    expect(isBlocked('desktop.closeBehavior')).toBe(true)
+    expect(isBlocked('security.lock')).toBe(true)
+    expect(isBlocked('credentials-store:binance')).toBe(true)
+    expect(isBlocked('keychain:okx')).toBe(true)
+    expect(isBlocked('pairlens:keychain:okx')).toBe(true)
+  })
+
+  test('the cloud-sync switches themselves never sync', () => {
+    // A device decides what it sends. Syncing the record would let one machine
+    // silently switch another's sync off — or back on.
+    expect(isBlocked('cloud-sync')).toBe(true)
+    expect(domainForSyncKey('cloud-sync')).toBeNull()
+  })
+
+  test('ordinary keys are not blocked', () => {
+    expect(isBlocked('language')).toBe(false)
+    expect(isBlocked('workflows')).toBe(false)
+  })
+})
+
+describe('SYNC_DOMAINS catalog', () => {
+  test('ids are unique and match the exported id list', () => {
+    expect(SYNC_DOMAINS.map((d) => d.id)).toEqual([...SYNC_DOMAIN_IDS])
+    expect(new Set(SYNC_DOMAIN_IDS).size).toBe(SYNC_DOMAIN_IDS.length)
+  })
+
+  test('catalog keys are literals under the settings namespace', () => {
+    // The i18n audit scans source statically; composed keys slip past it.
+    for (const domain of SYNC_DOMAINS) {
+      expect(domain.labelKey).toBe(
+        `settings.cloudSync.domains.${domain.id}.title`,
+      )
+      expect(domain.descriptionKey).toBe(
+        `settings.cloudSync.domains.${domain.id}.description`,
+      )
+    }
+  })
+
+  test('only the domains with no local store are flagged cloudOnly', () => {
+    expect(SYNC_DOMAINS.filter((d) => d.cloudOnly).map((d) => d.id)).toEqual([
+      'copilot',
+      'trades',
+    ])
+  })
+
+  test('isSyncDomainId rejects anything not in the catalog', () => {
+    expect(isSyncDomainId('charts')).toBe(true)
+    expect(isSyncDomainId('watchlists')).toBe(false)
+    expect(isSyncDomainId(null)).toBe(false)
+  })
+})

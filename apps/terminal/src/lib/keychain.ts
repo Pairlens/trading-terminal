@@ -106,12 +106,12 @@ async function encryptValue(plaintext: string): Promise<string> {
 }
 
 async function decryptValue(stored: string): Promise<string | null> {
-  // Values without the cipher prefix (or that fail to decrypt, e.g. the
-  // IndexedDB key was cleared) are unrecoverable — treat as absent.
+  // A value without the cipher prefix predates encryption at rest and is
+  // unrecoverable — treat as absent.
   if (!stored.startsWith(CIPHER_PREFIX)) return null
   const [ivB64, dataB64] = stored.slice(CIPHER_PREFIX.length).split('.')
-  if (!ivB64 || !dataB64) return null
   try {
+    if (!ivB64 || !dataB64) throw new Error('malformed ciphertext')
     const key = await getAesKey()
     const plaintext = await crypto.subtle.decrypt(
       { name: 'AES-GCM', iv: fromBase64(ivB64) },
@@ -120,7 +120,15 @@ async function decryptValue(stored: string): Promise<string | null> {
     )
     return new TextDecoder().decode(plaintext)
   } catch {
-    return null
+    // Ciphertext we hold but cannot open — the IndexedDB key was deleted, or
+    // the value was tampered with. NOT the same as "there is nothing stored",
+    // and the difference is load-bearing: callers treat absence as "self-heal"
+    // (the terminal lock disables itself and lets you in), so reporting this
+    // as absence would turn one devtools click on the `pairlens-keychain`
+    // database into a lock bypass with every byte of local data still there.
+    // Throwing puts it where it belongs — with the desktop keychain backend
+    // failures, which stay locked and offer a retry.
+    throw new Error('Stored credential could not be decrypted')
   }
 }
 

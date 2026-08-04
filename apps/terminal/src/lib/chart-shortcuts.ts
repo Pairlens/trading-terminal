@@ -3,6 +3,8 @@
 import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
 
+import { isTerminalLocked } from '@/lib/security/lock-store'
+
 /**
  * Window-level router for chart-pane keyboard shortcuts.
  *
@@ -37,6 +39,9 @@ const OVERLAY_SELECTOR =
 function onWindowKeyDown(e: KeyboardEvent) {
   // Something upstream (dialog Escape, omni-search, native menu…) claimed it.
   if (e.defaultPrevented) return
+  // The chart is still mounted (and streaming) behind the lock overlay; its
+  // chords must not be.
+  if (isTerminalLocked()) return
 
   const target = e.target
   if (!(target instanceof HTMLElement)) return

@@ -21,6 +21,8 @@ import appCss from '../styles.css?url'
 import type { QueryClient } from '@tanstack/react-query'
 import { isStandalone } from '@/lib/platform'
 import { attachNavHistory } from '@/lib/nav-history'
+import { TerminalLock } from '@/components/security/terminal-lock'
+import { QuitConfirm } from '@/components/quit-confirm'
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -32,6 +34,40 @@ export interface RouterContext {
 // Uses actualStartTime (profiler timer, on in dev builds) to decide whether
 // a fiber rendered in THIS pass — bailed-out fibers are shared between
 // commits and keep stale PerformedWork flags, so flags alone overcount.
+/**
+ * Pre-paint shield for the terminal lock.
+ *
+ * A classic inline script (same shape and placement as the theme-CSS restore
+ * below) so it runs before any module script: on reload, the terminal would
+ * otherwise paint one frame of live balances before React mounts the lock.
+ * It injects a <style> rather than a DOM node — head injection is the pattern
+ * the theme restore already proves safe against hydration.
+ *
+ * Deliberately a best-effort *visual* guard, not an authority: lock-store
+ * makes the real decision. Being wrong here costs at most one blank frame,
+ * and the 8s watchdog guarantees a stuck shield can never brick the app.
+ */
+const LOCK_SHIELD_SCRIPT = `(function(){
+  try {
+    var cfg = JSON.parse(localStorage.getItem('pairlens:security.lock') || 'null');
+    if (!cfg || !cfg.enabled) return;
+    var st = JSON.parse(localStorage.getItem('pairlens:security.lock-state') || 'null');
+    var locked = st ? !!st.locked : false;
+    if (!locked && cfg.triggers && cfg.triggers.onStartup) {
+      locked = !st || (Date.now() - (st.lastActiveAt || 0)) >= 45000;
+    }
+    if (!locked) return;
+    var s = document.createElement('style');
+    s.id = 'pairlens-lock-shield';
+    s.textContent = 'html::before{content:"";position:fixed;inset:0;z-index:2147483647;background:var(--background,#0b0b0c)}';
+    document.head.appendChild(s);
+    setTimeout(function(){
+      var e = document.getElementById('pairlens-lock-shield');
+      if (e) e.remove();
+    }, 8000);
+  } catch (e) {}
+})()`
+
 const RENDER_COUNTER_SCRIPT = `(function(){
   try {
     if (localStorage.getItem('pairlens:render-count') !== '1') return;
@@ -172,11 +208,34 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     void import('@/lib/desktop-menu').then((m) => m.initDesktopMenu())
     void import('@/lib/menu-shortcuts').then((m) => m.initMenuShortcuts())
+    // Hide/show signal for background mode — must be listening before the
+    // user can close a window, which is immediately.
+    void import('@/lib/window-visibility').then((m) => m.initWindowVisibility())
     // Auto-update checks (desktop only; no-op in browsers).
     void import('@/lib/updater').then((m) => m.initUpdater())
     // Opt-in analytics (no-op until the user consents; inert without a key).
     void import('@/lib/analytics').then((m) => m.initAnalytics())
+    // Idle / periodic / wake lock triggers. Inert until a password is set.
+    void import('@/lib/security/lock-manager').then((m) => m.initLockManager())
   }, [])
+
+  // The tray menu is built in Rust before the webview exists, so it starts in
+  // English. Push the user's language over once i18n is ready, and again
+  // whenever it changes. No-op on macOS (no tray) and in browsers.
+  useEffect(() => {
+    if (!isStandalone) return
+    const push = () => {
+      void import('@/lib/settings/close-behavior').then((m) =>
+        m.setTrayLabels(
+          i18n.t('tray.show', { defaultValue: 'Show Pairlens' }),
+          i18n.t('tray.quit', { defaultValue: 'Quit Pairlens' }),
+        ),
+      )
+    }
+    push()
+    i18n.on('languageChanged', push)
+    return () => i18n.off('languageChanged', push)
+  }, [i18n])
 
   // First-touch affiliate referral attribution (?ref=<code>)
   useEffect(() => {
@@ -213,6 +272,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             __html: `(function(){try{var c=localStorage.getItem("pairlens:theme.cachedCss");if(c){var s=document.createElement("style");s.id="pairlens-theme-override";s.textContent=c;document.head.appendChild(s)}}catch(e){}})()`,
           }}
         />
+        <script dangerouslySetInnerHTML={{ __html: LOCK_SHIELD_SCRIPT }} />
         {import.meta.env.DEV && (
           // Dev-only render counter for re-render profiling.
           // Classic inline script so it runs before any module script —
@@ -235,6 +295,16 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           enableSystem
         >
           <TooltipProvider>{children}</TooltipProvider>
+          {/* Renders ON TOP of the routed children, never instead of them:
+              closeSplashScreen() only fires when _terminal mounts, so a lock
+              that replaced the app would strand the desktop build behind its
+              native splash. On top also means bots, alerts and streams keep
+              running while locked. */}
+          <TerminalLock />
+          {/* Quitting is the one action no keyboard chord should be able to
+              take without asking — the accelerator runner fires Ctrl+Q
+              regardless of focus. Inert in the browser. */}
+          <QuitConfirm />
         </ThemeProvider>
         <TanStackDevtools
           config={{

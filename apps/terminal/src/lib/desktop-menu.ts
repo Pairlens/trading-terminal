@@ -70,11 +70,13 @@ async function buildNode(
         id: node.id,
         text: node.text(),
         checked: node.get(),
+        enabled: node.isEnabled ? node.isEnabled() : true,
         action: () => node.set(!node.get()),
       })
       sink.push(
         node.subscribe(() => {
           void item.setChecked(node.get())
+          if (node.isEnabled) void item.setEnabled(node.isEnabled())
         }),
       )
       return item
@@ -114,6 +116,9 @@ async function buildNode(
       )
       const submenu = await api.Submenu.new({
         text: node.text(),
+        // Disabling the whole submenu, not each option: a radio group the user
+        // can open but never act on reads as broken.
+        enabled: node.isEnabled ? node.isEnabled() : true,
         items: built.map((entry) => entry.item),
       })
       sink.push(
@@ -122,6 +127,7 @@ async function buildNode(
           for (const entry of built) {
             void entry.item.setChecked(entry.value === current)
           }
+          if (node.isEnabled) void submenu.setEnabled(node.isEnabled())
         }),
       )
       return submenu

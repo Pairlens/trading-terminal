@@ -23,6 +23,8 @@
  *    fall back to `e.key` when the code is one we don't map.
  */
 
+import { isStandalone } from '@/lib/platform'
+
 const isApplePlatform =
   typeof navigator !== 'undefined' &&
   /Mac|iPhone|iPad|iPod/.test(navigator.userAgent)
@@ -316,8 +318,14 @@ export function isRiskyChord(chord: Chord): boolean {
   if (bare && (chord.key === 'Tab' || chord.key === 'Enter')) return true
   if (chord.key === 'F5' && bare) return true
   if (chord.mod && !chord.alt && !chord.shift) {
-    // Chords the browser/webview reliably claims for itself.
-    return ['W', 'Q', 'R', 'T', 'N'].includes(chord.key) && !isApplePlatform
+    // Chords the browser/webview reliably claims for itself. Ctrl+Q is a
+    // browser-only hazard: in the desktop webview nothing above the app claims
+    // it, and it is the shipped Quit binding there — warning about the app's
+    // own default is noise the user cannot act on.
+    const claimed = isStandalone
+      ? ['W', 'R', 'T', 'N']
+      : ['W', 'Q', 'R', 'T', 'N']
+    return claimed.includes(chord.key) && !isApplePlatform
   }
   return false
 }

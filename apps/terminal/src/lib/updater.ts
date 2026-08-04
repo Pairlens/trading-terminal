@@ -23,6 +23,7 @@ import { toast } from 'sonner'
 import type { Update } from '@tauri-apps/plugin-updater'
 import i18n from '@/lib/i18n'
 import { isStandalone } from '@/lib/platform'
+import { whenWindowVisible } from '@/lib/window-visibility'
 import { onWindowLeader } from '@/lib/window-leader'
 
 const FIRST_CHECK_DELAY_MS = 15_000
@@ -90,6 +91,14 @@ export async function checkForUpdates(
 }
 
 function promptInstall(update: Update): void {
+  // In background mode the window can be hidden for weeks. A "Restart &
+  // update" toast rendered into a window nobody can see is an update that
+  // never gets applied — hold it until the window is back on screen.
+  whenWindowVisible(() => showUpdatePrompt(update))
+}
+
+function showUpdatePrompt(update: Update): void {
+  if (installing) return
   toast(t('updater.available', 'Update available'), {
     id: TOAST_ID,
     description: `${t('updater.availableDesc', 'Pairlens')} ${update.version}`,

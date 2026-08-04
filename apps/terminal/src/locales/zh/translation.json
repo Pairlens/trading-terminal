@@ -411,17 +411,20 @@
     "nav": {
       "profile": "个人资料",
       "plugins": "插件",
+      "cloudSync": "云同步",
       "notifications": "通知",
       "appearance": "外观",
       "keyboard": "键盘",
       "performance": "性能",
+      "desktop": "桌面",
       "connection": "连接",
       "language": "语言",
       "region": "国家",
       "currency": "货币",
       "risk": "风险管理",
       "privacy": "隐私",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "安全"
     },
     "comingSoon": "此部分即将推出。",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "保留我的账户",
       "confirmAction": "永久删除",
       "deleteDoneAnalyticsFailed": "你的账户已删除，但我们无法连接分析服务商来清除你的使用档案。请发邮件至 privacy@pairlens.finance，我们会手动完成。"
+    },
+    "cloudSync": {
+      "masterTitle": "云同步",
+      "masterDescription": "让账号在各设备上保持一致。可以在这里暂停，而不改动下面的开关。",
+      "pausedNotice": "已暂停。当前没有任何内容在同步。",
+      "title": "会同步到账号的内容",
+      "description": "选择另一台设备应当接手的内容。关掉的内容只留在这台设备上。",
+      "deviceOnly": "这些开关只对这台设备生效，其本身永远不会被同步。",
+      "nothingDeleted": "关掉某一项从不会删除任何东西。数据仍在这台设备上，账号里已有的副本也原样保留，只是不再更新、逐渐过期。",
+      "resumeNote": "重新打开后两边会合并，以最新的改动为准。关闭期间删除的内容，如果账号里还留着，可能会重新出现。",
+      "cloudOnlyWarning": "这一项只保存在账号里，关掉就意味着它不会被记录在任何地方。",
+      "signedOutTitle": "未登录",
+      "signedOut": "没有任何内容在同步。你所做的一切都留在这台设备上。",
+      "status": {
+        "synced": "一切都是最新的。",
+        "syncing": "正在同步…",
+        "error": "上次同步没有成功，下次改动时会重试。",
+        "idle": "暂时没有要发送的内容。"
+      },
+      "domains": {
+        "preferences": {
+          "title": "设置与偏好",
+          "description": "语言、主题、键盘快捷键、国家、插件仓库设置，以及你打开着的交易对。"
+        },
+        "charts": {
+          "title": "图表设置",
+          "description": "指标、画线、图表类型以及你的默认绘图样式。"
+        },
+        "workspaces": {
+          "title": "工作区与布局",
+          "description": "自定义工作区、文件夹、面板布局和工作区变量。"
+        },
+        "automation": {
+          "title": "工作流与提醒",
+          "description": "自动化工作流、提醒规则，以及它们监视的交易对。"
+        },
+        "plugins": {
+          "title": "插件",
+          "description": "你启用了哪些插件、它们的设置以及你固定的服务商。设置也包括你在插件自己的设置里填过的 API 密钥，比如 AI 服务商的密钥。交易所 API 密钥和钱包密钥永远不包含在内，它们留在你的钥匙串里。固定的服务商只保存在账号里，关掉后它们只在应用退出前有效。"
+        },
+        "copilot": {
+          "title": "AI 聊天记录",
+          "description": "你与 copilot 的对话，按交易对区分。"
+        },
+        "trades": {
+          "title": "交易日志",
+          "description": "你或 copilot 记入日志的交易。"
+        }
+      }
     },
     "profile": {
       "image": "头像",
@@ -543,6 +595,29 @@
       "balancedDescription": "行情和订单簿为 250 毫秒,K线为 500 毫秒。在响应速度和效率之间取得良好平衡。",
       "energySaver": "省电模式",
       "energySaverDescription": "行情和订单簿为 1 秒,K线为 2 秒。最适合被动监控或使用电池供电的笔记本电脑。"
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "关闭最后一个窗口时",
+        "description": "提醒、机器人和工作流只有在 Pairlens 运行时才会工作。请选择关闭最后一个窗口时的行为。",
+        "quit": "退出 Pairlens",
+        "quitDescription": "关闭最后一个窗口即退出应用。提醒、机器人和工作流将停止运行。",
+        "background": "在后台继续运行",
+        "backgroundDescriptionDock": "窗口关闭，但 Pairlens 继续运行。提醒、机器人和工作流照常工作。点按 Dock 图标即可重新打开窗口。",
+        "backgroundDescriptionTray": "窗口关闭，但 Pairlens 会在系统托盘继续运行。提醒、机器人和工作流照常工作。点击托盘图标即可重新打开窗口。",
+        "alwaysQuitsNote": "无论哪种模式，退出 Pairlens 都会停止提醒、机器人和工作流。",
+        "trayNeeded": "需要系统托盘。部分 Linux 桌面（例如未安装 AppIndicator 扩展的 GNOME）没有托盘，Pairlens 将无处可去。",
+        "trayUnavailable": "此桌面没有系统托盘，Pairlens 无法再回来。因此关闭最后一个窗口将直接退出。"
+      },
+      "quit": {
+        "title": "退出 Pairlens",
+        "description": "停止应用及其正在运行的一切。",
+        "button": "退出",
+        "confirmTitle": "要退出 Pairlens 吗？",
+        "confirmDescription_one": "有 {{count}} 个机器人已启用，退出会将其停止。",
+        "confirmDescription_other": "有 {{count}} 个机器人已启用，退出会将它们停止。",
+        "confirmAction": "退出"
+      }
     },
     "language": {
       "title": "语言",
@@ -686,6 +761,49 @@
         "workspaceMenu": "工作区菜单",
         "chartCancel": "取消工具 / 退出全屏"
       }
+    },
+    "security": {
+      "lockTitle": "终端锁",
+      "lockDescription": "在本设备上使用该终端前先要求输入密码。",
+      "setPassword": "设置密码",
+      "changePassword": "修改密码",
+      "turnOff": "关闭锁定",
+      "turnOffDescription": "输入当前密码以从本设备移除锁定。",
+      "newPassword": "新密码",
+      "confirmPassword": "确认密码",
+      "currentPassword": "当前密码",
+      "passwordTooShort": "至少 6 个字符。",
+      "passwordMismatch": "两次输入的密码不一致。",
+      "passwordWrong": "密码不正确。",
+      "noRecoveryWarning": "没有密码找回。一旦忘记，唯一的重新进入方式就是清除本设备的数据。现在就把它存进密码管理器。",
+      "triggersTitle": "何时锁定",
+      "triggersDescription": "选择需要弹出密码提示的时刻。",
+      "triggerStartup": "应用启动时",
+      "triggerStartupHint": "冷启动时要求输入密码。",
+      "triggerIdle": "闲置之后",
+      "triggerIdleHint": "在没有鼠标和键盘操作 {{minutes}} 分钟后锁定。",
+      "triggerPeriodic": "按固定周期",
+      "triggerPeriodicHint": "无论会话多忙，经过固定时间后再次锁定。",
+      "triggerWake": "电脑唤醒之后",
+      "triggerWakeHint": "设备从睡眠中恢复时锁定。",
+      "triggerTrade": "下单之前",
+      "triggerTradeHint": "确认你手动或通过副驾下的订单，包括自动批准的提案。机器人永远不会被询问。",
+      "afterMinutes": "{{minutes}} 分钟后",
+      "everyHours": "每 {{hours}} 小时",
+      "graceNever": "每次都问",
+      "graceMinutes": "{{minutes}} 分钟内",
+      "protectsTitle": "它能保护什么",
+      "protectsBody": "它在终端前面放一个全屏密码提示，让路过你工位的人无法点看持仓、读取余额或下单。但它不加密任何东西：交易所 API 密钥和钱包密钥仍在原处，任何拿到你已解锁电脑、又略懂技术的人，都能在完全看不到这个提示的情况下读取应用的本地数据。",
+      "protectsBots": "终端锁定期间，已启用的机器人仍在交易。锁屏不等于暂停你的策略。",
+      "protectsDesktop": "密码校验信息存放在系统钥匙串中，绝不会离开这台电脑。",
+      "protectsBrowser": "此版本把校验信息放在浏览器存储中。清除站点数据会一并移除锁定。桌面应用才是它应有的归宿。",
+      "lockNowTitle": "立即锁定",
+      "lockNowDescription": "关闭设置并立刻锁定终端。",
+      "lockNow": "锁定",
+      "resetButton": "重置并清除",
+      "resetConfirmTitle": "清除这台设备？",
+      "resetConfirmBody": "这会清除这台电脑上的所有交易所 API 密钥、钱包密钥、工作区、图表布局和聊天记录。无法撤销，也没有密码找回。如果你已登录，云端同步的设置会在再次登录后回来，但 API 密钥和钱包密钥永远不会，因为它们只保存在这里。",
+      "resetConfirmPhrase": "输入 {{phrase}} 以确认。"
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "解锁所有订单",
     "setRegion": "设置区域……",
     "newWindow": "新建窗口",
+    "quit": "退出 Pairlens",
     "back": "后退",
     "forward": "前进",
-    "checkForUpdates": "检查更新……"
+    "checkForUpdates": "检查更新……",
+    "lockTerminal": "锁定终端"
   },
   "titlebar": {
     "newWindow": "新建窗口",
@@ -2280,6 +2400,37 @@
       "finance": "金融",
       "financial_markets": "金融市场",
       "economy_macro": "宏观经济"
+    }
+  },
+  "tray": {
+    "show": "显示 Pairlens",
+    "quit": "退出 Pairlens"
+  },
+  "security": {
+    "lock": {
+      "title": "终端已锁定",
+      "subtitle": "输入密码以继续。",
+      "passwordLabel": "密码",
+      "unlock": "解锁",
+      "unlocking": "校验中…",
+      "wrongPassword": "密码不正确。",
+      "tooManyAttempts": "尝试次数过多。请在 {{seconds}} 秒后重试。",
+      "forgot": "忘记密码？",
+      "keychainUnavailable": "系统钥匙串暂时不可用。请稍后再试。",
+      "orderCancelled": "订单已取消。终端处于锁定状态。",
+      "reason": {
+        "startup": "输入密码以继续。",
+        "idle": "闲置一段时间后已锁定。",
+        "periodic": "已按计划锁定。",
+        "wake": "电脑睡眠期间已锁定。",
+        "manual": "你锁定了终端。"
+      }
+    },
+    "challenge": {
+      "title": "确认是你本人",
+      "description": "输入密码以提交此订单。",
+      "confirm": "确认",
+      "cancel": "取消"
     }
   }
 }

@@ -411,17 +411,20 @@
     "nav": {
       "profile": "Profil",
       "plugins": "Plugins",
+      "cloudSync": "Synchronisation",
       "notifications": "Notifications",
       "appearance": "Apparence",
       "keyboard": "Clavier",
       "performance": "Performance",
+      "desktop": "Bureau",
       "connection": "Connexion",
       "language": "Langue",
       "region": "Pays",
       "currency": "Devise",
       "risk": "Gestion du risque",
       "privacy": "Confidentialité",
-      "billing": "Intelligence"
+      "billing": "Intelligence",
+      "security": "Sécurité"
     },
     "comingSoon": "Cette section arrive bientôt.",
     "privacy": {
@@ -458,6 +461,55 @@
       "confirmCancel": "Garder mon compte",
       "confirmAction": "Supprimer définitivement",
       "deleteDoneAnalyticsFailed": "Votre compte est supprimé, mais nous n'avons pas pu joindre le fournisseur d'analyse pour effacer votre profil d'usage. Écrivez à privacy@pairlens.finance et nous le terminerons à la main."
+    },
+    "cloudSync": {
+      "masterTitle": "Synchronisation cloud",
+      "masterDescription": "Gardez votre compte à jour sur tous vos appareils. Mettez-la en pause ici sans toucher aux interrupteurs ci-dessous.",
+      "pausedNotice": "En pause. Rien n'est synchronisé pour le moment.",
+      "title": "Ce qui est synchronisé avec votre compte",
+      "description": "Choisissez ce qu'un deuxième appareil doit récupérer. Tout ce qui est désactivé reste sur cet appareil.",
+      "deviceOnly": "Ces interrupteurs ne concernent que cet appareil et ne sont jamais synchronisés eux-mêmes.",
+      "nothingDeleted": "Désactiver quelque chose n'efface jamais rien. Cela reste sur cet appareil, et la copie déjà présente dans votre compte n'est pas touchée : elle cesse simplement d'être mise à jour et devient obsolète.",
+      "resumeNote": "Réactivez-le et les deux côtés fusionnent, la modification la plus récente l'emporte. Ce que vous avez supprimé pendant la pause peut réapparaître si votre compte l'a encore.",
+      "cloudOnlyWarning": "Ceci n'est stocké que dans votre compte : désactivé, cela n'est enregistré nulle part.",
+      "signedOutTitle": "Non connecté",
+      "signedOut": "Rien n'est synchronisé. Tout ce que vous faites reste sur cet appareil.",
+      "status": {
+        "synced": "Tout est à jour.",
+        "syncing": "Synchronisation…",
+        "error": "La dernière synchronisation n'est pas passée. Une nouvelle tentative aura lieu à votre prochain changement.",
+        "idle": "Rien à envoyer pour l'instant."
+      },
+      "domains": {
+        "preferences": {
+          "title": "Réglages et préférences",
+          "description": "Langue, thème, raccourcis clavier, pays, réglages du registre de plugins et la paire que vous aviez ouverte."
+        },
+        "charts": {
+          "title": "Configuration du graphique",
+          "description": "Indicateurs, dessins, type de graphique et vos styles de dessin par défaut."
+        },
+        "workspaces": {
+          "title": "Espaces de travail et dispositions",
+          "description": "Espaces de travail personnalisés, dossiers, dispositions de panneaux et variables d'espace de travail."
+        },
+        "automation": {
+          "title": "Workflows et alertes",
+          "description": "Workflows d'automatisation, règles d'alerte et les paires qu'elles surveillent."
+        },
+        "plugins": {
+          "title": "Plugins",
+          "description": "Les plugins que vous avez activés, leurs réglages et vos fournisseurs épinglés. Les réglages incluent toute clé API saisie dans les paramètres d'un plugin, par exemple celle d'un fournisseur d'IA. Les clés API d'exchange et les secrets de wallet n'en font jamais partie, ils restent dans votre trousseau. Les fournisseurs épinglés ne sont conservés que dans votre compte : désactivé, ils ne durent que jusqu'à la fermeture de l'application."
+        },
+        "copilot": {
+          "title": "Historique du chat IA",
+          "description": "Vos conversations avec le copilote, paire par paire."
+        },
+        "trades": {
+          "title": "Journal de trading",
+          "description": "Les trades que vous ou le copilote consignez dans le journal."
+        }
+      }
     },
     "profile": {
       "image": "Image de profil",
@@ -543,6 +595,29 @@
       "balancedDescription": "Ticker et carnet d’ordres à 250 ms, bougies à 500 ms. Bon compromis entre réactivité et efficacité.",
       "energySaver": "Économie d’énergie",
       "energySaverDescription": "Ticker et carnet d’ordres à 1 s, bougies à 2 s. Idéal pour la surveillance passive ou les ordinateurs portables sur batterie."
+    },
+    "desktop": {
+      "closeBehavior": {
+        "title": "À la fermeture de la dernière fenêtre",
+        "description": "Les alertes, les bots et les workflows ne fonctionnent que tant que Pairlens tourne. Choisissez ce qui doit se passer à la fermeture de la dernière fenêtre.",
+        "quit": "Quitter Pairlens",
+        "quitDescription": "Fermer la dernière fenêtre quitte l'application. Les alertes, les bots et les workflows s'arrêtent.",
+        "background": "Continuer en arrière-plan",
+        "backgroundDescriptionDock": "La fenêtre se ferme, Pairlens continue de tourner. Les alertes, les bots et les workflows poursuivent leur travail. Cliquez sur l'icône du Dock pour revenir à la fenêtre.",
+        "backgroundDescriptionTray": "La fenêtre se ferme, Pairlens continue de tourner dans la zone de notification. Les alertes, les bots et les workflows poursuivent leur travail. Cliquez sur l'icône de la zone de notification pour revenir à la fenêtre.",
+        "alwaysQuitsNote": "Quitter Pairlens arrête toujours les alertes, les bots et les workflows, dans les deux modes.",
+        "trayNeeded": "Nécessite une zone de notification. Certains bureaux Linux (GNOME sans l'extension AppIndicator) n'en ont pas, et Pairlens n'aurait nulle part où aller.",
+        "trayUnavailable": "Ce bureau n'a pas de zone de notification, Pairlens ne pourrait pas revenir. Fermer la dernière fenêtre quitte l'application à la place."
+      },
+      "quit": {
+        "title": "Quitter Pairlens",
+        "description": "Arrête l'application et tout ce qu'elle exécute.",
+        "button": "Quitter",
+        "confirmTitle": "Quitter Pairlens ?",
+        "confirmDescription_one": "{{count}} bot est armé. Quitter l'arrêtera.",
+        "confirmDescription_other": "{{count}} bots sont armés. Quitter les arrêtera.",
+        "confirmAction": "Quitter"
+      }
     },
     "language": {
       "title": "Langue",
@@ -686,6 +761,49 @@
         "workspaceMenu": "Menu des espaces de travail",
         "chartCancel": "Annuler l’outil / quitter le plein écran"
       }
+    },
+    "security": {
+      "lockTitle": "Verrouillage du terminal",
+      "lockDescription": "Demander un mot de passe avant de pouvoir utiliser ce terminal sur cet appareil.",
+      "setPassword": "Définir un mot de passe",
+      "changePassword": "Changer le mot de passe",
+      "turnOff": "Désactiver le verrouillage",
+      "turnOffDescription": "Saisis ton mot de passe actuel pour retirer le verrouillage de cet appareil.",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "currentPassword": "Mot de passe actuel",
+      "passwordTooShort": "Utilise au moins 6 caractères.",
+      "passwordMismatch": "Les deux mots de passe ne correspondent pas.",
+      "passwordWrong": "Ce mot de passe n'est pas correct.",
+      "noRecoveryWarning": "Il n'existe aucune récupération de mot de passe. Si tu l'oublies, le seul retour possible efface les données de cet appareil. Enregistre-le dès maintenant dans ton gestionnaire de mots de passe.",
+      "triggersTitle": "Quand verrouiller",
+      "triggersDescription": "Choisis les moments où l'invite de mot de passe doit apparaître.",
+      "triggerStartup": "Au démarrage de l'app",
+      "triggerStartupHint": "Demander le mot de passe à un démarrage à froid.",
+      "triggerIdle": "Après une inactivité",
+      "triggerIdleHint": "Verrouiller après {{minutes}} minutes sans souris ni clavier.",
+      "triggerPeriodic": "À intervalle régulier",
+      "triggerPeriodicHint": "Reverrouiller après un délai fixe, quelle que soit l’activité de la session.",
+      "triggerWake": "Au réveil de l'ordinateur",
+      "triggerWakeHint": "Verrouiller quand la machine sort de veille.",
+      "triggerTrade": "Avant de passer un ordre",
+      "triggerTradeHint": "Confirmer les ordres que tu passes à la main ou via le copilote, y compris les propositions approuvées automatiquement. Les bots ne sont jamais interrogés.",
+      "afterMinutes": "Après {{minutes}} min",
+      "everyHours": "Toutes les {{hours}} h",
+      "graceNever": "À chaque fois",
+      "graceMinutes": "Pendant {{minutes}} min",
+      "protectsTitle": "Ce que cela protège",
+      "protectsBody": "Cela place une invite de mot de passe plein écran devant le terminal, pour que personne de passage à ton bureau ne puisse fouiller tes positions, lire tes soldes ou passer un ordre. Rien n'est chiffré : tes clés API et tes clés de portefeuille restent exactement où elles étaient, et quiconque dispose de ton ordinateur déverrouillé et d'un peu de savoir-faire peut lire les données locales de l'app sans jamais voir cette invite.",
+      "protectsBots": "Les bots armés continuent de trader pendant que le terminal est verrouillé. Verrouiller l’écran ne met pas tes stratégies en pause.",
+      "protectsDesktop": "La vérification du mot de passe est stockée dans le trousseau du système et ne quitte jamais cet ordinateur.",
+      "protectsBrowser": "Cette version stocke la vérification dans le stockage du navigateur. Effacer les données du site supprime le verrouillage. L'app de bureau est l'endroit prévu pour cela.",
+      "lockNowTitle": "Verrouiller maintenant",
+      "lockNowDescription": "Fermer les réglages et verrouiller le terminal immédiatement.",
+      "lockNow": "Verrouiller",
+      "resetButton": "Réinitialiser et effacer",
+      "resetConfirmTitle": "Effacer cet appareil ?",
+      "resetConfirmBody": "Cela efface toutes les clés API, clés de portefeuille, espaces de travail, dispositions de graphique et conversations de cet ordinateur. Aucun retour en arrière, aucune récupération de mot de passe. Si tu es connecté, les réglages synchronisés reviennent à la prochaine connexion — jamais les clés API ni les clés de portefeuille, car elles ne sont stockées qu'ici.",
+      "resetConfirmPhrase": "Tape {{phrase}} pour confirmer."
     }
   },
   "nav": {
@@ -777,9 +895,11 @@
     "unlockOrders": "Déverrouiller tous les ordres",
     "setRegion": "Définir la région…",
     "newWindow": "Nouvelle fenêtre",
+    "quit": "Quitter Pairlens",
     "back": "Précédent",
     "forward": "Suivant",
-    "checkForUpdates": "Vérifier les mises à jour…"
+    "checkForUpdates": "Vérifier les mises à jour…",
+    "lockTerminal": "Verrouiller le terminal"
   },
   "titlebar": {
     "newWindow": "Nouvelle fenêtre",
@@ -2280,6 +2400,37 @@
       "finance": "Finance",
       "financial_markets": "Marchés financiers",
       "economy_macro": "Économie macro"
+    }
+  },
+  "tray": {
+    "show": "Afficher Pairlens",
+    "quit": "Quitter Pairlens"
+  },
+  "security": {
+    "lock": {
+      "title": "Terminal verrouillé",
+      "subtitle": "Saisis ton mot de passe pour continuer.",
+      "passwordLabel": "Mot de passe",
+      "unlock": "Déverrouiller",
+      "unlocking": "Vérification…",
+      "wrongPassword": "Ce mot de passe n'est pas correct.",
+      "tooManyAttempts": "Trop de tentatives. Réessaie dans {{seconds}} s.",
+      "forgot": "Mot de passe oublié ?",
+      "keychainUnavailable": "Le trousseau du système est indisponible pour l'instant. Réessaie dans un moment.",
+      "orderCancelled": "Ordre annulé. Le terminal est verrouillé.",
+      "reason": {
+        "startup": "Saisis ton mot de passe pour continuer.",
+        "idle": "Verrouillé après un moment d'inactivité.",
+        "periodic": "Verrouillé comme prévu.",
+        "wake": "Verrouillé pendant la veille de l'ordinateur.",
+        "manual": "Tu as verrouillé le terminal."
+      }
+    },
+    "challenge": {
+      "title": "Confirme que c'est bien toi",
+      "description": "Saisis ton mot de passe pour passer cet ordre.",
+      "confirm": "Confirmer",
+      "cancel": "Annuler"
     }
   }
 }

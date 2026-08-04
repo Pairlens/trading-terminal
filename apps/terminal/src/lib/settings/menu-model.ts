@@ -9,7 +9,8 @@ import { getCommandChords } from '@/lib/keybindings/store'
 import { chordToAccelerator, parseChord } from '@/lib/keybindings/chord'
 import i18n from '@/lib/i18n'
 import { hasAppServer } from '@/lib/auth-client'
-import { openTerminalWindow } from '@/lib/platform'
+import { isMacDesktop, openTerminalWindow } from '@/lib/platform'
+import { requestQuitApp } from '@/lib/settings/close-behavior'
 import {
   getCanGoBack,
   getCanGoForward,
@@ -19,6 +20,12 @@ import {
 } from '@/lib/nav-history'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { useRiskConfigStore } from '@/stores/risk-config-store'
+import { getLockConfig, subscribeLockConfig } from '@/lib/security/lock-config'
+import {
+  isTerminalLocked,
+  lockNow,
+  subscribeLock,
+} from '@/lib/security/lock-store'
 import {
   DISPLAY_CURRENCIES,
   DISPLAY_CURRENCY_DEFAULT,
@@ -55,6 +62,7 @@ export type MenuChoice = {
   get: () => string
   set: (value: string) => void
   subscribe: (onChange: () => void) => () => void
+  isEnabled?: () => boolean
 }
 
 /** A boolean toggle: rendered as a single check item. */
@@ -65,6 +73,7 @@ export type MenuToggle = {
   get: () => boolean
   set: (value: boolean) => void
   subscribe: (onChange: () => void) => () => void
+  isEnabled?: () => boolean
 }
 
 /** A one-shot action. `text`/`isEnabled` may depend on live state. */
@@ -226,6 +235,21 @@ const newWindowCommand: MenuCommand = {
     void openTerminalWindow(window.location.pathname + window.location.search),
 }
 
+// An explicit quit — the one action that always quits, whatever the
+// close-behavior setting says. macOS gets this from the native app menu
+// (⌘Q via AppKit); Windows/Linux ship without a window menu, so this
+// descriptor is what gives them a real Ctrl+Q through the in-app accelerator
+// runner. That runner has no editable-target check by design, so this goes
+// through the confirmed path rather than `quitApp` directly: a stray Ctrl+Q
+// typed into a chat box or a bot script must not stop armed bots mid-position.
+const quitCommand: MenuCommand = {
+  kind: 'command',
+  id: 'quit-app',
+  text: () => t('menu.quit', 'Quit Pairlens'),
+  keybindingId: 'general.quit',
+  run: () => requestQuitApp(),
+}
+
 // Webview history navigation — the keyboard half of the titlebar arrows. ⌘[/⌘]
 // is what every macOS browser binds; the Windows/Linux accelerator runner picks
 // the same chord up from this descriptor as Ctrl+[/Ctrl+].
@@ -319,6 +343,18 @@ const unlockOrdersCommand: MenuCommand = {
     }),
 }
 
+// Lock the terminal on demand. Ships unbound (every obvious chord is taken);
+// the Keyboard settings section is where a user assigns one.
+const lockTerminalCommand: MenuCommand = {
+  kind: 'command',
+  id: 'lock-terminal',
+  text: () => t('menu.lockTerminal', 'Lock Terminal'),
+  keybindingId: 'general.lockTerminal',
+  run: () => lockNow('manual'),
+  isEnabled: () => getLockConfig().enabled,
+  subscribe: (onChange) => subscribeLockConfig(onChange),
+}
+
 const setRegionCommand: MenuCommand = {
   kind: 'command',
   id: 'set-region',
@@ -343,6 +379,48 @@ function withAccelerators(nodes: Array<MenuNode>): Array<MenuNode> {
   })
 }
 
+/**
+ * Disable every actionable entry while the terminal is locked.
+ *
+ * On macOS the menubar lives in AppKit, outside the webview — ⌘N and ⌘,
+ * never reach a DOM listener, so the enabled flag is the only lever there.
+ * The same descriptors drive the Windows/Linux accelerator runner, which has
+ * its own `isTerminalLocked()` bail; this keeps the two honest together.
+ *
+ * Toggles and choices are gated too, not just commands: the View menu is built
+ * almost entirely out of those, and leaving them live let someone sitting at a
+ * locked terminal change the color mode, UI language, display currency and
+ * performance mode and flip the marquee / inactivity toggles — against the
+ * stated invariant that nothing global works on a locked terminal.
+ */
+function withLockGate(nodes: Array<MenuNode>): Array<MenuNode> {
+  return nodes.map((node): MenuNode => {
+    if (
+      node.kind === 'command' ||
+      node.kind === 'toggle' ||
+      node.kind === 'choice'
+    ) {
+      const baseEnabled = node.isEnabled
+      const baseSubscribe = node.subscribe
+      return {
+        ...node,
+        isEnabled: () => !isTerminalLocked() && (baseEnabled?.() ?? true),
+        subscribe: (onChange: () => void) => {
+          const unsubscribes = [subscribeLock(onChange)]
+          if (baseSubscribe) unsubscribes.push(baseSubscribe(onChange))
+          return () => {
+            for (const unsubscribe of unsubscribes) unsubscribe()
+          }
+        },
+      }
+    }
+    if (node.kind === 'submenu') {
+      return { ...node, items: withLockGate(node.items) }
+    }
+    return node
+  })
+}
+
 /** The first chord bound to a command, as a Tauri accelerator. */
 function acceleratorFor(keybindingId: string): string | undefined {
   const serialized = getCommandChords(keybindingId)[0]
@@ -360,9 +438,18 @@ export function createMenuModel(): MenuModel {
     managePluginsCommand,
     ...(hasAppServer ? [accountCommand] : []),
     { kind: 'separator' },
+    lockTerminalCommand,
+    { kind: 'separator' },
   ]
 
-  const file: Array<MenuNode> = [newWindowCommand]
+  const file: Array<MenuNode> = [
+    newWindowCommand,
+    // macOS already has Quit in the app menu; adding a second one to File
+    // would be wrong there and redundant everywhere it isn't.
+    ...(isMacDesktop
+      ? []
+      : [{ kind: 'separator' } as MenuNode, quitCommand as MenuNode]),
+  ]
 
   const view: Array<MenuNode> = [
     backCommand,
@@ -391,9 +478,9 @@ export function createMenuModel(): MenuModel {
   }
 
   return {
-    appMenu: withAccelerators(appMenu),
-    file: withAccelerators(file),
-    view: withAccelerators(view),
-    extraMenus: withAccelerators([trading]) as Array<MenuSubmenu>,
+    appMenu: withAccelerators(withLockGate(appMenu)),
+    file: withAccelerators(withLockGate(file)),
+    view: withAccelerators(withLockGate(view)),
+    extraMenus: withAccelerators(withLockGate([trading])) as Array<MenuSubmenu>,
   }
 }
