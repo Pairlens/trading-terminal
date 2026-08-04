@@ -178,10 +178,7 @@ const SETTINGS_NAV_GROUPS = [
     { id: 'billing', nameKey: 'settings.nav.billing', icon: Sparkles },
     { id: 'cloud-sync', nameKey: 'settings.nav.cloudSync', icon: Cloud },
   ],
-  [
-    { id: 'risk', nameKey: 'settings.nav.risk', icon: ShieldCheck },
-    { id: 'plugins', nameKey: 'settings.nav.plugins', icon: Puzzle },
-  ],
+  [{ id: 'risk', nameKey: 'settings.nav.risk', icon: ShieldCheck }],
   [
     { id: 'security', nameKey: 'settings.nav.security', icon: Lock },
     { id: 'privacy', nameKey: 'settings.nav.privacy', icon: Fingerprint },
@@ -190,6 +187,10 @@ const SETTINGS_NAV_GROUPS = [
     { id: 'appearance', nameKey: 'settings.nav.appearance', icon: Paintbrush },
     { id: 'keyboard', nameKey: 'settings.nav.keyboard', icon: Keyboard },
     { id: 'performance', nameKey: 'settings.nav.performance', icon: Gauge },
+    // Plugins here, not with trading: the section configures registry source
+    // and publisher trust — app plumbing, even though most plugins are
+    // connectors. The store for browsing them is its own page.
+    { id: 'plugins', nameKey: 'settings.nav.plugins', icon: Puzzle },
     { id: 'desktop', nameKey: 'settings.nav.desktop', icon: AppWindow },
   ],
   [
