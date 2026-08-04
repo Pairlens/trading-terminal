@@ -1,23 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!--
-  Entitlements for provisioned (Developer ID + provisioning profile) builds.
-
-  Why these exist: the Touch ID vault protector (src/biometric.rs) stores its
-  key-encryption key in the macOS DATA PROTECTION keychain — the only keychain
-  that accepts a biometric SecAccessControl. That keychain refuses any process
-  without `com.apple.application-identifier` (SecItemAdd fails with
-  errSecMissingEntitlement, -34018). The identifier is a RESTRICTED
-  entitlement: codesign only honours it when the app embeds a provisioning
-  profile that authorises it, which is why this file is referenced from
-  tauri.provisioned.conf.json (applied via `--config` only when the profile is
-  present) and NOT from the base tauri.conf.json — signing an unprovisioned
-  build with these would produce an app macOS kills at launch.
-
-  keychain-access-groups pins the item to this app's own group. The data
-  protection keychain would default to it anyway; naming it keeps the intent
-  visible and matches what the profile authorises.
--->
 <plist version="1.0">
 <dict>
 	<key>com.apple.application-identifier</key>
