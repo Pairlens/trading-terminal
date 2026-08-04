@@ -79,11 +79,16 @@ both have a `helpers.py` without colliding.
 
 ## Packages
 
-numpy is preloaded. Declare anything else in `packages=[...]` and it installs
-on registration. Compiled scientific packages (pandas, scipy, scikit-learn)
-come from the Pyodide distribution; pure-Python wheels come from PyPI through
-micropip. The first install needs a network connection, then the wheels are
-cached.
+numpy is preloaded. Several hundred compiled scientific packages (pandas,
+scipy, scikit-learn, statsmodels, polars, ...) are built into the runtime and
+install on first import; the **Libraries** catalog in the editor lists every
+one with its version. Beyond those, any pure-Python wheel on PyPI works:
+import it, or declare it in `packages=[...]` to pin a version
+(`packages=['ta==0.11.0']`). Compiled packages outside the runtime
+distribution are the one thing that cannot install. The first install needs a
+network connection, then the wheels are cached. Works the same in the browser
+build and the desktop app: scripts and their dependencies run entirely on
+your machine.
 
 ## Sharing what you write
 

@@ -208,24 +208,50 @@ fires when the value turns nonzero on a closing bar. Messages support
 
 ## Using packages
 
-numpy is preloaded, because nearly every script wants it. For anything else,
-declare it:
+Libraries come in three tiers, from most to least guaranteed:
+
+1. **Preloaded.** numpy. It is warmed while the runtime boots, because nearly
+   every script wants it. Import it and go.
+2. **Built into the runtime.** Several hundred compiled scientific packages
+   ship with the Python runtime itself: pandas, scipy, scikit-learn,
+   statsmodels, polars, sympy, and friends. Import one at module level and it
+   downloads on registration, no declaration needed. The **Libraries** button
+   in the editor opens the full catalog, with versions and one-click import
+   inserts. The list comes straight from the runtime's own package lockfile,
+   so what you see is exactly what installs.
+3. **Anything pure Python on PyPI.** If a package publishes a
+   `py3-none-any` wheel, it works. Import it and the runtime installs it on
+   the first failed import, or declare it to be explicit:
 
 ```python
 meta = indicator(
     title='My indicator',
     ...
-    packages=['pandas'],
+    packages=['ta'],
 )
 ```
 
-Packages install via micropip when the script is registered. Pure-Python wheels
-come from PyPI, and compiled scientific packages (numpy, pandas, scipy,
-scikit-learn) come from the Pyodide distribution. The first install needs a
-network connection; the wheel downloads are cached, so subsequent runs are
-fast. If a module-level import fails because a pure-Python package was not
-declared, the runtime installs it and retries once, but declaring `packages`
-explicitly is the reliable path.
+`packages=[...]` takes PyPI requirement strings, so it is also how you pin a
+version of a pure-Python package: `packages=['ta==0.11.0']`. Runtime-built
+packages always install at the version the runtime ships (the catalog shows
+it).
+
+The one hard limit: compiled packages that are not part of the runtime
+distribution (TA-Lib is the classic) cannot install, because there is no C
+compiler in a browser. The error will say so. Almost always there is a
+pure-Python or runtime-built equivalent; the `ta` package covers most of
+TA-Lib, and `pairlens.ta` ships 82 indicator functions with zero installs.
+
+A few packages import under a different name than they install
+(`scikit-learn` imports as `sklearn`). The runtime knows the common cases and
+resolves them; for anything obscure, put the PyPI distribution name in
+`packages=[...]` and import whatever the package documents.
+
+The first install of any package needs a network connection; wheels are served
+from the browser HTTP cache after that. All of this works identically in the
+desktop app and in the browser build, because scripts run in your own local
+Python runtime either way. Nothing about your code or its dependencies
+touches a Pairlens server.
 
 ## On the chart
 
