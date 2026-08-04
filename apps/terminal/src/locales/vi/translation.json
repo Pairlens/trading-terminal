@@ -396,7 +396,9 @@
     "chooseIcon": "Chọn biểu tượng",
     "clear": "Xóa",
     "showInFolder": "Hiện trong thư mục",
-    "updated": "Đã cập nhật {{time}}"
+    "updated": "Đã cập nhật {{time}}",
+    "back": "Quay lại",
+    "dismiss": "Bỏ qua"
   },
   "legal": {
     "terms": "Điều khoản và Điều kiện",
@@ -773,7 +775,7 @@
       "newPassword": "Mật khẩu mới",
       "confirmPassword": "Xác nhận mật khẩu",
       "currentPassword": "Mật khẩu hiện tại",
-      "passwordTooShort": "Dùng ít nhất 6 ký tự.",
+      "passwordTooShort": "Dùng ít nhất {{min}} ký tự.",
       "passwordMismatch": "Hai mật khẩu không khớp.",
       "passwordWrong": "Mật khẩu không đúng.",
       "noRecoveryWarning": "Không có khôi phục mật khẩu. Nếu quên, cách duy nhất để vào lại là xoá sạch dữ liệu trên thiết bị này. Hãy lưu vào trình quản lý mật khẩu ngay bây giờ.",
@@ -804,7 +806,35 @@
       "resetButton": "Đặt lại và xoá",
       "resetConfirmTitle": "Xoá thiết bị này?",
       "resetConfirmBody": "Thao tác này xoá mọi khoá API sàn, khoá ví, không gian làm việc, bố cục biểu đồ và cuộc trò chuyện trên máy này. Không thể hoàn tác và không có khôi phục mật khẩu. Nếu bạn đã đăng nhập, các cài đặt đồng bộ sẽ trở lại khi đăng nhập lại — khoá API và khoá ví thì không bao giờ, vì chúng chỉ được lưu ở đây.",
-      "resetConfirmPhrase": "Gõ {{phrase}} để xác nhận."
+      "resetConfirmPhrase": "Gõ {{phrase}} để xác nhận.",
+      "vaultTitle": "Kho thông tin đăng nhập",
+      "vaultDescription": "Mã hóa khóa API sàn và khóa ví của bạn bằng mật khẩu hoặc passkey.",
+      "vaultStatusNone": "Chưa thiết lập.",
+      "vaultStatusReady_one": "Được bảo vệ bởi 1 cách mở khóa.",
+      "vaultStatusReady_other": "Được bảo vệ bởi {{count}} cách mở khóa.",
+      "vaultSetUp": "Thiết lập kho",
+      "vaultAddProtector": "Thêm cách vào khác",
+      "vaultRemoveProtector": "Xóa",
+      "vaultRemoveLastBlocked": "Đây là cách duy nhất vào kho của bạn. Hãy thêm cách khác trước khi xóa nó.",
+      "vaultRemoveBiometricOnlyBlocked": "Touch ID không thể là cách duy nhất để vào — vân tay trên máy Mac này có thể thay đổi. Hãy giữ lại mật khẩu hoặc passkey.",
+      "vaultProtectsBody": "Với kho, khóa API và khóa ví của bạn được lưu ở dạng mã hóa. Ai sao chép hồ sơ trình duyệt này — hoặc ổ đĩa của máy này — chỉ nhận được bản mã mà họ không mở nổi nếu không có mật khẩu hay passkey của bạn.",
+      "vaultCeiling": "Nó không bảo vệ khóa trong lúc bạn đang dùng. Bất cứ thứ gì chạy trong trang này đều có thể xin khóa từ kho đã mở, đúng như cách ứng dụng làm. Với những khóa giá trị nhất, ứng dụng desktop vẫn là lựa chọn được khuyến nghị.",
+      "vaultNoRecovery": "Không có khôi phục. Mất hết mọi cách vào thì khóa đã mã hóa cũng mất — cách duy nhất quay lại ứng dụng sẽ xóa dữ liệu của thiết bị này.",
+      "vaultDesktopToggleHint": "Khóa của bạn đã nằm trong keychain hệ thống. Bật mục này để thêm một mật khẩu hoặc passkey lên trên.",
+      "vaultDesktopOptOutTitle": "Tắt kho thông tin đăng nhập?",
+      "vaultDesktopOptOutBody": "Khóa của bạn quay lại chỉ được keychain hệ thống bảo vệ. Không có gì bị xóa, và bạn có thể bật lại kho sau.",
+      "vaultDesktopOptOutConfirm": "Tắt kho",
+      "vaultMigrated_one": "Đã chuyển 1 khóa sẵn có vào kho.",
+      "vaultMigrated_other": "Đã chuyển {{count}} khóa sẵn có vào kho.",
+      "vaultMigrationFailed": "Thiết lập kho chưa hoàn tất. Khóa của bạn vẫn đọc được — hãy mở kho để hoàn tất.",
+      "vaultSharedBackoff": "Kho và màn hình khóa dùng chung một giới hạn số lần thử, nên quá nhiều mật khẩu sai sẽ làm chậm cả hai.",
+      "vaultCliNote": "Công cụ dòng lệnh nhận khóa API qua tham số và không bao giờ đọc kho.",
+      "hardLockTitle": "Khóa cứng",
+      "hardLockDescription": "Khóa kho, không chỉ khóa màn hình.",
+      "hardLockButton": "Khóa cứng",
+      "hardLockWarning": "Khóa kho, không chỉ khóa màn hình. Bot live và tự động hóa ngừng giao dịch cho đến khi bạn mở khóa. Bot paper vẫn chạy.",
+      "hardLockConfirmTitle": "Niêm phong kho thông tin đăng nhập?",
+      "hardLockConfirmBody": "Bot live và tự động hóa ngừng giao dịch cho đến khi bạn mở khóa lại. Bot paper vẫn chạy."
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "Quay lại",
     "forward": "Tiến tới",
     "checkForUpdates": "Kiểm tra cập nhật…",
-    "lockTerminal": "Khoá terminal"
+    "lockTerminal": "Khoá terminal",
+    "hardLock": "Khóa cứng (niêm phong kho)…"
   },
   "titlebar": {
     "newWindow": "Cửa sổ mới",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "GIAO DỊCH THẬT",
     "armConfirm": "Bật giao dịch thật",
     "armNoCredential": "Chưa có thông tin API nào được lưu cho {{venue}}, nên bot này không thể đặt lệnh thật. Thêm một mục trong Tài khoản rồi quay lại.",
-    "armAddCredential": "Tới Tài khoản"
+    "armAddCredential": "Tới Tài khoản",
+    "statusWaitingUnlock": "Đang chờ mở khóa"
   },
   "indicatorsPage": {
     "scripts": "Chỉ báo của tôi",
@@ -2072,7 +2104,8 @@
       "switchTheme": "Giao diện: {{name}}",
       "reload": "Tải lại cửa sổ",
       "settingsSection": "Cài đặt: {{name}}",
-      "fullscreen": "Bật/tắt toàn màn hình"
+      "fullscreen": "Bật/tắt toàn màn hình",
+      "hardLock": "Khóa cứng (niêm phong kho)"
     },
     "footer": {
       "navigate": "Điều hướng",
@@ -2182,7 +2215,9 @@
     "hasAccountNo": "Chưa có",
     "hasAccountNoDesc": "Mở tài khoản {{exchange}} miễn phí",
     "importKey": "Nhập private key",
-    "affiliateDisclosure": "Một số liên kết đăng ký có thể mang lại hoa hồng cho Pairlens, không phát sinh thêm chi phí cho bạn."
+    "affiliateDisclosure": "Một số liên kết đăng ký có thể mang lại hoa hồng cho Pairlens, không phát sinh thêm chi phí cho bạn.",
+    "vaultSealedBody": "Kho thông tin đăng nhập của bạn đang bị khóa. Các tài khoản của bạn vẫn còn đây — hãy mở khóa để xem và sử dụng.",
+    "credentialsUnreadable": "Không đọc được các khoá đã lưu trên thiết bị này. Không mất gì cả — thử lại hoặc khởi động lại Pairlens."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2425,7 +2460,8 @@
         "idle": "Đã khoá sau một lúc không hoạt động.",
         "periodic": "Đã khoá theo lịch.",
         "wake": "Đã khoá khi máy tính ngủ.",
-        "manual": "Bạn đã khoá terminal."
+        "manual": "Bạn đã khoá terminal.",
+        "hard": "Bạn đã khóa kho khóa. Các tự động hóa trực tiếp đang tạm dừng."
       }
     },
     "challenge": {
@@ -2433,6 +2469,45 @@
       "description": "Nhập mật khẩu để đặt lệnh này.",
       "confirm": "Xác nhận",
       "cancel": "Huỷ"
+    },
+    "vault": {
+      "enrollTitle": "Bảo vệ khóa của bạn",
+      "enrollSubtitle": "Chọn cách bạn sẽ mở khóa các khóa được lưu trên thiết bị này.",
+      "enrollRecommendBoth": "Chúng tôi khuyên nên thiết lập cả passkey lẫn mật khẩu. Cả hai đều mở được kho của bạn, nên cái thứ hai là đường quay lại nếu bạn mất cái đầu tiên.",
+      "enrollButton": "Tiếp tục",
+      "secondTitle": "Thêm cách vào thứ hai?",
+      "secondSubtitle": "Bạn chỉ có một cách mở kho. Cách thứ hai khiến việc mất một thiết bị, hay quên một mật khẩu, không còn là dấu chấm hết.",
+      "doneButton": "Xong",
+      "choosePasskey": "Passkey",
+      "choosePasskeyHint": "Touch ID, Windows Hello hoặc khóa bảo mật USB.",
+      "choosePassword": "Mật khẩu",
+      "choosePasswordHint": "Chính mật khẩu mở khóa terminal này.",
+      "passkeyUnsupported": "Passkey không khả dụng ở đây.",
+      "passkeyUnsupportedHint": "Trình duyệt hoặc thiết bị này không thể dẫn xuất khóa từ passkey. Hãy dùng mật khẩu.",
+      "passkeyCancelled": "Lời nhắc passkey đã bị đóng.",
+      "passkeyNoMatch": "Passkey đó chưa được đăng ký cho kho này.",
+      "chooseBiometric": "Touch ID",
+      "chooseBiometricHint": "Mở khóa bằng cảm biến Touch ID trên máy Mac này.",
+      "unlockWithBiometric": "Mở khóa bằng Touch ID",
+      "biometricPromptReason": "Mở khóa kho thông tin đăng nhập Pairlens của bạn",
+      "biometricLabel": "Touch ID trên máy Mac này",
+      "biometricCancelled": "Lời nhắc Touch ID đã bị bỏ qua.",
+      "biometricInvalidated": "Touch ID không còn mở được kho của bạn — vân tay trên máy Mac này đã thay đổi. Hãy xóa trong Cài đặt → Bảo mật và thiết lập lại.",
+      "useExistingPassword": "Dùng mật khẩu bạn đã đặt cho terminal này.",
+      "unlockTitle": "Mở khóa các khóa của bạn",
+      "unlockSubtitle": "Khóa API và khóa ví của bạn đang được mã hóa. Mở khóa để sử dụng.",
+      "unlockWithPasskey": "Mở bằng passkey",
+      "unlockWithPassword": "Mở khóa",
+      "unlocking": "Đang mở khóa…",
+      "sealed": "Kho thông tin đăng nhập của bạn đang bị khóa.",
+      "sealedBanner_one": "1 bot live đang tạm dừng — mở khóa Pairlens để tiếp tục giao dịch.",
+      "sealedBanner_other": "{{count}} bot live đang tạm dừng — mở khóa Pairlens để tiếp tục giao dịch.",
+      "sealedBannerAction": "Mở khóa",
+      "botsPausedTitle": "Bot live đang tạm dừng",
+      "botsPausedBody": "Mở khóa Pairlens để tiếp tục giao dịch live. Bot paper không bị ảnh hưởng.",
+      "orderBlocked": "Kho thông tin đăng nhập của bạn đang bị khóa — mở khóa Pairlens để đặt lệnh live.",
+      "insecureContext": "Không thể mã hóa trên kết nối không an toàn. Hãy mở Pairlens qua HTTPS, hoặc trên localhost, để thiết lập kho.",
+      "diverged": "Terminal đã mở khóa, nhưng mật khẩu đó không mở được kho thông tin đăng nhập. Hãy đổi mật khẩu trong Cài đặt → Bảo mật để đồng bộ lại cả hai."
     }
   },
   "fullscreen": {

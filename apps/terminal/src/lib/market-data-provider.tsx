@@ -57,6 +57,14 @@ import {
 import { useWalletsStore } from '@/stores/wallets-store'
 import { useRiskConfigStore } from '@/stores/risk-config-store'
 import { requireUnlockForTrade } from '@/lib/security/lock-store'
+import {
+  VaultSealedError,
+  isVaultSealed,
+} from '@/lib/security/vault/vault-errors'
+import {
+  isVaultEnrolled,
+  isVaultUnlocked,
+} from '@/lib/security/vault/vault-session'
 import i18n from '@/lib/i18n'
 
 export type MarketDataStatus = 'disconnected' | 'connecting' | 'connected'
@@ -107,7 +115,12 @@ function orderAnalyticsProps(params: Record<string, unknown>): TradeEventProps {
   }
 }
 
-function orderFailReason(message: string): TradeFailReason {
+export function orderFailReason(err: unknown): TradeFailReason {
+  // Typed before textual: a sealed vault is its own bucket, not an `auth`
+  // failure. Filing it under `auth` would read in the funnel as "the venue
+  // rejected their key", which is a completely different product problem.
+  if (isVaultSealed(err)) return 'vault-sealed'
+  const message = err instanceof Error ? err.message : String(err)
   const m = message.toLowerCase()
   if (m.includes('risk limit') || m.includes('locked')) return 'guardrail'
   if (
@@ -687,6 +700,10 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
                 )
                 return Promise.resolve(null)
               }
+              // Deliberately NOT wrapped in a catch: a sealed vault throws out
+              // of here, and the plugin has to see a failure. Collapsing it
+              // into the `null` above would be indistinguishable from the deny
+              // path and the swap would look like "this wallet has no key".
               return getPrivateKey(id)
             },
           })
@@ -1102,6 +1119,21 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       const analytics = orderAnalyticsProps(params)
       track('trade_submitted', analytics)
       try {
+        // ── Vault guard ──
+        // Before the risk guards, because this is not a policy decision — the
+        // credential that signs this order is ciphertext we cannot open. It
+        // has to fail loud and typed: a connector handed no credential would
+        // otherwise report an authentication error from the venue, and the
+        // user would go looking at their API key instead of their lock screen.
+        if (isVaultEnrolled() && !isVaultUnlocked()) {
+          throw new VaultSealedError(
+            i18n.t('security.vault.orderBlocked', {
+              defaultValue:
+                'Your credential vault is locked — unlock Pairlens to place live orders.',
+            }),
+          )
+        }
+
         // ── Risk guard ──
         const riskStore = useRiskConfigStore.getState()
         riskStore.checkWindowReset()
@@ -1199,12 +1231,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         else track('trade_failed', { ...analytics, reason: 'rejected' })
         return result
       } catch (err) {
-        track('trade_failed', {
-          ...analytics,
-          reason: orderFailReason(
-            err instanceof Error ? err.message : String(err),
-          ),
-        })
+        track('trade_failed', { ...analytics, reason: orderFailReason(err) })
         throw err
       }
     },
@@ -1224,9 +1251,14 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
    */
   const placeOrder = useCallback(
     async (params: Record<string, unknown>): Promise<OrderResult> => {
-      const allowed = await requireUnlockForTrade()
-      if (!allowed) {
-        throw new Error(i18n.t('security.lock.orderCancelled'))
+      // A sealed vault also resolves `requireUnlockForTrade` to false, but
+      // "your order was cancelled" is the wrong explanation for it — let the
+      // guarded path below throw the sealed error, which says what to do.
+      if (!isVaultEnrolled() || isVaultUnlocked()) {
+        const allowed = await requireUnlockForTrade()
+        if (!allowed) {
+          throw new Error(i18n.t('security.lock.orderCancelled'))
+        }
       }
       return placeOrderGuarded(params)
     },

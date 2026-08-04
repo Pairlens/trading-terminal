@@ -19,7 +19,18 @@
 
 import { onLockMessage, postLock } from './lock-channel'
 
-export type LockReason = 'startup' | 'idle' | 'periodic' | 'wake' | 'manual'
+/**
+ * `'hard'` is the credential vault's own lock: it drops the data key as well
+ * as covering the screen, which stops live bots and automations. Every other
+ * reason leaves them running.
+ */
+export type LockReason =
+  | 'startup'
+  | 'idle'
+  | 'periodic'
+  | 'wake'
+  | 'manual'
+  | 'hard'
 
 export type LockTriggers = {
   onStartup: boolean

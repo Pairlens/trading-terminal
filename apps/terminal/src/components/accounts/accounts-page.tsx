@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence } from 'motion/react'
 import {
@@ -9,6 +9,7 @@ import {
   Landmark,
   Loader2,
   Plus,
+  TriangleAlert,
   Unplug,
   Wallet,
 } from 'lucide-react'
@@ -56,6 +57,10 @@ import {
 import { useMarketData } from '@/lib/market-data-provider'
 import { usePortfolioValue } from '@/hooks/use-portfolio-value'
 import { PageHeader } from '@/components/page-header'
+import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
+import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
+import { isVaultEnrollmentRequired } from '@/lib/security/vault/vault-errors'
+import { mustEnrollFirst } from '@/lib/security/vault/vault-policy'
 
 // ---------------------------------------------------------------------------
 // Empty section panel — dashed storefront-style placeholder
@@ -191,8 +196,16 @@ export function AccountsPage() {
     usePortfolioValue()
   // Derive market ID list from available market connector plugins
   const availableMarketIds = availableMarkets.map((m) => m.marketId)
-  const { credentials, loaded, load, addCredential, removeCredential } =
-    useCredentialsStore()
+  const {
+    credentials,
+    loaded,
+    sealed,
+    status: credentialsStatus,
+    load,
+    reload,
+    addCredential,
+    removeCredential,
+  } = useCredentialsStore()
 
   // Crypto wallets
   const {
@@ -222,6 +235,30 @@ export function AccountsPage() {
   const [isBusy, setIsBusy] = useState(false)
   // Full-screen "all venues" page (opened from the section rails)
   const [venuesOpen, setVenuesOpen] = useState(false)
+  // Vault enrollment gate. `pendingAction` is what to resume once the user has
+  // a protector — the wizard they were opening, or the submit that was
+  // rejected. Without it the enrollment dialog would be a dead end that
+  // silently discards a filled-in form.
+  const [enrollOpen, setEnrollOpen] = useState(false)
+  const [unlockOpen, setUnlockOpen] = useState(false)
+  const pendingAction = useRef<(() => void) | null>(null)
+
+  /**
+   * Run `action`, or open enrollment first when this device requires a vault
+   * and does not have one.
+   *
+   * Proactive: the user meets the "set up a way to unlock" step before typing
+   * an API key, not after. The submit handlers keep their own reactive catch
+   * as a safety net for any path that skips this.
+   */
+  const withVault = async (action: () => void) => {
+    if (await mustEnrollFirst()) {
+      pendingAction.current = action
+      setEnrollOpen(true)
+      return
+    }
+    action()
+  }
 
   useEffect(() => {
     void load()
@@ -240,16 +277,18 @@ export function AccountsPage() {
   const handlePickKind = (kind: CredentialKind) => {
     setShowTypePicker(false)
     setFeedback(null)
-    if (kind === 'exchange') {
-      setFormKind('exchange')
-      setShowForm(true)
-    } else if (kind === 'crypto') {
-      setCryptoChain(availableChains[0] ?? null)
-      setShowCryptoForm(true)
-    } else if (kind === 'broker') {
-      setFormKind('broker')
-      setShowForm(true)
-    }
+    void withVault(() => {
+      if (kind === 'exchange') {
+        setFormKind('exchange')
+        setShowForm(true)
+      } else if (kind === 'crypto') {
+        setCryptoChain(availableChains[0] ?? null)
+        setShowCryptoForm(true)
+      } else if (kind === 'broker') {
+        setFormKind('broker')
+        setShowForm(true)
+      }
+    })
   }
 
   const handleAddCryptoWallet = async (event: FormEvent) => {
@@ -286,6 +325,14 @@ export function AccountsPage() {
       setCryptoPrivateKey('')
       setCryptoChain(null)
     } catch (error) {
+      // The reactive half of the gate. Anything that reaches `addWallet`
+      // without going through `withVault` lands here rather than showing the
+      // user a raw error for a state they can simply fix.
+      if (isVaultEnrollmentRequired(error)) {
+        pendingAction.current = () => void handleAddCryptoWallet(event)
+        setEnrollOpen(true)
+        return
+      }
       setFeedback({
         type: 'error',
         message:
@@ -391,6 +438,11 @@ export function AccountsPage() {
       setWalletName('')
       setShowForm(false)
     } catch (error) {
+      if (isVaultEnrollmentRequired(error)) {
+        pendingAction.current = () => void handleSubmit(event)
+        setEnrollOpen(true)
+        return
+      }
       setFeedback({
         type: 'error',
         message:
@@ -420,7 +472,17 @@ export function AccountsPage() {
     }
   }
 
-  const hasAnyCredential = credentials.length > 0 || cryptoWallets.length > 0
+  // A read that FAILED is not an empty account list either. `error` empties the
+  // store for a reason that has nothing to do with the user's keys — a keychain
+  // that would not answer, one corrupted slot — and it deserves its own answer
+  // rather than the sealed one, because unlocking is not what fixes it.
+  const readFailed = credentialsStatus === 'error'
+
+  // A sealed vault must never present the first-run hero: "Trade with your own
+  // keys / connect a venue" in front of somebody who already has keys is how a
+  // user ends up re-entering credentials on top of a vault they can't open.
+  const hasAnyCredential =
+    sealed || readFailed || credentials.length > 0 || cryptoWallets.length > 0
 
   return (
     <SidebarInset className="h-svh min-h-svh overflow-hidden">
@@ -506,6 +568,55 @@ export function AccountsPage() {
                   onSubmit={handleAddCryptoWallet}
                 />
 
+                {/* Enrollment gate. Resumes whatever the user was doing. */}
+                <VaultEnrollmentDialog
+                  open={enrollOpen}
+                  onOpenChange={(next) => {
+                    setEnrollOpen(next)
+                    if (!next) pendingAction.current = null
+                  }}
+                  onEnrolled={() => {
+                    const resume = pendingAction.current
+                    pendingAction.current = null
+                    resume?.()
+                  }}
+                />
+                <VaultUnlockDialog
+                  open={unlockOpen}
+                  onOpenChange={setUnlockOpen}
+                />
+
+                {/* A sealed vault is NOT an empty account list. Saying so is
+                    the difference between "unlock to see your keys" and a
+                    user re-entering API keys over a vault they can't open. */}
+                {sealed && (
+                  <Alert className="mb-6 border-amber-500/30 bg-amber-500/10">
+                    <KeyRound className="size-4 text-amber-600 dark:text-amber-400" />
+                    <AlertDescription className="flex flex-wrap items-center gap-3">
+                      <span className="min-w-0 flex-1">
+                        {t('accounts.vaultSealedBody')}
+                      </span>
+                      <Button size="sm" onClick={() => setUnlockOpen(true)}>
+                        {t('security.vault.sealedBannerAction')}
+                      </Button>
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {readFailed && (
+                  <Alert className="mb-6 border-destructive/30 bg-destructive/10">
+                    <TriangleAlert className="size-4 text-destructive" />
+                    <AlertDescription className="flex flex-wrap items-center gap-3">
+                      <span className="min-w-0 flex-1">
+                        {t('accounts.credentialsUnreadable')}
+                      </span>
+                      <Button size="sm" onClick={() => void reload()}>
+                        {t('common.retry')}
+                      </Button>
+                    </AlertDescription>
+                  </Alert>
+                )}
+
                 {/* Spotlight hero — the acquisition moment, shown until the
                     first venue is connected */}
                 {!hasAnyCredential && (
@@ -577,9 +688,11 @@ export function AccountsPage() {
                             size="sm"
                             variant="outline"
                             onClick={() => {
-                              setFormKind('exchange')
-                              setShowForm(true)
                               setFeedback(null)
+                              void withVault(() => {
+                                setFormKind('exchange')
+                                setShowForm(true)
+                              })
                             }}
                           >
                             <Plus className="size-3.5" />
@@ -621,10 +734,12 @@ export function AccountsPage() {
                                 variant="outline"
                                 size="sm"
                                 className="mt-3 gap-2"
-                                onClick={() => {
-                                  setFormKind('exchange')
-                                  setShowForm(true)
-                                }}
+                                onClick={() =>
+                                  void withVault(() => {
+                                    setFormKind('exchange')
+                                    setShowForm(true)
+                                  })
+                                }
                               >
                                 <Plus className="size-3.5" />
                                 {t('accounts.connectExchange')}
@@ -661,10 +776,12 @@ export function AccountsPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => {
-                                setShowCryptoForm(true)
-                                setCryptoChain(availableChains[0] ?? null)
-                              }}
+                              onClick={() =>
+                                void withVault(() => {
+                                  setCryptoChain(availableChains[0] ?? null)
+                                  setShowCryptoForm(true)
+                                })
+                              }
                             >
                               <Plus className="size-3.5" />
                               {t('accounts.addWallet')}
@@ -677,10 +794,12 @@ export function AccountsPage() {
                         rail={
                           <ChainRail
                             chains={availableChains}
-                            onAdd={(chain) => {
-                              setCryptoChain(chain)
-                              setShowCryptoForm(true)
-                            }}
+                            onAdd={(chain) =>
+                              void withVault(() => {
+                                setCryptoChain(chain)
+                                setShowCryptoForm(true)
+                              })
+                            }
                           />
                         }
                       >
@@ -695,10 +814,12 @@ export function AccountsPage() {
                                   variant="outline"
                                   size="sm"
                                   className="mt-3 gap-2"
-                                  onClick={() => {
-                                    setCryptoChain(availableChains[0] ?? null)
-                                    setShowCryptoForm(true)
-                                  }}
+                                  onClick={() =>
+                                    void withVault(() => {
+                                      setCryptoChain(availableChains[0] ?? null)
+                                      setShowCryptoForm(true)
+                                    })
+                                  }
                                 >
                                   <Plus className="size-3.5" />
                                   {t('accounts.addWallet')}
@@ -738,9 +859,11 @@ export function AccountsPage() {
                               size="sm"
                               variant="outline"
                               onClick={() => {
-                                setFormKind('broker')
-                                setShowForm(true)
                                 setFeedback(null)
+                                void withVault(() => {
+                                  setFormKind('broker')
+                                  setShowForm(true)
+                                })
                               }}
                             >
                               <Plus className="size-3.5" />
@@ -770,10 +893,12 @@ export function AccountsPage() {
                                   variant="outline"
                                   size="sm"
                                   className="mt-3 gap-2"
-                                  onClick={() => {
-                                    setFormKind('broker')
-                                    setShowForm(true)
-                                  }}
+                                  onClick={() =>
+                                    void withVault(() => {
+                                      setFormKind('broker')
+                                      setShowForm(true)
+                                    })
+                                  }
                                 >
                                   <Plus className="size-3.5" />
                                   {t('accounts.connectBroker')}

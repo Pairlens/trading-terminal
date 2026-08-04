@@ -56,6 +56,14 @@ import { getBalancesForCredential } from '@/stores/balances-store'
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
 import { useCredentialsStore } from '@/stores/credentials-store'
+import { useVaultAttentionStore } from '@/stores/vault-attention-store'
+import { isVaultSealed } from '@/lib/security/vault/vault-errors'
+import {
+  isVaultEnrolled,
+  isVaultUnlocked,
+  subscribeVault,
+} from '@/lib/security/vault/vault-session'
+import { startVaultBootstrap } from '@/lib/security/vault/vault-bootstrap'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
 import { resolveTargets } from '@/lib/indicators/backtest'
 import { fetchHistoryDepth } from '@/lib/indicators/fetch-depth'
@@ -302,6 +310,8 @@ export class BotRuntime {
   private readonly subs = new Map<string, ActiveSub>()
   private storeUnsub: (() => void) | null = null
   private keepAwakeUnsub: (() => void) | null = null
+  private vaultUnsub: (() => void) | null = null
+  private credentialsUnsub: (() => void) | null = null
   private sleepHeld = false
 
   start(pluginManager: PluginManager): void {
@@ -315,11 +325,33 @@ export class BotRuntime {
     useBotsStore.getState().load()
     useBotRunsStore.getState().load()
     // Credentials live in the keychain and load asynchronously; a live bot
-    // can't be armed until they're in memory.
+    // can't be armed until they're in memory. A sealed vault settles the store
+    // into `sealed` rather than throwing, so this chain is safe either way —
+    // and the vault subscription below is what resumes the parked bots.
     void useCredentialsStore
       .getState()
       .load()
       .then(() => this.reconcile())
+    // …and reconcile again whenever that store settles somewhere new. This is
+    // what makes the unlock path safe: `subscribeVault` fires synchronously
+    // from `setDek`, at which point the credentials store is still `sealed`
+    // with nothing in it, and the reload that repopulates it is async. Without
+    // this listener the unlock-driven reconcile would find no credential and
+    // halt — disabling exactly the bots the park/halt split exists to keep.
+    this.credentialsUnsub = useCredentialsStore.subscribe((state, previous) => {
+      if (state.status === previous.status) return
+      queueMicrotask(() => this.reconcile())
+    })
+    // The runtime outlives any render, so it cannot rely on a component
+    // having called this. Cheap and idempotent.
+    startVaultBootstrap()
+    // Unlocking is the event that un-parks every waiting bot. Reconcile off
+    // the vault the same way we reconcile off the store: never off a caller
+    // remembering to tell us.
+    this.vaultUnsub = subscribeVault(() => {
+      if (isVaultUnlocked()) useVaultAttentionStore.getState().clearAll()
+      this.reconcile()
+    })
     // Toggling the switch mid-run must take effect immediately: turning it off
     // while a bot trades should release the machine, not wait for the bot to
     // stop.
@@ -345,6 +377,10 @@ export class BotRuntime {
     this.storeUnsub = null
     this.keepAwakeUnsub?.()
     this.keepAwakeUnsub = null
+    this.vaultUnsub?.()
+    this.vaultUnsub = null
+    this.credentialsUnsub?.()
+    this.credentialsUnsub = null
     for (const botId of Array.from(this.subs.keys())) {
       this.teardown(botId, 'stopped')
     }
@@ -401,14 +437,37 @@ export class BotRuntime {
       this.halt(bot.id, 'error', 'Cannot start', script.error)
       return
     }
-    if (bot.mode === 'live' && !liveCredentialId(bot.market)) {
-      this.halt(
-        bot.id,
-        'error',
-        'Cannot start live',
-        `No live credential for ${bot.market}. Add one in Accounts, or switch the bot to paper.`,
-      )
+    // The vault comes BEFORE the credential check on purpose: with a sealed
+    // vault the credentials store is empty because it could not read, not
+    // because there is nothing there, and `halt()` would disable a perfectly
+    // good bot over a lock screen.
+    if (bot.mode === 'live' && isVaultEnrolled() && !isVaultUnlocked()) {
+      this.park(bot)
       return
+    }
+    if (bot.mode === 'live') {
+      // "No credential" is only ever true of a store that finished reading.
+      // Anything else — still loading, sealed, or a keychain that refused —
+      // is an empty list for a reason that has nothing to do with the user's
+      // keys, and halting on it disables an armed bot the user would have to
+      // re-arm by hand. Wait instead: the credentials subscription in
+      // `start()` reconciles again the moment the status changes.
+      const credentials = useCredentialsStore.getState()
+      if (credentials.status !== 'ready') {
+        if (credentials.status === 'sealed' || credentials.status === 'error') {
+          this.park(bot, credentials.status)
+        }
+        return
+      }
+      if (!liveCredentialId(bot.market)) {
+        this.halt(
+          bot.id,
+          'error',
+          'Cannot start live',
+          `No live credential for ${bot.market}. Add one in Accounts, or switch the bot to paper.`,
+        )
+        return
+      }
     }
 
     const session: ActiveSub = {
@@ -933,6 +992,14 @@ export class BotRuntime {
     })
 
     if (!result.ok) {
+      // A hard lock mid-run is not a rejection to halt over: the venue never
+      // saw the order, and the bot is fine the moment the vault reopens.
+      // Halting here would disable the definition — the exact silent-disarm
+      // this path exists to prevent.
+      if (isVaultSealed(result.cause)) {
+        this.park(bot)
+        return
+      }
       this.log(botId, 'error', 'order-rejected', 'Order rejected', result.error)
       // Live rejections stop the bot: the venue said no, and the next bar
       // would ask again with the same parameters. Paper failures are
@@ -1141,6 +1208,48 @@ export class BotRuntime {
     useBotRunsStore
       .getState()
       .appendEvent(botId, makeEvent(botId, level, kind, message, detail))
+  }
+
+  /**
+   * Stand a live bot down until the vault opens — WITHOUT disabling it.
+   *
+   * This is the whole difference between `park` and `halt`, and it is the
+   * difference between "your bots resume when you unlock" and "your bots are
+   * off and you found out from your P&L". `bot.enabled` is untouched, so the
+   * unlock-driven `reconcile()` picks the bot straight back up; the run status
+   * says why it is idle; and the attention store drives a banner plus one OS
+   * notification from the leader window, because a paused live bot the user
+   * does not know about is the failure mode this whole path exists to avoid.
+   */
+  private park(
+    bot: BotDefinition,
+    reason: 'sealed' | 'error' = 'sealed',
+  ): void {
+    const detail =
+      reason === 'error'
+        ? 'Your stored credentials could not be read on this device. This bot resumes live trading as soon as they load. Paper bots are unaffected.'
+        : 'Your credential vault is locked. This bot resumes live trading as soon as you unlock Pairlens. Paper bots are unaffected.'
+    this.log(bot.id, 'warning', 'guard-blocked', 'Waiting for unlock', detail)
+    useBotRunsStore
+      .getState()
+      .patchRun(bot.id, { status: 'waiting-unlock', statusDetail: detail })
+    const session = this.subs.get(bot.id)
+    if (session) {
+      session.disposed = true
+      session.stopFillWatch?.()
+      session.unsub()
+      this.subs.delete(bot.id)
+    }
+    // Deliberately no `setEnabled(false)`: reconcile() must find this bot
+    // wanted again the moment the vault opens.
+    //
+    // Only a sealed vault feeds the banner — its copy tells the user to
+    // unlock, and a read that failed for some other reason is not something
+    // unlocking fixes. That case lives in the run status, where it is true.
+    if (reason === 'sealed') {
+      useVaultAttentionStore.getState().report({ id: bot.id, label: bot.name })
+    }
+    void this.syncSleepBlock()
   }
 
   /**

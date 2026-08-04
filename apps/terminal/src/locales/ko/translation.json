@@ -396,7 +396,9 @@
     "chooseIcon": "아이콘 선택",
     "clear": "지우기",
     "showInFolder": "폴더에서 보기",
-    "updated": "{{time}} 업데이트됨"
+    "updated": "{{time}} 업데이트됨",
+    "back": "뒤로",
+    "dismiss": "닫기"
   },
   "legal": {
     "terms": "이용약관",
@@ -773,7 +775,7 @@
       "newPassword": "새 비밀번호",
       "confirmPassword": "비밀번호 확인",
       "currentPassword": "현재 비밀번호",
-      "passwordTooShort": "6자 이상 사용하세요.",
+      "passwordTooShort": "{{min}}자 이상 사용하세요.",
       "passwordMismatch": "두 비밀번호가 일치하지 않습니다.",
       "passwordWrong": "비밀번호가 올바르지 않습니다.",
       "noRecoveryWarning": "비밀번호 복구는 없습니다. 잊어버리면 다시 들어오는 유일한 방법은 이 기기의 데이터를 지우는 것입니다. 지금 비밀번호 관리자에 저장하세요.",
@@ -804,7 +806,35 @@
       "resetButton": "초기화하고 지우기",
       "resetConfirmTitle": "이 기기를 지울까요?",
       "resetConfirmBody": "이 컴퓨터의 모든 거래소 API 키, 지갑 키, 워크스페이스, 차트 레이아웃, 채팅을 지웁니다. 되돌릴 수 없고 비밀번호 복구도 없습니다. 로그인 상태라면 클라우드 동기화 설정은 다시 로그인할 때 돌아오지만, API 키와 지갑 키는 여기에만 저장되므로 절대 돌아오지 않습니다.",
-      "resetConfirmPhrase": "확인하려면 {{phrase}}를 입력하세요."
+      "resetConfirmPhrase": "확인하려면 {{phrase}}를 입력하세요.",
+      "vaultTitle": "자격 증명 보관함",
+      "vaultDescription": "거래소 API 키와 지갑 키를 비밀번호 또는 패스키로 암호화합니다.",
+      "vaultStatusNone": "설정되지 않음.",
+      "vaultStatusReady_one": "1가지 잠금 해제 방법으로 보호됨.",
+      "vaultStatusReady_other": "{{count}}가지 잠금 해제 방법으로 보호됨.",
+      "vaultSetUp": "보관함 설정",
+      "vaultAddProtector": "다른 진입 수단 추가",
+      "vaultRemoveProtector": "제거",
+      "vaultRemoveLastBlocked": "이것이 보관함으로 들어가는 유일한 방법입니다. 제거하기 전에 다른 방법을 추가하세요.",
+      "vaultRemoveBiometricOnlyBlocked": "Touch ID만 유일한 입구로 둘 수는 없습니다. 이 Mac의 지문은 바뀔 수 있습니다. 비밀번호나 패스키를 남겨 두세요.",
+      "vaultProtectsBody": "보관함이 있으면 API 키와 지갑 키가 암호화되어 저장됩니다. 이 브라우저 프로필 — 또는 이 컴퓨터의 디스크 — 를 복사한 사람은 당신의 비밀번호나 패스키 없이는 열 수 없는 암호문만 얻습니다.",
+      "vaultCeiling": "사용 중인 키는 보호하지 않습니다. 이 페이지 안에서 실행되는 것은 무엇이든 앱과 똑같이 잠금 해제된 보관함에 키를 요청할 수 있습니다. 가장 중요한 키에는 여전히 데스크톱 앱을 권장합니다.",
+      "vaultNoRecovery": "복구는 없습니다. 모든 진입 수단을 잃으면 암호화된 키도 사라집니다 — 앱으로 돌아가는 유일한 방법은 이 기기의 데이터를 지우는 것입니다.",
+      "vaultDesktopToggleHint": "키는 이미 시스템 키체인에 있습니다. 그 위에 비밀번호나 패스키를 더하려면 이 옵션을 켜세요.",
+      "vaultDesktopOptOutTitle": "자격 증명 보관함을 끌까요?",
+      "vaultDesktopOptOutBody": "키는 다시 시스템 키체인만으로 보호됩니다. 삭제되는 것은 없으며, 보관함은 나중에 다시 켤 수 있습니다.",
+      "vaultDesktopOptOutConfirm": "보관함 끄기",
+      "vaultMigrated_one": "기존 키 1개를 보관함으로 옮겼습니다.",
+      "vaultMigrated_other": "기존 키 {{count}}개를 보관함으로 옮겼습니다.",
+      "vaultMigrationFailed": "보관함 설정이 끝나지 않았습니다. 키는 여전히 읽을 수 있습니다 — 보관함을 열어 마무리하세요.",
+      "vaultSharedBackoff": "보관함과 잠금 화면은 시도 횟수 제한을 공유하므로, 비밀번호를 너무 많이 틀리면 둘 다 지연됩니다.",
+      "vaultCliNote": "명령줄 도구는 API 키를 인자로 받으며 보관함을 읽지 않습니다.",
+      "hardLockTitle": "하드 잠금",
+      "hardLockDescription": "화면뿐 아니라 보관함까지 잠급니다.",
+      "hardLockButton": "하드 잠금",
+      "hardLockWarning": "화면뿐 아니라 보관함까지 잠급니다. 잠금을 해제할 때까지 실거래 봇과 자동화가 거래를 멈춥니다. 모의 봇은 계속 실행됩니다.",
+      "hardLockConfirmTitle": "자격 증명 보관함을 봉인할까요?",
+      "hardLockConfirmBody": "다시 잠금을 해제할 때까지 실거래 봇과 자동화가 거래를 멈춥니다. 모의 봇은 계속 실행됩니다."
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "뒤로",
     "forward": "앞으로",
     "checkForUpdates": "업데이트 확인…",
-    "lockTerminal": "터미널 잠금"
+    "lockTerminal": "터미널 잠금",
+    "hardLock": "하드 잠금(보관함 봉인)…"
   },
   "titlebar": {
     "newWindow": "새 창",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "ARM LIVE",
     "armConfirm": "실거래 활성화",
     "armNoCredential": "{{venue}}의 API 자격 증명이 저장되어 있지 않아 이 봇은 실주문을 낼 수 없습니다. 계정에서 추가한 뒤 다시 오세요.",
-    "armAddCredential": "계정으로 이동"
+    "armAddCredential": "계정으로 이동",
+    "statusWaitingUnlock": "잠금 해제 대기 중"
   },
   "indicatorsPage": {
     "scripts": "내 지표",
@@ -2072,7 +2104,8 @@
       "switchTheme": "테마: {{name}}",
       "reload": "창 새로고침",
       "settingsSection": "설정: {{name}}",
-      "fullscreen": "전체 화면 전환"
+      "fullscreen": "전체 화면 전환",
+      "hardLock": "하드 잠금(보관함 봉인)"
     },
     "footer": {
       "navigate": "이동",
@@ -2182,7 +2215,9 @@
     "hasAccountNo": "아직 없습니다",
     "hasAccountNoDesc": "무료 {{exchange}} 계정 만들기",
     "importKey": "개인 키 가져오기",
-    "affiliateDisclosure": "일부 가입 링크는 추가 비용 없이 Pairlens에 수수료를 지급할 수 있습니다."
+    "affiliateDisclosure": "일부 가입 링크는 추가 비용 없이 Pairlens에 수수료를 지급할 수 있습니다.",
+    "vaultSealedBody": "자격 증명 보관함이 잠겨 있습니다. 계정은 그대로 있습니다 — 잠금을 해제하면 보고 사용할 수 있습니다.",
+    "credentialsUnreadable": "이 기기에 저장된 키를 읽지 못했습니다. 잃어버린 것은 없습니다. 다시 시도하거나 Pairlens를 재시작하세요."
   },
   "workspaceStore": {
     "title": "워크스페이스 스토어",
@@ -2425,7 +2460,8 @@
         "idle": "한동안 사용이 없어 잠겼습니다.",
         "periodic": "예정대로 잠겼습니다.",
         "wake": "컴퓨터가 절전 상태인 동안 잠겼습니다.",
-        "manual": "직접 터미널을 잠갔습니다."
+        "manual": "직접 터미널을 잠갔습니다.",
+        "hard": "보관함을 잠갔습니다. 라이브 자동화가 일시 중지되었습니다."
       }
     },
     "challenge": {
@@ -2433,6 +2469,45 @@
       "description": "이 주문을 내려면 비밀번호를 입력하세요.",
       "confirm": "확인",
       "cancel": "취소"
+    },
+    "vault": {
+      "enrollTitle": "키를 보호하세요",
+      "enrollSubtitle": "이 기기에 저장된 키를 어떻게 잠금 해제할지 선택하세요.",
+      "enrollRecommendBoth": "패스키와 비밀번호를 모두 설정하는 것을 권장합니다. 둘 중 하나로 보관함이 열리므로, 두 번째는 첫 번째를 잃었을 때 돌아올 길이 됩니다.",
+      "enrollButton": "계속",
+      "secondTitle": "두 번째 진입 수단을 추가할까요?",
+      "secondSubtitle": "보관함을 열 방법이 하나뿐입니다. 두 번째가 있으면 기기를 잃거나 비밀번호를 잊어도 끝이 아닙니다.",
+      "doneButton": "완료",
+      "choosePasskey": "패스키",
+      "choosePasskeyHint": "Touch ID, Windows Hello 또는 USB 보안 키.",
+      "choosePassword": "비밀번호",
+      "choosePasswordHint": "이 터미널을 잠금 해제하는 것과 같은 비밀번호입니다.",
+      "passkeyUnsupported": "여기서는 패스키를 사용할 수 없습니다.",
+      "passkeyUnsupportedHint": "이 브라우저나 기기는 패스키에서 키를 파생할 수 없습니다. 대신 비밀번호를 사용하세요.",
+      "passkeyCancelled": "패스키 요청이 닫혔습니다.",
+      "passkeyNoMatch": "그 패스키는 이 보관함에 등록되어 있지 않습니다.",
+      "chooseBiometric": "Touch ID",
+      "chooseBiometricHint": "이 Mac의 Touch ID 센서로 잠금을 해제합니다.",
+      "unlockWithBiometric": "Touch ID로 잠금 해제",
+      "biometricPromptReason": "Pairlens 자격 증명 보관함 잠금 해제",
+      "biometricLabel": "이 Mac의 Touch ID",
+      "biometricCancelled": "Touch ID 요청을 취소했습니다.",
+      "biometricInvalidated": "Touch ID로는 더 이상 보관함을 열 수 없습니다. 이 Mac의 지문이 변경되었습니다. 설정 → 보안에서 제거한 뒤 다시 설정하세요.",
+      "useExistingPassword": "이 터미널에 이미 설정한 비밀번호를 사용하세요.",
+      "unlockTitle": "키 잠금 해제",
+      "unlockSubtitle": "API 키와 지갑 키가 암호화되어 있습니다. 사용하려면 잠금을 해제하세요.",
+      "unlockWithPasskey": "패스키로 잠금 해제",
+      "unlockWithPassword": "잠금 해제",
+      "unlocking": "잠금 해제 중…",
+      "sealed": "자격 증명 보관함이 잠겨 있습니다.",
+      "sealedBanner_one": "실거래 봇 1개가 일시 중지됨 — 거래를 재개하려면 Pairlens 잠금을 해제하세요.",
+      "sealedBanner_other": "실거래 봇 {{count}}개가 일시 중지됨 — 거래를 재개하려면 Pairlens 잠금을 해제하세요.",
+      "sealedBannerAction": "잠금 해제",
+      "botsPausedTitle": "실거래 봇 일시 중지됨",
+      "botsPausedBody": "실거래를 재개하려면 Pairlens 잠금을 해제하세요. 모의 봇은 영향을 받지 않습니다.",
+      "orderBlocked": "자격 증명 보관함이 잠겨 있습니다 — 실거래 주문을 내려면 Pairlens 잠금을 해제하세요.",
+      "insecureContext": "안전하지 않은 연결에서는 암호화를 사용할 수 없습니다. 보관함을 설정하려면 HTTPS 또는 localhost에서 Pairlens를 여세요.",
+      "diverged": "터미널은 잠금 해제되었지만 그 비밀번호로는 자격 증명 보관함이 열리지 않았습니다. 설정 → 보안에서 비밀번호를 변경해 둘을 다시 맞추세요."
     }
   },
   "fullscreen": {

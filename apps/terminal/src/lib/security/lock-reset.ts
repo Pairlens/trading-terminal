@@ -25,12 +25,18 @@
 import { clearLockConfig } from './lock-config'
 import { clearLockState } from './lock-store'
 import { postLock } from './lock-channel'
-import { LOCK_VERIFIER_KEY } from './lock-verifier'
+import { LOCK_VERIFIER_KEY, VAULT_RECORD_KEY } from './keys'
+import { clearUiMirror } from './vault/vault-storage'
 import { deleteCredential, getCredential } from '@/lib/keychain'
 import { CREDENTIALS_INDEX_KEY } from '@/stores/credentials-store'
 import { WALLETS_INDEX_KEY } from '@/stores/wallets-store'
 
-/** The AES key store backing the browser-dev keychain fallback. */
+/**
+ * The IndexedDB database that held the pre-vault browser AES key. Nothing
+ * writes it any more and the startup sweep (vault/legacy-sweep.ts) already
+ * deletes it — but a destructive reset promises to erase everything this
+ * install ever touched, and "the sweep probably ran" is not that promise.
+ */
 const KEYCHAIN_DB = 'pairlens-keychain'
 
 async function readIds(indexKey: string): Promise<Array<string>> {
@@ -74,6 +80,34 @@ export async function resetAndErase(): Promise<void> {
   await forget(WALLETS_INDEX_KEY)
   await forget(LOCK_VERIFIER_KEY)
 
+  // Biometric key material, read out of the record BEFORE the record is
+  // destroyed: the record is the only thing that remembers which OS keychain
+  // accounts belong to this install, so doing it afterwards is not possible at
+  // all. Best-effort inside — an erase must not stall on a keychain that will
+  // not answer.
+  try {
+    const [{ readVaultRecord }, { removeAllBiometricMaterial }] =
+      await Promise.all([
+        import('./vault/vault-storage'),
+        import('./vault/vault-biometric'),
+      ])
+    await removeAllBiometricMaterial(await readVaultRecord())
+  } catch {
+    // Best effort.
+  }
+
+  // The vault record. On browser it is a `pairlens:` localStorage key and step
+  // 3 would sweep it anyway; on desktop it is an OS keychain entry with no
+  // such prefix, and leaving it behind orphans a wrapped data key in the
+  // user's Keychain forever.
+  //
+  // Deleted AFTER the enumeration above, deliberately: with a vault enrolled
+  // and sealed, `readIds` cannot read the indexes and the `cred:*` entries
+  // survive on desktop. Destroying the record last is what makes that
+  // leftover ciphertext permanently unopenable rather than merely deleted-ish.
+  await forget(VAULT_RECORD_KEY)
+  clearUiMirror()
+
   // 2. Lock config and mirror before anything else local, so a failure
   //    partway through still leaves a bootable app.
   clearLockConfig()
@@ -92,7 +126,7 @@ export async function resetAndErase(): Promise<void> {
     // Best effort.
   }
 
-  // 4. The non-extractable AES key, so nothing encrypted at rest survives.
+  // 4. The pre-vault AES key, so nothing encrypted at rest survives.
   try {
     indexedDB.deleteDatabase(KEYCHAIN_DB)
   } catch {

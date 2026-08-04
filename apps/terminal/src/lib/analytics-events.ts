@@ -22,6 +22,12 @@
 import type { LockReason } from '@/lib/security/lock-config'
 import { captureEvent } from '@/lib/analytics'
 
+/**
+ * Which kind of vault protector answered. The kind only — never how many are
+ * enrolled, which would describe how hard the vault is to open.
+ */
+export type VaultProtectorKind = 'password' | 'passkey' | 'biometric'
+
 /** Coarse trading mode — never mixes with amounts. */
 export type TradeMode = 'paper' | 'live'
 
@@ -36,6 +42,9 @@ export type TradeFailReason =
   | 'network'
   | 'auth'
   | 'guardrail'
+  /** The credential vault was sealed — distinct from `auth`, which means the
+   * venue rejected a key we could actually read. */
+  | 'vault-sealed'
   | 'unknown'
 
 /** Shared shape of the trade-funnel events. Deliberately excludes the pair
@@ -142,6 +151,17 @@ export interface AnalyticsEvents {
   security_trade_challenge: { outcome: 'passed' | 'failed' | 'cancelled' }
   /** The forgotten-password path erased this device. */
   security_lock_reset: Record<string, never>
+  /** A credential-vault protector was enrolled. Kind only — never key material,
+   * never how many protectors exist (that describes how hard the vault is to
+   * open). */
+  security_vault_enrolled: { protector: VaultProtectorKind }
+  security_vault_removed: { protector: VaultProtectorKind }
+  /** The vault was opened. Which protector answered, never how long it took. */
+  security_vault_unlocked: { protector: VaultProtectorKind }
+  /** The vault was sealed by the explicit hard lock. */
+  security_vault_hard_locked: Record<string, never>
+  /** Desktop only: the opt-in app-level vault was turned on or off. */
+  security_vault_desktop_toggled: { enabled: boolean }
 
   // ── Plugins & connections ─────────────────────────────────────────
   /** Store product page opened — top of the install funnel. */

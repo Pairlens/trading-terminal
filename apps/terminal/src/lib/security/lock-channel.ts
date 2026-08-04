@@ -29,6 +29,25 @@ export type LockMessage =
    * straight back, so they reload into the first-run state instead.
    */
   | { type: 'reset'; at: number }
+  // ── Credential vault ───────────────────────────────────────────────
+  //
+  // Same bus as the lock, on purpose: it is the one channel the App Server
+  // provably cannot reach (see the note above), and one channel means one
+  // blocklist story. The DEK itself travels as a non-extractable `CryptoKey`,
+  // which structured clone carries without ever exposing key material.
+  /** A window unlocked the vault. Sealed windows may ask it for the key. */
+  | { type: 'vault:unlocked'; at: number }
+  /** A joining window asking whoever holds the DEK to hand it over. */
+  | { type: 'vault:key-request'; nonce: string }
+  /**
+   * The answer. Sent only in response to a request — never broadcast on
+   * unlock — so the key is not sitting in every passive listener's queue.
+   */
+  | { type: 'vault:key-offer'; nonce: string; key: CryptoKey }
+  /** A hard lock. Every window drops its DEK. */
+  | { type: 'vault:sealed'; at: number }
+  /** The record changed (protector added/removed, migration finished). */
+  | { type: 'vault:enrolled'; revision: number }
 
 const CHANNEL_NAME = 'pairlens:security-lock'
 /**

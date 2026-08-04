@@ -269,8 +269,12 @@ describe('executeBotOrder refusals', () => {
       credentialId: 'cred-1',
     })
 
+    // A venue that says no carries no `cause`; a throw carries the original
+    // error, because the runtime branches on its TYPE (a sealed vault parks
+    // the bot instead of halting it) and a message string cannot say that.
     expect(rejected).toEqual({ ok: false, error: 'insufficient balance' })
-    expect(thrown).toEqual({ ok: false, error: 'Orders are locked' })
+    expect(thrown).toMatchObject({ ok: false, error: 'Orders are locked' })
+    expect((thrown as { cause?: unknown }).cause).toBeInstanceOf(Error)
   })
 })
 
@@ -347,7 +351,7 @@ describe('live order serialization', () => {
       })
 
     const [first, second] = await Promise.all([submit(), submit()])
-    expect(first).toEqual({ ok: false, error: 'venue exploded' })
+    expect(first).toMatchObject({ ok: false, error: 'venue exploded' })
     expect(second.ok).toBe(true)
   })
 

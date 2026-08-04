@@ -3,7 +3,7 @@
 'use client'
 
 import * as React from 'react'
-import { LockKeyhole, ShieldAlert } from 'lucide-react'
+import { Fingerprint, LockKeyhole, ScanFace, ShieldAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -26,17 +26,20 @@ import { Input } from '@pairlens/ui/components/ui/input'
 import { Label } from '@pairlens/ui/components/ui/label'
 import { Spinner } from '@pairlens/ui/components/ui/spinner'
 
+import { useBlockedSeconds } from './use-lock-attempts'
 import {
-  blockedForMs,
   cancelTradeChallenge,
   getLockState,
   passTradeChallenge,
   recordFailedAttempt,
-  subscribeLock,
   unlockNow,
   useLockState,
 } from '@/lib/security/lock-store'
 import { setLockEnabled } from '@/lib/security/lock-config'
+import {
+  hasPasswordProtector,
+  useVaultState,
+} from '@/lib/security/vault/vault-session'
 import { track } from '@/lib/analytics-events'
 
 /** The literal a user types to confirm the destructive reset. Not localized
@@ -79,29 +82,25 @@ export function TerminalLock() {
 
 // ── Shared password field behaviour ──────────────────────────────────
 
-type VerifyState = 'idle' | 'checking' | 'wrong' | 'unavailable'
-
-/**
- * Seconds left on the brute-force lockout. Ticks on a plain interval and
- * setState-bails when the value hasn't changed, so an unblocked overlay
- * re-renders zero times.
- */
-function useBlockedSeconds(): number {
-  const [seconds, setSeconds] = React.useState(() =>
-    Math.max(0, Math.ceil(blockedForMs() / 1000)),
-  )
-  React.useEffect(() => {
-    const sync = () => setSeconds(Math.max(0, Math.ceil(blockedForMs() / 1000)))
-    // Another window's failed attempt counts against this one too.
-    const unsubscribe = subscribeLock(sync)
-    const timer = setInterval(sync, 500)
-    return () => {
-      unsubscribe()
-      clearInterval(timer)
-    }
-  }, [])
-  return seconds
-}
+type VerifyState =
+  | 'idle'
+  | 'checking'
+  | 'wrong'
+  | 'unavailable'
+  /**
+   * The password opened the screen but not the vault. Only reachable if the
+   * lock verifier and the vault's password protector disagree — a partially
+   * applied change-password. Distinct message on purpose: telling the user
+   * "wrong password" when it demonstrably was not would send them to the
+   * destructive reset.
+   */
+  | 'vault-diverged'
+  /**
+   * The OS key behind the Touch ID protector is gone — the fingerprint set on
+   * this Mac changed. No retry will ever work, so this must not read as "wrong"
+   * and must point at the only thing that fixes it.
+   */
+  | 'biometric-invalidated'
 
 // ── Full-screen lock ─────────────────────────────────────────────────
 
@@ -111,6 +110,7 @@ function LockOverlay({ reason }: { reason: string }) {
   const [status, setStatus] = React.useState<VerifyState>('idle')
   const [resetOpen, setResetOpen] = React.useState(false)
   const blockedSeconds = useBlockedSeconds()
+  const vault = useVaultState()
 
   // The overlay's DOM (dialog portal included) is committed by the time a
   // layout effect runs, and this frame has not painted yet — so handing the
@@ -123,6 +123,48 @@ function LockOverlay({ reason }: { reason: string }) {
     dismissPrePaintShield()
   }, [])
 
+  /**
+   * The non-password doors. WebAuthn user verification and a Touch ID gesture
+   * are both identity checks — they satisfy the screen lock exactly the way the
+   * password does, and they open the vault in the same step.
+   */
+  const unlockWithProtector = async (kind: 'passkey' | 'biometric') => {
+    if (status === 'checking' || blockedSeconds > 0) return
+    setStatus('checking')
+    try {
+      const { unlockVault } =
+        await import('@/lib/security/vault/vault-protectors')
+      await unlockVault(
+        kind === 'passkey'
+          ? { kind: 'passkey' }
+          : {
+              kind: 'biometric',
+              reason: t('security.vault.biometricPromptReason'),
+            },
+      )
+      track('security_vault_unlocked', { protector: kind })
+      setStatus('idle')
+      unlockNow()
+    } catch (err) {
+      const { VaultProtectorError } =
+        await import('@/lib/security/vault/vault-errors')
+      // A dismissed biometric prompt is not a failed guess — it must not
+      // count against the backoff, and the vault layer already makes sure it
+      // doesn't. Just put the user back where they were.
+      if (err instanceof VaultProtectorError && err.kind === 'cancelled') {
+        setStatus('idle')
+        return
+      }
+      // The protector is dead rather than refused. Saying "wrong" here sends
+      // someone who did nothing wrong toward the destructive reset.
+      if (err instanceof VaultProtectorError && err.kind === 'invalidated') {
+        setStatus('biometric-invalidated')
+        return
+      }
+      setStatus('wrong')
+    }
+  }
+
   const submit = async (event: React.FormEvent) => {
     event.preventDefault()
     if (status === 'checking' || blockedSeconds > 0 || !password) return
@@ -133,6 +175,24 @@ function LockOverlay({ reason }: { reason: string }) {
       const { verifyPassword } = await import('@/lib/security/lock-verifier')
       const result = await verifyPassword(password)
       if (result === 'ok') {
+        // One password, both doors. The vault is what actually protects the
+        // keys, so a screen unlock that left it sealed would silently stop
+        // live bots for a user who typed the right thing.
+        if (vault.enrolled && !vault.unlocked && vault.hasPassword) {
+          try {
+            const { unlockVault } =
+              await import('@/lib/security/vault/vault-protectors')
+            await unlockVault({ kind: 'password', password })
+          } catch {
+            // Verifier and protector disagree. Let them into the UI — they
+            // proved themselves against the artifact the lock screen owns —
+            // but say plainly that the keys are still sealed.
+            setPassword('')
+            setStatus('vault-diverged')
+            unlockNow()
+            return
+          }
+        }
         setPassword('')
         setStatus('idle')
         // Also clears the attempt counter, in every window.
@@ -144,7 +204,20 @@ function LockOverlay({ reason }: { reason: string }) {
         // deleted out from under us (keychain reset, cleared browser
         // storage). Anyone who can do that already owns the account, so
         // bricking the app to spite them is the worse trade — self-heal.
-        setLockEnabled(false)
+        //
+        // EXCEPT when a password protector is enrolled: then "no verifier" is
+        // storage damage, not an absent lock, and turning the lock off would
+        // leave the next boot with a vault and no prompt that can open it.
+        // Letting them into the UI with the vault still sealed is fine — the
+        // keys stay ciphertext either way.
+        //
+        // Asked of the RECORD, not `useVaultState()`: that snapshot answers
+        // from the untrusted UI mirror until the record has loaded, and a
+        // wrong `false` here disables the lock over a live vault. A backend
+        // that will not answer lands in the catch below, which stays locked.
+        if (!(await hasPasswordProtector())) {
+          setLockEnabled(false)
+        }
         setPassword('')
         setStatus('idle')
         unlockNow()
@@ -222,6 +295,16 @@ function LockOverlay({ reason }: { reason: string }) {
                   {t('security.lock.keychainUnavailable')}
                 </p>
               )}
+              {status === 'vault-diverged' && (
+                <p className="text-destructive text-xs">
+                  {t('security.vault.diverged')}
+                </p>
+              )}
+              {status === 'biometric-invalidated' && (
+                <p className="text-destructive text-xs">
+                  {t('security.vault.biometricInvalidated')}
+                </p>
+              )}
 
               <Button
                 type="submit"
@@ -236,6 +319,39 @@ function LockOverlay({ reason }: { reason: string }) {
                   : t('security.lock.unlock')}
               </Button>
             </form>
+
+            {/* Offered only when the protector is actually enrolled — the
+                record is what knows, and a button that cannot raise a prompt
+                is worse than no button. */}
+            {vault.hasPasskey && (
+              <Button
+                variant="outline"
+                className="mt-2 w-full"
+                disabled={status === 'checking' || blockedSeconds > 0}
+                onClick={() => void unlockWithProtector('passkey')}
+              >
+                <Fingerprint className="size-4" />
+                {t('security.vault.unlockWithPasskey')}
+              </Button>
+            )}
+
+            {vault.hasBiometric && (
+              <Button
+                variant="outline"
+                className="mt-2 w-full"
+                disabled={
+                  status === 'checking' ||
+                  blockedSeconds > 0 ||
+                  // Once it is dead, keep it dead: re-prompting only produces
+                  // the same failure and reads as a flaky sensor.
+                  status === 'biometric-invalidated'
+                }
+                onClick={() => void unlockWithProtector('biometric')}
+              >
+                <ScanFace className="size-4" />
+                {t('security.vault.unlockWithBiometric')}
+              </Button>
+            )}
 
             <button
               type="button"
@@ -340,8 +456,13 @@ function TradeChallengeDialog() {
       const result = await verifyPassword(password)
       if (result === 'ok' || result === 'missing') {
         // 'missing' self-heals the same way the overlay does — a check with
-        // nothing to check against must not strand a pending order.
-        if (result === 'missing') setLockEnabled(false)
+        // nothing to check against must not strand a pending order — and is
+        // suppressed under the same condition, for the same reason: an
+        // enrolled password protector makes a missing verifier storage damage
+        // rather than an absent lock.
+        if (result === 'missing' && !(await hasPasswordProtector())) {
+          setLockEnabled(false)
+        }
         setPassword('')
         setStatus('idle')
         passTradeChallenge()

@@ -4,10 +4,21 @@
  * The lock password's verifier.
  *
  * Nothing is encrypted with this password — it gates a screen, not the data
- * (see the Security section copy). What we store is a salted PBKDF2 digest
- * so the password itself is never at rest, kept in the same place as every
- * other secret: the OS keychain on desktop, AES-GCM-encrypted localStorage
- * in browser dev builds (lib/keychain.ts).
+ * (see the Security section copy). What we store is a salted PBKDF2 digest, so
+ * the password itself is never at rest.
+ *
+ * WHERE it is stored is the one thing to get right before changing anything
+ * here: this slot is the single credential the vault must never encrypt
+ * (`VAULT_EXEMPT` in lib/keychain.ts), because the lock screen has to be
+ * answerable while the vault is deliberately sealed. So it is plaintext on
+ * every platform — the OS keychain on desktop, bare localStorage in browser
+ * dev builds. That is a confidentiality argument only: there is nothing secret
+ * in a PBKDF2 digest, but in the browser there is also nothing protecting its
+ * INTEGRITY, so someone who can edit the profile on disk can plant a verifier
+ * for a password they choose and walk past the lock screen. The vault is
+ * unaffected (its DEK still needs the real password, and the mismatch lands in
+ * terminal-lock's `vault-diverged` branch), which is the whole reason this is
+ * acceptable — and why browser builds stay dev/testing only.
  *
  * PBKDF2-HMAC-SHA256 because `SubtleCrypto` offers no scrypt or Argon2 and
  * this feature is not worth a WASM dependency. Iterations are stored with
@@ -15,10 +26,17 @@
  * existing passwords.
  */
 
+import { LOCK_VERIFIER_KEY } from './keys'
 import { deleteCredential, getCredential, saveCredential } from '@/lib/keychain'
 
-/** Keychain slot. Follows the `cred:<id>` / `wallet:<id>` convention. */
-export const LOCK_VERIFIER_KEY = 'security:lock-verifier'
+/**
+ * Keychain slot. Follows the `cred:<id>` / `wallet:<id>` convention.
+ *
+ * Declared in `./keys` and re-exported here: `lib/keychain.ts` needs the name
+ * to exempt this slot from vault encryption, and it cannot import this module
+ * (this module imports it).
+ */
+export { LOCK_VERIFIER_KEY }
 
 /** OWASP-current for PBKDF2-HMAC-SHA256 at the time of writing. */
 export const PBKDF2_ITERATIONS = 600_000

@@ -396,7 +396,9 @@
     "chooseIcon": "Choose icon",
     "clear": "Clear",
     "showInFolder": "Show in folder",
-    "updated": "Updated {{time}}"
+    "updated": "Updated {{time}}",
+    "back": "Back",
+    "dismiss": "Dismiss"
   },
   "legal": {
     "terms": "Terms & Conditions",
@@ -773,7 +775,7 @@
       "newPassword": "New password",
       "confirmPassword": "Confirm password",
       "currentPassword": "Current password",
-      "passwordTooShort": "Use at least 6 characters.",
+      "passwordTooShort": "Use at least {{min}} characters.",
       "passwordMismatch": "The two passwords don't match.",
       "passwordWrong": "That password is not correct.",
       "noRecoveryWarning": "There is no password recovery. If you forget it, the only way back in erases this device's data. Save it in your password manager now.",
@@ -804,7 +806,35 @@
       "resetButton": "Reset and erase",
       "resetConfirmTitle": "Erase this device?",
       "resetConfirmBody": "This erases every exchange API key, wallet key, workspace, chart layout and chat on this computer. There is no undo and no password recovery. If you are signed in, settings that sync to the cloud come back when you sign in again — API keys and wallet keys never do, because they are only ever stored here.",
-      "resetConfirmPhrase": "Type {{phrase}} to confirm."
+      "resetConfirmPhrase": "Type {{phrase}} to confirm.",
+      "vaultTitle": "Credential vault",
+      "vaultDescription": "Encrypt your exchange API keys and wallet keys with a password or a passkey.",
+      "vaultStatusNone": "Not set up.",
+      "vaultStatusReady_one": "Protected by 1 way to unlock.",
+      "vaultStatusReady_other": "Protected by {{count}} ways to unlock.",
+      "vaultSetUp": "Set up vault",
+      "vaultAddProtector": "Add another way in",
+      "vaultRemoveProtector": "Remove",
+      "vaultRemoveLastBlocked": "This is the only way into your vault. Add another before removing it.",
+      "vaultRemoveBiometricOnlyBlocked": "Touch ID cannot be the only way in — the fingerprints on this Mac can change. Keep a password or a passkey.",
+      "vaultProtectsBody": "With a vault, your API keys and wallet keys are stored encrypted. Someone who copies this browser profile — or this computer's disk — gets ciphertext they cannot open without your password or your passkey.",
+      "vaultCeiling": "It does not protect keys while you are using them. Anything running inside this page can ask the unlocked vault for a key, the same way the app does. The desktop app remains the recommendation for your most valuable keys.",
+      "vaultNoRecovery": "There is no recovery. Lose every way in and the encrypted keys are gone — the only way back into the app erases this device's data.",
+      "vaultDesktopToggleHint": "Your keys are already in the system keychain. Turn this on to add a password or a passkey on top.",
+      "vaultDesktopOptOutTitle": "Turn off the credential vault?",
+      "vaultDesktopOptOutBody": "Your keys go back to being protected by the system keychain alone. Nothing is deleted, and you can turn the vault back on later.",
+      "vaultDesktopOptOutConfirm": "Turn off vault",
+      "vaultMigrated_one": "Moved 1 key you already had into the vault.",
+      "vaultMigrated_other": "Moved {{count}} keys you already had into the vault.",
+      "vaultMigrationFailed": "Vault setup did not finish. Your keys are still readable — open the vault to complete it.",
+      "vaultSharedBackoff": "The vault and the lock screen share one attempt limit, so too many wrong passwords delays both.",
+      "vaultCliNote": "The command-line tool takes API keys as arguments and never reads the vault.",
+      "hardLockTitle": "Hard lock",
+      "hardLockDescription": "Lock the vault, not just the screen.",
+      "hardLockButton": "Hard lock",
+      "hardLockWarning": "Locks the vault, not just the screen. Live bots and automations stop trading until you unlock. Paper bots keep running.",
+      "hardLockConfirmTitle": "Seal your credential vault?",
+      "hardLockConfirmBody": "Live bots and automations stop trading until you unlock again. Paper bots keep running."
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "Back",
     "forward": "Forward",
     "checkForUpdates": "Check for Updates…",
-    "lockTerminal": "Lock Terminal"
+    "lockTerminal": "Lock Terminal",
+    "hardLock": "Hard Lock (Seal Vault)…"
   },
   "titlebar": {
     "newWindow": "New window",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "ARM LIVE",
     "armConfirm": "Arm live",
     "armNoCredential": "No API credential is stored for {{venue}}, so this bot cannot place live orders. Add one under Accounts and come back.",
-    "armAddCredential": "Go to Accounts"
+    "armAddCredential": "Go to Accounts",
+    "statusWaitingUnlock": "Waiting for unlock"
   },
   "indicatorsPage": {
     "scripts": "My Indicators",
@@ -2072,7 +2104,8 @@
       "switchTheme": "Theme: {{name}}",
       "reload": "Reload window",
       "settingsSection": "Settings: {{name}}",
-      "fullscreen": "Toggle full screen"
+      "fullscreen": "Toggle full screen",
+      "hardLock": "Hard lock (seal vault)"
     },
     "footer": {
       "navigate": "Navigate",
@@ -2182,7 +2215,9 @@
     "hasAccountNo": "Not yet",
     "hasAccountNoDesc": "Open a free {{exchange}} account",
     "importKey": "Import a private key",
-    "affiliateDisclosure": "Some signup links may earn Pairlens a commission, at no extra cost to you."
+    "affiliateDisclosure": "Some signup links may earn Pairlens a commission, at no extra cost to you.",
+    "vaultSealedBody": "Your credential vault is locked. Your accounts are still here — unlock to see and use them.",
+    "credentialsUnreadable": "Your stored keys could not be read on this device. Nothing was lost — try again, or restart Pairlens."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2425,7 +2460,8 @@
         "idle": "Locked after a spell of inactivity.",
         "periodic": "Locked on schedule.",
         "wake": "Locked while the computer was asleep.",
-        "manual": "You locked the terminal."
+        "manual": "You locked the terminal.",
+        "hard": "You locked the vault. Live automations are paused."
       }
     },
     "challenge": {
@@ -2433,6 +2469,45 @@
       "description": "Enter your password to place this order.",
       "confirm": "Confirm",
       "cancel": "Cancel"
+    },
+    "vault": {
+      "enrollTitle": "Protect your keys",
+      "enrollSubtitle": "Choose how you will unlock the keys stored on this device.",
+      "enrollRecommendBoth": "We recommend setting up both a passkey and a password. Either one opens your vault, so the second is your way back in if you lose the first.",
+      "enrollButton": "Continue",
+      "secondTitle": "Add a second way in?",
+      "secondSubtitle": "You have one way to unlock your vault. A second means that losing one device, or forgetting one password, is not the end of it.",
+      "doneButton": "Done",
+      "choosePasskey": "Passkey",
+      "choosePasskeyHint": "Touch ID, Windows Hello, or a USB security key.",
+      "choosePassword": "Password",
+      "choosePasswordHint": "The same password that unlocks this terminal.",
+      "passkeyUnsupported": "Passkeys are not available here.",
+      "passkeyUnsupportedHint": "This browser or device cannot derive a key from a passkey. Use a password instead.",
+      "passkeyCancelled": "The passkey prompt was dismissed.",
+      "passkeyNoMatch": "That passkey is not enrolled on this vault.",
+      "chooseBiometric": "Touch ID",
+      "chooseBiometricHint": "Unlock with the Touch ID sensor on this Mac.",
+      "unlockWithBiometric": "Unlock with Touch ID",
+      "biometricPromptReason": "Unlock your Pairlens credential vault",
+      "biometricLabel": "Touch ID on this Mac",
+      "biometricCancelled": "The Touch ID prompt was dismissed.",
+      "biometricInvalidated": "Touch ID can no longer open your vault — the fingerprints on this Mac changed. Remove it in Settings → Security and set it up again.",
+      "useExistingPassword": "Use the password you already set for this terminal.",
+      "unlockTitle": "Unlock your keys",
+      "unlockSubtitle": "Your API keys and wallet keys are encrypted. Unlock to use them.",
+      "unlockWithPasskey": "Unlock with passkey",
+      "unlockWithPassword": "Unlock",
+      "unlocking": "Unlocking…",
+      "sealed": "Your credential vault is locked.",
+      "sealedBanner_one": "1 live bot is paused — unlock Pairlens to resume trading.",
+      "sealedBanner_other": "{{count}} live bots are paused — unlock Pairlens to resume trading.",
+      "sealedBannerAction": "Unlock",
+      "botsPausedTitle": "Live bots are paused",
+      "botsPausedBody": "Unlock Pairlens to resume live trading. Paper bots are unaffected.",
+      "orderBlocked": "Your credential vault is locked — unlock Pairlens to place live orders.",
+      "insecureContext": "Encryption is unavailable over an insecure connection. Open Pairlens over HTTPS, or on localhost, to set up a vault.",
+      "diverged": "Your terminal is unlocked, but that password did not open your credential vault. Change your password in Settings → Security to bring the two back in sync."
     }
   },
   "fullscreen": {

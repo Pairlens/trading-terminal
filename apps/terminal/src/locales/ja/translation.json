@@ -396,7 +396,9 @@
     "chooseIcon": "アイコンを選択",
     "clear": "クリア",
     "showInFolder": "フォルダに表示",
-    "updated": "{{time}}に更新"
+    "updated": "{{time}}に更新",
+    "back": "戻る",
+    "dismiss": "閉じる"
   },
   "legal": {
     "terms": "利用規約",
@@ -773,7 +775,7 @@
       "newPassword": "新しいパスワード",
       "confirmPassword": "パスワードの確認",
       "currentPassword": "現在のパスワード",
-      "passwordTooShort": "6文字以上にしてください。",
+      "passwordTooShort": "{{min}}文字以上にしてください。",
       "passwordMismatch": "2つのパスワードが一致しません。",
       "passwordWrong": "そのパスワードは正しくありません。",
       "noRecoveryWarning": "パスワードの復旧手段はありません。忘れた場合、戻る唯一の方法はこの端末のデータを消去することです。今すぐパスワードマネージャーに保存してください。",
@@ -804,7 +806,35 @@
       "resetButton": "リセットして消去",
       "resetConfirmTitle": "この端末を消去しますか？",
       "resetConfirmBody": "このコンピュータ上のすべての取引所APIキー、ウォレットキー、ワークスペース、チャートレイアウト、チャットを消去します。取り消しはできず、パスワードの復旧もありません。サインインしていれば、クラウド同期される設定は再ログイン時に戻りますが、APIキーとウォレットキーは戻りません。ここにしか保存されていないからです。",
-      "resetConfirmPhrase": "確認のため {{phrase}} と入力してください。"
+      "resetConfirmPhrase": "確認のため {{phrase}} と入力してください。",
+      "vaultTitle": "資格情報の保管庫",
+      "vaultDescription": "取引所の API キーとウォレット鍵をパスワードまたはパスキーで暗号化します。",
+      "vaultStatusNone": "未設定です。",
+      "vaultStatusReady_one": "1 つの解錠手段で保護されています。",
+      "vaultStatusReady_other": "{{count}} つの解錠手段で保護されています。",
+      "vaultSetUp": "保管庫を設定",
+      "vaultAddProtector": "別の入口を追加",
+      "vaultRemoveProtector": "削除",
+      "vaultRemoveLastBlocked": "これが保管庫への唯一の入口です。削除する前に別の入口を追加してください。",
+      "vaultRemoveBiometricOnlyBlocked": "Touch ID を唯一の入口にはできません。この Mac の指紋は変更される可能性があります。パスワードかパスキーを残してください。",
+      "vaultProtectsBody": "保管庫があれば、API キーとウォレット鍵は暗号化されて保存されます。このブラウザプロファイル — あるいはこのコンピュータのディスク — をコピーした人が手にするのは、あなたのパスワードかパスキーなしでは開けない暗号文だけです。",
+      "vaultCeiling": "使用中の鍵は保護しません。このページ内で動くものはすべて、アプリと同じように解錠済みの保管庫へ鍵を要求できます。もっとも価値の高い鍵には、引き続きデスクトップアプリをおすすめします。",
+      "vaultNoRecovery": "復旧手段はありません。すべての入口を失えば暗号化された鍵も失われます — アプリに戻る唯一の方法はこのデバイスのデータを消去することです。",
+      "vaultDesktopToggleHint": "鍵はすでにシステムのキーチェーンにあります。その上にパスワードやパスキーを重ねるにはこれをオンにしてください。",
+      "vaultDesktopOptOutTitle": "資格情報の保管庫をオフにしますか？",
+      "vaultDesktopOptOutBody": "鍵の保護はシステムのキーチェーンだけに戻ります。何も削除されず、保管庫は後からまたオンにできます。",
+      "vaultDesktopOptOutConfirm": "保管庫をオフにする",
+      "vaultMigrated_one": "既存の鍵 1 つを保管庫へ移動しました。",
+      "vaultMigrated_other": "既存の鍵 {{count}} つを保管庫へ移動しました。",
+      "vaultMigrationFailed": "保管庫の設定が完了しませんでした。鍵はまだ読み取れます — 保管庫を開いて完了させてください。",
+      "vaultSharedBackoff": "保管庫とロック画面は試行回数の上限を共有するため、パスワードを間違えすぎると両方が遅延します。",
+      "vaultCliNote": "コマンドラインツールは API キーを引数で受け取り、保管庫を読むことはありません。",
+      "hardLockTitle": "ハードロック",
+      "hardLockDescription": "画面だけでなく保管庫もロックします。",
+      "hardLockButton": "ハードロック",
+      "hardLockWarning": "画面だけでなく保管庫もロックします。解錠するまでライブボットと自動化は取引を停止します。ペーパーボットは動き続けます。",
+      "hardLockConfirmTitle": "資格情報の保管庫を封印しますか？",
+      "hardLockConfirmBody": "再び解錠するまでライブボットと自動化は取引を停止します。ペーパーボットは動き続けます。"
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "戻る",
     "forward": "進む",
     "checkForUpdates": "アップデートを確認…",
-    "lockTerminal": "ターミナルをロック"
+    "lockTerminal": "ターミナルをロック",
+    "hardLock": "ハードロック（保管庫を封印）…"
   },
   "titlebar": {
     "newWindow": "新しいウィンドウ",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "ARM LIVE",
     "armConfirm": "ライブを有効化",
     "armNoCredential": "{{venue}} のAPI認証情報が保存されていないため、このボットはライブ注文を出せません。アカウントで追加してから戻ってきてください。",
-    "armAddCredential": "アカウントへ移動"
+    "armAddCredential": "アカウントへ移動",
+    "statusWaitingUnlock": "解錠待ち"
   },
   "indicatorsPage": {
     "scripts": "マイインジケーター",
@@ -2072,7 +2104,8 @@
       "switchTheme": "テーマ：{{name}}",
       "reload": "ウィンドウを再読み込み",
       "settingsSection": "設定：{{name}}",
-      "fullscreen": "全画面表示を切り替え"
+      "fullscreen": "全画面表示を切り替え",
+      "hardLock": "ハードロック（保管庫を封印）"
     },
     "footer": {
       "navigate": "移動",
@@ -2182,7 +2215,9 @@
     "hasAccountNo": "まだです",
     "hasAccountNoDesc": "無料の{{exchange}}アカウントを開設",
     "importKey": "秘密鍵をインポート",
-    "affiliateDisclosure": "一部の登録リンクは、あなたに追加費用なしでPairlensに紹介料が発生する場合があります。"
+    "affiliateDisclosure": "一部の登録リンクは、あなたに追加費用なしでPairlensに紹介料が発生する場合があります。",
+    "vaultSealedBody": "資格情報の保管庫がロックされています。アカウントはそのまま残っています — 解錠すれば表示・利用できます。",
+    "credentialsUnreadable": "このデバイスに保存された鍵を読み取れませんでした。データは失われていません。再試行するか、Pairlens を再起動してください。"
   },
   "workspaceStore": {
     "title": "ワークスペースストア",
@@ -2425,7 +2460,8 @@
         "idle": "しばらく操作がなかったためロックしました。",
         "periodic": "予定どおりロックしました。",
         "wake": "コンピュータがスリープしている間にロックしました。",
-        "manual": "あなたがターミナルをロックしました。"
+        "manual": "あなたがターミナルをロックしました。",
+        "hard": "保管庫をロックしました。ライブ自動売買は一時停止中です。"
       }
     },
     "challenge": {
@@ -2433,6 +2469,45 @@
       "description": "この注文を出すにはパスワードを入力してください。",
       "confirm": "確認",
       "cancel": "キャンセル"
+    },
+    "vault": {
+      "enrollTitle": "鍵を保護する",
+      "enrollSubtitle": "このデバイスに保存された鍵をどう解錠するか選んでください。",
+      "enrollRecommendBoth": "パスキーとパスワードの両方を設定することをおすすめします。どちらでも保管庫を開けるので、片方を失ってももう片方が戻る道になります。",
+      "enrollButton": "続ける",
+      "secondTitle": "2つ目の入口を追加しますか？",
+      "secondSubtitle": "保管庫を解錠する手段が1つしかありません。2つ目があれば、デバイスを失っても、パスワードを忘れても終わりではありません。",
+      "doneButton": "完了",
+      "choosePasskey": "パスキー",
+      "choosePasskeyHint": "Touch ID、Windows Hello、または USB セキュリティキー。",
+      "choosePassword": "パスワード",
+      "choosePasswordHint": "このターミナルを解錠するのと同じパスワードです。",
+      "passkeyUnsupported": "ここではパスキーを使えません。",
+      "passkeyUnsupportedHint": "このブラウザまたはデバイスはパスキーから鍵を導出できません。パスワードをお使いください。",
+      "passkeyCancelled": "パスキーの確認が閉じられました。",
+      "passkeyNoMatch": "そのパスキーはこの保管庫に登録されていません。",
+      "chooseBiometric": "Touch ID",
+      "chooseBiometricHint": "この Mac の Touch ID センサーでロックを解除します。",
+      "unlockWithBiometric": "Touch ID で解除",
+      "biometricPromptReason": "Pairlens の資格情報保管庫を解除します",
+      "biometricLabel": "この Mac の Touch ID",
+      "biometricCancelled": "Touch ID の確認を閉じました。",
+      "biometricInvalidated": "Touch ID では保管庫を開けなくなりました。この Mac の指紋が変更されています。「設定 → セキュリティ」で削除して設定し直してください。",
+      "useExistingPassword": "このターミナル用にすでに設定したパスワードを使ってください。",
+      "unlockTitle": "鍵を解錠する",
+      "unlockSubtitle": "API キーとウォレット鍵は暗号化されています。使うには解錠してください。",
+      "unlockWithPasskey": "パスキーで解錠",
+      "unlockWithPassword": "解錠",
+      "unlocking": "解錠中…",
+      "sealed": "資格情報の保管庫がロックされています。",
+      "sealedBanner_one": "ライブボット 1 台が一時停止中 — 取引を再開するには Pairlens を解錠してください。",
+      "sealedBanner_other": "ライブボット {{count}} 台が一時停止中 — 取引を再開するには Pairlens を解錠してください。",
+      "sealedBannerAction": "解錠",
+      "botsPausedTitle": "ライブボットが一時停止中",
+      "botsPausedBody": "ライブ取引を再開するには Pairlens を解錠してください。ペーパーボットには影響しません。",
+      "orderBlocked": "資格情報の保管庫がロックされています — ライブ注文を出すには Pairlens を解錠してください。",
+      "insecureContext": "安全でない接続では暗号化を利用できません。保管庫を設定するには HTTPS か localhost で Pairlens を開いてください。",
+      "diverged": "ターミナルは解錠されましたが、そのパスワードでは資格情報の保管庫を開けませんでした。設定 → セキュリティ でパスワードを変更し、両者を再び一致させてください。"
     }
   },
   "fullscreen": {

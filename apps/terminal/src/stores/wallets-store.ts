@@ -4,6 +4,8 @@ import { create } from 'zustand'
 
 import type { WalletChain } from '@pairlens/market-engine/adapter'
 import { deleteCredential, getCredential, saveCredential } from '@/lib/keychain'
+import { isVaultSealed } from '@/lib/security/vault/vault-errors'
+import { assertCanAddCredential } from '@/lib/security/vault/vault-policy'
 
 export type CryptoWallet = {
   id: string
@@ -64,10 +66,17 @@ export const WALLET_SCHEMAS: Record<
 /** Keychain slot listing every stored wallet id. */
 export const WALLETS_INDEX_KEY = 'pairlens:wallets-index'
 
+/** Same three-way distinction as the credentials store — see the note there. */
+export type WalletsStatus = 'idle' | 'loading' | 'ready' | 'sealed' | 'error'
+
 type WalletsState = {
   wallets: Array<CryptoWallet>
+  /** Settled, not "empty". Read `status` to tell those apart. */
   loaded: boolean
+  status: WalletsStatus
+  sealed: boolean
   load: () => Promise<void>
+  reload: () => Promise<void>
   addWallet: (
     wallet: Omit<CryptoWallet, 'id' | 'createdAt'>,
     privateKey: string,
@@ -108,37 +117,71 @@ export async function deriveEvmAddress(privateKeyHex: string): Promise<string> {
   return privateKeyToAccount(normalized).address
 }
 
+async function readAll(
+  set: (partial: Partial<WalletsState>) => void,
+): Promise<void> {
+  set({ status: 'loading' })
+  try {
+    const indexRaw = await getCredential(WALLETS_INDEX_KEY)
+    if (!indexRaw) {
+      set({ wallets: [], loaded: true, status: 'ready', sealed: false })
+      return
+    }
+    const ids = JSON.parse(indexRaw) as Array<string>
+    const loaded: Array<CryptoWallet> = []
+    for (const id of ids) {
+      const raw = await getCredential(`wallet:${id}`)
+      if (raw) {
+        try {
+          loaded.push(JSON.parse(raw) as CryptoWallet)
+        } catch {
+          // Corrupted entry — skip
+        }
+      }
+    }
+    set({ wallets: loaded, loaded: true, status: 'ready', sealed: false })
+  } catch (err) {
+    if (isVaultSealed(err)) {
+      set({ wallets: [], loaded: true, status: 'sealed', sealed: true })
+      return
+    }
+    set({ wallets: [], loaded: true, status: 'error', sealed: false })
+  }
+}
+
+/**
+ * The read in flight, so concurrent callers await the same one — resolving
+ * `load()` while the keychain read is still going would tell every caller the
+ * wallets are in memory when they are not. Same contract as
+ * credentials-store.ts; see the note there.
+ */
+let inFlight: Promise<void> | null = null
+
+function startRead(set: (partial: Partial<WalletsState>) => void) {
+  const read = readAll(set).finally(() => {
+    if (inFlight === read) inFlight = null
+  })
+  inFlight = read
+  return read
+}
+
 export const useWalletsStore = create<WalletsState>((set, get) => ({
   wallets: [],
   loaded: false,
+  status: 'idle',
+  sealed: false,
 
   load: async () => {
-    if (get().loaded) return
-    try {
-      const indexRaw = await getCredential(WALLETS_INDEX_KEY)
-      if (!indexRaw) {
-        set({ loaded: true })
-        return
-      }
-      const ids = JSON.parse(indexRaw) as Array<string>
-      const loaded: Array<CryptoWallet> = []
-      for (const id of ids) {
-        const raw = await getCredential(`wallet:${id}`)
-        if (raw) {
-          try {
-            loaded.push(JSON.parse(raw) as CryptoWallet)
-          } catch {
-            // Corrupted entry — skip
-          }
-        }
-      }
-      set({ wallets: loaded, loaded: true })
-    } catch {
-      set({ loaded: true })
-    }
+    if (get().status === 'ready') return
+    await (inFlight ?? startRead(set))
+  },
+
+  reload: async () => {
+    await startRead(set)
   },
 
   addWallet: async (wallet, privateKey) => {
+    await assertCanAddCredential()
     const id = generateId()
     const entry: CryptoWallet = {
       ...wallet,

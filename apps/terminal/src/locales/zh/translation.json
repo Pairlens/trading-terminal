@@ -396,7 +396,9 @@
     "chooseIcon": "选择图标",
     "clear": "清除",
     "showInFolder": "在文件夹中显示",
-    "updated": "已更新 {{time}}"
+    "updated": "已更新 {{time}}",
+    "back": "返回",
+    "dismiss": "关闭"
   },
   "legal": {
     "terms": "服务条款",
@@ -773,7 +775,7 @@
       "newPassword": "新密码",
       "confirmPassword": "确认密码",
       "currentPassword": "当前密码",
-      "passwordTooShort": "至少 6 个字符。",
+      "passwordTooShort": "至少 {{min}} 个字符。",
       "passwordMismatch": "两次输入的密码不一致。",
       "passwordWrong": "密码不正确。",
       "noRecoveryWarning": "没有密码找回。一旦忘记，唯一的重新进入方式就是清除本设备的数据。现在就把它存进密码管理器。",
@@ -804,7 +806,35 @@
       "resetButton": "重置并清除",
       "resetConfirmTitle": "清除这台设备？",
       "resetConfirmBody": "这会清除这台电脑上的所有交易所 API 密钥、钱包密钥、工作区、图表布局和聊天记录。无法撤销，也没有密码找回。如果你已登录，云端同步的设置会在再次登录后回来，但 API 密钥和钱包密钥永远不会，因为它们只保存在这里。",
-      "resetConfirmPhrase": "输入 {{phrase}} 以确认。"
+      "resetConfirmPhrase": "输入 {{phrase}} 以确认。",
+      "vaultTitle": "凭证保险库",
+      "vaultDescription": "用密码或通行密钥加密你的交易所 API 密钥和钱包密钥。",
+      "vaultStatusNone": "尚未设置。",
+      "vaultStatusReady_one": "受 1 种解锁方式保护。",
+      "vaultStatusReady_other": "受 {{count}} 种解锁方式保护。",
+      "vaultSetUp": "设置保险库",
+      "vaultAddProtector": "添加另一种进入方式",
+      "vaultRemoveProtector": "移除",
+      "vaultRemoveLastBlocked": "这是进入保险库的唯一方式。移除前请先添加另一种。",
+      "vaultRemoveBiometricOnlyBlocked": "触控 ID 不能是唯一的进入方式——这台 Mac 上的指纹可能会变。请保留密码或通行密钥。",
+      "vaultProtectsBody": "有了保险库，你的 API 密钥和钱包密钥以加密形式保存。复制这个浏览器配置文件 — 或这台电脑的磁盘 — 的人只会拿到没有你的密码或通行密钥就打不开的密文。",
+      "vaultCeiling": "它不保护正在使用中的密钥。这个页面里运行的任何代码都能像应用本身一样，向已解锁的保险库索取密钥。对最贵重的密钥，我们仍然推荐桌面应用。",
+      "vaultNoRecovery": "没有找回途径。失去全部进入方式，加密的密钥就没了 — 回到应用的唯一办法会清除本设备的数据。",
+      "vaultDesktopToggleHint": "你的密钥已经在系统钥匙串里。开启此项可在其上再加一层密码或通行密钥。",
+      "vaultDesktopOptOutTitle": "关闭凭证保险库？",
+      "vaultDesktopOptOutBody": "你的密钥将重新只由系统钥匙串保护。不会删除任何内容，之后你也可以重新开启保险库。",
+      "vaultDesktopOptOutConfirm": "关闭保险库",
+      "vaultMigrated_one": "已将你原有的 1 个密钥移入保险库。",
+      "vaultMigrated_other": "已将你原有的 {{count}} 个密钥移入保险库。",
+      "vaultMigrationFailed": "保险库设置未完成。你的密钥仍可读取 — 打开保险库以完成设置。",
+      "vaultSharedBackoff": "保险库和锁屏共用同一个尝试次数上限，因此密码错误过多会同时延迟两者。",
+      "vaultCliNote": "命令行工具通过参数接收 API 密钥，从不读取保险库。",
+      "hardLockTitle": "强锁定",
+      "hardLockDescription": "锁定保险库，而不只是屏幕。",
+      "hardLockButton": "强锁定",
+      "hardLockWarning": "锁定保险库，而不只是屏幕。实盘机器人和自动化将停止交易，直到你解锁。模拟机器人继续运行。",
+      "hardLockConfirmTitle": "封存你的凭证保险库？",
+      "hardLockConfirmBody": "实盘机器人和自动化将停止交易，直到你再次解锁。模拟机器人继续运行。"
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "后退",
     "forward": "前进",
     "checkForUpdates": "检查更新……",
-    "lockTerminal": "锁定终端"
+    "lockTerminal": "锁定终端",
+    "hardLock": "强锁定（封存保险库）…"
   },
   "titlebar": {
     "newWindow": "新建窗口",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "ARM LIVE",
     "armConfirm": "启用实盘",
     "armNoCredential": "没有为 {{venue}} 保存 API 凭证,因此这个机器人无法下实盘订单。先到账户中添加一个,再回来。",
-    "armAddCredential": "前往账户"
+    "armAddCredential": "前往账户",
+    "statusWaitingUnlock": "等待解锁"
   },
   "indicatorsPage": {
     "scripts": "我的指标",
@@ -2072,7 +2104,8 @@
       "switchTheme": "主题:{{name}}",
       "reload": "重新加载窗口",
       "settingsSection": "设置:{{name}}",
-      "fullscreen": "切换全屏"
+      "fullscreen": "切换全屏",
+      "hardLock": "强锁定（封存保险库）"
     },
     "footer": {
       "navigate": "导航",
@@ -2182,7 +2215,9 @@
     "hasAccountNo": "还没有",
     "hasAccountNoDesc": "开设一个免费的 {{exchange}} 账户",
     "importKey": "导入私钥",
-    "affiliateDisclosure": "部分注册链接可能会为 Pairlens 带来佣金,不会给你带来任何额外费用。"
+    "affiliateDisclosure": "部分注册链接可能会为 Pairlens 带来佣金,不会给你带来任何额外费用。",
+    "vaultSealedBody": "你的凭证保险库已锁定。你的账户仍在这里 — 解锁即可查看和使用。",
+    "credentialsUnreadable": "无法读取此设备上保存的密钥。数据没有丢失，请重试或重启 Pairlens。"
   },
   "workspaceStore": {
     "title": "工作区商店",
@@ -2425,7 +2460,8 @@
         "idle": "闲置一段时间后已锁定。",
         "periodic": "已按计划锁定。",
         "wake": "电脑睡眠期间已锁定。",
-        "manual": "你锁定了终端。"
+        "manual": "你锁定了终端。",
+        "hard": "你锁定了保险库。实时自动化已暂停。"
       }
     },
     "challenge": {
@@ -2433,6 +2469,45 @@
       "description": "输入密码以提交此订单。",
       "confirm": "确认",
       "cancel": "取消"
+    },
+    "vault": {
+      "enrollTitle": "保护你的密钥",
+      "enrollSubtitle": "选择你将如何解锁本设备上保存的密钥。",
+      "enrollRecommendBoth": "建议同时设置通行密钥和密码。两者都能打开你的保险库，因此第二种就是你丢失第一种时的退路。",
+      "enrollButton": "继续",
+      "secondTitle": "再添加一种进入方式？",
+      "secondSubtitle": "你只有一种方式解锁保险库。第二种意味着丢一台设备、忘一个密码都不是终点。",
+      "doneButton": "完成",
+      "choosePasskey": "通行密钥",
+      "choosePasskeyHint": "Touch ID、Windows Hello 或 USB 安全密钥。",
+      "choosePassword": "密码",
+      "choosePasswordHint": "与解锁本终端相同的密码。",
+      "passkeyUnsupported": "此处无法使用通行密钥。",
+      "passkeyUnsupportedHint": "此浏览器或设备无法从通行密钥派生密钥。请改用密码。",
+      "passkeyCancelled": "通行密钥提示已被关闭。",
+      "passkeyNoMatch": "该通行密钥未在此保险库中注册。",
+      "chooseBiometric": "触控 ID",
+      "chooseBiometricHint": "使用这台 Mac 的触控 ID 传感器解锁。",
+      "unlockWithBiometric": "用触控 ID 解锁",
+      "biometricPromptReason": "解锁你的 Pairlens 凭据保险库",
+      "biometricLabel": "这台 Mac 上的触控 ID",
+      "biometricCancelled": "触控 ID 提示已被取消。",
+      "biometricInvalidated": "触控 ID 已无法打开保险库——这台 Mac 上的指纹发生了变化。请在“设置 → 安全”中移除并重新设置。",
+      "useExistingPassword": "使用你已为此终端设置的密码。",
+      "unlockTitle": "解锁你的密钥",
+      "unlockSubtitle": "你的 API 密钥和钱包密钥已加密。解锁后即可使用。",
+      "unlockWithPasskey": "用通行密钥解锁",
+      "unlockWithPassword": "解锁",
+      "unlocking": "正在解锁…",
+      "sealed": "你的凭证保险库已锁定。",
+      "sealedBanner_one": "1 个实盘机器人已暂停 — 解锁 Pairlens 以恢复交易。",
+      "sealedBanner_other": "{{count}} 个实盘机器人已暂停 — 解锁 Pairlens 以恢复交易。",
+      "sealedBannerAction": "解锁",
+      "botsPausedTitle": "实盘机器人已暂停",
+      "botsPausedBody": "解锁 Pairlens 以恢复实盘交易。模拟机器人不受影响。",
+      "orderBlocked": "你的凭证保险库已锁定 — 解锁 Pairlens 才能下实盘订单。",
+      "insecureContext": "在不安全的连接上无法加密。请通过 HTTPS 或在 localhost 上打开 Pairlens 来设置保险库。",
+      "diverged": "终端已解锁，但该密码没能打开你的凭证保险库。请在 设置 → 安全 中更改密码，让两者重新一致。"
     }
   },
   "fullscreen": {

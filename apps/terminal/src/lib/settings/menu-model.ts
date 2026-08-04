@@ -22,6 +22,11 @@ import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { useRiskConfigStore } from '@/stores/risk-config-store'
 import { getLockConfig, subscribeLockConfig } from '@/lib/security/lock-config'
 import {
+  isVaultEnrolled,
+  isVaultUnlocked,
+  subscribeVault,
+} from '@/lib/security/vault/vault-session'
+import {
   isTerminalLocked,
   lockNow,
   subscribeLock,
@@ -355,6 +360,21 @@ const lockTerminalCommand: MenuCommand = {
   subscribe: (onChange) => subscribeLockConfig(onChange),
 }
 
+/**
+ * Hard lock — seals the credential vault as well as covering the screen, so
+ * live bots and automations stop. Only enabled when there is actually a vault
+ * open to seal; the confirm dialog (not this) is what states the consequence.
+ */
+const hardLockCommand: MenuCommand = {
+  kind: 'command',
+  id: 'hard-lock',
+  text: () => t('menu.hardLock', 'Hard Lock (Seal Vault)…'),
+  keybindingId: 'general.hardLock',
+  run: () => useSettingsDialogStore.getState().open('security'),
+  isEnabled: () => isVaultEnrolled() && isVaultUnlocked(),
+  subscribe: (onChange) => subscribeVault(onChange),
+}
+
 const setRegionCommand: MenuCommand = {
   kind: 'command',
   id: 'set-region',
@@ -439,6 +459,7 @@ export function createMenuModel(): MenuModel {
     ...(hasAppServer ? [accountCommand] : []),
     { kind: 'separator' },
     lockTerminalCommand,
+    hardLockCommand,
     { kind: 'separator' },
   ]
 

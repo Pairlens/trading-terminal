@@ -396,7 +396,9 @@
     "chooseIcon": "Elegir icono",
     "clear": "Borrar",
     "showInFolder": "Mostrar en la carpeta",
-    "updated": "Actualizado {{time}}"
+    "updated": "Actualizado {{time}}",
+    "back": "Atrás",
+    "dismiss": "Descartar"
   },
   "legal": {
     "terms": "Términos y Condiciones",
@@ -773,7 +775,7 @@
       "newPassword": "Nueva contraseña",
       "confirmPassword": "Confirmar contraseña",
       "currentPassword": "Contraseña actual",
-      "passwordTooShort": "Usa al menos 6 caracteres.",
+      "passwordTooShort": "Usa al menos {{min}} caracteres.",
       "passwordMismatch": "Las dos contraseñas no coinciden.",
       "passwordWrong": "Esa contraseña no es correcta.",
       "noRecoveryWarning": "No hay recuperación de contraseña. Si la olvidas, la única forma de volver a entrar borra los datos de este dispositivo. Guárdala ahora en tu gestor de contraseñas.",
@@ -804,7 +806,35 @@
       "resetButton": "Restablecer y borrar",
       "resetConfirmTitle": "¿Borrar este dispositivo?",
       "resetConfirmBody": "Esto borra todas las claves API, claves de monedero, espacios de trabajo, diseños de gráfico y chats de este ordenador. No hay vuelta atrás ni recuperación de contraseña. Si has iniciado sesión, los ajustes sincronizados vuelven al entrar de nuevo; las claves API y de monedero no, porque solo se guardan aquí.",
-      "resetConfirmPhrase": "Escribe {{phrase}} para confirmar."
+      "resetConfirmPhrase": "Escribe {{phrase}} para confirmar.",
+      "vaultTitle": "Bóveda de credenciales",
+      "vaultDescription": "Cifra tus claves API de exchange y de wallet con una contraseña o una passkey.",
+      "vaultStatusNone": "Sin configurar.",
+      "vaultStatusReady_one": "Protegida por 1 forma de desbloqueo.",
+      "vaultStatusReady_other": "Protegida por {{count}} formas de desbloqueo.",
+      "vaultSetUp": "Configurar bóveda",
+      "vaultAddProtector": "Añadir otra forma de entrar",
+      "vaultRemoveProtector": "Quitar",
+      "vaultRemoveLastBlocked": "Esta es la única forma de entrar en tu bóveda. Añade otra antes de quitarla.",
+      "vaultRemoveBiometricOnlyBlocked": "Touch ID no puede ser la única forma de entrar: las huellas de este Mac pueden cambiar. Conserva una contraseña o un passkey.",
+      "vaultProtectsBody": "Con una bóveda, tus claves API y de wallet se guardan cifradas. Quien copie este perfil del navegador — o el disco de este ordenador — obtiene texto cifrado que no puede abrir sin tu contraseña o tu passkey.",
+      "vaultCeiling": "No protege las claves mientras las usas. Cualquier cosa que se ejecute dentro de esta página puede pedirle una clave a la bóveda desbloqueada, igual que lo hace la app. La app de escritorio sigue siendo la recomendación para tus claves más valiosas.",
+      "vaultNoRecovery": "No hay recuperación. Si pierdes todas las formas de entrar, las claves cifradas se pierden: la única manera de volver a entrar en la app borra los datos de este dispositivo.",
+      "vaultDesktopToggleHint": "Tus claves ya están en el llavero del sistema. Activa esto para añadir encima una contraseña o una passkey.",
+      "vaultDesktopOptOutTitle": "¿Desactivar la bóveda de credenciales?",
+      "vaultDesktopOptOutBody": "Tus claves vuelven a estar protegidas solo por el llavero del sistema. No se borra nada y puedes volver a activar la bóveda más adelante.",
+      "vaultDesktopOptOutConfirm": "Desactivar bóveda",
+      "vaultMigrated_one": "Se movió 1 clave que ya tenías a la bóveda.",
+      "vaultMigrated_other": "Se movieron {{count}} claves que ya tenías a la bóveda.",
+      "vaultMigrationFailed": "La configuración de la bóveda no terminó. Tus claves siguen siendo legibles: abre la bóveda para completarla.",
+      "vaultSharedBackoff": "La bóveda y la pantalla de bloqueo comparten un mismo límite de intentos, así que demasiadas contraseñas incorrectas retrasan ambas.",
+      "vaultCliNote": "La herramienta de línea de comandos recibe las claves API como argumentos y nunca lee la bóveda.",
+      "hardLockTitle": "Bloqueo total",
+      "hardLockDescription": "Bloquea la bóveda, no solo la pantalla.",
+      "hardLockButton": "Bloqueo total",
+      "hardLockWarning": "Bloquea la bóveda, no solo la pantalla. Los bots en vivo y las automatizaciones dejan de operar hasta que desbloquees. Los bots en papel siguen funcionando.",
+      "hardLockConfirmTitle": "¿Sellar tu bóveda de credenciales?",
+      "hardLockConfirmBody": "Los bots en vivo y las automatizaciones dejan de operar hasta que vuelvas a desbloquear. Los bots en papel siguen funcionando."
     }
   },
   "nav": {
@@ -900,7 +930,8 @@
     "back": "Atrás",
     "forward": "Adelante",
     "checkForUpdates": "Buscar actualizaciones…",
-    "lockTerminal": "Bloquear terminal"
+    "lockTerminal": "Bloquear terminal",
+    "hardLock": "Bloqueo total (sellar bóveda)…"
   },
   "titlebar": {
     "newWindow": "Nueva ventana",
@@ -1378,7 +1409,8 @@
     "armConfirmPhrase": "ARMAR REAL",
     "armConfirm": "Armar en real",
     "armNoCredential": "No hay ninguna credencial API guardada para {{venue}}, así que este bot no puede enviar órdenes reales. Añade una en Cuentas y vuelve.",
-    "armAddCredential": "Ir a Cuentas"
+    "armAddCredential": "Ir a Cuentas",
+    "statusWaitingUnlock": "Esperando desbloqueo"
   },
   "indicatorsPage": {
     "scripts": "Mis indicadores",
@@ -2072,7 +2104,8 @@
       "switchTheme": "Tema: {{name}}",
       "reload": "Recargar ventana",
       "settingsSection": "Configuración: {{name}}",
-      "fullscreen": "Alternar pantalla completa"
+      "fullscreen": "Alternar pantalla completa",
+      "hardLock": "Bloqueo total (sellar bóveda)"
     },
     "footer": {
       "navigate": "Navegar",
@@ -2182,7 +2215,9 @@
     "hasAccountNo": "Todavía no",
     "hasAccountNoDesc": "Abre una cuenta gratis en {{exchange}}",
     "importKey": "Importa una clave privada",
-    "affiliateDisclosure": "Algunos enlaces de registro pueden generar una comisión para Pairlens, sin coste extra para ti."
+    "affiliateDisclosure": "Algunos enlaces de registro pueden generar una comisión para Pairlens, sin coste extra para ti.",
+    "vaultSealedBody": "Tu bóveda de credenciales está bloqueada. Tus cuentas siguen aquí: desbloquea para verlas y usarlas.",
+    "credentialsUnreadable": "No se pudieron leer las claves guardadas en este dispositivo. No se perdió nada: inténtalo otra vez o reinicia Pairlens."
   },
   "workspaceStore": {
     "title": "Tienda de espacios",
@@ -2425,7 +2460,8 @@
         "idle": "Bloqueado tras un rato de inactividad.",
         "periodic": "Bloqueado según lo programado.",
         "wake": "Bloqueado mientras el equipo estaba suspendido.",
-        "manual": "Has bloqueado el terminal."
+        "manual": "Has bloqueado el terminal.",
+        "hard": "Bloqueaste la bóveda. Las automatizaciones en vivo están en pausa."
       }
     },
     "challenge": {
@@ -2433,6 +2469,45 @@
       "description": "Introduce tu contraseña para enviar esta orden.",
       "confirm": "Confirmar",
       "cancel": "Cancelar"
+    },
+    "vault": {
+      "enrollTitle": "Protege tus claves",
+      "enrollSubtitle": "Elige cómo desbloquearás las claves guardadas en este dispositivo.",
+      "enrollRecommendBoth": "Recomendamos configurar una passkey y una contraseña. Cualquiera de las dos abre tu bóveda, así que la segunda es tu forma de volver a entrar si pierdes la primera.",
+      "enrollButton": "Continuar",
+      "secondTitle": "¿Añadir una segunda forma de entrar?",
+      "secondSubtitle": "Tienes una sola forma de desbloquear tu bóveda. Con una segunda, perder un dispositivo u olvidar una contraseña deja de ser el final.",
+      "doneButton": "Listo",
+      "choosePasskey": "Passkey",
+      "choosePasskeyHint": "Touch ID, Windows Hello o una llave de seguridad USB.",
+      "choosePassword": "Contraseña",
+      "choosePasswordHint": "La misma contraseña que desbloquea este terminal.",
+      "passkeyUnsupported": "Las passkeys no están disponibles aquí.",
+      "passkeyUnsupportedHint": "Este navegador o dispositivo no puede derivar una clave de una passkey. Usa una contraseña.",
+      "passkeyCancelled": "Se cerró la solicitud de passkey.",
+      "passkeyNoMatch": "Esa passkey no está registrada en esta bóveda.",
+      "chooseBiometric": "Touch ID",
+      "chooseBiometricHint": "Desbloquea con el sensor Touch ID de este Mac.",
+      "unlockWithBiometric": "Desbloquear con Touch ID",
+      "biometricPromptReason": "Desbloquea tu bóveda de credenciales de Pairlens",
+      "biometricLabel": "Touch ID en este Mac",
+      "biometricCancelled": "Se descartó el aviso de Touch ID.",
+      "biometricInvalidated": "Touch ID ya no puede abrir tu bóveda: cambiaron las huellas de este Mac. Elimínalo en Ajustes → Seguridad y vuelve a configurarlo.",
+      "useExistingPassword": "Usa la contraseña que ya configuraste para este terminal.",
+      "unlockTitle": "Desbloquea tus claves",
+      "unlockSubtitle": "Tus claves API y de wallet están cifradas. Desbloquea para usarlas.",
+      "unlockWithPasskey": "Desbloquear con passkey",
+      "unlockWithPassword": "Desbloquear",
+      "unlocking": "Desbloqueando…",
+      "sealed": "Tu bóveda de credenciales está bloqueada.",
+      "sealedBanner_one": "1 bot en vivo está en pausa: desbloquea Pairlens para reanudar el trading.",
+      "sealedBanner_other": "{{count}} bots en vivo están en pausa: desbloquea Pairlens para reanudar el trading.",
+      "sealedBannerAction": "Desbloquear",
+      "botsPausedTitle": "Los bots en vivo están en pausa",
+      "botsPausedBody": "Desbloquea Pairlens para reanudar el trading en vivo. Los bots en papel no se ven afectados.",
+      "orderBlocked": "Tu bóveda de credenciales está bloqueada: desbloquea Pairlens para enviar órdenes en vivo.",
+      "insecureContext": "El cifrado no está disponible en una conexión insegura. Abre Pairlens por HTTPS, o en localhost, para configurar una bóveda.",
+      "diverged": "Tu terminal está desbloqueado, pero esa contraseña no abrió tu bóveda de credenciales. Cambia tu contraseña en Ajustes → Seguridad para volver a sincronizarlas."
     }
   },
   "fullscreen": {

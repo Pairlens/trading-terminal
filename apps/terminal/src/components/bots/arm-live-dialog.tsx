@@ -2,7 +2,12 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { KeyRound, MonitorSmartphone, TriangleAlert } from 'lucide-react'
+import {
+  KeyRound,
+  LockKeyhole,
+  MonitorSmartphone,
+  TriangleAlert,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
@@ -18,6 +23,7 @@ import { Input } from '@pairlens/ui/components/ui/input'
 import { Label } from '@pairlens/ui/components/ui/label'
 
 import type { BotDefinition } from '@pairlens/bot-engine/types'
+import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useBotsStore } from '@/stores/bots-store'
 import {
@@ -49,7 +55,12 @@ export function ArmLiveDialog({
 }: ArmLiveDialogProps) {
   const { t } = useTranslation()
   const [typed, setTyped] = useState('')
+  const [unlockOpen, setUnlockOpen] = useState(false)
   const credentials = useCredentialsStore((s) => s.credentials)
+  // A sealed vault is not an empty credential list. Telling someone to add the
+  // Binance key they already have — on the screen that arms real money — is
+  // exactly the misdirection the `sealed` status exists to end.
+  const sealed = useCredentialsStore((s) => s.sealed)
   const loadCredentials = useCredentialsStore((s) => s.load)
   const updateBot = useBotsStore((s) => s.updateBot)
   const setEnabled = useBotsStore((s) => s.setEnabled)
@@ -151,6 +162,20 @@ export function ArmLiveDialog({
               />
             </div>
           </div>
+        ) : sealed ? (
+          <div className="grid gap-3 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3">
+            <p className="flex gap-2 text-xs text-amber-500">
+              <LockKeyhole className="mt-px size-3.5 shrink-0" />
+              {t('security.vault.sealed')}
+            </p>
+            <Button
+              size="sm"
+              className="justify-self-start"
+              onClick={() => setUnlockOpen(true)}
+            >
+              {t('security.vault.sealedBannerAction')}
+            </Button>
+          </div>
         ) : (
           <div className="grid gap-3 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3">
             <p className="flex gap-2 text-xs text-amber-500">
@@ -168,6 +193,8 @@ export function ArmLiveDialog({
             </Button>
           </div>
         )}
+
+        <VaultUnlockDialog open={unlockOpen} onOpenChange={setUnlockOpen} />
 
         <DialogFooter>
           <Button
