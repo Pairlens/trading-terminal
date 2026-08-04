@@ -26,6 +26,8 @@ import { useThemePluginContext } from '@/hooks/use-theme-plugin'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { toggleFullscreen } from '@/lib/fullscreen'
+import { getLockConfig } from '@/lib/security/lock-config'
+import { lockNow } from '@/lib/security/lock-store'
 import { isStandalone, openTerminalWindow } from '@/lib/platform'
 import { useOptimisticSession } from '@/lib/session'
 import { authClient, hasAppServer } from '@/lib/auth-client'
@@ -472,6 +474,20 @@ export function useOmniSearchResults(
         icon: 'SquarePlus',
         keywords: ['create workspace', 'add workspace', 'layout'],
         execute: () => useCreateWorkspaceDialogStore.getState().open(),
+      },
+      // The plain screen lock fires directly — it is reversible with the
+      // password and stops nothing. With the lock not set up it falls through
+      // to Security settings instead of silently doing nothing.
+      {
+        type: 'action',
+        id: 'lock-terminal',
+        label: t('menu.lockTerminal'),
+        icon: 'Lock',
+        keywords: ['lock', 'screen', 'password', 'away', 'afk'],
+        execute: () => {
+          if (getLockConfig().enabled) lockNow('manual')
+          else openSettings('security')
+        },
       },
       // Hard lock. Routed through Security settings rather than fired
       // directly: this stops live automations, and an action with that

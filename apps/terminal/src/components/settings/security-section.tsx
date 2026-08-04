@@ -70,12 +70,18 @@ function useLockConfig(): LockConfig {
 }
 
 /**
- * Security — the optional, device-local screen lock.
+ * Security — the terminal lock and the credential vault.
  *
- * The copy in here is a functional requirement, not decoration. This feature
- * is easy to over-trust: it is a screen lock, not disk encryption, it
- * encrypts nothing, and armed bots keep trading behind it. A user who
- * believes otherwise will store more on a shared machine than they should.
+ * The copy in here is a functional requirement, not decoration. These
+ * features are easy to over-trust: the lock is a screen lock, not disk
+ * encryption, and armed bots keep trading behind it. A user who believes
+ * otherwise will store more on a shared machine than they should.
+ *
+ * ORDER is part of the story: the lock comes first because its password is
+ * the foundation everything else builds on — the vault below reuses it
+ * ("the same password that unlocks this terminal" has to point UP at
+ * something already seen, not forward at something unexplained), and Touch
+ * ID and passkeys are added on top of it.
  */
 export function SecuritySection() {
   const { t } = useTranslation()
@@ -89,11 +95,9 @@ export function SecuritySection() {
 
   return (
     <div className="max-w-4xl space-y-5">
-      {/* 0 — the credential vault. Above the screen lock because it is the
-          stronger claim: the lock covers a screen, this encrypts the keys. */}
-      <VaultCard />
-
-      {/* 1 — master switch */}
+      {/* 1 — the lock, with its password and its triggers in one card:
+          "when to lock" is meaningless without the lock, so it does not get
+          to look like an independent feature. */}
       <section className="rounded-xl border p-4">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -131,126 +135,127 @@ export function SecuritySection() {
           <TriangleAlert className="mt-0.5 size-3.5 shrink-0" />
           <span>{t('settings.security.noRecoveryWarning')}</span>
         </p>
-      </section>
 
-      {/* 2 — triggers */}
-      <section
-        className={
-          enabled ? 'rounded-xl border p-4' : 'rounded-xl border p-4 opacity-60'
-        }
-        aria-disabled={!enabled}
-      >
-        <h3 className="font-medium">{t('settings.security.triggersTitle')}</h3>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('settings.security.triggersDescription')}
-        </p>
+        <div
+          className={
+            enabled ? 'mt-5 border-t pt-4' : 'mt-5 border-t pt-4 opacity-60'
+          }
+          aria-disabled={!enabled}
+        >
+          <h4 className="text-sm font-medium">
+            {t('settings.security.triggersTitle')}
+          </h4>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {t('settings.security.triggersDescription')}
+          </p>
 
-        <div className="mt-4 space-y-4">
-          <TriggerRow
-            label={t('settings.security.triggerStartup')}
-            hint={t('settings.security.triggerStartupHint')}
-            checked={triggers.onStartup}
-            disabled={!enabled}
-            onCheckedChange={(onStartup) => updateLockTriggers({ onStartup })}
-          />
-
-          <TriggerRow
-            label={t('settings.security.triggerIdle')}
-            hint={t('settings.security.triggerIdleHint', {
-              minutes: triggers.onIdle.minutes,
-            })}
-            checked={triggers.onIdle.enabled}
-            disabled={!enabled}
-            onCheckedChange={(value) =>
-              updateLockTriggers({
-                onIdle: { ...triggers.onIdle, enabled: value },
-              })
-            }
-          >
-            <MinutesSelect
-              value={triggers.onIdle.minutes}
-              options={IDLE_MINUTE_OPTIONS}
-              disabled={!enabled || !triggers.onIdle.enabled}
-              format={(minutes) =>
-                t('settings.security.afterMinutes', { minutes })
-              }
-              onChange={(minutes) =>
-                updateLockTriggers({ onIdle: { ...triggers.onIdle, minutes } })
-              }
+          <div className="mt-4 space-y-4">
+            <TriggerRow
+              label={t('settings.security.triggerStartup')}
+              hint={t('settings.security.triggerStartupHint')}
+              checked={triggers.onStartup}
+              disabled={!enabled}
+              onCheckedChange={(onStartup) => updateLockTriggers({ onStartup })}
             />
-          </TriggerRow>
 
-          <TriggerRow
-            label={t('settings.security.triggerPeriodic')}
-            hint={t('settings.security.triggerPeriodicHint')}
-            checked={triggers.periodic.enabled}
-            disabled={!enabled}
-            onCheckedChange={(value) =>
-              updateLockTriggers({
-                periodic: { ...triggers.periodic, enabled: value },
-              })
-            }
-          >
-            <MinutesSelect
-              value={triggers.periodic.minutes}
-              options={PERIODIC_MINUTE_OPTIONS}
-              disabled={!enabled || !triggers.periodic.enabled}
-              format={(minutes) =>
-                t('settings.security.everyHours', { hours: minutes / 60 })
-              }
-              onChange={(minutes) =>
+            <TriggerRow
+              label={t('settings.security.triggerIdle')}
+              hint={t('settings.security.triggerIdleHint', {
+                minutes: triggers.onIdle.minutes,
+              })}
+              checked={triggers.onIdle.enabled}
+              disabled={!enabled}
+              onCheckedChange={(value) =>
                 updateLockTriggers({
-                  periodic: { ...triggers.periodic, minutes },
+                  onIdle: { ...triggers.onIdle, enabled: value },
                 })
               }
-            />
-          </TriggerRow>
+            >
+              <MinutesSelect
+                value={triggers.onIdle.minutes}
+                options={IDLE_MINUTE_OPTIONS}
+                disabled={!enabled || !triggers.onIdle.enabled}
+                format={(minutes) =>
+                  t('settings.security.afterMinutes', { minutes })
+                }
+                onChange={(minutes) =>
+                  updateLockTriggers({
+                    onIdle: { ...triggers.onIdle, minutes },
+                  })
+                }
+              />
+            </TriggerRow>
 
-          <TriggerRow
-            label={t('settings.security.triggerWake')}
-            hint={t('settings.security.triggerWakeHint')}
-            checked={triggers.onWake}
-            disabled={!enabled}
-            onCheckedChange={(onWake) => updateLockTriggers({ onWake })}
-          />
-
-          <TriggerRow
-            label={t('settings.security.triggerTrade')}
-            hint={t('settings.security.triggerTradeHint')}
-            checked={triggers.beforeTrade.enabled}
-            disabled={!enabled}
-            onCheckedChange={(value) =>
-              updateLockTriggers({
-                beforeTrade: { ...triggers.beforeTrade, enabled: value },
-              })
-            }
-          >
-            <MinutesSelect
-              value={triggers.beforeTrade.graceMinutes}
-              options={TRADE_GRACE_OPTIONS}
-              disabled={!enabled || !triggers.beforeTrade.enabled}
-              format={(minutes) =>
-                minutes === 0
-                  ? t('settings.security.graceNever')
-                  : t('settings.security.graceMinutes', { minutes })
-              }
-              onChange={(graceMinutes) =>
+            <TriggerRow
+              label={t('settings.security.triggerPeriodic')}
+              hint={t('settings.security.triggerPeriodicHint')}
+              checked={triggers.periodic.enabled}
+              disabled={!enabled}
+              onCheckedChange={(value) =>
                 updateLockTriggers({
-                  beforeTrade: { ...triggers.beforeTrade, graceMinutes },
+                  periodic: { ...triggers.periodic, enabled: value },
                 })
               }
+            >
+              <MinutesSelect
+                value={triggers.periodic.minutes}
+                options={PERIODIC_MINUTE_OPTIONS}
+                disabled={!enabled || !triggers.periodic.enabled}
+                format={(minutes) =>
+                  t('settings.security.everyHours', { hours: minutes / 60 })
+                }
+                onChange={(minutes) =>
+                  updateLockTriggers({
+                    periodic: { ...triggers.periodic, minutes },
+                  })
+                }
+              />
+            </TriggerRow>
+
+            <TriggerRow
+              label={t('settings.security.triggerWake')}
+              hint={t('settings.security.triggerWakeHint')}
+              checked={triggers.onWake}
+              disabled={!enabled}
+              onCheckedChange={(onWake) => updateLockTriggers({ onWake })}
             />
-          </TriggerRow>
+
+            <TriggerRow
+              label={t('settings.security.triggerTrade')}
+              hint={t('settings.security.triggerTradeHint')}
+              checked={triggers.beforeTrade.enabled}
+              disabled={!enabled}
+              onCheckedChange={(value) =>
+                updateLockTriggers({
+                  beforeTrade: { ...triggers.beforeTrade, enabled: value },
+                })
+              }
+            >
+              <MinutesSelect
+                value={triggers.beforeTrade.graceMinutes}
+                options={TRADE_GRACE_OPTIONS}
+                disabled={!enabled || !triggers.beforeTrade.enabled}
+                format={(minutes) =>
+                  minutes === 0
+                    ? t('settings.security.graceNever')
+                    : t('settings.security.graceMinutes', { minutes })
+                }
+                onChange={(graceMinutes) =>
+                  updateLockTriggers({
+                    beforeTrade: { ...triggers.beforeTrade, graceMinutes },
+                  })
+                }
+              />
+            </TriggerRow>
+          </div>
         </div>
       </section>
 
-      {/* 3 — what this actually protects */}
-      <ProtectsSection />
+      {/* 2 — the credential vault, built on the password above */}
+      <VaultCard />
 
-      {/* 3b — hard lock: the one action that stops automations */}
-      <HardLockSection />
-
-      {/* 4 — lock now */}
+      {/* 3 — the two lock actions, side by side so their difference is
+          visible: one covers the screen, the other seals the keys. */}
       <section className="rounded-xl border p-4">
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -274,7 +279,13 @@ export function SecuritySection() {
             {t('settings.security.lockNow')}
           </Button>
         </div>
+        <div className="mt-4 border-t pt-4">
+          <HardLockRow />
+        </div>
       </section>
+
+      {/* 4 — the fine print: true, load-bearing, and none of it a control */}
+      <FinePrint />
 
       <SetPasswordDialog open={setOpen} onOpenChange={setSetOpen} />
       <ConfirmPasswordDialog
@@ -354,6 +365,7 @@ function VaultCard() {
 
   const record = useVaultRecord(vault)
   const biometricSupported = useBiometricSupported()
+  const passkeySupported = usePasskeySupported()
 
   return (
     <section className="rounded-xl border p-4">
@@ -423,71 +435,129 @@ function VaultCard() {
         </div>
       )}
 
-      {vault.enrolled && record && (
+      {/* Every way in, in one list: what is enrolled (solid border, removable),
+          what can be added (dashed, with its own Add), and what exists but is
+          out of reach yet (dimmed, with the reason written on the row) — the
+          user asked where Touch ID was and the honest answer was "hidden".
+          The intro line answers the other standing question: these are not
+          vault-only, the lock screen accepts all of them. */}
+      <div className="mt-4">
+        <h4 className="text-sm font-medium">
+          {t('settings.security.vaultWaysTitle')}
+        </h4>
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          {t('settings.security.vaultAlsoUnlocks')}
+        </p>
         <ul className="mt-3 space-y-2">
-          {record.protectors.map((protector) => (
-            <li
-              key={protector.id}
-              className="flex items-center gap-3 rounded-lg border px-3 py-2"
-            >
-              {protector.type === 'passkey' ? (
-                <Fingerprint className="size-4 shrink-0 text-muted-foreground" />
-              ) : protector.type === 'biometric' ? (
-                <ScanFace className="size-4 shrink-0 text-muted-foreground" />
-              ) : (
-                <KeyRound className="size-4 shrink-0 text-muted-foreground" />
-              )}
-              <span className="min-w-0 flex-1 truncate text-sm">
-                {protector.label}
-              </span>
-              {/* Disabled on the same rule the library enforces
-                  (`removalStrandsVault`), so the button never offers a removal
-                  that comes back as an error — and never offers the one that
-                  leaves Touch ID alone holding the vault. */}
-              <Button
-                size="icon"
-                variant="ghost"
-                aria-label={t('settings.security.vaultRemoveProtector')}
-                title={
-                  record.protectors.length === 1
-                    ? t('settings.security.vaultRemoveLastBlocked')
-                    : removalStrandsVault(record, protector.id)
-                      ? t('settings.security.vaultRemoveBiometricOnlyBlocked')
-                      : !vault.unlocked
-                        ? t('security.vault.sealed')
-                        : t('settings.security.vaultRemoveProtector')
-                }
-                disabled={
-                  busy ||
-                  removalStrandsVault(record, protector.id) ||
-                  !vault.unlocked
-                }
-                onClick={() => void removeProtector(protector.id)}
+          {vault.enrolled &&
+            record?.protectors.map((protector) => (
+              <li
+                key={protector.id}
+                className="flex items-center gap-3 rounded-lg border px-3 py-2"
               >
-                <Trash2 className="size-3.5" />
-              </Button>
-            </li>
-          ))}
+                {protector.type === 'passkey' ? (
+                  <Fingerprint className="size-4 shrink-0 text-muted-foreground" />
+                ) : protector.type === 'biometric' ? (
+                  <ScanFace className="size-4 shrink-0 text-muted-foreground" />
+                ) : (
+                  <KeyRound className="size-4 shrink-0 text-muted-foreground" />
+                )}
+                <span className="min-w-0 flex-1 truncate text-sm">
+                  {protector.label}
+                </span>
+                {/* Disabled on the same rule the library enforces
+                    (`removalStrandsVault`), so the button never offers a
+                    removal that comes back as an error — and never offers the
+                    one that leaves Touch ID alone holding the vault. */}
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  aria-label={t('settings.security.vaultRemoveProtector')}
+                  title={
+                    record.protectors.length === 1
+                      ? t('settings.security.vaultRemoveLastBlocked')
+                      : removalStrandsVault(record, protector.id)
+                        ? t('settings.security.vaultRemoveBiometricOnlyBlocked')
+                        : !vault.unlocked
+                          ? t('security.vault.sealed')
+                          : t('settings.security.vaultRemoveProtector')
+                  }
+                  disabled={
+                    busy ||
+                    removalStrandsVault(record, protector.id) ||
+                    !vault.unlocked
+                  }
+                  onClick={() => void removeProtector(protector.id)}
+                >
+                  <Trash2 className="size-3.5" />
+                </Button>
+              </li>
+            ))}
+
+          {!vault.hasPassword && (
+            <MethodRow
+              icon={KeyRound}
+              title={t('security.vault.choosePassword')}
+              hint={t('security.vault.choosePasswordHint')}
+              action={
+                vault.enrolled ? (
+                  <AddMethodButton
+                    disabled={busy}
+                    onClick={() => setEnrollOpen(true)}
+                  />
+                ) : null
+              }
+            />
+          )}
+
+          {passkeySupported && !vault.hasPasskey && (
+            <MethodRow
+              icon={Fingerprint}
+              title={t('security.vault.choosePasskey')}
+              hint={t('security.vault.choosePasskeyHint')}
+              action={
+                vault.enrolled ? (
+                  <AddMethodButton
+                    disabled={busy}
+                    onClick={() => setEnrollOpen(true)}
+                  />
+                ) : null
+              }
+            />
+          )}
+
+          {biometricSupported && !vault.hasBiometric && (
+            <MethodRow
+              icon={ScanFace}
+              title={t('security.vault.chooseBiometric')}
+              // The row the feedback asked for: Touch ID visible before it is
+              // reachable, with the reason in place of a dead button.
+              hint={
+                vault.enrolled
+                  ? t('security.vault.chooseBiometricHint')
+                  : t('settings.security.biometricNeedsVault')
+              }
+              muted={!vault.enrolled}
+              action={
+                vault.enrolled ? (
+                  <AddMethodButton
+                    disabled={busy}
+                    onClick={() => setEnrollOpen(true)}
+                  />
+                ) : null
+              }
+            />
+          )}
         </ul>
-      )}
+      </div>
 
       {error && <p className="mt-2 text-destructive text-xs">{error}</p>}
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        {(!vault.enrolled ||
-          !vault.hasPasskey ||
-          !vault.hasPassword ||
-          (biometricSupported && !vault.hasBiometric)) && (
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={busy}
-            onClick={() => setEnrollOpen(true)}
-          >
+        {!vault.enrolled && (
+          <Button size="sm" disabled={busy} onClick={() => setEnrollOpen(true)}>
             <ShieldCheck className="size-4" />
-            {vault.enrolled
-              ? t('settings.security.vaultAddProtector')
-              : t('settings.security.vaultSetUp')}
+            {t('settings.security.vaultSetUp')}
           </Button>
         )}
         {vault.enrolled && !vault.unlocked && (
@@ -496,6 +566,8 @@ function VaultCard() {
           </Button>
         )}
       </div>
+
+      <VaultCeiling className="mt-4 space-y-2 rounded-lg bg-muted/50 p-3" />
 
       <p className="mt-3 flex items-start gap-1.5 text-xs text-amber-600 dark:text-amber-400">
         <TriangleAlert className="mt-0.5 size-3.5 shrink-0" />
@@ -518,6 +590,63 @@ function VaultCard() {
 }
 
 /**
+ * One row of the "ways to unlock" list that is NOT an enrolled protector:
+ * either addable (dashed border, its own Add) or visible-but-out-of-reach
+ * (dimmed, the reason written where the button would be). Distinct from the
+ * enrolled rows' solid border on purpose — present and possible are
+ * different states and should read differently at a glance.
+ */
+function MethodRow({
+  icon: Icon,
+  title,
+  hint,
+  muted,
+  action,
+}: {
+  icon: typeof KeyRound
+  title: string
+  hint: string
+  muted?: boolean
+  action: React.ReactNode
+}) {
+  return (
+    <li
+      className={`flex items-center gap-3 rounded-lg border border-dashed px-3 py-2 ${
+        muted ? 'opacity-60' : ''
+      }`}
+    >
+      <Icon className="size-4 shrink-0 text-muted-foreground" />
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm">{title}</span>
+        <span className="block text-xs text-muted-foreground">{hint}</span>
+      </span>
+      {action}
+    </li>
+  )
+}
+
+function AddMethodButton({
+  disabled,
+  onClick,
+}: {
+  disabled: boolean
+  onClick: () => void
+}) {
+  const { t } = useTranslation()
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      className="shrink-0"
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {t('common.add')}
+    </Button>
+  )
+}
+
+/**
  * Whether this machine can actually raise a biometric prompt.
  *
  * The probe, never `isStandalone`: a Mac mini has no Touch ID sensor and the
@@ -532,6 +661,22 @@ function useBiometricSupported(): boolean {
     let cancelled = false
     void import('@/lib/security/vault/vault-biometric').then(async (m) => {
       const ok = await m.isBiometricSupported().catch(() => false)
+      if (!cancelled) setSupported(ok)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  return supported
+}
+
+/** Same shape and same reasoning as `useBiometricSupported`, for passkeys. */
+function usePasskeySupported(): boolean {
+  const [supported, setSupported] = React.useState(false)
+  React.useEffect(() => {
+    let cancelled = false
+    void import('@/lib/security/vault/vault-passkey').then(async (m) => {
+      const ok = await m.isPasskeySupported().catch(() => false)
       if (!cancelled) setSupported(ok)
     })
     return () => {
@@ -641,53 +786,46 @@ function DisableVaultDialog({
   )
 }
 
-// ── What this protects, and the hard lock ────────────────────────────
+// ── Fine print, and the hard lock ────────────────────────────────────
 
 /**
- * Conditional on enrollment, because the un-enrolled copy says the lock
- * "encrypts nothing" — which stops being true the moment a vault exists, and
- * a security page that overstates its protection is worse than one that
- * understates it.
+ * The honest footnotes, at the foot. Every line here is load-bearing copy —
+ * the shared attempt limit, where the password check lives, the CLI bypass —
+ * but none of it is a control, so it must not sit BETWEEN controls dressed
+ * up as one (that was the "wall of text in the middle" complaint). The lock
+ * ceiling paragraph stays conditional on enrollment: it says the lock
+ * "encrypts nothing", which stops being true the moment a vault exists.
  */
-function ProtectsSection() {
+function FinePrint() {
   const { t } = useTranslation()
   const vault = useVaultState()
 
   return (
-    <section className="rounded-xl border p-4">
-      <h3 className="font-medium">{t('settings.security.protectsTitle')}</h3>
-      {vault.enrolled ? (
-        <VaultCeiling className="mt-2 space-y-2" />
-      ) : (
-        <p className="mt-2 text-sm text-muted-foreground">
-          {t('settings.security.protectsBody')}
-        </p>
-      )}
-      <p className="mt-2 text-sm text-muted-foreground">
-        {t('settings.security.protectsBots')}
-      </p>
-      <p className="mt-2 text-xs text-muted-foreground">
-        {t('settings.security.vaultSharedBackoff')}
-      </p>
-      <p className="mt-2 text-xs text-muted-foreground">
+    <section className="space-y-1.5 px-1 pb-2 text-xs text-muted-foreground">
+      <h3 className="text-sm font-medium text-foreground">
+        {t('settings.security.protectsTitle')}
+      </h3>
+      {!vault.enrolled && <p>{t('settings.security.protectsBody')}</p>}
+      <p>{t('settings.security.protectsBots')}</p>
+      <p>{t('settings.security.vaultSharedBackoff')}</p>
+      <p>
         {isStandalone
           ? t('settings.security.protectsDesktop')
           : t('settings.security.protectsBrowser')}
       </p>
-      <p className="mt-2 text-xs text-muted-foreground">
-        {t('settings.security.vaultCliNote')}
-      </p>
+      <p>{t('settings.security.vaultCliNote')}</p>
     </section>
   )
 }
 
-function HardLockSection() {
+/** The hard lock, as the second row of the actions card. */
+function HardLockRow() {
   const { t } = useTranslation()
   const vault = useVaultState()
   const [confirmOpen, setConfirmOpen] = React.useState(false)
 
   return (
-    <section className="rounded-xl border p-4">
+    <>
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
           <h3 className="text-sm font-medium">
@@ -712,7 +850,7 @@ function HardLockSection() {
         <span>{t('settings.security.hardLockWarning')}</span>
       </p>
       <HardLockConfirmDialog open={confirmOpen} onOpenChange={setConfirmOpen} />
-    </section>
+    </>
   )
 }
 
