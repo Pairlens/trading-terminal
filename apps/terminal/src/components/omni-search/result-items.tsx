@@ -17,6 +17,7 @@ import {
   Lock,
   LogOut,
   MapPin,
+  Maximize,
   Moon,
   Paintbrush,
   Palette,
@@ -76,6 +77,7 @@ const ACTION_ICONS: Record<string, LucideIcon> = {
   'open-settings': Settings2,
   'new-window': AppWindow,
   'reload-window': RefreshCw,
+  'toggle-fullscreen': Maximize,
   'sign-out': LogOut,
   Sun,
   Moon,
@@ -98,6 +100,7 @@ const ACTION_ICONS: Record<string, LucideIcon> = {
   Lock,
   Cloud,
   Sparkles,
+  Maximize,
 }
 
 // ── Match highlighting ──────────────────────────────────────────────

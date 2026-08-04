@@ -2069,7 +2069,8 @@
       "resetTheme": "Restablecer tema predeterminado",
       "switchTheme": "Tema: {{name}}",
       "reload": "Recargar ventana",
-      "settingsSection": "Configuración: {{name}}"
+      "settingsSection": "Configuración: {{name}}",
+      "fullscreen": "Alternar pantalla completa"
     },
     "footer": {
       "navigate": "Navegar",
@@ -2431,5 +2432,9 @@
       "confirm": "Confirmar",
       "cancel": "Cancelar"
     }
+  },
+  "fullscreen": {
+    "enter": "Pantalla completa",
+    "exit": "Salir de pantalla completa"
   }
 }

@@ -2069,7 +2069,8 @@
       "resetTheme": "Ripristina tema predefinito",
       "switchTheme": "Tema: {{name}}",
       "reload": "Ricarica finestra",
-      "settingsSection": "Impostazioni: {{name}}"
+      "settingsSection": "Impostazioni: {{name}}",
+      "fullscreen": "Attiva/disattiva schermo intero"
     },
     "footer": {
       "navigate": "Naviga",
@@ -2431,5 +2432,9 @@
       "confirm": "Conferma",
       "cancel": "Annulla"
     }
+  },
+  "fullscreen": {
+    "enter": "Schermo intero",
+    "exit": "Esci da schermo intero"
   }
 }

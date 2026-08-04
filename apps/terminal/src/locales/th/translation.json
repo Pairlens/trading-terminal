@@ -2069,7 +2069,8 @@
       "resetTheme": "รีเซ็ตเป็นธีมเริ่มต้น",
       "switchTheme": "ธีม: {{name}}",
       "reload": "โหลดหน้าต่างใหม่",
-      "settingsSection": "การตั้งค่า: {{name}}"
+      "settingsSection": "การตั้งค่า: {{name}}",
+      "fullscreen": "สลับโหมดเต็มหน้าจอ"
     },
     "footer": {
       "navigate": "นำทาง",
@@ -2431,5 +2432,9 @@
       "confirm": "ยืนยัน",
       "cancel": "ยกเลิก"
     }
+  },
+  "fullscreen": {
+    "enter": "เต็มหน้าจอ",
+    "exit": "ออกจากโหมดเต็มหน้าจอ"
   }
 }

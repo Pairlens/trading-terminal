@@ -2069,7 +2069,8 @@
       "resetTheme": "Réinitialiser au thème par défaut",
       "switchTheme": "Thème : {{name}}",
       "reload": "Recharger la fenêtre",
-      "settingsSection": "Paramètres : {{name}}"
+      "settingsSection": "Paramètres : {{name}}",
+      "fullscreen": "Basculer le plein écran"
     },
     "footer": {
       "navigate": "Naviguer",
@@ -2431,5 +2432,9 @@
       "confirm": "Confirmer",
       "cancel": "Annuler"
     }
+  },
+  "fullscreen": {
+    "enter": "Plein écran",
+    "exit": "Quitter le plein écran"
   }
 }

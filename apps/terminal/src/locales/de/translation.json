@@ -2069,7 +2069,8 @@
       "resetTheme": "Auf Standarddesign zurücksetzen",
       "switchTheme": "Design: {{name}}",
       "reload": "Fenster neu laden",
-      "settingsSection": "Einstellungen: {{name}}"
+      "settingsSection": "Einstellungen: {{name}}",
+      "fullscreen": "Vollbild umschalten"
     },
     "footer": {
       "navigate": "Navigieren",
@@ -2431,5 +2432,9 @@
       "confirm": "Bestätigen",
       "cancel": "Abbrechen"
     }
+  },
+  "fullscreen": {
+    "enter": "Vollbild",
+    "exit": "Vollbild verlassen"
   }
 }

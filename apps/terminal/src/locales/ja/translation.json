@@ -2069,7 +2069,8 @@
       "resetTheme": "デフォルトテーマに戻す",
       "switchTheme": "テーマ：{{name}}",
       "reload": "ウィンドウを再読み込み",
-      "settingsSection": "設定：{{name}}"
+      "settingsSection": "設定：{{name}}",
+      "fullscreen": "全画面表示を切り替え"
     },
     "footer": {
       "navigate": "移動",
@@ -2431,5 +2432,9 @@
       "confirm": "確認",
       "cancel": "キャンセル"
     }
+  },
+  "fullscreen": {
+    "enter": "全画面表示",
+    "exit": "全画面表示を終了"
   }
 }

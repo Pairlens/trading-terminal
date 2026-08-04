@@ -2073,7 +2073,8 @@
       "resetTheme": "Сбросить тему по умолчанию",
       "switchTheme": "Тема: {{name}}",
       "reload": "Перезагрузить окно",
-      "settingsSection": "Настройки: {{name}}"
+      "settingsSection": "Настройки: {{name}}",
+      "fullscreen": "Переключить полноэкранный режим"
     },
     "footer": {
       "navigate": "Навигация",
@@ -2439,5 +2440,9 @@
       "confirm": "Подтвердить",
       "cancel": "Отмена"
     }
+  },
+  "fullscreen": {
+    "enter": "Во весь экран",
+    "exit": "Выйти из полноэкранного режима"
   }
 }

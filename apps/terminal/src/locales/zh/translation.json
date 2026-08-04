@@ -2069,7 +2069,8 @@
       "resetTheme": "重置为默认主题",
       "switchTheme": "主题:{{name}}",
       "reload": "重新加载窗口",
-      "settingsSection": "设置:{{name}}"
+      "settingsSection": "设置:{{name}}",
+      "fullscreen": "切换全屏"
     },
     "footer": {
       "navigate": "导航",
@@ -2431,5 +2432,9 @@
       "confirm": "确认",
       "cancel": "取消"
     }
+  },
+  "fullscreen": {
+    "enter": "全屏",
+    "exit": "退出全屏"
   }
 }

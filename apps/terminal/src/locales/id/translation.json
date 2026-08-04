@@ -2069,7 +2069,8 @@
       "resetTheme": "Reset ke tema default",
       "switchTheme": "Tema: {{name}}",
       "reload": "Muat ulang jendela",
-      "settingsSection": "Pengaturan: {{name}}"
+      "settingsSection": "Pengaturan: {{name}}",
+      "fullscreen": "Alihkan layar penuh"
     },
     "footer": {
       "navigate": "Navigasi",
@@ -2431,5 +2432,9 @@
       "confirm": "Konfirmasi",
       "cancel": "Batal"
     }
+  },
+  "fullscreen": {
+    "enter": "Layar penuh",
+    "exit": "Keluar dari layar penuh"
   }
 }

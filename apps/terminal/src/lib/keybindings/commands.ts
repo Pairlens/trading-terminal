@@ -35,6 +35,8 @@ export type KeybindingCommand = {
   labelKey: string
   /** Only bindable in the Tauri desktop build (native window commands). */
   desktopOnly?: boolean
+  /** Only bindable in browser builds (the desktop window chrome owns it). */
+  webOnly?: boolean
 }
 
 export type KeybindingCategory = {
@@ -124,6 +126,13 @@ export const KEYBINDING_COMMANDS: Array<KeybindingCommand> = [
     categoryId: 'general',
     scope: 'global',
     labelKey: 'menu.lockTerminal',
+  },
+  {
+    id: 'general.toggleFullscreen',
+    categoryId: 'general',
+    scope: 'global',
+    labelKey: 'search.actions.fullscreen',
+    webOnly: true,
   },
   {
     id: 'general.newWindow',
@@ -313,6 +322,9 @@ const PAIRLENS_BINDINGS: Record<string, Array<string>> = {
   // Keyboard settings section makes an unbound command discoverable and
   // assignable, which is a better answer than stealing a chord.
   'general.lockTerminal': [],
+  // TradingView's fullscreen chord too, so the TV preset agrees for free.
+  // F11 stays untouched: browsers reserve it for their own window fullscreen.
+  'general.toggleFullscreen': ['Shift+F'],
   'general.newWindow': ['Mod+N'],
   // On macOS the native menubar consumes ⌘Q before the webview sees it, so
   // this chord only ever arms on Windows/Linux — where it is the only way to
