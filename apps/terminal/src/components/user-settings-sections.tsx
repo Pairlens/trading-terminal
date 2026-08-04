@@ -145,7 +145,7 @@ export function PluginsSection() {
     usePluginAutoUpdateSettings()
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       {/* Auto-update */}
       <section className="rounded-xl border p-4">
         <div className="flex items-center gap-2">
@@ -171,6 +171,9 @@ export function PluginsSection() {
             </div>
             <Select
               value={autoUpdateSettings.mode}
+              // items gives the closed trigger the item's label — without it
+              // Base UI renders the raw value ("notify").
+              items={{ auto: 'Auto-update', notify: 'Notify only', off: 'Off' }}
               onValueChange={(mode) =>
                 setAutoUpdateSettings((prev) => ({
                   ...prev,
@@ -199,6 +202,12 @@ export function PluginsSection() {
               </div>
               <Select
                 value={String(autoUpdateSettings.checkIntervalHours)}
+                items={{
+                  '1': 'Every hour',
+                  '6': 'Every 6 hours',
+                  '12': 'Every 12 hours',
+                  '24': 'Daily',
+                }}
                 onValueChange={(v) =>
                   setAutoUpdateSettings((prev) => ({
                     ...prev,
@@ -618,7 +627,7 @@ export function ConnectionSection() {
         : 'bg-red-500'
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       <section className="rounded-xl border p-4">
         <h3 className="font-medium">{t('settings.connection.title')}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -669,7 +678,7 @@ export function AppearanceSection() {
   const isDark = resolvedTheme === 'dark'
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       <section className="rounded-xl border p-4">
         <h3 className="font-medium">{t('settings.appearance.colorMode')}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -817,7 +826,7 @@ export function PerformanceSection() {
   const [idleGuardEnabled, setIdleGuardEnabled] = useIdleGuardEnabled()
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       <section className="rounded-xl border p-4">
         <h3 className="font-medium">{t('settings.performance.title')}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -875,28 +884,39 @@ export function LanguageSection() {
   const { currentLanguage, changeLanguage, languages } = useLanguage()
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       <section className="rounded-xl border p-4">
         <h3 className="font-medium">{t('settings.language.title')}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           {t('settings.language.description')}
         </p>
+        {/* Two columns: 17 languages fit on one screen instead of a long
+            single-column scroll. Each option is a row-sized hit target, not
+            just the 16px radio dot. */}
         <RadioGroup
-          className="mt-4 gap-3"
+          className="mt-4 grid gap-1 sm:grid-cols-2"
           value={currentLanguage}
           onValueChange={changeLanguage}
         >
           {languages.map((lang) => (
-            <div key={lang.code} className="flex items-center gap-3">
+            <Label
+              key={lang.code}
+              htmlFor={`lang-${lang.code}`}
+              className={`flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2.5 font-medium transition-colors ${
+                currentLanguage === lang.code
+                  ? 'border-primary/50 bg-primary/5'
+                  : 'border-transparent hover:bg-accent/50'
+              }`}
+            >
               <RadioGroupItem value={lang.code} id={`lang-${lang.code}`} />
               <span className="text-xl leading-none">{lang.flag}</span>
-              <Label htmlFor={`lang-${lang.code}`} className="font-medium">
+              <span className="min-w-0 truncate">
                 {lang.nativeName}
                 <span className="ml-2 text-sm font-normal text-muted-foreground">
                   {lang.name}
                 </span>
-              </Label>
-            </div>
+              </span>
+            </Label>
           ))}
         </RadioGroup>
       </section>
@@ -966,7 +986,7 @@ export function RegionSection() {
     : country
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       <section className="rounded-xl border p-4">
         <h3 className="font-medium">{t('settings.region.title', 'Country')}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -976,7 +996,9 @@ export function RegionSection() {
           )}
         </p>
 
-        <div className="mt-4">
+        {/* A country picker doesn't earn the full pane — cap the control so
+            it reads as an input, not a search bar. */}
+        <div className="mt-4 max-w-sm">
           <Combobox
             // Filtering only runs on the `items` prop (static JSX children
             // are never filtered by Base UI) — render items via the List's
@@ -1047,7 +1069,7 @@ export function CurrencySection() {
   const { currency, setCurrency } = useDisplayCurrency()
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       <section className="rounded-xl border p-4">
         <h3 className="font-medium">
           {t('settings.currency.title', 'Display Currency')}
@@ -1058,7 +1080,9 @@ export function CurrencySection() {
             'Choose the currency used to display portfolio values and balances.',
           )}
         </p>
-        <div className="mt-4 grid gap-2">
+        {/* One card per currency, side by side — a three-item choice reads at
+            a glance instead of as a stack of near-empty full-width rows. */}
+        <div className="mt-4 grid gap-2 sm:grid-cols-3">
           {DISPLAY_CURRENCIES.map((c) => (
             <button
               key={c.code}
@@ -1070,15 +1094,15 @@ export function CurrencySection() {
                   : 'border-border hover:bg-accent/50'
               }`}
             >
-              <span className="flex size-8 items-center justify-center rounded-md bg-muted text-sm font-bold">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-sm font-bold">
                 {c.symbol}
               </span>
-              <div>
-                <p className="text-sm font-medium">{c.label}</p>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">{c.label}</p>
                 <p className="text-[11px] text-muted-foreground">{c.code}</p>
               </div>
               {currency === c.code && (
-                <Check className="ml-auto size-4 text-primary" />
+                <Check className="ml-auto size-4 shrink-0 text-primary" />
               )}
             </button>
           ))}
@@ -1115,6 +1139,16 @@ const BREACH_ACTION_OPTIONS: Array<{ value: BreachAction; labelKey: string }> =
     { value: 'block_all', labelKey: 'settings.risk.actionBlockAll' },
   ]
 
+/**
+ * Base UI's Select renders the raw value in the trigger unless the root gets
+ * an `items` map to look labels up in — without this the closed control says
+ * "block_buys" while the open menu says "Block buys".
+ */
+const BREACH_ACTION_ITEMS = (
+  t: (key: string) => string,
+): Record<string, string> =>
+  Object.fromEntries(BREACH_ACTION_OPTIONS.map((o) => [o.value, t(o.labelKey)]))
+
 const RESET_INTERVAL_OPTIONS: Array<{
   value: ResetInterval
   labelKey: string
@@ -1145,13 +1179,16 @@ function RiskLimitRow({
   const { t } = useTranslation()
 
   return (
-    <div className="space-y-3 rounded-lg border p-3">
-      <div>
+    // One settings row per limit: what it is on the left, the two controls on
+    // the right — a 1-3 digit threshold doesn't earn a paragraph-wide input.
+    // Wraps back to stacked on narrow widths.
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg border p-3">
+      <div className="min-w-56 flex-1">
         <Label className="text-sm font-medium">{label}</Label>
         <p className="text-xs text-muted-foreground">{description}</p>
       </div>
-      <div className="flex items-center gap-3">
-        <div className="relative flex-1">
+      <div className="flex shrink-0 items-center gap-3">
+        <div className="relative w-24">
           <Input
             type="number"
             min={0}
@@ -1162,7 +1199,7 @@ function RiskLimitRow({
               onValueChange(v >= 0 ? v : 0)
             }}
             placeholder="0"
-            className="pr-8"
+            className={inputType === 'percent' ? 'pr-7' : undefined}
           />
           {inputType === 'percent' && (
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
@@ -1173,6 +1210,7 @@ function RiskLimitRow({
         <div className="w-[160px] shrink-0">
           <Select
             value={action}
+            items={BREACH_ACTION_ITEMS(t)}
             onValueChange={(v) => onActionChange(v as BreachAction)}
           >
             <SelectTrigger className="w-full">
@@ -1270,7 +1308,7 @@ export function RiskSection() {
   const isLocked = store.ordersLocked || store.buyOrdersLocked
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       {/* Lock Banner */}
       {isLocked && (
         <section className="rounded-xl border border-red-500/30 bg-red-500/5 p-4">
@@ -1370,6 +1408,9 @@ export function RiskSection() {
           </div>
           <Select
             value={store.resetInterval}
+            items={Object.fromEntries(
+              RESET_INTERVAL_OPTIONS.map((o) => [o.value, t(o.labelKey)]),
+            )}
             onValueChange={(v) =>
               store.updateConfig({ resetInterval: v as ResetInterval })
             }
@@ -1435,7 +1476,7 @@ export function PrivacySection() {
   const configured = isAnalyticsConfigured()
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       <section className="rounded-xl border p-4">
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -1672,7 +1713,7 @@ export function IntelligenceSection() {
 
   if (!session) {
     return (
-      <div className="max-w-2xl rounded-xl border border-dashed p-5">
+      <div className="max-w-4xl rounded-xl border border-dashed p-5">
         <h3 className="font-medium">{t('settings.billing.title')}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           {t('settings.billing.signInFirst')}
@@ -1692,7 +1733,7 @@ export function IntelligenceSection() {
   const state = billing.data
   if (!state || billing.isError) {
     return (
-      <div className="max-w-2xl rounded-xl border border-dashed p-5">
+      <div className="max-w-4xl rounded-xl border border-dashed p-5">
         <h3 className="font-medium">{t('settings.billing.title')}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           {t('settings.billing.loadError')}
@@ -1703,7 +1744,7 @@ export function IntelligenceSection() {
 
   if (!state.billingEnabled) {
     return (
-      <div className="max-w-2xl rounded-xl border border-dashed p-5">
+      <div className="max-w-4xl rounded-xl border border-dashed p-5">
         <h3 className="font-medium">{t('settings.billing.title')}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           {t('settings.billing.selfHosted')}
@@ -1730,7 +1771,7 @@ export function IntelligenceSection() {
   }
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       {/* Current plan */}
       <section className="rounded-xl border p-4">
         <div className="flex items-start justify-between gap-4">

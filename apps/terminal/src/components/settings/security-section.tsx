@@ -88,7 +88,7 @@ export function SecuritySection() {
   const triggers = config.triggers
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       {/* 0 — the credential vault. Above the screen lock because it is the
           stronger claim: the lock covers a screen, this encrypts the keys. */}
       <VaultCard />
@@ -814,6 +814,11 @@ function MinutesSelect({
   return (
     <Select
       value={String(value)}
+      // items gives the closed trigger the formatted label — without it Base
+      // UI renders the bare value ("15" instead of "15 minutes").
+      items={Object.fromEntries(
+        options.map((minutes) => [String(minutes), format(minutes)]),
+      )}
       disabled={disabled}
       onValueChange={(next: string | null) => {
         if (next !== null) onChange(Number(next))

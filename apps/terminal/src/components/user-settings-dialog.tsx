@@ -428,7 +428,7 @@ export default function UserSettingsDialog({
                 ) : (
                   <>
                     <form
-                      className="max-w-2xl space-y-5"
+                      className="max-w-4xl space-y-5"
                       onSubmit={onSaveProfile}
                     >
                       <section className="rounded-xl border p-4">
@@ -561,7 +561,7 @@ export default function UserSettingsDialog({
                   ) : activeSection === 'billing' ? (
                     <LazyIntelligenceSection />
                   ) : (
-                    <div className="max-w-2xl rounded-xl border border-dashed p-5">
+                    <div className="max-w-4xl rounded-xl border border-dashed p-5">
                       <h3 className="font-medium">
                         {t(currentSection.nameKey)}
                       </h3>
@@ -623,7 +623,7 @@ function ProfileSignInPrompt() {
   ]
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       <section className="rounded-xl border p-6">
         <div className="flex flex-col items-center text-center">
           <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-muted">
@@ -678,7 +678,7 @@ function ResetTutorialSection() {
   }
 
   return (
-    <section className="max-w-2xl rounded-xl border p-4">
+    <section className="max-w-4xl rounded-xl border p-4">
       <div className="flex items-center justify-between gap-4">
         <div>
           <h3 className="text-sm font-medium">

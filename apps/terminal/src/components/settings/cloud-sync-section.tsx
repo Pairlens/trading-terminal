@@ -57,7 +57,7 @@ export function CloudSyncSection() {
   // here with nothing to sync is being signed out.
   if (!session) {
     return (
-      <div className="max-w-2xl space-y-5">
+      <div className="max-w-4xl space-y-5">
         <section className="rounded-xl border border-dashed p-5">
           <div className="flex items-start gap-3">
             <CloudOff className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
@@ -88,7 +88,7 @@ export function CloudSyncSection() {
   }
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       <section className="rounded-xl border p-4">
         <div className="flex items-center justify-between gap-4">
           <div>

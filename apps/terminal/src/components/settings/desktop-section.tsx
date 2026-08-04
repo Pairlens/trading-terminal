@@ -58,7 +58,7 @@ export function DesktopSection() {
   ]
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-4xl space-y-5">
       <section className="rounded-xl border p-4">
         <h3 className="font-medium">
           {t('settings.desktop.closeBehavior.title')}
