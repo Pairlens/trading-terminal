@@ -428,6 +428,11 @@
       "billing": "Intelligence",
       "security": "Безопасность"
     },
+    "search": {
+      "placeholder": "Поиск по настройкам...",
+      "title": "Результаты поиска",
+      "noResults": "Ничего не найдено по запросу «{{query}}»"
+    },
     "comingSoon": "Этот раздел скоро появится.",
     "privacy": {
       "title": "Аналитика использования",
@@ -524,6 +529,7 @@
       "displayName": "Отображаемое имя",
       "namePlaceholder": "Ваше имя",
       "email": "Email",
+      "notSignedIn": "Вы не вошли",
       "saveChanges": "Сохранить изменения",
       "saving": "Сохранение...",
       "savedSuccess": "Настройки профиля сохранены.",

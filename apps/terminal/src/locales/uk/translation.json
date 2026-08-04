@@ -428,6 +428,11 @@
       "billing": "Intelligence",
       "security": "Безпека"
     },
+    "search": {
+      "placeholder": "Пошук у налаштуваннях...",
+      "title": "Результати пошуку",
+      "noResults": "Нічого не знайдено за запитом «{{query}}»"
+    },
     "comingSoon": "Цей розділ скоро з'явиться.",
     "privacy": {
       "title": "Аналітика використання",
@@ -524,6 +529,7 @@
       "displayName": "Відображуване ім'я",
       "namePlaceholder": "Ваше ім'я",
       "email": "Пошта",
+      "notSignedIn": "Ви не увійшли",
       "saveChanges": "Зберегти зміни",
       "saving": "Збереження...",
       "savedSuccess": "Налаштування профілю збережено.",

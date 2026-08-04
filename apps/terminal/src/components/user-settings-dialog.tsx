@@ -22,6 +22,7 @@ import {
   Paintbrush,
   Puzzle,
   RotateCcw,
+  Search,
   ShieldCheck,
   Sparkles,
   Upload,
@@ -62,11 +63,15 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarHeader,
+  SidebarInput,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
 } from '@pairlens/ui/components/ui/sidebar'
+import type { SettingsSearchEntry } from '@/components/settings/settings-search-index'
+import { searchSettings } from '@/components/settings/settings-search-index'
 import { track } from '@/lib/analytics-events'
 
 import { authClient, hasAppServer } from '@/lib/auth-client'
@@ -151,24 +156,52 @@ function SectionFallback() {
   )
 }
 
-const SETTINGS_NAV = [
-  { id: 'profile', nameKey: 'settings.nav.profile', icon: CircleUser },
-  { id: 'billing', nameKey: 'settings.nav.billing', icon: Sparkles },
-  { id: 'plugins', nameKey: 'settings.nav.plugins', icon: Puzzle },
-  { id: 'cloud-sync', nameKey: 'settings.nav.cloudSync', icon: Cloud },
-  { id: 'region', nameKey: 'settings.nav.region', icon: MapPin },
-  { id: 'currency', nameKey: 'settings.nav.currency', icon: Coins },
-  { id: 'risk', nameKey: 'settings.nav.risk', icon: ShieldCheck },
-  { id: 'security', nameKey: 'settings.nav.security', icon: Lock },
-  { id: 'appearance', nameKey: 'settings.nav.appearance', icon: Paintbrush },
-  { id: 'keyboard', nameKey: 'settings.nav.keyboard', icon: Keyboard },
-  { id: 'performance', nameKey: 'settings.nav.performance', icon: Gauge },
-  { id: 'desktop', nameKey: 'settings.nav.desktop', icon: AppWindow },
-  { id: 'privacy', nameKey: 'settings.nav.privacy', icon: Fingerprint },
-  { id: 'language', nameKey: 'settings.nav.language', icon: Globe },
+/**
+ * Profile is not in a group: it renders as the identity card at the top of
+ * the sidebar (avatar, name, email), the way Apple's System Settings leads
+ * with the account.
+ */
+const PROFILE_NAV_ITEM = {
+  id: 'profile',
+  nameKey: 'settings.nav.profile',
+  icon: CircleUser,
+} as const
+
+/**
+ * The rest of the sidebar, clustered by what a section configures: Pairlens
+ * services (things that ride on your account), trading, protection, the app
+ * itself, and locale. The gap between clusters is the only separator —
+ * grouping conveyed by negative space, not labels.
+ */
+const SETTINGS_NAV_GROUPS = [
+  [
+    { id: 'billing', nameKey: 'settings.nav.billing', icon: Sparkles },
+    { id: 'cloud-sync', nameKey: 'settings.nav.cloudSync', icon: Cloud },
+  ],
+  [
+    { id: 'risk', nameKey: 'settings.nav.risk', icon: ShieldCheck },
+    { id: 'plugins', nameKey: 'settings.nav.plugins', icon: Puzzle },
+  ],
+  [
+    { id: 'security', nameKey: 'settings.nav.security', icon: Lock },
+    { id: 'privacy', nameKey: 'settings.nav.privacy', icon: Fingerprint },
+  ],
+  [
+    { id: 'appearance', nameKey: 'settings.nav.appearance', icon: Paintbrush },
+    { id: 'keyboard', nameKey: 'settings.nav.keyboard', icon: Keyboard },
+    { id: 'performance', nameKey: 'settings.nav.performance', icon: Gauge },
+    { id: 'desktop', nameKey: 'settings.nav.desktop', icon: AppWindow },
+  ],
+  [
+    { id: 'language', nameKey: 'settings.nav.language', icon: Globe },
+    { id: 'region', nameKey: 'settings.nav.region', icon: MapPin },
+    { id: 'currency', nameKey: 'settings.nav.currency', icon: Coins },
+  ],
 ] as const
 
-type SettingsNavId = (typeof SETTINGS_NAV)[number]['id']
+const SETTINGS_NAV = [PROFILE_NAV_ITEM, ...SETTINGS_NAV_GROUPS.flat()] as const
+
+export type SettingsNavId = (typeof SETTINGS_NAV)[number]['id']
 
 /** Sections that only exist in the Tauri build. */
 const DESKTOP_ONLY_SECTIONS = new Set<string>(['desktop'])
@@ -176,17 +209,30 @@ const DESKTOP_ONLY_SECTIONS = new Set<string>(['desktop'])
 /** Sections that only mean anything when there is an account to sync with. */
 const APP_SERVER_ONLY_SECTIONS = new Set<string>(['cloud-sync'])
 
+const isSectionVisible = (id: string) =>
+  (isStandalone || !DESKTOP_ONLY_SECTIONS.has(id)) &&
+  (hasAppServer || !APP_SERVER_ONLY_SECTIONS.has(id))
+
 /**
  * What the sidebar actually renders, and what a deep link may resolve to. An
- * additive filter over `SETTINGS_NAV` rather than a second list, so the nav
+ * additive filter over the grouped nav rather than a second list, so the nav
  * order and typing stay derived from one place — and so a stale `?section=`
  * deep link in a browser build falls back to Profile instead of opening an
- * empty pane.
+ * empty pane. Groups that filter down to nothing disappear entirely, taking
+ * their gap with them.
  */
-const VISIBLE_SETTINGS_NAV = SETTINGS_NAV.filter(
-  (item) =>
-    (isStandalone || !DESKTOP_ONLY_SECTIONS.has(item.id)) &&
-    (hasAppServer || !APP_SERVER_ONLY_SECTIONS.has(item.id)),
+const VISIBLE_SETTINGS_NAV_GROUPS = SETTINGS_NAV_GROUPS.map((group) =>
+  group.filter((item) => isSectionVisible(item.id)),
+).filter((group) => group.length > 0)
+
+const VISIBLE_SETTINGS_NAV = [
+  PROFILE_NAV_ITEM,
+  ...VISIBLE_SETTINGS_NAV_GROUPS.flat(),
+]
+
+/** What settings search may return results for. */
+const VISIBLE_SECTION_IDS: ReadonlySet<string> = new Set(
+  VISIBLE_SETTINGS_NAV.map((item) => item.id),
 )
 
 type UserSettingsDialogProps = {
@@ -219,6 +265,7 @@ export default function UserSettingsDialog({
         (n) => n.id === useSettingsDialogStore.getState().section,
       )?.id ?? 'profile',
   )
+  const [searchQuery, setSearchQuery] = React.useState('')
   const [displayName, setDisplayName] = React.useState(userName)
   const [localCustomAvatarUrl, setLocalCustomAvatarUrl] = React.useState<
     string | null
@@ -237,6 +284,7 @@ export default function UserSettingsDialog({
     setLocalCustomAvatarUrl(customAvatarUrl ?? null)
     setErrorMessage(null)
     setSuccessMessage(null)
+    setSearchQuery('')
     // Honor a requested section (deep links from omni search, risk pane,
     // geo dialog, …); default to profile otherwise.
     setActiveSection(
@@ -330,6 +378,28 @@ export default function UserSettingsDialog({
     [activeSection],
   )
 
+  const isSearching = searchQuery.trim().length > 0
+
+  // Landing on a section — via the nav or a search result — always leaves
+  // search mode, otherwise the results pane would keep covering the content.
+  const openSection = React.useCallback((id: SettingsNavId) => {
+    setSearchQuery('')
+    setActiveSection(id)
+  }, [])
+
+  const searchResults = React.useMemo(
+    () =>
+      isSearching
+        ? searchSettings(searchQuery, t, VISIBLE_SECTION_IDS, (section) =>
+            t(
+              SETTINGS_NAV.find((item) => item.id === section)?.nameKey ??
+                'settings.nav.profile',
+            ),
+          )
+        : [],
+    [isSearching, searchQuery, t],
+  )
+
   React.useEffect(() => {
     track('settings_section_viewed', { section: activeSection })
   }, [activeSection])
@@ -376,25 +446,80 @@ export default function UserSettingsDialog({
             collapsible="none"
             className="hidden border-r md:flex md:h-full md:w-64"
           >
+            <SidebarHeader className="gap-2 pb-0">
+              <div className="relative">
+                <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                <SidebarInput
+                  className="pl-8"
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Escape' && isSearching) {
+                      event.stopPropagation()
+                      setSearchQuery('')
+                    } else if (event.key === 'Enter' && searchResults[0]) {
+                      openSection(searchResults[0].section)
+                    }
+                  }}
+                  placeholder={t('settings.search.placeholder')}
+                  value={searchQuery}
+                />
+              </div>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    isActive={!isSearching && activeSection === 'profile'}
+                    onClick={() => openSection('profile')}
+                    size="lg"
+                    type="button"
+                  >
+                    <Avatar size="lg">
+                      <AvatarImage
+                        alt={displayName || userName}
+                        src={avatarToRender}
+                      />
+                      <AvatarFallback>
+                        {hasSession ? (
+                          initials
+                        ) : (
+                          <UserRound className="size-5" />
+                        )}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left leading-tight">
+                      <span className="truncate text-sm font-medium">
+                        {hasSession ? userName : t('settings.nav.profile')}
+                      </span>
+                      <span className="truncate text-xs text-muted-foreground">
+                        {hasSession
+                          ? userEmail
+                          : t('settings.profile.notSignedIn')}
+                      </span>
+                    </div>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarHeader>
             <SidebarContent>
-              <SidebarGroup>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {VISIBLE_SETTINGS_NAV.map((item) => (
-                      <SidebarMenuItem key={item.id}>
-                        <SidebarMenuButton
-                          isActive={item.id === activeSection}
-                          onClick={() => setActiveSection(item.id)}
-                          type="button"
-                        >
-                          <item.icon />
-                          <span>{t(item.nameKey)}</span>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
+              {VISIBLE_SETTINGS_NAV_GROUPS.map((group) => (
+                <SidebarGroup key={group[0].id} className="py-1.5">
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {group.map((item) => (
+                        <SidebarMenuItem key={item.id}>
+                          <SidebarMenuButton
+                            isActive={!isSearching && item.id === activeSection}
+                            onClick={() => openSection(item.id)}
+                            type="button"
+                          >
+                            <item.icon />
+                            <span>{t(item.nameKey)}</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ))}
             </SidebarContent>
             <AppVersionFooter />
           </Sidebar>
@@ -411,7 +536,9 @@ export default function UserSettingsDialog({
                     <BreadcrumbSeparator className="hidden md:block" />
                     <BreadcrumbItem>
                       <BreadcrumbPage>
-                        {t(currentSection.nameKey)}
+                        {isSearching
+                          ? t('settings.search.title')
+                          : t(currentSection.nameKey)}
                       </BreadcrumbPage>
                     </BreadcrumbItem>
                   </BreadcrumbList>
@@ -419,7 +546,13 @@ export default function UserSettingsDialog({
               </div>
             </header>
             <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
-              {activeSection === 'profile' ? (
+              {isSearching ? (
+                <SettingsSearchResults
+                  onNavigate={openSection}
+                  query={searchQuery}
+                  results={searchResults}
+                />
+              ) : activeSection === 'profile' ? (
                 !hasSession ? (
                   <>
                     <ProfileSignInPrompt />
@@ -601,6 +734,72 @@ function AppVersionFooter() {
         {platform}
       </p>
     </SidebarFooter>
+  )
+}
+
+/**
+ * The main pane while a search query is active: matching settings grouped
+ * under their section, in nav order. Rows jump to the section — the sections
+ * themselves are lazy chunks, so search points rather than inlines.
+ */
+function SettingsSearchResults({
+  onNavigate,
+  query,
+  results,
+}: {
+  onNavigate: (section: SettingsNavId) => void
+  query: string
+  results: Array<SettingsSearchEntry>
+}) {
+  const { t } = useTranslation()
+
+  if (results.length === 0) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <p className="text-sm text-muted-foreground">
+          {t('settings.search.noResults', { query: query.trim() })}
+        </p>
+      </div>
+    )
+  }
+
+  const sections = VISIBLE_SETTINGS_NAV.filter((item) =>
+    results.some((entry) => entry.section === item.id),
+  )
+
+  return (
+    <div className="max-w-4xl space-y-5">
+      {sections.map((item) => (
+        <section key={item.id}>
+          <h3 className="flex items-center gap-1.5 px-1 text-xs font-medium text-muted-foreground">
+            <item.icon className="size-3.5" />
+            {t(item.nameKey)}
+          </h3>
+          <ul className="mt-2 space-y-2">
+            {results
+              .filter((entry) => entry.section === item.id)
+              .map((entry) => (
+                <li key={entry.titleKey}>
+                  <button
+                    className="w-full rounded-xl border p-3 text-left transition-colors hover:bg-accent/50"
+                    onClick={() => onNavigate(entry.section)}
+                    type="button"
+                  >
+                    <span className="block text-sm font-medium">
+                      {t(entry.titleKey)}
+                    </span>
+                    {entry.descriptionKey ? (
+                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                        {t(entry.descriptionKey)}
+                      </span>
+                    ) : null}
+                  </button>
+                </li>
+              ))}
+          </ul>
+        </section>
+      ))}
+    </div>
   )
 }
 

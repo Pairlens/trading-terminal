@@ -428,6 +428,11 @@
       "billing": "Intelligence",
       "security": "Bảo mật"
     },
+    "search": {
+      "placeholder": "Tìm trong cài đặt...",
+      "title": "Kết quả tìm kiếm",
+      "noResults": "Không có kết quả cho \"{{query}}\""
+    },
     "comingSoon": "Phần này sắp ra mắt.",
     "privacy": {
       "title": "Phân tích sử dụng",
@@ -524,6 +529,7 @@
       "displayName": "Tên hiển thị",
       "namePlaceholder": "Tên của bạn",
       "email": "Email",
+      "notSignedIn": "Chưa đăng nhập",
       "saveChanges": "Lưu thay đổi",
       "saving": "Đang lưu...",
       "savedSuccess": "Đã lưu cài đặt hồ sơ.",

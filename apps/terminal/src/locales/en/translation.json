@@ -428,6 +428,11 @@
       "billing": "Intelligence",
       "security": "Security"
     },
+    "search": {
+      "placeholder": "Search settings...",
+      "title": "Search results",
+      "noResults": "Nothing matches \"{{query}}\""
+    },
     "comingSoon": "This section is coming soon.",
     "privacy": {
       "title": "Usage analytics",
@@ -524,6 +529,7 @@
       "displayName": "Display name",
       "namePlaceholder": "Your name",
       "email": "Email",
+      "notSignedIn": "Not signed in",
       "saveChanges": "Save changes",
       "saving": "Saving...",
       "savedSuccess": "Profile settings saved.",

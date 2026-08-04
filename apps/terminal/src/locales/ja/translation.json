@@ -428,6 +428,11 @@
       "billing": "Intelligence",
       "security": "セキュリティ"
     },
+    "search": {
+      "placeholder": "設定を検索...",
+      "title": "検索結果",
+      "noResults": "「{{query}}」に一致する項目はありません"
+    },
     "comingSoon": "このセクションは近日公開予定です。",
     "privacy": {
       "title": "利用状況分析",
@@ -524,6 +529,7 @@
       "displayName": "表示名",
       "namePlaceholder": "お名前",
       "email": "メールアドレス",
+      "notSignedIn": "サインインしていません",
       "saveChanges": "変更を保存",
       "saving": "保存中...",
       "savedSuccess": "プロフィール設定を保存しました。",

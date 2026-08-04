@@ -428,6 +428,11 @@
       "billing": "Intelligence",
       "security": "Keamanan"
     },
+    "search": {
+      "placeholder": "Cari pengaturan...",
+      "title": "Hasil pencarian",
+      "noResults": "Tidak ada hasil untuk \"{{query}}\""
+    },
     "comingSoon": "Bagian ini akan segera hadir.",
     "privacy": {
       "title": "Analitik penggunaan",
@@ -524,6 +529,7 @@
       "displayName": "Nama tampilan",
       "namePlaceholder": "Nama Anda",
       "email": "Email",
+      "notSignedIn": "Belum masuk",
       "saveChanges": "Simpan perubahan",
       "saving": "Menyimpan...",
       "savedSuccess": "Pengaturan profil disimpan.",

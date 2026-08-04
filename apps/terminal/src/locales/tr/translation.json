@@ -428,6 +428,11 @@
       "billing": "Intelligence",
       "security": "Güvenlik"
     },
+    "search": {
+      "placeholder": "Ayarlarda ara...",
+      "title": "Arama sonuçları",
+      "noResults": "\"{{query}}\" için sonuç bulunamadı"
+    },
     "comingSoon": "Bu bölüm yakında geliyor.",
     "privacy": {
       "title": "Kullanım analitiği",
@@ -524,6 +529,7 @@
       "displayName": "Görünen ad",
       "namePlaceholder": "Adın",
       "email": "E-posta",
+      "notSignedIn": "Oturum açılmadı",
       "saveChanges": "Değişiklikleri kaydet",
       "saving": "Kaydediliyor...",
       "savedSuccess": "Profil ayarları kaydedildi.",

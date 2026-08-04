@@ -428,6 +428,11 @@
       "billing": "Intelligence",
       "security": "ความปลอดภัย"
     },
+    "search": {
+      "placeholder": "ค้นหาการตั้งค่า...",
+      "title": "ผลการค้นหา",
+      "noResults": "ไม่พบรายการที่ตรงกับ \"{{query}}\""
+    },
     "comingSoon": "ส่วนนี้กำลังจะมาเร็ว ๆ นี้",
     "privacy": {
       "title": "การวิเคราะห์การใช้งาน",
@@ -524,6 +529,7 @@
       "displayName": "ชื่อที่แสดง",
       "namePlaceholder": "ชื่อของคุณ",
       "email": "อีเมล",
+      "notSignedIn": "ยังไม่ได้ลงชื่อเข้าใช้",
       "saveChanges": "บันทึกการเปลี่ยนแปลง",
       "saving": "กำลังบันทึก...",
       "savedSuccess": "บันทึกการตั้งค่าโปรไฟล์แล้ว",

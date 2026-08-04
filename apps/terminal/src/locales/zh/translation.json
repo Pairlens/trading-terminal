@@ -428,6 +428,11 @@
       "billing": "Intelligence",
       "security": "安全"
     },
+    "search": {
+      "placeholder": "搜索设置...",
+      "title": "搜索结果",
+      "noResults": "没有与“{{query}}”匹配的结果"
+    },
     "comingSoon": "此部分即将推出。",
     "privacy": {
       "title": "使用情况分析",
@@ -524,6 +529,7 @@
       "displayName": "显示名称",
       "namePlaceholder": "你的名字",
       "email": "邮箱",
+      "notSignedIn": "未登录",
       "saveChanges": "保存更改",
       "saving": "保存中……",
       "savedSuccess": "个人资料设置已保存。",

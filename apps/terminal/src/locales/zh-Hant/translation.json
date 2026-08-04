@@ -428,6 +428,11 @@
       "billing": "Intelligence",
       "security": "安全"
     },
+    "search": {
+      "placeholder": "搜尋設定...",
+      "title": "搜尋結果",
+      "noResults": "沒有符合「{{query}}」的結果"
+    },
     "comingSoon": "此區塊即將推出。",
     "privacy": {
       "title": "使用分析",
@@ -524,6 +529,7 @@
       "displayName": "顯示名稱",
       "namePlaceholder": "你的名稱",
       "email": "電子郵件",
+      "notSignedIn": "尚未登入",
       "saveChanges": "儲存變更",
       "saving": "儲存中…",
       "savedSuccess": "個人資料設定已儲存。",
