@@ -1,24 +1,74 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@pairlens/ui/components/ui/sheet'
-import { Clock, ExternalLink, Newspaper, User } from 'lucide-react'
-import type { NewsArticle } from '@pairlens/shared/instrument-types'
+import { Newspaper } from 'lucide-react'
+import type {
+  NewsArticle,
+  NewsFeedResponse,
+} from '@pairlens/shared/instrument-types'
 
 import { formatRelativeTime } from '@/lib/format-time'
 import i18n from '@/lib/i18n'
 
 export { formatRelativeTime }
+
+/**
+ * The news API returns pages of (at most) this many articles. A page that
+ * comes back smaller means the feed is exhausted.
+ */
+export const NEWS_PAGE_SIZE = 50
+
+/**
+ * Far-past lower bound for paged requests — the API only honors `time_to`
+ * when `time_from` is also present.
+ */
+export const NEWS_PAGE_TIME_FROM = '20220101T0000'
+
+/** Compact UTC timestamp (YYYYMMDDTHHMM) used by /api/news time_from/time_to. */
+export function toNewsTimeParam(iso: string): string {
+  const d = new Date(iso)
+  const p = (n: number) => String(n).padStart(2, '0')
+  return `${d.getUTCFullYear()}${p(d.getUTCMonth() + 1)}${p(d.getUTCDate())}T${p(d.getUTCHours())}${p(d.getUTCMinutes())}`
+}
+
+/**
+ * Merge infinite-query pages into one feed. `time_to` has minute granularity,
+ * so consecutive pages overlap at the boundary minute — dedupe by URL.
+ */
+export function flattenNewsPages(
+  pages: Array<NewsFeedResponse>,
+): Array<NewsArticle> {
+  const seen = new Set<string>()
+  const out: Array<NewsArticle> = []
+  for (const page of pages) {
+    for (const article of page.articles) {
+      if (seen.has(article.url)) continue
+      seen.add(article.url)
+      out.push(article)
+    }
+  }
+  return out
+}
+
+/**
+ * Next `time_to` cursor: the oldest article's minute (inclusive, so nothing
+ * published within that minute is skipped — dedupe absorbs the overlap).
+ * Returns null when the page was short (feed exhausted); the caller must
+ * also stop when the cursor stops advancing (≥50 articles in one minute).
+ */
+export function nextNewsPageParam(lastPage: NewsFeedResponse): string | null {
+  if (lastPage.articles.length < NEWS_PAGE_SIZE) return null
+  // Scan for the true minimum — under RELEVANCE sort pages aren't chronological.
+  let oldest: string | null = null
+  for (const article of lastPage.articles) {
+    if (!oldest || article.timePublished < oldest)
+      oldest = article.timePublished
+  }
+  return oldest ? toNewsTimeParam(oldest) : null
+}
 
 export const TOPIC_OPTIONS = [
   'blockchain',
@@ -62,7 +112,7 @@ export function SentimentBadge({ label }: { label: string }) {
  * from publishers and 404 over time — rather than surfacing the browser's
  * broken-image glyph, we swap in an on-brand gradient placeholder.
  */
-function ArticleBanner({
+export function ArticleBanner({
   src,
   imgClassName,
   fallbackClassName,
@@ -159,119 +209,5 @@ export function ArticleCard({
         )}
       </div>
     </div>
-  )
-}
-
-export function ArticleDetail({
-  article,
-  onClose,
-}: {
-  article: NewsArticle
-  onClose: () => void
-}) {
-  const { t } = useTranslation()
-  return (
-    <Sheet open onOpenChange={(open) => !open && onClose()}>
-      <SheetContent
-        side="right"
-        className="flex flex-col overflow-y-auto sm:max-w-lg"
-      >
-        <SheetHeader className="gap-3">
-          <SheetTitle className="pr-8 text-base leading-snug">
-            {article.title}
-          </SheetTitle>
-          <SheetDescription className="sr-only">
-            {t('news.articleDetails')}
-          </SheetDescription>
-        </SheetHeader>
-
-        {/* Banner image */}
-        {article.bannerImage && (
-          <div className="px-4">
-            <ArticleBanner
-              src={article.bannerImage}
-              imgClassName="max-h-52 w-full rounded-lg object-cover"
-              fallbackClassName="h-40 w-full rounded-lg"
-              eager
-            />
-          </div>
-        )}
-
-        {/* Meta row */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-4 text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">{article.source}</span>
-          <span className="flex items-center gap-1">
-            <Clock className="size-3" />
-            {formatRelativeTime(article.timePublished)}
-          </span>
-          {article.authors.length > 0 && (
-            <span className="flex items-center gap-1">
-              <User className="size-3" />
-              {article.authors.join(', ')}
-            </span>
-          )}
-          <SentimentBadge label={article.overallSentimentLabel} />
-        </div>
-
-        {/* Full summary */}
-        <p className="px-4 text-sm leading-relaxed text-muted-foreground">
-          {article.summary}
-        </p>
-
-        {/* Topics */}
-        {article.topics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 px-4">
-            {article.topics.map((articleTopic) => (
-              <Badge
-                key={articleTopic.topic}
-                variant="secondary"
-                className="text-xs"
-              >
-                {formatTopicLabel(articleTopic.topic)}
-              </Badge>
-            ))}
-          </div>
-        )}
-
-        {/* Ticker sentiments */}
-        {article.tickerSentiment.length > 0 && (
-          <div className="space-y-1.5 px-4">
-            <span className="text-xs font-medium text-muted-foreground">
-              {t('news.tickerSentiment')}
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {article.tickerSentiment.map((ts) => (
-                <Badge
-                  key={ts.ticker}
-                  variant="outline"
-                  className={cn(
-                    'text-xs',
-                    ts.sentimentLabel.toLowerCase().includes('bullish') &&
-                      'border-green-500/30 bg-green-500/10 text-green-500',
-                    ts.sentimentLabel.toLowerCase().includes('bearish') &&
-                      'border-red-500/30 bg-red-500/10 text-red-500',
-                  )}
-                >
-                  {ts.ticker} · {ts.sentimentLabel.replace(/_/g, ' ')}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Visit article button */}
-        <div className="mt-auto px-4 pb-4 pt-2">
-          <a
-            href={article.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
-          >
-            <ExternalLink className="size-4" />
-            {t('news.visitArticle')}
-          </a>
-        </div>
-      </SheetContent>
-    </Sheet>
   )
 }

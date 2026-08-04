@@ -2453,6 +2453,17 @@
     "articleDetails": "記事の詳細",
     "tickerSentiment": "ティッカーセンチメント",
     "visitArticle": "記事を見る",
+    "reader": {
+      "title": "ニュースリーダー",
+      "searchPlaceholder": "ニュースを検索...",
+      "noMatches": "検索に一致する記事がありません",
+      "clearSearch": "検索をクリア",
+      "loadOlder": "過去のニュースを読み込む",
+      "loadingMore": "ニュースを読み込み中...",
+      "caughtUp": "すべて読みました",
+      "previousArticle": "前の記事",
+      "nextArticle": "次の記事"
+    },
     "topic": {
       "blockchain": "ブロックチェーン",
       "technology": "テクノロジー",

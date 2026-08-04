@@ -2453,6 +2453,17 @@
     "articleDetails": "Detalles del artículo",
     "tickerSentiment": "Sentimiento del ticker",
     "visitArticle": "Ver artículo",
+    "reader": {
+      "title": "Lector de noticias",
+      "searchPlaceholder": "Buscar noticias...",
+      "noMatches": "Nada coincide con tu búsqueda",
+      "clearSearch": "Borrar búsqueda",
+      "loadOlder": "Cargar noticias anteriores",
+      "loadingMore": "Cargando más noticias...",
+      "caughtUp": "Estás al día",
+      "previousArticle": "Artículo anterior",
+      "nextArticle": "Artículo siguiente"
+    },
     "topic": {
       "blockchain": "Blockchain",
       "technology": "Tecnología",

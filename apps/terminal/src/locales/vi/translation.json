@@ -2453,6 +2453,17 @@
     "articleDetails": "Chi tiết bài viết",
     "tickerSentiment": "Tâm lý mã",
     "visitArticle": "Xem bài viết",
+    "reader": {
+      "title": "Trình đọc tin tức",
+      "searchPlaceholder": "Tìm kiếm tin tức...",
+      "noMatches": "Không có kết quả phù hợp",
+      "clearSearch": "Xóa tìm kiếm",
+      "loadOlder": "Tải tin cũ hơn",
+      "loadingMore": "Đang tải thêm tin tức...",
+      "caughtUp": "Bạn đã xem hết tin",
+      "previousArticle": "Bài viết trước",
+      "nextArticle": "Bài viết tiếp theo"
+    },
     "topic": {
       "blockchain": "Blockchain",
       "technology": "Công nghệ",

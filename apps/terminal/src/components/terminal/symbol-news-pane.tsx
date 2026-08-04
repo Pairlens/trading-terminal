@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Newspaper, RefreshCw } from 'lucide-react'
 
@@ -10,7 +10,7 @@ import { Button } from '@pairlens/ui/components/ui/button'
 import {
   usePanePair,
   usePluginFetch,
-  usePluginQuery,
+  usePluginInfiniteQuery,
 } from '@pairlens/plugin-sdk'
 import type {
   NewsArticle,
@@ -18,39 +18,59 @@ import type {
 } from '@pairlens/shared/instrument-types'
 
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
+import { NewsReaderDialog } from '@/components/news/news-reader'
 import {
   ArticleCard,
   ArticleCardSkeleton,
-  ArticleDetail,
+  NEWS_PAGE_TIME_FROM,
+  flattenNewsPages,
   formatRelativeTime,
+  nextNewsPageParam,
 } from '@/components/news/news-shared'
 
 function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
   const { t } = useTranslation()
   const apiFetch = usePluginFetch()
 
-  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(
-    null,
-  )
+  const [readerIndex, setReaderIndex] = useState<number | null>(null)
 
   // Extract base symbol: "BTC-USDT" → "BTC"
   const baseSymbol = pairKey.split('-')[0] ?? pairKey
 
-  const { data, isLoading, isFetching, error, refetch } =
-    usePluginQuery<NewsFeedResponse>({
-      queryKey: ['symbol-news', baseSymbol],
-      queryFn: async () => {
-        const qs = new URLSearchParams({ tickers: baseSymbol })
-        const res = await apiFetch(`/api/news?${qs}`)
-        return res.json()
-      },
-      enabled: !!baseSymbol,
-      staleTime: 5 * 60_000,
-      gcTime: 30 * 60_000,
-    })
+  const {
+    data,
+    isLoading,
+    isFetching,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = usePluginInfiniteQuery<NewsFeedResponse, Error, string | null>({
+    queryKey: ['symbol-news', baseSymbol],
+    queryFn: async ({ pageParam }) => {
+      const qs = new URLSearchParams({ tickers: baseSymbol })
+      if (pageParam) {
+        qs.set('time_from', NEWS_PAGE_TIME_FROM)
+        qs.set('time_to', pageParam)
+      }
+      const res = await apiFetch(`/api/news?${qs}`)
+      return res.json()
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage, _pages, lastPageParam) => {
+      const next = nextNewsPageParam(lastPage)
+      // A non-advancing cursor would refetch the same page forever.
+      return next && next !== lastPageParam ? next : null
+    },
+    enabled: !!baseSymbol,
+    staleTime: 5 * 60_000,
+    gcTime: 30 * 60_000,
+  })
 
-  const articles = data?.articles ?? []
-  const fetchedAt = data?.fetchedAt ?? null
+  const pages = data?.pages
+  const articles = useMemo(() => flattenNewsPages(pages ?? []), [pages])
+  const fetchedAt = pages?.[0]?.fetchedAt ?? null
 
   return (
     <div className="flex h-full flex-col">
@@ -105,19 +125,23 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
         <div className="flex-1 grid grid-cols-1 @lg/pane:grid-cols-2 @4xl/pane:grid-cols-3 gap-3 overflow-y-auto p-4 auto-rows-max content-start">
           {articles.map((article: NewsArticle, i: number) => (
             <ArticleCard
-              key={i}
+              key={article.url}
               article={article}
-              onClick={() => setSelectedArticle(article)}
+              onClick={() => setReaderIndex(i)}
             />
           ))}
         </div>
       )}
 
-      {/* Article detail drawer */}
-      {selectedArticle && (
-        <ArticleDetail
-          article={selectedArticle}
-          onClose={() => setSelectedArticle(null)}
+      {/* Immersive article reader */}
+      {readerIndex !== null && (
+        <NewsReaderDialog
+          articles={articles}
+          initialIndex={readerIndex}
+          onClose={() => setReaderIndex(null)}
+          onEndReached={fetchNextPage}
+          hasMore={hasNextPage}
+          isLoadingMore={isFetchingNextPage}
         />
       )}
     </div>

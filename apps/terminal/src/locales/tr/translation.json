@@ -2453,6 +2453,17 @@
     "articleDetails": "Makale ayrıntıları",
     "tickerSentiment": "Ticker Duyarlılığı",
     "visitArticle": "Makaleyi Ziyaret Et",
+    "reader": {
+      "title": "Haber okuyucu",
+      "searchPlaceholder": "Haber ara...",
+      "noMatches": "Aramanızla eşleşen sonuç yok",
+      "clearSearch": "Aramayı temizle",
+      "loadOlder": "Daha eski haberleri yükle",
+      "loadingMore": "Daha fazla haber yükleniyor...",
+      "caughtUp": "Her şeyi okudunuz",
+      "previousArticle": "Önceki makale",
+      "nextArticle": "Sonraki makale"
+    },
     "topic": {
       "blockchain": "Blockchain",
       "technology": "Teknoloji",
