@@ -1,6 +1,6 @@
 ---
 title: Quickstart
-description: Get trading in about five minutes. Download the desktop app, watch live market data stream in, and connect an exchange. Your keys never leave your machine. Builders can run the whole terminal from source instead.
+description: Get trading in about five minutes. Open the web terminal or install the desktop app, watch live market data stream in, and connect an exchange. Your keys never leave your device. Builders can run the whole terminal from source instead.
 group: get-started
 order: 2
 eyebrow: Get started
@@ -15,20 +15,25 @@ import ConsoleMock from '@/components/docs/mdx/ConsoleMock.astro'
 import KeychainMock from '@/components/marketing/KeychainMock.astro'
 import NextSteps from '@/components/docs/mdx/NextSteps.astro'
 
-There are two ways into Pairlens. Most people should **download the desktop
-app**: it's free, auto-updating, and needs no account. If you'd
-rather read the code you're about to trust, you can **run everything from
-source**: same terminal, same features.
+There are three ways into Pairlens, and they all land on the same terminal.
+The fastest is the **web terminal**: it opens in your browser with nothing to
+install. The **desktop app** is free and auto-updating, and keeps your
+exchange keys in your operating system's own keychain. If you'd rather read
+the code you're about to trust, **run everything from source**.
 
-## Get the app
+## Open the terminal
 
-Grab the installer for macOS, Windows, or Linux from the
-[install page](/install) (or straight from the
-[latest GitHub release](https://github.com/Pairlens/trading-terminal/releases/latest)),
-open it, and you're on a live chart.
+Go to [terminal.pairlens.finance](https://terminal.pairlens.finance) and
+you're on a live chart. Nothing to install, no account.
 
-1. Launch Pairlens: the terminal opens with a live chart, streaming directly
-   from the exchange. No sign-up, nothing to configure.
+Prefer it on your desk? Grab the installer for macOS, Windows, or Linux from
+the [install page](/install) (or straight from the
+[latest GitHub release](https://github.com/Pairlens/trading-terminal/releases/latest)).
+
+Either way:
+
+1. The terminal opens with a live chart, streaming directly from the exchange.
+   No sign-up, nothing to configure.
 2. Pick a market (BTC-USDT is the default) and watch candles stream in.
 3. Sign in with your email **only if** you want workspaces synced across
    devices; everything works without it, stored locally.
@@ -36,15 +41,16 @@ open it, and you're on a live chart.
 ## Connect an exchange
 
 Open **Accounts** in the left nav, hit **Connect Account**, and pick your
-venue. Paste the API key it issued you. Keys are written to your OS keychain
-and used only to sign requests to that venue. They never touch a Pairlens
-server.
+venue. Paste the API key it issued you. Keys are used only to sign requests to
+that venue, and never touch a Pairlens server.
 
 <KeychainMock class="my-5" />
 
 <Callout type="success" title="Your keys stay put">
-  Pairlens has no server that could hold your secrets. Credentials live in the
-  macOS Keychain, Windows Credential Manager, or Linux Secret Service.
+  Pairlens has no server that could hold your secrets. On the desktop app,
+  credentials live in the macOS Keychain, Windows Credential Manager, or Linux
+  Secret Service. In the web terminal they stay in your browser, encrypted at
+  rest, behind a vault you unlock with a password, a passkey, or Touch ID.
 </Callout>
 
 Not ready to risk real funds? Most venues issue demo keys. Choose **Paper**

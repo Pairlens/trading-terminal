@@ -1,13 +1,17 @@
 ---
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-// /install arrival: marble ground, a facts rail, and the three OS tiles that
-// drive the rest of the page. Rendered with macOS selected so the page is
-// complete without JS; the page script re-selects the detected platform and
-// badges it "Your system". The tiles ARE the download — each is a direct
-// link to its installer alias, as is the big button. A click hands the hero
-// to the "download started" card (scripts/install-flow.ts) while the inline
-// page script keeps selection state in sync.
+// /install arrival: marble ground, a facts rail, the web lane, and the three
+// OS tiles that drive the rest of the page. Rendered with macOS selected so
+// the page is complete without JS; the page script re-selects the detected
+// platform and badges it "Your system". The tiles ARE the download — each is
+// a direct link to its installer alias, as is the big button. A click hands
+// the hero to the "download started" card (scripts/install-flow.ts) while the
+// inline page script keeps selection state in sync.
+//
+// The web lane sits above the tiles on purpose: the fastest way into the
+// terminal is not installing it, and someone who came here to download still
+// has the whole chooser directly underneath.
 import { INSTALLERS, SITE } from '@/lib/site'
 import { DEFAULT_OS, OS_GUIDES } from './os-guides'
 import appleIcon from '@/components/marketing/os/apple.svg?raw'
@@ -50,13 +54,14 @@ const defaultHref =
     <div class="ins-rail">
       <div>
         <p class="pl-eyebrow ins-eyebrow" data-reveal>
-          Install Pairlens · macOS · Windows · Linux
+          Get Pairlens · Browser · macOS · Windows · Linux
         </p>
         <h1 class="ins-h1" data-reveal data-reveal-delay="70">
           It runs on your desk, not ours.
         </h1>
         <p class="ins-lede" data-reveal data-reveal-delay="140">
-          One download, no account, nothing to configure before it opens. Every
+          Open it in your browser and start in seconds, or install the desktop
+          build for the full local experience. No account either way, and every
           build ships from public CI and keeps itself up to date.
         </p>
       </div>
@@ -72,6 +77,39 @@ const defaultHref =
         }
       </dl>
     </div>
+
+    <div class="ins-web" data-reveal data-reveal-delay="220">
+      <div class="ins-web-copy">
+        <p class="ins-web-eyebrow">Nothing to install</p>
+        <p class="ins-web-title">Run Pairlens in your browser.</p>
+        <p class="ins-web-body">
+          The same terminal, the same connectors, the same co-pilot. Your keys
+          are encrypted on your own device and never reach a Pairlens server.
+        </p>
+      </div>
+      <a
+        href={SITE.launchUrl}
+        class="ins-web-cta"
+        data-launch-terminal="install-hero"
+      >
+        Launch the terminal
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14m-6-6 6 6-6 6"></path>
+        </svg>
+      </a>
+    </div>
+
+    <p class="ins-or" data-reveal data-reveal-delay="230">
+      <span>or install the desktop app</span>
+    </p>
 
     <div role="group" aria-label="Choose your platform" class="ins-tiles">
       {
@@ -225,10 +263,11 @@ const defaultHref =
          install there, so the useful action is carrying the link to a desk. -->
     <div class="ins-mobile" data-reveal data-reveal-delay="420">
       <p class="ins-mobile-eyebrow">You’re on a phone</p>
-      <p class="ins-mobile-title">Pairlens is a desktop app.</p>
+      <p class="ins-mobile-title">The installers need a desk.</p>
       <p class="ins-mobile-body">
-        The terminal installs on macOS, Windows and Linux — there’s nothing to
-        download here. Send yourself this page and pick it up at your desk.
+        The desktop build is for macOS, Windows and Linux, so there’s nothing
+        to install here — but the web terminal above opens right where you
+        are. Send yourself this page to set up the desktop app later.
       </p>
       <div class="ins-mobile-row">
         <button type="button" class="ins-mobile-copy" data-mobile-copy>
@@ -306,8 +345,102 @@ const defaultHref =
     color: var(--ml-fg);
   }
 
+  /* The web lane. Iris-tinted so it reads as the recommended door without
+     shouting over the marble, and wide enough that the copy and the button
+     share one line on a desk. */
+  .ins-web {
+    margin-top: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    border-radius: 22px;
+    border: 1px solid color-mix(in oklch, var(--primary) 34%, var(--ml-border));
+    background: linear-gradient(
+      100deg,
+      color-mix(in oklch, var(--primary) 11%, var(--ml-card)),
+      var(--ml-card) 62%
+    );
+    padding: 26px 28px;
+    box-shadow: 0 24px 50px -38px oklch(0.24 0.012 66 / 0.55);
+  }
+  .ins-web-copy {
+    min-width: 0;
+  }
+  .ins-web-eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+  .ins-web-title {
+    margin: 9px 0 0;
+    font-family: var(--font-serif);
+    font-size: 25px;
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    color: var(--ml-fg);
+  }
+  .ins-web-body {
+    margin: 7px 0 0;
+    max-width: 58ch;
+    font-size: 14.5px;
+    line-height: 1.65;
+    text-wrap: pretty;
+    color: var(--ml-muted);
+  }
+  .ins-web-cta {
+    display: inline-flex;
+    flex: none;
+    height: 54px;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    border-radius: 15px;
+    background: var(--primary);
+    padding: 0 24px;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--primary-foreground);
+    transition: transform 0.2s var(--ease-out);
+  }
+  .ins-web-cta:hover {
+    color: var(--primary-foreground);
+    transform: translateY(-2px);
+  }
+  .ins-web-cta svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Hairline rule with the label sitting in the gap. */
+  .ins-or {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 42px 0 0;
+  }
+  .ins-or::before,
+  .ins-or::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--ml-border);
+  }
+  .ins-or span {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--ml-fg) 48%, transparent);
+  }
+
   .ins-tiles {
-    margin-top: 60px;
+    margin-top: 28px;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
@@ -642,6 +775,17 @@ const defaultHref =
     }
   }
   @media (max-width: 860px) {
+    .ins-web {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 22px;
+    }
+    .ins-web-cta {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  @media (max-width: 860px) {
     .ins-h1 {
       font-size: 46px;
     }
@@ -670,11 +814,13 @@ const defaultHref =
   @media (prefers-reduced-motion: reduce) {
     .ins-tile,
     .ins-download,
+    .ins-web-cta,
     .ins-link {
       transition: none;
     }
     .ins-tile:hover,
-    .ins-download:hover {
+    .ins-download:hover,
+    .ins-web-cta:hover {
       transform: none;
     }
   }

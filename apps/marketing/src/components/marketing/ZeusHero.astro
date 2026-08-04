@@ -7,7 +7,9 @@
 // scripts/landing-fx.ts via [data-par]; the pointer tilt is local to this
 // component (mouse only, damped, off on touch and under reduced motion).
 import { Image, getImage } from 'astro:assets'
+import { SITE } from '@/lib/site'
 import zeusLens from '@/assets/zeus-lens.png'
+import browserIcon from '@/components/marketing/os/browser.svg?raw'
 
 // Phones get their own statue rendition: at 200vw on a 390-430px viewport the
 // bust renders ~800-860 CSS px wide, and soft-focus marble tolerates a lower
@@ -41,6 +43,45 @@ const statuePhone = await getImage({
       decoding="async"
     />
   </picture>
+
+  <!-- The statue's own mask already fades its last 7% into the ground; this
+       carries that fade further up the frame so the corner marks and the CTA
+       always sit on black instead of on a lit marble shoulder. -->
+  <div aria-hidden="true" class="zhero-scrim"></div>
+
+  <!-- The one action of the landing page. It rides above the statue rather
+       than in the marks rail so it keeps a single centred baseline at every
+       width, and it is painted in glass so it reads over both the black
+       ground and the lit marble underneath.
+       The two labels are parallel by mechanism — browser vs desktop — rather
+       than product vs platform: the product name is already set 400px tall
+       behind the statue, so the button never has to repeat it. -->
+  <div class="zhero-cta">
+    <a
+      href={SITE.launchUrl}
+      class="zhero-launch"
+      data-launch-terminal="landing-hero"
+    >
+      <span class="zhero-glyph" set:html={browserIcon} />
+      Launch in browser
+      <span class="zhero-tag">FREE</span>
+    </a>
+    <a href="/install" class="zhero-dl">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 3v12m0 0 4-4m-4 4-4-4"></path>
+        <path d="M5 21h14"></path>
+      </svg>
+      Download for desktop
+    </a>
+  </div>
 
   <div class="zhero-marks">
     <p>The<br />Open<br />Trading<br />Terminal</p>
@@ -139,9 +180,110 @@ const statuePhone = await getImage({
     translate: var(--hx, 0px) calc(var(--par-y, 0px) + var(--hy, 0px));
   }
 
-  .zhero-marks {
+  .zhero-scrim {
+    pointer-events: none;
     position: absolute;
     z-index: 3;
+    inset: auto 0 0;
+    height: 250px;
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgb(0 0 0 / 0.5) 46%,
+      rgb(0 0 0 / 0.92)
+    );
+  }
+
+  /* Sits on the marks' baseline, centred between the two corner rails. */
+  .zhero-cta {
+    position: absolute;
+    z-index: 5;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: zs-cta 1.1s var(--ease-out) 0.45s both;
+  }
+  .zhero-launch,
+  .zhero-dl {
+    display: inline-flex;
+    height: 52px;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    border-radius: 15px;
+    padding: 0 24px;
+    font-size: 15.5px;
+    font-weight: 600;
+    transition: transform 0.2s var(--ease-out);
+  }
+  .zhero-launch {
+    background: #fff;
+    color: #000;
+  }
+  .zhero-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    opacity: 0.5;
+  }
+  /* Browser frame on the launch button, download arrow on its sibling: the
+     pair reads as "opens here" vs "saves to your machine" before either label
+     is read. `set:html` content sits outside the scope attribute. */
+  .zhero-glyph {
+    display: inline-flex;
+    opacity: 0.62;
+  }
+  .zhero-glyph :global(svg) {
+    display: block;
+    width: 17px;
+    height: 17px;
+  }
+  /* Glass, not a flat tint: under the button is either pure black or a lit
+     marble shoulder, and only a blurred backdrop holds both. */
+  .zhero-dl {
+    border: 1px solid rgb(255 255 255 / 0.24);
+    background: rgb(0 0 0 / 0.34);
+    color: #fff;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .zhero-dl svg {
+    width: 17px;
+    height: 17px;
+    opacity: 0.75;
+  }
+  .zhero-launch:hover {
+    color: #000;
+    transform: translateY(-2px);
+  }
+  .zhero-dl:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    border-color: rgb(255 255 255 / 0.45);
+  }
+  .zhero-launch:focus-visible,
+  .zhero-dl:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+
+  @keyframes zs-cta {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%);
+    }
+  }
+
+  .zhero-marks {
+    position: absolute;
+    z-index: 4;
     left: 0;
     right: 0;
     bottom: 0;
@@ -205,6 +347,23 @@ const statuePhone = await getImage({
     }
   }
 
+  /* Two 52px buttons plus both corner rails stop fitting across the frame
+     here; stacking keeps them centred and full-width-legible instead. */
+  @media (max-width: 900px) {
+    .zhero-cta {
+      flex-direction: column;
+      gap: 10px;
+    }
+    .zhero-launch,
+    .zhero-dl {
+      width: 272px;
+      justify-content: center;
+    }
+    .zhero-scrim {
+      height: 340px;
+    }
+  }
+
   /* Portrait phones cannot hold the landscape crop: the statue would swallow
      the wordmark. Widen the bust past the viewport and drop the word onto the
      laurel instead of across the face. */
@@ -234,6 +393,7 @@ const statuePhone = await getImage({
      radial gradient stays soft without the filter. */
   @media (pointer: coarse) {
     .zhero-word,
+    .zhero-cta,
     .zhero :global(.zhero-statue) {
       animation: none;
     }
@@ -249,9 +409,18 @@ const statuePhone = await getImage({
 
   @media (prefers-reduced-motion: reduce) {
     .zhero-word,
+    .zhero-cta,
     .zhero :global(.zhero-statue),
     .zhero-cue svg {
       animation: none;
+    }
+    .zhero-launch,
+    .zhero-dl {
+      transition: none;
+    }
+    .zhero-launch:hover,
+    .zhero-dl:hover {
+      transform: none;
     }
   }
 </style>

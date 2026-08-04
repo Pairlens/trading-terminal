@@ -140,17 +140,30 @@ export function captureEvent(
   withClient((ph) => ph.capture(name, properties))
 }
 
-// Download CTA attribution. Delegated from here because the page CTAs use
-// `is:inline` scripts (no module imports); this module rides on every page via
-// the cookie banner. Every release-download anchor carries `data-os-download`;
-// the OS is read from a static `data-os`, the visible `[data-os-face]` face on
-// the OS-switching landing CTAs, or the `[data-os-name]` label on /install.
+// CTA attribution for the site's two doors. Delegated from here because the
+// page CTAs use `is:inline` scripts (no module imports); this module rides on
+// every page via the cookie banner.
+//
+// Launch: every anchor into the hosted terminal carries
+// `data-launch-terminal="<surface>"`, so the funnel can be read per placement
+// (header, landing hero, install page, ...) rather than as one lump.
+//
+// Download: every release-download anchor carries `data-os-download`; the OS
+// is read from a static `data-os`, the visible `[data-os-face]` face on the
+// OS-switching landing CTAs, or the `[data-os-name]` label on /install.
 if (typeof document !== 'undefined') {
   document.addEventListener('click', (event) => {
-    const target =
-      event.target instanceof Element
-        ? event.target.closest('a[data-os-download]')
-        : null
+    if (!(event.target instanceof Element)) return
+
+    const launch = event.target.closest('a[data-launch-terminal]')
+    if (launch) {
+      captureEvent('terminal_launched', {
+        surface: launch.getAttribute('data-launch-terminal') || 'unknown',
+      })
+      return
+    }
+
+    const target = event.target.closest('a[data-os-download]')
     if (!target) return
     const os =
       target.getAttribute('data-os') ??
