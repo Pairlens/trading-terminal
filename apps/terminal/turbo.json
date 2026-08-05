@@ -3,7 +3,19 @@
   "tasks": {
     "build": {
       "outputs": ["dist/**", ".output/**", ".vercel/output/**"],
-      "env": ["MODE", "VITE_APP_SERVER_URL"]
+      // Everything Vite bakes into the client bundle. Turbo runs tasks in
+      // strict env mode and this list REPLACES the root one, so a var that
+      // is missing here is invisible to `vite build` — that is how a build
+      // ends up shipping without an analytics key while dev has one. Listed
+      // under `env` rather than passThroughEnv so changing a value busts the
+      // cache instead of replaying a build that baked the old value.
+      "env": [
+        "MODE",
+        "VITE_APP_SERVER_URL",
+        "VITE_POSTHOG_KEY",
+        "VITE_POSTHOG_HOST",
+        "VITE_EXTRA_PUBLISHER_KEYS"
+      ]
     }
   }
 }
