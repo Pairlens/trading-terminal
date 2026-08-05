@@ -917,6 +917,11 @@
         "title": "Anahtarlar sistem kasanızda",
         "detail": "Borsa anahtarları sistem anahtar zincirinde kalır, tarayıcı deposunda ya da sunucularımızda asla."
       }
+    },
+    "wall": {
+      "title": "{{venue}} masaüstü uygulamasını gerektiriyor",
+      "description": "Bu borsa piyasa verilerini, bir tarayıcının okumak için ihtiyaç duyduğu başlıklar olmadan sunuyor. Masaüstü uygulaması doğrudan bağlanır, orada her borsa çalışır.",
+      "alternatives": "Ya da tarayıcıda kalın"
     }
   },
   "userMenu": {
@@ -1984,7 +1989,12 @@
     "resetConfirmDescription": "Bu, mevcut düzenini varsayılan ön ayarla değiştirir. Özel düzenlemen kaybolacak.",
     "emptyPlaceholder": "Bir pano ekle",
     "searchPairs": "Parite ara...",
-    "searchPanes": "Pano ara..."
+    "searchPanes": "Pano ara...",
+    "paneUnavailable": {
+      "title": "{{pair}} {{venue}} üzerinde yok",
+      "titleAnyVenue": "{{pair}} bulunamadı",
+      "description": "Bu konektör bu parite için piyasa verisi döndürmedi. Pariteyi listeleyen başka bir konektör deneyin."
+    }
   },
   "watchlist": {
     "addTitle": "İzleme listesine ekle",

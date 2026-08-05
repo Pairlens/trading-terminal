@@ -917,6 +917,11 @@
         "title": "Claves en tu llavero",
         "detail": "Las claves del exchange viven en el llavero del sistema, nunca en el navegador ni en nuestros servidores."
       }
+    },
+    "wall": {
+      "title": "{{venue}} necesita la app de escritorio",
+      "description": "Este exchange sirve sus datos de mercado sin las cabeceras que un navegador necesita para leerlos. La app de escritorio se conecta de forma nativa, y allí funcionan todos.",
+      "alternatives": "O quédate en el navegador"
     }
   },
   "userMenu": {
@@ -1984,7 +1989,12 @@
     "resetConfirmDescription": "Esto reemplazará tu diseño actual con el preajuste predeterminado. Cualquier disposición personalizada se perderá.",
     "emptyPlaceholder": "Agregar un panel",
     "searchPairs": "Buscar pares...",
-    "searchPanes": "Buscar paneles..."
+    "searchPanes": "Buscar paneles...",
+    "paneUnavailable": {
+      "title": "{{pair}} no está disponible en {{venue}}",
+      "titleAnyVenue": "{{pair}} no está disponible",
+      "description": "Este conector no devolvió datos de mercado para este par. Prueba otro que lo tenga listado."
+    }
   },
   "watchlist": {
     "addTitle": "Agregar a lista de seguimiento",

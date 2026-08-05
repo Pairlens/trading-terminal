@@ -20,6 +20,7 @@
  */
 import { useState } from 'react'
 import { Monitor } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
 import {
@@ -42,6 +43,7 @@ export function DesktopOnlyState({
   market: string
   onSelectMarket: (market: string) => void
 }) {
+  const { t } = useTranslation()
   const [downloadOpen, setDownloadOpen] = useState(false)
   const { markets } = useAvailableMarkets()
 
@@ -68,12 +70,12 @@ export function DesktopOnlyState({
             )}
           </EmptyMedia>
           <EmptyTitle className="text-base">
-            {current?.label ?? market} needs the desktop app
+            {t('desktopCta.wall.title', {
+              venue: current?.label ?? market,
+            })}
           </EmptyTitle>
           <EmptyDescription className="leading-relaxed">
-            This exchange serves its market data without the headers a browser
-            needs to read it. The desktop app connects natively, so every venue
-            works there.
+            {t('desktopCta.wall.description')}
           </EmptyDescription>
         </EmptyHeader>
 
@@ -83,7 +85,7 @@ export function DesktopOnlyState({
           onClick={() => setDownloadOpen(true)}
         >
           {OsIcon ? <OsIcon className="size-4" /> : null}
-          Get the desktop app
+          {t('nav.getDesktopApp')}
         </Button>
 
         {alternatives.length > 0 && (
@@ -91,7 +93,7 @@ export function DesktopOnlyState({
             <div className="flex items-center gap-3">
               <span className="h-px flex-1 bg-border" />
               <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                Or stay in the browser
+                {t('desktopCta.wall.alternatives')}
               </span>
               <span className="h-px flex-1 bg-border" />
             </div>

@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { SearchX } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
@@ -24,6 +25,7 @@ export function PaneDataUnavailable({
   market: string
   onSelectMarket: (market: string) => void
 }) {
+  const { t } = useTranslation()
   const { markets } = useAvailableMarkets()
   const current = markets.find((m) => m.value === market)
   // Skip venues this build cannot reach, or the recovery just moves the wall.
@@ -38,13 +40,19 @@ export function PaneDataUnavailable({
     <div className="flex min-h-0 flex-1 items-center justify-center p-6">
       <div className="max-w-xs text-center">
         <SearchX className="mx-auto mb-3 size-8 text-muted-foreground/40" />
+        {/* Two keys rather than English's " on {venue}" tail: word order and
+            case around the venue differ per language, so the sentence has to
+            be translated whole. */}
         <p className="text-sm font-medium text-foreground">
-          {pairKey} isn’t available
-          {current ? ` on ${current.label}` : ''}
+          {current
+            ? t('layout.paneUnavailable.title', {
+                pair: pairKey,
+                venue: current.label,
+              })
+            : t('layout.paneUnavailable.titleAnyVenue', { pair: pairKey })}
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          This connector returned no market data for this pair. Try another
-          connector that lists it.
+          {t('layout.paneUnavailable.description')}
         </p>
 
         {alternatives.length > 0 && (

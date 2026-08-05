@@ -917,6 +917,11 @@
         "title": "Clés dans votre trousseau",
         "detail": "Les clés d'API restent dans le trousseau du système, jamais dans le navigateur ni sur nos serveurs."
       }
+    },
+    "wall": {
+      "title": "{{venue}} nécessite l’app de bureau",
+      "description": "Cette plateforme sert ses données de marché sans les en-têtes dont un navigateur a besoin pour les lire. L’app de bureau se connecte nativement, et toutes y fonctionnent.",
+      "alternatives": "Ou rester dans le navigateur"
     }
   },
   "userMenu": {
@@ -1984,7 +1989,12 @@
     "resetConfirmDescription": "Cela remplacera votre mise en page actuelle par le préréglage par défaut. Toute disposition personnalisée sera perdue.",
     "emptyPlaceholder": "Ajouter un panneau",
     "searchPairs": "Rechercher des paires...",
-    "searchPanes": "Rechercher des panneaux..."
+    "searchPanes": "Rechercher des panneaux...",
+    "paneUnavailable": {
+      "title": "{{pair}} n’est pas disponible sur {{venue}}",
+      "titleAnyVenue": "{{pair}} n’est pas disponible",
+      "description": "Ce connecteur n’a renvoyé aucune donnée de marché pour cette paire. Essayez-en un autre qui la référence."
+    }
   },
   "watchlist": {
     "addTitle": "Ajouter à la liste de suivi",
