@@ -2104,7 +2104,26 @@
     "uninstalled": "Uninstalled",
     "updateReactivate": "Update & Reactivate",
     "version": "Version",
-    "visit": "Visit"
+    "visit": "Visit",
+    "fullTrust": {
+      "title": "Grant full trust to “{{name}}”?",
+      "description": "This plugin contributes UI, so it must run in the main app without the sandbox. A full-trust plugin runs with the same access as Pairlens itself.",
+      "itCan": "It can:",
+      "grantPlugins": "read data from your other installed plugins;",
+      "grantCredentials": "read your stored exchange API keys and wallet credentials;",
+      "grantTrading": "place trades and other financial operations on your behalf.",
+      "trustNote": "Only grant full trust to plugins from authors you trust. You can uninstall it at any time.",
+      "trustNoteAuthor": "Only grant full trust to plugins from authors you trust (author: {{author}}). You can uninstall it at any time.",
+      "grant": "Grant full trust"
+    },
+    "network": {
+      "title": "Allow “{{name}}” to connect?",
+      "description": "This plugin needs to reach servers outside Pairlens. Your terminal will send network requests to the hosts below. Allow only if you trust this plugin — you can uninstall it at any time to revoke access.",
+      "hostsIntro": "It will be able to connect to:",
+      "reloadNote": "Approving reloads the terminal to apply the change.",
+      "deny": "Don’t allow",
+      "allow": "Allow & reload"
+    }
   },
   "search": {
     "title": "Search Pairs",

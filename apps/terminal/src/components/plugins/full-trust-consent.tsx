@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ShieldAlert } from 'lucide-react'
 
@@ -29,6 +30,7 @@ export function useFullTrustConsent(): {
   requestFullTrust: (target: ConsentTarget) => Promise<boolean>
   dialog: ReactNode
 } {
+  const { t } = useTranslation()
   const [pending, setPending] = useState<Pending | null>(null)
   // Track the live pending consent so we can resolve it if the component
   // unmounts mid-flow (otherwise the caller's `await` would hang forever).
@@ -71,36 +73,41 @@ export function useFullTrustConsent(): {
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
             <ShieldAlert className="size-5 text-amber-500" />
-            Grant full trust to “{pending?.name}”?
+            {t('pluginStore.fullTrust.title', { name: pending?.name ?? '' })}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This plugin contributes UI, so it must run in the main app without
-            the sandbox. A full-trust plugin runs with the same access as
-            Pairlens itself.
+            {t('pluginStore.fullTrust.description')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="space-y-3 text-sm">
-          <p className="text-muted-foreground">It can:</p>
-          <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
-            <li>read data from your other installed plugins;</li>
-            <li>read your stored exchange API keys and wallet credentials;</li>
-            <li>place trades and other financial operations on your behalf.</li>
-          </ul>
           <p className="text-muted-foreground">
-            Only grant full trust to plugins from authors you trust
-            {pending?.author ? ` (author: ${pending.author})` : ''}. You can
-            uninstall it at any time.
+            {t('pluginStore.fullTrust.itCan')}
+          </p>
+          <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
+            <li>{t('pluginStore.fullTrust.grantPlugins')}</li>
+            <li>{t('pluginStore.fullTrust.grantCredentials')}</li>
+            <li>{t('pluginStore.fullTrust.grantTrading')}</li>
+          </ul>
+          {/* Two keys, not a concatenated tail: the author clause carries the
+              sentence's subject in several languages, so it cannot be bolted
+              on after a full stop. */}
+          <p className="text-muted-foreground">
+            {pending?.author
+              ? t('pluginStore.fullTrust.trustNoteAuthor', {
+                  author: pending.author,
+                })
+              : t('pluginStore.fullTrust.trustNote')}
           </p>
         </div>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={() => settle(false)}>
-            Cancel
+            {t('common.cancel')}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={() => settle(true)}
             className="bg-amber-500 text-black hover:bg-amber-400"
           >
-            Grant full trust
+            {t('pluginStore.fullTrust.grant')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

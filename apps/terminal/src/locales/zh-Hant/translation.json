@@ -2104,7 +2104,26 @@
     "uninstalled": "已解除安裝",
     "updateReactivate": "更新並重新啟用",
     "version": "版本",
-    "visit": "前往"
+    "visit": "前往",
+    "fullTrust": {
+      "title": "給「{{name}}」完全信任？",
+      "description": "該外掛提供介面，因此必須在主應用程式中執行，無法沙箱隔離。獲得完全信任的外掛擁有與 Pairlens 本身相同的權限。",
+      "itCan": "它可以：",
+      "grantPlugins": "讀取你已安裝的其他外掛的資料；",
+      "grantCredentials": "讀取你儲存的交易所 API 金鑰與錢包憑證；",
+      "grantTrading": "代表你下單以及執行其他資金操作。",
+      "trustNote": "只把完全信任授予你信任的作者的外掛。你可以隨時解除安裝。",
+      "trustNoteAuthor": "只把完全信任授予你信任的作者的外掛（作者：{{author}}）。你可以隨時解除安裝。",
+      "grant": "授予完全信任"
+    },
+    "network": {
+      "title": "允許「{{name}}」連線？",
+      "description": "該外掛需要存取 Pairlens 之外的伺服器。你的終端機會向下列主機發送網路請求。只有在信任該外掛時才允許——你可以隨時解除安裝以撤銷存取。",
+      "hostsIntro": "它將可以連線到：",
+      "reloadNote": "核准後終端機會重新載入以套用變更。",
+      "deny": "不允許",
+      "allow": "允許並重新載入"
+    }
   },
   "search": {
     "title": "搜尋交易對",

@@ -2104,7 +2104,26 @@
     "uninstalled": "Disinstallato",
     "updateReactivate": "Aggiorna e riattiva",
     "version": "Versione",
-    "visit": "Visita"
+    "visit": "Visita",
+    "fullTrust": {
+      "title": "Concedere fiducia totale a “{{name}}”?",
+      "description": "Questo plugin fornisce interfaccia, quindi deve girare nell’app principale senza sandbox. Un plugin con fiducia totale ha gli stessi accessi di Pairlens.",
+      "itCan": "Può:",
+      "grantPlugins": "leggere i dati degli altri plugin installati;",
+      "grantCredentials": "leggere le tue chiavi API di exchange e le credenziali dei wallet salvate;",
+      "grantTrading": "eseguire ordini e altre operazioni finanziarie per tuo conto.",
+      "trustNote": "Concedi fiducia totale solo a plugin di autori di cui ti fidi. Puoi disinstallarlo in qualsiasi momento.",
+      "trustNoteAuthor": "Concedi fiducia totale solo a plugin di autori di cui ti fidi (autore: {{author}}). Puoi disinstallarlo in qualsiasi momento.",
+      "grant": "Concedi fiducia totale"
+    },
+    "network": {
+      "title": "Consentire a “{{name}}” di connettersi?",
+      "description": "Questo plugin deve raggiungere server esterni a Pairlens. Il tuo terminale invierà richieste di rete agli host qui sotto. Consenti solo se ti fidi del plugin: puoi disinstallarlo in qualsiasi momento per revocare l’accesso.",
+      "hostsIntro": "Potrà connettersi a:",
+      "reloadNote": "Approvando, il terminale si ricarica per applicare la modifica.",
+      "deny": "Non consentire",
+      "allow": "Consenti e ricarica"
+    }
   },
   "search": {
     "title": "Cerca coppie",

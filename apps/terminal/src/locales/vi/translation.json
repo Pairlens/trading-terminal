@@ -2104,7 +2104,26 @@
     "uninstalled": "Đã gỡ cài đặt",
     "updateReactivate": "Cập nhật & Kích hoạt lại",
     "version": "Phiên bản",
-    "visit": "Truy cập"
+    "visit": "Truy cập",
+    "fullTrust": {
+      "title": "Cấp toàn quyền cho “{{name}}”?",
+      "description": "Plugin này đóng góp giao diện nên phải chạy trong ứng dụng chính, ngoài sandbox. Plugin được cấp toàn quyền chạy với quyền truy cập ngang với chính Pairlens.",
+      "itCan": "Nó có thể:",
+      "grantPlugins": "đọc dữ liệu từ các plugin khác bạn đã cài;",
+      "grantCredentials": "đọc khóa API sàn và thông tin ví đã lưu của bạn;",
+      "grantTrading": "đặt lệnh và thực hiện các thao tác tài chính khác thay bạn.",
+      "trustNote": "Chỉ cấp toàn quyền cho plugin của tác giả bạn tin tưởng. Bạn có thể gỡ bất cứ lúc nào.",
+      "trustNoteAuthor": "Chỉ cấp toàn quyền cho plugin của tác giả bạn tin tưởng (tác giả: {{author}}). Bạn có thể gỡ bất cứ lúc nào.",
+      "grant": "Cấp toàn quyền"
+    },
+    "network": {
+      "title": "Cho phép “{{name}}” kết nối?",
+      "description": "Plugin này cần truy cập máy chủ bên ngoài Pairlens. Terminal của bạn sẽ gửi yêu cầu mạng tới các host bên dưới. Chỉ cho phép nếu bạn tin plugin này — bạn có thể gỡ bất cứ lúc nào để thu hồi quyền.",
+      "hostsIntro": "Nó sẽ có thể kết nối tới:",
+      "reloadNote": "Chấp thuận sẽ tải lại terminal để áp dụng thay đổi.",
+      "deny": "Không cho phép",
+      "allow": "Cho phép & tải lại"
+    }
   },
   "search": {
     "title": "Tìm cặp giao dịch",

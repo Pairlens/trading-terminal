@@ -2104,7 +2104,26 @@
     "uninstalled": "Deinstalliert",
     "updateReactivate": "Aktualisieren & reaktivieren",
     "version": "Version",
-    "visit": "Besuchen"
+    "visit": "Besuchen",
+    "fullTrust": {
+      "title": "„{{name}}“ vollen Zugriff gewähren?",
+      "description": "Dieses Plugin liefert UI und muss deshalb ohne Sandbox in der Haupt-App laufen. Ein Plugin mit vollem Zugriff läuft mit denselben Rechten wie Pairlens selbst.",
+      "itCan": "Es kann:",
+      "grantPlugins": "Daten deiner anderen installierten Plugins lesen;",
+      "grantCredentials": "deine gespeicherten Exchange-API-Schlüssel und Wallet-Zugangsdaten lesen;",
+      "grantTrading": "in deinem Namen Trades und andere Finanzoperationen ausführen.",
+      "trustNote": "Gewähre vollen Zugriff nur Plugins von Autoren, denen du vertraust. Du kannst es jederzeit deinstallieren.",
+      "trustNoteAuthor": "Gewähre vollen Zugriff nur Plugins von Autoren, denen du vertraust (Autor: {{author}}). Du kannst es jederzeit deinstallieren.",
+      "grant": "Vollen Zugriff gewähren"
+    },
+    "network": {
+      "title": "„{{name}}“ Verbindungen erlauben?",
+      "description": "Dieses Plugin muss Server außerhalb von Pairlens erreichen. Dein Terminal sendet Netzwerkanfragen an die unten stehenden Hosts. Erlaube das nur, wenn du dem Plugin vertraust — du kannst es jederzeit deinstallieren und den Zugriff entziehen.",
+      "hostsIntro": "Es kann sich verbinden mit:",
+      "reloadNote": "Beim Zustimmen wird das Terminal neu geladen.",
+      "deny": "Nicht erlauben",
+      "allow": "Erlauben & neu laden"
+    }
   },
   "search": {
     "title": "Paare suchen",

@@ -2104,7 +2104,26 @@
     "uninstalled": "Kaldırıldı",
     "updateReactivate": "Güncelle ve Yeniden Etkinleştir",
     "version": "Sürüm",
-    "visit": "Ziyaret et"
+    "visit": "Ziyaret et",
+    "fullTrust": {
+      "title": "“{{name}}” için tam güven verilsin mi?",
+      "description": "Bu eklenti arayüz sağlıyor, bu yüzden ana uygulamada sandbox olmadan çalışmalı. Tam güvenli bir eklenti Pairlens ile aynı erişime sahip olur.",
+      "itCan": "Şunları yapabilir:",
+      "grantPlugins": "kurulu diğer eklentilerinizin verilerini okumak;",
+      "grantCredentials": "kayıtlı borsa API anahtarlarınızı ve cüzdan kimlik bilgilerinizi okumak;",
+      "grantTrading": "sizin adınıza işlem ve diğer finansal operasyonları gerçekleştirmek.",
+      "trustNote": "Tam güveni yalnızca güvendiğiniz geliştiricilerin eklentilerine verin. İstediğiniz zaman kaldırabilirsiniz.",
+      "trustNoteAuthor": "Tam güveni yalnızca güvendiğiniz geliştiricilerin eklentilerine verin (geliştirici: {{author}}). İstediğiniz zaman kaldırabilirsiniz.",
+      "grant": "Tam güven ver"
+    },
+    "network": {
+      "title": "“{{name}}” bağlanabilsin mi?",
+      "description": "Bu eklentinin Pairlens dışındaki sunuculara erişmesi gerekiyor. Terminaliniz aşağıdaki adreslere ağ isteği gönderecek. Yalnızca bu eklentiye güveniyorsanız izin verin — erişimi kaldırmak için istediğiniz zaman silebilirsiniz.",
+      "hostsIntro": "Şunlara bağlanabilecek:",
+      "reloadNote": "Onaylamak, değişikliği uygulamak için terminali yeniden yükler.",
+      "deny": "İzin verme",
+      "allow": "İzin ver ve yeniden yükle"
+    }
   },
   "search": {
     "title": "Parite Ara",

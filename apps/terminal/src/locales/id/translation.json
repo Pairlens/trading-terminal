@@ -2104,7 +2104,26 @@
     "uninstalled": "Dihapus",
     "updateReactivate": "Perbarui & Aktifkan Ulang",
     "version": "Versi",
-    "visit": "Kunjungi"
+    "visit": "Kunjungi",
+    "fullTrust": {
+      "title": "Beri kepercayaan penuh ke “{{name}}”?",
+      "description": "Plugin ini menyumbang UI, jadi harus berjalan di aplikasi utama tanpa sandbox. Plugin dengan kepercayaan penuh berjalan dengan akses yang sama seperti Pairlens.",
+      "itCan": "Plugin ini dapat:",
+      "grantPlugins": "membaca data dari plugin lain yang kamu pasang;",
+      "grantCredentials": "membaca kunci API bursa dan kredensial wallet yang tersimpan;",
+      "grantTrading": "melakukan transaksi dan operasi keuangan lain atas namamu.",
+      "trustNote": "Beri kepercayaan penuh hanya pada plugin dari pembuat yang kamu percaya. Kamu bisa menghapusnya kapan saja.",
+      "trustNoteAuthor": "Beri kepercayaan penuh hanya pada plugin dari pembuat yang kamu percaya (pembuat: {{author}}). Kamu bisa menghapusnya kapan saja.",
+      "grant": "Beri kepercayaan penuh"
+    },
+    "network": {
+      "title": "Izinkan “{{name}}” terhubung?",
+      "description": "Plugin ini perlu menjangkau server di luar Pairlens. Terminalmu akan mengirim permintaan jaringan ke host di bawah. Izinkan hanya jika kamu percaya plugin ini — kamu bisa menghapusnya kapan saja untuk mencabut akses.",
+      "hostsIntro": "Plugin ini akan bisa terhubung ke:",
+      "reloadNote": "Menyetujui akan memuat ulang terminal untuk menerapkan perubahan.",
+      "deny": "Jangan izinkan",
+      "allow": "Izinkan & muat ulang"
+    }
   },
   "search": {
     "title": "Cari Pair",

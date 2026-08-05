@@ -2112,7 +2112,26 @@
     "uninstalled": "Odinstalowano",
     "updateReactivate": "Zaktualizuj i reaktywuj",
     "version": "Wersja",
-    "visit": "Odwiedź"
+    "visit": "Odwiedź",
+    "fullTrust": {
+      "title": "Przyznać pełne zaufanie „{{name}}”?",
+      "description": "Ta wtyczka dostarcza interfejs, więc musi działać w głównej aplikacji bez sandboxa. Wtyczka z pełnym zaufaniem działa z takim samym dostępem jak sam Pairlens.",
+      "itCan": "Może:",
+      "grantPlugins": "czytać dane z innych zainstalowanych wtyczek;",
+      "grantCredentials": "czytać zapisane klucze API giełd i dane portfeli;",
+      "grantTrading": "składać zlecenia i wykonywać inne operacje finansowe w Twoim imieniu.",
+      "trustNote": "Przyznawaj pełne zaufanie tylko wtyczkom autorów, którym ufasz. Możesz ją odinstalować w każdej chwili.",
+      "trustNoteAuthor": "Przyznawaj pełne zaufanie tylko wtyczkom autorów, którym ufasz (autor: {{author}}). Możesz ją odinstalować w każdej chwili.",
+      "grant": "Przyznaj pełne zaufanie"
+    },
+    "network": {
+      "title": "Zezwolić „{{name}}” na połączenie?",
+      "description": "Ta wtyczka musi łączyć się z serwerami spoza Pairlens. Twój terminal wyśle żądania sieciowe do hostów poniżej. Zezwól tylko, jeśli ufasz tej wtyczce — możesz ją odinstalować w każdej chwili, aby cofnąć dostęp.",
+      "hostsIntro": "Będzie mogła łączyć się z:",
+      "reloadNote": "Zatwierdzenie przeładuje terminal, aby zastosować zmianę.",
+      "deny": "Nie zezwalaj",
+      "allow": "Zezwól i przeładuj"
+    }
   },
   "search": {
     "title": "Szukaj par",

@@ -2104,7 +2104,26 @@
     "uninstalled": "已卸载",
     "updateReactivate": "更新并重新启用",
     "version": "版本",
-    "visit": "访问"
+    "visit": "访问",
+    "fullTrust": {
+      "title": "给“{{name}}”完全信任？",
+      "description": "该插件提供界面，因此必须在主应用中运行，不能沙箱隔离。获得完全信任的插件拥有与 Pairlens 本身相同的权限。",
+      "itCan": "它可以：",
+      "grantPlugins": "读取你已安装的其他插件的数据；",
+      "grantCredentials": "读取你保存的交易所 API 密钥和钱包凭据；",
+      "grantTrading": "代表你下单以及执行其他资金操作。",
+      "trustNote": "只把完全信任授予你信任的作者的插件。你可以随时卸载它。",
+      "trustNoteAuthor": "只把完全信任授予你信任的作者的插件（作者：{{author}}）。你可以随时卸载它。",
+      "grant": "授予完全信任"
+    },
+    "network": {
+      "title": "允许“{{name}}”联网？",
+      "description": "该插件需要访问 Pairlens 之外的服务器。你的终端会向下列主机发送网络请求。只有在信任该插件时才允许——你可以随时卸载它以撤销访问。",
+      "hostsIntro": "它将可以连接到：",
+      "reloadNote": "批准后终端会重新加载以应用更改。",
+      "deny": "不允许",
+      "allow": "允许并重新加载"
+    }
   },
   "search": {
     "title": "搜索交易对",

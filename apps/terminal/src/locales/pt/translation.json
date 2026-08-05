@@ -2104,7 +2104,26 @@
     "uninstalled": "Desinstalado",
     "updateReactivate": "Atualizar e Reativar",
     "version": "Versão",
-    "visit": "Visitar"
+    "visit": "Visitar",
+    "fullTrust": {
+      "title": "Conceder confiança total a “{{name}}”?",
+      "description": "Este plugin contribui com interface, então precisa rodar no app principal sem o sandbox. Um plugin de confiança total roda com o mesmo acesso que o Pairlens.",
+      "itCan": "Ele pode:",
+      "grantPlugins": "ler dados dos seus outros plugins instalados;",
+      "grantCredentials": "ler suas chaves de API de corretora e credenciais de carteira salvas;",
+      "grantTrading": "executar ordens e outras operações financeiras em seu nome.",
+      "trustNote": "Conceda confiança total apenas a plugins de autores em quem você confia. Você pode desinstalá-lo a qualquer momento.",
+      "trustNoteAuthor": "Conceda confiança total apenas a plugins de autores em quem você confia (autor: {{author}}). Você pode desinstalá-lo a qualquer momento.",
+      "grant": "Conceder confiança total"
+    },
+    "network": {
+      "title": "Permitir que “{{name}}” se conecte?",
+      "description": "Este plugin precisa alcançar servidores fora do Pairlens. Seu terminal enviará requisições de rede para os hosts abaixo. Permita apenas se você confia nele — pode desinstalá-lo a qualquer momento para revogar o acesso.",
+      "hostsIntro": "Ele poderá se conectar a:",
+      "reloadNote": "Aprovar recarrega o terminal para aplicar a mudança.",
+      "deny": "Não permitir",
+      "allow": "Permitir e recarregar"
+    }
   },
   "search": {
     "title": "Pesquisar Pares",
