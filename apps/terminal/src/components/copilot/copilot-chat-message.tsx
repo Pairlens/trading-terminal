@@ -35,8 +35,9 @@ export function CopilotChatMessage({ message }: CopilotChatMessageProps) {
         </div>
       )}
 
-      {/* Message parts */}
-      <div className="max-w-[85%] space-y-1">
+      {/* Message parts. min-w-0 so a long unbroken token (a pasted URL, an
+          address) can't push the row's min-content width past the pane. */}
+      <div className="min-w-0 max-w-[85%] space-y-1">
         {message.parts.map((part, i) => {
           if (part.type === 'text') {
             // Skip empty / whitespace-only text: models emit stray "\n\n"
@@ -46,7 +47,7 @@ export function CopilotChatMessage({ message }: CopilotChatMessageProps) {
               <div
                 key={i}
                 className={cn(
-                  'rounded-lg px-2.5 py-1.5 text-xs',
+                  'break-words rounded-lg px-2.5 py-1.5 text-xs',
                   isUser
                     ? 'bg-primary/10 text-foreground'
                     : 'bg-muted/60 text-foreground',
