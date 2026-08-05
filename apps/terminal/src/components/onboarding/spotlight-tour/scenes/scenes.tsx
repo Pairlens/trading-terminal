@@ -9,6 +9,7 @@
  * telling. Keep everything deterministic — no Date.now/Math.random.
  */
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion'
+import { useTranslation } from 'react-i18next'
 
 import {
   Candles,
@@ -131,6 +132,7 @@ function PairRow({
 
 /** Rows of live pairs stream in; a cursor sweeps over them. */
 const PairsDiscover: FC = () => {
+  const { t } = useTranslation()
   return (
     <Stage>
       <Panel style={{ width: 470, overflow: 'hidden' }}>
@@ -146,8 +148,8 @@ const PairsDiscover: FC = () => {
             ...muted,
           }}
         >
-          <span>Markets</span>
-          <span>24h</span>
+          <span>{t('panes.markets')}</span>
+          <span>{t('topCoins.col24h')}</span>
         </div>
         {PAIR_ROWS.map((row, i) => (
           <PairRow key={row.pair} row={row} delay={8 + i * 7} />
@@ -166,6 +168,7 @@ const PairsDiscover: FC = () => {
 
 /** Starring pairs builds a watchlist; mover chips pop in. */
 const PairsWatchlist: FC = () => {
+  const { t } = useTranslation()
   return (
     <Stage style={{ flexDirection: 'column', gap: 14 }}>
       <Panel style={{ width: 470, overflow: 'hidden' }}>
@@ -173,8 +176,12 @@ const PairsWatchlist: FC = () => {
         <PairRow row={PAIR_ROWS[2]} delay={10} starred starDelay={58} />
       </Panel>
       <Rise delay={68} style={{ display: 'flex', gap: 8 }}>
-        <Chip tone="up">▲ Top mover · SOL +9.2%</Chip>
-        <Chip tone="primary">★ Watchlist · 2</Chip>
+        <Chip tone="up">
+          ▲ {t('sectionTours.scenes.topMover', { pair: 'SOL', delta: '+9.2%' })}
+        </Chip>
+        <Chip tone="primary">
+          ★ {t('sectionTours.scenes.watchlistCount', { count: 2 })}
+        </Chip>
       </Rise>
       <Cursor
         path={[
@@ -242,6 +249,7 @@ const ChartsCandles: FC = () => {
 
 /** A candle closes (pulse on the last candle) and signals land in the feed. */
 const ChartsSignals: FC = () => {
+  const { t } = useTranslation()
   const frame = useCurrentFrame()
   const candleCount = 16
   const chartWidth = 428
@@ -272,7 +280,7 @@ const ChartsSignals: FC = () => {
         <span style={{ fontWeight: 600 }}>{label}</span>
         <span style={{ ...muted, fontSize: 11.5 }}>{market}</span>
         <span style={{ marginLeft: 'auto', fontSize: 10.5, ...mono, ...muted }}>
-          on close
+          {t('sectionTours.scenes.onClose')}
         </span>
       </div>
     </Rise>
@@ -306,13 +314,13 @@ const ChartsSignals: FC = () => {
         {feedRow(
           56,
           <Chip tone="up">▲ APPROVE</Chip>,
-          'Breakout',
+          t('sectionTours.scenes.signalBreakout'),
           'BTC-USDT · 1h',
         )}
         {feedRow(
           82,
           <Chip tone="primary">● WATCH</Chip>,
-          'Pullback forming',
+          t('sectionTours.scenes.signalPullbackForming'),
           'ETH-USDT · 4h',
         )}
       </Panel>
@@ -324,6 +332,7 @@ const ChartsSignals: FC = () => {
 
 /** Price crosses a dashed threshold → alert card slides in. */
 const AlertsTrigger: FC = () => {
+  const { t } = useTranslation()
   const frame = useCurrentFrame()
   const flash = interpolate(frame, [56, 62, 84], [0, 1, 0], {
     extrapolateLeft: 'clamp',
@@ -377,9 +386,11 @@ const AlertsTrigger: FC = () => {
         >
           <span style={{ fontSize: 15 }}>🔔</span>
           <span style={{ fontWeight: 600, ...mono }}>BTC-USDT</span>
-          <span style={muted}>crossed above $68,000</span>
+          <span style={muted}>
+            {t('sectionTours.scenes.crossedAbovePrice', { price: '$68,000' })}
+          </span>
           <span style={{ marginLeft: 'auto', fontSize: 11, ...mono, ...muted }}>
-            now
+            {t('time.justNow')}
           </span>
         </Panel>
       </Pop>
@@ -389,6 +400,7 @@ const AlertsTrigger: FC = () => {
 
 /** Condition chips assemble into a rule. */
 const AlertsCompose: FC = () => {
+  const { t } = useTranslation()
   return (
     <Stage style={{ flexDirection: 'column', gap: 16 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -399,7 +411,7 @@ const AlertsCompose: FC = () => {
           +
         </Rise>
         <Pop delay={26}>
-          <Chip>crosses above</Chip>
+          <Chip>{t('sectionTours.scenes.conditionCrossesAbove')}</Chip>
         </Pop>
         <Rise delay={40} style={{ ...muted, fontSize: 13 }}>
           +
@@ -422,7 +434,7 @@ const AlertsCompose: FC = () => {
           }}
         >
           <span style={{ fontSize: 15 }}>🔔</span>
-          <span>Notify me — desktop + in-app</span>
+          <span>{t('sectionTours.scenes.notifyMeDesktopInApp')}</span>
           <CheckDot />
         </Panel>
       </Pop>
@@ -477,6 +489,7 @@ function FlowNode({
 
 /** Trigger → condition → action nodes connect with animated edges. */
 const WorkflowsGraph: FC = () => {
+  const { t } = useTranslation()
   const frame = useCurrentFrame()
   const edge = (delay: number) =>
     interpolate(frame - delay, [0, 16], [0, 44], {
@@ -491,7 +504,13 @@ const WorkflowsGraph: FC = () => {
     <Stage>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Pop delay={6}>
-          <FlowNode sub="Trigger" label="Signal: breakout" tone="primary" />
+          <FlowNode
+            sub={t('sectionTours.scenes.nodeTrigger')}
+            label={t('sectionTours.scenes.nodeSignalLabel', {
+              signal: t('sectionTours.scenes.signalBreakout'),
+            })}
+            tone="primary"
+          />
         </Pop>
         <svg width={44} height={2} style={{ overflow: 'visible' }}>
           <line
@@ -505,7 +524,11 @@ const WorkflowsGraph: FC = () => {
           />
         </svg>
         <Pop delay={36}>
-          <FlowNode sub="Condition" label="Volume > avg" tone="neutral" />
+          <FlowNode
+            sub={t('sectionTours.scenes.nodeCondition')}
+            label={t('sectionTours.scenes.nodeVolumeAboveAvg')}
+            tone="neutral"
+          />
         </Pop>
         <svg width={44} height={2} style={{ overflow: 'visible' }}>
           <line
@@ -520,7 +543,11 @@ const WorkflowsGraph: FC = () => {
         </svg>
         <Pop delay={66}>
           <div style={{ position: 'relative' }}>
-            <FlowNode sub="Action" label="Alert + journal" tone="up" />
+            <FlowNode
+              sub={t('sectionTours.scenes.nodeAction')}
+              label={t('sectionTours.scenes.nodeAlertAndJournal')}
+              tone="up"
+            />
             <span
               style={{
                 position: 'absolute',
@@ -540,10 +567,11 @@ const WorkflowsGraph: FC = () => {
 
 /** Run history fills with green ticks. */
 const WorkflowsRuns: FC = () => {
+  const { t } = useTranslation()
   const runs = [
-    { label: 'Breakout watcher', time: '09:32' },
-    { label: 'DCA buyer', time: '10:00' },
-    { label: 'Stop-loss guard', time: '10:14' },
+    { label: t('sectionTours.scenes.runBreakoutWatcher'), time: '09:32' },
+    { label: t('sectionTours.scenes.runDcaBuyer'), time: '10:00' },
+    { label: t('sectionTours.scenes.runStopLossGuard'), time: '10:14' },
   ]
   return (
     <Stage>
@@ -568,7 +596,7 @@ const WorkflowsRuns: FC = () => {
               <span
                 style={{ marginLeft: 'auto', ...mono, ...muted, fontSize: 11 }}
               >
-                {run.time} · ran
+                {t('sectionTours.scenes.ranAt', { time: run.time })}
               </span>
             </div>
           </Rise>
@@ -756,6 +784,7 @@ function RsiStrip({
 
 /** A Python script types itself in; the preview strip runs it live. */
 const IndicatorsCode: FC = () => {
+  const { t } = useTranslation()
   return (
     <Stage>
       <Panel style={{ width: 440, overflow: 'hidden' }}>
@@ -791,7 +820,7 @@ const IndicatorsCode: FC = () => {
           </span>
           <Pop delay={118}>
             <Chip tone="up" style={{ padding: '3px 9px', fontSize: 10.5 }}>
-              <CheckDot size={12} /> Runs locally
+              <CheckDot size={12} /> {t('sectionTours.scenes.runsLocally')}
             </Chip>
           </Pop>
         </div>
@@ -977,6 +1006,7 @@ const IndicatorsChart: FC = () => {
 
 /** Venue connects; the key stays in a local vault. */
 const AccountsConnect: FC = () => {
+  const { t } = useTranslation()
   return (
     <Stage style={{ flexDirection: 'column', gap: 14 }}>
       <div style={{ display: 'flex', gap: 8 }}>
@@ -1002,12 +1032,14 @@ const AccountsConnect: FC = () => {
           </span>
           <span style={{ fontSize: 16 }}>→</span>
           <span style={{ fontSize: 18 }}>🔒</span>
-          <span style={{ fontWeight: 600 }}>OS keychain</span>
+          <span style={{ fontWeight: 600 }}>
+            {t('sectionTours.scenes.osKeychain')}
+          </span>
         </Panel>
       </Pop>
       <Rise delay={64}>
         <Chip tone="up">
-          <CheckDot size={13} /> Stored on this device — never on our servers
+          <CheckDot size={13} /> {t('sectionTours.scenes.storedOnDevice')}
         </Chip>
       </Rise>
     </Stage>
@@ -1016,11 +1048,16 @@ const AccountsConnect: FC = () => {
 
 /** Balances fill in across venues. */
 const AccountsBalances: FC = () => {
+  const { t } = useTranslation()
   const frame = useCurrentFrame()
   const rows = [
     { venue: 'Coinbase', pct: 0.72, amount: '$12,940' },
     { venue: 'Kraken', pct: 0.44, amount: '$7,215' },
-    { venue: 'Solana wallet', pct: 0.28, amount: '$4,530' },
+    {
+      venue: t('sectionTours.scenes.chainWallet', { chain: 'Solana' }),
+      pct: 0.28,
+      amount: '$4,530',
+    },
   ]
   return (
     <Stage>
@@ -1153,24 +1190,25 @@ function GridBotMark() {
 
 /** Store cards pop in; one installs. */
 const PluginsStore: FC = () => {
+  const { t } = useTranslation()
   const frame = useCurrentFrame()
   const installed = frame >= 74
   const cards = [
     {
       name: 'OKX Connector',
-      kind: 'Market data',
+      kind: t('sectionTours.scenes.pluginKindMarketData'),
       icon: <OkxMark />,
       tile: 'color-mix(in oklch, var(--foreground) 9%, transparent)',
     },
     {
       name: 'Nord Theme',
-      kind: 'Theme',
+      kind: t('sectionTours.scenes.pluginKindTheme'),
       icon: <NordSwatch />,
       tile: 'color-mix(in oklch, var(--primary) 10%, transparent)',
     },
     {
       name: 'Grid Bot',
-      kind: 'Automation',
+      kind: t('sectionTours.scenes.pluginKindAutomation'),
       icon: <GridBotMark />,
       tile: 'color-mix(in oklch, var(--up) 10%, transparent)',
     },
@@ -1217,7 +1255,9 @@ const PluginsStore: FC = () => {
                       : 'var(--primary)',
                 }}
               >
-                {i === 0 && installed ? '✓ Installed' : 'Install'}
+                {i === 0 && installed
+                  ? `✓ ${t('pluginStore.installedLabel')}`
+                  : t('pluginStore.install')}
               </div>
             </Panel>
           </Pop>
@@ -1237,6 +1277,7 @@ const PluginsStore: FC = () => {
 
 /** Sandbox shield + permission chips. */
 const PluginsSandbox: FC = () => {
+  const { t } = useTranslation()
   const shield = usePop(10)
   return (
     <Stage style={{ flexDirection: 'column', gap: 16 }}>
@@ -1266,16 +1307,16 @@ const PluginsSandbox: FC = () => {
       >
         <Pop delay={30}>
           <Chip tone="up">
-            <CheckDot size={13} /> Sandboxed by default
+            <CheckDot size={13} /> {t('sectionTours.scenes.sandboxedByDefault')}
           </Chip>
         </Pop>
         <Pop delay={44}>
           <Chip tone="up">
-            <CheckDot size={13} /> Signed & verified
+            <CheckDot size={13} /> {t('sectionTours.scenes.signedVerified')}
           </Chip>
         </Pop>
         <Pop delay={58}>
-          <Chip>Network access — you approve each host</Chip>
+          <Chip>{t('sectionTours.scenes.networkAccessApproveHost')}</Chip>
         </Pop>
       </div>
     </Stage>
@@ -1286,6 +1327,7 @@ const PluginsSandbox: FC = () => {
 
 /** Panes snap into a saved layout, then swap arrangements. */
 const WorkspacesLayout: FC = () => {
+  const { t } = useTranslation()
   const frame = useCurrentFrame()
   const swap = interpolate(frame, [66, 84], [0, 1], {
     extrapolateLeft: 'clamp',
@@ -1319,7 +1361,11 @@ const WorkspacesLayout: FC = () => {
   return (
     <Stage>
       <div style={{ position: 'relative', width: 400, height: 210 }}>
-        {pane({ left: 0, top: 0, width: chartW, height: 210 - 66 }, 'Chart', 8)}
+        {pane(
+          { left: 0, top: 0, width: chartW, height: 210 - 66 },
+          t('panes.chart'),
+          8,
+        )}
         {pane(
           {
             left: chartW + 10,
@@ -1327,7 +1373,7 @@ const WorkspacesLayout: FC = () => {
             width: 400 - chartW - 10,
             height: (210 - 66) * (0.5 + swap * 0.5) - swap * 5,
           },
-          'Order book',
+          t('panes.orderBook'),
           20,
         )}
         {swap < 0.5 &&
@@ -1338,12 +1384,12 @@ const WorkspacesLayout: FC = () => {
               width: 400 - chartW - 10,
               height: (210 - 66) * 0.5 - 5,
             },
-            'Trades',
+            t('panes.trades'),
             32,
           )}
         {pane(
           { left: 0, top: 210 - 56, width: 400, height: 56 },
-          'Positions',
+          t('panes.positions'),
           44,
         )}
       </div>
@@ -1456,8 +1502,10 @@ function LayoutThumb({
 
 /** Distinct template layouts; the copied one morphs to show easy switching. */
 const StoreTemplates: FC = () => {
+  const { t } = useTranslation()
   const frame = useCurrentFrame()
   const copied = frame >= 78
+  const communityAuthor = t('workspaceStore.source.community')
   const cards: Array<{
     name: string
     by: string
@@ -1467,11 +1515,11 @@ const StoreTemplates: FC = () => {
     { name: 'Scalper desk', by: 'Pairlens', layout: 'scalper' },
     {
       name: 'Swing setup',
-      by: 'Community',
+      by: communityAuthor,
       layout: 'swing',
       morphTo: 'scalper',
     },
-    { name: 'DEX monitor', by: 'Community', layout: 'dex' },
+    { name: 'DEX monitor', by: communityAuthor, layout: 'dex' },
   ]
   return (
     <Stage>
@@ -1487,7 +1535,7 @@ const StoreTemplates: FC = () => {
               />
               <div style={{ fontSize: 12.5, fontWeight: 600 }}>{card.name}</div>
               <div style={{ fontSize: 10.5, marginTop: 2, ...muted }}>
-                by {card.by}
+                {t('workspaceStore.community.by', { author: card.by })}
               </div>
               {i === 1 && copied && (
                 <div
@@ -1501,7 +1549,8 @@ const StoreTemplates: FC = () => {
                     fontWeight: 600,
                   }}
                 >
-                  <CheckDot size={13} /> Copied to workspaces
+                  <CheckDot size={13} />{' '}
+                  {t('sectionTours.scenes.copiedToWorkspaces')}
                 </div>
               )}
             </Panel>
@@ -1602,6 +1651,7 @@ function BotRow({
 
 /** The strategy that was backtested is the one that gets deployed. */
 const BotsStrategy: FC = () => {
+  const { t } = useTranslation()
   return (
     <Stage>
       <Panel style={{ width: 430, overflow: 'hidden' }}>
@@ -1620,7 +1670,7 @@ const BotsStrategy: FC = () => {
           </span>
           <Pop delay={96}>
             <Chip tone="up" style={{ padding: '3px 9px', fontSize: 10.5 }}>
-              <CheckDot size={12} /> Same code goes live
+              <CheckDot size={12} /> {t('sectionTours.scenes.sameCodeGoesLive')}
             </Chip>
           </Pop>
         </div>
@@ -1635,9 +1685,9 @@ const BotsStrategy: FC = () => {
           }}
         >
           {[
-            { label: 'Net', value: '+18.4%' },
-            { label: 'Win rate', value: '61%' },
-            { label: 'Max DD', value: '7.2%' },
+            { label: t('sectionTours.scenes.statNet'), value: '+18.4%' },
+            { label: t('botsPage.summaryWinRate'), value: '61%' },
+            { label: t('sectionTours.scenes.statMaxDd'), value: '7.2%' },
           ].map((stat, index) => (
             <Rise key={stat.label} delay={54 + index * 10}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -1664,33 +1714,35 @@ const BotsStrategy: FC = () => {
 
 /** Bots armed on this machine, one switch each. */
 const BotsRunning: FC = () => {
+  const { t } = useTranslation()
+  const paperMode = t('accounts.paper')
   return (
     <Stage style={{ flexDirection: 'column', gap: 12 }}>
       <Panel style={{ width: 400, padding: 10, display: 'grid', gap: 7 }}>
         <BotRow
-          name="EMA Cross"
+          name={t('indicators.names.EMACross')}
           pair="OKX · BTC-USDT · 1h"
-          mode="Paper"
+          mode={paperMode}
           delay={6}
           live
         />
         <BotRow
-          name="Mean Reversion"
+          name={t('sectionTours.scenes.botMeanReversion')}
           pair="Binance · ETH-USDT · 15m"
-          mode="Paper"
+          mode={paperMode}
           delay={20}
           live
         />
         <BotRow
-          name="Breakout"
+          name={t('sectionTours.scenes.signalBreakout')}
           pair="Kraken · SOL-USD · 4h"
-          mode="Paper"
+          mode={paperMode}
           delay={34}
           live={false}
         />
       </Panel>
       <Pop delay={68}>
-        <Chip>Runs on your machine — keep it awake</Chip>
+        <Chip>{t('sectionTours.scenes.runsOnYourMachine')}</Chip>
       </Pop>
     </Stage>
   )

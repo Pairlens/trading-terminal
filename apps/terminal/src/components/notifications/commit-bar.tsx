@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { AlertTriangle, Check, Eye, RotateCcw } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -23,6 +24,7 @@ type CommitBarProps = {
 }
 
 export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
+  const { t } = useTranslation()
   const draft = useNotificationStore((s) => s.draft)
   const hasChanges = useNotificationStore(
     (s) => (s.draft?.pendingChanges.length ?? 0) > 0,
@@ -54,14 +56,13 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
 
   const handleCommit = () => {
     if (hasCycles) {
-      toast.error('Cannot save rule', {
-        description:
-          'The rule contains a circular dependency. Remove the cycle (red edges) before saving.',
+      toast.error(t('notifications.builder.commitBar.cannotSaveTitle'), {
+        description: t('notifications.builder.commitBar.cycleError'),
       })
       return
     }
     if (invalid) {
-      toast.error('Cannot save rule', {
+      toast.error(t('notifications.builder.commitBar.cannotSaveTitle'), {
         description: validationErrors
           .slice(0, 4)
           .map((e) => e.message)
@@ -72,7 +73,7 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
     // Ensure all canvas state is synced to store before committing
     onBeforeCommit?.()
     commitDraft()
-    toast.success('Rule saved')
+    toast.success(t('notifications.builder.commitBar.saved'))
   }
 
   return (
@@ -85,7 +86,7 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
               className="h-5 border-red-500/30 bg-red-500/10 px-1.5 text-[10px] text-red-600 dark:text-red-400"
             >
               <AlertTriangle className="mr-1 size-3" />
-              Cycle detected
+              {t('notifications.builder.commitBar.cycleDetected')}
             </Badge>
           )}
           {invalid && (
@@ -97,8 +98,9 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
                     className="h-5 cursor-default border-amber-500/30 bg-amber-500/10 px-1.5 text-[10px] text-amber-600 dark:text-amber-400"
                   >
                     <AlertTriangle className="mr-1 size-3" />
-                    {validationErrors.length}{' '}
-                    {validationErrors.length === 1 ? 'issue' : 'issues'}
+                    {t('notifications.builder.commitBar.issueCount', {
+                      count: validationErrors.length,
+                    })}
                   </Badge>
                 }
               />
@@ -108,7 +110,11 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
                     <li key={i}>{e.message}</li>
                   ))}
                   {validationErrors.length > 6 && (
-                    <li>…and {validationErrors.length - 6} more</li>
+                    <li>
+                      {t('notifications.builder.commitBar.moreIssues', {
+                        count: validationErrors.length - 6,
+                      })}
+                    </li>
                   )}
                 </ul>
               </TooltipContent>
@@ -119,11 +125,15 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
               variant="outline"
               className="h-5 border-amber-500/30 bg-amber-500/10 px-1.5 text-[10px] text-amber-600 dark:text-amber-400"
             >
-              {changeCount} pending {changeCount === 1 ? 'change' : 'changes'}
+              {t('notifications.builder.commitBar.pendingChangeCount', {
+                count: changeCount,
+              })}
             </Badge>
           ) : (
             !hasCycles && (
-              <span className="text-xs text-muted-foreground">No changes</span>
+              <span className="text-xs text-muted-foreground">
+                {t('notifications.builder.commitBar.noChanges')}
+              </span>
             )
           )}
         </div>
@@ -137,7 +147,7 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
               onClick={() => setDiffOpen(true)}
             >
               <Eye className="size-3" />
-              Review
+              {t('notifications.builder.commitBar.review')}
             </Button>
           )}
           <Button
@@ -148,7 +158,7 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
             onClick={discardDraft}
           >
             <RotateCcw className="size-3" />
-            Discard
+            {t('notifications.builder.commitBar.discard')}
           </Button>
           <Button
             size="sm"
@@ -157,7 +167,7 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
             onClick={handleCommit}
           >
             <Check className="size-3" />
-            Commit
+            {t('notifications.builder.commitBar.commit')}
           </Button>
         </div>
       </div>

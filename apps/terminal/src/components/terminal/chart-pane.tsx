@@ -423,9 +423,11 @@ const ChartPaneInner = memo(function ChartPaneInner({
             showCloseButton={false}
             className="sm:max-w-none w-[calc(100vw-2rem)] h-[calc(100vh-2rem)] p-0 gap-0"
           >
-            <DialogTitle className="sr-only">Fullscreen Chart</DialogTitle>
+            <DialogTitle className="sr-only">
+              {t('chart.fullscreenTitle')}
+            </DialogTitle>
             <DialogDescription className="sr-only">
-              Chart in fullscreen mode. Press Escape to exit.
+              {t('chart.fullscreenHint')}
             </DialogDescription>
             {chartContent}
           </DialogContent>

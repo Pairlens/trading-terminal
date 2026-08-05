@@ -62,7 +62,9 @@ export function AccountStep({
         type: 'sign-in',
       })
       if (result.error)
-        throw new Error(result.error.message ?? 'Failed to send OTP')
+        throw new Error(
+          result.error.message ?? t('onboarding.account.otpSendFailed'),
+        )
       return value
     },
     onSuccess: (value) => {
@@ -88,7 +90,9 @@ export function AccountStep({
         otp: value,
       })
       if (result.error)
-        throw new Error(result.error.message ?? 'Failed to sign in')
+        throw new Error(
+          result.error.message ?? t('onboarding.account.signInFailed'),
+        )
     },
   })
 

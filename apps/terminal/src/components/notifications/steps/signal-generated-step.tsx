@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { Zap } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -8,6 +9,7 @@ import { useNotificationStepDataUpdate } from '../use-step-data'
 import type { NodeProps } from '@xyflow/react'
 
 export function SignalGeneratedStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
   const signalType = (data.signalType as string) ?? ''
 
   const updateStepData = useNotificationStepDataUpdate()
@@ -29,14 +31,14 @@ export function SignalGeneratedStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Signal Generated
+            {t('notifications.builder.steps.signalGenerated.title')}
           </div>
         </div>
         <Badge
           variant="outline"
           className="border-emerald-500/30 text-[10px] text-emerald-400"
         >
-          Event
+          {t('notifications.builder.category.event')}
         </Badge>
       </div>
 
@@ -44,12 +46,14 @@ export function SignalGeneratedStep({ id, data }: NodeProps) {
         {/* Signal type */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Signal Type
+            {t('notifications.builder.steps.signalGenerated.signalType')}
           </div>
           <input
             type="text"
             className="nodrag nopan nowheel mt-0.5 h-6 w-full rounded border border-border bg-background px-1.5 font-mono text-[10px] text-foreground outline-none focus:border-primary"
-            placeholder="Any type"
+            placeholder={t(
+              'notifications.builder.steps.signalGenerated.anyTypePlaceholder',
+            )}
             value={signalType}
             onChange={(e) => handleChange('signalType', e.target.value)}
           />

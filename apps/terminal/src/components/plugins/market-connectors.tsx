@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Cable, Check, ExternalLink, Loader2, Store, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -24,6 +25,7 @@ function isMarketConnector(plugin: PluginInstance): boolean {
 }
 
 export function MarketConnectors() {
+  const { t } = useTranslation()
   const { pluginManager, pluginStateVersion, notifyPluginStateChange } =
     usePairlens()
   const queryClient = useQueryClient()
@@ -78,10 +80,14 @@ export function MarketConnectors() {
             id,
             buildActivationConfig(id, config),
           )
-          toast.success(`${plugin.manifest.name} enabled`)
+          toast.success(
+            t('pluginStore.enabledToast', { name: plugin.manifest.name }),
+          )
         } else {
           await pluginManager.deactivatePlugin(id)
-          toast.success(`${plugin.manifest.name} disabled`)
+          toast.success(
+            t('pluginStore.disabledToast', { name: plugin.manifest.name }),
+          )
         }
         notifyPluginStateChange()
         saveStateMutation.mutate({
@@ -90,14 +96,17 @@ export function MarketConnectors() {
           config: statesMap[id]?.config ?? plugin.config ?? {},
         })
       } catch (err) {
-        toast.error(`Failed to ${enable ? 'enable' : 'disable'}`, {
-          description: String(err),
-        })
+        toast.error(
+          enable
+            ? t('pluginStore.enableFailedShort')
+            : t('pluginStore.disableFailedShort'),
+          { description: String(err) },
+        )
       } finally {
         setBusyId(null)
       }
     },
-    [pluginManager, statesMap, saveStateMutation, notifyPluginStateChange],
+    [pluginManager, statesMap, saveStateMutation, notifyPluginStateChange, t],
   )
 
   const activeCount = connectors.filter((c) => c.status === 'active').length
@@ -115,19 +124,20 @@ export function MarketConnectors() {
     <div className="mx-auto max-w-4xl p-6">
       <section className="mb-6">
         <h2 className="text-lg font-semibold tracking-tight">
-          Market Connectors
+          {t('pluginStore.marketConnectorsTitle')}
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Market connectors stream live price data, order books, and enable
-          trading directly from exchange APIs. Enable the exchanges you want to
-          use.
+          {t('pluginStore.marketConnectorsDescription')}
         </p>
       </section>
 
       <div className="mb-4">
         <Badge variant="outline" className="gap-1.5 text-[10px] tabular-nums">
           <Cable className="size-3" />
-          {activeCount}/{connectors.length} active
+          {t('pluginStore.activeCountBadge', {
+            active: activeCount,
+            total: connectors.length,
+          })}
         </Badge>
       </div>
 
@@ -166,7 +176,7 @@ export function MarketConnectors() {
                       className="h-4 gap-1 border-emerald-500/30 bg-emerald-500/10 px-1.5 text-[9px] text-emerald-700 dark:text-emerald-400"
                     >
                       <Check className="size-2.5" />
-                      Connected
+                      {t('pluginStore.connected')}
                     </Badge>
                   )}
                   {!active && (
@@ -175,7 +185,7 @@ export function MarketConnectors() {
                       className="h-4 gap-1 px-1.5 text-[9px] text-muted-foreground"
                     >
                       <X className="size-2.5" />
-                      Disabled
+                      {t('pluginStore.disabledStatus')}
                     </Badge>
                   )}
                 </div>
@@ -195,7 +205,9 @@ export function MarketConnectors() {
                       </Badge>
                     ))}
                   <Badge variant="secondary" className="h-4 px-1.5 text-[9px]">
-                    {canTrade ? 'Read + Trade' : 'Read Only'}
+                    {canTrade
+                      ? t('pluginStore.readAndTrade')
+                      : t('pluginStore.readOnly')}
                   </Badge>
                 </div>
               </div>
@@ -219,7 +231,7 @@ export function MarketConnectors() {
 
       {connectors.length === 0 && (
         <div className="py-12 text-center text-sm text-muted-foreground">
-          No market connector plugins installed.
+          {t('pluginStore.noConnectorsInstalled')}
         </div>
       )}
 
@@ -228,9 +240,11 @@ export function MarketConnectors() {
         <section className="mt-10">
           <div className="mb-4 flex items-center gap-2">
             <Store className="size-4 text-muted-foreground" />
-            <h3 className="text-sm font-semibold">More Connectors</h3>
+            <h3 className="text-sm font-semibold">
+              {t('pluginStore.moreConnectors')}
+            </h3>
             <span className="text-xs text-muted-foreground">
-              from the Plugin Store
+              {t('pluginStore.fromPluginStore')}
             </span>
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -245,6 +259,7 @@ export function MarketConnectors() {
 }
 
 function RegistryExchangeCard({ entry }: { entry: RegistryPluginEntry }) {
+  const { t } = useTranslation()
   return (
     <div className="flex flex-col gap-2 rounded-xl border p-4 transition-colors hover:bg-muted/30">
       <div className="flex items-center gap-3">
@@ -256,7 +271,10 @@ function RegistryExchangeCard({ entry }: { entry: RegistryPluginEntry }) {
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium">{entry.manifest.name}</p>
           <p className="text-[10px] text-muted-foreground">
-            v{entry.manifest.version} · {entry.manifest.author}
+            {t('pluginStore.versionAuthor', {
+              version: entry.manifest.version,
+              author: entry.manifest.author,
+            })}
           </p>
         </div>
       </div>
@@ -269,7 +287,7 @@ function RegistryExchangeCard({ entry }: { entry: RegistryPluginEntry }) {
           className="mt-1 flex items-center gap-1 text-[10px] text-primary hover:underline"
         >
           <ExternalLink className="size-2.5" />
-          Learn more
+          {t('pluginStore.learnMore')}
         </a>
       )}
     </div>

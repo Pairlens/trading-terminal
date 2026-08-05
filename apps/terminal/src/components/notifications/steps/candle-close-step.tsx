@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { CandlestickChart } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -17,6 +18,7 @@ const timeframeOptions = [
 ] as const
 
 export function CandleCloseStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
   const timeframe = (data.timeframe as string) ?? '1h'
 
   const updateStepData = useNotificationStepDataUpdate()
@@ -38,14 +40,14 @@ export function CandleCloseStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Candle Close
+            {t('notifications.builder.steps.candleClose.title')}
           </div>
         </div>
         <Badge
           variant="outline"
           className="border-emerald-500/30 text-[10px] text-emerald-400"
         >
-          Event
+          {t('notifications.builder.category.event')}
         </Badge>
       </div>
 
@@ -53,7 +55,7 @@ export function CandleCloseStep({ id, data }: NodeProps) {
         {/* Timeframe */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Timeframe
+            {t('chart.toolbar.timeframe')}
           </div>
           <div className="nodrag nopan nowheel mt-0.5 flex overflow-hidden rounded border border-border text-[9px]">
             {timeframeOptions.map((opt) => (

@@ -244,7 +244,9 @@
       "create": "Hesap oluştur",
       "skip": "Atla — her şeyi bu cihazda tut",
       "signedIn": "{{email}} olarak giriş yapıldı",
-      "label": "Hesap"
+      "label": "Hesap",
+      "otpSendFailed": "OTP gönderilemedi",
+      "signInFailed": "Oturum açılamadı"
     },
     "summary": {
       "eyebrow": "Hazır",
@@ -376,6 +378,42 @@
         "title": "Senin makinen, senin anahtarların",
         "description": "Botlar sunucularımızda değil burada çalışır ve API anahtarların bu bilgisayardan hiç çıkmaz. Pairlens açık kalsın, bilgisayar uykuya geçmesin; durmasını istediğin an istediğin botu kapat."
       }
+    },
+    "scenes": {
+      "topMover": "En çok hareket eden · {{pair}} {{delta}}",
+      "watchlistCount": "İzleme listesi · {{count}}",
+      "signalBreakout": "Breakout",
+      "signalPullbackForming": "Pullback oluşuyor",
+      "onClose": "kapanışta",
+      "crossedAbovePrice": "{{price}} üzerine çıktı",
+      "conditionCrossesAbove": "yukarı keser",
+      "notifyMeDesktopInApp": "Beni bilgilendirin — masaüstü + uygulama içi",
+      "nodeTrigger": "Tetikleyici",
+      "nodeSignalLabel": "Sinyal: {{signal}}",
+      "nodeCondition": "Koşul",
+      "nodeVolumeAboveAvg": "Hacim > ortalama",
+      "nodeAction": "Eylem",
+      "nodeAlertAndJournal": "Uyarı + günlük",
+      "runBreakoutWatcher": "Breakout izleyicisi",
+      "runDcaBuyer": "DCA alıcısı",
+      "runStopLossGuard": "Stop-loss bekçisi",
+      "ranAt": "{{time}} · çalıştı",
+      "runsLocally": "Yerelde çalışır",
+      "storedOnDevice": "Bu cihazda saklanır — sunucularımızda asla",
+      "osKeychain": "Sistem anahtarlığı",
+      "pluginKindMarketData": "Piyasa verisi",
+      "pluginKindTheme": "Tema",
+      "pluginKindAutomation": "Otomasyon",
+      "sandboxedByDefault": "Varsayılan olarak korumalı alanda",
+      "signedVerified": "İmzalı ve doğrulanmış",
+      "networkAccessApproveHost": "Ağ erişimi — her sunucuyu sen onaylarsın",
+      "copiedToWorkspaces": "Çalışma alanlarınıza kopyalandı",
+      "statNet": "Net",
+      "statMaxDd": "Maks. DD",
+      "sameCodeGoesLive": "Aynı kod canlıya geçer",
+      "runsOnYourMachine": "Cihazınızda çalışır — uyanık tutun",
+      "botMeanReversion": "Ortalamaya Dönüş",
+      "chainWallet": "{{chain}} cüzdanı"
     }
   },
   "common": {
@@ -398,7 +436,12 @@
     "showInFolder": "Klasörde göster",
     "updated": "{{time}} güncellendi",
     "back": "Geri",
-    "dismiss": "Kapat"
+    "dismiss": "Kapat",
+    "unknownError": "Bilinmeyen hata",
+    "ordersLockedRiskLimit": "Bir risk sınırı ihlali nedeniyle emirler kilitlendi. Ayarlar > Risk Yönetimi bölümünden kilidi açın.",
+    "buyOrdersLockedRiskLimit": "Bir risk sınırı ihlali nedeniyle alış emirleri kilitlendi. Ayarlar > Risk Yönetimi bölümünden kilidi açın.",
+    "positionSizeExceeded": "Emir risk sınırı tarafından engellendi: pozisyon, portföyünüzün %{{ratioPct}}'i olup %{{maxPositionSize}} olan maksimumunuzu aşıyor. Ayarlar > Risk Yönetimi bölümünden düzenleyin.",
+    "sessionExpired": "Oturumunuzun süresi doldu — lütfen tekrar giriş yapın."
   },
   "legal": {
     "terms": "Şartlar ve Koşullar",
@@ -581,7 +624,22 @@
       "publisherKeyConsentTitle": "Bu yayıncıya güvenilsin mi?",
       "publisherKeyConsentBody": "Bu anahtarla imzalanan eklentiler bu cihaza kurulabilir olacak. Kötü niyetli bir yayıncı, diğer eklentilerinin verilerine, saklanan borsa kimlik bilgilerine ve işlemlere erişim isteyen eklentiler gönderebilir. Devam etmeden önce parmak izini güvendiğin bir kanaldan yayıncıyla karşılaştır.",
       "publisherKeyConsentConfirm": "Bu anahtara güven",
-      "publisherKeyConsentCancel": "İptal"
+      "publisherKeyConsentCancel": "İptal",
+      "updatesTitle": "Eklenti Güncellemeleri",
+      "updatesDescription": "Kayıt defterinde daha yeni sürümler mevcut olduğunda eklentilerin nasıl güncelleneceğini kontrol edin.",
+      "updateModeLabel": "Güncelleme modu",
+      "updateModeAutoDescription": "Güncellemeler otomatik olarak indirilip yüklenir",
+      "updateModeNotifyDescription": "Güncellemeler mevcut olduğunda bir rozet göreceksin",
+      "updateModeOffDescription": "Otomatik güncelleme kontrolü yok",
+      "updateModeAuto": "Otomatik güncelle",
+      "updateModeNotify": "Yalnızca bildir",
+      "updateModeOffLabel": "Kapalı",
+      "checkIntervalLabel": "Kontrol aralığı",
+      "checkIntervalDescription": "Kayıt defterinin daha yeni sürümler için ne sıklıkla kontrol edileceği",
+      "intervalHourly": "Her saat",
+      "interval6Hours": "Her 6 saatte bir",
+      "interval12Hours": "Her 12 saatte bir",
+      "intervalDaily": "Günlük"
     },
     "appearance": {
       "colorMode": "Renk Modu",
@@ -603,7 +661,9 @@
       "balanced": "Dengeli",
       "balancedDescription": "Ticker ve emir defteri 250ms'de, mumlar 500ms'de. Duyarlılık ve verimlilik arasında iyi bir denge.",
       "energySaver": "Enerji Tasarrufu",
-      "energySaverDescription": "Ticker ve emir defteri 1s'de, mumlar 2s'de. Pasif izleme veya pil gücündeki dizüstü bilgisayarlar için en iyisi."
+      "energySaverDescription": "Ticker ve emir defteri 1s'de, mumlar 2s'de. Pasif izleme veya pil gücündeki dizüstü bilgisayarlar için en iyisi.",
+      "idleGuardTitle": "Hareketsizlikte bağlantıyı kes",
+      "idleGuardDescription": "Bant genişliğinden tasarruf etmek ve enerji tüketimini azaltmak için 1 saat hareketsizlikten sonra piyasa veri akışlarını duraklatır."
     },
     "desktop": {
       "closeBehavior": {
@@ -1031,7 +1091,9 @@
       "namePlaceholder": "Klasör adı"
     },
     "createFirst": "İlk çalışma alanını oluştur",
-    "emptyState": "Henüz çalışma alanı yok"
+    "emptyState": "Henüz çalışma alanı yok",
+    "descriptionLabel": "Açıklama",
+    "descriptionPlaceholder": "İsteğe bağlı kısa açıklama"
   },
   "session": {
     "checking": "Oturum kontrol ediliyor…",
@@ -1089,7 +1151,9 @@
     "verifying": "Doğrulanıyor...",
     "verifyAndSignIn": "Doğrula ve giriş yap",
     "codeRequired": "Kod gerekli",
-    "emailRequired": "E-posta gerekli"
+    "emailRequired": "E-posta gerekli",
+    "dialogDescription": "Bu özelliğe erişmek için giriş yap",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "Oturum Duraklatıldı",
@@ -1109,7 +1173,12 @@
     "connecting": "Bağlanıyor",
     "stalled": "Yeniden bağlanıyor",
     "offline": "Çevrimdışı",
-    "error": "Hata"
+    "error": "Hata",
+    "pluginUpdatesReady_one": "Yüklemeye hazır {{count}} eklenti güncellemesi",
+    "pluginUpdatesReady_other": "Yüklemeye hazır {{count}} eklenti güncellemesi",
+    "pluginUpdatesDescription": "Güncellemeler, terminal yeniden başlatıldıktan sonra uygulanır.",
+    "restartNow": "Şimdi yeniden başlat",
+    "later": "Daha sonra"
   },
   "copilot": {
     "aiLens": "Yapay Zeka Merceği",
@@ -1128,7 +1197,46 @@
     },
     "marketRegime": "Piyasa Rejimi",
     "trending": "Trend",
-    "choppy": "Dalgalı"
+    "choppy": "Dalgalı",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "Miktar",
+    "orderPlacedPaper": "Kağıt emir verildi",
+    "orderPlaced": "Emir verildi",
+    "autoApprovedNote": "Otomatik onaylandı ({{mode}} · bir daha sorma açık)",
+    "turnOff": "Kapat",
+    "autoApproving": "{{mode}} emri otomatik onaylanıyor…",
+    "liveOrderWarning": "Gerçek emir — gerçek fonlar, risk sınırlarınıza göre uygulanır.",
+    "dontAskAgainPaper": "Kağıt işlemler için bir daha sorma",
+    "dontAskAgainLive": "{{market}} üzerindeki gerçek işlemler için bir daha sorma",
+    "placing": "Emir veriliyor…",
+    "confirmMode": "{{mode}} onayla",
+    "dismissed": "Reddedildi",
+    "cancelOrderPrompt": "{{pair}} · {{market}} üzerindeki {{orderId}} emri iptal edilsin mi?",
+    "cancelled": "İptal edildi",
+    "cancelFailed": "İptal başarısız",
+    "cancelling": "İptal ediliyor…",
+    "confirmCancel": "İptali onayla",
+    "keep": "Koru",
+    "tradingUnavailable": "İşlem yapılamıyor.",
+    "noCredentialsForMarket": "{{market}} için bağlı bir kimlik bilgisi yok. Gerçek işlem yapmak için Hesaplar bölümünden API anahtarı ekleyin.",
+    "watchingPair": "{{pair}} · {{timeframe}} izleniyor",
+    "genericChatError": "Kopilotta bir hata oluştu — tekrar göndermeyi deneyin.",
+    "quickActionHowIsDoing": "{{symbol}} nasıl gidiyor?",
+    "quickActionSuggestedIndicators": "Önerilen göstergeler",
+    "quickActionAnySignals": "Herhangi bir sinyal var mı?",
+    "scheduledCheckPrefix": "[Zamanlanmış kontrol — {{minutes}} dk önce ayarlandı]",
+    "authRequiredTitle": "Yapay zekâ kopilotunuzla tanışın",
+    "authRequiredDescription": "Herhangi bir parite için bağlamsal analiz — grafiği okur, risk sınırlarını kontrol eder ve sorgulayabileceğin bir gerekçeyle yanıtlar.",
+    "upgradeRequiredDescription": "Yapay zekâ kopilotun grafiği okur, risk sınırlarını kontrol eder ve sorgulayabileceğin bir gerekçeyle yanıtlar.",
+    "aiLensUnavailableTitle": "AI Lens Kullanılamıyor",
+    "aiLensUnavailableDescription": "Gerçek zamanlı piyasa analizi ve işlem desteği almak için Plugins sayfasından bir yapay zekâ eklentisi etkinleştirin.",
+    "goToPlugins": "Plugins'e Git",
+    "analyzePair": "{{pair}} analiz et",
+    "startConversation": "Sohbeti başlat",
+    "emptyStateHint": "Piyasa koşullarını sorun, kurulumunuzu doğrulayın veya risk değerlendirmesi isteyin — yapay zekâ bu paritenin tüm bağlamına sahiptir.",
+    "contextAware": "Bağlamı bilir",
+    "toolFailed": "Araç başarısız oldu"
   },
   "chart": {
     "contextMenu": {
@@ -1312,7 +1420,9 @@
       "pause": "Duraklat",
       "step": "Sonraki mum",
       "exit": "Tekrardan çık"
-    }
+    },
+    "fullscreenTitle": "Tam ekran grafik",
+    "fullscreenHint": "Grafik tam ekran modunda. Çıkmak için Escape tuşuna basın."
   },
   "botsPage": {
     "loading": "Botlar yükleniyor…",
@@ -1872,7 +1982,15 @@
     "frozen": "Donduruldu",
     "total": "Toplam",
     "refreshBalances": "Yenile",
-    "asset": "Varlık"
+    "asset": "Varlık",
+    "cancelOrderTitle": "Emir iptal edilsin mi?",
+    "cancelOrderBody": "Bu, {{pair}} için {{side}} emrinizi iptal edecek.",
+    "keepOrder": "Emri koru",
+    "cancelOrder": "Emri iptal et",
+    "sideBuy": "alış",
+    "sideSell": "satış",
+    "buy": "Alış",
+    "sell": "Satış"
   },
   "pairInfo": {
     "title": "Parite Bilgisi",
@@ -1915,7 +2033,10 @@
     "emptyTitle": "Bir web sitesi eklemek için yukarıya bir URL gir",
     "embedWarning": "Bazı web siteleri iframe içine yerleştirmeyi engeller. Bir sayfa yüklenmezse, bunun yerine tarayıcında açmayı dene.",
     "blockedTitle": "Bu site yerleştirilemez",
-    "blockedDescription": "Bu web sitesi başka sayfaların içinde görüntülenmeyi engelliyor. Bunun yerine ayrı bir tarayıcı sekmesinde açabilirsin."
+    "blockedDescription": "Bu web sitesi başka sayfaların içinde görüntülenmeyi engelliyor. Bunun yerine ayrı bir tarayıcı sekmesinde açabilirsin.",
+    "forward": "İleri",
+    "failedToLoad": "Yükleme başarısız oldu",
+    "viewPaused": "Web görünümü duraklatıldı"
   },
   "intelligence": {
     "analyzing": "Piyasa analiz ediliyor…",
@@ -1924,7 +2045,29 @@
     "recentSignals": "Son sinyaller",
     "regime": "Rejim",
     "trending": "Trend",
-    "choppy": "Dalgalı"
+    "choppy": "Dalgalı",
+    "upsell": {
+      "priceMonthly": "{{price}} $/ay",
+      "taxNotice": "Fiyatlara vergi dahil değildir; ödeme sırasında hesaplanır.",
+      "defaultTitle": "Pairlens Intelligence'ın kilidini açın",
+      "defaultDescription": "API anahtarı gerektirmeyen barındırılan AI kopilotu ve web research'ü. Her planda sohbet, research ve web aramaları arasında paylaşılan aylık kullanım bütçesi bulunur.",
+      "byokNote": "Kendi sağlayıcını mı tercih edersin? <plugins>Eklentiler</plugins>",
+      "checkoutOpenedTitle": "Ödeme tarayıcınızda açıldı",
+      "checkoutActivates": "Ödeme tamamlanır tamamlanmaz aboneliğin burada etkinleşir.",
+      "checkoutStartError": "Ödeme başlatılamadı — lütfen tekrar deneyin.",
+      "subscriptionRequiredTitle": "Pairlens Intelligence aboneliği gerekiyor",
+      "subscriptionRequiredBody": "Barındırılan AI, bir Intelligence planıyla çalışır. Aşağıdan abone olun veya Eklentiler'de kendi AI sağlayıcı anahtarınızı bağlayın.",
+      "budgetUsedUpTitle": "Aylık kullanım bütçesi tükendi",
+      "budgetUsedBody": "Bu döngünün Intelligence kredilerini kullandın.",
+      "budgetResetsOn": "Bütçeniz {{date}} tarihinde sıfırlanır.",
+      "topUpHint": "Devam etmek için bir kredi paketiyle yükleme yapın — paket kredileri satın alımdan 30 gün sonra sona erer.",
+      "upgradeToMaxHint": "Ayda {{credits}} kredi için {{label}}'a yükseltin.",
+      "manageSubscription": "Aboneliği yönet",
+      "portalError": "Faturalandırma portalı açılamadı.",
+      "creditsLandDescription": "Ödeme tamamlanır tamamlanmaz ek krediler bakiyenize eklenir.",
+      "checkoutError": "Ödeme başlatılamadı.",
+      "upgradeToMax": "Max'e yükselt"
+    }
   },
   "panes": {
     "markets": "Piyasalar",
@@ -2020,6 +2163,52 @@
       "title": "{{pair}} {{venue}} üzerinde yok",
       "titleAnyVenue": "{{pair}} bulunamadı",
       "description": "Bu konektör bu parite için piyasa verisi döndürmedi. Pariteyi listeleyen başka bir konektör deneyin."
+    },
+    "panePicker": {
+      "bindToVariable": "Değişkene bağla",
+      "boundTo": "<b>{{variable}}</b> değişkenine bağlı",
+      "market": "Piyasa",
+      "setPair": "{{variable}} paritesini ayarla",
+      "selectPair": "Bir parite seç",
+      "bindingHint": "Bir parite seçmek, {{variable}} değişkenine bağlı tüm panoları güncelleyecektir",
+      "unbindFromVariable": "Değişken bağlantısını kaldır",
+      "settingForAllPanes": "Bağlı tüm panolar için <b>{{variable}}</b> ayarlanıyor"
+    },
+    "pane": {
+      "close": "{{pane}} kapat",
+      "popOutToColumn": "Yeni sütuna ayır",
+      "bindPairToVariable": "Pariteyi değişkene bağla",
+      "bindWalletToVariable": "Cüzdanı değişkene bağla",
+      "bindTimeframeToVariable": "Zaman dilimini değişkene bağla",
+      "clearPairOverride": "Parite geçersiz kılmasını temizle",
+      "closePane": "Panoyu kapat",
+      "unbind": "Bağlantıyı kaldır",
+      "closeTab": "Sekmeyi kapat"
+    },
+    "dnd": {
+      "pickedUp": "{{pane}} alındı. Taşımak için ok tuşlarını, bırakmak için boşluk tuşunu, iptal etmek için escape tuşunu kullanın.",
+      "genericPane": "pano",
+      "noDropTarget": "Bırakma hedefi yok.",
+      "dropStackTab": "Buraya bırakarak sekme olarak istifle.",
+      "dropSplitAbove": "Yukarıya bölmek için bırak.",
+      "dropSplitBelow": "Aşağıya bölmek için bırak.",
+      "dropNewColumn": "Yeni bir sütun oluşturmak için bırak.",
+      "paneMoved": "Pano taşındı.",
+      "dragCancelled": "Sürükleme iptal edildi, pano geri döndü.",
+      "dragCancelledFull": "Sürükleme iptal edildi, pano orijinal konumuna geri döndü."
+    },
+    "missingPane": {
+      "requiresPlugin": "Bu pano \"{{pluginId}}\" eklentisini gerektiriyor",
+      "notAvailable": "\"{{type}}\" panosu kullanılamıyor",
+      "description": "Eklenti kaldırılmış veya devre dışı bırakılmış olabilir.",
+      "openPluginStore": "Eklenti Mağazasını Aç"
+    },
+    "dropZone": {
+      "emptyHint": "Buraya bir pano sürükle",
+      "addAsTab": "Sekme olarak ekle",
+      "splitTop": "Üstten böl",
+      "splitBottom": "Alttan böl",
+      "newColumn": "Yeni sütun"
     }
   },
   "watchlist": {
@@ -2129,7 +2318,137 @@
     "uninstalled": "Kaldırıldı",
     "updateReactivate": "Güncelle ve Yeniden Etkinleştir",
     "version": "Sürüm",
-    "visit": "Ziyaret et"
+    "visit": "Ziyaret et",
+    "fullTrust": {
+      "title": "“{{name}}” için tam güven verilsin mi?",
+      "description": "Bu eklenti arayüz sağlıyor, bu yüzden ana uygulamada sandbox olmadan çalışmalı. Tam güvenli bir eklenti Pairlens ile aynı erişime sahip olur.",
+      "itCan": "Şunları yapabilir:",
+      "grantPlugins": "kurulu diğer eklentilerinizin verilerini okumak;",
+      "grantCredentials": "kayıtlı borsa API anahtarlarınızı ve cüzdan kimlik bilgilerinizi okumak;",
+      "grantTrading": "sizin adınıza işlem ve diğer finansal operasyonları gerçekleştirmek.",
+      "trustNote": "Tam güveni yalnızca güvendiğin geliştiricilerin eklentilerine ver. İstediğin zaman kaldırabilirsin.",
+      "trustNoteAuthor": "Tam güveni yalnızca güvendiğin geliştiricilerin eklentilerine ver (geliştirici: {{author}}). İstediğin zaman kaldırabilirsin.",
+      "grant": "Tam güven ver"
+    },
+    "network": {
+      "title": "“{{name}}” bağlanabilsin mi?",
+      "description": "Bu eklentinin Pairlens dışındaki sunuculara erişmesi gerekiyor. Terminalin aşağıdaki adreslere ağ isteği gönderecek. Yalnızca bu eklentiye güveniyorsan izin ver — erişimi kaldırmak için istediğin zaman silebilirsin.",
+      "hostsIntro": "Şunlara bağlanabilecek:",
+      "reloadNote": "Onaylamak, değişikliği uygulamak için terminali yeniden yükler.",
+      "deny": "İzin verme",
+      "allow": "İzin ver ve yeniden yükle"
+    },
+    "toggleFailedEnable": "{{name}} etkinleştirilemedi",
+    "toggleFailedDisable": "{{name}} devre dışı bırakılamadı",
+    "updateStagedToast": "Güncelleme hazırlandı — uygulamak için yeniden başlatın",
+    "restartNow": "Şimdi yeniden başlat",
+    "updateStageFailedToast": "Güncelleme hazırlanamadı: {{error}}",
+    "resetStagedToast": "Varsayılanlara sıfırlandı — tamamlamak için yeniden başlatın",
+    "networkGrantedToast": "\"{{name}}\" için ağ erişimi verildi — yeniden yükleniyor…",
+    "networkDeniedToast": "\"{{name}}\" ağ erişimi olmadan kuruldu — izin verene kadar çalışmayabilir.",
+    "installCancelledNoTrust": "Kurulum iptal edildi — tam güven verilmedi",
+    "installedVersionToast": "\"{{name}}\" v{{version}} kuruldu",
+    "installFailedToast": "Eklenti kurulamadı: {{error}}",
+    "localFilesNotFound": "Yerel eklenti dosyaları bulunamadı",
+    "pluginCodeNotFound": "Eklenti kodu bulunamadı — yeniden kurun",
+    "fullTrustGrantedNameToast": "\"{{name}}\" için tam güven verildi",
+    "loadPluginFailedToast": "Eklenti yüklenemedi: {{error}}",
+    "importFailedToast": "Eklenti içe aktarılamadı: {{error}}",
+    "fieldRequired": "{{label}} zorunludur",
+    "configSaved": "Yapılandırma kaydedildi",
+    "configurationFailed": "Yapılandırma başarısız oldu",
+    "needsFullTrustToRun": "Çalışması için tam güven gerekir",
+    "pendingTrustDescription": "Arayüz sağlıyor ve sandbox içinde çalışamıyor — etkinleştirmek için tam güven verin ya da kaldırın.",
+    "remove": "Kaldır",
+    "groupCore": "Çekirdek",
+    "groupProvidersExtensions": "Sağlayıcılar ve Uzantılar",
+    "groupThemes": "Temalar",
+    "removePluginTitle": "Eklentiyi Kaldır",
+    "removePluginDescription": "Bu, eklentiyi devre dışı bırakıp kaldıracak. Eklentinin sağladığı paneller, kurtarma yer tutucusu gösterecek. Eklentiyi istediğin zaman Plugin Store'dan yeniden kurabilirsin.",
+    "resetDefaultsTitle": "Varsayılanlara Sıfırla",
+    "resetDefaultsDescription": "Bu, pakete dahil olmayan tüm eklentileri kaldıracak, hazırlanmış ve mevcut güncellemeleri temizleyecek ve terminali yeniden yükleyecek. Pakete dahil eklentiler kurulu kalacak.",
+    "reset": "Sıfırla",
+    "installFromUrlDialogTitle": "URL'den Eklenti Kur",
+    "installFromUrlDialogDescription": "Kurulacak eklenti modülünün (.js) URL'sini girin.",
+    "unverifiedPluginTitle": "Doğrulanmamış Eklenti",
+    "unverifiedPluginBody": "Manuel olarak kurulan eklentiler güvenlik açısından incelenmemiştir. Yalnızca güvendiğin kaynaklardan eklenti kur.",
+    "installAnyway": "Yine de Kur",
+    "sourceBuiltIn": "Yerleşik",
+    "sourceRegistry": "Kayıt Defteri",
+    "sourceUrl": "URL",
+    "sourceLocal": "Yerel",
+    "fullTrustGrantedRestartToast": "Tam güven verildi — bu eklentiyi ana uygulamada çalıştırmak için yeniden başlatın",
+    "sandboxedRestartToast": "Eklenti sandbox içinde çalışacak — uygulamak için yeniden başlatın",
+    "requiresFullTrustTitle": "Bu eklenti arayüz sağlıyor ve tam güvenle çalışmalıdır.",
+    "trustBadgeFullRequired": "Tam güven (zorunlu)",
+    "trustBadgeFull": "Tam güven",
+    "trustBadgeSandboxed": "Sandbox'ta",
+    "panelCount_one": "{{count}} panel",
+    "panelCount_other": "{{count}} panel",
+    "update": "Güncelle",
+    "revokeFullTrustAria": "{{name}} için tam güveni geri al",
+    "grantFullTrustAria": "{{name}} için tam güven ver",
+    "fullTrustActiveTitle": "Tam güven — ana uygulamada çalışır. Sandbox'a almak için tıklayın.",
+    "sandboxedTitle": "Sandbox — izole edilmiş worker, ağ yalnızca beyan edilen sunuculara sınırlı. Tam güven vermek için tıklayın.",
+    "configureAria": "{{name}} yapılandır",
+    "toggleAria": "{{name}} değiştir",
+    "capabilityProvidersTitle": "Yetenek Sağlayıcıları",
+    "capabilityProvidersDescription": "Her terminal özelliği bir yetenek talep eder ve etkinleştirilmiş, en yüksek önceliğe sahip eklenti bunu otomatik olarak sağlar. Otomatik seçimi geçersiz kılmak için belirli bir eklenti seçin.",
+    "resetAllOverrides": "Tüm geçersiz kılmaları sıfırla",
+    "noProviderInstalled": "Kurulu hiçbir eklenti bunu sağlamıyor",
+    "browseStore": "Mağazaya göz at",
+    "installedNeedsKeySingle": "Kuruldu — API anahtarı gerekiyor",
+    "installedNeedsKeyPlural": "{{count}} kuruldu — hepsi API anahtarı gerektiriyor",
+    "installedDisabledSingle": "1 eklenti kurulu ama devre dışı",
+    "installedDisabledPlural": "{{count}} eklenti kurulu, hepsi devre dışı",
+    "manage": "Yönet",
+    "pinnedActiveNote": "Sabitlendi — otomatik sırayı geçersiz kılar",
+    "pinnedInactiveNote": "Sabitlenen eklenti devre dışı — otomatik sıra uygulanır",
+    "autoOrderLabel": "Otomatik sıra: {{chain}}",
+    "chainMore_one": "{{chain}} +{{count}} tane daha",
+    "chainMore_other": "{{chain}} +{{count}} tane daha",
+    "resolvedPerMarket": "Piyasaya göre belirlenir",
+    "marketOverrides": "Piyasa geçersiz kılmaları",
+    "pinnedCountBadge_one": "{{count}} sabitlendi",
+    "pinnedCountBadge_other": "{{count}} sabitlendi",
+    "automatic": "Otomatik",
+    "disabledHint": "devre dışı",
+    "notInstalled": "{{id}} (kurulu değil)",
+    "saveOverrideFailed": "Sağlayıcı geçersiz kılma kaydedilemedi",
+    "removeOverrideFailed": "Sağlayıcı geçersiz kılma kaldırılamadı",
+    "resetOverridesFailed": "Geçersiz kılmalar sıfırlanamadı",
+    "marketConnectorsTitle": "Piyasa Bağlayıcıları",
+    "marketConnectorsDescription": "Piyasa bağlayıcıları canlı fiyat verilerini ve emir defterlerini akış olarak sağlar ve borsa API'leri üzerinden doğrudan işlem yapmayı mümkün kılar. Kullanmak istediğin borsaları etkinleştir.",
+    "activeCountBadge": "{{active}}/{{total}} etkin",
+    "connected": "Bağlandı",
+    "disabledStatus": "Devre Dışı",
+    "readAndTrade": "Okuma + İşlem",
+    "readOnly": "Yalnızca Okuma",
+    "noConnectorsInstalled": "Kurulu piyasa bağlayıcısı eklentisi yok.",
+    "moreConnectors": "Daha Fazla Bağlayıcı",
+    "fromPluginStore": "Plugin Store'dan",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "Daha fazla bilgi",
+    "enabledToast": "{{name}} etkinleştirildi",
+    "disabledToast": "{{name}} devre dışı bırakıldı",
+    "enableFailedShort": "Etkinleştirilemedi",
+    "disableFailedShort": "Devre dışı bırakılamadı",
+    "domain": {
+      "marketData": "Piyasa Verileri",
+      "trading": "İşlem",
+      "wallet": "Cüzdan",
+      "signals": "Sinyaller",
+      "ai": "AI"
+    },
+    "byAuthor": "{{author}} tarafından",
+    "installsCount_one": "{{formattedCount}} kurulum",
+    "installsCount_other": "{{formattedCount}} kurulum",
+    "panelsCount": "Paneller ({{count}})",
+    "inactive": "Devre Dışı",
+    "previousSlide": "Önceki",
+    "nextSlide": "Sonraki",
+    "goToSlide": "{{n}}. slayta git",
+    "copyCommand": "Komutu kopyala"
   },
   "search": {
     "title": "Parite Ara",
@@ -2196,8 +2515,71 @@
       "selectAccount": "Hesap seç",
       "groupWallet": "Kripto cüzdanı",
       "groupBroker": "Aracı kurum hesabı",
-      "groupExchange": "Borsa hesabı"
-    }
+      "groupExchange": "Borsa hesabı",
+      "selectWalletTopBar": "Üst çubuktan cüzdan seç",
+      "connectChainWallet": "{{chain}} cüzdanını bağla",
+      "connectExchangeAccount": "{{exchange}} hesabını bağla",
+      "selectAccountTopBar": "Üst çubuktan hesap seç"
+    },
+    "trade": {
+      "limitBuy": "Limitli alış",
+      "limitSell": "Limitli satış",
+      "bought": "Alındı",
+      "sold": "Satıldı",
+      "limitOrderFailed": "Limit emri başarısız",
+      "swapFailed": "Swap başarısız",
+      "workflowUnsupported": "Bu piyasada iş akışı desteklenmiyor",
+      "orderBlocked": "Emir risk limiti tarafından engellendi",
+      "orderRejected": "Emir reddedildi",
+      "orderFailed": "Emir başarısız",
+      "setRegion": "Bölgenizi ayarlayın",
+      "regionDefaulting": "Bölge varsayılan olarak Global.",
+      "addPreset": "Ön ayar ekle",
+      "createFirstWorkflow": "İlk iş akışınızı oluşturun",
+      "editWorkflows": "İş akışlarını düzenle",
+      "selectWorkflow": "Bir iş akışı seçin",
+      "submitting": "Gönderiliyor…",
+      "holdToRun": "Çalıştırmak için basılı tutun",
+      "holdToConfirmLive": "Onaylamak için basılı tutun · para hemen çıkar",
+      "holdToPlace": "Emri vermek için basılı tutun",
+      "runWorkflow": "İş akışını çalıştır",
+      "buyAsset": "{{asset}} al",
+      "sellAsset": "{{asset}} sat",
+      "amount": "Miktar",
+      "price": "Fiyat",
+      "presetsTitle": "Tutar ön ayarları ({{quote}})",
+      "buy": "Al",
+      "sell": "Sat",
+      "orderTypeMarket": "Piyasa",
+      "orderTypeLimit": "Limit",
+      "workflow": "İş akışı",
+      "notSupportedOn": "{{venue}} üzerinde desteklenmiyor",
+      "available": "Kullanılabilir: {{amount}}",
+      "slippage": "Kayma"
+    },
+    "status": {
+      "connecting": "Bağlanıyor…",
+      "loadingOrderBook": "Emir defteri yükleniyor…",
+      "loadingDepth": "Derinlik yükleniyor…",
+      "loadingCandles": "Mumlar yükleniyor…",
+      "waitingTrades": "İşlemler bekleniyor…",
+      "waitingData": "Veri bekleniyor…",
+      "noCandleData": "Henüz mum verisi yok",
+      "noTradesFeed": "Time and sales yayınlayan bir borsaya geçin"
+    },
+    "columns": {
+      "price": "Fiyat",
+      "size": "Miktar",
+      "total": "Toplam",
+      "open": "Açılış",
+      "close": "Kapanış"
+    },
+    "panel": {
+      "expand": "Paneli genişlet",
+      "collapse": "Paneli daralt"
+    },
+    "recentlyViewed": "Son görüntülenenler",
+    "noMarketsFound": "Piyasa bulunamadı"
   },
   "accounts": {
     "pageTitle": "Hesaplar",
@@ -2293,7 +2675,42 @@
     "importKey": "Bir özel anahtar içe aktar",
     "affiliateDisclosure": "Bazı kayıt bağlantıları, sana ek maliyet çıkarmadan Pairlens'e komisyon kazandırabilir.",
     "vaultSealedBody": "Kimlik bilgisi kasan kilitli. Hesapların hâlâ burada — görmek ve kullanmak için kilidi aç.",
-    "credentialsUnreadable": "Bu cihazda saklanan anahtarlar okunamadı. Hiçbir şey kaybolmadı — tekrar dene ya da Pairlens’i yeniden başlat."
+    "credentialsUnreadable": "Bu cihazda saklanan anahtarlar okunamadı. Hiçbir şey kaybolmadı — tekrar dene ya da Pairlens’i yeniden başlat.",
+    "addWalletDialogTitle": "Kripto Cüzdanı Ekle",
+    "addWalletDialogDescription": "Zincir üstü işlem yapmak için bir cüzdan özel anahtarı içe aktarın",
+    "blockchainLabel": "Blok zinciri",
+    "walletLabelField": "Etiket",
+    "walletLabelPlaceholder": "Cüzdanım",
+    "privateKeyField": "Özel Anahtar",
+    "saveWallet": "Cüzdanı Kaydet",
+    "keep": "Sakla",
+    "remove": "Kaldır",
+    "disconnect": "Bağlantıyı Kes",
+    "localBadge": "Yerel",
+    "unknownDate": "Bilinmiyor",
+    "keyExpiredWarning": "Muhtemelen süresi doldu — {{daysInactive}} gündür etkin değil ({{limitDays}} günlük sınır). Borsada API anahtarını yeniden oluşturun.",
+    "keyInactiveWarning": "{{daysInactive}}/{{limitDays}} gündür etkin değil. Anahtarlar {{limitDays}} gün kullanılmadığında süresi dolar.",
+    "exchangeAccountAriaLabel": "{{label}} borsa hesabı",
+    "cryptoWalletAriaLabel": "{{label}} kripto cüzdanı",
+    "portfolioTotal": "Toplam",
+    "assetAllocationLabel": "Varlık Dağılımı",
+    "tableAsset": "Varlık",
+    "tableAmount": "Miktar",
+    "tableValue": "Değer",
+    "tableShare": "Pay",
+    "assetCount_one": "{{count}} varlık",
+    "assetCount_other": "{{count}} varlık",
+    "moreAssets_one": "+{{count}} varlık daha",
+    "moreAssets_other": "+{{count}} varlık daha",
+    "walletSavedFeedback": "Kripto cüzdanı kaydedildi.",
+    "walletRemovedFeedback": "Kripto cüzdanı kaldırıldı.",
+    "accountRemovedFeedback": "Hesap kaldırıldı.",
+    "walletSaveFailed": "Cüzdan kaydedilemedi.",
+    "walletRemoveFailed": "Cüzdan kaldırılamadı.",
+    "accountConnectFailed": "Hesap bağlanamadı.",
+    "accountRemoveFailed": "Hesap kaldırılamadı.",
+    "fieldRequired": "{{field}} gereklidir",
+    "accountConnectedFeedback": "{{label}} {{mode}} hesabı bağlandı."
   },
   "workspaceStore": {
     "title": "Çalışma Alanı Mağazası",
@@ -2401,12 +2818,136 @@
     "paneCount_other": "{{count}} pano",
     "panes": "Panolar",
     "showAll": "Tümünü göster",
-    "spotlight": "Öne çıkan"
+    "spotlight": "Öne çıkan",
+    "previousSlide": "Önceki",
+    "nextSlide": "Sonraki",
+    "goToSlide": "Slayt {{number}}'e git"
   },
   "notifications": {
     "flows": "Akışlar",
     "newFlow": "Yeni akış",
-    "noFlows": "Henüz bildirim akışı yok"
+    "noFlows": "Henüz bildirim akışı yok",
+    "builder": {
+      "sidebar": {
+        "tabRules": "Kurallar",
+        "tabActivity": "Etkinlik",
+        "noRules": "Henüz bildirim kuralı yok",
+        "newRuleTitle": "Yeni Bildirim Kuralı",
+        "rulePlaceholder": "Kural adı",
+        "renameRuleTitle": "Kuralı Yeniden Adlandır",
+        "rename": "Yeniden adlandır",
+        "deleteRuleTitle": "Kuralı Sil",
+        "deleteRuleWarning": "Bu işlem geri alınamaz. Bildirim kuralı ve pariteye bağlantıları kalıcı olarak silinecek.",
+        "pairsLabel": "Pariteler",
+        "sendTest": "Test gönder",
+        "testing": "Test ediliyor…",
+        "pairAlreadyBound": "Bu parite zaten kurala bağlı",
+        "noBindings": "Henüz hiçbir pariteye bağlı değil — sen bir tane eklemeden kural tetiklenmez.",
+        "testSent": "Test bildirimi gönderildi",
+        "testFailed": "Test iletilemedi",
+        "noActivity": "Henüz tetiklenen bildirim yok",
+        "clearActivity": "Etkinliği temizle",
+        "channelFailed": "{{channel}} başarısız oldu"
+      },
+      "commitBar": {
+        "cycleDetected": "Döngü tespit edildi",
+        "issueCount_one": "{{count}} sorun",
+        "issueCount_other": "{{count}} sorun",
+        "moreIssues": "…ve {{count}} tane daha",
+        "pendingChangeCount_one": "{{count}} bekleyen değişiklik",
+        "pendingChangeCount_other": "{{count}} bekleyen değişiklik",
+        "noChanges": "Değişiklik yok",
+        "review": "İncele",
+        "discard": "Vazgeç",
+        "commit": "Kaydet",
+        "cannotSaveTitle": "Kural kaydedilemiyor",
+        "cycleError": "Kural döngüsel bir bağımlılık içeriyor. Kaydetmeden önce döngüyü (kırmızı kenarlar) kaldır.",
+        "saved": "Kural kaydedildi"
+      },
+      "diff": {
+        "title": "Değişiklikleri İncele ({{count}})",
+        "addedStep": "{{type}} adımı eklendi",
+        "removedStep": "{{type}} adımı kaldırıldı",
+        "modifiedStep": "{{type}} yapılandırması değişti",
+        "addedConnection": "Bağlantı eklendi",
+        "removedConnection": "Bağlantı kaldırıldı"
+      },
+      "canvas": {
+        "undoTitle": "Geri al (Cmd+Z)",
+        "redoTitle": "Yinele (Cmd+Shift+Z)",
+        "deleteStep": "Adımı sil",
+        "deleteConnection": "Bağlantıyı sil",
+        "cycleLabel": "döngü"
+      },
+      "palette": {
+        "addStep": "Adım Ekle",
+        "categoryEvents": "Olaylar",
+        "categoryConditions": "Koşullar",
+        "categoryChannels": "Kanallar"
+      },
+      "category": {
+        "event": "Olay",
+        "condition": "Koşul",
+        "channel": "Kanal"
+      },
+      "emptyState": {
+        "pickRuleHint": "Sol taraftan bir kural seç, tuvalde açılsın.",
+        "untitledRule": "Adsız kural",
+        "eyebrow": "Bildirimler",
+        "title": "Piyasayı sen izlemeden Pairlens izlesin",
+        "description": "Bir kural küçük bir akıştır: bir şey olur — bir seviye geçilir, bir mum kapanır, bir emir gerçekleşir, bir gösterge uyarısı tetiklenir — eklediğin koşullardan geçer ve sana toast, sistem bildirimi ya da webhook olarak ulaşır.",
+        "startBlank": "Boş bir tuvalden başla",
+        "startFromTemplate": "Bir şablondan başla",
+        "footnote": "Şablonlar {{market}} üzerinde {{pair}} pairine bağlı bir taslak olarak açılır — adımları düzenle, kural listesinden pariteyi değiştir, sonra Kaydet ile kaydet. Kurallar yalnızca Pairlens çalışırken tetiklenir."
+      },
+      "direction": "Yön",
+      "above": "Üzerinde",
+      "below": "Altında",
+      "any": "Fark etmez",
+      "buy": "Al",
+      "sell": "Sat",
+      "up": "Yukarı",
+      "down": "Aşağı",
+      "either": "İkisi de",
+      "toggleOn": "Açık",
+      "toggleOff": "Kapalı",
+      "steps": {
+        "candleClose": {
+          "title": "Mum Kapanışı"
+        },
+        "localToast": {
+          "title": "Toast Bildirimi",
+          "description": "Tetiklendiğinde uygulama içi toast gösterir"
+        },
+        "orderExecuted": {
+          "title": "Emir Gerçekleşti"
+        },
+        "osNotification": {
+          "title": "Sistem Bildirimi",
+          "sound": "Ses"
+        },
+        "percentChange": {
+          "title": "Yüzde Değişimi",
+          "percent": "Yüzde"
+        },
+        "priceAlert": {
+          "title": "Fiyat Alarmı"
+        },
+        "priceCondition": {
+          "title": "Fiyat Koşulu"
+        },
+        "signalGenerated": {
+          "title": "Sinyal Oluştu",
+          "signalType": "Sinyal Türü",
+          "anyTypePlaceholder": "Herhangi bir tür"
+        },
+        "timeWindow": {
+          "title": "Zaman Aralığı",
+          "start": "Başlangıç (UTC)",
+          "end": "Bitiş (UTC)"
+        }
+      }
+    }
   },
   "updater": {
     "available": "Güncelleme mevcut",
@@ -2493,7 +3034,8 @@
     "failed": "Isı haritası yüklenemedi",
     "noData": "Veri yok",
     "tryLater": "Daha sonra tekrar dene",
-    "willAppear": "Isı haritası verisi burada görünecek"
+    "willAppear": "Isı haritası verisi burada görünecek",
+    "volume": "Hacim"
   },
   "news": {
     "title": "Haberler",
@@ -2606,5 +3148,228 @@
   "fullscreen": {
     "enter": "Tam ekran",
     "exit": "Tam ekrandan çık"
+  },
+  "research": {
+    "phaseSearching": "Web'de aranıyor...",
+    "phaseReading": "Kaynaklar okunuyor...",
+    "phaseAnalyzing": "Piyasa verileri analiz ediliyor...",
+    "phaseWriting": "Rapor yazılıyor...",
+    "authRequiredTitle": "Research masasına bir oturum açma kadar yakınsın",
+    "authRequiredDescription": "Canlı web kaynaklarına dayanan, herhangi bir parite için yapılandırılmış research raporları. Oturum açın, ardından Pairlens Intelligence'a abone olun veya kendi AI anahtarınızı kullanın.",
+    "upgradeDescription": "Canlı web kaynaklarına dayanan, herhangi bir parite için yapılandırılmış research raporları. Pairlens Intelligence'a abone olun — veya Eklentiler üzerinden kendi AI ve arama anahtarlarınızı ücretsiz olarak kullanın.",
+    "unavailableTitle": "Research kullanılamıyor",
+    "unavailableDescription": "Bu parite için research raporu oluşturmak üzere Eklentiler sayfasından bir AI eklentisi etkinleştirin.",
+    "goToPlugins": "Eklentilere git",
+    "navigateToPair": "Research'ü görüntülemek için bir pariteye gidin.",
+    "researchingSymbol": "{{symbol}} analiz ediliyor",
+    "generatingReport": "Rapor oluşturuluyor...",
+    "cachedGenerated": "Önbellekten — {{time}} oluşturuldu",
+    "freshGenerated": "Güncel — az önce oluşturuldu",
+    "refresh": "Yenile",
+    "sourcesCount": "Kaynaklar ({{count}})",
+    "reportTitle": "Research Raporu",
+    "fullscreenDescription": "Research raporu tam ekran modunda. Çıkmak için Escape tuşuna basın.",
+    "sections": "Bölümler",
+    "sparklineAriaLabel": "Günlük fiyat mini grafiği",
+    "errorTitle": "Research kullanılamıyor"
+  },
+  "capabilityGate": {
+    "authTitle": "Sadece ücretsiz bir girişe uzaklıkta",
+    "authDescription": "Bu özellik Pairlens hesabın üzerinden çalışır.",
+    "signInFree": "Ücretsiz giriş yap",
+    "authNote": "30 saniye sürer. Borsa anahtarların bu cihazdan asla çıkmaz.",
+    "upgradeRequired": "Yükseltme gerekli",
+    "upgradeDescriptionLevel": "Bu özellik <b>{{level}}</b> erişim düzeyi gerektirir.",
+    "upgradeDescriptionGeneric": "Bu özellik daha yüksek bir erişim düzeyi gerektirir.",
+    "managePlugin": "Eklentiyi Yönet"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}} burada kullanılamıyor",
+    "description": "{{exchange}} bölgen için piyasa verisi sağlamıyor, bu nedenle bu bağlayıcı veri yükleyemiyor. Başka bir bağlayıcıya geç veya bölgen yanlış ayarlandıysa güncelle.",
+    "yourRegion": "Bölgen:",
+    "notSet": "Ayarlanmadı",
+    "changeRegion": "Bölgeyi değiştir",
+    "switchTo": "{{venue}}'a geç"
+  },
+  "pairPicker": {
+    "noPairsFound": "Parite bulunamadı.",
+    "startTyping": "Parite aramak için yazmaya başla."
+  },
+  "routes": {
+    "goHome": "Ana sayfaya dön",
+    "noConnectors": {
+      "title": "Kullanılabilir piyasa bağlayıcısı yok",
+      "description": "Canlı veri akışı için piyasa bağlayıcı eklentileri gerekir. Başlamak için bir bağlayıcıyı etkinleştirin veya yükleyin.",
+      "manage": "Piyasa Bağlayıcılarını Yönet"
+    },
+    "workspace": {
+      "notFound": "Çalışma alanı bulunamadı",
+      "edit": "Düzenle"
+    },
+    "notFound": {
+      "title": "Sayfa bulunamadı"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "Enstrüman kataloğu yok",
+      "noInstrumentCatalogDescription": "Enstrüman keşfi sağlayan etkin bir eklenti yok. Kullanılabilir işlem paritelerine göz atmak için bir eklentiyi etkinleştirin.",
+      "goToPlugins": "Eklentilere Git"
+    },
+    "notifications": {
+      "loading": "Bildirimler yükleniyor…"
+    },
+    "workflows": {
+      "loading": "İş akışı oluşturucu yükleniyor…"
+    },
+    "plugins": {
+      "tabBuild": "Derle",
+      "activeCount": "{{active}}/{{total}} aktif",
+      "searchPlaceholder": "Eklenti ara…",
+      "clearSearch": "Aramayı temizle"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "Ödeme tamamlandı",
+      "titlePack": "{{credits}} ekstra kredi yüklendi.",
+      "titlePlan": "{{label}} artık sizin.",
+      "titleDefault": "Pairlens Intelligence artık sizin.",
+      "bodyPack": "Bunlar aylık bütçenize eklenir ve {{days}} gün sonra sona erer. Pairlens uygulamasına dönün — bakiyeniz birkaç saniye içinde güncellenir.",
+      "bodyPlanWithCredits": "Barındırılan yapay zeka yardımcı pilotun, araştırma ve web araman ayda {{credits}} kredi ile açıldı. Pairlens uygulamasına dön — aboneliğini birkaç saniye içinde tanır.",
+      "bodyPlanNoCredits": "Barındırılan yapay zeka yardımcı pilotun, araştırma ve web araman açıldı. Pairlens uygulamasına dön — aboneliğini birkaç saniye içinde tanır.",
+      "openTerminal": "Terminali aç",
+      "closeTabHint": "Masaüstü uygulamasından mı ödedin? Bu sekmeyi kapatabilirsin.",
+      "receiptHint": "Makbuz ve faturalar e-postanızda ve faturalandırma portalında (Ayarlar → Intelligence) bulunur."
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "İş akışları",
+      "tabRuns": "Çalıştırmalar",
+      "emptyState": "Henüz iş akışı yok",
+      "createTitle": "Yeni İş Akışı",
+      "namePlaceholder": "İş akışı adı",
+      "renameTitle": "İş Akışını Yeniden Adlandırın",
+      "renameButton": "Yeniden Adlandır",
+      "deleteTitle": "İş Akışını Silin",
+      "deleteDescription": "Bu işlem geri alınamaz. İş akışı kalıcı olarak silinecektir.",
+      "runsEmpty": "Henüz çalıştırma yok — işlem panelinden bir tane başlatabilirsin",
+      "clearHistory": "Geçmişi temizle",
+      "runOutcome": "{{executed}} başarılı",
+      "runOutcomeWithFailed": "{{executed}} başarılı, {{failed}} başarısız"
+    },
+    "canvas": {
+      "undoTitle": "Geri al (Cmd+Z)",
+      "redoTitle": "Yinele (Cmd+Shift+Z)",
+      "deleteStep": "Adımı sil",
+      "deleteConnection": "Bağlantıyı sil"
+    },
+    "commitBar": {
+      "cycleDetected": "Döngü tespit edildi",
+      "issue_one": "{{count}} sorun",
+      "issue_other": "{{count}} sorun",
+      "pendingChange_one": "{{count}} bekleyen değişiklik",
+      "pendingChange_other": "{{count}} bekleyen değişiklik",
+      "noChanges": "Değişiklik yok",
+      "review": "İncele",
+      "discard": "Vazgeç",
+      "commit": "Uygula",
+      "saveErrorTitle": "İş akışı kaydedilemiyor",
+      "saveErrorCycleBody": "İş akışında dairesel bir bağımlılık var. Kaydetmeden önce döngüyü (kırmızı bağlantılar) kaldırın.",
+      "saveSuccess": "İş akışı kaydedildi"
+    },
+    "diffPanel": {
+      "title": "Değişiklikleri İnceleyin ({{count}})",
+      "addedStep": "{{type}} adımı eklendi",
+      "removedStep": "{{type}} adımı kaldırıldı",
+      "modifiedStep": "{{type}} yapılandırması değiştirildi",
+      "addedConnection": "Bağlantı eklendi",
+      "removedConnection": "Bağlantı kaldırıldı",
+      "noChanges": "Değişiklik yok"
+    },
+    "palette": {
+      "title": "Adım Ekle",
+      "categoryEntry": "Giriş",
+      "categoryOrders": "Emirler",
+      "categoryExit": "Çıkış Stratejileri",
+      "categoryLogic": "Mantık",
+      "categoryCustom": "Özel",
+      "requires": "Gerekli: {{requirement}}",
+      "notAvailableOn": "{{markets}} üzerinde kullanılamaz"
+    },
+    "emptyState": {
+      "pickWorkflow": "Kanvasta açmak için soldan bir iş akışı seçin.",
+      "eyebrow": "İş Akışları",
+      "title": "Her emir kendi planını taşıyabilir",
+      "description": "Bir iş akışı, işlem panelinden verdiğin bir emre bağlanır. Emir gerçekleştiği anda altındaki adımlar kendiliğinden çalışır — bracket'lar, kademeli emirler, aşamalı çıkışlar, zamanlı kontroller — böylece plan, sonradan hatırlaman gereken bir şey olmak yerine baştan hazır olur.",
+      "blankLabel": "Boş kanvastan başla",
+      "footnote": "Şablonlar taslak olarak açılır: herhangi bir adımı düzenleyin, ardından kaydetmek için Uygula'ya tıklayın. Kaydedilen bir iş akışını çalıştırmak için işlem panelinden bir emre bağlayın."
+    },
+    "steps": {
+      "sideLabel": "Yön",
+      "sizeLabel": "Büyüklük",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "Mutlak",
+      "side": {
+        "inherit": "Devral",
+        "opposite": "Ters",
+        "buy": "Al",
+        "sell": "Sat"
+      },
+      "triggerWhenPrice": "Fiyat şu duruma geldiğinde tetikle",
+      "triggerPercentFromEntry": "Girişten % uzaklık",
+      "triggerReachesPrice": "Fiyata ulaşır",
+      "priceLevel": "Fiyat seviyesi",
+      "priceLabel": "Fiyat",
+      "stopLoss": {
+        "title": "Zarar durdur",
+        "lossPercent": "Zarar %"
+      },
+      "takeProfit": {
+        "title": "Kâr al",
+        "gainPercent": "Kâr %"
+      },
+      "limitOrder": {
+        "title": "Limit Emir",
+        "priceModeFixed": "Sabit",
+        "priceModePercentOffset": "% Sapma",
+        "priceModeOffset": "Sapma",
+        "priceValueLabel": "Fiyat Değeri"
+      },
+      "marketOrder": {
+        "title": "Piyasa Emri"
+      },
+      "condition": {
+        "title": "Koşul",
+        "typeLabel": "Tür",
+        "typePercentChange": "% Değişim",
+        "hint": "+N, ≥N% yükselişte geçer; -N, ≥N% düşüşte geçer"
+      },
+      "wait": {
+        "title": "Bekle",
+        "durationLabel": "Süre",
+        "unitSeconds": "sn",
+        "unitMinutes": "dk",
+        "unitHours": "sa"
+      },
+      "split": {
+        "title": "Paralel Bölme",
+        "branchesLabel": "Dallar"
+      },
+      "trigger": {
+        "title": "Emir Girişi",
+        "badge": "Giriş"
+      },
+      "configPanel": {
+        "requiresNote": "Gerekli: {{requirement}}. Bu yeteneğe sahip olmayan piyasalar, bu adımı içeren iş akışlarını çalıştıramaz.",
+        "on": "Açık",
+        "off": "Kapalı"
+      }
+    },
+    "execution": {
+      "statusExecuted": "çalıştırıldı",
+      "statusSkipped": "atlandı",
+      "statusFailed": "başarısız",
+      "summaryExecuted": "{{count}} çalıştırıldı",
+      "summarySkipped": "{{count}} atlandı",
+      "summaryFailed": "{{count}} başarısız"
+    }
   }
 }

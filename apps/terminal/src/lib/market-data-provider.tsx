@@ -1145,15 +1145,11 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         riskStore.checkWindowReset()
 
         if (riskStore.ordersLocked) {
-          throw new Error(
-            'Orders are locked due to a risk limit breach. Unlock in Settings > Risk Management.',
-          )
+          throw new Error(i18n.t('common.ordersLockedRiskLimit'))
         }
         const side = String(params['side'] ?? '').toLowerCase()
         if (riskStore.buyOrdersLocked && side === 'buy') {
-          throw new Error(
-            'Buy orders are locked due to a risk limit breach. Unlock in Settings > Risk Management.',
-          )
+          throw new Error(i18n.t('common.buyOrdersLockedRiskLimit'))
         }
 
         const market = String(params['market'] ?? '')
@@ -1207,7 +1203,10 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
           )
           if (exceeds) {
             throw new Error(
-              `Order blocked by risk limit: position is ${ratioPct.toFixed(1)}% of portfolio, over your ${riskStore.maxPositionSize}% max. Adjust in Settings > Risk Management.`,
+              i18n.t('common.positionSizeExceeded', {
+                ratioPct: ratioPct.toFixed(1),
+                maxPositionSize: riskStore.maxPositionSize,
+              }),
             )
           }
         }

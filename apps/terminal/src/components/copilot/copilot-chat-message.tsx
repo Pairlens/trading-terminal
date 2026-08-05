@@ -3,6 +3,7 @@
 import { AlertCircle, CheckCircle, Loader2, User, Wrench } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui/lib/utils'
 import {
@@ -22,6 +23,7 @@ type CopilotChatMessageProps = {
 }
 
 export function CopilotChatMessage({ message }: CopilotChatMessageProps) {
+  const { t } = useTranslation()
   const isUser = message.role === 'user'
 
   return (
@@ -96,7 +98,7 @@ export function CopilotChatMessage({ message }: CopilotChatMessageProps) {
             const isError = state === 'output-error'
             const isComplete = state === 'output-available' || isError
             const errorText = isError
-              ? (tool.errorText ?? 'Tool failed')
+              ? (tool.errorText ?? t('copilot.toolFailed'))
               : undefined
             return (
               <div

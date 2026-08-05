@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronDown, Loader2 } from 'lucide-react'
 
@@ -300,6 +301,7 @@ function OrderbookPaneInner({
   market: string
   pairKey: string
 }) {
+  const { t } = useTranslation()
   const {
     orderbook,
     baseTickSize: serverBaseTickSize,
@@ -455,7 +457,9 @@ function OrderbookPaneInner({
       <div className="flex h-full items-center justify-center gap-2 text-xs text-muted-foreground">
         <Loader2 className="h-3.5 w-3.5 animate-spin" />
         <span>
-          {status === 'connecting' ? 'Connecting...' : 'Loading order book...'}
+          {status === 'connecting'
+            ? t('terminal.status.connecting')
+            : t('terminal.status.loadingOrderBook')}
         </span>
       </div>
     )
@@ -471,9 +475,9 @@ function OrderbookPaneInner({
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border/50 px-2 py-1">
         <div className="grid flex-1 grid-cols-3 gap-1 font-mono text-[10.5px] font-medium uppercase tracking-[.11em] text-muted-foreground">
-          <span>Price</span>
-          <span className="text-right">Size</span>
-          <span className="text-right">Total</span>
+          <span>{t('terminal.columns.price')}</span>
+          <span className="text-right">{t('terminal.columns.size')}</span>
+          <span className="text-right">{t('terminal.columns.total')}</span>
         </div>
         {tickOptions.length > 0 && (
           <TickSelector

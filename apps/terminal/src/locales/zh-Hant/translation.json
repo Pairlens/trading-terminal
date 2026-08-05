@@ -244,7 +244,9 @@
       "create": "建立帳號",
       "skip": "略過——所有資料留在這台裝置上",
       "signedIn": "已以 {{email}} 登入",
-      "label": "帳號"
+      "label": "帳號",
+      "otpSendFailed": "驗證碼傳送失敗",
+      "signInFailed": "登入失敗"
     },
     "summary": {
       "eyebrow": "已就緒",
@@ -376,6 +378,42 @@
         "title": "你的機器，你的金鑰",
         "description": "機器人在這裡運行，不在我們的伺服器上，你的 API 金鑰也不會離開這台電腦。讓它保持喚醒並開著 Pairlens；想讓哪個機器人停下，隨時關掉就行。"
       }
+    },
+    "scenes": {
+      "topMover": "漲跌幅居首 · {{pair}} {{delta}}",
+      "watchlistCount": "自選清單 · {{count}}",
+      "signalBreakout": "突破",
+      "signalPullbackForming": "回檔成形中",
+      "onClose": "收盤時",
+      "crossedAbovePrice": "向上突破 {{price}}",
+      "conditionCrossesAbove": "向上突破",
+      "notifyMeDesktopInApp": "通知我——桌面 + 應用程式內",
+      "nodeTrigger": "觸發條件",
+      "nodeSignalLabel": "訊號:{{signal}}",
+      "nodeCondition": "條件",
+      "nodeVolumeAboveAvg": "成交量 > 均量",
+      "nodeAction": "動作",
+      "nodeAlertAndJournal": "提醒 + 紀錄",
+      "runBreakoutWatcher": "突破監控",
+      "runDcaBuyer": "定期定額買入",
+      "runStopLossGuard": "停損守護",
+      "ranAt": "{{time}} · 已執行",
+      "runsLocally": "在本機執行",
+      "storedOnDevice": "儲存在此裝置——絕不上傳至我們的伺服器",
+      "osKeychain": "系統鑰匙圈",
+      "pluginKindMarketData": "市場資料",
+      "pluginKindTheme": "佈景主題",
+      "pluginKindAutomation": "自動化",
+      "sandboxedByDefault": "預設在沙箱中執行",
+      "signedVerified": "已簽章並通過驗證",
+      "networkAccessApproveHost": "網路存取權限——由你逐一核准每個主機",
+      "copiedToWorkspaces": "已複製到你的工作區",
+      "statNet": "淨損益",
+      "statMaxDd": "最大回撤",
+      "sameCodeGoesLive": "實盤執行的是同一套程式碼",
+      "runsOnYourMachine": "在你的裝置上執行——請讓它保持喚醒",
+      "botMeanReversion": "均值回歸",
+      "chainWallet": "{{chain}} 錢包"
     }
   },
   "common": {
@@ -398,7 +436,12 @@
     "showInFolder": "在資料夾中顯示",
     "updated": "更新於 {{time}}",
     "back": "返回",
-    "dismiss": "關閉"
+    "dismiss": "關閉",
+    "unknownError": "未知錯誤",
+    "ordersLockedRiskLimit": "由於觸發風險限額,訂單已被鎖定。請在設定 > 風險管理中解鎖。",
+    "buyOrdersLockedRiskLimit": "由於觸發風險限額,買單已被鎖定。請在設定 > 風險管理中解鎖。",
+    "positionSizeExceeded": "訂單因風險限額被阻止:該倉位佔投資組合的 {{ratioPct}}%,超過你設定的 {{maxPositionSize}}% 上限。請在設定 > 風險管理中調整。",
+    "sessionExpired": "你的工作階段已過期 — 請重新登入。"
   },
   "legal": {
     "terms": "服務條款",
@@ -581,7 +624,22 @@
       "publisherKeyConsentTitle": "要信任這位發布者嗎？",
       "publisherKeyConsentBody": "以此金鑰簽署的外掛將可在此裝置上安裝。惡意發布者可能發布要求完整信任的外掛——進而存取你其他外掛的資料、已儲存的交易所憑證與交易功能。繼續之前，請透過你信任的管道與發布者核對指紋。",
       "publisherKeyConsentConfirm": "信任此金鑰",
-      "publisherKeyConsentCancel": "取消"
+      "publisherKeyConsentCancel": "取消",
+      "updatesTitle": "外掛更新",
+      "updatesDescription": "控制當登錄庫有較新版本時外掛的更新方式。",
+      "updateModeLabel": "更新模式",
+      "updateModeAutoDescription": "更新會自動下載並安裝",
+      "updateModeNotifyDescription": "有更新時會顯示徽章提示",
+      "updateModeOffDescription": "不會自動檢查更新",
+      "updateModeAuto": "自動更新",
+      "updateModeNotify": "僅通知",
+      "updateModeOffLabel": "關閉",
+      "checkIntervalLabel": "檢查間隔",
+      "checkIntervalDescription": "檢查登錄庫是否有較新版本的頻率",
+      "intervalHourly": "每小時",
+      "interval6Hours": "每 6 小時",
+      "interval12Hours": "每 12 小時",
+      "intervalDaily": "每天"
     },
     "appearance": {
       "colorMode": "顯示模式",
@@ -603,7 +661,9 @@
       "balanced": "均衡",
       "balancedDescription": "報價與委託簿每 250 毫秒更新一次，K 線每 500 毫秒更新一次。在即時性與效率間取得平衡。",
       "energySaver": "省電模式",
-      "energySaverDescription": "報價與委託簿每 1 秒更新一次，K 線每 2 秒更新一次。最適合被動監控或使用電池的筆電。"
+      "energySaverDescription": "報價與委託簿每 1 秒更新一次，K 線每 2 秒更新一次。最適合被動監控或使用電池的筆電。",
+      "idleGuardTitle": "閒置自動斷線",
+      "idleGuardDescription": "閒置 1 小時後暫停市場資料串流，以節省頻寬並降低耗電量。"
     },
     "desktop": {
       "closeBehavior": {
@@ -1031,7 +1091,9 @@
       "namePlaceholder": "資料夾名稱"
     },
     "createFirst": "建立你的第一個工作區",
-    "emptyState": "尚無工作區"
+    "emptyState": "尚無工作區",
+    "descriptionLabel": "描述",
+    "descriptionPlaceholder": "簡短描述（選填）"
   },
   "session": {
     "checking": "檢查工作階段中…",
@@ -1089,7 +1151,9 @@
     "verifying": "驗證中…",
     "verifyAndSignIn": "驗證並登入",
     "codeRequired": "請輸入驗證碼",
-    "emailRequired": "請輸入電子郵件"
+    "emailRequired": "請輸入電子郵件",
+    "dialogDescription": "登入以使用此功能",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "工作階段已暫停",
@@ -1109,7 +1173,12 @@
     "connecting": "連線中",
     "stalled": "重新連線中",
     "offline": "離線",
-    "error": "錯誤"
+    "error": "錯誤",
+    "pluginUpdatesReady_one": "{{count}} 個外掛更新已就緒,可以安裝",
+    "pluginUpdatesReady_other": "{{count}} 個外掛更新已就緒,可以安裝",
+    "pluginUpdatesDescription": "更新將在終端重新啟動後生效。",
+    "restartNow": "立即重新啟動",
+    "later": "稍後"
   },
   "copilot": {
     "aiLens": "AI 透鏡",
@@ -1128,7 +1197,46 @@
     },
     "marketRegime": "市場狀態",
     "trending": "趨勢明確",
-    "choppy": "震盪盤整"
+    "choppy": "震盪盤整",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "數量",
+    "orderPlacedPaper": "模擬委託已送出",
+    "orderPlaced": "委託已送出",
+    "autoApprovedNote": "已自動核准({{mode}} · 不再詢問已開啟)",
+    "turnOff": "關閉",
+    "autoApproving": "正在自動核准 {{mode}} 委託……",
+    "liveOrderWarning": "實盤委託——真實資金,將依你的風險限額強制執行。",
+    "dontAskAgainPaper": "模擬交易不再詢問",
+    "dontAskAgainLive": "{{market}} 上的實盤交易不再詢問",
+    "placing": "正在送出……",
+    "confirmMode": "確認{{mode}}",
+    "dismissed": "已忽略",
+    "cancelOrderPrompt": "要取消 {{pair}} · {{market}} 上的委託 {{orderId}} 嗎?",
+    "cancelled": "已取消",
+    "cancelFailed": "取消失敗",
+    "cancelling": "正在取消……",
+    "confirmCancel": "確認取消",
+    "keep": "保留",
+    "tradingUnavailable": "目前無法交易。",
+    "noCredentialsForMarket": "尚未連接 {{market}} 的憑證。請在「帳戶」中新增 API 金鑰以進行實盤交易。",
+    "watchingPair": "正在關注 {{pair}} · {{timeframe}}",
+    "genericChatError": "Copilot 發生錯誤——請試著重新傳送。",
+    "quickActionHowIsDoing": "{{symbol}} 表現如何?",
+    "quickActionSuggestedIndicators": "建議指標",
+    "quickActionAnySignals": "有訊號嗎?",
+    "scheduledCheckPrefix": "[排程檢查——於 {{minutes}} 分鐘前設定]",
+    "authRequiredTitle": "認識你的 AI 副駕",
+    "authRequiredDescription": "針對任何交易對的情境化分析——它會讀取圖表、核對你的風險限額,並給出你可以質疑的推理依據。請先登入,接著訂閱 Pairlens Intelligence,或使用你自己的 AI 金鑰。",
+    "upgradeRequiredDescription": "你的 AI 副駕會讀取圖表、核對你的風險限額,並給出你可以質疑的推理依據。訂閱 Pairlens Intelligence——或透過外掛免費使用你自己的 AI 金鑰。",
+    "aiLensUnavailableTitle": "AI Lens 無法使用",
+    "aiLensUnavailableDescription": "在外掛頁面啟用一個 AI 外掛,即可取得即時市場分析與交易協助。",
+    "goToPlugins": "前往外掛頁面",
+    "analyzePair": "分析 {{pair}}",
+    "startConversation": "開始對話",
+    "emptyStateHint": "問問市場狀況、核對你的交易設定,或請求風險評估——AI 掌握這個交易對的完整脈絡。",
+    "contextAware": "理解脈絡",
+    "toolFailed": "工具執行失敗"
   },
   "chart": {
     "contextMenu": {
@@ -1312,7 +1420,9 @@
       "pause": "暫停",
       "step": "下一根 K 棒",
       "exit": "結束回放"
-    }
+    },
+    "fullscreenTitle": "全螢幕圖表",
+    "fullscreenHint": "圖表處於全螢幕模式。按 Escape 退出。"
   },
   "botsPage": {
     "loading": "正在載入機器人…",
@@ -1872,7 +1982,15 @@
     "frozen": "凍結",
     "total": "總計",
     "refreshBalances": "重新整理",
-    "asset": "資產"
+    "asset": "資產",
+    "cancelOrderTitle": "撤銷訂單？",
+    "cancelOrderBody": "這將撤銷你在 {{pair}} 的{{side}}訂單。",
+    "keepOrder": "保留訂單",
+    "cancelOrder": "撤銷訂單",
+    "sideBuy": "買入",
+    "sideSell": "賣出",
+    "buy": "買入",
+    "sell": "賣出"
   },
   "pairInfo": {
     "title": "交易對資訊",
@@ -1915,7 +2033,10 @@
     "emptyTitle": "在上方輸入網址以嵌入網站",
     "embedWarning": "部分網站會封鎖 iframe 嵌入。若頁面無法載入，請改在瀏覽器中開啟。",
     "blockedTitle": "此網站無法嵌入",
-    "blockedDescription": "此網站封鎖在其他頁面內顯示。你可以改在獨立的瀏覽器分頁中開啟它。"
+    "blockedDescription": "此網站封鎖在其他頁面內顯示。你可以改在獨立的瀏覽器分頁中開啟它。",
+    "forward": "前進",
+    "failedToLoad": "載入失敗",
+    "viewPaused": "網頁檢視已暫停"
   },
   "intelligence": {
     "analyzing": "正在分析市場…",
@@ -1924,7 +2045,29 @@
     "recentSignals": "近期信號",
     "regime": "市場狀態",
     "trending": "趨勢明確",
-    "choppy": "震盪盤整"
+    "choppy": "震盪盤整",
+    "upsell": {
+      "priceMonthly": "${{price}}/月",
+      "taxNotice": "價格不含稅，稅費將於結帳時計算。",
+      "defaultTitle": "解鎖 Pairlens Intelligence",
+      "defaultDescription": "託管式 AI 副駕駛與網路研究功能，不需要 API 金鑰。每個方案都包含在聊天、研究與網路搜尋之間共享的每月用量額度。",
+      "byokNote": "比較想用自己的服務商？在<plugins>外掛</plugins>中連接 Anthropic、OpenAI、Groq 或 OpenRouter 金鑰——使用自有金鑰的 AI 永遠免費。",
+      "checkoutOpenedTitle": "已在瀏覽器中開啟結帳頁面",
+      "checkoutActivates": "付款完成後，訂閱會立即在此啟用。",
+      "checkoutStartError": "無法啟動結帳流程 — 請再試一次。",
+      "subscriptionRequiredTitle": "需要 Pairlens Intelligence 訂閱",
+      "subscriptionRequiredBody": "託管式 AI 需要 Intelligence 方案才能運作。請於下方訂閱，或在外掛中連接你自己的 AI 服務商金鑰。",
+      "budgetUsedUpTitle": "本月用量額度已用完",
+      "budgetUsedBody": "本週期的 Intelligence 額度已用完。",
+      "budgetResetsOn": "額度將於 {{date}} 重設。",
+      "topUpHint": "購買額度包以繼續使用 — 額度包內的額度將於購買後 30 天到期。",
+      "upgradeToMaxHint": "升級到 {{label}}，每月可獲得 {{credits}} 點額度。",
+      "manageSubscription": "管理訂閱",
+      "portalError": "無法開啟帳單入口網站。",
+      "creditsLandDescription": "付款完成後，額外額度會立即計入你的餘額。",
+      "checkoutError": "無法啟動結帳流程。",
+      "upgradeToMax": "升級到 Max"
+    }
   },
   "panes": {
     "markets": "市場",
@@ -2020,6 +2163,52 @@
       "title": "{{venue}} 上沒有 {{pair}}",
       "titleAnyVenue": "找不到 {{pair}}",
       "description": "這個連接器沒有回傳這個交易對的行情資料。換一個有上架它的連接器試試。"
+    },
+    "panePicker": {
+      "bindToVariable": "綁定至變數",
+      "boundTo": "已綁定至 <b>{{variable}}</b>",
+      "market": "市場",
+      "setPair": "設定 {{variable}} 的交易對",
+      "selectPair": "選擇交易對",
+      "bindingHint": "選擇交易對將更新所有綁定至 {{variable}} 的面板",
+      "unbindFromVariable": "取消與變數的綁定",
+      "settingForAllPanes": "正在為所有已綁定的面板設定 <b>{{variable}}</b>"
+    },
+    "pane": {
+      "close": "關閉 {{pane}}",
+      "popOutToColumn": "彈出至新欄",
+      "bindPairToVariable": "將交易對綁定至變數",
+      "bindWalletToVariable": "將錢包綁定至變數",
+      "bindTimeframeToVariable": "將時間週期綁定至變數",
+      "clearPairOverride": "清除交易對覆寫",
+      "closePane": "關閉面板",
+      "unbind": "取消綁定",
+      "closeTab": "關閉分頁"
+    },
+    "dnd": {
+      "pickedUp": "已拾取 {{pane}}。使用方向鍵移動，空白鍵放下，Esc 鍵取消。",
+      "genericPane": "面板",
+      "noDropTarget": "沒有可放置的目標。",
+      "dropStackTab": "放在此處以堆疊為分頁。",
+      "dropSplitAbove": "放置以在上方分割。",
+      "dropSplitBelow": "放置以在下方分割。",
+      "dropNewColumn": "放置以建立新欄。",
+      "paneMoved": "面板已移動。",
+      "dragCancelled": "已取消拖曳，面板已還原。",
+      "dragCancelledFull": "已取消拖曳，面板已返回原始位置。"
+    },
+    "missingPane": {
+      "requiresPlugin": "此面板需要「{{pluginId}}」外掛",
+      "notAvailable": "「{{type}}」面板無法使用",
+      "description": "該外掛可能已被移除或停用。",
+      "openPluginStore": "開啟外掛商店"
+    },
+    "dropZone": {
+      "emptyHint": "將面板拖曳至此",
+      "addAsTab": "新增為分頁",
+      "splitTop": "上方分割",
+      "splitBottom": "下方分割",
+      "newColumn": "新欄"
     }
   },
   "watchlist": {
@@ -2129,7 +2318,137 @@
     "uninstalled": "已解除安裝",
     "updateReactivate": "更新並重新啟用",
     "version": "版本",
-    "visit": "前往"
+    "visit": "前往",
+    "fullTrust": {
+      "title": "給「{{name}}」完全信任？",
+      "description": "該外掛提供介面，因此必須在主應用程式中執行，無法沙箱隔離。獲得完全信任的外掛擁有與 Pairlens 本身相同的權限。",
+      "itCan": "它可以：",
+      "grantPlugins": "讀取你已安裝的其他外掛的資料；",
+      "grantCredentials": "讀取你儲存的交易所 API 金鑰與錢包憑證；",
+      "grantTrading": "代表你下單以及執行其他資金操作。",
+      "trustNote": "只把完全信任授予你信任的作者的外掛。你可以隨時解除安裝。",
+      "trustNoteAuthor": "只把完全信任授予你信任的作者的外掛（作者：{{author}}）。你可以隨時解除安裝。",
+      "grant": "授予完全信任"
+    },
+    "network": {
+      "title": "允許「{{name}}」連線？",
+      "description": "該外掛需要存取 Pairlens 之外的伺服器。你的終端機會向下列主機發送網路請求。只有在信任該外掛時才允許——你可以隨時解除安裝以撤銷存取。",
+      "hostsIntro": "它將可以連線到：",
+      "reloadNote": "核准後終端機會重新載入以套用變更。",
+      "deny": "不允許",
+      "allow": "允許並重新載入"
+    },
+    "toggleFailedEnable": "無法啟用 {{name}}",
+    "toggleFailedDisable": "無法停用 {{name}}",
+    "updateStagedToast": "更新已就緒——重新啟動以套用",
+    "restartNow": "立即重新啟動",
+    "updateStageFailedToast": "準備更新失敗：{{error}}",
+    "resetStagedToast": "已重設為預設值——重新啟動以完成",
+    "networkGrantedToast": "已授予「{{name}}」網路存取權限——正在重新載入……",
+    "networkDeniedToast": "「{{name}}」在未取得網路存取權限的情況下完成安裝——在你允許之前可能無法正常運作。",
+    "installCancelledNoTrust": "已取消安裝——未授予完全信任",
+    "installedVersionToast": "已安裝「{{name}}」v{{version}}",
+    "installFailedToast": "外掛安裝失敗：{{error}}",
+    "localFilesNotFound": "找不到本機外掛檔案",
+    "pluginCodeNotFound": "找不到外掛程式碼——請重新安裝",
+    "fullTrustGrantedNameToast": "已向「{{name}}」授予完全信任",
+    "loadPluginFailedToast": "外掛載入失敗：{{error}}",
+    "importFailedToast": "外掛匯入失敗：{{error}}",
+    "fieldRequired": "必須填寫{{label}}",
+    "configSaved": "設定已儲存",
+    "configurationFailed": "設定失敗",
+    "needsFullTrustToRun": "需要完全信任才能執行",
+    "pendingTrustDescription": "該外掛提供介面，無法在沙箱中執行——請授予完全信任以啟用它，或將其解除安裝。",
+    "remove": "移除",
+    "groupCore": "核心",
+    "groupProvidersExtensions": "提供方與擴充功能",
+    "groupThemes": "主題",
+    "removePluginTitle": "移除外掛",
+    "removePluginDescription": "此操作將停用並移除該外掛。它貢獻的所有面板會顯示一個復原佔位符。你可以隨時從外掛商店重新安裝。",
+    "resetDefaultsTitle": "重設為預設值",
+    "resetDefaultsDescription": "此操作將移除所有非內建外掛，清除已暫存和可用的更新，並重新載入終端機。內建外掛將保持已安裝狀態。",
+    "reset": "重設",
+    "installFromUrlDialogTitle": "從網址安裝外掛",
+    "installFromUrlDialogDescription": "輸入要安裝的外掛模組（.js）網址。",
+    "unverifiedPluginTitle": "未驗證的外掛",
+    "unverifiedPluginBody": "手動安裝的外掛未經過安全審查。請只從你信任的來源安裝外掛。",
+    "installAnyway": "仍然安裝",
+    "sourceBuiltIn": "內建",
+    "sourceRegistry": "登錄庫",
+    "sourceUrl": "URL",
+    "sourceLocal": "本機",
+    "fullTrustGrantedRestartToast": "已授予完全信任——重新啟動以在主應用程式中執行此外掛",
+    "sandboxedRestartToast": "外掛將在沙箱中執行——重新啟動以套用",
+    "requiresFullTrustTitle": "該外掛提供介面，必須在完全信任下執行。",
+    "trustBadgeFullRequired": "完全信任（必要）",
+    "trustBadgeFull": "完全信任",
+    "trustBadgeSandboxed": "沙箱中",
+    "panelCount_one": "{{count}} 個面板",
+    "panelCount_other": "{{count}} 個面板",
+    "update": "更新",
+    "revokeFullTrustAria": "撤銷對 {{name}} 的完全信任",
+    "grantFullTrustAria": "向 {{name}} 授予完全信任",
+    "fullTrustActiveTitle": "完全信任——在主應用程式中執行。點擊以切換為沙箱。",
+    "sandboxedTitle": "沙箱——隔離的工作執行緒，網路僅限於已宣告的主機。點擊以授予完全信任。",
+    "configureAria": "設定 {{name}}",
+    "toggleAria": "切換 {{name}}",
+    "capabilityProvidersTitle": "功能提供方",
+    "capabilityProvidersDescription": "每個終端機功能都會請求某項功能，由已啟用且優先順序最高的外掛自動提供。選擇特定外掛可覆蓋自動選擇。",
+    "resetAllOverrides": "重設所有覆蓋設定",
+    "noProviderInstalled": "沒有已安裝的外掛提供此功能",
+    "browseStore": "瀏覽商店",
+    "installedNeedsKeySingle": "已安裝——需要 API 金鑰",
+    "installedNeedsKeyPlural": "已安裝 {{count}} 個——均需要 API 金鑰",
+    "installedDisabledSingle": "已安裝 1 個外掛，但已停用",
+    "installedDisabledPlural": "已安裝 {{count}} 個外掛，均已停用",
+    "manage": "管理",
+    "pinnedActiveNote": "已固定——覆蓋自動順序",
+    "pinnedInactiveNote": "已固定的外掛已停用——將使用自動順序",
+    "autoOrderLabel": "自動順序：{{chain}}",
+    "chainMore_one": "{{chain}} 還有 {{count}} 個",
+    "chainMore_other": "{{chain}} 還有 {{count}} 個",
+    "resolvedPerMarket": "依市場解析",
+    "marketOverrides": "市場覆蓋設定",
+    "pinnedCountBadge_one": "已固定 {{count}} 個",
+    "pinnedCountBadge_other": "已固定 {{count}} 個",
+    "automatic": "自動",
+    "disabledHint": "已停用",
+    "notInstalled": "{{id}}（未安裝）",
+    "saveOverrideFailed": "儲存提供方覆蓋設定失敗",
+    "removeOverrideFailed": "移除提供方覆蓋設定失敗",
+    "resetOverridesFailed": "重設覆蓋設定失敗",
+    "marketConnectorsTitle": "市場連接器",
+    "marketConnectorsDescription": "市場連接器即時串流價格資料和委託簿，並支援直接透過交易所 API 進行交易。啟用你想使用的交易所。",
+    "activeCountBadge": "{{active}}/{{total}} 個已啟用",
+    "connected": "已連線",
+    "disabledStatus": "已停用",
+    "readAndTrade": "讀取 + 交易",
+    "readOnly": "僅讀取",
+    "noConnectorsInstalled": "未安裝任何市場連接器外掛。",
+    "moreConnectors": "更多連接器",
+    "fromPluginStore": "來自 Plugin Store",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "瞭解更多",
+    "enabledToast": "{{name}} 已啟用",
+    "disabledToast": "{{name}} 已停用",
+    "enableFailedShort": "啟用失敗",
+    "disableFailedShort": "停用失敗",
+    "domain": {
+      "marketData": "市場資料",
+      "trading": "交易",
+      "wallet": "錢包",
+      "signals": "訊號",
+      "ai": "AI"
+    },
+    "byAuthor": "作者：{{author}}",
+    "installsCount_one": "{{formattedCount}} 次安裝",
+    "installsCount_other": "{{formattedCount}} 次安裝",
+    "panelsCount": "面板（{{count}}）",
+    "inactive": "未啟用",
+    "previousSlide": "上一個",
+    "nextSlide": "下一個",
+    "goToSlide": "前往第 {{n}} 張",
+    "copyCommand": "複製指令"
   },
   "search": {
     "title": "搜尋交易對",
@@ -2196,8 +2515,71 @@
       "selectAccount": "選擇帳戶",
       "groupWallet": "加密錢包",
       "groupBroker": "券商帳戶",
-      "groupExchange": "交易所帳戶"
-    }
+      "groupExchange": "交易所帳戶",
+      "selectWalletTopBar": "在頂部列選擇錢包",
+      "connectChainWallet": "連接 {{chain}} 錢包",
+      "connectExchangeAccount": "連接 {{exchange}} 帳戶",
+      "selectAccountTopBar": "在頂部列選擇帳戶"
+    },
+    "trade": {
+      "limitBuy": "限價買入",
+      "limitSell": "限價賣出",
+      "bought": "已買入",
+      "sold": "已賣出",
+      "limitOrderFailed": "限價單失敗",
+      "swapFailed": "兌換失敗",
+      "workflowUnsupported": "該市場不支援工作流",
+      "orderBlocked": "訂單被風險限額攔截",
+      "orderRejected": "訂單被拒絕",
+      "orderFailed": "下單失敗",
+      "setRegion": "設定你的地區",
+      "regionDefaulting": "地區預設為 Global。",
+      "addPreset": "新增預設",
+      "createFirstWorkflow": "建立你的第一個工作流",
+      "editWorkflows": "編輯工作流",
+      "selectWorkflow": "選擇工作流",
+      "submitting": "送出中…",
+      "holdToRun": "長按執行",
+      "holdToConfirmLive": "長按確認 · 資金立即劃出",
+      "holdToPlace": "長按下單",
+      "runWorkflow": "執行工作流",
+      "buyAsset": "買入 {{asset}}",
+      "sellAsset": "賣出 {{asset}}",
+      "amount": "數量",
+      "price": "價格",
+      "presetsTitle": "金額預設（{{quote}}）",
+      "buy": "買進",
+      "sell": "賣出",
+      "orderTypeMarket": "市價",
+      "orderTypeLimit": "限價",
+      "workflow": "工作流程",
+      "notSupportedOn": "{{venue}} 不支援",
+      "available": "可用：{{amount}}",
+      "slippage": "滑價"
+    },
+    "status": {
+      "connecting": "連線中…",
+      "loadingOrderBook": "正在載入委託簿…",
+      "loadingDepth": "正在載入深度…",
+      "loadingCandles": "正在載入 K 線…",
+      "waitingTrades": "等待成交…",
+      "waitingData": "等待資料…",
+      "noCandleData": "尚無 K 線資料",
+      "noTradesFeed": "切換到發布逐筆成交的交易所"
+    },
+    "columns": {
+      "price": "價格",
+      "size": "數量",
+      "total": "累計",
+      "open": "開盤",
+      "close": "收盤"
+    },
+    "panel": {
+      "expand": "展開面板",
+      "collapse": "收合面板"
+    },
+    "recentlyViewed": "最近檢視",
+    "noMarketsFound": "未找到市場"
   },
   "accounts": {
     "pageTitle": "帳戶",
@@ -2293,7 +2675,42 @@
     "importKey": "匯入私鑰",
     "affiliateDisclosure": "部分開戶連結可能為 Pairlens 帶來聯盟佣金，不會為你增加任何額外費用。",
     "vaultSealedBody": "你的憑證保險庫已鎖定。你的帳戶仍在這裡 — 解鎖即可檢視與使用。",
-    "credentialsUnreadable": "無法讀取此裝置上儲存的金鑰。資料沒有遺失，請重試或重新啟動 Pairlens。"
+    "credentialsUnreadable": "無法讀取此裝置上儲存的金鑰。資料沒有遺失，請重試或重新啟動 Pairlens。",
+    "addWalletDialogTitle": "新增加密錢包",
+    "addWalletDialogDescription": "匯入錢包私鑰以進行鏈上交易",
+    "blockchainLabel": "區塊鏈",
+    "walletLabelField": "標籤",
+    "walletLabelPlaceholder": "我的錢包",
+    "privateKeyField": "私鑰",
+    "saveWallet": "儲存錢包",
+    "keep": "保留",
+    "remove": "移除",
+    "disconnect": "中斷連線",
+    "localBadge": "本機",
+    "unknownDate": "未知",
+    "keyExpiredWarning": "可能已過期 — 已 {{daysInactive}} 天未使用（上限為 {{limitDays}} 天）。請在交易所重新產生 API 金鑰。",
+    "keyInactiveWarning": "已 {{daysInactive}}/{{limitDays}} 天未使用。金鑰將在連續 {{limitDays}} 天未使用後過期。",
+    "exchangeAccountAriaLabel": "{{label}} 交易所帳戶",
+    "cryptoWalletAriaLabel": "{{label}} 加密錢包",
+    "portfolioTotal": "總計",
+    "assetAllocationLabel": "資產配置",
+    "tableAsset": "資產",
+    "tableAmount": "數量",
+    "tableValue": "價值",
+    "tableShare": "占比",
+    "assetCount_one": "{{count}} 項資產",
+    "assetCount_other": "{{count}} 項資產",
+    "moreAssets_one": "+{{count}} 項資產",
+    "moreAssets_other": "+{{count}} 項資產",
+    "walletSavedFeedback": "加密錢包已儲存。",
+    "walletRemovedFeedback": "加密錢包已移除。",
+    "accountRemovedFeedback": "帳戶已移除。",
+    "walletSaveFailed": "儲存錢包失敗。",
+    "walletRemoveFailed": "移除錢包失敗。",
+    "accountConnectFailed": "連接帳戶失敗。",
+    "accountRemoveFailed": "移除帳戶失敗。",
+    "fieldRequired": "{{field}}為必填項目",
+    "accountConnectedFeedback": "{{label}}{{mode}}帳戶已連接。"
   },
   "workspaceStore": {
     "title": "工作區商店",
@@ -2401,12 +2818,136 @@
     "paneCount_other": "{{count}} 個面板",
     "panes": "面板",
     "showAll": "顯示全部",
-    "spotlight": "焦點推薦"
+    "spotlight": "焦點推薦",
+    "previousSlide": "上一個",
+    "nextSlide": "下一個",
+    "goToSlide": "前往投影片 {{number}}"
   },
   "notifications": {
     "flows": "流程",
     "newFlow": "新增流程",
-    "noFlows": "尚無通知流程"
+    "noFlows": "尚無通知流程",
+    "builder": {
+      "sidebar": {
+        "tabRules": "規則",
+        "tabActivity": "活動",
+        "noRules": "尚無通知規則",
+        "newRuleTitle": "新增通知規則",
+        "rulePlaceholder": "規則名稱",
+        "renameRuleTitle": "重新命名規則",
+        "rename": "重新命名",
+        "deleteRuleTitle": "刪除規則",
+        "deleteRuleWarning": "此操作無法復原。此通知規則及其交易對綁定將被永久刪除。",
+        "pairsLabel": "交易對",
+        "sendTest": "傳送測試",
+        "testing": "測試中…",
+        "pairAlreadyBound": "此交易對已綁定至此規則",
+        "noBindings": "尚未綁定任何交易對 —— 在你新增之前，規則不會觸發。",
+        "testSent": "已傳送測試通知",
+        "testFailed": "測試未送達",
+        "noActivity": "尚無已觸發的通知",
+        "clearActivity": "清除活動",
+        "channelFailed": "{{channel}} 失敗"
+      },
+      "commitBar": {
+        "cycleDetected": "偵測到循環",
+        "issueCount_one": "{{count}} 個問題",
+        "issueCount_other": "{{count}} 個問題",
+        "moreIssues": "……還有 {{count}} 個",
+        "pendingChangeCount_one": "{{count}} 項待處理變更",
+        "pendingChangeCount_other": "{{count}} 項待處理變更",
+        "noChanges": "沒有變更",
+        "review": "檢視",
+        "discard": "捨棄",
+        "commit": "儲存",
+        "cannotSaveTitle": "無法儲存規則",
+        "cycleError": "此規則存在循環相依。請先移除循環（紅色連線），再儲存。",
+        "saved": "規則已儲存"
+      },
+      "diff": {
+        "title": "檢視變更（{{count}}）",
+        "addedStep": "已新增 {{type}} 步驟",
+        "removedStep": "已移除 {{type}} 步驟",
+        "modifiedStep": "已修改 {{type}} 設定",
+        "addedConnection": "已新增連線",
+        "removedConnection": "已移除連線"
+      },
+      "canvas": {
+        "undoTitle": "復原（Cmd+Z）",
+        "redoTitle": "重做（Cmd+Shift+Z）",
+        "deleteStep": "刪除步驟",
+        "deleteConnection": "刪除連線",
+        "cycleLabel": "循環"
+      },
+      "palette": {
+        "addStep": "新增步驟",
+        "categoryEvents": "事件",
+        "categoryConditions": "條件",
+        "categoryChannels": "管道"
+      },
+      "category": {
+        "event": "事件",
+        "condition": "條件",
+        "channel": "管道"
+      },
+      "emptyState": {
+        "pickRuleHint": "在左側選擇一條規則，即可在畫布中開啟。",
+        "untitledRule": "未命名規則",
+        "eyebrow": "通知",
+        "title": "讓 Pairlens 替你盯盤",
+        "description": "一條規則就是一個小流程：某件事發生了——價格突破某個水平、K 線收盤、訂單成交、指標警示觸發——接著會通過你新增的條件，最終以應用程式內提示、系統通知或 Webhook 的形式送達給你。",
+        "startBlank": "從空白畫布開始",
+        "startFromTemplate": "從範本開始",
+        "footnote": "範本會以草稿形式開啟，綁定到 {{market}} 上的 {{pair}} —— 編輯步驟、在規則清單中更換交易對，然後儲存。規則僅在 Pairlens 執行期間才會觸發。"
+      },
+      "direction": "方向",
+      "above": "高於",
+      "below": "低於",
+      "any": "任意",
+      "buy": "買入",
+      "sell": "賣出",
+      "up": "上漲",
+      "down": "下跌",
+      "either": "任一方向",
+      "toggleOn": "開",
+      "toggleOff": "關",
+      "steps": {
+        "candleClose": {
+          "title": "K 線收盤"
+        },
+        "localToast": {
+          "title": "應用程式內提示",
+          "description": "觸發時在應用程式內顯示提示"
+        },
+        "orderExecuted": {
+          "title": "訂單成交"
+        },
+        "osNotification": {
+          "title": "系統通知",
+          "sound": "聲音"
+        },
+        "percentChange": {
+          "title": "百分比變化",
+          "percent": "百分比"
+        },
+        "priceAlert": {
+          "title": "價格提醒"
+        },
+        "priceCondition": {
+          "title": "價格條件"
+        },
+        "signalGenerated": {
+          "title": "訊號產生",
+          "signalType": "訊號類型",
+          "anyTypePlaceholder": "任意類型"
+        },
+        "timeWindow": {
+          "title": "時間視窗",
+          "start": "開始（UTC）",
+          "end": "結束（UTC）"
+        }
+      }
+    }
   },
   "updater": {
     "available": "有可用更新",
@@ -2493,7 +3034,8 @@
     "failed": "熱力圖載入失敗",
     "noData": "無可用資料",
     "tryLater": "請稍後再試",
-    "willAppear": "熱力圖資料將顯示於此"
+    "willAppear": "熱力圖資料將顯示於此",
+    "volume": "成交量"
   },
   "news": {
     "title": "新聞",
@@ -2606,5 +3148,228 @@
   "fullscreen": {
     "enter": "全螢幕",
     "exit": "離開全螢幕"
+  },
+  "research": {
+    "phaseSearching": "正在搜尋網路...",
+    "phaseReading": "正在讀取來源...",
+    "phaseAnalyzing": "正在分析市場資料...",
+    "phaseWriting": "正在撰寫報告...",
+    "authRequiredTitle": "研究工作台，只差一次登入",
+    "authRequiredDescription": "根據即時網路來源，為任意交易對產生結構化研究報告。登入後訂閱 Pairlens Intelligence，或使用你自己的 AI 金鑰。",
+    "upgradeDescription": "根據即時網路來源，為任意交易對產生結構化研究報告。訂閱 Pairlens Intelligence——或透過外掛免費使用你自己的 AI 與搜尋金鑰。",
+    "unavailableTitle": "研究功能無法使用",
+    "unavailableDescription": "請在外掛頁面啟用一個 AI 外掛，以產生此交易對的研究報告。",
+    "goToPlugins": "前往外掛",
+    "navigateToPair": "前往某個交易對以檢視研究報告。",
+    "researchingSymbol": "正在研究 {{symbol}}",
+    "generatingReport": "正在產生報告...",
+    "cachedGenerated": "快取內容 — 產生於 {{time}}",
+    "freshGenerated": "最新 — 剛剛產生",
+    "refresh": "重新整理",
+    "sourcesCount": "來源（{{count}}）",
+    "reportTitle": "研究報告",
+    "fullscreenDescription": "研究報告已全螢幕顯示。按 Esc 鍵結束。",
+    "sections": "章節",
+    "sparklineAriaLabel": "每日價格迷你圖",
+    "errorTitle": "研究功能無法使用"
+  },
+  "capabilityGate": {
+    "authTitle": "只需一次免費登入",
+    "authDescription": "此功能透過你的 Pairlens 帳戶運作。",
+    "signInFree": "免費登入",
+    "authNote": "只需 30 秒。你的交易所金鑰永遠不會離開這台裝置。",
+    "upgradeRequired": "需要升級",
+    "upgradeDescriptionLevel": "此功能需要 <b>{{level}}</b> 存取層級。",
+    "upgradeDescriptionGeneric": "此功能需要更高的存取層級。",
+    "managePlugin": "管理外掛"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}} 在此不可用",
+    "description": "{{exchange}} 不為你所在的地區提供市場資料，因此該連接器無法載入資料。請切換到其他連接器，或在地區設定不正確時更新地區。",
+    "yourRegion": "你的地區：",
+    "notSet": "未設定",
+    "changeRegion": "更改地區",
+    "switchTo": "切換到 {{venue}}"
+  },
+  "pairPicker": {
+    "noPairsFound": "找不到交易對。",
+    "startTyping": "開始輸入以搜尋交易對。"
+  },
+  "routes": {
+    "goHome": "返回首頁",
+    "noConnectors": {
+      "title": "沒有可用的市場連接器",
+      "description": "需要市場連接器外掛才能串流即時資料。啟用或安裝一個連接器即可開始。",
+      "manage": "管理市場連接器"
+    },
+    "workspace": {
+      "notFound": "找不到工作區",
+      "edit": "編輯"
+    },
+    "notFound": {
+      "title": "找不到頁面"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "沒有商品目錄",
+      "noInstrumentCatalogDescription": "沒有提供商品探索功能的啟用中外掛。啟用一個外掛即可瀏覽可用的交易對。",
+      "goToPlugins": "前往外掛"
+    },
+    "notifications": {
+      "loading": "正在載入通知…"
+    },
+    "workflows": {
+      "loading": "正在載入工作流程建立器…"
+    },
+    "plugins": {
+      "tabBuild": "建置",
+      "activeCount": "{{active}}/{{total}} 使用中",
+      "searchPlaceholder": "搜尋外掛…",
+      "clearSearch": "清除搜尋"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "付款完成",
+      "titlePack": "已加值 {{credits}} 額外點數。",
+      "titlePlan": "{{label}} 已屬於你。",
+      "titleDefault": "Pairlens Intelligence 已屬於你。",
+      "bodyPack": "這些點數會疊加在你的每月額度之上,將於 {{days}} 天後到期。回到 Pairlens 應用程式 — 你的餘額會在幾秒內更新。",
+      "bodyPlanWithCredits": "你的託管 AI 副駕駛、研究與網頁搜尋已解鎖,每月附帶 {{credits}} 點數。回到 Pairlens 應用程式 — 它會在幾秒內識別你的訂閱。",
+      "bodyPlanNoCredits": "你的託管 AI 副駕駛、研究與網頁搜尋已解鎖。回到 Pairlens 應用程式 — 它會在幾秒內識別你的訂閱。",
+      "openTerminal": "開啟終端",
+      "closeTabHint": "是從桌面應用程式付款的嗎?直接關閉此分頁即可。",
+      "receiptHint": "收據和發票已寄到你的信箱,也可在帳單管理頁面查看(設定 → Intelligence)。"
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "工作流程",
+      "tabRuns": "執行紀錄",
+      "emptyState": "尚無工作流程",
+      "createTitle": "新增工作流程",
+      "namePlaceholder": "工作流程名稱",
+      "renameTitle": "重新命名工作流程",
+      "renameButton": "重新命名",
+      "deleteTitle": "刪除工作流程",
+      "deleteDescription": "此操作無法復原，工作流程將被永久刪除。",
+      "runsEmpty": "尚無執行紀錄 — 從交易面板執行一次",
+      "clearHistory": "清除紀錄",
+      "runOutcome": "{{executed}} 成功",
+      "runOutcomeWithFailed": "{{executed}} 成功，{{failed}} 失敗"
+    },
+    "canvas": {
+      "undoTitle": "復原 (Cmd+Z)",
+      "redoTitle": "重做 (Cmd+Shift+Z)",
+      "deleteStep": "刪除步驟",
+      "deleteConnection": "刪除連線"
+    },
+    "commitBar": {
+      "cycleDetected": "偵測到循環",
+      "issue_one": "{{count}} 個問題",
+      "issue_other": "{{count}} 個問題",
+      "pendingChange_one": "{{count}} 項待處理變更",
+      "pendingChange_other": "{{count}} 項待處理變更",
+      "noChanges": "沒有變更",
+      "review": "查看",
+      "discard": "捨棄",
+      "commit": "提交",
+      "saveErrorTitle": "無法儲存工作流程",
+      "saveErrorCycleBody": "此工作流程存在循環相依，請先移除循環（紅色連線）再儲存。",
+      "saveSuccess": "工作流程已儲存"
+    },
+    "diffPanel": {
+      "title": "查看變更（{{count}}）",
+      "addedStep": "已新增 {{type}} 步驟",
+      "removedStep": "已移除 {{type}} 步驟",
+      "modifiedStep": "已修改 {{type}} 設定",
+      "addedConnection": "已新增連線",
+      "removedConnection": "已移除連線",
+      "noChanges": "沒有變更"
+    },
+    "palette": {
+      "title": "新增步驟",
+      "categoryEntry": "進場",
+      "categoryOrders": "委託",
+      "categoryExit": "出場策略",
+      "categoryLogic": "邏輯",
+      "categoryCustom": "自訂",
+      "requires": "需要：{{requirement}}",
+      "notAvailableOn": "在 {{markets}} 上無法使用"
+    },
+    "emptyState": {
+      "pickWorkflow": "在左側選擇一個工作流程，即可在畫布中開啟它。",
+      "eyebrow": "工作流程",
+      "title": "每一筆委託都能帶上自己的計畫",
+      "description": "工作流程掛在你從交易面板送出的委託上。委託一旦成交，底下的步驟就會自動執行 — 括號單、階梯單、分批出場、定時檢查 — 計畫早已備妥，而不是留到之後才要自己記得去做。",
+      "blankLabel": "從空白畫布開始",
+      "footnote": "範本會以草稿形式開啟：編輯任一步驟，然後按下提交即可儲存。從交易面板把已儲存的工作流程連結到某筆委託，即可執行它。"
+    },
+    "steps": {
+      "sideLabel": "方向",
+      "sizeLabel": "數量",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "絕對值",
+      "side": {
+        "inherit": "繼承",
+        "opposite": "相反",
+        "buy": "買進",
+        "sell": "賣出"
+      },
+      "triggerWhenPrice": "價格符合條件時觸發",
+      "triggerPercentFromEntry": "距進場價 %",
+      "triggerReachesPrice": "到達價格",
+      "priceLevel": "價格水準",
+      "priceLabel": "價格",
+      "stopLoss": {
+        "title": "停損",
+        "lossPercent": "虧損 %"
+      },
+      "takeProfit": {
+        "title": "停利",
+        "gainPercent": "獲利 %"
+      },
+      "limitOrder": {
+        "title": "限價單",
+        "priceModeFixed": "固定",
+        "priceModePercentOffset": "% 偏移",
+        "priceModeOffset": "偏移",
+        "priceValueLabel": "價格值"
+      },
+      "marketOrder": {
+        "title": "市價單"
+      },
+      "condition": {
+        "title": "條件",
+        "typeLabel": "類型",
+        "typePercentChange": "% 變化",
+        "hint": "+N 於上漲 ≥N% 時通過，-N 於下跌 ≥N% 時通過"
+      },
+      "wait": {
+        "title": "等待",
+        "durationLabel": "時長",
+        "unitSeconds": "秒",
+        "unitMinutes": "分",
+        "unitHours": "時"
+      },
+      "split": {
+        "title": "並行拆分",
+        "branchesLabel": "分支數"
+      },
+      "trigger": {
+        "title": "委託輸入",
+        "badge": "進場"
+      },
+      "configPanel": {
+        "requiresNote": "需要：{{requirement}}。不支援此能力的市場無法執行包含此步驟的工作流程。",
+        "on": "開",
+        "off": "關"
+      }
+    },
+    "execution": {
+      "statusExecuted": "已執行",
+      "statusSkipped": "已略過",
+      "statusFailed": "失敗",
+      "summaryExecuted": "{{count}} 已執行",
+      "summarySkipped": "{{count}} 已略過",
+      "summaryFailed": "{{count}} 失敗"
+    }
   }
 }

@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   AlertCircle,
@@ -76,11 +77,13 @@ type ResearchStatus = 'idle' | 'loading' | 'streaming' | 'done' | 'error'
 // Animated loading phases
 // ---------------------------------------------------------------------------
 
-const RESEARCH_PHASES = [
-  'Searching the web...',
-  'Reading sources...',
-  'Analyzing market data...',
-  'Writing report...',
+// Translation keys — the phase text is resolved with t() at render time so
+// the animated loading copy follows the active locale.
+const RESEARCH_PHASE_KEYS = [
+  'research.phaseSearching',
+  'research.phaseReading',
+  'research.phaseAnalyzing',
+  'research.phaseWriting',
 ] as const
 
 const PHASE_DELAYS = [0, 4000, 9000, 16000] as const
@@ -445,6 +448,7 @@ function ResearchTickerSync({
 // ---------------------------------------------------------------------------
 
 export function ResearchPanel({ pairKey, market }: ResearchPanelProps) {
+  const { t } = useTranslation()
   // Research runs client-side against the resolved ai:inference provider
   // (research-brain.ts) — same gate as the copilot. Web search grounding is
   // an optional extra resolved via ai:web-search.
@@ -454,15 +458,17 @@ export function ResearchPanel({ pairKey, market }: ResearchPanelProps) {
   if (access.status === 'auth-required') {
     return (
       <AuthRequiredPrompt
-        title="Research desk, one sign-in away"
-        description="Structured research reports on any pair, grounded in live web sources. Sign in, then subscribe to Pairlens Intelligence or bring your own AI key."
+        title={t('research.authRequiredTitle')}
+        description={t('research.authRequiredDescription')}
       />
     )
   }
 
   if (access.status === 'upgrade-required') {
     return (
-      <IntelligenceUpgradePrompt description="Structured research reports on any pair, grounded in live web sources. Subscribe to Pairlens Intelligence — or bring your own AI and search keys via Plugins, free." />
+      <IntelligenceUpgradePrompt
+        description={t('research.upgradeDescription')}
+      />
     )
   }
 
@@ -474,10 +480,9 @@ export function ResearchPanel({ pairKey, market }: ResearchPanelProps) {
             <EmptyMedia variant="icon">
               <Search className="size-5" />
             </EmptyMedia>
-            <EmptyTitle>Research Unavailable</EmptyTitle>
+            <EmptyTitle>{t('research.unavailableTitle')}</EmptyTitle>
             <EmptyDescription>
-              Enable an AI plugin on the Plugins page to generate research
-              reports for this pair.
+              {t('research.unavailableDescription')}
             </EmptyDescription>
           </EmptyHeader>
           <Button
@@ -486,7 +491,7 @@ export function ResearchPanel({ pairKey, market }: ResearchPanelProps) {
             render={<Link to="/plugins" />}
           >
             <Search className="size-4" />
-            Go to Plugins
+            {t('research.goToPlugins')}
           </Button>
         </Empty>
       </div>
@@ -514,6 +519,7 @@ function ResearchPanelBody({
   market,
   tickerRef,
 }: ResearchPanelProps & { tickerRef: RefObject<TickerSnapshot | null> }) {
+  const { t } = useTranslation()
   const { fetchHistory } = useMarketData()
   const { report, sources, status, cached, error, generatedAt, refresh } =
     useResearchStream(market, pairKey, fetchHistory, tickerRef)
@@ -563,7 +569,7 @@ function ResearchPanelBody({
       <div className="flex min-h-0 flex-1 flex-col items-center justify-center p-6 text-center">
         <Search className="mb-3 size-8 text-muted-foreground/50" />
         <p className="text-sm text-muted-foreground">
-          Navigate to a pair to view research.
+          {t('research.navigateToPair')}
         </p>
       </div>
     )
@@ -577,7 +583,7 @@ function ResearchPanelBody({
         <AiOrb size="48px" animationDuration={12} state="thinking" />
         <div className="flex flex-col items-center gap-2 text-center">
           <p className="text-sm font-medium text-foreground">
-            Researching {symbol}
+            {t('research.researchingSymbol', { symbol })}
           </p>
           <div className="relative h-4">
             <AnimatePresence mode="wait">
@@ -589,7 +595,7 @@ function ResearchPanelBody({
                 transition={{ duration: 0.25 }}
               >
                 <ShimmeringText
-                  text={RESEARCH_PHASES[phase]}
+                  text={t(RESEARCH_PHASE_KEYS[phase])}
                   duration={1.8}
                   repeatDelay={0.4}
                   spread={3}
@@ -600,7 +606,7 @@ function ResearchPanelBody({
             </AnimatePresence>
           </div>
           <div className="mt-1 flex items-center gap-1.5">
-            {RESEARCH_PHASES.map((_, i) => (
+            {RESEARCH_PHASE_KEYS.map((_, i) => (
               <div
                 key={i}
                 className={`size-1.5 rounded-full transition-colors duration-300 ${
@@ -631,7 +637,7 @@ function ResearchPanelBody({
         <AlertCircle className="size-8 text-destructive/60" />
         <div className="text-center">
           <p className="text-sm font-medium text-foreground">
-            Research unavailable
+            {t('research.errorTitle')}
           </p>
           <p className="mt-1 max-w-xs text-xs text-muted-foreground">{error}</p>
         </div>
@@ -642,7 +648,7 @@ function ResearchPanelBody({
           onClick={refresh}
         >
           <RefreshCw className="size-3.5" />
-          Retry
+          {t('common.retry')}
         </Button>
       </div>
     )
@@ -658,20 +664,21 @@ function ResearchPanelBody({
         {isGenerating ? (
           <>
             <Loader2 className="size-3.5 animate-spin text-primary" />
-            <span>Generating report...</span>
+            <span>{t('research.generatingReport')}</span>
           </>
         ) : cached ? (
           <>
             <Clock className="size-3.5" />
             <span>
-              Cached — generated{' '}
-              {generatedAt ? formatRelativeTime(generatedAt) : ''}
+              {t('research.cachedGenerated', {
+                time: generatedAt ? formatRelativeTime(generatedAt) : '',
+              })}
             </span>
           </>
         ) : (
           <>
             <Sparkles className="size-3.5 text-primary" />
-            <span>Fresh — generated just now</span>
+            <span>{t('research.freshGenerated')}</span>
           </>
         )}
       </div>
@@ -688,7 +695,7 @@ function ResearchPanelBody({
           ) : (
             <RefreshCw className="size-3.5" />
           )}
-          Refresh
+          {t('research.refresh')}
         </Button>
         <Button
           variant="ghost"
@@ -734,7 +741,7 @@ function ResearchPanelBody({
         <div className="mt-6 border-t pt-4">
           <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
             <Zap className="size-3.5" />
-            Sources ({sources.length})
+            {t('research.sourcesCount', { count: sources.length })}
           </div>
           <div className="grid gap-1.5">
             {sources.map((source, i) => (
@@ -766,9 +773,11 @@ function ResearchPanelBody({
             showCloseButton={false}
             className="flex h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] flex-col gap-0 p-0 sm:max-w-5xl"
           >
-            <DialogTitle className="sr-only">Research Report</DialogTitle>
+            <DialogTitle className="sr-only">
+              {t('research.reportTitle')}
+            </DialogTitle>
             <DialogDescription className="sr-only">
-              Research report in fullscreen mode. Press Escape to exit.
+              {t('research.fullscreenDescription')}
             </DialogDescription>
             {headerBar}
             <div className="flex min-h-0 flex-1">
@@ -776,7 +785,7 @@ function ResearchPanelBody({
               {headings.length > 0 && (
                 <nav className="w-[180px] shrink-0 overflow-y-auto border-r px-2 py-3">
                   <p className="mb-2 px-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                    Sections
+                    {t('research.sections')}
                   </p>
                   <ul className="space-y-0.5">
                     {headings.map((h) => (

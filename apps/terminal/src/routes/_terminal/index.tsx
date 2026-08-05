@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Blocks, Unplug } from 'lucide-react'
 
@@ -28,6 +29,7 @@ export const Route = createFileRoute('/_terminal/')({
 })
 
 function NoDiscoveryState() {
+  const { t } = useTranslation()
   return (
     <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
       <div className="flex flex-1 items-center justify-center p-6">
@@ -36,10 +38,9 @@ function NoDiscoveryState() {
             <EmptyMedia variant="icon">
               <Unplug className="size-5" />
             </EmptyMedia>
-            <EmptyTitle>No instrument catalog</EmptyTitle>
+            <EmptyTitle>{t('routes.discovery.noInstrumentCatalog')}</EmptyTitle>
             <EmptyDescription>
-              There are no active plugins providing instrument discovery. Enable
-              a plugin to browse available trading pairs.
+              {t('routes.discovery.noInstrumentCatalogDescription')}
             </EmptyDescription>
           </EmptyHeader>
           <Button
@@ -48,7 +49,7 @@ function NoDiscoveryState() {
             render={<Link to="/plugins" />}
           >
             <Blocks className="size-4" />
-            Go to Plugins
+            {t('routes.discovery.goToPlugins')}
           </Button>
         </Empty>
       </div>

@@ -158,12 +158,12 @@ export function CreateWorkspaceDialog({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="ws-desc">Description</Label>
+            <Label htmlFor="ws-desc">{t('workspace.descriptionLabel')}</Label>
             <Input
               id="ws-desc"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Optional short description"
+              placeholder={t('workspace.descriptionPlaceholder')}
             />
           </div>
 

@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { ArrowRight, Check, ShieldCheck } from 'lucide-react'
 
@@ -44,6 +45,7 @@ export const Route = createFileRoute('/checkout/success')({
 })
 
 function CheckoutSuccessPage() {
+  const { t } = useTranslation()
   const { plan: planId, pack: packId } = Route.useSearch()
   const plan = planId ? INTELLIGENCE_PLANS[planId] : null
   const pack = packId ? CREDIT_PACKS[packId] : null
@@ -70,39 +72,42 @@ function CheckoutSuccessPage() {
         </div>
 
         <p className="text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase">
-          Payment complete
+          {t('routes.checkoutSuccess.paymentComplete')}
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
           {pack
-            ? `${pack.credits.toLocaleString('en-US')} extra credits, loaded.`
+            ? t('routes.checkoutSuccess.titlePack', {
+                credits: pack.credits.toLocaleString('en-US'),
+              })
             : plan
-              ? `${plan.label} is yours.`
-              : 'Pairlens Intelligence is yours.'}
+              ? t('routes.checkoutSuccess.titlePlan', { label: plan.label })
+              : t('routes.checkoutSuccess.titleDefault')}
         </h1>
         <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted-foreground">
           {pack
-            ? `They stack on top of your monthly budget and expire ${CREDIT_PACK_EXPIRY_DAYS} days from now. Head back to the Pairlens app — your balance updates within a few seconds.`
-            : `Your hosted AI copilot, research desk, and web search are unlocked${
-                plan
-                  ? ` with ${plan.monthlyCredits.toLocaleString('en-US')} credits every month`
-                  : ''
-              }. Head back to the Pairlens app — it picks up your subscription within a few seconds.`}
+            ? t('routes.checkoutSuccess.bodyPack', {
+                days: CREDIT_PACK_EXPIRY_DAYS,
+              })
+            : plan
+              ? t('routes.checkoutSuccess.bodyPlanWithCredits', {
+                  credits: plan.monthlyCredits.toLocaleString('en-US'),
+                })
+              : t('routes.checkoutSuccess.bodyPlanNoCredits')}
         </p>
 
         <div className="mt-8 flex flex-col items-center gap-3">
           <Button size="lg" className="gap-2" render={<Link to="/" />}>
-            Open the terminal
+            {t('routes.checkoutSuccess.openTerminal')}
             <ArrowRight className="size-4" />
           </Button>
           <p className="text-xs text-muted-foreground">
-            Paid from the desktop app? You can simply close this tab.
+            {t('routes.checkoutSuccess.closeTabHint')}
           </p>
         </div>
 
         <p className="mt-10 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
           <ShieldCheck className="size-3.5" />
-          Receipt and invoices are in your email and the billing portal
-          (Settings → Intelligence).
+          {t('routes.checkoutSuccess.receiptHint')}
         </p>
       </div>
     </div>

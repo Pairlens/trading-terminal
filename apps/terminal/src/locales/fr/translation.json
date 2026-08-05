@@ -244,7 +244,9 @@
       "create": "Créer un compte",
       "skip": "Passer — tout garder sur cet appareil",
       "signedIn": "Connecté en tant que {{email}}",
-      "label": "Compte"
+      "label": "Compte",
+      "otpSendFailed": "Échec de l’envoi du code",
+      "signInFailed": "Échec de la connexion"
     },
     "summary": {
       "eyebrow": "Prêt",
@@ -376,6 +378,42 @@
         "title": "Votre machine, vos clés",
         "description": "Les bots tournent ici, pas sur nos serveurs, et vos clés API ne quittent jamais cet ordinateur. Gardez-le éveillé avec Pairlens ouvert, et coupez n’importe quel bot dès que vous voulez qu’il s’arrête."
       }
+    },
+    "scenes": {
+      "topMover": "Plus forte variation · {{pair}} {{delta}}",
+      "watchlistCount": "Liste de suivi · {{count}}",
+      "signalBreakout": "Breakout",
+      "signalPullbackForming": "Pullback en formation",
+      "onClose": "à la clôture",
+      "crossedAbovePrice": "a franchi {{price}} à la hausse",
+      "conditionCrossesAbove": "franchit à la hausse",
+      "notifyMeDesktopInApp": "Me notifier — bureau + dans l’app",
+      "nodeTrigger": "Déclencheur",
+      "nodeSignalLabel": "Signal : {{signal}}",
+      "nodeCondition": "Condition",
+      "nodeVolumeAboveAvg": "Volume > moyenne",
+      "nodeAction": "Action",
+      "nodeAlertAndJournal": "Alerte + journal",
+      "runBreakoutWatcher": "Veille de breakout",
+      "runDcaBuyer": "Acheteur DCA",
+      "runStopLossGuard": "Garde stop-loss",
+      "ranAt": "{{time}} · exécuté",
+      "runsLocally": "S’exécute localement",
+      "storedOnDevice": "Stocké sur cet appareil — jamais sur nos serveurs",
+      "osKeychain": "Trousseau du système",
+      "pluginKindMarketData": "Données de marché",
+      "pluginKindTheme": "Thème",
+      "pluginKindAutomation": "Automatisation",
+      "sandboxedByDefault": "En sandbox par défaut",
+      "signedVerified": "Signé et vérifié",
+      "networkAccessApproveHost": "Accès réseau — vous approuvez chaque hôte",
+      "copiedToWorkspaces": "Copié dans vos espaces de travail",
+      "statNet": "Net",
+      "statMaxDd": "DD max.",
+      "sameCodeGoesLive": "Le même code passe en production",
+      "runsOnYourMachine": "S’exécute sur votre machine — gardez-la éveillée",
+      "botMeanReversion": "Retour à la moyenne",
+      "chainWallet": "Wallet {{chain}}"
     }
   },
   "common": {
@@ -398,7 +436,12 @@
     "showInFolder": "Afficher dans le dossier",
     "updated": "Mis à jour {{time}}",
     "back": "Retour",
-    "dismiss": "Ignorer"
+    "dismiss": "Ignorer",
+    "unknownError": "Erreur inconnue",
+    "ordersLockedRiskLimit": "Les ordres sont verrouillés suite au dépassement d’une limite de risque. Déverrouillez-les dans Paramètres > Gestion du risque.",
+    "buyOrdersLockedRiskLimit": "Les achats sont verrouillés suite au dépassement d’une limite de risque. Déverrouillez-les dans Paramètres > Gestion du risque.",
+    "positionSizeExceeded": "Ordre bloqué par la limite de risque : la position représente {{ratioPct}} % de votre portefeuille, au-delà de votre maximum de {{maxPositionSize}} %. Ajustez cela dans Paramètres > Gestion du risque.",
+    "sessionExpired": "Votre session a expiré — veuillez vous reconnecter."
   },
   "legal": {
     "terms": "Conditions générales",
@@ -581,7 +624,22 @@
       "publisherKeyConsentTitle": "Faire confiance à cet éditeur ?",
       "publisherKeyConsentBody": "Les plugins signés avec cette clé pourront être installés sur cet appareil. Un éditeur malveillant peut publier des plugins demandant une confiance totale — avec accès aux données de vos autres plugins, à vos identifiants d’exchange stockés et au trading. Comparez l’empreinte avec l’éditeur via un canal de confiance avant de continuer.",
       "publisherKeyConsentConfirm": "Faire confiance à cette clé",
-      "publisherKeyConsentCancel": "Annuler"
+      "publisherKeyConsentCancel": "Annuler",
+      "updatesTitle": "Mises à jour des plugins",
+      "updatesDescription": "Contrôlez la façon dont les plugins sont mis à jour lorsque de nouvelles versions sont disponibles sur le registre.",
+      "updateModeLabel": "Mode de mise à jour",
+      "updateModeAutoDescription": "Les mises à jour sont téléchargées et installées automatiquement",
+      "updateModeNotifyDescription": "Vous verrez un badge lorsque des mises à jour seront disponibles",
+      "updateModeOffDescription": "Aucune vérification automatique des mises à jour",
+      "updateModeAuto": "Mise à jour automatique",
+      "updateModeNotify": "Notifier uniquement",
+      "updateModeOffLabel": "Désactivé",
+      "checkIntervalLabel": "Intervalle de vérification",
+      "checkIntervalDescription": "Fréquence de vérification du registre pour de nouvelles versions",
+      "intervalHourly": "Toutes les heures",
+      "interval6Hours": "Toutes les 6 heures",
+      "interval12Hours": "Toutes les 12 heures",
+      "intervalDaily": "Quotidiennement"
     },
     "appearance": {
       "colorMode": "Mode de couleur",
@@ -603,7 +661,9 @@
       "balanced": "Équilibré",
       "balancedDescription": "Ticker et carnet d’ordres à 250 ms, bougies à 500 ms. Bon compromis entre réactivité et efficacité.",
       "energySaver": "Économie d’énergie",
-      "energySaverDescription": "Ticker et carnet d’ordres à 1 s, bougies à 2 s. Idéal pour la surveillance passive ou les ordinateurs portables sur batterie."
+      "energySaverDescription": "Ticker et carnet d’ordres à 1 s, bougies à 2 s. Idéal pour la surveillance passive ou les ordinateurs portables sur batterie.",
+      "idleGuardTitle": "Déconnexion pour inactivité",
+      "idleGuardDescription": "Met en pause les flux de données de marché après 1 heure d'inactivité pour économiser la bande passante et réduire la consommation d'énergie."
     },
     "desktop": {
       "closeBehavior": {
@@ -1031,7 +1091,9 @@
       "namePlaceholder": "Nom du dossier"
     },
     "createFirst": "Créez votre premier espace de travail",
-    "emptyState": "Aucun espace de travail pour l’instant"
+    "emptyState": "Aucun espace de travail pour l’instant",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Brève description facultative"
   },
   "session": {
     "checking": "Vérification de la session…",
@@ -1089,7 +1151,9 @@
     "verifying": "Vérification...",
     "verifyAndSignIn": "Vérifier et se connecter",
     "codeRequired": "Le code est requis",
-    "emailRequired": "L’email est requis"
+    "emailRequired": "L’email est requis",
+    "dialogDescription": "Connectez-vous pour accéder à cette fonctionnalité",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "Session en pause",
@@ -1109,7 +1173,12 @@
     "connecting": "Connexion",
     "stalled": "Reconnexion",
     "offline": "Hors ligne",
-    "error": "Erreur"
+    "error": "Erreur",
+    "pluginUpdatesReady_one": "{{count}} mise à jour de plugin prête à installer",
+    "pluginUpdatesReady_other": "{{count}} mises à jour de plugins prêtes à installer",
+    "pluginUpdatesDescription": "Les mises à jour s’appliqueront après le redémarrage du terminal.",
+    "restartNow": "Redémarrer maintenant",
+    "later": "Plus tard"
   },
   "copilot": {
     "aiLens": "AI Lens",
@@ -1128,7 +1197,46 @@
     },
     "marketRegime": "Régime de marché",
     "trending": "Tendanciel",
-    "choppy": "Erratique"
+    "choppy": "Erratique",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "Taille",
+    "orderPlacedPaper": "Ordre paper passé",
+    "orderPlaced": "Ordre passé",
+    "autoApprovedNote": "Approuvé automatiquement ({{mode}} · ne plus demander est activé)",
+    "turnOff": "Désactiver",
+    "autoApproving": "Approbation automatique de l’ordre {{mode}}…",
+    "liveOrderWarning": "Ordre réel — fonds réels, appliqué selon vos limites de risque.",
+    "dontAskAgainPaper": "Ne plus demander pour les ordres paper",
+    "dontAskAgainLive": "Ne plus demander pour les ordres réels sur {{market}}",
+    "placing": "Passage en cours…",
+    "confirmMode": "Confirmer {{mode}}",
+    "dismissed": "Ignoré",
+    "cancelOrderPrompt": "Annuler l’ordre {{orderId}} sur {{pair}} · {{market}} ?",
+    "cancelled": "Annulé",
+    "cancelFailed": "Échec de l’annulation",
+    "cancelling": "Annulation en cours…",
+    "confirmCancel": "Confirmer l’annulation",
+    "keep": "Conserver",
+    "tradingUnavailable": "Le trading n’est pas disponible.",
+    "noCredentialsForMarket": "Aucun identifiant connecté pour {{market}}. Ajoutez des clés API dans Comptes pour trader en réel.",
+    "watchingPair": "Suivi de {{pair}} · {{timeframe}}",
+    "genericChatError": "Le copilote a rencontré une erreur — essayez de renvoyer votre message.",
+    "quickActionHowIsDoing": "Comment se comporte {{symbol}} ?",
+    "quickActionSuggestedIndicators": "Indicateurs suggérés",
+    "quickActionAnySignals": "Y a-t-il des signaux ?",
+    "scheduledCheckPrefix": "[Vérification planifiée — programmée il y a {{minutes}} min]",
+    "authRequiredTitle": "Découvrez votre copilote IA",
+    "authRequiredDescription": "Analyse contextuelle sur toute paire — il lit le graphique, vérifie vos limites de risque et répond avec un raisonnement que vous pouvez questionner. Connectez-vous, puis abonnez-vous à Pairlens Intelligence ou apportez votre propre clé IA.",
+    "upgradeRequiredDescription": "Votre copilote IA lit le graphique, vérifie vos limites de risque et répond avec un raisonnement que vous pouvez questionner. Abonnez-vous à Pairlens Intelligence — ou apportez votre propre clé IA via Plugins, gratuitement.",
+    "aiLensUnavailableTitle": "AI Lens indisponible",
+    "aiLensUnavailableDescription": "Activez un plugin IA sur la page Plugins pour obtenir une analyse de marché en temps réel et une assistance au trading.",
+    "goToPlugins": "Aller aux Plugins",
+    "analyzePair": "Analyser {{pair}}",
+    "startConversation": "Démarrer une conversation",
+    "emptyStateHint": "Interrogez les conditions de marché, validez votre setup, ou demandez une évaluation de risque — l’IA a le contexte complet de cette paire.",
+    "contextAware": "Sensible au contexte",
+    "toolFailed": "Échec de l’outil"
   },
   "chart": {
     "contextMenu": {
@@ -1312,7 +1420,9 @@
       "pause": "Pause",
       "step": "Bougie suivante",
       "exit": "Quitter le replay"
-    }
+    },
+    "fullscreenTitle": "Graphique en plein écran",
+    "fullscreenHint": "Graphique en plein écran. Appuyez sur Échap pour quitter."
   },
   "botsPage": {
     "loading": "Chargement des bots…",
@@ -1872,7 +1982,15 @@
     "frozen": "Gelé",
     "total": "Total",
     "refreshBalances": "Actualiser",
-    "asset": "Actif"
+    "asset": "Actif",
+    "cancelOrderTitle": "Annuler l’ordre ?",
+    "cancelOrderBody": "Cela annulera votre ordre d’{{side}} sur {{pair}}.",
+    "keepOrder": "Garder l’ordre",
+    "cancelOrder": "Annuler l’ordre",
+    "sideBuy": "achat",
+    "sideSell": "vente",
+    "buy": "Achat",
+    "sell": "Vente"
   },
   "pairInfo": {
     "title": "Informations sur la paire",
@@ -1915,7 +2033,10 @@
     "emptyTitle": "Saisissez une URL ci-dessus pour intégrer un site web",
     "embedWarning": "Certains sites web bloquent l’intégration en iframe. Si une page ne se charge pas, essayez de l’ouvrir dans votre navigateur à la place.",
     "blockedTitle": "Ce site ne peut pas être intégré",
-    "blockedDescription": "Ce site web empêche son affichage dans d’autres pages. Vous pouvez l’ouvrir dans un onglet de navigateur séparé à la place."
+    "blockedDescription": "Ce site web empêche son affichage dans d’autres pages. Vous pouvez l’ouvrir dans un onglet de navigateur séparé à la place.",
+    "forward": "Suivant",
+    "failedToLoad": "Échec du chargement",
+    "viewPaused": "Affichage web en pause"
   },
   "intelligence": {
     "analyzing": "Analyse du marché…",
@@ -1924,7 +2045,29 @@
     "recentSignals": "Signaux récents",
     "regime": "Régime",
     "trending": "Tendanciel",
-    "choppy": "Erratique"
+    "choppy": "Erratique",
+    "upsell": {
+      "priceMonthly": "{{price}} $/mois",
+      "taxNotice": "Les prix s'entendent hors taxes ; elles sont calculées lors du paiement.",
+      "defaultTitle": "Débloquez Pairlens Intelligence",
+      "defaultDescription": "Copilote IA hébergé et research web, sans clé API à fournir. Chaque forfait inclut un budget d'utilisation mensuel partagé entre le chat, le research et les recherches web.",
+      "byokNote": "Vous préférez votre propre fournisseur ? Connectez une clé Anthropic, OpenAI, Groq ou OpenRouter dans <plugins>Plugins</plugins> — l'IA avec votre propre clé est toujours gratuite.",
+      "checkoutOpenedTitle": "Paiement ouvert dans votre navigateur",
+      "checkoutActivates": "Votre abonnement s'active ici dès que le paiement est finalisé.",
+      "checkoutStartError": "Impossible de démarrer le paiement — veuillez réessayer.",
+      "subscriptionRequiredTitle": "Abonnement Pairlens Intelligence requis",
+      "subscriptionRequiredBody": "L'IA hébergée fonctionne avec un forfait Intelligence. Abonnez-vous ci-dessous, ou connectez votre propre clé de fournisseur IA dans les Plugins.",
+      "budgetUsedUpTitle": "Budget d'utilisation mensuel épuisé",
+      "budgetUsedBody": "Vous avez épuisé les crédits Intelligence de ce cycle.",
+      "budgetResetsOn": "Votre budget est réinitialisé le {{date}}.",
+      "topUpHint": "Rechargez avec un pack de crédits pour continuer — les crédits d'un pack expirent 30 jours après l'achat.",
+      "upgradeToMaxHint": "Passez à {{label}} pour {{credits}} crédits par mois.",
+      "manageSubscription": "Gérer l'abonnement",
+      "portalError": "Impossible d'ouvrir le portail de facturation.",
+      "creditsLandDescription": "Les crédits supplémentaires sont ajoutés à votre solde dès que le paiement est finalisé.",
+      "checkoutError": "Impossible de démarrer le paiement.",
+      "upgradeToMax": "Passer à Max"
+    }
   },
   "panes": {
     "markets": "Marchés",
@@ -2020,6 +2163,52 @@
       "title": "{{pair}} n’est pas disponible sur {{venue}}",
       "titleAnyVenue": "{{pair}} n’est pas disponible",
       "description": "Ce connecteur n’a renvoyé aucune donnée de marché pour cette paire. Essayez-en un autre qui la référence."
+    },
+    "panePicker": {
+      "bindToVariable": "Lier à une variable",
+      "boundTo": "Lié à <b>{{variable}}</b>",
+      "market": "Marché",
+      "setPair": "Définir la paire de {{variable}}",
+      "selectPair": "Sélectionner une paire",
+      "bindingHint": "La sélection d'une paire mettra à jour tous les panneaux liés à {{variable}}",
+      "unbindFromVariable": "Dissocier de la variable",
+      "settingForAllPanes": "Définition de <b>{{variable}}</b> pour tous les panneaux liés"
+    },
+    "pane": {
+      "close": "Fermer {{pane}}",
+      "popOutToColumn": "Détacher vers une nouvelle colonne",
+      "bindPairToVariable": "Lier la paire à une variable",
+      "bindWalletToVariable": "Lier le wallet à une variable",
+      "bindTimeframeToVariable": "Lier la période à une variable",
+      "clearPairOverride": "Effacer la substitution de paire",
+      "closePane": "Fermer le panneau",
+      "unbind": "Dissocier",
+      "closeTab": "Fermer l'onglet"
+    },
+    "dnd": {
+      "pickedUp": "{{pane}} saisi. Utilisez les flèches pour déplacer, espace pour déposer, échap pour annuler.",
+      "genericPane": "panneau",
+      "noDropTarget": "Aucune zone de dépôt.",
+      "dropStackTab": "Déposez ici pour empiler en tant qu'onglet.",
+      "dropSplitAbove": "Déposez pour scinder au-dessus.",
+      "dropSplitBelow": "Déposez pour scinder en dessous.",
+      "dropNewColumn": "Déposez pour créer une nouvelle colonne.",
+      "paneMoved": "Panneau déplacé.",
+      "dragCancelled": "Glissement annulé, panneau restauré.",
+      "dragCancelledFull": "Glissement annulé, le panneau est revenu à sa position d'origine."
+    },
+    "missingPane": {
+      "requiresPlugin": "Ce panneau nécessite le plugin « {{pluginId}} »",
+      "notAvailable": "Le panneau « {{type}} » n'est pas disponible",
+      "description": "Le plugin a peut-être été supprimé ou désactivé.",
+      "openPluginStore": "Ouvrir le Plugin Store"
+    },
+    "dropZone": {
+      "emptyHint": "Faites glisser un panneau ici",
+      "addAsTab": "Ajouter en tant qu'onglet",
+      "splitTop": "Scinder en haut",
+      "splitBottom": "Scinder en bas",
+      "newColumn": "Nouvelle colonne"
     }
   },
   "watchlist": {
@@ -2129,7 +2318,137 @@
     "uninstalled": "Désinstallé",
     "updateReactivate": "Mettre à jour et réactiver",
     "version": "Version",
-    "visit": "Visiter"
+    "visit": "Visiter",
+    "fullTrust": {
+      "title": "Accorder une confiance totale à « {{name}} » ?",
+      "description": "Ce plugin fournit de l’interface : il doit donc s’exécuter dans l’app principale, hors sandbox. Un plugin de confiance totale dispose des mêmes accès que Pairlens.",
+      "itCan": "Il peut :",
+      "grantPlugins": "lire les données de vos autres plugins installés ;",
+      "grantCredentials": "lire vos clés API d’exchange et identifiants de wallet enregistrés ;",
+      "grantTrading": "passer des ordres et d’autres opérations financières en votre nom.",
+      "trustNote": "N’accordez une confiance totale qu’aux plugins d’auteurs de confiance. Vous pouvez le désinstaller à tout moment.",
+      "trustNoteAuthor": "N’accordez une confiance totale qu’aux plugins d’auteurs de confiance (auteur : {{author}}). Vous pouvez le désinstaller à tout moment.",
+      "grant": "Accorder une confiance totale"
+    },
+    "network": {
+      "title": "Autoriser « {{name}} » à se connecter ?",
+      "description": "Ce plugin doit joindre des serveurs hors de Pairlens. Votre terminal enverra des requêtes réseau aux hôtes ci-dessous. N’autorisez que si vous faites confiance à ce plugin — vous pouvez le désinstaller à tout moment pour révoquer l’accès.",
+      "hostsIntro": "Il pourra se connecter à :",
+      "reloadNote": "L’approbation recharge le terminal pour appliquer le changement.",
+      "deny": "Ne pas autoriser",
+      "allow": "Autoriser et recharger"
+    },
+    "toggleFailedEnable": "Impossible d'activer {{name}}",
+    "toggleFailedDisable": "Impossible de désactiver {{name}}",
+    "updateStagedToast": "Mise à jour prête — redémarrez pour l'appliquer",
+    "restartNow": "Redémarrer maintenant",
+    "updateStageFailedToast": "Impossible de préparer la mise à jour : {{error}}",
+    "resetStagedToast": "Réinitialisé aux valeurs par défaut — redémarrez pour terminer",
+    "networkGrantedToast": "Accès réseau accordé à « {{name}} » — rechargement…",
+    "networkDeniedToast": "« {{name}} » a été installé sans accès réseau — il pourrait ne pas fonctionner tant que vous ne l'autorisez pas.",
+    "installCancelledNoTrust": "Installation annulée — confiance totale non accordée",
+    "installedVersionToast": "« {{name}} » v{{version}} installé",
+    "installFailedToast": "Impossible d'installer le plugin : {{error}}",
+    "localFilesNotFound": "Fichiers locaux du plugin introuvables",
+    "pluginCodeNotFound": "Code du plugin introuvable — réinstallez-le",
+    "fullTrustGrantedNameToast": "Confiance totale accordée à « {{name}} »",
+    "loadPluginFailedToast": "Impossible de charger le plugin : {{error}}",
+    "importFailedToast": "Impossible d'importer le plugin : {{error}}",
+    "fieldRequired": "{{label}} est requis",
+    "configSaved": "Configuration enregistrée",
+    "configurationFailed": "Échec de la configuration",
+    "needsFullTrustToRun": "Nécessite une confiance totale pour s'exécuter",
+    "pendingTrustDescription": "Fournit de l'interface et ne peut pas s'exécuter dans le sandbox — accordez une confiance totale pour l'activer, ou désinstallez-le.",
+    "remove": "Supprimer",
+    "groupCore": "Essentiels",
+    "groupProvidersExtensions": "Fournisseurs et extensions",
+    "groupThemes": "Thèmes",
+    "removePluginTitle": "Supprimer le plugin",
+    "removePluginDescription": "Cela désactivera et supprimera le plugin. Les panneaux qu'il fournissait afficheront un espace réservé de récupération. Vous pourrez le réinstaller depuis le Plugin Store à tout moment.",
+    "resetDefaultsTitle": "Réinitialiser aux valeurs par défaut",
+    "resetDefaultsDescription": "Cela supprimera tous les plugins non intégrés, effacera les mises à jour préparées et disponibles, et rechargera le terminal. Les plugins intégrés resteront installés.",
+    "reset": "Réinitialiser",
+    "installFromUrlDialogTitle": "Installer un plugin depuis une URL",
+    "installFromUrlDialogDescription": "Saisissez l'URL d'un module de plugin (.js) à installer.",
+    "unverifiedPluginTitle": "Plugin non vérifié",
+    "unverifiedPluginBody": "Les plugins installés manuellement n'ont pas fait l'objet d'un examen de sécurité. N'installez des plugins qu'à partir de sources auxquelles vous faites confiance.",
+    "installAnyway": "Installer quand même",
+    "sourceBuiltIn": "Intégré",
+    "sourceRegistry": "Registre",
+    "sourceUrl": "URL",
+    "sourceLocal": "Local",
+    "fullTrustGrantedRestartToast": "Confiance totale accordée — redémarrez pour exécuter ce plugin dans l'app principale",
+    "sandboxedRestartToast": "Le plugin s'exécutera dans le sandbox — redémarrez pour appliquer",
+    "requiresFullTrustTitle": "Ce plugin fournit de l'interface et doit s'exécuter en confiance totale.",
+    "trustBadgeFullRequired": "Confiance totale (requise)",
+    "trustBadgeFull": "Confiance totale",
+    "trustBadgeSandboxed": "Sandbox",
+    "panelCount_one": "{{count}} panneau",
+    "panelCount_other": "{{count}} panneaux",
+    "update": "Mettre à jour",
+    "revokeFullTrustAria": "Révoquer la confiance totale pour {{name}}",
+    "grantFullTrustAria": "Accorder une confiance totale à {{name}}",
+    "fullTrustActiveTitle": "Confiance totale — s'exécute dans l'app principale. Cliquez pour passer en sandbox.",
+    "sandboxedTitle": "Sandbox — worker isolé, réseau limité aux hôtes déclarés. Cliquez pour accorder une confiance totale.",
+    "configureAria": "Configurer {{name}}",
+    "toggleAria": "Activer/désactiver {{name}}",
+    "capabilityProvidersTitle": "Fournisseurs de capacités",
+    "capabilityProvidersDescription": "Chaque fonctionnalité du terminal demande une capacité, et le plugin activé de priorité la plus élevée la fournit automatiquement. Choisissez un plugin spécifique pour remplacer le choix automatique.",
+    "resetAllOverrides": "Réinitialiser tous les remplacements",
+    "noProviderInstalled": "Aucun plugin installé ne fournit ceci",
+    "browseStore": "Parcourir le Store",
+    "installedNeedsKeySingle": "Installé — nécessite une clé API",
+    "installedNeedsKeyPlural": "{{count}} installés — tous nécessitent une clé API",
+    "installedDisabledSingle": "1 plugin installé, mais désactivé",
+    "installedDisabledPlural": "{{count}} plugins installés, tous désactivés",
+    "manage": "Gérer",
+    "pinnedActiveNote": "Épinglé — remplace l'ordre automatique",
+    "pinnedInactiveNote": "Le plugin épinglé est désactivé — l'ordre automatique s'applique",
+    "autoOrderLabel": "Ordre automatique : {{chain}}",
+    "chainMore_one": "{{chain}} +{{count}} de plus",
+    "chainMore_other": "{{chain}} +{{count}} de plus",
+    "resolvedPerMarket": "Résolu par marché",
+    "marketOverrides": "Remplacements par marché",
+    "pinnedCountBadge_one": "{{count}} épinglé",
+    "pinnedCountBadge_other": "{{count}} épinglés",
+    "automatic": "Automatique",
+    "disabledHint": "désactivé",
+    "notInstalled": "{{id}} (non installé)",
+    "saveOverrideFailed": "Impossible d'enregistrer le remplacement du fournisseur",
+    "removeOverrideFailed": "Impossible de supprimer le remplacement du fournisseur",
+    "resetOverridesFailed": "Impossible de réinitialiser les remplacements",
+    "marketConnectorsTitle": "Connecteurs de marché",
+    "marketConnectorsDescription": "Les connecteurs de marché diffusent les données de prix en direct, les carnets d'ordres, et permettent de trader directement via les API des exchanges. Activez les exchanges que vous souhaitez utiliser.",
+    "activeCountBadge": "{{active}}/{{total}} actifs",
+    "connected": "Connecté",
+    "disabledStatus": "Désactivé",
+    "readAndTrade": "Lecture + Trading",
+    "readOnly": "Lecture seule",
+    "noConnectorsInstalled": "Aucun plugin de connecteur de marché installé.",
+    "moreConnectors": "Plus de connecteurs",
+    "fromPluginStore": "depuis le Plugin Store",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "En savoir plus",
+    "enabledToast": "{{name}} activé",
+    "disabledToast": "{{name}} désactivé",
+    "enableFailedShort": "Échec de l'activation",
+    "disableFailedShort": "Échec de la désactivation",
+    "domain": {
+      "marketData": "Données de marché",
+      "trading": "Trading",
+      "wallet": "Wallet",
+      "signals": "Signaux",
+      "ai": "IA"
+    },
+    "byAuthor": "par {{author}}",
+    "installsCount_one": "{{formattedCount}} installation",
+    "installsCount_other": "{{formattedCount}} installations",
+    "panelsCount": "Panneaux ({{count}})",
+    "inactive": "Inactif",
+    "previousSlide": "Précédent",
+    "nextSlide": "Suivant",
+    "goToSlide": "Aller à la diapositive {{n}}",
+    "copyCommand": "Copier la commande"
   },
   "search": {
     "title": "Rechercher des paires",
@@ -2196,8 +2515,71 @@
       "selectAccount": "Choisir un compte",
       "groupWallet": "Wallet crypto",
       "groupBroker": "Compte broker",
-      "groupExchange": "Compte d’exchange"
-    }
+      "groupExchange": "Compte d’exchange",
+      "selectWalletTopBar": "Sélectionnez le portefeuille dans la barre supérieure",
+      "connectChainWallet": "Connectez un portefeuille {{chain}}",
+      "connectExchangeAccount": "Connectez un compte {{exchange}}",
+      "selectAccountTopBar": "Sélectionnez le compte dans la barre supérieure"
+    },
+    "trade": {
+      "limitBuy": "Achat limite",
+      "limitSell": "Vente limite",
+      "bought": "Acheté",
+      "sold": "Vendu",
+      "limitOrderFailed": "Échec de l’ordre limite",
+      "swapFailed": "Échec du swap",
+      "workflowUnsupported": "Workflow non pris en charge sur ce marché",
+      "orderBlocked": "Ordre bloqué par la limite de risque",
+      "orderRejected": "Ordre rejeté",
+      "orderFailed": "Échec de l’ordre",
+      "setRegion": "Définir votre région",
+      "regionDefaulting": "Région par défaut : Global.",
+      "addPreset": "Ajouter un préréglage",
+      "createFirstWorkflow": "Créez votre premier workflow",
+      "editWorkflows": "Modifier les workflows",
+      "selectWorkflow": "Choisir un workflow",
+      "submitting": "Envoi…",
+      "holdToRun": "Maintenez pour exécuter",
+      "holdToConfirmLive": "Maintenez pour confirmer · les fonds partent immédiatement",
+      "holdToPlace": "Maintenez pour placer",
+      "runWorkflow": "Exécuter le workflow",
+      "buyAsset": "Acheter {{asset}}",
+      "sellAsset": "Vendre {{asset}}",
+      "amount": "Montant",
+      "price": "Prix",
+      "presetsTitle": "Préréglages de montant ({{quote}})",
+      "buy": "Acheter",
+      "sell": "Vendre",
+      "orderTypeMarket": "Marché",
+      "orderTypeLimit": "Limite",
+      "workflow": "Workflow",
+      "notSupportedOn": "Non pris en charge sur {{venue}}",
+      "available": "Disponible : {{amount}}",
+      "slippage": "Slippage"
+    },
+    "status": {
+      "connecting": "Connexion…",
+      "loadingOrderBook": "Chargement du carnet d’ordres…",
+      "loadingDepth": "Chargement de la profondeur…",
+      "loadingCandles": "Chargement des bougies…",
+      "waitingTrades": "En attente de transactions…",
+      "waitingData": "En attente de données…",
+      "noCandleData": "Pas encore de bougies",
+      "noTradesFeed": "Passez à une plateforme qui publie le time and sales"
+    },
+    "columns": {
+      "price": "Prix",
+      "size": "Taille",
+      "total": "Total",
+      "open": "Ouverture",
+      "close": "Clôture"
+    },
+    "panel": {
+      "expand": "Déplier le panneau",
+      "collapse": "Replier le panneau"
+    },
+    "recentlyViewed": "Vus récemment",
+    "noMarketsFound": "Aucun marché trouvé"
   },
   "accounts": {
     "pageTitle": "Comptes",
@@ -2293,7 +2675,42 @@
     "importKey": "Importer une clé privée",
     "affiliateDisclosure": "Certains liens d’inscription peuvent rapporter une commission à Pairlens, sans coût supplémentaire pour vous.",
     "vaultSealedBody": "Votre coffre d'identifiants est verrouillé. Vos comptes sont toujours là — déverrouillez pour les voir et les utiliser.",
-    "credentialsUnreadable": "Impossible de lire les clés enregistrées sur cet appareil. Rien n’est perdu : réessaie ou redémarre Pairlens."
+    "credentialsUnreadable": "Impossible de lire les clés enregistrées sur cet appareil. Rien n’est perdu : réessaie ou redémarre Pairlens.",
+    "addWalletDialogTitle": "Ajouter un wallet crypto",
+    "addWalletDialogDescription": "Importez la clé privée d'un wallet pour trader on-chain",
+    "blockchainLabel": "Blockchain",
+    "walletLabelField": "Libellé",
+    "walletLabelPlaceholder": "Mon wallet",
+    "privateKeyField": "Clé privée",
+    "saveWallet": "Enregistrer le wallet",
+    "keep": "Conserver",
+    "remove": "Supprimer",
+    "disconnect": "Déconnecter",
+    "localBadge": "Local",
+    "unknownDate": "Inconnue",
+    "keyExpiredWarning": "Probablement expirée — {{daysInactive}} jours d'inactivité (limite de {{limitDays}} jours). Recréez la clé API sur l'exchange.",
+    "keyInactiveWarning": "{{daysInactive}}/{{limitDays}} jours d'inactivité. Les clés expirent après {{limitDays}} jours sans utilisation.",
+    "exchangeAccountAriaLabel": "Compte d'exchange {{label}}",
+    "cryptoWalletAriaLabel": "Wallet crypto {{label}}",
+    "portfolioTotal": "Total",
+    "assetAllocationLabel": "Répartition des actifs",
+    "tableAsset": "Actif",
+    "tableAmount": "Montant",
+    "tableValue": "Valeur",
+    "tableShare": "Part",
+    "assetCount_one": "{{count}} actif",
+    "assetCount_other": "{{count}} actifs",
+    "moreAssets_one": "+{{count}} actif supplémentaire",
+    "moreAssets_other": "+{{count}} actifs supplémentaires",
+    "walletSavedFeedback": "Wallet crypto enregistré.",
+    "walletRemovedFeedback": "Wallet crypto supprimé.",
+    "accountRemovedFeedback": "Compte supprimé.",
+    "walletSaveFailed": "Échec de l'enregistrement du wallet.",
+    "walletRemoveFailed": "Échec de la suppression du wallet.",
+    "accountConnectFailed": "Échec de la connexion du compte.",
+    "accountRemoveFailed": "Échec de la suppression du compte.",
+    "fieldRequired": "{{field}} est requis",
+    "accountConnectedFeedback": "Compte {{label}} {{mode}} connecté."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2401,12 +2818,136 @@
     "paneCount_other": "{{count}} panneaux",
     "panes": "Panneaux",
     "showAll": "Tout afficher",
-    "spotlight": "À la une"
+    "spotlight": "À la une",
+    "previousSlide": "Précédent",
+    "nextSlide": "Suivant",
+    "goToSlide": "Aller à la diapositive {{number}}"
   },
   "notifications": {
     "flows": "Flux",
     "newFlow": "Nouveau flux",
-    "noFlows": "Aucun flux de notification pour l’instant"
+    "noFlows": "Aucun flux de notification pour l’instant",
+    "builder": {
+      "sidebar": {
+        "tabRules": "Règles",
+        "tabActivity": "Activité",
+        "noRules": "Aucune règle de notification pour l'instant",
+        "newRuleTitle": "Nouvelle règle de notification",
+        "rulePlaceholder": "Nom de la règle",
+        "renameRuleTitle": "Renommer la règle",
+        "rename": "Renommer",
+        "deleteRuleTitle": "Supprimer la règle",
+        "deleteRuleWarning": "Cette action est irréversible. La règle de notification et ses associations de paires seront supprimées définitivement.",
+        "pairsLabel": "Paires",
+        "sendTest": "Envoyer un test",
+        "testing": "Test en cours…",
+        "pairAlreadyBound": "Cette paire est déjà associée à la règle",
+        "noBindings": "Associée à aucune paire pour l'instant — la règle ne se déclenchera pas tant que vous n'en ajoutez pas une.",
+        "testSent": "Notification de test envoyée",
+        "testFailed": "Le test n'a pas été livré",
+        "noActivity": "Aucune notification déclenchée pour l'instant",
+        "clearActivity": "Effacer l'activité",
+        "channelFailed": "Échec de {{channel}}"
+      },
+      "commitBar": {
+        "cycleDetected": "Cycle détecté",
+        "issueCount_one": "{{count}} problème",
+        "issueCount_other": "{{count}} problèmes",
+        "moreIssues": "…et {{count}} de plus",
+        "pendingChangeCount_one": "{{count}} modification en attente",
+        "pendingChangeCount_other": "{{count}} modifications en attente",
+        "noChanges": "Aucune modification",
+        "review": "Vérifier",
+        "discard": "Abandonner",
+        "commit": "Enregistrer",
+        "cannotSaveTitle": "Impossible d'enregistrer la règle",
+        "cycleError": "La règle contient une dépendance circulaire. Supprimez le cycle (arêtes rouges) avant d'enregistrer.",
+        "saved": "Règle enregistrée"
+      },
+      "diff": {
+        "title": "Vérifier les modifications ({{count}})",
+        "addedStep": "Étape {{type}} ajoutée",
+        "removedStep": "Étape {{type}} supprimée",
+        "modifiedStep": "Configuration {{type}} modifiée",
+        "addedConnection": "Connexion ajoutée",
+        "removedConnection": "Connexion supprimée"
+      },
+      "canvas": {
+        "undoTitle": "Annuler (Cmd+Z)",
+        "redoTitle": "Rétablir (Cmd+Maj+Z)",
+        "deleteStep": "Supprimer l'étape",
+        "deleteConnection": "Supprimer la connexion",
+        "cycleLabel": "cycle"
+      },
+      "palette": {
+        "addStep": "Ajouter une étape",
+        "categoryEvents": "Événements",
+        "categoryConditions": "Conditions",
+        "categoryChannels": "Canaux"
+      },
+      "category": {
+        "event": "Événement",
+        "condition": "Condition",
+        "channel": "Canal"
+      },
+      "emptyState": {
+        "pickRuleHint": "Choisissez une règle à gauche pour l'ouvrir sur le canevas.",
+        "untitledRule": "Règle sans titre",
+        "eyebrow": "Notifications",
+        "title": "Surveillez le marché pour ne pas avoir à le faire vous-même",
+        "description": "Une règle est un petit flux : quelque chose se produit — un niveau est franchi, une bougie se clôture, un ordre est exécuté, une alerte d'indicateur se déclenche — elle passe par les conditions que vous ajoutez, puis elle vous parvient sous forme de toast, de notification système ou de webhook.",
+        "startBlank": "Partir d'un canevas vierge",
+        "startFromTemplate": "Partir d'un modèle",
+        "footnote": "Les modèles s'ouvrent en brouillon associé à {{pair}} sur {{market}} — modifiez les étapes, changez la paire dans la liste des règles, puis validez avec Enregistrer. Les règles ne se déclenchent que lorsque Pairlens est en cours d'exécution."
+      },
+      "direction": "Direction",
+      "above": "Au-dessus",
+      "below": "En dessous",
+      "any": "Indifférent",
+      "buy": "Achat",
+      "sell": "Vente",
+      "up": "Hausse",
+      "down": "Baisse",
+      "either": "Les deux",
+      "toggleOn": "Activé",
+      "toggleOff": "Désactivé",
+      "steps": {
+        "candleClose": {
+          "title": "Clôture de bougie"
+        },
+        "localToast": {
+          "title": "Notification toast",
+          "description": "Affiche un toast dans l'application lorsqu'elle se déclenche"
+        },
+        "orderExecuted": {
+          "title": "Ordre exécuté"
+        },
+        "osNotification": {
+          "title": "Notification système",
+          "sound": "Son"
+        },
+        "percentChange": {
+          "title": "Variation en pourcentage",
+          "percent": "Pourcentage"
+        },
+        "priceAlert": {
+          "title": "Alerte de prix"
+        },
+        "priceCondition": {
+          "title": "Condition de prix"
+        },
+        "signalGenerated": {
+          "title": "Signal généré",
+          "signalType": "Type de signal",
+          "anyTypePlaceholder": "Tout type"
+        },
+        "timeWindow": {
+          "title": "Plage horaire",
+          "start": "Début (UTC)",
+          "end": "Fin (UTC)"
+        }
+      }
+    }
   },
   "updater": {
     "available": "Mise à jour disponible",
@@ -2493,7 +3034,8 @@
     "failed": "Échec du chargement de la carte thermique",
     "noData": "Aucune donnée disponible",
     "tryLater": "Réessayez plus tard",
-    "willAppear": "Les données de la carte thermique apparaîtront ici"
+    "willAppear": "Les données de la carte thermique apparaîtront ici",
+    "volume": "Volume"
   },
   "news": {
     "title": "Actualités",
@@ -2606,5 +3148,228 @@
   "fullscreen": {
     "enter": "Plein écran",
     "exit": "Quitter le plein écran"
+  },
+  "research": {
+    "phaseSearching": "Recherche sur le web…",
+    "phaseReading": "Lecture des sources…",
+    "phaseAnalyzing": "Analyse des données de marché…",
+    "phaseWriting": "Rédaction du rapport…",
+    "authRequiredTitle": "Le research desk, à une connexion près",
+    "authRequiredDescription": "Des rapports de research structurés sur n'importe quelle paire, fondés sur des sources web en direct. Connectez-vous, puis abonnez-vous à Pairlens Intelligence ou utilisez votre propre clé IA.",
+    "upgradeDescription": "Des rapports de research structurés sur n'importe quelle paire, fondés sur des sources web en direct. Abonnez-vous à Pairlens Intelligence — ou apportez vos propres clés IA et de recherche via les Plugins, gratuitement.",
+    "unavailableTitle": "Research indisponible",
+    "unavailableDescription": "Activez un plugin IA sur la page Plugins pour générer des rapports de research pour cette paire.",
+    "goToPlugins": "Aller aux Plugins",
+    "navigateToPair": "Accédez à une paire pour afficher le research.",
+    "researchingSymbol": "Analyse de {{symbol}} en cours",
+    "generatingReport": "Génération du rapport…",
+    "cachedGenerated": "En cache — généré {{time}}",
+    "freshGenerated": "Récent — généré à l'instant",
+    "refresh": "Actualiser",
+    "sourcesCount": "Sources ({{count}})",
+    "reportTitle": "Rapport de research",
+    "fullscreenDescription": "Rapport de research en mode plein écran. Appuyez sur Échap pour quitter.",
+    "sections": "Sections",
+    "sparklineAriaLabel": "Mini-graphique du prix quotidien",
+    "errorTitle": "Research indisponible"
+  },
+  "capabilityGate": {
+    "authTitle": "À une connexion gratuite près",
+    "authDescription": "Cette fonctionnalité fonctionne via votre compte Pairlens.",
+    "signInFree": "Se connecter gratuitement",
+    "authNote": "Cela prend 30 secondes. Vos clés d'échange ne quittent jamais cet appareil.",
+    "upgradeRequired": "Mise à niveau requise",
+    "upgradeDescriptionLevel": "Cette fonctionnalité nécessite le niveau d'accès <b>{{level}}</b>.",
+    "upgradeDescriptionGeneric": "Cette fonctionnalité nécessite un niveau d'accès supérieur.",
+    "managePlugin": "Gérer le plugin"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}} n'est pas disponible ici",
+    "description": "{{exchange}} ne fournit pas de données de marché pour votre région, ce connecteur ne peut donc pas charger de données. Passez à un autre connecteur ou mettez à jour votre région si elle est mal configurée.",
+    "yourRegion": "Votre région :",
+    "notSet": "Non défini",
+    "changeRegion": "Changer de région",
+    "switchTo": "Passer à {{venue}}"
+  },
+  "pairPicker": {
+    "noPairsFound": "Aucune paire trouvée.",
+    "startTyping": "Commencez à taper pour rechercher des paires."
+  },
+  "routes": {
+    "goHome": "Retour à l’accueil",
+    "noConnectors": {
+      "title": "Aucun connecteur de marché disponible",
+      "description": "Des plugins de connecteur de marché sont nécessaires pour diffuser des données en direct. Activez ou installez un connecteur pour commencer.",
+      "manage": "Gérer les connecteurs de marché"
+    },
+    "workspace": {
+      "notFound": "Espace de travail introuvable",
+      "edit": "Modifier"
+    },
+    "notFound": {
+      "title": "Page introuvable"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "Aucun catalogue d’instruments",
+      "noInstrumentCatalogDescription": "Aucun plugin actif ne fournit la découverte d’instruments. Activez un plugin pour parcourir les paires disponibles.",
+      "goToPlugins": "Aller aux Plugins"
+    },
+    "notifications": {
+      "loading": "Chargement des notifications…"
+    },
+    "workflows": {
+      "loading": "Chargement du générateur de workflows…"
+    },
+    "plugins": {
+      "tabBuild": "Construire",
+      "activeCount": "{{active}}/{{total}} actifs",
+      "searchPlaceholder": "Rechercher des plugins…",
+      "clearSearch": "Effacer la recherche"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "Paiement effectué",
+      "titlePack": "{{credits}} crédits supplémentaires ajoutés.",
+      "titlePlan": "{{label}} est désormais à vous.",
+      "titleDefault": "Pairlens Intelligence est désormais à vous.",
+      "bodyPack": "Ils s’ajoutent à votre budget mensuel et expirent dans {{days}} jours. Retournez sur l’application Pairlens — votre solde se met à jour en quelques secondes.",
+      "bodyPlanWithCredits": "Votre copilote IA hébergé, la recherche et la recherche web sont débloqués avec {{credits}} crédits chaque mois. Retournez sur l’application Pairlens — elle détectera votre abonnement en quelques secondes.",
+      "bodyPlanNoCredits": "Votre copilote IA hébergé, la recherche et la recherche web sont débloqués. Retournez sur l’application Pairlens — elle détectera votre abonnement en quelques secondes.",
+      "openTerminal": "Ouvrir le terminal",
+      "closeTabHint": "Vous avez payé depuis l’application de bureau ? Vous pouvez simplement fermer cet onglet.",
+      "receiptHint": "Le reçu et les factures se trouvent dans votre e-mail et sur le portail de facturation (Paramètres → Intelligence)."
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "Workflows",
+      "tabRuns": "Exécutions",
+      "emptyState": "Aucun workflow pour le moment",
+      "createTitle": "Nouveau workflow",
+      "namePlaceholder": "Nom du workflow",
+      "renameTitle": "Renommer le workflow",
+      "renameButton": "Renommer",
+      "deleteTitle": "Supprimer le workflow",
+      "deleteDescription": "Cette action est irréversible. Le workflow sera supprimé définitivement.",
+      "runsEmpty": "Aucune exécution pour le moment — lancez-en une depuis le panneau de trading",
+      "clearHistory": "Effacer l'historique",
+      "runOutcome": "{{executed}} ok",
+      "runOutcomeWithFailed": "{{executed}} ok, {{failed}} échouées"
+    },
+    "canvas": {
+      "undoTitle": "Annuler (Cmd+Z)",
+      "redoTitle": "Rétablir (Cmd+Maj+Z)",
+      "deleteStep": "Supprimer l'étape",
+      "deleteConnection": "Supprimer la connexion"
+    },
+    "commitBar": {
+      "cycleDetected": "Cycle détecté",
+      "issue_one": "{{count}} problème",
+      "issue_other": "{{count}} problèmes",
+      "pendingChange_one": "{{count}} modification en attente",
+      "pendingChange_other": "{{count}} modifications en attente",
+      "noChanges": "Aucune modification",
+      "review": "Vérifier",
+      "discard": "Abandonner",
+      "commit": "Valider",
+      "saveErrorTitle": "Impossible d'enregistrer le workflow",
+      "saveErrorCycleBody": "Le workflow contient une dépendance circulaire. Supprimez le cycle (arêtes rouges) avant d'enregistrer.",
+      "saveSuccess": "Workflow enregistré"
+    },
+    "diffPanel": {
+      "title": "Vérifier les modifications ({{count}})",
+      "addedStep": "Étape {{type}} ajoutée",
+      "removedStep": "Étape {{type}} supprimée",
+      "modifiedStep": "Configuration {{type}} modifiée",
+      "addedConnection": "Connexion ajoutée",
+      "removedConnection": "Connexion supprimée",
+      "noChanges": "Aucune modification"
+    },
+    "palette": {
+      "title": "Ajouter une étape",
+      "categoryEntry": "Entrée",
+      "categoryOrders": "Ordres",
+      "categoryExit": "Stratégies de sortie",
+      "categoryLogic": "Logique",
+      "categoryCustom": "Personnalisé",
+      "requires": "Nécessite : {{requirement}}",
+      "notAvailableOn": "Non disponible sur {{markets}}"
+    },
+    "emptyState": {
+      "pickWorkflow": "Choisissez un workflow à gauche pour l'ouvrir sur le canevas.",
+      "eyebrow": "Workflows",
+      "title": "Chaque ordre peut avoir son propre plan",
+      "description": "Un workflow se rattache à un ordre que vous placez depuis le panneau de trading. Dès son exécution, les étapes qui en dépendent se déclenchent d'elles-mêmes — brackets, échelles, sorties échelonnées, vérifications programmées — le plan est donc déjà en place, plutôt qu'une chose à faire vous-même plus tard.",
+      "blankLabel": "Partir d'un canevas vierge",
+      "footnote": "Les modèles s'ouvrent en brouillon : modifiez une étape, puis cliquez sur Valider pour enregistrer. Associez un workflow enregistré à un ordre depuis le panneau de trading pour l'exécuter."
+    },
+    "steps": {
+      "sideLabel": "Sens",
+      "sizeLabel": "Taille",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "Abs",
+      "side": {
+        "inherit": "Hérité",
+        "opposite": "Opposé",
+        "buy": "Acheter",
+        "sell": "Vendre"
+      },
+      "triggerWhenPrice": "Déclencher quand le prix",
+      "triggerPercentFromEntry": "% depuis l'entrée",
+      "triggerReachesPrice": "Atteint un prix",
+      "priceLevel": "Niveau de prix",
+      "priceLabel": "Prix",
+      "stopLoss": {
+        "title": "Stop loss",
+        "lossPercent": "Perte %"
+      },
+      "takeProfit": {
+        "title": "Take profit",
+        "gainPercent": "Gain %"
+      },
+      "limitOrder": {
+        "title": "Ordre limite",
+        "priceModeFixed": "Fixe",
+        "priceModePercentOffset": "% d'écart",
+        "priceModeOffset": "Écart",
+        "priceValueLabel": "Valeur du prix"
+      },
+      "marketOrder": {
+        "title": "Ordre au marché"
+      },
+      "condition": {
+        "title": "Condition",
+        "typeLabel": "Type",
+        "typePercentChange": "% de variation",
+        "hint": "+N passe si hausse ≥N%, -N si baisse ≥N%"
+      },
+      "wait": {
+        "title": "Attente",
+        "durationLabel": "Durée",
+        "unitSeconds": "s",
+        "unitMinutes": "min",
+        "unitHours": "h"
+      },
+      "split": {
+        "title": "Division parallèle",
+        "branchesLabel": "Branches"
+      },
+      "trigger": {
+        "title": "Entrée d'ordre",
+        "badge": "Entrée"
+      },
+      "configPanel": {
+        "requiresNote": "Nécessite : {{requirement}}. Les marchés sans cette capacité ne peuvent pas exécuter de workflows contenant cette étape.",
+        "on": "Activé",
+        "off": "Désactivé"
+      }
+    },
+    "execution": {
+      "statusExecuted": "exécutée",
+      "statusSkipped": "ignorée",
+      "statusFailed": "échouée",
+      "summaryExecuted": "{{count}} exécutées",
+      "summarySkipped": "{{count}} ignorées",
+      "summaryFailed": "{{count}} échouées"
+    }
   }
 }

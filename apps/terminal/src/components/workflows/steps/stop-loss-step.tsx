@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { ShieldAlert } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -9,6 +10,7 @@ import type { NodeProps } from '@xyflow/react'
 import type { StopLossStepData } from '@pairlens/workflow-engine/types'
 
 export function StopLossStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
   const d = data as unknown as StopLossStepData
   const triggerMode = d.triggerMode ?? 'percent'
   const triggerValue = d.triggerValue ?? 3
@@ -37,7 +39,7 @@ export function StopLossStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Stop Loss
+            {t('workflows.steps.stopLoss.title')}
           </div>
         </div>
       </div>
@@ -46,7 +48,7 @@ export function StopLossStep({ id, data }: NodeProps) {
         {/* Trigger mode */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Trigger when price
+            {t('workflows.steps.triggerWhenPrice')}
           </div>
           <div className="nodrag nopan nowheel mt-0.5 flex overflow-hidden rounded border border-border text-[9px]">
             <button
@@ -59,7 +61,7 @@ export function StopLossStep({ id, data }: NodeProps) {
               )}
               onClick={() => handleChange('triggerMode', 'percent')}
             >
-              % from entry
+              {t('workflows.steps.triggerPercentFromEntry')}
             </button>
             <button
               type="button"
@@ -71,7 +73,7 @@ export function StopLossStep({ id, data }: NodeProps) {
               )}
               onClick={() => handleChange('triggerMode', 'absolute')}
             >
-              Reaches price
+              {t('workflows.steps.triggerReachesPrice')}
             </button>
           </div>
         </div>
@@ -79,7 +81,9 @@ export function StopLossStep({ id, data }: NodeProps) {
         {/* Trigger value */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            {triggerMode === 'percent' ? 'Loss %' : 'Price level'}
+            {triggerMode === 'percent'
+              ? t('workflows.steps.stopLoss.lossPercent')
+              : t('workflows.steps.priceLevel')}
           </div>
           <div className="mt-0.5 flex items-center gap-1">
             {triggerMode === 'percent' && (
@@ -103,7 +107,7 @@ export function StopLossStep({ id, data }: NodeProps) {
         <div>
           <div className="flex items-center justify-between">
             <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-              Sell
+              {t('workflows.steps.side.sell')}
             </div>
             <div className="font-mono text-[10px] font-medium text-red-400">
               {sizePercent}%

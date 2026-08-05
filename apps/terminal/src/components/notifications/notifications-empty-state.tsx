@@ -6,6 +6,7 @@
  * Same two shades as Workflows: nothing at all (explain, then hand over a
  * template) versus nothing selected (just point at the list).
  */
+import { useTranslation } from 'react-i18next'
 import { Bell } from 'lucide-react'
 
 import { StarterEmptyState } from '../starter-empty-state'
@@ -19,6 +20,7 @@ import type { StarterTemplate } from '../starter-empty-state'
 import { useNotificationStore } from '@/stores/notification-store'
 
 export function NotificationsEmptyState() {
+  const { t } = useTranslation()
   const rules = useNotificationStore((s) => s.rules)
   const loaded = useNotificationStore((s) => s.loaded)
   const createRule = useNotificationStore((s) => s.createRule)
@@ -32,33 +34,37 @@ export function NotificationsEmptyState() {
   if (rules.length > 0) {
     return (
       <div className="flex flex-1 items-center justify-center px-6 text-center text-sm text-muted-foreground">
-        Pick a rule on the left to open it on the canvas.
+        {t('notifications.builder.emptyState.pickRuleHint')}
       </div>
     )
   }
 
   const handlePick = (template: StarterTemplate) => {
-    const full = NOTIFICATION_TEMPLATES.find((t) => t.id === template.id)
+    const full = NOTIFICATION_TEMPLATES.find((tpl) => tpl.id === template.id)
     if (full) applyNotificationTemplate(full)
   }
 
   const handleBlank = () => {
-    const id = createRule('Untitled rule')
+    const id = createRule(t('notifications.builder.emptyState.untitledRule'))
     selectRule(id)
     startEditing(id)
   }
 
   return (
     <StarterEmptyState
-      eyebrow="Notifications"
-      title="Watch the market so you don't have to"
-      description="A rule is a small flow: something happens — a level is crossed, a candle closes, an order fills, an indicator alert trips — it passes whatever conditions you attach, and then it reaches you as a toast, an OS notification, or a webhook."
+      eyebrow={t('notifications.builder.emptyState.eyebrow')}
+      title={t('notifications.builder.emptyState.title')}
+      description={t('notifications.builder.emptyState.description')}
       icon={Bell}
       templates={NOTIFICATION_TEMPLATES}
       onPickTemplate={handlePick}
-      blankLabel="Start from a blank canvas"
+      blankLabel={t('notifications.builder.emptyState.startBlank')}
       onCreateBlank={handleBlank}
-      footnote={`Templates open as a draft bound to ${TEMPLATE_PAIR} on ${TEMPLATE_MARKET} — edit the steps, retarget the pair under the rule list, then Commit to save. Rules only fire while Pairlens is running.`}
+      shelfLabel={t('notifications.builder.emptyState.startFromTemplate')}
+      footnote={t('notifications.builder.emptyState.footnote', {
+        pair: TEMPLATE_PAIR,
+        market: TEMPLATE_MARKET,
+      })}
     />
   )
 }

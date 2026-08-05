@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { Trans, useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import { ShieldCheck, Sparkles } from 'lucide-react'
 
@@ -34,28 +35,31 @@ type AuthRequiredPromptProps = {
  * front, not a lock.
  */
 export function AuthRequiredPrompt({
-  title = 'One free sign-in away',
-  description = 'This feature runs through your Pairlens account.',
+  title,
+  description,
 }: AuthRequiredPromptProps) {
+  const { t } = useTranslation()
   return (
     <div className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto p-6">
       <Empty className="max-w-[280px]">
         <EmptyHeader className="gap-3">
           <AiOrb size="72px" className="mb-2" />
-          <EmptyTitle className="text-base">{title}</EmptyTitle>
+          <EmptyTitle className="text-base">
+            {title ?? t('capabilityGate.authTitle')}
+          </EmptyTitle>
           <EmptyDescription className="leading-relaxed">
-            {description}
+            {description ?? t('capabilityGate.authDescription')}
           </EmptyDescription>
         </EmptyHeader>
         <SignInDialog>
           <Button size="lg" className="mt-6 gap-2">
             <Sparkles className="size-4" />
-            Sign in free
+            {t('capabilityGate.signInFree')}
           </Button>
         </SignInDialog>
         <p className="mt-4 flex items-start justify-center gap-1.5 text-[11px] leading-snug text-muted-foreground">
           <ShieldCheck className="mt-px size-3.5 shrink-0" />
-          Takes 30 seconds. Your exchange keys never leave this device.
+          {t('capabilityGate.authNote')}
         </p>
       </Empty>
     </div>
@@ -73,6 +77,7 @@ export function UpgradeRequiredPrompt({
   pluginId: string | null
   requiredAccessLevel?: string
 }) {
+  const { t } = useTranslation()
   return (
     <div className="flex min-h-0 flex-1 flex-col items-center justify-center p-6">
       <Empty className="max-w-xs">
@@ -80,15 +85,20 @@ export function UpgradeRequiredPrompt({
           <EmptyMedia variant="icon">
             <Sparkles className="size-5" />
           </EmptyMedia>
-          <EmptyTitle>Upgrade required</EmptyTitle>
+          <EmptyTitle>{t('capabilityGate.upgradeRequired')}</EmptyTitle>
           <EmptyDescription>
-            This feature requires{' '}
+            {/* <Trans> keeps the access level emphasised inside the sentence.
+                Its position moves per language, so neither splitting the
+                string around it nor dropping the styling is right. */}
             {requiredAccessLevel ? (
-              <span className="font-medium">{requiredAccessLevel}</span>
+              <Trans
+                i18nKey="capabilityGate.upgradeDescriptionLevel"
+                values={{ level: requiredAccessLevel }}
+                components={{ b: <b className="font-medium" /> }}
+              />
             ) : (
-              'a higher'
-            )}{' '}
-            access level.
+              t('capabilityGate.upgradeDescriptionGeneric')
+            )}
           </EmptyDescription>
         </EmptyHeader>
         {pluginId && (
@@ -98,7 +108,7 @@ export function UpgradeRequiredPrompt({
             render={<Link to="/plugins" search={{ manage: pluginId }} />}
           >
             <Sparkles className="size-4" />
-            Manage Plugin
+            {t('capabilityGate.managePlugin')}
           </Button>
         )}
       </Empty>

@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { memo, useMemo } from 'react'
 import { Loader2 } from 'lucide-react'
 
@@ -94,6 +95,7 @@ function TradesPaneInner({
   market: string
   pairKey: string
 }) {
+  const { t } = useTranslation()
   const { trades, status } = useTradesStream({ market, pairKey })
 
   const venue = usePaneVenue(market)
@@ -101,7 +103,7 @@ function TradesPaneInner({
   // Same reference rule as the order book: `median x 6` over what's on screen,
   // so "big" means big for this tape rather than big in absolute units.
   const sizeReference = useMemo(
-    () => computeMagnitudeReference(trades.map((t) => t.size)),
+    () => computeMagnitudeReference(trades.map((trade) => trade.size)),
     [trades],
   )
 
@@ -112,7 +114,7 @@ function TradesPaneInner({
           No trade feed on {venue.label || 'this venue'}
         </span>
         <span className="text-[10px] text-muted-foreground/70">
-          Switch to a venue that publishes time and sales
+          {t('terminal.status.noTradesFeed')}
         </span>
       </div>
     )
@@ -123,7 +125,9 @@ function TradesPaneInner({
       <div className="flex h-full items-center justify-center gap-2 text-xs text-muted-foreground">
         <Loader2 className="h-3.5 w-3.5 animate-spin" />
         <span>
-          {status === 'connecting' ? 'Connecting...' : 'Waiting for trades...'}
+          {status === 'connecting'
+            ? t('terminal.status.connecting')
+            : t('terminal.status.waitingTrades')}
         </span>
       </div>
     )
@@ -134,8 +138,8 @@ function TradesPaneInner({
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border/50 px-2 py-1">
         <div className="grid flex-1 grid-cols-3 gap-1 font-mono text-[10.5px] font-medium uppercase tracking-[.11em] text-muted-foreground">
-          <span>Price</span>
-          <span className="text-right">Size</span>
+          <span>{t('terminal.columns.price')}</span>
+          <span className="text-right">{t('terminal.columns.size')}</span>
           <span className="text-right">Time</span>
         </div>
       </div>

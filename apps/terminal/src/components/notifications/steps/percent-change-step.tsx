@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { Percent } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -7,15 +8,16 @@ import { Badge } from '@pairlens/ui/components/ui/badge'
 import { useNotificationStepDataUpdate } from '../use-step-data'
 import type { NodeProps } from '@xyflow/react'
 
-const directionOptions = [
-  { value: 'up', label: 'Up' },
-  { value: 'down', label: 'Down' },
-  { value: 'either', label: 'Either' },
-] as const
-
 export function PercentChangeStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
   const percent = (data.percent as number) ?? 5
   const direction = (data.direction as string) ?? 'either'
+
+  const directionOptions = [
+    { value: 'up', label: t('notifications.builder.up') },
+    { value: 'down', label: t('notifications.builder.down') },
+    { value: 'either', label: t('notifications.builder.either') },
+  ] as const
 
   const updateStepData = useNotificationStepDataUpdate()
   const handleChange = (key: string, value: unknown) =>
@@ -42,14 +44,14 @@ export function PercentChangeStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Percent Change
+            {t('notifications.builder.steps.percentChange.title')}
           </div>
         </div>
         <Badge
           variant="outline"
           className="border-amber-500/30 text-[10px] text-amber-400"
         >
-          Condition
+          {t('notifications.builder.category.condition')}
         </Badge>
       </div>
 
@@ -57,7 +59,7 @@ export function PercentChangeStep({ id, data }: NodeProps) {
         {/* Percent */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Percent
+            {t('notifications.builder.steps.percentChange.percent')}
           </div>
           <div className="mt-0.5 flex items-center gap-1">
             <input
@@ -77,7 +79,7 @@ export function PercentChangeStep({ id, data }: NodeProps) {
         {/* Direction */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Direction
+            {t('notifications.builder.direction')}
           </div>
           <div className="nodrag nopan nowheel mt-0.5 flex overflow-hidden rounded border border-border text-[9px]">
             {directionOptions.map((opt) => (

@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { Clock } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -8,6 +9,7 @@ import { useNotificationStepDataUpdate } from '../use-step-data'
 import type { NodeProps } from '@xyflow/react'
 
 export function TimeWindowStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
   const startHour = (data.startHour as number) ?? 9
   const endHour = (data.endHour as number) ?? 17
 
@@ -38,14 +40,14 @@ export function TimeWindowStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Time Window
+            {t('notifications.builder.steps.timeWindow.title')}
           </div>
         </div>
         <Badge
           variant="outline"
           className="border-amber-500/30 text-[10px] text-amber-400"
         >
-          Condition
+          {t('notifications.builder.category.condition')}
         </Badge>
       </div>
 
@@ -53,7 +55,7 @@ export function TimeWindowStep({ id, data }: NodeProps) {
         {/* Start hour */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Start (UTC)
+            {t('notifications.builder.steps.timeWindow.start')}
           </div>
           <div className="mt-0.5 flex items-center gap-1">
             <input
@@ -79,7 +81,7 @@ export function TimeWindowStep({ id, data }: NodeProps) {
         {/* End hour */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            End (UTC)
+            {t('notifications.builder.steps.timeWindow.end')}
           </div>
           <div className="mt-0.5 flex items-center gap-1">
             <input

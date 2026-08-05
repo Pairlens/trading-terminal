@@ -244,7 +244,9 @@
       "create": "Utwórz konto",
       "skip": "Pomiń — zachowaj wszystko na tym urządzeniu",
       "signedIn": "Zalogowano jako {{email}}",
-      "label": "Konto"
+      "label": "Konto",
+      "otpSendFailed": "Nie udało się wysłać kodu OTP",
+      "signInFailed": "Logowanie nie powiodło się"
     },
     "summary": {
       "eyebrow": "Gotowe",
@@ -376,6 +378,42 @@
         "title": "Twoja maszyna, Twoje klucze",
         "description": "Boty działają tutaj, nie na naszych serwerach, a klucze API nigdy nie opuszczają tego komputera. Trzymaj go wybudzonego z otwartym Pairlens i wyłącz dowolnego bota w chwili, gdy ma przestać."
       }
+    },
+    "scenes": {
+      "topMover": "Największy ruch · {{pair}} {{delta}}",
+      "watchlistCount": "Lista obserwowanych · {{count}}",
+      "signalBreakout": "Breakout",
+      "signalPullbackForming": "Formuje się pullback",
+      "onClose": "po zamknięciu",
+      "crossedAbovePrice": "przekroczył {{price}} w górę",
+      "conditionCrossesAbove": "przekracza w górę",
+      "notifyMeDesktopInApp": "Powiadom mnie — pulpit + w aplikacji",
+      "nodeTrigger": "Wyzwalacz",
+      "nodeSignalLabel": "Sygnał: {{signal}}",
+      "nodeCondition": "Warunek",
+      "nodeVolumeAboveAvg": "Wolumen > średnia",
+      "nodeAction": "Akcja",
+      "nodeAlertAndJournal": "Alert + dziennik",
+      "runBreakoutWatcher": "Obserwator breakoutów",
+      "runDcaBuyer": "Kupujący DCA",
+      "runStopLossGuard": "Strażnik stop-loss",
+      "ranAt": "{{time}} · wykonano",
+      "runsLocally": "Działa lokalnie",
+      "storedOnDevice": "Przechowywane na tym urządzeniu — nigdy na naszych serwerach",
+      "osKeychain": "Magazyn kluczy systemu",
+      "pluginKindMarketData": "Dane rynkowe",
+      "pluginKindTheme": "Motyw",
+      "pluginKindAutomation": "Automatyzacja",
+      "sandboxedByDefault": "Domyślnie w piaskownicy",
+      "signedVerified": "Podpisane i zweryfikowane",
+      "networkAccessApproveHost": "Dostęp do sieci — Ty zatwierdzasz każdy host",
+      "copiedToWorkspaces": "Skopiowano do Twoich obszarów roboczych",
+      "statNet": "Netto",
+      "statMaxDd": "Maks. DD",
+      "sameCodeGoesLive": "Ten sam kod trafia na produkcję",
+      "runsOnYourMachine": "Działa na Twoim urządzeniu — nie pozwól mu zasnąć",
+      "botMeanReversion": "Powrót do średniej",
+      "chainWallet": "Portfel {{chain}}"
     }
   },
   "common": {
@@ -398,7 +436,12 @@
     "showInFolder": "Pokaż w folderze",
     "updated": "Zaktualizowano {{time}}",
     "back": "Wstecz",
-    "dismiss": "Odrzuć"
+    "dismiss": "Odrzuć",
+    "unknownError": "Nieznany błąd",
+    "ordersLockedRiskLimit": "Zlecenia są zablokowane z powodu przekroczenia limitu ryzyka. Odblokuj je w Ustawienia > Zarządzanie ryzykiem.",
+    "buyOrdersLockedRiskLimit": "Zakupy są zablokowane z powodu przekroczenia limitu ryzyka. Odblokuj je w Ustawienia > Zarządzanie ryzykiem.",
+    "positionSizeExceeded": "Zlecenie zablokowane przez limit ryzyka: pozycja stanowi {{ratioPct}}% portfela, powyżej maksimum {{maxPositionSize}}%. Dostosuj to w Ustawienia > Zarządzanie ryzykiem.",
+    "sessionExpired": "Twoja sesja wygasła — zaloguj się ponownie."
   },
   "legal": {
     "terms": "Regulamin",
@@ -581,7 +624,22 @@
       "publisherKeyConsentTitle": "Zaufać temu wydawcy?",
       "publisherKeyConsentBody": "Wtyczki podpisane tym kluczem będą możliwe do zainstalowania na tym urządzeniu. Złośliwy wydawca może dostarczyć wtyczki żądające pełnego zaufania — z dostępem do danych innych wtyczek, przechowywanych danych giełdowych i handlu. Przed kontynuowaniem porównaj odcisk klucza z wydawcą przez zaufany kanał.",
       "publisherKeyConsentConfirm": "Zaufaj temu kluczowi",
-      "publisherKeyConsentCancel": "Anuluj"
+      "publisherKeyConsentCancel": "Anuluj",
+      "updatesTitle": "Aktualizacje wtyczek",
+      "updatesDescription": "Określ, jak wtyczki są aktualizowane, gdy w rejestrze dostępne są nowsze wersje.",
+      "updateModeLabel": "Tryb aktualizacji",
+      "updateModeAutoDescription": "Aktualizacje są pobierane i instalowane automatycznie",
+      "updateModeNotifyDescription": "Zobaczysz odznakę, gdy dostępne będą aktualizacje",
+      "updateModeOffDescription": "Brak automatycznego sprawdzania aktualizacji",
+      "updateModeAuto": "Automatyczna aktualizacja",
+      "updateModeNotify": "Tylko powiadamiaj",
+      "updateModeOffLabel": "Wyłączone",
+      "checkIntervalLabel": "Częstotliwość sprawdzania",
+      "checkIntervalDescription": "Jak często sprawdzać rejestr pod kątem nowszych wersji",
+      "intervalHourly": "Co godzinę",
+      "interval6Hours": "Co 6 godzin",
+      "interval12Hours": "Co 12 godzin",
+      "intervalDaily": "Codziennie"
     },
     "appearance": {
       "colorMode": "Tryb koloru",
@@ -603,7 +661,9 @@
       "balanced": "Zbalansowany",
       "balancedDescription": "Ticker i arkusz zleceń co 250 ms, świece co 500 ms. Dobry balans między responsywnością a wydajnością.",
       "energySaver": "Oszczędzanie energii",
-      "energySaverDescription": "Ticker i arkusz zleceń co 1 s, świece co 2 s. Najlepsze do biernego monitorowania lub laptopów na baterii."
+      "energySaverDescription": "Ticker i arkusz zleceń co 1 s, świece co 2 s. Najlepsze do biernego monitorowania lub laptopów na baterii.",
+      "idleGuardTitle": "Rozłączanie przy bezczynności",
+      "idleGuardDescription": "Wstrzymuje strumienie danych rynkowych po 1 godzinie bezczynności, aby oszczędzać łącze i zmniejszyć zużycie energii."
     },
     "desktop": {
       "closeBehavior": {
@@ -1037,7 +1097,9 @@
       "namePlaceholder": "Nazwa folderu"
     },
     "createFirst": "Utwórz swój pierwszy obszar roboczy",
-    "emptyState": "Brak obszarów roboczych"
+    "emptyState": "Brak obszarów roboczych",
+    "descriptionLabel": "Opis",
+    "descriptionPlaceholder": "Opcjonalny krótki opis"
   },
   "session": {
     "checking": "Sprawdzanie sesji…",
@@ -1095,7 +1157,9 @@
     "verifying": "Weryfikowanie...",
     "verifyAndSignIn": "Zweryfikuj i zaloguj się",
     "codeRequired": "Kod jest wymagany",
-    "emailRequired": "E-mail jest wymagany"
+    "emailRequired": "E-mail jest wymagany",
+    "dialogDescription": "Zaloguj się, aby uzyskać dostęp do tej funkcji",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "Sesja wstrzymana",
@@ -1115,7 +1179,14 @@
     "connecting": "Łączenie",
     "stalled": "Ponowne łączenie",
     "offline": "Offline",
-    "error": "Błąd"
+    "error": "Błąd",
+    "pluginUpdatesReady_one": "{{count}} aktualizacja wtyczki gotowa do instalacji",
+    "pluginUpdatesReady_other": "{{count}} aktualizacji wtyczki gotowej do instalacji",
+    "pluginUpdatesDescription": "Aktualizacje zostaną zastosowane po ponownym uruchomieniu terminala.",
+    "restartNow": "Uruchom ponownie teraz",
+    "later": "Później",
+    "pluginUpdatesReady_few": "{{count}} aktualizacje wtyczek gotowe do instalacji",
+    "pluginUpdatesReady_many": "{{count}} aktualizacji wtyczek gotowych do instalacji"
   },
   "copilot": {
     "aiLens": "AI Lens",
@@ -1134,7 +1205,46 @@
     },
     "marketRegime": "Reżim rynkowy",
     "trending": "Trendowy",
-    "choppy": "Chaotyczny"
+    "choppy": "Chaotyczny",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "Wielkość",
+    "orderPlacedPaper": "Złożono zlecenie paper",
+    "orderPlaced": "Złożono zlecenie",
+    "autoApprovedNote": "Zatwierdzone automatycznie ({{mode}} · nie pytaj ponownie jest włączone)",
+    "turnOff": "Wyłącz",
+    "autoApproving": "Automatyczne zatwierdzanie zlecenia {{mode}}…",
+    "liveOrderWarning": "Zlecenie na żywo — prawdziwe środki, egzekwowane zgodnie z Twoimi limitami ryzyka.",
+    "dontAskAgainPaper": "Nie pytaj ponownie o transakcje paper",
+    "dontAskAgainLive": "Nie pytaj ponownie o transakcje na żywo na {{market}}",
+    "placing": "Składanie zlecenia…",
+    "confirmMode": "Potwierdź {{mode}}",
+    "dismissed": "Odrzucone",
+    "cancelOrderPrompt": "Anulować zlecenie {{orderId}} na {{pair}} · {{market}}?",
+    "cancelled": "Anulowane",
+    "cancelFailed": "Anulowanie nie powiodło się",
+    "cancelling": "Anulowanie…",
+    "confirmCancel": "Potwierdź anulowanie",
+    "keep": "Zachowaj",
+    "tradingUnavailable": "Handel jest niedostępny.",
+    "noCredentialsForMarket": "Brak połączonych danych uwierzytelniających dla {{market}}. Dodaj klucze API w Kontach, aby handlować na żywo.",
+    "watchingPair": "Obserwowanie {{pair}} · {{timeframe}}",
+    "genericChatError": "Copilot napotkał błąd — spróbuj wysłać wiadomość ponownie.",
+    "quickActionHowIsDoing": "Jak radzi sobie {{symbol}}?",
+    "quickActionSuggestedIndicators": "Sugerowane wskaźniki",
+    "quickActionAnySignals": "Są jakieś sygnały?",
+    "scheduledCheckPrefix": "[Zaplanowane sprawdzenie — ustawione {{minutes}} min temu]",
+    "authRequiredTitle": "Poznaj swojego copilota AI",
+    "authRequiredDescription": "Analiza kontekstowa dla dowolnej pary — odczytuje wykres, sprawdza Twoje limity ryzyka i odpowiada z uzasadnieniem, które możesz zakwestionować. Zaloguj się, a następnie zasubskrybuj Pairlens Intelligence lub użyj własnego klucza AI.",
+    "upgradeRequiredDescription": "Twój copilot AI odczytuje wykres, sprawdza Twoje limity ryzyka i odpowiada z uzasadnieniem, które możesz zakwestionować. Zasubskrybuj Pairlens Intelligence — lub użyj własnego klucza AI przez Plugins, za darmo.",
+    "aiLensUnavailableTitle": "AI Lens niedostępne",
+    "aiLensUnavailableDescription": "Włącz wtyczkę AI na stronie Plugins, aby uzyskać analizę rynku w czasie rzeczywistym i wsparcie w handlu.",
+    "goToPlugins": "Przejdź do Plugins",
+    "analyzePair": "Analizuj {{pair}}",
+    "startConversation": "Rozpocznij rozmowę",
+    "emptyStateHint": "Zapytaj o warunki rynkowe, zweryfikuj swój setup lub poproś o ocenę ryzyka — AI zna pełny kontekst tej pary.",
+    "contextAware": "Świadome kontekstu",
+    "toolFailed": "Narzędzie zawiodło"
   },
   "chart": {
     "contextMenu": {
@@ -1318,7 +1428,9 @@
       "pause": "Pauza",
       "step": "Następna świeca",
       "exit": "Zakończ powtórkę"
-    }
+    },
+    "fullscreenTitle": "Wykres pełnoekranowy",
+    "fullscreenHint": "Wykres w trybie pełnoekranowym. Naciśnij Escape, aby wyjść."
   },
   "botsPage": {
     "loading": "Ładowanie botów…",
@@ -1880,7 +1992,15 @@
     "frozen": "Zamrożone",
     "total": "Razem",
     "refreshBalances": "Odśwież",
-    "asset": "Aktywo"
+    "asset": "Aktywo",
+    "cancelOrderTitle": "Anulować zlecenie?",
+    "cancelOrderBody": "To anuluje Twoje zlecenie {{side}} na {{pair}}.",
+    "keepOrder": "Zostaw zlecenie",
+    "cancelOrder": "Anuluj zlecenie",
+    "sideBuy": "kupna",
+    "sideSell": "sprzedaży",
+    "buy": "Kupno",
+    "sell": "Sprzedaż"
   },
   "pairInfo": {
     "title": "Informacje o parze",
@@ -1923,7 +2043,10 @@
     "emptyTitle": "Wprowadź powyżej adres URL, aby osadzić stronę",
     "embedWarning": "Niektóre strony blokują osadzanie w ramkach iframe. Jeśli strona się nie ładuje, spróbuj otworzyć ją w przeglądarce.",
     "blockedTitle": "Tej strony nie można osadzić",
-    "blockedDescription": "Ta strona blokuje wyświetlanie w innych stronach. Możesz zamiast tego otworzyć ją w osobnej karcie przeglądarki."
+    "blockedDescription": "Ta strona blokuje wyświetlanie w innych stronach. Możesz zamiast tego otworzyć ją w osobnej karcie przeglądarki.",
+    "forward": "Dalej",
+    "failedToLoad": "Nie udało się załadować",
+    "viewPaused": "Widok WWW wstrzymany"
   },
   "intelligence": {
     "analyzing": "Analizowanie rynku…",
@@ -1932,7 +2055,29 @@
     "recentSignals": "Ostatnie sygnały",
     "regime": "Reżim",
     "trending": "Trendowy",
-    "choppy": "Chaotyczny"
+    "choppy": "Chaotyczny",
+    "upsell": {
+      "priceMonthly": "{{price}} USD/mies.",
+      "taxNotice": "Ceny nie zawierają podatku — jest on naliczany przy płatności.",
+      "defaultTitle": "Odblokuj Pairlens Intelligence",
+      "defaultDescription": "Hostowany kopilot AI i research w sieci, bez potrzeby własnych kluczy API. Każdy plan zawiera miesięczny limit wykorzystania współdzielony między czat, research i wyszukiwanie w sieci.",
+      "byokNote": "Wolisz własnego dostawcę? Połącz klucz Anthropic, OpenAI, Groq lub OpenRouter na stronie <plugins>Wtyczki</plugins> — AI z własnym kluczem jest zawsze bezpłatna.",
+      "checkoutOpenedTitle": "Płatność otwarta w przeglądarce",
+      "checkoutActivates": "Twoja subskrypcja aktywuje się tutaj zaraz po zakończeniu płatności.",
+      "checkoutStartError": "Nie udało się rozpocząć płatności — spróbuj ponownie.",
+      "subscriptionRequiredTitle": "Wymagana subskrypcja Pairlens Intelligence",
+      "subscriptionRequiredBody": "Hostowana AI działa w ramach planu Intelligence. Zasubskrybuj poniżej albo połącz własny klucz dostawcy AI we Wtyczkach.",
+      "budgetUsedUpTitle": "Miesięczny limit wykorzystania wyczerpany",
+      "budgetUsedBody": "Wykorzystano już kredyty Intelligence z tego cyklu.",
+      "budgetResetsOn": "Twój limit odnowi się {{date}}.",
+      "topUpHint": "Doładuj pakietem kredytów, aby kontynuować — kredyty z pakietu wygasają 30 dni po zakupie.",
+      "upgradeToMaxHint": "Przejdź na {{label}}, aby otrzymywać {{credits}} kredytów miesięcznie.",
+      "manageSubscription": "Zarządzaj subskrypcją",
+      "portalError": "Nie udało się otworzyć portalu rozliczeń.",
+      "creditsLandDescription": "Dodatkowe kredyty trafią na Twoje saldo zaraz po zakończeniu płatności.",
+      "checkoutError": "Nie udało się rozpocząć płatności.",
+      "upgradeToMax": "Przejdź na Max"
+    }
   },
   "panes": {
     "markets": "Rynki",
@@ -2028,6 +2173,52 @@
       "title": "{{pair}} nie jest dostępna na {{venue}}",
       "titleAnyVenue": "{{pair}} nie jest dostępna",
       "description": "Ten konektor nie zwrócił danych rynkowych dla tej pary. Spróbuj innego, który ją notuje."
+    },
+    "panePicker": {
+      "bindToVariable": "Powiąż ze zmienną",
+      "boundTo": "Powiązano ze zmienną <b>{{variable}}</b>",
+      "market": "Rynek",
+      "setPair": "Ustaw parę dla {{variable}}",
+      "selectPair": "Wybierz parę",
+      "bindingHint": "Wybranie pary zaktualizuje wszystkie panele powiązane ze zmienną {{variable}}",
+      "unbindFromVariable": "Odepnij od zmiennej",
+      "settingForAllPanes": "Ustawianie <b>{{variable}}</b> dla wszystkich powiązanych paneli"
+    },
+    "pane": {
+      "close": "Zamknij {{pane}}",
+      "popOutToColumn": "Przenieś do nowej kolumny",
+      "bindPairToVariable": "Powiąż parę ze zmienną",
+      "bindWalletToVariable": "Powiąż portfel ze zmienną",
+      "bindTimeframeToVariable": "Powiąż interwał ze zmienną",
+      "clearPairOverride": "Wyczyść nadpisanie pary",
+      "closePane": "Zamknij panel",
+      "unbind": "Odepnij",
+      "closeTab": "Zamknij kartę"
+    },
+    "dnd": {
+      "pickedUp": "Podniesiono {{pane}}. Użyj strzałek, aby przenieść, spacji, aby upuścić, escape, aby anulować.",
+      "genericPane": "panel",
+      "noDropTarget": "Brak miejsca upuszczenia.",
+      "dropStackTab": "Upuść tutaj, aby ułożyć jako kartę.",
+      "dropSplitAbove": "Upuść, aby podzielić powyżej.",
+      "dropSplitBelow": "Upuść, aby podzielić poniżej.",
+      "dropNewColumn": "Upuść, aby utworzyć nową kolumnę.",
+      "paneMoved": "Panel przeniesiony.",
+      "dragCancelled": "Przeciąganie anulowane, panel przywrócony.",
+      "dragCancelledFull": "Przeciąganie anulowane, panel wrócił na pierwotną pozycję."
+    },
+    "missingPane": {
+      "requiresPlugin": "Ten panel wymaga wtyczki „{{pluginId}}”",
+      "notAvailable": "Panel „{{type}}” jest niedostępny",
+      "description": "Wtyczka mogła zostać usunięta lub wyłączona.",
+      "openPluginStore": "Otwórz Plugin Store"
+    },
+    "dropZone": {
+      "emptyHint": "Przeciągnij tutaj panel",
+      "addAsTab": "Dodaj jako kartę",
+      "splitTop": "Podziel u góry",
+      "splitBottom": "Podziel na dole",
+      "newColumn": "Nowa kolumna"
     }
   },
   "watchlist": {
@@ -2137,7 +2328,141 @@
     "uninstalled": "Odinstalowano",
     "updateReactivate": "Zaktualizuj i reaktywuj",
     "version": "Wersja",
-    "visit": "Odwiedź"
+    "visit": "Odwiedź",
+    "fullTrust": {
+      "title": "Przyznać pełne zaufanie „{{name}}”?",
+      "description": "Ta wtyczka dostarcza interfejs, więc musi działać w głównej aplikacji bez sandboxa. Wtyczka z pełnym zaufaniem działa z takim samym dostępem jak sam Pairlens.",
+      "itCan": "Może:",
+      "grantPlugins": "czytać dane z innych zainstalowanych wtyczek;",
+      "grantCredentials": "czytać zapisane klucze API giełd i dane portfeli;",
+      "grantTrading": "składać zlecenia i wykonywać inne operacje finansowe w Twoim imieniu.",
+      "trustNote": "Przyznawaj pełne zaufanie tylko wtyczkom autorów, którym ufasz. Możesz ją odinstalować w każdej chwili.",
+      "trustNoteAuthor": "Przyznawaj pełne zaufanie tylko wtyczkom autorów, którym ufasz (autor: {{author}}). Możesz ją odinstalować w każdej chwili.",
+      "grant": "Przyznaj pełne zaufanie"
+    },
+    "network": {
+      "title": "Zezwolić „{{name}}” na połączenie?",
+      "description": "Ta wtyczka musi łączyć się z serwerami spoza Pairlens. Twój terminal wyśle żądania sieciowe do hostów poniżej. Zezwól tylko, jeśli ufasz tej wtyczce — możesz ją odinstalować w każdej chwili, aby cofnąć dostęp.",
+      "hostsIntro": "Będzie mogła łączyć się z:",
+      "reloadNote": "Zatwierdzenie przeładuje terminal, aby zastosować zmianę.",
+      "deny": "Nie zezwalaj",
+      "allow": "Zezwól i przeładuj"
+    },
+    "toggleFailedEnable": "Nie udało się włączyć {{name}}",
+    "toggleFailedDisable": "Nie udało się wyłączyć {{name}}",
+    "updateStagedToast": "Aktualizacja przygotowana — uruchom ponownie, aby zastosować",
+    "restartNow": "Uruchom ponownie teraz",
+    "updateStageFailedToast": "Nie udało się przygotować aktualizacji: {{error}}",
+    "resetStagedToast": "Przywrócono ustawienia domyślne — uruchom ponownie, aby zakończyć",
+    "networkGrantedToast": "Przyznano dostęp do sieci dla „{{name}}” — trwa przeładowywanie…",
+    "networkDeniedToast": "„{{name}}” zainstalowano bez dostępu do sieci — może nie działać, dopóki go nie zezwolisz.",
+    "installCancelledNoTrust": "Anulowano instalację — nie przyznano pełnego zaufania",
+    "installedVersionToast": "Zainstalowano „{{name}}” v{{version}}",
+    "installFailedToast": "Nie udało się zainstalować wtyczki: {{error}}",
+    "localFilesNotFound": "Nie znaleziono lokalnych plików wtyczki",
+    "pluginCodeNotFound": "Nie znaleziono kodu wtyczki — zainstaluj ją ponownie",
+    "fullTrustGrantedNameToast": "Przyznano pełne zaufanie dla „{{name}}”",
+    "loadPluginFailedToast": "Nie udało się wczytać wtyczki: {{error}}",
+    "importFailedToast": "Nie udało się zaimportować wtyczki: {{error}}",
+    "fieldRequired": "{{label}} jest wymagane",
+    "configSaved": "Konfiguracja zapisana",
+    "configurationFailed": "Konfiguracja nie powiodła się",
+    "needsFullTrustToRun": "Wymaga pełnego zaufania, aby działać",
+    "pendingTrustDescription": "Dostarcza interfejs i nie może działać w piaskownicy — przyznaj pełne zaufanie, aby go włączyć, albo go odinstaluj.",
+    "remove": "Usuń",
+    "groupCore": "Podstawowe",
+    "groupProvidersExtensions": "Dostawcy i rozszerzenia",
+    "groupThemes": "Motywy",
+    "removePluginTitle": "Usuń wtyczkę",
+    "removePluginDescription": "To wyłączy i usunie wtyczkę. Wszelkie panele, które dostarczała, pokażą zastępczy element odzyskiwania. Możesz ją ponownie zainstalować ze Sklepu z wtyczkami w każdej chwili.",
+    "resetDefaultsTitle": "Przywróć ustawienia domyślne",
+    "resetDefaultsDescription": "To usunie wszystkie wtyczki niewbudowane, wyczyści przygotowane i dostępne aktualizacje oraz przeładuje terminal. Wbudowane wtyczki pozostaną zainstalowane.",
+    "reset": "Zresetuj",
+    "installFromUrlDialogTitle": "Zainstaluj wtyczkę z adresu URL",
+    "installFromUrlDialogDescription": "Wpisz adres URL modułu wtyczki (.js) do zainstalowania.",
+    "unverifiedPluginTitle": "Niezweryfikowana wtyczka",
+    "unverifiedPluginBody": "Ręcznie instalowane wtyczki nie zostały zweryfikowane pod kątem bezpieczeństwa. Instaluj wtyczki tylko z zaufanych źródeł.",
+    "installAnyway": "Zainstaluj mimo to",
+    "sourceBuiltIn": "Wbudowana",
+    "sourceRegistry": "Rejestr",
+    "sourceUrl": "URL",
+    "sourceLocal": "Lokalna",
+    "fullTrustGrantedRestartToast": "Przyznano pełne zaufanie — uruchom ponownie, aby uruchomić tę wtyczkę w głównej aplikacji",
+    "sandboxedRestartToast": "Wtyczka będzie działać w piaskownicy — uruchom ponownie, aby zastosować",
+    "requiresFullTrustTitle": "Ta wtyczka dostarcza interfejs i musi działać z pełnym zaufaniem.",
+    "trustBadgeFullRequired": "Pełne zaufanie (wymagane)",
+    "trustBadgeFull": "Pełne zaufanie",
+    "trustBadgeSandboxed": "W piaskownicy",
+    "panelCount_one": "{{count}} panel",
+    "panelCount_other": "{{count}} paneli",
+    "update": "Aktualizuj",
+    "revokeFullTrustAria": "Cofnij pełne zaufanie dla {{name}}",
+    "grantFullTrustAria": "Przyznaj pełne zaufanie dla {{name}}",
+    "fullTrustActiveTitle": "Pełne zaufanie — działa w głównej aplikacji. Kliknij, aby przenieść do piaskownicy.",
+    "sandboxedTitle": "Piaskownica — izolowany worker, sieć ograniczona do zadeklarowanych hostów. Kliknij, aby przyznać pełne zaufanie.",
+    "configureAria": "Skonfiguruj {{name}}",
+    "toggleAria": "Przełącz {{name}}",
+    "capabilityProvidersTitle": "Dostawcy funkcji",
+    "capabilityProvidersDescription": "Każda funkcja terminala żąda określonej możliwości, a włączona wtyczka o najwyższym priorytecie dostarcza ją automatycznie. Wybierz konkretną wtyczkę, aby zastąpić automatyczny wybór.",
+    "resetAllOverrides": "Zresetuj wszystkie nadpisania",
+    "noProviderInstalled": "Żadna zainstalowana wtyczka tego nie dostarcza",
+    "browseStore": "Przeglądaj sklep",
+    "installedNeedsKeySingle": "Zainstalowana — wymaga klucza API",
+    "installedNeedsKeyPlural": "{{count}} zainstalowanych — wszystkie wymagają klucza API",
+    "installedDisabledSingle": "1 wtyczka zainstalowana, ale wyłączona",
+    "installedDisabledPlural": "{{count}} wtyczek zainstalowanych, wszystkie wyłączone",
+    "manage": "Zarządzaj",
+    "pinnedActiveNote": "Przypięte — zastępuje automatyczną kolejność",
+    "pinnedInactiveNote": "Przypięta wtyczka jest wyłączona — obowiązuje automatyczna kolejność",
+    "autoOrderLabel": "Automatyczna kolejność: {{chain}}",
+    "chainMore_one": "{{chain}} +{{count}} więcej",
+    "chainMore_other": "{{chain}} +{{count}} więcej",
+    "resolvedPerMarket": "Rozstrzygane per rynek",
+    "marketOverrides": "Nadpisania rynkowe",
+    "pinnedCountBadge_one": "Przypięte: {{count}}",
+    "pinnedCountBadge_other": "Przypięte: {{count}}",
+    "automatic": "Automatyczny",
+    "disabledHint": "wyłączone",
+    "notInstalled": "{{id}} (niezainstalowana)",
+    "saveOverrideFailed": "Nie udało się zapisać nadpisania dostawcy",
+    "removeOverrideFailed": "Nie udało się usunąć nadpisania dostawcy",
+    "resetOverridesFailed": "Nie udało się zresetować nadpisań",
+    "marketConnectorsTitle": "Konektory rynkowe",
+    "marketConnectorsDescription": "Konektory rynkowe przesyłają na żywo dane cenowe, arkusze zleceń i umożliwiają handel bezpośrednio przez API giełd. Włącz giełdy, których chcesz używać.",
+    "activeCountBadge": "{{active}}/{{total}} aktywnych",
+    "connected": "Połączono",
+    "disabledStatus": "Wyłączony",
+    "readAndTrade": "Odczyt + Handel",
+    "readOnly": "Tylko odczyt",
+    "noConnectorsInstalled": "Nie zainstalowano żadnych wtyczek konektorów rynkowych.",
+    "moreConnectors": "Więcej konektorów",
+    "fromPluginStore": "z Plugin Store",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "Dowiedz się więcej",
+    "enabledToast": "{{name}} włączono",
+    "disabledToast": "{{name}} wyłączono",
+    "enableFailedShort": "Nie udało się włączyć",
+    "disableFailedShort": "Nie udało się wyłączyć",
+    "domain": {
+      "marketData": "Dane rynkowe",
+      "trading": "Handel",
+      "wallet": "Portfel",
+      "signals": "Sygnały",
+      "ai": "AI"
+    },
+    "byAuthor": "autor: {{author}}",
+    "installsCount_one": "{{formattedCount}} instalacja",
+    "installsCount_other": "{{formattedCount}} instalacji",
+    "panelsCount": "Panele ({{count}})",
+    "inactive": "Nieaktywna",
+    "previousSlide": "Poprzedni",
+    "nextSlide": "Następny",
+    "goToSlide": "Przejdź do slajdu {{n}}",
+    "copyCommand": "Kopiuj polecenie",
+    "panelCount_few": "{{count}} panele",
+    "panelCount_many": "{{count}} paneli",
+    "installsCount_few": "{{formattedCount}} instalacje",
+    "installsCount_many": "{{formattedCount}} instalacji"
   },
   "search": {
     "title": "Szukaj par",
@@ -2204,8 +2529,71 @@
       "selectAccount": "Wybierz konto",
       "groupWallet": "Portfel kryptowalut",
       "groupBroker": "Konto brokerskie",
-      "groupExchange": "Konto giełdowe"
-    }
+      "groupExchange": "Konto giełdowe",
+      "selectWalletTopBar": "Wybierz portfel na górnym pasku",
+      "connectChainWallet": "Połącz portfel {{chain}}",
+      "connectExchangeAccount": "Połącz konto {{exchange}}",
+      "selectAccountTopBar": "Wybierz konto na górnym pasku"
+    },
+    "trade": {
+      "limitBuy": "Kupno z limitem",
+      "limitSell": "Sprzedaż z limitem",
+      "bought": "Kupiono",
+      "sold": "Sprzedano",
+      "limitOrderFailed": "Zlecenie z limitem nie powiodło się",
+      "swapFailed": "Swap nie powiódł się",
+      "workflowUnsupported": "Workflow nieobsługiwany na tym rynku",
+      "orderBlocked": "Zlecenie zablokowane przez limit ryzyka",
+      "orderRejected": "Zlecenie odrzucone",
+      "orderFailed": "Zlecenie nie powiodło się",
+      "setRegion": "Ustaw swój region",
+      "regionDefaulting": "Region domyślnie ustawiony na Global.",
+      "addPreset": "Dodaj preset",
+      "createFirstWorkflow": "Utwórz swój pierwszy workflow",
+      "editWorkflows": "Edytuj workflow",
+      "selectWorkflow": "Wybierz workflow",
+      "submitting": "Wysyłanie…",
+      "holdToRun": "Przytrzymaj, aby uruchomić",
+      "holdToConfirmLive": "Przytrzymaj, aby potwierdzić · środki ruszają natychmiast",
+      "holdToPlace": "Przytrzymaj, aby złożyć",
+      "runWorkflow": "Uruchom workflow",
+      "buyAsset": "Kup {{asset}}",
+      "sellAsset": "Sprzedaj {{asset}}",
+      "amount": "Ilość",
+      "price": "Cena",
+      "presetsTitle": "Ustawienia kwoty ({{quote}})",
+      "buy": "Kup",
+      "sell": "Sprzedaj",
+      "orderTypeMarket": "Rynek",
+      "orderTypeLimit": "Limit",
+      "workflow": "Workflow",
+      "notSupportedOn": "Nieobsługiwane na {{venue}}",
+      "available": "Dostępne: {{amount}}",
+      "slippage": "Poślizg cenowy"
+    },
+    "status": {
+      "connecting": "Łączenie…",
+      "loadingOrderBook": "Wczytywanie księgi zleceń…",
+      "loadingDepth": "Wczytywanie głębokości…",
+      "loadingCandles": "Wczytywanie świec…",
+      "waitingTrades": "Czekam na transakcje…",
+      "waitingData": "Czekam na dane…",
+      "noCandleData": "Brak danych świecowych",
+      "noTradesFeed": "Przełącz się na giełdę publikującą time and sales"
+    },
+    "columns": {
+      "price": "Cena",
+      "size": "Wielkość",
+      "total": "Razem",
+      "open": "Otwarcie",
+      "close": "Zamknięcie"
+    },
+    "panel": {
+      "expand": "Rozwiń panel",
+      "collapse": "Zwiń panel"
+    },
+    "recentlyViewed": "Ostatnio oglądane",
+    "noMarketsFound": "Nie znaleziono rynków"
   },
   "accounts": {
     "pageTitle": "Konta",
@@ -2301,7 +2689,46 @@
     "importKey": "Zaimportuj klucz prywatny",
     "affiliateDisclosure": "Niektóre linki rejestracyjne mogą przynieść Pairlens prowizję, bez dodatkowych kosztów dla Ciebie.",
     "vaultSealedBody": "Twój sejf poświadczeń jest zablokowany. Twoje konta wciąż tu są — odblokuj, aby je zobaczyć i z nich korzystać.",
-    "credentialsUnreadable": "Nie udało się odczytać kluczy zapisanych na tym urządzeniu. Nic nie zginęło — spróbuj ponownie lub uruchom Pairlens jeszcze raz."
+    "credentialsUnreadable": "Nie udało się odczytać kluczy zapisanych na tym urządzeniu. Nic nie zginęło — spróbuj ponownie lub uruchom Pairlens jeszcze raz.",
+    "addWalletDialogTitle": "Dodaj portfel kryptowalut",
+    "addWalletDialogDescription": "Zaimportuj klucz prywatny portfela do handlu on-chain",
+    "blockchainLabel": "Blockchain",
+    "walletLabelField": "Etykieta",
+    "walletLabelPlaceholder": "Mój portfel",
+    "privateKeyField": "Klucz prywatny",
+    "saveWallet": "Zapisz portfel",
+    "keep": "Zachowaj",
+    "remove": "Usuń",
+    "disconnect": "Odłącz",
+    "localBadge": "Lokalnie",
+    "unknownDate": "Nieznana",
+    "keyExpiredWarning": "Prawdopodobnie wygasł — {{daysInactive}} dni nieaktywności (limit {{limitDays}} dni). Utwórz nowy klucz API na giełdzie.",
+    "keyInactiveWarning": "{{daysInactive}}/{{limitDays}} dni nieaktywności. Klucze wygasają po {{limitDays}} dniach bez użycia.",
+    "exchangeAccountAriaLabel": "Konto giełdowe {{label}}",
+    "cryptoWalletAriaLabel": "Portfel kryptowalut {{label}}",
+    "portfolioTotal": "Razem",
+    "assetAllocationLabel": "Alokacja aktywów",
+    "tableAsset": "Aktywo",
+    "tableAmount": "Ilość",
+    "tableValue": "Wartość",
+    "tableShare": "Udział",
+    "assetCount_one": "{{count}} aktywo",
+    "assetCount_few": "{{count}} aktywa",
+    "assetCount_many": "{{count}} aktywów",
+    "assetCount_other": "{{count}} aktywa",
+    "moreAssets_one": "+{{count}} aktywo więcej",
+    "moreAssets_few": "+{{count}} aktywa więcej",
+    "moreAssets_many": "+{{count}} aktywów więcej",
+    "moreAssets_other": "+{{count}} aktywa więcej",
+    "walletSavedFeedback": "Zapisano portfel kryptowalut.",
+    "walletRemovedFeedback": "Usunięto portfel kryptowalut.",
+    "accountRemovedFeedback": "Usunięto konto.",
+    "walletSaveFailed": "Nie udało się zapisać portfela.",
+    "walletRemoveFailed": "Nie udało się usunąć portfela.",
+    "accountConnectFailed": "Nie udało się połączyć konta.",
+    "accountRemoveFailed": "Nie udało się usunąć konta.",
+    "fieldRequired": "Pole {{field}} jest wymagane",
+    "accountConnectedFeedback": "Połączono konto {{label}} ({{mode}})."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2411,12 +2838,136 @@
     "paneCount_other": "{{count}} paneli",
     "panes": "Panele",
     "showAll": "Pokaż wszystkie",
-    "spotlight": "Na wyróżnieniu"
+    "spotlight": "Na wyróżnieniu",
+    "previousSlide": "Poprzedni",
+    "nextSlide": "Następny",
+    "goToSlide": "Przejdź do slajdu {{number}}"
   },
   "notifications": {
     "flows": "Przepływy",
     "newFlow": "Nowy przepływ",
-    "noFlows": "Brak jeszcze przepływów powiadomień"
+    "noFlows": "Brak jeszcze przepływów powiadomień",
+    "builder": {
+      "sidebar": {
+        "tabRules": "Reguły",
+        "tabActivity": "Aktywność",
+        "noRules": "Brak jeszcze reguł powiadomień",
+        "newRuleTitle": "Nowa reguła powiadomienia",
+        "rulePlaceholder": "Nazwa reguły",
+        "renameRuleTitle": "Zmień nazwę reguły",
+        "rename": "Zmień nazwę",
+        "deleteRuleTitle": "Usuń regułę",
+        "deleteRuleWarning": "Tej czynności nie można cofnąć. Reguła powiadomienia i jej powiązania z parami zostaną trwale usunięte.",
+        "pairsLabel": "Pary",
+        "sendTest": "Wyślij test",
+        "testing": "Testowanie…",
+        "pairAlreadyBound": "Ta para jest już powiązana z regułą",
+        "noBindings": "Jeszcze nie powiązano z żadną parą — reguła nie zadziała, dopóki jej nie dodasz.",
+        "testSent": "Wysłano powiadomienie testowe",
+        "testFailed": "Testu nie udało się dostarczyć",
+        "noActivity": "Żadne powiadomienie jeszcze nie zadziałało",
+        "clearActivity": "Wyczyść aktywność",
+        "channelFailed": "{{channel}} nie powiodło się"
+      },
+      "commitBar": {
+        "cycleDetected": "Wykryto cykl",
+        "issueCount_one": "{{count}} problem",
+        "issueCount_other": "{{count}} problemów",
+        "moreIssues": "…i {{count}} więcej",
+        "pendingChangeCount_one": "{{count}} oczekująca zmiana",
+        "pendingChangeCount_other": "{{count}} oczekujących zmian",
+        "noChanges": "Brak zmian",
+        "review": "Przejrzyj",
+        "discard": "Odrzuć",
+        "commit": "Zapisz",
+        "cannotSaveTitle": "Nie można zapisać reguły",
+        "cycleError": "Reguła zawiera zależność cykliczną. Usuń cykl (czerwone krawędzie) przed zapisaniem.",
+        "saved": "Zapisano regułę"
+      },
+      "diff": {
+        "title": "Przejrzyj zmiany ({{count}})",
+        "addedStep": "Dodano krok {{type}}",
+        "removedStep": "Usunięto krok {{type}}",
+        "modifiedStep": "Zmieniono konfigurację {{type}}",
+        "addedConnection": "Dodano połączenie",
+        "removedConnection": "Usunięto połączenie"
+      },
+      "canvas": {
+        "undoTitle": "Cofnij (Cmd+Z)",
+        "redoTitle": "Ponów (Cmd+Shift+Z)",
+        "deleteStep": "Usuń krok",
+        "deleteConnection": "Usuń połączenie",
+        "cycleLabel": "cykl"
+      },
+      "palette": {
+        "addStep": "Dodaj krok",
+        "categoryEvents": "Zdarzenia",
+        "categoryConditions": "Warunki",
+        "categoryChannels": "Kanały"
+      },
+      "category": {
+        "event": "Zdarzenie",
+        "condition": "Warunek",
+        "channel": "Kanał"
+      },
+      "emptyState": {
+        "pickRuleHint": "Wybierz regułę po lewej, aby otworzyć ją na płótnie.",
+        "untitledRule": "Reguła bez nazwy",
+        "eyebrow": "Powiadomienia",
+        "title": "Obserwuj rynek, nie musząc tego robić samemu",
+        "description": "Reguła to mały przepływ: coś się dzieje — poziom zostaje przekroczony, świeca się zamyka, zlecenie zostaje zrealizowane, wskaźnik wysyła alert — przechodzi przez dodane warunki, a następnie dociera do ciebie jako toast, powiadomienie systemowe lub webhook.",
+        "startBlank": "Zacznij od pustego płótna",
+        "startFromTemplate": "Zacznij od szablonu",
+        "footnote": "Szablony otwierają się jako szkic powiązany z {{pair}} na {{market}} — edytuj kroki, zmień parę na liście reguł, a następnie zapisz. Reguły działają tylko wtedy, gdy Pairlens jest uruchomiony."
+      },
+      "direction": "Kierunek",
+      "above": "Powyżej",
+      "below": "Poniżej",
+      "any": "Dowolny",
+      "buy": "Kupno",
+      "sell": "Sprzedaż",
+      "up": "Wzrost",
+      "down": "Spadek",
+      "either": "Dowolny",
+      "toggleOn": "Włączony",
+      "toggleOff": "Wyłączony",
+      "steps": {
+        "candleClose": {
+          "title": "Zamknięcie świecy"
+        },
+        "localToast": {
+          "title": "Powiadomienie toast",
+          "description": "Pokazuje powiadomienie toast w aplikacji po zadziałaniu"
+        },
+        "orderExecuted": {
+          "title": "Zlecenie zrealizowane"
+        },
+        "osNotification": {
+          "title": "Powiadomienie systemowe",
+          "sound": "Dźwięk"
+        },
+        "percentChange": {
+          "title": "Zmiana procentowa",
+          "percent": "Procent"
+        },
+        "priceAlert": {
+          "title": "Alert cenowy"
+        },
+        "priceCondition": {
+          "title": "Warunek cenowy"
+        },
+        "signalGenerated": {
+          "title": "Wygenerowano sygnał",
+          "signalType": "Typ sygnału",
+          "anyTypePlaceholder": "Dowolny typ"
+        },
+        "timeWindow": {
+          "title": "Okno czasowe",
+          "start": "Początek (UTC)",
+          "end": "Koniec (UTC)"
+        }
+      }
+    }
   },
   "updater": {
     "available": "Dostępna aktualizacja",
@@ -2505,7 +3056,8 @@
     "failed": "Nie udało się załadować mapy cieplnej",
     "noData": "Brak dostępnych danych",
     "tryLater": "Spróbuj ponownie później",
-    "willAppear": "Tutaj pojawią się dane mapy cieplnej"
+    "willAppear": "Tutaj pojawią się dane mapy cieplnej",
+    "volume": "Wolumen"
   },
   "news": {
     "title": "Wiadomości",
@@ -2620,5 +3172,228 @@
   "fullscreen": {
     "enter": "Pełny ekran",
     "exit": "Wyjdź z pełnego ekranu"
+  },
+  "research": {
+    "phaseSearching": "Przeszukiwanie internetu...",
+    "phaseReading": "Wczytywanie źródeł...",
+    "phaseAnalyzing": "Analizowanie danych rynkowych...",
+    "phaseWriting": "Pisanie raportu...",
+    "authRequiredTitle": "Panel research — wystarczy się zalogować",
+    "authRequiredDescription": "Uporządkowane raporty research dla dowolnej pary, oparte na aktualnych źródłach internetowych. Zaloguj się, a potem subskrybuj Pairlens Intelligence lub użyj własnego klucza AI.",
+    "upgradeDescription": "Uporządkowane raporty research dla dowolnej pary, oparte na aktualnych źródłach internetowych. Subskrybuj Pairlens Intelligence — albo skorzystaj z własnych kluczy AI i wyszukiwania przez Wtyczki, za darmo.",
+    "unavailableTitle": "Research niedostępny",
+    "unavailableDescription": "Włącz wtyczkę AI na stronie Wtyczki, aby generować raporty research dla tej pary.",
+    "goToPlugins": "Przejdź do Wtyczek",
+    "navigateToPair": "Przejdź do pary, aby zobaczyć research.",
+    "researchingSymbol": "Analizowanie {{symbol}}",
+    "generatingReport": "Generowanie raportu...",
+    "cachedGenerated": "Z pamięci podręcznej — wygenerowano {{time}}",
+    "freshGenerated": "Świeże — wygenerowano przed chwilą",
+    "refresh": "Odśwież",
+    "sourcesCount": "Źródła ({{count}})",
+    "reportTitle": "Raport research",
+    "fullscreenDescription": "Raport research w trybie pełnoekranowym. Naciśnij Escape, aby zamknąć.",
+    "sections": "Sekcje",
+    "sparklineAriaLabel": "Wykres iskrowy ceny dziennej",
+    "errorTitle": "Research niedostępny"
+  },
+  "capabilityGate": {
+    "authTitle": "Wystarczy jedno bezpłatne logowanie",
+    "authDescription": "Ta funkcja działa za pośrednictwem Twojego konta Pairlens.",
+    "signInFree": "Zaloguj się za darmo",
+    "authNote": "Zajmuje 30 sekund. Twoje klucze giełdowe nigdy nie opuszczają tego urządzenia.",
+    "upgradeRequired": "Wymagany upgrade",
+    "upgradeDescriptionLevel": "Ta funkcja wymaga poziomu dostępu <b>{{level}}</b>.",
+    "upgradeDescriptionGeneric": "Ta funkcja wymaga wyższego poziomu dostępu.",
+    "managePlugin": "Zarządzaj wtyczką"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}} nie jest tu dostępne",
+    "description": "Dla Twojego regionu {{exchange}} nie udostępnia danych rynkowych, więc ten konektor nie może wczytać danych. Przełącz się na inny konektor albo zaktualizuj swój region, jeśli jest ustawiony nieprawidłowo.",
+    "yourRegion": "Twój region:",
+    "notSet": "Nie ustawiono",
+    "changeRegion": "Zmień region",
+    "switchTo": "Przełącz na {{venue}}"
+  },
+  "pairPicker": {
+    "noPairsFound": "Nie znaleziono par.",
+    "startTyping": "Zacznij pisać, aby wyszukać pary."
+  },
+  "routes": {
+    "goHome": "Przejdź do strony głównej",
+    "noConnectors": {
+      "title": "Brak dostępnych konektorów rynkowych",
+      "description": "Do przesyłania danych na żywo wymagane są wtyczki konektorów rynkowych. Włącz lub zainstaluj konektor, aby zacząć.",
+      "manage": "Zarządzaj konektorami rynkowymi"
+    },
+    "workspace": {
+      "notFound": "Nie znaleziono obszaru roboczego",
+      "edit": "Edytuj"
+    },
+    "notFound": {
+      "title": "Nie znaleziono strony"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "Brak katalogu instrumentów",
+      "noInstrumentCatalogDescription": "Brak aktywnych wtyczek udostępniających wykrywanie instrumentów. Włącz wtyczkę, aby przeglądać dostępne pary handlowe.",
+      "goToPlugins": "Przejdź do Wtyczek"
+    },
+    "notifications": {
+      "loading": "Ładowanie powiadomień…"
+    },
+    "workflows": {
+      "loading": "Ładowanie kreatora workflow…"
+    },
+    "plugins": {
+      "tabBuild": "Zbuduj",
+      "activeCount": "{{active}}/{{total}} aktywne",
+      "searchPlaceholder": "Szukaj wtyczek…",
+      "clearSearch": "Wyczyść wyszukiwanie"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "Płatność zakończona",
+      "titlePack": "Doładowano {{credits}} dodatkowych kredytów.",
+      "titlePlan": "{{label}} jest teraz Twój.",
+      "titleDefault": "Pairlens Intelligence jest teraz Twój.",
+      "bodyPack": "Doliczają się do Twojego miesięcznego budżetu i wygasają za {{days}} dni. Wróć do aplikacji Pairlens — Twoje saldo zaktualizuje się w ciągu kilku sekund.",
+      "bodyPlanWithCredits": "Twój hostowany AI-kopilot, research i wyszukiwanie w sieci są odblokowane z {{credits}} kredytami miesięcznie. Wróć do aplikacji Pairlens — rozpozna Twoją subskrypcję w ciągu kilku sekund.",
+      "bodyPlanNoCredits": "Twój hostowany AI-kopilot, research i wyszukiwanie w sieci są odblokowane. Wróć do aplikacji Pairlens — rozpozna Twoją subskrypcję w ciągu kilku sekund.",
+      "openTerminal": "Otwórz terminal",
+      "closeTabHint": "Zapłaciłeś z aplikacji na komputer? Możesz po prostu zamknąć tę kartę.",
+      "receiptHint": "Paragon i faktury znajdziesz w e-mailu oraz w portalu rozliczeniowym (Ustawienia → Intelligence)."
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "Workflowy",
+      "tabRuns": "Przebiegi",
+      "emptyState": "Brak workflowów",
+      "createTitle": "Nowy workflow",
+      "namePlaceholder": "Nazwa workflow",
+      "renameTitle": "Zmień nazwę workflow",
+      "renameButton": "Zmień nazwę",
+      "deleteTitle": "Usuń workflow",
+      "deleteDescription": "Tej czynności nie można cofnąć. Workflow zostanie trwale usunięty.",
+      "runsEmpty": "Brak przebiegów — uruchom jeden z panelu transakcyjnego",
+      "clearHistory": "Wyczyść historię",
+      "runOutcome": "{{executed}} ok",
+      "runOutcomeWithFailed": "{{executed}} ok, {{failed}} nieudanych"
+    },
+    "canvas": {
+      "undoTitle": "Cofnij (Cmd+Z)",
+      "redoTitle": "Ponów (Cmd+Shift+Z)",
+      "deleteStep": "Usuń krok",
+      "deleteConnection": "Usuń połączenie"
+    },
+    "commitBar": {
+      "cycleDetected": "Wykryto cykl",
+      "issue_one": "{{count}} problem",
+      "issue_other": "{{count}} problemów",
+      "pendingChange_one": "{{count}} oczekująca zmiana",
+      "pendingChange_other": "{{count}} oczekujących zmian",
+      "noChanges": "Brak zmian",
+      "review": "Przejrzyj",
+      "discard": "Odrzuć",
+      "commit": "Zatwierdź",
+      "saveErrorTitle": "Nie można zapisać workflow",
+      "saveErrorCycleBody": "Workflow zawiera zależność cykliczną. Usuń cykl (czerwone krawędzie) przed zapisaniem.",
+      "saveSuccess": "Workflow zapisany"
+    },
+    "diffPanel": {
+      "title": "Przejrzyj zmiany ({{count}})",
+      "addedStep": "Dodano krok {{type}}",
+      "removedStep": "Usunięto krok {{type}}",
+      "modifiedStep": "Zmieniono konfigurację {{type}}",
+      "addedConnection": "Dodano połączenie",
+      "removedConnection": "Usunięto połączenie",
+      "noChanges": "Brak zmian"
+    },
+    "palette": {
+      "title": "Dodaj krok",
+      "categoryEntry": "Wejście",
+      "categoryOrders": "Zlecenia",
+      "categoryExit": "Strategie wyjścia",
+      "categoryLogic": "Logika",
+      "categoryCustom": "Niestandardowe",
+      "requires": "Wymaga: {{requirement}}",
+      "notAvailableOn": "Niedostępne na {{markets}}"
+    },
+    "emptyState": {
+      "pickWorkflow": "Wybierz workflow po lewej, aby otworzyć go na płótnie.",
+      "eyebrow": "Workflowy",
+      "title": "Każde zlecenie może mieć własny plan",
+      "description": "Workflow jest podpięty pod zlecenie złożone z panelu transakcyjnego. Gdy tylko się zrealizuje, kroki pod nim uruchamiają się same — bracket, drabinki, etapowe wyjścia, sprawdzenia czasowe — więc plan jest już gotowy, zamiast być czymś, o czym trzeba pamiętać później.",
+      "blankLabel": "Zacznij od pustego płótna",
+      "footnote": "Szablony otwierają się jako szkic: edytuj dowolny krok, a potem kliknij Zatwierdź, aby zapisać. Podepnij zapisany workflow pod zlecenie z panelu transakcyjnego, aby go uruchomić."
+    },
+    "steps": {
+      "sideLabel": "Strona",
+      "sizeLabel": "Wielkość",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "Abs",
+      "side": {
+        "inherit": "Odziedziczona",
+        "opposite": "Przeciwna",
+        "buy": "Kup",
+        "sell": "Sprzedaj"
+      },
+      "triggerWhenPrice": "Uruchom, gdy cena",
+      "triggerPercentFromEntry": "% od wejścia",
+      "triggerReachesPrice": "Osiągnie cenę",
+      "priceLevel": "Poziom ceny",
+      "priceLabel": "Cena",
+      "stopLoss": {
+        "title": "Stop loss",
+        "lossPercent": "Strata %"
+      },
+      "takeProfit": {
+        "title": "Take profit",
+        "gainPercent": "Zysk %"
+      },
+      "limitOrder": {
+        "title": "Zlecenie limit",
+        "priceModeFixed": "Stała",
+        "priceModePercentOffset": "% odchylenia",
+        "priceModeOffset": "Odchylenie",
+        "priceValueLabel": "Wartość ceny"
+      },
+      "marketOrder": {
+        "title": "Zlecenie rynkowe"
+      },
+      "condition": {
+        "title": "Warunek",
+        "typeLabel": "Typ",
+        "typePercentChange": "% zmiany",
+        "hint": "+N przechodzi przy wzroście ≥N%, -N przy spadku ≥N%"
+      },
+      "wait": {
+        "title": "Czekaj",
+        "durationLabel": "Czas trwania",
+        "unitSeconds": "s",
+        "unitMinutes": "min",
+        "unitHours": "godz"
+      },
+      "split": {
+        "title": "Podział równoległy",
+        "branchesLabel": "Gałęzie"
+      },
+      "trigger": {
+        "title": "Wejście zlecenia",
+        "badge": "Wejście"
+      },
+      "configPanel": {
+        "requiresNote": "Wymaga: {{requirement}}. Rynki bez tej funkcji nie mogą uruchamiać workflowów zawierających ten krok.",
+        "on": "Wł.",
+        "off": "Wył."
+      }
+    },
+    "execution": {
+      "statusExecuted": "wykonano",
+      "statusSkipped": "pominięto",
+      "statusFailed": "nieudane",
+      "summaryExecuted": "{{count}} wykonano",
+      "summarySkipped": "{{count}} pominięto",
+      "summaryFailed": "{{count}} nieudanych"
+    }
   }
 }

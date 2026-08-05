@@ -235,7 +235,7 @@ function MarketDropdownContent({
         {filtered.length === 0 && (
           <DropdownMenuItem disabled>
             <span className="text-xs text-muted-foreground">
-              No markets found
+              {t('terminal.noMarketsFound')}
             </span>
           </DropdownMenuItem>
         )}

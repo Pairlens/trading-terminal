@@ -244,7 +244,9 @@
       "create": "Створити обліковий запис",
       "skip": "Пропустити — зберігати все на цьому пристрої",
       "signedIn": "Ви увійшли як {{email}}",
-      "label": "Обліковий запис"
+      "label": "Обліковий запис",
+      "otpSendFailed": "Не вдалося надіслати код",
+      "signInFailed": "Не вдалося увійти"
     },
     "summary": {
       "eyebrow": "Готово",
@@ -376,6 +378,42 @@
         "title": "Ваша машина, ваші ключі",
         "description": "Боти працюють тут, а не на наших серверах, і ваші API-ключі ніколи не залишають цей комп'ютер. Тримайте його активним із відкритим Pairlens і вимикайте будь-якого бота тієї миті, коли він має зупинитися."
       }
+    },
+    "scenes": {
+      "topMover": "Лідер руху · {{pair}} {{delta}}",
+      "watchlistCount": "Список відстеження · {{count}}",
+      "signalBreakout": "Breakout",
+      "signalPullbackForming": "Формується пулбек",
+      "onClose": "по закриттю",
+      "crossedAbovePrice": "перетнула {{price}} знизу вгору",
+      "conditionCrossesAbove": "перетинає знизу вгору",
+      "notifyMeDesktopInApp": "Сповістити мене — на робочому столі й у застосунку",
+      "nodeTrigger": "Тригер",
+      "nodeSignalLabel": "Сигнал: {{signal}}",
+      "nodeCondition": "Умова",
+      "nodeVolumeAboveAvg": "Обсяг > середнього",
+      "nodeAction": "Дія",
+      "nodeAlertAndJournal": "Сповіщення + журнал",
+      "runBreakoutWatcher": "Спостерігач breakout",
+      "runDcaBuyer": "Покупець DCA",
+      "runStopLossGuard": "Вартовий стоп-лосу",
+      "ranAt": "{{time}} · виконано",
+      "runsLocally": "Виконується локально",
+      "storedOnDevice": "Зберігається на цьому пристрої — ніколи на наших серверах",
+      "osKeychain": "Сховище ключів ОС",
+      "pluginKindMarketData": "Ринкові дані",
+      "pluginKindTheme": "Тема",
+      "pluginKindAutomation": "Автоматизація",
+      "sandboxedByDefault": "За замовчуванням у пісочниці",
+      "signedVerified": "Підписано й перевірено",
+      "networkAccessApproveHost": "Мережевий доступ — ви погоджуєте кожен хост",
+      "copiedToWorkspaces": "Скопійовано у ваші робочі простори",
+      "statNet": "Чистий прибуток",
+      "statMaxDd": "Макс. просадка",
+      "sameCodeGoesLive": "У реальну торгівлю йде той самий код",
+      "runsOnYourMachine": "Працює на вашому пристрої — не дайте йому заснути",
+      "botMeanReversion": "Повернення до середнього",
+      "chainWallet": "Гаманець {{chain}}"
     }
   },
   "common": {
@@ -398,7 +436,12 @@
     "showInFolder": "Показати в теці",
     "updated": "Оновлено {{time}}",
     "back": "Назад",
-    "dismiss": "Сховати"
+    "dismiss": "Сховати",
+    "unknownError": "Невідома помилка",
+    "ordersLockedRiskLimit": "Ордери заблоковано через порушення ліміту ризику. Розблокуйте їх у розділі Налаштування > Керування ризиками.",
+    "buyOrdersLockedRiskLimit": "Купівлю заблоковано через порушення ліміту ризику. Розблокуйте її у розділі Налаштування > Керування ризиками.",
+    "positionSizeExceeded": "Ордер заблоковано лімітом ризику: позиція становить {{ratioPct}}% портфеля — понад ваш максимум у {{maxPositionSize}}%. Змініть це в розділі Налаштування > Керування ризиками.",
+    "sessionExpired": "Ваша сесія завершилася — увійдіть знову."
   },
   "legal": {
     "terms": "Умови використання",
@@ -581,7 +624,22 @@
       "publisherKeyConsentTitle": "Довіряти цьому видавцю?",
       "publisherKeyConsentBody": "Плагіни, підписані цим ключем, можна буде встановлювати на цьому пристрої. Зловмисний видавець може випустити плагіни, що запитують повну довіру — з доступом до даних ваших інших плагінів, збережених облікових даних бірж і торгівлі. Порівняйте відбиток із видавцем через канал, якому довіряєте, перш ніж продовжити.",
       "publisherKeyConsentConfirm": "Довіряти цьому ключу",
-      "publisherKeyConsentCancel": "Скасувати"
+      "publisherKeyConsentCancel": "Скасувати",
+      "updatesTitle": "Оновлення плагінів",
+      "updatesDescription": "Визначте, як плагіни оновлюються, коли в реєстрі з'являються новіші версії.",
+      "updateModeLabel": "Режим оновлення",
+      "updateModeAutoDescription": "Оновлення завантажуються та встановлюються автоматично",
+      "updateModeNotifyDescription": "Ви побачите значок, коли з'являться оновлення",
+      "updateModeOffDescription": "Автоматична перевірка оновлень вимкнена",
+      "updateModeAuto": "Автооновлення",
+      "updateModeNotify": "Лише сповіщати",
+      "updateModeOffLabel": "Вимкнено",
+      "checkIntervalLabel": "Інтервал перевірки",
+      "checkIntervalDescription": "Як часто перевіряти реєстр на наявність новіших версій",
+      "intervalHourly": "Щогодини",
+      "interval6Hours": "Кожні 6 годин",
+      "interval12Hours": "Кожні 12 годин",
+      "intervalDaily": "Щодня"
     },
     "appearance": {
       "colorMode": "Кольоровий режим",
@@ -603,7 +661,9 @@
       "balanced": "Збалансовано",
       "balancedDescription": "Тікер і книга ордерів кожні 250мс, свічки кожні 500мс. Хороший баланс між чутливістю та ефективністю.",
       "energySaver": "Економія енергії",
-      "energySaverDescription": "Тікер і книга ордерів кожну 1с, свічки кожні 2с. Найкраще для пасивного спостереження або ноутбуків на батареї."
+      "energySaverDescription": "Тікер і книга ордерів кожну 1с, свічки кожні 2с. Найкраще для пасивного спостереження або ноутбуків на батареї.",
+      "idleGuardTitle": "Відключення при бездіяльності",
+      "idleGuardDescription": "Призупиняє потоки ринкових даних після 1 години бездіяльності, щоб заощадити трафік і зменшити споживання енергії."
     },
     "desktop": {
       "closeBehavior": {
@@ -1037,7 +1097,9 @@
       "namePlaceholder": "Назва папки"
     },
     "createFirst": "Створіть свій перший робочий простір",
-    "emptyState": "Поки що немає робочих просторів"
+    "emptyState": "Поки що немає робочих просторів",
+    "descriptionLabel": "Опис",
+    "descriptionPlaceholder": "Необов'язковий короткий опис"
   },
   "session": {
     "checking": "Перевірка сесії…",
@@ -1095,7 +1157,9 @@
     "verifying": "Підтвердження...",
     "verifyAndSignIn": "Підтвердити та увійти",
     "codeRequired": "Код обов'язковий",
-    "emailRequired": "Пошта обов'язкова"
+    "emailRequired": "Пошта обов'язкова",
+    "dialogDescription": "Увійдіть, щоб отримати доступ до цієї функції",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "Сесію призупинено",
@@ -1115,7 +1179,14 @@
     "connecting": "Підключення",
     "stalled": "Перепідключення",
     "offline": "Офлайн",
-    "error": "Помилка"
+    "error": "Помилка",
+    "pluginUpdatesReady_one": "{{count}} оновлення плагіна готове до встановлення",
+    "pluginUpdatesReady_other": "{{count}} оновлення плагіна готові до встановлення",
+    "pluginUpdatesDescription": "Оновлення застосуються після перезапуску термінала.",
+    "restartNow": "Перезапустити зараз",
+    "later": "Пізніше",
+    "pluginUpdatesReady_few": "{{count}} оновлення плагіна готові до встановлення",
+    "pluginUpdatesReady_many": "{{count}} оновлень плагіна готові до встановлення"
   },
   "copilot": {
     "aiLens": "AI-лінза",
@@ -1134,7 +1205,46 @@
     },
     "marketRegime": "Режим ринку",
     "trending": "Трендовий",
-    "choppy": "Флет"
+    "choppy": "Флет",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "Розмір",
+    "orderPlacedPaper": "Паперовий ордер виставлено",
+    "orderPlaced": "Ордер виставлено",
+    "autoApprovedNote": "Схвалено автоматично ({{mode}} · «більше не питати» увімкнено)",
+    "turnOff": "Вимкнути",
+    "autoApproving": "Автоматичне схвалення ордера {{mode}}…",
+    "liveOrderWarning": "Реальний ордер — справжні кошти, застосовується в межах ваших лімітів ризику.",
+    "dontAskAgainPaper": "Більше не питати для паперових угод",
+    "dontAskAgainLive": "Більше не питати для реальних угод на {{market}}",
+    "placing": "Виставлення…",
+    "confirmMode": "Підтвердити {{mode}}",
+    "dismissed": "Відхилено",
+    "cancelOrderPrompt": "Скасувати ордер {{orderId}} на {{pair}} · {{market}}?",
+    "cancelled": "Скасовано",
+    "cancelFailed": "Не вдалося скасувати",
+    "cancelling": "Скасування…",
+    "confirmCancel": "Підтвердити скасування",
+    "keep": "Залишити",
+    "tradingUnavailable": "Торгівля недоступна.",
+    "noCredentialsForMarket": "Немає підключених облікових даних для {{market}}. Додайте API-ключі в розділі «Облікові записи», щоб торгувати наживо.",
+    "watchingPair": "Спостереження за {{pair}} · {{timeframe}}",
+    "genericChatError": "У копілота сталася помилка — спробуйте надіслати ще раз.",
+    "quickActionHowIsDoing": "Як справи у {{symbol}}?",
+    "quickActionSuggestedIndicators": "Рекомендовані індикатори",
+    "quickActionAnySignals": "Є якісь сигнали?",
+    "scheduledCheckPrefix": "[Заплановану перевірку налаштовано {{minutes}} хв тому]",
+    "authRequiredTitle": "Знайомтеся зі своїм ШІ-копілотом",
+    "authRequiredDescription": "Контекстний аналіз для будь-якої пари — він читає графік, перевіряє ваші ліміти ризику та відповідає з обґрунтуванням, яке можна оскаржити. Увійдіть, а потім оформіть підписку на Pairlens Intelligence або використайте власний ключ ШІ.",
+    "upgradeRequiredDescription": "Ваш ШІ-копілот читає графік, перевіряє ваші ліміти ризику та відповідає з обґрунтуванням, яке можна оскаржити. Оформіть підписку на Pairlens Intelligence — або використайте власний ключ ШІ через Plugins, безкоштовно.",
+    "aiLensUnavailableTitle": "AI Lens недоступний",
+    "aiLensUnavailableDescription": "Увімкніть ШІ-плагін на сторінці Plugins, щоб отримати аналіз ринку в реальному часі та допомогу в торгівлі.",
+    "goToPlugins": "Перейти до Plugins",
+    "analyzePair": "Аналізувати {{pair}}",
+    "startConversation": "Почати розмову",
+    "emptyStateHint": "Запитайте про стан ринку, перевірте свій сетап або попросіть оцінку ризику — ШІ має повний контекст цієї пари.",
+    "contextAware": "Враховує контекст",
+    "toolFailed": "Інструмент не спрацював"
   },
   "chart": {
     "contextMenu": {
@@ -1318,7 +1428,9 @@
       "pause": "Пауза",
       "step": "Наступний бар",
       "exit": "Вийти з відтворення"
-    }
+    },
+    "fullscreenTitle": "Графік на весь екран",
+    "fullscreenHint": "Графік у повноекранному режимі. Натисніть Escape, щоб вийти."
   },
   "botsPage": {
     "loading": "Завантаження ботів…",
@@ -1880,7 +1992,15 @@
     "frozen": "Заморожено",
     "total": "Всього",
     "refreshBalances": "Оновити",
-    "asset": "Актив"
+    "asset": "Актив",
+    "cancelOrderTitle": "Скасувати ордер?",
+    "cancelOrderBody": "Це скасує ваш ордер на {{side}} по {{pair}}.",
+    "keepOrder": "Залишити ордер",
+    "cancelOrder": "Скасувати ордер",
+    "sideBuy": "купівлю",
+    "sideSell": "продаж",
+    "buy": "Купівля",
+    "sell": "Продаж"
   },
   "pairInfo": {
     "title": "Інформація про пару",
@@ -1923,7 +2043,10 @@
     "emptyTitle": "Введіть URL вище, щоб вбудувати вебсайт",
     "embedWarning": "Деякі вебсайти блокують вбудовування в iframe. Якщо сторінка не завантажується, спробуйте відкрити її в браузері.",
     "blockedTitle": "Цей сайт не можна вбудувати",
-    "blockedDescription": "Цей вебсайт блокує відображення всередині інших сторінок. Ви можете відкрити його в окремій вкладці браузера."
+    "blockedDescription": "Цей вебсайт блокує відображення всередині інших сторінок. Ви можете відкрити його в окремій вкладці браузера.",
+    "forward": "Вперед",
+    "failedToLoad": "Не вдалося завантажити",
+    "viewPaused": "Веб-перегляд призупинено"
   },
   "intelligence": {
     "analyzing": "Аналіз ринку…",
@@ -1932,7 +2055,29 @@
     "recentSignals": "Останні сигнали",
     "regime": "Режим",
     "trending": "Трендовий",
-    "choppy": "Флет"
+    "choppy": "Флет",
+    "upsell": {
+      "priceMonthly": "{{price}} $/міс",
+      "taxNotice": "Ціни вказані без урахування податків — вони розраховуються під час оформлення замовлення.",
+      "defaultTitle": "Розблокуйте Pairlens Intelligence",
+      "defaultDescription": "Хмарний ШІ-помічник і веб-research без потреби у власних API-ключах. Кожен план включає місячний ліміт використання, спільний для чату, research і веб-пошуку.",
+      "byokNote": "Віддаєте перевагу власному провайдеру? Підключіть ключ Anthropic, OpenAI, Groq або OpenRouter на сторінці <plugins>«Плагіни»</plugins> — ШІ з власним ключем завжди безкоштовний.",
+      "checkoutOpenedTitle": "Оформлення замовлення відкрито у браузері",
+      "checkoutActivates": "Підписка активується тут одразу після завершення оплати.",
+      "checkoutStartError": "Не вдалося розпочати оформлення замовлення — спробуйте ще раз.",
+      "subscriptionRequiredTitle": "Потрібна підписка Pairlens Intelligence",
+      "subscriptionRequiredBody": "Хмарний ШІ працює за планом Intelligence. Оформіть підписку нижче або підключіть власний ключ провайдера ШІ в плагінах.",
+      "budgetUsedUpTitle": "Місячний ліміт використання вичерпано",
+      "budgetUsedBody": "Ви вичерпали кредити Intelligence цього циклу.",
+      "budgetResetsOn": "Ваш ліміт оновиться {{date}}.",
+      "topUpHint": "Поповніть пакетом кредитів, щоб продовжити — кредити пакета згорають через 30 днів після покупки.",
+      "upgradeToMaxHint": "Перейдіть на {{label}}, щоб отримувати {{credits}} кредитів на місяць.",
+      "manageSubscription": "Керування підпискою",
+      "portalError": "Не вдалося відкрити портал оплати.",
+      "creditsLandDescription": "Додаткові кредити зараховуються на баланс одразу після завершення оплати.",
+      "checkoutError": "Не вдалося розпочати оформлення замовлення.",
+      "upgradeToMax": "Перейти на Max"
+    }
   },
   "panes": {
     "markets": "Ринки",
@@ -2028,6 +2173,52 @@
       "title": "{{pair}} недоступна на {{venue}}",
       "titleAnyVenue": "{{pair}} недоступна",
       "description": "Цей конектор не повернув ринкових даних для цієї пари. Спробуйте інший, де вона торгується."
+    },
+    "panePicker": {
+      "bindToVariable": "Прив'язати до змінної",
+      "boundTo": "Прив'язано до <b>{{variable}}</b>",
+      "market": "Ринок",
+      "setPair": "Встановити пару для {{variable}}",
+      "selectPair": "Вибрати пару",
+      "bindingHint": "Вибір пари оновить усі панелі, прив'язані до {{variable}}",
+      "unbindFromVariable": "Відв'язати від змінної",
+      "settingForAllPanes": "Встановлення <b>{{variable}}</b> для всіх прив'язаних панелей"
+    },
+    "pane": {
+      "close": "Закрити {{pane}}",
+      "popOutToColumn": "Винести в нову колонку",
+      "bindPairToVariable": "Прив'язати пару до змінної",
+      "bindWalletToVariable": "Прив'язати гаманець до змінної",
+      "bindTimeframeToVariable": "Прив'язати таймфрейм до змінної",
+      "clearPairOverride": "Скинути перевизначення пари",
+      "closePane": "Закрити панель",
+      "unbind": "Відв'язати",
+      "closeTab": "Закрити вкладку"
+    },
+    "dnd": {
+      "pickedUp": "Піднято {{pane}}. Стрілки — перемістити, пробіл — опустити, escape — скасувати.",
+      "genericPane": "панель",
+      "noDropTarget": "Немає цілі для скидання.",
+      "dropStackTab": "Відпустіть тут, щоб додати як вкладку.",
+      "dropSplitAbove": "Відпустіть, щоб розділити зверху.",
+      "dropSplitBelow": "Відпустіть, щоб розділити знизу.",
+      "dropNewColumn": "Відпустіть, щоб створити нову колонку.",
+      "paneMoved": "Панель переміщено.",
+      "dragCancelled": "Перетягування скасовано, панель повернуто.",
+      "dragCancelledFull": "Перетягування скасовано, панель повернулася на початкову позицію."
+    },
+    "missingPane": {
+      "requiresPlugin": "Ця панель потребує плагіна «{{pluginId}}»",
+      "notAvailable": "Панель «{{type}}» недоступна",
+      "description": "Можливо, плагін було видалено або вимкнено.",
+      "openPluginStore": "Відкрити магазин плагінів"
+    },
+    "dropZone": {
+      "emptyHint": "Перетягніть сюди панель",
+      "addAsTab": "Додати як вкладку",
+      "splitTop": "Розділити зверху",
+      "splitBottom": "Розділити знизу",
+      "newColumn": "Нова колонка"
     }
   },
   "watchlist": {
@@ -2137,7 +2328,141 @@
     "uninstalled": "Видалено",
     "updateReactivate": "Оновити й реактивувати",
     "version": "Версія",
-    "visit": "Відвідати"
+    "visit": "Відвідати",
+    "fullTrust": {
+      "title": "Надати повну довіру «{{name}}»?",
+      "description": "Цей плагін додає інтерфейс, тож має працювати в основному застосунку без пісочниці. Плагін із повною довірою отримує ті самі права, що й сам Pairlens.",
+      "itCan": "Він зможе:",
+      "grantPlugins": "читати дані інших встановлених плагінів;",
+      "grantCredentials": "читати збережені API-ключі бірж та дані гаманців;",
+      "grantTrading": "здійснювати угоди та інші фінансові операції від вашого імені.",
+      "trustNote": "Надавайте повну довіру лише плагінам від авторів, яким ви довіряєте. Видалити його можна будь-коли.",
+      "trustNoteAuthor": "Надавайте повну довіру лише плагінам від авторів, яким ви довіряєте (автор: {{author}}). Видалити його можна будь-коли.",
+      "grant": "Надати повну довіру"
+    },
+    "network": {
+      "title": "Дозволити «{{name}}» підключатися?",
+      "description": "Цьому плагіну потрібні сервери поза Pairlens. Термінал надсилатиме мережеві запити до хостів нижче. Дозволяйте, лише якщо довіряєте плагіну — видалити його й відкликати доступ можна будь-коли.",
+      "hostsIntro": "Він зможе підключатися до:",
+      "reloadNote": "Після підтвердження термінал перезавантажиться, щоб застосувати зміну.",
+      "deny": "Не дозволяти",
+      "allow": "Дозволити й перезавантажити"
+    },
+    "toggleFailedEnable": "Не вдалося увімкнути {{name}}",
+    "toggleFailedDisable": "Не вдалося вимкнути {{name}}",
+    "updateStagedToast": "Оновлення підготовлено — перезапустіть, щоб застосувати",
+    "restartNow": "Перезапустити зараз",
+    "updateStageFailedToast": "Не вдалося підготувати оновлення: {{error}}",
+    "resetStagedToast": "Скинуто до типових — перезапустіть, щоб завершити",
+    "networkGrantedToast": "Мережевий доступ надано «{{name}}» — перезавантаження…",
+    "networkDeniedToast": "«{{name}}» встановлено без мережевого доступу — може не працювати, доки ви його не дозволите.",
+    "installCancelledNoTrust": "Встановлення скасовано — повну довіру не надано",
+    "installedVersionToast": "«{{name}}» v{{version}} встановлено",
+    "installFailedToast": "Не вдалося встановити плагін: {{error}}",
+    "localFilesNotFound": "Локальні файли плагіна не знайдено",
+    "pluginCodeNotFound": "Код плагіна не знайдено — перевстановіть його",
+    "fullTrustGrantedNameToast": "Надано повну довіру «{{name}}»",
+    "loadPluginFailedToast": "Не вдалося завантажити плагін: {{error}}",
+    "importFailedToast": "Не вдалося імпортувати плагін: {{error}}",
+    "fieldRequired": "{{label}} є обов'язковим",
+    "configSaved": "Конфігурацію збережено",
+    "configurationFailed": "Не вдалося виконати конфігурацію",
+    "needsFullTrustToRun": "Потребує повної довіри для запуску",
+    "pendingTrustDescription": "Додає інтерфейс і не може працювати в пісочниці — надайте повну довіру, щоб увімкнути його, або видаліть.",
+    "remove": "Видалити",
+    "groupCore": "Основні",
+    "groupProvidersExtensions": "Провайдери та розширення",
+    "groupThemes": "Теми",
+    "removePluginTitle": "Видалити плагін",
+    "removePluginDescription": "Це вимкне та видалить плагін. Будь-які панелі, які він додавав, покажуть заповнювач для відновлення. Ви можете перевстановити його з Plugin Store будь-коли.",
+    "resetDefaultsTitle": "Скидання до типових",
+    "resetDefaultsDescription": "Це видалить усі плагіни, які не входять у комплект, очистить підготовлені й доступні оновлення та перезавантажить термінал. Вбудовані плагіни залишаться встановленими.",
+    "reset": "Скинути",
+    "installFromUrlDialogTitle": "Встановити плагін з URL",
+    "installFromUrlDialogDescription": "Введіть URL модуля плагіна (.js) для встановлення.",
+    "unverifiedPluginTitle": "Неперевірений плагін",
+    "unverifiedPluginBody": "Плагіни, встановлені вручну, не проходили перевірку безпеки. Встановлюйте плагіни лише з джерел, яким ви довіряєте.",
+    "installAnyway": "Усе одно встановити",
+    "sourceBuiltIn": "Вбудований",
+    "sourceRegistry": "Реєстр",
+    "sourceUrl": "URL",
+    "sourceLocal": "Локальний",
+    "fullTrustGrantedRestartToast": "Надано повну довіру — перезапустіть, щоб цей плагін працював в основному застосунку",
+    "sandboxedRestartToast": "Плагін працюватиме в пісочниці — перезапустіть, щоб застосувати",
+    "requiresFullTrustTitle": "Цей плагін додає інтерфейс і повинен працювати з повною довірою.",
+    "trustBadgeFullRequired": "Повна довіра (обов'язково)",
+    "trustBadgeFull": "Повна довіра",
+    "trustBadgeSandboxed": "У пісочниці",
+    "panelCount_one": "{{count}} панель",
+    "panelCount_other": "{{count}} панелей",
+    "update": "Оновити",
+    "revokeFullTrustAria": "Відкликати повну довіру для {{name}}",
+    "grantFullTrustAria": "Надати повну довіру для {{name}}",
+    "fullTrustActiveTitle": "Повна довіра — працює в основному застосунку. Натисніть, щоб перевести в пісочницю.",
+    "sandboxedTitle": "Пісочниця — ізольований воркер, мережа обмежена заявленими хостами. Натисніть, щоб надати повну довіру.",
+    "configureAria": "Налаштувати {{name}}",
+    "toggleAria": "Перемкнути {{name}}",
+    "capabilityProvidersTitle": "Постачальники можливостей",
+    "capabilityProvidersDescription": "Кожна функція термінала запитує можливість, і ввімкнений плагін із найвищим пріоритетом надає її автоматично. Виберіть конкретний плагін, щоб перевизначити автоматичний вибір.",
+    "resetAllOverrides": "Скинути всі перевизначення",
+    "noProviderInstalled": "Жоден встановлений плагін цього не надає",
+    "browseStore": "Переглянути магазин",
+    "installedNeedsKeySingle": "Встановлено — потрібен ключ API",
+    "installedNeedsKeyPlural": "Встановлено: {{count}} — усім потрібен ключ API",
+    "installedDisabledSingle": "Встановлено 1 плагін, але вимкнено",
+    "installedDisabledPlural": "Встановлено плагінів: {{count}}, усі вимкнені",
+    "manage": "Керувати",
+    "pinnedActiveNote": "Закріплено — перевизначає автоматичний порядок",
+    "pinnedInactiveNote": "Закріплений плагін вимкнено — застосовується автоматичний порядок",
+    "autoOrderLabel": "Автоматичний порядок: {{chain}}",
+    "chainMore_one": "{{chain}} +{{count}} ще",
+    "chainMore_other": "{{chain}} +{{count}} ще",
+    "resolvedPerMarket": "Визначається за ринком",
+    "marketOverrides": "Перевизначення за ринками",
+    "pinnedCountBadge_one": "Закріплено: {{count}}",
+    "pinnedCountBadge_other": "Закріплено: {{count}}",
+    "automatic": "Автоматично",
+    "disabledHint": "вимкнено",
+    "notInstalled": "{{id}} (не встановлено)",
+    "saveOverrideFailed": "Не вдалося зберегти перевизначення провайдера",
+    "removeOverrideFailed": "Не вдалося видалити перевизначення провайдера",
+    "resetOverridesFailed": "Не вдалося скинути перевизначення",
+    "marketConnectorsTitle": "Ринкові конектори",
+    "marketConnectorsDescription": "Ринкові конектори транслюють ціни в реальному часі, книги ордерів і дають змогу торгувати напряму через API бірж. Увімкніть біржі, якими хочете користуватися.",
+    "activeCountBadge": "{{active}}/{{total}} активні",
+    "connected": "Підключено",
+    "disabledStatus": "Вимкнено",
+    "readAndTrade": "Читання + Торгівля",
+    "readOnly": "Лише читання",
+    "noConnectorsInstalled": "Не встановлено жодного плагіна ринкового конектора.",
+    "moreConnectors": "Інші конектори",
+    "fromPluginStore": "з Plugin Store",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "Дізнатися більше",
+    "enabledToast": "{{name}} увімкнено",
+    "disabledToast": "{{name}} вимкнено",
+    "enableFailedShort": "Не вдалося увімкнути",
+    "disableFailedShort": "Не вдалося вимкнути",
+    "domain": {
+      "marketData": "Ринкові дані",
+      "trading": "Торгівля",
+      "wallet": "Гаманець",
+      "signals": "Сигнали",
+      "ai": "ШІ"
+    },
+    "byAuthor": "автор: {{author}}",
+    "installsCount_one": "{{formattedCount}} встановлення",
+    "installsCount_other": "{{formattedCount}} встановлень",
+    "panelsCount": "Панелі ({{count}})",
+    "inactive": "Неактивний",
+    "previousSlide": "Назад",
+    "nextSlide": "Далі",
+    "goToSlide": "Перейти до слайду {{n}}",
+    "copyCommand": "Копіювати команду",
+    "panelCount_few": "{{count}} панелі",
+    "panelCount_many": "{{count}} панелей",
+    "installsCount_few": "{{formattedCount}} встановлення",
+    "installsCount_many": "{{formattedCount}} встановлень"
   },
   "search": {
     "title": "Пошук пар",
@@ -2204,8 +2529,71 @@
       "selectAccount": "Вибрати акаунт",
       "groupWallet": "Криптогаманець",
       "groupBroker": "Брокерський рахунок",
-      "groupExchange": "Акаунт біржі"
-    }
+      "groupExchange": "Акаунт біржі",
+      "selectWalletTopBar": "Виберіть гаманець на верхній панелі",
+      "connectChainWallet": "Підключіть гаманець {{chain}}",
+      "connectExchangeAccount": "Підключіть акаунт {{exchange}}",
+      "selectAccountTopBar": "Виберіть акаунт на верхній панелі"
+    },
+    "trade": {
+      "limitBuy": "Лімітна купівля",
+      "limitSell": "Лімітний продаж",
+      "bought": "Куплено",
+      "sold": "Продано",
+      "limitOrderFailed": "Лімітний ордер не пройшов",
+      "swapFailed": "Своп не пройшов",
+      "workflowUnsupported": "Воркфлоу не підтримується на цьому ринку",
+      "orderBlocked": "Ордер заблоковано лімітом ризику",
+      "orderRejected": "Ордер відхилено",
+      "orderFailed": "Ордер не пройшов",
+      "setRegion": "Вкажіть регіон",
+      "regionDefaulting": "Регіон за умовчанням — Global.",
+      "addPreset": "Додати пресет",
+      "createFirstWorkflow": "Створіть перший воркфлоу",
+      "editWorkflows": "Редагувати воркфлоу",
+      "selectWorkflow": "Виберіть воркфлоу",
+      "submitting": "Надсилання…",
+      "holdToRun": "Утримуйте, щоб запустити",
+      "holdToConfirmLive": "Утримуйте для підтвердження · кошти спишуться одразу",
+      "holdToPlace": "Утримуйте, щоб розмістити",
+      "runWorkflow": "Запустити воркфлоу",
+      "buyAsset": "Купити {{asset}}",
+      "sellAsset": "Продати {{asset}}",
+      "amount": "Обсяг",
+      "price": "Ціна",
+      "presetsTitle": "Пресети суми ({{quote}})",
+      "buy": "Купити",
+      "sell": "Продати",
+      "orderTypeMarket": "Ринок",
+      "orderTypeLimit": "Ліміт",
+      "workflow": "Робочий процес",
+      "notSupportedOn": "Не підтримується на {{venue}}",
+      "available": "Доступно: {{amount}}",
+      "slippage": "Прослизання"
+    },
+    "status": {
+      "connecting": "Підключення…",
+      "loadingOrderBook": "Завантаження стакана…",
+      "loadingDepth": "Завантаження глибини…",
+      "loadingCandles": "Завантаження свічок…",
+      "waitingTrades": "Очікування угод…",
+      "waitingData": "Очікування даних…",
+      "noCandleData": "Свічок поки немає",
+      "noTradesFeed": "Перейдіть на біржу, що публікує стрічку угод"
+    },
+    "columns": {
+      "price": "Ціна",
+      "size": "Обсяг",
+      "total": "Разом",
+      "open": "Відкриття",
+      "close": "Закриття"
+    },
+    "panel": {
+      "expand": "Розгорнути панель",
+      "collapse": "Згорнути панель"
+    },
+    "recentlyViewed": "Нещодавно переглянуті",
+    "noMarketsFound": "Ринків не знайдено"
   },
   "accounts": {
     "pageTitle": "Облікові записи",
@@ -2301,7 +2689,46 @@
     "importKey": "Імпортувати приватний ключ",
     "affiliateDisclosure": "Деякі посилання для реєстрації можуть приносити Pairlens комісію без додаткових витрат для вас.",
     "vaultSealedBody": "Ваше сховище облікових даних заблоковано. Ваші рахунки на місці — розблокуйте, щоб їх побачити й використати.",
-    "credentialsUnreadable": "Не вдалося прочитати ключі, збережені на цьому пристрої. Нічого не втрачено — спробуйте ще раз або перезапустіть Pairlens."
+    "credentialsUnreadable": "Не вдалося прочитати ключі, збережені на цьому пристрої. Нічого не втрачено — спробуйте ще раз або перезапустіть Pairlens.",
+    "addWalletDialogTitle": "Додати криптогаманець",
+    "addWalletDialogDescription": "Імпортуйте приватний ключ гаманця для ончейн-торгівлі",
+    "blockchainLabel": "Блокчейн",
+    "walletLabelField": "Назва",
+    "walletLabelPlaceholder": "Мій гаманець",
+    "privateKeyField": "Приватний ключ",
+    "saveWallet": "Зберегти гаманець",
+    "keep": "Залишити",
+    "remove": "Видалити",
+    "disconnect": "Відключити",
+    "localBadge": "Локально",
+    "unknownDate": "Невідомо",
+    "keyExpiredWarning": "Ймовірно, минув строк дії — {{daysInactive}} днів без активності (ліміт {{limitDays}} днів). Створіть новий API-ключ на біржі.",
+    "keyInactiveWarning": "{{daysInactive}}/{{limitDays}} днів без активності. Ключі втрачають чинність через {{limitDays}} днів без використання.",
+    "exchangeAccountAriaLabel": "Обліковий запис біржі {{label}}",
+    "cryptoWalletAriaLabel": "Криптогаманець {{label}}",
+    "portfolioTotal": "Разом",
+    "assetAllocationLabel": "Розподіл активів",
+    "tableAsset": "Актив",
+    "tableAmount": "Кількість",
+    "tableValue": "Вартість",
+    "tableShare": "Частка",
+    "assetCount_one": "{{count}} актив",
+    "assetCount_few": "{{count}} активи",
+    "assetCount_many": "{{count}} активів",
+    "assetCount_other": "{{count}} активу",
+    "moreAssets_one": "+{{count}} актив",
+    "moreAssets_few": "+{{count}} активи",
+    "moreAssets_many": "+{{count}} активів",
+    "moreAssets_other": "+{{count}} активу",
+    "walletSavedFeedback": "Криптогаманець збережено.",
+    "walletRemovedFeedback": "Криптогаманець видалено.",
+    "accountRemovedFeedback": "Обліковий запис видалено.",
+    "walletSaveFailed": "Не вдалося зберегти гаманець.",
+    "walletRemoveFailed": "Не вдалося видалити гаманець.",
+    "accountConnectFailed": "Не вдалося підключити обліковий запис.",
+    "accountRemoveFailed": "Не вдалося видалити обліковий запис.",
+    "fieldRequired": "Поле «{{field}}» обов'язкове",
+    "accountConnectedFeedback": "Обліковий запис {{label}} ({{mode}}) підключено."
   },
   "workspaceStore": {
     "title": "Магазин робочих просторів",
@@ -2411,12 +2838,136 @@
     "paneCount_other": "{{count}} панелей",
     "panes": "Панелі",
     "showAll": "Показати всі",
-    "spotlight": "У фокусі"
+    "spotlight": "У фокусі",
+    "previousSlide": "Попередній",
+    "nextSlide": "Наступний",
+    "goToSlide": "Перейти до слайду {{number}}"
   },
   "notifications": {
     "flows": "Потоки",
     "newFlow": "Новий потік",
-    "noFlows": "Поки що немає потоків сповіщень"
+    "noFlows": "Поки що немає потоків сповіщень",
+    "builder": {
+      "sidebar": {
+        "tabRules": "Правила",
+        "tabActivity": "Активність",
+        "noRules": "Поки що немає правил сповіщень",
+        "newRuleTitle": "Нове правило сповіщення",
+        "rulePlaceholder": "Назва правила",
+        "renameRuleTitle": "Перейменувати правило",
+        "rename": "Перейменувати",
+        "deleteRuleTitle": "Видалити правило",
+        "deleteRuleWarning": "Цю дію не можна скасувати. Правило сповіщення та його прив'язки до пар буде видалено назавжди.",
+        "pairsLabel": "Пари",
+        "sendTest": "Надіслати тест",
+        "testing": "Тестування…",
+        "pairAlreadyBound": "Ця пара вже прив'язана до правила",
+        "noBindings": "Ще не прив'язано до жодної пари — правило не спрацює, поки ви не додасте пару.",
+        "testSent": "Тестове сповіщення надіслано",
+        "testFailed": "Не вдалося доставити тест",
+        "noActivity": "Сповіщення ще не спрацьовували",
+        "clearActivity": "Очистити активність",
+        "channelFailed": "Збій: {{channel}}"
+      },
+      "commitBar": {
+        "cycleDetected": "Виявлено цикл",
+        "issueCount_one": "{{count}} проблема",
+        "issueCount_other": "{{count}} проблем",
+        "moreIssues": "…і ще {{count}}",
+        "pendingChangeCount_one": "{{count}} незбережена зміна",
+        "pendingChangeCount_other": "{{count}} незбережених змін",
+        "noChanges": "Без змін",
+        "review": "Перегляд",
+        "discard": "Відхилити",
+        "commit": "Зберегти",
+        "cannotSaveTitle": "Не вдалося зберегти правило",
+        "cycleError": "Правило містить циклічну залежність. Приберіть цикл (червоні ребра) перед збереженням.",
+        "saved": "Правило збережено"
+      },
+      "diff": {
+        "title": "Перегляд змін ({{count}})",
+        "addedStep": "Додано крок {{type}}",
+        "removedStep": "Видалено крок {{type}}",
+        "modifiedStep": "Змінено конфігурацію {{type}}",
+        "addedConnection": "Додано з'єднання",
+        "removedConnection": "Видалено з'єднання"
+      },
+      "canvas": {
+        "undoTitle": "Скасувати (Cmd+Z)",
+        "redoTitle": "Повторити (Cmd+Shift+Z)",
+        "deleteStep": "Видалити крок",
+        "deleteConnection": "Видалити з'єднання",
+        "cycleLabel": "цикл"
+      },
+      "palette": {
+        "addStep": "Додати крок",
+        "categoryEvents": "Події",
+        "categoryConditions": "Умови",
+        "categoryChannels": "Канали"
+      },
+      "category": {
+        "event": "Подія",
+        "condition": "Умова",
+        "channel": "Канал"
+      },
+      "emptyState": {
+        "pickRuleHint": "Виберіть правило зліва, щоб відкрити його на полотні.",
+        "untitledRule": "Правило без назви",
+        "eyebrow": "Сповіщення",
+        "title": "Стежте за ринком, не стежачи за ним самі",
+        "description": "Правило — це невеликий потік: щось відбувається — ціна перетинає рівень, закривається свічка, виконується ордер, спрацьовує алерт індикатора — потім проходить через додані вами умови і доходить до вас у вигляді toast-сповіщення, системного сповіщення або вебхука.",
+        "startBlank": "Почати з порожнього полотна",
+        "startFromTemplate": "Почати з шаблону",
+        "footnote": "Шаблони відкриваються як чернетка, прив'язана до {{pair}} на {{market}} — відредагуйте кроки, змініть пару у списку правил, а потім збережіть. Правила спрацьовують, лише поки Pairlens запущено."
+      },
+      "direction": "Напрямок",
+      "above": "Вище",
+      "below": "Нижче",
+      "any": "Будь-яка",
+      "buy": "Купівля",
+      "sell": "Продаж",
+      "up": "Зростання",
+      "down": "Падіння",
+      "either": "Будь-який",
+      "toggleOn": "Увімк",
+      "toggleOff": "Вимк",
+      "steps": {
+        "candleClose": {
+          "title": "Закриття свічки"
+        },
+        "localToast": {
+          "title": "Toast-сповіщення",
+          "description": "Показує toast-сповіщення в застосунку під час спрацювання"
+        },
+        "orderExecuted": {
+          "title": "Ордер виконано"
+        },
+        "osNotification": {
+          "title": "Системне сповіщення",
+          "sound": "Звук"
+        },
+        "percentChange": {
+          "title": "Зміна у відсотках",
+          "percent": "Відсоток"
+        },
+        "priceAlert": {
+          "title": "Ціновий алерт"
+        },
+        "priceCondition": {
+          "title": "Цінова умова"
+        },
+        "signalGenerated": {
+          "title": "Сигнал сформовано",
+          "signalType": "Тип сигналу",
+          "anyTypePlaceholder": "Будь-який тип"
+        },
+        "timeWindow": {
+          "title": "Часове вікно",
+          "start": "Початок (UTC)",
+          "end": "Кінець (UTC)"
+        }
+      }
+    }
   },
   "updater": {
     "available": "Доступне оновлення",
@@ -2505,7 +3056,8 @@
     "failed": "Не вдалося завантажити теплову карту",
     "noData": "Немає доступних даних",
     "tryLater": "Спробуйте пізніше",
-    "willAppear": "Дані теплової карти з'являться тут"
+    "willAppear": "Дані теплової карти з'являться тут",
+    "volume": "Обсяг"
   },
   "news": {
     "title": "Новини",
@@ -2620,5 +3172,228 @@
   "fullscreen": {
     "enter": "На весь екран",
     "exit": "Вийти з повноекранного режиму"
+  },
+  "research": {
+    "phaseSearching": "Пошук в інтернеті...",
+    "phaseReading": "Читання джерел...",
+    "phaseAnalyzing": "Аналіз ринкових даних...",
+    "phaseWriting": "Складання звіту...",
+    "authRequiredTitle": "До панелі research — лише один вхід",
+    "authRequiredDescription": "Структуровані research-звіти для будь-якої пари на основі актуальних веб-джерел. Увійдіть, а потім оформіть підписку на Pairlens Intelligence або використайте власний ключ ШІ.",
+    "upgradeDescription": "Структуровані research-звіти для будь-якої пари на основі актуальних веб-джерел. Оформіть підписку на Pairlens Intelligence — або підключіть власні ключі ШІ та пошуку через плагіни безкоштовно.",
+    "unavailableTitle": "Research недоступний",
+    "unavailableDescription": "Увімкніть плагін ШІ на сторінці «Плагіни», щоб створювати research-звіти для цієї пари.",
+    "goToPlugins": "Перейти до плагінів",
+    "navigateToPair": "Перейдіть до пари, щоб переглянути research.",
+    "researchingSymbol": "Аналізуємо {{symbol}}",
+    "generatingReport": "Складання звіту...",
+    "cachedGenerated": "З кешу — створено {{time}}",
+    "freshGenerated": "Актуально — щойно створено",
+    "refresh": "Оновити",
+    "sourcesCount": "Джерела ({{count}})",
+    "reportTitle": "Research-звіт",
+    "fullscreenDescription": "Research-звіт у повноекранному режимі. Натисніть Escape, щоб вийти.",
+    "sections": "Розділи",
+    "sparklineAriaLabel": "Спарклайн денної ціни",
+    "errorTitle": "Research недоступний"
+  },
+  "capabilityGate": {
+    "authTitle": "Лише один безкоштовний вхід",
+    "authDescription": "Ця функція працює через ваш акаунт Pairlens.",
+    "signInFree": "Увійти безкоштовно",
+    "authNote": "Це займе 30 секунд. Ваші ключі біржі ніколи не залишають цей пристрій.",
+    "upgradeRequired": "Потрібен апгрейд",
+    "upgradeDescriptionLevel": "Ця функція потребує рівня доступу <b>{{level}}</b>.",
+    "upgradeDescriptionGeneric": "Ця функція потребує вищого рівня доступу.",
+    "managePlugin": "Керувати плагіном"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}} тут недоступний",
+    "description": "Для вашого регіону {{exchange}} не надає ринкові дані, тому цей конектор не може завантажити дані. Перейдіть на інший конектор або оновіть свій регіон, якщо він вказаний неправильно.",
+    "yourRegion": "Ваш регіон:",
+    "notSet": "Не встановлено",
+    "changeRegion": "Змінити регіон",
+    "switchTo": "Перейти на {{venue}}"
+  },
+  "pairPicker": {
+    "noPairsFound": "Пар не знайдено.",
+    "startTyping": "Почніть вводити текст, щоб знайти пари."
+  },
+  "routes": {
+    "goHome": "На головну",
+    "noConnectors": {
+      "title": "Немає доступних конекторів ринку",
+      "description": "Для потокової передачі даних у реальному часі потрібні плагіни конекторів ринку. Увімкніть або встановіть конектор, щоб почати.",
+      "manage": "Керувати конекторами ринку"
+    },
+    "workspace": {
+      "notFound": "Робочий простір не знайдено",
+      "edit": "Редагувати"
+    },
+    "notFound": {
+      "title": "Сторінку не знайдено"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "Немає каталогу інструментів",
+      "noInstrumentCatalogDescription": "Немає активних плагінів, що надають виявлення інструментів. Увімкніть плагін, щоб переглянути доступні торгові пари.",
+      "goToPlugins": "Перейти до плагінів"
+    },
+    "notifications": {
+      "loading": "Завантаження сповіщень…"
+    },
+    "workflows": {
+      "loading": "Завантаження конструктора робочих процесів…"
+    },
+    "plugins": {
+      "tabBuild": "Збірка",
+      "activeCount": "{{active}}/{{total}} активні",
+      "searchPlaceholder": "Пошук плагінів…",
+      "clearSearch": "Очистити пошук"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "Оплату завершено",
+      "titlePack": "Додано {{credits}} додаткових кредитів.",
+      "titlePlan": "{{label}} тепер ваш.",
+      "titleDefault": "Pairlens Intelligence тепер ваш.",
+      "bodyPack": "Вони додаються до вашого місячного бюджету і згорають через {{days}} днів. Поверніться в застосунок Pairlens — баланс оновиться за кілька секунд.",
+      "bodyPlanWithCredits": "Ваш хмарний ШІ-копілот, research і вебпошук розблоковано — з {{credits}} кредитами щомісяця. Поверніться в застосунок Pairlens — він розпізнає підписку за кілька секунд.",
+      "bodyPlanNoCredits": "Ваш хмарний ШІ-копілот, research і вебпошук розблоковано. Поверніться в застосунок Pairlens — він розпізнає підписку за кілька секунд.",
+      "openTerminal": "Відкрити термінал",
+      "closeTabHint": "Оплатили через десктопний застосунок? Цю вкладку можна просто закрити.",
+      "receiptHint": "Квитанція та рахунки доступні у вашій пошті та в порталі білінгу (Налаштування → Intelligence)."
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "Робочі процеси",
+      "tabRuns": "Запуски",
+      "emptyState": "Робочих процесів ще немає",
+      "createTitle": "Новий робочий процес",
+      "namePlaceholder": "Назва робочого процесу",
+      "renameTitle": "Перейменувати робочий процес",
+      "renameButton": "Перейменувати",
+      "deleteTitle": "Видалити робочий процес",
+      "deleteDescription": "Цю дію не можна скасувати. Робочий процес буде видалено назавжди.",
+      "runsEmpty": "Запусків ще немає — запустіть один із панелі торгівлі",
+      "clearHistory": "Очистити історію",
+      "runOutcome": "{{executed}} ок",
+      "runOutcomeWithFailed": "{{executed}} ок, {{failed}} з помилкою"
+    },
+    "canvas": {
+      "undoTitle": "Скасувати (Cmd+Z)",
+      "redoTitle": "Повторити (Cmd+Shift+Z)",
+      "deleteStep": "Видалити крок",
+      "deleteConnection": "Видалити з'єднання"
+    },
+    "commitBar": {
+      "cycleDetected": "Виявлено цикл",
+      "issue_one": "{{count}} проблема",
+      "issue_other": "{{count}} проблем",
+      "pendingChange_one": "{{count}} незбережена зміна",
+      "pendingChange_other": "{{count}} незбережених змін",
+      "noChanges": "Немає змін",
+      "review": "Переглянути",
+      "discard": "Скинути",
+      "commit": "Застосувати",
+      "saveErrorTitle": "Не вдалося зберегти робочий процес",
+      "saveErrorCycleBody": "Робочий процес містить циклічну залежність. Приберіть цикл (червоні з'єднання), перш ніж зберігати.",
+      "saveSuccess": "Робочий процес збережено"
+    },
+    "diffPanel": {
+      "title": "Перегляд змін ({{count}})",
+      "addedStep": "Додано крок «{{type}}»",
+      "removedStep": "Видалено крок «{{type}}»",
+      "modifiedStep": "Змінено налаштування «{{type}}»",
+      "addedConnection": "Додано з'єднання",
+      "removedConnection": "Видалено з'єднання",
+      "noChanges": "Немає змін"
+    },
+    "palette": {
+      "title": "Додати крок",
+      "categoryEntry": "Вхід",
+      "categoryOrders": "Ордери",
+      "categoryExit": "Стратегії виходу",
+      "categoryLogic": "Логіка",
+      "categoryCustom": "Користувацькі",
+      "requires": "Потрібно: {{requirement}}",
+      "notAvailableOn": "Недоступно на {{markets}}"
+    },
+    "emptyState": {
+      "pickWorkflow": "Виберіть робочий процес ліворуч, щоб відкрити його на полотні.",
+      "eyebrow": "Робочі процеси",
+      "title": "У кожного ордера може бути власний план",
+      "description": "Робочий процес прив'язується до ордера, який ви виставляєте з панелі торгівлі. Щойно він виконається, кроки під ним запускаються самі — брекети, драбини ордерів, поетапні виходи, перевірки за часом — план уже готовий, а не те, про що вам треба пам'ятати згодом.",
+      "blankLabel": "Почати з порожнього полотна",
+      "footnote": "Шаблони відкриваються як чернетка: відредагуйте будь-який крок, а потім натисніть «Застосувати», щоб зберегти. Прив'яжіть збережений робочий процес до ордера з панелі торгівлі, щоб запустити його."
+    },
+    "steps": {
+      "sideLabel": "Сторона",
+      "sizeLabel": "Розмір",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "Абс",
+      "side": {
+        "inherit": "Успадкувати",
+        "opposite": "Протилежна",
+        "buy": "Купити",
+        "sell": "Продати"
+      },
+      "triggerWhenPrice": "Спрацювати, коли ціна",
+      "triggerPercentFromEntry": "% від входу",
+      "triggerReachesPrice": "Досягне ціни",
+      "priceLevel": "Рівень ціни",
+      "priceLabel": "Ціна",
+      "stopLoss": {
+        "title": "Стоп-лосс",
+        "lossPercent": "Збиток %"
+      },
+      "takeProfit": {
+        "title": "Тейк-профіт",
+        "gainPercent": "Прибуток %"
+      },
+      "limitOrder": {
+        "title": "Лімітний ордер",
+        "priceModeFixed": "Фіксована",
+        "priceModePercentOffset": "% відступ",
+        "priceModeOffset": "Відступ",
+        "priceValueLabel": "Значення ціни"
+      },
+      "marketOrder": {
+        "title": "Ринковий ордер"
+      },
+      "condition": {
+        "title": "Умова",
+        "typeLabel": "Тип",
+        "typePercentChange": "% зміни",
+        "hint": "+N спрацьовує при зростанні ≥N%, -N при падінні ≥N%"
+      },
+      "wait": {
+        "title": "Пауза",
+        "durationLabel": "Тривалість",
+        "unitSeconds": "с",
+        "unitMinutes": "хв",
+        "unitHours": "год"
+      },
+      "split": {
+        "title": "Паралельне розділення",
+        "branchesLabel": "Гілки"
+      },
+      "trigger": {
+        "title": "Вхід ордера",
+        "badge": "Вхід"
+      },
+      "configPanel": {
+        "requiresNote": "Потрібно: {{requirement}}. Ринки без цієї можливості не можуть виконувати робочі процеси з цим кроком.",
+        "on": "Увімк",
+        "off": "Вимк"
+      }
+    },
+    "execution": {
+      "statusExecuted": "виконано",
+      "statusSkipped": "пропущено",
+      "statusFailed": "помилка",
+      "summaryExecuted": "виконано: {{count}}",
+      "summarySkipped": "пропущено: {{count}}",
+      "summaryFailed": "помилок: {{count}}"
+    }
   }
 }

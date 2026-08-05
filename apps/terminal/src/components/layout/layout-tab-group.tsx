@@ -130,12 +130,12 @@ function SortableTab({ pane, cellId }: { pane: PaneInstance; cellId: string }) {
       <ContextMenuContent>
         <ContextMenuItem onClick={handlePopToColumn}>
           <Columns3 className="size-3.5" />
-          Pop Out to Column
+          {t('layout.pane.popOutToColumn')}
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem variant="destructive" onClick={handleClose}>
           <X className="size-3.5" />
-          Close Tab
+          {t('layout.pane.closeTab')}
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

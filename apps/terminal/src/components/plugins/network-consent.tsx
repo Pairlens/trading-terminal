@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Globe } from 'lucide-react'
 
@@ -31,6 +32,7 @@ export function useNetworkConsent(): {
   requestNetworkConsent: (target: ConsentTarget) => Promise<boolean>
   dialog: ReactNode
 } {
+  const { t } = useTranslation()
   const [pending, setPending] = useState<Pending | null>(null)
   // Track the live pending consent so we can resolve it if the component
   // unmounts mid-flow (otherwise the caller's `await` would hang forever).
@@ -73,18 +75,15 @@ export function useNetworkConsent(): {
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
             <Globe className="size-5 text-sky-500" />
-            Allow “{pending?.name}” to connect?
+            {t('pluginStore.network.title', { name: pending?.name ?? '' })}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This plugin needs to reach servers outside Pairlens. Your terminal
-            will send network requests to the hosts below. Allow only if you
-            trust this plugin — you can uninstall it at any time to revoke
-            access.
+            {t('pluginStore.network.description')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="space-y-3 text-sm">
           <p className="text-muted-foreground">
-            It will be able to connect to:
+            {t('pluginStore.network.hostsIntro')}
           </p>
           <ul className="max-h-40 space-y-1 overflow-y-auto rounded-md border bg-muted/40 p-3 font-mono text-xs">
             {pending?.hosts.map((host) => (
@@ -94,15 +93,15 @@ export function useNetworkConsent(): {
             ))}
           </ul>
           <p className="text-muted-foreground">
-            Approving reloads the terminal to apply the change.
+            {t('pluginStore.network.reloadNote')}
           </p>
         </div>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={() => settle(false)}>
-            Don’t allow
+            {t('pluginStore.network.deny')}
           </AlertDialogCancel>
           <AlertDialogAction onClick={() => settle(true)}>
-            Allow &amp; reload
+            {t('pluginStore.network.allow')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

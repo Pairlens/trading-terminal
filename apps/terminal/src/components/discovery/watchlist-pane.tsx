@@ -315,7 +315,7 @@ export function WatchlistPane() {
             </DropdownMenu>
             <span className="flex shrink-0 items-center gap-1 font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
               <span className="live-dot size-1.5 rounded-full bg-up" />
-              Live
+              {t('connection.live')}
             </span>
             <AddSymbolButton
               listId={activeList.id}

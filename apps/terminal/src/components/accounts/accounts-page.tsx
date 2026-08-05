@@ -319,7 +319,10 @@ export function AccountsPage() {
         cryptoPrivateKey,
       )
       track('wallet_connected', { chain: cryptoChain })
-      setFeedback({ type: 'success', message: 'Crypto wallet saved.' })
+      setFeedback({
+        type: 'success',
+        message: t('accounts.walletSavedFeedback'),
+      })
       setShowCryptoForm(false)
       setCryptoLabel('')
       setCryptoPrivateKey('')
@@ -336,7 +339,9 @@ export function AccountsPage() {
       setFeedback({
         type: 'error',
         message:
-          error instanceof Error ? error.message : 'Failed to save wallet.',
+          error instanceof Error
+            ? error.message
+            : t('accounts.walletSaveFailed'),
       })
     } finally {
       setIsBusy(false)
@@ -347,12 +352,17 @@ export function AccountsPage() {
     setIsBusy(true)
     try {
       await removeCryptoWallet(id)
-      setFeedback({ type: 'success', message: 'Crypto wallet removed.' })
+      setFeedback({
+        type: 'success',
+        message: t('accounts.walletRemovedFeedback'),
+      })
     } catch (error) {
       setFeedback({
         type: 'error',
         message:
-          error instanceof Error ? error.message : 'Failed to remove wallet.',
+          error instanceof Error
+            ? error.message
+            : t('accounts.walletRemoveFailed'),
       })
     } finally {
       setIsBusy(false)
@@ -411,7 +421,10 @@ export function AccountsPage() {
     // Validate required fields
     for (const field of schema.fields) {
       if (field.required && !formFields[field.key]?.trim()) {
-        setFeedback({ type: 'error', message: `${field.label} is required` })
+        setFeedback({
+          type: 'error',
+          message: t('accounts.fieldRequired', { field: field.label }),
+        })
         return
       }
     }
@@ -420,7 +433,9 @@ export function AccountsPage() {
     try {
       const name =
         walletName.trim() ||
-        `${schema.label} ${mode === 'paper' ? 'Paper' : 'Live'}`
+        // A default NAME, not a sentence — composing venue + mode is fine, and
+        // the user can rename it. Both mode words already exist in all 17.
+        `${schema.label} ${mode === 'paper' ? t('accounts.paper') : t('accounts.live')}`
       await addCredential({
         market: resolvedMarket,
         label: name,
@@ -432,7 +447,10 @@ export function AccountsPage() {
       track('venue_connected', { venue: resolvedMarket })
       setFeedback({
         type: 'success',
-        message: `${schema.label} ${mode} account connected.`,
+        message: t('accounts.accountConnectedFeedback', {
+          label: schema.label,
+          mode: t(mode === 'paper' ? 'accounts.paper' : 'accounts.live'),
+        }),
       })
       setFormFields({})
       setWalletName('')
@@ -446,7 +464,9 @@ export function AccountsPage() {
       setFeedback({
         type: 'error',
         message:
-          error instanceof Error ? error.message : 'Failed to connect account.',
+          error instanceof Error
+            ? error.message
+            : t('accounts.accountConnectFailed'),
       })
     } finally {
       setIsBusy(false)
@@ -460,12 +480,17 @@ export function AccountsPage() {
       const venue = credentials.find((c) => c.id === id)?.market
       await removeCredential(id)
       if (venue) track('venue_disconnected', { venue })
-      setFeedback({ type: 'success', message: 'Account removed.' })
+      setFeedback({
+        type: 'success',
+        message: t('accounts.accountRemovedFeedback'),
+      })
     } catch (error) {
       setFeedback({
         type: 'error',
         message:
-          error instanceof Error ? error.message : 'Failed to remove account.',
+          error instanceof Error
+            ? error.message
+            : t('accounts.accountRemoveFailed'),
       })
     } finally {
       setIsBusy(false)

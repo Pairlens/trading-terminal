@@ -244,7 +244,9 @@
       "create": "สร้างบัญชี",
       "skip": "ข้าม — เก็บทุกอย่างไว้บนอุปกรณ์นี้",
       "signedIn": "เข้าสู่ระบบในชื่อ {{email}}",
-      "label": "บัญชี"
+      "label": "บัญชี",
+      "otpSendFailed": "ส่ง OTP ไม่สำเร็จ",
+      "signInFailed": "เข้าสู่ระบบไม่สำเร็จ"
     },
     "summary": {
       "eyebrow": "พร้อมแล้ว",
@@ -376,6 +378,42 @@
         "title": "เครื่องของคุณ คีย์ของคุณ",
         "description": "บอททำงานที่นี่ ไม่ใช่บนเซิร์ฟเวอร์ของเรา และคีย์ API ของคุณไม่เคยออกจากคอมพิวเตอร์เครื่องนี้ เปิด Pairlens ไว้และอย่าให้เครื่องหลับ แล้วปิดบอทตัวไหนก็ได้ทันทีที่คุณอยากให้มันหยุด"
       }
+    },
+    "scenes": {
+      "topMover": "ตัวนำตลาด · {{pair}} {{delta}}",
+      "watchlistCount": "รายการติดตาม · {{count}}",
+      "signalBreakout": "Breakout",
+      "signalPullbackForming": "กำลังเกิด Pullback",
+      "onClose": "เมื่อปิดแท่ง",
+      "crossedAbovePrice": "ทะลุขึ้นเหนือ {{price}}",
+      "conditionCrossesAbove": "ทะลุขึ้นเหนือ",
+      "notifyMeDesktopInApp": "แจ้งเตือนฉัน — เดสก์ท็อป + ในแอป",
+      "nodeTrigger": "ตัวกระตุ้น",
+      "nodeSignalLabel": "สัญญาณ: {{signal}}",
+      "nodeCondition": "เงื่อนไข",
+      "nodeVolumeAboveAvg": "ปริมาณ > ค่าเฉลี่ย",
+      "nodeAction": "การกระทำ",
+      "nodeAlertAndJournal": "แจ้งเตือน + บันทึก",
+      "runBreakoutWatcher": "ตัวเฝ้าดู Breakout",
+      "runDcaBuyer": "ผู้ซื้อ DCA",
+      "runStopLossGuard": "ตัวเฝ้าระวัง Stop-loss",
+      "ranAt": "{{time}} · ทำงานแล้ว",
+      "runsLocally": "ทำงานในเครื่อง",
+      "storedOnDevice": "จัดเก็บบนอุปกรณ์นี้ — ไม่เก็บบนเซิร์ฟเวอร์ของเรา",
+      "osKeychain": "Keychain ของระบบปฏิบัติการ",
+      "pluginKindMarketData": "ข้อมูลตลาด",
+      "pluginKindTheme": "ธีม",
+      "pluginKindAutomation": "ระบบอัตโนมัติ",
+      "sandboxedByDefault": "อยู่ในแซนด์บ็อกซ์โดยค่าเริ่มต้น",
+      "signedVerified": "เซ็นรับรองและยืนยันแล้ว",
+      "networkAccessApproveHost": "การเข้าถึงเครือข่าย — คุณอนุมัติทีละโฮสต์",
+      "copiedToWorkspaces": "คัดลอกไปยังพื้นที่ทำงานของคุณแล้ว",
+      "statNet": "กำไรสุทธิ",
+      "statMaxDd": "DD สูงสุด",
+      "sameCodeGoesLive": "ใช้โค้ดเดียวกันตอนเทรดจริง",
+      "runsOnYourMachine": "ทำงานบนเครื่องของคุณ — อย่าให้เครื่องหลับ",
+      "botMeanReversion": "Mean Reversion",
+      "chainWallet": "กระเป๋าเงิน {{chain}}"
     }
   },
   "common": {
@@ -398,7 +436,12 @@
     "showInFolder": "แสดงในโฟลเดอร์",
     "updated": "อัปเดต {{time}}",
     "back": "ย้อนกลับ",
-    "dismiss": "ปิด"
+    "dismiss": "ปิด",
+    "unknownError": "ข้อผิดพลาดที่ไม่ทราบสาเหตุ",
+    "ordersLockedRiskLimit": "คำสั่งซื้อขายถูกล็อกเนื่องจากละเมิดขีดจำกัดความเสี่ยง ปลดล็อกได้ที่การตั้งค่า > การจัดการความเสี่ยง",
+    "buyOrdersLockedRiskLimit": "คำสั่งซื้อถูกล็อกเนื่องจากละเมิดขีดจำกัดความเสี่ยง ปลดล็อกได้ที่การตั้งค่า > การจัดการความเสี่ยง",
+    "positionSizeExceeded": "คำสั่งซื้อขายถูกบล็อกโดยขีดจำกัดความเสี่ยง: โพซิชันคิดเป็น {{ratioPct}}% ของพอร์ต ซึ่งเกินค่าสูงสุด {{maxPositionSize}}% ของคุณ ปรับได้ที่การตั้งค่า > การจัดการความเสี่ยง",
+    "sessionExpired": "เซสชันของคุณหมดอายุแล้ว — กรุณาเข้าสู่ระบบอีกครั้ง"
   },
   "legal": {
     "terms": "ข้อกำหนดและเงื่อนไข",
@@ -581,7 +624,22 @@
       "publisherKeyConsentTitle": "เชื่อถือผู้เผยแพร่รายนี้หรือไม่?",
       "publisherKeyConsentBody": "ปลั๊กอินที่เซ็นด้วยคีย์นี้จะสามารถติดตั้งบนอุปกรณ์นี้ได้ ผู้เผยแพร่ที่ประสงค์ร้ายอาจส่งปลั๊กอินที่ขอความเชื่อถือแบบเต็มรูปแบบ — ซึ่งเข้าถึงข้อมูลของปลั๊กอินอื่น ข้อมูลรับรองตลาดแลกเปลี่ยนที่จัดเก็บไว้ และการเทรดของคุณได้ เปรียบเทียบลายนิ้วมือกับผู้เผยแพร่ผ่านช่องทางที่คุณเชื่อถือก่อนดำเนินการต่อ",
       "publisherKeyConsentConfirm": "เชื่อถือคีย์นี้",
-      "publisherKeyConsentCancel": "ยกเลิก"
+      "publisherKeyConsentCancel": "ยกเลิก",
+      "updatesTitle": "การอัปเดตปลั๊กอิน",
+      "updatesDescription": "กำหนดวิธีอัปเดตปลั๊กอินเมื่อมีเวอร์ชันใหม่กว่าในทะเบียน",
+      "updateModeLabel": "โหมดการอัปเดต",
+      "updateModeAutoDescription": "อัปเดตจะถูกดาวน์โหลดและติดตั้งโดยอัตโนมัติ",
+      "updateModeNotifyDescription": "คุณจะเห็นป้ายแจ้งเตือนเมื่อมีอัปเดตพร้อมใช้งาน",
+      "updateModeOffDescription": "ไม่มีการตรวจสอบอัปเดตอัตโนมัติ",
+      "updateModeAuto": "อัปเดตอัตโนมัติ",
+      "updateModeNotify": "แจ้งเตือนเท่านั้น",
+      "updateModeOffLabel": "ปิด",
+      "checkIntervalLabel": "ความถี่ในการตรวจสอบ",
+      "checkIntervalDescription": "ความถี่ในการตรวจสอบทะเบียนเพื่อหาเวอร์ชันใหม่กว่า",
+      "intervalHourly": "ทุกชั่วโมง",
+      "interval6Hours": "ทุก 6 ชั่วโมง",
+      "interval12Hours": "ทุก 12 ชั่วโมง",
+      "intervalDaily": "ทุกวัน"
     },
     "appearance": {
       "colorMode": "โหมดสี",
@@ -603,7 +661,9 @@
       "balanced": "สมดุล",
       "balancedDescription": "ทิกเกอร์และสมุดคำสั่งที่ 250ms แท่งเทียนที่ 500ms สมดุลที่ดีระหว่างการตอบสนองและประสิทธิภาพ",
       "energySaver": "ประหยัดพลังงาน",
-      "energySaverDescription": "ทิกเกอร์และสมุดคำสั่งที่ 1s แท่งเทียนที่ 2s เหมาะสำหรับการติดตามแบบพาสซีฟหรือแล็ปท็อปที่ใช้แบตเตอรี่"
+      "energySaverDescription": "ทิกเกอร์และสมุดคำสั่งที่ 1s แท่งเทียนที่ 2s เหมาะสำหรับการติดตามแบบพาสซีฟหรือแล็ปท็อปที่ใช้แบตเตอรี่",
+      "idleGuardTitle": "ตัดการเชื่อมต่อเมื่อไม่มีการใช้งาน",
+      "idleGuardDescription": "หยุดสตรีมข้อมูลตลาดชั่วคราวหลังไม่มีการใช้งาน 1 ชั่วโมง เพื่อประหยัดแบนด์วิดท์และลดการใช้พลังงาน"
     },
     "desktop": {
       "closeBehavior": {
@@ -1031,7 +1091,9 @@
       "namePlaceholder": "ชื่อโฟลเดอร์"
     },
     "createFirst": "สร้างพื้นที่ทำงานแรกของคุณ",
-    "emptyState": "ยังไม่มีพื้นที่ทำงาน"
+    "emptyState": "ยังไม่มีพื้นที่ทำงาน",
+    "descriptionLabel": "คำอธิบาย",
+    "descriptionPlaceholder": "คำอธิบายสั้น ๆ (ไม่บังคับ)"
   },
   "session": {
     "checking": "กำลังตรวจสอบเซสชัน…",
@@ -1089,7 +1151,9 @@
     "verifying": "กำลังยืนยัน...",
     "verifyAndSignIn": "ยืนยันและเข้าสู่ระบบ",
     "codeRequired": "ต้องระบุรหัส",
-    "emailRequired": "ต้องระบุอีเมล"
+    "emailRequired": "ต้องระบุอีเมล",
+    "dialogDescription": "เข้าสู่ระบบเพื่อใช้งานฟีเจอร์นี้",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "หยุดเซสชันชั่วคราว",
@@ -1109,7 +1173,12 @@
     "connecting": "กำลังเชื่อมต่อ",
     "stalled": "กำลังเชื่อมต่อใหม่",
     "offline": "ออฟไลน์",
-    "error": "ข้อผิดพลาด"
+    "error": "ข้อผิดพลาด",
+    "pluginUpdatesReady_one": "มีอัปเดตปลั๊กอินพร้อมติดตั้ง {{count}} รายการ",
+    "pluginUpdatesReady_other": "มีอัปเดตปลั๊กอินพร้อมติดตั้ง {{count}} รายการ",
+    "pluginUpdatesDescription": "อัปเดตจะมีผลหลังจากรีสตาร์ทเทอร์มินัล",
+    "restartNow": "รีสตาร์ทตอนนี้",
+    "later": "ภายหลัง"
   },
   "copilot": {
     "aiLens": "AI Lens",
@@ -1128,7 +1197,46 @@
     },
     "marketRegime": "สภาวะตลาด",
     "trending": "เป็นเทรนด์",
-    "choppy": "แกว่งตัว"
+    "choppy": "แกว่งตัว",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "ขนาด",
+    "orderPlacedPaper": "ส่งคำสั่งซื้อขายจำลองแล้ว",
+    "orderPlaced": "ส่งคำสั่งซื้อขายแล้ว",
+    "autoApprovedNote": "อนุมัติอัตโนมัติแล้ว ({{mode}} · เปิดใช้งานไม่ถามอีก)",
+    "turnOff": "ปิดใช้งาน",
+    "autoApproving": "กำลังอนุมัติคำสั่ง {{mode}} โดยอัตโนมัติ…",
+    "liveOrderWarning": "คำสั่งเทรดจริง — เงินจริง จะถูกบังคับใช้ตามขีดจำกัดความเสี่ยงของคุณ",
+    "dontAskAgainPaper": "ไม่ต้องถามอีกสำหรับการเทรดจำลอง",
+    "dontAskAgainLive": "ไม่ต้องถามอีกสำหรับการเทรดจริงบน {{market}}",
+    "placing": "กำลังส่งคำสั่ง…",
+    "confirmMode": "ยืนยัน {{mode}}",
+    "dismissed": "ปิดแล้ว",
+    "cancelOrderPrompt": "ยกเลิกคำสั่ง {{orderId}} บน {{pair}} · {{market}} ใช่ไหม?",
+    "cancelled": "ยกเลิกแล้ว",
+    "cancelFailed": "ยกเลิกไม่สำเร็จ",
+    "cancelling": "กำลังยกเลิก…",
+    "confirmCancel": "ยืนยันการยกเลิก",
+    "keep": "เก็บไว้",
+    "tradingUnavailable": "ไม่สามารถใช้งานการเทรดได้",
+    "noCredentialsForMarket": "ไม่มีข้อมูลรับรองที่เชื่อมต่อกับ {{market}} เพิ่ม API key ในหน้า Accounts เพื่อเทรดจริง",
+    "watchingPair": "กำลังติดตาม {{pair}} · {{timeframe}}",
+    "genericChatError": "โคไพลอตพบข้อผิดพลาด — ลองส่งข้อความอีกครั้ง",
+    "quickActionHowIsDoing": "{{symbol}} เป็นอย่างไรบ้าง?",
+    "quickActionSuggestedIndicators": "อินดิเคเตอร์ที่แนะนำ",
+    "quickActionAnySignals": "มีสัญญาณไหม?",
+    "scheduledCheckPrefix": "[ตรวจสอบตามกำหนดเวลา — ตั้งไว้เมื่อ {{minutes}} นาทีก่อน]",
+    "authRequiredTitle": "รู้จักกับ AI โคไพลอตของคุณ",
+    "authRequiredDescription": "วิเคราะห์ตามบริบทสำหรับทุกคู่เทรด — อ่านกราฟ ตรวจสอบขีดจำกัดความเสี่ยงของคุณ และตอบพร้อมเหตุผลที่คุณสามารถซักถามได้ เข้าสู่ระบบก่อน แล้วสมัคร Pairlens Intelligence หรือใช้ AI key ของคุณเอง",
+    "upgradeRequiredDescription": "AI โคไพลอตของคุณอ่านกราฟ ตรวจสอบขีดจำกัดความเสี่ยงของคุณ และตอบพร้อมเหตุผลที่คุณสามารถซักถามได้ สมัคร Pairlens Intelligence — หรือใช้ AI key ของคุณเองผ่าน Plugins ได้ฟรี",
+    "aiLensUnavailableTitle": "ใช้งาน AI Lens ไม่ได้",
+    "aiLensUnavailableDescription": "เปิดใช้งานปลั๊กอิน AI ในหน้า Plugins เพื่อรับการวิเคราะห์ตลาดแบบเรียลไทม์และความช่วยเหลือในการเทรด",
+    "goToPlugins": "ไปที่ Plugins",
+    "analyzePair": "วิเคราะห์ {{pair}}",
+    "startConversation": "เริ่มการสนทนา",
+    "emptyStateHint": "ถามเกี่ยวกับสภาวะตลาด ตรวจสอบเซ็ตอัพของคุณ หรือขอประเมินความเสี่ยง — AI มีบริบททั้งหมดของคู่เทรดนี้",
+    "contextAware": "เข้าใจบริบท",
+    "toolFailed": "เครื่องมือทำงานล้มเหลว"
   },
   "chart": {
     "contextMenu": {
@@ -1312,7 +1420,9 @@
       "pause": "หยุดชั่วคราว",
       "step": "แท่งถัดไป",
       "exit": "ออกจากการเล่นย้อนหลัง"
-    }
+    },
+    "fullscreenTitle": "กราฟเต็มจอ",
+    "fullscreenHint": "กราฟอยู่ในโหมดเต็มจอ กด Escape เพื่อออก"
   },
   "botsPage": {
     "loading": "กำลังโหลดบอท…",
@@ -1872,7 +1982,15 @@
     "frozen": "ถูกอายัด",
     "total": "ยอดรวม",
     "refreshBalances": "รีเฟรช",
-    "asset": "สินทรัพย์"
+    "asset": "สินทรัพย์",
+    "cancelOrderTitle": "ยกเลิกคำสั่งหรือไม่?",
+    "cancelOrderBody": "การทำเช่นนี้จะยกเลิกคำสั่ง{{side}}ของคุณสำหรับ {{pair}}",
+    "keepOrder": "เก็บคำสั่งไว้",
+    "cancelOrder": "ยกเลิกคำสั่ง",
+    "sideBuy": "ซื้อ",
+    "sideSell": "ขาย",
+    "buy": "ซื้อ",
+    "sell": "ขาย"
   },
   "pairInfo": {
     "title": "ข้อมูลคู่เทรด",
@@ -1915,7 +2033,10 @@
     "emptyTitle": "ป้อน URL ด้านบนเพื่อฝังเว็บไซต์",
     "embedWarning": "บางเว็บไซต์บล็อกการฝังใน iframe หากหน้าเว็บไม่โหลด ลองเปิดในเบราว์เซอร์ของคุณแทน",
     "blockedTitle": "ไม่สามารถฝังเว็บไซต์นี้ได้",
-    "blockedDescription": "เว็บไซต์นี้บล็อกการแสดงผลภายในหน้าอื่น คุณสามารถเปิดในแท็บเบราว์เซอร์แยกต่างหากแทนได้"
+    "blockedDescription": "เว็บไซต์นี้บล็อกการแสดงผลภายในหน้าอื่น คุณสามารถเปิดในแท็บเบราว์เซอร์แยกต่างหากแทนได้",
+    "forward": "ถัดไป",
+    "failedToLoad": "โหลดไม่สำเร็จ",
+    "viewPaused": "หยุดมุมมองเว็บชั่วคราว"
   },
   "intelligence": {
     "analyzing": "กำลังวิเคราะห์ตลาด…",
@@ -1924,7 +2045,29 @@
     "recentSignals": "สัญญาณล่าสุด",
     "regime": "สภาวะตลาด",
     "trending": "เป็นเทรนด์",
-    "choppy": "แกว่งตัว"
+    "choppy": "แกว่งตัว",
+    "upsell": {
+      "priceMonthly": "${{price}}/เดือน",
+      "taxNotice": "ราคาที่แสดงไม่รวมภาษี ซึ่งจะคำนวณตอนชำระเงิน",
+      "defaultTitle": "ปลดล็อก Pairlens Intelligence",
+      "defaultDescription": "AI ผู้ช่วยและรายงานวิเคราะห์เว็บแบบโฮสต์ ไม่ต้องใช้คีย์ API ทุกแพ็กเกจมีโควตาการใช้งานรายเดือนที่ใช้ร่วมกันระหว่างแชท รายงานวิเคราะห์ และการค้นหาเว็บ",
+      "byokNote": "อยากใช้ผู้ให้บริการของคุณเอง? เชื่อมต่อคีย์ Anthropic, OpenAI, Groq หรือ OpenRouter ได้ที่ <plugins>ปลั๊กอิน</plugins> — AI ที่ใช้คีย์ของคุณเองฟรีเสมอ",
+      "checkoutOpenedTitle": "เปิดหน้าชำระเงินในเบราว์เซอร์แล้ว",
+      "checkoutActivates": "การสมัครสมาชิกของคุณจะเปิดใช้งานทันทีที่ชำระเงินเสร็จสมบูรณ์",
+      "checkoutStartError": "ไม่สามารถเริ่มการชำระเงินได้ — ลองอีกครั้ง",
+      "subscriptionRequiredTitle": "ต้องสมัครสมาชิก Pairlens Intelligence",
+      "subscriptionRequiredBody": "AI แบบโฮสต์ทำงานภายใต้แพ็กเกจ Intelligence สมัครด้านล่าง หรือเชื่อมต่อคีย์ผู้ให้บริการ AI ของคุณเองในหน้าปลั๊กอิน",
+      "budgetUsedUpTitle": "ใช้โควตารายเดือนหมดแล้ว",
+      "budgetUsedBody": "คุณใช้เครดิต Intelligence ของรอบนี้หมดแล้ว",
+      "budgetResetsOn": "โควตาของคุณจะรีเซ็ตในวันที่ {{date}}",
+      "topUpHint": "เติมเครดิตเพื่อใช้งานต่อ — เครดิตแพ็กจะหมดอายุ 30 วันหลังซื้อ",
+      "upgradeToMaxHint": "อัปเกรดเป็น {{label}} เพื่อรับ {{credits}} เครดิตต่อเดือน",
+      "manageSubscription": "จัดการการสมัครสมาชิก",
+      "portalError": "ไม่สามารถเปิดพอร์ทัลการเรียกเก็บเงินได้",
+      "creditsLandDescription": "เครดิตเพิ่มเติมจะเข้ายอดคงเหลือทันทีที่ชำระเงินเสร็จสมบูรณ์",
+      "checkoutError": "ไม่สามารถเริ่มการชำระเงินได้",
+      "upgradeToMax": "อัปเกรดเป็น Max"
+    }
   },
   "panes": {
     "markets": "ตลาด",
@@ -2020,6 +2163,52 @@
       "title": "ไม่มี {{pair}} บน {{venue}}",
       "titleAnyVenue": "ไม่มี {{pair}}",
       "description": "คอนเนกเตอร์นี้ไม่ได้ส่งข้อมูลตลาดของคู่นี้กลับมา ลองคอนเนกเตอร์อื่นที่มีคู่นี้"
+    },
+    "panePicker": {
+      "bindToVariable": "ผูกกับตัวแปร",
+      "boundTo": "ผูกกับ <b>{{variable}}</b> แล้ว",
+      "market": "ตลาด",
+      "setPair": "ตั้งค่าคู่เทรดของ {{variable}}",
+      "selectPair": "เลือกคู่เทรด",
+      "bindingHint": "การเลือกคู่เทรดจะอัปเดตแผงทั้งหมดที่ผูกกับ {{variable}}",
+      "unbindFromVariable": "ยกเลิกการผูกกับตัวแปร",
+      "settingForAllPanes": "กำลังตั้งค่า <b>{{variable}}</b> สำหรับแผงที่ผูกไว้ทั้งหมด"
+    },
+    "pane": {
+      "close": "ปิด {{pane}}",
+      "popOutToColumn": "แยกไปยังคอลัมน์ใหม่",
+      "bindPairToVariable": "ผูกคู่เทรดกับตัวแปร",
+      "bindWalletToVariable": "ผูกวอลเล็ตกับตัวแปร",
+      "bindTimeframeToVariable": "ผูกไทม์เฟรมกับตัวแปร",
+      "clearPairOverride": "ล้างการแทนที่คู่เทรด",
+      "closePane": "ปิดแผง",
+      "unbind": "ยกเลิกการผูก",
+      "closeTab": "ปิดแท็บ"
+    },
+    "dnd": {
+      "pickedUp": "หยิบ {{pane}} แล้ว ใช้ปุ่มลูกศรเพื่อย้าย กด space เพื่อวาง กด escape เพื่อยกเลิก",
+      "genericPane": "แผง",
+      "noDropTarget": "ไม่มีเป้าหมายให้วาง",
+      "dropStackTab": "วางที่นี่เพื่อซ้อนเป็นแท็บ",
+      "dropSplitAbove": "วางเพื่อแบ่งด้านบน",
+      "dropSplitBelow": "วางเพื่อแบ่งด้านล่าง",
+      "dropNewColumn": "วางเพื่อสร้างคอลัมน์ใหม่",
+      "paneMoved": "ย้ายแผงแล้ว",
+      "dragCancelled": "ยกเลิกการลากแล้ว แผงถูกส่งกลับ",
+      "dragCancelledFull": "ยกเลิกการลากแล้ว แผงกลับไปยังตำแหน่งเดิม"
+    },
+    "missingPane": {
+      "requiresPlugin": "แผงนี้ต้องใช้ปลั๊กอิน \"{{pluginId}}\"",
+      "notAvailable": "แผง \"{{type}}\" ไม่พร้อมใช้งาน",
+      "description": "ปลั๊กอินอาจถูกลบหรือปิดใช้งาน",
+      "openPluginStore": "เปิด Plugin Store"
+    },
+    "dropZone": {
+      "emptyHint": "ลากแผงมาที่นี่",
+      "addAsTab": "เพิ่มเป็นแท็บ",
+      "splitTop": "แบ่งด้านบน",
+      "splitBottom": "แบ่งด้านล่าง",
+      "newColumn": "คอลัมน์ใหม่"
     }
   },
   "watchlist": {
@@ -2129,7 +2318,137 @@
     "uninstalled": "ถอนการติดตั้งแล้ว",
     "updateReactivate": "อัปเดตและเปิดใช้งานอีกครั้ง",
     "version": "เวอร์ชัน",
-    "visit": "เยี่ยมชม"
+    "visit": "เยี่ยมชม",
+    "fullTrust": {
+      "title": "ให้ความเชื่อถือเต็มรูปแบบกับ “{{name}}” หรือไม่?",
+      "description": "ปลั๊กอินนี้เพิ่มส่วนติดต่อผู้ใช้ จึงต้องทำงานในแอปหลักโดยไม่มีแซนด์บ็อกซ์ ปลั๊กอินที่ได้รับความเชื่อถือเต็มรูปแบบจะมีสิทธิ์เท่ากับ Pairlens เอง",
+      "itCan": "ปลั๊กอินนี้สามารถ:",
+      "grantPlugins": "อ่านข้อมูลจากปลั๊กอินอื่นที่คุณติดตั้ง",
+      "grantCredentials": "อ่านคีย์ API ของกระดานและข้อมูลวอลเล็ตที่บันทึกไว้",
+      "grantTrading": "ส่งคำสั่งซื้อขายและทำธุรกรรมการเงินอื่นแทนคุณ",
+      "trustNote": "ให้ความเชื่อถือเต็มรูปแบบเฉพาะปลั๊กอินจากผู้พัฒนาที่คุณไว้ใจ คุณถอนการติดตั้งได้ทุกเมื่อ",
+      "trustNoteAuthor": "ให้ความเชื่อถือเต็มรูปแบบเฉพาะปลั๊กอินจากผู้พัฒนาที่คุณไว้ใจ (ผู้พัฒนา: {{author}}) คุณถอนการติดตั้งได้ทุกเมื่อ",
+      "grant": "ให้ความเชื่อถือเต็มรูปแบบ"
+    },
+    "network": {
+      "title": "อนุญาตให้ “{{name}}” เชื่อมต่อหรือไม่?",
+      "description": "ปลั๊กอินนี้ต้องติดต่อเซิร์ฟเวอร์ภายนอก Pairlens เทอร์มินัลจะส่งคำขอเครือข่ายไปยังโฮสต์ด้านล่าง อนุญาตเฉพาะเมื่อคุณไว้ใจปลั๊กอินนี้ — ถอนการติดตั้งเมื่อใดก็ได้เพื่อเพิกถอนสิทธิ์",
+      "hostsIntro": "จะสามารถเชื่อมต่อไปยัง:",
+      "reloadNote": "เมื่ออนุมัติ เทอร์มินัลจะโหลดใหม่เพื่อใช้การเปลี่ยนแปลง",
+      "deny": "ไม่อนุญาต",
+      "allow": "อนุญาตและโหลดใหม่"
+    },
+    "toggleFailedEnable": "เปิดใช้งาน {{name}} ไม่สำเร็จ",
+    "toggleFailedDisable": "ปิดใช้งาน {{name}} ไม่สำเร็จ",
+    "updateStagedToast": "เตรียมอัปเดตแล้ว — รีสตาร์ทเพื่อใช้งาน",
+    "restartNow": "รีสตาร์ทตอนนี้",
+    "updateStageFailedToast": "เตรียมอัปเดตไม่สำเร็จ: {{error}}",
+    "resetStagedToast": "รีเซ็ตเป็นค่าเริ่มต้นแล้ว — รีสตาร์ทเพื่อดำเนินการให้เสร็จสิ้น",
+    "networkGrantedToast": "ให้สิทธิ์เข้าถึงเครือข่ายแก่ \"{{name}}\" แล้ว — กำลังโหลดใหม่…",
+    "networkDeniedToast": "ติดตั้ง \"{{name}}\" โดยไม่มีสิทธิ์เข้าถึงเครือข่าย — อาจทำงานไม่ได้จนกว่าคุณจะอนุญาต",
+    "installCancelledNoTrust": "ยกเลิกการติดตั้งแล้ว — ไม่ได้ให้ความเชื่อถือเต็มรูปแบบ",
+    "installedVersionToast": "ติดตั้ง \"{{name}}\" v{{version}} แล้ว",
+    "installFailedToast": "ติดตั้งปลั๊กอินไม่สำเร็จ: {{error}}",
+    "localFilesNotFound": "ไม่พบไฟล์ปลั๊กอินในเครื่อง",
+    "pluginCodeNotFound": "ไม่พบโค้ดปลั๊กอิน — โปรดติดตั้งใหม่",
+    "fullTrustGrantedNameToast": "ให้ความเชื่อถือเต็มรูปแบบแก่ \"{{name}}\" แล้ว",
+    "loadPluginFailedToast": "โหลดปลั๊กอินไม่สำเร็จ: {{error}}",
+    "importFailedToast": "นำเข้าปลั๊กอินไม่สำเร็จ: {{error}}",
+    "fieldRequired": "ต้องกรอก {{label}}",
+    "configSaved": "บันทึกการกำหนดค่าแล้ว",
+    "configurationFailed": "การกำหนดค่าล้มเหลว",
+    "needsFullTrustToRun": "ต้องได้รับความเชื่อถือเต็มรูปแบบจึงจะทำงานได้",
+    "pendingTrustDescription": "เพิ่มส่วนติดต่อผู้ใช้และไม่สามารถทำงานในแซนด์บ็อกซ์ได้ — ให้ความเชื่อถือเต็มรูปแบบเพื่อเปิดใช้งาน หรือถอนการติดตั้ง",
+    "remove": "ลบ",
+    "groupCore": "หลัก",
+    "groupProvidersExtensions": "ผู้ให้บริการและส่วนขยาย",
+    "groupThemes": "ธีม",
+    "removePluginTitle": "ลบปลั๊กอิน",
+    "removePluginDescription": "การดำเนินการนี้จะปิดใช้งานและลบปลั๊กอิน แผงใด ๆ ที่ปลั๊กอินนี้เพิ่มไว้จะแสดงตัวยึดตำแหน่งสำหรับกู้คืน คุณสามารถติดตั้งใหม่ได้จาก Plugin Store ได้ทุกเมื่อ",
+    "resetDefaultsTitle": "รีเซ็ตเป็นค่าเริ่มต้น",
+    "resetDefaultsDescription": "การดำเนินการนี้จะลบปลั๊กอินที่ไม่ได้มาพร้อมเทอร์มินัลทั้งหมด ล้างการอัปเดตที่เตรียมไว้และที่พร้อมใช้งาน แล้วโหลดเทอร์มินัลใหม่ ปลั๊กอินที่มาพร้อมเทอร์มินัลจะยังคงติดตั้งอยู่",
+    "reset": "รีเซ็ต",
+    "installFromUrlDialogTitle": "ติดตั้งปลั๊กอินจาก URL",
+    "installFromUrlDialogDescription": "ป้อน URL ของโมดูลปลั๊กอิน (.js) ที่ต้องการติดตั้ง",
+    "unverifiedPluginTitle": "ปลั๊กอินที่ยังไม่ได้ตรวจสอบ",
+    "unverifiedPluginBody": "ปลั๊กอินที่ติดตั้งด้วยตนเองยังไม่ได้รับการตรวจสอบด้านความปลอดภัย ติดตั้งปลั๊กอินจากแหล่งที่คุณไว้ใจเท่านั้น",
+    "installAnyway": "ติดตั้งต่อไป",
+    "sourceBuiltIn": "มาในตัว",
+    "sourceRegistry": "ทะเบียน",
+    "sourceUrl": "URL",
+    "sourceLocal": "ในเครื่อง",
+    "fullTrustGrantedRestartToast": "ให้ความเชื่อถือเต็มรูปแบบแล้ว — รีสตาร์ทเพื่อรันปลั๊กอินนี้ในแอปหลัก",
+    "sandboxedRestartToast": "ปลั๊กอินจะทำงานในแซนด์บ็อกซ์ — รีสตาร์ทเพื่อใช้งาน",
+    "requiresFullTrustTitle": "ปลั๊กอินนี้เพิ่มส่วนติดต่อผู้ใช้และต้องทำงานโดยได้รับความเชื่อถือเต็มรูปแบบ",
+    "trustBadgeFullRequired": "ความเชื่อถือเต็มรูปแบบ (จำเป็น)",
+    "trustBadgeFull": "ความเชื่อถือเต็มรูปแบบ",
+    "trustBadgeSandboxed": "อยู่ในแซนด์บ็อกซ์",
+    "panelCount_one": "{{count}} แผง",
+    "panelCount_other": "{{count}} แผง",
+    "update": "อัปเดต",
+    "revokeFullTrustAria": "เพิกถอนความเชื่อถือเต็มรูปแบบสำหรับ {{name}}",
+    "grantFullTrustAria": "ให้ความเชื่อถือเต็มรูปแบบแก่ {{name}}",
+    "fullTrustActiveTitle": "ความเชื่อถือเต็มรูปแบบ — ทำงานในแอปหลัก คลิกเพื่อย้ายไปแซนด์บ็อกซ์",
+    "sandboxedTitle": "แซนด์บ็อกซ์ — เวิร์กเกอร์แยกส่วน เครือข่ายจำกัดเฉพาะโฮสต์ที่ระบุไว้ คลิกเพื่อให้ความเชื่อถือเต็มรูปแบบ",
+    "configureAria": "กำหนดค่า {{name}}",
+    "toggleAria": "สลับ {{name}}",
+    "capabilityProvidersTitle": "ผู้ให้บริการความสามารถ",
+    "capabilityProvidersDescription": "แต่ละฟีเจอร์ของเทอร์มินัลจะร้องขอความสามารถหนึ่งอย่าง และปลั๊กอินที่เปิดใช้งานซึ่งมีลำดับความสำคัญสูงสุดจะเป็นผู้ให้บริการโดยอัตโนมัติ เลือกปลั๊กอินที่ต้องการเพื่อแทนที่การเลือกอัตโนมัติ",
+    "resetAllOverrides": "รีเซ็ตการแทนที่ทั้งหมด",
+    "noProviderInstalled": "ไม่มีปลั๊กอินที่ติดตั้งไว้ให้บริการสิ่งนี้",
+    "browseStore": "เรียกดูสโตร์",
+    "installedNeedsKeySingle": "ติดตั้งแล้ว — ต้องใช้ API key",
+    "installedNeedsKeyPlural": "ติดตั้งแล้ว {{count}} รายการ — ทั้งหมดต้องใช้ API key",
+    "installedDisabledSingle": "ติดตั้งปลั๊กอินแล้ว 1 รายการ แต่ปิดใช้งานอยู่",
+    "installedDisabledPlural": "ติดตั้งปลั๊กอินแล้ว {{count}} รายการ ปิดใช้งานทั้งหมด",
+    "manage": "จัดการ",
+    "pinnedActiveNote": "ปักหมุดแล้ว — แทนที่ลำดับอัตโนมัติ",
+    "pinnedInactiveNote": "ปลั๊กอินที่ปักหมุดถูกปิดใช้งาน — จะใช้ลำดับอัตโนมัติแทน",
+    "autoOrderLabel": "ลำดับอัตโนมัติ: {{chain}}",
+    "chainMore_one": "{{chain}} อีก {{count}} รายการ",
+    "chainMore_other": "{{chain}} อีก {{count}} รายการ",
+    "resolvedPerMarket": "กำหนดตามตลาด",
+    "marketOverrides": "การแทนที่ตามตลาด",
+    "pinnedCountBadge_one": "ปักหมุด {{count}} รายการ",
+    "pinnedCountBadge_other": "ปักหมุด {{count}} รายการ",
+    "automatic": "อัตโนมัติ",
+    "disabledHint": "ปิดใช้งาน",
+    "notInstalled": "{{id}} (ยังไม่ได้ติดตั้ง)",
+    "saveOverrideFailed": "บันทึกการแทนที่ผู้ให้บริการไม่สำเร็จ",
+    "removeOverrideFailed": "ลบการแทนที่ผู้ให้บริการไม่สำเร็จ",
+    "resetOverridesFailed": "รีเซ็ตการแทนที่ไม่สำเร็จ",
+    "marketConnectorsTitle": "ตัวเชื่อมต่อตลาด",
+    "marketConnectorsDescription": "ตัวเชื่อมต่อตลาดสตรีมข้อมูลราคาแบบเรียลไทม์และสมุดคำสั่ง และเปิดให้เทรดได้โดยตรงผ่าน API ของตลาดแลกเปลี่ยน เปิดใช้งานตลาดแลกเปลี่ยนที่คุณต้องการใช้",
+    "activeCountBadge": "ใช้งานอยู่ {{active}}/{{total}}",
+    "connected": "เชื่อมต่อแล้ว",
+    "disabledStatus": "ปิดใช้งาน",
+    "readAndTrade": "อ่าน + เทรด",
+    "readOnly": "อ่านอย่างเดียว",
+    "noConnectorsInstalled": "ไม่มีปลั๊กอินตัวเชื่อมต่อตลาดที่ติดตั้งไว้",
+    "moreConnectors": "ตัวเชื่อมต่อเพิ่มเติม",
+    "fromPluginStore": "จาก Plugin Store",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "เรียนรู้เพิ่มเติม",
+    "enabledToast": "เปิดใช้งาน {{name}} แล้ว",
+    "disabledToast": "ปิดใช้งาน {{name}} แล้ว",
+    "enableFailedShort": "เปิดใช้งานไม่สำเร็จ",
+    "disableFailedShort": "ปิดใช้งานไม่สำเร็จ",
+    "domain": {
+      "marketData": "ข้อมูลตลาด",
+      "trading": "การเทรด",
+      "wallet": "วอลเล็ต",
+      "signals": "สัญญาณ",
+      "ai": "AI"
+    },
+    "byAuthor": "โดย {{author}}",
+    "installsCount_one": "ติดตั้งแล้ว {{formattedCount}} ครั้ง",
+    "installsCount_other": "ติดตั้งแล้ว {{formattedCount}} ครั้ง",
+    "panelsCount": "แผง ({{count}})",
+    "inactive": "ไม่ทำงาน",
+    "previousSlide": "ก่อนหน้า",
+    "nextSlide": "ถัดไป",
+    "goToSlide": "ไปที่สไลด์ {{n}}",
+    "copyCommand": "คัดลอกคำสั่ง"
   },
   "search": {
     "title": "ค้นหาคู่เทรด",
@@ -2196,8 +2515,71 @@
       "selectAccount": "เลือกบัญชี",
       "groupWallet": "วอลเล็ตคริปโต",
       "groupBroker": "บัญชีโบรกเกอร์",
-      "groupExchange": "บัญชีกระดานเทรด"
-    }
+      "groupExchange": "บัญชีกระดานเทรด",
+      "selectWalletTopBar": "เลือกกระเป๋าเงินที่แถบด้านบน",
+      "connectChainWallet": "เชื่อมต่อกระเป๋าเงิน {{chain}}",
+      "connectExchangeAccount": "เชื่อมต่อบัญชี {{exchange}}",
+      "selectAccountTopBar": "เลือกบัญชีที่แถบด้านบน"
+    },
+    "trade": {
+      "limitBuy": "ซื้อแบบลิมิต",
+      "limitSell": "ขายแบบลิมิต",
+      "bought": "ซื้อแล้ว",
+      "sold": "ขายแล้ว",
+      "limitOrderFailed": "คำสั่งลิมิตล้มเหลว",
+      "swapFailed": "สวอปล้มเหลว",
+      "workflowUnsupported": "กระดานนี้ไม่รองรับเวิร์กโฟลว์",
+      "orderBlocked": "คำสั่งถูกบล็อกโดยลิมิตความเสี่ยง",
+      "orderRejected": "คำสั่งถูกปฏิเสธ",
+      "orderFailed": "คำสั่งล้มเหลว",
+      "setRegion": "ตั้งค่าภูมิภาคของคุณ",
+      "regionDefaulting": "ภูมิภาคใช้ค่าเริ่มต้นเป็น Global",
+      "addPreset": "เพิ่มพรีเซ็ต",
+      "createFirstWorkflow": "สร้างเวิร์กโฟลว์แรกของคุณ",
+      "editWorkflows": "แก้ไขเวิร์กโฟลว์",
+      "selectWorkflow": "เลือกเวิร์กโฟลว์",
+      "submitting": "กำลังส่ง…",
+      "holdToRun": "กดค้างเพื่อเรียกใช้",
+      "holdToConfirmLive": "กดค้างเพื่อยืนยัน · เงินจะถูกใช้ทันที",
+      "holdToPlace": "กดค้างเพื่อส่งคำสั่ง",
+      "runWorkflow": "เรียกใช้เวิร์กโฟลว์",
+      "buyAsset": "ซื้อ {{asset}}",
+      "sellAsset": "ขาย {{asset}}",
+      "amount": "จำนวน",
+      "price": "ราคา",
+      "presetsTitle": "ค่าที่ตั้งไว้ล่วงหน้าของจำนวนเงิน ({{quote}})",
+      "buy": "ซื้อ",
+      "sell": "ขาย",
+      "orderTypeMarket": "ตลาด",
+      "orderTypeLimit": "ลิมิต",
+      "workflow": "เวิร์กโฟลว์",
+      "notSupportedOn": "ไม่รองรับบน {{venue}}",
+      "available": "พร้อมใช้งาน: {{amount}}",
+      "slippage": "สลิปเพจ"
+    },
+    "status": {
+      "connecting": "กำลังเชื่อมต่อ…",
+      "loadingOrderBook": "กำลังโหลดออร์เดอร์บุ๊ก…",
+      "loadingDepth": "กำลังโหลดความลึกตลาด…",
+      "loadingCandles": "กำลังโหลดแท่งเทียน…",
+      "waitingTrades": "รอรายการซื้อขาย…",
+      "waitingData": "รอข้อมูล…",
+      "noCandleData": "ยังไม่มีข้อมูลแท่งเทียน",
+      "noTradesFeed": "สลับไปกระดานที่เผยแพร่ time and sales"
+    },
+    "columns": {
+      "price": "ราคา",
+      "size": "ปริมาณ",
+      "total": "รวม",
+      "open": "ราคาเปิด",
+      "close": "ราคาปิด"
+    },
+    "panel": {
+      "expand": "ขยายแผง",
+      "collapse": "ย่อแผง"
+    },
+    "recentlyViewed": "ดูล่าสุด",
+    "noMarketsFound": "ไม่พบตลาด"
   },
   "accounts": {
     "pageTitle": "บัญชี",
@@ -2293,7 +2675,42 @@
     "importKey": "นำเข้ากุญแจส่วนตัว",
     "affiliateDisclosure": "ลิงก์สมัครสมาชิกบางลิงก์อาจทำให้ Pairlens ได้รับค่าคอมมิชชัน โดยไม่มีค่าใช้จ่ายเพิ่มเติมสำหรับคุณ",
     "vaultSealedBody": "ตู้นิรภัยข้อมูลรับรองของคุณถูกล็อกอยู่ บัญชีของคุณยังอยู่ที่นี่ — ปลดล็อกเพื่อดูและใช้งาน",
-    "credentialsUnreadable": "อ่านคีย์ที่เก็บไว้บนอุปกรณ์นี้ไม่ได้ ไม่มีอะไรสูญหาย ลองอีกครั้งหรือเปิด Pairlens ใหม่"
+    "credentialsUnreadable": "อ่านคีย์ที่เก็บไว้บนอุปกรณ์นี้ไม่ได้ ไม่มีอะไรสูญหาย ลองอีกครั้งหรือเปิด Pairlens ใหม่",
+    "addWalletDialogTitle": "เพิ่มกระเป๋าเงินคริปโต",
+    "addWalletDialogDescription": "นำเข้าคีย์ส่วนตัวของกระเป๋าเงินสำหรับเทรดออนเชน",
+    "blockchainLabel": "บล็อกเชน",
+    "walletLabelField": "ป้ายชื่อ",
+    "walletLabelPlaceholder": "กระเป๋าเงินของฉัน",
+    "privateKeyField": "คีย์ส่วนตัว",
+    "saveWallet": "บันทึกกระเป๋าเงิน",
+    "keep": "เก็บไว้",
+    "remove": "ลบ",
+    "disconnect": "ตัดการเชื่อมต่อ",
+    "localBadge": "ในเครื่อง",
+    "unknownDate": "ไม่ทราบ",
+    "keyExpiredWarning": "อาจหมดอายุแล้ว — ไม่มีการใช้งาน {{daysInactive}} วัน (ขีดจำกัด {{limitDays}} วัน) สร้างคีย์ API ใหม่ที่เอ็กซ์เชนจ์",
+    "keyInactiveWarning": "ไม่มีการใช้งาน {{daysInactive}}/{{limitDays}} วัน คีย์จะหมดอายุหลังไม่ได้ใช้งาน {{limitDays}} วัน",
+    "exchangeAccountAriaLabel": "บัญชีเอ็กซ์เชนจ์ {{label}}",
+    "cryptoWalletAriaLabel": "กระเป๋าเงินคริปโต {{label}}",
+    "portfolioTotal": "รวม",
+    "assetAllocationLabel": "การจัดสรรสินทรัพย์",
+    "tableAsset": "สินทรัพย์",
+    "tableAmount": "จำนวน",
+    "tableValue": "มูลค่า",
+    "tableShare": "สัดส่วน",
+    "assetCount_one": "{{count}} สินทรัพย์",
+    "assetCount_other": "{{count}} สินทรัพย์",
+    "moreAssets_one": "+{{count}} สินทรัพย์เพิ่มเติม",
+    "moreAssets_other": "+{{count}} สินทรัพย์เพิ่มเติม",
+    "walletSavedFeedback": "บันทึกกระเป๋าเงินคริปโตแล้ว",
+    "walletRemovedFeedback": "ลบกระเป๋าเงินคริปโตแล้ว",
+    "accountRemovedFeedback": "ลบบัญชีแล้ว",
+    "walletSaveFailed": "บันทึกกระเป๋าเงินไม่สำเร็จ",
+    "walletRemoveFailed": "ลบกระเป๋าเงินไม่สำเร็จ",
+    "accountConnectFailed": "เชื่อมต่อบัญชีไม่สำเร็จ",
+    "accountRemoveFailed": "ลบบัญชีไม่สำเร็จ",
+    "fieldRequired": "ต้องระบุ {{field}}",
+    "accountConnectedFeedback": "เชื่อมต่อบัญชี {{label}} {{mode}} แล้ว"
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2401,12 +2818,136 @@
     "paneCount_other": "{{count}} แผง",
     "panes": "แผง",
     "showAll": "แสดงทั้งหมด",
-    "spotlight": "ไฮไลต์"
+    "spotlight": "ไฮไลต์",
+    "previousSlide": "ก่อนหน้า",
+    "nextSlide": "ถัดไป",
+    "goToSlide": "ไปที่สไลด์ {{number}}"
   },
   "notifications": {
     "flows": "โฟลว์",
     "newFlow": "โฟลว์ใหม่",
-    "noFlows": "ยังไม่มีโฟลว์การแจ้งเตือน"
+    "noFlows": "ยังไม่มีโฟลว์การแจ้งเตือน",
+    "builder": {
+      "sidebar": {
+        "tabRules": "กฎ",
+        "tabActivity": "กิจกรรม",
+        "noRules": "ยังไม่มีกฎการแจ้งเตือน",
+        "newRuleTitle": "กฎการแจ้งเตือนใหม่",
+        "rulePlaceholder": "ชื่อกฎ",
+        "renameRuleTitle": "เปลี่ยนชื่อกฎ",
+        "rename": "เปลี่ยนชื่อ",
+        "deleteRuleTitle": "ลบกฎ",
+        "deleteRuleWarning": "การกระทำนี้ย้อนกลับไม่ได้ กฎการแจ้งเตือนและการผูกคู่เทรดของกฎนี้จะถูกลบอย่างถาวร",
+        "pairsLabel": "คู่เทรด",
+        "sendTest": "ส่งทดสอบ",
+        "testing": "กำลังทดสอบ…",
+        "pairAlreadyBound": "คู่เทรดนี้ผูกกับกฎนี้อยู่แล้ว",
+        "noBindings": "ยังไม่ได้ผูกกับคู่เทรดใด — กฎจะยังไม่ทำงานจนกว่าจะเพิ่มคู่เทรด",
+        "testSent": "ส่งการแจ้งเตือนทดสอบแล้ว",
+        "testFailed": "ส่งการทดสอบไม่สำเร็จ",
+        "noActivity": "ยังไม่มีการแจ้งเตือนเกิดขึ้น",
+        "clearActivity": "ล้างกิจกรรม",
+        "channelFailed": "{{channel}} ล้มเหลว"
+      },
+      "commitBar": {
+        "cycleDetected": "ตรวจพบการวนซ้ำ",
+        "issueCount_one": "{{count}} ปัญหา",
+        "issueCount_other": "{{count}} ปัญหา",
+        "moreIssues": "…และอีก {{count}} รายการ",
+        "pendingChangeCount_one": "{{count}} การเปลี่ยนแปลงที่รอดำเนินการ",
+        "pendingChangeCount_other": "{{count}} การเปลี่ยนแปลงที่รอดำเนินการ",
+        "noChanges": "ไม่มีการเปลี่ยนแปลง",
+        "review": "ตรวจสอบ",
+        "discard": "ละทิ้ง",
+        "commit": "บันทึก",
+        "cannotSaveTitle": "บันทึกกฎไม่ได้",
+        "cycleError": "กฎนี้มีการพึ่งพาแบบวนซ้ำ กรุณาลบวงจร (เส้นสีแดง) ก่อนบันทึก",
+        "saved": "บันทึกกฎแล้ว"
+      },
+      "diff": {
+        "title": "ตรวจสอบการเปลี่ยนแปลง ({{count}})",
+        "addedStep": "เพิ่มขั้นตอน {{type}}",
+        "removedStep": "ลบขั้นตอน {{type}}",
+        "modifiedStep": "แก้ไขการตั้งค่า {{type}}",
+        "addedConnection": "เพิ่มการเชื่อมต่อ",
+        "removedConnection": "ลบการเชื่อมต่อ"
+      },
+      "canvas": {
+        "undoTitle": "เลิกทำ (Cmd+Z)",
+        "redoTitle": "ทำซ้ำ (Cmd+Shift+Z)",
+        "deleteStep": "ลบขั้นตอน",
+        "deleteConnection": "ลบการเชื่อมต่อ",
+        "cycleLabel": "วงจร"
+      },
+      "palette": {
+        "addStep": "เพิ่มขั้นตอน",
+        "categoryEvents": "เหตุการณ์",
+        "categoryConditions": "เงื่อนไข",
+        "categoryChannels": "ช่องทาง"
+      },
+      "category": {
+        "event": "เหตุการณ์",
+        "condition": "เงื่อนไข",
+        "channel": "ช่องทาง"
+      },
+      "emptyState": {
+        "pickRuleHint": "เลือกกฎทางซ้ายเพื่อเปิดบนแคนวาส",
+        "untitledRule": "กฎที่ยังไม่มีชื่อ",
+        "eyebrow": "การแจ้งเตือน",
+        "title": "ให้ Pairlens จับตาตลาดแทนคุณ",
+        "description": "กฎคือโฟลว์เล็ก ๆ เมื่อมีบางอย่างเกิดขึ้น — ราคาข้ามระดับ แท่งเทียนปิด ออเดอร์ถูกดำเนินการ หรืออินดิเคเตอร์ส่งสัญญาณเตือน — มันจะผ่านเงื่อนไขที่คุณเพิ่มเข้ามา แล้วส่งถึงคุณในรูปแบบทูสต์ การแจ้งเตือนของระบบ หรือเว็บฮุก",
+        "startBlank": "เริ่มจากแคนวาสเปล่า",
+        "startFromTemplate": "เริ่มจากเทมเพลต",
+        "footnote": "เทมเพลตจะเปิดเป็นฉบับร่างที่ผูกกับ {{pair}} บน {{market}} — แก้ไขขั้นตอน เปลี่ยนคู่เทรดในรายการกฎ แล้วบันทึก กฎจะทำงานเฉพาะขณะที่ Pairlens เปิดอยู่เท่านั้น"
+      },
+      "direction": "ทิศทาง",
+      "above": "สูงกว่า",
+      "below": "ต่ำกว่า",
+      "any": "ใดก็ได้",
+      "buy": "ซื้อ",
+      "sell": "ขาย",
+      "up": "ขึ้น",
+      "down": "ลง",
+      "either": "ทั้งสองทาง",
+      "toggleOn": "เปิด",
+      "toggleOff": "ปิด",
+      "steps": {
+        "candleClose": {
+          "title": "แท่งเทียนปิด"
+        },
+        "localToast": {
+          "title": "การแจ้งเตือนแบบทูสต์",
+          "description": "แสดงทูสต์ในแอปเมื่อทำงาน"
+        },
+        "orderExecuted": {
+          "title": "ออเดอร์ถูกดำเนินการ"
+        },
+        "osNotification": {
+          "title": "การแจ้งเตือนของระบบ",
+          "sound": "เสียง"
+        },
+        "percentChange": {
+          "title": "การเปลี่ยนแปลงเปอร์เซ็นต์",
+          "percent": "เปอร์เซ็นต์"
+        },
+        "priceAlert": {
+          "title": "การแจ้งเตือนราคา"
+        },
+        "priceCondition": {
+          "title": "เงื่อนไขราคา"
+        },
+        "signalGenerated": {
+          "title": "เกิดสัญญาณ",
+          "signalType": "ประเภทสัญญาณ",
+          "anyTypePlaceholder": "ประเภทใดก็ได้"
+        },
+        "timeWindow": {
+          "title": "ช่วงเวลา",
+          "start": "เริ่ม (UTC)",
+          "end": "สิ้นสุด (UTC)"
+        }
+      }
+    }
   },
   "updater": {
     "available": "มีอัปเดตใหม่",
@@ -2493,7 +3034,8 @@
     "failed": "โหลดฮีตแมปไม่สำเร็จ",
     "noData": "ไม่มีข้อมูล",
     "tryLater": "ลองใหม่ภายหลัง",
-    "willAppear": "ข้อมูลฮีตแมปจะแสดงที่นี่"
+    "willAppear": "ข้อมูลฮีตแมปจะแสดงที่นี่",
+    "volume": "วอลุ่ม"
   },
   "news": {
     "title": "ข่าว",
@@ -2606,5 +3148,228 @@
   "fullscreen": {
     "enter": "เต็มหน้าจอ",
     "exit": "ออกจากโหมดเต็มหน้าจอ"
+  },
+  "research": {
+    "phaseSearching": "กำลังค้นหาบนเว็บ...",
+    "phaseReading": "กำลังอ่านแหล่งข้อมูล...",
+    "phaseAnalyzing": "กำลังวิเคราะห์ข้อมูลตลาด...",
+    "phaseWriting": "กำลังเขียนรายงาน...",
+    "authRequiredTitle": "รายงานวิเคราะห์อยู่ห่างแค่การเข้าสู่ระบบ",
+    "authRequiredDescription": "รายงานวิเคราะห์เชิงลึกสำหรับคู่เทรดใดก็ได้ อ้างอิงจากแหล่งข้อมูลเว็บแบบเรียลไทม์ เข้าสู่ระบบแล้วสมัคร Pairlens Intelligence หรือใช้คีย์ AI ของคุณเอง",
+    "upgradeDescription": "รายงานวิเคราะห์เชิงลึกสำหรับคู่เทรดใดก็ได้ อ้างอิงจากแหล่งข้อมูลเว็บแบบเรียลไทม์ สมัคร Pairlens Intelligence หรือใช้คีย์ AI และคีย์ค้นหาของคุณเองผ่านปลั๊กอินได้ฟรี",
+    "unavailableTitle": "ไม่สามารถใช้งานรายงานวิเคราะห์ได้",
+    "unavailableDescription": "เปิดใช้งานปลั๊กอิน AI ที่หน้าปลั๊กอินเพื่อสร้างรายงานวิเคราะห์สำหรับคู่เทรดนี้",
+    "goToPlugins": "ไปที่หน้าปลั๊กอิน",
+    "navigateToPair": "ไปที่คู่เทรดเพื่อดูรายงานวิเคราะห์",
+    "researchingSymbol": "กำลังวิเคราะห์ {{symbol}}",
+    "generatingReport": "กำลังสร้างรายงาน...",
+    "cachedGenerated": "จากแคช — สร้างเมื่อ {{time}}",
+    "freshGenerated": "ล่าสุด — เพิ่งสร้างเสร็จ",
+    "refresh": "รีเฟรช",
+    "sourcesCount": "แหล่งข้อมูล ({{count}})",
+    "reportTitle": "รายงานวิเคราะห์",
+    "fullscreenDescription": "รายงานวิเคราะห์ในโหมดเต็มหน้าจอ กด Escape เพื่อออก",
+    "sections": "หัวข้อ",
+    "sparklineAriaLabel": "กราฟราคารายวันแบบย่อ",
+    "errorTitle": "ไม่สามารถใช้งานรายงานวิเคราะห์ได้"
+  },
+  "capabilityGate": {
+    "authTitle": "เพียงเข้าสู่ระบบฟรีครั้งเดียว",
+    "authDescription": "ฟีเจอร์นี้ทำงานผ่านบัญชี Pairlens ของคุณ",
+    "signInFree": "เข้าสู่ระบบฟรี",
+    "authNote": "ใช้เวลาเพียง 30 วินาที คีย์ตลาดแลกเปลี่ยนของคุณจะไม่ออกจากอุปกรณ์นี้เลย",
+    "upgradeRequired": "ต้องอัปเกรด",
+    "upgradeDescriptionLevel": "ฟีเจอร์นี้ต้องการระดับการเข้าถึง <b>{{level}}</b>",
+    "upgradeDescriptionGeneric": "ฟีเจอร์นี้ต้องการระดับการเข้าถึงที่สูงกว่า",
+    "managePlugin": "จัดการปลั๊กอิน"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}} ไม่พร้อมใช้งานที่นี่",
+    "description": "{{exchange}} ไม่ได้ให้บริการข้อมูลตลาดสำหรับภูมิภาคของคุณ ตัวเชื่อมต่อนี้จึงโหลดข้อมูลไม่ได้ ให้เปลี่ยนไปใช้ตัวเชื่อมต่ออื่น หรืออัปเดตภูมิภาคของคุณหากตั้งค่าไว้ไม่ถูกต้อง",
+    "yourRegion": "ภูมิภาคของคุณ:",
+    "notSet": "ยังไม่ได้ตั้งค่า",
+    "changeRegion": "เปลี่ยนภูมิภาค",
+    "switchTo": "เปลี่ยนไปใช้ {{venue}}"
+  },
+  "pairPicker": {
+    "noPairsFound": "ไม่พบคู่เทรด",
+    "startTyping": "เริ่มพิมพ์เพื่อค้นหาคู่เทรด"
+  },
+  "routes": {
+    "goHome": "กลับหน้าหลัก",
+    "noConnectors": {
+      "title": "ไม่มีตัวเชื่อมต่อตลาดที่ใช้งานได้",
+      "description": "จำเป็นต้องมีปลั๊กอินตัวเชื่อมต่อตลาดเพื่อสตรีมข้อมูลสด เปิดใช้งานหรือติดตั้งตัวเชื่อมต่อเพื่อเริ่มต้น",
+      "manage": "จัดการตัวเชื่อมต่อตลาด"
+    },
+    "workspace": {
+      "notFound": "ไม่พบพื้นที่ทำงาน",
+      "edit": "แก้ไข"
+    },
+    "notFound": {
+      "title": "ไม่พบหน้านี้"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "ไม่มีแคตตาล็อกตราสาร",
+      "noInstrumentCatalogDescription": "ไม่มีปลั๊กอินที่ใช้งานอยู่ซึ่งให้บริการค้นหาตราสาร เปิดใช้งานปลั๊กอินเพื่อเรียกดูคู่เทรดที่มีอยู่",
+      "goToPlugins": "ไปที่ปลั๊กอิน"
+    },
+    "notifications": {
+      "loading": "กำลังโหลดการแจ้งเตือน…"
+    },
+    "workflows": {
+      "loading": "กำลังโหลดตัวสร้างเวิร์กโฟลว์…"
+    },
+    "plugins": {
+      "tabBuild": "สร้าง",
+      "activeCount": "{{active}}/{{total}} ใช้งานอยู่",
+      "searchPlaceholder": "ค้นหาปลั๊กอิน…",
+      "clearSearch": "ล้างการค้นหา"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "ชำระเงินเรียบร้อยแล้ว",
+      "titlePack": "เติมเครดิตเสริม {{credits}} เรียบร้อยแล้ว",
+      "titlePlan": "{{label}} เป็นของคุณแล้ว",
+      "titleDefault": "Pairlens Intelligence เป็นของคุณแล้ว",
+      "bodyPack": "เครดิตนี้จะเพิ่มเข้าไปในงบประมาณรายเดือนของคุณและหมดอายุใน {{days}} วัน กลับไปที่แอป Pairlens แล้วยอดคงเหลือของคุณจะอัปเดตภายในไม่กี่วินาที",
+      "bodyPlanWithCredits": "AI copilot แบบโฮสต์ การวิจัย และการค้นหาเว็บของคุณปลดล็อกแล้ว พร้อมเครดิต {{credits}} ทุกเดือน กลับไปที่แอป Pairlens แล้วระบบจะรับรู้การสมัครของคุณภายในไม่กี่วินาที",
+      "bodyPlanNoCredits": "AI copilot แบบโฮสต์ การวิจัย และการค้นหาเว็บของคุณปลดล็อกแล้ว กลับไปที่แอป Pairlens แล้วระบบจะรับรู้การสมัครของคุณภายในไม่กี่วินาที",
+      "openTerminal": "เปิดเทอร์มินัล",
+      "closeTabHint": "จ่ายเงินจากแอปเดสก์ท็อปใช่ไหม คุณสามารถปิดแท็บนี้ได้เลย",
+      "receiptHint": "ใบเสร็จและใบแจ้งหนี้อยู่ในอีเมลของคุณและพอร์ทัลการเรียกเก็บเงิน (การตั้งค่า → Intelligence)"
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "เวิร์กโฟลว์",
+      "tabRuns": "การรัน",
+      "emptyState": "ยังไม่มีเวิร์กโฟลว์",
+      "createTitle": "เวิร์กโฟลว์ใหม่",
+      "namePlaceholder": "ชื่อเวิร์กโฟลว์",
+      "renameTitle": "เปลี่ยนชื่อเวิร์กโฟลว์",
+      "renameButton": "เปลี่ยนชื่อ",
+      "deleteTitle": "ลบเวิร์กโฟลว์",
+      "deleteDescription": "การกระทำนี้ย้อนกลับไม่ได้ เวิร์กโฟลว์จะถูกลบอย่างถาวร",
+      "runsEmpty": "ยังไม่มีการรัน — เริ่มรันได้จากแผงเทรด",
+      "clearHistory": "ล้างประวัติ",
+      "runOutcome": "สำเร็จ {{executed}}",
+      "runOutcomeWithFailed": "สำเร็จ {{executed}}, ล้มเหลว {{failed}}"
+    },
+    "canvas": {
+      "undoTitle": "เลิกทำ (Cmd+Z)",
+      "redoTitle": "ทำซ้ำ (Cmd+Shift+Z)",
+      "deleteStep": "ลบขั้นตอน",
+      "deleteConnection": "ลบการเชื่อมต่อ"
+    },
+    "commitBar": {
+      "cycleDetected": "ตรวจพบวงจร",
+      "issue_one": "{{count}} ปัญหา",
+      "issue_other": "{{count}} ปัญหา",
+      "pendingChange_one": "{{count}} การเปลี่ยนแปลงที่รอดำเนินการ",
+      "pendingChange_other": "{{count}} การเปลี่ยนแปลงที่รอดำเนินการ",
+      "noChanges": "ไม่มีการเปลี่ยนแปลง",
+      "review": "ตรวจสอบ",
+      "discard": "ละทิ้ง",
+      "commit": "ยืนยัน",
+      "saveErrorTitle": "ไม่สามารถบันทึกเวิร์กโฟลว์ได้",
+      "saveErrorCycleBody": "เวิร์กโฟลว์นี้มีการพึ่งพาแบบวนซ้ำ กรุณาลบวงจร (เส้นสีแดง) ก่อนบันทึก",
+      "saveSuccess": "บันทึกเวิร์กโฟลว์แล้ว"
+    },
+    "diffPanel": {
+      "title": "ตรวจสอบการเปลี่ยนแปลง ({{count}})",
+      "addedStep": "เพิ่มขั้นตอน {{type}}",
+      "removedStep": "ลบขั้นตอน {{type}}",
+      "modifiedStep": "แก้ไขการตั้งค่า {{type}}",
+      "addedConnection": "เพิ่มการเชื่อมต่อ",
+      "removedConnection": "ลบการเชื่อมต่อ",
+      "noChanges": "ไม่มีการเปลี่ยนแปลง"
+    },
+    "palette": {
+      "title": "เพิ่มขั้นตอน",
+      "categoryEntry": "เข้าออเดอร์",
+      "categoryOrders": "ออเดอร์",
+      "categoryExit": "กลยุทธ์ออกออเดอร์",
+      "categoryLogic": "ตรรกะ",
+      "categoryCustom": "กำหนดเอง",
+      "requires": "ต้องการ: {{requirement}}",
+      "notAvailableOn": "ไม่พร้อมใช้งานบน {{markets}}"
+    },
+    "emptyState": {
+      "pickWorkflow": "เลือกเวิร์กโฟลว์ทางซ้ายเพื่อเปิดบนแคนวาส",
+      "eyebrow": "เวิร์กโฟลว์",
+      "title": "ทุกออเดอร์มีแผนของตัวเองได้",
+      "description": "เวิร์กโฟลว์จะผูกกับออเดอร์ที่คุณส่งจากแผงเทรด ทันทีที่ออเดอร์นั้นเติมเต็ม ขั้นตอนที่อยู่ด้านล่างจะทำงานเอง — bracket, การไล่ระดับราคา, การออกแบบขั้นบันได, การตรวจสอบตามเวลา — แผนจึงพร้อมอยู่แล้วตั้งแต่ต้น แทนที่จะเป็นสิ่งที่คุณต้องมาจำทำเองทีหลัง",
+      "blankLabel": "เริ่มจากแคนวาสเปล่า",
+      "footnote": "เทมเพลตจะเปิดเป็นฉบับร่าง แก้ไขขั้นตอนใดก็ได้ แล้วกดยืนยันเพื่อบันทึก เชื่อมเวิร์กโฟลว์ที่บันทึกไว้เข้ากับออเดอร์จากแผงเทรดเพื่อรันมัน"
+    },
+    "steps": {
+      "sideLabel": "ฝั่ง",
+      "sizeLabel": "ขนาด",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "ค่าจริง",
+      "side": {
+        "inherit": "สืบทอด",
+        "opposite": "ตรงข้าม",
+        "buy": "ซื้อ",
+        "sell": "ขาย"
+      },
+      "triggerWhenPrice": "เริ่มทำงานเมื่อราคา",
+      "triggerPercentFromEntry": "% จากราคาเข้า",
+      "triggerReachesPrice": "ถึงราคาที่กำหนด",
+      "priceLevel": "ระดับราคา",
+      "priceLabel": "ราคา",
+      "stopLoss": {
+        "title": "ตัดขาดทุน",
+        "lossPercent": "ขาดทุน %"
+      },
+      "takeProfit": {
+        "title": "ทำกำไร",
+        "gainPercent": "กำไร %"
+      },
+      "limitOrder": {
+        "title": "ลิมิตออเดอร์",
+        "priceModeFixed": "คงที่",
+        "priceModePercentOffset": "% ส่วนต่าง",
+        "priceModeOffset": "ส่วนต่าง",
+        "priceValueLabel": "ค่าราคา"
+      },
+      "marketOrder": {
+        "title": "มาร์เก็ตออเดอร์"
+      },
+      "condition": {
+        "title": "เงื่อนไข",
+        "typeLabel": "ประเภท",
+        "typePercentChange": "% การเปลี่ยนแปลง",
+        "hint": "+N ผ่านเมื่อขึ้น ≥N%, -N เมื่อลง ≥N%"
+      },
+      "wait": {
+        "title": "รอ",
+        "durationLabel": "ระยะเวลา",
+        "unitSeconds": "วิ",
+        "unitMinutes": "นาที",
+        "unitHours": "ชม."
+      },
+      "split": {
+        "title": "แยกแบบขนาน",
+        "branchesLabel": "จำนวนแขนง"
+      },
+      "trigger": {
+        "title": "จุดเริ่มออเดอร์",
+        "badge": "เข้าออเดอร์"
+      },
+      "configPanel": {
+        "requiresNote": "ต้องการ: {{requirement}} ตลาดที่ไม่มีความสามารถนี้จะรันเวิร์กโฟลว์ที่มีขั้นตอนนี้ไม่ได้",
+        "on": "เปิด",
+        "off": "ปิด"
+      }
+    },
+    "execution": {
+      "statusExecuted": "สำเร็จ",
+      "statusSkipped": "ข้าม",
+      "statusFailed": "ล้มเหลว",
+      "summaryExecuted": "สำเร็จ {{count}}",
+      "summarySkipped": "ข้าม {{count}}",
+      "summaryFailed": "ล้มเหลว {{count}}"
+    }
   }
 }

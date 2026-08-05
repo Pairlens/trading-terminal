@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Suspense } from 'react'
 import { Loader2, Puzzle } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
@@ -20,6 +21,7 @@ function PaneLoading() {
 }
 
 function MissingPaneUI({ type }: { type: string }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const pluginId = type.includes(':') ? type.split(':')[0] : null
 
@@ -29,11 +31,11 @@ function MissingPaneUI({ type }: { type: string }) {
       <div>
         <p className="text-xs font-medium text-muted-foreground">
           {pluginId
-            ? `This panel requires the "${pluginId}" plugin`
-            : `Panel "${type}" is not available`}
+            ? t('layout.missingPane.requiresPlugin', { pluginId })
+            : t('layout.missingPane.notAvailable', { type })}
         </p>
         <p className="mt-1 text-[10px] text-muted-foreground/60">
-          The plugin may have been removed or disabled.
+          {t('layout.missingPane.description')}
         </p>
       </div>
       <Button
@@ -48,7 +50,7 @@ function MissingPaneUI({ type }: { type: string }) {
         }
       >
         <Puzzle className="size-3" />
-        Open Plugin Store
+        {t('layout.missingPane.openPluginStore')}
       </Button>
     </div>
   )

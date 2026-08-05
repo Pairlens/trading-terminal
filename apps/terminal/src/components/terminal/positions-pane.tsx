@@ -104,10 +104,11 @@ function Th({
 }
 
 function SideBadge({ side }: { side: string }) {
+  const { t } = useTranslation()
   const isBuy = side.toLowerCase() === 'buy'
   return (
     <span className={`font-medium ${isBuy ? 'text-up' : 'text-down'}`}>
-      {isBuy ? 'Buy' : 'Sell'}
+      {isBuy ? t('positions.buy') : t('positions.sell')}
     </span>
   )
 }
@@ -175,6 +176,7 @@ function CancelButton({
     trigger?: boolean,
   ) => Promise<void>
 }) {
+  const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
 
@@ -204,19 +206,29 @@ function CancelButton({
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel order?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t('positions.cancelOrderTitle')}
+            </AlertDialogTitle>
+            {/* The side rides in as a translated word, not `.toLowerCase()` on
+                an English literal: "buy"/"sell" have no lowercase form to
+                borrow in ja/ko/zh, and German capitalises the noun. */}
             <AlertDialogDescription>
-              This will cancel your {side.toLowerCase()} order for{' '}
-              {pair.replace('-', '/')}.
+              {t('positions.cancelOrderBody', {
+                side:
+                  side.toLowerCase() === 'buy'
+                    ? t('positions.sideBuy')
+                    : t('positions.sideSell'),
+                pair: pair.replace('-', '/'),
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep order</AlertDialogCancel>
+            <AlertDialogCancel>{t('positions.keepOrder')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirm}
               className="bg-destructive text-white hover:bg-destructive/90"
             >
-              Cancel order
+              {t('positions.cancelOrder')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

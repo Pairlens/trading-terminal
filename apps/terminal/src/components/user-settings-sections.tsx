@@ -150,30 +150,35 @@ export function PluginsSection() {
       <section className="rounded-xl border p-4">
         <div className="flex items-center gap-2">
           <RefreshCw className="size-4 text-muted-foreground" />
-          <h3 className="font-medium">Plugin Updates</h3>
+          <h3 className="font-medium">{t('settings.plugins.updatesTitle')}</h3>
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
-          Control how plugins are updated when newer versions are available on
-          the Registry.
+          {t('settings.plugins.updatesDescription')}
         </p>
 
         <div className="mt-4 space-y-4">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <Label className="text-sm font-medium">Update mode</Label>
+              <Label className="text-sm font-medium">
+                {t('settings.plugins.updateModeLabel')}
+              </Label>
               <p className="text-xs text-muted-foreground">
                 {autoUpdateSettings.mode === 'auto'
-                  ? 'Updates are downloaded and installed automatically'
+                  ? t('settings.plugins.updateModeAutoDescription')
                   : autoUpdateSettings.mode === 'notify'
-                    ? 'You will see a badge when updates are available'
-                    : 'No automatic update checks'}
+                    ? t('settings.plugins.updateModeNotifyDescription')
+                    : t('settings.plugins.updateModeOffDescription')}
               </p>
             </div>
             <Select
               value={autoUpdateSettings.mode}
               // items gives the closed trigger the item's label — without it
               // Base UI renders the raw value ("notify").
-              items={{ auto: 'Auto-update', notify: 'Notify only', off: 'Off' }}
+              items={{
+                auto: t('settings.plugins.updateModeAuto'),
+                notify: t('settings.plugins.updateModeNotify'),
+                off: t('settings.plugins.updateModeOffLabel'),
+              }}
               onValueChange={(mode) =>
                 setAutoUpdateSettings((prev) => ({
                   ...prev,
@@ -185,9 +190,15 @@ export function PluginsSection() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="auto">Auto-update</SelectItem>
-                <SelectItem value="notify">Notify only</SelectItem>
-                <SelectItem value="off">Off</SelectItem>
+                <SelectItem value="auto">
+                  {t('settings.plugins.updateModeAuto')}
+                </SelectItem>
+                <SelectItem value="notify">
+                  {t('settings.plugins.updateModeNotify')}
+                </SelectItem>
+                <SelectItem value="off">
+                  {t('settings.plugins.updateModeOffLabel')}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -195,18 +206,20 @@ export function PluginsSection() {
           {autoUpdateSettings.mode !== 'off' && (
             <div className="flex items-center justify-between gap-4">
               <div>
-                <Label className="text-sm font-medium">Check interval</Label>
+                <Label className="text-sm font-medium">
+                  {t('settings.plugins.checkIntervalLabel')}
+                </Label>
                 <p className="text-xs text-muted-foreground">
-                  How often to check the Registry for newer versions
+                  {t('settings.plugins.checkIntervalDescription')}
                 </p>
               </div>
               <Select
                 value={String(autoUpdateSettings.checkIntervalHours)}
                 items={{
-                  '1': 'Every hour',
-                  '6': 'Every 6 hours',
-                  '12': 'Every 12 hours',
-                  '24': 'Daily',
+                  '1': t('settings.plugins.intervalHourly'),
+                  '6': t('settings.plugins.interval6Hours'),
+                  '12': t('settings.plugins.interval12Hours'),
+                  '24': t('settings.plugins.intervalDaily'),
                 }}
                 onValueChange={(v) =>
                   setAutoUpdateSettings((prev) => ({
@@ -219,10 +232,18 @@ export function PluginsSection() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Every hour</SelectItem>
-                  <SelectItem value="6">Every 6 hours</SelectItem>
-                  <SelectItem value="12">Every 12 hours</SelectItem>
-                  <SelectItem value="24">Daily</SelectItem>
+                  <SelectItem value="1">
+                    {t('settings.plugins.intervalHourly')}
+                  </SelectItem>
+                  <SelectItem value="6">
+                    {t('settings.plugins.interval6Hours')}
+                  </SelectItem>
+                  <SelectItem value="12">
+                    {t('settings.plugins.interval12Hours')}
+                  </SelectItem>
+                  <SelectItem value="24">
+                    {t('settings.plugins.intervalDaily')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -861,10 +882,11 @@ export function PerformanceSection() {
       <section className="rounded-xl border p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-medium">Inactivity disconnect</h3>
+            <h3 className="font-medium">
+              {t('settings.performance.idleGuardTitle')}
+            </h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Pause market data streams after 1 hour of inactivity to save
-              bandwidth and reduce energy consumption.
+              {t('settings.performance.idleGuardDescription')}
             </p>
           </div>
           <Switch

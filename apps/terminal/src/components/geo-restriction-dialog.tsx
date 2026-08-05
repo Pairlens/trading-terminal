@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ArrowLeftRight, Globe, MapPin } from 'lucide-react'
 
 import {
@@ -31,6 +32,7 @@ import { switchActiveMarket } from '@/lib/switch-market'
  * dismisses it automatically, and acts as a cache when switching back.
  */
 export function GeoRestrictionDialog() {
+  const { t } = useTranslation()
   const restriction = useGeoRestrictionStore((s) => s.restriction)
   const clear = useGeoRestrictionStore((s) => s.clear)
   const { markets, defaultMarket } = useAvailableMarkets()
@@ -74,29 +76,35 @@ export function GeoRestrictionDialog() {
           <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10 text-destructive">
             <Globe className="h-5 w-5" />
           </div>
-          <DialogTitle>{restriction.exchange} isn’t available here</DialogTitle>
+          <DialogTitle>
+            {t('geoRestriction.title', { exchange: restriction.exchange })}
+          </DialogTitle>
           <DialogDescription>
-            {restriction.exchange} doesn’t serve market data for your region, so
-            this connector can’t load data. Switch to another connector, or
-            update your region if it’s set incorrectly.
+            {t('geoRestriction.description', {
+              exchange: restriction.exchange,
+            })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex items-center gap-2 rounded-md border border-border bg-muted/40 px-3 py-2 text-sm">
           <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
-          <span className="text-muted-foreground">Your region:</span>
-          <span className="font-medium">{regionLabel ?? 'Not set'}</span>
+          <span className="text-muted-foreground">
+            {t('geoRestriction.yourRegion')}
+          </span>
+          <span className="font-medium">
+            {regionLabel ?? t('geoRestriction.notSet')}
+          </span>
         </div>
 
         <DialogFooter className="gap-2 sm:gap-2">
           <Button variant="outline" onClick={handleChangeRegion}>
             <MapPin className="h-4 w-4" />
-            Change region
+            {t('geoRestriction.changeRegion')}
           </Button>
           {alternative && (
             <Button onClick={handleSwitch}>
               <ArrowLeftRight className="h-4 w-4" />
-              Switch to {alternative.label}
+              {t('geoRestriction.switchTo', { venue: alternative.label })}
             </Button>
           )}
         </DialogFooter>

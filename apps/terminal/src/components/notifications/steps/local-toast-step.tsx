@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { MessageSquare } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -7,6 +8,7 @@ import { Badge } from '@pairlens/ui/components/ui/badge'
 import type { NodeProps } from '@xyflow/react'
 
 export function LocalToastStep({ data }: NodeProps) {
+  const { t } = useTranslation()
   return (
     <div
       className={cn(
@@ -28,20 +30,20 @@ export function LocalToastStep({ data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Toast Notification
+            {t('notifications.builder.steps.localToast.title')}
           </div>
         </div>
         <Badge
           variant="outline"
           className="border-blue-500/30 text-[10px] text-blue-400"
         >
-          Channel
+          {t('notifications.builder.category.channel')}
         </Badge>
       </div>
 
       <div className="mt-1.5">
         <div className="text-[9px] text-muted-foreground">
-          Shows an in-app toast when triggered
+          {t('notifications.builder.steps.localToast.description')}
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { AlertTriangle, CheckCircle2, XCircle, Zap } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@pairlens/ui/components/ui/button'
 import { Checkbox } from '@pairlens/ui/components/ui/checkbox'
 import { cn } from '@pairlens/ui/lib/utils'
@@ -87,6 +88,7 @@ export function CopilotPlaceOrderCard({
   proposalId?: string
   proposedAt?: number
 }) {
+  const { t } = useTranslation()
   const actions = useCopilotOrderActions()
   const [mode, setMode] = useState<'paper' | 'live'>(
     actions?.tradingMode === 'live' ? 'live' : 'paper',
@@ -161,24 +163,29 @@ export function CopilotPlaceOrderCard({
             isBuy ? 'bg-up/15 text-up' : 'bg-down/15 text-down',
           )}
         >
-          {order.side}
+          {order.side === 'buy'
+            ? t('positions.sideBuy')
+            : t('positions.sideSell')}
         </span>
         <span className="font-semibold">{order.pair}</span>
         <span className="text-muted-foreground">
-          · {order.market} · {order.type}
+          · {order.market} ·{' '}
+          {order.type === 'limit'
+            ? t('copilot.orderTypeLimit')
+            : t('copilot.orderTypeMarket')}
         </span>
       </div>
 
       <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-muted-foreground">
         <div className="flex justify-between">
-          <dt>Size</dt>
+          <dt>{t('copilot.fieldSize')}</dt>
           <dd className="text-foreground font-mono font-medium tabular-nums">
             {fmt(order.size)}
           </dd>
         </div>
         {order.type === 'limit' && order.price != null && (
           <div className="flex justify-between">
-            <dt>Limit</dt>
+            <dt>{t('copilot.orderTypeLimit')}</dt>
             <dd className="text-foreground font-mono font-medium tabular-nums">
               {fmt(order.price)}
             </dd>
@@ -204,14 +211,16 @@ export function CopilotPlaceOrderCard({
               <>
                 <CheckCircle2 className="size-3.5" />
                 <span>
-                  {mode === 'paper' ? 'Paper order' : 'Order'} placed
+                  {mode === 'paper'
+                    ? t('copilot.orderPlacedPaper')
+                    : t('copilot.orderPlaced')}
                   {outcome.orderId ? ` · ${outcome.orderId}` : ''}
                 </span>
               </>
             ) : (
               <>
                 <XCircle className="size-3.5" />
-                <span>{outcome.error ?? 'Order failed'}</span>
+                <span>{outcome.error ?? t('terminal.trade.orderFailed')}</span>
               </>
             )}
           </div>
@@ -219,7 +228,10 @@ export function CopilotPlaceOrderCard({
             <div className="mt-1.5 flex items-center justify-between text-[10px] text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Zap className="size-3 text-primary" />
-                Auto-approved ({mode} · don’t-ask-again is on)
+                {t('copilot.autoApprovedNote', {
+                  mode:
+                    mode === 'paper' ? t('accounts.paper') : t('accounts.live'),
+                })}
               </span>
               <button
                 type="button"
@@ -230,7 +242,7 @@ export function CopilotPlaceOrderCard({
                     : setLiveAutoApprove(order.market, false)
                 }
               >
-                Turn off
+                {t('copilot.turnOff')}
               </button>
             </div>
           )}
@@ -238,7 +250,9 @@ export function CopilotPlaceOrderCard({
       ) : autoApproved ? (
         <div className="mt-2 flex items-center gap-1.5 text-[11px] text-muted-foreground">
           <Zap className="size-3.5 text-primary" />
-          Auto-approving {mode} order…
+          {t('copilot.autoApproving', {
+            mode: mode === 'paper' ? t('accounts.paper') : t('accounts.live'),
+          })}
         </div>
       ) : (
         <div className="mt-2.5 space-y-2">
@@ -257,14 +271,14 @@ export function CopilotPlaceOrderCard({
                     : 'text-muted-foreground hover:text-foreground',
                 )}
               >
-                {m}
+                {m === 'live' ? t('accounts.live') : t('accounts.paper')}
               </button>
             ))}
           </div>
           {mode === 'live' && (
             <p className="flex items-center gap-1 text-[10px] text-amber-500">
               <AlertTriangle className="size-3" />
-              Live order — real funds, enforced against your risk limits.
+              {t('copilot.liveOrderWarning')}
             </p>
           )}
           <label className="flex cursor-pointer items-center gap-1.5 text-[10px] text-muted-foreground">
@@ -274,8 +288,8 @@ export function CopilotPlaceOrderCard({
               className="size-3.5"
             />
             {mode === 'paper'
-              ? 'Don’t ask again for paper trades'
-              : `Don’t ask again for live trades on ${order.market}`}
+              ? t('copilot.dontAskAgainPaper')
+              : t('copilot.dontAskAgainLive', { market: order.market })}
           </label>
           <div className="flex gap-2">
             <Button
@@ -285,8 +299,13 @@ export function CopilotPlaceOrderCard({
               onClick={() => confirm(mode, { grantConsent: dontAskAgain })}
             >
               {state === 'placing'
-                ? 'Placing…'
-                : `Confirm ${mode === 'live' ? 'live' : 'paper'}`}
+                ? t('copilot.placing')
+                : t('copilot.confirmMode', {
+                    mode:
+                      mode === 'live'
+                        ? t('accounts.live')
+                        : t('accounts.paper'),
+                  })}
             </Button>
             <Button
               size="sm"
@@ -299,11 +318,11 @@ export function CopilotPlaceOrderCard({
                   mode,
                   auto_approved: false,
                 })
-                setOutcome({ success: false, error: 'Dismissed' })
+                setOutcome({ success: false, error: t('copilot.dismissed') })
                 setState('done')
               }}
             >
-              Dismiss
+              {t('common.dismiss')}
             </Button>
           </div>
         </div>
@@ -317,6 +336,7 @@ export function CopilotCancelOrderCard({
 }: {
   cancel: CopilotCancelRequest
 }) {
+  const { t } = useTranslation()
   const actions = useCopilotOrderActions()
   const [state, setState] = useState<'idle' | 'working' | 'done'>('idle')
   const [outcome, setOutcome] = useState<OrderOutcome | null>(null)
@@ -338,8 +358,11 @@ export function CopilotCancelOrderCard({
   return (
     <div className="border-border/60 bg-muted/40 elevated-panel rounded-lg border p-3 text-xs">
       <p className="mb-2">
-        Cancel order <span className="font-semibold">{cancel.orderId}</span> on{' '}
-        {cancel.pair} · {cancel.market}?
+        {t('copilot.cancelOrderPrompt', {
+          orderId: cancel.orderId,
+          pair: cancel.pair,
+          market: cancel.market,
+        })}
       </p>
       {state === 'done' && outcome ? (
         <div
@@ -354,7 +377,9 @@ export function CopilotCancelOrderCard({
             <XCircle className="size-3.5" />
           )}
           <span>
-            {outcome.success ? 'Cancelled' : (outcome.error ?? 'Cancel failed')}
+            {outcome.success
+              ? t('copilot.cancelled')
+              : (outcome.error ?? t('copilot.cancelFailed'))}
           </span>
         </div>
       ) : (
@@ -366,7 +391,9 @@ export function CopilotCancelOrderCard({
             disabled={state === 'working' || !actions}
             onClick={confirm}
           >
-            {state === 'working' ? 'Cancelling…' : 'Confirm cancel'}
+            {state === 'working'
+              ? t('copilot.cancelling')
+              : t('copilot.confirmCancel')}
           </Button>
           <Button
             size="sm"
@@ -374,11 +401,11 @@ export function CopilotCancelOrderCard({
             className="h-7 text-xs"
             disabled={state === 'working'}
             onClick={() => {
-              setOutcome({ success: false, error: 'Dismissed' })
+              setOutcome({ success: false, error: t('copilot.dismissed') })
               setState('done')
             }}
           >
-            Keep
+            {t('copilot.keep')}
           </Button>
         </div>
       )}
