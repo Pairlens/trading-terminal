@@ -2453,6 +2453,11 @@
     "articleDetails": "Detail artikel",
     "tickerSentiment": "Sentimen Ticker",
     "visitArticle": "Kunjungi Artikel",
+    "sentiment": {
+      "bullish": "Bullish",
+      "bearish": "Bearish",
+      "neutral": "Netral"
+    },
     "reader": {
       "title": "Pembaca berita",
       "searchPlaceholder": "Cari berita...",
@@ -2462,10 +2467,7 @@
       "loadingMore": "Memuat berita lainnya...",
       "caughtUp": "Anda sudah membaca semuanya",
       "previousArticle": "Artikel sebelumnya",
-      "nextArticle": "Artikel berikutnya",
-      "sentiment": "Sentimen",
-      "bearish": "Bearish",
-      "bullish": "Bullish"
+      "nextArticle": "Artikel berikutnya"
     },
     "topic": {
       "blockchain": "Blockchain",

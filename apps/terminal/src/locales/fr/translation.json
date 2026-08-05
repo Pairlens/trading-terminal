@@ -2453,6 +2453,11 @@
     "articleDetails": "Détails de l’article",
     "tickerSentiment": "Sentiment du ticker",
     "visitArticle": "Voir l’article",
+    "sentiment": {
+      "bullish": "Haussier",
+      "bearish": "Baissier",
+      "neutral": "Neutre"
+    },
     "reader": {
       "title": "Lecteur d’actualités",
       "searchPlaceholder": "Rechercher des actualités...",
@@ -2462,10 +2467,7 @@
       "loadingMore": "Chargement d’autres actualités...",
       "caughtUp": "Vous êtes à jour",
       "previousArticle": "Article précédent",
-      "nextArticle": "Article suivant",
-      "sentiment": "Sentiment",
-      "bearish": "Baissier",
-      "bullish": "Haussier"
+      "nextArticle": "Article suivant"
     },
     "topic": {
       "blockchain": "Blockchain",

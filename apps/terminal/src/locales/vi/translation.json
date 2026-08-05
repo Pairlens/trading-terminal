@@ -2453,6 +2453,11 @@
     "articleDetails": "Chi tiết bài viết",
     "tickerSentiment": "Tâm lý mã",
     "visitArticle": "Xem bài viết",
+    "sentiment": {
+      "bullish": "Tăng giá",
+      "bearish": "Giảm giá",
+      "neutral": "Trung lập"
+    },
     "reader": {
       "title": "Trình đọc tin tức",
       "searchPlaceholder": "Tìm kiếm tin tức...",
@@ -2462,10 +2467,7 @@
       "loadingMore": "Đang tải thêm tin tức...",
       "caughtUp": "Bạn đã xem hết tin",
       "previousArticle": "Bài viết trước",
-      "nextArticle": "Bài viết tiếp theo",
-      "sentiment": "Tâm lý",
-      "bearish": "Giảm giá",
-      "bullish": "Tăng giá"
+      "nextArticle": "Bài viết tiếp theo"
     },
     "topic": {
       "blockchain": "Blockchain",

@@ -2453,6 +2453,11 @@
     "articleDetails": "기사 세부 정보",
     "tickerSentiment": "티커 심리",
     "visitArticle": "기사 보기",
+    "sentiment": {
+      "bullish": "강세",
+      "bearish": "약세",
+      "neutral": "중립"
+    },
     "reader": {
       "title": "뉴스 리더",
       "searchPlaceholder": "뉴스 검색...",
@@ -2462,10 +2467,7 @@
       "loadingMore": "뉴스를 더 불러오는 중...",
       "caughtUp": "모든 뉴스를 확인했습니다",
       "previousArticle": "이전 기사",
-      "nextArticle": "다음 기사",
-      "sentiment": "시장 심리",
-      "bearish": "약세",
-      "bullish": "강세"
+      "nextArticle": "다음 기사"
     },
     "topic": {
       "blockchain": "블록체인",

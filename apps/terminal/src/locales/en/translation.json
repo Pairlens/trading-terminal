@@ -2453,6 +2453,11 @@
     "articleDetails": "Article details",
     "tickerSentiment": "Ticker Sentiment",
     "visitArticle": "Visit Article",
+    "sentiment": {
+      "bullish": "Bullish",
+      "bearish": "Bearish",
+      "neutral": "Neutral"
+    },
     "reader": {
       "title": "News reader",
       "searchPlaceholder": "Search news...",
@@ -2462,10 +2467,7 @@
       "loadingMore": "Loading more news...",
       "caughtUp": "You're all caught up",
       "previousArticle": "Previous article",
-      "nextArticle": "Next article",
-      "sentiment": "Sentiment",
-      "bearish": "Bearish",
-      "bullish": "Bullish"
+      "nextArticle": "Next article"
     },
     "topic": {
       "blockchain": "Blockchain",

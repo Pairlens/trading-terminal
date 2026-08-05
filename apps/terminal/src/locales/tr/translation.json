@@ -2453,6 +2453,11 @@
     "articleDetails": "Makale ayrıntıları",
     "tickerSentiment": "Ticker Duyarlılığı",
     "visitArticle": "Makaleyi Ziyaret Et",
+    "sentiment": {
+      "bullish": "Yükseliş",
+      "bearish": "Düşüş",
+      "neutral": "Nötr"
+    },
     "reader": {
       "title": "Haber okuyucu",
       "searchPlaceholder": "Haber ara...",
@@ -2462,10 +2467,7 @@
       "loadingMore": "Daha fazla haber yükleniyor...",
       "caughtUp": "Her şeyi okudunuz",
       "previousArticle": "Önceki makale",
-      "nextArticle": "Sonraki makale",
-      "sentiment": "Duyarlılık",
-      "bearish": "Düşüş",
-      "bullish": "Yükseliş"
+      "nextArticle": "Sonraki makale"
     },
     "topic": {
       "blockchain": "Blockchain",

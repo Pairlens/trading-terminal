@@ -104,6 +104,13 @@ export const SENTIMENT_BADGE_CLASSES: Record<SentimentDirection, string> = {
   neutral: 'border-border bg-muted/60 text-muted-foreground',
 }
 
+/** Text-only tones — sentiment that colors a line of type rather than a block. */
+export const SENTIMENT_TEXT_CLASSES: Record<SentimentDirection, string> = {
+  bullish: 'text-up',
+  bearish: 'text-down',
+  neutral: 'text-muted-foreground',
+}
+
 const SENTIMENT_ICONS: Record<
   SentimentDirection,
   typeof TrendingUp | typeof TrendingDown | typeof Minus
@@ -113,31 +120,103 @@ const SENTIMENT_ICONS: Record<
   neutral: Minus,
 }
 
-export function SentimentBadge({
+const SENTIMENT_FALLBACK_WORDS: Record<SentimentDirection, string> = {
+  bullish: 'Bullish',
+  bearish: 'Bearish',
+  neutral: 'Neutral',
+}
+
+/** Localized direction word — the feed's own label ("Somewhat-Bullish") is English-only. */
+export function sentimentWord(direction: SentimentDirection): string {
+  return i18n.t(
+    `news.sentiment.${direction}`,
+    SENTIMENT_FALLBACK_WORDS[direction],
+  )
+}
+
+/** Signed score, P&L-style: +0.24 / -0.31 — the sign repeats the direction. */
+function formatSentimentScore(score: number): string {
+  return `${score > 0 ? '+' : ''}${score.toFixed(2)}`
+}
+
+/**
+ * The bearish→bullish scale, shrunk to a glyph that fits inside a line of type.
+ * Same reading as a full meter — which side of neutral, and how far — from a
+ * hairline track with the neutral center marked and a bar running from that
+ * center out to the article's score. Colors come from `currentColor`, so it
+ * inherits the direction tone of the tag it sits in.
+ */
+function SentimentScale({ score }: { score: number }) {
+  const pct = ((Math.max(-1, Math.min(1, score)) + 1) / 2) * 100
+  return (
+    <span
+      className="relative inline-block h-[3px] w-12 shrink-0 rounded-full"
+      aria-hidden
+    >
+      <span className="absolute inset-0 rounded-full bg-current opacity-25" />
+      <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-current opacity-50" />
+      <span
+        className="absolute inset-y-0 rounded-full bg-current"
+        style={{
+          left: `${Math.min(50, pct)}%`,
+          // A floor keeps a near-neutral score visible as a tick, not nothing.
+          width: `${Math.max(Math.abs(pct - 50), 4)}%`,
+        }}
+      />
+    </span>
+  )
+}
+
+/**
+ * Sentiment as one item in an article's meta line: direction arrow, word, the
+ * scale, and the raw score. Two variants, same reading:
+ *
+ * - `inline` — no chrome at all, so it joins source/timestamp as a peer and
+ *   the headline keeps the eye.
+ * - `overlay` — the minimum backing needed to stay legible over a banner.
+ *
+ * The feed's own gradation ("Somewhat-Bullish") rides along as a tooltip; the
+ * scale and score carry that nuance in a form a trader reads faster.
+ */
+export function SentimentTag({
   label,
-  size = 'sm',
+  score,
+  scale = false,
+  variant = 'inline',
   className,
 }: {
   label: string
-  size?: 'sm' | 'lg'
+  score?: number
+  /** Show the bearish→bullish scale between the word and the score. */
+  scale?: boolean
+  variant?: 'inline' | 'overlay'
   className?: string
 }) {
   const direction = sentimentDirection(label)
   const Icon = SENTIMENT_ICONS[direction]
 
   return (
-    <Badge
-      variant="outline"
+    <span
       className={cn(
-        'font-semibold',
-        size === 'sm' ? 'text-[10px]' : 'h-6 px-2.5 text-xs',
-        SENTIMENT_BADGE_CLASSES[direction],
+        'inline-flex items-center gap-1 whitespace-nowrap font-medium',
+        SENTIMENT_TEXT_CLASSES[direction],
+        variant === 'overlay' &&
+          'rounded-full bg-background/75 px-1.5 py-0.5 text-[10px] backdrop-blur-sm',
         className,
       )}
+      title={label.replace(/[-_]/g, ' ')}
     >
-      <Icon className={cn(size === 'lg' && 'size-3.5!')} />
-      {label.replace(/_/g, ' ')}
-    </Badge>
+      <Icon className="size-3 shrink-0" />
+      {sentimentWord(direction)}
+      {score !== undefined && (
+        <>
+          {scale && <SentimentScale score={score} />}
+          <span className="tabular-nums opacity-70">
+            {formatSentimentScore(score)}
+          </span>
+        </>
+      )}
+    </span>
   )
 }
 
@@ -221,9 +300,11 @@ export function ArticleCard({
             imgClassName="max-h-40 w-full object-cover"
             fallbackClassName="h-28 w-full"
           />
-          <SentimentBadge
+          <SentimentTag
             label={article.overallSentimentLabel}
-            className="absolute right-2 top-2 shadow-md backdrop-blur-sm"
+            score={article.overallSentimentScore}
+            variant="overlay"
+            className="absolute right-2 top-2"
           />
         </div>
       )}
@@ -234,7 +315,13 @@ export function ArticleCard({
           <span>&middot;</span>
           <span>{formatRelativeTime(article.timePublished)}</span>
           {!article.bannerImage && (
-            <SentimentBadge label={article.overallSentimentLabel} />
+            <>
+              <span>&middot;</span>
+              <SentimentTag
+                label={article.overallSentimentLabel}
+                score={article.overallSentimentScore}
+              />
+            </>
           )}
         </div>
         <p className="line-clamp-3 text-xs text-muted-foreground">
