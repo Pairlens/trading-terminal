@@ -3237,6 +3237,12 @@
       "openTerminal": "打开终端",
       "closeTabHint": "是从桌面应用付款的吗?直接关闭此标签页即可。",
       "receiptHint": "收据和发票已发送到你的邮箱,也可在账单管理页面查看(设置 → Intelligence)。"
+    },
+    "crash": {
+      "title": "此页面出现错误",
+      "description": "渲染时出现问题。重试通常即可解决；如果再次出现，请返回首页并重新打开该交易对。",
+      "reload": "重新加载",
+      "details": "技术细节"
     }
   },
   "workflows": {

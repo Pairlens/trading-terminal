@@ -3237,6 +3237,12 @@
       "openTerminal": "Abrir el terminal",
       "closeTabHint": "¿Pagaste desde la app de escritorio? Puedes cerrar esta pestaña sin problema.",
       "receiptHint": "El recibo y las facturas están en tu correo y en el portal de facturación (Configuración → Intelligence)."
+    },
+    "crash": {
+      "title": "Esta pantalla ha fallado",
+      "description": "Algo falló al renderizar. Reintentar suele bastar; si vuelve a ocurrir, vuelve al inicio y abre el par de nuevo.",
+      "reload": "Recargar",
+      "details": "Detalles técnicos"
     }
   },
   "workflows": {

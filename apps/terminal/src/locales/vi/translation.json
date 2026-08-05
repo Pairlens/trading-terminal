@@ -3237,6 +3237,12 @@
       "openTerminal": "Mở terminal",
       "closeTabHint": "Đã thanh toán từ ứng dụng máy tính? Bạn có thể đóng tab này.",
       "receiptHint": "Biên nhận và hóa đơn có trong email của bạn và trên cổng thanh toán (Cài đặt → Intelligence)."
+    },
+    "crash": {
+      "title": "Màn hình này gặp lỗi",
+      "description": "Có lỗi khi hiển thị. Thử lại thường là đủ; nếu vẫn lặp lại, hãy về trang chủ và mở lại cặp giao dịch.",
+      "reload": "Tải lại",
+      "details": "Chi tiết kỹ thuật"
     }
   },
   "workflows": {
