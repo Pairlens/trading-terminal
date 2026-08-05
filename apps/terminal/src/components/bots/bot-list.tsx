@@ -61,8 +61,10 @@ import {
 
 import type { BotDefinition } from '@pairlens/bot-engine/types'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { isScriptMissing } from '@/lib/bots/bot-script-link'
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
+import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
 
 type BotListProps = {
   selectedId: string | null
@@ -301,14 +303,21 @@ function BotRow({
   // map on every bar, and reading a status string means only the rows whose
   // status actually moved re-render (and nothing allocates per snapshot).
   const status = useBotRunsStore((s) => s.runs[bot.id]?.status) ?? 'stopped'
+  // A boolean, not the script record: this row only asks whether the strategy
+  // still exists, and selecting the object would re-render every row whenever
+  // anything about any script changed.
+  const scriptMissing = useIndicatorScriptsStore((s) =>
+    isScriptMissing(s, bot.scriptId),
+  )
   const isLive = bot.mode === 'live'
-  const tone = rowTone(status, bot.needsRearm === true)
+  const tone = rowTone(status, bot.needsRearm === true, scriptMissing)
   // Colour alone can't carry a state — it is invisible to a good few readers
   // and ambiguous to everyone at a glance. States that need doing something
   // about therefore say so in words; running and stopped don't need to,
   // because the switch beside them already says which one it is.
-  const flag =
-    bot.needsRearm === true
+  const flag = scriptMissing
+    ? { text: t('botsPage.scriptMissing'), className: 'text-destructive' }
+    : bot.needsRearm === true
       ? { text: t('botsPage.rearm'), className: 'text-amber-500' }
       : status === 'error'
         ? { text: t('botsPage.statusError'), className: 'text-destructive' }
@@ -320,6 +329,24 @@ function BotRow({
                 className: 'text-muted-foreground',
               }
             : null
+
+  // Arming is refused rather than merely ignored: the switch says so before it
+  // is touched, and `requestBotToggle` refuses again behind it.
+  const toggle = (
+    <Switch
+      size="sm"
+      checked={bot.enabled}
+      disabled={scriptMissing}
+      onCheckedChange={(next) =>
+        requestBotToggle({ ...bot, scriptMissing }, next === true, {
+          setEnabled,
+          requestArm: onRequestArm,
+        })
+      }
+      aria-label={t('botsPage.toggleAria', { name: bot.name })}
+      className={cn('shrink-0', bot.enabled && 'data-checked:bg-up')}
+    />
+  )
 
   return (
     <div
@@ -401,19 +428,22 @@ function BotRow({
           {/* Arming lives in the list because the list is where you scan:
               deciding which bots should be on is a comparison between them,
               and walking into each one's detail to make it defeats the point.
-              Same rule as everywhere — a live bot routes through the dialog. */}
-          <Switch
-            size="sm"
-            checked={bot.enabled}
-            onCheckedChange={(next) =>
-              requestBotToggle(bot, next === true, {
-                setEnabled,
-                requestArm: onRequestArm,
-              })
-            }
-            aria-label={t('botsPage.toggleAria', { name: bot.name })}
-            className={cn('shrink-0', bot.enabled && 'data-checked:bg-up')}
-          />
+              Same rule as everywhere — a live bot routes through the dialog.
+
+              A disabled switch swallows its own pointer events, so the reason
+              it is dead has to be hung on a wrapper or it never appears. */}
+          {scriptMissing ? (
+            <Tooltip>
+              <TooltipTrigger render={<span className="inline-flex" />}>
+                {toggle}
+              </TooltipTrigger>
+              <TooltipContent>
+                {t('botsPage.scriptMissingTitle')}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            toggle
+          )}
         </div>
         <div className="flex h-4 items-center">
           {/* Overriding the height too, not just the text: the base badge is

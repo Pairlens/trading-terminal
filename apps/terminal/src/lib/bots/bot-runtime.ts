@@ -33,6 +33,7 @@ import {
   computeBotOutputs,
 } from './bot-python'
 import { getBotOrderSource } from './bot-order-source'
+import { isScriptMissing } from './bot-script-link'
 import type { PluginManager } from '@pairlens/plugin-system'
 import type { ChartBar } from '@pairlens/fast-financial-charts/types'
 import type {
@@ -161,7 +162,12 @@ function loadScript(bot: BotDefinition): BotScript | { error: string } {
   const script = useIndicatorScriptsStore
     .getState()
     .scripts.find((s) => s.id === bot.scriptId)
-  if (!script) return { error: 'Script not found' }
+  if (!script) {
+    return {
+      error:
+        'The strategy script this bot runs has been deleted. Delete the bot, or deploy a new one from a strategy you still have.',
+    }
+  }
   const meta = script.meta
   if (!meta) {
     return {
@@ -310,6 +316,7 @@ export class BotRuntime {
   private pluginManager: PluginManager | null = null
   private readonly subs = new Map<string, ActiveSub>()
   private storeUnsub: (() => void) | null = null
+  private scriptsUnsub: (() => void) | null = null
   private keepAwakeUnsub: (() => void) | null = null
   private vaultUnsub: (() => void) | null = null
   private credentialsUnsub: (() => void) | null = null
@@ -323,8 +330,19 @@ export class BotRuntime {
     this.storeUnsub = useBotsStore.subscribe(() =>
       queueMicrotask(() => this.reconcile()),
     )
+    // A deleted strategy leaves its bots with nothing to run, and the workbench
+    // that deletes it may be in another window — so the script store is
+    // reconciled off exactly like the definitions are, rather than the bot
+    // finding out at its next bar close, which on a daily timeframe is a day.
+    this.scriptsUnsub = useIndicatorScriptsStore.subscribe(() =>
+      queueMicrotask(() => this.reconcile()),
+    )
     useBotsStore.getState().load()
     useBotRunsStore.getState().load()
+    // Loaded here rather than left to whichever page opens first: without it
+    // `loadScript` cannot tell "not read yet" from "deleted", and the runtime
+    // starts long before the indicators page ever mounts.
+    useIndicatorScriptsStore.getState().load()
     // Credentials live in the keychain and load asynchronously; a live bot
     // can't be armed until they're in memory. A sealed vault settles the store
     // into `sealed` rather than throwing, so this chain is safe either way —
@@ -376,6 +394,8 @@ export class BotRuntime {
   stop(): void {
     this.storeUnsub?.()
     this.storeUnsub = null
+    this.scriptsUnsub?.()
+    this.scriptsUnsub = null
     this.keepAwakeUnsub?.()
     this.keepAwakeUnsub = null
     this.vaultUnsub?.()
@@ -414,10 +434,26 @@ export class BotRuntime {
       if (bot.enabled && !bot.needsRearm) wanted.set(bot.id, bot)
     }
 
+    const scripts = useIndicatorScriptsStore.getState()
+
     for (const [botId, sub] of this.subs) {
       const bot = wanted.get(botId)
       if (!bot || sub.deployment !== deploymentKey(bot)) {
         this.teardown(botId, 'stopped')
+        continue
+      }
+      // A running bot whose script was just deleted has nothing left to decide
+      // with. It stops loudly and disarmed, the same as any other unrunnable
+      // configuration — a bot that keeps a subscription open (and a position
+      // unmanaged) because nobody told it its strategy is gone is the failure
+      // this check exists to end.
+      if (isScriptMissing(scripts, bot.scriptId)) {
+        this.halt(
+          botId,
+          'error',
+          'Strategy deleted',
+          'The strategy script this bot runs has been deleted. Delete the bot, or deploy a new one from a strategy you still have.',
+        )
       }
     }
 

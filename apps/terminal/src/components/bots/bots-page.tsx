@@ -11,6 +11,7 @@ import { CreateBotDialog } from './create-bot-dialog'
 import type { BotDefinition } from '@pairlens/bot-engine/types'
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
+import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
 
 /**
  * The bots surface, as master-detail: the deployments down the left, one bot's
@@ -25,6 +26,9 @@ export function BotsPage() {
   const loaded = useBotsStore((s) => s.loaded)
   const loadBots = useBotsStore((s) => s.load)
   const loadRuns = useBotRunsStore((s) => s.load)
+  // Every bot names a script, and this page reports the ones whose script is
+  // gone. Reading that off an unloaded store would call every bot orphaned.
+  const loadScripts = useIndicatorScriptsStore((s) => s.load)
 
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
@@ -33,7 +37,8 @@ export function BotsPage() {
   useEffect(() => {
     loadBots()
     loadRuns()
-  }, [loadBots, loadRuns])
+    loadScripts()
+  }, [loadBots, loadRuns, loadScripts])
 
   // Auto-select the first bot, and re-select after a delete: an empty main
   // area while bots exist reads as "nothing here" when there plainly is.

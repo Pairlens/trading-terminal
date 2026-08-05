@@ -20,7 +20,12 @@ import {
 type Calls = { enabled: Array<[string, boolean]>; armed: number }
 
 function run(
-  bot: { id: string; mode: 'paper' | 'live'; needsRearm?: boolean },
+  bot: {
+    id: string
+    mode: 'paper' | 'live'
+    needsRearm?: boolean
+    scriptMissing?: boolean
+  },
   checked: boolean,
 ): Calls {
   const calls: Calls = { enabled: [], armed: 0 }
@@ -62,6 +67,21 @@ describe('requestBotToggle', () => {
       expect(calls.armed).toBe(0)
     }
   })
+
+  test('a bot whose script was deleted cannot be turned back on', () => {
+    // The runtime would halt it a moment later anyway; going "on, error, off
+    // by itself" is what makes a deleted strategy read as a broken app.
+    for (const mode of ['paper', 'live'] as const) {
+      const calls = run({ id: 'b1', mode, scriptMissing: true }, true)
+      expect(calls.enabled).toEqual([])
+      expect(calls.armed).toBe(0)
+    }
+  })
+
+  test('…but it can still be turned off', () => {
+    const calls = run({ id: 'b1', mode: 'paper', scriptMissing: true }, false)
+    expect(calls.enabled).toEqual([['b1', false]])
+  })
 })
 
 describe('rowTone', () => {
@@ -83,6 +103,13 @@ describe('rowTone', () => {
     // blend in with the ones deliberately switched off.
     expect(rowTone('stopped', true)).toBe('attention')
     expect(rowTone('running', true)).toBe('attention')
+  })
+
+  test('a missing script outranks everything, including re-arm', () => {
+    // Such a bot is not idle and not merely waiting on a decision: it can
+    // never run again, whatever its last status said.
+    expect(rowTone('stopped', false, true)).toBe('error')
+    expect(rowTone('running', true, true)).toBe('error')
   })
 
   test('every tone has both a resting and a selected fill', () => {

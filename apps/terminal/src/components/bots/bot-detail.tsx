@@ -1,7 +1,8 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useMemo, useState } from 'react'
-import { Trash2 } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { Trash2, TriangleAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
@@ -49,6 +50,7 @@ import type { BotDefinition, BotEvent } from '@pairlens/bot-engine/types'
 import type { BotTrade } from '@/stores/bot-runs-store'
 import { PreviewParamsBar } from '@/components/indicators/preview-params'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { isScriptMissing } from '@/lib/bots/bot-script-link'
 import { emptyRunState, useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
@@ -95,6 +97,11 @@ export function BotDetail({ bot, onRequestArm }: BotDetailProps) {
   const resetRun = useBotRunsStore((s) => s.resetRun)
   const script = useIndicatorScriptsStore((s) =>
     s.scripts.find((entry) => entry.id === bot.scriptId),
+  )
+  // Distinct from `!script`: before the store has read localStorage every bot
+  // looks scriptless, and that must not be reported as a deleted strategy.
+  const scriptMissing = useIndicatorScriptsStore((s) =>
+    isScriptMissing(s, bot.scriptId),
   )
   const { markets } = useAvailableMarkets()
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -176,6 +183,48 @@ export function BotDetail({ bot, onRequestArm }: BotDetailProps) {
           )}
         </span>
       </div>
+
+      {/*
+        An orphaned bot: its strategy was deleted, so there is nothing left for
+        it to run and nothing that will ever start it again. The bot cannot be
+        repaired — `scriptId` is an id, and a new script with the same name is
+        a different script — so the banner says what happened and offers the
+        only two moves there are.
+      */}
+      {scriptMissing && (
+        <div className="flex shrink-0 items-start gap-2 border-b border-destructive/30 bg-destructive/5 px-3 py-2.5">
+          <TriangleAlert className="mt-0.5 size-4 shrink-0 text-destructive" />
+          <div className="grid min-w-0 gap-1.5">
+            <p className="text-xs font-medium text-destructive">
+              {t('botsPage.scriptMissingTitle')}
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              {t('botsPage.scriptMissingDetail')}
+            </p>
+            <div className="flex flex-wrap gap-2 pt-0.5">
+              <Button
+                variant="destructive"
+                size="sm"
+                className="gap-1.5"
+                onClick={() => setConfirmDelete(true)}
+              >
+                <Trash2 className="size-3.5" />
+                {t('botsPage.scriptMissingDelete')}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                // It renders as an anchor, so Base UI must not assume the
+                // native button semantics it would otherwise warn about.
+                nativeButton={false}
+                render={<Link to="/indicators" />}
+              >
+                {t('botsPage.openIndicators')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Live numbers — position, marks, and where the bot is deployed. */}
       <div className="grid grid-cols-2 gap-x-6 gap-y-2 border-b border-border px-3 py-2.5 text-xs sm:grid-cols-3 xl:grid-cols-7">
@@ -311,6 +360,10 @@ export function BotDetail({ bot, onRequestArm }: BotDetailProps) {
                   id="bot-detail-live"
                   className="ml-auto shrink-0"
                   checked={bot.mode === 'live'}
+                  // Promoting a bot with no strategy to live would open the
+                  // arming dialog for a deployment that cannot place a single
+                  // order. Demotion stays available: it is the safe direction.
+                  disabled={scriptMissing && bot.mode !== 'live'}
                   onCheckedChange={handleModeChange}
                   aria-label={t('botsPage.liveTrading')}
                 />
