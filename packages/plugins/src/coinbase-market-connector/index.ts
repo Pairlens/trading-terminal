@@ -79,8 +79,8 @@ const coinbaseSpec: CexConnectorSpec<CoinbaseCredentials> = {
   requiresDesktop: true,
   createWsClient: () => new CoinbaseWsClient(),
   createPrivateWsClient: () => new CoinbasePrivateWsClient(),
-  fetchCandles: (pair, timeframe, limit, country) =>
-    fetchCoinbaseCandles(pair, timeframe, limit, country),
+  fetchCandles: (pair, timeframe, limit, country, endTs) =>
+    fetchCoinbaseCandles(pair, timeframe, limit, country, endTs),
   fetchTickerSnapshot: (country) => fetchCoinbaseTickerSnapshot(country),
   fetchOpenOrders: (slot) =>
     fetchCoinbaseOpenOrders(

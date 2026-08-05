@@ -29,6 +29,24 @@ export function mapTimeframeToMexcInterval(tf: string): string | null {
   return TF_TO_MEXC[tf] ?? null
 }
 
+// Bar length per timeframe. MEXC ignores `endTime` unless `startTime` is sent
+// with it (measured), so paged history has to compute an explicit window.
+const TF_TO_MS: Record<string, number> = {
+  '1m': 60_000,
+  '5m': 300_000,
+  '15m': 900_000,
+  '30m': 1_800_000,
+  '1h': 3_600_000,
+  '4h': 14_400_000,
+  '1d': 86_400_000,
+  '1w': 604_800_000,
+  '1M': 2_592_000_000,
+}
+
+export function mexcTimeframeMs(tf: string): number {
+  return TF_TO_MS[tf] ?? 900_000
+}
+
 /** WS channel kline intervals — different naming from REST. */
 const TF_TO_WS_INTERVAL: Record<string, string> = {
   '1m': 'Min1',

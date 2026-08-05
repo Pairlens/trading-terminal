@@ -74,8 +74,8 @@ const gateSpec: CexConnectorSpec<GateCredentials> = {
   requiresDesktop: true,
   createWsClient: () => new GateWsClient(),
   createPrivateWsClient: () => new GatePrivateWsClient(),
-  fetchCandles: (pair, timeframe, limit, country) =>
-    fetchGateCandles(pair, timeframe, limit, country),
+  fetchCandles: (pair, timeframe, limit, country, endTs) =>
+    fetchGateCandles(pair, timeframe, limit, country, undefined, endTs),
   fetchTickerSnapshot: (country) => fetchGateTickerSnapshot(country),
   fetchOpenOrders: (slot) =>
     fetchGateOpenOrders(

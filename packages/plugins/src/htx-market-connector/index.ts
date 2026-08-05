@@ -72,8 +72,8 @@ const htxSpec: CexConnectorSpec<HtxCredentials> = {
   defaultMode: 'live',
   createWsClient: () => new HtxWsClient(),
   createPrivateWsClient: () => new HtxPrivateWsClient(),
-  fetchCandles: (pair, timeframe, limit) =>
-    fetchHtxCandles(pair, timeframe, limit),
+  fetchCandles: (pair, timeframe, limit, _country, endTs) =>
+    fetchHtxCandles(pair, timeframe, limit, endTs),
   fetchTickerSnapshot: () => fetchHtxTickerSnapshot(),
   fetchOpenOrders: (slot) =>
     fetchHtxOpenOrders(slot.credentials, slot.currentPair || undefined),

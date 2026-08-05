@@ -7,6 +7,7 @@
  * Candles are returned in descending order — reversed to chronological.
  */
 
+import { olderThan, pageEndSec } from '@pairlens/market-engine/candle-paging'
 import { assertResponseOk } from '@pairlens/market-engine/errors'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
 import {
@@ -32,6 +33,7 @@ export async function fetchCoinbaseCandles(
   timeframe: string,
   limit: number,
   country?: string,
+  endTs?: number,
 ): Promise<Array<Candle>> {
   const restBase = resolveCoinbasePublicRest()
   const productId = normalizePair(pair)
@@ -39,7 +41,10 @@ export async function fetchCoinbaseCandles(
   if (!granularity) throw new Error(`Unsupported timeframe: ${timeframe}`)
 
   const tfSec = timeframeToSeconds(timeframe)
-  const end = Math.floor(Date.now() / 1000)
+  // `end` is inclusive here (measured), so paged reads step back one second
+  // and the batch is filtered again below.
+  const end =
+    endTs === undefined ? Math.floor(Date.now() / 1000) : pageEndSec(endTs)
   const start = end - limit * tfSec
 
   const url =
@@ -70,7 +75,7 @@ export async function fetchCoinbaseCandles(
   // Coinbase returns descending order — reverse to chronological
   candles.reverse()
 
-  return candles.slice(-limit)
+  return olderThan(candles, endTs).slice(-limit)
 }
 
 /**

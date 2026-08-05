@@ -11,6 +11,7 @@
  * then reverse to chronological order.
  */
 
+import { olderThan, pageEndMs } from '@pairlens/market-engine/candle-paging'
 import { assertResponseOk } from '@pairlens/market-engine/errors'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
 import {
@@ -30,6 +31,7 @@ export async function fetchBfxCandles(
   pair: string,
   timeframe: string,
   limit: number,
+  endTs?: number,
 ): Promise<Array<Candle>> {
   const tf = toBfxTimeframe(timeframe)
   if (!tf) throw new Error(`Unsupported timeframe: ${timeframe}`)
@@ -39,7 +41,9 @@ export async function fetchBfxCandles(
   const count = Math.min(limit, 10000)
 
   // sort=-1 returns most recent candles first (default Bitfinex behavior)
-  const url = `${restPublicBase}/v2/candles/trade:${tf}:${symbol}/hist?limit=${count}&sort=-1`
+  // `end` is inclusive (measured), so step back a millisecond.
+  const endParam = endTs === undefined ? '' : `&end=${pageEndMs(endTs)}`
+  const url = `${restPublicBase}/v2/candles/trade:${tf}:${symbol}/hist?limit=${count}&sort=-1${endParam}`
 
   const res = await fetch(url)
   if (!res.ok) {
@@ -53,7 +57,7 @@ export async function fetchBfxCandles(
   }
 
   // Reverse to chronological order (oldest first)
-  return json.map(parseBfxCandle).reverse()
+  return olderThan(json.map(parseBfxCandle).reverse(), endTs)
 }
 
 /** Fetch bulk 24h quotes for every trading pair from Bitfinex REST API. */

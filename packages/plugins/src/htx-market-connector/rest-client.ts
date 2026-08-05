@@ -7,6 +7,7 @@
  * Response envelope: { "status": "ok", "data": [...] }
  */
 
+import { olderThan } from '@pairlens/market-engine/candle-paging'
 import { sortCandlesAscending } from '@pairlens/market-engine/candle-buffer'
 import { assertResponseOk } from '@pairlens/market-engine/errors'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
@@ -27,13 +28,18 @@ export async function fetchHtxCandles(
   pair: string,
   timeframe: string,
   limit: number,
+  endTs?: number,
 ): Promise<Array<Candle>> {
   const period = toHtxPeriod(timeframe)
   if (!period) throw new Error(`Unsupported timeframe: ${timeframe}`)
 
   const symbol = toHtxSymbol(pair)
   const base = resolveHtxRestBase()
-  const size = Math.min(limit, 2000)
+  // HTX offers no time cursor here, only `size`. Paging therefore means
+  // pulling the widest window the venue allows and slicing older bars out of
+  // it: good for roughly 2000 bars back, then genuinely exhausted. The chart
+  // treats an empty page as end-of-history, which is the honest answer.
+  const size = endTs === undefined ? Math.min(limit, 2000) : 2000
 
   const url = `${base}/market/history/kline?symbol=${symbol}&period=${period}&size=${size}`
 
@@ -61,7 +67,10 @@ export async function fetchHtxCandles(
   }
 
   // HTX returns newest-first; normalize to ascending (order-assumption-free).
-  return sortCandlesAscending(json.data.map(parseHtxCandle))
+  return olderThan(
+    sortCandlesAscending(json.data.map(parseHtxCandle)),
+    endTs,
+  ).slice(-limit)
 }
 
 /** Fetch bulk 24h quotes for every listed symbol from HTX REST API. */

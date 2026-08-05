@@ -96,8 +96,8 @@ const kucoinSpec: CexConnectorSpec<KucoinCredentials> = {
   requiresDesktop: true,
   createWsClient: () => new KucoinWsClient(),
   createPrivateWsClient: () => new KucoinPrivateWsClient(),
-  fetchCandles: (pair, timeframe, limit, country) =>
-    fetchKucoinCandles(pair, timeframe, limit, country),
+  fetchCandles: (pair, timeframe, limit, country, endTs) =>
+    fetchKucoinCandles(pair, timeframe, limit, country, endTs),
   fetchTickerSnapshot: (country) => fetchKucoinTickerSnapshot(country),
   fetchOpenOrders: (slot) =>
     fetchKucoinOpenOrders(

@@ -163,7 +163,8 @@ export function createAlpacaMarketConnectorPlugin(
       const pair = String(p['pair'] ?? context.pair)
       const timeframe = String(p['timeframe'] ?? context.timeframe)
       const limit = typeof p['limit'] === 'number' ? p['limit'] : 300
-      return fetchAlpacaCandles(pair, timeframe, limit, credentials)
+      const endTs = typeof p['endTs'] === 'number' ? p['endTs'] : undefined
+      return fetchAlpacaCandles(pair, timeframe, limit, credentials, endTs)
     }
 
     if (capability === 'trading:orders') {

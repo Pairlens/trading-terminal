@@ -80,8 +80,8 @@ const mexcSpec: CexConnectorSpec<MexcCredentials> = {
     if (capability.startsWith('market-data:')) checkBlocked(country)
   },
   tradeGeoCheck: (slot) => checkBlocked(slot.country),
-  fetchCandles: (pair, timeframe, limit, country) =>
-    fetchMexcCandles(pair, timeframe, limit, country),
+  fetchCandles: (pair, timeframe, limit, country, endTs) =>
+    fetchMexcCandles(pair, timeframe, limit, country, endTs),
   fetchTickerSnapshot: (country) => fetchMexcTickerSnapshot(country),
   fetchOpenOrders: (slot) =>
     fetchMexcOpenOrders(slot.credentials, slot.country, slot.mode === 'paper'),

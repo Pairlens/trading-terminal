@@ -75,8 +75,8 @@ const cryptocomSpec: CexConnectorSpec<CryptocomCredentials> = {
   defaultMode: 'paper',
   createWsClient: () => new CryptocomWsClient(),
   createPrivateWsClient: () => new CryptocomPrivateWsClient(),
-  fetchCandles: (pair, timeframe, limit) =>
-    fetchCryptocomCandles(pair, timeframe, limit),
+  fetchCandles: (pair, timeframe, limit, _country, endTs) =>
+    fetchCryptocomCandles(pair, timeframe, limit, false, endTs),
   fetchTickerSnapshot: () => fetchCryptocomTickerSnapshot(),
   fetchOpenOrders: (slot) =>
     fetchCryptocomOpenOrders(

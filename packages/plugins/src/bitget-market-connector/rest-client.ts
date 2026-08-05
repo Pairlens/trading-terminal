@@ -7,6 +7,7 @@
  * All values are strings. Candles returned in descending order — reversed here.
  */
 
+import { olderThan, pageEndMs } from '@pairlens/market-engine/candle-paging'
 import { sortCandlesAscending } from '@pairlens/market-engine/candle-buffer'
 import { assertResponseOk } from '@pairlens/market-engine/errors'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
@@ -32,6 +33,7 @@ export async function fetchBitgetCandles(
   timeframe: string,
   limit: number,
   country?: string,
+  endTs?: number,
 ): Promise<Array<Candle>> {
   const restBase = resolveBitgetRestBase()
   const symbol = normalizePair(pair)
@@ -39,7 +41,9 @@ export async function fetchBitgetCandles(
   if (!granularity) throw new Error(`Unsupported timeframe: ${timeframe}`)
 
   const clampedLimit = Math.min(limit, 1000)
-  const url = `${restBase}/market/candles?symbol=${symbol}&granularity=${granularity}&limit=${clampedLimit}`
+  // `endTime` is inclusive (measured), so step back a millisecond.
+  const endParam = endTs === undefined ? '' : `&endTime=${pageEndMs(endTs)}`
+  const url = `${restBase}/market/candles?symbol=${symbol}&granularity=${granularity}&limit=${clampedLimit}${endParam}`
 
   const resp = await fetch(url)
   if (!resp.ok) {
@@ -65,7 +69,7 @@ export async function fetchBitgetCandles(
 
   // Normalize to ascending regardless of the API's current ordering — the
   // exchange has flipped this and may again. See sortCandlesAscending.
-  return sortCandlesAscending(candles).slice(-limit)
+  return olderThan(sortCandlesAscending(candles), endTs).slice(-limit)
 }
 
 /**

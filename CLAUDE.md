@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What is Pairlens
 
-AI-native crypto spot trading terminal. **Desktop-first** — the primary distribution is a Tauri desktop app (`apps/desktop/`). Browser builds are maintained for dev/testing only. Deterministic strategies generate signals, an AI co-pilot provides contextual analysis (APPROVE/BLOCK/WATCH), and user-configurable risk guardrails are enforced at the infrastructure level. The AI augments decisions but never overrides risk limits.
+AI-native crypto spot trading terminal. **Desktop-first, but the browser is a shipped surface** — the primary distribution is a Tauri desktop app (`apps/desktop/`), and a hosted web terminal runs at `terminal.pairlens.finance` (the marketing site's main CTA). The browser build is a real product, not a dev harness; what it cannot do is bounded and explicit. Four connectors (Coinbase, Gate, KuCoin, MEXC) serve REST without CORS headers and stream no candle history, so they declare `requiresDesktop` and refuse in a browser with a typed `PlatformRestrictedError` rather than presenting a dead chart. Desktop additionally gets the OS keychain, background bots, wake-blocking and native windows. Deterministic strategies generate signals, an AI co-pilot provides contextual analysis (APPROVE/BLOCK/WATCH), and user-configurable risk guardrails are enforced at the infrastructure level. The AI augments decisions but never overrides risk limits.
 
 **Credential storage is local-only.** Due to legal constraints, user wallets and exchange API keys must never be persisted on Pairlens servers. On desktop they are stored in the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service) via the `keychain_*` Tauri commands in `apps/desktop/src-tauri` (backed by the Rust `keyring` crate). In browser dev/testing builds they are stored in localStorage encrypted at rest with AES-256-GCM (non-extractable WebCrypto key in IndexedDB) — this resists reading secrets off disk but not same-origin XSS; desktop is the supported home for live-trading secrets. The frontend entry point is `apps/terminal/src/lib/keychain.ts`. The App Server database must not contain plaintext or encrypted user exchange credentials.
 
@@ -65,7 +65,7 @@ DESKTOP APP (Tauri)                       OPTIONAL CLOUD (not in this repo)
   Local credential store (OS keychain)
 
 ALSO AVAILABLE
-  Browser (dev/testing only)
+  Hosted web terminal (terminal.pairlens.finance, Vercel) — 11 of 15 venues
   CLI (bun apps/cli/src/index.ts)
   pairlens.finance (marketing, Vercel)
 ```
