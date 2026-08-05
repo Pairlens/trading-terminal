@@ -882,18 +882,42 @@
     "surveyOtherPlaceholder": "Raccontaci di più"
   },
   "desktopCta": {
+    "eyebrow": "App desktop",
     "title": "Pairlens sul tuo desktop",
     "description": "La build nel browser serve per provare. L'app desktop è quella che pubblichiamo.",
-    "benefitKeychain": "Le chiavi degli exchange restano nel portachiavi del sistema, mai sui nostri server",
-    "benefitPerformance": "Finestra nativa, grafici su GPU, nessuna scheda del browser di mezzo",
-    "benefitUpdates": "Gli aggiornamenti firmati si installano in silenzio in background",
     "downloadFor": "Scarica per {{os}}",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "Altre piattaforme",
     "sourceNote": "Ogni build è a sorgente aperto e firmata.",
-    "releaseNotes": "Note di rilascio"
+    "releaseNotes": "Note di rilascio",
+    "benefits": {
+      "venues": {
+        "title": "Tutti gli exchange",
+        "detail": "Tutti i 15 connettori. Coinbase, KuCoin, Gate e MEXC bloccano i browser e funzionano solo qui."
+      },
+      "bots": {
+        "title": "Bot che non si fermano",
+        "detail": "Il browser rallenta una scheda che non stai guardando e prima o poi la sospende. Qui i bot continuano a operare, anche a finestra chiusa."
+      },
+      "alerts": {
+        "title": "Avvisi che arrivano",
+        "detail": "Notifiche vere dal sistema operativo, non da una scheda che deve restare aperta."
+      },
+      "sleep": {
+        "title": "Resta sveglio mentre opera",
+        "detail": "Blocca la sospensione mentre i bot sono attivi, così chiudere il coperchio non termina la sessione."
+      },
+      "windows": {
+        "title": "Finestre vere",
+        "detail": "Porta i grafici su un secondo monitor come finestre di sistema, non schede del browser."
+      },
+      "keychain": {
+        "title": "Chiavi nel portachiavi",
+        "detail": "Le chiavi dell'exchange restano nel portachiavi di sistema, mai nel browser né sui nostri server."
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "Menu account",

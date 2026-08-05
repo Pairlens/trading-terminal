@@ -882,18 +882,42 @@
     "surveyOtherPlaceholder": "Cuéntanos más"
   },
   "desktopCta": {
+    "eyebrow": "App de escritorio",
     "title": "Pairlens en tu escritorio",
     "description": "La versión del navegador es para probar. La app de escritorio es la que publicamos.",
-    "benefitKeychain": "Las claves del exchange se quedan en el llavero del sistema, nunca en nuestros servidores",
-    "benefitPerformance": "Ventana nativa, gráficos por GPU y ninguna pestaña compitiendo por ellos",
-    "benefitUpdates": "Las actualizaciones firmadas se instalan solas en segundo plano",
     "downloadFor": "Descargar para {{os}}",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "Otras plataformas",
     "sourceNote": "Todas las versiones son de código abierto y están firmadas.",
-    "releaseNotes": "Notas de la versión"
+    "releaseNotes": "Notas de la versión",
+    "benefits": {
+      "venues": {
+        "title": "Todos los exchanges",
+        "detail": "Los 15 conectores. Coinbase, KuCoin, Gate y MEXC bloquean los navegadores, así que solo funcionan aquí."
+      },
+      "bots": {
+        "title": "Bots que no se detienen",
+        "detail": "El navegador ralentiza una pestaña que no estás mirando y acaba suspendiéndola. Aquí tus bots siguen operando, incluso con la ventana cerrada."
+      },
+      "alerts": {
+        "title": "Alertas que llegan",
+        "detail": "Notificaciones reales del sistema operativo, no de una pestaña que debe seguir abierta."
+      },
+      "sleep": {
+        "title": "No se duerme mientras opera",
+        "detail": "Evita la suspensión mientras los bots están activos, así cerrar la tapa no termina la sesión."
+      },
+      "windows": {
+        "title": "Ventanas reales",
+        "detail": "Lleva los gráficos a un segundo monitor como ventanas del sistema, no pestañas."
+      },
+      "keychain": {
+        "title": "Claves en tu llavero",
+        "detail": "Las claves del exchange viven en el llavero del sistema, nunca en el navegador ni en nuestros servidores."
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "Menú de cuenta",

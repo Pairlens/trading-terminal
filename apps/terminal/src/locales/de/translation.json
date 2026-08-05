@@ -882,18 +882,42 @@
     "surveyOtherPlaceholder": "Erzähl uns mehr"
   },
   "desktopCta": {
+    "eyebrow": "Desktop-App",
     "title": "Pairlens auf deinem Desktop",
     "description": "Der Browser-Build ist zum Ausprobieren. Ausgeliefert wird die Desktop-App.",
-    "benefitKeychain": "Exchange-Schlüssel bleiben im Schlüsselbund des Systems, nie auf unseren Servern",
-    "benefitPerformance": "Natives Fenster, GPU-Charts, kein Browser-Tab, der sie ausbremst",
-    "benefitUpdates": "Signierte Updates installieren sich still im Hintergrund",
     "downloadFor": "Für {{os}} herunterladen",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "Andere Plattformen",
     "sourceNote": "Jeder Build ist quelloffen und signiert.",
-    "releaseNotes": "Release Notes"
+    "releaseNotes": "Release Notes",
+    "benefits": {
+      "venues": {
+        "title": "Jede Börse",
+        "detail": "Alle 15 Konnektoren. Coinbase, KuCoin, Gate und MEXC sperren Browser komplett aus und laufen nur hier."
+      },
+      "bots": {
+        "title": "Bots, die weiterlaufen",
+        "detail": "Browser bremsen einen Tab, den du nicht ansiehst, und pausieren ihn irgendwann. Hier handeln deine Bots weiter, auch bei geschlossenem Fenster."
+      },
+      "alerts": {
+        "title": "Hinweise, die ankommen",
+        "detail": "Echte Benachrichtigungen vom Betriebssystem statt aus einem Tab, der offen bleiben muss."
+      },
+      "sleep": {
+        "title": "Bleibt wach im Einsatz",
+        "detail": "Verhindert den Ruhezustand, solange Bots aktiv sind. Deckel zu beendet die Sitzung nicht."
+      },
+      "windows": {
+        "title": "Echte Fenster",
+        "detail": "Zieh Charts als echte Systemfenster auf einen zweiten Monitor statt in Browser-Tabs."
+      },
+      "keychain": {
+        "title": "Schlüssel im Schlüsselbund",
+        "detail": "Börsenschlüssel liegen im System-Schlüsselbund, nie im Browser-Speicher und nie auf unseren Servern."
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "Kontomenü",

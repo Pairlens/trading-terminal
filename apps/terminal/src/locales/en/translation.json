@@ -882,18 +882,42 @@
     "surveyOtherPlaceholder": "Tell us more"
   },
   "desktopCta": {
+    "eyebrow": "Desktop app",
     "title": "Pairlens on your desktop",
     "description": "The browser build is for tinkering. The desktop app is the one we ship.",
-    "benefitKeychain": "Exchange keys stay in your OS keychain, never on our servers",
-    "benefitPerformance": "Native window, GPU charts, no browser tab competing for them",
-    "benefitUpdates": "Signed updates install quietly in the background",
     "downloadFor": "Download for {{os}}",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "Other platforms",
     "sourceNote": "Every build is source-available and signed.",
-    "releaseNotes": "Release notes"
+    "releaseNotes": "Release notes",
+    "benefits": {
+      "venues": {
+        "title": "Every exchange",
+        "detail": "All 15 connectors. Coinbase, KuCoin, Gate and MEXC block browsers outright, so they only run here."
+      },
+      "bots": {
+        "title": "Bots that keep running",
+        "detail": "Browsers slow down a tab you are not looking at, then suspend it. Here your bots keep trading, even with the window closed."
+      },
+      "alerts": {
+        "title": "Alerts that arrive",
+        "detail": "Real notifications from your operating system, not from a tab that has to stay open."
+      },
+      "sleep": {
+        "title": "Stays awake while armed",
+        "detail": "Holds off sleep while bots are live, so closing the lid does not end your session."
+      },
+      "windows": {
+        "title": "Real windows",
+        "detail": "Pull charts onto a second monitor as proper system windows instead of browser tabs."
+      },
+      "keychain": {
+        "title": "Keys in your OS keychain",
+        "detail": "Exchange keys live in the system keychain, never in browser storage and never on our servers."
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "Account menu",

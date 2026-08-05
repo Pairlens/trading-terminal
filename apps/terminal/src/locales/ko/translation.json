@@ -882,18 +882,42 @@
     "surveyOtherPlaceholder": "조금 더 알려주세요"
   },
   "desktopCta": {
+    "eyebrow": "데스크톱 앱",
     "title": "내 데스크톱의 Pairlens",
     "description": "브라우저 빌드는 체험용입니다. 실제로 배포하는 것은 데스크톱 앱입니다.",
-    "benefitKeychain": "거래소 키는 OS 키체인에 남고 서버로는 절대 가지 않습니다",
-    "benefitPerformance": "네이티브 창과 GPU 차트, 자원을 다투는 브라우저 탭 없음",
-    "benefitUpdates": "서명된 업데이트가 백그라운드에서 조용히 설치됩니다",
     "downloadFor": "{{os}}용 다운로드",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "다른 플랫폼",
     "sourceNote": "모든 빌드는 소스가 공개되어 있고 서명되어 있습니다.",
-    "releaseNotes": "릴리스 노트"
+    "releaseNotes": "릴리스 노트",
+    "benefits": {
+      "venues": {
+        "title": "모든 거래소",
+        "detail": "커넥터 15개 전부. Coinbase, KuCoin, Gate, MEXC는 브라우저를 아예 차단해 여기서만 작동합니다."
+      },
+      "bots": {
+        "title": "멈추지 않는 봇",
+        "detail": "브라우저는 보고 있지 않은 탭을 늦추다 결국 중단합니다. 여기서는 창을 닫아도 봇이 계속 거래합니다."
+      },
+      "alerts": {
+        "title": "제때 도착하는 알림",
+        "detail": "열어 둔 탭이 아니라 운영체제가 보내는 진짜 알림입니다."
+      },
+      "sleep": {
+        "title": "가동 중에는 잠들지 않음",
+        "detail": "봇이 켜져 있는 동안 절전을 막아 덮개를 닫아도 세션이 끝나지 않습니다."
+      },
+      "windows": {
+        "title": "진짜 창",
+        "detail": "차트를 브라우저 탭이 아닌 OS 창으로 두 번째 모니터에 띄우세요."
+      },
+      "keychain": {
+        "title": "키는 OS 키체인에",
+        "detail": "거래소 키는 시스템 키체인에 있으며 브라우저 저장소나 저희 서버에는 없습니다."
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "계정 메뉴",

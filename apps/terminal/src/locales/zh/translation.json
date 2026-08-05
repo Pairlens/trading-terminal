@@ -882,18 +882,42 @@
     "surveyOtherPlaceholder": "再多说一点"
   },
   "desktopCta": {
+    "eyebrow": "桌面应用",
     "title": "把 Pairlens 装到桌面",
     "description": "浏览器版本用来试玩，我们真正发布的是桌面应用。",
-    "benefitKeychain": "交易所密钥保存在系统钥匙串里，绝不上传到我们的服务器",
-    "benefitPerformance": "原生窗口、GPU 图表，没有浏览器标签页来抢资源",
-    "benefitUpdates": "已签名的更新在后台悄悄安装",
     "downloadFor": "下载 {{os}} 版",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "其他平台",
     "sourceNote": "每个版本都开放源码并已签名。",
-    "releaseNotes": "发行说明"
+    "releaseNotes": "发行说明",
+    "benefits": {
+      "venues": {
+        "title": "所有交易所",
+        "detail": "全部 15 个连接器。Coinbase、KuCoin、Gate 和 MEXC 完全阻止浏览器访问，只能在这里使用。"
+      },
+      "bots": {
+        "title": "不会被暂停的机器人",
+        "detail": "浏览器会拖慢你没在看的标签页，最终将其挂起。在这里，即使关闭窗口，机器人也会继续交易。"
+      },
+      "alerts": {
+        "title": "真正送达的提醒",
+        "detail": "来自操作系统的原生通知，而不是必须一直开着的标签页。"
+      },
+      "sleep": {
+        "title": "运行时不休眠",
+        "detail": "机器人运行期间阻止系统休眠，合上盖子也不会中断。"
+      },
+      "windows": {
+        "title": "真正的窗口",
+        "detail": "把图表以系统窗口的形式拖到第二块显示器，而不是浏览器标签页。"
+      },
+      "keychain": {
+        "title": "密钥存于系统钥匙串",
+        "detail": "交易所密钥保存在系统钥匙串中，不会进入浏览器存储，也不会到我们的服务器。"
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "账户菜单",
