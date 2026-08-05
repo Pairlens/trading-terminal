@@ -2412,6 +2412,7 @@
     "installFailed": "Update failed",
     "installNow": "Restart & update",
     "installing": "Installing…",
+    "refreshNow": "Refresh",
     "restarting": "Restarting…",
     "upToDate": "You're on the latest version."
   },

@@ -2412,6 +2412,7 @@
     "installFailed": "Échec de la mise à jour",
     "installNow": "Redémarrer et mettre à jour",
     "installing": "Installation…",
+    "refreshNow": "Actualiser",
     "restarting": "Redémarrage…",
     "upToDate": "Vous êtes à jour."
   },

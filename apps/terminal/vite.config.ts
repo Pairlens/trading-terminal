@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { readFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { defineConfig } from 'vite'
 import { devtools } from '@tanstack/devtools-vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
@@ -32,6 +33,22 @@ function pyodideAssets(): Plugin {
     name: 'pairlens:pyodide-assets',
     configResolved(config) {
       copyPyodideAssets(config.root)
+    },
+  }
+}
+
+// Stage public/version.json (gitignored) carrying the same version the bundle
+// bakes in as __APP_VERSION__. Deployed alongside the web terminal, it always
+// reports the live release — browser builds poll it to learn a newer deploy
+// shipped and prompt a refresh (see src/lib/web-updater.ts).
+function versionManifest(): Plugin {
+  return {
+    name: 'pairlens:version-manifest',
+    configResolved(config) {
+      writeFileSync(
+        join(config.root, 'public', 'version.json'),
+        JSON.stringify({ version: appVersion }) + '\n',
+      )
     },
   }
 }
@@ -188,6 +205,7 @@ const config = defineConfig({
   },
   plugins: [
     pyodideAssets(),
+    versionManifest(),
     devtools({
       eventBusConfig: {
         // Worktree-derived by scripts/env/with-worktree-env.ts to avoid

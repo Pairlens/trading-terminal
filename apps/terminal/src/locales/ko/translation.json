@@ -2412,6 +2412,7 @@
     "installFailed": "업데이트 실패",
     "installNow": "재시작 & 업데이트",
     "installing": "설치 중…",
+    "refreshNow": "새로고침",
     "restarting": "재시작 중…",
     "upToDate": "최신 버전을 사용 중입니다."
   },

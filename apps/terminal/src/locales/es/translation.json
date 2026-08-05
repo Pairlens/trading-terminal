@@ -2412,6 +2412,7 @@
     "installFailed": "Error al actualizar",
     "installNow": "Reiniciar y actualizar",
     "installing": "Instalando…",
+    "refreshNow": "Actualizar",
     "restarting": "Reiniciando…",
     "upToDate": "Tienes la última versión."
   },
