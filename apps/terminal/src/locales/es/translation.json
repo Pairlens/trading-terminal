@@ -1863,7 +1863,6 @@
     "partiallyFilled": "Parcial",
     "filled": "Ejecutada",
     "canceled": "Cancelada",
-    "connectWallet": "Conecta una wallet de exchange para ver las órdenes",
     "selectWalletOrders": "Selecciona una wallet para ver las órdenes",
     "selectWalletFills": "Selecciona una wallet para ver las ejecuciones",
     "selectWalletBalances": "Selecciona una wallet para ver los balances",

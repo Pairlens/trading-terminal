@@ -1863,7 +1863,6 @@
     "partiallyFilled": "Kısmi",
     "filled": "Gerçekleşti",
     "canceled": "İptal edildi",
-    "connectWallet": "Emirleri görüntülemek için borsa cüzdanı bağla",
     "selectWalletOrders": "Emirleri görüntülemek için bir cüzdan seç",
     "selectWalletFills": "Gerçekleşmeleri görüntülemek için bir cüzdan seç",
     "selectWalletBalances": "Bakiyeleri görüntülemek için bir cüzdan seç",

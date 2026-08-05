@@ -1863,7 +1863,6 @@
     "partiallyFilled": "Khớp một phần",
     "filled": "Đã khớp",
     "canceled": "Đã hủy",
-    "connectWallet": "Kết nối ví sàn giao dịch để xem lệnh",
     "selectWalletOrders": "Chọn ví để xem lệnh",
     "selectWalletFills": "Chọn ví để xem khớp lệnh",
     "selectWalletBalances": "Chọn ví để xem số dư",

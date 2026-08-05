@@ -1863,7 +1863,6 @@
     "partiallyFilled": "部分成交",
     "filled": "已成交",
     "canceled": "已取消",
-    "connectWallet": "连接交易所钱包以查看订单",
     "selectWalletOrders": "选择一个钱包以查看订单",
     "selectWalletFills": "选择一个钱包以查看成交记录",
     "selectWalletBalances": "选择一个钱包以查看余额",
