@@ -8,6 +8,7 @@ import {
   bitfinexMarketConnectorManifest,
   bitgetMarketConnectorManifest,
   bitvavoMarketConnectorManifest,
+  boomergManifest,
   bybitMarketConnectorManifest,
   coinbaseMarketConnectorManifest,
   cryptoGoldManifest,
@@ -358,6 +359,14 @@ export const CATALOG: Array<RegistryPluginEntry> = [
     tagline: 'Delicate cherry blossom pinks with soft rose accents',
     longDescription:
       'A gentle, airy theme inspired by Japanese cherry blossoms. Soft pinks and rose tones with generous corner radii create a light, delicate aesthetic. Low noise opacity keeps the UI clean and inviting.',
+    bundled: true,
+  },
+  {
+    manifest: boomergManifest,
+    category: 'themes',
+    tagline: 'Amber on black in the spirit of a classic Bloomberg terminal',
+    longDescription:
+      'The institutional terminal look, rebuilt in CSS variables: pure black canvas, amber text, blue selection bars, and square corners on everything. The whole shell switches to a monospace face, so labels and numbers sit on the same grid. Green/red candles and tape stay conventional.',
     bundled: true,
   },
 

@@ -2604,6 +2604,10 @@
         "title": "High Contrast",
         "description": "专注无障碍体验,最大对比度、粗边框和清晰的视觉分区"
       },
+      "boomerg": {
+        "title": "Boomerg",
+        "description": "向经典彭博终端致敬的黑底琥珀色配色——等宽界面、直角边框与功能键配色"
+      },
       "okx-market-connector": {
         "title": "OKX 市场连接器",
         "description": "通过 OKX 交易所 API 直接获取市场数据和交易"

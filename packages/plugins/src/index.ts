@@ -145,6 +145,8 @@ export {
   createEyeComfortPlugin,
   highContrastManifest,
   createHighContrastPlugin,
+  boomergManifest,
+  createBoomergPlugin,
 } from './themes/index.ts'
 export type { ThemeDefinition, ThemeVariableMap } from './themes/index.ts'
 export {

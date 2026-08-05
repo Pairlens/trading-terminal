@@ -14,7 +14,7 @@ Pairlens puts 14 crypto exchanges, US equities, and on-chain DEX trading in one 
 - **An AI co-pilot, on your terms.** It reads your charts, portfolio, and market context, runs research, and proposes trades that you explicitly confirm. It never overrides your risk guardrails, which are enforced below the AI, not by it. Bring your own AI key (Groq, OpenAI, Anthropic, OpenRouter) or subscribe to the hosted Pairlens Intelligence plan.
 - **Professional charts, no paywall.** Powered by [Fast Financial Charts](https://github.com/Pairlens/fast-financial-charts), our own MIT-licensed WebGL2 engine: 90 indicators, drawings, multi-pane layouts, and buttery live streaming. Write your own indicators in real Python, with pip packages, running locally in the terminal.
 - **Automation with guardrails.** Deterministic strategy signals, price and indicator alerts, and user-defined workflows. Everything that can place an order goes through the same guarded path with your risk limits.
-- **Make it yours.** Panels, workspaces, and 17 themes compose into whatever desk you want. Connectors, AI providers, data sources, and themes are plugins with a public SDK: install from the Plugin Store, build your own, or run a private registry for your team. Anything you can't change in config, you can change in code. The full source is in the open, no watermark, no "contact sales".
+- **Make it yours.** Panels, workspaces, and 18 themes compose into whatever desk you want. Connectors, AI providers, data sources, and themes are plugins with a public SDK: install from the Plugin Store, build your own, or run a private registry for your team. Anything you can't change in config, you can change in code. The full source is in the open, no watermark, no "contact sales".
 
 ## Get started
 

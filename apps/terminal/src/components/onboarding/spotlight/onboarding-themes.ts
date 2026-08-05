@@ -43,7 +43,7 @@ type ThemeFactory = (manifest: PluginManifest) => PluginInstance
  * The bundled `theme:override` plugins, mirroring BOOTSTRAP_THEME_PLUGINS.
  * Listed here rather than imported from the bootstrap bundle because that
  * module pulls in every market connector — far too much for a first-run
- * page that only needs seventeen maps of CSS variables.
+ * page that only needs eighteen maps of CSS variables.
  */
 function bundledEntries(
   m: ThemesModule,
@@ -66,6 +66,7 @@ function bundledEntries(
     [m.nightCityManifest, m.createNightCityPlugin],
     [m.eyeComfortManifest, m.createEyeComfortPlugin],
     [m.highContrastManifest, m.createHighContrastPlugin],
+    [m.boomergManifest, m.createBoomergPlugin],
   ]
 }
 

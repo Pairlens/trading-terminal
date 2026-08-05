@@ -136,7 +136,7 @@ price and red while it rides above.
 ### Colours
 
 Semantic tokens resolve against the active theme, so an indicator looks right
-in all 17 themes: `color.primary`, `color.accent`, `color.up`, `color.down`,
+in all 18 themes: `color.primary`, `color.accent`, `color.up`, `color.down`,
 `color.muted`. Raw CSS colours (`'#e0b34d'`) pass through untouched.
 
 ## The compute context

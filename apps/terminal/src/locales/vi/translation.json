@@ -2604,6 +2604,10 @@
         "title": "High Contrast",
         "description": "Tập trung vào khả năng tiếp cận với độ tương phản tối đa, viền đậm và phân tách trực quan rõ ràng"
       },
+      "boomerg": {
+        "title": "Boomerg",
+        "description": "Sắc hổ phách trên nền đen, gợi nhớ terminal Bloomberg kinh điển — giao diện đơn cách, góc vuông và màu phím chức năng"
+      },
       "okx-market-connector": {
         "title": "Bộ kết nối Thị trường OKX",
         "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn OKX"

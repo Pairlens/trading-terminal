@@ -2604,6 +2604,10 @@
         "title": "High Contrast",
         "description": "Fokussiert auf Barrierefreiheit — maximaler Kontrast, kräftige Rahmen und klare visuelle Trennung"
       },
+      "boomerg": {
+        "title": "Boomerg",
+        "description": "Bernstein auf Schwarz als Hommage an das klassische Bloomberg-Terminal — Monospace-Oberfläche, rechte Winkel und Funktionstasten-Farben"
+      },
       "okx-market-connector": {
         "title": "OKX Markt-Connector",
         "description": "Direkte Marktdaten und direktes Trading über die APIs von OKX"

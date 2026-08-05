@@ -63,3 +63,4 @@ export {
   highContrastManifest,
   createHighContrastPlugin,
 } from './high-contrast/index.ts'
+export { boomergManifest, createBoomergPlugin } from './boomerg/index.ts'

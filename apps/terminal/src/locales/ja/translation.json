@@ -2604,6 +2604,10 @@
         "title": "High Contrast",
         "description": "アクセシビリティ重視。最大限のコントラスト、太いボーダー、明確な視覚的区分"
       },
+      "boomerg": {
+        "title": "Boomerg",
+        "description": "往年のブルームバーグ端末へのオマージュ。黒地にアンバー、等幅UI、直角の角、ファンクションキーの配色"
+      },
       "okx-market-connector": {
         "title": "OKX マーケットコネクタ",
         "description": "OKX 取引所 API による直接のマーケットデータと取引"
