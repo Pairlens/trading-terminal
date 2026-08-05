@@ -105,6 +105,17 @@ export type WsSessionOptions = {
   authenticate?: () => Promise<void>
   /** Called when a connect attempt fails (a reconnect is already scheduled). */
   onConnectError?: (error: unknown) => void
+  /**
+   * Called when a retry is queued, with the delay asked for and the attempt it
+   * was computed from (0 for the first retry after a stable connection).
+   *
+   * Reports the DECISION, not its delivery: the timer still fires whenever the
+   * event loop gets round to it. That distinction is the point — it lets the
+   * backoff policy be asserted exactly, instead of inferred from a stopwatch
+   * that a loaded machine stretches. Also the honest source for a
+   * "reconnecting, next try in Ns" indicator.
+   */
+  onReconnectScheduled?: (delayMs: number, attempt: number) => void
   gracePeriodMs?: number
   baseBackoffMs?: number
   maxBackoffMs?: number
@@ -486,6 +497,7 @@ export class ReconnectingWsSession {
     // Equal jitter: half deterministic, half random — spreads the reconnect
     // stampede when many clients lose the same endpoint at once.
     const delay = cap / 2 + random() * (cap / 2)
+    this.opts.onReconnectScheduled?.(delay, this.reconnectAttempt)
     this.reconnectAttempt++
 
     this.reconnectTimer = setTimeout(() => {

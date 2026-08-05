@@ -846,58 +846,52 @@ describe('ReconnectingWsSession — retired sockets', () => {
 })
 
 describe('ReconnectingWsSession — backoff policy', () => {
+  // These assert the delay the session ASKS for, never the delay the runtime
+  // delivers. Timing the gaps with Date.now() measures the event loop instead
+  // of the policy: a loaded machine stretches a 10ms timer to 20ms and reorders
+  // which of two gaps looks longer, so the old stopwatch versions failed on CI
+  // while the arithmetic under test was perfect.
   it('backoff delay grows exponentially and is capped', async () => {
     const delays: Array<number> = []
-    let last = 0
     const { session } = makeSession({
       failConnects: 6,
       baseBackoffMs: 4,
       maxBackoffMs: 16,
-      onConnectError: () => {
-        const now = Date.now()
-        if (last) delays.push(now - last)
-        last = now
-      },
+      onReconnectScheduled: (delayMs) => delays.push(delayMs),
     })
 
     session.acquire('a', candleSpec([], 'a'), () => {})
-    await sleep(120)
+    await waitFor(() => delays.length >= 4)
 
-    // Expected caps: 4, 8, 16, 16, 16 ... (random() => 1 makes delay === cap)
-    expect(delays.length).toBeGreaterThanOrEqual(3)
-    expect(delays[1]).toBeGreaterThanOrEqual(delays[0])
-    // Never exceeds maxBackoffMs by more than timer slop
-    for (const d of delays) expect(d).toBeLessThan(40)
+    // random() => 1 makes delay === cap: 4, 8, then pinned at maxBackoffMs.
+    expect(delays.slice(0, 4)).toEqual([4, 8, 16, 16])
 
     session.destroy()
   })
 
   it('resets the backoff counter only after a stable connection', async () => {
-    // random() => 0.999… gives delay ≈ cap; observe that after a stable
-    // period the next drop reconnects with the base delay again.
+    const attempts: Array<number> = []
     const { session, sockets } = makeSession({
       baseBackoffMs: 10,
       stableResetMs: 15,
+      onReconnectScheduled: (_delayMs, attempt) => attempts.push(attempt),
     })
 
     session.acquire('a', candleSpec([], 'a'), () => {})
-    await sleep(5)
+    await waitFor(() => sockets.length === 1)
 
-    // Unstable drop: reconnect happens, attempt counter grows to 1.
+    // Unstable drop: this retry is attempt 0, and the counter grows to 1.
     sockets[0].drop()
-    await sleep(30) // reconnected after ~10ms, then stays up past stableResetMs
+    await waitFor(() => attempts.length === 1 && session.isOpen)
 
+    // Hold the connection past stableResetMs so the counter is reset...
+    await sleep(30)
     expect(session.isOpen).toBe(true)
 
-    // The connection has now been stable ≥ stableResetMs — counter reset to 0.
-    const before = Date.now()
+    // ...and the next drop must therefore ask for attempt 0 again, not 1.
     sockets[1].drop()
-    while (!session.isOpen && Date.now() - before < 100) await sleep(2)
-    const reconnectDelay = Date.now() - before
-
-    // attempt 0 again → delay = base * 2^0 = 10ms, not 20ms
-    expect(session.isOpen).toBe(true)
-    expect(reconnectDelay).toBeLessThan(18)
+    await waitFor(() => attempts.length === 2)
+    expect(attempts).toEqual([0, 0])
 
     session.destroy()
   })
