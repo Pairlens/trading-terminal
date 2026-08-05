@@ -190,13 +190,19 @@ export function RecentTickersMarquee({
           reducedMotion ? 'no-scrollbar overflow-x-auto' : 'overflow-hidden',
         )}
       >
-        <div className="flex w-max items-center">
-          <div ref={contentRef} className="flex items-center">
+        {/* shrink-0 on the track AND on both copies is load-bearing: the
+            viewport is a flex container, so `w-max` only sets the base size —
+            flex-shrink would still squeeze the track back down to the
+            viewport once the chips overflow. The chips themselves refuse to
+            shrink, so a squeezed copy overflows its own box and the next copy
+            gets laid out on top of it: the tail chips render overlapping. */}
+        <div className="flex w-max shrink-0 items-center">
+          <div ref={contentRef} className="flex shrink-0 items-center">
             {chips}
           </div>
           {/* Second copy makes the scroll loop seamless */}
           {autoScroll && (
-            <div aria-hidden className="flex items-center">
+            <div aria-hidden className="flex shrink-0 items-center">
               {chips}
             </div>
           )}
