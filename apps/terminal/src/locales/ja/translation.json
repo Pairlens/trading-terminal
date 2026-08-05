@@ -2462,7 +2462,10 @@
       "loadingMore": "ニュースを読み込み中...",
       "caughtUp": "すべて読みました",
       "previousArticle": "前の記事",
-      "nextArticle": "次の記事"
+      "nextArticle": "次の記事",
+      "sentiment": "センチメント",
+      "bearish": "弱気",
+      "bullish": "強気"
     },
     "topic": {
       "blockchain": "ブロックチェーン",

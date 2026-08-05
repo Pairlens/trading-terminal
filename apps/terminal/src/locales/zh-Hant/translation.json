@@ -2462,7 +2462,10 @@
       "loadingMore": "正在載入更多新聞...",
       "caughtUp": "已看完全部新聞",
       "previousArticle": "上一篇",
-      "nextArticle": "下一篇"
+      "nextArticle": "下一篇",
+      "sentiment": "市場情緒",
+      "bearish": "看跌",
+      "bullish": "看漲"
     },
     "topic": {
       "blockchain": "區塊鏈",

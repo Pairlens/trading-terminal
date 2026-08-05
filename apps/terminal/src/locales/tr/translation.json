@@ -2462,7 +2462,10 @@
       "loadingMore": "Daha fazla haber yükleniyor...",
       "caughtUp": "Her şeyi okudunuz",
       "previousArticle": "Önceki makale",
-      "nextArticle": "Sonraki makale"
+      "nextArticle": "Sonraki makale",
+      "sentiment": "Duyarlılık",
+      "bearish": "Düşüş",
+      "bullish": "Yükseliş"
     },
     "topic": {
       "blockchain": "Blockchain",

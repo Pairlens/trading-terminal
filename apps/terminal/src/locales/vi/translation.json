@@ -2462,7 +2462,10 @@
       "loadingMore": "Đang tải thêm tin tức...",
       "caughtUp": "Bạn đã xem hết tin",
       "previousArticle": "Bài viết trước",
-      "nextArticle": "Bài viết tiếp theo"
+      "nextArticle": "Bài viết tiếp theo",
+      "sentiment": "Tâm lý",
+      "bearish": "Giảm giá",
+      "bullish": "Tăng giá"
     },
     "topic": {
       "blockchain": "Blockchain",
