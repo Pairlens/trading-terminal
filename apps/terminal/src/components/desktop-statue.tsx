@@ -17,7 +17,13 @@
 //      treatment, which also drives the sign-in and onboarding art. modulate()
 //      scales in HSL, so pure black stays pure black and the ground still
 //      alpha-keys cleanly.
-//   3. Encode webp q86 (~59 KB).
+//   3. Feather the bottom and both side edges to black. The render was cut by
+//      its own frame: the forearms end flat at the bottom and the robes run
+//      into the left and right borders. Under `contain` those cuts sit in open
+//      panel and read as a mistake, so they are faded out instead — which also
+//      drops them under the alpha-key threshold, dissolving the subject into
+//      the ground rather than stopping at a hard line.
+//   4. Encode webp q90 (~53 KB).
 // The ground must stay pure black: the pass flood-fills from the borders and
 // keys it to transparent, which is what lets the subject float frameless.
 
@@ -50,10 +56,12 @@ export function DesktopStatueScene({
           nearly square (two hands framing the machine) while this band is a
           narrow column, so cover crops away both hands and leaves an anonymous
           grey slab. Contain keeps the whole gesture; the ground is alpha-keyed
-          to transparent, so the empty band above and below is just panel. */}
+          to transparent, so the empty band above and below is just panel.
+          Sitting at 60% rather than centred puts the subject on the eye line
+          and lets the feathered forearms trail into the floor fade. */}
       <DuotoneImage
         src={statueUrl}
-        className="absolute inset-0 object-contain object-[50%_45%]"
+        className="absolute inset-0 object-contain object-[50%_60%]"
       />
 
       {/* Fade the artwork toward the panel floor, using the (dark-scoped)
