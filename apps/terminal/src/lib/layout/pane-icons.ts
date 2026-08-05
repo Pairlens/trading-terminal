@@ -5,6 +5,7 @@ import {
   BookOpen,
   Brain,
   CandlestickChart,
+  Flame,
   Gauge,
   Globe,
   Grid3X3,
@@ -13,6 +14,7 @@ import {
   Layers,
   LayoutGrid,
   Newspaper,
+  PieChart,
   Plus,
   Receipt,
   ScrollText,
@@ -25,6 +27,10 @@ import {
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
+// A curated allowlist, not a passthrough — a plugin naming an icon we don't
+// carry gets the LayoutGrid fallback rather than an arbitrary component. Every
+// name a bundled pane declares in `pairlens-core` must be listed here, or that
+// pane silently renders the fallback everywhere getPaneIcon is used.
 const PANE_ICONS: Record<string, LucideIcon> = {
   LayoutGrid,
   Star,
@@ -47,6 +53,8 @@ const PANE_ICONS: Record<string, LucideIcon> = {
   Plus,
   Sparkles,
   Terminal,
+  PieChart,
+  Flame,
 }
 
 export function getPaneIcon(name?: string): LucideIcon {
