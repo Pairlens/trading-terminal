@@ -154,7 +154,7 @@ scripts/
 
 ### Authentication (BetterAuth)
 
-The App Server runs BetterAuth at `/api/auth` with email OTP login. The Terminal uses the `better-auth` client-side SDK (`apps/terminal/src/lib/auth-client.ts`). Sessions ride on **bearer tokens** (BetterAuth `bearer()` plugin), not cookies: sign-in responses carry a `set-auth-token` header the client persists (`pairlens:auth-token` in localStorage) and replays as `Authorization: Bearer`. This is what makes cross-origin sign-in work — the Tauri desktop webview (`tauri://localhost`) against `api.pairlens.finance`, and localhost dev against any remote App Server — where third-party cookies would be blocked. Auth is always optional — with an empty `VITE_APP_SERVER_URL`, the terminal runs standalone with local persistence.
+The App Server runs BetterAuth at `/api/auth` with email OTP login. The Terminal uses the `better-auth` client-side SDK (`apps/terminal/src/lib/auth-client.ts`). Sessions ride on **bearer tokens** (BetterAuth `bearer()` plugin), not cookies: sign-in responses carry a `set-auth-token` header the client persists (`pairlens:auth-token` in localStorage) and replays as `Authorization: Bearer`. This is what makes cross-origin sign-in work — the Tauri desktop webview (`tauri://localhost`) against `api.pairlens.finance`, the hosted web terminal, and localhost dev against any remote App Server — where third-party cookies would be blocked. **No App Server request may ask for cookies:** every call sends `APP_SERVER_CREDENTIALS` (`'same-origin'`, exported from `auth-client.ts`), because a credentialed cross-origin request is spec-refused against a wildcard `Access-Control-Allow-Origin` and surfaces as a bare "fetch failed". This has broken sign-in twice — desktop in July, the web terminal in August. Auth is always optional — with an empty `VITE_APP_SERVER_URL`, the terminal runs standalone with local persistence.
 
 When an App Server runs locally on :4046 (maintainers run it from its repo), OTP codes are printed to its console (no SMTP setup required). Look for `[auth] OTP for <email> (sign-in): <code>`. Against Pairlens Cloud (the dev default when no local server runs), OTP codes are emailed — sign in with your real email.
 
@@ -318,7 +318,7 @@ import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **pairlens-terminal-cla-fda829**. Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **custom-library-indicators-b5f40d**. Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
@@ -334,7 +334,7 @@ This project is indexed by GitNexus as **pairlens-terminal-cla-fda829**. Use the
 
 1. `gitnexus_query({query: "<error or symptom>"})` — find execution flows related to the issue
 2. `gitnexus_context({name: "<suspect function>"})` — see all callers, callees, and process participation
-3. `READ gitnexus://repo/pairlens-terminal-cla-fda829/process/{processName}` — trace the full execution flow step by step
+3. `READ gitnexus://repo/custom-library-indicators-b5f40d/process/{processName}` — trace the full execution flow step by step
 4. For regressions: `gitnexus_detect_changes({scope: "compare", base_ref: "main"})` — see what your branch changed
 
 ## When Refactoring
@@ -373,10 +373,10 @@ This project is indexed by GitNexus as **pairlens-terminal-cla-fda829**. Use the
 
 | Resource | Use for |
 |----------|---------|
-| `gitnexus://repo/pairlens-terminal-cla-fda829/context` | Codebase overview, check index freshness |
-| `gitnexus://repo/pairlens-terminal-cla-fda829/clusters` | All functional areas |
-| `gitnexus://repo/pairlens-terminal-cla-fda829/processes` | All execution flows |
-| `gitnexus://repo/pairlens-terminal-cla-fda829/process/{name}` | Step-by-step execution trace |
+| `gitnexus://repo/custom-library-indicators-b5f40d/context` | Codebase overview, check index freshness |
+| `gitnexus://repo/custom-library-indicators-b5f40d/clusters` | All functional areas |
+| `gitnexus://repo/custom-library-indicators-b5f40d/processes` | All execution flows |
+| `gitnexus://repo/custom-library-indicators-b5f40d/process/{name}` | Step-by-step execution trace |
 
 ## Self-Check Before Finishing
 
