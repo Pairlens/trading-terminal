@@ -26,14 +26,18 @@ import {
 import { useIsMobile } from '@pairlens/ui/hooks/use-mobile'
 import { LayoutColumn } from './layout-column'
 import { LayoutMobileShell } from './layout-mobile-shell'
+import { DesktopOnlyState } from './desktop-only-state'
 import type {
   Announcements,
   DragEndEvent,
   DragMoveEvent,
   DragStartEvent,
 } from '@dnd-kit/core'
+import type { ReactNode } from 'react'
 
 import type { DropZone } from '@/lib/layout/types'
+import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
 import { useLayout } from '@/lib/layout/context'
 import { getPaneIcon } from '@/lib/layout/pane-icons'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
@@ -42,7 +46,46 @@ type DragData = { paneId: string; paneType: string }
 
 const EDGE_THRESHOLD = 0.25
 
+/**
+ * The workspace, or a wall in front of it.
+ *
+ * Every pane in a workspace streams from the selected venue, and four venues
+ * are unreachable from a browser build. Only the chart ever said so; the
+ * orderbook, tape, depth and trade panes just kept their last frame and looked
+ * alive. Rather than teach each pane the same lesson, the venue is checked
+ * once here and the whole workspace is replaced — the panes below are never
+ * mounted, so nothing subscribes to a stream that cannot open.
+ *
+ * The check is the venue's DECLARED reach, known before anything subscribes,
+ * so there is no flash of panes that then die. A connector that refuses
+ * without declaring it (a third-party one) still surfaces in the chart's own
+ * `desktopOnly` branch, which is the narrower backstop.
+ *
+ * `DesktopOnlyGate` wraps rather than inlines so this component keeps its
+ * distance from ChartConfigContext: the gate re-renders when chart config
+ * changes, but `children` is the same element it was handed, so React skips
+ * the layout tree underneath it.
+ */
 export function LayoutShell() {
+  return (
+    <DesktopOnlyGate>
+      <LayoutGrid />
+    </DesktopOnlyGate>
+  )
+}
+
+function DesktopOnlyGate({ children }: { children: ReactNode }) {
+  const { markets } = useAvailableMarkets()
+  const { market } = useChartConfig()
+  const { setMarket } = useChartActions()
+
+  if (markets.find((m) => m.value === market)?.desktopOnly) {
+    return <DesktopOnlyState market={market} onSelectMarket={setMarket} />
+  }
+  return children
+}
+
+function LayoutGrid() {
   const { layout, dispatch, pendingAddPaneType, cancelAddPane } = useLayout()
   const isMobile = useIsMobile()
   const [activeDrag, setActiveDrag] = useState<DragData | null>(null)

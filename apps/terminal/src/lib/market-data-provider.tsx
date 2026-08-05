@@ -256,6 +256,11 @@ function getConnectorAdapterInfo(
   const walletChain = meta?.walletChain as WalletChain | undefined
   const dexLimitOrders = meta?.dexLimitOrders === true
   const triggerOrders = meta?.triggerOrders === true
+  // Declared by the four venues a browser cannot reach (see the connector
+  // spec's requiresDesktop). It has to come off the MANIFEST rather than the
+  // connector's exported adapter info, because that export is never read —
+  // this function builds MarketAdapterInfo from the manifest alone.
+  const requiresDesktop = meta?.requiresDesktop === true
 
   const hasTradingCap = plugin.manifest.capabilities.some(
     (c) => c.id === 'trading:orders',
@@ -284,6 +289,7 @@ function getConnectorAdapterInfo(
     walletChain,
     dexLimitOrders,
     triggerOrders,
+    requiresDesktop,
   }
 }
 
