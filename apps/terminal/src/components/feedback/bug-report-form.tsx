@@ -11,8 +11,9 @@
  * Consent is the interesting part. Analytics is off by default and reports go
  * through it, so a report typed with analytics off must not be dropped and
  * must not be sent behind the user's back. Two honest outcomes:
- *   - analytics available but off → the notice explains the trade and the
- *     submit button says exactly what it does ("Enable analytics & send").
+ *   - analytics available but off → a consent switch turns it on right here
+ *     (no trip to Settings), and for anyone who ignores the switch the submit
+ *     button still says exactly what it does ("Enable analytics & send").
  *   - build has no analytics key at all → nothing can be sent from the app,
  *     so the report is copied to the clipboard with a link to file it.
  */
@@ -33,6 +34,7 @@ import {
 } from '@pairlens/ui/components/ui/select'
 import { Textarea } from '@pairlens/ui/components/ui/textarea'
 
+import { AnalyticsConsentRow } from './analytics-consent-row'
 import { track } from '@/lib/analytics-events'
 import { isAnalyticsConfigured, useAnalyticsEnabled } from '@/lib/analytics'
 import { useAppVersion } from '@/lib/app-version'
@@ -143,11 +145,9 @@ export function BugReportForm({ onDone }: { onDone: () => void }) {
         <p className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
           {t('feedback.unavailableNotice')}
         </p>
-      ) : !analyticsEnabled ? (
-        <p className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
-          {t('feedback.consentNotice')}
-        </p>
-      ) : null}
+      ) : (
+        <AnalyticsConsentRow />
+      )}
 
       <div className="flex items-center justify-end gap-2">
         {!configured ? (

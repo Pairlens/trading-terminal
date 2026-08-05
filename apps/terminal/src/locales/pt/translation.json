@@ -877,6 +877,7 @@
     "sent": "Relato enviado. Obrigado.",
     "attached": "Enviado com v{{version}} · {{platform}} · {{route}}",
     "consentNotice": "Os relatos são enviados pelas análises de uso, desativadas neste dispositivo. Enviar ativa; você pode desativar de novo em Privacidade.",
+    "consentEnabledNotice": "Agora ativada neste dispositivo, então seu relato chega até nós. Você pode desativar quando quiser em Privacidade.",
     "enableAndSend": "Ativar análises e enviar",
     "unavailableNotice": "Esta build não tem chave de análise, então não dá para enviar relatos pelo app. Copie o seu e abra uma issue no GitHub.",
     "copy": "Copiar relato",

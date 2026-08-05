@@ -877,6 +877,7 @@
     "sent": "Bericht gesendet. Danke.",
     "attached": "Gesendet mit v{{version}} · {{platform}} · {{route}}",
     "consentNotice": "Berichte laufen über die Nutzungsanalyse, die auf diesem Gerät aus ist. Beim Senden wird sie aktiviert – in den Datenschutz-Einstellungen kannst du sie wieder ausschalten.",
+    "consentEnabledNotice": "Jetzt auf diesem Gerät an, damit dein Bericht bei uns ankommt. Du kannst sie jederzeit in den Datenschutz-Einstellungen wieder ausschalten.",
     "enableAndSend": "Analyse aktivieren & senden",
     "unavailableNotice": "Dieser Build hat keinen Analyse-Schlüssel, Berichte lassen sich also nicht aus der App senden. Kopiere deinen und öffne ein GitHub-Issue.",
     "copy": "Bericht kopieren",

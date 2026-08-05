@@ -877,6 +877,7 @@
     "sent": "Laporan terkirim. Terima kasih.",
     "attached": "Dikirim dengan v{{version}} · {{platform}} · {{route}}",
     "consentNotice": "Laporan dikirim lewat analitik penggunaan, yang mati di perangkat ini. Mengirim akan menyalakannya — bisa dimatikan lagi di pengaturan Privasi.",
+    "consentEnabledNotice": "Sekarang aktif di perangkat ini, jadi laporanmu bisa sampai ke kami. Bisa dimatikan lagi kapan saja di pengaturan Privasi.",
     "enableAndSend": "Nyalakan analitik & kirim",
     "unavailableNotice": "Build ini tidak punya kunci analitik, jadi laporan tidak bisa dikirim dari aplikasi. Salin laporanmu dan buka issue di GitHub.",
     "copy": "Salin laporan",

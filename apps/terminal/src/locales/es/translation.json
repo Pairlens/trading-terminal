@@ -877,6 +877,7 @@
     "sent": "Informe enviado. Gracias.",
     "attached": "Se envía con v{{version}} · {{platform}} · {{route}}",
     "consentNotice": "Los informes se envían a través de las analíticas de uso, desactivadas en este dispositivo. Al enviar se activan; puedes volver a desactivarlas en Privacidad.",
+    "consentEnabledNotice": "Ahora activada en este dispositivo, así tu informe nos llega. Puedes volver a desactivarla cuando quieras en Privacidad.",
     "enableAndSend": "Activar analíticas y enviar",
     "unavailableNotice": "Esta versión no tiene clave de analíticas, así que no se pueden enviar informes desde la app. Copia el tuyo y abre una incidencia en GitHub.",
     "copy": "Copiar informe",
