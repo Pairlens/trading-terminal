@@ -1303,7 +1303,9 @@
       "pause": "หยุดชั่วคราว",
       "step": "แท่งถัดไป",
       "exit": "ออกจากการเล่นย้อนหลัง"
-    }
+    },
+    "fullscreenTitle": "กราฟเต็มจอ",
+    "fullscreenHint": "กราฟอยู่ในโหมดเต็มจอ กด Escape เพื่อออก"
   },
   "botsPage": {
     "loading": "กำลังโหลดบอท…",
@@ -1850,7 +1852,13 @@
     "frozen": "ถูกอายัด",
     "total": "ยอดรวม",
     "refreshBalances": "รีเฟรช",
-    "asset": "สินทรัพย์"
+    "asset": "สินทรัพย์",
+    "cancelOrderTitle": "ยกเลิกคำสั่งหรือไม่?",
+    "cancelOrderBody": "การทำเช่นนี้จะยกเลิกคำสั่ง{{side}}ของคุณสำหรับ {{pair}}",
+    "keepOrder": "เก็บคำสั่งไว้",
+    "cancelOrder": "ยกเลิกคำสั่ง",
+    "sideBuy": "ซื้อ",
+    "sideSell": "ขาย"
   },
   "pairInfo": {
     "title": "ข้อมูลคู่เทรด",
@@ -2236,7 +2244,8 @@
       "expand": "ขยายแผง",
       "collapse": "ย่อแผง"
     },
-    "recentlyViewed": "ดูล่าสุด"
+    "recentlyViewed": "ดูล่าสุด",
+    "noMarketsFound": "ไม่พบตลาด"
   },
   "accounts": {
     "pageTitle": "บัญชี",

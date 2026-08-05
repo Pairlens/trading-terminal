@@ -1309,7 +1309,9 @@
       "pause": "Pauza",
       "step": "Następna świeca",
       "exit": "Zakończ powtórkę"
-    }
+    },
+    "fullscreenTitle": "Wykres pełnoekranowy",
+    "fullscreenHint": "Wykres w trybie pełnoekranowym. Naciśnij Escape, aby wyjść."
   },
   "botsPage": {
     "loading": "Ładowanie botów…",
@@ -1858,7 +1860,13 @@
     "frozen": "Zamrożone",
     "total": "Razem",
     "refreshBalances": "Odśwież",
-    "asset": "Aktywo"
+    "asset": "Aktywo",
+    "cancelOrderTitle": "Anulować zlecenie?",
+    "cancelOrderBody": "To anuluje Twoje zlecenie {{side}} na {{pair}}.",
+    "keepOrder": "Zostaw zlecenie",
+    "cancelOrder": "Anuluj zlecenie",
+    "sideBuy": "kupna",
+    "sideSell": "sprzedaży"
   },
   "pairInfo": {
     "title": "Informacje o parze",
@@ -2244,7 +2252,8 @@
       "expand": "Rozwiń panel",
       "collapse": "Zwiń panel"
     },
-    "recentlyViewed": "Ostatnio oglądane"
+    "recentlyViewed": "Ostatnio oglądane",
+    "noMarketsFound": "Nie znaleziono rynków"
   },
   "accounts": {
     "pageTitle": "Konta",

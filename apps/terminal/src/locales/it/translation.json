@@ -1303,7 +1303,9 @@
       "pause": "Pausa",
       "step": "Barra successiva",
       "exit": "Esci dal replay"
-    }
+    },
+    "fullscreenTitle": "Grafico a schermo intero",
+    "fullscreenHint": "Grafico a schermo intero. Premi Esc per uscire."
   },
   "botsPage": {
     "loading": "Caricamento dei bot…",
@@ -1850,7 +1852,13 @@
     "frozen": "Bloccato",
     "total": "Totale",
     "refreshBalances": "Aggiorna",
-    "asset": "Asset"
+    "asset": "Asset",
+    "cancelOrderTitle": "Annullare l’ordine?",
+    "cancelOrderBody": "Questo annullerà il tuo ordine di {{side}} su {{pair}}.",
+    "keepOrder": "Mantieni l’ordine",
+    "cancelOrder": "Annulla l’ordine",
+    "sideBuy": "acquisto",
+    "sideSell": "vendita"
   },
   "pairInfo": {
     "title": "Informazioni sulla coppia",
@@ -2236,7 +2244,8 @@
       "expand": "Espandi pannello",
       "collapse": "Comprimi pannello"
     },
-    "recentlyViewed": "Visti di recente"
+    "recentlyViewed": "Visti di recente",
+    "noMarketsFound": "Nessun mercato trovato"
   },
   "accounts": {
     "pageTitle": "Account",

@@ -1303,7 +1303,9 @@
       "pause": "一時停止",
       "step": "次のバー",
       "exit": "リプレイを終了"
-    }
+    },
+    "fullscreenTitle": "全画面チャート",
+    "fullscreenHint": "チャートは全画面表示です。Esc キーで終了します。"
   },
   "botsPage": {
     "loading": "ボットを読み込み中…",
@@ -1850,7 +1852,13 @@
     "frozen": "凍結中",
     "total": "合計",
     "refreshBalances": "更新",
-    "asset": "資産"
+    "asset": "資産",
+    "cancelOrderTitle": "注文をキャンセルしますか？",
+    "cancelOrderBody": "{{pair}} の{{side}}注文をキャンセルします。",
+    "keepOrder": "注文を残す",
+    "cancelOrder": "注文をキャンセル",
+    "sideBuy": "買い",
+    "sideSell": "売り"
   },
   "pairInfo": {
     "title": "ペア情報",
@@ -2236,7 +2244,8 @@
       "expand": "パネルを展開",
       "collapse": "パネルを折りたたむ"
     },
-    "recentlyViewed": "最近見た銘柄"
+    "recentlyViewed": "最近見た銘柄",
+    "noMarketsFound": "該当する市場がありません"
   },
   "accounts": {
     "pageTitle": "アカウント",

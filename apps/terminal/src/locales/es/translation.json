@@ -1303,7 +1303,9 @@
       "pause": "Pausa",
       "step": "Siguiente vela",
       "exit": "Salir del replay"
-    }
+    },
+    "fullscreenTitle": "Gráfico a pantalla completa",
+    "fullscreenHint": "Gráfico en pantalla completa. Pulsa Escape para salir."
   },
   "botsPage": {
     "loading": "Cargando bots…",
@@ -1850,7 +1852,13 @@
     "frozen": "Congelado",
     "total": "Total",
     "refreshBalances": "Actualizar",
-    "asset": "Activo"
+    "asset": "Activo",
+    "cancelOrderTitle": "¿Cancelar la orden?",
+    "cancelOrderBody": "Esto cancelará tu orden de {{side}} de {{pair}}.",
+    "keepOrder": "Mantener la orden",
+    "cancelOrder": "Cancelar la orden",
+    "sideBuy": "compra",
+    "sideSell": "venta"
   },
   "pairInfo": {
     "title": "Información del par",
@@ -2236,7 +2244,8 @@
       "expand": "Expandir panel",
       "collapse": "Contraer panel"
     },
-    "recentlyViewed": "Vistos recientemente"
+    "recentlyViewed": "Vistos recientemente",
+    "noMarketsFound": "No se encontraron mercados"
   },
   "accounts": {
     "pageTitle": "Cuentas",

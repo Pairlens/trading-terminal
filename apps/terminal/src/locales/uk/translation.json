@@ -1309,7 +1309,9 @@
       "pause": "Пауза",
       "step": "Наступний бар",
       "exit": "Вийти з відтворення"
-    }
+    },
+    "fullscreenTitle": "Графік на весь екран",
+    "fullscreenHint": "Графік у повноекранному режимі. Натисніть Escape, щоб вийти."
   },
   "botsPage": {
     "loading": "Завантаження ботів…",
@@ -1858,7 +1860,13 @@
     "frozen": "Заморожено",
     "total": "Всього",
     "refreshBalances": "Оновити",
-    "asset": "Актив"
+    "asset": "Актив",
+    "cancelOrderTitle": "Скасувати ордер?",
+    "cancelOrderBody": "Це скасує ваш ордер на {{side}} по {{pair}}.",
+    "keepOrder": "Залишити ордер",
+    "cancelOrder": "Скасувати ордер",
+    "sideBuy": "купівлю",
+    "sideSell": "продаж"
   },
   "pairInfo": {
     "title": "Інформація про пару",
@@ -2244,7 +2252,8 @@
       "expand": "Розгорнути панель",
       "collapse": "Згорнути панель"
     },
-    "recentlyViewed": "Нещодавно переглянуті"
+    "recentlyViewed": "Нещодавно переглянуті",
+    "noMarketsFound": "Ринків не знайдено"
   },
   "accounts": {
     "pageTitle": "Облікові записи",

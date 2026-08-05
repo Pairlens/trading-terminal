@@ -1303,7 +1303,9 @@
       "pause": "일시정지",
       "step": "다음 봉",
       "exit": "리플레이 종료"
-    }
+    },
+    "fullscreenTitle": "전체 화면 차트",
+    "fullscreenHint": "차트가 전체 화면입니다. Esc 키를 누르면 종료됩니다."
   },
   "botsPage": {
     "loading": "봇 불러오는 중…",
@@ -1850,7 +1852,13 @@
     "frozen": "동결됨",
     "total": "합계",
     "refreshBalances": "새로고침",
-    "asset": "자산"
+    "asset": "자산",
+    "cancelOrderTitle": "주문을 취소할까요?",
+    "cancelOrderBody": "{{pair}}의 {{side}} 주문을 취소합니다.",
+    "keepOrder": "주문 유지",
+    "cancelOrder": "주문 취소",
+    "sideBuy": "매수",
+    "sideSell": "매도"
   },
   "pairInfo": {
     "title": "페어 정보",
@@ -2236,7 +2244,8 @@
       "expand": "패널 펼치기",
       "collapse": "패널 접기"
     },
-    "recentlyViewed": "최근 본 종목"
+    "recentlyViewed": "최근 본 종목",
+    "noMarketsFound": "마켓을 찾을 수 없습니다"
   },
   "accounts": {
     "pageTitle": "계정",

@@ -1303,7 +1303,9 @@
       "pause": "Pause",
       "step": "Next bar",
       "exit": "Exit replay"
-    }
+    },
+    "fullscreenTitle": "Fullscreen Chart",
+    "fullscreenHint": "Chart in fullscreen mode. Press Escape to exit."
   },
   "botsPage": {
     "loading": "Loading bots…",
@@ -1850,7 +1852,13 @@
     "frozen": "Frozen",
     "total": "Total",
     "refreshBalances": "Refresh",
-    "asset": "Asset"
+    "asset": "Asset",
+    "cancelOrderTitle": "Cancel order?",
+    "cancelOrderBody": "This will cancel your {{side}} order for {{pair}}.",
+    "keepOrder": "Keep order",
+    "cancelOrder": "Cancel order",
+    "sideBuy": "buy",
+    "sideSell": "sell"
   },
   "pairInfo": {
     "title": "Pair Information",
@@ -2236,7 +2244,8 @@
       "expand": "Expand panel",
       "collapse": "Collapse panel"
     },
-    "recentlyViewed": "Recently viewed"
+    "recentlyViewed": "Recently viewed",
+    "noMarketsFound": "No markets found"
   },
   "accounts": {
     "pageTitle": "Accounts",

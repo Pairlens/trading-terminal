@@ -1309,7 +1309,9 @@
       "pause": "Пауза",
       "step": "Следующий бар",
       "exit": "Выйти из реплея"
-    }
+    },
+    "fullscreenTitle": "График на весь экран",
+    "fullscreenHint": "График в полноэкранном режиме. Нажмите Escape, чтобы выйти."
   },
   "botsPage": {
     "loading": "Загрузка ботов…",
@@ -1858,7 +1860,13 @@
     "frozen": "Заморожено",
     "total": "Всего",
     "refreshBalances": "Обновить",
-    "asset": "Актив"
+    "asset": "Актив",
+    "cancelOrderTitle": "Отменить ордер?",
+    "cancelOrderBody": "Это отменит ваш ордер на {{side}} по {{pair}}.",
+    "keepOrder": "Оставить ордер",
+    "cancelOrder": "Отменить ордер",
+    "sideBuy": "покупку",
+    "sideSell": "продажу"
   },
   "pairInfo": {
     "title": "Информация о паре",
@@ -2244,7 +2252,8 @@
       "expand": "Развернуть панель",
       "collapse": "Свернуть панель"
     },
-    "recentlyViewed": "Недавно просмотренные"
+    "recentlyViewed": "Недавно просмотренные",
+    "noMarketsFound": "Рынки не найдены"
   },
   "accounts": {
     "pageTitle": "Аккаунты",

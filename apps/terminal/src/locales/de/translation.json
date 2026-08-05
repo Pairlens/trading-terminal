@@ -1303,7 +1303,9 @@
       "pause": "Pause",
       "step": "Nächste Kerze",
       "exit": "Replay beenden"
-    }
+    },
+    "fullscreenTitle": "Vollbild-Chart",
+    "fullscreenHint": "Chart im Vollbild. Escape drücken zum Verlassen."
   },
   "botsPage": {
     "loading": "Bots werden geladen…",
@@ -1850,7 +1852,13 @@
     "frozen": "Eingefroren",
     "total": "Gesamt",
     "refreshBalances": "Aktualisieren",
-    "asset": "Asset"
+    "asset": "Asset",
+    "cancelOrderTitle": "Order stornieren?",
+    "cancelOrderBody": "Damit wird deine {{side}}-Order für {{pair}} storniert.",
+    "keepOrder": "Order behalten",
+    "cancelOrder": "Order stornieren",
+    "sideBuy": "Kauf",
+    "sideSell": "Verkauf"
   },
   "pairInfo": {
     "title": "Paar-Informationen",
@@ -2236,7 +2244,8 @@
       "expand": "Panel ausklappen",
       "collapse": "Panel einklappen"
     },
-    "recentlyViewed": "Zuletzt angesehen"
+    "recentlyViewed": "Zuletzt angesehen",
+    "noMarketsFound": "Keine Märkte gefunden"
   },
   "accounts": {
     "pageTitle": "Konten",

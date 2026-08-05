@@ -1303,7 +1303,9 @@
       "pause": "暫停",
       "step": "下一根 K 棒",
       "exit": "結束回放"
-    }
+    },
+    "fullscreenTitle": "全螢幕圖表",
+    "fullscreenHint": "圖表處於全螢幕模式。按 Escape 退出。"
   },
   "botsPage": {
     "loading": "正在載入機器人…",
@@ -1850,7 +1852,13 @@
     "frozen": "凍結",
     "total": "總計",
     "refreshBalances": "重新整理",
-    "asset": "資產"
+    "asset": "資產",
+    "cancelOrderTitle": "撤銷訂單？",
+    "cancelOrderBody": "這將撤銷你在 {{pair}} 的{{side}}訂單。",
+    "keepOrder": "保留訂單",
+    "cancelOrder": "撤銷訂單",
+    "sideBuy": "買入",
+    "sideSell": "賣出"
   },
   "pairInfo": {
     "title": "交易對資訊",
@@ -2236,7 +2244,8 @@
       "expand": "展開面板",
       "collapse": "收合面板"
     },
-    "recentlyViewed": "最近檢視"
+    "recentlyViewed": "最近檢視",
+    "noMarketsFound": "未找到市場"
   },
   "accounts": {
     "pageTitle": "帳戶",

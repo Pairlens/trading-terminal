@@ -1303,7 +1303,9 @@
       "pause": "Jeda",
       "step": "Bar berikutnya",
       "exit": "Keluar dari replay"
-    }
+    },
+    "fullscreenTitle": "Grafik layar penuh",
+    "fullscreenHint": "Grafik dalam mode layar penuh. Tekan Escape untuk keluar."
   },
   "botsPage": {
     "loading": "Memuat bot…",
@@ -1850,7 +1852,13 @@
     "frozen": "Dibekukan",
     "total": "Total",
     "refreshBalances": "Segarkan",
-    "asset": "Aset"
+    "asset": "Aset",
+    "cancelOrderTitle": "Batalkan order?",
+    "cancelOrderBody": "Ini akan membatalkan order {{side}} kamu untuk {{pair}}.",
+    "keepOrder": "Pertahankan order",
+    "cancelOrder": "Batalkan order",
+    "sideBuy": "beli",
+    "sideSell": "jual"
   },
   "pairInfo": {
     "title": "Informasi Pair",
@@ -2236,7 +2244,8 @@
       "expand": "Buka panel",
       "collapse": "Tutup panel"
     },
-    "recentlyViewed": "Baru dilihat"
+    "recentlyViewed": "Baru dilihat",
+    "noMarketsFound": "Tidak ada pasar ditemukan"
   },
   "accounts": {
     "pageTitle": "Akun",

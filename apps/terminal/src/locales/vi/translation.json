@@ -1303,7 +1303,9 @@
       "pause": "Tạm dừng",
       "step": "Nến tiếp theo",
       "exit": "Thoát phát lại"
-    }
+    },
+    "fullscreenTitle": "Biểu đồ toàn màn hình",
+    "fullscreenHint": "Biểu đồ đang ở chế độ toàn màn hình. Nhấn Escape để thoát."
   },
   "botsPage": {
     "loading": "Đang tải bot…",
@@ -1850,7 +1852,13 @@
     "frozen": "Bị đóng băng",
     "total": "Tổng",
     "refreshBalances": "Làm mới",
-    "asset": "Tài sản"
+    "asset": "Tài sản",
+    "cancelOrderTitle": "Hủy lệnh?",
+    "cancelOrderBody": "Thao tác này sẽ hủy lệnh {{side}} của bạn cho {{pair}}.",
+    "keepOrder": "Giữ lệnh",
+    "cancelOrder": "Hủy lệnh",
+    "sideBuy": "mua",
+    "sideSell": "bán"
   },
   "pairInfo": {
     "title": "Thông tin cặp giao dịch",
@@ -2236,7 +2244,8 @@
       "expand": "Mở rộng bảng",
       "collapse": "Thu gọn bảng"
     },
-    "recentlyViewed": "Xem gần đây"
+    "recentlyViewed": "Xem gần đây",
+    "noMarketsFound": "Không tìm thấy thị trường"
   },
   "accounts": {
     "pageTitle": "Tài khoản",

@@ -1303,7 +1303,9 @@
       "pause": "Duraklat",
       "step": "Sonraki mum",
       "exit": "Tekrardan çık"
-    }
+    },
+    "fullscreenTitle": "Tam ekran grafik",
+    "fullscreenHint": "Grafik tam ekran modunda. Çıkmak için Escape tuşuna basın."
   },
   "botsPage": {
     "loading": "Botlar yükleniyor…",
@@ -1850,7 +1852,13 @@
     "frozen": "Donduruldu",
     "total": "Toplam",
     "refreshBalances": "Yenile",
-    "asset": "Varlık"
+    "asset": "Varlık",
+    "cancelOrderTitle": "Emir iptal edilsin mi?",
+    "cancelOrderBody": "Bu, {{pair}} için {{side}} emrinizi iptal edecek.",
+    "keepOrder": "Emri koru",
+    "cancelOrder": "Emri iptal et",
+    "sideBuy": "alış",
+    "sideSell": "satış"
   },
   "pairInfo": {
     "title": "Parite Bilgisi",
@@ -2236,7 +2244,8 @@
       "expand": "Paneli genişlet",
       "collapse": "Paneli daralt"
     },
-    "recentlyViewed": "Son görüntülenenler"
+    "recentlyViewed": "Son görüntülenenler",
+    "noMarketsFound": "Piyasa bulunamadı"
   },
   "accounts": {
     "pageTitle": "Hesaplar",

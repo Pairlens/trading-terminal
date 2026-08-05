@@ -1303,7 +1303,9 @@
       "pause": "暂停",
       "step": "下一根K线",
       "exit": "退出回放"
-    }
+    },
+    "fullscreenTitle": "全屏图表",
+    "fullscreenHint": "图表处于全屏模式。按 Escape 退出。"
   },
   "botsPage": {
     "loading": "正在加载机器人…",
@@ -1850,7 +1852,13 @@
     "frozen": "冻结",
     "total": "总计",
     "refreshBalances": "刷新",
-    "asset": "资产"
+    "asset": "资产",
+    "cancelOrderTitle": "撤销订单？",
+    "cancelOrderBody": "这将撤销你在 {{pair}} 的{{side}}订单。",
+    "keepOrder": "保留订单",
+    "cancelOrder": "撤销订单",
+    "sideBuy": "买入",
+    "sideSell": "卖出"
   },
   "pairInfo": {
     "title": "交易对信息",
@@ -2236,7 +2244,8 @@
       "expand": "展开面板",
       "collapse": "折叠面板"
     },
-    "recentlyViewed": "最近查看"
+    "recentlyViewed": "最近查看",
+    "noMarketsFound": "未找到市场"
   },
   "accounts": {
     "pageTitle": "账户",
