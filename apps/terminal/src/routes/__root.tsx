@@ -20,6 +20,7 @@ import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
 import { isStandalone } from '@/lib/platform'
+import { initChunkRecovery } from '@/lib/lazy-chunk'
 import { attachNavHistory } from '@/lib/nav-history'
 import { RouteError } from '@/components/route-error'
 import { TerminalLock } from '@/components/security/terminal-lock'
@@ -212,6 +213,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   // Desktop menu commands: native menubar on macOS, in-app keyboard
   // accelerators on Windows/Linux (no window menu there). No-op in browsers.
   useEffect(() => {
+    // Stale-chunk recovery first, and from a static import: every line below
+    // is itself a dynamic import, so a tab left open across a deploy needs
+    // this listening before it asks for a chunk that no longer exists.
+    initChunkRecovery()
     void import('@/lib/desktop-menu').then((m) => m.initDesktopMenu())
     void import('@/lib/menu-shortcuts').then((m) => m.initMenuShortcuts())
     // Hide/show signal for background mode — must be listening before the

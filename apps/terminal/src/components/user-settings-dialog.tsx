@@ -79,6 +79,7 @@ import { api, queryKeys } from '@/lib/api'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { useAppVersion } from '@/lib/app-version'
 import { isStandalone } from '@/lib/platform'
+import { lazyChunk } from '@/lib/lazy-chunk'
 
 import {
   SECTION_TOURS_DISABLED_KEY,
@@ -89,38 +90,41 @@ import { ONBOARDING_KEY } from '@/lib/onboarding-state'
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024
 const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp'])
 
-// Lazy-load non-profile sections (single chunk, split per named export)
+// Lazy-load non-profile sections (single chunk, split per named export).
+// `lazyChunk` rather than `React.lazy`: these chunks are fetched long after
+// first paint, so a tab left open across a deploy asks for hashes the live
+// build no longer has — see @/lib/lazy-chunk.
 const loadSections = () => import('./user-settings-sections')
-const LazyPluginsSection = React.lazy(() =>
+const LazyPluginsSection = lazyChunk(() =>
   loadSections().then((m) => ({ default: m.PluginsSection })),
 )
-const LazyAppearanceSection = React.lazy(() =>
+const LazyAppearanceSection = lazyChunk(() =>
   loadSections().then((m) => ({ default: m.AppearanceSection })),
 )
-const LazyPerformanceSection = React.lazy(() =>
+const LazyPerformanceSection = lazyChunk(() =>
   loadSections().then((m) => ({ default: m.PerformanceSection })),
 )
-const LazyLanguageSection = React.lazy(() =>
+const LazyLanguageSection = lazyChunk(() =>
   loadSections().then((m) => ({ default: m.LanguageSection })),
 )
-const LazyRegionSection = React.lazy(() =>
+const LazyRegionSection = lazyChunk(() =>
   loadSections().then((m) => ({ default: m.RegionSection })),
 )
-const LazyCurrencySection = React.lazy(() =>
+const LazyCurrencySection = lazyChunk(() =>
   loadSections().then((m) => ({ default: m.CurrencySection })),
 )
-const LazyRiskSection = React.lazy(() =>
+const LazyRiskSection = lazyChunk(() =>
   loadSections().then((m) => ({ default: m.RiskSection })),
 )
-const LazyPrivacySection = React.lazy(() =>
+const LazyPrivacySection = lazyChunk(() =>
   loadSections().then((m) => ({ default: m.PrivacySection })),
 )
-const LazyIntelligenceSection = React.lazy(() =>
+const LazyIntelligenceSection = lazyChunk(() =>
   loadSections().then((m) => ({ default: m.IntelligenceSection })),
 )
 // Keyboard lives in its own chunk: it pulls in the whole command catalog and
 // almost nobody opens it, so it shouldn't ride along with the common sections.
-const LazyKeyboardSection = React.lazy(() =>
+const LazyKeyboardSection = lazyChunk(() =>
   import('./settings/keyboard-section').then((m) => ({
     default: m.KeyboardSection,
   })),
@@ -128,21 +132,21 @@ const LazyKeyboardSection = React.lazy(() =>
 // Security is its own chunk for the same reason as Keyboard: it carries its
 // own dialogs and a page of threat-model copy that nobody who never opens it
 // should have to download.
-const LazySecuritySection = React.lazy(() =>
+const LazySecuritySection = lazyChunk(() =>
   import('./settings/security-section').then((m) => ({
     default: m.SecuritySection,
   })),
 )
 // Desktop is its own chunk too: it only exists in the Tauri build, so a
 // browser bundle should never carry it.
-const LazyDesktopSection = React.lazy(() =>
+const LazyDesktopSection = lazyChunk(() =>
   import('./settings/desktop-section').then((m) => ({
     default: m.DesktopSection,
   })),
 )
 // Cloud Sync only exists when an App Server is configured, and it drags in the
 // sync taxonomy — its own chunk, same reasoning as Desktop.
-const LazyCloudSyncSection = React.lazy(() =>
+const LazyCloudSyncSection = lazyChunk(() =>
   import('./settings/cloud-sync-section').then((m) => ({
     default: m.CloudSyncSection,
   })),

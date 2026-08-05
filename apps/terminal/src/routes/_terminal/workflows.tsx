@@ -1,14 +1,15 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useTranslation } from 'react-i18next'
-import { Suspense, lazy } from 'react'
+import { Suspense } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { Workflow } from 'lucide-react'
 import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
 import { PageHeader } from '@/components/page-header'
+import { lazyChunk } from '@/lib/lazy-chunk'
 
-const WorkflowBuilder = lazy(() =>
+const WorkflowBuilder = lazyChunk(() =>
   import('@/components/workflows/workflow-builder').then((m) => ({
     default: m.WorkflowBuilder,
   })),

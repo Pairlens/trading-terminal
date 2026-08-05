@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { execSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { defineConfig } from 'vite'
@@ -37,17 +38,50 @@ function pyodideAssets(): Plugin {
   }
 }
 
-// Stage public/version.json (gitignored) carrying the same version the bundle
-// bakes in as __APP_VERSION__. Deployed alongside the web terminal, it always
-// reports the live release — browser builds poll it to learn a newer deploy
-// shipped and prompt a refresh (see src/lib/web-updater.ts).
+// Identity of this particular build. The release number can't do that job on
+// its own: the web terminal redeploys on every push to main, while the version
+// only moves on `bun run release`, so between releases a deploy replaces every
+// content hash under a number that never changes — and a tab holding the old
+// hashes had no way to tell.
+//
+// It has to be the commit, not a timestamp. TanStack Start loads this config
+// once per build environment (client, server, prerender), so anything derived
+// from the clock produces a different value each time: the id baked into the
+// bundle would never match the one written to version.json, and every tab
+// would be told it was stale the moment it loaded.
+function resolveBuildId(): string {
+  // Vercel and GitHub Actions hand the SHA over directly. It has to be listed
+  // in this app's turbo.json or strict env mode hides it from `vite build`.
+  const fromCi = process.env.VERCEL_GIT_COMMIT_SHA ?? process.env.GITHUB_SHA
+  if (fromCi) return fromCi.slice(0, 12)
+  try {
+    return execSync('git rev-parse HEAD', {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
+      .trim()
+      .slice(0, 12)
+  } catch {
+    // No CI metadata and no git: report "can't tell" rather than invent an
+    // id. An empty build id is not an answer, and web-updater falls back to
+    // comparing versions — see isDifferentBuild.
+    return ''
+  }
+}
+
+const buildId = resolveBuildId()
+
+// Stage public/version.json (gitignored) carrying the version and build id the
+// bundle bakes in. Deployed alongside the web terminal, it always reports the
+// live build — browser builds poll it to learn a newer deploy shipped and
+// prompt a refresh (see src/lib/web-updater.ts).
 function versionManifest(): Plugin {
   return {
     name: 'pairlens:version-manifest',
     configResolved(config) {
       writeFileSync(
         join(config.root, 'public', 'version.json'),
-        JSON.stringify({ version: appVersion }) + '\n',
+        JSON.stringify({ version: appVersion, build: buildId }) + '\n',
       )
     },
   }
@@ -56,6 +90,7 @@ function versionManifest(): Plugin {
 const config = defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(appVersion),
+    __APP_BUILD_ID__: JSON.stringify(buildId),
   },
   server: {
     port: Number.isFinite(terminalPort) ? terminalPort : 3000,

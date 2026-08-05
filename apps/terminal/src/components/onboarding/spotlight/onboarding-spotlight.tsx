@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import {
   Suspense,
-  lazy,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -82,10 +81,11 @@ import { analyticsSetting, setPersonProperties } from '@/lib/analytics'
 import { track } from '@/lib/analytics-events'
 import { setCountrySetting } from '@/lib/region-settings'
 import { emitWrite } from '@/lib/sync/sync-channel'
+import { lazyChunk } from '@/lib/lazy-chunk'
 
 // Story-step vignettes pull in remotion — loaded only once the user moves
 // past the welcome frame, never on the onboarding page's first paint.
-const StoryMedia = lazy(() => import('./story-media'))
+const StoryMedia = lazyChunk(() => import('./story-media'))
 
 const STORY_SCENE_IDS: ReadonlyArray<string> = [
   'oneTerminal',
