@@ -39,6 +39,21 @@ type UseOrderbookStreamResult = {
   errorMessage: string | null
 }
 
+/**
+ * Smallest positive gap between adjacent levels of one book side.
+ * Levels arrive sorted (bids descending, asks ascending — the pane's spread
+ * and cumulative math already rely on this), so adjacent gaps are the finest
+ * price distances the venue actually quoted.
+ */
+const minAdjacentGap = (levels: Array<OrderBookLevel>): number => {
+  let min = Infinity
+  for (let i = 1; i < levels.length; i++) {
+    const gap = Math.abs(levels[i].price - levels[i - 1].price)
+    if (gap > 0 && gap < min) min = gap
+  }
+  return min
+}
+
 const mapStatus = (
   mdStatus: MarketDataStatus,
   enabled: boolean,
@@ -75,9 +90,9 @@ export function useOrderbookStream(
   useEffect(() => {
     setOrderbook(null)
     setBaseTickSize(0)
-    // Reset the ref too — otherwise the tick-size estimator's `=== 0` guard
-    // never re-runs on a pair switch and the new pair renders with the previous
-    // pair's tick grid.
+    // Reset the ref too — the estimator only ever shrinks a non-zero value,
+    // so without this a switch to a coarser-tick pair would keep rendering on
+    // the previous pair's finer tick grid.
     baseTickSizeRef.current = 0
     setStreamError(null)
 
@@ -98,10 +113,21 @@ export function useOrderbookStream(
         const bids = update.bids.map(([price, size]) => ({ price, size }))
         const asks = update.asks.map(([price, size]) => ({ price, size }))
 
-        // Estimate tick size from bid spread
-        if (bids.length >= 2 && baseTickSizeRef.current === 0) {
-          const tick = Math.abs(bids[0].price - bids[1].price)
-          if (tick > 0) {
+        // Estimate the venue tick size from the level grid. The gap between
+        // the top two levels alone is NOT the tick — on a thin book (Kraken
+        // SOL-USDT) it is routinely several ticks wide, and the pane then
+        // force-groups the whole book into a few coarse buckets. Take the
+        // minimum adjacent gap across both sides instead, and let a later
+        // finer gap shrink the estimate — never grow it, so a sparse update
+        // can't coarsen the grid mid-session.
+        const gap = Math.min(minAdjacentGap(bids), minAdjacentGap(asks))
+        if (Number.isFinite(gap)) {
+          // Strip float drift (73.7 − 73.6 = 0.0999999…) to a clean tick.
+          const tick = Number(gap.toPrecision(2))
+          if (
+            tick > 0 &&
+            (baseTickSizeRef.current === 0 || tick < baseTickSizeRef.current)
+          ) {
             baseTickSizeRef.current = tick
             setBaseTickSize(tick)
           }
