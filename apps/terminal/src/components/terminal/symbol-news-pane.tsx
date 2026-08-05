@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Newspaper, RefreshCw } from 'lucide-react'
+import { RefreshCw } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
@@ -23,6 +23,8 @@ import {
   ArticleCard,
   ArticleCardSkeleton,
   NEWS_PAGE_TIME_FROM,
+  NewsFeedStatus,
+  fetchNewsPage,
   flattenNewsPages,
   formatRelativeTime,
   nextNewsPageParam,
@@ -54,8 +56,7 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
         qs.set('time_from', NEWS_PAGE_TIME_FROM)
         qs.set('time_to', pageParam)
       }
-      const res = await apiFetch(`/api/news?${qs}`)
-      return res.json()
+      return fetchNewsPage(apiFetch, qs.toString())
     },
     initialPageParam: null,
     getNextPageParam: (lastPage, _pages, lastPageParam) => {
@@ -66,6 +67,8 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
     enabled: !!baseSymbol,
     staleTime: 5 * 60_000,
     gcTime: 30 * 60_000,
+    // A provider outage isn't worth three rounds of backoff before we say so.
+    retry: 1,
   })
 
   const pages = data?.pages
@@ -110,17 +113,10 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
           ))}
         </div>
       ) : error || articles.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
-          <Newspaper className="mb-3 size-8 text-muted-foreground/40" />
-          <p className="text-sm font-medium">
-            {error ? t('news.failed') : t('news.noneFound')}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {error
-              ? t('news.tryLater', 'Try again later')
-              : t('news.noRecentFor', { symbol: baseSymbol })}
-          </p>
-        </div>
+        <NewsFeedStatus
+          error={error}
+          emptyBody={t('news.noRecentFor', { symbol: baseSymbol })}
+        />
       ) : (
         <div className="flex-1 grid grid-cols-1 @lg/pane:grid-cols-2 @4xl/pane:grid-cols-3 gap-3 overflow-y-auto p-4 auto-rows-max content-start">
           {articles.map((article: NewsArticle, i: number) => (

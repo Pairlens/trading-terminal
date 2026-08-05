@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
@@ -8,6 +9,8 @@ import { Minus, Newspaper, TrendingDown, TrendingUp } from 'lucide-react'
 import type {
   NewsArticle,
   NewsFeedResponse,
+  NewsUnavailableReason,
+  NewsUnavailableResponse,
 } from '@pairlens/shared/instrument-types'
 
 import { formatRelativeTime } from '@/lib/format-time'
@@ -68,6 +71,89 @@ export function nextNewsPageParam(lastPage: NewsFeedResponse): string | null {
       oldest = article.timePublished
   }
   return oldest ? toNewsTimeParam(oldest) : null
+}
+
+/**
+ * The feed provider failed us — distinct from a feed that came back empty.
+ * Carries the App Server's reason so the pane can say which kind of failure
+ * it was instead of a flat "try again later".
+ */
+export class NewsUnavailableError extends Error {
+  readonly reason: NewsUnavailableReason
+
+  constructor(reason: NewsUnavailableReason) {
+    super(`News unavailable: ${reason}`)
+    this.name = 'NewsUnavailableError'
+    this.reason = reason
+  }
+}
+
+/**
+ * Fetch one page of the feed.
+ *
+ * `usePluginFetch` hands back the raw Response without checking status, so a
+ * 5xx body would otherwise be stored as a page and then crash the render in
+ * flattenNewsPages, where `articles` is undefined. Failures throw instead, so
+ * TanStack Query routes them to the pane's error branch.
+ */
+export async function fetchNewsPage(
+  apiFetch: (path: string, init?: RequestInit) => Promise<Response>,
+  query: string,
+): Promise<NewsFeedResponse> {
+  const res = await apiFetch(`/api/news${query ? `?${query}` : ''}`)
+
+  if (!res.ok) {
+    const body = (await res
+      .json()
+      .catch(() => null)) as NewsUnavailableResponse | null
+    throw new NewsUnavailableError(body?.reason ?? 'upstream_error')
+  }
+
+  const page = (await res.json()) as NewsFeedResponse
+  // A 200 that isn't a feed is still the provider failing, just more quietly.
+  if (!Array.isArray(page.articles)) {
+    throw new NewsUnavailableError('upstream_error')
+  }
+  return page
+}
+
+/**
+ * The feed's non-article state: provider down, or simply nothing matched.
+ * `emptyBody` is the caller's own "nothing matched" line — the browse pane
+ * blames the filters, the symbol pane names the symbol.
+ */
+export function NewsFeedStatus({
+  error,
+  emptyBody,
+}: {
+  error: unknown
+  emptyBody: string
+}) {
+  const { t } = useTranslation()
+
+  const reason =
+    error instanceof NewsUnavailableError
+      ? error.reason
+      : error
+        ? 'error'
+        : null
+
+  const title = reason ? t('news.unavailable') : t('news.noneFound')
+  const body = !reason
+    ? emptyBody
+    : reason === 'not_configured'
+      ? t('news.unavailableNotConfigured')
+      : reason === 'rate_limited'
+        ? t('news.unavailableRateLimited')
+        : t('news.unavailableUpstream')
+
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
+      <Newspaper className="mb-3 size-8 text-muted-foreground/40" />
+      <p className="text-sm font-medium">{title}</p>
+      <p className="mt-1 max-w-xs text-xs text-muted-foreground">{body}</p>
+    </div>
+  )
 }
 
 export const TOPIC_OPTIONS = [
