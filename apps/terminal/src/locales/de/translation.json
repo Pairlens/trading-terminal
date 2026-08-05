@@ -2496,11 +2496,205 @@
     "apiKeyRequiredHint": "API-Schlüssel erforderlich",
     "setupRequiredHint": "Einrichtung erforderlich",
     "manifests": {
-      "userIndicators": {
+      "pairlens-core": {
+        "title": "Pairlens Core",
+        "description": "Zentrales Trading-Terminal — Charts, Orderbücher, Orderaufgabe, Markt-Discovery und Watchlists"
+      },
+      "pairlens-intelligence": {
+        "title": "Pairlens Intelligence",
+        "description": "KI-Inferenz, Instrumenten-Discovery, News-Feeds und Marktintelligenz, bereitgestellt vom Pairlens-Backend"
+      },
+      "pairlens-community": {
+        "title": "Pairlens Community",
+        "description": "Community-Workspace-Vorlagen, geteilt von Pairlens-Nutzern."
+      },
+      "user-indicators": {
+        "title": "Meine Indikatoren",
         "description": "Deine eigenen Python-Indikatoren, erstellt im Indikatoren-Editor."
       },
-      "pairlensCommunity": {
-        "description": "Community-Workspace-Vorlagen, geteilt von Pairlens-Nutzern."
+      "groq-inference": {
+        "title": "Groq Inferenz",
+        "description": "KI-Inferenz über die Groq-API (ultraschnelle LLM-Antworten)"
+      },
+      "openai-inference": {
+        "title": "OpenAI Inferenz",
+        "description": "KI-Inferenz über die OpenAI-API"
+      },
+      "anthropic-inference": {
+        "title": "Anthropic Inferenz",
+        "description": "KI-Inferenz über die Anthropic-Claude-API"
+      },
+      "openrouter-inference": {
+        "title": "OpenRouter",
+        "description": "KI-Inferenz über OpenRouter — ein API-Schlüssel für Hunderte Modelle über verschiedene Anbieter hinweg (eigener Schlüssel)"
+      },
+      "tavily-search": {
+        "title": "Tavily-Suche",
+        "description": "Websuche als Grundlage für KI-Research über die Tavily Search API (eigener Schlüssel)"
+      },
+      "exa-search": {
+        "title": "Exa-Suche",
+        "description": "Neuronale Websuche als Grundlage für KI-Research über die Exa API (eigener Schlüssel)"
+      },
+      "pairlens": {
+        "title": "Pairlens",
+        "description": "Das Signature-Theme von Pairlens — klares Schwarz-Weiß mit Regenbogen-Prisma-Akzenten"
+      },
+      "zen-trading": {
+        "title": "Zen Trading",
+        "description": "Warme, erdige Töne mit ruhiger Ästhetik für konzentrierte Trading-Sessions"
+      },
+      "cyberpunk-neon": {
+        "title": "Cyberpunk Neon",
+        "description": "Dunkel geprägtes Theme mit leuchtenden Cyan-, Magenta- und Elektro-Violett-Tönen"
+      },
+      "earth-tones": {
+        "title": "Earth Tones",
+        "description": "Warmes, von der Natur inspiriertes Theme mit Salbeigrün, Terrakotta und Brauntönen"
+      },
+      "terminal-classic": {
+        "title": "Terminal Classic",
+        "description": "Professioneller Trading-Terminal-Look mit marineblauen Hintergründen und klassischen grün/roten Kerzen"
+      },
+      "crypto-gold": {
+        "title": "Crypto Gold",
+        "description": "Von Bitcoin inspiriertes Theme mit goldenen Akzenten, dunklen Bernstein-Hintergründen und bullischer Energie"
+      },
+      "arctic-blue": {
+        "title": "Arctic Blue",
+        "description": "Kühles, monochromes Blau-Theme mit eisigen Tönen und klaren Linien"
+      },
+      "infrared": {
+        "title": "Infrared",
+        "description": "Ultramodernes, rotgetöntes Theme mit Karmesin-Akzenten und scharfer Ästhetik"
+      },
+      "emerald-matrix": {
+        "title": "Emerald Matrix",
+        "description": "Tiefgrünes Theme mit Smaragdtönen, kräftig grünen Kerzen und einer Terminal-Hacker-Energie"
+      },
+      "royal-violet": {
+        "title": "Royal Violet",
+        "description": "Sattes Lila-Theme mit violetten Akzenten, Lavendel-Highlights und tiefen Pflaumen-Dunkeltönen"
+      },
+      "midnight-ember": {
+        "title": "Midnight Ember",
+        "description": "Warmes, dunkles Theme mit tiefer Anthrazit-Basis und glühenden orange-bernsteinfarbenen Glut-Akzenten"
+      },
+      "sakura-bloom": {
+        "title": "Sakura Bloom",
+        "description": "Zartes Kirschblüten-Theme mit sanften Rosatönen, Rosé-Akzenten und milder Wärme"
+      },
+      "electric-lime": {
+        "title": "Electric Lime",
+        "description": "Kräftig limettengrüne Seitenleiste mit klaren, monochromen Inhaltsbereichen"
+      },
+      "burnt-orange": {
+        "title": "Burnt Orange",
+        "description": "Warme, von Reddit inspirierte Palette mit tiefem Orange und Cremetönen"
+      },
+      "night-city": {
+        "title": "Night City",
+        "description": "Von Cyberpunk 2077 inspiriert — elektrisches Gelb auf dunklem Gunmetal mit scharfen Kanten"
+      },
+      "eye-comfort": {
+        "title": "Eye Comfort",
+        "description": "Warme, kontrastarme Palette, entwickelt, um die Augenermüdung bei langen Sessions zu reduzieren"
+      },
+      "high-contrast": {
+        "title": "High Contrast",
+        "description": "Fokussiert auf Barrierefreiheit — maximaler Kontrast, kräftige Rahmen und klare visuelle Trennung"
+      },
+      "okx-market-connector": {
+        "title": "OKX Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von OKX"
+      },
+      "binance-market-connector": {
+        "title": "Binance Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von Binance"
+      },
+      "bybit-market-connector": {
+        "title": "ByBit Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von ByBit"
+      },
+      "bitvavo-market-connector": {
+        "title": "Bitvavo Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von Bitvavo"
+      },
+      "mexc-market-connector": {
+        "title": "MEXC Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von MEXC"
+      },
+      "kucoin-market-connector": {
+        "title": "KuCoin Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von KuCoin"
+      },
+      "gate-market-connector": {
+        "title": "Gate.io Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von Gate.io"
+      },
+      "coinbase-market-connector": {
+        "title": "Coinbase Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die Coinbase Advanced Trade APIs"
+      },
+      "bitget-market-connector": {
+        "title": "Bitget Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von Bitget"
+      },
+      "kraken-market-connector": {
+        "title": "Kraken Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von Kraken"
+      },
+      "htx-market-connector": {
+        "title": "HTX Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von HTX (ehemals Huobi)"
+      },
+      "cryptocom-market-connector": {
+        "title": "Crypto.com Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von Crypto.com"
+      },
+      "bitfinex-market-connector": {
+        "title": "Bitfinex Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von Bitfinex"
+      },
+      "upbit-market-connector": {
+        "title": "Upbit Markt-Connector",
+        "description": "Direkte Marktdaten und direktes Trading über die APIs von Upbit Global"
+      },
+      "alpaca-market-connector": {
+        "title": "Alpaca Markt-Connector",
+        "description": "US-Aktien und ETFs über die Alpaca-Broker-API — Echtzeit-Marktdaten, Paper- und Live-Trading"
+      },
+      "dexpaprika-data-provider": {
+        "title": "DexPaprika",
+        "description": "DEX-Marktdaten, bereitgestellt von DexPaprika"
+      },
+      "geckoterminal-data-provider": {
+        "title": "GeckoTerminal",
+        "description": "DEX-Marktdaten, bereitgestellt von GeckoTerminal (CoinGecko) — weitreichende Historie, native 4-Stunden-Kerzen"
+      },
+      "jupiter-dex-connector": {
+        "title": "Jupiter DEX-Connector",
+        "description": "Solana-DEX-Aggregator — optimales Preis-Routing über alle Solana-DEXs"
+      },
+      "ethereum-dex-connector": {
+        "title": "Ethereum DEX-Connector",
+        "description": "On-Chain-Swaps auf Ethereum — optimales Preis-Routing über alle Ethereum-DEXs via KyberSwap-Aggregator"
+      },
+      "base-dex-connector": {
+        "title": "Base DEX-Connector",
+        "description": "On-Chain-Swaps auf Base — optimales Preis-Routing über alle Base-DEXs via KyberSwap-Aggregator"
+      },
+      "arbitrum-dex-connector": {
+        "title": "Arbitrum DEX-Connector",
+        "description": "On-Chain-Swaps auf Arbitrum — optimales Preis-Routing über alle Arbitrum-DEXs via KyberSwap-Aggregator"
+      },
+      "bsc-dex-connector": {
+        "title": "BNB Chain DEX-Connector",
+        "description": "On-Chain-Swaps auf der BNB Chain — optimales Preis-Routing über alle BNB-Chain-DEXs via KyberSwap-Aggregator"
+      },
+      "polygon-dex-connector": {
+        "title": "Polygon DEX-Connector",
+        "description": "On-Chain-Swaps auf Polygon — optimales Preis-Routing über alle Polygon-DEXs via KyberSwap-Aggregator"
       }
     }
   },
@@ -4196,6 +4390,36 @@
         "label": "Store-Katalog",
         "description": "Stellt einen durchsuchbaren Katalog von Workspace-Vorlagen bereit"
       }
+    }
+  },
+  "registryCategories": {
+    "platform": {
+      "label": "Plattform",
+      "description": "Kerndienste, die über den Pairlens-Server laufen"
+    },
+    "exchange": {
+      "label": "Exchange",
+      "description": "Direkte Exchange-Verbindungen für Marktdaten und Trading"
+    },
+    "broker": {
+      "label": "Broker",
+      "description": "Aktienbroker-Verbindungen für Aktiendaten und Trading"
+    },
+    "ai": {
+      "label": "KI-Anbieter",
+      "description": "Sprachmodell-Anbieter für die Analyse des KI-Co-Piloten"
+    },
+    "intelligence": {
+      "label": "Intelligence",
+      "description": "Signalerkennung und Strategieberechnung"
+    },
+    "discovery": {
+      "label": "Entdecken",
+      "description": "Instrumentenkataloge zum Durchsuchen verfügbarer Handelspaare"
+    },
+    "themes": {
+      "label": "Designs",
+      "description": "Visuelle Designs, die Farben, Chart-Palette und UI-Styling überschreiben"
     }
   }
 }

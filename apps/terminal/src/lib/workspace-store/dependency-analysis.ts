@@ -4,6 +4,7 @@ import type { PluginManifest, PluginStatus } from '@pairlens/plugin-system'
 
 import type { TerminalLayout } from '@/lib/layout/types'
 import type { WorkspaceTemplate } from './types'
+import { localizedText } from '@/lib/plugin-text'
 import {
   BOOTSTRAP_PLUGINS,
   BOOTSTRAP_PLUGIN_IDS,
@@ -49,7 +50,9 @@ for (const { manifest } of BOOTSTRAP_PLUGINS) {
     STATIC_PANE_OWNER.set(type, manifest.id)
     STATIC_PANE_META.set(type, {
       type,
-      label: panel.label ?? panel.id,
+      // Module-load time, so this freezes at the launch language; the
+      // pane picker resolves its own label per render.
+      label: localizedText(panel.label) ?? panel.id,
       icon: panel.icon,
       pluginId: manifest.id,
     })

@@ -2516,11 +2516,205 @@
     "apiKeyRequiredHint": "Wymaga klucza API",
     "setupRequiredHint": "Wymaga konfiguracji",
     "manifests": {
-      "userIndicators": {
+      "pairlens-core": {
+        "title": "Pairlens Core",
+        "description": "Główny terminal handlowy — wykresy, arkusze zleceń, składanie zleceń, odkrywanie rynków i listy obserwowanych"
+      },
+      "pairlens-intelligence": {
+        "title": "Pairlens Intelligence",
+        "description": "Wnioskowanie AI, wykrywanie instrumentów, kanały wiadomości i analiza rynku napędzane przez backend Pairlens"
+      },
+      "pairlens-community": {
+        "title": "Pairlens Community",
+        "description": "Szablony obszarów roboczych społeczności, udostępnione przez użytkowników Pairlens."
+      },
+      "user-indicators": {
+        "title": "Moje Wskaźniki",
         "description": "Twoje własne wskaźniki w Pythonie, utworzone w edytorze Wskaźników."
       },
-      "pairlensCommunity": {
-        "description": "Szablony obszarów roboczych społeczności, udostępnione przez użytkowników Pairlens."
+      "groq-inference": {
+        "title": "Groq Wnioskowanie",
+        "description": "Wnioskowanie AI przez API Groq (ultraszybkie odpowiedzi LLM)"
+      },
+      "openai-inference": {
+        "title": "OpenAI Wnioskowanie",
+        "description": "Wnioskowanie AI przez API OpenAI"
+      },
+      "anthropic-inference": {
+        "title": "Anthropic Wnioskowanie",
+        "description": "Wnioskowanie AI przez API Anthropic Claude"
+      },
+      "openrouter-inference": {
+        "title": "OpenRouter",
+        "description": "Wnioskowanie AI przez OpenRouter — jeden klucz API do setek modeli u różnych dostawców (własny klucz)"
+      },
+      "tavily-search": {
+        "title": "Tavily Wyszukiwanie",
+        "description": "Wyszukiwanie w sieci jako podstawa researchu AI, przez API Tavily Search (własny klucz)"
+      },
+      "exa-search": {
+        "title": "Exa Wyszukiwanie",
+        "description": "Neuronowe wyszukiwanie w sieci jako podstawa researchu AI, przez API Exa (własny klucz)"
+      },
+      "pairlens": {
+        "title": "Pairlens",
+        "description": "Charakterystyczny motyw Pairlens — wyraziste czernie i biele z akcentami pryzmatu tęczy"
+      },
+      "zen-trading": {
+        "title": "Zen Trading",
+        "description": "Ciepłe, ziemiste odcienie ze spokojną estetyką na potrzeby skoncentrowanych sesji handlowych"
+      },
+      "cyberpunk-neon": {
+        "title": "Cyberpunk Neon",
+        "description": "Ciemny motyw z żywym cyjanem, magentą i elektrycznym fioletem"
+      },
+      "earth-tones": {
+        "title": "Earth Tones",
+        "description": "Ciepły motyw inspirowany naturą z szałwiową zielenią, terakotą i brązami"
+      },
+      "terminal-classic": {
+        "title": "Terminal Classic",
+        "description": "Profesjonalny wygląd terminala handlowego z granatowym tłem i klasycznymi zielono-czerwonymi świecami"
+      },
+      "crypto-gold": {
+        "title": "Crypto Gold",
+        "description": "Motyw inspirowany Bitcoinem ze złotymi akcentami, ciemnobursztynowym tłem i wzrostową energią"
+      },
+      "arctic-blue": {
+        "title": "Arctic Blue",
+        "description": "Chłodny, niebieski motyw monochromatyczny z lodowatymi odcieniami i czystymi liniami"
+      },
+      "infrared": {
+        "title": "Infrared",
+        "description": "Ultranowoczesny motyw w odcieniach czerwieni z karmazynowymi akcentami i ostrą estetyką"
+      },
+      "emerald-matrix": {
+        "title": "Emerald Matrix",
+        "description": "Głęboko zielony motyw z odcieniami szmaragdu, żywymi zielonymi świecami i klimatem terminala hakera"
+      },
+      "royal-violet": {
+        "title": "Royal Violet",
+        "description": "Bogaty fioletowy motyw z fioletowymi akcentami, lawendowymi rozjaśnieniami i głębokimi śliwkowymi ciemnościami"
+      },
+      "midnight-ember": {
+        "title": "Midnight Ember",
+        "description": "Ciepły ciemny motyw z głęboką antracytową bazą i żarzącymi się bursztynowo-pomarańczowymi akcentami żaru"
+      },
+      "sakura-bloom": {
+        "title": "Sakura Bloom",
+        "description": "Delikatny motyw kwiatu wiśni z miękkimi różami, różanymi akcentami i łagodnym ciepłem"
+      },
+      "electric-lime": {
+        "title": "Electric Lime",
+        "description": "Żywy limonkowy pasek boczny z czystymi, monochromatycznymi obszarami treści"
+      },
+      "burnt-orange": {
+        "title": "Burnt Orange",
+        "description": "Ciepła paleta inspirowana Redditem z głębokimi pomarańczami i kremowymi odcieniami"
+      },
+      "night-city": {
+        "title": "Night City",
+        "description": "Inspirowane Cyberpunk 2077 — elektryczna żółć na ciemnej stalowoszarej powierzchni z ostrymi krawędziami"
+      },
+      "eye-comfort": {
+        "title": "Eye Comfort",
+        "description": "Ciepła paleta o niskim kontraście zaprojektowana, by zmniejszyć zmęczenie oczu podczas długich sesji"
+      },
+      "high-contrast": {
+        "title": "High Contrast",
+        "description": "Skupiony na dostępności, z maksymalnym kontrastem, wyraźnymi obramowaniami i czytelnym rozdzieleniem wizualnym"
+      },
+      "okx-market-connector": {
+        "title": "OKX Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API OKX"
+      },
+      "binance-market-connector": {
+        "title": "Binance Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API Binance"
+      },
+      "bybit-market-connector": {
+        "title": "ByBit Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API ByBit"
+      },
+      "bitvavo-market-connector": {
+        "title": "Bitvavo Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API Bitvavo"
+      },
+      "mexc-market-connector": {
+        "title": "MEXC Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API MEXC"
+      },
+      "kucoin-market-connector": {
+        "title": "KuCoin Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API KuCoin"
+      },
+      "gate-market-connector": {
+        "title": "Gate.io Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API Gate.io"
+      },
+      "coinbase-market-connector": {
+        "title": "Coinbase Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API Advanced Trade Coinbase"
+      },
+      "bitget-market-connector": {
+        "title": "Bitget Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API Bitget"
+      },
+      "kraken-market-connector": {
+        "title": "Kraken Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API Kraken"
+      },
+      "htx-market-connector": {
+        "title": "HTX Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API HTX (dawniej Huobi)"
+      },
+      "cryptocom-market-connector": {
+        "title": "Crypto.com Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API Crypto.com"
+      },
+      "bitfinex-market-connector": {
+        "title": "Bitfinex Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API Bitfinex"
+      },
+      "upbit-market-connector": {
+        "title": "Upbit Konektor Rynkowy",
+        "description": "Bezpośrednie dane rynkowe i handel przez API Upbit Global"
+      },
+      "alpaca-market-connector": {
+        "title": "Alpaca Konektor Rynkowy",
+        "description": "Akcje i ETF-y z USA przez API brokera Alpaca — dane rynkowe w czasie rzeczywistym, handel paper i live"
+      },
+      "dexpaprika-data-provider": {
+        "title": "DexPaprika",
+        "description": "Dane rynkowe DEX dostarczane przez DexPaprika"
+      },
+      "geckoterminal-data-provider": {
+        "title": "GeckoTerminal",
+        "description": "Dane rynkowe DEX dostarczane przez GeckoTerminal (CoinGecko) — dogłębna historia, natywne świece 4h"
+      },
+      "jupiter-dex-connector": {
+        "title": "Jupiter Konektor DEX",
+        "description": "Agregator DEX Solana — routing po najlepszej cenie na wszystkich DEX-ach Solana"
+      },
+      "ethereum-dex-connector": {
+        "title": "Ethereum Konektor DEX",
+        "description": "Swapy on-chain w sieci Ethereum — routing po najlepszej cenie na wszystkich DEX-ach Ethereum przez agregator KyberSwap"
+      },
+      "base-dex-connector": {
+        "title": "Base Konektor DEX",
+        "description": "Swapy on-chain w sieci Base — routing po najlepszej cenie na wszystkich DEX-ach Base przez agregator KyberSwap"
+      },
+      "arbitrum-dex-connector": {
+        "title": "Arbitrum Konektor DEX",
+        "description": "Swapy on-chain w sieci Arbitrum — routing po najlepszej cenie na wszystkich DEX-ach Arbitrum przez agregator KyberSwap"
+      },
+      "bsc-dex-connector": {
+        "title": "BNB Chain Konektor DEX",
+        "description": "Swapy on-chain w sieci BNB Chain — routing po najlepszej cenie na wszystkich DEX-ach BNB Chain przez agregator KyberSwap"
+      },
+      "polygon-dex-connector": {
+        "title": "Polygon Konektor DEX",
+        "description": "Swapy on-chain w sieci Polygon — routing po najlepszej cenie na wszystkich DEX-ach Polygon przez agregator KyberSwap"
       }
     }
   },
@@ -4226,6 +4420,36 @@
         "label": "Katalog sklepu",
         "description": "Zapewnia przeglądalny katalog szablonów obszaru roboczego"
       }
+    }
+  },
+  "registryCategories": {
+    "platform": {
+      "label": "Platforma",
+      "description": "Podstawowe usługi routowane przez serwer Pairlens"
+    },
+    "exchange": {
+      "label": "Giełdy",
+      "description": "Bezpośrednie połączenia z giełdami do danych rynkowych i handlu"
+    },
+    "broker": {
+      "label": "Brokerzy",
+      "description": "Połączenia z brokerami giełdowymi do danych i handlu akcjami"
+    },
+    "ai": {
+      "label": "Dostawcy AI",
+      "description": "Dostawcy modeli językowych do analizy copilota AI"
+    },
+    "intelligence": {
+      "label": "Analityka",
+      "description": "Wykrywanie sygnałów i obliczenia strategii"
+    },
+    "discovery": {
+      "label": "Odkrywanie",
+      "description": "Katalogi instrumentów do przeglądania dostępnych par handlowych"
+    },
+    "themes": {
+      "label": "Motywy",
+      "description": "Motywy wizualne, które nadpisują kolory, paletę wykresu i styl interfejsu"
     }
   }
 }

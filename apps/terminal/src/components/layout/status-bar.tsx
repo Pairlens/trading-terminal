@@ -7,6 +7,7 @@ import type { ComponentType } from 'react'
 import type { ContributedStatusBarItem } from '@pairlens/plugin-system'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { getPaneIcon } from '@/lib/layout/pane-icons'
+import { localizedText } from '@/lib/plugin-text'
 
 type ResolvedStatusBarItem = {
   pluginId: string
@@ -72,8 +73,10 @@ function StatusBarItemView({ resolved }: { resolved: ResolvedStatusBarItem }) {
 
   // Default: render label with optional icon
   const Icon = item.icon ? getPaneIcon(item.icon) : null
-  const label = item.labelKey ? t(item.labelKey) : item.label
-  const tooltip = item.tooltipKey ? t(item.tooltipKey) : item.tooltip
+  const label = item.labelKey ? t(item.labelKey) : localizedText(item.label)
+  const tooltip = item.tooltipKey
+    ? t(item.tooltipKey)
+    : localizedText(item.tooltip)
 
   return (
     <span className="flex items-center gap-1" title={tooltip}>

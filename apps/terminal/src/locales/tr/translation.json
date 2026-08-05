@@ -2496,11 +2496,205 @@
     "apiKeyRequiredHint": "API anahtarı gerekli",
     "setupRequiredHint": "Kurulum gerekli",
     "manifests": {
-      "userIndicators": {
+      "pairlens-core": {
+        "title": "Pairlens Core",
+        "description": "Ana işlem terminali — grafikler, emir defterleri, işlem girişi, piyasa keşfi ve izleme listeleri"
+      },
+      "pairlens-intelligence": {
+        "title": "Pairlens Intelligence",
+        "description": "Pairlens altyapısının sunduğu AI çıkarımı, enstrüman keşfi, haber akışları ve piyasa istihbaratı"
+      },
+      "pairlens-community": {
+        "title": "Pairlens Community",
+        "description": "Pairlens kullanıcılarının paylaştığı topluluk çalışma alanı şablonları."
+      },
+      "user-indicators": {
+        "title": "Göstergelerim",
         "description": "Göstergeler editöründe oluşturduğun özel Python göstergelerin."
       },
-      "pairlensCommunity": {
-        "description": "Pairlens kullanıcılarının paylaştığı topluluk çalışma alanı şablonları."
+      "groq-inference": {
+        "title": "Groq Çıkarım",
+        "description": "Groq API üzerinden AI çıkarımı (ultra hızlı LLM tamamlamaları)"
+      },
+      "openai-inference": {
+        "title": "OpenAI Çıkarım",
+        "description": "OpenAI API üzerinden AI çıkarımı"
+      },
+      "anthropic-inference": {
+        "title": "Anthropic Çıkarım",
+        "description": "Anthropic Claude API üzerinden AI çıkarımı"
+      },
+      "openrouter-inference": {
+        "title": "OpenRouter",
+        "description": "OpenRouter üzerinden AI çıkarımı — tek bir API anahtarıyla farklı sağlayıcılardan yüzlerce modele erişim (kendi anahtarınla)"
+      },
+      "tavily-search": {
+        "title": "Tavily Arama",
+        "description": "Tavily Search API üzerinden AI araştırması için web arama desteği (kendi anahtarınla)"
+      },
+      "exa-search": {
+        "title": "Exa Arama",
+        "description": "Exa API üzerinden AI araştırması için nöral web arama desteği (kendi anahtarınla)"
+      },
+      "pairlens": {
+        "title": "Pairlens",
+        "description": "Pairlens'in imza teması — canlı siyah beyaz üzerine gökkuşağı prizma vurguları"
+      },
+      "zen-trading": {
+        "title": "Zen Trading",
+        "description": "Odaklı işlem seansları için sakin bir his veren sıcak, toprak tonları"
+      },
+      "cyberpunk-neon": {
+        "title": "Cyberpunk Neon",
+        "description": "Canlı camgöbeği, macenta ve elektrik moru tonlarıyla koyu ağırlıklı tema"
+      },
+      "earth-tones": {
+        "title": "Earth Tones",
+        "description": "Adaçayı yeşili, pişmiş toprak ve kahverengiyle doğadan ilham alan sıcak tema"
+      },
+      "terminal-classic": {
+        "title": "Terminal Classic",
+        "description": "Lacivert arka plan ve klasik yeşil/kırmızı mumlarla profesyonel işlem terminali görünümü"
+      },
+      "crypto-gold": {
+        "title": "Crypto Gold",
+        "description": "Bitcoin'den ilham alan tema; altın vurgular, koyu kehribar arka plan ve yükseliş enerjisi"
+      },
+      "arctic-blue": {
+        "title": "Arctic Blue",
+        "description": "Buzul tonları ve temiz çizgileriyle soğuk mavi monokrom tema"
+      },
+      "infrared": {
+        "title": "Infrared",
+        "description": "Kızıl vurgular ve keskin bir estetiğe sahip ultra modern kırmızı tonlu tema"
+      },
+      "emerald-matrix": {
+        "title": "Emerald Matrix",
+        "description": "Zümrüt tonları, canlı yeşil mumlar ve terminal-hacker havasıyla koyu yeşil tema"
+      },
+      "royal-violet": {
+        "title": "Royal Violet",
+        "description": "Menekşe vurgular, lavanta parlaklıkları ve koyu erik tonlarıyla zengin mor tema"
+      },
+      "midnight-ember": {
+        "title": "Midnight Ember",
+        "description": "Derin antrasit tabanı ve közlenen turuncu-kehribar vurgularıyla sıcak koyu tema"
+      },
+      "sakura-bloom": {
+        "title": "Sakura Bloom",
+        "description": "Yumuşak pembeler, gül vurguları ve nazik sıcaklığıyla ince bir kiraz çiçeği teması"
+      },
+      "electric-lime": {
+        "title": "Electric Lime",
+        "description": "Canlı limon yeşili kenar çubuğu ve sade monokrom içerik alanları"
+      },
+      "burnt-orange": {
+        "title": "Burnt Orange",
+        "description": "Koyu turuncular ve krem tonlarıyla Reddit'ten ilham alan sıcak palet"
+      },
+      "night-city": {
+        "title": "Night City",
+        "description": "Cyberpunk 2077'den ilham alındı — koyu gunmetal üzerinde elektrik sarısı ve keskin hatlar"
+      },
+      "eye-comfort": {
+        "title": "Eye Comfort",
+        "description": "Uzun seanslarda göz yorgunluğunu azaltmak için tasarlanmış sıcak, düşük kontrastlı palet"
+      },
+      "high-contrast": {
+        "title": "High Contrast",
+        "description": "Erişilebilirliğe odaklı; maksimum kontrast, kalın kenarlıklar ve net görsel ayrım"
+      },
+      "okx-market-connector": {
+        "title": "OKX Piyasa Bağlayıcısı",
+        "description": "OKX borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "binance-market-connector": {
+        "title": "Binance Piyasa Bağlayıcısı",
+        "description": "Binance borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "bybit-market-connector": {
+        "title": "ByBit Piyasa Bağlayıcısı",
+        "description": "ByBit borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "bitvavo-market-connector": {
+        "title": "Bitvavo Piyasa Bağlayıcısı",
+        "description": "Bitvavo borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "mexc-market-connector": {
+        "title": "MEXC Piyasa Bağlayıcısı",
+        "description": "MEXC borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "kucoin-market-connector": {
+        "title": "KuCoin Piyasa Bağlayıcısı",
+        "description": "KuCoin borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "gate-market-connector": {
+        "title": "Gate.io Piyasa Bağlayıcısı",
+        "description": "Gate.io borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "coinbase-market-connector": {
+        "title": "Coinbase Piyasa Bağlayıcısı",
+        "description": "Coinbase Advanced Trade API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "bitget-market-connector": {
+        "title": "Bitget Piyasa Bağlayıcısı",
+        "description": "Bitget borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "kraken-market-connector": {
+        "title": "Kraken Piyasa Bağlayıcısı",
+        "description": "Kraken borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "htx-market-connector": {
+        "title": "HTX Piyasa Bağlayıcısı",
+        "description": "HTX (eski adıyla Huobi) borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "cryptocom-market-connector": {
+        "title": "Crypto.com Piyasa Bağlayıcısı",
+        "description": "Crypto.com borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "bitfinex-market-connector": {
+        "title": "Bitfinex Piyasa Bağlayıcısı",
+        "description": "Bitfinex borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "upbit-market-connector": {
+        "title": "Upbit Piyasa Bağlayıcısı",
+        "description": "Upbit Global borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"
+      },
+      "alpaca-market-connector": {
+        "title": "Alpaca Piyasa Bağlayıcısı",
+        "description": "Alpaca aracı kurum API'si üzerinden ABD hisseleri ve ETF'ler — gerçek zamanlı piyasa verisi, kağıt ve canlı işlem"
+      },
+      "dexpaprika-data-provider": {
+        "title": "DexPaprika",
+        "description": "DexPaprika tarafından sağlanan DEX piyasa verisi"
+      },
+      "geckoterminal-data-provider": {
+        "title": "GeckoTerminal",
+        "description": "GeckoTerminal (CoinGecko) tarafından sağlanan DEX piyasa verisi — derin geçmiş, yerel 4 saatlik mumlar"
+      },
+      "jupiter-dex-connector": {
+        "title": "Jupiter DEX Bağlayıcısı",
+        "description": "Solana DEX aggregator'ı — tüm Solana DEX'lerinde en iyi fiyat yönlendirmesi"
+      },
+      "ethereum-dex-connector": {
+        "title": "Ethereum DEX Bağlayıcısı",
+        "description": "Zincir üstü Ethereum takasları — KyberSwap aggregator'ı üzerinden tüm Ethereum DEX'lerinde en iyi fiyat yönlendirmesi"
+      },
+      "base-dex-connector": {
+        "title": "Base DEX Bağlayıcısı",
+        "description": "Zincir üstü Base takasları — KyberSwap aggregator'ı üzerinden tüm Base DEX'lerinde en iyi fiyat yönlendirmesi"
+      },
+      "arbitrum-dex-connector": {
+        "title": "Arbitrum DEX Bağlayıcısı",
+        "description": "Zincir üstü Arbitrum takasları — KyberSwap aggregator'ı üzerinden tüm Arbitrum DEX'lerinde en iyi fiyat yönlendirmesi"
+      },
+      "bsc-dex-connector": {
+        "title": "BNB Chain DEX Bağlayıcısı",
+        "description": "Zincir üstü BNB Chain takasları — KyberSwap aggregator'ı üzerinden tüm BNB Chain DEX'lerinde en iyi fiyat yönlendirmesi"
+      },
+      "polygon-dex-connector": {
+        "title": "Polygon DEX Bağlayıcısı",
+        "description": "Zincir üstü Polygon takasları — KyberSwap aggregator'ı üzerinden tüm Polygon DEX'lerinde en iyi fiyat yönlendirmesi"
       }
     }
   },
@@ -4196,6 +4390,36 @@
         "label": "Mağaza Kataloğu",
         "description": "Göz atılabilir bir çalışma alanı şablonu kataloğu sağla"
       }
+    }
+  },
+  "registryCategories": {
+    "platform": {
+      "label": "Platform",
+      "description": "Pairlens sunucusu üzerinden yönlendirilen ana hizmetler"
+    },
+    "exchange": {
+      "label": "Borsa",
+      "description": "Piyasa verisi ve işlem için doğrudan borsa bağlantıları"
+    },
+    "broker": {
+      "label": "Aracı Kurumlar",
+      "description": "Hisse senedi verisi ve işlemi için aracı kurum bağlantıları"
+    },
+    "ai": {
+      "label": "AI Sağlayıcıları",
+      "description": "AI co-pilot analizi için dil modeli sağlayıcıları"
+    },
+    "intelligence": {
+      "label": "İstihbarat",
+      "description": "Sinyal tespiti ve strateji hesaplaması"
+    },
+    "discovery": {
+      "label": "Keşif",
+      "description": "Mevcut işlem çiftlerine göz atmak için enstrüman katalogları"
+    },
+    "themes": {
+      "label": "Temalar",
+      "description": "Renkleri, grafik paletini ve arayüz stilini geçersiz kılan görsel temalar"
     }
   }
 }

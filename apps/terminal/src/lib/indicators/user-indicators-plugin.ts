@@ -8,7 +8,6 @@ import type {
 import type { CustomIndicatorDescriptor } from '@pairlens/shared/plugin-types'
 
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
-import i18n from '@/lib/i18n'
 
 // ---------------------------------------------------------------------------
 // User Indicators — the user's own Python indicator scripts, expressed as a
@@ -27,10 +26,8 @@ export const userIndicatorsManifest: PluginManifest = {
   name: 'My Indicators',
   version: '1.0.0',
   author: 'Pairlens',
-  description: i18n.t('pluginStore.manifests.userIndicators.description', {
-    defaultValue:
-      'Your custom Python indicators, created in the Indicators editor.',
-  }),
+  description:
+    'Your custom Python indicators, created in the Indicators editor.',
   icon: 'SquareFunction',
   capabilities: [
     {

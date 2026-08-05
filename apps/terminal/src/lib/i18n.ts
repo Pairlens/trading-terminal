@@ -3,6 +3,8 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+import { SUPPORTED_LOCALES, pickLocale } from '@pairlens/shared/localized-text'
+
 import de from '@/locales/de/translation.json'
 import en from '@/locales/en/translation.json'
 import es from '@/locales/es/translation.json'
@@ -23,40 +25,18 @@ import zhHant from '@/locales/zh-Hant/translation.json'
 
 const STORAGE_KEY = 'pairlens:language'
 
-const SUPPORTED = [
-  'en',
-  'es',
-  'zh',
-  'zh-Hant',
-  'ru',
-  'uk',
-  'fr',
-  'pt',
-  'de',
-  'it',
-  'pl',
-  'ja',
-  'ko',
-  'vi',
-  'th',
-  'tr',
-  'id',
-]
+const SUPPORTED = SUPPORTED_LOCALES
 
-/** Map a BCP-47 browser language to a supported locale (or 'en'). */
+/**
+ * Map a BCP-47 browser language to a supported locale (or 'en').
+ *
+ * Shares `pickLocale` with plugin-manifest text so a `zh-TW` reader gets
+ * Traditional from both the terminal's catalog and a plugin's own strings.
+ * Two implementations of "close enough language" would drift, and the seam
+ * where they disagreed would be invisible.
+ */
 function detectLanguage(navLanguage: string): string {
-  const nav = navLanguage.toLowerCase()
-  // Chinese needs script-aware routing: Taiwan, Hong Kong, and Macau read
-  // Traditional; every other zh variant gets Simplified.
-  if (nav === 'zh' || nav.startsWith('zh-')) {
-    return /hant|tw|hk|mo/.test(nav) ? 'zh-Hant' : 'zh'
-  }
-  return (
-    SUPPORTED.find((l) => {
-      const s = l.toLowerCase()
-      return nav === s || nav.startsWith(`${s}-`)
-    }) ?? 'en'
-  )
+  return pickLocale(SUPPORTED, navLanguage) ?? 'en'
 }
 
 function getStoredLanguage(): string {
@@ -92,7 +72,7 @@ i18n.use(initReactI18next).init({
   },
   lng: getStoredLanguage(),
   fallbackLng: 'en',
-  supportedLngs: SUPPORTED,
+  supportedLngs: [...SUPPORTED],
   interpolation: { escapeValue: false },
 })
 

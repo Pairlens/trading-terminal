@@ -2496,11 +2496,205 @@
     "apiKeyRequiredHint": "APIキーが必要",
     "setupRequiredHint": "セットアップが必要",
     "manifests": {
-      "userIndicators": {
+      "pairlens-core": {
+        "title": "Pairlens Core",
+        "description": "コアトレーディングターミナル — チャート、オーダーブック、エントリー、マーケットディスカバリー、ウォッチリスト"
+      },
+      "pairlens-intelligence": {
+        "title": "Pairlens Intelligence",
+        "description": "Pairlensバックエンドが提供するAI推論、銘柄ディスカバリー、ニュースフィード、マーケットインテリジェンス"
+      },
+      "pairlens-community": {
+        "title": "Pairlens Community",
+        "description": "Pairlensユーザーが共有するコミュニティワークスペーステンプレート。"
+      },
+      "user-indicators": {
+        "title": "マイインジケーター",
         "description": "インジケーターエディターで作成した、あなたのカスタムPythonインジケーター。"
       },
-      "pairlensCommunity": {
-        "description": "Pairlensユーザーが共有するコミュニティワークスペーステンプレート。"
+      "groq-inference": {
+        "title": "Groq 推論",
+        "description": "Groq API による AI 推論(超高速な LLM 補完)"
+      },
+      "openai-inference": {
+        "title": "OpenAI 推論",
+        "description": "OpenAI API による AI 推論"
+      },
+      "anthropic-inference": {
+        "title": "Anthropic 推論",
+        "description": "Anthropic Claude API による AI 推論"
+      },
+      "openrouter-inference": {
+        "title": "OpenRouter",
+        "description": "OpenRouter による AI 推論 — 1つの API キーで各プロバイダーの数百のモデルを利用可能(自前のキーを使用)"
+      },
+      "tavily-search": {
+        "title": "Tavily 検索",
+        "description": "Tavily Search API による AI リサーチ向けのウェブ検索根拠(自前のキーを使用)"
+      },
+      "exa-search": {
+        "title": "Exa 検索",
+        "description": "Exa API による AI リサーチ向けのニューラルウェブ検索根拠(自前のキーを使用)"
+      },
+      "pairlens": {
+        "title": "Pairlens",
+        "description": "Pairlens のシグネチャーテーマ — クリーンな白黒配色にレインボープリズムのアクセント"
+      },
+      "zen-trading": {
+        "title": "Zen Trading",
+        "description": "温かみのあるアースカラーで、集中してトレードするための落ち着いた雰囲気"
+      },
+      "cyberpunk-neon": {
+        "title": "Cyberpunk Neon",
+        "description": "ダーク基調のテーマ。鮮やかなシアン、マゼンタ、エレクトリックパープルを配色"
+      },
+      "earth-tones": {
+        "title": "Earth Tones",
+        "description": "自然にインスパイアされた暖色系テーマ。セージグリーン、テラコッタ、ブラウンを配色"
+      },
+      "terminal-classic": {
+        "title": "Terminal Classic",
+        "description": "ネイビー背景に定番の赤緑ローソク足を組み合わせた、本格トレーディングターミナルの見た目"
+      },
+      "crypto-gold": {
+        "title": "Crypto Gold",
+        "description": "ビットコインにインスパイアされたテーマ。ゴールドのアクセントとダークアンバーの背景で強気なムード"
+      },
+      "arctic-blue": {
+        "title": "Arctic Blue",
+        "description": "アイシーな色合いとすっきりしたラインの、クールなブルーのモノクロテーマ"
+      },
+      "infrared": {
+        "title": "Infrared",
+        "description": "クリムゾンのアクセントとシャープな見た目の、超モダンな赤系テーマ"
+      },
+      "emerald-matrix": {
+        "title": "Emerald Matrix",
+        "description": "エメラルドの色合いと鮮やかな緑のローソク足による、ターミナルハッカー感のあるダークグリーンテーマ"
+      },
+      "royal-violet": {
+        "title": "Royal Violet",
+        "description": "バイオレットのアクセント、ラベンダーのハイライト、深いプラムの暗部を備えたリッチなパープルテーマ"
+      },
+      "midnight-ember": {
+        "title": "Midnight Ember",
+        "description": "深いチャコールをベースに、オレンジアンバーの燃え火のようなアクセントが光る暖色系ダークテーマ"
+      },
+      "sakura-bloom": {
+        "title": "Sakura Bloom",
+        "description": "優しいピンクとローズのアクセントによる、繊細で温かみのある桜のテーマ"
+      },
+      "electric-lime": {
+        "title": "Electric Lime",
+        "description": "鮮やかなライムグリーンのサイドバーと、すっきりしたモノクロのコンテンツエリア"
+      },
+      "burnt-orange": {
+        "title": "Burnt Orange",
+        "description": "深いオレンジとクリーム色を組み合わせた、Reddit風の温かみのある配色"
+      },
+      "night-city": {
+        "title": "Night City",
+        "description": "サイバーパンク2077にインスパイアされた、ダークガンメタルにエレクトリックイエローが映える鋭いデザイン"
+      },
+      "eye-comfort": {
+        "title": "Eye Comfort",
+        "description": "長時間のトレードでも目の疲れを軽減するよう設計された、暖色系の低コントラスト配色"
+      },
+      "high-contrast": {
+        "title": "High Contrast",
+        "description": "アクセシビリティ重視。最大限のコントラスト、太いボーダー、明確な視覚的区分"
+      },
+      "okx-market-connector": {
+        "title": "OKX マーケットコネクタ",
+        "description": "OKX 取引所 API による直接のマーケットデータと取引"
+      },
+      "binance-market-connector": {
+        "title": "Binance マーケットコネクタ",
+        "description": "Binance 取引所 API による直接のマーケットデータと取引"
+      },
+      "bybit-market-connector": {
+        "title": "ByBit マーケットコネクタ",
+        "description": "ByBit 取引所 API による直接のマーケットデータと取引"
+      },
+      "bitvavo-market-connector": {
+        "title": "Bitvavo マーケットコネクタ",
+        "description": "Bitvavo 取引所 API による直接のマーケットデータと取引"
+      },
+      "mexc-market-connector": {
+        "title": "MEXC マーケットコネクタ",
+        "description": "MEXC 取引所 API による直接のマーケットデータと取引"
+      },
+      "kucoin-market-connector": {
+        "title": "KuCoin マーケットコネクタ",
+        "description": "KuCoin 取引所 API による直接のマーケットデータと取引"
+      },
+      "gate-market-connector": {
+        "title": "Gate.io マーケットコネクタ",
+        "description": "Gate.io 取引所 API による直接のマーケットデータと取引"
+      },
+      "coinbase-market-connector": {
+        "title": "Coinbase マーケットコネクタ",
+        "description": "Coinbase Advanced Trade API による直接のマーケットデータと取引"
+      },
+      "bitget-market-connector": {
+        "title": "Bitget マーケットコネクタ",
+        "description": "Bitget 取引所 API による直接のマーケットデータと取引"
+      },
+      "kraken-market-connector": {
+        "title": "Kraken マーケットコネクタ",
+        "description": "Kraken 取引所 API による直接のマーケットデータと取引"
+      },
+      "htx-market-connector": {
+        "title": "HTX マーケットコネクタ",
+        "description": "HTX(旧Huobi)取引所 API による直接のマーケットデータと取引"
+      },
+      "cryptocom-market-connector": {
+        "title": "Crypto.com マーケットコネクタ",
+        "description": "Crypto.com 取引所 API による直接のマーケットデータと取引"
+      },
+      "bitfinex-market-connector": {
+        "title": "Bitfinex マーケットコネクタ",
+        "description": "Bitfinex 取引所 API による直接のマーケットデータと取引"
+      },
+      "upbit-market-connector": {
+        "title": "Upbit マーケットコネクタ",
+        "description": "Upbit Global 取引所 API による直接のマーケットデータと取引"
+      },
+      "alpaca-market-connector": {
+        "title": "Alpaca マーケットコネクタ",
+        "description": "Alpaca ブローカー API による米国株式・ETF — リアルタイムのマーケットデータ、ペーパー・ライブ両対応の取引"
+      },
+      "dexpaprika-data-provider": {
+        "title": "DexPaprika",
+        "description": "DexPaprika が提供する DEX マーケットデータ"
+      },
+      "geckoterminal-data-provider": {
+        "title": "GeckoTerminal",
+        "description": "GeckoTerminal(CoinGecko)が提供する DEX マーケットデータ — 深い履歴と 4 時間足のネイティブ対応"
+      },
+      "jupiter-dex-connector": {
+        "title": "Jupiter DEXコネクタ",
+        "description": "Solana DEXアグリゲーター — 全 Solana DEX から最良価格をルーティング"
+      },
+      "ethereum-dex-connector": {
+        "title": "Ethereum DEXコネクタ",
+        "description": "オンチェーンEthereumスワップ — KyberSwapアグリゲーター経由で全 Ethereum DEX から最良価格をルーティング"
+      },
+      "base-dex-connector": {
+        "title": "Base DEXコネクタ",
+        "description": "オンチェーンBaseスワップ — KyberSwapアグリゲーター経由で全 Base DEX から最良価格をルーティング"
+      },
+      "arbitrum-dex-connector": {
+        "title": "Arbitrum DEXコネクタ",
+        "description": "オンチェーンArbitrumスワップ — KyberSwapアグリゲーター経由で全 Arbitrum DEX から最良価格をルーティング"
+      },
+      "bsc-dex-connector": {
+        "title": "BNB Chain DEXコネクタ",
+        "description": "オンチェーンBNB Chainスワップ — KyberSwapアグリゲーター経由で全 BNB Chain DEX から最良価格をルーティング"
+      },
+      "polygon-dex-connector": {
+        "title": "Polygon DEXコネクタ",
+        "description": "オンチェーンPolygonスワップ — KyberSwapアグリゲーター経由で全 Polygon DEX から最良価格をルーティング"
       }
     }
   },
@@ -4196,6 +4390,36 @@
         "label": "ストアカタログ",
         "description": "閲覧可能なワークスペーステンプレートのカタログを提供"
       }
+    }
+  },
+  "registryCategories": {
+    "platform": {
+      "label": "プラットフォーム",
+      "description": "Pairlens サーバー経由でルーティングされるコアサービス"
+    },
+    "exchange": {
+      "label": "取引所",
+      "description": "マーケットデータと取引のための直接取引所接続"
+    },
+    "broker": {
+      "label": "ブローカー",
+      "description": "株式データと取引のための証券ブローカー接続"
+    },
+    "ai": {
+      "label": "AI プロバイダー",
+      "description": "AI コパイロット分析を支える言語モデルプロバイダー"
+    },
+    "intelligence": {
+      "label": "インテリジェンス",
+      "description": "シグナル検出とストラテジー計算"
+    },
+    "discovery": {
+      "label": "ディスカバリー",
+      "description": "取引可能な銘柄を閲覧するための銘柄カタログ"
+    },
+    "themes": {
+      "label": "テーマ",
+      "description": "配色、チャートパレット、UIスタイルを上書きするビジュアルテーマ"
     }
   }
 }

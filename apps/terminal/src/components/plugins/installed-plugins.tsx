@@ -104,6 +104,7 @@ import {
   getAvailableUpdates,
   removeUpdateForPlugin,
 } from '@/stores/plugin-updates-store'
+import { pluginDescription, pluginTitle } from '@/lib/plugin-text'
 
 function getContributedPanelCount(plugin: PluginInstance): number {
   return plugin.manifest.contributes?.panels?.length ?? 0
@@ -114,7 +115,7 @@ function manifestToEntry(manifest: PluginManifest): RegistryPluginEntry {
   return {
     manifest,
     category: isTheme ? 'themes' : 'installed',
-    tagline: manifest.description,
+    tagline: pluginDescription(manifest),
     bundled: true,
   }
 }
@@ -1429,7 +1430,9 @@ function InstalledPluginRow({
       />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">{plugin.manifest.name}</span>
+          <span className="text-sm font-medium">
+            {pluginTitle(plugin.manifest)}
+          </span>
           <span className="text-[10px] text-muted-foreground/50">
             v{plugin.manifest.version}
           </span>
@@ -1490,7 +1493,7 @@ function InstalledPluginRow({
           )}
         </div>
         <p className="truncate text-xs text-muted-foreground">
-          {plugin.manifest.description}
+          {pluginDescription(plugin.manifest)}
         </p>
       </div>
       <div className="flex items-center gap-2">

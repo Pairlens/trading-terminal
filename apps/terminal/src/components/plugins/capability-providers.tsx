@@ -40,6 +40,7 @@ import {
   capabilityDomainLabel,
   capabilityLabel,
 } from '@/lib/registry-labels'
+import { pluginTitle } from '@/lib/plugin-text'
 
 const AUTO = 'auto'
 
@@ -547,7 +548,7 @@ function ProviderSelect({
           themeColors={provider.plugin.manifest.theme?.previewColors}
           className="size-4"
         />
-        <span>{provider.plugin.manifest.name}</span>
+        <span>{pluginTitle(provider.plugin.manifest)}</span>
       </span>
     )
   }
@@ -582,7 +583,7 @@ function ProviderSelect({
               themeColors={plugin.manifest.theme?.previewColors}
               className="size-4"
             />
-            <span>{plugin.manifest.name}</span>
+            <span>{pluginTitle(plugin.manifest)}</span>
             {!active && (
               <span className="text-muted-foreground">
                 ({inactiveHint?.toLowerCase() ?? t('pluginStore.disabledHint')})

@@ -10,6 +10,7 @@ import { pluginBrand, pluginPosterSrc } from './plugin-brand'
 import { PluginPosterArt } from './plugin-icon'
 import type { RegistryPluginEntry } from '@pairlens/shared/registry-types'
 import { isCommunityEntry } from '@/lib/plugins/community-tier'
+import { pluginDescription, pluginTitle } from '@/lib/plugin-text'
 
 /** Entries updated within this window get an "Updated" poster badge. */
 const UPDATED_WINDOW_MS = 30 * 24 * 60 * 60 * 1000
@@ -99,9 +100,11 @@ export function PluginStoreCard({
         </span>
       </motion.div>
       <p className="mt-2 truncate text-[13px] font-semibold text-foreground">
-        {manifest.name}
+        {pluginTitle(manifest)}
       </p>
-      <p className="truncate text-[11px] text-muted-foreground/80">{tagline}</p>
+      <p className="truncate text-[11px] text-muted-foreground/80">
+        {pluginDescription(manifest) || tagline}
+      </p>
     </button>
   )
 }

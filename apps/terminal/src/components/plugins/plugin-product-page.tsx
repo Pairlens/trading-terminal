@@ -23,6 +23,11 @@ import { ConfigFieldInput } from '@/components/config-field-input'
 import { getPaneIcon } from '@/lib/layout/pane-icons'
 import { isCommunityEntry } from '@/lib/plugins/community-tier'
 import { hostsFromManifest } from '@/lib/plugins/network-grants'
+import {
+  localizedText,
+  pluginDescription,
+  pluginTitle,
+} from '@/lib/plugin-text'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -230,10 +235,10 @@ export function PluginProductPage({
               )}
             </div>
             <h1 className="mt-3.5 font-serif text-[46px] font-semibold leading-[1.02] tracking-[-0.03em] text-foreground">
-              {manifest.name}
+              {pluginTitle(manifest)}
             </h1>
             <p className="mt-3.5 max-w-[52ch] text-base leading-[1.6] text-muted-foreground">
-              {tagline}
+              {pluginDescription(manifest) || tagline}
             </p>
             <p className="mt-4 font-mono text-xs text-muted-foreground/80">
               {manifest.author}
@@ -288,7 +293,7 @@ export function PluginProductPage({
               {t('pluginStore.overview', 'Overview')}
             </SectionEyebrow>
             <p className="mt-3 max-w-[74ch] text-[14.5px] leading-[1.7] text-muted-foreground">
-              {longDescription ?? tagline}
+              {(longDescription ?? pluginDescription(manifest)) || tagline}
             </p>
           </section>
 
@@ -333,14 +338,17 @@ export function PluginProductPage({
                       className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-card px-2.5 py-1.5 text-xs text-foreground/90"
                       title={
                         panel.descriptionKey
-                          ? t(panel.descriptionKey, panel.description ?? '')
-                          : panel.description
+                          ? t(
+                              panel.descriptionKey,
+                              localizedText(panel.description) ?? '',
+                            )
+                          : localizedText(panel.description)
                       }
                     >
                       <Icon className="size-3.5 text-muted-foreground" />
                       {panel.labelKey
-                        ? t(panel.labelKey, panel.label)
-                        : panel.label}
+                        ? t(panel.labelKey, localizedText(panel.label) ?? '')
+                        : localizedText(panel.label)}
                     </span>
                   )
                 })}

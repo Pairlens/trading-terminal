@@ -2496,11 +2496,205 @@
     "apiKeyRequiredHint": "API key required",
     "setupRequiredHint": "Setup required",
     "manifests": {
-      "userIndicators": {
+      "pairlens-core": {
+        "title": "Pairlens Core",
+        "description": "Core trading terminal — charts, order books, trade entry, market discovery, and watchlists"
+      },
+      "pairlens-intelligence": {
+        "title": "Pairlens Intelligence",
+        "description": "AI inference, instrument discovery, news feeds, and market intelligence powered by the Pairlens backend"
+      },
+      "pairlens-community": {
+        "title": "Pairlens Community",
+        "description": "Community workspace templates shared by Pairlens users."
+      },
+      "user-indicators": {
+        "title": "My Indicators",
         "description": "Your custom Python indicators, created in the Indicators editor."
       },
-      "pairlensCommunity": {
-        "description": "Community workspace templates shared by Pairlens users."
+      "groq-inference": {
+        "title": "Groq Inference",
+        "description": "AI inference via Groq API (ultra-fast LLM completions)"
+      },
+      "openai-inference": {
+        "title": "OpenAI Inference",
+        "description": "AI inference via OpenAI API"
+      },
+      "anthropic-inference": {
+        "title": "Anthropic Inference",
+        "description": "AI inference via Anthropic Claude API"
+      },
+      "openrouter-inference": {
+        "title": "OpenRouter",
+        "description": "AI inference via OpenRouter — one API key for hundreds of models across providers (bring your own key)"
+      },
+      "tavily-search": {
+        "title": "Tavily Search",
+        "description": "Web search grounding for AI research via the Tavily Search API (bring your own key)"
+      },
+      "exa-search": {
+        "title": "Exa Search",
+        "description": "Neural web search grounding for AI research via the Exa API (bring your own key)"
+      },
+      "pairlens": {
+        "title": "Pairlens",
+        "description": "The signature Pairlens theme — crisp black & white with rainbow prism accents"
+      },
+      "zen-trading": {
+        "title": "Zen Trading",
+        "description": "Warm, earthy tones with a calm aesthetic for focused trading sessions"
+      },
+      "cyberpunk-neon": {
+        "title": "Cyberpunk Neon",
+        "description": "Dark-forward theme with vibrant cyans, magentas, and electric purples"
+      },
+      "earth-tones": {
+        "title": "Earth Tones",
+        "description": "Warm nature-inspired theme with sage greens, terracotta, and browns"
+      },
+      "terminal-classic": {
+        "title": "Terminal Classic",
+        "description": "Professional trading terminal look with navy backgrounds and classic green/red candles"
+      },
+      "crypto-gold": {
+        "title": "Crypto Gold",
+        "description": "Bitcoin-inspired theme with gold accents, dark amber backgrounds, and bullish energy"
+      },
+      "arctic-blue": {
+        "title": "Arctic Blue",
+        "description": "Cool blue monochrome theme with icy tones and clean lines"
+      },
+      "infrared": {
+        "title": "Infrared",
+        "description": "Ultra-modern red-toned theme with crimson accents and sharp aesthetics"
+      },
+      "emerald-matrix": {
+        "title": "Emerald Matrix",
+        "description": "Deep green theme with emerald tones, vivid green candles, and a terminal-hacker energy"
+      },
+      "royal-violet": {
+        "title": "Royal Violet",
+        "description": "Rich purple theme with violet accents, lavender highlights, and deep plum darks"
+      },
+      "midnight-ember": {
+        "title": "Midnight Ember",
+        "description": "Warm dark theme with deep charcoal base and glowing orange-amber ember accents"
+      },
+      "sakura-bloom": {
+        "title": "Sakura Bloom",
+        "description": "Delicate cherry blossom theme with soft pinks, rose accents, and gentle warmth"
+      },
+      "electric-lime": {
+        "title": "Electric Lime",
+        "description": "Vivid lime green sidebar with clean monochrome content areas"
+      },
+      "burnt-orange": {
+        "title": "Burnt Orange",
+        "description": "Warm Reddit-inspired palette with deep oranges and cream tones"
+      },
+      "night-city": {
+        "title": "Night City",
+        "description": "Cyberpunk 2077 inspired — electric yellow on dark gunmetal with sharp edges"
+      },
+      "eye-comfort": {
+        "title": "Eye Comfort",
+        "description": "Warm, low-contrast palette designed to reduce eye fatigue during long sessions"
+      },
+      "high-contrast": {
+        "title": "High Contrast",
+        "description": "Accessibility-focused with maximum contrast, bold borders, and clear visual separation"
+      },
+      "okx-market-connector": {
+        "title": "OKX Market Connector",
+        "description": "Direct market data and trading via OKX exchange APIs"
+      },
+      "binance-market-connector": {
+        "title": "Binance Market Connector",
+        "description": "Direct market data and trading via Binance exchange APIs"
+      },
+      "bybit-market-connector": {
+        "title": "ByBit Market Connector",
+        "description": "Direct market data and trading via ByBit exchange APIs"
+      },
+      "bitvavo-market-connector": {
+        "title": "Bitvavo Market Connector",
+        "description": "Direct market data and trading via Bitvavo exchange APIs"
+      },
+      "mexc-market-connector": {
+        "title": "MEXC Market Connector",
+        "description": "Direct market data and trading via MEXC exchange APIs"
+      },
+      "kucoin-market-connector": {
+        "title": "KuCoin Market Connector",
+        "description": "Direct market data and trading via KuCoin exchange APIs"
+      },
+      "gate-market-connector": {
+        "title": "Gate.io Market Connector",
+        "description": "Direct market data and trading via Gate.io exchange APIs"
+      },
+      "coinbase-market-connector": {
+        "title": "Coinbase Market Connector",
+        "description": "Direct market data and trading via Coinbase Advanced Trade APIs"
+      },
+      "bitget-market-connector": {
+        "title": "Bitget Market Connector",
+        "description": "Direct market data and trading via Bitget exchange APIs"
+      },
+      "kraken-market-connector": {
+        "title": "Kraken Market Connector",
+        "description": "Direct market data and trading via Kraken exchange APIs"
+      },
+      "htx-market-connector": {
+        "title": "HTX Market Connector",
+        "description": "Direct market data and trading via HTX (formerly Huobi) exchange APIs"
+      },
+      "cryptocom-market-connector": {
+        "title": "Crypto.com Market Connector",
+        "description": "Direct market data and trading via Crypto.com exchange APIs"
+      },
+      "bitfinex-market-connector": {
+        "title": "Bitfinex Market Connector",
+        "description": "Direct market data and trading via Bitfinex exchange APIs"
+      },
+      "upbit-market-connector": {
+        "title": "Upbit Market Connector",
+        "description": "Direct market data and trading via Upbit Global exchange APIs"
+      },
+      "alpaca-market-connector": {
+        "title": "Alpaca Market Connector",
+        "description": "US stocks and ETFs via the Alpaca broker API — real-time market data, paper and live trading"
+      },
+      "dexpaprika-data-provider": {
+        "title": "DexPaprika",
+        "description": "DEX market data powered by DexPaprika"
+      },
+      "geckoterminal-data-provider": {
+        "title": "GeckoTerminal",
+        "description": "DEX market data powered by GeckoTerminal (CoinGecko) — deep history, native 4h candles"
+      },
+      "jupiter-dex-connector": {
+        "title": "Jupiter DEX Connector",
+        "description": "Solana DEX aggregator — best price routing across all Solana DEXs"
+      },
+      "ethereum-dex-connector": {
+        "title": "Ethereum DEX Connector",
+        "description": "On-chain Ethereum swaps — best price routing across all Ethereum DEXs via the KyberSwap aggregator"
+      },
+      "base-dex-connector": {
+        "title": "Base DEX Connector",
+        "description": "On-chain Base swaps — best price routing across all Base DEXs via the KyberSwap aggregator"
+      },
+      "arbitrum-dex-connector": {
+        "title": "Arbitrum DEX Connector",
+        "description": "On-chain Arbitrum swaps — best price routing across all Arbitrum DEXs via the KyberSwap aggregator"
+      },
+      "bsc-dex-connector": {
+        "title": "BNB Chain DEX Connector",
+        "description": "On-chain BNB Chain swaps — best price routing across all BNB Chain DEXs via the KyberSwap aggregator"
+      },
+      "polygon-dex-connector": {
+        "title": "Polygon DEX Connector",
+        "description": "On-chain Polygon swaps — best price routing across all Polygon DEXs via the KyberSwap aggregator"
       }
     }
   },
@@ -4196,6 +4390,36 @@
         "label": "Store Catalog",
         "description": "Provide a browsable catalog of workspace templates"
       }
+    }
+  },
+  "registryCategories": {
+    "platform": {
+      "label": "Platform",
+      "description": "Core services routing through the Pairlens server"
+    },
+    "exchange": {
+      "label": "Exchange",
+      "description": "Direct exchange connections for market data and trading"
+    },
+    "broker": {
+      "label": "Brokers",
+      "description": "Stock broker connections for equities data and trading"
+    },
+    "ai": {
+      "label": "AI Providers",
+      "description": "Language model providers for AI co-pilot analysis"
+    },
+    "intelligence": {
+      "label": "Intelligence",
+      "description": "Signal detection and strategy computation"
+    },
+    "discovery": {
+      "label": "Discovery",
+      "description": "Instrument catalogs for browsing available trading pairs"
+    },
+    "themes": {
+      "label": "Themes",
+      "description": "Visual themes that override colors, chart palette, and UI styling"
     }
   }
 }

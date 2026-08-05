@@ -35,6 +35,7 @@
     "./capability-meta": "./src/capability-meta.ts",
     "./affiliates": "./src/affiliates.ts",
     "./billing-types": "./src/billing-types.ts",
-    "./account-types": "./src/account-types.ts"
+    "./account-types": "./src/account-types.ts",
+    "./localized-text": "./src/localized-text.ts"
   }
 }

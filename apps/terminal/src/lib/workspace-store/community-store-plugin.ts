@@ -8,7 +8,6 @@ import type {
 
 import type { CommunityWorkspaceSubmitInput } from '@/lib/api'
 import { api } from '@/lib/api'
-import i18n from '@/lib/i18n'
 
 // ---------------------------------------------------------------------------
 // Pairlens Community — the first-party workspace store, expressed as a plugin.
@@ -30,9 +29,7 @@ export const communityStoreManifest: PluginManifest = {
   name: 'Pairlens Community',
   version: '1.0.0',
   author: 'Pairlens',
-  description: i18n.t('pluginStore.manifests.pairlensCommunity.description', {
-    defaultValue: 'Community workspace templates shared by Pairlens users.',
-  }),
+  description: 'Community workspace templates shared by Pairlens users.',
   icon: 'Users',
   capabilities: [
     {
