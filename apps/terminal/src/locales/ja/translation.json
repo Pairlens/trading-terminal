@@ -2413,6 +2413,7 @@
     "installFailed": "アップデートに失敗しました",
     "installNow": "再起動してアップデート",
     "installing": "インストール中…",
+    "refreshNow": "更新",
     "restarting": "再起動中…",
     "upToDate": "最新バージョンを利用中です。"
   },

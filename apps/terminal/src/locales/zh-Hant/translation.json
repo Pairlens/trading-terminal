@@ -2413,6 +2413,7 @@
     "installFailed": "更新失敗",
     "installNow": "重新啟動並更新",
     "installing": "安裝中…",
+    "refreshNow": "重新整理",
     "restarting": "重新啟動中…",
     "upToDate": "你目前使用的已是最新版本。"
   },

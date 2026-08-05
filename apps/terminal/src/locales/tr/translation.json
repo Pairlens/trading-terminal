@@ -2413,6 +2413,7 @@
     "installFailed": "Güncelleme başarısız oldu",
     "installNow": "Yeniden başlat ve güncelle",
     "installing": "Kuruluyor…",
+    "refreshNow": "Yenile",
     "restarting": "Yeniden başlatılıyor…",
     "upToDate": "En son sürümdesin."
   },

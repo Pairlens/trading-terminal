@@ -2413,6 +2413,7 @@
     "installFailed": "Cập nhật thất bại",
     "installNow": "Khởi động lại & cập nhật",
     "installing": "Đang cài đặt…",
+    "refreshNow": "Tải lại",
     "restarting": "Đang khởi động lại…",
     "upToDate": "Bạn đang dùng phiên bản mới nhất."
   },

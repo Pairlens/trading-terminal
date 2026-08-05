@@ -49,3 +49,7 @@ apps/registry/static/modules/community/
 # Pyodide runtime assets — staged from node_modules/pyodide by
 # apps/terminal/scripts/copy-pyodide.ts on dev/build, never committed
 apps/terminal/public/_pyodide/
+
+# Version manifest — written by the terminal vite config on dev/build so the
+# web build can poll for newer deploys, never committed
+apps/terminal/public/version.json

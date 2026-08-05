@@ -214,6 +214,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     void import('@/lib/window-visibility').then((m) => m.initWindowVisibility())
     // Auto-update checks (desktop only; no-op in browsers).
     void import('@/lib/updater').then((m) => m.initUpdater())
+    // New-deploy refresh prompt (browsers only; no-op on desktop and in dev).
+    void import('@/lib/web-updater').then((m) => m.initWebUpdater())
     // Opt-in analytics (no-op until the user consents; inert without a key).
     void import('@/lib/analytics').then((m) => m.initAnalytics())
     // Idle / periodic / wake lock triggers. Inert until a password is set.

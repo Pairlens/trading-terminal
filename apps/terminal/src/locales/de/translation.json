@@ -2413,6 +2413,7 @@
     "installFailed": "Update fehlgeschlagen",
     "installNow": "Neu starten & aktualisieren",
     "installing": "Wird installiert…",
+    "refreshNow": "Aktualisieren",
     "restarting": "Wird neu gestartet…",
     "upToDate": "Du hast die neueste Version."
   },
