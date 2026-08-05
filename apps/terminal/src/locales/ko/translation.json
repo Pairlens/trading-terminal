@@ -1918,7 +1918,10 @@
     "blockedDescription": "이 웹사이트는 다른 페이지 안에 표시되는 것을 차단합니다. 대신 별도의 브라우저 탭에서 열 수 있습니다."
   },
   "intelligence": {
-    "awaitingSignal": "감지된 시그널이 없습니다",
+    "analyzing": "시장 분석 중…",
+    "noRecentSignals": "최근 {{bars}}개 봉에서 시그널 없음",
+    "live": "라이브",
+    "recentSignals": "최근 시그널",
     "regime": "국면",
     "trending": "추세",
     "choppy": "횡보"

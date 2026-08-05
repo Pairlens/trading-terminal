@@ -1926,7 +1926,10 @@
     "blockedDescription": "Ta strona blokuje wyświetlanie w innych stronach. Możesz zamiast tego otworzyć ją w osobnej karcie przeglądarki."
   },
   "intelligence": {
-    "awaitingSignal": "Nie wykryto sygnałów",
+    "analyzing": "Analizowanie rynku…",
+    "noRecentSignals": "Brak sygnałów w ostatnich {{bars}} świecach",
+    "live": "Na żywo",
+    "recentSignals": "Ostatnie sygnały",
     "regime": "Reżim",
     "trending": "Trendowy",
     "choppy": "Chaotyczny"

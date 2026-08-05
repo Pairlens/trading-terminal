@@ -1918,7 +1918,10 @@
     "blockedDescription": "Trang web này chặn việc hiển thị bên trong các trang khác. Bạn có thể mở nó trong một tab trình duyệt riêng thay vào đó."
   },
   "intelligence": {
-    "awaitingSignal": "Không phát hiện tín hiệu nào",
+    "analyzing": "Đang phân tích thị trường…",
+    "noRecentSignals": "Không có tín hiệu trong {{bars}} nến gần nhất",
+    "live": "Trực tiếp",
+    "recentSignals": "Tín hiệu gần đây",
     "regime": "Chế độ",
     "trending": "Xu hướng",
     "choppy": "Giằng co"

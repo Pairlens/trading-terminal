@@ -4,7 +4,9 @@ export {
   computeSignals,
   computeSignalsWithRegime,
   findRecentSignal,
+  scanSignals,
 } from './compute'
+export type { DetectedSignal, SignalScan } from './compute'
 export { detectRegime, detectRegimeWithAtr } from './regime'
 export {
   ema,

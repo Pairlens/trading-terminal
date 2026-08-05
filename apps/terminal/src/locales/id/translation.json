@@ -1918,7 +1918,10 @@
     "blockedDescription": "Situs web ini memblokir tampilan di dalam halaman lain. Anda dapat membukanya di tab browser terpisah."
   },
   "intelligence": {
-    "awaitingSignal": "Tidak ada sinyal terdeteksi",
+    "analyzing": "Menganalisis pasar…",
+    "noRecentSignals": "Tidak ada sinyal dalam {{bars}} candle terakhir",
+    "live": "Langsung",
+    "recentSignals": "Sinyal terbaru",
     "regime": "Rezim",
     "trending": "Trending",
     "choppy": "Bergejolak"

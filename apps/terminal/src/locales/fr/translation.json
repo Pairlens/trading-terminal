@@ -1918,7 +1918,10 @@
     "blockedDescription": "Ce site web empêche son affichage dans d’autres pages. Vous pouvez l’ouvrir dans un onglet de navigateur séparé à la place."
   },
   "intelligence": {
-    "awaitingSignal": "Aucun signal détecté",
+    "analyzing": "Analyse du marché…",
+    "noRecentSignals": "Aucun signal sur les {{bars}} dernières bougies",
+    "live": "En direct",
+    "recentSignals": "Signaux récents",
     "regime": "Régime",
     "trending": "Tendanciel",
     "choppy": "Erratique"

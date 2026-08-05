@@ -31,6 +31,7 @@ export type CandleStreamValue = Pick<
   | 'candles'
   | 'latestCandle'
   | 'latestSignal'
+  | 'signalScan'
   | 'status'
   | 'stale'
   | 'noData'
@@ -180,6 +181,7 @@ export function ChartTerminalProvider({
       candles: state.candles,
       latestCandle: state.latestCandle,
       latestSignal: state.latestSignal,
+      signalScan: state.signalScan,
       status: state.status,
       stale: state.stale,
       noData: state.noData,
@@ -191,6 +193,7 @@ export function ChartTerminalProvider({
       state.candles,
       state.latestCandle,
       state.latestSignal,
+      state.signalScan,
       state.status,
       state.stale,
       state.noData,

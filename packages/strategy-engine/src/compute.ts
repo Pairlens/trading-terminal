@@ -51,6 +51,77 @@ export function computeSignals(
   return computeSignalsWithRegime(candles)[1]
 }
 
+/** A signal occurrence found by scanning historical bars. */
+export interface DetectedSignal {
+  /** Payload as evaluated on the most recent bar of the run. */
+  signal: SignalPayload
+  /** Bar timestamp where the signal first appeared (the detection moment). */
+  firstTs: number
+  /** Most recent bar timestamp where the signal still evaluated. */
+  lastTs: number
+  /** The signal still evaluates on the newest scanned bar. */
+  active: boolean
+}
+
+export interface SignalScan {
+  regime: Regime | null
+  /** How many bar positions were actually evaluated. */
+  scannedBars: number
+  /** Detected signal runs, newest-first. */
+  signals: Array<DetectedSignal>
+}
+
+/**
+ * Scan the last `lookback` bar positions and return every signal occurrence,
+ * collapsing consecutive bars where the same strategy+direction keeps firing
+ * into a single run. Lets clients show "what fired recently and when" from a
+ * fresh history backfill instead of waiting for a live bar to trigger.
+ * Minimum: 39 candles required (MR_EMA_PERIOD + MR_ATR_PERIOD + 5).
+ */
+export function scanSignals(
+  candles: ReadonlyArray<Candle>,
+  lookback: number,
+): SignalScan {
+  const [regime] = computeSignalsWithRegime(candles)
+
+  const minRequired = 39
+  if (candles.length < minRequired) {
+    return { regime, scannedBars: 0, signals: [] }
+  }
+
+  const start = Math.max(minRequired, candles.length - lookback + 1)
+  const signals: Array<DetectedSignal> = []
+  let run: DetectedSignal | null = null
+
+  for (let end = start; end <= candles.length; end++) {
+    const signal = computeSignals(candles.slice(0, end))
+    const bar = candles[end - 1]
+    if (signal) {
+      if (
+        run &&
+        run.signal.strategy === signal.strategy &&
+        run.signal.direction === signal.direction
+      ) {
+        run.signal = signal
+        run.lastTs = bar.ts
+      } else {
+        if (run) signals.push(run)
+        run = { signal, firstTs: bar.ts, lastTs: bar.ts, active: false }
+      }
+    } else if (run) {
+      signals.push(run)
+      run = null
+    }
+  }
+  if (run) {
+    run.active = true
+    signals.push(run)
+  }
+
+  signals.reverse()
+  return { regime, scannedBars: candles.length - start + 1, signals }
+}
+
 /**
  * Scan backwards through last `lookback` candle positions to find the most
  * recent signal. Used after backfill so clients see a signal immediately.

@@ -1918,7 +1918,10 @@
     "blockedDescription": "Este site bloqueia sua exibição dentro de outras páginas. Você pode abri-lo em uma aba separada do navegador."
   },
   "intelligence": {
-    "awaitingSignal": "Nenhum sinal detectado",
+    "analyzing": "Analisando o mercado…",
+    "noRecentSignals": "Sem sinais nas últimas {{bars}} velas",
+    "live": "Ao vivo",
+    "recentSignals": "Sinais recentes",
     "regime": "Regime",
     "trending": "Em tendência",
     "choppy": "Lateralizado"

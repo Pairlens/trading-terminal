@@ -1918,7 +1918,10 @@
     "blockedDescription": "このウェブサイトは他のページ内での表示をブロックしています。代わりに別のブラウザタブで開くことができます。"
   },
   "intelligence": {
-    "awaitingSignal": "シグナルは検出されていません",
+    "analyzing": "市場を分析中…",
+    "noRecentSignals": "直近{{bars}}本のバーでシグナルなし",
+    "live": "ライブ",
+    "recentSignals": "最近のシグナル",
     "regime": "レジーム",
     "trending": "トレンド",
     "choppy": "もみ合い"

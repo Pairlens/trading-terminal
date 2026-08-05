@@ -1918,7 +1918,10 @@
     "blockedDescription": "Diese Website blockiert die Anzeige innerhalb anderer Seiten. Du kannst sie stattdessen in einem separaten Browser-Tab öffnen."
   },
   "intelligence": {
-    "awaitingSignal": "Keine Signale erkannt",
+    "analyzing": "Markt wird analysiert…",
+    "noRecentSignals": "Keine Signale in den letzten {{bars}} Kerzen",
+    "live": "Live",
+    "recentSignals": "Letzte Signale",
     "regime": "Regime",
     "trending": "Trendstark",
     "choppy": "Volatil-seitwärts"
