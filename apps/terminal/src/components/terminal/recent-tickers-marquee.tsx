@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { History, X } from 'lucide-react'
@@ -44,6 +45,7 @@ export function RecentTickersMarquee({
 }: {
   currentPairKey: string
 }) {
+  const { t } = useTranslation()
   const [recentPairs, , removeRecent] = useRecentPairs()
   const { items } = useInstrumentsBySymbols(recentPairs)
   const { markets, defaultMarket } = useAvailableMarkets()
@@ -169,8 +171,8 @@ export function RecentTickersMarquee({
           recently viewed pairs. */}
       <div
         className="flex h-full shrink-0 items-center border-r border-border/60 px-2.5 text-muted-foreground"
-        title="Recently viewed"
-        aria-label="Recently viewed"
+        title={t('terminal.recentlyViewed')}
+        aria-label={t('terminal.recentlyViewed')}
       >
         <History className="size-3.5" />
       </div>

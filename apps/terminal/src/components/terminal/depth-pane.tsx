@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useCallback, useMemo, useRef } from 'react'
 import { Loader2 } from 'lucide-react'
 import { useTheme } from 'next-themes'
@@ -45,6 +46,7 @@ function DepthPaneInner({
 }: {
   orderbookData: OrderbookStreamValue
 }) {
+  const { t } = useTranslation()
   const { orderbook, orderbookStatus, orderbookError } = orderbookData
 
   // Connector-switch transition: retain the previous book and dim it until the
@@ -142,8 +144,8 @@ function DepthPaneInner({
         <Loader2 className="h-3.5 w-3.5 animate-spin" />
         <span>
           {orderbookStatus === 'connecting'
-            ? 'Connecting...'
-            : 'Loading depth...'}
+            ? t('terminal.status.connecting')
+            : t('terminal.status.loadingDepth')}
         </span>
       </div>
     )

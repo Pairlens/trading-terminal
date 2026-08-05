@@ -398,7 +398,8 @@
     "showInFolder": "Показать в папке",
     "updated": "Обновлено {{time}}",
     "back": "Назад",
-    "dismiss": "Скрыть"
+    "dismiss": "Скрыть",
+    "unknownError": "Неизвестная ошибка"
   },
   "legal": {
     "terms": "Условия использования",
@@ -2175,7 +2176,56 @@
       "groupWallet": "Крипто-кошелёк",
       "groupBroker": "Брокерский счёт",
       "groupExchange": "Аккаунт биржи"
-    }
+    },
+    "trade": {
+      "limitBuy": "Лимитная покупка",
+      "limitSell": "Лимитная продажа",
+      "bought": "Куплено",
+      "sold": "Продано",
+      "limitOrderFailed": "Лимитный ордер не прошёл",
+      "swapFailed": "Своп не прошёл",
+      "workflowUnsupported": "Воркфлоу не поддерживается на этом рынке",
+      "orderBlocked": "Ордер заблокирован лимитом риска",
+      "orderRejected": "Ордер отклонён",
+      "orderFailed": "Ордер не прошёл",
+      "setRegion": "Укажите регион",
+      "regionDefaulting": "Регион по умолчанию — Global.",
+      "addPreset": "Добавить пресет",
+      "createFirstWorkflow": "Создайте первый воркфлоу",
+      "editWorkflows": "Редактировать воркфлоу",
+      "selectWorkflow": "Выберите воркфлоу",
+      "submitting": "Отправка…",
+      "holdToRun": "Удерживайте, чтобы запустить",
+      "holdToConfirmLive": "Удерживайте для подтверждения · средства спишутся сразу",
+      "holdToPlace": "Удерживайте, чтобы разместить",
+      "runWorkflow": "Запустить воркфлоу",
+      "buyAsset": "Купить {{asset}}",
+      "sellAsset": "Продать {{asset}}",
+      "amount": "Объём",
+      "price": "Цена"
+    },
+    "status": {
+      "connecting": "Подключение…",
+      "loadingOrderBook": "Загрузка стакана…",
+      "loadingDepth": "Загрузка глубины…",
+      "loadingCandles": "Загрузка свечей…",
+      "waitingTrades": "Ожидание сделок…",
+      "waitingData": "Ожидание данных…",
+      "noCandleData": "Свечей пока нет",
+      "noTradesFeed": "Перейдите на биржу, которая публикует ленту сделок"
+    },
+    "columns": {
+      "price": "Цена",
+      "size": "Объём",
+      "total": "Итого",
+      "open": "Открытие",
+      "close": "Закрытие"
+    },
+    "panel": {
+      "expand": "Развернуть панель",
+      "collapse": "Свернуть панель"
+    },
+    "recentlyViewed": "Недавно просмотренные"
   },
   "accounts": {
     "pageTitle": "Аккаунты",

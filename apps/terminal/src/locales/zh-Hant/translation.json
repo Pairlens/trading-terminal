@@ -398,7 +398,8 @@
     "showInFolder": "在資料夾中顯示",
     "updated": "更新於 {{time}}",
     "back": "返回",
-    "dismiss": "關閉"
+    "dismiss": "關閉",
+    "unknownError": "未知錯誤"
   },
   "legal": {
     "terms": "服務條款",
@@ -2167,7 +2168,56 @@
       "groupWallet": "加密錢包",
       "groupBroker": "券商帳戶",
       "groupExchange": "交易所帳戶"
-    }
+    },
+    "trade": {
+      "limitBuy": "限價買入",
+      "limitSell": "限價賣出",
+      "bought": "已買入",
+      "sold": "已賣出",
+      "limitOrderFailed": "限價單失敗",
+      "swapFailed": "兌換失敗",
+      "workflowUnsupported": "該市場不支援工作流",
+      "orderBlocked": "訂單被風險限額攔截",
+      "orderRejected": "訂單被拒絕",
+      "orderFailed": "下單失敗",
+      "setRegion": "設定你的地區",
+      "regionDefaulting": "地區預設為 Global。",
+      "addPreset": "新增預設",
+      "createFirstWorkflow": "建立你的第一個工作流",
+      "editWorkflows": "編輯工作流",
+      "selectWorkflow": "選擇工作流",
+      "submitting": "送出中…",
+      "holdToRun": "長按執行",
+      "holdToConfirmLive": "長按確認 · 資金立即劃出",
+      "holdToPlace": "長按下單",
+      "runWorkflow": "執行工作流",
+      "buyAsset": "買入 {{asset}}",
+      "sellAsset": "賣出 {{asset}}",
+      "amount": "數量",
+      "price": "價格"
+    },
+    "status": {
+      "connecting": "連線中…",
+      "loadingOrderBook": "正在載入委託簿…",
+      "loadingDepth": "正在載入深度…",
+      "loadingCandles": "正在載入 K 線…",
+      "waitingTrades": "等待成交…",
+      "waitingData": "等待資料…",
+      "noCandleData": "尚無 K 線資料",
+      "noTradesFeed": "切換到發布逐筆成交的交易所"
+    },
+    "columns": {
+      "price": "價格",
+      "size": "數量",
+      "total": "累計",
+      "open": "開盤",
+      "close": "收盤"
+    },
+    "panel": {
+      "expand": "展開面板",
+      "collapse": "收合面板"
+    },
+    "recentlyViewed": "最近檢視"
   },
   "accounts": {
     "pageTitle": "帳戶",

@@ -398,7 +398,8 @@
     "showInFolder": "Hiện trong thư mục",
     "updated": "Đã cập nhật {{time}}",
     "back": "Quay lại",
-    "dismiss": "Bỏ qua"
+    "dismiss": "Bỏ qua",
+    "unknownError": "Lỗi không xác định"
   },
   "legal": {
     "terms": "Điều khoản và Điều kiện",
@@ -2167,7 +2168,56 @@
       "groupWallet": "Ví tiền mã hóa",
       "groupBroker": "Tài khoản môi giới",
       "groupExchange": "Tài khoản sàn"
-    }
+    },
+    "trade": {
+      "limitBuy": "Mua giới hạn",
+      "limitSell": "Bán giới hạn",
+      "bought": "Đã mua",
+      "sold": "Đã bán",
+      "limitOrderFailed": "Lệnh giới hạn thất bại",
+      "swapFailed": "Swap thất bại",
+      "workflowUnsupported": "Sàn này không hỗ trợ workflow",
+      "orderBlocked": "Lệnh bị chặn bởi giới hạn rủi ro",
+      "orderRejected": "Lệnh bị từ chối",
+      "orderFailed": "Lệnh thất bại",
+      "setRegion": "Đặt khu vực của bạn",
+      "regionDefaulting": "Khu vực đang mặc định là Global.",
+      "addPreset": "Thêm preset",
+      "createFirstWorkflow": "Tạo workflow đầu tiên của bạn",
+      "editWorkflows": "Sửa workflow",
+      "selectWorkflow": "Chọn một workflow",
+      "submitting": "Đang gửi…",
+      "holdToRun": "Nhấn giữ để chạy",
+      "holdToConfirmLive": "Nhấn giữ để xác nhận · tiền được dùng ngay",
+      "holdToPlace": "Nhấn giữ để đặt lệnh",
+      "runWorkflow": "Chạy workflow",
+      "buyAsset": "Mua {{asset}}",
+      "sellAsset": "Bán {{asset}}",
+      "amount": "Số lượng",
+      "price": "Giá"
+    },
+    "status": {
+      "connecting": "Đang kết nối…",
+      "loadingOrderBook": "Đang tải sổ lệnh…",
+      "loadingDepth": "Đang tải độ sâu…",
+      "loadingCandles": "Đang tải nến…",
+      "waitingTrades": "Đang chờ giao dịch…",
+      "waitingData": "Đang chờ dữ liệu…",
+      "noCandleData": "Chưa có dữ liệu nến",
+      "noTradesFeed": "Chuyển sang sàn có công bố time and sales"
+    },
+    "columns": {
+      "price": "Giá",
+      "size": "Khối lượng",
+      "total": "Tổng",
+      "open": "Mở cửa",
+      "close": "Đóng cửa"
+    },
+    "panel": {
+      "expand": "Mở rộng bảng",
+      "collapse": "Thu gọn bảng"
+    },
+    "recentlyViewed": "Xem gần đây"
   },
   "accounts": {
     "pageTitle": "Tài khoản",

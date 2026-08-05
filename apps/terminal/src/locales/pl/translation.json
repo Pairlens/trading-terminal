@@ -398,7 +398,8 @@
     "showInFolder": "Pokaż w folderze",
     "updated": "Zaktualizowano {{time}}",
     "back": "Wstecz",
-    "dismiss": "Odrzuć"
+    "dismiss": "Odrzuć",
+    "unknownError": "Nieznany błąd"
   },
   "legal": {
     "terms": "Regulamin",
@@ -2175,7 +2176,56 @@
       "groupWallet": "Portfel kryptowalut",
       "groupBroker": "Konto brokerskie",
       "groupExchange": "Konto giełdowe"
-    }
+    },
+    "trade": {
+      "limitBuy": "Kupno z limitem",
+      "limitSell": "Sprzedaż z limitem",
+      "bought": "Kupiono",
+      "sold": "Sprzedano",
+      "limitOrderFailed": "Zlecenie z limitem nie powiodło się",
+      "swapFailed": "Swap nie powiódł się",
+      "workflowUnsupported": "Workflow nieobsługiwany na tym rynku",
+      "orderBlocked": "Zlecenie zablokowane przez limit ryzyka",
+      "orderRejected": "Zlecenie odrzucone",
+      "orderFailed": "Zlecenie nie powiodło się",
+      "setRegion": "Ustaw swój region",
+      "regionDefaulting": "Region domyślnie ustawiony na Global.",
+      "addPreset": "Dodaj preset",
+      "createFirstWorkflow": "Utwórz swój pierwszy workflow",
+      "editWorkflows": "Edytuj workflow",
+      "selectWorkflow": "Wybierz workflow",
+      "submitting": "Wysyłanie…",
+      "holdToRun": "Przytrzymaj, aby uruchomić",
+      "holdToConfirmLive": "Przytrzymaj, aby potwierdzić · środki ruszają natychmiast",
+      "holdToPlace": "Przytrzymaj, aby złożyć",
+      "runWorkflow": "Uruchom workflow",
+      "buyAsset": "Kup {{asset}}",
+      "sellAsset": "Sprzedaj {{asset}}",
+      "amount": "Ilość",
+      "price": "Cena"
+    },
+    "status": {
+      "connecting": "Łączenie…",
+      "loadingOrderBook": "Wczytywanie księgi zleceń…",
+      "loadingDepth": "Wczytywanie głębokości…",
+      "loadingCandles": "Wczytywanie świec…",
+      "waitingTrades": "Czekam na transakcje…",
+      "waitingData": "Czekam na dane…",
+      "noCandleData": "Brak danych świecowych",
+      "noTradesFeed": "Przełącz się na giełdę publikującą time and sales"
+    },
+    "columns": {
+      "price": "Cena",
+      "size": "Wielkość",
+      "total": "Razem",
+      "open": "Otwarcie",
+      "close": "Zamknięcie"
+    },
+    "panel": {
+      "expand": "Rozwiń panel",
+      "collapse": "Zwiń panel"
+    },
+    "recentlyViewed": "Ostatnio oglądane"
   },
   "accounts": {
     "pageTitle": "Konta",

@@ -398,7 +398,8 @@
     "showInFolder": "Mostrar en la carpeta",
     "updated": "Actualizado {{time}}",
     "back": "Atrás",
-    "dismiss": "Descartar"
+    "dismiss": "Descartar",
+    "unknownError": "Error desconocido"
   },
   "legal": {
     "terms": "Términos y Condiciones",
@@ -2167,7 +2168,56 @@
       "groupWallet": "Wallet cripto",
       "groupBroker": "Cuenta de bróker",
       "groupExchange": "Cuenta de exchange"
-    }
+    },
+    "trade": {
+      "limitBuy": "Compra límite",
+      "limitSell": "Venta límite",
+      "bought": "Comprado",
+      "sold": "Vendido",
+      "limitOrderFailed": "La orden límite falló",
+      "swapFailed": "El swap falló",
+      "workflowUnsupported": "Workflow no soportado en este mercado",
+      "orderBlocked": "Orden bloqueada por el límite de riesgo",
+      "orderRejected": "Orden rechazada",
+      "orderFailed": "La orden falló",
+      "setRegion": "Configura tu región",
+      "regionDefaulting": "La región está por defecto en Global.",
+      "addPreset": "Añadir preajuste",
+      "createFirstWorkflow": "Crea tu primer workflow",
+      "editWorkflows": "Editar workflows",
+      "selectWorkflow": "Elige un workflow",
+      "submitting": "Enviando…",
+      "holdToRun": "Mantén pulsado para ejecutar",
+      "holdToConfirmLive": "Mantén pulsado para confirmar · los fondos salen al instante",
+      "holdToPlace": "Mantén pulsado para enviar",
+      "runWorkflow": "Ejecutar workflow",
+      "buyAsset": "Comprar {{asset}}",
+      "sellAsset": "Vender {{asset}}",
+      "amount": "Cantidad",
+      "price": "Precio"
+    },
+    "status": {
+      "connecting": "Conectando…",
+      "loadingOrderBook": "Cargando libro de órdenes…",
+      "loadingDepth": "Cargando profundidad…",
+      "loadingCandles": "Cargando velas…",
+      "waitingTrades": "Esperando operaciones…",
+      "waitingData": "Esperando datos…",
+      "noCandleData": "Aún no hay datos de velas",
+      "noTradesFeed": "Cambia a un exchange que publique time and sales"
+    },
+    "columns": {
+      "price": "Precio",
+      "size": "Tamaño",
+      "total": "Total",
+      "open": "Apertura",
+      "close": "Cierre"
+    },
+    "panel": {
+      "expand": "Expandir panel",
+      "collapse": "Contraer panel"
+    },
+    "recentlyViewed": "Vistos recientemente"
   },
   "accounts": {
     "pageTitle": "Cuentas",

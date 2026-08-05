@@ -398,7 +398,8 @@
     "showInFolder": "แสดงในโฟลเดอร์",
     "updated": "อัปเดต {{time}}",
     "back": "ย้อนกลับ",
-    "dismiss": "ปิด"
+    "dismiss": "ปิด",
+    "unknownError": "ข้อผิดพลาดที่ไม่ทราบสาเหตุ"
   },
   "legal": {
     "terms": "ข้อกำหนดและเงื่อนไข",
@@ -2167,7 +2168,56 @@
       "groupWallet": "วอลเล็ตคริปโต",
       "groupBroker": "บัญชีโบรกเกอร์",
       "groupExchange": "บัญชีกระดานเทรด"
-    }
+    },
+    "trade": {
+      "limitBuy": "ซื้อแบบลิมิต",
+      "limitSell": "ขายแบบลิมิต",
+      "bought": "ซื้อแล้ว",
+      "sold": "ขายแล้ว",
+      "limitOrderFailed": "คำสั่งลิมิตล้มเหลว",
+      "swapFailed": "สวอปล้มเหลว",
+      "workflowUnsupported": "กระดานนี้ไม่รองรับเวิร์กโฟลว์",
+      "orderBlocked": "คำสั่งถูกบล็อกโดยลิมิตความเสี่ยง",
+      "orderRejected": "คำสั่งถูกปฏิเสธ",
+      "orderFailed": "คำสั่งล้มเหลว",
+      "setRegion": "ตั้งค่าภูมิภาคของคุณ",
+      "regionDefaulting": "ภูมิภาคใช้ค่าเริ่มต้นเป็น Global",
+      "addPreset": "เพิ่มพรีเซ็ต",
+      "createFirstWorkflow": "สร้างเวิร์กโฟลว์แรกของคุณ",
+      "editWorkflows": "แก้ไขเวิร์กโฟลว์",
+      "selectWorkflow": "เลือกเวิร์กโฟลว์",
+      "submitting": "กำลังส่ง…",
+      "holdToRun": "กดค้างเพื่อเรียกใช้",
+      "holdToConfirmLive": "กดค้างเพื่อยืนยัน · เงินจะถูกใช้ทันที",
+      "holdToPlace": "กดค้างเพื่อส่งคำสั่ง",
+      "runWorkflow": "เรียกใช้เวิร์กโฟลว์",
+      "buyAsset": "ซื้อ {{asset}}",
+      "sellAsset": "ขาย {{asset}}",
+      "amount": "จำนวน",
+      "price": "ราคา"
+    },
+    "status": {
+      "connecting": "กำลังเชื่อมต่อ…",
+      "loadingOrderBook": "กำลังโหลดออร์เดอร์บุ๊ก…",
+      "loadingDepth": "กำลังโหลดความลึกตลาด…",
+      "loadingCandles": "กำลังโหลดแท่งเทียน…",
+      "waitingTrades": "รอรายการซื้อขาย…",
+      "waitingData": "รอข้อมูล…",
+      "noCandleData": "ยังไม่มีข้อมูลแท่งเทียน",
+      "noTradesFeed": "สลับไปกระดานที่เผยแพร่ time and sales"
+    },
+    "columns": {
+      "price": "ราคา",
+      "size": "ปริมาณ",
+      "total": "รวม",
+      "open": "ราคาเปิด",
+      "close": "ราคาปิด"
+    },
+    "panel": {
+      "expand": "ขยายแผง",
+      "collapse": "ย่อแผง"
+    },
+    "recentlyViewed": "ดูล่าสุด"
   },
   "accounts": {
     "pageTitle": "บัญชี",

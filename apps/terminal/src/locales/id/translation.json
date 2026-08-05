@@ -398,7 +398,8 @@
     "showInFolder": "Tampilkan di folder",
     "updated": "Diperbarui {{time}}",
     "back": "Kembali",
-    "dismiss": "Tutup"
+    "dismiss": "Tutup",
+    "unknownError": "Kesalahan tidak diketahui"
   },
   "legal": {
     "terms": "Syarat & Ketentuan",
@@ -2167,7 +2168,56 @@
       "groupWallet": "Wallet kripto",
       "groupBroker": "Akun broker",
       "groupExchange": "Akun bursa"
-    }
+    },
+    "trade": {
+      "limitBuy": "Beli limit",
+      "limitSell": "Jual limit",
+      "bought": "Dibeli",
+      "sold": "Terjual",
+      "limitOrderFailed": "Order limit gagal",
+      "swapFailed": "Swap gagal",
+      "workflowUnsupported": "Workflow tidak didukung di pasar ini",
+      "orderBlocked": "Order diblokir oleh batas risiko",
+      "orderRejected": "Order ditolak",
+      "orderFailed": "Order gagal",
+      "setRegion": "Atur wilayahmu",
+      "regionDefaulting": "Wilayah default ke Global.",
+      "addPreset": "Tambah preset",
+      "createFirstWorkflow": "Buat workflow pertamamu",
+      "editWorkflows": "Edit workflow",
+      "selectWorkflow": "Pilih workflow",
+      "submitting": "Mengirim…",
+      "holdToRun": "Tekan & tahan untuk menjalankan",
+      "holdToConfirmLive": "Tekan & tahan untuk konfirmasi · dana langsung keluar",
+      "holdToPlace": "Tekan & tahan untuk memasang",
+      "runWorkflow": "Jalankan workflow",
+      "buyAsset": "Beli {{asset}}",
+      "sellAsset": "Jual {{asset}}",
+      "amount": "Jumlah",
+      "price": "Harga"
+    },
+    "status": {
+      "connecting": "Menghubungkan…",
+      "loadingOrderBook": "Memuat order book…",
+      "loadingDepth": "Memuat kedalaman…",
+      "loadingCandles": "Memuat candle…",
+      "waitingTrades": "Menunggu transaksi…",
+      "waitingData": "Menunggu data…",
+      "noCandleData": "Belum ada data candle",
+      "noTradesFeed": "Ganti ke bursa yang menerbitkan time and sales"
+    },
+    "columns": {
+      "price": "Harga",
+      "size": "Ukuran",
+      "total": "Total",
+      "open": "Pembukaan",
+      "close": "Penutupan"
+    },
+    "panel": {
+      "expand": "Buka panel",
+      "collapse": "Tutup panel"
+    },
+    "recentlyViewed": "Baru dilihat"
   },
   "accounts": {
     "pageTitle": "Akun",

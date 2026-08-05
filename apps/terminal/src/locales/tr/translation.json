@@ -398,7 +398,8 @@
     "showInFolder": "Klasörde göster",
     "updated": "{{time}} güncellendi",
     "back": "Geri",
-    "dismiss": "Kapat"
+    "dismiss": "Kapat",
+    "unknownError": "Bilinmeyen hata"
   },
   "legal": {
     "terms": "Şartlar ve Koşullar",
@@ -2167,7 +2168,56 @@
       "groupWallet": "Kripto cüzdanı",
       "groupBroker": "Aracı kurum hesabı",
       "groupExchange": "Borsa hesabı"
-    }
+    },
+    "trade": {
+      "limitBuy": "Limitli alış",
+      "limitSell": "Limitli satış",
+      "bought": "Alındı",
+      "sold": "Satıldı",
+      "limitOrderFailed": "Limit emri başarısız",
+      "swapFailed": "Swap başarısız",
+      "workflowUnsupported": "Bu piyasada iş akışı desteklenmiyor",
+      "orderBlocked": "Emir risk limiti tarafından engellendi",
+      "orderRejected": "Emir reddedildi",
+      "orderFailed": "Emir başarısız",
+      "setRegion": "Bölgenizi ayarlayın",
+      "regionDefaulting": "Bölge varsayılan olarak Global.",
+      "addPreset": "Ön ayar ekle",
+      "createFirstWorkflow": "İlk iş akışınızı oluşturun",
+      "editWorkflows": "İş akışlarını düzenle",
+      "selectWorkflow": "Bir iş akışı seçin",
+      "submitting": "Gönderiliyor…",
+      "holdToRun": "Çalıştırmak için basılı tutun",
+      "holdToConfirmLive": "Onaylamak için basılı tutun · para hemen çıkar",
+      "holdToPlace": "Emri vermek için basılı tutun",
+      "runWorkflow": "İş akışını çalıştır",
+      "buyAsset": "{{asset}} al",
+      "sellAsset": "{{asset}} sat",
+      "amount": "Miktar",
+      "price": "Fiyat"
+    },
+    "status": {
+      "connecting": "Bağlanıyor…",
+      "loadingOrderBook": "Emir defteri yükleniyor…",
+      "loadingDepth": "Derinlik yükleniyor…",
+      "loadingCandles": "Mumlar yükleniyor…",
+      "waitingTrades": "İşlemler bekleniyor…",
+      "waitingData": "Veri bekleniyor…",
+      "noCandleData": "Henüz mum verisi yok",
+      "noTradesFeed": "Time and sales yayınlayan bir borsaya geçin"
+    },
+    "columns": {
+      "price": "Fiyat",
+      "size": "Miktar",
+      "total": "Toplam",
+      "open": "Açılış",
+      "close": "Kapanış"
+    },
+    "panel": {
+      "expand": "Paneli genişlet",
+      "collapse": "Paneli daralt"
+    },
+    "recentlyViewed": "Son görüntülenenler"
   },
   "accounts": {
     "pageTitle": "Hesaplar",

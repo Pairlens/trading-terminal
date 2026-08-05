@@ -398,7 +398,8 @@
     "showInFolder": "在文件夹中显示",
     "updated": "已更新 {{time}}",
     "back": "返回",
-    "dismiss": "关闭"
+    "dismiss": "关闭",
+    "unknownError": "未知错误"
   },
   "legal": {
     "terms": "服务条款",
@@ -2167,7 +2168,56 @@
       "groupWallet": "加密钱包",
       "groupBroker": "券商账户",
       "groupExchange": "交易所账户"
-    }
+    },
+    "trade": {
+      "limitBuy": "限价买入",
+      "limitSell": "限价卖出",
+      "bought": "已买入",
+      "sold": "已卖出",
+      "limitOrderFailed": "限价单失败",
+      "swapFailed": "兑换失败",
+      "workflowUnsupported": "该市场不支持工作流",
+      "orderBlocked": "订单被风险限额拦截",
+      "orderRejected": "订单被拒绝",
+      "orderFailed": "下单失败",
+      "setRegion": "设置你的地区",
+      "regionDefaulting": "地区默认为 Global。",
+      "addPreset": "添加预设",
+      "createFirstWorkflow": "创建你的第一个工作流",
+      "editWorkflows": "编辑工作流",
+      "selectWorkflow": "选择工作流",
+      "submitting": "提交中…",
+      "holdToRun": "长按运行",
+      "holdToConfirmLive": "长按确认 · 资金立即划出",
+      "holdToPlace": "长按下单",
+      "runWorkflow": "运行工作流",
+      "buyAsset": "买入 {{asset}}",
+      "sellAsset": "卖出 {{asset}}",
+      "amount": "数量",
+      "price": "价格"
+    },
+    "status": {
+      "connecting": "连接中…",
+      "loadingOrderBook": "正在加载订单簿…",
+      "loadingDepth": "正在加载深度…",
+      "loadingCandles": "正在加载 K 线…",
+      "waitingTrades": "等待成交…",
+      "waitingData": "等待数据…",
+      "noCandleData": "暂无 K 线数据",
+      "noTradesFeed": "切换到发布逐笔成交的交易所"
+    },
+    "columns": {
+      "price": "价格",
+      "size": "数量",
+      "total": "累计",
+      "open": "开盘",
+      "close": "收盘"
+    },
+    "panel": {
+      "expand": "展开面板",
+      "collapse": "折叠面板"
+    },
+    "recentlyViewed": "最近查看"
   },
   "accounts": {
     "pageTitle": "账户",

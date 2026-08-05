@@ -398,7 +398,8 @@
     "showInFolder": "Im Ordner anzeigen",
     "updated": "Aktualisiert {{time}}",
     "back": "Zurück",
-    "dismiss": "Ausblenden"
+    "dismiss": "Ausblenden",
+    "unknownError": "Unbekannter Fehler"
   },
   "legal": {
     "terms": "Nutzungsbedingungen",
@@ -1915,7 +1916,7 @@
     "portfolio": "Portfolio",
     "orderBook": "Orderbuch",
     "trades": "Trades",
-    "marketDepth": "Marktiefe",
+    "marketDepth": "Markttiefe",
     "pairInfo": "Paar-Info",
     "research": "Research",
     "social": "Social",
@@ -2167,7 +2168,56 @@
       "groupWallet": "Krypto-Wallet",
       "groupBroker": "Broker-Konto",
       "groupExchange": "Börsenkonto"
-    }
+    },
+    "trade": {
+      "limitBuy": "Limit-Kauf",
+      "limitSell": "Limit-Verkauf",
+      "bought": "Gekauft",
+      "sold": "Verkauft",
+      "limitOrderFailed": "Limit-Order fehlgeschlagen",
+      "swapFailed": "Swap fehlgeschlagen",
+      "workflowUnsupported": "Workflow auf diesem Markt nicht unterstützt",
+      "orderBlocked": "Order durch Risikolimit blockiert",
+      "orderRejected": "Order abgelehnt",
+      "orderFailed": "Order fehlgeschlagen",
+      "setRegion": "Region festlegen",
+      "regionDefaulting": "Region steht standardmäßig auf Global.",
+      "addPreset": "Preset hinzufügen",
+      "createFirstWorkflow": "Erstelle deinen ersten Workflow",
+      "editWorkflows": "Workflows bearbeiten",
+      "selectWorkflow": "Workflow wählen",
+      "submitting": "Wird gesendet…",
+      "holdToRun": "Gedrückt halten zum Ausführen",
+      "holdToConfirmLive": "Gedrückt halten zum Bestätigen · Geld fließt sofort",
+      "holdToPlace": "Gedrückt halten zum Platzieren",
+      "runWorkflow": "Workflow ausführen",
+      "buyAsset": "{{asset}} kaufen",
+      "sellAsset": "{{asset}} verkaufen",
+      "amount": "Menge",
+      "price": "Preis"
+    },
+    "status": {
+      "connecting": "Verbinde…",
+      "loadingOrderBook": "Orderbuch wird geladen…",
+      "loadingDepth": "Markttiefe wird geladen…",
+      "loadingCandles": "Kerzen werden geladen…",
+      "waitingTrades": "Warte auf Trades…",
+      "waitingData": "Warte auf Daten…",
+      "noCandleData": "Noch keine Kerzendaten",
+      "noTradesFeed": "Wechsle zu einer Börse, die Time and Sales veröffentlicht"
+    },
+    "columns": {
+      "price": "Preis",
+      "size": "Größe",
+      "total": "Gesamt",
+      "open": "Eröffnung",
+      "close": "Schluss"
+    },
+    "panel": {
+      "expand": "Panel ausklappen",
+      "collapse": "Panel einklappen"
+    },
+    "recentlyViewed": "Zuletzt angesehen"
   },
   "accounts": {
     "pageTitle": "Konten",

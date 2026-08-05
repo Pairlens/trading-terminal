@@ -398,7 +398,8 @@
     "showInFolder": "Показати в теці",
     "updated": "Оновлено {{time}}",
     "back": "Назад",
-    "dismiss": "Сховати"
+    "dismiss": "Сховати",
+    "unknownError": "Невідома помилка"
   },
   "legal": {
     "terms": "Умови використання",
@@ -2175,7 +2176,56 @@
       "groupWallet": "Криптогаманець",
       "groupBroker": "Брокерський рахунок",
       "groupExchange": "Акаунт біржі"
-    }
+    },
+    "trade": {
+      "limitBuy": "Лімітна купівля",
+      "limitSell": "Лімітний продаж",
+      "bought": "Куплено",
+      "sold": "Продано",
+      "limitOrderFailed": "Лімітний ордер не пройшов",
+      "swapFailed": "Своп не пройшов",
+      "workflowUnsupported": "Воркфлоу не підтримується на цьому ринку",
+      "orderBlocked": "Ордер заблоковано лімітом ризику",
+      "orderRejected": "Ордер відхилено",
+      "orderFailed": "Ордер не пройшов",
+      "setRegion": "Вкажіть регіон",
+      "regionDefaulting": "Регіон за умовчанням — Global.",
+      "addPreset": "Додати пресет",
+      "createFirstWorkflow": "Створіть перший воркфлоу",
+      "editWorkflows": "Редагувати воркфлоу",
+      "selectWorkflow": "Виберіть воркфлоу",
+      "submitting": "Надсилання…",
+      "holdToRun": "Утримуйте, щоб запустити",
+      "holdToConfirmLive": "Утримуйте для підтвердження · кошти спишуться одразу",
+      "holdToPlace": "Утримуйте, щоб розмістити",
+      "runWorkflow": "Запустити воркфлоу",
+      "buyAsset": "Купити {{asset}}",
+      "sellAsset": "Продати {{asset}}",
+      "amount": "Обсяг",
+      "price": "Ціна"
+    },
+    "status": {
+      "connecting": "Підключення…",
+      "loadingOrderBook": "Завантаження стакана…",
+      "loadingDepth": "Завантаження глибини…",
+      "loadingCandles": "Завантаження свічок…",
+      "waitingTrades": "Очікування угод…",
+      "waitingData": "Очікування даних…",
+      "noCandleData": "Свічок поки немає",
+      "noTradesFeed": "Перейдіть на біржу, що публікує стрічку угод"
+    },
+    "columns": {
+      "price": "Ціна",
+      "size": "Обсяг",
+      "total": "Разом",
+      "open": "Відкриття",
+      "close": "Закриття"
+    },
+    "panel": {
+      "expand": "Розгорнути панель",
+      "collapse": "Згорнути панель"
+    },
+    "recentlyViewed": "Нещодавно переглянуті"
   },
   "accounts": {
     "pageTitle": "Облікові записи",

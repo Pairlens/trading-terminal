@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Loader2 } from 'lucide-react'
 
@@ -309,6 +310,7 @@ function formatCompactValue(val: number): string {
 // ── Pane entry point ─────────────────────────────────────────────────
 
 export function LiquidityHeatmapPane() {
+  const { t } = useTranslation()
   const activePair = usePanePair()
   const orderbookData = useOptionalOrderbookData()
   const candleData = useOptionalCandleData()
@@ -322,7 +324,7 @@ export function LiquidityHeatmapPane() {
     return (
       <div className="flex h-full items-center justify-center gap-2 text-xs text-muted-foreground">
         <Loader2 className="h-3.5 w-3.5 animate-spin" />
-        <span>Loading candles...</span>
+        <span>{t('terminal.status.loadingCandles')}</span>
       </div>
     )
   }

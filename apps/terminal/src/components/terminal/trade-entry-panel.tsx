@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { memo, useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 import {
@@ -89,6 +90,7 @@ function TradeToast({
   market,
   price,
 }: TradeToastProps) {
+  const { t } = useTranslation()
   const isBuy = side === 'buy'
   const isLimit = orderType === 'limit'
   const Icon = isLimit ? Timer : isBuy ? ArrowUpRight : ArrowDownRight
@@ -142,11 +144,11 @@ function TradeToast({
           >
             {isLimit
               ? isBuy
-                ? 'Limit Buy'
-                : 'Limit Sell'
+                ? t('terminal.trade.limitBuy')
+                : t('terminal.trade.limitSell')
               : isBuy
-                ? 'Bought'
-                : 'Sold'}
+                ? t('terminal.trade.bought')
+                : t('terminal.trade.sold')}
           </span>
         </motion.div>
 
@@ -246,6 +248,7 @@ function PresetsConfigDialog({
   onOpenChange: (open: boolean) => void
   quoteAsset: string
 }) {
+  const { t } = useTranslation()
   const [draft, setDraft] = useState<Array<string>>([])
 
   useEffect(() => {
@@ -300,16 +303,16 @@ function PresetsConfigDialog({
               className="text-xs text-muted-foreground hover:text-foreground"
               onClick={addSlot}
             >
-              + Add preset
+              + {t('terminal.trade.addPreset')}
             </button>
           )}
         </div>
         <DialogFooter>
           <Button size="sm" variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button size="sm" onClick={handleSave}>
-            Save
+            {t('common.save')}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -342,6 +345,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   pairKey,
   pricesRef,
 }: TradeEntryPanelProps) {
+  const { t } = useTranslation()
   const [side, setSide] = useState<'buy' | 'sell'>('buy')
   const [orderType, setOrderType] = useState<'market' | 'limit' | 'workflow'>(
     'market',
@@ -557,7 +561,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             setSellPct(0)
             refreshWalletBalances(market, selectedWallet.id, pairKey)
           } else {
-            toast.error('Limit order failed', {
+            toast.error(t('terminal.trade.limitOrderFailed'), {
               description: result.error ?? 'Unknown error',
             })
           }
@@ -626,12 +630,14 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           setSellPct(0)
           refreshWalletBalances(market, selectedWallet.id, pairKey)
         } else {
-          toast.error('Swap failed', {
-            description: result.error ?? 'Unknown error',
+          toast.error(t('terminal.trade.swapFailed'), {
+            description: result.error ?? t('common.unknownError'),
           })
         }
       } catch (err) {
-        toast.error('Swap failed', { description: String(err) })
+        toast.error(t('terminal.trade.swapFailed'), {
+          description: String(err),
+        })
       } finally {
         setSubmitting(false)
       }
@@ -653,7 +659,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         if (marketInfo) {
           const compatIssues = checkWorkflowMarketCompat(workflow, marketInfo)
           if (compatIssues.length > 0) {
-            toast.error('Workflow not supported on this market', {
+            toast.error(t('terminal.trade.workflowUnsupported'), {
               description: compatIssues
                 .map((i) => `${i.stepLabel}: ${i.reason}`)
                 .join(' · '),
@@ -815,7 +821,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               risk.positionSizeAction === 'block_all' ||
               (risk.positionSizeAction === 'block_buys' && side === 'buy')
             if (blocks) {
-              toast.error('Order blocked by risk limit', {
+              toast.error(t('terminal.trade.orderBlocked'), {
                 description: `Position is ${ratioPct.toFixed(1)}% of portfolio, over your ${risk.maxPositionSize}% max. Adjust in Settings › Risk.`,
               })
               return
@@ -862,13 +868,15 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           setSize('')
           setSellPct(0)
         } else {
-          toast.error('Order rejected', {
+          toast.error(t('terminal.trade.orderRejected'), {
             description: result.error ?? 'Unknown error',
           })
         }
       }
     } catch (err) {
-      toast.error('Order failed', { description: String(err) })
+      toast.error(t('terminal.trade.orderFailed'), {
+        description: String(err),
+      })
     } finally {
       setSubmitting(false)
     }
@@ -935,13 +943,13 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           <div className="flex items-start gap-2 rounded-md bg-amber-500/10 px-3 py-2 text-[11px] text-amber-700 dark:text-amber-400">
             <MapPin className="mt-0.5 size-3 shrink-0" />
             <span>
-              Region defaulting to Global.{' '}
+              {t('terminal.trade.regionDefaulting')}{' '}
               <button
                 type="button"
                 className="underline"
                 onClick={() => useSettingsDialogStore.getState().open('region')}
               >
-                Set your region
+                {t('terminal.trade.setRegion')}
               </button>
             </span>
             <button
@@ -1041,7 +1049,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                 to="/workflows"
                 className="block text-center text-xs text-muted-foreground hover:text-foreground"
               >
-                Create your first workflow →
+                {t('terminal.trade.createFirstWorkflow')} →
               </Link>
             ) : (
               <>
@@ -1052,7 +1060,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                     setSelectedWorkflowId(e.target.value || null)
                   }
                 >
-                  <option value="">Select a workflow</option>
+                  <option value="">{t('terminal.trade.selectWorkflow')}</option>
                   {wfWorkflows.map((wf) => (
                     <option key={wf.id} value={wf.id}>
                       {wf.name}
@@ -1078,7 +1086,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                   to="/workflows"
                   className="block text-[10px] text-muted-foreground hover:text-foreground"
                 >
-                  Edit workflows →
+                  {t('terminal.trade.editWorkflows')} →
                 </Link>
               </>
             )}
@@ -1089,7 +1097,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-              Amount
+              {t('terminal.trade.amount')}
             </span>
             <button
               type="button"
@@ -1257,21 +1265,23 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           side={side === 'buy' ? 'buy' : 'sell'}
           disabled={!canSubmit}
           busy={submitting}
-          busyLabel="Submitting…"
+          busyLabel={t('terminal.trade.submitting')}
           holdMs={isLiveOrder ? 720 : 480}
           hint={
             orderType === 'workflow'
-              ? 'Press & hold to run'
+              ? t('terminal.trade.holdToRun')
               : isLiveOrder
-                ? 'Press & hold to confirm · funds commit immediately'
-                : 'Press & hold to place'
+                ? t('terminal.trade.holdToConfirmLive')
+                : t('terminal.trade.holdToPlace')
           }
           onConfirm={handleSubmit}
           label={
             <span className="flex items-center gap-1.5">
               {orderType === 'workflow'
-                ? 'Run Workflow'
-                : `${side === 'buy' ? 'Buy' : 'Sell'} ${baseAsset}`}
+                ? t('terminal.trade.runWorkflow')
+                : side === 'buy'
+                  ? t('terminal.trade.buyAsset', { asset: baseAsset })
+                  : t('terminal.trade.sellAsset', { asset: baseAsset })}
               {modeBadge}
             </span>
           }
@@ -1306,6 +1316,7 @@ function LimitPriceField({
   onChange: (value: string) => void
   pricesRef: RefObject<LivePrices>
 }) {
+  const { t } = useTranslation()
   const tickerData = useOptionalTickerData()
   const candleData = useOptionalCandleData()
   const bestBid = tickerData?.bestBid ?? pricesRef.current.bestBid
@@ -1316,7 +1327,7 @@ function LimitPriceField({
   return (
     <div className="space-y-1">
       <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-        Price
+        {t('terminal.trade.price')}
       </span>
       <Input
         type="number"

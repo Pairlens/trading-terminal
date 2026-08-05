@@ -398,7 +398,8 @@
     "showInFolder": "フォルダに表示",
     "updated": "{{time}}に更新",
     "back": "戻る",
-    "dismiss": "閉じる"
+    "dismiss": "閉じる",
+    "unknownError": "不明なエラー"
   },
   "legal": {
     "terms": "利用規約",
@@ -2167,7 +2168,56 @@
       "groupWallet": "暗号資産ウォレット",
       "groupBroker": "ブローカー口座",
       "groupExchange": "取引所アカウント"
-    }
+    },
+    "trade": {
+      "limitBuy": "指値買い",
+      "limitSell": "指値売り",
+      "bought": "約定（買い）",
+      "sold": "約定（売り）",
+      "limitOrderFailed": "指値注文に失敗しました",
+      "swapFailed": "スワップに失敗しました",
+      "workflowUnsupported": "この市場ではワークフローに対応していません",
+      "orderBlocked": "リスク上限により注文がブロックされました",
+      "orderRejected": "注文が拒否されました",
+      "orderFailed": "注文に失敗しました",
+      "setRegion": "地域を設定",
+      "regionDefaulting": "地域は既定でグローバルです。",
+      "addPreset": "プリセットを追加",
+      "createFirstWorkflow": "最初のワークフローを作成",
+      "editWorkflows": "ワークフローを編集",
+      "selectWorkflow": "ワークフローを選択",
+      "submitting": "送信中…",
+      "holdToRun": "長押しで実行",
+      "holdToConfirmLive": "長押しで確定 · 資金は即時に動きます",
+      "holdToPlace": "長押しで発注",
+      "runWorkflow": "ワークフローを実行",
+      "buyAsset": "{{asset}} を買う",
+      "sellAsset": "{{asset}} を売る",
+      "amount": "数量",
+      "price": "価格"
+    },
+    "status": {
+      "connecting": "接続中…",
+      "loadingOrderBook": "板を読み込み中…",
+      "loadingDepth": "板の深さを読み込み中…",
+      "loadingCandles": "ローソク足を読み込み中…",
+      "waitingTrades": "約定を待機中…",
+      "waitingData": "データを待機中…",
+      "noCandleData": "ローソク足データがまだありません",
+      "noTradesFeed": "歩み値を配信している取引所に切り替えてください"
+    },
+    "columns": {
+      "price": "価格",
+      "size": "数量",
+      "total": "合計",
+      "open": "始値",
+      "close": "終値"
+    },
+    "panel": {
+      "expand": "パネルを展開",
+      "collapse": "パネルを折りたたむ"
+    },
+    "recentlyViewed": "最近見た銘柄"
   },
   "accounts": {
     "pageTitle": "アカウント",
