@@ -884,7 +884,7 @@
   "desktopCta": {
     "eyebrow": "Masaüstü uygulaması",
     "title": "Masaüstünde Pairlens",
-    "description": "Tarayıcı sürümü denemek için. Yayınladığımız asıl ürün masaüstü uygulaması.",
+    "description": "Terminal tarayıcınızda sorunsuz çalışır. Masaüstü uygulaması, bir tarayıcı sekmesinin getirdiği sınırları kaldırır.",
     "downloadFor": "{{os}} için indir",
     "macos": "macOS",
     "windows": "Windows",

@@ -884,7 +884,7 @@
   "desktopCta": {
     "eyebrow": "App de escritorio",
     "title": "Pairlens en tu escritorio",
-    "description": "La versión del navegador es para probar. La app de escritorio es la que publicamos.",
+    "description": "El terminal funciona bien en tu navegador. La app de escritorio quita los límites que le impone una pestaña.",
     "downloadFor": "Descargar para {{os}}",
     "macos": "macOS",
     "windows": "Windows",

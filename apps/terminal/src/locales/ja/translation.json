@@ -884,7 +884,7 @@
   "desktopCta": {
     "eyebrow": "デスクトップアプリ",
     "title": "デスクトップで使う Pairlens",
-    "description": "ブラウザ版はお試し用です。実際に提供しているのはデスクトップアプリです。",
+    "description": "ターミナルはブラウザでも問題なく動きます。デスクトップアプリは、ブラウザのタブによる制約を取り払います。",
     "downloadFor": "{{os}} 版をダウンロード",
     "macos": "macOS",
     "windows": "Windows",

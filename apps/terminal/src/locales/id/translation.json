@@ -884,7 +884,7 @@
   "desktopCta": {
     "eyebrow": "Aplikasi desktop",
     "title": "Pairlens di desktopmu",
-    "description": "Versi browser untuk coba-coba. Aplikasi desktop adalah yang kami rilis.",
+    "description": "Terminal berjalan dengan baik di browser Anda. Aplikasi desktop menghilangkan batasan yang diberikan tab browser.",
     "downloadFor": "Unduh untuk {{os}}",
     "macos": "macOS",
     "windows": "Windows",

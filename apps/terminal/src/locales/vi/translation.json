@@ -884,7 +884,7 @@
   "desktopCta": {
     "eyebrow": "Ứng dụng máy tính",
     "title": "Pairlens trên máy tính của bạn",
-    "description": "Bản chạy trên trình duyệt để dùng thử. Ứng dụng máy tính mới là bản chúng tôi phát hành.",
+    "description": "Terminal chạy tốt ngay trong trình duyệt. Ứng dụng máy tính gỡ bỏ những giới hạn mà một tab trình duyệt áp lên nó.",
     "downloadFor": "Tải cho {{os}}",
     "macos": "macOS",
     "windows": "Windows",

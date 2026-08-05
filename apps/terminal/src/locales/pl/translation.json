@@ -888,7 +888,7 @@
   "desktopCta": {
     "eyebrow": "Aplikacja na komputer",
     "title": "Pairlens na Twoim komputerze",
-    "description": "Wersja w przeglądarce służy do testów. Wydajemy aplikację desktopową.",
+    "description": "Terminal działa w przeglądarce bez zarzutu. Aplikacja na komputer znosi ograniczenia, które nakłada karta przeglądarki.",
     "downloadFor": "Pobierz dla {{os}}",
     "macos": "macOS",
     "windows": "Windows",

@@ -884,7 +884,7 @@
   "desktopCta": {
     "eyebrow": "Desktop app",
     "title": "Pairlens on your desktop",
-    "description": "The browser build is for tinkering. The desktop app is the one we ship.",
+    "description": "The terminal runs properly in your browser. The desktop app removes the limits a browser tab puts on it.",
     "downloadFor": "Download for {{os}}",
     "macos": "macOS",
     "windows": "Windows",

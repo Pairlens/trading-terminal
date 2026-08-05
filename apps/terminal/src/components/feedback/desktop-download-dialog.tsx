@@ -1,8 +1,11 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * "Get the desktop app" — shown only in the browser build, where the terminal
- * is a dev/testing surface and the real product is the Tauri app.
+ * "Get the desktop app" — shown only in the browser build.
+ *
+ * The browser build is a real, shipped surface (terminal.pairlens.finance), so
+ * this is not a "download the real one" pitch. It is the honest list of things
+ * a browser tab cannot do, and nothing more.
  *
  * Composition mirrors the sign-in dialog: duotone artwork band on the left,
  * content on the right, seam blend between them. The two are the only
@@ -21,7 +24,6 @@ import {
   AppWindow,
   BellRing,
   Bot,
-  Download,
   KeyRound,
   Layers,
   MoonStar,
@@ -38,6 +40,7 @@ import {
 
 import type { DesktopBuild } from '@/lib/desktop-download'
 import { DesktopStatueScene } from '@/components/desktop-statue'
+import { OS_ICON } from '@/components/feedback/os-icons'
 import { track } from '@/lib/analytics-events'
 import {
   DESKTOP_BUILDS,
@@ -61,6 +64,7 @@ export function DesktopDownloadDialog({
 
   const primaryBuild = DESKTOP_BUILDS.find((build) => build.os === currentOs)
   const otherBuilds = DESKTOP_BUILDS.filter((build) => build !== primaryBuild)
+  const PrimaryIcon = primaryBuild ? OS_ICON[primaryBuild.os] : null
 
   const download = (build: DesktopBuild, asset: string) => {
     track('desktop_download_clicked', {
@@ -132,7 +136,7 @@ export function DesktopDownloadDialog({
                   size="lg"
                   type="button"
                 >
-                  <Download className="size-4" />
+                  {PrimaryIcon ? <PrimaryIcon className="size-4" /> : null}
                   {t('desktopCta.downloadFor', {
                     os: t(primaryBuild.nameKey),
                   })}
@@ -161,18 +165,21 @@ export function DesktopDownloadDialog({
                   {t('desktopCta.otherPlatforms')}
                 </span>
               ) : null}
-              {otherBuilds.map((build) => (
-                <Button
-                  key={build.os}
-                  onClick={() => download(build, build.primary.asset)}
-                  size="sm"
-                  type="button"
-                  variant="outline"
-                >
-                  <Download className="size-3.5" />
-                  {t(build.nameKey)}
-                </Button>
-              ))}
+              {otherBuilds.map((build) => {
+                const Icon = OS_ICON[build.os]
+                return (
+                  <Button
+                    key={build.os}
+                    onClick={() => download(build, build.primary.asset)}
+                    size="sm"
+                    type="button"
+                    variant="outline"
+                  >
+                    <Icon className="size-3.5" />
+                    {t(build.nameKey)}
+                  </Button>
+                )
+              })}
             </div>
 
             <p className="mt-3 text-xs text-muted-foreground">

@@ -884,7 +884,7 @@
   "desktopCta": {
     "eyebrow": "Application de bureau",
     "title": "Pairlens sur votre bureau",
-    "description": "La version navigateur sert aux tests. L'app de bureau est celle que nous publions.",
+    "description": "Le terminal fonctionne très bien dans votre navigateur. L'application de bureau lève les limites qu'un onglet lui impose.",
     "downloadFor": "Télécharger pour {{os}}",
     "macos": "macOS",
     "windows": "Windows",

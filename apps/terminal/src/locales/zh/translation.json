@@ -884,7 +884,7 @@
   "desktopCta": {
     "eyebrow": "桌面应用",
     "title": "把 Pairlens 装到桌面",
-    "description": "浏览器版本用来试玩，我们真正发布的是桌面应用。",
+    "description": "终端在浏览器中运行良好。桌面应用则去掉了浏览器标签页带来的限制。",
     "downloadFor": "下载 {{os}} 版",
     "macos": "macOS",
     "windows": "Windows",

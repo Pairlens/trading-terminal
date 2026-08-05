@@ -884,7 +884,7 @@
   "desktopCta": {
     "eyebrow": "App desktop",
     "title": "Pairlens sul tuo desktop",
-    "description": "La build nel browser serve per provare. L'app desktop è quella che pubblichiamo.",
+    "description": "Il terminale funziona bene nel browser. L'app desktop toglie i limiti che una scheda del browser gli impone.",
     "downloadFor": "Scarica per {{os}}",
     "macos": "macOS",
     "windows": "Windows",
