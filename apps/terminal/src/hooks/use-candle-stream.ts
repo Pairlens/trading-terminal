@@ -9,8 +9,10 @@ import {
   isGeoRestrictedError,
   isPlatformRestrictedError,
 } from '@pairlens/market-engine/errors'
+import { scanSignals } from '@pairlens/strategy-engine'
+import type { SignalScan } from '@pairlens/strategy-engine'
 import type { CandleUpdate } from '@pairlens/market-engine/types'
-import type { SignalPayload } from '@pairlens/shared/types'
+import type { Candle, SignalPayload } from '@pairlens/shared/types'
 import type { MarketDataStatus } from '@/lib/market-data-provider'
 import { useGeoRestrictionStore } from '@/stores/geo-restriction-store'
 import { useMarketData } from '@/lib/market-data-provider'
@@ -60,6 +62,12 @@ type UseCandleStreamResult = {
   candles: Array<PluginCandle>
   latestCandle: PluginCandle | null
   latestSignal: SignalPayload | null
+  /**
+   * Historical signal scan over the candle buffer: regime plus every signal
+   * run detected in the recent lookback window, newest-first. Recomputed on
+   * snapshot arrival and on bar close — never per tick.
+   */
+  signalScan: SignalScan | null
   status: CandleStreamStatus
   errorMessage: string | null
   hasSnapshot: boolean
@@ -145,7 +153,24 @@ const upsertCandle = (candles: Array<PluginCandle>, incoming: PluginCandle) => {
   return next.length > MAX_CANDLES ? next.slice(-MAX_CANDLES) : next
 }
 
-const signalCache = new Map<string, SignalPayload>()
+// How many recent bar positions the signal scan evaluates. With the 500-candle
+// buffer this covers hours-to-weeks depending on timeframe while keeping the
+// scan around a few ms — and it only runs on snapshot/bar close.
+const SIGNAL_SCAN_LOOKBACK = 150
+
+// Last scan per stream key, so switching back to a pair shows its signals
+// instantly while the fresh snapshot (and rescan) is in flight.
+const signalScanCache = new Map<string, SignalScan>()
+const SIGNAL_SCAN_CACHE_MAX = 64
+
+const cacheSignalScan = (key: string, scan: SignalScan) => {
+  signalScanCache.delete(key)
+  signalScanCache.set(key, scan)
+  if (signalScanCache.size > SIGNAL_SCAN_CACHE_MAX) {
+    const oldest = signalScanCache.keys().next().value
+    if (oldest !== undefined) signalScanCache.delete(oldest)
+  }
+}
 
 const mapStatus = (
   mdStatus: MarketDataStatus,
@@ -177,7 +202,10 @@ export function useCandleStream(
   const normalizedPairKey = useMemo(() => normalizePairKey(pairKey), [pairKey])
 
   const [candles, setCandles] = useState<Array<PluginCandle>>([])
-  const [latestSignal, setLatestSignal] = useState<SignalPayload | null>(null)
+  const [signalScan, setSignalScan] = useState<SignalScan | null>(null)
+  // ts of the forming bar the last scan ran against — the bail that keeps the
+  // scan off the per-tick path. null forces a rescan (fresh stream).
+  const lastScannedTsRef = useRef<number | null>(null)
   const [hasSnapshot, setHasSnapshot] = useState(false)
   const [streamError, setStreamError] = useState<string | null>(null)
   const [stale, setStale] = useState(false)
@@ -190,7 +218,8 @@ export function useCandleStream(
   if (prevStreamKeyRef.current !== streamKey) {
     setCandles([])
     setHasSnapshot(false)
-    setLatestSignal(signalCache.get(streamKey) ?? null)
+    setSignalScan(signalScanCache.get(streamKey) ?? null)
+    lastScannedTsRef.current = null
     setStreamError(null)
     setNoData(false)
     setDesktopOnly(false)
@@ -200,7 +229,8 @@ export function useCandleStream(
   useEffect(() => {
     if (!enabled || normalizedPairKey.length === 0) {
       setCandles([])
-      setLatestSignal(null)
+      setSignalScan(null)
+      lastScannedTsRef.current = null
       setHasSnapshot(false)
       setStreamError(null)
       setNoData(false)
@@ -212,7 +242,8 @@ export function useCandleStream(
 
     const sk = `${market}:${normalizedPairKey}:${timeframe}`
     setCandles([])
-    setLatestSignal(signalCache.get(sk) ?? null)
+    setSignalScan(signalScanCache.get(sk) ?? null)
+    lastScannedTsRef.current = null
     setHasSnapshot(false)
     setStreamError(null)
     setNoData(false)
@@ -363,15 +394,35 @@ export function useCandleStream(
     }
   }, [noData, enabled, market, normalizedPairKey, timeframe, fetchHistory])
 
+  // Signal scan: recompute when the snapshot lands and on every bar close.
+  // The newest bar is the forming one, so keying on its ts means this fires
+  // exactly once per bar rollover (plus once per snapshot) — the O(lookback×n)
+  // scan never runs on the per-tick path. Signals confirm on close, so the
+  // forming bar itself is excluded from the evaluated window.
+  useEffect(() => {
+    if (!hasSnapshot || candles.length < 2) return
+    const formingTs = candles[candles.length - 1].ts
+    if (formingTs === lastScannedTsRef.current) return
+    lastScannedTsRef.current = formingTs
+    const closed: ReadonlyArray<Candle> = candles.slice(0, -1)
+    const scan = scanSignals(closed, SIGNAL_SCAN_LOOKBACK)
+    setSignalScan(scan)
+    cacheSignalScan(streamKey, scan)
+  }, [candles, hasSnapshot, streamKey])
+
   const latestCandle = useMemo(
     () => candles[candles.length - 1] ?? null,
     [candles],
   )
 
+  const latestSignal: SignalPayload | null =
+    signalScan?.signals[0]?.signal ?? null
+
   return {
     candles,
     latestCandle,
     latestSignal,
+    signalScan,
     status: mapStatus(mdStatus, enabled),
     errorMessage: streamError,
     hasSnapshot,

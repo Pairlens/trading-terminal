@@ -1918,7 +1918,10 @@
     "blockedDescription": "Bu web sitesi başka sayfaların içinde görüntülenmeyi engelliyor. Bunun yerine ayrı bir tarayıcı sekmesinde açabilirsin."
   },
   "intelligence": {
-    "awaitingSignal": "Sinyal tespit edilmedi",
+    "analyzing": "Piyasa analiz ediliyor…",
+    "noRecentSignals": "Son {{bars}} mumda sinyal yok",
+    "live": "Canlı",
+    "recentSignals": "Son sinyaller",
     "regime": "Rejim",
     "trending": "Trend",
     "choppy": "Dalgalı"

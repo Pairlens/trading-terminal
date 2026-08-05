@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import i18n from '@/lib/i18n'
 
-/** Format an ISO date as a coarse relative time ("just now", "5m ago", "3h ago", "2d ago"). */
-export function formatRelativeTime(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime()
+/** Format an ISO date or epoch-ms as a coarse relative time ("just now", "5m ago", "3h ago", "2d ago"). */
+export function formatRelativeTime(when: string | number): string {
+  const diff = Date.now() - new Date(when).getTime()
   const minutes = Math.floor(diff / 60_000)
   if (minutes < 1) return i18n.t('time.justNow')
   if (minutes < 60) return i18n.t('time.minutesAgo', { n: minutes })

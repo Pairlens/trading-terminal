@@ -78,7 +78,7 @@ ALSO AVAILABLE
 
 ### Signal Pipeline
 
-Exchange WS → Market connector plugin → CandleBuffer → consumers compute signals **on demand** with `@pairlens/strategy-engine` (pure functions over the candle buffer). Consumers: copilot market tools (`apps/terminal/src/lib/copilot/market-tools.ts`), the research panel, and the CLI `signals` command. Connectors do NOT push signals on candle close.
+Exchange WS → Market connector plugin → CandleBuffer → consumers compute signals **on demand** with `@pairlens/strategy-engine` (pure functions over the candle buffer). Consumers: the chart pane's Signals strip (`scanSignals` in `apps/terminal/src/hooks/use-candle-stream.ts` — historical scan on snapshot + bar close), copilot market tools (`apps/terminal/src/lib/copilot/market-tools.ts`), the research panel, and the CLI `signals` command. Connectors do NOT push signals on candle close.
 
 ### Market Connector Plugins
 

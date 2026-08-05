@@ -1918,7 +1918,10 @@
     "blockedDescription": "此網站封鎖在其他頁面內顯示。你可以改在獨立的瀏覽器分頁中開啟它。"
   },
   "intelligence": {
-    "awaitingSignal": "尚未偵測到訊號",
+    "analyzing": "正在分析市場…",
+    "noRecentSignals": "最近 {{bars}} 根K線無信號",
+    "live": "即時",
+    "recentSignals": "近期信號",
     "regime": "市場狀態",
     "trending": "趨勢明確",
     "choppy": "震盪盤整"

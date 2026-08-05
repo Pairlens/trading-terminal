@@ -1918,7 +1918,10 @@
     "blockedDescription": "该网站禁止在其他页面中显示。你可以改为在单独的浏览器标签页中打开它。"
   },
   "intelligence": {
-    "awaitingSignal": "未检测到信号",
+    "analyzing": "正在分析市场…",
+    "noRecentSignals": "最近 {{bars}} 根K线无信号",
+    "live": "实时",
+    "recentSignals": "近期信号",
     "regime": "市场状态",
     "trending": "趋势",
     "choppy": "震荡"

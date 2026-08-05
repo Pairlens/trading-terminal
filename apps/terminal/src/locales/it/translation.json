@@ -1918,7 +1918,10 @@
     "blockedDescription": "Questo sito web impedisce di essere visualizzato all'interno di altre pagine. Puoi aprirlo in una scheda separata del browser."
   },
   "intelligence": {
-    "awaitingSignal": "Nessun segnale rilevato",
+    "analyzing": "Analisi del mercato…",
+    "noRecentSignals": "Nessun segnale nelle ultime {{bars}} candele",
+    "live": "Live",
+    "recentSignals": "Segnali recenti",
     "regime": "Regime",
     "trending": "In trend",
     "choppy": "Laterale"
