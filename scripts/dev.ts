@@ -24,7 +24,7 @@
  */
 
 import { resolve } from 'node:path'
-import { $ } from 'bun'
+import { runConformanceGate } from './dev/conformance'
 import {
   CLOUD_APP_SERVER_URL,
   resolveAppServerUrl,
@@ -195,31 +195,16 @@ async function main() {
 
   // ── Connector conformance gate ──
   // Run the cross-connector contract suite so a broken market-data / order
-  // contract is caught the moment you start dev. We warn loudly but still start
-  // (so you can debug the break); production builds hard-fail on this same suite
-  // via turbo (`build` dependsOn `test`). Set SKIP_CONFORMANCE=1 to silence.
+  // contract is caught the moment you start dev. Each connector is its own
+  // child `bun test`, so the terminal shows live per-connector status instead
+  // of a silent multi-second pause. We warn loudly but still start (so you can
+  // debug the break); production builds hard-fail on this same suite via turbo
+  // (`build` dependsOn `test`). Set SKIP_CONFORMANCE=1 to skip it.
   if (process.env['SKIP_CONFORMANCE'] !== '1') {
-    console.info(`  ${DIM}[1/2]${RESET} Verifying connector conformance...`)
-    const conformance =
-      await $`bun test packages/plugins packages/market-engine`
-        .cwd(REPO_ROOT)
-        .nothrow()
-        .quiet()
-    if (conformance.exitCode === 0) {
+    const report = await runConformanceGate()
+    if (!report.ok) {
       console.info(
-        `  ${DIM}[1/2]${RESET} ${GREEN}Connector conformance OK${RESET}`,
-      )
-    } else {
-      console.info('')
-      console.info(`  ${BOLD}${YELLOW}⚠  CONNECTOR CONFORMANCE FAILED${RESET}`)
-      console.info(
-        `  ${YELLOW}   The market-data/order contract is broken — the UI may receive`,
-      )
-      console.info(
-        `  ${YELLOW}   inconsistent data across connectors. Run ${BOLD}bun run test:conformance${RESET}${YELLOW} for details.${RESET}`,
-      )
-      console.info(
-        `  ${DIM}   (set SKIP_CONFORMANCE=1 to silence; starting dev anyway…)${RESET}`,
+        `  ${DIM}   (set SKIP_CONFORMANCE=1 to skip this gate; starting dev anyway…)${RESET}`,
       )
       console.info('')
     }
