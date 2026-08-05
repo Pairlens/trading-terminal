@@ -716,7 +716,6 @@ function CopilotChatInner({
               onClearHistory={handleClearHistory}
               status={status}
               watching={`Watching ${pairKey.replace('-', '/')} · ${timeframe}`}
-              onRerun={() => handleSend(quickActions[0])}
             />
           </div>
         )}
