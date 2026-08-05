@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useReducedMotion } from 'motion/react'
 
 import {
@@ -25,6 +26,7 @@ type SignInDialogProps = {
 }
 
 export function SignInDialog({ children }: SignInDialogProps) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const { session } = useOptimisticSession()
   const reduceMotion = useReducedMotion() ?? false
@@ -72,9 +74,9 @@ export function SignInDialog({ children }: SignInDialogProps) {
           className="gap-0 overflow-clip p-0 sm:max-w-md md:max-w-[760px]"
           showCloseButton={false}
         >
-          <DialogTitle className="sr-only">Sign in</DialogTitle>
+          <DialogTitle className="sr-only">{t('nav.signIn')}</DialogTitle>
           <DialogDescription className="sr-only">
-            Sign in to access this feature
+            {t('signIn.dialogDescription')}
           </DialogDescription>
           {/* Statue band + form: the /sign-in page composition at dialog
               scale. The statue column only appears at md+; mobile keeps the

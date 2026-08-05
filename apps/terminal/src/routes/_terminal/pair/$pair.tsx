@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Loader2, Unplug } from 'lucide-react'
@@ -46,6 +47,7 @@ const marketsSupportStocks = (markets: Array<MarketOption>, marketId: string) =>
   false
 
 function PairTerminalPage() {
+  const { t } = useTranslation()
   const { pair } = Route.useParams()
   const pairKey = normalizePairKey(pair)
   const { markets, defaultMarket } = useAvailableMarkets()
@@ -71,17 +73,18 @@ function PairTerminalPage() {
       <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <div className="flex flex-1 flex-col items-center justify-center gap-3 text-muted-foreground">
           <Unplug className="size-10 opacity-40" />
-          <p className="text-sm font-medium">No market connectors available</p>
+          <p className="text-sm font-medium">
+            {t('routes.noConnectors.title')}
+          </p>
           <p className="max-w-xs text-center text-xs opacity-70">
-            Market connector plugins are required to stream live data. Enable or
-            install a connector to get started.
+            {t('routes.noConnectors.description')}
           </p>
           <Link
             to="/plugins"
             search={{ tab: 'markets' }}
             className="mt-2 rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-foreground hover:bg-accent/80"
           >
-            Manage Market Connectors
+            {t('routes.noConnectors.manage')}
           </Link>
         </div>
       </SidebarInset>

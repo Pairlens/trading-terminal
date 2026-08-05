@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Background,
@@ -172,6 +173,7 @@ function getDisconnectedNodeIds(
 // ── Canvas ───────────────────────────────────────────────────────────
 
 export function WorkflowCanvas() {
+  const { t } = useTranslation()
   const { screenToFlowPosition } = useReactFlow()
   const wsr = useWorkflowStepRegistry()
 
@@ -605,7 +607,7 @@ export function WorkflowCanvas() {
                   className="size-7"
                   disabled={!canUndo}
                   onClick={undo}
-                  title="Undo (Cmd+Z)"
+                  title={t('workflows.canvas.undoTitle')}
                 >
                   <Undo2 className="size-3.5" />
                 </Button>
@@ -615,7 +617,7 @@ export function WorkflowCanvas() {
                   className="size-7"
                   disabled={!canRedo}
                   onClick={redo}
-                  title="Redo (Cmd+Shift+Z)"
+                  title={t('workflows.canvas.redoTitle')}
                 >
                   <Redo2 className="size-3.5" />
                 </Button>
@@ -644,7 +646,7 @@ export function WorkflowCanvas() {
                   )}
                 >
                   <Trash2 className="size-3.5" />
-                  Delete step
+                  {t('workflows.canvas.deleteStep')}
                 </button>
               )}
               {contextMenu.type === 'edge' && (
@@ -657,7 +659,7 @@ export function WorkflowCanvas() {
                   )}
                 >
                   <Trash2 className="size-3.5" />
-                  Delete connection
+                  {t('workflows.canvas.deleteConnection')}
                 </button>
               )}
             </div>

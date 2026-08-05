@@ -244,7 +244,9 @@
       "create": "创建账户",
       "skip": "跳过 —— 一切保留在本设备上",
       "signedIn": "已以 {{email}} 登录",
-      "label": "账户"
+      "label": "账户",
+      "otpSendFailed": "验证码发送失败",
+      "signInFailed": "登录失败"
     },
     "summary": {
       "eyebrow": "已就绪",
@@ -376,6 +378,42 @@
         "title": "你的机器,你的密钥",
         "description": "机器人在这里运行,不在我们的服务器上,你的 API 密钥也不会离开这台电脑。让它保持唤醒并开着 Pairlens;想让哪个机器人停下,随时关掉就行。"
       }
+    },
+    "scenes": {
+      "topMover": "涨跌幅榜首 · {{pair}} {{delta}}",
+      "watchlistCount": "自选列表 · {{count}}",
+      "signalBreakout": "突破",
+      "signalPullbackForming": "回调形成中",
+      "onClose": "收盘时",
+      "crossedAbovePrice": "向上突破 {{price}}",
+      "conditionCrossesAbove": "向上突破",
+      "notifyMeDesktopInApp": "通知我 —— 桌面 + 应用内",
+      "nodeTrigger": "触发器",
+      "nodeSignalLabel": "信号:{{signal}}",
+      "nodeCondition": "条件",
+      "nodeVolumeAboveAvg": "成交量 > 均量",
+      "nodeAction": "动作",
+      "nodeAlertAndJournal": "提醒 + 记录",
+      "runBreakoutWatcher": "突破监控",
+      "runDcaBuyer": "定投买入",
+      "runStopLossGuard": "止损守护",
+      "ranAt": "{{time}} · 已运行",
+      "runsLocally": "在本地运行",
+      "storedOnDevice": "保存在本设备 —— 绝不上传我们的服务器",
+      "osKeychain": "系统钥匙串",
+      "pluginKindMarketData": "市场数据",
+      "pluginKindTheme": "主题",
+      "pluginKindAutomation": "自动化",
+      "sandboxedByDefault": "默认在沙盒中运行",
+      "signedVerified": "已签名并通过验证",
+      "networkAccessApproveHost": "网络访问 —— 由你逐一批准每个主机",
+      "copiedToWorkspaces": "已复制到你的工作区",
+      "statNet": "净收益",
+      "statMaxDd": "最大回撤",
+      "sameCodeGoesLive": "实盘运行的是同一套代码",
+      "runsOnYourMachine": "在你的设备上运行 —— 请让它保持唤醒",
+      "botMeanReversion": "均值回归",
+      "chainWallet": "{{chain}} 钱包"
     }
   },
   "common": {
@@ -398,7 +436,12 @@
     "showInFolder": "在文件夹中显示",
     "updated": "已更新 {{time}}",
     "back": "返回",
-    "dismiss": "关闭"
+    "dismiss": "关闭",
+    "unknownError": "未知错误",
+    "ordersLockedRiskLimit": "由于触发风险限额,订单已被锁定。请在设置 > 风险管理中解锁。",
+    "buyOrdersLockedRiskLimit": "由于触发风险限额,买单已被锁定。请在设置 > 风险管理中解锁。",
+    "positionSizeExceeded": "订单因风险限额被阻止:该仓位占投资组合的 {{ratioPct}}%,超过了你设置的 {{maxPositionSize}}% 上限。请在设置 > 风险管理中调整。",
+    "sessionExpired": "你的会话已过期 — 请重新登录。"
   },
   "legal": {
     "terms": "服务条款",
@@ -581,7 +624,22 @@
       "publisherKeyConsentTitle": "信任此发布者？",
       "publisherKeyConsentBody": "使用此密钥签名的插件将可在本设备上安装。恶意发布者可能会发布请求完全信任的插件 —— 从而访问你其他插件的数据、已存储的交易所凭证及交易权限。请在继续之前,通过你信任的渠道与发布者核对指纹。",
       "publisherKeyConsentConfirm": "信任此密钥",
-      "publisherKeyConsentCancel": "取消"
+      "publisherKeyConsentCancel": "取消",
+      "updatesTitle": "插件更新",
+      "updatesDescription": "控制注册表中有新版本时插件的更新方式。",
+      "updateModeLabel": "更新模式",
+      "updateModeAutoDescription": "更新会自动下载并安装",
+      "updateModeNotifyDescription": "有更新时会显示徽标提示",
+      "updateModeOffDescription": "不会自动检查更新",
+      "updateModeAuto": "自动更新",
+      "updateModeNotify": "仅通知",
+      "updateModeOffLabel": "关闭",
+      "checkIntervalLabel": "检查间隔",
+      "checkIntervalDescription": "检查注册表中新版本的频率",
+      "intervalHourly": "每小时",
+      "interval6Hours": "每 6 小时",
+      "interval12Hours": "每 12 小时",
+      "intervalDaily": "每天"
     },
     "appearance": {
       "colorMode": "配色模式",
@@ -603,7 +661,9 @@
       "balanced": "均衡",
       "balancedDescription": "行情和订单簿为 250 毫秒,K线为 500 毫秒。在响应速度和效率之间取得良好平衡。",
       "energySaver": "省电模式",
-      "energySaverDescription": "行情和订单簿为 1 秒,K线为 2 秒。最适合被动监控或使用电池供电的笔记本电脑。"
+      "energySaverDescription": "行情和订单簿为 1 秒,K线为 2 秒。最适合被动监控或使用电池供电的笔记本电脑。",
+      "idleGuardTitle": "闲置断开连接",
+      "idleGuardDescription": "闲置 1 小时后暂停市场数据流，以节省带宽并降低能耗。"
     },
     "desktop": {
       "closeBehavior": {
@@ -1031,7 +1091,9 @@
       "namePlaceholder": "文件夹名称"
     },
     "createFirst": "创建你的第一个工作区",
-    "emptyState": "暂无工作区"
+    "emptyState": "暂无工作区",
+    "descriptionLabel": "描述",
+    "descriptionPlaceholder": "简短描述（可选）"
   },
   "session": {
     "checking": "正在检查会话……",
@@ -1089,7 +1151,9 @@
     "verifying": "正在验证……",
     "verifyAndSignIn": "验证并登录",
     "codeRequired": "请输入验证码",
-    "emailRequired": "请输入邮箱"
+    "emailRequired": "请输入邮箱",
+    "dialogDescription": "登录以使用此功能",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "会话已暂停",
@@ -1109,7 +1173,12 @@
     "connecting": "连接中",
     "stalled": "重新连接中",
     "offline": "离线",
-    "error": "错误"
+    "error": "错误",
+    "pluginUpdatesReady_one": "{{count}} 个插件更新已就绪,可以安装",
+    "pluginUpdatesReady_other": "{{count}} 个插件更新已就绪,可以安装",
+    "pluginUpdatesDescription": "更新将在终端重启后生效。",
+    "restartNow": "立即重启",
+    "later": "稍后"
   },
   "copilot": {
     "aiLens": "AI 透镜",
@@ -1128,7 +1197,46 @@
     },
     "marketRegime": "市场状态",
     "trending": "趋势",
-    "choppy": "震荡"
+    "choppy": "震荡",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "数量",
+    "orderPlacedPaper": "模拟订单已提交",
+    "orderPlaced": "订单已提交",
+    "autoApprovedNote": "已自动批准({{mode}} · 已开启不再询问)",
+    "turnOff": "关闭",
+    "autoApproving": "正在自动批准 {{mode}} 订单……",
+    "liveOrderWarning": "实盘订单 —— 真实资金,将按你的风险限额强制执行。",
+    "dontAskAgainPaper": "模拟交易不再询问",
+    "dontAskAgainLive": "{{market}} 上的实盘交易不再询问",
+    "placing": "正在提交……",
+    "confirmMode": "确认{{mode}}",
+    "dismissed": "已忽略",
+    "cancelOrderPrompt": "取消 {{pair}} · {{market}} 上的订单 {{orderId}}?",
+    "cancelled": "已取消",
+    "cancelFailed": "取消失败",
+    "cancelling": "正在取消……",
+    "confirmCancel": "确认取消",
+    "keep": "保留",
+    "tradingUnavailable": "交易当前不可用。",
+    "noCredentialsForMarket": "尚未连接 {{market}} 的凭证。请在“账户”中添加 API 密钥以进行实盘交易。",
+    "watchingPair": "正在关注 {{pair}} · {{timeframe}}",
+    "genericChatError": "Copilot 出现了错误 —— 请重新发送试试。",
+    "quickActionHowIsDoing": "{{symbol}} 表现如何?",
+    "quickActionSuggestedIndicators": "推荐指标",
+    "quickActionAnySignals": "有信号吗?",
+    "scheduledCheckPrefix": "[定时检查 —— 于 {{minutes}} 分钟前设置]",
+    "authRequiredTitle": "认识你的 AI 副驾",
+    "authRequiredDescription": "针对任意交易对的情境化分析 —— 它会读取图表、核对你的风险限额,并给出可供质疑的推理过程。请先登录,然后订阅 Pairlens Intelligence,或使用你自己的 AI 密钥。",
+    "upgradeRequiredDescription": "你的 AI 副驾会读取图表、核对你的风险限额,并给出可供质疑的推理过程。订阅 Pairlens Intelligence,或通过插件免费使用你自己的 AI 密钥。",
+    "aiLensUnavailableTitle": "AI Lens 不可用",
+    "aiLensUnavailableDescription": "在插件页面启用一个 AI 插件,即可获得实时市场分析与交易辅助。",
+    "goToPlugins": "前往插件页面",
+    "analyzePair": "分析 {{pair}}",
+    "startConversation": "开始对话",
+    "emptyStateHint": "问问市场状况、核对你的交易设置,或请求风险评估 —— AI 掌握这个交易对的完整上下文。",
+    "contextAware": "理解上下文",
+    "toolFailed": "工具执行失败"
   },
   "chart": {
     "contextMenu": {
@@ -1312,7 +1420,9 @@
       "pause": "暂停",
       "step": "下一根K线",
       "exit": "退出回放"
-    }
+    },
+    "fullscreenTitle": "全屏图表",
+    "fullscreenHint": "图表处于全屏模式。按 Escape 退出。"
   },
   "botsPage": {
     "loading": "正在加载机器人…",
@@ -1873,7 +1983,15 @@
     "frozen": "冻结",
     "total": "总计",
     "refreshBalances": "刷新",
-    "asset": "资产"
+    "asset": "资产",
+    "cancelOrderTitle": "撤销订单？",
+    "cancelOrderBody": "这将撤销你在 {{pair}} 的{{side}}订单。",
+    "keepOrder": "保留订单",
+    "cancelOrder": "撤销订单",
+    "sideBuy": "买入",
+    "sideSell": "卖出",
+    "buy": "买入",
+    "sell": "卖出"
   },
   "pairInfo": {
     "title": "交易对信息",
@@ -1916,13 +2034,41 @@
     "emptyTitle": "在上方输入网址以嵌入网站",
     "embedWarning": "部分网站会阻止在 iframe 中嵌入。如果页面无法加载,请尝试在浏览器中打开。",
     "blockedTitle": "该网站无法被嵌入",
-    "blockedDescription": "该网站禁止在其他页面中显示。你可以改为在单独的浏览器标签页中打开它。"
+    "blockedDescription": "该网站禁止在其他页面中显示。你可以改为在单独的浏览器标签页中打开它。",
+    "forward": "前进",
+    "failedToLoad": "加载失败",
+    "viewPaused": "网页视图已暂停"
   },
   "intelligence": {
-    "awaitingSignal": "未检测到信号",
+    "analyzing": "正在分析市场…",
+    "noRecentSignals": "最近 {{bars}} 根K线无信号",
+    "live": "实时",
+    "recentSignals": "近期信号",
     "regime": "市场状态",
     "trending": "趋势",
-    "choppy": "震荡"
+    "choppy": "震荡",
+    "upsell": {
+      "priceMonthly": "${{price}}/月",
+      "taxNotice": "价格不含税，税费将在结账时计算。",
+      "defaultTitle": "解锁 Pairlens Intelligence",
+      "defaultDescription": "托管式 AI 副驾驶与网络研究功能，无需 API 密钥。每个套餐都包含在聊天、研究和网络搜索之间共享的每月用量额度。",
+      "byokNote": "更想用自己的服务商？在<plugins>插件</plugins>中连接 Anthropic、OpenAI、Groq 或 OpenRouter 密钥——使用自有密钥的 AI 始终免费。",
+      "checkoutOpenedTitle": "已在浏览器中打开结账页面",
+      "checkoutActivates": "付款完成后，订阅会立即在此激活。",
+      "checkoutStartError": "无法启动结账流程 — 请重试。",
+      "subscriptionRequiredTitle": "需要 Pairlens Intelligence 订阅",
+      "subscriptionRequiredBody": "托管式 AI 需要 Intelligence 套餐才能运行。请在下方订阅，或在插件中连接你自己的 AI 服务商密钥。",
+      "budgetUsedUpTitle": "本月用量额度已用完",
+      "budgetUsedBody": "本周期的 Intelligence 额度已用完。",
+      "budgetResetsOn": "额度将于 {{date}} 重置。",
+      "topUpHint": "购买额度包以继续使用 — 额度包内的额度将在购买后 30 天过期。",
+      "upgradeToMaxHint": "升级到 {{label}}，每月可获得 {{credits}} 点额度。",
+      "manageSubscription": "管理订阅",
+      "portalError": "无法打开账单门户。",
+      "creditsLandDescription": "付款完成后，额外额度会立即计入你的余额。",
+      "checkoutError": "无法启动结账流程。",
+      "upgradeToMax": "升级到 Max"
+    }
   },
   "panes": {
     "markets": "市场",
@@ -2018,6 +2164,52 @@
       "title": "{{venue}} 上没有 {{pair}}",
       "titleAnyVenue": "找不到 {{pair}}",
       "description": "该连接器没有返回这个交易对的行情数据。换一个上架了它的连接器试试。"
+    },
+    "panePicker": {
+      "bindToVariable": "绑定到变量",
+      "boundTo": "已绑定到 <b>{{variable}}</b>",
+      "market": "市场",
+      "setPair": "设置 {{variable}} 的交易对",
+      "selectPair": "选择交易对",
+      "bindingHint": "选择交易对将更新所有绑定到 {{variable}} 的面板",
+      "unbindFromVariable": "取消与变量的绑定",
+      "settingForAllPanes": "正在为所有已绑定的面板设置 <b>{{variable}}</b>"
+    },
+    "pane": {
+      "close": "关闭 {{pane}}",
+      "popOutToColumn": "弹出到新列",
+      "bindPairToVariable": "将交易对绑定到变量",
+      "bindWalletToVariable": "将钱包绑定到变量",
+      "bindTimeframeToVariable": "将周期绑定到变量",
+      "clearPairOverride": "清除交易对覆盖",
+      "closePane": "关闭面板",
+      "unbind": "取消绑定",
+      "closeTab": "关闭标签页"
+    },
+    "dnd": {
+      "pickedUp": "已拾取 {{pane}}。使用方向键移动，空格键放下，Esc 键取消。",
+      "genericPane": "面板",
+      "noDropTarget": "没有可放置的目标。",
+      "dropStackTab": "放在此处以堆叠为标签页。",
+      "dropSplitAbove": "放置以在上方拆分。",
+      "dropSplitBelow": "放置以在下方拆分。",
+      "dropNewColumn": "放置以创建新列。",
+      "paneMoved": "面板已移动。",
+      "dragCancelled": "已取消拖动，面板已还原。",
+      "dragCancelledFull": "已取消拖动，面板已返回原位置。"
+    },
+    "missingPane": {
+      "requiresPlugin": "此面板需要\"{{pluginId}}\"插件",
+      "notAvailable": "\"{{type}}\"面板不可用",
+      "description": "该插件可能已被移除或禁用。",
+      "openPluginStore": "打开插件商店"
+    },
+    "dropZone": {
+      "emptyHint": "将面板拖到此处",
+      "addAsTab": "添加为标签页",
+      "splitTop": "上方拆分",
+      "splitBottom": "下方拆分",
+      "newColumn": "新列"
     }
   },
   "watchlist": {
@@ -2127,7 +2319,137 @@
     "uninstalled": "已卸载",
     "updateReactivate": "更新并重新启用",
     "version": "版本",
-    "visit": "访问"
+    "visit": "访问",
+    "fullTrust": {
+      "title": "给“{{name}}”完全信任？",
+      "description": "该插件提供界面，因此必须在主应用中运行，不能沙箱隔离。获得完全信任的插件拥有与 Pairlens 本身相同的权限。",
+      "itCan": "它可以：",
+      "grantPlugins": "读取你已安装的其他插件的数据；",
+      "grantCredentials": "读取你保存的交易所 API 密钥和钱包凭据；",
+      "grantTrading": "代表你下单以及执行其他资金操作。",
+      "trustNote": "只把完全信任授予你信任的作者的插件。你可以随时卸载它。",
+      "trustNoteAuthor": "只把完全信任授予你信任的作者的插件（作者：{{author}}）。你可以随时卸载它。",
+      "grant": "授予完全信任"
+    },
+    "network": {
+      "title": "允许“{{name}}”联网？",
+      "description": "该插件需要访问 Pairlens 之外的服务器。你的终端会向下列主机发送网络请求。只有在信任该插件时才允许——你可以随时卸载它以撤销访问。",
+      "hostsIntro": "它将可以连接到：",
+      "reloadNote": "批准后终端会重新加载以应用更改。",
+      "deny": "不允许",
+      "allow": "允许并重新加载"
+    },
+    "toggleFailedEnable": "无法启用 {{name}}",
+    "toggleFailedDisable": "无法停用 {{name}}",
+    "updateStagedToast": "更新已就绪——重启以应用",
+    "restartNow": "立即重启",
+    "updateStageFailedToast": "准备更新失败：{{error}}",
+    "resetStagedToast": "已恢复默认设置——重启以完成",
+    "networkGrantedToast": "已授予“{{name}}”网络访问权限——正在重新加载……",
+    "networkDeniedToast": "“{{name}}”在未获得网络访问权限的情况下完成安装——在你允许之前可能无法正常运作。",
+    "installCancelledNoTrust": "已取消安装——未授予完全信任",
+    "installedVersionToast": "已安装“{{name}}” v{{version}}",
+    "installFailedToast": "插件安装失败：{{error}}",
+    "localFilesNotFound": "未找到本地插件文件",
+    "pluginCodeNotFound": "未找到插件代码——请重新安装",
+    "fullTrustGrantedNameToast": "已向“{{name}}”授予完全信任",
+    "loadPluginFailedToast": "插件加载失败：{{error}}",
+    "importFailedToast": "插件导入失败：{{error}}",
+    "fieldRequired": "必须填写{{label}}",
+    "configSaved": "配置已保存",
+    "configurationFailed": "配置失败",
+    "needsFullTrustToRun": "需要完全信任才能运行",
+    "pendingTrustDescription": "该插件提供界面，无法在沙箱中运行——请授予完全信任以启用它，或将其卸载。",
+    "remove": "移除",
+    "groupCore": "核心",
+    "groupProvidersExtensions": "提供方与扩展",
+    "groupThemes": "主题",
+    "removePluginTitle": "移除插件",
+    "removePluginDescription": "此操作将停用并移除该插件。它贡献的所有面板会显示一个恢复占位符。你可以随时从插件商店重新安装。",
+    "resetDefaultsTitle": "恢复默认设置",
+    "resetDefaultsDescription": "此操作将移除所有非内置插件，清除已暂存和可用的更新，并重新加载终端。内置插件将保持已安装状态。",
+    "reset": "重置",
+    "installFromUrlDialogTitle": "从 URL 安装插件",
+    "installFromUrlDialogDescription": "输入要安装的插件模块（.js）的 URL。",
+    "unverifiedPluginTitle": "未验证的插件",
+    "unverifiedPluginBody": "手动安装的插件未经过安全审查。请只从你信任的来源安装插件。",
+    "installAnyway": "仍然安装",
+    "sourceBuiltIn": "内置",
+    "sourceRegistry": "注册表",
+    "sourceUrl": "URL",
+    "sourceLocal": "本地",
+    "fullTrustGrantedRestartToast": "已授予完全信任——重启以在主应用中运行此插件",
+    "sandboxedRestartToast": "插件将在沙箱中运行——重启以应用",
+    "requiresFullTrustTitle": "该插件提供界面，必须在完全信任下运行。",
+    "trustBadgeFullRequired": "完全信任（必需）",
+    "trustBadgeFull": "完全信任",
+    "trustBadgeSandboxed": "沙箱中",
+    "panelCount_one": "{{count}} 个面板",
+    "panelCount_other": "{{count}} 个面板",
+    "update": "更新",
+    "revokeFullTrustAria": "撤销对 {{name}} 的完全信任",
+    "grantFullTrustAria": "向 {{name}} 授予完全信任",
+    "fullTrustActiveTitle": "完全信任——在主应用中运行。点击以切换为沙箱。",
+    "sandboxedTitle": "沙箱——隔离的工作线程，网络仅限于已声明的主机。点击以授予完全信任。",
+    "configureAria": "配置 {{name}}",
+    "toggleAria": "切换 {{name}}",
+    "capabilityProvidersTitle": "能力提供方",
+    "capabilityProvidersDescription": "每个终端功能都会请求某项能力，由已启用且优先级最高的插件自动提供。选择特定插件可覆盖自动选择。",
+    "resetAllOverrides": "重置所有覆盖设置",
+    "noProviderInstalled": "没有已安装的插件提供此功能",
+    "browseStore": "浏览商店",
+    "installedNeedsKeySingle": "已安装——需要 API 密钥",
+    "installedNeedsKeyPlural": "已安装 {{count}} 个——均需要 API 密钥",
+    "installedDisabledSingle": "已安装 1 个插件，但已停用",
+    "installedDisabledPlural": "已安装 {{count}} 个插件，均已停用",
+    "manage": "管理",
+    "pinnedActiveNote": "已固定——覆盖自动顺序",
+    "pinnedInactiveNote": "已固定的插件已停用——将使用自动顺序",
+    "autoOrderLabel": "自动顺序：{{chain}}",
+    "chainMore_one": "{{chain}} 还有 {{count}} 个",
+    "chainMore_other": "{{chain}} 还有 {{count}} 个",
+    "resolvedPerMarket": "按市场解析",
+    "marketOverrides": "市场覆盖设置",
+    "pinnedCountBadge_one": "已固定 {{count}} 个",
+    "pinnedCountBadge_other": "已固定 {{count}} 个",
+    "automatic": "自动",
+    "disabledHint": "已停用",
+    "notInstalled": "{{id}}（未安装）",
+    "saveOverrideFailed": "保存提供方覆盖设置失败",
+    "removeOverrideFailed": "移除提供方覆盖设置失败",
+    "resetOverridesFailed": "重置覆盖设置失败",
+    "marketConnectorsTitle": "市场连接器",
+    "marketConnectorsDescription": "市场连接器实时推送价格数据和订单簿，并支持直接通过交易所 API 进行交易。启用你想使用的交易所。",
+    "activeCountBadge": "{{active}}/{{total}} 个已启用",
+    "connected": "已连接",
+    "disabledStatus": "已停用",
+    "readAndTrade": "读取 + 交易",
+    "readOnly": "仅读取",
+    "noConnectorsInstalled": "未安装任何市场连接器插件。",
+    "moreConnectors": "更多连接器",
+    "fromPluginStore": "来自 Plugin Store",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "了解更多",
+    "enabledToast": "{{name}} 已启用",
+    "disabledToast": "{{name}} 已停用",
+    "enableFailedShort": "启用失败",
+    "disableFailedShort": "停用失败",
+    "domain": {
+      "marketData": "市场数据",
+      "trading": "交易",
+      "wallet": "钱包",
+      "signals": "信号",
+      "ai": "AI"
+    },
+    "byAuthor": "作者：{{author}}",
+    "installsCount_one": "{{formattedCount}} 次安装",
+    "installsCount_other": "{{formattedCount}} 次安装",
+    "panelsCount": "面板（{{count}}）",
+    "inactive": "未激活",
+    "previousSlide": "上一个",
+    "nextSlide": "下一个",
+    "goToSlide": "转到第 {{n}} 张",
+    "copyCommand": "复制命令"
   },
   "search": {
     "title": "搜索交易对",
@@ -2194,8 +2516,71 @@
       "selectAccount": "选择账户",
       "groupWallet": "加密钱包",
       "groupBroker": "券商账户",
-      "groupExchange": "交易所账户"
-    }
+      "groupExchange": "交易所账户",
+      "selectWalletTopBar": "在顶部栏选择钱包",
+      "connectChainWallet": "连接 {{chain}} 钱包",
+      "connectExchangeAccount": "连接 {{exchange}} 账户",
+      "selectAccountTopBar": "在顶部栏选择账户"
+    },
+    "trade": {
+      "limitBuy": "限价买入",
+      "limitSell": "限价卖出",
+      "bought": "已买入",
+      "sold": "已卖出",
+      "limitOrderFailed": "限价单失败",
+      "swapFailed": "兑换失败",
+      "workflowUnsupported": "该市场不支持工作流",
+      "orderBlocked": "订单被风险限额拦截",
+      "orderRejected": "订单被拒绝",
+      "orderFailed": "下单失败",
+      "setRegion": "设置你的地区",
+      "regionDefaulting": "地区默认为 Global。",
+      "addPreset": "添加预设",
+      "createFirstWorkflow": "创建你的第一个工作流",
+      "editWorkflows": "编辑工作流",
+      "selectWorkflow": "选择工作流",
+      "submitting": "提交中…",
+      "holdToRun": "长按运行",
+      "holdToConfirmLive": "长按确认 · 资金立即划出",
+      "holdToPlace": "长按下单",
+      "runWorkflow": "运行工作流",
+      "buyAsset": "买入 {{asset}}",
+      "sellAsset": "卖出 {{asset}}",
+      "amount": "数量",
+      "price": "价格",
+      "presetsTitle": "金额预设（{{quote}}）",
+      "buy": "买入",
+      "sell": "卖出",
+      "orderTypeMarket": "市价",
+      "orderTypeLimit": "限价",
+      "workflow": "工作流",
+      "notSupportedOn": "{{venue}} 不支持",
+      "available": "可用：{{amount}}",
+      "slippage": "滑点"
+    },
+    "status": {
+      "connecting": "连接中…",
+      "loadingOrderBook": "正在加载订单簿…",
+      "loadingDepth": "正在加载深度…",
+      "loadingCandles": "正在加载 K 线…",
+      "waitingTrades": "等待成交…",
+      "waitingData": "等待数据…",
+      "noCandleData": "暂无 K 线数据",
+      "noTradesFeed": "切换到发布逐笔成交的交易所"
+    },
+    "columns": {
+      "price": "价格",
+      "size": "数量",
+      "total": "累计",
+      "open": "开盘",
+      "close": "收盘"
+    },
+    "panel": {
+      "expand": "展开面板",
+      "collapse": "折叠面板"
+    },
+    "recentlyViewed": "最近查看",
+    "noMarketsFound": "未找到市场"
   },
   "accounts": {
     "pageTitle": "账户",
@@ -2291,7 +2676,42 @@
     "importKey": "导入私钥",
     "affiliateDisclosure": "部分注册链接可能会为 Pairlens 带来佣金,不会给你带来任何额外费用。",
     "vaultSealedBody": "你的凭证保险库已锁定。你的账户仍在这里 — 解锁即可查看和使用。",
-    "credentialsUnreadable": "无法读取此设备上保存的密钥。数据没有丢失，请重试或重启 Pairlens。"
+    "credentialsUnreadable": "无法读取此设备上保存的密钥。数据没有丢失，请重试或重启 Pairlens。",
+    "addWalletDialogTitle": "添加加密钱包",
+    "addWalletDialogDescription": "导入钱包私钥以进行链上交易",
+    "blockchainLabel": "区块链",
+    "walletLabelField": "标签",
+    "walletLabelPlaceholder": "我的钱包",
+    "privateKeyField": "私钥",
+    "saveWallet": "保存钱包",
+    "keep": "保留",
+    "remove": "移除",
+    "disconnect": "断开连接",
+    "localBadge": "本地",
+    "unknownDate": "未知",
+    "keyExpiredWarning": "可能已过期 — 已 {{daysInactive}} 天未使用（上限为 {{limitDays}} 天）。请在交易所重新生成 API 密钥。",
+    "keyInactiveWarning": "已 {{daysInactive}}/{{limitDays}} 天未使用。密钥将在连续 {{limitDays}} 天未使用后过期。",
+    "exchangeAccountAriaLabel": "{{label}} 交易所账户",
+    "cryptoWalletAriaLabel": "{{label}} 加密钱包",
+    "portfolioTotal": "总计",
+    "assetAllocationLabel": "资产配置",
+    "tableAsset": "资产",
+    "tableAmount": "数量",
+    "tableValue": "价值",
+    "tableShare": "占比",
+    "assetCount_one": "{{count}} 项资产",
+    "assetCount_other": "{{count}} 项资产",
+    "moreAssets_one": "+{{count}} 项资产",
+    "moreAssets_other": "+{{count}} 项资产",
+    "walletSavedFeedback": "加密钱包已保存。",
+    "walletRemovedFeedback": "加密钱包已移除。",
+    "accountRemovedFeedback": "账户已移除。",
+    "walletSaveFailed": "保存钱包失败。",
+    "walletRemoveFailed": "移除钱包失败。",
+    "accountConnectFailed": "连接账户失败。",
+    "accountRemoveFailed": "移除账户失败。",
+    "fieldRequired": "{{field}}为必填项",
+    "accountConnectedFeedback": "{{label}}{{mode}}账户已连接。"
   },
   "workspaceStore": {
     "title": "工作区商店",
@@ -2399,12 +2819,136 @@
     "paneCount_other": "{{count}} 个面板",
     "panes": "面板",
     "showAll": "显示全部",
-    "spotlight": "聚焦精选"
+    "spotlight": "聚焦精选",
+    "previousSlide": "上一个",
+    "nextSlide": "下一个",
+    "goToSlide": "转到幻灯片 {{number}}"
   },
   "notifications": {
     "flows": "流程",
     "newFlow": "新建流程",
-    "noFlows": "暂无通知流程"
+    "noFlows": "暂无通知流程",
+    "builder": {
+      "sidebar": {
+        "tabRules": "规则",
+        "tabActivity": "活动",
+        "noRules": "暂无通知规则",
+        "newRuleTitle": "新建通知规则",
+        "rulePlaceholder": "规则名称",
+        "renameRuleTitle": "重命名规则",
+        "rename": "重命名",
+        "deleteRuleTitle": "删除规则",
+        "deleteRuleWarning": "此操作无法撤销。该通知规则及其交易对绑定将被永久删除。",
+        "pairsLabel": "交易对",
+        "sendTest": "发送测试",
+        "testing": "测试中…",
+        "pairAlreadyBound": "该交易对已绑定到此规则",
+        "noBindings": "尚未绑定任何交易对 —— 添加一个之前规则不会触发。",
+        "testSent": "已发送测试通知",
+        "testFailed": "测试未送达",
+        "noActivity": "暂无已触发的通知",
+        "clearActivity": "清除活动",
+        "channelFailed": "{{channel}} 失败"
+      },
+      "commitBar": {
+        "cycleDetected": "检测到循环",
+        "issueCount_one": "{{count}} 个问题",
+        "issueCount_other": "{{count}} 个问题",
+        "moreIssues": "……还有 {{count}} 个",
+        "pendingChangeCount_one": "{{count}} 项待处理更改",
+        "pendingChangeCount_other": "{{count}} 项待处理更改",
+        "noChanges": "没有更改",
+        "review": "查看",
+        "discard": "放弃",
+        "commit": "保存",
+        "cannotSaveTitle": "无法保存规则",
+        "cycleError": "该规则存在循环依赖。请先移除循环（红色连线），再保存。",
+        "saved": "规则已保存"
+      },
+      "diff": {
+        "title": "查看更改（{{count}}）",
+        "addedStep": "已添加 {{type}} 步骤",
+        "removedStep": "已移除 {{type}} 步骤",
+        "modifiedStep": "已修改 {{type}} 配置",
+        "addedConnection": "已添加连接",
+        "removedConnection": "已移除连接"
+      },
+      "canvas": {
+        "undoTitle": "撤销（Cmd+Z）",
+        "redoTitle": "重做（Cmd+Shift+Z）",
+        "deleteStep": "删除步骤",
+        "deleteConnection": "删除连接",
+        "cycleLabel": "循环"
+      },
+      "palette": {
+        "addStep": "添加步骤",
+        "categoryEvents": "事件",
+        "categoryConditions": "条件",
+        "categoryChannels": "渠道"
+      },
+      "category": {
+        "event": "事件",
+        "condition": "条件",
+        "channel": "渠道"
+      },
+      "emptyState": {
+        "pickRuleHint": "在左侧选择一条规则，即可在画布中打开。",
+        "untitledRule": "未命名规则",
+        "eyebrow": "通知",
+        "title": "让 Pairlens 替你盯盘",
+        "description": "一条规则就是一个小流程：某件事发生了——价格突破某个水平、K 线收盘、订单成交、指标警报触发——然后经过你添加的条件，最终以应用内提示、系统通知或 Webhook 的形式送达给你。",
+        "startBlank": "从空白画布开始",
+        "startFromTemplate": "从模板开始",
+        "footnote": "模板会以草稿形式打开，绑定到 {{market}} 上的 {{pair}} —— 编辑步骤、在规则列表中更换交易对，然后保存。规则仅在 Pairlens 运行期间才会触发。"
+      },
+      "direction": "方向",
+      "above": "高于",
+      "below": "低于",
+      "any": "任意",
+      "buy": "买入",
+      "sell": "卖出",
+      "up": "上涨",
+      "down": "下跌",
+      "either": "任一方向",
+      "toggleOn": "开",
+      "toggleOff": "关",
+      "steps": {
+        "candleClose": {
+          "title": "K 线收盘"
+        },
+        "localToast": {
+          "title": "应用内提示",
+          "description": "触发时在应用内显示提示"
+        },
+        "orderExecuted": {
+          "title": "订单成交"
+        },
+        "osNotification": {
+          "title": "系统通知",
+          "sound": "声音"
+        },
+        "percentChange": {
+          "title": "百分比变化",
+          "percent": "百分比"
+        },
+        "priceAlert": {
+          "title": "价格提醒"
+        },
+        "priceCondition": {
+          "title": "价格条件"
+        },
+        "signalGenerated": {
+          "title": "信号生成",
+          "signalType": "信号类型",
+          "anyTypePlaceholder": "任意类型"
+        },
+        "timeWindow": {
+          "title": "时间窗口",
+          "start": "开始（UTC）",
+          "end": "结束（UTC）"
+        }
+      }
+    }
   },
   "updater": {
     "available": "有可用更新",
@@ -2491,7 +3035,8 @@
     "failed": "加载热力图失败",
     "noData": "暂无数据",
     "tryLater": "请稍后重试",
-    "willAppear": "热力图数据将显示在此处"
+    "willAppear": "热力图数据将显示在此处",
+    "volume": "成交量"
   },
   "news": {
     "title": "新闻",
@@ -2604,5 +3149,228 @@
   "fullscreen": {
     "enter": "全屏",
     "exit": "退出全屏"
+  },
+  "research": {
+    "phaseSearching": "正在搜索网络...",
+    "phaseReading": "正在阅读来源...",
+    "phaseAnalyzing": "正在分析市场数据...",
+    "phaseWriting": "正在撰写报告...",
+    "authRequiredTitle": "研究工作台，只差一次登录",
+    "authRequiredDescription": "基于实时网络来源，为任意交易对生成结构化研究报告。登录后订阅 Pairlens Intelligence，或使用你自己的 AI 密钥。",
+    "upgradeDescription": "基于实时网络来源，为任意交易对生成结构化研究报告。订阅 Pairlens Intelligence——或通过插件免费使用你自己的 AI 和搜索密钥。",
+    "unavailableTitle": "研究功能不可用",
+    "unavailableDescription": "请在插件页面启用一个 AI 插件，以生成该交易对的研究报告。",
+    "goToPlugins": "前往插件",
+    "navigateToPair": "前往某个交易对以查看研究报告。",
+    "researchingSymbol": "正在研究 {{symbol}}",
+    "generatingReport": "正在生成报告...",
+    "cachedGenerated": "缓存内容 — 生成于 {{time}}",
+    "freshGenerated": "最新 — 刚刚生成",
+    "refresh": "刷新",
+    "sourcesCount": "来源（{{count}}）",
+    "reportTitle": "研究报告",
+    "fullscreenDescription": "研究报告已全屏显示。按 Esc 键退出。",
+    "sections": "章节",
+    "sparklineAriaLabel": "每日价格迷你图",
+    "errorTitle": "研究功能不可用"
+  },
+  "capabilityGate": {
+    "authTitle": "只需一次免费登录",
+    "authDescription": "此功能通过你的 Pairlens 账户运行。",
+    "signInFree": "免费登录",
+    "authNote": "只需 30 秒。你的交易所密钥永远不会离开这台设备。",
+    "upgradeRequired": "需要升级",
+    "upgradeDescriptionLevel": "此功能需要 <b>{{level}}</b> 访问级别。",
+    "upgradeDescriptionGeneric": "此功能需要更高的访问级别。",
+    "managePlugin": "管理插件"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}} 在此不可用",
+    "description": "{{exchange}} 不为你所在的地区提供市场数据，因此该连接器无法加载数据。请切换到其他连接器，或在地区设置不正确时更新地区。",
+    "yourRegion": "你的地区：",
+    "notSet": "未设置",
+    "changeRegion": "更改地区",
+    "switchTo": "切换到 {{venue}}"
+  },
+  "pairPicker": {
+    "noPairsFound": "未找到交易对。",
+    "startTyping": "开始输入以搜索交易对。"
+  },
+  "routes": {
+    "goHome": "返回主页",
+    "noConnectors": {
+      "title": "没有可用的市场连接器",
+      "description": "需要市场连接器插件才能流式传输实时数据。启用或安装一个连接器即可开始。",
+      "manage": "管理市场连接器"
+    },
+    "workspace": {
+      "notFound": "未找到工作区",
+      "edit": "编辑"
+    },
+    "notFound": {
+      "title": "未找到页面"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "没有标的目录",
+      "noInstrumentCatalogDescription": "没有提供标的发现功能的活跃插件。启用一个插件即可浏览可用的交易对。",
+      "goToPlugins": "前往插件"
+    },
+    "notifications": {
+      "loading": "正在加载通知…"
+    },
+    "workflows": {
+      "loading": "正在加载工作流构建器…"
+    },
+    "plugins": {
+      "tabBuild": "构建",
+      "activeCount": "{{active}}/{{total}} 已启用",
+      "searchPlaceholder": "搜索插件…",
+      "clearSearch": "清除搜索"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "付款完成",
+      "titlePack": "已充值 {{credits}} 额外积分。",
+      "titlePlan": "{{label}} 已属于你。",
+      "titleDefault": "Pairlens Intelligence 已属于你。",
+      "bodyPack": "这些积分叠加在你的每月额度之上,将在 {{days}} 天后过期。回到 Pairlens 应用 — 你的余额会在几秒内更新。",
+      "bodyPlanWithCredits": "你的托管 AI 副驾驶、研究和网页搜索已解锁,每月附带 {{credits}} 积分。回到 Pairlens 应用 — 它会在几秒内识别你的订阅。",
+      "bodyPlanNoCredits": "你的托管 AI 副驾驶、研究和网页搜索已解锁。回到 Pairlens 应用 — 它会在几秒内识别你的订阅。",
+      "openTerminal": "打开终端",
+      "closeTabHint": "是从桌面应用付款的吗?直接关闭此标签页即可。",
+      "receiptHint": "收据和发票已发送到你的邮箱,也可在账单管理页面查看(设置 → Intelligence)。"
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "工作流",
+      "tabRuns": "运行记录",
+      "emptyState": "还没有工作流",
+      "createTitle": "新建工作流",
+      "namePlaceholder": "工作流名称",
+      "renameTitle": "重命名工作流",
+      "renameButton": "重命名",
+      "deleteTitle": "删除工作流",
+      "deleteDescription": "此操作无法撤销，工作流将被永久删除。",
+      "runsEmpty": "还没有运行记录 — 从交易面板执行一次",
+      "clearHistory": "清除记录",
+      "runOutcome": "{{executed}} 成功",
+      "runOutcomeWithFailed": "{{executed}} 成功，{{failed}} 失败"
+    },
+    "canvas": {
+      "undoTitle": "撤销 (Cmd+Z)",
+      "redoTitle": "重做 (Cmd+Shift+Z)",
+      "deleteStep": "删除步骤",
+      "deleteConnection": "删除连接"
+    },
+    "commitBar": {
+      "cycleDetected": "检测到循环",
+      "issue_one": "{{count}} 个问题",
+      "issue_other": "{{count}} 个问题",
+      "pendingChange_one": "{{count}} 项待处理更改",
+      "pendingChange_other": "{{count}} 项待处理更改",
+      "noChanges": "没有更改",
+      "review": "查看",
+      "discard": "放弃",
+      "commit": "提交",
+      "saveErrorTitle": "无法保存工作流",
+      "saveErrorCycleBody": "该工作流存在循环依赖，请先移除循环（红色连线）再保存。",
+      "saveSuccess": "工作流已保存"
+    },
+    "diffPanel": {
+      "title": "查看更改（{{count}}）",
+      "addedStep": "已添加 {{type}} 步骤",
+      "removedStep": "已移除 {{type}} 步骤",
+      "modifiedStep": "已修改 {{type}} 配置",
+      "addedConnection": "已添加连接",
+      "removedConnection": "已移除连接",
+      "noChanges": "没有更改"
+    },
+    "palette": {
+      "title": "添加步骤",
+      "categoryEntry": "入场",
+      "categoryOrders": "订单",
+      "categoryExit": "退出策略",
+      "categoryLogic": "逻辑",
+      "categoryCustom": "自定义",
+      "requires": "需要：{{requirement}}",
+      "notAvailableOn": "在 {{markets}} 上不可用"
+    },
+    "emptyState": {
+      "pickWorkflow": "在左侧选择一个工作流，即可在画布中打开它。",
+      "eyebrow": "工作流",
+      "title": "每一笔订单都可以带上自己的计划",
+      "description": "工作流挂在你从交易面板下的订单上。订单一旦成交，下面的步骤就会自动运行 — 括号单、阶梯单、分批离场、定时检查 — 计划早已就位，而不是留到以后再靠自己记住去做。",
+      "blankLabel": "从空白画布开始",
+      "footnote": "模板会以草稿形式打开：编辑任意步骤，然后点击提交保存。从交易面板把已保存的工作流关联到某笔订单即可运行它。"
+    },
+    "steps": {
+      "sideLabel": "方向",
+      "sizeLabel": "数量",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "绝对值",
+      "side": {
+        "inherit": "继承",
+        "opposite": "相反",
+        "buy": "买入",
+        "sell": "卖出"
+      },
+      "triggerWhenPrice": "价格满足条件时触发",
+      "triggerPercentFromEntry": "距入场价 %",
+      "triggerReachesPrice": "到达价格",
+      "priceLevel": "价格水平",
+      "priceLabel": "价格",
+      "stopLoss": {
+        "title": "止损",
+        "lossPercent": "亏损 %"
+      },
+      "takeProfit": {
+        "title": "止盈",
+        "gainPercent": "盈利 %"
+      },
+      "limitOrder": {
+        "title": "限价单",
+        "priceModeFixed": "固定",
+        "priceModePercentOffset": "% 偏移",
+        "priceModeOffset": "偏移",
+        "priceValueLabel": "价格值"
+      },
+      "marketOrder": {
+        "title": "市价单"
+      },
+      "condition": {
+        "title": "条件",
+        "typeLabel": "类型",
+        "typePercentChange": "% 变化",
+        "hint": "+N 在上涨 ≥N% 时通过，-N 在下跌 ≥N% 时通过"
+      },
+      "wait": {
+        "title": "等待",
+        "durationLabel": "时长",
+        "unitSeconds": "秒",
+        "unitMinutes": "分",
+        "unitHours": "时"
+      },
+      "split": {
+        "title": "并行拆分",
+        "branchesLabel": "分支数"
+      },
+      "trigger": {
+        "title": "订单输入",
+        "badge": "入场"
+      },
+      "configPanel": {
+        "requiresNote": "需要：{{requirement}}。不支持此能力的市场无法运行包含此步骤的工作流。",
+        "on": "开",
+        "off": "关"
+      }
+    },
+    "execution": {
+      "statusExecuted": "已执行",
+      "statusSkipped": "已跳过",
+      "statusFailed": "失败",
+      "summaryExecuted": "{{count}} 已执行",
+      "summarySkipped": "{{count}} 已跳过",
+      "summaryFailed": "{{count}} 失败"
+    }
   }
 }

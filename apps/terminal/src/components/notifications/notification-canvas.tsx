@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Background,
@@ -170,6 +171,7 @@ function getDisconnectedNodeIds(
 // ── Canvas ───────────────────────────────────────────────────────────
 
 export function NotificationCanvas() {
+  const { t } = useTranslation()
   const { screenToFlowPosition } = useReactFlow()
   const nsr = useNotificationStepRegistry()
 
@@ -301,7 +303,7 @@ export function NotificationCanvas() {
               stroke: 'oklch(0.637 0.237 25.331)', // red-500
               strokeWidth: 3,
             },
-            label: 'cycle',
+            label: t('notifications.builder.canvas.cycleLabel'),
             labelStyle: {
               fill: 'oklch(0.637 0.237 25.331)',
               fontSize: 10,
@@ -311,7 +313,7 @@ export function NotificationCanvas() {
         }
         return e
       }),
-    [rfEdges, cycleEdgeIds],
+    [rfEdges, cycleEdgeIds, t],
   )
 
   // ── Sync helpers ─────────────────────────────────────────────────
@@ -574,7 +576,7 @@ export function NotificationCanvas() {
                   className="size-7"
                   disabled={!canUndo}
                   onClick={undo}
-                  title="Undo (Cmd+Z)"
+                  title={t('notifications.builder.canvas.undoTitle')}
                 >
                   <Undo2 className="size-3.5" />
                 </Button>
@@ -584,7 +586,7 @@ export function NotificationCanvas() {
                   className="size-7"
                   disabled={!canRedo}
                   onClick={redo}
-                  title="Redo (Cmd+Shift+Z)"
+                  title={t('notifications.builder.canvas.redoTitle')}
                 >
                   <Redo2 className="size-3.5" />
                 </Button>
@@ -608,7 +610,7 @@ export function NotificationCanvas() {
                   )}
                 >
                   <Trash2 className="size-3.5" />
-                  Delete step
+                  {t('notifications.builder.canvas.deleteStep')}
                 </button>
               )}
               {contextMenu.type === 'edge' && (
@@ -621,7 +623,7 @@ export function NotificationCanvas() {
                   )}
                 >
                   <Trash2 className="size-3.5" />
-                  Delete connection
+                  {t('notifications.builder.canvas.deleteConnection')}
                 </button>
               )}
             </div>

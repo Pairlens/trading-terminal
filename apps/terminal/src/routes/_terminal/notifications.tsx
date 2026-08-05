@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Suspense, lazy } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { Bell } from 'lucide-react'
@@ -18,11 +19,12 @@ export const Route = createFileRoute('/_terminal/notifications')({
 })
 
 function NotificationsPage() {
+  const { t } = useTranslation()
   return (
     <SidebarInset className="overflow-hidden">
       <PageHeader>
         <Bell className="size-4" />
-        <h1 className="text-sm font-semibold">Notifications</h1>
+        <h1 className="text-sm font-semibold">{t('nav.notifications')}</h1>
       </PageHeader>
 
       {/* Explicit height = viewport minus header. No flex chain needed. */}
@@ -30,7 +32,7 @@ function NotificationsPage() {
         <Suspense
           fallback={
             <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              Loading notifications...
+              {t('routes.notifications.loading')}
             </div>
           }
         >

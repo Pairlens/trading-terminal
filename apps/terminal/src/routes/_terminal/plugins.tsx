@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import {
@@ -44,6 +45,7 @@ export const Route = createFileRoute('/_terminal/plugins')({
 })
 
 function PluginsPage() {
+  const { t } = useTranslation()
   const { manage, tab } = Route.useSearch()
   const { pluginManager } = usePairlens()
   const navigate = useNavigate({ from: Route.fullPath })
@@ -72,30 +74,33 @@ function PluginsPage() {
               <TabsList>
                 <TabsTrigger value="store">
                   <Store className="size-3.5" />
-                  Store
+                  {t('pluginStore.backToStore')}
                 </TabsTrigger>
                 <TabsTrigger value="markets">
                   <Cable className="size-3.5" />
-                  Markets
+                  {t('panes.markets')}
                 </TabsTrigger>
                 <TabsTrigger value="installed">
                   <Package className="size-3.5" />
-                  Installed
+                  {t('pluginStore.installedLabel')}
                 </TabsTrigger>
                 <TabsTrigger value="providers">
                   <SlidersHorizontal className="size-3.5" />
-                  Configuration
+                  {t('pluginStore.configuration')}
                 </TabsTrigger>
                 <TabsTrigger value="build">
                   <Hammer className="size-3.5" />
-                  Build
+                  {t('routes.plugins.tabBuild')}
                 </TabsTrigger>
               </TabsList>
               <Badge
                 variant="outline"
                 className="shrink-0 gap-1.5 font-mono text-[10px] tabular-nums"
               >
-                {activeCount}/{totalCount} active
+                {t('routes.plugins.activeCount', {
+                  active: activeCount,
+                  total: totalCount,
+                })}
               </Badge>
               {activeTab === 'store' && (
                 <div className="relative">
@@ -103,7 +108,7 @@ function PluginsPage() {
                   <Input
                     value={storeSearch}
                     onChange={(e) => setStoreSearch(e.target.value)}
-                    placeholder="Search plugins…"
+                    placeholder={t('routes.plugins.searchPlaceholder')}
                     className="h-[30px] w-[210px] pl-8 pr-7 text-xs"
                   />
                   {storeSearch && (
@@ -111,7 +116,7 @@ function PluginsPage() {
                       type="button"
                       onClick={() => setStoreSearch('')}
                       className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-muted-foreground hover:text-foreground"
-                      aria-label="Clear search"
+                      aria-label={t('routes.plugins.clearSearch')}
                     >
                       <X className="size-3" />
                     </button>
@@ -122,7 +127,7 @@ function PluginsPage() {
           }
         >
           <Blocks className="size-4" />
-          <h1 className="text-sm font-semibold">Plugins</h1>
+          <h1 className="text-sm font-semibold">{t('nav.plugins')}</h1>
         </PageHeader>
 
         <TabsContent

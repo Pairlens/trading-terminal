@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Bell, Copy, FlaskConical, Pencil, Plus, Trash2, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -26,6 +27,7 @@ import { useNotificationStore } from '@/stores/notification-store'
 import { useNotificationLogStore } from '@/stores/notification-log-store'
 
 export function NotificationsSidebar() {
+  const { t } = useTranslation()
   const rules = useNotificationStore((s) => s.rules)
   const activeRuleId = useNotificationStore((s) => s.activeRuleId)
   const selectRule = useNotificationStore((s) => s.selectRule)
@@ -87,7 +89,7 @@ export function NotificationsSidebar() {
             )}
             onClick={() => setTab('rules')}
           >
-            Rules
+            {t('notifications.builder.sidebar.tabRules')}
           </button>
           <button
             type="button"
@@ -99,7 +101,7 @@ export function NotificationsSidebar() {
             )}
             onClick={() => setTab('activity')}
           >
-            Activity
+            {t('notifications.builder.sidebar.tabActivity')}
           </button>
         </div>
         {tab === 'rules' && (
@@ -122,7 +124,7 @@ export function NotificationsSidebar() {
           <div className="flex-1 overflow-y-auto p-1.5">
             {rules.length === 0 && (
               <p className="px-2 py-4 text-center text-xs text-muted-foreground">
-                No notification rules yet
+                {t('notifications.builder.sidebar.noRules')}
               </p>
             )}
             {rules.map((rule) => {
@@ -199,10 +201,12 @@ export function NotificationsSidebar() {
       >
         <DialogContent className="sm:max-w-xs">
           <DialogHeader>
-            <DialogTitle>New Notification Rule</DialogTitle>
+            <DialogTitle>
+              {t('notifications.builder.sidebar.newRuleTitle')}
+            </DialogTitle>
           </DialogHeader>
           <Input
-            placeholder="Rule name"
+            placeholder={t('notifications.builder.sidebar.rulePlaceholder')}
             className="h-8 text-sm"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
@@ -215,10 +219,10 @@ export function NotificationsSidebar() {
               variant="ghost"
               onClick={() => setCreateOpen(false)}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button size="sm" onClick={handleCreate} disabled={!newName.trim()}>
-              Create
+              {t('common.create')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -228,10 +232,12 @@ export function NotificationsSidebar() {
       <Dialog open={!!renameId} onOpenChange={() => setRenameId(null)}>
         <DialogContent className="sm:max-w-xs">
           <DialogHeader>
-            <DialogTitle>Rename Rule</DialogTitle>
+            <DialogTitle>
+              {t('notifications.builder.sidebar.renameRuleTitle')}
+            </DialogTitle>
           </DialogHeader>
           <Input
-            placeholder="Rule name"
+            placeholder={t('notifications.builder.sidebar.rulePlaceholder')}
             className="h-8 text-sm"
             value={renameName}
             onChange={(e) => setRenameName(e.target.value)}
@@ -240,14 +246,14 @@ export function NotificationsSidebar() {
           />
           <DialogFooter>
             <Button size="sm" variant="ghost" onClick={() => setRenameId(null)}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               size="sm"
               onClick={handleRename}
               disabled={!renameName.trim()}
             >
-              Rename
+              {t('notifications.builder.sidebar.rename')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -257,18 +263,19 @@ export function NotificationsSidebar() {
       <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <DialogContent className="sm:max-w-xs">
           <DialogHeader>
-            <DialogTitle>Delete Rule</DialogTitle>
+            <DialogTitle>
+              {t('notifications.builder.sidebar.deleteRuleTitle')}
+            </DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            This action cannot be undone. The notification rule and its pair
-            bindings will be permanently deleted.
+            {t('notifications.builder.sidebar.deleteRuleWarning')}
           </p>
           <DialogFooter>
             <Button size="sm" variant="ghost" onClick={() => setDeleteId(null)}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button size="sm" variant="destructive" onClick={handleDelete}>
-              Delete
+              {t('common.delete')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -283,6 +290,7 @@ export function NotificationsSidebar() {
 // test-fire that exercises real channel deliveries.
 
 function BindingsPanel({ ruleId }: { ruleId: string }) {
+  const { t } = useTranslation()
   const rule = useNotificationStore((s) => s.rules.find((r) => r.id === ruleId))
   const bindings = useNotificationStore((s) => s.bindings)
   const addBinding = useNotificationStore((s) => s.addBinding)
@@ -301,7 +309,7 @@ function BindingsPanel({ ruleId }: { ruleId: string }) {
     const m = market.trim().toLowerCase()
     if (!p || !m) return
     if (ruleBindings.some((b) => b.pair === p && b.market === m)) {
-      toast.info('This pair is already bound to the rule')
+      toast.info(t('notifications.builder.sidebar.pairAlreadyBound'))
       return
     }
     addBinding(ruleId, p, m)
@@ -318,9 +326,13 @@ function BindingsPanel({ ruleId }: { ruleId: string }) {
         scope?.market ?? 'okx',
       )
       if (outcome.ok) {
-        toast.success('Test notification sent', { description: outcome.detail })
+        toast.success(t('notifications.builder.sidebar.testSent'), {
+          description: outcome.detail,
+        })
       } else {
-        toast.error('Test did not deliver', { description: outcome.detail })
+        toast.error(t('notifications.builder.sidebar.testFailed'), {
+          description: outcome.detail,
+        })
       }
     } finally {
       setTesting(false)
@@ -331,7 +343,7 @@ function BindingsPanel({ ruleId }: { ruleId: string }) {
     <div className="border-t border-border">
       <div className="flex items-center justify-between px-3 py-2">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Pairs
+          {t('notifications.builder.sidebar.pairsLabel')}
         </span>
         <Button
           variant="ghost"
@@ -341,14 +353,16 @@ function BindingsPanel({ ruleId }: { ruleId: string }) {
           onClick={handleTest}
         >
           <FlaskConical className="size-3" />
-          {testing ? 'Testing…' : 'Send test'}
+          {testing
+            ? t('notifications.builder.sidebar.testing')
+            : t('notifications.builder.sidebar.sendTest')}
         </Button>
       </div>
 
       <div className="max-h-40 overflow-y-auto px-1.5 pb-1">
         {ruleBindings.length === 0 && (
           <p className="px-2 pb-1 text-[11px] text-muted-foreground">
-            Not bound to any pair yet — the rule won't fire until you add one.
+            {t('notifications.builder.sidebar.noBindings')}
           </p>
         )}
         {ruleBindings.map((b) => (
@@ -422,6 +436,7 @@ const severityDot: Record<NotificationLogEntry['severity'], string> = {
 }
 
 function ActivityList() {
+  const { t } = useTranslation()
   const entries = useNotificationLogStore((s) => s.entries)
   const clear = useNotificationLogStore((s) => s.clear)
   const load = useNotificationLogStore((s) => s.load)
@@ -435,7 +450,7 @@ function ActivityList() {
       <div className="flex-1 overflow-y-auto p-1.5">
         {entries.length === 0 && (
           <p className="px-2 py-4 text-center text-xs text-muted-foreground">
-            No notifications fired yet
+            {t('notifications.builder.sidebar.noActivity')}
           </p>
         )}
         {entries.map((entry) => {
@@ -475,7 +490,9 @@ function ActivityList() {
                     className="rounded bg-red-500/10 px-1 text-[9px] text-red-600 dark:text-red-400"
                     title={f.error}
                   >
-                    {f.channel} failed
+                    {t('notifications.builder.sidebar.channelFailed', {
+                      channel: f.channel,
+                    })}
                   </span>
                 ))}
               </div>
@@ -491,7 +508,7 @@ function ActivityList() {
             className="h-6 w-full text-[10px] text-muted-foreground"
             onClick={clear}
           >
-            Clear activity
+            {t('notifications.builder.sidebar.clearActivity')}
           </Button>
         </div>
       )}

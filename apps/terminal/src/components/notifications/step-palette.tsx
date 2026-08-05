@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useCallback } from 'react'
 
 import { cn } from '@pairlens/ui'
@@ -14,17 +15,17 @@ import {
 
 const CATEGORY_ORDER = ['event', 'condition', 'channel'] as const
 
-const CATEGORY_LABELS: Record<string, string> = {
-  event: 'Events',
-  condition: 'Conditions',
-  channel: 'Channels',
-}
-
 type StepPaletteProps = {
   onAddStep?: (stepType: string) => void
 }
 
 export function StepPalette({ onAddStep }: StepPaletteProps) {
+  const { t } = useTranslation()
+  const CATEGORY_LABELS: Record<string, string> = {
+    event: t('notifications.builder.palette.categoryEvents'),
+    condition: t('notifications.builder.palette.categoryConditions'),
+    channel: t('notifications.builder.palette.categoryChannels'),
+  }
   const registry = useNotificationStepRegistry()
   const stepTypes = registry.getAllDefinitions()
 
@@ -47,7 +48,7 @@ export function StepPalette({ onAddStep }: StepPaletteProps) {
     <div className="flex w-56 shrink-0 flex-col border-l border-border bg-background">
       <div className="border-b border-border px-3 py-2">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Add Step
+          {t('notifications.builder.palette.addStep')}
         </span>
       </div>
       <div className="flex-1 overflow-y-auto p-1.5">

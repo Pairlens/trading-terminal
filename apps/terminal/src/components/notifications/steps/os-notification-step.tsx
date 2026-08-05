@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { Bell, Volume2, VolumeX } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -8,6 +9,7 @@ import { useNotificationStepDataUpdate } from '../use-step-data'
 import type { NodeProps } from '@xyflow/react'
 
 export function OsNotificationStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
   const sound = (data.sound as boolean) ?? true
 
   const updateStepData = useNotificationStepDataUpdate()
@@ -35,14 +37,14 @@ export function OsNotificationStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            OS Notification
+            {t('notifications.builder.steps.osNotification.title')}
           </div>
         </div>
         <Badge
           variant="outline"
           className="border-blue-500/30 text-[10px] text-blue-400"
         >
-          Channel
+          {t('notifications.builder.category.channel')}
         </Badge>
       </div>
 
@@ -50,7 +52,7 @@ export function OsNotificationStep({ id, data }: NodeProps) {
         {/* Sound toggle */}
         <div className="flex items-center justify-between">
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Sound
+            {t('notifications.builder.steps.osNotification.sound')}
           </div>
           <button
             type="button"
@@ -65,12 +67,12 @@ export function OsNotificationStep({ id, data }: NodeProps) {
             {sound ? (
               <>
                 <Volume2 className="size-2.5" />
-                On
+                {t('notifications.builder.toggleOn')}
               </>
             ) : (
               <>
                 <VolumeX className="size-2.5" />
-                Off
+                {t('notifications.builder.toggleOff')}
               </>
             )}
           </button>

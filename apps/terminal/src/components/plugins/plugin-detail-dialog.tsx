@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { ExternalLink } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
@@ -26,22 +27,30 @@ import { ConfigFieldInput } from '@/components/config-field-input'
 // Helpers
 // ---------------------------------------------------------------------------
 
-const DOMAIN_LABELS: Record<string, string> = {
-  'market-data': 'Market Data',
-  trading: 'Trading',
-  wallet: 'Wallet',
-  intelligence: 'Signals',
-  ai: 'AI',
+function domainLabelKeys(
+  t: (key: string, options?: Record<string, unknown>) => string,
+): Record<string, string> {
+  return {
+    'market-data': t('pluginStore.domain.marketData'),
+    trading: t('pluginStore.domain.trading'),
+    wallet: t('pluginStore.domain.wallet'),
+    intelligence: t('pluginStore.domain.signals'),
+    ai: t('pluginStore.domain.ai'),
+  }
 }
 
-function getCapabilityDomains(manifest: PluginManifest): Array<string> {
+function getCapabilityDomains(
+  manifest: PluginManifest,
+  t: (key: string, options?: Record<string, unknown>) => string,
+): Array<string> {
+  const labels = domainLabelKeys(t)
   const seen = new Set<string>()
   const result: Array<string> = []
   for (const cap of manifest.capabilities) {
     const domain = cap.id.split(':')[0]
     if (!seen.has(domain)) {
       seen.add(domain)
-      result.push(DOMAIN_LABELS[domain] ?? domain)
+      result.push(labels[domain] ?? domain)
     }
   }
   return result
@@ -88,10 +97,11 @@ export function PluginDetailDialog({
   onConfigChange: (key: string, value: unknown) => void
   onConfigSubmit: (event: FormEvent) => void
 }) {
+  const { t } = useTranslation()
   if (!entry) return null
 
   const { manifest, longDescription, tagline } = entry
-  const domains = getCapabilityDomains(manifest)
+  const domains = getCapabilityDomains(manifest, t)
   const configFields = getVisibleConfigFields(manifest)
   const hasSavedConfig = savedConfig && Object.keys(savedConfig).length > 0
 
@@ -123,11 +133,14 @@ export function PluginDetailDialog({
               </DialogTitle>
               <DialogDescription>
                 <span className="text-xs text-muted-foreground">
-                  by {manifest.author}
+                  {t('pluginStore.byAuthor', { author: manifest.author })}
                 </span>
                 {entry.installCount != null && entry.installCount > 0 && (
                   <span className="ml-2 text-xs text-muted-foreground">
-                    {entry.installCount.toLocaleString()} installs
+                    {t('pluginStore.installsCount', {
+                      count: entry.installCount,
+                      formattedCount: entry.installCount.toLocaleString(),
+                    })}
                   </span>
                 )}
                 {manifest.homepage && (
@@ -139,7 +152,7 @@ export function PluginDetailDialog({
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-0.5 text-xs text-primary hover:underline"
                     >
-                      Homepage
+                      {t('pluginStore.homepage')}
                       <ExternalLink className="size-3" />
                     </a>
                   </>
@@ -172,7 +185,9 @@ export function PluginDetailDialog({
           manifest.contributes.panels.length > 0 && (
             <div className="rounded-lg border bg-muted/20 px-4 py-3">
               <p className="mb-2 text-xs font-medium text-muted-foreground">
-                Panels ({manifest.contributes.panels.length})
+                {t('pluginStore.panelsCount', {
+                  count: manifest.contributes.panels.length,
+                })}
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {manifest.contributes.panels.map((panel) => (
@@ -192,7 +207,7 @@ export function PluginDetailDialog({
         {entry.permissions && entry.permissions.length > 0 && (
           <div className="rounded-lg border bg-muted/20 px-4 py-3">
             <p className="mb-2 text-xs font-medium text-muted-foreground">
-              Permissions
+              {t('pluginStore.permissions')}
             </p>
             <div className="flex flex-wrap gap-1.5">
               {entry.permissions.map((perm) => (
@@ -215,7 +230,7 @@ export function PluginDetailDialog({
             className="space-y-4 rounded-lg border bg-muted/30 p-4"
           >
             <p className="text-xs font-medium text-muted-foreground">
-              Configuration
+              {t('pluginStore.configuration')}
               {hasSavedConfig && (
                 <span className="ml-1.5 inline-block size-1.5 rounded-full bg-emerald-500" />
               )}
@@ -232,7 +247,9 @@ export function PluginDetailDialog({
             ))}
             <div className="flex justify-end">
               <Button type="submit" size="sm" disabled={busy}>
-                {active ? 'Update & Reactivate' : 'Save & Activate'}
+                {active
+                  ? t('pluginStore.updateReactivate')
+                  : t('pluginStore.saveActivate')}
               </Button>
             </div>
           </form>
@@ -260,13 +277,17 @@ export function PluginDetailDialog({
                     : 'text-muted-foreground',
               )}
             >
-              {platformBadge ? platformBadge : active ? 'Active' : 'Inactive'}
+              {platformBadge
+                ? platformBadge
+                : active
+                  ? t('common.active')
+                  : t('pluginStore.inactive')}
             </span>
             <Switch
               checked={active}
               disabled={busy || !!platformBadge}
               onCheckedChange={onToggle}
-              aria-label={`Toggle ${manifest.name}`}
+              aria-label={t('pluginStore.toggleAria', { name: manifest.name })}
             />
           </div>
         </DialogFooter>

@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Cable, Minus, Pencil, Plus } from 'lucide-react'
 
 import {
@@ -18,6 +19,7 @@ type DiffPanelProps = {
 }
 
 export function DiffPanel({ open, onOpenChange, diff }: DiffPanelProps) {
+  const { t } = useTranslation()
   const totalChanges =
     diff.addedSteps.length +
     diff.removedSteps.length +
@@ -29,7 +31,9 @@ export function DiffPanel({ open, onOpenChange, diff }: DiffPanelProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>Review Changes ({totalChanges})</DialogTitle>
+          <DialogTitle>
+            {t('notifications.builder.diff.title', { count: totalChanges })}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="max-h-64 space-y-2 overflow-y-auto">
@@ -41,7 +45,7 @@ export function DiffPanel({ open, onOpenChange, diff }: DiffPanelProps) {
             >
               <Plus className="size-3 text-emerald-500" />
               <span className="text-emerald-700 dark:text-emerald-400">
-                Added {n.type} step
+                {t('notifications.builder.diff.addedStep', { type: n.type })}
               </span>
             </div>
           ))}
@@ -54,7 +58,7 @@ export function DiffPanel({ open, onOpenChange, diff }: DiffPanelProps) {
             >
               <Minus className="size-3 text-red-500" />
               <span className="text-red-700 dark:text-red-400">
-                Removed {n.type} step
+                {t('notifications.builder.diff.removedStep', { type: n.type })}
               </span>
             </div>
           ))}
@@ -67,7 +71,9 @@ export function DiffPanel({ open, onOpenChange, diff }: DiffPanelProps) {
             >
               <Pencil className="size-3 text-amber-500" />
               <span className="text-amber-700 dark:text-amber-400">
-                Modified {before.type} config
+                {t('notifications.builder.diff.modifiedStep', {
+                  type: before.type,
+                })}
               </span>
             </div>
           ))}
@@ -80,7 +86,7 @@ export function DiffPanel({ open, onOpenChange, diff }: DiffPanelProps) {
             >
               <Cable className="size-3 text-emerald-500" />
               <span className="text-emerald-700 dark:text-emerald-400">
-                Added connection
+                {t('notifications.builder.diff.addedConnection')}
               </span>
             </div>
           ))}
@@ -93,14 +99,14 @@ export function DiffPanel({ open, onOpenChange, diff }: DiffPanelProps) {
             >
               <Cable className="size-3 text-red-500" />
               <span className="text-red-700 dark:text-red-400">
-                Removed connection
+                {t('notifications.builder.diff.removedConnection')}
               </span>
             </div>
           ))}
 
           {totalChanges === 0 && (
             <p className="py-4 text-center text-xs text-muted-foreground">
-              No changes
+              {t('notifications.builder.commitBar.noChanges')}
             </p>
           )}
         </div>

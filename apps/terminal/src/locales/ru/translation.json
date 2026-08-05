@@ -244,7 +244,9 @@
       "create": "Создать аккаунт",
       "skip": "Пропустить — оставить всё на этом устройстве",
       "signedIn": "Вы вошли как {{email}}",
-      "label": "Аккаунт"
+      "label": "Аккаунт",
+      "otpSendFailed": "Не удалось отправить код",
+      "signInFailed": "Не удалось войти"
     },
     "summary": {
       "eyebrow": "Готово",
@@ -376,6 +378,42 @@
         "title": "Ваша машина, ваши ключи",
         "description": "Боты работают здесь, а не на наших серверах, и ваши API-ключи никогда не покидают этот компьютер. Держите его активным с открытым Pairlens и выключайте любого бота в тот момент, когда он должен остановиться."
       }
+    },
+    "scenes": {
+      "topMover": "Лидер движения · {{pair}} {{delta}}",
+      "watchlistCount": "Список наблюдения · {{count}}",
+      "signalBreakout": "Breakout",
+      "signalPullbackForming": "Формируется пуллбэк",
+      "onClose": "по закрытию",
+      "crossedAbovePrice": "пересекла {{price}} снизу вверх",
+      "conditionCrossesAbove": "пересекает снизу вверх",
+      "notifyMeDesktopInApp": "Уведомить меня — на рабочем столе и в приложении",
+      "nodeTrigger": "Триггер",
+      "nodeSignalLabel": "Сигнал: {{signal}}",
+      "nodeCondition": "Условие",
+      "nodeVolumeAboveAvg": "Объём > среднего",
+      "nodeAction": "Действие",
+      "nodeAlertAndJournal": "Уведомление + журнал",
+      "runBreakoutWatcher": "Наблюдатель breakout",
+      "runDcaBuyer": "Покупка по DCA",
+      "runStopLossGuard": "Страж стоп-лосса",
+      "ranAt": "{{time}} · выполнено",
+      "runsLocally": "Выполняется локально",
+      "storedOnDevice": "Хранится на этом устройстве — никогда на наших серверах",
+      "osKeychain": "Хранилище ключей ОС",
+      "pluginKindMarketData": "Рыночные данные",
+      "pluginKindTheme": "Тема",
+      "pluginKindAutomation": "Автоматизация",
+      "sandboxedByDefault": "По умолчанию в песочнице",
+      "signedVerified": "Подписан и проверен",
+      "networkAccessApproveHost": "Сетевой доступ — вы одобряете каждый хост",
+      "copiedToWorkspaces": "Скопировано в ваши рабочие пространства",
+      "statNet": "Чистая прибыль",
+      "statMaxDd": "Макс. просадка",
+      "sameCodeGoesLive": "В реальную торговлю идёт тот же код",
+      "runsOnYourMachine": "Работает на вашем компьютере — не давайте ему уснуть",
+      "botMeanReversion": "Возврат к среднему",
+      "chainWallet": "Кошелёк {{chain}}"
     }
   },
   "common": {
@@ -398,7 +436,12 @@
     "showInFolder": "Показать в папке",
     "updated": "Обновлено {{time}}",
     "back": "Назад",
-    "dismiss": "Скрыть"
+    "dismiss": "Скрыть",
+    "unknownError": "Неизвестная ошибка",
+    "ordersLockedRiskLimit": "Ордера заблокированы из-за превышения лимита риска. Разблокируйте их в разделе Настройки > Управление риском.",
+    "buyOrdersLockedRiskLimit": "Покупки заблокированы из-за превышения лимита риска. Разблокируйте их в разделе Настройки > Управление риском.",
+    "positionSizeExceeded": "Ордер заблокирован лимитом риска: позиция составляет {{ratioPct}}% портфеля — выше вашего максимума в {{maxPositionSize}}%. Измените это в разделе Настройки > Управление риском.",
+    "sessionExpired": "Ваша сессия истекла — пожалуйста, войдите снова."
   },
   "legal": {
     "terms": "Условия использования",
@@ -581,7 +624,22 @@
       "publisherKeyConsentTitle": "Доверять этому издателю?",
       "publisherKeyConsentBody": "Плагины, подписанные этим ключом, можно будет устанавливать на этом устройстве. Злоумышленник-издатель может выпустить плагины, запрашивающие полное доверие — с доступом к данным других ваших плагинов, сохранённым учётным данным биржи и торговле. Прежде чем продолжить, сверьте отпечаток с издателем по каналу, которому вы доверяете.",
       "publisherKeyConsentConfirm": "Доверять этому ключу",
-      "publisherKeyConsentCancel": "Отмена"
+      "publisherKeyConsentCancel": "Отмена",
+      "updatesTitle": "Обновления плагинов",
+      "updatesDescription": "Настройте, как обновляются плагины при появлении новых версий в реестре.",
+      "updateModeLabel": "Режим обновления",
+      "updateModeAutoDescription": "Обновления загружаются и устанавливаются автоматически",
+      "updateModeNotifyDescription": "Вы увидите значок, когда появятся обновления",
+      "updateModeOffDescription": "Автоматическая проверка обновлений отключена",
+      "updateModeAuto": "Автообновление",
+      "updateModeNotify": "Только уведомлять",
+      "updateModeOffLabel": "Выкл.",
+      "checkIntervalLabel": "Интервал проверки",
+      "checkIntervalDescription": "Как часто проверять реестр на наличие новых версий",
+      "intervalHourly": "Каждый час",
+      "interval6Hours": "Каждые 6 часов",
+      "interval12Hours": "Каждые 12 часов",
+      "intervalDaily": "Ежедневно"
     },
     "appearance": {
       "colorMode": "Цветовой режим",
@@ -603,7 +661,9 @@
       "balanced": "Сбалансированный",
       "balancedDescription": "Тикер и стакан ордеров каждые 250 мс, свечи каждые 500 мс. Хороший баланс между отзывчивостью и эффективностью.",
       "energySaver": "Энергосбережение",
-      "energySaverDescription": "Тикер и стакан ордеров каждую 1 с, свечи каждые 2 с. Лучше всего для пассивного наблюдения или ноутбуков на батарее."
+      "energySaverDescription": "Тикер и стакан ордеров каждую 1 с, свечи каждые 2 с. Лучше всего для пассивного наблюдения или ноутбуков на батарее.",
+      "idleGuardTitle": "Отключение при бездействии",
+      "idleGuardDescription": "Приостанавливает потоки рыночных данных после 1 часа бездействия, чтобы сэкономить трафик и снизить энергопотребление."
     },
     "desktop": {
       "closeBehavior": {
@@ -1037,7 +1097,9 @@
       "namePlaceholder": "Название папки"
     },
     "createFirst": "Создайте своё первое рабочее пространство",
-    "emptyState": "Пока нет рабочих пространств"
+    "emptyState": "Пока нет рабочих пространств",
+    "descriptionLabel": "Описание",
+    "descriptionPlaceholder": "Необязательное краткое описание"
   },
   "session": {
     "checking": "Проверка сессии…",
@@ -1095,7 +1157,9 @@
     "verifying": "Проверка...",
     "verifyAndSignIn": "Подтвердить и войти",
     "codeRequired": "Код обязателен",
-    "emailRequired": "Email обязателен"
+    "emailRequired": "Email обязателен",
+    "dialogDescription": "Войдите, чтобы получить доступ к этой функции",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "Сессия приостановлена",
@@ -1115,7 +1179,14 @@
     "connecting": "Подключение",
     "stalled": "Переподключение",
     "offline": "Оффлайн",
-    "error": "Ошибка"
+    "error": "Ошибка",
+    "pluginUpdatesReady_one": "{{count}} обновление плагина готово к установке",
+    "pluginUpdatesReady_other": "{{count}} обновления плагина готовы к установке",
+    "pluginUpdatesDescription": "Обновления применятся после перезапуска терминала.",
+    "restartNow": "Перезапустить сейчас",
+    "later": "Позже",
+    "pluginUpdatesReady_few": "{{count}} обновления плагина готовы к установке",
+    "pluginUpdatesReady_many": "{{count}} обновлений плагина готовы к установке"
   },
   "copilot": {
     "aiLens": "AI-линза",
@@ -1134,7 +1205,46 @@
     },
     "marketRegime": "Режим рынка",
     "trending": "Трендовый",
-    "choppy": "Флэт"
+    "choppy": "Флэт",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "Размер",
+    "orderPlacedPaper": "Бумажный ордер выставлен",
+    "orderPlaced": "Ордер выставлен",
+    "autoApprovedNote": "Одобрено автоматически ({{mode}} · «больше не спрашивать» включено)",
+    "turnOff": "Отключить",
+    "autoApproving": "Автоматическое одобрение ордера {{mode}}…",
+    "liveOrderWarning": "Реальный ордер — настоящие средства, применяется в рамках ваших лимитов риска.",
+    "dontAskAgainPaper": "Больше не спрашивать для бумажных сделок",
+    "dontAskAgainLive": "Больше не спрашивать для реальных сделок на {{market}}",
+    "placing": "Выставление…",
+    "confirmMode": "Подтвердить {{mode}}",
+    "dismissed": "Отклонено",
+    "cancelOrderPrompt": "Отменить ордер {{orderId}} на {{pair}} · {{market}}?",
+    "cancelled": "Отменён",
+    "cancelFailed": "Не удалось отменить",
+    "cancelling": "Отмена…",
+    "confirmCancel": "Подтвердить отмену",
+    "keep": "Оставить",
+    "tradingUnavailable": "Торговля недоступна.",
+    "noCredentialsForMarket": "Нет подключённых учётных данных для {{market}}. Добавьте API-ключи в разделе «Аккаунты», чтобы торговать в реальном режиме.",
+    "watchingPair": "Наблюдение за {{pair}} · {{timeframe}}",
+    "genericChatError": "У копилота произошла ошибка — попробуйте отправить сообщение ещё раз.",
+    "quickActionHowIsDoing": "Как дела у {{symbol}}?",
+    "quickActionSuggestedIndicators": "Рекомендуемые индикаторы",
+    "quickActionAnySignals": "Есть сигналы?",
+    "scheduledCheckPrefix": "[Запланированная проверка — настроена {{minutes}} мин назад]",
+    "authRequiredTitle": "Познакомьтесь со своим ИИ-копилотом",
+    "authRequiredDescription": "Контекстный анализ по любой паре — он читает график, проверяет ваши лимиты риска и отвечает с обоснованием, которое можно оспорить. Войдите, а затем оформите подписку на Pairlens Intelligence или используйте собственный ключ ИИ.",
+    "upgradeRequiredDescription": "Ваш ИИ-копилот читает график, проверяет ваши лимиты риска и отвечает с обоснованием, которое можно оспорить. Оформите подписку на Pairlens Intelligence — или используйте собственный ключ ИИ через Plugins, бесплатно.",
+    "aiLensUnavailableTitle": "AI Lens недоступен",
+    "aiLensUnavailableDescription": "Включите ИИ-плагин на странице Plugins, чтобы получить анализ рынка в реальном времени и помощь в торговле.",
+    "goToPlugins": "Перейти в Plugins",
+    "analyzePair": "Анализировать {{pair}}",
+    "startConversation": "Начать разговор",
+    "emptyStateHint": "Спросите о состоянии рынка, проверьте свою сделку или запросите оценку риска — ИИ знает полный контекст этой пары.",
+    "contextAware": "Учитывает контекст",
+    "toolFailed": "Инструмент не сработал"
   },
   "chart": {
     "contextMenu": {
@@ -1318,7 +1428,9 @@
       "pause": "Пауза",
       "step": "Следующий бар",
       "exit": "Выйти из реплея"
-    }
+    },
+    "fullscreenTitle": "График на весь экран",
+    "fullscreenHint": "График в полноэкранном режиме. Нажмите Escape, чтобы выйти."
   },
   "botsPage": {
     "loading": "Загрузка ботов…",
@@ -1881,7 +1993,15 @@
     "frozen": "Заморожено",
     "total": "Всего",
     "refreshBalances": "Обновить",
-    "asset": "Актив"
+    "asset": "Актив",
+    "cancelOrderTitle": "Отменить ордер?",
+    "cancelOrderBody": "Это отменит ваш ордер на {{side}} по {{pair}}.",
+    "keepOrder": "Оставить ордер",
+    "cancelOrder": "Отменить ордер",
+    "sideBuy": "покупку",
+    "sideSell": "продажу",
+    "buy": "Покупка",
+    "sell": "Продажа"
   },
   "pairInfo": {
     "title": "Информация о паре",
@@ -1924,13 +2044,41 @@
     "emptyTitle": "Введите URL выше, чтобы встроить сайт",
     "embedWarning": "Некоторые сайты блокируют встраивание в iframe. Если страница не загружается, попробуйте открыть её в браузере.",
     "blockedTitle": "Этот сайт нельзя встроить",
-    "blockedDescription": "Этот сайт блокирует отображение внутри других страниц. Вы можете открыть его в отдельной вкладке браузера."
+    "blockedDescription": "Этот сайт блокирует отображение внутри других страниц. Вы можете открыть его в отдельной вкладке браузера.",
+    "forward": "Вперёд",
+    "failedToLoad": "Не удалось загрузить",
+    "viewPaused": "Веб-просмотр приостановлен"
   },
   "intelligence": {
-    "awaitingSignal": "Сигналы не обнаружены",
+    "analyzing": "Анализ рынка…",
+    "noRecentSignals": "Нет сигналов за последние {{bars}} свечей",
+    "live": "Сейчас",
+    "recentSignals": "Недавние сигналы",
     "regime": "Режим",
     "trending": "Трендовый",
-    "choppy": "Флэт"
+    "choppy": "Флэт",
+    "upsell": {
+      "priceMonthly": "{{price}} $/мес",
+      "taxNotice": "Цены указаны без учёта налогов — они рассчитываются при оформлении заказа.",
+      "defaultTitle": "Откройте доступ к Pairlens Intelligence",
+      "defaultDescription": "Облачный ИИ-помощник и веб-research без необходимости в собственных API-ключах. Каждый план включает месячный лимит использования, общий для чата, research и веб-поиска.",
+      "byokNote": "Предпочитаете собственного провайдера? Подключите ключ Anthropic, OpenAI, Groq или OpenRouter на странице <plugins>«Плагины»</plugins> — ИИ с собственным ключом всегда бесплатен.",
+      "checkoutOpenedTitle": "Оформление заказа открыто в браузере",
+      "checkoutActivates": "Подписка активируется здесь сразу после завершения оплаты.",
+      "checkoutStartError": "Не удалось начать оформление заказа — попробуйте ещё раз.",
+      "subscriptionRequiredTitle": "Требуется подписка Pairlens Intelligence",
+      "subscriptionRequiredBody": "Облачный ИИ работает по плану Intelligence. Оформите подписку ниже или подключите собственный ключ ИИ-провайдера в плагинах.",
+      "budgetUsedUpTitle": "Месячный лимит использования исчерпан",
+      "budgetUsedBody": "Вы исчерпали кредиты Intelligence за этот цикл.",
+      "budgetResetsOn": "Лимит обновится {{date}}.",
+      "topUpHint": "Пополните баланс пакетом кредитов, чтобы продолжить — кредиты пакета сгорают через 30 дней после покупки.",
+      "upgradeToMaxHint": "Перейдите на {{label}}, чтобы получать {{credits}} кредитов в месяц.",
+      "manageSubscription": "Управление подпиской",
+      "portalError": "Не удалось открыть портал оплаты.",
+      "creditsLandDescription": "Дополнительные кредиты зачисляются на баланс сразу после завершения оплаты.",
+      "checkoutError": "Не удалось начать оформление заказа.",
+      "upgradeToMax": "Перейти на Max"
+    }
   },
   "panes": {
     "markets": "Рынки",
@@ -2026,6 +2174,52 @@
       "title": "{{pair}} недоступна на {{venue}}",
       "titleAnyVenue": "{{pair}} недоступна",
       "description": "Этот коннектор не вернул рыночных данных по этой паре. Попробуйте другой, где она торгуется."
+    },
+    "panePicker": {
+      "bindToVariable": "Привязать к переменной",
+      "boundTo": "Привязано к <b>{{variable}}</b>",
+      "market": "Рынок",
+      "setPair": "Задать пару для {{variable}}",
+      "selectPair": "Выбрать пару",
+      "bindingHint": "Выбор пары обновит все панели, привязанные к {{variable}}",
+      "unbindFromVariable": "Отвязать от переменной",
+      "settingForAllPanes": "Установка <b>{{variable}}</b> для всех привязанных панелей"
+    },
+    "pane": {
+      "close": "Закрыть {{pane}}",
+      "popOutToColumn": "Вынести в новую колонку",
+      "bindPairToVariable": "Привязать пару к переменной",
+      "bindWalletToVariable": "Привязать кошелёк к переменной",
+      "bindTimeframeToVariable": "Привязать таймфрейм к переменной",
+      "clearPairOverride": "Сбросить переопределение пары",
+      "closePane": "Закрыть панель",
+      "unbind": "Отвязать",
+      "closeTab": "Закрыть вкладку"
+    },
+    "dnd": {
+      "pickedUp": "Элемент {{pane}} захвачен. Стрелки — переместить, пробел — опустить, escape — отменить.",
+      "genericPane": "панель",
+      "noDropTarget": "Нет цели для сброса.",
+      "dropStackTab": "Отпустите здесь, чтобы добавить как вкладку.",
+      "dropSplitAbove": "Отпустите, чтобы разделить сверху.",
+      "dropSplitBelow": "Отпустите, чтобы разделить снизу.",
+      "dropNewColumn": "Отпустите, чтобы создать новую колонку.",
+      "paneMoved": "Панель перемещена.",
+      "dragCancelled": "Перетаскивание отменено, панель возвращена.",
+      "dragCancelledFull": "Перетаскивание отменено, панель вернулась на исходную позицию."
+    },
+    "missingPane": {
+      "requiresPlugin": "Для этой панели требуется плагин «{{pluginId}}»",
+      "notAvailable": "Панель «{{type}}» недоступна",
+      "description": "Возможно, плагин был удалён или отключён.",
+      "openPluginStore": "Открыть магазин плагинов"
+    },
+    "dropZone": {
+      "emptyHint": "Перетащите панель сюда",
+      "addAsTab": "Добавить как вкладку",
+      "splitTop": "Разделить сверху",
+      "splitBottom": "Разделить снизу",
+      "newColumn": "Новая колонка"
     }
   },
   "watchlist": {
@@ -2135,7 +2329,141 @@
     "uninstalled": "Удалён",
     "updateReactivate": "Обновить и активировать",
     "version": "Версия",
-    "visit": "Перейти"
+    "visit": "Перейти",
+    "fullTrust": {
+      "title": "Дать полное доверие «{{name}}»?",
+      "description": "Этот плагин добавляет интерфейс, поэтому должен работать в основном приложении без песочницы. Плагин с полным доверием получает те же права, что и сам Pairlens.",
+      "itCan": "Он сможет:",
+      "grantPlugins": "читать данные других установленных плагинов;",
+      "grantCredentials": "читать сохранённые API-ключи бирж и учётные данные кошельков;",
+      "grantTrading": "совершать сделки и другие финансовые операции от вашего имени.",
+      "trustNote": "Давайте полное доверие только плагинам от авторов, которым вы доверяете. Удалить его можно в любой момент.",
+      "trustNoteAuthor": "Давайте полное доверие только плагинам от авторов, которым вы доверяете (автор: {{author}}). Удалить его можно в любой момент.",
+      "grant": "Дать полное доверие"
+    },
+    "network": {
+      "title": "Разрешить «{{name}}» подключаться?",
+      "description": "Этому плагину нужны серверы за пределами Pairlens. Терминал будет отправлять сетевые запросы к хостам ниже. Разрешайте, только если доверяете плагину — удалить его и отозвать доступ можно в любой момент.",
+      "hostsIntro": "Он сможет подключаться к:",
+      "reloadNote": "После подтверждения терминал перезагрузится, чтобы применить изменение.",
+      "deny": "Не разрешать",
+      "allow": "Разрешить и перезагрузить"
+    },
+    "toggleFailedEnable": "Не удалось включить {{name}}",
+    "toggleFailedDisable": "Не удалось отключить {{name}}",
+    "updateStagedToast": "Обновление подготовлено — перезапустите, чтобы применить",
+    "restartNow": "Перезапустить сейчас",
+    "updateStageFailedToast": "Не удалось подготовить обновление: {{error}}",
+    "resetStagedToast": "Сброшено к значениям по умолчанию — перезапустите, чтобы завершить",
+    "networkGrantedToast": "Сетевой доступ предоставлен «{{name}}» — перезагрузка…",
+    "networkDeniedToast": "«{{name}}» установлен без сетевого доступа — он может не работать, пока вы его не разрешите.",
+    "installCancelledNoTrust": "Установка отменена — полное доверие не предоставлено",
+    "installedVersionToast": "«{{name}}» v{{version}} установлен",
+    "installFailedToast": "Не удалось установить плагин: {{error}}",
+    "localFilesNotFound": "Локальные файлы плагина не найдены",
+    "pluginCodeNotFound": "Код плагина не найден — переустановите его",
+    "fullTrustGrantedNameToast": "Полное доверие предоставлено «{{name}}»",
+    "loadPluginFailedToast": "Не удалось загрузить плагин: {{error}}",
+    "importFailedToast": "Не удалось импортировать плагин: {{error}}",
+    "fieldRequired": "{{label}} обязательно для заполнения",
+    "configSaved": "Конфигурация сохранена",
+    "configurationFailed": "Не удалось выполнить настройку",
+    "needsFullTrustToRun": "Требует полного доверия для запуска",
+    "pendingTrustDescription": "Добавляет интерфейс и не может работать в песочнице — предоставьте полное доверие, чтобы включить его, или удалите.",
+    "remove": "Удалить",
+    "groupCore": "Основные",
+    "groupProvidersExtensions": "Провайдеры и расширения",
+    "groupThemes": "Темы",
+    "removePluginTitle": "Удалить плагин",
+    "removePluginDescription": "Это отключит и удалит плагин. Все панели, которые он предоставлял, покажут заполнитель для восстановления. Вы можете переустановить его из Plugin Store в любой момент.",
+    "resetDefaultsTitle": "Сброс к значениям по умолчанию",
+    "resetDefaultsDescription": "Это удалит все плагины, не входящие в комплект, очистит подготовленные и доступные обновления и перезагрузит терминал. Встроенные плагины останутся установленными.",
+    "reset": "Сбросить",
+    "installFromUrlDialogTitle": "Установить плагин по URL",
+    "installFromUrlDialogDescription": "Введите URL модуля плагина (.js) для установки.",
+    "unverifiedPluginTitle": "Непроверенный плагин",
+    "unverifiedPluginBody": "Плагины, установленные вручную, не проходили проверку безопасности. Устанавливайте плагины только из источников, которым вы доверяете.",
+    "installAnyway": "Всё равно установить",
+    "sourceBuiltIn": "Встроенный",
+    "sourceRegistry": "Реестр",
+    "sourceUrl": "URL",
+    "sourceLocal": "Локальный",
+    "fullTrustGrantedRestartToast": "Полное доверие предоставлено — перезапустите, чтобы этот плагин работал в основном приложении",
+    "sandboxedRestartToast": "Плагин будет работать в песочнице — перезапустите, чтобы применить",
+    "requiresFullTrustTitle": "Этот плагин добавляет интерфейс и должен работать с полным доверием.",
+    "trustBadgeFullRequired": "Полное доверие (обязательно)",
+    "trustBadgeFull": "Полное доверие",
+    "trustBadgeSandboxed": "В песочнице",
+    "panelCount_one": "{{count}} панель",
+    "panelCount_other": "{{count}} панелей",
+    "update": "Обновить",
+    "revokeFullTrustAria": "Отозвать полное доверие для {{name}}",
+    "grantFullTrustAria": "Предоставить полное доверие для {{name}}",
+    "fullTrustActiveTitle": "Полное доверие — работает в основном приложении. Нажмите, чтобы перевести в песочницу.",
+    "sandboxedTitle": "Песочница — изолированный воркер, сеть ограничена заявленными хостами. Нажмите, чтобы предоставить полное доверие.",
+    "configureAria": "Настроить {{name}}",
+    "toggleAria": "Переключить {{name}}",
+    "capabilityProvidersTitle": "Поставщики возможностей",
+    "capabilityProvidersDescription": "Каждая функция терминала запрашивает определённую возможность, и включённый плагин с наивысшим приоритетом предоставляет её автоматически. Выберите конкретный плагин, чтобы переопределить автоматический выбор.",
+    "resetAllOverrides": "Сбросить все переопределения",
+    "noProviderInstalled": "Ни один установленный плагин не предоставляет это",
+    "browseStore": "Открыть магазин",
+    "installedNeedsKeySingle": "Установлен — требуется API-ключ",
+    "installedNeedsKeyPlural": "Установлено: {{count}} — всем нужны API-ключи",
+    "installedDisabledSingle": "Установлен 1 плагин, но он отключён",
+    "installedDisabledPlural": "Установлено плагинов: {{count}}, все отключены",
+    "manage": "Управление",
+    "pinnedActiveNote": "Закреплено — переопределяет автоматический порядок",
+    "pinnedInactiveNote": "Закреплённый плагин отключён — применяется автоматический порядок",
+    "autoOrderLabel": "Автоматический порядок: {{chain}}",
+    "chainMore_one": "{{chain}} +{{count}} ещё",
+    "chainMore_other": "{{chain}} +{{count}} ещё",
+    "resolvedPerMarket": "Определяется по рынку",
+    "marketOverrides": "Переопределения по рынкам",
+    "pinnedCountBadge_one": "Закреплено: {{count}}",
+    "pinnedCountBadge_other": "Закреплено: {{count}}",
+    "automatic": "Автоматически",
+    "disabledHint": "отключён",
+    "notInstalled": "{{id}} (не установлен)",
+    "saveOverrideFailed": "Не удалось сохранить переопределение провайдера",
+    "removeOverrideFailed": "Не удалось удалить переопределение провайдера",
+    "resetOverridesFailed": "Не удалось сбросить переопределения",
+    "marketConnectorsTitle": "Рыночные коннекторы",
+    "marketConnectorsDescription": "Рыночные коннекторы передают данные о ценах и стаканы ордеров в реальном времени, а также позволяют торговать напрямую через API бирж. Включите биржи, которые хотите использовать.",
+    "activeCountBadge": "{{active}}/{{total}} активно",
+    "connected": "Подключено",
+    "disabledStatus": "Отключён",
+    "readAndTrade": "Чтение + Торговля",
+    "readOnly": "Только чтение",
+    "noConnectorsInstalled": "Не установлено ни одного плагина рыночного коннектора.",
+    "moreConnectors": "Другие коннекторы",
+    "fromPluginStore": "из Plugin Store",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "Узнать больше",
+    "enabledToast": "{{name}} включён",
+    "disabledToast": "{{name}} отключён",
+    "enableFailedShort": "Не удалось включить",
+    "disableFailedShort": "Не удалось отключить",
+    "domain": {
+      "marketData": "Рыночные данные",
+      "trading": "Торговля",
+      "wallet": "Кошелёк",
+      "signals": "Сигналы",
+      "ai": "ИИ"
+    },
+    "byAuthor": "автор: {{author}}",
+    "installsCount_one": "{{formattedCount}} установка",
+    "installsCount_other": "{{formattedCount}} установок",
+    "panelsCount": "Панели ({{count}})",
+    "inactive": "Неактивен",
+    "previousSlide": "Назад",
+    "nextSlide": "Далее",
+    "goToSlide": "Перейти к слайду {{n}}",
+    "copyCommand": "Скопировать команду",
+    "panelCount_few": "{{count}} панели",
+    "panelCount_many": "{{count}} панелей",
+    "installsCount_few": "{{formattedCount}} установки",
+    "installsCount_many": "{{formattedCount}} установок"
   },
   "search": {
     "title": "Поиск пар",
@@ -2202,8 +2530,71 @@
       "selectAccount": "Выбрать аккаунт",
       "groupWallet": "Крипто-кошелёк",
       "groupBroker": "Брокерский счёт",
-      "groupExchange": "Аккаунт биржи"
-    }
+      "groupExchange": "Аккаунт биржи",
+      "selectWalletTopBar": "Выберите кошелёк на верхней панели",
+      "connectChainWallet": "Подключите кошелёк {{chain}}",
+      "connectExchangeAccount": "Подключите аккаунт {{exchange}}",
+      "selectAccountTopBar": "Выберите аккаунт на верхней панели"
+    },
+    "trade": {
+      "limitBuy": "Лимитная покупка",
+      "limitSell": "Лимитная продажа",
+      "bought": "Куплено",
+      "sold": "Продано",
+      "limitOrderFailed": "Лимитный ордер не прошёл",
+      "swapFailed": "Своп не прошёл",
+      "workflowUnsupported": "Воркфлоу не поддерживается на этом рынке",
+      "orderBlocked": "Ордер заблокирован лимитом риска",
+      "orderRejected": "Ордер отклонён",
+      "orderFailed": "Ордер не прошёл",
+      "setRegion": "Укажите регион",
+      "regionDefaulting": "Регион по умолчанию — Global.",
+      "addPreset": "Добавить пресет",
+      "createFirstWorkflow": "Создайте первый воркфлоу",
+      "editWorkflows": "Редактировать воркфлоу",
+      "selectWorkflow": "Выберите воркфлоу",
+      "submitting": "Отправка…",
+      "holdToRun": "Удерживайте, чтобы запустить",
+      "holdToConfirmLive": "Удерживайте для подтверждения · средства спишутся сразу",
+      "holdToPlace": "Удерживайте, чтобы разместить",
+      "runWorkflow": "Запустить воркфлоу",
+      "buyAsset": "Купить {{asset}}",
+      "sellAsset": "Продать {{asset}}",
+      "amount": "Объём",
+      "price": "Цена",
+      "presetsTitle": "Пресеты суммы ({{quote}})",
+      "buy": "Купить",
+      "sell": "Продать",
+      "orderTypeMarket": "Рынок",
+      "orderTypeLimit": "Лимит",
+      "workflow": "Воркфлоу",
+      "notSupportedOn": "Не поддерживается на {{venue}}",
+      "available": "Доступно: {{amount}}",
+      "slippage": "Проскальзывание"
+    },
+    "status": {
+      "connecting": "Подключение…",
+      "loadingOrderBook": "Загрузка стакана…",
+      "loadingDepth": "Загрузка глубины…",
+      "loadingCandles": "Загрузка свечей…",
+      "waitingTrades": "Ожидание сделок…",
+      "waitingData": "Ожидание данных…",
+      "noCandleData": "Свечей пока нет",
+      "noTradesFeed": "Перейдите на биржу, которая публикует ленту сделок"
+    },
+    "columns": {
+      "price": "Цена",
+      "size": "Объём",
+      "total": "Итого",
+      "open": "Открытие",
+      "close": "Закрытие"
+    },
+    "panel": {
+      "expand": "Развернуть панель",
+      "collapse": "Свернуть панель"
+    },
+    "recentlyViewed": "Недавно просмотренные",
+    "noMarketsFound": "Рынки не найдены"
   },
   "accounts": {
     "pageTitle": "Аккаунты",
@@ -2299,7 +2690,46 @@
     "importKey": "Импортировать приватный ключ",
     "affiliateDisclosure": "Некоторые ссылки регистрации могут приносить Pairlens комиссию без дополнительных затрат для вас.",
     "vaultSealedBody": "Ваше хранилище учётных данных заблокировано. Ваши счета на месте — разблокируйте, чтобы их увидеть и использовать.",
-    "credentialsUnreadable": "Не удалось прочитать ключи, сохранённые на этом устройстве. Ничего не потеряно — попробуйте снова или перезапустите Pairlens."
+    "credentialsUnreadable": "Не удалось прочитать ключи, сохранённые на этом устройстве. Ничего не потеряно — попробуйте снова или перезапустите Pairlens.",
+    "addWalletDialogTitle": "Добавить криптокошелёк",
+    "addWalletDialogDescription": "Импортируйте приватный ключ кошелька для ончейн-торговли",
+    "blockchainLabel": "Блокчейн",
+    "walletLabelField": "Название",
+    "walletLabelPlaceholder": "Мой кошелёк",
+    "privateKeyField": "Приватный ключ",
+    "saveWallet": "Сохранить кошелёк",
+    "keep": "Оставить",
+    "remove": "Удалить",
+    "disconnect": "Отключить",
+    "localBadge": "Локально",
+    "unknownDate": "Неизвестно",
+    "keyExpiredWarning": "Вероятно, истёк срок действия — {{daysInactive}} дней без активности (лимит {{limitDays}} дней). Создайте новый API-ключ на бирже.",
+    "keyInactiveWarning": "{{daysInactive}}/{{limitDays}} дней без активности. Ключи истекают через {{limitDays}} дней без использования.",
+    "exchangeAccountAriaLabel": "Аккаунт биржи {{label}}",
+    "cryptoWalletAriaLabel": "Криптокошелёк {{label}}",
+    "portfolioTotal": "Всего",
+    "assetAllocationLabel": "Распределение активов",
+    "tableAsset": "Актив",
+    "tableAmount": "Количество",
+    "tableValue": "Стоимость",
+    "tableShare": "Доля",
+    "assetCount_one": "{{count}} актив",
+    "assetCount_few": "{{count}} актива",
+    "assetCount_many": "{{count}} активов",
+    "assetCount_other": "{{count}} актива",
+    "moreAssets_one": "+{{count}} актив",
+    "moreAssets_few": "+{{count}} актива",
+    "moreAssets_many": "+{{count}} активов",
+    "moreAssets_other": "+{{count}} актива",
+    "walletSavedFeedback": "Криптокошелёк сохранён.",
+    "walletRemovedFeedback": "Криптокошелёк удалён.",
+    "accountRemovedFeedback": "Аккаунт удалён.",
+    "walletSaveFailed": "Не удалось сохранить кошелёк.",
+    "walletRemoveFailed": "Не удалось удалить кошелёк.",
+    "accountConnectFailed": "Не удалось подключить аккаунт.",
+    "accountRemoveFailed": "Не удалось удалить аккаунт.",
+    "fieldRequired": "Поле «{{field}}» обязательно",
+    "accountConnectedFeedback": "Аккаунт {{label}} ({{mode}}) подключён."
   },
   "workspaceStore": {
     "title": "Магазин рабочих пространств",
@@ -2409,12 +2839,136 @@
     "paneCount_other": "{{count}} панели",
     "panes": "Панели",
     "showAll": "Показать все",
-    "spotlight": "В центре внимания"
+    "spotlight": "В центре внимания",
+    "previousSlide": "Предыдущий",
+    "nextSlide": "Следующий",
+    "goToSlide": "Перейти к слайду {{number}}"
   },
   "notifications": {
     "flows": "Потоки",
     "newFlow": "Новый поток",
-    "noFlows": "Пока нет потоков уведомлений"
+    "noFlows": "Пока нет потоков уведомлений",
+    "builder": {
+      "sidebar": {
+        "tabRules": "Правила",
+        "tabActivity": "Активность",
+        "noRules": "Пока нет правил уведомлений",
+        "newRuleTitle": "Новое правило уведомления",
+        "rulePlaceholder": "Название правила",
+        "renameRuleTitle": "Переименовать правило",
+        "rename": "Переименовать",
+        "deleteRuleTitle": "Удалить правило",
+        "deleteRuleWarning": "Это действие нельзя отменить. Правило уведомления и его привязки к парам будут удалены безвозвратно.",
+        "pairsLabel": "Пары",
+        "sendTest": "Отправить тест",
+        "testing": "Тестирование…",
+        "pairAlreadyBound": "Эта пара уже привязана к правилу",
+        "noBindings": "Ещё не привязано ни к одной паре — правило не сработает, пока вы не добавите пару.",
+        "testSent": "Тестовое уведомление отправлено",
+        "testFailed": "Тест не удалось доставить",
+        "noActivity": "Уведомления ещё не срабатывали",
+        "clearActivity": "Очистить активность",
+        "channelFailed": "Сбой: {{channel}}"
+      },
+      "commitBar": {
+        "cycleDetected": "Обнаружен цикл",
+        "issueCount_one": "{{count}} проблема",
+        "issueCount_other": "{{count}} проблем",
+        "moreIssues": "…и ещё {{count}}",
+        "pendingChangeCount_one": "{{count}} несохранённое изменение",
+        "pendingChangeCount_other": "{{count}} несохранённых изменений",
+        "noChanges": "Нет изменений",
+        "review": "Просмотр",
+        "discard": "Отклонить",
+        "commit": "Сохранить",
+        "cannotSaveTitle": "Не удалось сохранить правило",
+        "cycleError": "Правило содержит циклическую зависимость. Уберите цикл (красные рёбра) перед сохранением.",
+        "saved": "Правило сохранено"
+      },
+      "diff": {
+        "title": "Просмотр изменений ({{count}})",
+        "addedStep": "Добавлен шаг {{type}}",
+        "removedStep": "Удалён шаг {{type}}",
+        "modifiedStep": "Изменена конфигурация {{type}}",
+        "addedConnection": "Добавлено соединение",
+        "removedConnection": "Удалено соединение"
+      },
+      "canvas": {
+        "undoTitle": "Отменить (Cmd+Z)",
+        "redoTitle": "Повторить (Cmd+Shift+Z)",
+        "deleteStep": "Удалить шаг",
+        "deleteConnection": "Удалить соединение",
+        "cycleLabel": "цикл"
+      },
+      "palette": {
+        "addStep": "Добавить шаг",
+        "categoryEvents": "События",
+        "categoryConditions": "Условия",
+        "categoryChannels": "Каналы"
+      },
+      "category": {
+        "event": "Событие",
+        "condition": "Условие",
+        "channel": "Канал"
+      },
+      "emptyState": {
+        "pickRuleHint": "Выберите правило слева, чтобы открыть его на холсте.",
+        "untitledRule": "Правило без названия",
+        "eyebrow": "Уведомления",
+        "title": "Следите за рынком, не следя за ним сами",
+        "description": "Правило — это небольшой поток: что-то происходит — цена пересекает уровень, закрывается свеча, исполняется ордер, срабатывает алерт индикатора — затем проходит через добавленные вами условия и доходит до вас в виде toast-уведомления, системного уведомления или вебхука.",
+        "startBlank": "Начать с пустого холста",
+        "startFromTemplate": "Начать с шаблона",
+        "footnote": "Шаблоны открываются как черновик, привязанный к {{pair}} на {{market}} — отредактируйте шаги, смените пару в списке правил, затем сохраните. Правила срабатывают, только пока запущен Pairlens."
+      },
+      "direction": "Направление",
+      "above": "Выше",
+      "below": "Ниже",
+      "any": "Любая",
+      "buy": "Покупка",
+      "sell": "Продажа",
+      "up": "Рост",
+      "down": "Падение",
+      "either": "Любое",
+      "toggleOn": "Вкл",
+      "toggleOff": "Выкл",
+      "steps": {
+        "candleClose": {
+          "title": "Закрытие свечи"
+        },
+        "localToast": {
+          "title": "Toast-уведомление",
+          "description": "Показывает toast-уведомление в приложении при срабатывании"
+        },
+        "orderExecuted": {
+          "title": "Ордер исполнен"
+        },
+        "osNotification": {
+          "title": "Системное уведомление",
+          "sound": "Звук"
+        },
+        "percentChange": {
+          "title": "Изменение в процентах",
+          "percent": "Процент"
+        },
+        "priceAlert": {
+          "title": "Ценовой алерт"
+        },
+        "priceCondition": {
+          "title": "Ценовое условие"
+        },
+        "signalGenerated": {
+          "title": "Сигнал сформирован",
+          "signalType": "Тип сигнала",
+          "anyTypePlaceholder": "Любой тип"
+        },
+        "timeWindow": {
+          "title": "Временное окно",
+          "start": "Начало (UTC)",
+          "end": "Конец (UTC)"
+        }
+      }
+    }
   },
   "updater": {
     "available": "Доступно обновление",
@@ -2503,7 +3057,8 @@
     "failed": "Не удалось загрузить тепловую карту",
     "noData": "Нет данных",
     "tryLater": "Попробуйте позже",
-    "willAppear": "Здесь появятся данные тепловой карты"
+    "willAppear": "Здесь появятся данные тепловой карты",
+    "volume": "Объём"
   },
   "news": {
     "title": "Новости",
@@ -2618,5 +3173,228 @@
   "fullscreen": {
     "enter": "Во весь экран",
     "exit": "Выйти из полноэкранного режима"
+  },
+  "research": {
+    "phaseSearching": "Поиск в интернете...",
+    "phaseReading": "Чтение источников...",
+    "phaseAnalyzing": "Анализ рыночных данных...",
+    "phaseWriting": "Составление отчёта...",
+    "authRequiredTitle": "До research-панели — один шаг: вход в аккаунт",
+    "authRequiredDescription": "Структурированные research-отчёты по любой паре на основе актуальных веб-источников. Войдите в аккаунт, затем оформите подписку на Pairlens Intelligence или используйте собственный ключ ИИ.",
+    "upgradeDescription": "Структурированные research-отчёты по любой паре на основе актуальных веб-источников. Оформите подписку на Pairlens Intelligence — либо подключите собственные ключи ИИ и поиска через плагины бесплатно.",
+    "unavailableTitle": "Research недоступен",
+    "unavailableDescription": "Включите плагин ИИ на странице «Плагины», чтобы создавать research-отчёты по этой паре.",
+    "goToPlugins": "Перейти к плагинам",
+    "navigateToPair": "Перейдите к паре, чтобы посмотреть research.",
+    "researchingSymbol": "Анализируем {{symbol}}",
+    "generatingReport": "Составление отчёта...",
+    "cachedGenerated": "Из кеша — создано {{time}}",
+    "freshGenerated": "Актуально — создано только что",
+    "refresh": "Обновить",
+    "sourcesCount": "Источники ({{count}})",
+    "reportTitle": "Research-отчёт",
+    "fullscreenDescription": "Research-отчёт в полноэкранном режиме. Нажмите Esc, чтобы выйти.",
+    "sections": "Разделы",
+    "sparklineAriaLabel": "Спарклайн дневной цены",
+    "errorTitle": "Research недоступен"
+  },
+  "capabilityGate": {
+    "authTitle": "Всего один бесплатный вход",
+    "authDescription": "Эта функция работает через ваш аккаунт Pairlens.",
+    "signInFree": "Войти бесплатно",
+    "authNote": "Это займёт 30 секунд. Ваши ключи биржи никогда не покидают это устройство.",
+    "upgradeRequired": "Требуется апгрейд",
+    "upgradeDescriptionLevel": "Для этой функции требуется уровень доступа <b>{{level}}</b>.",
+    "upgradeDescriptionGeneric": "Для этой функции требуется более высокий уровень доступа.",
+    "managePlugin": "Управление плагином"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}} здесь недоступен",
+    "description": "Для вашего региона {{exchange}} не предоставляет рыночные данные, поэтому этот коннектор не может загрузить данные. Переключитесь на другой коннектор или обновите регион, если он указан неверно.",
+    "yourRegion": "Ваш регион:",
+    "notSet": "Не задано",
+    "changeRegion": "Изменить регион",
+    "switchTo": "Переключиться на {{venue}}"
+  },
+  "pairPicker": {
+    "noPairsFound": "Пары не найдены.",
+    "startTyping": "Начните вводить текст, чтобы найти пары."
+  },
+  "routes": {
+    "goHome": "На главную",
+    "noConnectors": {
+      "title": "Нет доступных коннекторов рынка",
+      "description": "Для получения данных в реальном времени нужны плагины коннекторов рынка. Включите или установите коннектор, чтобы начать.",
+      "manage": "Управление коннекторами рынка"
+    },
+    "workspace": {
+      "notFound": "Рабочее пространство не найдено",
+      "edit": "Изменить"
+    },
+    "notFound": {
+      "title": "Страница не найдена"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "Нет каталога инструментов",
+      "noInstrumentCatalogDescription": "Нет активных плагинов, предоставляющих обнаружение инструментов. Включите плагин, чтобы просматривать доступные торговые пары.",
+      "goToPlugins": "Перейти к плагинам"
+    },
+    "notifications": {
+      "loading": "Загрузка уведомлений…"
+    },
+    "workflows": {
+      "loading": "Загрузка конструктора воркфлоу…"
+    },
+    "plugins": {
+      "tabBuild": "Сборка",
+      "activeCount": "{{active}}/{{total}} активно",
+      "searchPlaceholder": "Поиск плагинов…",
+      "clearSearch": "Очистить поиск"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "Оплата завершена",
+      "titlePack": "{{credits}} доп. кредитов начислено.",
+      "titlePlan": "{{label}} теперь ваш.",
+      "titleDefault": "Pairlens Intelligence теперь ваш.",
+      "bodyPack": "Они добавляются к вашему месячному бюджету и сгорают через {{days}} дн. Вернитесь в приложение Pairlens — баланс обновится за несколько секунд.",
+      "bodyPlanWithCredits": "Ваш облачный ИИ-копилот, research и веб-поиск разблокированы — с {{credits}} кредитами в месяц. Вернитесь в приложение Pairlens — оно распознает подписку за несколько секунд.",
+      "bodyPlanNoCredits": "Ваш облачный ИИ-копилот, research и веб-поиск разблокированы. Вернитесь в приложение Pairlens — оно распознает подписку за несколько секунд.",
+      "openTerminal": "Открыть терминал",
+      "closeTabHint": "Оплатили из десктопного приложения? Эту вкладку можно просто закрыть.",
+      "receiptHint": "Квитанция и счета доступны в вашей почте и в портале биллинга (Настройки → Intelligence)."
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "Воркфлоу",
+      "tabRuns": "Запуски",
+      "emptyState": "Пока нет воркфлоу",
+      "createTitle": "Новый воркфлоу",
+      "namePlaceholder": "Название воркфлоу",
+      "renameTitle": "Переименовать воркфлоу",
+      "renameButton": "Переименовать",
+      "deleteTitle": "Удалить воркфлоу",
+      "deleteDescription": "Это действие необратимо. Воркфлоу будет удалён навсегда.",
+      "runsEmpty": "Пока нет запусков — запустите воркфлоу с панели торговли",
+      "clearHistory": "Очистить историю",
+      "runOutcome": "{{executed}} ок",
+      "runOutcomeWithFailed": "{{executed}} ок, {{failed}} с ошибкой"
+    },
+    "canvas": {
+      "undoTitle": "Отменить (Cmd+Z)",
+      "redoTitle": "Повторить (Cmd+Shift+Z)",
+      "deleteStep": "Удалить шаг",
+      "deleteConnection": "Удалить связь"
+    },
+    "commitBar": {
+      "cycleDetected": "Обнаружен цикл",
+      "issue_one": "{{count}} проблема",
+      "issue_other": "{{count}} проблем",
+      "pendingChange_one": "{{count}} несохранённое изменение",
+      "pendingChange_other": "{{count}} несохранённых изменений",
+      "noChanges": "Нет изменений",
+      "review": "Просмотреть",
+      "discard": "Сбросить",
+      "commit": "Применить",
+      "saveErrorTitle": "Не удалось сохранить воркфлоу",
+      "saveErrorCycleBody": "Воркфлоу содержит циклическую зависимость. Уберите цикл (красные связи), прежде чем сохранять.",
+      "saveSuccess": "Воркфлоу сохранён"
+    },
+    "diffPanel": {
+      "title": "Просмотр изменений ({{count}})",
+      "addedStep": "Добавлен шаг «{{type}}»",
+      "removedStep": "Удалён шаг «{{type}}»",
+      "modifiedStep": "Изменена настройка «{{type}}»",
+      "addedConnection": "Добавлена связь",
+      "removedConnection": "Удалена связь",
+      "noChanges": "Нет изменений"
+    },
+    "palette": {
+      "title": "Добавить шаг",
+      "categoryEntry": "Вход",
+      "categoryOrders": "Ордера",
+      "categoryExit": "Стратегии выхода",
+      "categoryLogic": "Логика",
+      "categoryCustom": "Пользовательские",
+      "requires": "Требуется: {{requirement}}",
+      "notAvailableOn": "Недоступно на {{markets}}"
+    },
+    "emptyState": {
+      "pickWorkflow": "Выберите воркфлоу слева, чтобы открыть его на холсте.",
+      "eyebrow": "Воркфлоу",
+      "title": "У каждого ордера может быть свой план",
+      "description": "Воркфлоу привязывается к ордеру, который вы выставляете с панели торговли. Как только он исполнится, шаги под ним запускаются сами — брекеты, лестницы ордеров, поэтапные выходы, проверки по времени — план уже готов, и вам не нужно держать его в памяти.",
+      "blankLabel": "Начать с пустого холста",
+      "footnote": "Шаблоны открываются как черновик: отредактируйте любой шаг и нажмите «Применить», чтобы сохранить. Привяжите сохранённый воркфлоу к ордеру с панели торговли, чтобы запустить его."
+    },
+    "steps": {
+      "sideLabel": "Сторона",
+      "sizeLabel": "Размер",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "Абс",
+      "side": {
+        "inherit": "Наследовать",
+        "opposite": "Противоположная",
+        "buy": "Купить",
+        "sell": "Продать"
+      },
+      "triggerWhenPrice": "Сработать, когда цена",
+      "triggerPercentFromEntry": "% от входа",
+      "triggerReachesPrice": "Достигнет цены",
+      "priceLevel": "Уровень цены",
+      "priceLabel": "Цена",
+      "stopLoss": {
+        "title": "Стоп-лосс",
+        "lossPercent": "Убыток %"
+      },
+      "takeProfit": {
+        "title": "Тейк-профит",
+        "gainPercent": "Прибыль %"
+      },
+      "limitOrder": {
+        "title": "Лимитный ордер",
+        "priceModeFixed": "Фиксированная",
+        "priceModePercentOffset": "% отступ",
+        "priceModeOffset": "Отступ",
+        "priceValueLabel": "Значение цены"
+      },
+      "marketOrder": {
+        "title": "Рыночный ордер"
+      },
+      "condition": {
+        "title": "Условие",
+        "typeLabel": "Тип",
+        "typePercentChange": "% изменения",
+        "hint": "+N срабатывает при росте ≥N%, -N при падении ≥N%"
+      },
+      "wait": {
+        "title": "Пауза",
+        "durationLabel": "Длительность",
+        "unitSeconds": "сек",
+        "unitMinutes": "мин",
+        "unitHours": "ч"
+      },
+      "split": {
+        "title": "Параллельное разделение",
+        "branchesLabel": "Ветки"
+      },
+      "trigger": {
+        "title": "Вход ордера",
+        "badge": "Вход"
+      },
+      "configPanel": {
+        "requiresNote": "Требуется: {{requirement}}. Рынки без этой возможности не могут выполнять воркфлоу с этим шагом.",
+        "on": "Вкл",
+        "off": "Выкл"
+      }
+    },
+    "execution": {
+      "statusExecuted": "выполнено",
+      "statusSkipped": "пропущено",
+      "statusFailed": "ошибка",
+      "summaryExecuted": "выполнено: {{count}}",
+      "summarySkipped": "пропущено: {{count}}",
+      "summaryFailed": "ошибок: {{count}}"
+    }
   }
 }

@@ -5,6 +5,7 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useChat } from '@ai-sdk/react'
 import { Brain, Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@pairlens/ui/components/ui/button'
 import {
   Empty,
@@ -447,6 +448,7 @@ function CopilotChatInner({
   chartActions,
   initialMessages,
 }: CopilotPanelProps & { initialMessages: Array<UIMessage> }) {
+  const { t } = useTranslation()
   const [persona, setPersona] = usePersistedState<
     'mentor' | 'balanced' | 'technical'
   >('copilot.persona', 'balanced')
@@ -477,7 +479,7 @@ function CopilotChatInner({
   useEffect(() => {
     const timers = scheduledTimersRef.current
     return () => {
-      for (const t of timers) clearTimeout(t)
+      for (const timer of timers) clearTimeout(timer)
       timers.clear()
     }
   }, [])
@@ -486,7 +488,7 @@ function CopilotChatInner({
     const timer = setTimeout(() => {
       scheduledTimersRef.current.delete(timer)
       handleSendRef.current(
-        `[Scheduled check — you set this ${delayMinutes} min ago] ${instr}`,
+        `${i18n.t('copilot.scheduledCheckPrefix', { minutes: delayMinutes })} ${instr}`,
       )
     }, delayMinutes * 60_000)
     scheduledTimersRef.current.add(timer)
@@ -559,7 +561,8 @@ function CopilotChatInner({
       tradingMode: 'paper',
       placeOrder: async (req: CopilotOrderRequest, mode) => {
         const md = marketDataRef.current
-        if (!md) return { success: false, error: 'Trading is unavailable.' }
+        if (!md)
+          return { success: false, error: i18n.t('copilot.tradingUnavailable') }
         // A sealed vault is checked BEFORE the credential lookup: the store is
         // empty because it could not read, not because nothing is stored, and
         // "add API keys in Accounts" would be exactly the wrong advice — the
@@ -576,7 +579,9 @@ function CopilotChatInner({
         if (mode === 'live' && !cred) {
           return {
             success: false,
-            error: `No credentials connected for ${req.market}. Add API keys in Accounts to trade live.`,
+            error: i18n.t('copilot.noCredentialsForMarket', {
+              market: req.market,
+            }),
           }
         }
         const params: Record<string, unknown> = {
@@ -608,7 +613,8 @@ function CopilotChatInner({
       },
       cancelOrder: async (req: CopilotCancelRequest) => {
         const md = marketDataRef.current
-        if (!md) return { success: false, error: 'Trading is unavailable.' }
+        if (!md)
+          return { success: false, error: i18n.t('copilot.tradingUnavailable') }
         const cred = useCredentialsStore
           .getState()
           .getCredentialForMarket(req.market)
@@ -643,11 +649,11 @@ function CopilotChatInner({
 
   const quickActions = useMemo(
     () => [
-      `How is ${pairKey.split('-')[0]} doing?`,
-      'Suggested indicators',
-      'Any signals?',
+      t('copilot.quickActionHowIsDoing', { symbol: pairKey.split('-')[0] }),
+      t('copilot.quickActionSuggestedIndicators'),
+      t('copilot.quickActionAnySignals'),
     ],
-    [pairKey],
+    [pairKey, t],
   )
 
   const handleSend = useCallback(
@@ -715,7 +721,10 @@ function CopilotChatInner({
               onPersonaChange={setPersona}
               onClearHistory={handleClearHistory}
               status={status}
-              watching={`Watching ${pairKey.replace('-', '/')} · ${timeframe}`}
+              watching={t('copilot.watchingPair', {
+                pair: pairKey.replace('-', '/'),
+                timeframe,
+              })}
             />
           </div>
         )}
@@ -734,7 +743,7 @@ function CopilotChatInner({
                 <BillingErrorNotice code={billingErrorCode} />
               ) : (
                 <p className="text-destructive rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs">
-                  The copilot hit an error — try sending that again.
+                  {t('copilot.genericChatError')}
                 </p>
               )}
             </div>
@@ -756,6 +765,7 @@ function CopilotChatInner({
 // ---------------------------------------------------------------------------
 
 export function CopilotPanel(props: CopilotPanelProps) {
+  const { t } = useTranslation()
   const { market, pairKey } = props
 
   const access = useCapabilityAccess('ai:inference')
@@ -769,15 +779,17 @@ export function CopilotPanel(props: CopilotPanelProps) {
   if (access.status === 'auth-required') {
     return (
       <AuthRequiredPrompt
-        title="Meet your AI copilot"
-        description="Contextual analysis on any pair — it reads the chart, checks your risk limits, and answers with reasoning you can question. Sign in, then subscribe to Pairlens Intelligence or bring your own AI key."
+        title={t('copilot.authRequiredTitle')}
+        description={t('copilot.authRequiredDescription')}
       />
     )
   }
 
   if (access.status === 'upgrade-required') {
     return (
-      <IntelligenceUpgradePrompt description="Your AI copilot reads the chart, checks your risk limits, and answers with reasoning you can question. Subscribe to Pairlens Intelligence — or bring your own AI key via Plugins, free." />
+      <IntelligenceUpgradePrompt
+        description={t('copilot.upgradeRequiredDescription')}
+      />
     )
   }
 
@@ -789,10 +801,9 @@ export function CopilotPanel(props: CopilotPanelProps) {
             <EmptyMedia variant="icon">
               <Brain className="size-5" />
             </EmptyMedia>
-            <EmptyTitle>AI Lens Unavailable</EmptyTitle>
+            <EmptyTitle>{t('copilot.aiLensUnavailableTitle')}</EmptyTitle>
             <EmptyDescription>
-              Enable an AI plugin on the Plugins page to get real-time market
-              analysis and trading assistance.
+              {t('copilot.aiLensUnavailableDescription')}
             </EmptyDescription>
           </EmptyHeader>
           <Button
@@ -801,7 +812,7 @@ export function CopilotPanel(props: CopilotPanelProps) {
             render={<Link to="/plugins" />}
           >
             <Brain className="size-4" />
-            Go to Plugins
+            {t('copilot.goToPlugins')}
           </Button>
         </Empty>
       </div>

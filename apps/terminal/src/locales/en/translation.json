@@ -244,7 +244,9 @@
       "create": "Create account",
       "skip": "Skip — keep everything on this device",
       "signedIn": "Signed in as {{email}}",
-      "label": "Account"
+      "label": "Account",
+      "otpSendFailed": "Failed to send OTP",
+      "signInFailed": "Failed to sign in"
     },
     "summary": {
       "eyebrow": "Ready",
@@ -376,6 +378,42 @@
         "title": "Your machine, your keys",
         "description": "Bots run here, not on our servers, and your API keys never leave this computer. Keep it awake with Pairlens open, and switch any bot off the moment you want it to stop."
       }
+    },
+    "scenes": {
+      "topMover": "Top mover · {{pair}} {{delta}}",
+      "watchlistCount": "Watchlist · {{count}}",
+      "signalBreakout": "Breakout",
+      "signalPullbackForming": "Pullback forming",
+      "onClose": "on close",
+      "crossedAbovePrice": "crossed above {{price}}",
+      "conditionCrossesAbove": "crosses above",
+      "notifyMeDesktopInApp": "Notify me — desktop + in-app",
+      "nodeTrigger": "Trigger",
+      "nodeSignalLabel": "Signal: {{signal}}",
+      "nodeCondition": "Condition",
+      "nodeVolumeAboveAvg": "Volume > avg",
+      "nodeAction": "Action",
+      "nodeAlertAndJournal": "Alert + journal",
+      "runBreakoutWatcher": "Breakout watcher",
+      "runDcaBuyer": "DCA buyer",
+      "runStopLossGuard": "Stop-loss guard",
+      "ranAt": "{{time}} · ran",
+      "runsLocally": "Runs locally",
+      "storedOnDevice": "Stored on this device — never on our servers",
+      "osKeychain": "OS keychain",
+      "pluginKindMarketData": "Market data",
+      "pluginKindTheme": "Theme",
+      "pluginKindAutomation": "Automation",
+      "sandboxedByDefault": "Sandboxed by default",
+      "signedVerified": "Signed & verified",
+      "networkAccessApproveHost": "Network access — you approve each host",
+      "copiedToWorkspaces": "Copied to workspaces",
+      "statNet": "Net",
+      "statMaxDd": "Max DD",
+      "sameCodeGoesLive": "Same code goes live",
+      "runsOnYourMachine": "Runs on your machine — keep it awake",
+      "botMeanReversion": "Mean Reversion",
+      "chainWallet": "{{chain}} wallet"
     }
   },
   "common": {
@@ -398,7 +436,12 @@
     "showInFolder": "Show in folder",
     "updated": "Updated {{time}}",
     "back": "Back",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "unknownError": "Unknown error",
+    "ordersLockedRiskLimit": "Orders are locked due to a risk limit breach. Unlock in Settings > Risk Management.",
+    "buyOrdersLockedRiskLimit": "Buy orders are locked due to a risk limit breach. Unlock in Settings > Risk Management.",
+    "positionSizeExceeded": "Order blocked by risk limit: position is {{ratioPct}}% of portfolio, over your {{maxPositionSize}}% max. Adjust in Settings > Risk Management.",
+    "sessionExpired": "Your session expired — please sign in again."
   },
   "legal": {
     "terms": "Terms & Conditions",
@@ -581,7 +624,22 @@
       "publisherKeyConsentTitle": "Trust this publisher?",
       "publisherKeyConsentBody": "Plugins signed with this key will be installable on this device. A malicious publisher can ship plugins that request full trust — with access to your other plugins' data, stored exchange credentials, and trading. Compare the fingerprint with the publisher through a channel you trust before continuing.",
       "publisherKeyConsentConfirm": "Trust this key",
-      "publisherKeyConsentCancel": "Cancel"
+      "publisherKeyConsentCancel": "Cancel",
+      "updatesTitle": "Plugin Updates",
+      "updatesDescription": "Control how plugins are updated when newer versions are available on the Registry.",
+      "updateModeLabel": "Update mode",
+      "updateModeAutoDescription": "Updates are downloaded and installed automatically",
+      "updateModeNotifyDescription": "You will see a badge when updates are available",
+      "updateModeOffDescription": "No automatic update checks",
+      "updateModeAuto": "Auto-update",
+      "updateModeNotify": "Notify only",
+      "updateModeOffLabel": "Off",
+      "checkIntervalLabel": "Check interval",
+      "checkIntervalDescription": "How often to check the Registry for newer versions",
+      "intervalHourly": "Every hour",
+      "interval6Hours": "Every 6 hours",
+      "interval12Hours": "Every 12 hours",
+      "intervalDaily": "Daily"
     },
     "appearance": {
       "colorMode": "Color Mode",
@@ -603,7 +661,9 @@
       "balanced": "Balanced",
       "balancedDescription": "Ticker and order book at 250ms, candles at 500ms. Good balance between responsiveness and efficiency.",
       "energySaver": "Energy Saver",
-      "energySaverDescription": "Ticker and order book at 1s, candles at 2s. Best for passive monitoring or laptops on battery."
+      "energySaverDescription": "Ticker and order book at 1s, candles at 2s. Best for passive monitoring or laptops on battery.",
+      "idleGuardTitle": "Inactivity disconnect",
+      "idleGuardDescription": "Pause market data streams after 1 hour of inactivity to save bandwidth and reduce energy consumption."
     },
     "desktop": {
       "closeBehavior": {
@@ -1031,7 +1091,9 @@
       "namePlaceholder": "Folder name"
     },
     "createFirst": "Create your first workspace",
-    "emptyState": "No workspaces yet"
+    "emptyState": "No workspaces yet",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Optional short description"
   },
   "session": {
     "checking": "Checking session…",
@@ -1089,7 +1151,9 @@
     "verifying": "Verifying...",
     "verifyAndSignIn": "Verify and sign in",
     "codeRequired": "Code is required",
-    "emailRequired": "Email is required"
+    "emailRequired": "Email is required",
+    "dialogDescription": "Sign in to access this feature",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "Session Paused",
@@ -1109,7 +1173,12 @@
     "connecting": "Connecting",
     "stalled": "Reconnecting",
     "offline": "Offline",
-    "error": "Error"
+    "error": "Error",
+    "pluginUpdatesReady_one": "{{count}} plugin update ready to install",
+    "pluginUpdatesReady_other": "{{count}} plugin updates ready to install",
+    "pluginUpdatesDescription": "Updates will apply after restarting the terminal.",
+    "restartNow": "Restart now",
+    "later": "Later"
   },
   "copilot": {
     "aiLens": "AI Lens",
@@ -1128,7 +1197,46 @@
     },
     "marketRegime": "Market Regime",
     "trending": "Trending",
-    "choppy": "Choppy"
+    "choppy": "Choppy",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "Size",
+    "orderPlacedPaper": "Paper order placed",
+    "orderPlaced": "Order placed",
+    "autoApprovedNote": "Auto-approved ({{mode}} · don’t-ask-again is on)",
+    "turnOff": "Turn off",
+    "autoApproving": "Auto-approving {{mode}} order…",
+    "liveOrderWarning": "Live order — real funds, enforced against your risk limits.",
+    "dontAskAgainPaper": "Don’t ask again for paper trades",
+    "dontAskAgainLive": "Don’t ask again for live trades on {{market}}",
+    "placing": "Placing…",
+    "confirmMode": "Confirm {{mode}}",
+    "dismissed": "Dismissed",
+    "cancelOrderPrompt": "Cancel order {{orderId}} on {{pair}} · {{market}}?",
+    "cancelled": "Cancelled",
+    "cancelFailed": "Cancel failed",
+    "cancelling": "Cancelling…",
+    "confirmCancel": "Confirm cancel",
+    "keep": "Keep",
+    "tradingUnavailable": "Trading is unavailable.",
+    "noCredentialsForMarket": "No credentials connected for {{market}}. Add API keys in Accounts to trade live.",
+    "watchingPair": "Watching {{pair}} · {{timeframe}}",
+    "genericChatError": "The copilot hit an error — try sending that again.",
+    "quickActionHowIsDoing": "How is {{symbol}} doing?",
+    "quickActionSuggestedIndicators": "Suggested indicators",
+    "quickActionAnySignals": "Any signals?",
+    "scheduledCheckPrefix": "[Scheduled check — you set this {{minutes}} min ago]",
+    "authRequiredTitle": "Meet your AI copilot",
+    "authRequiredDescription": "Contextual analysis on any pair — it reads the chart, checks your risk limits, and answers with reasoning you can question. Sign in, then subscribe to Pairlens Intelligence or bring your own AI key.",
+    "upgradeRequiredDescription": "Your AI copilot reads the chart, checks your risk limits, and answers with reasoning you can question. Subscribe to Pairlens Intelligence — or bring your own AI key via Plugins, free.",
+    "aiLensUnavailableTitle": "AI Lens Unavailable",
+    "aiLensUnavailableDescription": "Enable an AI plugin on the Plugins page to get real-time market analysis and trading assistance.",
+    "goToPlugins": "Go to Plugins",
+    "analyzePair": "Analyze {{pair}}",
+    "startConversation": "Start a conversation",
+    "emptyStateHint": "Ask about market conditions, validate your setup, or get a risk assessment — the AI has full context of this pair.",
+    "contextAware": "Context-aware",
+    "toolFailed": "Tool failed"
   },
   "chart": {
     "contextMenu": {
@@ -1312,7 +1420,9 @@
       "pause": "Pause",
       "step": "Next bar",
       "exit": "Exit replay"
-    }
+    },
+    "fullscreenTitle": "Fullscreen Chart",
+    "fullscreenHint": "Chart in fullscreen mode. Press Escape to exit."
   },
   "botsPage": {
     "loading": "Loading bots…",
@@ -1873,7 +1983,15 @@
     "frozen": "Frozen",
     "total": "Total",
     "refreshBalances": "Refresh",
-    "asset": "Asset"
+    "asset": "Asset",
+    "cancelOrderTitle": "Cancel order?",
+    "cancelOrderBody": "This will cancel your {{side}} order for {{pair}}.",
+    "keepOrder": "Keep order",
+    "cancelOrder": "Cancel order",
+    "sideBuy": "buy",
+    "sideSell": "sell",
+    "buy": "Buy",
+    "sell": "Sell"
   },
   "pairInfo": {
     "title": "Pair Information",
@@ -1916,13 +2034,41 @@
     "emptyTitle": "Enter a URL above to embed a website",
     "embedWarning": "Some websites block embedding in iframes. If a page doesn't load, try opening it in your browser instead.",
     "blockedTitle": "This site can't be embedded",
-    "blockedDescription": "This website blocks being displayed inside other pages. You can open it in a separate browser tab instead."
+    "blockedDescription": "This website blocks being displayed inside other pages. You can open it in a separate browser tab instead.",
+    "forward": "Forward",
+    "failedToLoad": "Failed to load",
+    "viewPaused": "Web view paused"
   },
   "intelligence": {
-    "awaitingSignal": "No signals detected",
+    "analyzing": "Analyzing market…",
+    "noRecentSignals": "No signals in the last {{bars}} bars",
+    "live": "Live",
+    "recentSignals": "Recent signals",
     "regime": "Regime",
     "trending": "Trending",
-    "choppy": "Choppy"
+    "choppy": "Choppy",
+    "upsell": {
+      "priceMonthly": "${{price}}/mo",
+      "taxNotice": "Prices exclude tax — calculated at checkout.",
+      "defaultTitle": "Unlock Pairlens Intelligence",
+      "defaultDescription": "Hosted AI copilot and web research, no API keys needed. Every plan includes a monthly usage budget shared across chat, research, and web searches.",
+      "byokNote": "Prefer your own provider? Connect an Anthropic, OpenAI, Groq, or OpenRouter key in <plugins>Plugins</plugins> — bring-your-own-key AI is always free.",
+      "checkoutOpenedTitle": "Checkout opened in your browser",
+      "checkoutActivates": "Your subscription activates here as soon as payment completes.",
+      "checkoutStartError": "Could not start checkout — please try again.",
+      "subscriptionRequiredTitle": "Pairlens Intelligence subscription required",
+      "subscriptionRequiredBody": "Hosted AI runs on an Intelligence plan. Subscribe below, or connect your own AI provider key in Plugins.",
+      "budgetUsedUpTitle": "Monthly usage budget used up",
+      "budgetUsedBody": "You've used this cycle's Intelligence credits.",
+      "budgetResetsOn": "Your budget resets on {{date}}.",
+      "topUpHint": "Top up with a credit pack to keep going — pack credits expire 30 days after purchase.",
+      "upgradeToMaxHint": "Upgrade to {{label}} for {{credits}} credits per month.",
+      "manageSubscription": "Manage subscription",
+      "portalError": "Could not open the billing portal.",
+      "creditsLandDescription": "Extra credits land on your balance as soon as payment completes.",
+      "checkoutError": "Could not start checkout.",
+      "upgradeToMax": "Upgrade to Max"
+    }
   },
   "panes": {
     "markets": "Markets",
@@ -2018,6 +2164,52 @@
       "title": "{{pair}} isn’t available on {{venue}}",
       "titleAnyVenue": "{{pair}} isn’t available",
       "description": "This connector returned no market data for this pair. Try another connector that lists it."
+    },
+    "panePicker": {
+      "bindToVariable": "Bind to variable",
+      "boundTo": "Bound to <b>{{variable}}</b>",
+      "market": "Market",
+      "setPair": "Set {{variable}} pair",
+      "selectPair": "Select a pair",
+      "bindingHint": "Selecting a pair will update all panes bound to {{variable}}",
+      "unbindFromVariable": "Unbind from variable",
+      "settingForAllPanes": "Setting <b>{{variable}}</b> for all bound panes"
+    },
+    "pane": {
+      "close": "Close {{pane}}",
+      "popOutToColumn": "Pop Out to Column",
+      "bindPairToVariable": "Bind Pair to Variable",
+      "bindWalletToVariable": "Bind Wallet to Variable",
+      "bindTimeframeToVariable": "Bind Timeframe to Variable",
+      "clearPairOverride": "Clear Pair Override",
+      "closePane": "Close Pane",
+      "unbind": "Unbind",
+      "closeTab": "Close Tab"
+    },
+    "dnd": {
+      "pickedUp": "Picked up {{pane}}. Use arrow keys to move, space to drop, escape to cancel.",
+      "genericPane": "pane",
+      "noDropTarget": "No drop target.",
+      "dropStackTab": "Drop to stack as a tab here.",
+      "dropSplitAbove": "Drop to split above.",
+      "dropSplitBelow": "Drop to split below.",
+      "dropNewColumn": "Drop to create a new column.",
+      "paneMoved": "Pane moved.",
+      "dragCancelled": "Drag cancelled, pane returned.",
+      "dragCancelledFull": "Drag cancelled, pane returned to its original position."
+    },
+    "missingPane": {
+      "requiresPlugin": "This panel requires the \"{{pluginId}}\" plugin",
+      "notAvailable": "Panel \"{{type}}\" is not available",
+      "description": "The plugin may have been removed or disabled.",
+      "openPluginStore": "Open Plugin Store"
+    },
+    "dropZone": {
+      "emptyHint": "Drag a pane here",
+      "addAsTab": "Add as tab",
+      "splitTop": "Split top",
+      "splitBottom": "Split bottom",
+      "newColumn": "New column"
     }
   },
   "watchlist": {
@@ -2127,7 +2319,137 @@
     "uninstalled": "Uninstalled",
     "updateReactivate": "Update & Reactivate",
     "version": "Version",
-    "visit": "Visit"
+    "visit": "Visit",
+    "fullTrust": {
+      "title": "Grant full trust to “{{name}}”?",
+      "description": "This plugin contributes UI, so it must run in the main app without the sandbox. A full-trust plugin runs with the same access as Pairlens itself.",
+      "itCan": "It can:",
+      "grantPlugins": "read data from your other installed plugins;",
+      "grantCredentials": "read your stored exchange API keys and wallet credentials;",
+      "grantTrading": "place trades and other financial operations on your behalf.",
+      "trustNote": "Only grant full trust to plugins from authors you trust. You can uninstall it at any time.",
+      "trustNoteAuthor": "Only grant full trust to plugins from authors you trust (author: {{author}}). You can uninstall it at any time.",
+      "grant": "Grant full trust"
+    },
+    "network": {
+      "title": "Allow “{{name}}” to connect?",
+      "description": "This plugin needs to reach servers outside Pairlens. Your terminal will send network requests to the hosts below. Allow only if you trust this plugin — you can uninstall it at any time to revoke access.",
+      "hostsIntro": "It will be able to connect to:",
+      "reloadNote": "Approving reloads the terminal to apply the change.",
+      "deny": "Don’t allow",
+      "allow": "Allow & reload"
+    },
+    "toggleFailedEnable": "Failed to enable {{name}}",
+    "toggleFailedDisable": "Failed to disable {{name}}",
+    "updateStagedToast": "Update staged — restart to apply",
+    "restartNow": "Restart now",
+    "updateStageFailedToast": "Failed to stage update: {{error}}",
+    "resetStagedToast": "Reset to defaults — restart to complete",
+    "networkGrantedToast": "Network access granted to \"{{name}}\" — reloading…",
+    "networkDeniedToast": "\"{{name}}\" was installed without network access — it may not function until you allow it.",
+    "installCancelledNoTrust": "Install cancelled — full trust not granted",
+    "installedVersionToast": "Installed \"{{name}}\" v{{version}}",
+    "installFailedToast": "Failed to install plugin: {{error}}",
+    "localFilesNotFound": "Local plugin files not found",
+    "pluginCodeNotFound": "Plugin code not found — reinstall it",
+    "fullTrustGrantedNameToast": "Granted full trust to \"{{name}}\"",
+    "loadPluginFailedToast": "Failed to load plugin: {{error}}",
+    "importFailedToast": "Failed to import plugin: {{error}}",
+    "fieldRequired": "{{label}} is required",
+    "configSaved": "Configuration saved",
+    "configurationFailed": "Configuration failed",
+    "needsFullTrustToRun": "Needs full trust to run",
+    "pendingTrustDescription": "Contributes UI and can't run in the sandbox — grant full trust to enable it, or uninstall it.",
+    "remove": "Remove",
+    "groupCore": "Core",
+    "groupProvidersExtensions": "Providers & Extensions",
+    "groupThemes": "Themes",
+    "removePluginTitle": "Remove Plugin",
+    "removePluginDescription": "This will deactivate and remove the plugin. Any panels it contributed will show a recovery placeholder. You can reinstall it from the Plugin Store at any time.",
+    "resetDefaultsTitle": "Reset to Defaults",
+    "resetDefaultsDescription": "This will remove all non-bundled plugins, clear staged and available updates, and reload the terminal. Bundled plugins will remain installed.",
+    "reset": "Reset",
+    "installFromUrlDialogTitle": "Install Plugin from URL",
+    "installFromUrlDialogDescription": "Enter the URL of a plugin module (.js) to install.",
+    "unverifiedPluginTitle": "Unverified Plugin",
+    "unverifiedPluginBody": "Manually installed plugins have not been reviewed for security. Only install plugins from sources you trust.",
+    "installAnyway": "Install Anyway",
+    "sourceBuiltIn": "Built-in",
+    "sourceRegistry": "Registry",
+    "sourceUrl": "URL",
+    "sourceLocal": "Local",
+    "fullTrustGrantedRestartToast": "Full trust granted — restart to run this plugin in the main app",
+    "sandboxedRestartToast": "Plugin will run sandboxed — restart to apply",
+    "requiresFullTrustTitle": "This plugin contributes UI and must run at full trust.",
+    "trustBadgeFullRequired": "Full trust (required)",
+    "trustBadgeFull": "Full trust",
+    "trustBadgeSandboxed": "Sandboxed",
+    "panelCount_one": "{{count}} panel",
+    "panelCount_other": "{{count}} panels",
+    "update": "Update",
+    "revokeFullTrustAria": "Revoke full trust for {{name}}",
+    "grantFullTrustAria": "Grant full trust to {{name}}",
+    "fullTrustActiveTitle": "Full trust — runs in the main app. Click to sandbox.",
+    "sandboxedTitle": "Sandboxed — isolated worker, network limited to declared hosts. Click to grant full trust.",
+    "configureAria": "Configure {{name}}",
+    "toggleAria": "Toggle {{name}}",
+    "capabilityProvidersTitle": "Capability Providers",
+    "capabilityProvidersDescription": "Each terminal feature requests a capability, and the highest-priority enabled plugin provides it automatically. Choose a specific plugin to override the automatic choice.",
+    "resetAllOverrides": "Reset all overrides",
+    "noProviderInstalled": "No installed plugin provides this",
+    "browseStore": "Browse Store",
+    "installedNeedsKeySingle": "Installed — needs an API key",
+    "installedNeedsKeyPlural": "{{count}} installed — all need API keys",
+    "installedDisabledSingle": "1 plugin installed, but disabled",
+    "installedDisabledPlural": "{{count}} plugins installed, all disabled",
+    "manage": "Manage",
+    "pinnedActiveNote": "Pinned — overrides automatic order",
+    "pinnedInactiveNote": "Pinned plugin is disabled — automatic order applies",
+    "autoOrderLabel": "Auto order: {{chain}}",
+    "chainMore_one": "{{chain}} +{{count}} more",
+    "chainMore_other": "{{chain}} +{{count}} more",
+    "resolvedPerMarket": "Resolved per market",
+    "marketOverrides": "Market overrides",
+    "pinnedCountBadge_one": "{{count}} pinned",
+    "pinnedCountBadge_other": "{{count}} pinned",
+    "automatic": "Automatic",
+    "disabledHint": "disabled",
+    "notInstalled": "{{id}} (not installed)",
+    "saveOverrideFailed": "Failed to save provider override",
+    "removeOverrideFailed": "Failed to remove provider override",
+    "resetOverridesFailed": "Failed to reset overrides",
+    "marketConnectorsTitle": "Market Connectors",
+    "marketConnectorsDescription": "Market connectors stream live price data, order books, and enable trading directly from exchange APIs. Enable the exchanges you want to use.",
+    "activeCountBadge": "{{active}}/{{total}} active",
+    "connected": "Connected",
+    "disabledStatus": "Disabled",
+    "readAndTrade": "Read + Trade",
+    "readOnly": "Read Only",
+    "noConnectorsInstalled": "No market connector plugins installed.",
+    "moreConnectors": "More Connectors",
+    "fromPluginStore": "from the Plugin Store",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "Learn more",
+    "enabledToast": "{{name}} enabled",
+    "disabledToast": "{{name}} disabled",
+    "enableFailedShort": "Failed to enable",
+    "disableFailedShort": "Failed to disable",
+    "domain": {
+      "marketData": "Market Data",
+      "trading": "Trading",
+      "wallet": "Wallet",
+      "signals": "Signals",
+      "ai": "AI"
+    },
+    "byAuthor": "by {{author}}",
+    "installsCount_one": "{{formattedCount}} install",
+    "installsCount_other": "{{formattedCount}} installs",
+    "panelsCount": "Panels ({{count}})",
+    "inactive": "Inactive",
+    "previousSlide": "Previous",
+    "nextSlide": "Next",
+    "goToSlide": "Go to slide {{n}}",
+    "copyCommand": "Copy command"
   },
   "search": {
     "title": "Search Pairs",
@@ -2194,8 +2516,71 @@
       "selectAccount": "Select account",
       "groupWallet": "Crypto Wallet",
       "groupBroker": "Broker Account",
-      "groupExchange": "Exchange Account"
-    }
+      "groupExchange": "Exchange Account",
+      "selectWalletTopBar": "Select wallet in top bar",
+      "connectChainWallet": "Connect {{chain}} wallet",
+      "connectExchangeAccount": "Connect {{exchange}} account",
+      "selectAccountTopBar": "Select account in top bar"
+    },
+    "trade": {
+      "limitBuy": "Limit Buy",
+      "limitSell": "Limit Sell",
+      "bought": "Bought",
+      "sold": "Sold",
+      "limitOrderFailed": "Limit order failed",
+      "swapFailed": "Swap failed",
+      "workflowUnsupported": "Workflow not supported on this market",
+      "orderBlocked": "Order blocked by risk limit",
+      "orderRejected": "Order rejected",
+      "orderFailed": "Order failed",
+      "setRegion": "Set your region",
+      "regionDefaulting": "Region defaulting to Global.",
+      "addPreset": "Add preset",
+      "createFirstWorkflow": "Create your first workflow",
+      "editWorkflows": "Edit workflows",
+      "selectWorkflow": "Select a workflow",
+      "submitting": "Submitting…",
+      "holdToRun": "Press & hold to run",
+      "holdToConfirmLive": "Press & hold to confirm · funds commit immediately",
+      "holdToPlace": "Press & hold to place",
+      "runWorkflow": "Run Workflow",
+      "buyAsset": "Buy {{asset}}",
+      "sellAsset": "Sell {{asset}}",
+      "amount": "Amount",
+      "price": "Price",
+      "presetsTitle": "Amount Presets ({{quote}})",
+      "buy": "Buy",
+      "sell": "Sell",
+      "orderTypeMarket": "Market",
+      "orderTypeLimit": "Limit",
+      "workflow": "Workflow",
+      "notSupportedOn": "Not supported on {{venue}}",
+      "available": "Avail: {{amount}}",
+      "slippage": "Slippage"
+    },
+    "status": {
+      "connecting": "Connecting…",
+      "loadingOrderBook": "Loading order book…",
+      "loadingDepth": "Loading depth…",
+      "loadingCandles": "Loading candles…",
+      "waitingTrades": "Waiting for trades…",
+      "waitingData": "Waiting for data…",
+      "noCandleData": "No candle data yet",
+      "noTradesFeed": "Switch to a venue that publishes time and sales"
+    },
+    "columns": {
+      "price": "Price",
+      "size": "Size",
+      "total": "Total",
+      "open": "Open",
+      "close": "Close"
+    },
+    "panel": {
+      "expand": "Expand panel",
+      "collapse": "Collapse panel"
+    },
+    "recentlyViewed": "Recently viewed",
+    "noMarketsFound": "No markets found"
   },
   "accounts": {
     "pageTitle": "Accounts",
@@ -2291,7 +2676,42 @@
     "importKey": "Import a private key",
     "affiliateDisclosure": "Some signup links may earn Pairlens a commission, at no extra cost to you.",
     "vaultSealedBody": "Your credential vault is locked. Your accounts are still here — unlock to see and use them.",
-    "credentialsUnreadable": "Your stored keys could not be read on this device. Nothing was lost — try again, or restart Pairlens."
+    "credentialsUnreadable": "Your stored keys could not be read on this device. Nothing was lost — try again, or restart Pairlens.",
+    "addWalletDialogTitle": "Add Crypto Wallet",
+    "addWalletDialogDescription": "Import a wallet private key for on-chain trading",
+    "blockchainLabel": "Blockchain",
+    "walletLabelField": "Label",
+    "walletLabelPlaceholder": "My Wallet",
+    "privateKeyField": "Private Key",
+    "saveWallet": "Save Wallet",
+    "keep": "Keep",
+    "remove": "Remove",
+    "disconnect": "Disconnect",
+    "localBadge": "Local",
+    "unknownDate": "Unknown",
+    "keyExpiredWarning": "Likely expired — {{daysInactive}} days inactive ({{limitDays}}-day limit). Re-create the API key on the exchange.",
+    "keyInactiveWarning": "{{daysInactive}}/{{limitDays}} days inactive. Keys expire after {{limitDays}} days without use.",
+    "exchangeAccountAriaLabel": "{{label}} exchange account",
+    "cryptoWalletAriaLabel": "{{label}} crypto wallet",
+    "portfolioTotal": "Total",
+    "assetAllocationLabel": "Asset Allocation",
+    "tableAsset": "Asset",
+    "tableAmount": "Amount",
+    "tableValue": "Value",
+    "tableShare": "Share",
+    "assetCount_one": "{{count}} asset",
+    "assetCount_other": "{{count}} assets",
+    "moreAssets_one": "+{{count}} more asset",
+    "moreAssets_other": "+{{count}} more assets",
+    "walletSavedFeedback": "Crypto wallet saved.",
+    "walletRemovedFeedback": "Crypto wallet removed.",
+    "accountRemovedFeedback": "Account removed.",
+    "walletSaveFailed": "Failed to save wallet.",
+    "walletRemoveFailed": "Failed to remove wallet.",
+    "accountConnectFailed": "Failed to connect account.",
+    "accountRemoveFailed": "Failed to remove account.",
+    "fieldRequired": "{{field}} is required",
+    "accountConnectedFeedback": "{{label}} {{mode}} account connected."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2399,12 +2819,136 @@
     "paneCount_other": "{{count}} panes",
     "panes": "Panes",
     "showAll": "Show all",
-    "spotlight": "Spotlight"
+    "spotlight": "Spotlight",
+    "previousSlide": "Previous",
+    "nextSlide": "Next",
+    "goToSlide": "Go to slide {{number}}"
   },
   "notifications": {
     "flows": "Flows",
     "newFlow": "New flow",
-    "noFlows": "No notification flows yet"
+    "noFlows": "No notification flows yet",
+    "builder": {
+      "sidebar": {
+        "tabRules": "Rules",
+        "tabActivity": "Activity",
+        "noRules": "No notification rules yet",
+        "newRuleTitle": "New Notification Rule",
+        "rulePlaceholder": "Rule name",
+        "renameRuleTitle": "Rename Rule",
+        "rename": "Rename",
+        "deleteRuleTitle": "Delete Rule",
+        "deleteRuleWarning": "This action cannot be undone. The notification rule and its pair bindings will be permanently deleted.",
+        "pairsLabel": "Pairs",
+        "sendTest": "Send test",
+        "testing": "Testing…",
+        "pairAlreadyBound": "This pair is already bound to the rule",
+        "noBindings": "Not bound to any pair yet — the rule won't fire until you add one.",
+        "testSent": "Test notification sent",
+        "testFailed": "Test did not deliver",
+        "noActivity": "No notifications fired yet",
+        "clearActivity": "Clear activity",
+        "channelFailed": "{{channel}} failed"
+      },
+      "commitBar": {
+        "cycleDetected": "Cycle detected",
+        "issueCount_one": "{{count}} issue",
+        "issueCount_other": "{{count}} issues",
+        "moreIssues": "…and {{count}} more",
+        "pendingChangeCount_one": "{{count}} pending change",
+        "pendingChangeCount_other": "{{count}} pending changes",
+        "noChanges": "No changes",
+        "review": "Review",
+        "discard": "Discard",
+        "commit": "Commit",
+        "cannotSaveTitle": "Cannot save rule",
+        "cycleError": "The rule contains a circular dependency. Remove the cycle (red edges) before saving.",
+        "saved": "Rule saved"
+      },
+      "diff": {
+        "title": "Review Changes ({{count}})",
+        "addedStep": "Added {{type}} step",
+        "removedStep": "Removed {{type}} step",
+        "modifiedStep": "Modified {{type}} config",
+        "addedConnection": "Added connection",
+        "removedConnection": "Removed connection"
+      },
+      "canvas": {
+        "undoTitle": "Undo (Cmd+Z)",
+        "redoTitle": "Redo (Cmd+Shift+Z)",
+        "deleteStep": "Delete step",
+        "deleteConnection": "Delete connection",
+        "cycleLabel": "cycle"
+      },
+      "palette": {
+        "addStep": "Add Step",
+        "categoryEvents": "Events",
+        "categoryConditions": "Conditions",
+        "categoryChannels": "Channels"
+      },
+      "category": {
+        "event": "Event",
+        "condition": "Condition",
+        "channel": "Channel"
+      },
+      "emptyState": {
+        "pickRuleHint": "Pick a rule on the left to open it on the canvas.",
+        "untitledRule": "Untitled rule",
+        "eyebrow": "Notifications",
+        "title": "Watch the market so you don't have to",
+        "description": "A rule is a small flow: something happens — a level is crossed, a candle closes, an order fills, an indicator alert trips — it passes whatever conditions you attach, and then it reaches you as a toast, an OS notification, or a webhook.",
+        "startBlank": "Start from a blank canvas",
+        "startFromTemplate": "Start from a template",
+        "footnote": "Templates open as a draft bound to {{pair}} on {{market}} — edit the steps, retarget the pair under the rule list, then Commit to save. Rules only fire while Pairlens is running."
+      },
+      "direction": "Direction",
+      "above": "Above",
+      "below": "Below",
+      "any": "Any",
+      "buy": "Buy",
+      "sell": "Sell",
+      "up": "Up",
+      "down": "Down",
+      "either": "Either",
+      "toggleOn": "On",
+      "toggleOff": "Off",
+      "steps": {
+        "candleClose": {
+          "title": "Candle Close"
+        },
+        "localToast": {
+          "title": "Toast Notification",
+          "description": "Shows an in-app toast when triggered"
+        },
+        "orderExecuted": {
+          "title": "Order Executed"
+        },
+        "osNotification": {
+          "title": "OS Notification",
+          "sound": "Sound"
+        },
+        "percentChange": {
+          "title": "Percent Change",
+          "percent": "Percent"
+        },
+        "priceAlert": {
+          "title": "Price Alert"
+        },
+        "priceCondition": {
+          "title": "Price Condition"
+        },
+        "signalGenerated": {
+          "title": "Signal Generated",
+          "signalType": "Signal Type",
+          "anyTypePlaceholder": "Any type"
+        },
+        "timeWindow": {
+          "title": "Time Window",
+          "start": "Start (UTC)",
+          "end": "End (UTC)"
+        }
+      }
+    }
   },
   "updater": {
     "available": "Update available",
@@ -2491,7 +3035,8 @@
     "failed": "Failed to load heatmap",
     "noData": "No data available",
     "tryLater": "Try again later",
-    "willAppear": "Heatmap data will appear here"
+    "willAppear": "Heatmap data will appear here",
+    "volume": "Volume"
   },
   "news": {
     "title": "News",
@@ -2604,5 +3149,228 @@
   "fullscreen": {
     "enter": "Full screen",
     "exit": "Exit full screen"
+  },
+  "research": {
+    "phaseSearching": "Searching the web...",
+    "phaseReading": "Reading sources...",
+    "phaseAnalyzing": "Analyzing market data...",
+    "phaseWriting": "Writing report...",
+    "authRequiredTitle": "Research desk, one sign-in away",
+    "authRequiredDescription": "Structured research reports on any pair, grounded in live web sources. Sign in, then subscribe to Pairlens Intelligence or bring your own AI key.",
+    "upgradeDescription": "Structured research reports on any pair, grounded in live web sources. Subscribe to Pairlens Intelligence — or bring your own AI and search keys via Plugins, free.",
+    "unavailableTitle": "Research Unavailable",
+    "unavailableDescription": "Enable an AI plugin on the Plugins page to generate research reports for this pair.",
+    "goToPlugins": "Go to Plugins",
+    "navigateToPair": "Navigate to a pair to view research.",
+    "researchingSymbol": "Researching {{symbol}}",
+    "generatingReport": "Generating report...",
+    "cachedGenerated": "Cached — generated {{time}}",
+    "freshGenerated": "Fresh — generated just now",
+    "refresh": "Refresh",
+    "sourcesCount": "Sources ({{count}})",
+    "reportTitle": "Research Report",
+    "fullscreenDescription": "Research report in fullscreen mode. Press Escape to exit.",
+    "sections": "Sections",
+    "sparklineAriaLabel": "Daily price sparkline",
+    "errorTitle": "Research unavailable"
+  },
+  "capabilityGate": {
+    "authTitle": "One free sign-in away",
+    "authDescription": "This feature runs through your Pairlens account.",
+    "signInFree": "Sign in free",
+    "authNote": "Takes 30 seconds. Your exchange keys never leave this device.",
+    "upgradeRequired": "Upgrade required",
+    "upgradeDescriptionLevel": "This feature requires <b>{{level}}</b> access level.",
+    "upgradeDescriptionGeneric": "This feature requires a higher access level.",
+    "managePlugin": "Manage Plugin"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}} isn’t available here",
+    "description": "{{exchange}} doesn’t serve market data for your region, so this connector can’t load data. Switch to another connector, or update your region if it’s set incorrectly.",
+    "yourRegion": "Your region:",
+    "notSet": "Not set",
+    "changeRegion": "Change region",
+    "switchTo": "Switch to {{venue}}"
+  },
+  "pairPicker": {
+    "noPairsFound": "No pairs found.",
+    "startTyping": "Start typing to search pairs."
+  },
+  "routes": {
+    "goHome": "Go home",
+    "noConnectors": {
+      "title": "No market connectors available",
+      "description": "Market connector plugins are required to stream live data. Enable or install a connector to get started.",
+      "manage": "Manage Market Connectors"
+    },
+    "workspace": {
+      "notFound": "Workspace not found",
+      "edit": "Edit"
+    },
+    "notFound": {
+      "title": "Page not found"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "No instrument catalog",
+      "noInstrumentCatalogDescription": "There are no active plugins providing instrument discovery. Enable a plugin to browse available trading pairs.",
+      "goToPlugins": "Go to Plugins"
+    },
+    "notifications": {
+      "loading": "Loading notifications..."
+    },
+    "workflows": {
+      "loading": "Loading workflow builder..."
+    },
+    "plugins": {
+      "tabBuild": "Build",
+      "activeCount": "{{active}}/{{total}} active",
+      "searchPlaceholder": "Search plugins…",
+      "clearSearch": "Clear search"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "Payment complete",
+      "titlePack": "{{credits}} extra credits, loaded.",
+      "titlePlan": "{{label}} is yours.",
+      "titleDefault": "Pairlens Intelligence is yours.",
+      "bodyPack": "They stack on top of your monthly budget and expire {{days}} days from now. Head back to the Pairlens app — your balance updates within a few seconds.",
+      "bodyPlanWithCredits": "Your hosted AI copilot, research desk, and web search are unlocked with {{credits}} credits every month. Head back to the Pairlens app — it picks up your subscription within a few seconds.",
+      "bodyPlanNoCredits": "Your hosted AI copilot, research desk, and web search are unlocked. Head back to the Pairlens app — it picks up your subscription within a few seconds.",
+      "openTerminal": "Open the terminal",
+      "closeTabHint": "Paid from the desktop app? You can simply close this tab.",
+      "receiptHint": "Receipt and invoices are in your email and the billing portal (Settings → Intelligence)."
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "Workflows",
+      "tabRuns": "Runs",
+      "emptyState": "No workflows yet",
+      "createTitle": "New Workflow",
+      "namePlaceholder": "Workflow name",
+      "renameTitle": "Rename Workflow",
+      "renameButton": "Rename",
+      "deleteTitle": "Delete Workflow",
+      "deleteDescription": "This action cannot be undone. The workflow will be permanently deleted.",
+      "runsEmpty": "No workflow runs yet — execute one from the trade panel",
+      "clearHistory": "Clear history",
+      "runOutcome": "{{executed}} ok",
+      "runOutcomeWithFailed": "{{executed}} ok, {{failed}} failed"
+    },
+    "canvas": {
+      "undoTitle": "Undo (Cmd+Z)",
+      "redoTitle": "Redo (Cmd+Shift+Z)",
+      "deleteStep": "Delete step",
+      "deleteConnection": "Delete connection"
+    },
+    "commitBar": {
+      "cycleDetected": "Cycle detected",
+      "issue_one": "{{count}} issue",
+      "issue_other": "{{count}} issues",
+      "pendingChange_one": "{{count}} pending change",
+      "pendingChange_other": "{{count}} pending changes",
+      "noChanges": "No changes",
+      "review": "Review",
+      "discard": "Discard",
+      "commit": "Commit",
+      "saveErrorTitle": "Cannot save workflow",
+      "saveErrorCycleBody": "The workflow contains a circular dependency. Remove the cycle (red edges) before saving.",
+      "saveSuccess": "Workflow saved"
+    },
+    "diffPanel": {
+      "title": "Review Changes ({{count}})",
+      "addedStep": "Added {{type}} step",
+      "removedStep": "Removed {{type}} step",
+      "modifiedStep": "Modified {{type}} config",
+      "addedConnection": "Added connection",
+      "removedConnection": "Removed connection",
+      "noChanges": "No changes"
+    },
+    "palette": {
+      "title": "Add Step",
+      "categoryEntry": "Entry",
+      "categoryOrders": "Orders",
+      "categoryExit": "Exit Strategies",
+      "categoryLogic": "Logic",
+      "categoryCustom": "Custom",
+      "requires": "Requires: {{requirement}}",
+      "notAvailableOn": "Not available on {{markets}}"
+    },
+    "emptyState": {
+      "pickWorkflow": "Pick a workflow on the left to open it on the canvas.",
+      "eyebrow": "Workflows",
+      "title": "Every order can bring its own plan",
+      "description": "A workflow hangs off an order you place from the trade panel. The moment it fills, the steps below it run — brackets, ladders, staged exits, timed checks — so the plan is already in place instead of something you remember to do later.",
+      "blankLabel": "Start from a blank canvas",
+      "footnote": "Templates open as a draft: edit any step, then Commit to save it. Attach a saved workflow to an order from the trade panel to run it."
+    },
+    "steps": {
+      "sideLabel": "Side",
+      "sizeLabel": "Size",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "Abs",
+      "side": {
+        "inherit": "Inherit",
+        "opposite": "Opposite",
+        "buy": "Buy",
+        "sell": "Sell"
+      },
+      "triggerWhenPrice": "Trigger when price",
+      "triggerPercentFromEntry": "% from entry",
+      "triggerReachesPrice": "Reaches price",
+      "priceLevel": "Price level",
+      "priceLabel": "Price",
+      "stopLoss": {
+        "title": "Stop Loss",
+        "lossPercent": "Loss %"
+      },
+      "takeProfit": {
+        "title": "Take Profit",
+        "gainPercent": "Gain %"
+      },
+      "limitOrder": {
+        "title": "Limit Order",
+        "priceModeFixed": "Fixed",
+        "priceModePercentOffset": "% Offset",
+        "priceModeOffset": "Offset",
+        "priceValueLabel": "Price Value"
+      },
+      "marketOrder": {
+        "title": "Market Order"
+      },
+      "condition": {
+        "title": "Condition",
+        "typeLabel": "Type",
+        "typePercentChange": "% Change",
+        "hint": "+N passes when up ≥N%, -N when down ≥N%"
+      },
+      "wait": {
+        "title": "Wait",
+        "durationLabel": "Duration",
+        "unitSeconds": "sec",
+        "unitMinutes": "min",
+        "unitHours": "hr"
+      },
+      "split": {
+        "title": "Parallel Split",
+        "branchesLabel": "Branches"
+      },
+      "trigger": {
+        "title": "Order Input",
+        "badge": "Entry"
+      },
+      "configPanel": {
+        "requiresNote": "Requires: {{requirement}}. Markets without this capability can't run workflows containing this step.",
+        "on": "On",
+        "off": "Off"
+      }
+    },
+    "execution": {
+      "statusExecuted": "executed",
+      "statusSkipped": "skipped",
+      "statusFailed": "failed",
+      "summaryExecuted": "{{count}} executed",
+      "summarySkipped": "{{count}} skipped",
+      "summaryFailed": "{{count}} failed"
+    }
   }
 }

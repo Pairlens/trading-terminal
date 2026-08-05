@@ -160,7 +160,9 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
               variant="ghost"
               className="size-5 text-muted-foreground/50 hover:text-destructive"
               onClick={handleClose}
-              aria-label={`Close ${def ? t(def.labelKey) : paneType}`}
+              aria-label={t('layout.pane.close', {
+                pane: def ? t(def.labelKey) : paneType,
+              })}
             >
               <X className="size-3" />
             </Button>
@@ -168,7 +170,7 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
           <ContextMenuContent>
             <ContextMenuItem onClick={handlePopToColumn}>
               <Columns3 className="size-3.5" />
-              Pop Out to Column
+              {t('layout.pane.popOutToColumn')}
             </ContextMenuItem>
 
             {/* Variable binding submenus */}
@@ -177,7 +179,7 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
                 paneId={paneId}
                 slot="active-pair"
                 varType="pair"
-                label="Bind Pair to Variable"
+                label={t('layout.pane.bindPairToVariable')}
                 currentBinding={boundVar}
               />
             )}
@@ -186,7 +188,7 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
                 paneId={paneId}
                 slot="active-wallet"
                 varType="wallet"
-                label="Bind Wallet to Variable"
+                label={t('layout.pane.bindWalletToVariable')}
                 currentBinding={boundWalletVar}
               />
             )}
@@ -195,7 +197,7 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
                 paneId={paneId}
                 slot="active-timeframe"
                 varType="timeframe"
-                label="Bind Timeframe to Variable"
+                label={t('layout.pane.bindTimeframeToVariable')}
                 currentBinding={boundTimeframeVar}
               />
             )}
@@ -212,14 +214,14 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
                 }
               >
                 <Unlink className="size-3.5" />
-                Clear Pair Override
+                {t('layout.pane.clearPairOverride')}
               </ContextMenuItem>
             )}
 
             <ContextMenuSeparator />
             <ContextMenuItem variant="destructive" onClick={handleClose}>
               <X className="size-3.5" />
-              Close Pane
+              {t('layout.pane.closePane')}
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
@@ -245,6 +247,7 @@ function BindToVariableSubmenu({
   label: string
   currentBinding: string | undefined
 }) {
+  const { t } = useTranslation()
   const { dispatch } = useLayout()
   const { variables: allVars } = useWorkspaceVariables()
   const variables = allVars.filter((v) => v.type === varType)
@@ -276,7 +279,7 @@ function BindToVariableSubmenu({
             </span>
             {currentBinding === v.name && (
               <span className="ml-auto text-[10px] text-muted-foreground">
-                active
+                {t('common.active')}
               </span>
             )}
           </ContextMenuItem>
@@ -294,7 +297,7 @@ function BindToVariableSubmenu({
               }
             >
               <Unlink className="size-3.5" />
-              Unbind
+              {t('layout.pane.unbind')}
             </ContextMenuItem>
           </>
         )}

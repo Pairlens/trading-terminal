@@ -184,7 +184,7 @@ function WorkspaceSpotlight({
         <>
           <button
             type="button"
-            aria-label="Previous"
+            aria-label={t('workspaceStore.previousSlide', 'Previous')}
             onClick={() => setIndex((index - 1 + count) % count)}
             className="absolute left-4 top-1/2 z-10 flex size-[34px] -translate-y-1/2 items-center justify-center rounded-full border border-border/60 bg-background/40 text-muted-foreground backdrop-blur-sm transition-colors hover:bg-background/70 hover:text-foreground"
           >
@@ -192,7 +192,7 @@ function WorkspaceSpotlight({
           </button>
           <button
             type="button"
-            aria-label="Next"
+            aria-label={t('workspaceStore.nextSlide', 'Next')}
             onClick={() => setIndex((index + 1) % count)}
             className="absolute right-4 top-1/2 z-10 flex size-[34px] -translate-y-1/2 items-center justify-center rounded-full border border-border/60 bg-background/40 text-muted-foreground backdrop-blur-sm transition-colors hover:bg-background/70 hover:text-foreground"
           >
@@ -203,7 +203,10 @@ function WorkspaceSpotlight({
               <button
                 key={tpl.id}
                 type="button"
-                aria-label={`Go to slide ${i + 1}`}
+                aria-label={t('workspaceStore.goToSlide', {
+                  defaultValue: 'Go to slide {{number}}',
+                  number: i + 1,
+                })}
                 onClick={() => setIndex(i)}
                 className={cn(
                   'h-1 rounded-[2px] transition-all',

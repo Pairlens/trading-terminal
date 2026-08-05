@@ -21,7 +21,7 @@ import { IndicatorPicker } from './indicator-picker'
 import { IntelligenceStrip } from './intelligence-strip'
 import { TerminalChart } from './terminal-chart'
 import { TextInputDialog } from './text-input-dialog'
-import type { SignalPayload } from '@pairlens/shared/types'
+import type { SignalScan } from '@pairlens/strategy-engine'
 import type {
   ChartCommand,
   DrawingToolType,
@@ -57,7 +57,7 @@ export function ChartPane() {
   return (
     <ChartPaneInner
       pairKey={activePair.pairKey}
-      latestSignal={candleData.latestSignal}
+      signalScan={candleData.signalScan}
       hasSnapshot={candleData.hasSnapshot}
       noData={candleData.noData}
       desktopOnly={candleData.desktopOnly}
@@ -69,7 +69,7 @@ export function ChartPane() {
 
 const ChartPaneInner = memo(function ChartPaneInner({
   pairKey,
-  latestSignal,
+  signalScan,
   hasSnapshot,
   noData,
   desktopOnly,
@@ -77,7 +77,7 @@ const ChartPaneInner = memo(function ChartPaneInner({
   chartActions,
 }: {
   pairKey: string
-  latestSignal: SignalPayload | null
+  signalScan: SignalScan | null
   hasSnapshot: boolean
   noData: boolean
   desktopOnly: boolean
@@ -331,7 +331,7 @@ const ChartPaneInner = memo(function ChartPaneInner({
           <ReplayControls />
         </PaneTransition>
       )}
-      <IntelligenceStrip signal={latestSignal} />
+      <IntelligenceStrip scan={signalScan} />
     </div>
   )
 
@@ -423,9 +423,11 @@ const ChartPaneInner = memo(function ChartPaneInner({
             showCloseButton={false}
             className="sm:max-w-none w-[calc(100vw-2rem)] h-[calc(100vh-2rem)] p-0 gap-0"
           >
-            <DialogTitle className="sr-only">Fullscreen Chart</DialogTitle>
+            <DialogTitle className="sr-only">
+              {t('chart.fullscreenTitle')}
+            </DialogTitle>
             <DialogDescription className="sr-only">
-              Chart in fullscreen mode. Press Escape to exit.
+              {t('chart.fullscreenHint')}
             </DialogDescription>
             {chartContent}
           </DialogContent>

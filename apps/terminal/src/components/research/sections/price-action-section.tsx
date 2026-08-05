@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { BarChart3 } from 'lucide-react'
 
@@ -38,6 +39,7 @@ function Sparkline({
   support: Array<number>
   resistance: Array<number>
 }) {
+  const { t } = useTranslation()
   const closes = candles.map((c) => c.close)
   const first = closes[0]
   const last = closes[closes.length - 1]
@@ -84,7 +86,7 @@ function Sparkline({
         viewBox={`0 0 ${W} ${H}`}
         className="h-auto w-full"
         role="img"
-        aria-label="Daily price sparkline"
+        aria-label={t('research.sparklineAriaLabel')}
       >
         <path d={areaPath} fill={stroke} fillOpacity={0.07} />
         <path

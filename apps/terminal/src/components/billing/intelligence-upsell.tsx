@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { Trans, useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { Check, ExternalLink, Sparkles } from 'lucide-react'
 
@@ -52,18 +53,18 @@ export function IntelligencePlanButtons({
 }: {
   size?: 'sm' | 'default'
 }) {
+  const { t } = useTranslation()
   const checkout = useIntelligenceCheckout()
 
   const subscribe = (plan: IntelligencePlanId) => {
     checkout.mutate(plan, {
       onSuccess: () => {
-        toast.info('Checkout opened in your browser', {
-          description:
-            'Your subscription activates here as soon as payment completes.',
+        toast.info(t('intelligence.upsell.checkoutOpenedTitle'), {
+          description: t('intelligence.upsell.checkoutActivates'),
         })
       },
       onError: () => {
-        toast.error('Could not start checkout — please try again.')
+        toast.error(t('intelligence.upsell.checkoutStartError'))
       },
     })
   }
@@ -85,12 +86,16 @@ export function IntelligencePlanButtons({
               <Sparkles className="size-4" />
               {plan.label}
             </span>
-            <span className="tabular-nums">${plan.priceUsdMonthly}/mo</span>
+            <span className="tabular-nums">
+              {t('intelligence.upsell.priceMonthly', {
+                price: plan.priceUsdMonthly,
+              })}
+            </span>
           </Button>
         )
       })}
       <p className="text-center text-[10px] text-muted-foreground">
-        Prices exclude tax — calculated at checkout.
+        {t('intelligence.upsell.taxNotice')}
       </p>
       <LegalNotice kind="checkout" className="text-center text-[10px]" />
     </div>
@@ -102,32 +107,39 @@ export function IntelligencePlanButtons({
  * (the copilot / research panels' 'upgrade-required' state).
  */
 export function IntelligenceUpgradePrompt({
-  title = 'Unlock Pairlens Intelligence',
-  description = 'Hosted AI copilot and web research, no API keys needed. Every plan includes a monthly usage budget shared across chat, research, and web searches.',
+  title,
+  description,
 }: {
   title?: string
   description?: string
 }) {
+  const { t } = useTranslation()
+  const resolvedTitle = title ?? t('intelligence.upsell.defaultTitle')
+  const resolvedDescription =
+    description ?? t('intelligence.upsell.defaultDescription')
+
   return (
     <div className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto p-6">
       <Empty className="max-w-[300px]">
         <EmptyHeader className="gap-3">
           <AiOrb size="72px" className="mb-2" />
-          <EmptyTitle className="text-base">{title}</EmptyTitle>
+          <EmptyTitle className="text-base">{resolvedTitle}</EmptyTitle>
           <EmptyDescription className="leading-relaxed">
-            {description}
+            {resolvedDescription}
           </EmptyDescription>
         </EmptyHeader>
         <div className="mt-6 w-full">
           <IntelligencePlanButtons />
         </div>
         <p className="mt-4 text-center text-[11px] leading-snug text-muted-foreground">
-          Prefer your own provider? Connect an Anthropic, OpenAI, Groq, or
-          OpenRouter key in{' '}
-          <Link to="/plugins" className="underline underline-offset-2">
-            Plugins
-          </Link>{' '}
-          — bring-your-own-key AI is always free.
+          <Trans
+            i18nKey="intelligence.upsell.byokNote"
+            components={{
+              plugins: (
+                <Link to="/plugins" className="underline underline-offset-2" />
+              ),
+            }}
+          />
         </p>
       </Empty>
     </div>
@@ -139,6 +151,7 @@ export function IntelligenceUpgradePrompt({
  * monthly budget runs out while chatting).
  */
 export function BillingErrorNotice({ code }: { code: BillingErrorCode }) {
+  const { t } = useTranslation()
   const billing = useBillingState()
   const portal = useBillingPortal()
 
@@ -153,12 +166,11 @@ export function BillingErrorNotice({ code }: { code: BillingErrorCode }) {
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
           <p className="text-sm font-medium">
-            Pairlens Intelligence subscription required
+            {t('intelligence.upsell.subscriptionRequiredTitle')}
           </p>
         </div>
         <p className="mt-1 text-xs text-muted-foreground">
-          Hosted AI runs on an Intelligence plan. Subscribe below, or connect
-          your own AI provider key in Plugins.
+          {t('intelligence.upsell.subscriptionRequiredBody')}
         </p>
         <div className="mt-3">
           <IntelligencePlanButtons size="sm" />
@@ -180,16 +192,22 @@ export function BillingErrorNotice({ code }: { code: BillingErrorCode }) {
     <div className="rounded-xl border p-4">
       <div className="flex items-center gap-2">
         <Sparkles className="size-4 text-primary" />
-        <p className="text-sm font-medium">Monthly usage budget used up</p>
+        <p className="text-sm font-medium">
+          {t('intelligence.upsell.budgetUsedUpTitle')}
+        </p>
       </div>
       <p className="mt-1 text-xs text-muted-foreground">
-        You've used this cycle's Intelligence credits.
-        {resetsOn ? ` Your budget resets on ${resetsOn}.` : ''}
+        {t('intelligence.upsell.budgetUsedBody')}
+        {resetsOn
+          ? ' ' + t('intelligence.upsell.budgetResetsOn', { date: resetsOn })
+          : ''}
         {onMax
-          ? ' Top up with a credit pack to keep going — pack credits expire 30 days after purchase.'
-          : ` Upgrade to ${INTELLIGENCE_PLANS.max.label} for ${formatCredits(
-              INTELLIGENCE_PLANS.max.monthlyCredits,
-            )} credits per month.`}
+          ? ' ' + t('intelligence.upsell.topUpHint')
+          : ' ' +
+            t('intelligence.upsell.upgradeToMaxHint', {
+              label: INTELLIGENCE_PLANS.max.label,
+              credits: formatCredits(INTELLIGENCE_PLANS.max.monthlyCredits),
+            })}
       </p>
       {onMax && (
         <div className="mt-3">
@@ -205,12 +223,12 @@ export function BillingErrorNotice({ code }: { code: BillingErrorCode }) {
           disabled={portal.isPending}
           onClick={() =>
             portal.mutate(undefined, {
-              onError: () => toast.error('Could not open the billing portal.'),
+              onError: () => toast.error(t('intelligence.upsell.portalError')),
             })
           }
         >
           <ExternalLink className="size-3.5" />
-          Manage subscription
+          {t('intelligence.upsell.manageSubscription')}
         </Button>
       </div>
     </div>
@@ -226,6 +244,7 @@ export function CreditPackButtons({
 }: {
   size?: 'sm' | 'default'
 }) {
+  const { t } = useTranslation()
   const checkout = usePackCheckout()
   return (
     <div className="grid grid-cols-2 gap-2">
@@ -241,12 +260,14 @@ export function CreditPackButtons({
             onClick={() =>
               checkout.mutate(packId, {
                 onSuccess: () => {
-                  toast.info('Checkout opened in your browser', {
-                    description:
-                      'Extra credits land on your balance as soon as payment completes.',
+                  toast.info(t('intelligence.upsell.checkoutOpenedTitle'), {
+                    description: t(
+                      'intelligence.upsell.creditsLandDescription',
+                    ),
                   })
                 },
-                onError: () => toast.error('Could not start checkout.'),
+                onError: () =>
+                  toast.error(t('intelligence.upsell.checkoutError')),
               })
             }
           >
@@ -260,6 +281,7 @@ export function CreditPackButtons({
 }
 
 function UpgradeToMaxButton() {
+  const { t } = useTranslation()
   const checkout = useIntelligenceCheckout()
   return (
     <Button
@@ -268,12 +290,12 @@ function UpgradeToMaxButton() {
       disabled={checkout.isPending}
       onClick={() =>
         checkout.mutate('max', {
-          onError: () => toast.error('Could not start checkout.'),
+          onError: () => toast.error(t('intelligence.upsell.checkoutError')),
         })
       }
     >
       <Check className="size-3.5" />
-      Upgrade to Max
+      {t('intelligence.upsell.upgradeToMax')}
     </Button>
   )
 }

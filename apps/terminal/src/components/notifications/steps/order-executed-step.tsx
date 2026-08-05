@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { ShoppingCart } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -7,21 +8,22 @@ import { Badge } from '@pairlens/ui/components/ui/badge'
 import { useNotificationStepDataUpdate } from '../use-step-data'
 import type { NodeProps } from '@xyflow/react'
 
-const sideOptions = [
-  { value: 'any', label: 'Any' },
-  { value: 'buy', label: 'Buy' },
-  { value: 'sell', label: 'Sell' },
-] as const
-
-const statusOptions = [
-  { value: 'any', label: 'Any' },
-  { value: 'filled', label: 'Filled' },
-  { value: 'partially_filled', label: 'Partial' },
-] as const
-
 export function OrderExecutedStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
   const side = (data.side as string) ?? 'any'
   const status = (data.status as string) ?? 'filled'
+
+  const sideOptions = [
+    { value: 'any', label: t('notifications.builder.any') },
+    { value: 'buy', label: t('notifications.builder.buy') },
+    { value: 'sell', label: t('notifications.builder.sell') },
+  ] as const
+
+  const statusOptions = [
+    { value: 'any', label: t('notifications.builder.any') },
+    { value: 'filled', label: t('positions.filled') },
+    { value: 'partially_filled', label: t('positions.partiallyFilled') },
+  ] as const
 
   const updateStepData = useNotificationStepDataUpdate()
   const handleChange = (key: string, value: unknown) =>
@@ -42,14 +44,14 @@ export function OrderExecutedStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Order Executed
+            {t('notifications.builder.steps.orderExecuted.title')}
           </div>
         </div>
         <Badge
           variant="outline"
           className="border-emerald-500/30 text-[10px] text-emerald-400"
         >
-          Event
+          {t('notifications.builder.category.event')}
         </Badge>
       </div>
 
@@ -57,7 +59,7 @@ export function OrderExecutedStep({ id, data }: NodeProps) {
         {/* Side filter */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Side
+            {t('positions.side')}
           </div>
           <div className="nodrag nopan nowheel mt-0.5 flex overflow-hidden rounded border border-border text-[9px]">
             {sideOptions.map((opt) => (
@@ -81,7 +83,7 @@ export function OrderExecutedStep({ id, data }: NodeProps) {
         {/* Status filter */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Status
+            {t('positions.status')}
           </div>
           <div className="nodrag nopan nowheel mt-0.5 flex overflow-hidden rounded border border-border text-[9px]">
             {statusOptions.map((opt) => (

@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { Trans, useTranslation } from 'react-i18next'
 import { useCallback, useState } from 'react'
 import { CandlestickChart, Search, Unlink, Variable } from 'lucide-react'
 
@@ -25,6 +26,7 @@ import { useOptionalWorkspaceVariables } from '@/lib/layout/workspace-variables-
  * pane tracks.
  */
 export function PanePairPicker() {
+  const { t } = useTranslation()
   const [expanded, setExpanded] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const watchedSymbols = useWatchlistsStore((s) => s.allSymbolsSet)
@@ -93,7 +95,7 @@ export function PanePairPicker() {
         {pairVars.length > 0 && (
           <div className="flex flex-col items-center gap-1.5">
             <span className="text-[10px] uppercase tracking-wider text-muted-foreground/40">
-              Bind to variable
+              {t('layout.panePicker.bindToVariable')}
             </span>
             <div className="flex flex-wrap justify-center gap-1.5">
               {pairVars.map((v) => {
@@ -120,11 +122,16 @@ export function PanePairPicker() {
         {isBoundToVariable && (
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground/60">
             <Variable className="size-3" />
+            {/* <Trans> rather than a plain t(): the variable name is bolded
+                inside the sentence, and its position moves per language. The
+                alternative — splitting the string at the placeholder — is the
+                concatenation trap. */}
             <span>
-              Bound to{' '}
-              <span className="font-medium text-muted-foreground">
-                {displayLabel}
-              </span>
+              <Trans
+                i18nKey="layout.panePicker.boundTo"
+                values={{ variable: displayLabel }}
+                components={{ b: <b className="font-medium" /> }}
+              />
             </span>
           </div>
         )}
@@ -132,7 +139,7 @@ export function PanePairPicker() {
         {markets.length > 1 && (
           <div className="flex w-full max-w-md flex-col items-center gap-1.5">
             <span className="text-[10px] uppercase tracking-wider text-muted-foreground/40">
-              Market
+              {t('layout.panePicker.market')}
             </span>
             <div className="flex max-h-20 flex-wrap justify-center gap-1 overflow-y-auto">
               {markets.map((m) => (
@@ -156,19 +163,21 @@ export function PanePairPicker() {
           onClick={() => setExpanded(true)}
         >
           <Search className="size-3.5" />
-          {isBoundToVariable ? `Set ${displayLabel} pair` : 'Select a pair'}
+          {isBoundToVariable
+            ? t('layout.panePicker.setPair', { variable: displayLabel })
+            : t('layout.panePicker.selectPair')}
         </button>
         {isBoundToVariable && (
           <div className="flex flex-col items-center gap-2">
             <p className="max-w-[220px] text-center text-[10px] leading-tight text-muted-foreground/40">
-              Selecting a pair will update all panes bound to {displayLabel}
+              {t('layout.panePicker.bindingHint', { variable: displayLabel })}
             </p>
             <button
               className="flex items-center gap-1 text-[10px] text-muted-foreground/40 transition-colors hover:text-muted-foreground"
               onClick={handleUnbind}
             >
               <Unlink className="size-3" />
-              Unbind from variable
+              {t('layout.panePicker.unbindFromVariable')}
             </button>
           </div>
         )}
@@ -182,14 +191,17 @@ export function PanePairPicker() {
         {isBoundToVariable && (
           <div className="mb-1.5 flex items-center gap-1.5 text-[10px] text-muted-foreground">
             <Variable className="size-3" />
-            Setting <span className="font-medium">{displayLabel}</span> for all
-            bound panes
+            <Trans
+              i18nKey="layout.panePicker.settingForAllPanes"
+              values={{ variable: displayLabel }}
+              components={{ b: <b className="font-medium" /> }}
+            />
           </div>
         )}
         <div className="relative">
           <Search className="absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search pairs..."
+            placeholder={t('layout.searchPairs')}
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             className="h-8 pl-7 text-sm"
@@ -199,7 +211,7 @@ export function PanePairPicker() {
         {markets.length > 1 && (
           <div className="mt-2 flex items-start gap-1.5">
             <span className="py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground/50">
-              Market
+              {t('layout.panePicker.market')}
             </span>
             <div className="flex max-h-16 min-w-0 flex-1 flex-wrap gap-1 overflow-y-auto">
               {markets.map((m) => (
@@ -235,7 +247,7 @@ export function PanePairPicker() {
             setSearchValue('')
           }}
         >
-          Cancel
+          {t('common.cancel')}
         </button>
       </div>
     </div>

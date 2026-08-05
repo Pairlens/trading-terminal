@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { AlertTriangle, Check, Eye, RotateCcw } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -23,6 +24,7 @@ type CommitBarProps = {
 }
 
 export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
+  const { t } = useTranslation()
   const draft = useWorkflowStore((s) => s.draft)
   const hasPendingChanges = useWorkflowStore((s) => s.hasPendingChanges)
   const commitDraft = useWorkflowStore((s) => s.commitDraft)
@@ -52,14 +54,13 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
 
   const handleCommit = () => {
     if (hasCycles) {
-      toast.error('Cannot save workflow', {
-        description:
-          'The workflow contains a circular dependency. Remove the cycle (red edges) before saving.',
+      toast.error(t('workflows.commitBar.saveErrorTitle'), {
+        description: t('workflows.commitBar.saveErrorCycleBody'),
       })
       return
     }
     if (invalid) {
-      toast.error('Cannot save workflow', {
+      toast.error(t('workflows.commitBar.saveErrorTitle'), {
         description: validationErrors
           .slice(0, 4)
           .map((e) => e.message)
@@ -70,7 +71,7 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
     // Ensure all canvas state is synced to store before committing
     onBeforeCommit?.()
     commitDraft()
-    toast.success('Workflow saved')
+    toast.success(t('workflows.commitBar.saveSuccess'))
   }
 
   return (
@@ -83,7 +84,7 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
               className="h-5 border-red-500/30 bg-red-500/10 px-1.5 text-[10px] text-red-600 dark:text-red-400"
             >
               <AlertTriangle className="mr-1 size-3" />
-              Cycle detected
+              {t('workflows.commitBar.cycleDetected')}
             </Badge>
           )}
           {invalid && (
@@ -95,8 +96,9 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
                     className="h-5 cursor-default border-amber-500/30 bg-amber-500/10 px-1.5 text-[10px] text-amber-600 dark:text-amber-400"
                   >
                     <AlertTriangle className="mr-1 size-3" />
-                    {validationErrors.length}{' '}
-                    {validationErrors.length === 1 ? 'issue' : 'issues'}
+                    {t('workflows.commitBar.issue', {
+                      count: validationErrors.length,
+                    })}
                   </Badge>
                 }
               />
@@ -117,11 +119,13 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
               variant="outline"
               className="h-5 border-amber-500/30 bg-amber-500/10 px-1.5 text-[10px] text-amber-600 dark:text-amber-400"
             >
-              {changeCount} pending {changeCount === 1 ? 'change' : 'changes'}
+              {t('workflows.commitBar.pendingChange', { count: changeCount })}
             </Badge>
           ) : (
             !hasCycles && (
-              <span className="text-xs text-muted-foreground">No changes</span>
+              <span className="text-xs text-muted-foreground">
+                {t('workflows.commitBar.noChanges')}
+              </span>
             )
           )}
         </div>
@@ -135,7 +139,7 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
               onClick={() => setDiffOpen(true)}
             >
               <Eye className="size-3" />
-              Review
+              {t('workflows.commitBar.review')}
             </Button>
           )}
           <Button
@@ -146,7 +150,7 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
             onClick={discardDraft}
           >
             <RotateCcw className="size-3" />
-            Discard
+            {t('workflows.commitBar.discard')}
           </Button>
           <Button
             size="sm"
@@ -155,7 +159,7 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
             onClick={handleCommit}
           >
             <Check className="size-3" />
-            Commit
+            {t('workflows.commitBar.commit')}
           </Button>
         </div>
       </div>

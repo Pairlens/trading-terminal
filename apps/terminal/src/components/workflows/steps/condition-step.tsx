@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { GitBranch } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -7,13 +8,17 @@ import { useStepDataUpdate } from '../use-step-data'
 import type { NodeProps } from '@xyflow/react'
 import type { ConditionStepData } from '@pairlens/workflow-engine/types'
 
-const conditionTypeOptions = [
-  { value: 'price-above', label: '>' },
-  { value: 'price-below', label: '<' },
-  { value: 'percent-change', label: '% Change' },
-] as const
-
 export function ConditionStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
+  const conditionTypeOptions = [
+    { value: 'price-above', label: '>' },
+    { value: 'price-below', label: '<' },
+    {
+      value: 'percent-change',
+      label: t('workflows.steps.condition.typePercentChange'),
+    },
+  ] as const
+
   const d = data as unknown as ConditionStepData
   const conditionType = d.conditionType ?? 'price-above'
   const value = d.value ?? 0
@@ -41,7 +46,7 @@ export function ConditionStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Condition
+            {t('workflows.steps.condition.title')}
           </div>
         </div>
       </div>
@@ -50,7 +55,7 @@ export function ConditionStep({ id, data }: NodeProps) {
         {/* Condition Type */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Type
+            {t('workflows.steps.condition.typeLabel')}
           </div>
           <div className="nodrag nopan nowheel mt-0.5 flex overflow-hidden rounded border border-border text-[9px]">
             {conditionTypeOptions.map((opt) => (
@@ -74,7 +79,9 @@ export function ConditionStep({ id, data }: NodeProps) {
         {/* Value */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            {conditionType === 'percent-change' ? '% from entry' : 'Price'}
+            {conditionType === 'percent-change'
+              ? t('workflows.steps.triggerPercentFromEntry')
+              : t('workflows.steps.priceLabel')}
           </div>
           <input
             type="number"
@@ -86,7 +93,7 @@ export function ConditionStep({ id, data }: NodeProps) {
           />
           {conditionType === 'percent-change' && (
             <div className="mt-0.5 text-[9px] text-muted-foreground">
-              +N passes when up ≥N%, -N when down ≥N%
+              {t('workflows.steps.condition.hint')}
             </div>
           )}
         </div>

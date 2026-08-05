@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useMemo } from 'react'
 
 import type { PluginCandle } from '@/hooks/use-candle-stream'
@@ -30,6 +31,7 @@ export function BottomPanelDataLog({
   candles,
   latestCandle,
 }: BottomPanelDataLogProps) {
+  const { t } = useTranslation()
   const recentCandles = useMemo(() => candles.slice(-20).reverse(), [candles])
 
   // Volume is the one column here worth scanning for outliers, and unlike the
@@ -61,7 +63,9 @@ export function BottomPanelDataLog({
             </p>
             <div className="space-y-1.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Open</span>
+                <span className="text-muted-foreground">
+                  {t('terminal.columns.open')}
+                </span>
                 <span className="font-medium font-mono">
                   {formatBookPrice(latestCandle.open)}
                 </span>
@@ -88,7 +92,9 @@ export function BottomPanelDataLog({
           </>
         )}
         {!latestCandle && (
-          <p className="text-sm text-muted-foreground">Waiting for data...</p>
+          <p className="text-sm text-muted-foreground">
+            {t('terminal.status.waitingData')}
+          </p>
         )}
       </div>
 
@@ -98,10 +104,14 @@ export function BottomPanelDataLog({
           <thead>
             <tr className="border-b text-muted-foreground">
               <th className="pb-1 pr-3 text-left font-medium">Time</th>
-              <th className="pb-1 pr-3 text-right font-medium">Open</th>
+              <th className="pb-1 pr-3 text-right font-medium">
+                {t('terminal.columns.open')}
+              </th>
               <th className="pb-1 pr-3 text-right font-medium">High</th>
               <th className="pb-1 pr-3 text-right font-medium">Low</th>
-              <th className="pb-1 pr-3 text-right font-medium">Close</th>
+              <th className="pb-1 pr-3 text-right font-medium">
+                {t('terminal.columns.close')}
+              </th>
               <th className="pb-1 text-right font-medium">Volume</th>
             </tr>
           </thead>
@@ -157,7 +167,7 @@ export function BottomPanelDataLog({
                   colSpan={6}
                   className="py-4 text-center text-muted-foreground"
                 >
-                  No candle data yet
+                  {t('terminal.status.noCandleData')}
                 </td>
               </tr>
             )}

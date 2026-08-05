@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { ArrowDown, ArrowUp, TrendingUp } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -8,6 +9,7 @@ import { useNotificationStepDataUpdate } from '../use-step-data'
 import type { NodeProps } from '@xyflow/react'
 
 export function PriceAlertStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
   const direction = (data.direction as string) ?? 'above'
   const price = (data.price as number) ?? 0
 
@@ -32,14 +34,14 @@ export function PriceAlertStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Price Alert
+            {t('notifications.builder.steps.priceAlert.title')}
           </div>
         </div>
         <Badge
           variant="outline"
           className="border-emerald-500/30 text-[10px] text-emerald-400"
         >
-          Event
+          {t('notifications.builder.category.event')}
         </Badge>
       </div>
 
@@ -47,7 +49,7 @@ export function PriceAlertStep({ id, data }: NodeProps) {
         {/* Direction */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Direction
+            {t('notifications.builder.direction')}
           </div>
           <div className="nodrag nopan nowheel mt-0.5 flex overflow-hidden rounded border border-border text-[9px]">
             <button
@@ -61,7 +63,7 @@ export function PriceAlertStep({ id, data }: NodeProps) {
               onClick={() => handleChange('direction', 'above')}
             >
               <ArrowUp className="size-2.5" />
-              Above
+              {t('notifications.builder.above')}
             </button>
             <button
               type="button"
@@ -74,7 +76,7 @@ export function PriceAlertStep({ id, data }: NodeProps) {
               onClick={() => handleChange('direction', 'below')}
             >
               <ArrowDown className="size-2.5" />
-              Below
+              {t('notifications.builder.below')}
             </button>
           </div>
         </div>
@@ -82,7 +84,7 @@ export function PriceAlertStep({ id, data }: NodeProps) {
         {/* Price */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Price
+            {t('positions.price')}
           </div>
           <div className="mt-0.5 flex items-center gap-1">
             <DirectionIcon

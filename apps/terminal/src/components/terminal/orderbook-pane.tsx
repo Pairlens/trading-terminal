@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronDown, Loader2 } from 'lucide-react'
 
@@ -20,7 +21,7 @@ import {
 } from '@/components/terminal/magnitude-intensity'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
-import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { usePaneVenue } from '@/hooks/use-pane-venue'
 import { useSwitchTransition } from '@/hooks/use-switch-transition'
 // Market data now comes through plugin-based connectors
 
@@ -300,6 +301,7 @@ function OrderbookPaneInner({
   market: string
   pairKey: string
 }) {
+  const { t } = useTranslation()
   const {
     orderbook,
     baseTickSize: serverBaseTickSize,
@@ -312,28 +314,29 @@ function OrderbookPaneInner({
   // first snapshot arrives (`book` is the retained payload we actually render).
   const chartConfig = useOptionalChartConfig()
   const market = chartConfig?.market ?? ''
-  const { markets } = useAvailableMarkets()
-  const marketLabel = markets.find((m) => m.value === market)?.label ?? market
+  const venue = usePaneVenue(market)
   const { phase, display: book } = useSwitchTransition(market, orderbook)
 
   const [containerEl, setContainerEl] = useState<HTMLDivElement | null>(null)
   const [visibleRows, setVisibleRows] = useState(20)
   const [tickIndex, setTickIndex] = useState<number | null>(null)
 
+  // Header (~28px), spread row (~26px), buy/sell bar (~32px) — plus the venue
+  // footer (~24px) on the panes that render one.
+  const chromeHeight = venue.isDistinct ? 110 : 86
+
   // Measure available height for rows (callback ref so it works after loading state)
   useEffect(() => {
     if (!containerEl) return
     const observer = new ResizeObserver(([entry]) => {
       if (!entry) return
-      // Subtract header (~28px), spread row (~26px), buy/sell bar (~32px),
-      // and streaming footer (~24px)
-      const available = entry.contentRect.height - 110
+      const available = entry.contentRect.height - chromeHeight
       const rows = Math.max(4, Math.floor(available / ROW_HEIGHT))
       setVisibleRows(rows)
     })
     observer.observe(containerEl)
     return () => observer.disconnect()
-  }, [containerEl])
+  }, [containerEl, chromeHeight])
 
   const rowsPerSide = Math.floor(visibleRows / 2)
 
@@ -454,7 +457,9 @@ function OrderbookPaneInner({
       <div className="flex h-full items-center justify-center gap-2 text-xs text-muted-foreground">
         <Loader2 className="h-3.5 w-3.5 animate-spin" />
         <span>
-          {status === 'connecting' ? 'Connecting...' : 'Loading order book...'}
+          {status === 'connecting'
+            ? t('terminal.status.connecting')
+            : t('terminal.status.loadingOrderBook')}
         </span>
       </div>
     )
@@ -464,15 +469,15 @@ function OrderbookPaneInner({
     <PaneTransition
       className="relative flex h-full flex-col overflow-hidden text-xs"
       phase={phase}
-      marketLabel={marketLabel}
+      marketLabel={venue.label}
       ref={setContainerEl}
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border/50 px-2 py-1">
         <div className="grid flex-1 grid-cols-3 gap-1 font-mono text-[10.5px] font-medium uppercase tracking-[.11em] text-muted-foreground">
-          <span>Price</span>
-          <span className="text-right">Size</span>
-          <span className="text-right">Total</span>
+          <span>{t('terminal.columns.price')}</span>
+          <span className="text-right">{t('terminal.columns.size')}</span>
+          <span className="text-right">{t('terminal.columns.total')}</span>
         </div>
         {tickOptions.length > 0 && (
           <TickSelector
@@ -528,17 +533,14 @@ function OrderbookPaneInner({
       {/* Buy vs Sell pressure bar */}
       <BuySellBar bids={bids} asks={asks} />
 
-      {/* Streaming footer */}
-      <div className="flex items-center gap-1.5 border-t border-border/50 px-2 py-1 font-mono text-[10px] uppercase tracking-[.11em] text-muted-foreground">
-        <span className="live-dot size-1.5 rounded-full bg-up" />
-        <span>Streaming</span>
-        {marketLabel && (
-          <>
-            <span className="text-muted-foreground/50">·</span>
-            <span className="normal-case tracking-normal">{marketLabel}</span>
-          </>
-        )}
-      </div>
+      {/* Venue footer — only when this book isn't on the charted venue. Stream
+          health is the top bar's job (ConnectionIndicator), which can say
+          "stalled"; a per-pane dot could only ever say "streaming". */}
+      {venue.isDistinct && (
+        <div className="border-t border-border/50 px-2 py-1 text-[10px] text-muted-foreground">
+          {venue.label}
+        </div>
+      )}
     </PaneTransition>
   )
 }

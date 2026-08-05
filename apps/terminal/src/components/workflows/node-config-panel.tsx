@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 
 import { Button } from '@pairlens/ui/components/ui/button'
@@ -24,6 +25,7 @@ export function StepConfigPanel({
   data,
   onClose,
 }: StepConfigPanelProps) {
+  const { t } = useTranslation()
   const updateStepData = useWorkflowStore((s) => s.updateStepData)
   const stepDef = getStepType(stepType)
 
@@ -82,8 +84,9 @@ export function StepConfigPanel({
         )}
         {stepDef.compat && (
           <p className="rounded border border-border bg-muted/40 px-2 py-1.5 text-[10px] text-muted-foreground">
-            Requires: {stepDef.compat.requires}. Markets without this capability
-            can't run workflows containing this step.
+            {t('workflows.steps.configPanel.requiresNote', {
+              requirement: stepDef.compat.requires,
+            })}
           </p>
         )}
       </div>
@@ -100,6 +103,7 @@ function ConfigField({
   value: unknown
   onChange: (value: unknown) => void
 }) {
+  const { t } = useTranslation()
   switch (field.type) {
     case 'number':
       return (
@@ -175,7 +179,9 @@ function ConfigField({
             className="nodrag rounded border border-border px-2 py-0.5 text-[10px]"
             onClick={() => onChange(!value)}
           >
-            {value ? 'On' : 'Off'}
+            {value
+              ? t('workflows.steps.configPanel.on')
+              : t('workflows.steps.configPanel.off')}
           </button>
         </div>
       )
