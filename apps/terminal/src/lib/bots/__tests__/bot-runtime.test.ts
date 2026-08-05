@@ -219,6 +219,37 @@ describe('subscription reconciliation', () => {
     expect(useBotsStore.getState().bots[0].enabled).toBe(false)
   })
 
+  it('stops a running bot the moment its strategy is deleted', async () => {
+    runtime.start(manager)
+    await push('snapshot', [bar(0, 100), bar(1, 101)])
+    expect(run().status).toBe('running')
+
+    // Deleting the script is what the workbench does; the bot must not wait
+    // for its next bar close — on a daily timeframe that is a day of holding
+    // a position with no strategy behind it.
+    useIndicatorScriptsStore.setState({ scripts: [], loaded: true })
+    await flush()
+
+    expect(unsubscribed).toBe(1)
+    expect(run().status).toBe('error')
+    expect(run().statusDetail).toContain('deleted')
+    // Disarmed too, so nothing resurrects it and the UI can refuse to restart.
+    expect(useBotsStore.getState().bots[0].enabled).toBe(false)
+  })
+
+  it('leaves a running bot alone while its strategy is merely edited', async () => {
+    runtime.start(manager)
+    await push('snapshot', [bar(0, 100), bar(1, 101)])
+
+    useIndicatorScriptsStore
+      .getState()
+      .updateScript('script-1', { source: 'meta = strategy()  # tweak' })
+    await flush()
+
+    expect(unsubscribed).toBe(0)
+    expect(run().status).toBe('running')
+  })
+
   it('resubscribes when the deployment moves to another market', async () => {
     runtime.start(manager)
     const first = feed

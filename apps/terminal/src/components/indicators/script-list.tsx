@@ -16,6 +16,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import { cn } from '@pairlens/ui'
 import {
@@ -62,6 +63,9 @@ import type {
   IndicatorScript,
 } from '@/stores/indicator-scripts-store'
 import { BLANK_SCRIPT, EXAMPLE_SCRIPTS } from '@/lib/python/examples'
+import { botsUsingScript } from '@/lib/bots/bot-script-link'
+import { useBotRunsStore } from '@/stores/bot-runs-store'
+import { useBotsStore } from '@/stores/bots-store'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
 
 type ScriptListProps = {
@@ -148,10 +152,22 @@ export function ScriptList({
   const createScript = useIndicatorScriptsStore((s) => s.createScript)
   const updateScript = useIndicatorScriptsStore((s) => s.updateScript)
   const deleteScript = useIndicatorScriptsStore((s) => s.deleteScript)
+  // Deleting a script is not a private act: bots are deployments OF a script,
+  // and one that outlives its strategy can neither run nor be restarted.
+  const bots = useBotsStore((s) => s.bots)
+  const loadBots = useBotsStore((s) => s.load)
+  const deleteBot = useBotsStore((s) => s.deleteBot)
+  const resetRun = useBotRunsStore((s) => s.resetRun)
 
   const [renameId, setRenameId] = useState<string | null>(null)
   const [renameName, setRenameName] = useState('')
   const [deleteId, setDeleteId] = useState<string | null>(null)
+
+  // The bots store is loaded by whichever window runs the runtime; this page
+  // may be another one, and an unloaded store would report no bots at all.
+  useEffect(() => {
+    loadBots()
+  }, [loadBots])
 
   useEffect(() => {
     if (renameId) {
@@ -175,6 +191,33 @@ export function ScriptList({
   }
 
   const deleteTarget = scripts.find((s) => s.id === deleteId)
+  const deleteBots = deleteId ? botsUsingScript(bots, deleteId) : []
+
+  /**
+   * Deleting a script takes its bots with it, always — the alternative is a
+   * deployment pointing at nothing, which keeps running until its next bar
+   * close and can never be started again.
+   *
+   * Bots go first: the runtime reconciles off that store, so removing them is
+   * what actually stops them, and doing it in this order means there is never
+   * an instant where a live bot's strategy has already gone.
+   */
+  const handleDelete = () => {
+    if (!deleteId) return
+    for (const bot of deleteBots) {
+      deleteBot(bot.id)
+      resetRun(bot.id)
+    }
+    deleteScript(deleteId)
+    setDeleteId(null)
+    // The bots live on another page: without this, the consequence of the
+    // confirmation happens entirely off screen.
+    if (deleteBots.length > 0) {
+      toast.success(
+        t('indicatorsPage.deleteBotsDone', { count: deleteBots.length }),
+      )
+    }
+  }
 
   return (
     <div className={MASTER_DETAIL_LIST_CLASS}>
@@ -374,23 +417,60 @@ export function ScriptList({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {t('indicatorsPage.deleteTitle')}
+              {deleteBots.length > 0
+                ? t('indicatorsPage.deleteBotsTitle')
+                : t('indicatorsPage.deleteTitle')}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {t('indicatorsPage.deleteDescription', {
-                name: deleteTarget?.name ?? '',
-              })}
+              {deleteBots.length > 0
+                ? t('indicatorsPage.deleteBotsDescription', {
+                    name: deleteTarget?.name ?? '',
+                    count: deleteBots.length,
+                  })
+                : t('indicatorsPage.deleteDescription', {
+                    name: deleteTarget?.name ?? '',
+                  })}
             </AlertDialogDescription>
           </AlertDialogHeader>
+
+          {/* Named, not counted: "2 bots" is not enough to decide with when one
+              of them might be the live one. Outside the description because a
+              list cannot live inside a paragraph. */}
+          {deleteBots.length > 0 && (
+            <ul className="grid gap-1 rounded-lg border border-destructive/30 bg-destructive/5 p-2.5 text-xs">
+              {deleteBots.map((bot) => (
+                <li key={bot.id} className="flex items-center gap-2">
+                  <Bot className="size-3.5 shrink-0 text-muted-foreground" />
+                  <span className="truncate">{bot.name}</span>
+                  <span className="ml-auto shrink-0 font-mono text-[10px] text-muted-foreground">
+                    {bot.pair} · {bot.timeframe}
+                  </span>
+                  {bot.mode === 'live' && (
+                    <span className="shrink-0 text-[10px] uppercase tracking-wide text-destructive">
+                      {t('botsPage.modeLive')}
+                    </span>
+                  )}
+                  {bot.enabled && (
+                    <span className="shrink-0 text-[10px] uppercase tracking-wide text-amber-500">
+                      {t('botsPage.statusRunning')}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+
           <AlertDialogFooter>
             <AlertDialogCancel>{t('indicatorsPage.cancel')}</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => {
-                if (deleteId) deleteScript(deleteId)
-                setDeleteId(null)
-              }}
+              variant={deleteBots.length > 0 ? 'destructive' : undefined}
+              onClick={handleDelete}
             >
-              {t('indicatorsPage.delete')}
+              {deleteBots.length > 0
+                ? t('indicatorsPage.deleteBotsAction', {
+                    count: deleteBots.length,
+                  })
+                : t('indicatorsPage.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -44,7 +44,14 @@ export function statusLabelKey(status: BotStatus): string {
  */
 export type BotRowTone = 'active' | 'attention' | 'error' | 'idle'
 
-export function rowTone(status: BotStatus, needsRearm: boolean): BotRowTone {
+export function rowTone(
+  status: BotStatus,
+  needsRearm: boolean,
+  scriptMissing = false,
+): BotRowTone {
+  // A bot with no strategy left cannot run at all, whatever its last run said.
+  // That outranks every other reading of the row: it is broken, not idle.
+  if (scriptMissing) return 'error'
   // A bot waiting to be re-armed is stopped, but stopped *pending a decision* —
   // it must not blend in with the ones deliberately switched off.
   if (needsRearm) return 'attention'
@@ -113,9 +120,20 @@ export function statusDotClass(status: BotStatus): string {
  *
  * `needsRearm` counts as live for this purpose — it is set precisely because a
  * live bot came back from a restart without the user having said so yet.
+ *
+ * A bot whose script has been deleted can only ever be turned OFF. The runtime
+ * would halt it a moment after starting anyway, and the round trip through
+ * "on, then error, then off by itself" is what makes a deleted strategy read
+ * as a broken app rather than a missing file.
  */
 export function requestBotToggle(
-  bot: { id: string; mode: BotMode; needsRearm?: boolean },
+  bot: {
+    id: string
+    mode: BotMode
+    needsRearm?: boolean
+    /** The strategy behind `scriptId` is gone — see `isScriptMissing`. */
+    scriptMissing?: boolean
+  },
   checked: boolean,
   handlers: {
     setEnabled: (id: string, enabled: boolean) => void
@@ -126,6 +144,7 @@ export function requestBotToggle(
     handlers.setEnabled(bot.id, false)
     return
   }
+  if (bot.scriptMissing) return
   if (bot.mode === 'live' || bot.needsRearm) {
     handlers.requestArm()
     return
