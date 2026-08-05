@@ -209,15 +209,9 @@ export function ArticleCard({
   article: NewsArticle
   onClick: () => void
 }) {
-  const direction = sentimentDirection(article.overallSentimentLabel)
   return (
     <div
-      className={cn(
-        'mb-3 break-inside-avoid cursor-pointer overflow-hidden rounded-lg border border-l-2 transition-colors hover:bg-accent/50',
-        direction === 'bullish' && 'border-l-up',
-        direction === 'bearish' && 'border-l-down',
-        direction === 'neutral' && 'border-l-muted-foreground/30',
-      )}
+      className="mb-3 break-inside-avoid cursor-pointer overflow-hidden rounded-lg border transition-colors hover:bg-accent/50"
       onClick={onClick}
     >
       {article.bannerImage && (
