@@ -28,7 +28,7 @@ import type { NewsArticle } from '@pairlens/shared/instrument-types'
 import {
   ArticleBanner,
   SENTIMENT_BADGE_CLASSES,
-  SentimentBadge,
+  SentimentTag,
   formatRelativeTime,
   formatTopicLabel,
   sentimentDirection,
@@ -36,50 +36,6 @@ import {
 
 /** How many slides ahead of the current one may trigger a background page fetch. */
 const LOAD_AHEAD = 3
-
-/**
- * Where this article sits on the bearish→bullish scale. The sentiment score
- * from the feed lives in roughly [-1, 1] with ±0.15 as the neutral band.
- */
-function SentimentMeter({ score, label }: { score: number; label: string }) {
-  const { t } = useTranslation()
-  const direction = sentimentDirection(label)
-  const pct = ((Math.max(-1, Math.min(1, score)) + 1) / 2) * 100
-  return (
-    <div className="space-y-2 rounded-lg border p-3">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-medium text-muted-foreground">
-          {t('news.reader.sentiment', 'Sentiment')}
-        </span>
-        <span
-          className={cn(
-            'text-xs font-semibold tabular-nums',
-            direction === 'bullish' && 'text-up',
-            direction === 'bearish' && 'text-down',
-            direction === 'neutral' && 'text-muted-foreground',
-          )}
-        >
-          {score.toFixed(2)}
-        </span>
-      </div>
-      <div className="relative h-1.5 rounded-full bg-gradient-to-r from-down/50 via-muted to-up/50">
-        <div
-          className={cn(
-            'absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background shadow-sm',
-            direction === 'bullish' && 'bg-up',
-            direction === 'bearish' && 'bg-down',
-            direction === 'neutral' && 'bg-muted-foreground',
-          )}
-          style={{ left: `${pct}%` }}
-        />
-      </div>
-      <div className="flex justify-between text-[10px] font-medium text-muted-foreground">
-        <span>{t('news.reader.bearish', 'Bearish')}</span>
-        <span>{t('news.reader.bullish', 'Bullish')}</span>
-      </div>
-    </div>
-  )
-}
 
 const ReaderSlide = memo(function ReaderSlide({
   article,
@@ -121,7 +77,11 @@ const ReaderSlide = memo(function ReaderSlide({
               <Clock className="size-3" />
               {formatRelativeTime(article.timePublished)}
             </span>
-            <SentimentBadge label={article.overallSentimentLabel} size="lg" />
+            <SentimentTag
+              label={article.overallSentimentLabel}
+              score={article.overallSentimentScore}
+              scale
+            />
           </div>
           <h2 className="text-balance text-xl font-semibold leading-tight">
             {article.title}
@@ -134,10 +94,6 @@ const ReaderSlide = memo(function ReaderSlide({
         <p className="text-sm leading-relaxed text-muted-foreground">
           {article.summary}
         </p>
-        <SentimentMeter
-          score={article.overallSentimentScore}
-          label={article.overallSentimentLabel}
-        />
         {article.authors.length > 0 && (
           <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <User className="size-3" />

@@ -2453,6 +2453,11 @@
     "articleDetails": "รายละเอียดบทความ",
     "tickerSentiment": "ความรู้สึกต่อทิกเกอร์",
     "visitArticle": "ไปที่บทความ",
+    "sentiment": {
+      "bullish": "ขาขึ้น",
+      "bearish": "ขาลง",
+      "neutral": "เป็นกลาง"
+    },
     "reader": {
       "title": "โปรแกรมอ่านข่าว",
       "searchPlaceholder": "ค้นหาข่าว...",
@@ -2462,10 +2467,7 @@
       "loadingMore": "กำลังโหลดข่าวเพิ่มเติม...",
       "caughtUp": "คุณอ่านครบทุกข่าวแล้ว",
       "previousArticle": "บทความก่อนหน้า",
-      "nextArticle": "บทความถัดไป",
-      "sentiment": "ความเชื่อมั่น",
-      "bearish": "ขาลง",
-      "bullish": "ขาขึ้น"
+      "nextArticle": "บทความถัดไป"
     },
     "topic": {
       "blockchain": "บล็อกเชน",

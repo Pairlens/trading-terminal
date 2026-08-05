@@ -2453,6 +2453,11 @@
     "articleDetails": "Artikeldetails",
     "tickerSentiment": "Ticker-Sentiment",
     "visitArticle": "Artikel öffnen",
+    "sentiment": {
+      "bullish": "Bullisch",
+      "bearish": "Bärisch",
+      "neutral": "Neutral"
+    },
     "reader": {
       "title": "News-Reader",
       "searchPlaceholder": "News durchsuchen...",
@@ -2462,10 +2467,7 @@
       "loadingMore": "Weitere News werden geladen...",
       "caughtUp": "Alles gelesen",
       "previousArticle": "Vorheriger Artikel",
-      "nextArticle": "Nächster Artikel",
-      "sentiment": "Sentiment",
-      "bearish": "Bärisch",
-      "bullish": "Bullisch"
+      "nextArticle": "Nächster Artikel"
     },
     "topic": {
       "blockchain": "Blockchain",

@@ -2465,6 +2465,11 @@
     "articleDetails": "Детали статьи",
     "tickerSentiment": "Настроение по тикеру",
     "visitArticle": "Перейти к статье",
+    "sentiment": {
+      "bullish": "Бычье",
+      "bearish": "Медвежье",
+      "neutral": "Нейтральное"
+    },
     "reader": {
       "title": "Просмотр новостей",
       "searchPlaceholder": "Поиск новостей...",
@@ -2474,10 +2479,7 @@
       "loadingMore": "Загрузка новостей...",
       "caughtUp": "Вы всё прочитали",
       "previousArticle": "Предыдущая статья",
-      "nextArticle": "Следующая статья",
-      "sentiment": "Настроение",
-      "bearish": "Медвежье",
-      "bullish": "Бычье"
+      "nextArticle": "Следующая статья"
     },
     "topic": {
       "blockchain": "Блокчейн",
