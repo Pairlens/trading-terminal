@@ -12,6 +12,7 @@ import type {
 } from '@pairlens/shared/billing-types'
 import type { AccountDeletionSummary } from '@pairlens/shared/account-types'
 import {
+  APP_SERVER_CREDENTIALS,
   authClient,
   clearStoredAuthToken,
   hasAppServer,
@@ -122,6 +123,9 @@ export const resolveUrl = (
 // Returns the raw Response so streaming/SSE consumers (AI chat, research)
 // can read the body incrementally. All App Server calls — JSON, FormData,
 // streams — must go through this instead of raw fetch.
+//
+// The bearer token is the credential; see APP_SERVER_CREDENTIALS for why
+// asking for cookies cross-origin is what breaks the browser build.
 // ---------------------------------------------------------------------------
 
 export async function authFetch(
@@ -137,7 +141,7 @@ export async function authFetch(
 
   const response = await fetch(input, {
     ...init,
-    credentials: 'include',
+    credentials: APP_SERVER_CREDENTIALS,
     headers,
   })
 

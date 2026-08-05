@@ -13,6 +13,15 @@ const getAuthBaseURL = () => {
   return `${appServerUrl}/api/auth`
 }
 
+/** Host of the App Server we authenticate against — for error copy. */
+export const appServerHost = (() => {
+  try {
+    return new URL(getAuthBaseURL()).host
+  } catch {
+    return 'the App Server'
+  }
+})()
+
 // ---------------------------------------------------------------------------
 // Bearer token storage
 //
@@ -23,7 +32,23 @@ const getAuthBaseURL = () => {
 // remote App Server has the same problem. The App Server runs BetterAuth's
 // `bearer()` plugin: every auth response carries a `set-auth-token` header,
 // which we persist and send back as `Authorization: Bearer`.
+//
+// Which is why we must NOT ask for cookies (`credentials: 'include'`). A
+// credentialed cross-origin request is only satisfied by an exact
+// `Access-Control-Allow-Origin` plus `Allow-Credentials: true`; a server
+// answering the wildcard makes the browser reject the response before we ever
+// see it, surfacing as a bare "fetch failed". That is what broke sign-in on
+// the hosted web terminal, whose origin the App Server answers with `*`.
+// `same-origin` (the fetch default) still sends cookies to an App Server
+// deployed under the terminal's own origin, and sends nothing cross-origin —
+// where the bearer token is the credential anyway.
 // ---------------------------------------------------------------------------
+
+/**
+ * Credential mode for every App Server request. See the note above: cookies
+ * for a same-origin deployment, bearer-only across origins.
+ */
+export const APP_SERVER_CREDENTIALS: RequestCredentials = 'same-origin'
 
 const AUTH_TOKEN_KEY = 'pairlens:auth-token'
 
@@ -63,9 +88,7 @@ export const authClient: ReturnType<
       baseURL: getAuthBaseURL(),
       plugins: [emailOTPClient()],
       fetchOptions: {
-        // Cookies still work for same-site setups; the bearer token below is
-        // what makes cross-origin (desktop, localhost dev → remote) work.
-        credentials: 'include',
+        credentials: APP_SERVER_CREDENTIALS,
         auth: {
           type: 'Bearer',
           token: getStoredAuthToken,
