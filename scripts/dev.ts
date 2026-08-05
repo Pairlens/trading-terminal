@@ -71,7 +71,9 @@ function boxLine(content: string): string {
   // Strip ANSI codes for length calculation
   // eslint-disable-next-line no-control-regex -- \x1b is the ANSI escape byte; stripping color codes is the point
   const stripped = content.replace(/\x1b\[[0-9;]*m/g, '')
-  const padding = Math.max(0, W - 6 - stripped.length)
+  // Interior is W - 2 columns wide (the corners/rules span W); 2 of them go to
+  // the left gutter, so the content + right padding fill the remaining W - 4.
+  const padding = Math.max(0, W - 4 - stripped.length)
   return `  ${DIM}│${RESET}  ${content}${' '.repeat(padding)}${DIM}│${RESET}`
 }
 
