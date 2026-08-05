@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { RefreshCw, Trash2 } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, motion } from 'motion/react'
 
@@ -18,8 +18,6 @@ type CopilotHeaderProps = {
   status?: string
   /** Optional "Watching …" subtitle context (pair · timeframe). */
   watching?: string
-  /** Optional re-run action — renders the magic-gradient action button. */
-  onRerun?: () => void
 }
 
 export function CopilotHeader({
@@ -28,7 +26,6 @@ export function CopilotHeader({
   onClearHistory,
   status,
   watching,
-  onRerun,
 }: CopilotHeaderProps) {
   const { t } = useTranslation()
   const isThinking = status === 'streaming'
@@ -90,22 +87,6 @@ export function CopilotHeader({
       </div>
 
       <div className="flex items-center gap-1">
-        {onRerun && (
-          <button
-            type="button"
-            onClick={onRerun}
-            disabled={isThinking}
-            title="Re-run analysis"
-            className="hover-lift text-primary-foreground inline-flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-medium shadow-sm disabled:pointer-events-none disabled:opacity-50"
-            style={{
-              background:
-                'linear-gradient(120deg, var(--magic-1), var(--magic-2))',
-            }}
-          >
-            <RefreshCw className="size-3" />
-            Re-run
-          </button>
-        )}
         <PersonaMenu persona={persona} onPersonaChange={onPersonaChange} />
         {onClearHistory && (
           <Button
