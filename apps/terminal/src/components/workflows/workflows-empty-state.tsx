@@ -12,7 +12,11 @@ import { useTranslation } from 'react-i18next'
 import { Workflow } from 'lucide-react'
 
 import { StarterEmptyState } from '../starter-empty-state'
-import { WORKFLOW_TEMPLATES, applyWorkflowTemplate } from './workflow-templates'
+import {
+  WORKFLOW_TEMPLATES,
+  applyWorkflowTemplate,
+  workflowTemplateChips,
+} from './workflow-templates'
 import type { StarterTemplate } from '../starter-empty-state'
 import { useWorkflowStore } from '@/stores/workflow-store'
 
@@ -43,10 +47,24 @@ export function WorkflowsEmptyState() {
   }
 
   const handleBlank = () => {
-    const id = createWorkflow('Untitled workflow')
+    const id = createWorkflow(t('workflows.emptyState.untitledWorkflow'))
     selectWorkflow(id)
     startEditing(id)
   }
+
+  // Translated at render time so the catalog module stays hook-free; the
+  // raw English record is still what `handlePick` looks up and hands to
+  // `applyWorkflowTemplate`, which localizes the name it persists.
+  const templates = WORKFLOW_TEMPLATES.map((template) => ({
+    ...template,
+    title: t(`workflows.templates.${template.id}.title`, {
+      defaultValue: template.title,
+    }),
+    description: t(`workflows.templates.${template.id}.description`, {
+      defaultValue: template.description,
+    }),
+    chips: workflowTemplateChips(t, template),
+  }))
 
   return (
     <StarterEmptyState
@@ -54,7 +72,7 @@ export function WorkflowsEmptyState() {
       title={t('workflows.emptyState.title')}
       description={t('workflows.emptyState.description')}
       icon={Workflow}
-      templates={WORKFLOW_TEMPLATES}
+      templates={templates}
       onPickTemplate={handlePick}
       blankLabel={t('workflows.emptyState.blankLabel')}
       onCreateBlank={handleBlank}

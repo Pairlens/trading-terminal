@@ -142,7 +142,11 @@ export function DesktopDownloadDialog({
                   })}
                 </Button>
                 <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-                  <span>{primaryBuild.primary.label}</span>
+                  <span>
+                    {t(primaryBuild.primary.labelKey, {
+                      defaultValue: primaryBuild.primary.label,
+                    })}
+                  </span>
                   {primaryBuild.alternates.map((alternate) => (
                     <Button
                       className="h-auto p-0 text-xs font-normal underline-offset-4 hover:underline"
@@ -152,7 +156,7 @@ export function DesktopDownloadDialog({
                       type="button"
                       variant="link"
                     >
-                      {alternate.label}
+                      {t(alternate.labelKey, { defaultValue: alternate.label })}
                     </Button>
                   ))}
                 </div>

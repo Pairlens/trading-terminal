@@ -31,13 +31,19 @@ import { setPluginTrust } from '@/lib/plugins/plugin-ledger'
 import { analyzeTemplateDependencies } from '@/lib/workspace-store/dependency-analysis'
 import {
   ASSET_CLASSES,
-  ASSET_CLASS_META,
   SCREEN_SIZES,
-  SCREEN_SIZE_META,
   TRADER_TYPES,
-  TRADER_TYPE_META,
   templateToWorkspaceParams,
 } from '@/lib/workspace-store/catalog'
+import {
+  assetClassLabel,
+  screenSizeLabel,
+  templateDescription,
+  templateName,
+  templateTagline,
+  traderTypeDescription,
+  traderTypeLabel,
+} from '@/lib/workspace-store/template-labels'
 import { useWorkspaceTemplates } from '@/lib/workspace-store/use-workspace-templates'
 import { useCustomWorkspacesStore } from '@/stores/custom-workspaces-store'
 import { queryKeys } from '@/lib/api'
@@ -83,7 +89,7 @@ function WorkspaceSpotlight({
   if (count === 0) return null
   const template = templates[Math.min(index, count - 1)]
   const traderLabels = template.facets.traderTypes
-    .map((tt) => TRADER_TYPE_META[tt].label)
+    .map((tt) => traderTypeLabel(t, tt))
     .join(' · ')
 
   return (
@@ -157,10 +163,10 @@ function WorkspaceSpotlight({
           </span>
         </div>
         <h2 className="mt-4 max-w-[16ch] font-serif text-[44px] font-semibold leading-[1.02] tracking-[-0.03em] text-foreground">
-          {template.name}
+          {templateName(t, template)}
         </h2>
         <p className="mt-4 max-w-[47ch] text-[15px] leading-[1.6] text-muted-foreground">
-          {template.tagline}
+          {templateTagline(t, template)}
         </p>
         <div className="mt-[26px] flex items-center gap-[13px]">
           <Button
@@ -361,9 +367,9 @@ export function WorkspaceStore({
       if (screen && !tpl.facets.screenSizes.includes(screen)) return false
       if (query) {
         const haystack = [
-          tpl.name,
-          tpl.tagline,
-          tpl.description,
+          templateName(t, tpl),
+          templateTagline(t, tpl),
+          templateDescription(t, tpl),
           ...(tpl.tags ?? []),
         ]
           .join(' ')
@@ -372,7 +378,7 @@ export function WorkspaceStore({
       }
       return true
     })
-  }, [templates, query, source, trader, asset, screen])
+  }, [templates, query, source, trader, asset, screen, t])
 
   const featured = useMemo(
     () => templates.filter((tpl) => tpl.featured),
@@ -383,11 +389,11 @@ export function WorkspaceStore({
   const traderShelves = useMemo(() => {
     return TRADER_TYPES.map((tt) => ({
       id: tt,
-      label: TRADER_TYPE_META[tt].label,
-      subLabel: TRADER_TYPE_META[tt].description,
+      label: traderTypeLabel(t, tt),
+      subLabel: traderTypeDescription(t, tt),
       templates: templates.filter((tpl) => tpl.facets.traderTypes.includes(tt)),
     })).filter((shelf) => shelf.templates.length > 0)
-  }, [templates])
+  }, [templates, t])
 
   const communityShelf = useMemo(
     () => templates.filter((tpl) => tpl.origin === 'community'),
@@ -449,14 +455,14 @@ export function WorkspaceStore({
             t('workspaceStore.addedWithMissing', {
               defaultValue:
                 '“{{name}}” added. Install the missing plugins to fill every panel.',
-              name: template.name,
+              name: templateName(t, template),
             }),
           )
         } else {
           toast.success(
             t('workspaceStore.added', {
               defaultValue: '“{{name}}” added to your workspaces.',
-              name: template.name,
+              name: templateName(t, template),
             }),
           )
         }
@@ -683,21 +689,21 @@ export function WorkspaceStore({
               <FacetGroup
                 label={t('workspaceStore.facet.trader', 'Trader')}
                 values={TRADER_TYPES}
-                labelOf={(v) => TRADER_TYPE_META[v].label}
+                labelOf={(v) => traderTypeLabel(t, v)}
                 active={trader}
                 onChange={setTrader}
               />
               <FacetGroup
                 label={t('workspaceStore.facet.asset', 'Asset')}
                 values={ASSET_CLASSES}
-                labelOf={(v) => ASSET_CLASS_META[v].label}
+                labelOf={(v) => assetClassLabel(t, v)}
                 active={asset}
                 onChange={setAsset}
               />
               <FacetGroup
                 label={t('workspaceStore.facet.screen', 'Screen')}
                 values={SCREEN_SIZES}
-                labelOf={(v) => SCREEN_SIZE_META[v].label}
+                labelOf={(v) => screenSizeLabel(t, v)}
                 active={screen}
                 onChange={setScreen}
               />

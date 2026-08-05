@@ -166,14 +166,14 @@ export function WalletSelector({ market }: WalletSelectorProps) {
         variant="outline"
         className="h-4 border-red-500/30 bg-red-500/10 px-1 text-[9px] text-red-700 dark:text-red-300"
       >
-        LIVE
+        {t('terminal.modeLive', { defaultValue: 'LIVE' })}
       </Badge>
     ) : (
       <Badge
         variant="outline"
         className="h-4 border-amber-500/30 bg-amber-500/10 px-1 text-[9px] text-amber-700 dark:text-amber-300"
       >
-        PAPER
+        {t('terminal.modePaper', { defaultValue: 'PAPER' })}
       </Badge>
     )
 

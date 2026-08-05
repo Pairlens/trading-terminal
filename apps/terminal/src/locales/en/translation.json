@@ -441,7 +441,18 @@
     "ordersLockedRiskLimit": "Orders are locked due to a risk limit breach. Unlock in Settings > Risk Management.",
     "buyOrdersLockedRiskLimit": "Buy orders are locked due to a risk limit breach. Unlock in Settings > Risk Management.",
     "positionSizeExceeded": "Order blocked by risk limit: position is {{ratioPct}}% of portfolio, over your {{maxPositionSize}}% max. Adjust in Settings > Risk Management.",
-    "sessionExpired": "Your session expired — please sign in again."
+    "sessionExpired": "Your session expired — please sign in again.",
+    "startFromTemplate": "Start from a template",
+    "chips": {
+      "osNotification": "OS notification",
+      "toastPlusOs": "Toast + OS",
+      "timeframeClose": "1H close",
+      "downPercent": "Down {{percent}}",
+      "takeProfitPercent": "Take profit {{percent}}",
+      "stopLossPercent": "Stop loss {{percent}}",
+      "sizeAtOffset": "{{size}} at {{offset}}",
+      "waitDuration": "Wait {{duration}}"
+    }
   },
   "legal": {
     "terms": "Terms & Conditions",
@@ -781,7 +792,9 @@
       "taxNote": "Prices exclude tax — it is calculated at checkout based on your location.",
       "packsTitle": "Extra credits",
       "packsDescription": "One-time top-ups that stack on your monthly budget. Pack credits expire 30 days after purchase and don’t renew.",
-      "packActive": "{{credits}} extra credits — expire {{date}}"
+      "packActive": "{{credits}} extra credits — expire {{date}}",
+      "packAddedToastTitle": "Extra credits added",
+      "packAddedToastDescription": "Your credit pack is on the balance — pack credits expire 30 days after purchase."
     },
     "about": {
       "desktop": "Desktop",
@@ -992,6 +1005,21 @@
       "title": "{{venue}} needs the desktop app",
       "description": "This exchange serves its market data without the headers a browser needs to read it. The desktop app connects natively, so every venue works there.",
       "alternatives": "Or stay in the browser"
+    },
+    "assets": {
+      "macos": {
+        "primary": "Apple silicon (.dmg)",
+        "intel": "Intel Mac (.dmg)"
+      },
+      "windows": {
+        "primary": "Installer (.exe)",
+        "msi": ".msi installer"
+      },
+      "linux": {
+        "primary": "AppImage",
+        "deb": ".deb",
+        "rpm": ".rpm"
+      }
     }
   },
   "userMenu": {
@@ -1762,7 +1790,10 @@
       "unsupportedLanguage": "Indicators written in {{language}} can’t be imported.",
       "malformedDescriptor": "That indicator’s data is malformed.",
       "unknown": "The import failed."
-    }
+    },
+    "syntaxErrorDiagnostic": "Syntax error",
+    "missingMetaDiagnostic": "main.py defines no top-level `meta = indicator(...)` — the chart has nothing to draw.",
+    "missingComputeDiagnostic": "main.py defines no top-level `def compute(ctx)` — the script will fail to load."
   },
   "indicators": {
     "title": "Add Indicator",
@@ -2446,7 +2477,17 @@
     "previousSlide": "Previous",
     "nextSlide": "Next",
     "goToSlide": "Go to slide {{n}}",
-    "copyCommand": "Copy command"
+    "copyCommand": "Copy command",
+    "apiKeyRequiredHint": "API key required",
+    "setupRequiredHint": "Setup required",
+    "manifests": {
+      "userIndicators": {
+        "description": "Your custom Python indicators, created in the Indicators editor."
+      },
+      "pairlensCommunity": {
+        "description": "Community workspace templates shared by Pairlens users."
+      }
+    }
   },
   "search": {
     "title": "Search Pairs",
@@ -2577,7 +2618,9 @@
       "collapse": "Collapse panel"
     },
     "recentlyViewed": "Recently viewed",
-    "noMarketsFound": "No markets found"
+    "noMarketsFound": "No markets found",
+    "modeLive": "LIVE",
+    "modePaper": "PAPER"
   },
   "accounts": {
     "pageTitle": "Accounts",
@@ -2708,7 +2751,32 @@
     "accountConnectFailed": "Failed to connect account.",
     "accountRemoveFailed": "Failed to remove account.",
     "fieldRequired": "{{field}} is required",
-    "accountConnectedFeedback": "{{label}} {{mode}} account connected."
+    "accountConnectedFeedback": "{{label}} {{mode}} account connected.",
+    "walletChains": {
+      "ethereum": {
+        "label": "Ethereum / EVM",
+        "fields": {
+          "privateKey": {
+            "label": "Private Key (hex)"
+          }
+        }
+      },
+      "solana": {
+        "fields": {
+          "privateKey": {
+            "label": "Private Key (base58)"
+          }
+        }
+      },
+      "bitcoin": {
+        "fields": {
+          "privateKey": {
+            "label": "Private Key (WIF)"
+          }
+        }
+      }
+    },
+    "defaultWalletName": "{{chain}} Wallet"
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2819,7 +2887,218 @@
     "spotlight": "Spotlight",
     "previousSlide": "Previous",
     "nextSlide": "Next",
-    "goToSlide": "Go to slide {{number}}"
+    "goToSlide": "Go to slide {{number}}",
+    "templates": {
+      "scalpers-cockpit": {
+        "name": "Scalper's Cockpit",
+        "tagline": "Chart, book, and one-click entry — nothing else.",
+        "description": "A minimal two-column cockpit for fast execution: a chart beside a live order book, market depth, and a trade-entry ticket. Built for speed on a single screen."
+      },
+      "day-trader-pro": {
+        "name": "Day Trader Pro",
+        "tagline": "Scan, chart, and trade the intraday session.",
+        "description": "A balanced three-column desk: a markets scanner on the left, a large chart in the middle, and an order book plus trade ticket and open positions on the right. The everyday driver for active crypto trading."
+      },
+      "swing-overview": {
+        "name": "Swing Overview",
+        "tagline": "Trend context with a watchlist and the movers.",
+        "description": "A calmer layout for multi-day positions: a full chart alongside your watchlist, the top movers, and pair fundamentals. Enough context to size a swing without the noise of an execution desk."
+      },
+      "ai-research-desk": {
+        "name": "AI Research Desk",
+        "tagline": "Copilot, research, and the news wire beside your chart.",
+        "description": "Pair a chart with the AI Copilot, deep research, and both the global and symbol news feeds. Built for catalyst-driven trading where the story matters as much as the tape. Needs an AI inference provider for Copilot and Research."
+      },
+      "market-discovery": {
+        "name": "Market Discovery",
+        "tagline": "Find what is moving before you commit.",
+        "description": "A pure discovery board: the markets scanner, top movers, a sector heatmap, your watchlist, and the Fear & Greed gauge. No chart, no ticket — just for hunting the next setup."
+      },
+      "portfolio-command": {
+        "name": "Portfolio Command",
+        "tagline": "Balances, positions, and risk at a glance.",
+        "description": "An account-centric cockpit: your portfolio breakdown, open positions, live risk guardrails, and a watchlist to keep an eye on the rest of the book. For managing what you already hold."
+      },
+      "dex-degen": {
+        "name": "DEX Degen",
+        "tagline": "On-chain charts, swaps, and the social feed.",
+        "description": "Built for on-chain hunting: a chart with a swap ticket, recent tickers to catch new listings, and the social feed for alpha. Route swaps through a DEX connector such as Jupiter."
+      },
+      "quant-signals": {
+        "name": "Quant Signals",
+        "tagline": "Data log, heatmap, and risk for signal-driven trading.",
+        "description": "A data-first desk: a chart paired with the raw data log, a liquidity heatmap, live risk state, and the markets scanner. For traders who read the tape as numbers, not candles."
+      },
+      "equities-desk": {
+        "name": "Equities Desk",
+        "tagline": "Trade stocks with a scanner, chart, and positions.",
+        "description": "A stock-trading layout: the markets scanner, a chart, open positions, and the news wire. Connect the Alpaca broker plugin to stream US equities and route orders."
+      },
+      "ultrawide-trading-floor": {
+        "name": "Ultrawide Trading Floor",
+        "tagline": "Everything, everywhere — for the big screen.",
+        "description": "A four-column command center that fills an ultrawide or second monitor: scanner, chart, order book and depth, a trade ticket with positions, and the AI Copilot. The maximalist layout."
+      },
+      "classic-terminal": {
+        "name": "Classic Terminal",
+        "tagline": "The classic Pairlens desk — chart, data, trade, copilot.",
+        "description": "The default terminal layout: a large chart with a tabbed data strip and risk bar on the left, and a trade ticket over the AI Copilot on the right.",
+        "menuLabel": "Default"
+      },
+      "chart-focus": {
+        "name": "Chart Focus",
+        "tagline": "One big chart with tabbed data underneath.",
+        "description": "A single-column layout that gives the chart maximum room, with positions, data log, copilot, and the trade ticket tucked into a tab strip below.",
+        "menuLabel": "Chart Focus"
+      },
+      "trading": {
+        "name": "Trading",
+        "tagline": "Order book and ticket flanking a central chart.",
+        "description": "A three-column execution desk: order book and trade ticket on the left, chart with positions and risk in the middle, and the AI Copilot on the right.",
+        "menuLabel": "Trading"
+      },
+      "chart-analysis": {
+        "name": "Chart Analysis",
+        "tagline": "Chart and data left, copilot and execution right.",
+        "description": "A study-oriented split: chart, data, research, and risk on the left; copilot, order book, and trade ticket on the right.",
+        "menuLabel": "Analysis"
+      },
+      "dual-charts": {
+        "name": "Dual Charts",
+        "tagline": "Two side-by-side charts.",
+        "description": "Two independent chart panes side by side — each keeps its own market, timeframe, and chart type. Set a different pair per pane with its pair picker.",
+        "menuLabel": "Dual Charts"
+      },
+      "triple-charts": {
+        "name": "Triple Charts",
+        "tagline": "One large chart with two stacked beside it.",
+        "description": "A large primary chart with two smaller charts stacked to the right — each independent, for watching a lead pair against two others.",
+        "menuLabel": "Triple Charts"
+      },
+      "quad-charts": {
+        "name": "Quad Charts",
+        "tagline": "A 2×2 grid of charts.",
+        "description": "Four independent charts in a 2×2 grid — a full multi-chart cockpit for tracking several markets at once.",
+        "menuLabel": "Quad Charts"
+      },
+      "laptop-focus": {
+        "name": "Laptop Focus",
+        "tagline": "Vertical single-column layout tuned for laptops.",
+        "description": "A compact, vertical layout that fits a laptop screen: chart on top, a data tab strip, and a slim risk bar."
+      },
+      "laptop-split": {
+        "name": "Laptop Split",
+        "tagline": "Chart + data left, trade + copilot right — for smaller screens.",
+        "description": "A two-column split sized for laptops: chart and positions on the left, trade ticket over copilot on the right."
+      },
+      "ultrawide-dashboard": {
+        "name": "Ultrawide Dashboard",
+        "tagline": "Every panel spread across an ultrawide monitor.",
+        "description": "A four-column dashboard for ultrawide displays: order book, chart with risk, positions and research, and a trade + copilot column."
+      },
+      "ultrawide-trading": {
+        "name": "Ultrawide Trading",
+        "tagline": "Order book, depth, chart, and execution across the width.",
+        "description": "An ultrawide execution layout: order book and market depth on the left, chart with positions in the center, and a trade + copilot column on the right."
+      },
+      "command-center": {
+        "name": "4K Command Center",
+        "tagline": "The full command center for a 4K display.",
+        "description": "Everything on screen for a 4K monitor: order book and pair info, chart with research and risk, positions and social, and a trade + copilot column."
+      },
+      "home-pulse": {
+        "name": "Home",
+        "tagline": "The default board: scanner, sentiment, movers, and news.",
+        "description": "The default home board — markets scanner, a market-pulse rail with the Fear & Greed gauge and top coins tabbed with your watchlist, and a full-height news column. Everything on it works without an account.",
+        "menuLabel": "Home"
+      },
+      "markets-board": {
+        "name": "Markets Board",
+        "tagline": "Just the markets scanner, full-screen.",
+        "description": "The full-width markets scanner — the simplest way to browse and sort every tradable pair.",
+        "menuLabel": "Markets"
+      },
+      "markets-overview": {
+        "name": "Markets Overview",
+        "tagline": "Scanner beside your movers and watchlist.",
+        "description": "The markets scanner alongside the top movers and your watchlist — a balanced home for finding and tracking setups.",
+        "menuLabel": "Overview"
+      },
+      "sector-analysis": {
+        "name": "Sector Analysis",
+        "tagline": "Scanner, heatmap, movers, and watchlist.",
+        "description": "A discovery board with a sector heatmap in the middle: scanner on the left, heatmap in the center, and movers over your watchlist on the right.",
+        "menuLabel": "Analysis"
+      },
+      "news-board": {
+        "name": "News Board",
+        "tagline": "Markets alongside movers and the news feed.",
+        "description": "The markets scanner beside the top movers and the live news feed — a home base for catalyst-driven trading.",
+        "menuLabel": "News"
+      }
+    },
+    "traderTypes": {
+      "scalper": {
+        "label": "Scalper",
+        "description": "Fast in-and-out on tight spreads"
+      },
+      "day-trader": {
+        "label": "Day Trader",
+        "description": "Intraday momentum & flow"
+      },
+      "swing-trader": {
+        "label": "Swing Trader",
+        "description": "Multi-day trend positions"
+      },
+      "position-investor": {
+        "label": "Investor",
+        "description": "Longer-horizon portfolio focus"
+      },
+      "news-trader": {
+        "label": "News Trader",
+        "description": "Headline- and catalyst-driven"
+      },
+      "dex-degen": {
+        "label": "DEX Degen",
+        "description": "On-chain & memecoin hunting"
+      },
+      "quant": {
+        "label": "Quant",
+        "description": "Signal- and data-heavy workflows"
+      }
+    },
+    "assetClasses": {
+      "crypto-spot": {
+        "label": "Crypto Spot"
+      },
+      "dex": {
+        "label": "DEX"
+      },
+      "equities": {
+        "label": "Equities"
+      },
+      "multi-asset": {
+        "label": "Multi-Asset"
+      }
+    },
+    "screenSizes": {
+      "compact": {
+        "label": "Compact"
+      },
+      "standard": {
+        "label": "Standard"
+      },
+      "wide": {
+        "label": "Wide"
+      },
+      "multi": {
+        "label": "Multi-Monitor"
+      }
+    },
+    "pluginReasons": {
+      "jupiter-dex-connector": "Routes Solana swaps and streams on-chain prices",
+      "alpaca-market-connector": "Streams US equities data and routes stock orders"
+    }
   },
   "notifications": {
     "flows": "Flows",
@@ -2944,6 +3223,243 @@
           "start": "Start (UTC)",
           "end": "End (UTC)"
         }
+      }
+    },
+    "stepTypes": {
+      "price-alert": {
+        "label": "Price Alert",
+        "fields": {
+          "direction": {
+            "label": "Direction",
+            "options": {
+              "above": "Above",
+              "below": "Below"
+            }
+          },
+          "price": {
+            "label": "Price"
+          }
+        },
+        "handles": {
+          "out": "Triggered"
+        }
+      },
+      "order-executed": {
+        "label": "Order Executed",
+        "fields": {
+          "side": {
+            "label": "Side",
+            "options": {
+              "any": "Any",
+              "buy": "Buy",
+              "sell": "Sell"
+            }
+          },
+          "status": {
+            "label": "Status",
+            "options": {
+              "any": "Any",
+              "filled": "Filled",
+              "partially_filled": "Partially Filled"
+            }
+          }
+        },
+        "handles": {
+          "out": "Triggered"
+        }
+      },
+      "signal-generated": {
+        "label": "Signal Generated",
+        "fields": {
+          "signalType": {
+            "label": "Signal Type (optional)",
+            "placeholder": "Any type"
+          }
+        },
+        "handles": {
+          "out": "Triggered"
+        }
+      },
+      "indicator-alert": {
+        "label": "Indicator Alert",
+        "fields": {
+          "indicator": {
+            "label": "Indicator (optional)",
+            "placeholder": "Any indicator"
+          },
+          "condition": {
+            "label": "Condition (optional)",
+            "placeholder": "Any condition"
+          }
+        },
+        "handles": {
+          "out": "Triggered"
+        }
+      },
+      "candle-close": {
+        "label": "Candle Close",
+        "fields": {
+          "timeframe": {
+            "label": "Timeframe",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          }
+        },
+        "handles": {
+          "out": "Triggered"
+        }
+      },
+      "price-condition": {
+        "label": "Price Condition",
+        "fields": {
+          "direction": {
+            "label": "Direction",
+            "options": {
+              "above": "Above",
+              "below": "Below"
+            }
+          },
+          "price": {
+            "label": "Price"
+          }
+        },
+        "handles": {
+          "pass": "Pass",
+          "fail": "Fail"
+        }
+      },
+      "percent-change": {
+        "label": "Percent Change",
+        "fields": {
+          "percent": {
+            "label": "Percent"
+          },
+          "direction": {
+            "label": "Direction",
+            "options": {
+              "up": "Up",
+              "down": "Down",
+              "either": "Either"
+            }
+          }
+        },
+        "handles": {
+          "pass": "Pass",
+          "fail": "Fail"
+        }
+      },
+      "time-window": {
+        "label": "Time Window",
+        "fields": {
+          "startHour": {
+            "label": "Start Hour (UTC)"
+          },
+          "endHour": {
+            "label": "End Hour (UTC)"
+          }
+        },
+        "handles": {
+          "pass": "Pass",
+          "fail": "Fail"
+        }
+      },
+      "local-toast": {
+        "label": "Toast"
+      },
+      "os-notification": {
+        "label": "OS Notification",
+        "fields": {
+          "sound": {
+            "label": "Play Sound"
+          }
+        }
+      },
+      "webhook": {
+        "label": "Webhook",
+        "fields": {
+          "url": {
+            "label": "URL",
+            "placeholder": "https://example.com/webhook"
+          },
+          "method": {
+            "label": "Method",
+            "options": {
+              "GET": "GET",
+              "POST": "POST"
+            }
+          },
+          "includePayload": {
+            "label": "Include Event Payload"
+          }
+        }
+      }
+    },
+    "messages": {
+      "unknownPair": "unknown",
+      "priceAlert": {
+        "title": "Price Alert: {{pair}}",
+        "body": "{{pair}} is now {{direction}} {{price}} — current: {{current}}"
+      },
+      "orderExecuted": {
+        "title": "Order Executed",
+        "body": "{{side}} {{pair}} — {{status}}"
+      },
+      "signalGenerated": {
+        "title": "Signal Generated",
+        "body": "{{signal}} on {{pair}}",
+        "genericSignal": "Signal"
+      },
+      "indicatorAlert": {
+        "title": "Indicator Alert",
+        "body": "{{indicator}} fired on {{pair}}",
+        "genericName": "Indicator"
+      },
+      "candleClose": {
+        "title": "Candle Close",
+        "body": "{{timeframe}} candle closed on {{pair}}"
+      }
+    },
+    "templates": {
+      "price-level": {
+        "title": "Price crosses a level",
+        "description": "Toast plus an OS notification the moment {{pair}} crosses {{level}}. Drag the level to yours.",
+        "chips": {
+          "0": "Price above",
+          "1": "Toast"
+        }
+      },
+      "volatile-candle": {
+        "title": "The hourly candle went big",
+        "description": "Fires when an hourly candle closes more than 3% from where it opened, up or down.",
+        "chips": {
+          "1": "±3% body"
+        }
+      },
+      "fills": {
+        "title": "Tell me when an order fills",
+        "description": "Every filled order on the pair reaches you, so the terminal can sit in the background.",
+        "chips": {
+          "0": "Order filled",
+          "1": "Any side"
+        }
+      },
+      "indicator-relay": {
+        "title": "Relay my indicator alerts",
+        "description": "Alert conditions declared by your Python indicators become real notifications.",
+        "chips": {
+          "0": "Any indicator",
+          "1": "Any condition"
+        }
+      },
+      "session-drop": {
+        "title": "Sharp drop, only while I am up",
+        "description": "A 2% down candle wakes you, but only between 13:00 and 21:00 UTC."
       }
     }
   },
@@ -3140,7 +3656,11 @@
       "botsPausedBody": "Unlock Pairlens to resume live trading. Paper bots are unaffected.",
       "orderBlocked": "Your credential vault is locked — unlock Pairlens to place live orders.",
       "insecureContext": "Encryption is unavailable over an insecure connection. Open Pairlens over HTTPS, or on localhost, to set up a vault.",
-      "diverged": "Your terminal is unlocked, but that password did not open your credential vault. Change your password in Settings → Security to bring the two back in sync."
+      "diverged": "Your terminal is unlocked, but that password did not open your credential vault. Change your password in Settings → Security to bring the two back in sync.",
+      "botParkDetailSealed": "Your credential vault is locked. This bot resumes live trading as soon as you unlock Pairlens. Paper bots are unaffected.",
+      "botParkDetailError": "Your stored credentials could not be read on this device. This bot resumes live trading as soon as they load. Paper bots are unaffected.",
+      "onlyProtectorLeft": "This is the only way into your vault. Add another before removing it.",
+      "onlyBiometricProtectorLeft": "Touch ID cannot be the only way into your vault. Add a password or a passkey before removing this one."
     }
   },
   "fullscreen": {
@@ -3304,7 +3824,8 @@
       "title": "Every order can bring its own plan",
       "description": "A workflow hangs off an order you place from the trade panel. The moment it fills, the steps below it run — brackets, ladders, staged exits, timed checks — so the plan is already in place instead of something you remember to do later.",
       "blankLabel": "Start from a blank canvas",
-      "footnote": "Templates open as a draft: edit any step, then Commit to save it. Attach a saved workflow to an order from the trade panel to run it."
+      "footnote": "Templates open as a draft: edit any step, then Commit to save it. Attach a saved workflow to an order from the trade panel to run it.",
+      "untitledWorkflow": "Untitled workflow"
     },
     "steps": {
       "sideLabel": "Side",
@@ -3374,6 +3895,288 @@
       "summaryExecuted": "{{count}} executed",
       "summarySkipped": "{{count}} skipped",
       "summaryFailed": "{{count}} failed"
+    },
+    "stepTypes": {
+      "trigger": {
+        "label": "Order Input"
+      },
+      "market-order": {
+        "label": "Market Order",
+        "fields": {
+          "side": {
+            "label": "Side",
+            "options": {
+              "inherit": "Same as trigger",
+              "opposite": "Opposite of trigger",
+              "buy": "Buy",
+              "sell": "Sell"
+            }
+          },
+          "sizeMode": {
+            "label": "Size Mode",
+            "options": {
+              "percent": "% of input",
+              "absolute": "Fixed amount"
+            }
+          },
+          "size": {
+            "label": "Size"
+          }
+        }
+      },
+      "limit-order": {
+        "label": "Limit Order",
+        "compat": "Resting limit orders",
+        "fields": {
+          "side": {
+            "label": "Side",
+            "options": {
+              "inherit": "Same as trigger",
+              "opposite": "Opposite of trigger",
+              "buy": "Buy",
+              "sell": "Sell"
+            }
+          },
+          "sizeMode": {
+            "label": "Size Mode",
+            "options": {
+              "percent": "% of input",
+              "absolute": "Fixed amount"
+            }
+          },
+          "size": {
+            "label": "Size"
+          },
+          "priceMode": {
+            "label": "Price Mode",
+            "options": {
+              "absolute": "Fixed price",
+              "offset-percent": "% from current",
+              "offset-absolute": "Offset from current"
+            }
+          },
+          "priceValue": {
+            "label": "Price Value"
+          }
+        },
+        "compatReason": "this venue cannot rest limit orders (swap-only DEX)"
+      },
+      "take-profit": {
+        "label": "Take Profit",
+        "compat": "Native trigger orders or resting limit orders",
+        "fields": {
+          "triggerMode": {
+            "label": "Trigger Mode",
+            "options": {
+              "percent": "% gain",
+              "absolute": "Price level"
+            }
+          },
+          "triggerValue": {
+            "label": "Trigger Value"
+          },
+          "sizePercent": {
+            "label": "Close %"
+          },
+          "orderType": {
+            "label": "Order Type",
+            "options": {
+              "market": "Market",
+              "limit": "Limit"
+            }
+          },
+          "limitPrice": {
+            "label": "Limit Price"
+          }
+        },
+        "compatReason": "this venue supports neither trigger orders nor resting limit orders"
+      },
+      "stop-loss": {
+        "label": "Stop Loss",
+        "compat": "Native trigger orders",
+        "fields": {
+          "triggerMode": {
+            "label": "Trigger Mode",
+            "options": {
+              "percent": "% loss",
+              "absolute": "Price level"
+            }
+          },
+          "triggerValue": {
+            "label": "Trigger Value"
+          },
+          "sizePercent": {
+            "label": "Close %"
+          },
+          "orderType": {
+            "label": "Order Type",
+            "options": {
+              "market": "Market",
+              "limit": "Limit"
+            }
+          },
+          "limitPrice": {
+            "label": "Limit Price"
+          }
+        },
+        "compatReason": "this venue has no exchange-native trigger orders, so a stop-loss cannot rest on the exchange"
+      },
+      "condition": {
+        "label": "Condition",
+        "fields": {
+          "conditionType": {
+            "label": "Condition",
+            "options": {
+              "price-above": "Price above",
+              "price-below": "Price below",
+              "percent-change": "% change from entry"
+            }
+          },
+          "value": {
+            "label": "Value"
+          }
+        }
+      },
+      "split": {
+        "label": "Parallel Split",
+        "fields": {
+          "branches": {
+            "label": "Branches"
+          }
+        }
+      },
+      "wait": {
+        "label": "Wait",
+        "fields": {
+          "duration": {
+            "label": "Duration"
+          },
+          "unit": {
+            "label": "Unit",
+            "options": {
+              "seconds": "Seconds",
+              "minutes": "Minutes",
+              "hours": "Hours"
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "bracket": {
+        "title": "Bracket the fill",
+        "description": "The one every position wants: an exit above and an exit below, both resting the moment the order fills."
+      },
+      "scale-out": {
+        "title": "Scale out in three",
+        "description": "Take a third off at each of three levels instead of guessing one exit and living with it."
+      },
+      "ladder-entry": {
+        "title": "Ladder the entry",
+        "description": "Rest half the size 1% under the fill and half 2.5% under it, so a dip adds instead of hurting."
+      },
+      "cut-if-stalls": {
+        "title": "Cut it if it stalls",
+        "description": "Wait fifteen minutes, and if the trade is underwater by then, close it at market and move on.",
+        "chips": {
+          "2": "Market out"
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "market-data": {
+      "candles": {
+        "label": "Candles",
+        "description": "Live OHLCV candle streams for charts and signals"
+      },
+      "ticker": {
+        "label": "Ticker",
+        "description": "Real-time last price and 24h change streams"
+      },
+      "ticker-snapshot": {
+        "label": "Ticker Snapshot",
+        "description": "Bulk one-shot ticker quotes via REST, without opening streams"
+      },
+      "orderbook": {
+        "label": "Order Book",
+        "description": "Live order book depth streams"
+      },
+      "history": {
+        "label": "History",
+        "description": "Historical candle backfill for charts"
+      },
+      "discovery": {
+        "label": "Discovery",
+        "description": "Browse available trading instruments",
+        "search": {
+          "label": "Search",
+          "description": "Search instruments by name or symbol"
+        }
+      },
+      "symbol-logo": {
+        "label": "Symbol Logo",
+        "description": "Logo/icon images for trading symbols"
+      }
+    },
+    "domains": {
+      "market-data": "Market Data",
+      "ai": "AI",
+      "trading": "Trading",
+      "automation": "Automation",
+      "theme": "Theme",
+      "charting": "Charting",
+      "workspace-store": "Workspace Store"
+    },
+    "ai": {
+      "inference": {
+        "label": "Inference",
+        "description": "LLM inference for co-pilot analysis"
+      },
+      "web-search": {
+        "label": "Web Search",
+        "description": "Web search grounding for AI research reports"
+      }
+    },
+    "trading": {
+      "orders": {
+        "label": "Orders",
+        "description": "Place and manage orders on the connected venue"
+      },
+      "balances": {
+        "label": "Balances",
+        "description": "Fetch account asset balances from the connected exchange"
+      }
+    },
+    "workflow": {
+      "step-types": {
+        "label": "Workflow Steps",
+        "description": "Custom step types for automation workflows"
+      }
+    },
+    "notification": {
+      "channel": {
+        "label": "Notification Channels",
+        "description": "Delivery channels for alerts and notifications"
+      }
+    },
+    "theme": {
+      "override": {
+        "label": "Theme",
+        "description": "Custom terminal theme and styling overrides"
+      }
+    },
+    "chart": {
+      "indicator": {
+        "label": "Custom Indicators",
+        "description": "Script-defined chart indicators run in the local Python runtime"
+      }
+    },
+    "workspace-store": {
+      "catalog": {
+        "label": "Store Catalog",
+        "description": "Provide a browsable catalog of workspace templates"
+      }
     }
   }
 }

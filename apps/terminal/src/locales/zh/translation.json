@@ -441,7 +441,18 @@
     "ordersLockedRiskLimit": "由于触发风险限额,订单已被锁定。请在设置 > 风险管理中解锁。",
     "buyOrdersLockedRiskLimit": "由于触发风险限额,买单已被锁定。请在设置 > 风险管理中解锁。",
     "positionSizeExceeded": "订单因风险限额被阻止:该仓位占投资组合的 {{ratioPct}}%,超过了你设置的 {{maxPositionSize}}% 上限。请在设置 > 风险管理中调整。",
-    "sessionExpired": "你的会话已过期 — 请重新登录。"
+    "sessionExpired": "你的会话已过期 — 请重新登录。",
+    "startFromTemplate": "从模板开始",
+    "chips": {
+      "osNotification": "系统通知",
+      "toastPlusOs": "提示 + 系统通知",
+      "timeframeClose": "1H 收盘",
+      "downPercent": "下跌 {{percent}}",
+      "takeProfitPercent": "止盈 {{percent}}",
+      "stopLossPercent": "止损 {{percent}}",
+      "sizeAtOffset": "{{size}}（{{offset}}）",
+      "waitDuration": "等待 {{duration}}"
+    }
   },
   "legal": {
     "terms": "服务条款",
@@ -781,7 +792,9 @@
       "taxNote": "价格不含税 — 税费将在结账时根据你的所在地计算。",
       "packsTitle": "额外积分",
       "packsDescription": "一次性充值,叠加在每月预算之上。充值积分自购买起 30 天后过期,不会续期。",
-      "packActive": "{{credits}} 额外积分 — {{date}} 过期"
+      "packActive": "{{credits}} 额外积分 — {{date}} 过期",
+      "packAddedToastTitle": "额外积分已添加",
+      "packAddedToastDescription": "你的积分包已计入余额 — 充值积分自购买起 30 天后过期。"
     },
     "about": {
       "desktop": "桌面版",
@@ -992,6 +1005,21 @@
       "title": "{{venue}} 需要桌面应用",
       "description": "这家交易所返回行情数据时不带浏览器读取所需的响应头。桌面应用以原生方式连接，所有交易所在那里都能用。",
       "alternatives": "或者继续用浏览器"
+    },
+    "assets": {
+      "macos": {
+        "primary": "Apple 芯片版（.dmg）",
+        "intel": "Intel Mac 版（.dmg）"
+      },
+      "windows": {
+        "primary": "安装程序（.exe）",
+        "msi": ".msi 安装程序"
+      },
+      "linux": {
+        "primary": "AppImage",
+        "deb": ".deb",
+        "rpm": ".rpm"
+      }
     }
   },
   "userMenu": {
@@ -1762,7 +1790,10 @@
       "unsupportedLanguage": "用 {{language}} 编写的指标无法导入。",
       "malformedDescriptor": "该指标的数据格式有误。",
       "unknown": "导入失败。"
-    }
+    },
+    "syntaxErrorDiagnostic": "语法错误",
+    "missingMetaDiagnostic": "main.py 没有在顶层定义 `meta = indicator(...)` —— 图表没有可绘制的内容。",
+    "missingComputeDiagnostic": "main.py 没有在顶层定义 `def compute(ctx)` —— 脚本将无法加载。"
   },
   "indicators": {
     "title": "添加指标",
@@ -2446,7 +2477,17 @@
     "previousSlide": "上一个",
     "nextSlide": "下一个",
     "goToSlide": "转到第 {{n}} 张",
-    "copyCommand": "复制命令"
+    "copyCommand": "复制命令",
+    "apiKeyRequiredHint": "需要 API 密钥",
+    "setupRequiredHint": "需要设置",
+    "manifests": {
+      "userIndicators": {
+        "description": "你在指标编辑器中创建的自定义 Python 指标。"
+      },
+      "pairlensCommunity": {
+        "description": "由 Pairlens 用户分享的社区工作区模板。"
+      }
+    }
   },
   "search": {
     "title": "搜索交易对",
@@ -2577,7 +2618,9 @@
       "collapse": "折叠面板"
     },
     "recentlyViewed": "最近查看",
-    "noMarketsFound": "未找到市场"
+    "noMarketsFound": "未找到市场",
+    "modeLive": "实盘",
+    "modePaper": "模拟"
   },
   "accounts": {
     "pageTitle": "账户",
@@ -2708,7 +2751,32 @@
     "accountConnectFailed": "连接账户失败。",
     "accountRemoveFailed": "移除账户失败。",
     "fieldRequired": "{{field}}为必填项",
-    "accountConnectedFeedback": "{{label}}{{mode}}账户已连接。"
+    "accountConnectedFeedback": "{{label}}{{mode}}账户已连接。",
+    "defaultWalletName": "{{chain}} 钱包",
+    "walletChains": {
+      "ethereum": {
+        "label": "Ethereum / EVM",
+        "fields": {
+          "privateKey": {
+            "label": "私钥(hex)"
+          }
+        }
+      },
+      "solana": {
+        "fields": {
+          "privateKey": {
+            "label": "私钥(base58)"
+          }
+        }
+      },
+      "bitcoin": {
+        "fields": {
+          "privateKey": {
+            "label": "私钥(WIF)"
+          }
+        }
+      }
+    }
   },
   "workspaceStore": {
     "title": "工作区商店",
@@ -2819,7 +2887,218 @@
     "spotlight": "聚焦精选",
     "previousSlide": "上一个",
     "nextSlide": "下一个",
-    "goToSlide": "转到幻灯片 {{number}}"
+    "goToSlide": "转到幻灯片 {{number}}",
+    "templates": {
+      "scalpers-cockpit": {
+        "name": "剥头皮驾驶舱",
+        "tagline": "图表、订单簿与一键下单——仅此而已。",
+        "description": "极简双栏驾驶舱，专为快速执行打造：图表旁是实时订单簿、市场深度和下单面板。为单屏幕上的速度而生。"
+      },
+      "day-trader-pro": {
+        "name": "日内交易专业版",
+        "tagline": "扫描、看图、交易日内行情。",
+        "description": "均衡的三栏工作台：左侧是市场扫描器，中间是大图表，右侧是订单簿、下单面板和持仓。活跃加密货币交易的日常主力。"
+      },
+      "swing-overview": {
+        "name": "波段概览",
+        "tagline": "趋势脉络，搭配自选列表与涨跌幅榜。",
+        "description": "更从容的多日持仓布局：完整图表旁是你的自选列表、涨跌幅榜和交易对基本面。足够的脉络帮你判断波段仓位，却没有交易台的喧嚣。"
+      },
+      "ai-research-desk": {
+        "name": "AI 研究台",
+        "tagline": "副驾驶、研究与资讯，就在图表旁边。",
+        "description": "把图表与 AI 副驾驶、深度研究，以及全球和标的资讯双信息流搭配在一起。专为催化剂驱动的交易而生，消息面和盘面同样重要。需要 AI 推理服务商才能使用副驾驶与研究功能。"
+      },
+      "market-discovery": {
+        "name": "市场发现",
+        "tagline": "在下单之前，先找到正在动的行情。",
+        "description": "纯粹的发现看板：市场扫描器、涨跌幅榜、板块热力图、你的自选列表和恐慌与贪婪指数。没有图表，没有下单面板——只为猎寻下一个机会。"
+      },
+      "portfolio-command": {
+        "name": "投资组合控制台",
+        "tagline": "余额、持仓与风险，一览无余。",
+        "description": "以账户为核心的驾驶舱：你的投资组合明细、持仓、实时风控边界，以及用来关注其余仓位的自选列表。为管理你已持有的资产而生。"
+      },
+      "dex-degen": {
+        "name": "DEX Degen",
+        "tagline": "链上图表、兑换与社交动态。",
+        "description": "为链上猎寻而生：图表搭配兑换面板、用于捕捉新上线代币的最近行情，以及提供 alpha 情报的社交动态。通过 Jupiter 等 DEX 连接器路由兑换。"
+      },
+      "quant-signals": {
+        "name": "量化信号",
+        "tagline": "数据日志、热力图与风险，服务于信号驱动交易。",
+        "description": "数据优先的工作台：图表搭配原始数据日志、流动性热力图、实时风险状态与市场扫描器。为那些把盘面读作数字而非 K 线的交易者而生。"
+      },
+      "equities-desk": {
+        "name": "股票交易台",
+        "tagline": "用扫描器、图表与持仓交易股票。",
+        "description": "股票交易布局：市场扫描器、图表、持仓与资讯。连接 Alpaca 经纪商插件即可推送美股数据并路由订单。"
+      },
+      "ultrawide-trading-floor": {
+        "name": "超宽屏交易大厅",
+        "tagline": "一应俱全，为大屏幕而生。",
+        "description": "填满超宽屏或第二块显示器的四栏指挥中心：扫描器、图表、订单簿与深度、带持仓的下单面板，以及 AI 副驾驶。极繁主义布局。"
+      },
+      "classic-terminal": {
+        "name": "经典终端",
+        "tagline": "经典 Pairlens 工作台——图表、数据、交易、副驾驶。",
+        "description": "默认终端布局：左侧是大图表搭配标签式数据条与风险条，右侧是下单面板叠加 AI 副驾驶。",
+        "menuLabel": "默认"
+      },
+      "chart-focus": {
+        "name": "图表聚焦",
+        "tagline": "一张大图表，底部是标签式数据。",
+        "description": "单栏布局把最大空间留给图表，持仓、数据日志、副驾驶和下单面板都收进下方的标签条。",
+        "menuLabel": "图表聚焦"
+      },
+      "trading": {
+        "name": "交易",
+        "tagline": "订单簿与下单面板环绕中央图表。",
+        "description": "三栏执行工作台：左侧是订单簿与下单面板，中间是带持仓与风险的图表，右侧是 AI 副驾驶。",
+        "menuLabel": "交易"
+      },
+      "chart-analysis": {
+        "name": "图表分析",
+        "tagline": "左侧图表与数据，右侧副驾驶与交易执行。",
+        "description": "偏研究型的分栏布局：左侧是图表、数据、研究与风险，右侧是副驾驶、订单簿与下单面板。",
+        "menuLabel": "分析"
+      },
+      "dual-charts": {
+        "name": "双图表",
+        "tagline": "两张图表并排显示。",
+        "description": "两个独立图表面板并排——各自保留自己的市场、周期和图表类型。用面板自带的交易对选择器为每个面板设置不同的交易对。",
+        "menuLabel": "双图表"
+      },
+      "triple-charts": {
+        "name": "三图表",
+        "tagline": "一张大图表，旁边叠放两张小图表。",
+        "description": "一张大的主图表，右侧叠放两张较小的图表——彼此独立，方便你对照领先交易对与另外两个交易对。",
+        "menuLabel": "三图表"
+      },
+      "quad-charts": {
+        "name": "四图表",
+        "tagline": "2×2 网格图表。",
+        "description": "2×2 网格中的四张独立图表——完整的多图驾驶舱，同时追踪多个市场。",
+        "menuLabel": "四图表"
+      },
+      "laptop-focus": {
+        "name": "笔记本聚焦",
+        "tagline": "为笔记本电脑调校的竖版单栏布局。",
+        "description": "紧凑的竖版布局，适配笔记本电脑屏幕：图表在上，下接数据标签条与纤细的风险条。"
+      },
+      "laptop-split": {
+        "name": "笔记本分栏",
+        "tagline": "左侧图表+数据，右侧交易+副驾驶——为较小屏幕设计。",
+        "description": "为笔记本电脑设计的双栏布局：左侧是图表与持仓，右侧是下单面板叠加副驾驶。"
+      },
+      "ultrawide-dashboard": {
+        "name": "超宽屏仪表盘",
+        "tagline": "每个面板都铺展在超宽屏显示器上。",
+        "description": "为超宽屏显示器设计的四栏仪表盘：订单簿、带风险的图表、持仓与研究，以及交易+副驾驶栏。"
+      },
+      "ultrawide-trading": {
+        "name": "超宽屏交易",
+        "tagline": "订单簿、深度、图表与交易执行，横贯整个宽度。",
+        "description": "超宽屏执行布局：左侧是订单簿与市场深度，中间是带持仓的图表，右侧是交易+副驾驶栏。"
+      },
+      "command-center": {
+        "name": "4K 指挥中心",
+        "tagline": "为 4K 显示器打造的完整指挥中心。",
+        "description": "为 4K 显示器铺满全部内容：订单簿与交易对信息、带研究和风险的图表、持仓与社交动态，以及交易+副驾驶栏。"
+      },
+      "home-pulse": {
+        "name": "首页",
+        "tagline": "默认看板：扫描器、情绪、涨跌幅榜与资讯。",
+        "description": "默认首页看板——市场扫描器、带恐慌与贪婪指数和热门币种的市场脉搏栏（与你的自选列表同标签页），以及通栏资讯栏。全部功能无需账户即可使用。",
+        "menuLabel": "首页"
+      },
+      "markets-board": {
+        "name": "市场看板",
+        "tagline": "只有市场扫描器，全屏铺开。",
+        "description": "全宽市场扫描器——浏览和排序所有可交易对的最简单方式。",
+        "menuLabel": "市场"
+      },
+      "markets-overview": {
+        "name": "市场概览",
+        "tagline": "扫描器旁边是涨跌幅榜与自选列表。",
+        "description": "市场扫描器搭配涨跌幅榜和你的自选列表——寻找与追踪交易机会的均衡首页。",
+        "menuLabel": "概览"
+      },
+      "sector-analysis": {
+        "name": "板块分析",
+        "tagline": "扫描器、热力图、涨跌幅榜与自选列表。",
+        "description": "中间是板块热力图的发现看板：左侧是扫描器，中间是热力图，右侧是涨跌幅榜叠加你的自选列表。",
+        "menuLabel": "分析"
+      },
+      "news-board": {
+        "name": "资讯看板",
+        "tagline": "市场行情搭配涨跌幅榜与资讯流。",
+        "description": "市场扫描器搭配涨跌幅榜和实时资讯流——催化剂驱动交易的大本营。",
+        "menuLabel": "资讯"
+      }
+    },
+    "traderTypes": {
+      "scalper": {
+        "label": "剥头皮交易者",
+        "description": "窄价差快进快出"
+      },
+      "day-trader": {
+        "label": "日内交易者",
+        "description": "日内动量与资金流"
+      },
+      "swing-trader": {
+        "label": "波段交易者",
+        "description": "多日趋势持仓"
+      },
+      "position-investor": {
+        "label": "投资者",
+        "description": "更长期的投资组合视角"
+      },
+      "news-trader": {
+        "label": "消息面交易者",
+        "description": "消息面与催化剂驱动"
+      },
+      "dex-degen": {
+        "label": "DEX Degen",
+        "description": "链上与 meme 币淘金"
+      },
+      "quant": {
+        "label": "量化",
+        "description": "信号与数据驱动的工作流"
+      }
+    },
+    "assetClasses": {
+      "crypto-spot": {
+        "label": "加密货币现货"
+      },
+      "dex": {
+        "label": "DEX"
+      },
+      "equities": {
+        "label": "股票"
+      },
+      "multi-asset": {
+        "label": "多资产"
+      }
+    },
+    "screenSizes": {
+      "compact": {
+        "label": "紧凑"
+      },
+      "standard": {
+        "label": "标准"
+      },
+      "wide": {
+        "label": "宽屏"
+      },
+      "multi": {
+        "label": "多显示器"
+      }
+    },
+    "pluginReasons": {
+      "jupiter-dex-connector": "路由 Solana 兑换并推送链上价格",
+      "alpaca-market-connector": "推送美股数据并路由股票订单"
+    }
   },
   "notifications": {
     "flows": "流程",
@@ -2944,6 +3223,243 @@
           "start": "开始（UTC）",
           "end": "结束（UTC）"
         }
+      }
+    },
+    "stepTypes": {
+      "price-alert": {
+        "label": "价格提醒",
+        "fields": {
+          "direction": {
+            "label": "方向",
+            "options": {
+              "above": "高于",
+              "below": "低于"
+            }
+          },
+          "price": {
+            "label": "价格"
+          }
+        },
+        "handles": {
+          "out": "已触发"
+        }
+      },
+      "order-executed": {
+        "label": "订单成交",
+        "fields": {
+          "side": {
+            "label": "方向",
+            "options": {
+              "any": "任意",
+              "buy": "买入",
+              "sell": "卖出"
+            }
+          },
+          "status": {
+            "label": "状态",
+            "options": {
+              "any": "任意",
+              "filled": "已成交",
+              "partially_filled": "部分成交"
+            }
+          }
+        },
+        "handles": {
+          "out": "已触发"
+        }
+      },
+      "signal-generated": {
+        "label": "信号生成",
+        "fields": {
+          "signalType": {
+            "label": "信号类型（选填）",
+            "placeholder": "任意类型"
+          }
+        },
+        "handles": {
+          "out": "已触发"
+        }
+      },
+      "indicator-alert": {
+        "label": "指标提醒",
+        "fields": {
+          "indicator": {
+            "label": "指标（选填）",
+            "placeholder": "任意指标"
+          },
+          "condition": {
+            "label": "条件（选填）",
+            "placeholder": "任意条件"
+          }
+        },
+        "handles": {
+          "out": "已触发"
+        }
+      },
+      "candle-close": {
+        "label": "K 线收盘",
+        "fields": {
+          "timeframe": {
+            "label": "周期",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          }
+        },
+        "handles": {
+          "out": "已触发"
+        }
+      },
+      "price-condition": {
+        "label": "价格条件",
+        "fields": {
+          "direction": {
+            "label": "方向",
+            "options": {
+              "above": "高于",
+              "below": "低于"
+            }
+          },
+          "price": {
+            "label": "价格"
+          }
+        },
+        "handles": {
+          "pass": "通过",
+          "fail": "不通过"
+        }
+      },
+      "percent-change": {
+        "label": "百分比变化",
+        "fields": {
+          "percent": {
+            "label": "百分比"
+          },
+          "direction": {
+            "label": "方向",
+            "options": {
+              "up": "上涨",
+              "down": "下跌",
+              "either": "任一"
+            }
+          }
+        },
+        "handles": {
+          "pass": "通过",
+          "fail": "不通过"
+        }
+      },
+      "time-window": {
+        "label": "时间窗口",
+        "fields": {
+          "startHour": {
+            "label": "开始小时（UTC）"
+          },
+          "endHour": {
+            "label": "结束小时（UTC）"
+          }
+        },
+        "handles": {
+          "pass": "通过",
+          "fail": "不通过"
+        }
+      },
+      "local-toast": {
+        "label": "应用内提示"
+      },
+      "os-notification": {
+        "label": "系统通知",
+        "fields": {
+          "sound": {
+            "label": "播放声音"
+          }
+        }
+      },
+      "webhook": {
+        "label": "Webhook",
+        "fields": {
+          "url": {
+            "label": "URL",
+            "placeholder": "https://example.com/webhook"
+          },
+          "method": {
+            "label": "方法",
+            "options": {
+              "GET": "GET",
+              "POST": "POST"
+            }
+          },
+          "includePayload": {
+            "label": "包含事件负载"
+          }
+        }
+      }
+    },
+    "messages": {
+      "unknownPair": "未知",
+      "priceAlert": {
+        "title": "价格提醒：{{pair}}",
+        "body": "{{pair}} 现在{{direction}} {{price}} —— 当前：{{current}}"
+      },
+      "orderExecuted": {
+        "title": "订单成交",
+        "body": "{{side}} {{pair}} —— {{status}}"
+      },
+      "signalGenerated": {
+        "title": "信号生成",
+        "body": "{{pair}} 上的 {{signal}}",
+        "genericSignal": "信号"
+      },
+      "indicatorAlert": {
+        "title": "指标提醒",
+        "body": "{{indicator}} 在 {{pair}} 上触发",
+        "genericName": "指标"
+      },
+      "candleClose": {
+        "title": "K 线收盘",
+        "body": "{{pair}} 的 {{timeframe}} K 线已收盘"
+      }
+    },
+    "templates": {
+      "price-level": {
+        "title": "价格突破某个水平",
+        "description": "在 {{pair}} 突破 {{level}} 的那一刻送出应用内提示加系统通知。把水平线拖到你想要的价位。",
+        "chips": {
+          "0": "价格高于",
+          "1": "提示"
+        }
+      },
+      "volatile-candle": {
+        "title": "小时K线大幅波动",
+        "description": "当小时K线收盘价与开盘价相差超过 3%（无论涨跌）时触发。",
+        "chips": {
+          "1": "±3% 实体"
+        }
+      },
+      "fills": {
+        "title": "订单成交时告诉我",
+        "description": "该交易对上的每一笔成交订单都会送达给你，终端因此可以放在后台运行。",
+        "chips": {
+          "0": "订单成交",
+          "1": "任意方向"
+        }
+      },
+      "indicator-relay": {
+        "title": "转发我的指标提醒",
+        "description": "由你的 Python 指标声明的提醒条件，将变成真正的通知。",
+        "chips": {
+          "0": "任意指标",
+          "1": "任意条件"
+        }
+      },
+      "session-drop": {
+        "title": "急跌，只在我醒着的时候",
+        "description": "2% 下跌K线会唤醒你，但仅限 UTC 13:00 到 21:00 之间。"
       }
     }
   },
@@ -3140,7 +3656,11 @@
       "botsPausedBody": "解锁 Pairlens 以恢复实盘交易。模拟机器人不受影响。",
       "orderBlocked": "你的凭证保险库已锁定 — 解锁 Pairlens 才能下实盘订单。",
       "insecureContext": "在不安全的连接上无法加密。请通过 HTTPS 或在 localhost 上打开 Pairlens 来设置保险库。",
-      "diverged": "终端已解锁，但该密码没能打开你的凭证保险库。请在 设置 → 安全 中更改密码，让两者重新一致。"
+      "diverged": "终端已解锁，但该密码没能打开你的凭证保险库。请在 设置 → 安全 中更改密码，让两者重新一致。",
+      "botParkDetailSealed": "你的凭证保险库已锁定。只要解锁 Pairlens，此机器人就会恢复实盘交易。模拟机器人不受影响。",
+      "botParkDetailError": "你保存的凭证无法在此设备上读取。凭证一旦加载完成，此机器人就会恢复实盘交易。模拟机器人不受影响。",
+      "onlyProtectorLeft": "这是进入你保险库的唯一方式。请先添加另一种方式，再移除它。",
+      "onlyBiometricProtectorLeft": "触控 ID 不能是进入保险库的唯一方式。请先添加密码或通行密钥，再移除它。"
     }
   },
   "fullscreen": {
@@ -3304,7 +3824,8 @@
       "title": "每一笔订单都可以带上自己的计划",
       "description": "工作流挂在你从交易面板下的订单上。订单一旦成交，下面的步骤就会自动运行 — 括号单、阶梯单、分批离场、定时检查 — 计划早已就位，而不是留到以后再靠自己记住去做。",
       "blankLabel": "从空白画布开始",
-      "footnote": "模板会以草稿形式打开：编辑任意步骤，然后点击提交保存。从交易面板把已保存的工作流关联到某笔订单即可运行它。"
+      "footnote": "模板会以草稿形式打开：编辑任意步骤，然后点击提交保存。从交易面板把已保存的工作流关联到某笔订单即可运行它。",
+      "untitledWorkflow": "未命名工作流"
     },
     "steps": {
       "sideLabel": "方向",
@@ -3374,6 +3895,288 @@
       "summaryExecuted": "{{count}} 已执行",
       "summarySkipped": "{{count}} 已跳过",
       "summaryFailed": "{{count}} 失败"
+    },
+    "stepTypes": {
+      "trigger": {
+        "label": "订单输入"
+      },
+      "market-order": {
+        "label": "市价单",
+        "fields": {
+          "side": {
+            "label": "方向",
+            "options": {
+              "inherit": "与触发相同",
+              "opposite": "与触发相反",
+              "buy": "买入",
+              "sell": "卖出"
+            }
+          },
+          "sizeMode": {
+            "label": "数量方式",
+            "options": {
+              "percent": "% 输入量",
+              "absolute": "固定数量"
+            }
+          },
+          "size": {
+            "label": "数量"
+          }
+        }
+      },
+      "limit-order": {
+        "label": "限价单",
+        "compat": "限价挂单",
+        "fields": {
+          "side": {
+            "label": "方向",
+            "options": {
+              "inherit": "与触发相同",
+              "opposite": "与触发相反",
+              "buy": "买入",
+              "sell": "卖出"
+            }
+          },
+          "sizeMode": {
+            "label": "数量方式",
+            "options": {
+              "percent": "% 输入量",
+              "absolute": "固定数量"
+            }
+          },
+          "size": {
+            "label": "数量"
+          },
+          "priceMode": {
+            "label": "价格方式",
+            "options": {
+              "absolute": "固定价格",
+              "offset-percent": "距现价 %",
+              "offset-absolute": "距现价偏移"
+            }
+          },
+          "priceValue": {
+            "label": "价格值"
+          }
+        },
+        "compatReason": "此交易所无法挂限价单（仅支持兑换的 DEX）"
+      },
+      "take-profit": {
+        "label": "止盈",
+        "compat": "原生触发单或限价挂单",
+        "fields": {
+          "triggerMode": {
+            "label": "触发方式",
+            "options": {
+              "percent": "盈利 %",
+              "absolute": "价格水平"
+            }
+          },
+          "triggerValue": {
+            "label": "触发值"
+          },
+          "sizePercent": {
+            "label": "平仓 %"
+          },
+          "orderType": {
+            "label": "订单类型",
+            "options": {
+              "market": "市价",
+              "limit": "限价"
+            }
+          },
+          "limitPrice": {
+            "label": "限价"
+          }
+        },
+        "compatReason": "此交易所既不支持触发单，也不支持挂限价单"
+      },
+      "stop-loss": {
+        "label": "止损",
+        "compat": "原生触发单",
+        "fields": {
+          "triggerMode": {
+            "label": "触发方式",
+            "options": {
+              "percent": "亏损 %",
+              "absolute": "价格水平"
+            }
+          },
+          "triggerValue": {
+            "label": "触发值"
+          },
+          "sizePercent": {
+            "label": "平仓 %"
+          },
+          "orderType": {
+            "label": "订单类型",
+            "options": {
+              "market": "市价",
+              "limit": "限价"
+            }
+          },
+          "limitPrice": {
+            "label": "限价"
+          }
+        },
+        "compatReason": "此交易所没有原生触发单，止损无法挂在交易所端"
+      },
+      "condition": {
+        "label": "条件",
+        "fields": {
+          "conditionType": {
+            "label": "条件",
+            "options": {
+              "price-above": "价格高于",
+              "price-below": "价格低于",
+              "percent-change": "距入场价变化 %"
+            }
+          },
+          "value": {
+            "label": "数值"
+          }
+        }
+      },
+      "split": {
+        "label": "并行拆分",
+        "fields": {
+          "branches": {
+            "label": "分支数"
+          }
+        }
+      },
+      "wait": {
+        "label": "等待",
+        "fields": {
+          "duration": {
+            "label": "时长"
+          },
+          "unit": {
+            "label": "单位",
+            "options": {
+              "seconds": "秒",
+              "minutes": "分钟",
+              "hours": "小时"
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "bracket": {
+        "title": "给成交加上括号单",
+        "description": "每个仓位都想要的配置：一个上方离场，一个下方离场，订单一成交就同时挂上。"
+      },
+      "scale-out": {
+        "title": "分三批离场",
+        "description": "在三个价位各减仓三分之一，而不是猜一个离场点将就用。"
+      },
+      "ladder-entry": {
+        "title": "阶梯式建仓",
+        "description": "把一半仓位挂在成交价下方 1%，另一半挂在下方 2.5%，回调不再伤人，反而帮你加仓。"
+      },
+      "cut-if-stalls": {
+        "title": "横盘就砍仓",
+        "description": "等十五分钟，如果那时还在亏损，就用市价平仓然后放手。",
+        "chips": {
+          "2": "市价离场"
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "market-data": {
+      "candles": {
+        "label": "K 线",
+        "description": "为图表和信号提供实时 OHLCV K 线推送"
+      },
+      "ticker": {
+        "label": "行情",
+        "description": "实时最新价格与 24 小时涨跌幅推送"
+      },
+      "ticker-snapshot": {
+        "label": "行情快照",
+        "description": "通过 REST 批量一次性获取行情报价，无需建立数据流"
+      },
+      "orderbook": {
+        "label": "订单簿",
+        "description": "实时订单簿深度推送"
+      },
+      "history": {
+        "label": "历史",
+        "description": "为图表回补历史 K 线数据"
+      },
+      "discovery": {
+        "label": "发现",
+        "description": "浏览可交易的标的",
+        "search": {
+          "label": "搜索",
+          "description": "按名称或代码搜索标的"
+        }
+      },
+      "symbol-logo": {
+        "label": "标的图标",
+        "description": "交易标的的图标图片"
+      }
+    },
+    "domains": {
+      "market-data": "市场数据",
+      "ai": "AI",
+      "trading": "交易",
+      "automation": "自动化",
+      "theme": "主题",
+      "charting": "图表",
+      "workspace-store": "工作区商店"
+    },
+    "ai": {
+      "inference": {
+        "label": "推理",
+        "description": "用于副驾驶分析的 LLM 推理"
+      },
+      "web-search": {
+        "label": "网页搜索",
+        "description": "为 AI 研究报告提供网页搜索依据"
+      }
+    },
+    "trading": {
+      "orders": {
+        "label": "订单",
+        "description": "在已连接的交易所下单和管理订单"
+      },
+      "balances": {
+        "label": "余额",
+        "description": "从已连接的交易所获取账户资产余额"
+      }
+    },
+    "workflow": {
+      "step-types": {
+        "label": "工作流步骤",
+        "description": "自动化工作流的自定义步骤类型"
+      }
+    },
+    "notification": {
+      "channel": {
+        "label": "通知渠道",
+        "description": "提醒与通知的送达渠道"
+      }
+    },
+    "theme": {
+      "override": {
+        "label": "主题",
+        "description": "自定义终端主题与样式覆盖"
+      }
+    },
+    "chart": {
+      "indicator": {
+        "label": "自定义指标",
+        "description": "在本地 Python 运行时中运行的脚本定义图表指标"
+      }
+    },
+    "workspace-store": {
+      "catalog": {
+        "label": "商店目录",
+        "description": "提供可浏览的工作区模板目录"
+      }
     }
   }
 }

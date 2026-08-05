@@ -309,7 +309,11 @@ export function AccountsPage() {
       }
       const label =
         cryptoLabel.trim() ||
-        `${WALLET_SCHEMAS[cryptoChain as keyof typeof WALLET_SCHEMAS]?.label ?? cryptoChain} Wallet`
+        t('accounts.defaultWalletName', {
+          chain:
+            WALLET_SCHEMAS[cryptoChain as keyof typeof WALLET_SCHEMAS]?.label ??
+            cryptoChain,
+        })
       await addCryptoWallet(
         {
           chain: cryptoChain as 'solana' | 'ethereum' | 'bitcoin',

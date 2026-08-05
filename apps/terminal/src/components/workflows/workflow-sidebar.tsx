@@ -22,6 +22,7 @@ import {
 import type { WorkflowRunRecord } from '@/stores/workflow-run-store'
 import { useWorkflowStore } from '@/stores/workflow-store'
 import { useWorkflowRunStore } from '@/stores/workflow-run-store'
+import { stepTypeLabelById } from '@/lib/registry-labels'
 
 export function WorkflowSidebar() {
   const { t } = useTranslation()
@@ -384,7 +385,14 @@ function RunRow({
                     ? '✗'
                     : '–'}
               </span>{' '}
-              <span className="text-foreground">{step.stepLabel}</span>
+              <span className="text-foreground">
+                {stepTypeLabelById(
+                  t,
+                  'workflows',
+                  step.stepType,
+                  step.stepLabel,
+                )}
+              </span>
               {step.error && (
                 <span className="text-muted-foreground"> — {step.error}</span>
               )}

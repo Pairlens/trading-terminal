@@ -110,7 +110,12 @@ function RequirementRow({ plugin }: { plugin: RequiredPlugin }) {
         </div>
         {plugin.reason ? (
           <p className="mt-0.5 text-xs text-muted-foreground">
-            {plugin.reason}
+            {/* Why this template needs this plugin. Written per template in
+                the catalog, so the key is derived from the plugin id rather
+                than threaded through dependency-analysis as a key. */}
+            {t(`workspaceStore.pluginReasons.${plugin.pluginId}`, {
+              defaultValue: plugin.reason,
+            })}
           </p>
         ) : null}
         {/* Security: full-access (UI) plugins run in the main realm. */}

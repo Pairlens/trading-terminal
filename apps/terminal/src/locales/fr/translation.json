@@ -441,7 +441,18 @@
     "ordersLockedRiskLimit": "Les ordres sont verrouillés suite au dépassement d’une limite de risque. Déverrouillez-les dans Paramètres > Gestion du risque.",
     "buyOrdersLockedRiskLimit": "Les achats sont verrouillés suite au dépassement d’une limite de risque. Déverrouillez-les dans Paramètres > Gestion du risque.",
     "positionSizeExceeded": "Ordre bloqué par la limite de risque : la position représente {{ratioPct}} % de votre portefeuille, au-delà de votre maximum de {{maxPositionSize}} %. Ajustez cela dans Paramètres > Gestion du risque.",
-    "sessionExpired": "Votre session a expiré — veuillez vous reconnecter."
+    "sessionExpired": "Votre session a expiré — veuillez vous reconnecter.",
+    "startFromTemplate": "Partir d'un modèle",
+    "chips": {
+      "osNotification": "Notification système",
+      "toastPlusOs": "Toast + système",
+      "timeframeClose": "Clôture 1H",
+      "downPercent": "Baisse {{percent}}",
+      "takeProfitPercent": "Take profit {{percent}}",
+      "stopLossPercent": "Stop loss {{percent}}",
+      "sizeAtOffset": "{{size}} à {{offset}}",
+      "waitDuration": "Attente {{duration}}"
+    }
   },
   "legal": {
     "terms": "Conditions générales",
@@ -781,7 +792,9 @@
       "taxNote": "Prix hors taxes — elles sont calculées au moment du paiement selon votre localisation.",
       "packsTitle": "Crédits supplémentaires",
       "packsDescription": "Recharges ponctuelles qui s’ajoutent à votre budget mensuel. Les crédits de recharge expirent 30 jours après l’achat et ne se renouvellent pas.",
-      "packActive": "{{credits}} crédits supplémentaires — expirent le {{date}}"
+      "packActive": "{{credits}} crédits supplémentaires — expirent le {{date}}",
+      "packAddedToastTitle": "Crédits supplémentaires ajoutés",
+      "packAddedToastDescription": "Votre pack de crédits est ajouté à votre solde — les crédits du pack expirent 30 jours après l'achat."
     },
     "about": {
       "desktop": "Bureau",
@@ -992,6 +1005,21 @@
       "title": "{{venue}} nécessite l’app de bureau",
       "description": "Cette plateforme sert ses données de marché sans les en-têtes dont un navigateur a besoin pour les lire. L’app de bureau se connecte nativement, et toutes y fonctionnent.",
       "alternatives": "Ou rester dans le navigateur"
+    },
+    "assets": {
+      "macos": {
+        "primary": "Apple Silicon (.dmg)",
+        "intel": "Intel Mac (.dmg)"
+      },
+      "windows": {
+        "primary": "Installateur (.exe)",
+        "msi": "Installateur .msi"
+      },
+      "linux": {
+        "primary": "AppImage",
+        "deb": ".deb",
+        "rpm": ".rpm"
+      }
     }
   },
   "userMenu": {
@@ -1762,7 +1790,10 @@
       "unsupportedLanguage": "Les indicateurs écrits en {{language}} ne peuvent pas être importés.",
       "malformedDescriptor": "Les données de cet indicateur sont invalides.",
       "unknown": "L’importation a échoué."
-    }
+    },
+    "syntaxErrorDiagnostic": "Erreur de syntaxe",
+    "missingMetaDiagnostic": "main.py ne définit aucun `meta = indicator(...)` de premier niveau — le graphique n'a rien à dessiner.",
+    "missingComputeDiagnostic": "main.py ne définit aucun `def compute(ctx)` de premier niveau — le script ne pourra pas se charger."
   },
   "indicators": {
     "title": "Ajouter un indicateur",
@@ -2446,7 +2477,17 @@
     "previousSlide": "Précédent",
     "nextSlide": "Suivant",
     "goToSlide": "Aller à la diapositive {{n}}",
-    "copyCommand": "Copier la commande"
+    "copyCommand": "Copier la commande",
+    "apiKeyRequiredHint": "Clé API requise",
+    "setupRequiredHint": "Configuration requise",
+    "manifests": {
+      "userIndicators": {
+        "description": "Vos indicateurs Python personnalisés, créés dans l'éditeur Indicateurs."
+      },
+      "pairlensCommunity": {
+        "description": "Modèles d'espaces de travail communautaires partagés par les utilisateurs de Pairlens."
+      }
+    }
   },
   "search": {
     "title": "Rechercher des paires",
@@ -2577,7 +2618,9 @@
       "collapse": "Replier le panneau"
     },
     "recentlyViewed": "Vus récemment",
-    "noMarketsFound": "Aucun marché trouvé"
+    "noMarketsFound": "Aucun marché trouvé",
+    "modeLive": "RÉEL",
+    "modePaper": "PAPIER"
   },
   "accounts": {
     "pageTitle": "Comptes",
@@ -2708,7 +2751,32 @@
     "accountConnectFailed": "Échec de la connexion du compte.",
     "accountRemoveFailed": "Échec de la suppression du compte.",
     "fieldRequired": "{{field}} est requis",
-    "accountConnectedFeedback": "Compte {{label}} {{mode}} connecté."
+    "accountConnectedFeedback": "Compte {{label}} {{mode}} connecté.",
+    "walletChains": {
+      "ethereum": {
+        "label": "Ethereum / EVM",
+        "fields": {
+          "privateKey": {
+            "label": "Clé privée (hex)"
+          }
+        }
+      },
+      "solana": {
+        "fields": {
+          "privateKey": {
+            "label": "Clé privée (base58)"
+          }
+        }
+      },
+      "bitcoin": {
+        "fields": {
+          "privateKey": {
+            "label": "Clé privée (WIF)"
+          }
+        }
+      }
+    },
+    "defaultWalletName": "Wallet {{chain}}"
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2819,7 +2887,218 @@
     "spotlight": "À la une",
     "previousSlide": "Précédent",
     "nextSlide": "Suivant",
-    "goToSlide": "Aller à la diapositive {{number}}"
+    "goToSlide": "Aller à la diapositive {{number}}",
+    "templates": {
+      "scalpers-cockpit": {
+        "name": "Cockpit du Scalper",
+        "tagline": "Graphique, carnet et entrée en un clic — rien d'autre.",
+        "description": "Un cockpit minimaliste à deux colonnes pour une exécution rapide : un graphique à côté d'un carnet d'ordres en direct, de la profondeur de marché et d'un ticket d'ordre. Conçu pour la rapidité sur un seul écran."
+      },
+      "day-trader-pro": {
+        "name": "Day Trader Pro",
+        "tagline": "Scannez, analysez le graphique et tradez la session intrajournalière.",
+        "description": "Un poste équilibré à trois colonnes : un scanner de marchés à gauche, un grand graphique au centre, et à droite un carnet d'ordres avec ticket d'ordre et positions ouvertes. Le cheval de bataille du trading crypto actif au quotidien."
+      },
+      "swing-overview": {
+        "name": "Vue d'ensemble Swing",
+        "tagline": "Contexte de tendance avec une liste de suivi et les mouvements.",
+        "description": "Une mise en page plus calme pour les positions sur plusieurs jours : un graphique complet à côté de votre liste de suivi, les principaux mouvements, et les fondamentaux de la paire. Assez de contexte pour dimensionner un swing sans le bruit d'un poste d'exécution."
+      },
+      "ai-research-desk": {
+        "name": "Poste Research IA",
+        "tagline": "Copilote, recherche et le fil d'actualités à côté de votre graphique.",
+        "description": "Associez un graphique au co-pilote IA, à la recherche approfondie, et aux flux d'actualités globaux et du symbole. Conçu pour le trading piloté par les catalyseurs, où l'histoire compte autant que le ticker. Nécessite un fournisseur d'inférence IA pour le Copilote et la Recherche."
+      },
+      "market-discovery": {
+        "name": "Découverte de marché",
+        "tagline": "Trouvez ce qui bouge avant de vous engager.",
+        "description": "Un tableau de découverte pur : le scanner de marchés, les principaux mouvements, une carte thermique sectorielle, votre liste de suivi, et la jauge Peur & Avidité. Pas de graphique, pas de ticket — juste pour chasser la prochaine configuration."
+      },
+      "portfolio-command": {
+        "name": "Pilotage du portefeuille",
+        "tagline": "Soldes, positions et risque en un coup d'œil.",
+        "description": "Un cockpit centré sur le compte : la répartition de votre portefeuille, les positions ouvertes, des garde-fous de risque en direct, et une liste de suivi pour garder un œil sur le reste de vos positions. Pour gérer ce que vous détenez déjà."
+      },
+      "dex-degen": {
+        "name": "DEX Degen",
+        "tagline": "Graphiques on-chain, swaps et fil social.",
+        "description": "Conçu pour la chasse on-chain : un graphique avec ticket de swap, des tickers récents pour repérer les nouvelles cotations, et le fil social pour l'alpha. Acheminez les swaps via un connecteur DEX comme Jupiter."
+      },
+      "quant-signals": {
+        "name": "Signaux Quant",
+        "tagline": "Journal de données, carte thermique et risque pour un trading piloté par les signaux.",
+        "description": "Un poste axé sur les données : un graphique associé au journal de données brutes, une carte thermique de liquidité, l'état du risque en direct, et le scanner de marchés. Pour les traders qui lisent le ticker en chiffres, pas en bougies."
+      },
+      "equities-desk": {
+        "name": "Poste Actions",
+        "tagline": "Tradez des actions avec un scanner, un graphique et des positions.",
+        "description": "Une mise en page pour le trading d'actions : le scanner de marchés, un graphique, les positions ouvertes, et le fil d'actualités. Connectez le plugin broker Alpaca pour recevoir les actions américaines en flux et acheminer les ordres."
+      },
+      "ultrawide-trading-floor": {
+        "name": "Salle des marchés Ultrawide",
+        "tagline": "Tout, partout — pour le grand écran.",
+        "description": "Un centre de commande à quatre colonnes qui remplit un écran ultrawide ou un second écran : scanner, graphique, carnet d'ordres et profondeur, un ticket d'ordre avec positions, et le co-pilote IA. La mise en page maximaliste."
+      },
+      "classic-terminal": {
+        "name": "Terminal Classique",
+        "tagline": "Le poste Pairlens classique — graphique, données, trading, copilote.",
+        "description": "La mise en page de terminal par défaut : un grand graphique avec un bandeau de données à onglets et une barre de risque à gauche, et un ticket d'ordre au-dessus du co-pilote IA à droite.",
+        "menuLabel": "Par défaut"
+      },
+      "chart-focus": {
+        "name": "Focus Graphique",
+        "tagline": "Un grand graphique avec les données en onglets en dessous.",
+        "description": "Une mise en page à une colonne qui donne au graphique le maximum d'espace, avec les positions, le journal de données, le copilote et le ticket d'ordre nichés dans un bandeau d'onglets en dessous.",
+        "menuLabel": "Focus Graphique"
+      },
+      "trading": {
+        "name": "Trading",
+        "tagline": "Carnet d'ordres et ticket encadrant un graphique central.",
+        "description": "Un poste d'exécution à trois colonnes : carnet d'ordres et ticket d'ordre à gauche, graphique avec positions et risque au centre, et le co-pilote IA à droite.",
+        "menuLabel": "Trading"
+      },
+      "chart-analysis": {
+        "name": "Analyse Graphique",
+        "tagline": "Graphique et données à gauche, copilote et exécution à droite.",
+        "description": "Une répartition orientée étude : graphique, données, recherche et risque à gauche ; copilote, carnet d'ordres et ticket d'ordre à droite.",
+        "menuLabel": "Analyse"
+      },
+      "dual-charts": {
+        "name": "Doubles Graphiques",
+        "tagline": "Deux graphiques côte à côte.",
+        "description": "Deux panneaux de graphique indépendants côte à côte — chacun garde son propre marché, sa période et son type de graphique. Définissez une paire différente par panneau avec son sélecteur de paire.",
+        "menuLabel": "Doubles Graphiques"
+      },
+      "triple-charts": {
+        "name": "Triples Graphiques",
+        "tagline": "Un grand graphique avec deux empilés à côté.",
+        "description": "Un grand graphique principal avec deux graphiques plus petits empilés à droite — chacun indépendant, pour surveiller une paire de référence face à deux autres.",
+        "menuLabel": "Triples Graphiques"
+      },
+      "quad-charts": {
+        "name": "Quadruples Graphiques",
+        "tagline": "Une grille de graphiques 2×2.",
+        "description": "Quatre graphiques indépendants dans une grille 2×2 — un cockpit multi-graphiques complet pour suivre plusieurs marchés à la fois.",
+        "menuLabel": "Quadruples Graphiques"
+      },
+      "laptop-focus": {
+        "name": "Focus Portable",
+        "tagline": "Mise en page verticale à une colonne, adaptée aux ordinateurs portables.",
+        "description": "Une mise en page compacte et verticale adaptée à l'écran d'un ordinateur portable : graphique en haut, un bandeau d'onglets de données et une fine barre de risque."
+      },
+      "laptop-split": {
+        "name": "Partage Portable",
+        "tagline": "Graphique + données à gauche, trading + copilote à droite — pour les écrans plus petits.",
+        "description": "Une répartition à deux colonnes dimensionnée pour les ordinateurs portables : graphique et positions à gauche, ticket d'ordre au-dessus du copilote à droite."
+      },
+      "ultrawide-dashboard": {
+        "name": "Tableau de bord Ultrawide",
+        "tagline": "Chaque panneau réparti sur un écran ultrawide.",
+        "description": "Un tableau de bord à quatre colonnes pour écrans ultrawide : carnet d'ordres, graphique avec risque, positions et recherche, et une colonne trading + copilote."
+      },
+      "ultrawide-trading": {
+        "name": "Trading Ultrawide",
+        "tagline": "Carnet d'ordres, profondeur, graphique et exécution sur toute la largeur.",
+        "description": "Une mise en page d'exécution ultrawide : carnet d'ordres et profondeur de marché à gauche, graphique avec positions au centre, et une colonne trading + copilote à droite."
+      },
+      "command-center": {
+        "name": "Centre de commande 4K",
+        "tagline": "Le centre de commande complet pour un écran 4K.",
+        "description": "Tout à l'écran pour un moniteur 4K : carnet d'ordres et infos de paire, graphique avec recherche et risque, positions et social, et une colonne trading + copilote."
+      },
+      "home-pulse": {
+        "name": "Accueil",
+        "tagline": "Le tableau par défaut : scanner, sentiment, mouvements et actualités.",
+        "description": "Le tableau d'accueil par défaut — scanner de marchés, un bandeau de pouls du marché avec la jauge Peur & Avidité et Top coins en onglet avec votre liste de suivi, et une colonne d'actualités pleine hauteur. Tout y fonctionne sans compte.",
+        "menuLabel": "Accueil"
+      },
+      "markets-board": {
+        "name": "Tableau des marchés",
+        "tagline": "Juste le scanner de marchés, en plein écran.",
+        "description": "Le scanner de marchés en pleine largeur — la façon la plus simple de parcourir et trier chaque paire négociable.",
+        "menuLabel": "Marchés"
+      },
+      "markets-overview": {
+        "name": "Vue d'ensemble des marchés",
+        "tagline": "Scanner à côté de vos mouvements et de votre liste de suivi.",
+        "description": "Le scanner de marchés aux côtés des principaux mouvements et de votre liste de suivi — une base équilibrée pour trouver et suivre des configurations.",
+        "menuLabel": "Vue d'ensemble"
+      },
+      "sector-analysis": {
+        "name": "Analyse Sectorielle",
+        "tagline": "Scanner, carte thermique, mouvements et liste de suivi.",
+        "description": "Un tableau de découverte avec une carte thermique sectorielle au milieu : scanner à gauche, carte thermique au centre, et mouvements au-dessus de votre liste de suivi à droite.",
+        "menuLabel": "Analyse"
+      },
+      "news-board": {
+        "name": "Tableau d'actualités",
+        "tagline": "Marchés aux côtés des mouvements et du flux d'actualités.",
+        "description": "Le scanner de marchés aux côtés des principaux mouvements et du flux d'actualités en direct — une base pour le trading piloté par les catalyseurs.",
+        "menuLabel": "Actualités"
+      }
+    },
+    "traderTypes": {
+      "scalper": {
+        "label": "Scalper",
+        "description": "Entrées et sorties rapides sur des spreads serrés"
+      },
+      "day-trader": {
+        "label": "Day Trader",
+        "description": "Momentum et flux intrajournalier"
+      },
+      "swing-trader": {
+        "label": "Swing Trader",
+        "description": "Positions de tendance sur plusieurs jours"
+      },
+      "position-investor": {
+        "label": "Investisseur",
+        "description": "Approche portefeuille à horizon plus long"
+      },
+      "news-trader": {
+        "label": "News Trader",
+        "description": "Guidé par les gros titres et les catalyseurs"
+      },
+      "dex-degen": {
+        "label": "DEX Degen",
+        "description": "Chasse on-chain et memecoins"
+      },
+      "quant": {
+        "label": "Quant",
+        "description": "Workflows riches en signaux et en données"
+      }
+    },
+    "assetClasses": {
+      "crypto-spot": {
+        "label": "Crypto Spot"
+      },
+      "dex": {
+        "label": "DEX"
+      },
+      "equities": {
+        "label": "Actions"
+      },
+      "multi-asset": {
+        "label": "Multi-actifs"
+      }
+    },
+    "screenSizes": {
+      "compact": {
+        "label": "Compact"
+      },
+      "standard": {
+        "label": "Standard"
+      },
+      "wide": {
+        "label": "Large"
+      },
+      "multi": {
+        "label": "Multi-écrans"
+      }
+    },
+    "pluginReasons": {
+      "jupiter-dex-connector": "Achemine les swaps Solana et diffuse les prix on-chain",
+      "alpaca-market-connector": "Diffuse les données d'actions américaines et achemine les ordres boursiers"
+    }
   },
   "notifications": {
     "flows": "Flux",
@@ -2944,6 +3223,243 @@
           "start": "Début (UTC)",
           "end": "Fin (UTC)"
         }
+      }
+    },
+    "stepTypes": {
+      "price-alert": {
+        "label": "Alerte de prix",
+        "fields": {
+          "direction": {
+            "label": "Direction",
+            "options": {
+              "above": "Au-dessus",
+              "below": "En dessous"
+            }
+          },
+          "price": {
+            "label": "Prix"
+          }
+        },
+        "handles": {
+          "out": "Déclenché"
+        }
+      },
+      "order-executed": {
+        "label": "Ordre exécuté",
+        "fields": {
+          "side": {
+            "label": "Sens",
+            "options": {
+              "any": "Indifférent",
+              "buy": "Achat",
+              "sell": "Vente"
+            }
+          },
+          "status": {
+            "label": "Statut",
+            "options": {
+              "any": "Indifférent",
+              "filled": "Exécuté",
+              "partially_filled": "Partiellement exécuté"
+            }
+          }
+        },
+        "handles": {
+          "out": "Déclenché"
+        }
+      },
+      "signal-generated": {
+        "label": "Signal généré",
+        "fields": {
+          "signalType": {
+            "label": "Type de signal (optionnel)",
+            "placeholder": "Tout type"
+          }
+        },
+        "handles": {
+          "out": "Déclenché"
+        }
+      },
+      "indicator-alert": {
+        "label": "Alerte d'indicateur",
+        "fields": {
+          "indicator": {
+            "label": "Indicateur (optionnel)",
+            "placeholder": "Tout indicateur"
+          },
+          "condition": {
+            "label": "Condition (optionnelle)",
+            "placeholder": "Toute condition"
+          }
+        },
+        "handles": {
+          "out": "Déclenché"
+        }
+      },
+      "candle-close": {
+        "label": "Clôture de bougie",
+        "fields": {
+          "timeframe": {
+            "label": "Période",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          }
+        },
+        "handles": {
+          "out": "Déclenché"
+        }
+      },
+      "price-condition": {
+        "label": "Condition de prix",
+        "fields": {
+          "direction": {
+            "label": "Direction",
+            "options": {
+              "above": "Au-dessus",
+              "below": "En dessous"
+            }
+          },
+          "price": {
+            "label": "Prix"
+          }
+        },
+        "handles": {
+          "pass": "Validé",
+          "fail": "Invalidé"
+        }
+      },
+      "percent-change": {
+        "label": "Variation en pourcentage",
+        "fields": {
+          "percent": {
+            "label": "Pourcentage"
+          },
+          "direction": {
+            "label": "Direction",
+            "options": {
+              "up": "Hausse",
+              "down": "Baisse",
+              "either": "Les deux"
+            }
+          }
+        },
+        "handles": {
+          "pass": "Validé",
+          "fail": "Invalidé"
+        }
+      },
+      "time-window": {
+        "label": "Plage horaire",
+        "fields": {
+          "startHour": {
+            "label": "Heure de début (UTC)"
+          },
+          "endHour": {
+            "label": "Heure de fin (UTC)"
+          }
+        },
+        "handles": {
+          "pass": "Validé",
+          "fail": "Invalidé"
+        }
+      },
+      "local-toast": {
+        "label": "Toast"
+      },
+      "os-notification": {
+        "label": "Notification système",
+        "fields": {
+          "sound": {
+            "label": "Jouer un son"
+          }
+        }
+      },
+      "webhook": {
+        "label": "Webhook",
+        "fields": {
+          "url": {
+            "label": "URL",
+            "placeholder": "https://example.com/webhook"
+          },
+          "method": {
+            "label": "Méthode",
+            "options": {
+              "GET": "GET",
+              "POST": "POST"
+            }
+          },
+          "includePayload": {
+            "label": "Inclure le payload de l'événement"
+          }
+        }
+      }
+    },
+    "messages": {
+      "unknownPair": "inconnu",
+      "priceAlert": {
+        "title": "Alerte de prix : {{pair}}",
+        "body": "{{pair}} est maintenant {{direction}} {{price}} — actuel : {{current}}"
+      },
+      "orderExecuted": {
+        "title": "Ordre exécuté",
+        "body": "{{side}} {{pair}} — {{status}}"
+      },
+      "signalGenerated": {
+        "title": "Signal généré",
+        "body": "{{signal}} sur {{pair}}",
+        "genericSignal": "Signal"
+      },
+      "indicatorAlert": {
+        "title": "Alerte d'indicateur",
+        "body": "{{indicator}} déclenché sur {{pair}}",
+        "genericName": "Indicateur"
+      },
+      "candleClose": {
+        "title": "Clôture de bougie",
+        "body": "Bougie {{timeframe}} clôturée sur {{pair}}"
+      }
+    },
+    "templates": {
+      "price-level": {
+        "title": "Le prix franchit un niveau",
+        "description": "Toast plus notification système à l'instant où {{pair}} franchit {{level}}. Faites glisser le niveau jusqu'au vôtre.",
+        "chips": {
+          "0": "Prix au-dessus",
+          "1": "Toast"
+        }
+      },
+      "volatile-candle": {
+        "title": "La bougie horaire fait un grand mouvement",
+        "description": "Se déclenche quand une bougie horaire clôture à plus de 3 % de son ouverture, à la hausse ou à la baisse.",
+        "chips": {
+          "1": "±3 % de corps"
+        }
+      },
+      "fills": {
+        "title": "Prévenez-moi quand un ordre est exécuté",
+        "description": "Chaque ordre exécuté sur la paire vous parvient, pour que le terminal puisse rester en arrière-plan.",
+        "chips": {
+          "0": "Ordre exécuté",
+          "1": "Sens indifférent"
+        }
+      },
+      "indicator-relay": {
+        "title": "Relayez mes alertes d'indicateur",
+        "description": "Les conditions d'alerte déclarées par vos indicateurs Python deviennent de vraies notifications.",
+        "chips": {
+          "0": "Tout indicateur",
+          "1": "Toute condition"
+        }
+      },
+      "session-drop": {
+        "title": "Forte baisse, uniquement pendant que je suis éveillé",
+        "description": "Une bougie baissière de 2 % vous réveille, mais seulement entre 13h00 et 21h00 UTC."
       }
     }
   },
@@ -3140,7 +3656,11 @@
       "botsPausedBody": "Déverrouillez Pairlens pour reprendre le trading réel. Les bots en papier ne sont pas affectés.",
       "orderBlocked": "Votre coffre d'identifiants est verrouillé — déverrouillez Pairlens pour passer des ordres réels.",
       "insecureContext": "Le chiffrement est indisponible sur une connexion non sécurisée. Ouvrez Pairlens en HTTPS, ou sur localhost, pour configurer un coffre.",
-      "diverged": "Votre terminal est déverrouillé, mais ce mot de passe n'a pas ouvert votre coffre d'identifiants. Changez votre mot de passe dans Paramètres → Sécurité pour les resynchroniser."
+      "diverged": "Votre terminal est déverrouillé, mais ce mot de passe n'a pas ouvert votre coffre d'identifiants. Changez votre mot de passe dans Paramètres → Sécurité pour les resynchroniser.",
+      "botParkDetailSealed": "Votre coffre d'identifiants est verrouillé. Ce bot reprend le trading réel dès que vous déverrouillez Pairlens. Les bots en papier ne sont pas affectés.",
+      "botParkDetailError": "Vos identifiants enregistrés n'ont pas pu être lus sur cet appareil. Ce bot reprend le trading réel dès qu'ils sont chargés. Les bots en papier ne sont pas affectés.",
+      "onlyProtectorLeft": "C'est le seul moyen d'entrer dans votre coffre. Ajoutez-en un autre avant de le retirer.",
+      "onlyBiometricProtectorLeft": "Touch ID ne peut pas être le seul moyen d'entrer dans votre coffre. Ajoutez un mot de passe ou une passkey avant de retirer celui-ci."
     }
   },
   "fullscreen": {
@@ -3304,7 +3824,8 @@
       "title": "Chaque ordre peut avoir son propre plan",
       "description": "Un workflow se rattache à un ordre que vous placez depuis le panneau de trading. Dès son exécution, les étapes qui en dépendent se déclenchent d'elles-mêmes — brackets, échelles, sorties échelonnées, vérifications programmées — le plan est donc déjà en place, plutôt qu'une chose à faire vous-même plus tard.",
       "blankLabel": "Partir d'un canevas vierge",
-      "footnote": "Les modèles s'ouvrent en brouillon : modifiez une étape, puis cliquez sur Valider pour enregistrer. Associez un workflow enregistré à un ordre depuis le panneau de trading pour l'exécuter."
+      "footnote": "Les modèles s'ouvrent en brouillon : modifiez une étape, puis cliquez sur Valider pour enregistrer. Associez un workflow enregistré à un ordre depuis le panneau de trading pour l'exécuter.",
+      "untitledWorkflow": "Workflow sans titre"
     },
     "steps": {
       "sideLabel": "Sens",
@@ -3374,6 +3895,288 @@
       "summaryExecuted": "{{count}} exécutées",
       "summarySkipped": "{{count}} ignorées",
       "summaryFailed": "{{count}} échouées"
+    },
+    "stepTypes": {
+      "trigger": {
+        "label": "Entrée d'ordre"
+      },
+      "market-order": {
+        "label": "Ordre au marché",
+        "fields": {
+          "side": {
+            "label": "Sens",
+            "options": {
+              "inherit": "Identique à l'entrée",
+              "opposite": "Opposé à l'entrée",
+              "buy": "Acheter",
+              "sell": "Vendre"
+            }
+          },
+          "sizeMode": {
+            "label": "Mode de taille",
+            "options": {
+              "percent": "% de l'entrée",
+              "absolute": "Montant fixe"
+            }
+          },
+          "size": {
+            "label": "Taille"
+          }
+        }
+      },
+      "limit-order": {
+        "label": "Ordre limite",
+        "compat": "Ordres limites en attente",
+        "fields": {
+          "side": {
+            "label": "Sens",
+            "options": {
+              "inherit": "Identique à l'entrée",
+              "opposite": "Opposé à l'entrée",
+              "buy": "Acheter",
+              "sell": "Vendre"
+            }
+          },
+          "sizeMode": {
+            "label": "Mode de taille",
+            "options": {
+              "percent": "% de l'entrée",
+              "absolute": "Montant fixe"
+            }
+          },
+          "size": {
+            "label": "Taille"
+          },
+          "priceMode": {
+            "label": "Mode de prix",
+            "options": {
+              "absolute": "Prix fixe",
+              "offset-percent": "% depuis le prix actuel",
+              "offset-absolute": "Écart depuis le prix actuel"
+            }
+          },
+          "priceValue": {
+            "label": "Valeur du prix"
+          }
+        },
+        "compatReason": "cette place de marché ne peut pas laisser d'ordres limites en attente (DEX swap uniquement)"
+      },
+      "take-profit": {
+        "label": "Take Profit",
+        "compat": "Ordres déclencheurs natifs ou ordres limites en attente",
+        "fields": {
+          "triggerMode": {
+            "label": "Mode de déclenchement",
+            "options": {
+              "percent": "% de gain",
+              "absolute": "Niveau de prix"
+            }
+          },
+          "triggerValue": {
+            "label": "Valeur de déclenchement"
+          },
+          "sizePercent": {
+            "label": "Clôturer %"
+          },
+          "orderType": {
+            "label": "Type d'ordre",
+            "options": {
+              "market": "Marché",
+              "limit": "Limite"
+            }
+          },
+          "limitPrice": {
+            "label": "Prix limite"
+          }
+        },
+        "compatReason": "cette place de marché ne prend en charge ni les ordres déclencheurs ni les ordres limites en attente"
+      },
+      "stop-loss": {
+        "label": "Stop Loss",
+        "compat": "Ordres déclencheurs natifs",
+        "fields": {
+          "triggerMode": {
+            "label": "Mode de déclenchement",
+            "options": {
+              "percent": "% de perte",
+              "absolute": "Niveau de prix"
+            }
+          },
+          "triggerValue": {
+            "label": "Valeur de déclenchement"
+          },
+          "sizePercent": {
+            "label": "Clôturer %"
+          },
+          "orderType": {
+            "label": "Type d'ordre",
+            "options": {
+              "market": "Marché",
+              "limit": "Limite"
+            }
+          },
+          "limitPrice": {
+            "label": "Prix limite"
+          }
+        },
+        "compatReason": "cette place de marché n'a pas d'ordres déclencheurs natifs, donc un stop loss ne peut pas rester en attente sur la plateforme"
+      },
+      "condition": {
+        "label": "Condition",
+        "fields": {
+          "conditionType": {
+            "label": "Condition",
+            "options": {
+              "price-above": "Prix au-dessus",
+              "price-below": "Prix en dessous",
+              "percent-change": "% de variation depuis l'entrée"
+            }
+          },
+          "value": {
+            "label": "Valeur"
+          }
+        }
+      },
+      "split": {
+        "label": "Division parallèle",
+        "fields": {
+          "branches": {
+            "label": "Branches"
+          }
+        }
+      },
+      "wait": {
+        "label": "Attente",
+        "fields": {
+          "duration": {
+            "label": "Durée"
+          },
+          "unit": {
+            "label": "Unité",
+            "options": {
+              "seconds": "Secondes",
+              "minutes": "Minutes",
+              "hours": "Heures"
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "bracket": {
+        "title": "Bracket autour de l'exécution",
+        "description": "Ce que veut toute position : une sortie au-dessus et une en dessous, toutes deux en attente dès que l'ordre est exécuté."
+      },
+      "scale-out": {
+        "title": "Sortir en trois paliers",
+        "description": "Prenez un tiers à chacun des trois niveaux, plutôt que de deviner une seule sortie et de devoir vous en contenter."
+      },
+      "ladder-entry": {
+        "title": "Échelonner l'entrée",
+        "description": "Placez la moitié de la taille 1 % sous l'exécution et l'autre moitié 2,5 % plus bas, pour qu'un repli renforce la position au lieu de faire mal."
+      },
+      "cut-if-stalls": {
+        "title": "Coupez si ça stagne",
+        "description": "Attendez quinze minutes, et si la position est dans le rouge à ce moment-là, clôturez-la au marché et passez à autre chose.",
+        "chips": {
+          "2": "Sortie au marché"
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "market-data": {
+      "candles": {
+        "label": "Bougies",
+        "description": "Flux de bougies OHLCV en direct pour graphiques et signaux"
+      },
+      "ticker": {
+        "label": "Ticker",
+        "description": "Flux en temps réel du dernier prix et de la variation sur 24 h"
+      },
+      "ticker-snapshot": {
+        "label": "Instantané du Ticker",
+        "description": "Cotations de ticker en masse via REST, sans ouvrir de flux"
+      },
+      "orderbook": {
+        "label": "Carnet d'Ordres",
+        "description": "Flux en direct de la profondeur du carnet d'ordres"
+      },
+      "history": {
+        "label": "Historique",
+        "description": "Rechargement historique de bougies pour les graphiques"
+      },
+      "discovery": {
+        "label": "Découverte",
+        "description": "Parcourir les instruments de trading disponibles",
+        "search": {
+          "label": "Rechercher",
+          "description": "Rechercher des instruments par nom ou symbole"
+        }
+      },
+      "symbol-logo": {
+        "label": "Logo du symbole",
+        "description": "Images de logo/icône pour les symboles de trading"
+      }
+    },
+    "domains": {
+      "market-data": "Données de marché",
+      "ai": "IA",
+      "trading": "Trading",
+      "automation": "Automatisation",
+      "theme": "Thème",
+      "charting": "Graphiques",
+      "workspace-store": "Workspace Store"
+    },
+    "ai": {
+      "inference": {
+        "label": "Inférence",
+        "description": "Inférence LLM pour l'analyse du co-pilote"
+      },
+      "web-search": {
+        "label": "Recherche web",
+        "description": "Recherche web comme base pour les rapports de recherche IA"
+      }
+    },
+    "trading": {
+      "orders": {
+        "label": "Ordres",
+        "description": "Passer et gérer des ordres sur la place de marché connectée"
+      },
+      "balances": {
+        "label": "Soldes",
+        "description": "Récupérer les soldes d'actifs du compte depuis l'exchange connecté"
+      }
+    },
+    "workflow": {
+      "step-types": {
+        "label": "Étapes de workflow",
+        "description": "Types d'étapes personnalisés pour les workflows d'automatisation"
+      }
+    },
+    "notification": {
+      "channel": {
+        "label": "Canaux de notification",
+        "description": "Canaux de diffusion pour les alertes et notifications"
+      }
+    },
+    "theme": {
+      "override": {
+        "label": "Thème",
+        "description": "Personnalisations de thème du terminal et de styles"
+      }
+    },
+    "chart": {
+      "indicator": {
+        "label": "Indicateurs Personnalisés",
+        "description": "Indicateurs de graphique définis par script, exécutés dans l'environnement Python local"
+      }
+    },
+    "workspace-store": {
+      "catalog": {
+        "label": "Catalogue de la boutique",
+        "description": "Fournit un catalogue consultable de modèles d'espace de travail"
+      }
     }
   }
 }
