@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Newspaper, RefreshCw } from 'lucide-react'
+import { RefreshCw } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
@@ -20,7 +20,9 @@ import {
   ArticleCard,
   ArticleCardSkeleton,
   NEWS_PAGE_TIME_FROM,
+  NewsFeedStatus,
   TOPIC_OPTIONS,
+  fetchNewsPage,
   flattenNewsPages,
   formatRelativeTime,
   formatTopicLabel,
@@ -86,9 +88,7 @@ export function NewsPane() {
         qs.set('time_from', NEWS_PAGE_TIME_FROM)
         qs.set('time_to', pageParam)
       }
-      const qsStr = qs.toString()
-      const res = await apiFetch(`/api/news${qsStr ? `?${qsStr}` : ''}`)
-      return res.json()
+      return fetchNewsPage(apiFetch, qs.toString())
     },
     initialPageParam: null,
     getNextPageParam: (lastPage, _pages, lastPageParam) => {
@@ -98,6 +98,8 @@ export function NewsPane() {
     },
     staleTime: 5 * 60_000,
     gcTime: 30 * 60_000,
+    // A provider outage isn't worth three rounds of backoff before we say so.
+    retry: 1,
   })
 
   const pages = data?.pages
@@ -167,17 +169,7 @@ export function NewsPane() {
           ))}
         </div>
       ) : error || articles.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
-          <Newspaper className="mb-3 size-8 text-muted-foreground/40" />
-          <p className="text-sm font-medium">
-            {error ? t('news.failed') : t('news.noneFound')}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {error
-              ? t('news.tryLater', 'Try again later')
-              : t('news.adjustFilters')}
-          </p>
-        </div>
+        <NewsFeedStatus error={error} emptyBody={t('news.adjustFilters')} />
       ) : (
         <div className="flex-1 grid grid-cols-1 @lg/pane:grid-cols-2 @4xl/pane:grid-cols-3 gap-3 overflow-y-auto p-4 auto-rows-max content-start">
           {articles.map((article: NewsArticle, i: number) => (

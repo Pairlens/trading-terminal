@@ -121,6 +121,23 @@ export type NewsFeedResponse = {
   fetchedAt: string
 }
 
+/**
+ * Why the feed could not be served. An empty `articles` array means the
+ * provider answered and had nothing to match; these mean it never answered
+ * usefully at all, which is a different thing to tell the user.
+ */
+export type NewsUnavailableReason =
+  | 'not_configured' // this server has no news provider key
+  | 'rate_limited' // the provider is refusing us for now
+  | 'upstream_error' // the provider errored, or answered with something unusable
+
+/** Error body served with a 5xx when the news provider fails us. */
+export type NewsUnavailableResponse = {
+  error: 'news_unavailable'
+  reason: NewsUnavailableReason
+  fetchedAt: string
+}
+
 export type TickerOverview = {
   // -- Common fields (populated for all asset classes) --
   ticker: string
