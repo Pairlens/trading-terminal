@@ -20,8 +20,10 @@ import {
 import { formatBookPrice } from '@/lib/format-price'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
+import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useSwitchTransition } from '@/hooks/use-switch-transition'
+import { usePairUnavailable } from '@/stores/pair-availability-store'
 
 function formatSize(size: number): string {
   if (size >= 1_000_000) return `${(size / 1_000_000).toFixed(2)}M`
@@ -38,24 +40,36 @@ export function DepthPane() {
     return <PanePairPicker />
   }
 
-  return <DepthPaneInner orderbookData={orderbookData} />
+  return (
+    <DepthPaneInner
+      orderbookData={orderbookData}
+      pairKey={activePair.pairKey}
+    />
+  )
 }
 
 function DepthPaneInner({
   orderbookData,
+  pairKey,
 }: {
   orderbookData: OrderbookStreamValue
+  pairKey: string
 }) {
   const { t } = useTranslation()
   const { orderbook, orderbookStatus, orderbookError } = orderbookData
 
-  // Connector-switch transition: retain the previous book and dim it until the
-  // new connector's first snapshot arrives (`book` is what we actually render).
+  // Switch transition: retain the previous book and dim it until the new
+  // stream's first snapshot arrives (`book` is what we actually render).
   const chartConfig = useOptionalChartConfig()
   const market = chartConfig?.market ?? ''
   const { markets } = useAvailableMarkets()
   const marketLabel = markets.find((m) => m.value === market)?.label ?? market
-  const { phase, display: book } = useSwitchTransition(market, orderbook)
+  const unavailable = usePairUnavailable(market, pairKey)
+  const {
+    phase,
+    display: book,
+    marketChanged,
+  } = useSwitchTransition(market, pairKey, orderbook)
 
   // The canvas engine takes a resolved theme object, so the pane has to pick
   // it — passing the dark one unconditionally left light mode with dark-tuned
@@ -130,6 +144,10 @@ function DepthPaneInner({
     }
   }, [book])
 
+  if (unavailable) {
+    return <PaneDataUnavailable compact pairKey={pairKey} market={market} />
+  }
+
   if (orderbookError) {
     return (
       <div className="flex h-full items-center justify-center px-4 text-center text-xs text-destructive">
@@ -155,7 +173,7 @@ function DepthPaneInner({
     <PaneTransition
       className="relative h-full w-full"
       phase={phase}
-      marketLabel={marketLabel}
+      marketLabel={marketChanged ? marketLabel : undefined}
     >
       <div
         className="relative h-full w-full"

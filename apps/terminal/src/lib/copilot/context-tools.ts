@@ -111,12 +111,15 @@ export function buildContextTools(deps: CopilotToolDeps) {
             })),
           }
         } catch (err) {
+          const message = err instanceof Error ? err.message : String(err)
+          // The App Server answers 502/503 when the news provider fails. Say so
+          // plainly, or the model reports "no news" for an outage.
+          const providerDown = /API error: 5\d\d/.test(message)
           return {
             articles: [],
-            error:
-              err instanceof Error
-                ? err.message
-                : 'News data requires being signed in.',
+            error: providerDown
+              ? 'The news provider is unavailable right now, so no articles could be fetched. This is not the same as there being no news.'
+              : message || 'News data requires being signed in.',
           }
         }
       },

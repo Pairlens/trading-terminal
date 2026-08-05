@@ -12,6 +12,7 @@ import {
   FallbackStepIcon,
   getNotificationStepIcon,
 } from '@/lib/notifications/notification-icons'
+import { stepTypeLabel } from '@/lib/registry-labels'
 
 const CATEGORY_ORDER = ['event', 'condition', 'channel'] as const
 
@@ -76,7 +77,7 @@ export function StepPalette({ onAddStep }: StepPaletteProps) {
                     )}
                   >
                     <Icon className="size-3.5 shrink-0" />
-                    <span>{st.label}</span>
+                    <span>{stepTypeLabel(t, 'notifications', st)}</span>
                   </div>
                 )
               })}

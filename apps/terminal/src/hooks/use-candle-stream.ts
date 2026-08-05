@@ -15,6 +15,10 @@ import type { CandleUpdate } from '@pairlens/market-engine/types'
 import type { Candle, SignalPayload } from '@pairlens/shared/types'
 import type { MarketDataStatus } from '@/lib/market-data-provider'
 import { useGeoRestrictionStore } from '@/stores/geo-restriction-store'
+import {
+  usePairAvailabilityStore,
+  usePairUnavailable,
+} from '@/stores/pair-availability-store'
 import { useMarketData } from '@/lib/market-data-provider'
 import { normalizePairKey } from '@/lib/pairs'
 
@@ -22,11 +26,17 @@ import { normalizePairKey } from '@/lib/pairs'
 // stale ("no recent market activity"). Conservative so quiet pairs don't flap.
 const STALE_THRESHOLD_MS = 30_000
 const STALE_CHECK_INTERVAL_MS = 5_000
-// Once the transport is connected we expect the REST backfill snapshot quickly.
-// If none arrives within this window the pair is almost certainly unavailable
-// on this connector (no such market, or a region/listing gap). We surface that
-// as a graceful empty state instead of an indefinite spinner.
+// Backstop for the availability probe below: a connector with no history
+// capability, or one whose REST call never settles, still has to resolve to
+// something. Silence for this long is treated as "not on this connector".
 const NO_DATA_TIMEOUT_MS = 12_000
+// A stream that has delivered nothing after this long gets probed against the
+// venue's REST history endpoint, which answers definitively in a few hundred
+// milliseconds ("market parameter is invalid" for BTC-USDT on Bitvavo) where
+// the WS just stays quiet. Sized so the probe almost never fires on a healthy
+// pair — connector backfill and the first live bar both land well inside it —
+// while an unlisted pair resolves in about a second instead of twelve.
+const PROBE_AFTER_MS = 1_000
 // Live WS updates flowing with no snapshot means the connector's REST
 // backfill died (rate limit, outage) even after its retry. The chart gates
 // on hasSnapshot, so without this guard it would stay empty/stale forever
@@ -74,8 +84,11 @@ type UseCandleStreamResult = {
   /** Connected but no candle updates within the staleness threshold. */
   stale: boolean
   /**
-   * Connected but no snapshot arrived within NO_DATA_TIMEOUT_MS — the pair is
-   * effectively unavailable on this connector. Drives a graceful empty state.
+   * The connector carries no market data for this pair — it doesn't list it, or
+   * refuses to serve it here. Established by the REST availability probe (about
+   * a second) with the silence timeout as a backstop, and shared with every
+   * other pane through the pair-availability store. Drives a graceful empty
+   * state instead of a spinner that never ends.
    */
   noData: boolean
   /**
@@ -172,6 +185,28 @@ const cacheSignalScan = (key: string, scan: SignalScan) => {
   }
 }
 
+// One availability probe per (market, pair, timeframe) at a time. The pair
+// page's provider, a pane pinned to the same pair and the copilot's context
+// sync each run their own candle stream for the same key, and there is no
+// reason to ask the venue the same question three times.
+const inFlightProbes = new Map<string, Promise<ReadonlyArray<unknown>>>()
+
+/** null when `run` reports the venue can't be asked (no history provider). */
+const probeAvailability = (
+  key: string,
+  run: () => Promise<ReadonlyArray<unknown>> | null,
+): Promise<ReadonlyArray<unknown>> | null => {
+  const existing = inFlightProbes.get(key)
+  if (existing) return existing
+  const started = run()
+  if (started === null) return null
+  const probe = started.finally(() => {
+    inFlightProbes.delete(key)
+  })
+  inFlightProbes.set(key, probe)
+  return probe
+}
+
 const mapStatus = (
   mdStatus: MarketDataStatus,
   enabled: boolean,
@@ -194,7 +229,7 @@ export function useCandleStream(
 
   const {
     subscribe,
-    fetchHistory,
+    probeVenueHistory,
     status: mdStatus,
     streamVersion,
   } = useMarketData()
@@ -253,16 +288,76 @@ export function useCandleStream(
     staleness.reset()
     setStale(false)
 
-    // If no snapshot arrives in time, the pair is unavailable on this
-    // connector — flag it so the UI can show an empty state with a CTA.
+    // Settled once the verdict is in (either way), so a late probe reply or a
+    // fired timeout can't contradict data that has since arrived.
+    let resolved = false
+
+    const markUnavailable = () => {
+      if (resolved) return
+      resolved = true
+      setNoData(true)
+      // Publish to every pane, not just the chart: the order book and the tape
+      // have no way of telling this apart from a slow venue on their own.
+      usePairAvailabilityStore.getState().report(market, normalizedPairKey)
+    }
+
+    // Backstop for venues the probe below can't reach (no history endpoint of
+    // their own, or a REST call that never settles).
     let noDataTimer: ReturnType<typeof setTimeout> | null = setTimeout(() => {
       noDataTimer = null
-      setNoData(true)
+      markUnavailable()
     }, NO_DATA_TIMEOUT_MS)
     const clearNoDataTimer = () => {
       if (noDataTimer) {
         clearTimeout(noDataTimer)
         noDataTimer = null
+      }
+    }
+
+    // Availability probe. The WS is silent whether the pair is unlisted or the
+    // venue is merely slow; REST distinguishes the two in one round trip, so
+    // ask it as soon as the stream looks quiet rather than sitting on a
+    // spinner. Doubles as the geo-block probe — a region-blocked venue answers
+    // 451/403 here — which used to wait out the full twelve seconds.
+    let probeTimer: ReturnType<typeof setTimeout> | null = setTimeout(() => {
+      probeTimer = null
+      if (resolved) return
+      const probe = probeAvailability(sk, () =>
+        probeVenueHistory(market, normalizedPairKey, timeframe, 1),
+      )
+      // The venue has no history endpoint of its own to ask — nothing to do
+      // but let the silence timeout above decide.
+      if (!probe) return
+      probe
+        .then((probed) => {
+          // A venue that answers with candles lists the pair; the connector's
+          // own backfill is just slow, so leave the stream to it.
+          if (probed.length === 0) markUnavailable()
+        })
+        .catch((err: unknown) => {
+          if (isPlatformRestrictedError(err)) {
+            if (!resolved) {
+              resolved = true
+              setDesktopOnly(true)
+            }
+            return
+          }
+          if (isGeoRestrictedError(err)) {
+            useGeoRestrictionStore.getState().report({
+              exchange: err.exchange,
+              market,
+              region: err.region,
+            })
+          }
+          // Every other rejection is the venue refusing this market outright
+          // ("market parameter is invalid", "Instrument ID does not exist").
+          markUnavailable()
+        })
+    }, PROBE_AFTER_MS)
+    const clearProbeTimer = () => {
+      if (probeTimer) {
+        clearTimeout(probeTimer)
+        probeTimer = null
       }
     }
 
@@ -283,10 +378,15 @@ export function useCandleStream(
         if (!update?.candles) return
 
         // Any delivered data means the pair is live on this connector — so it
-        // is reachable from this region. Clear any prior geo-block for it.
+        // is both listed and reachable from this region. Clear any prior
+        // geo-block and unavailability verdict for it, and close the question
+        // so a probe still in flight can't reopen it.
+        resolved = true
         clearNoDataTimer()
+        clearProbeTimer()
         setNoData(false)
         useGeoRestrictionStore.getState().clearForMarket(market)
+        usePairAvailabilityStore.getState().clear(market, normalizedPairKey)
 
         // Any delivered update counts as activity for staleness detection.
         staleness.mark(Date.now())
@@ -327,7 +427,9 @@ export function useCandleStream(
       // A connector can throw synchronously on subscribe when it statically
       // knows the venue is unavailable for the user's region (proactive geo
       // block, e.g. ByBit in the US). Surface it as a region restriction.
+      resolved = true
       clearNoDataTimer()
+      clearProbeTimer()
       // The venue is unreachable from a browser build (CORS + no WS history).
       // Surfaced as its own state so the UI can offer the desktop app instead
       // of implying the pair or the region is the problem.
@@ -353,9 +455,11 @@ export function useCandleStream(
     }, STALE_CHECK_INTERVAL_MS)
 
     return () => {
+      resolved = true
       unsubscribe()
       clearInterval(staleTimer)
       clearNoDataTimer()
+      clearProbeTimer()
       clearPromoteTimer()
       staleness.reset()
       setStale(false)
@@ -365,34 +469,11 @@ export function useCandleStream(
     market,
     normalizedPairKey,
     subscribe,
+    probeVenueHistory,
     mdStatus,
     timeframe,
     streamVersion,
   ])
-
-  // Reactive geo-block detection. When the stream connects but no snapshot
-  // arrives (noData), the WS may have been silently refused at the network
-  // layer — which looks identical to an unsupported pair. A connector blocked
-  // for the region, however, returns a clean 451/403 over REST. Probe once with
-  // a single-candle history fetch: a GeoRestrictedError confirms a region block
-  // (the proactive path already covers connectors that throw on subscribe).
-  useEffect(() => {
-    if (!noData || !enabled || normalizedPairKey.length === 0) return
-    let cancelled = false
-    fetchHistory(market, normalizedPairKey, timeframe, 1).catch((err) => {
-      if (cancelled) return
-      if (isGeoRestrictedError(err)) {
-        useGeoRestrictionStore.getState().report({
-          exchange: err.exchange,
-          market,
-          region: err.region,
-        })
-      }
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [noData, enabled, market, normalizedPairKey, timeframe, fetchHistory])
 
   // Signal scan: recompute when the snapshot lands and on every bar close.
   // The newest bar is the forming one, so keying on its ts means this fires
@@ -418,6 +499,12 @@ export function useCandleStream(
   const latestSignal: SignalPayload | null =
     signalScan?.signals[0]?.signal ?? null
 
+  // A verdict already on record wins immediately, so returning to a pair the
+  // venue doesn't list skips the probe wait — and, more importantly, keeps the
+  // chart saying the same thing as the panes reading the store directly. Local
+  // state alone resets on every resubscribe; the store doesn't.
+  const knownUnavailable = usePairUnavailable(market, normalizedPairKey)
+
   return {
     candles,
     latestCandle,
@@ -427,7 +514,7 @@ export function useCandleStream(
     errorMessage: streamError,
     hasSnapshot,
     stale,
-    noData,
+    noData: noData || knownUnavailable,
     desktopOnly,
   }
 }

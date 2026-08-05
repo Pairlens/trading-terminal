@@ -17,6 +17,8 @@ import type {
   WorkflowExecutionResult,
 } from '@pairlens/workflow-engine/types'
 
+import { stepTypeLabelById } from '@/lib/registry-labels'
+
 // ── Status Indicators ────────────────────────────────────────────────
 
 function StatusIcon({ status }: { status: StepExecutionResult['status'] }) {
@@ -118,7 +120,7 @@ function LiveWorkflowToast({
             <div className="flex items-center gap-2 py-0.5">
               <StatusIcon status={r.status} />
               <span className="min-w-0 flex-1 truncate text-xs">
-                {r.stepLabel}
+                {stepTypeLabelById(t, 'workflows', r.stepType, r.stepLabel)}
               </span>
               <span
                 className={`text-[10px] ${

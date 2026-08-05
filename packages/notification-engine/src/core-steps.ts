@@ -14,6 +14,15 @@
 
 import type { NotificationStepTypeDefinition } from './step-registry'
 
+/** First value that is real text, skipping nullish and blank strings. */
+function firstText(...values: Array<unknown>): string | undefined {
+  for (const v of values) {
+    if (typeof v === 'string' && v.trim() !== '') return v
+    if (typeof v === 'number') return String(v)
+  }
+  return undefined
+}
+
 // ── Event Steps ──────────────────────────────────────────────────────
 // Pair/market is inherited from the rule — not configured per event step.
 
@@ -162,15 +171,18 @@ const indicatorAlert: NotificationStepTypeDefinition = {
   validate: () => [],
   defaultData: () => ({ indicator: '', condition: '' }),
   formatMessage: (data, payload) => ({
-    title: String(
-      payload.data.conditionTitle ?? data.condition ?? 'Indicator Alert',
-    ),
-    body: String(
-      payload.data.message ??
-        `${String(payload.data.indicatorTitle ?? 'Indicator')} fired on ${String(
-          payload.pair ?? 'unknown',
-        )}`,
-    ),
+    // `condition` and `indicator` default to '' — blank is the documented way
+    // to match every condition of every indicator — so `??` would hand back an
+    // empty title for the most common configuration. Skip blanks, not just
+    // nullish values.
+    title:
+      firstText(payload.data.conditionTitle, data.condition) ??
+      'Indicator Alert',
+    body:
+      firstText(payload.data.message) ??
+      `${firstText(payload.data.indicatorTitle, data.indicator) ?? 'Indicator'} fired on ${String(
+        payload.pair ?? 'unknown',
+      )}`,
     severity: 'info',
   }),
 }

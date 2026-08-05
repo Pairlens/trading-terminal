@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { motion } from 'motion/react'
+import { useTranslation } from 'react-i18next'
 import type { ReactNode, Ref } from 'react'
 
 /**
@@ -19,7 +20,11 @@ import type { ReactNode, Ref } from 'react'
 export function PaneTransition({
   /** 'switching' = awaiting fresh data (dim); 'live' = fresh (full opacity). */
   phase,
-  /** Human-readable connector label for the badge. */
+  /**
+   * Human-readable connector label for the badge. Omit when the venue didn't
+   * change (a pair switch on the same venue) — the badge then says only that
+   * the pane is switching, rather than naming the venue it is already on.
+   */
   marketLabel,
   /** Layout classes for the container (drop-in for the wrapped region). */
   className,
@@ -33,6 +38,7 @@ export function PaneTransition({
   ref?: Ref<HTMLDivElement>
   children: ReactNode
 }) {
+  const { t } = useTranslation()
   const switching = phase === 'switching'
 
   return (
@@ -48,8 +54,8 @@ export function PaneTransition({
         <div className="pointer-events-none absolute left-1/2 top-2 z-20 -translate-x-1/2">
           <span className="rounded-full border border-border/60 bg-background/90 px-2.5 py-1 text-[11px] font-medium text-muted-foreground shadow-sm backdrop-blur">
             {marketLabel
-              ? `Switching to ${marketLabel}…`
-              : 'Switching connector…'}
+              ? t('layout.paneTransition.switchingTo', { venue: marketLabel })
+              : t('layout.paneTransition.switching')}
           </span>
         </div>
       )}

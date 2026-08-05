@@ -441,7 +441,18 @@
     "ordersLockedRiskLimit": "由於觸發風險限額,訂單已被鎖定。請在設定 > 風險管理中解鎖。",
     "buyOrdersLockedRiskLimit": "由於觸發風險限額,買單已被鎖定。請在設定 > 風險管理中解鎖。",
     "positionSizeExceeded": "訂單因風險限額被阻止:該倉位佔投資組合的 {{ratioPct}}%,超過你設定的 {{maxPositionSize}}% 上限。請在設定 > 風險管理中調整。",
-    "sessionExpired": "你的工作階段已過期 — 請重新登入。"
+    "sessionExpired": "你的工作階段已過期 — 請重新登入。",
+    "startFromTemplate": "從範本開始",
+    "chips": {
+      "osNotification": "系統通知",
+      "toastPlusOs": "提示 + 系統通知",
+      "timeframeClose": "1H 收盤",
+      "downPercent": "下跌 {{percent}}",
+      "takeProfitPercent": "停利 {{percent}}",
+      "stopLossPercent": "停損 {{percent}}",
+      "sizeAtOffset": "{{size}}（{{offset}}）",
+      "waitDuration": "等待 {{duration}}"
+    }
   },
   "legal": {
     "terms": "服務條款",
@@ -781,7 +792,9 @@
       "taxNote": "價格未含稅 — 稅金將於結帳時依你的所在地計算。",
       "packsTitle": "額外點數",
       "packsDescription": "一次性加值,疊加在每月預算之上。加值點數自購買起 30 天後到期,不會續期。",
-      "packActive": "{{credits}} 額外點數 — {{date}} 到期"
+      "packActive": "{{credits}} 額外點數 — {{date}} 到期",
+      "packAddedToastTitle": "額外點數已新增",
+      "packAddedToastDescription": "你的點數包已計入餘額 — 加值點數自購買起 30 天後到期。"
     },
     "about": {
       "desktop": "桌面版",
@@ -992,6 +1005,21 @@
       "title": "{{venue}} 需要桌面應用程式",
       "description": "這家交易所回傳行情資料時不帶瀏覽器讀取所需的標頭。桌面應用程式以原生方式連線，所有交易所在那裡都能用。",
       "alternatives": "或者繼續用瀏覽器"
+    },
+    "assets": {
+      "macos": {
+        "primary": "Apple 晶片版（.dmg）",
+        "intel": "Intel Mac 版（.dmg）"
+      },
+      "windows": {
+        "primary": "安裝程式（.exe）",
+        "msi": ".msi 安裝程式"
+      },
+      "linux": {
+        "primary": "AppImage",
+        "deb": ".deb",
+        "rpm": ".rpm"
+      }
     }
   },
   "userMenu": {
@@ -1172,6 +1200,7 @@
     "live": "即時",
     "connecting": "連線中",
     "stalled": "重新連線中",
+    "noData": "無資料",
     "offline": "離線",
     "error": "錯誤",
     "pluginUpdatesReady_one": "{{count}} 個外掛更新已就緒,可以安裝",
@@ -1762,7 +1791,10 @@
       "unsupportedLanguage": "以 {{language}} 撰寫的指標無法匯入。",
       "malformedDescriptor": "該指標的資料格式有誤。",
       "unknown": "匯入失敗。"
-    }
+    },
+    "syntaxErrorDiagnostic": "語法錯誤",
+    "missingMetaDiagnostic": "main.py 沒有在頂層定義 `meta = indicator(...)`——圖表沒有可繪製的內容。",
+    "missingComputeDiagnostic": "main.py 沒有在頂層定義 `def compute(ctx)`——腳本將無法載入。"
   },
   "indicators": {
     "title": "新增指標",
@@ -2162,6 +2194,10 @@
       "titleAnyVenue": "找不到 {{pair}}",
       "description": "這個連接器沒有回傳這個交易對的行情資料。換一個有上架它的連接器試試。"
     },
+    "paneTransition": {
+      "switchingTo": "正在切換到 {{venue}}…",
+      "switching": "正在切換…"
+    },
     "panePicker": {
       "bindToVariable": "綁定至變數",
       "boundTo": "已綁定至 <b>{{variable}}</b>",
@@ -2446,7 +2482,17 @@
     "previousSlide": "上一個",
     "nextSlide": "下一個",
     "goToSlide": "前往第 {{n}} 張",
-    "copyCommand": "複製指令"
+    "copyCommand": "複製指令",
+    "apiKeyRequiredHint": "需要 API 金鑰",
+    "setupRequiredHint": "需要設定",
+    "manifests": {
+      "userIndicators": {
+        "description": "你在指標編輯器中建立的自訂 Python 指標。"
+      },
+      "pairlensCommunity": {
+        "description": "由 Pairlens 使用者分享的社群工作區範本。"
+      }
+    }
   },
   "search": {
     "title": "搜尋交易對",
@@ -2563,7 +2609,9 @@
       "waitingTrades": "等待成交…",
       "waitingData": "等待資料…",
       "noCandleData": "尚無 K 線資料",
-      "noTradesFeed": "切換到發布逐筆成交的交易所"
+      "noTradesFeed": "切換到發布逐筆成交的交易所",
+      "noTradesFeedOn": "{{venue}} 沒有逐筆成交",
+      "noTradesFeedHere": "該交易所沒有逐筆成交"
     },
     "columns": {
       "price": "價格",
@@ -2577,7 +2625,9 @@
       "collapse": "收合面板"
     },
     "recentlyViewed": "最近檢視",
-    "noMarketsFound": "未找到市場"
+    "noMarketsFound": "未找到市場",
+    "modeLive": "實盤",
+    "modePaper": "模擬"
   },
   "accounts": {
     "pageTitle": "帳戶",
@@ -2708,7 +2758,32 @@
     "accountConnectFailed": "連接帳戶失敗。",
     "accountRemoveFailed": "移除帳戶失敗。",
     "fieldRequired": "{{field}}為必填項目",
-    "accountConnectedFeedback": "{{label}}{{mode}}帳戶已連接。"
+    "accountConnectedFeedback": "{{label}}{{mode}}帳戶已連接。",
+    "defaultWalletName": "{{chain}} 錢包",
+    "walletChains": {
+      "ethereum": {
+        "label": "Ethereum / EVM",
+        "fields": {
+          "privateKey": {
+            "label": "私鑰（hex）"
+          }
+        }
+      },
+      "solana": {
+        "fields": {
+          "privateKey": {
+            "label": "私鑰（base58）"
+          }
+        }
+      },
+      "bitcoin": {
+        "fields": {
+          "privateKey": {
+            "label": "私鑰（WIF）"
+          }
+        }
+      }
+    }
   },
   "workspaceStore": {
     "title": "工作區商店",
@@ -2819,7 +2894,218 @@
     "spotlight": "焦點推薦",
     "previousSlide": "上一個",
     "nextSlide": "下一個",
-    "goToSlide": "前往投影片 {{number}}"
+    "goToSlide": "前往投影片 {{number}}",
+    "templates": {
+      "scalpers-cockpit": {
+        "name": "剝頭皮駕駛艙",
+        "tagline": "圖表、委託簿與一鍵下單——僅此而已。",
+        "description": "極簡雙欄駕駛艙，專為快速執行打造：圖表旁是即時委託簿、市場深度與下單面板。為單一螢幕上的速度而生。"
+      },
+      "day-trader-pro": {
+        "name": "當沖交易專業版",
+        "tagline": "掃描、看圖、交易當沖行情。",
+        "description": "均衡的三欄工作台：左側是市場掃描器，中間是大圖表，右側是委託簿、下單面板與持倉部位。活躍加密貨幣交易的日常主力。"
+      },
+      "swing-overview": {
+        "name": "波段總覽",
+        "tagline": "趨勢脈絡，搭配自選清單與漲跌幅排行榜。",
+        "description": "更從容的多日部位版面：完整圖表旁是你的自選清單、漲跌幅排行榜與交易對基本面。足夠的脈絡助你判斷波段部位，卻沒有交易台的喧囂。"
+      },
+      "ai-research-desk": {
+        "name": "AI 研究台",
+        "tagline": "副駕駛、研究與新聞，就在圖表旁邊。",
+        "description": "把圖表與 AI 副駕駛、深度研究，以及全球和商品新聞雙資訊流搭配在一起。專為催化劑驅動的交易而生，消息面與盤面同樣重要。需要 AI 推論服務商才能使用副駕駛與研究功能。"
+      },
+      "market-discovery": {
+        "name": "市場探索",
+        "tagline": "在下單之前，先找到正在動的行情。",
+        "description": "純粹的探索看板：市場掃描器、漲跌幅排行榜、產業熱力圖、你的自選清單與恐懼與貪婪指數。沒有圖表，沒有下單面板——只為尋找下一個機會。"
+      },
+      "portfolio-command": {
+        "name": "投資組合控制台",
+        "tagline": "餘額、持倉部位與風險，一覽無遺。",
+        "description": "以帳戶為核心的駕駛艙：你的投資組合明細、持倉部位、即時風險護欄，以及用來關注其餘部位的自選清單。為管理你已持有的資產而生。"
+      },
+      "dex-degen": {
+        "name": "DEX Degen",
+        "tagline": "鏈上圖表、兌換與社群動態。",
+        "description": "為鏈上尋找機會而生：圖表搭配兌換面板、用於捕捉新上線代幣的近期行情，以及提供 alpha 情報的社群動態。透過 Jupiter 等 DEX 連接器路由兌換。"
+      },
+      "quant-signals": {
+        "name": "量化訊號",
+        "tagline": "資料日誌、熱力圖與風險，服務於訊號驅動交易。",
+        "description": "數據優先的工作台：圖表搭配原始資料日誌、流動性熱力圖、即時風險狀態與市場掃描器。為那些把盤面讀作數字而非 K 線的交易者而生。"
+      },
+      "equities-desk": {
+        "name": "股票交易台",
+        "tagline": "用掃描器、圖表與持倉部位交易股票。",
+        "description": "股票交易版面：市場掃描器、圖表、持倉部位與新聞。連接 Alpaca 券商外掛即可串流美股資料並路由訂單。"
+      },
+      "ultrawide-trading-floor": {
+        "name": "超寬螢幕交易大廳",
+        "tagline": "應有盡有，為大螢幕而生。",
+        "description": "填滿超寬螢幕或第二個螢幕的四欄指揮中心：掃描器、圖表、委託簿與深度、帶持倉部位的下單面板，以及 AI 副駕駛。極繁主義版面。"
+      },
+      "classic-terminal": {
+        "name": "經典終端",
+        "tagline": "經典 Pairlens 工作台——圖表、數據、交易、副駕駛。",
+        "description": "預設終端版面：左側是大圖表搭配標籤式資料條與風險條，右側是下單面板疊加 AI 副駕駛。",
+        "menuLabel": "預設"
+      },
+      "chart-focus": {
+        "name": "圖表聚焦",
+        "tagline": "一張大圖表，底部是標籤式資料。",
+        "description": "單欄版面把最大空間留給圖表，持倉部位、資料日誌、副駕駛與下單面板都收進下方的標籤條。",
+        "menuLabel": "圖表聚焦"
+      },
+      "trading": {
+        "name": "交易",
+        "tagline": "委託簿與下單面板環繞中央圖表。",
+        "description": "三欄執行工作台：左側是委託簿與下單面板，中間是帶持倉部位與風險的圖表，右側是 AI 副駕駛。",
+        "menuLabel": "交易"
+      },
+      "chart-analysis": {
+        "name": "圖表分析",
+        "tagline": "左側圖表與數據，右側副駕駛與交易執行。",
+        "description": "偏研究型的分欄版面：左側是圖表、數據、研究與風險，右側是副駕駛、委託簿與下單面板。",
+        "menuLabel": "分析"
+      },
+      "dual-charts": {
+        "name": "雙圖表",
+        "tagline": "兩張圖表並排顯示。",
+        "description": "兩個獨立圖表面板並排——各自保留自己的市場、時間週期與圖表類型。用面板自帶的交易對選擇器為每個面板設定不同的交易對。",
+        "menuLabel": "雙圖表"
+      },
+      "triple-charts": {
+        "name": "三圖表",
+        "tagline": "一張大圖表，旁邊疊放兩張小圖表。",
+        "description": "一張大的主圖表，右側疊放兩張較小的圖表——彼此獨立，方便你對照領先交易對與另外兩個交易對。",
+        "menuLabel": "三圖表"
+      },
+      "quad-charts": {
+        "name": "四圖表",
+        "tagline": "2×2 網格圖表。",
+        "description": "2×2 網格中的四張獨立圖表——完整的多圖駕駛艙，同時追蹤多個市場。",
+        "menuLabel": "四圖表"
+      },
+      "laptop-focus": {
+        "name": "筆電聚焦",
+        "tagline": "為筆電調校的直式單欄版面。",
+        "description": "精簡的直式版面，適配筆電螢幕：圖表在上，下接資料標籤條與細窄的風險條。"
+      },
+      "laptop-split": {
+        "name": "筆電分欄",
+        "tagline": "左側圖表＋數據，右側交易＋副駕駛——為較小螢幕設計。",
+        "description": "為筆電設計的雙欄版面：左側是圖表與持倉部位，右側是下單面板疊加副駕駛。"
+      },
+      "ultrawide-dashboard": {
+        "name": "超寬螢幕儀表板",
+        "tagline": "每個面板都鋪展在超寬螢幕上。",
+        "description": "為超寬螢幕設計的四欄儀表板：委託簿、帶風險的圖表、持倉部位與研究，以及交易＋副駕駛欄。"
+      },
+      "ultrawide-trading": {
+        "name": "超寬螢幕交易",
+        "tagline": "委託簿、深度、圖表與交易執行，橫貫整個寬度。",
+        "description": "超寬螢幕執行版面：左側是委託簿與市場深度，中間是帶持倉部位的圖表，右側是交易＋副駕駛欄。"
+      },
+      "command-center": {
+        "name": "4K 指揮中心",
+        "tagline": "為 4K 螢幕打造的完整指揮中心。",
+        "description": "為 4K 螢幕鋪滿全部內容：委託簿與交易對資訊、帶研究和風險的圖表、持倉部位與社群動態，以及交易＋副駕駛欄。"
+      },
+      "home-pulse": {
+        "name": "首頁",
+        "tagline": "預設看板：掃描器、情緒、漲跌幅排行榜與新聞。",
+        "description": "預設首頁看板——市場掃描器、帶恐懼與貪婪指數和熱門幣種的市場脈動欄（與你的自選清單同標籤頁），以及通欄新聞欄。全部功能無需帳戶即可使用。",
+        "menuLabel": "首頁"
+      },
+      "markets-board": {
+        "name": "市場看板",
+        "tagline": "只有市場掃描器，全螢幕鋪開。",
+        "description": "全寬市場掃描器——瀏覽與排序所有可交易對的最簡單方式。",
+        "menuLabel": "市場"
+      },
+      "markets-overview": {
+        "name": "市場總覽",
+        "tagline": "掃描器旁邊是漲跌幅排行榜與自選清單。",
+        "description": "市場掃描器搭配漲跌幅排行榜和你的自選清單——尋找與追蹤交易機會的均衡首頁。",
+        "menuLabel": "總覽"
+      },
+      "sector-analysis": {
+        "name": "產業分析",
+        "tagline": "掃描器、熱力圖、漲跌幅排行榜與自選清單。",
+        "description": "中間是產業熱力圖的探索看板：左側是掃描器，中間是熱力圖，右側是漲跌幅排行榜疊加你的自選清單。",
+        "menuLabel": "分析"
+      },
+      "news-board": {
+        "name": "新聞看板",
+        "tagline": "市場行情搭配漲跌幅排行榜與新聞動態。",
+        "description": "市場掃描器搭配漲跌幅排行榜和即時新聞動態——催化劑驅動交易的大本營。",
+        "menuLabel": "新聞"
+      }
+    },
+    "traderTypes": {
+      "scalper": {
+        "label": "剝頭皮交易者",
+        "description": "窄價差快進快出"
+      },
+      "day-trader": {
+        "label": "當沖交易者",
+        "description": "盤中動量與資金流"
+      },
+      "swing-trader": {
+        "label": "波段交易者",
+        "description": "多日趨勢部位"
+      },
+      "position-investor": {
+        "label": "投資者",
+        "description": "更長期的投資組合視角"
+      },
+      "news-trader": {
+        "label": "消息面交易者",
+        "description": "消息面與催化劑驅動"
+      },
+      "dex-degen": {
+        "label": "DEX Degen",
+        "description": "鏈上與 meme 幣淘金"
+      },
+      "quant": {
+        "label": "量化",
+        "description": "訊號與數據驅動的工作流程"
+      }
+    },
+    "assetClasses": {
+      "crypto-spot": {
+        "label": "加密貨幣現貨"
+      },
+      "dex": {
+        "label": "DEX"
+      },
+      "equities": {
+        "label": "股票"
+      },
+      "multi-asset": {
+        "label": "多資產"
+      }
+    },
+    "screenSizes": {
+      "compact": {
+        "label": "精簡"
+      },
+      "standard": {
+        "label": "標準"
+      },
+      "wide": {
+        "label": "寬螢幕"
+      },
+      "multi": {
+        "label": "多螢幕"
+      }
+    },
+    "pluginReasons": {
+      "jupiter-dex-connector": "路由 Solana 兌換並串流鏈上價格",
+      "alpaca-market-connector": "串流美股資料並路由股票訂單"
+    }
   },
   "notifications": {
     "flows": "流程",
@@ -2945,6 +3231,243 @@
           "end": "結束（UTC）"
         }
       }
+    },
+    "stepTypes": {
+      "price-alert": {
+        "label": "價格提醒",
+        "fields": {
+          "direction": {
+            "label": "方向",
+            "options": {
+              "above": "高於",
+              "below": "低於"
+            }
+          },
+          "price": {
+            "label": "價格"
+          }
+        },
+        "handles": {
+          "out": "已觸發"
+        }
+      },
+      "order-executed": {
+        "label": "訂單成交",
+        "fields": {
+          "side": {
+            "label": "方向",
+            "options": {
+              "any": "任意",
+              "buy": "買進",
+              "sell": "賣出"
+            }
+          },
+          "status": {
+            "label": "狀態",
+            "options": {
+              "any": "任意",
+              "filled": "已成交",
+              "partially_filled": "部分成交"
+            }
+          }
+        },
+        "handles": {
+          "out": "已觸發"
+        }
+      },
+      "signal-generated": {
+        "label": "訊號產生",
+        "fields": {
+          "signalType": {
+            "label": "訊號類型（選填）",
+            "placeholder": "任意類型"
+          }
+        },
+        "handles": {
+          "out": "已觸發"
+        }
+      },
+      "indicator-alert": {
+        "label": "指標提醒",
+        "fields": {
+          "indicator": {
+            "label": "指標（選填）",
+            "placeholder": "任意指標"
+          },
+          "condition": {
+            "label": "條件（選填）",
+            "placeholder": "任意條件"
+          }
+        },
+        "handles": {
+          "out": "已觸發"
+        }
+      },
+      "candle-close": {
+        "label": "K 線收盤",
+        "fields": {
+          "timeframe": {
+            "label": "時間週期",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          }
+        },
+        "handles": {
+          "out": "已觸發"
+        }
+      },
+      "price-condition": {
+        "label": "價格條件",
+        "fields": {
+          "direction": {
+            "label": "方向",
+            "options": {
+              "above": "高於",
+              "below": "低於"
+            }
+          },
+          "price": {
+            "label": "價格"
+          }
+        },
+        "handles": {
+          "pass": "通過",
+          "fail": "不通過"
+        }
+      },
+      "percent-change": {
+        "label": "百分比變化",
+        "fields": {
+          "percent": {
+            "label": "百分比"
+          },
+          "direction": {
+            "label": "方向",
+            "options": {
+              "up": "上漲",
+              "down": "下跌",
+              "either": "任一"
+            }
+          }
+        },
+        "handles": {
+          "pass": "通過",
+          "fail": "不通過"
+        }
+      },
+      "time-window": {
+        "label": "時間視窗",
+        "fields": {
+          "startHour": {
+            "label": "開始小時（UTC）"
+          },
+          "endHour": {
+            "label": "結束小時（UTC）"
+          }
+        },
+        "handles": {
+          "pass": "通過",
+          "fail": "不通過"
+        }
+      },
+      "local-toast": {
+        "label": "應用程式內提示"
+      },
+      "os-notification": {
+        "label": "系統通知",
+        "fields": {
+          "sound": {
+            "label": "播放聲音"
+          }
+        }
+      },
+      "webhook": {
+        "label": "Webhook",
+        "fields": {
+          "url": {
+            "label": "URL",
+            "placeholder": "https://example.com/webhook"
+          },
+          "method": {
+            "label": "方法",
+            "options": {
+              "GET": "GET",
+              "POST": "POST"
+            }
+          },
+          "includePayload": {
+            "label": "包含事件負載"
+          }
+        }
+      }
+    },
+    "messages": {
+      "unknownPair": "未知",
+      "priceAlert": {
+        "title": "價格提醒：{{pair}}",
+        "body": "{{pair}} 現在{{direction}} {{price}}——目前：{{current}}"
+      },
+      "orderExecuted": {
+        "title": "訂單成交",
+        "body": "{{side}} {{pair}}——{{status}}"
+      },
+      "signalGenerated": {
+        "title": "訊號產生",
+        "body": "{{pair}} 上的 {{signal}}",
+        "genericSignal": "訊號"
+      },
+      "indicatorAlert": {
+        "title": "指標提醒",
+        "body": "{{indicator}} 在 {{pair}} 上觸發",
+        "genericName": "指標"
+      },
+      "candleClose": {
+        "title": "K 線收盤",
+        "body": "{{pair}} 的 {{timeframe}} K 線已收盤"
+      }
+    },
+    "templates": {
+      "price-level": {
+        "title": "價格突破某個水平",
+        "description": "在 {{pair}} 突破 {{level}} 的那一刻送出應用程式內提示與系統通知。把水平線拖到你想要的價位。",
+        "chips": {
+          "0": "價格高於",
+          "1": "提示"
+        }
+      },
+      "volatile-candle": {
+        "title": "小時K線大幅波動",
+        "description": "當小時K線收盤價與開盤價相差超過 3%（無論漲跌）時觸發。",
+        "chips": {
+          "1": "±3% 實體"
+        }
+      },
+      "fills": {
+        "title": "訂單成交時告訴我",
+        "description": "該交易對上的每一筆成交訂單都會送達給你，終端因此可以在背景執行。",
+        "chips": {
+          "0": "訂單成交",
+          "1": "任意方向"
+        }
+      },
+      "indicator-relay": {
+        "title": "轉發我的指標提醒",
+        "description": "由你的 Python 指標宣告的提醒條件，將變成真正的通知。",
+        "chips": {
+          "0": "任意指標",
+          "1": "任意條件"
+        }
+      },
+      "session-drop": {
+        "title": "急跌，只在我醒著的時候",
+        "description": "2% 下跌K線會喚醒你，但僅限 UTC 13:00 到 21:00 之間。"
+      }
     }
   },
   "updater": {
@@ -3040,8 +3563,10 @@
     "tickerPlaceholder": "股票代號…",
     "sortLatest": "最新",
     "sortRelevance": "相關性",
-    "failed": "新聞載入失敗",
-    "tryLater": "請稍後再試",
+    "unavailable": "新聞無法使用",
+    "unavailableUpstream": "新聞提供方無回應。恢復前無法載入任何內容。",
+    "unavailableRateLimited": "已達到新聞提供方的請求上限，應該很快重置。",
+    "unavailableNotConfigured": "此伺服器未設定新聞提供方。",
     "noneFound": "找不到新聞",
     "adjustFilters": "請調整篩選條件，或稍後再回來查看",
     "noRecentFor": "{{symbol}} 目前沒有近期新聞",
@@ -3140,7 +3665,11 @@
       "botsPausedBody": "解鎖 Pairlens 以恢復實盤交易。模擬機器人不受影響。",
       "orderBlocked": "你的憑證保險庫已鎖定 — 解鎖 Pairlens 才能下實盤委託。",
       "insecureContext": "在不安全的連線上無法加密。請透過 HTTPS 或在 localhost 開啟 Pairlens 來設定保險庫。",
-      "diverged": "終端已解鎖，但該密碼沒能打開你的憑證保險庫。請在 設定 → 安全性 中變更密碼，讓兩者重新一致。"
+      "diverged": "終端已解鎖，但該密碼沒能打開你的憑證保險庫。請在 設定 → 安全性 中變更密碼，讓兩者重新一致。",
+      "botParkDetailSealed": "你的憑證保險庫已鎖定。只要解鎖 Pairlens，此機器人就會恢復實盤交易。模擬機器人不受影響。",
+      "botParkDetailError": "你儲存的憑證無法在此裝置上讀取。憑證一旦載入完成，此機器人就會恢復實盤交易。模擬機器人不受影響。",
+      "onlyProtectorLeft": "這是進入你保險庫的唯一方式。請先新增另一種方式，再移除它。",
+      "onlyBiometricProtectorLeft": "觸控 ID 不能是進入保險庫的唯一方式。請先新增密碼或通行金鑰，再移除它。"
     }
   },
   "fullscreen": {
@@ -3304,7 +3833,8 @@
       "title": "每一筆委託都能帶上自己的計畫",
       "description": "工作流程掛在你從交易面板送出的委託上。委託一旦成交，底下的步驟就會自動執行 — 括號單、階梯單、分批出場、定時檢查 — 計畫早已備妥，而不是留到之後才要自己記得去做。",
       "blankLabel": "從空白畫布開始",
-      "footnote": "範本會以草稿形式開啟：編輯任一步驟，然後按下提交即可儲存。從交易面板把已儲存的工作流程連結到某筆委託，即可執行它。"
+      "footnote": "範本會以草稿形式開啟：編輯任一步驟，然後按下提交即可儲存。從交易面板把已儲存的工作流程連結到某筆委託，即可執行它。",
+      "untitledWorkflow": "未命名工作流程"
     },
     "steps": {
       "sideLabel": "方向",
@@ -3374,6 +3904,288 @@
       "summaryExecuted": "{{count}} 已執行",
       "summarySkipped": "{{count}} 已略過",
       "summaryFailed": "{{count}} 失敗"
+    },
+    "stepTypes": {
+      "trigger": {
+        "label": "委託輸入"
+      },
+      "market-order": {
+        "label": "市價單",
+        "fields": {
+          "side": {
+            "label": "方向",
+            "options": {
+              "inherit": "與觸發相同",
+              "opposite": "與觸發相反",
+              "buy": "買進",
+              "sell": "賣出"
+            }
+          },
+          "sizeMode": {
+            "label": "數量方式",
+            "options": {
+              "percent": "% 輸入量",
+              "absolute": "固定數量"
+            }
+          },
+          "size": {
+            "label": "數量"
+          }
+        }
+      },
+      "limit-order": {
+        "label": "限價單",
+        "compat": "限價掛單",
+        "fields": {
+          "side": {
+            "label": "方向",
+            "options": {
+              "inherit": "與觸發相同",
+              "opposite": "與觸發相反",
+              "buy": "買進",
+              "sell": "賣出"
+            }
+          },
+          "sizeMode": {
+            "label": "數量方式",
+            "options": {
+              "percent": "% 輸入量",
+              "absolute": "固定數量"
+            }
+          },
+          "size": {
+            "label": "數量"
+          },
+          "priceMode": {
+            "label": "價格方式",
+            "options": {
+              "absolute": "固定價格",
+              "offset-percent": "距現價 %",
+              "offset-absolute": "距現價偏移"
+            }
+          },
+          "priceValue": {
+            "label": "價格值"
+          }
+        },
+        "compatReason": "此交易所無法掛限價單（僅支援兌換的 DEX）"
+      },
+      "take-profit": {
+        "label": "停利",
+        "compat": "原生觸發單或限價掛單",
+        "fields": {
+          "triggerMode": {
+            "label": "觸發方式",
+            "options": {
+              "percent": "獲利 %",
+              "absolute": "價格水準"
+            }
+          },
+          "triggerValue": {
+            "label": "觸發值"
+          },
+          "sizePercent": {
+            "label": "平倉 %"
+          },
+          "orderType": {
+            "label": "委託類型",
+            "options": {
+              "market": "市價",
+              "limit": "限價"
+            }
+          },
+          "limitPrice": {
+            "label": "限價"
+          }
+        },
+        "compatReason": "此交易所既不支援觸發單，也不支援掛限價單"
+      },
+      "stop-loss": {
+        "label": "停損",
+        "compat": "原生觸發單",
+        "fields": {
+          "triggerMode": {
+            "label": "觸發方式",
+            "options": {
+              "percent": "虧損 %",
+              "absolute": "價格水準"
+            }
+          },
+          "triggerValue": {
+            "label": "觸發值"
+          },
+          "sizePercent": {
+            "label": "平倉 %"
+          },
+          "orderType": {
+            "label": "委託類型",
+            "options": {
+              "market": "市價",
+              "limit": "限價"
+            }
+          },
+          "limitPrice": {
+            "label": "限價"
+          }
+        },
+        "compatReason": "此交易所沒有原生觸發單，停損無法掛在交易所端"
+      },
+      "condition": {
+        "label": "條件",
+        "fields": {
+          "conditionType": {
+            "label": "條件",
+            "options": {
+              "price-above": "價格高於",
+              "price-below": "價格低於",
+              "percent-change": "較進場價變化 %"
+            }
+          },
+          "value": {
+            "label": "數值"
+          }
+        }
+      },
+      "split": {
+        "label": "並行拆分",
+        "fields": {
+          "branches": {
+            "label": "分支數"
+          }
+        }
+      },
+      "wait": {
+        "label": "等待",
+        "fields": {
+          "duration": {
+            "label": "時長"
+          },
+          "unit": {
+            "label": "單位",
+            "options": {
+              "seconds": "秒",
+              "minutes": "分鐘",
+              "hours": "小時"
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "bracket": {
+        "title": "為成交加上括號單",
+        "description": "每個部位都想要的配置：一個上方出場，一個下方出場，委託一成交就同時掛上。"
+      },
+      "scale-out": {
+        "title": "分三批出場",
+        "description": "在三個價位各減倉三分之一，而不是猜一個出場點將就用。"
+      },
+      "ladder-entry": {
+        "title": "階梯式建倉",
+        "description": "把一半部位掛在成交價下方 1%，另一半掛在下方 2.5%，回檔不再傷人，反而幫你加碼。"
+      },
+      "cut-if-stalls": {
+        "title": "橫盤就砍倉",
+        "description": "等十五分鐘，如果那時還在虧損，就用市價平倉然後放手。",
+        "chips": {
+          "2": "市價出場"
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "market-data": {
+      "candles": {
+        "label": "K 線",
+        "description": "為圖表與訊號提供即時 OHLCV K 線串流"
+      },
+      "ticker": {
+        "label": "行情",
+        "description": "即時最新價格與 24 小時漲跌幅串流"
+      },
+      "ticker-snapshot": {
+        "label": "行情快照",
+        "description": "透過 REST 批次一次性取得行情報價，不需要開啟串流"
+      },
+      "orderbook": {
+        "label": "委託簿",
+        "description": "即時委託簿深度串流"
+      },
+      "history": {
+        "label": "歷史",
+        "description": "為圖表回補歷史 K 線資料"
+      },
+      "discovery": {
+        "label": "探索",
+        "description": "瀏覽可交易的商品",
+        "search": {
+          "label": "搜尋",
+          "description": "依名稱或代號搜尋商品"
+        }
+      },
+      "symbol-logo": {
+        "label": "商品圖示",
+        "description": "交易商品的圖示圖片"
+      }
+    },
+    "domains": {
+      "market-data": "市場數據",
+      "ai": "AI",
+      "trading": "交易",
+      "automation": "自動化",
+      "theme": "主題",
+      "charting": "圖表",
+      "workspace-store": "工作區商店"
+    },
+    "ai": {
+      "inference": {
+        "label": "推論",
+        "description": "用於副駕駛分析的 LLM 推論"
+      },
+      "web-search": {
+        "label": "網頁搜尋",
+        "description": "為 AI 研究報告提供網頁搜尋依據"
+      }
+    },
+    "trading": {
+      "orders": {
+        "label": "訂單",
+        "description": "在已連接的交易所下單與管理訂單"
+      },
+      "balances": {
+        "label": "餘額",
+        "description": "從已連接的交易所取得帳戶資產餘額"
+      }
+    },
+    "workflow": {
+      "step-types": {
+        "label": "工作流程步驟",
+        "description": "自動化工作流程的自訂步驟類型"
+      }
+    },
+    "notification": {
+      "channel": {
+        "label": "通知管道",
+        "description": "提醒與通知的送達管道"
+      }
+    },
+    "theme": {
+      "override": {
+        "label": "主題",
+        "description": "自訂終端主題與樣式覆蓋"
+      }
+    },
+    "chart": {
+      "indicator": {
+        "label": "自訂指標",
+        "description": "在本機 Python 執行環境中執行的腳本定義圖表指標"
+      }
+    },
+    "workspace-store": {
+      "catalog": {
+        "label": "商店目錄",
+        "description": "提供可瀏覽的工作區範本目錄"
+      }
     }
   }
 }

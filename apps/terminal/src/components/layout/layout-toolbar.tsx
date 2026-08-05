@@ -56,6 +56,7 @@ import type { GridPlacement } from './grid-confirm-dialog'
 import type { ShortcutDefinition } from '@/hooks/use-keyboard-shortcuts'
 import { workspaceAnalyticsKind } from '@/lib/analytics-panels'
 import { track } from '@/lib/analytics-events'
+import { templateMenuLabel } from '@/lib/workspace-store/template-labels'
 import { useLayout } from '@/lib/layout/context'
 import { useWorkspace } from '@/lib/layout/workspace-context'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
@@ -226,7 +227,7 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
           {Object.entries(presets).map(([key, preset]) => (
             <DropdownMenuItem key={key} onClick={() => handlePreset(key)}>
               <Layout className="size-3.5" />
-              {preset.label}
+              {templateMenuLabel(t, key, preset.label)}
             </DropdownMenuItem>
           ))}
 

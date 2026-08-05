@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { getLedgerEntry } from './plugin-ledger'
 import type { PluginManifest } from '@pairlens/plugin-system'
+import i18n from '@/lib/i18n'
 
 /**
  * Required config fields (declared in the manifest) that have no value in the
@@ -30,5 +31,11 @@ export function missingRequiredConfig(manifest: PluginManifest): Array<{
 export function missingConfigHint(manifest: PluginManifest): string | null {
   const missing = missingRequiredConfig(manifest)
   if (missing.length === 0) return null
-  return missing.some((m) => m.secret) ? 'API key required' : 'Setup required'
+  return missing.some((m) => m.secret)
+    ? i18n.t('pluginStore.apiKeyRequiredHint', {
+        defaultValue: 'API key required',
+      })
+    : i18n.t('pluginStore.setupRequiredHint', {
+        defaultValue: 'Setup required',
+      })
 }

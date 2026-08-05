@@ -24,7 +24,9 @@ import {
   useOptionalOrderbookData,
 } from '@/lib/chart-terminal-context'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
+import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { usePairlensChartTheme } from '@/hooks/use-chart-theme'
+import { usePairUnavailable } from '@/stores/pair-availability-store'
 import {
   findFirstSampleIndex,
   useLiquidityHeatmapData,
@@ -315,9 +317,23 @@ export function LiquidityHeatmapPane() {
   const orderbookData = useOptionalOrderbookData()
   const candleData = useOptionalCandleData()
   const chartConfig = useOptionalChartConfig()
+  const market = chartConfig?.market ?? activePair?.market ?? ''
+  const unavailable = usePairUnavailable(market, activePair?.pairKey ?? '')
 
   if (!activePair) {
     return <PanePairPicker />
+  }
+
+  // Checked before the snapshot gate below, which would otherwise spin on
+  // "Loading candles…" forever for a pair the venue doesn't carry.
+  if (unavailable) {
+    return (
+      <PaneDataUnavailable
+        compact
+        pairKey={activePair.pairKey}
+        market={market}
+      />
+    )
   }
 
   if (!candleData?.hasSnapshot) {

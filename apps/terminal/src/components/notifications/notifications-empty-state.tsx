@@ -14,7 +14,9 @@ import {
   NOTIFICATION_TEMPLATES,
   TEMPLATE_MARKET,
   TEMPLATE_PAIR,
+  TEMPLATE_PRICE_LEVEL,
   applyNotificationTemplate,
+  notificationTemplateChips,
 } from './notification-templates'
 import type { StarterTemplate } from '../starter-empty-state'
 import { useNotificationStore } from '@/stores/notification-store'
@@ -50,13 +52,29 @@ export function NotificationsEmptyState() {
     startEditing(id)
   }
 
+  // Translated at render time so the catalog module stays hook-free; the
+  // raw English record is still what `handlePick` looks up and hands to
+  // `applyNotificationTemplate`, which localizes the name it persists.
+  const templates = NOTIFICATION_TEMPLATES.map((template) => ({
+    ...template,
+    title: t(`notifications.templates.${template.id}.title`, {
+      defaultValue: template.title,
+    }),
+    description: t(`notifications.templates.${template.id}.description`, {
+      defaultValue: template.description,
+      pair: TEMPLATE_PAIR,
+      level: TEMPLATE_PRICE_LEVEL.toLocaleString(),
+    }),
+    chips: notificationTemplateChips(t, template),
+  }))
+
   return (
     <StarterEmptyState
       eyebrow={t('notifications.builder.emptyState.eyebrow')}
       title={t('notifications.builder.emptyState.title')}
       description={t('notifications.builder.emptyState.description')}
       icon={Bell}
-      templates={NOTIFICATION_TEMPLATES}
+      templates={templates}
       onPickTemplate={handlePick}
       blankLabel={t('notifications.builder.emptyState.startBlank')}
       onCreateBlank={handleBlank}

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { INTELLIGENCE_PLANS } from '@pairlens/shared/billing-types'
 import type {
@@ -26,6 +27,7 @@ import { openExternalUrl } from '@/lib/platform'
 export function useBillingState() {
   const { session } = useOptimisticSession()
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const query = useQuery({
     queryKey: queryKeys.billingState(),
@@ -68,14 +70,21 @@ export function useBillingState() {
         })
       }
     } else if (packCount > previous.packCount) {
-      toast.success('Extra credits added', {
-        id: 'intelligence-pack-added',
-        description:
-          'Your credit pack is on the balance — pack credits expire 30 days after purchase.',
-        duration: 8000,
-      })
+      toast.success(
+        t('settings.billing.packAddedToastTitle', {
+          defaultValue: 'Extra credits added',
+        }),
+        {
+          id: 'intelligence-pack-added',
+          description: t('settings.billing.packAddedToastDescription', {
+            defaultValue:
+              'Your credit pack is on the balance — pack credits expire 30 days after purchase.',
+          }),
+          duration: 8000,
+        },
+      )
     }
-  }, [plan, status, packCount, queryClient])
+  }, [plan, status, packCount, queryClient, t])
 
   return query
 }
