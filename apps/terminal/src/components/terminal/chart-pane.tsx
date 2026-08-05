@@ -331,7 +331,11 @@ const ChartPaneInner = memo(function ChartPaneInner({
           <ReplayControls />
         </PaneTransition>
       )}
-      <IntelligenceStrip scan={signalScan} />
+      {/* No candles will ever arrive, so the strip's "Analyzing market…" would
+          spin under an empty state that has already given the verdict. */}
+      {!desktopOnly && !(noData && !hasSnapshot) && (
+        <IntelligenceStrip scan={signalScan} />
+      )}
     </div>
   )
 

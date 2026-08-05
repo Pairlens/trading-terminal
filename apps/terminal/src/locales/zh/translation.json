@@ -1200,6 +1200,7 @@
     "live": "实时",
     "connecting": "连接中",
     "stalled": "重新连接中",
+    "noData": "无数据",
     "offline": "离线",
     "error": "错误",
     "pluginUpdatesReady_one": "{{count}} 个插件更新已就绪,可以安装",
@@ -2193,6 +2194,10 @@
       "titleAnyVenue": "找不到 {{pair}}",
       "description": "该连接器没有返回这个交易对的行情数据。换一个上架了它的连接器试试。"
     },
+    "paneTransition": {
+      "switchingTo": "正在切换到 {{venue}}…",
+      "switching": "正在切换…"
+    },
     "panePicker": {
       "bindToVariable": "绑定到变量",
       "boundTo": "已绑定到 <b>{{variable}}</b>",
@@ -2604,7 +2609,9 @@
       "waitingTrades": "等待成交…",
       "waitingData": "等待数据…",
       "noCandleData": "暂无 K 线数据",
-      "noTradesFeed": "切换到发布逐笔成交的交易所"
+      "noTradesFeed": "切换到发布逐笔成交的交易所",
+      "noTradesFeedOn": "{{venue}} 没有逐笔成交",
+      "noTradesFeedHere": "该交易所没有逐笔成交"
     },
     "columns": {
       "price": "价格",

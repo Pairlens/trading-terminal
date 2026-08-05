@@ -1200,6 +1200,7 @@
     "live": "Trực tiếp",
     "connecting": "Đang kết nối",
     "stalled": "Đang kết nối lại",
+    "noData": "Không có dữ liệu",
     "offline": "Ngoại tuyến",
     "error": "Lỗi",
     "pluginUpdatesReady_one": "{{count}} bản cập nhật plugin đã sẵn sàng để cài đặt",
@@ -2193,6 +2194,10 @@
       "titleAnyVenue": "{{pair}} không khả dụng",
       "description": "Connector này không trả về dữ liệu thị trường cho cặp này. Hãy thử connector khác có niêm yết cặp đó."
     },
+    "paneTransition": {
+      "switchingTo": "Đang chuyển sang {{venue}}…",
+      "switching": "Đang chuyển…"
+    },
     "panePicker": {
       "bindToVariable": "Gắn với biến",
       "boundTo": "Đã gắn với <b>{{variable}}</b>",
@@ -2604,7 +2609,9 @@
       "waitingTrades": "Đang chờ giao dịch…",
       "waitingData": "Đang chờ dữ liệu…",
       "noCandleData": "Chưa có dữ liệu nến",
-      "noTradesFeed": "Chuyển sang sàn có công bố time and sales"
+      "noTradesFeed": "Chuyển sang sàn có công bố time and sales",
+      "noTradesFeedOn": "{{venue}} không có time and sales",
+      "noTradesFeedHere": "Sàn này không có time and sales"
     },
     "columns": {
       "price": "Giá",

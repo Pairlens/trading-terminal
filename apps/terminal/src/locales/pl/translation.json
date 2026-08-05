@@ -1206,6 +1206,7 @@
     "live": "Na żywo",
     "connecting": "Łączenie",
     "stalled": "Ponowne łączenie",
+    "noData": "Brak danych",
     "offline": "Offline",
     "error": "Błąd",
     "pluginUpdatesReady_one": "{{count}} aktualizacja wtyczki gotowa do instalacji",
@@ -2203,6 +2204,10 @@
       "titleAnyVenue": "{{pair}} nie jest dostępna",
       "description": "Ten konektor nie zwrócił danych rynkowych dla tej pary. Spróbuj innego, który ją notuje."
     },
+    "paneTransition": {
+      "switchingTo": "Przełączanie na {{venue}}…",
+      "switching": "Przełączanie…"
+    },
     "panePicker": {
       "bindToVariable": "Powiąż ze zmienną",
       "boundTo": "Powiązano ze zmienną <b>{{variable}}</b>",
@@ -2618,7 +2623,9 @@
       "waitingTrades": "Czekam na transakcje…",
       "waitingData": "Czekam na dane…",
       "noCandleData": "Brak danych świecowych",
-      "noTradesFeed": "Przełącz się na giełdę publikującą time and sales"
+      "noTradesFeed": "Przełącz się na giełdę publikującą time and sales",
+      "noTradesFeedOn": "Brak time and sales na {{venue}}",
+      "noTradesFeedHere": "Brak time and sales na tej giełdzie"
     },
     "columns": {
       "price": "Cena",

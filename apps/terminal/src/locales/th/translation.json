@@ -1200,6 +1200,7 @@
     "live": "สด",
     "connecting": "กำลังเชื่อมต่อ",
     "stalled": "กำลังเชื่อมต่อใหม่",
+    "noData": "ไม่มีข้อมูล",
     "offline": "ออฟไลน์",
     "error": "ข้อผิดพลาด",
     "pluginUpdatesReady_one": "มีอัปเดตปลั๊กอินพร้อมติดตั้ง {{count}} รายการ",
@@ -2193,6 +2194,10 @@
       "titleAnyVenue": "ไม่มี {{pair}}",
       "description": "คอนเนกเตอร์นี้ไม่ได้ส่งข้อมูลตลาดของคู่นี้กลับมา ลองคอนเนกเตอร์อื่นที่มีคู่นี้"
     },
+    "paneTransition": {
+      "switchingTo": "กำลังสลับไป {{venue}}…",
+      "switching": "กำลังสลับ…"
+    },
     "panePicker": {
       "bindToVariable": "ผูกกับตัวแปร",
       "boundTo": "ผูกกับ <b>{{variable}}</b> แล้ว",
@@ -2604,7 +2609,9 @@
       "waitingTrades": "รอรายการซื้อขาย…",
       "waitingData": "รอข้อมูล…",
       "noCandleData": "ยังไม่มีข้อมูลแท่งเทียน",
-      "noTradesFeed": "สลับไปกระดานที่เผยแพร่ time and sales"
+      "noTradesFeed": "สลับไปกระดานที่เผยแพร่ time and sales",
+      "noTradesFeedOn": "ไม่มี time and sales บน {{venue}}",
+      "noTradesFeedHere": "กระดานนี้ไม่มี time and sales"
     },
     "columns": {
       "price": "ราคา",

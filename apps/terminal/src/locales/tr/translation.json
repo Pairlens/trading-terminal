@@ -1200,6 +1200,7 @@
     "live": "Canlı",
     "connecting": "Bağlanıyor",
     "stalled": "Yeniden bağlanıyor",
+    "noData": "Veri yok",
     "offline": "Çevrimdışı",
     "error": "Hata",
     "pluginUpdatesReady_one": "Yüklemeye hazır {{count}} eklenti güncellemesi",
@@ -2193,6 +2194,10 @@
       "titleAnyVenue": "{{pair}} bulunamadı",
       "description": "Bu konektör bu parite için piyasa verisi döndürmedi. Pariteyi listeleyen başka bir konektör deneyin."
     },
+    "paneTransition": {
+      "switchingTo": "{{venue}} borsasına geçiliyor…",
+      "switching": "Geçiliyor…"
+    },
     "panePicker": {
       "bindToVariable": "Değişkene bağla",
       "boundTo": "<b>{{variable}}</b> değişkenine bağlı",
@@ -2604,7 +2609,9 @@
       "waitingTrades": "İşlemler bekleniyor…",
       "waitingData": "Veri bekleniyor…",
       "noCandleData": "Henüz mum verisi yok",
-      "noTradesFeed": "Time and sales yayınlayan bir borsaya geçin"
+      "noTradesFeed": "Time and sales yayınlayan bir borsaya geçin",
+      "noTradesFeedOn": "{{venue}} time and sales yayınlamıyor",
+      "noTradesFeedHere": "Bu borsa time and sales yayınlamıyor"
     },
     "columns": {
       "price": "Fiyat",

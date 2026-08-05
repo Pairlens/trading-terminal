@@ -21,8 +21,10 @@ import {
 } from '@/components/terminal/magnitude-intensity'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
+import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { usePaneVenue } from '@/hooks/use-pane-venue'
 import { useSwitchTransition } from '@/hooks/use-switch-transition'
+import { usePairUnavailable } from '@/stores/pair-availability-store'
 // Market data now comes through plugin-based connectors
 
 const ROW_HEIGHT = 18
@@ -288,7 +290,6 @@ export function OrderbookPane() {
   return (
     <OrderbookPaneInner
       orderbookData={orderbookData}
-      market={activePair.market}
       pairKey={activePair.pairKey}
     />
   )
@@ -296,9 +297,9 @@ export function OrderbookPane() {
 
 function OrderbookPaneInner({
   orderbookData,
+  pairKey,
 }: {
   orderbookData: OrderbookStreamValue
-  market: string
   pairKey: string
 }) {
   const { t } = useTranslation()
@@ -309,13 +310,18 @@ function OrderbookPaneInner({
     orderbookError: errorMessage,
   } = orderbookData
 
-  // Connector-switch transition: the orderbook stream nulls out on every market
-  // change, so retain the previous book and dim it until the new connector's
-  // first snapshot arrives (`book` is the retained payload we actually render).
+  // Switch transition: the orderbook stream nulls out on every venue/pair
+  // change, so retain the previous book and dim it until the new stream's first
+  // snapshot arrives (`book` is the retained payload we actually render).
   const chartConfig = useOptionalChartConfig()
   const market = chartConfig?.market ?? ''
   const venue = usePaneVenue(market)
-  const { phase, display: book } = useSwitchTransition(market, orderbook)
+  const unavailable = usePairUnavailable(market, pairKey)
+  const {
+    phase,
+    display: book,
+    marketChanged,
+  } = useSwitchTransition(market, pairKey, orderbook)
 
   const [containerEl, setContainerEl] = useState<HTMLDivElement | null>(null)
   const [visibleRows, setVisibleRows] = useState(20)
@@ -444,6 +450,12 @@ function OrderbookPaneInner({
     setTickIndex(index)
   }, [])
 
+  // Ahead of the loading and error states: "this venue doesn't list the pair"
+  // is the specific answer, and the book has nothing true left to show.
+  if (unavailable) {
+    return <PaneDataUnavailable compact pairKey={pairKey} market={market} />
+  }
+
   if (errorMessage) {
     return (
       <div className="flex h-full items-center justify-center text-xs text-destructive px-4 text-center">
@@ -469,7 +481,7 @@ function OrderbookPaneInner({
     <PaneTransition
       className="relative flex h-full flex-col overflow-hidden text-xs"
       phase={phase}
-      marketLabel={venue.label}
+      marketLabel={marketChanged ? venue.label : undefined}
       ref={setContainerEl}
     >
       {/* Header */}

@@ -192,6 +192,18 @@ type MarketDataContextValue = {
     /** Fetch candles strictly older than this epoch-ms timestamp. */
     endTs?: number,
   ) => Promise<Array<Candle>>
+  /**
+   * Ask ONE venue for candles, with no fallback to another provider — the
+   * question is whether this venue carries this pair, so an answer from
+   * anywhere else is worse than no answer. Returns null when the venue
+   * declares no history capability of its own, meaning it can't be asked.
+   */
+  probeVenueHistory: (
+    market: string,
+    pair: string,
+    timeframe: string,
+    limit: number,
+  ) => Promise<Array<Candle>> | null
   placeOrder: (params: Record<string, unknown>) => Promise<OrderResult>
   /**
    * The same risk guards, without the before-trade identity check.
@@ -1120,6 +1132,46 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
     [pluginManager],
   )
 
+  const probeVenueHistory = useCallback(
+    (
+      market: string,
+      pair: string,
+      timeframe: string,
+      limit: number,
+    ): Promise<Array<Candle>> | null => {
+      // The venue's OWN history provider, resolved by an explicit (non-'*')
+      // market declaration. `fetchHistory` goes through pluginManager.execute,
+      // which walks a fallback chain when the primary errors — right for
+      // filling a chart, wrong for asking a venue about itself: GeckoTerminal
+      // declares market-data:history for '*' and would gladly answer "does
+      // Bitvavo carry BTC-USDT?" on Bitvavo's behalf.
+      const plugin = pluginManager
+        .getPluginsForCapability('market-data:history', market)
+        .find((p) =>
+          p.manifest.capabilities.some(
+            (c) => c.id === 'market-data:history' && c.markets.includes(market),
+          ),
+        )
+      if (!plugin) return null
+
+      // A locally-built context rather than setContext(): this runs alongside
+      // other panes' streams, and mutating the shared context to ask one
+      // question would hand the next caller the wrong market.
+      return plugin.execute({
+        capability: 'market-data:history',
+        params: { pair, timeframe, limit },
+        context: {
+          ...pluginManager.getContext(),
+          market,
+          pair,
+          timeframe,
+          country: getCountrySetting(),
+        },
+      }) as Promise<Array<Candle>>
+    },
+    [pluginManager],
+  )
+
   const placeOrderGuarded = useCallback(
     async (params: Record<string, unknown>): Promise<OrderResult> => {
       const analytics = orderAnalyticsProps(params)
@@ -1376,6 +1428,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       hasCapability,
       warmupMarket,
       fetchHistory,
+      probeVenueHistory,
       placeOrder,
       placeUnattendedOrder: placeOrderGuarded,
       cancelOrder,
@@ -1398,6 +1451,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       hasCapability,
       warmupMarket,
       fetchHistory,
+      probeVenueHistory,
       placeOrder,
       placeOrderGuarded,
       cancelOrder,

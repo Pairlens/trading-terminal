@@ -1200,6 +1200,7 @@
     "live": "Live",
     "connecting": "Menghubungkan",
     "stalled": "Menghubungkan ulang",
+    "noData": "Tidak ada data",
     "offline": "Offline",
     "error": "Kesalahan",
     "pluginUpdatesReady_one": "{{count}} pembaruan plugin siap dipasang",
@@ -2193,6 +2194,10 @@
       "titleAnyVenue": "{{pair}} tidak tersedia",
       "description": "Konektor ini tidak mengembalikan data pasar untuk pasangan ini. Coba konektor lain yang mencantumkannya."
     },
+    "paneTransition": {
+      "switchingTo": "Beralih ke {{venue}}…",
+      "switching": "Beralih…"
+    },
     "panePicker": {
       "bindToVariable": "Ikat ke variabel",
       "boundTo": "Terikat ke <b>{{variable}}</b>",
@@ -2604,7 +2609,9 @@
       "waitingTrades": "Menunggu transaksi…",
       "waitingData": "Menunggu data…",
       "noCandleData": "Belum ada data candle",
-      "noTradesFeed": "Ganti ke bursa yang menerbitkan time and sales"
+      "noTradesFeed": "Ganti ke bursa yang menerbitkan time and sales",
+      "noTradesFeedOn": "Tidak ada time and sales di {{venue}}",
+      "noTradesFeedHere": "Bursa ini tidak menerbitkan time and sales"
     },
     "columns": {
       "price": "Harga",
