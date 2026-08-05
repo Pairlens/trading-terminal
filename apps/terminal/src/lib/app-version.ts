@@ -23,6 +23,14 @@ import { isStandalone } from '@/lib/platform'
 export const BUILD_VERSION: string =
   typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : '0.0.0-dev'
 
+/**
+ * Identity of this exact build — distinct per `vite build`, unlike the release
+ * number, which stands still between `bun run release` runs while deploys keep
+ * replacing the bundle's content hashes. Empty when built outside vite.
+ */
+export const BUILD_ID: string =
+  typeof __APP_BUILD_ID__ === 'string' ? __APP_BUILD_ID__ : ''
+
 // Browser builds are already final; desktop resolves once, then caches.
 let resolved: string | null = isStandalone ? null : BUILD_VERSION
 let inflight: Promise<string> | null = null

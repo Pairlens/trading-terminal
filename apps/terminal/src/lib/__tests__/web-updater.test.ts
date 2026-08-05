@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { describe, expect, test } from 'bun:test'
-import { isNewer } from '@/lib/web-updater'
+import { isDifferentBuild, isNewer } from '@/lib/web-updater'
 
 describe('isNewer', () => {
   test('detects a strictly newer release', () => {
@@ -26,5 +26,26 @@ describe('isNewer', () => {
     expect(isNewer('0.1.5-beta', '0.1.4')).toBe(false)
     // SPA fallback HTML that slipped through as a "version".
     expect(isNewer('<!doctype html>', '0.1.4')).toBe(false)
+  })
+})
+
+describe('isDifferentBuild', () => {
+  test('catches the redeploy that leaves the version alone', () => {
+    // The case a version-only check is blind to: main was pushed, every
+    // content hash changed, 0.1.4 stayed 0.1.4.
+    expect(isDifferentBuild('mfk3z1a', 'mfk2p0q')).toBe(true)
+  })
+
+  test('the same build never prompts', () => {
+    expect(isDifferentBuild('mfk3z1a', 'mfk3z1a')).toBe(false)
+  })
+
+  test('a missing id on either side means "can\'t tell", not "stale"', () => {
+    // A deploy predating the build id, or a bundle built outside vite. The
+    // version compare is still a valid answer on its own — this must not
+    // override it with a prompt every tab would get forever.
+    expect(isDifferentBuild('', 'mfk3z1a')).toBe(false)
+    expect(isDifferentBuild('mfk3z1a', '')).toBe(false)
+    expect(isDifferentBuild('', '')).toBe(false)
   })
 })

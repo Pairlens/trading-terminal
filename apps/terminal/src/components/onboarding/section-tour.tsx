@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { Suspense, lazy, useCallback, useEffect, useState } from 'react'
+import { Suspense, useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useTranslation } from 'react-i18next'
 
@@ -11,10 +11,11 @@ import { Button } from '@pairlens/ui/components/ui/button'
 import { SECTION_TOURS } from './section-tours'
 import { useSectionTour } from './use-section-tour'
 import type { SectionTourId } from './section-tours'
+import { lazyChunk } from '@/lib/lazy-chunk'
 
 // Remotion (player + scenes) loads on demand — tours only appear on a
 // section's first open, so the boot bundle never pays for it.
-const TourMedia = lazy(() => import('./spotlight-tour/tour-media'))
+const TourMedia = lazyChunk(() => import('./spotlight-tour/tour-media'))
 
 /**
  * First-open showcase for a section, styled after the Spotlight onboarding:

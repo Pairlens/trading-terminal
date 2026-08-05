@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import {
   createContext,
-  lazy,
   useCallback,
   useContext,
   useEffect,
@@ -39,6 +38,7 @@ import type {
 } from '@/stores/plugin-updates-store'
 import type { PluginModule } from '@/lib/plugins/plugin-module-loader'
 import i18n from '@/lib/i18n'
+import { lazyChunk } from '@/lib/lazy-chunk'
 import { api, appServerUrl, getSessionToken } from '@/lib/api'
 import { hasAppServer } from '@/lib/auth-client'
 import { useOptimisticSession } from '@/lib/session'
@@ -113,119 +113,119 @@ const FIRST_PARTY_COMPONENTS: Record<
   Record<string, LazyExoticComponent<ComponentType>>
 > = {
   'pairlens-core': {
-    chart: lazy(() =>
+    chart: lazyChunk(() =>
       import('@/components/terminal/chart-pane').then((m) => ({
         default: m.ChartPane,
       })),
     ),
-    'data-log': lazy(() =>
+    'data-log': lazyChunk(() =>
       import('@/components/terminal/data-log-pane').then((m) => ({
         default: m.DataLogPane,
       })),
     ),
-    depth: lazy(() =>
+    depth: lazyChunk(() =>
       import('@/components/terminal/depth-pane').then((m) => ({
         default: m.DepthPane,
       })),
     ),
-    orderbook: lazy(() =>
+    orderbook: lazyChunk(() =>
       import('@/components/terminal/orderbook-pane').then((m) => ({
         default: m.OrderbookPane,
       })),
     ),
-    trades: lazy(() =>
+    trades: lazyChunk(() =>
       import('@/components/terminal/trades-pane').then((m) => ({
         default: m.TradesPane,
       })),
     ),
-    'pair-info': lazy(() =>
+    'pair-info': lazyChunk(() =>
       import('@/components/terminal/pair-info-pane').then((m) => ({
         default: m.PairInfoPane,
       })),
     ),
-    'trade-entry': lazy(() =>
+    'trade-entry': lazyChunk(() =>
       import('@/components/terminal/trade-entry-pane').then((m) => ({
         default: m.TradeEntryPane,
       })),
     ),
-    positions: lazy(() =>
+    positions: lazyChunk(() =>
       import('@/components/terminal/positions-pane').then((m) => ({
         default: m.PositionsPane,
       })),
     ),
-    portfolio: lazy(() =>
+    portfolio: lazyChunk(() =>
       import('@/components/terminal/portfolio-pane').then((m) => ({
         default: m.PortfolioPane,
       })),
     ),
-    risk: lazy(() =>
+    risk: lazyChunk(() =>
       import('@/components/terminal/risk-pane').then((m) => ({
         default: m.RiskPane,
       })),
     ),
-    markets: lazy(() =>
+    markets: lazyChunk(() =>
       import('@/components/discovery/markets-pane').then((m) => ({
         default: m.MarketsPane,
       })),
     ),
-    watchlist: lazy(() =>
+    watchlist: lazyChunk(() =>
       import('@/components/discovery/watchlist-pane').then((m) => ({
         default: m.WatchlistPane,
       })),
     ),
-    'liquidity-heatmap': lazy(() =>
+    'liquidity-heatmap': lazyChunk(() =>
       import('@/components/terminal/liquidity-heatmap-pane').then((m) => ({
         default: m.LiquidityHeatmapPane,
       })),
     ),
-    web: lazy(() =>
+    web: lazyChunk(() =>
       import('@/components/web-pane').then((m) => ({
         default: m.WebPane,
       })),
     ),
-    'recent-tickers': lazy(() =>
+    'recent-tickers': lazyChunk(() =>
       import('@/components/terminal/recent-tickers-pane').then((m) => ({
         default: m.RecentTickersPane,
       })),
     ),
   },
   'pairlens-intelligence': {
-    copilot: lazy(() =>
+    copilot: lazyChunk(() =>
       import('@/components/terminal/copilot-pane').then((m) => ({
         default: m.CopilotPane,
       })),
     ),
-    research: lazy(() =>
+    research: lazyChunk(() =>
       import('@/components/terminal/research-pane').then((m) => ({
         default: m.ResearchPane,
       })),
     ),
-    news: lazy(() =>
+    news: lazyChunk(() =>
       import('@/components/discovery/news-pane').then((m) => ({
         default: m.NewsPane,
       })),
     ),
-    'symbol-news': lazy(() =>
+    'symbol-news': lazyChunk(() =>
       import('@/components/terminal/symbol-news-pane').then((m) => ({
         default: m.SymbolNewsPane,
       })),
     ),
-    social: lazy(() =>
+    social: lazyChunk(() =>
       import('@/components/terminal/social-pane').then((m) => ({
         default: m.SocialPane,
       })),
     ),
-    'top-coins': lazy(() =>
+    'top-coins': lazyChunk(() =>
       import('@/components/discovery/top-coins-pane').then((m) => ({
         default: m.TopCoinsPane,
       })),
     ),
-    heatmap: lazy(() =>
+    heatmap: lazyChunk(() =>
       import('@/components/discovery/heatmap-pane').then((m) => ({
         default: m.HeatmapPane,
       })),
     ),
-    'fear-greed': lazy(() =>
+    'fear-greed': lazyChunk(() =>
       import('@/components/discovery/fear-greed-pane').then((m) => ({
         default: m.FearGreedPane,
       })),
@@ -242,42 +242,42 @@ const FIRST_PARTY_WORKFLOW_COMPONENTS: Record<
   Record<string, AnyLazy>
 > = {
   'pairlens-core': {
-    trigger: lazy(() =>
+    trigger: lazyChunk(() =>
       import('@/components/workflows/steps/trigger-step').then((m) => ({
         default: m.TriggerStep,
       })),
     ),
-    'market-order': lazy(() =>
+    'market-order': lazyChunk(() =>
       import('@/components/workflows/steps/market-order-step').then((m) => ({
         default: m.MarketOrderStep,
       })),
     ),
-    'limit-order': lazy(() =>
+    'limit-order': lazyChunk(() =>
       import('@/components/workflows/steps/limit-order-step').then((m) => ({
         default: m.LimitOrderStep,
       })),
     ),
-    'take-profit': lazy(() =>
+    'take-profit': lazyChunk(() =>
       import('@/components/workflows/steps/take-profit-step').then((m) => ({
         default: m.TakeProfitStep,
       })),
     ),
-    'stop-loss': lazy(() =>
+    'stop-loss': lazyChunk(() =>
       import('@/components/workflows/steps/stop-loss-step').then((m) => ({
         default: m.StopLossStep,
       })),
     ),
-    condition: lazy(() =>
+    condition: lazyChunk(() =>
       import('@/components/workflows/steps/condition-step').then((m) => ({
         default: m.ConditionStep,
       })),
     ),
-    split: lazy(() =>
+    split: lazyChunk(() =>
       import('@/components/workflows/steps/split-step').then((m) => ({
         default: m.SplitStep,
       })),
     ),
-    wait: lazy(() =>
+    wait: lazyChunk(() =>
       import('@/components/workflows/steps/wait-step').then((m) => ({
         default: m.WaitStep,
       })),
@@ -292,64 +292,64 @@ const FIRST_PARTY_NOTIFICATION_COMPONENTS: Record<
   Record<string, AnyLazy>
 > = {
   'pairlens-core': {
-    'price-alert': lazy(() =>
+    'price-alert': lazyChunk(() =>
       import('@/components/notifications/steps/price-alert-step').then((m) => ({
         default: m.PriceAlertStep,
       })),
     ),
-    'order-executed': lazy(() =>
+    'order-executed': lazyChunk(() =>
       import('@/components/notifications/steps/order-executed-step').then(
         (m) => ({
           default: m.OrderExecutedStep,
         }),
       ),
     ),
-    'signal-generated': lazy(() =>
+    'signal-generated': lazyChunk(() =>
       import('@/components/notifications/steps/signal-generated-step').then(
         (m) => ({
           default: m.SignalGeneratedStep,
         }),
       ),
     ),
-    'candle-close': lazy(() =>
+    'candle-close': lazyChunk(() =>
       import('@/components/notifications/steps/candle-close-step').then(
         (m) => ({
           default: m.CandleCloseStep,
         }),
       ),
     ),
-    'price-condition': lazy(() =>
+    'price-condition': lazyChunk(() =>
       import('@/components/notifications/steps/price-condition-step').then(
         (m) => ({
           default: m.PriceConditionStep,
         }),
       ),
     ),
-    'percent-change': lazy(() =>
+    'percent-change': lazyChunk(() =>
       import('@/components/notifications/steps/percent-change-step').then(
         (m) => ({
           default: m.PercentChangeStep,
         }),
       ),
     ),
-    'time-window': lazy(() =>
+    'time-window': lazyChunk(() =>
       import('@/components/notifications/steps/time-window-step').then((m) => ({
         default: m.TimeWindowStep,
       })),
     ),
-    'local-toast': lazy(() =>
+    'local-toast': lazyChunk(() =>
       import('@/components/notifications/steps/local-toast-step').then((m) => ({
         default: m.LocalToastStep,
       })),
     ),
-    'os-notification': lazy(() =>
+    'os-notification': lazyChunk(() =>
       import('@/components/notifications/steps/os-notification-step').then(
         (m) => ({
           default: m.OsNotificationStep,
         }),
       ),
     ),
-    webhook: lazy(() =>
+    webhook: lazyChunk(() =>
       import('@/components/notifications/steps/webhook-step').then((m) => ({
         default: m.WebhookStep,
       })),

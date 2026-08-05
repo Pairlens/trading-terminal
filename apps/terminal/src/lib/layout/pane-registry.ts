@@ -1,11 +1,12 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { createContext, lazy, useContext, useSyncExternalStore } from 'react'
+import { createContext, useContext, useSyncExternalStore } from 'react'
 import type { ComponentType, LazyExoticComponent } from 'react'
 
 import type { ContributedPanel } from '@pairlens/plugin-system'
 
 import type { PaneDefinition } from './types'
+import { lazyChunk } from '@/lib/lazy-chunk'
 
 // ── Types ───────────────────────────────────────────────────────────
 
@@ -137,7 +138,7 @@ export class DynamicPaneRegistry {
 
 // ── Builtin pane ────────────────────────────────────────────────────
 
-const EmptyPlaceholderPane = lazy(() =>
+const EmptyPlaceholderPane = lazyChunk(() =>
   import('@/components/layout/empty-placeholder-pane').then((m) => ({
     default: m.EmptyPlaceholderPane,
   })),
