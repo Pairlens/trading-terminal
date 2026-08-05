@@ -4,10 +4,27 @@ import { useEffect, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { track } from '@/lib/analytics-events'
 
-import { authClient } from '@/lib/auth-client'
+import { appServerHost, authClient } from '@/lib/auth-client'
 import { useResendTimer } from '@/hooks/use-resend-timer'
 
 const OTP_LENGTH = 6
+
+/**
+ * A request that never reached the App Server surfaces as the browser's own
+ * transport error — "fetch failed" in Chrome, "Load failed" in WebKit — which
+ * tells the user nothing about what to do. Name the host instead, so an
+ * unreachable server, an offline machine, and a rejected code read as three
+ * different problems.
+ */
+const NETWORK_ERROR_PATTERN =
+  /fetch failed|failed to fetch|load failed|network ?error|networkerror/i
+
+function describeAuthError(error: Error, fallback: string): string {
+  const message = error.message?.trim()
+  if (!message) return fallback
+  if (!NETWORK_ERROR_PATTERN.test(message)) return message
+  return `Couldn't reach ${appServerHost}. Check your connection and try again.`
+}
 
 type UseSignInFlowOptions = {
   /** Called once the OTP verifies — celebrate, navigate, close the dialog. */
@@ -117,9 +134,9 @@ export function useSignInFlow({ onSignedIn }: UseSignInFlowOptions = {}) {
     otp,
     otpSentTo,
     errorMessage: signIn.isError
-      ? signIn.error.message
+      ? describeAuthError(signIn.error, 'Failed to sign in')
       : sendOtp.isError
-        ? sendOtp.error.message
+        ? describeAuthError(sendOtp.error, 'Failed to send OTP')
         : null,
     isSendingOtp: sendOtp.isPending,
     isVerifyingOtp,

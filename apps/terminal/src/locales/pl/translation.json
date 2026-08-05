@@ -930,6 +930,11 @@
         "title": "Klucze w magazynie systemu",
         "detail": "Klucze giełdowe zostają w magazynie systemowym, nigdy w przeglądarce ani na naszych serwerach."
       }
+    },
+    "wall": {
+      "title": "{{venue}} wymaga aplikacji na komputer",
+      "description": "Ta giełda udostępnia dane rynkowe bez nagłówków, których przeglądarka potrzebuje, by je odczytać. Aplikacja na komputer łączy się natywnie, więc działa tam każda giełda.",
+      "alternatives": "Albo zostań w przeglądarce"
     }
   },
   "userMenu": {
@@ -2014,7 +2019,12 @@
     "resetConfirmDescription": "Spowoduje to zastąpienie bieżącego układu domyślnym ustawieniem wstępnym. Wszelkie niestandardowe rozmieszczenie zostanie utracone.",
     "emptyPlaceholder": "Dodaj panel",
     "searchPairs": "Szukaj par...",
-    "searchPanes": "Szukaj paneli..."
+    "searchPanes": "Szukaj paneli...",
+    "paneUnavailable": {
+      "title": "{{pair}} nie jest dostępna na {{venue}}",
+      "titleAnyVenue": "{{pair}} nie jest dostępna",
+      "description": "Ten konektor nie zwrócił danych rynkowych dla tej pary. Spróbuj innego, który ją notuje."
+    }
   },
   "watchlist": {
     "addTitle": "Dodaj do listy obserwowanych",
@@ -2179,7 +2189,19 @@
   "terminal": {
     "manageWatchlists": "Zarządzaj listami obserwowanych",
     "createAlert": "Utwórz alert",
-    "market": "Rynek"
+    "market": "Rynek",
+    "wallet": {
+      "connectWallet": "Podłącz portfel",
+      "connectAccount": "Podłącz konto",
+      "connectHintWallet": "Podłącz portfel {{chain}}, aby handlować",
+      "connectHintWalletAny": "Podłącz portfel, aby handlować",
+      "connectHintAccount": "Podłącz konto {{venue}}, aby handlować",
+      "selectWallet": "Wybierz portfel",
+      "selectAccount": "Wybierz konto",
+      "groupWallet": "Portfel kryptowalut",
+      "groupBroker": "Konto brokerskie",
+      "groupExchange": "Konto giełdowe"
+    }
   },
   "accounts": {
     "pageTitle": "Konta",

@@ -6,17 +6,43 @@ import { buildMarketResults } from '../market-results'
 import type { MarketOption } from '@/hooks/use-available-markets'
 
 const MARKETS: Array<MarketOption> = [
-  { value: 'okx', label: 'OKX', assetClasses: ['crypto-spot'] },
-  { value: 'binance', label: 'Binance', assetClasses: ['crypto-spot'] },
-  { value: 'gate', label: 'Gate.io', assetClasses: ['crypto-spot'] },
+  {
+    value: 'okx',
+    label: 'OKX',
+    assetClasses: ['crypto-spot'],
+    desktopOnly: false,
+  },
+  {
+    value: 'binance',
+    label: 'Binance',
+    assetClasses: ['crypto-spot'],
+    desktopOnly: false,
+  },
+  {
+    value: 'gate',
+    label: 'Gate.io',
+    assetClasses: ['crypto-spot'],
+    desktopOnly: false,
+  },
+  // Reachable only from the desktop build — still listed, but marked.
   {
     value: 'kucoin',
     label: 'KuCoin',
     assetClasses: ['crypto-spot'],
-    requiresDesktop: true,
+    desktopOnly: true,
   },
-  { value: 'jupiter', label: 'Jupiter', assetClasses: ['dex'] },
-  { value: 'alpaca', label: 'Alpaca', assetClasses: ['stocks'] },
+  {
+    value: 'jupiter',
+    label: 'Jupiter',
+    assetClasses: ['dex'],
+    desktopOnly: false,
+  },
+  {
+    value: 'alpaca',
+    label: 'Alpaca',
+    assetClasses: ['stocks'],
+    desktopOnly: false,
+  },
 ]
 
 const ids = (query: string, markets = MARKETS, active = 'okx') =>
@@ -67,9 +93,7 @@ describe('buildMarketResults', () => {
     expect(items[0].marketId).toBe('binance')
     expect(items[0].isActive).toBe(true)
     expect(items.filter((m) => m.isActive)).toHaveLength(1)
-    expect(items.find((m) => m.marketId === 'kucoin')?.requiresDesktop).toBe(
-      true,
-    )
+    expect(items.find((m) => m.marketId === 'kucoin')?.desktopOnly).toBe(true)
   })
 
   test('empty query browses every venue, active one first', () => {

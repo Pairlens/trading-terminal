@@ -39,8 +39,8 @@ export type MarketResult = {
   assetClass?: AssetClass
   /** Already the active venue — selecting it is a no-op. */
   isActive: boolean
-  /** Unreachable from this build — see MarketAdapterInfo.requiresDesktop. */
-  requiresDesktop?: boolean
+  /** This build cannot reach the venue — see MarketOption.desktopOnly. */
+  desktopOnly: boolean
   matchRanges?: MatchRanges
 }
 

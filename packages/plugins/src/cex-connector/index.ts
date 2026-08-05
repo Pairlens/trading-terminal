@@ -53,6 +53,17 @@ export type CexManifestOptions = {
    */
   triggerOrders?: boolean
   /**
+   * The venue is unreachable from a browser build (no CORS headers on its
+   * public REST, no candle history on its WS) and works only on desktop.
+   *
+   * The spec flag of the same name makes the CONNECTOR refuse; this one makes
+   * the terminal SAY SO — it rides the manifest into MarketAdapterInfo, which
+   * is what the venue picker and the workspace gate read. Both are needed:
+   * without the manifest copy the venue looks ordinary right up until the
+   * chart refuses.
+   */
+  requiresDesktop?: boolean
+  /**
    * The connector implements `market-data:ticker-snapshot` (bulk 24h quotes
    * for every listed spot pair in one public REST call). Declared with
    * markets: ['*'] — the snapshot serves the whole app (markets scanner)
@@ -126,6 +137,7 @@ export function createCexConnectorManifest(
       logoUrl: opts.icon,
       ...(opts.headerImage ? { headerImage: opts.headerImage } : {}),
       ...(opts.triggerOrders ? { triggerOrders: true } : {}),
+      ...(opts.requiresDesktop ? { requiresDesktop: true } : {}),
     },
     config: {},
   }

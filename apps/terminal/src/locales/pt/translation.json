@@ -926,6 +926,11 @@
         "title": "Chaves no seu chaveiro",
         "detail": "As chaves da corretora ficam no chaveiro do sistema, nunca no navegador nem nos nossos servidores."
       }
+    },
+    "wall": {
+      "title": "{{venue}} precisa do app de desktop",
+      "description": "Esta corretora entrega seus dados de mercado sem os cabeçalhos que um navegador precisa para lê-los. O app de desktop conecta de forma nativa, e lá todas funcionam.",
+      "alternatives": "Ou continue no navegador"
     }
   },
   "userMenu": {
@@ -2006,7 +2011,12 @@
     "resetConfirmDescription": "Isso substituirá seu layout atual pela predefinição padrão. Qualquer arranjo personalizado será perdido.",
     "emptyPlaceholder": "Adicionar um painel",
     "searchPairs": "Pesquisar pares...",
-    "searchPanes": "Pesquisar painéis..."
+    "searchPanes": "Pesquisar painéis...",
+    "paneUnavailable": {
+      "title": "{{pair}} não está disponível na {{venue}}",
+      "titleAnyVenue": "{{pair}} não está disponível",
+      "description": "Este conector não retornou dados de mercado para este par. Tente outro que o liste."
+    }
   },
   "watchlist": {
     "addTitle": "Adicionar à watchlist",
@@ -2171,7 +2181,19 @@
   "terminal": {
     "manageWatchlists": "Gerenciar watchlists",
     "createAlert": "Criar alerta",
-    "market": "Mercado"
+    "market": "Mercado",
+    "wallet": {
+      "connectWallet": "Conectar carteira",
+      "connectAccount": "Conectar conta",
+      "connectHintWallet": "Conecte uma carteira {{chain}} para operar",
+      "connectHintWalletAny": "Conecte uma carteira para operar",
+      "connectHintAccount": "Conecte uma conta {{venue}} para operar",
+      "selectWallet": "Escolher carteira",
+      "selectAccount": "Escolher conta",
+      "groupWallet": "Carteira cripto",
+      "groupBroker": "Conta de corretora",
+      "groupExchange": "Conta de exchange"
+    }
   },
   "accounts": {
     "pageTitle": "Contas",

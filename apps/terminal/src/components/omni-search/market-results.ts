@@ -40,7 +40,7 @@ function toResult(option: MarketOption, activeMarket: string): MarketResult {
     iconUrl: option.iconUrl,
     assetClass: option.assetClasses[0],
     isActive: option.value === activeMarket,
-    requiresDesktop: option.requiresDesktop,
+    desktopOnly: option.desktopOnly,
   }
 }
 

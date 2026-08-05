@@ -21,6 +21,7 @@ import {
   LogOut,
   MapPin,
   Maximize,
+  Monitor,
   Moon,
   Paintbrush,
   Palette,
@@ -245,12 +246,16 @@ export const MarketResultItem = memo(function MarketResultItem({
       </span>
       <span className="ml-auto flex items-center gap-1.5">
         {/* This venue serves no CORS headers and streams no candle history,
-            so a browser build cannot read it — same mark as the venue
-            dropdown, said before the click rather than after. */}
-        {result.requiresDesktop && (
-          <span className="rounded-sm border border-border/60 px-1 py-px text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
+            so a browser build cannot read it — the same mark the venue
+            dropdown carries, said before the click rather than after. */}
+        {result.desktopOnly && (
+          <Badge
+            variant="outline"
+            className="h-4 gap-1 px-1.5 text-[10px] text-muted-foreground"
+          >
+            <Monitor />
             Desktop
-          </span>
+          </Badge>
         )}
         {classLabel && (
           <Badge

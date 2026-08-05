@@ -926,6 +926,11 @@
         "title": "Chiavi nel portachiavi",
         "detail": "Le chiavi dell'exchange restano nel portachiavi di sistema, mai nel browser né sui nostri server."
       }
+    },
+    "wall": {
+      "title": "{{venue}} richiede l’app desktop",
+      "description": "Questo exchange serve i suoi dati di mercato senza le intestazioni che un browser richiede per leggerli. L’app desktop si collega in modo nativo, e lì funzionano tutti.",
+      "alternatives": "Oppure resta nel browser"
     }
   },
   "userMenu": {
@@ -2006,7 +2011,12 @@
     "resetConfirmDescription": "Questo sostituirà il tuo layout attuale con la preimpostazione predefinita. Ogni disposizione personalizzata andrà persa.",
     "emptyPlaceholder": "Aggiungi un pannello",
     "searchPairs": "Cerca coppie...",
-    "searchPanes": "Cerca pannelli..."
+    "searchPanes": "Cerca pannelli...",
+    "paneUnavailable": {
+      "title": "{{pair}} non è disponibile su {{venue}}",
+      "titleAnyVenue": "{{pair}} non è disponibile",
+      "description": "Questo connettore non ha restituito dati di mercato per questa coppia. Provane un altro che la elenchi."
+    }
   },
   "watchlist": {
     "addTitle": "Aggiungi alla watchlist",
@@ -2171,7 +2181,19 @@
   "terminal": {
     "manageWatchlists": "Gestisci watchlist",
     "createAlert": "Crea avviso",
-    "market": "Mercato"
+    "market": "Mercato",
+    "wallet": {
+      "connectWallet": "Collega wallet",
+      "connectAccount": "Collega account",
+      "connectHintWallet": "Collega un wallet {{chain}} per operare",
+      "connectHintWalletAny": "Collega un wallet per operare",
+      "connectHintAccount": "Collega un account {{venue}} per operare",
+      "selectWallet": "Scegli wallet",
+      "selectAccount": "Scegli account",
+      "groupWallet": "Wallet cripto",
+      "groupBroker": "Account broker",
+      "groupExchange": "Account exchange"
+    }
   },
   "accounts": {
     "pageTitle": "Account",

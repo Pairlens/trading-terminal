@@ -50,6 +50,7 @@ export const mexcMarketConnectorManifest: PluginManifest =
     icon: ICON_URL,
     gradient: 'from-blue-600 to-blue-800',
     abbr: 'MX',
+    requiresDesktop: true,
     tickerSnapshot: true,
     headerImage:
       'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600&q=80',

@@ -926,6 +926,11 @@
         "title": "Kunci di keychain OS",
         "detail": "Kunci bursa tersimpan di keychain sistem, tidak pernah di penyimpanan browser atau server kami."
       }
+    },
+    "wall": {
+      "title": "{{venue}} memerlukan aplikasi desktop",
+      "description": "Bursa ini menyajikan data pasarnya tanpa header yang dibutuhkan browser untuk membacanya. Aplikasi desktop terhubung secara native, jadi semua bursa berfungsi di sana.",
+      "alternatives": "Atau tetap di browser"
     }
   },
   "userMenu": {
@@ -2006,7 +2011,12 @@
     "resetConfirmDescription": "Ini akan mengganti tata letak Anda saat ini dengan preset default. Susunan kustom apa pun akan hilang.",
     "emptyPlaceholder": "Tambah panel",
     "searchPairs": "Cari pair...",
-    "searchPanes": "Cari panel..."
+    "searchPanes": "Cari panel...",
+    "paneUnavailable": {
+      "title": "{{pair}} tidak tersedia di {{venue}}",
+      "titleAnyVenue": "{{pair}} tidak tersedia",
+      "description": "Konektor ini tidak mengembalikan data pasar untuk pasangan ini. Coba konektor lain yang mencantumkannya."
+    }
   },
   "watchlist": {
     "addTitle": "Tambah ke daftar pantauan",
@@ -2171,7 +2181,19 @@
   "terminal": {
     "manageWatchlists": "Kelola daftar pantauan",
     "createAlert": "Buat alert",
-    "market": "Market"
+    "market": "Market",
+    "wallet": {
+      "connectWallet": "Hubungkan wallet",
+      "connectAccount": "Hubungkan akun",
+      "connectHintWallet": "Hubungkan wallet {{chain}} untuk berdagang",
+      "connectHintWalletAny": "Hubungkan wallet untuk berdagang",
+      "connectHintAccount": "Hubungkan akun {{venue}} untuk berdagang",
+      "selectWallet": "Pilih wallet",
+      "selectAccount": "Pilih akun",
+      "groupWallet": "Wallet kripto",
+      "groupBroker": "Akun broker",
+      "groupExchange": "Akun bursa"
+    }
   },
   "accounts": {
     "pageTitle": "Akun",

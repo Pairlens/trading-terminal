@@ -36,7 +36,7 @@ import { matchCommand } from '@/lib/keybindings/store'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
-import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
+import { DesktopOnlyState } from '@/components/layout/desktop-only-state'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useNotificationStore } from '@/stores/notification-store'
 
@@ -263,9 +263,13 @@ const ChartPaneInner = memo(function ChartPaneInner({
       onPointerDown={() => containerRef.current?.focus()}
     >
       <ChartToolbar />
+      {/* Backstop only: a venue that DECLARES `requiresDesktop` never gets
+          here, because LayoutShell replaced the whole workspace before any
+          pane mounted. This catches a connector that refuses without having
+          declared it. */}
       {desktopOnly ? (
         <div className="relative flex min-h-0 flex-1">
-          <PaneDesktopOnly
+          <DesktopOnlyState
             market={chartConfig.market}
             onSelectMarket={setMarket}
           />

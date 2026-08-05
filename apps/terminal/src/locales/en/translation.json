@@ -926,6 +926,11 @@
         "title": "Keys in your OS keychain",
         "detail": "Exchange keys live in the system keychain, never in browser storage and never on our servers."
       }
+    },
+    "wall": {
+      "title": "{{venue}} needs the desktop app",
+      "description": "This exchange serves its market data without the headers a browser needs to read it. The desktop app connects natively, so every venue works there.",
+      "alternatives": "Or stay in the browser"
     }
   },
   "userMenu": {
@@ -2006,7 +2011,12 @@
     "resetConfirmDescription": "This will replace your current layout with the default preset. Any custom arrangement will be lost.",
     "emptyPlaceholder": "Add a pane",
     "searchPairs": "Search pairs...",
-    "searchPanes": "Search panes..."
+    "searchPanes": "Search panes...",
+    "paneUnavailable": {
+      "title": "{{pair}} isn’t available on {{venue}}",
+      "titleAnyVenue": "{{pair}} isn’t available",
+      "description": "This connector returned no market data for this pair. Try another connector that lists it."
+    }
   },
   "watchlist": {
     "addTitle": "Add to watchlist",
@@ -2171,7 +2181,19 @@
   "terminal": {
     "manageWatchlists": "Manage watchlists",
     "createAlert": "Create alert",
-    "market": "Market"
+    "market": "Market",
+    "wallet": {
+      "connectWallet": "Connect wallet",
+      "connectAccount": "Connect account",
+      "connectHintWallet": "Connect a {{chain}} wallet to trade",
+      "connectHintWalletAny": "Connect a wallet to trade",
+      "connectHintAccount": "Connect a {{venue}} account to trade",
+      "selectWallet": "Select wallet",
+      "selectAccount": "Select account",
+      "groupWallet": "Crypto Wallet",
+      "groupBroker": "Broker Account",
+      "groupExchange": "Exchange Account"
+    }
   },
   "accounts": {
     "pageTitle": "Accounts",

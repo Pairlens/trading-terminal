@@ -926,6 +926,11 @@
         "title": "鍵は OS のキーチェーンに",
         "detail": "取引所の鍵はシステムのキーチェーンに保存され、ブラウザにも当社サーバーにも残りません。"
       }
+    },
+    "wall": {
+      "title": "{{venue}} はデスクトップアプリが必要です",
+      "description": "この取引所は、ブラウザが読み取るために必要なヘッダーを付けずに市場データを配信しています。デスクトップアプリはネイティブに接続するため、すべての取引所が使えます。",
+      "alternatives": "またはブラウザのまま使う"
     }
   },
   "userMenu": {
@@ -2006,7 +2011,12 @@
     "resetConfirmDescription": "現在のレイアウトをデフォルトプリセットに置き換えます。カスタム配置は失われます。",
     "emptyPlaceholder": "ペインを追加",
     "searchPairs": "ペアを検索...",
-    "searchPanes": "ペインを検索..."
+    "searchPanes": "ペインを検索...",
+    "paneUnavailable": {
+      "title": "{{pair}} は {{venue}} では取り扱いがありません",
+      "titleAnyVenue": "{{pair}} は取り扱いがありません",
+      "description": "このコネクタはこのペアの市場データを返しませんでした。取り扱いのある別のコネクタをお試しください。"
+    }
   },
   "watchlist": {
     "addTitle": "ウォッチリストに追加",
@@ -2171,7 +2181,19 @@
   "terminal": {
     "manageWatchlists": "ウォッチリストを管理",
     "createAlert": "アラートを作成",
-    "market": "マーケット"
+    "market": "マーケット",
+    "wallet": {
+      "connectWallet": "ウォレットを接続",
+      "connectAccount": "アカウントを接続",
+      "connectHintWallet": "取引するには {{chain}} のウォレットを接続してください",
+      "connectHintWalletAny": "取引するにはウォレットを接続してください",
+      "connectHintAccount": "取引するには {{venue}} のアカウントを接続してください",
+      "selectWallet": "ウォレットを選択",
+      "selectAccount": "アカウントを選択",
+      "groupWallet": "暗号資産ウォレット",
+      "groupBroker": "ブローカー口座",
+      "groupExchange": "取引所アカウント"
+    }
   },
   "accounts": {
     "pageTitle": "アカウント",

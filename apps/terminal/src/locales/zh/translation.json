@@ -926,6 +926,11 @@
         "title": "密钥存于系统钥匙串",
         "detail": "交易所密钥保存在系统钥匙串中，不会进入浏览器存储，也不会到我们的服务器。"
       }
+    },
+    "wall": {
+      "title": "{{venue}} 需要桌面应用",
+      "description": "这家交易所返回行情数据时不带浏览器读取所需的响应头。桌面应用以原生方式连接，所有交易所在那里都能用。",
+      "alternatives": "或者继续用浏览器"
     }
   },
   "userMenu": {
@@ -2006,7 +2011,12 @@
     "resetConfirmDescription": "此操作将用默认预设替换你当前的布局。任何自定义排列都将丢失。",
     "emptyPlaceholder": "添加面板",
     "searchPairs": "搜索交易对……",
-    "searchPanes": "搜索面板……"
+    "searchPanes": "搜索面板……",
+    "paneUnavailable": {
+      "title": "{{venue}} 上没有 {{pair}}",
+      "titleAnyVenue": "找不到 {{pair}}",
+      "description": "该连接器没有返回这个交易对的行情数据。换一个上架了它的连接器试试。"
+    }
   },
   "watchlist": {
     "addTitle": "添加到自选列表",
@@ -2171,7 +2181,19 @@
   "terminal": {
     "manageWatchlists": "管理自选列表",
     "createAlert": "创建提醒",
-    "market": "市场"
+    "market": "市场",
+    "wallet": {
+      "connectWallet": "连接钱包",
+      "connectAccount": "连接账户",
+      "connectHintWallet": "连接 {{chain}} 钱包即可交易",
+      "connectHintWalletAny": "连接钱包即可交易",
+      "connectHintAccount": "连接 {{venue}} 账户即可交易",
+      "selectWallet": "选择钱包",
+      "selectAccount": "选择账户",
+      "groupWallet": "加密钱包",
+      "groupBroker": "券商账户",
+      "groupExchange": "交易所账户"
+    }
   },
   "accounts": {
     "pageTitle": "账户",

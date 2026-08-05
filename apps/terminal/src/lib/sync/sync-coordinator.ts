@@ -31,6 +31,7 @@ import {
 import { emitHydrate, onWrite } from './sync-channel'
 import type { SyncDomainId } from './sync-domains'
 import { handleUnauthorized } from '@/lib/api'
+import { APP_SERVER_CREDENTIALS } from '@/lib/auth-client'
 import { getInstallableEntries } from '@/lib/plugins/plugin-ledger'
 
 export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'error'
@@ -667,7 +668,7 @@ export class SyncCoordinator {
     const response = await fetch(`${this.appServerUrl}${path}`, {
       ...init,
       headers,
-      credentials: 'include',
+      credentials: APP_SERVER_CREDENTIALS,
     })
     // Auth rejected mid-sync → sign out so the user can re-authenticate.
     if (response.status === 401 && token) {
