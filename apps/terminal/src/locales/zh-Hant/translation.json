@@ -3238,6 +3238,12 @@
       "openTerminal": "開啟終端",
       "closeTabHint": "是從桌面應用程式付款的嗎?直接關閉此分頁即可。",
       "receiptHint": "收據和發票已寄到你的信箱,也可在帳單管理頁面查看(設定 → Intelligence)。"
+    },
+    "crash": {
+      "title": "此頁面發生錯誤",
+      "description": "算繪時發生問題。重試通常即可解決；若再次出現，請回到首頁並重新開啟該交易對。",
+      "reload": "重新載入",
+      "details": "技術細節"
     }
   },
   "workflows": {

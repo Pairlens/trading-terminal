@@ -3238,6 +3238,12 @@
       "openTerminal": "Terminali aç",
       "closeTabHint": "Masaüstü uygulamasından mı ödedin? Bu sekmeyi kapatabilirsin.",
       "receiptHint": "Makbuz ve faturalar e-postanızda ve faturalandırma portalında (Ayarlar → Intelligence) bulunur."
+    },
+    "crash": {
+      "title": "Bu ekranda bir hata oluştu",
+      "description": "Ekran çizilirken bir şey başarısız oldu. Genellikle yeniden denemek yeterlidir; tekrar ederse ana ekrana dönüp pariteyi yeniden açın.",
+      "reload": "Yeniden yükle",
+      "details": "Teknik ayrıntılar"
     }
   },
   "workflows": {

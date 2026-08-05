@@ -3238,6 +3238,12 @@
       "openTerminal": "Abrir o terminal",
       "closeTabHint": "Pagou pelo app para desktop? Você pode simplesmente fechar esta aba.",
       "receiptHint": "O recibo e as faturas estão no seu e-mail e no portal de cobrança (Configurações → Intelligence)."
+    },
+    "crash": {
+      "title": "Esta tela encontrou um erro",
+      "description": "Algo falhou ao renderizar. Tentar de novo costuma resolver; se voltar a acontecer, volte ao início e abra o par novamente.",
+      "reload": "Recarregar",
+      "details": "Detalhes técnicos"
     }
   },
   "workflows": {

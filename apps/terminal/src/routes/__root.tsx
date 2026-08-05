@@ -21,6 +21,7 @@ import appCss from '../styles.css?url'
 import type { QueryClient } from '@tanstack/react-query'
 import { isStandalone } from '@/lib/platform'
 import { attachNavHistory } from '@/lib/nav-history'
+import { RouteError } from '@/components/route-error'
 import { TerminalLock } from '@/components/security/terminal-lock'
 import { QuitConfirm } from '@/components/quit-confirm'
 import { FullscreenShortcut } from '@/components/fullscreen-toggle'
@@ -178,6 +179,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
     ],
   }),
+  // Every route inherits this one: nothing else in the app defines an
+  // errorComponent, so a throw from any screen lands on a panel that offers a
+  // way out instead of the router's bare default.
+  errorComponent: RouteError,
   shellComponent: RootDocument,
 })
 

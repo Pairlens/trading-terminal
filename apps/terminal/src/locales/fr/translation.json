@@ -3238,6 +3238,12 @@
       "openTerminal": "Ouvrir le terminal",
       "closeTabHint": "Vous avez payé depuis l’application de bureau ? Vous pouvez simplement fermer cet onglet.",
       "receiptHint": "Le reçu et les factures se trouvent dans votre e-mail et sur le portail de facturation (Paramètres → Intelligence)."
+    },
+    "crash": {
+      "title": "Cet écran a rencontré une erreur",
+      "description": "Le rendu a échoué. Réessayer suffit généralement ; si cela se reproduit, revenez à l'accueil et rouvrez la paire.",
+      "reload": "Recharger",
+      "details": "Détails techniques"
     }
   },
   "workflows": {

@@ -3238,6 +3238,12 @@
       "openTerminal": "Terminal öffnen",
       "closeTabHint": "Über die Desktop-App bezahlt? Du kannst diesen Tab einfach schließen.",
       "receiptHint": "Beleg und Rechnungen findest du in deiner E-Mail und im Abrechnungsportal (Einstellungen → Intelligence)."
+    },
+    "crash": {
+      "title": "Diese Ansicht hat einen Fehler",
+      "description": "Beim Rendern ist etwas fehlgeschlagen. Ein erneuter Versuch behebt das meist – tritt es wieder auf, gehe zur Startseite und öffne das Paar erneut.",
+      "reload": "Neu laden",
+      "details": "Technische Details"
     }
   },
   "workflows": {

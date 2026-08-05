@@ -3238,6 +3238,12 @@
       "openTerminal": "Apri il terminale",
       "closeTabHint": "Hai pagato dall'app desktop? Puoi semplicemente chiudere questa scheda.",
       "receiptHint": "La ricevuta e le fatture si trovano nella tua email e nel portale di fatturazione (Impostazioni → Intelligence)."
+    },
+    "crash": {
+      "title": "Questa schermata ha riscontrato un errore",
+      "description": "Qualcosa non è riuscito durante il rendering. Di solito basta riprovare; se si ripete, torna alla home e riapri la coppia.",
+      "reload": "Ricarica",
+      "details": "Dettagli tecnici"
     }
   },
   "workflows": {

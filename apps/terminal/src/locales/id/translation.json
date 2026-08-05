@@ -3238,6 +3238,12 @@
       "openTerminal": "Buka terminal",
       "closeTabHint": "Membayar dari aplikasi desktop? Anda bisa langsung menutup tab ini.",
       "receiptHint": "Struk dan faktur ada di email Anda dan portal penagihan (Pengaturan → Intelligence)."
+    },
+    "crash": {
+      "title": "Layar ini mengalami error",
+      "description": "Ada yang gagal saat merender. Biasanya cukup dicoba lagi; jika muncul lagi, kembali ke beranda dan buka pasangan itu lagi.",
+      "reload": "Muat ulang",
+      "details": "Detail teknis"
     }
   },
   "workflows": {

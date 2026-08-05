@@ -18,7 +18,7 @@ import {
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useMarketData } from '@/lib/market-data-provider'
 import {
-  ChartTerminalAutoProvider,
+  ChartTerminalProvider,
   useChartActions,
   useChartConfig,
 } from '@/lib/chart-terminal-context'
@@ -98,16 +98,28 @@ function PairTerminalPage() {
       ? { walletId: marketCreds[0]!.id, market: defaultMarket }
       : null
 
+  // Mounted directly, not through ChartTerminalAutoProvider: this page IS the
+  // chart terminal, and the two facts the provider needs are already proven
+  // above (a route param for the pair, a non-empty venue list). The auto
+  // provider decides from the GLOBAL active pair, which the page's own content
+  // is what sets — so a moment where that global read comes back empty left
+  // the page rendering chart consumers with no provider above them, and the
+  // whole terminal died on `useChartConfig must be used within a
+  // ChartTerminalProvider`. Here the provider is unconditional.
   return (
     <ActivePairProvider initial={{ pairKey, market: defaultMarket }}>
       <ActiveWalletProvider initial={initialWallet}>
-        <ChartTerminalAutoProvider>
+        <ChartTerminalProvider
+          pairKey={pairKey}
+          markets={markets}
+          defaultMarket={defaultMarket}
+        >
           <WorkspaceProvider config={PAIR_WORKSPACE}>
             <LayoutProvider>
               <PairTerminalContent pairKey={pairKey} markets={markets} />
             </LayoutProvider>
           </WorkspaceProvider>
-        </ChartTerminalAutoProvider>
+        </ChartTerminalProvider>
       </ActiveWalletProvider>
     </ActivePairProvider>
   )

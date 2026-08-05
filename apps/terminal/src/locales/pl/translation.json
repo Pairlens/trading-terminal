@@ -3262,6 +3262,12 @@
       "openTerminal": "Otwórz terminal",
       "closeTabHint": "Zapłaciłeś z aplikacji na komputer? Możesz po prostu zamknąć tę kartę.",
       "receiptHint": "Paragon i faktury znajdziesz w e-mailu oraz w portalu rozliczeniowym (Ustawienia → Intelligence)."
+    },
+    "crash": {
+      "title": "Ten ekran napotkał błąd",
+      "description": "Coś nie zadziałało podczas renderowania. Zwykle wystarczy ponowić próbę; jeśli błąd wraca, wróć na stronę główną i otwórz parę ponownie.",
+      "reload": "Odśwież",
+      "details": "Szczegóły techniczne"
     }
   },
   "workflows": {

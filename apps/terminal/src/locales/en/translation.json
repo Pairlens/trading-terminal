@@ -3238,6 +3238,12 @@
       "openTerminal": "Open the terminal",
       "closeTabHint": "Paid from the desktop app? You can simply close this tab.",
       "receiptHint": "Receipt and invoices are in your email and the billing portal (Settings → Intelligence)."
+    },
+    "crash": {
+      "title": "This screen hit an error",
+      "description": "Something failed while rendering. Retrying usually clears it — if it comes back, go to the home board and open the pair again.",
+      "reload": "Reload",
+      "details": "Technical details"
     }
   },
   "workflows": {
