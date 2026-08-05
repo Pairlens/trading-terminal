@@ -728,6 +728,42 @@ describe('ReconnectingWsSession — authenticate gate', () => {
     session.destroy()
   })
 
+  // A venue settles authenticate() on its own terms — an ack, or a timeout
+  // measured in seconds. Waiting for that after the socket is already gone
+  // pins `connecting`, and ensureConnected() refuses every reconnect while it
+  // is set, so the feed stays dark for the venue's whole auth timeout. The
+  // login has to be something the session can walk away from.
+  it('reconnects without waiting out a login that never answers', async () => {
+    const log: Array<string> = []
+    let logins = 0
+    const { session, sockets } = makeSession({
+      // Models a venue whose login settles only on an ack that is never
+      // coming — bitfinex's is a 10s timeout — so the ONLY way this test can
+      // pass is by abandoning it rather than outliving it.
+      authenticate: () => {
+        logins++
+        return new Promise<void>(() => {})
+      },
+    })
+
+    session.acquire('orders', candleSpec(log, 'orders'), () => {})
+    await waitFor(() => sockets.length === 1 && logins === 1)
+
+    // The watchdog gives up on the silent socket mid-login.
+    session.restart()
+
+    await waitFor(() => sockets.length === 2)
+    expect(sockets.length).toBe(2)
+    expect(logins).toBe(2)
+
+    session.destroy()
+  })
+
+  // (destroy() releases parked logins too, but there is nothing to assert on:
+  // after teardown nothing reconnects either way, so a test would pass with or
+  // without it. It stays in the code because an unsettleable promise would
+  // otherwise pin that connect frame for the life of the process.)
+
   // The login round-trip is the one window where `connecting` stays true long
   // enough for a close to land inside it. Everything that wants a reconnect
   // there — the drop itself, or a watchdog restart() — is refused by

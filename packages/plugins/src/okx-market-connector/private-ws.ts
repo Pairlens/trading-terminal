@@ -162,23 +162,32 @@ export class OkxPrivateWsClient {
     return hmacSign(creds.apiSecret, `${timestamp}GET/users/self/verify`).then(
       (sign) =>
         new Promise<void>((resolve, reject) => {
+          // Only ever clear OUR entry. The session abandons a login whose
+          // socket was retired and reconnects straight away, so this login can
+          // still be pending when the next one installs itself here. Clearing
+          // unconditionally — which the timeout below is late enough to do —
+          // would strand that newer login waiting for an ack it can no longer
+          // resolve, until its own timeout.
+          const forget = () => {
+            clearTimeout(timer)
+            if (this.pendingLogin === entry) this.pendingLogin = null
+          }
           const timer = setTimeout(() => {
-            this.pendingLogin = null
+            forget()
             reject(new Error('okx private: login timeout'))
           }, LOGIN_TIMEOUT_MS)
 
-          this.pendingLogin = {
+          const entry = {
             resolve: () => {
-              clearTimeout(timer)
-              this.pendingLogin = null
+              forget()
               resolve()
             },
-            reject: (err) => {
-              clearTimeout(timer)
-              this.pendingLogin = null
+            reject: (err: Error) => {
+              forget()
               reject(err)
             },
           }
+          this.pendingLogin = entry
 
           this.session.send(
             JSON.stringify({

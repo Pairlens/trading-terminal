@@ -108,23 +108,32 @@ export class BfxPrivateWsClient {
     return buildWsAuth(creds).then(
       (auth) =>
         new Promise<void>((resolve, reject) => {
+          // Only ever clear OUR entry. The session abandons a login whose
+          // socket was retired and reconnects straight away, so this login can
+          // still be pending when the next one installs itself here. Clearing
+          // unconditionally — which the timeout below is late enough to do —
+          // would strand that newer login waiting for an ack it can no longer
+          // resolve, until its own timeout.
+          const forget = () => {
+            clearTimeout(timer)
+            if (this.pendingAuth === entry) this.pendingAuth = null
+          }
           const timer = setTimeout(() => {
-            this.pendingAuth = null
+            forget()
             reject(new Error('bfx private: auth timeout'))
           }, AUTH_TIMEOUT_MS)
 
-          this.pendingAuth = {
+          const entry = {
             resolve: () => {
-              clearTimeout(timer)
-              this.pendingAuth = null
+              forget()
               resolve()
             },
-            reject: (err) => {
-              clearTimeout(timer)
-              this.pendingAuth = null
+            reject: (err: Error) => {
+              forget()
               reject(err)
             },
           }
+          this.pendingAuth = entry
 
           this.session.send(
             JSON.stringify({

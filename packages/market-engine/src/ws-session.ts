@@ -171,6 +171,12 @@ export class ReconnectingWsSession {
   private stableTimer: ReturnType<typeof setTimeout> | null = null
   private livenessTimer: ReturnType<typeof setInterval> | null = null
   private releaseWake: (() => void) | null = null
+  /**
+   * Woken whenever a generation is retired or the session is destroyed, so a
+   * connect attempt blocked on a venue's login round-trip can stop waiting on
+   * a socket that no longer exists. See `abandonedOn`.
+   */
+  private retireWaiters = new Set<() => void>()
 
   constructor(private readonly opts: WsSessionOptions) {
     const source = opts.wakeSource === undefined ? wakeMonitor : opts.wakeSource
@@ -267,6 +273,41 @@ export class ReconnectingWsSession {
     this.stopPingTimer()
     this.stopStableTimer()
     this.stopLivenessTimer()
+    this.wakeRetireWaiters()
+  }
+
+  /** Release every connect attempt parked on a login round-trip. */
+  private wakeRetireWaiters(): void {
+    if (this.retireWaiters.size === 0) return
+    for (const wake of [...this.retireWaiters]) wake()
+    this.retireWaiters.clear()
+  }
+
+  /**
+   * Resolves once `connectionId` is no longer the caller's — i.e. the socket
+   * it is working on has been retired, or the session was destroyed.
+   *
+   * This exists so a login is something we can WALK AWAY from, not something
+   * we have to outlive. Venues settle `authenticate()` on their own terms: an
+   * auth ack, or a timeout measured in seconds. Waiting for that after the
+   * socket is already gone pins `connecting` for the whole interval, and
+   * `ensureConnected()` refuses every reconnect while it is set — so a
+   * watchdog restart during login used to cost a private feed the venue's
+   * entire auth timeout before it could try again.
+   */
+  private abandonedOn(connectionId: number): {
+    promise: Promise<void>
+    release: () => void
+  } {
+    if (this.destroyed || connectionId !== this.connectionId) {
+      return { promise: Promise.resolve(), release: () => {} }
+    }
+    let wake!: () => void
+    const promise = new Promise<void>((resolve) => {
+      wake = resolve
+    })
+    this.retireWaiters.add(wake)
+    return { promise, release: () => this.retireWaiters.delete(wake) }
   }
 
   /**
@@ -283,6 +324,9 @@ export class ReconnectingWsSession {
 
   destroy(): void {
     this.destroyed = true
+    // Anything parked on a login round-trip is released here too: teardown
+    // must not have to outlive a venue's auth timeout either.
+    this.wakeRetireWaiters()
     this.stopPingTimer()
     this.stopStableTimer()
     this.stopLivenessTimer()
@@ -347,7 +391,16 @@ export class ReconnectingWsSession {
       // assigned) but no subscribe has gone out yet, which is exactly the
       // ordering every private endpoint requires.
       if (this.opts.authenticate) {
-        await this.opts.authenticate()
+        // Race, don't just await: if this socket is retired mid-login we stop
+        // waiting immediately rather than outliving the venue's auth timeout.
+        // A login that loses the race still has handlers attached here, so a
+        // late rejection is handled rather than surfacing as an unhandled one.
+        const abandoned = this.abandonedOn(connectionId)
+        try {
+          await Promise.race([this.opts.authenticate(), abandoned.promise])
+        } finally {
+          abandoned.release()
+        }
         // A restart()/destroy() during the login round-trip retired this
         // socket — subscribing on it now would talk to a dead connection.
         if (this.destroyed || connectionId !== this.connectionId) return
