@@ -37,7 +37,10 @@ import type { ReactNode } from 'react'
 
 import type { DropZone } from '@/lib/layout/types'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
-import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
+import {
+  useOptionalChartActions,
+  useOptionalChartConfig,
+} from '@/lib/chart-terminal-context'
 import { useLayout } from '@/lib/layout/context'
 import { getPaneIcon } from '@/lib/layout/pane-icons'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
@@ -76,11 +79,21 @@ export function LayoutShell() {
 
 function DesktopOnlyGate({ children }: { children: ReactNode }) {
   const { markets } = useAvailableMarkets()
-  const { market } = useChartConfig()
-  const { setMarket } = useChartActions()
+  // Optional reads: ChartTerminalAutoProvider deliberately mounts no chart
+  // terminal when there is no active pair (the discovery workspace), and
+  // with no market selected there is nothing to gate.
+  const config = useOptionalChartConfig()
+  const actions = useOptionalChartActions()
 
-  if (markets.find((m) => m.value === market)?.desktopOnly) {
-    return <DesktopOnlyState market={market} onSelectMarket={setMarket} />
+  if (!config || !actions) return children
+
+  if (markets.find((m) => m.value === config.market)?.desktopOnly) {
+    return (
+      <DesktopOnlyState
+        market={config.market}
+        onSelectMarket={actions.setMarket}
+      />
+    )
   }
   return children
 }
