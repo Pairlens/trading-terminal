@@ -399,7 +399,7 @@ export function WebPane() {
           onClick={handleBack}
           disabled={!canGoBack}
           className="text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:pointer-events-none p-0.5"
-          title="Back"
+          title={t('common.back')}
         >
           <ArrowLeft className="size-3" />
         </button>
@@ -408,7 +408,7 @@ export function WebPane() {
           onClick={handleForward}
           disabled={!canGoForward}
           className="text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:pointer-events-none p-0.5"
-          title="Forward"
+          title={t('webPane.forward')}
         >
           <ArrowRight className="size-3" />
         </button>
@@ -462,7 +462,7 @@ export function WebPane() {
             <div className="absolute inset-0 flex items-center justify-center p-6">
               <div className="max-w-xs text-center">
                 <p className="text-sm font-medium text-foreground mb-1">
-                  Failed to load
+                  {t('webPane.failedToLoad')}
                 </p>
                 <p className="text-xs text-muted-foreground">{errorMsg}</p>
               </div>
@@ -472,7 +472,7 @@ export function WebPane() {
             <div className="absolute inset-0 flex items-center justify-center bg-background/80">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <EyeOff className="size-4" />
-                <span className="text-xs">Web view paused</span>
+                <span className="text-xs">{t('webPane.viewPaused')}</span>
               </div>
             </div>
           )}
@@ -500,7 +500,7 @@ export function WebPane() {
         <iframe
           ref={iframeRef}
           src={loadedUrl}
-          title="Web Panel"
+          title={t('panes.web')}
           className="flex-1 border-0"
           sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
           onLoad={handleIframeLoad}

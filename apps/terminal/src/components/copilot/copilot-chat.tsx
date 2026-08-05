@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useRef } from 'react'
 import { Sparkles } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { AiOrb } from '@pairlens/ui/components/ui/ai-orb'
 import { ScrollArea } from '@pairlens/ui/components/ui/scroll-area'
@@ -27,6 +28,7 @@ export function CopilotChat({
   persona,
   onPersonaChange,
 }: CopilotChatProps) {
+  const { t } = useTranslation()
   const isStreaming = status === 'streaming' || status === 'submitted'
   const { contentRef, scrollToBottom } = useStickToBottom({
     enabled: isStreaming,
@@ -50,11 +52,12 @@ export function CopilotChat({
         <AiOrb size="48px" animationDuration={25} />
         <div className="max-w-[200px] space-y-1.5">
           <p className="font-serif text-base font-medium leading-snug">
-            {pairKey ? `Analyze ${pairKey}` : 'Start a conversation'}
+            {pairKey
+              ? t('copilot.analyzePair', { pair: pairKey })
+              : t('copilot.startConversation')}
           </p>
           <p className="text-muted-foreground text-xs">
-            Ask about market conditions, validate your setup, or get a risk
-            assessment — the AI has full context of this pair.
+            {t('copilot.emptyStateHint')}
           </p>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-1.5">
@@ -71,7 +74,9 @@ export function CopilotChat({
               className="size-2.5"
               style={{ color: 'var(--magic-1)' }}
             />
-            <span className="magic-text font-medium">Context-aware</span>
+            <span className="magic-text font-medium">
+              {t('copilot.contextAware')}
+            </span>
           </span>
           {persona && onPersonaChange && (
             <PersonaMenu

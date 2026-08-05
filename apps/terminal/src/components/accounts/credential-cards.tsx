@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { motion } from 'motion/react'
 import { AlertTriangle, Link2Off, ShieldCheck } from 'lucide-react'
@@ -37,6 +38,7 @@ function RemoveConfirm({
   isBusy: boolean
   label: string
 }) {
+  const { t } = useTranslation()
   const [confirming, setConfirming] = useState(false)
 
   if (confirming) {
@@ -48,7 +50,7 @@ function RemoveConfirm({
           onClick={() => setConfirming(false)}
           disabled={isBusy}
         >
-          Keep
+          {t('accounts.keep')}
         </Button>
         <Button
           size="sm"
@@ -59,7 +61,7 @@ function RemoveConfirm({
           }}
           disabled={isBusy}
         >
-          Remove
+          {t('accounts.remove')}
         </Button>
       </div>
     )
@@ -92,6 +94,7 @@ export function ExchangeAccountCard({
   isBusy: boolean
   currencySymbol: string
 }) {
+  const { t } = useTranslation()
   const expiry = getExpiryStatus(credential)
   const { totalValue } = usePortfolioValue(credential.id)
   const brand = venueBrand(credential.market, credential.label)
@@ -118,7 +121,9 @@ export function ExchangeAccountCard({
         background: `linear-gradient(165deg, color-mix(in oklch, ${brand.tint} 26%, var(--card)) 0%, var(--card) 62%)`,
       }}
       role="article"
-      aria-label={`${credential.label} exchange account`}
+      aria-label={t('accounts.exchangeAccountAriaLabel', {
+        label: credential.label,
+      })}
     >
       {/* Poster band — the venue's mark as ambient art */}
       <div className="relative flex h-[124px] items-center justify-center overflow-hidden">
@@ -174,7 +179,7 @@ export function ExchangeAccountCard({
 
         <div className="mt-3 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
           <ShieldCheck className="size-3 text-emerald-600 dark:text-emerald-400" />
-          Local
+          {t('accounts.localBadge')}
           <span className="text-border">·</span>
           {credential.createdAt > 0
             ? new Date(credential.createdAt).toLocaleDateString(undefined, {
@@ -182,7 +187,7 @@ export function ExchangeAccountCard({
                 day: 'numeric',
                 year: 'numeric',
               })
-            : 'Unknown'}
+            : t('accounts.unknownDate')}
         </div>
 
         {/* Inactivity expiry warning */}
@@ -198,8 +203,14 @@ export function ExchangeAccountCard({
             <AlertTriangle className="mt-0.5 size-3 shrink-0" />
             <span>
               {expiry.expired
-                ? `Likely expired — ${expiry.daysInactive} days inactive (${expiry.policy.days}-day limit). Re-create the API key on the exchange.`
-                : `${expiry.daysInactive}/${expiry.policy.days} days inactive. Keys expire after ${expiry.policy.days} days without use.`}
+                ? t('accounts.keyExpiredWarning', {
+                    daysInactive: expiry.daysInactive,
+                    limitDays: expiry.policy.days,
+                  })
+                : t('accounts.keyInactiveWarning', {
+                    daysInactive: expiry.daysInactive,
+                    limitDays: expiry.policy.days,
+                  })}
             </span>
           </div>
         )}
@@ -214,13 +225,13 @@ export function ExchangeAccountCard({
               )}
             />
             <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-              Active
+              {t('common.active')}
             </span>
           </div>
           <RemoveConfirm
             onRemove={onRemove}
             isBusy={isBusy}
-            label="Disconnect"
+            label={t('accounts.disconnect')}
           />
         </div>
       </div>
@@ -241,6 +252,7 @@ export function CryptoWalletCard({
   onRemove: () => void
   isBusy: boolean
 }) {
+  const { t } = useTranslation()
   const schema = WALLET_SCHEMAS[wallet.chain]
   const brand = chainBrand(wallet.chain)
   const poster = chainPosterSrc(wallet.chain)
@@ -253,7 +265,9 @@ export function CryptoWalletCard({
         background: `linear-gradient(165deg, color-mix(in oklch, ${brand.tint} 24%, var(--card)) 0%, var(--card) 62%)`,
       }}
       role="article"
-      aria-label={`${wallet.label} crypto wallet`}
+      aria-label={t('accounts.cryptoWalletAriaLabel', {
+        label: wallet.label,
+      })}
     >
       {/* Poster band — chain mark or tinted monogram */}
       <div className="relative flex h-[96px] items-center justify-center overflow-hidden">
@@ -296,7 +310,7 @@ export function CryptoWalletCard({
 
         <div className="mt-3 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
           <ShieldCheck className="size-3 text-emerald-600 dark:text-emerald-400" />
-          Local
+          {t('accounts.localBadge')}
           <span className="text-border">·</span>
           {new Date(wallet.createdAt).toLocaleDateString(undefined, {
             month: 'short',
@@ -305,7 +319,11 @@ export function CryptoWalletCard({
         </div>
 
         <div className="mt-auto flex items-center justify-end border-t border-dashed border-border/40 pt-3">
-          <RemoveConfirm onRemove={onRemove} isBusy={isBusy} label="Remove" />
+          <RemoveConfirm
+            onRemove={onRemove}
+            isBusy={isBusy}
+            label={t('accounts.remove')}
+          />
         </div>
       </div>
     </div>

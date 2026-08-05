@@ -13,6 +13,7 @@ import {
 } from '@/lib/plugins/local-plugin-store'
 
 function CommandBlock({ command }: { command: string }) {
+  const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
   return (
     <div className="flex items-center justify-between gap-3 rounded-md border bg-muted/40 px-3 py-2 font-mono text-xs">
@@ -21,7 +22,7 @@ function CommandBlock({ command }: { command: string }) {
         size="icon-xs"
         variant="ghost"
         className="size-6 shrink-0"
-        aria-label="Copy command"
+        aria-label={t('pluginStore.copyCommand')}
         onClick={() => {
           void navigator.clipboard?.writeText(command)
           setCopied(true)
@@ -109,7 +110,7 @@ export function DevelopGuide() {
               'Go to the Installed tab and use',
             )}
             <Badge variant="outline" className="gap-1 text-[10px]">
-              <Upload className="size-2.5" /> Import plugin
+              <Upload className="size-2.5" /> {t('pluginStore.importPlugin')}
             </Badge>
             {t(
               'pluginStore.buildStepInstallNote2',

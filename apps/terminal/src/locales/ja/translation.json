@@ -244,7 +244,9 @@
       "create": "アカウントを作成",
       "skip": "スキップ — すべてこのデバイスに保存",
       "signedIn": "{{email}} でサインイン中",
-      "label": "アカウント"
+      "label": "アカウント",
+      "otpSendFailed": "OTPの送信に失敗しました",
+      "signInFailed": "サインインに失敗しました"
     },
     "summary": {
       "eyebrow": "準備完了",
@@ -376,6 +378,42 @@
         "title": "あなたのマシン、あなたの鍵",
         "description": "ボットは当社のサーバーではなくここで動き、APIキーがこのコンピューターから出ることはありません。Pairlensを開いたままスリープさせず、止めたいときはいつでもボットをオフにしてください。"
       }
+    },
+    "scenes": {
+      "topMover": "値動き上位 · {{pair}} {{delta}}",
+      "watchlistCount": "ウォッチリスト · {{count}}",
+      "signalBreakout": "ブレイクアウト",
+      "signalPullbackForming": "プルバック形成中",
+      "onClose": "確定時",
+      "crossedAbovePrice": "{{price}} を上抜けました",
+      "conditionCrossesAbove": "上抜けたら",
+      "notifyMeDesktopInApp": "通知する — デスクトップ + アプリ内",
+      "nodeTrigger": "トリガー",
+      "nodeSignalLabel": "シグナル: {{signal}}",
+      "nodeCondition": "条件",
+      "nodeVolumeAboveAvg": "出来高 > 平均",
+      "nodeAction": "アクション",
+      "nodeAlertAndJournal": "アラート + ジャーナル",
+      "runBreakoutWatcher": "ブレイクアウト監視",
+      "runDcaBuyer": "DCA買い",
+      "runStopLossGuard": "ストップロス監視",
+      "ranAt": "{{time}} · 実行済み",
+      "runsLocally": "ローカルで実行",
+      "storedOnDevice": "この端末に保存 — サーバーには保存されません",
+      "osKeychain": "OSキーチェーン",
+      "pluginKindMarketData": "マーケットデータ",
+      "pluginKindTheme": "テーマ",
+      "pluginKindAutomation": "自動化",
+      "sandboxedByDefault": "デフォルトでサンドボックス",
+      "signedVerified": "署名済み & 検証済み",
+      "networkAccessApproveHost": "ネットワークアクセス — ホストごとに承認します",
+      "copiedToWorkspaces": "ワークスペースにコピーしました",
+      "statNet": "純損益",
+      "statMaxDd": "最大DD",
+      "sameCodeGoesLive": "同じコードがそのまま本番稼働",
+      "runsOnYourMachine": "お使いの端末で実行 — スリープさせないでください",
+      "botMeanReversion": "平均回帰",
+      "chainWallet": "{{chain}}ウォレット"
     }
   },
   "common": {
@@ -399,7 +437,11 @@
     "updated": "{{time}}に更新",
     "back": "戻る",
     "dismiss": "閉じる",
-    "unknownError": "不明なエラー"
+    "unknownError": "不明なエラー",
+    "ordersLockedRiskLimit": "リスク上限に達したため、注文がロックされています。設定 > リスク管理でロックを解除してください。",
+    "buyOrdersLockedRiskLimit": "リスク上限に達したため、買い注文がロックされています。設定 > リスク管理でロックを解除してください。",
+    "positionSizeExceeded": "リスク上限により注文がブロックされました。ポジションはポートフォリオの{{ratioPct}}%で、上限の{{maxPositionSize}}%を超えています。設定 > リスク管理で調整してください。",
+    "sessionExpired": "セッションの有効期限が切れました。もう一度サインインしてください。"
   },
   "legal": {
     "terms": "利用規約",
@@ -576,7 +618,22 @@
       "publisherKeyConsentTitle": "この発行者を信頼しますか？",
       "publisherKeyConsentBody": "このキーで署名されたプラグインは、このデバイスにインストール可能になります。悪意のある発行者は、他のプラグインのデータ、保存された取引所の認証情報、取引へのフルアクセスを要求するプラグインを配布する可能性があります。続行する前に、信頼できるチャネルで発行者とフィンガープリントを照合してください。",
       "publisherKeyConsentConfirm": "このキーを信頼する",
-      "publisherKeyConsentCancel": "キャンセル"
+      "publisherKeyConsentCancel": "キャンセル",
+      "updatesTitle": "プラグインアップデート",
+      "updatesDescription": "レジストリで新しいバージョンが利用可能になったときに、プラグインをどのように更新するかを設定します。",
+      "updateModeLabel": "更新モード",
+      "updateModeAutoDescription": "アップデートは自動的にダウンロードされてインストールされます",
+      "updateModeNotifyDescription": "アップデートが利用可能になるとバッジが表示されます",
+      "updateModeOffDescription": "自動アップデートチェックは行われません",
+      "updateModeAuto": "自動アップデート",
+      "updateModeNotify": "通知のみ",
+      "updateModeOffLabel": "オフ",
+      "checkIntervalLabel": "チェック間隔",
+      "checkIntervalDescription": "レジストリで新しいバージョンを確認する頻度",
+      "intervalHourly": "1時間ごと",
+      "interval6Hours": "6時間ごと",
+      "interval12Hours": "12時間ごと",
+      "intervalDaily": "毎日"
     },
     "appearance": {
       "colorMode": "カラーモード",
@@ -598,7 +655,9 @@
       "balanced": "バランス",
       "balancedDescription": "ティッカーと板は250ms、ローソク足は500ms。応答性と効率のバランスが良好です。",
       "energySaver": "省エネモード",
-      "energySaverDescription": "ティッカーと板は1秒、ローソク足は2秒。パッシブな監視やバッテリー駆動のノートPCに最適です。"
+      "energySaverDescription": "ティッカーと板は1秒、ローソク足は2秒。パッシブな監視やバッテリー駆動のノートPCに最適です。",
+      "idleGuardTitle": "非アクティブ時の切断",
+      "idleGuardDescription": "1時間操作がない場合、市場データのストリームを一時停止して帯域幅を節約し、消費電力を抑えます。"
     },
     "desktop": {
       "closeBehavior": {
@@ -1022,7 +1081,9 @@
       "namePlaceholder": "フォルダ名"
     },
     "createFirst": "最初のワークスペースを作成",
-    "emptyState": "ワークスペースはまだありません"
+    "emptyState": "ワークスペースはまだありません",
+    "descriptionLabel": "説明",
+    "descriptionPlaceholder": "任意の簡単な説明"
   },
   "session": {
     "checking": "セッションを確認中…",
@@ -1080,7 +1141,9 @@
     "verifying": "確認中...",
     "verifyAndSignIn": "確認してサインイン",
     "codeRequired": "コードを入力してください",
-    "emailRequired": "メールアドレスを入力してください"
+    "emailRequired": "メールアドレスを入力してください",
+    "dialogDescription": "この機能を利用するにはサインインしてください",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "セッション一時停止中",
@@ -1100,7 +1163,12 @@
     "connecting": "接続中",
     "stalled": "再接続中",
     "offline": "オフライン",
-    "error": "エラー"
+    "error": "エラー",
+    "pluginUpdatesReady_one": "プラグインアップデートが{{count}}件、インストール可能です",
+    "pluginUpdatesReady_other": "プラグインアップデートが{{count}}件、インストール可能です",
+    "pluginUpdatesDescription": "アップデートはターミナルを再起動すると適用されます。",
+    "restartNow": "今すぐ再起動",
+    "later": "後で"
   },
   "copilot": {
     "aiLens": "AIレンズ",
@@ -1119,7 +1187,47 @@
     },
     "marketRegime": "マーケットレジーム",
     "trending": "トレンド",
-    "choppy": "もみ合い"
+    "choppy": "もみ合い",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "数量",
+    "orderPlacedPaper": "ペーパー注文を発注しました",
+    "orderPlaced": "注文を発注しました",
+    "autoApprovedNote": "自動承認済み({{mode}} · 次回から確認しない が有効)",
+    "turnOff": "オフにする",
+    "autoApproving": "{{mode}}注文を自動承認しています…",
+    "liveOrderWarning": "実注文 — 実際の資金が動きます。リスク上限に基づいて強制されます。",
+    "dontAskAgainPaper": "ペーパー取引では次回から確認しない",
+    "dontAskAgainLive": "{{market}} の実取引では次回から確認しない",
+    "placing": "発注中…",
+    "confirmMode": "{{mode}}を確定",
+    "dismissed": "却下しました",
+    "cancelOrderPrompt": "{{pair}} · {{market}} の注文 {{orderId}} をキャンセルしますか？",
+    "cancelled": "キャンセルしました",
+    "cancelFailed": "キャンセルに失敗しました",
+    "cancelling": "キャンセル中…",
+    "confirmCancel": "キャンセルを確定",
+    "keep": "そのままにする",
+    "tradingUnavailable": "取引は利用できません。",
+    "noCredentialsForMarket": "{{market}} に接続された認証情報がありません。実取引を行うにはAccountsでAPIキーを追加してください。",
+    "watchingPair": "{{pair}} · {{timeframe}} を確認中",
+    "genericChatError": "コパイロットでエラーが発生しました — もう一度送信してみてください。",
+    "quickActionHowIsDoing": "{{symbol}} の調子はどうですか？",
+    "quickActionSuggestedIndicators": "おすすめのインジケーター",
+    "quickActionAnySignals": "シグナルはありますか？",
+    "scheduledCheckPrefix": "[予約チェック — {{minutes}}分前に設定]",
+    "authRequiredTitle": "あなたのAIコパイロットに会いましょう",
+    "authRequiredDescription": "どのペアでも文脈を踏まえた分析を行います。チャートを読み取り、リスク上限を確認し、根拠を示して回答するので、内容を問い直すこともできます。サインインしてから、Pairlens Intelligenceを購読するか、ご自身のAIキーを使用してください。",
+    "upgradeRequiredDescription": "AIコパイロットはチャートを読み取り、リスク上限を確認し、根拠を示して回答するので、内容を問い直すこともできます。Pairlens Intelligenceを購読するか — またはPluginsから無料でご自身のAIキーを使用してください。",
+    "aiLensUnavailableTitle": "AI Lens は利用できません",
+    "aiLensUnavailableDescription": "Pluginsページで AI プラグインを有効にすると、リアルタイムの市場分析とトレード支援が受けられます。",
+    "goToPlugins": "Pluginsへ移動",
+    "rerunAnalysis": "分析を再実行",
+    "analyzePair": "{{pair}} を分析",
+    "startConversation": "会話を始める",
+    "emptyStateHint": "市場の状況を聞いたり、セットアップを確認したり、リスク評価を依頼したりできます — AIはこのペアの文脈をすべて把握しています。",
+    "contextAware": "文脈を理解",
+    "toolFailed": "ツールが失敗しました"
   },
   "chart": {
     "contextMenu": {
@@ -1858,7 +1966,9 @@
     "keepOrder": "注文を残す",
     "cancelOrder": "注文をキャンセル",
     "sideBuy": "買い",
-    "sideSell": "売り"
+    "sideSell": "売り",
+    "buy": "買い",
+    "sell": "売り"
   },
   "pairInfo": {
     "title": "ペア情報",
@@ -1901,13 +2011,38 @@
     "emptyTitle": "上部にURLを入力してウェブサイトを埋め込む",
     "embedWarning": "一部のウェブサイトはiframe内での埋め込みをブロックします。ページが読み込まれない場合は、代わりにブラウザで開いてみてください。",
     "blockedTitle": "このサイトは埋め込めません",
-    "blockedDescription": "このウェブサイトは他のページ内での表示をブロックしています。代わりに別のブラウザタブで開くことができます。"
+    "blockedDescription": "このウェブサイトは他のページ内での表示をブロックしています。代わりに別のブラウザタブで開くことができます。",
+    "forward": "進む",
+    "failedToLoad": "読み込みに失敗しました",
+    "viewPaused": "Web表示を一時停止中"
   },
   "intelligence": {
     "awaitingSignal": "シグナルは検出されていません",
     "regime": "レジーム",
     "trending": "トレンド",
-    "choppy": "もみ合い"
+    "choppy": "もみ合い",
+    "upsell": {
+      "priceMonthly": "月額 ${{price}}",
+      "taxNotice": "価格には税金が含まれません。税金はチェックアウト時に計算されます。",
+      "defaultTitle": "Pairlens Intelligence を利用する",
+      "defaultDescription": "APIキー不要で使えるホスト型AIコパイロットとウェブリサーチです。各プランには、チャット・リサーチ・ウェブ検索で共有される月間利用予算が含まれます。",
+      "byokNote": "独自のプロバイダーをお使いになりたい場合は、<plugins>プラグイン</plugins>で Anthropic、OpenAI、Groq、OpenRouter のいずれかのキーを接続してください — 自分のキーを使うAIは常に無料です。",
+      "checkoutOpenedTitle": "ブラウザでチェックアウトを開きました",
+      "checkoutActivates": "お支払いが完了すると、ここでサブスクリプションが有効になります。",
+      "checkoutStartError": "チェックアウトを開始できませんでした — もう一度お試しください。",
+      "subscriptionRequiredTitle": "Pairlens Intelligence の購読が必要です",
+      "subscriptionRequiredBody": "ホスト型AIは Intelligence プランで動作します。下記から購読するか、プラグインで独自のAIプロバイダーキーを接続してください。",
+      "budgetUsedUpTitle": "月間利用予算を使い切りました",
+      "budgetUsedBody": "今サイクルの Intelligence クレジットを使い切りました。",
+      "budgetResetsOn": "予算は{{date}}にリセットされます。",
+      "topUpHint": "クレジットパックでチャージして続けられます — パックのクレジットは購入から30日で失効します。",
+      "upgradeToMaxHint": "{{label}}にアップグレードすると、月に{{credits}}クレジットが利用できます。",
+      "manageSubscription": "サブスクリプションを管理",
+      "portalError": "請求ポータルを開けませんでした。",
+      "creditsLandDescription": "お支払いが完了すると、追加クレジットが残高に反映されます。",
+      "checkoutError": "チェックアウトを開始できませんでした。",
+      "upgradeToMax": "Max にアップグレード"
+    }
   },
   "panes": {
     "markets": "マーケット",
@@ -2003,6 +2138,52 @@
       "title": "{{pair}} は {{venue}} では取り扱いがありません",
       "titleAnyVenue": "{{pair}} は取り扱いがありません",
       "description": "このコネクタはこのペアの市場データを返しませんでした。取り扱いのある別のコネクタをお試しください。"
+    },
+    "panePicker": {
+      "bindToVariable": "変数にバインド",
+      "boundTo": "<b>{{variable}}</b> にバインド済み",
+      "market": "マーケット",
+      "setPair": "{{variable}} のペアを設定",
+      "selectPair": "ペアを選択",
+      "bindingHint": "ペアを選択すると、{{variable}} にバインドされたすべてのペインが更新されます",
+      "unbindFromVariable": "変数のバインドを解除",
+      "settingForAllPanes": "バインドされたすべてのペインに <b>{{variable}}</b> を設定しています"
+    },
+    "pane": {
+      "close": "{{pane}} を閉じる",
+      "popOutToColumn": "新しいカラムに切り離す",
+      "bindPairToVariable": "ペアを変数にバインド",
+      "bindWalletToVariable": "ウォレットを変数にバインド",
+      "bindTimeframeToVariable": "時間足を変数にバインド",
+      "clearPairOverride": "ペアのオーバーライドを解除",
+      "closePane": "ペインを閉じる",
+      "unbind": "バインド解除",
+      "closeTab": "タブを閉じる"
+    },
+    "dnd": {
+      "pickedUp": "{{pane}} をつかみました。矢印キーで移動、スペースキーでドロップ、Escapeでキャンセルします。",
+      "genericPane": "ペイン",
+      "noDropTarget": "ドロップ先がありません。",
+      "dropStackTab": "ここにドロップするとタブとして重ねられます。",
+      "dropSplitAbove": "ドロップすると上に分割されます。",
+      "dropSplitBelow": "ドロップすると下に分割されます。",
+      "dropNewColumn": "ドロップすると新しいカラムが作成されます。",
+      "paneMoved": "ペインを移動しました。",
+      "dragCancelled": "ドラッグをキャンセルしました。ペインは元に戻りました。",
+      "dragCancelledFull": "ドラッグをキャンセルしました。ペインは元の位置に戻りました。"
+    },
+    "missingPane": {
+      "requiresPlugin": "このパネルには「{{pluginId}}」プラグインが必要です",
+      "notAvailable": "パネル「{{type}}」は利用できません",
+      "description": "プラグインが削除または無効化された可能性があります。",
+      "openPluginStore": "プラグインストアを開く"
+    },
+    "dropZone": {
+      "emptyHint": "ここにペインをドラッグ",
+      "addAsTab": "タブとして追加",
+      "splitTop": "上に分割",
+      "splitBottom": "下に分割",
+      "newColumn": "新しいカラム"
     }
   },
   "watchlist": {
@@ -2131,7 +2312,118 @@
       "reloadNote": "許可するとターミナルが再読み込みされ、変更が適用されます。",
       "deny": "許可しない",
       "allow": "許可して再読み込み"
-    }
+    },
+    "toggleFailedEnable": "{{name}} を有効化できませんでした",
+    "toggleFailedDisable": "{{name}} を無効化できませんでした",
+    "updateStagedToast": "更新の準備ができました — 適用するには再起動してください",
+    "restartNow": "今すぐ再起動",
+    "updateStageFailedToast": "更新の準備に失敗しました: {{error}}",
+    "resetStagedToast": "デフォルトにリセットしました — 完了するには再起動してください",
+    "networkGrantedToast": "「{{name}}」にネットワークアクセスを許可しました — 再読み込み中…",
+    "networkDeniedToast": "「{{name}}」はネットワークアクセスなしでインストールされました — 許可するまで正しく動作しない場合があります。",
+    "installCancelledNoTrust": "インストールをキャンセルしました — 完全な信頼は付与されていません",
+    "installedVersionToast": "「{{name}}」v{{version}} をインストールしました",
+    "installFailedToast": "プラグインをインストールできませんでした: {{error}}",
+    "localFilesNotFound": "ローカルのプラグインファイルが見つかりません",
+    "pluginCodeNotFound": "プラグインのコードが見つかりません — 再インストールしてください",
+    "fullTrustGrantedNameToast": "「{{name}}」に完全な信頼を付与しました",
+    "loadPluginFailedToast": "プラグインを読み込めませんでした: {{error}}",
+    "importFailedToast": "プラグインをインポートできませんでした: {{error}}",
+    "fieldRequired": "{{label}} は必須です",
+    "configSaved": "設定を保存しました",
+    "configurationFailed": "設定に失敗しました",
+    "needsFullTrustToRun": "実行には完全な信頼が必要です",
+    "pendingTrustDescription": "UI を提供するためサンドボックス内では動作できません — 有効にするには完全な信頼を付与するか、アンインストールしてください。",
+    "remove": "削除",
+    "groupCore": "コア",
+    "groupProvidersExtensions": "プロバイダーと拡張機能",
+    "groupThemes": "テーマ",
+    "removePluginTitle": "プラグインを削除",
+    "removePluginDescription": "プラグインを無効化して削除します。このプラグインが提供していたパネルには復元用のプレースホルダーが表示されます。いつでも Plugin Store から再インストールできます。",
+    "resetDefaultsTitle": "デフォルトにリセット",
+    "resetDefaultsDescription": "これにより、同梱されていないすべてのプラグインが削除され、準備中および利用可能な更新がクリアされ、ターミナルが再読み込みされます。同梱プラグインはインストールされたままです。",
+    "reset": "リセット",
+    "installFromUrlDialogTitle": "URL からプラグインをインストール",
+    "installFromUrlDialogDescription": "インストールするプラグインモジュール（.js）の URL を入力してください。",
+    "unverifiedPluginTitle": "未検証のプラグイン",
+    "unverifiedPluginBody": "手動でインストールしたプラグインはセキュリティレビューを受けていません。信頼できる提供元のプラグインのみをインストールしてください。",
+    "installAnyway": "それでもインストール",
+    "sourceBuiltIn": "内蔵",
+    "sourceRegistry": "レジストリ",
+    "sourceUrl": "URL",
+    "sourceLocal": "ローカル",
+    "fullTrustGrantedRestartToast": "完全な信頼を付与しました — このプラグインをメインアプリで実行するには再起動してください",
+    "sandboxedRestartToast": "プラグインはサンドボックスで実行されます — 適用するには再起動してください",
+    "requiresFullTrustTitle": "このプラグインは UI を提供するため、完全な信頼のもとで実行する必要があります。",
+    "trustBadgeFullRequired": "完全な信頼（必須）",
+    "trustBadgeFull": "完全な信頼",
+    "trustBadgeSandboxed": "サンドボックス",
+    "panelCount_one": "{{count}}パネル",
+    "panelCount_other": "{{count}}パネル",
+    "update": "更新",
+    "revokeFullTrustAria": "{{name}} の完全な信頼を取り消す",
+    "grantFullTrustAria": "{{name}} に完全な信頼を付与",
+    "fullTrustActiveTitle": "完全な信頼 — メインアプリで実行中です。クリックするとサンドボックスに切り替わります。",
+    "sandboxedTitle": "サンドボックス — 分離された Worker で実行され、ネットワークは宣言済みのホストに限定されます。クリックすると完全な信頼を付与します。",
+    "configureAria": "{{name}} を設定",
+    "toggleAria": "{{name}} を切り替え",
+    "capabilityProvidersTitle": "機能プロバイダー",
+    "capabilityProvidersDescription": "各ターミナル機能は機能（capability）を要求し、有効なプラグインのうち優先度が最も高いものが自動的にそれを提供します。特定のプラグインを選択すると、自動選択を上書きできます。",
+    "resetAllOverrides": "すべてのオーバーライドをリセット",
+    "noProviderInstalled": "これを提供するインストール済みプラグインはありません",
+    "browseStore": "ストアを見る",
+    "installedNeedsKeySingle": "インストール済み — API キーが必要です",
+    "installedNeedsKeyPlural": "{{count}}件インストール済み — すべて API キーが必要です",
+    "installedDisabledSingle": "プラグインが1つインストールされていますが、無効です",
+    "installedDisabledPlural": "プラグインが{{count}}件インストールされていますが、すべて無効です",
+    "manage": "管理",
+    "pinnedActiveNote": "固定済み — 自動順序を上書きします",
+    "pinnedInactiveNote": "固定されたプラグインは無効です — 自動順序が適用されます",
+    "autoOrderLabel": "自動順序: {{chain}}",
+    "chainMore_one": "{{chain}} 他{{count}}件",
+    "chainMore_other": "{{chain}} 他{{count}}件",
+    "resolvedPerMarket": "マーケットごとに解決",
+    "marketOverrides": "マーケット別オーバーライド",
+    "pinnedCountBadge_one": "{{count}}件固定",
+    "pinnedCountBadge_other": "{{count}}件固定",
+    "automatic": "自動",
+    "disabledHint": "無効",
+    "notInstalled": "{{id}}（未インストール）",
+    "saveOverrideFailed": "プロバイダーのオーバーライドを保存できませんでした",
+    "removeOverrideFailed": "プロバイダーのオーバーライドを削除できませんでした",
+    "resetOverridesFailed": "オーバーライドをリセットできませんでした",
+    "marketConnectorsTitle": "マーケットコネクタ",
+    "marketConnectorsDescription": "マーケットコネクタはリアルタイムの価格データやオーダーブックをストリーミングし、取引所の API から直接取引できるようにします。使用したい取引所を有効にしてください。",
+    "activeCountBadge": "{{active}}/{{total}} 有効",
+    "connected": "接続済み",
+    "disabledStatus": "無効",
+    "readAndTrade": "読み取り + 取引",
+    "readOnly": "読み取り専用",
+    "noConnectorsInstalled": "マーケットコネクタのプラグインがインストールされていません。",
+    "moreConnectors": "その他のコネクタ",
+    "fromPluginStore": "Plugin Store から",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "詳しく見る",
+    "enabledToast": "{{name}} を有効化しました",
+    "disabledToast": "{{name}} を無効化しました",
+    "enableFailedShort": "有効化に失敗しました",
+    "disableFailedShort": "無効化に失敗しました",
+    "domain": {
+      "marketData": "マーケットデータ",
+      "trading": "取引",
+      "wallet": "ウォレット",
+      "signals": "シグナル",
+      "ai": "AI"
+    },
+    "byAuthor": "作者: {{author}}",
+    "installsCount_one": "{{formattedCount}}回インストール",
+    "installsCount_other": "{{formattedCount}}回インストール",
+    "panelsCount": "パネル（{{count}}）",
+    "inactive": "無効",
+    "previousSlide": "前へ",
+    "nextSlide": "次へ",
+    "goToSlide": "スライド{{n}}へ移動",
+    "copyCommand": "コマンドをコピー"
   },
   "search": {
     "title": "ペアを検索",
@@ -2194,7 +2486,11 @@
       "selectAccount": "アカウントを選択",
       "groupWallet": "暗号資産ウォレット",
       "groupBroker": "ブローカー口座",
-      "groupExchange": "取引所アカウント"
+      "groupExchange": "取引所アカウント",
+      "selectWalletTopBar": "上部バーでウォレットを選択",
+      "connectChainWallet": "{{chain}}ウォレットを接続",
+      "connectExchangeAccount": "{{exchange}}アカウントを接続",
+      "selectAccountTopBar": "上部バーでアカウントを選択"
     },
     "trade": {
       "limitBuy": "指値買い",
@@ -2221,7 +2517,16 @@
       "buyAsset": "{{asset}} を買う",
       "sellAsset": "{{asset}} を売る",
       "amount": "数量",
-      "price": "価格"
+      "price": "価格",
+      "presetsTitle": "金額プリセット（{{quote}}）",
+      "buy": "買い",
+      "sell": "売り",
+      "orderTypeMarket": "成行",
+      "orderTypeLimit": "指値",
+      "workflow": "ワークフロー",
+      "notSupportedOn": "{{venue}}では未対応です",
+      "available": "利用可能: {{amount}}",
+      "slippage": "スリッページ"
     },
     "status": {
       "connecting": "接続中…",
@@ -2341,7 +2646,42 @@
     "importKey": "秘密鍵をインポート",
     "affiliateDisclosure": "一部の登録リンクは、あなたに追加費用なしでPairlensに紹介料が発生する場合があります。",
     "vaultSealedBody": "資格情報の保管庫がロックされています。アカウントはそのまま残っています — 解錠すれば表示・利用できます。",
-    "credentialsUnreadable": "このデバイスに保存された鍵を読み取れませんでした。データは失われていません。再試行するか、Pairlens を再起動してください。"
+    "credentialsUnreadable": "このデバイスに保存された鍵を読み取れませんでした。データは失われていません。再試行するか、Pairlens を再起動してください。",
+    "addWalletDialogTitle": "暗号資産ウォレットを追加",
+    "addWalletDialogDescription": "オンチェーン取引のためにウォレットの秘密鍵をインポートします",
+    "blockchainLabel": "ブロックチェーン",
+    "walletLabelField": "ラベル",
+    "walletLabelPlaceholder": "マイウォレット",
+    "privateKeyField": "秘密鍵",
+    "saveWallet": "ウォレットを保存",
+    "keep": "保持",
+    "remove": "削除",
+    "disconnect": "切断",
+    "localBadge": "ローカル",
+    "unknownDate": "不明",
+    "keyExpiredWarning": "期限切れの可能性があります — {{daysInactive}}日間未使用（上限{{limitDays}}日）。取引所でAPIキーを再作成してください。",
+    "keyInactiveWarning": "{{daysInactive}}/{{limitDays}}日間未使用です。キーは{{limitDays}}日間未使用のまま経過すると失効します。",
+    "exchangeAccountAriaLabel": "{{label}} 取引所アカウント",
+    "cryptoWalletAriaLabel": "{{label}} 暗号資産ウォレット",
+    "portfolioTotal": "合計",
+    "assetAllocationLabel": "資産配分",
+    "tableAsset": "資産",
+    "tableAmount": "数量",
+    "tableValue": "評価額",
+    "tableShare": "割合",
+    "assetCount_one": "{{count}}件の資産",
+    "assetCount_other": "{{count}}件の資産",
+    "moreAssets_one": "+{{count}}件の資産",
+    "moreAssets_other": "+{{count}}件の資産",
+    "walletSavedFeedback": "暗号資産ウォレットを保存しました。",
+    "walletRemovedFeedback": "暗号資産ウォレットを削除しました。",
+    "accountRemovedFeedback": "アカウントを削除しました。",
+    "walletSaveFailed": "ウォレットを保存できませんでした。",
+    "walletRemoveFailed": "ウォレットを削除できませんでした。",
+    "accountConnectFailed": "アカウントを接続できませんでした。",
+    "accountRemoveFailed": "アカウントを削除できませんでした。",
+    "fieldRequired": "{{field}}は必須です",
+    "accountConnectedFeedback": "{{label}}の{{mode}}アカウントを接続しました。"
   },
   "workspaceStore": {
     "title": "ワークスペースストア",
@@ -2449,12 +2789,136 @@
     "paneCount_other": "{{count}}ペイン",
     "panes": "ペイン",
     "showAll": "すべて表示",
-    "spotlight": "スポットライト"
+    "spotlight": "スポットライト",
+    "previousSlide": "前へ",
+    "nextSlide": "次へ",
+    "goToSlide": "スライド{{number}}に移動"
   },
   "notifications": {
     "flows": "フロー",
     "newFlow": "新しいフロー",
-    "noFlows": "通知フローはまだありません"
+    "noFlows": "通知フローはまだありません",
+    "builder": {
+      "sidebar": {
+        "tabRules": "ルール",
+        "tabActivity": "アクティビティ",
+        "noRules": "通知ルールはまだありません",
+        "newRuleTitle": "新しい通知ルール",
+        "rulePlaceholder": "ルール名",
+        "renameRuleTitle": "ルール名を変更",
+        "rename": "名前を変更",
+        "deleteRuleTitle": "ルールを削除",
+        "deleteRuleWarning": "この操作は取り消せません。この通知ルールとそのペアの紐付けは完全に削除されます。",
+        "pairsLabel": "ペア",
+        "sendTest": "テスト送信",
+        "testing": "テスト中…",
+        "pairAlreadyBound": "このペアはすでにルールに紐付けられています",
+        "noBindings": "まだどのペアにも紐付けられていません — ペアを追加するまでルールは発火しません。",
+        "testSent": "テスト通知を送信しました",
+        "testFailed": "テストを配信できませんでした",
+        "noActivity": "まだ通知は発火していません",
+        "clearActivity": "アクティビティを消去",
+        "channelFailed": "{{channel}}が失敗しました"
+      },
+      "commitBar": {
+        "cycleDetected": "循環を検出",
+        "issueCount_one": "{{count}}件の問題",
+        "issueCount_other": "{{count}}件の問題",
+        "moreIssues": "…他{{count}}件",
+        "pendingChangeCount_one": "未保存の変更{{count}}件",
+        "pendingChangeCount_other": "未保存の変更{{count}}件",
+        "noChanges": "変更なし",
+        "review": "確認",
+        "discard": "破棄",
+        "commit": "保存",
+        "cannotSaveTitle": "ルールを保存できません",
+        "cycleError": "このルールには循環依存があります。保存する前に循環（赤いエッジ）を取り除いてください。",
+        "saved": "ルールを保存しました"
+      },
+      "diff": {
+        "title": "変更内容の確認（{{count}}件）",
+        "addedStep": "{{type}}ステップを追加",
+        "removedStep": "{{type}}ステップを削除",
+        "modifiedStep": "{{type}}の設定を変更",
+        "addedConnection": "接続を追加",
+        "removedConnection": "接続を削除"
+      },
+      "canvas": {
+        "undoTitle": "元に戻す（Cmd+Z）",
+        "redoTitle": "やり直す（Cmd+Shift+Z）",
+        "deleteStep": "ステップを削除",
+        "deleteConnection": "接続を削除",
+        "cycleLabel": "循環"
+      },
+      "palette": {
+        "addStep": "ステップを追加",
+        "categoryEvents": "イベント",
+        "categoryConditions": "条件",
+        "categoryChannels": "チャンネル"
+      },
+      "category": {
+        "event": "イベント",
+        "condition": "条件",
+        "channel": "チャンネル"
+      },
+      "emptyState": {
+        "pickRuleHint": "左のリストからルールを選ぶとキャンバスに開きます。",
+        "untitledRule": "無題のルール",
+        "eyebrow": "通知",
+        "title": "マーケットの監視はPairlensにおまかせ",
+        "description": "ルールは小さなフローです。何かが起きる — 水準を超える、ローソク足が確定する、注文が約定する、インジケーターのアラートが発火する — そこに追加した条件を通過すると、トースト、システム通知、またはWebhookとして届きます。",
+        "startBlank": "空のキャンバスから始める",
+        "startFromTemplate": "テンプレートから始める",
+        "footnote": "テンプレートは{{market}}の{{pair}}に紐付いた下書きとして開きます — ステップを編集し、ルール一覧でペアを変更してから保存してください。ルールはPairlensが起動している間のみ発火します。"
+      },
+      "direction": "方向",
+      "above": "以上",
+      "below": "以下",
+      "any": "指定なし",
+      "buy": "買い",
+      "sell": "売り",
+      "up": "上昇",
+      "down": "下落",
+      "either": "どちらでも",
+      "toggleOn": "オン",
+      "toggleOff": "オフ",
+      "steps": {
+        "candleClose": {
+          "title": "ローソク足確定"
+        },
+        "localToast": {
+          "title": "トースト通知",
+          "description": "発火時にアプリ内トーストを表示します"
+        },
+        "orderExecuted": {
+          "title": "注文約定"
+        },
+        "osNotification": {
+          "title": "システム通知",
+          "sound": "サウンド"
+        },
+        "percentChange": {
+          "title": "変化率",
+          "percent": "パーセント"
+        },
+        "priceAlert": {
+          "title": "価格アラート"
+        },
+        "priceCondition": {
+          "title": "価格条件"
+        },
+        "signalGenerated": {
+          "title": "シグナル発生",
+          "signalType": "シグナルタイプ",
+          "anyTypePlaceholder": "任意のタイプ"
+        },
+        "timeWindow": {
+          "title": "時間帯",
+          "start": "開始（UTC）",
+          "end": "終了（UTC）"
+        }
+      }
+    }
   },
   "updater": {
     "available": "アップデートが利用可能",
@@ -2540,7 +3004,8 @@
     "failed": "ヒートマップの読み込みに失敗しました",
     "noData": "データがありません",
     "tryLater": "後でもう一度お試しください",
-    "willAppear": "ここにヒートマップデータが表示されます"
+    "willAppear": "ここにヒートマップデータが表示されます",
+    "volume": "出来高"
   },
   "news": {
     "title": "ニュース",
@@ -2637,5 +3102,228 @@
   "fullscreen": {
     "enter": "全画面表示",
     "exit": "全画面表示を終了"
+  },
+  "research": {
+    "phaseSearching": "ウェブを検索しています...",
+    "phaseReading": "ソースを読み込んでいます...",
+    "phaseAnalyzing": "市場データを分析しています...",
+    "phaseWriting": "レポートを作成しています...",
+    "authRequiredTitle": "リサーチデスクまであと一歩、サインインだけです",
+    "authRequiredDescription": "ライブのウェブソースに基づく、任意のペアの構造化リサーチレポートです。サインイン後、Pairlens Intelligence を購読するか、独自のAIキーをご利用ください。",
+    "upgradeDescription": "ライブのウェブソースに基づく、任意のペアの構造化リサーチレポートです。Pairlens Intelligence を購読するか、プラグイン経由で独自のAI・検索キーを無料でご利用いただけます。",
+    "unavailableTitle": "リサーチを利用できません",
+    "unavailableDescription": "このペアのリサーチレポートを生成するには、プラグインページでAIプラグインを有効にしてください。",
+    "goToPlugins": "プラグインへ移動",
+    "navigateToPair": "リサーチを表示するにはペアを選択してください。",
+    "researchingSymbol": "{{symbol}} をリサーチ中",
+    "generatingReport": "レポートを生成しています...",
+    "cachedGenerated": "キャッシュ — {{time}}生成",
+    "freshGenerated": "最新 — たった今生成しました",
+    "refresh": "更新",
+    "sourcesCount": "ソース（{{count}}件）",
+    "reportTitle": "リサーチレポート",
+    "fullscreenDescription": "リサーチレポートを全画面表示中です。Escキーで終了します。",
+    "sections": "セクション",
+    "sparklineAriaLabel": "日次価格スパークライン",
+    "errorTitle": "リサーチを利用できません"
+  },
+  "capabilityGate": {
+    "authTitle": "無料の登録だけで利用できます",
+    "authDescription": "この機能はPairlensアカウントを通じて利用します。",
+    "signInFree": "無料でサインイン",
+    "authNote": "所要時間は30秒です。取引所のキーはこの端末から外部に出ることはありません。",
+    "upgradeRequired": "アップグレードが必要です",
+    "upgradeDescriptionLevel": "この機能には<b>{{level}}</b>のアクセスレベルが必要です。",
+    "upgradeDescriptionGeneric": "この機能にはより高いアクセスレベルが必要です。",
+    "managePlugin": "プラグインを管理"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}}はここでは利用できません",
+    "description": "{{exchange}}はお住まいの地域向けの市場データを提供していないため、このコネクタはデータを読み込めません。別のコネクタに切り替えるか、地域設定が正しくない場合は更新してください。",
+    "yourRegion": "地域：",
+    "notSet": "未設定",
+    "changeRegion": "地域を変更",
+    "switchTo": "{{venue}}に切り替え"
+  },
+  "pairPicker": {
+    "noPairsFound": "ペアが見つかりません。",
+    "startTyping": "入力を開始してペアを検索してください。"
+  },
+  "routes": {
+    "goHome": "ホームに戻る",
+    "noConnectors": {
+      "title": "利用可能なマーケットコネクタがありません",
+      "description": "ライブデータをストリーミングするにはマーケットコネクタプラグインが必要です。開始するにはコネクタを有効化またはインストールしてください。",
+      "manage": "マーケットコネクタを管理"
+    },
+    "workspace": {
+      "notFound": "ワークスペースが見つかりません",
+      "edit": "編集"
+    },
+    "notFound": {
+      "title": "ページが見つかりません"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "銘柄カタログがありません",
+      "noInstrumentCatalogDescription": "銘柄検出を提供するアクティブなプラグインがありません。プラグインを有効にして、利用可能な取引ペアを閲覧してください。",
+      "goToPlugins": "プラグインへ"
+    },
+    "notifications": {
+      "loading": "通知を読み込み中…"
+    },
+    "workflows": {
+      "loading": "ワークフロービルダーを読み込み中…"
+    },
+    "plugins": {
+      "tabBuild": "ビルド",
+      "activeCount": "{{active}}/{{total}} 有効",
+      "searchPlaceholder": "プラグインを検索…",
+      "clearSearch": "検索をクリア"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "お支払いが完了しました",
+      "titlePack": "追加クレジット{{credits}}を追加しました。",
+      "titlePlan": "{{label}}をご利用いただけます。",
+      "titleDefault": "Pairlens Intelligenceをご利用いただけます。",
+      "bodyPack": "月々の予算に上乗せされ、{{days}}日後に失効します。Pairlensアプリに戻ってください — 残高は数秒以内に更新されます。",
+      "bodyPlanWithCredits": "ホスト型AIコパイロット、リサーチ、ウェブ検索が、毎月{{credits}}クレジット付きで利用可能になりました。Pairlensアプリに戻ってください — 数秒以内にサブスクリプションが反映されます。",
+      "bodyPlanNoCredits": "ホスト型AIコパイロット、リサーチ、ウェブ検索が利用可能になりました。Pairlensアプリに戻ってください — 数秒以内にサブスクリプションが反映されます。",
+      "openTerminal": "ターミナルを開く",
+      "closeTabHint": "デスクトップアプリから支払いましたか?このタブはそのまま閉じて構いません。",
+      "receiptHint": "領収書と請求書はメールと請求ポータル(設定 → Intelligence)でご確認いただけます。"
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "ワークフロー",
+      "tabRuns": "実行履歴",
+      "emptyState": "ワークフローはまだありません",
+      "createTitle": "新規ワークフロー",
+      "namePlaceholder": "ワークフロー名",
+      "renameTitle": "ワークフロー名を変更",
+      "renameButton": "名前を変更",
+      "deleteTitle": "ワークフローを削除",
+      "deleteDescription": "この操作は元に戻せません。ワークフローは完全に削除されます。",
+      "runsEmpty": "実行履歴はまだありません。トレードパネルから実行してください",
+      "clearHistory": "履歴を消去",
+      "runOutcome": "成功 {{executed}} 件",
+      "runOutcomeWithFailed": "成功 {{executed}} 件、失敗 {{failed}} 件"
+    },
+    "canvas": {
+      "undoTitle": "元に戻す (Cmd+Z)",
+      "redoTitle": "やり直す (Cmd+Shift+Z)",
+      "deleteStep": "ステップを削除",
+      "deleteConnection": "接続を削除"
+    },
+    "commitBar": {
+      "cycleDetected": "循環を検出",
+      "issue_one": "問題 {{count}} 件",
+      "issue_other": "問題 {{count}} 件",
+      "pendingChange_one": "未保存の変更 {{count}} 件",
+      "pendingChange_other": "未保存の変更 {{count}} 件",
+      "noChanges": "変更はありません",
+      "review": "確認",
+      "discard": "破棄",
+      "commit": "確定",
+      "saveErrorTitle": "ワークフローを保存できません",
+      "saveErrorCycleBody": "このワークフローには循環依存があります。保存する前に、循環（赤い線）を解消してください。",
+      "saveSuccess": "ワークフローを保存しました"
+    },
+    "diffPanel": {
+      "title": "変更を確認 ({{count}}件)",
+      "addedStep": "{{type}}ステップを追加しました",
+      "removedStep": "{{type}}ステップを削除しました",
+      "modifiedStep": "{{type}}の設定を変更しました",
+      "addedConnection": "接続を追加しました",
+      "removedConnection": "接続を削除しました",
+      "noChanges": "変更はありません"
+    },
+    "palette": {
+      "title": "ステップを追加",
+      "categoryEntry": "エントリー",
+      "categoryOrders": "注文",
+      "categoryExit": "エグジット戦略",
+      "categoryLogic": "ロジック",
+      "categoryCustom": "カスタム",
+      "requires": "必要条件: {{requirement}}",
+      "notAvailableOn": "{{markets}} では利用できません"
+    },
+    "emptyState": {
+      "pickWorkflow": "左側からワークフローを選ぶと、キャンバスに表示されます。",
+      "eyebrow": "ワークフロー",
+      "title": "どの注文にも、その注文専用のプランを持たせられます",
+      "description": "ワークフローはトレードパネルから出す注文にひも付きます。約定した瞬間、その下にあるステップが自動で動き出します — ブラケット、階段状の指値、段階的なイグジット、時間による確認など。プランはあらかじめ組み込まれているので、後で自分で覚えておく必要がありません。",
+      "blankLabel": "空のキャンバスから始める",
+      "footnote": "テンプレートは下書きとして開きます。各ステップを編集してから「確定」を押すと保存されます。保存したワークフローはトレードパネルから注文に紐付けると実行されます。"
+    },
+    "steps": {
+      "sideLabel": "売買",
+      "sizeLabel": "数量",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "絶対値",
+      "side": {
+        "inherit": "継承",
+        "opposite": "反対",
+        "buy": "買い",
+        "sell": "売り"
+      },
+      "triggerWhenPrice": "価格が以下のとき発動",
+      "triggerPercentFromEntry": "エントリーからの%",
+      "triggerReachesPrice": "指定価格に到達",
+      "priceLevel": "価格水準",
+      "priceLabel": "価格",
+      "stopLoss": {
+        "title": "ストップロス",
+        "lossPercent": "損失 %"
+      },
+      "takeProfit": {
+        "title": "テイクプロフィット",
+        "gainPercent": "利益 %"
+      },
+      "limitOrder": {
+        "title": "指値注文",
+        "priceModeFixed": "固定",
+        "priceModePercentOffset": "%オフセット",
+        "priceModeOffset": "オフセット",
+        "priceValueLabel": "価格値"
+      },
+      "marketOrder": {
+        "title": "成行注文"
+      },
+      "condition": {
+        "title": "条件",
+        "typeLabel": "種別",
+        "typePercentChange": "%変化",
+        "hint": "+Nは上昇N%以上で通過、-Nは下落N%以上で通過"
+      },
+      "wait": {
+        "title": "待機",
+        "durationLabel": "時間",
+        "unitSeconds": "秒",
+        "unitMinutes": "分",
+        "unitHours": "時間"
+      },
+      "split": {
+        "title": "並列分岐",
+        "branchesLabel": "分岐数"
+      },
+      "trigger": {
+        "title": "注文入力",
+        "badge": "エントリー"
+      },
+      "configPanel": {
+        "requiresNote": "必要条件: {{requirement}}。この機能がない市場では、このステップを含むワークフローを実行できません。",
+        "on": "オン",
+        "off": "オフ"
+      }
+    },
+    "execution": {
+      "statusExecuted": "実行済み",
+      "statusSkipped": "スキップ",
+      "statusFailed": "失敗",
+      "summaryExecuted": "実行済み {{count}} 件",
+      "summarySkipped": "スキップ {{count}} 件",
+      "summaryFailed": "失敗 {{count}} 件"
+    }
   }
 }

@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { motion } from 'motion/react'
@@ -31,14 +32,17 @@ function StatusIcon({ status }: { status: StepExecutionResult['status'] }) {
   }
 }
 
-function statusLabel(status: StepExecutionResult['status']): string {
+function statusLabel(
+  status: StepExecutionResult['status'],
+  t: (key: string) => string,
+): string {
   switch (status) {
     case 'executed':
-      return 'executed'
+      return t('workflows.execution.statusExecuted')
     case 'skipped':
-      return 'skipped'
+      return t('workflows.execution.statusSkipped')
     case 'failed':
-      return 'failed'
+      return t('workflows.execution.statusFailed')
   }
 }
 
@@ -55,6 +59,7 @@ function LiveWorkflowToast({
   resultRef,
   finalResultRef,
 }: LiveToastProps) {
+  const { t } = useTranslation()
   const [results, setResults] = useState<Array<StepExecutionResult>>([])
   const [finalResult, setFinalResult] =
     useState<WorkflowExecutionResult | null>(null)
@@ -124,7 +129,7 @@ function LiveWorkflowToast({
                       : 'text-muted-foreground'
                 }`}
               >
-                {statusLabel(r.status)}
+                {statusLabel(r.status, t)}
               </span>
             </div>
             {r.status === 'failed' && r.error && (
@@ -145,20 +150,22 @@ function LiveWorkflowToast({
           <p className="text-[10px] text-muted-foreground">
             {executed > 0 && (
               <span className="text-emerald-600 dark:text-emerald-400">
-                {executed} executed
+                {t('workflows.execution.summaryExecuted', { count: executed })}
               </span>
             )}
             {skipped > 0 && (
               <>
                 {executed > 0 && <span> · </span>}
-                <span>{skipped} skipped</span>
+                <span>
+                  {t('workflows.execution.summarySkipped', { count: skipped })}
+                </span>
               </>
             )}
             {failed > 0 && (
               <>
                 {(executed > 0 || skipped > 0) && <span> · </span>}
                 <span className="text-red-600 dark:text-red-400">
-                  {failed} failed
+                  {t('workflows.execution.summaryFailed', { count: failed })}
                 </span>
               </>
             )}

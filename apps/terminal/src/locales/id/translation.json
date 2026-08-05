@@ -244,7 +244,9 @@
       "create": "Buat akun",
       "skip": "Lewati — simpan semuanya di perangkat ini",
       "signedIn": "Masuk sebagai {{email}}",
-      "label": "Akun"
+      "label": "Akun",
+      "otpSendFailed": "Gagal mengirim OTP",
+      "signInFailed": "Gagal masuk"
     },
     "summary": {
       "eyebrow": "Siap",
@@ -376,6 +378,42 @@
         "title": "Perangkat Anda, kunci Anda",
         "description": "Bot berjalan di sini, bukan di server kami, dan kunci API Anda tidak pernah keluar dari komputer ini. Biarkan komputer tetap menyala dengan Pairlens terbuka, dan matikan bot mana pun begitu Anda ingin bot itu berhenti."
       }
+    },
+    "scenes": {
+      "topMover": "Penggerak teratas · {{pair}} {{delta}}",
+      "watchlistCount": "Daftar pantauan · {{count}}",
+      "signalBreakout": "Breakout",
+      "signalPullbackForming": "Pullback terbentuk",
+      "onClose": "saat penutupan",
+      "crossedAbovePrice": "naik melewati {{price}}",
+      "conditionCrossesAbove": "naik melewati",
+      "notifyMeDesktopInApp": "Beri tahu aku — desktop + dalam aplikasi",
+      "nodeTrigger": "Pemicu",
+      "nodeSignalLabel": "Sinyal: {{signal}}",
+      "nodeCondition": "Kondisi",
+      "nodeVolumeAboveAvg": "Volume > rata-rata",
+      "nodeAction": "Aksi",
+      "nodeAlertAndJournal": "Alert + jurnal",
+      "runBreakoutWatcher": "Pemantau breakout",
+      "runDcaBuyer": "Pembeli DCA",
+      "runStopLossGuard": "Penjaga stop-loss",
+      "ranAt": "{{time}} · berjalan",
+      "runsLocally": "Berjalan secara lokal",
+      "storedOnDevice": "Disimpan di perangkat ini — tidak pernah di server kami",
+      "osKeychain": "Keychain OS",
+      "pluginKindMarketData": "Data pasar",
+      "pluginKindTheme": "Tema",
+      "pluginKindAutomation": "Otomasi",
+      "sandboxedByDefault": "Sandboxed secara default",
+      "signedVerified": "Ditandatangani & terverifikasi",
+      "networkAccessApproveHost": "Akses jaringan — Anda menyetujui setiap host",
+      "copiedToWorkspaces": "Disalin ke workspace Anda",
+      "statNet": "Net",
+      "statMaxDd": "Max DD",
+      "sameCodeGoesLive": "Kode yang sama dijalankan live",
+      "runsOnYourMachine": "Berjalan di perangkat Anda — jaga agar tetap menyala",
+      "botMeanReversion": "Mean Reversion",
+      "chainWallet": "Wallet {{chain}}"
     }
   },
   "common": {
@@ -399,7 +437,11 @@
     "updated": "Diperbarui {{time}}",
     "back": "Kembali",
     "dismiss": "Tutup",
-    "unknownError": "Kesalahan tidak diketahui"
+    "unknownError": "Kesalahan tidak diketahui",
+    "ordersLockedRiskLimit": "Order terkunci karena pelanggaran batas risiko. Buka kunci di Pengaturan > Manajemen Risiko.",
+    "buyOrdersLockedRiskLimit": "Order beli terkunci karena pelanggaran batas risiko. Buka kunci di Pengaturan > Manajemen Risiko.",
+    "positionSizeExceeded": "Order diblokir oleh batas risiko: posisi mencapai {{ratioPct}}% dari portofolio Anda, melebihi batas maksimum {{maxPositionSize}}%. Sesuaikan di Pengaturan > Manajemen Risiko.",
+    "sessionExpired": "Sesi Anda telah berakhir — silakan masuk kembali."
   },
   "legal": {
     "terms": "Syarat & Ketentuan",
@@ -576,7 +618,22 @@
       "publisherKeyConsentTitle": "Percayai penerbit ini?",
       "publisherKeyConsentBody": "Plugin yang ditandatangani dengan kunci ini akan dapat dipasang di perangkat ini. Penerbit yang berniat jahat dapat mengirim plugin yang meminta kepercayaan penuh — dengan akses ke data plugin lain Anda, kredensial exchange yang tersimpan, dan trading. Bandingkan fingerprint dengan penerbit melalui saluran yang Anda percayai sebelum melanjutkan.",
       "publisherKeyConsentConfirm": "Percayai kunci ini",
-      "publisherKeyConsentCancel": "Batal"
+      "publisherKeyConsentCancel": "Batal",
+      "updatesTitle": "Pembaruan Plugin",
+      "updatesDescription": "Atur cara plugin diperbarui saat versi yang lebih baru tersedia di Registry.",
+      "updateModeLabel": "Mode pembaruan",
+      "updateModeAutoDescription": "Pembaruan diunduh dan dipasang secara otomatis",
+      "updateModeNotifyDescription": "Anda akan melihat lencana saat pembaruan tersedia",
+      "updateModeOffDescription": "Tidak ada pemeriksaan pembaruan otomatis",
+      "updateModeAuto": "Perbarui otomatis",
+      "updateModeNotify": "Hanya beri tahu",
+      "updateModeOffLabel": "Nonaktif",
+      "checkIntervalLabel": "Interval pemeriksaan",
+      "checkIntervalDescription": "Seberapa sering memeriksa Registry untuk versi yang lebih baru",
+      "intervalHourly": "Setiap jam",
+      "interval6Hours": "Setiap 6 jam",
+      "interval12Hours": "Setiap 12 jam",
+      "intervalDaily": "Harian"
     },
     "appearance": {
       "colorMode": "Mode Warna",
@@ -598,7 +655,9 @@
       "balanced": "Seimbang",
       "balancedDescription": "Ticker dan order book pada 250ms, candle pada 500ms. Keseimbangan baik antara responsivitas dan efisiensi.",
       "energySaver": "Hemat Energi",
-      "energySaverDescription": "Ticker dan order book pada 1d, candle pada 2d. Terbaik untuk pemantauan pasif atau laptop dengan baterai."
+      "energySaverDescription": "Ticker dan order book pada 1d, candle pada 2d. Terbaik untuk pemantauan pasif atau laptop dengan baterai.",
+      "idleGuardTitle": "Putuskan saat tidak aktif",
+      "idleGuardDescription": "Menjeda streaming data pasar setelah 1 jam tidak aktif untuk menghemat bandwidth dan mengurangi konsumsi energi."
     },
     "desktop": {
       "closeBehavior": {
@@ -1022,7 +1081,9 @@
       "namePlaceholder": "Nama folder"
     },
     "createFirst": "Buat ruang kerja pertama Anda",
-    "emptyState": "Belum ada ruang kerja"
+    "emptyState": "Belum ada ruang kerja",
+    "descriptionLabel": "Deskripsi",
+    "descriptionPlaceholder": "Deskripsi singkat opsional"
   },
   "session": {
     "checking": "Memeriksa sesi…",
@@ -1080,7 +1141,9 @@
     "verifying": "Memverifikasi...",
     "verifyAndSignIn": "Verifikasi dan masuk",
     "codeRequired": "Kode wajib diisi",
-    "emailRequired": "Email wajib diisi"
+    "emailRequired": "Email wajib diisi",
+    "dialogDescription": "Masuk untuk mengakses fitur ini",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "Sesi Dijeda",
@@ -1100,7 +1163,12 @@
     "connecting": "Menghubungkan",
     "stalled": "Menghubungkan ulang",
     "offline": "Offline",
-    "error": "Kesalahan"
+    "error": "Kesalahan",
+    "pluginUpdatesReady_one": "{{count}} pembaruan plugin siap dipasang",
+    "pluginUpdatesReady_other": "{{count}} pembaruan plugin siap dipasang",
+    "pluginUpdatesDescription": "Pembaruan akan diterapkan setelah terminal dimulai ulang.",
+    "restartNow": "Mulai ulang sekarang",
+    "later": "Nanti"
   },
   "copilot": {
     "aiLens": "AI Lens",
@@ -1119,7 +1187,47 @@
     },
     "marketRegime": "Rezim Market",
     "trending": "Trending",
-    "choppy": "Bergejolak"
+    "choppy": "Bergejolak",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "Ukuran",
+    "orderPlacedPaper": "Order paper terpasang",
+    "orderPlaced": "Order terpasang",
+    "autoApprovedNote": "Disetujui otomatis ({{mode}} · jangan tanya lagi aktif)",
+    "turnOff": "Matikan",
+    "autoApproving": "Menyetujui order {{mode}} secara otomatis…",
+    "liveOrderWarning": "Order live — dana sungguhan, ditegakkan sesuai batas risiko Anda.",
+    "dontAskAgainPaper": "Jangan tanya lagi untuk trading paper",
+    "dontAskAgainLive": "Jangan tanya lagi untuk trading live di {{market}}",
+    "placing": "Memasang…",
+    "confirmMode": "Konfirmasi {{mode}}",
+    "dismissed": "Ditutup",
+    "cancelOrderPrompt": "Batalkan order {{orderId}} di {{pair}} · {{market}}?",
+    "cancelled": "Dibatalkan",
+    "cancelFailed": "Pembatalan gagal",
+    "cancelling": "Membatalkan…",
+    "confirmCancel": "Konfirmasi pembatalan",
+    "keep": "Simpan",
+    "tradingUnavailable": "Trading tidak tersedia.",
+    "noCredentialsForMarket": "Tidak ada kredensial yang terhubung untuk {{market}}. Tambahkan API key di Accounts untuk trading live.",
+    "watchingPair": "Memantau {{pair}} · {{timeframe}}",
+    "genericChatError": "Copilot mengalami error — coba kirim lagi.",
+    "quickActionHowIsDoing": "Bagaimana kabar {{symbol}}?",
+    "quickActionSuggestedIndicators": "Indikator yang disarankan",
+    "quickActionAnySignals": "Ada sinyal?",
+    "scheduledCheckPrefix": "[Pemeriksaan terjadwal — Anda mengatur ini {{minutes}} menit lalu]",
+    "authRequiredTitle": "Kenalan dengan copilot AI Anda",
+    "authRequiredDescription": "Analisis kontekstual untuk pasangan apa pun — ia membaca chart, memeriksa batas risiko Anda, dan menjawab dengan penalaran yang bisa Anda pertanyakan.",
+    "upgradeRequiredDescription": "Copilot AI Anda membaca chart, memeriksa batas risiko Anda, dan menjawab dengan penalaran yang bisa Anda pertanyakan.",
+    "aiLensUnavailableTitle": "AI Lens Tidak Tersedia",
+    "aiLensUnavailableDescription": "Aktifkan plugin AI di halaman Plugins untuk mendapatkan analisis pasar real-time dan bantuan trading.",
+    "goToPlugins": "Buka Plugins",
+    "rerunAnalysis": "Jalankan ulang analisis",
+    "analyzePair": "Analisis {{pair}}",
+    "startConversation": "Mulai percakapan",
+    "emptyStateHint": "Tanyakan kondisi pasar, validasi setup Anda, atau minta penilaian risiko — AI punya konteks chart.",
+    "contextAware": "Sadar konteks",
+    "toolFailed": "Tool gagal"
   },
   "chart": {
     "contextMenu": {
@@ -1858,7 +1966,9 @@
     "keepOrder": "Pertahankan order",
     "cancelOrder": "Batalkan order",
     "sideBuy": "beli",
-    "sideSell": "jual"
+    "sideSell": "jual",
+    "buy": "Beli",
+    "sell": "Jual"
   },
   "pairInfo": {
     "title": "Informasi Pair",
@@ -1901,13 +2011,38 @@
     "emptyTitle": "Masukkan URL di atas untuk menyematkan situs web",
     "embedWarning": "Beberapa situs web memblokir penyematan dalam iframe. Jika halaman tidak dimuat, coba buka di browser Anda.",
     "blockedTitle": "Situs ini tidak dapat disematkan",
-    "blockedDescription": "Situs web ini memblokir tampilan di dalam halaman lain. Anda dapat membukanya di tab browser terpisah."
+    "blockedDescription": "Situs web ini memblokir tampilan di dalam halaman lain. Anda dapat membukanya di tab browser terpisah.",
+    "forward": "Maju",
+    "failedToLoad": "Gagal memuat",
+    "viewPaused": "Tampilan web dijeda"
   },
   "intelligence": {
     "awaitingSignal": "Tidak ada sinyal terdeteksi",
     "regime": "Rezim",
     "trending": "Trending",
-    "choppy": "Bergejolak"
+    "choppy": "Bergejolak",
+    "upsell": {
+      "priceMonthly": "${{price}}/bln",
+      "taxNotice": "Harga belum termasuk pajak — dihitung saat checkout.",
+      "defaultTitle": "Buka Pairlens Intelligence",
+      "defaultDescription": "Kopilot AI dan riset web yang dihosting, tanpa perlu kunci API. Setiap paket mencakup kuota penggunaan bulanan yang dibagi antara chat, riset, dan pencarian web.",
+      "byokNote": "Lebih suka penyedia sendiri? Hubungkan kunci Anthropic, OpenAI, Groq, atau OpenRouter di <plugins>Plugin</plugins> — AI dengan kunci sendiri selalu gratis.",
+      "checkoutOpenedTitle": "Checkout dibuka di browser Anda",
+      "checkoutActivates": "Langganan Anda aktif di sini begitu pembayaran selesai.",
+      "checkoutStartError": "Checkout gagal dimulai — coba lagi.",
+      "subscriptionRequiredTitle": "Perlu langganan Pairlens Intelligence",
+      "subscriptionRequiredBody": "AI yang dihosting berjalan dengan paket Intelligence. Berlangganan di bawah, atau hubungkan kunci penyedia AI-mu sendiri di Plugin.",
+      "budgetUsedUpTitle": "Kuota penggunaan bulanan habis",
+      "budgetUsedBody": "Kredit Intelligence untuk siklus ini sudah habis.",
+      "budgetResetsOn": "Kuota Anda akan direset pada {{date}}.",
+      "topUpHint": "Isi ulang dengan paket kredit untuk melanjutkan — kredit paket kedaluwarsa 30 hari setelah pembelian.",
+      "upgradeToMaxHint": "Tingkatkan ke {{label}} untuk {{credits}} kredit per bulan.",
+      "manageSubscription": "Kelola langganan",
+      "portalError": "Portal penagihan gagal dibuka.",
+      "creditsLandDescription": "Kredit tambahan masuk ke saldo Anda begitu pembayaran selesai.",
+      "checkoutError": "Checkout gagal dimulai.",
+      "upgradeToMax": "Tingkatkan ke Max"
+    }
   },
   "panes": {
     "markets": "Market",
@@ -2003,6 +2138,52 @@
       "title": "{{pair}} tidak tersedia di {{venue}}",
       "titleAnyVenue": "{{pair}} tidak tersedia",
       "description": "Konektor ini tidak mengembalikan data pasar untuk pasangan ini. Coba konektor lain yang mencantumkannya."
+    },
+    "panePicker": {
+      "bindToVariable": "Ikat ke variabel",
+      "boundTo": "Terikat ke <b>{{variable}}</b>",
+      "market": "Market",
+      "setPair": "Atur pair {{variable}}",
+      "selectPair": "Pilih pair",
+      "bindingHint": "Memilih pair akan memperbarui semua panel yang terikat ke {{variable}}",
+      "unbindFromVariable": "Lepas ikatan dari variabel",
+      "settingForAllPanes": "Mengatur <b>{{variable}}</b> untuk semua panel yang terikat"
+    },
+    "pane": {
+      "close": "Tutup {{pane}}",
+      "popOutToColumn": "Pindahkan ke kolom baru",
+      "bindPairToVariable": "Ikat pair ke variabel",
+      "bindWalletToVariable": "Ikat dompet ke variabel",
+      "bindTimeframeToVariable": "Ikat timeframe ke variabel",
+      "clearPairOverride": "Hapus override pair",
+      "closePane": "Tutup panel",
+      "unbind": "Lepas ikatan",
+      "closeTab": "Tutup tab"
+    },
+    "dnd": {
+      "pickedUp": "Mengambil {{pane}}. Gunakan tombol panah untuk memindahkan, spasi untuk meletakkan, escape untuk membatalkan.",
+      "genericPane": "panel",
+      "noDropTarget": "Tidak ada target penempatan.",
+      "dropStackTab": "Letakkan di sini untuk menumpuk sebagai tab.",
+      "dropSplitAbove": "Letakkan untuk membagi di atas.",
+      "dropSplitBelow": "Letakkan untuk membagi di bawah.",
+      "dropNewColumn": "Letakkan untuk membuat kolom baru.",
+      "paneMoved": "Panel dipindahkan.",
+      "dragCancelled": "Seret dibatalkan, panel dikembalikan.",
+      "dragCancelledFull": "Seret dibatalkan, panel dikembalikan ke posisi semula."
+    },
+    "missingPane": {
+      "requiresPlugin": "Panel ini memerlukan plugin \"{{pluginId}}\"",
+      "notAvailable": "Panel \"{{type}}\" tidak tersedia",
+      "description": "Plugin mungkin telah dihapus atau dinonaktifkan.",
+      "openPluginStore": "Buka Plugin Store"
+    },
+    "dropZone": {
+      "emptyHint": "Seret panel ke sini",
+      "addAsTab": "Tambahkan sebagai tab",
+      "splitTop": "Bagi atas",
+      "splitBottom": "Bagi bawah",
+      "newColumn": "Kolom baru"
     }
   },
   "watchlist": {
@@ -2131,7 +2312,118 @@
       "reloadNote": "Menyetujui akan memuat ulang terminal untuk menerapkan perubahan.",
       "deny": "Jangan izinkan",
       "allow": "Izinkan & muat ulang"
-    }
+    },
+    "toggleFailedEnable": "Gagal mengaktifkan {{name}}",
+    "toggleFailedDisable": "Gagal menonaktifkan {{name}}",
+    "updateStagedToast": "Pembaruan disiapkan — mulai ulang untuk menerapkan",
+    "restartNow": "Mulai ulang sekarang",
+    "updateStageFailedToast": "Gagal menyiapkan pembaruan: {{error}}",
+    "resetStagedToast": "Direset ke default — mulai ulang untuk menyelesaikan",
+    "networkGrantedToast": "Akses jaringan diberikan ke \"{{name}}\" — memuat ulang…",
+    "networkDeniedToast": "\"{{name}}\" dipasang tanpa akses jaringan — mungkin tidak berfungsi sampai Anda mengizinkannya.",
+    "installCancelledNoTrust": "Instalasi dibatalkan — kepercayaan penuh tidak diberikan",
+    "installedVersionToast": "\"{{name}}\" v{{version}} terpasang",
+    "installFailedToast": "Gagal memasang plugin: {{error}}",
+    "localFilesNotFound": "File plugin lokal tidak ditemukan",
+    "pluginCodeNotFound": "Kode plugin tidak ditemukan — pasang ulang",
+    "fullTrustGrantedNameToast": "Kepercayaan penuh diberikan ke \"{{name}}\"",
+    "loadPluginFailedToast": "Gagal memuat plugin: {{error}}",
+    "importFailedToast": "Gagal mengimpor plugin: {{error}}",
+    "fieldRequired": "{{label}} wajib diisi",
+    "configSaved": "Konfigurasi disimpan",
+    "configurationFailed": "Konfigurasi gagal",
+    "needsFullTrustToRun": "Butuh kepercayaan penuh untuk berjalan",
+    "pendingTrustDescription": "Menyumbang UI dan tidak bisa berjalan di sandbox — beri kepercayaan penuh untuk mengaktifkannya, atau hapus.",
+    "remove": "Hapus",
+    "groupCore": "Inti",
+    "groupProvidersExtensions": "Penyedia & Ekstensi",
+    "groupThemes": "Tema",
+    "removePluginTitle": "Hapus Plugin",
+    "removePluginDescription": "Ini akan menonaktifkan dan menghapus plugin. Panel apa pun yang disumbangkannya akan menampilkan placeholder pemulihan. Anda bisa memasangnya lagi dari Plugin Store kapan saja.",
+    "resetDefaultsTitle": "Reset ke Default",
+    "resetDefaultsDescription": "Ini akan menghapus semua plugin non-bawaan, menghapus pembaruan yang disiapkan dan tersedia, lalu memuat ulang terminal. Plugin bawaan akan tetap terpasang.",
+    "reset": "Reset",
+    "installFromUrlDialogTitle": "Pasang Plugin dari URL",
+    "installFromUrlDialogDescription": "Masukkan URL modul plugin (.js) untuk dipasang.",
+    "unverifiedPluginTitle": "Plugin Tidak Terverifikasi",
+    "unverifiedPluginBody": "Plugin yang dipasang secara manual belum ditinjau dari sisi keamanan. Pasang plugin hanya dari sumber yang Anda percaya.",
+    "installAnyway": "Tetap Pasang",
+    "sourceBuiltIn": "Bawaan",
+    "sourceRegistry": "Registry",
+    "sourceUrl": "URL",
+    "sourceLocal": "Lokal",
+    "fullTrustGrantedRestartToast": "Kepercayaan penuh diberikan — mulai ulang untuk menjalankan plugin ini di aplikasi utama",
+    "sandboxedRestartToast": "Plugin akan berjalan di sandbox — mulai ulang untuk menerapkan",
+    "requiresFullTrustTitle": "Plugin ini menyumbang UI dan harus berjalan dengan kepercayaan penuh.",
+    "trustBadgeFullRequired": "Kepercayaan penuh (wajib)",
+    "trustBadgeFull": "Kepercayaan penuh",
+    "trustBadgeSandboxed": "Sandbox",
+    "panelCount_one": "{{count}} panel",
+    "panelCount_other": "{{count}} panel",
+    "update": "Perbarui",
+    "revokeFullTrustAria": "Cabut kepercayaan penuh untuk {{name}}",
+    "grantFullTrustAria": "Beri kepercayaan penuh ke {{name}}",
+    "fullTrustActiveTitle": "Kepercayaan penuh — berjalan di aplikasi utama. Klik untuk memasukkan ke sandbox.",
+    "sandboxedTitle": "Sandbox — worker terisolasi, jaringan terbatas pada host yang dideklarasikan. Klik untuk memberi kepercayaan penuh.",
+    "configureAria": "Konfigurasi {{name}}",
+    "toggleAria": "Alihkan {{name}}",
+    "capabilityProvidersTitle": "Penyedia Kapabilitas",
+    "capabilityProvidersDescription": "Setiap fitur terminal meminta suatu kapabilitas, dan plugin aktif dengan prioritas tertinggi menyediakannya secara otomatis. Pilih plugin tertentu untuk menggantikan pilihan otomatis.",
+    "resetAllOverrides": "Reset semua penggantian",
+    "noProviderInstalled": "Tidak ada plugin terpasang yang menyediakan ini",
+    "browseStore": "Jelajahi Store",
+    "installedNeedsKeySingle": "Terpasang — butuh API key",
+    "installedNeedsKeyPlural": "{{count}} terpasang — semua butuh API key",
+    "installedDisabledSingle": "1 plugin terpasang, tapi nonaktif",
+    "installedDisabledPlural": "{{count}} plugin terpasang, semua nonaktif",
+    "manage": "Kelola",
+    "pinnedActiveNote": "Disematkan — menggantikan urutan otomatis",
+    "pinnedInactiveNote": "Plugin yang disematkan nonaktif — urutan otomatis berlaku",
+    "autoOrderLabel": "Urutan otomatis: {{chain}}",
+    "chainMore_one": "{{chain}} +{{count}} lainnya",
+    "chainMore_other": "{{chain}} +{{count}} lainnya",
+    "resolvedPerMarket": "Diselesaikan per market",
+    "marketOverrides": "Penggantian per market",
+    "pinnedCountBadge_one": "{{count}} disematkan",
+    "pinnedCountBadge_other": "{{count}} disematkan",
+    "automatic": "Otomatis",
+    "disabledHint": "nonaktif",
+    "notInstalled": "{{id}} (belum terpasang)",
+    "saveOverrideFailed": "Gagal menyimpan penggantian penyedia",
+    "removeOverrideFailed": "Gagal menghapus penggantian penyedia",
+    "resetOverridesFailed": "Gagal mereset penggantian",
+    "marketConnectorsTitle": "Konektor Market",
+    "marketConnectorsDescription": "Konektor market melakukan streaming data harga langsung, order book, dan memungkinkan trading langsung dari API exchange. Aktifkan exchange yang ingin Anda gunakan.",
+    "activeCountBadge": "{{active}}/{{total}} aktif",
+    "connected": "Terhubung",
+    "disabledStatus": "Nonaktif",
+    "readAndTrade": "Baca + Trading",
+    "readOnly": "Hanya Baca",
+    "noConnectorsInstalled": "Tidak ada plugin konektor market yang terpasang.",
+    "moreConnectors": "Konektor Lainnya",
+    "fromPluginStore": "dari Plugin Store",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "Pelajari lebih lanjut",
+    "enabledToast": "{{name}} diaktifkan",
+    "disabledToast": "{{name}} dinonaktifkan",
+    "enableFailedShort": "Gagal mengaktifkan",
+    "disableFailedShort": "Gagal menonaktifkan",
+    "domain": {
+      "marketData": "Data Market",
+      "trading": "Trading",
+      "wallet": "Wallet",
+      "signals": "Sinyal",
+      "ai": "AI"
+    },
+    "byAuthor": "oleh {{author}}",
+    "installsCount_one": "{{formattedCount}} pemasangan",
+    "installsCount_other": "{{formattedCount}} pemasangan",
+    "panelsCount": "Panel ({{count}})",
+    "inactive": "Nonaktif",
+    "previousSlide": "Sebelumnya",
+    "nextSlide": "Berikutnya",
+    "goToSlide": "Ke slide {{n}}",
+    "copyCommand": "Salin perintah"
   },
   "search": {
     "title": "Cari Pair",
@@ -2194,7 +2486,11 @@
       "selectAccount": "Pilih akun",
       "groupWallet": "Wallet kripto",
       "groupBroker": "Akun broker",
-      "groupExchange": "Akun bursa"
+      "groupExchange": "Akun bursa",
+      "selectWalletTopBar": "Pilih wallet di bilah atas",
+      "connectChainWallet": "Hubungkan wallet {{chain}}",
+      "connectExchangeAccount": "Hubungkan akun {{exchange}}",
+      "selectAccountTopBar": "Pilih akun di bilah atas"
     },
     "trade": {
       "limitBuy": "Beli limit",
@@ -2221,7 +2517,16 @@
       "buyAsset": "Beli {{asset}}",
       "sellAsset": "Jual {{asset}}",
       "amount": "Jumlah",
-      "price": "Harga"
+      "price": "Harga",
+      "presetsTitle": "Preset jumlah ({{quote}})",
+      "buy": "Beli",
+      "sell": "Jual",
+      "orderTypeMarket": "Pasar",
+      "orderTypeLimit": "Limit",
+      "workflow": "Workflow",
+      "notSupportedOn": "Tidak didukung di {{venue}}",
+      "available": "Tersedia: {{amount}}",
+      "slippage": "Slippage"
     },
     "status": {
       "connecting": "Menghubungkan…",
@@ -2341,7 +2646,42 @@
     "importKey": "Impor private key",
     "affiliateDisclosure": "Beberapa tautan pendaftaran dapat memberikan komisi kepada Pairlens, tanpa biaya tambahan bagi Anda.",
     "vaultSealedBody": "Brankas kredensial Anda terkunci. Akun Anda masih ada — buka untuk melihat dan menggunakannya.",
-    "credentialsUnreadable": "Kunci yang tersimpan di perangkat ini tidak bisa dibaca. Tidak ada yang hilang — coba lagi atau mulai ulang Pairlens."
+    "credentialsUnreadable": "Kunci yang tersimpan di perangkat ini tidak bisa dibaca. Tidak ada yang hilang — coba lagi atau mulai ulang Pairlens.",
+    "addWalletDialogTitle": "Tambah Wallet Kripto",
+    "addWalletDialogDescription": "Impor private key wallet untuk trading on-chain",
+    "blockchainLabel": "Blockchain",
+    "walletLabelField": "Label",
+    "walletLabelPlaceholder": "Wallet Saya",
+    "privateKeyField": "Private Key",
+    "saveWallet": "Simpan Wallet",
+    "keep": "Simpan",
+    "remove": "Hapus",
+    "disconnect": "Putuskan",
+    "localBadge": "Lokal",
+    "unknownDate": "Tidak diketahui",
+    "keyExpiredWarning": "Kemungkinan kedaluwarsa — {{daysInactive}} hari tidak aktif (batas {{limitDays}} hari). Buat ulang API key di exchange.",
+    "keyInactiveWarning": "{{daysInactive}}/{{limitDays}} hari tidak aktif. Key kedaluwarsa setelah {{limitDays}} hari tanpa digunakan.",
+    "exchangeAccountAriaLabel": "Akun exchange {{label}}",
+    "cryptoWalletAriaLabel": "Wallet kripto {{label}}",
+    "portfolioTotal": "Total",
+    "assetAllocationLabel": "Alokasi Aset",
+    "tableAsset": "Aset",
+    "tableAmount": "Jumlah",
+    "tableValue": "Nilai",
+    "tableShare": "Persentase",
+    "assetCount_one": "{{count}} aset",
+    "assetCount_other": "{{count}} aset",
+    "moreAssets_one": "+{{count}} aset lagi",
+    "moreAssets_other": "+{{count}} aset lagi",
+    "walletSavedFeedback": "Wallet kripto tersimpan.",
+    "walletRemovedFeedback": "Wallet kripto dihapus.",
+    "accountRemovedFeedback": "Akun dihapus.",
+    "walletSaveFailed": "Gagal menyimpan wallet.",
+    "walletRemoveFailed": "Gagal menghapus wallet.",
+    "accountConnectFailed": "Gagal menghubungkan akun.",
+    "accountRemoveFailed": "Gagal menghapus akun.",
+    "fieldRequired": "{{field}} wajib diisi",
+    "accountConnectedFeedback": "Akun {{label}} {{mode}} terhubung."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2449,12 +2789,136 @@
     "paneCount_other": "{{count}} panel",
     "panes": "Panel",
     "showAll": "Tampilkan semua",
-    "spotlight": "Sorotan"
+    "spotlight": "Sorotan",
+    "previousSlide": "Sebelumnya",
+    "nextSlide": "Berikutnya",
+    "goToSlide": "Buka slide {{number}}"
   },
   "notifications": {
     "flows": "Alur",
     "newFlow": "Alur baru",
-    "noFlows": "Belum ada alur notifikasi"
+    "noFlows": "Belum ada alur notifikasi",
+    "builder": {
+      "sidebar": {
+        "tabRules": "Aturan",
+        "tabActivity": "Aktivitas",
+        "noRules": "Belum ada aturan notifikasi",
+        "newRuleTitle": "Aturan Notifikasi Baru",
+        "rulePlaceholder": "Nama aturan",
+        "renameRuleTitle": "Ganti Nama Aturan",
+        "rename": "Ganti nama",
+        "deleteRuleTitle": "Hapus Aturan",
+        "deleteRuleWarning": "Tindakan ini tidak bisa dibatalkan. Aturan notifikasi dan pengikatan pairnya akan dihapus secara permanen.",
+        "pairsLabel": "Pair",
+        "sendTest": "Kirim tes",
+        "testing": "Menguji…",
+        "pairAlreadyBound": "Pair ini sudah terikat ke aturan",
+        "noBindings": "Belum terikat ke pair mana pun — aturan tidak akan aktif sampai Anda menambahkan satu.",
+        "testSent": "Notifikasi tes terkirim",
+        "testFailed": "Tes tidak terkirim",
+        "noActivity": "Belum ada notifikasi yang terpicu",
+        "clearActivity": "Hapus aktivitas",
+        "channelFailed": "{{channel}} gagal"
+      },
+      "commitBar": {
+        "cycleDetected": "Siklus terdeteksi",
+        "issueCount_one": "{{count}} masalah",
+        "issueCount_other": "{{count}} masalah",
+        "moreIssues": "…dan {{count}} lainnya",
+        "pendingChangeCount_one": "{{count}} perubahan tertunda",
+        "pendingChangeCount_other": "{{count}} perubahan tertunda",
+        "noChanges": "Tidak ada perubahan",
+        "review": "Tinjau",
+        "discard": "Abaikan",
+        "commit": "Simpan",
+        "cannotSaveTitle": "Aturan tidak dapat disimpan",
+        "cycleError": "Aturan ini mengandung dependensi melingkar. Hapus siklusnya (garis merah) sebelum menyimpan.",
+        "saved": "Aturan disimpan"
+      },
+      "diff": {
+        "title": "Tinjau Perubahan ({{count}})",
+        "addedStep": "Langkah {{type}} ditambahkan",
+        "removedStep": "Langkah {{type}} dihapus",
+        "modifiedStep": "Konfigurasi {{type}} diubah",
+        "addedConnection": "Koneksi ditambahkan",
+        "removedConnection": "Koneksi dihapus"
+      },
+      "canvas": {
+        "undoTitle": "Urungkan (Cmd+Z)",
+        "redoTitle": "Ulangi (Cmd+Shift+Z)",
+        "deleteStep": "Hapus langkah",
+        "deleteConnection": "Hapus koneksi",
+        "cycleLabel": "siklus"
+      },
+      "palette": {
+        "addStep": "Tambah Langkah",
+        "categoryEvents": "Peristiwa",
+        "categoryConditions": "Kondisi",
+        "categoryChannels": "Saluran"
+      },
+      "category": {
+        "event": "Peristiwa",
+        "condition": "Kondisi",
+        "channel": "Saluran"
+      },
+      "emptyState": {
+        "pickRuleHint": "Pilih aturan di sebelah kiri untuk membukanya di kanvas.",
+        "untitledRule": "Aturan tanpa judul",
+        "eyebrow": "Notifikasi",
+        "title": "Pantau market agar Anda tidak perlu melakukannya sendiri",
+        "description": "Aturan adalah alur kecil: sesuatu terjadi — level tertembus, candle ditutup, order terisi, alert indikator terpicu — lalu melewati kondisi yang Anda tambahkan, dan akhirnya sampai ke Anda sebagai toast, notifikasi sistem, atau webhook.",
+        "startBlank": "Mulai dari kanvas kosong",
+        "startFromTemplate": "Mulai dari template",
+        "footnote": "Template terbuka sebagai draf yang terikat ke {{pair}} di {{market}} — edit langkah-langkahnya, ubah pair di daftar aturan, lalu Simpan. Aturan hanya aktif selama Pairlens berjalan."
+      },
+      "direction": "Arah",
+      "above": "Di atas",
+      "below": "Di bawah",
+      "any": "Apa saja",
+      "buy": "Beli",
+      "sell": "Jual",
+      "up": "Naik",
+      "down": "Turun",
+      "either": "Keduanya",
+      "toggleOn": "Aktif",
+      "toggleOff": "Nonaktif",
+      "steps": {
+        "candleClose": {
+          "title": "Penutupan Candle"
+        },
+        "localToast": {
+          "title": "Notifikasi Toast",
+          "description": "Menampilkan toast di dalam app saat terpicu"
+        },
+        "orderExecuted": {
+          "title": "Order Tereksekusi"
+        },
+        "osNotification": {
+          "title": "Notifikasi Sistem",
+          "sound": "Suara"
+        },
+        "percentChange": {
+          "title": "Perubahan Persentase",
+          "percent": "Persentase"
+        },
+        "priceAlert": {
+          "title": "Alert Harga"
+        },
+        "priceCondition": {
+          "title": "Kondisi Harga"
+        },
+        "signalGenerated": {
+          "title": "Sinyal Terbentuk",
+          "signalType": "Tipe Sinyal",
+          "anyTypePlaceholder": "Tipe apa saja"
+        },
+        "timeWindow": {
+          "title": "Jendela Waktu",
+          "start": "Mulai (UTC)",
+          "end": "Selesai (UTC)"
+        }
+      }
+    }
   },
   "updater": {
     "available": "Pembaruan tersedia",
@@ -2540,7 +3004,8 @@
     "failed": "Gagal memuat heatmap",
     "noData": "Tidak ada data tersedia",
     "tryLater": "Coba lagi nanti",
-    "willAppear": "Data heatmap akan muncul di sini"
+    "willAppear": "Data heatmap akan muncul di sini",
+    "volume": "Volume"
   },
   "news": {
     "title": "Berita",
@@ -2637,5 +3102,228 @@
   "fullscreen": {
     "enter": "Layar penuh",
     "exit": "Keluar dari layar penuh"
+  },
+  "research": {
+    "phaseSearching": "Menelusuri web...",
+    "phaseReading": "Membaca sumber...",
+    "phaseAnalyzing": "Menganalisis data pasar...",
+    "phaseWriting": "Menulis laporan...",
+    "authRequiredTitle": "Meja riset, tinggal satu langkah masuk",
+    "authRequiredDescription": "Laporan riset terstruktur untuk pasangan mana pun, berdasarkan sumber web langsung. Masuk, lalu berlangganan Pairlens Intelligence atau gunakan kunci AI-mu sendiri.",
+    "upgradeDescription": "Laporan riset terstruktur untuk pasangan mana pun, berdasarkan sumber web langsung. Berlangganan Pairlens Intelligence — atau gunakan kunci AI dan pencarian Anda sendiri lewat Plugin, gratis.",
+    "unavailableTitle": "Riset Tidak Tersedia",
+    "unavailableDescription": "Aktifkan plugin AI di halaman Plugin untuk membuat laporan riset pasangan ini.",
+    "goToPlugins": "Buka Plugin",
+    "navigateToPair": "Buka sebuah pasangan untuk melihat riset.",
+    "researchingSymbol": "Meriset {{symbol}}",
+    "generatingReport": "Membuat laporan...",
+    "cachedGenerated": "Tersimpan cache — dibuat {{time}}",
+    "freshGenerated": "Baru — baru saja dibuat",
+    "refresh": "Segarkan",
+    "sourcesCount": "Sumber ({{count}})",
+    "reportTitle": "Laporan Riset",
+    "fullscreenDescription": "Laporan riset dalam mode layar penuh. Tekan Escape untuk keluar.",
+    "sections": "Bagian",
+    "sparklineAriaLabel": "Sparkline harga harian",
+    "errorTitle": "Riset tidak tersedia"
+  },
+  "capabilityGate": {
+    "authTitle": "Hanya perlu satu kali masuk gratis",
+    "authDescription": "Fitur ini berjalan melalui akun Pairlens Anda.",
+    "signInFree": "Masuk gratis",
+    "authNote": "Hanya butuh 30 detik. Kunci exchange Anda tidak pernah meninggalkan perangkat ini.",
+    "upgradeRequired": "Perlu peningkatan",
+    "upgradeDescriptionLevel": "Fitur ini memerlukan tingkat akses <b>{{level}}</b>.",
+    "upgradeDescriptionGeneric": "Fitur ini memerlukan tingkat akses yang lebih tinggi.",
+    "managePlugin": "Kelola Plugin"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}} tidak tersedia di sini",
+    "description": "Untuk wilayah Anda, {{exchange}} tidak menyediakan data pasar, sehingga konektor ini tidak dapat memuat data. Beralihlah ke konektor lain, atau perbarui wilayah Anda jika salah diatur.",
+    "yourRegion": "Wilayah Anda:",
+    "notSet": "Tidak diatur",
+    "changeRegion": "Ubah wilayah",
+    "switchTo": "Beralih ke {{venue}}"
+  },
+  "pairPicker": {
+    "noPairsFound": "Tidak ada pair yang ditemukan.",
+    "startTyping": "Mulai mengetik untuk mencari pair."
+  },
+  "routes": {
+    "goHome": "Kembali ke beranda",
+    "noConnectors": {
+      "title": "Tidak ada konektor pasar yang tersedia",
+      "description": "Plugin konektor pasar diperlukan untuk streaming data langsung. Aktifkan atau instal konektor untuk memulai.",
+      "manage": "Kelola Konektor Pasar"
+    },
+    "workspace": {
+      "notFound": "Ruang kerja tidak ditemukan",
+      "edit": "Edit"
+    },
+    "notFound": {
+      "title": "Halaman tidak ditemukan"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "Tidak ada katalog instrumen",
+      "noInstrumentCatalogDescription": "Tidak ada plugin aktif yang menyediakan penemuan instrumen. Aktifkan plugin untuk menelusuri pair trading yang tersedia.",
+      "goToPlugins": "Buka Plugin"
+    },
+    "notifications": {
+      "loading": "Memuat notifikasi…"
+    },
+    "workflows": {
+      "loading": "Memuat pembuat workflow…"
+    },
+    "plugins": {
+      "tabBuild": "Build",
+      "activeCount": "{{active}}/{{total}} aktif",
+      "searchPlaceholder": "Cari plugin…",
+      "clearSearch": "Bersihkan pencarian"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "Pembayaran selesai",
+      "titlePack": "{{credits}} kredit ekstra sudah ditambahkan.",
+      "titlePlan": "{{label}} kini milik Anda.",
+      "titleDefault": "Pairlens Intelligence kini milik Anda.",
+      "bodyPack": "Kredit ini bertumpuk di atas anggaran bulanan Anda dan kedaluwarsa dalam {{days}} hari. Kembali ke aplikasi Pairlens — saldo Anda akan diperbarui dalam beberapa detik.",
+      "bodyPlanWithCredits": "Kopilot AI terkelola, riset, dan pencarian web Anda kini terbuka dengan {{credits}} kredit setiap bulan. Kembali ke aplikasi Pairlens — langganan Anda akan terdeteksi dalam beberapa detik.",
+      "bodyPlanNoCredits": "Kopilot AI terkelola, riset, dan pencarian web Anda kini terbuka. Kembali ke aplikasi Pairlens — langganan Anda akan terdeteksi dalam beberapa detik.",
+      "openTerminal": "Buka terminal",
+      "closeTabHint": "Membayar dari aplikasi desktop? Anda bisa langsung menutup tab ini.",
+      "receiptHint": "Struk dan faktur ada di email Anda dan portal penagihan (Pengaturan → Intelligence)."
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "Workflow",
+      "tabRuns": "Eksekusi",
+      "emptyState": "Belum ada workflow",
+      "createTitle": "Workflow Baru",
+      "namePlaceholder": "Nama workflow",
+      "renameTitle": "Ganti Nama Workflow",
+      "renameButton": "Ganti Nama",
+      "deleteTitle": "Hapus Workflow",
+      "deleteDescription": "Tindakan ini tidak bisa dibatalkan. Workflow akan dihapus secara permanen.",
+      "runsEmpty": "Belum ada eksekusi workflow — jalankan satu dari panel trading",
+      "clearHistory": "Hapus riwayat",
+      "runOutcome": "{{executed}} ok",
+      "runOutcomeWithFailed": "{{executed}} ok, {{failed}} gagal"
+    },
+    "canvas": {
+      "undoTitle": "Urungkan (Cmd+Z)",
+      "redoTitle": "Ulangi (Cmd+Shift+Z)",
+      "deleteStep": "Hapus langkah",
+      "deleteConnection": "Hapus koneksi"
+    },
+    "commitBar": {
+      "cycleDetected": "Siklus terdeteksi",
+      "issue_one": "{{count}} masalah",
+      "issue_other": "{{count}} masalah",
+      "pendingChange_one": "{{count}} perubahan tertunda",
+      "pendingChange_other": "{{count}} perubahan tertunda",
+      "noChanges": "Tidak ada perubahan",
+      "review": "Tinjau",
+      "discard": "Buang",
+      "commit": "Terapkan",
+      "saveErrorTitle": "Workflow tidak bisa disimpan",
+      "saveErrorCycleBody": "Workflow ini punya dependensi melingkar. Hapus siklusnya (garis merah) dulu sebelum menyimpan.",
+      "saveSuccess": "Workflow tersimpan"
+    },
+    "diffPanel": {
+      "title": "Tinjau Perubahan ({{count}})",
+      "addedStep": "Langkah {{type}} ditambahkan",
+      "removedStep": "Langkah {{type}} dihapus",
+      "modifiedStep": "Konfigurasi {{type}} diubah",
+      "addedConnection": "Koneksi ditambahkan",
+      "removedConnection": "Koneksi dihapus",
+      "noChanges": "Tidak ada perubahan"
+    },
+    "palette": {
+      "title": "Tambah Langkah",
+      "categoryEntry": "Entry",
+      "categoryOrders": "Order",
+      "categoryExit": "Strategi Exit",
+      "categoryLogic": "Logika",
+      "categoryCustom": "Kustom",
+      "requires": "Butuh: {{requirement}}",
+      "notAvailableOn": "Tidak tersedia di {{markets}}"
+    },
+    "emptyState": {
+      "pickWorkflow": "Pilih workflow di sebelah kiri untuk membukanya di kanvas.",
+      "eyebrow": "Workflow",
+      "title": "Setiap order bisa punya rencananya sendiri",
+      "description": "Workflow menempel pada order yang Anda pasang dari panel trading. Begitu order terisi, langkah-langkah di bawahnya langsung berjalan sendiri — bracket, tangga harga, exit bertahap, pengecekan terjadwal — jadi rencananya sudah siap, bukan sesuatu yang harus Anda ingat lagi nanti.",
+      "blankLabel": "Mulai dari kanvas kosong",
+      "footnote": "Template terbuka sebagai draf: edit langkah mana pun, lalu klik Terapkan untuk menyimpannya. Kaitkan workflow tersimpan ke sebuah order dari panel trading untuk menjalankannya."
+    },
+    "steps": {
+      "sideLabel": "Sisi",
+      "sizeLabel": "Ukuran",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "Abs",
+      "side": {
+        "inherit": "Warisi",
+        "opposite": "Kebalikan",
+        "buy": "Beli",
+        "sell": "Jual"
+      },
+      "triggerWhenPrice": "Aktifkan saat harga",
+      "triggerPercentFromEntry": "% dari entry",
+      "triggerReachesPrice": "Mencapai harga",
+      "priceLevel": "Level harga",
+      "priceLabel": "Harga",
+      "stopLoss": {
+        "title": "Stop Loss",
+        "lossPercent": "Rugi %"
+      },
+      "takeProfit": {
+        "title": "Take Profit",
+        "gainPercent": "Untung %"
+      },
+      "limitOrder": {
+        "title": "Limit Order",
+        "priceModeFixed": "Tetap",
+        "priceModePercentOffset": "% Selisih",
+        "priceModeOffset": "Selisih",
+        "priceValueLabel": "Nilai Harga"
+      },
+      "marketOrder": {
+        "title": "Market Order"
+      },
+      "condition": {
+        "title": "Kondisi",
+        "typeLabel": "Tipe",
+        "typePercentChange": "% Perubahan",
+        "hint": "+N lolos saat naik ≥N%, -N saat turun ≥N%"
+      },
+      "wait": {
+        "title": "Tunggu",
+        "durationLabel": "Durasi",
+        "unitSeconds": "dtk",
+        "unitMinutes": "mnt",
+        "unitHours": "jam"
+      },
+      "split": {
+        "title": "Split Paralel",
+        "branchesLabel": "Cabang"
+      },
+      "trigger": {
+        "title": "Input Order",
+        "badge": "Entry"
+      },
+      "configPanel": {
+        "requiresNote": "Butuh: {{requirement}}. Market tanpa kapabilitas ini tidak bisa menjalankan workflow yang berisi langkah ini.",
+        "on": "Aktif",
+        "off": "Nonaktif"
+      }
+    },
+    "execution": {
+      "statusExecuted": "berhasil",
+      "statusSkipped": "dilewati",
+      "statusFailed": "gagal",
+      "summaryExecuted": "{{count}} berhasil",
+      "summarySkipped": "{{count}} dilewati",
+      "summaryFailed": "{{count}} gagal"
+    }
   }
 }

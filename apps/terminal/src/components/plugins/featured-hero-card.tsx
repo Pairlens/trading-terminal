@@ -186,7 +186,7 @@ export function SpotlightHero({
               <button
                 key={e.manifest.id}
                 type="button"
-                aria-label={`Go to slide ${i + 1}`}
+                aria-label={t('pluginStore.goToSlide', { n: i + 1 })}
                 onClick={() => goTo(i)}
                 className={cn(
                   'h-1 rounded-[2px] transition-all',
@@ -210,11 +210,16 @@ function HeroArrow({
   side: 'left' | 'right'
   onClick: () => void
 }) {
+  const { t } = useTranslation()
   const Icon = side === 'left' ? ChevronLeft : ChevronRight
   return (
     <button
       type="button"
-      aria-label={side === 'left' ? 'Previous' : 'Next'}
+      aria-label={
+        side === 'left'
+          ? t('pluginStore.previousSlide')
+          : t('pluginStore.nextSlide')
+      }
       onClick={onClick}
       className={cn(
         'absolute top-1/2 z-10 flex size-[34px] -translate-y-1/2 items-center justify-center rounded-full border border-border/60 bg-background/40 text-muted-foreground backdrop-blur-sm transition-colors hover:bg-background/70 hover:text-foreground',

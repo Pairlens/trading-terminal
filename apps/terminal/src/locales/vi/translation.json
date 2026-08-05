@@ -244,7 +244,9 @@
       "create": "Tạo tài khoản",
       "skip": "Bỏ qua — giữ mọi thứ trên thiết bị này",
       "signedIn": "Đã đăng nhập với {{email}}",
-      "label": "Tài khoản"
+      "label": "Tài khoản",
+      "otpSendFailed": "Gửi mã OTP thất bại",
+      "signInFailed": "Đăng nhập thất bại"
     },
     "summary": {
       "eyebrow": "Sẵn sàng",
@@ -376,6 +378,42 @@
         "title": "Máy của bạn, khóa của bạn",
         "description": "Bot chạy ở đây chứ không phải trên máy chủ của chúng tôi, và khóa API của bạn không bao giờ rời khỏi máy tính này. Giữ máy không ngủ và mở Pairlens; muốn bot nào dừng thì tắt nó ngay lúc đó."
       }
+    },
+    "scenes": {
+      "topMover": "Biến động mạnh nhất · {{pair}} {{delta}}",
+      "watchlistCount": "Danh sách theo dõi · {{count}}",
+      "signalBreakout": "Breakout",
+      "signalPullbackForming": "Pullback đang hình thành",
+      "onClose": "khi đóng nến",
+      "crossedAbovePrice": "vượt lên trên {{price}}",
+      "conditionCrossesAbove": "vượt lên trên",
+      "notifyMeDesktopInApp": "Thông báo cho tôi — desktop + trong ứng dụng",
+      "nodeTrigger": "Trigger",
+      "nodeSignalLabel": "Tín hiệu: {{signal}}",
+      "nodeCondition": "Điều kiện",
+      "nodeVolumeAboveAvg": "Khối lượng > trung bình",
+      "nodeAction": "Hành động",
+      "nodeAlertAndJournal": "Cảnh báo + nhật ký",
+      "runBreakoutWatcher": "Theo dõi breakout",
+      "runDcaBuyer": "Mua theo DCA",
+      "runStopLossGuard": "Canh stop-loss",
+      "ranAt": "{{time}} · đã chạy",
+      "runsLocally": "Chạy cục bộ",
+      "storedOnDevice": "Lưu trên thiết bị này — không bao giờ trên máy chủ của chúng tôi",
+      "osKeychain": "Keychain của hệ điều hành",
+      "pluginKindMarketData": "Dữ liệu thị trường",
+      "pluginKindTheme": "Giao diện",
+      "pluginKindAutomation": "Tự động hóa",
+      "sandboxedByDefault": "Chạy trong sandbox theo mặc định",
+      "signedVerified": "Đã ký và xác minh",
+      "networkAccessApproveHost": "Truy cập mạng — bạn phê duyệt từng host",
+      "copiedToWorkspaces": "Đã sao chép vào không gian làm việc của bạn",
+      "statNet": "Lợi nhuận ròng",
+      "statMaxDd": "DD tối đa",
+      "sameCodeGoesLive": "Cùng một đoạn mã chạy ở chế độ thật",
+      "runsOnYourMachine": "Chạy trên máy của bạn — hãy giữ máy thức",
+      "botMeanReversion": "Hồi quy về trung bình",
+      "chainWallet": "Ví {{chain}}"
     }
   },
   "common": {
@@ -399,7 +437,11 @@
     "updated": "Đã cập nhật {{time}}",
     "back": "Quay lại",
     "dismiss": "Bỏ qua",
-    "unknownError": "Lỗi không xác định"
+    "unknownError": "Lỗi không xác định",
+    "ordersLockedRiskLimit": "Lệnh bị khóa do vi phạm giới hạn rủi ro. Mở khóa tại Cài đặt > Quản lý rủi ro.",
+    "buyOrdersLockedRiskLimit": "Lệnh mua bị khóa do vi phạm giới hạn rủi ro. Mở khóa tại Cài đặt > Quản lý rủi ro.",
+    "positionSizeExceeded": "Lệnh bị chặn do giới hạn rủi ro: vị thế chiếm {{ratioPct}}% danh mục, vượt mức tối đa {{maxPositionSize}}% của bạn. Điều chỉnh tại Cài đặt > Quản lý rủi ro.",
+    "sessionExpired": "Phiên đăng nhập của bạn đã hết hạn — vui lòng đăng nhập lại."
   },
   "legal": {
     "terms": "Điều khoản và Điều kiện",
@@ -576,7 +618,22 @@
       "publisherKeyConsentTitle": "Tin tưởng nhà phát hành này?",
       "publisherKeyConsentBody": "Plugin ký bằng khóa này sẽ có thể cài đặt trên thiết bị này. Một nhà phát hành độc hại có thể phát hành plugin yêu cầu toàn quyền — với quyền truy cập dữ liệu của các plugin khác, thông tin đăng nhập sàn giao dịch đã lưu, và giao dịch. So sánh dấu vân tay với nhà phát hành qua một kênh bạn tin tưởng trước khi tiếp tục.",
       "publisherKeyConsentConfirm": "Tin tưởng khóa này",
-      "publisherKeyConsentCancel": "Hủy"
+      "publisherKeyConsentCancel": "Hủy",
+      "updatesTitle": "Cập nhật Plugin",
+      "updatesDescription": "Kiểm soát cách plugin được cập nhật khi có phiên bản mới hơn trên Registry.",
+      "updateModeLabel": "Chế độ cập nhật",
+      "updateModeAutoDescription": "Bản cập nhật được tải xuống và cài đặt tự động",
+      "updateModeNotifyDescription": "Bạn sẽ thấy huy hiệu khi có bản cập nhật",
+      "updateModeOffDescription": "Không tự động kiểm tra cập nhật",
+      "updateModeAuto": "Tự động cập nhật",
+      "updateModeNotify": "Chỉ thông báo",
+      "updateModeOffLabel": "Tắt",
+      "checkIntervalLabel": "Khoảng thời gian kiểm tra",
+      "checkIntervalDescription": "Tần suất kiểm tra Registry để tìm phiên bản mới hơn",
+      "intervalHourly": "Mỗi giờ",
+      "interval6Hours": "Mỗi 6 giờ",
+      "interval12Hours": "Mỗi 12 giờ",
+      "intervalDaily": "Hằng ngày"
     },
     "appearance": {
       "colorMode": "Chế độ màu",
@@ -598,7 +655,9 @@
       "balanced": "Cân bằng",
       "balancedDescription": "Ticker và sổ lệnh ở 250ms, nến ở 500ms. Cân bằng tốt giữa độ phản hồi và hiệu quả.",
       "energySaver": "Tiết kiệm năng lượng",
-      "energySaverDescription": "Ticker và sổ lệnh ở 1s, nến ở 2s. Tốt nhất cho theo dõi thụ động hoặc laptop dùng pin."
+      "energySaverDescription": "Ticker và sổ lệnh ở 1s, nến ở 2s. Tốt nhất cho theo dõi thụ động hoặc laptop dùng pin.",
+      "idleGuardTitle": "Ngắt kết nối khi không hoạt động",
+      "idleGuardDescription": "Tạm dừng luồng dữ liệu thị trường sau 1 giờ không hoạt động để tiết kiệm băng thông và giảm tiêu thụ năng lượng."
     },
     "desktop": {
       "closeBehavior": {
@@ -1022,7 +1081,9 @@
       "namePlaceholder": "Tên thư mục"
     },
     "createFirst": "Tạo không gian làm việc đầu tiên của bạn",
-    "emptyState": "Chưa có không gian làm việc nào"
+    "emptyState": "Chưa có không gian làm việc nào",
+    "descriptionLabel": "Mô tả",
+    "descriptionPlaceholder": "Mô tả ngắn (không bắt buộc)"
   },
   "session": {
     "checking": "Đang kiểm tra phiên đăng nhập…",
@@ -1080,7 +1141,9 @@
     "verifying": "Đang xác minh...",
     "verifyAndSignIn": "Xác minh và đăng nhập",
     "codeRequired": "Cần nhập mã",
-    "emailRequired": "Cần nhập email"
+    "emailRequired": "Cần nhập email",
+    "dialogDescription": "Đăng nhập để sử dụng tính năng này",
+    "emailPlaceholder": "you@example.com"
   },
   "idle": {
     "title": "Phiên đã tạm dừng",
@@ -1100,7 +1163,12 @@
     "connecting": "Đang kết nối",
     "stalled": "Đang kết nối lại",
     "offline": "Ngoại tuyến",
-    "error": "Lỗi"
+    "error": "Lỗi",
+    "pluginUpdatesReady_one": "{{count}} bản cập nhật plugin đã sẵn sàng để cài đặt",
+    "pluginUpdatesReady_other": "{{count}} bản cập nhật plugin đã sẵn sàng để cài đặt",
+    "pluginUpdatesDescription": "Các bản cập nhật sẽ được áp dụng sau khi khởi động lại terminal.",
+    "restartNow": "Khởi động lại ngay",
+    "later": "Để sau"
   },
   "copilot": {
     "aiLens": "AI Lens",
@@ -1119,7 +1187,47 @@
     },
     "marketRegime": "Chế độ thị trường",
     "trending": "Xu hướng",
-    "choppy": "Giằng co"
+    "choppy": "Giằng co",
+    "orderTypeMarket": "Market",
+    "orderTypeLimit": "Limit",
+    "fieldSize": "Khối lượng",
+    "orderPlacedPaper": "Đã đặt lệnh giả lập",
+    "orderPlaced": "Đã đặt lệnh",
+    "autoApprovedNote": "Đã tự động duyệt ({{mode}} · đang bật không hỏi lại)",
+    "turnOff": "Tắt",
+    "autoApproving": "Đang tự động duyệt lệnh {{mode}}…",
+    "liveOrderWarning": "Lệnh thật — tiền thật, được áp dụng theo giới hạn rủi ro của bạn.",
+    "dontAskAgainPaper": "Không hỏi lại cho giao dịch giả lập",
+    "dontAskAgainLive": "Không hỏi lại cho giao dịch thật trên {{market}}",
+    "placing": "Đang đặt lệnh…",
+    "confirmMode": "Xác nhận {{mode}}",
+    "dismissed": "Đã bỏ qua",
+    "cancelOrderPrompt": "Hủy lệnh {{orderId}} trên {{pair}} · {{market}}?",
+    "cancelled": "Đã hủy",
+    "cancelFailed": "Hủy thất bại",
+    "cancelling": "Đang hủy…",
+    "confirmCancel": "Xác nhận hủy",
+    "keep": "Giữ lại",
+    "tradingUnavailable": "Giao dịch hiện không khả dụng.",
+    "noCredentialsForMarket": "Chưa có thông tin xác thực nào được kết nối cho {{market}}. Thêm API key trong Accounts để giao dịch thật.",
+    "watchingPair": "Đang theo dõi {{pair}} · {{timeframe}}",
+    "genericChatError": "Copilot gặp lỗi — hãy thử gửi lại.",
+    "quickActionHowIsDoing": "{{symbol}} đang thế nào?",
+    "quickActionSuggestedIndicators": "Chỉ báo được đề xuất",
+    "quickActionAnySignals": "Có tín hiệu nào không?",
+    "scheduledCheckPrefix": "[Kiểm tra theo lịch — được đặt cách đây {{minutes}} phút]",
+    "authRequiredTitle": "Gặp gỡ copilot AI của bạn",
+    "authRequiredDescription": "Phân tích theo ngữ cảnh cho bất kỳ cặp nào — nó đọc biểu đồ, kiểm tra giới hạn rủi ro của bạn và trả lời kèm lý lẽ mà bạn có thể chất vấn. Đăng nhập, sau đó đăng ký Pairlens Intelligence hoặc dùng khóa AI của riêng bạn.",
+    "upgradeRequiredDescription": "Copilot AI của bạn đọc biểu đồ, kiểm tra giới hạn rủi ro của bạn và trả lời kèm lý lẽ mà bạn có thể chất vấn. Đăng ký Pairlens Intelligence — hoặc dùng khóa AI của riêng bạn qua Plugins, miễn phí.",
+    "aiLensUnavailableTitle": "AI Lens không khả dụng",
+    "aiLensUnavailableDescription": "Bật một plugin AI trên trang Plugins để nhận phân tích thị trường theo thời gian thực và hỗ trợ giao dịch.",
+    "goToPlugins": "Đến trang Plugins",
+    "rerunAnalysis": "Chạy lại phân tích",
+    "analyzePair": "Phân tích {{pair}}",
+    "startConversation": "Bắt đầu trò chuyện",
+    "emptyStateHint": "Hỏi về điều kiện thị trường, kiểm tra thiết lập của bạn, hoặc yêu cầu đánh giá rủi ro — AI có đầy đủ ngữ cảnh của cặp này.",
+    "contextAware": "Hiểu ngữ cảnh",
+    "toolFailed": "Công cụ thất bại"
   },
   "chart": {
     "contextMenu": {
@@ -1858,7 +1966,9 @@
     "keepOrder": "Giữ lệnh",
     "cancelOrder": "Hủy lệnh",
     "sideBuy": "mua",
-    "sideSell": "bán"
+    "sideSell": "bán",
+    "buy": "Mua",
+    "sell": "Bán"
   },
   "pairInfo": {
     "title": "Thông tin cặp giao dịch",
@@ -1901,13 +2011,38 @@
     "emptyTitle": "Nhập URL ở trên để nhúng một trang web",
     "embedWarning": "Một số trang web chặn nhúng trong iframe. Nếu trang không tải được, hãy thử mở trong trình duyệt của bạn thay vào đó.",
     "blockedTitle": "Trang này không thể nhúng được",
-    "blockedDescription": "Trang web này chặn việc hiển thị bên trong các trang khác. Bạn có thể mở nó trong một tab trình duyệt riêng thay vào đó."
+    "blockedDescription": "Trang web này chặn việc hiển thị bên trong các trang khác. Bạn có thể mở nó trong một tab trình duyệt riêng thay vào đó.",
+    "forward": "Tiến",
+    "failedToLoad": "Tải không thành công",
+    "viewPaused": "Đã tạm dừng chế độ xem web"
   },
   "intelligence": {
     "awaitingSignal": "Không phát hiện tín hiệu nào",
     "regime": "Chế độ",
     "trending": "Xu hướng",
-    "choppy": "Giằng co"
+    "choppy": "Giằng co",
+    "upsell": {
+      "priceMonthly": "${{price}}/tháng",
+      "taxNotice": "Giá chưa bao gồm thuế — thuế được tính khi thanh toán.",
+      "defaultTitle": "Mở khóa Pairlens Intelligence",
+      "defaultDescription": "Trợ lý AI và nghiên cứu web được lưu trữ sẵn, không cần khóa API. Mỗi gói đi kèm ngân sách sử dụng hằng tháng dùng chung cho trò chuyện, nghiên cứu và tìm kiếm web.",
+      "byokNote": "Muốn dùng nhà cung cấp riêng? Kết nối khóa Anthropic, OpenAI, Groq hoặc OpenRouter tại <plugins>Plugin</plugins> — AI dùng khóa riêng luôn miễn phí.",
+      "checkoutOpenedTitle": "Đã mở trang thanh toán trong trình duyệt",
+      "checkoutActivates": "Gói đăng ký của bạn sẽ kích hoạt tại đây ngay khi thanh toán hoàn tất.",
+      "checkoutStartError": "Không thể bắt đầu thanh toán — vui lòng thử lại.",
+      "subscriptionRequiredTitle": "Cần đăng ký Pairlens Intelligence",
+      "subscriptionRequiredBody": "AI lưu trữ sẵn hoạt động theo gói Intelligence. Đăng ký bên dưới, hoặc kết nối khóa nhà cung cấp AI của riêng bạn trong Plugin.",
+      "budgetUsedUpTitle": "Đã dùng hết ngân sách hằng tháng",
+      "budgetUsedBody": "Bạn đã dùng hết credit Intelligence của chu kỳ này.",
+      "budgetResetsOn": "Ngân sách của bạn sẽ được đặt lại vào {{date}}.",
+      "topUpHint": "Nạp thêm bằng gói credit để tiếp tục — credit của gói hết hạn sau 30 ngày kể từ khi mua.",
+      "upgradeToMaxHint": "Nâng cấp lên {{label}} để nhận {{credits}} credit mỗi tháng.",
+      "manageSubscription": "Quản lý gói đăng ký",
+      "portalError": "Không thể mở cổng thanh toán.",
+      "creditsLandDescription": "Credit bổ sung sẽ vào số dư của bạn ngay khi thanh toán hoàn tất.",
+      "checkoutError": "Không thể bắt đầu thanh toán.",
+      "upgradeToMax": "Nâng cấp lên Max"
+    }
   },
   "panes": {
     "markets": "Thị trường",
@@ -2003,6 +2138,52 @@
       "title": "{{pair}} không có trên {{venue}}",
       "titleAnyVenue": "{{pair}} không khả dụng",
       "description": "Connector này không trả về dữ liệu thị trường cho cặp này. Hãy thử connector khác có niêm yết cặp đó."
+    },
+    "panePicker": {
+      "bindToVariable": "Gắn với biến",
+      "boundTo": "Đã gắn với <b>{{variable}}</b>",
+      "market": "Thị trường",
+      "setPair": "Đặt cặp giao dịch cho {{variable}}",
+      "selectPair": "Chọn cặp giao dịch",
+      "bindingHint": "Chọn một cặp giao dịch sẽ cập nhật tất cả panel được gắn với {{variable}}",
+      "unbindFromVariable": "Bỏ gắn khỏi biến",
+      "settingForAllPanes": "Đang đặt <b>{{variable}}</b> cho tất cả panel đã gắn"
+    },
+    "pane": {
+      "close": "Đóng {{pane}}",
+      "popOutToColumn": "Tách sang cột mới",
+      "bindPairToVariable": "Gắn cặp giao dịch với biến",
+      "bindWalletToVariable": "Gắn ví với biến",
+      "bindTimeframeToVariable": "Gắn khung thời gian với biến",
+      "clearPairOverride": "Xóa ghi đè cặp giao dịch",
+      "closePane": "Đóng panel",
+      "unbind": "Bỏ gắn",
+      "closeTab": "Đóng tab"
+    },
+    "dnd": {
+      "pickedUp": "Đã nhấc {{pane}}. Dùng phím mũi tên để di chuyển, phím cách để thả, phím escape để hủy.",
+      "genericPane": "panel",
+      "noDropTarget": "Không có vị trí để thả.",
+      "dropStackTab": "Thả vào đây để xếp thành tab.",
+      "dropSplitAbove": "Thả để chia phía trên.",
+      "dropSplitBelow": "Thả để chia phía dưới.",
+      "dropNewColumn": "Thả để tạo cột mới.",
+      "paneMoved": "Đã di chuyển panel.",
+      "dragCancelled": "Đã hủy kéo, panel được trả về vị trí cũ.",
+      "dragCancelledFull": "Đã hủy kéo, panel đã trở về vị trí ban đầu."
+    },
+    "missingPane": {
+      "requiresPlugin": "Panel này cần plugin \"{{pluginId}}\"",
+      "notAvailable": "Panel \"{{type}}\" không khả dụng",
+      "description": "Plugin có thể đã bị gỡ hoặc vô hiệu hóa.",
+      "openPluginStore": "Mở Plugin Store"
+    },
+    "dropZone": {
+      "emptyHint": "Kéo một panel vào đây",
+      "addAsTab": "Thêm dưới dạng tab",
+      "splitTop": "Chia phía trên",
+      "splitBottom": "Chia phía dưới",
+      "newColumn": "Cột mới"
     }
   },
   "watchlist": {
@@ -2131,7 +2312,118 @@
       "reloadNote": "Chấp thuận sẽ tải lại terminal để áp dụng thay đổi.",
       "deny": "Không cho phép",
       "allow": "Cho phép & tải lại"
-    }
+    },
+    "toggleFailedEnable": "Không thể bật {{name}}",
+    "toggleFailedDisable": "Không thể tắt {{name}}",
+    "updateStagedToast": "Đã chuẩn bị bản cập nhật — khởi động lại để áp dụng",
+    "restartNow": "Khởi động lại ngay",
+    "updateStageFailedToast": "Không thể chuẩn bị bản cập nhật: {{error}}",
+    "resetStagedToast": "Đã đặt lại về mặc định — khởi động lại để hoàn tất",
+    "networkGrantedToast": "Đã cấp quyền truy cập mạng cho \"{{name}}\" — đang tải lại…",
+    "networkDeniedToast": "\"{{name}}\" đã được cài đặt mà không có quyền truy cập mạng — có thể không hoạt động cho đến khi bạn cho phép.",
+    "installCancelledNoTrust": "Đã hủy cài đặt — chưa cấp toàn quyền",
+    "installedVersionToast": "Đã cài đặt \"{{name}}\" v{{version}}",
+    "installFailedToast": "Không thể cài đặt plugin: {{error}}",
+    "localFilesNotFound": "Không tìm thấy tệp plugin cục bộ",
+    "pluginCodeNotFound": "Không tìm thấy mã plugin — hãy cài đặt lại",
+    "fullTrustGrantedNameToast": "Đã cấp toàn quyền cho \"{{name}}\"",
+    "loadPluginFailedToast": "Không thể tải plugin: {{error}}",
+    "importFailedToast": "Không thể nhập plugin: {{error}}",
+    "fieldRequired": "{{label}} là bắt buộc",
+    "configSaved": "Đã lưu cấu hình",
+    "configurationFailed": "Cấu hình thất bại",
+    "needsFullTrustToRun": "Cần toàn quyền để chạy",
+    "pendingTrustDescription": "Đóng góp giao diện nên không thể chạy trong sandbox — hãy cấp toàn quyền để bật, hoặc gỡ cài đặt.",
+    "remove": "Gỡ bỏ",
+    "groupCore": "Cốt lõi",
+    "groupProvidersExtensions": "Nhà cung cấp & Tiện ích mở rộng",
+    "groupThemes": "Giao diện",
+    "removePluginTitle": "Gỡ bỏ Plugin",
+    "removePluginDescription": "Thao tác này sẽ tắt và gỡ bỏ plugin. Mọi panel mà plugin này đóng góp sẽ hiển thị vùng giữ chỗ để khôi phục. Bạn có thể cài đặt lại từ Plugin Store bất cứ lúc nào.",
+    "resetDefaultsTitle": "Đặt lại về Mặc định",
+    "resetDefaultsDescription": "Thao tác này sẽ gỡ bỏ tất cả plugin không đi kèm sẵn, xóa các bản cập nhật đã chuẩn bị và có sẵn, rồi tải lại terminal. Các plugin đi kèm sẵn sẽ vẫn được cài đặt.",
+    "reset": "Đặt lại",
+    "installFromUrlDialogTitle": "Cài đặt Plugin từ URL",
+    "installFromUrlDialogDescription": "Nhập URL của module plugin (.js) để cài đặt.",
+    "unverifiedPluginTitle": "Plugin Chưa được Xác minh",
+    "unverifiedPluginBody": "Các plugin cài đặt thủ công chưa được xem xét về bảo mật. Chỉ cài đặt plugin từ những nguồn bạn tin tưởng.",
+    "installAnyway": "Vẫn cài đặt",
+    "sourceBuiltIn": "Tích hợp sẵn",
+    "sourceRegistry": "Registry",
+    "sourceUrl": "URL",
+    "sourceLocal": "Cục bộ",
+    "fullTrustGrantedRestartToast": "Đã cấp toàn quyền — khởi động lại để chạy plugin này trong ứng dụng chính",
+    "sandboxedRestartToast": "Plugin sẽ chạy trong sandbox — khởi động lại để áp dụng",
+    "requiresFullTrustTitle": "Plugin này đóng góp giao diện và phải chạy ở chế độ toàn quyền.",
+    "trustBadgeFullRequired": "Toàn quyền (bắt buộc)",
+    "trustBadgeFull": "Toàn quyền",
+    "trustBadgeSandboxed": "Trong sandbox",
+    "panelCount_one": "{{count}} panel",
+    "panelCount_other": "{{count}} panel",
+    "update": "Cập nhật",
+    "revokeFullTrustAria": "Thu hồi toàn quyền của {{name}}",
+    "grantFullTrustAria": "Cấp toàn quyền cho {{name}}",
+    "fullTrustActiveTitle": "Toàn quyền — chạy trong ứng dụng chính. Nhấp để chuyển sang sandbox.",
+    "sandboxedTitle": "Sandbox — worker cách ly, mạng giới hạn ở các host đã khai báo. Nhấp để cấp toàn quyền.",
+    "configureAria": "Cấu hình {{name}}",
+    "toggleAria": "Bật/tắt {{name}}",
+    "capabilityProvidersTitle": "Nhà cung cấp Tính năng",
+    "capabilityProvidersDescription": "Mỗi tính năng của terminal yêu cầu một khả năng, và plugin đang bật có mức ưu tiên cao nhất sẽ tự động cung cấp khả năng đó. Hãy chọn một plugin cụ thể để ghi đè lựa chọn tự động.",
+    "resetAllOverrides": "Đặt lại tất cả ghi đè",
+    "noProviderInstalled": "Không có plugin nào đã cài đặt cung cấp tính năng này",
+    "browseStore": "Duyệt Store",
+    "installedNeedsKeySingle": "Đã cài đặt — cần API key",
+    "installedNeedsKeyPlural": "Đã cài đặt {{count}} — tất cả đều cần API key",
+    "installedDisabledSingle": "Đã cài 1 plugin, nhưng đang tắt",
+    "installedDisabledPlural": "Đã cài {{count}} plugin, tất cả đều đang tắt",
+    "manage": "Quản lý",
+    "pinnedActiveNote": "Đã ghim — ghi đè thứ tự tự động",
+    "pinnedInactiveNote": "Plugin đã ghim đang tắt — áp dụng thứ tự tự động",
+    "autoOrderLabel": "Thứ tự tự động: {{chain}}",
+    "chainMore_one": "{{chain}} +{{count}} nữa",
+    "chainMore_other": "{{chain}} +{{count}} nữa",
+    "resolvedPerMarket": "Xác định theo từng thị trường",
+    "marketOverrides": "Ghi đè theo thị trường",
+    "pinnedCountBadge_one": "Đã ghim {{count}}",
+    "pinnedCountBadge_other": "Đã ghim {{count}}",
+    "automatic": "Tự động",
+    "disabledHint": "đã tắt",
+    "notInstalled": "{{id}} (chưa cài đặt)",
+    "saveOverrideFailed": "Không thể lưu ghi đè nhà cung cấp",
+    "removeOverrideFailed": "Không thể xóa ghi đè nhà cung cấp",
+    "resetOverridesFailed": "Không thể đặt lại các ghi đè",
+    "marketConnectorsTitle": "Bộ kết nối Thị trường",
+    "marketConnectorsDescription": "Bộ kết nối thị trường truyền trực tiếp dữ liệu giá, sổ lệnh, và cho phép giao dịch trực tiếp qua API của sàn. Hãy bật các sàn bạn muốn sử dụng.",
+    "activeCountBadge": "{{active}}/{{total}} đang bật",
+    "connected": "Đã kết nối",
+    "disabledStatus": "Đã tắt",
+    "readAndTrade": "Đọc + Giao dịch",
+    "readOnly": "Chỉ đọc",
+    "noConnectorsInstalled": "Không có plugin bộ kết nối thị trường nào được cài đặt.",
+    "moreConnectors": "Thêm Bộ kết nối",
+    "fromPluginStore": "từ Plugin Store",
+    "versionAuthor": "v{{version}} · {{author}}",
+    "learnMore": "Tìm hiểu thêm",
+    "enabledToast": "Đã bật {{name}}",
+    "disabledToast": "Đã tắt {{name}}",
+    "enableFailedShort": "Không thể bật",
+    "disableFailedShort": "Không thể tắt",
+    "domain": {
+      "marketData": "Dữ liệu Thị trường",
+      "trading": "Giao dịch",
+      "wallet": "Ví",
+      "signals": "Tín hiệu",
+      "ai": "AI"
+    },
+    "byAuthor": "bởi {{author}}",
+    "installsCount_one": "{{formattedCount}} lượt cài đặt",
+    "installsCount_other": "{{formattedCount}} lượt cài đặt",
+    "panelsCount": "Panel ({{count}})",
+    "inactive": "Không hoạt động",
+    "previousSlide": "Trước",
+    "nextSlide": "Tiếp theo",
+    "goToSlide": "Đi tới trang {{n}}",
+    "copyCommand": "Sao chép lệnh"
   },
   "search": {
     "title": "Tìm cặp giao dịch",
@@ -2194,7 +2486,11 @@
       "selectAccount": "Chọn tài khoản",
       "groupWallet": "Ví tiền mã hóa",
       "groupBroker": "Tài khoản môi giới",
-      "groupExchange": "Tài khoản sàn"
+      "groupExchange": "Tài khoản sàn",
+      "selectWalletTopBar": "Chọn ví ở thanh trên cùng",
+      "connectChainWallet": "Kết nối ví {{chain}}",
+      "connectExchangeAccount": "Kết nối tài khoản {{exchange}}",
+      "selectAccountTopBar": "Chọn tài khoản ở thanh trên cùng"
     },
     "trade": {
       "limitBuy": "Mua giới hạn",
@@ -2221,7 +2517,16 @@
       "buyAsset": "Mua {{asset}}",
       "sellAsset": "Bán {{asset}}",
       "amount": "Số lượng",
-      "price": "Giá"
+      "price": "Giá",
+      "presetsTitle": "Mức đặt trước số lượng ({{quote}})",
+      "buy": "Mua",
+      "sell": "Bán",
+      "orderTypeMarket": "Thị trường",
+      "orderTypeLimit": "Giới hạn",
+      "workflow": "Quy trình",
+      "notSupportedOn": "Không được hỗ trợ trên {{venue}}",
+      "available": "Khả dụng: {{amount}}",
+      "slippage": "Trượt giá"
     },
     "status": {
       "connecting": "Đang kết nối…",
@@ -2341,7 +2646,42 @@
     "importKey": "Nhập private key",
     "affiliateDisclosure": "Một số liên kết đăng ký có thể mang lại hoa hồng cho Pairlens, không phát sinh thêm chi phí cho bạn.",
     "vaultSealedBody": "Kho thông tin đăng nhập của bạn đang bị khóa. Các tài khoản của bạn vẫn còn đây — hãy mở khóa để xem và sử dụng.",
-    "credentialsUnreadable": "Không đọc được các khoá đã lưu trên thiết bị này. Không mất gì cả — thử lại hoặc khởi động lại Pairlens."
+    "credentialsUnreadable": "Không đọc được các khoá đã lưu trên thiết bị này. Không mất gì cả — thử lại hoặc khởi động lại Pairlens.",
+    "addWalletDialogTitle": "Thêm ví crypto",
+    "addWalletDialogDescription": "Nhập private key của ví để giao dịch on-chain",
+    "blockchainLabel": "Blockchain",
+    "walletLabelField": "Nhãn",
+    "walletLabelPlaceholder": "Ví của tôi",
+    "privateKeyField": "Private Key",
+    "saveWallet": "Lưu ví",
+    "keep": "Giữ lại",
+    "remove": "Xóa",
+    "disconnect": "Ngắt kết nối",
+    "localBadge": "Cục bộ",
+    "unknownDate": "Không rõ",
+    "keyExpiredWarning": "Có thể đã hết hạn — không hoạt động {{daysInactive}} ngày (giới hạn {{limitDays}} ngày). Hãy tạo lại API key trên sàn.",
+    "keyInactiveWarning": "Không hoạt động {{daysInactive}}/{{limitDays}} ngày. Key sẽ hết hạn sau {{limitDays}} ngày không sử dụng.",
+    "exchangeAccountAriaLabel": "Tài khoản sàn {{label}}",
+    "cryptoWalletAriaLabel": "Ví crypto {{label}}",
+    "portfolioTotal": "Tổng",
+    "assetAllocationLabel": "Phân bổ tài sản",
+    "tableAsset": "Tài sản",
+    "tableAmount": "Số lượng",
+    "tableValue": "Giá trị",
+    "tableShare": "Tỷ trọng",
+    "assetCount_one": "{{count}} tài sản",
+    "assetCount_other": "{{count}} tài sản",
+    "moreAssets_one": "+{{count}} tài sản khác",
+    "moreAssets_other": "+{{count}} tài sản khác",
+    "walletSavedFeedback": "Đã lưu ví crypto.",
+    "walletRemovedFeedback": "Đã xóa ví crypto.",
+    "accountRemovedFeedback": "Đã xóa tài khoản.",
+    "walletSaveFailed": "Không thể lưu ví.",
+    "walletRemoveFailed": "Không thể xóa ví.",
+    "accountConnectFailed": "Không thể kết nối tài khoản.",
+    "accountRemoveFailed": "Không thể xóa tài khoản.",
+    "fieldRequired": "{{field}} là bắt buộc",
+    "accountConnectedFeedback": "Đã kết nối tài khoản {{label}} {{mode}}."
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2449,12 +2789,136 @@
     "paneCount_other": "{{count}} panel",
     "panes": "Panel",
     "showAll": "Hiển thị tất cả",
-    "spotlight": "Nổi bật"
+    "spotlight": "Nổi bật",
+    "previousSlide": "Trước",
+    "nextSlide": "Tiếp theo",
+    "goToSlide": "Đi đến slide {{number}}"
   },
   "notifications": {
     "flows": "Luồng",
     "newFlow": "Luồng mới",
-    "noFlows": "Chưa có luồng thông báo nào"
+    "noFlows": "Chưa có luồng thông báo nào",
+    "builder": {
+      "sidebar": {
+        "tabRules": "Quy tắc",
+        "tabActivity": "Hoạt động",
+        "noRules": "Chưa có quy tắc thông báo nào",
+        "newRuleTitle": "Quy tắc thông báo mới",
+        "rulePlaceholder": "Tên quy tắc",
+        "renameRuleTitle": "Đổi tên quy tắc",
+        "rename": "Đổi tên",
+        "deleteRuleTitle": "Xóa quy tắc",
+        "deleteRuleWarning": "Không thể hoàn tác hành động này. Quy tắc thông báo và các liên kết cặp giao dịch của nó sẽ bị xóa vĩnh viễn.",
+        "pairsLabel": "Cặp giao dịch",
+        "sendTest": "Gửi thử",
+        "testing": "Đang thử…",
+        "pairAlreadyBound": "Cặp giao dịch này đã được liên kết với quy tắc",
+        "noBindings": "Chưa liên kết với cặp giao dịch nào — quy tắc sẽ không kích hoạt cho đến khi bạn thêm một cặp.",
+        "testSent": "Đã gửi thông báo thử nghiệm",
+        "testFailed": "Không gửi được thử nghiệm",
+        "noActivity": "Chưa có thông báo nào được kích hoạt",
+        "clearActivity": "Xóa hoạt động",
+        "channelFailed": "{{channel}} thất bại"
+      },
+      "commitBar": {
+        "cycleDetected": "Đã phát hiện vòng lặp",
+        "issueCount_one": "{{count}} vấn đề",
+        "issueCount_other": "{{count}} vấn đề",
+        "moreIssues": "…và {{count}} vấn đề khác",
+        "pendingChangeCount_one": "{{count}} thay đổi đang chờ",
+        "pendingChangeCount_other": "{{count}} thay đổi đang chờ",
+        "noChanges": "Không có thay đổi",
+        "review": "Xem lại",
+        "discard": "Hủy bỏ",
+        "commit": "Lưu",
+        "cannotSaveTitle": "Không thể lưu quy tắc",
+        "cycleError": "Quy tắc này chứa một phụ thuộc vòng tròn. Hãy loại bỏ vòng lặp (các cạnh màu đỏ) trước khi lưu.",
+        "saved": "Đã lưu quy tắc"
+      },
+      "diff": {
+        "title": "Xem lại thay đổi ({{count}})",
+        "addedStep": "Đã thêm bước {{type}}",
+        "removedStep": "Đã xóa bước {{type}}",
+        "modifiedStep": "Đã sửa cấu hình {{type}}",
+        "addedConnection": "Đã thêm kết nối",
+        "removedConnection": "Đã xóa kết nối"
+      },
+      "canvas": {
+        "undoTitle": "Hoàn tác (Cmd+Z)",
+        "redoTitle": "Làm lại (Cmd+Shift+Z)",
+        "deleteStep": "Xóa bước",
+        "deleteConnection": "Xóa kết nối",
+        "cycleLabel": "vòng lặp"
+      },
+      "palette": {
+        "addStep": "Thêm bước",
+        "categoryEvents": "Sự kiện",
+        "categoryConditions": "Điều kiện",
+        "categoryChannels": "Kênh"
+      },
+      "category": {
+        "event": "Sự kiện",
+        "condition": "Điều kiện",
+        "channel": "Kênh"
+      },
+      "emptyState": {
+        "pickRuleHint": "Chọn một quy tắc bên trái để mở nó trên khung vẽ.",
+        "untitledRule": "Quy tắc chưa đặt tên",
+        "eyebrow": "Thông báo",
+        "title": "Theo dõi thị trường để bạn không phải làm điều đó",
+        "description": "Một quy tắc là một luồng nhỏ: điều gì đó xảy ra — giá vượt qua một mức, một nến đóng lại, một lệnh được khớp, một cảnh báo chỉ báo được kích hoạt — nó đi qua các điều kiện bạn thêm vào, rồi đến với bạn dưới dạng toast, thông báo hệ thống, hoặc webhook.",
+        "startBlank": "Bắt đầu từ khung vẽ trống",
+        "startFromTemplate": "Bắt đầu từ mẫu",
+        "footnote": "Các mẫu mở dưới dạng bản nháp liên kết với {{pair}} trên {{market}} — hãy chỉnh sửa các bước, đổi cặp giao dịch trong danh sách quy tắc, rồi Lưu. Quy tắc chỉ hoạt động khi Pairlens đang chạy."
+      },
+      "direction": "Hướng",
+      "above": "Trên",
+      "below": "Dưới",
+      "any": "Bất kỳ",
+      "buy": "Mua",
+      "sell": "Bán",
+      "up": "Tăng",
+      "down": "Giảm",
+      "either": "Cả hai",
+      "toggleOn": "Bật",
+      "toggleOff": "Tắt",
+      "steps": {
+        "candleClose": {
+          "title": "Nến đóng"
+        },
+        "localToast": {
+          "title": "Thông báo Toast",
+          "description": "Hiển thị toast trong ứng dụng khi kích hoạt"
+        },
+        "orderExecuted": {
+          "title": "Lệnh khớp"
+        },
+        "osNotification": {
+          "title": "Thông báo hệ thống",
+          "sound": "Âm thanh"
+        },
+        "percentChange": {
+          "title": "Thay đổi phần trăm",
+          "percent": "Phần trăm"
+        },
+        "priceAlert": {
+          "title": "Cảnh báo giá"
+        },
+        "priceCondition": {
+          "title": "Điều kiện giá"
+        },
+        "signalGenerated": {
+          "title": "Tín hiệu được tạo",
+          "signalType": "Loại tín hiệu",
+          "anyTypePlaceholder": "Bất kỳ loại nào"
+        },
+        "timeWindow": {
+          "title": "Khung thời gian",
+          "start": "Bắt đầu (UTC)",
+          "end": "Kết thúc (UTC)"
+        }
+      }
+    }
   },
   "updater": {
     "available": "Có bản cập nhật",
@@ -2540,7 +3004,8 @@
     "failed": "Không thể tải bản đồ nhiệt",
     "noData": "Không có dữ liệu khả dụng",
     "tryLater": "Thử lại sau",
-    "willAppear": "Dữ liệu bản đồ nhiệt sẽ hiển thị ở đây"
+    "willAppear": "Dữ liệu bản đồ nhiệt sẽ hiển thị ở đây",
+    "volume": "Khối lượng"
   },
   "news": {
     "title": "Tin tức",
@@ -2637,5 +3102,228 @@
   "fullscreen": {
     "enter": "Toàn màn hình",
     "exit": "Thoát toàn màn hình"
+  },
+  "research": {
+    "phaseSearching": "Đang tìm kiếm trên web...",
+    "phaseReading": "Đang đọc nguồn...",
+    "phaseAnalyzing": "Đang phân tích dữ liệu thị trường...",
+    "phaseWriting": "Đang viết báo cáo...",
+    "authRequiredTitle": "Bàn nghiên cứu chỉ cách một lần đăng nhập",
+    "authRequiredDescription": "Báo cáo nghiên cứu có cấu trúc cho bất kỳ cặp nào, dựa trên nguồn web trực tiếp. Đăng nhập, sau đó đăng ký Pairlens Intelligence hoặc dùng khóa AI của riêng bạn.",
+    "upgradeDescription": "Báo cáo nghiên cứu có cấu trúc cho bất kỳ cặp nào, dựa trên nguồn web trực tiếp. Đăng ký Pairlens Intelligence — hoặc dùng khóa AI và tìm kiếm của riêng bạn qua Plugin, miễn phí.",
+    "unavailableTitle": "Không có nghiên cứu",
+    "unavailableDescription": "Bật một plugin AI ở trang Plugin để tạo báo cáo nghiên cứu cho cặp này.",
+    "goToPlugins": "Đến trang Plugin",
+    "navigateToPair": "Chuyển đến một cặp để xem nghiên cứu.",
+    "researchingSymbol": "Đang nghiên cứu {{symbol}}",
+    "generatingReport": "Đang tạo báo cáo...",
+    "cachedGenerated": "Từ bộ nhớ đệm — tạo lúc {{time}}",
+    "freshGenerated": "Mới — vừa tạo xong",
+    "refresh": "Làm mới",
+    "sourcesCount": "Nguồn ({{count}})",
+    "reportTitle": "Báo cáo nghiên cứu",
+    "fullscreenDescription": "Báo cáo nghiên cứu ở chế độ toàn màn hình. Nhấn Escape để thoát.",
+    "sections": "Mục",
+    "sparklineAriaLabel": "Biểu đồ mini giá theo ngày",
+    "errorTitle": "Không có nghiên cứu"
+  },
+  "capabilityGate": {
+    "authTitle": "Chỉ cần một lần đăng nhập miễn phí",
+    "authDescription": "Tính năng này hoạt động thông qua tài khoản Pairlens của bạn.",
+    "signInFree": "Đăng nhập miễn phí",
+    "authNote": "Chỉ mất 30 giây. Khóa sàn giao dịch của bạn không bao giờ rời khỏi thiết bị này.",
+    "upgradeRequired": "Cần nâng cấp",
+    "upgradeDescriptionLevel": "Tính năng này yêu cầu cấp độ truy cập <b>{{level}}</b>.",
+    "upgradeDescriptionGeneric": "Tính năng này yêu cầu cấp độ truy cập cao hơn.",
+    "managePlugin": "Quản lý plugin"
+  },
+  "geoRestriction": {
+    "title": "{{exchange}} không khả dụng ở đây",
+    "description": "{{exchange}} không cung cấp dữ liệu thị trường cho khu vực của bạn, vì vậy trình kết nối này không thể tải dữ liệu. Hãy chuyển sang trình kết nối khác, hoặc cập nhật khu vực của bạn nếu đang đặt sai.",
+    "yourRegion": "Khu vực của bạn:",
+    "notSet": "Chưa đặt",
+    "changeRegion": "Đổi khu vực",
+    "switchTo": "Chuyển sang {{venue}}"
+  },
+  "pairPicker": {
+    "noPairsFound": "Không tìm thấy cặp nào.",
+    "startTyping": "Bắt đầu nhập để tìm cặp giao dịch."
+  },
+  "routes": {
+    "goHome": "Về trang chủ",
+    "noConnectors": {
+      "title": "Không có trình kết nối thị trường nào khả dụng",
+      "description": "Cần có plugin trình kết nối thị trường để truyền dữ liệu trực tiếp. Hãy bật hoặc cài đặt một trình kết nối để bắt đầu.",
+      "manage": "Quản lý trình kết nối thị trường"
+    },
+    "workspace": {
+      "notFound": "Không tìm thấy không gian làm việc",
+      "edit": "Chỉnh sửa"
+    },
+    "notFound": {
+      "title": "Không tìm thấy trang"
+    },
+    "discovery": {
+      "noInstrumentCatalog": "Không có danh mục công cụ",
+      "noInstrumentCatalogDescription": "Không có plugin nào đang hoạt động để cung cấp tính năng khám phá công cụ giao dịch. Hãy bật một plugin để duyệt các cặp giao dịch khả dụng.",
+      "goToPlugins": "Đến Plugin"
+    },
+    "notifications": {
+      "loading": "Đang tải thông báo…"
+    },
+    "workflows": {
+      "loading": "Đang tải trình tạo quy trình…"
+    },
+    "plugins": {
+      "tabBuild": "Build",
+      "activeCount": "{{active}}/{{total}} hoạt động",
+      "searchPlaceholder": "Tìm plugin…",
+      "clearSearch": "Xóa tìm kiếm"
+    },
+    "checkoutSuccess": {
+      "paymentComplete": "Thanh toán hoàn tất",
+      "titlePack": "Đã nạp {{credits}} tín dụng bổ sung.",
+      "titlePlan": "{{label}} giờ đã là của bạn.",
+      "titleDefault": "Pairlens Intelligence giờ đã là của bạn.",
+      "bodyPack": "Số tín dụng này cộng thêm vào ngân sách hằng tháng của bạn và hết hạn sau {{days}} ngày. Quay lại ứng dụng Pairlens — số dư của bạn sẽ cập nhật trong vài giây.",
+      "bodyPlanWithCredits": "Trợ lý AI được lưu trữ, nghiên cứu và tìm kiếm web của bạn đã được mở khóa với {{credits}} tín dụng mỗi tháng. Quay lại ứng dụng Pairlens — ứng dụng sẽ nhận diện gói đăng ký của bạn trong vài giây.",
+      "bodyPlanNoCredits": "Trợ lý AI được lưu trữ, nghiên cứu và tìm kiếm web của bạn đã được mở khóa. Quay lại ứng dụng Pairlens — ứng dụng sẽ nhận diện gói đăng ký của bạn trong vài giây.",
+      "openTerminal": "Mở terminal",
+      "closeTabHint": "Đã thanh toán từ ứng dụng máy tính? Bạn có thể đóng tab này.",
+      "receiptHint": "Biên nhận và hóa đơn có trong email của bạn và trên cổng thanh toán (Cài đặt → Intelligence)."
+    }
+  },
+  "workflows": {
+    "sidebar": {
+      "tabWorkflows": "Quy trình",
+      "tabRuns": "Lượt chạy",
+      "emptyState": "Chưa có quy trình nào",
+      "createTitle": "Quy trình mới",
+      "namePlaceholder": "Tên quy trình",
+      "renameTitle": "Đổi tên quy trình",
+      "renameButton": "Đổi tên",
+      "deleteTitle": "Xóa quy trình",
+      "deleteDescription": "Hành động này không thể hoàn tác. Quy trình sẽ bị xóa vĩnh viễn.",
+      "runsEmpty": "Chưa có lượt chạy nào — hãy chạy một lượt từ bảng giao dịch",
+      "clearHistory": "Xóa lịch sử",
+      "runOutcome": "{{executed}} thành công",
+      "runOutcomeWithFailed": "{{executed}} thành công, {{failed}} thất bại"
+    },
+    "canvas": {
+      "undoTitle": "Hoàn tác (Cmd+Z)",
+      "redoTitle": "Làm lại (Cmd+Shift+Z)",
+      "deleteStep": "Xóa bước",
+      "deleteConnection": "Xóa kết nối"
+    },
+    "commitBar": {
+      "cycleDetected": "Phát hiện vòng lặp",
+      "issue_one": "{{count}} vấn đề",
+      "issue_other": "{{count}} vấn đề",
+      "pendingChange_one": "{{count}} thay đổi đang chờ",
+      "pendingChange_other": "{{count}} thay đổi đang chờ",
+      "noChanges": "Không có thay đổi",
+      "review": "Xem lại",
+      "discard": "Loại bỏ",
+      "commit": "Áp dụng",
+      "saveErrorTitle": "Không thể lưu quy trình",
+      "saveErrorCycleBody": "Quy trình này có phụ thuộc vòng lặp. Hãy gỡ bỏ vòng lặp (các đường màu đỏ) trước khi lưu.",
+      "saveSuccess": "Đã lưu quy trình"
+    },
+    "diffPanel": {
+      "title": "Xem lại thay đổi ({{count}})",
+      "addedStep": "Đã thêm bước {{type}}",
+      "removedStep": "Đã xóa bước {{type}}",
+      "modifiedStep": "Đã sửa cấu hình {{type}}",
+      "addedConnection": "Đã thêm kết nối",
+      "removedConnection": "Đã xóa kết nối",
+      "noChanges": "Không có thay đổi"
+    },
+    "palette": {
+      "title": "Thêm bước",
+      "categoryEntry": "Vào lệnh",
+      "categoryOrders": "Lệnh",
+      "categoryExit": "Chiến lược thoát lệnh",
+      "categoryLogic": "Logic",
+      "categoryCustom": "Tùy chỉnh",
+      "requires": "Yêu cầu: {{requirement}}",
+      "notAvailableOn": "Không khả dụng trên {{markets}}"
+    },
+    "emptyState": {
+      "pickWorkflow": "Chọn một quy trình bên trái để mở nó trên canvas.",
+      "eyebrow": "Quy trình",
+      "title": "Mọi lệnh đều có thể mang theo kế hoạch riêng",
+      "description": "Một quy trình gắn liền với lệnh bạn đặt từ bảng giao dịch. Ngay khi lệnh khớp, các bước bên dưới nó tự chạy — bracket, thang lệnh, thoát lệnh theo từng giai đoạn, kiểm tra theo thời gian — nên kế hoạch đã sẵn sàng từ trước, thay vì là điều bạn phải tự nhớ để làm sau.",
+      "blankLabel": "Bắt đầu từ canvas trống",
+      "footnote": "Mẫu mở ra ở dạng bản nháp: chỉnh sửa bất kỳ bước nào, sau đó nhấn Áp dụng để lưu. Gắn một quy trình đã lưu vào lệnh từ bảng giao dịch để chạy nó."
+    },
+    "steps": {
+      "sideLabel": "Chiều",
+      "sizeLabel": "Khối lượng",
+      "sizeModePercent": "%",
+      "sizeModeAbsolute": "Tuyệt đối",
+      "side": {
+        "inherit": "Kế thừa",
+        "opposite": "Ngược lại",
+        "buy": "Mua",
+        "sell": "Bán"
+      },
+      "triggerWhenPrice": "Kích hoạt khi giá",
+      "triggerPercentFromEntry": "% từ giá vào lệnh",
+      "triggerReachesPrice": "Chạm mức giá",
+      "priceLevel": "Mức giá",
+      "priceLabel": "Giá",
+      "stopLoss": {
+        "title": "Cắt lỗ",
+        "lossPercent": "Lỗ %"
+      },
+      "takeProfit": {
+        "title": "Chốt lời",
+        "gainPercent": "Lãi %"
+      },
+      "limitOrder": {
+        "title": "Lệnh giới hạn",
+        "priceModeFixed": "Cố định",
+        "priceModePercentOffset": "% chênh lệch",
+        "priceModeOffset": "Chênh lệch",
+        "priceValueLabel": "Giá trị giá"
+      },
+      "marketOrder": {
+        "title": "Lệnh thị trường"
+      },
+      "condition": {
+        "title": "Điều kiện",
+        "typeLabel": "Loại",
+        "typePercentChange": "% thay đổi",
+        "hint": "+N vượt qua khi tăng ≥N%, -N khi giảm ≥N%"
+      },
+      "wait": {
+        "title": "Chờ",
+        "durationLabel": "Thời lượng",
+        "unitSeconds": "giây",
+        "unitMinutes": "phút",
+        "unitHours": "giờ"
+      },
+      "split": {
+        "title": "Tách song song",
+        "branchesLabel": "Nhánh"
+      },
+      "trigger": {
+        "title": "Đầu vào lệnh",
+        "badge": "Vào lệnh"
+      },
+      "configPanel": {
+        "requiresNote": "Yêu cầu: {{requirement}}. Các thị trường không có khả năng này không thể chạy quy trình chứa bước này.",
+        "on": "Bật",
+        "off": "Tắt"
+      }
+    },
+    "execution": {
+      "statusExecuted": "đã thực hiện",
+      "statusSkipped": "đã bỏ qua",
+      "statusFailed": "thất bại",
+      "summaryExecuted": "{{count}} đã thực hiện",
+      "summarySkipped": "{{count}} đã bỏ qua",
+      "summaryFailed": "{{count}} thất bại"
+    }
   }
 }

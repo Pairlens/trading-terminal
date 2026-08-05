@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { ChevronRight, CircleAlert, Pin, RotateCcw, Store } from 'lucide-react'
@@ -80,10 +81,16 @@ function priorityFor(
   return null
 }
 
-function formatChain(chain: Array<string>): string {
+function formatChain(
+  chain: Array<string>,
+  t: (key: string, options?: Record<string, unknown>) => string,
+): string {
   const shown = chain.slice(0, 3)
   const rest = chain.length - shown.length
-  return shown.join(' → ') + (rest > 0 ? ` +${rest} more` : '')
+  const base = shown.join(' → ')
+  return rest > 0
+    ? t('pluginStore.chainMore', { chain: base, count: rest })
+    : base
 }
 
 function autoOrder(
@@ -98,6 +105,7 @@ function autoOrder(
 }
 
 export function CapabilityProviders() {
+  const { t } = useTranslation()
   const { pluginManager, pluginStateVersion, notifyPluginStateChange } =
     usePairlens()
   const queryClient = useQueryClient()
@@ -222,7 +230,7 @@ export function CapabilityProviders() {
     },
     onError: (err, data, context) => {
       restorePin(data.capability, data.market, context?.previous ?? null)
-      toast.error('Failed to save provider override', {
+      toast.error(t('pluginStore.saveOverrideFailed'), {
         description: String(err),
       })
     },
@@ -242,7 +250,7 @@ export function CapabilityProviders() {
     },
     onError: (err, data, context) => {
       restorePin(data.capability, data.market, context?.previous ?? null)
-      toast.error('Failed to remove provider override', {
+      toast.error(t('pluginStore.removeOverrideFailed'), {
         description: String(err),
       })
     },
@@ -264,7 +272,9 @@ export function CapabilityProviders() {
         pluginManager.pinPlugin(pin.capability, pin.market, pin.pluginId)
       }
       notifyPluginStateChange()
-      toast.error('Failed to reset overrides', { description: String(err) })
+      toast.error(t('pluginStore.resetOverridesFailed'), {
+        description: String(err),
+      })
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.pluginPins() })
@@ -291,12 +301,10 @@ export function CapabilityProviders() {
       <section className="mb-6 flex items-start justify-between gap-4">
         <div>
           <h2 className="text-lg font-semibold tracking-tight">
-            Capability Providers
+            {t('pluginStore.capabilityProvidersTitle')}
           </h2>
           <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-            Each terminal feature requests a capability, and the
-            highest-priority enabled plugin provides it automatically. Choose a
-            specific plugin to override the automatic choice.
+            {t('pluginStore.capabilityProvidersDescription')}
           </p>
         </div>
         {hasPins && (
@@ -308,7 +316,7 @@ export function CapabilityProviders() {
             disabled={resetAllPinsMutation.isPending}
           >
             <RotateCcw className="size-3" />
-            Reset all overrides
+            {t('pluginStore.resetAllOverrides')}
           </Button>
         )}
       </section>
@@ -355,6 +363,7 @@ function CapabilityRowView({
   onBrowseStore: () => void
   onManagePlugins: () => void
 }) {
+  const { t } = useTranslation()
   const { meta, providers, activeCount, pinnedId, pinnedActive } = row
   const pinned = pinnedId !== null
 
@@ -372,7 +381,7 @@ function CapabilityRowView({
           {providers.length === 0 ? (
             <div className="flex items-center gap-2.5">
               <span className="text-xs text-muted-foreground">
-                No installed plugin provides this
+                {t('pluginStore.noProviderInstalled')}
               </span>
               <Button
                 variant="outline"
@@ -381,7 +390,7 @@ function CapabilityRowView({
                 onClick={onBrowseStore}
               >
                 <Store className="size-3" />
-                Browse Store
+                {t('pluginStore.browseStore')}
               </Button>
             </div>
           ) : activeCount === 0 ? (
@@ -390,11 +399,15 @@ function CapabilityRowView({
                 <CircleAlert className="size-3.5" />
                 {providers.every((p) => p.inactiveHint !== null)
                   ? providers.length === 1
-                    ? 'Installed — needs an API key'
-                    : `${providers.length} installed — all need API keys`
+                    ? t('pluginStore.installedNeedsKeySingle')
+                    : t('pluginStore.installedNeedsKeyPlural', {
+                        count: providers.length,
+                      })
                   : providers.length === 1
-                    ? '1 plugin installed, but disabled'
-                    : `${providers.length} plugins installed, all disabled`}
+                    ? t('pluginStore.installedDisabledSingle')
+                    : t('pluginStore.installedDisabledPlural', {
+                        count: providers.length,
+                      })}
               </span>
               <Button
                 variant="outline"
@@ -402,7 +415,7 @@ function CapabilityRowView({
                 className="h-7 text-xs"
                 onClick={onManagePlugins}
               >
-                Manage
+                {t('pluginStore.manage')}
               </Button>
             </div>
           ) : (
@@ -417,23 +430,25 @@ function CapabilityRowView({
           {pinned && pinnedActive && (
             <span className="flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400">
               <Pin className="size-2.5 fill-current" />
-              Pinned — overrides automatic order
+              {t('pluginStore.pinnedActiveNote')}
             </span>
           )}
           {pinned && !pinnedActive && (
             <span className="flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400">
               <CircleAlert className="size-2.5" />
-              Pinned plugin is disabled — automatic order applies
+              {t('pluginStore.pinnedInactiveNote')}
             </span>
           )}
           {!pinned && row.autoChain.length > 1 && (
             <span className="max-w-72 truncate text-[10px] text-muted-foreground">
-              Auto order: {formatChain(row.autoChain)}
+              {t('pluginStore.autoOrderLabel', {
+                chain: formatChain(row.autoChain, t),
+              })}
             </span>
           )}
           {!pinned && row.autoName === null && activeCount > 0 && (
             <span className="text-[10px] text-muted-foreground">
-              Resolved per market
+              {t('pluginStore.resolvedPerMarket')}
             </span>
           )}
         </div>
@@ -443,10 +458,12 @@ function CapabilityRowView({
         <Collapsible>
           <CollapsibleTrigger className="group mt-2 flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground">
             <ChevronRight className="size-3.5 transition-transform group-data-[panel-open]:rotate-90" />
-            Market overrides
+            {t('pluginStore.marketOverrides')}
             {row.marketPinCount > 0 && (
               <Badge variant="secondary" className="h-4 px-1.5 text-[9px]">
-                {row.marketPinCount} pinned
+                {t('pluginStore.pinnedCountBadge', {
+                  count: row.marketPinCount,
+                })}
               </Badge>
             )}
           </CollapsibleTrigger>
@@ -493,6 +510,7 @@ function ProviderSelect({
   onChange: (value: string | null) => void
   size?: 'sm' | 'default'
 }) {
+  const { t } = useTranslation()
   // A stale pin can reference a plugin that is no longer installed — keep it
   // selectable so the trigger renders something meaningful and Automatic
   // remains one click away
@@ -503,7 +521,7 @@ function ProviderSelect({
     if (selected === null || selected === AUTO) {
       return (
         <span className="flex items-center gap-1.5">
-          <span>Automatic</span>
+          <span>{t('pluginStore.automatic')}</span>
           {autoName !== null && (
             <span className="text-muted-foreground">· {autoName}</span>
           )}
@@ -539,7 +557,7 @@ function ProviderSelect({
       </SelectTrigger>
       <SelectContent align="end" className="w-auto min-w-(--anchor-width)">
         <SelectItem value={AUTO}>
-          <span>Automatic</span>
+          <span>{t('pluginStore.automatic')}</span>
           {autoName !== null && (
             <span className="text-muted-foreground">· {autoName}</span>
           )}
@@ -560,7 +578,7 @@ function ProviderSelect({
             <span>{plugin.manifest.name}</span>
             {!active && (
               <span className="text-muted-foreground">
-                ({inactiveHint?.toLowerCase() ?? 'disabled'})
+                ({inactiveHint?.toLowerCase() ?? t('pluginStore.disabledHint')})
               </span>
             )}
           </SelectItem>
@@ -568,7 +586,7 @@ function ProviderSelect({
         {orphanPin && (
           <SelectItem value={value}>
             <span className="text-muted-foreground">
-              {value} (not installed)
+              {t('pluginStore.notInstalled', { id: value })}
             </span>
           </SelectItem>
         )}

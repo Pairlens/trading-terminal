@@ -38,6 +38,7 @@ import type {
   PluginUpdateInfo,
 } from '@/stores/plugin-updates-store'
 import type { PluginModule } from '@/lib/plugins/plugin-module-loader'
+import i18n from '@/lib/i18n'
 import { api, appServerUrl, getSessionToken } from '@/lib/api'
 import { hasAppServer } from '@/lib/auth-client'
 import { useOptimisticSession } from '@/lib/session'
@@ -434,7 +435,7 @@ export function PairlensProvider({
   // the user out — surface a notice so they know to re-authenticate.
   useEffect(() => {
     const onExpired = () => {
-      toast.error('Your session expired — please sign in again.', {
+      toast.error(i18n.t('common.sessionExpired'), {
         id: 'session-expired',
       })
     }
@@ -1298,22 +1299,19 @@ function getAutoUpdateSettings(): PluginAutoUpdateSettings {
 }
 
 function showRestartToast(count: number): void {
-  toast.info(
-    `${count} plugin update${count === 1 ? '' : 's'} ready to install`,
-    {
-      description: 'Updates will apply after restarting the terminal.',
-      duration: Infinity,
-      id: 'plugin-updates-staged',
-      action: {
-        label: 'Restart now',
-        onClick: () => window.location.reload(),
-      },
-      cancel: {
-        label: 'Later',
-        onClick: () => toast.dismiss('plugin-updates-staged'),
-      },
+  toast.info(i18n.t('connection.pluginUpdatesReady', { count }), {
+    description: i18n.t('connection.pluginUpdatesDescription'),
+    duration: Infinity,
+    id: 'plugin-updates-staged',
+    action: {
+      label: i18n.t('connection.restartNow'),
+      onClick: () => window.location.reload(),
     },
-  )
+    cancel: {
+      label: i18n.t('connection.later'),
+      onClick: () => toast.dismiss('plugin-updates-staged'),
+    },
+  })
 }
 
 async function runUpdateCheck(manager: PluginManager): Promise<void> {

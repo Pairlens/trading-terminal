@@ -161,7 +161,7 @@ const StoryPrivacy: FC = () => {
                   {t('onboarding.privacy.scene.device')}
                 </div>
                 <div style={{ fontSize: 11, marginTop: 2, ...mono, ...muted }}>
-                  OS keychain
+                  {t('sectionTours.scenes.osKeychain')}
                 </div>
               </div>
             </Panel>
@@ -565,6 +565,7 @@ const StoryCopilot: FC = () => {
 // ── Workspaces — one clean pane grows into a full pro desk ──────────
 
 const StoryWorkspaces: FC = () => {
+  const { t } = useTranslation()
   const frame = useCurrentFrame()
   const width = 470
   const paneAreaHeight = 176
@@ -640,7 +641,7 @@ const StoryWorkspaces: FC = () => {
                 ...muted,
               }}
             >
-              Chart
+              {t('panes.chart')}
             </span>
             <Candles
               width={Math.max(chartWidth - 28, 80)}
@@ -662,7 +663,7 @@ const StoryWorkspaces: FC = () => {
           }}
         >
           <Panel style={{ ...paneLabel, boxShadow: arrivalRing(64) }}>
-            Order book
+            {t('panes.orderBook')}
           </Panel>
         </div>
         <div
@@ -676,7 +677,7 @@ const StoryWorkspaces: FC = () => {
           }}
         >
           <Panel style={{ ...paneLabel, boxShadow: arrivalRing(70) }}>
-            Trades
+            {t('panes.trades')}
           </Panel>
         </div>
         <div
@@ -691,7 +692,7 @@ const StoryWorkspaces: FC = () => {
           }}
         >
           <Panel style={{ ...paneLabel, boxShadow: arrivalRing(78) }}>
-            Positions
+            {t('panes.positions')}
           </Panel>
         </div>
       </div>

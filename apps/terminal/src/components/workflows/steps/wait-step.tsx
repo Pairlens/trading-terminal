@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { Timer } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -7,13 +8,14 @@ import { useStepDataUpdate } from '../use-step-data'
 import type { NodeProps } from '@xyflow/react'
 import type { WaitStepData } from '@pairlens/workflow-engine/types'
 
-const unitOptions = [
-  { value: 'seconds', label: 'sec' },
-  { value: 'minutes', label: 'min' },
-  { value: 'hours', label: 'hr' },
-] as const
-
 export function WaitStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
+  const unitOptions = [
+    { value: 'seconds', label: t('workflows.steps.wait.unitSeconds') },
+    { value: 'minutes', label: t('workflows.steps.wait.unitMinutes') },
+    { value: 'hours', label: t('workflows.steps.wait.unitHours') },
+  ] as const
+
   const d = data as unknown as WaitStepData
   const duration = d.duration ?? 5
   const unit = d.unit ?? 'seconds'
@@ -41,7 +43,7 @@ export function WaitStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Wait
+            {t('workflows.steps.wait.title')}
           </div>
         </div>
       </div>
@@ -49,7 +51,7 @@ export function WaitStep({ id, data }: NodeProps) {
       <div className="mt-2 space-y-1.5">
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Duration
+            {t('workflows.steps.wait.durationLabel')}
           </div>
           <div className="mt-0.5 flex items-center gap-1">
             <input

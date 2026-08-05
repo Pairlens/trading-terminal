@@ -95,7 +95,7 @@ export function CopilotHeader({
             type="button"
             onClick={onRerun}
             disabled={isThinking}
-            title="Re-run analysis"
+            title={t('copilot.rerunAnalysis')}
             className="hover-lift text-primary-foreground inline-flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-medium shadow-sm disabled:pointer-events-none disabled:opacity-50"
             style={{
               background:
@@ -103,7 +103,7 @@ export function CopilotHeader({
             }}
           >
             <RefreshCw className="size-3" />
-            Re-run
+            {t('indicatorsPage.rerun')}
           </button>
         )}
         <PersonaMenu persona={persona} onPersonaChange={onPersonaChange} />

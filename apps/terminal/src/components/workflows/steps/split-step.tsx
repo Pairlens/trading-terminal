@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position, useUpdateNodeInternals } from '@xyflow/react'
 import { GitFork } from 'lucide-react'
 import { useEffect } from 'react'
@@ -9,6 +10,7 @@ import type { NodeProps } from '@xyflow/react'
 import type { SplitStepData } from '@pairlens/workflow-engine/types'
 
 export function SplitStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
   const d = data as unknown as SplitStepData
   const branches = d.branches ?? 2
 
@@ -47,7 +49,7 @@ export function SplitStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Parallel Split
+            {t('workflows.steps.split.title')}
           </div>
         </div>
       </div>
@@ -56,7 +58,7 @@ export function SplitStep({ id, data }: NodeProps) {
         {/* Branches */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Branches
+            {t('workflows.steps.split.branchesLabel')}
           </div>
           <div className="nodrag nopan nowheel mt-0.5 flex items-center gap-1">
             <button

@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useCallback } from 'react'
 import { Info } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -34,14 +35,6 @@ export function clearDragStepType(): void {
 
 const CATEGORY_ORDER = ['entry', 'order', 'exit', 'logic', 'custom'] as const
 
-const CATEGORY_LABELS: Record<string, string> = {
-  entry: 'Entry',
-  order: 'Orders',
-  exit: 'Exit Strategies',
-  logic: 'Logic',
-  custom: 'Custom',
-}
-
 type StepPaletteProps = {
   onAddStep?: (stepType: string) => void
 }
@@ -49,6 +42,7 @@ type StepPaletteProps = {
 /** Tooltip note for steps gated on venue capabilities: shows the
  * requirement plus which of the connected markets can(not) run it. */
 function StepCompatNote({ def }: { def: WorkflowStepTypeDefinition }) {
+  const { t } = useTranslation()
   const { availableMarkets } = useMarketData()
   if (!def.compat) return null
 
@@ -64,11 +58,18 @@ function StepCompatNote({ def }: { def: WorkflowStepTypeDefinition }) {
         }
       />
       <TooltipContent side="left" className="max-w-64">
-        <p className="text-xs">Requires: {def.compat.requires}</p>
+        <p className="text-xs">
+          {t('workflows.palette.requires', {
+            requirement: def.compat.requires,
+          })}
+        </p>
         {unsupported.length > 0 && (
           <p className="mt-1 text-xs text-muted-foreground">
-            Not available on{' '}
-            {unsupported.map((m) => m.displayName ?? m.marketId).join(', ')}
+            {t('workflows.palette.notAvailableOn', {
+              markets: unsupported
+                .map((m) => m.displayName ?? m.marketId)
+                .join(', '),
+            })}
           </p>
         )}
       </TooltipContent>
@@ -77,8 +78,17 @@ function StepCompatNote({ def }: { def: WorkflowStepTypeDefinition }) {
 }
 
 export function StepPalette({ onAddStep }: StepPaletteProps) {
+  const { t } = useTranslation()
   const registry = useWorkflowStepRegistry()
   const stepTypes = registry.getAllDefinitions()
+
+  const categoryLabels: Record<string, string> = {
+    entry: t('workflows.palette.categoryEntry'),
+    order: t('workflows.palette.categoryOrders'),
+    exit: t('workflows.palette.categoryExit'),
+    logic: t('workflows.palette.categoryLogic'),
+    custom: t('workflows.palette.categoryCustom'),
+  }
 
   // Group by category
   const grouped = new Map<string, Array<WorkflowStepTypeDefinition>>()
@@ -105,7 +115,7 @@ export function StepPalette({ onAddStep }: StepPaletteProps) {
     <div className="flex w-56 shrink-0 flex-col border-l border-border bg-background">
       <div className="border-b border-border px-3 py-2">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Add Step
+          {t('workflows.palette.title')}
         </span>
       </div>
       <div className="flex-1 overflow-y-auto p-1.5">
@@ -115,7 +125,7 @@ export function StepPalette({ onAddStep }: StepPaletteProps) {
           return (
             <div key={cat} className="mb-3">
               <p className="mb-1 px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                {CATEGORY_LABELS[cat] ?? cat}
+                {categoryLabels[cat] ?? cat}
               </p>
               {items.map((st) => {
                 const CustomIcon = registry.getIconComponent(st.type)

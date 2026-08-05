@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Cell, Pie, PieChart, Tooltip as RechartsTooltip } from 'recharts'
 import { TrendingUp } from 'lucide-react'
 
@@ -38,6 +39,7 @@ export function PortfolioOverview({
   displayCurrency: string
   credentials: Array<ExchangeCredential>
 }) {
+  const { t } = useTranslation()
   const chartData = holdings
     .filter((h) => h.amount > 0)
     .map((h) => ({
@@ -113,7 +115,7 @@ export function PortfolioOverview({
               {totalValue > 0 ? (
                 <>
                   <span className="font-mono text-[10px] uppercase tracking-[.16em] text-muted-foreground">
-                    Total
+                    {t('accounts.portfolioTotal')}
                   </span>
                   <span className="font-mono text-lg font-semibold tracking-tight tabular-nums text-foreground">
                     {formatValue(currencySymbol, totalValue)}
@@ -129,7 +131,7 @@ export function PortfolioOverview({
                 </>
               ) : (
                 <span className="font-mono text-xs tabular-nums text-muted-foreground">
-                  {chartData.length} assets
+                  {t('accounts.assetCount', { count: chartData.length })}
                 </span>
               )}
             </div>
@@ -172,11 +174,11 @@ export function PortfolioOverview({
             <div className="flex items-center gap-1.5">
               <TrendingUp className="size-3.5 text-muted-foreground" />
               <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-                Asset Allocation
+                {t('accounts.assetAllocationLabel')}
               </span>
             </div>
             <span className="font-mono text-[10px] tabular-nums text-muted-foreground">
-              {chartData.length} asset{chartData.length !== 1 && 's'}
+              {t('accounts.assetCount', { count: chartData.length })}
             </span>
           </div>
 
@@ -202,16 +204,16 @@ export function PortfolioOverview({
             <thead>
               <tr className="text-muted-foreground">
                 <th className="pb-2 pr-3 text-left font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                  Asset
+                  {t('accounts.tableAsset')}
                 </th>
                 <th className="pb-2 pr-3 text-right font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                  Amount
+                  {t('accounts.tableAmount')}
                 </th>
                 <th className="pb-2 pr-3 text-right font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                  Value
+                  {t('accounts.tableValue')}
                 </th>
                 <th className="pb-2 text-right font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                  Share
+                  {t('accounts.tableShare')}
                 </th>
               </tr>
             </thead>
@@ -272,7 +274,7 @@ export function PortfolioOverview({
           </table>
           {hasMore && (
             <p className="mt-2 text-center font-mono text-[10px] tabular-nums text-muted-foreground">
-              +{chartData.length - 8} more assets
+              {t('accounts.moreAssets', { count: chartData.length - 8 })}
             </p>
           )}
         </div>

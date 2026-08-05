@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { Play } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -7,6 +8,7 @@ import { Badge } from '@pairlens/ui/components/ui/badge'
 import type { NodeProps } from '@xyflow/react'
 
 export function TriggerStep(_props: NodeProps) {
+  const { t } = useTranslation()
   return (
     <div
       className={cn(
@@ -20,14 +22,14 @@ export function TriggerStep(_props: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Order Input
+            {t('workflows.steps.trigger.title')}
           </div>
         </div>
         <Badge
           variant="outline"
           className="border-emerald-500/30 text-[10px] text-emerald-400"
         >
-          Entry
+          {t('workflows.steps.trigger.badge')}
         </Badge>
       </div>
 

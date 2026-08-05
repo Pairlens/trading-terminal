@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { cn } from '@pairlens/ui'
 import { Button } from '@pairlens/ui/components/ui/button'
 import {
@@ -47,19 +48,20 @@ export function AddCryptoWalletDialog({
   isBusy: boolean
   onSubmit: (event: FormEvent) => Promise<void>
 }) {
+  const { t } = useTranslation()
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add Crypto Wallet</DialogTitle>
+          <DialogTitle>{t('accounts.addWalletDialogTitle')}</DialogTitle>
           <DialogDescription>
-            Import a wallet private key for on-chain trading
+            {t('accounts.addWalletDialogDescription')}
           </DialogDescription>
         </DialogHeader>
         <form className="space-y-4" onSubmit={(e) => void onSubmit(e)}>
           {/* Chain selector */}
           <div className="space-y-1.5">
-            <Label>Blockchain</Label>
+            <Label>{t('accounts.blockchainLabel')}</Label>
             <div className="grid grid-cols-3 gap-2">
               {availableChains.map((chain) => {
                 const schema =
@@ -86,10 +88,12 @@ export function AddCryptoWalletDialog({
 
           {/* Label */}
           <div className="space-y-1.5">
-            <Label htmlFor="crypto-label">Label</Label>
+            <Label htmlFor="crypto-label">
+              {t('accounts.walletLabelField')}
+            </Label>
             <Input
               id="crypto-label"
-              placeholder="My Wallet"
+              placeholder={t('accounts.walletLabelPlaceholder')}
               value={cryptoLabel}
               onChange={(e) => setCryptoLabel(e.target.value)}
               disabled={isBusy}
@@ -100,7 +104,7 @@ export function AddCryptoWalletDialog({
           {/* Private key */}
           <div className="space-y-1.5">
             <Label htmlFor="crypto-key">
-              Private Key
+              {t('accounts.privateKeyField')}
               <span className="text-destructive"> *</span>
             </Label>
             <Input
@@ -122,14 +126,14 @@ export function AddCryptoWalletDialog({
               size="sm"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t('accounts.cancel')}
             </Button>
             <Button
               type="submit"
               size="sm"
               disabled={isBusy || !cryptoPrivateKey.trim()}
             >
-              {isBusy ? 'Saving...' : 'Save Wallet'}
+              {isBusy ? t('accounts.saving') : t('accounts.saveWallet')}
             </Button>
           </DialogFooter>
         </form>

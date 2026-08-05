@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
 import { Zap } from 'lucide-react'
 import { cn } from '@pairlens/ui'
@@ -7,14 +8,15 @@ import { useStepDataUpdate } from '../use-step-data'
 import type { NodeProps } from '@xyflow/react'
 import type { MarketOrderStepData } from '@pairlens/workflow-engine/types'
 
-const sideOptions = [
-  { value: 'inherit', label: 'Inherit' },
-  { value: 'opposite', label: 'Opposite' },
-  { value: 'buy', label: 'Buy' },
-  { value: 'sell', label: 'Sell' },
-] as const
-
 export function MarketOrderStep({ id, data }: NodeProps) {
+  const { t } = useTranslation()
+  const sideOptions = [
+    { value: 'inherit', label: t('workflows.steps.side.inherit') },
+    { value: 'opposite', label: t('workflows.steps.side.opposite') },
+    { value: 'buy', label: t('workflows.steps.side.buy') },
+    { value: 'sell', label: t('workflows.steps.side.sell') },
+  ] as const
+
   const d = data as unknown as MarketOrderStepData
   const side = d.side ?? 'inherit'
   const sizeMode = d.sizeMode ?? 'percent'
@@ -43,7 +45,7 @@ export function MarketOrderStep({ id, data }: NodeProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            Market Order
+            {t('workflows.steps.marketOrder.title')}
           </div>
         </div>
       </div>
@@ -52,7 +54,7 @@ export function MarketOrderStep({ id, data }: NodeProps) {
         {/* Side */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Side
+            {t('workflows.steps.sideLabel')}
           </div>
           <div className="nodrag nopan nowheel mt-0.5 flex overflow-hidden rounded border border-border text-[9px]">
             {sideOptions.map((opt) => (
@@ -76,7 +78,7 @@ export function MarketOrderStep({ id, data }: NodeProps) {
         {/* Size */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            Size
+            {t('workflows.steps.sizeLabel')}
           </div>
           <div className="mt-0.5 flex items-center gap-1">
             <input
@@ -102,7 +104,9 @@ export function MarketOrderStep({ id, data }: NodeProps) {
                 )
               }
             >
-              {sizeMode === 'percent' ? '%' : 'Abs'}
+              {sizeMode === 'percent'
+                ? t('workflows.steps.sizeModePercent')
+                : t('workflows.steps.sizeModeAbsolute')}
             </button>
           </div>
         </div>

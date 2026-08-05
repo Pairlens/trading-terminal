@@ -86,6 +86,7 @@ function DesktopOnlyGate({ children }: { children: ReactNode }) {
 }
 
 function LayoutGrid() {
+  const { t } = useTranslation()
   const { layout, dispatch, pendingAddPaneType, cancelAddPane } = useLayout()
   const isMobile = useIsMobile()
   const [activeDrag, setActiveDrag] = useState<DragData | null>(null)
@@ -123,24 +124,26 @@ function LayoutGrid() {
       ...defaultAnnouncements,
       onDragStart({ active }) {
         const type = (active.data.current as DragData | undefined)?.paneType
-        return `Picked up ${type ?? 'pane'}. Use arrow keys to move, space to drop, escape to cancel.`
+        return t('layout.dnd.pickedUp', {
+          pane: type ?? t('layout.dnd.genericPane'),
+        })
       },
       onDragOver({ over }) {
         const z = dropZoneRef.current?.zone
-        if (!over) return 'No drop target.'
-        if (!z || z === 'center') return 'Drop to stack as a tab here.'
-        if (z === 'top') return 'Drop to split above.'
-        if (z === 'bottom') return 'Drop to split below.'
-        return 'Drop to create a new column.'
+        if (!over) return t('layout.dnd.noDropTarget')
+        if (!z || z === 'center') return t('layout.dnd.dropStackTab')
+        if (z === 'top') return t('layout.dnd.dropSplitAbove')
+        if (z === 'bottom') return t('layout.dnd.dropSplitBelow')
+        return t('layout.dnd.dropNewColumn')
       },
       onDragEnd({ over }) {
-        return over ? 'Pane moved.' : 'Drag cancelled, pane returned.'
+        return over ? t('layout.dnd.paneMoved') : t('layout.dnd.dragCancelled')
       },
       onDragCancel() {
-        return 'Drag cancelled, pane returned to its original position.'
+        return t('layout.dnd.dragCancelledFull')
       },
     }),
-    [],
+    [t],
   )
 
   const handleDragStart = useCallback(

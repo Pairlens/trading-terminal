@@ -104,10 +104,11 @@ function Th({
 }
 
 function SideBadge({ side }: { side: string }) {
+  const { t } = useTranslation()
   const isBuy = side.toLowerCase() === 'buy'
   return (
     <span className={`font-medium ${isBuy ? 'text-up' : 'text-down'}`}>
-      {isBuy ? 'Buy' : 'Sell'}
+      {isBuy ? t('positions.buy') : t('positions.sell')}
     </span>
   )
 }

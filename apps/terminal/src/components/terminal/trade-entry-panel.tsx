@@ -274,7 +274,9 @@ function PresetsConfigDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-xs">
         <DialogHeader>
-          <DialogTitle>Amount Presets ({quoteAsset})</DialogTitle>
+          <DialogTitle>
+            {t('terminal.trade.presetsTitle', { quote: quoteAsset })}
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-2">
           {draft.map((v, i) => (
@@ -919,8 +921,8 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               className="text-center text-xs text-muted-foreground hover:text-foreground"
             >
               {cryptoWallets.some((w) => w.chain === marketInfo?.walletChain)
-                ? 'Select wallet in top bar →'
-                : `Connect ${marketInfo?.walletChain ?? 'crypto'} wallet →`}
+                ? `${t('terminal.wallet.selectWalletTopBar')} →`
+                : `${t('terminal.wallet.connectChainWallet', { chain: marketInfo?.walletChain ?? 'crypto' })} →`}
             </Link>
           )
         ) : (
@@ -931,8 +933,8 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               className="text-center text-xs text-muted-foreground hover:text-foreground"
             >
               {marketCreds.length === 0
-                ? `Connect ${exchangeLabel} account →`
-                : 'Select account in top bar →'}
+                ? `${t('terminal.wallet.connectExchangeAccount', { exchange: exchangeLabel })} →`
+                : `${t('terminal.wallet.selectAccountTopBar')} →`}
             </Link>
           )
         )}
@@ -984,7 +986,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             }
             onClick={() => handleSideChange('buy')}
           >
-            Buy
+            {t('terminal.trade.buy')}
           </button>
           <button
             type="button"
@@ -1006,7 +1008,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             }
             onClick={() => handleSideChange('sell')}
           >
-            Sell
+            {t('terminal.trade.sell')}
           </button>
         </div>
 
@@ -1021,17 +1023,17 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           >
             <TabsList className="h-8 w-full rounded-xl bg-secondary">
               <TabsTrigger value="market" className="flex-1 rounded-lg text-xs">
-                Market
+                {t('terminal.trade.orderTypeMarket')}
               </TabsTrigger>
               <TabsTrigger value="limit" className="flex-1 rounded-lg text-xs">
-                Limit
+                {t('terminal.trade.orderTypeLimit')}
               </TabsTrigger>
               {!isDex && (
                 <TabsTrigger
                   value="workflow"
                   className="flex-1 rounded-lg text-xs"
                 >
-                  Workflow
+                  {t('terminal.trade.workflow')}
                 </TabsTrigger>
               )}
             </TabsList>
@@ -1042,7 +1044,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         {orderType === 'workflow' && (
           <div className="space-y-1">
             <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-              Workflow
+              {t('terminal.trade.workflow')}
             </span>
             {wfWorkflows.length === 0 ? (
               <Link
@@ -1071,7 +1073,9 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                   <div className="rounded border border-amber-500/30 bg-amber-500/10 px-2 py-1.5">
                     <div className="flex items-center gap-1 text-[10px] font-medium text-amber-600 dark:text-amber-400">
                       <AlertTriangle className="size-3 shrink-0" />
-                      Not supported on {marketInfo?.displayName ?? market}
+                      {t('terminal.trade.notSupportedOn', {
+                        venue: marketInfo?.displayName ?? market,
+                      })}
                     </div>
                     <ul className="mt-0.5 space-y-0.5 text-[10px] text-amber-600/90 dark:text-amber-400/90">
                       {workflowCompatIssues.map((issue) => (
@@ -1110,7 +1114,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             </button>
           </div>
           <div className="font-mono text-[10px] tabular-nums text-muted-foreground">
-            Avail: {availableDisplay}
+            {t('terminal.trade.available', { amount: availableDisplay })}
           </div>
           <Input
             type="number"
@@ -1165,7 +1169,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-                Sell
+                {t('terminal.trade.sell')}
               </span>
               <span className="font-mono text-[10px] tabular-nums text-muted-foreground">
                 {sellPct}%
@@ -1215,7 +1219,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           <div className="space-y-1">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-                Slippage
+                {t('terminal.trade.slippage')}
               </span>
               <span className="font-mono text-[10px] tabular-nums text-muted-foreground">
                 {(slippageBps / 100).toFixed(slippageBps % 100 === 0 ? 0 : 1)}%

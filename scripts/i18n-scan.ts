@@ -37,6 +37,21 @@ import { join } from 'node:path'
 const ROOT = join(import.meta.dir, '..', 'apps', 'terminal', 'src')
 const SKIP_DIRS = new Set(['locales', '__tests__'])
 
+/**
+ * Paths whose English is deliberate and must stay.
+ *
+ * `lib/copilot/*` holds tool names and descriptions that are sent to the
+ * language model as part of the tool schema. The reader is the model, not the
+ * user — translating them would change what the model is told, degrade tool
+ * selection, and show up as worse copilot behaviour in non-English locales
+ * for no visible benefit.
+ *
+ * `lib/python/*` is the Python SDK surface: completions, signatures and code
+ * examples for user-authored indicators. The API itself is English, so
+ * translating the docs around it would leave half-English snippets.
+ */
+const NOT_USER_FACING = [/\/lib\/copilot\//, /\/lib\/python\//]
+
 /** Props whose string value a user reads. */
 const TEXT_PROPS = ['placeholder', 'aria-label', 'alt', 'emptyText', 'title']
 /** Props that hold prose-shaped values nobody reads. */
@@ -81,6 +96,14 @@ const propStr = new RegExp(
 const ternary = /\?\s*'([^']{3,})'\s*:\s*'([^']{3,})'/g
 const toastCall =
   /\b(?:toast(?:\.\w+)?|notify|setError|setStatus)\(\s*'([^']{3,})'/g
+/**
+ * Object literals carrying display text — template catalogues, step
+ * registries, error tables. These live almost entirely in plain .ts, so they
+ * were invisible while this walked components alone: the workflow template
+ * cards stayed English through an entire sweep because of it.
+ */
+const objectText =
+  /^\s*(?:title|label|description|message|summary|hint|shelfLabel):\s*'([^']{4,})'/gm
 
 const CSS_VALUE =
   /(?:\b\d+(?:\.\d+)?(?:px|rem|em|vh|vw|%|s|ms)\b|var\(|color-mix|oklch|rgba?\(|calc\(|linear-gradient|\bsolid\b|\bdashed\b|#[0-9a-fA-F]{3,8}\b)/
@@ -90,6 +113,12 @@ const CODE =
   /(?:\bexport\b|\bconst\b|\bimport\b|\breturn\b|=>|::|\bPick\b|\bArray\b|\bcreateContext\b|\bRecord\b|\btypeof\b|\bnew [A-Z]|\w+\(\)|^\w+:)/
 const IDENTIFIER = /^[A-Za-z][A-Za-z0-9]*$/
 const KEBAB_OR_DOTTED = /^[a-z0-9]+(?:[-.][a-z0-9]+)+$/
+/**
+ * A translation key, not English. `t(x ? 'a.bKey' : 'a.cKey')` matches the
+ * ternary pattern, so the more this sweep translated the more the scanner
+ * reported its own output as work still to do.
+ */
+const I18N_KEY = /^[a-z][A-Za-z0-9]*(?:\.[a-zA-Z][A-Za-z0-9]*)+$/
 const CSS_VAR = /^--/
 const TICKER = /^[A-Z0-9]{2,10}-[A-Z0-9]{2,10}(?:\s*·.*)?$/
 const HAS_LETTERS = /[A-Za-z]{2}/
@@ -145,6 +174,7 @@ function keep(raw: string): boolean {
   if (s.length < 3 || BRAND.has(s)) return false
   if (!HAS_LETTERS.test(s)) return false
   if (CODE.test(s) || CSS_VAR.test(s) || TICKER.test(s)) return false
+  if (I18N_KEY.test(s)) return false
   if (CSS_VALUE.test(s) || TAILWIND.test(s) || KEBAB_OR_DOTTED.test(s))
     return false
   if (IDENTIFIER.test(s) && !s.includes(' '))
@@ -157,7 +187,16 @@ function* walk(dir: string): Generator<string> {
     if (SKIP_DIRS.has(entry)) continue
     const p = join(dir, entry)
     if (statSync(p).isDirectory()) yield* walk(p)
-    else if (p.endsWith('.tsx')) yield p
+    // .ts too, not just .tsx. Template catalogues, store error messages and
+    // hook fallbacks live in plain .ts and were invisible while this only
+    // walked components — the workflow template cards stayed English through
+    // a whole sweep because of it.
+    else if (
+      (p.endsWith('.tsx') || p.endsWith('.ts')) &&
+      !p.endsWith('.d.ts') &&
+      !NOT_USER_FACING.some((re) => re.test(p))
+    )
+      yield p
   }
 }
 
@@ -184,6 +223,7 @@ for (const path of walk(ROOT)) {
     hits.add(m[2])
   }
   for (const m of s.matchAll(toastCall)) hits.add(m[1])
+  for (const m of s.matchAll(objectText)) hits.add(m[1])
 
   const kept = [...hits]
     .map((h) => h.trim())

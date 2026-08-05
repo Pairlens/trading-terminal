@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { ChevronDown, Pencil, Plus, Trash2, Workflow } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -23,6 +24,7 @@ import { useWorkflowStore } from '@/stores/workflow-store'
 import { useWorkflowRunStore } from '@/stores/workflow-run-store'
 
 export function WorkflowSidebar() {
+  const { t } = useTranslation()
   const workflows = useWorkflowStore((s) => s.workflows)
   const activeWorkflowId = useWorkflowStore((s) => s.activeWorkflowId)
   const selectWorkflow = useWorkflowStore((s) => s.selectWorkflow)
@@ -82,7 +84,7 @@ export function WorkflowSidebar() {
             )}
             onClick={() => setTab('workflows')}
           >
-            Workflows
+            {t('workflows.sidebar.tabWorkflows')}
           </button>
           <button
             type="button"
@@ -94,7 +96,7 @@ export function WorkflowSidebar() {
             )}
             onClick={() => setTab('runs')}
           >
-            Runs
+            {t('workflows.sidebar.tabRuns')}
           </button>
         </div>
         {tab === 'workflows' && (
@@ -115,7 +117,7 @@ export function WorkflowSidebar() {
         <div className="flex-1 overflow-y-auto p-1.5">
           {workflows.length === 0 && (
             <p className="px-2 py-4 text-center text-xs text-muted-foreground">
-              No workflows yet
+              {t('workflows.sidebar.emptyState')}
             </p>
           )}
           {workflows.map((wf) => (
@@ -163,10 +165,10 @@ export function WorkflowSidebar() {
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent className="sm:max-w-xs">
           <DialogHeader>
-            <DialogTitle>New Workflow</DialogTitle>
+            <DialogTitle>{t('workflows.sidebar.createTitle')}</DialogTitle>
           </DialogHeader>
           <Input
-            placeholder="Workflow name"
+            placeholder={t('workflows.sidebar.namePlaceholder')}
             className="h-8 text-sm"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
@@ -179,10 +181,10 @@ export function WorkflowSidebar() {
               variant="ghost"
               onClick={() => setCreateOpen(false)}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button size="sm" onClick={handleCreate} disabled={!newName.trim()}>
-              Create
+              {t('common.create')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -192,10 +194,10 @@ export function WorkflowSidebar() {
       <Dialog open={!!renameId} onOpenChange={() => setRenameId(null)}>
         <DialogContent className="sm:max-w-xs">
           <DialogHeader>
-            <DialogTitle>Rename Workflow</DialogTitle>
+            <DialogTitle>{t('workflows.sidebar.renameTitle')}</DialogTitle>
           </DialogHeader>
           <Input
-            placeholder="Workflow name"
+            placeholder={t('workflows.sidebar.namePlaceholder')}
             className="h-8 text-sm"
             value={renameName}
             onChange={(e) => setRenameName(e.target.value)}
@@ -204,14 +206,14 @@ export function WorkflowSidebar() {
           />
           <DialogFooter>
             <Button size="sm" variant="ghost" onClick={() => setRenameId(null)}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               size="sm"
               onClick={handleRename}
               disabled={!renameName.trim()}
             >
-              Rename
+              {t('workflows.sidebar.renameButton')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -221,18 +223,17 @@ export function WorkflowSidebar() {
       <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <DialogContent className="sm:max-w-xs">
           <DialogHeader>
-            <DialogTitle>Delete Workflow</DialogTitle>
+            <DialogTitle>{t('workflows.sidebar.deleteTitle')}</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            This action cannot be undone. The workflow will be permanently
-            deleted.
+            {t('workflows.sidebar.deleteDescription')}
           </p>
           <DialogFooter>
             <Button size="sm" variant="ghost" onClick={() => setDeleteId(null)}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button size="sm" variant="destructive" onClick={handleDelete}>
-              Delete
+              {t('common.delete')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -254,6 +255,7 @@ const runStatusStyle: Record<string, string> = {
 }
 
 function RunHistoryList() {
+  const { t } = useTranslation()
   const runs = useWorkflowRunStore((s) => s.runs)
   const clear = useWorkflowRunStore((s) => s.clear)
   const load = useWorkflowRunStore((s) => s.load)
@@ -268,7 +270,7 @@ function RunHistoryList() {
       <div className="flex-1 overflow-y-auto p-1.5">
         {runs.length === 0 && (
           <p className="px-2 py-4 text-center text-xs text-muted-foreground">
-            No workflow runs yet — execute one from the trade panel
+            {t('workflows.sidebar.runsEmpty')}
           </p>
         )}
         {runs.map((run) => (
@@ -290,7 +292,7 @@ function RunHistoryList() {
             className="h-6 w-full text-[10px] text-muted-foreground"
             onClick={clear}
           >
-            Clear history
+            {t('workflows.sidebar.clearHistory')}
           </Button>
         </div>
       )}
@@ -307,6 +309,7 @@ function RunRow({
   expanded: boolean
   onToggle: () => void
 }) {
+  const { t } = useTranslation()
   const executed = run.result.results.filter(
     (r) => r.status === 'executed',
   ).length
@@ -352,7 +355,12 @@ function RunRow({
             </span>
             <span>·</span>
             <span>
-              {executed} ok{failed > 0 ? `, ${failed} failed` : ''}
+              {failed > 0
+                ? t('workflows.sidebar.runOutcomeWithFailed', {
+                    executed,
+                    failed,
+                  })
+                : t('workflows.sidebar.runOutcome', { executed })}
             </span>
           </div>
         </div>

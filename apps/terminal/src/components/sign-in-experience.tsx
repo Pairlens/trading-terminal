@@ -273,7 +273,7 @@ export function SignInExperience({
                       autoFocus
                       className="min-w-0 flex-1 bg-transparent text-[15px] text-foreground outline-none placeholder:text-muted-foreground"
                       onChange={(event) => onEmailChange(event.target.value)}
-                      placeholder="you@example.com"
+                      placeholder={t('signIn.emailPlaceholder')}
                       required
                       type="email"
                       value={email}

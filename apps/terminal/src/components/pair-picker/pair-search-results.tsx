@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { memo, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Star } from 'lucide-react'
 
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
@@ -110,6 +111,7 @@ export function PairSearchResults({
   onSelect,
   maxResults = 20,
 }: PairSearchResultsProps) {
+  const { t } = useTranslation()
   const {
     showSearchResults,
     showResults,
@@ -121,7 +123,7 @@ export function PairSearchResults({
   return (
     <div className="flex flex-col gap-1 overflow-y-auto">
       {showSearchResults && (
-        <ResultSection label="Results">
+        <ResultSection label={t('search.results')}>
           {showResults.slice(0, maxResults).map((pair) => (
             <PairResultItem
               key={pair.symbol}
@@ -134,7 +136,7 @@ export function PairSearchResults({
       )}
 
       {!hasQuery && recentEntries.length > 0 && (
-        <ResultSection label="Recent">
+        <ResultSection label={t('search.recent')}>
           {recentEntries.map((pair) => (
             <PairResultItem
               key={pair.symbol}
@@ -147,7 +149,7 @@ export function PairSearchResults({
       )}
 
       {!hasQuery && watchedEntries.length > 0 && (
-        <ResultSection label="Watched">
+        <ResultSection label={t('search.watched')}>
           {watchedEntries.map((pair) => (
             <PairResultItem
               key={pair.symbol}
@@ -161,7 +163,7 @@ export function PairSearchResults({
 
       {hasQuery && !showSearchResults && (
         <div className="px-3 py-6 text-center text-xs text-muted-foreground">
-          No pairs found.
+          {t('pairPicker.noPairsFound')}
         </div>
       )}
 
@@ -169,7 +171,7 @@ export function PairSearchResults({
         recentEntries.length === 0 &&
         watchedEntries.length === 0 && (
           <div className="px-3 py-6 text-center text-xs text-muted-foreground">
-            Start typing to search pairs.
+            {t('pairPicker.startTyping')}
           </div>
         )}
     </div>

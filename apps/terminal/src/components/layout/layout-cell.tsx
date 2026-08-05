@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import {
@@ -28,6 +29,7 @@ type LayoutCellProps = {
 const EDGE_THRESHOLD = 0.25
 
 export function LayoutCell({ cell, dropZone, fitContent }: LayoutCellProps) {
+  const { t } = useTranslation()
   const { setNodeRef } = useDroppable({
     id: `cell:${cell.id}`,
     data: { cellId: cell.id, type: 'cell' },
@@ -45,7 +47,7 @@ export function LayoutCell({ cell, dropZone, fitContent }: LayoutCellProps) {
         className="relative flex h-full flex-col items-center justify-center gap-2 text-muted-foreground/40"
       >
         <LayoutGrid className="size-5" strokeWidth={1.5} />
-        <span className="text-xs">Drag a pane here</span>
+        <span className="text-xs">{t('layout.dropZone.emptyHint')}</span>
         <DropIndicator zone={zone} />
         {pendingAddPaneType && (
           <PlacementOverlay cellId={cell.id} onPlace={confirmAddPane} />
@@ -93,12 +95,12 @@ const ZONE_ICON: Record<Zone, LucideIcon> = {
   right: PanelRight,
 }
 
-const ZONE_LABEL: Record<Zone, string> = {
-  center: 'Add as tab',
-  top: 'Split top',
-  bottom: 'Split bottom',
-  left: 'New column',
-  right: 'New column',
+const ZONE_LABEL_KEY: Record<Zone, string> = {
+  center: 'layout.dropZone.addAsTab',
+  top: 'layout.dropZone.splitTop',
+  bottom: 'layout.dropZone.splitBottom',
+  left: 'layout.dropZone.newColumn',
+  right: 'layout.dropZone.newColumn',
 }
 
 const ACTIVE_ZONE =
@@ -108,11 +110,12 @@ const GHOST_ZONE = 'rounded-md bg-muted/10 animate-in fade-in duration-150'
 /** Shared visual for a highlighted drop/placement zone. Identical between
  * drag-to-move and click-to-place so the two flows feel like one. */
 function ZoneVisual({ zone }: { zone: Zone }) {
+  const { t } = useTranslation()
   const Icon = ZONE_ICON[zone]
   const content = (
     <>
       <Icon className="size-4 animate-in zoom-in duration-200" />
-      <span className="text-[11px] font-medium">{ZONE_LABEL[zone]}</span>
+      <span className="text-[11px] font-medium">{t(ZONE_LABEL_KEY[zone])}</span>
     </>
   )
 

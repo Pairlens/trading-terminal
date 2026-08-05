@@ -182,6 +182,7 @@ function HeatmapTooltip({
   item: HeatmapItem
   containerRef: React.RefObject<HTMLDivElement | null>
 }) {
+  const { t } = useTranslation()
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -222,19 +223,19 @@ function HeatmapTooltip({
         <span className="text-xs text-muted-foreground">{item.name}</span>
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-xs">
-        <span className="text-muted-foreground">Price</span>
+        <span className="text-muted-foreground">{t('topCoins.colPrice')}</span>
         <span className="text-right">{formatPrice(item.price)}</span>
-        <span className="text-muted-foreground">24h</span>
+        <span className="text-muted-foreground">{t('topCoins.col24h')}</span>
         <span
           className={`text-right ${item.percentChange24h >= 0 ? 'text-green-500' : 'text-red-500'}`}
         >
           {formatPercent(item.percentChange24h)}
         </span>
-        <span className="text-muted-foreground">Mkt Cap</span>
+        <span className="text-muted-foreground">{t('topCoins.colMktCap')}</span>
         <span className="text-right">
           {capFormatter.format(item.marketCap)}
         </span>
-        <span className="text-muted-foreground">Volume</span>
+        <span className="text-muted-foreground">{t('heatmap.volume')}</span>
         <span className="text-right">
           {capFormatter.format(item.volume24h)}
         </span>

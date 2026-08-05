@@ -233,7 +233,12 @@ export function InstalledPlugins() {
         notifyPluginStateChange()
       } catch (err) {
         toast.error(
-          `Failed to ${checked ? 'enable' : 'disable'} ${plugin.manifest.name}`,
+          t(
+            checked
+              ? 'pluginStore.toggleFailedEnable'
+              : 'pluginStore.toggleFailedDisable',
+            { name: plugin.manifest.name },
+          ),
           { description: err instanceof Error ? err.message : String(err) },
         )
       } finally {
@@ -245,6 +250,7 @@ export function InstalledPlugins() {
       notifyPluginStateChange,
       statesQuery.data,
       saveStateMutation,
+      t,
     ],
   )
 
@@ -304,21 +310,24 @@ export function InstalledPlugins() {
         removeUpdateForPlugin(update.pluginId)
         notifyPluginStateChange()
 
-        toast.info('Update staged — restart to apply', {
+        toast.info(t('pluginStore.updateStagedToast'), {
           action: {
-            label: 'Restart now',
+            label: t('pluginStore.restartNow'),
             onClick: () => window.location.reload(),
           },
         })
       } catch (err) {
         toast.error(
-          `Failed to stage update: ${err instanceof Error ? err.message : 'Unknown error'}`,
+          t('pluginStore.updateStageFailedToast', {
+            error:
+              err instanceof Error ? err.message : t('common.unknownError'),
+          }),
         )
       } finally {
         setBusyId(null)
       }
     },
-    [pluginManager, notifyPluginStateChange],
+    [pluginManager, notifyPluginStateChange, t],
   )
 
   const handleReset = useCallback(async () => {
@@ -345,9 +354,9 @@ export function InstalledPlugins() {
       clearAvailableUpdates()
       notifyPluginStateChange()
 
-      toast.info('Reset to defaults — restart to complete', {
+      toast.info(t('pluginStore.resetStagedToast'), {
         action: {
-          label: 'Restart now',
+          label: t('pluginStore.restartNow'),
           onClick: () => window.location.reload(),
         },
       })
@@ -355,7 +364,7 @@ export function InstalledPlugins() {
       setBusyId(null)
       setConfirmReset(false)
     }
-  }, [pluginManager, notifyPluginStateChange])
+  }, [pluginManager, notifyPluginStateChange, t])
 
   // After a plugin installs, surface any external hosts it needs (desktop only)
   // and, on consent, persist the grant and reload so the widened CSP applies.
@@ -367,16 +376,16 @@ export function InstalledPlugins() {
       )
       if (outcome === 'granted') {
         toast.success(
-          `Network access granted to "${manifest.name}" — reloading…`,
+          t('pluginStore.networkGrantedToast', { name: manifest.name }),
         )
         reloadForGrants()
       } else if (outcome === 'denied') {
         toast.warning(
-          `"${manifest.name}" was installed without network access — it may not function until you allow it.`,
+          t('pluginStore.networkDeniedToast', { name: manifest.name }),
         )
       }
     },
-    [requestNetworkConsent],
+    [requestNetworkConsent, t],
   )
 
   const handleManualInstall = useCallback(async () => {
@@ -395,7 +404,7 @@ export function InstalledPlugins() {
         if (!(err instanceof PluginFullTrustRequiredError)) throw err
         const granted = await requestFullTrust({ name: url })
         if (!granted) {
-          toast.info('Install cancelled — full trust not granted')
+          toast.info(t('pluginStore.installCancelledNoTrust'))
           return
         }
         trust = 'full'
@@ -442,13 +451,18 @@ export function InstalledPlugins() {
       setManualUrl('')
 
       toast.success(
-        `Installed "${pluginModule.manifest.name}" v${pluginModule.manifest.version}`,
+        t('pluginStore.installedVersionToast', {
+          name: pluginModule.manifest.name,
+          version: pluginModule.manifest.version,
+        }),
       )
 
       await applyNetworkConsent(pluginModule.manifest)
     } catch (err) {
       toast.error(
-        `Failed to install plugin: ${err instanceof Error ? err.message : 'Unknown error'}`,
+        t('pluginStore.installFailedToast', {
+          error: err instanceof Error ? err.message : t('common.unknownError'),
+        }),
       )
     } finally {
       setManualBusy(false)
@@ -459,6 +473,7 @@ export function InstalledPlugins() {
     notifyPluginStateChange,
     saveStateMutation,
     applyNetworkConsent,
+    t,
   ])
 
   // ── Recovery: plugins stuck needing full trust ────────────────────
@@ -480,7 +495,7 @@ export function InstalledPlugins() {
         let mod
         if (entry.source === 'local') {
           const files = await readLocalPlugin(entry.pluginId)
-          if (!files) throw new Error('Local plugin files not found')
+          if (!files) throw new Error(t('pluginStore.localFilesNotFound'))
           mod = await loader.loadModuleWithStyle(
             files.module_text,
             files.style_text,
@@ -490,7 +505,7 @@ export function InstalledPlugins() {
         } else {
           mod = await loader.loadCached(entry.pluginId, 'full')
         }
-        if (!mod) throw new Error('Plugin code not found — reinstall it')
+        if (!mod) throw new Error(t('pluginStore.pluginCodeNotFound'))
 
         await pluginManager.installPlugin(mod.manifest, mod.factory)
         const cfg = getLedger()[entry.pluginId]?.config ?? {}
@@ -500,18 +515,25 @@ export function InstalledPlugins() {
         )
         clearPendingFullTrust(entry.pluginId)
         notifyPluginStateChange()
-        toast.success(`Granted full trust to "${mod.manifest.name}"`)
+        toast.success(
+          t('pluginStore.fullTrustGrantedNameToast', {
+            name: mod.manifest.name,
+          }),
+        )
       } catch (err) {
         // Revert trust so it doesn't silently sit half-granted.
         setPluginTrust(entry.pluginId, 'sandboxed')
         toast.error(
-          `Failed to load plugin: ${err instanceof Error ? err.message : 'Unknown error'}`,
+          t('pluginStore.loadPluginFailedToast', {
+            error:
+              err instanceof Error ? err.message : t('common.unknownError'),
+          }),
         )
       } finally {
         setBusyId(null)
       }
     },
-    [requestFullTrust, pluginManager, notifyPluginStateChange],
+    [requestFullTrust, pluginManager, notifyPluginStateChange, t],
   )
 
   // ── Import a .zip plugin package (file picker / drag-drop) ─────────
@@ -558,7 +580,7 @@ export function InstalledPlugins() {
             author: pkg.manifest.author,
           })
           if (!granted) {
-            toast.info('Install cancelled — full trust not granted')
+            toast.info(t('pluginStore.installCancelledNoTrust'))
             return
           }
           trust = 'full'
@@ -607,13 +629,19 @@ export function InstalledPlugins() {
 
         notifyPluginStateChange()
         toast.success(
-          `Installed "${pkg.manifest.name}" v${pkg.manifest.version}`,
+          t('pluginStore.installedVersionToast', {
+            name: pkg.manifest.name,
+            version: pkg.manifest.version,
+          }),
         )
 
         await applyNetworkConsent(pluginModule.manifest)
       } catch (err) {
         toast.error(
-          `Failed to import plugin: ${err instanceof Error ? err.message : 'Unknown error'}`,
+          t('pluginStore.importFailedToast', {
+            error:
+              err instanceof Error ? err.message : t('common.unknownError'),
+          }),
         )
       } finally {
         setImportBusy(false)
@@ -624,6 +652,7 @@ export function InstalledPlugins() {
       notifyPluginStateChange,
       saveStateMutation,
       applyNetworkConsent,
+      t,
     ],
   )
 
@@ -737,7 +766,9 @@ export function InstalledPlugins() {
               ...prev,
               [manifest.id]: {
                 type: 'error',
-                message: `${field.label} is required`,
+                message: t('pluginStore.fieldRequired', {
+                  label: field.label,
+                }),
               },
             }))
             setBusyId(null)
@@ -763,7 +794,10 @@ export function InstalledPlugins() {
         notifyPluginStateChange()
         setConfigFeedback((prev) => ({
           ...prev,
-          [manifest.id]: { type: 'success', message: 'Configuration saved' },
+          [manifest.id]: {
+            type: 'success',
+            message: t('pluginStore.configSaved'),
+          },
         }))
       } catch (err) {
         setConfigFeedback((prev) => ({
@@ -771,14 +805,22 @@ export function InstalledPlugins() {
           [manifest.id]: {
             type: 'error',
             message:
-              err instanceof Error ? err.message : 'Configuration failed',
+              err instanceof Error
+                ? err.message
+                : t('pluginStore.configurationFailed'),
           },
         }))
       } finally {
         setBusyId(null)
       }
     },
-    [pluginManager, notifyPluginStateChange, getConfigDraft, saveStateMutation],
+    [
+      pluginManager,
+      notifyPluginStateChange,
+      getConfigDraft,
+      saveStateMutation,
+      t,
+    ],
   )
 
   // Source per plugin (from the install ledger), recomputed on state changes.
@@ -934,7 +976,7 @@ export function InstalledPlugins() {
         <div className="mb-4 space-y-2 rounded-lg border border-amber-500/40 bg-amber-500/5 p-3">
           <div className="flex items-center gap-2 text-sm font-medium text-amber-500">
             <ShieldAlert className="size-4" />
-            Needs full trust to run
+            {t('pluginStore.needsFullTrustToRun')}
           </div>
           {pendingTrust.map((entry) => (
             <div
@@ -946,8 +988,7 @@ export function InstalledPlugins() {
                   {entry.pluginId}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Contributes UI and can’t run in the sandbox — grant full trust
-                  to enable it, or uninstall it.
+                  {t('pluginStore.pendingTrustDescription')}
                 </p>
               </div>
               <div className="flex shrink-0 items-center gap-2">
@@ -959,7 +1000,7 @@ export function InstalledPlugins() {
                   onClick={() => void handleGrantPendingTrust(entry)}
                 >
                   <ShieldCheck className="size-3" />
-                  Grant full trust
+                  {t('pluginStore.fullTrust.grant')}
                 </Button>
                 <Button
                   size="sm"
@@ -974,7 +1015,7 @@ export function InstalledPlugins() {
                   }}
                 >
                   <Trash2 className="size-3" />
-                  Remove
+                  {t('pluginStore.remove')}
                 </Button>
               </div>
             </div>
@@ -985,7 +1026,7 @@ export function InstalledPlugins() {
       {/* Core plugins (pairlens-core is irreducible: disable with confirm,
           not removable; intelligence is fully removable) */}
       {grouped.core.length > 0 && (
-        <PluginGroup label="Core" plugins={grouped.core}>
+        <PluginGroup label={t('pluginStore.groupCore')} plugins={grouped.core}>
           {(plugin) => (
             <InstalledPluginRow
               key={plugin.manifest.id}
@@ -1030,7 +1071,10 @@ export function InstalledPlugins() {
 
       {/* Other plugins (inference, etc.) */}
       {grouped.other.length > 0 && (
-        <PluginGroup label="Providers & Extensions" plugins={grouped.other}>
+        <PluginGroup
+          label={t('pluginStore.groupProvidersExtensions')}
+          plugins={grouped.other}
+        >
           {(plugin) => (
             <InstalledPluginRow
               key={plugin.manifest.id}
@@ -1051,7 +1095,10 @@ export function InstalledPlugins() {
 
       {/* Theme plugins */}
       {grouped.themes.length > 0 && (
-        <PluginGroup label="Themes" plugins={grouped.themes}>
+        <PluginGroup
+          label={t('pluginStore.groupThemes')}
+          plugins={grouped.themes}
+        >
           {(plugin) => (
             <InstalledPluginRow
               key={plugin.manifest.id}
@@ -1084,19 +1131,19 @@ export function InstalledPlugins() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove Plugin</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t('pluginStore.removePluginTitle')}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This will deactivate and remove the plugin. Any panels it
-              contributed will show a recovery placeholder. You can reinstall it
-              from the Plugin Store at any time.
+              {t('pluginStore.removePluginDescription')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => confirmRemove && handleRemove(confirmRemove)}
             >
-              Remove
+              {t('pluginStore.remove')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -1111,17 +1158,17 @@ export function InstalledPlugins() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Reset to Defaults</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t('pluginStore.resetDefaultsTitle')}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove all non-bundled plugins, clear staged and
-              available updates, and reload the terminal. Bundled plugins will
-              remain installed.
+              {t('pluginStore.resetDefaultsDescription')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={() => void handleReset()}>
-              Reset
+              {t('pluginStore.reset')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -1147,7 +1194,7 @@ export function InstalledPlugins() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 const plugin = pluginManager
@@ -1175,9 +1222,11 @@ export function InstalledPlugins() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Install Plugin from URL</DialogTitle>
+            <DialogTitle>
+              {t('pluginStore.installFromUrlDialogTitle')}
+            </DialogTitle>
             <DialogDescription>
-              Enter the URL of a plugin module (.js) to install.
+              {t('pluginStore.installFromUrlDialogDescription')}
             </DialogDescription>
           </DialogHeader>
 
@@ -1185,10 +1234,11 @@ export function InstalledPlugins() {
           <div className="flex gap-2.5 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
             <ShieldAlert className="mt-0.5 size-4 shrink-0 text-amber-400" />
             <div>
-              <p className="font-semibold text-amber-300">Unverified Plugin</p>
+              <p className="font-semibold text-amber-300">
+                {t('pluginStore.unverifiedPluginTitle')}
+              </p>
               <p className="mt-0.5 text-amber-200/80">
-                Manually installed plugins have not been reviewed for security.
-                Only install plugins from sources you trust.
+                {t('pluginStore.unverifiedPluginBody')}
               </p>
             </div>
           </div>
@@ -1215,7 +1265,7 @@ export function InstalledPlugins() {
               }}
               disabled={manualBusy}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               variant="default"
@@ -1224,7 +1274,9 @@ export function InstalledPlugins() {
               className="gap-1.5"
             >
               {manualBusy && <Loader2 className="size-3.5 animate-spin" />}
-              {manualBusy ? 'Installing...' : 'Install Anyway'}
+              {manualBusy
+                ? t('pluginStore.installing')
+                : t('pluginStore.installAnyway')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1295,13 +1347,6 @@ function PluginGroup({
   )
 }
 
-const SOURCE_LABELS: Record<PluginSourceKind, string> = {
-  bootstrap: 'Built-in',
-  registry: 'Registry',
-  url: 'URL',
-  local: 'Local',
-}
-
 function InstalledPluginRow({
   plugin,
   source,
@@ -1327,6 +1372,13 @@ function InstalledPluginRow({
   removable: boolean
   toggleable?: boolean
 }) {
+  const { t } = useTranslation()
+  const SOURCE_LABELS: Record<PluginSourceKind, string> = {
+    bootstrap: t('pluginStore.sourceBuiltIn'),
+    registry: t('pluginStore.sourceRegistry'),
+    url: t('pluginStore.sourceUrl'),
+    local: t('pluginStore.sourceLocal'),
+  }
   const hasConfig = Object.keys(plugin.manifest.config).length > 0
   const isActive = plugin.status === 'active'
   const configHint = isActive ? null : missingConfigHint(plugin.manifest)
@@ -1346,11 +1398,11 @@ function InstalledPluginRow({
     setTrust(next)
     toast.info(
       next === 'full'
-        ? 'Full trust granted — restart to run this plugin in the main app'
-        : 'Plugin will run sandboxed — restart to apply',
+        ? t('pluginStore.fullTrustGrantedRestartToast')
+        : t('pluginStore.sandboxedRestartToast'),
       {
         action: {
-          label: 'Restart now',
+          label: t('pluginStore.restartNow'),
           onClick: () => window.location.reload(),
         },
       },
@@ -1396,7 +1448,7 @@ function InstalledPluginRow({
               )}
               title={
                 requiresFullTrust
-                  ? 'This plugin contributes UI and must run at full trust.'
+                  ? t('pluginStore.requiresFullTrustTitle')
                   : undefined
               }
             >
@@ -1407,9 +1459,9 @@ function InstalledPluginRow({
               )}
               {trust === 'full'
                 ? requiresFullTrust
-                  ? 'Full trust (required)'
-                  : 'Full trust'
-                : 'Sandboxed'}
+                  ? t('pluginStore.trustBadgeFullRequired')
+                  : t('pluginStore.trustBadgeFull')
+                : t('pluginStore.trustBadgeSandboxed')}
             </Badge>
           )}
           {update && (
@@ -1424,7 +1476,7 @@ function InstalledPluginRow({
           {panelCount > 0 && (
             <Badge variant="outline" className="h-4 gap-1 px-1 py-0 text-[9px]">
               <Puzzle className="size-2.5" />
-              {panelCount} {panelCount === 1 ? 'panel' : 'panels'}
+              {t('pluginStore.panelCount', { count: panelCount })}
             </Badge>
           )}
           {configHint && (
@@ -1451,7 +1503,7 @@ function InstalledPluginRow({
             onClick={() => onUpdate?.(update)}
           >
             <ArrowUpCircle className="size-3" />
-            Update
+            {t('pluginStore.update')}
           </Button>
         )}
         {/* Trust toggle — only for plugins that CAN run sandboxed. UI plugins
@@ -1470,13 +1522,17 @@ function InstalledPluginRow({
             disabled={busy}
             aria-label={
               trust === 'full'
-                ? `Revoke full trust for ${plugin.manifest.name}`
-                : `Grant full trust to ${plugin.manifest.name}`
+                ? t('pluginStore.revokeFullTrustAria', {
+                    name: plugin.manifest.name,
+                  })
+                : t('pluginStore.grantFullTrustAria', {
+                    name: plugin.manifest.name,
+                  })
             }
             title={
               trust === 'full'
-                ? 'Full trust — runs in the main app. Click to sandbox.'
-                : 'Sandboxed — isolated worker, network limited to declared hosts. Click to grant full trust.'
+                ? t('pluginStore.fullTrustActiveTitle')
+                : t('pluginStore.sandboxedTitle')
             }
           >
             {trust === 'full' ? (
@@ -1494,7 +1550,9 @@ function InstalledPluginRow({
             className="size-7 text-muted-foreground hover:text-foreground"
             onClick={onConfigure}
             disabled={busy}
-            aria-label={`Configure ${plugin.manifest.name}`}
+            aria-label={t('pluginStore.configureAria', {
+              name: plugin.manifest.name,
+            })}
           >
             <Settings className="size-3.5" />
           </Button>
@@ -1514,7 +1572,9 @@ function InstalledPluginRow({
           checked={isActive}
           disabled={busy || !toggleable}
           onCheckedChange={onToggle}
-          aria-label={`Toggle ${plugin.manifest.name}`}
+          aria-label={t('pluginStore.toggleAria', {
+            name: plugin.manifest.name,
+          })}
         />
       </div>
     </div>
