@@ -1195,9 +1195,6 @@
       "technical": "技术型",
       "technicalDescription": "数据驱动,评论极简"
     },
-    "marketRegime": "市场状态",
-    "trending": "趋势",
-    "choppy": "震荡",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "数量",

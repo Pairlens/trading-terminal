@@ -1203,9 +1203,6 @@
       "technical": "Технический",
       "technicalDescription": "Основан на данных, минимум комментариев"
     },
-    "marketRegime": "Режим рынка",
-    "trending": "Трендовый",
-    "choppy": "Флэт",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "Размер",

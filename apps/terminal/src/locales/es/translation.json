@@ -1195,9 +1195,6 @@
       "technical": "Técnico",
       "technicalDescription": "Basado en datos, comentario mínimo"
     },
-    "marketRegime": "Régimen de mercado",
-    "trending": "Tendencia",
-    "choppy": "Volátil",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "Tamaño",

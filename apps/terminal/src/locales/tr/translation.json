@@ -1195,9 +1195,6 @@
       "technical": "Teknik",
       "technicalDescription": "Veri odaklı, minimum yorum"
     },
-    "marketRegime": "Piyasa Rejimi",
-    "trending": "Trend",
-    "choppy": "Dalgalı",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "Miktar",

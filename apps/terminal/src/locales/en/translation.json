@@ -1195,9 +1195,6 @@
       "technical": "Technical",
       "technicalDescription": "Data-driven, minimal commentary"
     },
-    "marketRegime": "Market Regime",
-    "trending": "Trending",
-    "choppy": "Choppy",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "Size",

@@ -1203,9 +1203,6 @@
       "technical": "Технічний",
       "technicalDescription": "На основі даних, мінімум коментарів"
     },
-    "marketRegime": "Режим ринку",
-    "trending": "Трендовий",
-    "choppy": "Флет",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "Розмір",

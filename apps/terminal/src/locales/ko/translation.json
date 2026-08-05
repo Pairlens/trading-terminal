@@ -1195,9 +1195,6 @@
       "technical": "테크니컬",
       "technicalDescription": "데이터 중심, 최소한의 설명"
     },
-    "marketRegime": "시장 국면",
-    "trending": "추세",
-    "choppy": "횡보",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "수량",
