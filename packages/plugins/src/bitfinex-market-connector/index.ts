@@ -72,8 +72,8 @@ const bitfinexSpec: CexConnectorSpec<BitfinexCredentials> = {
   defaultMode: 'live',
   createWsClient: () => new BfxWsClient(),
   createPrivateWsClient: () => new BfxPrivateWsClient(),
-  fetchCandles: (pair, timeframe, limit) =>
-    fetchBfxCandles(pair, timeframe, limit),
+  fetchCandles: (pair, timeframe, limit, _country, endTs) =>
+    fetchBfxCandles(pair, timeframe, limit, endTs),
   fetchTickerSnapshot: () => fetchBfxTickerSnapshot(),
   fetchOpenOrders: (slot) => fetchBfxOpenOrders(slot.credentials),
   fetchOrderHistory: (slot) => fetchBfxOrderHistory(slot.credentials),

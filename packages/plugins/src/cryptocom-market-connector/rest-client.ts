@@ -7,6 +7,7 @@
  * Response: { "code": 0, "result": { "data": [...], "instrument_name": "..." } }
  */
 
+import { olderThan, pageEndMs } from '@pairlens/market-engine/candle-paging'
 import { sortCandlesAscending } from '@pairlens/market-engine/candle-buffer'
 import { assertResponseOk } from '@pairlens/market-engine/errors'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
@@ -28,6 +29,7 @@ export async function fetchCryptocomCandles(
   timeframe: string,
   limit: number,
   paper = false,
+  endTs?: number,
 ): Promise<Array<Candle>> {
   const tf = toCryptocomTimeframe(timeframe)
   if (!tf) throw new Error(`Unsupported timeframe: ${timeframe}`)
@@ -36,7 +38,8 @@ export async function fetchCryptocomCandles(
   const base = resolveCryptocomRestBase(paper)
   const count = Math.min(limit, 300)
 
-  const url = `${base}/exchange/v1/public/get-candlestick?instrument_name=${instrument}&timeframe=${tf}&count=${count}`
+  const endParam = endTs === undefined ? '' : `&end_ts=${pageEndMs(endTs)}`
+  const url = `${base}/exchange/v1/public/get-candlestick?instrument_name=${instrument}&timeframe=${tf}&count=${count}${endParam}`
 
   const res = await fetch(url)
   if (!res.ok) {
@@ -63,7 +66,10 @@ export async function fetchCryptocomCandles(
   }
 
   // Normalize to ascending regardless of the API's current ordering.
-  return sortCandlesAscending(json.result.data.map(parseCryptocomCandle))
+  return olderThan(
+    sortCandlesAscending(json.result.data.map(parseCryptocomCandle)),
+    endTs,
+  )
 }
 
 /** Fetch bulk 24h quotes for every spot instrument from Crypto.com REST API. */

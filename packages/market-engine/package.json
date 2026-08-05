@@ -21,6 +21,7 @@
     "./candle-buffer": "./src/candle-buffer.ts",
     "./candle-aggregator": "./src/candle-aggregator.ts",
     "./candle-backfill": "./src/candle-backfill.ts",
+    "./candle-paging": "./src/candle-paging.ts",
     "./throttle": "./src/throttle.ts",
     "./hmac-signer": "./src/hmac-signer.ts",
     "./http": "./src/http.ts",

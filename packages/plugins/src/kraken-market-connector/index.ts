@@ -72,8 +72,8 @@ const krakenSpec: CexConnectorSpec<KrakenCredentials> = {
   defaultMode: 'live',
   createWsClient: () => new KrakenWsClient(),
   createPrivateWsClient: () => new KrakenPrivateWsClient(),
-  fetchCandles: (pair, timeframe, limit) =>
-    fetchKrakenCandles(pair, timeframe, limit),
+  fetchCandles: (pair, timeframe, limit, _country, endTs) =>
+    fetchKrakenCandles(pair, timeframe, limit, endTs),
   fetchTickerSnapshot: () => fetchKrakenTickerSnapshot(),
   fetchOpenOrders: (slot) => fetchKrakenOpenOrders(slot.credentials),
   fetchOrderHistory: (slot) => fetchKrakenOrderHistory(slot.credentials),

@@ -9,6 +9,7 @@
  * Max 200 per request.
  */
 
+import { olderThan, pageEndMs } from '@pairlens/market-engine/candle-paging'
 import { assertResponseOk } from '@pairlens/market-engine/errors'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
 import {
@@ -29,6 +30,7 @@ export async function fetchUpbitCandles(
   timeframe: string,
   limit: number,
   country: string,
+  endTs?: number,
 ): Promise<Array<Candle>> {
   const rest = toUpbitRestCandle(timeframe)
   if (!rest) throw new Error(`Unsupported timeframe: ${timeframe}`)
@@ -41,7 +43,12 @@ export async function fetchUpbitCandles(
   // extreme outlier prices from erroneous trades. Filter candles to the last
   // 6 months and remove price outliers.
   const count = Math.min(limit, 200)
-  const url = `${restBase}${rest.path}?market=${market}&count=${count}`
+  // `to` takes an ISO-8601 UTC instant and is exclusive (measured).
+  const toParam =
+    endTs === undefined
+      ? ''
+      : `&to=${new Date(pageEndMs(endTs)).toISOString().replace(/\.\d+Z$/, 'Z')}`
+  const url = `${restBase}${rest.path}?market=${market}&count=${count}${toParam}`
 
   const res = await fetch(url)
   if (!res.ok) {
@@ -60,14 +67,20 @@ export async function fetchUpbitCandles(
 
   if (!Array.isArray(json) || json.length === 0) return []
 
-  // Filter: only candles from the last 6 months to avoid ancient outliers
-  const sixMonthsAgo = Date.now() - 180 * 24 * 60 * 60 * 1000
+  // Filter: only candles from the 6 months BEFORE the window being requested,
+  // to avoid ancient outliers. Anchoring this to `now` instead of the cursor
+  // would throw away every page the pan-left backfill asks for, since those
+  // are older than six months by definition once the user scrolls back far
+  // enough — the recency guard would silently become an end-of-history wall.
+  const windowEnd = endTs ?? Date.now()
+  const sixMonthsAgo = windowEnd - 180 * 24 * 60 * 60 * 1000
   const recent = json.filter((c) => {
     const ts = new Date(c.candle_date_time_utc + 'Z').getTime()
     return ts >= sixMonthsAgo
   })
 
-  if (recent.length === 0) return json.map(parseUpbitCandle).reverse()
+  if (recent.length === 0)
+    return olderThan(json.map(parseUpbitCandle).reverse(), endTs)
 
   // Compute median close price from recent candles for outlier detection
   const closes = recent.map((c) => c.trade_price).sort((a, b) => a - b)
@@ -79,9 +92,10 @@ export async function fetchUpbitCandles(
   )
 
   // Upbit returns newest first; reverse to chronological
-  return (filtered.length > 0 ? filtered : recent)
-    .map(parseUpbitCandle)
-    .reverse()
+  return olderThan(
+    (filtered.length > 0 ? filtered : recent).map(parseUpbitCandle).reverse(),
+    endTs,
+  )
 }
 
 /** Fetch bulk 24h quotes for every listed market from Upbit REST API. */

@@ -9,6 +9,7 @@
  * Response envelope: { "error": [...], "result": { ... } }
  */
 
+import { olderThan } from '@pairlens/market-engine/candle-paging'
 import { assertResponseOk } from '@pairlens/market-engine/errors'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
 import {
@@ -28,6 +29,7 @@ export async function fetchKrakenCandles(
   pair: string,
   timeframe: string,
   limit: number,
+  endTs?: number,
 ): Promise<Array<Candle>> {
   const interval = toRestInterval(timeframe)
   if (!interval) throw new Error(`Unsupported timeframe: ${timeframe}`)
@@ -35,7 +37,10 @@ export async function fetchKrakenCandles(
   const restPair = toRestPair(pair)
   const base = resolveKrakenRestBase()
 
-  // Kraken returns max 720 candles (most recent when no `since`)
+  // Kraken returns max 720 candles (most recent when no `since`). `since`
+  // selects a START point and pages FORWARD, so there is no way to ask for
+  // anything older than this window — a paged read slices what is here and
+  // then reports exhaustion rather than pretending to have more.
   const url = `${base}/public/OHLC?pair=${restPair}&interval=${interval}`
 
   const res = await fetch(url)
@@ -63,7 +68,7 @@ export async function fetchKrakenCandles(
 
   // Kraken returns chronological order; take the last N
   const clamped = Math.min(limit, 720)
-  return candles.slice(-clamped)
+  return olderThan(candles, endTs).slice(-clamped)
 }
 
 /**

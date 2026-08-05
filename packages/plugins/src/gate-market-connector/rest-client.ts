@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { olderThan, pageEndSec } from '@pairlens/market-engine/candle-paging'
 import { assertResponseOk } from '@pairlens/market-engine/errors'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
 import {
@@ -45,6 +46,7 @@ export async function fetchGateCandles(
   limit: number,
   country: string,
   paper?: boolean,
+  endTs?: number,
 ): Promise<Array<Candle>> {
   const restBase = resolveGateRestBase(paper)
   const interval = mapTimeframeToGateInterval(timeframe)
@@ -55,7 +57,8 @@ export async function fetchGateCandles(
 
   // Use from/to time range for accurate candle count
   const intervalSeconds = gateIntervalToSeconds(interval)
-  const to = Math.floor(Date.now() / 1000)
+  const to =
+    endTs === undefined ? Math.floor(Date.now() / 1000) : pageEndSec(endTs)
   const from = to - clampedLimit * intervalSeconds
 
   const url = `${restBase}/spot/candlesticks?currency_pair=${symbol}&interval=${interval}&from=${from}&to=${to}&limit=${clampedLimit}`
@@ -87,12 +90,14 @@ export async function fetchGateCandles(
   }
 
   // Gate.io returns oldest first — already chronological
+  const paged = olderThan(candles, endTs)
+
   // Respect limit
-  if (candles.length > limit) {
-    return candles.slice(candles.length - limit)
+  if (paged.length > limit) {
+    return paged.slice(paged.length - limit)
   }
 
-  return candles
+  return paged
 }
 
 /** Fetch bulk 24h quotes for every listed pair from Gate REST API. */

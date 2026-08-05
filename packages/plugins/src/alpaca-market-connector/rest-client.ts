@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { olderThan, pageEndMs } from '@pairlens/market-engine/candle-paging'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
 import {
   mapTimeframeToAlpacaInterval,
@@ -48,6 +49,7 @@ export async function fetchAlpacaCandles(
   timeframe: string,
   limit: number,
   credentials: AlpacaCredentials,
+  endTs?: number,
 ): Promise<Array<Candle>> {
   const interval = mapTimeframeToAlpacaInterval(timeframe)
   if (!interval) throw new Error(`Unsupported timeframe: ${timeframe}`)
@@ -63,9 +65,16 @@ export async function fetchAlpacaCandles(
       ? '2016-01-01'
       : new Date(Date.now() - 365 * 86_400_000).toISOString()
 
+  // `end` bounds the newest bar returned; with sort=desc that is exactly the
+  // pan-left cursor. RFC-3339, and exclusive by way of the millisecond step.
+  const endParam =
+    endTs === undefined
+      ? ''
+      : `&end=${encodeURIComponent(new Date(pageEndMs(endTs)).toISOString())}`
+
   const url =
     `${ALPACA_DATA_REST}/v2/stocks/${encodeURIComponent(symbol)}/bars` +
-    `?timeframe=${interval}&limit=${capped}&sort=desc&feed=iex&adjustment=split&start=${encodeURIComponent(start)}`
+    `?timeframe=${interval}&limit=${capped}&sort=desc&feed=iex&adjustment=split&start=${encodeURIComponent(start)}${endParam}`
 
   const resp = await fetch(url, { headers: alpacaDataHeaders(credentials) })
   if (!resp.ok) {
@@ -82,7 +91,7 @@ export async function fetchAlpacaCandles(
 
   // sort=desc returns newest first — flip to chronological order.
   candles.reverse()
-  return candles
+  return olderThan(candles, endTs)
 }
 
 /** Fetch a ticker snapshot (last, bid/ask, session stats) for one symbol. */

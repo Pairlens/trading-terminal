@@ -95,8 +95,8 @@ const bitgetSpec: CexConnectorSpec<BitgetCredentials> = {
   defaultMode: 'paper',
   createWsClient: () => new BitgetWsClient(),
   createPrivateWsClient: () => new BitgetPrivateWsClient(),
-  fetchCandles: (pair, timeframe, limit, country) =>
-    fetchBitgetCandles(pair, timeframe, limit, country),
+  fetchCandles: (pair, timeframe, limit, country, endTs) =>
+    fetchBitgetCandles(pair, timeframe, limit, country, endTs),
   fetchTickerSnapshot: (country) => fetchBitgetTickerSnapshot(country),
   fetchOpenOrders: (slot) =>
     fetchBitgetOpenOrders(

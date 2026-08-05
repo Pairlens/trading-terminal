@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { olderThan, pageEndMs } from '@pairlens/market-engine/candle-paging'
 import {
   GeoRestrictedError,
   assertResponseOk,
@@ -7,6 +8,7 @@ import {
 import { restFetch as fetch } from '@pairlens/market-engine/http'
 import {
   mapTimeframeToMexcInterval,
+  mexcTimeframeMs,
   normalizePair,
   parseMexcBulkTickerRow,
   parseMexcRestKline,
@@ -24,6 +26,7 @@ export async function fetchMexcCandles(
   timeframe: string,
   limit: number,
   country: string,
+  endTs?: number,
 ): Promise<Array<Candle>> {
   const urls = resolveMexcUrls(country)
   if (!urls) throw new GeoRestrictedError('MEXC', country)
@@ -32,7 +35,15 @@ export async function fetchMexcCandles(
   if (!interval) throw new Error(`Unsupported timeframe: ${timeframe}`)
 
   const symbol = normalizePair(pair)
-  const url = `${urls.restBase}/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${Math.min(limit, 1000)}`
+  const clamped = Math.min(limit, 1000)
+  // `endTime` on its own is ignored — the API only honours it alongside an
+  // explicit `startTime`, so the window is computed rather than implied.
+  let range = ''
+  if (endTs !== undefined) {
+    const end = pageEndMs(endTs)
+    range = `&startTime=${end - clamped * mexcTimeframeMs(timeframe)}&endTime=${end}`
+  }
+  const url = `${urls.restBase}/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${clamped}${range}`
 
   const resp = await fetch(url)
   if (!resp.ok) {
@@ -48,7 +59,7 @@ export async function fetchMexcCandles(
   }
 
   // MEXC returns oldest first — already in chronological order
-  return candles
+  return olderThan(candles, endTs)
 }
 
 /** Fetch bulk 24h quotes for every listed symbol from MEXC REST API. */

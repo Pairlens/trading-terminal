@@ -70,8 +70,8 @@ const upbitSpec: CexConnectorSpec<UpbitCredentials> = {
   defaultMode: 'live',
   createWsClient: () => new UpbitWsClient(),
   createPrivateWsClient: () => new UpbitPrivateWsClient(),
-  fetchCandles: (pair, timeframe, limit, country) =>
-    fetchUpbitCandles(pair, timeframe, limit, country),
+  fetchCandles: (pair, timeframe, limit, country, endTs) =>
+    fetchUpbitCandles(pair, timeframe, limit, country, endTs),
   fetchTickerSnapshot: (country) => fetchUpbitTickerSnapshot(country),
   fetchOpenOrders: (slot) =>
     fetchUpbitOpenOrders(slot.credentials, slot.country),

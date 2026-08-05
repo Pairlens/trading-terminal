@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { olderThan, pageEndSec } from '@pairlens/market-engine/candle-paging'
 import { assertResponseOk } from '@pairlens/market-engine/errors'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
 import {
@@ -47,6 +48,7 @@ export async function fetchKucoinCandles(
   timeframe: string,
   limit: number,
   country: string,
+  endTs?: number,
 ): Promise<Array<Candle>> {
   const restBase = resolveKucoinRestBase(country)
   const kucoinType = mapTimeframeToKucoinType(timeframe)
@@ -57,7 +59,8 @@ export async function fetchKucoinCandles(
   // KuCoin doesn't have a `limit` param — use startAt/endAt time range.
   // Calculate how far back to go based on the requested candle count + interval.
   const intervalSeconds = kucoinTypeToSeconds(kucoinType)
-  const endAt = Math.floor(Date.now() / 1000)
+  const endAt =
+    endTs === undefined ? Math.floor(Date.now() / 1000) : pageEndSec(endTs)
   const startAt = endAt - limit * intervalSeconds
 
   const url = `${restBase}/api/v1/market/candles?symbol=${symbol}&type=${kucoinType}&startAt=${startAt}&endAt=${endAt}`
@@ -83,12 +86,14 @@ export async function fetchKucoinCandles(
   // KuCoin returns newest first — reverse to chronological order
   candles.reverse()
 
+  const paged = olderThan(candles, endTs)
+
   // Respect limit
-  if (candles.length > limit) {
-    return candles.slice(candles.length - limit)
+  if (paged.length > limit) {
+    return paged.slice(paged.length - limit)
   }
 
-  return candles
+  return paged
 }
 
 /**
