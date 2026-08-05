@@ -81,9 +81,9 @@ exchange's API is expected. A theme needing network access is not.
 
 ## Themes
 
-Seventeen themes ship in the box, from **Terminal Classic** and **Zen Trading**
-through **Cyberpunk Neon**, **Sakura Bloom**, **Infrared**, and **High
-Contrast**. Apply one from the Plugin Store, or from
+Eighteen themes ship in the box, from **Terminal Classic** and **Zen Trading**
+through **Cyberpunk Neon**, **Sakura Bloom**, **Infrared**, **High Contrast**,
+and **Boomerg**, which turns the whole terminal amber-on-black and monospace. Apply one from the Plugin Store, or from
 **Settings → Appearance**, or with the omni-search **Theme** action. Light and
 dark modes are independent of the theme, and **System** follows your OS.
 

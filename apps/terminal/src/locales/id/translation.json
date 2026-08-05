@@ -2604,6 +2604,10 @@
         "title": "High Contrast",
         "description": "Berfokus pada aksesibilitas dengan kontras maksimal, border tebal, dan pemisahan visual yang jelas"
       },
+      "boomerg": {
+        "title": "Boomerg",
+        "description": "Nuansa amber di atas hitam sebagai penghormatan pada terminal Bloomberg klasik — antarmuka monospace, sudut siku, dan warna tombol fungsi"
+      },
       "okx-market-connector": {
         "title": "Konektor Market OKX",
         "description": "Data market dan trading langsung via API exchange OKX"

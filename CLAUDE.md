@@ -93,7 +93,7 @@ Market connectors are standard plugins that implement the `MarketAdapter` interf
 - **AI inference** (bring-your-own-key): Groq, OpenAI, Anthropic, OpenRouter
 - **AI web search** (bring-your-own-key): Tavily, Exa
 - **Core**: `pairlens-core` (instrument discovery, panels, workflow step types), `pairlens-intelligence` (fallback-only AI inference/search + discovery + symbol logos). `basic-symbols` is deprecated (absorbed into pairlens-core, kept for registry back-compat).
-- **Themes**: 17 `theme:override` plugins
+- **Themes**: 18 `theme:override` plugins
 
 **Third-party connectors** can be installed from the Plugin Store at runtime. Any developer can build a connector by implementing `MarketAdapter` and publishing to the registry.
 

@@ -2604,6 +2604,10 @@
         "title": "High Contrast",
         "description": "Erişilebilirliğe odaklı; maksimum kontrast, kalın kenarlıklar ve net görsel ayrım"
       },
+      "boomerg": {
+        "title": "Boomerg",
+        "description": "Klasik Bloomberg terminaline selam duran siyah üzerine kehribar — eş aralıklı arayüz, keskin köşeler ve fonksiyon tuşu renkleri"
+      },
       "okx-market-connector": {
         "title": "OKX Piyasa Bağlayıcısı",
         "description": "OKX borsa API'leri üzerinden doğrudan piyasa verisi ve işlem"

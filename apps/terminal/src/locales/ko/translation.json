@@ -2604,6 +2604,10 @@
         "title": "High Contrast",
         "description": "접근성에 초점을 맞춰 최대 대비, 굵은 테두리, 명확한 시각적 구분을 제공"
       },
+      "boomerg": {
+        "title": "Boomerg",
+        "description": "클래식 블룸버그 터미널에 대한 오마주. 검정 배경에 앰버 텍스트, 고정폭 UI, 각진 모서리, 기능키 색상"
+      },
       "okx-market-connector": {
         "title": "OKX 마켓 커넥터",
         "description": "OKX 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"

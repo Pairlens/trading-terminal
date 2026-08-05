@@ -2604,6 +2604,10 @@
         "title": "High Contrast",
         "description": "Pensato per l'accessibilità, con contrasto massimo, bordi marcati e netta separazione visiva"
       },
+      "boomerg": {
+        "title": "Boomerg",
+        "description": "Omaggio in ambra su nero al classico terminale Bloomberg — interfaccia monospaziata, angoli vivi e colori dei tasti funzione"
+      },
       "okx-market-connector": {
         "title": "OKX Connettore di Mercato",
         "description": "Dati di mercato e trading diretti via le API di OKX"

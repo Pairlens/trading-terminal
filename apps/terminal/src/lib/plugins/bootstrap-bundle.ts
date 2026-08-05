@@ -102,9 +102,11 @@ import {
 import {
   anthropicInferenceManifest,
   arcticBlueManifest,
+  boomergManifest,
   burntOrangeManifest,
   createAnthropicInferencePlugin,
   createArcticBluePlugin,
+  createBoomergPlugin,
   createBurntOrangePlugin,
   createCryptoGoldPlugin,
   createCyberpunkNeonPlugin,
@@ -215,6 +217,7 @@ export const BOOTSTRAP_THEME_PLUGINS: Array<BootstrapPlugin> = [
   { manifest: nightCityManifest, factory: createNightCityPlugin },
   { manifest: eyeComfortManifest, factory: createEyeComfortPlugin },
   { manifest: highContrastManifest, factory: createHighContrastPlugin },
+  { manifest: boomergManifest, factory: createBoomergPlugin },
 ]
 
 /** DEX data providers + connectors. */
