@@ -11,14 +11,19 @@
  * here: this slot is the single credential the vault must never encrypt
  * (`VAULT_EXEMPT` in lib/keychain.ts), because the lock screen has to be
  * answerable while the vault is deliberately sealed. So it is plaintext on
- * every platform — the OS keychain on desktop, bare localStorage in browser
- * dev builds. That is a confidentiality argument only: there is nothing secret
+ * every platform — the OS keychain on desktop, bare localStorage in the
+ * browser. That is a confidentiality argument only: there is nothing secret
  * in a PBKDF2 digest, but in the browser there is also nothing protecting its
  * INTEGRITY, so someone who can edit the profile on disk can plant a verifier
- * for a password they choose and walk past the lock screen. The vault is
- * unaffected (its DEK still needs the real password, and the mismatch lands in
- * terminal-lock's `vault-diverged` branch), which is the whole reason this is
- * acceptable — and why browser builds stay dev/testing only.
+ * for a password they choose and walk past the lock screen.
+ *
+ * What makes that acceptable is the vault, and ONLY the vault: its DEK still
+ * needs the real password, so a planted verifier opens an empty room and the
+ * mismatch lands in terminal-lock's `vault-diverged` branch. This used to lean
+ * on a second argument — that browser builds were dev/testing only — which
+ * stopped being true when the hosted web terminal shipped. The remaining
+ * argument still holds on its own, but it is now the whole of it: weakening
+ * the vault's grip on the DEK would leave this slot with nothing behind it.
  *
  * PBKDF2-HMAC-SHA256 because `SubtleCrypto` offers no scrypt or Argon2 and
  * this feature is not worth a WASM dependency. Iterations are stored with
