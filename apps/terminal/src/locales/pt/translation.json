@@ -441,7 +441,18 @@
     "ordersLockedRiskLimit": "As ordens estão bloqueadas devido à violação de um limite de risco. Desbloqueie em Configurações > Gestão de Risco.",
     "buyOrdersLockedRiskLimit": "As compras estão bloqueadas devido à violação de um limite de risco. Desbloqueie em Configurações > Gestão de Risco.",
     "positionSizeExceeded": "Ordem bloqueada pelo limite de risco: a posição é {{ratioPct}}% do portfólio, acima do seu máximo de {{maxPositionSize}}%. Ajuste em Configurações > Gestão de Risco.",
-    "sessionExpired": "Sua sessão expirou — faça login novamente."
+    "sessionExpired": "Sua sessão expirou — faça login novamente.",
+    "startFromTemplate": "Começar com um modelo",
+    "chips": {
+      "osNotification": "Notificação do sistema",
+      "toastPlusOs": "Toast + sistema",
+      "timeframeClose": "Fechamento 1H",
+      "downPercent": "Baixa {{percent}}",
+      "takeProfitPercent": "Take profit {{percent}}",
+      "stopLossPercent": "Stop loss {{percent}}",
+      "sizeAtOffset": "{{size}} a {{offset}}",
+      "waitDuration": "Aguardar {{duration}}"
+    }
   },
   "legal": {
     "terms": "Termos e Condições",
@@ -781,7 +792,9 @@
       "taxNote": "Preços sem impostos — calculados no pagamento conforme sua localização.",
       "packsTitle": "Créditos extras",
       "packsDescription": "Recargas avulsas que se somam ao seu orçamento mensal. Créditos de recarga expiram 30 dias após a compra e não se renovam.",
-      "packActive": "{{credits}} créditos extras — expiram em {{date}}"
+      "packActive": "{{credits}} créditos extras — expiram em {{date}}",
+      "packAddedToastTitle": "Créditos extras adicionados",
+      "packAddedToastDescription": "Sua recarga de créditos está agora no saldo — os créditos da recarga expiram 30 dias após a compra."
     },
     "about": {
       "desktop": "Desktop",
@@ -992,6 +1005,21 @@
       "title": "{{venue}} precisa do app de desktop",
       "description": "Esta corretora entrega seus dados de mercado sem os cabeçalhos que um navegador precisa para lê-los. O app de desktop conecta de forma nativa, e lá todas funcionam.",
       "alternatives": "Ou continue no navegador"
+    },
+    "assets": {
+      "macos": {
+        "primary": "Apple Silicon (.dmg)",
+        "intel": "Intel Mac (.dmg)"
+      },
+      "windows": {
+        "primary": "Instalador (.exe)",
+        "msi": "Instalador .msi"
+      },
+      "linux": {
+        "primary": "AppImage",
+        "deb": ".deb",
+        "rpm": ".rpm"
+      }
     }
   },
   "userMenu": {
@@ -1762,7 +1790,10 @@
       "unsupportedLanguage": "Indicadores escritos em {{language}} não podem ser importados.",
       "malformedDescriptor": "Os dados desse indicador estão malformados.",
       "unknown": "A importação falhou."
-    }
+    },
+    "syntaxErrorDiagnostic": "Erro de sintaxe",
+    "missingMetaDiagnostic": "main.py não define nenhum `meta = indicator(...)` de nível superior — o gráfico não tem nada para desenhar.",
+    "missingComputeDiagnostic": "main.py não define nenhum `def compute(ctx)` de nível superior — o script falhará ao carregar."
   },
   "indicators": {
     "title": "Adicionar Indicador",
@@ -2446,7 +2477,17 @@
     "previousSlide": "Anterior",
     "nextSlide": "Próximo",
     "goToSlide": "Ir para o slide {{n}}",
-    "copyCommand": "Copiar comando"
+    "copyCommand": "Copiar comando",
+    "apiKeyRequiredHint": "Chave de API necessária",
+    "setupRequiredHint": "Configuração necessária",
+    "manifests": {
+      "userIndicators": {
+        "description": "Seus indicadores Python personalizados, criados no editor de Indicadores."
+      },
+      "pairlensCommunity": {
+        "description": "Modelos de workspace da comunidade, compartilhados por usuários do Pairlens."
+      }
+    }
   },
   "search": {
     "title": "Pesquisar Pares",
@@ -2577,7 +2618,9 @@
       "collapse": "Recolher painel"
     },
     "recentlyViewed": "Vistos recentemente",
-    "noMarketsFound": "Nenhum mercado encontrado"
+    "noMarketsFound": "Nenhum mercado encontrado",
+    "modeLive": "REAL",
+    "modePaper": "SIMULADO"
   },
   "accounts": {
     "pageTitle": "Contas",
@@ -2708,7 +2751,32 @@
     "accountConnectFailed": "Falha ao conectar a conta.",
     "accountRemoveFailed": "Falha ao remover a conta.",
     "fieldRequired": "{{field}} é obrigatório",
-    "accountConnectedFeedback": "Conta {{label}} {{mode}} conectada."
+    "accountConnectedFeedback": "Conta {{label}} {{mode}} conectada.",
+    "defaultWalletName": "Carteira {{chain}}",
+    "walletChains": {
+      "ethereum": {
+        "label": "Ethereum / EVM",
+        "fields": {
+          "privateKey": {
+            "label": "Chave privada (hex)"
+          }
+        }
+      },
+      "solana": {
+        "fields": {
+          "privateKey": {
+            "label": "Chave privada (base58)"
+          }
+        }
+      },
+      "bitcoin": {
+        "fields": {
+          "privateKey": {
+            "label": "Chave privada (WIF)"
+          }
+        }
+      }
+    }
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2819,7 +2887,218 @@
     "spotlight": "Destaque",
     "previousSlide": "Anterior",
     "nextSlide": "Próximo",
-    "goToSlide": "Ir para o slide {{number}}"
+    "goToSlide": "Ir para o slide {{number}}",
+    "templates": {
+      "scalpers-cockpit": {
+        "name": "Cockpit do Scalper",
+        "tagline": "Gráfico, livro de ofertas e entrada em um clique — nada além disso.",
+        "description": "Um cockpit minimalista de duas colunas para execução rápida: um gráfico ao lado de um livro de ofertas ao vivo, a profundidade de mercado e um painel de negociação. Feito para velocidade em uma única tela."
+      },
+      "day-trader-pro": {
+        "name": "Day Trader Pro",
+        "tagline": "Escaneie, analise e opere a sessão intradiária.",
+        "description": "Uma mesa equilibrada de três colunas: um scanner de mercados à esquerda, um grande gráfico no centro e um livro de ofertas com painel de negociação e posições abertas à direita. O layout do dia a dia para negociação ativa de cripto."
+      },
+      "swing-overview": {
+        "name": "Visão Geral Swing",
+        "tagline": "Contexto de tendência com watchlist e os movers.",
+        "description": "Um layout mais calmo para posições de vários dias: um gráfico completo ao lado da sua watchlist, os principais movers e os fundamentos do par. Contexto suficiente para dimensionar um swing sem o ruído de uma mesa de execução."
+      },
+      "ai-research-desk": {
+        "name": "Mesa de Pesquisa de IA",
+        "tagline": "Copilot, pesquisa e o feed de notícias ao lado do seu gráfico.",
+        "description": "Combine um gráfico com o copiloto de IA, pesquisa aprofundada e os feeds de notícias globais e do símbolo. Feito para negociação guiada por catalisadores, onde a história importa tanto quanto o preço. Precisa de um provedor de inferência de IA para o Copilot e a Pesquisa."
+      },
+      "market-discovery": {
+        "name": "Descoberta de Mercados",
+        "tagline": "Descubra o que está se movendo antes de se comprometer.",
+        "description": "Um painel de descoberta pura: o scanner de mercados, os principais movers, um mapa de calor setorial, sua watchlist e o medidor de Medo e Ganância. Sem gráfico, sem painel de negociação — só para caçar o próximo setup."
+      },
+      "portfolio-command": {
+        "name": "Centro do Portfólio",
+        "tagline": "Saldos, posições e risco em um relance.",
+        "description": "Um cockpit centrado na conta: a divisão do seu portfólio, posições abertas, limites de risco em tempo real e uma watchlist para ficar de olho no restante da sua carteira. Para gerenciar o que você já possui."
+      },
+      "dex-degen": {
+        "name": "DEX Degen",
+        "tagline": "Gráficos on-chain, swaps e o feed social.",
+        "description": "Feito para a caça on-chain: um gráfico com ticket de swap, tickers recentes para pegar novas listagens e o feed social em busca de alpha. Roteie os swaps por um conector DEX como o Jupiter."
+      },
+      "quant-signals": {
+        "name": "Sinais Quant",
+        "tagline": "Registro de dados, mapa de calor e risco para negociação guiada por sinais.",
+        "description": "Uma mesa focada em dados: um gráfico combinado com o registro de dados brutos, um mapa de calor de liquidez, o estado de risco em tempo real e o scanner de mercados. Para quem lê o mercado em números, não em candles."
+      },
+      "equities-desk": {
+        "name": "Mesa de Ações",
+        "tagline": "Negocie ações com scanner, gráfico e posições.",
+        "description": "Um layout para negociação de ações: o scanner de mercados, um gráfico, posições abertas e o feed de notícias. Conecte o plugin de corretora Alpaca para transmitir ações dos EUA e rotear ordens."
+      },
+      "ultrawide-trading-floor": {
+        "name": "Ultrawide Trading Floor",
+        "tagline": "Tudo, em todo lugar — para a tela grande.",
+        "description": "Um centro de comando de quatro colunas que preenche um monitor ultrawide ou secundário: scanner, gráfico, livro de ofertas e profundidade, um painel de negociação com posições e o copiloto de IA. O layout maximalista."
+      },
+      "classic-terminal": {
+        "name": "Terminal Clássico",
+        "tagline": "A mesa clássica do Pairlens — gráfico, dados, negociação, copilot.",
+        "description": "O layout padrão do terminal: um grande gráfico com uma faixa de dados em abas e uma barra de risco à esquerda, e um painel de negociação sobre o copiloto de IA à direita.",
+        "menuLabel": "Padrão"
+      },
+      "chart-focus": {
+        "name": "Foco no Gráfico",
+        "tagline": "Um grande gráfico com dados em abas embaixo.",
+        "description": "Um layout de coluna única que dá ao gráfico o máximo de espaço, com posições, registro de dados, copilot e o painel de negociação reunidos em uma faixa de abas embaixo.",
+        "menuLabel": "Foco no Gráfico"
+      },
+      "trading": {
+        "name": "Negociação",
+        "tagline": "Livro de ofertas e painel de negociação ladeando um gráfico central.",
+        "description": "Uma mesa de execução de três colunas: livro de ofertas e painel de negociação à esquerda, gráfico com posições e risco no centro, e o copiloto de IA à direita.",
+        "menuLabel": "Negociação"
+      },
+      "chart-analysis": {
+        "name": "Análise do Gráfico",
+        "tagline": "Gráfico e dados à esquerda, copilot e execução à direita.",
+        "description": "Uma divisão voltada para estudo: gráfico, dados, pesquisa e risco à esquerda; copilot, livro de ofertas e painel de negociação à direita.",
+        "menuLabel": "Análise"
+      },
+      "dual-charts": {
+        "name": "Gráficos Duplos",
+        "tagline": "Dois gráficos lado a lado.",
+        "description": "Dois painéis de gráfico independentes lado a lado — cada um mantém seu próprio mercado, timeframe e tipo de gráfico. Defina um par diferente por painel com o seletor de par.",
+        "menuLabel": "Gráficos Duplos"
+      },
+      "triple-charts": {
+        "name": "Gráficos Triplos",
+        "tagline": "Um grande gráfico com outros dois empilhados ao lado.",
+        "description": "Um grande gráfico principal com dois gráficos menores empilhados à direita — cada um independente, para observar um par principal contra outros dois.",
+        "menuLabel": "Gráficos Triplos"
+      },
+      "quad-charts": {
+        "name": "Gráficos Quádruplos",
+        "tagline": "Uma grade 2×2 de gráficos.",
+        "description": "Quatro gráficos independentes em uma grade 2×2 — um cockpit multi-gráfico completo para acompanhar vários mercados ao mesmo tempo.",
+        "menuLabel": "Gráficos Quádruplos"
+      },
+      "laptop-focus": {
+        "name": "Foco no Laptop",
+        "tagline": "Layout vertical de coluna única ajustado para laptops.",
+        "description": "Um layout compacto e vertical que se ajusta à tela de um laptop: gráfico no topo, uma faixa de dados em abas e uma barra de risco fina."
+      },
+      "laptop-split": {
+        "name": "Laptop Dividido",
+        "tagline": "Gráfico + dados à esquerda, negociação + copilot à direita — para telas menores.",
+        "description": "Uma divisão de duas colunas dimensionada para laptops: gráfico e posições à esquerda, painel de negociação sobre o copilot à direita."
+      },
+      "ultrawide-dashboard": {
+        "name": "Dashboard Ultrawide",
+        "tagline": "Cada painel espalhado por um monitor ultrawide.",
+        "description": "Um dashboard de quatro colunas para telas ultrawide: livro de ofertas, gráfico com risco, posições e pesquisa, e uma coluna de negociação + copilot."
+      },
+      "ultrawide-trading": {
+        "name": "Negociação Ultrawide",
+        "tagline": "Livro de ofertas, profundidade, gráfico e execução em toda a largura.",
+        "description": "Um layout de execução ultrawide: livro de ofertas e profundidade de mercado à esquerda, gráfico com posições no centro, e uma coluna de negociação + copilot à direita."
+      },
+      "command-center": {
+        "name": "Centro de Comando 4K",
+        "tagline": "O centro de comando completo para uma tela 4K.",
+        "description": "Tudo na tela para um monitor 4K: livro de ofertas e info do par, gráfico com pesquisa e risco, posições e social, e uma coluna de negociação + copilot."
+      },
+      "home-pulse": {
+        "name": "Home",
+        "tagline": "O painel padrão: scanner, sentimento, movers e notícias.",
+        "description": "O painel inicial padrão — scanner de mercados, uma barra de pulso do mercado com o medidor de Medo e Ganância e as principais moedas em aba com sua watchlist, e uma coluna de notícias em altura total. Tudo nele funciona sem conta.",
+        "menuLabel": "Home"
+      },
+      "markets-board": {
+        "name": "Painel de Mercados",
+        "tagline": "Apenas o scanner de mercados, em tela cheia.",
+        "description": "O scanner de mercados em largura total — a forma mais simples de navegar e ordenar todos os pares negociáveis.",
+        "menuLabel": "Mercados"
+      },
+      "markets-overview": {
+        "name": "Visão Geral dos Mercados",
+        "tagline": "Scanner ao lado dos seus movers e watchlist.",
+        "description": "O scanner de mercados junto aos principais movers e sua watchlist — uma base equilibrada para encontrar e acompanhar setups.",
+        "menuLabel": "Visão Geral"
+      },
+      "sector-analysis": {
+        "name": "Análise Setorial",
+        "tagline": "Scanner, mapa de calor, movers e watchlist.",
+        "description": "Um painel de descoberta com um mapa de calor setorial no meio: scanner à esquerda, mapa de calor no centro, e movers sobre a watchlist à direita.",
+        "menuLabel": "Análise"
+      },
+      "news-board": {
+        "name": "Painel de Notícias",
+        "tagline": "Mercados junto a movers e feed de notícias.",
+        "description": "O scanner de mercados ao lado dos principais movers e do feed de notícias ao vivo — uma base para negociação guiada por catalisadores.",
+        "menuLabel": "Notícias"
+      }
+    },
+    "traderTypes": {
+      "scalper": {
+        "label": "Scalper",
+        "description": "Entra e sai rápido em spreads apertados"
+      },
+      "day-trader": {
+        "label": "Day Trader",
+        "description": "Momentum e fluxo intradiário"
+      },
+      "swing-trader": {
+        "label": "Swing Trader",
+        "description": "Posições de tendência de vários dias"
+      },
+      "position-investor": {
+        "label": "Investidor",
+        "description": "Foco de portfólio de horizonte mais longo"
+      },
+      "news-trader": {
+        "label": "News Trader",
+        "description": "Guiado por manchetes e catalisadores"
+      },
+      "dex-degen": {
+        "label": "DEX Degen",
+        "description": "Caça on-chain e memecoin"
+      },
+      "quant": {
+        "label": "Quant",
+        "description": "Workflows ricos em sinais e dados"
+      }
+    },
+    "assetClasses": {
+      "crypto-spot": {
+        "label": "Spot Cripto"
+      },
+      "dex": {
+        "label": "DEX"
+      },
+      "equities": {
+        "label": "Ações"
+      },
+      "multi-asset": {
+        "label": "Multi-Asset"
+      }
+    },
+    "screenSizes": {
+      "compact": {
+        "label": "Compacto"
+      },
+      "standard": {
+        "label": "Standard"
+      },
+      "wide": {
+        "label": "Amplo"
+      },
+      "multi": {
+        "label": "Multi-monitor"
+      }
+    },
+    "pluginReasons": {
+      "jupiter-dex-connector": "Roteia swaps na Solana e transmite preços on-chain",
+      "alpaca-market-connector": "Transmite dados de ações dos EUA e roteia ordens de ações"
+    }
   },
   "notifications": {
     "flows": "Fluxos",
@@ -2944,6 +3223,243 @@
           "start": "Início (UTC)",
           "end": "Fim (UTC)"
         }
+      }
+    },
+    "stepTypes": {
+      "price-alert": {
+        "label": "Alerta de preço",
+        "fields": {
+          "direction": {
+            "label": "Direção",
+            "options": {
+              "above": "Acima",
+              "below": "Abaixo"
+            }
+          },
+          "price": {
+            "label": "Preço"
+          }
+        },
+        "handles": {
+          "out": "Disparado"
+        }
+      },
+      "order-executed": {
+        "label": "Ordem executada",
+        "fields": {
+          "side": {
+            "label": "Lado",
+            "options": {
+              "any": "Qualquer",
+              "buy": "Compra",
+              "sell": "Venda"
+            }
+          },
+          "status": {
+            "label": "Status",
+            "options": {
+              "any": "Qualquer",
+              "filled": "Executada",
+              "partially_filled": "Parcialmente executada"
+            }
+          }
+        },
+        "handles": {
+          "out": "Disparado"
+        }
+      },
+      "signal-generated": {
+        "label": "Sinal gerado",
+        "fields": {
+          "signalType": {
+            "label": "Tipo de sinal (opcional)",
+            "placeholder": "Qualquer tipo"
+          }
+        },
+        "handles": {
+          "out": "Disparado"
+        }
+      },
+      "indicator-alert": {
+        "label": "Alerta de indicador",
+        "fields": {
+          "indicator": {
+            "label": "Indicador (opcional)",
+            "placeholder": "Qualquer indicador"
+          },
+          "condition": {
+            "label": "Condição (opcional)",
+            "placeholder": "Qualquer condição"
+          }
+        },
+        "handles": {
+          "out": "Disparado"
+        }
+      },
+      "candle-close": {
+        "label": "Fechamento de candle",
+        "fields": {
+          "timeframe": {
+            "label": "Timeframe",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          }
+        },
+        "handles": {
+          "out": "Disparado"
+        }
+      },
+      "price-condition": {
+        "label": "Condição de preço",
+        "fields": {
+          "direction": {
+            "label": "Direção",
+            "options": {
+              "above": "Acima",
+              "below": "Abaixo"
+            }
+          },
+          "price": {
+            "label": "Preço"
+          }
+        },
+        "handles": {
+          "pass": "Passa",
+          "fail": "Não passa"
+        }
+      },
+      "percent-change": {
+        "label": "Variação percentual",
+        "fields": {
+          "percent": {
+            "label": "Percentual"
+          },
+          "direction": {
+            "label": "Direção",
+            "options": {
+              "up": "Alta",
+              "down": "Baixa",
+              "either": "Ambos"
+            }
+          }
+        },
+        "handles": {
+          "pass": "Passa",
+          "fail": "Não passa"
+        }
+      },
+      "time-window": {
+        "label": "Janela de horário",
+        "fields": {
+          "startHour": {
+            "label": "Hora de início (UTC)"
+          },
+          "endHour": {
+            "label": "Hora de término (UTC)"
+          }
+        },
+        "handles": {
+          "pass": "Passa",
+          "fail": "Não passa"
+        }
+      },
+      "local-toast": {
+        "label": "Toast"
+      },
+      "os-notification": {
+        "label": "Notificação do sistema",
+        "fields": {
+          "sound": {
+            "label": "Reproduzir som"
+          }
+        }
+      },
+      "webhook": {
+        "label": "Webhook",
+        "fields": {
+          "url": {
+            "label": "URL",
+            "placeholder": "https://example.com/webhook"
+          },
+          "method": {
+            "label": "Método",
+            "options": {
+              "GET": "GET",
+              "POST": "POST"
+            }
+          },
+          "includePayload": {
+            "label": "Incluir payload do evento"
+          }
+        }
+      }
+    },
+    "messages": {
+      "unknownPair": "desconhecido",
+      "priceAlert": {
+        "title": "Alerta de preço: {{pair}}",
+        "body": "{{pair}} está agora {{direction}} {{price}} — atual: {{current}}"
+      },
+      "orderExecuted": {
+        "title": "Ordem executada",
+        "body": "{{side}} {{pair}} — {{status}}"
+      },
+      "signalGenerated": {
+        "title": "Sinal gerado",
+        "body": "{{signal}} em {{pair}}",
+        "genericSignal": "Sinal"
+      },
+      "indicatorAlert": {
+        "title": "Alerta de indicador",
+        "body": "{{indicator}} disparou em {{pair}}",
+        "genericName": "Indicador"
+      },
+      "candleClose": {
+        "title": "Fechamento de candle",
+        "body": "Candle de {{timeframe}} fechado em {{pair}}"
+      }
+    },
+    "templates": {
+      "price-level": {
+        "title": "O preço cruza um nível",
+        "description": "Toast mais uma notificação do sistema no momento em que {{pair}} cruzar {{level}}. Arraste o nível para o seu.",
+        "chips": {
+          "0": "Preço acima",
+          "1": "Toast"
+        }
+      },
+      "volatile-candle": {
+        "title": "O candle horário fez um movimento grande",
+        "description": "Dispara quando um candle de uma hora fecha a mais de 3% de distância de onde abriu, para cima ou para baixo.",
+        "chips": {
+          "1": "±3% de corpo"
+        }
+      },
+      "fills": {
+        "title": "Avise-me quando uma ordem for executada",
+        "description": "Toda ordem executada no par chega até você, então o terminal pode ficar em segundo plano.",
+        "chips": {
+          "0": "Ordem executada",
+          "1": "Qualquer lado"
+        }
+      },
+      "indicator-relay": {
+        "title": "Repasse meus alertas de indicador",
+        "description": "As condições de alerta declaradas pelos seus indicadores em Python viram notificações reais.",
+        "chips": {
+          "0": "Qualquer indicador",
+          "1": "Qualquer condição"
+        }
+      },
+      "session-drop": {
+        "title": "Queda brusca, só durante minhas horas ativas",
+        "description": "Um candle de queda de 2% te avisa, mas só entre 13:00 e 21:00 UTC."
       }
     }
   },
@@ -3142,7 +3658,11 @@
       "botsPausedBody": "Desbloqueie o Pairlens para retomar as operações reais. Bots em papel não são afetados.",
       "orderBlocked": "Seu cofre de credenciais está bloqueado — desbloqueie o Pairlens para enviar ordens reais.",
       "insecureContext": "A criptografia não está disponível em uma conexão insegura. Abra o Pairlens por HTTPS, ou em localhost, para configurar um cofre.",
-      "diverged": "Seu terminal está desbloqueado, mas essa senha não abriu o cofre de credenciais. Altere sua senha em Configurações → Segurança para sincronizar os dois novamente."
+      "diverged": "Seu terminal está desbloqueado, mas essa senha não abriu o cofre de credenciais. Altere sua senha em Configurações → Segurança para sincronizar os dois novamente.",
+      "botParkDetailSealed": "Seu cofre de credenciais está bloqueado. Este bot retoma as operações reais assim que você desbloquear o Pairlens. Bots em papel não são afetados.",
+      "botParkDetailError": "Suas credenciais salvas não puderam ser lidas neste dispositivo. Este bot retoma as operações reais assim que elas forem carregadas. Bots em papel não são afetados.",
+      "onlyProtectorLeft": "Esta é a única forma de acessar seu cofre. Adicione outra antes de removê-la.",
+      "onlyBiometricProtectorLeft": "O Touch ID não pode ser a única forma de acessar seu cofre. Adicione uma senha ou uma passkey antes de remover este."
     }
   },
   "fullscreen": {
@@ -3306,7 +3826,8 @@
       "title": "Cada ordem pode ter seu próprio plano",
       "description": "Um workflow fica atrelado a uma ordem que você coloca pelo painel de negociação. Assim que ela é executada, as etapas abaixo dela rodam sozinhas — brackets, escadas, saídas em estágios, verificações programadas — então o plano já está pronto, em vez de ser algo que você precisa lembrar de fazer depois.",
       "blankLabel": "Começar com uma tela em branco",
-      "footnote": "Os modelos abrem como rascunho: edite qualquer etapa e depois clique em Confirmar para salvar. Vincule um workflow salvo a uma ordem pelo painel de negociação para executá-lo."
+      "footnote": "Os modelos abrem como rascunho: edite qualquer etapa e depois clique em Confirmar para salvar. Vincule um workflow salvo a uma ordem pelo painel de negociação para executá-lo.",
+      "untitledWorkflow": "Workflow sem título"
     },
     "steps": {
       "sideLabel": "Lado",
@@ -3376,6 +3897,288 @@
       "summaryExecuted": "{{count}} executados",
       "summarySkipped": "{{count}} ignorados",
       "summaryFailed": "{{count}} com falha"
+    },
+    "stepTypes": {
+      "trigger": {
+        "label": "Entrada da ordem"
+      },
+      "market-order": {
+        "label": "Ordem a mercado",
+        "fields": {
+          "side": {
+            "label": "Lado",
+            "options": {
+              "inherit": "Igual ao gatilho",
+              "opposite": "Oposto ao gatilho",
+              "buy": "Comprar",
+              "sell": "Vender"
+            }
+          },
+          "sizeMode": {
+            "label": "Modo de tamanho",
+            "options": {
+              "percent": "% da entrada",
+              "absolute": "Valor fixo"
+            }
+          },
+          "size": {
+            "label": "Tamanho"
+          }
+        }
+      },
+      "limit-order": {
+        "label": "Ordem limitada",
+        "compat": "Ordens limitadas pendentes",
+        "fields": {
+          "side": {
+            "label": "Lado",
+            "options": {
+              "inherit": "Igual ao gatilho",
+              "opposite": "Oposto ao gatilho",
+              "buy": "Comprar",
+              "sell": "Vender"
+            }
+          },
+          "sizeMode": {
+            "label": "Modo de tamanho",
+            "options": {
+              "percent": "% da entrada",
+              "absolute": "Valor fixo"
+            }
+          },
+          "size": {
+            "label": "Tamanho"
+          },
+          "priceMode": {
+            "label": "Modo de preço",
+            "options": {
+              "absolute": "Preço fixo",
+              "offset-percent": "% de desvio",
+              "offset-absolute": "Desvio do preço atual"
+            }
+          },
+          "priceValue": {
+            "label": "Valor do preço"
+          }
+        },
+        "compatReason": "esta corretora não consegue manter ordens limitadas pendentes (DEX somente swap)"
+      },
+      "take-profit": {
+        "label": "Take profit",
+        "compat": "Ordens de gatilho nativas ou ordens limitadas pendentes",
+        "fields": {
+          "triggerMode": {
+            "label": "Modo de gatilho",
+            "options": {
+              "percent": "% de ganho",
+              "absolute": "Nível de preço"
+            }
+          },
+          "triggerValue": {
+            "label": "Valor do gatilho"
+          },
+          "sizePercent": {
+            "label": "% de fechamento"
+          },
+          "orderType": {
+            "label": "Tipo de ordem",
+            "options": {
+              "market": "Mercado",
+              "limit": "Limite"
+            }
+          },
+          "limitPrice": {
+            "label": "Preço limite"
+          }
+        },
+        "compatReason": "esta corretora não é compatível com ordens de gatilho nem com ordens limitadas pendentes"
+      },
+      "stop-loss": {
+        "label": "Stop loss",
+        "compat": "Ordens de gatilho nativas",
+        "fields": {
+          "triggerMode": {
+            "label": "Modo de gatilho",
+            "options": {
+              "percent": "% de perda",
+              "absolute": "Nível de preço"
+            }
+          },
+          "triggerValue": {
+            "label": "Valor do gatilho"
+          },
+          "sizePercent": {
+            "label": "% de fechamento"
+          },
+          "orderType": {
+            "label": "Tipo de ordem",
+            "options": {
+              "market": "Mercado",
+              "limit": "Limite"
+            }
+          },
+          "limitPrice": {
+            "label": "Preço limite"
+          }
+        },
+        "compatReason": "esta corretora não tem ordens de gatilho nativas, então um stop loss não pode ficar pendente na exchange"
+      },
+      "condition": {
+        "label": "Condição",
+        "fields": {
+          "conditionType": {
+            "label": "Condição",
+            "options": {
+              "price-above": "Preço acima",
+              "price-below": "Preço abaixo",
+              "percent-change": "% de variação a partir da entrada"
+            }
+          },
+          "value": {
+            "label": "Valor"
+          }
+        }
+      },
+      "split": {
+        "label": "Divisão paralela",
+        "fields": {
+          "branches": {
+            "label": "Ramos"
+          }
+        }
+      },
+      "wait": {
+        "label": "Aguardar",
+        "fields": {
+          "duration": {
+            "label": "Duração"
+          },
+          "unit": {
+            "label": "Unidade",
+            "options": {
+              "seconds": "Segundos",
+              "minutes": "Minutos",
+              "hours": "Horas"
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "bracket": {
+        "title": "Bracket na execução",
+        "description": "Aquele que toda posição quer: uma saída acima e uma abaixo, ambas já pendentes no momento em que a ordem é executada."
+      },
+      "scale-out": {
+        "title": "Saia em três etapas",
+        "description": "Feche um terço em cada um de três níveis, em vez de adivinhar uma única saída e conviver com ela."
+      },
+      "ladder-entry": {
+        "title": "Escalone a entrada",
+        "description": "Deixe metade da quantidade pendente 1% abaixo do preço de entrada e a outra metade 2,5% abaixo, para que uma queda adicione posição em vez de prejudicar."
+      },
+      "cut-if-stalls": {
+        "title": "Feche se estagnar",
+        "description": "Espere quinze minutos e, se a operação estiver no vermelho até lá, feche a mercado e siga em frente.",
+        "chips": {
+          "2": "Saída a mercado"
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "market-data": {
+      "candles": {
+        "label": "Candles",
+        "description": "Streams de candles OHLCV ao vivo para gráficos e sinais"
+      },
+      "ticker": {
+        "label": "Ticker",
+        "description": "Streams em tempo real do último preço e variação em 24h"
+      },
+      "ticker-snapshot": {
+        "label": "Snapshot de ticker",
+        "description": "Cotações de ticker em lote, via REST, sem abrir streams"
+      },
+      "orderbook": {
+        "label": "Livro de Ofertas",
+        "description": "Streams ao vivo da profundidade do livro de ofertas"
+      },
+      "history": {
+        "label": "Histórico",
+        "description": "Preenchimento histórico de candles para gráficos"
+      },
+      "discovery": {
+        "label": "Descoberta",
+        "description": "Navegue pelos instrumentos de negociação disponíveis",
+        "search": {
+          "label": "Pesquisar",
+          "description": "Pesquise instrumentos por nome ou símbolo"
+        }
+      },
+      "symbol-logo": {
+        "label": "Logo do símbolo",
+        "description": "Imagens de logo/ícone para símbolos de negociação"
+      }
+    },
+    "domains": {
+      "market-data": "Dados de Mercado",
+      "ai": "IA",
+      "trading": "Negociação",
+      "automation": "Automação",
+      "theme": "Tema",
+      "charting": "Gráficos",
+      "workspace-store": "Workspace Store"
+    },
+    "ai": {
+      "inference": {
+        "label": "Inferência",
+        "description": "Inferência de LLM para a análise do copiloto"
+      },
+      "web-search": {
+        "label": "Pesquisa na Web",
+        "description": "Pesquisa na web como base para os relatórios de pesquisa de IA"
+      }
+    },
+    "trading": {
+      "orders": {
+        "label": "Ordens",
+        "description": "Envie e gerencie ordens na corretora conectada"
+      },
+      "balances": {
+        "label": "Saldos",
+        "description": "Busca os saldos de ativos da conta na exchange conectada"
+      }
+    },
+    "workflow": {
+      "step-types": {
+        "label": "Etapas do Workflow",
+        "description": "Tipos de etapas personalizadas para workflows de automação"
+      }
+    },
+    "notification": {
+      "channel": {
+        "label": "Canais de notificação",
+        "description": "Canais de entrega para alertas e notificações"
+      }
+    },
+    "theme": {
+      "override": {
+        "label": "Tema",
+        "description": "Tema personalizado do terminal e substituições de estilo"
+      }
+    },
+    "chart": {
+      "indicator": {
+        "label": "Indicadores personalizados",
+        "description": "Indicadores de gráfico definidos por script, executados no runtime Python local"
+      }
+    },
+    "workspace-store": {
+      "catalog": {
+        "label": "Catálogo da Loja",
+        "description": "Fornece um catálogo navegável de modelos de workspace"
+      }
     }
   }
 }

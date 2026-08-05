@@ -67,6 +67,7 @@ import {
 import type { PasskeyPrfPort } from './vault-passkey'
 import type { BiometricPort } from './vault-biometric'
 import type { VaultProtector, VaultRecord } from './vault-record'
+import i18n from '@/lib/i18n'
 
 export type EnrollInput =
   | {
@@ -338,8 +339,14 @@ export async function removeProtector(
   if (strands && (await hasValues())) {
     throw new VaultProtectorError(
       record.protectors.length === 1
-        ? 'This is the only way into your vault. Add another before removing it.'
-        : 'Touch ID cannot be the only way into your vault. Add a password or a passkey before removing this one.',
+        ? i18n.t('security.vault.onlyProtectorLeft', {
+            defaultValue:
+              'This is the only way into your vault. Add another before removing it.',
+          })
+        : i18n.t('security.vault.onlyBiometricProtectorLeft', {
+            defaultValue:
+              'Touch ID cannot be the only way into your vault. Add a password or a passkey before removing this one.',
+          }),
       'unavailable',
     )
   }

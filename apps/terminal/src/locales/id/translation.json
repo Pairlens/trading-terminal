@@ -441,7 +441,18 @@
     "ordersLockedRiskLimit": "Order terkunci karena pelanggaran batas risiko. Buka kunci di Pengaturan > Manajemen Risiko.",
     "buyOrdersLockedRiskLimit": "Order beli terkunci karena pelanggaran batas risiko. Buka kunci di Pengaturan > Manajemen Risiko.",
     "positionSizeExceeded": "Order diblokir oleh batas risiko: posisi mencapai {{ratioPct}}% dari portofolio Anda, melebihi batas maksimum {{maxPositionSize}}%. Sesuaikan di Pengaturan > Manajemen Risiko.",
-    "sessionExpired": "Sesi Anda telah berakhir — silakan masuk kembali."
+    "sessionExpired": "Sesi Anda telah berakhir — silakan masuk kembali.",
+    "startFromTemplate": "Mulai dari template",
+    "chips": {
+      "osNotification": "Notifikasi Sistem",
+      "toastPlusOs": "Toast + Sistem",
+      "timeframeClose": "Penutupan 1H",
+      "downPercent": "Turun {{percent}}",
+      "takeProfitPercent": "Take Profit {{percent}}",
+      "stopLossPercent": "Stop Loss {{percent}}",
+      "sizeAtOffset": "{{size}} di {{offset}}",
+      "waitDuration": "Tunggu {{duration}}"
+    }
   },
   "legal": {
     "terms": "Syarat & Ketentuan",
@@ -781,7 +792,9 @@
       "taxNote": "Harga belum termasuk pajak — dihitung saat pembayaran berdasarkan lokasi Anda.",
       "packsTitle": "Kredit ekstra",
       "packsDescription": "Isi ulang sekali beli yang ditambahkan ke anggaran bulanan Anda. Kredit isi ulang kedaluwarsa 30 hari setelah pembelian dan tidak diperpanjang.",
-      "packActive": "{{credits}} kredit ekstra — kedaluwarsa {{date}}"
+      "packActive": "{{credits}} kredit ekstra — kedaluwarsa {{date}}",
+      "packAddedToastTitle": "Kredit ekstra ditambahkan",
+      "packAddedToastDescription": "Paket kredit Anda sudah masuk ke saldo — kredit paket kedaluwarsa 30 hari setelah pembelian."
     },
     "about": {
       "desktop": "Desktop",
@@ -992,6 +1005,21 @@
       "title": "{{venue}} memerlukan aplikasi desktop",
       "description": "Bursa ini menyajikan data pasarnya tanpa header yang dibutuhkan browser untuk membacanya. Aplikasi desktop terhubung secara native, jadi semua bursa berfungsi di sana.",
       "alternatives": "Atau tetap di browser"
+    },
+    "assets": {
+      "macos": {
+        "primary": "Apple silicon (.dmg)",
+        "intel": "Intel Mac (.dmg)"
+      },
+      "windows": {
+        "primary": "Installer (.exe)",
+        "msi": "Installer .msi"
+      },
+      "linux": {
+        "primary": "AppImage",
+        "deb": ".deb",
+        "rpm": ".rpm"
+      }
     }
   },
   "userMenu": {
@@ -1762,7 +1790,10 @@
       "unsupportedLanguage": "Indikator yang ditulis dalam {{language}} tidak bisa diimpor.",
       "malformedDescriptor": "Data indikator itu rusak.",
       "unknown": "Impor gagal."
-    }
+    },
+    "syntaxErrorDiagnostic": "Error sintaks",
+    "missingMetaDiagnostic": "main.py tidak mendefinisikan `meta = indicator(...)` di level teratas — chart tidak punya apa pun untuk digambar.",
+    "missingComputeDiagnostic": "main.py tidak mendefinisikan `def compute(ctx)` di level teratas — script akan gagal dimuat."
   },
   "indicators": {
     "title": "Tambah Indikator",
@@ -2446,7 +2477,17 @@
     "previousSlide": "Sebelumnya",
     "nextSlide": "Berikutnya",
     "goToSlide": "Ke slide {{n}}",
-    "copyCommand": "Salin perintah"
+    "copyCommand": "Salin perintah",
+    "apiKeyRequiredHint": "Perlu API key",
+    "setupRequiredHint": "Perlu penyiapan",
+    "manifests": {
+      "userIndicators": {
+        "description": "Indikator Python kustom Anda, dibuat di editor Indikator."
+      },
+      "pairlensCommunity": {
+        "description": "Template ruang kerja komunitas yang dibagikan oleh pengguna Pairlens."
+      }
+    }
   },
   "search": {
     "title": "Cari Pair",
@@ -2577,7 +2618,9 @@
       "collapse": "Tutup panel"
     },
     "recentlyViewed": "Baru dilihat",
-    "noMarketsFound": "Tidak ada pasar ditemukan"
+    "noMarketsFound": "Tidak ada pasar ditemukan",
+    "modeLive": "LIVE",
+    "modePaper": "PAPER"
   },
   "accounts": {
     "pageTitle": "Akun",
@@ -2708,7 +2751,32 @@
     "accountConnectFailed": "Gagal menghubungkan akun.",
     "accountRemoveFailed": "Gagal menghapus akun.",
     "fieldRequired": "{{field}} wajib diisi",
-    "accountConnectedFeedback": "Akun {{label}} {{mode}} terhubung."
+    "accountConnectedFeedback": "Akun {{label}} {{mode}} terhubung.",
+    "walletChains": {
+      "ethereum": {
+        "label": "Ethereum / EVM",
+        "fields": {
+          "privateKey": {
+            "label": "Private Key (hex)"
+          }
+        }
+      },
+      "solana": {
+        "fields": {
+          "privateKey": {
+            "label": "Private Key (base58)"
+          }
+        }
+      },
+      "bitcoin": {
+        "fields": {
+          "privateKey": {
+            "label": "Private Key (WIF)"
+          }
+        }
+      }
+    },
+    "defaultWalletName": "Dompet {{chain}}"
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2819,7 +2887,218 @@
     "spotlight": "Sorotan",
     "previousSlide": "Sebelumnya",
     "nextSlide": "Berikutnya",
-    "goToSlide": "Buka slide {{number}}"
+    "goToSlide": "Buka slide {{number}}",
+    "templates": {
+      "scalpers-cockpit": {
+        "name": "Kokpit Scalper",
+        "tagline": "Chart, order book, dan entry satu klik — tidak ada yang lain.",
+        "description": "Kokpit dua kolom minimal untuk eksekusi cepat: chart bersebelahan dengan order book langsung, kedalaman market, dan tiket order. Dibuat untuk kecepatan dalam satu layar."
+      },
+      "day-trader-pro": {
+        "name": "Day Trader Pro",
+        "tagline": "Pindai, analisis chart, dan trading sesi intraday.",
+        "description": "Meja kerja tiga kolom yang seimbang: scanner market di kiri, chart besar di tengah, dan order book plus tiket order serta posisi terbuka di kanan. Andalan harian untuk trading kripto aktif."
+      },
+      "swing-overview": {
+        "name": "Ringkasan Swing",
+        "tagline": "Konteks tren dengan daftar pantauan dan para penggerak.",
+        "description": "Tata letak yang lebih tenang untuk posisi multi-hari: chart penuh bersebelahan dengan daftar pantauan Anda, para penggerak teratas, dan fundamental pair. Cukup konteks untuk menakar swing tanpa keramaian meja eksekusi."
+      },
+      "ai-research-desk": {
+        "name": "Meja Riset AI",
+        "tagline": "Copilot, riset, dan feed berita di samping chart Anda.",
+        "description": "Padukan chart dengan AI Copilot, riset mendalam, dan feed berita global maupun simbol. Dibuat untuk trading yang digerakkan katalis, di mana cerita di baliknya sama pentingnya dengan datanya. Membutuhkan penyedia inferensi AI untuk Copilot dan Riset."
+      },
+      "market-discovery": {
+        "name": "Penemuan Market",
+        "tagline": "Temukan apa yang bergerak sebelum Anda berkomitmen.",
+        "description": "Papan penemuan murni: scanner market, para penggerak teratas, heatmap sektor, daftar pantauan Anda, dan pengukur Fear & Greed. Tanpa chart, tanpa tiket order — hanya untuk memburu setup berikutnya."
+      },
+      "portfolio-command": {
+        "name": "Komando Portofolio",
+        "tagline": "Saldo, posisi, dan risiko sekilas pandang.",
+        "description": "Kokpit yang berpusat pada akun: rincian portofolio Anda, posisi terbuka, guardrail risiko langsung, dan daftar pantauan untuk mengawasi sisa order book. Untuk mengelola apa yang sudah Anda miliki."
+      },
+      "dex-degen": {
+        "name": "DEX Degen",
+        "tagline": "Chart on-chain, swap, dan feed sosial.",
+        "description": "Dibuat untuk perburuan on-chain: chart dengan tiket swap, ticker terbaru untuk menangkap listing baru, dan feed sosial untuk alpha. Rutekan swap melalui konektor DEX seperti Jupiter."
+      },
+      "quant-signals": {
+        "name": "Sinyal Quant",
+        "tagline": "Log data, heatmap, dan risiko untuk trading berbasis sinyal.",
+        "description": "Meja kerja yang mengutamakan data: chart dipadukan dengan log data mentah, heatmap likuiditas, status risiko langsung, dan scanner market. Untuk trader yang membaca data sebagai angka, bukan candle."
+      },
+      "equities-desk": {
+        "name": "Meja Saham",
+        "tagline": "Trading saham dengan scanner, chart, dan posisi.",
+        "description": "Tata letak trading saham: scanner market, sebuah chart, posisi terbuka, dan feed berita. Hubungkan plugin broker Alpaca untuk streaming saham AS dan merutekan order."
+      },
+      "ultrawide-trading-floor": {
+        "name": "Lantai Trading Ultrawide",
+        "tagline": "Semuanya, di mana-mana — untuk layar besar.",
+        "description": "Pusat komando empat kolom yang memenuhi monitor ultrawide atau kedua: scanner, chart, order book dan kedalaman, tiket order dengan posisi, dan AI Copilot. Tata letak paling maksimal."
+      },
+      "classic-terminal": {
+        "name": "Terminal Klasik",
+        "tagline": "Meja kerja klasik Pairlens — chart, data, trading, copilot.",
+        "description": "Tata letak terminal default: chart besar dengan strip data bertab dan bar risiko di kiri, serta tiket order di atas AI Copilot di kanan.",
+        "menuLabel": "Default"
+      },
+      "chart-focus": {
+        "name": "Fokus Chart",
+        "tagline": "Satu chart besar dengan data bertab di bawahnya.",
+        "description": "Tata letak satu kolom yang memberi ruang maksimal pada chart, dengan posisi, log data, copilot, dan tiket order terselip dalam strip tab di bawah.",
+        "menuLabel": "Fokus Chart"
+      },
+      "trading": {
+        "name": "Trading",
+        "tagline": "Order book dan tiket mengapit chart utama.",
+        "description": "Meja eksekusi tiga kolom: order book dan tiket order di kiri, chart dengan posisi dan risiko di tengah, dan AI Copilot di kanan.",
+        "menuLabel": "Trading"
+      },
+      "chart-analysis": {
+        "name": "Analisis Chart",
+        "tagline": "Chart dan data di kiri, copilot dan eksekusi di kanan.",
+        "description": "Pembagian berorientasi studi: chart, data, riset, dan risiko di kiri; copilot, order book, dan tiket order di kanan.",
+        "menuLabel": "Analisis"
+      },
+      "dual-charts": {
+        "name": "Chart Ganda",
+        "tagline": "Dua chart berdampingan.",
+        "description": "Dua panel chart independen berdampingan — masing-masing mempertahankan market, timeframe, dan jenis chart sendiri. Atur pair berbeda per panel dengan pemilih pair-nya.",
+        "menuLabel": "Chart Ganda"
+      },
+      "triple-charts": {
+        "name": "Tiga Chart",
+        "tagline": "Satu chart besar dengan dua bertumpuk di sampingnya.",
+        "description": "Satu chart utama besar dengan dua chart lebih kecil bertumpuk di kanan — masing-masing independen, untuk mengawasi satu pair utama terhadap dua lainnya.",
+        "menuLabel": "Tiga Chart"
+      },
+      "quad-charts": {
+        "name": "Empat Chart",
+        "tagline": "Grid chart 2×2.",
+        "description": "Empat chart independen dalam grid 2×2 — kokpit multi-chart lengkap untuk memantau beberapa market sekaligus.",
+        "menuLabel": "Empat Chart"
+      },
+      "laptop-focus": {
+        "name": "Fokus Laptop",
+        "tagline": "Tata letak satu kolom vertikal yang disetel untuk laptop.",
+        "description": "Tata letak vertikal yang ringkas dan pas di layar laptop: chart di atas, strip tab data, dan bar risiko yang ramping."
+      },
+      "laptop-split": {
+        "name": "Split Laptop",
+        "tagline": "Chart + data di kiri, trading + copilot di kanan — untuk layar lebih kecil.",
+        "description": "Pembagian dua kolom berukuran laptop: chart dan posisi di kiri, tiket order di atas copilot di kanan."
+      },
+      "ultrawide-dashboard": {
+        "name": "Dashboard Ultrawide",
+        "tagline": "Setiap panel tersebar di monitor ultrawide.",
+        "description": "Dashboard empat kolom untuk layar ultrawide: order book, chart dengan risiko, posisi dan riset, serta kolom trading + copilot."
+      },
+      "ultrawide-trading": {
+        "name": "Trading Ultrawide",
+        "tagline": "Order book, kedalaman, chart, dan eksekusi di sepanjang lebar layar.",
+        "description": "Tata letak eksekusi ultrawide: order book dan kedalaman market di kiri, chart dengan posisi di tengah, dan kolom trading + copilot di kanan."
+      },
+      "command-center": {
+        "name": "Pusat Komando 4K",
+        "tagline": "Pusat komando lengkap untuk layar 4K.",
+        "description": "Semuanya di layar untuk monitor 4K: order book dan info pair, chart dengan riset dan risiko, posisi dan sosial, serta kolom trading + copilot."
+      },
+      "home-pulse": {
+        "name": "Beranda",
+        "tagline": "Papan default: scanner, sentimen, penggerak, dan berita.",
+        "description": "Papan beranda default — scanner market, rel denyut market dengan pengukur Fear & Greed dan koin teratas bertab dengan daftar pantauan Anda, serta kolom berita setinggi penuh. Semua di dalamnya berfungsi tanpa akun.",
+        "menuLabel": "Beranda"
+      },
+      "markets-board": {
+        "name": "Papan Market",
+        "tagline": "Hanya scanner market, layar penuh.",
+        "description": "Scanner market selebar penuh — cara termudah untuk menjelajahi dan mengurutkan setiap pair yang dapat diperdagangkan.",
+        "menuLabel": "Market"
+      },
+      "markets-overview": {
+        "name": "Ringkasan Market",
+        "tagline": "Scanner bersebelahan dengan para penggerak dan daftar pantauan Anda.",
+        "description": "Scanner market bersebelahan dengan para penggerak teratas dan daftar pantauan Anda — beranda yang seimbang untuk menemukan dan melacak setup.",
+        "menuLabel": "Ringkasan"
+      },
+      "sector-analysis": {
+        "name": "Analisis Sektor",
+        "tagline": "Scanner, heatmap, penggerak, dan daftar pantauan.",
+        "description": "Papan penemuan dengan heatmap sektor di tengah: scanner di kiri, heatmap di tengah, dan para penggerak di atas daftar pantauan Anda di kanan.",
+        "menuLabel": "Analisis"
+      },
+      "news-board": {
+        "name": "Papan Berita",
+        "tagline": "Market bersebelahan dengan para penggerak dan feed berita.",
+        "description": "Scanner market bersebelahan dengan para penggerak teratas dan feed berita langsung — basis utama untuk trading yang digerakkan katalis.",
+        "menuLabel": "Berita"
+      }
+    },
+    "traderTypes": {
+      "scalper": {
+        "label": "Scalper",
+        "description": "Keluar-masuk cepat di spread ketat"
+      },
+      "day-trader": {
+        "label": "Day Trader",
+        "description": "Momentum & aliran intraday"
+      },
+      "swing-trader": {
+        "label": "Swing Trader",
+        "description": "Posisi tren multi-hari"
+      },
+      "position-investor": {
+        "label": "Investor",
+        "description": "Fokus portofolio jangka panjang"
+      },
+      "news-trader": {
+        "label": "News Trader",
+        "description": "Digerakkan headline & katalis"
+      },
+      "dex-degen": {
+        "label": "DEX Degen",
+        "description": "Berburu on-chain & memecoin"
+      },
+      "quant": {
+        "label": "Quant",
+        "description": "Alur kerja berat sinyal & data"
+      }
+    },
+    "assetClasses": {
+      "crypto-spot": {
+        "label": "Kripto Spot"
+      },
+      "dex": {
+        "label": "DEX"
+      },
+      "equities": {
+        "label": "Saham"
+      },
+      "multi-asset": {
+        "label": "Multi-Aset"
+      }
+    },
+    "screenSizes": {
+      "compact": {
+        "label": "Kompak"
+      },
+      "standard": {
+        "label": "Standar"
+      },
+      "wide": {
+        "label": "Lebar"
+      },
+      "multi": {
+        "label": "Multi-Monitor"
+      }
+    },
+    "pluginReasons": {
+      "jupiter-dex-connector": "Merutekan swap Solana dan streaming harga on-chain",
+      "alpaca-market-connector": "Streaming data saham AS dan merutekan order saham"
+    }
   },
   "notifications": {
     "flows": "Alur",
@@ -2944,6 +3223,243 @@
           "start": "Mulai (UTC)",
           "end": "Selesai (UTC)"
         }
+      }
+    },
+    "stepTypes": {
+      "price-alert": {
+        "label": "Alert Harga",
+        "fields": {
+          "direction": {
+            "label": "Arah",
+            "options": {
+              "above": "Di atas",
+              "below": "Di bawah"
+            }
+          },
+          "price": {
+            "label": "Harga"
+          }
+        },
+        "handles": {
+          "out": "Terpicu"
+        }
+      },
+      "order-executed": {
+        "label": "Order Tereksekusi",
+        "fields": {
+          "side": {
+            "label": "Sisi",
+            "options": {
+              "any": "Apa saja",
+              "buy": "Beli",
+              "sell": "Jual"
+            }
+          },
+          "status": {
+            "label": "Status",
+            "options": {
+              "any": "Apa saja",
+              "filled": "Terisi",
+              "partially_filled": "Terisi Sebagian"
+            }
+          }
+        },
+        "handles": {
+          "out": "Terpicu"
+        }
+      },
+      "signal-generated": {
+        "label": "Sinyal Terbentuk",
+        "fields": {
+          "signalType": {
+            "label": "Tipe Sinyal (opsional)",
+            "placeholder": "Tipe apa saja"
+          }
+        },
+        "handles": {
+          "out": "Terpicu"
+        }
+      },
+      "indicator-alert": {
+        "label": "Alert Indikator",
+        "fields": {
+          "indicator": {
+            "label": "Indikator (opsional)",
+            "placeholder": "Indikator apa saja"
+          },
+          "condition": {
+            "label": "Kondisi (opsional)",
+            "placeholder": "Kondisi apa saja"
+          }
+        },
+        "handles": {
+          "out": "Terpicu"
+        }
+      },
+      "candle-close": {
+        "label": "Penutupan Candle",
+        "fields": {
+          "timeframe": {
+            "label": "Timeframe",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          }
+        },
+        "handles": {
+          "out": "Terpicu"
+        }
+      },
+      "price-condition": {
+        "label": "Kondisi Harga",
+        "fields": {
+          "direction": {
+            "label": "Arah",
+            "options": {
+              "above": "Di atas",
+              "below": "Di bawah"
+            }
+          },
+          "price": {
+            "label": "Harga"
+          }
+        },
+        "handles": {
+          "pass": "Lolos",
+          "fail": "Gagal"
+        }
+      },
+      "percent-change": {
+        "label": "Perubahan Persentase",
+        "fields": {
+          "percent": {
+            "label": "Persentase"
+          },
+          "direction": {
+            "label": "Arah",
+            "options": {
+              "up": "Naik",
+              "down": "Turun",
+              "either": "Keduanya"
+            }
+          }
+        },
+        "handles": {
+          "pass": "Lolos",
+          "fail": "Gagal"
+        }
+      },
+      "time-window": {
+        "label": "Jendela Waktu",
+        "fields": {
+          "startHour": {
+            "label": "Jam Mulai (UTC)"
+          },
+          "endHour": {
+            "label": "Jam Selesai (UTC)"
+          }
+        },
+        "handles": {
+          "pass": "Lolos",
+          "fail": "Gagal"
+        }
+      },
+      "local-toast": {
+        "label": "Toast"
+      },
+      "os-notification": {
+        "label": "Notifikasi Sistem",
+        "fields": {
+          "sound": {
+            "label": "Putar Suara"
+          }
+        }
+      },
+      "webhook": {
+        "label": "Webhook",
+        "fields": {
+          "url": {
+            "label": "URL",
+            "placeholder": "https://example.com/webhook"
+          },
+          "method": {
+            "label": "Metode",
+            "options": {
+              "GET": "GET",
+              "POST": "POST"
+            }
+          },
+          "includePayload": {
+            "label": "Sertakan Payload Event"
+          }
+        }
+      }
+    },
+    "messages": {
+      "unknownPair": "tidak diketahui",
+      "priceAlert": {
+        "title": "Alert Harga: {{pair}}",
+        "body": "{{pair}} sekarang {{direction}} {{price}} — saat ini: {{current}}"
+      },
+      "orderExecuted": {
+        "title": "Order Tereksekusi",
+        "body": "{{side}} {{pair}} — {{status}}"
+      },
+      "signalGenerated": {
+        "title": "Sinyal Terbentuk",
+        "body": "{{signal}} pada {{pair}}",
+        "genericSignal": "Sinyal"
+      },
+      "indicatorAlert": {
+        "title": "Alert Indikator",
+        "body": "{{indicator}} terpicu pada {{pair}}",
+        "genericName": "Indikator"
+      },
+      "candleClose": {
+        "title": "Penutupan Candle",
+        "body": "Candle {{timeframe}} ditutup pada {{pair}}"
+      }
+    },
+    "templates": {
+      "price-level": {
+        "title": "Harga melewati sebuah level",
+        "description": "Toast plus notifikasi sistem tepat saat {{pair}} melewati {{level}}. Seret level ke milik Anda.",
+        "chips": {
+          "0": "Harga di atas",
+          "1": "Toast"
+        }
+      },
+      "volatile-candle": {
+        "title": "Candle per jam bergerak besar",
+        "description": "Terpicu saat candle per jam ditutup lebih dari 3% dari harga pembukaannya, naik atau turun.",
+        "chips": {
+          "1": "Badan ±3%"
+        }
+      },
+      "fills": {
+        "title": "Beri tahu saya saat order terisi",
+        "description": "Setiap order yang terisi pada pair ini sampai ke Anda, jadi terminal bisa tetap di latar belakang.",
+        "chips": {
+          "0": "Order terisi",
+          "1": "Sisi apa saja"
+        }
+      },
+      "indicator-relay": {
+        "title": "Teruskan alert indikator saya",
+        "description": "Kondisi alert yang dideklarasikan oleh indikator Python Anda menjadi notifikasi sungguhan.",
+        "chips": {
+          "0": "Indikator apa saja",
+          "1": "Kondisi apa saja"
+        }
+      },
+      "session-drop": {
+        "title": "Penurunan tajam, hanya saat saya bangun",
+        "description": "Candle turun 2% membangunkan Anda, tapi hanya antara pukul 13:00 dan 21:00 UTC."
       }
     }
   },
@@ -3142,7 +3658,11 @@
       "botsPausedBody": "Buka Pairlens untuk melanjutkan trading live. Bot paper tidak terpengaruh.",
       "orderBlocked": "Brankas kredensial Anda terkunci — buka Pairlens untuk mengirim order live.",
       "insecureContext": "Enkripsi tidak tersedia pada koneksi yang tidak aman. Buka Pairlens melalui HTTPS, atau di localhost, untuk menyiapkan brankas.",
-      "diverged": "Terminal Anda terbuka, tetapi kata sandi itu tidak membuka brankas kredensial. Ubah kata sandi di Pengaturan → Keamanan agar keduanya selaras kembali."
+      "diverged": "Terminal Anda terbuka, tetapi kata sandi itu tidak membuka brankas kredensial. Ubah kata sandi di Pengaturan → Keamanan agar keduanya selaras kembali.",
+      "botParkDetailSealed": "Brankas kredensial Anda terkunci. Bot ini melanjutkan trading live begitu Anda membuka kunci Pairlens. Bot paper tidak terpengaruh.",
+      "botParkDetailError": "Kredensial tersimpan Anda tidak dapat dibaca di perangkat ini. Bot ini melanjutkan trading live begitu kredensial berhasil dimuat. Bot paper tidak terpengaruh.",
+      "onlyProtectorLeft": "Ini satu-satunya cara masuk ke brankas Anda. Tambahkan cara lain sebelum menghapus ini.",
+      "onlyBiometricProtectorLeft": "Touch ID tidak boleh menjadi satu-satunya cara masuk ke brankas Anda. Tambahkan kata sandi atau passkey sebelum menghapus yang ini."
     }
   },
   "fullscreen": {
@@ -3306,7 +3826,8 @@
       "title": "Setiap order bisa punya rencananya sendiri",
       "description": "Workflow menempel pada order yang Anda pasang dari panel trading. Begitu order terisi, langkah-langkah di bawahnya langsung berjalan sendiri — bracket, tangga harga, exit bertahap, pengecekan terjadwal — jadi rencananya sudah siap, bukan sesuatu yang harus Anda ingat lagi nanti.",
       "blankLabel": "Mulai dari kanvas kosong",
-      "footnote": "Template terbuka sebagai draf: edit langkah mana pun, lalu klik Terapkan untuk menyimpannya. Kaitkan workflow tersimpan ke sebuah order dari panel trading untuk menjalankannya."
+      "footnote": "Template terbuka sebagai draf: edit langkah mana pun, lalu klik Terapkan untuk menyimpannya. Kaitkan workflow tersimpan ke sebuah order dari panel trading untuk menjalankannya.",
+      "untitledWorkflow": "Workflow tanpa judul"
     },
     "steps": {
       "sideLabel": "Sisi",
@@ -3376,6 +3897,288 @@
       "summaryExecuted": "{{count}} berhasil",
       "summarySkipped": "{{count}} dilewati",
       "summaryFailed": "{{count}} gagal"
+    },
+    "stepTypes": {
+      "trigger": {
+        "label": "Input Order"
+      },
+      "market-order": {
+        "label": "Market Order",
+        "fields": {
+          "side": {
+            "label": "Sisi",
+            "options": {
+              "inherit": "Sama seperti trigger",
+              "opposite": "Kebalikan trigger",
+              "buy": "Beli",
+              "sell": "Jual"
+            }
+          },
+          "sizeMode": {
+            "label": "Mode Ukuran",
+            "options": {
+              "percent": "% dari input",
+              "absolute": "Jumlah tetap"
+            }
+          },
+          "size": {
+            "label": "Ukuran"
+          }
+        }
+      },
+      "limit-order": {
+        "label": "Limit Order",
+        "compat": "Limit order yang mengendap",
+        "fields": {
+          "side": {
+            "label": "Sisi",
+            "options": {
+              "inherit": "Sama seperti trigger",
+              "opposite": "Kebalikan trigger",
+              "buy": "Beli",
+              "sell": "Jual"
+            }
+          },
+          "sizeMode": {
+            "label": "Mode Ukuran",
+            "options": {
+              "percent": "% dari input",
+              "absolute": "Jumlah tetap"
+            }
+          },
+          "size": {
+            "label": "Ukuran"
+          },
+          "priceMode": {
+            "label": "Mode Harga",
+            "options": {
+              "absolute": "Harga tetap",
+              "offset-percent": "% dari harga saat ini",
+              "offset-absolute": "Selisih dari harga saat ini"
+            }
+          },
+          "priceValue": {
+            "label": "Nilai Harga"
+          }
+        },
+        "compatReason": "venue ini tidak bisa mengendapkan limit order (DEX swap-only)"
+      },
+      "take-profit": {
+        "label": "Take Profit",
+        "compat": "Trigger order native atau limit order yang mengendap",
+        "fields": {
+          "triggerMode": {
+            "label": "Mode Trigger",
+            "options": {
+              "percent": "% untung",
+              "absolute": "Level harga"
+            }
+          },
+          "triggerValue": {
+            "label": "Nilai Trigger"
+          },
+          "sizePercent": {
+            "label": "Tutup %"
+          },
+          "orderType": {
+            "label": "Tipe Order",
+            "options": {
+              "market": "Market",
+              "limit": "Limit"
+            }
+          },
+          "limitPrice": {
+            "label": "Harga Limit"
+          }
+        },
+        "compatReason": "venue ini tidak mendukung trigger order maupun limit order yang mengendap"
+      },
+      "stop-loss": {
+        "label": "Stop Loss",
+        "compat": "Trigger order native",
+        "fields": {
+          "triggerMode": {
+            "label": "Mode Trigger",
+            "options": {
+              "percent": "% rugi",
+              "absolute": "Level harga"
+            }
+          },
+          "triggerValue": {
+            "label": "Nilai Trigger"
+          },
+          "sizePercent": {
+            "label": "Tutup %"
+          },
+          "orderType": {
+            "label": "Tipe Order",
+            "options": {
+              "market": "Market",
+              "limit": "Limit"
+            }
+          },
+          "limitPrice": {
+            "label": "Harga Limit"
+          }
+        },
+        "compatReason": "venue ini tidak punya trigger order native di exchange, jadi stop loss tidak bisa mengendap di exchange"
+      },
+      "condition": {
+        "label": "Kondisi",
+        "fields": {
+          "conditionType": {
+            "label": "Kondisi",
+            "options": {
+              "price-above": "Harga di atas",
+              "price-below": "Harga di bawah",
+              "percent-change": "% perubahan dari entry"
+            }
+          },
+          "value": {
+            "label": "Nilai"
+          }
+        }
+      },
+      "split": {
+        "label": "Split Paralel",
+        "fields": {
+          "branches": {
+            "label": "Cabang"
+          }
+        }
+      },
+      "wait": {
+        "label": "Tunggu",
+        "fields": {
+          "duration": {
+            "label": "Durasi"
+          },
+          "unit": {
+            "label": "Satuan",
+            "options": {
+              "seconds": "Detik",
+              "minutes": "Menit",
+              "hours": "Jam"
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "bracket": {
+        "title": "Bracket saat terisi",
+        "description": "Yang diinginkan setiap posisi: exit di atas dan exit di bawah, keduanya mengendap begitu order terisi."
+      },
+      "scale-out": {
+        "title": "Keluar bertahap dalam tiga langkah",
+        "description": "Ambil sepertiga di masing-masing tiga level, alih-alih menebak satu exit dan hidup dengannya."
+      },
+      "ladder-entry": {
+        "title": "Buat tangga entry",
+        "description": "Endapkan separuh ukuran 1% di bawah harga terisi dan separuh lagi 2,5% di bawahnya, jadi penurunan menambah posisi, bukan merugikan."
+      },
+      "cut-if-stalls": {
+        "title": "Potong jika macet",
+        "description": "Tunggu lima belas menit, dan jika trade masih rugi saat itu, tutup dengan harga market lalu lanjutkan.",
+        "chips": {
+          "2": "Keluar di market"
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "market-data": {
+      "candles": {
+        "label": "Candle",
+        "description": "Streaming candle OHLCV langsung untuk chart dan sinyal"
+      },
+      "ticker": {
+        "label": "Ticker",
+        "description": "Streaming harga terakhir dan perubahan 24 jam secara real-time"
+      },
+      "ticker-snapshot": {
+        "label": "Snapshot Ticker",
+        "description": "Kuotasi ticker satu kali secara massal via REST, tanpa membuka stream"
+      },
+      "orderbook": {
+        "label": "Order Book",
+        "description": "Streaming kedalaman order book langsung"
+      },
+      "history": {
+        "label": "Riwayat",
+        "description": "Pengisian ulang candle historis untuk chart"
+      },
+      "discovery": {
+        "label": "Penemuan",
+        "description": "Jelajahi instrumen trading yang tersedia",
+        "search": {
+          "label": "Pencarian",
+          "description": "Cari instrumen berdasarkan nama atau simbol"
+        }
+      },
+      "symbol-logo": {
+        "label": "Logo Simbol",
+        "description": "Gambar logo/ikon untuk simbol trading"
+      }
+    },
+    "domains": {
+      "market-data": "Data Market",
+      "ai": "AI",
+      "trading": "Trading",
+      "automation": "Otomasi",
+      "theme": "Tema",
+      "charting": "Charting",
+      "workspace-store": "Workspace Store"
+    },
+    "ai": {
+      "inference": {
+        "label": "Inferensi",
+        "description": "Inferensi LLM untuk analisis co-pilot"
+      },
+      "web-search": {
+        "label": "Pencarian Web",
+        "description": "Landasan pencarian web untuk laporan riset AI"
+      }
+    },
+    "trading": {
+      "orders": {
+        "label": "Order",
+        "description": "Pasang dan kelola order di venue yang terhubung"
+      },
+      "balances": {
+        "label": "Saldo",
+        "description": "Ambil saldo aset akun dari exchange yang terhubung"
+      }
+    },
+    "workflow": {
+      "step-types": {
+        "label": "Langkah Workflow",
+        "description": "Tipe langkah kustom untuk workflow otomatisasi"
+      }
+    },
+    "notification": {
+      "channel": {
+        "label": "Kanal Notifikasi",
+        "description": "Kanal pengiriman untuk alert dan notifikasi"
+      }
+    },
+    "theme": {
+      "override": {
+        "label": "Tema",
+        "description": "Kustomisasi tema dan gaya terminal"
+      }
+    },
+    "chart": {
+      "indicator": {
+        "label": "Indikator Kustom",
+        "description": "Indikator chart yang ditentukan skrip, berjalan di runtime Python lokal"
+      }
+    },
+    "workspace-store": {
+      "catalog": {
+        "label": "Katalog Store",
+        "description": "Sediakan katalog template ruang kerja yang dapat dijelajahi"
+      }
     }
   }
 }

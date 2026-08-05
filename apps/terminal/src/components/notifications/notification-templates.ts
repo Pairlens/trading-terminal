@@ -27,7 +27,9 @@ import type {
   NotificationEdgeDSL,
   NotificationStepDSL,
 } from '@pairlens/notification-engine/types'
+import type { TFunction } from 'i18next'
 import { useNotificationStore } from '@/stores/notification-store'
+import i18n from '@/lib/i18n'
 
 /** Where a template's rule points until the user says otherwise. */
 export const TEMPLATE_PAIR = 'BTC-USDT'
@@ -220,6 +222,70 @@ export const NOTIFICATION_TEMPLATES: Array<NotificationTemplate> = [
 ]
 
 /**
+ * Localized chips for a template's picker card.
+ *
+ * Most chips are short English phrases ('Order filled', 'OS notification')
+ * that need translating like any other prose. A few are pure notation
+ * ('13-21 UTC', the scale-out percentages) with no word to translate, so they
+ * pass through unchanged. Where the same chip text appears on more than one
+ * card ('OS notification', 'Toast + OS', '1H close', the 'Down N%' pattern
+ * shared with the workflow templates) it gets one key under `common.chips`
+ * instead of a duplicate per template. Every key's `defaultValue` reads from
+ * the template's own `chips` array, so the English here can never drift from
+ * what a plugin-contributed template (with no catalog entry) would render.
+ */
+export function notificationTemplateChips(
+  t: TFunction,
+  template: NotificationTemplate,
+): Array<string> {
+  const [c0, c1, c2] = template.chips
+  switch (template.id) {
+    case 'price-level':
+      return [
+        t('notifications.templates.price-level.chips.0', {
+          defaultValue: c0,
+        }),
+        t('notifications.templates.price-level.chips.1', {
+          defaultValue: c1,
+        }),
+        t('common.chips.osNotification', { defaultValue: c2 }),
+      ]
+    case 'volatile-candle':
+      return [
+        t('common.chips.timeframeClose', { defaultValue: c0 }),
+        t('notifications.templates.volatile-candle.chips.1', {
+          defaultValue: c1,
+        }),
+        t('common.chips.toastPlusOs', { defaultValue: c2 }),
+      ]
+    case 'fills':
+      return [
+        t('notifications.templates.fills.chips.0', { defaultValue: c0 }),
+        t('notifications.templates.fills.chips.1', { defaultValue: c1 }),
+        t('common.chips.osNotification', { defaultValue: c2 }),
+      ]
+    case 'indicator-relay':
+      return [
+        t('notifications.templates.indicator-relay.chips.0', {
+          defaultValue: c0,
+        }),
+        t('notifications.templates.indicator-relay.chips.1', {
+          defaultValue: c1,
+        }),
+        t('common.chips.toastPlusOs', { defaultValue: c2 }),
+      ]
+    case 'session-drop':
+      return [
+        t('common.chips.timeframeClose', { defaultValue: c0 }),
+        t('common.chips.downPercent', { defaultValue: c1, percent: '2%' }),
+        c2, // '13-21 UTC' — pure notation, nothing to translate
+      ]
+    default:
+      return template.chips
+  }
+}
+
+/**
  * The DSL a graph template expands to. Pure, so a test can hand it straight to
  * `validateRule` — a template that opens with a red commit bar is worse than
  * no template at all. (`price-level` goes through `createPriceAlertRule`
@@ -271,7 +337,11 @@ export function applyNotificationTemplate(
     return ruleId
   }
 
-  const ruleId = store.createRule(template.title)
+  const ruleId = store.createRule(
+    i18n.t(`notifications.templates.${template.id}.title`, {
+      defaultValue: template.title,
+    }),
+  )
   store.addBinding(ruleId, TEMPLATE_PAIR, TEMPLATE_MARKET)
   store.selectRule(ruleId)
   store.startEditing(ruleId)

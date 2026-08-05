@@ -11,6 +11,12 @@ import { getStepType } from '@pairlens/workflow-engine/step-registry'
 import type { WorkflowStepConfigField } from '@pairlens/workflow-engine/step-registry'
 
 import { useWorkflowStore } from '@/stores/workflow-store'
+import {
+  stepCompatRequires,
+  stepFieldLabel,
+  stepOptionLabel,
+  stepTypeLabel,
+} from '@/lib/registry-labels'
 
 type StepConfigPanelProps = {
   stepId: string
@@ -42,7 +48,9 @@ export function StepConfigPanel({
   return (
     <div className="flex w-56 shrink-0 flex-col border-l border-border bg-background">
       <div className="flex items-center justify-between border-b border-border px-3 py-2">
-        <span className="text-xs font-semibold">{stepDef.label}</span>
+        <span className="text-xs font-semibold">
+          {stepTypeLabel(t, 'workflows', stepDef)}
+        </span>
         <Button
           variant="ghost"
           size="icon"
@@ -65,6 +73,7 @@ export function StepConfigPanel({
           .map((field) => (
             <ConfigField
               key={field.key}
+              stepType={stepType}
               field={field}
               value={data[field.key] ?? field.default}
               onChange={(v) => handleChange(field.key, v)}
@@ -85,7 +94,12 @@ export function StepConfigPanel({
         {stepDef.compat && (
           <p className="rounded border border-border bg-muted/40 px-2 py-1.5 text-[10px] text-muted-foreground">
             {t('workflows.steps.configPanel.requiresNote', {
-              requirement: stepDef.compat.requires,
+              requirement: stepCompatRequires(
+                t,
+                'workflows',
+                stepType,
+                stepDef.compat.requires,
+              ),
             })}
           </p>
         )}
@@ -95,10 +109,12 @@ export function StepConfigPanel({
 }
 
 function ConfigField({
+  stepType,
   field,
   value,
   onChange,
 }: {
+  stepType: string
   field: WorkflowStepConfigField
   value: unknown
   onChange: (value: unknown) => void
@@ -109,7 +125,7 @@ function ConfigField({
       return (
         <div className="space-y-1">
           <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            {field.label}
+            {stepFieldLabel(t, 'workflows', stepType, field)}
           </label>
           <Input
             type="number"
@@ -130,7 +146,7 @@ function ConfigField({
       return (
         <div className="space-y-1">
           <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            {field.label}
+            {stepFieldLabel(t, 'workflows', stepType, field)}
           </label>
           <select
             className="nodrag h-7 w-full rounded border border-border bg-background px-2 text-xs"
@@ -139,7 +155,7 @@ function ConfigField({
           >
             {field.options?.map((opt) => (
               <option key={opt.value} value={opt.value}>
-                {opt.label}
+                {stepOptionLabel(t, 'workflows', stepType, field.key, opt)}
               </option>
             ))}
           </select>
@@ -151,7 +167,7 @@ function ConfigField({
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              {field.label}
+              {stepFieldLabel(t, 'workflows', stepType, field)}
             </label>
             <span className="font-mono text-[10px] text-muted-foreground">
               {String(value)}%
@@ -172,7 +188,7 @@ function ConfigField({
       return (
         <div className="flex items-center justify-between">
           <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            {field.label}
+            {stepFieldLabel(t, 'workflows', stepType, field)}
           </label>
           <button
             type="button"

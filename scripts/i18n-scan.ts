@@ -52,6 +52,49 @@ const SKIP_DIRS = new Set(['locales', '__tests__'])
  */
 const NOT_USER_FACING = [/\/lib\/copilot\//, /\/lib\/python\//]
 
+/**
+ * Data modules whose English is the *fallback source* for a derived key, not
+ * untranslated text.
+ *
+ * Several catalogues stay plain data — no hooks, no translator — because
+ * non-React code imports them, and their records are translated at the render
+ * site from keys derived from each record's stable id (see
+ * `lib/registry-labels.ts` and `lib/workspace-store/template-labels.ts`). The
+ * English literal is passed through as i18next's `defaultValue`, which is also
+ * what makes a plugin-contributed record render at all.
+ *
+ * This scanner cannot tell that apart from text that simply never got a key,
+ * so these are listed explicitly, each with the module that translates it and
+ * the test that proves every key exists. Adding a file here without both of
+ * those is how the sweep quietly regresses.
+ */
+const TRANSLATED_AT_RENDER: Array<{
+  path: string
+  file: RegExp
+  via: string
+}> = [
+  {
+    path: 'lib/workspace-store/catalog.ts',
+    file: /\/lib\/workspace-store\/catalog\.ts$/,
+    via: 'workspace-store/template-labels.ts · __tests__/template-labels.test.ts',
+  },
+  {
+    path: 'components/notifications/notification-templates.ts',
+    file: /\/components\/notifications\/notification-templates\.ts$/,
+    via: 'notifications-empty-state.tsx · __tests__/starter-templates.test.ts',
+  },
+  {
+    path: 'components/workflows/workflow-templates.ts',
+    file: /\/components\/workflows\/workflow-templates\.ts$/,
+    via: 'workflows-empty-state.tsx · __tests__/starter-templates.test.ts',
+  },
+  {
+    path: 'lib/desktop-download.ts',
+    file: /\/lib\/desktop-download\.ts$/,
+    via: 'labelKey on each build · desktop-download-dialog.tsx',
+  },
+]
+
 /** Props whose string value a user reads. */
 const TEXT_PROPS = ['placeholder', 'aria-label', 'alt', 'emptyText', 'title']
 /** Props that hold prose-shaped values nobody reads. */
@@ -104,13 +147,20 @@ const toastCall =
  */
 const objectText =
   /^\s*(?:title|label|description|message|summary|hint|shelfLabel):\s*'([^']{4,})'/gm
+/**
+ * Default values in a props destructure — `{ shelfLabel = 'Start from a
+ * template' }`. Nothing about them looks like a string literal in JSX, and no
+ * caller has to pass the prop, so the English default is simply what ships.
+ * The Workflows empty state kept an English heading over German cards this way.
+ */
+const propDefault = /^\s*\w+\s*=\s*'([^']{4,})',?\s*$/gm
 
 const CSS_VALUE =
   /(?:\b\d+(?:\.\d+)?(?:px|rem|em|vh|vw|%|s|ms)\b|var\(|color-mix|oklch|rgba?\(|calc\(|linear-gradient|\bsolid\b|\bdashed\b|#[0-9a-fA-F]{3,8}\b)/
 const TAILWIND =
   /(?:^|\s)(?:size|text|bg|border|px|py|mt|mb|gap|flex|grid|w|h|min|max)-/
 const CODE =
-  /(?:\bexport\b|\bconst\b|\bimport\b|\breturn\b|=>|::|\bPick\b|\bArray\b|\bcreateContext\b|\bRecord\b|\btypeof\b|\bnew [A-Z]|\w+\(\)|^\w+:)/
+  /(?:\bexport\b|\bconst\b|\bimport\b|\breturn\b|=>|::|\bPick\b|\bArray\b|\bcreateContext\b|\bRecord\b|\bReturnType\b|\btypeof\b|\bnew [A-Z]|\w+\(\)|^\w+:)/
 const IDENTIFIER = /^[A-Za-z][A-Za-z0-9]*$/
 const KEBAB_OR_DOTTED = /^[a-z0-9]+(?:[-.][a-z0-9]+)+$/
 /**
@@ -120,6 +170,8 @@ const KEBAB_OR_DOTTED = /^[a-z0-9]+(?:[-.][a-z0-9]+)+$/
  */
 const I18N_KEY = /^[a-z][A-Za-z0-9]*(?:\.[a-zA-Z][A-Za-z0-9]*)+$/
 const CSS_VAR = /^--/
+/** A route or endpoint, not prose — `/api/user/workspace/terminal-layout`. */
+const URL_PATH = /^(?:https?:\/\/|\/[a-z0-9])/i
 const TICKER = /^[A-Z0-9]{2,10}-[A-Z0-9]{2,10}(?:\s*·.*)?$/
 const HAS_LETTERS = /[A-Za-z]{2}/
 
@@ -173,7 +225,8 @@ function keep(raw: string): boolean {
   const s = raw.trim()
   if (s.length < 3 || BRAND.has(s)) return false
   if (!HAS_LETTERS.test(s)) return false
-  if (CODE.test(s) || CSS_VAR.test(s) || TICKER.test(s)) return false
+  if (CODE.test(s) || CSS_VAR.test(s) || TICKER.test(s) || URL_PATH.test(s))
+    return false
   if (I18N_KEY.test(s)) return false
   if (CSS_VALUE.test(s) || TAILWIND.test(s) || KEBAB_OR_DOTTED.test(s))
     return false
@@ -194,7 +247,8 @@ function* walk(dir: string): Generator<string> {
     else if (
       (p.endsWith('.tsx') || p.endsWith('.ts')) &&
       !p.endsWith('.d.ts') &&
-      !NOT_USER_FACING.some((re) => re.test(p))
+      !NOT_USER_FACING.some((re) => re.test(p)) &&
+      !TRANSLATED_AT_RENDER.some((e) => e.file.test(p))
     )
       yield p
   }
@@ -224,6 +278,7 @@ for (const path of walk(ROOT)) {
   }
   for (const m of s.matchAll(toastCall)) hits.add(m[1])
   for (const m of s.matchAll(objectText)) hits.add(m[1])
+  for (const m of s.matchAll(propDefault)) hits.add(m[1])
 
   const kept = [...hits]
     .map((h) => h.trim())
@@ -243,6 +298,13 @@ if (process.argv.includes('--list')) {
   }
 }
 console.log(`\n${rows.length} files, ${total} hardcoded user-facing strings`)
+console.log(
+  `${TRANSLATED_AT_RENDER.length} data modules skipped — their English is a ` +
+    `defaultValue source, translated at the render site:`,
+)
+for (const entry of TRANSLATED_AT_RENDER) {
+  console.log(`    ${entry.path} → ${entry.via}`)
+}
 if (!process.argv.includes('--list')) {
   console.log('Run with --list to see them.')
 }

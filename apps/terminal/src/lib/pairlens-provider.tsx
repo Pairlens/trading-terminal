@@ -80,6 +80,7 @@ import {
   NotificationStepRegistryContext,
 } from '@/lib/notifications/notification-step-registry'
 import { registerChannelDeliveries } from '@/lib/notifications/channel-deliveries'
+import { registerEventMessages } from '@/lib/notifications/event-messages'
 import { customIndicatorRegistry } from '@/lib/indicators/custom-indicator-registry'
 import { USER_INDICATORS_PLUGIN_ID } from '@/lib/indicators/user-indicators-plugin'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
@@ -1163,6 +1164,8 @@ export function PairlensProvider({
         )
         // Register concrete channel delivery implementations (overrides stubs)
         registerChannelDeliveries()
+        // Swap the engine's English formatMessage for translating ones
+        registerEventMessages()
         // Load rules/bindings in every window (the editor UI needs them),
         // but run evaluation + delivery only in the leader window — with
         // multiple windows open, each one streams the same candles, so

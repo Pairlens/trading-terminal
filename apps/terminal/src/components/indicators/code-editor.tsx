@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 
@@ -171,6 +172,7 @@ export function CodeEditor({
   onInsertReady,
   className,
 }: CodeEditorProps) {
+  const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement | null>(null)
   const viewRef = useRef<EditorView | null>(null)
   const valueRef = useRef(value)
@@ -179,11 +181,13 @@ export function CodeEditor({
   const onRunRef = useRef(onRun)
   const filePathRef = useRef(filePath)
   const onInsertReadyRef = useRef(onInsertReady)
+  const tRef = useRef(t)
   onChangeRef.current = onChange
   onSaveRef.current = onSave
   onRunRef.current = onRun
   filePathRef.current = filePath
   onInsertReadyRef.current = onInsertReady
+  tRef.current = t
 
   useEffect(() => {
     let cancelled = false
@@ -383,7 +387,9 @@ export function CodeEditor({
                 from,
                 to,
                 severity: 'error',
-                message: 'Syntax error',
+                message: tRef.current('indicatorsPage.syntaxErrorDiagnostic', {
+                  defaultValue: 'Syntax error',
+                }),
               })
             },
           })
@@ -419,8 +425,10 @@ export function CodeEditor({
                 from: first.from,
                 to: first.to,
                 severity: 'warning',
-                message:
-                  'main.py defines no top-level `meta = indicator(...)` — the chart has nothing to draw.',
+                message: tRef.current('indicatorsPage.missingMetaDiagnostic', {
+                  defaultValue:
+                    'main.py defines no top-level `meta = indicator(...)` — the chart has nothing to draw.',
+                }),
               })
             }
             if (!hasCompute) {
@@ -428,8 +436,13 @@ export function CodeEditor({
                 from: first.from,
                 to: first.to,
                 severity: 'warning',
-                message:
-                  'main.py defines no top-level `def compute(ctx)` — the script will fail to load.',
+                message: tRef.current(
+                  'indicatorsPage.missingComputeDiagnostic',
+                  {
+                    defaultValue:
+                      'main.py defines no top-level `def compute(ctx)` — the script will fail to load.',
+                  },
+                ),
               })
             }
           }

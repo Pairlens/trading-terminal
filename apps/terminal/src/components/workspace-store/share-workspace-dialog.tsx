@@ -41,12 +41,14 @@ import { useWorkspaceStoreRegistry } from '@/lib/workspace-store/use-workspace-t
 import { useOptimisticSession } from '@/lib/session'
 import {
   ASSET_CLASSES,
-  ASSET_CLASS_META,
   SCREEN_SIZES,
-  SCREEN_SIZE_META,
   TRADER_TYPES,
-  TRADER_TYPE_META,
 } from '@/lib/workspace-store/catalog'
+import {
+  assetClassLabel,
+  screenSizeLabel,
+  traderTypeLabel,
+} from '@/lib/workspace-store/template-labels'
 import { useCustomWorkspacesStore } from '@/stores/custom-workspaces-store'
 
 type Props = {
@@ -408,7 +410,7 @@ export function ShareWorkspaceDialog({ open, onOpenChange, workspace }: Props) {
                 <Label>{t('workspaceStore.facet.trader', 'Trader')}</Label>
                 <TogglePills
                   values={TRADER_TYPES}
-                  labelOf={(v) => TRADER_TYPE_META[v].label}
+                  labelOf={(v) => traderTypeLabel(t, v)}
                   selected={traderTypes}
                   onToggle={(v) => toggle(setTraderTypes, v)}
                 />
@@ -417,7 +419,7 @@ export function ShareWorkspaceDialog({ open, onOpenChange, workspace }: Props) {
                 <Label>{t('workspaceStore.facet.asset', 'Asset')}</Label>
                 <TogglePills
                   values={ASSET_CLASSES}
-                  labelOf={(v) => ASSET_CLASS_META[v].label}
+                  labelOf={(v) => assetClassLabel(t, v)}
                   selected={assetClasses}
                   onToggle={(v) => toggle(setAssetClasses, v)}
                 />
@@ -426,7 +428,7 @@ export function ShareWorkspaceDialog({ open, onOpenChange, workspace }: Props) {
                 <Label>{t('workspaceStore.facet.screen', 'Screen')}</Label>
                 <TogglePills
                   values={SCREEN_SIZES}
-                  labelOf={(v) => SCREEN_SIZE_META[v].label}
+                  labelOf={(v) => screenSizeLabel(t, v)}
                   selected={screenSizes}
                   onToggle={(v) => toggle(setScreenSizes, v)}
                 />

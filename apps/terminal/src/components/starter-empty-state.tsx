@@ -12,6 +12,8 @@
  * wash behind — so the first thing a section says looks like the tour that
  * just finished saying it.
  */
+import { useTranslation } from 'react-i18next'
+
 import { cn } from '@pairlens/ui'
 import { Button } from '@pairlens/ui/components/ui/button'
 import {
@@ -56,8 +58,8 @@ type StarterEmptyStateProps = {
   /** One line of small print under the shelf — caveats, where things run. */
   footnote?: string
   /**
-   * Divider label over the shelf. Defaults to English for the surfaces that
-   * are not localized; localized pages pass their own.
+   * Divider label over the shelf. Defaults to the shared `common.startFromTemplate`
+   * translation; pass an override for a surface that wants its own wording.
    */
   shelfLabel?: string
   /**
@@ -78,9 +80,11 @@ export function StarterEmptyState({
   blankLabel,
   onCreateBlank,
   footnote,
-  shelfLabel = 'Start from a template',
+  shelfLabel,
   pendingId = null,
 }: StarterEmptyStateProps) {
+  const { t } = useTranslation()
+  const shelfHeading = shelfLabel ?? t('common.startFromTemplate')
   return (
     <div className="relative flex min-w-0 flex-1 overflow-y-auto">
       {/* Aurora wash, echoing the onboarding page. Purely decorative. */}
@@ -128,7 +132,7 @@ export function StarterEmptyState({
             <div className="flex w-full items-center gap-3">
               <span className="h-px flex-1 bg-border" />
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                {shelfLabel}
+                {shelfHeading}
               </span>
               <span className="h-px flex-1 bg-border" />
             </div>

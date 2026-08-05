@@ -15,6 +15,7 @@ import type { WorkflowStepTypeDefinition } from '@pairlens/workflow-engine/step-
 
 import { useMarketData } from '@/lib/market-data-provider'
 import { isStandalone } from '@/lib/platform'
+import { stepCompatRequires, stepTypeLabel } from '@/lib/registry-labels'
 import { useWorkflowStepRegistry } from '@/lib/workflows/workflow-step-registry'
 import {
   FallbackStepIcon,
@@ -60,7 +61,12 @@ function StepCompatNote({ def }: { def: WorkflowStepTypeDefinition }) {
       <TooltipContent side="left" className="max-w-64">
         <p className="text-xs">
           {t('workflows.palette.requires', {
-            requirement: def.compat.requires,
+            requirement: stepCompatRequires(
+              t,
+              'workflows',
+              def.type,
+              def.compat.requires,
+            ),
           })}
         </p>
         {unsupported.length > 0 && (
@@ -154,7 +160,7 @@ export function StepPalette({ onAddStep }: StepPaletteProps) {
                     )}
                   >
                     <Icon className="size-3.5 shrink-0" />
-                    <span>{st.label}</span>
+                    <span>{stepTypeLabel(t, 'workflows', st)}</span>
                     <StepCompatNote def={st} />
                   </div>
                 )

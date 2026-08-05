@@ -3,7 +3,14 @@
   "tasks": {
     "build": {
       "outputs": ["dist/**", ".astro/**"],
-      "env": ["SITE_URL", "VERCEL_URL"]
+      // Same rule as the terminal: strict env mode means anything Astro
+      // inlines has to be named here, or the built site quietly loses it.
+      "env": [
+        "SITE_URL",
+        "VERCEL_URL",
+        "PUBLIC_POSTHOG_KEY",
+        "PUBLIC_POSTHOG_HOST"
+      ]
     }
   }
 }

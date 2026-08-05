@@ -58,6 +58,7 @@ import { useBotsStore } from '@/stores/bots-store'
 import { useCredentialsStore } from '@/stores/credentials-store'
 import { useVaultAttentionStore } from '@/stores/vault-attention-store'
 import { isVaultSealed } from '@/lib/security/vault/vault-errors'
+import i18n from '@/lib/i18n'
 import {
   isVaultEnrolled,
   isVaultUnlocked,
@@ -1227,8 +1228,14 @@ export class BotRuntime {
   ): void {
     const detail =
       reason === 'error'
-        ? 'Your stored credentials could not be read on this device. This bot resumes live trading as soon as they load. Paper bots are unaffected.'
-        : 'Your credential vault is locked. This bot resumes live trading as soon as you unlock Pairlens. Paper bots are unaffected.'
+        ? i18n.t('security.vault.botParkDetailError', {
+            defaultValue:
+              'Your stored credentials could not be read on this device. This bot resumes live trading as soon as they load. Paper bots are unaffected.',
+          })
+        : i18n.t('security.vault.botParkDetailSealed', {
+            defaultValue:
+              'Your credential vault is locked. This bot resumes live trading as soon as you unlock Pairlens. Paper bots are unaffected.',
+          })
     this.log(bot.id, 'warning', 'guard-blocked', 'Waiting for unlock', detail)
     useBotRunsStore
       .getState()

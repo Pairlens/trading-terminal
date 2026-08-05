@@ -441,7 +441,18 @@
     "ordersLockedRiskLimit": "Zlecenia są zablokowane z powodu przekroczenia limitu ryzyka. Odblokuj je w Ustawienia > Zarządzanie ryzykiem.",
     "buyOrdersLockedRiskLimit": "Zakupy są zablokowane z powodu przekroczenia limitu ryzyka. Odblokuj je w Ustawienia > Zarządzanie ryzykiem.",
     "positionSizeExceeded": "Zlecenie zablokowane przez limit ryzyka: pozycja stanowi {{ratioPct}}% portfela, powyżej maksimum {{maxPositionSize}}%. Dostosuj to w Ustawienia > Zarządzanie ryzykiem.",
-    "sessionExpired": "Twoja sesja wygasła — zaloguj się ponownie."
+    "sessionExpired": "Twoja sesja wygasła — zaloguj się ponownie.",
+    "startFromTemplate": "Zacznij od szablonu",
+    "chips": {
+      "osNotification": "Powiadomienie systemowe",
+      "toastPlusOs": "Toast + system",
+      "timeframeClose": "Zamknięcie 1H",
+      "downPercent": "Spadek {{percent}}",
+      "takeProfitPercent": "Take profit {{percent}}",
+      "stopLossPercent": "Stop loss {{percent}}",
+      "sizeAtOffset": "{{size}} przy {{offset}}",
+      "waitDuration": "Czekaj {{duration}}"
+    }
   },
   "legal": {
     "terms": "Regulamin",
@@ -781,7 +792,9 @@
       "taxNote": "Ceny nie zawierają podatków — są naliczane przy płatności na podstawie Twojej lokalizacji.",
       "packsTitle": "Dodatkowe kredyty",
       "packsDescription": "Jednorazowe doładowania dodawane do miesięcznego budżetu. Kredyty z doładowań wygasają 30 dni po zakupie i nie odnawiają się.",
-      "packActive": "{{credits}} dodatkowych kredytów — wygasają {{date}}"
+      "packActive": "{{credits}} dodatkowych kredytów — wygasają {{date}}",
+      "packAddedToastTitle": "Dodano dodatkowe kredyty",
+      "packAddedToastDescription": "Twoje doładowanie kredytów trafiło do budżetu — kredyty z doładowania wygasają 30 dni po zakupie."
     },
     "about": {
       "desktop": "Desktop",
@@ -996,6 +1009,21 @@
       "title": "{{venue}} wymaga aplikacji na komputer",
       "description": "Ta giełda udostępnia dane rynkowe bez nagłówków, których przeglądarka potrzebuje, by je odczytać. Aplikacja na komputer łączy się natywnie, więc działa tam każda giełda.",
       "alternatives": "Albo zostań w przeglądarce"
+    },
+    "assets": {
+      "macos": {
+        "primary": "Apple Silicon (.dmg)",
+        "intel": "Intel Mac (.dmg)"
+      },
+      "windows": {
+        "primary": "Instalator (.exe)",
+        "msi": "Instalator .msi"
+      },
+      "linux": {
+        "primary": "AppImage",
+        "deb": ".deb",
+        "rpm": ".rpm"
+      }
     }
   },
   "userMenu": {
@@ -1772,7 +1800,10 @@
       "unsupportedLanguage": "Wskaźników napisanych w {{language}} nie można zaimportować.",
       "malformedDescriptor": "Dane tego wskaźnika są uszkodzone.",
       "unknown": "Import nie powiódł się."
-    }
+    },
+    "syntaxErrorDiagnostic": "Błąd składni",
+    "missingMetaDiagnostic": "main.py nie definiuje żadnego `meta = indicator(...)` na najwyższym poziomie — wykres nie ma czego rysować.",
+    "missingComputeDiagnostic": "main.py nie definiuje żadnego `def compute(ctx)` na najwyższym poziomie — skrypt się nie załaduje."
   },
   "indicators": {
     "title": "Dodaj wskaźnik",
@@ -2460,7 +2491,17 @@
     "panelCount_few": "{{count}} panele",
     "panelCount_many": "{{count}} paneli",
     "installsCount_few": "{{formattedCount}} instalacje",
-    "installsCount_many": "{{formattedCount}} instalacji"
+    "installsCount_many": "{{formattedCount}} instalacji",
+    "apiKeyRequiredHint": "Wymaga klucza API",
+    "setupRequiredHint": "Wymaga konfiguracji",
+    "manifests": {
+      "userIndicators": {
+        "description": "Twoje własne wskaźniki w Pythonie, utworzone w edytorze Wskaźników."
+      },
+      "pairlensCommunity": {
+        "description": "Szablony obszarów roboczych społeczności, udostępnione przez użytkowników Pairlens."
+      }
+    }
   },
   "search": {
     "title": "Szukaj par",
@@ -2591,7 +2632,9 @@
       "collapse": "Zwiń panel"
     },
     "recentlyViewed": "Ostatnio oglądane",
-    "noMarketsFound": "Nie znaleziono rynków"
+    "noMarketsFound": "Nie znaleziono rynków",
+    "modeLive": "LIVE",
+    "modePaper": "PAPER"
   },
   "accounts": {
     "pageTitle": "Konta",
@@ -2726,7 +2769,32 @@
     "accountConnectFailed": "Nie udało się połączyć konta.",
     "accountRemoveFailed": "Nie udało się usunąć konta.",
     "fieldRequired": "Pole {{field}} jest wymagane",
-    "accountConnectedFeedback": "Połączono konto {{label}} ({{mode}})."
+    "accountConnectedFeedback": "Połączono konto {{label}} ({{mode}}).",
+    "defaultWalletName": "Portfel {{chain}}",
+    "walletChains": {
+      "ethereum": {
+        "label": "Ethereum / EVM",
+        "fields": {
+          "privateKey": {
+            "label": "Klucz prywatny (hex)"
+          }
+        }
+      },
+      "solana": {
+        "fields": {
+          "privateKey": {
+            "label": "Klucz prywatny (base58)"
+          }
+        }
+      },
+      "bitcoin": {
+        "fields": {
+          "privateKey": {
+            "label": "Klucz prywatny (WIF)"
+          }
+        }
+      }
+    }
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2839,7 +2907,218 @@
     "spotlight": "Na wyróżnieniu",
     "previousSlide": "Poprzedni",
     "nextSlide": "Następny",
-    "goToSlide": "Przejdź do slajdu {{number}}"
+    "goToSlide": "Przejdź do slajdu {{number}}",
+    "templates": {
+      "scalpers-cockpit": {
+        "name": "Kokpit Scalpera",
+        "tagline": "Wykres, arkusz zleceń i wejście jednym kliknięciem — nic więcej.",
+        "description": "Minimalistyczny dwukolumnowy kokpit do szybkiej egzekucji: wykres obok arkusza zleceń na żywo, głębokości rynku i panelu transakcyjnego. Stworzony pod szybkość na jednym ekranie."
+      },
+      "day-trader-pro": {
+        "name": "Day Trader Pro",
+        "tagline": "Skanuj, analizuj i handluj w sesji intraday.",
+        "description": "Zbalansowany trzykolumnowy desk: skaner rynków po lewej, duży wykres na środku oraz arkusz zleceń z panelem transakcyjnym i otwartymi pozycjami po prawej. Codzienny układ do aktywnego handlu kryptowalutami."
+      },
+      "swing-overview": {
+        "name": "Przegląd Swing",
+        "tagline": "Kontekst trendu z listą obserwowanych i liderami rynku.",
+        "description": "Spokojniejszy układ dla pozycji wielodniowych: pełny wykres obok Twojej listy obserwowanych, liderzy rynku i fundamenty pary. Wystarczający kontekst, by dobrać wielkość pozycji swingowej bez szumu desku egzekucyjnego."
+      },
+      "ai-research-desk": {
+        "name": "AI Research Desk",
+        "tagline": "Copilot, research i kanał wiadomości obok Twojego wykresu.",
+        "description": "Połącz wykres z copilotem AI, dogłębnym researchem oraz kanałami wiadomości globalnych i o symbolu. Stworzone do handlu napędzanego katalizatorami, gdzie historia liczy się tak samo jak cena. Wymaga dostawcy wnioskowania AI dla Copilota i Researchu."
+      },
+      "market-discovery": {
+        "name": "Odkrywanie Rynków",
+        "tagline": "Znajdź, co się rusza, zanim się zaangażujesz.",
+        "description": "Czysty pulpit odkrywania: skaner rynków, czołowi liderzy rynku, mapa cieplna sektorów, Twoja lista obserwowanych i wskaźnik Strachu i Chciwości. Bez wykresu, bez panelu transakcyjnego — tylko do polowania na kolejny setup."
+      },
+      "portfolio-command": {
+        "name": "Centrum Portfela",
+        "tagline": "Salda, pozycje i ryzyko na pierwszy rzut oka.",
+        "description": "Kokpit skupiony na koncie: podział Twojego portfela, otwarte pozycje, limity ryzyka na żywo i lista obserwowanych, by mieć oko na resztę Twojego portfela. Do zarządzania tym, co już posiadasz."
+      },
+      "dex-degen": {
+        "name": "DEX Degen",
+        "tagline": "Wykresy on-chain, swapy i kanał społecznościowy.",
+        "description": "Stworzone do polowania on-chain: wykres z ticketem swapa, ostatnie tickery do wychwytywania nowych listingów i kanał społecznościowy w poszukiwaniu alpha. Kieruj swapy przez konektor DEX, taki jak Jupiter."
+      },
+      "quant-signals": {
+        "name": "Sygnały Quant",
+        "tagline": "Dziennik danych, mapa cieplna i ryzyko dla handlu napędzanego sygnałami.",
+        "description": "Desk skupiony na danych: wykres połączony z surowym dziennikiem danych, mapą cieplną płynności, stanem ryzyka na żywo i skanerem rynków. Dla traderów, którzy czytają rynek w liczbach, nie w świecach."
+      },
+      "equities-desk": {
+        "name": "Desk Akcji",
+        "tagline": "Handluj akcjami ze skanerem, wykresem i pozycjami.",
+        "description": "Układ do handlu akcjami: skaner rynków, wykres, otwarte pozycje i kanał wiadomości. Podłącz wtyczkę brokera Alpaca, aby przesyłać dane o akcjach z USA i kierować zleceniami."
+      },
+      "ultrawide-trading-floor": {
+        "name": "Ultrawide Trading Floor",
+        "tagline": "Wszystko, wszędzie — na duży ekran.",
+        "description": "Czterokolumnowe centrum dowodzenia, które wypełnia monitor ultrawide lub drugi ekran: skaner, wykres, arkusz zleceń i głębokość, panel transakcyjny z pozycjami oraz copilot AI. Maksymalistyczny układ."
+      },
+      "classic-terminal": {
+        "name": "Klasyczny Terminal",
+        "tagline": "Klasyczny desk Pairlens — wykres, dane, handel, copilot.",
+        "description": "Domyślny układ terminala: duży wykres z paskiem danych w zakładkach i paskiem ryzyka po lewej oraz panel transakcyjny nad copilotem AI po prawej.",
+        "menuLabel": "Domyślny"
+      },
+      "chart-focus": {
+        "name": "Wykres na Pierwszym Planie",
+        "tagline": "Jeden duży wykres z danymi w zakładkach na dole.",
+        "description": "Jednokolumnowy układ, który daje wykresowi maksymalnie dużo miejsca, z pozycjami, dziennikiem danych, copilotem i panelem transakcyjnym schowanymi w pasku zakładek na dole.",
+        "menuLabel": "Wykres na Pierwszym Planie"
+      },
+      "trading": {
+        "name": "Handel",
+        "tagline": "Arkusz zleceń i panel transakcyjny po bokach centralnego wykresu.",
+        "description": "Trzykolumnowy desk egzekucyjny: arkusz zleceń i panel transakcyjny po lewej, wykres z pozycjami i ryzykiem na środku oraz copilot AI po prawej.",
+        "menuLabel": "Handel"
+      },
+      "chart-analysis": {
+        "name": "Analiza Wykresu",
+        "tagline": "Wykres i dane po lewej, copilot i egzekucja po prawej.",
+        "description": "Podział nastawiony na analizę: wykres, dane, research i ryzyko po lewej; copilot, arkusz zleceń i panel transakcyjny po prawej.",
+        "menuLabel": "Analiza"
+      },
+      "dual-charts": {
+        "name": "Podwójne Wykresy",
+        "tagline": "Dwa wykresy obok siebie.",
+        "description": "Dwa niezależne panele wykresu obok siebie — każdy zachowuje własny rynek, interwał i typ wykresu. Ustaw inną parę dla każdego panelu za pomocą jego selektora pary.",
+        "menuLabel": "Podwójne Wykresy"
+      },
+      "triple-charts": {
+        "name": "Potrójne Wykresy",
+        "tagline": "Jeden duży wykres z dwoma ułożonymi obok niego.",
+        "description": "Duży wykres główny z dwoma mniejszymi wykresami ułożonymi po prawej — każdy niezależny, do obserwowania pary wiodącej na tle dwóch innych.",
+        "menuLabel": "Potrójne Wykresy"
+      },
+      "quad-charts": {
+        "name": "Poczwórne Wykresy",
+        "tagline": "Siatka wykresów 2×2.",
+        "description": "Cztery niezależne wykresy w siatce 2×2 — pełny kokpit z wieloma wykresami do śledzenia kilku rynków naraz.",
+        "menuLabel": "Poczwórne Wykresy"
+      },
+      "laptop-focus": {
+        "name": "Widok na Laptopa",
+        "tagline": "Pionowy, jednokolumnowy układ dopasowany do laptopów.",
+        "description": "Kompaktowy, pionowy układ dopasowany do ekranu laptopa: wykres na górze, pasek danych w zakładkach i wąski pasek ryzyka."
+      },
+      "laptop-split": {
+        "name": "Podział na Laptopie",
+        "tagline": "Wykres + dane po lewej, handel + copilot po prawej — na mniejsze ekrany.",
+        "description": "Dwukolumnowy podział dopasowany do laptopów: wykres i pozycje po lewej, panel transakcyjny nad copilotem po prawej."
+      },
+      "ultrawide-dashboard": {
+        "name": "Dashboard Ultrawide",
+        "tagline": "Każdy panel rozłożony na monitorze ultrawide.",
+        "description": "Czterokolumnowy dashboard dla ekranów ultrawide: arkusz zleceń, wykres z ryzykiem, pozycje i research oraz kolumna handel + copilot."
+      },
+      "ultrawide-trading": {
+        "name": "Handel Ultrawide",
+        "tagline": "Arkusz zleceń, głębokość, wykres i egzekucja na całej szerokości.",
+        "description": "Układ egzekucyjny ultrawide: arkusz zleceń i głębokość rynku po lewej, wykres z pozycjami na środku oraz kolumna handel + copilot po prawej."
+      },
+      "command-center": {
+        "name": "Centrum Dowodzenia 4K",
+        "tagline": "Pełne centrum dowodzenia dla ekranu 4K.",
+        "description": "Wszystko na ekranie dla monitora 4K: arkusz zleceń i informacje o parze, wykres z researchem i ryzykiem, pozycje i społeczność oraz kolumna handel + copilot."
+      },
+      "home-pulse": {
+        "name": "Home",
+        "tagline": "Domyślny pulpit: skaner, nastroje, liderzy rynku i wiadomości.",
+        "description": "Domyślny pulpit startowy — skaner rynków, pasek pulsu rynku ze wskaźnikiem Strachu i Chciwości oraz najlepszymi monetami w zakładce z Twoją listą obserwowanych, i pełnowymiarowa kolumna wiadomości. Wszystko na nim działa bez konta.",
+        "menuLabel": "Home"
+      },
+      "markets-board": {
+        "name": "Pulpit Rynków",
+        "tagline": "Tylko skaner rynków, na pełnym ekranie.",
+        "description": "Skaner rynków na pełną szerokość — najprostszy sposób przeglądania i sortowania każdej dostępnej pary.",
+        "menuLabel": "Rynki"
+      },
+      "markets-overview": {
+        "name": "Przegląd Rynków",
+        "tagline": "Skaner obok liderów rynku i listy obserwowanych.",
+        "description": "Skaner rynków obok czołowych liderów rynku i Twojej listy obserwowanych — zbalansowana baza do wyszukiwania i śledzenia setupów.",
+        "menuLabel": "Przegląd"
+      },
+      "sector-analysis": {
+        "name": "Analiza Sektorów",
+        "tagline": "Skaner, mapa cieplna, liderzy rynku i lista obserwowanych.",
+        "description": "Pulpit odkrywania z mapą cieplną sektorów na środku: skaner po lewej, mapa cieplna na środku, a liderzy rynku nad listą obserwowanych po prawej.",
+        "menuLabel": "Analiza"
+      },
+      "news-board": {
+        "name": "Pulpit Wiadomości",
+        "tagline": "Rynki obok liderów rynku i kanału wiadomości.",
+        "description": "Skaner rynków obok czołowych liderów rynku i kanału wiadomości na żywo — baza do handlu napędzanego katalizatorami.",
+        "menuLabel": "Wiadomości"
+      }
+    },
+    "traderTypes": {
+      "scalper": {
+        "label": "Scalper",
+        "description": "Szybkie wejścia i wyjścia na wąskich spreadach"
+      },
+      "day-trader": {
+        "label": "Day Trader",
+        "description": "Momentum i przepływ w handlu intraday"
+      },
+      "swing-trader": {
+        "label": "Swing Trader",
+        "description": "Pozycje trendowe na kilka dni"
+      },
+      "position-investor": {
+        "label": "Inwestor",
+        "description": "Portfel nastawiony na dłuższy horyzont"
+      },
+      "news-trader": {
+        "label": "News Trader",
+        "description": "Napędzany newsami i katalizatorami"
+      },
+      "dex-degen": {
+        "label": "DEX Degen",
+        "description": "Polowanie on-chain i na memecoiny"
+      },
+      "quant": {
+        "label": "Quant",
+        "description": "Workflowy oparte na sygnałach i danych"
+      }
+    },
+    "assetClasses": {
+      "crypto-spot": {
+        "label": "Spot krypto"
+      },
+      "dex": {
+        "label": "DEX"
+      },
+      "equities": {
+        "label": "Akcje"
+      },
+      "multi-asset": {
+        "label": "Multi-Asset"
+      }
+    },
+    "screenSizes": {
+      "compact": {
+        "label": "Kompaktowy"
+      },
+      "standard": {
+        "label": "Standard"
+      },
+      "wide": {
+        "label": "Szeroki"
+      },
+      "multi": {
+        "label": "Multi-monitor"
+      }
+    },
+    "pluginReasons": {
+      "jupiter-dex-connector": "Kieruje swapami na Solanie i przesyła ceny on-chain",
+      "alpaca-market-connector": "Przesyła dane o akcjach z USA i kieruje zleceniami na akcje"
+    }
   },
   "notifications": {
     "flows": "Przepływy",
@@ -2964,6 +3243,243 @@
           "start": "Początek (UTC)",
           "end": "Koniec (UTC)"
         }
+      }
+    },
+    "stepTypes": {
+      "price-alert": {
+        "label": "Alert cenowy",
+        "fields": {
+          "direction": {
+            "label": "Kierunek",
+            "options": {
+              "above": "Powyżej",
+              "below": "Poniżej"
+            }
+          },
+          "price": {
+            "label": "Cena"
+          }
+        },
+        "handles": {
+          "out": "Wyzwolono"
+        }
+      },
+      "order-executed": {
+        "label": "Zlecenie zrealizowane",
+        "fields": {
+          "side": {
+            "label": "Strona",
+            "options": {
+              "any": "Dowolna",
+              "buy": "Kupno",
+              "sell": "Sprzedaż"
+            }
+          },
+          "status": {
+            "label": "Status",
+            "options": {
+              "any": "Dowolny",
+              "filled": "Zrealizowane",
+              "partially_filled": "Częściowo zrealizowane"
+            }
+          }
+        },
+        "handles": {
+          "out": "Wyzwolono"
+        }
+      },
+      "signal-generated": {
+        "label": "Wygenerowano sygnał",
+        "fields": {
+          "signalType": {
+            "label": "Typ sygnału (opcjonalnie)",
+            "placeholder": "Dowolny typ"
+          }
+        },
+        "handles": {
+          "out": "Wyzwolono"
+        }
+      },
+      "indicator-alert": {
+        "label": "Alert wskaźnika",
+        "fields": {
+          "indicator": {
+            "label": "Wskaźnik (opcjonalnie)",
+            "placeholder": "Dowolny wskaźnik"
+          },
+          "condition": {
+            "label": "Warunek (opcjonalnie)",
+            "placeholder": "Dowolny warunek"
+          }
+        },
+        "handles": {
+          "out": "Wyzwolono"
+        }
+      },
+      "candle-close": {
+        "label": "Zamknięcie świecy",
+        "fields": {
+          "timeframe": {
+            "label": "Interwał",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          }
+        },
+        "handles": {
+          "out": "Wyzwolono"
+        }
+      },
+      "price-condition": {
+        "label": "Warunek cenowy",
+        "fields": {
+          "direction": {
+            "label": "Kierunek",
+            "options": {
+              "above": "Powyżej",
+              "below": "Poniżej"
+            }
+          },
+          "price": {
+            "label": "Cena"
+          }
+        },
+        "handles": {
+          "pass": "Przechodzi",
+          "fail": "Nie przechodzi"
+        }
+      },
+      "percent-change": {
+        "label": "Zmiana procentowa",
+        "fields": {
+          "percent": {
+            "label": "Procent"
+          },
+          "direction": {
+            "label": "Kierunek",
+            "options": {
+              "up": "Wzrost",
+              "down": "Spadek",
+              "either": "Dowolny"
+            }
+          }
+        },
+        "handles": {
+          "pass": "Przechodzi",
+          "fail": "Nie przechodzi"
+        }
+      },
+      "time-window": {
+        "label": "Okno czasowe",
+        "fields": {
+          "startHour": {
+            "label": "Godzina początkowa (UTC)"
+          },
+          "endHour": {
+            "label": "Godzina końcowa (UTC)"
+          }
+        },
+        "handles": {
+          "pass": "Przechodzi",
+          "fail": "Nie przechodzi"
+        }
+      },
+      "local-toast": {
+        "label": "Toast"
+      },
+      "os-notification": {
+        "label": "Powiadomienie systemowe",
+        "fields": {
+          "sound": {
+            "label": "Odtwórz dźwięk"
+          }
+        }
+      },
+      "webhook": {
+        "label": "Webhook",
+        "fields": {
+          "url": {
+            "label": "URL",
+            "placeholder": "https://example.com/webhook"
+          },
+          "method": {
+            "label": "Metoda",
+            "options": {
+              "GET": "GET",
+              "POST": "POST"
+            }
+          },
+          "includePayload": {
+            "label": "Dołącz payload zdarzenia"
+          }
+        }
+      }
+    },
+    "messages": {
+      "unknownPair": "nieznana",
+      "priceAlert": {
+        "title": "Alert cenowy: {{pair}}",
+        "body": "{{pair}} jest teraz {{direction}} {{price}} — aktualnie: {{current}}"
+      },
+      "orderExecuted": {
+        "title": "Zlecenie zrealizowane",
+        "body": "{{side}} {{pair}} — {{status}}"
+      },
+      "signalGenerated": {
+        "title": "Wygenerowano sygnał",
+        "body": "{{signal}} na {{pair}}",
+        "genericSignal": "Sygnał"
+      },
+      "indicatorAlert": {
+        "title": "Alert wskaźnika",
+        "body": "{{indicator}} zadziałał na {{pair}}",
+        "genericName": "Wskaźnik"
+      },
+      "candleClose": {
+        "title": "Zamknięcie świecy",
+        "body": "Świeca {{timeframe}} zamknięta na {{pair}}"
+      }
+    },
+    "templates": {
+      "price-level": {
+        "title": "Cena przekracza poziom",
+        "description": "Toast plus powiadomienie systemowe w chwili, gdy {{pair}} przekroczy {{level}}. Przeciągnij poziom na swój.",
+        "chips": {
+          "0": "Cena powyżej",
+          "1": "Toast"
+        }
+      },
+      "volatile-candle": {
+        "title": "Świeca godzinowa zrobiła duży ruch",
+        "description": "Uruchamia się, gdy godzinowa świeca zamknie się ponad 3% od miejsca, w którym się otworzyła, w górę lub w dół.",
+        "chips": {
+          "1": "±3% korpusu"
+        }
+      },
+      "fills": {
+        "title": "Powiadom mnie, gdy zlecenie zostanie zrealizowane",
+        "description": "Każde zrealizowane zlecenie na parze dotrze do Ciebie, więc terminal może działać w tle.",
+        "chips": {
+          "0": "Zlecenie zrealizowane",
+          "1": "Dowolna strona"
+        }
+      },
+      "indicator-relay": {
+        "title": "Przekazuj moje alerty wskaźników",
+        "description": "Warunki alertu zadeklarowane przez Twoje wskaźniki w Pythonie stają się prawdziwymi powiadomieniami.",
+        "chips": {
+          "0": "Dowolny wskaźnik",
+          "1": "Dowolny warunek"
+        }
+      },
+      "session-drop": {
+        "title": "Gwałtowny spadek, tylko gdy nie śpię",
+        "description": "Świeca ze spadkiem o 2% Cię obudzi, ale tylko między 13:00 a 21:00 UTC."
       }
     }
   },
@@ -3166,7 +3682,11 @@
       "botsPausedBody": "Odblokuj Pairlens, aby wznowić handel na żywo. Boty papierowe działają dalej.",
       "orderBlocked": "Twój sejf poświadczeń jest zablokowany — odblokuj Pairlens, aby składać zlecenia na żywo.",
       "insecureContext": "Szyfrowanie jest niedostępne na niezabezpieczonym połączeniu. Otwórz Pairlens przez HTTPS lub na localhost, aby skonfigurować sejf.",
-      "diverged": "Terminal jest odblokowany, ale to hasło nie otworzyło sejfu poświadczeń. Zmień hasło w Ustawieniach → Bezpieczeństwo, aby je ponownie zsynchronizować."
+      "diverged": "Terminal jest odblokowany, ale to hasło nie otworzyło sejfu poświadczeń. Zmień hasło w Ustawieniach → Bezpieczeństwo, aby je ponownie zsynchronizować.",
+      "botParkDetailSealed": "Twój sejf poświadczeń jest zablokowany. Ten bot wznowi handel na żywo, gdy tylko odblokujesz Pairlens. Boty papierowe działają dalej.",
+      "botParkDetailError": "Nie udało się odczytać zapisanych poświadczeń na tym urządzeniu. Ten bot wznowi handel na żywo, gdy tylko się załadują. Boty papierowe działają dalej.",
+      "onlyProtectorLeft": "To jedyny sposób na dostęp do Twojego sejfu. Dodaj kolejny, zanim go usuniesz.",
+      "onlyBiometricProtectorLeft": "Touch ID nie może być jedynym sposobem na dostęp do Twojego sejfu. Dodaj hasło lub passkey, zanim go usuniesz."
     }
   },
   "fullscreen": {
@@ -3330,7 +3850,8 @@
       "title": "Każde zlecenie może mieć własny plan",
       "description": "Workflow jest podpięty pod zlecenie złożone z panelu transakcyjnego. Gdy tylko się zrealizuje, kroki pod nim uruchamiają się same — bracket, drabinki, etapowe wyjścia, sprawdzenia czasowe — więc plan jest już gotowy, zamiast być czymś, o czym trzeba pamiętać później.",
       "blankLabel": "Zacznij od pustego płótna",
-      "footnote": "Szablony otwierają się jako szkic: edytuj dowolny krok, a potem kliknij Zatwierdź, aby zapisać. Podepnij zapisany workflow pod zlecenie z panelu transakcyjnego, aby go uruchomić."
+      "footnote": "Szablony otwierają się jako szkic: edytuj dowolny krok, a potem kliknij Zatwierdź, aby zapisać. Podepnij zapisany workflow pod zlecenie z panelu transakcyjnego, aby go uruchomić.",
+      "untitledWorkflow": "Workflow bez nazwy"
     },
     "steps": {
       "sideLabel": "Strona",
@@ -3400,6 +3921,288 @@
       "summaryExecuted": "{{count}} wykonano",
       "summarySkipped": "{{count}} pominięto",
       "summaryFailed": "{{count}} nieudanych"
+    },
+    "stepTypes": {
+      "trigger": {
+        "label": "Wejście zlecenia"
+      },
+      "market-order": {
+        "label": "Zlecenie rynkowe",
+        "fields": {
+          "side": {
+            "label": "Strona",
+            "options": {
+              "inherit": "Tak jak wyzwalacz",
+              "opposite": "Przeciwnie do wyzwalacza",
+              "buy": "Kup",
+              "sell": "Sprzedaj"
+            }
+          },
+          "sizeMode": {
+            "label": "Tryb wielkości",
+            "options": {
+              "percent": "% wejścia",
+              "absolute": "Stała kwota"
+            }
+          },
+          "size": {
+            "label": "Wielkość"
+          }
+        }
+      },
+      "limit-order": {
+        "label": "Zlecenie limit",
+        "compat": "Oczekujące zlecenia limit",
+        "fields": {
+          "side": {
+            "label": "Strona",
+            "options": {
+              "inherit": "Tak jak wyzwalacz",
+              "opposite": "Przeciwnie do wyzwalacza",
+              "buy": "Kup",
+              "sell": "Sprzedaj"
+            }
+          },
+          "sizeMode": {
+            "label": "Tryb wielkości",
+            "options": {
+              "percent": "% wejścia",
+              "absolute": "Stała kwota"
+            }
+          },
+          "size": {
+            "label": "Wielkość"
+          },
+          "priceMode": {
+            "label": "Tryb ceny",
+            "options": {
+              "absolute": "Stała cena",
+              "offset-percent": "% odchylenia",
+              "offset-absolute": "Odchylenie od bieżącej ceny"
+            }
+          },
+          "priceValue": {
+            "label": "Wartość ceny"
+          }
+        },
+        "compatReason": "ta giełda nie może utrzymywać oczekujących zleceń limit (DEX tylko swap)"
+      },
+      "take-profit": {
+        "label": "Take profit",
+        "compat": "Natywne zlecenia wyzwalające lub oczekujące zlecenia limit",
+        "fields": {
+          "triggerMode": {
+            "label": "Tryb wyzwalacza",
+            "options": {
+              "percent": "% zysku",
+              "absolute": "Poziom ceny"
+            }
+          },
+          "triggerValue": {
+            "label": "Wartość wyzwalacza"
+          },
+          "sizePercent": {
+            "label": "% zamknięcia"
+          },
+          "orderType": {
+            "label": "Typ zlecenia",
+            "options": {
+              "market": "Rynkowe",
+              "limit": "Limit"
+            }
+          },
+          "limitPrice": {
+            "label": "Cena limit"
+          }
+        },
+        "compatReason": "ta giełda nie obsługuje ani zleceń wyzwalających, ani oczekujących zleceń limit"
+      },
+      "stop-loss": {
+        "label": "Stop loss",
+        "compat": "Natywne zlecenia wyzwalające",
+        "fields": {
+          "triggerMode": {
+            "label": "Tryb wyzwalacza",
+            "options": {
+              "percent": "% straty",
+              "absolute": "Poziom ceny"
+            }
+          },
+          "triggerValue": {
+            "label": "Wartość wyzwalacza"
+          },
+          "sizePercent": {
+            "label": "% zamknięcia"
+          },
+          "orderType": {
+            "label": "Typ zlecenia",
+            "options": {
+              "market": "Rynkowe",
+              "limit": "Limit"
+            }
+          },
+          "limitPrice": {
+            "label": "Cena limit"
+          }
+        },
+        "compatReason": "ta giełda nie ma natywnych zleceń wyzwalających, więc stop loss nie może czekać na giełdzie"
+      },
+      "condition": {
+        "label": "Warunek",
+        "fields": {
+          "conditionType": {
+            "label": "Warunek",
+            "options": {
+              "price-above": "Cena powyżej",
+              "price-below": "Cena poniżej",
+              "percent-change": "% zmiany od wejścia"
+            }
+          },
+          "value": {
+            "label": "Wartość"
+          }
+        }
+      },
+      "split": {
+        "label": "Podział równoległy",
+        "fields": {
+          "branches": {
+            "label": "Gałęzie"
+          }
+        }
+      },
+      "wait": {
+        "label": "Czekaj",
+        "fields": {
+          "duration": {
+            "label": "Czas trwania"
+          },
+          "unit": {
+            "label": "Jednostka",
+            "options": {
+              "seconds": "Sekundy",
+              "minutes": "Minuty",
+              "hours": "Godziny"
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "bracket": {
+        "title": "Bracket przy realizacji",
+        "description": "Ten, którego chce każda pozycja: wyjście powyżej i wyjście poniżej, oba czekające już w momencie realizacji zlecenia."
+      },
+      "scale-out": {
+        "title": "Wychodź w trzech transzach",
+        "description": "Zamykaj jedną trzecią na każdym z trzech poziomów, zamiast zgadywać jedno wyjście i z nim żyć."
+      },
+      "ladder-entry": {
+        "title": "Rozłóż wejście na etapy",
+        "description": "Zostaw połowę wielkości zlecenia 1% poniżej ceny wejścia, a drugą połowę 2,5% poniżej, żeby spadek dokładał pozycję, zamiast szkodzić."
+      },
+      "cut-if-stalls": {
+        "title": "Zamknij, jeśli utknie",
+        "description": "Poczekaj piętnaście minut, a jeśli do tego czasu transakcja jest na minusie, zamknij ją po cenie rynkowej i idź dalej.",
+        "chips": {
+          "2": "Wyjście rynkowe"
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "market-data": {
+      "candles": {
+        "label": "Świece",
+        "description": "Strumienie świec OHLCV na żywo do wykresów i sygnałów"
+      },
+      "ticker": {
+        "label": "Ticker",
+        "description": "Strumienie na żywo z ostatnią ceną i zmianą 24h"
+      },
+      "ticker-snapshot": {
+        "label": "Snapshot tickera",
+        "description": "Zbiorcze, jednorazowe notowania tickera przez REST, bez otwierania strumieni"
+      },
+      "orderbook": {
+        "label": "Arkusz zleceń",
+        "description": "Strumienie głębokości arkusza zleceń na żywo"
+      },
+      "history": {
+        "label": "Historia",
+        "description": "Historyczne uzupełnianie świec dla wykresów"
+      },
+      "discovery": {
+        "label": "Odkrywanie",
+        "description": "Przeglądaj dostępne instrumenty handlowe",
+        "search": {
+          "label": "Szukaj",
+          "description": "Szukaj instrumentów po nazwie lub symbolu"
+        }
+      },
+      "symbol-logo": {
+        "label": "Logo symbolu",
+        "description": "Obrazy logo/ikony dla symboli handlowych"
+      }
+    },
+    "domains": {
+      "market-data": "Dane rynkowe",
+      "ai": "AI",
+      "trading": "Handel",
+      "automation": "Automatyzacja",
+      "theme": "Motyw",
+      "charting": "Wykresy",
+      "workspace-store": "Workspace Store"
+    },
+    "ai": {
+      "inference": {
+        "label": "Wnioskowanie",
+        "description": "Wnioskowanie LLM do analizy copilota"
+      },
+      "web-search": {
+        "label": "Wyszukiwanie w sieci",
+        "description": "Wyszukiwanie w sieci jako podstawa raportów researchu AI"
+      }
+    },
+    "trading": {
+      "orders": {
+        "label": "Zlecenia",
+        "description": "Składaj i zarządzaj zleceniami na podłączonej giełdzie"
+      },
+      "balances": {
+        "label": "Salda",
+        "description": "Pobiera salda aktywów konta z podłączonej giełdy"
+      }
+    },
+    "workflow": {
+      "step-types": {
+        "label": "Kroki workflow",
+        "description": "Niestandardowe typy kroków dla workflowów automatyzacji"
+      }
+    },
+    "notification": {
+      "channel": {
+        "label": "Kanały powiadomień",
+        "description": "Kanały dostarczania alertów i powiadomień"
+      }
+    },
+    "theme": {
+      "override": {
+        "label": "Motyw",
+        "description": "Niestandardowy motyw terminala i nadpisania stylów"
+      }
+    },
+    "chart": {
+      "indicator": {
+        "label": "Niestandardowe wskaźniki",
+        "description": "Wskaźniki wykresu zdefiniowane skryptem, uruchamiane w lokalnym środowisku Python"
+      }
+    },
+    "workspace-store": {
+      "catalog": {
+        "label": "Katalog sklepu",
+        "description": "Zapewnia przeglądalny katalog szablonów obszaru roboczego"
+      }
     }
   }
 }

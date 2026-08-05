@@ -35,6 +35,11 @@ import { track } from '@/lib/analytics-events'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { api, queryKeys } from '@/lib/api'
 import { missingConfigHint } from '@/lib/plugins/config-requirements'
+import {
+  capabilityDescription,
+  capabilityDomainLabel,
+  capabilityLabel,
+} from '@/lib/registry-labels'
 
 const AUTO = 'auto'
 
@@ -325,7 +330,7 @@ export function CapabilityProviders() {
         {rows.map((domain) => (
           <section key={domain.id}>
             <h3 className="mb-2 px-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              {domain.label}
+              {capabilityDomainLabel(t, domain)}
             </h3>
             <div className="divide-y rounded-xl border">
               {domain.capabilities.map((row) => (
@@ -371,9 +376,11 @@ function CapabilityRowView({
     <div className="p-4">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 pt-0.5">
-          <span className="text-sm font-medium">{meta.label}</span>
+          <span className="text-sm font-medium">
+            {capabilityLabel(t, meta)}
+          </span>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            {meta.description}
+            {capabilityDescription(t, meta)}
           </p>
         </div>
 

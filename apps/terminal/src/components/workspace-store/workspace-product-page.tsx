@@ -15,10 +15,13 @@ import { WorkspaceLayoutPreview } from './workspace-layout-preview'
 import type { TemplateDependencyReport } from '@/lib/workspace-store/dependency-analysis'
 import type { WorkspaceTemplate } from '@/lib/workspace-store/types'
 import {
-  ASSET_CLASS_META,
-  SCREEN_SIZE_META,
-  TRADER_TYPE_META,
-} from '@/lib/workspace-store/catalog'
+  assetClassLabel,
+  screenSizeLabel,
+  templateDescription,
+  templateName,
+  templateTagline,
+  traderTypeLabel,
+} from '@/lib/workspace-store/template-labels'
 
 function VariableSummary({ template }: { template: WorkspaceTemplate }) {
   const { t } = useTranslation()
@@ -90,7 +93,7 @@ export function WorkspaceProductPage({
     0,
   )
   const traderLabels = template.facets.traderTypes
-    .map((tt) => TRADER_TYPE_META[tt].label)
+    .map((tt) => traderTypeLabel(t, tt))
     .join(' · ')
 
   useEffect(() => {
@@ -171,7 +174,7 @@ export function WorkspaceProductPage({
             {t('workspaceStore.eyebrow', 'Workspace')}
           </span>
           <h1 className="mt-3 font-serif text-[46px] font-semibold leading-[1.02] tracking-[-0.03em] text-foreground">
-            {template.name}
+            {templateName(t, template)}
           </h1>
         </motion.div>
 
@@ -199,7 +202,7 @@ export function WorkspaceProductPage({
           <div className="mt-8 flex flex-wrap items-center gap-2.5">
             {template.facets.assetClasses.map((ac) => (
               <Badge key={ac} variant="outline" className="text-[10px]">
-                {ASSET_CLASS_META[ac].label}
+                {assetClassLabel(t, ac)}
               </Badge>
             ))}
             {template.facets.screenSizes.map((ss) => (
@@ -208,7 +211,7 @@ export function WorkspaceProductPage({
                 variant="outline"
                 className="text-[10px] text-muted-foreground"
               >
-                {SCREEN_SIZE_META[ss].label}
+                {screenSizeLabel(t, ss)}
               </Badge>
             ))}
             <span className="font-mono text-xs text-muted-foreground/80">
@@ -223,7 +226,7 @@ export function WorkspaceProductPage({
             </span>
           </div>
           <p className="mt-4 max-w-[52ch] text-base leading-[1.6] text-muted-foreground">
-            {template.tagline}
+            {templateTagline(t, template)}
           </p>
           <VariableSummary template={template} />
 
@@ -233,7 +236,7 @@ export function WorkspaceProductPage({
               {t('workspaceStore.overview', 'Overview')}
             </SectionEyebrow>
             <p className="mt-3 max-w-[74ch] text-[14.5px] leading-[1.7] text-muted-foreground">
-              {template.description}
+              {templateDescription(t, template)}
             </p>
           </section>
         </motion.div>

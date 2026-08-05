@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 
 import { Button } from '@pairlens/ui/components/ui/button'
@@ -10,6 +11,12 @@ import { getStepType } from '@pairlens/notification-engine/step-registry'
 import type { ConfigField } from '@pairlens/notification-engine/types'
 
 import { useNotificationStore } from '@/stores/notification-store'
+import {
+  stepFieldLabel,
+  stepFieldPlaceholder,
+  stepOptionLabel,
+  stepTypeLabel,
+} from '@/lib/registry-labels'
 
 type StepConfigPanelProps = {
   stepId: string
@@ -24,6 +31,7 @@ export function StepConfigPanel({
   data,
   onClose,
 }: StepConfigPanelProps) {
+  const { t } = useTranslation()
   const updateStepData = useNotificationStore((s) => s.updateStepData)
   const stepDef = getStepType(stepType)
 
@@ -40,7 +48,9 @@ export function StepConfigPanel({
   return (
     <div className="flex w-56 shrink-0 flex-col border-l border-border bg-background">
       <div className="flex items-center justify-between border-b border-border px-3 py-2">
-        <span className="text-xs font-semibold">{stepDef.label}</span>
+        <span className="text-xs font-semibold">
+          {stepTypeLabel(t, 'notifications', stepDef)}
+        </span>
         <Button
           variant="ghost"
           size="icon"
@@ -55,6 +65,7 @@ export function StepConfigPanel({
         {stepDef.configSchema.map((field) => (
           <ConfigFieldComponent
             key={field.key}
+            stepType={stepType}
             field={field}
             value={data[field.key] ?? field.default}
             onChange={(v) => handleChange(field.key, v)}
@@ -78,20 +89,23 @@ export function StepConfigPanel({
 }
 
 function ConfigFieldComponent({
+  stepType,
   field,
   value,
   onChange,
 }: {
+  stepType: string
   field: ConfigField
   value: unknown
   onChange: (value: unknown) => void
 }) {
+  const { t } = useTranslation()
   switch (field.type) {
     case 'number':
       return (
         <div className="space-y-1">
           <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            {field.label}
+            {stepFieldLabel(t, 'notifications', stepType, field)}
           </label>
           <Input
             type="number"
@@ -112,7 +126,7 @@ function ConfigFieldComponent({
       return (
         <div className="space-y-1">
           <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            {field.label}
+            {stepFieldLabel(t, 'notifications', stepType, field)}
           </label>
           <select
             className="nodrag h-7 w-full rounded border border-border bg-background px-2 text-xs"
@@ -121,7 +135,7 @@ function ConfigFieldComponent({
           >
             {field.options?.map((opt) => (
               <option key={opt.value} value={opt.value}>
-                {opt.label}
+                {stepOptionLabel(t, 'notifications', stepType, field.key, opt)}
               </option>
             ))}
           </select>
@@ -133,7 +147,7 @@ function ConfigFieldComponent({
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              {field.label}
+              {stepFieldLabel(t, 'notifications', stepType, field)}
             </label>
             <span className="font-mono text-[10px] text-muted-foreground">
               {String(value)}%
@@ -154,7 +168,7 @@ function ConfigFieldComponent({
       return (
         <div className="flex items-center justify-between">
           <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            {field.label}
+            {stepFieldLabel(t, 'notifications', stepType, field)}
           </label>
           <button
             type="button"
@@ -170,12 +184,17 @@ function ConfigFieldComponent({
       return (
         <div className="space-y-1">
           <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            {field.label}
+            {stepFieldLabel(t, 'notifications', stepType, field)}
           </label>
           <Input
             className="nodrag h-7 text-xs"
             value={String(value ?? '')}
-            placeholder={field.placeholder}
+            placeholder={stepFieldPlaceholder(
+              t,
+              'notifications',
+              stepType,
+              field,
+            )}
             onChange={(e) => onChange(e.target.value)}
           />
         </div>
