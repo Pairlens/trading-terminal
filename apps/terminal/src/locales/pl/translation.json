@@ -1203,9 +1203,6 @@
       "technical": "Techniczna",
       "technicalDescription": "Oparta na danych, minimum komentarza"
     },
-    "marketRegime": "Reżim rynkowy",
-    "trending": "Trendowy",
-    "choppy": "Chaotyczny",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "Wielkość",

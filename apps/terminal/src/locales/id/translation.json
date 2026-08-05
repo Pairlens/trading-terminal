@@ -1195,9 +1195,6 @@
       "technical": "Teknis",
       "technicalDescription": "Berbasis data, komentar minimal"
     },
-    "marketRegime": "Rezim Market",
-    "trending": "Trending",
-    "choppy": "Bergejolak",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "Ukuran",

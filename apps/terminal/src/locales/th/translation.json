@@ -1195,9 +1195,6 @@
       "technical": "เชิงเทคนิค",
       "technicalDescription": "เน้นข้อมูล คำอธิบายน้อยที่สุด"
     },
-    "marketRegime": "สภาวะตลาด",
-    "trending": "เป็นเทรนด์",
-    "choppy": "แกว่งตัว",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "ขนาด",

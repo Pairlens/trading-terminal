@@ -1195,9 +1195,6 @@
       "technical": "Kỹ thuật",
       "technicalDescription": "Dựa trên dữ liệu, hạn chế bình luận"
     },
-    "marketRegime": "Chế độ thị trường",
-    "trending": "Xu hướng",
-    "choppy": "Giằng co",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "Khối lượng",

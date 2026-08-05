@@ -1195,9 +1195,6 @@
       "technical": "技術型",
       "technicalDescription": "數據導向，僅提供最少評論"
     },
-    "marketRegime": "市場狀態",
-    "trending": "趨勢明確",
-    "choppy": "震盪盤整",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "數量",

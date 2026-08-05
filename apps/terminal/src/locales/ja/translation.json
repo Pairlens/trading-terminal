@@ -1195,9 +1195,6 @@
       "technical": "テクニカル",
       "technicalDescription": "データ駆動、最小限の解説"
     },
-    "marketRegime": "マーケットレジーム",
-    "trending": "トレンド",
-    "choppy": "もみ合い",
     "orderTypeMarket": "Market",
     "orderTypeLimit": "Limit",
     "fieldSize": "数量",
