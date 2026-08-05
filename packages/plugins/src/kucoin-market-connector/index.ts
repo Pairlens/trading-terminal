@@ -71,6 +71,7 @@ export const kucoinMarketConnectorManifest: PluginManifest =
     icon: ICON_URL,
     gradient: 'from-emerald-500 to-teal-600',
     abbr: 'KC',
+    requiresDesktop: true,
     tickerSnapshot: true,
     triggerOrders: true,
     headerImage:

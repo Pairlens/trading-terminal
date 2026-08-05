@@ -59,6 +59,7 @@ export const coinbaseMarketConnectorManifest: PluginManifest =
     icon: ICON_URL,
     gradient: 'from-blue-500 to-indigo-600',
     abbr: 'CB',
+    requiresDesktop: true,
     tickerSnapshot: true,
     triggerOrders: true,
     headerImage:

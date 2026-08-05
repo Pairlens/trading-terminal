@@ -13,13 +13,40 @@
  * silently, the CORS-exempt WS feeds keep streaming, and the chart hangs and
  * then renders one live candle. So these connectors refuse up front with a
  * typed PlatformRestrictedError, and the terminal (use-candle-stream →
- * PaneDesktopOnly) keys entirely off `isPlatformRestrictedError` — a regression
- * here silently brings the dead chart back.
+ * DesktopOnlyState) keys entirely off `isPlatformRestrictedError` — a
+ * regression here silently brings the dead chart back.
  */
 import { afterEach, describe, expect, it } from 'bun:test'
 
 import { isPlatformRestrictedError } from '@pairlens/market-engine/errors'
 
+import {
+  ALPACA_ADAPTER_INFO,
+  BINANCE_ADAPTER_INFO,
+  BITFINEX_ADAPTER_INFO,
+  BITGET_ADAPTER_INFO,
+  BITVAVO_ADAPTER_INFO,
+  BYBIT_ADAPTER_INFO,
+  COINBASE_ADAPTER_INFO,
+  CRYPTOCOM_ADAPTER_INFO,
+  GATE_ADAPTER_INFO,
+  HTX_ADAPTER_INFO,
+  KRAKEN_ADAPTER_INFO,
+  KUCOIN_ADAPTER_INFO,
+  MEXC_ADAPTER_INFO,
+  OKX_ADAPTER_INFO,
+  UPBIT_ADAPTER_INFO,
+  alpacaMarketConnectorManifest,
+  binanceMarketConnectorManifest,
+  bitfinexMarketConnectorManifest,
+  bitgetMarketConnectorManifest,
+  bitvavoMarketConnectorManifest,
+  bybitMarketConnectorManifest,
+  cryptocomMarketConnectorManifest,
+  htxMarketConnectorManifest,
+  krakenMarketConnectorManifest,
+  upbitMarketConnectorManifest,
+} from '../index'
 import {
   coinbaseMarketConnectorManifest,
   createCoinbaseMarketConnectorPlugin,
@@ -33,12 +60,18 @@ import {
   kucoinMarketConnectorManifest,
 } from '../kucoin-market-connector'
 import {
+  createMexcMarketConnectorPlugin,
+  mexcMarketConnectorManifest,
+} from '../mexc-market-connector'
+import {
   createOkxMarketConnectorPlugin,
   okxMarketConnectorManifest,
 } from '../okx-market-connector'
+import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
   PluginExecuteParams,
   PluginInstance,
+  PluginManifest,
 } from '@pairlens/plugin-system/types'
 
 const g = globalThis as { window?: unknown }
@@ -60,6 +93,7 @@ const RESTRICTED: Array<[string, () => PluginInstance]> = [
     'kucoin',
     () => createKucoinMarketConnectorPlugin(kucoinMarketConnectorManifest),
   ],
+  ['mexc', () => createMexcMarketConnectorPlugin(mexcMarketConnectorManifest)],
 ]
 
 const candleSub = (market: string): PluginExecuteParams => ({
@@ -120,5 +154,58 @@ describe('desktop-only venues in a browser build', () => {
         false,
       )
     }
+  })
+})
+
+/**
+ * The refusal above is invisible until it fires. Everything that WARNS about it
+ * ahead of time — the "Desktop" mark in the venue picker, the workspace gate,
+ * the choice of default venue — reads `MarketAdapterInfo.requiresDesktop`, and
+ * the terminal builds that struct from the plugin MANIFEST
+ * (`getConnectorAdapterInfo`), never from the connector's exported adapter-info
+ * const.
+ *
+ * That is how the mark went missing on first ship: the flag was set on the
+ * exported const, which nothing reads. The two must agree.
+ */
+describe('a venue that needs desktop says so in its manifest', () => {
+  const CONNECTORS: Array<[string, PluginManifest, MarketAdapterInfo]> = [
+    ['okx', okxMarketConnectorManifest, OKX_ADAPTER_INFO],
+    ['binance', binanceMarketConnectorManifest, BINANCE_ADAPTER_INFO],
+    ['bybit', bybitMarketConnectorManifest, BYBIT_ADAPTER_INFO],
+    ['bitvavo', bitvavoMarketConnectorManifest, BITVAVO_ADAPTER_INFO],
+    ['mexc', mexcMarketConnectorManifest, MEXC_ADAPTER_INFO],
+    ['kucoin', kucoinMarketConnectorManifest, KUCOIN_ADAPTER_INFO],
+    ['gate', gateMarketConnectorManifest, GATE_ADAPTER_INFO],
+    ['coinbase', coinbaseMarketConnectorManifest, COINBASE_ADAPTER_INFO],
+    ['bitget', bitgetMarketConnectorManifest, BITGET_ADAPTER_INFO],
+    ['kraken', krakenMarketConnectorManifest, KRAKEN_ADAPTER_INFO],
+    ['htx', htxMarketConnectorManifest, HTX_ADAPTER_INFO],
+    ['cryptocom', cryptocomMarketConnectorManifest, CRYPTOCOM_ADAPTER_INFO],
+    ['bitfinex', bitfinexMarketConnectorManifest, BITFINEX_ADAPTER_INFO],
+    ['upbit', upbitMarketConnectorManifest, UPBIT_ADAPTER_INFO],
+    ['alpaca', alpacaMarketConnectorManifest, ALPACA_ADAPTER_INFO],
+  ]
+
+  const declared = (manifest: PluginManifest) =>
+    manifest.metadata?.['requiresDesktop'] === true
+
+  it('carries the flag on the manifest, which is what the terminal reads', () => {
+    // Compared as one object so a mismatch names the venue, not just `false`.
+    const fromManifest = Object.fromEntries(
+      CONNECTORS.map(([venue, manifest]) => [venue, declared(manifest)]),
+    )
+    const fromAdapterInfo = Object.fromEntries(
+      CONNECTORS.map(([venue, , info]) => [
+        venue,
+        info.requiresDesktop === true,
+      ]),
+    )
+    expect(fromManifest).toEqual(fromAdapterInfo)
+  })
+
+  it('marks exactly the four venues a browser cannot reach', () => {
+    const marked = CONNECTORS.filter(([, m]) => declared(m)).map(([v]) => v)
+    expect(marked.sort()).toEqual(['coinbase', 'gate', 'kucoin', 'mexc'])
   })
 })

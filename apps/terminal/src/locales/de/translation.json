@@ -926,6 +926,11 @@
         "title": "Schlüssel im Schlüsselbund",
         "detail": "Börsenschlüssel liegen im System-Schlüsselbund, nie im Browser-Speicher und nie auf unseren Servern."
       }
+    },
+    "wall": {
+      "title": "{{venue}} braucht die Desktop-App",
+      "description": "Diese Börse liefert ihre Marktdaten ohne die Header, die ein Browser zum Lesen braucht. Die Desktop-App verbindet sich nativ, dort funktioniert jede Börse.",
+      "alternatives": "Oder im Browser bleiben"
     }
   },
   "userMenu": {
@@ -2006,7 +2011,12 @@
     "resetConfirmDescription": "Dadurch wird dein aktuelles Layout durch die Standardvoreinstellung ersetzt. Jede benutzerdefinierte Anordnung geht verloren.",
     "emptyPlaceholder": "Panel hinzufügen",
     "searchPairs": "Paare suchen...",
-    "searchPanes": "Panels suchen..."
+    "searchPanes": "Panels suchen...",
+    "paneUnavailable": {
+      "title": "{{pair}} ist auf {{venue}} nicht verfügbar",
+      "titleAnyVenue": "{{pair}} ist nicht verfügbar",
+      "description": "Dieser Konnektor hat für dieses Paar keine Marktdaten geliefert. Probier einen anderen, der es listet."
+    }
   },
   "watchlist": {
     "addTitle": "Zur Watchlist hinzufügen",
@@ -2167,7 +2177,19 @@
   "terminal": {
     "manageWatchlists": "Watchlists verwalten",
     "createAlert": "Alert erstellen",
-    "market": "Markt"
+    "market": "Markt",
+    "wallet": {
+      "connectWallet": "Wallet verbinden",
+      "connectAccount": "Konto verbinden",
+      "connectHintWallet": "Verbinde eine {{chain}}-Wallet zum Handeln",
+      "connectHintWalletAny": "Verbinde eine Wallet zum Handeln",
+      "connectHintAccount": "Verbinde ein {{venue}}-Konto zum Handeln",
+      "selectWallet": "Wallet wählen",
+      "selectAccount": "Konto wählen",
+      "groupWallet": "Krypto-Wallet",
+      "groupBroker": "Broker-Konto",
+      "groupExchange": "Börsenkonto"
+    }
   },
   "accounts": {
     "pageTitle": "Konten",

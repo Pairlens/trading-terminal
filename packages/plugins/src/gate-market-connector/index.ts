@@ -54,6 +54,7 @@ export const gateMarketConnectorManifest: PluginManifest =
     icon: ICON_URL,
     gradient: 'from-sky-500 to-blue-600',
     abbr: 'GT',
+    requiresDesktop: true,
     tickerSnapshot: true,
     triggerOrders: true,
     headerImage:

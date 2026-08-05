@@ -926,6 +926,11 @@
         "title": "金鑰存於系統鑰匙圈",
         "detail": "交易所金鑰保存在系統鑰匙圈中，不會進入瀏覽器儲存空間，也不會到我們的伺服器。"
       }
+    },
+    "wall": {
+      "title": "{{venue}} 需要桌面應用程式",
+      "description": "這家交易所回傳行情資料時不帶瀏覽器讀取所需的標頭。桌面應用程式以原生方式連線，所有交易所在那裡都能用。",
+      "alternatives": "或者繼續用瀏覽器"
     }
   },
   "userMenu": {
@@ -2006,7 +2011,12 @@
     "resetConfirmDescription": "這會以預設版面取代你目前的版面，所有自訂排列都將遺失。",
     "emptyPlaceholder": "新增面板",
     "searchPairs": "搜尋交易對…",
-    "searchPanes": "搜尋面板…"
+    "searchPanes": "搜尋面板…",
+    "paneUnavailable": {
+      "title": "{{venue}} 上沒有 {{pair}}",
+      "titleAnyVenue": "找不到 {{pair}}",
+      "description": "這個連接器沒有回傳這個交易對的行情資料。換一個有上架它的連接器試試。"
+    }
   },
   "watchlist": {
     "addTitle": "加入自選清單",
@@ -2167,7 +2177,19 @@
   "terminal": {
     "manageWatchlists": "管理自選清單",
     "createAlert": "建立提醒",
-    "market": "市場"
+    "market": "市場",
+    "wallet": {
+      "connectWallet": "連接錢包",
+      "connectAccount": "連接帳戶",
+      "connectHintWallet": "連接 {{chain}} 錢包即可交易",
+      "connectHintWalletAny": "連接錢包即可交易",
+      "connectHintAccount": "連接 {{venue}} 帳戶即可交易",
+      "selectWallet": "選擇錢包",
+      "selectAccount": "選擇帳戶",
+      "groupWallet": "加密錢包",
+      "groupBroker": "券商帳戶",
+      "groupExchange": "交易所帳戶"
+    }
   },
   "accounts": {
     "pageTitle": "帳戶",

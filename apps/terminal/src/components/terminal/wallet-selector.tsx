@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { ChevronDown, Wallet } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
@@ -23,6 +24,7 @@ import {
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
 
+import type { WalletChain } from '@pairlens/market-engine/adapter'
 import { useActiveWallet } from '@/lib/active-wallet-context'
 import { useMarketData } from '@/lib/market-data-provider'
 import {
@@ -35,7 +37,20 @@ type WalletSelectorProps = {
   market: string
 }
 
+/**
+ * `WalletChain` is a lowercase id, and it was reaching the user raw — "Connect
+ * a solana wallet". These are proper nouns; they read as a bug in every
+ * language and worse in the ones that capitalize the noun beside them
+ * ("solana-Wallet"). Not translated: chain names are the same everywhere.
+ */
+const CHAIN_NAME: Record<WalletChain, string> = {
+  solana: 'Solana',
+  ethereum: 'Ethereum',
+  bitcoin: 'Bitcoin',
+}
+
 export function WalletSelector({ market }: WalletSelectorProps) {
+  const { t } = useTranslation()
   const { activeWallet, setActiveWallet } = useActiveWallet()
   const credentials = useCredentialsStore((s) => s.credentials)
   const credLoaded = useCredentialsStore((s) => s.loaded)
@@ -108,9 +123,17 @@ export function WalletSelector({ market }: WalletSelectorProps) {
   if (!loaded) return null
 
   if (items.length === 0) {
-    const connectLabel = isDex
-      ? `${marketInfo?.walletChain ?? ''} wallet`
-      : (CREDENTIAL_SCHEMAS[market]?.label ?? market.toUpperCase()) + ' account'
+    // The chain/venue rides in as a placeholder rather than being glued to a
+    // " wallet" / " account" suffix: that word order is English-only, and the
+    // chain is not always known (an EVM connector with no wallet configured).
+    const chain = marketInfo?.walletChain
+    const connectHint = isDex
+      ? chain
+        ? t('terminal.wallet.connectHintWallet', { chain: CHAIN_NAME[chain] })
+        : t('terminal.wallet.connectHintWalletAny')
+      : t('terminal.wallet.connectHintAccount', {
+          venue: CREDENTIAL_SCHEMAS[market]?.label ?? market.toUpperCase(),
+        })
 
     return (
       <Tooltip>
@@ -126,9 +149,11 @@ export function WalletSelector({ market }: WalletSelectorProps) {
           }
         >
           <Wallet className="size-3" />
-          {isDex ? 'Connect wallet' : 'Connect account'}
+          {isDex
+            ? t('terminal.wallet.connectWallet')
+            : t('terminal.wallet.connectAccount')}
         </TooltipTrigger>
-        <TooltipContent>Connect a {connectLabel} to trade</TooltipContent>
+        <TooltipContent>{connectHint}</TooltipContent>
       </Tooltip>
     )
   }
@@ -174,7 +199,9 @@ export function WalletSelector({ market }: WalletSelectorProps) {
             </>
           ) : (
             <span className="text-muted-foreground">
-              {isDex ? 'Select wallet' : 'Select account'}
+              {isDex
+                ? t('terminal.wallet.selectWallet')
+                : t('terminal.wallet.selectAccount')}
             </span>
           )}
           <ChevronDown className="size-3" />
@@ -183,18 +210,18 @@ export function WalletSelector({ market }: WalletSelectorProps) {
           {selected
             ? selected.label
             : isDex
-              ? 'Select wallet'
-              : 'Select account'}
+              ? t('terminal.wallet.selectWallet')
+              : t('terminal.wallet.selectAccount')}
         </TooltipContent>
       </Tooltip>
       <DropdownMenuContent align="start" className="w-auto min-w-48">
         <DropdownMenuGroup>
           <DropdownMenuLabel>
             {isDex
-              ? 'Crypto Wallet'
+              ? t('terminal.wallet.groupWallet')
               : isBroker
-                ? 'Broker Account'
-                : 'Exchange Account'}
+                ? t('terminal.wallet.groupBroker')
+                : t('terminal.wallet.groupExchange')}
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

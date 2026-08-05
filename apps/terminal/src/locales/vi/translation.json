@@ -926,6 +926,11 @@
         "title": "Khóa nằm trong keychain",
         "detail": "Khóa sàn nằm trong keychain hệ thống, không bao giờ ở bộ nhớ trình duyệt hay máy chủ của chúng tôi."
       }
+    },
+    "wall": {
+      "title": "{{venue}} cần ứng dụng máy tính",
+      "description": "Sàn này trả dữ liệu thị trường mà không kèm các header trình duyệt cần để đọc. Ứng dụng máy tính kết nối trực tiếp, nên mọi sàn đều chạy được ở đó.",
+      "alternatives": "Hoặc ở lại trên trình duyệt"
     }
   },
   "userMenu": {
@@ -2006,7 +2011,12 @@
     "resetConfirmDescription": "Thao tác này sẽ thay thế bố cục hiện tại của bạn bằng mẫu mặc định. Mọi sắp xếp tùy chỉnh sẽ bị mất.",
     "emptyPlaceholder": "Thêm một panel",
     "searchPairs": "Tìm cặp giao dịch...",
-    "searchPanes": "Tìm panel..."
+    "searchPanes": "Tìm panel...",
+    "paneUnavailable": {
+      "title": "{{pair}} không có trên {{venue}}",
+      "titleAnyVenue": "{{pair}} không khả dụng",
+      "description": "Connector này không trả về dữ liệu thị trường cho cặp này. Hãy thử connector khác có niêm yết cặp đó."
+    }
   },
   "watchlist": {
     "addTitle": "Thêm vào danh sách theo dõi",
@@ -2167,7 +2177,19 @@
   "terminal": {
     "manageWatchlists": "Quản lý danh sách theo dõi",
     "createAlert": "Tạo cảnh báo",
-    "market": "Thị trường"
+    "market": "Thị trường",
+    "wallet": {
+      "connectWallet": "Kết nối ví",
+      "connectAccount": "Kết nối tài khoản",
+      "connectHintWallet": "Kết nối ví {{chain}} để giao dịch",
+      "connectHintWalletAny": "Kết nối ví để giao dịch",
+      "connectHintAccount": "Kết nối tài khoản {{venue}} để giao dịch",
+      "selectWallet": "Chọn ví",
+      "selectAccount": "Chọn tài khoản",
+      "groupWallet": "Ví tiền mã hóa",
+      "groupBroker": "Tài khoản môi giới",
+      "groupExchange": "Tài khoản sàn"
+    }
   },
   "accounts": {
     "pageTitle": "Tài khoản",
