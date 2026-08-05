@@ -1,14 +1,9 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
-import {
-  ClipboardList,
-  History,
-  Loader2,
-  Package,
-  Wallet,
-  X,
-} from 'lucide-react'
+// Empty-state glyphs follow the pane vocabulary in `pairlens-core`: Layers is
+// what the registry hands the Positions pane, Receipt is what it hands Trades.
+import { Layers, ListOrdered, Loader2, Receipt, Wallet, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -339,7 +334,7 @@ export function PositionsPane() {
       <div className="flex-1 overflow-hidden">
         {/* Positions tab */}
         <TabsContent value="positions" className="h-full p-2">
-          <EmptyState icon={Package} message={t('positions.spotNoPositions')} />
+          <EmptyState icon={Layers} message={t('positions.spotNoPositions')} />
         </TabsContent>
 
         {/* Orders tab */}
@@ -347,12 +342,12 @@ export function PositionsPane() {
           <div className="h-full overflow-auto">
             {!hasWallet ? (
               <EmptyState
-                icon={ClipboardList}
-                message={t('positions.selectWallet')}
+                icon={ListOrdered}
+                message={t('positions.selectWalletOrders')}
               />
             ) : sortedOrders.length === 0 ? (
               <EmptyState
-                icon={ClipboardList}
+                icon={ListOrdered}
                 message={t('positions.noOrders')}
               />
             ) : (
@@ -438,11 +433,11 @@ export function PositionsPane() {
           <div className="h-full overflow-auto">
             {!hasWallet ? (
               <EmptyState
-                icon={History}
-                message={t('positions.selectWallet')}
+                icon={Receipt}
+                message={t('positions.selectWalletFills')}
               />
             ) : fills.length === 0 ? (
-              <EmptyState icon={History} message={t('positions.noFills')} />
+              <EmptyState icon={Receipt} message={t('positions.noFills')} />
             ) : (
               <table className="w-full text-[11px]">
                 <TableHeader>
@@ -491,7 +486,10 @@ export function PositionsPane() {
         <TabsContent value="balances" className="h-full p-2">
           <div className="h-full overflow-auto">
             {!hasWallet ? (
-              <EmptyState icon={Wallet} message={t('positions.selectWallet')} />
+              <EmptyState
+                icon={Wallet}
+                message={t('positions.selectWalletBalances')}
+              />
             ) : holdings.length === 0 ? (
               <EmptyState
                 icon={Wallet}
