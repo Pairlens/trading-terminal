@@ -1,12 +1,21 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { SendHorizontal, Square } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
-import { Input } from '@pairlens/ui/components/ui/input'
-import type { FormEvent } from 'react'
+import { Textarea } from '@pairlens/ui/components/ui/textarea'
+import type { FormEvent, KeyboardEvent } from 'react'
+
+/** Composer growth ceiling — past this it scrolls instead of eating the chat. */
+const MAX_COMPOSER_HEIGHT = 128
 
 function useDragScroll() {
   const ref = useRef<HTMLDivElement>(null)
@@ -73,7 +82,7 @@ export function CopilotInput({
   const { t } = useTranslation()
   const [value, setValue] = useState('')
   const drag = useDragScroll()
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
   const userEngagedRef = useRef(false)
   const isReady = status === 'ready'
   const isStreaming = status === 'streaming'
@@ -82,12 +91,37 @@ export function CopilotInput({
     if (isReady && userEngagedRef.current) inputRef.current?.focus()
   }, [isReady])
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
+  // Grow the composer with its content so a long message wraps into a block
+  // instead of scrolling away on one endless line. Measured rather than left to
+  // `field-sizing: content`, which older WebKit (so older desktop builds) lacks.
+  useLayoutEffect(() => {
+    const el = inputRef.current
+    if (!el) return
+    el.style.height = 'auto'
+    // scrollHeight is content + padding; borders sit outside it under
+    // border-box, and omitting them would leave the box 2px short of its text.
+    const borders = el.offsetHeight - el.clientHeight
+    el.style.height = `${Math.min(el.scrollHeight + borders, MAX_COMPOSER_HEIGHT)}px`
+  }, [value])
+
+  const submit = useCallback(() => {
     const trimmed = value.trim()
     if (!trimmed || !isReady) return
     onSend(trimmed)
     setValue('')
+  }, [value, isReady, onSend])
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    submit()
+  }
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    // Enter sends, Shift+Enter breaks the line. `isComposing` lets an IME
+    // (ja/ko/zh) accept its candidate with Enter without firing the message.
+    if (e.key !== 'Enter' || e.shiftKey || e.nativeEvent.isComposing) return
+    e.preventDefault()
+    submit()
   }
 
   return (
@@ -121,17 +155,19 @@ export function CopilotInput({
       </div>
 
       {/* Input + send/stop */}
-      <form onSubmit={handleSubmit} className="flex gap-1.5">
-        <Input
+      <form onSubmit={handleSubmit} className="flex items-end gap-1.5">
+        <Textarea
           ref={inputRef}
+          rows={1}
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onKeyDown={handleKeyDown}
           onFocus={() => {
             userEngagedRef.current = true
           }}
           placeholder={t('copilot.placeholder')}
           disabled={!isReady}
-          className="flex-1"
+          className="field-sizing-fixed min-h-8 flex-1 resize-none overflow-y-auto px-2.5 py-1 leading-5"
         />
         {isStreaming ? (
           <Button
