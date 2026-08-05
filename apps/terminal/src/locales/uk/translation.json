@@ -2140,6 +2140,7 @@
     "categories": {
       "all": "Усі",
       "pairs": "Пари",
+      "markets": "Ринки",
       "pages": "Сторінки",
       "workspaces": "Робочі простори",
       "workflows": "Робочі процеси",
@@ -2170,6 +2171,9 @@
       "pairs": "Пари"
     },
     "addPane": "Додати до розкладки",
+    "switchMarket": "Змінити ринок",
+    "marketActive": "Активний",
+    "marketSwitched": "Перемкнено на {{name}}",
     "topMarkets": "Топ ринки"
   },
   "terminal": {

@@ -1,10 +1,12 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import type { AssetClass } from '@pairlens/market-engine'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 
 export type OmniSearchCategory =
   | 'all'
   | 'pairs'
+  | 'markets'
   | 'pages'
   | 'workspaces'
   | 'workflows'
@@ -20,6 +22,26 @@ export type PairResult = {
   type: 'pair'
   pair: PairEntry
   isWatched: boolean
+}
+
+/**
+ * A venue the terminal can chart right now — one entry per ACTIVE market
+ * connector plugin, so uninstalled or disabled connectors are absent by
+ * construction rather than by an allow-list.
+ */
+export type MarketResult = {
+  type: 'market'
+  /** Connector market id ('okx') — the value `terminal.market` holds. */
+  marketId: string
+  label: string
+  iconUrl?: string
+  /** Primary asset class, used for the row's category chip. */
+  assetClass?: AssetClass
+  /** Already the active venue — selecting it is a no-op. */
+  isActive: boolean
+  /** Unreachable from this build — see MarketAdapterInfo.requiresDesktop. */
+  requiresDesktop?: boolean
+  matchRanges?: MatchRanges
 }
 
 export type PageResult = {
@@ -88,6 +110,7 @@ export type ActionResult = {
 
 export type OmniSearchResult =
   | PairResult
+  | MarketResult
   | PageResult
   | WorkspaceResult
   | WorkflowResult

@@ -2132,6 +2132,7 @@
     "categories": {
       "all": "전체",
       "pairs": "페어",
+      "markets": "마켓",
       "pages": "페이지",
       "workspaces": "워크스페이스",
       "workflows": "워크플로우",
@@ -2162,6 +2163,9 @@
       "pairs": "페어"
     },
     "addPane": "레이아웃에 추가",
+    "switchMarket": "마켓 전환",
+    "marketActive": "사용 중",
+    "marketSwitched": "{{name}}(으)로 전환했습니다",
     "topMarkets": "상위 마켓"
   },
   "terminal": {

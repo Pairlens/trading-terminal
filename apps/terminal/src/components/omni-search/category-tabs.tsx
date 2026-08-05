@@ -10,6 +10,7 @@ import type { OmniSearchCategory } from './omni-search-types'
 const CATEGORIES: Array<{ id: OmniSearchCategory; labelKey: string }> = [
   { id: 'all', labelKey: 'search.categories.all' },
   { id: 'pairs', labelKey: 'search.categories.pairs' },
+  { id: 'markets', labelKey: 'search.categories.markets' },
   { id: 'pages', labelKey: 'search.categories.pages' },
   { id: 'workspaces', labelKey: 'search.categories.workspaces' },
   { id: 'workflows', labelKey: 'search.categories.workflows' },

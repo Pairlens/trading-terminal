@@ -2132,6 +2132,7 @@
     "categories": {
       "all": "Tümü",
       "pairs": "Pariteler",
+      "markets": "Piyasalar",
       "pages": "Sayfalar",
       "workspaces": "Çalışma alanları",
       "workflows": "İş akışları",
@@ -2162,6 +2163,9 @@
       "pairs": "Pariteler"
     },
     "addPane": "Düzene ekle",
+    "switchMarket": "Piyasa değiştir",
+    "marketActive": "Etkin",
+    "marketSwitched": "{{name}} piyasasına geçildi",
     "topMarkets": "En İyi Piyasalar"
   },
   "terminal": {

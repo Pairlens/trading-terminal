@@ -40,7 +40,7 @@ const ASSET_CLASS_ORDER: Array<AssetClass> = [
   'prediction',
 ]
 
-const ASSET_CLASS_LABELS: Record<AssetClass, string> = {
+export const ASSET_CLASS_LABELS: Record<AssetClass, string> = {
   'crypto-spot': 'CEX (Spot)',
   'crypto-perp': 'CEX (Perpetuals)',
   dex: 'DEX',

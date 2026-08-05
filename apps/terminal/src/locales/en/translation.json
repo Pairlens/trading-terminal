@@ -2132,6 +2132,7 @@
     "categories": {
       "all": "All",
       "pairs": "Pairs",
+      "markets": "Markets",
       "pages": "Pages",
       "workspaces": "Workspaces",
       "workflows": "Workflows",
@@ -2162,6 +2163,9 @@
       "pairs": "Pairs"
     },
     "addPane": "Add to layout",
+    "switchMarket": "Switch market",
+    "marketActive": "Active",
+    "marketSwitched": "Switched to {{name}}",
     "topMarkets": "Top Markets"
   },
   "terminal": {

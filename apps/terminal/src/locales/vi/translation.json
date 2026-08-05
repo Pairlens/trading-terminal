@@ -2132,6 +2132,7 @@
     "categories": {
       "all": "Tất cả",
       "pairs": "Cặp giao dịch",
+      "markets": "Thị trường",
       "pages": "Trang",
       "workspaces": "Không gian làm việc",
       "workflows": "Quy trình",
@@ -2162,6 +2163,9 @@
       "pairs": "Cặp giao dịch"
     },
     "addPane": "Thêm vào bố cục",
+    "switchMarket": "Chuyển thị trường",
+    "marketActive": "Đang dùng",
+    "marketSwitched": "Đã chuyển sang {{name}}",
     "topMarkets": "Thị trường hàng đầu"
   },
   "terminal": {

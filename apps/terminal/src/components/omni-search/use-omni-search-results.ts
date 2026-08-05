@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { useTheme } from 'next-themes'
 
 import { rankItems } from './fuzzy'
+import { buildMarketResults } from './market-results'
+import type { MarketResults } from './market-results'
 import type {
   ActionResult,
   NotificationResult,
@@ -19,6 +21,7 @@ import type {
   WorkspaceResult,
 } from './omni-search-types'
 import { instrumentToPairEntry } from '@/components/pair-picker/pair-picker-data'
+import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useInstrumentSearch } from '@/hooks/use-instrument-search'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { usePersistedState } from '@/hooks/use-persisted-state'
@@ -39,6 +42,7 @@ import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { useWorkflowStore } from '@/stores/workflow-store'
 
 const MAX_PAIRS_IN_ALL = 8
+const MAX_MARKETS_IN_ALL = 5
 const MAX_ACTIONS_IN_ALL = 6
 
 /** VS Code-style query prefixes that scope the search to one category. */
@@ -210,6 +214,22 @@ export function useOmniSearchResults(
     recentPairs,
     allSymbolsSet,
   ])
+
+  // ── Markets (venues) ──────────────────────────────────────────────
+  // Sourced from the active connector plugins, so the list follows whatever
+  // is installed and enabled — including third-party connectors — and a
+  // disabled connector's venue disappears from the palette with it.
+
+  const { markets: availableMarkets, defaultMarket } = useAvailableMarkets()
+  const [activeMarket] = usePersistedState<string>(
+    'terminal.market',
+    defaultMarket,
+  )
+
+  const marketResults = useMemo<MarketResults>(
+    () => buildMarketResults(q, availableMarkets, activeMarket),
+    [q, availableMarkets, activeMarket],
+  )
 
   // ── Pages ─────────────────────────────────────────────────────────
 
@@ -738,6 +758,7 @@ export function useOmniSearchResults(
     const counts: Record<OmniSearchCategory, number> = {
       all: 0,
       pairs: pairResults.items.length,
+      markets: marketResults.items.length,
       pages: pageResults.items.length,
       workspaces: workspaceResults.items.length,
       workflows: workflowResults.items.length,
@@ -748,6 +769,7 @@ export function useOmniSearchResults(
     }
     counts.all =
       counts.pairs +
+      counts.markets +
       counts.pages +
       counts.workspaces +
       counts.workflows +
@@ -765,6 +787,10 @@ export function useOmniSearchResults(
           pairs: {
             label: t('search.categories.pairs'),
             results: pairResults.items,
+          },
+          markets: {
+            label: t('search.categories.markets'),
+            results: marketResults.items,
           },
           pages: {
             label: t('search.categories.pages'),
@@ -810,6 +836,21 @@ export function useOmniSearchResults(
       // "All" tab — pairs first, remaining groups ranked by best match.
       const result: Array<ResultGroup> = []
 
+      // Venues only while searching — otherwise every connector would sit
+      // between the user's recents and everything else on an empty query.
+      const marketsGroup: ResultGroup | null =
+        q && marketResults.items.length > 0
+          ? {
+              category: 'markets',
+              label: t('search.categories.markets'),
+              results: marketResults.items.slice(0, MAX_MARKETS_IN_ALL),
+            }
+          : null
+
+      // Typing a venue's name outright beats the pairs that merely carry it in
+      // their symbol — "okx" means OKX, not OKX-MASCOT-BLOCKY.
+      if (marketsGroup && marketResults.namesVenue) result.push(marketsGroup)
+
       if (pairResults.items.length > 0) {
         result.push({
           category: 'pairs',
@@ -824,6 +865,10 @@ export function useOmniSearchResults(
 
       type Candidate = ResultGroup & { topScore: number }
       const candidates: Array<Candidate> = []
+
+      if (marketsGroup && !marketResults.namesVenue) {
+        candidates.push({ ...marketsGroup, topScore: marketResults.topScore })
+      }
 
       if (pageResults.items.length > 0) {
         candidates.push({
@@ -903,6 +948,7 @@ export function useOmniSearchResults(
     effectiveCategory,
     q,
     pairResults,
+    marketResults,
     pageResults,
     workspaceResults,
     workflowResults,

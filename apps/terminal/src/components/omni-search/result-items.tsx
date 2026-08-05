@@ -3,9 +3,11 @@
 import { Fragment, memo } from 'react'
 import {
   AppWindow,
+  ArrowLeftRight,
   Bell,
   Blocks,
   Bot,
+  Check,
   CircleUser,
   Cloud,
   Coins,
@@ -14,6 +16,7 @@ import {
   Globe,
   Home,
   Keyboard,
+  Landmark,
   Lock,
   LogOut,
   MapPin,
@@ -46,6 +49,7 @@ import type { LucideIcon } from 'lucide-react'
 
 import type {
   ActionResult,
+  MarketResult,
   MatchRanges,
   NotificationResult,
   PageResult,
@@ -56,6 +60,7 @@ import type {
   WorkspaceResult,
 } from './omni-search-types'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
+import { ASSET_CLASS_LABELS } from '@/components/terminal/market-picker'
 import { getWorkspaceIcon } from '@/components/workspace/workspace-icons'
 import { getPaneIcon } from '@/lib/layout/pane-icons'
 
@@ -202,6 +207,71 @@ export const PairResultItem = memo(function PairResultItem({
       {isWatched && (
         <Star className="size-3 shrink-0 fill-amber-400 text-amber-400" />
       )}
+    </CommandItem>
+  )
+})
+
+// ── Market (venue) result ───────────────────────────────────────────
+
+export const MarketResultItem = memo(function MarketResultItem({
+  result,
+  onSelect,
+}: {
+  result: MarketResult
+  onSelect: () => void
+}) {
+  const { t } = useTranslation()
+  const classLabel = result.assetClass
+    ? ASSET_CLASS_LABELS[result.assetClass]
+    : null
+
+  return (
+    <CommandItem
+      value={`market:${result.marketId}`}
+      onSelect={onSelect}
+      className={cn(ROW_CLASS, 'group/market')}
+    >
+      {result.iconUrl ? (
+        <img
+          src={result.iconUrl}
+          alt=""
+          className="size-[22px] shrink-0 rounded-md"
+        />
+      ) : (
+        <IconTile icon={Landmark} active={result.isActive} />
+      )}
+      <span className="text-sm">
+        <HighlightedText text={result.label} ranges={result.matchRanges} />
+      </span>
+      <span className="ml-auto flex items-center gap-1.5">
+        {/* This venue serves no CORS headers and streams no candle history,
+            so a browser build cannot read it — same mark as the venue
+            dropdown, said before the click rather than after. */}
+        {result.requiresDesktop && (
+          <span className="rounded-sm border border-border/60 px-1 py-px text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
+            Desktop
+          </span>
+        )}
+        {classLabel && (
+          <Badge
+            variant="secondary"
+            className="font-mono text-[10px] tracking-wide group-data-[selected=true]/market:hidden"
+          >
+            {classLabel}
+          </Badge>
+        )}
+        {result.isActive ? (
+          <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+            <Check className="size-3" />
+            {t('search.marketActive')}
+          </span>
+        ) : (
+          <span className="hidden items-center gap-1 text-[11px] text-muted-foreground group-data-[selected=true]/market:flex">
+            <ArrowLeftRight className="size-3" />
+            {t('search.switchMarket')}
+          </span>
+        )}
+      </span>
     </CommandItem>
   )
 })

@@ -2132,6 +2132,7 @@
     "categories": {
       "all": "すべて",
       "pairs": "ペア",
+      "markets": "マーケット",
       "pages": "ページ",
       "workspaces": "ワークスペース",
       "workflows": "ワークフロー",
@@ -2162,6 +2163,9 @@
       "pairs": "ペア"
     },
     "addPane": "レイアウトに追加",
+    "switchMarket": "マーケットを切り替え",
+    "marketActive": "使用中",
+    "marketSwitched": "{{name}} に切り替えました",
     "topMarkets": "トップマーケット"
   },
   "terminal": {

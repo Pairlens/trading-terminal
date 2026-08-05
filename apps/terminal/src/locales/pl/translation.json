@@ -2140,6 +2140,7 @@
     "categories": {
       "all": "Wszystkie",
       "pairs": "Pary",
+      "markets": "Rynki",
       "pages": "Strony",
       "workspaces": "Obszary robocze",
       "workflows": "Workflowy",
@@ -2170,6 +2171,9 @@
       "pairs": "Pary"
     },
     "addPane": "Dodaj do układu",
+    "switchMarket": "Zmień rynek",
+    "marketActive": "Aktywny",
+    "marketSwitched": "Przełączono na {{name}}",
     "topMarkets": "Najlepsze rynki"
   },
   "terminal": {

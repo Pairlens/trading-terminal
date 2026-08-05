@@ -2132,6 +2132,7 @@
     "categories": {
       "all": "ทั้งหมด",
       "pairs": "คู่เทรด",
+      "markets": "ตลาด",
       "pages": "หน้า",
       "workspaces": "พื้นที่ทำงาน",
       "workflows": "เวิร์กโฟลว์",
@@ -2162,6 +2163,9 @@
       "pairs": "คู่เทรด"
     },
     "addPane": "เพิ่มลงเลย์เอาต์",
+    "switchMarket": "สลับตลาด",
+    "marketActive": "ใช้งานอยู่",
+    "marketSwitched": "สลับไปที่ {{name}} แล้ว",
     "topMarkets": "ตลาดยอดนิยม"
   },
   "terminal": {

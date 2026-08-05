@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import {
   Command,
@@ -17,6 +18,7 @@ import { cn } from '@pairlens/ui'
 import { CategoryTabs } from './category-tabs'
 import {
   ActionResultItem,
+  MarketResultItem,
   NotificationResultItem,
   PageResultItem,
   PairResultItem,
@@ -29,6 +31,7 @@ import { SearchFooter } from './search-footer'
 import { useOmniSearchResults } from './use-omni-search-results'
 import type { OmniSearchCategory, OmniSearchResult } from './omni-search-types'
 import { track } from '@/lib/analytics-events'
+import { switchActiveMarket } from '@/lib/switch-market'
 import { useWorkflowStore } from '@/stores/workflow-store'
 import { useNotificationStore } from '@/stores/notification-store'
 import { usePaneAddRequestStore } from '@/stores/pane-add-request-store'
@@ -42,6 +45,7 @@ type OmniSearchPaletteProps = {
 const CATEGORY_ORDER: Array<OmniSearchCategory> = [
   'all',
   'pairs',
+  'markets',
   'pages',
   'workspaces',
   'workflows',
@@ -114,6 +118,17 @@ export function OmniSearchPalette({
           void navigate({ to: '/pair/$pair', params: { pair: symbol } })
           break
         }
+        case 'market': {
+          // Writes the same synced `terminal.market` value the venue dropdown
+          // owns, so every mounted chart on the shared scope re-streams from
+          // the new connector. Off the chart page the switch has no visible
+          // surface, so say what happened.
+          switchActiveMarket(result.marketId)
+          if (!window.location.pathname.startsWith('/pair/')) {
+            toast.success(t('search.marketSwitched', { name: result.label }))
+          }
+          break
+        }
         case 'page':
           void navigate({ to: result.path as '/' })
           break
@@ -163,6 +178,7 @@ export function OmniSearchPalette({
     [
       close,
       navigate,
+      t,
       setRecentPairs,
       setAssetClassMap,
       setRecentActionIds,
@@ -278,6 +294,8 @@ function ResultItem({
   switch (result.type) {
     case 'pair':
       return <PairResultItem result={result} onSelect={onSelect} />
+    case 'market':
+      return <MarketResultItem result={result} onSelect={onSelect} />
     case 'page':
       return <PageResultItem result={result} onSelect={onSelect} />
     case 'workspace':
@@ -299,6 +317,8 @@ function resultKey(result: OmniSearchResult): string {
   switch (result.type) {
     case 'pair':
       return `pair:${result.pair.symbol}`
+    case 'market':
+      return `market:${result.marketId}`
     case 'page':
       return `page:${result.id}`
     case 'workspace':

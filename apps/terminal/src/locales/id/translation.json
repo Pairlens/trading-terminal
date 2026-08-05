@@ -2132,6 +2132,7 @@
     "categories": {
       "all": "Semua",
       "pairs": "Pair",
+      "markets": "Market",
       "pages": "Halaman",
       "workspaces": "Ruang Kerja",
       "workflows": "Workflow",
@@ -2162,6 +2163,9 @@
       "pairs": "Pair"
     },
     "addPane": "Tambah ke tata letak",
+    "switchMarket": "Ganti market",
+    "marketActive": "Aktif",
+    "marketSwitched": "Beralih ke {{name}}",
     "topMarkets": "Market Teratas"
   },
   "terminal": {

@@ -2132,6 +2132,7 @@
     "categories": {
       "all": "全部",
       "pairs": "交易对",
+      "markets": "市场",
       "pages": "页面",
       "workspaces": "工作区",
       "workflows": "工作流",
@@ -2162,6 +2163,9 @@
       "pairs": "交易对"
     },
     "addPane": "添加到布局",
+    "switchMarket": "切换市场",
+    "marketActive": "使用中",
+    "marketSwitched": "已切换到 {{name}}",
     "topMarkets": "热门市场"
   },
   "terminal": {
