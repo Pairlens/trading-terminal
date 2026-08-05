@@ -4,12 +4,22 @@
 // same duotone treatment as the sign-in statue so the two dialogs read as one
 // family. The treatment itself lives in duotone-image.tsx.
 //
-// ARTWORK NOTE: `desktop-statue.webp` is currently a stand-in copy of
-// `sign-in-statue.webp`. Dropping the marble-hands render at that exact path
-// is the only change needed — the artwork wants a pure black ground (the
-// duotone pass alpha-keys it so the subject floats frameless) and reads best
-// with its chromatic accents intact, since those are what the vivid-ink pass
-// turns into the rainbow.
+// ARTWORK NOTE — how desktop-statue.webp was prepared, in case it is ever
+// regenerated from a new render:
+//   1. Trim the dead black above the glow (the source had ~23% empty headroom).
+//      Keep the FULL width: the glow reaches both edges and the hands are the
+//      composition.
+//   2. Boost saturation ~1.6x. The duotone pass only routes a pixel to vivid
+//      ink when max(r,g,b) > 50 and it clears a saturation smoothstep, and the
+//      lid's glow is a soft falloff into black, so most of the rainbow fails
+//      the brightness gate and lands on the grey ramp instead. Saturating the
+//      SOURCE lifts it over both thresholds without touching the shared
+//      treatment, which also drives the sign-in and onboarding art. modulate()
+//      scales in HSL, so pure black stays pure black and the ground still
+//      alpha-keys cleanly.
+//   3. Encode webp q86 (~59 KB).
+// The ground must stay pure black: the pass flood-fills from the borders and
+// keys it to transparent, which is what lets the subject float frameless.
 
 import { cn } from '@pairlens/ui/lib/utils'
 
@@ -36,9 +46,14 @@ export function DesktopStatueScene({
         className,
       )}
     >
+      {/* `contain`, not the DuotoneImage default of `cover`. The composition is
+          nearly square (two hands framing the machine) while this band is a
+          narrow column, so cover crops away both hands and leaves an anonymous
+          grey slab. Contain keeps the whole gesture; the ground is alpha-keyed
+          to transparent, so the empty band above and below is just panel. */}
       <DuotoneImage
         src={statueUrl}
-        className="absolute inset-0 object-[50%_35%]"
+        className="absolute inset-0 object-contain object-[50%_45%]"
       />
 
       {/* Fade the artwork toward the panel floor, using the (dark-scoped)
