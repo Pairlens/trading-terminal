@@ -2474,7 +2474,10 @@
       "loadingMore": "Ładowanie kolejnych wiadomości...",
       "caughtUp": "Wszystko przeczytane",
       "previousArticle": "Poprzedni artykuł",
-      "nextArticle": "Następny artykuł"
+      "nextArticle": "Następny artykuł",
+      "sentiment": "Sentyment",
+      "bearish": "Niedźwiedzi",
+      "bullish": "Byczy"
     },
     "topic": {
       "blockchain": "Blockchain",

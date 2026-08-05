@@ -2462,7 +2462,10 @@
       "loadingMore": "Memuat berita lainnya...",
       "caughtUp": "Anda sudah membaca semuanya",
       "previousArticle": "Artikel sebelumnya",
-      "nextArticle": "Artikel berikutnya"
+      "nextArticle": "Artikel berikutnya",
+      "sentiment": "Sentimen",
+      "bearish": "Bearish",
+      "bullish": "Bullish"
     },
     "topic": {
       "blockchain": "Blockchain",

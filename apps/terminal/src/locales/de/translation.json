@@ -2462,7 +2462,10 @@
       "loadingMore": "Weitere News werden geladen...",
       "caughtUp": "Alles gelesen",
       "previousArticle": "Vorheriger Artikel",
-      "nextArticle": "Nächster Artikel"
+      "nextArticle": "Nächster Artikel",
+      "sentiment": "Sentiment",
+      "bearish": "Bärisch",
+      "bullish": "Bullisch"
     },
     "topic": {
       "blockchain": "Blockchain",

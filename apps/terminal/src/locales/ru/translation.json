@@ -2474,7 +2474,10 @@
       "loadingMore": "Загрузка новостей...",
       "caughtUp": "Вы всё прочитали",
       "previousArticle": "Предыдущая статья",
-      "nextArticle": "Следующая статья"
+      "nextArticle": "Следующая статья",
+      "sentiment": "Настроение",
+      "bearish": "Медвежье",
+      "bullish": "Бычье"
     },
     "topic": {
       "blockchain": "Блокчейн",

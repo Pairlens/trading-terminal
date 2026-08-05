@@ -2462,7 +2462,10 @@
       "loadingMore": "뉴스를 더 불러오는 중...",
       "caughtUp": "모든 뉴스를 확인했습니다",
       "previousArticle": "이전 기사",
-      "nextArticle": "다음 기사"
+      "nextArticle": "다음 기사",
+      "sentiment": "시장 심리",
+      "bearish": "약세",
+      "bullish": "강세"
     },
     "topic": {
       "blockchain": "블록체인",

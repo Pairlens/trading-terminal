@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
-import { Newspaper } from 'lucide-react'
+import { Minus, Newspaper, TrendingDown, TrendingUp } from 'lucide-react'
 import type {
   NewsArticle,
   NewsFeedResponse,
@@ -87,21 +87,55 @@ export function formatTopicLabel(topic: string): string {
   return i18n.t(`news.topic.${topic}`, fallback)
 }
 
-export function SentimentBadge({ label }: { label: string }) {
+export type SentimentDirection = 'bullish' | 'bearish' | 'neutral'
+
+/** Bucket an API sentiment label ("Somewhat-Bullish", ...) into a direction. */
+export function sentimentDirection(label: string): SentimentDirection {
   const lower = label.toLowerCase()
-  const isBullish = lower.includes('bullish')
-  const isBearish = lower.includes('bearish')
+  if (lower.includes('bullish')) return 'bullish'
+  if (lower.includes('bearish')) return 'bearish'
+  return 'neutral'
+}
+
+/** Shared bullish/bearish/neutral color classes, keyed to the --up/--down tokens. */
+export const SENTIMENT_BADGE_CLASSES: Record<SentimentDirection, string> = {
+  bullish: 'border-up/40 bg-up/15 text-up',
+  bearish: 'border-down/40 bg-down/15 text-down',
+  neutral: 'border-border bg-muted/60 text-muted-foreground',
+}
+
+const SENTIMENT_ICONS: Record<
+  SentimentDirection,
+  typeof TrendingUp | typeof TrendingDown | typeof Minus
+> = {
+  bullish: TrendingUp,
+  bearish: TrendingDown,
+  neutral: Minus,
+}
+
+export function SentimentBadge({
+  label,
+  size = 'sm',
+  className,
+}: {
+  label: string
+  size?: 'sm' | 'lg'
+  className?: string
+}) {
+  const direction = sentimentDirection(label)
+  const Icon = SENTIMENT_ICONS[direction]
 
   return (
     <Badge
       variant="outline"
       className={cn(
-        'text-[10px]',
-        isBullish && 'border-green-500/30 bg-green-500/10 text-green-500',
-        isBearish && 'border-red-500/30 bg-red-500/10 text-red-500',
-        !isBullish && !isBearish && 'text-muted-foreground',
+        'font-semibold',
+        size === 'sm' ? 'text-[10px]' : 'h-6 px-2.5 text-xs',
+        SENTIMENT_BADGE_CLASSES[direction],
+        className,
       )}
     >
+      <Icon className={cn(size === 'lg' && 'size-3.5!')} />
       {label.replace(/_/g, ' ')}
     </Badge>
   )
@@ -175,17 +209,29 @@ export function ArticleCard({
   article: NewsArticle
   onClick: () => void
 }) {
+  const direction = sentimentDirection(article.overallSentimentLabel)
   return (
     <div
-      className="mb-3 break-inside-avoid cursor-pointer overflow-hidden rounded-lg border transition-colors hover:bg-accent/50"
+      className={cn(
+        'mb-3 break-inside-avoid cursor-pointer overflow-hidden rounded-lg border border-l-2 transition-colors hover:bg-accent/50',
+        direction === 'bullish' && 'border-l-up',
+        direction === 'bearish' && 'border-l-down',
+        direction === 'neutral' && 'border-l-muted-foreground/30',
+      )}
       onClick={onClick}
     >
       {article.bannerImage && (
-        <ArticleBanner
-          src={article.bannerImage}
-          imgClassName="max-h-40 w-full object-cover"
-          fallbackClassName="h-28 w-full"
-        />
+        <div className="relative">
+          <ArticleBanner
+            src={article.bannerImage}
+            imgClassName="max-h-40 w-full object-cover"
+            fallbackClassName="h-28 w-full"
+          />
+          <SentimentBadge
+            label={article.overallSentimentLabel}
+            className="absolute right-2 top-2 shadow-md backdrop-blur-sm"
+          />
+        </div>
       )}
       <div className="space-y-2 p-3">
         <span className="text-sm font-bold">{article.title}</span>
@@ -193,7 +239,9 @@ export function ArticleCard({
           <span>{article.source}</span>
           <span>&middot;</span>
           <span>{formatRelativeTime(article.timePublished)}</span>
-          <SentimentBadge label={article.overallSentimentLabel} />
+          {!article.bannerImage && (
+            <SentimentBadge label={article.overallSentimentLabel} />
+          )}
         </div>
         <p className="line-clamp-3 text-xs text-muted-foreground">
           {article.summary}

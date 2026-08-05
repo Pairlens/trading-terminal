@@ -2462,7 +2462,10 @@
       "loadingMore": "กำลังโหลดข่าวเพิ่มเติม...",
       "caughtUp": "คุณอ่านครบทุกข่าวแล้ว",
       "previousArticle": "บทความก่อนหน้า",
-      "nextArticle": "บทความถัดไป"
+      "nextArticle": "บทความถัดไป",
+      "sentiment": "ความเชื่อมั่น",
+      "bearish": "ขาลง",
+      "bullish": "ขาขึ้น"
     },
     "topic": {
       "blockchain": "บล็อกเชน",
