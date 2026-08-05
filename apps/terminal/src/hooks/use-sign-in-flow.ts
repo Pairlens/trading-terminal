@@ -6,6 +6,7 @@ import { track } from '@/lib/analytics-events'
 
 import { appServerHost, authClient } from '@/lib/auth-client'
 import { useResendTimer } from '@/hooks/use-resend-timer'
+import i18n from '@/lib/i18n'
 
 const OTP_LENGTH = 6
 
@@ -52,10 +53,15 @@ export function useSignInFlow({ onSignedIn }: UseSignInFlowOptions = {}) {
         throw new Error('Email is required')
       }
 
-      const result = await authClient.emailOtp.sendVerificationOtp({
-        email: value,
-        type: 'sign-in',
-      })
+      // Tell the App Server which language to write the email in. The
+      // browser's own Accept-Language is the wrong answer on its own: someone
+      // running the terminal in Japanese on an English-locale machine should
+      // get a Japanese code. Accept-Language is CORS-safelisted, so overriding
+      // it costs no preflight.
+      const result = await authClient.emailOtp.sendVerificationOtp(
+        { email: value, type: 'sign-in' },
+        { headers: { 'Accept-Language': i18n.language } },
+      )
 
       if (result.error) {
         throw new Error(result.error.message ?? 'Failed to send OTP')
