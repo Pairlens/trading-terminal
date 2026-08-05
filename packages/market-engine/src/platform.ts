@@ -32,6 +32,11 @@
  *
  * Asking #1 directly is correct in all four environments: browser dev and
  * `tauri dev` get the proxy, production desktop and the CLI go direct.
+ *
+ * A fifth environment arrived with the hosted web terminal: a PRODUCTION
+ * browser build, which has neither a dev proxy nor a Rust-side `fetch`, so
+ * plain `fetch` there is subject to CORS. That is a different question again —
+ * see `isCorsConstrained`.
  */
 
 /** True inside the Tauri desktop webview (dev or production). */
@@ -52,9 +57,49 @@ export function isBrowserRuntime(): boolean {
  * `import.meta.env` is absent outside Vite (the CLI runs under bun), hence the
  * defensive read; a document context is required because the proxy is served by
  * the same origin as the page.
+ *
+ * The dev proxy is the user's own localhost, so nothing — market data or
+ * signed request — leaves their machine before reaching the exchange. There is
+ * deliberately NO production counterpart: a Pairlens-hosted proxy would put us
+ * in the middle of both the market-data path and the credential path.
  */
 export function isDevProxyAvailable(): boolean {
   if (typeof window === 'undefined') return false
   const env = (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env
   return env?.DEV === true
+}
+
+/**
+ * True when plain `fetch` is subject to CORS — a browser build with no dev
+ * proxy in front of it, i.e. the hosted web terminal.
+ *
+ * This is the constraint connectors actually have to reason about, and it has
+ * no workaround available to the client: WebSockets are exempt from CORS, but
+ * REST is not, and several exchange hosts send no `Access-Control-Allow-Origin`
+ * at all (measured 2026-08: eea.okx.com, us.okx.com, api.coinbase.com,
+ * api.kucoin.com, api.kucoin.eu, api.gateio.ws, api-pub.bitfinex.com,
+ * api.mexc.com). Calls to those hosts are blocked outright, which killed the
+ * REST candle backfill while the CORS-exempt WS feeds kept streaming — a chart
+ * stuck on "Switching to OKX…" that resolved to a single live candle.
+ *
+ * Connectors answer this per venue rather than by routing around it:
+ *  - OKX reads public data from the CORS-enabled global host (identical
+ *    instruments and candles to the regional hosts — verified, they are one
+ *    matching engine behind separate legal entities).
+ *  - Bitfinex and Coinbase seed history from their WS snapshots instead.
+ *  - Gate, KuCoin and MEXC have no reachable public host and no WS history
+ *    (KuCoin cannot even open a socket — its WS URL comes from a CORS-blocked
+ *    REST POST), so they declare themselves desktop-only here.
+ *
+ * There is deliberately no same-origin proxy in production: it would put
+ * Pairlens in the middle of the market-data path, which the product's
+ * "straight from the venue, no middleman" guarantee rules out.
+ */
+export function isCorsConstrained(): boolean {
+  // The dev server proxies `/__*` straight to the exchange, CORS-free.
+  if (isDevProxyAvailable()) return false
+  // Desktop reaches exchanges through the Rust HTTP plugin, which is exempt.
+  if (isTauriRuntime()) return false
+  // No document (CLI, bun) means no origin and therefore no CORS.
+  return typeof window !== 'undefined'
 }

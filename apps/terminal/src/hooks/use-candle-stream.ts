@@ -5,7 +5,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { validateCandle } from '@pairlens/market-engine/validation'
 import { sortCandlesAscending } from '@pairlens/market-engine/candle-buffer'
 import { StalenessTracker } from '@pairlens/market-engine/staleness'
-import { isGeoRestrictedError } from '@pairlens/market-engine/errors'
+import {
+  isGeoRestrictedError,
+  isPlatformRestrictedError,
+} from '@pairlens/market-engine/errors'
 import type { CandleUpdate } from '@pairlens/market-engine/types'
 import type { SignalPayload } from '@pairlens/shared/types'
 import type { MarketDataStatus } from '@/lib/market-data-provider'
@@ -67,6 +70,13 @@ type UseCandleStreamResult = {
    * effectively unavailable on this connector. Drives a graceful empty state.
    */
   noData: boolean
+  /**
+   * The connector cannot work in this build at all (browser + a venue whose
+   * REST is CORS-blocked and whose WS carries no history). Distinct from
+   * `noData`: nothing is wrong with the pair, so the UI offers the desktop app
+   * rather than another pair.
+   */
+  desktopOnly: boolean
 }
 
 const MAX_CANDLES = 500
@@ -172,6 +182,7 @@ export function useCandleStream(
   const [streamError, setStreamError] = useState<string | null>(null)
   const [stale, setStale] = useState(false)
   const [noData, setNoData] = useState(false)
+  const [desktopOnly, setDesktopOnly] = useState(false)
   const stalenessRef = useRef(new StalenessTracker())
 
   const prevStreamKeyRef = useRef(`${market}:${normalizedPairKey}:${timeframe}`)
@@ -182,6 +193,7 @@ export function useCandleStream(
     setLatestSignal(signalCache.get(streamKey) ?? null)
     setStreamError(null)
     setNoData(false)
+    setDesktopOnly(false)
     prevStreamKeyRef.current = streamKey
   }
 
@@ -192,6 +204,7 @@ export function useCandleStream(
       setHasSnapshot(false)
       setStreamError(null)
       setNoData(false)
+      setDesktopOnly(false)
       return
     }
 
@@ -203,6 +216,7 @@ export function useCandleStream(
     setHasSnapshot(false)
     setStreamError(null)
     setNoData(false)
+    setDesktopOnly(false)
 
     const staleness = stalenessRef.current
     staleness.reset()
@@ -283,6 +297,14 @@ export function useCandleStream(
       // knows the venue is unavailable for the user's region (proactive geo
       // block, e.g. ByBit in the US). Surface it as a region restriction.
       clearNoDataTimer()
+      // The venue is unreachable from a browser build (CORS + no WS history).
+      // Surfaced as its own state so the UI can offer the desktop app instead
+      // of implying the pair or the region is the problem.
+      if (isPlatformRestrictedError(err)) {
+        setDesktopOnly(true)
+        setStreamError(null)
+        return
+      }
       if (isGeoRestrictedError(err)) {
         useGeoRestrictionStore.getState().report({
           exchange: err.exchange,
@@ -355,5 +377,6 @@ export function useCandleStream(
     hasSnapshot,
     stale,
     noData,
+    desktopOnly,
   }
 }

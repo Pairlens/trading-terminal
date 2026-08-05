@@ -30,6 +30,7 @@ export const GATE_ADAPTER_INFO: MarketAdapterInfo = {
   displayName: 'Gate.io',
   assetClasses: ['crypto-spot'],
   capabilities: ['read', 'trade'],
+  requiresDesktop: true,
   credentialSchema: [
     { key: 'apiKey', label: 'API Key', type: 'text', required: true },
     {
@@ -70,6 +71,7 @@ const gateSpec: CexConnectorSpec<GateCredentials> = {
     { key: 'apiSecret', required: true },
   ],
   defaultMode: 'paper',
+  requiresDesktop: true,
   createWsClient: () => new GateWsClient(),
   createPrivateWsClient: () => new GatePrivateWsClient(),
   fetchCandles: (pair, timeframe, limit, country) =>

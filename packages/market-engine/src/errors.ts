@@ -46,6 +46,49 @@ export function isGeoRestrictedError(e: unknown): e is GeoRestrictedError {
   )
 }
 
+/**
+ * The venue cannot be reached from this build at all — not a region block, a
+ * platform one.
+ *
+ * A browser tab can only make REST calls to hosts that send
+ * `Access-Control-Allow-Origin`, and some exchanges send none: api.coinbase.com,
+ * api.kucoin.com, api.gateio.ws and api.mexc.com. WebSockets are exempt from
+ * CORS, so where a venue streams enough history to seed a chart we use that
+ * instead (Bitfinex ships a 240-bar snapshot; OKX reads public data from its
+ * CORS-enabled global host). These four can do neither — Coinbase's WS candles
+ * are 5-minute-only, Gate's and MEXC's carry no history, and KuCoin cannot even
+ * open a socket because its WS URL comes from a REST POST that is itself
+ * blocked.
+ *
+ * Rather than let that surface as a chart that hangs and then shows one candle,
+ * connectors declare it up front and the terminal offers the desktop app, which
+ * reaches these venues through the Rust HTTP client and is unaffected.
+ */
+export class PlatformRestrictedError extends Error {
+  /** Sentinel for the cross-bundle type guard (survives name mangling). */
+  readonly __platformRestricted = true
+  readonly exchange: string
+  /** Where the venue does work, for the UI's call to action. */
+  readonly availableOn = 'desktop' as const
+
+  constructor(exchange: string) {
+    super(`${exchange} is only available in the desktop app`)
+    this.name = 'PlatformRestrictedError'
+    this.exchange = exchange
+  }
+}
+
+/** True when `e` is a PlatformRestrictedError (robust across bundles). */
+export function isPlatformRestrictedError(
+  e: unknown,
+): e is PlatformRestrictedError {
+  return (
+    e instanceof Error &&
+    (e.name === 'PlatformRestrictedError' ||
+      (e as Partial<PlatformRestrictedError>).__platformRestricted === true)
+  )
+}
+
 /** Substrings exchanges use in geo-block response bodies (case-insensitive). */
 const GEO_BLOCK_MARKERS = [
   'restricted',

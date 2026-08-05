@@ -32,6 +32,7 @@ export const MEXC_ADAPTER_INFO: MarketAdapterInfo = {
   displayName: 'MEXC',
   assetClasses: ['crypto-spot'],
   capabilities: ['read', 'trade'],
+  requiresDesktop: true,
   credentialSchema: [
     { key: 'apiKey', label: 'API Key', type: 'text', required: true },
     { key: 'apiSecret', label: 'API Secret', type: 'secret', required: true },
@@ -70,6 +71,7 @@ const mexcSpec: CexConnectorSpec<MexcCredentials> = {
     { key: 'apiSecret', required: true },
   ],
   defaultMode: 'live',
+  requiresDesktop: true,
   createWsClient: () => new MexcWsClient(),
   createPrivateWsClient: () => new MexcPrivateWsClient(),
   // Market-data paths are gated by region; trading is gated separately via

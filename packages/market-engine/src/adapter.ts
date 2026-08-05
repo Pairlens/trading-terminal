@@ -45,6 +45,14 @@ export type MarketAdapterInfo = {
   dexLimitOrders?: boolean
   /** Exchange-native trigger (TP/SL) orders via OrderParams.trigger. */
   triggerOrders?: boolean
+  /**
+   * Venue that cannot work in a browser build: its public REST host sends no
+   * `Access-Control-Allow-Origin` and its WS carries no usable candle history.
+   * The venue picker marks it, and the connector refuses with a
+   * PlatformRestrictedError rather than presenting a chart that never seeds.
+   * Always reachable on desktop, which fetches from Rust and is CORS-exempt.
+   */
+  requiresDesktop?: boolean
 }
 
 export interface MarketAdapter {

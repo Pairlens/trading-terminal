@@ -36,6 +36,7 @@ import { matchCommand } from '@/lib/keybindings/store'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
+import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useNotificationStore } from '@/stores/notification-store'
 
@@ -59,6 +60,7 @@ export function ChartPane() {
       latestSignal={candleData.latestSignal}
       hasSnapshot={candleData.hasSnapshot}
       noData={candleData.noData}
+      desktopOnly={candleData.desktopOnly}
       chartConfig={chartConfig}
       chartActions={chartActions}
     />
@@ -70,6 +72,7 @@ const ChartPaneInner = memo(function ChartPaneInner({
   latestSignal,
   hasSnapshot,
   noData,
+  desktopOnly,
   chartConfig,
   chartActions,
 }: {
@@ -77,6 +80,7 @@ const ChartPaneInner = memo(function ChartPaneInner({
   latestSignal: SignalPayload | null
   hasSnapshot: boolean
   noData: boolean
+  desktopOnly: boolean
   chartConfig: NonNullable<ReturnType<typeof useOptionalChartConfig>>
   chartActions: NonNullable<ReturnType<typeof useOptionalChartActions>>
 }) {
@@ -259,7 +263,14 @@ const ChartPaneInner = memo(function ChartPaneInner({
       onPointerDown={() => containerRef.current?.focus()}
     >
       <ChartToolbar />
-      {noData && !hasSnapshot ? (
+      {desktopOnly ? (
+        <div className="relative flex min-h-0 flex-1">
+          <PaneDesktopOnly
+            market={chartConfig.market}
+            onSelectMarket={setMarket}
+          />
+        </div>
+      ) : noData && !hasSnapshot ? (
         <div className="relative flex min-h-0 flex-1">
           <PaneDataUnavailable
             pairKey={pairKey}

@@ -3,6 +3,7 @@
 import { afterEach, describe, expect, it } from 'bun:test'
 import {
   isBrowserRuntime,
+  isCorsConstrained,
   isDevProxyAvailable,
   isTauriRuntime,
 } from '../platform'
@@ -62,5 +63,42 @@ describe('isDevProxyAvailable', () => {
     const inBrowser = isDevProxyAvailable()
     g.window = { __TAURI_INTERNALS__: {} }
     expect(isDevProxyAvailable()).toBe(inBrowser)
+  })
+})
+
+// `import.meta.env.DEV` is undefined under bun, so these run as PRODUCTION
+// builds — which is the environment matrix the hosted web terminal broke in.
+describe('isCorsConstrained', () => {
+  // Regression: the hosted web terminal is a production browser build with no
+  // dev proxy and no Rust-side fetch, so plain `fetch` is subject to CORS.
+  // eea.okx.com, us.okx.com, api.coinbase.com, api.kucoin.com, api.gateio.ws,
+  // api-pub.bitfinex.com and api.mexc.com send no Access-Control-Allow-Origin,
+  // so every REST call to them was blocked. That killed the candle backfill
+  // while the CORS-exempt WS feeds kept streaming: the chart hung on
+  // "Switching to OKX…" and settled on a single live candle.
+  it('is true in a production browser build', () => {
+    g.window = {}
+    expect(isDevProxyAvailable()).toBe(false)
+    expect(isCorsConstrained()).toBe(true)
+  })
+
+  // Desktop reaches exchanges through the Rust HTTP plugin, which is exempt.
+  it('is false in a production desktop build', () => {
+    g.window = { __TAURI_INTERNALS__: {} }
+    expect(isCorsConstrained()).toBe(false)
+  })
+
+  it('is false without a document — no origin, so no CORS (CLI / worker)', () => {
+    delete g.window
+    expect(isCorsConstrained()).toBe(false)
+  })
+
+  // The dev server proxies `/__*` straight through, so dev is never
+  // constrained — in either browser dev or `tauri dev`.
+  it('is false wherever the dev proxy is available', () => {
+    for (const win of [{}, { __TAURI_INTERNALS__: {} }]) {
+      g.window = win
+      if (isDevProxyAvailable()) expect(isCorsConstrained()).toBe(false)
+    }
   })
 })

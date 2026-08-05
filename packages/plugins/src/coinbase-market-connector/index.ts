@@ -33,6 +33,7 @@ export const COINBASE_ADAPTER_INFO: MarketAdapterInfo = {
   displayName: 'Coinbase',
   assetClasses: ['crypto-spot'],
   capabilities: ['read', 'trade'],
+  requiresDesktop: true,
   credentialSchema: [
     { key: 'apiKey', label: 'API Key', type: 'text', required: true },
     {
@@ -75,6 +76,7 @@ const coinbaseSpec: CexConnectorSpec<CoinbaseCredentials> = {
     { key: 'apiSecret', required: true },
   ],
   defaultMode: 'paper',
+  requiresDesktop: true,
   createWsClient: () => new CoinbaseWsClient(),
   createPrivateWsClient: () => new CoinbasePrivateWsClient(),
   fetchCandles: (pair, timeframe, limit, country) =>

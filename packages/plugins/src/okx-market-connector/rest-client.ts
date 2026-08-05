@@ -9,7 +9,7 @@ import {
   parseOkxCandleRow,
   parseOkxTicker,
 } from './parser'
-import { resolveOkxUrls } from './regions'
+import { resolveOkxPublicRestBase } from './regions'
 import type { Candle } from '@pairlens/shared/types'
 import type {
   BulkTickerEntry,
@@ -17,7 +17,25 @@ import type {
 } from '@pairlens/shared/instrument-types'
 import type { TickerSnapshot } from '@pairlens/market-engine/types'
 
-/** Fetch historical candles from OKX REST API. */
+/**
+ * Fetch historical candles from OKX REST API.
+ *
+ * OKX splits candle history across two endpoints, and picking the wrong one
+ * silently truncates the chart:
+ *
+ * - `/market/candles` serves only the most recent ~1440 bars per timeframe.
+ *   Page past that and it returns an empty array with `code: "0"` — a success,
+ *   not an error. The terminal's pan-left backfill reads an empty page as
+ *   "this connector has no older data" and latches `exhausted`, so OKX charts
+ *   dead-ended at ~1440 bars against a 5000-bar budget.
+ * - `/market/history-candles` covers the deep archive and is a strict superset:
+ *   measured identical to `/market/candles` at the head (same rows, same
+ *   `confirm` flag on the forming bar) and it keeps paging exactly where the
+ *   other runs dry.
+ *
+ * So the first page (no `endTs`) stays on the recent endpoint and every paged
+ * read goes to the history one.
+ */
 export async function fetchOkxCandles(
   pair: string,
   timeframe: string,
@@ -25,14 +43,16 @@ export async function fetchOkxCandles(
   country: string,
   endTs?: number,
 ): Promise<Array<Candle>> {
-  const urls = resolveOkxUrls(country)
+  const restBase = resolveOkxPublicRestBase(country)
   const bar = mapTimeframeToOkxBar(timeframe)
   if (!bar) throw new Error(`Unsupported timeframe: ${timeframe}`)
 
   const instId = normalizePair(pair)
   // OKX `after` pages backwards: returns records with ts strictly before it.
-  const afterParam = endTs !== undefined ? `&after=${endTs}` : ''
-  const url = `${urls.restBase}/api/v5/market/candles?instId=${instId}&bar=${bar}&limit=${Math.min(limit, 300)}${afterParam}`
+  const paging = endTs !== undefined
+  const afterParam = paging ? `&after=${endTs}` : ''
+  const endpoint = paging ? 'history-candles' : 'candles'
+  const url = `${restBase}/api/v5/market/${endpoint}?instId=${instId}&bar=${bar}&limit=${Math.min(limit, 300)}${afterParam}`
 
   const resp = await fetch(url)
   if (!resp.ok) {
@@ -61,9 +81,9 @@ export async function fetchOkxTicker(
   pair: string,
   country: string,
 ): Promise<TickerSnapshot> {
-  const urls = resolveOkxUrls(country)
+  const restBase = resolveOkxPublicRestBase(country)
   const instId = normalizePair(pair)
-  const url = `${urls.restBase}/api/v5/market/ticker?instId=${instId}`
+  const url = `${restBase}/api/v5/market/ticker?instId=${instId}`
 
   const resp = await fetch(url)
   if (!resp.ok) {
@@ -84,8 +104,8 @@ export async function fetchOkxTicker(
 export async function fetchOkxTickerSnapshot(
   country: string,
 ): Promise<BulkTickersResponse> {
-  const urls = resolveOkxUrls(country)
-  const url = `${urls.restBase}/api/v5/market/tickers?instType=SPOT`
+  const restBase = resolveOkxPublicRestBase(country)
+  const url = `${restBase}/api/v5/market/tickers?instType=SPOT`
 
   const resp = await fetch(url)
   if (!resp.ok) {

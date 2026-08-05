@@ -11,6 +11,8 @@ export type MarketOption = {
   label: string
   iconUrl?: string
   assetClasses: Array<AssetClass>
+  /** Unreachable from a browser build — see MarketAdapterInfo.requiresDesktop. */
+  requiresDesktop?: boolean
 }
 
 export function useAvailableMarkets(): {
@@ -25,8 +27,15 @@ export function useAvailableMarkets(): {
       label: m.displayName,
       iconUrl: m.iconUrl,
       assetClasses: m.assetClasses,
+      requiresDesktop: m.requiresDesktop,
     }))
 
-    return { markets, defaultMarket: markets[0]?.value ?? 'okx' }
+    // Never default into a venue this build cannot reach — that would open the
+    // terminal on a dead chart for anyone whose first connector is desktop-only.
+    const usable = markets.filter((m) => !m.requiresDesktop)
+    return {
+      markets,
+      defaultMarket: (usable[0] ?? markets[0])?.value ?? 'okx',
+    }
   }, [availableMarkets])
 }
