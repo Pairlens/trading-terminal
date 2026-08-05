@@ -204,7 +204,11 @@ function MarketDropdownContent({
                   onPointerEnter={() => onMarketHover?.(option.value)}
                   onFocus={() => onMarketHover?.(option.value)}
                 >
-                  <span className="flex items-center gap-2 font-medium">
+                  {/* w-full + ml-auto below parks every mark on the same right
+                      edge instead of trailing whatever venue name precedes it,
+                      so the marks read as one column. The item's pr-8 keeps
+                      them clear of the absolutely-positioned check. */}
+                  <span className="flex w-full items-center gap-2 font-medium">
                     <MarketIcon option={option} />
                     {option.label}
                     {/* This venue serves no CORS headers and streams no candle
@@ -214,7 +218,7 @@ function MarketDropdownContent({
                     {option.desktopOnly && (
                       <Badge
                         variant="outline"
-                        className="h-4 gap-1 px-1.5 text-[10px] text-muted-foreground"
+                        className="ml-auto h-4 gap-1 px-1.5 text-[10px] text-muted-foreground"
                       >
                         <Monitor />
                         Desktop
