@@ -26,6 +26,7 @@
     "build:marketing": "bun scripts/env/with-worktree-env.ts -- turbo run build --filter=@pairlens/marketing",
     "typecheck": "bun scripts/env/with-worktree-env.ts -- turbo run typecheck",
     "lint": "eslint --max-warnings 0 --cache --cache-location node_modules/.cache/eslint/ .",
+    "i18n:scan": "bun scripts/i18n-scan.ts",
     "test": "bun scripts/env/with-worktree-env.ts -- turbo run test",
     "test:conformance": "bun test packages/plugins packages/market-engine",
     "test:connectors:live": "PAIRLENS_LIVE_CONNECTORS=1 bun test packages/plugins/src/__tests__/live",
