@@ -2155,7 +2155,19 @@
   "terminal": {
     "manageWatchlists": "管理自選清單",
     "createAlert": "建立提醒",
-    "market": "市場"
+    "market": "市場",
+    "wallet": {
+      "connectWallet": "連接錢包",
+      "connectAccount": "連接帳戶",
+      "connectHintWallet": "連接 {{chain}} 錢包即可交易",
+      "connectHintWalletAny": "連接錢包即可交易",
+      "connectHintAccount": "連接 {{venue}} 帳戶即可交易",
+      "selectWallet": "選擇錢包",
+      "selectAccount": "選擇帳戶",
+      "groupWallet": "加密錢包",
+      "groupBroker": "券商帳戶",
+      "groupExchange": "交易所帳戶"
+    }
   },
   "accounts": {
     "pageTitle": "帳戶",

@@ -2155,7 +2155,19 @@
   "terminal": {
     "manageWatchlists": "Kelola daftar pantauan",
     "createAlert": "Buat alert",
-    "market": "Market"
+    "market": "Market",
+    "wallet": {
+      "connectWallet": "Hubungkan wallet",
+      "connectAccount": "Hubungkan akun",
+      "connectHintWallet": "Hubungkan wallet {{chain}} untuk berdagang",
+      "connectHintWalletAny": "Hubungkan wallet untuk berdagang",
+      "connectHintAccount": "Hubungkan akun {{venue}} untuk berdagang",
+      "selectWallet": "Pilih wallet",
+      "selectAccount": "Pilih akun",
+      "groupWallet": "Wallet kripto",
+      "groupBroker": "Akun broker",
+      "groupExchange": "Akun bursa"
+    }
   },
   "accounts": {
     "pageTitle": "Akun",

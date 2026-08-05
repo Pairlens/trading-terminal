@@ -2155,7 +2155,19 @@
   "terminal": {
     "manageWatchlists": "管理自选列表",
     "createAlert": "创建提醒",
-    "market": "市场"
+    "market": "市场",
+    "wallet": {
+      "connectWallet": "连接钱包",
+      "connectAccount": "连接账户",
+      "connectHintWallet": "连接 {{chain}} 钱包即可交易",
+      "connectHintWalletAny": "连接钱包即可交易",
+      "connectHintAccount": "连接 {{venue}} 账户即可交易",
+      "selectWallet": "选择钱包",
+      "selectAccount": "选择账户",
+      "groupWallet": "加密钱包",
+      "groupBroker": "券商账户",
+      "groupExchange": "交易所账户"
+    }
   },
   "accounts": {
     "pageTitle": "账户",

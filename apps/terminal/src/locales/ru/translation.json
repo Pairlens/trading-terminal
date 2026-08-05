@@ -2163,7 +2163,19 @@
   "terminal": {
     "manageWatchlists": "Управление списками наблюдения",
     "createAlert": "Создать оповещение",
-    "market": "Рынок"
+    "market": "Рынок",
+    "wallet": {
+      "connectWallet": "Подключить кошелёк",
+      "connectAccount": "Подключить аккаунт",
+      "connectHintWallet": "Подключите кошелёк {{chain}}, чтобы торговать",
+      "connectHintWalletAny": "Подключите кошелёк, чтобы торговать",
+      "connectHintAccount": "Подключите аккаунт {{venue}}, чтобы торговать",
+      "selectWallet": "Выбрать кошелёк",
+      "selectAccount": "Выбрать аккаунт",
+      "groupWallet": "Крипто-кошелёк",
+      "groupBroker": "Брокерский счёт",
+      "groupExchange": "Аккаунт биржи"
+    }
   },
   "accounts": {
     "pageTitle": "Аккаунты",

@@ -2155,7 +2155,19 @@
   "terminal": {
     "manageWatchlists": "Manage watchlists",
     "createAlert": "Create alert",
-    "market": "Market"
+    "market": "Market",
+    "wallet": {
+      "connectWallet": "Connect wallet",
+      "connectAccount": "Connect account",
+      "connectHintWallet": "Connect a {{chain}} wallet to trade",
+      "connectHintWalletAny": "Connect a wallet to trade",
+      "connectHintAccount": "Connect a {{venue}} account to trade",
+      "selectWallet": "Select wallet",
+      "selectAccount": "Select account",
+      "groupWallet": "Crypto Wallet",
+      "groupBroker": "Broker Account",
+      "groupExchange": "Exchange Account"
+    }
   },
   "accounts": {
     "pageTitle": "Accounts",

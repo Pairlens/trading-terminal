@@ -2163,7 +2163,19 @@
   "terminal": {
     "manageWatchlists": "Zarządzaj listami obserwowanych",
     "createAlert": "Utwórz alert",
-    "market": "Rynek"
+    "market": "Rynek",
+    "wallet": {
+      "connectWallet": "Podłącz portfel",
+      "connectAccount": "Podłącz konto",
+      "connectHintWallet": "Podłącz portfel {{chain}}, aby handlować",
+      "connectHintWalletAny": "Podłącz portfel, aby handlować",
+      "connectHintAccount": "Podłącz konto {{venue}}, aby handlować",
+      "selectWallet": "Wybierz portfel",
+      "selectAccount": "Wybierz konto",
+      "groupWallet": "Portfel kryptowalut",
+      "groupBroker": "Konto brokerskie",
+      "groupExchange": "Konto giełdowe"
+    }
   },
   "accounts": {
     "pageTitle": "Konta",

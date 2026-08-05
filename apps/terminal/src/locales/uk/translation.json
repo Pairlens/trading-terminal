@@ -2163,7 +2163,19 @@
   "terminal": {
     "manageWatchlists": "Керувати списками відстеження",
     "createAlert": "Створити сповіщення",
-    "market": "Ринок"
+    "market": "Ринок",
+    "wallet": {
+      "connectWallet": "Підключити гаманець",
+      "connectAccount": "Підключити акаунт",
+      "connectHintWallet": "Підключіть гаманець {{chain}}, щоб торгувати",
+      "connectHintWalletAny": "Підключіть гаманець, щоб торгувати",
+      "connectHintAccount": "Підключіть акаунт {{venue}}, щоб торгувати",
+      "selectWallet": "Вибрати гаманець",
+      "selectAccount": "Вибрати акаунт",
+      "groupWallet": "Криптогаманець",
+      "groupBroker": "Брокерський рахунок",
+      "groupExchange": "Акаунт біржі"
+    }
   },
   "accounts": {
     "pageTitle": "Облікові записи",

@@ -2155,7 +2155,19 @@
   "terminal": {
     "manageWatchlists": "관심 목록 관리",
     "createAlert": "알림 만들기",
-    "market": "마켓"
+    "market": "마켓",
+    "wallet": {
+      "connectWallet": "지갑 연결",
+      "connectAccount": "계정 연결",
+      "connectHintWallet": "거래하려면 {{chain}} 지갑을 연결하세요",
+      "connectHintWalletAny": "거래하려면 지갑을 연결하세요",
+      "connectHintAccount": "거래하려면 {{venue}} 계정을 연결하세요",
+      "selectWallet": "지갑 선택",
+      "selectAccount": "계정 선택",
+      "groupWallet": "암호화폐 지갑",
+      "groupBroker": "증권 계좌",
+      "groupExchange": "거래소 계정"
+    }
   },
   "accounts": {
     "pageTitle": "계정",

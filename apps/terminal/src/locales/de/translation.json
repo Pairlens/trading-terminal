@@ -2155,7 +2155,19 @@
   "terminal": {
     "manageWatchlists": "Watchlists verwalten",
     "createAlert": "Alert erstellen",
-    "market": "Markt"
+    "market": "Markt",
+    "wallet": {
+      "connectWallet": "Wallet verbinden",
+      "connectAccount": "Konto verbinden",
+      "connectHintWallet": "Verbinde eine {{chain}}-Wallet zum Handeln",
+      "connectHintWalletAny": "Verbinde eine Wallet zum Handeln",
+      "connectHintAccount": "Verbinde ein {{venue}}-Konto zum Handeln",
+      "selectWallet": "Wallet wählen",
+      "selectAccount": "Konto wählen",
+      "groupWallet": "Krypto-Wallet",
+      "groupBroker": "Broker-Konto",
+      "groupExchange": "Börsenkonto"
+    }
   },
   "accounts": {
     "pageTitle": "Konten",

@@ -2155,7 +2155,19 @@
   "terminal": {
     "manageWatchlists": "İzleme listelerini yönet",
     "createAlert": "Uyarı oluştur",
-    "market": "Piyasa"
+    "market": "Piyasa",
+    "wallet": {
+      "connectWallet": "Cüzdan bağla",
+      "connectAccount": "Hesap bağla",
+      "connectHintWallet": "İşlem yapmak için bir {{chain}} cüzdanı bağlayın",
+      "connectHintWalletAny": "İşlem yapmak için bir cüzdan bağlayın",
+      "connectHintAccount": "İşlem yapmak için bir {{venue}} hesabı bağlayın",
+      "selectWallet": "Cüzdan seç",
+      "selectAccount": "Hesap seç",
+      "groupWallet": "Kripto cüzdanı",
+      "groupBroker": "Aracı kurum hesabı",
+      "groupExchange": "Borsa hesabı"
+    }
   },
   "accounts": {
     "pageTitle": "Hesaplar",

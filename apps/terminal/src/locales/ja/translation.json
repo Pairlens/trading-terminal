@@ -2155,7 +2155,19 @@
   "terminal": {
     "manageWatchlists": "ウォッチリストを管理",
     "createAlert": "アラートを作成",
-    "market": "マーケット"
+    "market": "マーケット",
+    "wallet": {
+      "connectWallet": "ウォレットを接続",
+      "connectAccount": "アカウントを接続",
+      "connectHintWallet": "取引するには {{chain}} のウォレットを接続してください",
+      "connectHintWalletAny": "取引するにはウォレットを接続してください",
+      "connectHintAccount": "取引するには {{venue}} のアカウントを接続してください",
+      "selectWallet": "ウォレットを選択",
+      "selectAccount": "アカウントを選択",
+      "groupWallet": "暗号資産ウォレット",
+      "groupBroker": "ブローカー口座",
+      "groupExchange": "取引所アカウント"
+    }
   },
   "accounts": {
     "pageTitle": "アカウント",

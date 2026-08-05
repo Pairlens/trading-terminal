@@ -2155,7 +2155,19 @@
   "terminal": {
     "manageWatchlists": "จัดการรายการติดตาม",
     "createAlert": "สร้างการแจ้งเตือน",
-    "market": "ตลาด"
+    "market": "ตลาด",
+    "wallet": {
+      "connectWallet": "เชื่อมต่อวอลเล็ต",
+      "connectAccount": "เชื่อมต่อบัญชี",
+      "connectHintWallet": "เชื่อมต่อวอลเล็ต {{chain}} เพื่อเทรด",
+      "connectHintWalletAny": "เชื่อมต่อวอลเล็ตเพื่อเทรด",
+      "connectHintAccount": "เชื่อมต่อบัญชี {{venue}} เพื่อเทรด",
+      "selectWallet": "เลือกวอลเล็ต",
+      "selectAccount": "เลือกบัญชี",
+      "groupWallet": "วอลเล็ตคริปโต",
+      "groupBroker": "บัญชีโบรกเกอร์",
+      "groupExchange": "บัญชีกระดานเทรด"
+    }
   },
   "accounts": {
     "pageTitle": "บัญชี",

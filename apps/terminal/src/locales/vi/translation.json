@@ -2155,7 +2155,19 @@
   "terminal": {
     "manageWatchlists": "Quản lý danh sách theo dõi",
     "createAlert": "Tạo cảnh báo",
-    "market": "Thị trường"
+    "market": "Thị trường",
+    "wallet": {
+      "connectWallet": "Kết nối ví",
+      "connectAccount": "Kết nối tài khoản",
+      "connectHintWallet": "Kết nối ví {{chain}} để giao dịch",
+      "connectHintWalletAny": "Kết nối ví để giao dịch",
+      "connectHintAccount": "Kết nối tài khoản {{venue}} để giao dịch",
+      "selectWallet": "Chọn ví",
+      "selectAccount": "Chọn tài khoản",
+      "groupWallet": "Ví tiền mã hóa",
+      "groupBroker": "Tài khoản môi giới",
+      "groupExchange": "Tài khoản sàn"
+    }
   },
   "accounts": {
     "pageTitle": "Tài khoản",
