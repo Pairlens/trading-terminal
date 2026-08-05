@@ -1,21 +1,10 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { Flame, PieChart } from 'lucide-react'
 import { cn } from '@pairlens/ui'
-import type { LucideIcon } from 'lucide-react'
 
 import type { TerminalLayout } from '@/lib/layout/types'
 import { getPaneIcon } from '@/lib/layout/pane-icons'
 import { paneMeta } from '@/lib/workspace-store/dependency-analysis'
-
-// getPaneIcon covers most pane icons; fill the couple it doesn't so previews
-// stay faithful without touching the shared pane-icon map.
-const EXTRA_ICONS: Record<string, LucideIcon> = { PieChart, Flame }
-
-function resolvePaneIcon(name?: string): LucideIcon {
-  if (name && EXTRA_ICONS[name]) return EXTRA_ICONS[name]
-  return getPaneIcon(name)
-}
 
 type Props = {
   layout: TerminalLayout
@@ -47,7 +36,7 @@ export function WorkspaceLayoutPreview({ layout, detailed, className }: Props) {
           {col.cells.map((cell) => {
             const primary = cell.panes[0]
             const meta = primary ? paneMeta(primary.type) : null
-            const Icon = resolvePaneIcon(meta?.icon)
+            const Icon = getPaneIcon(meta?.icon)
             const extra = cell.panes.length - 1
             return (
               <div
