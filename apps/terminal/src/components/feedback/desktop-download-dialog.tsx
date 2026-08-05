@@ -95,7 +95,7 @@ export function DesktopDownloadDialog({
         {/* Artwork band + content. The band only appears at md+; mobile keeps
             the single content column, same rule as the sign-in dialog. */}
         <div className="relative grid md:grid-cols-[300px_1fr]">
-          <DesktopStatueScene className="hidden md:block" />
+          <DesktopStatueScene os={currentOs} className="hidden md:block" />
 
           <div className="flex max-h-[85vh] flex-col overflow-y-auto p-6 md:p-8">
             <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
