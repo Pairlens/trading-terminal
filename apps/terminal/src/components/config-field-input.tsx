@@ -12,6 +12,7 @@ import {
 } from '@pairlens/ui/components/ui/select'
 import { Switch } from '@pairlens/ui/components/ui/switch'
 import type { PluginConfigField } from '@pairlens/plugin-system'
+import { useLocalized } from '@/lib/plugin-text'
 
 export function ConfigFieldInput({
   fieldKey,
@@ -27,13 +28,16 @@ export function ConfigFieldInput({
   onChange: (value: unknown) => void
 }) {
   const { t } = useTranslation()
+  const { localizedText } = useLocalized()
   const id = `plugin-config-${fieldKey}`
+  // A plugin's own field label, in whatever languages its author wrote.
+  const label = localizedText(field.label) ?? fieldKey
 
   if (field.type === 'boolean') {
     return (
       <div className="flex items-center justify-between">
         <label htmlFor={id} className="text-sm font-medium">
-          {field.label}
+          {label}
         </label>
         <Switch
           id={id}
@@ -49,7 +53,7 @@ export function ConfigFieldInput({
     return (
       <div className="space-y-1.5">
         <label htmlFor={id} className="text-sm font-medium">
-          {field.label}
+          {label}
           {field.required && <span className="text-destructive"> *</span>}
         </label>
         <Select
@@ -60,7 +64,7 @@ export function ConfigFieldInput({
           <SelectTrigger id={id}>
             <SelectValue
               placeholder={t('configField.selectLabel', {
-                label: field.label.toLowerCase(),
+                label: label.toLowerCase(),
               })}
             />
           </SelectTrigger>
@@ -86,7 +90,7 @@ export function ConfigFieldInput({
   return (
     <div className="space-y-1.5">
       <label htmlFor={id} className="text-sm font-medium">
-        {field.label}
+        {label}
         {field.required && <span className="text-destructive"> *</span>}
       </label>
       <Input

@@ -9,6 +9,7 @@ import { cn } from '@pairlens/ui'
 import { POSTER_MORPH } from '../store/store-shell'
 import type { RegistryPluginEntry } from '@pairlens/shared/registry-types'
 import { isCommunityEntry } from '@/lib/plugins/community-tier'
+import { pluginDescription, pluginTitle } from '@/lib/plugin-text'
 
 /**
  * Theme palette tile — same 152×188 poster footprint as plugin cards, but the
@@ -67,9 +68,11 @@ export function ThemeStoreCard({
         )}
       </motion.div>
       <p className="mt-2 truncate text-[13px] font-semibold text-foreground">
-        {manifest.name}
+        {pluginTitle(manifest)}
       </p>
-      <p className="truncate text-[11px] text-muted-foreground/80">{tagline}</p>
+      <p className="truncate text-[11px] text-muted-foreground/80">
+        {pluginDescription(manifest) || tagline}
+      </p>
     </button>
   )
 }

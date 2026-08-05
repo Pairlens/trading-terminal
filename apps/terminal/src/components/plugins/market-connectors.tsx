@@ -17,6 +17,7 @@ import type { PluginStateResponse } from '@/lib/api'
 import { api, queryKeys } from '@/lib/api'
 import { buildActivationConfig } from '@/lib/plugins/official-config'
 import { usePairlens } from '@/lib/pairlens-provider'
+import { pluginDescription, pluginTitle } from '@/lib/plugin-text'
 
 function isMarketConnector(plugin: PluginInstance): boolean {
   return plugin.manifest.capabilities.some(
@@ -168,7 +169,7 @@ export function MarketConnectors() {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">
-                    {connector.manifest.name}
+                    {pluginTitle(connector.manifest)}
                   </span>
                   {active && (
                     <Badge
@@ -190,7 +191,7 @@ export function MarketConnectors() {
                   )}
                 </div>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  {connector.manifest.description}
+                  {pluginDescription(connector.manifest)}
                 </p>
                 <div className="mt-1.5 flex items-center gap-2">
                   {markets

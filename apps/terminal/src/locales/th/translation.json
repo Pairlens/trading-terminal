@@ -2484,11 +2484,205 @@
     "apiKeyRequiredHint": "ต้องใช้ API key",
     "setupRequiredHint": "ต้องตั้งค่า",
     "manifests": {
-      "userIndicators": {
+      "pairlens-core": {
+        "title": "Pairlens Core",
+        "description": "เทอร์มินัลเทรดหลัก — กราฟ สมุดคำสั่ง จุดเข้า การค้นพบตลาด และรายการติดตาม"
+      },
+      "pairlens-intelligence": {
+        "title": "Pairlens Intelligence",
+        "description": "AI อนุมาน การค้นพบสินทรัพย์ ฟีดข่าว และข้อมูลเชิงลึกด้านตลาด ขับเคลื่อนโดยแบ็กเอนด์ของ Pairlens"
+      },
+      "pairlens-community": {
+        "title": "Pairlens Community",
+        "description": "เทมเพลตพื้นที่ทำงานจากคอมมูนิตี้ที่ผู้ใช้ Pairlens แชร์ไว้"
+      },
+      "user-indicators": {
+        "title": "อินดิเคเตอร์ของฉัน",
         "description": "อินดิเคเตอร์ Python ที่คุณสร้างเองในตัวแก้ไขอินดิเคเตอร์"
       },
-      "pairlensCommunity": {
-        "description": "เทมเพลตพื้นที่ทำงานจากคอมมูนิตี้ที่ผู้ใช้ Pairlens แชร์ไว้"
+      "groq-inference": {
+        "title": "Groq Inference",
+        "description": "AI อนุมานผ่าน Groq API (ประมวลผล LLM รวดเร็วสุดขีด)"
+      },
+      "openai-inference": {
+        "title": "OpenAI Inference",
+        "description": "AI อนุมานผ่าน OpenAI API"
+      },
+      "anthropic-inference": {
+        "title": "Anthropic Inference",
+        "description": "AI อนุมานผ่าน Anthropic Claude API"
+      },
+      "openrouter-inference": {
+        "title": "OpenRouter",
+        "description": "AI อนุมานผ่าน OpenRouter — API key เดียวเข้าถึงโมเดลนับร้อยจากหลายผู้ให้บริการ (ใช้คีย์ของคุณเอง)"
+      },
+      "tavily-search": {
+        "title": "Tavily Search",
+        "description": "ข้อมูลอ้างอิงจากการค้นหาเว็บสำหรับงานวิจัยของ AI ผ่าน Tavily Search API (ใช้คีย์ของคุณเอง)"
+      },
+      "exa-search": {
+        "title": "Exa Search",
+        "description": "ข้อมูลอ้างอิงจากการค้นหาเว็บด้วยโครงข่ายประสาทสำหรับงานวิจัยของ AI ผ่าน Exa API (ใช้คีย์ของคุณเอง)"
+      },
+      "pairlens": {
+        "title": "Pairlens",
+        "description": "ธีมซิกเนเจอร์ของ Pairlens — ขาวดำคมชัดพร้อมสีสันปริซึมสายรุ้งจุดเน้น"
+      },
+      "zen-trading": {
+        "title": "Zen Trading",
+        "description": "โทนสีอุ่นแบบเอิร์ธโทน ให้บรรยากาศสงบสำหรับการเทรดแบบมีสมาธิ"
+      },
+      "cyberpunk-neon": {
+        "title": "Cyberpunk Neon",
+        "description": "ธีมโทนมืดเด่น พร้อมสีฟ้าอมเขียว สีแดงอมม่วง และสีม่วงไฟฟ้าสดใส"
+      },
+      "earth-tones": {
+        "title": "Earth Tones",
+        "description": "ธีมโทนอุ่นแรงบันดาลใจจากธรรมชาติ ผสมสีเขียวเซจ สีดินเผา และสีน้ำตาล"
+      },
+      "terminal-classic": {
+        "title": "Terminal Classic",
+        "description": "ลุคเทอร์มินัลเทรดมืออาชีพ พื้นหลังกรมท่าคู่กับแท่งเทียนแดง-เขียวคลาสสิก"
+      },
+      "crypto-gold": {
+        "title": "Crypto Gold",
+        "description": "ธีมแรงบันดาลใจจาก Bitcoin สีทองเด่น พื้นหลังอำพันเข้ม ให้ความรู้สึกกระทิงเต็มขั้น"
+      },
+      "arctic-blue": {
+        "title": "Arctic Blue",
+        "description": "ธีมโมโนโครมสีฟ้าเย็นตา โทนน้ำแข็งพร้อมเส้นสายเรียบคม"
+      },
+      "infrared": {
+        "title": "Infrared",
+        "description": "ธีมโทนแดงสุดโมเดิร์น สีแดงเข้มเด่นและดีไซน์คมชัด"
+      },
+      "emerald-matrix": {
+        "title": "Emerald Matrix",
+        "description": "ธีมเขียวเข้ม โทนมรกตคู่กับแท่งเทียนเขียวสด ให้ฟีลแฮ็กเกอร์เทอร์มินัล"
+      },
+      "royal-violet": {
+        "title": "Royal Violet",
+        "description": "ธีมม่วงหรูหรา สีไวโอเล็ตเด่น ไฮไลต์สีลาเวนเดอร์ และโทนมืดสีพลัมเข้ม"
+      },
+      "midnight-ember": {
+        "title": "Midnight Ember",
+        "description": "ธีมมืดโทนอุ่น พื้นหลังสีถ่านเข้ม พร้อมประกายสีส้มอำพันดั่งถ่านคุ"
+      },
+      "sakura-bloom": {
+        "title": "Sakura Bloom",
+        "description": "ธีมซากุระอ่อนหวาน สีชมพูนุ่มนวล จุดเน้นสีกุหลาบ อบอุ่นละมุน"
+      },
+      "electric-lime": {
+        "title": "Electric Lime",
+        "description": "แถบข้างสีเขียวมะนาวสดใส คู่กับพื้นที่เนื้อหาโมโนโครมเรียบง่าย"
+      },
+      "burnt-orange": {
+        "title": "Burnt Orange",
+        "description": "โทนสีอุ่นสไตล์ Reddit ส้มเข้มคู่กับโทนครีม"
+      },
+      "night-city": {
+        "title": "Night City",
+        "description": "แรงบันดาลใจจาก Cyberpunk 2077 — สีเหลืองไฟฟ้าบนพื้นเทาปืนเข้ม ดีไซน์คมชัด"
+      },
+      "eye-comfort": {
+        "title": "Eye Comfort",
+        "description": "โทนสีอุ่นคอนทราสต์ต่ำ ออกแบบมาเพื่อลดความล้าของดวงตาระหว่างเทรดนาน ๆ"
+      },
+      "high-contrast": {
+        "title": "High Contrast",
+        "description": "เน้นการเข้าถึงง่าย คอนทราสต์สูงสุด เส้นขอบหนา และแบ่งส่วนภาพชัดเจน"
+      },
+      "okx-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด OKX",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน OKX"
+      },
+      "binance-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Binance",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน Binance"
+      },
+      "bybit-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด ByBit",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน ByBit"
+      },
+      "bitvavo-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Bitvavo",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน Bitvavo"
+      },
+      "mexc-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด MEXC",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน MEXC"
+      },
+      "kucoin-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด KuCoin",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน KuCoin"
+      },
+      "gate-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Gate.io",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน Gate.io"
+      },
+      "coinbase-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Coinbase",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน Coinbase Advanced Trade API"
+      },
+      "bitget-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Bitget",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน Bitget"
+      },
+      "kraken-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Kraken",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน Kraken"
+      },
+      "htx-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด HTX",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน HTX (เดิมชื่อ Huobi)"
+      },
+      "cryptocom-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Crypto.com",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน Crypto.com"
+      },
+      "bitfinex-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Bitfinex",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน Bitfinex"
+      },
+      "upbit-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Upbit",
+        "description": "ข้อมูลตลาดและการเทรดโดยตรงผ่าน API ของตลาดแลกเปลี่ยน Upbit Global"
+      },
+      "alpaca-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Alpaca",
+        "description": "หุ้นสหรัฐฯ และ ETF ผ่าน API โบรกเกอร์ Alpaca — ข้อมูลตลาดเรียลไทม์ เทรดได้ทั้งบัญชีกระดาษและเงินจริง"
+      },
+      "dexpaprika-data-provider": {
+        "title": "DexPaprika",
+        "description": "ข้อมูลตลาด DEX ขับเคลื่อนโดย DexPaprika"
+      },
+      "geckoterminal-data-provider": {
+        "title": "GeckoTerminal",
+        "description": "ข้อมูลตลาด DEX ขับเคลื่อนโดย GeckoTerminal (CoinGecko) — ประวัติข้อมูลย้อนหลังลึก แท่งเทียน 4 ชั่วโมงแบบเนทีฟ"
+      },
+      "jupiter-dex-connector": {
+        "title": "ตัวเชื่อมต่อ DEX Jupiter",
+        "description": "รวมสภาพคล่อง DEX ทั้งหมดบน Solana เพื่อจัดเส้นทางหาราคาที่ดีที่สุด"
+      },
+      "ethereum-dex-connector": {
+        "title": "ตัวเชื่อมต่อ DEX Ethereum",
+        "description": "สวอปบนเชน Ethereum — จัดเส้นทางราคาที่ดีที่สุดในทุก DEX ของ Ethereum ผ่าน KyberSwap"
+      },
+      "base-dex-connector": {
+        "title": "ตัวเชื่อมต่อ DEX Base",
+        "description": "สวอปบนเชน Base — จัดเส้นทางราคาที่ดีที่สุดในทุก DEX ของ Base ผ่าน KyberSwap"
+      },
+      "arbitrum-dex-connector": {
+        "title": "ตัวเชื่อมต่อ DEX Arbitrum",
+        "description": "สวอปบนเชน Arbitrum — จัดเส้นทางราคาที่ดีที่สุดในทุก DEX ของ Arbitrum ผ่าน KyberSwap"
+      },
+      "bsc-dex-connector": {
+        "title": "ตัวเชื่อมต่อ DEX BNB Chain",
+        "description": "สวอปบนเชน BNB Chain — จัดเส้นทางราคาที่ดีที่สุดในทุก DEX ของ BNB Chain ผ่าน KyberSwap"
+      },
+      "polygon-dex-connector": {
+        "title": "ตัวเชื่อมต่อ DEX Polygon",
+        "description": "สวอปบนเชน Polygon — จัดเส้นทางราคาที่ดีที่สุดในทุก DEX ของ Polygon ผ่าน KyberSwap"
       }
     }
   },
@@ -4174,6 +4368,36 @@
         "label": "แคตตาล็อกสโตร์",
         "description": "มอบแคตตาล็อกเทมเพลตพื้นที่ทำงานที่เรียกดูได้"
       }
+    }
+  },
+  "registryCategories": {
+    "platform": {
+      "label": "แพลตฟอร์ม",
+      "description": "บริการหลักที่ส่งผ่านเซิร์ฟเวอร์ของ Pairlens"
+    },
+    "exchange": {
+      "label": "ตลาดแลกเปลี่ยน",
+      "description": "การเชื่อมต่อตลาดแลกเปลี่ยนโดยตรงสำหรับข้อมูลตลาดและการเทรด"
+    },
+    "broker": {
+      "label": "โบรกเกอร์",
+      "description": "การเชื่อมต่อโบรกเกอร์หุ้นสำหรับข้อมูลและการเทรดหุ้น"
+    },
+    "ai": {
+      "label": "ผู้ให้บริการ AI",
+      "description": "ผู้ให้บริการโมเดลภาษาสำหรับการวิเคราะห์ของ AI co-pilot"
+    },
+    "intelligence": {
+      "label": "อินเทลลิเจนซ์",
+      "description": "การตรวจจับสัญญาณและการคำนวณกลยุทธ์"
+    },
+    "discovery": {
+      "label": "ค้นพบ",
+      "description": "แคตตาล็อกสินทรัพย์สำหรับเรียกดูคู่เทรดที่มีให้ใช้งาน"
+    },
+    "themes": {
+      "label": "ธีม",
+      "description": "ธีมภาพที่ปรับแต่งสี พาเลตสีของกราฟ และสไตล์ UI"
     }
   }
 }

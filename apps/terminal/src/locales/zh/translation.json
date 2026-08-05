@@ -2484,11 +2484,205 @@
     "apiKeyRequiredHint": "需要 API 密钥",
     "setupRequiredHint": "需要设置",
     "manifests": {
-      "userIndicators": {
+      "pairlens-core": {
+        "title": "Pairlens Core",
+        "description": "核心交易终端 —— 图表、订单簿、开仓、市场发现和自选列表"
+      },
+      "pairlens-intelligence": {
+        "title": "Pairlens Intelligence",
+        "description": "由 Pairlens 后端提供支持的 AI 推理、标的发现、资讯流和市场情报"
+      },
+      "pairlens-community": {
+        "title": "Pairlens Community",
+        "description": "由 Pairlens 用户分享的社区工作区模板。"
+      },
+      "user-indicators": {
+        "title": "我的指标",
         "description": "你在指标编辑器中创建的自定义 Python 指标。"
       },
-      "pairlensCommunity": {
-        "description": "由 Pairlens 用户分享的社区工作区模板。"
+      "groq-inference": {
+        "title": "Groq 推理",
+        "description": "通过 Groq API 进行 AI 推理(超快 LLM 补全)"
+      },
+      "openai-inference": {
+        "title": "OpenAI 推理",
+        "description": "通过 OpenAI API 进行 AI 推理"
+      },
+      "anthropic-inference": {
+        "title": "Anthropic 推理",
+        "description": "通过 Anthropic Claude API 进行 AI 推理"
+      },
+      "openrouter-inference": {
+        "title": "OpenRouter",
+        "description": "通过 OpenRouter 进行 AI 推理 —— 一个 API 密钥即可访问跨服务商的数百个模型(自带密钥)"
+      },
+      "tavily-search": {
+        "title": "Tavily 搜索",
+        "description": "通过 Tavily Search API 为 AI 研究提供网络搜索依据(自带密钥)"
+      },
+      "exa-search": {
+        "title": "Exa 搜索",
+        "description": "通过 Exa API 为 AI 研究提供神经网络搜索依据(自带密钥)"
+      },
+      "pairlens": {
+        "title": "Pairlens",
+        "description": "Pairlens 的标志性主题 —— 干净的黑白配色搭配彩虹棱镜点缀"
+      },
+      "zen-trading": {
+        "title": "Zen Trading",
+        "description": "温暖的大地色调,营造专注交易时的沉静氛围"
+      },
+      "cyberpunk-neon": {
+        "title": "Cyberpunk Neon",
+        "description": "以深色为主的主题,搭配鲜艳的青色、品红色和电紫色"
+      },
+      "earth-tones": {
+        "title": "Earth Tones",
+        "description": "自然启发的暖色调主题,融合鼠尾草绿、赤陶色和棕色"
+      },
+      "terminal-classic": {
+        "title": "Terminal Classic",
+        "description": "专业交易终端外观,深蓝背景搭配经典红绿蜡烛"
+      },
+      "crypto-gold": {
+        "title": "Crypto Gold",
+        "description": "比特币风格主题,金色点缀、深琥珀色背景,尽显看涨气息"
+      },
+      "arctic-blue": {
+        "title": "Arctic Blue",
+        "description": "冷色调单色蓝主题,冰蓝色调搭配简洁线条"
+      },
+      "infrared": {
+        "title": "Infrared",
+        "description": "超现代红色调主题,深红点缀,棱角分明"
+      },
+      "emerald-matrix": {
+        "title": "Emerald Matrix",
+        "description": "深绿色主题,翡翠色调搭配鲜绿蜡烛,充满终端黑客气息"
+      },
+      "royal-violet": {
+        "title": "Royal Violet",
+        "description": "浓郁紫色主题,紫罗兰点缀、薰衣草高光和深梅子暗色"
+      },
+      "midnight-ember": {
+        "title": "Midnight Ember",
+        "description": "暖色调深色主题,深炭灰基底搭配发光的橙琥珀余烬点缀"
+      },
+      "sakura-bloom": {
+        "title": "Sakura Bloom",
+        "description": "细腻的樱花主题,柔粉色调、玫瑰点缀,温柔而不失暖意"
+      },
+      "electric-lime": {
+        "title": "Electric Lime",
+        "description": "鲜艳的青柠绿侧边栏,搭配简洁的单色内容区域"
+      },
+      "burnt-orange": {
+        "title": "Burnt Orange",
+        "description": "暖色调 Reddit 风格配色,深橙搭配奶油色调"
+      },
+      "night-city": {
+        "title": "Night City",
+        "description": "赛博朋克 2077 风格 —— 电光黄搭配深色枪灰,棱角锐利"
+      },
+      "eye-comfort": {
+        "title": "Eye Comfort",
+        "description": "暖色低对比度配色,专为长时间交易减轻眼部疲劳而设计"
+      },
+      "high-contrast": {
+        "title": "High Contrast",
+        "description": "专注无障碍体验,最大对比度、粗边框和清晰的视觉分区"
+      },
+      "okx-market-connector": {
+        "title": "OKX 市场连接器",
+        "description": "通过 OKX 交易所 API 直接获取市场数据和交易"
+      },
+      "binance-market-connector": {
+        "title": "Binance 市场连接器",
+        "description": "通过 Binance 交易所 API 直接获取市场数据和交易"
+      },
+      "bybit-market-connector": {
+        "title": "ByBit 市场连接器",
+        "description": "通过 ByBit 交易所 API 直接获取市场数据和交易"
+      },
+      "bitvavo-market-connector": {
+        "title": "Bitvavo 市场连接器",
+        "description": "通过 Bitvavo 交易所 API 直接获取市场数据和交易"
+      },
+      "mexc-market-connector": {
+        "title": "MEXC 市场连接器",
+        "description": "通过 MEXC 交易所 API 直接获取市场数据和交易"
+      },
+      "kucoin-market-connector": {
+        "title": "KuCoin 市场连接器",
+        "description": "通过 KuCoin 交易所 API 直接获取市场数据和交易"
+      },
+      "gate-market-connector": {
+        "title": "Gate.io 市场连接器",
+        "description": "通过 Gate.io 交易所 API 直接获取市场数据和交易"
+      },
+      "coinbase-market-connector": {
+        "title": "Coinbase 市场连接器",
+        "description": "通过 Coinbase Advanced Trade API 直接获取市场数据和交易"
+      },
+      "bitget-market-connector": {
+        "title": "Bitget 市场连接器",
+        "description": "通过 Bitget 交易所 API 直接获取市场数据和交易"
+      },
+      "kraken-market-connector": {
+        "title": "Kraken 市场连接器",
+        "description": "通过 Kraken 交易所 API 直接获取市场数据和交易"
+      },
+      "htx-market-connector": {
+        "title": "HTX 市场连接器",
+        "description": "通过 HTX(原火币)交易所 API 直接获取市场数据和交易"
+      },
+      "cryptocom-market-connector": {
+        "title": "Crypto.com 市场连接器",
+        "description": "通过 Crypto.com 交易所 API 直接获取市场数据和交易"
+      },
+      "bitfinex-market-connector": {
+        "title": "Bitfinex 市场连接器",
+        "description": "通过 Bitfinex 交易所 API 直接获取市场数据和交易"
+      },
+      "upbit-market-connector": {
+        "title": "Upbit 市场连接器",
+        "description": "通过 Upbit Global 交易所 API 直接获取市场数据和交易"
+      },
+      "alpaca-market-connector": {
+        "title": "Alpaca 市场连接器",
+        "description": "通过 Alpaca 经纪商 API 交易美股与 ETF —— 实时市场数据,支持模拟与实盘交易"
+      },
+      "dexpaprika-data-provider": {
+        "title": "DexPaprika",
+        "description": "由 DexPaprika 提供支持的 DEX 市场数据"
+      },
+      "geckoterminal-data-provider": {
+        "title": "GeckoTerminal",
+        "description": "由 GeckoTerminal(CoinGecko)提供支持的 DEX 市场数据 —— 历史数据深、原生 4 小时 K 线"
+      },
+      "jupiter-dex-connector": {
+        "title": "Jupiter DEX 连接器",
+        "description": "Solana DEX 聚合器 —— 在所有 Solana DEX 中路由至最优价格"
+      },
+      "ethereum-dex-connector": {
+        "title": "Ethereum DEX 连接器",
+        "description": "链上 Ethereum 兑换 —— 通过 KyberSwap 聚合器,在所有 Ethereum DEX 中路由至最优价格"
+      },
+      "base-dex-connector": {
+        "title": "Base DEX 连接器",
+        "description": "链上 Base 兑换 —— 通过 KyberSwap 聚合器,在所有 Base DEX 中路由至最优价格"
+      },
+      "arbitrum-dex-connector": {
+        "title": "Arbitrum DEX 连接器",
+        "description": "链上 Arbitrum 兑换 —— 通过 KyberSwap 聚合器,在所有 Arbitrum DEX 中路由至最优价格"
+      },
+      "bsc-dex-connector": {
+        "title": "BNB Chain DEX 连接器",
+        "description": "链上 BNB Chain 兑换 —— 通过 KyberSwap 聚合器,在所有 BNB Chain DEX 中路由至最优价格"
+      },
+      "polygon-dex-connector": {
+        "title": "Polygon DEX 连接器",
+        "description": "链上 Polygon 兑换 —— 通过 KyberSwap 聚合器,在所有 Polygon DEX 中路由至最优价格"
       }
     }
   },
@@ -4174,6 +4368,36 @@
         "label": "商店目录",
         "description": "提供可浏览的工作区模板目录"
       }
+    }
+  },
+  "registryCategories": {
+    "platform": {
+      "label": "平台",
+      "description": "通过 Pairlens 服务器路由的核心服务"
+    },
+    "exchange": {
+      "label": "交易所",
+      "description": "用于市场数据和交易的直连交易所"
+    },
+    "broker": {
+      "label": "经纪商",
+      "description": "用于股票数据和交易的股票经纪商连接"
+    },
+    "ai": {
+      "label": "AI 服务商",
+      "description": "为 AI 副驾驶分析提供支持的语言模型服务商"
+    },
+    "intelligence": {
+      "label": "情报",
+      "description": "信号检测与策略计算"
+    },
+    "discovery": {
+      "label": "发现",
+      "description": "用于浏览可交易标的的标的目录"
+    },
+    "themes": {
+      "label": "主题",
+      "description": "覆盖颜色、图表配色和界面样式的视觉主题"
     }
   }
 }

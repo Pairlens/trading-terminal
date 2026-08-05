@@ -2484,11 +2484,205 @@
     "apiKeyRequiredHint": "Cần khóa API",
     "setupRequiredHint": "Cần thiết lập",
     "manifests": {
-      "userIndicators": {
+      "pairlens-core": {
+        "title": "Pairlens Core",
+        "description": "Terminal giao dịch cốt lõi — biểu đồ, sổ lệnh, vào lệnh, khám phá thị trường và danh sách theo dõi"
+      },
+      "pairlens-intelligence": {
+        "title": "Pairlens Intelligence",
+        "description": "Suy luận AI, khám phá tài sản, nguồn tin tức và thông tin thị trường, vận hành bởi backend của Pairlens"
+      },
+      "pairlens-community": {
+        "title": "Pairlens Community",
+        "description": "Các mẫu không gian làm việc cộng đồng do người dùng Pairlens chia sẻ."
+      },
+      "user-indicators": {
+        "title": "Chỉ báo của tôi",
         "description": "Các chỉ báo Python tùy chỉnh của bạn, được tạo trong trình soạn thảo Chỉ báo."
       },
-      "pairlensCommunity": {
-        "description": "Các mẫu không gian làm việc cộng đồng do người dùng Pairlens chia sẻ."
+      "groq-inference": {
+        "title": "Groq Inference",
+        "description": "Suy luận AI qua Groq API (hoàn thành LLM cực nhanh)"
+      },
+      "openai-inference": {
+        "title": "OpenAI Inference",
+        "description": "Suy luận AI qua OpenAI API"
+      },
+      "anthropic-inference": {
+        "title": "Anthropic Inference",
+        "description": "Suy luận AI qua Anthropic Claude API"
+      },
+      "openrouter-inference": {
+        "title": "OpenRouter",
+        "description": "Suy luận AI qua OpenRouter — một API key dùng cho hàng trăm model từ nhiều nhà cung cấp (dùng key riêng)"
+      },
+      "tavily-search": {
+        "title": "Tavily Search",
+        "description": "Căn cứ tìm kiếm web cho nghiên cứu AI qua Tavily Search API (dùng key riêng)"
+      },
+      "exa-search": {
+        "title": "Exa Search",
+        "description": "Căn cứ tìm kiếm web bằng mạng nơ-ron cho nghiên cứu AI qua Exa API (dùng key riêng)"
+      },
+      "pairlens": {
+        "title": "Pairlens",
+        "description": "Giao diện đặc trưng của Pairlens — đen trắng sắc nét với điểm nhấn lăng kính cầu vồng"
+      },
+      "zen-trading": {
+        "title": "Zen Trading",
+        "description": "Tông màu đất ấm áp, tạo cảm giác an tĩnh cho những phiên giao dịch tập trung"
+      },
+      "cyberpunk-neon": {
+        "title": "Cyberpunk Neon",
+        "description": "Giao diện thiên tối với cyan, magenta và tím điện rực rỡ"
+      },
+      "earth-tones": {
+        "title": "Earth Tones",
+        "description": "Giao diện tông ấm lấy cảm hứng từ thiên nhiên với xanh xô thơm, đất nung và nâu"
+      },
+      "terminal-classic": {
+        "title": "Terminal Classic",
+        "description": "Diện mạo terminal giao dịch chuyên nghiệp với nền navy và nến xanh/đỏ cổ điển"
+      },
+      "crypto-gold": {
+        "title": "Crypto Gold",
+        "description": "Giao diện lấy cảm hứng từ Bitcoin với điểm nhấn vàng, nền hổ phách tối và khí thế tăng giá"
+      },
+      "arctic-blue": {
+        "title": "Arctic Blue",
+        "description": "Giao diện đơn sắc xanh lạnh với tông băng giá và đường nét gọn gàng"
+      },
+      "infrared": {
+        "title": "Infrared",
+        "description": "Giao diện tông đỏ siêu hiện đại với điểm nhấn đỏ thẫm và thẩm mỹ sắc sảo"
+      },
+      "emerald-matrix": {
+        "title": "Emerald Matrix",
+        "description": "Giao diện xanh đậm với tông ngọc lục bảo, nến xanh rực rỡ và khí chất hacker terminal"
+      },
+      "royal-violet": {
+        "title": "Royal Violet",
+        "description": "Giao diện tím sang trọng với điểm nhấn violet, highlight oải hương và tông tối mận đậm"
+      },
+      "midnight-ember": {
+        "title": "Midnight Ember",
+        "description": "Giao diện tối tông ấm với nền than chì sâu và điểm nhấn than hồng cam-hổ phách rực sáng"
+      },
+      "sakura-bloom": {
+        "title": "Sakura Bloom",
+        "description": "Giao diện hoa anh đào tinh tế với hồng phấn, điểm nhấn hồng và sự ấm áp nhẹ nhàng"
+      },
+      "electric-lime": {
+        "title": "Electric Lime",
+        "description": "Sidebar xanh chanh rực rỡ kết hợp vùng nội dung đơn sắc gọn gàng"
+      },
+      "burnt-orange": {
+        "title": "Burnt Orange",
+        "description": "Bảng màu ấm lấy cảm hứng từ Reddit với cam đậm và tông kem"
+      },
+      "night-city": {
+        "title": "Night City",
+        "description": "Lấy cảm hứng từ Cyberpunk 2077 — vàng điện trên nền xám thép tối, thiết kế sắc cạnh"
+      },
+      "eye-comfort": {
+        "title": "Eye Comfort",
+        "description": "Bảng màu ấm, tương phản thấp, thiết kế để giảm mỏi mắt trong các phiên giao dịch dài"
+      },
+      "high-contrast": {
+        "title": "High Contrast",
+        "description": "Tập trung vào khả năng tiếp cận với độ tương phản tối đa, viền đậm và phân tách trực quan rõ ràng"
+      },
+      "okx-market-connector": {
+        "title": "Bộ kết nối Thị trường OKX",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn OKX"
+      },
+      "binance-market-connector": {
+        "title": "Bộ kết nối Thị trường Binance",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn Binance"
+      },
+      "bybit-market-connector": {
+        "title": "Bộ kết nối Thị trường ByBit",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn ByBit"
+      },
+      "bitvavo-market-connector": {
+        "title": "Bộ kết nối Thị trường Bitvavo",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn Bitvavo"
+      },
+      "mexc-market-connector": {
+        "title": "Bộ kết nối Thị trường MEXC",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn MEXC"
+      },
+      "kucoin-market-connector": {
+        "title": "Bộ kết nối Thị trường KuCoin",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn KuCoin"
+      },
+      "gate-market-connector": {
+        "title": "Bộ kết nối Thị trường Gate.io",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn Gate.io"
+      },
+      "coinbase-market-connector": {
+        "title": "Bộ kết nối Thị trường Coinbase",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua Coinbase Advanced Trade API"
+      },
+      "bitget-market-connector": {
+        "title": "Bộ kết nối Thị trường Bitget",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn Bitget"
+      },
+      "kraken-market-connector": {
+        "title": "Bộ kết nối Thị trường Kraken",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn Kraken"
+      },
+      "htx-market-connector": {
+        "title": "Bộ kết nối Thị trường HTX",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn HTX (trước đây là Huobi)"
+      },
+      "cryptocom-market-connector": {
+        "title": "Bộ kết nối Thị trường Crypto.com",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn Crypto.com"
+      },
+      "bitfinex-market-connector": {
+        "title": "Bộ kết nối Thị trường Bitfinex",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn Bitfinex"
+      },
+      "upbit-market-connector": {
+        "title": "Bộ kết nối Thị trường Upbit",
+        "description": "Dữ liệu thị trường và giao dịch trực tiếp qua API sàn Upbit Global"
+      },
+      "alpaca-market-connector": {
+        "title": "Bộ kết nối Thị trường Alpaca",
+        "description": "Cổ phiếu & ETF Mỹ qua API broker Alpaca — dữ liệu thị trường thời gian thực, giao dịch cả paper và live"
+      },
+      "dexpaprika-data-provider": {
+        "title": "DexPaprika",
+        "description": "Dữ liệu thị trường DEX cung cấp bởi DexPaprika"
+      },
+      "geckoterminal-data-provider": {
+        "title": "GeckoTerminal",
+        "description": "Dữ liệu thị trường DEX cung cấp bởi GeckoTerminal (CoinGecko) — lịch sử sâu, nến 4 giờ gốc"
+      },
+      "jupiter-dex-connector": {
+        "title": "Bộ kết nối DEX Jupiter",
+        "description": "Aggregator DEX trên Solana — định tuyến giá tốt nhất qua mọi DEX trên Solana"
+      },
+      "ethereum-dex-connector": {
+        "title": "Bộ kết nối DEX Ethereum",
+        "description": "Swap on-chain trên Ethereum — định tuyến giá tốt nhất qua mọi DEX Ethereum, thông qua aggregator KyberSwap"
+      },
+      "base-dex-connector": {
+        "title": "Bộ kết nối DEX Base",
+        "description": "Swap on-chain trên Base — định tuyến giá tốt nhất qua mọi DEX Base, thông qua aggregator KyberSwap"
+      },
+      "arbitrum-dex-connector": {
+        "title": "Bộ kết nối DEX Arbitrum",
+        "description": "Swap on-chain trên Arbitrum — định tuyến giá tốt nhất qua mọi DEX Arbitrum, thông qua aggregator KyberSwap"
+      },
+      "bsc-dex-connector": {
+        "title": "Bộ kết nối DEX BNB Chain",
+        "description": "Swap on-chain trên BNB Chain — định tuyến giá tốt nhất qua mọi DEX BNB Chain, thông qua aggregator KyberSwap"
+      },
+      "polygon-dex-connector": {
+        "title": "Bộ kết nối DEX Polygon",
+        "description": "Swap on-chain trên Polygon — định tuyến giá tốt nhất qua mọi DEX Polygon, thông qua aggregator KyberSwap"
       }
     }
   },
@@ -4174,6 +4368,36 @@
         "label": "Danh mục Store",
         "description": "Cung cấp một danh mục có thể duyệt các mẫu không gian làm việc"
       }
+    }
+  },
+  "registryCategories": {
+    "platform": {
+      "label": "Nền tảng",
+      "description": "Các dịch vụ cốt lõi định tuyến qua máy chủ Pairlens"
+    },
+    "exchange": {
+      "label": "Sàn giao dịch",
+      "description": "Kết nối trực tiếp đến sàn giao dịch để lấy dữ liệu thị trường và giao dịch"
+    },
+    "broker": {
+      "label": "Broker",
+      "description": "Kết nối broker chứng khoán để lấy dữ liệu và giao dịch cổ phiếu"
+    },
+    "ai": {
+      "label": "Nhà cung cấp AI",
+      "description": "Nhà cung cấp mô hình ngôn ngữ cho phân tích của AI co-pilot"
+    },
+    "intelligence": {
+      "label": "Intelligence",
+      "description": "Phát hiện tín hiệu và tính toán chiến lược"
+    },
+    "discovery": {
+      "label": "Khám phá",
+      "description": "Danh mục tài sản để duyệt các cặp giao dịch khả dụng"
+    },
+    "themes": {
+      "label": "Giao diện",
+      "description": "Giao diện hình ảnh ghi đè màu sắc, bảng màu biểu đồ và phong cách UI"
     }
   }
 }

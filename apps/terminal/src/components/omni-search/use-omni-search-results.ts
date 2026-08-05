@@ -40,6 +40,11 @@ import { useNotificationStore } from '@/stores/notification-store'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { useWorkflowStore } from '@/stores/workflow-store'
+import {
+  localizedText,
+  pluginDescription,
+  pluginTitle,
+} from '@/lib/plugin-text'
 
 const MAX_PAIRS_IN_ALL = 8
 const MAX_MARKETS_IN_ALL = 5
@@ -410,8 +415,9 @@ export function useOmniSearchResults(
     const items: Array<PluginResult> = allPlugins.map((p) => ({
       type: 'plugin' as const,
       id: p.manifest.id,
-      name: p.manifest.name,
-      description: p.manifest.description,
+      // Searched as well as shown — a German user types German.
+      name: pluginTitle(p.manifest),
+      description: pluginDescription(p.manifest),
       icon: undefined,
       enabled: p.status === 'active',
     }))
@@ -705,7 +711,9 @@ export function useOmniSearchResults(
         commands.push({
           type: 'action',
           id: `${plugin.manifest.id}:${cmd.id}`,
-          label: cmd.labelKey ? t(cmd.labelKey) : cmd.label,
+          label: cmd.labelKey
+            ? t(cmd.labelKey)
+            : (localizedText(cmd.label) ?? cmd.id),
           icon: cmd.icon ?? 'Terminal',
           shortcut: cmd.shortcut,
           keywords: [plugin.manifest.name, cmd.id],

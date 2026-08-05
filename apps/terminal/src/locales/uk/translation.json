@@ -2498,11 +2498,205 @@
     "apiKeyRequiredHint": "Потрібен ключ API",
     "setupRequiredHint": "Потрібне налаштування",
     "manifests": {
-      "userIndicators": {
+      "pairlens-core": {
+        "title": "Pairlens Core",
+        "description": "Основний торговий термінал — графіки, книги ордерів, розміщення ордерів, виявлення ринків і списки відстеження"
+      },
+      "pairlens-intelligence": {
+        "title": "Pairlens Intelligence",
+        "description": "Інференс ШІ, виявлення інструментів, новинні стрічки та ринкова аналітика на основі backend Pairlens"
+      },
+      "pairlens-community": {
+        "title": "Pairlens Community",
+        "description": "Шаблони робочих просторів від спільноти, якими поділилися користувачі Pairlens."
+      },
+      "user-indicators": {
+        "title": "Мої Індикатори",
         "description": "Ваші власні індикатори на Python, створені в редакторі «Індикатори»."
       },
-      "pairlensCommunity": {
-        "description": "Шаблони робочих просторів від спільноти, якими поділилися користувачі Pairlens."
+      "groq-inference": {
+        "title": "Groq Інференс",
+        "description": "Інференс ШІ через API Groq (надшвидкі відповіді LLM)"
+      },
+      "openai-inference": {
+        "title": "OpenAI Інференс",
+        "description": "Інференс ШІ через API OpenAI"
+      },
+      "anthropic-inference": {
+        "title": "Anthropic Інференс",
+        "description": "Інференс ШІ через API Anthropic Claude"
+      },
+      "openrouter-inference": {
+        "title": "OpenRouter",
+        "description": "Інференс ШІ через OpenRouter — один API-ключ для сотень моделей у різних провайдерів (власний ключ)"
+      },
+      "tavily-search": {
+        "title": "Tavily Пошук",
+        "description": "Веб-пошук як основа для ШІ-досліджень через API Tavily Search (власний ключ)"
+      },
+      "exa-search": {
+        "title": "Exa Пошук",
+        "description": "Нейронний веб-пошук як основа для ШІ-досліджень через API Exa (власний ключ)"
+      },
+      "pairlens": {
+        "title": "Pairlens",
+        "description": "Фірмова тема Pairlens — чіткий чорно-білий з райдужними призматичними акцентами"
+      },
+      "zen-trading": {
+        "title": "Zen Trading",
+        "description": "Теплі землисті відтінки зі спокійною естетикою для зосереджених торгових сесій"
+      },
+      "cyberpunk-neon": {
+        "title": "Cyberpunk Neon",
+        "description": "Темна тема з яскравими блакитними, пурпуровими та електрично-фіолетовими відтінками"
+      },
+      "earth-tones": {
+        "title": "Earth Tones",
+        "description": "Тепла тема в природних тонах: шавлієвий зелений, теракотовий і коричневі відтінки"
+      },
+      "terminal-classic": {
+        "title": "Terminal Classic",
+        "description": "Професійний вигляд торгового термінала з темно-синім тлом і класичними зеленими/червоними свічками"
+      },
+      "crypto-gold": {
+        "title": "Crypto Gold",
+        "description": "Тема в дусі Bitcoin із золотими акцентами, темно-бурштиновим тлом і бичачою енергією"
+      },
+      "arctic-blue": {
+        "title": "Arctic Blue",
+        "description": "Холодна синя монохромна тема з крижаними відтінками та чіткими лініями"
+      },
+      "infrared": {
+        "title": "Infrared",
+        "description": "Ультрасучасна тема в червоних тонах із багряними акцентами та чіткою естетикою"
+      },
+      "emerald-matrix": {
+        "title": "Emerald Matrix",
+        "description": "Глибока зелена тема зі смарагдовими відтінками, яскравими зеленими свічками та духом хакерського термінала"
+      },
+      "royal-violet": {
+        "title": "Royal Violet",
+        "description": "Насичена фіолетова тема з бузковими акцентами, лавандовими відблисками та глибокими сливовими темними тонами"
+      },
+      "midnight-ember": {
+        "title": "Midnight Ember",
+        "description": "Тепла темна тема з глибоким вугільно-сірим тлом і сяючими оранжево-бурштиновими акцентами жаристого вугілля"
+      },
+      "sakura-bloom": {
+        "title": "Sakura Bloom",
+        "description": "Ніжна тема квітучої сакури з м'якими рожевими тонами, трояндовими акцентами та легкою теплотою"
+      },
+      "electric-lime": {
+        "title": "Electric Lime",
+        "description": "Яскрава лаймово-зелена бічна панель із чистими монохромними ділянками контенту"
+      },
+      "burnt-orange": {
+        "title": "Burnt Orange",
+        "description": "Тепла палітра в дусі Reddit із насиченими оранжевими та кремовими тонами"
+      },
+      "night-city": {
+        "title": "Night City",
+        "description": "У дусі Cyberpunk 2077 — електрично-жовтий на темно-сталевому тлі з різкими гранями"
+      },
+      "eye-comfort": {
+        "title": "Eye Comfort",
+        "description": "Тепла палітра з низьким контрастом, розроблена для зменшення втоми очей під час тривалих сесій"
+      },
+      "high-contrast": {
+        "title": "High Contrast",
+        "description": "Орієнтований на доступність: максимальний контраст, чіткі межі та ясний візуальний поділ"
+      },
+      "okx-market-connector": {
+        "title": "OKX Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API OKX"
+      },
+      "binance-market-connector": {
+        "title": "Binance Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API Binance"
+      },
+      "bybit-market-connector": {
+        "title": "ByBit Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API ByBit"
+      },
+      "bitvavo-market-connector": {
+        "title": "Bitvavo Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API Bitvavo"
+      },
+      "mexc-market-connector": {
+        "title": "MEXC Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API MEXC"
+      },
+      "kucoin-market-connector": {
+        "title": "KuCoin Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API KuCoin"
+      },
+      "gate-market-connector": {
+        "title": "Gate.io Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API Gate.io"
+      },
+      "coinbase-market-connector": {
+        "title": "Coinbase Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через Advanced Trade API Coinbase"
+      },
+      "bitget-market-connector": {
+        "title": "Bitget Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API Bitget"
+      },
+      "kraken-market-connector": {
+        "title": "Kraken Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API Kraken"
+      },
+      "htx-market-connector": {
+        "title": "HTX Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API HTX (раніше Huobi)"
+      },
+      "cryptocom-market-connector": {
+        "title": "Crypto.com Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API Crypto.com"
+      },
+      "bitfinex-market-connector": {
+        "title": "Bitfinex Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API Bitfinex"
+      },
+      "upbit-market-connector": {
+        "title": "Upbit Ринковий конектор",
+        "description": "Прямі ринкові дані та торгівля через API Upbit Global"
+      },
+      "alpaca-market-connector": {
+        "title": "Alpaca Ринковий конектор",
+        "description": "Акції та ETF США через брокерський API Alpaca — ринкові дані в реальному часі, паперова та реальна торгівля"
+      },
+      "dexpaprika-data-provider": {
+        "title": "DexPaprika",
+        "description": "Ринкові дані DEX від DexPaprika"
+      },
+      "geckoterminal-data-provider": {
+        "title": "GeckoTerminal",
+        "description": "Ринкові дані DEX від GeckoTerminal (CoinGecko) — глибока історія, нативні 4-годинні свічки"
+      },
+      "jupiter-dex-connector": {
+        "title": "Jupiter DEX-конектор",
+        "description": "Агрегатор DEX Solana — маршрутизація за найкращою ціною на всіх DEX Solana"
+      },
+      "ethereum-dex-connector": {
+        "title": "Ethereum DEX-конектор",
+        "description": "On-chain-свопи в мережі Ethereum — маршрутизація за найкращою ціною на всіх DEX Ethereum через агрегатор KyberSwap"
+      },
+      "base-dex-connector": {
+        "title": "Base DEX-конектор",
+        "description": "On-chain-свопи в мережі Base — маршрутизація за найкращою ціною на всіх DEX Base через агрегатор KyberSwap"
+      },
+      "arbitrum-dex-connector": {
+        "title": "Arbitrum DEX-конектор",
+        "description": "On-chain-свопи в мережі Arbitrum — маршрутизація за найкращою ціною на всіх DEX Arbitrum через агрегатор KyberSwap"
+      },
+      "bsc-dex-connector": {
+        "title": "BNB Chain DEX-конектор",
+        "description": "On-chain-свопи в мережі BNB Chain — маршрутизація за найкращою ціною на всіх DEX BNB Chain через агрегатор KyberSwap"
+      },
+      "polygon-dex-connector": {
+        "title": "Polygon DEX-конектор",
+        "description": "On-chain-свопи в мережі Polygon — маршрутизація за найкращою ціною на всіх DEX Polygon через агрегатор KyberSwap"
       }
     }
   },
@@ -4198,6 +4392,36 @@
         "label": "Каталог магазину",
         "description": "Надає каталог шаблонів робочих просторів для перегляду"
       }
+    }
+  },
+  "registryCategories": {
+    "platform": {
+      "label": "Платформа",
+      "description": "Основні сервіси, що маршрутизуються через сервер Pairlens"
+    },
+    "exchange": {
+      "label": "Біржі",
+      "description": "Прямі підключення до бірж для ринкових даних і торгівлі"
+    },
+    "broker": {
+      "label": "Брокери",
+      "description": "Підключення до фондових брокерів для даних і торгівлі акціями"
+    },
+    "ai": {
+      "label": "Провайдери ШІ",
+      "description": "Постачальники мовних моделей для аналізу ШІ-копілота"
+    },
+    "intelligence": {
+      "label": "Аналітика",
+      "description": "Виявлення сигналів і розрахунок стратегій"
+    },
+    "discovery": {
+      "label": "Виявлення",
+      "description": "Каталоги інструментів для перегляду доступних торгових пар"
+    },
+    "themes": {
+      "label": "Теми",
+      "description": "Візуальні теми, що перевизначають кольори, палітру графіка та стиль інтерфейсу"
     }
   }
 }

@@ -12,6 +12,7 @@ import { Button } from '@pairlens/ui/components/ui/button'
 import { pluginBrand, pluginPosterSrc } from './plugin-brand'
 import { PluginBrandTile } from './plugin-icon'
 import type { RegistryPluginEntry } from '@pairlens/shared/registry-types'
+import { pluginDescription, pluginTitle } from '@/lib/plugin-text'
 
 const ROTATE_MS = 4800
 
@@ -146,10 +147,10 @@ export function SpotlightHero({
           </span>
         </div>
         <h2 className="mt-4 max-w-[15ch] font-serif text-[50px] font-semibold leading-[0.99] tracking-[-0.03em] text-foreground">
-          {featuredTitle ?? manifest.name}
+          {featuredTitle ?? pluginTitle(manifest)}
         </h2>
         <p className="mt-4 max-w-[47ch] text-[15px] leading-[1.6] text-muted-foreground">
-          {featuredText ?? tagline}
+          {(featuredText ?? pluginDescription(manifest)) || tagline}
         </p>
         <div className="mt-[26px] flex items-center gap-[13px]">
           <Button

@@ -3,6 +3,7 @@
 import { getLedgerEntry } from './plugin-ledger'
 import type { PluginManifest } from '@pairlens/plugin-system'
 import i18n from '@/lib/i18n'
+import { localizedText } from '@/lib/plugin-text'
 
 /**
  * Required config fields (declared in the manifest) that have no value in the
@@ -21,7 +22,11 @@ export function missingRequiredConfig(manifest: PluginManifest): Array<{
     if (!field.required) continue
     const value = config[key]
     if (value === undefined || value === null || String(value).trim() === '') {
-      missing.push({ key, label: field.label, secret: field.type === 'secret' })
+      missing.push({
+        key,
+        label: localizedText(field.label) ?? key,
+        secret: field.type === 'secret',
+      })
     }
   }
   return missing

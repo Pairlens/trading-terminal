@@ -2484,11 +2484,205 @@
     "apiKeyRequiredHint": "Perlu API key",
     "setupRequiredHint": "Perlu penyiapan",
     "manifests": {
-      "userIndicators": {
+      "pairlens-core": {
+        "title": "Pairlens Core",
+        "description": "Terminal trading inti — chart, order book, entry trade, penemuan market, dan watchlist"
+      },
+      "pairlens-intelligence": {
+        "title": "Pairlens Intelligence",
+        "description": "Inferensi AI, penemuan instrumen, feed berita, dan intelijen market yang didukung oleh backend Pairlens"
+      },
+      "pairlens-community": {
+        "title": "Pairlens Community",
+        "description": "Template ruang kerja komunitas yang dibagikan oleh pengguna Pairlens."
+      },
+      "user-indicators": {
+        "title": "Indikator Saya",
         "description": "Indikator Python kustom Anda, dibuat di editor Indikator."
       },
-      "pairlensCommunity": {
-        "description": "Template ruang kerja komunitas yang dibagikan oleh pengguna Pairlens."
+      "groq-inference": {
+        "title": "Groq Inference",
+        "description": "Inferensi AI via Groq API (completion LLM super cepat)"
+      },
+      "openai-inference": {
+        "title": "OpenAI Inference",
+        "description": "Inferensi AI via OpenAI API"
+      },
+      "anthropic-inference": {
+        "title": "Anthropic Inference",
+        "description": "Inferensi AI via Anthropic Claude API"
+      },
+      "openrouter-inference": {
+        "title": "OpenRouter",
+        "description": "Inferensi AI via OpenRouter — satu API key untuk ratusan model dari berbagai provider (bawa key sendiri)"
+      },
+      "tavily-search": {
+        "title": "Tavily Search",
+        "description": "Dasar pencarian web untuk riset AI via Tavily Search API (bawa key sendiri)"
+      },
+      "exa-search": {
+        "title": "Exa Search",
+        "description": "Dasar pencarian web berbasis neural untuk riset AI via Exa API (bawa key sendiri)"
+      },
+      "pairlens": {
+        "title": "Pairlens",
+        "description": "Tema khas Pairlens — hitam putih tegas dengan aksen prisma pelangi"
+      },
+      "zen-trading": {
+        "title": "Zen Trading",
+        "description": "Nuansa earthy yang hangat dengan estetika tenang untuk sesi trading yang fokus"
+      },
+      "cyberpunk-neon": {
+        "title": "Cyberpunk Neon",
+        "description": "Tema gelap dengan cyan, magenta, dan ungu elektrik yang mencolok"
+      },
+      "earth-tones": {
+        "title": "Earth Tones",
+        "description": "Tema hangat terinspirasi alam dengan hijau sage, terracotta, dan cokelat"
+      },
+      "terminal-classic": {
+        "title": "Terminal Classic",
+        "description": "Tampilan terminal trading profesional dengan latar navy dan candle hijau/merah klasik"
+      },
+      "crypto-gold": {
+        "title": "Crypto Gold",
+        "description": "Tema terinspirasi Bitcoin dengan aksen emas, latar amber gelap, dan energi bullish"
+      },
+      "arctic-blue": {
+        "title": "Arctic Blue",
+        "description": "Tema monokrom biru sejuk dengan nuansa es dan garis yang bersih"
+      },
+      "infrared": {
+        "title": "Infrared",
+        "description": "Tema merah ultra-modern dengan aksen crimson dan estetika tajam"
+      },
+      "emerald-matrix": {
+        "title": "Emerald Matrix",
+        "description": "Tema hijau tua dengan nuansa emerald, candle hijau cerah, dan nuansa terminal-hacker"
+      },
+      "royal-violet": {
+        "title": "Royal Violet",
+        "description": "Tema ungu mewah dengan aksen violet, highlight lavender, dan gelap plum yang pekat"
+      },
+      "midnight-ember": {
+        "title": "Midnight Ember",
+        "description": "Tema gelap hangat dengan dasar charcoal pekat dan aksen bara oranye-amber yang menyala"
+      },
+      "sakura-bloom": {
+        "title": "Sakura Bloom",
+        "description": "Tema bunga sakura yang lembut dengan pink lembut, aksen rose, dan kehangatan yang halus"
+      },
+      "electric-lime": {
+        "title": "Electric Lime",
+        "description": "Sidebar hijau lime yang mencolok dengan area konten monokrom yang bersih"
+      },
+      "burnt-orange": {
+        "title": "Burnt Orange",
+        "description": "Palet hangat terinspirasi Reddit dengan oranye pekat dan nuansa krem"
+      },
+      "night-city": {
+        "title": "Night City",
+        "description": "Terinspirasi Cyberpunk 2077 — kuning elektrik di atas gunmetal gelap dengan sudut yang tajam"
+      },
+      "eye-comfort": {
+        "title": "Eye Comfort",
+        "description": "Palet hangat berkontras rendah, dirancang untuk mengurangi kelelahan mata saat sesi trading panjang"
+      },
+      "high-contrast": {
+        "title": "High Contrast",
+        "description": "Berfokus pada aksesibilitas dengan kontras maksimal, border tebal, dan pemisahan visual yang jelas"
+      },
+      "okx-market-connector": {
+        "title": "Konektor Market OKX",
+        "description": "Data market dan trading langsung via API exchange OKX"
+      },
+      "binance-market-connector": {
+        "title": "Konektor Market Binance",
+        "description": "Data market dan trading langsung via API exchange Binance"
+      },
+      "bybit-market-connector": {
+        "title": "Konektor Market ByBit",
+        "description": "Data market dan trading langsung via API exchange ByBit"
+      },
+      "bitvavo-market-connector": {
+        "title": "Konektor Market Bitvavo",
+        "description": "Data market dan trading langsung via API exchange Bitvavo"
+      },
+      "mexc-market-connector": {
+        "title": "Konektor Market MEXC",
+        "description": "Data market dan trading langsung via API exchange MEXC"
+      },
+      "kucoin-market-connector": {
+        "title": "Konektor Market KuCoin",
+        "description": "Data market dan trading langsung via API exchange KuCoin"
+      },
+      "gate-market-connector": {
+        "title": "Konektor Market Gate.io",
+        "description": "Data market dan trading langsung via API exchange Gate.io"
+      },
+      "coinbase-market-connector": {
+        "title": "Konektor Market Coinbase",
+        "description": "Data market dan trading langsung via Coinbase Advanced Trade API"
+      },
+      "bitget-market-connector": {
+        "title": "Konektor Market Bitget",
+        "description": "Data market dan trading langsung via API exchange Bitget"
+      },
+      "kraken-market-connector": {
+        "title": "Konektor Market Kraken",
+        "description": "Data market dan trading langsung via API exchange Kraken"
+      },
+      "htx-market-connector": {
+        "title": "Konektor Market HTX",
+        "description": "Data market dan trading langsung via API exchange HTX (dulunya Huobi)"
+      },
+      "cryptocom-market-connector": {
+        "title": "Konektor Market Crypto.com",
+        "description": "Data market dan trading langsung via API exchange Crypto.com"
+      },
+      "bitfinex-market-connector": {
+        "title": "Konektor Market Bitfinex",
+        "description": "Data market dan trading langsung via API exchange Bitfinex"
+      },
+      "upbit-market-connector": {
+        "title": "Konektor Market Upbit",
+        "description": "Data market dan trading langsung via API exchange Upbit Global"
+      },
+      "alpaca-market-connector": {
+        "title": "Konektor Market Alpaca",
+        "description": "Saham & ETF AS via API broker Alpaca — data market real-time, trading paper dan live"
+      },
+      "dexpaprika-data-provider": {
+        "title": "DexPaprika",
+        "description": "Data market DEX yang didukung oleh DexPaprika"
+      },
+      "geckoterminal-data-provider": {
+        "title": "GeckoTerminal",
+        "description": "Data market DEX yang didukung oleh GeckoTerminal (CoinGecko) — riwayat data mendalam, candle 4 jam native"
+      },
+      "jupiter-dex-connector": {
+        "title": "Konektor DEX Jupiter",
+        "description": "Agregator DEX Solana — routing harga terbaik di semua DEX Solana"
+      },
+      "ethereum-dex-connector": {
+        "title": "Konektor DEX Ethereum",
+        "description": "Swap Ethereum on-chain — routing harga terbaik di semua DEX Ethereum via agregator KyberSwap"
+      },
+      "base-dex-connector": {
+        "title": "Konektor DEX Base",
+        "description": "Swap Base on-chain — routing harga terbaik di semua DEX Base via agregator KyberSwap"
+      },
+      "arbitrum-dex-connector": {
+        "title": "Konektor DEX Arbitrum",
+        "description": "Swap Arbitrum on-chain — routing harga terbaik di semua DEX Arbitrum via agregator KyberSwap"
+      },
+      "bsc-dex-connector": {
+        "title": "Konektor DEX BNB Chain",
+        "description": "Swap BNB Chain on-chain — routing harga terbaik di semua DEX BNB Chain via agregator KyberSwap"
+      },
+      "polygon-dex-connector": {
+        "title": "Konektor DEX Polygon",
+        "description": "Swap Polygon on-chain — routing harga terbaik di semua DEX Polygon via agregator KyberSwap"
       }
     }
   },
@@ -4174,6 +4368,36 @@
         "label": "Katalog Store",
         "description": "Sediakan katalog template ruang kerja yang dapat dijelajahi"
       }
+    }
+  },
+  "registryCategories": {
+    "platform": {
+      "label": "Platform",
+      "description": "Layanan inti yang dirutekan melalui server Pairlens"
+    },
+    "exchange": {
+      "label": "Exchange",
+      "description": "Koneksi exchange langsung untuk data market dan trading"
+    },
+    "broker": {
+      "label": "Broker",
+      "description": "Koneksi broker saham untuk data dan trading ekuitas"
+    },
+    "ai": {
+      "label": "Provider AI",
+      "description": "Provider model bahasa untuk analisis AI co-pilot"
+    },
+    "intelligence": {
+      "label": "Intelligence",
+      "description": "Deteksi sinyal dan perhitungan strategi"
+    },
+    "discovery": {
+      "label": "Penemuan",
+      "description": "Katalog instrumen untuk menjelajahi pair trading yang tersedia"
+    },
+    "themes": {
+      "label": "Tema",
+      "description": "Tema visual yang menggantikan warna, palet chart, dan gaya UI"
     }
   }
 }

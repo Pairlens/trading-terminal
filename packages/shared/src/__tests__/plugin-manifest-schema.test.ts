@@ -141,4 +141,75 @@ describe('validateManifest', () => {
       validateManifest({ ...VALID, permissions: ['network', 'root'] }).valid,
     ).toBe(false)
   })
+
+  // ── Localized manifest text ───────────────────────────────────────
+  //
+  // A plugin author cannot add a key to the terminal's catalog, so their name
+  // and description carry their own translations. The strictness here is the
+  // point: an unknown locale never matches anything and never renders, which
+  // looks exactly like "no translation provided".
+
+  it('accepts a bare string — the author wrote one language', () => {
+    expect(
+      validateManifest({ ...VALID, description: 'Does things' }).valid,
+    ).toBe(true)
+  })
+
+  it('accepts a locale map on description and title', () => {
+    const r = validateManifest({
+      ...VALID,
+      title: { en: 'My Plugin', de: 'Mein Plugin' },
+      description: {
+        en: 'Does things',
+        de: 'Macht Sachen',
+        ja: '色々やります',
+      },
+    })
+    expect(r.errors).toEqual([])
+    expect(r.valid).toBe(true)
+  })
+
+  it('rejects a locale the terminal has no catalog for', () => {
+    // 'pr' is a well-formed tag and a plausible typo for 'pt'.
+    const r = validateManifest({
+      ...VALID,
+      description: { en: 'Does things', pr: 'Faz coisas' },
+    })
+    expect(r.valid).toBe(false)
+    expect(r.errors.join(' ')).toContain('"pr"')
+  })
+
+  it('rejects an empty locale map and empty values', () => {
+    expect(validateManifest({ ...VALID, description: {} }).valid).toBe(false)
+    expect(validateManifest({ ...VALID, description: { en: '' } }).valid).toBe(
+      false,
+    )
+  })
+
+  it('caps a single string so a manifest cannot carry a README', () => {
+    expect(
+      validateManifest({ ...VALID, description: 'x'.repeat(501) }).valid,
+    ).toBe(false)
+    expect(
+      validateManifest({
+        ...VALID,
+        description: { en: 'ok', de: 'x'.repeat(501) },
+      }).valid,
+    ).toBe(false)
+  })
+
+  it('validates config field labels the same way', () => {
+    expect(
+      validateManifest({
+        ...VALID,
+        config: { key: { type: 'string', label: { en: 'API key' } } },
+      }).valid,
+    ).toBe(true)
+    expect(
+      validateManifest({
+        ...VALID,
+        config: { key: { type: 'string', label: { xx: 'API key' } } },
+      }).valid,
+    ).toBe(false)
+  })
 })

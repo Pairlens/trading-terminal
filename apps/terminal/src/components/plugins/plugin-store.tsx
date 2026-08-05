@@ -51,6 +51,7 @@ import {
   PluginModuleLoader,
 } from '@/lib/plugins/plugin-module-loader'
 import { usePairlens } from '@/lib/pairlens-provider'
+import { pluginDescription, pluginTitle } from '@/lib/plugin-text'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -83,7 +84,7 @@ function manifestToEntry(manifest: PluginManifest): RegistryPluginEntry {
   return {
     manifest,
     category,
-    tagline: manifest.description,
+    tagline: pluginDescription(manifest),
     bundled: true,
   }
 }
@@ -573,7 +574,8 @@ export function PluginStore({
     (e: RegistryPluginEntry) =>
       !query ||
       e.manifest.name.toLowerCase().includes(query) ||
-      e.manifest.description.toLowerCase().includes(query) ||
+      pluginTitle(e.manifest).toLowerCase().includes(query) ||
+      pluginDescription(e.manifest).toLowerCase().includes(query) ||
       e.tagline.toLowerCase().includes(query) ||
       e.category.toLowerCase().includes(query),
     [query],
@@ -590,13 +592,31 @@ export function PluginStore({
     [featuredQuery.data],
   )
 
+  // Category text arrives from the registry in English. Categories are our
+  // content, not a plugin author's, so their translations live in the catalog
+  // like the rest of ours — keyed by the id the server already sends, with the
+  // server's own string as the fallback. No server change, and an older
+  // registry keeps working.
   const categoryLabel = useCallback(
     (categoryId: string) => {
       const meta = categories.find((c: RegistryCategory) => c.id === categoryId)
-      if (meta) return meta.label
-      return categoryId.charAt(0).toUpperCase() + categoryId.slice(1)
+      return t(`registryCategories.${categoryId}.label`, {
+        defaultValue:
+          meta?.label ??
+          categoryId.charAt(0).toUpperCase() + categoryId.slice(1),
+      })
     },
-    [categories],
+    [categories, t],
+  )
+
+  const categoryDescription = useCallback(
+    (categoryId: string, fallback: string | undefined) =>
+      fallback === undefined
+        ? undefined
+        : t(`registryCategories.${categoryId}.description`, {
+            defaultValue: fallback,
+          }),
+    [t],
   )
 
   // Topic shelves: one per registry category (ordered), Editor's picks first.
@@ -618,12 +638,18 @@ export function PluginStore({
       const catMeta = categories.find((c: RegistryCategory) => c.id === catId)
       return {
         id: catId,
-        label: catMeta?.label ?? catId,
-        subLabel: catMeta?.description,
+        label: categoryLabel(catId),
+        subLabel: categoryDescription(catId, catMeta?.description),
         plugins,
       }
     })
-  }, [categoryFilter, filteredEntries, categories])
+  }, [
+    categoryFilter,
+    filteredEntries,
+    categories,
+    categoryLabel,
+    categoryDescription,
+  ])
 
   const editorsPicks = useMemo(
     () => featured.filter(matchesQuery),

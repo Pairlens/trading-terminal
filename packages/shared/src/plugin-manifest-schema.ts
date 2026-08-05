@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { SUPPORTED_LOCALES } from './localized-text'
 import type { CapabilityId, PluginManifest } from './plugin-types'
 
 /**
@@ -32,6 +33,66 @@ export const VALID_CAPABILITY_IDS: ReadonlyArray<CapabilityId> = [
 ]
 
 const CONFIG_FIELD_TYPES = ['string', 'secret', 'number', 'boolean', 'select']
+
+/**
+ * Longest a single display string may be. Generous — the point is to stop a
+ * manifest carrying a README, not to police wording.
+ */
+const MAX_TEXT_LEN = 500
+
+/**
+ * A `LocalizedText`: a bare string, or a map of locale to string.
+ *
+ * Locale keys must be ones the terminal actually ships a catalog for. That is
+ * stricter than the resolver needs, and deliberately so: `pt` mistyped as `pr`
+ * is a well-formed tag that would simply never match anything, and silently
+ * never rendering is the failure mode this whole mechanism exists to avoid.
+ */
+function checkLocalizedText(
+  value: unknown,
+  path: string,
+  errors: Array<string>,
+  { required }: { required: boolean },
+): void {
+  if (value === undefined) {
+    if (required) errors.push(`"${path}" is required`)
+    return
+  }
+
+  if (typeof value === 'string') {
+    if (value.length === 0) errors.push(`"${path}" must not be empty`)
+    if (value.length > MAX_TEXT_LEN) {
+      errors.push(`"${path}" must be at most ${MAX_TEXT_LEN} characters`)
+    }
+    return
+  }
+
+  if (!isPlainObject(value)) {
+    errors.push(`"${path}" must be a string or a locale-to-string object`)
+    return
+  }
+
+  const entries = Object.entries(value)
+  if (entries.length === 0) {
+    errors.push(`"${path}" must carry at least one locale`)
+    return
+  }
+  for (const [locale, text] of entries) {
+    if (!(SUPPORTED_LOCALES as ReadonlyArray<string>).includes(locale)) {
+      errors.push(
+        `"${path}" has locale "${locale}", which the terminal has no catalog for ` +
+          `(expected one of: ${SUPPORTED_LOCALES.join(', ')})`,
+      )
+    }
+    if (typeof text !== 'string' || text.length === 0) {
+      errors.push(`"${path}.${locale}" must be a non-empty string`)
+    } else if (text.length > MAX_TEXT_LEN) {
+      errors.push(
+        `"${path}.${locale}" must be at most ${MAX_TEXT_LEN} characters`,
+      )
+    }
+  }
+}
 
 export type ManifestValidationResult =
   | { valid: true; manifest: PluginManifest; errors: [] }
@@ -80,17 +141,16 @@ export function validateManifest(input: unknown): ManifestValidationResult {
   const m = input
 
   // Required string fields
-  for (const key of [
-    'id',
-    'name',
-    'version',
-    'author',
-    'description',
-  ] as const) {
+  for (const key of ['id', 'name', 'version', 'author'] as const) {
     if (typeof m[key] !== 'string' || m[key].length === 0) {
       errors.push(`"${key}" is required and must be a non-empty string`)
     }
   }
+
+  checkLocalizedText(m['description'], 'description', errors, {
+    required: true,
+  })
+  checkLocalizedText(m['title'], 'title', errors, { required: false })
 
   if (typeof m['id'] === 'string' && !ID_RE.test(m['id'])) {
     errors.push(
@@ -156,9 +216,9 @@ export function validateManifest(input: unknown): ManifestValidationResult {
             `config.${fieldKey}.type must be one of ${CONFIG_FIELD_TYPES.join(', ')}`,
           )
         }
-        if (typeof field['label'] !== 'string') {
-          errors.push(`config.${fieldKey}.label must be a string`)
-        }
+        checkLocalizedText(field['label'], `config.${fieldKey}.label`, errors, {
+          required: true,
+        })
       }
     }
   } else {

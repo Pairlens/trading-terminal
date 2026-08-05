@@ -22,6 +22,11 @@ import type { RegistryPluginEntry } from '@pairlens/shared/registry-types'
 import type { PluginManifest } from '@pairlens/plugin-system'
 import type { FormEvent } from 'react'
 import { ConfigFieldInput } from '@/components/config-field-input'
+import {
+  localizedText,
+  pluginDescription,
+  pluginTitle,
+} from '@/lib/plugin-text'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -118,7 +123,7 @@ export function PluginDetailDialog({
             />
             <div className="min-w-0 flex-1">
               <DialogTitle className="flex items-center gap-2">
-                <span className="truncate">{manifest.name}</span>
+                <span className="truncate">{pluginTitle(manifest)}</span>
                 <span className="shrink-0 text-xs font-normal text-muted-foreground/50">
                   v{manifest.version}
                 </span>
@@ -164,7 +169,7 @@ export function PluginDetailDialog({
 
         {/* Description */}
         <p className="text-[13px] leading-relaxed text-muted-foreground">
-          {longDescription ?? tagline}
+          {(longDescription ?? pluginDescription(manifest)) || tagline}
         </p>
 
         {/* Capability badges */}
@@ -196,7 +201,9 @@ export function PluginDetailDialog({
                     variant="outline"
                     className="text-[10px] font-normal"
                   >
-                    {panel.labelKey ? panel.labelKey : panel.label}
+                    {panel.labelKey
+                      ? t(panel.labelKey)
+                      : localizedText(panel.label)}
                   </Badge>
                 ))}
               </div>

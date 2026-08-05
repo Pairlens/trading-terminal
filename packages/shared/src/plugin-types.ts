@@ -6,6 +6,8 @@
 // PluginContext, resolution, access control) live in @pairlens/plugin-system,
 // which re-exports these wire types for convenience.
 
+import type { LocalizedText } from './localized-text'
+
 // Capability IDs
 export type CapabilityId =
   | 'market-data:discovery'
@@ -312,7 +314,7 @@ export type PluginConfigFieldType =
 
 export type PluginConfigField = {
   type: PluginConfigFieldType
-  label: string
+  label: LocalizedText
   required?: boolean
   default?: unknown
   options?: Array<string> // for 'select' type
@@ -321,9 +323,15 @@ export type PluginConfigField = {
 // UI panel contribution declared in plugin manifest
 export type ContributedPanel = {
   id: string // panel ID, unique within plugin
-  label: string
+  /**
+   * Bundled plugins name a catalog key (`labelKey`) so their translations sit
+   * with the rest of ours — one file per language, covered by the parity
+   * test. Third-party plugins cannot add catalog entries, so they carry
+   * translations inline here instead. Resolution order: labelKey, then this.
+   */
+  label: LocalizedText
   labelKey?: string // i18n key (takes precedence over label)
-  description?: string
+  description?: LocalizedText
   descriptionKey?: string // i18n key (takes precedence over description)
   icon: string // lucide icon name
   category: string // PaneCategoryId
@@ -338,7 +346,7 @@ export type ContributedPanel = {
 // Command contribution declared in plugin manifest
 export type ContributedCommand = {
   id: string // unique within plugin
-  label: string
+  label: LocalizedText
   labelKey?: string // i18n (takes precedence)
   icon?: string // lucide icon name
   shortcut?: string // keyboard shortcut display (e.g. "Ctrl+Shift+R")
@@ -348,12 +356,12 @@ export type ContributedCommand = {
 // Status bar item contribution declared in plugin manifest
 export type ContributedStatusBarItem = {
   id: string
-  label: string
+  label: LocalizedText
   labelKey?: string
   icon?: string
   alignment: 'left' | 'right'
   priority?: number // lower = closer to edge
-  tooltip?: string
+  tooltip?: LocalizedText
   tooltipKey?: string
 }
 
@@ -364,7 +372,7 @@ export type ContributedStatusBarItem = {
  */
 export type ContributedSettingsPage = {
   id: string
-  label: string
+  label: LocalizedText
   labelKey?: string
   icon?: string
 }
@@ -383,10 +391,24 @@ export type PluginNetworkDeclaration = {
 
 export type PluginManifest = {
   id: string
+  /**
+   * Canonical name — an identity, not display text. Logs, sort keys, search
+   * indexes and React keys read this, and every one of them wants the same
+   * stable value in every language. `title` is what a user sees.
+   */
   name: string
+  /**
+   * Display name, translated by the author.
+   *
+   * Bundled plugins leave this unset: the terminal derives a catalog key from
+   * the plugin id, so our translations stay in `locales/*` with the rest of
+   * ours, one file per language. Third-party plugins cannot add catalog
+   * entries and carry their translations here instead.
+   */
+  title?: LocalizedText
   version: string
   author: string
-  description: string
+  description: LocalizedText
   homepage?: string
   icon?: string
   minTerminalVersion?: string

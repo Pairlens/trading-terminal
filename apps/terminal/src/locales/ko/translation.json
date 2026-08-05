@@ -2484,11 +2484,205 @@
     "apiKeyRequiredHint": "API 키 필요",
     "setupRequiredHint": "설정 필요",
     "manifests": {
-      "userIndicators": {
+      "pairlens-core": {
+        "title": "Pairlens Core",
+        "description": "핵심 트레이딩 터미널 — 차트, 호가창, 진입, 마켓 탐색, 관심 목록"
+      },
+      "pairlens-intelligence": {
+        "title": "Pairlens Intelligence",
+        "description": "Pairlens 백엔드가 제공하는 AI 추론, 종목 탐색, 뉴스 피드, 마켓 인텔리전스"
+      },
+      "pairlens-community": {
+        "title": "Pairlens Community",
+        "description": "Pairlens 사용자가 공유하는 커뮤니티 워크스페이스 템플릿입니다."
+      },
+      "user-indicators": {
+        "title": "내 지표",
         "description": "지표 편집기에서 만든 나만의 커스텀 Python 지표입니다."
       },
-      "pairlensCommunity": {
-        "description": "Pairlens 사용자가 공유하는 커뮤니티 워크스페이스 템플릿입니다."
+      "groq-inference": {
+        "title": "Groq 추론",
+        "description": "Groq API를 통한 AI 추론(초고속 LLM 완성)"
+      },
+      "openai-inference": {
+        "title": "OpenAI 추론",
+        "description": "OpenAI API를 통한 AI 추론"
+      },
+      "anthropic-inference": {
+        "title": "Anthropic 추론",
+        "description": "Anthropic Claude API를 통한 AI 추론"
+      },
+      "openrouter-inference": {
+        "title": "OpenRouter",
+        "description": "OpenRouter를 통한 AI 추론 — API 키 하나로 여러 제공자의 수백 개 모델을 이용(자체 키 사용)"
+      },
+      "tavily-search": {
+        "title": "Tavily 검색",
+        "description": "Tavily Search API를 통해 AI 리서치에 웹 검색 근거를 제공(자체 키 사용)"
+      },
+      "exa-search": {
+        "title": "Exa 검색",
+        "description": "Exa API를 통해 AI 리서치에 신경망 기반 웹 검색 근거를 제공(자체 키 사용)"
+      },
+      "pairlens": {
+        "title": "Pairlens",
+        "description": "Pairlens의 시그니처 테마 — 선명한 흑백에 레인보우 프리즘 포인트"
+      },
+      "zen-trading": {
+        "title": "Zen Trading",
+        "description": "따뜻한 흙빛 톤으로 차분하게 집중해서 거래할 수 있는 분위기"
+      },
+      "cyberpunk-neon": {
+        "title": "Cyberpunk Neon",
+        "description": "선명한 시안, 마젠타, 일렉트릭 퍼플이 돋보이는 다크 톤 테마"
+      },
+      "earth-tones": {
+        "title": "Earth Tones",
+        "description": "세이지 그린, 테라코타, 브라운을 담은 자연에서 영감을 받은 따뜻한 테마"
+      },
+      "terminal-classic": {
+        "title": "Terminal Classic",
+        "description": "네이비 배경에 클래식한 빨강/초록 캔들을 조합한 정통 트레이딩 터미널 스타일"
+      },
+      "crypto-gold": {
+        "title": "Crypto Gold",
+        "description": "골드 포인트와 다크 앰버 배경으로 강세장 분위기를 살린 비트코인 테마"
+      },
+      "arctic-blue": {
+        "title": "Arctic Blue",
+        "description": "아이시한 톤과 깔끔한 선이 돋보이는 차가운 블루 모노크롬 테마"
+      },
+      "infrared": {
+        "title": "Infrared",
+        "description": "크림슨 포인트와 날카로운 디자인의 초현대적인 레드 톤 테마"
+      },
+      "emerald-matrix": {
+        "title": "Emerald Matrix",
+        "description": "에메랄드 톤과 선명한 초록 캔들로 터미널 해커 감성을 살린 딥 그린 테마"
+      },
+      "royal-violet": {
+        "title": "Royal Violet",
+        "description": "바이올렛 포인트, 라벤더 하이라이트, 짙은 플럼 다크톤이 어우러진 화려한 퍼플 테마"
+      },
+      "midnight-ember": {
+        "title": "Midnight Ember",
+        "description": "짙은 차콜 베이스에 은은하게 빛나는 오렌지 앰버 잉걸불 포인트를 더한 따뜻한 다크 테마"
+      },
+      "sakura-bloom": {
+        "title": "Sakura Bloom",
+        "description": "부드러운 핑크와 로즈 포인트로 은은하고 따뜻한 벚꽃 테마"
+      },
+      "electric-lime": {
+        "title": "Electric Lime",
+        "description": "선명한 라임 그린 사이드바에 깔끔한 모노크롬 콘텐츠 영역을 조합"
+      },
+      "burnt-orange": {
+        "title": "Burnt Orange",
+        "description": "짙은 오렌지와 크림 톤이 어우러진 따뜻한 Reddit 감성 팔레트"
+      },
+      "night-city": {
+        "title": "Night City",
+        "description": "사이버펑크 2077에서 영감을 받은, 다크 건메탈 위 일렉트릭 옐로우의 날카로운 스타일"
+      },
+      "eye-comfort": {
+        "title": "Eye Comfort",
+        "description": "장시간 트레이딩 시 눈의 피로를 줄이도록 설계된 저채도 따뜻한 팔레트"
+      },
+      "high-contrast": {
+        "title": "High Contrast",
+        "description": "접근성에 초점을 맞춰 최대 대비, 굵은 테두리, 명확한 시각적 구분을 제공"
+      },
+      "okx-market-connector": {
+        "title": "OKX 마켓 커넥터",
+        "description": "OKX 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "binance-market-connector": {
+        "title": "Binance 마켓 커넥터",
+        "description": "Binance 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "bybit-market-connector": {
+        "title": "ByBit 마켓 커넥터",
+        "description": "ByBit 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "bitvavo-market-connector": {
+        "title": "Bitvavo 마켓 커넥터",
+        "description": "Bitvavo 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "mexc-market-connector": {
+        "title": "MEXC 마켓 커넥터",
+        "description": "MEXC 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "kucoin-market-connector": {
+        "title": "KuCoin 마켓 커넥터",
+        "description": "KuCoin 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "gate-market-connector": {
+        "title": "Gate.io 마켓 커넥터",
+        "description": "Gate.io 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "coinbase-market-connector": {
+        "title": "Coinbase 마켓 커넥터",
+        "description": "Coinbase Advanced Trade API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "bitget-market-connector": {
+        "title": "Bitget 마켓 커넥터",
+        "description": "Bitget 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "kraken-market-connector": {
+        "title": "Kraken 마켓 커넥터",
+        "description": "Kraken 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "htx-market-connector": {
+        "title": "HTX 마켓 커넥터",
+        "description": "HTX(구 Huobi) 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "cryptocom-market-connector": {
+        "title": "Crypto.com 마켓 커넥터",
+        "description": "Crypto.com 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "bitfinex-market-connector": {
+        "title": "Bitfinex 마켓 커넥터",
+        "description": "Bitfinex 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "upbit-market-connector": {
+        "title": "Upbit 마켓 커넥터",
+        "description": "Upbit Global 거래소 API를 통한 다이렉트 마켓 데이터 및 거래"
+      },
+      "alpaca-market-connector": {
+        "title": "Alpaca 마켓 커넥터",
+        "description": "Alpaca 브로커 API를 통한 미국 주식 및 ETF — 실시간 마켓 데이터, 모의 및 실거래 지원"
+      },
+      "dexpaprika-data-provider": {
+        "title": "DexPaprika",
+        "description": "DexPaprika가 제공하는 DEX 마켓 데이터"
+      },
+      "geckoterminal-data-provider": {
+        "title": "GeckoTerminal",
+        "description": "GeckoTerminal(CoinGecko)이 제공하는 DEX 마켓 데이터 — 깊은 히스토리와 네이티브 4시간봉 지원"
+      },
+      "jupiter-dex-connector": {
+        "title": "Jupiter DEX 커넥터",
+        "description": "Solana DEX 애그리게이터 — 모든 Solana DEX에서 최적가로 라우팅"
+      },
+      "ethereum-dex-connector": {
+        "title": "Ethereum DEX 커넥터",
+        "description": "온체인 Ethereum 스왑 — KyberSwap 애그리게이터를 통해 모든 Ethereum DEX에서 최적가로 라우팅"
+      },
+      "base-dex-connector": {
+        "title": "Base DEX 커넥터",
+        "description": "온체인 Base 스왑 — KyberSwap 애그리게이터를 통해 모든 Base DEX에서 최적가로 라우팅"
+      },
+      "arbitrum-dex-connector": {
+        "title": "Arbitrum DEX 커넥터",
+        "description": "온체인 Arbitrum 스왑 — KyberSwap 애그리게이터를 통해 모든 Arbitrum DEX에서 최적가로 라우팅"
+      },
+      "bsc-dex-connector": {
+        "title": "BNB Chain DEX 커넥터",
+        "description": "온체인 BNB Chain 스왑 — KyberSwap 애그리게이터를 통해 모든 BNB Chain DEX에서 최적가로 라우팅"
+      },
+      "polygon-dex-connector": {
+        "title": "Polygon DEX 커넥터",
+        "description": "온체인 Polygon 스왑 — KyberSwap 애그리게이터를 통해 모든 Polygon DEX에서 최적가로 라우팅"
       }
     }
   },
@@ -4174,6 +4368,36 @@
         "label": "스토어 카탈로그",
         "description": "탐색 가능한 워크스페이스 템플릿 카탈로그를 제공합니다"
       }
+    }
+  },
+  "registryCategories": {
+    "platform": {
+      "label": "플랫폼",
+      "description": "Pairlens 서버를 통해 라우팅되는 핵심 서비스"
+    },
+    "exchange": {
+      "label": "거래소",
+      "description": "마켓 데이터 및 거래를 위한 직접 거래소 연결"
+    },
+    "broker": {
+      "label": "브로커",
+      "description": "주식 데이터 및 거래를 위한 증권 브로커 연결"
+    },
+    "ai": {
+      "label": "AI 제공자",
+      "description": "AI 코파일럿 분석을 지원하는 언어 모델 제공자"
+    },
+    "intelligence": {
+      "label": "인텔리전스",
+      "description": "시그널 감지와 전략 계산"
+    },
+    "discovery": {
+      "label": "탐색",
+      "description": "거래 가능한 페어를 둘러보기 위한 종목 카탈로그"
+    },
+    "themes": {
+      "label": "테마",
+      "description": "색상, 차트 팔레트, UI 스타일을 재정의하는 비주얼 테마"
     }
   }
 }
