@@ -9,6 +9,7 @@ import { Button } from '@pairlens/ui/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -114,7 +115,9 @@ export function TerminalTopBar({
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-auto min-w-48">
-          <DropdownMenuLabel>{t('notifications.flows')}</DropdownMenuLabel>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>{t('notifications.flows')}</DropdownMenuLabel>
+          </DropdownMenuGroup>
           <DropdownMenuSeparator />
           {rules.length === 0 && (
             <DropdownMenuItem disabled>
