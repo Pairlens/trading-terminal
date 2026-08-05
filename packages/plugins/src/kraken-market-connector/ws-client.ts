@@ -45,7 +45,9 @@ const PING_INTERVAL = 20_000
 // Must match the `depth` requested on the book subscription. Kraken streams
 // deltas only within this window and does not explicitly delete a level that
 // falls out of it, so the local book must be trimmed to this depth each update.
-const BOOK_DEPTH = 25
+// 100 (next supported tier above 25) so a tall order-book pane fills like the
+// other venues — 25 rows left the pane half-empty and starved coarse grouping.
+const BOOK_DEPTH = 100
 
 type CandleSub = {
   pair: string // Pairlens: BTC-USDT
