@@ -34,9 +34,9 @@ export type DesktopBuild = {
   /** i18n key for the OS name — the label users read. */
   nameKey: string
   /** The build the big button downloads. */
-  primary: { label: string; asset: string }
+  primary: { label: string; labelKey: string; asset: string }
   /** Same OS, other formats/architectures — offered as small links. */
-  alternates: ReadonlyArray<{ label: string; asset: string }>
+  alternates: ReadonlyArray<{ label: string; labelKey: string; asset: string }>
 }
 
 export const DESKTOP_BUILDS: ReadonlyArray<DesktopBuild> = [
@@ -45,25 +45,52 @@ export const DESKTOP_BUILDS: ReadonlyArray<DesktopBuild> = [
     nameKey: 'desktopCta.macos',
     primary: {
       label: 'Apple silicon (.dmg)',
+      labelKey: 'desktopCta.assets.macos.primary',
       asset: 'Pairlens-macOS-AppleSilicon.dmg',
     },
     alternates: [
-      { label: 'Intel Mac (.dmg)', asset: 'Pairlens-macOS-Intel.dmg' },
+      {
+        label: 'Intel Mac (.dmg)',
+        labelKey: 'desktopCta.assets.macos.intel',
+        asset: 'Pairlens-macOS-Intel.dmg',
+      },
     ],
   },
   {
     os: 'windows',
     nameKey: 'desktopCta.windows',
-    primary: { label: 'Installer (.exe)', asset: 'Pairlens-Windows-Setup.exe' },
-    alternates: [{ label: '.msi installer', asset: 'Pairlens-Windows.msi' }],
+    primary: {
+      label: 'Installer (.exe)',
+      labelKey: 'desktopCta.assets.windows.primary',
+      asset: 'Pairlens-Windows-Setup.exe',
+    },
+    alternates: [
+      {
+        label: '.msi installer',
+        labelKey: 'desktopCta.assets.windows.msi',
+        asset: 'Pairlens-Windows.msi',
+      },
+    ],
   },
   {
     os: 'linux',
     nameKey: 'desktopCta.linux',
-    primary: { label: 'AppImage', asset: 'Pairlens-Linux.AppImage' },
+    primary: {
+      label: 'AppImage',
+      labelKey: 'desktopCta.assets.linux.primary',
+      asset: 'Pairlens-Linux.AppImage',
+    },
     alternates: [
-      { label: '.deb', asset: 'Pairlens-Linux.deb' },
-      { label: '.rpm', asset: 'Pairlens-Linux.rpm' },
+      {
+        label: '.deb',
+        labelKey: 'desktopCta.assets.linux.deb',
+        asset: 'Pairlens-Linux.deb',
+      },
+      {
+        label: '.rpm',
+        labelKey: 'desktopCta.assets.linux.rpm',
+        asset: 'Pairlens-Linux.rpm',
+      },
     ],
   },
 ]

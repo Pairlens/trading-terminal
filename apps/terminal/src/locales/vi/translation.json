@@ -441,7 +441,18 @@
     "ordersLockedRiskLimit": "Lệnh bị khóa do vi phạm giới hạn rủi ro. Mở khóa tại Cài đặt > Quản lý rủi ro.",
     "buyOrdersLockedRiskLimit": "Lệnh mua bị khóa do vi phạm giới hạn rủi ro. Mở khóa tại Cài đặt > Quản lý rủi ro.",
     "positionSizeExceeded": "Lệnh bị chặn do giới hạn rủi ro: vị thế chiếm {{ratioPct}}% danh mục, vượt mức tối đa {{maxPositionSize}}% của bạn. Điều chỉnh tại Cài đặt > Quản lý rủi ro.",
-    "sessionExpired": "Phiên đăng nhập của bạn đã hết hạn — vui lòng đăng nhập lại."
+    "sessionExpired": "Phiên đăng nhập của bạn đã hết hạn — vui lòng đăng nhập lại.",
+    "startFromTemplate": "Bắt đầu từ mẫu",
+    "chips": {
+      "osNotification": "Thông báo hệ thống",
+      "toastPlusOs": "Toast + Hệ thống",
+      "timeframeClose": "Đóng 1H",
+      "downPercent": "Giảm {{percent}}",
+      "takeProfitPercent": "Chốt lời {{percent}}",
+      "stopLossPercent": "Cắt lỗ {{percent}}",
+      "sizeAtOffset": "{{size}} tại {{offset}}",
+      "waitDuration": "Chờ {{duration}}"
+    }
   },
   "legal": {
     "terms": "Điều khoản và Điều kiện",
@@ -781,7 +792,9 @@
       "taxNote": "Giá chưa bao gồm thuế — thuế được tính khi thanh toán dựa trên vị trí của bạn.",
       "packsTitle": "Tín dụng bổ sung",
       "packsDescription": "Gói nạp một lần cộng thêm vào ngân sách hằng tháng. Tín dụng của gói nạp hết hạn 30 ngày sau khi mua và không gia hạn.",
-      "packActive": "{{credits}} tín dụng bổ sung — hết hạn {{date}}"
+      "packActive": "{{credits}} tín dụng bổ sung — hết hạn {{date}}",
+      "packAddedToastTitle": "Đã thêm tín dụng bổ sung",
+      "packAddedToastDescription": "Gói tín dụng của bạn đã cộng vào số dư — tín dụng của gói hết hạn 30 ngày sau khi mua."
     },
     "about": {
       "desktop": "Máy tính",
@@ -992,6 +1005,21 @@
       "title": "{{venue}} cần ứng dụng máy tính",
       "description": "Sàn này trả dữ liệu thị trường mà không kèm các header trình duyệt cần để đọc. Ứng dụng máy tính kết nối trực tiếp, nên mọi sàn đều chạy được ở đó.",
       "alternatives": "Hoặc ở lại trên trình duyệt"
+    },
+    "assets": {
+      "macos": {
+        "primary": "Apple silicon (.dmg)",
+        "intel": "Intel Mac (.dmg)"
+      },
+      "windows": {
+        "primary": "Trình cài đặt (.exe)",
+        "msi": "Trình cài đặt .msi"
+      },
+      "linux": {
+        "primary": "AppImage",
+        "deb": ".deb",
+        "rpm": ".rpm"
+      }
     }
   },
   "userMenu": {
@@ -1236,7 +1264,8 @@
     "startConversation": "Bắt đầu trò chuyện",
     "emptyStateHint": "Hỏi về điều kiện thị trường, kiểm tra thiết lập của bạn, hoặc yêu cầu đánh giá rủi ro — AI có đầy đủ ngữ cảnh của cặp này.",
     "contextAware": "Hiểu ngữ cảnh",
-    "toolFailed": "Công cụ thất bại"
+    "toolFailed": "Công cụ thất bại",
+    "sidebarPreviewSummary": "Phát hiện giao cắt EMA nhưng khối lượng dưới mức trung bình. Đang chờ xác nhận."
   },
   "chart": {
     "contextMenu": {
@@ -1765,7 +1794,10 @@
       "unsupportedLanguage": "Chỉ báo viết bằng {{language}} không thể nhập.",
       "malformedDescriptor": "Dữ liệu của chỉ báo đó bị lỗi.",
       "unknown": "Nhập thất bại."
-    }
+    },
+    "syntaxErrorDiagnostic": "Lỗi cú pháp",
+    "missingMetaDiagnostic": "main.py không khai báo `meta = indicator(...)` ở cấp cao nhất — biểu đồ không có gì để vẽ.",
+    "missingComputeDiagnostic": "main.py không khai báo `def compute(ctx)` ở cấp cao nhất — script sẽ không tải được."
   },
   "indicators": {
     "title": "Thêm chỉ báo",
@@ -2448,7 +2480,17 @@
     "previousSlide": "Trước",
     "nextSlide": "Tiếp theo",
     "goToSlide": "Đi tới trang {{n}}",
-    "copyCommand": "Sao chép lệnh"
+    "copyCommand": "Sao chép lệnh",
+    "apiKeyRequiredHint": "Cần khóa API",
+    "setupRequiredHint": "Cần thiết lập",
+    "manifests": {
+      "userIndicators": {
+        "description": "Các chỉ báo Python tùy chỉnh của bạn, được tạo trong trình soạn thảo Chỉ báo."
+      },
+      "pairlensCommunity": {
+        "description": "Các mẫu không gian làm việc cộng đồng do người dùng Pairlens chia sẻ."
+      }
+    }
   },
   "search": {
     "title": "Tìm cặp giao dịch",
@@ -2579,7 +2621,9 @@
       "collapse": "Thu gọn bảng"
     },
     "recentlyViewed": "Xem gần đây",
-    "noMarketsFound": "Không tìm thấy thị trường"
+    "noMarketsFound": "Không tìm thấy thị trường",
+    "modeLive": "LIVE",
+    "modePaper": "PAPER"
   },
   "accounts": {
     "pageTitle": "Tài khoản",
@@ -2710,7 +2754,32 @@
     "accountConnectFailed": "Không thể kết nối tài khoản.",
     "accountRemoveFailed": "Không thể xóa tài khoản.",
     "fieldRequired": "{{field}} là bắt buộc",
-    "accountConnectedFeedback": "Đã kết nối tài khoản {{label}} {{mode}}."
+    "accountConnectedFeedback": "Đã kết nối tài khoản {{label}} {{mode}}.",
+    "walletChains": {
+      "ethereum": {
+        "label": "Ethereum / EVM",
+        "fields": {
+          "privateKey": {
+            "label": "Private Key (hex)"
+          }
+        }
+      },
+      "solana": {
+        "fields": {
+          "privateKey": {
+            "label": "Private Key (base58)"
+          }
+        }
+      },
+      "bitcoin": {
+        "fields": {
+          "privateKey": {
+            "label": "Private Key (WIF)"
+          }
+        }
+      }
+    },
+    "defaultWalletName": "Ví {{chain}}"
   },
   "workspaceStore": {
     "title": "Workspace Store",
@@ -2821,7 +2890,218 @@
     "spotlight": "Nổi bật",
     "previousSlide": "Trước",
     "nextSlide": "Tiếp theo",
-    "goToSlide": "Đi đến slide {{number}}"
+    "goToSlide": "Đi đến slide {{number}}",
+    "templates": {
+      "scalpers-cockpit": {
+        "name": "Buồng Lái Scalper",
+        "tagline": "Biểu đồ, sổ lệnh và vào lệnh một chạm — không gì khác.",
+        "description": "Buồng lái hai cột tối giản cho thực thi nhanh: một biểu đồ bên cạnh sổ lệnh trực tiếp, độ sâu thị trường và một phiếu đặt lệnh. Được tạo ra cho tốc độ trên một màn hình duy nhất."
+      },
+      "day-trader-pro": {
+        "name": "Day Trader Pro",
+        "tagline": "Quét, xem biểu đồ và giao dịch trong phiên.",
+        "description": "Một bàn làm việc ba cột cân bằng: bộ quét thị trường bên trái, biểu đồ lớn ở giữa, và sổ lệnh cùng phiếu đặt lệnh và vị thế mở bên phải. Công cụ hằng ngày cho giao dịch crypto năng động."
+      },
+      "swing-overview": {
+        "name": "Tổng Quan Swing",
+        "tagline": "Bối cảnh xu hướng với danh sách theo dõi và các mã biến động mạnh.",
+        "description": "Một bố cục điềm tĩnh hơn cho vị thế nhiều ngày: một biểu đồ đầy đủ cùng danh sách theo dõi của bạn, các mã biến động mạnh nhất và thông tin cơ bản của cặp. Đủ bối cảnh để định cỡ một swing mà không có sự ồn ào của bàn thực thi."
+      },
+      "ai-research-desk": {
+        "name": "Bàn Nghiên Cứu AI",
+        "tagline": "Copilot, nghiên cứu và bảng tin bên cạnh biểu đồ của bạn.",
+        "description": "Kết hợp một biểu đồ với AI Copilot, nghiên cứu chuyên sâu, và cả luồng tin tức toàn cầu lẫn theo mã. Được tạo ra cho giao dịch theo sự kiện xúc tác, nơi câu chuyện đằng sau quan trọng không kém dữ liệu giá. Cần một nhà cung cấp suy luận AI cho Copilot và Nghiên cứu."
+      },
+      "market-discovery": {
+        "name": "Khám Phá Thị Trường",
+        "tagline": "Tìm ra thứ đang biến động trước khi bạn vào lệnh.",
+        "description": "Một bảng khám phá thuần túy: bộ quét thị trường, các mã biến động mạnh nhất, bản đồ nhiệt theo lĩnh vực, danh sách theo dõi của bạn, và đồng hồ đo Sợ hãi & Tham lam. Không biểu đồ, không phiếu đặt lệnh — chỉ để săn tìm cơ hội tiếp theo."
+      },
+      "portfolio-command": {
+        "name": "Chỉ Huy Danh Mục",
+        "tagline": "Số dư, vị thế và rủi ro trong nháy mắt.",
+        "description": "Một buồng lái lấy tài khoản làm trung tâm: phân bổ danh mục của bạn, vị thế mở, giới hạn rủi ro trực tiếp, và một danh sách theo dõi để để mắt tới phần còn lại của sổ lệnh. Dành cho việc quản lý những gì bạn đã nắm giữ."
+      },
+      "dex-degen": {
+        "name": "DEX Degen",
+        "tagline": "Biểu đồ on-chain, swap và luồng mạng xã hội.",
+        "description": "Được tạo ra để săn lùng on-chain: một biểu đồ với phiếu swap, các mã gần đây để bắt kịp niêm yết mới, và luồng mạng xã hội để tìm alpha. Định tuyến swap qua một bộ kết nối DEX như Jupiter."
+      },
+      "quant-signals": {
+        "name": "Tín Hiệu Quant",
+        "tagline": "Nhật ký dữ liệu, bản đồ nhiệt và rủi ro cho giao dịch theo tín hiệu.",
+        "description": "Một bàn làm việc ưu tiên dữ liệu: một biểu đồ kết hợp với nhật ký dữ liệu thô, bản đồ nhiệt thanh khoản, trạng thái rủi ro trực tiếp, và bộ quét thị trường. Dành cho trader đọc dữ liệu giá dưới dạng con số, không phải nến."
+      },
+      "equities-desk": {
+        "name": "Bàn Cổ Phiếu",
+        "tagline": "Giao dịch cổ phiếu với bộ quét, biểu đồ và vị thế.",
+        "description": "Một bố cục giao dịch cổ phiếu: bộ quét thị trường, một biểu đồ, vị thế mở, và bảng tin. Kết nối plugin broker Alpaca để truyền trực tiếp cổ phiếu Mỹ và định tuyến lệnh."
+      },
+      "ultrawide-trading-floor": {
+        "name": "Sàn Giao Dịch Ultrawide",
+        "tagline": "Mọi thứ, ở khắp mọi nơi — cho màn hình lớn.",
+        "description": "Một trung tâm chỉ huy bốn cột lấp đầy màn hình ultrawide hoặc màn hình phụ: bộ quét, biểu đồ, sổ lệnh và độ sâu, một phiếu đặt lệnh kèm vị thế, và AI Copilot. Bố cục tối đa nhất."
+      },
+      "classic-terminal": {
+        "name": "Terminal Cổ Điển",
+        "tagline": "Bàn làm việc Pairlens cổ điển — biểu đồ, dữ liệu, giao dịch, copilot.",
+        "description": "Bố cục terminal mặc định: một biểu đồ lớn với dải dữ liệu dạng tab và thanh rủi ro bên trái, và một phiếu đặt lệnh nằm trên AI Copilot bên phải.",
+        "menuLabel": "Mặc định"
+      },
+      "chart-focus": {
+        "name": "Tập Trung Biểu Đồ",
+        "tagline": "Một biểu đồ lớn duy nhất với dữ liệu dạng tab bên dưới.",
+        "description": "Một bố cục một cột cho biểu đồ không gian tối đa, với vị thế, nhật ký dữ liệu, copilot, và phiếu đặt lệnh được gói gọn trong dải tab bên dưới.",
+        "menuLabel": "Tập Trung Biểu Đồ"
+      },
+      "trading": {
+        "name": "Giao Dịch",
+        "tagline": "Sổ lệnh và phiếu đặt lệnh kẹp hai bên một biểu đồ trung tâm.",
+        "description": "Một bàn thực thi ba cột: sổ lệnh và phiếu đặt lệnh bên trái, biểu đồ với vị thế và rủi ro ở giữa, và AI Copilot bên phải.",
+        "menuLabel": "Giao Dịch"
+      },
+      "chart-analysis": {
+        "name": "Phân Tích Biểu Đồ",
+        "tagline": "Biểu đồ và dữ liệu bên trái, copilot và thực thi bên phải.",
+        "description": "Một cách chia hướng nghiên cứu: biểu đồ, dữ liệu, nghiên cứu và rủi ro bên trái; copilot, sổ lệnh và phiếu đặt lệnh bên phải.",
+        "menuLabel": "Phân Tích"
+      },
+      "dual-charts": {
+        "name": "Biểu Đồ Đôi",
+        "tagline": "Hai biểu đồ cạnh nhau.",
+        "description": "Hai khung biểu đồ độc lập cạnh nhau — mỗi khung giữ riêng thị trường, khung thời gian và loại biểu đồ của mình. Đặt một cặp khác cho mỗi khung bằng bộ chọn cặp của nó.",
+        "menuLabel": "Biểu Đồ Đôi"
+      },
+      "triple-charts": {
+        "name": "Ba Biểu Đồ",
+        "tagline": "Một biểu đồ lớn với hai biểu đồ xếp chồng bên cạnh.",
+        "description": "Một biểu đồ chính lớn với hai biểu đồ nhỏ hơn xếp chồng bên phải — mỗi biểu đồ độc lập, để theo dõi một cặp dẫn đầu so với hai cặp khác.",
+        "menuLabel": "Ba Biểu Đồ"
+      },
+      "quad-charts": {
+        "name": "Bốn Biểu Đồ",
+        "tagline": "Lưới biểu đồ 2×2.",
+        "description": "Bốn biểu đồ độc lập trong một lưới 2×2 — một buồng lái đa biểu đồ đầy đủ để theo dõi nhiều thị trường cùng lúc.",
+        "menuLabel": "Bốn Biểu Đồ"
+      },
+      "laptop-focus": {
+        "name": "Tập Trung Laptop",
+        "tagline": "Bố cục một cột theo chiều dọc được tinh chỉnh cho laptop.",
+        "description": "Một bố cục dọc, gọn gàng vừa với màn hình laptop: biểu đồ ở trên, dải tab dữ liệu, và một thanh rủi ro mảnh."
+      },
+      "laptop-split": {
+        "name": "Chia Đôi Laptop",
+        "tagline": "Biểu đồ + dữ liệu bên trái, giao dịch + copilot bên phải — cho màn hình nhỏ hơn.",
+        "description": "Một cách chia hai cột vừa cỡ laptop: biểu đồ và vị thế bên trái, phiếu đặt lệnh nằm trên copilot bên phải."
+      },
+      "ultrawide-dashboard": {
+        "name": "Bảng Điều Khiển Ultrawide",
+        "tagline": "Mọi panel trải rộng trên một màn hình ultrawide.",
+        "description": "Một bảng điều khiển bốn cột cho màn hình ultrawide: sổ lệnh, biểu đồ với rủi ro, vị thế và nghiên cứu, và một cột giao dịch + copilot."
+      },
+      "ultrawide-trading": {
+        "name": "Giao Dịch Ultrawide",
+        "tagline": "Sổ lệnh, độ sâu, biểu đồ và thực thi trải suốt chiều rộng.",
+        "description": "Một bố cục thực thi ultrawide: sổ lệnh và độ sâu thị trường bên trái, biểu đồ với vị thế ở giữa, và một cột giao dịch + copilot bên phải."
+      },
+      "command-center": {
+        "name": "Trung Tâm Chỉ Huy 4K",
+        "tagline": "Trung tâm chỉ huy đầy đủ cho màn hình 4K.",
+        "description": "Mọi thứ trên màn hình cho một màn hình 4K: sổ lệnh và thông tin cặp, biểu đồ với nghiên cứu và rủi ro, vị thế và mạng xã hội, và một cột giao dịch + copilot."
+      },
+      "home-pulse": {
+        "name": "Trang chủ",
+        "tagline": "Bảng mặc định: bộ quét, tâm lý, mã biến động và tin tức.",
+        "description": "Bảng trang chủ mặc định — bộ quét thị trường, một dải nhịp đập thị trường với đồng hồ đo Sợ hãi & Tham lam và coin hàng đầu xếp tab cùng danh sách theo dõi của bạn, và một cột tin tức cao suốt trang. Mọi thứ trên đó hoạt động mà không cần tài khoản.",
+        "menuLabel": "Trang chủ"
+      },
+      "markets-board": {
+        "name": "Bảng Thị Trường",
+        "tagline": "Chỉ bộ quét thị trường, toàn màn hình.",
+        "description": "Bộ quét thị trường rộng hết cỡ — cách đơn giản nhất để duyệt và sắp xếp mọi cặp có thể giao dịch.",
+        "menuLabel": "Thị trường"
+      },
+      "markets-overview": {
+        "name": "Tổng Quan Thị Trường",
+        "tagline": "Bộ quét bên cạnh các mã biến động mạnh và danh sách theo dõi của bạn.",
+        "description": "Bộ quét thị trường cùng với các mã biến động mạnh nhất và danh sách theo dõi của bạn — một trang chủ cân bằng để tìm và theo dõi cơ hội.",
+        "menuLabel": "Tổng quan"
+      },
+      "sector-analysis": {
+        "name": "Phân Tích Lĩnh Vực",
+        "tagline": "Bộ quét, bản đồ nhiệt, mã biến động và danh sách theo dõi.",
+        "description": "Một bảng khám phá với bản đồ nhiệt theo lĩnh vực ở giữa: bộ quét bên trái, bản đồ nhiệt ở giữa, và các mã biến động mạnh nằm trên danh sách theo dõi của bạn bên phải.",
+        "menuLabel": "Phân tích"
+      },
+      "news-board": {
+        "name": "Bảng Tin Tức",
+        "tagline": "Thị trường bên cạnh các mã biến động mạnh và luồng tin tức.",
+        "description": "Bộ quét thị trường bên cạnh các mã biến động mạnh nhất và luồng tin tức trực tiếp — một căn cứ cho giao dịch theo sự kiện xúc tác.",
+        "menuLabel": "Tin tức"
+      }
+    },
+    "traderTypes": {
+      "scalper": {
+        "label": "Scalper",
+        "description": "Vào nhanh ra nhanh trên chênh lệch giá hẹp"
+      },
+      "day-trader": {
+        "label": "Day Trader",
+        "description": "Động lượng & dòng tiền trong ngày"
+      },
+      "swing-trader": {
+        "label": "Swing Trader",
+        "description": "Vị thế theo xu hướng nhiều ngày"
+      },
+      "position-investor": {
+        "label": "Nhà đầu tư",
+        "description": "Tập trung danh mục dài hạn"
+      },
+      "news-trader": {
+        "label": "News Trader",
+        "description": "Theo tin tức và sự kiện xúc tác"
+      },
+      "dex-degen": {
+        "label": "DEX Degen",
+        "description": "Săn on-chain & memecoin"
+      },
+      "quant": {
+        "label": "Quant",
+        "description": "Quy trình nặng tín hiệu & dữ liệu"
+      }
+    },
+    "assetClasses": {
+      "crypto-spot": {
+        "label": "Crypto Spot"
+      },
+      "dex": {
+        "label": "DEX"
+      },
+      "equities": {
+        "label": "Cổ phiếu"
+      },
+      "multi-asset": {
+        "label": "Đa Tài Sản"
+      }
+    },
+    "screenSizes": {
+      "compact": {
+        "label": "Gọn"
+      },
+      "standard": {
+        "label": "Tiêu chuẩn"
+      },
+      "wide": {
+        "label": "Rộng"
+      },
+      "multi": {
+        "label": "Đa Màn Hình"
+      }
+    },
+    "pluginReasons": {
+      "jupiter-dex-connector": "Định tuyến swap Solana và truyền trực tiếp giá on-chain",
+      "alpaca-market-connector": "Truyền trực tiếp dữ liệu cổ phiếu Mỹ và định tuyến lệnh cổ phiếu"
+    }
   },
   "notifications": {
     "flows": "Luồng",
@@ -2946,6 +3226,243 @@
           "start": "Bắt đầu (UTC)",
           "end": "Kết thúc (UTC)"
         }
+      }
+    },
+    "stepTypes": {
+      "price-alert": {
+        "label": "Cảnh báo giá",
+        "fields": {
+          "direction": {
+            "label": "Hướng",
+            "options": {
+              "above": "Trên",
+              "below": "Dưới"
+            }
+          },
+          "price": {
+            "label": "Giá"
+          }
+        },
+        "handles": {
+          "out": "Đã kích hoạt"
+        }
+      },
+      "order-executed": {
+        "label": "Lệnh khớp",
+        "fields": {
+          "side": {
+            "label": "Chiều",
+            "options": {
+              "any": "Bất kỳ",
+              "buy": "Mua",
+              "sell": "Bán"
+            }
+          },
+          "status": {
+            "label": "Trạng thái",
+            "options": {
+              "any": "Bất kỳ",
+              "filled": "Đã khớp",
+              "partially_filled": "Khớp một phần"
+            }
+          }
+        },
+        "handles": {
+          "out": "Đã kích hoạt"
+        }
+      },
+      "signal-generated": {
+        "label": "Tín hiệu được tạo",
+        "fields": {
+          "signalType": {
+            "label": "Loại tín hiệu (tùy chọn)",
+            "placeholder": "Bất kỳ loại nào"
+          }
+        },
+        "handles": {
+          "out": "Đã kích hoạt"
+        }
+      },
+      "indicator-alert": {
+        "label": "Cảnh báo chỉ báo",
+        "fields": {
+          "indicator": {
+            "label": "Chỉ báo (tùy chọn)",
+            "placeholder": "Bất kỳ chỉ báo nào"
+          },
+          "condition": {
+            "label": "Điều kiện (tùy chọn)",
+            "placeholder": "Bất kỳ điều kiện nào"
+          }
+        },
+        "handles": {
+          "out": "Đã kích hoạt"
+        }
+      },
+      "candle-close": {
+        "label": "Nến đóng",
+        "fields": {
+          "timeframe": {
+            "label": "Khung thời gian",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          }
+        },
+        "handles": {
+          "out": "Đã kích hoạt"
+        }
+      },
+      "price-condition": {
+        "label": "Điều kiện giá",
+        "fields": {
+          "direction": {
+            "label": "Hướng",
+            "options": {
+              "above": "Trên",
+              "below": "Dưới"
+            }
+          },
+          "price": {
+            "label": "Giá"
+          }
+        },
+        "handles": {
+          "pass": "Đạt",
+          "fail": "Không đạt"
+        }
+      },
+      "percent-change": {
+        "label": "Thay đổi phần trăm",
+        "fields": {
+          "percent": {
+            "label": "Phần trăm"
+          },
+          "direction": {
+            "label": "Hướng",
+            "options": {
+              "up": "Tăng",
+              "down": "Giảm",
+              "either": "Cả hai"
+            }
+          }
+        },
+        "handles": {
+          "pass": "Đạt",
+          "fail": "Không đạt"
+        }
+      },
+      "time-window": {
+        "label": "Khung thời gian",
+        "fields": {
+          "startHour": {
+            "label": "Giờ bắt đầu (UTC)"
+          },
+          "endHour": {
+            "label": "Giờ kết thúc (UTC)"
+          }
+        },
+        "handles": {
+          "pass": "Đạt",
+          "fail": "Không đạt"
+        }
+      },
+      "local-toast": {
+        "label": "Toast"
+      },
+      "os-notification": {
+        "label": "Thông báo hệ thống",
+        "fields": {
+          "sound": {
+            "label": "Phát âm thanh"
+          }
+        }
+      },
+      "webhook": {
+        "label": "Webhook",
+        "fields": {
+          "url": {
+            "label": "URL",
+            "placeholder": "https://example.com/webhook"
+          },
+          "method": {
+            "label": "Phương thức",
+            "options": {
+              "GET": "GET",
+              "POST": "POST"
+            }
+          },
+          "includePayload": {
+            "label": "Bao gồm payload sự kiện"
+          }
+        }
+      }
+    },
+    "messages": {
+      "unknownPair": "không rõ",
+      "priceAlert": {
+        "title": "Cảnh báo giá: {{pair}}",
+        "body": "{{pair}} hiện đang ở mức {{direction}} {{price}} — hiện tại: {{current}}"
+      },
+      "orderExecuted": {
+        "title": "Lệnh khớp",
+        "body": "{{side}} {{pair}} — {{status}}"
+      },
+      "signalGenerated": {
+        "title": "Tín hiệu được tạo",
+        "body": "{{signal}} trên {{pair}}",
+        "genericSignal": "Tín hiệu"
+      },
+      "indicatorAlert": {
+        "title": "Cảnh báo chỉ báo",
+        "body": "{{indicator}} đã kích hoạt trên {{pair}}",
+        "genericName": "Chỉ báo"
+      },
+      "candleClose": {
+        "title": "Nến đóng",
+        "body": "Nến {{timeframe}} đã đóng trên {{pair}}"
+      }
+    },
+    "templates": {
+      "price-level": {
+        "title": "Giá vượt qua một mức",
+        "description": "Toast cộng với thông báo hệ thống ngay khi {{pair}} vượt qua {{level}}. Kéo mức giá theo ý bạn.",
+        "chips": {
+          "0": "Giá trên",
+          "1": "Toast"
+        }
+      },
+      "volatile-candle": {
+        "title": "Nến giờ biến động mạnh",
+        "description": "Kích hoạt khi một nến giờ đóng cách giá mở hơn 3%, dù tăng hay giảm.",
+        "chips": {
+          "1": "Thân nến ±3%"
+        }
+      },
+      "fills": {
+        "title": "Báo cho tôi khi một lệnh khớp",
+        "description": "Mọi lệnh khớp trên cặp này đều đến với bạn, nên terminal có thể chạy nền.",
+        "chips": {
+          "0": "Lệnh đã khớp",
+          "1": "Mọi chiều"
+        }
+      },
+      "indicator-relay": {
+        "title": "Chuyển tiếp cảnh báo chỉ báo của tôi",
+        "description": "Các điều kiện cảnh báo do chỉ báo Python của bạn khai báo trở thành thông báo thật.",
+        "chips": {
+          "0": "Bất kỳ chỉ báo nào",
+          "1": "Bất kỳ điều kiện nào"
+        }
+      },
+      "session-drop": {
+        "title": "Giảm mạnh, chỉ khi tôi đang thức",
+        "description": "Một nến giảm 2% sẽ đánh thức bạn, nhưng chỉ trong khoảng 13:00 đến 21:00 UTC."
       }
     }
   },
@@ -3142,7 +3659,11 @@
       "botsPausedBody": "Mở khóa Pairlens để tiếp tục giao dịch live. Bot paper không bị ảnh hưởng.",
       "orderBlocked": "Kho thông tin đăng nhập của bạn đang bị khóa — mở khóa Pairlens để đặt lệnh live.",
       "insecureContext": "Không thể mã hóa trên kết nối không an toàn. Hãy mở Pairlens qua HTTPS, hoặc trên localhost, để thiết lập kho.",
-      "diverged": "Terminal đã mở khóa, nhưng mật khẩu đó không mở được kho thông tin đăng nhập. Hãy đổi mật khẩu trong Cài đặt → Bảo mật để đồng bộ lại cả hai."
+      "diverged": "Terminal đã mở khóa, nhưng mật khẩu đó không mở được kho thông tin đăng nhập. Hãy đổi mật khẩu trong Cài đặt → Bảo mật để đồng bộ lại cả hai.",
+      "botParkDetailSealed": "Kho thông tin đăng nhập của bạn đang bị khóa. Bot này sẽ tiếp tục giao dịch live ngay khi bạn mở khóa Pairlens. Bot paper không bị ảnh hưởng.",
+      "botParkDetailError": "Không thể đọc thông tin đăng nhập đã lưu của bạn trên thiết bị này. Bot này sẽ tiếp tục giao dịch live ngay khi thông tin được tải. Bot paper không bị ảnh hưởng.",
+      "onlyProtectorLeft": "Đây là cách duy nhất để vào kho của bạn. Hãy thêm một cách khác trước khi xóa cách này.",
+      "onlyBiometricProtectorLeft": "Touch ID không thể là cách duy nhất để vào kho của bạn. Hãy thêm mật khẩu hoặc passkey trước khi xóa cách này."
     }
   },
   "fullscreen": {
@@ -3300,7 +3821,8 @@
       "title": "Mọi lệnh đều có thể mang theo kế hoạch riêng",
       "description": "Một quy trình gắn liền với lệnh bạn đặt từ bảng giao dịch. Ngay khi lệnh khớp, các bước bên dưới nó tự chạy — bracket, thang lệnh, thoát lệnh theo từng giai đoạn, kiểm tra theo thời gian — nên kế hoạch đã sẵn sàng từ trước, thay vì là điều bạn phải tự nhớ để làm sau.",
       "blankLabel": "Bắt đầu từ canvas trống",
-      "footnote": "Mẫu mở ra ở dạng bản nháp: chỉnh sửa bất kỳ bước nào, sau đó nhấn Áp dụng để lưu. Gắn một quy trình đã lưu vào lệnh từ bảng giao dịch để chạy nó."
+      "footnote": "Mẫu mở ra ở dạng bản nháp: chỉnh sửa bất kỳ bước nào, sau đó nhấn Áp dụng để lưu. Gắn một quy trình đã lưu vào lệnh từ bảng giao dịch để chạy nó.",
+      "untitledWorkflow": "Quy trình chưa đặt tên"
     },
     "steps": {
       "sideLabel": "Chiều",
@@ -3370,6 +3892,288 @@
       "summaryExecuted": "{{count}} đã thực hiện",
       "summarySkipped": "{{count}} đã bỏ qua",
       "summaryFailed": "{{count}} thất bại"
+    },
+    "stepTypes": {
+      "trigger": {
+        "label": "Đầu vào lệnh"
+      },
+      "market-order": {
+        "label": "Lệnh thị trường",
+        "fields": {
+          "side": {
+            "label": "Chiều",
+            "options": {
+              "inherit": "Giống trigger",
+              "opposite": "Ngược với trigger",
+              "buy": "Mua",
+              "sell": "Bán"
+            }
+          },
+          "sizeMode": {
+            "label": "Chế độ khối lượng",
+            "options": {
+              "percent": "% của đầu vào",
+              "absolute": "Số lượng cố định"
+            }
+          },
+          "size": {
+            "label": "Khối lượng"
+          }
+        }
+      },
+      "limit-order": {
+        "label": "Lệnh giới hạn",
+        "compat": "Lệnh giới hạn chờ khớp",
+        "fields": {
+          "side": {
+            "label": "Chiều",
+            "options": {
+              "inherit": "Giống trigger",
+              "opposite": "Ngược với trigger",
+              "buy": "Mua",
+              "sell": "Bán"
+            }
+          },
+          "sizeMode": {
+            "label": "Chế độ khối lượng",
+            "options": {
+              "percent": "% của đầu vào",
+              "absolute": "Số lượng cố định"
+            }
+          },
+          "size": {
+            "label": "Khối lượng"
+          },
+          "priceMode": {
+            "label": "Chế độ giá",
+            "options": {
+              "absolute": "Giá cố định",
+              "offset-percent": "% từ giá hiện tại",
+              "offset-absolute": "Chênh lệch từ giá hiện tại"
+            }
+          },
+          "priceValue": {
+            "label": "Giá trị giá"
+          }
+        },
+        "compatReason": "venue này không thể chờ khớp lệnh giới hạn (DEX chỉ swap)"
+      },
+      "take-profit": {
+        "label": "Chốt lời",
+        "compat": "Lệnh trigger gốc của sàn hoặc lệnh giới hạn chờ khớp",
+        "fields": {
+          "triggerMode": {
+            "label": "Chế độ trigger",
+            "options": {
+              "percent": "% lãi",
+              "absolute": "Mức giá"
+            }
+          },
+          "triggerValue": {
+            "label": "Giá trị trigger"
+          },
+          "sizePercent": {
+            "label": "Đóng %"
+          },
+          "orderType": {
+            "label": "Loại lệnh",
+            "options": {
+              "market": "Thị trường",
+              "limit": "Giới hạn"
+            }
+          },
+          "limitPrice": {
+            "label": "Giá giới hạn"
+          }
+        },
+        "compatReason": "venue này không hỗ trợ lệnh trigger gốc lẫn lệnh giới hạn chờ khớp"
+      },
+      "stop-loss": {
+        "label": "Cắt lỗ",
+        "compat": "Lệnh trigger gốc của sàn",
+        "fields": {
+          "triggerMode": {
+            "label": "Chế độ trigger",
+            "options": {
+              "percent": "% lỗ",
+              "absolute": "Mức giá"
+            }
+          },
+          "triggerValue": {
+            "label": "Giá trị trigger"
+          },
+          "sizePercent": {
+            "label": "Đóng %"
+          },
+          "orderType": {
+            "label": "Loại lệnh",
+            "options": {
+              "market": "Thị trường",
+              "limit": "Giới hạn"
+            }
+          },
+          "limitPrice": {
+            "label": "Giá giới hạn"
+          }
+        },
+        "compatReason": "venue này không có lệnh trigger gốc trên sàn, nên lệnh cắt lỗ không thể chờ khớp trên sàn"
+      },
+      "condition": {
+        "label": "Điều kiện",
+        "fields": {
+          "conditionType": {
+            "label": "Điều kiện",
+            "options": {
+              "price-above": "Giá trên",
+              "price-below": "Giá dưới",
+              "percent-change": "% thay đổi từ giá vào lệnh"
+            }
+          },
+          "value": {
+            "label": "Giá trị"
+          }
+        }
+      },
+      "split": {
+        "label": "Tách song song",
+        "fields": {
+          "branches": {
+            "label": "Nhánh"
+          }
+        }
+      },
+      "wait": {
+        "label": "Chờ",
+        "fields": {
+          "duration": {
+            "label": "Thời lượng"
+          },
+          "unit": {
+            "label": "Đơn vị",
+            "options": {
+              "seconds": "Giây",
+              "minutes": "Phút",
+              "hours": "Giờ"
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "bracket": {
+        "title": "Kẹp khi khớp lệnh",
+        "description": "Cái mà mọi vị thế đều muốn: một điểm thoát phía trên và một điểm thoát phía dưới, cả hai đều chờ khớp ngay khi lệnh khớp."
+      },
+      "scale-out": {
+        "title": "Thoát dần thành ba phần",
+        "description": "Chốt một phần ba ở mỗi trong ba mức, thay vì đoán một điểm thoát duy nhất rồi sống chung với nó."
+      },
+      "ladder-entry": {
+        "title": "Vào lệnh theo bậc thang",
+        "description": "Cho chờ khớp nửa khối lượng ở mức 1% dưới giá khớp và nửa còn lại ở mức 2,5% dưới đó, để một đợt giảm giá bồi thêm vị thế thay vì gây thiệt hại."
+      },
+      "cut-if-stalls": {
+        "title": "Cắt nếu lệnh chững lại",
+        "description": "Chờ mười lăm phút, và nếu giao dịch vẫn đang lỗ vào lúc đó, đóng nó theo giá thị trường rồi tiếp tục.",
+        "chips": {
+          "2": "Thoát theo giá thị trường"
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "market-data": {
+      "candles": {
+        "label": "Nến",
+        "description": "Luồng nến OHLCV trực tiếp cho biểu đồ và tín hiệu"
+      },
+      "ticker": {
+        "label": "Ticker",
+        "description": "Luồng giá cuối và biến động 24 giờ theo thời gian thực"
+      },
+      "ticker-snapshot": {
+        "label": "Ảnh chụp Ticker",
+        "description": "Báo giá ticker một lần, hàng loạt qua REST, không cần mở luồng"
+      },
+      "orderbook": {
+        "label": "Sổ lệnh",
+        "description": "Luồng độ sâu sổ lệnh trực tiếp"
+      },
+      "history": {
+        "label": "Lịch sử",
+        "description": "Nạp lại nến lịch sử cho biểu đồ"
+      },
+      "discovery": {
+        "label": "Khám phá",
+        "description": "Duyệt các công cụ giao dịch khả dụng",
+        "search": {
+          "label": "Tìm kiếm",
+          "description": "Tìm công cụ theo tên hoặc mã"
+        }
+      },
+      "symbol-logo": {
+        "label": "Logo mã",
+        "description": "Hình ảnh logo/biểu tượng cho các mã giao dịch"
+      }
+    },
+    "domains": {
+      "market-data": "Dữ liệu thị trường",
+      "ai": "AI",
+      "trading": "Giao dịch",
+      "automation": "Tự động hóa",
+      "theme": "Giao diện",
+      "charting": "Biểu đồ",
+      "workspace-store": "Workspace Store"
+    },
+    "ai": {
+      "inference": {
+        "label": "Suy luận",
+        "description": "Suy luận LLM cho phân tích co-pilot"
+      },
+      "web-search": {
+        "label": "Tìm kiếm web",
+        "description": "Căn cứ tìm kiếm web cho báo cáo nghiên cứu AI"
+      }
+    },
+    "trading": {
+      "orders": {
+        "label": "Lệnh",
+        "description": "Đặt và quản lý lệnh trên venue đã kết nối"
+      },
+      "balances": {
+        "label": "Số dư",
+        "description": "Lấy số dư tài sản tài khoản từ sàn đã kết nối"
+      }
+    },
+    "workflow": {
+      "step-types": {
+        "label": "Các bước quy trình",
+        "description": "Các loại bước tùy chỉnh cho quy trình tự động hóa"
+      }
+    },
+    "notification": {
+      "channel": {
+        "label": "Kênh thông báo",
+        "description": "Các kênh gửi cảnh báo và thông báo"
+      }
+    },
+    "theme": {
+      "override": {
+        "label": "Giao diện",
+        "description": "Tùy chỉnh giao diện và kiểu dáng terminal"
+      }
+    },
+    "chart": {
+      "indicator": {
+        "label": "Chỉ báo tùy chỉnh",
+        "description": "Chỉ báo biểu đồ do script định nghĩa, chạy trên runtime Python cục bộ"
+      }
+    },
+    "workspace-store": {
+      "catalog": {
+        "label": "Danh mục Store",
+        "description": "Cung cấp một danh mục có thể duyệt các mẫu không gian làm việc"
+      }
     }
   }
 }

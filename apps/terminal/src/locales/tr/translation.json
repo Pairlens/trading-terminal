@@ -441,7 +441,18 @@
     "ordersLockedRiskLimit": "Bir risk sınırı ihlali nedeniyle emirler kilitlendi. Ayarlar > Risk Yönetimi bölümünden kilidi açın.",
     "buyOrdersLockedRiskLimit": "Bir risk sınırı ihlali nedeniyle alış emirleri kilitlendi. Ayarlar > Risk Yönetimi bölümünden kilidi açın.",
     "positionSizeExceeded": "Emir risk sınırı tarafından engellendi: pozisyon, portföyünüzün %{{ratioPct}}'i olup %{{maxPositionSize}} olan maksimumunuzu aşıyor. Ayarlar > Risk Yönetimi bölümünden düzenleyin.",
-    "sessionExpired": "Oturumunuzun süresi doldu — lütfen tekrar giriş yapın."
+    "sessionExpired": "Oturumunuzun süresi doldu — lütfen tekrar giriş yapın.",
+    "startFromTemplate": "Bir şablondan başla",
+    "chips": {
+      "osNotification": "Sistem Bildirimi",
+      "toastPlusOs": "Toast + Sistem",
+      "timeframeClose": "1H kapanış",
+      "downPercent": "Aşağı {{percent}}",
+      "takeProfitPercent": "Kâr al {{percent}}",
+      "stopLossPercent": "Zarar durdur {{percent}}",
+      "sizeAtOffset": "{{offset}} konumunda {{size}}",
+      "waitDuration": "Bekle {{duration}}"
+    }
   },
   "legal": {
     "terms": "Şartlar ve Koşullar",
@@ -781,7 +792,9 @@
       "taxNote": "Fiyatlara vergi dahil değildir — vergi, ödeme sırasında konumunuza göre hesaplanır.",
       "packsTitle": "Ekstra krediler",
       "packsDescription": "Aylık bütçenizin üzerine eklenen tek seferlik yüklemeler. Yükleme kredileri satın alımdan 30 gün sonra sona erer ve yenilenmez.",
-      "packActive": "{{credits}} ekstra kredi — {{date}} tarihinde sona erer"
+      "packActive": "{{credits}} ekstra kredi — {{date}} tarihinde sona erer",
+      "packAddedToastTitle": "Ekstra kredi eklendi",
+      "packAddedToastDescription": "Kredi paketiniz bakiyeye eklendi — paket kredileri satın alımdan 30 gün sonra sona erer."
     },
     "about": {
       "desktop": "Masaüstü",
@@ -992,6 +1005,21 @@
       "title": "{{venue}} masaüstü uygulamasını gerektiriyor",
       "description": "Bu borsa piyasa verilerini, bir tarayıcının okumak için ihtiyaç duyduğu başlıklar olmadan sunuyor. Masaüstü uygulaması doğrudan bağlanır, orada her borsa çalışır.",
       "alternatives": "Ya da tarayıcıda kalın"
+    },
+    "assets": {
+      "macos": {
+        "primary": "Apple silicon (.dmg)",
+        "intel": "Intel Mac (.dmg)"
+      },
+      "windows": {
+        "primary": "Yükleyici (.exe)",
+        "msi": ".msi yükleyici"
+      },
+      "linux": {
+        "primary": "AppImage",
+        "deb": ".deb",
+        "rpm": ".rpm"
+      }
     }
   },
   "userMenu": {
@@ -1236,7 +1264,8 @@
     "startConversation": "Sohbeti başlat",
     "emptyStateHint": "Piyasa koşullarını sorun, kurulumunuzu doğrulayın veya risk değerlendirmesi isteyin — yapay zekâ bu paritenin tüm bağlamına sahiptir.",
     "contextAware": "Bağlamı bilir",
-    "toolFailed": "Araç başarısız oldu"
+    "toolFailed": "Araç başarısız oldu",
+    "sidebarPreviewSummary": "EMA kesişimi tespit edildi ama hacim ortalamanın altında. Onay bekleniyor."
   },
   "chart": {
     "contextMenu": {
@@ -1765,7 +1794,10 @@
       "unsupportedLanguage": "{{language}} ile yazılmış göstergeler içe aktarılamaz.",
       "malformedDescriptor": "Bu göstergenin verisi bozuk.",
       "unknown": "İçe aktarma başarısız oldu."
-    }
+    },
+    "syntaxErrorDiagnostic": "Söz dizimi hatası",
+    "missingMetaDiagnostic": "main.py üst düzeyde bir `meta = indicator(...)` tanımlamıyor — grafiğin çizecek bir şeyi yok.",
+    "missingComputeDiagnostic": "main.py üst düzeyde bir `def compute(ctx)` tanımlamıyor — script yüklenemeyecek."
   },
   "indicators": {
     "title": "Gösterge Ekle",
@@ -2448,7 +2480,17 @@
     "previousSlide": "Önceki",
     "nextSlide": "Sonraki",
     "goToSlide": "{{n}}. slayta git",
-    "copyCommand": "Komutu kopyala"
+    "copyCommand": "Komutu kopyala",
+    "apiKeyRequiredHint": "API anahtarı gerekli",
+    "setupRequiredHint": "Kurulum gerekli",
+    "manifests": {
+      "userIndicators": {
+        "description": "Göstergeler editöründe oluşturduğun özel Python göstergelerin."
+      },
+      "pairlensCommunity": {
+        "description": "Pairlens kullanıcılarının paylaştığı topluluk çalışma alanı şablonları."
+      }
+    }
   },
   "search": {
     "title": "Parite Ara",
@@ -2579,7 +2621,9 @@
       "collapse": "Paneli daralt"
     },
     "recentlyViewed": "Son görüntülenenler",
-    "noMarketsFound": "Piyasa bulunamadı"
+    "noMarketsFound": "Piyasa bulunamadı",
+    "modeLive": "CANLI",
+    "modePaper": "KAĞIT"
   },
   "accounts": {
     "pageTitle": "Hesaplar",
@@ -2710,7 +2754,32 @@
     "accountConnectFailed": "Hesap bağlanamadı.",
     "accountRemoveFailed": "Hesap kaldırılamadı.",
     "fieldRequired": "{{field}} gereklidir",
-    "accountConnectedFeedback": "{{label}} {{mode}} hesabı bağlandı."
+    "accountConnectedFeedback": "{{label}} {{mode}} hesabı bağlandı.",
+    "walletChains": {
+      "ethereum": {
+        "label": "Ethereum / EVM",
+        "fields": {
+          "privateKey": {
+            "label": "Özel Anahtar (hex)"
+          }
+        }
+      },
+      "solana": {
+        "fields": {
+          "privateKey": {
+            "label": "Özel Anahtar (base58)"
+          }
+        }
+      },
+      "bitcoin": {
+        "fields": {
+          "privateKey": {
+            "label": "Özel Anahtar (WIF)"
+          }
+        }
+      }
+    },
+    "defaultWalletName": "{{chain}} Cüzdanı"
   },
   "workspaceStore": {
     "title": "Çalışma Alanı Mağazası",
@@ -2821,7 +2890,218 @@
     "spotlight": "Öne çıkan",
     "previousSlide": "Önceki",
     "nextSlide": "Sonraki",
-    "goToSlide": "Slayt {{number}}'e git"
+    "goToSlide": "Slayt {{number}}'e git",
+    "templates": {
+      "scalpers-cockpit": {
+        "name": "Scalper Kokpiti",
+        "tagline": "Grafik, defter ve tek tıkla emir girişi — başka hiçbir şey yok.",
+        "description": "Hızlı işlem için minimal iki sütunlu bir kokpit: canlı bir emir defteri, piyasa derinliği ve bir işlem paneli eşliğinde bir grafik. Tek ekranda hız için tasarlandı."
+      },
+      "day-trader-pro": {
+        "name": "Day Trader Pro",
+        "tagline": "Gün içi seansı tara, grafikle takip et, işlem yap.",
+        "description": "Dengeli üç sütunlu bir masa: solda bir piyasa tarayıcısı, ortada büyük bir grafik, sağda ise emir defteri, işlem paneli ve açık pozisyonlar. Aktif kripto işlemleri için günlük sürücü."
+      },
+      "swing-overview": {
+        "name": "Swing Genel Bakış",
+        "tagline": "İzleme listesi ve en çok hareket edenlerle trend bağlamı.",
+        "description": "Çok günlük pozisyonlar için daha sakin bir düzen: izleme listen, en çok hareket edenler ve parite temel verileriyle birlikte tam bir grafik. Bir işlem masasının gürültüsü olmadan bir swing'i ölçeklendirmeye yetecek bağlam."
+      },
+      "ai-research-desk": {
+        "name": "Yapay Zeka Araştırma Masası",
+        "tagline": "Grafiğinin yanında co-pilot, araştırma ve haber akışı.",
+        "description": "Bir grafiği Yapay Zeka Co-pilotu, derinlemesine araştırma ve hem genel hem de sembol haber akışlarıyla eşleştir. Hikayenin tape kadar önemli olduğu katalizör odaklı işlemler için tasarlandı. Co-pilot ve Araştırma için bir yapay zeka çıkarım sağlayıcısı gerektirir."
+      },
+      "market-discovery": {
+        "name": "Piyasa Keşfi",
+        "tagline": "Taahhüt etmeden önce nelerin hareket ettiğini bul.",
+        "description": "Saf bir keşif panosu: piyasa tarayıcısı, en çok hareket edenler, bir sektör ısı haritası, izleme listen ve Korku ve Açgözlülük göstergesi. Grafik yok, işlem paneli yok — yalnızca bir sonraki kurulumu avlamak için."
+      },
+      "portfolio-command": {
+        "name": "Portföy Komutası",
+        "tagline": "Bir bakışta bakiyeler, pozisyonlar ve risk.",
+        "description": "Hesap odaklı bir kokpit: portföy dağılımın, açık pozisyonların, canlı risk sınırların ve defterin geri kalanını gözünün önünde tutmak için bir izleme listesi. Zaten sahip olduklarını yönetmek için."
+      },
+      "dex-degen": {
+        "name": "DEX Degen",
+        "tagline": "Zincir üstü grafikler, takaslar ve sosyal akış.",
+        "description": "Zincir üstü avlanmak için tasarlandı: bir takas paneli olan bir grafik, yeni listelemeleri yakalamak için son görülen pariteler ve alfa için sosyal akış. Takasları Jupiter gibi bir DEX bağlayıcısı üzerinden yönlendir."
+      },
+      "quant-signals": {
+        "name": "Quant Sinyalleri",
+        "tagline": "Sinyal odaklı işlemler için veri günlüğü, ısı haritası ve risk.",
+        "description": "Veri öncelikli bir masa: ham veri günlüğü, bir likidite ısı haritası, canlı risk durumu ve piyasa tarayıcısıyla eşleştirilmiş bir grafik. Tape'i mum değil, sayı olarak okuyan traderlar için."
+      },
+      "equities-desk": {
+        "name": "Hisse Senedi Masası",
+        "tagline": "Tarayıcı, grafik ve pozisyonlarla hisse senedi işlemi yap.",
+        "description": "Bir hisse senedi işlem düzeni: piyasa tarayıcısı, bir grafik, açık pozisyonlar ve haber akışı. ABD hisse senetlerini akış olarak almak ve emirleri yönlendirmek için Alpaca broker eklentisini bağla."
+      },
+      "ultrawide-trading-floor": {
+        "name": "Ultra Geniş İşlem Katı",
+        "tagline": "Her şey, her yerde — büyük ekran için.",
+        "description": "Ultra geniş veya ikinci bir monitörü dolduran dört sütunlu bir komuta merkezi: tarayıcı, grafik, emir defteri ve derinlik, pozisyonlarla birlikte bir işlem paneli ve Yapay Zeka Co-pilotu. Maksimalist düzen."
+      },
+      "classic-terminal": {
+        "name": "Klasik Terminal",
+        "tagline": "Klasik Pairlens masası — grafik, veri, işlem, co-pilot.",
+        "description": "Varsayılan terminal düzeni: solda sekmeli bir veri şeridi ve risk çubuğu olan büyük bir grafik, sağda ise Yapay Zeka Co-pilotu üzerinde bir işlem paneli.",
+        "menuLabel": "Varsayılan"
+      },
+      "chart-focus": {
+        "name": "Grafik Odağı",
+        "tagline": "Altında sekmeli veri olan tek büyük bir grafik.",
+        "description": "Grafiğe maksimum alan veren tek sütunlu bir düzen; pozisyonlar, veri günlüğü, co-pilot ve işlem paneli altta bir sekme şeridine sığdırılmış.",
+        "menuLabel": "Grafik Odağı"
+      },
+      "trading": {
+        "name": "İşlem",
+        "tagline": "Merkezi bir grafiğin iki yanında emir defteri ve işlem paneli.",
+        "description": "Üç sütunlu bir işlem masası: solda emir defteri ve işlem paneli, ortada pozisyonlar ve riskle grafik, sağda ise Yapay Zeka Co-pilotu.",
+        "menuLabel": "İşlem"
+      },
+      "chart-analysis": {
+        "name": "Grafik Analizi",
+        "tagline": "Solda grafik ve veri, sağda co-pilot ve işlem.",
+        "description": "Çalışma odaklı bir bölünme: solda grafik, veri, araştırma ve risk; sağda co-pilot, emir defteri ve işlem paneli.",
+        "menuLabel": "Analiz"
+      },
+      "dual-charts": {
+        "name": "Çift Grafik",
+        "tagline": "Yan yana iki grafik.",
+        "description": "Yan yana iki bağımsız grafik panosu — her biri kendi piyasasını, zaman dilimini ve grafik türünü korur. Parite seçicisiyle her pano için farklı bir parite ayarla.",
+        "menuLabel": "Çift Grafik"
+      },
+      "triple-charts": {
+        "name": "Üçlü Grafik",
+        "tagline": "Yanında iki tane üst üste olan büyük bir grafik.",
+        "description": "Sağda üst üste iki küçük grafik olan büyük bir ana grafik — her biri bağımsız, bir öncü pariteyi diğer ikisine karşı izlemek için.",
+        "menuLabel": "Üçlü Grafik"
+      },
+      "quad-charts": {
+        "name": "Dörtlü Grafik",
+        "tagline": "2×2'lik bir grafik ızgarası.",
+        "description": "2×2'lik bir ızgarada dört bağımsız grafik — birden çok piyasayı aynı anda izlemek için tam bir çoklu grafik kokpiti.",
+        "menuLabel": "Dörtlü Grafik"
+      },
+      "laptop-focus": {
+        "name": "Dizüstü Odağı",
+        "tagline": "Dizüstü bilgisayarlar için ayarlanmış dikey tek sütunlu düzen.",
+        "description": "Bir dizüstü ekranına sığan kompakt, dikey bir düzen: üstte grafik, bir veri sekme şeridi ve ince bir risk çubuğu."
+      },
+      "laptop-split": {
+        "name": "Dizüstü Bölünmesi",
+        "tagline": "Solda grafik + veri, sağda işlem + co-pilot — daha küçük ekranlar için.",
+        "description": "Dizüstü bilgisayarlar için boyutlandırılmış iki sütunlu bir bölünme: solda grafik ve pozisyonlar, sağda co-pilot üzerinde işlem paneli."
+      },
+      "ultrawide-dashboard": {
+        "name": "Ultra Geniş Gösterge Paneli",
+        "tagline": "Ultra geniş bir monitöre yayılmış her panel.",
+        "description": "Ultra geniş ekranlar için dört sütunlu bir gösterge paneli: emir defteri, riskle grafik, pozisyonlar ve araştırma, ve bir işlem + co-pilot sütunu."
+      },
+      "ultrawide-trading": {
+        "name": "Ultra Geniş İşlem",
+        "tagline": "Genişlik boyunca emir defteri, derinlik, grafik ve işlem.",
+        "description": "Ultra geniş bir işlem düzeni: solda emir defteri ve piyasa derinliği, ortada pozisyonlarla grafik, sağda ise bir işlem + co-pilot sütunu."
+      },
+      "command-center": {
+        "name": "4K Komuta Merkezi",
+        "tagline": "4K bir ekran için tam komuta merkezi.",
+        "description": "4K bir monitör için ekrandaki her şey: emir defteri ve parite bilgisi, araştırma ve riskle grafik, pozisyonlar ve sosyal, ve bir işlem + co-pilot sütunu."
+      },
+      "home-pulse": {
+        "name": "Ana Sayfa",
+        "tagline": "Varsayılan pano: tarayıcı, duyarlılık, hareket edenler ve haberler.",
+        "description": "Varsayılan ana sayfa panosu — piyasa tarayıcısı, Korku ve Açgözlülük göstergesi ile en iyi coinlerin izleme listenle sekmelendiği bir piyasa nabzı rayı ve tam yükseklikte bir haber sütunu. Üzerindeki her şey hesap olmadan çalışır.",
+        "menuLabel": "Ana Sayfa"
+      },
+      "markets-board": {
+        "name": "Piyasalar Panosu",
+        "tagline": "Yalnızca piyasa tarayıcısı, tam ekran.",
+        "description": "Tam genişlikte piyasa tarayıcısı — işlem yapılabilir her pariteye göz atmanın ve sıralamanın en basit yolu.",
+        "menuLabel": "Piyasalar"
+      },
+      "markets-overview": {
+        "name": "Piyasalar Genel Bakış",
+        "tagline": "En çok hareket edenlerin ve izleme listenin yanında tarayıcı.",
+        "description": "Piyasa tarayıcısı, en çok hareket edenler ve izleme listenle birlikte — kurulum bulmak ve izlemek için dengeli bir ana sayfa.",
+        "menuLabel": "Genel Bakış"
+      },
+      "sector-analysis": {
+        "name": "Sektör Analizi",
+        "tagline": "Tarayıcı, ısı haritası, hareket edenler ve izleme listesi.",
+        "description": "Ortada bir sektör ısı haritası olan bir keşif panosu: solda tarayıcı, ortada ısı haritası, sağda ise izleme listenin üzerinde hareket edenler.",
+        "menuLabel": "Analiz"
+      },
+      "news-board": {
+        "name": "Haberler Panosu",
+        "tagline": "En çok hareket edenlerin ve haber akışının yanında piyasalar.",
+        "description": "En çok hareket edenlerin ve canlı haber akışının yanında piyasa tarayıcısı — katalizör odaklı işlemler için bir ana üs.",
+        "menuLabel": "Haberler"
+      }
+    },
+    "traderTypes": {
+      "scalper": {
+        "label": "Scalper",
+        "description": "Sıkı spreadlerde hızlı giriş çıkış"
+      },
+      "day-trader": {
+        "label": "Day Trader",
+        "description": "Gün içi momentum ve akış"
+      },
+      "swing-trader": {
+        "label": "Swing Trader",
+        "description": "Çok günlük trend pozisyonları"
+      },
+      "position-investor": {
+        "label": "Yatırımcı",
+        "description": "Uzun vadeli portföy odağı"
+      },
+      "news-trader": {
+        "label": "News Trader",
+        "description": "Haber ve katalizör odaklı"
+      },
+      "dex-degen": {
+        "label": "DEX Degen",
+        "description": "Zincir üstü ve memecoin avcılığı"
+      },
+      "quant": {
+        "label": "Quant",
+        "description": "Sinyal ve veri ağırlıklı iş akışları"
+      }
+    },
+    "assetClasses": {
+      "crypto-spot": {
+        "label": "Kripto Spot"
+      },
+      "dex": {
+        "label": "DEX"
+      },
+      "equities": {
+        "label": "Hisse Senetleri"
+      },
+      "multi-asset": {
+        "label": "Çoklu Varlık"
+      }
+    },
+    "screenSizes": {
+      "compact": {
+        "label": "Kompakt"
+      },
+      "standard": {
+        "label": "Standart"
+      },
+      "wide": {
+        "label": "Geniş"
+      },
+      "multi": {
+        "label": "Çoklu Monitör"
+      }
+    },
+    "pluginReasons": {
+      "jupiter-dex-connector": "Solana takaslarını yönlendirir ve zincir üstü fiyatları akış olarak sağlar",
+      "alpaca-market-connector": "ABD hisse senedi verilerini akış olarak sağlar ve hisse emirlerini yönlendirir"
+    }
   },
   "notifications": {
     "flows": "Akışlar",
@@ -2946,6 +3226,243 @@
           "start": "Başlangıç (UTC)",
           "end": "Bitiş (UTC)"
         }
+      }
+    },
+    "stepTypes": {
+      "price-alert": {
+        "label": "Fiyat Alarmı",
+        "fields": {
+          "direction": {
+            "label": "Yön",
+            "options": {
+              "above": "Üzerinde",
+              "below": "Altında"
+            }
+          },
+          "price": {
+            "label": "Fiyat"
+          }
+        },
+        "handles": {
+          "out": "Tetiklendi"
+        }
+      },
+      "order-executed": {
+        "label": "Emir Gerçekleşti",
+        "fields": {
+          "side": {
+            "label": "Yön",
+            "options": {
+              "any": "Fark etmez",
+              "buy": "Al",
+              "sell": "Sat"
+            }
+          },
+          "status": {
+            "label": "Durum",
+            "options": {
+              "any": "Fark etmez",
+              "filled": "Gerçekleşti",
+              "partially_filled": "Kısmen Gerçekleşti"
+            }
+          }
+        },
+        "handles": {
+          "out": "Tetiklendi"
+        }
+      },
+      "signal-generated": {
+        "label": "Sinyal Oluştu",
+        "fields": {
+          "signalType": {
+            "label": "Sinyal Türü (isteğe bağlı)",
+            "placeholder": "Herhangi bir tür"
+          }
+        },
+        "handles": {
+          "out": "Tetiklendi"
+        }
+      },
+      "indicator-alert": {
+        "label": "Gösterge Uyarısı",
+        "fields": {
+          "indicator": {
+            "label": "Gösterge (isteğe bağlı)",
+            "placeholder": "Herhangi bir gösterge"
+          },
+          "condition": {
+            "label": "Koşul (isteğe bağlı)",
+            "placeholder": "Herhangi bir koşul"
+          }
+        },
+        "handles": {
+          "out": "Tetiklendi"
+        }
+      },
+      "candle-close": {
+        "label": "Mum Kapanışı",
+        "fields": {
+          "timeframe": {
+            "label": "Zaman Dilimi",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          }
+        },
+        "handles": {
+          "out": "Tetiklendi"
+        }
+      },
+      "price-condition": {
+        "label": "Fiyat Koşulu",
+        "fields": {
+          "direction": {
+            "label": "Yön",
+            "options": {
+              "above": "Üzerinde",
+              "below": "Altında"
+            }
+          },
+          "price": {
+            "label": "Fiyat"
+          }
+        },
+        "handles": {
+          "pass": "Geçer",
+          "fail": "Geçmez"
+        }
+      },
+      "percent-change": {
+        "label": "Yüzde Değişimi",
+        "fields": {
+          "percent": {
+            "label": "Yüzde"
+          },
+          "direction": {
+            "label": "Yön",
+            "options": {
+              "up": "Yukarı",
+              "down": "Aşağı",
+              "either": "İkisi de"
+            }
+          }
+        },
+        "handles": {
+          "pass": "Geçer",
+          "fail": "Geçmez"
+        }
+      },
+      "time-window": {
+        "label": "Zaman Aralığı",
+        "fields": {
+          "startHour": {
+            "label": "Başlangıç Saati (UTC)"
+          },
+          "endHour": {
+            "label": "Bitiş Saati (UTC)"
+          }
+        },
+        "handles": {
+          "pass": "Geçer",
+          "fail": "Geçmez"
+        }
+      },
+      "local-toast": {
+        "label": "Toast"
+      },
+      "os-notification": {
+        "label": "Sistem Bildirimi",
+        "fields": {
+          "sound": {
+            "label": "Sesi Çal"
+          }
+        }
+      },
+      "webhook": {
+        "label": "Webhook",
+        "fields": {
+          "url": {
+            "label": "URL",
+            "placeholder": "https://example.com/webhook"
+          },
+          "method": {
+            "label": "Yöntem",
+            "options": {
+              "GET": "GET",
+              "POST": "POST"
+            }
+          },
+          "includePayload": {
+            "label": "Olay Yükünü Dahil Et"
+          }
+        }
+      }
+    },
+    "messages": {
+      "unknownPair": "bilinmiyor",
+      "priceAlert": {
+        "title": "Fiyat Alarmı: {{pair}}",
+        "body": "{{pair}} artık {{price}} {{direction}} — güncel: {{current}}"
+      },
+      "orderExecuted": {
+        "title": "Emir Gerçekleşti",
+        "body": "{{side}} {{pair}} — {{status}}"
+      },
+      "signalGenerated": {
+        "title": "Sinyal Oluştu",
+        "body": "{{pair}} üzerinde {{signal}}",
+        "genericSignal": "Sinyal"
+      },
+      "indicatorAlert": {
+        "title": "Gösterge Uyarısı",
+        "body": "{{indicator}}, {{pair}} üzerinde tetiklendi",
+        "genericName": "Gösterge"
+      },
+      "candleClose": {
+        "title": "Mum Kapanışı",
+        "body": "{{pair}} üzerinde {{timeframe}} mumu kapandı"
+      }
+    },
+    "templates": {
+      "price-level": {
+        "title": "Fiyat bir seviyeyi geçtiğinde",
+        "description": "{{pair}}, {{level}} seviyesini geçtiği anda toast artı bir sistem bildirimi. Seviyeyi kendininkine sürükle.",
+        "chips": {
+          "0": "Fiyat üzerinde",
+          "1": "Toast"
+        }
+      },
+      "volatile-candle": {
+        "title": "Saatlik mum büyüdü",
+        "description": "Saatlik bir mum, açıldığı yerden yukarı ya da aşağı %3'ten fazla uzakta kapandığında tetiklenir.",
+        "chips": {
+          "1": "±%3 gövde"
+        }
+      },
+      "fills": {
+        "title": "Bir emir gerçekleştiğinde haber ver",
+        "description": "Paritedeki her gerçekleşen emir sana ulaşır, böylece terminal arka planda kalabilir.",
+        "chips": {
+          "0": "Emir gerçekleşti",
+          "1": "Herhangi bir yön"
+        }
+      },
+      "indicator-relay": {
+        "title": "Gösterge uyarılarımı ilet",
+        "description": "Python göstergelerinin bildirdiği uyarı koşulları gerçek bildirimlere dönüşür.",
+        "chips": {
+          "0": "Herhangi bir gösterge",
+          "1": "Herhangi bir koşul"
+        }
+      },
+      "session-drop": {
+        "title": "Sert düşüş, yalnızca ben uyanıkken",
+        "description": "%2'lik aşağı bir mum seni uyandırır, ama yalnızca UTC 13:00 ile 21:00 arasında."
       }
     }
   },
@@ -3142,7 +3659,11 @@
       "botsPausedBody": "Canlı işlemlere devam etmek için Pairlens'in kilidini aç. Kâğıt botlar etkilenmez.",
       "orderBlocked": "Kimlik bilgisi kasan kilitli — canlı emir göndermek için Pairlens'in kilidini aç.",
       "insecureContext": "Güvenli olmayan bir bağlantıda şifreleme kullanılamaz. Kasa kurmak için Pairlens'i HTTPS üzerinden veya localhost'ta aç.",
-      "diverged": "Terminalin açık, ama bu parola kimlik bilgisi kasanı açmadı. İkisini yeniden eşitlemek için parolanı Ayarlar → Güvenlik'ten değiştir."
+      "diverged": "Terminalin açık, ama bu parola kimlik bilgisi kasanı açmadı. İkisini yeniden eşitlemek için parolanı Ayarlar → Güvenlik'ten değiştir.",
+      "botParkDetailSealed": "Kimlik bilgisi kasan kilitli. Bu bot, Pairlens'in kilidini açar açmaz canlı işlem yapmaya devam eder. Kâğıt botlar etkilenmez.",
+      "botParkDetailError": "Saklı kimlik bilgilerin bu cihazda okunamadı. Bu bot, kimlik bilgileri yüklenir yüklenmez canlı işlem yapmaya devam eder. Kâğıt botlar etkilenmez.",
+      "onlyProtectorLeft": "Kasana girmenin tek yolu bu. Kaldırmadan önce bir tane daha ekle.",
+      "onlyBiometricProtectorLeft": "Touch ID, kasana girmenin tek yolu olamaz. Bunu kaldırmadan önce bir parola veya passkey ekle."
     }
   },
   "fullscreen": {
@@ -3300,7 +3821,8 @@
       "title": "Her emir kendi planını taşıyabilir",
       "description": "Bir iş akışı, işlem panelinden verdiğin bir emre bağlanır. Emir gerçekleştiği anda altındaki adımlar kendiliğinden çalışır — bracket'lar, kademeli emirler, aşamalı çıkışlar, zamanlı kontroller — böylece plan, sonradan hatırlaman gereken bir şey olmak yerine baştan hazır olur.",
       "blankLabel": "Boş kanvastan başla",
-      "footnote": "Şablonlar taslak olarak açılır: herhangi bir adımı düzenleyin, ardından kaydetmek için Uygula'ya tıklayın. Kaydedilen bir iş akışını çalıştırmak için işlem panelinden bir emre bağlayın."
+      "footnote": "Şablonlar taslak olarak açılır: herhangi bir adımı düzenleyin, ardından kaydetmek için Uygula'ya tıklayın. Kaydedilen bir iş akışını çalıştırmak için işlem panelinden bir emre bağlayın.",
+      "untitledWorkflow": "Adsız iş akışı"
     },
     "steps": {
       "sideLabel": "Yön",
@@ -3370,6 +3892,288 @@
       "summaryExecuted": "{{count}} çalıştırıldı",
       "summarySkipped": "{{count}} atlandı",
       "summaryFailed": "{{count}} başarısız"
+    },
+    "stepTypes": {
+      "trigger": {
+        "label": "Emir Girişi"
+      },
+      "market-order": {
+        "label": "Piyasa Emri",
+        "fields": {
+          "side": {
+            "label": "Yön",
+            "options": {
+              "inherit": "Tetikleyiciyle aynı",
+              "opposite": "Tetikleyicinin tersi",
+              "buy": "Al",
+              "sell": "Sat"
+            }
+          },
+          "sizeMode": {
+            "label": "Büyüklük Modu",
+            "options": {
+              "percent": "Girdinin %'si",
+              "absolute": "Sabit miktar"
+            }
+          },
+          "size": {
+            "label": "Büyüklük"
+          }
+        }
+      },
+      "limit-order": {
+        "label": "Limit Emir",
+        "compat": "Bekleyen limit emirler",
+        "fields": {
+          "side": {
+            "label": "Yön",
+            "options": {
+              "inherit": "Tetikleyiciyle aynı",
+              "opposite": "Tetikleyicinin tersi",
+              "buy": "Al",
+              "sell": "Sat"
+            }
+          },
+          "sizeMode": {
+            "label": "Büyüklük Modu",
+            "options": {
+              "percent": "Girdinin %'si",
+              "absolute": "Sabit miktar"
+            }
+          },
+          "size": {
+            "label": "Büyüklük"
+          },
+          "priceMode": {
+            "label": "Fiyat Modu",
+            "options": {
+              "absolute": "Sabit fiyat",
+              "offset-percent": "Güncelden %",
+              "offset-absolute": "Güncelden sapma"
+            }
+          },
+          "priceValue": {
+            "label": "Fiyat Değeri"
+          }
+        },
+        "compatReason": "bu venue bekleyen limit emirlerini destekleyemiyor (yalnızca takas yapan DEX)"
+      },
+      "take-profit": {
+        "label": "Kâr Al",
+        "compat": "Yerel tetikleyici emirler veya bekleyen limit emirler",
+        "fields": {
+          "triggerMode": {
+            "label": "Tetikleyici Modu",
+            "options": {
+              "percent": "% kazanç",
+              "absolute": "Fiyat seviyesi"
+            }
+          },
+          "triggerValue": {
+            "label": "Tetikleyici Değeri"
+          },
+          "sizePercent": {
+            "label": "Kapatma %"
+          },
+          "orderType": {
+            "label": "Emir Türü",
+            "options": {
+              "market": "Piyasa",
+              "limit": "Limit"
+            }
+          },
+          "limitPrice": {
+            "label": "Limit Fiyatı"
+          }
+        },
+        "compatReason": "bu venue ne tetikleyici emirleri ne de bekleyen limit emirleri destekliyor"
+      },
+      "stop-loss": {
+        "label": "Zarar Durdur",
+        "compat": "Yerel tetikleyici emirler",
+        "fields": {
+          "triggerMode": {
+            "label": "Tetikleyici Modu",
+            "options": {
+              "percent": "% kayıp",
+              "absolute": "Fiyat seviyesi"
+            }
+          },
+          "triggerValue": {
+            "label": "Tetikleyici Değeri"
+          },
+          "sizePercent": {
+            "label": "Kapatma %"
+          },
+          "orderType": {
+            "label": "Emir Türü",
+            "options": {
+              "market": "Piyasa",
+              "limit": "Limit"
+            }
+          },
+          "limitPrice": {
+            "label": "Limit Fiyatı"
+          }
+        },
+        "compatReason": "bu venue'de borsa taraflı tetikleyici emirler yok, bu yüzden bir zarar durdur emri borsada bekleyemez"
+      },
+      "condition": {
+        "label": "Koşul",
+        "fields": {
+          "conditionType": {
+            "label": "Koşul",
+            "options": {
+              "price-above": "Fiyat üzerinde",
+              "price-below": "Fiyat altında",
+              "percent-change": "Girişten % değişim"
+            }
+          },
+          "value": {
+            "label": "Değer"
+          }
+        }
+      },
+      "split": {
+        "label": "Paralel Bölme",
+        "fields": {
+          "branches": {
+            "label": "Dallar"
+          }
+        }
+      },
+      "wait": {
+        "label": "Bekle",
+        "fields": {
+          "duration": {
+            "label": "Süre"
+          },
+          "unit": {
+            "label": "Birim",
+            "options": {
+              "seconds": "Saniye",
+              "minutes": "Dakika",
+              "hours": "Saat"
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "bracket": {
+        "title": "Doluşu bracket'la",
+        "description": "Her pozisyonun istediği o şablon: emir gerçekleştiği an bekleyen bir üst çıkış ve bir alt çıkış."
+      },
+      "scale-out": {
+        "title": "Üçe bölerek çık",
+        "description": "Tek bir çıkışı tahmin edip onunla yaşamak yerine, üç seviyenin her birinde üçte birini al."
+      },
+      "ladder-entry": {
+        "title": "Girişi merdivenle",
+        "description": "Büyüklüğün yarısını doluşun %1 altında, diğer yarısını %2,5 altında bekletir; böylece bir düşüş zarar vermek yerine ekler."
+      },
+      "cut-if-stalls": {
+        "title": "Duraklarsa kes",
+        "description": "On beş dakika bekle, ve işlem o zamana kadar zarardaysa piyasadan kapat ve devam et.",
+        "chips": {
+          "2": "Piyasadan çık"
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "market-data": {
+      "candles": {
+        "label": "Mumlar",
+        "description": "Grafikler ve sinyaller için canlı OHLCV mum akışları"
+      },
+      "ticker": {
+        "label": "Ticker",
+        "description": "Gerçek zamanlı son fiyat ve 24 saatlik değişim akışları"
+      },
+      "ticker-snapshot": {
+        "label": "Ticker Anlık Görüntüsü",
+        "description": "Akış açmadan REST üzerinden toplu, tek seferlik ticker kotasyonları"
+      },
+      "orderbook": {
+        "label": "Emir Defteri",
+        "description": "Canlı emir defteri derinlik akışları"
+      },
+      "history": {
+        "label": "Geçmiş",
+        "description": "Grafikler için geçmişe dönük mum doldurma"
+      },
+      "discovery": {
+        "label": "Keşif",
+        "description": "Mevcut işlem araçlarına göz at",
+        "search": {
+          "label": "Arama",
+          "description": "Araçları ada veya sembole göre ara"
+        }
+      },
+      "symbol-logo": {
+        "label": "Sembol Logosu",
+        "description": "İşlem sembolleri için logo/simge görselleri"
+      }
+    },
+    "domains": {
+      "market-data": "Piyasa Verisi",
+      "ai": "Yapay Zeka",
+      "trading": "İşlem",
+      "automation": "Otomasyon",
+      "theme": "Tema",
+      "charting": "Grafik",
+      "workspace-store": "Çalışma Alanı Mağazası"
+    },
+    "ai": {
+      "inference": {
+        "label": "Çıkarım",
+        "description": "Co-pilot analizi için LLM çıkarımı"
+      },
+      "web-search": {
+        "label": "Web Araması",
+        "description": "Yapay zeka araştırma raporları için web arama temellendirmesi"
+      }
+    },
+    "trading": {
+      "orders": {
+        "label": "Emirler",
+        "description": "Bağlı venue üzerinde emir ver ve yönet"
+      },
+      "balances": {
+        "label": "Bakiyeler",
+        "description": "Bağlı borsadan hesap varlık bakiyelerini getir"
+      }
+    },
+    "workflow": {
+      "step-types": {
+        "label": "İş Akışı Adımları",
+        "description": "Otomasyon iş akışları için özel adım türleri"
+      }
+    },
+    "notification": {
+      "channel": {
+        "label": "Bildirim Kanalları",
+        "description": "Uyarılar ve bildirimler için iletim kanalları"
+      }
+    },
+    "theme": {
+      "override": {
+        "label": "Tema",
+        "description": "Özel terminal teması ve stil geçersiz kılmaları"
+      }
+    },
+    "chart": {
+      "indicator": {
+        "label": "Özel Göstergeler",
+        "description": "Yerel Python çalışma zamanında çalışan, script tanımlı grafik göstergeleri"
+      }
+    },
+    "workspace-store": {
+      "catalog": {
+        "label": "Mağaza Kataloğu",
+        "description": "Göz atılabilir bir çalışma alanı şablonu kataloğu sağla"
+      }
     }
   }
 }

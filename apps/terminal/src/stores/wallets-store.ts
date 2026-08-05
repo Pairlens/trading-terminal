@@ -4,6 +4,7 @@ import { create } from 'zustand'
 
 import type { WalletChain } from '@pairlens/market-engine/adapter'
 import { deleteCredential, getCredential, saveCredential } from '@/lib/keychain'
+import i18n from '@/lib/i18n'
 import { isVaultSealed } from '@/lib/security/vault/vault-errors'
 import { assertCanAddCredential } from '@/lib/security/vault/vault-policy'
 
@@ -16,6 +17,18 @@ export type CryptoWallet = {
   lastActivityAt?: number
 }
 
+/**
+ * The chains you can add a wallet for, and what each one asks you to paste.
+ *
+ * Every translated label is a getter, not a value. This is a module-level
+ * const read by four components, so a plain `i18n.t(...)` would resolve once
+ * at import — with whatever language was active then — and go stale the
+ * moment someone switches language in Settings. A getter re-resolves on each
+ * read, which costs a catalog lookup in a form nobody renders in a loop.
+ *
+ * Chain names themselves (Solana, Bitcoin) are proper nouns and stay put;
+ * "Ethereum / EVM" is translated because the "/ EVM" half is a description.
+ */
 export const WALLET_SCHEMAS: Record<
   WalletChain,
   {
@@ -33,18 +46,34 @@ export const WALLET_SCHEMAS: Record<
     fields: [
       {
         key: 'privateKey',
-        label: 'Private Key (base58)',
+        get label() {
+          return i18n.t(
+            'accounts.walletChains.solana.fields.privateKey.label',
+            {
+              defaultValue: 'Private Key (base58)',
+            },
+          )
+        },
         type: 'secret',
         required: true,
       },
     ],
   },
   ethereum: {
-    label: 'Ethereum / EVM',
+    get label() {
+      return i18n.t('accounts.walletChains.ethereum.label', {
+        defaultValue: 'Ethereum / EVM',
+      })
+    },
     fields: [
       {
         key: 'privateKey',
-        label: 'Private Key (hex)',
+        get label() {
+          return i18n.t(
+            'accounts.walletChains.ethereum.fields.privateKey.label',
+            { defaultValue: 'Private Key (hex)' },
+          )
+        },
         type: 'secret',
         required: true,
       },
@@ -55,7 +84,12 @@ export const WALLET_SCHEMAS: Record<
     fields: [
       {
         key: 'privateKey',
-        label: 'Private Key (WIF)',
+        get label() {
+          return i18n.t(
+            'accounts.walletChains.bitcoin.fields.privateKey.label',
+            { defaultValue: 'Private Key (WIF)' },
+          )
+        },
         type: 'secret',
         required: true,
       },

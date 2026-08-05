@@ -16,6 +16,10 @@ import { POSTER_MORPH } from '../store/store-shell'
 import { WorkspaceLayoutPreview } from './workspace-layout-preview'
 import type { TemplateReadiness } from '@/lib/workspace-store/dependency-analysis'
 import type { WorkspaceTemplate } from '@/lib/workspace-store/types'
+import {
+  templateName,
+  templateTagline,
+} from '@/lib/workspace-store/template-labels'
 
 const READINESS_DOT: Record<
   TemplateReadiness,
@@ -153,10 +157,10 @@ export function WorkspaceStoreCard({
         )}
       </motion.div>
       <p className="mt-2 truncate text-[13px] font-semibold text-foreground">
-        {template.name}
+        {templateName(t, template)}
       </p>
       <p className="truncate text-[11px] text-muted-foreground/80">
-        {template.tagline}
+        {templateTagline(t, template)}
       </p>
     </div>
   )

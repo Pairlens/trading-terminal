@@ -20,7 +20,9 @@ import type {
   WorkflowEdgeDSL,
   WorkflowStepDSL,
 } from '@pairlens/workflow-engine/types'
+import type { TFunction } from 'i18next'
 import { useWorkflowStore } from '@/stores/workflow-store'
+import i18n from '@/lib/i18n'
 
 /** `createWorkflow` seeds every new workflow with a trigger under this id. */
 const TRIGGER_ID = 'trigger'
@@ -215,6 +217,56 @@ export const WORKFLOW_TEMPLATES: Array<WorkflowTemplate> = [
 ]
 
 /**
+ * Localized chips for a template's picker card.
+ *
+ * `scale-out`'s chips are pure percent/size notation with no word to
+ * translate, so they pass through unchanged. The 'N% at N%' shape
+ * (`ladder-entry`) and the 'Down N%' shape — shared with the notification
+ * templates' `session-drop` card — get one parametrized key each instead of
+ * a duplicate per number. Every key's `defaultValue` reads from the
+ * template's own `chips` array, so the English here can never drift from
+ * what a plugin-contributed template (with no catalog entry) would render.
+ */
+export function workflowTemplateChips(
+  t: TFunction,
+  template: WorkflowTemplate,
+): Array<string> {
+  const [c0, c1, c2] = template.chips
+  switch (template.id) {
+    case 'bracket':
+      return [
+        t('common.chips.takeProfitPercent', {
+          defaultValue: c0,
+          percent: '+5%',
+        }),
+        t('common.chips.stopLossPercent', { defaultValue: c1, percent: '-3%' }),
+      ]
+    case 'ladder-entry':
+      return [
+        t('common.chips.sizeAtOffset', {
+          defaultValue: c0,
+          size: '50%',
+          offset: '-1%',
+        }),
+        t('common.chips.sizeAtOffset', {
+          defaultValue: c1,
+          size: '50%',
+          offset: '-2.5%',
+        }),
+      ]
+    case 'cut-if-stalls':
+      return [
+        t('common.chips.waitDuration', { defaultValue: c0, duration: '15m' }),
+        t('common.chips.downPercent', { defaultValue: c1, percent: '1%' }),
+        t('workflows.templates.cut-if-stalls.chips.2', { defaultValue: c2 }),
+      ]
+    default:
+      // scale-out: '+2% / 33%' etc. — pure notation, nothing to translate
+      return template.chips
+  }
+}
+
+/**
  * The DSL a template expands to, trigger included.
  *
  * Pure, so a test can hand it straight to `validateWorkflow` — a template that
@@ -265,7 +317,11 @@ export function workflowTemplateGraph(template: WorkflowTemplate): {
 export function applyWorkflowTemplate(template: WorkflowTemplate): string {
   const store = useWorkflowStore.getState()
 
-  const workflowId = store.createWorkflow(template.title)
+  const workflowId = store.createWorkflow(
+    i18n.t(`workflows.templates.${template.id}.title`, {
+      defaultValue: template.title,
+    }),
+  )
   store.selectWorkflow(workflowId)
   store.startEditing(workflowId)
 

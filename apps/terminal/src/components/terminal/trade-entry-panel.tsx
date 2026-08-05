@@ -68,6 +68,7 @@ import { showLiveWorkflowToast } from '@/components/workflows/workflow-execution
 import { requireUnlockForTrade } from '@/lib/security/lock-store'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
 import i18n from '@/lib/i18n'
+import { stepCompatReason, stepTypeLabelById } from '@/lib/registry-labels'
 
 // ── Trade toast ───────────────────────────────────────────────────────
 
@@ -663,7 +664,10 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           if (compatIssues.length > 0) {
             toast.error(t('terminal.trade.workflowUnsupported'), {
               description: compatIssues
-                .map((i) => `${i.stepLabel}: ${i.reason}`)
+                .map(
+                  (i) =>
+                    `${stepTypeLabelById(t, 'workflows', i.stepType, i.stepLabel)}: ${stepCompatReason(t, 'workflows', i.stepType, i.reason)}`,
+                )
                 .join(' · '),
             })
             return
@@ -896,7 +900,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
       variant="outline"
       className="h-4 border-amber-500/30 bg-amber-500/10 px-1.5 font-mono text-[10px] tracking-[.08em] text-amber-700 dark:text-amber-300"
     >
-      PAPER
+      {t('terminal.modePaper', { defaultValue: 'PAPER' })}
     </Badge>
   ) : null
 
@@ -1080,7 +1084,19 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                     <ul className="mt-0.5 space-y-0.5 text-[10px] text-amber-600/90 dark:text-amber-400/90">
                       {workflowCompatIssues.map((issue) => (
                         <li key={issue.stepId}>
-                          {issue.stepLabel} — {issue.reason}
+                          {stepTypeLabelById(
+                            t,
+                            'workflows',
+                            issue.stepType,
+                            issue.stepLabel,
+                          )}{' '}
+                          —{' '}
+                          {stepCompatReason(
+                            t,
+                            'workflows',
+                            issue.stepType,
+                            issue.reason,
+                          )}
                         </li>
                       ))}
                     </ul>

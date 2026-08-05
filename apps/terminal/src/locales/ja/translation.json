@@ -441,7 +441,18 @@
     "ordersLockedRiskLimit": "リスク上限に達したため、注文がロックされています。設定 > リスク管理でロックを解除してください。",
     "buyOrdersLockedRiskLimit": "リスク上限に達したため、買い注文がロックされています。設定 > リスク管理でロックを解除してください。",
     "positionSizeExceeded": "リスク上限により注文がブロックされました。ポジションはポートフォリオの{{ratioPct}}%で、上限の{{maxPositionSize}}%を超えています。設定 > リスク管理で調整してください。",
-    "sessionExpired": "セッションの有効期限が切れました。もう一度サインインしてください。"
+    "sessionExpired": "セッションの有効期限が切れました。もう一度サインインしてください。",
+    "startFromTemplate": "テンプレートから始める",
+    "chips": {
+      "osNotification": "OS通知",
+      "toastPlusOs": "トースト + OS",
+      "timeframeClose": "1H確定",
+      "downPercent": "{{percent}}下落",
+      "takeProfitPercent": "テイクプロフィット {{percent}}",
+      "stopLossPercent": "ストップロス {{percent}}",
+      "sizeAtOffset": "{{offset}}で{{size}}",
+      "waitDuration": "{{duration}}待機"
+    }
   },
   "legal": {
     "terms": "利用規約",
@@ -781,7 +792,9 @@
       "taxNote": "価格は税抜きです — 税額はお住まいの地域に基づき決済時に計算されます。",
       "packsTitle": "追加クレジット",
       "packsDescription": "月間バジェットに上乗せされる単発チャージです。チャージ分のクレジットは購入から30日で失効し、更新されません。",
-      "packActive": "追加クレジット {{credits}} — {{date}} に失効"
+      "packActive": "追加クレジット {{credits}} — {{date}} に失効",
+      "packAddedToastTitle": "追加クレジットが加算されました",
+      "packAddedToastDescription": "クレジットパックが残高に反映されました — パッククレジットは購入から30日で失効します。"
     },
     "about": {
       "desktop": "デスクトップ",
@@ -992,6 +1005,21 @@
       "title": "{{venue}} はデスクトップアプリが必要です",
       "description": "この取引所は、ブラウザが読み取るために必要なヘッダーを付けずに市場データを配信しています。デスクトップアプリはネイティブに接続するため、すべての取引所が使えます。",
       "alternatives": "またはブラウザのまま使う"
+    },
+    "assets": {
+      "macos": {
+        "primary": "Apple Silicon(.dmg)",
+        "intel": "Intel Mac(.dmg)"
+      },
+      "windows": {
+        "primary": "インストーラー(.exe)",
+        "msi": ".msi インストーラー"
+      },
+      "linux": {
+        "primary": "AppImage",
+        "deb": ".deb",
+        "rpm": ".rpm"
+      }
     }
   },
   "userMenu": {
@@ -1236,7 +1264,8 @@
     "startConversation": "会話を始める",
     "emptyStateHint": "市場の状況を聞いたり、セットアップを確認したり、リスク評価を依頼したりできます — AIはこのペアの文脈をすべて把握しています。",
     "contextAware": "文脈を理解",
-    "toolFailed": "ツールが失敗しました"
+    "toolFailed": "ツールが失敗しました",
+    "sidebarPreviewSummary": "EMAクロスオーバーを検出しましたが、出来高が平均を下回っています。確認を待っています。"
   },
   "chart": {
     "contextMenu": {
@@ -1765,7 +1794,10 @@
       "unsupportedLanguage": "{{language}} で書かれたインジケーターはインポートできません。",
       "malformedDescriptor": "そのインジケーターのデータが不正です。",
       "unknown": "インポートに失敗しました。"
-    }
+    },
+    "syntaxErrorDiagnostic": "構文エラー",
+    "missingMetaDiagnostic": "main.py にトップレベルの `meta = indicator(...)` が定義されていません — チャートに描画するものがありません。",
+    "missingComputeDiagnostic": "main.py にトップレベルの `def compute(ctx)` が定義されていません — スクリプトの読み込みに失敗します。"
   },
   "indicators": {
     "title": "インジケーターを追加",
@@ -2448,7 +2480,17 @@
     "previousSlide": "前へ",
     "nextSlide": "次へ",
     "goToSlide": "スライド{{n}}へ移動",
-    "copyCommand": "コマンドをコピー"
+    "copyCommand": "コマンドをコピー",
+    "apiKeyRequiredHint": "APIキーが必要",
+    "setupRequiredHint": "セットアップが必要",
+    "manifests": {
+      "userIndicators": {
+        "description": "インジケーターエディターで作成した、あなたのカスタムPythonインジケーター。"
+      },
+      "pairlensCommunity": {
+        "description": "Pairlensユーザーが共有するコミュニティワークスペーステンプレート。"
+      }
+    }
   },
   "search": {
     "title": "ペアを検索",
@@ -2579,7 +2621,9 @@
       "collapse": "パネルを折りたたむ"
     },
     "recentlyViewed": "最近見た銘柄",
-    "noMarketsFound": "該当する市場がありません"
+    "noMarketsFound": "該当する市場がありません",
+    "modeLive": "ライブ",
+    "modePaper": "ペーパー"
   },
   "accounts": {
     "pageTitle": "アカウント",
@@ -2710,7 +2754,32 @@
     "accountConnectFailed": "アカウントを接続できませんでした。",
     "accountRemoveFailed": "アカウントを削除できませんでした。",
     "fieldRequired": "{{field}}は必須です",
-    "accountConnectedFeedback": "{{label}}の{{mode}}アカウントを接続しました。"
+    "accountConnectedFeedback": "{{label}}の{{mode}}アカウントを接続しました。",
+    "defaultWalletName": "{{chain}} ウォレット",
+    "walletChains": {
+      "ethereum": {
+        "label": "Ethereum / EVM",
+        "fields": {
+          "privateKey": {
+            "label": "秘密鍵(hex)"
+          }
+        }
+      },
+      "solana": {
+        "fields": {
+          "privateKey": {
+            "label": "秘密鍵(base58)"
+          }
+        }
+      },
+      "bitcoin": {
+        "fields": {
+          "privateKey": {
+            "label": "秘密鍵(WIF)"
+          }
+        }
+      }
+    }
   },
   "workspaceStore": {
     "title": "ワークスペースストア",
@@ -2821,7 +2890,218 @@
     "spotlight": "スポットライト",
     "previousSlide": "前へ",
     "nextSlide": "次へ",
-    "goToSlide": "スライド{{number}}に移動"
+    "goToSlide": "スライド{{number}}に移動",
+    "templates": {
+      "scalpers-cockpit": {
+        "name": "スキャルパーズ・コックピット",
+        "tagline": "チャート、板、ワンクリック発注 — それだけ。",
+        "description": "素早い執行のためのミニマルな2カラム構成 — チャートの隣にライブのオーダーブック、マーケットデプス、取引チケットを配置。1画面のスピードのために作られています。"
+      },
+      "day-trader-pro": {
+        "name": "デイトレーダー Pro",
+        "tagline": "スキャンして、チャートを見て、日中セッションを取引する。",
+        "description": "バランス型の3カラムデスク — 左にマーケットスキャナー、中央に大きなチャート、右にオーダーブックと取引チケット、保有ポジション。アクティブな暗号資産取引の日常ドライバーです。"
+      },
+      "swing-overview": {
+        "name": "スイングオーバービュー",
+        "tagline": "ウォッチリストと値動き上位で掴む、トレンドの文脈。",
+        "description": "複数日ポジション向けの落ち着いたレイアウト — フルサイズのチャートにウォッチリスト、値動き上位、ペアのファンダメンタルズを添えて。執行デスクの喧騒なしに、スイングのサイズを判断するための十分な文脈です。"
+      },
+      "ai-research-desk": {
+        "name": "AIリサーチデスク",
+        "tagline": "AIレンズ、リサーチ、ニュースフィードをチャートの横に。",
+        "description": "チャートにAIレンズ、詳細なリサーチ、グローバル・銘柄ニュースフィードの両方を組み合わせます。値動きと同じくらいストーリーが重要な、カタリスト主導のトレードのために作られています。AIレンズとリサーチにはAI推論プロバイダーが必要です。"
+      },
+      "market-discovery": {
+        "name": "マーケットディスカバリー",
+        "tagline": "動く前に、動いているものを見つける。",
+        "description": "純粋なディスカバリーボード — マーケットスキャナー、値動き上位、セクターヒートマップ、ウォッチリスト、Fear & Greedゲージ。チャートもチケットもなし、次のセットアップを探すためだけに。"
+      },
+      "portfolio-command": {
+        "name": "ポートフォリオコマンド",
+        "tagline": "残高、ポジション、リスクをひと目で。",
+        "description": "アカウント中心のコックピット — ポートフォリオの内訳、保有ポジション、リアルタイムのリスクガードレール、そして残りの銘柄を見張るウォッチリスト。すでに保有しているものを管理するために。"
+      },
+      "dex-degen": {
+        "name": "DEX Degen",
+        "tagline": "オンチェーンチャート、スワップ、ソーシャルフィード。",
+        "description": "オンチェーンハンティングのために作られています — スワップチケット付きチャート、新規上場を捉える最近見たティッカー、アルファのためのソーシャルフィード。Jupiterのような DEX コネクタでスワップをルーティング。"
+      },
+      "quant-signals": {
+        "name": "クオンツシグナル",
+        "tagline": "データログ、ヒートマップ、リスク — シグナル主導のトレードに。",
+        "description": "データファーストのデスク — 生のデータログ、流動性ヒートマップ、リアルタイムのリスク状態、マーケットスキャナーを組み合わせたチャート。値動きをローソク足ではなく数字として読むトレーダーのために。"
+      },
+      "equities-desk": {
+        "name": "株式デスク",
+        "tagline": "スキャナー、チャート、ポジションで株式を取引。",
+        "description": "株式取引向けのレイアウト — マーケットスキャナー、チャート、保有ポジション、ニュースフィード。Alpacaブローカープラグインを接続して米国株式をストリーミングし、注文をルーティングします。"
+      },
+      "ultrawide-trading-floor": {
+        "name": "ウルトラワイド・トレーディングフロア",
+        "tagline": "すべてを、あらゆる場所に — 大画面のために。",
+        "description": "ウルトラワイドまたはセカンドモニターを埋め尽くす4カラムのコマンドセンター — スキャナー、チャート、オーダーブックと板の厚み、ポジション付きの取引チケット、AIレンズ。最大主義のレイアウトです。"
+      },
+      "classic-terminal": {
+        "name": "クラシックターミナル",
+        "tagline": "定番のPairlensデスク — チャート、データ、取引、コパイロット。",
+        "description": "デフォルトのターミナルレイアウト — 左に大きなチャートとタブ切り替え式のデータストリップ、リスクバー、右にAIレンズの上に取引チケット。",
+        "menuLabel": "デフォルト"
+      },
+      "chart-focus": {
+        "name": "チャートフォーカス",
+        "tagline": "1つの大きなチャートと、その下にタブ式データ。",
+        "description": "チャートに最大限のスペースを与えるシングルカラムレイアウト — ポジション、データログ、AIレンズ、取引チケットは下部のタブストリップにまとめられています。",
+        "menuLabel": "チャートフォーカス"
+      },
+      "trading": {
+        "name": "トレーディング",
+        "tagline": "中央のチャートを挟むオーダーブックとチケット。",
+        "description": "3カラムの執行デスク — 左にオーダーブックと取引チケット、中央にポジションとリスクを添えたチャート、右にAIレンズ。",
+        "menuLabel": "トレーディング"
+      },
+      "chart-analysis": {
+        "name": "チャート分析",
+        "tagline": "左にチャートとデータ、右にコパイロットと執行。",
+        "description": "検証志向の分割レイアウト — 左にチャート、データ、リサーチ、リスク、右にAIレンズ、オーダーブック、取引チケット。",
+        "menuLabel": "分析"
+      },
+      "dual-charts": {
+        "name": "デュアルチャート",
+        "tagline": "2つのチャートを並べて。",
+        "description": "2つの独立したチャートペインを並べて表示 — それぞれが独自のマーケット、時間足、チャートタイプを保持します。ペア選択でペインごとに異なるペアを設定できます。",
+        "menuLabel": "デュアルチャート"
+      },
+      "triple-charts": {
+        "name": "トリプルチャート",
+        "tagline": "大きなチャート1つと、その横に積み重なる2つ。",
+        "description": "大きなメインチャートと、右側に積み重なる2つの小さなチャート — それぞれ独立していて、主軸のペアを他の2つと見比べられます。",
+        "menuLabel": "トリプルチャート"
+      },
+      "quad-charts": {
+        "name": "クアッドチャート",
+        "tagline": "2×2グリッドのチャート。",
+        "description": "2×2グリッドに並ぶ4つの独立したチャート — 複数のマーケットを同時に追う、フル装備のマルチチャートコックピットです。",
+        "menuLabel": "クアッドチャート"
+      },
+      "laptop-focus": {
+        "name": "ラップトップフォーカス",
+        "tagline": "ノートPC向けに調整した縦型シングルカラム。",
+        "description": "ノートPCの画面に収まる、コンパクトな縦型レイアウト — 上部にチャート、データタブストリップ、細めのリスクバー。"
+      },
+      "laptop-split": {
+        "name": "ラップトップスプリット",
+        "tagline": "左にチャート+データ、右に取引+コパイロット — 小さめの画面向け。",
+        "description": "ラップトップサイズの2カラム分割 — 左にチャートとポジション、右にAIレンズの上に取引チケット。"
+      },
+      "ultrawide-dashboard": {
+        "name": "ウルトラワイドダッシュボード",
+        "tagline": "すべてのパネルをウルトラワイドモニターいっぱいに。",
+        "description": "ウルトラワイドディスプレイ向けの4カラムダッシュボード — オーダーブック、リスクを添えたチャート、ポジションとリサーチ、そして取引+AIレンズのカラム。"
+      },
+      "ultrawide-trading": {
+        "name": "ウルトラワイドトレーディング",
+        "tagline": "幅いっぱいに広がるオーダーブック、板の厚み、チャート、執行。",
+        "description": "ウルトラワイド向けの執行レイアウト — 左にオーダーブックとマーケットデプス、中央にポジションを添えたチャート、右に取引+AIレンズのカラム。"
+      },
+      "command-center": {
+        "name": "4Kコマンドセンター",
+        "tagline": "4Kディスプレイのためのフル装備コマンドセンター。",
+        "description": "4Kモニター向けに画面を埋め尽くす全部盛り — オーダーブックとペア情報、リサーチとリスクを添えたチャート、ポジションとソーシャル、そして取引+AIレンズのカラム。"
+      },
+      "home-pulse": {
+        "name": "ホーム",
+        "tagline": "デフォルトのボード — スキャナー、センチメント、値動き上位、ニュース。",
+        "description": "デフォルトのホームボード — マーケットスキャナー、Fear & Greedゲージとトップコインをウォッチリストとタブ切り替えできるマーケットパルスレール、そしてフル高さのニュースカラム。すべてアカウントなしで動作します。",
+        "menuLabel": "ホーム"
+      },
+      "markets-board": {
+        "name": "マーケットボード",
+        "tagline": "マーケットスキャナーだけを、フルスクリーンで。",
+        "description": "フル幅のマーケットスキャナー — 取引可能な全ペアを閲覧・並べ替えする最もシンプルな方法。",
+        "menuLabel": "マーケット"
+      },
+      "markets-overview": {
+        "name": "マーケットオーバービュー",
+        "tagline": "スキャナーの横に値動き上位とウォッチリスト。",
+        "description": "マーケットスキャナーと値動き上位、ウォッチリストを並べて表示 — セットアップを見つけて追うためのバランスの取れたホームです。",
+        "menuLabel": "概要"
+      },
+      "sector-analysis": {
+        "name": "セクター分析",
+        "tagline": "スキャナー、ヒートマップ、値動き上位、ウォッチリスト。",
+        "description": "中央にセクターヒートマップを配したディスカバリーボード — 左にスキャナー、中央にヒートマップ、右にウォッチリストの上に値動き上位。",
+        "menuLabel": "分析"
+      },
+      "news-board": {
+        "name": "ニュースボード",
+        "tagline": "マーケットと値動き上位、ニュースフィードを並べて。",
+        "description": "マーケットスキャナーと値動き上位、ライブのニュースフィードを並べて表示 — カタリスト主導のトレードのホームベースです。",
+        "menuLabel": "ニュース"
+      }
+    },
+    "traderTypes": {
+      "scalper": {
+        "label": "スキャルパー",
+        "description": "狭いスプレッドで素早く売買"
+      },
+      "day-trader": {
+        "label": "デイトレーダー",
+        "description": "日中のモメンタムとフロー"
+      },
+      "swing-trader": {
+        "label": "スイングトレーダー",
+        "description": "複数日のトレンドポジション"
+      },
+      "position-investor": {
+        "label": "投資家",
+        "description": "長期視点のポートフォリオ重視"
+      },
+      "news-trader": {
+        "label": "ニューストレーダー",
+        "description": "ヘッドラインとカタリスト主導"
+      },
+      "dex-degen": {
+        "label": "DEX Degen",
+        "description": "オンチェーン&ミームコインハンティング"
+      },
+      "quant": {
+        "label": "クオンツ",
+        "description": "シグナルとデータ重視のワークフロー"
+      }
+    },
+    "assetClasses": {
+      "crypto-spot": {
+        "label": "暗号資産現物"
+      },
+      "dex": {
+        "label": "DEX"
+      },
+      "equities": {
+        "label": "株式"
+      },
+      "multi-asset": {
+        "label": "マルチアセット"
+      }
+    },
+    "screenSizes": {
+      "compact": {
+        "label": "コンパクト"
+      },
+      "standard": {
+        "label": "標準"
+      },
+      "wide": {
+        "label": "ワイド"
+      },
+      "multi": {
+        "label": "マルチモニター"
+      }
+    },
+    "pluginReasons": {
+      "jupiter-dex-connector": "Solanaのスワップをルーティングし、オンチェーン価格をストリーミング",
+      "alpaca-market-connector": "米国株式データをストリーミングし、株式注文をルーティング"
+    }
   },
   "notifications": {
     "flows": "フロー",
@@ -2946,6 +3226,243 @@
           "start": "開始（UTC）",
           "end": "終了（UTC）"
         }
+      }
+    },
+    "stepTypes": {
+      "price-alert": {
+        "label": "価格アラート",
+        "fields": {
+          "direction": {
+            "label": "方向",
+            "options": {
+              "above": "以上",
+              "below": "以下"
+            }
+          },
+          "price": {
+            "label": "価格"
+          }
+        },
+        "handles": {
+          "out": "発火"
+        }
+      },
+      "order-executed": {
+        "label": "注文約定",
+        "fields": {
+          "side": {
+            "label": "売買",
+            "options": {
+              "any": "指定なし",
+              "buy": "買い",
+              "sell": "売り"
+            }
+          },
+          "status": {
+            "label": "状態",
+            "options": {
+              "any": "指定なし",
+              "filled": "約定済み",
+              "partially_filled": "一部約定"
+            }
+          }
+        },
+        "handles": {
+          "out": "発火"
+        }
+      },
+      "signal-generated": {
+        "label": "シグナル発生",
+        "fields": {
+          "signalType": {
+            "label": "シグナルタイプ (任意)",
+            "placeholder": "種別指定なし"
+          }
+        },
+        "handles": {
+          "out": "発火"
+        }
+      },
+      "indicator-alert": {
+        "label": "インジケーターアラート",
+        "fields": {
+          "indicator": {
+            "label": "インジケーター (任意)",
+            "placeholder": "インジケーター指定なし"
+          },
+          "condition": {
+            "label": "条件 (任意)",
+            "placeholder": "条件指定なし"
+          }
+        },
+        "handles": {
+          "out": "発火"
+        }
+      },
+      "candle-close": {
+        "label": "ローソク足確定",
+        "fields": {
+          "timeframe": {
+            "label": "時間足",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          }
+        },
+        "handles": {
+          "out": "発火"
+        }
+      },
+      "price-condition": {
+        "label": "価格条件",
+        "fields": {
+          "direction": {
+            "label": "方向",
+            "options": {
+              "above": "以上",
+              "below": "以下"
+            }
+          },
+          "price": {
+            "label": "価格"
+          }
+        },
+        "handles": {
+          "pass": "通過",
+          "fail": "不通過"
+        }
+      },
+      "percent-change": {
+        "label": "パーセント変化",
+        "fields": {
+          "percent": {
+            "label": "パーセント"
+          },
+          "direction": {
+            "label": "方向",
+            "options": {
+              "up": "上昇",
+              "down": "下落",
+              "either": "どちらでも"
+            }
+          }
+        },
+        "handles": {
+          "pass": "通過",
+          "fail": "不通過"
+        }
+      },
+      "time-window": {
+        "label": "時間帯",
+        "fields": {
+          "startHour": {
+            "label": "開始時刻 (UTC)"
+          },
+          "endHour": {
+            "label": "終了時刻 (UTC)"
+          }
+        },
+        "handles": {
+          "pass": "通過",
+          "fail": "不通過"
+        }
+      },
+      "local-toast": {
+        "label": "トースト"
+      },
+      "os-notification": {
+        "label": "システム通知",
+        "fields": {
+          "sound": {
+            "label": "サウンドを再生"
+          }
+        }
+      },
+      "webhook": {
+        "label": "Webhook",
+        "fields": {
+          "url": {
+            "label": "URL",
+            "placeholder": "https://example.com/webhook"
+          },
+          "method": {
+            "label": "メソッド",
+            "options": {
+              "GET": "GET",
+              "POST": "POST"
+            }
+          },
+          "includePayload": {
+            "label": "イベントペイロードを含める"
+          }
+        }
+      }
+    },
+    "messages": {
+      "unknownPair": "不明",
+      "priceAlert": {
+        "title": "価格アラート: {{pair}}",
+        "body": "{{pair}}が{{price}}{{direction}}になりました — 現在値: {{current}}"
+      },
+      "orderExecuted": {
+        "title": "注文約定",
+        "body": "{{side}} {{pair}} — {{status}}"
+      },
+      "signalGenerated": {
+        "title": "シグナル発生",
+        "body": "{{pair}}で{{signal}}",
+        "genericSignal": "シグナル"
+      },
+      "indicatorAlert": {
+        "title": "インジケーターアラート",
+        "body": "{{pair}}で{{indicator}}が発火",
+        "genericName": "インジケーター"
+      },
+      "candleClose": {
+        "title": "ローソク足確定",
+        "body": "{{pair}}で{{timeframe}}足が確定"
+      }
+    },
+    "templates": {
+      "price-level": {
+        "title": "価格が水準を突破",
+        "description": "{{pair}}が{{level}}を突破した瞬間に、トーストとOS通知を送信。水準はドラッグして自分の値に調整できます。",
+        "chips": {
+          "0": "価格上抜け",
+          "1": "トースト"
+        }
+      },
+      "volatile-candle": {
+        "title": "1時間足が大きく動いた",
+        "description": "1時間足が始値から3%を超えて上下どちらかに動いて確定したときに発火します。",
+        "chips": {
+          "1": "実体±3%"
+        }
+      },
+      "fills": {
+        "title": "注文が約定したら知らせる",
+        "description": "そのペアで約定したすべての注文が届くので、ターミナルはバックグラウンドに置いておけます。",
+        "chips": {
+          "0": "注文約定",
+          "1": "売買問わず"
+        }
+      },
+      "indicator-relay": {
+        "title": "インジケーターアラートを中継",
+        "description": "Pythonインジケーターで定義したアラート条件が、実際の通知になります。",
+        "chips": {
+          "0": "インジケーター指定なし",
+          "1": "条件指定なし"
+        }
+      },
+      "session-drop": {
+        "title": "急落を、自分が起きている間だけ",
+        "description": "2%下落の足で起こしますが、UTC 13:00〜21:00の間だけです。"
       }
     }
   },
@@ -3142,7 +3659,11 @@
       "botsPausedBody": "ライブ取引を再開するには Pairlens を解錠してください。ペーパーボットには影響しません。",
       "orderBlocked": "資格情報の保管庫がロックされています — ライブ注文を出すには Pairlens を解錠してください。",
       "insecureContext": "安全でない接続では暗号化を利用できません。保管庫を設定するには HTTPS か localhost で Pairlens を開いてください。",
-      "diverged": "ターミナルは解錠されましたが、そのパスワードでは資格情報の保管庫を開けませんでした。設定 → セキュリティ でパスワードを変更し、両者を再び一致させてください。"
+      "diverged": "ターミナルは解錠されましたが、そのパスワードでは資格情報の保管庫を開けませんでした。設定 → セキュリティ でパスワードを変更し、両者を再び一致させてください。",
+      "botParkDetailSealed": "資格情報の保管庫がロックされています。Pairlens を解錠すると、このボットはすぐにライブ取引を再開します。ペーパーボットには影響しません。",
+      "botParkDetailError": "保存された資格情報をこのデバイスで読み込めませんでした。読み込みが完了すると、このボットはすぐにライブ取引を再開します。ペーパーボットには影響しません。",
+      "onlyProtectorLeft": "これが保管庫を開ける唯一の方法です。削除する前に、もう一つ追加してください。",
+      "onlyBiometricProtectorLeft": "Touch ID だけを保管庫を開ける唯一の方法にはできません。これを削除する前に、パスワードかパスキーを追加してください。"
     }
   },
   "fullscreen": {
@@ -3300,7 +3821,8 @@
       "title": "どの注文にも、その注文専用のプランを持たせられます",
       "description": "ワークフローはトレードパネルから出す注文にひも付きます。約定した瞬間、その下にあるステップが自動で動き出します — ブラケット、階段状の指値、段階的なイグジット、時間による確認など。プランはあらかじめ組み込まれているので、後で自分で覚えておく必要がありません。",
       "blankLabel": "空のキャンバスから始める",
-      "footnote": "テンプレートは下書きとして開きます。各ステップを編集してから「確定」を押すと保存されます。保存したワークフローはトレードパネルから注文に紐付けると実行されます。"
+      "footnote": "テンプレートは下書きとして開きます。各ステップを編集してから「確定」を押すと保存されます。保存したワークフローはトレードパネルから注文に紐付けると実行されます。",
+      "untitledWorkflow": "無題のワークフロー"
     },
     "steps": {
       "sideLabel": "売買",
@@ -3370,6 +3892,288 @@
       "summaryExecuted": "実行済み {{count}} 件",
       "summarySkipped": "スキップ {{count}} 件",
       "summaryFailed": "失敗 {{count}} 件"
+    },
+    "stepTypes": {
+      "trigger": {
+        "label": "注文入力"
+      },
+      "market-order": {
+        "label": "成行注文",
+        "fields": {
+          "side": {
+            "label": "売買",
+            "options": {
+              "inherit": "トリガーと同じ",
+              "opposite": "トリガーの逆",
+              "buy": "買い",
+              "sell": "売り"
+            }
+          },
+          "sizeMode": {
+            "label": "サイズモード",
+            "options": {
+              "percent": "入力の%",
+              "absolute": "固定量"
+            }
+          },
+          "size": {
+            "label": "数量"
+          }
+        }
+      },
+      "limit-order": {
+        "label": "指値注文",
+        "compat": "板に残る指値注文",
+        "fields": {
+          "side": {
+            "label": "売買",
+            "options": {
+              "inherit": "トリガーと同じ",
+              "opposite": "トリガーの逆",
+              "buy": "買い",
+              "sell": "売り"
+            }
+          },
+          "sizeMode": {
+            "label": "サイズモード",
+            "options": {
+              "percent": "入力の%",
+              "absolute": "固定量"
+            }
+          },
+          "size": {
+            "label": "数量"
+          },
+          "priceMode": {
+            "label": "価格モード",
+            "options": {
+              "absolute": "固定価格",
+              "offset-percent": "現在値からの%",
+              "offset-absolute": "現在値からのオフセット"
+            }
+          },
+          "priceValue": {
+            "label": "価格値"
+          }
+        },
+        "compatReason": "この取引所は指値注文を板に残せません(スワップ専用DEX)"
+      },
+      "take-profit": {
+        "label": "テイクプロフィット",
+        "compat": "ネイティブのトリガー注文、または板に残る指値注文",
+        "fields": {
+          "triggerMode": {
+            "label": "トリガーモード",
+            "options": {
+              "percent": "利益 %",
+              "absolute": "価格水準"
+            }
+          },
+          "triggerValue": {
+            "label": "トリガー値"
+          },
+          "sizePercent": {
+            "label": "決済%"
+          },
+          "orderType": {
+            "label": "注文タイプ",
+            "options": {
+              "market": "成行",
+              "limit": "指値"
+            }
+          },
+          "limitPrice": {
+            "label": "指値価格"
+          }
+        },
+        "compatReason": "この取引所はトリガー注文にも、板に残る指値注文にも対応していません"
+      },
+      "stop-loss": {
+        "label": "ストップロス",
+        "compat": "ネイティブのトリガー注文",
+        "fields": {
+          "triggerMode": {
+            "label": "トリガーモード",
+            "options": {
+              "percent": "損失 %",
+              "absolute": "価格水準"
+            }
+          },
+          "triggerValue": {
+            "label": "トリガー値"
+          },
+          "sizePercent": {
+            "label": "決済%"
+          },
+          "orderType": {
+            "label": "注文タイプ",
+            "options": {
+              "market": "成行",
+              "limit": "指値"
+            }
+          },
+          "limitPrice": {
+            "label": "指値価格"
+          }
+        },
+        "compatReason": "この取引所には取引所ネイティブのトリガー注文がないため、ストップロスを取引所側に残せません"
+      },
+      "condition": {
+        "label": "条件",
+        "fields": {
+          "conditionType": {
+            "label": "条件",
+            "options": {
+              "price-above": "価格が上回る",
+              "price-below": "価格が下回る",
+              "percent-change": "エントリーからの%変化"
+            }
+          },
+          "value": {
+            "label": "値"
+          }
+        }
+      },
+      "split": {
+        "label": "並列分岐",
+        "fields": {
+          "branches": {
+            "label": "分岐数"
+          }
+        }
+      },
+      "wait": {
+        "label": "待機",
+        "fields": {
+          "duration": {
+            "label": "時間"
+          },
+          "unit": {
+            "label": "単位",
+            "options": {
+              "seconds": "秒",
+              "minutes": "分",
+              "hours": "時間"
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "bracket": {
+        "title": "約定をブラケットで囲む",
+        "description": "すべてのポジションが求めるもの — 上に一つ、下に一つの決済を、約定した瞬間に板へ残します。"
+      },
+      "scale-out": {
+        "title": "3段階で分割決済",
+        "description": "1つの決済ポイントに賭けるのではなく、3つの水準でそれぞれ3分の1ずつ決済します。"
+      },
+      "ladder-entry": {
+        "title": "エントリーをラダーで分割",
+        "description": "サイズの半分を約定の1%下に、残り半分を2.5%下に置いておき、下落が痛手ではなく買い増しになるようにします。"
+      },
+      "cut-if-stalls": {
+        "title": "停滞したら損切り",
+        "description": "15分待って、その時点でトレードが含み損なら成行で決済して次へ進みます。",
+        "chips": {
+          "2": "成行決済"
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "market-data": {
+      "candles": {
+        "label": "ローソク足",
+        "description": "チャートとシグナルのためのライブOHLCVローソク足ストリーム"
+      },
+      "ticker": {
+        "label": "ティッカー",
+        "description": "リアルタイムの最終価格と24時間変化のストリーム"
+      },
+      "ticker-snapshot": {
+        "label": "ティッカースナップショット",
+        "description": "ストリームを開かずにRESTで一括取得するティッカー相場"
+      },
+      "orderbook": {
+        "label": "オーダーブック",
+        "description": "ライブのオーダーブック深度ストリーム"
+      },
+      "history": {
+        "label": "履歴",
+        "description": "チャート用の過去ローソク足バックフィル"
+      },
+      "discovery": {
+        "label": "ディスカバリー",
+        "description": "利用可能な取引銘柄を閲覧",
+        "search": {
+          "label": "検索",
+          "description": "名前または銘柄コードで銘柄を検索"
+        }
+      },
+      "symbol-logo": {
+        "label": "銘柄ロゴ",
+        "description": "取引銘柄用のロゴ/アイコン画像"
+      }
+    },
+    "domains": {
+      "market-data": "マーケットデータ",
+      "ai": "AI",
+      "trading": "トレーディング",
+      "automation": "オートメーション",
+      "theme": "テーマ",
+      "charting": "チャート",
+      "workspace-store": "ワークスペースストア"
+    },
+    "ai": {
+      "inference": {
+        "label": "推論",
+        "description": "AIレンズ分析のためのLLM推論"
+      },
+      "web-search": {
+        "label": "ウェブ検索",
+        "description": "AIリサーチレポートのためのウェブ検索グラウンディング"
+      }
+    },
+    "trading": {
+      "orders": {
+        "label": "注文",
+        "description": "接続した取引所で注文を発注・管理"
+      },
+      "balances": {
+        "label": "残高",
+        "description": "接続した取引所からアカウントの資産残高を取得"
+      }
+    },
+    "workflow": {
+      "step-types": {
+        "label": "ワークフローステップ",
+        "description": "自動化ワークフロー用のカスタムステップタイプ"
+      }
+    },
+    "notification": {
+      "channel": {
+        "label": "通知チャンネル",
+        "description": "アラートと通知の配信チャンネル"
+      }
+    },
+    "theme": {
+      "override": {
+        "label": "テーマ",
+        "description": "ターミナルのカスタムテーマとスタイルの上書き"
+      }
+    },
+    "chart": {
+      "indicator": {
+        "label": "カスタムインジケーター",
+        "description": "ローカルのPythonランタイムで実行される、スクリプト定義のチャートインジケーター"
+      }
+    },
+    "workspace-store": {
+      "catalog": {
+        "label": "ストアカタログ",
+        "description": "閲覧可能なワークスペーステンプレートのカタログを提供"
+      }
     }
   }
 }
