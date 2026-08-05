@@ -1178,6 +1178,7 @@
     "live": "Наживо",
     "connecting": "Підключення",
     "stalled": "Перепідключення",
+    "noData": "Немає даних",
     "offline": "Офлайн",
     "error": "Помилка",
     "pluginUpdatesReady_one": "{{count}} оновлення плагіна готове до встановлення",
@@ -2172,6 +2173,10 @@
       "titleAnyVenue": "{{pair}} недоступна",
       "description": "Цей конектор не повернув ринкових даних для цієї пари. Спробуйте інший, де вона торгується."
     },
+    "paneTransition": {
+      "switchingTo": "Перемикання на {{venue}}…",
+      "switching": "Перемикання…"
+    },
     "panePicker": {
       "bindToVariable": "Прив'язати до змінної",
       "boundTo": "Прив'язано до <b>{{variable}}</b>",
@@ -2577,7 +2582,9 @@
       "waitingTrades": "Очікування угод…",
       "waitingData": "Очікування даних…",
       "noCandleData": "Свічок поки немає",
-      "noTradesFeed": "Перейдіть на біржу, що публікує стрічку угод"
+      "noTradesFeed": "Перейдіть на біржу, що публікує стрічку угод",
+      "noTradesFeedOn": "На {{venue}} немає стрічки угод",
+      "noTradesFeedHere": "На цій біржі немає стрічки угод"
     },
     "columns": {
       "price": "Ціна",

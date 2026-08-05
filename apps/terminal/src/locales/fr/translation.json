@@ -1172,6 +1172,7 @@
     "live": "En direct",
     "connecting": "Connexion",
     "stalled": "Reconnexion",
+    "noData": "Aucune donnée",
     "offline": "Hors ligne",
     "error": "Erreur",
     "pluginUpdatesReady_one": "{{count}} mise à jour de plugin prête à installer",
@@ -2162,6 +2163,10 @@
       "titleAnyVenue": "{{pair}} n’est pas disponible",
       "description": "Ce connecteur n’a renvoyé aucune donnée de marché pour cette paire. Essayez-en un autre qui la référence."
     },
+    "paneTransition": {
+      "switchingTo": "Passage à {{venue}}…",
+      "switching": "Changement…"
+    },
     "panePicker": {
       "bindToVariable": "Lier à une variable",
       "boundTo": "Lié à <b>{{variable}}</b>",
@@ -2563,7 +2568,9 @@
       "waitingTrades": "En attente de transactions…",
       "waitingData": "En attente de données…",
       "noCandleData": "Pas encore de bougies",
-      "noTradesFeed": "Passez à une plateforme qui publie le time and sales"
+      "noTradesFeed": "Passez à une plateforme qui publie le time and sales",
+      "noTradesFeedOn": "Pas de time and sales sur {{venue}}",
+      "noTradesFeedHere": "Pas de time and sales sur cette plateforme"
     },
     "columns": {
       "price": "Prix",

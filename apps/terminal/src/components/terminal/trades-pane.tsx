@@ -16,7 +16,9 @@ import {
   magnitudeTextColor,
 } from '@/components/terminal/magnitude-intensity'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
+import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { usePaneVenue } from '@/hooks/use-pane-venue'
+import { usePairUnavailable } from '@/stores/pair-availability-store'
 
 function formatSize(size: number): string {
   if (size >= 1_000_000) return `${(size / 1_000_000).toFixed(2)}M`
@@ -99,6 +101,7 @@ function TradesPaneInner({
   const { trades, status } = useTradesStream({ market, pairKey })
 
   const venue = usePaneVenue(market)
+  const unavailable = usePairUnavailable(market, pairKey)
 
   // Same reference rule as the order book: `median x 6` over what's on screen,
   // so "big" means big for this tape rather than big in absolute units.
@@ -107,11 +110,20 @@ function TradesPaneInner({
     [trades],
   )
 
+  // Ahead of the unsupported check: "the venue doesn't list this pair" is the
+  // real answer, and telling someone to find a venue with a trade feed when the
+  // pair itself isn't there sends them down the wrong path.
+  if (unavailable) {
+    return <PaneDataUnavailable compact pairKey={pairKey} market={market} />
+  }
+
   if (status === 'unsupported') {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-1 px-4 text-center">
         <span className="text-xs text-muted-foreground">
-          No trade feed on {venue.label || 'this venue'}
+          {venue.label
+            ? t('terminal.status.noTradesFeedOn', { venue: venue.label })
+            : t('terminal.status.noTradesFeedHere')}
         </span>
         <span className="text-[10px] text-muted-foreground/70">
           {t('terminal.status.noTradesFeed')}

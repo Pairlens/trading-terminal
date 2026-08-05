@@ -1172,6 +1172,7 @@
     "live": "ライブ",
     "connecting": "接続中",
     "stalled": "再接続中",
+    "noData": "データなし",
     "offline": "オフライン",
     "error": "エラー",
     "pluginUpdatesReady_one": "プラグインアップデートが{{count}}件、インストール可能です",
@@ -2162,6 +2163,10 @@
       "titleAnyVenue": "{{pair}} は取り扱いがありません",
       "description": "このコネクタはこのペアの市場データを返しませんでした。取り扱いのある別のコネクタをお試しください。"
     },
+    "paneTransition": {
+      "switchingTo": "{{venue}} に切り替え中…",
+      "switching": "切り替え中…"
+    },
     "panePicker": {
       "bindToVariable": "変数にバインド",
       "boundTo": "<b>{{variable}}</b> にバインド済み",
@@ -2563,7 +2568,9 @@
       "waitingTrades": "約定を待機中…",
       "waitingData": "データを待機中…",
       "noCandleData": "ローソク足データがまだありません",
-      "noTradesFeed": "歩み値を配信している取引所に切り替えてください"
+      "noTradesFeed": "歩み値を配信している取引所に切り替えてください",
+      "noTradesFeedOn": "{{venue}} には歩み値がありません",
+      "noTradesFeedHere": "この取引所には歩み値がありません"
     },
     "columns": {
       "price": "価格",

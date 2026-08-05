@@ -1172,6 +1172,7 @@
     "live": "Live",
     "connecting": "Verbindung wird hergestellt",
     "stalled": "Neu verbinden",
+    "noData": "Keine Daten",
     "offline": "Offline",
     "error": "Fehler",
     "pluginUpdatesReady_one": "{{count}} Plugin-Update bereit zur Installation",
@@ -2162,6 +2163,10 @@
       "titleAnyVenue": "{{pair}} ist nicht verfügbar",
       "description": "Dieser Konnektor hat für dieses Paar keine Marktdaten geliefert. Probier einen anderen, der es listet."
     },
+    "paneTransition": {
+      "switchingTo": "Wechsel zu {{venue}}…",
+      "switching": "Wechsel…"
+    },
     "panePicker": {
       "bindToVariable": "An Variable binden",
       "boundTo": "Gebunden an <b>{{variable}}</b>",
@@ -2563,7 +2568,9 @@
       "waitingTrades": "Warte auf Trades…",
       "waitingData": "Warte auf Daten…",
       "noCandleData": "Noch keine Kerzendaten",
-      "noTradesFeed": "Wechsle zu einer Börse, die Time and Sales veröffentlicht"
+      "noTradesFeed": "Wechsle zu einer Börse, die Time and Sales veröffentlicht",
+      "noTradesFeedOn": "Keine Time and Sales auf {{venue}}",
+      "noTradesFeedHere": "Diese Börse veröffentlicht keine Time and Sales"
     },
     "columns": {
       "price": "Preis",
