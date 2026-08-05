@@ -877,6 +877,7 @@
     "sent": "报告已发送，谢谢。",
     "attached": "随附发送：v{{version}} · {{platform}} · {{route}}",
     "consentNotice": "报告通过使用分析发送，而本设备上的分析已关闭。发送将开启分析，你可以随时在隐私设置中关闭。",
+    "consentEnabledNotice": "已在本设备开启，你的报告可以送达。随时可在隐私设置中关闭。",
     "enableAndSend": "开启分析并发送",
     "unavailableNotice": "此版本没有分析密钥，无法从应用内发送报告。请复制内容并在 GitHub 上提交 issue。",
     "copy": "复制报告",

@@ -881,6 +881,7 @@
     "sent": "Zgłoszenie wysłane. Dziękujemy.",
     "attached": "Wysyłane z v{{version}} · {{platform}} · {{route}}",
     "consentNotice": "Zgłoszenia idą przez analitykę użycia, która jest wyłączona na tym urządzeniu. Wysłanie ją włączy — możesz ją wyłączyć ponownie w ustawieniach Prywatności.",
+    "consentEnabledNotice": "Włączona na tym urządzeniu, więc Twoje zgłoszenie do nas dotrze. Możesz ją wyłączyć w każdej chwili w ustawieniach Prywatności.",
     "enableAndSend": "Włącz analitykę i wyślij",
     "unavailableNotice": "Ta kompilacja nie ma klucza analityki, więc nie wyśle zgłoszenia. Skopiuj je i załóż zgłoszenie na GitHubie.",
     "copy": "Kopiuj zgłoszenie",

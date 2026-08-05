@@ -23,6 +23,8 @@ import { Input } from '@pairlens/ui/components/ui/input'
 import { Label } from '@pairlens/ui/components/ui/label'
 import { Textarea } from '@pairlens/ui/components/ui/textarea'
 
+import { AnalyticsConsentRow } from './analytics-consent-row'
+
 import type {
   FeedbackSurvey,
   FeedbackSurveyQuestion,
@@ -212,11 +214,7 @@ export function SurveyForm({ onDone }: { onDone: () => void }) {
         </div>
       ))}
 
-      {!analyticsEnabled ? (
-        <p className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
-          {t('feedback.consentNotice')}
-        </p>
-      ) : null}
+      <AnalyticsConsentRow />
 
       <div className="flex items-center justify-end gap-2">
         <Button onClick={onDone} type="button" variant="ghost">

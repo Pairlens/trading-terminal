@@ -877,6 +877,7 @@
     "sent": "回報已送出，謝謝。",
     "attached": "一併送出：v{{version}} · {{platform}} · {{route}}",
     "consentNotice": "回報透過使用分析送出，而本裝置上的分析已關閉。送出將開啟分析，你可以隨時在隱私設定中關閉。",
+    "consentEnabledNotice": "已在這台裝置開啟，你的回報可以送達。隨時可在隱私設定中關閉。",
     "enableAndSend": "開啟分析並送出",
     "unavailableNotice": "此版本沒有分析金鑰，無法從應用程式內送出回報。請複製內容並到 GitHub 開 issue。",
     "copy": "複製回報",

@@ -877,6 +877,7 @@
     "sent": "Đã gửi báo cáo. Cảm ơn bạn.",
     "attached": "Gửi kèm v{{version}} · {{platform}} · {{route}}",
     "consentNotice": "Báo cáo đi qua phân tích sử dụng, hiện đang tắt trên thiết bị này. Gửi sẽ bật nó — bạn có thể tắt lại trong cài đặt Quyền riêng tư.",
+    "consentEnabledNotice": "Đã bật trên thiết bị này nên báo cáo của bạn sẽ tới được chúng tôi. Bạn có thể tắt lại bất cứ lúc nào trong cài đặt Quyền riêng tư.",
     "enableAndSend": "Bật phân tích và gửi",
     "unavailableNotice": "Bản dựng này không có khóa phân tích nên không gửi được báo cáo từ ứng dụng. Hãy sao chép và mở issue trên GitHub.",
     "copy": "Sao chép báo cáo",

@@ -877,6 +877,7 @@
     "sent": "Bildirim gönderildi. Teşekkürler.",
     "attached": "Şununla gönderilir: v{{version}} · {{platform}} · {{route}}",
     "consentNotice": "Bildirimler kullanım analitiği üzerinden gider ve bu cihazda kapalı. Göndermek onu açar; Gizlilik ayarlarından tekrar kapatabilirsin.",
+    "consentEnabledNotice": "Bu cihazda açık, yani bildirimin bize ulaşır. Gizlilik ayarlarından istediğin zaman kapatabilirsin.",
     "enableAndSend": "Analitiği aç ve gönder",
     "unavailableNotice": "Bu sürümde analitik anahtarı yok, bu yüzden uygulamadan bildirim gönderilemez. Kopyala ve GitHub'da bir issue aç.",
     "copy": "Bildirimi kopyala",

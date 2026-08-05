@@ -877,6 +877,7 @@
     "sent": "Segnalazione inviata. Grazie.",
     "attached": "Inviato con v{{version}} · {{platform}} · {{route}}",
     "consentNotice": "Le segnalazioni passano dalle statistiche d'uso, disattivate su questo dispositivo. Inviando le attivi; puoi disattivarle di nuovo in Privacy.",
+    "consentEnabledNotice": "Ora attive su questo dispositivo, così la tua segnalazione arriva fino a noi. Puoi disattivarle quando vuoi in Privacy.",
     "enableAndSend": "Attiva statistiche e invia",
     "unavailableNotice": "Questa build non ha una chiave di analytics, quindi non può inviare segnalazioni. Copia la tua e apri una issue su GitHub.",
     "copy": "Copia segnalazione",
