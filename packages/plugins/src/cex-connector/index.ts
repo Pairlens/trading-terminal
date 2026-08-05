@@ -11,6 +11,8 @@
  * through the spec hooks below.
  */
 
+import { PlatformRestrictedError } from '@pairlens/market-engine/errors'
+import { isCorsConstrained } from '@pairlens/market-engine/platform'
 import type {
   PluginCapabilityDeclaration,
   PluginExecuteParams,
@@ -212,6 +214,15 @@ export type CexConnectorSpec<TCredentials extends CexCredentials> = {
    */
   geoCheck?: (country: string, capability: string) => void
   /**
+   * Venue whose public REST host sends no `Access-Control-Allow-Origin` AND
+   * whose WS carries no usable candle history — so it cannot work in a browser
+   * build at all. Set it and the factory refuses up front with a
+   * PlatformRestrictedError instead of letting the chart hang and then show a
+   * single live candle. Desktop is unaffected: it reaches exchanges through the
+   * Rust HTTP client, which is exempt from CORS.
+   */
+  requiresDesktop?: boolean
+  /**
    * Geo restriction check for order execution, run after credential-slot
    * resolution with the slot's provisioned country — so a missing credential
    * still surfaces as 'No credentials configured' rather than a geo error.
@@ -288,9 +299,22 @@ export function createCexConnectorPlugin<TCredentials extends CexCredentials>(
     return first.done ? null : first.value
   }
 
+  /**
+   * Refuse a venue the current build cannot reach. Mirrors geoCheck's placement
+   * so both restrictions are decided in exactly one place per entry point.
+   */
+  function platformCheck(): void {
+    if (spec.requiresDesktop && isCorsConstrained()) {
+      // manifest.name is the human label ("KuCoin"), which reaches the user
+      // verbatim wherever a pane renders the raw error message.
+      throw new PlatformRestrictedError(manifest.name || spec.marketId)
+    }
+  }
+
   async function execute(params: PluginExecuteParams): Promise<unknown> {
     const { capability, params: p, context } = params
 
+    platformCheck()
     spec.geoCheck?.(context.country, capability)
 
     if (capability === 'market-data:history') {
@@ -391,6 +415,7 @@ export function createCexConnectorPlugin<TCredentials extends CexCredentials>(
   ): () => void {
     const { capability, params: p, context } = params
 
+    platformCheck()
     spec.geoCheck?.(context.country, capability)
 
     const pair = String(p['pair'] ?? context.pair)

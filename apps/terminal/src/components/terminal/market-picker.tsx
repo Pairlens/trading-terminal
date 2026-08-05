@@ -206,6 +206,14 @@ function MarketDropdownContent({
                   <span className="flex items-center gap-2 font-medium">
                     <MarketIcon option={option} />
                     {option.label}
+                    {/* This venue serves no CORS headers and streams no candle
+                        history, so a browser build cannot read it at all. Say
+                        so before the click rather than after. */}
+                    {option.requiresDesktop && (
+                      <span className="rounded-sm border border-border/60 px-1 py-px text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
+                        Desktop
+                      </span>
+                    )}
                   </span>
                 </DropdownMenuRadioItem>
               ))}

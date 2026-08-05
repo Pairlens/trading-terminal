@@ -895,18 +895,42 @@
     "surveyOtherPlaceholder": "Napisz więcej"
   },
   "desktopCta": {
+    "eyebrow": "Aplikacja na komputer",
     "title": "Pairlens na Twoim komputerze",
-    "description": "Wersja w przeglądarce służy do testów. Wydajemy aplikację desktopową.",
-    "benefitKeychain": "Klucze giełd zostają w pęku kluczy systemu, nigdy na naszych serwerach",
-    "benefitPerformance": "Natywne okno, wykresy na GPU, bez karty przeglądarki w tle",
-    "benefitUpdates": "Podpisane aktualizacje instalują się po cichu w tle",
+    "description": "Terminal działa w przeglądarce bez zarzutu. Aplikacja na komputer znosi ograniczenia, które nakłada karta przeglądarki.",
     "downloadFor": "Pobierz dla {{os}}",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "Inne platformy",
     "sourceNote": "Każda kompilacja ma dostępne źródła i jest podpisana.",
-    "releaseNotes": "Informacje o wydaniu"
+    "releaseNotes": "Informacje o wydaniu",
+    "benefits": {
+      "venues": {
+        "title": "Każda giełda",
+        "detail": "Wszystkie 15 konektorów. Coinbase, KuCoin, Gate i MEXC blokują przeglądarki, więc działają tylko tutaj."
+      },
+      "bots": {
+        "title": "Boty, które nie stają",
+        "detail": "Przeglądarka spowalnia kartę, na którą nie patrzysz, a potem ją usypia. Tutaj boty handlują dalej, nawet po zamknięciu okna."
+      },
+      "alerts": {
+        "title": "Alerty, które docierają",
+        "detail": "Prawdziwe powiadomienia systemowe, a nie z karty, która musi być otwarta."
+      },
+      "sleep": {
+        "title": "Nie zasypia podczas pracy",
+        "detail": "Blokuje uśpienie, gdy boty są aktywne, więc zamknięcie klapy nie kończy sesji."
+      },
+      "windows": {
+        "title": "Prawdziwe okna",
+        "detail": "Przenieś wykresy na drugi monitor jako okna systemowe, nie karty przeglądarki."
+      },
+      "keychain": {
+        "title": "Klucze w magazynie systemu",
+        "detail": "Klucze giełdowe zostają w magazynie systemowym, nigdy w przeglądarce ani na naszych serwerach."
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "Menu konta",

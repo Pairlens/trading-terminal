@@ -891,18 +891,42 @@
     "surveyOtherPlaceholder": "再多說一點"
   },
   "desktopCta": {
+    "eyebrow": "桌面應用程式",
     "title": "把 Pairlens 裝到桌面",
-    "description": "瀏覽器版本用來試玩，我們真正發行的是桌面應用程式。",
-    "benefitKeychain": "交易所金鑰留在系統鑰匙圈裡，絕不會上傳到我們的伺服器",
-    "benefitPerformance": "原生視窗、GPU 圖表，沒有瀏覽器分頁來搶資源",
-    "benefitUpdates": "已簽章的更新會在背景安靜安裝",
+    "description": "終端在瀏覽器中運作良好。桌面應用程式則移除了瀏覽器分頁帶來的限制。",
     "downloadFor": "下載 {{os}} 版",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "其他平台",
     "sourceNote": "每個版本都公開原始碼並已簽章。",
-    "releaseNotes": "發行說明"
+    "releaseNotes": "發行說明",
+    "benefits": {
+      "venues": {
+        "title": "所有交易所",
+        "detail": "全部 15 個連接器。Coinbase、KuCoin、Gate 與 MEXC 完全封鎖瀏覽器，只能在這裡使用。"
+      },
+      "bots": {
+        "title": "不會被暫停的機器人",
+        "detail": "瀏覽器會拖慢你沒在看的分頁，最後將它暫停。在這裡，即使關閉視窗，機器人也會繼續交易。"
+      },
+      "alerts": {
+        "title": "真正送達的提醒",
+        "detail": "來自作業系統的原生通知，而不是必須一直開著的分頁。"
+      },
+      "sleep": {
+        "title": "執行時不休眠",
+        "detail": "機器人運行期間阻止系統休眠，闔上螢幕也不會中斷。"
+      },
+      "windows": {
+        "title": "真正的視窗",
+        "detail": "把圖表以系統視窗的形式拖到第二個螢幕，而不是瀏覽器分頁。"
+      },
+      "keychain": {
+        "title": "金鑰存於系統鑰匙圈",
+        "detail": "交易所金鑰保存在系統鑰匙圈中，不會進入瀏覽器儲存空間，也不會到我們的伺服器。"
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "帳戶選單",

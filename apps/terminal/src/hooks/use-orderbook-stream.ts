@@ -84,10 +84,14 @@ export function useOrderbookStream(
     if (!enabled || normalizedPairKey.length === 0) return
     if (mdStatus !== 'connected') return
 
-    const unsubscribe = subscribeOrderbook(
-      market,
-      normalizedPairKey,
-      (data) => {
+    // A connector can refuse synchronously when it knows the venue is
+    // unreachable from this build (PlatformRestrictedError — CORS-blocked REST
+    // with no WS history). Without this the throw escaped the effect and the
+    // pane sat on "Loading order book…" forever, which is the same silent hang
+    // the chart used to have.
+    let unsubscribe: () => void = () => {}
+    try {
+      unsubscribe = subscribeOrderbook(market, normalizedPairKey, (data) => {
         const update = data as OrderbookUpdate
         if (!update?.bids || !update?.asks) return
 
@@ -109,8 +113,11 @@ export function useOrderbookStream(
           ts: update.ts ?? Date.now(),
         })
         setStreamError(null)
-      },
-    )
+      })
+    } catch (err) {
+      setStreamError((err as Error)?.message ?? 'Subscription failed')
+      return
+    }
 
     return () => {
       unsubscribe()

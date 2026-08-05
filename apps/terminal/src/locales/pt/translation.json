@@ -891,18 +891,42 @@
     "surveyOtherPlaceholder": "Conte mais"
   },
   "desktopCta": {
+    "eyebrow": "App para desktop",
     "title": "Pairlens no seu desktop",
-    "description": "A versão no navegador é para experimentar. O app de desktop é o que publicamos.",
-    "benefitKeychain": "As chaves das corretoras ficam no chaveiro do sistema, nunca nos nossos servidores",
-    "benefitPerformance": "Janela nativa, gráficos por GPU, sem aba do navegador disputando recursos",
-    "benefitUpdates": "Atualizações assinadas se instalam sozinhas em segundo plano",
+    "description": "O terminal funciona bem no seu navegador. O app para desktop remove os limites que uma aba impõe a ele.",
     "downloadFor": "Baixar para {{os}}",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "Outras plataformas",
     "sourceNote": "Toda build tem código disponível e é assinada.",
-    "releaseNotes": "Notas da versão"
+    "releaseNotes": "Notas da versão",
+    "benefits": {
+      "venues": {
+        "title": "Todas as corretoras",
+        "detail": "Os 15 conectores. Coinbase, KuCoin, Gate e MEXC bloqueiam navegadores e só funcionam aqui."
+      },
+      "bots": {
+        "title": "Bots que continuam",
+        "detail": "O navegador desacelera uma aba que você não está vendo e depois a suspende. Aqui seus bots seguem operando, mesmo com a janela fechada."
+      },
+      "alerts": {
+        "title": "Alertas que chegam",
+        "detail": "Notificações reais do sistema operacional, não de uma aba que precisa ficar aberta."
+      },
+      "sleep": {
+        "title": "Não dorme enquanto opera",
+        "detail": "Impede a suspensão enquanto os bots estão ativos, então fechar a tampa não encerra a sessão."
+      },
+      "windows": {
+        "title": "Janelas de verdade",
+        "detail": "Leve os gráficos para um segundo monitor como janelas do sistema, não abas."
+      },
+      "keychain": {
+        "title": "Chaves no seu chaveiro",
+        "detail": "As chaves da corretora ficam no chaveiro do sistema, nunca no navegador nem nos nossos servidores."
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "Menu da conta",

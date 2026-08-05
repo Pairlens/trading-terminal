@@ -891,18 +891,42 @@
     "surveyOtherPlaceholder": "Ceritakan lebih lanjut"
   },
   "desktopCta": {
+    "eyebrow": "Aplikasi desktop",
     "title": "Pairlens di desktopmu",
-    "description": "Versi browser untuk coba-coba. Aplikasi desktop adalah yang kami rilis.",
-    "benefitKeychain": "Kunci bursa tetap di keychain sistem operasi, tidak pernah di server kami",
-    "benefitPerformance": "Jendela native, grafik GPU, tanpa tab browser yang berebut sumber daya",
-    "benefitUpdates": "Pembaruan bertanda tangan terpasang diam-diam di latar belakang",
+    "description": "Terminal berjalan dengan baik di browser Anda. Aplikasi desktop menghilangkan batasan yang diberikan tab browser.",
     "downloadFor": "Unduh untuk {{os}}",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "Platform lain",
     "sourceNote": "Setiap build sumbernya terbuka dan bertanda tangan.",
-    "releaseNotes": "Catatan rilis"
+    "releaseNotes": "Catatan rilis",
+    "benefits": {
+      "venues": {
+        "title": "Semua bursa",
+        "detail": "Seluruh 15 konektor. Coinbase, KuCoin, Gate, dan MEXC memblokir browser sepenuhnya, jadi hanya berjalan di sini."
+      },
+      "bots": {
+        "title": "Bot yang terus jalan",
+        "detail": "Browser memperlambat tab yang tidak Anda lihat lalu menangguhkannya. Di sini bot tetap berdagang, bahkan saat jendela ditutup."
+      },
+      "alerts": {
+        "title": "Notifikasi yang sampai",
+        "detail": "Notifikasi asli dari sistem operasi, bukan dari tab yang harus tetap terbuka."
+      },
+      "sleep": {
+        "title": "Tetap terjaga saat aktif",
+        "detail": "Menahan mode tidur selama bot aktif, jadi menutup layar tidak mengakhiri sesi."
+      },
+      "windows": {
+        "title": "Jendela sungguhan",
+        "detail": "Pindahkan grafik ke monitor kedua sebagai jendela sistem, bukan tab browser."
+      },
+      "keychain": {
+        "title": "Kunci di keychain OS",
+        "detail": "Kunci bursa tersimpan di keychain sistem, tidak pernah di penyimpanan browser atau server kami."
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "Menu akun",

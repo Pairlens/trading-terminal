@@ -384,6 +384,7 @@ export function useChartTerminalState(
     hasSnapshot,
     stale,
     noData,
+    desktopOnly,
   } = useCandleStream({
     market,
     pairKey,
@@ -1367,6 +1368,7 @@ export function useChartTerminalState(
     status,
     stale,
     noData,
+    desktopOnly,
     latestCandle,
     latestSignal,
     candles,

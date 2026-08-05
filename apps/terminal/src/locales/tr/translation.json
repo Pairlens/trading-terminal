@@ -891,18 +891,42 @@
     "surveyOtherPlaceholder": "Biraz daha anlat"
   },
   "desktopCta": {
+    "eyebrow": "Masaüstü uygulaması",
     "title": "Masaüstünde Pairlens",
-    "description": "Tarayıcı sürümü denemek için. Yayınladığımız asıl ürün masaüstü uygulaması.",
-    "benefitKeychain": "Borsa anahtarların işletim sisteminin anahtar zincirinde kalır, sunucularımızda asla",
-    "benefitPerformance": "Yerel pencere, GPU grafikleri, arada tarayıcı sekmesi yok",
-    "benefitUpdates": "İmzalı güncellemeler arka planda sessizce kurulur",
+    "description": "Terminal tarayıcınızda sorunsuz çalışır. Masaüstü uygulaması, bir tarayıcı sekmesinin getirdiği sınırları kaldırır.",
     "downloadFor": "{{os}} için indir",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "Diğer platformlar",
     "sourceNote": "Her sürüm kaynağı açık ve imzalıdır.",
-    "releaseNotes": "Sürüm notları"
+    "releaseNotes": "Sürüm notları",
+    "benefits": {
+      "venues": {
+        "title": "Her borsa",
+        "detail": "15 bağlayıcının tamamı. Coinbase, KuCoin, Gate ve MEXC tarayıcıları tamamen engeller, yalnızca burada çalışır."
+      },
+      "bots": {
+        "title": "Duraklamayan botlar",
+        "detail": "Tarayıcı bakmadığınız sekmeyi yavaşlatır, sonra askıya alır. Burada botlarınız pencere kapalıyken bile işlem yapmayı sürdürür."
+      },
+      "alerts": {
+        "title": "Ulaşan uyarılar",
+        "detail": "Açık kalması gereken bir sekmeden değil, işletim sisteminden gerçek bildirimler."
+      },
+      "sleep": {
+        "title": "Çalışırken uyumaz",
+        "detail": "Botlar etkinken uykuyu engeller, kapağı kapatmak oturumu bitirmez."
+      },
+      "windows": {
+        "title": "Gerçek pencereler",
+        "detail": "Grafikleri tarayıcı sekmesi olarak değil, gerçek sistem penceresi olarak ikinci ekrana taşıyın."
+      },
+      "keychain": {
+        "title": "Anahtarlar sistem kasanızda",
+        "detail": "Borsa anahtarları sistem anahtar zincirinde kalır, tarayıcı deposunda ya da sunucularımızda asla."
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "Hesap menüsü",

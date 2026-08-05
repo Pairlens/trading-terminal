@@ -891,18 +891,42 @@
     "surveyOtherPlaceholder": "もう少し詳しく"
   },
   "desktopCta": {
+    "eyebrow": "デスクトップアプリ",
     "title": "デスクトップで使う Pairlens",
-    "description": "ブラウザ版はお試し用です。実際に提供しているのはデスクトップアプリです。",
-    "benefitKeychain": "取引所の API キーは OS のキーチェーンに保存され、サーバーには送りません",
-    "benefitPerformance": "ネイティブウィンドウと GPU チャート。ブラウザのタブに邪魔されません",
-    "benefitUpdates": "署名済みのアップデートがバックグラウンドで静かに入ります",
+    "description": "ターミナルはブラウザでも問題なく動きます。デスクトップアプリは、ブラウザのタブによる制約を取り払います。",
     "downloadFor": "{{os}} 版をダウンロード",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "ほかのプラットフォーム",
     "sourceNote": "すべてのビルドはソース公開で署名済みです。",
-    "releaseNotes": "リリースノート"
+    "releaseNotes": "リリースノート",
+    "benefits": {
+      "venues": {
+        "title": "すべての取引所",
+        "detail": "15 のコネクタすべて。Coinbase、KuCoin、Gate、MEXC はブラウザを遮断するため、ここでしか動きません。"
+      },
+      "bots": {
+        "title": "止まらないボット",
+        "detail": "ブラウザは見ていないタブを減速させ、やがて停止します。ここではウィンドウを閉じてもボットは取引を続けます。"
+      },
+      "alerts": {
+        "title": "確実に届く通知",
+        "detail": "開いたままのタブからではなく、OS からの本物の通知です。"
+      },
+      "sleep": {
+        "title": "稼働中はスリープしない",
+        "detail": "ボットの稼働中はスリープを抑止するので、ふたを閉じてもセッションは終わりません。"
+      },
+      "windows": {
+        "title": "本物のウィンドウ",
+        "detail": "チャートをブラウザのタブではなく、OS のウィンドウとして 2 台目のモニタへ。"
+      },
+      "keychain": {
+        "title": "鍵は OS のキーチェーンに",
+        "detail": "取引所の鍵はシステムのキーチェーンに保存され、ブラウザにも当社サーバーにも残りません。"
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "アカウントメニュー",

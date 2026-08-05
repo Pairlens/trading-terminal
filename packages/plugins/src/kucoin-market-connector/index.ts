@@ -30,6 +30,7 @@ export const KUCOIN_ADAPTER_INFO: MarketAdapterInfo = {
   displayName: 'KuCoin',
   assetClasses: ['crypto-spot'],
   capabilities: ['read', 'trade'],
+  requiresDesktop: true,
   credentialSchema: [
     { key: 'apiKey', label: 'API Key', type: 'text', required: true },
     {
@@ -92,6 +93,7 @@ const kucoinSpec: CexConnectorSpec<KucoinCredentials> = {
     { key: 'passphrase', required: true },
   ],
   defaultMode: 'paper',
+  requiresDesktop: true,
   createWsClient: () => new KucoinWsClient(),
   createPrivateWsClient: () => new KucoinPrivateWsClient(),
   fetchCandles: (pair, timeframe, limit, country) =>

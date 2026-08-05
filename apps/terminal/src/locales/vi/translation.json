@@ -891,18 +891,42 @@
     "surveyOtherPlaceholder": "Kể thêm cho chúng tôi"
   },
   "desktopCta": {
+    "eyebrow": "Ứng dụng máy tính",
     "title": "Pairlens trên máy tính của bạn",
-    "description": "Bản chạy trên trình duyệt để dùng thử. Ứng dụng máy tính mới là bản chúng tôi phát hành.",
-    "benefitKeychain": "Khóa sàn nằm trong keychain của hệ điều hành, không bao giờ trên máy chủ của chúng tôi",
-    "benefitPerformance": "Cửa sổ gốc, biểu đồ chạy GPU, không có tab trình duyệt tranh tài nguyên",
-    "benefitUpdates": "Bản cập nhật có chữ ký tự cài lặng lẽ ở nền",
+    "description": "Terminal chạy tốt ngay trong trình duyệt. Ứng dụng máy tính gỡ bỏ những giới hạn mà một tab trình duyệt áp lên nó.",
     "downloadFor": "Tải cho {{os}}",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "Nền tảng khác",
     "sourceNote": "Mọi bản dựng đều mở mã nguồn và được ký.",
-    "releaseNotes": "Ghi chú phát hành"
+    "releaseNotes": "Ghi chú phát hành",
+    "benefits": {
+      "venues": {
+        "title": "Mọi sàn giao dịch",
+        "detail": "Đủ 15 kết nối. Coinbase, KuCoin, Gate và MEXC chặn trình duyệt hoàn toàn nên chỉ chạy ở đây."
+      },
+      "bots": {
+        "title": "Bot chạy không ngắt",
+        "detail": "Trình duyệt làm chậm tab bạn không nhìn rồi tạm dừng nó. Ở đây bot vẫn giao dịch, kể cả khi đã đóng cửa sổ."
+      },
+      "alerts": {
+        "title": "Cảnh báo luôn tới nơi",
+        "detail": "Thông báo thật từ hệ điều hành, không phải từ một tab phải mở liên tục."
+      },
+      "sleep": {
+        "title": "Không ngủ khi đang chạy",
+        "detail": "Giữ máy thức trong lúc bot hoạt động, đóng nắp máy không kết thúc phiên."
+      },
+      "windows": {
+        "title": "Cửa sổ thật",
+        "detail": "Kéo biểu đồ sang màn hình thứ hai như cửa sổ hệ thống, không phải tab trình duyệt."
+      },
+      "keychain": {
+        "title": "Khóa nằm trong keychain",
+        "detail": "Khóa sàn nằm trong keychain hệ thống, không bao giờ ở bộ nhớ trình duyệt hay máy chủ của chúng tôi."
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "Menu tài khoản",

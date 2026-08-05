@@ -891,18 +891,42 @@
     "surveyOtherPlaceholder": "Dites-nous en plus"
   },
   "desktopCta": {
+    "eyebrow": "Application de bureau",
     "title": "Pairlens sur votre bureau",
-    "description": "La version navigateur sert aux tests. L'app de bureau est celle que nous publions.",
-    "benefitKeychain": "Vos clés d'exchange restent dans le trousseau du système, jamais sur nos serveurs",
-    "benefitPerformance": "Fenêtre native, graphiques GPU, sans onglet qui leur dispute la machine",
-    "benefitUpdates": "Les mises à jour signées s'installent discrètement en arrière-plan",
+    "description": "Le terminal fonctionne très bien dans votre navigateur. L'application de bureau lève les limites qu'un onglet lui impose.",
     "downloadFor": "Télécharger pour {{os}}",
     "macos": "macOS",
     "windows": "Windows",
     "linux": "Linux",
     "otherPlatforms": "Autres plateformes",
     "sourceNote": "Chaque build est à code ouvert et signé.",
-    "releaseNotes": "Notes de version"
+    "releaseNotes": "Notes de version",
+    "benefits": {
+      "venues": {
+        "title": "Toutes les plateformes",
+        "detail": "Les 15 connecteurs. Coinbase, KuCoin, Gate et MEXC bloquent les navigateurs et ne fonctionnent qu'ici."
+      },
+      "bots": {
+        "title": "Des bots qui continuent",
+        "detail": "Le navigateur ralentit un onglet que vous ne regardez pas, puis le suspend. Ici vos bots continuent de trader, même fenêtre fermée."
+      },
+      "alerts": {
+        "title": "Des alertes qui arrivent",
+        "detail": "De vraies notifications du système, pas d'un onglet qui doit rester ouvert."
+      },
+      "sleep": {
+        "title": "Reste éveillé en position",
+        "detail": "Empêche la mise en veille tant que des bots tournent, donc fermer l'écran n'arrête pas la session."
+      },
+      "windows": {
+        "title": "De vraies fenêtres",
+        "detail": "Placez vos graphiques sur un second écran comme de vraies fenêtres système, pas des onglets."
+      },
+      "keychain": {
+        "title": "Clés dans votre trousseau",
+        "detail": "Les clés d'API restent dans le trousseau du système, jamais dans le navigateur ni sur nos serveurs."
+      }
+    }
   },
   "userMenu": {
     "accountMenu": "Menu du compte",

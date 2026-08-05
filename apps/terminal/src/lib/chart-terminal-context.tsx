@@ -34,6 +34,7 @@ export type CandleStreamValue = Pick<
   | 'status'
   | 'stale'
   | 'noData'
+  | 'desktopOnly'
   | 'hasSnapshot'
   | 'errorMessage'
 >
@@ -182,6 +183,7 @@ export function ChartTerminalProvider({
       status: state.status,
       stale: state.stale,
       noData: state.noData,
+      desktopOnly: state.desktopOnly,
       hasSnapshot: state.hasSnapshot,
       errorMessage: state.errorMessage,
     }),
@@ -192,6 +194,7 @@ export function ChartTerminalProvider({
       state.status,
       state.stale,
       state.noData,
+      state.desktopOnly,
       state.hasSnapshot,
       state.errorMessage,
     ],
