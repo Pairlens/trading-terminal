@@ -3406,7 +3406,7 @@
         "description": "A rule is a small flow: something happens — a level is crossed, a candle closes, an order fills, an indicator alert trips — it passes whatever conditions you attach, and then it reaches you as a toast, an OS notification, or a webhook.",
         "startBlank": "Start from a blank canvas",
         "startFromTemplate": "Start from a template",
-        "footnote": "Templates open as a draft bound to {{pair}} on {{market}} — edit the steps, retarget the pair under the rule list, then Commit to save. Rules only fire while Pairlens is running."
+        "footnote": "Templates arrive armed, bound to {{pair}} on {{market}}. Edit the steps or retarget the pair under the rule list, then Commit to save your changes. Rules only fire while Pairlens is running."
       },
       "direction": "Direction",
       "above": "Above",

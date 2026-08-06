@@ -3432,7 +3432,7 @@
         "description": "Reguła to mały przepływ: coś się dzieje — poziom zostaje przekroczony, świeca się zamyka, zlecenie zostaje zrealizowane, wskaźnik wysyła alert — przechodzi przez dodane warunki, a następnie dociera do ciebie jako toast, powiadomienie systemowe lub webhook.",
         "startBlank": "Zacznij od pustego płótna",
         "startFromTemplate": "Zacznij od szablonu",
-        "footnote": "Szablony otwierają się jako szkic powiązany z {{pair}} na {{market}} — edytuj kroki, zmień parę na liście reguł, a następnie zapisz. Reguły działają tylko wtedy, gdy Pairlens jest uruchomiony."
+        "footnote": "Szablony są od razu aktywne i przypisane do {{pair}} na {{market}}. Zmień kroki lub parę pod listą reguł, a potem zapisz zmiany. Reguły działają tylko wtedy, gdy Pairlens jest uruchomiony."
       },
       "direction": "Kierunek",
       "above": "Powyżej",

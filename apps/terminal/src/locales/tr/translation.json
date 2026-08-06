@@ -3406,7 +3406,7 @@
         "description": "Bir kural küçük bir akıştır: bir şey olur — bir seviye geçilir, bir mum kapanır, bir emir gerçekleşir, bir gösterge uyarısı tetiklenir — eklediğin koşullardan geçer ve sana toast, sistem bildirimi ya da webhook olarak ulaşır.",
         "startBlank": "Boş bir tuvalden başla",
         "startFromTemplate": "Bir şablondan başla",
-        "footnote": "Şablonlar {{market}} üzerinde {{pair}} pairine bağlı bir taslak olarak açılır — adımları düzenle, kural listesinden pariteyi değiştir, sonra Kaydet ile kaydet. Kurallar yalnızca Pairlens çalışırken tetiklenir."
+        "footnote": "Şablonlar {{market}} üzerindeki {{pair}} çiftine bağlı olarak hazır gelir. Adımları düzenleyin ya da kural listesinin altından çifti değiştirin, sonra değişikliklerinizi kaydedin. Kurallar yalnızca Pairlens açıkken çalışır."
       },
       "direction": "Yön",
       "above": "Üzerinde",

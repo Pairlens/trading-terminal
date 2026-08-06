@@ -3406,7 +3406,7 @@
         "description": "Một quy tắc là một luồng nhỏ: điều gì đó xảy ra — giá vượt qua một mức, một nến đóng lại, một lệnh được khớp, một cảnh báo chỉ báo được kích hoạt — nó đi qua các điều kiện bạn thêm vào, rồi đến với bạn dưới dạng toast, thông báo hệ thống, hoặc webhook.",
         "startBlank": "Bắt đầu từ khung vẽ trống",
         "startFromTemplate": "Bắt đầu từ mẫu",
-        "footnote": "Các mẫu mở dưới dạng bản nháp liên kết với {{pair}} trên {{market}} — hãy chỉnh sửa các bước, đổi cặp giao dịch trong danh sách quy tắc, rồi Lưu. Quy tắc chỉ hoạt động khi Pairlens đang chạy."
+        "footnote": "Mẫu có hiệu lực ngay, gắn với {{pair}} trên {{market}}. Sửa các bước hoặc đổi cặp bên dưới danh sách quy tắc, rồi lưu thay đổi. Quy tắc chỉ chạy khi Pairlens đang mở."
       },
       "direction": "Hướng",
       "above": "Trên",

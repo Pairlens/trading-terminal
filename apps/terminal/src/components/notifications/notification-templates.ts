@@ -317,8 +317,15 @@ export function notificationTemplateGraph(template: NotificationTemplate): {
  *
  * Same store actions the sidebar and canvas already use — `createRule` /
  * `createPriceAlertRule`, `startEditing`, then `addStep`/`addEdge` per element
- * exactly as a drop on the canvas does. The user lands on a normal draft with
- * the commit bar armed, free to change anything before saving.
+ * exactly as a drop on the canvas does.
+ *
+ * The graph is then committed, so the rule is armed the moment it appears.
+ * Leaving it as an uncommitted draft meant the rule showed up in the list with
+ * its toggle on while `rule.steps` was still empty: enabled, visible, and
+ * incapable of firing until the user happened to notice the Commit button.
+ * The price-level branch below has always committed for exactly this reason.
+ * Editing still works the usual way — commitDraft re-opens the rule with a
+ * clean draft, so the canvas stays live and the next change is pending again.
  */
 export function applyNotificationTemplate(
   template: NotificationTemplate,
@@ -349,6 +356,7 @@ export function applyNotificationTemplate(
   const { steps, edges } = notificationTemplateGraph(template)
   for (const step of steps) store.addStep(step)
   for (const edge of edges) store.addEdge(edge)
+  store.commitDraft()
 
   return ruleId
 }

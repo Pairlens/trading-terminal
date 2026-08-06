@@ -3406,7 +3406,7 @@
         "description": "Aturan adalah alur kecil: sesuatu terjadi — level tertembus, candle ditutup, order terisi, alert indikator terpicu — lalu melewati kondisi yang Anda tambahkan, dan akhirnya sampai ke Anda sebagai toast, notifikasi sistem, atau webhook.",
         "startBlank": "Mulai dari kanvas kosong",
         "startFromTemplate": "Mulai dari template",
-        "footnote": "Template terbuka sebagai draf yang terikat ke {{pair}} di {{market}} — edit langkah-langkahnya, ubah pair di daftar aturan, lalu Simpan. Aturan hanya aktif selama Pairlens berjalan."
+        "footnote": "Templat langsung aktif, terikat ke {{pair}} di {{market}}. Ubah langkahnya atau ganti pasangan di bawah daftar aturan, lalu Simpan perubahannya. Aturan hanya berjalan selama Pairlens terbuka."
       },
       "direction": "Arah",
       "above": "Di atas",

@@ -3406,7 +3406,7 @@
         "description": "Una regla es un flujo pequeño: algo ocurre — se cruza un nivel, cierra una vela, se ejecuta una orden, salta una alerta de indicador — pasa por las condiciones que agregues y luego te llega como un toast, una notificación del sistema o un webhook.",
         "startBlank": "Empezar con un lienzo en blanco",
         "startFromTemplate": "Empezar con una plantilla",
-        "footnote": "Las plantillas se abren como borrador vinculado a {{pair}} en {{market}} — edita los pasos, cambia el par en la lista de reglas y luego usa Guardar. Las reglas solo se activan mientras Pairlens está en ejecución."
+        "footnote": "Las plantillas llegan activas, vinculadas a {{pair}} en {{market}}. Edita los pasos o cambia el par bajo la lista de reglas y pulsa Guardar para conservar los cambios. Las reglas solo se disparan mientras Pairlens está abierto."
       },
       "direction": "Dirección",
       "above": "Por encima",

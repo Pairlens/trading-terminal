@@ -3406,7 +3406,7 @@
         "description": "Uma regra é um fluxo pequeno: algo acontece — um nível é cruzado, um candle fecha, uma ordem é executada, um alerta de indicador dispara — passa pelas condições que você adicionar e chega até você como um toast, uma notificação do sistema ou um webhook.",
         "startBlank": "Começar com uma tela em branco",
         "startFromTemplate": "Começar com um modelo",
-        "footnote": "Os modelos abrem como rascunho vinculado a {{pair}} em {{market}} — edite as etapas, troque o par na lista de regras e depois salve. As regras só disparam enquanto o Pairlens está em execução."
+        "footnote": "Os modelos já chegam ativos, vinculados a {{pair}} na {{market}}. Edite os passos ou troque o par abaixo da lista de regras e salve as alterações. As regras só disparam enquanto o Pairlens estiver aberto."
       },
       "direction": "Direção",
       "above": "Acima",

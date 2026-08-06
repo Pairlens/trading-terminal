@@ -130,19 +130,21 @@ function useUndoRedo(
 
 // ── Disconnected node detection ──────────────────────────────────────
 
-function getDisconnectedNodeIds(
+export function getDisconnectedNodeIds(
   nodes: Array<Node>,
   edges: Array<Edge>,
 ): Set<string> {
-  // Event steps are roots — find all of them
-  const EVENT_TYPES = [
-    'price-alert',
-    'order-executed',
-    'signal-generated',
-    'indicator-alert',
-    'candle-close',
-  ]
-  const eventSteps = nodes.filter((n) => EVENT_TYPES.includes(n.type ?? ''))
+  // Event steps are roots. Ask the registry what an event is rather than
+  // keeping a list here: a hardcoded one silently omitted `indicator-alert`
+  // and every plugin-contributed event, and the failure was ugly. With no
+  // recognised root the whole graph was declared connected; add one
+  // recognised event step to such a rule and the BFS suddenly started from
+  // that node alone, marking every correctly-wired node around it as
+  // disconnected. That is what made editing a template look like it tore
+  // the flow apart.
+  const eventSteps = nodes.filter(
+    (n) => getStepType(n.type ?? '')?.category === 'event',
+  )
   if (eventSteps.length === 0) return new Set()
 
   const adj = new Map<string, Array<string>>()

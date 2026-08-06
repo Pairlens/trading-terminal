@@ -3406,7 +3406,7 @@
         "description": "Una regola è un piccolo flusso: succede qualcosa — un livello viene superato, una candela si chiude, un ordine viene eseguito, un indicatore scatta — passa attraverso le condizioni che aggiungi e poi ti raggiunge come toast, notifica di sistema o webhook.",
         "startBlank": "Inizia da una lavagna vuota",
         "startFromTemplate": "Inizia da un modello",
-        "footnote": "I modelli si aprono come bozza collegata a {{pair}} su {{market}} — modifica i passi, cambia la coppia nell'elenco delle regole, poi salva con Salva. Le regole scattano solo mentre Pairlens è in esecuzione."
+        "footnote": "I modelli sono già attivi, associati a {{pair}} su {{market}}. Modifica i passaggi o cambia la coppia sotto l’elenco delle regole, poi salva le modifiche. Le regole scattano solo mentre Pairlens è in esecuzione."
       },
       "direction": "Direzione",
       "above": "Sopra",
