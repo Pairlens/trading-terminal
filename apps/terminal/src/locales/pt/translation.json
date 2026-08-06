@@ -1190,7 +1190,20 @@
     "createFirst": "Crie seu primeiro workspace",
     "emptyState": "Ainda não há workspaces",
     "descriptionLabel": "Descrição",
-    "descriptionPlaceholder": "Descrição breve opcional"
+    "descriptionPlaceholder": "Descrição breve opcional",
+    "save": {
+      "title": "Salvar workspace",
+      "description": "Guarde esta disposição de painéis como um workspace que você pode reabrir quando quiser.",
+      "submit": "Salvar workspace",
+      "saved": "“{{name}}” salvo nos seus workspaces.",
+      "updated": "“{{name}}” atualizado.",
+      "cloudHint": "Sincroniza com a sua conta Pairlens, então abre em qualquer dispositivo em que você entrar.",
+      "syncOffHint": "A sincronização de workspaces está desligada, então isto fica neste dispositivo.",
+      "localHint": "Salvo neste dispositivo. Entre para sincronizar com a sua conta Pairlens e abrir em qualquer lugar.",
+      "localOnlyHint": "Salvo neste dispositivo.",
+      "copyName": "{{name}} (cópia)",
+      "namePlaceholder": "Meu Workspace"
+    }
   },
   "session": {
     "checking": "Verificando sessão…",
@@ -2329,7 +2342,10 @@
       "splitTop": "Dividir acima",
       "splitBottom": "Dividir abaixo",
       "newColumn": "Nova coluna"
-    }
+    },
+    "currentLayout": "Layout atual",
+    "saveAsWorkspace": "Salvar como workspace…",
+    "updateWorkspace": "Atualizar “{{name}}”"
   },
   "watchlist": {
     "addTitle": "Adicionar à watchlist",

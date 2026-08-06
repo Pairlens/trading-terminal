@@ -1196,7 +1196,20 @@
     "createFirst": "Utwórz swój pierwszy obszar roboczy",
     "emptyState": "Brak obszarów roboczych",
     "descriptionLabel": "Opis",
-    "descriptionPlaceholder": "Opcjonalny krótki opis"
+    "descriptionPlaceholder": "Opcjonalny krótki opis",
+    "save": {
+      "title": "Zapisz obszar roboczy",
+      "description": "Zachowaj ten układ paneli jako obszar roboczy, który otworzysz w dowolnej chwili.",
+      "submit": "Zapisz obszar roboczy",
+      "saved": "„{{name}}” zapisano w Twoich obszarach roboczych.",
+      "updated": "„{{name}}” zaktualizowano.",
+      "cloudHint": "Synchronizuje się z Twoim kontem Pairlens, więc otworzysz go na każdym zalogowanym urządzeniu.",
+      "syncOffHint": "Synchronizacja obszarów roboczych jest wyłączona, więc to zostanie na tym urządzeniu.",
+      "localHint": "Zapisze się na tym urządzeniu. Zaloguj się, aby zsynchronizować go z kontem Pairlens i otwierać wszędzie.",
+      "localOnlyHint": "Zapisze się na tym urządzeniu.",
+      "copyName": "{{name}} (kopia)",
+      "namePlaceholder": "Mój obszar roboczy"
+    }
   },
   "session": {
     "checking": "Sprawdzanie sesji…",
@@ -2345,7 +2358,10 @@
       "splitTop": "Podziel u góry",
       "splitBottom": "Podziel na dole",
       "newColumn": "Nowa kolumna"
-    }
+    },
+    "currentLayout": "Bieżący układ",
+    "saveAsWorkspace": "Zapisz jako obszar roboczy…",
+    "updateWorkspace": "Zaktualizuj „{{name}}”"
   },
   "watchlist": {
     "addTitle": "Dodaj do listy obserwowanych",

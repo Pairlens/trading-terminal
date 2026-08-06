@@ -122,11 +122,19 @@ export const SCREEN_SIZE_META: Record<
 // an active pair / wallet are auto-bound to the template's variables, matching
 // how the layout reducer wires panes when they're added interactively.
 
+// These two sets restate what each panel declares in its manifest
+// (`requires: ['workspace:active-pair' | 'workspace:active-wallet']`, see
+// pairlens-core and pairlens-intelligence). They exist as a copy because the
+// catalog builds its layouts at module scope, long before a pane registry
+// exists to ask — `createPaneInstance` in lib/layout/reducer.ts is the runtime
+// half of the same rule. A copy can drift, so dependency-analysis.test.ts
+// asserts these match the real manifests.
 const PANES_NEEDING_PAIR = new Set([
   'chart',
   'data-log',
   'depth',
   'orderbook',
+  'trades',
   'pair-info',
   'liquidity-heatmap',
   'trade-entry',
