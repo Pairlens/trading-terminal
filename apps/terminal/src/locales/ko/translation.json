@@ -2359,6 +2359,7 @@
       "spot": "현물"
     },
     "tier": "등급",
+    "uninstall": "제거",
     "uninstalled": "제거됨",
     "updateReactivate": "업데이트 & 재활성화",
     "version": "버전",

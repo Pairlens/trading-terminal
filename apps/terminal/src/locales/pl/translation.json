@@ -2375,6 +2375,7 @@
       "spot": "Spot"
     },
     "tier": "Poziom",
+    "uninstall": "Odinstaluj",
     "uninstalled": "Odinstalowano",
     "updateReactivate": "Zaktualizuj i reaktywuj",
     "version": "Wersja",

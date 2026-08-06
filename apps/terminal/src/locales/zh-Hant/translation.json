@@ -2359,6 +2359,7 @@
       "spot": "現貨"
     },
     "tier": "等級",
+    "uninstall": "解除安裝",
     "uninstalled": "已解除安裝",
     "updateReactivate": "更新並重新啟用",
     "version": "版本",
