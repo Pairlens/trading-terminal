@@ -2800,9 +2800,8 @@
       "groupBroker": "Konto brokerskie",
       "groupExchange": "Konto giełdowe",
       "selectWalletTopBar": "Wybierz portfel na górnym pasku",
-      "connectChainWallet": "Połącz portfel {{chain}}",
-      "connectExchangeAccount": "Połącz konto {{exchange}}",
-      "selectAccountTopBar": "Wybierz konto na górnym pasku"
+      "selectAccountTopBar": "Wybierz konto na górnym pasku",
+      "gateNoTrading": "Tylko dane rynkowe. Tutaj nie można handlować."
     },
     "trade": {
       "limitBuy": "Kupno z limitem",

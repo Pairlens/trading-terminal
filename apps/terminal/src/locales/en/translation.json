@@ -2773,16 +2773,15 @@
       "connectAccount": "Connect account",
       "connectHintWallet": "Connect a {{chain}} wallet to trade",
       "connectHintWalletAny": "Connect a wallet to trade",
-      "connectHintAccount": "Connect a {{venue}} account to trade",
+      "connectHintAccount": "Connect your {{venue}} account to trade",
       "selectWallet": "Select wallet",
       "selectAccount": "Select account",
       "groupWallet": "Crypto Wallet",
       "groupBroker": "Broker Account",
       "groupExchange": "Exchange Account",
       "selectWalletTopBar": "Select wallet in top bar",
-      "connectChainWallet": "Connect {{chain}} wallet",
-      "connectExchangeAccount": "Connect {{exchange}} account",
-      "selectAccountTopBar": "Select account in top bar"
+      "selectAccountTopBar": "Select account in top bar",
+      "gateNoTrading": "Market data only. Orders can't be placed here."
     },
     "trade": {
       "limitBuy": "Limit Buy",

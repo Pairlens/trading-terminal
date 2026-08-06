@@ -29,6 +29,8 @@ import { Tabs, TabsList, TabsTrigger } from '@pairlens/ui/components/ui/tabs'
 import { executeWorkflow } from '@pairlens/workflow-engine/executor'
 import { checkWorkflowMarketCompat } from '@pairlens/workflow-engine/market-compat'
 import { TradeConfirmButton } from './trade-confirm-button'
+import { TradeConnectGate } from './trade-connect-gate'
+import { CHAIN_NAME } from './wallet-selector'
 import type { RefObject } from 'react'
 
 import type { OrderExecutor } from '@pairlens/workflow-engine/types'
@@ -433,6 +435,27 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     wallet && isDex
       ? cryptoWallets.find((w) => w.id === wallet.walletId)
       : undefined
+
+  // Wallets that can sign for this venue. One EVM key covers every EVM chain,
+  // so the match is on the chain, not the market.
+  const chainWallets = isDex
+    ? cryptoWallets.filter((w) => w.chain === marketInfo?.walletChain)
+    : []
+
+  // Nothing on this ticket can reach an order book: no API keys for the
+  // exchange, no wallet for the chain, or a connector that only streams prices.
+  // Blur it behind the connect gate rather than leaving a form that looks
+  // perfectly live right up to the rejection.
+  //
+  // A sealed vault is excluded on purpose — the store is empty because it could
+  // not be read, not because there is nothing in it, and "connect an account"
+  // would send a user who already has keys off to enter them a second time.
+  const needsConnect =
+    marketInfo != null &&
+    !(isDex ? walletsSealed : credentialsSealed) &&
+    (isDex ? walletsLoaded : loaded) &&
+    (!marketInfo.capabilities.includes('trade') ||
+      (isDex ? chainWallets.length === 0 : marketCreds.length === 0))
 
   const balanceMap = useBalanceMap(
     isDex
@@ -927,10 +950,12 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     </Badge>
   ) : null
 
-  return (
+  const body = (
     <div className="flex shrink-0 flex-col">
       <div className="flex flex-col gap-2.5 p-2.5">
-        {/* Wallet status */}
+        {/* Wallet status. The "nothing connected here" case belongs to the
+            connect gate below — what's left is a vault that can't be read, and
+            an account that exists but hasn't been picked for this pane. */}
         {(isDex ? walletsSealed : credentialsSealed) ? (
           <button
             type="button"
@@ -942,26 +967,24 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </button>
         ) : isDex ? (
           walletsLoaded &&
-          !selectedWallet && (
+          !selectedWallet &&
+          chainWallets.length > 0 && (
             <Link
               to="/accounts"
               className="text-center text-xs text-muted-foreground hover:text-foreground"
             >
-              {cryptoWallets.some((w) => w.chain === marketInfo?.walletChain)
-                ? `${t('terminal.wallet.selectWalletTopBar')} →`
-                : `${t('terminal.wallet.connectChainWallet', { chain: marketInfo?.walletChain ?? 'crypto' })} →`}
+              {`${t('terminal.wallet.selectWalletTopBar')} →`}
             </Link>
           )
         ) : (
           loaded &&
-          !selectedCred && (
+          !selectedCred &&
+          marketCreds.length > 0 && (
             <Link
               to="/accounts"
               className="text-center text-xs text-muted-foreground hover:text-foreground"
             >
-              {marketCreds.length === 0
-                ? `${t('terminal.wallet.connectExchangeAccount', { exchange: exchangeLabel })} →`
-                : `${t('terminal.wallet.selectAccountTopBar')} →`}
+              {`${t('terminal.wallet.selectAccountTopBar')} →`}
             </Link>
           )
         )}
@@ -1333,6 +1356,33 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         open={presetsConfigOpen}
         onOpenChange={setPresetsConfigOpen}
         quoteAsset={quoteAsset}
+      />
+    </div>
+  )
+
+  // `needsConnect` already implies a resolved marketInfo — the second half of
+  // the guard is what tells the type checker so.
+  if (!needsConnect || !marketInfo) return body
+
+  const gateChain = marketInfo.walletChain
+
+  // The ticket stays on screen — blurred and inert — so the pane keeps its
+  // shape and the gate reads as a lock over this venue's ticket rather than a
+  // generic empty state.
+  return (
+    <div className="relative shrink-0">
+      <div
+        aria-hidden
+        inert
+        className="pointer-events-none select-none opacity-70 blur-[2.5px]"
+      >
+        {body}
+      </div>
+      <TradeConnectGate
+        market={market}
+        venueLabel={gateChain ? CHAIN_NAME[gateChain] : exchangeLabel}
+        chain={gateChain}
+        readOnly={!marketInfo.capabilities.includes('trade')}
       />
     </div>
   )

@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, motion } from 'motion/react'
 import {
@@ -64,6 +64,11 @@ export type ConnectExchangeWizardProps = {
   resolvedMarket: string | null
   /** 'exchange' (crypto CEX) or 'broker' (stock broker) — copy only. */
   variant: 'exchange' | 'broker'
+  /**
+   * Venue to open on, skipping the picker — set when the wizard is opened from
+   * somewhere that already knows the venue (the trade ticket's connect gate).
+   */
+  initialMarket?: string | null
 }
 
 export function ConnectExchangeWizard({
@@ -84,23 +89,13 @@ export function ConnectExchangeWizard({
   schema,
   resolvedMarket,
   variant,
+  initialMarket,
 }: ConnectExchangeWizardProps) {
   const { t } = useTranslation()
   const { getSignupUrl } = useAffiliateLinks()
   const [step, setStep] = useState<WizardStep>('exchange')
   const isBroker = variant === 'broker'
   const resolvedSignupUrl = resolvedMarket ? getSignupUrl(resolvedMarket) : null
-
-  // Reset wizard state when dialog opens/closes
-  useEffect(() => {
-    if (open) {
-      setStep('exchange')
-      setSelectedMarket(null)
-      setFormFields({})
-      setWalletName('')
-      setFeedback(null)
-    }
-  }, [open, setSelectedMarket, setFormFields, setWalletName, setFeedback])
 
   const availableModes = schema?.modes ?? ['paper', 'live']
 
@@ -142,6 +137,26 @@ export function ConnectExchangeWizard({
       getSignupUrl,
     ],
   )
+
+  // Reset wizard state when the dialog opens, or jump straight past the venue
+  // picker when the caller already knows the venue. Read through refs so the
+  // effect stays keyed on `open` alone — re-running it when the affiliate links
+  // resolve would wipe a half-filled form.
+  const openOnRef = useRef({ market: initialMarket, select: selectExchange })
+  openOnRef.current = { market: initialMarket, select: selectExchange }
+  useEffect(() => {
+    if (!open) return
+    setFormFields({})
+    setWalletName('')
+    setFeedback(null)
+    const { market, select } = openOnRef.current
+    if (market && CREDENTIAL_SCHEMAS[market]) {
+      select(market)
+    } else {
+      setStep('exchange')
+      setSelectedMarket(null)
+    }
+  }, [open, setSelectedMarket, setFormFields, setWalletName, setFeedback])
 
   // Both "yes" and "not yet" continue — "not yet" also opens the signup link
   const advanceFromAccount = useCallback(() => {

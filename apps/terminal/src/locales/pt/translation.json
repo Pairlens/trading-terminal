@@ -2780,9 +2780,8 @@
       "groupBroker": "Conta de corretora",
       "groupExchange": "Conta de exchange",
       "selectWalletTopBar": "Selecione a carteira na barra superior",
-      "connectChainWallet": "Conecte uma carteira {{chain}}",
-      "connectExchangeAccount": "Conecte uma conta {{exchange}}",
-      "selectAccountTopBar": "Selecione a conta na barra superior"
+      "selectAccountTopBar": "Selecione a conta na barra superior",
+      "gateNoTrading": "Apenas dados de mercado. Não é possível operar aqui."
     },
     "trade": {
       "limitBuy": "Compra limitada",

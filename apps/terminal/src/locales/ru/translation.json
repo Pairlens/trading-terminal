@@ -2800,9 +2800,8 @@
       "groupBroker": "Брокерский счёт",
       "groupExchange": "Аккаунт биржи",
       "selectWalletTopBar": "Выберите кошелёк на верхней панели",
-      "connectChainWallet": "Подключите кошелёк {{chain}}",
-      "connectExchangeAccount": "Подключите аккаунт {{exchange}}",
-      "selectAccountTopBar": "Выберите аккаунт на верхней панели"
+      "selectAccountTopBar": "Выберите аккаунт на верхней панели",
+      "gateNoTrading": "Только рыночные данные. Здесь торговать нельзя."
     },
     "trade": {
       "limitBuy": "Лимитная покупка",
