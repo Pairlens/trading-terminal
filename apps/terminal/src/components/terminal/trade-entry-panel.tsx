@@ -28,7 +28,7 @@ import { Slider } from '@pairlens/ui/components/ui/slider'
 import { Tabs, TabsList, TabsTrigger } from '@pairlens/ui/components/ui/tabs'
 import { executeWorkflow } from '@pairlens/workflow-engine/executor'
 import { checkWorkflowMarketCompat } from '@pairlens/workflow-engine/market-compat'
-import { HoldToConfirmButton } from './hold-to-confirm-button'
+import { TradeConfirmButton } from './trade-confirm-button'
 import type { RefObject } from 'react'
 
 import type { OrderExecutor } from '@pairlens/workflow-engine/types'
@@ -50,6 +50,8 @@ import {
 import { usePaneWallet } from '@/lib/layout/pane-context'
 import { isRegionExplicitlySet } from '@/lib/region-settings'
 import { usePersistedState } from '@/hooks/use-persisted-state'
+import { useTradeConfirmMode } from '@/hooks/use-trade-confirm'
+import { tradeHoldMs } from '@/lib/settings/trade-confirm'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import {
   CREDENTIAL_SCHEMAS,
@@ -495,6 +497,27 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   // Live funds (DEX swaps are always on-chain; CEX honors the credential mode)
   // get a longer hold + an explicit "funds commit" note.
   const isLiveOrder = isDex || selectedCred?.mode === 'live'
+
+  // Press & hold by default, single click if the user asked for one. The
+  // button applies the gesture; the note under it has to say which one is on,
+  // or a click-mode user is told to hold a button that fires on release.
+  const [confirmMode] = useTradeConfirmMode()
+  const submitHint = useMemo(() => {
+    const hold = confirmMode === 'hold'
+    if (orderType === 'workflow') {
+      return hold
+        ? t('terminal.trade.holdToRun')
+        : t('terminal.trade.clickToRun')
+    }
+    if (isLiveOrder) {
+      return hold
+        ? t('terminal.trade.holdToConfirmLive')
+        : t('terminal.trade.clickToConfirmLive')
+    }
+    return hold
+      ? t('terminal.trade.holdToPlace')
+      : t('terminal.trade.clickToPlace')
+  }, [confirmMode, orderType, isLiveOrder, t])
 
   const handleSideChange = (newSide: 'buy' | 'sell') => {
     setSide(newSide)
@@ -1279,21 +1302,16 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           />
         )}
 
-        {/* Submit — press & hold to commit. Conveys the criticality of the
-            moment (a fuller hold for live funds); the toast is the confirmation. */}
-        <HoldToConfirmButton
+        {/* Submit — press & hold to commit (single click if the user set that
+            in settings). Conveys the criticality of the moment (a fuller hold
+            for live funds); the toast is the confirmation. */}
+        <TradeConfirmButton
           side={side === 'buy' ? 'buy' : 'sell'}
           disabled={!canSubmit}
           busy={submitting}
           busyLabel={t('terminal.trade.submitting')}
-          holdMs={isLiveOrder ? 720 : 480}
-          hint={
-            orderType === 'workflow'
-              ? t('terminal.trade.holdToRun')
-              : isLiveOrder
-                ? t('terminal.trade.holdToConfirmLive')
-                : t('terminal.trade.holdToPlace')
-          }
+          holdMs={tradeHoldMs(isLiveOrder)}
+          hint={submitHint}
           onConfirm={handleSubmit}
           label={
             <span className="flex items-center gap-1.5">
