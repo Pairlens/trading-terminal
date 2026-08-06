@@ -756,6 +756,13 @@
       "dailyPnl": "P&L",
       "dailyTradeCount": "Trades",
       "windowStart": "Fenster gestartet",
+      "confirmGesture": "Orderbestätigung",
+      "confirmGestureDescription": "Wie du eine selbst platzierte Order abschickst — im Ticket und auf den Orderkarten des Co-Piloten.",
+      "confirmHold": "Gedrückt halten",
+      "confirmHoldDescription": "Halte den Senden-Button, bis er sich füllt. Live-Orders hältst du etwas länger als Paper-Orders.",
+      "confirmClick": "Einfacher Klick",
+      "confirmClickDescription": "Der erste Klick sendet. Zwischen einem Fehlklick und einer echten Order steht dann nichts mehr.",
+      "confirmGestureNote": "Die Risikolimits gelten in beiden Fällen — das ändert die Geste, nicht die Schutzgrenzen.",
       "aiPermissions": "KI-Handelsberechtigungen",
       "aiPermissionsDescription": "Was der KI-Co-Pilot ohne Rückfrage tun darf. Orders außerhalb dieser Freigaben erfordern immer deine Bestätigung über eine Karte im Chat, und jede Order — automatisch genehmigt oder nicht — wird gegen die oben genannten Risikolimits geprüft.",
       "aiPaperAuto": "Paper-Trades automatisch genehmigen",
@@ -841,6 +848,7 @@
       "commands": {
         "workspaceTree": "Arbeitsbereichs-Baum ein-/ausblenden",
         "workspaceMenu": "Arbeitsbereichs-Menü",
+        "panesMenu": "Panel-Menü",
         "chartCancel": "Werkzeug abbrechen / Vollbild verlassen"
       }
     },
@@ -1237,6 +1245,7 @@
     "dontAskAgainLive": "Bei Live-Trades auf {{market}} nicht mehr fragen",
     "placing": "Wird platziert…",
     "confirmMode": "{{mode}} bestätigen",
+    "holdToConfirm": "Zum Bestätigen gedrückt halten",
     "dismissed": "Verworfen",
     "cancelOrderPrompt": "Order {{orderId}} auf {{pair}} · {{market}} stornieren?",
     "cancelled": "Storniert",
@@ -2178,6 +2187,7 @@
   },
   "layout": {
     "workspaces": "Workspaces",
+    "panes": "Panels",
     "presets": "Voreinstellungen",
     "browseStore": "Workspace Store durchsuchen",
     "workspaceStore": "Workspace Store",
@@ -2359,6 +2369,7 @@
       "spot": "Spot"
     },
     "tier": "Stufe",
+    "uninstall": "Deinstallieren",
     "uninstalled": "Deinstalliert",
     "updateReactivate": "Aktualisieren & reaktivieren",
     "version": "Version",
@@ -2769,9 +2780,8 @@
       "groupBroker": "Broker-Konto",
       "groupExchange": "Börsenkonto",
       "selectWalletTopBar": "Wallet in der oberen Leiste auswählen",
-      "connectChainWallet": "{{chain}}-Wallet verbinden",
-      "connectExchangeAccount": "{{exchange}}-Konto verbinden",
-      "selectAccountTopBar": "Konto in der oberen Leiste auswählen"
+      "selectAccountTopBar": "Konto in der oberen Leiste auswählen",
+      "gateNoTrading": "Nur Marktdaten. Hier kann nicht gehandelt werden."
     },
     "trade": {
       "limitBuy": "Limit-Kauf",
@@ -2794,6 +2804,9 @@
       "holdToRun": "Gedrückt halten zum Ausführen",
       "holdToConfirmLive": "Gedrückt halten zum Bestätigen · Geld fließt sofort",
       "holdToPlace": "Gedrückt halten zum Platzieren",
+      "clickToRun": "Klicken zum Ausführen",
+      "clickToConfirmLive": "Klicken zum Bestätigen · Geld fließt sofort",
+      "clickToPlace": "Klicken zum Platzieren",
       "runWorkflow": "Workflow ausführen",
       "buyAsset": "{{asset}} kaufen",
       "sellAsset": "{{asset}} verkaufen",

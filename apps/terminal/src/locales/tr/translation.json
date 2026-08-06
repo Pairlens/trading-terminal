@@ -756,6 +756,13 @@
       "dailyPnl": "Kâr/Zarar",
       "dailyTradeCount": "İşlemler",
       "windowStart": "Pencere başlangıcı",
+      "confirmGesture": "Emir onayı",
+      "confirmGestureDescription": "Kendi verdiğin emri nasıl onayladığın — işlem bileti ve co-pilot emir kartları için geçerli.",
+      "confirmHold": "Basılı tut",
+      "confirmHoldDescription": "Düğme dolana kadar basılı tut. Gerçek emirler kağıt emirlerden biraz daha uzun sürer.",
+      "confirmClick": "Tek tıklama",
+      "confirmClickDescription": "İlk tıklama emri gönderir. Yanlış bir tıklama ile gerçek bir emir arasında hiçbir şey kalmaz.",
+      "confirmGestureNote": "Risk sınırları her iki durumda da geçerli — değişen hareket, koruma değil.",
       "aiPermissions": "Yapay zeka işlem izinleri",
       "aiPermissionsDescription": "Yapay zeka co-pilotunun sormadan yapabilecekleri. Bu izinlerin dışındaki emirler her zaman sohbetteki bir kartla onayını gerektirir ve otomatik onaylı olsun ya da olmasın her emir yukarıdaki risk sınırlarına göre uygulanır.",
       "aiPaperAuto": "Kağıt üzerinde işlemleri otomatik onayla",
@@ -841,6 +848,7 @@
       "commands": {
         "workspaceTree": "Çalışma alanı ağacını aç/kapat",
         "workspaceMenu": "Çalışma alanı menüsü",
+        "panesMenu": "Pano menüsü",
         "chartCancel": "Aracı iptal et / tam ekrandan çık"
       }
     },
@@ -1237,6 +1245,7 @@
     "dontAskAgainLive": "{{market}} üzerindeki gerçek işlemler için bir daha sorma",
     "placing": "Emir veriliyor…",
     "confirmMode": "{{mode}} onayla",
+    "holdToConfirm": "Onaylamak için basılı tutun",
     "dismissed": "Reddedildi",
     "cancelOrderPrompt": "{{pair}} · {{market}} üzerindeki {{orderId}} emri iptal edilsin mi?",
     "cancelled": "İptal edildi",
@@ -2178,6 +2187,7 @@
   },
   "layout": {
     "workspaces": "Çalışma alanları",
+    "panes": "Panolar",
     "presets": "Ön ayarlar",
     "browseStore": "Çalışma Alanı Mağazasına Göz At",
     "workspaceStore": "Çalışma Alanı Mağazası",
@@ -2359,6 +2369,7 @@
       "spot": "Spot"
     },
     "tier": "Katman",
+    "uninstall": "Kaldır",
     "uninstalled": "Kaldırıldı",
     "updateReactivate": "Güncelle ve Yeniden Etkinleştir",
     "version": "Sürüm",
@@ -2769,9 +2780,8 @@
       "groupBroker": "Aracı kurum hesabı",
       "groupExchange": "Borsa hesabı",
       "selectWalletTopBar": "Üst çubuktan cüzdan seç",
-      "connectChainWallet": "{{chain}} cüzdanını bağla",
-      "connectExchangeAccount": "{{exchange}} hesabını bağla",
-      "selectAccountTopBar": "Üst çubuktan hesap seç"
+      "selectAccountTopBar": "Üst çubuktan hesap seç",
+      "gateNoTrading": "Yalnızca piyasa verisi. Burada işlem yapılamaz."
     },
     "trade": {
       "limitBuy": "Limitli alış",
@@ -2794,6 +2804,9 @@
       "holdToRun": "Çalıştırmak için basılı tutun",
       "holdToConfirmLive": "Onaylamak için basılı tutun · para hemen çıkar",
       "holdToPlace": "Emri vermek için basılı tutun",
+      "clickToRun": "Çalıştırmak için tıklayın",
+      "clickToConfirmLive": "Onaylamak için tıklayın · para hemen çıkar",
+      "clickToPlace": "Emri vermek için tıklayın",
       "runWorkflow": "İş akışını çalıştır",
       "buyAsset": "{{asset}} al",
       "sellAsset": "{{asset}} sat",

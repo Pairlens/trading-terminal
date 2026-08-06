@@ -42,9 +42,14 @@ changes how values are shown, not what you hold.
 ## Risk Management
 
 Loss caps, position caps, trade caps, the breach action for each, the reset
-window, and the AI's trade permissions. This is the most important page in
-settings and it has its own guide:
+window, the gesture that commits an order, and the AI's trade permissions. This
+is the most important page in settings and it has its own guide:
 [risk guardrails](/docs/risk-guardrails).
+
+**Order confirmation.** Press and hold is the default: you hold the submit
+button until it fills, and live orders hold longer than paper. Switch it to a
+single click if you place a lot of orders and want the ticket out of your way.
+Either way the risk limits above still apply.
 
 ## Appearance
 

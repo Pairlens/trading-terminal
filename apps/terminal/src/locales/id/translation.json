@@ -756,6 +756,13 @@
       "dailyPnl": "P&L",
       "dailyTradeCount": "Trade",
       "windowStart": "Jendela dimulai",
+      "confirmGesture": "Konfirmasi order",
+      "confirmGestureDescription": "Cara Anda mengirim order yang Anda pasang sendiri, di tiket trading dan di kartu order copilot.",
+      "confirmHold": "Tekan & tahan",
+      "confirmHoldDescription": "Tahan tombol kirim sampai terisi penuh. Order live ditahan sedikit lebih lama daripada order paper.",
+      "confirmClick": "Sekali klik",
+      "confirmClickDescription": "Klik pertama langsung mengirim. Tidak ada jeda antara salah klik dan order sungguhan.",
+      "confirmGestureNote": "Batas risiko tetap berlaku — yang berubah caranya, bukan pengamannya.",
       "aiPermissions": "Izin trading AI",
       "aiPermissionsDescription": "Apa yang boleh dilakukan AI copilot tanpa bertanya. Order di luar izin ini selalu memerlukan konfirmasi Anda pada kartu di chat, dan setiap order — disetujui otomatis atau tidak — diberlakukan sesuai batas risiko di atas.",
       "aiPaperAuto": "Setujui otomatis trade paper",
@@ -841,6 +848,7 @@
       "commands": {
         "workspaceTree": "Tampilkan/sembunyikan pohon ruang kerja",
         "workspaceMenu": "Menu ruang kerja",
+        "panesMenu": "Menu panel",
         "chartCancel": "Batalkan alat / keluar dari layar penuh"
       }
     },
@@ -1237,6 +1245,7 @@
     "dontAskAgainLive": "Jangan tanya lagi untuk trading live di {{market}}",
     "placing": "Memasang…",
     "confirmMode": "Konfirmasi {{mode}}",
+    "holdToConfirm": "Tekan & tahan untuk konfirmasi",
     "dismissed": "Ditutup",
     "cancelOrderPrompt": "Batalkan order {{orderId}} di {{pair}} · {{market}}?",
     "cancelled": "Dibatalkan",
@@ -2178,6 +2187,7 @@
   },
   "layout": {
     "workspaces": "Ruang Kerja",
+    "panes": "Panel",
     "presets": "Preset",
     "browseStore": "Jelajahi Workspace Store",
     "workspaceStore": "Workspace Store",
@@ -2359,6 +2369,7 @@
       "spot": "Spot"
     },
     "tier": "Tingkat",
+    "uninstall": "Copot pemasangan",
     "uninstalled": "Dihapus",
     "updateReactivate": "Perbarui & Aktifkan Ulang",
     "version": "Versi",
@@ -2769,9 +2780,8 @@
       "groupBroker": "Akun broker",
       "groupExchange": "Akun bursa",
       "selectWalletTopBar": "Pilih wallet di bilah atas",
-      "connectChainWallet": "Hubungkan wallet {{chain}}",
-      "connectExchangeAccount": "Hubungkan akun {{exchange}}",
-      "selectAccountTopBar": "Pilih akun di bilah atas"
+      "selectAccountTopBar": "Pilih akun di bilah atas",
+      "gateNoTrading": "Hanya data pasar. Tidak bisa berdagang di sini."
     },
     "trade": {
       "limitBuy": "Beli limit",
@@ -2794,6 +2804,9 @@
       "holdToRun": "Tekan & tahan untuk menjalankan",
       "holdToConfirmLive": "Tekan & tahan untuk konfirmasi · dana langsung keluar",
       "holdToPlace": "Tekan & tahan untuk memasang",
+      "clickToRun": "Klik untuk menjalankan",
+      "clickToConfirmLive": "Klik untuk konfirmasi · dana langsung keluar",
+      "clickToPlace": "Klik untuk memasang",
       "runWorkflow": "Jalankan workflow",
       "buyAsset": "Beli {{asset}}",
       "sellAsset": "Jual {{asset}}",

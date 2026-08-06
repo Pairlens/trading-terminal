@@ -4,6 +4,9 @@
 # Builds installers for macOS (Apple Silicon + Intel), Windows and Linux,
 # publishes them to a DRAFT release on this repo, and attaches the signed
 # updater manifest (latest.json) that the in-app auto-updater polls.
+# The draft opens with generated release notes: every commit between the
+# previous `v*` tag and this one, grouped by type
+# (scripts/release/changelog.ts). Edit them in the draft before publishing.
 #
 # Publishing the draft (GitHub UI or `gh release edit <tag> --draft=false`)
 # is the human gate that ships the update to users —
@@ -42,6 +45,14 @@ jobs:
       release_id: ${{ steps.release.outputs.release_id }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          # Release notes are generated from the commits between the previous
+          # `v*` tag and this one, so the job needs the whole history and every
+          # tag — the default shallow checkout has neither.
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.8
       - name: Verify tag matches app version
         run: |
           CONF_VERSION=$(python3 -c "import json; print(json.load(open('apps/desktop/src-tauri/tauri.conf.json'))['version'])")
@@ -51,6 +62,18 @@ jobs:
             echo "Bump versions with 'bun run release' so the tag and app agree."
             exit 1
           fi
+      # Changelog for the release body: every commit that landed between the
+      # previous `v*` tag and this one, grouped by conventional-commit type.
+      # Printed to a file so the notes reach the API as JSON rather than
+      # through shell quoting.
+      - name: Generate release notes
+        env:
+          RELEASE_REPO: ${{ github.repository }}
+        run: |
+          bun scripts/release/changelog.ts "$GITHUB_REF_NAME" > release-notes.md
+          echo "--- release notes ---"
+          cat release-notes.md
+
       - name: Create (or reuse) draft release
         id: release
         env:
@@ -58,18 +81,20 @@ jobs:
           RELEASE_REPO: ${{ github.repository }}
         run: |
           # Reruns of a failed pipeline reuse the existing draft for this tag.
+          # Its body is left alone: by then a human may have edited the notes,
+          # and a rerun exists to replace a broken installer, not the writing.
           EXISTING=$(gh api "repos/$RELEASE_REPO/releases" --paginate \
             --jq "[.[] | select(.tag_name == \"$GITHUB_REF_NAME\")][0].id // empty")
           if [ -n "$EXISTING" ]; then
             echo "Reusing release $EXISTING for $GITHUB_REF_NAME"
             echo "release_id=$EXISTING" >> "$GITHUB_OUTPUT"
           else
-            ID=$(gh api "repos/$RELEASE_REPO/releases" \
-              -f tag_name="$GITHUB_REF_NAME" \
-              -f name="Pairlens $GITHUB_REF_NAME" \
-              -f body="Pairlens $GITHUB_REF_NAME — download the installer for your platform below. Existing installs update automatically." \
-              -F draft=true \
-              --jq .id)
+            ID=$(jq -n \
+              --arg tag "$GITHUB_REF_NAME" \
+              --arg name "Pairlens $GITHUB_REF_NAME" \
+              --rawfile body release-notes.md \
+              '{tag_name: $tag, name: $name, body: $body, draft: true}' \
+              | gh api "repos/$RELEASE_REPO/releases" --method POST --input - --jq .id)
             echo "release_id=$ID" >> "$GITHUB_OUTPUT"
           fi
 

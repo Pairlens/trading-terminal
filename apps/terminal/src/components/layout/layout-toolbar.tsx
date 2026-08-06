@@ -1,32 +1,18 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import {
   ArrowRight,
-  Grid3X3,
   Laptop,
   Layout,
   LayoutGrid,
   LayoutTemplate,
   Monitor,
   MonitorPlay,
-  Plus,
-  RotateCcw,
   Tv,
-  X,
 } from 'lucide-react'
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@pairlens/ui/components/ui/alert-dialog'
 import { Button } from '@pairlens/ui/components/ui/button'
 import {
   DropdownMenu,
@@ -48,22 +34,17 @@ import {
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
 
-import { AddPaneDialog } from './add-pane-dialog'
-import { GridConfirmDialog } from './grid-confirm-dialog'
-import { GridPicker } from './grid-picker'
+import { PanesToolbar, PendingPanePlacementHint } from './panes-toolbar'
 import type { ScreenPresetGroup } from '@/lib/layout/types'
-import type { GridPlacement } from './grid-confirm-dialog'
 import type { ShortcutDefinition } from '@/hooks/use-keyboard-shortcuts'
 import { workspaceAnalyticsKind } from '@/lib/analytics-panels'
 import { track } from '@/lib/analytics-events'
 import { templateMenuLabel } from '@/lib/workspace-store/template-labels'
 import { useLayout } from '@/lib/layout/context'
 import { useWorkspace } from '@/lib/layout/workspace-context'
-import { usePaneRegistry } from '@/lib/layout/pane-registry'
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { ShortcutHint } from '@/components/shortcut-hints'
-import { createGridLayout, mergeGridIntoLayout } from '@/lib/layout/presets'
 
 const SCREEN_ICONS: Record<string, typeof Laptop> = {
   Laptop,
@@ -78,39 +59,30 @@ type LayoutToolbarProps = {
   onOpenChange?: (open: boolean) => void
 }
 
+/**
+ * The layout controls in a page header: a Panes button for the panes of the
+ * current layout, and a Workspaces button for swapping the whole layout out.
+ * `open`/`onOpenChange` drive the Workspaces menu — the Panes menu owns its own.
+ */
 export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { layout, dispatch, pendingAddPaneType, startAddPane, cancelAddPane } =
-    useLayout()
+  const { dispatch } = useLayout()
   const workspace = useWorkspace()
-  const [addPaneOpen, setAddPaneOpen] = useState(false)
-  const [pendingGrid, setPendingGrid] = useState<{
-    cols: number
-    rows: number
-  } | null>(null)
-  const [resetConfirmOpen, setResetConfirmOpen] = useState(false)
-  const { presets, screenPresets, defaultPreset } = workspace
+  const { presets, screenPresets } = workspace
 
-  // Add-pane and the workspaces dropdown, on whatever chords the user bound.
+  // The workspaces dropdown, on whatever chord the user bound.
   const shortcuts = useMemo<Array<ShortcutDefinition>>(() => {
-    const defs: Array<ShortcutDefinition> = [
+    if (!onOpenChange) return []
+    return [
       {
-        commandId: 'workspace.addPane',
-        action: () => setAddPaneOpen(true),
-      },
-    ]
-    if (onOpenChange) {
-      defs.push({
         commandId: 'workspace.menu',
         action: () => onOpenChange(!open),
-      })
-    }
-    return defs
+      },
+    ]
   }, [onOpenChange, open])
   useKeyboardShortcuts(shortcuts)
   const menuShortcut = useKeybindingLabel('workspace.menu')
-  const addPaneShortcut = useKeybindingLabel('workspace.addPane')
 
   const workspaceKind = workspaceAnalyticsKind(workspace.storageKey)
 
@@ -132,68 +104,10 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
     })
   }
 
-  const handleAddPane = (type: string) => {
-    startAddPane(type)
-  }
-
-  const hasRealPanes = layout.columns.some((col) =>
-    col.cells.some((cell) => cell.panes.some((p) => p.type !== 'empty')),
-  )
-
-  const handleReset = () => {
-    if (hasRealPanes) {
-      setResetConfirmOpen(true)
-      onOpenChange?.(false)
-    } else {
-      dispatch({ type: 'APPLY_PRESET', layout: structuredClone(defaultPreset) })
-    }
-  }
-
-  const confirmReset = () => {
-    dispatch({ type: 'APPLY_PRESET', layout: structuredClone(defaultPreset) })
-    setResetConfirmOpen(false)
-  }
-
-  const handleGridSelect = (cols: number, rows: number) => {
-    if (hasRealPanes) {
-      setPendingGrid({ cols, rows })
-    } else {
-      dispatch({ type: 'APPLY_PRESET', layout: createGridLayout(cols, rows) })
-    }
-    onOpenChange?.(false)
-  }
-
-  const handleGridConfirm = (placement: GridPlacement) => {
-    if (!pendingGrid) return
-    const { cols, rows } = pendingGrid
-    if (placement === 'replace') {
-      dispatch({ type: 'APPLY_PRESET', layout: createGridLayout(cols, rows) })
-    } else {
-      dispatch({
-        type: 'APPLY_PRESET',
-        layout: mergeGridIntoLayout(layout, cols, rows, placement),
-      })
-    }
-    setPendingGrid(null)
-  }
-
-  // Find which pane types are already in the layout
-  const existingTypes = new Set<string>()
-  for (const col of layout.columns) {
-    for (const cell of col.cells) {
-      for (const pane of cell.panes) {
-        existingTypes.add(pane.type)
-      }
-    }
-  }
-
-  const registry = usePaneRegistry()
-  const pendingPaneDef = pendingAddPaneType
-    ? registry.getDefinition(pendingAddPaneType)
-    : null
-
   return (
     <>
+      <PanesToolbar />
+
       <DropdownMenu open={open} onOpenChange={onOpenChange}>
         <Tooltip>
           <TooltipTrigger
@@ -290,92 +204,10 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
               })}
             </>
           )}
-
-          <DropdownMenuSeparator />
-
-          {/* Grid layout picker */}
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <Grid3X3 className="size-3.5" />
-              {t('layout.gridLayout')}
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <GridPicker onSelect={handleGridSelect} />
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-
-          {/* Add pane */}
-          <DropdownMenuItem onClick={() => setAddPaneOpen(true)}>
-            <Plus className="size-3.5" />
-            {t('layout.addPane')}
-            {addPaneShortcut ? (
-              <Kbd className="ml-auto">{addPaneShortcut}</Kbd>
-            ) : null}
-          </DropdownMenuItem>
-
-          <DropdownMenuSeparator />
-
-          <DropdownMenuItem onClick={handleReset}>
-            <RotateCcw className="size-3.5" />
-            {t('layout.resetToDefault')}
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <AddPaneDialog
-        open={addPaneOpen}
-        onOpenChange={setAddPaneOpen}
-        existingTypes={existingTypes}
-        workspace={workspace}
-        onSelectPane={handleAddPane}
-      />
-
-      <AlertDialog open={resetConfirmOpen} onOpenChange={setResetConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('layout.resetConfirmTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('layout.resetConfirmDescription')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              onClick={confirmReset}
-            >
-              {t('layout.resetToDefault')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {pendingGrid && (
-        <GridConfirmDialog
-          open
-          onOpenChange={(nextOpen) => {
-            if (!nextOpen) setPendingGrid(null)
-          }}
-          cols={pendingGrid.cols}
-          rows={pendingGrid.rows}
-          onConfirm={handleGridConfirm}
-        />
-      )}
-
-      {pendingPaneDef && (
-        <div className="flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs">
-          <span className="text-primary">
-            {t('layout.clickToPlace')}{' '}
-            <span className="font-medium">{t(pendingPaneDef.labelKey)}</span>
-          </span>
-          <button
-            onClick={cancelAddPane}
-            className="rounded p-0.5 text-primary/60 hover:bg-primary/20 hover:text-primary"
-          >
-            <X className="size-3" />
-          </button>
-        </div>
-      )}
+      <PendingPanePlacementHint />
     </>
   )
 }

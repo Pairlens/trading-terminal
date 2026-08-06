@@ -756,6 +756,13 @@
       "dailyPnl": "P&L",
       "dailyTradeCount": "Operazioni",
       "windowStart": "Finestra iniziata",
+      "confirmGesture": "Conferma degli ordini",
+      "confirmGestureDescription": "Come invii un ordine che inserisci tu, nel ticket e sulle card ordine del co-pilota.",
+      "confirmHold": "Tieni premuto",
+      "confirmHoldDescription": "Tieni premuto il pulsante finché non si riempie. Gli ordini live durano un po’ più di quelli paper.",
+      "confirmClick": "Clic singolo",
+      "confirmClickDescription": "Il primo clic invia. Tra un clic sbagliato e un ordine reale non resta più nulla.",
+      "confirmGestureNote": "I limiti di rischio valgono in entrambi i casi — cambia il gesto, non le protezioni.",
       "aiPermissions": "Permessi di trading dell'AI",
       "aiPermissionsDescription": "Cosa può fare il co-pilota AI senza chiedere. Gli ordini al di fuori di queste autorizzazioni richiedono sempre la tua conferma su una card nella chat, e ogni ordine — approvato automaticamente o meno — viene verificato rispetto ai limiti di rischio sopra indicati.",
       "aiPaperAuto": "Approva automaticamente gli ordini paper",
@@ -841,6 +848,7 @@
       "commands": {
         "workspaceTree": "Mostra/nascondi l’albero degli spazi di lavoro",
         "workspaceMenu": "Menu degli spazi di lavoro",
+        "panesMenu": "Menu dei pannelli",
         "chartCancel": "Annulla strumento / esci da schermo intero"
       }
     },
@@ -1237,6 +1245,7 @@
     "dontAskAgainLive": "Non chiedere più per gli ordini live su {{market}}",
     "placing": "Invio in corso…",
     "confirmMode": "Conferma {{mode}}",
+    "holdToConfirm": "Tieni premuto per confermare",
     "dismissed": "Ignorato",
     "cancelOrderPrompt": "Annullare l’ordine {{orderId}} su {{pair}} · {{market}}?",
     "cancelled": "Annullato",
@@ -2178,6 +2187,7 @@
   },
   "layout": {
     "workspaces": "Spazi di lavoro",
+    "panes": "Pannelli",
     "presets": "Preimpostazioni",
     "browseStore": "Sfoglia Workspace Store",
     "workspaceStore": "Workspace Store",
@@ -2359,6 +2369,7 @@
       "spot": "Spot"
     },
     "tier": "Livello",
+    "uninstall": "Disinstalla",
     "uninstalled": "Disinstallato",
     "updateReactivate": "Aggiorna e riattiva",
     "version": "Versione",
@@ -2769,9 +2780,8 @@
       "groupBroker": "Account broker",
       "groupExchange": "Account exchange",
       "selectWalletTopBar": "Seleziona il wallet nella barra superiore",
-      "connectChainWallet": "Collega un wallet {{chain}}",
-      "connectExchangeAccount": "Collega un account {{exchange}}",
-      "selectAccountTopBar": "Seleziona l'account nella barra superiore"
+      "selectAccountTopBar": "Seleziona l'account nella barra superiore",
+      "gateNoTrading": "Solo dati di mercato. Qui non si può operare."
     },
     "trade": {
       "limitBuy": "Acquisto limite",
@@ -2794,6 +2804,9 @@
       "holdToRun": "Tieni premuto per eseguire",
       "holdToConfirmLive": "Tieni premuto per confermare · i fondi partono subito",
       "holdToPlace": "Tieni premuto per inviare",
+      "clickToRun": "Clicca per eseguire",
+      "clickToConfirmLive": "Clicca per confermare · i fondi partono subito",
+      "clickToPlace": "Clicca per inviare",
       "runWorkflow": "Esegui workflow",
       "buyAsset": "Compra {{asset}}",
       "sellAsset": "Vendi {{asset}}",

@@ -51,6 +51,7 @@ import {
   PluginModuleLoader,
 } from '@/lib/plugins/plugin-module-loader'
 import { usePairlens } from '@/lib/pairlens-provider'
+import { useThemePluginContext } from '@/hooks/use-theme-plugin'
 import { pluginDescription, pluginTitle } from '@/lib/plugin-text'
 
 // ---------------------------------------------------------------------------
@@ -107,6 +108,11 @@ export function PluginStore({
   const queryClient = useQueryClient()
   const reduceMotion = useReducedMotion() ?? false
   const { pluginManager, notifyPluginStateChange } = usePairlens()
+  // A theme plugin being *active* only means its tokens are available — the
+  // one that actually paints the terminal is `activeThemeId`. The store speaks
+  // in "applied", so it reads and writes that selection directly instead of
+  // sending the user to Settings → Appearance.
+  const { activeThemeId, selectTheme } = useThemePluginContext()
   const { requestFullTrust, dialog: fullTrustDialog } = useFullTrustConsent()
   const { requestNetworkConsent, dialog: networkConsentDialog } =
     useNetworkConsent()
@@ -476,6 +482,72 @@ export function PluginStore({
     }
   }
 
+  /**
+   * Apply a theme straight from its store page: install it if it came from the
+   * registry, activate the plugin if it is dormant, then select it as the
+   * terminal's theme. Without the last step "installed" themes just sit in the
+   * Settings picker, which is the trip this replaces.
+   */
+  const handleApplyTheme = async (manifest: PluginManifest) => {
+    clearPluginFeedback(manifest.id)
+    setBusyPluginId(manifest.id)
+
+    try {
+      if (!isInstalled(manifest.id)) {
+        const registryEntry = findRegistryEntry(manifest.id)
+        if (registryEntry?.moduleUrl) {
+          await installRemotePlugin(registryEntry)
+          notifyPluginStateChange()
+          // Consent was declined — installRemotePlugin leaves nothing behind,
+          // and the user already answered, so say nothing more.
+          if (!isInstalled(manifest.id)) return
+        }
+      }
+
+      // A theme the user had switched off is dormant, not gone: wake it back
+      // up rather than making them find it in the Installed tab first.
+      if (!isActive(manifest.id)) {
+        const config = getConfigDraft(manifest.id, manifest)
+        await pluginManager.activatePlugin(
+          manifest.id,
+          buildActivationConfig(manifest.id, config),
+        )
+        setLedgerEnabled(manifest.id, true)
+        setLedgerConfig(manifest.id, config)
+        track('plugin_toggled', { plugin_id: manifest.id, enabled: true })
+        saveStateMutation.mutate({
+          pluginId: manifest.id,
+          enabled: true,
+          config,
+        })
+        notifyPluginStateChange()
+      }
+
+      selectTheme(manifest.id)
+      track('theme_changed', { theme: manifest.id })
+      setPluginFeedback(manifest.id, 'success', t('pluginStore.applied'))
+      toast.success(t('pluginStore.themeAppliedToast', 'Theme applied'), {
+        description: manifest.name,
+      })
+    } catch (err) {
+      setPluginFeedback(
+        manifest.id,
+        'error',
+        err instanceof Error ? err.message : t('pluginStore.operationFailed'),
+      )
+    } finally {
+      setBusyPluginId(null)
+    }
+  }
+
+  /** Drop back to the built-in palette. The plugin stays installed so the
+   *  theme is one click away again. */
+  const handleRemoveTheme = (manifest: PluginManifest) => {
+    clearPluginFeedback(manifest.id)
+    selectTheme(null)
+    track('theme_changed', { theme: 'default' })
+  }
+
   const handleConfigSubmit = async (
     event: FormEvent,
     manifest: PluginManifest,
@@ -680,7 +752,7 @@ export function PluginStore({
       <ThemeStoreCard
         key={entry.manifest.id}
         entry={entry}
-        active={isActive(entry.manifest.id)}
+        active={activeThemeId === entry.manifest.id}
         layoutId={layoutId}
         onClick={() => openProductPage(entry, layoutId)}
       />
@@ -811,6 +883,8 @@ export function PluginStore({
             posterLayoutId={posterLayoutId}
             categoryLabel={categoryLabel}
             active={isActive(selectedEntry.manifest.id)}
+            installed={isInstalled(selectedEntry.manifest.id)}
+            themeApplied={activeThemeId === selectedEntry.manifest.id}
             busy={busyPluginId === selectedEntry.manifest.id}
             feedback={feedback[selectedEntry.manifest.id] ?? null}
             savedConfig={statesMap[selectedEntry.manifest.id]?.config ?? null}
@@ -823,6 +897,8 @@ export function PluginStore({
             onToggle={(checked) =>
               void handleToggle(selectedEntry.manifest, checked)
             }
+            onApplyTheme={() => void handleApplyTheme(selectedEntry.manifest)}
+            onRemoveTheme={() => handleRemoveTheme(selectedEntry.manifest)}
             onConfigChange={(key, value) =>
               updateDraft(selectedEntry.manifest.id, key, value)
             }

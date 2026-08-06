@@ -756,6 +756,13 @@
       "dailyPnl": "กำไรขาดทุน",
       "dailyTradeCount": "การเทรด",
       "windowStart": "ช่วงเวลาเริ่มต้นเมื่อ",
+      "confirmGesture": "การยืนยันคำสั่ง",
+      "confirmGestureDescription": "วิธียืนยันคำสั่งที่คุณส่งเอง ทั้งในตั๋วเทรดและบนการ์ดคำสั่งของ copilot",
+      "confirmHold": "กดค้าง",
+      "confirmHoldDescription": "กดปุ่มค้างไว้จนเต็ม คำสั่งเงินจริงต้องกดค้างนานกว่าคำสั่งจำลองเล็กน้อย",
+      "confirmClick": "คลิกครั้งเดียว",
+      "confirmClickDescription": "คลิกแรกส่งคำสั่งทันที ไม่มีอะไรคั่นระหว่างคลิกพลาดกับคำสั่งจริง",
+      "confirmGestureNote": "ขีดจำกัดความเสี่ยงยังบังคับใช้เหมือนเดิม เปลี่ยนแค่วิธีกด ไม่ใช่การป้องกัน",
       "aiPermissions": "สิทธิ์การเทรดของ AI",
       "aiPermissionsDescription": "สิ่งที่ AI copilot ทำได้โดยไม่ต้องขออนุญาต คำสั่งซื้อขายนอกเหนือจากสิทธิ์เหล่านี้ต้องได้รับการยืนยันจากคุณผ่านการ์ดในแชทเสมอ และทุกคำสั่งซื้อขาย — ไม่ว่าจะอนุมัติอัตโนมัติหรือไม่ — จะถูกบังคับใช้ตามขีดจำกัดความเสี่ยงด้านบน",
       "aiPaperAuto": "อนุมัติการเทรดกระดาษอัตโนมัติ",
@@ -841,6 +848,7 @@
       "commands": {
         "workspaceTree": "เปิด/ปิดแผนผังพื้นที่ทำงาน",
         "workspaceMenu": "เมนูพื้นที่ทำงาน",
+        "panesMenu": "เมนูแผง",
         "chartCancel": "ยกเลิกเครื่องมือ / ออกจากเต็มจอ"
       }
     },
@@ -1237,6 +1245,7 @@
     "dontAskAgainLive": "ไม่ต้องถามอีกสำหรับการเทรดจริงบน {{market}}",
     "placing": "กำลังส่งคำสั่ง…",
     "confirmMode": "ยืนยัน {{mode}}",
+    "holdToConfirm": "กดค้างเพื่อยืนยัน",
     "dismissed": "ปิดแล้ว",
     "cancelOrderPrompt": "ยกเลิกคำสั่ง {{orderId}} บน {{pair}} · {{market}} ใช่ไหม?",
     "cancelled": "ยกเลิกแล้ว",
@@ -2178,6 +2187,7 @@
   },
   "layout": {
     "workspaces": "พื้นที่ทำงาน",
+    "panes": "แผง",
     "presets": "เทมเพลตสำเร็จรูป",
     "browseStore": "เรียกดู Workspace Store",
     "workspaceStore": "Workspace Store",
@@ -2359,6 +2369,7 @@
       "spot": "สปอต"
     },
     "tier": "ระดับ",
+    "uninstall": "ถอนการติดตั้ง",
     "uninstalled": "ถอนการติดตั้งแล้ว",
     "updateReactivate": "อัปเดตและเปิดใช้งานอีกครั้ง",
     "version": "เวอร์ชัน",
@@ -2769,9 +2780,8 @@
       "groupBroker": "บัญชีโบรกเกอร์",
       "groupExchange": "บัญชีกระดานเทรด",
       "selectWalletTopBar": "เลือกกระเป๋าเงินที่แถบด้านบน",
-      "connectChainWallet": "เชื่อมต่อกระเป๋าเงิน {{chain}}",
-      "connectExchangeAccount": "เชื่อมต่อบัญชี {{exchange}}",
-      "selectAccountTopBar": "เลือกบัญชีที่แถบด้านบน"
+      "selectAccountTopBar": "เลือกบัญชีที่แถบด้านบน",
+      "gateNoTrading": "ข้อมูลตลาดเท่านั้น เทรดที่นี่ไม่ได้"
     },
     "trade": {
       "limitBuy": "ซื้อแบบลิมิต",
@@ -2794,6 +2804,9 @@
       "holdToRun": "กดค้างเพื่อเรียกใช้",
       "holdToConfirmLive": "กดค้างเพื่อยืนยัน · เงินจะถูกใช้ทันที",
       "holdToPlace": "กดค้างเพื่อส่งคำสั่ง",
+      "clickToRun": "คลิกเพื่อเรียกใช้",
+      "clickToConfirmLive": "คลิกเพื่อยืนยัน · เงินจะถูกใช้ทันที",
+      "clickToPlace": "คลิกเพื่อส่งคำสั่ง",
       "runWorkflow": "เรียกใช้เวิร์กโฟลว์",
       "buyAsset": "ซื้อ {{asset}}",
       "sellAsset": "ขาย {{asset}}",

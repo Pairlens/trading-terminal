@@ -756,6 +756,13 @@
       "dailyPnl": "P&L",
       "dailyTradeCount": "Trades",
       "windowStart": "Window started",
+      "confirmGesture": "Order confirmation",
+      "confirmGestureDescription": "How you commit an order you place yourself, in the trade ticket and on the copilot's order cards.",
+      "confirmHold": "Press & hold",
+      "confirmHoldDescription": "Hold the submit button until it fills. Live orders hold a little longer than paper ones.",
+      "confirmClick": "Single click",
+      "confirmClickDescription": "The first click submits. Nothing stands between a misclick and a real order.",
+      "confirmGestureNote": "Risk limits are enforced either way — this changes the gesture, not the guardrails.",
       "aiPermissions": "AI trade permissions",
       "aiPermissionsDescription": "What the AI copilot may do without asking. Orders outside these grants always require your confirmation on a card in the chat, and every order — auto-approved or not — is enforced against the risk limits above.",
       "aiPaperAuto": "Auto-approve paper trades",
@@ -841,6 +848,7 @@
       "commands": {
         "workspaceTree": "Toggle workspaces tree",
         "workspaceMenu": "Workspace menu",
+        "panesMenu": "Panes menu",
         "chartCancel": "Cancel tool / exit fullscreen"
       }
     },
@@ -1237,6 +1245,7 @@
     "dontAskAgainLive": "Don’t ask again for live trades on {{market}}",
     "placing": "Placing…",
     "confirmMode": "Confirm {{mode}}",
+    "holdToConfirm": "Press & hold to confirm",
     "dismissed": "Dismissed",
     "cancelOrderPrompt": "Cancel order {{orderId}} on {{pair}} · {{market}}?",
     "cancelled": "Cancelled",
@@ -2178,6 +2187,7 @@
   },
   "layout": {
     "workspaces": "Workspaces",
+    "panes": "Panes",
     "presets": "Presets",
     "browseStore": "Browse Workspace Store",
     "workspaceStore": "Workspace Store",
@@ -2359,6 +2369,7 @@
       "spot": "Spot"
     },
     "tier": "Tier",
+    "uninstall": "Uninstall",
     "uninstalled": "Uninstalled",
     "updateReactivate": "Update & Reactivate",
     "version": "Version",
@@ -2762,16 +2773,15 @@
       "connectAccount": "Connect account",
       "connectHintWallet": "Connect a {{chain}} wallet to trade",
       "connectHintWalletAny": "Connect a wallet to trade",
-      "connectHintAccount": "Connect a {{venue}} account to trade",
+      "connectHintAccount": "Connect your {{venue}} account to trade",
       "selectWallet": "Select wallet",
       "selectAccount": "Select account",
       "groupWallet": "Crypto Wallet",
       "groupBroker": "Broker Account",
       "groupExchange": "Exchange Account",
       "selectWalletTopBar": "Select wallet in top bar",
-      "connectChainWallet": "Connect {{chain}} wallet",
-      "connectExchangeAccount": "Connect {{exchange}} account",
-      "selectAccountTopBar": "Select account in top bar"
+      "selectAccountTopBar": "Select account in top bar",
+      "gateNoTrading": "Market data only. Orders can't be placed here."
     },
     "trade": {
       "limitBuy": "Limit Buy",
@@ -2794,6 +2804,9 @@
       "holdToRun": "Press & hold to run",
       "holdToConfirmLive": "Press & hold to confirm · funds commit immediately",
       "holdToPlace": "Press & hold to place",
+      "clickToRun": "Click to run",
+      "clickToConfirmLive": "Click to confirm · funds commit immediately",
+      "clickToPlace": "Click to place",
       "runWorkflow": "Run Workflow",
       "buyAsset": "Buy {{asset}}",
       "sellAsset": "Sell {{asset}}",

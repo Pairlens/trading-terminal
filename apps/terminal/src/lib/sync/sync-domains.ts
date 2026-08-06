@@ -16,6 +16,7 @@ export const TIER1_KEYS: ReadonlySet<string> = new Set([
   'keybindings',
   'theme.activePluginId',
   'performance-mode',
+  'trade-confirm-mode',
   'terminal.market',
   'terminal.timeframe',
   'terminal.chartType',

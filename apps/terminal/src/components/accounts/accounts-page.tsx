@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { AnimatePresence } from 'motion/react'
 import {
   CircleCheck,
@@ -225,6 +226,10 @@ export function AccountsPage() {
   // Which flavor of the credential wizard is open — crypto CEX or stock broker
   const [formKind, setFormKind] = useState<'exchange' | 'broker'>('exchange')
   const [selectedMarket, setSelectedMarket] = useState<string | null>(null)
+  // Venue the wizard should skip its picker for — set only by the deep link
+  const [wizardInitialMarket, setWizardInitialMarket] = useState<string | null>(
+    null,
+  )
   const [mode, setMode] = useState<'paper' | 'live'>('paper')
   const [walletName, setWalletName] = useState('')
   const [formFields, setFormFields] = useState<Record<string, string>>({})
@@ -290,6 +295,37 @@ export function AccountsPage() {
       }
     })
   }
+
+  // Deep link — /accounts?connect=<market> or ?connectChain=<chain> opens that
+  // venue's connect flow directly. The trade ticket's connect gate sends users
+  // here, so they land in the form for the venue they were looking at instead
+  // of having to find it again. Consumed once and stripped from the URL: a
+  // refresh or a back-nav shouldn't reopen a dialog the user just closed.
+  const { connect: connectMarket, connectChain } = useSearch({
+    from: '/_terminal/accounts',
+  })
+  const navigate = useNavigate()
+  const deepLinkConsumed = useRef(false)
+  useEffect(() => {
+    if (deepLinkConsumed.current) return
+    if (!connectMarket && !connectChain) return
+    deepLinkConsumed.current = true
+    void navigate({ to: '/accounts', search: {}, replace: true })
+    setFeedback(null)
+    void withVault(() => {
+      if (connectChain) {
+        setCryptoChain(connectChain)
+        setShowCryptoForm(true)
+        return
+      }
+      if (!connectMarket) return
+      setFormKind(isBrokerMarket(connectMarket) ? 'broker' : 'exchange')
+      setWizardInitialMarket(connectMarket)
+      setShowForm(true)
+    })
+    // withVault is recreated per render; the ref guard is what keeps this to
+    // a single run, so it stays out of the dependency list.
+  }, [connectMarket, connectChain, navigate])
 
   const handleAddCryptoWallet = async (event: FormEvent) => {
     event.preventDefault()
@@ -564,7 +600,13 @@ export function AccountsPage() {
                 {/* Exchange / broker API key wizard */}
                 <ConnectExchangeWizard
                   open={showForm}
-                  onOpenChange={setShowForm}
+                  onOpenChange={(next) => {
+                    setShowForm(next)
+                    // The pre-picked venue belongs to that one deep-linked
+                    // open — the next manual open starts at the picker.
+                    if (!next) setWizardInitialMarket(null)
+                  }}
+                  initialMarket={wizardInitialMarket}
                   availableMarkets={wizardMarkets}
                   variant={formKind}
                   isBusy={isBusy}

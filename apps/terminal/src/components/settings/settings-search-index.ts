@@ -91,6 +91,20 @@ export const SETTINGS_SEARCH_INDEX: ReadonlyArray<SettingsSearchEntry> = [
   },
   {
     section: 'risk',
+    titleKey: 'settings.risk.confirmGesture',
+    descriptionKey: 'settings.risk.confirmGestureDescription',
+    keywords: [
+      'confirm',
+      'press and hold',
+      'hold',
+      'click',
+      'submit',
+      'order',
+      'trade',
+    ],
+  },
+  {
+    section: 'risk',
     titleKey: 'settings.risk.aiPermissions',
     descriptionKey: 'settings.risk.aiPermissionsDescription',
     keywords: ['ai', 'copilot', 'autonomy', 'permissions', 'trading', 'auto'],
