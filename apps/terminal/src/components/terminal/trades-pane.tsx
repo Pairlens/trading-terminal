@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useTranslation } from 'react-i18next'
 import { memo, useMemo } from 'react'
-import { Loader2 } from 'lucide-react'
+import { ArrowDown, ArrowUp, Loader2 } from 'lucide-react'
 
 import { cn } from '@pairlens/ui/lib/utils'
 import { usePanePair } from '@pairlens/plugin-sdk'
@@ -35,24 +35,78 @@ function formatTime(ts: number): string {
   return `${hh}:${mm}:${ss}`
 }
 
+// Column template shared by the tape's header and its rows — each row is its
+// own grid, so anything but fixed/fractional tracks would drift row to row.
+// Price and size get the wider fractions: a BTC print is nine characters and
+// a small-cap size can run to ten, while the clock is always eight.
+//
+// The side column carries the arrow alone until the pane is wide enough for
+// the word to sit next to it without squeezing the price out of its track.
+// 17rem/4.25rem is what the longest translation needs — Polish "Sprzedaż" —
+// not what English would get away with.
+const TAPE_GRID =
+  'grid grid-cols-[0.85rem_1.15fr_1.15fr_1fr] gap-1 @min-[17rem]/pane:grid-cols-[4.25rem_1.15fr_1.15fr_1fr]'
+
+/** Buy/sell wording, resolved once per render of the pane rather than per row. */
+type SideLabels = { buy: string; sell: string }
+
+/**
+ * Side of the print, stated rather than implied.
+ *
+ * The tint and the red/green price already say "buy" or "sell", but both ride
+ * on one channel — hue — and how loudly it speaks is up to the active theme.
+ * So the side gets its own column: an arrow (shape, not colour) at every
+ * width, and the word itself once there is room. Below that width the word
+ * stays in the accessibility tree via `sr-only`, and `title` keeps it one
+ * hover away.
+ */
+function TradeSide({ side, label }: { side: Trade['side']; label: string }) {
+  const isBuy = side === 'buy'
+  const Arrow = isBuy ? ArrowUp : ArrowDown
+
+  return (
+    <span
+      title={label}
+      className={cn(
+        'relative z-10 flex items-center gap-0.5 overflow-hidden',
+        isBuy ? 'text-up' : 'text-down',
+      )}
+    >
+      <Arrow className="size-2.5 shrink-0" aria-hidden="true" />
+      <span className="sr-only @min-[17rem]/pane:not-sr-only">{label}</span>
+    </span>
+  )
+}
+
 const TradeRow = memo(
   function TradeRow({
     trade,
     sizeReference,
+    sideLabels,
   }: {
     trade: Trade
     sizeReference: number
+    sideLabels: SideLabels
   }) {
     const direction = trade.side === 'buy' ? 'up' : 'down'
     const intensity = magnitudeIntensity(trade.size, sizeReference)
 
     return (
-      <div className="relative grid grid-cols-3 gap-1 px-2 py-[1px] font-mono text-[11px] leading-[18px]">
+      <div
+        className={cn(
+          'relative px-2 py-[1px] font-mono text-[11px] leading-[18px]',
+          TAPE_GRID,
+        )}
+      >
         {/* Unlike the book, the tint spans the whole row: there is no
             cumulative axis here, so nothing competes for the row's width. */}
         <div
           className="absolute inset-0"
           style={{ backgroundColor: magnitudeFillColor(direction, intensity) }}
+        />
+        <TradeSide
+          side={trade.side}
+          label={trade.side === 'buy' ? sideLabels.buy : sideLabels.sell}
         />
         <span
           className={cn(
@@ -74,10 +128,14 @@ const TradeRow = memo(
       </div>
     )
   },
-  // Trades are immutable once printed, so identity is the whole comparison.
+  // Trades are immutable once printed, so identity is the whole comparison —
+  // plus the two things that come from outside the print: the tape's size
+  // scale and the wording of the side column (which moves on a language
+  // switch, and would otherwise stay frozen on already-mounted rows).
   (prev, next) =>
     prev.trade.id === next.trade.id &&
-    prev.sizeReference === next.sizeReference,
+    prev.sizeReference === next.sizeReference &&
+    prev.sideLabels === next.sideLabels,
 )
 
 export function TradesPane() {
@@ -97,11 +155,20 @@ function TradesPaneInner({
   market: string
   pairKey: string
 }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { trades, status } = useTradesStream({ market, pairKey })
 
   const venue = usePaneVenue(market)
   const unavailable = usePairUnavailable(market, pairKey)
+
+  // Reuses the fills table's vocabulary (nouns, already translated in every
+  // locale) so a print reads the same word here as it does under Positions.
+  // Held by reference so a tape full of memoized rows re-renders on a
+  // language switch and on nothing else.
+  const sideLabels = useMemo<SideLabels>(
+    () => ({ buy: t('positions.buy'), sell: t('positions.sell') }),
+    [t, i18n.language],
+  )
 
   // Same reference rule as the order book: `median x 6` over what's on screen,
   // so "big" means big for this tape rather than big in absolute units.
@@ -149,10 +216,18 @@ function TradesPaneInner({
     <div className="relative flex h-full flex-col overflow-hidden text-xs">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border/50 px-2 py-1">
-        <div className="grid flex-1 grid-cols-3 gap-1 font-mono text-[10.5px] font-medium uppercase tracking-[.11em] text-muted-foreground">
+        <div
+          className={cn(
+            'flex-1 font-mono text-[10.5px] font-medium uppercase tracking-[.11em] text-muted-foreground',
+            TAPE_GRID,
+          )}
+        >
+          <span className="sr-only @min-[17rem]/pane:not-sr-only">
+            {t('positions.side')}
+          </span>
           <span>{t('terminal.columns.price')}</span>
           <span className="text-right">{t('terminal.columns.size')}</span>
-          <span className="text-right">Time</span>
+          <span className="text-right">{t('positions.time')}</span>
         </div>
       </div>
 
@@ -164,6 +239,7 @@ function TradesPaneInner({
             key={trade.id}
             trade={trade}
             sizeReference={sizeReference}
+            sideLabels={sideLabels}
           />
         ))}
       </div>
