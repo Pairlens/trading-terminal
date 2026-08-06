@@ -2780,9 +2780,8 @@
       "groupBroker": "Akun broker",
       "groupExchange": "Akun bursa",
       "selectWalletTopBar": "Pilih wallet di bilah atas",
-      "connectChainWallet": "Hubungkan wallet {{chain}}",
-      "connectExchangeAccount": "Hubungkan akun {{exchange}}",
-      "selectAccountTopBar": "Pilih akun di bilah atas"
+      "selectAccountTopBar": "Pilih akun di bilah atas",
+      "gateNoTrading": "Hanya data pasar. Tidak bisa berdagang di sini."
     },
     "trade": {
       "limitBuy": "Beli limit",

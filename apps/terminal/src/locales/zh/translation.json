@@ -2780,9 +2780,8 @@
       "groupBroker": "券商账户",
       "groupExchange": "交易所账户",
       "selectWalletTopBar": "在顶部栏选择钱包",
-      "connectChainWallet": "连接 {{chain}} 钱包",
-      "connectExchangeAccount": "连接 {{exchange}} 账户",
-      "selectAccountTopBar": "在顶部栏选择账户"
+      "selectAccountTopBar": "在顶部栏选择账户",
+      "gateNoTrading": "仅提供行情数据，无法在此交易。"
     },
     "trade": {
       "limitBuy": "限价买入",

@@ -2800,9 +2800,8 @@
       "groupBroker": "Брокерський рахунок",
       "groupExchange": "Акаунт біржі",
       "selectWalletTopBar": "Виберіть гаманець на верхній панелі",
-      "connectChainWallet": "Підключіть гаманець {{chain}}",
-      "connectExchangeAccount": "Підключіть акаунт {{exchange}}",
-      "selectAccountTopBar": "Виберіть акаунт на верхній панелі"
+      "selectAccountTopBar": "Виберіть акаунт на верхній панелі",
+      "gateNoTrading": "Лише ринкові дані. Тут торгувати не можна."
     },
     "trade": {
       "limitBuy": "Лімітна купівля",

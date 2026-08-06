@@ -2780,9 +2780,8 @@
       "groupBroker": "Cuenta de bróker",
       "groupExchange": "Cuenta de exchange",
       "selectWalletTopBar": "Selecciona la wallet en la barra superior",
-      "connectChainWallet": "Conecta una wallet de {{chain}}",
-      "connectExchangeAccount": "Conecta una cuenta de {{exchange}}",
-      "selectAccountTopBar": "Selecciona la cuenta en la barra superior"
+      "selectAccountTopBar": "Selecciona la cuenta en la barra superior",
+      "gateNoTrading": "Solo datos de mercado. Aquí no se puede operar."
     },
     "trade": {
       "limitBuy": "Compra límite",

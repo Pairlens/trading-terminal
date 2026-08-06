@@ -2780,9 +2780,8 @@
       "groupBroker": "Broker-Konto",
       "groupExchange": "Börsenkonto",
       "selectWalletTopBar": "Wallet in der oberen Leiste auswählen",
-      "connectChainWallet": "{{chain}}-Wallet verbinden",
-      "connectExchangeAccount": "{{exchange}}-Konto verbinden",
-      "selectAccountTopBar": "Konto in der oberen Leiste auswählen"
+      "selectAccountTopBar": "Konto in der oberen Leiste auswählen",
+      "gateNoTrading": "Nur Marktdaten. Hier kann nicht gehandelt werden."
     },
     "trade": {
       "limitBuy": "Limit-Kauf",

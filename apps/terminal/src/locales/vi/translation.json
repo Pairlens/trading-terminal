@@ -2780,9 +2780,8 @@
       "groupBroker": "Tài khoản môi giới",
       "groupExchange": "Tài khoản sàn",
       "selectWalletTopBar": "Chọn ví ở thanh trên cùng",
-      "connectChainWallet": "Kết nối ví {{chain}}",
-      "connectExchangeAccount": "Kết nối tài khoản {{exchange}}",
-      "selectAccountTopBar": "Chọn tài khoản ở thanh trên cùng"
+      "selectAccountTopBar": "Chọn tài khoản ở thanh trên cùng",
+      "gateNoTrading": "Chỉ có dữ liệu thị trường. Không thể giao dịch ở đây."
     },
     "trade": {
       "limitBuy": "Mua giới hạn",

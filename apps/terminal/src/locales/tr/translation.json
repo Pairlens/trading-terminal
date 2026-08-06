@@ -2780,9 +2780,8 @@
       "groupBroker": "Aracı kurum hesabı",
       "groupExchange": "Borsa hesabı",
       "selectWalletTopBar": "Üst çubuktan cüzdan seç",
-      "connectChainWallet": "{{chain}} cüzdanını bağla",
-      "connectExchangeAccount": "{{exchange}} hesabını bağla",
-      "selectAccountTopBar": "Üst çubuktan hesap seç"
+      "selectAccountTopBar": "Üst çubuktan hesap seç",
+      "gateNoTrading": "Yalnızca piyasa verisi. Burada işlem yapılamaz."
     },
     "trade": {
       "limitBuy": "Limitli alış",

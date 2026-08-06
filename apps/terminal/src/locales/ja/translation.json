@@ -2780,9 +2780,8 @@
       "groupBroker": "ブローカー口座",
       "groupExchange": "取引所アカウント",
       "selectWalletTopBar": "上部バーでウォレットを選択",
-      "connectChainWallet": "{{chain}}ウォレットを接続",
-      "connectExchangeAccount": "{{exchange}}アカウントを接続",
-      "selectAccountTopBar": "上部バーでアカウントを選択"
+      "selectAccountTopBar": "上部バーでアカウントを選択",
+      "gateNoTrading": "マーケットデータのみ。ここでは取引できません。"
     },
     "trade": {
       "limitBuy": "指値買い",

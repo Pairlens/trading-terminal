@@ -2780,9 +2780,8 @@
       "groupBroker": "증권 계좌",
       "groupExchange": "거래소 계정",
       "selectWalletTopBar": "상단 바에서 지갑 선택",
-      "connectChainWallet": "{{chain}} 지갑 연결",
-      "connectExchangeAccount": "{{exchange}} 계정 연결",
-      "selectAccountTopBar": "상단 바에서 계정 선택"
+      "selectAccountTopBar": "상단 바에서 계정 선택",
+      "gateNoTrading": "시세 데이터 전용입니다. 여기서는 거래할 수 없습니다."
     },
     "trade": {
       "limitBuy": "지정가 매수",
