@@ -1190,7 +1190,20 @@
     "createFirst": "İlk çalışma alanını oluştur",
     "emptyState": "Henüz çalışma alanı yok",
     "descriptionLabel": "Açıklama",
-    "descriptionPlaceholder": "İsteğe bağlı kısa açıklama"
+    "descriptionPlaceholder": "İsteğe bağlı kısa açıklama",
+    "save": {
+      "title": "Çalışma alanını kaydet",
+      "description": "Bu panel düzenini istediğin zaman yeniden açabileceğin bir çalışma alanı olarak sakla.",
+      "submit": "Çalışma alanını kaydet",
+      "saved": "\"{{name}}\" çalışma alanlarına kaydedildi.",
+      "updated": "\"{{name}}\" güncellendi.",
+      "cloudHint": "Pairlens hesabınla eşitlenir, böylece giriş yaptığın her cihazda açılır.",
+      "syncOffHint": "Çalışma alanı eşitlemesi kapalı, bu yüzden bu cihazda kalır.",
+      "localHint": "Bu cihaza kaydedilir. Pairlens hesabınla eşitleyip her yerden açmak için giriş yap.",
+      "localOnlyHint": "Bu cihaza kaydedilir.",
+      "copyName": "{{name}} (kopya)",
+      "namePlaceholder": "Çalışma Alanım"
+    }
   },
   "session": {
     "checking": "Oturum kontrol ediliyor…",
@@ -2329,7 +2342,10 @@
       "splitTop": "Üstten böl",
       "splitBottom": "Alttan böl",
       "newColumn": "Yeni sütun"
-    }
+    },
+    "currentLayout": "Mevcut düzen",
+    "saveAsWorkspace": "Çalışma alanı olarak kaydet…",
+    "updateWorkspace": "\"{{name}}\" güncelle"
   },
   "watchlist": {
     "addTitle": "İzleme listesine ekle",

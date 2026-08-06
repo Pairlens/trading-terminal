@@ -1,17 +1,20 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import {
   ArrowRight,
+  Check,
   Laptop,
   Layout,
   LayoutGrid,
   LayoutTemplate,
   Monitor,
   MonitorPlay,
+  Save,
   Tv,
 } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@pairlens/ui/components/ui/button'
 import {
@@ -40,11 +43,15 @@ import type { ShortcutDefinition } from '@/hooks/use-keyboard-shortcuts'
 import { workspaceAnalyticsKind } from '@/lib/analytics-panels'
 import { track } from '@/lib/analytics-events'
 import { templateMenuLabel } from '@/lib/workspace-store/template-labels'
+import { normalizeLayout } from '@/lib/layout/utils'
+import { uniqueWorkspaceName } from '@/lib/layout/save-workspace'
 import { useLayout } from '@/lib/layout/context'
 import { useWorkspace } from '@/lib/layout/workspace-context'
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { ShortcutHint } from '@/components/shortcut-hints'
+import { SaveWorkspaceDialog } from '@/components/workspace/save-workspace-dialog'
+import { useCustomWorkspacesStore } from '@/stores/custom-workspaces-store'
 
 const SCREEN_ICONS: Record<string, typeof Laptop> = {
   Laptop,
@@ -67,9 +74,46 @@ type LayoutToolbarProps = {
 export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { dispatch } = useLayout()
+  const { layout, dispatch } = useLayout()
   const workspace = useWorkspace()
   const { presets, screenPresets } = workspace
+
+  const [saveOpen, setSaveOpen] = useState(false)
+
+  // On a custom workspace the current arrangement can be written back to the
+  // workspace itself; on the pair/discovery routes there is nothing to write
+  // back to, so saving always means creating one.
+  const workspaces = useCustomWorkspacesStore((s) => s.workspaces)
+  const updateWorkspace = useCustomWorkspacesStore((s) => s.updateWorkspace)
+  const loadWorkspaces = useCustomWorkspacesStore((s) => s.load)
+  // The tree sidebar normally hydrates the store, but this toolbar also renders
+  // in windows that never mount it (a popped-out pane window).
+  useEffect(() => {
+    loadWorkspaces()
+  }, [loadWorkspaces])
+  const currentWorkspace = workspace.id
+    ? workspaces.find((w) => w.id === workspace.id)
+    : undefined
+
+  const openSaveDialog = useCallback(() => {
+    onOpenChange?.(false)
+    setSaveOpen(true)
+  }, [onOpenChange])
+
+  const handleUpdateWorkspace = useCallback(() => {
+    if (!currentWorkspace) return
+    onOpenChange?.(false)
+    updateWorkspace(currentWorkspace.id, {
+      defaultLayout: normalizeLayout(layout),
+    })
+    track('workspace_layout_saved', { workspace: 'custom', mode: 'update' })
+    toast.success(
+      t('workspace.save.updated', {
+        defaultValue: '“{{name}}” updated.',
+        name: currentWorkspace.name,
+      }),
+    )
+  }, [currentWorkspace, layout, onOpenChange, t, updateWorkspace])
 
   // The workspaces dropdown, on whatever chord the user bound.
   const shortcuts = useMemo<Array<ShortcutDefinition>>(() => {
@@ -134,16 +178,47 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
           </TooltipContent>
         </Tooltip>
         <DropdownMenuContent align="end" className="w-60">
-          {/* Existing presets — quick access */}
+          {/* What the user has in front of them, before the ready-made
+              layouts: keeping the current arrangement is the one action here
+              that would otherwise be lost by picking anything below. */}
           <DropdownMenuGroup>
-            <DropdownMenuLabel>{t('layout.presets')}</DropdownMenuLabel>
-          </DropdownMenuGroup>
-          {Object.entries(presets).map(([key, preset]) => (
-            <DropdownMenuItem key={key} onClick={() => handlePreset(key)}>
-              <Layout className="size-3.5" />
-              {templateMenuLabel(t, key, preset.label)}
+            <DropdownMenuLabel>
+              {t('layout.currentLayout', 'Current layout')}
+            </DropdownMenuLabel>
+            <DropdownMenuItem onClick={openSaveDialog}>
+              <Save className="size-3.5" />
+              {t('layout.saveAsWorkspace', 'Save as workspace…')}
             </DropdownMenuItem>
-          ))}
+            {currentWorkspace ? (
+              <DropdownMenuItem onClick={handleUpdateWorkspace}>
+                <Check className="size-3.5" />
+                <span className="truncate">
+                  {t('layout.updateWorkspace', {
+                    defaultValue: 'Update “{{name}}”',
+                    name: currentWorkspace.name,
+                  })}
+                </span>
+              </DropdownMenuItem>
+            ) : null}
+          </DropdownMenuGroup>
+
+          <DropdownMenuSeparator />
+
+          {/* Existing presets — quick access. Custom workspaces carry none,
+              and a bare heading over nothing reads as a loading failure. */}
+          {Object.keys(presets).length > 0 ? (
+            <>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>{t('layout.presets')}</DropdownMenuLabel>
+              </DropdownMenuGroup>
+              {Object.entries(presets).map(([key, preset]) => (
+                <DropdownMenuItem key={key} onClick={() => handlePreset(key)}>
+                  <Layout className="size-3.5" />
+                  {templateMenuLabel(t, key, preset.label)}
+                </DropdownMenuItem>
+              ))}
+            </>
+          ) : null}
 
           {/* Workspace Store — featured CTA, in the language of the
               user-menu / sign-in CTAs: tinted card, iris glow, badge. */}
@@ -206,6 +281,26 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <SaveWorkspaceDialog
+        open={saveOpen}
+        onOpenChange={setSaveOpen}
+        layout={layout}
+        variables={workspace.variables}
+        sourceKind={workspaceKind}
+        suggestedName={
+          currentWorkspace
+            ? uniqueWorkspaceName(
+                t('workspace.save.copyName', {
+                  defaultValue: '{{name}} copy',
+                  name: currentWorkspace.name,
+                }),
+                workspaces.map((w) => w.name),
+              )
+            : ''
+        }
+        suggestedIcon={currentWorkspace?.icon}
+      />
 
       <PendingPanePlacementHint />
     </>

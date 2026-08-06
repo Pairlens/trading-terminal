@@ -1190,7 +1190,20 @@
     "createFirst": "Buat ruang kerja pertama Anda",
     "emptyState": "Belum ada ruang kerja",
     "descriptionLabel": "Deskripsi",
-    "descriptionPlaceholder": "Deskripsi singkat opsional"
+    "descriptionPlaceholder": "Deskripsi singkat opsional",
+    "save": {
+      "title": "Simpan ruang kerja",
+      "description": "Simpan susunan panel ini sebagai ruang kerja yang bisa kamu buka lagi kapan saja.",
+      "submit": "Simpan ruang kerja",
+      "saved": "“{{name}}” disimpan ke ruang kerja Anda.",
+      "updated": "“{{name}}” diperbarui.",
+      "cloudHint": "Disinkronkan ke akun Pairlens kamu, jadi bisa dibuka di semua perangkat tempat kamu masuk.",
+      "syncOffHint": "Sinkronisasi ruang kerja mati, jadi ini tetap di perangkat ini.",
+      "localHint": "Disimpan di perangkat ini. Masuk untuk menyinkronkannya ke akun Pairlens kamu dan membukanya di mana saja.",
+      "localOnlyHint": "Disimpan di perangkat ini.",
+      "copyName": "{{name}} (salinan)",
+      "namePlaceholder": "Ruang Kerja Saya"
+    }
   },
   "session": {
     "checking": "Memeriksa sesi…",
@@ -2329,7 +2342,10 @@
       "splitTop": "Bagi atas",
       "splitBottom": "Bagi bawah",
       "newColumn": "Kolom baru"
-    }
+    },
+    "currentLayout": "Tata letak saat ini",
+    "saveAsWorkspace": "Simpan sebagai ruang kerja…",
+    "updateWorkspace": "Perbarui “{{name}}”"
   },
   "watchlist": {
     "addTitle": "Tambah ke daftar pantauan",

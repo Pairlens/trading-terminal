@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'bun:test'
 
 import {
   BUILTIN_WORKSPACE_TEMPLATES,
+  bindLayoutVariables,
   routePresets,
   templateToWorkspaceParams,
 } from '../catalog'
@@ -58,6 +59,87 @@ for (const { manifest } of BOOTSTRAP_PLUGINS) {
     }
   }
 }
+
+describe('catalog pane requirements track the manifests', () => {
+  // The catalog restates "which panes need a pair / a wallet" in its own sets,
+  // because it builds template layouts at module scope — long before a pane
+  // registry exists to ask. A restatement can drift from what the panels
+  // actually declare, and it had: `trades` requires a pair and was missing.
+  //
+  // The per-template test below only fails once some template happens to use a
+  // drifted pane. This one fails on the drift itself, the commit it appears.
+  //
+  // Asserted through `bindLayoutVariables` rather than by exporting the sets:
+  // it is the behaviour that matters, and every other consumer of those sets
+  // (`buildLayout`, `variablesForLayout`) reads the same two constants.
+  const PAIR_VAR = { name: '$pair', label: 'Pair', type: 'pair' as const }
+  const WALLET_VAR = {
+    name: '$wallet',
+    label: 'Account',
+    type: 'wallet' as const,
+  }
+
+  function bindingsFor(paneType: string): Record<string, string> {
+    const bound = bindLayoutVariables(
+      {
+        version: 1,
+        columns: [
+          {
+            id: 'c',
+            widthPercent: 100,
+            cells: [
+              {
+                id: 'e',
+                activeTabIndex: 0,
+                heightPercent: 100,
+                panes: [{ id: 'p', type: paneType }],
+              },
+            ],
+          },
+        ],
+      },
+      [PAIR_VAR, WALLET_VAR],
+    )
+    return bound.columns[0].cells[0].panes[0].bindings ?? {}
+  }
+
+  it('binds each bundled pane exactly as its manifest declares', () => {
+    const drift: Array<string> = []
+    for (const { manifest } of BOOTSTRAP_PLUGINS) {
+      for (const panel of manifest.contributes?.panels ?? []) {
+        const type = typeKey(manifest.id, panel.id)
+        const bindings = bindingsFor(type)
+        for (const [requirement, slot] of [
+          ['workspace:active-pair', 'active-pair'],
+          ['workspace:active-wallet', 'active-wallet'],
+        ] as const) {
+          const declared = panel.requires?.includes(requirement) ?? false
+          const bound = bindings[slot] !== undefined
+          if (declared !== bound) {
+            drift.push(
+              `${type}: manifest ${declared ? 'declares' : 'omits'} ${requirement}, ` +
+                `catalog ${bound ? 'binds' : 'skips'} ${slot}`,
+            )
+          }
+        }
+      }
+    }
+    expect(drift.sort()).toEqual([])
+  })
+
+  it('covers enough panes to be a real guard (self-check)', () => {
+    const panels = BOOTSTRAP_PLUGINS.flatMap(
+      ({ manifest }) => manifest.contributes?.panels ?? [],
+    )
+    expect(panels.length).toBeGreaterThan(15)
+    expect(
+      panels.some((p) => p.requires?.includes('workspace:active-pair')),
+    ).toBe(true)
+    expect(
+      panels.some((p) => p.requires?.includes('workspace:active-wallet')),
+    ).toBe(true)
+  })
+})
 
 describe('workspace template catalog integrity', () => {
   it('has unique template ids', () => {

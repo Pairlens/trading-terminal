@@ -1190,7 +1190,20 @@
     "createFirst": "最初のワークスペースを作成",
     "emptyState": "ワークスペースはまだありません",
     "descriptionLabel": "説明",
-    "descriptionPlaceholder": "任意の簡単な説明"
+    "descriptionPlaceholder": "任意の簡単な説明",
+    "save": {
+      "title": "ワークスペースを保存",
+      "description": "現在のペイン配置をワークスペースとして保存し、いつでも開き直せます。",
+      "submit": "ワークスペースを保存",
+      "saved": "「{{name}}」をワークスペースに保存しました。",
+      "updated": "「{{name}}」を更新しました。",
+      "cloudHint": "Pairlens アカウントに同期されるので、ログインしたどの端末でも開けます。",
+      "syncOffHint": "ワークスペースの同期がオフのため、この端末だけに保存されます。",
+      "localHint": "この端末に保存されます。ログインすると Pairlens アカウントに同期され、どこからでも開けます。",
+      "localOnlyHint": "この端末に保存されます。",
+      "copyName": "{{name}} のコピー",
+      "namePlaceholder": "マイワークスペース"
+    }
   },
   "session": {
     "checking": "セッションを確認中…",
@@ -2329,7 +2342,10 @@
       "splitTop": "上に分割",
       "splitBottom": "下に分割",
       "newColumn": "新しいカラム"
-    }
+    },
+    "currentLayout": "現在のレイアウト",
+    "saveAsWorkspace": "ワークスペースとして保存…",
+    "updateWorkspace": "「{{name}}」を更新"
   },
   "watchlist": {
     "addTitle": "ウォッチリストに追加",

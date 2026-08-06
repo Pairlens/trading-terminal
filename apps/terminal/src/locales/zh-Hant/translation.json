@@ -1190,7 +1190,20 @@
     "createFirst": "建立你的第一個工作區",
     "emptyState": "尚無工作區",
     "descriptionLabel": "描述",
-    "descriptionPlaceholder": "簡短描述（選填）"
+    "descriptionPlaceholder": "簡短描述（選填）",
+    "save": {
+      "title": "儲存工作區",
+      "description": "把目前的面板排列儲存為工作區，隨時都能再打開。",
+      "submit": "儲存工作區",
+      "saved": "「{{name}}」已儲存到你的工作區。",
+      "updated": "「{{name}}」已更新。",
+      "cloudHint": "會同步到你的 Pairlens 帳號，在任何登入的裝置上都能打開。",
+      "syncOffHint": "工作區同步已關閉，因此它只留在這台裝置上。",
+      "localHint": "儲存在這台裝置上。登入後可同步到你的 Pairlens 帳號，隨處開啟。",
+      "localOnlyHint": "儲存在這台裝置上。",
+      "copyName": "{{name}} 副本",
+      "namePlaceholder": "我的工作區"
+    }
   },
   "session": {
     "checking": "檢查工作階段中…",
@@ -2329,7 +2342,10 @@
       "splitTop": "上方分割",
       "splitBottom": "下方分割",
       "newColumn": "新欄"
-    }
+    },
+    "currentLayout": "目前版面",
+    "saveAsWorkspace": "儲存為工作區…",
+    "updateWorkspace": "更新「{{name}}」"
   },
   "watchlist": {
     "addTitle": "加入自選清單",
