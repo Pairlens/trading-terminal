@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
+import { latencyMonitor } from '@pairlens/market-engine/latency'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import {
@@ -96,6 +97,12 @@ export class BinanceWsClient {
   private backfillRetryDelayMs?: number
   private country = ''
   private msgId = 0
+  /**
+   * Id of the newest keepalive request. Binance has no pong frame — the
+   * keepalive is a real LIST_SUBSCRIPTIONS call — so its reply is only
+   * recognizable by the id it echoes back.
+   */
+  private keepaliveId = 0
   private reconcileScheduled = false
   // session key → Binance stream name; the set of values is the desired state.
   private desired = new Map<string, string>()
@@ -130,9 +137,9 @@ export class BinanceWsClient {
       },
       ping: {
         intervalMs: KEEPALIVE_INTERVAL_MS,
-        frame: () =>
-          JSON.stringify({ method: 'LIST_SUBSCRIPTIONS', id: ++this.msgId }),
+        frame: () => this.keepaliveFrame(),
       },
+      onLatencySample: (rttMs) => latencyMonitor.record('binance', rttMs),
       ...sessionOverrides,
     })
   }
@@ -357,6 +364,20 @@ export class BinanceWsClient {
 
   // ── Message handling ──
 
+  /**
+   * Binance has no pong frame, so the keepalive is a real request and its
+   * reply is only recognizable by the id it echoes. Built here rather than
+   * inline in the ping option so the id assignment and the reply match is one
+   * pair of moving parts.
+   */
+  private keepaliveFrame(): string {
+    this.keepaliveId = ++this.msgId
+    return JSON.stringify({
+      method: 'LIST_SUBSCRIPTIONS',
+      id: this.keepaliveId,
+    })
+  }
+
   private handleMessage(text: string): void {
     let msg: {
       stream?: string
@@ -372,6 +393,9 @@ export class BinanceWsClient {
     // Control-message ack ({ result, id }): Binance confirmed it received the
     // SUBSCRIBE/UNSUBSCRIBE — disarm the lost-subscribe watchdog for that id.
     if (typeof msg.id === 'number') {
+      // The keepalive rides the same id space, and its reply is the only
+      // frame that closes a round trip.
+      if (msg.id === this.keepaliveId) this.session.notePong()
       const timer = this.pendingAcks.get(msg.id)
       if (timer) {
         clearTimeout(timer)

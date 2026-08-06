@@ -56,6 +56,7 @@ export {
   type WakeReason,
   type WakeSource,
 } from './wake-monitor'
+export { latencyMonitor, type VenueLatency } from './latency'
 export {
   GeoRestrictedError,
   isGeoRestrictedError,

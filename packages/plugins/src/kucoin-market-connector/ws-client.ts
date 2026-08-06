@@ -19,6 +19,7 @@
  */
 
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
+import { latencyMonitor } from '@pairlens/market-engine/latency'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
@@ -117,6 +118,7 @@ export class KucoinWsClient {
         frame: () =>
           JSON.stringify({ id: String(this.nextMsgId++), type: 'ping' }),
       },
+      onLatencySample: (rttMs) => latencyMonitor.record('kucoin', rttMs),
       onOpen: () => this.armTokenRefresh(),
       onConnectError: () => {
         this.tokenCache = null
@@ -411,9 +413,13 @@ export class KucoinWsClient {
       return
     }
 
-    // Welcome / pong / subscription ack — no action needed
-    if (msg.type === 'welcome' || msg.type === 'pong' || msg.type === 'ack')
+    // Welcome / pong / subscription ack — no action needed beyond closing the
+    // keepalive round trip the pong answers.
+    if (msg.type === 'pong') {
+      this.session.notePong()
       return
+    }
+    if (msg.type === 'welcome' || msg.type === 'ack') return
 
     if (msg.type === 'message' && msg.topic && msg.data) {
       if (msg.topic.startsWith('/market/candles:')) {

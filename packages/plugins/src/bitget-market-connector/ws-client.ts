@@ -18,6 +18,7 @@
  */
 
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
+import { latencyMonitor } from '@pairlens/market-engine/latency'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import {
@@ -69,6 +70,7 @@ export class BitgetWsClient {
         intervalMs: PING_INTERVAL,
         frame: () => 'ping',
       },
+      onLatencySample: (rttMs) => latencyMonitor.record('bitget', rttMs),
       ...sessionOverrides,
     })
   }
@@ -232,8 +234,11 @@ export class BitgetWsClient {
   // ── Message handling ──
 
   private handleMessage(text: string): void {
-    // Pong response — raw string, not JSON — ignore
-    if (text === 'pong') return
+    // Pong response — raw string, not JSON — closes the keepalive round trip
+    if (text === 'pong') {
+      this.session.notePong()
+      return
+    }
 
     let msg: {
       action?: string

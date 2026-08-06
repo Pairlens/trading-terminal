@@ -19,6 +19,7 @@
  */
 
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
+import { latencyMonitor } from '@pairlens/market-engine/latency'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import {
@@ -89,6 +90,7 @@ export class BybitWsClient {
         intervalMs: PING_INTERVAL_MS,
         frame: () => JSON.stringify({ op: 'ping' }),
       },
+      onLatencySample: (rttMs) => latencyMonitor.record('bybit', rttMs),
       ...sessionOverrides,
     })
   }
@@ -265,10 +267,20 @@ export class BybitWsClient {
       type?: string
       data?: unknown
       op?: string
+      ret_msg?: string
     }
     try {
       msg = JSON.parse(text)
     } catch {
+      return
+    }
+
+    // The reply to OUR keepalive, which closes a round trip. ByBit answers it
+    // two ways depending on the endpoint — `op: 'pong'`, or `op: 'ping'`
+    // echoed back alongside `ret_msg: 'pong'` — and the second is
+    // indistinguishable from a server-initiated ping without ret_msg.
+    if (msg.op === 'pong' || msg.ret_msg === 'pong') {
+      this.session.notePong()
       return
     }
 

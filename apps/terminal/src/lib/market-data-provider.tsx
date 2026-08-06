@@ -11,6 +11,7 @@ import {
 } from 'react'
 
 import { StreamThrottle } from '@pairlens/market-engine'
+import { feedEventTs, latencyMonitor } from '@pairlens/market-engine/latency'
 import { usePairlens } from './pairlens-provider'
 import { getCountrySetting } from './region-settings'
 import { streamHealth } from './stream-health'
@@ -829,6 +830,13 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       start: (dispatch: (data: unknown) => void) => () => void,
       shouldCache: (data: unknown) => boolean,
       cb: (data: unknown) => void,
+      /**
+       * Set only for streams whose payloads carry the venue's own emission
+       * timestamp (today: trades). Passing it opts the stream into feed-age
+       * latency sampling — see market-engine/latency for why this is the only
+       * stream that qualifies.
+       */
+      feedVenue?: string,
     ): (() => void) => {
       if (pausedRef.current) return () => {}
 
@@ -865,6 +873,15 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         // a different question from "we are painting every frame".
         e.unsub = start((data: unknown) => {
           streamHealth.mark(key)
+          // Sampled on RAW arrival for the same reason health is: the throttle
+          // drops frames under load, and a dropped frame is still evidence of
+          // how fresh the feed is. latencyMonitor throttles its own sampling.
+          if (feedVenue) {
+            const eventTs = feedEventTs(data)
+            if (eventTs !== null) {
+              latencyMonitor.recordFeedAge(feedVenue, eventTs)
+            }
+          }
           e.throttled(data)
         })
         mux.set(key, e)
@@ -1031,6 +1048,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
           // incremental, so there is nothing to replay to a late joiner.
           () => false,
           cb,
+          market,
         )
       } catch {
         // Venue has no trade feed — the pane renders an unsupported state.

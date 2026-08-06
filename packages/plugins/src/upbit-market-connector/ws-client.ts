@@ -28,6 +28,7 @@
  */
 
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
+import { latencyMonitor } from '@pairlens/market-engine/latency'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import {
@@ -91,6 +92,7 @@ export class UpbitWsClient {
       onMessage: (data) => this.handleRawMessage(data),
       // Upbit drops the connection after 120s idle — raw PING keep-alive
       ping: { intervalMs: PING_INTERVAL, frame: () => 'PING' },
+      onLatencySample: (rttMs) => latencyMonitor.record('upbit', rttMs),
       ...sessionOverrides,
     })
   }
@@ -337,7 +339,11 @@ export class UpbitWsClient {
 
   private handleMessage(text: string): void {
     // Upbit sends "PONG" as text response to our PING, or binary pong frames
-    if (text === 'PONG' || text === '') return
+    if (text === 'PONG') {
+      this.session.notePong()
+      return
+    }
+    if (text === '') return
 
     let msg: Record<string, unknown>
     try {
@@ -346,8 +352,12 @@ export class UpbitWsClient {
       return
     }
 
-    // Keep-alive status message
-    if (msg['status'] === 'UP') return
+    // Keep-alive status message — Upbit's other answer to PING, so it closes
+    // the round trip just like the plain "PONG" text above.
+    if (msg['status'] === 'UP') {
+      this.session.notePong()
+      return
+    }
 
     // Error message
     if (msg['error']) return

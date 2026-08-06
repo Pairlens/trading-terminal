@@ -18,6 +18,7 @@
  */
 
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
+import { latencyMonitor } from '@pairlens/market-engine/latency'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import {
@@ -82,6 +83,7 @@ export class KrakenWsClient {
         intervalMs: PING_INTERVAL,
         frame: () => JSON.stringify({ method: 'ping' }),
       },
+      onLatencySample: (rttMs) => latencyMonitor.record('kraken', rttMs),
       ...sessionOverrides,
     })
   }
@@ -305,8 +307,11 @@ export class KrakenWsClient {
 
     // Pong or subscription ack
     const method = msg['method'] as string | undefined
-    if (method === 'pong' || method === 'subscribe' || method === 'unsubscribe')
+    if (method === 'pong') {
+      this.session.notePong()
       return
+    }
+    if (method === 'subscribe' || method === 'unsubscribe') return
 
     // Heartbeat
     if (msg['channel'] === 'heartbeat') return
