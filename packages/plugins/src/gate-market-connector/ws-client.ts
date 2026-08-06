@@ -19,6 +19,7 @@
  */
 
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
+import { latencyMonitor } from '@pairlens/market-engine/latency'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import { fetchGateCandles } from './rest-client'
@@ -75,6 +76,7 @@ export class GateWsClient {
             channel: 'spot.ping',
           }),
       },
+      onLatencySample: (rttMs) => latencyMonitor.record('gate', rttMs),
       ...sessionOverrides,
     })
   }
@@ -250,7 +252,10 @@ export class GateWsClient {
     }
 
     // Pong — keep-alive response
-    if (msg.channel === 'spot.pong') return
+    if (msg.channel === 'spot.pong') {
+      this.session.notePong()
+      return
+    }
 
     // Subscription ack
     if (msg.event === 'subscribe' || msg.event === 'unsubscribe') return

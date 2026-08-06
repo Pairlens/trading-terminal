@@ -15,6 +15,7 @@
  */
 
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
+import { latencyMonitor } from '@pairlens/market-engine/latency'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import { fetchMexcCandles } from './rest-client'
@@ -76,6 +77,7 @@ export class MexcWsClient {
         intervalMs: PING_INTERVAL_MS,
         frame: () => JSON.stringify({ method: 'PING' }),
       },
+      onLatencySample: (rttMs) => latencyMonitor.record('mexc', rttMs),
       ...sessionOverrides,
     })
   }
@@ -218,8 +220,13 @@ export class MexcWsClient {
   // ── Message handling ──
 
   private handleMessage(data: string | ArrayBuffer): void {
-    // JSON text messages are subscription confirmations / pong — ignore
-    if (typeof data === 'string') return
+    // JSON text messages are subscription confirmations / pong. Market data
+    // never arrives as text, so a substring test is enough to spot the PING
+    // reply ({"id":0,"code":0,"msg":"PONG"}) without parsing every ack.
+    if (typeof data === 'string') {
+      if (data.includes('PONG')) this.session.notePong()
+      return
+    }
 
     // Binary protobuf frame
     const msg = decodeMexcPush(data)

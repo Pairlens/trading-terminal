@@ -896,3 +896,80 @@ describe('ReconnectingWsSession — backoff policy', () => {
     session.destroy()
   })
 })
+
+describe('ReconnectingWsSession — keepalive latency', () => {
+  it('reports the round trip between a ping and the client acking its pong', async () => {
+    const samples: Array<number> = []
+    const { session, sockets } = makeSession({
+      ping: { intervalMs: 5, frame: () => 'ping' },
+      onLatencySample: (rttMs) => samples.push(rttMs),
+    })
+
+    session.acquire('a', candleSpec([], 'a'), () => {})
+    await waitFor(() => sockets.length === 1)
+    await waitFor(() => sockets[0].sent.includes('ping'))
+
+    session.notePong()
+    expect(samples.length).toBe(1)
+    expect(samples[0]).toBeGreaterThanOrEqual(0)
+    expect(samples[0]).toBeLessThan(2000)
+
+    session.destroy()
+  })
+
+  it('ignores a pong nobody pinged for', async () => {
+    const samples: Array<number> = []
+    const { session, sockets } = makeSession({
+      onLatencySample: (rttMs) => samples.push(rttMs),
+    })
+
+    session.acquire('a', candleSpec([], 'a'), () => {})
+    await waitFor(() => sockets.length === 1)
+
+    // A venue that pings US and gets an echo back can produce this; timing it
+    // against a stale stamp would invent a number.
+    session.notePong()
+    expect(samples).toEqual([])
+
+    session.destroy()
+  })
+
+  it('reports one sample per ping, not one per pong', async () => {
+    const samples: Array<number> = []
+    const { session, sockets } = makeSession({
+      ping: { intervalMs: 5, frame: () => 'ping' },
+      onLatencySample: (rttMs) => samples.push(rttMs),
+    })
+
+    session.acquire('a', candleSpec([], 'a'), () => {})
+    await waitFor(() => sockets.length === 1)
+    await waitFor(() => sockets[0].sent.includes('ping'))
+
+    session.notePong()
+    session.notePong()
+    expect(samples.length).toBe(1)
+
+    session.destroy()
+  })
+
+  it('does not time a pong against the socket that was replaced', async () => {
+    const samples: Array<number> = []
+    const { session, sockets } = makeSession({
+      ping: { intervalMs: 5, frame: () => 'ping' },
+      onLatencySample: (rttMs) => samples.push(rttMs),
+    })
+
+    session.acquire('a', candleSpec([], 'a'), () => {})
+    await waitFor(() => sockets.length === 1)
+    await waitFor(() => sockets[0].sent.includes('ping'))
+
+    // The socket dies with a ping outstanding. A pong arriving from the old
+    // connection's decode queue must not be measured against a stamp that
+    // belongs to a connection nobody is listening to any more.
+    sockets[0].drop()
+    session.notePong()
+    expect(samples).toEqual([])
+
+    session.destroy()
+  })
+})

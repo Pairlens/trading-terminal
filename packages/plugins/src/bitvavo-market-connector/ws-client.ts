@@ -24,6 +24,7 @@
  */
 
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
+import { latencyMonitor } from '@pairlens/market-engine/latency'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import {
@@ -101,6 +102,7 @@ export class BitvavoWsClient {
         intervalMs: KEEPALIVE_INTERVAL,
         frame: () => JSON.stringify({ action: 'getTime' }),
       },
+      onLatencySample: (rttMs) => latencyMonitor.record('bitvavo', rttMs),
       ...sessionOverrides,
     })
   }
@@ -322,7 +324,12 @@ export class BitvavoWsClient {
       )
       return
     }
-    if (action) return // getTime and other action acks — nothing to do
+    // getTime IS the keepalive, so its ack closes the round trip.
+    if (action === 'getTime') {
+      this.session.notePong()
+      return
+    }
+    if (action) return // other action acks — nothing to do
 
     const event = msg['event'] as string | undefined
     switch (event) {

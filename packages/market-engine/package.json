@@ -29,6 +29,7 @@
     "./ws-adapter": "./src/ws-adapter.ts",
     "./ws-session": "./src/ws-session.ts",
     "./wake-monitor": "./src/wake-monitor.ts",
+    "./latency": "./src/latency.ts",
     "./validation": "./src/validation.ts",
     "./checksum": "./src/checksum.ts",
     "./staleness": "./src/staleness.ts",

@@ -28,6 +28,7 @@
  */
 
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
+import { latencyMonitor } from '@pairlens/market-engine/latency'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import {
@@ -81,9 +82,19 @@ type TradeSub = {
 
 type ChanState = { chanId?: number }
 
+/**
+ * Latency-probe cadence. Not a keepalive — the server's own heartbeats already
+ * hold the socket open — so it is paced to be a cheap measurement rather than
+ * to beat an idle timeout.
+ */
+const PING_INTERVAL_MS = 20_000
+
 export class BfxWsClient {
   private session: ReconnectingWsSession
   private backfillRetryDelayMs?: number
+
+  /** Client id echoed back on the pong; only its presence is used. */
+  private pingCid = 0
 
   // Map chanId → subscription key for routing data messages
   private chanMap = new Map<number, { type: string; key: string }>()
@@ -94,10 +105,21 @@ export class BfxWsClient {
     this.session = new ReconnectingWsSession({
       url: () => resolveBfxUrls().wsPublicUrl,
       onMessage: (data) => this.handleMessage(data as string),
-      // No ping frame — Bitfinex heartbeats ([chanId,"hb"]) keep it alive.
-      // Those arrive every ~15s per channel whether or not the market moves,
-      // so a minute of total silence means the socket is dead.
+      // The socket does not NEED this ping — Bitfinex heartbeats
+      // ([chanId,"hb"]) already keep it alive, and they arrive every ~15s per
+      // channel whether or not the market moves. It is here for the round-trip
+      // measurement: a heartbeat the server sends unprompted can be timed
+      // against nothing, whereas {event:'ping', cid} comes back as
+      // {event:'pong', cid} and closes a trip we opened.
+      ping: {
+        intervalMs: PING_INTERVAL_MS,
+        frame: () => JSON.stringify({ event: 'ping', cid: ++this.pingCid }),
+      },
+      // Keep the explicit watchdog: the heartbeats remain the guaranteed
+      // inbound signal, and deriving a timeout from the ping interval instead
+      // would arm a tighter trigger than this venue has ever needed.
       livenessTimeoutMs: 60_000,
+      onLatencySample: (rttMs) => latencyMonitor.record('bitfinex', rttMs),
       ...sessionOverrides,
     })
   }
@@ -320,6 +342,10 @@ export class BfxWsClient {
   private handleEvent(evt: Record<string, unknown>): void {
     const event = evt['event'] as string
 
+    if (event === 'pong') {
+      this.session.notePong()
+      return
+    }
     if (event === 'subscribed') {
       this.handleSubscribed(evt)
     }

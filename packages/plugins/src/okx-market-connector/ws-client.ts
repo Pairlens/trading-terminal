@@ -16,6 +16,7 @@
  */
 
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
+import { latencyMonitor } from '@pairlens/market-engine/latency'
 import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 import { backfillCandles } from '@pairlens/market-engine/candle-backfill'
 import {
@@ -87,6 +88,7 @@ export class OkxWsClient {
       },
       onMessage: (data) => this.handleBusinessMessage(data as string),
       ping: { intervalMs: PING_INTERVAL_MS, frame: () => 'ping' },
+      onLatencySample: (rttMs) => latencyMonitor.record('okx', rttMs),
       ...sessionOverrides,
     })
     this.publicSession = new ReconnectingWsSession({
@@ -96,6 +98,7 @@ export class OkxWsClient {
       },
       onMessage: (data) => this.handlePublicMessage(data as string),
       ping: { intervalMs: PING_INTERVAL_MS, frame: () => 'ping' },
+      onLatencySample: (rttMs) => latencyMonitor.record('okx', rttMs),
       onConnectError: (err) =>
         console.error('[okx-public-ws] connectWs failed', err),
       ...sessionOverrides,
@@ -284,8 +287,12 @@ export class OkxWsClient {
 
   private handleBusinessMessage(text: string): void {
     // Keepalive reply — a raw string, not JSON. Reaching the session at all is
-    // what matters (it feeds the liveness watchdog); nothing else to do.
-    if (text === 'pong') return
+    // what matters (it feeds the liveness watchdog); notePong additionally
+    // closes the round trip the ping opened, which is the latency readout.
+    if (text === 'pong') {
+      this.businessSession.notePong()
+      return
+    }
 
     let msg: {
       arg?: { channel?: string; instId?: string }
@@ -323,7 +330,10 @@ export class OkxWsClient {
   // ── Public WS messages (ticker, orderbook) ──
 
   private handlePublicMessage(text: string): void {
-    if (text === 'pong') return
+    if (text === 'pong') {
+      this.publicSession.notePong()
+      return
+    }
 
     let msg: {
       arg?: { channel?: string; instId?: string }

@@ -20,6 +20,7 @@ import type { MarketOption } from '@/hooks/use-available-markets'
 import { LayoutToolbar } from '@/components/layout/layout-toolbar'
 import { PageHeader } from '@/components/page-header'
 import { ConnectionIndicator } from '@/components/terminal/connection-indicator'
+import { LatencyIndicator } from '@/components/terminal/latency-indicator'
 import { MarketPicker } from '@/components/terminal/market-picker'
 import { WalletSelector } from '@/components/terminal/wallet-selector'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
@@ -178,6 +179,12 @@ export function TerminalTopBar({
       <LivePriceTicker />
 
       <ConnectionIndicator />
+
+      <LatencyIndicator
+        market={market}
+        pairKey={pairKey}
+        venueLabel={marketOptions.find((m) => m.value === market)?.label}
+      />
     </PageHeader>
   )
 }

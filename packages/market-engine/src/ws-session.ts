@@ -76,6 +76,16 @@ const LIVENESS_CHECK_DIVISOR = 3
 const MIN_LIVENESS_CHECK_MS = 1_000
 const MAX_LIVENESS_CHECK_MS = 10_000
 
+/**
+ * Durations are measured on the monotonic clock. `Date.now()` is what the rest
+ * of this file uses for wall-clock deadlines, but an NTP correction landing
+ * between a ping and its pong would turn a round trip negative — or into an
+ * hour.
+ */
+function monotonicNow(): number {
+  return typeof performance !== 'undefined' ? performance.now() : Date.now()
+}
+
 export type WsSessionConnect = (
   url: string,
   events: WsAdapterEvents,
@@ -105,6 +115,11 @@ export type WsSessionOptions = {
   authenticate?: () => Promise<void>
   /** Called when a connect attempt fails (a reconnect is already scheduled). */
   onConnectError?: (error: unknown) => void
+  /**
+   * Round-trip time of the keepalive, in ms, once per answered ping. Only
+   * fires for clients that call `notePong()` — see that method.
+   */
+  onLatencySample?: (rttMs: number) => void
   /**
    * Called when a retry is queued, with the delay asked for and the attempt it
    * was computed from (0 for the first retry after a stable connection).
@@ -175,6 +190,8 @@ export class ReconnectingWsSession {
    */
   private connectionId = 0
   private lastInboundAt = 0
+  /** Monotonic stamp of the ping still awaiting a pong; 0 when none is out. */
+  private pingSentAt = 0
 
   private pingTimer: ReturnType<typeof setInterval> | null = null
   private disconnectTimer: ReturnType<typeof setTimeout> | null = null
@@ -258,6 +275,30 @@ export class ReconnectingWsSession {
 
   get isOpen(): boolean {
     return this.ws !== null
+  }
+
+  /**
+   * The venue answered our keepalive. Closes the round trip opened by the last
+   * ping and reports it through `onLatencySample`.
+   *
+   * Call it from the message handler, in the branch that already recognizes
+   * the pong. Matching has to be the client's job: every venue spells its
+   * reply differently ('pong', {op:'pong'}, {channel:'spot.pong'}, a
+   * LIST_SUBSCRIPTIONS result), and the session deliberately never parses.
+   *
+   * The session could not guess it either. Timing the next inbound frame after
+   * a ping would measure a busy market's tick cadence, not the network, and
+   * report single-digit milliseconds on BTC-USDT no matter which continent the
+   * exchange is on.
+   *
+   * Unsolicited calls (a server-initiated ping we echoed, a second pong) are
+   * ignored rather than attributed to a stale stamp.
+   */
+  notePong(): void {
+    if (this.pingSentAt === 0) return
+    const rtt = monotonicNow() - this.pingSentAt
+    this.pingSentAt = 0
+    if (rtt >= 0) this.opts.onLatencySample?.(rtt)
   }
 
   /**
@@ -546,11 +587,21 @@ export class ReconnectingWsSession {
     const ping = this.opts.ping
     if (!ping) return
     this.pingTimer = setInterval(() => {
-      this.ws?.send(ping.frame())
+      if (!this.ws) return
+      // Stamped before the frame leaves, and overwritten by the next ping if
+      // the previous one is still unanswered: a pong is attributed to the most
+      // recent ping, which is the only one it can plausibly belong to. A link
+      // dropping pongs outright is the liveness watchdog's problem, not this
+      // number's.
+      this.pingSentAt = monotonicNow()
+      this.ws.send(ping.frame())
     }, ping.intervalMs)
   }
 
   private stopPingTimer(): void {
+    // Whatever was in flight belongs to a socket we are done with; a pong
+    // arriving late must not be timed against it.
+    this.pingSentAt = 0
     if (this.pingTimer) {
       clearInterval(this.pingTimer)
       this.pingTimer = null
