@@ -88,6 +88,12 @@ const COINGECKO_EXCHANGES: Record<string, string> = {
   'bybit-market-connector': 'bybit_spot',
   'gate-market-connector': 'gate',
   'bitfinex-market-connector': 'bitfinex',
+  // Clearbit still serves Coinbase's retired Material-era app icon — a
+  // squared blue tile with a long shadow — which looked nothing like the mark
+  // the venue picker gets from the manifest, so the same exchange appeared
+  // twice on one screen wearing two different logos. 'gdax' is CoinGecko's id
+  // for Coinbase Exchange and resolves to the current round mark.
+  'coinbase-market-connector': 'gdax',
 }
 
 /** Pairlens's own plugins reuse the logo already shipped in public/. */
