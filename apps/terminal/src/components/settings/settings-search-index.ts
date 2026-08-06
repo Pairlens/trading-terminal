@@ -214,6 +214,37 @@ export const SETTINGS_SEARCH_INDEX: ReadonlyArray<SettingsSearchEntry> = [
     descriptionKey: 'settings.keyboard.presetDescription',
     keywords: ['preset', 'shortcuts', 'defaults'],
   },
+  // Notifications
+  {
+    section: 'notifications',
+    titleKey: 'settings.notifications.system.title',
+    descriptionKey: 'settings.notifications.system.description',
+    keywords: [
+      'notifications',
+      'permission',
+      'desktop notifications',
+      'browser notifications',
+      'alerts',
+      'sound',
+      'banner',
+      'blocked',
+    ],
+  },
+  {
+    section: 'notifications',
+    titleKey: 'settings.notifications.telegram.title',
+    descriptionKey: 'settings.notifications.telegram.description',
+    keywords: [
+      'telegram',
+      'bot',
+      'chat',
+      'alerts',
+      'notifications',
+      'botfather',
+      'mobile',
+      'phone',
+    ],
+  },
   // Performance
   {
     section: 'performance',

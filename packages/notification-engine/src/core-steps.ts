@@ -5,7 +5,7 @@
 // Event steps:     price-alert, order-executed, signal-generated,
 //                  indicator-alert, candle-close
 // Condition steps: price-condition, percent-change, time-window
-// Channel steps:   local-toast, os-notification, webhook
+// Channel steps:   local-toast, os-notification, webhook, telegram
 //
 // Pair/market context lives on the rule, not on individual event steps.
 // Event steps are the entry points of notification flows — they have no
@@ -458,6 +458,58 @@ const webhook: NotificationStepTypeDefinition = {
   deliver: async () => {},
 }
 
+/**
+ * Telegram.
+ *
+ * The bot token is deliberately NOT a config field. Rules are persisted in
+ * localStorage and synced to the App Server under the `automation` domain, so
+ * a token here would be a credential uploaded to Pairlens servers — the one
+ * thing the credential design forbids. The terminal keeps it in the OS
+ * keychain (browser: the vault) and its delivery implementation reads it from
+ * there; the step carries only routing.
+ *
+ * `chatId` blank means "the chat linked in settings", which is what a user who
+ * connected one bot to their own DM wants and never has to type.
+ */
+const telegram: NotificationStepTypeDefinition = {
+  type: 'telegram',
+  label: 'Telegram',
+  icon: 'Send',
+  category: 'channel',
+  handles: {
+    inputs: [{ id: 'in' }],
+    outputs: [],
+  },
+  configSchema: [
+    {
+      key: 'chatId',
+      type: 'string',
+      label: 'Chat ID (optional)',
+      default: '',
+      placeholder: 'Linked chat',
+    },
+    {
+      key: 'silent',
+      type: 'toggle',
+      label: 'Silent Message',
+      default: false,
+    },
+  ],
+  validate: (data) => {
+    const errors: Array<string> = []
+    const chatId = String(data.chatId ?? '').trim()
+    // Blank is the normal case. A typed value is either a numeric id
+    // (negative for groups) or an @channelusername — anything else is a
+    // paste of the wrong thing, most often the bot token.
+    if (chatId && !/^(-?\d+|@[A-Za-z0-9_]{4,})$/.test(chatId)) {
+      errors.push('Chat ID must be a number or @channelname')
+    }
+    return errors
+  },
+  defaultData: () => ({ chatId: '', silent: false }),
+  deliver: async () => {},
+}
+
 // ── All Core Steps ───────────────────────────────────────────────────
 
 export const CORE_NOTIFICATION_STEPS: Array<NotificationStepTypeDefinition> = [
@@ -475,4 +527,5 @@ export const CORE_NOTIFICATION_STEPS: Array<NotificationStepTypeDefinition> = [
   localToast,
   osNotification,
   webhook,
+  telegram,
 ]

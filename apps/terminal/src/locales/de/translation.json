@@ -852,6 +852,67 @@
         "chartCancel": "Werkzeug abbrechen / Vollbild verlassen"
       }
     },
+    "notifications": {
+      "system": {
+        "title": "Systembenachrichtigungen",
+        "description": "Zeige Alarme in deiner Mitteilungszentrale, damit sie dich erreichen, während Pairlens hinter einem anderen Fenster liegt.",
+        "statusGranted": "Erlaubt",
+        "statusBlocked": "Blockiert",
+        "statusPrompt": "Noch nicht aktiviert",
+        "statusUnsupported": "Hier nicht verfügbar",
+        "enable": "Aktivieren",
+        "blockedHelpBrowser": "Dein Browser blockiert Benachrichtigungen für diese Seite. Erlaube sie über das Schloss neben der Adressleiste und komm zurück.",
+        "blockedHelpDesktop": "Dein System blockiert Benachrichtigungen für Pairlens. Erlaube sie in den Benachrichtigungseinstellungen des Betriebssystems.",
+        "unsupportedHelp": "Dieser Browser kann keine Systembenachrichtigungen anzeigen. Alarme kommen weiterhin als Toast in der App, und Telegram funktioniert ohnehin.",
+        "sendTest": "Testbenachrichtigung senden",
+        "testTitle": "Pairlens",
+        "testBody": "So wird ein Alarm aussehen.",
+        "testSent": "Gesendet — sieh in deiner Mitteilungszentrale nach.",
+        "testFailed": "Benachrichtigung konnte nicht angezeigt werden."
+      },
+      "telegram": {
+        "title": "Telegram",
+        "description": "Sende Alarme in einen Telegram-Chat, damit sie dein Handy erreichen, wenn du nicht am Terminal sitzt.",
+        "runningNote": "Alarme lösen nur aus, solange Pairlens läuft. Auf dem Desktop kann die App nach dem Schließen des Fensters im Hintergrund weiterlaufen.",
+        "privacyNote": "Das Bot-Token bleibt auf diesem Gerät — im Schlüsselbund des Betriebssystems auf dem Desktop, im verschlüsselten Tresor im Browser. Es wird nie an Pairlens gesendet.",
+        "setup": {
+          "step1": "Öffne einen Chat mit @BotFather und sende /newbot.",
+          "step2": "Wähle einen Namen und einen Benutzernamen für deinen Bot.",
+          "step3": "Füge unten das Token ein, das BotFather dir schickt."
+        },
+        "openBotFather": "@BotFather öffnen",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "Verbinden",
+        "invalidToken": "Das ist kein Bot-Token. Das von BotFather sieht aus wie 123456789:AAE…",
+        "connectFailed": "Bot konnte nicht verbunden werden.",
+        "errorUnauthorized": "Telegram hat das Token abgelehnt. Prüfe, ob du es vollständig kopiert hast, oder hole dir mit /revoke in BotFather ein neues.",
+        "errorForbidden": "Der Bot darf in diesen Chat nicht schreiben. Öffne den Bot und drücke Starten, oder prüfe, ob er noch in der Gruppe ist.",
+        "errorChatNotFound": "Telegram kennt diesen Chat nicht. Erkenne ihn erneut, oder prüfe die Chat-ID am Schritt.",
+        "errorConflict": "Etwas anderes fragt diesen Bot bereits ab. Schließe es, oder nimm einen eigenen Bot.",
+        "errorRateLimited": "Telegram drosselt diesen Bot. Warte einen Moment und versuche es erneut.",
+        "disconnect": "Trennen",
+        "disconnectFailed": "Bot konnte nicht getrennt werden.",
+        "chatTitle": "Verknüpfter Chat",
+        "chatHelp": "Öffne den Bot und drücke Starten, dann den Chat erkennen. Für eine Gruppe: Bot hinzufügen und dort eine Nachricht senden.",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "Bot öffnen",
+        "detectChat": "Chat erkennen",
+        "relink": "Chat wechseln",
+        "waitingForStart": "Warte auf Starten…",
+        "cancel": "Abbrechen",
+        "pickChat": "Mehrere Chats haben mit diesem Bot gesprochen. Wähle den passenden:",
+        "chatLinked": "Verknüpft mit {{chat}}",
+        "chatTimeout": "Kein Chat gefunden. Öffne den Bot, drücke Starten und versuche es erneut.",
+        "chatFailed": "Chats konnten nicht von Telegram gelesen werden.",
+        "noChatYet": "Verknüpfe zuerst einen Chat.",
+        "sendTest": "Testnachricht senden",
+        "testSent": "Testnachricht gesendet.",
+        "testFailed": "Testnachricht konnte nicht gesendet werden.",
+        "testRuleName": "Test",
+        "testTitle": "Pairlens ist verbunden",
+        "testBody": "Alarme aus deinen Benachrichtigungs-Flows kommen hier an."
+      }
+    },
     "security": {
       "lockTitle": "Terminal-Sperre",
       "lockDescription": "Ein Passwort verlangen, bevor dieses Terminal auf diesem Gerät benutzt werden kann.",
@@ -3400,7 +3461,7 @@
         "untitledRule": "Unbenannte Regel",
         "eyebrow": "Benachrichtigungen",
         "title": "Beobachte den Markt, ohne selbst hinzuschauen",
-        "description": "Eine Regel ist ein kleiner Ablauf: Etwas passiert — ein Niveau wird gekreuzt, eine Kerze schließt, ein Order wird ausgeführt, ein Indikator schlägt an — sie durchläuft die Bedingungen, die du hinzufügst, und erreicht dich dann als Toast, Systembenachrichtigung oder Webhook.",
+        "description": "Eine Regel ist ein kleiner Ablauf: Etwas passiert — ein Niveau wird gekreuzt, eine Kerze schließt, ein Order wird ausgeführt, ein Indikator schlägt an — sie durchläuft die Bedingungen, die du hinzufügst, und erreicht dich dann als Toast, Systembenachrichtigung, Telegram-Nachricht oder Webhook.",
         "startBlank": "Mit einer leeren Zeichenfläche beginnen",
         "startFromTemplate": "Mit einer Vorlage beginnen",
         "footnote": "Vorlagen öffnen als Entwurf, gebunden an {{pair}} auf {{market}} — bearbeite die Schritte, ändere das Paar in der Regelliste und speichere dann mit Commit. Regeln lösen nur aus, während Pairlens läuft."
@@ -3445,6 +3506,15 @@
           "title": "Signal erzeugt",
           "signalType": "Signaltyp",
           "anyTypePlaceholder": "Beliebiger Typ"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "Chat-ID",
+          "noChatLinked": "Kein Chat verknüpft",
+          "linkChat": "Chat verknüpfen",
+          "silent": "Stumm",
+          "notConnected": "Verbinde in den Einstellungen einen Bot, um Alarme an Telegram zu senden.",
+          "connect": "Telegram verbinden"
         },
         "timeWindow": {
           "title": "Zeitfenster",
@@ -3624,6 +3694,18 @@
           },
           "includePayload": {
             "label": "Event-Payload einschließen"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "Chat-ID (optional)",
+            "placeholder": "Verknüpfter Chat"
+          },
+          "silent": {
+            "label": "Stumme Nachricht"
           }
         }
       }

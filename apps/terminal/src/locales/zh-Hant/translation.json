@@ -852,6 +852,67 @@
         "chartCancel": "取消工具 / 離開全螢幕"
       }
     },
+    "notifications": {
+      "system": {
+        "title": "系統通知",
+        "description": "在通知中心顯示提醒，即使 Pairlens 被其他視窗擋住也能收到。",
+        "statusGranted": "已允許",
+        "statusBlocked": "已封鎖",
+        "statusPrompt": "尚未開啟",
+        "statusUnsupported": "此處無法使用",
+        "enable": "開啟",
+        "blockedHelpBrowser": "瀏覽器正在封鎖本網站的通知。請在網址列旁的鎖頭圖示中允許，然後回到這裡。",
+        "blockedHelpDesktop": "系統正在封鎖 Pairlens 的通知。請在作業系統的通知設定中允許。",
+        "unsupportedHelp": "此瀏覽器無法顯示系統通知。提醒仍會以應用程式內提示送達，Telegram 也照常運作。",
+        "sendTest": "傳送測試通知",
+        "testTitle": "Pairlens",
+        "testBody": "提醒會是這個樣子。",
+        "testSent": "已傳送，請查看通知中心。",
+        "testFailed": "無法顯示通知。"
+      },
+      "telegram": {
+        "title": "Telegram",
+        "description": "將提醒傳送到 Telegram 聊天，即使你沒有盯著終端機也能收到手機通知。",
+        "runningNote": "只有 Pairlens 在執行時提醒才會觸發。桌面版可以在關閉視窗後繼續在背景執行。",
+        "privacyNote": "機器人權杖只留在這台裝置：桌面版存於系統鑰匙圈，瀏覽器版存於加密保險庫，絕不會傳送給 Pairlens。",
+        "setup": {
+          "step1": "開啟與 @BotFather 的聊天並傳送 /newbot。",
+          "step2": "為機器人取一個名稱和使用者名稱。",
+          "step3": "把 BotFather 傳給你的權杖貼到下方。"
+        },
+        "openBotFather": "開啟 @BotFather",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "連接",
+        "invalidToken": "這不是機器人權杖。BotFather 的權杖長得像 123456789:AAE…",
+        "connectFailed": "無法連接機器人。",
+        "errorUnauthorized": "Telegram 拒絕了該權杖。請確認已完整複製，或在 BotFather 中使用 /revoke 取得新的權杖。",
+        "errorForbidden": "機器人無法在該聊天中發言。請開啟機器人並點選「開始」，或確認它仍在群組中。",
+        "errorChatNotFound": "Telegram 找不到該聊天。請重新偵測，或檢查該步驟上的聊天 ID。",
+        "errorConflict": "已有其他程式在輪詢這個機器人。請關閉它，或改用專用的機器人。",
+        "errorRateLimited": "Telegram 正在限制該機器人的請求頻率。請稍候再試。",
+        "disconnect": "中斷連接",
+        "disconnectFailed": "無法中斷機器人連接。",
+        "chatTitle": "已連結的聊天",
+        "chatHelp": "開啟機器人並點選「開始」，然後偵測聊天。若是群組，請把機器人加入群組並傳送一則訊息。",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "開啟機器人",
+        "detectChat": "偵測聊天",
+        "relink": "更換聊天",
+        "waitingForStart": "等待「開始」…",
+        "cancel": "取消",
+        "pickChat": "有多個聊天與這個機器人對話過，請選擇要使用的：",
+        "chatLinked": "已連結到 {{chat}}",
+        "chatTimeout": "找不到聊天。請開啟機器人，點選「開始」後再試一次。",
+        "chatFailed": "無法從 Telegram 讀取聊天。",
+        "noChatYet": "請先連結一個聊天。",
+        "sendTest": "傳送測試訊息",
+        "testSent": "已傳送測試訊息。",
+        "testFailed": "無法傳送測試訊息。",
+        "testRuleName": "測試",
+        "testTitle": "Pairlens 已連接",
+        "testBody": "通知流程的提醒將傳送到這裡。"
+      }
+    },
     "security": {
       "lockTitle": "終端機鎖",
       "lockDescription": "在本裝置上使用此終端機前先要求輸入密碼。",
@@ -3400,7 +3461,7 @@
         "untitledRule": "未命名規則",
         "eyebrow": "通知",
         "title": "讓 Pairlens 替你盯盤",
-        "description": "一條規則就是一個小流程：某件事發生了——價格突破某個水平、K 線收盤、訂單成交、指標警示觸發——接著會通過你新增的條件，最終以應用程式內提示、系統通知或 Webhook 的形式送達給你。",
+        "description": "一條規則就是一個小流程：某件事發生了——價格突破某個水平、K 線收盤、訂單成交、指標警示觸發——接著會通過你新增的條件，最終以應用程式內提示、系統通知、Telegram 訊息或 Webhook 的形式送達給你。",
         "startBlank": "從空白畫布開始",
         "startFromTemplate": "從範本開始",
         "footnote": "範本會以草稿形式開啟，綁定到 {{market}} 上的 {{pair}} —— 編輯步驟、在規則清單中更換交易對，然後儲存。規則僅在 Pairlens 執行期間才會觸發。"
@@ -3445,6 +3506,15 @@
           "title": "訊號產生",
           "signalType": "訊號類型",
           "anyTypePlaceholder": "任意類型"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "聊天 ID",
+          "noChatLinked": "未連結聊天",
+          "linkChat": "連結聊天",
+          "silent": "靜音",
+          "notConnected": "在設定中連接機器人，即可將提醒傳送到 Telegram。",
+          "connect": "連接 Telegram"
         },
         "timeWindow": {
           "title": "時間視窗",
@@ -3624,6 +3694,18 @@
           },
           "includePayload": {
             "label": "包含事件負載"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "聊天 ID（選填）",
+            "placeholder": "已連結的聊天"
+          },
+          "silent": {
+            "label": "靜音訊息"
           }
         }
       }

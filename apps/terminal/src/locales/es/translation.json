@@ -852,6 +852,67 @@
         "chartCancel": "Cancelar herramienta / salir de pantalla completa"
       }
     },
+    "notifications": {
+      "system": {
+        "title": "Notificaciones del sistema",
+        "description": "Muestra las alertas en tu centro de notificaciones para que te lleguen aunque Pairlens esté detrás de otra ventana.",
+        "statusGranted": "Permitidas",
+        "statusBlocked": "Bloqueadas",
+        "statusPrompt": "Aún sin activar",
+        "statusUnsupported": "No disponible aquí",
+        "enable": "Activar",
+        "blockedHelpBrowser": "Tu navegador está bloqueando las notificaciones de este sitio. Permítelas desde el candado junto a la barra de direcciones y vuelve.",
+        "blockedHelpDesktop": "Tu sistema está bloqueando las notificaciones de Pairlens. Permítelas en los ajustes de notificaciones del sistema operativo.",
+        "unsupportedHelp": "Este navegador no puede mostrar notificaciones del sistema. Las alertas siguen llegando como avisos dentro de la app, y Telegram funciona igual.",
+        "sendTest": "Enviar notificación de prueba",
+        "testTitle": "Pairlens",
+        "testBody": "Así se verá una alerta.",
+        "testSent": "Enviada: revisa tu centro de notificaciones.",
+        "testFailed": "No se pudo mostrar la notificación."
+      },
+      "telegram": {
+        "title": "Telegram",
+        "description": "Envía las alertas a un chat de Telegram para que te lleguen al móvil cuando no estés mirando el terminal.",
+        "runningNote": "Las alertas solo se disparan mientras Pairlens está en ejecución. En escritorio puede seguir ejecutándose en segundo plano después de cerrar la ventana.",
+        "privacyNote": "El token del bot se queda en este dispositivo: en el llavero del sistema en escritorio y en tu bóveda cifrada en el navegador. Nunca se envía a Pairlens.",
+        "setup": {
+          "step1": "Abre un chat con @BotFather y envía /newbot.",
+          "step2": "Elige un nombre y un usuario para tu bot.",
+          "step3": "Pega abajo el token que te dé BotFather."
+        },
+        "openBotFather": "Abrir @BotFather",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "Conectar",
+        "invalidToken": "Eso no es un token de bot. El de BotFather se parece a 123456789:AAE…",
+        "connectFailed": "No se pudo conectar el bot.",
+        "errorUnauthorized": "Telegram rechazó ese token. Comprueba que lo copiaste entero o usa /revoke en BotFather para obtener uno nuevo.",
+        "errorForbidden": "El bot no puede escribir en ese chat. Abre el bot y pulsa Iniciar, o comprueba que sigue en el grupo.",
+        "errorChatNotFound": "Telegram no conoce ese chat. Vuelve a detectarlo o revisa el ID de chat del paso.",
+        "errorConflict": "Otra cosa ya está consultando este bot. Ciérrala o usa un bot propio.",
+        "errorRateLimited": "Telegram está limitando este bot. Espera un momento e inténtalo de nuevo.",
+        "disconnect": "Desconectar",
+        "disconnectFailed": "No se pudo desconectar el bot.",
+        "chatTitle": "Chat vinculado",
+        "chatHelp": "Abre el bot y pulsa Iniciar; después detecta el chat. Para un grupo, añade el bot y envía un mensaje allí.",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "Abrir bot",
+        "detectChat": "Detectar chat",
+        "relink": "Cambiar chat",
+        "waitingForStart": "Esperando a Iniciar…",
+        "cancel": "Cancelar",
+        "pickChat": "Más de un chat ha hablado con este bot. Elige cuál usar:",
+        "chatLinked": "Vinculado a {{chat}}",
+        "chatTimeout": "No se encontró ningún chat. Abre el bot, pulsa Iniciar e inténtalo de nuevo.",
+        "chatFailed": "No se pudieron leer los chats de Telegram.",
+        "noChatYet": "Vincula primero un chat.",
+        "sendTest": "Enviar mensaje de prueba",
+        "testSent": "Mensaje de prueba enviado.",
+        "testFailed": "No se pudo enviar el mensaje de prueba.",
+        "testRuleName": "Prueba",
+        "testTitle": "Pairlens está conectado",
+        "testBody": "Aquí llegarán las alertas de tus flujos de notificación."
+      }
+    },
     "security": {
       "lockTitle": "Bloqueo del terminal",
       "lockDescription": "Pedir una contraseña antes de poder usar este terminal en este dispositivo.",
@@ -3400,7 +3461,7 @@
         "untitledRule": "Regla sin título",
         "eyebrow": "Notificaciones",
         "title": "Vigila el mercado para que tú no tengas que hacerlo",
-        "description": "Una regla es un flujo pequeño: algo ocurre — se cruza un nivel, cierra una vela, se ejecuta una orden, salta una alerta de indicador — pasa por las condiciones que agregues y luego te llega como un toast, una notificación del sistema o un webhook.",
+        "description": "Una regla es un flujo pequeño: algo ocurre — se cruza un nivel, cierra una vela, se ejecuta una orden, salta una alerta de indicador — pasa por las condiciones que agregues y luego te llega como un toast, una notificación del sistema, un mensaje de Telegram o un webhook.",
         "startBlank": "Empezar con un lienzo en blanco",
         "startFromTemplate": "Empezar con una plantilla",
         "footnote": "Las plantillas se abren como borrador vinculado a {{pair}} en {{market}} — edita los pasos, cambia el par en la lista de reglas y luego usa Guardar. Las reglas solo se activan mientras Pairlens está en ejecución."
@@ -3445,6 +3506,15 @@
           "title": "Señal generada",
           "signalType": "Tipo de señal",
           "anyTypePlaceholder": "Cualquier tipo"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "ID de chat",
+          "noChatLinked": "Sin chat vinculado",
+          "linkChat": "Vincular un chat",
+          "silent": "Silencioso",
+          "notConnected": "Conecta un bot en Ajustes para enviar alertas a Telegram.",
+          "connect": "Conectar Telegram"
         },
         "timeWindow": {
           "title": "Ventana horaria",
@@ -3624,6 +3694,18 @@
           },
           "includePayload": {
             "label": "Incluir payload del evento"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "ID de chat (opcional)",
+            "placeholder": "Chat vinculado"
+          },
+          "silent": {
+            "label": "Mensaje silencioso"
           }
         }
       }
