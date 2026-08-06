@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "Mostrar/ocultar a árvore de áreas de trabalho",
         "workspaceMenu": "Menu de áreas de trabalho",
+        "panesMenu": "Menu de painéis",
         "chartCancel": "Cancelar ferramenta / sair do ecrã inteiro"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "Workspaces",
+    "panes": "Painéis",
     "presets": "Predefinições",
     "browseStore": "Explorar Workspace Store",
     "workspaceStore": "Workspace Store",

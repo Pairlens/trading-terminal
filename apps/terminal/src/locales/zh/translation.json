@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "显示/隐藏工作区树",
         "workspaceMenu": "工作区菜单",
+        "panesMenu": "面板菜单",
         "chartCancel": "取消工具 / 退出全屏"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "工作区",
+    "panes": "面板",
     "presets": "预设",
     "browseStore": "浏览工作区商店",
     "workspaceStore": "工作区商店",

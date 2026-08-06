@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "Arbeitsbereichs-Baum ein-/ausblenden",
         "workspaceMenu": "Arbeitsbereichs-Menü",
+        "panesMenu": "Panel-Menü",
         "chartCancel": "Werkzeug abbrechen / Vollbild verlassen"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "Workspaces",
+    "panes": "Panels",
     "presets": "Voreinstellungen",
     "browseStore": "Workspace Store durchsuchen",
     "workspaceStore": "Workspace Store",

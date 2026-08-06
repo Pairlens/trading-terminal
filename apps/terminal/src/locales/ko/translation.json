@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "워크스페이스 트리 표시 전환",
         "workspaceMenu": "워크스페이스 메뉴",
+        "panesMenu": "패널 메뉴",
         "chartCancel": "도구 취소 / 전체 화면 종료"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "워크스페이스",
+    "panes": "패널",
     "presets": "프리셋",
     "browseStore": "워크스페이스 스토어 둘러보기",
     "workspaceStore": "워크스페이스 스토어",

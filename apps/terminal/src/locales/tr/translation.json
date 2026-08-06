@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "Çalışma alanı ağacını aç/kapat",
         "workspaceMenu": "Çalışma alanı menüsü",
+        "panesMenu": "Pano menüsü",
         "chartCancel": "Aracı iptal et / tam ekrandan çık"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "Çalışma alanları",
+    "panes": "Panolar",
     "presets": "Ön ayarlar",
     "browseStore": "Çalışma Alanı Mağazasına Göz At",
     "workspaceStore": "Çalışma Alanı Mağazası",

@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "Tampilkan/sembunyikan pohon ruang kerja",
         "workspaceMenu": "Menu ruang kerja",
+        "panesMenu": "Menu panel",
         "chartCancel": "Batalkan alat / keluar dari layar penuh"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "Ruang Kerja",
+    "panes": "Panel",
     "presets": "Preset",
     "browseStore": "Jelajahi Workspace Store",
     "workspaceStore": "Workspace Store",

@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "เปิด/ปิดแผนผังพื้นที่ทำงาน",
         "workspaceMenu": "เมนูพื้นที่ทำงาน",
+        "panesMenu": "เมนูแผง",
         "chartCancel": "ยกเลิกเครื่องมือ / ออกจากเต็มจอ"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "พื้นที่ทำงาน",
+    "panes": "แผง",
     "presets": "เทมเพลตสำเร็จรูป",
     "browseStore": "เรียกดู Workspace Store",
     "workspaceStore": "Workspace Store",

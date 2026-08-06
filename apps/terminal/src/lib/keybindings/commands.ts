@@ -239,6 +239,12 @@ export const KEYBINDING_COMMANDS: Array<KeybindingCommand> = [
     labelKey: 'layout.addPane',
   },
   {
+    id: 'workspace.panesMenu',
+    categoryId: 'workspace',
+    scope: 'global',
+    labelKey: 'settings.keyboard.commands.panesMenu',
+  },
+  {
     id: 'workspace.menu',
     categoryId: 'workspace',
     scope: 'global',
@@ -355,6 +361,11 @@ const PAIRLENS_BINDINGS: Record<string, Array<string>> = {
   'navigation.bots': ['Alt+B'],
 
   'workspace.addPane': ['Mod+Shift+P'],
+  // Shipped unbound: the one action worth a chord in this menu — add a pane —
+  // already owns ⌘⇧P, and every remaining ⌘⇧ letter near it is spoken for by a
+  // browser (⌘⇧N incognito, ⌘⇧K web console, ⌘⇧G find-previous). Assignable
+  // from the Keyboard settings section for anyone who wants it.
+  'workspace.panesMenu': [],
   'workspace.menu': ['Mod+Shift+L'],
 
   'chart.indicators': ['Mod+I'],

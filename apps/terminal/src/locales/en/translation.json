@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "Toggle workspaces tree",
         "workspaceMenu": "Workspace menu",
+        "panesMenu": "Panes menu",
         "chartCancel": "Cancel tool / exit fullscreen"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "Workspaces",
+    "panes": "Panes",
     "presets": "Presets",
     "browseStore": "Browse Workspace Store",
     "workspaceStore": "Workspace Store",

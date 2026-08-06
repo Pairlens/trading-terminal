@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "Pokaż/ukryj drzewo obszarów roboczych",
         "workspaceMenu": "Menu obszarów roboczych",
+        "panesMenu": "Menu paneli",
         "chartCancel": "Anuluj narzędzie / wyjdź z pełnego ekranu"
       }
     },
@@ -2194,6 +2195,7 @@
   },
   "layout": {
     "workspaces": "Obszary robocze",
+    "panes": "Panele",
     "presets": "Ustawienia wstępne",
     "browseStore": "Przeglądaj Workspace Store",
     "workspaceStore": "Workspace Store",
