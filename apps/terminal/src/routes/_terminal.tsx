@@ -484,10 +484,9 @@ function TerminalLayout() {
                                         : 'navigation.plugins',
                                     )}
                                   />
-                                  {item.id === 'plugins' && (
-                                    <PluginUpdateBadge />
-                                  )}
                                 </SidebarMenuButton>
+                                {/* Outside the button on purpose — see DesktopCtaBadge. */}
+                                {item.id === 'plugins' && <PluginUpdateBadge />}
                               </SidebarMenuItem>
                             ))}
                             <SidebarSeparator className="my-1" />
@@ -558,8 +557,9 @@ function TerminalLayout() {
                               <span className="sr-only">
                                 {t('nav.getDesktopApp')}
                               </span>
-                              {!desktopCtaSeen && <DesktopCtaBadge />}
                             </SidebarMenuButton>
+                            {/* Outside the button on purpose — see DesktopCtaBadge. */}
+                            {!desktopCtaSeen && <DesktopCtaBadge />}
                           </SidebarMenuItem>
                         )}
                         <SidebarMenuItem>
@@ -628,6 +628,22 @@ function TerminalLayout() {
 /**
  * One-time nudge on the desktop-download button: a soft ping until the user
  * opens the dialog once, then gone for good on this device.
+ *
+ * Rendered as a SIBLING of the SidebarMenuButton rather than inside it, which
+ * is the whole reason it is visible at all. A menu button clips two ways:
+ *
+ *   - `overflow-hidden` on the button variant ate the 2px the badge is offset
+ *     past the corner, so the dot arrived with its top-right shaved off;
+ *   - `[&>span:last-child]:truncate` on that same variant targets the last
+ *     span child, which IS this badge, and truncate carries overflow-hidden.
+ *     The ping ring scales to twice the dot and was being clipped back to the
+ *     dot, so the animation did nothing.
+ *
+ * The rules are there to truncate a long label, which these icon-only buttons
+ * never have, but they apply all the same. SidebarMenuItem is already
+ * `relative` and — with `collapsible="none"` and `items-center` on the menu —
+ * shrink-wraps the button exactly, so moving out one level keeps the anchor
+ * identical and escapes both clips without fighting specificity.
  */
 function DesktopCtaBadge() {
   return (
@@ -638,6 +654,7 @@ function DesktopCtaBadge() {
   )
 }
 
+/** Same clipping story as [DesktopCtaBadge] — also a sibling of the button. */
 function PluginUpdateBadge() {
   const count = useAvailableUpdateCount()
   if (count === 0) return null
