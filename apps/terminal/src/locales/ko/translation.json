@@ -1190,7 +1190,20 @@
     "createFirst": "첫 워크스페이스를 만드세요",
     "emptyState": "아직 워크스페이스가 없습니다",
     "descriptionLabel": "설명",
-    "descriptionPlaceholder": "선택 사항: 짧은 설명"
+    "descriptionPlaceholder": "선택 사항: 짧은 설명",
+    "save": {
+      "title": "워크스페이스 저장",
+      "description": "지금의 패널 배치를 워크스페이스로 저장해 언제든 다시 열 수 있습니다.",
+      "submit": "워크스페이스 저장",
+      "saved": "“{{name}}”이(가) 워크스페이스에 저장되었습니다.",
+      "updated": "“{{name}}”이(가) 업데이트되었습니다.",
+      "cloudHint": "Pairlens 계정에 동기화되어 로그인한 모든 기기에서 열립니다.",
+      "syncOffHint": "워크스페이스 동기화가 꺼져 있어 이 기기에만 저장됩니다.",
+      "localHint": "이 기기에 저장됩니다. 로그인하면 Pairlens 계정에 동기화되어 어디서든 열 수 있습니다.",
+      "localOnlyHint": "이 기기에 저장됩니다.",
+      "copyName": "{{name}} 사본",
+      "namePlaceholder": "내 워크스페이스"
+    }
   },
   "session": {
     "checking": "세션 확인 중…",
@@ -2329,7 +2342,10 @@
       "splitTop": "위쪽 분할",
       "splitBottom": "아래쪽 분할",
       "newColumn": "새 컬럼"
-    }
+    },
+    "currentLayout": "현재 레이아웃",
+    "saveAsWorkspace": "워크스페이스로 저장…",
+    "updateWorkspace": "“{{name}}” 업데이트"
   },
   "watchlist": {
     "addTitle": "관심 목록에 추가",

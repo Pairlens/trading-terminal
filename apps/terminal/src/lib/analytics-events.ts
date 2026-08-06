@@ -195,6 +195,9 @@ export interface AnalyticsEvents {
   workspace_opened: { workspace: WorkspaceKind }
   workspace_created: { workspace_count: number }
   workspace_deleted: { workspace_count: number }
+  /** The current arrangement kept by name — `workspace` is the surface it was
+   * saved from, `mode` separates a new workspace from a write-back. */
+  workspace_layout_saved: { workspace: WorkspaceKind; mode: 'new' | 'update' }
   /** Template product page opened — top of the apply funnel. */
   workspace_template_viewed: { template_id: string }
   workspace_template_applied: { template_id: string; community: boolean }

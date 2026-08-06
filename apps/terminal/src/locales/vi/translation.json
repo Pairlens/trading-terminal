@@ -1190,7 +1190,20 @@
     "createFirst": "Tạo không gian làm việc đầu tiên của bạn",
     "emptyState": "Chưa có không gian làm việc nào",
     "descriptionLabel": "Mô tả",
-    "descriptionPlaceholder": "Mô tả ngắn (không bắt buộc)"
+    "descriptionPlaceholder": "Mô tả ngắn (không bắt buộc)",
+    "save": {
+      "title": "Lưu không gian làm việc",
+      "description": "Giữ lại cách sắp xếp bảng hiện tại thành một không gian làm việc để mở lại bất cứ lúc nào.",
+      "submit": "Lưu không gian làm việc",
+      "saved": "\"{{name}}\" đã được lưu vào không gian làm việc của bạn.",
+      "updated": "\"{{name}}\" đã được cập nhật.",
+      "cloudHint": "Được đồng bộ lên tài khoản Pairlens của bạn, nên mở được trên mọi thiết bị bạn đăng nhập.",
+      "syncOffHint": "Đồng bộ không gian làm việc đang tắt, nên nó chỉ ở lại trên thiết bị này.",
+      "localHint": "Lưu trên thiết bị này. Đăng nhập để đồng bộ lên tài khoản Pairlens và mở ở bất cứ đâu.",
+      "localOnlyHint": "Lưu trên thiết bị này.",
+      "copyName": "{{name}} (bản sao)",
+      "namePlaceholder": "Không gian làm việc của tôi"
+    }
   },
   "session": {
     "checking": "Đang kiểm tra phiên đăng nhập…",
@@ -2329,7 +2342,10 @@
       "splitTop": "Chia phía trên",
       "splitBottom": "Chia phía dưới",
       "newColumn": "Cột mới"
-    }
+    },
+    "currentLayout": "Bố cục hiện tại",
+    "saveAsWorkspace": "Lưu thành không gian làm việc…",
+    "updateWorkspace": "Cập nhật \"{{name}}\""
   },
   "watchlist": {
     "addTitle": "Thêm vào danh sách theo dõi",
