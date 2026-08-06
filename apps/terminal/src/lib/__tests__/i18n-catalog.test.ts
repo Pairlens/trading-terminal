@@ -186,3 +186,33 @@ describe('i18n static usage audit', () => {
     expect(count).toBeGreaterThan(500)
   })
 })
+
+/**
+ * The "stored securely" disclosure bolds one clause by finding it as a
+ * SUBSTRING of the surrounding paragraph (stored-locally-disclosure.tsx).
+ * Nothing in the type system ties the two strings together, and when a
+ * translation of either one drifts the component silently renders the
+ * paragraph unemphasised — no error, no visual bug worth reporting, just the
+ * strongest sentence on a page where someone is pasting an API key quietly
+ * losing its weight. Both paragraph variants have to keep containing it.
+ */
+describe('i18n composed strings', () => {
+  const CLAUSE = 'accounts.storedSecurelyNever'
+  const PARAGRAPHS = [
+    'accounts.storedSecurelyDetail',
+    'accounts.storedSecurelyDetailBrowser',
+  ]
+
+  for (const locale of [EN, ...LOCALES]) {
+    test(`${locale}: the "never sent" clause appears in both detail paragraphs`, () => {
+      const flat = flatten(loadCatalog(locale))
+      const clause = flat.get(CLAUSE)
+      expect(clause).toBeTruthy()
+      for (const key of PARAGRAPHS) {
+        const paragraph = flat.get(key)
+        expect(paragraph).toBeTruthy()
+        expect(paragraph).toContain(clause!)
+      }
+    })
+  }
+})

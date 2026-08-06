@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import { Shield, Wallet } from 'lucide-react'
@@ -14,6 +15,7 @@ import {
 
 import type { WalletChain } from '@pairlens/market-engine/adapter'
 import { PluginBrandTile } from '@/components/plugins/plugin-icon'
+import { KeySecurityDialog } from '@/components/security/key-security-dialog'
 import {
   chainBrand,
   chainPosterSrc,
@@ -87,6 +89,7 @@ export function TradeConnectGate({
   readOnly?: boolean
 }) {
   const { t } = useTranslation()
+  const [securityOpen, setSecurityOpen] = useState(false)
   const isDex = chain != null
 
   return (
@@ -127,13 +130,26 @@ export function TradeConnectGate({
                 ? t('terminal.wallet.connectWallet')
                 : t('terminal.wallet.connectAccount')}
             </Button>
-            <p className="flex items-center justify-center gap-1 text-[10px] leading-snug text-muted-foreground">
+            {/*
+              The claim is clickable. Telling someone their keys are safe and
+              giving them no way to ask "how?" is the part that reads as a
+              slogan; the same explainer the Accounts badge opens is one tap
+              away right where they are being asked to hand over an API key.
+            */}
+            <button
+              type="button"
+              onClick={() => setSecurityOpen(true)}
+              aria-label={t('accounts.localOnly.badgeAria')}
+              className="flex items-center justify-center gap-1 rounded text-[10px] leading-snug text-muted-foreground underline-offset-2 transition-colors hover:text-foreground hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+            >
               <Shield className="size-2.5 shrink-0" />
               {t('accounts.storedSecurely')}
-            </p>
+            </button>
           </>
         )}
       </Empty>
+
+      <KeySecurityDialog open={securityOpen} onOpenChange={setSecurityOpen} />
     </div>
   )
 }

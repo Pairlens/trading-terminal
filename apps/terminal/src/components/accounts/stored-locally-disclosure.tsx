@@ -7,8 +7,16 @@ import { ChevronLeft, Shield } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 
+import { isStandalone } from '@/lib/platform'
+
 // ---------------------------------------------------------------------------
 // Stored Locally Disclosure
+//
+// Expanded inline where an API key is actually pasted, so the promise is
+// legible at the moment it matters. The detail is platform-specific because
+// the mechanism is: there is no OS keychain in a browser, and telling someone
+// their key went into one when it went into a vault would be the one claim on
+// this screen that is not true.
 // ---------------------------------------------------------------------------
 
 export function StoredLocallyDisclosure() {
@@ -16,7 +24,9 @@ export function StoredLocallyDisclosure() {
   const { t } = useTranslation()
 
   // Split the detail text around the "never" clause to bold it
-  const detail = t('accounts.storedSecurelyDetail')
+  const detail = isStandalone
+    ? t('accounts.storedSecurelyDetail')
+    : t('accounts.storedSecurelyDetailBrowser')
   const neverClause = t('accounts.storedSecurelyNever')
   const neverIdx = detail.indexOf(neverClause)
 
