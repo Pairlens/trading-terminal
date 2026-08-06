@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "Bật/tắt cây không gian làm việc",
         "workspaceMenu": "Menu không gian làm việc",
+        "panesMenu": "Menu panel",
         "chartCancel": "Huỷ công cụ / thoát toàn màn hình"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "Không gian làm việc",
+    "panes": "Panel",
     "presets": "Mẫu dựng sẵn",
     "browseStore": "Duyệt Workspace Store",
     "workspaceStore": "Workspace Store",

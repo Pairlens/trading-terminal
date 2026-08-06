@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "ワークスペースツリーの表示切り替え",
         "workspaceMenu": "ワークスペースメニュー",
+        "panesMenu": "ペインメニュー",
         "chartCancel": "ツールを解除 / 全画面を終了"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "ワークスペース",
+    "panes": "ペイン",
     "presets": "プリセット",
     "browseStore": "ワークスペースストアを見る",
     "workspaceStore": "ワークスペースストア",

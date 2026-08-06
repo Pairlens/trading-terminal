@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "Mostra/nascondi l’albero degli spazi di lavoro",
         "workspaceMenu": "Menu degli spazi di lavoro",
+        "panesMenu": "Menu dei pannelli",
         "chartCancel": "Annulla strumento / esci da schermo intero"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "Spazi di lavoro",
+    "panes": "Pannelli",
     "presets": "Preimpostazioni",
     "browseStore": "Sfoglia Workspace Store",
     "workspaceStore": "Workspace Store",

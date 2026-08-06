@@ -841,6 +841,7 @@
       "commands": {
         "workspaceTree": "Afficher/masquer l’arborescence des espaces",
         "workspaceMenu": "Menu des espaces de travail",
+        "panesMenu": "Menu des panneaux",
         "chartCancel": "Annuler l’outil / quitter le plein écran"
       }
     },
@@ -2178,6 +2179,7 @@
   },
   "layout": {
     "workspaces": "Espaces de travail",
+    "panes": "Panneaux",
     "presets": "Préréglages",
     "browseStore": "Parcourir le Workspace Store",
     "workspaceStore": "Workspace Store",
