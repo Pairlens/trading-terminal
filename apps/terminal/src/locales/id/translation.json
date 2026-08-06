@@ -845,6 +845,23 @@
       }
     },
     "notifications": {
+      "system": {
+        "title": "Notifikasi sistem",
+        "description": "Tampilkan peringatan di pusat notifikasi, supaya sampai ke Anda saat Pairlens berada di balik jendela lain.",
+        "statusGranted": "Diizinkan",
+        "statusBlocked": "Diblokir",
+        "statusPrompt": "Belum diaktifkan",
+        "statusUnsupported": "Tidak tersedia di sini",
+        "enable": "Aktifkan",
+        "blockedHelpBrowser": "Peramban Anda memblokir notifikasi untuk situs ini. Izinkan lewat ikon gembok di sebelah bilah alamat, lalu kembali ke sini.",
+        "blockedHelpDesktop": "Sistem Anda memblokir notifikasi Pairlens. Izinkan di pengaturan notifikasi sistem operasi.",
+        "unsupportedHelp": "Peramban ini tidak bisa menampilkan notifikasi sistem. Peringatan tetap datang sebagai toast di dalam aplikasi, dan Telegram tetap berfungsi.",
+        "sendTest": "Kirim notifikasi uji",
+        "testTitle": "Pairlens",
+        "testBody": "Beginilah tampilan sebuah peringatan.",
+        "testSent": "Terkirim — periksa pusat notifikasi Anda.",
+        "testFailed": "Tidak dapat menampilkan notifikasi."
+      },
       "telegram": {
         "title": "Telegram",
         "description": "Kirim peringatan ke obrolan Telegram agar sampai ke ponsel Anda saat Anda tidak sedang melihat terminal.",

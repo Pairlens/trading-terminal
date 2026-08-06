@@ -110,7 +110,15 @@ our servers, and everything Pairlens knows about you lives on this device.
 
 ## Notifications
 
-Where alerts go once they fire. Connect a Telegram bot here — paste the token
+Where alerts go once they fire.
+
+**System notifications** shows whether Pairlens is allowed to post to your
+notification centre, and grants it from a button rather than from a prompt that
+appears mid-alert — Safari only grants from a click, and a dismissed prompt is
+hard to undo. If your browser has already blocked them, the card says so and
+points you at the padlock in the address bar. Test one from here.
+
+Connect a Telegram bot here — paste the token
 BotFather gives you, press Start in the bot, link the chat — and any alert flow
 can then deliver to it. The bot token is stored like an exchange key: OS
 keychain on desktop, encrypted vault in the browser, never on a Pairlens

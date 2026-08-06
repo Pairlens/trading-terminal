@@ -845,6 +845,23 @@
       }
     },
     "notifications": {
+      "system": {
+        "title": "システム通知",
+        "description": "アラートを通知センターに表示します。Pairlensが他のウィンドウの背後にあるときも届きます。",
+        "statusGranted": "許可済み",
+        "statusBlocked": "ブロック中",
+        "statusPrompt": "まだ有効ではありません",
+        "statusUnsupported": "ここでは利用できません",
+        "enable": "有効にする",
+        "blockedHelpBrowser": "ブラウザーがこのサイトの通知をブロックしています。アドレスバー横の鍵アイコンから許可して、戻ってきてください。",
+        "blockedHelpDesktop": "システムがPairlensの通知をブロックしています。OSの通知設定で許可してください。",
+        "unsupportedHelp": "このブラウザーはシステム通知を表示できません。アラートはアプリ内トーストとして届き、Telegramはいずれの場合も動作します。",
+        "sendTest": "テスト通知を送信",
+        "testTitle": "Pairlens",
+        "testBody": "アラートはこのように表示されます。",
+        "testSent": "送信しました。通知センターを確認してください。",
+        "testFailed": "通知を表示できませんでした。"
+      },
       "telegram": {
         "title": "Telegram",
         "description": "アラートをTelegramのチャットに送信します。ターミナルを見ていないときでもスマートフォンに届きます。",

@@ -845,6 +845,23 @@
       }
     },
     "notifications": {
+      "system": {
+        "title": "系统通知",
+        "description": "在通知中心显示提醒，即使 Pairlens 被其他窗口挡住也能收到。",
+        "statusGranted": "已允许",
+        "statusBlocked": "已阻止",
+        "statusPrompt": "尚未开启",
+        "statusUnsupported": "此处不可用",
+        "enable": "开启",
+        "blockedHelpBrowser": "浏览器正在阻止本站点的通知。请在地址栏旁的锁形图标中允许，然后回到这里。",
+        "blockedHelpDesktop": "系统正在阻止 Pairlens 的通知。请在操作系统的通知设置中允许。",
+        "unsupportedHelp": "此浏览器无法显示系统通知。提醒仍会以应用内提示送达，Telegram 也照常工作。",
+        "sendTest": "发送测试通知",
+        "testTitle": "Pairlens",
+        "testBody": "提醒将会是这个样子。",
+        "testSent": "已发送，请查看通知中心。",
+        "testFailed": "无法显示通知。"
+      },
       "telegram": {
         "title": "Telegram",
         "description": "把提醒发送到 Telegram 聊天，即使你没有盯着终端也能收到手机通知。",

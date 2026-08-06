@@ -845,6 +845,23 @@
       }
     },
     "notifications": {
+      "system": {
+        "title": "Thông báo hệ thống",
+        "description": "Hiển thị cảnh báo trong trung tâm thông báo, để chúng đến với bạn khi Pairlens nằm sau cửa sổ khác.",
+        "statusGranted": "Đã cho phép",
+        "statusBlocked": "Đã chặn",
+        "statusPrompt": "Chưa bật",
+        "statusUnsupported": "Không khả dụng ở đây",
+        "enable": "Bật",
+        "blockedHelpBrowser": "Trình duyệt đang chặn thông báo cho trang này. Hãy cho phép từ biểu tượng ổ khóa cạnh thanh địa chỉ rồi quay lại.",
+        "blockedHelpDesktop": "Hệ thống đang chặn thông báo của Pairlens. Hãy cho phép trong cài đặt thông báo của hệ điều hành.",
+        "unsupportedHelp": "Trình duyệt này không hiển thị được thông báo hệ thống. Cảnh báo vẫn đến dưới dạng toast trong ứng dụng, và Telegram vẫn hoạt động bình thường.",
+        "sendTest": "Gửi thông báo thử",
+        "testTitle": "Pairlens",
+        "testBody": "Cảnh báo sẽ trông như thế này.",
+        "testSent": "Đã gửi — hãy xem trung tâm thông báo.",
+        "testFailed": "Không hiển thị được thông báo."
+      },
       "telegram": {
         "title": "Telegram",
         "description": "Gửi cảnh báo tới một cuộc trò chuyện Telegram để chúng đến điện thoại của bạn khi bạn không ngồi trước terminal.",

@@ -845,6 +845,23 @@
       }
     },
     "notifications": {
+      "system": {
+        "title": "Sistem bildirimleri",
+        "description": "Uyarıları bildirim merkezinde göster; Pairlens başka bir pencerenin arkasındayken bile sana ulaşsınlar.",
+        "statusGranted": "İzin verildi",
+        "statusBlocked": "Engellendi",
+        "statusPrompt": "Henüz açılmadı",
+        "statusUnsupported": "Burada kullanılamıyor",
+        "enable": "Aç",
+        "blockedHelpBrowser": "Tarayıcın bu site için bildirimleri engelliyor. Adres çubuğunun yanındaki kilitten izin ver, sonra buraya dön.",
+        "blockedHelpDesktop": "Sistemin Pairlens bildirimlerini engelliyor. İşletim sisteminin bildirim ayarlarından izin ver.",
+        "unsupportedHelp": "Bu tarayıcı sistem bildirimi gösteremiyor. Uyarılar yine uygulama içi toast olarak geliyor ve Telegram her hâlükârda çalışıyor.",
+        "sendTest": "Test bildirimi gönder",
+        "testTitle": "Pairlens",
+        "testBody": "Bir uyarı böyle görünecek.",
+        "testSent": "Gönderildi — bildirim merkezine bak.",
+        "testFailed": "Bildirim gösterilemedi."
+      },
       "telegram": {
         "title": "Telegram",
         "description": "Uyarıları bir Telegram sohbetine gönderin; terminale bakmadığınız zamanlarda telefonunuza ulaşsınlar.",

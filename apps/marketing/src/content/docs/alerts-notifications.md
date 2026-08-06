@@ -56,7 +56,12 @@ trade.
 
 **OS Notification.** A real system notification through the OS notification
 centre, with an optional sound. It reaches you when Pairlens is not the focused
-window, which is the whole point of an alert.
+window, which is the whole point of an alert. The desktop app posts it natively;
+the browser uses the Web Notification API, which is the same notification centre
+and needs permission first — grant it under **Settings → Notifications**, where
+you can also fire a test one. Clicking a notification brings the terminal
+forward. If permission was never granted or was blocked, the alert is recorded
+as a failed delivery in the Activity log rather than quietly doing nothing.
 
 **Telegram.** A message to a Telegram chat, which is how an alert reaches you
 when you are not in front of the terminal. It moves the alert off this machine;

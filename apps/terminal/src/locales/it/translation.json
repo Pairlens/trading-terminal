@@ -845,6 +845,23 @@
       }
     },
     "notifications": {
+      "system": {
+        "title": "Notifiche di sistema",
+        "description": "Mostra gli avvisi nel centro notifiche, così ti raggiungono mentre Pairlens è dietro un'altra finestra.",
+        "statusGranted": "Consentite",
+        "statusBlocked": "Bloccate",
+        "statusPrompt": "Non ancora attivate",
+        "statusUnsupported": "Non disponibile qui",
+        "enable": "Attiva",
+        "blockedHelpBrowser": "Il browser sta bloccando le notifiche per questo sito. Consentile dal lucchetto accanto alla barra degli indirizzi e torna qui.",
+        "blockedHelpDesktop": "Il sistema sta bloccando le notifiche di Pairlens. Consentile nelle impostazioni di notifica del sistema operativo.",
+        "unsupportedHelp": "Questo browser non può mostrare notifiche di sistema. Gli avvisi arrivano comunque come toast nell'app, e Telegram funziona in ogni caso.",
+        "sendTest": "Invia notifica di prova",
+        "testTitle": "Pairlens",
+        "testBody": "Ecco come apparirà un avviso.",
+        "testSent": "Inviata — controlla il centro notifiche.",
+        "testFailed": "Impossibile mostrare la notifica."
+      },
       "telegram": {
         "title": "Telegram",
         "description": "Invia gli avvisi in una chat Telegram, così arrivano sul telefono quando non stai guardando il terminale.",

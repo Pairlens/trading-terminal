@@ -845,6 +845,23 @@
       }
     },
     "notifications": {
+      "system": {
+        "title": "Systembenachrichtigungen",
+        "description": "Zeige Alarme in deiner Mitteilungszentrale, damit sie dich erreichen, während Pairlens hinter einem anderen Fenster liegt.",
+        "statusGranted": "Erlaubt",
+        "statusBlocked": "Blockiert",
+        "statusPrompt": "Noch nicht aktiviert",
+        "statusUnsupported": "Hier nicht verfügbar",
+        "enable": "Aktivieren",
+        "blockedHelpBrowser": "Dein Browser blockiert Benachrichtigungen für diese Seite. Erlaube sie über das Schloss neben der Adressleiste und komm zurück.",
+        "blockedHelpDesktop": "Dein System blockiert Benachrichtigungen für Pairlens. Erlaube sie in den Benachrichtigungseinstellungen des Betriebssystems.",
+        "unsupportedHelp": "Dieser Browser kann keine Systembenachrichtigungen anzeigen. Alarme kommen weiterhin als Toast in der App, und Telegram funktioniert ohnehin.",
+        "sendTest": "Testbenachrichtigung senden",
+        "testTitle": "Pairlens",
+        "testBody": "So wird ein Alarm aussehen.",
+        "testSent": "Gesendet — sieh in deiner Mitteilungszentrale nach.",
+        "testFailed": "Benachrichtigung konnte nicht angezeigt werden."
+      },
       "telegram": {
         "title": "Telegram",
         "description": "Sende Alarme in einen Telegram-Chat, damit sie dein Handy erreichen, wenn du nicht am Terminal sitzt.",

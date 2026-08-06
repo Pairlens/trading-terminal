@@ -203,6 +203,21 @@ export const SETTINGS_SEARCH_INDEX: ReadonlyArray<SettingsSearchEntry> = [
   // Notifications
   {
     section: 'notifications',
+    titleKey: 'settings.notifications.system.title',
+    descriptionKey: 'settings.notifications.system.description',
+    keywords: [
+      'notifications',
+      'permission',
+      'desktop notifications',
+      'browser notifications',
+      'alerts',
+      'sound',
+      'banner',
+      'blocked',
+    ],
+  },
+  {
+    section: 'notifications',
     titleKey: 'settings.notifications.telegram.title',
     descriptionKey: 'settings.notifications.telegram.description',
     keywords: [

@@ -3,6 +3,8 @@
 import * as React from 'react'
 import {
   AlertTriangle,
+  Bell,
+  BellOff,
   Check,
   ExternalLink,
   Loader2,
@@ -18,7 +20,10 @@ import { Input } from '@pairlens/ui/components/ui/input'
 import type { TFunction } from 'i18next'
 import type { TelegramChat } from '@/lib/notifications/telegram'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
+import { useSystemNotificationPermission } from '@/hooks/use-system-notification-permission'
 import { useTelegramConnection } from '@/hooks/use-telegram-connection'
+import { isStandalone } from '@/lib/platform'
+import { sendOsNotification } from '@/lib/notifications/platform-notify'
 import { isVaultEnrollmentRequired } from '@/lib/security/vault/vault-errors'
 import {
   TelegramApiError,
@@ -90,6 +95,10 @@ export function NotificationsSection() {
 
   return (
     <div className="max-w-4xl space-y-5">
+      {/* System notifications first: it is the channel most alert flows already
+          use, and the one that fails silently when nobody granted it. */}
+      <SystemNotificationsCard />
+
       <section className="rounded-xl border p-4">
         <div className="flex items-start gap-3">
           <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
@@ -120,6 +129,156 @@ export function NotificationsSection() {
         </p>
       </section>
     </div>
+  )
+}
+
+// ── System notifications ─────────────────────────────────────────────
+
+/**
+ * The permission that every OS Notification step depends on.
+ *
+ * It lives here because of when a browser will honour the ask: Safari only
+ * grants from a user gesture, and Chrome treats a dismissed prompt as a lasting
+ * no. Requesting it the first time an alert fires — which is what delivery
+ * falls back to — is therefore the worst moment available. A button in Settings
+ * is a gesture, in context, at a time the user chose.
+ */
+function SystemNotificationsCard() {
+  const { t } = useTranslation()
+  const { permission, request, refresh } = useSystemNotificationPermission()
+  const [feedback, setFeedback] = React.useState<Feedback>(null)
+  const [busy, setBusy] = React.useState(false)
+
+  const handleEnable = async () => {
+    setBusy(true)
+    setFeedback(null)
+    try {
+      const next = await request()
+      if (next === 'denied') {
+        setFeedback({
+          type: 'error',
+          message: t(
+            isStandalone
+              ? 'settings.notifications.system.blockedHelpDesktop'
+              : 'settings.notifications.system.blockedHelpBrowser',
+          ),
+        })
+      }
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const handleTest = async () => {
+    setBusy(true)
+    setFeedback(null)
+    try {
+      await sendOsNotification(
+        t('settings.notifications.system.testTitle'),
+        t('settings.notifications.system.testBody'),
+      )
+      setFeedback({
+        type: 'success',
+        message: t('settings.notifications.system.testSent'),
+      })
+    } catch (error) {
+      setFeedback({
+        type: 'error',
+        message:
+          error instanceof Error
+            ? error.message
+            : t('settings.notifications.system.testFailed'),
+      })
+      // The permission may be what changed — repaint from the source of truth
+      // rather than from what the card believed a moment ago.
+      refresh()
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const status =
+    permission === 'granted'
+      ? t('settings.notifications.system.statusGranted')
+      : permission === 'denied'
+        ? t('settings.notifications.system.statusBlocked')
+        : permission === 'unsupported'
+          ? t('settings.notifications.system.statusUnsupported')
+          : t('settings.notifications.system.statusPrompt')
+
+  return (
+    <section className="rounded-xl border p-4">
+      <div className="flex items-start gap-3">
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+          <Bell className="size-4 text-primary" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-medium">
+            {t('settings.notifications.system.title')}
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t('settings.notifications.system.description')}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center gap-3 rounded-lg border bg-muted/40 px-3 py-2.5">
+        {permission === 'granted' ? (
+          <Check className="size-4 shrink-0 text-emerald-500" />
+        ) : permission === null ? (
+          <Loader2 className="size-4 shrink-0 animate-spin text-muted-foreground" />
+        ) : (
+          <BellOff className="size-4 shrink-0 text-muted-foreground" />
+        )}
+        <span className="min-w-0 flex-1 text-sm">{status}</span>
+
+        {(permission === 'prompt' || permission === 'denied') && (
+          <Button
+            size="sm"
+            variant={permission === 'denied' ? 'outline' : 'default'}
+            onClick={() => void handleEnable()}
+            disabled={busy || permission === 'denied'}
+          >
+            {busy && <Loader2 className="size-3.5 animate-spin" />}
+            {t('settings.notifications.system.enable')}
+          </Button>
+        )}
+        {permission === 'granted' && (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => void handleTest()}
+            disabled={busy}
+          >
+            {busy ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <Bell className="size-3.5" />
+            )}
+            {t('settings.notifications.system.sendTest')}
+          </Button>
+        )}
+      </div>
+
+      {permission === 'denied' && (
+        <p className="mt-2 text-xs text-muted-foreground">
+          {t(
+            isStandalone
+              ? 'settings.notifications.system.blockedHelpDesktop'
+              : 'settings.notifications.system.blockedHelpBrowser',
+          )}
+        </p>
+      )}
+      {permission === 'unsupported' && (
+        <p className="mt-2 text-xs text-muted-foreground">
+          {t('settings.notifications.system.unsupportedHelp')}
+        </p>
+      )}
+
+      <div className="mt-2">
+        <FeedbackLine feedback={feedback} />
+      </div>
+    </section>
   )
 }
 

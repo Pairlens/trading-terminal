@@ -845,6 +845,23 @@
       }
     },
     "notifications": {
+      "system": {
+        "title": "System notifications",
+        "description": "Show alerts in your notification centre, so they reach you while Pairlens is behind another window.",
+        "statusGranted": "Allowed",
+        "statusBlocked": "Blocked",
+        "statusPrompt": "Not enabled yet",
+        "statusUnsupported": "Not available here",
+        "enable": "Enable",
+        "blockedHelpBrowser": "Your browser is blocking notifications for this site. Allow them from the padlock next to the address bar, then come back.",
+        "blockedHelpDesktop": "Your system is blocking notifications for Pairlens. Allow them in your operating system's notification settings.",
+        "unsupportedHelp": "This browser cannot show system notifications. Alerts still arrive as in-app toasts, and Telegram works either way.",
+        "sendTest": "Send test notification",
+        "testTitle": "Pairlens",
+        "testBody": "This is what an alert will look like.",
+        "testSent": "Sent — check your notification centre.",
+        "testFailed": "Could not show a notification."
+      },
       "telegram": {
         "title": "Telegram",
         "description": "Send alerts to a Telegram chat, so they reach your phone when you are not watching the terminal.",

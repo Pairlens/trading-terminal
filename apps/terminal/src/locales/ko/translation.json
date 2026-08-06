@@ -845,6 +845,23 @@
       }
     },
     "notifications": {
+      "system": {
+        "title": "시스템 알림",
+        "description": "알림 센터에 알림을 표시해, Pairlens 가 다른 창 뒤에 있어도 전달되게 합니다.",
+        "statusGranted": "허용됨",
+        "statusBlocked": "차단됨",
+        "statusPrompt": "아직 켜지 않음",
+        "statusUnsupported": "여기서는 사용할 수 없음",
+        "enable": "켜기",
+        "blockedHelpBrowser": "브라우저가 이 사이트의 알림을 차단하고 있습니다. 주소창 옆 자물쇠에서 허용한 뒤 돌아오세요.",
+        "blockedHelpDesktop": "시스템이 Pairlens 알림을 차단하고 있습니다. 운영체제의 알림 설정에서 허용하세요.",
+        "unsupportedHelp": "이 브라우저는 시스템 알림을 표시할 수 없습니다. 알림은 앱 내 토스트로 계속 도착하고, 텔레그램은 어느 쪽이든 동작합니다.",
+        "sendTest": "테스트 알림 보내기",
+        "testTitle": "Pairlens",
+        "testBody": "알림은 이렇게 표시됩니다.",
+        "testSent": "보냈습니다 — 알림 센터를 확인하세요.",
+        "testFailed": "알림을 표시하지 못했습니다."
+      },
       "telegram": {
         "title": "Telegram",
         "description": "알림을 텔레그램 채팅으로 보냅니다. 터미널을 보고 있지 않아도 휴대폰으로 도착합니다.",

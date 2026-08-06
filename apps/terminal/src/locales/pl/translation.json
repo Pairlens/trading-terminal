@@ -845,6 +845,23 @@
       }
     },
     "notifications": {
+      "system": {
+        "title": "Powiadomienia systemowe",
+        "description": "Pokazuj alerty w centrum powiadomień, żeby docierały do ciebie, gdy Pairlens jest za innym oknem.",
+        "statusGranted": "Dozwolone",
+        "statusBlocked": "Zablokowane",
+        "statusPrompt": "Jeszcze niewłączone",
+        "statusUnsupported": "Niedostępne tutaj",
+        "enable": "Włącz",
+        "blockedHelpBrowser": "Przeglądarka blokuje powiadomienia dla tej strony. Zezwól na nie z kłódki obok paska adresu i wróć tutaj.",
+        "blockedHelpDesktop": "System blokuje powiadomienia Pairlens. Zezwól na nie w ustawieniach powiadomień systemu operacyjnego.",
+        "unsupportedHelp": "Ta przeglądarka nie potrafi pokazywać powiadomień systemowych. Alerty nadal przychodzą jako toasty w aplikacji, a Telegram działa tak czy inaczej.",
+        "sendTest": "Wyślij powiadomienie testowe",
+        "testTitle": "Pairlens",
+        "testBody": "Tak będzie wyglądał alert.",
+        "testSent": "Wysłane — sprawdź centrum powiadomień.",
+        "testFailed": "Nie udało się pokazać powiadomienia."
+      },
       "telegram": {
         "title": "Telegram",
         "description": "Wysyłaj alerty na czat w Telegramie, żeby docierały na telefon, gdy nie patrzysz na terminal.",
