@@ -10,15 +10,18 @@ import {
   Check,
   Download,
   ExternalLink,
+  Hand,
   KeyRound,
   Lock,
   Monitor,
   Moon,
+  MousePointerClick,
   RefreshCw,
   Scale,
   ShieldAlert,
   Sparkles,
   Sun,
+  Timer,
   Trash2,
   Unlock,
   X,
@@ -76,6 +79,7 @@ import type { RegistryMode } from '@/components/plugins/use-registry-settings'
 import type { PerformanceMode } from '@/hooks/use-performance-mode'
 import type { PluginAutoUpdateMode } from '@/stores/plugin-updates-store'
 import type { ColorMode } from '@/lib/settings/color-mode'
+import type { TradeConfirmMode } from '@/lib/settings/trade-confirm'
 import { track } from '@/lib/analytics-events'
 import { useOptimisticSession } from '@/lib/session'
 import {
@@ -122,6 +126,8 @@ import {
 } from '@/hooks/use-display-currency'
 import { useRiskConfigStore } from '@/stores/risk-config-store'
 import { useTradeConsentStore } from '@/stores/trade-consent-store'
+import { useTradeConfirmMode } from '@/hooks/use-trade-confirm'
+import { TRADE_CONFIRM_MODES } from '@/lib/settings/trade-confirm'
 
 function isValidUrl(value: string): boolean {
   try {
@@ -1252,6 +1258,68 @@ function RiskLimitRow({
   )
 }
 
+const CONFIRM_MODE_ICONS: Record<TradeConfirmMode, typeof Zap> = {
+  hold: Timer,
+  click: MousePointerClick,
+}
+
+/**
+ * The gesture that commits an order. Hold ships as the default because the
+ * wait is the only thing standing between a mis-aimed cursor and a filled
+ * order; this is where a trader who places size all day buys that time back.
+ */
+function OrderConfirmationSection() {
+  const { t } = useTranslation()
+  const [confirmMode, setConfirmMode] = useTradeConfirmMode()
+
+  return (
+    <section className="rounded-xl border p-4">
+      <div className="flex items-center gap-2">
+        <Hand className="size-4 text-muted-foreground" />
+        <h3 className="font-medium">{t('settings.risk.confirmGesture')}</h3>
+      </div>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {t('settings.risk.confirmGestureDescription')}
+      </p>
+
+      <RadioGroup
+        className="mt-4 gap-3"
+        value={confirmMode}
+        onValueChange={(v: string) => {
+          setConfirmMode(v as TradeConfirmMode)
+          track('risk_setting_changed', { setting: 'tradeConfirmMode' })
+        }}
+      >
+        {TRADE_CONFIRM_MODES.map(({ value, labelKey, descKey }) => {
+          const Icon = CONFIRM_MODE_ICONS[value]
+          return (
+            <label
+              key={value}
+              className="flex cursor-pointer items-start gap-3 rounded-lg border px-4 py-3 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+            >
+              <RadioGroupItem value={value} className="mt-0.5 sr-only" />
+              <Icon className="mt-0.5 size-4 shrink-0" />
+              <div className="grid gap-0.5">
+                <span className="text-sm font-medium">{t(labelKey)}</span>
+                <span className="text-xs text-muted-foreground">
+                  {t(descKey)}
+                </span>
+              </div>
+              {confirmMode === value && (
+                <Check className="ml-auto mt-0.5 size-4 shrink-0 text-primary" />
+              )}
+            </label>
+          )
+        })}
+      </RadioGroup>
+
+      <p className="mt-3 text-xs text-muted-foreground">
+        {t('settings.risk.confirmGestureNote')}
+      </p>
+    </section>
+  )
+}
+
 function AiTradePermissionsSection() {
   const { t } = useTranslation()
   const paper = useTradeConsentStore((s) => s.paper)
@@ -1402,6 +1470,10 @@ export function RiskSection() {
           />
         </div>
       </section>
+
+      {/* How a trade is committed by hand — the friction the user chooses to
+          keep in front of every order they place themselves */}
+      <OrderConfirmationSection />
 
       {/* AI Trade Permissions — the copilot's standing "don't ask again"
           grants, revocable here outside the chat that created them */}

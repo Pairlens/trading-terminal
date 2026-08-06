@@ -756,6 +756,13 @@
       "dailyPnl": "Lãi/lỗ",
       "dailyTradeCount": "Số lệnh",
       "windowStart": "Cửa sổ bắt đầu",
+      "confirmGesture": "Xác nhận lệnh",
+      "confirmGestureDescription": "Cách bạn xác nhận lệnh do chính bạn đặt, trong phiếu lệnh và trên thẻ lệnh của copilot.",
+      "confirmHold": "Nhấn giữ",
+      "confirmHoldDescription": "Giữ nút gửi cho đến khi đầy. Lệnh tiền thật giữ lâu hơn lệnh giả lập một chút.",
+      "confirmClick": "Nhấp một lần",
+      "confirmClickDescription": "Nhấp đầu tiên là gửi lệnh. Không còn gì ngăn giữa một cú nhấp nhầm và một lệnh thật.",
+      "confirmGestureNote": "Giới hạn rủi ro vẫn áp dụng như nhau — chỉ thay đổi thao tác, không thay đổi lớp bảo vệ.",
       "aiPermissions": "Quyền giao dịch của AI",
       "aiPermissionsDescription": "Những gì AI copilot có thể làm mà không cần hỏi. Lệnh nằm ngoài các quyền này luôn cần bạn xác nhận trên thẻ trong khung chat, và mọi lệnh — dù tự động duyệt hay không — đều được kiểm soát theo các giới hạn rủi ro ở trên.",
       "aiPaperAuto": "Tự động duyệt lệnh giả lập",
@@ -841,7 +848,69 @@
       "commands": {
         "workspaceTree": "Bật/tắt cây không gian làm việc",
         "workspaceMenu": "Menu không gian làm việc",
+        "panesMenu": "Menu panel",
         "chartCancel": "Huỷ công cụ / thoát toàn màn hình"
+      }
+    },
+    "notifications": {
+      "system": {
+        "title": "Thông báo hệ thống",
+        "description": "Hiển thị cảnh báo trong trung tâm thông báo, để chúng đến với bạn khi Pairlens nằm sau cửa sổ khác.",
+        "statusGranted": "Đã cho phép",
+        "statusBlocked": "Đã chặn",
+        "statusPrompt": "Chưa bật",
+        "statusUnsupported": "Không khả dụng ở đây",
+        "enable": "Bật",
+        "blockedHelpBrowser": "Trình duyệt đang chặn thông báo cho trang này. Hãy cho phép từ biểu tượng ổ khóa cạnh thanh địa chỉ rồi quay lại.",
+        "blockedHelpDesktop": "Hệ thống đang chặn thông báo của Pairlens. Hãy cho phép trong cài đặt thông báo của hệ điều hành.",
+        "unsupportedHelp": "Trình duyệt này không hiển thị được thông báo hệ thống. Cảnh báo vẫn đến dưới dạng toast trong ứng dụng, và Telegram vẫn hoạt động bình thường.",
+        "sendTest": "Gửi thông báo thử",
+        "testTitle": "Pairlens",
+        "testBody": "Cảnh báo sẽ trông như thế này.",
+        "testSent": "Đã gửi — hãy xem trung tâm thông báo.",
+        "testFailed": "Không hiển thị được thông báo."
+      },
+      "telegram": {
+        "title": "Telegram",
+        "description": "Gửi cảnh báo tới một cuộc trò chuyện Telegram để chúng đến điện thoại của bạn khi bạn không ngồi trước terminal.",
+        "runningNote": "Cảnh báo chỉ kích hoạt khi Pairlens đang chạy. Trên desktop, ứng dụng có thể tiếp tục chạy nền sau khi bạn đóng cửa sổ.",
+        "privacyNote": "Token của bot chỉ nằm trên thiết bị này — trong keychain của hệ điều hành trên desktop và trong kho mã hóa trên trình duyệt. Nó không bao giờ được gửi tới Pairlens.",
+        "setup": {
+          "step1": "Mở cuộc trò chuyện với @BotFather và gửi /newbot.",
+          "step2": "Chọn tên và username cho bot của bạn.",
+          "step3": "Dán token mà BotFather gửi cho bạn vào bên dưới."
+        },
+        "openBotFather": "Mở @BotFather",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "Kết nối",
+        "invalidToken": "Đây không phải token bot. Token của BotFather trông như 123456789:AAE…",
+        "connectFailed": "Không thể kết nối bot.",
+        "errorUnauthorized": "Telegram từ chối token đó. Hãy kiểm tra bạn đã sao chép đầy đủ, hoặc dùng /revoke trong BotFather để lấy token mới.",
+        "errorForbidden": "Bot không gửi được vào cuộc trò chuyện đó. Hãy mở bot và nhấn Bắt đầu, hoặc kiểm tra bot còn trong nhóm không.",
+        "errorChatNotFound": "Telegram không biết cuộc trò chuyện đó. Hãy dò lại, hoặc kiểm tra ID trò chuyện trên bước.",
+        "errorConflict": "Có thứ khác đang lấy dữ liệu từ bot này. Hãy tắt nó, hoặc dùng một bot riêng.",
+        "errorRateLimited": "Telegram đang giới hạn tần suất của bot này. Hãy đợi một lát rồi thử lại.",
+        "disconnect": "Ngắt kết nối",
+        "disconnectFailed": "Không thể ngắt kết nối bot.",
+        "chatTitle": "Cuộc trò chuyện đã liên kết",
+        "chatHelp": "Mở bot và nhấn Bắt đầu, rồi dò tìm cuộc trò chuyện. Với nhóm, hãy thêm bot vào nhóm và gửi một tin nhắn.",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "Mở bot",
+        "detectChat": "Dò tìm cuộc trò chuyện",
+        "relink": "Đổi cuộc trò chuyện",
+        "waitingForStart": "Đang chờ Bắt đầu…",
+        "cancel": "Hủy",
+        "pickChat": "Có nhiều cuộc trò chuyện đã nhắn cho bot này. Hãy chọn một:",
+        "chatLinked": "Đã liên kết với {{chat}}",
+        "chatTimeout": "Không tìm thấy cuộc trò chuyện. Mở bot, nhấn Bắt đầu rồi thử lại.",
+        "chatFailed": "Không đọc được cuộc trò chuyện từ Telegram.",
+        "noChatYet": "Hãy liên kết một cuộc trò chuyện trước.",
+        "sendTest": "Gửi tin nhắn thử",
+        "testSent": "Đã gửi tin nhắn thử.",
+        "testFailed": "Không gửi được tin nhắn thử.",
+        "testRuleName": "Thử",
+        "testTitle": "Pairlens đã kết nối",
+        "testBody": "Cảnh báo từ các luồng thông báo của bạn sẽ đến đây."
       }
     },
     "security": {
@@ -1242,6 +1311,7 @@
     "dontAskAgainLive": "Không hỏi lại cho giao dịch thật trên {{market}}",
     "placing": "Đang đặt lệnh…",
     "confirmMode": "Xác nhận {{mode}}",
+    "holdToConfirm": "Nhấn giữ để xác nhận",
     "dismissed": "Đã bỏ qua",
     "cancelOrderPrompt": "Hủy lệnh {{orderId}} trên {{pair}} · {{market}}?",
     "cancelled": "Đã hủy",
@@ -2183,6 +2253,7 @@
   },
   "layout": {
     "workspaces": "Không gian làm việc",
+    "panes": "Panel",
     "presets": "Mẫu dựng sẵn",
     "browseStore": "Duyệt Workspace Store",
     "workspaceStore": "Workspace Store",
@@ -2364,6 +2435,7 @@
       "spot": "Giao ngay"
     },
     "tier": "Cấp độ",
+    "uninstall": "Gỡ cài đặt",
     "uninstalled": "Đã gỡ cài đặt",
     "updateReactivate": "Cập nhật & Kích hoạt lại",
     "version": "Phiên bản",
@@ -2774,9 +2846,8 @@
       "groupBroker": "Tài khoản môi giới",
       "groupExchange": "Tài khoản sàn",
       "selectWalletTopBar": "Chọn ví ở thanh trên cùng",
-      "connectChainWallet": "Kết nối ví {{chain}}",
-      "connectExchangeAccount": "Kết nối tài khoản {{exchange}}",
-      "selectAccountTopBar": "Chọn tài khoản ở thanh trên cùng"
+      "selectAccountTopBar": "Chọn tài khoản ở thanh trên cùng",
+      "gateNoTrading": "Chỉ có dữ liệu thị trường. Không thể giao dịch ở đây."
     },
     "trade": {
       "limitBuy": "Mua giới hạn",
@@ -2799,6 +2870,9 @@
       "holdToRun": "Nhấn giữ để chạy",
       "holdToConfirmLive": "Nhấn giữ để xác nhận · tiền được dùng ngay",
       "holdToPlace": "Nhấn giữ để đặt lệnh",
+      "clickToRun": "Nhấp để chạy",
+      "clickToConfirmLive": "Nhấp để xác nhận · tiền được dùng ngay",
+      "clickToPlace": "Nhấp để đặt lệnh",
       "runWorkflow": "Chạy workflow",
       "buyAsset": "Mua {{asset}}",
       "sellAsset": "Bán {{asset}}",
@@ -3392,7 +3466,7 @@
         "untitledRule": "Quy tắc chưa đặt tên",
         "eyebrow": "Thông báo",
         "title": "Theo dõi thị trường để bạn không phải làm điều đó",
-        "description": "Một quy tắc là một luồng nhỏ: điều gì đó xảy ra — giá vượt qua một mức, một nến đóng lại, một lệnh được khớp, một cảnh báo chỉ báo được kích hoạt — nó đi qua các điều kiện bạn thêm vào, rồi đến với bạn dưới dạng toast, thông báo hệ thống, hoặc webhook.",
+        "description": "Một quy tắc là một luồng nhỏ: điều gì đó xảy ra — giá vượt qua một mức, một nến đóng lại, một lệnh được khớp, một cảnh báo chỉ báo được kích hoạt — nó đi qua các điều kiện bạn thêm vào, rồi đến với bạn dưới dạng toast, thông báo hệ thống, tin nhắn Telegram, hoặc webhook.",
         "startBlank": "Bắt đầu từ khung vẽ trống",
         "startFromTemplate": "Bắt đầu từ mẫu",
         "footnote": "Các mẫu mở dưới dạng bản nháp liên kết với {{pair}} trên {{market}} — hãy chỉnh sửa các bước, đổi cặp giao dịch trong danh sách quy tắc, rồi Lưu. Quy tắc chỉ hoạt động khi Pairlens đang chạy."
@@ -3437,6 +3511,15 @@
           "title": "Tín hiệu được tạo",
           "signalType": "Loại tín hiệu",
           "anyTypePlaceholder": "Bất kỳ loại nào"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "ID trò chuyện",
+          "noChatLinked": "Chưa liên kết cuộc trò chuyện",
+          "linkChat": "Liên kết cuộc trò chuyện",
+          "silent": "Im lặng",
+          "notConnected": "Kết nối bot trong Cài đặt để gửi cảnh báo tới Telegram.",
+          "connect": "Kết nối Telegram"
         },
         "timeWindow": {
           "title": "Khung thời gian",
@@ -3616,6 +3699,18 @@
           },
           "includePayload": {
             "label": "Bao gồm payload sự kiện"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "ID trò chuyện (tùy chọn)",
+            "placeholder": "Cuộc trò chuyện đã liên kết"
+          },
+          "silent": {
+            "label": "Tin nhắn im lặng"
           }
         }
       }

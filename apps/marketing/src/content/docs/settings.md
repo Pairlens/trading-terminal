@@ -42,9 +42,14 @@ changes how values are shown, not what you hold.
 ## Risk Management
 
 Loss caps, position caps, trade caps, the breach action for each, the reset
-window, and the AI's trade permissions. This is the most important page in
-settings and it has its own guide:
+window, the gesture that commits an order, and the AI's trade permissions. This
+is the most important page in settings and it has its own guide:
 [risk guardrails](/docs/risk-guardrails).
+
+**Order confirmation.** Press and hold is the default: you hold the submit
+button until it fills, and live orders hold longer than paper. Switch it to a
+single click if you place a lot of orders and want the ticket out of your way.
+Either way the risk limits above still apply.
 
 ## Appearance
 
@@ -110,8 +115,22 @@ our servers, and everything Pairlens knows about you lives on this device.
 
 ## Notifications
 
-Delivery preferences for alert rules. The rules themselves live under
-[Notifications](/docs/alerts-notifications) in the left nav.
+Where alerts go once they fire.
+
+**System notifications** shows whether Pairlens is allowed to post to your
+notification centre, and grants it from a button rather than from a prompt that
+appears mid-alert — Safari only grants from a click, and a dismissed prompt is
+hard to undo. If your browser has already blocked them, the card says so and
+points you at the padlock in the address bar. Test one from here.
+
+Connect a Telegram bot here — paste the token
+BotFather gives you, press Start in the bot, link the chat — and any alert flow
+can then deliver to it. The bot token is stored like an exchange key: OS
+keychain on desktop, encrypted vault in the browser, never on a Pairlens
+server. Full walkthrough in
+[Alerts and notifications](/docs/alerts-notifications).
+
+The rules themselves live under **Notifications** in the left nav.
 
 ## Desktop menu
 

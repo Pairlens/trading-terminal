@@ -756,6 +756,13 @@
       "dailyPnl": "損益",
       "dailyTradeCount": "取引数",
       "windowStart": "期間の開始",
+      "confirmGesture": "注文の確定操作",
+      "confirmGestureDescription": "自分で出す注文を確定する操作です。トレードチケットとコパイロットの注文カードの両方に適用されます。",
+      "confirmHold": "長押し",
+      "confirmHoldDescription": "ボタンが満たされるまで押し続けます。ライブ注文はペーパー注文より少し長めです。",
+      "confirmClick": "シングルクリック",
+      "confirmClickDescription": "最初のクリックで発注します。誤クリックと実際の注文の間には何も残りません。",
+      "confirmGestureNote": "どちらでもリスク制限は適用されます。変わるのは操作だけで、防御は変わりません。",
       "aiPermissions": "AI取引権限",
       "aiPermissionsDescription": "AIコパイロットが確認なしで実行できる操作です。ここで許可されていない注文は常にチャット内の確認カードでの承認が必要であり、自動承認かどうかにかかわらず、すべての注文は上記のリスク上限に照らして強制されます。",
       "aiPaperAuto": "ペーパー取引を自動承認",
@@ -841,7 +848,69 @@
       "commands": {
         "workspaceTree": "ワークスペースツリーの表示切り替え",
         "workspaceMenu": "ワークスペースメニュー",
+        "panesMenu": "ペインメニュー",
         "chartCancel": "ツールを解除 / 全画面を終了"
+      }
+    },
+    "notifications": {
+      "system": {
+        "title": "システム通知",
+        "description": "アラートを通知センターに表示します。Pairlensが他のウィンドウの背後にあるときも届きます。",
+        "statusGranted": "許可済み",
+        "statusBlocked": "ブロック中",
+        "statusPrompt": "まだ有効ではありません",
+        "statusUnsupported": "ここでは利用できません",
+        "enable": "有効にする",
+        "blockedHelpBrowser": "ブラウザーがこのサイトの通知をブロックしています。アドレスバー横の鍵アイコンから許可して、戻ってきてください。",
+        "blockedHelpDesktop": "システムがPairlensの通知をブロックしています。OSの通知設定で許可してください。",
+        "unsupportedHelp": "このブラウザーはシステム通知を表示できません。アラートはアプリ内トーストとして届き、Telegramはいずれの場合も動作します。",
+        "sendTest": "テスト通知を送信",
+        "testTitle": "Pairlens",
+        "testBody": "アラートはこのように表示されます。",
+        "testSent": "送信しました。通知センターを確認してください。",
+        "testFailed": "通知を表示できませんでした。"
+      },
+      "telegram": {
+        "title": "Telegram",
+        "description": "アラートをTelegramのチャットに送信します。ターミナルを見ていないときでもスマートフォンに届きます。",
+        "runningNote": "アラートはPairlensが動作している間だけ発火します。デスクトップではウィンドウを閉じたあともバックグラウンドで動作させられます。",
+        "privacyNote": "ボットトークンはこの端末に留まります。デスクトップではOSのキーチェーン、ブラウザーでは暗号化されたボールトに保存され、Pairlensに送信されることはありません。",
+        "setup": {
+          "step1": "@BotFather とのチャットを開き、/newbot を送信します。",
+          "step2": "ボットの名前とユーザー名を決めます。",
+          "step3": "BotFather から届いたトークンを下に貼り付けます。"
+        },
+        "openBotFather": "@BotFather を開く",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "接続",
+        "invalidToken": "ボットトークンではありません。BotFather のトークンは 123456789:AAE… のような形式です。",
+        "connectFailed": "ボットを接続できませんでした。",
+        "errorUnauthorized": "Telegram がこのトークンを拒否しました。全体をコピーできているか確認するか、BotFather で /revoke して新しいトークンを取得してください。",
+        "errorForbidden": "ボットはそのチャットに書き込めません。ボットを開いて「スタート」を押すか、まだグループに参加しているか確認してください。",
+        "errorChatNotFound": "Telegram はそのチャットを認識していません。もう一度検出するか、ステップのチャットIDを確認してください。",
+        "errorConflict": "別のプログラムがすでにこのボットを取得しています。それを停止するか、専用のボットを用意してください。",
+        "errorRateLimited": "Telegram がこのボットの送信を制限しています。少し待ってからお試しください。",
+        "disconnect": "接続を解除",
+        "disconnectFailed": "ボットの接続を解除できませんでした。",
+        "chatTitle": "連携済みチャット",
+        "chatHelp": "ボットを開いて「スタート」を押し、チャットを検出します。グループの場合はボットを追加してメッセージを送信してください。",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "ボットを開く",
+        "detectChat": "チャットを検出",
+        "relink": "チャットを変更",
+        "waitingForStart": "「スタート」を待機中…",
+        "cancel": "キャンセル",
+        "pickChat": "複数のチャットがこのボットに送信しています。使用するものを選んでください:",
+        "chatLinked": "{{chat}} と連携しました",
+        "chatTimeout": "チャットが見つかりません。ボットを開いて「スタート」を押し、もう一度お試しください。",
+        "chatFailed": "Telegramからチャットを取得できませんでした。",
+        "noChatYet": "先にチャットを連携してください。",
+        "sendTest": "テストメッセージを送信",
+        "testSent": "テストメッセージを送信しました。",
+        "testFailed": "テストメッセージを送信できませんでした。",
+        "testRuleName": "テスト",
+        "testTitle": "Pairlensが接続されました",
+        "testBody": "通知フローのアラートはここに届きます。"
       }
     },
     "security": {
@@ -1242,6 +1311,7 @@
     "dontAskAgainLive": "{{market}} の実取引では次回から確認しない",
     "placing": "発注中…",
     "confirmMode": "{{mode}}を確定",
+    "holdToConfirm": "長押しで確定",
     "dismissed": "却下しました",
     "cancelOrderPrompt": "{{pair}} · {{market}} の注文 {{orderId}} をキャンセルしますか？",
     "cancelled": "キャンセルしました",
@@ -2183,6 +2253,7 @@
   },
   "layout": {
     "workspaces": "ワークスペース",
+    "panes": "ペイン",
     "presets": "プリセット",
     "browseStore": "ワークスペースストアを見る",
     "workspaceStore": "ワークスペースストア",
@@ -2364,6 +2435,7 @@
       "spot": "現物"
     },
     "tier": "階層",
+    "uninstall": "アンインストール",
     "uninstalled": "アンインストール済み",
     "updateReactivate": "更新して再有効化",
     "version": "バージョン",
@@ -2774,9 +2846,8 @@
       "groupBroker": "ブローカー口座",
       "groupExchange": "取引所アカウント",
       "selectWalletTopBar": "上部バーでウォレットを選択",
-      "connectChainWallet": "{{chain}}ウォレットを接続",
-      "connectExchangeAccount": "{{exchange}}アカウントを接続",
-      "selectAccountTopBar": "上部バーでアカウントを選択"
+      "selectAccountTopBar": "上部バーでアカウントを選択",
+      "gateNoTrading": "マーケットデータのみ。ここでは取引できません。"
     },
     "trade": {
       "limitBuy": "指値買い",
@@ -2799,6 +2870,9 @@
       "holdToRun": "長押しで実行",
       "holdToConfirmLive": "長押しで確定 · 資金は即時に動きます",
       "holdToPlace": "長押しで発注",
+      "clickToRun": "クリックで実行",
+      "clickToConfirmLive": "クリックで確定 · 資金は即時に動きます",
+      "clickToPlace": "クリックで発注",
       "runWorkflow": "ワークフローを実行",
       "buyAsset": "{{asset}} を買う",
       "sellAsset": "{{asset}} を売る",
@@ -3392,7 +3466,7 @@
         "untitledRule": "無題のルール",
         "eyebrow": "通知",
         "title": "マーケットの監視はPairlensにおまかせ",
-        "description": "ルールは小さなフローです。何かが起きる — 水準を超える、ローソク足が確定する、注文が約定する、インジケーターのアラートが発火する — そこに追加した条件を通過すると、トースト、システム通知、またはWebhookとして届きます。",
+        "description": "ルールは小さなフローです。何かが起きる — 水準を超える、ローソク足が確定する、注文が約定する、インジケーターのアラートが発火する — そこに追加した条件を通過すると、トースト、システム通知、Telegramのメッセージ、またはWebhookとして届きます。",
         "startBlank": "空のキャンバスから始める",
         "startFromTemplate": "テンプレートから始める",
         "footnote": "テンプレートは{{market}}の{{pair}}に紐付いた下書きとして開きます — ステップを編集し、ルール一覧でペアを変更してから保存してください。ルールはPairlensが起動している間のみ発火します。"
@@ -3437,6 +3511,15 @@
           "title": "シグナル発生",
           "signalType": "シグナルタイプ",
           "anyTypePlaceholder": "任意のタイプ"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "チャットID",
+          "noChatLinked": "チャット未連携",
+          "linkChat": "チャットを連携",
+          "silent": "サイレント",
+          "notConnected": "設定でボットを接続すると、アラートをTelegramに送信できます。",
+          "connect": "Telegramを接続"
         },
         "timeWindow": {
           "title": "時間帯",
@@ -3616,6 +3699,18 @@
           },
           "includePayload": {
             "label": "イベントペイロードを含める"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "チャットID（任意）",
+            "placeholder": "連携済みチャット"
+          },
+          "silent": {
+            "label": "サイレント送信"
           }
         }
       }

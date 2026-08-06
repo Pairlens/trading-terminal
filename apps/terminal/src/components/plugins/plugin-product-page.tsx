@@ -71,6 +71,8 @@ export function PluginProductPage({
   entry,
   categoryLabel,
   active,
+  installed,
+  themeApplied,
   busy,
   feedback,
   configDraft,
@@ -79,12 +81,17 @@ export function PluginProductPage({
   posterLayoutId,
   onBack,
   onToggle,
+  onApplyTheme,
+  onRemoveTheme,
   onConfigChange,
   onConfigSubmit,
 }: {
   entry: RegistryPluginEntry
   categoryLabel: (categoryId: string) => string
   active: boolean
+  installed: boolean
+  /** Themes only — this theme is the one painting the terminal right now. */
+  themeApplied: boolean
   busy: boolean
   feedback: { type: 'error' | 'success'; message: string } | null
   configDraft: Record<string, unknown>
@@ -94,6 +101,8 @@ export function PluginProductPage({
   posterLayoutId?: string | null
   onBack: () => void
   onToggle: (checked: boolean) => void
+  onApplyTheme: () => void
+  onRemoveTheme: () => void
   onConfigChange: (key: string, value: unknown) => void
   onConfigSubmit: (event: FormEvent) => void
 }) {
@@ -133,12 +142,12 @@ export function PluginProductPage({
 
   const installLabel = busy
     ? t('pluginStore.installing', 'Installing…')
-    : active
-      ? theme
+    : theme
+      ? themeApplied
         ? t('pluginStore.applied', 'Applied')
-        : t('pluginStore.installedLabel', 'Installed')
-      : theme
-        ? t('pluginStore.applyTheme', 'Apply theme')
+        : t('pluginStore.applyTheme', 'Apply theme')
+      : active
+        ? t('pluginStore.installedLabel', 'Installed')
         : t('pluginStore.install', 'Install')
 
   return (
@@ -165,27 +174,51 @@ export function PluginProductPage({
           {t('pluginStore.backToStore', 'Store')}
         </button>
         <div className="flex items-center gap-3">
-          {active && (
+          {(theme ? themeApplied : active) && (
             <span className="inline-flex items-center gap-1.5 text-xs text-[var(--chart-2)]">
               <span className="size-1.5 rounded-full bg-[var(--chart-2)]" />
-              {t('pluginStore.installedActive', 'Installed & active')}
+              {theme
+                ? t('pluginStore.applied', 'Applied')
+                : t('pluginStore.installedActive', 'Installed & active')}
             </span>
           )}
-          {active && (
+          {/* Themes: "Remove" drops back to the built-in palette and keeps the
+              plugin around; uninstalling a downloaded theme is its own step. */}
+          {theme && themeApplied && (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={busy}
+              onClick={onRemoveTheme}
+            >
+              {t('pluginStore.removeTheme', 'Remove')}
+            </Button>
+          )}
+          {theme && installed && !entry.bundled && (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={busy}
+              onClick={() => onToggle(false)}
+            >
+              {t('pluginStore.uninstall', 'Uninstall')}
+            </Button>
+          )}
+          {!theme && active && (
             <Button
               variant="outline"
               size="sm"
               disabled={busy || !!platformBadge}
               onClick={() => onToggle(false)}
             >
-              {theme
-                ? t('pluginStore.removeTheme', 'Remove')
-                : t('pluginStore.disable', 'Disable')}
+              {t('pluginStore.disable', 'Disable')}
             </Button>
           )}
           <Button
-            disabled={busy || active || !!platformBadge}
-            onClick={() => onToggle(true)}
+            disabled={
+              busy || (theme ? themeApplied : active) || !!platformBadge
+            }
+            onClick={() => (theme ? onApplyTheme() : onToggle(true))}
           >
             {installLabel}
           </Button>

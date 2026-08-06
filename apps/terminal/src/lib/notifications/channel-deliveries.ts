@@ -6,6 +6,7 @@ import {
   registerStepType,
 } from '@pairlens/notification-engine/step-registry'
 import { sendOsNotification } from './platform-notify'
+import { deliverTelegramNotification } from './telegram'
 import type { NotificationMessage } from '@pairlens/notification-engine/types'
 
 /**
@@ -92,6 +93,15 @@ export function registerChannelDeliveries(): void {
           throw new Error(`Webhook responded ${res.status}`)
         }
       },
+    })
+  }
+
+  // Telegram — token comes from the keychain, never from the step (telegram.ts)
+  const telegramDef = getStepType('telegram')
+  if (telegramDef) {
+    registerStepType({
+      ...telegramDef,
+      deliver: deliverTelegramNotification,
     })
   }
 }

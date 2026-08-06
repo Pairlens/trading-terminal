@@ -756,6 +756,13 @@
       "dailyPnl": "손익",
       "dailyTradeCount": "거래 횟수",
       "windowStart": "주기 시작",
+      "confirmGesture": "주문 확인 방식",
+      "confirmGestureDescription": "직접 내는 주문을 확정하는 방식입니다. 트레이드 티켓과 코파일럿 주문 카드에 모두 적용됩니다.",
+      "confirmHold": "길게 누르기",
+      "confirmHoldDescription": "버튼이 가득 찰 때까지 누르고 있습니다. 라이브 주문은 모의 주문보다 조금 더 깁니다.",
+      "confirmClick": "한 번 클릭",
+      "confirmClickDescription": "첫 클릭에 바로 주문됩니다. 잘못 누른 클릭과 실제 주문 사이에 아무것도 남지 않습니다.",
+      "confirmGestureNote": "어느 쪽이든 리스크 한도는 그대로 적용됩니다. 바뀌는 것은 조작 방식뿐입니다.",
       "aiPermissions": "AI 거래 권한",
       "aiPermissionsDescription": "AI 코파일럿이 확인 없이 수행할 수 있는 작업입니다. 이 권한 밖의 주문은 항상 채팅의 카드에서 확인이 필요하며, 자동 승인 여부와 관계없이 모든 주문은 위의 리스크 한도가 적용됩니다.",
       "aiPaperAuto": "모의 거래 자동 승인",
@@ -841,7 +848,69 @@
       "commands": {
         "workspaceTree": "워크스페이스 트리 표시 전환",
         "workspaceMenu": "워크스페이스 메뉴",
+        "panesMenu": "패널 메뉴",
         "chartCancel": "도구 취소 / 전체 화면 종료"
+      }
+    },
+    "notifications": {
+      "system": {
+        "title": "시스템 알림",
+        "description": "알림 센터에 알림을 표시해, Pairlens 가 다른 창 뒤에 있어도 전달되게 합니다.",
+        "statusGranted": "허용됨",
+        "statusBlocked": "차단됨",
+        "statusPrompt": "아직 켜지 않음",
+        "statusUnsupported": "여기서는 사용할 수 없음",
+        "enable": "켜기",
+        "blockedHelpBrowser": "브라우저가 이 사이트의 알림을 차단하고 있습니다. 주소창 옆 자물쇠에서 허용한 뒤 돌아오세요.",
+        "blockedHelpDesktop": "시스템이 Pairlens 알림을 차단하고 있습니다. 운영체제의 알림 설정에서 허용하세요.",
+        "unsupportedHelp": "이 브라우저는 시스템 알림을 표시할 수 없습니다. 알림은 앱 내 토스트로 계속 도착하고, 텔레그램은 어느 쪽이든 동작합니다.",
+        "sendTest": "테스트 알림 보내기",
+        "testTitle": "Pairlens",
+        "testBody": "알림은 이렇게 표시됩니다.",
+        "testSent": "보냈습니다 — 알림 센터를 확인하세요.",
+        "testFailed": "알림을 표시하지 못했습니다."
+      },
+      "telegram": {
+        "title": "Telegram",
+        "description": "알림을 텔레그램 채팅으로 보냅니다. 터미널을 보고 있지 않아도 휴대폰으로 도착합니다.",
+        "runningNote": "알림은 Pairlens가 실행 중일 때만 발생합니다. 데스크톱에서는 창을 닫아도 백그라운드에서 계속 실행할 수 있습니다.",
+        "privacyNote": "봇 토큰은 이 기기에만 저장됩니다. 데스크톱에서는 OS 키체인에, 브라우저에서는 암호화된 볼트에 보관되며 Pairlens로 전송되지 않습니다.",
+        "setup": {
+          "step1": "@BotFather 와의 채팅을 열고 /newbot 을 보냅니다.",
+          "step2": "봇의 이름과 사용자명을 정합니다.",
+          "step3": "BotFather 가 보낸 토큰을 아래에 붙여넣습니다."
+        },
+        "openBotFather": "@BotFather 열기",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "연결",
+        "invalidToken": "봇 토큰이 아닙니다. BotFather 의 토큰은 123456789:AAE… 형태입니다.",
+        "connectFailed": "봇을 연결하지 못했습니다.",
+        "errorUnauthorized": "텔레그램이 이 토큰을 거부했습니다. 전체를 복사했는지 확인하거나 BotFather 에서 /revoke 로 새 토큰을 받으세요.",
+        "errorForbidden": "봇이 그 채팅에 쓸 수 없습니다. 봇을 열고 시작을 누르거나, 아직 그룹에 있는지 확인하세요.",
+        "errorChatNotFound": "텔레그램이 그 채팅을 모릅니다. 다시 감지하거나 단계의 채팅 ID를 확인하세요.",
+        "errorConflict": "다른 프로그램이 이미 이 봇을 폴링하고 있습니다. 그것을 닫거나 전용 봇을 쓰세요.",
+        "errorRateLimited": "텔레그램이 이 봇의 요청을 제한하고 있습니다. 잠시 후 다시 시도하세요.",
+        "disconnect": "연결 해제",
+        "disconnectFailed": "봇 연결을 해제하지 못했습니다.",
+        "chatTitle": "연결된 채팅",
+        "chatHelp": "봇을 열고 시작을 누른 뒤 채팅을 감지하세요. 그룹이라면 봇을 추가하고 메시지를 보내세요.",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "봇 열기",
+        "detectChat": "채팅 감지",
+        "relink": "채팅 변경",
+        "waitingForStart": "시작을 기다리는 중…",
+        "cancel": "취소",
+        "pickChat": "여러 채팅이 이 봇과 대화했습니다. 사용할 채팅을 고르세요:",
+        "chatLinked": "{{chat}} 에 연결됨",
+        "chatTimeout": "채팅을 찾지 못했습니다. 봇을 열고 시작을 누른 뒤 다시 시도하세요.",
+        "chatFailed": "텔레그램에서 채팅을 읽지 못했습니다.",
+        "noChatYet": "먼저 채팅을 연결하세요.",
+        "sendTest": "테스트 메시지 보내기",
+        "testSent": "테스트 메시지를 보냈습니다.",
+        "testFailed": "테스트 메시지를 보내지 못했습니다.",
+        "testRuleName": "테스트",
+        "testTitle": "Pairlens 연결됨",
+        "testBody": "알림 플로우의 알림이 여기로 도착합니다."
       }
     },
     "security": {
@@ -1242,6 +1311,7 @@
     "dontAskAgainLive": "{{market}}의 실거래는 다시 묻지 않기",
     "placing": "주문 접수 중…",
     "confirmMode": "{{mode}} 확인",
+    "holdToConfirm": "길게 눌러 확인",
     "dismissed": "닫음",
     "cancelOrderPrompt": "{{pair}} · {{market}}의 주문 {{orderId}}을(를) 취소할까요?",
     "cancelled": "취소됨",
@@ -2183,6 +2253,7 @@
   },
   "layout": {
     "workspaces": "워크스페이스",
+    "panes": "패널",
     "presets": "프리셋",
     "browseStore": "워크스페이스 스토어 둘러보기",
     "workspaceStore": "워크스페이스 스토어",
@@ -2364,6 +2435,7 @@
       "spot": "현물"
     },
     "tier": "등급",
+    "uninstall": "제거",
     "uninstalled": "제거됨",
     "updateReactivate": "업데이트 & 재활성화",
     "version": "버전",
@@ -2774,9 +2846,8 @@
       "groupBroker": "증권 계좌",
       "groupExchange": "거래소 계정",
       "selectWalletTopBar": "상단 바에서 지갑 선택",
-      "connectChainWallet": "{{chain}} 지갑 연결",
-      "connectExchangeAccount": "{{exchange}} 계정 연결",
-      "selectAccountTopBar": "상단 바에서 계정 선택"
+      "selectAccountTopBar": "상단 바에서 계정 선택",
+      "gateNoTrading": "시세 데이터 전용입니다. 여기서는 거래할 수 없습니다."
     },
     "trade": {
       "limitBuy": "지정가 매수",
@@ -2799,6 +2870,9 @@
       "holdToRun": "길게 눌러 실행",
       "holdToConfirmLive": "길게 눌러 확인 · 자금이 즉시 집행됩니다",
       "holdToPlace": "길게 눌러 주문",
+      "clickToRun": "클릭하여 실행",
+      "clickToConfirmLive": "클릭하여 확인 · 자금이 즉시 집행됩니다",
+      "clickToPlace": "클릭하여 주문",
       "runWorkflow": "워크플로 실행",
       "buyAsset": "{{asset}} 매수",
       "sellAsset": "{{asset}} 매도",
@@ -3392,7 +3466,7 @@
         "untitledRule": "제목 없는 규칙",
         "eyebrow": "알림",
         "title": "시장 감시는 Pairlens에 맡기세요",
-        "description": "규칙은 작은 흐름입니다. 무언가 발생하면 — 가격이 특정 수준을 넘거나, 캔들이 마감되거나, 주문이 체결되거나, 지표 알림이 트리거되면 — 추가한 조건을 통과한 뒤 토스트, 시스템 알림, 웹훅으로 전달됩니다.",
+        "description": "규칙은 작은 흐름입니다. 무언가 발생하면 — 가격이 특정 수준을 넘거나, 캔들이 마감되거나, 주문이 체결되거나, 지표 알림이 트리거되면 — 추가한 조건을 통과한 뒤 토스트, 시스템 알림, 텔레그램 메시지, 웹훅으로 전달됩니다.",
         "startBlank": "빈 캔버스에서 시작",
         "startFromTemplate": "템플릿에서 시작",
         "footnote": "템플릿은 {{market}}의 {{pair}}에 연결된 초안으로 열립니다 — 단계를 편집하고 규칙 목록에서 페어를 변경한 뒤 저장하세요. 규칙은 Pairlens가 실행 중일 때만 작동합니다."
@@ -3437,6 +3511,15 @@
           "title": "시그널 발생",
           "signalType": "시그널 유형",
           "anyTypePlaceholder": "모든 유형"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "채팅 ID",
+          "noChatLinked": "연결된 채팅 없음",
+          "linkChat": "채팅 연결",
+          "silent": "무음",
+          "notConnected": "설정에서 봇을 연결하면 알림을 텔레그램으로 보낼 수 있습니다.",
+          "connect": "텔레그램 연결"
         },
         "timeWindow": {
           "title": "시간대",
@@ -3616,6 +3699,18 @@
           },
           "includePayload": {
             "label": "이벤트 페이로드 포함"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "채팅 ID (선택)",
+            "placeholder": "연결된 채팅"
+          },
+          "silent": {
+            "label": "무음 메시지"
           }
         }
       }

@@ -10,6 +10,7 @@ import { TimeWindowStep } from './time-window-step'
 import { LocalToastStep } from './local-toast-step'
 import { OsNotificationStep } from './os-notification-step'
 import { WebhookStep } from './webhook-step'
+import { TelegramStep } from './telegram-step'
 import type { NodeProps } from '@xyflow/react'
 import type { ComponentType } from 'react'
 
@@ -24,6 +25,7 @@ export {
   LocalToastStep,
   OsNotificationStep,
   WebhookStep,
+  TelegramStep,
 }
 
 /** Map from step type string to ReactFlow node component. */
@@ -41,4 +43,5 @@ export const notificationStepComponents: Record<
   'local-toast': LocalToastStep,
   'os-notification': OsNotificationStep,
   webhook: WebhookStep,
+  telegram: TelegramStep,
 }

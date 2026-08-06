@@ -7,6 +7,8 @@ import { Button } from '@pairlens/ui/components/ui/button'
 import { Checkbox } from '@pairlens/ui/components/ui/checkbox'
 import { cn } from '@pairlens/ui/lib/utils'
 import { track } from '@/lib/analytics-events'
+import { useHoldConfirm } from '@/hooks/use-trade-confirm'
+import { tradeHoldMs } from '@/lib/settings/trade-confirm'
 import {
   PROPOSAL_FRESHNESS_MS,
   markProposalExecuted,
@@ -134,6 +136,20 @@ export function CopilotPlaceOrderCard({
     }
     setState('done')
   }
+
+  // Confirming here commits real (or paper) funds exactly like the ticket
+  // does, so it answers to the same gesture: press & hold by default, single
+  // click when the user has set that in Settings → Risk Management.
+  const {
+    mode: confirmGesture,
+    controlProps,
+    fillProps,
+  } = useHoldConfirm({
+    holdMs: tradeHoldMs(mode === 'live'),
+    disabled: !actions || state !== 'idle',
+    busy: state === 'placing',
+    onConfirm: () => void confirm(mode, { grantConsent: dontAskAgain }),
+  })
 
   // Auto-execute under standing consent — only for a fresh, never-executed
   // proposal, and only in the user's default trading mode.
@@ -294,18 +310,21 @@ export function CopilotPlaceOrderCard({
           <div className="flex gap-2">
             <Button
               size="sm"
-              className="h-7 flex-1 text-xs"
+              className="relative h-7 flex-1 overflow-hidden text-xs"
               disabled={state === 'placing' || !actions}
-              onClick={() => confirm(mode, { grantConsent: dontAskAgain })}
+              {...controlProps}
             >
-              {state === 'placing'
-                ? t('copilot.placing')
-                : t('copilot.confirmMode', {
-                    mode:
-                      mode === 'live'
-                        ? t('accounts.live')
-                        : t('accounts.paper'),
-                  })}
+              {fillProps ? <span {...fillProps} /> : null}
+              <span className="relative">
+                {state === 'placing'
+                  ? t('copilot.placing')
+                  : t('copilot.confirmMode', {
+                      mode:
+                        mode === 'live'
+                          ? t('accounts.live')
+                          : t('accounts.paper'),
+                    })}
+              </span>
             </Button>
             <Button
               size="sm"
@@ -325,6 +344,11 @@ export function CopilotPlaceOrderCard({
               {t('common.dismiss')}
             </Button>
           </div>
+          {confirmGesture === 'hold' && state === 'idle' && (
+            <p className="text-center text-[10px] text-muted-foreground">
+              {t('copilot.holdToConfirm')}
+            </p>
+          )}
         </div>
       )}
     </div>

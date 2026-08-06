@@ -756,6 +756,13 @@
       "dailyPnl": "P&L",
       "dailyTradeCount": "Negociações",
       "windowStart": "Janela iniciada",
+      "confirmGesture": "Confirmação de ordens",
+      "confirmGestureDescription": "Como você envia uma ordem colocada por você mesmo, no ticket e nos cartões de ordem do copiloto.",
+      "confirmHold": "Pressionar e segurar",
+      "confirmHoldDescription": "Segure o botão até ele preencher. Ordens live seguram um pouco mais que as simuladas.",
+      "confirmClick": "Clique único",
+      "confirmClickDescription": "O primeiro clique envia. Nada fica entre um clique errado e uma ordem real.",
+      "confirmGestureNote": "Os limites de risco valem nos dois casos — muda o gesto, não as proteções.",
       "aiPermissions": "Permissões de negociação da IA",
       "aiPermissionsDescription": "O que o copiloto de IA pode fazer sem pedir confirmação. Ordens fora dessas concessões sempre exigem sua confirmação em um cartão no chat, e toda ordem — auto-aprovada ou não — é verificada contra os limites de risco acima.",
       "aiPaperAuto": "Auto-aprovar negociações simuladas",
@@ -841,7 +848,69 @@
       "commands": {
         "workspaceTree": "Mostrar/ocultar a árvore de áreas de trabalho",
         "workspaceMenu": "Menu de áreas de trabalho",
+        "panesMenu": "Menu de painéis",
         "chartCancel": "Cancelar ferramenta / sair do ecrã inteiro"
+      }
+    },
+    "notifications": {
+      "system": {
+        "title": "Notificações do sistema",
+        "description": "Mostre alertas na sua central de notificações, para que cheguem a você enquanto a Pairlens está atrás de outra janela.",
+        "statusGranted": "Permitidas",
+        "statusBlocked": "Bloqueadas",
+        "statusPrompt": "Ainda não ativadas",
+        "statusUnsupported": "Indisponível aqui",
+        "enable": "Ativar",
+        "blockedHelpBrowser": "Seu navegador está bloqueando as notificações deste site. Permita pelo cadeado ao lado da barra de endereços e volte aqui.",
+        "blockedHelpDesktop": "Seu sistema está bloqueando as notificações da Pairlens. Permita nas configurações de notificação do sistema operacional.",
+        "unsupportedHelp": "Este navegador não consegue mostrar notificações do sistema. Os alertas continuam chegando como avisos no app, e o Telegram funciona de qualquer forma.",
+        "sendTest": "Enviar notificação de teste",
+        "testTitle": "Pairlens",
+        "testBody": "É assim que um alerta vai aparecer.",
+        "testSent": "Enviada — confira sua central de notificações.",
+        "testFailed": "Não foi possível mostrar a notificação."
+      },
+      "telegram": {
+        "title": "Telegram",
+        "description": "Envie alertas para uma conversa do Telegram, para que cheguem ao seu celular quando você não estiver olhando o terminal.",
+        "runningNote": "Os alertas só disparam enquanto a Pairlens está em execução. No desktop ela pode continuar rodando em segundo plano depois que você fecha a janela.",
+        "privacyNote": "O token do bot fica neste dispositivo — no chaveiro do sistema no desktop e no seu cofre criptografado no navegador. Ele nunca é enviado à Pairlens.",
+        "setup": {
+          "step1": "Abra uma conversa com o @BotFather e envie /newbot.",
+          "step2": "Escolha um nome e um usuário para o seu bot.",
+          "step3": "Cole abaixo o token que o BotFather enviar."
+        },
+        "openBotFather": "Abrir @BotFather",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "Conectar",
+        "invalidToken": "Isso não é um token de bot. O do BotFather se parece com 123456789:AAE…",
+        "connectFailed": "Não foi possível conectar o bot.",
+        "errorUnauthorized": "O Telegram recusou esse token. Confira se copiou o token inteiro, ou use /revoke no BotFather para gerar um novo.",
+        "errorForbidden": "O bot não consegue escrever nessa conversa. Abra o bot e toque em Iniciar, ou confira se ele ainda está no grupo.",
+        "errorChatNotFound": "O Telegram não conhece essa conversa. Detecte de novo, ou confira o ID da conversa na etapa.",
+        "errorConflict": "Outra coisa já está consultando este bot. Feche-a, ou use um bot só para isso.",
+        "errorRateLimited": "O Telegram está limitando este bot. Espere um pouco e tente de novo.",
+        "disconnect": "Desconectar",
+        "disconnectFailed": "Não foi possível desconectar o bot.",
+        "chatTitle": "Conversa vinculada",
+        "chatHelp": "Abra o bot e toque em Iniciar, depois detecte a conversa. Para um grupo, adicione o bot e envie uma mensagem lá.",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "Abrir bot",
+        "detectChat": "Detectar conversa",
+        "relink": "Trocar conversa",
+        "waitingForStart": "Aguardando Iniciar…",
+        "cancel": "Cancelar",
+        "pickChat": "Mais de uma conversa falou com este bot. Escolha qual usar:",
+        "chatLinked": "Vinculada a {{chat}}",
+        "chatTimeout": "Nenhuma conversa encontrada. Abra o bot, toque em Iniciar e tente de novo.",
+        "chatFailed": "Não foi possível ler as conversas do Telegram.",
+        "noChatYet": "Vincule uma conversa primeiro.",
+        "sendTest": "Enviar mensagem de teste",
+        "testSent": "Mensagem de teste enviada.",
+        "testFailed": "Não foi possível enviar a mensagem de teste.",
+        "testRuleName": "Teste",
+        "testTitle": "A Pairlens está conectada",
+        "testBody": "Os alertas dos seus fluxos de notificação vão chegar aqui."
       }
     },
     "security": {
@@ -1242,6 +1311,7 @@
     "dontAskAgainLive": "Não perguntar de novo para operações reais em {{market}}",
     "placing": "Enviando…",
     "confirmMode": "Confirmar {{mode}}",
+    "holdToConfirm": "Pressione e segure para confirmar",
     "dismissed": "Dispensada",
     "cancelOrderPrompt": "Cancelar a ordem {{orderId}} em {{pair}} · {{market}}?",
     "cancelled": "Cancelada",
@@ -2183,6 +2253,7 @@
   },
   "layout": {
     "workspaces": "Workspaces",
+    "panes": "Painéis",
     "presets": "Predefinições",
     "browseStore": "Explorar Workspace Store",
     "workspaceStore": "Workspace Store",
@@ -2364,6 +2435,7 @@
       "spot": "Spot"
     },
     "tier": "Nível",
+    "uninstall": "Desinstalar",
     "uninstalled": "Desinstalado",
     "updateReactivate": "Atualizar e Reativar",
     "version": "Versão",
@@ -2774,9 +2846,8 @@
       "groupBroker": "Conta de corretora",
       "groupExchange": "Conta de exchange",
       "selectWalletTopBar": "Selecione a carteira na barra superior",
-      "connectChainWallet": "Conecte uma carteira {{chain}}",
-      "connectExchangeAccount": "Conecte uma conta {{exchange}}",
-      "selectAccountTopBar": "Selecione a conta na barra superior"
+      "selectAccountTopBar": "Selecione a conta na barra superior",
+      "gateNoTrading": "Apenas dados de mercado. Não é possível operar aqui."
     },
     "trade": {
       "limitBuy": "Compra limitada",
@@ -2799,6 +2870,9 @@
       "holdToRun": "Pressione e segure para executar",
       "holdToConfirmLive": "Pressione e segure para confirmar · os fundos saem na hora",
       "holdToPlace": "Pressione e segure para enviar",
+      "clickToRun": "Clique para executar",
+      "clickToConfirmLive": "Clique para confirmar · os fundos saem na hora",
+      "clickToPlace": "Clique para enviar",
       "runWorkflow": "Executar workflow",
       "buyAsset": "Comprar {{asset}}",
       "sellAsset": "Vender {{asset}}",
@@ -3392,7 +3466,7 @@
         "untitledRule": "Regra sem título",
         "eyebrow": "Notificações",
         "title": "Vigie o mercado para você não precisar",
-        "description": "Uma regra é um fluxo pequeno: algo acontece — um nível é cruzado, um candle fecha, uma ordem é executada, um alerta de indicador dispara — passa pelas condições que você adicionar e chega até você como um toast, uma notificação do sistema ou um webhook.",
+        "description": "Uma regra é um fluxo pequeno: algo acontece — um nível é cruzado, um candle fecha, uma ordem é executada, um alerta de indicador dispara — passa pelas condições que você adicionar e chega até você como um toast, uma notificação do sistema, uma mensagem no Telegram ou um webhook.",
         "startBlank": "Começar com uma tela em branco",
         "startFromTemplate": "Começar com um modelo",
         "footnote": "Os modelos abrem como rascunho vinculado a {{pair}} em {{market}} — edite as etapas, troque o par na lista de regras e depois salve. As regras só disparam enquanto o Pairlens está em execução."
@@ -3437,6 +3511,15 @@
           "title": "Sinal gerado",
           "signalType": "Tipo de sinal",
           "anyTypePlaceholder": "Qualquer tipo"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "ID da conversa",
+          "noChatLinked": "Nenhuma conversa vinculada",
+          "linkChat": "Vincular uma conversa",
+          "silent": "Silencioso",
+          "notConnected": "Conecte um bot nas Configurações para enviar alertas ao Telegram.",
+          "connect": "Conectar Telegram"
         },
         "timeWindow": {
           "title": "Janela de horário",
@@ -3616,6 +3699,18 @@
           },
           "includePayload": {
             "label": "Incluir payload do evento"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "ID da conversa (opcional)",
+            "placeholder": "Conversa vinculada"
+          },
+          "silent": {
+            "label": "Mensagem silenciosa"
           }
         }
       }

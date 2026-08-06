@@ -8,6 +8,7 @@ import {
   MessageSquare,
   Percent,
   Puzzle,
+  Send,
   ShoppingCart,
   TrendingUp,
   Webhook,
@@ -29,6 +30,7 @@ const NOTIFICATION_STEP_ICONS: Record<string, LucideIcon> = {
   MessageSquare,
   Bell,
   Webhook,
+  Send,
 }
 
 export function getNotificationStepIcon(name?: string): LucideIcon | null {

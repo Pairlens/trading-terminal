@@ -756,6 +756,13 @@
       "dailyPnl": "P&L",
       "dailyTradeCount": "Trade",
       "windowStart": "Jendela dimulai",
+      "confirmGesture": "Konfirmasi order",
+      "confirmGestureDescription": "Cara Anda mengirim order yang Anda pasang sendiri, di tiket trading dan di kartu order copilot.",
+      "confirmHold": "Tekan & tahan",
+      "confirmHoldDescription": "Tahan tombol kirim sampai terisi penuh. Order live ditahan sedikit lebih lama daripada order paper.",
+      "confirmClick": "Sekali klik",
+      "confirmClickDescription": "Klik pertama langsung mengirim. Tidak ada jeda antara salah klik dan order sungguhan.",
+      "confirmGestureNote": "Batas risiko tetap berlaku — yang berubah caranya, bukan pengamannya.",
       "aiPermissions": "Izin trading AI",
       "aiPermissionsDescription": "Apa yang boleh dilakukan AI copilot tanpa bertanya. Order di luar izin ini selalu memerlukan konfirmasi Anda pada kartu di chat, dan setiap order — disetujui otomatis atau tidak — diberlakukan sesuai batas risiko di atas.",
       "aiPaperAuto": "Setujui otomatis trade paper",
@@ -841,7 +848,69 @@
       "commands": {
         "workspaceTree": "Tampilkan/sembunyikan pohon ruang kerja",
         "workspaceMenu": "Menu ruang kerja",
+        "panesMenu": "Menu panel",
         "chartCancel": "Batalkan alat / keluar dari layar penuh"
+      }
+    },
+    "notifications": {
+      "system": {
+        "title": "Notifikasi sistem",
+        "description": "Tampilkan peringatan di pusat notifikasi, supaya sampai ke Anda saat Pairlens berada di balik jendela lain.",
+        "statusGranted": "Diizinkan",
+        "statusBlocked": "Diblokir",
+        "statusPrompt": "Belum diaktifkan",
+        "statusUnsupported": "Tidak tersedia di sini",
+        "enable": "Aktifkan",
+        "blockedHelpBrowser": "Peramban Anda memblokir notifikasi untuk situs ini. Izinkan lewat ikon gembok di sebelah bilah alamat, lalu kembali ke sini.",
+        "blockedHelpDesktop": "Sistem Anda memblokir notifikasi Pairlens. Izinkan di pengaturan notifikasi sistem operasi.",
+        "unsupportedHelp": "Peramban ini tidak bisa menampilkan notifikasi sistem. Peringatan tetap datang sebagai toast di dalam aplikasi, dan Telegram tetap berfungsi.",
+        "sendTest": "Kirim notifikasi uji",
+        "testTitle": "Pairlens",
+        "testBody": "Beginilah tampilan sebuah peringatan.",
+        "testSent": "Terkirim — periksa pusat notifikasi Anda.",
+        "testFailed": "Tidak dapat menampilkan notifikasi."
+      },
+      "telegram": {
+        "title": "Telegram",
+        "description": "Kirim peringatan ke obrolan Telegram agar sampai ke ponsel Anda saat Anda tidak sedang melihat terminal.",
+        "runningNote": "Peringatan hanya berjalan selama Pairlens berjalan. Di desktop, aplikasi bisa tetap berjalan di latar belakang setelah jendelanya ditutup.",
+        "privacyNote": "Token bot tetap di perangkat ini — di keychain sistem pada desktop, dan di brankas terenkripsi pada peramban. Token tidak pernah dikirim ke Pairlens.",
+        "setup": {
+          "step1": "Buka obrolan dengan @BotFather lalu kirim /newbot.",
+          "step2": "Pilih nama dan username untuk bot Anda.",
+          "step3": "Tempel token yang dikirim BotFather di bawah ini."
+        },
+        "openBotFather": "Buka @BotFather",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "Hubungkan",
+        "invalidToken": "Itu bukan token bot. Token dari BotFather berbentuk 123456789:AAE…",
+        "connectFailed": "Tidak dapat menghubungkan bot.",
+        "errorUnauthorized": "Telegram menolak token itu. Pastikan Anda menyalinnya utuh, atau jalankan /revoke di BotFather untuk token baru.",
+        "errorForbidden": "Bot tidak bisa menulis ke obrolan itu. Buka bot dan tekan Mulai, atau periksa apakah bot masih ada di grup.",
+        "errorChatNotFound": "Telegram tidak mengenali obrolan itu. Deteksi ulang, atau periksa ID obrolan pada langkah tersebut.",
+        "errorConflict": "Ada program lain yang sudah menarik data bot ini. Tutup program itu, atau pakai bot tersendiri.",
+        "errorRateLimited": "Telegram sedang membatasi laju bot ini. Tunggu sebentar lalu coba lagi.",
+        "disconnect": "Putuskan",
+        "disconnectFailed": "Tidak dapat memutuskan bot.",
+        "chatTitle": "Obrolan tertaut",
+        "chatHelp": "Buka bot dan tekan Mulai, lalu deteksi obrolannya. Untuk grup, tambahkan bot dan kirim satu pesan di sana.",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "Buka bot",
+        "detectChat": "Deteksi obrolan",
+        "relink": "Ganti obrolan",
+        "waitingForStart": "Menunggu Mulai…",
+        "cancel": "Batal",
+        "pickChat": "Lebih dari satu obrolan pernah menghubungi bot ini. Pilih yang ingin dipakai:",
+        "chatLinked": "Tertaut ke {{chat}}",
+        "chatTimeout": "Obrolan tidak ditemukan. Buka bot, tekan Mulai, lalu coba lagi.",
+        "chatFailed": "Tidak dapat membaca obrolan dari Telegram.",
+        "noChatYet": "Tautkan obrolan terlebih dahulu.",
+        "sendTest": "Kirim pesan uji",
+        "testSent": "Pesan uji terkirim.",
+        "testFailed": "Tidak dapat mengirim pesan uji.",
+        "testRuleName": "Uji",
+        "testTitle": "Pairlens terhubung",
+        "testBody": "Peringatan dari alur notifikasi Anda akan tiba di sini."
       }
     },
     "security": {
@@ -1242,6 +1311,7 @@
     "dontAskAgainLive": "Jangan tanya lagi untuk trading live di {{market}}",
     "placing": "Memasang…",
     "confirmMode": "Konfirmasi {{mode}}",
+    "holdToConfirm": "Tekan & tahan untuk konfirmasi",
     "dismissed": "Ditutup",
     "cancelOrderPrompt": "Batalkan order {{orderId}} di {{pair}} · {{market}}?",
     "cancelled": "Dibatalkan",
@@ -2183,6 +2253,7 @@
   },
   "layout": {
     "workspaces": "Ruang Kerja",
+    "panes": "Panel",
     "presets": "Preset",
     "browseStore": "Jelajahi Workspace Store",
     "workspaceStore": "Workspace Store",
@@ -2364,6 +2435,7 @@
       "spot": "Spot"
     },
     "tier": "Tingkat",
+    "uninstall": "Copot pemasangan",
     "uninstalled": "Dihapus",
     "updateReactivate": "Perbarui & Aktifkan Ulang",
     "version": "Versi",
@@ -2774,9 +2846,8 @@
       "groupBroker": "Akun broker",
       "groupExchange": "Akun bursa",
       "selectWalletTopBar": "Pilih wallet di bilah atas",
-      "connectChainWallet": "Hubungkan wallet {{chain}}",
-      "connectExchangeAccount": "Hubungkan akun {{exchange}}",
-      "selectAccountTopBar": "Pilih akun di bilah atas"
+      "selectAccountTopBar": "Pilih akun di bilah atas",
+      "gateNoTrading": "Hanya data pasar. Tidak bisa berdagang di sini."
     },
     "trade": {
       "limitBuy": "Beli limit",
@@ -2799,6 +2870,9 @@
       "holdToRun": "Tekan & tahan untuk menjalankan",
       "holdToConfirmLive": "Tekan & tahan untuk konfirmasi · dana langsung keluar",
       "holdToPlace": "Tekan & tahan untuk memasang",
+      "clickToRun": "Klik untuk menjalankan",
+      "clickToConfirmLive": "Klik untuk konfirmasi · dana langsung keluar",
+      "clickToPlace": "Klik untuk memasang",
       "runWorkflow": "Jalankan workflow",
       "buyAsset": "Beli {{asset}}",
       "sellAsset": "Jual {{asset}}",
@@ -3392,7 +3466,7 @@
         "untitledRule": "Aturan tanpa judul",
         "eyebrow": "Notifikasi",
         "title": "Pantau market agar Anda tidak perlu melakukannya sendiri",
-        "description": "Aturan adalah alur kecil: sesuatu terjadi — level tertembus, candle ditutup, order terisi, alert indikator terpicu — lalu melewati kondisi yang Anda tambahkan, dan akhirnya sampai ke Anda sebagai toast, notifikasi sistem, atau webhook.",
+        "description": "Aturan adalah alur kecil: sesuatu terjadi — level tertembus, candle ditutup, order terisi, alert indikator terpicu — lalu melewati kondisi yang Anda tambahkan, dan akhirnya sampai ke Anda sebagai toast, notifikasi sistem, pesan Telegram, atau webhook.",
         "startBlank": "Mulai dari kanvas kosong",
         "startFromTemplate": "Mulai dari template",
         "footnote": "Template terbuka sebagai draf yang terikat ke {{pair}} di {{market}} — edit langkah-langkahnya, ubah pair di daftar aturan, lalu Simpan. Aturan hanya aktif selama Pairlens berjalan."
@@ -3437,6 +3511,15 @@
           "title": "Sinyal Terbentuk",
           "signalType": "Tipe Sinyal",
           "anyTypePlaceholder": "Tipe apa saja"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "ID obrolan",
+          "noChatLinked": "Belum ada obrolan tertaut",
+          "linkChat": "Tautkan obrolan",
+          "silent": "Senyap",
+          "notConnected": "Hubungkan bot di Pengaturan untuk mengirim peringatan ke Telegram.",
+          "connect": "Hubungkan Telegram"
         },
         "timeWindow": {
           "title": "Jendela Waktu",
@@ -3616,6 +3699,18 @@
           },
           "includePayload": {
             "label": "Sertakan Payload Event"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "ID obrolan (opsional)",
+            "placeholder": "Obrolan tertaut"
+          },
+          "silent": {
+            "label": "Pesan senyap"
           }
         }
       }

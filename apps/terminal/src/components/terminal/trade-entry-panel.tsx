@@ -28,7 +28,9 @@ import { Slider } from '@pairlens/ui/components/ui/slider'
 import { Tabs, TabsList, TabsTrigger } from '@pairlens/ui/components/ui/tabs'
 import { executeWorkflow } from '@pairlens/workflow-engine/executor'
 import { checkWorkflowMarketCompat } from '@pairlens/workflow-engine/market-compat'
-import { HoldToConfirmButton } from './hold-to-confirm-button'
+import { TradeConfirmButton } from './trade-confirm-button'
+import { TradeConnectGate } from './trade-connect-gate'
+import { CHAIN_NAME } from './wallet-selector'
 import type { RefObject } from 'react'
 
 import type { OrderExecutor } from '@pairlens/workflow-engine/types'
@@ -50,6 +52,8 @@ import {
 import { usePaneWallet } from '@/lib/layout/pane-context'
 import { isRegionExplicitlySet } from '@/lib/region-settings'
 import { usePersistedState } from '@/hooks/use-persisted-state'
+import { useTradeConfirmMode } from '@/hooks/use-trade-confirm'
+import { tradeHoldMs } from '@/lib/settings/trade-confirm'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import {
   CREDENTIAL_SCHEMAS,
@@ -432,6 +436,27 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
       ? cryptoWallets.find((w) => w.id === wallet.walletId)
       : undefined
 
+  // Wallets that can sign for this venue. One EVM key covers every EVM chain,
+  // so the match is on the chain, not the market.
+  const chainWallets = isDex
+    ? cryptoWallets.filter((w) => w.chain === marketInfo?.walletChain)
+    : []
+
+  // Nothing on this ticket can reach an order book: no API keys for the
+  // exchange, no wallet for the chain, or a connector that only streams prices.
+  // Blur it behind the connect gate rather than leaving a form that looks
+  // perfectly live right up to the rejection.
+  //
+  // A sealed vault is excluded on purpose — the store is empty because it could
+  // not be read, not because there is nothing in it, and "connect an account"
+  // would send a user who already has keys off to enter them a second time.
+  const needsConnect =
+    marketInfo != null &&
+    !(isDex ? walletsSealed : credentialsSealed) &&
+    (isDex ? walletsLoaded : loaded) &&
+    (!marketInfo.capabilities.includes('trade') ||
+      (isDex ? chainWallets.length === 0 : marketCreds.length === 0))
+
   const balanceMap = useBalanceMap(
     isDex
       ? wallet
@@ -495,6 +520,27 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   // Live funds (DEX swaps are always on-chain; CEX honors the credential mode)
   // get a longer hold + an explicit "funds commit" note.
   const isLiveOrder = isDex || selectedCred?.mode === 'live'
+
+  // Press & hold by default, single click if the user asked for one. The
+  // button applies the gesture; the note under it has to say which one is on,
+  // or a click-mode user is told to hold a button that fires on release.
+  const [confirmMode] = useTradeConfirmMode()
+  const submitHint = useMemo(() => {
+    const hold = confirmMode === 'hold'
+    if (orderType === 'workflow') {
+      return hold
+        ? t('terminal.trade.holdToRun')
+        : t('terminal.trade.clickToRun')
+    }
+    if (isLiveOrder) {
+      return hold
+        ? t('terminal.trade.holdToConfirmLive')
+        : t('terminal.trade.clickToConfirmLive')
+    }
+    return hold
+      ? t('terminal.trade.holdToPlace')
+      : t('terminal.trade.clickToPlace')
+  }, [confirmMode, orderType, isLiveOrder, t])
 
   const handleSideChange = (newSide: 'buy' | 'sell') => {
     setSide(newSide)
@@ -904,10 +950,12 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     </Badge>
   ) : null
 
-  return (
+  const body = (
     <div className="flex shrink-0 flex-col">
       <div className="flex flex-col gap-2.5 p-2.5">
-        {/* Wallet status */}
+        {/* Wallet status. The "nothing connected here" case belongs to the
+            connect gate below — what's left is a vault that can't be read, and
+            an account that exists but hasn't been picked for this pane. */}
         {(isDex ? walletsSealed : credentialsSealed) ? (
           <button
             type="button"
@@ -919,26 +967,24 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </button>
         ) : isDex ? (
           walletsLoaded &&
-          !selectedWallet && (
+          !selectedWallet &&
+          chainWallets.length > 0 && (
             <Link
               to="/accounts"
               className="text-center text-xs text-muted-foreground hover:text-foreground"
             >
-              {cryptoWallets.some((w) => w.chain === marketInfo?.walletChain)
-                ? `${t('terminal.wallet.selectWalletTopBar')} →`
-                : `${t('terminal.wallet.connectChainWallet', { chain: marketInfo?.walletChain ?? 'crypto' })} →`}
+              {`${t('terminal.wallet.selectWalletTopBar')} →`}
             </Link>
           )
         ) : (
           loaded &&
-          !selectedCred && (
+          !selectedCred &&
+          marketCreds.length > 0 && (
             <Link
               to="/accounts"
               className="text-center text-xs text-muted-foreground hover:text-foreground"
             >
-              {marketCreds.length === 0
-                ? `${t('terminal.wallet.connectExchangeAccount', { exchange: exchangeLabel })} →`
-                : `${t('terminal.wallet.selectAccountTopBar')} →`}
+              {`${t('terminal.wallet.selectAccountTopBar')} →`}
             </Link>
           )
         )}
@@ -1279,21 +1325,16 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           />
         )}
 
-        {/* Submit — press & hold to commit. Conveys the criticality of the
-            moment (a fuller hold for live funds); the toast is the confirmation. */}
-        <HoldToConfirmButton
+        {/* Submit — press & hold to commit (single click if the user set that
+            in settings). Conveys the criticality of the moment (a fuller hold
+            for live funds); the toast is the confirmation. */}
+        <TradeConfirmButton
           side={side === 'buy' ? 'buy' : 'sell'}
           disabled={!canSubmit}
           busy={submitting}
           busyLabel={t('terminal.trade.submitting')}
-          holdMs={isLiveOrder ? 720 : 480}
-          hint={
-            orderType === 'workflow'
-              ? t('terminal.trade.holdToRun')
-              : isLiveOrder
-                ? t('terminal.trade.holdToConfirmLive')
-                : t('terminal.trade.holdToPlace')
-          }
+          holdMs={tradeHoldMs(isLiveOrder)}
+          hint={submitHint}
           onConfirm={handleSubmit}
           label={
             <span className="flex items-center gap-1.5">
@@ -1315,6 +1356,33 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         open={presetsConfigOpen}
         onOpenChange={setPresetsConfigOpen}
         quoteAsset={quoteAsset}
+      />
+    </div>
+  )
+
+  // `needsConnect` already implies a resolved marketInfo — the second half of
+  // the guard is what tells the type checker so.
+  if (!needsConnect || !marketInfo) return body
+
+  const gateChain = marketInfo.walletChain
+
+  // The ticket stays on screen — blurred and inert — so the pane keeps its
+  // shape and the gate reads as a lock over this venue's ticket rather than a
+  // generic empty state.
+  return (
+    <div className="relative shrink-0">
+      <div
+        aria-hidden
+        inert
+        className="pointer-events-none select-none opacity-70 blur-[2.5px]"
+      >
+        {body}
+      </div>
+      <TradeConnectGate
+        market={market}
+        venueLabel={gateChain ? CHAIN_NAME[gateChain] : exchangeLabel}
+        chain={gateChain}
+        readOnly={!marketInfo.capabilities.includes('trade')}
       />
     </div>
   )

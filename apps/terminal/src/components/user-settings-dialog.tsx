@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import {
   AppWindow,
+  BellRing,
   CircleUser,
   Cloud,
   CloudUpload,
@@ -137,6 +138,13 @@ const LazySecuritySection = lazyChunk(() =>
     default: m.SecuritySection,
   })),
 )
+// Notifications carries the Telegram connect flow (its own Bot API client and
+// the vault enrollment dialog), which nothing else in settings needs.
+const LazyNotificationsSection = lazyChunk(() =>
+  import('./settings/notifications-section').then((m) => ({
+    default: m.NotificationsSection,
+  })),
+)
 // Desktop is its own chunk too: it only exists in the Tauri build, so a
 // browser bundle should never carry it.
 const LazyDesktopSection = lazyChunk(() =>
@@ -190,6 +198,11 @@ const SETTINGS_NAV_GROUPS = [
   [
     { id: 'appearance', nameKey: 'settings.nav.appearance', icon: Paintbrush },
     { id: 'keyboard', nameKey: 'settings.nav.keyboard', icon: Keyboard },
+    {
+      id: 'notifications',
+      nameKey: 'settings.nav.notifications',
+      icon: BellRing,
+    },
     { id: 'performance', nameKey: 'settings.nav.performance', icon: Gauge },
     // Plugins here, not with trading: the section configures registry source
     // and publisher trust — app plumbing, even though most plugins are
@@ -696,6 +709,8 @@ export default function UserSettingsDialog({
                     <LazySecuritySection />
                   ) : activeSection === 'keyboard' ? (
                     <LazyKeyboardSection />
+                  ) : activeSection === 'notifications' ? (
+                    <LazyNotificationsSection />
                   ) : activeSection === 'desktop' ? (
                     <LazyDesktopSection />
                   ) : activeSection === 'cloud-sync' ? (

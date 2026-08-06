@@ -756,6 +756,13 @@
       "dailyPnl": "Zysk/strata",
       "dailyTradeCount": "Transakcje",
       "windowStart": "Okno rozpoczęte",
+      "confirmGesture": "Potwierdzanie zleceń",
+      "confirmGestureDescription": "Jak zatwierdzasz zlecenie składane samodzielnie — w tickecie i na kartach zleceń copilota.",
+      "confirmHold": "Naciśnij i przytrzymaj",
+      "confirmHoldDescription": "Trzymaj przycisk, aż się wypełni. Zlecenia live trzyma się nieco dłużej niż paper.",
+      "confirmClick": "Pojedyncze kliknięcie",
+      "confirmClickDescription": "Pierwsze kliknięcie składa zlecenie. Między pomyłką a prawdziwym zleceniem nie ma już nic.",
+      "confirmGestureNote": "Limity ryzyka działają tak samo — zmienia się gest, nie zabezpieczenia.",
       "aiPermissions": "Uprawnienia handlowe AI",
       "aiPermissionsDescription": "Co copilot AI może zrobić bez pytania. Zlecenia poza tymi uprawnieniami zawsze wymagają Twojego potwierdzenia na karcie w czacie, a każde zlecenie — automatycznie zatwierdzone lub nie — jest egzekwowane wobec powyższych limitów ryzyka.",
       "aiPaperAuto": "Automatycznie zatwierdzaj zlecenia paper",
@@ -841,7 +848,69 @@
       "commands": {
         "workspaceTree": "Pokaż/ukryj drzewo obszarów roboczych",
         "workspaceMenu": "Menu obszarów roboczych",
+        "panesMenu": "Menu paneli",
         "chartCancel": "Anuluj narzędzie / wyjdź z pełnego ekranu"
+      }
+    },
+    "notifications": {
+      "system": {
+        "title": "Powiadomienia systemowe",
+        "description": "Pokazuj alerty w centrum powiadomień, żeby docierały do ciebie, gdy Pairlens jest za innym oknem.",
+        "statusGranted": "Dozwolone",
+        "statusBlocked": "Zablokowane",
+        "statusPrompt": "Jeszcze niewłączone",
+        "statusUnsupported": "Niedostępne tutaj",
+        "enable": "Włącz",
+        "blockedHelpBrowser": "Przeglądarka blokuje powiadomienia dla tej strony. Zezwól na nie z kłódki obok paska adresu i wróć tutaj.",
+        "blockedHelpDesktop": "System blokuje powiadomienia Pairlens. Zezwól na nie w ustawieniach powiadomień systemu operacyjnego.",
+        "unsupportedHelp": "Ta przeglądarka nie potrafi pokazywać powiadomień systemowych. Alerty nadal przychodzą jako toasty w aplikacji, a Telegram działa tak czy inaczej.",
+        "sendTest": "Wyślij powiadomienie testowe",
+        "testTitle": "Pairlens",
+        "testBody": "Tak będzie wyglądał alert.",
+        "testSent": "Wysłane — sprawdź centrum powiadomień.",
+        "testFailed": "Nie udało się pokazać powiadomienia."
+      },
+      "telegram": {
+        "title": "Telegram",
+        "description": "Wysyłaj alerty na czat w Telegramie, żeby docierały na telefon, gdy nie patrzysz na terminal.",
+        "runningNote": "Alerty działają tylko wtedy, gdy Pairlens jest uruchomiony. Na komputerze może działać w tle po zamknięciu okna.",
+        "privacyNote": "Token bota zostaje na tym urządzeniu — w pęku kluczy systemu na komputerze i w zaszyfrowanym sejfie w przeglądarce. Nigdy nie trafia do Pairlens.",
+        "setup": {
+          "step1": "Otwórz czat z @BotFather i wyślij /newbot.",
+          "step2": "Wybierz nazwę i nazwę użytkownika bota.",
+          "step3": "Wklej poniżej token, który przyśle BotFather."
+        },
+        "openBotFather": "Otwórz @BotFather",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "Połącz",
+        "invalidToken": "To nie jest token bota. Ten z BotFather wygląda jak 123456789:AAE…",
+        "connectFailed": "Nie udało się połączyć bota.",
+        "errorUnauthorized": "Telegram odrzucił ten token. Sprawdź, czy skopiowałeś go w całości, albo użyj /revoke w BotFather, żeby dostać nowy.",
+        "errorForbidden": "Bot nie może pisać na tym czacie. Otwórz bota i naciśnij Start, albo sprawdź, czy nadal jest w grupie.",
+        "errorChatNotFound": "Telegram nie zna tego czatu. Wykryj go ponownie albo sprawdź ID czatu w kroku.",
+        "errorConflict": "Coś już odpytuje tego bota. Zamknij to albo użyj osobnego bota.",
+        "errorRateLimited": "Telegram ogranicza tego bota. Poczekaj chwilę i spróbuj ponownie.",
+        "disconnect": "Odłącz",
+        "disconnectFailed": "Nie udało się odłączyć bota.",
+        "chatTitle": "Powiązany czat",
+        "chatHelp": "Otwórz bota i naciśnij Start, a potem wykryj czat. W grupie dodaj bota i wyślij tam wiadomość.",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "Otwórz bota",
+        "detectChat": "Wykryj czat",
+        "relink": "Zmień czat",
+        "waitingForStart": "Czekam na Start…",
+        "cancel": "Anuluj",
+        "pickChat": "Z tym botem rozmawiał więcej niż jeden czat. Wybierz właściwy:",
+        "chatLinked": "Powiązano z {{chat}}",
+        "chatTimeout": "Nie znaleziono czatu. Otwórz bota, naciśnij Start i spróbuj ponownie.",
+        "chatFailed": "Nie udało się odczytać czatów z Telegrama.",
+        "noChatYet": "Najpierw powiąż czat.",
+        "sendTest": "Wyślij wiadomość testową",
+        "testSent": "Wiadomość testowa wysłana.",
+        "testFailed": "Nie udało się wysłać wiadomości testowej.",
+        "testRuleName": "Test",
+        "testTitle": "Pairlens jest połączony",
+        "testBody": "Tu będą przychodzić alerty z twoich przepływów powiadomień."
       }
     },
     "security": {
@@ -1250,6 +1319,7 @@
     "dontAskAgainLive": "Nie pytaj ponownie o transakcje na żywo na {{market}}",
     "placing": "Składanie zlecenia…",
     "confirmMode": "Potwierdź {{mode}}",
+    "holdToConfirm": "Przytrzymaj, aby potwierdzić",
     "dismissed": "Odrzucone",
     "cancelOrderPrompt": "Anulować zlecenie {{orderId}} na {{pair}} · {{market}}?",
     "cancelled": "Anulowane",
@@ -2199,6 +2269,7 @@
   },
   "layout": {
     "workspaces": "Obszary robocze",
+    "panes": "Panele",
     "presets": "Ustawienia wstępne",
     "browseStore": "Przeglądaj Workspace Store",
     "workspaceStore": "Workspace Store",
@@ -2380,6 +2451,7 @@
       "spot": "Spot"
     },
     "tier": "Poziom",
+    "uninstall": "Odinstaluj",
     "uninstalled": "Odinstalowano",
     "updateReactivate": "Zaktualizuj i reaktywuj",
     "version": "Wersja",
@@ -2794,9 +2866,8 @@
       "groupBroker": "Konto brokerskie",
       "groupExchange": "Konto giełdowe",
       "selectWalletTopBar": "Wybierz portfel na górnym pasku",
-      "connectChainWallet": "Połącz portfel {{chain}}",
-      "connectExchangeAccount": "Połącz konto {{exchange}}",
-      "selectAccountTopBar": "Wybierz konto na górnym pasku"
+      "selectAccountTopBar": "Wybierz konto na górnym pasku",
+      "gateNoTrading": "Tylko dane rynkowe. Tutaj nie można handlować."
     },
     "trade": {
       "limitBuy": "Kupno z limitem",
@@ -2819,6 +2890,9 @@
       "holdToRun": "Przytrzymaj, aby uruchomić",
       "holdToConfirmLive": "Przytrzymaj, aby potwierdzić · środki ruszają natychmiast",
       "holdToPlace": "Przytrzymaj, aby złożyć",
+      "clickToRun": "Kliknij, aby uruchomić",
+      "clickToConfirmLive": "Kliknij, aby potwierdzić · środki ruszają natychmiast",
+      "clickToPlace": "Kliknij, aby złożyć",
       "runWorkflow": "Uruchom workflow",
       "buyAsset": "Kup {{asset}}",
       "sellAsset": "Sprzedaj {{asset}}",
@@ -3418,7 +3492,7 @@
         "untitledRule": "Reguła bez nazwy",
         "eyebrow": "Powiadomienia",
         "title": "Obserwuj rynek, nie musząc tego robić samemu",
-        "description": "Reguła to mały przepływ: coś się dzieje — poziom zostaje przekroczony, świeca się zamyka, zlecenie zostaje zrealizowane, wskaźnik wysyła alert — przechodzi przez dodane warunki, a następnie dociera do ciebie jako toast, powiadomienie systemowe lub webhook.",
+        "description": "Reguła to mały przepływ: coś się dzieje — poziom zostaje przekroczony, świeca się zamyka, zlecenie zostaje zrealizowane, wskaźnik wysyła alert — przechodzi przez dodane warunki, a następnie dociera do ciebie jako toast, powiadomienie systemowe, wiadomość na Telegramie lub webhook.",
         "startBlank": "Zacznij od pustego płótna",
         "startFromTemplate": "Zacznij od szablonu",
         "footnote": "Szablony otwierają się jako szkic powiązany z {{pair}} na {{market}} — edytuj kroki, zmień parę na liście reguł, a następnie zapisz. Reguły działają tylko wtedy, gdy Pairlens jest uruchomiony."
@@ -3463,6 +3537,15 @@
           "title": "Wygenerowano sygnał",
           "signalType": "Typ sygnału",
           "anyTypePlaceholder": "Dowolny typ"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "ID czatu",
+          "noChatLinked": "Brak powiązanego czatu",
+          "linkChat": "Powiąż czat",
+          "silent": "Cicho",
+          "notConnected": "Połącz bota w Ustawieniach, aby wysyłać alerty na Telegram.",
+          "connect": "Połącz Telegram"
         },
         "timeWindow": {
           "title": "Okno czasowe",
@@ -3642,6 +3725,18 @@
           },
           "includePayload": {
             "label": "Dołącz payload zdarzenia"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "ID czatu (opcjonalne)",
+            "placeholder": "Powiązany czat"
+          },
+          "silent": {
+            "label": "Cicha wiadomość"
           }
         }
       }

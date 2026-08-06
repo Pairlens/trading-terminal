@@ -43,7 +43,7 @@ type WalletSelectorProps = {
  * language and worse in the ones that capitalize the noun beside them
  * ("solana-Wallet"). Not translated: chain names are the same everywhere.
  */
-const CHAIN_NAME: Record<WalletChain, string> = {
+export const CHAIN_NAME: Record<WalletChain, string> = {
   solana: 'Solana',
   ethereum: 'Ethereum',
   bitcoin: 'Bitcoin',
