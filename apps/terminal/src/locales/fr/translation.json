@@ -844,6 +844,50 @@
         "chartCancel": "Annuler l’outil / quitter le plein écran"
       }
     },
+    "notifications": {
+      "telegram": {
+        "title": "Telegram",
+        "description": "Envoyez les alertes dans une discussion Telegram : elles arrivent sur votre téléphone quand vous n'êtes pas devant le terminal.",
+        "runningNote": "Les alertes ne se déclenchent que pendant que Pairlens tourne. Sur bureau, l'app peut continuer en arrière-plan après la fermeture de la fenêtre.",
+        "privacyNote": "Le token du bot reste sur cet appareil — dans le trousseau du système sur bureau, dans votre coffre chiffré dans le navigateur. Il n'est jamais transmis à Pairlens.",
+        "setup": {
+          "step1": "Ouvrez une discussion avec @BotFather et envoyez /newbot.",
+          "step2": "Choisissez un nom et un identifiant pour votre bot.",
+          "step3": "Collez ci-dessous le token envoyé par BotFather."
+        },
+        "openBotFather": "Ouvrir @BotFather",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "Connecter",
+        "invalidToken": "Ce n'est pas un token de bot. Celui de BotFather ressemble à 123456789:AAE…",
+        "connectFailed": "Impossible de connecter le bot.",
+        "errorUnauthorized": "Telegram a refusé ce token. Vérifiez que vous l'avez copié en entier, ou faites /revoke dans BotFather pour en obtenir un nouveau.",
+        "errorForbidden": "Le bot ne peut pas écrire dans cette discussion. Ouvrez-le et appuyez sur Démarrer, ou vérifiez qu'il est toujours dans le groupe.",
+        "errorChatNotFound": "Telegram ne connaît pas cette discussion. Détectez-la à nouveau, ou vérifiez l'ID de discussion sur l'étape.",
+        "errorConflict": "Autre chose interroge déjà ce bot. Fermez-le, ou utilisez un bot dédié.",
+        "errorRateLimited": "Telegram limite le débit de ce bot. Patientez un instant et réessayez.",
+        "disconnect": "Déconnecter",
+        "disconnectFailed": "Impossible de déconnecter le bot.",
+        "chatTitle": "Discussion liée",
+        "chatHelp": "Ouvrez le bot et appuyez sur Démarrer, puis détectez la discussion. Pour un groupe, ajoutez-y le bot et envoyez un message.",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "Ouvrir le bot",
+        "detectChat": "Détecter la discussion",
+        "relink": "Changer de discussion",
+        "waitingForStart": "En attente de Démarrer…",
+        "cancel": "Annuler",
+        "pickChat": "Plusieurs discussions ont parlé à ce bot. Choisissez celle à utiliser :",
+        "chatLinked": "Liée à {{chat}}",
+        "chatTimeout": "Aucune discussion trouvée. Ouvrez le bot, appuyez sur Démarrer, puis réessayez.",
+        "chatFailed": "Impossible de lire les discussions depuis Telegram.",
+        "noChatYet": "Liez d'abord une discussion.",
+        "sendTest": "Envoyer un message test",
+        "testSent": "Message test envoyé.",
+        "testFailed": "Impossible d'envoyer le message test.",
+        "testRuleName": "Test",
+        "testTitle": "Pairlens est connecté",
+        "testBody": "Les alertes de vos flux de notification arriveront ici."
+      }
+    },
     "security": {
       "lockTitle": "Verrouillage du terminal",
       "lockDescription": "Demander un mot de passe avant de pouvoir utiliser ce terminal sur cet appareil.",
@@ -3387,7 +3431,7 @@
         "untitledRule": "Règle sans titre",
         "eyebrow": "Notifications",
         "title": "Surveillez le marché pour ne pas avoir à le faire vous-même",
-        "description": "Une règle est un petit flux : quelque chose se produit — un niveau est franchi, une bougie se clôture, un ordre est exécuté, une alerte d'indicateur se déclenche — elle passe par les conditions que vous ajoutez, puis elle vous parvient sous forme de toast, de notification système ou de webhook.",
+        "description": "Une règle est un petit flux : quelque chose se produit — un niveau est franchi, une bougie se clôture, un ordre est exécuté, une alerte d'indicateur se déclenche — elle passe par les conditions que vous ajoutez, puis elle vous parvient sous forme de toast, de notification système, de message Telegram ou de webhook.",
         "startBlank": "Partir d'un canevas vierge",
         "startFromTemplate": "Partir d'un modèle",
         "footnote": "Les modèles s'ouvrent en brouillon associé à {{pair}} sur {{market}} — modifiez les étapes, changez la paire dans la liste des règles, puis validez avec Enregistrer. Les règles ne se déclenchent que lorsque Pairlens est en cours d'exécution."
@@ -3432,6 +3476,15 @@
           "title": "Signal généré",
           "signalType": "Type de signal",
           "anyTypePlaceholder": "Tout type"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "ID de discussion",
+          "noChatLinked": "Aucune discussion liée",
+          "linkChat": "Lier une discussion",
+          "silent": "Silencieux",
+          "notConnected": "Connectez un bot dans les Réglages pour envoyer les alertes sur Telegram.",
+          "connect": "Connecter Telegram"
         },
         "timeWindow": {
           "title": "Plage horaire",
@@ -3611,6 +3664,18 @@
           },
           "includePayload": {
             "label": "Inclure le payload de l'événement"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "ID de discussion (facultatif)",
+            "placeholder": "Discussion liée"
+          },
+          "silent": {
+            "label": "Message silencieux"
           }
         }
       }

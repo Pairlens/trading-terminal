@@ -844,6 +844,50 @@
         "chartCancel": "Batalkan alat / keluar dari layar penuh"
       }
     },
+    "notifications": {
+      "telegram": {
+        "title": "Telegram",
+        "description": "Kirim peringatan ke obrolan Telegram agar sampai ke ponsel Anda saat Anda tidak sedang melihat terminal.",
+        "runningNote": "Peringatan hanya berjalan selama Pairlens berjalan. Di desktop, aplikasi bisa tetap berjalan di latar belakang setelah jendelanya ditutup.",
+        "privacyNote": "Token bot tetap di perangkat ini — di keychain sistem pada desktop, dan di brankas terenkripsi pada peramban. Token tidak pernah dikirim ke Pairlens.",
+        "setup": {
+          "step1": "Buka obrolan dengan @BotFather lalu kirim /newbot.",
+          "step2": "Pilih nama dan username untuk bot Anda.",
+          "step3": "Tempel token yang dikirim BotFather di bawah ini."
+        },
+        "openBotFather": "Buka @BotFather",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "Hubungkan",
+        "invalidToken": "Itu bukan token bot. Token dari BotFather berbentuk 123456789:AAE…",
+        "connectFailed": "Tidak dapat menghubungkan bot.",
+        "errorUnauthorized": "Telegram menolak token itu. Pastikan Anda menyalinnya utuh, atau jalankan /revoke di BotFather untuk token baru.",
+        "errorForbidden": "Bot tidak bisa menulis ke obrolan itu. Buka bot dan tekan Mulai, atau periksa apakah bot masih ada di grup.",
+        "errorChatNotFound": "Telegram tidak mengenali obrolan itu. Deteksi ulang, atau periksa ID obrolan pada langkah tersebut.",
+        "errorConflict": "Ada program lain yang sudah menarik data bot ini. Tutup program itu, atau pakai bot tersendiri.",
+        "errorRateLimited": "Telegram sedang membatasi laju bot ini. Tunggu sebentar lalu coba lagi.",
+        "disconnect": "Putuskan",
+        "disconnectFailed": "Tidak dapat memutuskan bot.",
+        "chatTitle": "Obrolan tertaut",
+        "chatHelp": "Buka bot dan tekan Mulai, lalu deteksi obrolannya. Untuk grup, tambahkan bot dan kirim satu pesan di sana.",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "Buka bot",
+        "detectChat": "Deteksi obrolan",
+        "relink": "Ganti obrolan",
+        "waitingForStart": "Menunggu Mulai…",
+        "cancel": "Batal",
+        "pickChat": "Lebih dari satu obrolan pernah menghubungi bot ini. Pilih yang ingin dipakai:",
+        "chatLinked": "Tertaut ke {{chat}}",
+        "chatTimeout": "Obrolan tidak ditemukan. Buka bot, tekan Mulai, lalu coba lagi.",
+        "chatFailed": "Tidak dapat membaca obrolan dari Telegram.",
+        "noChatYet": "Tautkan obrolan terlebih dahulu.",
+        "sendTest": "Kirim pesan uji",
+        "testSent": "Pesan uji terkirim.",
+        "testFailed": "Tidak dapat mengirim pesan uji.",
+        "testRuleName": "Uji",
+        "testTitle": "Pairlens terhubung",
+        "testBody": "Peringatan dari alur notifikasi Anda akan tiba di sini."
+      }
+    },
     "security": {
       "lockTitle": "Kunci terminal",
       "lockDescription": "Minta kata sandi sebelum terminal ini bisa dipakai di perangkat ini.",
@@ -3387,7 +3431,7 @@
         "untitledRule": "Aturan tanpa judul",
         "eyebrow": "Notifikasi",
         "title": "Pantau market agar Anda tidak perlu melakukannya sendiri",
-        "description": "Aturan adalah alur kecil: sesuatu terjadi — level tertembus, candle ditutup, order terisi, alert indikator terpicu — lalu melewati kondisi yang Anda tambahkan, dan akhirnya sampai ke Anda sebagai toast, notifikasi sistem, atau webhook.",
+        "description": "Aturan adalah alur kecil: sesuatu terjadi — level tertembus, candle ditutup, order terisi, alert indikator terpicu — lalu melewati kondisi yang Anda tambahkan, dan akhirnya sampai ke Anda sebagai toast, notifikasi sistem, pesan Telegram, atau webhook.",
         "startBlank": "Mulai dari kanvas kosong",
         "startFromTemplate": "Mulai dari template",
         "footnote": "Template terbuka sebagai draf yang terikat ke {{pair}} di {{market}} — edit langkah-langkahnya, ubah pair di daftar aturan, lalu Simpan. Aturan hanya aktif selama Pairlens berjalan."
@@ -3432,6 +3476,15 @@
           "title": "Sinyal Terbentuk",
           "signalType": "Tipe Sinyal",
           "anyTypePlaceholder": "Tipe apa saja"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "ID obrolan",
+          "noChatLinked": "Belum ada obrolan tertaut",
+          "linkChat": "Tautkan obrolan",
+          "silent": "Senyap",
+          "notConnected": "Hubungkan bot di Pengaturan untuk mengirim peringatan ke Telegram.",
+          "connect": "Hubungkan Telegram"
         },
         "timeWindow": {
           "title": "Jendela Waktu",
@@ -3611,6 +3664,18 @@
           },
           "includePayload": {
             "label": "Sertakan Payload Event"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "ID obrolan (opsional)",
+            "placeholder": "Obrolan tertaut"
+          },
+          "silent": {
+            "label": "Pesan senyap"
           }
         }
       }

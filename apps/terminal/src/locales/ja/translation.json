@@ -844,6 +844,50 @@
         "chartCancel": "ツールを解除 / 全画面を終了"
       }
     },
+    "notifications": {
+      "telegram": {
+        "title": "Telegram",
+        "description": "アラートをTelegramのチャットに送信します。ターミナルを見ていないときでもスマートフォンに届きます。",
+        "runningNote": "アラートはPairlensが動作している間だけ発火します。デスクトップではウィンドウを閉じたあともバックグラウンドで動作させられます。",
+        "privacyNote": "ボットトークンはこの端末に留まります。デスクトップではOSのキーチェーン、ブラウザーでは暗号化されたボールトに保存され、Pairlensに送信されることはありません。",
+        "setup": {
+          "step1": "@BotFather とのチャットを開き、/newbot を送信します。",
+          "step2": "ボットの名前とユーザー名を決めます。",
+          "step3": "BotFather から届いたトークンを下に貼り付けます。"
+        },
+        "openBotFather": "@BotFather を開く",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "接続",
+        "invalidToken": "ボットトークンではありません。BotFather のトークンは 123456789:AAE… のような形式です。",
+        "connectFailed": "ボットを接続できませんでした。",
+        "errorUnauthorized": "Telegram がこのトークンを拒否しました。全体をコピーできているか確認するか、BotFather で /revoke して新しいトークンを取得してください。",
+        "errorForbidden": "ボットはそのチャットに書き込めません。ボットを開いて「スタート」を押すか、まだグループに参加しているか確認してください。",
+        "errorChatNotFound": "Telegram はそのチャットを認識していません。もう一度検出するか、ステップのチャットIDを確認してください。",
+        "errorConflict": "別のプログラムがすでにこのボットを取得しています。それを停止するか、専用のボットを用意してください。",
+        "errorRateLimited": "Telegram がこのボットの送信を制限しています。少し待ってからお試しください。",
+        "disconnect": "接続を解除",
+        "disconnectFailed": "ボットの接続を解除できませんでした。",
+        "chatTitle": "連携済みチャット",
+        "chatHelp": "ボットを開いて「スタート」を押し、チャットを検出します。グループの場合はボットを追加してメッセージを送信してください。",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "ボットを開く",
+        "detectChat": "チャットを検出",
+        "relink": "チャットを変更",
+        "waitingForStart": "「スタート」を待機中…",
+        "cancel": "キャンセル",
+        "pickChat": "複数のチャットがこのボットに送信しています。使用するものを選んでください:",
+        "chatLinked": "{{chat}} と連携しました",
+        "chatTimeout": "チャットが見つかりません。ボットを開いて「スタート」を押し、もう一度お試しください。",
+        "chatFailed": "Telegramからチャットを取得できませんでした。",
+        "noChatYet": "先にチャットを連携してください。",
+        "sendTest": "テストメッセージを送信",
+        "testSent": "テストメッセージを送信しました。",
+        "testFailed": "テストメッセージを送信できませんでした。",
+        "testRuleName": "テスト",
+        "testTitle": "Pairlensが接続されました",
+        "testBody": "通知フローのアラートはここに届きます。"
+      }
+    },
     "security": {
       "lockTitle": "ターミナルロック",
       "lockDescription": "この端末でターミナルを使う前にパスワードを求めます。",
@@ -3387,7 +3431,7 @@
         "untitledRule": "無題のルール",
         "eyebrow": "通知",
         "title": "マーケットの監視はPairlensにおまかせ",
-        "description": "ルールは小さなフローです。何かが起きる — 水準を超える、ローソク足が確定する、注文が約定する、インジケーターのアラートが発火する — そこに追加した条件を通過すると、トースト、システム通知、またはWebhookとして届きます。",
+        "description": "ルールは小さなフローです。何かが起きる — 水準を超える、ローソク足が確定する、注文が約定する、インジケーターのアラートが発火する — そこに追加した条件を通過すると、トースト、システム通知、Telegramのメッセージ、またはWebhookとして届きます。",
         "startBlank": "空のキャンバスから始める",
         "startFromTemplate": "テンプレートから始める",
         "footnote": "テンプレートは{{market}}の{{pair}}に紐付いた下書きとして開きます — ステップを編集し、ルール一覧でペアを変更してから保存してください。ルールはPairlensが起動している間のみ発火します。"
@@ -3432,6 +3476,15 @@
           "title": "シグナル発生",
           "signalType": "シグナルタイプ",
           "anyTypePlaceholder": "任意のタイプ"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "チャットID",
+          "noChatLinked": "チャット未連携",
+          "linkChat": "チャットを連携",
+          "silent": "サイレント",
+          "notConnected": "設定でボットを接続すると、アラートをTelegramに送信できます。",
+          "connect": "Telegramを接続"
         },
         "timeWindow": {
           "title": "時間帯",
@@ -3611,6 +3664,18 @@
           },
           "includePayload": {
             "label": "イベントペイロードを含める"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "チャットID（任意）",
+            "placeholder": "連携済みチャット"
+          },
+          "silent": {
+            "label": "サイレント送信"
           }
         }
       }

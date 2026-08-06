@@ -355,6 +355,11 @@ const FIRST_PARTY_NOTIFICATION_COMPONENTS: Record<
         default: m.WebhookStep,
       })),
     ),
+    telegram: lazyChunk(() =>
+      import('@/components/notifications/steps/telegram-step').then((m) => ({
+        default: m.TelegramStep,
+      })),
+    ),
   },
 }
 

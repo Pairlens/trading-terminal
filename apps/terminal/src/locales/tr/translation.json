@@ -844,6 +844,50 @@
         "chartCancel": "Aracı iptal et / tam ekrandan çık"
       }
     },
+    "notifications": {
+      "telegram": {
+        "title": "Telegram",
+        "description": "Uyarıları bir Telegram sohbetine gönderin; terminale bakmadığınız zamanlarda telefonunuza ulaşsınlar.",
+        "runningNote": "Uyarılar yalnızca Pairlens çalışırken tetiklenir. Masaüstünde pencereyi kapattıktan sonra arka planda çalışmaya devam edebilir.",
+        "privacyNote": "Bot anahtarı bu cihazda kalır — masaüstünde işletim sisteminin anahtar zincirinde, tarayıcıda şifreli kasanızda. Pairlens'e asla gönderilmez.",
+        "setup": {
+          "step1": "@BotFather ile bir sohbet açın ve /newbot gönderin.",
+          "step2": "Botunuz için bir ad ve kullanıcı adı seçin.",
+          "step3": "BotFather'ın gönderdiği anahtarı aşağıya yapıştırın."
+        },
+        "openBotFather": "@BotFather'ı aç",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "Bağla",
+        "invalidToken": "Bu bir bot anahtarı değil. BotFather'ınki 123456789:AAE… gibi görünür.",
+        "connectFailed": "Bot bağlanamadı.",
+        "errorUnauthorized": "Telegram bu anahtarı reddetti. Tamamını kopyaladığından emin ol ya da BotFather'da /revoke ile yenisini al.",
+        "errorForbidden": "Bot o sohbete yazamıyor. Botu açıp Başlat'a bas ya da hâlâ grupta olduğunu kontrol et.",
+        "errorChatNotFound": "Telegram o sohbeti tanımıyor. Yeniden algıla ya da adımdaki sohbet kimliğini kontrol et.",
+        "errorConflict": "Bu botu başka bir şey zaten yokluyor. Onu kapat ya da ayrı bir bot kullan.",
+        "errorRateLimited": "Telegram bu botu hız sınırına takıyor. Biraz bekleyip tekrar dene.",
+        "disconnect": "Bağlantıyı kes",
+        "disconnectFailed": "Bot bağlantısı kesilemedi.",
+        "chatTitle": "Bağlı sohbet",
+        "chatHelp": "Botu açıp Başlat'a basın, sonra sohbeti algılayın. Grup için botu gruba ekleyip oraya bir mesaj gönderin.",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "Botu aç",
+        "detectChat": "Sohbeti algıla",
+        "relink": "Sohbeti değiştir",
+        "waitingForStart": "Başlat bekleniyor…",
+        "cancel": "İptal",
+        "pickChat": "Bu botla birden fazla sohbet konuştu. Kullanılacak olanı seçin:",
+        "chatLinked": "{{chat}} ile bağlandı",
+        "chatTimeout": "Sohbet bulunamadı. Botu açın, Başlat'a basın ve tekrar deneyin.",
+        "chatFailed": "Telegram'dan sohbetler okunamadı.",
+        "noChatYet": "Önce bir sohbet bağlayın.",
+        "sendTest": "Test mesajı gönder",
+        "testSent": "Test mesajı gönderildi.",
+        "testFailed": "Test mesajı gönderilemedi.",
+        "testRuleName": "Test",
+        "testTitle": "Pairlens bağlandı",
+        "testBody": "Bildirim akışlarınızdan gelen uyarılar buraya düşecek."
+      }
+    },
     "security": {
       "lockTitle": "Terminal kilidi",
       "lockDescription": "Bu terminal bu cihazda kullanılmadan önce parola sor.",
@@ -3387,7 +3431,7 @@
         "untitledRule": "Adsız kural",
         "eyebrow": "Bildirimler",
         "title": "Piyasayı sen izlemeden Pairlens izlesin",
-        "description": "Bir kural küçük bir akıştır: bir şey olur — bir seviye geçilir, bir mum kapanır, bir emir gerçekleşir, bir gösterge uyarısı tetiklenir — eklediğin koşullardan geçer ve sana toast, sistem bildirimi ya da webhook olarak ulaşır.",
+        "description": "Bir kural küçük bir akıştır: bir şey olur — bir seviye geçilir, bir mum kapanır, bir emir gerçekleşir, bir gösterge uyarısı tetiklenir — eklediğin koşullardan geçer ve sana toast, sistem bildirimi, Telegram mesajı ya da webhook olarak ulaşır.",
         "startBlank": "Boş bir tuvalden başla",
         "startFromTemplate": "Bir şablondan başla",
         "footnote": "Şablonlar {{market}} üzerinde {{pair}} pairine bağlı bir taslak olarak açılır — adımları düzenle, kural listesinden pariteyi değiştir, sonra Kaydet ile kaydet. Kurallar yalnızca Pairlens çalışırken tetiklenir."
@@ -3432,6 +3476,15 @@
           "title": "Sinyal Oluştu",
           "signalType": "Sinyal Türü",
           "anyTypePlaceholder": "Herhangi bir tür"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "Sohbet kimliği",
+          "noChatLinked": "Bağlı sohbet yok",
+          "linkChat": "Sohbet bağla",
+          "silent": "Sessiz",
+          "notConnected": "Uyarıları Telegram'a göndermek için Ayarlar'dan bir bot bağlayın.",
+          "connect": "Telegram'ı bağla"
         },
         "timeWindow": {
           "title": "Zaman Aralığı",
@@ -3611,6 +3664,18 @@
           },
           "includePayload": {
             "label": "Olay Yükünü Dahil Et"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "Sohbet kimliği (isteğe bağlı)",
+            "placeholder": "Bağlı sohbet"
+          },
+          "silent": {
+            "label": "Sessiz mesaj"
           }
         }
       }

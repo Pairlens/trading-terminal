@@ -110,8 +110,14 @@ our servers, and everything Pairlens knows about you lives on this device.
 
 ## Notifications
 
-Delivery preferences for alert rules. The rules themselves live under
-[Notifications](/docs/alerts-notifications) in the left nav.
+Where alerts go once they fire. Connect a Telegram bot here — paste the token
+BotFather gives you, press Start in the bot, link the chat — and any alert flow
+can then deliver to it. The bot token is stored like an exchange key: OS
+keychain on desktop, encrypted vault in the browser, never on a Pairlens
+server. Full walkthrough in
+[Alerts and notifications](/docs/alerts-notifications).
+
+The rules themselves live under **Notifications** in the left nav.
 
 ## Desktop menu
 

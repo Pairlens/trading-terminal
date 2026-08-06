@@ -844,6 +844,50 @@
         "chartCancel": "Anuluj narzędzie / wyjdź z pełnego ekranu"
       }
     },
+    "notifications": {
+      "telegram": {
+        "title": "Telegram",
+        "description": "Wysyłaj alerty na czat w Telegramie, żeby docierały na telefon, gdy nie patrzysz na terminal.",
+        "runningNote": "Alerty działają tylko wtedy, gdy Pairlens jest uruchomiony. Na komputerze może działać w tle po zamknięciu okna.",
+        "privacyNote": "Token bota zostaje na tym urządzeniu — w pęku kluczy systemu na komputerze i w zaszyfrowanym sejfie w przeglądarce. Nigdy nie trafia do Pairlens.",
+        "setup": {
+          "step1": "Otwórz czat z @BotFather i wyślij /newbot.",
+          "step2": "Wybierz nazwę i nazwę użytkownika bota.",
+          "step3": "Wklej poniżej token, który przyśle BotFather."
+        },
+        "openBotFather": "Otwórz @BotFather",
+        "tokenPlaceholder": "123456789:AA…",
+        "connect": "Połącz",
+        "invalidToken": "To nie jest token bota. Ten z BotFather wygląda jak 123456789:AAE…",
+        "connectFailed": "Nie udało się połączyć bota.",
+        "errorUnauthorized": "Telegram odrzucił ten token. Sprawdź, czy skopiowałeś go w całości, albo użyj /revoke w BotFather, żeby dostać nowy.",
+        "errorForbidden": "Bot nie może pisać na tym czacie. Otwórz bota i naciśnij Start, albo sprawdź, czy nadal jest w grupie.",
+        "errorChatNotFound": "Telegram nie zna tego czatu. Wykryj go ponownie albo sprawdź ID czatu w kroku.",
+        "errorConflict": "Coś już odpytuje tego bota. Zamknij to albo użyj osobnego bota.",
+        "errorRateLimited": "Telegram ogranicza tego bota. Poczekaj chwilę i spróbuj ponownie.",
+        "disconnect": "Odłącz",
+        "disconnectFailed": "Nie udało się odłączyć bota.",
+        "chatTitle": "Powiązany czat",
+        "chatHelp": "Otwórz bota i naciśnij Start, a potem wykryj czat. W grupie dodaj bota i wyślij tam wiadomość.",
+        "chatLinkedTo": "{{chat}} · {{id}}",
+        "openChat": "Otwórz bota",
+        "detectChat": "Wykryj czat",
+        "relink": "Zmień czat",
+        "waitingForStart": "Czekam na Start…",
+        "cancel": "Anuluj",
+        "pickChat": "Z tym botem rozmawiał więcej niż jeden czat. Wybierz właściwy:",
+        "chatLinked": "Powiązano z {{chat}}",
+        "chatTimeout": "Nie znaleziono czatu. Otwórz bota, naciśnij Start i spróbuj ponownie.",
+        "chatFailed": "Nie udało się odczytać czatów z Telegrama.",
+        "noChatYet": "Najpierw powiąż czat.",
+        "sendTest": "Wyślij wiadomość testową",
+        "testSent": "Wiadomość testowa wysłana.",
+        "testFailed": "Nie udało się wysłać wiadomości testowej.",
+        "testRuleName": "Test",
+        "testTitle": "Pairlens jest połączony",
+        "testBody": "Tu będą przychodzić alerty z twoich przepływów powiadomień."
+      }
+    },
     "security": {
       "lockTitle": "Blokada terminala",
       "lockDescription": "Pytaj o hasło, zanim tego terminala będzie można użyć na tym urządzeniu.",
@@ -3413,7 +3457,7 @@
         "untitledRule": "Reguła bez nazwy",
         "eyebrow": "Powiadomienia",
         "title": "Obserwuj rynek, nie musząc tego robić samemu",
-        "description": "Reguła to mały przepływ: coś się dzieje — poziom zostaje przekroczony, świeca się zamyka, zlecenie zostaje zrealizowane, wskaźnik wysyła alert — przechodzi przez dodane warunki, a następnie dociera do ciebie jako toast, powiadomienie systemowe lub webhook.",
+        "description": "Reguła to mały przepływ: coś się dzieje — poziom zostaje przekroczony, świeca się zamyka, zlecenie zostaje zrealizowane, wskaźnik wysyła alert — przechodzi przez dodane warunki, a następnie dociera do ciebie jako toast, powiadomienie systemowe, wiadomość na Telegramie lub webhook.",
         "startBlank": "Zacznij od pustego płótna",
         "startFromTemplate": "Zacznij od szablonu",
         "footnote": "Szablony otwierają się jako szkic powiązany z {{pair}} na {{market}} — edytuj kroki, zmień parę na liście reguł, a następnie zapisz. Reguły działają tylko wtedy, gdy Pairlens jest uruchomiony."
@@ -3458,6 +3502,15 @@
           "title": "Wygenerowano sygnał",
           "signalType": "Typ sygnału",
           "anyTypePlaceholder": "Dowolny typ"
+        },
+        "telegram": {
+          "title": "Telegram",
+          "chatId": "ID czatu",
+          "noChatLinked": "Brak powiązanego czatu",
+          "linkChat": "Powiąż czat",
+          "silent": "Cicho",
+          "notConnected": "Połącz bota w Ustawieniach, aby wysyłać alerty na Telegram.",
+          "connect": "Połącz Telegram"
         },
         "timeWindow": {
           "title": "Okno czasowe",
@@ -3637,6 +3690,18 @@
           },
           "includePayload": {
             "label": "Dołącz payload zdarzenia"
+          }
+        }
+      },
+      "telegram": {
+        "label": "Telegram",
+        "fields": {
+          "chatId": {
+            "label": "ID czatu (opcjonalne)",
+            "placeholder": "Powiązany czat"
+          },
+          "silent": {
+            "label": "Cicha wiadomość"
           }
         }
       }
