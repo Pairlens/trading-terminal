@@ -3354,7 +3354,10 @@
         "commit": "Salvar",
         "cannotSaveTitle": "Não é possível salvar a regra",
         "cycleError": "A regra contém uma dependência circular. Remova o ciclo (arestas vermelhas) antes de salvar.",
-        "saved": "Regra salva"
+        "saved": "Regra salva",
+        "webhookHostAllowed": "Acesso permitido a {{hosts}} — recarregue para começar a enviar webhooks",
+        "webhookHostFailed": "Não foi possível permitir o host do webhook",
+        "reload": "Recarregar"
       },
       "diff": {
         "title": "Revisar alterações ({{count}})",
@@ -3406,6 +3409,13 @@
       "steps": {
         "candleClose": {
           "title": "Fechamento de candle"
+        },
+        "indicatorAlert": {
+          "title": "Alerta de indicador",
+          "indicator": "Indicador (opcional)",
+          "anyIndicatorPlaceholder": "Qualquer indicador",
+          "condition": "Condição (opcional)",
+          "anyConditionPlaceholder": "Qualquer condição"
         },
         "localToast": {
           "title": "Notificação toast",
@@ -3486,6 +3496,17 @@
       "signal-generated": {
         "label": "Sinal gerado",
         "fields": {
+          "timeframe": {
+            "label": "Timeframe",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "Tipo de sinal (opcional)",
             "placeholder": "Qualquer tipo"
@@ -3498,6 +3519,17 @@
       "indicator-alert": {
         "label": "Alerta de indicador",
         "fields": {
+          "timeframe": {
+            "label": "Timeframe",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "Indicador (opcional)",
             "placeholder": "Qualquer indicador"

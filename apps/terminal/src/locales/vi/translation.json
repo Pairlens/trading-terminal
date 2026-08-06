@@ -3354,7 +3354,10 @@
         "commit": "Lưu",
         "cannotSaveTitle": "Không thể lưu quy tắc",
         "cycleError": "Quy tắc này chứa một phụ thuộc vòng tròn. Hãy loại bỏ vòng lặp (các cạnh màu đỏ) trước khi lưu.",
-        "saved": "Đã lưu quy tắc"
+        "saved": "Đã lưu quy tắc",
+        "webhookHostAllowed": "Đã cho phép truy cập {{hosts}} — tải lại để bắt đầu gửi webhook",
+        "webhookHostFailed": "Không thể cho phép máy chủ webhook",
+        "reload": "Tải lại"
       },
       "diff": {
         "title": "Xem lại thay đổi ({{count}})",
@@ -3406,6 +3409,13 @@
       "steps": {
         "candleClose": {
           "title": "Nến đóng"
+        },
+        "indicatorAlert": {
+          "title": "Cảnh báo chỉ báo",
+          "indicator": "Chỉ báo (tùy chọn)",
+          "anyIndicatorPlaceholder": "Bất kỳ chỉ báo nào",
+          "condition": "Điều kiện (tùy chọn)",
+          "anyConditionPlaceholder": "Bất kỳ điều kiện nào"
         },
         "localToast": {
           "title": "Thông báo Toast",
@@ -3486,6 +3496,17 @@
       "signal-generated": {
         "label": "Tín hiệu được tạo",
         "fields": {
+          "timeframe": {
+            "label": "Khung thời gian",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "Loại tín hiệu (tùy chọn)",
             "placeholder": "Bất kỳ loại nào"
@@ -3498,6 +3519,17 @@
       "indicator-alert": {
         "label": "Cảnh báo chỉ báo",
         "fields": {
+          "timeframe": {
+            "label": "Khung thời gian",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "Chỉ báo (tùy chọn)",
             "placeholder": "Bất kỳ chỉ báo nào"

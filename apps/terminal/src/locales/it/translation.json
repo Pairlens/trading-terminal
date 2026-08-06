@@ -3354,7 +3354,10 @@
         "commit": "Salva",
         "cannotSaveTitle": "Impossibile salvare la regola",
         "cycleError": "La regola contiene una dipendenza circolare. Rimuovi il ciclo (bordi rossi) prima di salvare.",
-        "saved": "Regola salvata"
+        "saved": "Regola salvata",
+        "webhookHostAllowed": "Accesso consentito a {{hosts}} — ricarica per iniziare a inviare i webhook",
+        "webhookHostFailed": "Impossibile consentire l'host del webhook",
+        "reload": "Ricarica"
       },
       "diff": {
         "title": "Rivedi modifiche ({{count}})",
@@ -3406,6 +3409,13 @@
       "steps": {
         "candleClose": {
           "title": "Chiusura candela"
+        },
+        "indicatorAlert": {
+          "title": "Avviso indicatore",
+          "indicator": "Indicatore (opzionale)",
+          "anyIndicatorPlaceholder": "Qualsiasi indicatore",
+          "condition": "Condizione (opzionale)",
+          "anyConditionPlaceholder": "Qualsiasi condizione"
         },
         "localToast": {
           "title": "Notifica toast",
@@ -3486,6 +3496,17 @@
       "signal-generated": {
         "label": "Segnale generato",
         "fields": {
+          "timeframe": {
+            "label": "Timeframe",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "Tipo di segnale (opzionale)",
             "placeholder": "Qualsiasi tipo"
@@ -3498,6 +3519,17 @@
       "indicator-alert": {
         "label": "Alert indicatore",
         "fields": {
+          "timeframe": {
+            "label": "Timeframe",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "Indicatore (opzionale)",
             "placeholder": "Qualsiasi indicatore"

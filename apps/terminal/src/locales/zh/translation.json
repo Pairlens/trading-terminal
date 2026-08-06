@@ -3354,7 +3354,10 @@
         "commit": "保存",
         "cannotSaveTitle": "无法保存规则",
         "cycleError": "该规则存在循环依赖。请先移除循环（红色连线），再保存。",
-        "saved": "规则已保存"
+        "saved": "规则已保存",
+        "webhookHostAllowed": "已允许访问 {{hosts}}，重新加载后开始发送 webhook",
+        "webhookHostFailed": "无法允许该 webhook 主机",
+        "reload": "重新加载"
       },
       "diff": {
         "title": "查看更改（{{count}}）",
@@ -3406,6 +3409,13 @@
       "steps": {
         "candleClose": {
           "title": "K 线收盘"
+        },
+        "indicatorAlert": {
+          "title": "指标提醒",
+          "indicator": "指标（选填）",
+          "anyIndicatorPlaceholder": "任意指标",
+          "condition": "条件（选填）",
+          "anyConditionPlaceholder": "任意条件"
         },
         "localToast": {
           "title": "应用内提示",
@@ -3486,6 +3496,17 @@
       "signal-generated": {
         "label": "信号生成",
         "fields": {
+          "timeframe": {
+            "label": "周期",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "信号类型（选填）",
             "placeholder": "任意类型"
@@ -3498,6 +3519,17 @@
       "indicator-alert": {
         "label": "指标提醒",
         "fields": {
+          "timeframe": {
+            "label": "周期",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "指标（选填）",
             "placeholder": "任意指标"

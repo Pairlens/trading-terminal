@@ -3,6 +3,7 @@
 import { PriceAlertStep } from './price-alert-step'
 import { OrderExecutedStep } from './order-executed-step'
 import { SignalGeneratedStep } from './signal-generated-step'
+import { IndicatorAlertStep } from './indicator-alert-step'
 import { CandleCloseStep } from './candle-close-step'
 import { PriceConditionStep } from './price-condition-step'
 import { PercentChangeStep } from './percent-change-step'
@@ -17,6 +18,7 @@ export {
   PriceAlertStep,
   OrderExecutedStep,
   SignalGeneratedStep,
+  IndicatorAlertStep,
   CandleCloseStep,
   PriceConditionStep,
   PercentChangeStep,
@@ -34,6 +36,7 @@ export const notificationStepComponents: Record<
   'price-alert': PriceAlertStep,
   'order-executed': OrderExecutedStep,
   'signal-generated': SignalGeneratedStep,
+  'indicator-alert': IndicatorAlertStep,
   'candle-close': CandleCloseStep,
   'price-condition': PriceConditionStep,
   'percent-change': PercentChangeStep,

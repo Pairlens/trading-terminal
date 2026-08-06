@@ -3354,7 +3354,10 @@
         "commit": "บันทึก",
         "cannotSaveTitle": "บันทึกกฎไม่ได้",
         "cycleError": "กฎนี้มีการพึ่งพาแบบวนซ้ำ กรุณาลบวงจร (เส้นสีแดง) ก่อนบันทึก",
-        "saved": "บันทึกกฎแล้ว"
+        "saved": "บันทึกกฎแล้ว",
+        "webhookHostAllowed": "อนุญาตการเข้าถึง {{hosts}} แล้ว — โหลดใหม่เพื่อเริ่มส่ง webhook",
+        "webhookHostFailed": "ไม่สามารถอนุญาตโฮสต์ของ webhook ได้",
+        "reload": "โหลดใหม่"
       },
       "diff": {
         "title": "ตรวจสอบการเปลี่ยนแปลง ({{count}})",
@@ -3406,6 +3409,13 @@
       "steps": {
         "candleClose": {
           "title": "แท่งเทียนปิด"
+        },
+        "indicatorAlert": {
+          "title": "การแจ้งเตือนอินดิเคเตอร์",
+          "indicator": "อินดิเคเตอร์ (ไม่บังคับ)",
+          "anyIndicatorPlaceholder": "อินดิเคเตอร์ใดก็ได้",
+          "condition": "เงื่อนไข (ไม่บังคับ)",
+          "anyConditionPlaceholder": "เงื่อนไขใดก็ได้"
         },
         "localToast": {
           "title": "การแจ้งเตือนแบบทูสต์",
@@ -3486,6 +3496,17 @@
       "signal-generated": {
         "label": "เกิดสัญญาณ",
         "fields": {
+          "timeframe": {
+            "label": "ไทม์เฟรม",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "ประเภทสัญญาณ (ไม่บังคับ)",
             "placeholder": "ประเภทใดก็ได้"
@@ -3498,6 +3519,17 @@
       "indicator-alert": {
         "label": "แจ้งเตือนอินดิเคเตอร์",
         "fields": {
+          "timeframe": {
+            "label": "ไทม์เฟรม",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "อินดิเคเตอร์ (ไม่บังคับ)",
             "placeholder": "อินดิเคเตอร์ใดก็ได้"

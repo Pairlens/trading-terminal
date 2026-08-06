@@ -3354,7 +3354,10 @@
         "commit": "Enregistrer",
         "cannotSaveTitle": "Impossible d'enregistrer la règle",
         "cycleError": "La règle contient une dépendance circulaire. Supprimez le cycle (arêtes rouges) avant d'enregistrer.",
-        "saved": "Règle enregistrée"
+        "saved": "Règle enregistrée",
+        "webhookHostAllowed": "Accès autorisé à {{hosts}} — rechargez pour envoyer les webhooks",
+        "webhookHostFailed": "Impossible d'autoriser l'hôte du webhook",
+        "reload": "Recharger"
       },
       "diff": {
         "title": "Vérifier les modifications ({{count}})",
@@ -3406,6 +3409,13 @@
       "steps": {
         "candleClose": {
           "title": "Clôture de bougie"
+        },
+        "indicatorAlert": {
+          "title": "Alerte d'indicateur",
+          "indicator": "Indicateur (optionnel)",
+          "anyIndicatorPlaceholder": "Tout indicateur",
+          "condition": "Condition (optionnelle)",
+          "anyConditionPlaceholder": "Toute condition"
         },
         "localToast": {
           "title": "Notification toast",
@@ -3486,6 +3496,17 @@
       "signal-generated": {
         "label": "Signal généré",
         "fields": {
+          "timeframe": {
+            "label": "Période",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "Type de signal (optionnel)",
             "placeholder": "Tout type"
@@ -3498,6 +3519,17 @@
       "indicator-alert": {
         "label": "Alerte d'indicateur",
         "fields": {
+          "timeframe": {
+            "label": "Période",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "Indicateur (optionnel)",
             "placeholder": "Tout indicateur"

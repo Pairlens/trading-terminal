@@ -135,7 +135,12 @@ function buildTestPayload(
         ...base,
         price: 100,
         data: {
-          signalType: String(data.signalType || 'test-signal'),
+          // Echo the step's own timeframe and signal type — the event filter
+          // matches on both, so a test that omitted them would report the
+          // rule as blocked when it is fine.
+          timeframe: String(data.timeframe ?? '1h'),
+          signalType: String(data.signalType || 'breakout'),
+          direction: 'long',
           percentChange: 1,
         },
       }

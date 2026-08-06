@@ -3354,7 +3354,10 @@
         "commit": "저장",
         "cannotSaveTitle": "규칙을 저장할 수 없습니다",
         "cycleError": "규칙에 순환 종속성이 있습니다. 저장하기 전에 순환(빨간색 연결선)을 제거하세요.",
-        "saved": "규칙을 저장했습니다"
+        "saved": "규칙을 저장했습니다",
+        "webhookHostAllowed": "{{hosts}} 접근을 허용했습니다. 다시 불러오면 웹훅 전송이 시작됩니다",
+        "webhookHostFailed": "웹훅 호스트를 허용하지 못했습니다",
+        "reload": "다시 불러오기"
       },
       "diff": {
         "title": "변경 사항 검토 ({{count}}건)",
@@ -3406,6 +3409,13 @@
       "steps": {
         "candleClose": {
           "title": "캔들 마감"
+        },
+        "indicatorAlert": {
+          "title": "지표 알림",
+          "indicator": "지표 (선택)",
+          "anyIndicatorPlaceholder": "지표 전체",
+          "condition": "조건 (선택)",
+          "anyConditionPlaceholder": "조건 전체"
         },
         "localToast": {
           "title": "토스트 알림",
@@ -3486,6 +3496,17 @@
       "signal-generated": {
         "label": "시그널 발생",
         "fields": {
+          "timeframe": {
+            "label": "시간 프레임",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "시그널 유형 (선택)",
             "placeholder": "유형 전체"
@@ -3498,6 +3519,17 @@
       "indicator-alert": {
         "label": "지표 알림",
         "fields": {
+          "timeframe": {
+            "label": "시간 프레임",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "지표 (선택)",
             "placeholder": "지표 전체"

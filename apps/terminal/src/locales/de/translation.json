@@ -3354,7 +3354,10 @@
         "commit": "Speichern",
         "cannotSaveTitle": "Regel kann nicht gespeichert werden",
         "cycleError": "Die Regel enthält eine zirkuläre Abhängigkeit. Entferne den Zyklus (rote Kanten), bevor du speicherst.",
-        "saved": "Regel gespeichert"
+        "saved": "Regel gespeichert",
+        "webhookHostAllowed": "Zugriff auf {{hosts}} erlaubt — zum Senden von Webhooks neu laden",
+        "webhookHostFailed": "Webhook-Host konnte nicht freigegeben werden",
+        "reload": "Neu laden"
       },
       "diff": {
         "title": "Änderungen prüfen ({{count}})",
@@ -3406,6 +3409,13 @@
       "steps": {
         "candleClose": {
           "title": "Kerze geschlossen"
+        },
+        "indicatorAlert": {
+          "title": "Indikator-Alarm",
+          "indicator": "Indikator (optional)",
+          "anyIndicatorPlaceholder": "Beliebiger Indikator",
+          "condition": "Bedingung (optional)",
+          "anyConditionPlaceholder": "Beliebige Bedingung"
         },
         "localToast": {
           "title": "Toast-Benachrichtigung",
@@ -3486,6 +3496,17 @@
       "signal-generated": {
         "label": "Signal erzeugt",
         "fields": {
+          "timeframe": {
+            "label": "Zeitrahmen",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "Signaltyp (optional)",
             "placeholder": "Beliebiger Typ"
@@ -3498,6 +3519,17 @@
       "indicator-alert": {
         "label": "Indikator-Alarm",
         "fields": {
+          "timeframe": {
+            "label": "Zeitrahmen",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "Indikator (optional)",
             "placeholder": "Beliebiger Indikator"

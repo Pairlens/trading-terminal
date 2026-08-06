@@ -3380,7 +3380,10 @@
         "commit": "Zapisz",
         "cannotSaveTitle": "Nie można zapisać reguły",
         "cycleError": "Reguła zawiera zależność cykliczną. Usuń cykl (czerwone krawędzie) przed zapisaniem.",
-        "saved": "Zapisano regułę"
+        "saved": "Zapisano regułę",
+        "webhookHostAllowed": "Zezwolono na dostęp do {{hosts}} — odśwież, aby zacząć wysyłać webhooki",
+        "webhookHostFailed": "Nie udało się zezwolić na host webhooka",
+        "reload": "Odśwież"
       },
       "diff": {
         "title": "Przejrzyj zmiany ({{count}})",
@@ -3432,6 +3435,13 @@
       "steps": {
         "candleClose": {
           "title": "Zamknięcie świecy"
+        },
+        "indicatorAlert": {
+          "title": "Alert wskaźnika",
+          "indicator": "Wskaźnik (opcjonalnie)",
+          "anyIndicatorPlaceholder": "Dowolny wskaźnik",
+          "condition": "Warunek (opcjonalnie)",
+          "anyConditionPlaceholder": "Dowolny warunek"
         },
         "localToast": {
           "title": "Powiadomienie toast",
@@ -3512,6 +3522,17 @@
       "signal-generated": {
         "label": "Wygenerowano sygnał",
         "fields": {
+          "timeframe": {
+            "label": "Interwał",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "Typ sygnału (opcjonalnie)",
             "placeholder": "Dowolny typ"
@@ -3524,6 +3545,17 @@
       "indicator-alert": {
         "label": "Alert wskaźnika",
         "fields": {
+          "timeframe": {
+            "label": "Interwał",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "Wskaźnik (opcjonalnie)",
             "placeholder": "Dowolny wskaźnik"

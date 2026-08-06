@@ -236,13 +236,36 @@ function matchesEventFilter(
     return false
   }
 
-  // Filter by signal type if specified (signal-generated)
+  // Filter by signal type if specified (signal-generated). A rule that names
+  // a strategy must NOT match a payload that carries no signal type at all —
+  // guarding on `payload.data.signalType` made every unlabelled event match
+  // every rule, which is how "breakout only" alerts fired on plain closes.
+  if (data.signalType && String(data.signalType).trim() !== '') {
+    if (String(data.signalType) !== String(payload.data.signalType ?? '')) {
+      return false
+    }
+  }
+
+  // Filter by timeframe (candle-close, signal-generated, indicator-alert).
+  // One candle subscription is shared by every rule on the same pair, so
+  // without this a rule configured for 1d fires on the 1h stream another rule
+  // opened — and then formats the message with its OWN timeframe, claiming a
+  // daily close that never happened. Indicator alerts additionally arrive from
+  // two sources (the open chart and the headless runner), so a rule watching
+  // 4h must ignore the ones the 1h chart produces.
   if (
-    data.signalType &&
-    payload.data.signalType &&
-    String(data.signalType) !== String(payload.data.signalType)
+    eventStep.type === 'candle-close' ||
+    eventStep.type === 'signal-generated' ||
+    eventStep.type === 'indicator-alert'
   ) {
-    return false
+    const want = data.timeframe
+    if (
+      want &&
+      String(want).trim() !== '' &&
+      String(want) !== String(payload.data.timeframe ?? '')
+    ) {
+      return false
+    }
   }
 
   // Filter by indicator + condition (indicator-alert). A blank field means

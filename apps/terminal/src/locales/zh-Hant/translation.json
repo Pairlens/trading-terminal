@@ -3354,7 +3354,10 @@
         "commit": "儲存",
         "cannotSaveTitle": "無法儲存規則",
         "cycleError": "此規則存在循環相依。請先移除循環（紅色連線），再儲存。",
-        "saved": "規則已儲存"
+        "saved": "規則已儲存",
+        "webhookHostAllowed": "已允許存取 {{hosts}}，重新載入後開始傳送 webhook",
+        "webhookHostFailed": "無法允許該 webhook 主機",
+        "reload": "重新載入"
       },
       "diff": {
         "title": "檢視變更（{{count}}）",
@@ -3406,6 +3409,13 @@
       "steps": {
         "candleClose": {
           "title": "K 線收盤"
+        },
+        "indicatorAlert": {
+          "title": "指標提醒",
+          "indicator": "指標（選填）",
+          "anyIndicatorPlaceholder": "任意指標",
+          "condition": "條件（選填）",
+          "anyConditionPlaceholder": "任意條件"
         },
         "localToast": {
           "title": "應用程式內提示",
@@ -3486,6 +3496,17 @@
       "signal-generated": {
         "label": "訊號產生",
         "fields": {
+          "timeframe": {
+            "label": "時間週期",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "訊號類型（選填）",
             "placeholder": "任意類型"
@@ -3498,6 +3519,17 @@
       "indicator-alert": {
         "label": "指標提醒",
         "fields": {
+          "timeframe": {
+            "label": "時間週期",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "指標（選填）",
             "placeholder": "任意指標"

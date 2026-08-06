@@ -23,6 +23,16 @@ function firstText(...values: Array<unknown>): string | undefined {
   return undefined
 }
 
+/** Shared by every step whose trigger is driven by a candle stream. */
+const TIMEFRAME_OPTIONS = [
+  { value: '1m', label: '1m' },
+  { value: '5m', label: '5m' },
+  { value: '15m', label: '15m' },
+  { value: '1h', label: '1H' },
+  { value: '4h', label: '4H' },
+  { value: '1d', label: '1D' },
+]
+
 // ── Event Steps ──────────────────────────────────────────────────────
 // Pair/market is inherited from the rule — not configured per event step.
 
@@ -121,6 +131,17 @@ const signalGenerated: NotificationStepTypeDefinition = {
     outputs: [{ id: 'out', label: 'Triggered' }],
   },
   configSchema: [
+    // Signals confirm on close, so this step is driven by a candle stream and
+    // needs its own timeframe. It used to have none while the subscription
+    // manager still read `data.timeframe` — silently defaulting every signal
+    // rule to a 1h stream no matter what the user had in mind.
+    {
+      key: 'timeframe',
+      type: 'select',
+      label: 'Timeframe',
+      default: '1h',
+      options: TIMEFRAME_OPTIONS,
+    },
     {
       key: 'signalType',
       type: 'string',
@@ -130,10 +151,12 @@ const signalGenerated: NotificationStepTypeDefinition = {
     },
   ],
   validate: () => [],
-  defaultData: () => ({ signalType: '' }),
+  defaultData: () => ({ timeframe: '1h', signalType: '' }),
   formatMessage: (data, payload) => ({
     title: 'Signal Generated',
-    body: `${String(payload.data.signalType ?? data.signalType ?? 'Signal')} on ${String(payload.pair ?? 'unknown')}`,
+    body: `${firstText(payload.data.signalType, data.signalType) ?? 'Signal'} on ${String(payload.pair ?? 'unknown')}${
+      payload.data.direction ? ` (${String(payload.data.direction)})` : ''
+    }`,
     severity: 'info',
   }),
 }
@@ -153,6 +176,15 @@ const indicatorAlert: NotificationStepTypeDefinition = {
     outputs: [{ id: 'out', label: 'Triggered' }],
   },
   configSchema: [
+    // Conditions confirm on a closed bar, so a rule that fires without the
+    // chart open has to say which timeframe's closes to evaluate.
+    {
+      key: 'timeframe',
+      type: 'select',
+      label: 'Timeframe',
+      default: '1h',
+      options: TIMEFRAME_OPTIONS,
+    },
     {
       key: 'indicator',
       type: 'string',
@@ -169,7 +201,7 @@ const indicatorAlert: NotificationStepTypeDefinition = {
     },
   ],
   validate: () => [],
-  defaultData: () => ({ indicator: '', condition: '' }),
+  defaultData: () => ({ timeframe: '1h', indicator: '', condition: '' }),
   formatMessage: (data, payload) => ({
     // `condition` and `indicator` default to '' — blank is the documented way
     // to match every condition of every indicator — so `??` would hand back an
@@ -202,21 +234,17 @@ const candleClose: NotificationStepTypeDefinition = {
       type: 'select',
       label: 'Timeframe',
       default: '1h',
-      options: [
-        { value: '1m', label: '1m' },
-        { value: '5m', label: '5m' },
-        { value: '15m', label: '15m' },
-        { value: '1h', label: '1H' },
-        { value: '4h', label: '4H' },
-        { value: '1d', label: '1D' },
-      ],
+      options: TIMEFRAME_OPTIONS,
     },
   ],
   validate: () => [],
   defaultData: () => ({ timeframe: '1h' }),
   formatMessage: (data, payload) => ({
     title: 'Candle Close',
-    body: `${String(data.timeframe)} candle closed on ${String(payload.pair ?? 'unknown')}`,
+    // The event's own timeframe, not the step's — they agree now that the
+    // filter enforces it, and reporting the payload keeps the message honest
+    // if a future event source ever routes differently.
+    body: `${firstText(payload.data.timeframe, data.timeframe) ?? ''} candle closed on ${String(payload.pair ?? 'unknown')}`,
     severity: 'info',
   }),
 }

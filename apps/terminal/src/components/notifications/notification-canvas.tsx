@@ -139,6 +139,7 @@ function getDisconnectedNodeIds(
     'price-alert',
     'order-executed',
     'signal-generated',
+    'indicator-alert',
     'candle-close',
   ]
   const eventSteps = nodes.filter((n) => EVENT_TYPES.includes(n.type ?? ''))
