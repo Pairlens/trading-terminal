@@ -109,6 +109,26 @@ The tag push triggers the **Release** workflow (~20–30 min across four
 runners). It produces a **draft** release with all installers plus
 `latest.json`.
 
+### Release notes
+
+The draft arrives with its changelog already written. `scripts/release/changelog.ts`
+reads every commit between the previous `v*` tag and the new one (`--no-merges`,
+so a branch contributes its own commits and not the `merge:` commit that folded
+it in) and groups them by conventional-commit type: `feat` under **New**, `fix`
+under **Fixed**, `perf`, `polish`/`style`, `i18n`, `docs`, and everything else
+(`chore`, `refactor`, `test`, `ci`, plus commits with no type at all) inside a
+collapsed **Under the hood**. `release:` commits are dropped, `feat!:` and
+`BREAKING CHANGE:` float to the top, and every line links its commit.
+
+Preview the notes for a tag before pushing it, or regenerate them by hand:
+
+```bash
+bun scripts/release/changelog.ts v0.2.0
+```
+
+Reruns of a failed pipeline reuse the existing draft and leave its body alone,
+so hand-edits survive a rebuild.
+
 **Publish the draft to ship** — edit the release notes on the releases page,
 then publish (or `gh release edit v0.2.0 --draft=false`). Publishing makes
 `releases/latest/download/latest.json` resolve to the new manifest; running
