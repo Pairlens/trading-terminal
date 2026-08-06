@@ -19,12 +19,19 @@ const lastFired = new Map<string, number>()
 /** Value the condition held on the previously evaluated closed bar. */
 const lastValue = new Map<string, number>()
 
+/**
+ * Timeframe is part of the key: the same condition on the same pair is a
+ * different series per timeframe, and the chart and the headless notification
+ * runner can watch two of them at once. Sharing one slot let a 4h evaluation
+ * overwrite the 1h edge state and swallow the next alert.
+ */
 const stateKey = (
   indicatorType: string,
   alertKey: string,
   market: string,
   pair: string,
-): string => `${indicatorType}|${alertKey}|${market}|${pair}`
+  timeframe: string,
+): string => `${indicatorType}|${alertKey}|${market}|${pair}|${timeframe}`
 
 /** Expand the `{{...}}` placeholders a script may put in its alert message. */
 export function formatAlertMessage(
@@ -71,7 +78,7 @@ export function evaluateIndicatorAlerts(options: {
     const series = outputs[alert.key]
     if (!series || closedIndex >= series.length) continue
 
-    const key = stateKey(indicatorType, alert.key, market, pair)
+    const key = stateKey(indicatorType, alert.key, market, pair, timeframe)
     const current = series[closedIndex]
     const previousBar = closedIndex > 0 ? series[closedIndex - 1] : Number.NaN
     // Prefer the value we recorded last time we looked at this condition;

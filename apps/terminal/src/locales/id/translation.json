@@ -3433,7 +3433,10 @@
         "commit": "Simpan",
         "cannotSaveTitle": "Aturan tidak dapat disimpan",
         "cycleError": "Aturan ini mengandung dependensi melingkar. Hapus siklusnya (garis merah) sebelum menyimpan.",
-        "saved": "Aturan disimpan"
+        "saved": "Aturan disimpan",
+        "webhookHostAllowed": "Akses ke {{hosts}} diizinkan — muat ulang untuk mulai mengirim webhook",
+        "webhookHostFailed": "Tidak dapat mengizinkan host webhook",
+        "reload": "Muat ulang"
       },
       "diff": {
         "title": "Tinjau Perubahan ({{count}})",
@@ -3469,7 +3472,7 @@
         "description": "Aturan adalah alur kecil: sesuatu terjadi — level tertembus, candle ditutup, order terisi, alert indikator terpicu — lalu melewati kondisi yang Anda tambahkan, dan akhirnya sampai ke Anda sebagai toast, notifikasi sistem, pesan Telegram, atau webhook.",
         "startBlank": "Mulai dari kanvas kosong",
         "startFromTemplate": "Mulai dari template",
-        "footnote": "Template terbuka sebagai draf yang terikat ke {{pair}} di {{market}} — edit langkah-langkahnya, ubah pair di daftar aturan, lalu Simpan. Aturan hanya aktif selama Pairlens berjalan."
+        "footnote": "Templat langsung aktif, terikat ke {{pair}} di {{market}}. Ubah langkahnya atau ganti pasangan di bawah daftar aturan, lalu Simpan perubahannya. Aturan hanya berjalan selama Pairlens terbuka."
       },
       "direction": "Arah",
       "above": "Di atas",
@@ -3485,6 +3488,13 @@
       "steps": {
         "candleClose": {
           "title": "Penutupan Candle"
+        },
+        "indicatorAlert": {
+          "title": "Peringatan Indikator",
+          "indicator": "Indikator (opsional)",
+          "anyIndicatorPlaceholder": "Indikator apa saja",
+          "condition": "Kondisi (opsional)",
+          "anyConditionPlaceholder": "Kondisi apa saja"
         },
         "localToast": {
           "title": "Notifikasi Toast",
@@ -3574,6 +3584,17 @@
       "signal-generated": {
         "label": "Sinyal Terbentuk",
         "fields": {
+          "timeframe": {
+            "label": "Timeframe",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "Tipe Sinyal (opsional)",
             "placeholder": "Tipe apa saja"
@@ -3586,6 +3607,17 @@
       "indicator-alert": {
         "label": "Alert Indikator",
         "fields": {
+          "timeframe": {
+            "label": "Timeframe",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "Indikator (opsional)",
             "placeholder": "Indikator apa saja"

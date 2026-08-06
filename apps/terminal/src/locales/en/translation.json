@@ -3433,7 +3433,10 @@
         "commit": "Commit",
         "cannotSaveTitle": "Cannot save rule",
         "cycleError": "The rule contains a circular dependency. Remove the cycle (red edges) before saving.",
-        "saved": "Rule saved"
+        "saved": "Rule saved",
+        "webhookHostAllowed": "Allowed access to {{hosts}} — reload to start sending webhooks",
+        "webhookHostFailed": "Could not allow the webhook host",
+        "reload": "Reload"
       },
       "diff": {
         "title": "Review Changes ({{count}})",
@@ -3469,7 +3472,7 @@
         "description": "A rule is a small flow: something happens — a level is crossed, a candle closes, an order fills, an indicator alert trips — it passes whatever conditions you attach, and then it reaches you as a toast, an OS notification, a Telegram message, or a webhook.",
         "startBlank": "Start from a blank canvas",
         "startFromTemplate": "Start from a template",
-        "footnote": "Templates open as a draft bound to {{pair}} on {{market}} — edit the steps, retarget the pair under the rule list, then Commit to save. Rules only fire while Pairlens is running."
+        "footnote": "Templates arrive armed, bound to {{pair}} on {{market}}. Edit the steps or retarget the pair under the rule list, then Commit to save your changes. Rules only fire while Pairlens is running."
       },
       "direction": "Direction",
       "above": "Above",
@@ -3485,6 +3488,13 @@
       "steps": {
         "candleClose": {
           "title": "Candle Close"
+        },
+        "indicatorAlert": {
+          "title": "Indicator Alert",
+          "indicator": "Indicator (optional)",
+          "anyIndicatorPlaceholder": "Any indicator",
+          "condition": "Condition (optional)",
+          "anyConditionPlaceholder": "Any condition"
         },
         "localToast": {
           "title": "Toast Notification",
@@ -3574,6 +3584,17 @@
       "signal-generated": {
         "label": "Signal Generated",
         "fields": {
+          "timeframe": {
+            "label": "Timeframe",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "Signal Type (optional)",
             "placeholder": "Any type"
@@ -3586,6 +3607,17 @@
       "indicator-alert": {
         "label": "Indicator Alert",
         "fields": {
+          "timeframe": {
+            "label": "Timeframe",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "Indicator (optional)",
             "placeholder": "Any indicator"

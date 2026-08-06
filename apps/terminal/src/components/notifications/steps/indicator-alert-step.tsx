@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useTranslation } from 'react-i18next'
 import { Handle, Position } from '@xyflow/react'
-import { Zap } from 'lucide-react'
+import { SquareFunction } from 'lucide-react'
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
 import { useNotificationStepDataUpdate } from '../use-step-data'
 import type { NodeProps } from '@xyflow/react'
 
-// Signals confirm on close, so this step is driven by a candle stream and
-// picks its own timeframe — same control the candle-close step uses.
+// Alert conditions confirm on a closed bar, so the step picks the timeframe
+// whose closes it watches — same control the other candle-driven events use.
 const timeframeOptions = [
   { value: '1m', label: '1m' },
   { value: '5m', label: '5m' },
@@ -19,10 +19,11 @@ const timeframeOptions = [
   { value: '1d', label: '1D' },
 ] as const
 
-export function SignalGeneratedStep({ id, data }: NodeProps) {
+export function IndicatorAlertStep({ id, data }: NodeProps) {
   const { t } = useTranslation()
-  const signalType = (data.signalType as string) ?? ''
   const timeframe = (data.timeframe as string) ?? '1h'
+  const indicator = (data.indicator as string) ?? ''
+  const condition = (data.condition as string) ?? ''
 
   const updateStepData = useNotificationStepDataUpdate()
   const handleChange = (key: string, value: unknown) =>
@@ -39,11 +40,11 @@ export function SignalGeneratedStep({ id, data }: NodeProps) {
     >
       <div className="flex items-center gap-2">
         <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-emerald-500/15">
-          <Zap className="size-3.5 text-emerald-400" />
+          <SquareFunction className="size-3.5 text-emerald-400" />
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-xs font-semibold text-foreground">
-            {t('notifications.builder.steps.signalGenerated.title')}
+            {t('notifications.builder.steps.indicatorAlert.title')}
           </div>
         </div>
         <Badge
@@ -79,19 +80,35 @@ export function SignalGeneratedStep({ id, data }: NodeProps) {
           </div>
         </div>
 
-        {/* Signal type */}
+        {/* Indicator — blank matches every script that declares an alert */}
         <div>
           <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-            {t('notifications.builder.steps.signalGenerated.signalType')}
+            {t('notifications.builder.steps.indicatorAlert.indicator')}
           </div>
           <input
             type="text"
             className="nodrag nopan nowheel mt-0.5 h-6 w-full rounded border border-border bg-background px-1.5 font-mono text-[10px] text-foreground outline-none focus:border-primary"
             placeholder={t(
-              'notifications.builder.steps.signalGenerated.anyTypePlaceholder',
+              'notifications.builder.steps.indicatorAlert.anyIndicatorPlaceholder',
             )}
-            value={signalType}
-            onChange={(e) => handleChange('signalType', e.target.value)}
+            value={indicator}
+            onChange={(e) => handleChange('indicator', e.target.value)}
+          />
+        </div>
+
+        {/* Condition — blank matches every condition of the matched script */}
+        <div>
+          <div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
+            {t('notifications.builder.steps.indicatorAlert.condition')}
+          </div>
+          <input
+            type="text"
+            className="nodrag nopan nowheel mt-0.5 h-6 w-full rounded border border-border bg-background px-1.5 font-mono text-[10px] text-foreground outline-none focus:border-primary"
+            placeholder={t(
+              'notifications.builder.steps.indicatorAlert.anyConditionPlaceholder',
+            )}
+            value={condition}
+            onChange={(e) => handleChange('condition', e.target.value)}
           />
         </div>
       </div>

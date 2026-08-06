@@ -3433,7 +3433,10 @@
         "commit": "Kaydet",
         "cannotSaveTitle": "Kural kaydedilemiyor",
         "cycleError": "Kural döngüsel bir bağımlılık içeriyor. Kaydetmeden önce döngüyü (kırmızı kenarlar) kaldır.",
-        "saved": "Kural kaydedildi"
+        "saved": "Kural kaydedildi",
+        "webhookHostAllowed": "{{hosts}} erişimine izin verildi — webhook göndermeye başlamak için yeniden yükleyin",
+        "webhookHostFailed": "Webhook sunucusuna izin verilemedi",
+        "reload": "Yeniden yükle"
       },
       "diff": {
         "title": "Değişiklikleri İncele ({{count}})",
@@ -3469,7 +3472,7 @@
         "description": "Bir kural küçük bir akıştır: bir şey olur — bir seviye geçilir, bir mum kapanır, bir emir gerçekleşir, bir gösterge uyarısı tetiklenir — eklediğin koşullardan geçer ve sana toast, sistem bildirimi, Telegram mesajı ya da webhook olarak ulaşır.",
         "startBlank": "Boş bir tuvalden başla",
         "startFromTemplate": "Bir şablondan başla",
-        "footnote": "Şablonlar {{market}} üzerinde {{pair}} pairine bağlı bir taslak olarak açılır — adımları düzenle, kural listesinden pariteyi değiştir, sonra Kaydet ile kaydet. Kurallar yalnızca Pairlens çalışırken tetiklenir."
+        "footnote": "Şablonlar {{market}} üzerindeki {{pair}} çiftine bağlı olarak hazır gelir. Adımları düzenleyin ya da kural listesinin altından çifti değiştirin, sonra değişikliklerinizi kaydedin. Kurallar yalnızca Pairlens açıkken çalışır."
       },
       "direction": "Yön",
       "above": "Üzerinde",
@@ -3485,6 +3488,13 @@
       "steps": {
         "candleClose": {
           "title": "Mum Kapanışı"
+        },
+        "indicatorAlert": {
+          "title": "Gösterge Uyarısı",
+          "indicator": "Gösterge (isteğe bağlı)",
+          "anyIndicatorPlaceholder": "Herhangi bir gösterge",
+          "condition": "Koşul (isteğe bağlı)",
+          "anyConditionPlaceholder": "Herhangi bir koşul"
         },
         "localToast": {
           "title": "Toast Bildirimi",
@@ -3574,6 +3584,17 @@
       "signal-generated": {
         "label": "Sinyal Oluştu",
         "fields": {
+          "timeframe": {
+            "label": "Zaman Dilimi",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "Sinyal Türü (isteğe bağlı)",
             "placeholder": "Herhangi bir tür"
@@ -3586,6 +3607,17 @@
       "indicator-alert": {
         "label": "Gösterge Uyarısı",
         "fields": {
+          "timeframe": {
+            "label": "Zaman Dilimi",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "Gösterge (isteğe bağlı)",
             "placeholder": "Herhangi bir gösterge"

@@ -3433,7 +3433,10 @@
         "commit": "Speichern",
         "cannotSaveTitle": "Regel kann nicht gespeichert werden",
         "cycleError": "Die Regel enthält eine zirkuläre Abhängigkeit. Entferne den Zyklus (rote Kanten), bevor du speicherst.",
-        "saved": "Regel gespeichert"
+        "saved": "Regel gespeichert",
+        "webhookHostAllowed": "Zugriff auf {{hosts}} erlaubt — zum Senden von Webhooks neu laden",
+        "webhookHostFailed": "Webhook-Host konnte nicht freigegeben werden",
+        "reload": "Neu laden"
       },
       "diff": {
         "title": "Änderungen prüfen ({{count}})",
@@ -3469,7 +3472,7 @@
         "description": "Eine Regel ist ein kleiner Ablauf: Etwas passiert — ein Niveau wird gekreuzt, eine Kerze schließt, ein Order wird ausgeführt, ein Indikator schlägt an — sie durchläuft die Bedingungen, die du hinzufügst, und erreicht dich dann als Toast, Systembenachrichtigung, Telegram-Nachricht oder Webhook.",
         "startBlank": "Mit einer leeren Zeichenfläche beginnen",
         "startFromTemplate": "Mit einer Vorlage beginnen",
-        "footnote": "Vorlagen öffnen als Entwurf, gebunden an {{pair}} auf {{market}} — bearbeite die Schritte, ändere das Paar in der Regelliste und speichere dann mit Commit. Regeln lösen nur aus, während Pairlens läuft."
+        "footnote": "Vorlagen sind sofort scharf, gebunden an {{pair}} auf {{market}}. Passe die Schritte an oder ändere das Paar unter der Regelliste, dann speichere mit Commit. Regeln laufen nur, solange Pairlens läuft."
       },
       "direction": "Richtung",
       "above": "Über",
@@ -3485,6 +3488,13 @@
       "steps": {
         "candleClose": {
           "title": "Kerze geschlossen"
+        },
+        "indicatorAlert": {
+          "title": "Indikator-Alarm",
+          "indicator": "Indikator (optional)",
+          "anyIndicatorPlaceholder": "Beliebiger Indikator",
+          "condition": "Bedingung (optional)",
+          "anyConditionPlaceholder": "Beliebige Bedingung"
         },
         "localToast": {
           "title": "Toast-Benachrichtigung",
@@ -3574,6 +3584,17 @@
       "signal-generated": {
         "label": "Signal erzeugt",
         "fields": {
+          "timeframe": {
+            "label": "Zeitrahmen",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "Signaltyp (optional)",
             "placeholder": "Beliebiger Typ"
@@ -3586,6 +3607,17 @@
       "indicator-alert": {
         "label": "Indikator-Alarm",
         "fields": {
+          "timeframe": {
+            "label": "Zeitrahmen",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "Indikator (optional)",
             "placeholder": "Beliebiger Indikator"

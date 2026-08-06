@@ -12,6 +12,40 @@ import type {
 } from '@pairlens/notification-engine/types'
 import { track } from '@/lib/analytics-events'
 
+const COOLDOWN_KEY = 'pairlens:notification-cooldowns'
+
+/**
+ * Cooldowns outlive the process. Holding them only in memory meant every
+ * reload re-armed every rule, and a level alert whose threshold is already
+ * breached fires once on the first tick by design — so restarting the app
+ * re-notified everything the user had already been told about.
+ */
+function loadCooldowns(): Map<string, number> {
+  try {
+    const raw = localStorage.getItem(COOLDOWN_KEY)
+    if (!raw) return new Map()
+    const parsed: unknown = JSON.parse(raw)
+    if (!parsed || typeof parsed !== 'object') return new Map()
+    const entries = Object.entries(parsed as Record<string, unknown>).filter(
+      (e): e is [string, number] => typeof e[1] === 'number',
+    )
+    return new Map(entries)
+  } catch {
+    return new Map()
+  }
+}
+
+function saveCooldowns(cooldowns: Map<string, number>): void {
+  try {
+    localStorage.setItem(
+      COOLDOWN_KEY,
+      JSON.stringify(Object.fromEntries(cooldowns)),
+    )
+  } catch {
+    // Quota or unavailable storage — cooldowns degrade to in-memory.
+  }
+}
+
 /**
  * Singleton runtime that receives events from adapters, evaluates rules,
  * and dispatches to channels.
@@ -30,12 +64,15 @@ export class NotificationRuntime {
     this.getRules = getRules
     this.getBindings = getBindings
     this.logEntry = logEntry ?? null
+    this.cooldowns = loadCooldowns()
   }
 
   stop(): void {
     this.getRules = null
     this.getBindings = null
     this.logEntry = null
+    // Keep the persisted record — clearing here would hand the next start a
+    // clean slate and reintroduce the re-notify-on-restart behavior.
     this.cooldowns.clear()
   }
 
@@ -66,8 +103,16 @@ export class NotificationRuntime {
       const result = evaluateRule(rule, binding, payload)
 
       if (result.shouldFire && result.message) {
-        // Record cooldown per binding
+        // Record cooldown per binding, dropping entries whose binding is gone
+        // so a long-lived install doesn't accumulate them forever.
         this.cooldowns.set(binding.id, Date.now())
+        if (this.cooldowns.size > bindings.length) {
+          const live = new Set(bindings.map((b) => b.id))
+          for (const id of this.cooldowns.keys()) {
+            if (!live.has(id)) this.cooldowns.delete(id)
+          }
+        }
+        saveCooldowns(this.cooldowns)
         track('alert_triggered', { kind: payload.eventType })
 
         // Dispatch to all channels, then log with per-channel outcomes so

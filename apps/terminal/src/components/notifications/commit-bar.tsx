@@ -17,6 +17,8 @@ import { validateRule } from '@pairlens/notification-engine/validator'
 
 import { DiffPanel } from './diff-panel'
 import { useNotificationStore } from '@/stores/notification-store'
+import { syncWebhookHostGrants } from '@/lib/notifications/webhook-grants'
+import { reloadForGrants } from '@/lib/plugins/network-grants'
 
 type CommitBarProps = {
   hasCycles?: boolean
@@ -74,6 +76,29 @@ export function CommitBar({ hasCycles, onBeforeCommit }: CommitBarProps) {
     onBeforeCommit?.()
     commitDraft()
     toast.success(t('notifications.builder.commitBar.saved'))
+
+    // On desktop a webhook host has to be added to the CSP allowlist or the
+    // delivery fetch is blocked outright. Do it from the committed rules, and
+    // say so — the widened policy only applies on the next document load.
+    void syncWebhookHostGrants(useNotificationStore.getState().rules)
+      .then((outcome) => {
+        if (outcome.status !== 'granted') return
+        toast.info(
+          t('notifications.builder.commitBar.webhookHostAllowed', {
+            hosts: outcome.hosts.join(', '),
+          }),
+          {
+            duration: 10_000,
+            action: {
+              label: t('notifications.builder.commitBar.reload'),
+              onClick: reloadForGrants,
+            },
+          },
+        )
+      })
+      .catch(() => {
+        toast.error(t('notifications.builder.commitBar.webhookHostFailed'))
+      })
   }
 
   return (

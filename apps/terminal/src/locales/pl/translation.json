@@ -3459,7 +3459,10 @@
         "commit": "Zapisz",
         "cannotSaveTitle": "Nie można zapisać reguły",
         "cycleError": "Reguła zawiera zależność cykliczną. Usuń cykl (czerwone krawędzie) przed zapisaniem.",
-        "saved": "Zapisano regułę"
+        "saved": "Zapisano regułę",
+        "webhookHostAllowed": "Zezwolono na dostęp do {{hosts}} — odśwież, aby zacząć wysyłać webhooki",
+        "webhookHostFailed": "Nie udało się zezwolić na host webhooka",
+        "reload": "Odśwież"
       },
       "diff": {
         "title": "Przejrzyj zmiany ({{count}})",
@@ -3495,7 +3498,7 @@
         "description": "Reguła to mały przepływ: coś się dzieje — poziom zostaje przekroczony, świeca się zamyka, zlecenie zostaje zrealizowane, wskaźnik wysyła alert — przechodzi przez dodane warunki, a następnie dociera do ciebie jako toast, powiadomienie systemowe, wiadomość na Telegramie lub webhook.",
         "startBlank": "Zacznij od pustego płótna",
         "startFromTemplate": "Zacznij od szablonu",
-        "footnote": "Szablony otwierają się jako szkic powiązany z {{pair}} na {{market}} — edytuj kroki, zmień parę na liście reguł, a następnie zapisz. Reguły działają tylko wtedy, gdy Pairlens jest uruchomiony."
+        "footnote": "Szablony są od razu aktywne i przypisane do {{pair}} na {{market}}. Zmień kroki lub parę pod listą reguł, a potem zapisz zmiany. Reguły działają tylko wtedy, gdy Pairlens jest uruchomiony."
       },
       "direction": "Kierunek",
       "above": "Powyżej",
@@ -3511,6 +3514,13 @@
       "steps": {
         "candleClose": {
           "title": "Zamknięcie świecy"
+        },
+        "indicatorAlert": {
+          "title": "Alert wskaźnika",
+          "indicator": "Wskaźnik (opcjonalnie)",
+          "anyIndicatorPlaceholder": "Dowolny wskaźnik",
+          "condition": "Warunek (opcjonalnie)",
+          "anyConditionPlaceholder": "Dowolny warunek"
         },
         "localToast": {
           "title": "Powiadomienie toast",
@@ -3600,6 +3610,17 @@
       "signal-generated": {
         "label": "Wygenerowano sygnał",
         "fields": {
+          "timeframe": {
+            "label": "Interwał",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "Typ sygnału (opcjonalnie)",
             "placeholder": "Dowolny typ"
@@ -3612,6 +3633,17 @@
       "indicator-alert": {
         "label": "Alert wskaźnika",
         "fields": {
+          "timeframe": {
+            "label": "Interwał",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "Wskaźnik (opcjonalnie)",
             "placeholder": "Dowolny wskaźnik"

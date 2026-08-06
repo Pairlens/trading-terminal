@@ -312,6 +312,16 @@ const FIRST_PARTY_NOTIFICATION_COMPONENTS: Record<
         }),
       ),
     ),
+    // Without an entry here the registry silently skips the core step
+    // (registerPluginSteps drops definitions with no component), so it never
+    // reaches the palette and its canvas node renders as an empty box.
+    'indicator-alert': lazyChunk(() =>
+      import('@/components/notifications/steps/indicator-alert-step').then(
+        (m) => ({
+          default: m.IndicatorAlertStep,
+        }),
+      ),
+    ),
     'candle-close': lazyChunk(() =>
       import('@/components/notifications/steps/candle-close-step').then(
         (m) => ({

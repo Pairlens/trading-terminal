@@ -8,6 +8,7 @@ import {
 import { sendOsNotification } from './platform-notify'
 import { deliverTelegramNotification } from './telegram'
 import type { NotificationMessage } from '@pairlens/notification-engine/types'
+import { isStandalone } from '@/lib/platform'
 
 /**
  * Register concrete delivery implementations for built-in channels.
@@ -88,7 +89,21 @@ export function registerChannelDeliveries(): void {
           })
         }
 
-        const res = await fetch(url, fetchOpts)
+        let res: Response
+        try {
+          res = await fetch(url, fetchOpts)
+        } catch (err) {
+          // A CSP-blocked request fails as an opaque "Failed to fetch", which
+          // in the activity log is indistinguishable from a dead endpoint.
+          // Name the real cause so the fix (commit the rule again to grant the
+          // host, then reload) is discoverable.
+          if (isStandalone && err instanceof TypeError) {
+            throw new Error(
+              `Blocked by the desktop network policy — commit the rule again to allow ${new URL(url).hostname}, then reload`,
+            )
+          }
+          throw err
+        }
         if (!res.ok) {
           throw new Error(`Webhook responded ${res.status}`)
         }

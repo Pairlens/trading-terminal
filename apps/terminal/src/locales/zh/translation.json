@@ -3433,7 +3433,10 @@
         "commit": "保存",
         "cannotSaveTitle": "无法保存规则",
         "cycleError": "该规则存在循环依赖。请先移除循环（红色连线），再保存。",
-        "saved": "规则已保存"
+        "saved": "规则已保存",
+        "webhookHostAllowed": "已允许访问 {{hosts}}，重新加载后开始发送 webhook",
+        "webhookHostFailed": "无法允许该 webhook 主机",
+        "reload": "重新加载"
       },
       "diff": {
         "title": "查看更改（{{count}}）",
@@ -3469,7 +3472,7 @@
         "description": "一条规则就是一个小流程：某件事发生了——价格突破某个水平、K 线收盘、订单成交、指标警报触发——然后经过你添加的条件，最终以应用内提示、系统通知、Telegram 消息或 Webhook 的形式送达给你。",
         "startBlank": "从空白画布开始",
         "startFromTemplate": "从模板开始",
-        "footnote": "模板会以草稿形式打开，绑定到 {{market}} 上的 {{pair}} —— 编辑步骤、在规则列表中更换交易对，然后保存。规则仅在 Pairlens 运行期间才会触发。"
+        "footnote": "模板创建后立即生效，绑定到 {{market}} 的 {{pair}}。你可以修改步骤，或在规则列表下方更换交易对，然后保存改动。规则只在 Pairlens 运行时触发。"
       },
       "direction": "方向",
       "above": "高于",
@@ -3485,6 +3488,13 @@
       "steps": {
         "candleClose": {
           "title": "K 线收盘"
+        },
+        "indicatorAlert": {
+          "title": "指标提醒",
+          "indicator": "指标（选填）",
+          "anyIndicatorPlaceholder": "任意指标",
+          "condition": "条件（选填）",
+          "anyConditionPlaceholder": "任意条件"
         },
         "localToast": {
           "title": "应用内提示",
@@ -3574,6 +3584,17 @@
       "signal-generated": {
         "label": "信号生成",
         "fields": {
+          "timeframe": {
+            "label": "周期",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "signalType": {
             "label": "信号类型（选填）",
             "placeholder": "任意类型"
@@ -3586,6 +3607,17 @@
       "indicator-alert": {
         "label": "指标提醒",
         "fields": {
+          "timeframe": {
+            "label": "周期",
+            "options": {
+              "1m": "1m",
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "1d": "1D"
+            }
+          },
           "indicator": {
             "label": "指标（选填）",
             "placeholder": "任意指标"
