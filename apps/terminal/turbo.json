@@ -3,6 +3,17 @@
   "tasks": {
     "build": {
       "outputs": ["dist/**", ".output/**", ".vercel/output/**"],
+      // The release number this build reports is read out of the desktop
+      // bundle's manifest (appVersion in vite.config.ts) — a file in another
+      // package that nothing here depends on. Without naming it, `bun run
+      // release` changes no input turbo can see, so the next deploy is a
+      // cache hit that replays the previous release's bundle under the new
+      // version: that is how terminal.pairlens.finance sat on 0.1.4 for the
+      // whole of v0.2.0. $TURBO_DEFAULT$ keeps the package's own files.
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/apps/desktop/src-tauri/tauri.conf.json"
+      ],
       // Everything Vite bakes into the client bundle. Turbo runs tasks in
       // strict env mode and this list REPLACES the root one, so a var that
       // is missing here is invisible to `vite build` — that is how a build
