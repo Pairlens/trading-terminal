@@ -55,6 +55,18 @@ pick: every 4 hours, every 12 hours, daily, or weekly. The Risk panel shows the
 current window's P&L, trade count, when the window started, and how long until
 it resets.
 
+## Order confirmation
+
+The last guardrail is the one in your hand. By default you commit an order by
+pressing and holding the submit button until it fills, and a live order holds
+longer than a paper one. It is the cheapest protection in the app: it costs
+half a second and it catches the order you did not mean to send.
+
+If that half second is in your way, the same settings page switches the gesture
+to a single click. It applies to the ticket and to the co-pilot's order cards,
+and the note under the button always says which gesture is in force. Nothing
+else changes. The caps above are enforced identically under either one.
+
 ## AI trade permissions
 
 The same settings page controls what the co-pilot may do without asking.

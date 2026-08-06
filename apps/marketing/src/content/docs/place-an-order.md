@@ -39,6 +39,11 @@ reads **PAPER**, **ON-CHAIN**, or nothing at all for a live CEX order, so the
 last thing you look at before committing tells you what kind of money is at
 stake.
 
+If you would rather not wait through the hold, switch the gesture to a single
+click in Settings, Risk Management, under Order confirmation. It applies to
+this ticket and to the co-pilot's order cards, and the note under the button
+tells you which gesture is live. Risk limits are enforced the same either way.
+
 ## Market and limit
 
 **Market** fills immediately at the best available price. Fast, and on a thin
