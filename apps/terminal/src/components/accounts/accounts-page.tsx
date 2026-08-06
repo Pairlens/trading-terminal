@@ -597,13 +597,17 @@ export function AccountsPage() {
                   onSubmit={handleAddCryptoWallet}
                 />
 
-                {/* Enrollment gate. Resumes whatever the user was doing. */}
+                {/* Enrollment gate. Resumes whatever the user was doing.
+                    The dialog closes itself BEFORE it reports success, so
+                    clearing `pendingAction` on close would drop the very retry
+                    this exists for — and the user would have to press Save
+                    again over a form they already filled in. Only `onEnrolled`
+                    consumes it, and only a real enrollment fires that, so a
+                    cancelled dialog just leaves a closure nothing calls; the
+                    next attempt overwrites it. */}
                 <VaultEnrollmentDialog
                   open={enrollOpen}
-                  onOpenChange={(next) => {
-                    setEnrollOpen(next)
-                    if (!next) pendingAction.current = null
-                  }}
+                  onOpenChange={setEnrollOpen}
                   onEnrolled={() => {
                     const resume = pendingAction.current
                     pendingAction.current = null
