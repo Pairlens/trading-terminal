@@ -2359,6 +2359,7 @@
       "spot": "现货"
     },
     "tier": "等级",
+    "uninstall": "卸载",
     "uninstalled": "已卸载",
     "updateReactivate": "更新并重新启用",
     "version": "版本",

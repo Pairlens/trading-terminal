@@ -2359,6 +2359,7 @@
       "spot": "現物"
     },
     "tier": "階層",
+    "uninstall": "アンインストール",
     "uninstalled": "アンインストール済み",
     "updateReactivate": "更新して再有効化",
     "version": "バージョン",

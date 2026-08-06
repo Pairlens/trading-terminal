@@ -2359,6 +2359,7 @@
       "spot": "Spot"
     },
     "tier": "Niveau",
+    "uninstall": "Désinstaller",
     "uninstalled": "Désinstallé",
     "updateReactivate": "Mettre à jour et réactiver",
     "version": "Version",
