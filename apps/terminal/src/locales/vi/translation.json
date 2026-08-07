@@ -2272,7 +2272,8 @@
     "notListed": "Không niêm yết",
     "quiet": "Chưa có khớp",
     "noVenues": "Không sàn nào khác giao dịch loại tài sản này",
-    "desktopFooter": "Một số sàn chỉ hoạt động trong ứng dụng máy tính",
+    "feesFooter": "Giá chưa gồm phí, spread và thời gian chuyển",
+    "feesTooltip": "Mọi mức giá và phần trăm ở đây đều là số gộp. Phí sàn, chi phí rút, thời gian chuyển và độ sâu nằm dưới mức đầu sổ lệnh đều có thể lớn hơn khoảng chênh bạn đang thấy. Hãy kiểm tra trước khi hành động.",
     "desktopOnlyRow": "{{venue}} cần ứng dụng máy tính",
     "switchTo": "Xem cặp này trên {{venue}}"
   },

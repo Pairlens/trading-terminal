@@ -2272,7 +2272,8 @@
     "notListed": "Nicht gelistet",
     "quiet": "Keine Trades",
     "noVenues": "Keine andere Börse handelt diese Anlageklasse",
-    "desktopFooter": "Manche Börsen funktionieren nur in der Desktop-App",
+    "feesFooter": "Preise ohne Gebühren, Spread und Transferzeit",
+    "feesTooltip": "Jeder Preis und jeder Prozentsatz hier ist brutto. Börsengebühren, Auszahlungskosten, Transferzeit und die Tiefe jenseits der ersten Orderbuchebene können jeweils größer sein als der Abstand, den Sie sehen. Prüfen Sie das, bevor Sie handeln.",
     "desktopOnlyRow": "{{venue}} braucht die Desktop-App",
     "switchTo": "Dieses Paar auf {{venue}} charten"
   },

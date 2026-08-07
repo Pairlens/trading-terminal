@@ -2272,7 +2272,8 @@
     "notListed": "Tidak terdaftar",
     "quiet": "Tanpa transaksi",
     "noVenues": "Tidak ada bursa lain yang memperdagangkan kelas aset ini",
-    "desktopFooter": "Sebagian bursa hanya bisa diakses lewat aplikasi desktop",
+    "feesFooter": "Harga belum termasuk biaya, spread, dan waktu transfer",
+    "feesTooltip": "Setiap harga dan persentase di sini bersifat kotor. Biaya bursa, ongkos penarikan, waktu transfer, dan kedalaman di bawah level teratas order book masing-masing bisa lebih besar dari selisih yang Anda lihat. Periksa dulu sebelum bertindak.",
     "desktopOnlyRow": "{{venue}} butuh aplikasi desktop",
     "switchTo": "Buka pasangan ini di {{venue}}"
   },

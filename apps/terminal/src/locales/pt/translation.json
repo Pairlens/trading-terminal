@@ -2272,7 +2272,8 @@
     "notListed": "Não listado",
     "quiet": "Sem negócios",
     "noVenues": "Nenhuma outra exchange negocia esta classe de ativo",
-    "desktopFooter": "Algumas exchanges só funcionam no app de desktop",
+    "feesFooter": "Preços não incluem taxas, spread nem tempo de transferência",
+    "feesTooltip": "Todo preço e percentual aqui é bruto. Taxas da exchange, custos de saque, tempo de transferência e a profundidade além do topo do livro podem ser maiores que a diferença que você está vendo. Confira antes de agir.",
     "desktopOnlyRow": "{{venue}} exige o app de desktop",
     "switchTo": "Ver este par na {{venue}}"
   },

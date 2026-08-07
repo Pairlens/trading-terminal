@@ -2272,7 +2272,8 @@
     "notListed": "No listado",
     "quiet": "Sin operaciones",
     "noVenues": "Ningún otro exchange opera esta clase de activo",
-    "desktopFooter": "Algunos exchanges solo funcionan en la app de escritorio",
+    "feesFooter": "Los precios no incluyen comisiones, spread ni tiempo de transferencia",
+    "feesTooltip": "Todos los precios y porcentajes aquí son brutos. Las comisiones del exchange, los costes de retirada, el tiempo de transferencia y la profundidad más allá del tope del libro pueden ser mayores que la diferencia que estás viendo. Compruébalos antes de actuar.",
     "desktopOnlyRow": "{{venue}} requiere la app de escritorio",
     "switchTo": "Ver este par en {{venue}}"
   },

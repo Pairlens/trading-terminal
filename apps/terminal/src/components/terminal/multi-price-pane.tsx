@@ -23,6 +23,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ArrowRight,
   ArrowUpDown,
+  Info,
   Monitor,
   Pause,
   Play,
@@ -150,8 +151,6 @@ function MultiPricePaneInner({
     }
     return ordered
   }, [quotes, sortMode])
-
-  const hasDesktopOnly = quotes.some((q) => q.status === 'desktop-only')
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden text-xs">
@@ -336,16 +335,29 @@ function MultiPricePaneInner({
         )}
       </div>
 
-      {hasDesktopOnly && (
-        <button
-          type="button"
-          className="flex items-center gap-1.5 border-t border-border/50 px-2 py-1 text-left text-[10px] text-muted-foreground transition-colors hover:text-foreground"
-          onClick={() => setDownloadOpen(true)}
+      {/* Every number in this pane is gross, and the gaps it surfaces are
+          routinely smaller than a taker fee — a 0.05% venue premium is inside
+          what most venues charge to cross. So the caveat is permanent chrome
+          rather than a tooltip on the arbitrage strip: it applies to the whole
+          board, including the ordinary case where there is no crossing edge
+          and someone is simply picking where to buy.
+
+          This is the footer slot the desktop notice used to hold. Nothing was
+          lost by taking it: the unreachable venues each carry their own
+          Desktop mark, and their rows still open the download dialog. */}
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <div className="flex shrink-0 items-center gap-1.5 border-t border-border/50 px-2 py-1 text-[10px] text-muted-foreground" />
+          }
         >
-          <Monitor className="size-3 shrink-0" />
-          <span className="truncate">{t('multiPrice.desktopFooter')}</span>
-        </button>
-      )}
+          <Info className="size-3 shrink-0" />
+          <span className="truncate">{t('multiPrice.feesFooter')}</span>
+        </TooltipTrigger>
+        <TooltipContent className="max-w-72">
+          {t('multiPrice.feesTooltip')}
+        </TooltipContent>
+      </Tooltip>
 
       <DesktopDownloadDialog
         open={downloadOpen}

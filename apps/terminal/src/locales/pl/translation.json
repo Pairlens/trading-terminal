@@ -2288,7 +2288,8 @@
     "notListed": "Brak pary",
     "quiet": "Brak transakcji",
     "noVenues": "Żadna inna giełda nie obsługuje tej klasy aktywów",
-    "desktopFooter": "Część giełd działa tylko w aplikacji na komputer",
+    "feesFooter": "Ceny bez prowizji, spreadu i czasu transferu",
+    "feesTooltip": "Każda cena i każdy procent są tu wartościami brutto. Prowizje giełdy, koszty wypłaty, czas transferu i głębokość poza pierwszym poziomem księgi mogą być większe niż różnica, którą widzisz. Sprawdź je, zanim zaczniesz działać.",
     "desktopOnlyRow": "{{venue}} wymaga aplikacji na komputer",
     "switchTo": "Pokaż tę parę na {{venue}}"
   },

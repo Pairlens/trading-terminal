@@ -2272,7 +2272,8 @@
     "notListed": "Not listed",
     "quiet": "No prints",
     "noVenues": "No other venue trades this asset class",
-    "desktopFooter": "Some venues only work in the desktop app",
+    "feesFooter": "Prices exclude fees, spread and transfer time",
+    "feesTooltip": "Every price and percentage here is gross. Exchange fees, withdrawal costs, transfer time and depth past the top of the book can each be larger than the gap you are looking at. Check them before acting on one.",
     "desktopOnlyRow": "{{venue}} needs the desktop app",
     "switchTo": "Chart this pair on {{venue}}"
   },

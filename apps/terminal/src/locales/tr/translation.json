@@ -2272,7 +2272,8 @@
     "notListed": "Listede yok",
     "quiet": "İşlem yok",
     "noVenues": "Bu varlık sınıfını işleyen başka borsa yok",
-    "desktopFooter": "Bazı borsalar yalnızca masaüstü uygulamasında çalışır",
+    "feesFooter": "Fiyatlara komisyon, spread ve transfer süresi dahil değildir",
+    "feesTooltip": "Buradaki her fiyat ve yüzde brüttür. Borsa komisyonları, çekim maliyetleri, transfer süresi ve defterin ilk kademesinin ötesindeki derinlik, baktığınız farktan tek başına büyük olabilir. Harekete geçmeden önce kontrol edin.",
     "desktopOnlyRow": "{{venue}} masaüstü uygulaması gerektiriyor",
     "switchTo": "Bu pariteyi {{venue}} üzerinde aç"
   },

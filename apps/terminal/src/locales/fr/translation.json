@@ -2272,7 +2272,8 @@
     "notListed": "Non listé",
     "quiet": "Aucun échange",
     "noVenues": "Aucun autre exchange ne traite cette classe d'actifs",
-    "desktopFooter": "Certains exchanges ne fonctionnent que dans l'app de bureau",
+    "feesFooter": "Prix hors frais, spread et temps de transfert",
+    "feesTooltip": "Chaque prix et pourcentage affiché ici est brut. Les frais de l'exchange, les coûts de retrait, le temps de transfert et la profondeur au-delà de la première ligne du carnet peuvent chacun dépasser l'écart que vous regardez. Vérifiez-les avant d'agir.",
     "desktopOnlyRow": "{{venue}} nécessite l'app de bureau",
     "switchTo": "Afficher cette paire sur {{venue}}"
   },

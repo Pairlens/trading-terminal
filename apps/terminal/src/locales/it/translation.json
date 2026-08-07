@@ -2272,7 +2272,8 @@
     "notListed": "Non quotata",
     "quiet": "Nessuno scambio",
     "noVenues": "Nessun altro exchange tratta questa classe di attivo",
-    "desktopFooter": "Alcuni exchange funzionano solo nell'app desktop",
+    "feesFooter": "Prezzi al lordo di commissioni, spread e tempi di trasferimento",
+    "feesTooltip": "Ogni prezzo e percentuale qui è al lordo. Commissioni dell’exchange, costi di prelievo, tempi di trasferimento e profondità oltre il primo livello del book possono superare la differenza che stai guardando. Verificali prima di agire.",
     "desktopOnlyRow": "{{venue}} richiede l'app desktop",
     "switchTo": "Apri questa coppia su {{venue}}"
   },
