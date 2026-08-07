@@ -46,7 +46,7 @@ glance. See [risk guardrails](/docs/risk-guardrails).
 | Panel              | What it shows                                               |
 | ------------------ | ----------------------------------------------------------- |
 | **Markets**        | Every trading pair your connectors can reach                |
-| **Watchlist**      | Your own tracked pairs, in a list you curate                |
+| **Watchlist**      | Tracked pairs, starting with Top Crypto and Top Equities    |
 | **Recent Tickers** | Recently viewed pairs with live prices, for quick switching |
 | **Top Coins**      | Coins ranked by volume, market cap, and price change        |
 | **Heatmap**        | Market performance across sectors at a glance               |
