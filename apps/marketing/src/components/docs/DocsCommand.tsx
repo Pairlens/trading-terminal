@@ -12,6 +12,7 @@ import {
 } from '@pairlens/ui/components/ui/command'
 import type { ReactNode } from 'react'
 import { SITE } from '@/lib/site'
+import { track } from '@/scripts/analytics-events'
 
 type Page = { title: string; href: string; group: string }
 type Section = { label: string; items: Array<Page> }
@@ -98,10 +99,17 @@ export function DocsCommand({ pages }: { pages: Array<Page> }) {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
-        setOpen((o) => !o)
+        setOpen((o) => {
+          // Only the opening half is a search; the same chord closes it.
+          if (!o) track('docs_search_opened', { trigger: 'hotkey' })
+          return !o
+        })
       }
     }
-    const onOpen = () => setOpen(true)
+    const onOpen = () => {
+      track('docs_search_opened', { trigger: 'button' })
+      setOpen(true)
+    }
     document.addEventListener('keydown', onKey)
     document.addEventListener('pairlens:open-command', onOpen)
     return () => {
@@ -154,7 +162,15 @@ export function DocsCommand({ pages }: { pages: Array<Page> }) {
                 <CommandItem
                   key={p.href}
                   value={`${p.title} ${section.label}`}
-                  onSelect={() => select(() => navigateTo(p.href))}
+                  onSelect={() =>
+                    select(() => {
+                      track('docs_search_selected', {
+                        kind: 'page',
+                        target: p.href,
+                      })
+                      navigateTo(p.href)
+                    })
+                  }
                   className={itemClass}
                 >
                   <DocIcon className="size-[17px]" />
@@ -169,6 +185,10 @@ export function DocsCommand({ pages }: { pages: Array<Page> }) {
               value="copy install command git clone"
               onSelect={() =>
                 select(() => {
+                  track('docs_search_selected', {
+                    kind: 'action',
+                    target: 'copy-install-command',
+                  })
                   navigator.clipboard
                     ?.writeText(
                       'git clone https://github.com/Pairlens/trading-terminal',
@@ -184,7 +204,14 @@ export function DocsCommand({ pages }: { pages: Array<Page> }) {
             <CommandItem
               value="ask the co-pilot ai assistant"
               onSelect={() =>
-                select(() => window.location.assign(SITE.launchUrl))
+                select(() => {
+                  track('docs_search_selected', {
+                    kind: 'action',
+                    target: 'ask-the-copilot',
+                  })
+                  track('terminal_launched', { surface: 'docs-command' })
+                  window.location.assign(SITE.launchUrl)
+                })
               }
               className={itemClass}
             >

@@ -43,7 +43,11 @@ const holdsCurrent = (item: NavGroup['items'][number]) =>
   >
 </button>
 
-<nav aria-label="Docs" class="mt-[26px] flex flex-col gap-5">
+<nav
+  aria-label="Docs"
+  data-nav-loc="docs-sidebar"
+  class="mt-[26px] flex flex-col gap-5"
+>
   {
     nav.map((group) => (
       <div

@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Thiết lập biểu đồ",
-          "description": "Chỉ báo, hình vẽ, loại biểu đồ và kiểu vẽ mặc định của bạn."
+          "description": "Chỉ báo, hình vẽ, loại biểu đồ, công cụ yêu thích và kiểu vẽ mặc định của bạn."
         },
         "workspaces": {
           "title": "Không gian làm việc và bố cục",
@@ -1070,6 +1070,17 @@
         "detail": "Khóa sàn nằm trong keychain hệ thống, không bao giờ ở bộ nhớ trình duyệt hay máy chủ của chúng tôi."
       }
     },
+    "nudge": {
+      "learnMore": "Tìm hiểu thêm",
+      "notifications": {
+        "title": "Cảnh báo chạy khi Pairlens còn hoạt động",
+        "description": "Trình duyệt làm chậm tab bạn không nhìn rồi tạm dừng nó. Ứng dụng máy tính vẫn theo dõi cảnh báo kể cả khi đã đóng cửa sổ."
+      },
+      "bots": {
+        "title": "Bot giao dịch khi Pairlens còn hoạt động",
+        "description": "Trình duyệt làm chậm tab bạn không nhìn rồi tạm dừng nó. Ứng dụng máy tính giữ bot giao dịch và không cho máy ngủ."
+      }
+    },
     "wall": {
       "title": "{{venue}} cần ứng dụng máy tính",
       "description": "Sàn này trả dữ liệu thị trường mà không kèm các header trình duyệt cần để đọc. Ứng dụng máy tính kết nối trực tiếp, nên mọi sàn đều chạy được ở đó.",
@@ -1422,6 +1433,10 @@
       "singleUseTools": "Công cụ dùng một lần",
       "undo": "Hoàn tác",
       "redo": "Làm lại",
+      "addToFavorites": "Thêm vào yêu thích",
+      "removeFromFavorites": "Xóa khỏi yêu thích",
+      "recentTools": "Công cụ gần đây",
+      "noRecentTools": "Chưa dùng công cụ nào",
       "categories": {
         "lines": "Đường",
         "shapes": "Hình dạng",
@@ -2214,6 +2229,7 @@
     "trades": "Giao dịch",
     "marketDepth": "Độ sâu thị trường",
     "pairInfo": "Thông tin cặp",
+    "multiPrice": "Giá đa sàn",
     "research": "Nghiên cứu",
     "social": "Mạng xã hội",
     "risk": "Rủi ro",
@@ -2240,6 +2256,7 @@
     "trades": "Dòng khớp lệnh trực tiếp với mọi giao dịch công khai theo thời gian thực",
     "marketDepth": "Biểu đồ độ sâu thị trường tích lũy cho cặp đang hoạt động",
     "pairInfo": "Số liệu chính, tỷ lệ funding và metadata cho cặp đang hoạt động",
+    "multiPrice": "Cùng một cặp trên mọi sàn cùng lúc, sắp xếp để tìm mức khớp tốt nhất",
     "research": "Báo cáo phân tích chuyên sâu do AI tạo cho cặp đang hoạt động",
     "social": "Tâm lý mạng xã hội và hoạt động cộng đồng cho một cặp",
     "risk": "Chỉ số rủi ro danh mục và cấu hình giới hạn bảo vệ",
@@ -2247,6 +2264,33 @@
     "web": "Nhúng bất kỳ trang web nào làm panel trong không gian làm việc của bạn",
     "liquidityHeatmap": "Bản đồ nhiệt thanh khoản sổ lệnh thể hiện độ sâu theo mức giá theo thời gian",
     "recentTickers": "Các cặp xem gần đây với giá trực tiếp để chuyển đổi nhanh"
+  },
+  "multiPrice": {
+    "venue": "Sàn",
+    "vsBest": "so với tốt nhất",
+    "change24h": "24h",
+    "quoting": "{{priced}}/{{total}} sàn đang báo giá cặp này",
+    "spreadTooltip": "Rẻ nhất trên {{low}}, đắt nhất trên {{high}}",
+    "sortBy": "Đổi cách sắp xếp",
+    "sortedByPrice": "Sắp xếp theo giá, rẻ nhất trước",
+    "sortedByVenue": "Sắp xếp theo sàn",
+    "pause": "Tạm dừng cập nhật",
+    "resume": "Tiếp tục cập nhật",
+    "buyAt": "Mua trên {{venue}}",
+    "sellAt": "Bán trên {{venue}}",
+    "edgeTooltip": "Chênh lệch gộp giữa ask thấp nhất và bid cao nhất. Chưa tính phí, thời gian chuyển và phần nằm sâu hơn mức đầu sổ lệnh.",
+    "best": "Tốt nhất",
+    "high": "Cao",
+    "stale": "Cũ",
+    "delayed": "Trễ",
+    "desktop": "Máy tính",
+    "notListed": "Không niêm yết",
+    "quiet": "Chưa có khớp",
+    "noVenues": "Không sàn nào khác giao dịch loại tài sản này",
+    "feesFooter": "Giá chưa gồm phí, spread và thời gian chuyển",
+    "feesTooltip": "Mọi mức giá và phần trăm ở đây đều là số gộp. Phí sàn, chi phí rút, thời gian chuyển và độ sâu nằm dưới mức đầu sổ lệnh đều có thể lớn hơn khoảng chênh bạn đang thấy. Hãy kiểm tra trước khi hành động.",
+    "desktopOnlyRow": "{{venue}} cần ứng dụng máy tính",
+    "switchTo": "Xem cặp này trên {{venue}}"
   },
   "recentTickers": {
     "empty": "Chưa có cặp nào được xem gần đây",

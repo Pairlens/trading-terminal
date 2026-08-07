@@ -1,9 +1,12 @@
 # Analytics tracking plan
 
-Pairlens uses PostHog (EU) for opt-in product analytics. This document is the
-human-readable index of what we measure and the rules every event must follow.
-The machine-checked source of truth for the client taxonomy is
-[`apps/terminal/src/lib/analytics-events.ts`](../apps/terminal/src/lib/analytics-events.ts);
+Pairlens uses PostHog (EU) for product analytics, in two separate projects:
+**Pairlens Terminal** (opt-in) and **Pairlens Marketing** (cookieless by
+default). This document is the human-readable index of what we measure and the
+rules every event must follow. The machine-checked sources of truth are
+[`apps/terminal/src/lib/analytics-events.ts`](../apps/terminal/src/lib/analytics-events.ts)
+and
+[`apps/marketing/src/scripts/analytics-events.ts`](../apps/marketing/src/scripts/analytics-events.ts);
 the server taxonomy lives in the App Server repo
 (`apps/app-server/src/lib/analytics.ts`).
 
@@ -55,20 +58,54 @@ Super properties on every event: `platform` (desktop/web), `app_version`,
 `ai_proxy_completed` (model, workload, credits, tokens, duration),
 `ai_proxy_rejected` (typed 402 reason), `ai_search_completed`.
 
-The marketing site (separate PostHog project) captures pageviews under its
-cookie banner plus `download_clicked` (os).
+## Marketing site events (separate PostHog project)
+
+The marketing site is **cookieless by default**: capture starts anonymous and
+storage-free from the first paint, and accepting the banner only upgrades it
+to a first-party cookie that remembers the visitor between visits. Every event
+below rides that posture, so declining costs no measurement.
+
+| Domain              | Events                                                                                                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The two doors       | `terminal_launched` (surface), `download_clicked` (os, surface), `download_retried`, `download_flow_restarted`, `command_copied`, `install_page_shared` |
+| Chrome & navigation | `nav_clicked` (location, label, href), `outbound_link_clicked` (domain), `mobile_nav_opened`, `docs_drawer_opened`, `cookie_consent_decided`            |
+| Reading depth       | `scroll_depth_reached` (25 / 50 / 75 / 100, once per page)                                                                                              |
+| Landing engagement  | `feature_opened` (feature, card-vs-phrase), `feature_stepped`, `desk_slot_changed`                                                                      |
+| Consideration       | `faq_opened` (question), `pricing_plan_cta_clicked` (plan)                                                                                              |
+| /charts             | `chart_skin_changed` (control, value), `code_example_viewed`                                                                                            |
+| Docs                | `docs_search_opened` (hotkey-vs-button) → `docs_search_selected` (page-vs-action)                                                                       |
+| Affiliates          | `affiliate_code_applied` (tier, ok) → `affiliate_venue_toggled` → `affiliate_claim_submitted` (tier, venue_count)                                       |
+
+Every marketing event carries `page_area` (landing / install / charts /
+intelligence / affiliates / licensing / docs / legal) and the `visitor_os`
+super property, which is the machine the visitor is on — not the build they
+downloaded. The gap between `visitor_os` and `download_clicked.os` is people
+fetching a build for another machine.
+
+The affiliate claim form is the one place the site takes typed input. The
+email and the exchange referral codes pasted into it are never captured: the
+events record that a step happened and how many venues were picked, nothing
+else. Note that PostHog autocapture is still on for this project (it predates
+this taxonomy); it records clicked-element text, never input values.
 
 ## Dashboards
 
-All in the terminal's PostHog project, prefixed `Pairlens ·`: **Trading**,
-**AI Copilot**, **Workspaces & Panels**, **Activation & Growth**,
-**Intelligence Revenue** (MRR movement, credits/COGS, conversion funnels),
-**Product Health** (retention, lifecycle, stickiness, feature/version
-adoption, chart loop, risk-guardrail usage).
+Terminal project, prefixed `Pairlens ·`: **Trading**, **AI Copilot**,
+**Workspaces & Panels**, **Activation & Growth**, **Intelligence Revenue**
+(MRR movement, credits/COGS, conversion funnels), **Product Health**
+(retention, lifecycle, stickiness, feature/version adoption, chart loop,
+risk-guardrail usage).
+
+Marketing project, prefixed `Marketing ·`: **Acquisition & Conversion** (the
+launch/download funnel per surface and OS), **Content Engagement** (reading
+depth, feature dialog, FAQ, charts playground), **Docs & Developers**,
+**Affiliates Funnel**.
 
 ## Adding an event
 
 Declare it in the typed taxonomy first (the property set is the privacy
 review), call `track()` at the chokepoint closest to the user action, and add
 a tile to the relevant dashboard. Prefer one well-placed chokepoint over
-per-surface duplicates, and coarse enums over raw values.
+per-surface duplicates, and coarse enums over raw values. On the marketing
+site, prefer a `data-*` hook read by the one delegated listener in
+`analytics-events.ts` over a new per-component script.

@@ -40,11 +40,15 @@ const CONSENT_KEY = key ? `__ph_opt_in_out_${key}` : ''
 
 let client: PostHog | null = null
 let booting = false
+// Calls made before the deferred SDK lands. Capped so a load that never
+// finishes (blocked host, offline visitor) cannot grow it without bound —
+// the site emits an event per interaction, not per session.
+const QUEUE_MAX = 200
 const queue: Array<(ph: PostHog) => void> = []
 
 function withClient(fn: (ph: PostHog) => void) {
   if (client) fn(client)
-  else if (key) queue.push(fn)
+  else if (key && queue.length < QUEUE_MAX) queue.push(fn)
 }
 
 function migrateLegacyConsent(posthog: PostHog) {
@@ -132,6 +136,9 @@ export function declineCookies() {
  * Explicit product event (e.g. a download CTA click). Respects the consent
  * state exactly like pageviews: pending and decline capture cookieless,
  * accept captures normally. No-op when no key is configured.
+ *
+ * Prefer `track()` from `analytics-events.ts` — the declared taxonomy is
+ * where the privacy review of a new event happens.
  */
 export function captureEvent(
   name: string,
@@ -140,38 +147,11 @@ export function captureEvent(
   withClient((ph) => ph.capture(name, properties))
 }
 
-// CTA attribution for the site's two doors. Delegated from here because the
-// page CTAs use `is:inline` scripts (no module imports); this module rides on
-// every page via the cookie banner.
-//
-// Launch: every anchor into the hosted terminal carries
-// `data-launch-terminal="<surface>"`, so the funnel can be read per placement
-// (header, landing hero, install page, ...) rather than as one lump.
-//
-// Download: every release-download anchor carries `data-os-download`; the OS
-// is read from a static `data-os`, the visible `[data-os-face]` face on the
-// OS-switching landing CTAs, or the `[data-os-name]` label on /install.
-if (typeof document !== 'undefined') {
-  document.addEventListener('click', (event) => {
-    if (!(event.target instanceof Element)) return
-
-    const launch = event.target.closest('a[data-launch-terminal]')
-    if (launch) {
-      captureEvent('terminal_launched', {
-        surface: launch.getAttribute('data-launch-terminal') || 'unknown',
-      })
-      return
-    }
-
-    const target = event.target.closest('a[data-os-download]')
-    if (!target) return
-    const os =
-      target.getAttribute('data-os') ??
-      target
-        .querySelector('[data-os-face]:not([hidden])')
-        ?.getAttribute('data-os-face') ??
-      target.querySelector('[data-os-name]')?.textContent?.trim() ??
-      'unknown'
-    captureEvent('download_clicked', { os })
-  })
+/**
+ * Super properties attached to every subsequent event and pageview (e.g. the
+ * visitor's platform). Safe before the SDK lands — queued like everything
+ * else, so the init-time pageview is the only capture that can miss them.
+ */
+export function registerProperties(props: Record<string, unknown>) {
+  withClient((ph) => ph.register(props))
 }

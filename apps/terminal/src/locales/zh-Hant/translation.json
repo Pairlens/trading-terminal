@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "圖表設定",
-          "description": "指標、畫線、圖表類型以及你的預設繪圖樣式。"
+          "description": "指標、畫線、圖表類型、收藏的工具以及你的預設繪圖樣式。"
         },
         "workspaces": {
           "title": "工作區與版面",
@@ -1070,6 +1070,17 @@
         "detail": "交易所金鑰保存在系統鑰匙圈中，不會進入瀏覽器儲存空間，也不會到我們的伺服器。"
       }
     },
+    "nudge": {
+      "learnMore": "瞭解更多",
+      "notifications": {
+        "title": "提醒只在 Pairlens 執行時觸發",
+        "description": "瀏覽器會拖慢你沒在看的分頁，最後將它暫停。桌面應用程式即使關掉視窗也會盯著你的提醒。"
+      },
+      "bots": {
+        "title": "機器人只在 Pairlens 執行時交易",
+        "description": "瀏覽器會拖慢你沒在看的分頁，最後將它暫停。桌面應用程式讓機器人繼續交易，還會阻止電腦休眠。"
+      }
+    },
     "wall": {
       "title": "{{venue}} 需要桌面應用程式",
       "description": "這家交易所回傳行情資料時不帶瀏覽器讀取所需的標頭。桌面應用程式以原生方式連線，所有交易所在那裡都能用。",
@@ -1422,6 +1433,10 @@
       "singleUseTools": "單次繪圖工具",
       "undo": "復原",
       "redo": "重做",
+      "addToFavorites": "加入收藏",
+      "removeFromFavorites": "從收藏移除",
+      "recentTools": "最近使用的工具",
+      "noRecentTools": "尚未使用任何工具",
       "categories": {
         "lines": "線條",
         "shapes": "形狀",
@@ -2214,6 +2229,7 @@
     "trades": "成交紀錄",
     "marketDepth": "市場深度",
     "pairInfo": "交易對資訊",
+    "multiPrice": "多平台價格",
     "research": "研究報告",
     "social": "社群動態",
     "risk": "風險",
@@ -2240,6 +2256,7 @@
     "trades": "即時成交明細，顯示每一筆公開成交",
     "marketDepth": "目前交易對的累積市場深度圖",
     "pairInfo": "目前交易對的關鍵數據、資金費率與詮釋資料",
+    "multiPrice": "同一交易對在所有交易所的即時價格，依最佳成交排序",
     "research": "針對目前交易對的 AI 深度研究報告",
     "social": "交易對的社群情緒與討論動態",
     "risk": "投資組合風險指標與護欄設定",
@@ -2247,6 +2264,33 @@
     "web": "在工作區中嵌入任何網站作為面板",
     "liquidityHeatmap": "委託簿流動性熱力圖，呈現各價位隨時間的深度變化",
     "recentTickers": "近期查看過的交易對即時報價，方便快速切換"
+  },
+  "multiPrice": {
+    "venue": "交易所",
+    "vsBest": "對比最優",
+    "change24h": "24h",
+    "quoting": "{{total}} 家交易所中有 {{priced}} 家報價此交易對",
+    "spreadTooltip": "{{low}} 最低，{{high}} 最高",
+    "sortBy": "變更排序",
+    "sortedByPrice": "依價格排序，由低到高",
+    "sortedByVenue": "依交易所排序",
+    "pause": "暫停更新",
+    "resume": "繼續更新",
+    "buyAt": "在 {{venue}} 買入",
+    "sellAt": "在 {{venue}} 賣出",
+    "edgeTooltip": "最低賣價與最高買價之間的毛差。未計手續費、轉帳時間以及盤口首檔以外的深度。",
+    "best": "最優",
+    "high": "最高",
+    "stale": "過時",
+    "delayed": "延遲",
+    "desktop": "桌面版",
+    "notListed": "未上架",
+    "quiet": "暫無成交",
+    "noVenues": "沒有其他交易所交易此資產類別",
+    "feesFooter": "價格未計手續費、點差與轉帳時間",
+    "feesTooltip": "此處所有價格與百分比皆為毛值。交易所手續費、提領成本、轉帳時間以及盤口首檔以外的深度，任何一項都可能大於你看到的價差。行動前請先核對。",
+    "desktopOnlyRow": "{{venue}} 需要桌面應用程式",
+    "switchTo": "在 {{venue}} 檢視此交易對"
   },
   "recentTickers": {
     "empty": "尚無近期查看的交易對",

@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Ustawienia wykresu",
-          "description": "Wskaźniki, rysunki, typ wykresu i Twoje domyślne style rysowania."
+          "description": "Wskaźniki, rysunki, typ wykresu, ulubione narzędzia i Twoje domyślne style rysowania."
         },
         "workspaces": {
           "title": "Przestrzenie robocze i układy",
@@ -1074,6 +1074,17 @@
         "detail": "Klucze giełdowe zostają w magazynie systemowym, nigdy w przeglądarce ani na naszych serwerach."
       }
     },
+    "nudge": {
+      "learnMore": "Dowiedz się więcej",
+      "notifications": {
+        "title": "Alerty działają, dopóki Pairlens jest uruchomiony",
+        "description": "Przeglądarka spowalnia kartę, na którą nie patrzysz, a potem ją usypia. Aplikacja na komputer pilnuje Twoich alertów nawet po zamknięciu okna."
+      },
+      "bots": {
+        "title": "Boty handlują, dopóki Pairlens jest uruchomiony",
+        "description": "Przeglądarka spowalnia kartę, na którą nie patrzysz, a potem ją usypia. Aplikacja na komputer nie pozwala botom stanąć ani komputerowi zasnąć."
+      }
+    },
     "wall": {
       "title": "{{venue}} wymaga aplikacji na komputer",
       "description": "Ta giełda udostępnia dane rynkowe bez nagłówków, których przeglądarka potrzebuje, by je odczytać. Aplikacja na komputer łączy się natywnie, więc działa tam każda giełda.",
@@ -1430,6 +1441,10 @@
       "singleUseTools": "Narzędzia jednorazowe",
       "undo": "Cofnij",
       "redo": "Ponów",
+      "addToFavorites": "Dodaj do ulubionych",
+      "removeFromFavorites": "Usuń z ulubionych",
+      "recentTools": "Ostatnie narzędzia",
+      "noRecentTools": "Nie użyto jeszcze żadnego narzędzia",
       "categories": {
         "lines": "Linie",
         "shapes": "Kształty",
@@ -2230,6 +2245,7 @@
     "trades": "Transakcje",
     "marketDepth": "Głębokość rynku",
     "pairInfo": "Informacje o parze",
+    "multiPrice": "Porównanie cen",
     "research": "Research",
     "social": "Społeczność",
     "risk": "Ryzyko",
@@ -2256,6 +2272,7 @@
     "trades": "Wstęga transakcji na żywo z każdą publiczną realizacją w czasie rzeczywistym",
     "marketDepth": "Skumulowany wykres głębokości rynku dla aktywnej pary",
     "pairInfo": "Kluczowe statystyki, stopa finansowania i metadane dla aktywnej pary",
+    "multiPrice": "Ta sama para wyceniana jednocześnie na wszystkich giełdach, posortowana pod najlepsze wykonanie",
     "research": "Wygenerowane przez AI szczegółowe raporty dla aktywnej pary",
     "social": "Nastroje społeczne i aktywność społeczności dla pary",
     "risk": "Metryki ryzyka portfela i konfiguracja zabezpieczeń",
@@ -2263,6 +2280,33 @@
     "web": "Osadź dowolną stronę jako panel w obszarze roboczym",
     "liquidityHeatmap": "Mapa cieplna płynności arkusza zleceń pokazująca głębokość na poziomach cenowych w czasie",
     "recentTickers": "Ostatnio przeglądane pary z cenami na żywo do szybkiego przełączania"
+  },
+  "multiPrice": {
+    "venue": "Giełda",
+    "vsBest": "vs najlepsza",
+    "change24h": "24h",
+    "quoting": "{{priced}} z {{total}} giełd podaje cenę tej pary",
+    "spreadTooltip": "Najtaniej na {{low}}, najdrożej na {{high}}",
+    "sortBy": "Zmień sortowanie",
+    "sortedByPrice": "Sortowanie po cenie, od najtańszej",
+    "sortedByVenue": "Sortowanie po giełdzie",
+    "pause": "Wstrzymaj aktualizacje",
+    "resume": "Wznów aktualizacje",
+    "buyAt": "Kup na {{venue}}",
+    "sellAt": "Sprzedaj na {{venue}}",
+    "edgeTooltip": "Różnica brutto między najniższym askiem a najwyższym bidem. Przed prowizjami, czasem transferu i wszystkim poza pierwszym poziomem księgi.",
+    "best": "Najlepsza",
+    "high": "Wysoka",
+    "stale": "Nieaktualna",
+    "delayed": "Opóźniona",
+    "desktop": "Desktop",
+    "notListed": "Brak pary",
+    "quiet": "Brak transakcji",
+    "noVenues": "Żadna inna giełda nie obsługuje tej klasy aktywów",
+    "feesFooter": "Ceny bez prowizji, spreadu i czasu transferu",
+    "feesTooltip": "Każda cena i każdy procent są tu wartościami brutto. Prowizje giełdy, koszty wypłaty, czas transferu i głębokość poza pierwszym poziomem księgi mogą być większe niż różnica, którą widzisz. Sprawdź je, zanim zaczniesz działać.",
+    "desktopOnlyRow": "{{venue}} wymaga aplikacji na komputer",
+    "switchTo": "Pokaż tę parę na {{venue}}"
   },
   "recentTickers": {
     "empty": "Brak jeszcze ostatnio przeglądanych par",

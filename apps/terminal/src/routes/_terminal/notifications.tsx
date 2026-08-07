@@ -6,6 +6,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Bell } from 'lucide-react'
 import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
+import { DesktopSurfaceNudge } from '@/components/feedback/desktop-nudge'
 import { PageHeader } from '@/components/page-header'
 import { lazyChunk } from '@/lib/lazy-chunk'
 
@@ -23,6 +24,9 @@ function NotificationsPage() {
   const { t } = useTranslation()
   return (
     <SidebarInset className="overflow-hidden">
+      {/* Browser build only, once per device: alert rules are evaluated in
+          this tab, and a browser suspends tabs. */}
+      <DesktopSurfaceNudge surface="notifications" />
       <PageHeader>
         <Bell className="size-4" />
         <h1 className="text-sm font-semibold">{t('nav.notifications')}</h1>

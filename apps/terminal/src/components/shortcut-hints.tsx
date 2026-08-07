@@ -34,6 +34,34 @@ type HintBadge = {
   top: number
 }
 
+/**
+ * Whether a scrolling ancestor has cropped this control out of sight.
+ *
+ * On-screen by its own rect is not the same as on-screen: a button scrolled
+ * past the top of a clipping container (the drawing rail's tool list) keeps a
+ * rect well inside the viewport, and its badge would float over whatever now
+ * occupies that spot.
+ */
+function isClippedByAncestor(anchor: HTMLElement, rect: DOMRect): boolean {
+  let node = anchor.parentElement
+  while (node && node !== document.body) {
+    const style = getComputedStyle(node)
+    if (style.overflowX !== 'visible' || style.overflowY !== 'visible') {
+      const box = node.getBoundingClientRect()
+      if (
+        rect.bottom <= box.top ||
+        rect.top >= box.bottom ||
+        rect.right <= box.left ||
+        rect.left >= box.right
+      ) {
+        return true
+      }
+    }
+    node = node.parentElement
+  }
+  return false
+}
+
 /** Measure every mounted marker's parent control, skipping invisible ones. */
 function collectBadges(): Array<HintBadge> {
   const badges: Array<HintBadge> = []
@@ -61,6 +89,7 @@ function collectBadges(): Array<HintBadge> {
       ) {
         return
       }
+      if (isClippedByAncestor(anchor, rect)) return
       badges.push({
         id: index,
         keys: marker.dataset.shortcutHint ?? '',

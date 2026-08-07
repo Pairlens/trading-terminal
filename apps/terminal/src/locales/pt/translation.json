@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Configuração do gráfico",
-          "description": "Indicadores, desenhos, tipo de gráfico e os seus estilos de desenho predefinidos."
+          "description": "Indicadores, desenhos, tipo de gráfico, ferramentas favoritas e os seus estilos de desenho predefinidos."
         },
         "workspaces": {
           "title": "Espaços de trabalho e disposições",
@@ -1070,6 +1070,17 @@
         "detail": "As chaves da corretora ficam no chaveiro do sistema, nunca no navegador nem nos nossos servidores."
       }
     },
+    "nudge": {
+      "learnMore": "Saiba mais",
+      "notifications": {
+        "title": "Os alertas disparam enquanto o Pairlens está rodando",
+        "description": "O navegador desacelera uma aba que você não está vendo e depois a suspende. O app para desktop cuida dos seus alertas com a janela fechada."
+      },
+      "bots": {
+        "title": "Os bots operam enquanto o Pairlens está rodando",
+        "description": "O navegador desacelera uma aba que você não está vendo e depois a suspende. O app para desktop mantém seus bots operando e evita que a máquina durma."
+      }
+    },
     "wall": {
       "title": "{{venue}} precisa do app de desktop",
       "description": "Esta corretora entrega seus dados de mercado sem os cabeçalhos que um navegador precisa para lê-los. O app de desktop conecta de forma nativa, e lá todas funcionam.",
@@ -1422,6 +1433,10 @@
       "singleUseTools": "Ferramentas de uso único",
       "undo": "Desfazer",
       "redo": "Refazer",
+      "addToFavorites": "Adicionar aos favoritos",
+      "removeFromFavorites": "Remover dos favoritos",
+      "recentTools": "Ferramentas recentes",
+      "noRecentTools": "Nenhuma ferramenta usada ainda",
       "categories": {
         "lines": "Linhas",
         "shapes": "Formas",
@@ -2214,6 +2229,7 @@
     "trades": "Negócios",
     "marketDepth": "Profundidade de Mercado",
     "pairInfo": "Info do Par",
+    "multiPrice": "Multipreço",
     "research": "Pesquisa",
     "social": "Social",
     "risk": "Risco",
@@ -2240,6 +2256,7 @@
     "trades": "Fluxo de negócios ao vivo com cada execução pública em tempo real",
     "marketDepth": "Gráfico de profundidade de mercado acumulada para o par ativo",
     "pairInfo": "Estatísticas principais, taxa de financiamento e metadados do par ativo",
+    "multiPrice": "O mesmo par cotado em todas as exchanges ao mesmo tempo, ordenado para achar a melhor execução",
     "research": "Relatórios detalhados gerados por IA sobre o par ativo",
     "social": "Sentimento social e atividade da comunidade para um par",
     "risk": "Métricas de risco do portfólio e configuração de proteções",
@@ -2247,6 +2264,33 @@
     "web": "Incorpore qualquer site como um painel no seu workspace",
     "liquidityHeatmap": "Mapa de calor de liquidez do livro de ofertas mostrando a profundidade entre níveis de preço ao longo do tempo",
     "recentTickers": "Pares vistos recentemente com preços ao vivo para alternância rápida"
+  },
+  "multiPrice": {
+    "venue": "Exchange",
+    "vsBest": "vs melhor",
+    "change24h": "24h",
+    "quoting": "{{priced}} de {{total}} exchanges cotam este par",
+    "spreadTooltip": "Mais barato na {{low}}, mais caro na {{high}}",
+    "sortBy": "Mudar a ordenação",
+    "sortedByPrice": "Ordenado por preço, do mais barato",
+    "sortedByVenue": "Ordenado por exchange",
+    "pause": "Pausar atualizações",
+    "resume": "Retomar atualizações",
+    "buyAt": "Comprar na {{venue}}",
+    "sellAt": "Vender na {{venue}}",
+    "edgeTooltip": "Diferença bruta entre o menor ask e o maior bid. Antes de taxas, tempo de transferência e tudo o que passa do topo do livro.",
+    "best": "Melhor",
+    "high": "Alto",
+    "stale": "Desatualizado",
+    "delayed": "Atrasado",
+    "desktop": "Desktop",
+    "notListed": "Não listado",
+    "quiet": "Sem negócios",
+    "noVenues": "Nenhuma outra exchange negocia esta classe de ativo",
+    "feesFooter": "Preços não incluem taxas, spread nem tempo de transferência",
+    "feesTooltip": "Todo preço e percentual aqui é bruto. Taxas da exchange, custos de saque, tempo de transferência e a profundidade além do topo do livro podem ser maiores que a diferença que você está vendo. Confira antes de agir.",
+    "desktopOnlyRow": "{{venue}} exige o app de desktop",
+    "switchTo": "Ver este par na {{venue}}"
   },
   "recentTickers": {
     "empty": "Nenhum par visto recentemente",

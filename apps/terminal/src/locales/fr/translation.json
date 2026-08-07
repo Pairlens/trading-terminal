@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Configuration du graphique",
-          "description": "Indicateurs, dessins, type de graphique et vos styles de dessin par défaut."
+          "description": "Indicateurs, dessins, type de graphique, outils favoris et vos styles de dessin par défaut."
         },
         "workspaces": {
           "title": "Espaces de travail et dispositions",
@@ -1070,6 +1070,17 @@
         "detail": "Les clés d'API restent dans le trousseau du système, jamais dans le navigateur ni sur nos serveurs."
       }
     },
+    "nudge": {
+      "learnMore": "En savoir plus",
+      "notifications": {
+        "title": "Les alertes se déclenchent tant que Pairlens tourne",
+        "description": "Le navigateur ralentit un onglet que vous ne regardez pas, puis le suspend. L'application de bureau surveille vos alertes, fenêtre fermée."
+      },
+      "bots": {
+        "title": "Les bots tradent tant que Pairlens tourne",
+        "description": "Le navigateur ralentit un onglet que vous ne regardez pas, puis le suspend. L'application de bureau garde vos bots actifs et empêche la mise en veille."
+      }
+    },
     "wall": {
       "title": "{{venue}} nécessite l’app de bureau",
       "description": "Cette plateforme sert ses données de marché sans les en-têtes dont un navigateur a besoin pour les lire. L’app de bureau se connecte nativement, et toutes y fonctionnent.",
@@ -1422,6 +1433,10 @@
       "singleUseTools": "Outils à usage unique",
       "undo": "Annuler",
       "redo": "Rétablir",
+      "addToFavorites": "Ajouter aux favoris",
+      "removeFromFavorites": "Retirer des favoris",
+      "recentTools": "Outils récents",
+      "noRecentTools": "Aucun outil utilisé pour l’instant",
       "categories": {
         "lines": "Lignes",
         "shapes": "Formes",
@@ -2214,6 +2229,7 @@
     "trades": "Transactions",
     "marketDepth": "Profondeur de marché",
     "pairInfo": "Infos paire",
+    "multiPrice": "Multi-prix",
     "research": "Recherche",
     "social": "Social",
     "risk": "Risque",
@@ -2240,6 +2256,7 @@
     "trades": "Historique des transactions en direct avec chaque exécution publique",
     "marketDepth": "Graphique de profondeur de marché cumulative pour la paire active",
     "pairInfo": "Statistiques clés, taux de financement et métadonnées pour la paire active",
+    "multiPrice": "La même paire cotée sur tous les exchanges en même temps, classée pour repérer la meilleure exécution",
     "research": "Rapports d’analyse approfondie générés par IA sur la paire active",
     "social": "Sentiment social et activité communautaire pour une paire",
     "risk": "Métriques de risque du portefeuille et configuration des garde-fous",
@@ -2247,6 +2264,33 @@
     "web": "Intégrez n’importe quel site web comme panneau dans votre espace de travail",
     "liquidityHeatmap": "Carte thermique de la liquidité du carnet d’ordres montrant la profondeur par niveau de prix dans le temps",
     "recentTickers": "Paires récemment consultées avec prix en direct pour un changement rapide"
+  },
+  "multiPrice": {
+    "venue": "Exchange",
+    "vsBest": "vs meilleur",
+    "change24h": "24h",
+    "quoting": "{{priced}} exchanges sur {{total}} cotent cette paire",
+    "spreadTooltip": "Moins cher sur {{low}}, plus cher sur {{high}}",
+    "sortBy": "Changer le tri",
+    "sortedByPrice": "Trié par prix, du moins cher au plus cher",
+    "sortedByVenue": "Trié par exchange",
+    "pause": "Suspendre les mises à jour",
+    "resume": "Reprendre les mises à jour",
+    "buyAt": "Acheter sur {{venue}}",
+    "sellAt": "Vendre sur {{venue}}",
+    "edgeTooltip": "Écart brut entre le meilleur ask et le meilleur bid. Avant frais, temps de transfert et tout ce qui dépasse la première ligne du carnet.",
+    "best": "Meilleur",
+    "high": "Haut",
+    "stale": "Obsolète",
+    "delayed": "Différé",
+    "desktop": "Bureau",
+    "notListed": "Non listé",
+    "quiet": "Aucun échange",
+    "noVenues": "Aucun autre exchange ne traite cette classe d'actifs",
+    "feesFooter": "Prix hors frais, spread et temps de transfert",
+    "feesTooltip": "Chaque prix et pourcentage affiché ici est brut. Les frais de l'exchange, les coûts de retrait, le temps de transfert et la profondeur au-delà de la première ligne du carnet peuvent chacun dépasser l'écart que vous regardez. Vérifiez-les avant d'agir.",
+    "desktopOnlyRow": "{{venue}} nécessite l'app de bureau",
+    "switchTo": "Afficher cette paire sur {{venue}}"
   },
   "recentTickers": {
     "empty": "Aucune paire consultée récemment",

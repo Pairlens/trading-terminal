@@ -11,7 +11,7 @@ const stars = await getRepoStars()
 
 <header transition:persist="site-header-pill" class="pl-hdr">
   <div data-site-hdr class="pl-hdr-strip">
-    <div class="pl-hdr-pill">
+    <div class="pl-hdr-pill" data-nav-loc="header">
       <a href="/" class="pl-hdr-brand" aria-label="Pairlens home">
         <img
           src="/logo.svg"
@@ -99,7 +99,12 @@ const stars = await getRepoStars()
       </button>
     </div>
 
-    <nav id="pl-hdr-sheet" class="pl-hdr-sheet" aria-label="Primary, mobile">
+    <nav
+      id="pl-hdr-sheet"
+      class="pl-hdr-sheet"
+      aria-label="Primary, mobile"
+      data-nav-loc="header-sheet"
+    >
       {NAV.map((link) => <a href={link.href}>{link.label}</a>)}
       <a href="/install" class="pl-hdr-sheet-dl">
         Download

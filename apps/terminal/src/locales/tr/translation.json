@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Grafik kurulumu",
-          "description": "Göstergeler, çizimler, grafik türü ve varsayılan çizim stillerin."
+          "description": "Göstergeler, çizimler, grafik türü, favori araçlar ve varsayılan çizim stillerin."
         },
         "workspaces": {
           "title": "Çalışma alanları ve düzenler",
@@ -1070,6 +1070,17 @@
         "detail": "Borsa anahtarları sistem anahtar zincirinde kalır, tarayıcı deposunda ya da sunucularımızda asla."
       }
     },
+    "nudge": {
+      "learnMore": "Daha fazla bilgi",
+      "notifications": {
+        "title": "Uyarılar Pairlens çalışırken tetiklenir",
+        "description": "Tarayıcı bakmadığınız sekmeyi yavaşlatır, sonra askıya alır. Masaüstü uygulaması uyarılarınızı pencere kapalıyken de izler."
+      },
+      "bots": {
+        "title": "Botlar Pairlens çalışırken işlem yapar",
+        "description": "Tarayıcı bakmadığınız sekmeyi yavaşlatır, sonra askıya alır. Masaüstü uygulaması botlarınızı çalışır tutar ve bilgisayarı uykuya bırakmaz."
+      }
+    },
     "wall": {
       "title": "{{venue}} masaüstü uygulamasını gerektiriyor",
       "description": "Bu borsa piyasa verilerini, bir tarayıcının okumak için ihtiyaç duyduğu başlıklar olmadan sunuyor. Masaüstü uygulaması doğrudan bağlanır, orada her borsa çalışır.",
@@ -1422,6 +1433,10 @@
       "singleUseTools": "Tek kullanımlık araçlar",
       "undo": "Geri al",
       "redo": "Yinele",
+      "addToFavorites": "Favorilere ekle",
+      "removeFromFavorites": "Favorilerden çıkar",
+      "recentTools": "Son kullanılan araçlar",
+      "noRecentTools": "Henüz araç kullanılmadı",
       "categories": {
         "lines": "Çizgiler",
         "shapes": "Şekiller",
@@ -2214,6 +2229,7 @@
     "trades": "İşlemler",
     "marketDepth": "Piyasa Derinliği",
     "pairInfo": "Parite Bilgisi",
+    "multiPrice": "Çoklu Fiyat",
     "research": "Araştırma",
     "social": "Sosyal",
     "risk": "Risk",
@@ -2240,6 +2256,7 @@
     "trades": "Her genel gerçekleşmeyi anlık gösteren canlı işlem akışı",
     "marketDepth": "Aktif parite için kümülatif piyasa derinliği grafiği",
     "pairInfo": "Aktif parite için önemli istatistikler, fonlama oranı ve meta veri",
+    "multiPrice": "Aynı parite tüm borsalarda aynı anda, en iyi gerçekleşme için sıralanmış",
     "research": "Aktif parite için yapay zeka tarafından oluşturulan derinlemesine raporlar",
     "social": "Bir parite için sosyal duyarlılık ve topluluk aktivitesi",
     "risk": "Portföy risk ölçümleri ve sınır yapılandırması",
@@ -2247,6 +2264,33 @@
     "web": "Herhangi bir web sitesini çalışma alanına panel olarak yerleştir",
     "liquidityHeatmap": "Zaman içinde fiyat seviyeleri genelinde derinliği gösteren emir defteri likidite ısı haritası",
     "recentTickers": "Hızlı geçiş için canlı fiyatlarla son görüntülenen pariteler"
+  },
+  "multiPrice": {
+    "venue": "Borsa",
+    "vsBest": "en iyiye göre",
+    "change24h": "24s",
+    "quoting": "{{total}} borsanın {{priced}} tanesi bu pariteyi fiyatlıyor",
+    "spreadTooltip": "En ucuz {{low}}, en pahalı {{high}}",
+    "sortBy": "Sıralamayı değiştir",
+    "sortedByPrice": "Fiyata göre sıralı, en ucuz önce",
+    "sortedByVenue": "Borsaya göre sıralı",
+    "pause": "Güncellemeleri duraklat",
+    "resume": "Güncellemeleri sürdür",
+    "buyAt": "{{venue}} borsasından al",
+    "sellAt": "{{venue}} borsasında sat",
+    "edgeTooltip": "En düşük ask ile en yüksek bid arasındaki brüt fark. Komisyonlar, transfer süresi ve defterin ilk kademesinin ötesi hariç.",
+    "best": "En iyi",
+    "high": "Yüksek",
+    "stale": "Eski",
+    "delayed": "Gecikmeli",
+    "desktop": "Masaüstü",
+    "notListed": "Listede yok",
+    "quiet": "İşlem yok",
+    "noVenues": "Bu varlık sınıfını işleyen başka borsa yok",
+    "feesFooter": "Fiyatlara komisyon, spread ve transfer süresi dahil değildir",
+    "feesTooltip": "Buradaki her fiyat ve yüzde brüttür. Borsa komisyonları, çekim maliyetleri, transfer süresi ve defterin ilk kademesinin ötesindeki derinlik, baktığınız farktan tek başına büyük olabilir. Harekete geçmeden önce kontrol edin.",
+    "desktopOnlyRow": "{{venue}} masaüstü uygulaması gerektiriyor",
+    "switchTo": "Bu pariteyi {{venue}} üzerinde aç"
   },
   "recentTickers": {
     "empty": "Henüz yakın zamanda görüntülenen parite yok",

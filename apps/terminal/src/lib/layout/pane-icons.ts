@@ -17,6 +17,7 @@ import {
   PieChart,
   Plus,
   Receipt,
+  Scale,
   ScrollText,
   Search,
   ShieldCheck,
@@ -55,6 +56,7 @@ const PANE_ICONS: Record<string, LucideIcon> = {
   Terminal,
   PieChart,
   Flame,
+  Scale,
 }
 
 export function getPaneIcon(name?: string): LucideIcon {

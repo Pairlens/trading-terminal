@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "차트 구성",
-          "description": "지표, 드로잉, 차트 종류, 기본 드로잉 스타일."
+          "description": "지표, 드로잉, 차트 종류, 즐겨찾는 도구, 기본 드로잉 스타일."
         },
         "workspaces": {
           "title": "워크스페이스와 레이아웃",
@@ -1070,6 +1070,17 @@
         "detail": "거래소 키는 시스템 키체인에 있으며 브라우저 저장소나 저희 서버에는 없습니다."
       }
     },
+    "nudge": {
+      "learnMore": "더 알아보기",
+      "notifications": {
+        "title": "알림은 Pairlens가 실행 중일 때 울립니다",
+        "description": "브라우저는 보고 있지 않은 탭을 늦추다 결국 중단합니다. 데스크톱 앱은 창을 닫아도 알림을 계속 지켜봅니다."
+      },
+      "bots": {
+        "title": "봇은 Pairlens가 실행 중일 때 거래합니다",
+        "description": "브라우저는 보고 있지 않은 탭을 늦추다 결국 중단합니다. 데스크톱 앱은 봇을 계속 거래하게 하고 절전 모드도 막아 줍니다."
+      }
+    },
     "wall": {
       "title": "{{venue}}에는 데스크톱 앱이 필요합니다",
       "description": "이 거래소는 브라우저가 읽는 데 필요한 헤더 없이 시장 데이터를 제공합니다. 데스크톱 앱은 네이티브로 연결하므로 모든 거래소를 쓸 수 있습니다.",
@@ -1422,6 +1433,10 @@
       "singleUseTools": "일회용 도구",
       "undo": "실행 취소",
       "redo": "다시 실행",
+      "addToFavorites": "즐겨찾기에 추가",
+      "removeFromFavorites": "즐겨찾기에서 제거",
+      "recentTools": "최근 사용한 도구",
+      "noRecentTools": "아직 사용한 도구가 없습니다",
       "categories": {
         "lines": "선",
         "shapes": "도형",
@@ -2214,6 +2229,7 @@
     "trades": "체결 내역",
     "marketDepth": "시장 심도",
     "pairInfo": "페어 정보",
+    "multiPrice": "멀티 프라이스",
     "research": "리서치",
     "social": "소셜",
     "risk": "리스크",
@@ -2240,6 +2256,7 @@
     "trades": "모든 공개 체결을 실시간으로 보여주는 체결 내역",
     "marketDepth": "활성 페어의 누적 시장 심도 차트",
     "pairInfo": "활성 페어의 주요 통계, 펀딩비, 메타데이터",
+    "multiPrice": "같은 페어를 모든 거래소에서 한눈에, 최적 체결 순으로 정렬합니다",
     "research": "활성 페어에 대한 AI 생성 심층 분석 리포트",
     "social": "페어에 대한 소셜 심리 및 커뮤니티 활동",
     "risk": "포트폴리오 리스크 지표 및 가드레일 설정",
@@ -2247,6 +2264,33 @@
     "web": "워크스페이스에 패널로 웹사이트를 삽입하세요",
     "liquidityHeatmap": "시간에 따른 가격대별 심도를 보여주는 호가창 유동성 히트맵",
     "recentTickers": "빠른 전환을 위한 최근 조회 페어와 실시간 가격"
+  },
+  "multiPrice": {
+    "venue": "거래소",
+    "vsBest": "최저 대비",
+    "change24h": "24h",
+    "quoting": "{{total}}개 거래소 중 {{priced}}곳이 이 페어를 호가 중",
+    "spreadTooltip": "최저가 {{low}}, 최고가 {{high}}",
+    "sortBy": "정렬 순서 변경",
+    "sortedByPrice": "가격순, 저가부터",
+    "sortedByVenue": "거래소순",
+    "pause": "업데이트 일시정지",
+    "resume": "업데이트 재개",
+    "buyAt": "{{venue}}에서 매수",
+    "sellAt": "{{venue}}에서 매도",
+    "edgeTooltip": "최저 매도호가와 최고 매수호가의 총 차이입니다. 수수료, 전송 시간, 호가창 최상단 아래는 반영하지 않습니다.",
+    "best": "최저",
+    "high": "최고",
+    "stale": "오래됨",
+    "delayed": "지연",
+    "desktop": "데스크톱",
+    "notListed": "미상장",
+    "quiet": "체결 없음",
+    "noVenues": "이 자산군을 취급하는 다른 거래소가 없습니다",
+    "feesFooter": "가격에 수수료, 스프레드, 전송 시간은 반영되지 않습니다",
+    "feesTooltip": "여기 표시된 모든 가격과 비율은 총액 기준입니다. 거래소 수수료, 출금 비용, 전송 시간, 호가창 최상단 아래의 물량은 각각 지금 보고 있는 차이보다 클 수 있습니다. 실행 전에 확인하세요.",
+    "desktopOnlyRow": "{{venue}}은(는) 데스크톱 앱이 필요합니다",
+    "switchTo": "{{venue}}에서 이 페어 보기"
   },
   "recentTickers": {
     "empty": "아직 최근에 본 페어가 없습니다",

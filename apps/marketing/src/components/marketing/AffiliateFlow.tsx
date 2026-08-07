@@ -15,6 +15,7 @@ import { Slider } from '@pairlens/ui/components/ui/slider'
 import type { AffiliateTier } from '@pairlens/shared/affiliates'
 import { SITE, VENUE_BRAND } from '@/lib/site'
 import { VenueIcon } from '@/components/marketing/VenueIcon'
+import { track } from '@/scripts/analytics-events'
 
 const CLAIMABLE = AFFILIATE_VENUES.filter((v) => v.referral)
 const brand = (id: string) =>
@@ -100,6 +101,11 @@ export function AffiliateFlow() {
   // —— Actions ————————————————————————————————————————
   const applyCode = () => {
     const inferred = inferTier(codeInput)
+    // The tier it resolved to, never the code itself.
+    track('affiliate_code_applied', {
+      ok: inferred !== null,
+      tier: inferred ?? 'none',
+    })
     if (!inferred) {
       setCodeError('That code doesn’t look right. DM @pairlens on X for one.')
       return
@@ -117,12 +123,21 @@ export function AffiliateFlow() {
     setSelected((s) => s.slice(0, AFFILIATE_TIER_LIMITS.bronze))
   }
 
+  // Decided out here rather than inside a functional updater: `track` is a
+  // side effect and an updater has to stay pure (StrictMode runs it twice).
+  // The event and the new state are derived from the SAME snapshot, so they
+  // can never disagree about whether this click added or removed a venue.
   const toggleVenue = (id: string) => {
-    setSelected((s) => {
-      if (s.includes(id)) return s.filter((x) => x !== id)
-      if (s.length >= cap) return s
-      return [...s, id]
+    const wasSelected = selected.includes(id)
+    // At the tier cap the click does nothing, so it is not a selection.
+    if (!wasSelected && selected.length >= cap) return
+    track('affiliate_venue_toggled', {
+      venue: id,
+      action: wasSelected ? 'removed' : 'added',
     })
+    setSelected(
+      wasSelected ? selected.filter((x) => x !== id) : [...selected, id],
+    )
   }
 
   const setField = (venueId: string, key: string, value: string) =>
@@ -130,6 +145,9 @@ export function AffiliateFlow() {
 
   const submit = () => {
     if (!canSubmit || submitting) return
+    // Venue count and tier only. The email and the referral codes the visitor
+    // pasted never leave this component.
+    track('affiliate_claim_submitted', { tier, venue_count: selected.length })
     setSubmitting(true)
     setTimeout(() => {
       setSubmitting(false)

@@ -3,56 +3,26 @@
 import { useState } from 'react'
 
 import {
-  Activity,
-  ArrowDownRight,
-  ArrowUpRight,
-  CalendarRange,
   ChevronDown,
-  Circle,
-  Columns2,
-  Columns3,
-  Crosshair,
-  Diamond,
   Eraser,
-  Fan,
-  GitBranch,
-  Grid3x3,
-  Hexagon,
-  Highlighter,
-  LineChart,
-  Maximize2,
-  MessageSquare,
-  Minus,
+  History,
   MousePointer2,
-  MoveRight,
-  MoveVertical,
-  Octagon,
-  Paintbrush,
-  Pen,
-  PencilLine,
   Pin,
   PinOff,
-  Radar,
   Redo2,
-  RotateCw,
-  RulerIcon,
-  Scaling,
-  SeparatorHorizontal,
-  Slash,
-  Spline,
   Star,
-  Target,
-  TrendingDown,
-  TrendingUp,
-  Triangle,
-  Type,
   Undo2,
-  Waves,
 } from 'lucide-react'
 
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@pairlens/ui/components/ui/context-menu'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,10 +42,17 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
+import { cn } from '@pairlens/ui/lib/utils'
+import {
+  TOOL_CATEGORIES,
+  findDrawingTool,
+  toolKey,
+} from './drawing-tool-catalog'
 import type {
   DrawingToolMode,
   DrawingToolType,
 } from '@pairlens/fast-financial-charts/types'
+import type { DrawingToolOption, ToolCategory } from './drawing-tool-catalog'
 import { ShortcutHint } from '@/components/shortcut-hints'
 import {
   useKeybindingLabel,
@@ -83,325 +60,11 @@ import {
 } from '@/hooks/use-keybindings'
 import { drawingToolCommandId } from '@/lib/keybindings/commands'
 import { usePersistedState } from '@/hooks/use-persisted-state'
-
-type IconComponent = React.ComponentType<{ className?: string }>
-
-type DrawingToolOption = {
-  tool: DrawingToolType
-  labelKey: string
-  icon: IconComponent
-  /** Extra metadata passed to the chart engine (e.g., path preset). */
-  meta?: Record<string, unknown>
-}
-
-/** Circle icon stretched to look like an ellipse. */
-const ellipseIconStyle = { transform: 'scaleX(1.3) scaleY(0.8)' } as const
-
-function EllipseIcon({ className }: { className?: string }) {
-  return <Circle className={className} style={ellipseIconStyle} />
-}
-
-type ToolCategory = {
-  id: string
-  labelKey: string
-  tools: Array<DrawingToolOption>
-  persistKey: string
-}
-
-const TOOL_CATEGORIES: Array<ToolCategory> = [
-  {
-    id: 'lines',
-    labelKey: 'chart.drawing.categories.lines',
-    persistKey: 'drawing-last-lines',
-    tools: [
-      {
-        tool: 'line',
-        labelKey: 'chart.drawing.trendLine',
-        icon: PencilLine,
-      },
-      {
-        tool: 'ray',
-        labelKey: 'chart.drawing.ray',
-        icon: MoveRight,
-      },
-      {
-        tool: 'xline',
-        labelKey: 'chart.drawing.extendedLine',
-        icon: Maximize2,
-      },
-      {
-        tool: 'info-line',
-        labelKey: 'chart.drawing.infoLine',
-        icon: Slash,
-      },
-      {
-        tool: 'trend-angle',
-        labelKey: 'chart.drawing.trendAngle',
-        icon: ArrowDownRight,
-      },
-      {
-        tool: 'hline',
-        labelKey: 'chart.drawing.horizontalLine',
-        icon: Minus,
-      },
-      {
-        tool: 'hray',
-        labelKey: 'chart.drawing.horizontalRay',
-        icon: MoveRight,
-      },
-      {
-        tool: 'vline',
-        labelKey: 'chart.drawing.verticalLine',
-        icon: MoveVertical,
-      },
-      {
-        tool: 'crossline',
-        labelKey: 'chart.drawing.crossLine',
-        icon: Crosshair,
-      },
-    ],
-  },
-  {
-    id: 'channels',
-    labelKey: 'chart.drawing.categories.channels',
-    persistKey: 'drawing-last-channels',
-    tools: [
-      {
-        tool: 'channel',
-        labelKey: 'chart.drawing.channel',
-        icon: Columns2,
-      },
-      {
-        tool: 'pitchfork',
-        labelKey: 'chart.drawing.pitchfork',
-        icon: GitBranch,
-      },
-      {
-        tool: 'polyline',
-        labelKey: 'chart.drawing.polyline',
-        icon: Pen,
-      },
-    ],
-  },
-  {
-    id: 'shapes',
-    labelKey: 'chart.drawing.categories.shapes',
-    persistKey: 'drawing-last-shapes',
-    tools: [
-      {
-        tool: 'rectangle',
-        labelKey: 'chart.drawing.rectangle',
-        icon: SeparatorHorizontal,
-      },
-      {
-        tool: 'circle',
-        labelKey: 'chart.drawing.circle',
-        icon: Circle,
-      },
-      {
-        tool: 'ellipse',
-        labelKey: 'chart.drawing.ellipse',
-        icon: EllipseIcon,
-      },
-      {
-        tool: 'path',
-        labelKey: 'chart.drawing.triangle',
-        icon: Triangle,
-        meta: { preset: 'triangle' },
-      },
-      {
-        tool: 'path',
-        labelKey: 'chart.drawing.diamond',
-        icon: Diamond,
-        meta: { preset: 'diamond' },
-      },
-      {
-        tool: 'path',
-        labelKey: 'chart.drawing.star',
-        icon: Star,
-        meta: { preset: 'star' },
-      },
-      {
-        tool: 'path',
-        labelKey: 'chart.drawing.hexagon',
-        icon: Hexagon,
-        meta: { preset: 'hexagon' },
-      },
-      {
-        tool: 'rotated-rectangle',
-        labelKey: 'chart.drawing.rotatedRectangle',
-        icon: RotateCw,
-      },
-      {
-        tool: 'arc',
-        labelKey: 'chart.drawing.arc',
-        icon: Spline,
-      },
-    ],
-  },
-  {
-    id: 'annotations',
-    labelKey: 'chart.drawing.categories.annotations',
-    persistKey: 'drawing-last-annotations',
-    tools: [
-      {
-        tool: 'text',
-        labelKey: 'chart.drawing.text',
-        icon: Type,
-      },
-      {
-        tool: 'arrow',
-        labelKey: 'chart.drawing.arrow',
-        icon: ArrowUpRight,
-      },
-      {
-        tool: 'callout',
-        labelKey: 'chart.drawing.callout',
-        icon: MessageSquare,
-      },
-      {
-        tool: 'brush',
-        labelKey: 'chart.drawing.brush',
-        icon: Paintbrush,
-      },
-      {
-        tool: 'highlighter',
-        labelKey: 'chart.drawing.highlighter',
-        icon: Highlighter,
-      },
-    ],
-  },
-  {
-    id: 'fibonacci',
-    labelKey: 'chart.drawing.categories.fibonacci',
-    persistKey: 'drawing-last-fibonacci',
-    tools: [
-      {
-        tool: 'fibonacci',
-        labelKey: 'chart.drawing.fibonacci',
-        icon: TrendingUp,
-      },
-      {
-        tool: 'fib-extension',
-        labelKey: 'chart.drawing.fibExtension',
-        icon: Spline,
-      },
-      {
-        tool: 'fib-channel',
-        labelKey: 'chart.drawing.fibChannel',
-        icon: Columns2,
-      },
-      {
-        tool: 'fib-time-zone',
-        labelKey: 'chart.drawing.fibTimeZone',
-        icon: Columns3,
-      },
-      {
-        tool: 'fib-wedge',
-        labelKey: 'chart.drawing.fibWedge',
-        icon: Radar,
-      },
-    ],
-  },
-  {
-    id: 'gann',
-    labelKey: 'chart.drawing.categories.gann',
-    persistKey: 'drawing-last-gann',
-    tools: [
-      {
-        tool: 'gann-fan',
-        labelKey: 'chart.drawing.gannFan',
-        icon: Fan,
-      },
-      {
-        tool: 'gann-box',
-        labelKey: 'chart.drawing.gannBox',
-        icon: Grid3x3,
-      },
-    ],
-  },
-  {
-    id: 'patterns',
-    labelKey: 'chart.drawing.categories.patterns',
-    persistKey: 'drawing-last-patterns',
-    tools: [
-      {
-        tool: 'triangle-pattern',
-        labelKey: 'chart.drawing.trianglePattern',
-        icon: Triangle,
-      },
-      {
-        tool: 'abcd-pattern',
-        labelKey: 'chart.drawing.abcdPattern',
-        icon: Activity,
-      },
-      {
-        tool: 'xabcd-pattern',
-        labelKey: 'chart.drawing.xabcdPattern',
-        icon: Octagon,
-      },
-      {
-        tool: 'head-shoulders',
-        labelKey: 'chart.drawing.headShoulders',
-        icon: Activity,
-      },
-      {
-        tool: 'elliott-wave',
-        labelKey: 'chart.drawing.elliottWave',
-        icon: Waves,
-      },
-    ],
-  },
-  {
-    id: 'projection',
-    labelKey: 'chart.drawing.categories.projection',
-    persistKey: 'drawing-last-projection',
-    tools: [
-      {
-        tool: 'long-position',
-        labelKey: 'chart.drawing.longPosition',
-        icon: TrendingUp,
-      },
-      {
-        tool: 'short-position',
-        labelKey: 'chart.drawing.shortPosition',
-        icon: TrendingDown,
-      },
-      {
-        tool: 'forecast',
-        labelKey: 'chart.drawing.forecast',
-        icon: Target,
-      },
-      {
-        tool: 'anchored-vwap',
-        labelKey: 'chart.drawing.anchoredVwap',
-        icon: LineChart,
-      },
-    ],
-  },
-  {
-    id: 'measure',
-    labelKey: 'chart.drawing.categories.measure',
-    persistKey: 'drawing-last-measure',
-    tools: [
-      {
-        tool: 'measure',
-        labelKey: 'chart.drawing.measure',
-        icon: RulerIcon,
-      },
-      {
-        tool: 'date-range',
-        labelKey: 'chart.drawing.dateRange',
-        icon: CalendarRange,
-      },
-      {
-        tool: 'price-date-range',
-        labelKey: 'chart.drawing.priceDateRange',
-        icon: Scaling,
-      },
-    ],
-  },
-]
+import {
+  drawingToolKey,
+  useDrawingFavorites,
+  useDrawingRecents,
+} from '@/lib/chart-drawing-tools'
 
 type ChartDrawingToolbarProps = {
   activeTool: DrawingToolType | null
@@ -421,28 +84,223 @@ type ChartDrawingToolbarProps = {
   onRedo: () => void
 }
 
-/** Unique key for a tool option — differentiates path presets from each other. */
-const toolKey = (opt: DrawingToolOption): string =>
-  opt.meta?.preset ? `${opt.tool}:${opt.meta.preset}` : opt.tool
+type ShelfProps = {
+  activeToolKey: string | null
+  isFavorite: (key: string) => boolean
+  onToggleFavorite: (key: string) => void
+  onToolChange: (tool: DrawingToolType, meta?: Record<string, unknown>) => void
+}
 
-/** Build an active tool key from the tool type + optional meta (same format as toolKey). */
-const activeKey = (
-  tool: DrawingToolType | null,
-  meta?: Record<string, unknown> | null,
-): string | null => {
-  if (!tool) return null
-  return meta?.preset ? `${tool}:${meta.preset}` : tool
+/**
+ * One named row inside a flyout: pick the tool, or pin it.
+ *
+ * The star is a sibling button rather than something layered on the row —
+ * a button inside a button is invalid, and the two do different things.
+ */
+function ToolRow({
+  option,
+  activeToolKey,
+  shortcut,
+  isFavorite,
+  onToggleFavorite,
+  onSelect,
+}: {
+  option: DrawingToolOption
+  activeToolKey: string | null
+  shortcut: string
+  isFavorite: boolean
+  onToggleFavorite: (key: string) => void
+  onSelect: () => void
+}) {
+  const { t } = useTranslation()
+  const key = toolKey(option)
+
+  return (
+    <div className="flex items-center gap-0.5">
+      <Button
+        size="sm"
+        variant={key === activeToolKey ? 'default' : 'ghost'}
+        className="flex-1 justify-start gap-2 px-2 text-xs"
+        onClick={onSelect}
+      >
+        <option.icon className="size-3.5" />
+        {t(option.labelKey)}
+        {shortcut ? (
+          <Kbd className="ml-auto text-[10px]">{shortcut}</Kbd>
+        ) : null}
+      </Button>
+      <Button
+        size="icon-sm"
+        variant="ghost"
+        className="size-6 shrink-0"
+        onClick={() => onToggleFavorite(key)}
+        aria-label={
+          isFavorite
+            ? t('chart.drawing.removeFromFavorites')
+            : t('chart.drawing.addToFavorites')
+        }
+      >
+        <Star
+          className={cn(
+            'size-3',
+            isFavorite
+              ? 'fill-primary text-primary'
+              : 'text-muted-foreground/60',
+          )}
+        />
+      </Button>
+    </div>
+  )
+}
+
+/**
+ * Pinned tools, above the categories.
+ *
+ * Right-click unpins: the rail is 40px wide, so an always-visible remove
+ * affordance would crowd out the icon it belongs to.
+ */
+function FavoritesSection({
+  favorites,
+  activeToolKey,
+  onToggleFavorite,
+  onToolChange,
+}: {
+  favorites: Array<string>
+} & Omit<ShelfProps, 'isFavorite'>) {
+  const { t } = useTranslation()
+  const keybindingLabel = useKeybindingLabels()
+
+  // A key can outlive the tool it names (a build that drops a tool, a list
+  // synced from a newer version) — those are skipped, not rendered blank.
+  const options = favorites
+    .map((key) => ({ key, option: findDrawingTool(key) }))
+    .filter((entry): entry is { key: string; option: DrawingToolOption } =>
+      Boolean(entry.option),
+    )
+
+  if (options.length === 0) return null
+
+  return (
+    <>
+      {options.map(({ key, option }) => {
+        const shortcut = keybindingLabel(drawingToolCommandId(option.tool))
+        return (
+          <ContextMenu key={key}>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <ContextMenuTrigger
+                    render={
+                      <Button
+                        size="icon-sm"
+                        variant={key === activeToolKey ? 'default' : 'ghost'}
+                        className="size-7"
+                        onClick={() => onToolChange(option.tool, option.meta)}
+                        aria-label={t(option.labelKey)}
+                      />
+                    }
+                  />
+                }
+              >
+                <option.icon className="size-3.5" />
+                <ShortcutHint keys={shortcut} />
+              </TooltipTrigger>
+              <TooltipContent side="right" className="flex items-center gap-2">
+                {t(option.labelKey)}
+                {shortcut ? <Kbd className="ml-1">{shortcut}</Kbd> : null}
+              </TooltipContent>
+            </Tooltip>
+            <ContextMenuContent>
+              <ContextMenuItem onClick={() => onToggleFavorite(key)}>
+                <Star className="size-3.5" />
+                {t('chart.drawing.removeFromFavorites')}
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
+        )
+      })}
+      <Separator className="my-1 w-6" />
+    </>
+  )
+}
+
+/** Last few tools used, from any source — the rail, a chord, the copilot. */
+function RecentsMenu({
+  activeToolKey,
+  isFavorite,
+  onToggleFavorite,
+  onToolChange,
+}: ShelfProps) {
+  const { t } = useTranslation()
+  const keybindingLabel = useKeybindingLabels()
+  const recents = useDrawingRecents()
+  const [open, setOpen] = useState(false)
+
+  const options = recents
+    .map((key) => findDrawingTool(key))
+    .filter((option): option is DrawingToolOption => Boolean(option))
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <PopoverTrigger
+              render={
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  className="size-7"
+                  aria-label={t('chart.drawing.recentTools')}
+                />
+              }
+            />
+          }
+        >
+          <History className="size-3.5" />
+        </TooltipTrigger>
+        <TooltipContent side="right">
+          {t('chart.drawing.recentTools')}
+        </TooltipContent>
+      </Tooltip>
+      <PopoverContent side="right" align="start" className="w-auto p-1">
+        {options.length === 0 ? (
+          <p className="text-muted-foreground px-2 py-1.5 text-xs">
+            {t('chart.drawing.noRecentTools')}
+          </p>
+        ) : (
+          <div className="flex flex-col gap-0.5">
+            {options.map((option) => {
+              const key = toolKey(option)
+              return (
+                <ToolRow
+                  key={key}
+                  option={option}
+                  activeToolKey={activeToolKey}
+                  shortcut={keybindingLabel(drawingToolCommandId(option.tool))}
+                  isFavorite={isFavorite(key)}
+                  onToggleFavorite={onToggleFavorite}
+                  onSelect={() => {
+                    onToolChange(option.tool, option.meta)
+                    setOpen(false)
+                  }}
+                />
+              )
+            })}
+          </div>
+        )}
+      </PopoverContent>
+    </Popover>
+  )
 }
 
 function CategoryGroup({
   category,
   activeToolKey,
+  isFavorite,
+  onToggleFavorite,
   onToolChange,
-}: {
-  category: ToolCategory
-  activeToolKey: string | null
-  onToolChange: (tool: DrawingToolType, meta?: Record<string, unknown>) => void
-}) {
+}: { category: ToolCategory } & ShelfProps) {
   const { t } = useTranslation()
   const keybindingLabel = useKeybindingLabels()
   const shortcutFor = (option: DrawingToolOption) =>
@@ -535,23 +393,19 @@ function CategoryGroup({
       <PopoverContent side="right" align="start" className="w-auto p-1">
         <div className="flex flex-col gap-0.5">
           {category.tools.map((option) => (
-            <Button
+            <ToolRow
               key={toolKey(option)}
-              size="sm"
-              variant={toolKey(option) === activeToolKey ? 'default' : 'ghost'}
-              className="justify-start gap-2 px-2 text-xs"
-              onClick={() => {
+              option={option}
+              activeToolKey={activeToolKey}
+              shortcut={shortcutFor(option)}
+              isFavorite={isFavorite(toolKey(option))}
+              onToggleFavorite={onToggleFavorite}
+              onSelect={() => {
                 onToolChange(option.tool, option.meta)
                 setLastUsedKey(toolKey(option))
                 setOpen(false)
               }}
-            >
-              <option.icon className="size-3.5" />
-              {t(option.labelKey)}
-              {shortcutFor(option) ? (
-                <Kbd className="ml-auto text-[10px]">{shortcutFor(option)}</Kbd>
-              ) : null}
-            </Button>
+            />
           ))}
         </div>
       </PopoverContent>
@@ -576,8 +430,11 @@ export function ChartDrawingToolbar({
   const { t } = useTranslation()
   const undoShortcut = useKeybindingLabel('chart.undo')
   const redoShortcut = useKeybindingLabel('chart.redo')
+  const [favorites, toggleFavorite, isFavorite] = useDrawingFavorites()
   const StickyModeIcon = toolMode === 'sticky' ? Pin : PinOff
-  const activeToolKey = activeKey(activeTool, activeToolMeta)
+  const activeToolKey = activeTool
+    ? drawingToolKey(activeTool, activeToolMeta)
+    : null
 
   return (
     <div className="flex w-10 shrink-0 flex-col items-center gap-0.5 border-r py-2">
@@ -602,20 +459,41 @@ export function ChartDrawingToolbar({
         </TooltipContent>
       </Tooltip>
 
+      <RecentsMenu
+        activeToolKey={activeToolKey}
+        isFavorite={isFavorite}
+        onToggleFavorite={toggleFavorite}
+        onToolChange={onToolChange}
+      />
+
       <Separator className="my-1 w-6" />
 
-      {/* Category groups */}
-      {TOOL_CATEGORIES.map((category) => (
-        <CategoryGroup
-          key={category.id}
-          category={category}
+      {/* Favorites + category groups. Scrolls on its own so a short pane keeps
+          the clear/undo block reachable instead of pushing it past the bottom
+          edge, where it used to be clipped away entirely. The bar stays hidden:
+          a platform gutter is 8-11px of a 40px rail, which would knock every
+          icon off-centre on Windows to say what the wheel already does. */}
+      <div className="no-scrollbar flex min-h-0 flex-1 flex-col items-center gap-0.5 overflow-y-auto overscroll-contain">
+        <FavoritesSection
+          favorites={favorites}
           activeToolKey={activeToolKey}
+          onToggleFavorite={toggleFavorite}
           onToolChange={onToolChange}
         />
-      ))}
+        {TOOL_CATEGORIES.map((category) => (
+          <CategoryGroup
+            key={category.id}
+            category={category}
+            activeToolKey={activeToolKey}
+            isFavorite={isFavorite}
+            onToggleFavorite={toggleFavorite}
+            onToolChange={onToolChange}
+          />
+        ))}
+      </div>
 
       {/* Bottom actions */}
-      <div className="mt-auto flex flex-col items-center gap-0.5">
+      <div className="flex flex-col items-center gap-0.5">
         <Separator className="mb-1 w-6" />
         <DropdownMenu>
           <Tooltip>

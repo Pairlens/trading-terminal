@@ -23,6 +23,7 @@ export const TIER1_KEYS: ReadonlySet<string> = new Set([
   'terminal.crosshairMode',
   'terminal.priceScaleMode',
   'terminal.drawingToolMode',
+  'terminal.drawingFavorites',
   'copilot.persona',
   'pair-picker.assetClass',
   'pair-picker.category',
@@ -159,6 +160,9 @@ export function isSyncDomainId(value: unknown): value is SyncDomainId {
 // Chart setup, as a user reads it: what's drawn on the chart plus how the
 // chart is set up to draw it. Transport-wise this spans both tiers, which
 // doesn't matter — gating happens per key, not per tier.
+// `terminal.drawingRecents` is deliberately absent: recents are a local trace
+// of what this hand just did, rewritten on nearly every tool selection. Pinned
+// favorites are the curated set worth carrying between devices.
 const CHART_KEYS = new Set([
   'terminal.indicators',
   'terminal.drawings',
@@ -166,6 +170,7 @@ const CHART_KEYS = new Set([
   'terminal.crosshairMode',
   'terminal.priceScaleMode',
   'terminal.drawingToolMode',
+  'terminal.drawingFavorites',
 ])
 
 const WORKSPACE_KEYS = new Set([
