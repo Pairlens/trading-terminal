@@ -10,6 +10,9 @@ import type {
   ChartBar,
   ChartThemeInput,
   ChartType,
+  DrawingObject,
+  DrawingStyleDefaults,
+  DrawingToolType,
   IndicatorInstanceInput,
   Timeframe,
 } from '@pairlens/fast-financial-charts/types'
@@ -178,6 +181,199 @@ export function buildIndicators(
     })
   }
   return out
+}
+
+/**
+ * The nine tools the hero rail arms, out of the engine's 42. Chosen to cover
+ * the four things a trader actually reaches for — a line, a level, a zone, a
+ * measurement — plus the two that read as "this is a real charting library"
+ * on sight: a Fibonacci retracement and a long-position box.
+ */
+export type DrawingToolEntry = {
+  tool: DrawingToolType
+  label: string
+  hint: string
+  /** Skin hue this tool draws in — the rail tints its chip with it, so the
+   *  armed button is also the colour preview. */
+  tone: keyof ChartSkin
+}
+
+export const DRAWING_TOOLS: Array<DrawingToolEntry> = [
+  {
+    tool: 'select',
+    label: 'Cursor',
+    hint: 'Click a drawing to move or reshape it',
+    tone: 'fg',
+  },
+  {
+    tool: 'line',
+    label: 'Trend line',
+    hint: 'Drag between two points',
+    tone: 'up',
+  },
+  {
+    tool: 'hline',
+    label: 'Horizontal level',
+    hint: 'Click a price to tag it',
+    tone: 'down',
+  },
+  {
+    tool: 'rectangle',
+    label: 'Zone',
+    hint: 'Drag a box over the range',
+    tone: 'bb',
+  },
+  {
+    tool: 'fibonacci',
+    label: 'Fib retracement',
+    hint: 'Drag from the swing low to the high',
+    tone: 'rsi',
+  },
+  {
+    tool: 'long-position',
+    label: 'Long position',
+    hint: 'Drag from entry to target',
+    tone: 'up',
+  },
+  {
+    tool: 'measure',
+    label: 'Measure',
+    hint: 'Drag to read the move in % and bars',
+    tone: 'fg',
+  },
+  {
+    tool: 'brush',
+    label: 'Freehand',
+    hint: 'Draw anywhere on the canvas',
+    tone: 'fg',
+  },
+  {
+    tool: 'arrow',
+    label: 'Arrow',
+    hint: 'Drag to point at the bar that matters',
+    tone: 'fg',
+  },
+]
+
+/**
+ * New drawings inherit the page skin. `drawingStyleDefaults` is read when a
+ * tool creates a shape, so re-pointing it as the skin bar changes keeps
+ * anything the visitor draws in the same palette as the seeded set below.
+ */
+export function drawingStyleDefaults(skin: ChartSkin): DrawingStyleDefaults {
+  return {
+    line: { color: skin.up, lineWidth: 1.5 },
+    ray: { color: skin.up, lineWidth: 1.5 },
+    xline: { color: skin.up, lineWidth: 1.5 },
+    'trend-angle': { color: skin.up, lineWidth: 1.5 },
+    channel: { color: skin.up, lineWidth: 1.5 },
+    hline: { color: skin.down, lineWidth: 1.5 },
+    hray: { color: skin.down, lineWidth: 1.5 },
+    fibonacci: { color: skin.rsi, lineWidth: 1 },
+    'fib-extension': { color: skin.rsi, lineWidth: 1 },
+    rectangle: { color: skin.bb, lineWidth: 1.5 },
+    ellipse: { color: skin.bb, lineWidth: 1.5 },
+    circle: { color: skin.bb, lineWidth: 1.5 },
+    // Annotation, not analysis: ink-coloured, which also keeps it off the
+    // EMA's amber — the one hue an overlay indicator already owns.
+    brush: { color: skin.fg, lineWidth: 2 },
+    highlighter: { color: skin.fg, lineWidth: 8 },
+    arrow: { color: skin.fg, lineWidth: 1.5 },
+    callout: { color: skin.fg, lineWidth: 1.5 },
+    text: { color: skin.fg, lineWidth: 1 },
+    measure: { color: skin.fg, lineWidth: 1.5 },
+    'date-range': { color: skin.fg, lineWidth: 1.5 },
+  }
+}
+
+/** Ids of the seeded set, so a re-skin can repaint exactly those three. */
+export const SEEDED_DRAWINGS = {
+  trend: 'seed:trend',
+  level: 'seed:level',
+  fib: 'seed:fib',
+} as const
+
+/** Which skin hue each seeded drawing wears. */
+const SEEDED_TONE: Record<string, keyof ChartSkin> = {
+  [SEEDED_DRAWINGS.trend]: 'up',
+  [SEEDED_DRAWINGS.level]: 'down',
+  [SEEDED_DRAWINGS.fib]: 'rsi',
+}
+
+export const seededDrawingColor = (id: string, skin: ChartSkin) => {
+  const tone = SEEDED_TONE[id]
+  return tone ? skin[tone] : null
+}
+
+const lowestBar = (bars: Array<ChartBar>) =>
+  bars.reduce((best, bar) => (bar.low < best.low ? bar : best), bars[0])
+
+const highestBar = (bars: Array<ChartBar>) =>
+  bars.reduce((best, bar) => (bar.high > best.high ? bar : best), bars[0])
+
+/**
+ * The analysis the hero card lands with. Most visitors never touch the rail,
+ * so the claim has to be legible at rest: a trend line off two swing lows, a
+ * resistance level with its price tag, and a Fibonacci retracement over the
+ * earlier swing — anchored to real extremes in the seeded series, which is why
+ * it reads like someone drew it rather than like decoration.
+ *
+ * Everything is anchored inside the recent window: bars keep arriving, and a
+ * drawing pinned to the far left would walk off the chart within a minute.
+ */
+export function makeDrawings(
+  seriesId: string,
+  bars: Array<ChartBar>,
+  skin: ChartSkin,
+): Array<DrawingObject> {
+  const window = bars.slice(Math.max(0, bars.length - 96))
+  if (window.length < 24) return []
+  const half = Math.floor(window.length / 2)
+  const early = window.slice(0, half)
+  const late = window.slice(half)
+
+  const earlyLow = lowestBar(early)
+  const earlyHigh = highestBar(early)
+  const lateLow = lowestBar(late)
+  const lateHigh = highestBar(late)
+
+  return [
+    {
+      id: SEEDED_DRAWINGS.trend,
+      type: 'line',
+      seriesId,
+      points: [
+        { ts: earlyLow.ts, price: earlyLow.low },
+        { ts: lateLow.ts, price: lateLow.low },
+      ],
+      extend: 'right',
+      color: skin.up,
+      lineWidth: 1.5,
+      visible: true,
+    },
+    {
+      id: SEEDED_DRAWINGS.level,
+      type: 'hline',
+      seriesId,
+      price: lateHigh.high,
+      color: skin.down,
+      lineWidth: 1.5,
+      visible: true,
+    },
+    {
+      id: SEEDED_DRAWINGS.fib,
+      type: 'fibonacci',
+      seriesId,
+      points: [
+        { ts: earlyLow.ts, price: earlyLow.low },
+        { ts: earlyHigh.ts, price: earlyHigh.high },
+      ],
+      levels: [0, 0.382, 0.618, 1],
+      color: skin.rsi,
+      lineWidth: 1,
+      visible: true,
+    },
+  ]
 }
 
 export const decimalsFor = (base: number) =>

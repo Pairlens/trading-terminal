@@ -13,10 +13,13 @@ import {
   formatPrice,
   skinToTheme,
 } from './chart-kit'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, RefObject } from 'react'
 import type {
   ChartBar,
   ChartHudPayload,
+  DrawingObject,
+  DrawingStyleDefaults,
+  DrawingToolType,
   FastFinancialChartRef,
   Timeframe,
 } from '@pairlens/fast-financial-charts/types'
@@ -48,6 +51,18 @@ type LiveChartProps = {
    *  stay bar-for-bar identical widen this so they all wake together. */
   rootMargin?: string
   onTick?: (tick: LiveTick) => void
+  /** Seeded at construction only — drawings are uncontrolled, so the engine
+   *  owns the set from the first pointer down and a later array is ignored. */
+  drawings?: Array<DrawingObject>
+  /** Style a freshly created drawing inherits. Re-read on every creation. */
+  drawingStyleDefaults?: DrawingStyleDefaults
+  /** Armed tool. Controlled: the rail is the only thing that sets it… */
+  activeTool?: DrawingToolType | null
+  /** …except the engine itself, which disarms after a single-use draw. */
+  onActiveToolChange?: (tool: DrawingToolType | null) => void
+  onDrawingsChange?: (drawings: Array<DrawingObject>) => void
+  /** Borrowed by cards that drive the engine imperatively (undo, clear). */
+  controllerRef?: RefObject<FastFinancialChartRef | null>
 }
 
 export function LiveChart({
@@ -70,9 +85,16 @@ export function LiveChart({
   hud = false,
   rootMargin = '280px 0px',
   onTick,
+  drawings,
+  drawingStyleDefaults,
+  activeTool,
+  onActiveToolChange,
+  onDrawingsChange,
+  controllerRef,
 }: LiveChartProps) {
   const hostRef = useRef<HTMLDivElement>(null)
-  const chartRef = useRef<FastFinancialChartRef>(null)
+  const ownChartRef = useRef<FastFinancialChartRef>(null)
+  const chartRef = controllerRef ?? ownChartRef
   const onTickRef = useRef(onTick)
   onTickRef.current = onTick
 
@@ -169,8 +191,15 @@ export function LiveChart({
 
   const interaction = useMemo(
     // Wheel zoom would swallow page scroll over a full-width chart, and the
-    // engine leaves the event alone when it is off.
-    () => ({ wheelZoom: false, dragPan: pannable, keyboardShortcuts: false }),
+    // engine leaves the event alone when it is off. Tools are single-use so a
+    // visitor who draws one line gets the cursor — and panning — straight back
+    // instead of a chart that keeps sprouting lines under every drag.
+    () => ({
+      wheelZoom: false,
+      dragPan: pannable,
+      keyboardShortcuts: false,
+      drawingToolMode: 'single-use' as const,
+    }),
     [pannable],
   )
 
@@ -178,6 +207,12 @@ export function LiveChart({
     () => ({ type: 'last-bars' as const, bars: bars.length }),
     [bars.length],
   )
+
+  // Drawings are uncontrolled: the engine reads this array once, at
+  // construction, and owns the set from the first pointer down. Pin what we
+  // were handed first so a re-skin can't hand the prop diff a new identity for
+  // something nothing downstream reads any more.
+  const seededDrawings = useRef(drawings).current
 
   const renderHud = useCallback(
     (payload: ChartHudPayload) => {
@@ -218,6 +253,11 @@ export function LiveChart({
             chartType={cfg.type}
             indicators={indicators}
             controlled={{ indicators: true }}
+            drawings={seededDrawings}
+            drawingStyleDefaults={drawingStyleDefaults}
+            activeTool={activeTool}
+            onActiveToolChange={onActiveToolChange}
+            onDrawingsChange={onDrawingsChange}
             theme={theme}
             performance={perf}
             interaction={interaction}

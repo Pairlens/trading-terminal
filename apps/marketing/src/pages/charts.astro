@@ -16,7 +16,7 @@ import tradingShot from '@/assets/screens/trading.webp'
 const title =
   'Fast Financial Charts: free, MIT-licensed WebGL2 charting library'
 const description =
-  'The WebGL2 financial charting engine that powers Pairlens, offered standalone and 100% free. 90 indicators, 7 chart types, drawings, multi-pane layouts, React bindings, and an MCP-compatible AI control surface. No license tiers, no watermark.'
+  'The WebGL2 financial charting engine that powers Pairlens, offered standalone and 100% free. 90 indicators, 42 drawing tools, 7 chart types, multi-pane layouts, React bindings, and an MCP-compatible AI control surface. No license tiers, no watermark.'
 
 const npmUrl = 'https://www.npmjs.com/package/@pairlens/fast-financial-charts'
 const installCmd = 'bun add @pairlens/fast-financial-charts'
@@ -63,10 +63,10 @@ const FEATURES = [
   },
   {
     accent: 'var(--chart-5)',
-    stat: '7',
-    statLabel: 'chart types, all GPU',
+    stat: '42',
+    statLabel: 'drawing tools',
     title: 'Trader-grade features',
-    body: 'Four price-scale modes, multi-pane layouts, drawings with magnet snapping and undo/redo, price lines, markers, compare modes, localization.',
+    body: 'Trend lines, Fibonacci, pitchforks, Gann, Elliott waves, position boxes — each with handles, magnet snapping and undo/redo. Plus seven chart types, four price-scale modes, multi-pane layouts, markers and compare modes.',
   },
   {
     accent: 'var(--chart-2)',
@@ -272,9 +272,10 @@ const EXAMPLES: Array<{
           data-reveal-delay="140"
           class="mt-6 max-w-[62ch] text-[18px] leading-[1.62] text-muted-foreground"
         >
-          High-frequency ticks, 90 indicators computed off the main thread,
-          drawings, multi-pane layouts and an AI-ready MCP control surface.
-          Standalone, free, MIT-licensed.
+          High-frequency ticks, 90 indicators computed off the main thread, 42
+          drawing tools, multi-pane layouts and an AI-ready MCP control surface.
+          Standalone, free, MIT-licensed. The chart below is the real thing —
+          pick a tool from the rail and draw on it.
         </p>
         <div
           data-reveal
@@ -333,7 +334,7 @@ const EXAMPLES: Array<{
         data-reveal-delay="260"
         data-chart-root
         data-skin-radius
-        class="charts-island relative z-[2] mx-auto mt-13 -mb-20 min-h-[533px] max-w-[1200px] overflow-hidden rounded-[18px] border border-border bg-card"
+        class="charts-island relative z-[2] mx-auto mt-13 -mb-20 min-h-[570px] max-w-[1200px] overflow-hidden rounded-[18px] border border-border bg-card"
         style="box-shadow: 0 54px 90px -50px rgba(0,0,0,.95);"
       >
         <ChartsLiveDemo client:only="react" />
