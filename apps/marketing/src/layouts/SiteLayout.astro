@@ -149,7 +149,9 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
 
     <script>
       import '@/scripts/reveal.ts'
-      import '@/scripts/analytics.ts'
+      // Pulls in analytics.ts (consent + init) and arms the delegated
+      // product-event listeners on top of it.
+      import '@/scripts/analytics-events.ts'
     </script>
   </body>
 </html>
