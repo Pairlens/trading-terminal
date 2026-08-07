@@ -76,6 +76,7 @@ import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useTickerStream } from '@/hooks/use-ticker-stream'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useActivePair } from '@/lib/active-pair-context'
+import { useMarketData } from '@/lib/market-data-provider'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import { PairSearchResults } from '@/components/pair-picker/pair-search-results'
@@ -121,6 +122,27 @@ export function WatchlistPane() {
   const availableMarketValues = useMemo(
     () => availableMarkets.map((m) => m.value),
     [availableMarkets],
+  )
+
+  // Resolve each row's venue up front: a stocks instrument can't stream from a
+  // crypto exchange, so it has to leave the sticky market for one that serves
+  // its asset class. That decision needs the adapters' declared asset classes —
+  // without them every venue looks compatible and stock rows never reprice.
+  const { availableMarkets: adapterInfos } = useMarketData()
+  const marketBySymbol = useMemo(
+    () =>
+      new Map(
+        watchlistItems.map((inst) => [
+          inst.symbol,
+          resolveMarketForAssetClass(
+            validPreferred,
+            availableMarketValues,
+            inst.assetClass,
+            adapterInfos,
+          ),
+        ]),
+      ),
+    [watchlistItems, validPreferred, availableMarketValues, adapterInfos],
   )
 
   // Connector-switch transition: every row re-resolves and re-subscribes its
@@ -375,8 +397,9 @@ export function WatchlistPane() {
                             inst={inst}
                             listId={activeList.id}
                             isActive={inst.symbol === activePair?.pairKey}
-                            preferredMarket={validPreferred}
-                            availableMarkets={availableMarketValues}
+                            market={
+                              marketBySymbol.get(inst.symbol) ?? validPreferred
+                            }
                             priceCache={priceCacheRef}
                             justDraggedRef={justDraggedRef}
                             onRemove={removeFromWatchlist}
@@ -571,8 +594,7 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
   inst,
   listId,
   isActive,
-  preferredMarket,
-  availableMarkets,
+  market,
   priceCache,
   justDraggedRef,
   onRemove,
@@ -580,8 +602,8 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
   inst: Instrument
   listId: string
   isActive: boolean
-  preferredMarket: string
-  availableMarkets: Array<string>
+  /** Venue this row prices against — already resolved for its asset class. */
+  market: string
   priceCache: React.RefObject<Map<string, CachedTicker>>
   justDraggedRef: React.RefObject<boolean>
   onRemove: (symbol: string, listId: string) => void
@@ -603,16 +625,8 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
     opacity: isDragging ? 0.4 : 1,
   }
 
-  // Resolve the best market for this instrument's asset class:
-  // preferred market if compatible, else first available compatible market.
-  const tickerMarket = resolveMarketForAssetClass(
-    preferredMarket,
-    availableMarkets,
-    inst.assetClass,
-  )
-
   const { ticker } = useTickerStream({
-    market: tickerMarket,
+    market,
     pairKey: inst.symbol,
   })
 
@@ -754,7 +768,7 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
               {displayChange.toFixed(2)}%
             </span>
           )}
-          {tickerMarket}
+          {market}
         </span>
       </div>
       <Button size="icon-xs" variant="ghost" onClick={handleRemove}>

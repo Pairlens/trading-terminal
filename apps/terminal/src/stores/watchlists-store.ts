@@ -5,15 +5,28 @@ import { create } from 'zustand'
 import { DEFAULT_WATCHLIST_ID } from '@pairlens/persistence'
 import type { PersistenceAdapter, WatchlistsState } from '@pairlens/persistence'
 import { track } from '@/lib/analytics-events'
+import {
+  TOP_CRYPTO_WATCHLIST_ID,
+  createStarterLists,
+  seedStarterAssetClasses,
+} from '@/lib/starter-watchlists'
 
 function generateId(): string {
   return Math.random().toString(36).slice(2, 10)
 }
 
+/**
+ * First-run state: an empty Favorites plus the starter lists, opened on Top
+ * Crypto so the pane shows live markets instead of the empty state. The
+ * starters are ordinary lists — deleting one persists and it stays gone.
+ */
 function createDefaultState(): WatchlistsState {
   return {
-    activeListId: DEFAULT_WATCHLIST_ID,
-    lists: [{ id: DEFAULT_WATCHLIST_ID, name: 'Favorites', symbols: [] }],
+    activeListId: TOP_CRYPTO_WATCHLIST_ID,
+    lists: [
+      { id: DEFAULT_WATCHLIST_ID, name: 'Favorites', symbols: [] },
+      ...createStarterLists(),
+    ],
   }
 }
 
@@ -24,6 +37,9 @@ function buildAllSymbolsSet(state: WatchlistsState): Set<string> {
 /**
  * Migrates from the legacy `pair-picker.favorites` localStorage key
  * to the new multi-list format. Returns null if nothing to migrate.
+ *
+ * A legacy user has never seen a multi-list watchlist either, so they get the
+ * starter lists alongside their own favorites — which stay the active list.
  */
 function migrateFromLegacy(): WatchlistsState | null {
   try {
@@ -34,7 +50,10 @@ function migrateFromLegacy(): WatchlistsState | null {
         localStorage.removeItem('pairlens:pair-picker.favorites')
         return {
           activeListId: DEFAULT_WATCHLIST_ID,
-          lists: [{ id: DEFAULT_WATCHLIST_ID, name: 'Favorites', symbols }],
+          lists: [
+            { id: DEFAULT_WATCHLIST_ID, name: 'Favorites', symbols },
+            ...createStarterLists(),
+          ],
         }
       }
     }
@@ -114,12 +133,20 @@ export const useWatchlistsStore = create<WatchlistsStore>((set, get) => ({
     if (!loaded) {
       const migrated = migrateFromLegacy()
       if (migrated) {
+        seedStarterAssetClasses()
         await persistence.setWatchlists(userId, migrated)
         loaded = migrated
       }
     }
 
-    const state = loaded ?? createDefaultState()
+    // First run for this user: hand them the starter lists and persist right
+    // away, so removing one is permanent instead of being re-seeded on reload.
+    let state = loaded
+    if (!state) {
+      state = createDefaultState()
+      seedStarterAssetClasses()
+      await persistence.setWatchlists(userId, state)
+    }
 
     // Subscribe to external updates (skip self-triggered events)
     const unsub = persistence.subscribeWatchlists(userId, (externalState) => {

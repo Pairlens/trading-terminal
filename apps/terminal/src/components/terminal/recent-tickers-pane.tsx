@@ -17,6 +17,7 @@ import { useLivePairPrice } from '@/hooks/use-live-pair-price'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useRecentPairs } from '@/lib/recent-tickers'
 import { formatPrice } from '@/lib/format-price'
+import { useMarketData } from '@/lib/market-data-provider'
 import { resolveMarketForAssetClass } from '@/lib/market-asset-classes'
 
 /**
@@ -29,6 +30,9 @@ export function RecentTickersPane() {
   const { items } = useInstrumentsBySymbols(recentPairs)
   const { markets, defaultMarket } = useAvailableMarkets()
   const [preferredMarket] = usePersistedState('terminal.market', defaultMarket)
+  // The adapters' declared asset classes — without them every venue looks
+  // compatible and a stocks row never leaves the sticky crypto venue.
+  const { availableMarkets: adapterInfos } = useMarketData()
   const navigate = useNavigate()
 
   const instrumentsBySymbol = useMemo(
@@ -79,6 +83,7 @@ export function RecentTickersPane() {
               preferredMarket,
               availableMarketValues,
               inst?.assetClass,
+              adapterInfos,
             )}
             onSelect={handleSelect}
             onRemove={handleRemove}

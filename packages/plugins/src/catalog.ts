@@ -213,10 +213,12 @@ function generateCatalog(): Array<Instrument> {
   }
 
   // Stocks rank after all crypto quote tiers so the mixed view is stable.
+  // The symbol is the bare ticker — same key the App Server catalog serves, so
+  // a watchlist saved online still resolves when this fallback takes over.
   const stockRankBase = QUOTE_CURRENCIES.length * RANK_OFFSET
   for (let i = 0; i < STOCK_ASSETS.length; i++) {
     const stock = STOCK_ASSETS[i]
-    const symbol = `${stock.symbol}-USD`
+    const symbol = stock.symbol
     instruments.push({
       id: symbol,
       market: '',
