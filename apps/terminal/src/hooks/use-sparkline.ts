@@ -15,17 +15,20 @@ const TIMEFRAME = '1h'
 const LIMIT = 24
 
 /**
- * Discovery lists hold hundreds of instruments. Virtualization keeps the
- * mounted row count small, but a fast scroll still mounts and unmounts a lot
- * of rows on the way past, and each one would otherwise open its own REST
- * call. Two brakes:
+ * Discovery lists hold hundreds of instruments, and not all of them are
+ * virtualized — the markets card grid mounts every loaded page at once. Three
+ * brakes keep that from becoming one REST call per row on the way past:
  *
- *   - a settle delay, so a row that scrolls by in a flick never asks at all,
+ *   - `enabled`, which callers drive from actual viewport visibility, so a
+ *     mounted-but-off-screen card asks for nothing,
+ *   - a settle delay measured from the moment it becomes visible, so a row
+ *     that scrolls by in a flick never asks either,
  *   - a global slot limit, so the rows that do settle queue up instead of
  *     firing thirty parallel requests at one venue and earning a 429.
  *
- * Candles are cached for five minutes per (venue, pair), so scrolling back
- * over a row costs nothing.
+ * Candles are then cached in memory for five minutes per (venue, pair) and
+ * kept for thirty, so scrolling back over a row costs nothing — and one pair
+ * on four panes at once is one request, not four.
  */
 const SETTLE_MS = 200
 const MAX_IN_FLIGHT = 4
@@ -67,6 +70,10 @@ const NO_VALUES: Array<number> = []
  * browser, a pair it doesn't list) leaves the row without a chart. That is a
  * quiet outcome by design — the row still carries price and change, and the
  * chart slot keeps its size so nothing reflows.
+ *
+ * `enabled` is the visibility gate; pass whether the chart is actually on
+ * screen. It may flip back and forth freely — the settle timer restarts with
+ * it, and anything already fetched keeps rendering from cache.
  */
 export function useSparkline(
   market: string | undefined,
@@ -76,10 +83,17 @@ export function useSparkline(
   const { probeVenueHistory } = useMarketData()
   const [settled, setSettled] = useState(false)
 
+  // Measured from becoming visible, not from mounting: in a grid that renders
+  // every loaded card up front, a mount-time timer would have long since
+  // fired by the time a card scrolls past, and every one would fetch.
   useEffect(() => {
+    if (!enabled) {
+      setSettled(false)
+      return
+    }
     const timer = setTimeout(() => setSettled(true), SETTLE_MS)
     return () => clearTimeout(timer)
-  }, [])
+  }, [enabled])
 
   const active = enabled && settled && Boolean(market) && Boolean(pair)
 
@@ -116,10 +130,14 @@ export function useSparkline(
     refetchOnWindowFocus: false,
   })
 
-  if (query.isError) return { values: NO_VALUES, state: 'unavailable' }
-  if (!active || query.isPending) {
-    return { values: NO_VALUES, state: 'loading' }
-  }
+  // Cache first, and deliberately before the `active` check: a disabled query
+  // still reads its cache entry, so a row scrolled back into view repaints its
+  // chart on the same frame instead of flashing the placeholder for the length
+  // of another settle delay.
   const values = query.data ?? NO_VALUES
-  return { values, state: values.length >= 2 ? 'ready' : 'unavailable' }
+  if (values.length >= 2) return { values, state: 'ready' }
+  if (query.isError || query.isSuccess) {
+    return { values: NO_VALUES, state: 'unavailable' }
+  }
+  return { values: NO_VALUES, state: 'loading' }
 }
