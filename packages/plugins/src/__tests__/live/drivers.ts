@@ -109,7 +109,18 @@ export const LIVE_DRIVERS: Array<LiveDriver> = [
   },
   {
     name: 'kraken',
-    pair: PAIR,
+    // Not the default BTC-USDT, and not a connector quirk — a liquidity one.
+    // Kraken's OHLC channel emits on trades, and its USDT book is thin enough
+    // that the forming-bar check is a coin flip: measured over 45s it produced
+    // one update (first at 12.9s) against a 40s ceiling, where BTC-USD
+    // produced ten (first at 1.9s). So the check was passing or failing on
+    // whether a trade happened to land, which is what took the nightly red on
+    // its first run while the connector was working correctly.
+    //
+    // Every other venue streams BTC-USDT comfortably, so this stays a
+    // per-driver exception rather than a change of default. Widening the
+    // timeout instead would only make the flake rarer and slower.
+    pair: 'BTC-USD',
     timeframe: TF,
     country: COUNTRY,
     makeClient: () => new KrakenWsClient(),
