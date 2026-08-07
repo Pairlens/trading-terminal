@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Grafik kurulumu",
-          "description": "Göstergeler, çizimler, grafik türü ve varsayılan çizim stillerin."
+          "description": "Göstergeler, çizimler, grafik türü, favori araçlar ve varsayılan çizim stillerin."
         },
         "workspaces": {
           "title": "Çalışma alanları ve düzenler",
@@ -1422,6 +1422,10 @@
       "singleUseTools": "Tek kullanımlık araçlar",
       "undo": "Geri al",
       "redo": "Yinele",
+      "addToFavorites": "Favorilere ekle",
+      "removeFromFavorites": "Favorilerden çıkar",
+      "recentTools": "Son kullanılan araçlar",
+      "noRecentTools": "Henüz araç kullanılmadı",
       "categories": {
         "lines": "Çizgiler",
         "shapes": "Şekiller",

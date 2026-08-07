@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "차트 구성",
-          "description": "지표, 드로잉, 차트 종류, 기본 드로잉 스타일."
+          "description": "지표, 드로잉, 차트 종류, 즐겨찾는 도구, 기본 드로잉 스타일."
         },
         "workspaces": {
           "title": "워크스페이스와 레이아웃",
@@ -1422,6 +1422,10 @@
       "singleUseTools": "일회용 도구",
       "undo": "실행 취소",
       "redo": "다시 실행",
+      "addToFavorites": "즐겨찾기에 추가",
+      "removeFromFavorites": "즐겨찾기에서 제거",
+      "recentTools": "최근 사용한 도구",
+      "noRecentTools": "아직 사용한 도구가 없습니다",
       "categories": {
         "lines": "선",
         "shapes": "도형",

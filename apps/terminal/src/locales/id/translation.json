@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Penyiapan grafik",
-          "description": "Indikator, gambar, jenis grafik, dan gaya gambar bawaanmu."
+          "description": "Indikator, gambar, jenis grafik, alat favorit, dan gaya gambar bawaanmu."
         },
         "workspaces": {
           "title": "Ruang kerja dan tata letak",
@@ -1422,6 +1422,10 @@
       "singleUseTools": "Alat sekali pakai",
       "undo": "Urungkan",
       "redo": "Ulangi",
+      "addToFavorites": "Tambahkan ke favorit",
+      "removeFromFavorites": "Hapus dari favorit",
+      "recentTools": "Alat terbaru",
+      "noRecentTools": "Belum ada alat yang dipakai",
       "categories": {
         "lines": "Garis",
         "shapes": "Bentuk",
