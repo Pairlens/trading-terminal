@@ -428,6 +428,8 @@
     "retry": "Tekrar dene",
     "search": "Ara",
     "noResults": "Sonuç bulunamadı.",
+    "trend": "Trend",
+    "trendAriaLabel": "24 saatlik fiyat trendi",
     "comingSoon": "Bu özellik yakında geliyor.",
     "active": "Aktif",
     "select": "Seç...",

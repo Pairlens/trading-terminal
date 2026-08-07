@@ -428,6 +428,8 @@
     "retry": "Reintentar",
     "search": "Buscar",
     "noResults": "No se encontraron resultados.",
+    "trend": "Tendencia",
+    "trendAriaLabel": "Tendencia del precio en 24 h",
     "comingSoon": "Esta función estará disponible próximamente.",
     "active": "Activo",
     "select": "Seleccionar...",

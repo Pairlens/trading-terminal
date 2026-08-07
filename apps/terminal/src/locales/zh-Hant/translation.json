@@ -428,6 +428,8 @@
     "retry": "重試",
     "search": "搜尋",
     "noResults": "找不到結果。",
+    "trend": "走勢",
+    "trendAriaLabel": "24 小時價格走勢",
     "comingSoon": "此功能即將推出。",
     "active": "使用中",
     "select": "請選擇…",

@@ -21,7 +21,6 @@ import {
   ArrowRight,
   Check,
   ChevronDown,
-  ChevronUp,
   GripVertical,
   Pencil,
   Plus,
@@ -81,6 +80,9 @@ import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import { PairSearchResults } from '@/components/pair-picker/pair-search-results'
 import { PaneTransition } from '@/components/layout/pane-transition'
+import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
+import { TickArrow } from '@/components/tick-arrow'
+import { usePriceTick } from '@/hooks/use-price-tick'
 
 export function WatchlistPane() {
   const { t } = useTranslation()
@@ -580,8 +582,6 @@ function AddSymbolButton({
 
 // --- Sortable watchlist item ---
 
-type TickDirection = 'up' | 'down' | null
-
 type CachedTicker = {
   price: number
   change24h?: number
@@ -635,21 +635,11 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
   const cached = priceCache.current?.get(inst.symbol)
   const displayPrice = ticker?.last ?? cached?.price ?? null
   const displayChange = ticker?.change24h ?? cached?.change24h ?? null
-  const [direction, setDirection] = useState<TickDirection>(null)
-  const prevPriceRef = useRef<number | null>(displayPrice)
-  const flashTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const direction = usePriceTick(ticker?.last)
 
   useEffect(() => {
     if (ticker?.last == null) return
 
-    const prev = prevPriceRef.current
-    if (prev != null && ticker.last !== prev) {
-      setDirection(ticker.last > prev ? 'up' : 'down')
-      clearTimeout(flashTimerRef.current)
-      flashTimerRef.current = setTimeout(() => setDirection(null), 700)
-    }
-
-    prevPriceRef.current = ticker.last
     const prevCached = priceCache.current?.get(inst.symbol)
     priceCache.current?.set(inst.symbol, {
       price: ticker.last,
@@ -660,10 +650,6 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
           : {}),
     })
   }, [ticker?.last, ticker?.change24h, inst.symbol, priceCache])
-
-  useEffect(() => {
-    return () => clearTimeout(flashTimerRef.current)
-  }, [])
 
   const handleRemove = useCallback(
     (e: React.MouseEvent) => {
@@ -733,7 +719,18 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
         <PairSymbol symbol={inst.symbol} className="text-sm" />
         <p className="truncate text-xs text-muted-foreground">{inst.name}</p>
       </div>
-      <div className="flex flex-col items-end gap-0.5">
+      {/* Trend cue. It grows with the pane and is the first thing to go when
+          the pane is docked narrower than the symbol itself needs. */}
+      <MiniPriceChart
+        market={market}
+        pair={inst.symbol}
+        className="hidden h-5 w-10 @min-[20rem]/pane:block @sm/pane:w-14 @lg/pane:w-20"
+      />
+      {/* Reserved width, so the chart to its left starts at the same x on
+          every row. Digits per price vary a lot across a watchlist
+          ($64,570.60 against $0.1984) and without this the column of charts
+          comes out ragged. */}
+      <div className="flex min-w-24 flex-col items-end gap-0.5">
         <span
           className={cn(
             'tick-cell inline-flex items-center gap-0.5 font-mono text-xs tabular-nums transition-colors duration-700',
@@ -746,10 +743,7 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
         >
           {displayPrice != null ? (
             <>
-              {direction === 'up' && <ChevronUp className="size-3 shrink-0" />}
-              {direction === 'down' && (
-                <ChevronDown className="size-3 shrink-0" />
-              )}
+              <TickArrow direction={direction} />
               {formatPrice(displayPrice)}
             </>
           ) : (
@@ -774,7 +768,9 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
       <Button size="icon-xs" variant="ghost" onClick={handleRemove}>
         <Star className="size-3.5 fill-primary text-primary" />
       </Button>
-      <ArrowRight className="size-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+      {/* Decoration only — the whole row is clickable. It yields its pixels
+          to the trend line once the pane gets tight. */}
+      <ArrowRight className="hidden size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 @min-[22rem]/pane:block" />
     </div>
   )
 })

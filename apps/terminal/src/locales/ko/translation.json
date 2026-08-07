@@ -428,6 +428,8 @@
     "retry": "다시 시도",
     "search": "검색",
     "noResults": "결과가 없습니다.",
+    "trend": "추세",
+    "trendAriaLabel": "24시간 가격 추세",
     "comingSoon": "곧 제공될 기능입니다.",
     "active": "활성",
     "select": "선택...",

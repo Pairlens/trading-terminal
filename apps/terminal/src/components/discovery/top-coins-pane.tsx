@@ -24,6 +24,8 @@ import {
 import type { TopCoinsResponse } from '@pairlens/shared/instrument-types'
 
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
+import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
+import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { formatPrice } from '@/lib/format-price'
 import { formatRelativeTime } from '@/lib/format-time'
 import { fetchTopCoinsWithFallback } from '@/lib/public-market-data'
@@ -55,6 +57,9 @@ export function TopCoinsPane() {
   const host = usePluginHost()
   const appServerUrl = String(host.config['appServerUrl'] ?? '')
   const apiFetch = usePluginFetch()
+  // The ranking is exchange-agnostic (CMC/CoinGecko), but a candle isn't —
+  // trend lines are drawn from whichever crypto venue this build can reach.
+  const cryptoMarket = usePreferredMarketResolver()('crypto')
 
   const { data, isLoading, error } = usePluginQuery<TopCoinsResponse>({
     queryKey: ['top-coins'],
@@ -102,13 +107,16 @@ export function TopCoinsPane() {
                 <TableHead className="text-xs">
                   {t('topCoins.colCoin')}
                 </TableHead>
+                <TableHead className="hidden w-10 @min-[352px]/pane:table-cell text-xs @md/pane:w-16">
+                  {t('common.trend')}
+                </TableHead>
                 <TableHead className="text-right text-xs">
                   {t('topCoins.colPrice')}
                 </TableHead>
                 <TableHead className="text-right text-xs">
                   {t('topCoins.col24h')}
                 </TableHead>
-                <TableHead className="hidden @md/pane:table-cell text-right text-xs">
+                <TableHead className="hidden @lg/pane:table-cell text-right text-xs">
                   {t('topCoins.colMktCap')}
                 </TableHead>
               </TableRow>
@@ -125,13 +133,16 @@ export function TopCoinsPane() {
                       <div className="h-2.5 w-16 animate-pulse rounded bg-muted" />
                     </div>
                   </TableCell>
+                  <TableCell className="hidden @min-[352px]/pane:table-cell">
+                    <div className="h-3 w-16 animate-pulse rounded bg-muted" />
+                  </TableCell>
                   <TableCell>
                     <div className="ml-auto h-3 w-16 animate-pulse rounded bg-muted" />
                   </TableCell>
                   <TableCell>
                     <div className="ml-auto h-3 w-12 animate-pulse rounded bg-muted" />
                   </TableCell>
-                  <TableCell className="hidden @md/pane:table-cell">
+                  <TableCell className="hidden @lg/pane:table-cell">
                     <div className="ml-auto h-3 w-14 animate-pulse rounded bg-muted" />
                   </TableCell>
                 </TableRow>
@@ -155,11 +166,19 @@ export function TopCoinsPane() {
           className="flex-1 overflow-x-auto overflow-y-auto px-1"
         >
           <Table>
+            {/* Column budget, measured rather than guessed: rank, coin, price
+                and 24h need 348px together with a 40px trend line, so that is
+                the breakpoint the trend column appears at — a narrower rail
+                would push the 24h number off the edge instead. It widens at
+                @md, and market cap waits for @lg. */}
             <TableHeader>
               <TableRow>
                 <TableHead className="w-8 text-xs">#</TableHead>
                 <TableHead className="text-xs">
                   {t('topCoins.colCoin')}
+                </TableHead>
+                <TableHead className="hidden w-10 @min-[352px]/pane:table-cell text-xs @md/pane:w-16">
+                  {t('common.trend')}
                 </TableHead>
                 <TableHead className="text-right text-xs">
                   {t('topCoins.colPrice')}
@@ -167,7 +186,7 @@ export function TopCoinsPane() {
                 <TableHead className="text-right text-xs">
                   {t('topCoins.col24h')}
                 </TableHead>
-                <TableHead className="hidden @md/pane:table-cell text-right text-xs">
+                <TableHead className="hidden @lg/pane:table-cell text-right text-xs">
                   {t('topCoins.colMktCap')}
                 </TableHead>
               </TableRow>
@@ -215,14 +234,34 @@ export function TopCoinsPane() {
                                 logoUrl={coin.logoUrl}
                                 size="sm"
                               />
-                              <div className="flex flex-col">
+                              {/* Capped and truncating: without it the full
+                                  name ("UNUS SED LEO") sets the column's
+                                  min-content width and pushes the 24h number
+                                  off the edge of a docked rail. */}
+                              <div className="flex min-w-0 flex-col">
                                 <span className="text-xs font-bold">
                                   {coin.symbol}
                                 </span>
-                                <span className="text-[10px] leading-tight text-muted-foreground">
+                                <span
+                                  className="max-w-20 truncate text-[10px] leading-tight text-muted-foreground @md/pane:max-w-32"
+                                  title={coin.name}
+                                >
                                   {coin.name}
                                 </span>
                               </div>
+                            </Link>
+                          </TableCell>
+                          <TableCell className="hidden @min-[352px]/pane:table-cell p-0">
+                            <Link
+                              to="/pair/$pair"
+                              params={{ pair: `${coin.symbol}-USDT` }}
+                              className="flex h-9 items-center px-2"
+                            >
+                              <MiniPriceChart
+                                market={cryptoMarket}
+                                pair={`${coin.symbol}-USDT`}
+                                className="h-5 w-10 @md/pane:w-16"
+                              />
                             </Link>
                           </TableCell>
                           <TableCell className="p-0">
@@ -248,7 +287,7 @@ export function TopCoinsPane() {
                               {formatPercent(coin.percentChange24h)}
                             </Link>
                           </TableCell>
-                          <TableCell className="hidden @md/pane:table-cell p-0">
+                          <TableCell className="hidden @lg/pane:table-cell p-0">
                             <Link
                               to="/pair/$pair"
                               params={{ pair: `${coin.symbol}-USDT` }}

@@ -48,6 +48,10 @@ import {
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
+import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
+import { usePriceTick } from '@/hooks/use-price-tick'
+import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
+import { TickArrow } from '@/components/tick-arrow'
 import { formatPrice } from '@/lib/format-price'
 
 /** Live exchange quote by exact pair symbol; top-coins base join as fallback. */
@@ -71,15 +75,42 @@ function PairQuote({
   quote: BulkQuote | undefined
   className?: string
 }) {
-  if (!quote) return null
-  const change = quote.change24h
+  // These prices come from the 60s bulk snapshots, not a per-row stream —
+  // fanning a ticker subscription over two thousand instruments is the thing
+  // the bulk endpoint exists to avoid. So the flash marks a refresh rather
+  // than a trade, which is still exactly when the number on screen moved.
+  const direction = usePriceTick(quote?.price)
+  const change = quote?.change24h
   return (
-    <div className={cn('text-right tabular-nums', className)}>
-      <p className="text-sm font-medium">{formatPrice(quote.price)}</p>
-      <p className={cn('text-xs', change >= 0 ? 'text-up' : 'text-down')}>
-        {change >= 0 ? '+' : ''}
-        {change.toFixed(2)}%
+    // A reserved column, not a shrink-wrapped one. Digit count varies per
+    // pair ($64,570.60 against $0.1984) and a venue with no price at all used
+    // to collapse the slot entirely — either way the chart beside it moved,
+    // and a list of charts that each start at a different x reads as broken
+    // alignment rather than as data.
+    <div className={cn('min-w-24 text-right tabular-nums', className)}>
+      <p
+        className={cn(
+          'tick-cell flex items-center justify-end gap-0.5 text-sm font-medium transition-colors duration-700',
+          direction === 'up'
+            ? 'tick-up text-up'
+            : direction === 'down'
+              ? 'tick-down text-down'
+              : undefined,
+        )}
+      >
+        <TickArrow direction={direction} />
+        {quote ? (
+          formatPrice(quote.price)
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        )}
       </p>
+      {change != null && (
+        <p className={cn('text-xs', change >= 0 ? 'text-up' : 'text-down')}>
+          {change >= 0 ? '+' : ''}
+          {change.toFixed(2)}%
+        </p>
+      )}
     </div>
   )
 }
@@ -99,6 +130,9 @@ export function MarketsPane() {
   const openAddDialog = useWatchlistsStore((s) => s.openAddDialog)
   const coinsBySymbol = useTopCoinsSnapshot()
   const liveQuotes = useBulkTickerQuotes()
+  // Trend lines come from candles, which need a venue — an equity row can't
+  // ask a crypto exchange, so each row resolves its own.
+  const resolveMarket = usePreferredMarketResolver()
   const [recentPairs, setRecentPairs] = usePersistedState<Array<string>>(
     'pair-picker.recent',
     [],
@@ -339,11 +373,19 @@ export function MarketsPane() {
             {/* Featured row */}
             {showFeatured && (
               <div className="border-b px-4 py-3">
-                <div className="grid grid-cols-1 gap-2 @sm/pane:grid-cols-3">
+                {/* Column count follows the available width rather than a
+                    breakpoint. Three fixed columns meant a 384px pane gave
+                    each tile 112px — less than the logo, symbol and price
+                    need — so the symbol wrapped mid-pair ("BTC-" / "USDT")
+                    and collided with the price. */}
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-2">
                   {featuredPairs.map((pair) => (
                     <Link
                       key={pair.symbol}
-                      className="group flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-primary/40 hover:bg-accent/40"
+                      // Its own container: how a tile lays out depends on how
+                      // wide that tile ended up, which the pane's width alone
+                      // no longer tells us.
+                      className="@container/tile group flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border p-3 transition-colors hover:border-primary/40 hover:bg-accent/40"
                       params={{ pair: pair.symbol }}
                       to="/pair/$pair"
                       onClick={() => trackRecent(pair.symbol, pair.assetClass)}
@@ -354,17 +396,31 @@ export function MarketsPane() {
                         assetClass={pair.assetClass}
                         size="lg"
                       />
-                      <div className="min-w-0 flex-1">
-                        <PairSymbol symbol={pair.symbol} className="text-sm" />
-                        <p className="text-xs text-muted-foreground">
+                      <div className="min-w-20 flex-1">
+                        {/* A ticker never wraps — it truncates or it fits. */}
+                        <PairSymbol
+                          symbol={pair.symbol}
+                          className="block truncate text-sm"
+                        />
+                        <p className="truncate text-xs text-muted-foreground">
                           {pair.name}
                         </p>
                       </div>
+                      {/* Only once the tile is wide enough to hold logo,
+                          pair, chart and price on one line — below that the
+                          tile has already dropped its arrow to make room. */}
+                      <MiniPriceChart
+                        market={resolveMarket(pair.assetClass)}
+                        pair={pair.symbol}
+                        className="hidden h-6 w-10 @min-[19rem]/tile:block @min-[27rem]/tile:w-16"
+                      />
                       <PairQuote
                         quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
-                        className="shrink-0"
+                        className="ml-auto shrink-0"
                       />
-                      <ArrowRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                      {/* Decoration, and the first thing to go: below this
+                          the price has already wrapped to its own line. */}
+                      <ArrowRight className="hidden size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 @min-[21rem]/tile:block" />
                     </Link>
                   ))}
                 </div>
@@ -410,6 +466,9 @@ export function MarketsPane() {
                     <TableRow>
                       <TableHead className="w-10" />
                       <TableHead>{t('markets.colPair')}</TableHead>
+                      <TableHead className="hidden w-24 @lg/pane:table-cell">
+                        {t('common.trend')}
+                      </TableHead>
                       <TableHead className="text-right">
                         {t('markets.colPrice24h')}
                       </TableHead>
@@ -432,6 +491,7 @@ export function MarketsPane() {
                           key={pair.symbol}
                           pair={pair}
                           quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
+                          market={resolveMarket(pair.assetClass)}
                           isWatched={allSymbolsSet.has(pair.symbol)}
                           onStarClick={openAddDialog}
                           onNavigate={trackRecent}
@@ -451,7 +511,9 @@ export function MarketsPane() {
             {/* Card grid (shown on mobile always if list mode, or on all sizes if grid mode) */}
             <div
               className={cn(
-                'grid grid-cols-1 gap-2 p-4 @xs/pane:grid-cols-2',
+                // Same reason as the featured row: a fixed second column at
+                // @xs meant 150px cards, narrower than the content they hold.
+                'grid grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-2 p-4',
                 viewMode === 'list' ? '@md/pane:hidden' : '',
               )}
             >
@@ -460,6 +522,7 @@ export function MarketsPane() {
                   key={pair.symbol}
                   pair={pair}
                   quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
+                  market={resolveMarket(pair.assetClass)}
                   isWatched={allSymbolsSet.has(pair.symbol)}
                   onStarClick={openAddDialog}
                   onNavigate={trackRecent}
@@ -484,12 +547,15 @@ export function MarketsPane() {
 const PairTableRow = memo(function PairTableRow({
   pair,
   quote,
+  market,
   isWatched,
   onStarClick,
   onNavigate,
 }: {
   pair: PairEntry
   quote: BulkQuote | undefined
+  /** Venue the trend line is drawn from — resolved for the asset class. */
+  market: string
   isWatched: boolean
   onStarClick: (symbol: string) => void
   onNavigate: (symbol: string, assetClass?: string) => void
@@ -543,12 +609,22 @@ const PairTableRow = memo(function PairTableRow({
           </div>
         </Link>
       </TableCell>
+      <TableCell className="hidden @lg/pane:table-cell">
+        <Link
+          className="block"
+          params={{ pair: pair.symbol }}
+          to="/pair/$pair"
+          onClick={() => onNavigate(pair.symbol, pair.assetClass)}
+        >
+          <MiniPriceChart
+            market={market}
+            pair={pair.symbol}
+            className="h-6 w-16 @xl/pane:w-24"
+          />
+        </Link>
+      </TableCell>
       <TableCell>
-        {quote ? (
-          <PairQuote quote={quote} />
-        ) : (
-          <p className="text-right text-xs text-muted-foreground">—</p>
-        )}
+        <PairQuote quote={quote} />
       </TableCell>
       <TableCell className="hidden @lg/pane:table-cell">
         <div className="flex flex-wrap gap-1">
@@ -575,12 +651,15 @@ const PairTableRow = memo(function PairTableRow({
 const PairCard = memo(function PairCard({
   pair,
   quote,
+  market,
   isWatched,
   onStarClick,
   onNavigate,
 }: {
   pair: PairEntry
   quote: BulkQuote | undefined
+  /** Venue the trend line is drawn from — resolved for the asset class. */
+  market: string
   isWatched: boolean
   onStarClick: (symbol: string) => void
   onNavigate: (symbol: string, assetClass?: string) => void
@@ -609,11 +688,23 @@ const PairCard = memo(function PairCard({
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <PairSymbol symbol={pair.symbol} className="text-sm" />
-            <p className="text-xs text-muted-foreground">{pair.name}</p>
+            <PairSymbol
+              symbol={pair.symbol}
+              className="block truncate text-sm"
+            />
+            <p className="truncate text-xs text-muted-foreground">
+              {pair.name}
+            </p>
           </div>
           <PairQuote quote={quote} className="shrink-0" />
         </div>
+        {/* Its own line: a card is narrow enough that squeezing the trend in
+            beside the symbol costs the price its last digits. */}
+        <MiniPriceChart
+          market={market}
+          pair={pair.symbol}
+          className="mt-2 h-6 w-full"
+        />
         <div className="mt-1.5 flex flex-wrap gap-1">
           {categoryLabels.map((cat) => (
             <Badge key={cat.id} variant="secondary" className="text-[10px]">

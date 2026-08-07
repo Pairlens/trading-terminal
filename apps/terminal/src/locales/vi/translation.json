@@ -428,6 +428,8 @@
     "retry": "Thử lại",
     "search": "Tìm kiếm",
     "noResults": "Không tìm thấy kết quả.",
+    "trend": "Xu hướng",
+    "trendAriaLabel": "Xu hướng giá 24 giờ",
     "comingSoon": "Tính năng này sắp ra mắt.",
     "active": "Đang hoạt động",
     "select": "Chọn...",
