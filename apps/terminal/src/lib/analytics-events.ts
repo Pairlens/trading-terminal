@@ -265,6 +265,21 @@ export interface AnalyticsEvents {
   /** A layout tab was brought to the front — panel engagement, not just
    * composition. */
   panel_focused: { pane_type: string }
+
+  // ── Mobile terminal ───────────────────────────────────────────────
+  /**
+   * The phone shell mounted. `entry` separates a cold load on a phone from a
+   * desktop window dragged under 768px — the second is a developer or a
+   * curious user, and mixing them would flatter the mobile numbers.
+   */
+  mobile_terminal_opened: { entry: 'direct' | 'resize' }
+  /**
+   * A mobile destination was opened. Which of the five surfaces earns its
+   * place in the tab bar — the phone's equivalent of `panel_focused`.
+   */
+  mobile_tab_changed: {
+    tab: 'watchlist' | 'trade' | 'chart' | 'copilot' | 'discover'
+  }
 }
 
 /**

@@ -4635,5 +4635,44 @@
       "label": "Themes",
       "description": "Visual themes that override colors, chart palette, and UI styling"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "Destinations",
+        "watchlist": "Watchlist",
+        "trade": "Trade",
+        "chart": "Chart",
+        "copilot": "Co-pilot",
+        "discover": "Discover"
+      },
+      "overlays": {
+        "orderbook": "Order book",
+        "pairPicker": "Pairs",
+        "venuePicker": "Venue",
+        "settings": "Settings",
+        "connect": "Connect account",
+        "news": "News"
+      },
+      "changePair": "Change pair",
+      "changeVenue": "Change venue",
+      "search": "Search pairs",
+      "openSettings": "Open settings",
+      "readOnly": "read-only",
+      "timeframe": "Timeframe",
+      "dismiss": "Dismiss",
+      "comingSoon": "Coming soon",
+      "priceChange": "{{absolute}} {{percent}} · 24h",
+      "switchVenue": "Switch venue",
+      "noChartData": "No data for this pair here",
+      "noChartDataHint": "This venue does not list it. Try another one.",
+      "desktopOnlyRoute": "That screen is only on the desktop app."
+    },
+    "panels": {},
+    "trade": {},
+    "chart": {},
+    "copilot": {},
+    "settings": {},
+    "pickers": {}
   }
 }

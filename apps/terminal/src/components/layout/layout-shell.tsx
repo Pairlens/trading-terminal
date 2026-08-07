@@ -23,9 +23,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@pairlens/ui/components/ui/resizable'
-import { useIsMobile } from '@pairlens/ui/hooks/use-mobile'
 import { LayoutColumn } from './layout-column'
-import { LayoutMobileShell } from './layout-mobile-shell'
 import { DesktopOnlyState } from './desktop-only-state'
 import type {
   Announcements,
@@ -101,7 +99,6 @@ function DesktopOnlyGate({ children }: { children: ReactNode }) {
 function LayoutGrid() {
   const { t } = useTranslation()
   const { layout, dispatch, pendingAddPaneType, cancelAddPane } = useLayout()
-  const isMobile = useIsMobile()
   const [activeDrag, setActiveDrag] = useState<DragData | null>(null)
   const [dropZone, setDropZone] = useState<DropZone | null>(null)
   const dropZoneRef = useRef<DropZone | null>(null)
@@ -353,10 +350,8 @@ function LayoutGrid() {
     dropZoneRef.current = null
   }, [])
 
-  if (isMobile) {
-    return <LayoutMobileShell />
-  }
-
+  // No mobile branch: at phone width `_terminal.tsx` swaps the entire shell
+  // for the Focus surface, so this pane grid never mounts there at all.
   const activeDropZone = activeDrag ? dropZone : null
 
   if (layout.columns.length === 1) {

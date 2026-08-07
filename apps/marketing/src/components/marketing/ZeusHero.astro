@@ -83,6 +83,19 @@ const statuePhone = await getImage({
       </svg>
       Download for desktop
     </a>
+    <!-- Phones get one action instead of two. The swap is CSS-only at the
+         terminal's own 767px breakpoint, so the button a visitor sees and the
+         shell they land on always agree, and nothing flashes the way a
+         post-parse JS rewrite would. Analytics needs no change: the surface
+         string segments it against the desktop-width hero on its own. -->
+    <a
+      href={SITE.launchUrl}
+      class="zhero-mobile"
+      data-launch-terminal="landing-hero-mobile"
+    >
+      Launch Mobile Terminal
+      <span class="zhero-tag">FREE</span>
+    </a>
     </div>
 
     <!-- Compatibility, not endorsement: the whole set says "any of these",
@@ -234,7 +247,8 @@ const statuePhone = await getImage({
     gap: 12px;
   }
   .zhero-launch,
-  .zhero-dl {
+  .zhero-dl,
+  .zhero-mobile {
     display: inline-flex;
     height: 52px;
     align-items: center;
@@ -246,9 +260,16 @@ const statuePhone = await getImage({
     font-weight: 600;
     transition: transform 0.2s var(--ease-out);
   }
-  .zhero-launch {
+  /* The phone CTA is the same primary treatment as "Launch in browser", so it
+     rides that button's rules rather than repeating them; only the display
+     swap below is its own. */
+  .zhero-launch,
+  .zhero-mobile {
     background: #fff;
     color: #000;
+  }
+  .zhero-mobile {
+    display: none;
   }
   /* A real chip rather than dimmed text: it reads as a badge without breaking
      the button's silhouette the way an overhanging corner ribbon would. */
@@ -305,7 +326,8 @@ const statuePhone = await getImage({
     height: 17px;
     opacity: 0.75;
   }
-  .zhero-launch:hover {
+  .zhero-launch:hover,
+  .zhero-mobile:hover {
     color: #000;
     transform: translateY(-2px);
   }
@@ -315,7 +337,8 @@ const statuePhone = await getImage({
     border-color: rgb(255 255 255 / 0.45);
   }
   .zhero-launch:focus-visible,
-  .zhero-dl:focus-visible {
+  .zhero-dl:focus-visible,
+  .zhero-mobile:focus-visible {
     outline: 2px solid #fff;
     outline-offset: 3px;
   }
@@ -413,6 +436,23 @@ const statuePhone = await getImage({
       height: 380px;
     }
   }
+  /* 767px is the terminal's own MOBILE_BREAKPOINT: below it the hosted
+     terminal boots its phone shell, so the hero offers that one action and
+     drops both desktop-width labels. It composes with the 900px rule above
+     rather than fighting it — the column stack and the 380px scrim still
+     apply, and the two hidden buttons take their 272px width with them, so
+     the phone CTA restates it here as the only remaining child. */
+  @media (max-width: 767px) {
+    .zhero-launch,
+    .zhero-dl {
+      display: none;
+    }
+    .zhero-mobile {
+      display: inline-flex;
+      width: 272px;
+      justify-content: center;
+    }
+  }
   /* The label alone would wrap beside the stack on a narrow phone. */
   @media (max-width: 420px) {
     .zhero-browsers {
@@ -472,11 +512,13 @@ const statuePhone = await getImage({
       animation: none;
     }
     .zhero-launch,
-    .zhero-dl {
+    .zhero-dl,
+    .zhero-mobile {
       transition: none;
     }
     .zhero-launch:hover,
-    .zhero-dl:hover {
+    .zhero-dl:hover,
+    .zhero-mobile:hover {
       transform: none;
     }
   }

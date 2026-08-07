@@ -71,6 +71,32 @@ const LOCK_SHIELD_SCRIPT = `(function(){
   } catch (e) {}
 })()`
 
+/**
+ * Pre-hydration viewport stamp.
+ *
+ * The mobile shell branch cannot wait for an effect: `useIsMobile()` returns
+ * false on its first render, so branching the whole application on it would
+ * paint one full desktop frame on every phone load. A classic inline script
+ * (same shape and placement as LOCK_SHIELD_SCRIPT above) stamps
+ * `html[data-viewport]` before any module script runs, which is what
+ * `mobile/use-viewport-mode.ts` reads through `useSyncExternalStore` — correct
+ * on the FIRST render — and what the CSS backstop in `mobile/mobile.css`
+ * keys off. The listener keeps it honest across live resizes.
+ *
+ * Breakpoint matches MOBILE_BREAKPOINT (768) in @pairlens/ui.
+ */
+const VIEWPORT_MODE_SCRIPT = `(function(){
+  try {
+    var mq = window.matchMedia('(max-width: 767px)');
+    var set = function () {
+      document.documentElement.dataset.viewport = mq.matches ? 'mobile' : 'desktop';
+    };
+    set();
+    mq.addEventListener('change', set);
+    window.addEventListener('resize', set);
+  } catch (e) {}
+})()`
+
 const RENDER_COUNTER_SCRIPT = `(function(){
   try {
     if (localStorage.getItem('pairlens:render-count') !== '1') return;
@@ -167,7 +193,18 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
+        // `viewport-fit=cover` is what makes env(safe-area-inset-*) non-zero,
+        // and `interactive-widget=resizes-content` is what lifts the mobile
+        // co-pilot composer above the software keyboard. Neither has any
+        // effect on a desktop browser.
+        content:
+          'width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content',
+      },
+      {
+        // --background, so iOS Safari's chrome matches the app instead of
+        // bracketing it in white.
+        name: 'theme-color',
+        content: '#0a0806',
       },
       {
         title: 'Pairlens Terminal',
@@ -286,6 +323,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           }}
         />
         <script dangerouslySetInnerHTML={{ __html: LOCK_SHIELD_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: VIEWPORT_MODE_SCRIPT }} />
         {import.meta.env.DEV && (
           // Dev-only render counter for re-render profiling.
           // Classic inline script so it runs before any module script —

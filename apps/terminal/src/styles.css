@@ -3,6 +3,9 @@
  * SPDX-License-Identifier: FSL-1.1-Apache-2.0
  */
 @import '@pairlens/ui/styles.css';
+/* Mobile "Focus" surface paint — glass, sheets, safe-area geometry. Inert
+   until html[data-viewport='mobile'] and the .pl-mobile-root shell exist. */
+@import './mobile/mobile.css';
 @source "./**/*.{ts,tsx}";
 
 @utility no-scrollbar {

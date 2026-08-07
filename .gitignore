@@ -53,3 +53,4 @@ apps/terminal/public/_pyodide/
 # Version manifest — written by the terminal vite config on dev/build so the
 # web build can poll for newer deploys, never committed
 apps/terminal/public/version.json
+design_handoff_pairlens_mobile/

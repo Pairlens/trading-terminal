@@ -99,12 +99,6 @@ export type ScreenPresetGroup = {
   presets: Array<{ key: string; label: string; layout: TerminalLayout }>
 }
 
-export type MobileTabConfig = {
-  type: string
-  label: string
-  icon: React.ComponentType<{ className?: string }>
-}
-
 export type WorkspaceVariableType = 'pair' | 'timeframe' | 'wallet' | 'string'
 
 export type WorkspaceVariableDefinition = {
@@ -120,7 +114,6 @@ export type WorkspaceConfig = {
   defaultPreset: TerminalLayout
   presets: Record<string, { label: string; layout: TerminalLayout }>
   screenPresets?: Array<ScreenPresetGroup>
-  mobileTabs?: Array<MobileTabConfig>
   variables?: Array<WorkspaceVariableDefinition>
 }
 
