@@ -466,13 +466,21 @@ export function MarketsPane() {
                     <TableRow>
                       <TableHead className="w-10" />
                       <TableHead>{t('markets.colPair')}</TableHead>
-                      <TableHead className="hidden w-24 @lg/pane:table-cell">
+                      {/* A share of the table, not a fixed 96px. At a fixed
+                          width the line covered barely half the distance to
+                          the right-aligned price and read as a chart that had
+                          stopped drawing rather than a short one. */}
+                      <TableHead className="hidden w-[26%] @lg/pane:table-cell">
                         {t('common.trend')}
                       </TableHead>
                       <TableHead className="text-right">
                         {t('markets.colPrice24h')}
                       </TableHead>
-                      <TableHead className="hidden @lg/pane:table-cell">
+                      {/* Later than the trend line, at the measured width the
+                          badges actually fit on one row (640px pane). Sharing
+                          @lg with the trend column left them 74px, narrow
+                          enough to wrap and make the row heights ragged. */}
+                      <TableHead className="hidden @min-[40rem]/pane:table-cell">
                         {t('markets.colCategory')}
                       </TableHead>
                       <TableHead className="w-10" />
@@ -619,14 +627,14 @@ const PairTableRow = memo(function PairTableRow({
           <MiniPriceChart
             market={market}
             pair={pair.symbol}
-            className="h-6 w-16 @xl/pane:w-24"
+            className="h-6 w-full"
           />
         </Link>
       </TableCell>
       <TableCell>
         <PairQuote quote={quote} />
       </TableCell>
-      <TableCell className="hidden @lg/pane:table-cell">
+      <TableCell className="hidden @min-[40rem]/pane:table-cell">
         <div className="flex flex-wrap gap-1">
           {categoryLabels.map((cat) => (
             <Badge key={cat.id} variant="secondary" className="text-[10px]">
