@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "圖表設定",
-          "description": "指標、畫線、圖表類型以及你的預設繪圖樣式。"
+          "description": "指標、畫線、圖表類型、收藏的工具以及你的預設繪圖樣式。"
         },
         "workspaces": {
           "title": "工作區與版面",
@@ -1422,6 +1422,10 @@
       "singleUseTools": "單次繪圖工具",
       "undo": "復原",
       "redo": "重做",
+      "addToFavorites": "加入收藏",
+      "removeFromFavorites": "從收藏移除",
+      "recentTools": "最近使用的工具",
+      "noRecentTools": "尚未使用任何工具",
       "categories": {
         "lines": "線條",
         "shapes": "形狀",

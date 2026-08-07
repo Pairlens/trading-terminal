@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Chart-Einrichtung",
-          "description": "Indikatoren, Zeichnungen, Chart-Typ und deine Standard-Zeichenstile."
+          "description": "Indikatoren, Zeichnungen, Chart-Typ, Lieblingswerkzeuge und deine Standard-Zeichenstile."
         },
         "workspaces": {
           "title": "Arbeitsbereiche und Layouts",
@@ -1422,6 +1422,10 @@
       "singleUseTools": "Einmal-Tools",
       "undo": "Rückgängig",
       "redo": "Wiederholen",
+      "addToFavorites": "Zu Favoriten hinzufügen",
+      "removeFromFavorites": "Aus Favoriten entfernen",
+      "recentTools": "Zuletzt verwendete Werkzeuge",
+      "noRecentTools": "Noch kein Werkzeug verwendet",
       "categories": {
         "lines": "Linien",
         "shapes": "Formen",

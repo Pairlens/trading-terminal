@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Chart setup",
-          "description": "Indicators, drawings, chart type and your default drawing styles."
+          "description": "Indicators, drawings, chart type, favorite tools and your default drawing styles."
         },
         "workspaces": {
           "title": "Workspaces and layouts",
@@ -1422,6 +1422,10 @@
       "singleUseTools": "Single-use tools",
       "undo": "Undo",
       "redo": "Redo",
+      "addToFavorites": "Add to favorites",
+      "removeFromFavorites": "Remove from favorites",
+      "recentTools": "Recent tools",
+      "noRecentTools": "No tools used yet",
       "categories": {
         "lines": "Lines",
         "shapes": "Shapes",

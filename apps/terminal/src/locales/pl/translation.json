@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Ustawienia wykresu",
-          "description": "Wskaźniki, rysunki, typ wykresu i Twoje domyślne style rysowania."
+          "description": "Wskaźniki, rysunki, typ wykresu, ulubione narzędzia i Twoje domyślne style rysowania."
         },
         "workspaces": {
           "title": "Przestrzenie robocze i układy",
@@ -1430,6 +1430,10 @@
       "singleUseTools": "Narzędzia jednorazowe",
       "undo": "Cofnij",
       "redo": "Ponów",
+      "addToFavorites": "Dodaj do ulubionych",
+      "removeFromFavorites": "Usuń z ulubionych",
+      "recentTools": "Ostatnie narzędzia",
+      "noRecentTools": "Nie użyto jeszcze żadnego narzędzia",
       "categories": {
         "lines": "Linie",
         "shapes": "Kształty",
