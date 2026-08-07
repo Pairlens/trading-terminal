@@ -13,7 +13,7 @@
 
 import { afterAll, describe, expect, it } from 'bun:test'
 
-import { LIVE_DRIVERS } from './drivers'
+import { SELECTED_DRIVERS, SKIPPED_DRIVER_NAMES } from './drivers'
 import { formatReliabilityMatrix, runReliabilityCheck } from './reliability'
 import type { ReliabilityResult } from './reliability'
 
@@ -27,9 +27,13 @@ describe.skipIf(!LIVE)('connector switch reliability', () => {
     if (rows.length === 0) return
 
     console.log('\n' + formatReliabilityMatrix(rows) + '\n')
+    // Same reason as live.test.ts: a narrowed run must not read as a sweep.
+    if (SKIPPED_DRIVER_NAMES.length > 0) {
+      console.log(`not checked: ${SKIPPED_DRIVER_NAMES.join(', ')}\n`)
+    }
   })
 
-  for (const driver of LIVE_DRIVERS) {
+  for (const driver of SELECTED_DRIVERS) {
     it(
       `${driver.name} keeps streaming across resubscribe cycles`,
       async () => {

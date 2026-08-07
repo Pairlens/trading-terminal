@@ -1,0 +1,148 @@
+# Daily live-exchange conformance.
+#
+# CI proves our code speaks each venue's protocol; it cannot prove the venue
+# still answers the way we think, because everything in it is deterministic by
+# design. This is the other half: it drives the real WS and REST clients
+# against the real exchanges and checks the normalized output still obeys the
+# canonical contract. It is how contract drift gets noticed here rather than in
+# a user's chart.
+#
+# It deliberately runs on a schedule and never on push or pull_request, so it
+# cannot gate a merge. That is the point rather than an omission: a check that
+# fails when Binance rate-limits a runner teaches people to ignore red, and
+# once they do, the real failures go unread too. Merges stay gated on the
+# deterministic suite in ci.yml.
+#
+# A failure here is therefore a question, not a verdict. An exchange outage, a
+# rate limit, a new region block and a genuinely broken connector all look the
+# same from outside; the matrix in the issue is what tells them apart.
+name: Live connectors
+
+on:
+  schedule:
+    # 06:00 UTC daily. GitHub delays scheduled runs under load, sometimes by
+    # a lot, which is fine for drift detection and would not be for a gate.
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      markets:
+        description: 'Connectors to check, comma-separated (blank = the scheduled set)'
+        required: false
+        default: ''
+
+concurrency:
+  group: live-connectors
+  # No cancel-in-progress: a run that is halfway through the venues has already
+  # paid for that data, and there is nothing to race against on a daily job.
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  # Binance answers a US address with HTTP 451, and ByBit and MEXC are
+  # region-gated the same way. GitHub's hosted runners are US-based, so those
+  # three would fail every single night for a reason no commit caused — the
+  # fastest way to turn a nightly job into noise and then into a muted job.
+  #
+  # This is a statement about the runner's address, not about those connectors,
+  # and it leaves a real gap: nothing watches them for drift until this runs
+  # somewhere that can reach them. A non-US self-hosted runner would close it.
+  #
+  # The excluded set is a starting point from the documented region gates. The
+  # first runs are what confirm it: any venue that fails on connectivity rather
+  # than on contract belongs in this list, and the matrix in the issue says
+  # which.
+  SCHEDULED_MARKETS: 'okx,coinbase,gate,htx,upbit,kraken,kucoin,bitget,cryptocom,bitfinex'
+  ISSUE_LABEL: live-connectors
+
+jobs:
+  connectors:
+    runs-on: ubuntu-latest
+    # Each connector has its own generous per-check ceiling and they run in
+    # sequence, so the job needs real headroom.
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.8
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # continue-on-error so a failure still reaches the reporting steps below;
+      # the job is failed explicitly at the end.
+      - name: Check live connectors
+        id: check
+        continue-on-error: true
+        env:
+          PAIRLENS_LIVE_MARKETS: ${{ github.event.inputs.markets || env.SCHEDULED_MARKETS }}
+        run: |
+          set -o pipefail
+          bun run test:connectors:live 2>&1 | tee live-output.txt
+
+      - name: Report the failure
+        if: steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+
+          {
+            echo "The daily live-connector check failed."
+            echo
+            echo "**This job talks to real exchanges**, so a failure is not by"
+            echo "itself a code regression. An exchange outage, a rate limit or"
+            echo "a new region block fails it the same way a broken connector"
+            echo "does. Read the matrix below before assuming ours is at fault:"
+            echo "a row that fails every check is usually reachability, and a"
+            echo "row that passes some and fails others is usually drift."
+            echo
+            echo "Run: $RUN_URL"
+            echo
+            echo '```'
+            # The suite prints a pass/fail matrix per suite at the end, which is
+            # the part worth reading; the assertion noise above it is not.
+            tail -n 80 live-output.txt
+            echo '```'
+          } > issue-body.md
+
+          existing=$(gh issue list --label "$ISSUE_LABEL" --state open --limit 1 \
+            --json number --jq '.[0].number // empty')
+
+          if [ -n "$existing" ]; then
+            # One rolling issue rather than a new one every morning, which
+            # would bury the first (and most informative) report.
+            gh issue comment "$existing" --body-file issue-body.md
+          else
+            gh label create "$ISSUE_LABEL" \
+              --color B60205 \
+              --description 'Daily live exchange connectivity check' \
+              2>/dev/null || true
+            gh issue create \
+              --title "Live connector check failing ($(date -u '+%Y-%m-%d'))" \
+              --label "$ISSUE_LABEL" \
+              --body-file issue-body.md
+          fi
+
+      - name: Close the tracking issue once it passes
+        if: steps.check.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          # Otherwise the issue outlives the outage that opened it and everyone
+          # learns to ignore it.
+          for number in $(gh issue list --label "$ISSUE_LABEL" --state open \
+            --json number --jq '.[].number'); do
+            gh issue close "$number" \
+              --comment "Live connector check passed on $(date -u '+%Y-%m-%d %H:%M UTC'). $RUN_URL"
+          done
+
+      - name: Fail the job when the check failed
+        if: steps.check.outcome == 'failure'
+        run: exit 1
