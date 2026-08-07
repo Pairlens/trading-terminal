@@ -4,11 +4,39 @@ import { dirname, resolve } from 'node:path'
 import { describe, expect, it } from 'bun:test'
 import { $ } from 'bun'
 
-const CLI = resolve(
-  dirname(new URL(import.meta.url).pathname),
-  '..',
-  'index.ts',
-)
+const HERE = dirname(new URL(import.meta.url).pathname)
+const CLI = resolve(HERE, '..', 'index.ts')
+
+/**
+ * Preload that answers OKX REST from a fixture inside the CLI's own process.
+ *
+ * The data commands used to call the live venue on every run, with a 15s
+ * timeout standing in for a ~300ms request. That is a required status check
+ * built on a third-party API being reachable and fast from a CI runner: it
+ * went 307ms, timeout, 216ms across three runs of identical code, and a red
+ * `main` from it looks exactly like a real regression until someone opens the
+ * log. The same file already skips Binance in CI over an HTTP 451, so the
+ * network was a known problem here; this removes it from the rest.
+ *
+ * What the venue was actually contributing is response SHAPE, and that is
+ * covered where it belongs — the connector conformance suite in
+ * packages/plugins drives every venue's parser against recorded payloads. What
+ * these tests uniquely cover is the CLI wiring around it, which the fixture
+ * leaves entirely intact.
+ */
+const STUB = resolve(HERE, 'fixtures', 'okx-rest-stub.ts')
+
+/** The CLI, wired to the fixture instead of the internet. */
+const cli = (...args: Array<string>) =>
+  $`bun --preload ${STUB} ${CLI} ${args}`.text()
+
+/**
+ * Live-venue runs still exist, they just do not gate anything: set
+ * PAIRLENS_LIVE_E2E=1 to point the same commands at the real OKX. Deleting
+ * them outright would drop the only check that the venue still answers the
+ * way the parsers expect.
+ */
+const liveOnly = it.skipIf(!process.env.PAIRLENS_LIVE_E2E)
 
 describe('CLI', () => {
   it('prints help with --help', async () => {
@@ -55,8 +83,17 @@ describe('CLI', () => {
 
 describe('candles command', () => {
   it('fetches JSON candles from OKX', async () => {
-    const result =
-      await $`bun ${CLI} candles --market okx --pair BTC-USDT --timeframe 1d --limit 3`.text()
+    const result = await cli(
+      'candles',
+      '--market',
+      'okx',
+      '--pair',
+      'BTC-USDT',
+      '--timeframe',
+      '1d',
+      '--limit',
+      '3',
+    )
     const candles = JSON.parse(result)
     expect(Array.isArray(candles)).toBe(true)
     expect(candles.length).toBe(3)
@@ -66,15 +103,30 @@ describe('candles command', () => {
     expect(candles[0]).toHaveProperty('low')
     expect(candles[0]).toHaveProperty('close')
     expect(candles[0]).toHaveProperty('volume')
-  }, 15000)
+    // Oldest first, so the parser's reverse of OKX's newest-first ordering is
+    // asserted rather than assumed — a detail the live version could not pin
+    // without hard-coding a moment in market history.
+    expect(candles[0].ts).toBeLessThan(candles[2].ts)
+  })
 
   it('fetches CSV candles', async () => {
-    const result =
-      await $`bun ${CLI} candles --market okx --pair ETH-USDT --timeframe 1d --limit 2 --format csv`.text()
+    const result = await cli(
+      'candles',
+      '--market',
+      'okx',
+      '--pair',
+      'ETH-USDT',
+      '--timeframe',
+      '1d',
+      '--limit',
+      '2',
+      '--format',
+      'csv',
+    )
     const lines = result.trim().split('\n')
     expect(lines[0]).toBe('ts,open,high,low,close,volume')
     expect(lines.length).toBe(3) // header + 2 rows
-  }, 15000)
+  })
 
   // Binance blocks US IPs (HTTP 451) — skip in CI where runners are US-based
   it.skipIf(!!process.env.CI)(
@@ -88,14 +140,46 @@ describe('candles command', () => {
     },
     15000,
   )
+
+  liveOnly(
+    'fetches candles from the live OKX API',
+    async () => {
+      const result =
+        await $`bun ${CLI} candles --market okx --pair BTC-USDT --timeframe 1d --limit 3`.text()
+      const candles = JSON.parse(result)
+      expect(candles.length).toBe(3)
+      expect(candles[0].close).toBeGreaterThan(0)
+    },
+    15000,
+  )
 })
 
 describe('signals command', () => {
   it('computes signals and detects regime', async () => {
-    const result =
-      await $`bun ${CLI} signals --market okx --pair BTC-USDT --timeframe 1d`.text()
-    expect(result).toContain('Loaded')
-    expect(result).toContain('Regime:')
-    expect(result).toMatch(/Regime: (trend|chop|unknown)/)
-  }, 15000)
+    const result = await cli(
+      'signals',
+      '--market',
+      'okx',
+      '--pair',
+      'BTC-USDT',
+      '--timeframe',
+      '1d',
+    )
+    // Exact values, because the input is now known. The live version could
+    // only accept any of the three regimes and any candle count, which meant
+    // it passed whether or not the strategy engine had computed anything.
+    expect(result).toContain('Loaded 300 candles for BTC-USDT (1d) on OKX')
+    expect(result).toContain('Regime: chop')
+  })
+
+  liveOnly(
+    'computes signals against the live OKX API',
+    async () => {
+      const result =
+        await $`bun ${CLI} signals --market okx --pair BTC-USDT --timeframe 1d`.text()
+      expect(result).toContain('Loaded')
+      expect(result).toMatch(/Regime: (trend|chop|unknown)/)
+    },
+    15000,
+  )
 })
