@@ -81,6 +81,7 @@ import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import { PairSearchResults } from '@/components/pair-picker/pair-search-results'
 import { PaneTransition } from '@/components/layout/pane-transition'
+import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 
 export function WatchlistPane() {
   const { t } = useTranslation()
@@ -733,6 +734,13 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
         <PairSymbol symbol={inst.symbol} className="text-sm" />
         <p className="truncate text-xs text-muted-foreground">{inst.name}</p>
       </div>
+      {/* Trend cue. It grows with the pane and is the first thing to go when
+          the pane is docked narrower than the symbol itself needs. */}
+      <MiniPriceChart
+        market={market}
+        pair={inst.symbol}
+        className="hidden h-5 w-10 @2xs/pane:block @sm/pane:w-14 @lg/pane:w-20"
+      />
       <div className="flex flex-col items-end gap-0.5">
         <span
           className={cn(
@@ -774,7 +782,9 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
       <Button size="icon-xs" variant="ghost" onClick={handleRemove}>
         <Star className="size-3.5 fill-primary text-primary" />
       </Button>
-      <ArrowRight className="size-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+      {/* Decoration only — the whole row is clickable. It yields its pixels
+          to the trend line once the pane gets tight. */}
+      <ArrowRight className="hidden size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 @xs/pane:block" />
     </div>
   )
 })

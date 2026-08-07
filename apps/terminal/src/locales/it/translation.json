@@ -428,6 +428,8 @@
     "retry": "Riprova",
     "search": "Cerca",
     "noResults": "Nessun risultato trovato.",
+    "trend": "Andamento",
+    "trendAriaLabel": "Andamento del prezzo nelle ultime 24 ore",
     "comingSoon": "Questa funzionalità è in arrivo.",
     "active": "Attivo",
     "select": "Seleziona...",

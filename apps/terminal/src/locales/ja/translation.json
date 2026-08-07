@@ -428,6 +428,8 @@
     "retry": "再試行",
     "search": "検索",
     "noResults": "結果が見つかりません。",
+    "trend": "推移",
+    "trendAriaLabel": "24時間の価格推移",
     "comingSoon": "この機能は近日公開予定です。",
     "active": "有効",
     "select": "選択...",

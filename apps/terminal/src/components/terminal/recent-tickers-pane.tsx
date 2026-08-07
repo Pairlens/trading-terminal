@@ -11,6 +11,7 @@ import type { Instrument } from '@pairlens/shared/instrument-types'
 import type { MarketOption } from '@/hooks/use-available-markets'
 import type { TickDirection } from '@/hooks/use-live-pair-price'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
+import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
 import { useLivePairPrice } from '@/hooks/use-live-pair-price'
@@ -133,6 +134,11 @@ const RecentTickerRow = memo(function RecentTickerRow({
           <p className="truncate text-xs text-muted-foreground">{inst.name}</p>
         )}
       </div>
+      <MiniPriceChart
+        market={market}
+        pair={symbol}
+        className="hidden h-5 w-12 @2xs/pane:block @sm/pane:w-16"
+      />
       <span
         className={cn(
           'font-mono text-sm tabular-nums transition-colors',

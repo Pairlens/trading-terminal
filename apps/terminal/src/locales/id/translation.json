@@ -428,6 +428,8 @@
     "retry": "Coba lagi",
     "search": "Cari",
     "noResults": "Tidak ditemukan hasil.",
+    "trend": "Tren",
+    "trendAriaLabel": "Tren harga 24 jam",
     "comingSoon": "Fitur ini akan segera hadir.",
     "active": "Aktif",
     "select": "Pilih...",

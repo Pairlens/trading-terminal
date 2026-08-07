@@ -48,6 +48,8 @@ import {
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
+import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
+import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 import { formatPrice } from '@/lib/format-price'
 
 /** Live exchange quote by exact pair symbol; top-coins base join as fallback. */
@@ -99,6 +101,9 @@ export function MarketsPane() {
   const openAddDialog = useWatchlistsStore((s) => s.openAddDialog)
   const coinsBySymbol = useTopCoinsSnapshot()
   const liveQuotes = useBulkTickerQuotes()
+  // Trend lines come from candles, which need a venue — an equity row can't
+  // ask a crypto exchange, so each row resolves its own.
+  const resolveMarket = usePreferredMarketResolver()
   const [recentPairs, setRecentPairs] = usePersistedState<Array<string>>(
     'pair-picker.recent',
     [],
@@ -360,6 +365,10 @@ export function MarketsPane() {
                           {pair.name}
                         </p>
                       </div>
+                      {/* No trend line here on purpose: three tiles across a
+                          pane leaves ~220px each, and a chart squeezed in
+                          wraps the symbol. These pairs carry their trend in
+                          the table below. */}
                       <PairQuote
                         quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
                         className="shrink-0"
@@ -410,6 +419,9 @@ export function MarketsPane() {
                     <TableRow>
                       <TableHead className="w-10" />
                       <TableHead>{t('markets.colPair')}</TableHead>
+                      <TableHead className="hidden w-24 @lg/pane:table-cell">
+                        {t('common.trend')}
+                      </TableHead>
                       <TableHead className="text-right">
                         {t('markets.colPrice24h')}
                       </TableHead>
@@ -432,6 +444,7 @@ export function MarketsPane() {
                           key={pair.symbol}
                           pair={pair}
                           quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
+                          market={resolveMarket(pair.assetClass)}
                           isWatched={allSymbolsSet.has(pair.symbol)}
                           onStarClick={openAddDialog}
                           onNavigate={trackRecent}
@@ -460,6 +473,7 @@ export function MarketsPane() {
                   key={pair.symbol}
                   pair={pair}
                   quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
+                  market={resolveMarket(pair.assetClass)}
                   isWatched={allSymbolsSet.has(pair.symbol)}
                   onStarClick={openAddDialog}
                   onNavigate={trackRecent}
@@ -484,12 +498,15 @@ export function MarketsPane() {
 const PairTableRow = memo(function PairTableRow({
   pair,
   quote,
+  market,
   isWatched,
   onStarClick,
   onNavigate,
 }: {
   pair: PairEntry
   quote: BulkQuote | undefined
+  /** Venue the trend line is drawn from — resolved for the asset class. */
+  market: string
   isWatched: boolean
   onStarClick: (symbol: string) => void
   onNavigate: (symbol: string, assetClass?: string) => void
@@ -543,6 +560,20 @@ const PairTableRow = memo(function PairTableRow({
           </div>
         </Link>
       </TableCell>
+      <TableCell className="hidden @lg/pane:table-cell">
+        <Link
+          className="block"
+          params={{ pair: pair.symbol }}
+          to="/pair/$pair"
+          onClick={() => onNavigate(pair.symbol, pair.assetClass)}
+        >
+          <MiniPriceChart
+            market={market}
+            pair={pair.symbol}
+            className="h-6 w-16 @xl/pane:w-24"
+          />
+        </Link>
+      </TableCell>
       <TableCell>
         {quote ? (
           <PairQuote quote={quote} />
@@ -575,12 +606,15 @@ const PairTableRow = memo(function PairTableRow({
 const PairCard = memo(function PairCard({
   pair,
   quote,
+  market,
   isWatched,
   onStarClick,
   onNavigate,
 }: {
   pair: PairEntry
   quote: BulkQuote | undefined
+  /** Venue the trend line is drawn from — resolved for the asset class. */
+  market: string
   isWatched: boolean
   onStarClick: (symbol: string) => void
   onNavigate: (symbol: string, assetClass?: string) => void
@@ -614,6 +648,13 @@ const PairCard = memo(function PairCard({
           </div>
           <PairQuote quote={quote} className="shrink-0" />
         </div>
+        {/* Its own line: a card is narrow enough that squeezing the trend in
+            beside the symbol costs the price its last digits. */}
+        <MiniPriceChart
+          market={market}
+          pair={pair.symbol}
+          className="mt-2 h-6 w-full"
+        />
         <div className="mt-1.5 flex flex-wrap gap-1">
           {categoryLabels.map((cat) => (
             <Badge key={cat.id} variant="secondary" className="text-[10px]">

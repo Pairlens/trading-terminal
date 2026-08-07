@@ -428,6 +428,8 @@
     "retry": "Retry",
     "search": "Search",
     "noResults": "No results found.",
+    "trend": "Trend",
+    "trendAriaLabel": "24-hour price trend",
     "comingSoon": "This feature is coming soon.",
     "active": "Active",
     "select": "Select...",

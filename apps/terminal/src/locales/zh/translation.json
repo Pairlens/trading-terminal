@@ -428,6 +428,8 @@
     "retry": "重试",
     "search": "搜索",
     "noResults": "未找到结果。",
+    "trend": "走势",
+    "trendAriaLabel": "24 小时价格走势",
     "comingSoon": "该功能即将推出。",
     "active": "已启用",
     "select": "选择……",

@@ -428,6 +428,8 @@
     "retry": "Erneut versuchen",
     "search": "Suchen",
     "noResults": "Keine Ergebnisse gefunden.",
+    "trend": "Trend",
+    "trendAriaLabel": "Kursverlauf der letzten 24 Stunden",
     "comingSoon": "Diese Funktion kommt bald.",
     "active": "Aktiv",
     "select": "Auswählen...",
