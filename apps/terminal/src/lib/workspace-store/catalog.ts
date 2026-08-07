@@ -136,6 +136,7 @@ const PANES_NEEDING_PAIR = new Set([
   'orderbook',
   'trades',
   'pair-info',
+  'multi-price',
   'liquidity-heatmap',
   'trade-entry',
   'copilot',
