@@ -71,6 +71,7 @@ const enabled = Boolean(import.meta.env.PUBLIC_POSTHOG_KEY)
     consentStatus,
     declineCookies,
   } from '@/scripts/analytics'
+  import { track } from '@/scripts/analytics-events'
 
   // No-ops when the banner isn't rendered (no PostHog key configured).
   function bind() {
@@ -93,16 +94,21 @@ const enabled = Boolean(import.meta.env.PUBLIC_POSTHOG_KEY)
         banner.hidden = true
         document.documentElement.style.overflow = ''
       }
+      // The consent event is captured either way: a decline stays cookieless,
+      // it does not stop capture. PostHog's own opt-in/opt-out record is
+      // still the durable one — this is the funnel view of the same choice.
       banner
         .querySelector('[data-cookie-accept]')
         ?.addEventListener('click', () => {
           acceptCookies()
+          track('cookie_consent_decided', { decision: 'accepted' })
           close()
         })
       banner
         .querySelector('[data-cookie-decline]')
         ?.addEventListener('click', () => {
           declineCookies()
+          track('cookie_consent_decided', { decision: 'declined' })
           close()
         })
     }

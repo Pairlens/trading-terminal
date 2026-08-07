@@ -120,7 +120,7 @@ const defaultHref =
               class:list={['ins-tile', it.os === DEFAULT_OS && 'is-sel']}
               data-os-tile={it.os}
               data-os-href={it.href}
-              data-os-download
+              data-os-download="install-tile"
               data-os={it.os}
               aria-label={`Download Pairlens for ${it.os}`}
             >
@@ -145,7 +145,16 @@ const defaultHref =
     </div>
 
     <div class="ins-cta" data-reveal data-reveal-delay="420">
-      <a class="pl-ring ins-download" data-os-download href={defaultHref}>
+      <!-- `data-os-cta` is what the platform chooser rewrites. It cannot key
+           off `[data-os-download]`: the OS tiles above carry that too and come
+           first in the DOM, so the chooser would repoint the macOS tile and
+           leave this button on the default build. -->
+      <a
+        class="pl-ring ins-download"
+        data-os-download="install-cta"
+        data-os-cta
+        href={defaultHref}
+      >
         <svg
           class="ins-download-ic"
           viewBox="0 0 24 24"

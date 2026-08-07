@@ -56,7 +56,11 @@ const releases = downloadAsset('Pairlens-macOS-AppleSilicon.dmg')
           Launch the terminal
         </a>
 
-        <a href={releases} class="cta-secondary" data-os-download>
+        <a
+          href={releases}
+          class="cta-secondary"
+          data-os-download="landing-closing"
+        >
           <span class="os-face" data-os-face="mac">
             <span class="os-glyph" set:html={appleIcon} />Download for macOS
           </span>

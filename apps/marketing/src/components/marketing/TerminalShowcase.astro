@@ -46,7 +46,11 @@ const releases = downloadAsset('Pairlens-macOS-AppleSilicon.dmg')
         <span class="free-tag">Yes, it's free</span>
       </a>
 
-      <a href={releases} class="cta-secondary" data-os-download>
+      <a
+        href={releases}
+        class="cta-secondary"
+        data-os-download="landing-showcase"
+      >
         <span class="os-face" data-os-face="mac">
           <span class="os-glyph" set:html={appleIcon} />Download for macOS
         </span>

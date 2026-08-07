@@ -101,7 +101,7 @@ const jsonLd = {
         for (const el of page.querySelectorAll('[data-os-panel]')) {
           el.classList.toggle('is-active', el.getAttribute('data-os-panel') === os)
         }
-        const cta = page.querySelector('[data-os-download]')
+        const cta = page.querySelector('[data-os-cta]')
         if (cta && href) cta.setAttribute('href', href)
       }
 

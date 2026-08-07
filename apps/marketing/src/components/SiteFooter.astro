@@ -11,7 +11,7 @@ import LegalDisclaimer from '@/components/LegalDisclaimer.astro'
   (
     <footer class="border-t border-border bg-background">
       <div class="pl-foot-shell">
-        <div class="pl-foot-cols">
+        <div class="pl-foot-cols" data-nav-loc="footer">
           <div>
             <BrandLogo size={26} textSize={19} href={null} />
             <p class="mt-4 max-w-[34ch] text-[14px] leading-[1.7] text-muted-foreground">
@@ -55,6 +55,7 @@ import LegalDisclaimer from '@/components/LegalDisclaimer.astro'
           <LegalDisclaimer />
           <nav
             aria-label="Legal"
+            data-nav-loc="footer-legal"
             class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px]"
           >
             {FOOTER_LEGAL_LINKS.map((link) => (
