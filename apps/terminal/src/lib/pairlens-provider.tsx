@@ -144,6 +144,11 @@ const FIRST_PARTY_COMPONENTS: Record<
         default: m.PairInfoPane,
       })),
     ),
+    'multi-price': lazyChunk(() =>
+      import('@/components/terminal/multi-price-pane').then((m) => ({
+        default: m.MultiPricePane,
+      })),
+    ),
     'trade-entry': lazyChunk(() =>
       import('@/components/terminal/trade-entry-pane').then((m) => ({
         default: m.TradeEntryPane,

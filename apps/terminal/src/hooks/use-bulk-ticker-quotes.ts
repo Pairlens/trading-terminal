@@ -9,14 +9,16 @@ import { usePairlens } from '@/lib/pairlens-provider'
 export type BulkQuote = { price: number; change24h: number }
 
 /**
- * Live exchange quotes for every listed spot pair, keyed by canonical
- * 'BASE-QUOTE' symbol. Merges the bulk snapshots of every active
- * `market-data:ticker-snapshot` provider (one public REST call per venue,
- * refreshed every 60s) — free, keyless, and independent of the App Server.
- * Higher-priority venues win on symbol collisions; a venue that is down or
- * geo-blocked simply drops out of the merge.
+ * The raw per-venue snapshots, priority-ordered, with the venue each one came
+ * from still attached.
+ *
+ * `useBulkTickerQuotes` below flattens these into one symbol → price map,
+ * which is what the discovery surfaces want. The multi-price pane wants the
+ * opposite: which venues list a symbol at all, and at what price each. Both
+ * read the same react-query entry, so asking for the venue dimension costs no
+ * extra requests.
  */
-export function useBulkTickerQuotes(): Map<string, BulkQuote> {
+export function useBulkTickerSnapshots(): Array<BulkTickersResponse> {
   const { pluginManager, pluginStateVersion } = usePairlens()
 
   const { data } = useQuery({
@@ -49,9 +51,26 @@ export function useBulkTickerQuotes(): Map<string, BulkQuote> {
     gcTime: 5 * 60_000,
   })
 
+  return data ?? EMPTY_SNAPSHOTS
+}
+
+/** Stable identity so `data ?? []` doesn't invalidate every memo downstream. */
+const EMPTY_SNAPSHOTS: Array<BulkTickersResponse> = []
+
+/**
+ * Live exchange quotes for every listed spot pair, keyed by canonical
+ * 'BASE-QUOTE' symbol. Merges the bulk snapshots of every active
+ * `market-data:ticker-snapshot` provider (one public REST call per venue,
+ * refreshed every 60s) — free, keyless, and independent of the App Server.
+ * Higher-priority venues win on symbol collisions; a venue that is down or
+ * geo-blocked simply drops out of the merge.
+ */
+export function useBulkTickerQuotes(): Map<string, BulkQuote> {
+  const data = useBulkTickerSnapshots()
+
   return useMemo(() => {
     const map = new Map<string, BulkQuote>()
-    for (const snapshot of data ?? []) {
+    for (const snapshot of data) {
       for (const t of snapshot.tickers) {
         if (!map.has(t.symbol)) {
           map.set(t.symbol, { price: t.price, change24h: t.change24h })

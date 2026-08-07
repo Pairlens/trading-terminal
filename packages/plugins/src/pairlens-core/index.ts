@@ -95,6 +95,16 @@ export const pairlensCoreManifest: PluginManifest = {
         requires: ['workspace:active-pair'],
       },
       {
+        id: 'multi-price',
+        label: 'Multi-Price',
+        labelKey: 'panes.multiPrice',
+        descriptionKey: 'paneDescriptions.multiPrice',
+        icon: 'Scale',
+        category: 'charting',
+        minHeight: 120,
+        requires: ['workspace:active-pair'],
+      },
+      {
         id: 'pair-info',
         label: 'Pair Info',
         labelKey: 'panes.pairInfo',
