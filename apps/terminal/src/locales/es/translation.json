@@ -1070,6 +1070,17 @@
         "detail": "Las claves del exchange viven en el llavero del sistema, nunca en el navegador ni en nuestros servidores."
       }
     },
+    "nudge": {
+      "learnMore": "Más información",
+      "notifications": {
+        "title": "Las alertas saltan mientras Pairlens está en marcha",
+        "description": "El navegador ralentiza una pestaña que no estás mirando y acaba suspendiéndola. La app de escritorio vigila tus alertas con la ventana cerrada."
+      },
+      "bots": {
+        "title": "Los bots operan mientras Pairlens está en marcha",
+        "description": "El navegador ralentiza una pestaña que no estás mirando y acaba suspendiéndola. La app de escritorio mantiene tus bots operando y evita que el equipo se suspenda."
+      }
+    },
     "wall": {
       "title": "{{venue}} necesita la app de escritorio",
       "description": "Este exchange sirve sus datos de mercado sin las cabeceras que un navegador necesita para leerlos. La app de escritorio se conecta de forma nativa, y allí funcionan todos.",

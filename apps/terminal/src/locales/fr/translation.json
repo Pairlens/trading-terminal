@@ -1070,6 +1070,17 @@
         "detail": "Les clés d'API restent dans le trousseau du système, jamais dans le navigateur ni sur nos serveurs."
       }
     },
+    "nudge": {
+      "learnMore": "En savoir plus",
+      "notifications": {
+        "title": "Les alertes se déclenchent tant que Pairlens tourne",
+        "description": "Le navigateur ralentit un onglet que vous ne regardez pas, puis le suspend. L'application de bureau surveille vos alertes, fenêtre fermée."
+      },
+      "bots": {
+        "title": "Les bots tradent tant que Pairlens tourne",
+        "description": "Le navigateur ralentit un onglet que vous ne regardez pas, puis le suspend. L'application de bureau garde vos bots actifs et empêche la mise en veille."
+      }
+    },
     "wall": {
       "title": "{{venue}} nécessite l’app de bureau",
       "description": "Cette plateforme sert ses données de marché sans les en-têtes dont un navigateur a besoin pour les lire. L’app de bureau se connecte nativement, et toutes y fonctionnent.",

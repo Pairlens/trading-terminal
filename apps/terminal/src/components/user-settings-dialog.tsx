@@ -86,6 +86,7 @@ import {
   SECTION_TOURS_DISABLED_KEY,
   SECTION_TOURS_SEEN_KEY,
 } from '@/components/onboarding/use-section-tour'
+import { DESKTOP_NUDGE_SEEN_KEY } from '@/lib/desktop-nudge'
 import { ONBOARDING_KEY } from '@/lib/onboarding-state'
 
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024
@@ -896,6 +897,8 @@ function ResetTutorialSection() {
     localStorage.removeItem(ONBOARDING_KEY)
     localStorage.removeItem(SECTION_TOURS_SEEN_KEY)
     localStorage.removeItem(SECTION_TOURS_DISABLED_KEY)
+    // Same family of first-visit tips, so a replay owes it the same reset.
+    localStorage.removeItem(DESKTOP_NUDGE_SEEN_KEY)
     useSettingsDialogStore.getState().close()
     void navigate({ to: '/onboarding' })
   }

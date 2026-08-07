@@ -1070,6 +1070,17 @@
         "detail": "Khóa sàn nằm trong keychain hệ thống, không bao giờ ở bộ nhớ trình duyệt hay máy chủ của chúng tôi."
       }
     },
+    "nudge": {
+      "learnMore": "Tìm hiểu thêm",
+      "notifications": {
+        "title": "Cảnh báo chạy khi Pairlens còn hoạt động",
+        "description": "Trình duyệt làm chậm tab bạn không nhìn rồi tạm dừng nó. Ứng dụng máy tính vẫn theo dõi cảnh báo kể cả khi đã đóng cửa sổ."
+      },
+      "bots": {
+        "title": "Bot giao dịch khi Pairlens còn hoạt động",
+        "description": "Trình duyệt làm chậm tab bạn không nhìn rồi tạm dừng nó. Ứng dụng máy tính giữ bot giao dịch và không cho máy ngủ."
+      }
+    },
     "wall": {
       "title": "{{venue}} cần ứng dụng máy tính",
       "description": "Sàn này trả dữ liệu thị trường mà không kèm các header trình duyệt cần để đọc. Ứng dụng máy tính kết nối trực tiếp, nên mọi sàn đều chạy được ở đó.",

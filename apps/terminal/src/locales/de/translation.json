@@ -1070,6 +1070,17 @@
         "detail": "Börsenschlüssel liegen im System-Schlüsselbund, nie im Browser-Speicher und nie auf unseren Servern."
       }
     },
+    "nudge": {
+      "learnMore": "Mehr erfahren",
+      "notifications": {
+        "title": "Hinweise kommen, solange Pairlens läuft",
+        "description": "Browser bremsen einen Tab, den du nicht ansiehst, und pausieren ihn irgendwann. Die Desktop-App behält deine Hinweise auch bei geschlossenem Fenster im Blick."
+      },
+      "bots": {
+        "title": "Bots handeln, solange Pairlens läuft",
+        "description": "Browser bremsen einen Tab, den du nicht ansiehst, und pausieren ihn irgendwann. Die Desktop-App lässt deine Bots weiterhandeln und hält den Ruhezustand auf."
+      }
+    },
     "wall": {
       "title": "{{venue}} braucht die Desktop-App",
       "description": "Diese Börse liefert ihre Marktdaten ohne die Header, die ein Browser zum Lesen braucht. Die Desktop-App verbindet sich nativ, dort funktioniert jede Börse.",

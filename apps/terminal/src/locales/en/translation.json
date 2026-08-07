@@ -1070,6 +1070,17 @@
         "detail": "Exchange keys live in the system keychain, never in browser storage and never on our servers."
       }
     },
+    "nudge": {
+      "learnMore": "Learn more",
+      "notifications": {
+        "title": "Alerts fire while Pairlens is running",
+        "description": "Browsers slow down a tab you are not looking at, then suspend it. The desktop app watches your alerts with the window closed."
+      },
+      "bots": {
+        "title": "Bots trade while Pairlens is running",
+        "description": "Browsers slow down a tab you are not looking at, then suspend it. The desktop app keeps your bots trading and holds off sleep."
+      }
+    },
     "wall": {
       "title": "{{venue}} needs the desktop app",
       "description": "This exchange serves its market data without the headers a browser needs to read it. The desktop app connects natively, so every venue works there.",
