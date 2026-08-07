@@ -344,11 +344,19 @@ export function MarketsPane() {
             {/* Featured row */}
             {showFeatured && (
               <div className="border-b px-4 py-3">
-                <div className="grid grid-cols-1 gap-2 @sm/pane:grid-cols-3">
+                {/* Column count follows the available width rather than a
+                    breakpoint. Three fixed columns meant a 384px pane gave
+                    each tile 112px — less than the logo, symbol and price
+                    need — so the symbol wrapped mid-pair ("BTC-" / "USDT")
+                    and collided with the price. */}
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-2">
                   {featuredPairs.map((pair) => (
                     <Link
                       key={pair.symbol}
-                      className="group flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-primary/40 hover:bg-accent/40"
+                      // Its own container: how a tile lays out depends on how
+                      // wide that tile ended up, which the pane's width alone
+                      // no longer tells us.
+                      className="@container/tile group flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border p-3 transition-colors hover:border-primary/40 hover:bg-accent/40"
                       params={{ pair: pair.symbol }}
                       to="/pair/$pair"
                       onClick={() => trackRecent(pair.symbol, pair.assetClass)}
@@ -359,21 +367,27 @@ export function MarketsPane() {
                         assetClass={pair.assetClass}
                         size="lg"
                       />
-                      <div className="min-w-0 flex-1">
-                        <PairSymbol symbol={pair.symbol} className="text-sm" />
-                        <p className="text-xs text-muted-foreground">
+                      <div className="min-w-24 flex-1">
+                        {/* A ticker never wraps — it truncates or it fits. */}
+                        <PairSymbol
+                          symbol={pair.symbol}
+                          className="block truncate text-sm"
+                        />
+                        <p className="truncate text-xs text-muted-foreground">
                           {pair.name}
                         </p>
                       </div>
-                      {/* No trend line here on purpose: three tiles across a
-                          pane leaves ~220px each, and a chart squeezed in
-                          wraps the symbol. These pairs carry their trend in
-                          the table below. */}
+                      {/* No trend line here on purpose: a featured tile is
+                          already carrying a logo, a pair, a price and a
+                          change, and these pairs repeat in the table below
+                          with a trend of their own. */}
                       <PairQuote
                         quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
-                        className="shrink-0"
+                        className="ml-auto shrink-0"
                       />
-                      <ArrowRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                      {/* Decoration, and the first thing to go: below this
+                          the price has already wrapped to its own line. */}
+                      <ArrowRight className="hidden size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 @min-[17rem]/tile:block" />
                     </Link>
                   ))}
                 </div>
@@ -464,7 +478,9 @@ export function MarketsPane() {
             {/* Card grid (shown on mobile always if list mode, or on all sizes if grid mode) */}
             <div
               className={cn(
-                'grid grid-cols-1 gap-2 p-4 @xs/pane:grid-cols-2',
+                // Same reason as the featured row: a fixed second column at
+                // @xs meant 150px cards, narrower than the content they hold.
+                'grid grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-2 p-4',
                 viewMode === 'list' ? '@md/pane:hidden' : '',
               )}
             >
@@ -643,8 +659,13 @@ const PairCard = memo(function PairCard({
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <PairSymbol symbol={pair.symbol} className="text-sm" />
-            <p className="text-xs text-muted-foreground">{pair.name}</p>
+            <PairSymbol
+              symbol={pair.symbol}
+              className="block truncate text-sm"
+            />
+            <p className="truncate text-xs text-muted-foreground">
+              {pair.name}
+            </p>
           </div>
           <PairQuote quote={quote} className="shrink-0" />
         </div>
