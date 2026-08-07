@@ -118,6 +118,7 @@ export function TradeConnectGate({
             <Button
               size="sm"
               className="w-full"
+              nativeButton={false}
               render={
                 <Link
                   to="/accounts"

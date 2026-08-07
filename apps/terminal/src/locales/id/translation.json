@@ -3264,6 +3264,11 @@
         "tagline": "Pindai, analisis chart, dan trading sesi intraday.",
         "description": "Meja kerja tiga kolom yang seimbang: scanner market di kiri, chart besar di tengah, dan order book plus tiket order serta posisi terbuka di kanan. Andalan harian untuk trading kripto aktif."
       },
+      "cross-venue-desk": {
+        "name": "Meja Multi-Bursa",
+        "tagline": "Satu pasangan, semua bursa, harga terbaik di atas.",
+        "description": "Dibangun di sekitar panel Multi-Harga: pasangan aktif dikutip di setiap bursa yang mencatatkannya, diurutkan berdasarkan harga sehingga eksekusi terbaik berada di baris teratas. Di sampingnya ada chart dan aliran transaksi, dengan order book dan tiket order siap memanfaatkan selisihnya."
+      },
       "swing-overview": {
         "name": "Ringkasan Swing",
         "tagline": "Konteks tren dengan daftar pantauan dan para penggerak.",

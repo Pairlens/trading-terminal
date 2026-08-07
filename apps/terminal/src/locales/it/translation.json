@@ -3264,6 +3264,11 @@
         "tagline": "Scansiona, analizza e opera nella sessione intraday.",
         "description": "Un desk bilanciato a tre colonne: uno scanner dei mercati a sinistra, un grande grafico al centro e un order book con pannello di trading e posizioni aperte a destra. Il setup di tutti i giorni per il trading crypto attivo."
       },
+      "cross-venue-desk": {
+        "name": "Desk Multi-Exchange",
+        "tagline": "Una coppia, tutti gli exchange, il prezzo migliore in cima.",
+        "description": "Costruito attorno al pannello Multiprezzo: la coppia attiva quotata su ogni exchange che la elenca, ordinata per prezzo così la migliore esecuzione è la prima riga. Accanto, un grafico e il flusso delle operazioni, con order book e pannello di trading pronti a sfruttare la differenza."
+      },
       "swing-overview": {
         "name": "Panoramica Swing",
         "tagline": "Contesto di trend con watchlist e mover.",

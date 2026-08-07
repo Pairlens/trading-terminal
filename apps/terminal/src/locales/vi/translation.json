@@ -3264,6 +3264,11 @@
         "tagline": "Quét, xem biểu đồ và giao dịch trong phiên.",
         "description": "Một bàn làm việc ba cột cân bằng: bộ quét thị trường bên trái, biểu đồ lớn ở giữa, và sổ lệnh cùng phiếu đặt lệnh và vị thế mở bên phải. Công cụ hằng ngày cho giao dịch crypto năng động."
       },
+      "cross-venue-desk": {
+        "name": "Bàn Đa Sàn",
+        "tagline": "Một cặp, mọi sàn, giá tốt nhất ở trên cùng.",
+        "description": "Được xây dựng quanh bảng Giá đa sàn: cặp đang xem được niêm yết trên mọi sàn có giao dịch nó, sắp xếp theo giá để mức khớp tốt nhất nằm ở hàng đầu tiên. Bên cạnh là biểu đồ và dòng giao dịch, cùng sổ lệnh và phiếu đặt lệnh sẵn sàng tận dụng chênh lệch."
+      },
       "swing-overview": {
         "name": "Tổng Quan Swing",
         "tagline": "Bối cảnh xu hướng với danh sách theo dõi và các mã biến động mạnh.",

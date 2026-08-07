@@ -96,7 +96,12 @@ function CheckoutSuccessPage() {
         </p>
 
         <div className="mt-8 flex flex-col items-center gap-3">
-          <Button size="lg" className="gap-2" render={<Link to="/" />}>
+          <Button
+            size="lg"
+            className="gap-2"
+            nativeButton={false}
+            render={<Link to="/" />}
+          >
             {t('routes.checkoutSuccess.openTerminal')}
             <ArrowRight className="size-4" />
           </Button>

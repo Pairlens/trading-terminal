@@ -16,6 +16,7 @@ import {
   Layers,
   Radio,
   Rocket,
+  Scale,
   Scan,
   Shield,
   Star,
@@ -47,6 +48,7 @@ export const WORKSPACE_ICONS: Record<string, LucideIcon> = {
   Crosshair,
   Radio,
   Scan,
+  Scale,
 }
 
 export const DEFAULT_WORKSPACE_ICON = 'Layers'

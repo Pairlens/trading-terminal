@@ -105,6 +105,7 @@ export function UpgradeRequiredPrompt({
           <Button
             variant="outline"
             className="mt-4 gap-2"
+            nativeButton={false}
             render={<Link to="/plugins" search={{ manage: pluginId }} />}
           >
             <Sparkles className="size-4" />
