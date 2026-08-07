@@ -13,11 +13,10 @@
  * lib/lazy-chunk) and unmount when their tab is not active. The Trade draft
  * survives that because it lives in a store, not in the sheet.
  */
-import { Suspense, memo, useCallback, useState } from 'react'
-import { ChevronDown, Loader2 } from 'lucide-react'
+import { Suspense, memo, useCallback } from 'react'
+import { Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { cn } from '@pairlens/ui'
 import {
   openPanelFor,
   useMobileActions,
@@ -27,8 +26,6 @@ import {
 import { useMobileRouteSync } from './use-mobile-route-sync'
 import { SHEET_BAND } from './lib/mobile-geometry'
 import { ContextBar } from './primitives/context-bar'
-import { FullScreenOverlay } from './primitives/full-screen-overlay'
-import { MobileScrim } from './primitives/mobile-scrim'
 import { MobileSheet } from './primitives/mobile-sheet'
 import { MobileTabBar } from './primitives/mobile-tab-bar'
 import { MobileChartSurface } from './chart/mobile-chart-surface'
@@ -36,8 +33,6 @@ import type { MobileOverlay, MobileTab } from './mobile-focus-context'
 import type { ComponentType, LazyExoticComponent } from 'react'
 import { lazyChunk } from '@/lib/lazy-chunk'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
-import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
-import { track } from '@/lib/analytics-events'
 
 type PanelTab = Exclude<MobileTab, 'chart'>
 
@@ -79,6 +74,30 @@ const PANEL_LABEL_KEY: Record<PanelTab, string> = {
   copilot: 'mobile.shell.tabs.copilot',
   discover: 'mobile.shell.tabs.discover',
 }
+
+/**
+ * Overlay screens, one module per overlay kind. Each module's DEFAULT export
+ * is the contract — `{ overlay, onClose }`, with the screen owning its own
+ * frame (FullScreenOverlay or a full-height MobileSheet). Each file is owned
+ * by one workstream; replacing a file's contents is the whole integration.
+ */
+const OrderbookScreen = lazyChunk(() => import('./screens/orderbook-screen'))
+const PairPickerScreen = lazyChunk(() => import('./screens/pair-picker-screen'))
+const VenuePickerScreen = lazyChunk(
+  () => import('./screens/venue-picker-screen'),
+)
+const SettingsScreen = lazyChunk(() => import('./screens/settings-screen'))
+const ConnectAccountSheet = lazyChunk(
+  () => import('./screens/connect-account-sheet'),
+)
+const NewsReaderSheet = lazyChunk(() => import('./screens/news-reader-sheet'))
+
+/** Chart-band extras, owned by WS-D (toolbar, timeframe) and WS-C (limit line). */
+const TimeframePopoverChip = lazyChunk(
+  () => import('./chart/timeframe-popover'),
+)
+const MobileDrawingToolbar = lazyChunk(() => import('./chart/drawing-toolbar'))
+const LimitLineOverlay = lazyChunk(() => import('./chart/limit-line-overlay'))
 
 export function MobileSurface() {
   const { t } = useTranslation()
@@ -130,10 +149,26 @@ export function MobileSurface() {
       <MobileChartSurface
         band={openPanel ? 'compact' : 'full'}
         dismissible={openPanel !== null}
+        footer={
+          openPanel === null ? (
+            <Suspense fallback={null}>
+              <MobileDrawingToolbar />
+            </Suspense>
+          ) : null
+        }
         onDismiss={dismissPanel}
         onSwitchVenue={openVenuePicker}
         opacity={chrome?.chartOpacity ?? 1}
-        timeframeSlot={<TimeframeChip />}
+        overlay={
+          <Suspense fallback={null}>
+            <LimitLineOverlay />
+          </Suspense>
+        }
+        timeframeSlot={
+          <Suspense fallback={null}>
+            <TimeframePopoverChip />
+          </Suspense>
+        }
         venueLabel={venueLabel}
       />
 
@@ -182,13 +217,11 @@ function PanelFallback() {
 }
 
 /**
- * The overlay stack's renderer.
- *
- * Every kind wears the same `FullScreenOverlay` frame. The bodies below are
- * PLACEHOLDERS owned by other workstreams — WS-B (pair picker, venue picker,
- * Settings, connect, news) and WS-C (order book). To wire a real screen,
- * swap the one placeholder element for a `lazyChunk` import of the screen;
- * nothing else in this file changes.
+ * The overlay stack's renderer. One screen module per kind (see the lazy
+ * imports above); each screen owns its own frame and receives the narrowed
+ * overlay plus `onClose`. The switch exists for type narrowing — TypeScript
+ * cannot index a component map with a discriminated union and keep the
+ * narrowing.
  */
 const OverlayHost = memo(function OverlayHost({
   overlay,
@@ -197,120 +230,30 @@ const OverlayHost = memo(function OverlayHost({
   overlay: MobileOverlay
   onClose: () => void
 }) {
-  const { t } = useTranslation()
+  const screen = (() => {
+    switch (overlay.kind) {
+      case 'orderbook':
+        return <OrderbookScreen onClose={onClose} overlay={overlay} />
+      case 'pairPicker':
+        return <PairPickerScreen onClose={onClose} overlay={overlay} />
+      case 'venuePicker':
+        return <VenuePickerScreen onClose={onClose} overlay={overlay} />
+      case 'settings':
+        return <SettingsScreen onClose={onClose} overlay={overlay} />
+      case 'connect':
+        return <ConnectAccountSheet onClose={onClose} overlay={overlay} />
+      case 'news':
+        return <NewsReaderSheet onClose={onClose} overlay={overlay} />
+    }
+  })()
 
-  const title = {
-    orderbook: t('mobile.shell.overlays.orderbook'),
-    pairPicker: t('mobile.shell.overlays.pairPicker'),
-    venuePicker: t('mobile.shell.overlays.venuePicker'),
-    settings: t('mobile.shell.overlays.settings'),
-    connect: t('mobile.shell.overlays.connect'),
-    news: t('mobile.shell.overlays.news'),
-  }[overlay.kind]
-
-  return (
-    <FullScreenOverlay
-      // Settings owns the whole display and closes with an X; everything else
-      // keeps the context bar and steps back out of a flow.
-      anchor={overlay.kind === 'settings' ? 'screen' : 'chart'}
-      display={overlay.kind === 'orderbook'}
-      dismiss={overlay.kind === 'settings' ? 'close' : 'back'}
-      onBack={onClose}
-      opaque={overlay.kind !== 'pairPicker'}
-      title={title}
-    >
-      {/* WS-B / WS-C: replace with the screen for this kind. */}
-      <div className="flex h-full flex-col items-center justify-center gap-1 px-8 py-16 text-center">
-        <p className="text-[12.5px] text-muted-foreground">
-          {t('mobile.shell.comingSoon')}
-        </p>
-      </div>
-    </FullScreenOverlay>
-  )
+  return <Suspense fallback={<OverlayFallback />}>{screen}</Suspense>
 })
 
-/**
- * The timeframe chip, and a deliberately minimal popover behind it.
- *
- * WS-D owns `chart/timeframe-popover.tsx` (pinned/more grids, long-press to
- * pin). This is the shell's fallback so the surface is usable before that
- * lands: same chip, same inversion, same scrim, a flat list instead of two
- * grids. Replace `<TimeframeChip />` above with WS-D's component.
- *
- * The values are re-declared rather than imported because `TIMEFRAME_OPTIONS`
- * in `components/terminal/chart-toolbar.tsx` is module-private and that file
- * belongs to WS-D. It is the source of truth; this list is a stand-in.
- */
-const FALLBACK_TIMEFRAMES = [
-  '1m',
-  '5m',
-  '15m',
-  '30m',
-  '1h',
-  '4h',
-  '1d',
-  '1w',
-  '1M',
-] as const
-
-function TimeframeChip() {
-  const { t } = useTranslation()
-  const { timeframe } = useChartConfig()
-  const { setTimeframe } = useChartActions()
-  const [open, setOpen] = useState(false)
-
+function OverlayFallback() {
   return (
-    <>
-      <button
-        aria-label={t('mobile.shell.timeframe')}
-        className={cn(
-          'flex h-9 items-center gap-1.5 rounded-[10px] pl-[11px] pr-[7px] font-mono text-[13.5px] font-semibold',
-          open
-            ? 'bg-foreground text-background'
-            : 'text-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,.16)]',
-        )}
-        onClick={() => setOpen((v) => !v)}
-        type="button"
-      >
-        {timeframe}
-        <ChevronDown
-          className={cn(
-            'size-4',
-            open ? 'rotate-180 text-background' : 'text-muted-foreground',
-          )}
-        />
-      </button>
-      {open ? (
-        <>
-          <MobileScrim className="z-[45]" onDismiss={() => setOpen(false)} />
-          <div
-            className="pl-popover fixed right-4 z-[46] grid w-[238px] grid-cols-4 gap-1.5 p-[9px]"
-            // Chart top + the readout row's 8px inset + the 36px chip + 8px:
-            // the popover hangs off the chip rather than covering it.
-            style={{ top: 'calc(var(--pl-chart-top) + 52px)' }}
-          >
-            {FALLBACK_TIMEFRAMES.map((value) => (
-              <button
-                className={cn(
-                  'flex h-[38px] items-center justify-center rounded-[10px] font-mono text-[12.5px] font-semibold',
-                  value === timeframe
-                    ? 'bg-foreground text-background'
-                    : 'text-muted-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)]',
-                )}
-                key={value}
-                onClick={() => {
-                  setTimeframe(value)
-                  track('timeframe_changed', { timeframe: value })
-                  setOpen(false)
-                }}
-                type="button"
-              >
-                {value}
-              </button>
-            ))}
-          </div>
-        </>
-      ) : null}
-    </>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center">
+      <Loader2 className="size-5 animate-spin text-muted-foreground/60" />
+    </div>
   )
 }
