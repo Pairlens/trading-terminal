@@ -19,6 +19,21 @@ function readSeen(): Record<string, boolean> {
   }
 }
 
+/** Global "no first-visit tips" opt-out. */
+export function areSectionTipsDisabled(): boolean {
+  return localStorage.getItem(SECTION_TOURS_DISABLED_KEY) === '1'
+}
+
+/**
+ * Is this section's tour still owed? Exported for anything that must not talk
+ * over it — the desktop nudge toast waits this out rather than landing on top
+ * of the tour's modal.
+ */
+export function isSectionTourPending(sectionId: SectionTourId): boolean {
+  const onboardingDone = localStorage.getItem(ONBOARDING_KEY) === '1'
+  return onboardingDone && !areSectionTipsDisabled() && !readSeen()[sectionId]
+}
+
 /**
  * Drives the first-open tutorial for a single section.
  *
@@ -29,11 +44,7 @@ export function useSectionTour(sectionId: SectionTourId) {
   // Bump to force a re-evaluation of localStorage after a write.
   const [, bump] = useState(0)
 
-  const onboardingDone = localStorage.getItem(ONBOARDING_KEY) === '1'
-  const disabled = localStorage.getItem(SECTION_TOURS_DISABLED_KEY) === '1'
-  const seen = readSeen()
-
-  const showTour = onboardingDone && !disabled && !seen[sectionId]
+  const showTour = isSectionTourPending(sectionId)
 
   const completeTour = useCallback(() => {
     const next = { ...readSeen(), [sectionId]: true }

@@ -1070,6 +1070,17 @@
         "detail": "Kunci bursa tersimpan di keychain sistem, tidak pernah di penyimpanan browser atau server kami."
       }
     },
+    "nudge": {
+      "learnMore": "Pelajari lebih lanjut",
+      "notifications": {
+        "title": "Notifikasi berbunyi selama Pairlens berjalan",
+        "description": "Browser memperlambat tab yang tidak Anda lihat lalu menangguhkannya. Aplikasi desktop mengawasi notifikasi Anda meski jendela ditutup."
+      },
+      "bots": {
+        "title": "Bot berdagang selama Pairlens berjalan",
+        "description": "Browser memperlambat tab yang tidak Anda lihat lalu menangguhkannya. Aplikasi desktop menjaga bot tetap berdagang dan mencegah komputer tidur."
+      }
+    },
     "wall": {
       "title": "{{venue}} memerlukan aplikasi desktop",
       "description": "Bursa ini menyajikan data pasarnya tanpa header yang dibutuhkan browser untuk membacanya. Aplikasi desktop terhubung secara native, jadi semua bursa berfungsi di sana.",

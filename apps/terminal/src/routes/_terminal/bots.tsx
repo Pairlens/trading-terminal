@@ -6,6 +6,7 @@ import { Bot } from 'lucide-react'
 import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
 
+import { DesktopSurfaceNudge } from '@/components/feedback/desktop-nudge'
 import { PageHeader } from '@/components/page-header'
 import { lazyChunk } from '@/lib/lazy-chunk'
 
@@ -25,6 +26,9 @@ function BotsRoute() {
   const { t } = useTranslation()
   return (
     <SidebarInset className="overflow-hidden">
+      {/* Browser build only, once per device: a bot runs in this tab, and a
+          browser throttles then suspends the tab you are not looking at. */}
+      <DesktopSurfaceNudge surface="bots" />
       <PageHeader>
         <Bot className="size-4" />
         <h1 className="text-sm font-semibold">{t('nav.bots')}</h1>

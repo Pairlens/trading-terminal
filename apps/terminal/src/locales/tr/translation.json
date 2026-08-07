@@ -1070,6 +1070,17 @@
         "detail": "Borsa anahtarları sistem anahtar zincirinde kalır, tarayıcı deposunda ya da sunucularımızda asla."
       }
     },
+    "nudge": {
+      "learnMore": "Daha fazla bilgi",
+      "notifications": {
+        "title": "Uyarılar Pairlens çalışırken tetiklenir",
+        "description": "Tarayıcı bakmadığınız sekmeyi yavaşlatır, sonra askıya alır. Masaüstü uygulaması uyarılarınızı pencere kapalıyken de izler."
+      },
+      "bots": {
+        "title": "Botlar Pairlens çalışırken işlem yapar",
+        "description": "Tarayıcı bakmadığınız sekmeyi yavaşlatır, sonra askıya alır. Masaüstü uygulaması botlarınızı çalışır tutar ve bilgisayarı uykuya bırakmaz."
+      }
+    },
     "wall": {
       "title": "{{venue}} masaüstü uygulamasını gerektiriyor",
       "description": "Bu borsa piyasa verilerini, bir tarayıcının okumak için ihtiyaç duyduğu başlıklar olmadan sunuyor. Masaüstü uygulaması doğrudan bağlanır, orada her borsa çalışır.",
