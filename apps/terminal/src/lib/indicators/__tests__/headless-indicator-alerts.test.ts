@@ -34,12 +34,23 @@ globalThis.localStorage = {
   },
 } as Storage
 
-const { customIndicatorRegistry } = await import('../custom-indicator-registry')
+// Every specifier here is the '@/' one the subject itself uses, and that
+// matters more than tidiness. This suite works by writing to module singletons
+// (the registry below, the runtime further down) and then asserting on what
+// the subject read back. That only holds while the test and the subject share
+// one instance of each module — and a relative specifier and an alias pointing
+// at the same file are only guaranteed to collapse to one module record if the
+// resolver says so. Where they do not, every write lands in a second copy
+// nobody reads: the registry looks empty from inside, the subject returns
+// before it touches Python, and the assertions come back with nothing having
+// happened. Matching the subject's specifiers removes the question.
+const { customIndicatorRegistry } =
+  await import('@/lib/indicators/custom-indicator-registry')
 const { notificationRuntime } =
   await import('@/lib/notifications/notification-runtime')
 const { getPythonRuntime } = await import('@/lib/python/python-runtime')
 const { runHeadlessIndicatorAlerts, resetHeadlessIndicatorAlertState } =
-  await import('../headless-indicator-alerts')
+  await import('@/lib/indicators/headless-indicator-alerts')
 
 // Patch the singletons rather than the modules: bun's mock.module is
 // process-wide and would leak into every other suite in the run.
@@ -136,13 +147,23 @@ describe('headless indicator alerts', () => {
   it('skips scripts that declare no alert condition', async () => {
     customIndicatorRegistry.setProviderIndicators('user-indicators', [
       descriptor('plain', 'Plain', false),
+      descriptor('raises', 'Raises', true),
     ])
 
     await run([''])
 
     // Nothing to raise, so Python is never touched — this is what keeps the
     // blank "any indicator" default from costing a run per script per bar.
-    expect(computeCalls).toHaveLength(0)
+    //
+    // The alert-declaring script is here as a live control rather than for
+    // coverage. Asserting only that 'plain' was skipped is an assertion that
+    // nothing happened, which stays true when the subject is not running at
+    // all — a wiring break (a leaked module mock, a forked module instance)
+    // used to leave this case green while it took the rest of the file down,
+    // reading as one odd failure instead of a dead suite.
+    expect(computeCalls.map((c) => c.id)).toEqual([
+      'custom:user-indicators:raises',
+    ])
   })
 
   it('runs every alert-declaring script when the rule says "any"', async () => {
