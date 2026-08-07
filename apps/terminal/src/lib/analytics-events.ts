@@ -227,6 +227,14 @@ export interface AnalyticsEvents {
     current_os: string
     asset: string
   }
+  /**
+   * Browser build only: the one-time notice on a page whose feature needs the
+   * app to be running (`surface` is `notifications` or `bots`). `shown` fires
+   * once per surface per device, so the pair is a conversion rate, not a
+   * volume — if nobody clicks through, the copy is wrong or the toast is.
+   */
+  desktop_nudge_shown: { surface: string }
+  desktop_nudge_clicked: { surface: string }
 
   // ── User-submitted feedback ───────────────────────────────────────
   /**

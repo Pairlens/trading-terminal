@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Configuration du graphique",
-          "description": "Indicateurs, dessins, type de graphique et vos styles de dessin par défaut."
+          "description": "Indicateurs, dessins, type de graphique, outils favoris et vos styles de dessin par défaut."
         },
         "workspaces": {
           "title": "Espaces de travail et dispositions",
@@ -1070,6 +1070,17 @@
         "detail": "Les clés d'API restent dans le trousseau du système, jamais dans le navigateur ni sur nos serveurs."
       }
     },
+    "nudge": {
+      "learnMore": "En savoir plus",
+      "notifications": {
+        "title": "Les alertes se déclenchent tant que Pairlens tourne",
+        "description": "Le navigateur ralentit un onglet que vous ne regardez pas, puis le suspend. L'application de bureau surveille vos alertes, fenêtre fermée."
+      },
+      "bots": {
+        "title": "Les bots tradent tant que Pairlens tourne",
+        "description": "Le navigateur ralentit un onglet que vous ne regardez pas, puis le suspend. L'application de bureau garde vos bots actifs et empêche la mise en veille."
+      }
+    },
     "wall": {
       "title": "{{venue}} nécessite l’app de bureau",
       "description": "Cette plateforme sert ses données de marché sans les en-têtes dont un navigateur a besoin pour les lire. L’app de bureau se connecte nativement, et toutes y fonctionnent.",
@@ -1422,6 +1433,10 @@
       "singleUseTools": "Outils à usage unique",
       "undo": "Annuler",
       "redo": "Rétablir",
+      "addToFavorites": "Ajouter aux favoris",
+      "removeFromFavorites": "Retirer des favoris",
+      "recentTools": "Outils récents",
+      "noRecentTools": "Aucun outil utilisé pour l’instant",
       "categories": {
         "lines": "Lignes",
         "shapes": "Formes",

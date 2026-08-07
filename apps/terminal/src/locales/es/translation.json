@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Configuración del gráfico",
-          "description": "Indicadores, dibujos, tipo de gráfico y tus estilos de dibujo predeterminados."
+          "description": "Indicadores, dibujos, tipo de gráfico, herramientas favoritas y tus estilos de dibujo predeterminados."
         },
         "workspaces": {
           "title": "Espacios de trabajo y diseños",
@@ -1070,6 +1070,17 @@
         "detail": "Las claves del exchange viven en el llavero del sistema, nunca en el navegador ni en nuestros servidores."
       }
     },
+    "nudge": {
+      "learnMore": "Más información",
+      "notifications": {
+        "title": "Las alertas saltan mientras Pairlens está en marcha",
+        "description": "El navegador ralentiza una pestaña que no estás mirando y acaba suspendiéndola. La app de escritorio vigila tus alertas con la ventana cerrada."
+      },
+      "bots": {
+        "title": "Los bots operan mientras Pairlens está en marcha",
+        "description": "El navegador ralentiza una pestaña que no estás mirando y acaba suspendiéndola. La app de escritorio mantiene tus bots operando y evita que el equipo se suspenda."
+      }
+    },
     "wall": {
       "title": "{{venue}} necesita la app de escritorio",
       "description": "Este exchange sirve sus datos de mercado sin las cabeceras que un navegador necesita para leerlos. La app de escritorio se conecta de forma nativa, y allí funcionan todos.",
@@ -1422,6 +1433,10 @@
       "singleUseTools": "Herramientas de un solo uso",
       "undo": "Deshacer",
       "redo": "Rehacer",
+      "addToFavorites": "Añadir a favoritos",
+      "removeFromFavorites": "Quitar de favoritos",
+      "recentTools": "Herramientas recientes",
+      "noRecentTools": "Aún no has usado ninguna herramienta",
       "categories": {
         "lines": "Líneas",
         "shapes": "Formas",

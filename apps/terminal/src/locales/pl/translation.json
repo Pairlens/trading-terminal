@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Ustawienia wykresu",
-          "description": "Wskaźniki, rysunki, typ wykresu i Twoje domyślne style rysowania."
+          "description": "Wskaźniki, rysunki, typ wykresu, ulubione narzędzia i Twoje domyślne style rysowania."
         },
         "workspaces": {
           "title": "Przestrzenie robocze i układy",
@@ -1074,6 +1074,17 @@
         "detail": "Klucze giełdowe zostają w magazynie systemowym, nigdy w przeglądarce ani na naszych serwerach."
       }
     },
+    "nudge": {
+      "learnMore": "Dowiedz się więcej",
+      "notifications": {
+        "title": "Alerty działają, dopóki Pairlens jest uruchomiony",
+        "description": "Przeglądarka spowalnia kartę, na którą nie patrzysz, a potem ją usypia. Aplikacja na komputer pilnuje Twoich alertów nawet po zamknięciu okna."
+      },
+      "bots": {
+        "title": "Boty handlują, dopóki Pairlens jest uruchomiony",
+        "description": "Przeglądarka spowalnia kartę, na którą nie patrzysz, a potem ją usypia. Aplikacja na komputer nie pozwala botom stanąć ani komputerowi zasnąć."
+      }
+    },
     "wall": {
       "title": "{{venue}} wymaga aplikacji na komputer",
       "description": "Ta giełda udostępnia dane rynkowe bez nagłówków, których przeglądarka potrzebuje, by je odczytać. Aplikacja na komputer łączy się natywnie, więc działa tam każda giełda.",
@@ -1430,6 +1441,10 @@
       "singleUseTools": "Narzędzia jednorazowe",
       "undo": "Cofnij",
       "redo": "Ponów",
+      "addToFavorites": "Dodaj do ulubionych",
+      "removeFromFavorites": "Usuń z ulubionych",
+      "recentTools": "Ostatnie narzędzia",
+      "noRecentTools": "Nie użyto jeszcze żadnego narzędzia",
       "categories": {
         "lines": "Linie",
         "shapes": "Kształty",

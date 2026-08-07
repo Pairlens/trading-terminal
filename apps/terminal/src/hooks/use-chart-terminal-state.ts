@@ -20,6 +20,7 @@ import type {
 } from '@pairlens/fast-financial-charts/types'
 import type { PluginCandle } from '@/hooks/use-candle-stream'
 import { track } from '@/lib/analytics-events'
+import { trackDrawingToolUse } from '@/lib/chart-drawing-tools'
 import { emitWrite } from '@/lib/sync/sync-channel'
 import {
   buildCustomIndicatorDefinition,
@@ -1154,7 +1155,13 @@ export function useChartTerminalState(
 
   const applyTool = useCallback(
     (tool: DrawingToolType | null, meta?: Record<string, unknown>) => {
-      if (tool) track('drawing_tool_selected', { tool })
+      // Every source of a tool selection lands here — the rail, a keyboard
+      // chord, the copilot, the engine re-arming a sticky tool — so this is
+      // the one place recents can be recorded from.
+      if (tool) {
+        track('drawing_tool_selected', { tool })
+        trackDrawingToolUse(tool, meta)
+      }
       setActiveTool(tool)
       setActiveToolMeta(meta ?? null)
       runCommand({ type: 'setActiveTool', payload: { tool, meta } })

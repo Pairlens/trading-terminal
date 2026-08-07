@@ -187,6 +187,12 @@ const dialogFeatures = FEATURES.map((f, i) => ({
   <div class="features-inner">
     <div class="statement">
       {
+        /* Each phrase carries both `data-phrase` (the rail index the click
+           opens) and `data-name` (the feature it names) — analytics reads the
+           name, so the event says which feature was opened rather than which
+           array position. */
+      }
+      {
         PARAGRAPHS.map((parts, pi) => (
           <p
             class="statement-p"
@@ -205,6 +211,7 @@ const dialogFeatures = FEATURES.map((f, i) => ({
                   tabindex="0"
                   aria-haspopup="dialog"
                   data-phrase={part}
+                  data-name={FEATURES[part].name}
                   style={`--phrase-accent: ${FEATURES[part].accent}`}
                   set:text={FEATURES[part].phrase}
                 />

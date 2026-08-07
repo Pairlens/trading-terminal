@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "圖表設定",
-          "description": "指標、畫線、圖表類型以及你的預設繪圖樣式。"
+          "description": "指標、畫線、圖表類型、收藏的工具以及你的預設繪圖樣式。"
         },
         "workspaces": {
           "title": "工作區與版面",
@@ -1070,6 +1070,17 @@
         "detail": "交易所金鑰保存在系統鑰匙圈中，不會進入瀏覽器儲存空間，也不會到我們的伺服器。"
       }
     },
+    "nudge": {
+      "learnMore": "瞭解更多",
+      "notifications": {
+        "title": "提醒只在 Pairlens 執行時觸發",
+        "description": "瀏覽器會拖慢你沒在看的分頁，最後將它暫停。桌面應用程式即使關掉視窗也會盯著你的提醒。"
+      },
+      "bots": {
+        "title": "機器人只在 Pairlens 執行時交易",
+        "description": "瀏覽器會拖慢你沒在看的分頁，最後將它暫停。桌面應用程式讓機器人繼續交易，還會阻止電腦休眠。"
+      }
+    },
     "wall": {
       "title": "{{venue}} 需要桌面應用程式",
       "description": "這家交易所回傳行情資料時不帶瀏覽器讀取所需的標頭。桌面應用程式以原生方式連線，所有交易所在那裡都能用。",
@@ -1422,6 +1433,10 @@
       "singleUseTools": "單次繪圖工具",
       "undo": "復原",
       "redo": "重做",
+      "addToFavorites": "加入收藏",
+      "removeFromFavorites": "從收藏移除",
+      "recentTools": "最近使用的工具",
+      "noRecentTools": "尚未使用任何工具",
       "categories": {
         "lines": "線條",
         "shapes": "形狀",

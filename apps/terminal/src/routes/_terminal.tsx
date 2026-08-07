@@ -105,6 +105,7 @@ import {
 import { OmniSearchProvider } from '@/components/omni-search/omni-search-provider'
 import { StatusBar } from '@/components/layout/status-bar'
 import { WatchlistsProvider } from '@/lib/watchlists-provider'
+import { useDesktopCtaStore } from '@/stores/desktop-cta-store'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { lockNow } from '@/lib/security/lock-store'
 import { startVaultBootstrap } from '@/lib/security/vault/vault-bootstrap'
@@ -186,12 +187,20 @@ function TerminalLayout() {
   const perfMode = usePerformanceModeState()
   const [workspaceTreeOpen, setWorkspaceTreeOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
-  const [desktopCtaOpen, setDesktopCtaOpen] = useState(false)
+  // Store rather than local state: the Notifications/Bots nudge opens this
+  // same dialog from deep in the tree (see stores/desktop-cta-store).
+  const desktopCtaOpen = useDesktopCtaStore((state) => state.isOpen)
+  const setDesktopCtaOpen = useDesktopCtaStore((state) => state.setOpen)
   // Device-local: the ping badge is a one-time nudge, not a permanent decoration.
   const [desktopCtaSeen, setDesktopCtaSeen] = usePersistedState<boolean>(
     DESKTOP_CTA_SEEN_KEY,
     false,
   )
+
+  // Whoever opened it, the pitch has now been read — retire the ping badge.
+  useEffect(() => {
+    if (desktopCtaOpen && !desktopCtaSeen) setDesktopCtaSeen(true)
+  }, [desktopCtaOpen, desktopCtaSeen, setDesktopCtaSeen])
 
   const activeItem = location.pathname.startsWith('/notifications')
     ? 'notifications'
@@ -547,10 +556,7 @@ function TerminalLayout() {
                             <SidebarMenuButton
                               aria-label={t('nav.getDesktopApp')}
                               className="relative size-9 justify-center p-0"
-                              onClick={() => {
-                                setDesktopCtaOpen(true)
-                                setDesktopCtaSeen(true)
-                              }}
+                              onClick={() => setDesktopCtaOpen(true)}
                               type="button"
                             >
                               <MonitorDown size={16} />

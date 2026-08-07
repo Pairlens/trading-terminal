@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Chart setup",
-          "description": "Indicators, drawings, chart type and your default drawing styles."
+          "description": "Indicators, drawings, chart type, favorite tools and your default drawing styles."
         },
         "workspaces": {
           "title": "Workspaces and layouts",
@@ -1070,6 +1070,17 @@
         "detail": "Exchange keys live in the system keychain, never in browser storage and never on our servers."
       }
     },
+    "nudge": {
+      "learnMore": "Learn more",
+      "notifications": {
+        "title": "Alerts fire while Pairlens is running",
+        "description": "Browsers slow down a tab you are not looking at, then suspend it. The desktop app watches your alerts with the window closed."
+      },
+      "bots": {
+        "title": "Bots trade while Pairlens is running",
+        "description": "Browsers slow down a tab you are not looking at, then suspend it. The desktop app keeps your bots trading and holds off sleep."
+      }
+    },
     "wall": {
       "title": "{{venue}} needs the desktop app",
       "description": "This exchange serves its market data without the headers a browser needs to read it. The desktop app connects natively, so every venue works there.",
@@ -1422,6 +1433,10 @@
       "singleUseTools": "Single-use tools",
       "undo": "Undo",
       "redo": "Redo",
+      "addToFavorites": "Add to favorites",
+      "removeFromFavorites": "Remove from favorites",
+      "recentTools": "Recent tools",
+      "noRecentTools": "No tools used yet",
       "categories": {
         "lines": "Lines",
         "shapes": "Shapes",

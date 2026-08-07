@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Configurazione del grafico",
-          "description": "Indicatori, disegni, tipo di grafico e i tuoi stili di disegno predefiniti."
+          "description": "Indicatori, disegni, tipo di grafico, strumenti preferiti e i tuoi stili di disegno predefiniti."
         },
         "workspaces": {
           "title": "Aree di lavoro e layout",
@@ -1070,6 +1070,17 @@
         "detail": "Le chiavi dell'exchange restano nel portachiavi di sistema, mai nel browser né sui nostri server."
       }
     },
+    "nudge": {
+      "learnMore": "Scopri di più",
+      "notifications": {
+        "title": "Gli avvisi scattano finché Pairlens è in funzione",
+        "description": "Il browser rallenta una scheda che non stai guardando e prima o poi la sospende. L’app desktop tiene d’occhio i tuoi avvisi anche a finestra chiusa."
+      },
+      "bots": {
+        "title": "I bot operano finché Pairlens è in funzione",
+        "description": "Il browser rallenta una scheda che non stai guardando e prima o poi la sospende. L’app desktop tiene i bot al lavoro e impedisce la sospensione del computer."
+      }
+    },
     "wall": {
       "title": "{{venue}} richiede l’app desktop",
       "description": "Questo exchange serve i suoi dati di mercato senza le intestazioni che un browser richiede per leggerli. L’app desktop si collega in modo nativo, e lì funzionano tutti.",
@@ -1422,6 +1433,10 @@
       "singleUseTools": "Strumenti a uso singolo",
       "undo": "Annulla",
       "redo": "Ripeti",
+      "addToFavorites": "Aggiungi ai preferiti",
+      "removeFromFavorites": "Rimuovi dai preferiti",
+      "recentTools": "Strumenti recenti",
+      "noRecentTools": "Nessuno strumento usato finora",
       "categories": {
         "lines": "Linee",
         "shapes": "Forme",
