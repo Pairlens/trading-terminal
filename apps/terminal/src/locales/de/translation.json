@@ -3266,6 +3266,11 @@
         "tagline": "Scanne, verfolge den Chart und trade die Intraday-Session.",
         "description": "Ein ausgewogenes dreispaltiges Setup: ein Markt-Scanner links, ein großer Chart in der Mitte und rechts ein Orderbuch mit Order-Ticket und offenen Positionen. Das Arbeitspferd für aktiven Krypto-Handel."
       },
+      "cross-venue-desk": {
+        "name": "Multi-Börsen-Desk",
+        "tagline": "Ein Paar, alle Börsen, der beste Preis ganz oben.",
+        "description": "Rund um das Preisvergleich-Panel gebaut: das aktive Paar auf jeder Börse, die es listet, nach Preis sortiert, sodass die beste Ausführung in der obersten Zeile steht. Daneben ein Chart und der Trade-Ticker, dazu Orderbuch und Order-Ticket, um die Differenz sofort zu handeln."
+      },
       "swing-overview": {
         "name": "Swing-Überblick",
         "tagline": "Trendkontext mit Watchlist und den Movern.",

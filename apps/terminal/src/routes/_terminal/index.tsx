@@ -46,6 +46,7 @@ function NoDiscoveryState() {
           <Button
             variant="outline"
             className="mt-4 gap-2"
+            nativeButton={false}
             render={<Link to="/plugins" />}
           >
             <Blocks className="size-4" />

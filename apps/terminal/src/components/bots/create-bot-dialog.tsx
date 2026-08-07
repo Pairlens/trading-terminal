@@ -245,6 +245,7 @@ export function CreateBotDialog({
               <EmptyContent>
                 <Button
                   size="sm"
+                  nativeButton={false}
                   render={<Link to="/indicators" />}
                   onClick={() => onOpenChange(false)}
                 >

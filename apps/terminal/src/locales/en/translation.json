@@ -3266,6 +3266,11 @@
         "tagline": "Scan, chart, and trade the intraday session.",
         "description": "A balanced three-column desk: a markets scanner on the left, a large chart in the middle, and an order book plus trade ticket and open positions on the right. The everyday driver for active crypto trading."
       },
+      "cross-venue-desk": {
+        "name": "Cross-Venue Desk",
+        "tagline": "One pair, every venue, cheapest fill on top.",
+        "description": "Built around the Multi-Price panel: the active pair quoted on every venue that lists it, ranked by price so the best fill is the top row. A chart and the tape sit beside it, with the order book and a trade ticket ready to act on the gap."
+      },
       "swing-overview": {
         "name": "Swing Overview",
         "tagline": "Trend context with a watchlist and the movers.",

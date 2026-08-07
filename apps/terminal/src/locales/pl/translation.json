@@ -3292,6 +3292,11 @@
         "tagline": "Skanuj, analizuj i handluj w sesji intraday.",
         "description": "Zbalansowany trzykolumnowy desk: skaner rynków po lewej, duży wykres na środku oraz arkusz zleceń z panelem transakcyjnym i otwartymi pozycjami po prawej. Codzienny układ do aktywnego handlu kryptowalutami."
       },
+      "cross-venue-desk": {
+        "name": "Pulpit Wielogiełdowy",
+        "tagline": "Jedna para, wszystkie giełdy, najlepsza cena na górze.",
+        "description": "Zbudowany wokół panelu Porównanie cen: aktywna para notowana na każdej giełdzie, która ją oferuje, posortowana według ceny, więc najlepsza egzekucja trafia do pierwszego wiersza. Obok wykres i wstęga transakcji, a arkusz zleceń i panel transakcyjny czekają, by wykorzystać różnicę."
+      },
       "swing-overview": {
         "name": "Przegląd Swing",
         "tagline": "Kontekst trendu z listą obserwowanych i liderami rynku.",

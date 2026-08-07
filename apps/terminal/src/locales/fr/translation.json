@@ -3266,6 +3266,11 @@
         "tagline": "Scannez, analysez le graphique et tradez la session intrajournalière.",
         "description": "Un poste équilibré à trois colonnes : un scanner de marchés à gauche, un grand graphique au centre, et à droite un carnet d'ordres avec ticket d'ordre et positions ouvertes. Le cheval de bataille du trading crypto actif au quotidien."
       },
+      "cross-venue-desk": {
+        "name": "Poste Multi-Plateformes",
+        "tagline": "Une paire, toutes les plateformes, le meilleur prix en tête.",
+        "description": "Conçu autour du panneau Multi-prix : la paire active cotée sur chaque plateforme qui la référence, classée par prix pour que la meilleure exécution figure en première ligne. À côté, un graphique et le fil des transactions, avec le carnet d'ordres et un ticket d'ordre prêts à saisir l'écart."
+      },
       "swing-overview": {
         "name": "Vue d'ensemble Swing",
         "tagline": "Contexte de tendance avec une liste de suivi et les mouvements.",

@@ -3266,6 +3266,11 @@
         "tagline": "Escaneie, analise e opere a sessão intradiária.",
         "description": "Uma mesa equilibrada de três colunas: um scanner de mercados à esquerda, um grande gráfico no centro e um livro de ofertas com painel de negociação e posições abertas à direita. O layout do dia a dia para negociação ativa de cripto."
       },
+      "cross-venue-desk": {
+        "name": "Mesa Multiexchange",
+        "tagline": "Um par, todas as corretoras, o melhor preço no topo.",
+        "description": "Construída em torno do painel Multipreço: o par ativo cotado em cada corretora que o lista, ordenado por preço para que a melhor execução fique na primeira linha. Ao lado, um gráfico e o fluxo de negócios, com o livro de ofertas e um painel de negociação prontos para aproveitar a diferença."
+      },
       "swing-overview": {
         "name": "Visão Geral Swing",
         "tagline": "Contexto de tendência com watchlist e os movers.",

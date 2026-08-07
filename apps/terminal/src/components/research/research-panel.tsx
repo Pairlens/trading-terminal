@@ -488,6 +488,7 @@ export function ResearchPanel({ pairKey, market }: ResearchPanelProps) {
           <Button
             variant="outline"
             className="mt-4 gap-2"
+            nativeButton={false}
             render={<Link to="/plugins" />}
           >
             <Search className="size-4" />

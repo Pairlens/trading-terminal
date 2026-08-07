@@ -3266,6 +3266,11 @@
         "tagline": "Gün içi seansı tara, grafikle takip et, işlem yap.",
         "description": "Dengeli üç sütunlu bir masa: solda bir piyasa tarayıcısı, ortada büyük bir grafik, sağda ise emir defteri, işlem paneli ve açık pozisyonlar. Aktif kripto işlemleri için günlük sürücü."
       },
+      "cross-venue-desk": {
+        "name": "Çoklu Borsa Masası",
+        "tagline": "Tek parite, tüm borsalar, en iyi fiyat en üstte.",
+        "description": "Çoklu Fiyat paneli etrafında kuruldu: aktif parite, onu listeleyen her borsada fiyatlanır ve fiyata göre sıralanır, böylece en iyi gerçekleşme en üst satırda olur. Yanında bir grafik ve işlem akışı, farkı değerlendirmeye hazır bir emir defteri ve işlem paneli bulunur."
+      },
       "swing-overview": {
         "name": "Swing Genel Bakış",
         "tagline": "İzleme listesi ve en çok hareket edenlerle trend bağlamı.",

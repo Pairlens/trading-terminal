@@ -19,14 +19,22 @@ install one. Everything below ships in the box, from **Pairlens Core** or
 | --------------------- | --------------------------------------------------------------------------------------------- |
 | **Chart**             | The main chart: 16 types, 90 indicators, 45 drawing tools. See [the chart](/docs/chart-panel) |
 | **Order Book**        | Live bids and asks with depth visualisation                                                   |
+| **Trades**            | The live tape: every print with side, size, and time                                          |
 | **Market Depth**      | The cumulative depth curve for the active pair                                                |
 | **Liquidity Heatmap** | Order-book liquidity across price levels over time                                            |
+| **Multi-Price**       | The active pair quoted on every venue at once, ranked by price                                |
 | **Pair Info**         | Key stats and metadata for the active pair                                                    |
 | **Data Log**          | The raw signal and event feed                                                                 |
 
 The Liquidity Heatmap is the one people miss. It renders where resting
 liquidity has actually sat over the last few hours, which shows you the levels
 the book keeps defending rather than the ones you drew.
+
+Multi-Price answers a question a single chart cannot: where is this pair
+cheapest right now. It quotes the active pair on every venue that lists it and
+sorts by price, so the top row is the answer. The
+[Cross-Venue Desk](/docs/workspaces#the-workspace-store) template is built
+around it.
 
 ## Trading
 
