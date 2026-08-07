@@ -186,6 +186,7 @@ export function ArmLiveDialog({
               size="sm"
               variant="outline"
               className="justify-self-start"
+              nativeButton={false}
               render={<Link to="/accounts" />}
               onClick={() => onOpenChange(false)}
             >

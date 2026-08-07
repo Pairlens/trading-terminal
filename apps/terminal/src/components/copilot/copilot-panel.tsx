@@ -809,6 +809,7 @@ export function CopilotPanel(props: CopilotPanelProps) {
           <Button
             variant="outline"
             className="mt-4 gap-2"
+            nativeButton={false}
             render={<Link to="/plugins" />}
           >
             <Brain className="size-4" />
