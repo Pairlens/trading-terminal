@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "チャート構成",
-          "description": "インジケーター、描画、チャートの種類、既定の描画スタイル。"
+          "description": "インジケーター、描画、チャートの種類、お気に入りのツール、既定の描画スタイル。"
         },
         "workspaces": {
           "title": "ワークスペースとレイアウト",
@@ -1433,6 +1433,10 @@
       "singleUseTools": "単発描画ツール",
       "undo": "元に戻す",
       "redo": "やり直す",
+      "addToFavorites": "お気に入りに追加",
+      "removeFromFavorites": "お気に入りから削除",
+      "recentTools": "最近使ったツール",
+      "noRecentTools": "まだツールを使っていません",
       "categories": {
         "lines": "ライン",
         "shapes": "図形",

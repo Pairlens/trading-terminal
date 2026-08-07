@@ -59,6 +59,26 @@ const headlessRuns: Array<{
   indicatorFilters: Array<string>
   barCount: number
 }> = []
+
+// `mock.module` is process-global and bun runs test files one after another in
+// the same process, so the stub below becomes every later file's copy of this
+// module. headless-indicator-alerts.test.ts is one of those files, and it
+// tests exactly this module: left in place, its subject is silently replaced
+// by a recorder that computes nothing. Worse, bun MERGES the stub into an
+// already-loaded namespace, so that suite keeps a real
+// resetHeadlessIndicatorAlertState and only loses runHeadlessIndicatorAlerts —
+// no import error, just every assertion about work done coming back empty.
+// Capture the genuine module first and put it back when this file is done.
+const realHeadlessAlerts = {
+  ...(await import('@/lib/indicators/headless-indicator-alerts')),
+}
+afterAll(() => {
+  void mock.module(
+    '@/lib/indicators/headless-indicator-alerts',
+    () => realHeadlessAlerts,
+  )
+})
+
 void mock.module('@/lib/indicators/headless-indicator-alerts', () => ({
   runHeadlessIndicatorAlerts: (run: {
     pair: string

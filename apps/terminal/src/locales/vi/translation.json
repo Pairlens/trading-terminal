@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Thiết lập biểu đồ",
-          "description": "Chỉ báo, hình vẽ, loại biểu đồ và kiểu vẽ mặc định của bạn."
+          "description": "Chỉ báo, hình vẽ, loại biểu đồ, công cụ yêu thích và kiểu vẽ mặc định của bạn."
         },
         "workspaces": {
           "title": "Không gian làm việc và bố cục",
@@ -1433,6 +1433,10 @@
       "singleUseTools": "Công cụ dùng một lần",
       "undo": "Hoàn tác",
       "redo": "Làm lại",
+      "addToFavorites": "Thêm vào yêu thích",
+      "removeFromFavorites": "Xóa khỏi yêu thích",
+      "recentTools": "Công cụ gần đây",
+      "noRecentTools": "Chưa dùng công cụ nào",
       "categories": {
         "lines": "Đường",
         "shapes": "Hình dạng",

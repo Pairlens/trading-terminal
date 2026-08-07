@@ -52,6 +52,7 @@ describe('domainForSyncKey', () => {
     expect(domainForSyncKey('terminal.indicators')).toBe('charts')
     expect(domainForSyncKey('terminal.chartType')).toBe('charts')
     expect(domainForSyncKey('drawing-last-lines')).toBe('charts')
+    expect(domainForSyncKey('terminal.drawingFavorites')).toBe('charts')
     expect(domainForSyncKey('custom-workspaces')).toBe('workspaces')
     expect(domainForSyncKey('workspace.abc.layout')).toBe('workspaces')
     expect(domainForSyncKey('workspace-vars:abc')).toBe('workspaces')
@@ -72,6 +73,9 @@ describe('domainForSyncKey', () => {
       'workflow-runs',
       'notification-log',
       'terminal.compareSymbols',
+      // Drawing-tool recents: rewritten on nearly every tool click, and a
+      // trace of one device's last few actions. Favorites are the synced half.
+      'terminal.drawingRecents',
     ]) {
       expect(domainForSyncKey(key)).toBeNull()
     }

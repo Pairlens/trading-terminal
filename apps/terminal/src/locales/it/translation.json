@@ -548,7 +548,7 @@
         },
         "charts": {
           "title": "Configurazione del grafico",
-          "description": "Indicatori, disegni, tipo di grafico e i tuoi stili di disegno predefiniti."
+          "description": "Indicatori, disegni, tipo di grafico, strumenti preferiti e i tuoi stili di disegno predefiniti."
         },
         "workspaces": {
           "title": "Aree di lavoro e layout",
@@ -1433,6 +1433,10 @@
       "singleUseTools": "Strumenti a uso singolo",
       "undo": "Annulla",
       "redo": "Ripeti",
+      "addToFavorites": "Aggiungi ai preferiti",
+      "removeFromFavorites": "Rimuovi dai preferiti",
+      "recentTools": "Strumenti recenti",
+      "noRecentTools": "Nessuno strumento usato finora",
       "categories": {
         "lines": "Linee",
         "shapes": "Forme",
