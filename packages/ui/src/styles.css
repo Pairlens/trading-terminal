@@ -410,6 +410,50 @@
   }
 }
 
+/* Discovery mini price charts.
+
+   The loading state is a real trendline shape with a short highlight
+   travelling along it, not a grey bar: a row still fetching should read as
+   "a chart is coming here", which a bar does not say. Both animations drive
+   stroke-dashoffset against pathLength="1", so the numbers are fractions of
+   the path and work at any width the container query hands the chart. */
+.spark-sweep {
+  animation: spark-sweep 1.5s linear infinite;
+}
+@keyframes spark-sweep {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* One-shot reveal when the candles land — the line draws itself in left to
+   right while the fill comes up under it. */
+.spark-draw {
+  animation: spark-draw var(--dur-slow) var(--ease-out) both;
+}
+@keyframes spark-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.spark-fade-in {
+  animation: spark-fade-in var(--dur-slow) var(--ease-out) both;
+}
+@keyframes spark-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Live pulse dot */
 .live-dot {
   animation: live-blink 1.6s ease-in-out infinite;
@@ -438,8 +482,14 @@
   }
   .tick-up,
   .tick-down,
-  .panel-rise {
+  .panel-rise,
+  .spark-draw,
+  .spark-fade-in {
     animation: none;
+  }
+  /* The base skeleton path stays; only its travelling highlight goes. */
+  .spark-sweep {
+    display: none;
   }
 }
 

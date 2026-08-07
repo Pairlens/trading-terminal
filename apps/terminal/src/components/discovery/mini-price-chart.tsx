@@ -1,12 +1,20 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { memo, useCallback, useEffect, useId, useRef, useState } from 'react'
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 
 import type { SparklineState } from '@/hooks/use-sparkline'
-import { buildSparkline } from '@/lib/sparkline-path'
+import { buildSparkline, skeletonValues } from '@/lib/sparkline-path'
 import { useSparkline } from '@/hooks/use-sparkline'
 
 // ---------------------------------------------------------------------------
@@ -32,18 +40,41 @@ const VIEW_PAD = 2
 
 const DEFAULT_BOX = 'h-5 w-16'
 
+/** Shared by every stroke so the three states are visually one object. */
+const STROKE = {
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 1.25,
+  strokeLinecap: 'round',
+  strokeLinejoin: 'round',
+  // The box is stretched to fit its slot; the line should not thicken or
+  // thin with it.
+  vectorEffect: 'non-scaling-stroke',
+} as const
+
 export function MiniPriceChartView({
   values,
   state,
+  seed,
+  animate = true,
   className,
   ref,
 }: {
   values: Array<number>
   state: SparklineState
+  /** Keeps a row's loading shape stable, and unlike its neighbours'. */
+  seed?: string
+  /**
+   * Whether this chart is on screen. A list holds far more charts than it
+   * shows, and an infinite shimmer on every one of them is real compositing
+   * work for pixels nobody is looking at — off screen, the placeholder holds
+   * still.
+   */
+  animate?: boolean
   /** Sizing and responsive visibility — callers own the box. */
   className?: string
-  /** Lands on whichever element is rendered, chart or empty slot. */
-  ref?: React.Ref<never>
+  /** Lands on the chart element, whichever state it is in. */
+  ref?: React.Ref<SVGSVGElement>
 }) {
   const { t } = useTranslation()
   const rawId = useId()
@@ -53,27 +84,25 @@ export function MiniPriceChartView({
   const geometry =
     state === 'ready' ? buildSparkline(values, VIEW_W, VIEW_H, VIEW_PAD) : null
 
-  if (!geometry) {
-    // Same box either way, so a chart arriving never nudges the row. No
-    // display utility of our own here — callers hide the slot with their own
-    // responsive classes, and a `flex` of ours would fight them in the merge.
-    return (
-      <div
-        ref={ref}
-        aria-hidden
-        className={cn('relative shrink-0', DEFAULT_BOX, className)}
-      >
-        <span
-          className={cn(
-            'absolute inset-x-0 top-1/2 h-px -translate-y-1/2 rounded-full bg-muted-foreground/20',
-            state === 'loading' && 'animate-pulse',
-          )}
-        />
-      </div>
-    )
-  }
+  // A wider pad than the real line uses: the placeholder should sit inside
+  // the eventual chart's envelope, so the reveal reads as the line resolving
+  // rather than as one shape being replaced by a taller one.
+  const skeleton = useMemo(
+    () =>
+      state === 'loading'
+        ? buildSparkline(
+            skeletonValues(seed ?? 'pairlens'),
+            VIEW_W,
+            VIEW_H,
+            VIEW_PAD * 3,
+          )
+        : null,
+    [state, seed],
+  )
 
   return (
+    // One element in every state, always the same box, so a chart arriving
+    // never nudges the row and the viewport observer never loses its target.
     <svg
       ref={ref}
       viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
@@ -81,30 +110,70 @@ export function MiniPriceChartView({
       className={cn(
         'shrink-0 overflow-visible',
         DEFAULT_BOX,
-        geometry.up ? 'text-up' : 'text-down',
+        geometry
+          ? geometry.up
+            ? 'text-up'
+            : 'text-down'
+          : 'text-muted-foreground',
         className,
       )}
-      role="img"
-      aria-label={t('common.trendAriaLabel')}
+      // Only the finished chart says anything; the placeholder and the
+      // nothing-to-show line are decoration, and the row already reads out
+      // its price and change.
+      {...(geometry
+        ? { role: 'img', 'aria-label': t('common.trendAriaLabel') }
+        : { 'aria-hidden': true })}
     >
-      <defs>
-        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="currentColor" stopOpacity={0.3} />
-          <stop offset="100%" stopColor="currentColor" stopOpacity={0} />
-        </linearGradient>
-      </defs>
-      <path d={geometry.area} fill={`url(#${gradientId})`} />
-      <path
-        d={geometry.line}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.25}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        // The box is stretched to fit its slot; the line should not thicken
-        // or thin with it.
-        vectorEffect="non-scaling-stroke"
-      />
+      {geometry ? (
+        <>
+          <defs>
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="currentColor" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="currentColor" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <path
+            className="spark-fade-in"
+            d={geometry.area}
+            fill={`url(#${gradientId})`}
+          />
+          <path
+            {...STROKE}
+            className="spark-draw"
+            d={geometry.line}
+            pathLength={1}
+            strokeDasharray={1}
+          />
+        </>
+      ) : skeleton ? (
+        <>
+          <path {...STROKE} d={skeleton.line} strokeOpacity={0.16} />
+          {/* A short segment travelling the same path — the shimmer. */}
+          {animate && (
+            <path
+              {...STROKE}
+              className="spark-sweep"
+              d={skeleton.line}
+              pathLength={1}
+              strokeDasharray="0.22 0.78"
+              strokeOpacity={0.45}
+            />
+          )}
+        </>
+      ) : (
+        // Nothing to show: settle to a flat line, dimmer than the skeleton,
+        // so "this venue has no history for this pair" is legible as an
+        // answer rather than as a chart that never loaded.
+        <line
+          {...STROKE}
+          className="spark-fade-in"
+          x1={0}
+          x2={VIEW_W}
+          y1={VIEW_H / 2}
+          y2={VIEW_H / 2}
+          strokeOpacity={0.22}
+        />
+      )}
     </svg>
   )
 }
@@ -157,9 +226,11 @@ export const MiniPriceChart = memo(function MiniPriceChart({
   const { values, state } = useSparkline(market, pair, inView)
   return (
     <MiniPriceChartView
-      ref={observe as React.Ref<never>}
+      ref={observe}
       values={values}
       state={state}
+      seed={pair}
+      animate={inView}
       className={className}
     />
   )

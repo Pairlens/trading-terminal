@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { describe, expect, test } from 'bun:test'
 
-import { buildSparkline } from '../sparkline-path'
+import { buildSparkline, skeletonValues } from '../sparkline-path'
 
 const W = 72
 const H = 22
@@ -64,5 +64,29 @@ describe('buildSparkline', () => {
     expect(buildSparkline([42], W, H)).toBeNull()
     expect(buildSparkline([1, 2], 0, H)).toBeNull()
     expect(buildSparkline([1, 2], W, 0)).toBeNull()
+  })
+})
+
+describe('skeletonValues', () => {
+  // The two properties the loading placeholder depends on. Break the first
+  // and it reshuffles on every render, which reads as data arriving; break
+  // the second and a list becomes a column of identical squiggles.
+  test('is stable for a given pair', () => {
+    expect(skeletonValues('BTC-USDT')).toEqual(skeletonValues('BTC-USDT'))
+  })
+
+  test('differs between pairs, including near-identical ones', () => {
+    expect(skeletonValues('BTC-USDT')).not.toEqual(skeletonValues('ETH-USDT'))
+    expect(skeletonValues('BTC-USDT')).not.toEqual(skeletonValues('BTC-USDC'))
+  })
+
+  test('produces a drawable line, never a flat one', () => {
+    for (const seed of ['BTC-USDT', 'AAPL', 'WIF-SOL', '', 'x']) {
+      const values = skeletonValues(seed)
+      expect(values.length).toBeGreaterThanOrEqual(2)
+      expect(values.every(Number.isFinite)).toBe(true)
+      expect(new Set(values).size).toBeGreaterThan(1)
+      expect(buildSparkline(values, W, H)).not.toBeNull()
+    }
   })
 })

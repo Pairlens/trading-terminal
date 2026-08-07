@@ -28,6 +28,40 @@ function round(n: number): number {
   return Math.round(n * 100) / 100
 }
 
+/** FNV-1a. Any stable string→int would do; this one is short and seeds well. */
+function hashSeed(seed: string): number {
+  let hash = 2166136261
+  for (let i = 0; i < seed.length; i++) {
+    hash ^= seed.charCodeAt(i)
+    hash = Math.imul(hash, 16777619)
+  }
+  return hash >>> 0
+}
+
+/** Points for a loading placeholder that looks like a price line.
+ *
+ * Derived from the pair symbol rather than random, for two reasons: the shape
+ * must not change between renders (a placeholder that reshuffles reads as data
+ * arriving), and neighbouring rows must not share one shape (a column of
+ * identical squiggles reads as a rendering bug). The walk is deliberately
+ * gentle — this is a "a chart is coming" cue, not a prediction. */
+export function skeletonValues(seed: string, count = 14): Array<number> {
+  let state = hashSeed(seed) || 1
+  let level = 0
+  const values: Array<number> = []
+  for (let i = 0; i < count; i++) {
+    // xorshift32: deterministic, and plenty for a shape nobody reads.
+    state ^= state << 13
+    state >>>= 0
+    state ^= state >>> 17
+    state ^= state << 5
+    state >>>= 0
+    level += state / 0xffffffff - 0.5
+    values.push(level)
+  }
+  return values
+}
+
 /**
  * Returns null when there is nothing honest to draw — fewer than two points,
  * or a degenerate box. Callers render an empty slot of the same size so the
