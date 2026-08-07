@@ -80,10 +80,14 @@ function PairQuote({
   // the bulk endpoint exists to avoid. So the flash marks a refresh rather
   // than a trade, which is still exactly when the number on screen moved.
   const direction = usePriceTick(quote?.price)
-  if (!quote) return null
-  const change = quote.change24h
+  const change = quote?.change24h
   return (
-    <div className={cn('text-right tabular-nums', className)}>
+    // A reserved column, not a shrink-wrapped one. Digit count varies per
+    // pair ($64,570.60 against $0.1984) and a venue with no price at all used
+    // to collapse the slot entirely — either way the chart beside it moved,
+    // and a list of charts that each start at a different x reads as broken
+    // alignment rather than as data.
+    <div className={cn('min-w-24 text-right tabular-nums', className)}>
       <p
         className={cn(
           'tick-cell flex items-center justify-end gap-0.5 text-sm font-medium transition-colors duration-700',
@@ -95,12 +99,18 @@ function PairQuote({
         )}
       >
         <TickArrow direction={direction} />
-        {formatPrice(quote.price)}
+        {quote ? (
+          formatPrice(quote.price)
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        )}
       </p>
-      <p className={cn('text-xs', change >= 0 ? 'text-up' : 'text-down')}>
-        {change >= 0 ? '+' : ''}
-        {change.toFixed(2)}%
-      </p>
+      {change != null && (
+        <p className={cn('text-xs', change >= 0 ? 'text-up' : 'text-down')}>
+          {change >= 0 ? '+' : ''}
+          {change.toFixed(2)}%
+        </p>
+      )}
     </div>
   )
 }
@@ -402,7 +412,7 @@ export function MarketsPane() {
                       <MiniPriceChart
                         market={resolveMarket(pair.assetClass)}
                         pair={pair.symbol}
-                        className="hidden h-6 w-10 @min-[18rem]/tile:block @min-[26rem]/tile:w-16"
+                        className="hidden h-6 w-10 @min-[19rem]/tile:block @min-[27rem]/tile:w-16"
                       />
                       <PairQuote
                         quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
@@ -410,7 +420,7 @@ export function MarketsPane() {
                       />
                       {/* Decoration, and the first thing to go: below this
                           the price has already wrapped to its own line. */}
-                      <ArrowRight className="hidden size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 @min-[20rem]/tile:block" />
+                      <ArrowRight className="hidden size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 @min-[21rem]/tile:block" />
                     </Link>
                   ))}
                 </div>
@@ -614,11 +624,7 @@ const PairTableRow = memo(function PairTableRow({
         </Link>
       </TableCell>
       <TableCell>
-        {quote ? (
-          <PairQuote quote={quote} />
-        ) : (
-          <p className="text-right text-xs text-muted-foreground">—</p>
-        )}
+        <PairQuote quote={quote} />
       </TableCell>
       <TableCell className="hidden @lg/pane:table-cell">
         <div className="flex flex-wrap gap-1">

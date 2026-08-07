@@ -724,9 +724,13 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
       <MiniPriceChart
         market={market}
         pair={inst.symbol}
-        className="hidden h-5 w-10 @2xs/pane:block @sm/pane:w-14 @lg/pane:w-20"
+        className="hidden h-5 w-10 @min-[20rem]/pane:block @sm/pane:w-14 @lg/pane:w-20"
       />
-      <div className="flex flex-col items-end gap-0.5">
+      {/* Reserved width, so the chart to its left starts at the same x on
+          every row. Digits per price vary a lot across a watchlist
+          ($64,570.60 against $0.1984) and without this the column of charts
+          comes out ragged. */}
+      <div className="flex min-w-24 flex-col items-end gap-0.5">
         <span
           className={cn(
             'tick-cell inline-flex items-center gap-0.5 font-mono text-xs tabular-nums transition-colors duration-700',
@@ -766,7 +770,7 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
       </Button>
       {/* Decoration only — the whole row is clickable. It yields its pixels
           to the trend line once the pane gets tight. */}
-      <ArrowRight className="hidden size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 @xs/pane:block" />
+      <ArrowRight className="hidden size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 @min-[22rem]/pane:block" />
     </div>
   )
 })

@@ -139,9 +139,11 @@ const RecentTickerRow = memo(function RecentTickerRow({
         pair={symbol}
         className="hidden h-5 w-12 @2xs/pane:block @sm/pane:w-16"
       />
+      {/* Reserved width for the same reason as the watchlist: a price column
+          that shrink-wraps its digits leaves the chart beside it ragged. */}
       <span
         className={cn(
-          'font-mono text-sm tabular-nums transition-colors',
+          'min-w-24 text-right font-mono text-sm tabular-nums transition-colors',
           rowDirectionClass(direction),
         )}
       >
