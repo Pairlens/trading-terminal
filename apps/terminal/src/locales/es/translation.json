@@ -3264,6 +3264,11 @@
         "tagline": "Escanea, analiza el gráfico y opera la sesión intradía.",
         "description": "Un escritorio equilibrado a tres columnas: un escáner de mercados a la izquierda, un gráfico grande en el centro y, a la derecha, un libro de órdenes con ticket de operación y posiciones abiertas. El caballo de batalla para el trading cripto activo del día a día."
       },
+      "cross-venue-desk": {
+        "name": "Mesa Multiexchange",
+        "tagline": "Un par, todos los exchanges, el mejor precio arriba.",
+        "description": "Construida en torno al panel Multiprecio: el par activo cotizado en cada exchange que lo lista, ordenado por precio para que la mejor ejecución quede en la fila superior. Al lado, un gráfico y la cinta de operaciones, con el libro de órdenes y un ticket de operación listos para aprovechar la diferencia."
+      },
       "swing-overview": {
         "name": "Resumen Swing",
         "tagline": "Contexto de tendencia con una watchlist y los movers.",

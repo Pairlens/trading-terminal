@@ -364,6 +364,44 @@ const STANDALONE_TEMPLATES: Array<WorkspaceTemplate> = [
     ),
   },
   {
+    id: 'template:cross-venue-desk',
+    name: 'Cross-Venue Desk',
+    tagline: 'One pair, every venue, cheapest fill on top.',
+    description:
+      'Built around the Multi-Price panel: the active pair quoted on every venue that lists it, ranked by price so the best fill is the top row. A chart and the tape sit beside it, with the order book and a trade ticket ready to act on the gap.',
+    icon: 'Scale',
+    author: 'Pairlens',
+    featured: true,
+    facets: {
+      traderTypes: ['scalper', 'day-trader', 'quant'],
+      assetClasses: ['crypto-spot', 'multi-asset'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['multi-venue', 'spread', 'best-fill'],
+    variables: [pairVariable('BTC-USDT', 'okx'), WALLET_VARIABLE],
+    layout: buildLayout(
+      'venue',
+      [
+        {
+          w: 44,
+          cells: [
+            { h: 68, panes: ['chart'] },
+            { h: 32, panes: ['trades', 'data-log'] },
+          ],
+        },
+        { w: 30, cells: [{ h: 100, panes: ['multi-price'] }] },
+        {
+          w: 26,
+          cells: [
+            { h: 55, panes: ['orderbook'] },
+            { h: 45, panes: ['trade-entry'] },
+          ],
+        },
+      ],
+      { pairVar: PAIR, walletVar: WALLET },
+    ),
+  },
+  {
     id: 'template:swing-overview',
     name: 'Swing Overview',
     tagline: 'Trend context with a watchlist and the movers.',

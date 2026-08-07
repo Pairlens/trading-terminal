@@ -7,6 +7,11 @@ import type { TerminalLayout } from './types'
  * Default — Chart+Data left, a narrow Order Book+Trade rail in the middle,
  * and the AI copilot as its own full-height column: the conversation (or its
  * sign-in invitation) gets room to breathe instead of sharing a column.
+ *
+ * The data strip opens on Trades rather than Positions. A fresh terminal has
+ * no positions to show, so the first tab was an empty state on every install;
+ * the tape is live the moment the chart is, and it reads as the natural
+ * companion to the candles above it.
  */
 export const PRESET_DEFAULT: TerminalLayout = {
   version: 1,
@@ -26,6 +31,7 @@ export const PRESET_DEFAULT: TerminalLayout = {
           heightPercent: 24,
           activeTabIndex: 0,
           panes: [
+            { id: 'pane-trades', type: 'trades' },
             { id: 'pane-positions', type: 'positions' },
             { id: 'pane-data-log', type: 'data-log' },
             { id: 'pane-depth', type: 'depth' },
