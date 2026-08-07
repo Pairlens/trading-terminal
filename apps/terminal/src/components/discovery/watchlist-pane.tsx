@@ -21,7 +21,6 @@ import {
   ArrowRight,
   Check,
   ChevronDown,
-  ChevronUp,
   GripVertical,
   Pencil,
   Plus,
@@ -82,6 +81,8 @@ import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import { PairSearchResults } from '@/components/pair-picker/pair-search-results'
 import { PaneTransition } from '@/components/layout/pane-transition'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
+import { TickArrow } from '@/components/tick-arrow'
+import { usePriceTick } from '@/hooks/use-price-tick'
 
 export function WatchlistPane() {
   const { t } = useTranslation()
@@ -581,8 +582,6 @@ function AddSymbolButton({
 
 // --- Sortable watchlist item ---
 
-type TickDirection = 'up' | 'down' | null
-
 type CachedTicker = {
   price: number
   change24h?: number
@@ -636,21 +635,11 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
   const cached = priceCache.current?.get(inst.symbol)
   const displayPrice = ticker?.last ?? cached?.price ?? null
   const displayChange = ticker?.change24h ?? cached?.change24h ?? null
-  const [direction, setDirection] = useState<TickDirection>(null)
-  const prevPriceRef = useRef<number | null>(displayPrice)
-  const flashTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const direction = usePriceTick(ticker?.last)
 
   useEffect(() => {
     if (ticker?.last == null) return
 
-    const prev = prevPriceRef.current
-    if (prev != null && ticker.last !== prev) {
-      setDirection(ticker.last > prev ? 'up' : 'down')
-      clearTimeout(flashTimerRef.current)
-      flashTimerRef.current = setTimeout(() => setDirection(null), 700)
-    }
-
-    prevPriceRef.current = ticker.last
     const prevCached = priceCache.current?.get(inst.symbol)
     priceCache.current?.set(inst.symbol, {
       price: ticker.last,
@@ -661,10 +650,6 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
           : {}),
     })
   }, [ticker?.last, ticker?.change24h, inst.symbol, priceCache])
-
-  useEffect(() => {
-    return () => clearTimeout(flashTimerRef.current)
-  }, [])
 
   const handleRemove = useCallback(
     (e: React.MouseEvent) => {
@@ -754,10 +739,7 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
         >
           {displayPrice != null ? (
             <>
-              {direction === 'up' && <ChevronUp className="size-3 shrink-0" />}
-              {direction === 'down' && (
-                <ChevronDown className="size-3 shrink-0" />
-              )}
+              <TickArrow direction={direction} />
               {formatPrice(displayPrice)}
             </>
           ) : (

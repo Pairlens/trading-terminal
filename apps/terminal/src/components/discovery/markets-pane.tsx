@@ -49,7 +49,9 @@ import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
+import { usePriceTick } from '@/hooks/use-price-tick'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
+import { TickArrow } from '@/components/tick-arrow'
 import { formatPrice } from '@/lib/format-price'
 
 /** Live exchange quote by exact pair symbol; top-coins base join as fallback. */
@@ -73,11 +75,28 @@ function PairQuote({
   quote: BulkQuote | undefined
   className?: string
 }) {
+  // These prices come from the 60s bulk snapshots, not a per-row stream —
+  // fanning a ticker subscription over two thousand instruments is the thing
+  // the bulk endpoint exists to avoid. So the flash marks a refresh rather
+  // than a trade, which is still exactly when the number on screen moved.
+  const direction = usePriceTick(quote?.price)
   if (!quote) return null
   const change = quote.change24h
   return (
     <div className={cn('text-right tabular-nums', className)}>
-      <p className="text-sm font-medium">{formatPrice(quote.price)}</p>
+      <p
+        className={cn(
+          'tick-cell flex items-center justify-end gap-0.5 text-sm font-medium transition-colors duration-700',
+          direction === 'up'
+            ? 'tick-up text-up'
+            : direction === 'down'
+              ? 'tick-down text-down'
+              : undefined,
+        )}
+      >
+        <TickArrow direction={direction} />
+        {formatPrice(quote.price)}
+      </p>
       <p className={cn('text-xs', change >= 0 ? 'text-up' : 'text-down')}>
         {change >= 0 ? '+' : ''}
         {change.toFixed(2)}%
@@ -349,7 +368,7 @@ export function MarketsPane() {
                     each tile 112px — less than the logo, symbol and price
                     need — so the symbol wrapped mid-pair ("BTC-" / "USDT")
                     and collided with the price. */}
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-2">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-2">
                   {featuredPairs.map((pair) => (
                     <Link
                       key={pair.symbol}
@@ -367,7 +386,7 @@ export function MarketsPane() {
                         assetClass={pair.assetClass}
                         size="lg"
                       />
-                      <div className="min-w-24 flex-1">
+                      <div className="min-w-20 flex-1">
                         {/* A ticker never wraps — it truncates or it fits. */}
                         <PairSymbol
                           symbol={pair.symbol}
@@ -377,17 +396,21 @@ export function MarketsPane() {
                           {pair.name}
                         </p>
                       </div>
-                      {/* No trend line here on purpose: a featured tile is
-                          already carrying a logo, a pair, a price and a
-                          change, and these pairs repeat in the table below
-                          with a trend of their own. */}
+                      {/* Only once the tile is wide enough to hold logo,
+                          pair, chart and price on one line — below that the
+                          tile has already dropped its arrow to make room. */}
+                      <MiniPriceChart
+                        market={resolveMarket(pair.assetClass)}
+                        pair={pair.symbol}
+                        className="hidden h-6 w-10 @min-[18rem]/tile:block @min-[26rem]/tile:w-16"
+                      />
                       <PairQuote
                         quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
                         className="ml-auto shrink-0"
                       />
                       {/* Decoration, and the first thing to go: below this
                           the price has already wrapped to its own line. */}
-                      <ArrowRight className="hidden size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 @min-[17rem]/tile:block" />
+                      <ArrowRight className="hidden size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 @min-[20rem]/tile:block" />
                     </Link>
                   ))}
                 </div>

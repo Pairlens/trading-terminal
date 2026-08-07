@@ -1,11 +1,13 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 
+import type { TickDirection } from '@/hooks/use-price-tick'
 import { useTickerStream } from '@/hooks/use-ticker-stream'
+import { usePriceTick } from '@/hooks/use-price-tick'
 import { recentTickerPriceCache } from '@/lib/recent-tickers'
 
-export type TickDirection = 'up' | 'down' | null
+export type { TickDirection }
 
 type LivePairPrice = {
   price: number | null
@@ -27,27 +29,12 @@ export function useLivePairPrice(
   // switches) — keeping it out of state avoids a second render per tick.
   const price = ticker?.last ?? recentTickerPriceCache.get(symbol) ?? null
 
-  const [direction, setDirection] = useState<TickDirection>(null)
-  const prevPriceRef = useRef<number | null>(price)
-  const flashTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const direction = usePriceTick(ticker?.last)
 
   useEffect(() => {
     if (ticker?.last == null) return
-
-    const prev = prevPriceRef.current
-    if (prev != null && ticker.last !== prev) {
-      setDirection(ticker.last > prev ? 'up' : 'down')
-      clearTimeout(flashTimerRef.current)
-      flashTimerRef.current = setTimeout(() => setDirection(null), 700)
-    }
-
-    prevPriceRef.current = ticker.last
     recentTickerPriceCache.set(symbol, ticker.last)
   }, [ticker?.last, symbol])
-
-  useEffect(() => {
-    return () => clearTimeout(flashTimerRef.current)
-  }, [])
 
   return { price, direction }
 }
