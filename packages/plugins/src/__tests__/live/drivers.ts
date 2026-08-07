@@ -159,3 +159,49 @@ export const LIVE_DRIVERS: Array<LiveDriver> = [
     fetchHistory: (p, tf, limit) => fetchBfxCandles(p, tf, limit),
   },
 ]
+
+/**
+ * Optional comma-separated allowlist of connector names; empty means all.
+ *
+ * This is about WHERE the run happens, not what is worth testing. Some venues
+ * refuse whole countries — Binance answers a US address with HTTP 451, ByBit
+ * and MEXC are region-gated the same way — and GitHub's hosted runners are
+ * US-based. Run the full set there and those rows fail every night for a
+ * reason no commit caused, which is how a nightly job becomes noise and then
+ * gets muted.
+ *
+ * So narrowing the nightly is a statement about the runner's address and
+ * nothing else. It is also a real coverage gap rather than a fix: nothing
+ * watches the excluded venues for contract drift until the job runs somewhere
+ * that can reach them.
+ *
+ * It lives here, beside the drivers, because both live suites iterate them and
+ * a filter applied in only one is worse than none — the run looks narrowed
+ * while the other file quietly calls every venue anyway.
+ */
+const ONLY = (process.env.PAIRLENS_LIVE_MARKETS ?? '')
+  .split(',')
+  .map((name) => name.trim().toLowerCase())
+  .filter(Boolean)
+
+const KNOWN = new Set(LIVE_DRIVERS.map((driver) => driver.name))
+// A typo would otherwise silently shrink the run — possibly to nothing — and
+// still report success, the one outcome a drift detector must never fake.
+const UNKNOWN = ONLY.filter((name) => !KNOWN.has(name))
+if (UNKNOWN.length > 0) {
+  throw new Error(
+    `PAIRLENS_LIVE_MARKETS names unknown connectors: ${UNKNOWN.join(', ')}. ` +
+      `Known: ${[...KNOWN].join(', ')}`,
+  )
+}
+
+/** The drivers this run will actually exercise. */
+export const SELECTED_DRIVERS: Array<LiveDriver> =
+  ONLY.length > 0
+    ? LIVE_DRIVERS.filter((driver) => ONLY.includes(driver.name))
+    : LIVE_DRIVERS
+
+/** Named so a narrowed run can never be read as a full sweep. */
+export const SKIPPED_DRIVER_NAMES: Array<string> = LIVE_DRIVERS.filter(
+  (driver) => !SELECTED_DRIVERS.includes(driver),
+).map((driver) => driver.name)

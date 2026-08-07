@@ -16,7 +16,7 @@
 
 import { afterAll, describe, expect, it } from 'bun:test'
 
-import { LIVE_DRIVERS } from './drivers'
+import { SELECTED_DRIVERS, SKIPPED_DRIVER_NAMES } from './drivers'
 import { formatMatrix, rowFailures, runConnectorChecks } from './harness'
 import type { ConnectorResults } from './harness'
 
@@ -32,9 +32,13 @@ describe.skipIf(!LIVE)('live connector conformance', () => {
     if (rows.length === 0) return
 
     console.log('\n' + formatMatrix(rows) + '\n')
+    // Named explicitly so a narrowed nightly cannot read as a full sweep.
+    if (SKIPPED_DRIVER_NAMES.length > 0) {
+      console.log(`not checked: ${SKIPPED_DRIVER_NAMES.join(', ')}\n`)
+    }
   })
 
-  for (const driver of LIVE_DRIVERS) {
+  for (const driver of SELECTED_DRIVERS) {
     it(
       `${driver.name} conforms on ${driver.pair}`,
       async () => {

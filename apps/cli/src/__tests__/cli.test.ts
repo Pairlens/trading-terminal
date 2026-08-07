@@ -128,18 +128,25 @@ describe('candles command', () => {
     expect(lines.length).toBe(3) // header + 2 rows
   })
 
-  // Binance blocks US IPs (HTTP 451) — skip in CI where runners are US-based
-  it.skipIf(!!process.env.CI)(
-    'fetches candles from Binance',
-    async () => {
-      const result =
-        await $`bun ${CLI} candles --market binance --pair BTC-USDT --timeframe 1d --limit 2`.text()
-      const candles = JSON.parse(result)
-      expect(candles.length).toBe(2)
-      expect(candles[0].close).toBeGreaterThan(0)
-    },
-    15000,
-  )
+  // There was a Binance case here. It is gone rather than stubbed, and both
+  // halves of that are deliberate.
+  //
+  // Stubbing it would have made it the OKX case above with a different market
+  // string: all fourteen CEX connectors are built by the same
+  // createCexConnectorPlugin factory, and per-venue wire shapes are already
+  // covered by golden-conformance in packages/plugins. It would have asserted
+  // nothing new while looking like coverage of a second venue.
+  //
+  // Keeping it live was worse. Binance answers a US address with HTTP 451, so
+  // it was skipped in CI and ran ONLY on contributors' machines — where it
+  // fails outright for anyone in the US, and fails intermittently for everyone
+  // else. A test that cannot pass for a whole class of contributor teaches
+  // them their tree is broken when it is not.
+  //
+  // What it was actually asking — does Binance still answer the way our parser
+  // expects — is a live question, and it now lives with the other live
+  // questions: the connector conformance suite in packages/plugins covers
+  // Binance, and .github/workflows/live-connectors.yml runs that daily.
 
   liveOnly(
     'fetches candles from the live OKX API',
