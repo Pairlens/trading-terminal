@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "Remover",
       "vaultRemoveLastBlocked": "Esta é a única forma de entrar no seu cofre. Adicione outra antes de removê-la.",
       "vaultRemoveBiometricOnlyBlocked": "O Touch ID não pode ser a única forma de entrar — as digitais deste Mac podem mudar. Mantenha uma senha ou um passkey.",
-      "vaultProtectsBody": "Com um cofre, suas chaves de API e de carteira ficam guardadas criptografadas. Quem copiar este perfil do navegador — ou o disco deste computador — recebe texto cifrado que não consegue abrir sem sua senha ou sua passkey.",
+      "vaultProtectsBody": "Com um cofre, suas chaves de API e de carteira ficam guardadas criptografadas. Quem copiar este perfil do navegador — ou o armazenamento deste dispositivo — recebe texto cifrado que não consegue abrir sem sua senha ou sua passkey.",
       "vaultCeiling": "Ele não protege as chaves enquanto você as usa. Qualquer coisa em execução nesta página pode pedir uma chave ao cofre desbloqueado, do mesmo jeito que o app faz. Para as chaves mais valiosas, o app de desktop continua sendo a recomendação.",
       "vaultNoRecovery": "Não há recuperação. Perca todas as formas de entrar e as chaves criptografadas se vão — o único caminho de volta ao app apaga os dados deste dispositivo.",
       "vaultDesktopToggleHint": "Suas chaves já estão no chaveiro do sistema. Ative isto para acrescentar uma senha ou uma passkey por cima.",
@@ -3024,7 +3024,7 @@
     "back": "Voltar",
     "saveApiKey": "Salvar Chave de API",
     "saving": "Salvando...",
-    "storedSecurely": "Armazenado com segurança apenas no seu computador",
+    "storedSecurely": "Armazenado com segurança apenas no seu dispositivo",
     "storedSecurelyDetail": "Todas as credenciais são armazenadas com segurança no seu computador usando o keychain do sistema operacional (macOS Keychain, Windows Credential Manager ou Linux Secret Service), que as criptografa em repouso. Elas nunca são enviadas para os servidores do Pairlens nem armazenadas neles. Sempre mantenha um backup das suas chaves de API em um local seguro.",
     "storedSecurelyDetailBrowser": "Neste navegador cada credencial é criptografada com AES-256-GCM antes de ser salva, sob uma chave que só a senha do seu cofre, sua passkey ou o Touch ID conseguem abrir. Elas nunca são enviadas para os servidores do Pairlens nem armazenadas neles. Sempre mantenha um backup das suas chaves de API em um local seguro.",
     "storedSecurelyNever": "nunca são enviadas para os servidores do Pairlens nem armazenadas neles",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}} corretora",
       "venuesCount_other": "{{count}} corretoras"
     },
+    "discover": {
+      "featured": "Em destaque"
+    },
+    "markets": {
+      "filterPlaceholder": "Filtrar mercados",
+      "matchCount_one": "{{count}} resultado",
+      "matchCount_other": "{{count}} resultados"
+    },
     "trade": {
       "openBook": "Abrir o livro de ofertas",
       "spread": "spread {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "Anotações"
       }
     },
+    "drawing": {
+      "placementLabel": "Posicionar desenho",
+      "setPoint": "Marcar ponto",
+      "cancel": "Cancelar",
+      "done": "Concluir",
+      "step": "Ponto {{current}} de {{total}}",
+      "dragHint": "Arraste para posicionar",
+      "textLabel": "Texto",
+      "textPlaceholder": "Digite o texto…"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "Contas e conexões",
@@ -4722,6 +4740,24 @@
       "trading": "Negociação",
       "connected": "Conectado",
       "perOrder": "{{percent}}% por ordem"
+    },
+    "accounts": {
+      "permissionsLabel": "Permissões",
+      "canTrade": "Negociação ativada",
+      "canTradeHint": "As ordens que você envia nesta corretora são assinadas com esta chave. Ela nunca sai deste dispositivo.",
+      "readOnlyTitle": "Somente leitura",
+      "readOnlyHint": "Os dados de mercado desta corretora seguem em tempo real, mas não é possível enviar ordens com esta chave aqui.",
+      "unavailableTitle": "Indisponível aqui",
+      "modeLabel": "Modo",
+      "apiKeyLabel": "Chave de API",
+      "connectedLabel": "Conectado",
+      "renameSaved": "Nome atualizado.",
+      "renameFailed": "O novo nome não foi salvo.",
+      "disconnectTitle": "Desconectar {{label}}?",
+      "disconnectBody": "A chave é removida deste dispositivo. Nada muda na exchange, e você pode conectá-la de novo quando quiser.",
+      "sealedTitle": "Cofre bloqueado",
+      "missingTitle": "Não conectada",
+      "missingBody": "Esta conta não está mais guardada neste dispositivo."
     },
     "pickers": {
       "searchPlaceholder": "Pesquisar qualquer par, ticker ou nome",

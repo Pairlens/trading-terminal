@@ -1,25 +1,24 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Everything `ConnectExchangeWizard` and `AddCryptoWalletDialog` need to be
- * driven, as a hook.
+ * Everything `AddCredentialPicker`, `ConnectExchangeWizard` and
+ * `AddCryptoWalletDialog` need to be driven, as a hook.
  *
- * Both components are fully controlled — eighteen props between them — and
- * today the state that drives them lives inside `accounts-page.tsx`. The phone
- * cannot mount that page (it is a `SidebarInset` full of desk layout), so this
- * is a deliberate, mechanical COPY of that page's state block, its
- * `handleSubmit`, its wallet submit and its vault gate.
+ * All three are fully controlled — eighteen props between them — and this is
+ * the single place their state lives. Both surfaces consume it: the desktop
+ * Accounts page (`components/accounts/accounts-page.tsx`) and the mobile
+ * connect overlay (`mobile/screens/connect-account-sheet.tsx`). The mobile
+ * shell shipped with a copy of the page's state block; that copy is gone, and
+ * this file is what replaced it. Anything that opens a credential flow goes
+ * through here — a second copy is how the vault gate ends up guarding one
+ * surface and not the other.
  *
- * A copy rather than an extraction on purpose: lifting the desktop page's
- * state is a change to a 1000-line screen that works, for no user-visible
- * gain, on a branch that is already large. The duplication is real and is
- * filed as a follow-up — the two should become one hook once the mobile shell
- * has landed and the desktop page can be refactored against it.
+ * It deliberately owns only the CONNECT flow. Listing, renaming and removing
+ * credentials stay with the screen that shows them.
  *
- * The one intentional difference from the desktop page: no `?connect=` deep
- * link handling. On mobile that URL is consumed by `use-mobile-route-sync`,
- * which turns it into a `{ kind: 'connect', market }` overlay before this hook
- * is ever mounted, and `initialMarket` arrives as a prop instead.
+ * Lives outside `src/mobile/` on purpose: the mobile tree is separable, so
+ * nothing in the desktop tree may import from it (see
+ * `mobile/__tests__/separability.test.ts`).
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -71,8 +70,11 @@ export function useConnectWizardState({
     wallets,
   } = useWalletsStore()
 
+  const allMarketIds = useMemo(() => markets.map((m) => m.value), [markets])
   // A venue this build cannot reach is not a venue the user can connect: the
-  // wizard would take their key and then fail every call behind it.
+  // wizard would take their key and then fail every call behind it. Already
+  // platform-aware — on desktop `desktopOnly` is false for all fifteen, so
+  // this filter only ever bites in a browser.
   const reachableMarketIds = useMemo(
     () => markets.filter((m) => !m.desktopOnly).map((m) => m.value),
     [markets],
@@ -166,6 +168,21 @@ export function useConnectWizardState({
     [reachableMarketIds],
   )
 
+  // The same two lists over every venue this build knows about, reachable or
+  // not. What you can SIGN UP with is a wider set than what you can connect a
+  // key to from here: opening a Coinbase account in the browser and finishing
+  // on the desktop app is a real path, so the signup rails read these.
+  const allExchangeSchemaMarkets = useMemo(
+    () =>
+      allMarketIds.filter((m) => m in CREDENTIAL_SCHEMAS && !isBrokerMarket(m)),
+    [allMarketIds],
+  )
+  const allBrokerSchemaMarkets = useMemo(
+    () =>
+      allMarketIds.filter((m) => m in CREDENTIAL_SCHEMAS && isBrokerMarket(m)),
+    [allMarketIds],
+  )
+
   const wizardMarkets =
     formKind === 'broker' ? brokerSchemaMarkets : exchangeSchemaMarkets
   const resolvedMarket = selectedMarket ?? wizardMarkets[0] ?? null
@@ -191,6 +208,24 @@ export function useConnectWizardState({
     [withVault, availableChains],
   )
 
+  /** Start at the credential-type picker (the generic "Connect" button). */
+  const openTypePicker = useCallback(() => {
+    setFeedback(null)
+    setShowTypePicker(true)
+  }, [])
+
+  /** Skip the type picker and open the API-key wizard on a known flavor. */
+  const openWizard = useCallback(
+    (variant: 'exchange' | 'broker') => {
+      setFeedback(null)
+      void withVault(() => {
+        setFormKind(variant)
+        setShowForm(true)
+      })
+    },
+    [withVault],
+  )
+
   /** Open straight on a venue, skipping the type picker (the connect gate). */
   const openForMarket = useCallback(
     (market: string) => {
@@ -214,20 +249,21 @@ export function useConnectWizardState({
   )
 
   /**
-   * Open straight on the wallet dialog for a chain (the DEX connect gate).
+   * Open straight on the wallet dialog, on `chain` or on the first available
+   * one (the DEX connect gate, and the plain "Add wallet" button).
    *
    * The counterpart to `openForMarket`: a DEX venue signs with a chain wallet,
    * so its gate has to reach `AddCryptoWalletDialog`, never the API-key wizard.
    */
   const openForChain = useCallback(
-    (chain: string) => {
+    (chain?: string) => {
       setFeedback(null)
       void withVault(() => {
-        setCryptoChain(chain)
+        setCryptoChain(chain ?? availableChains[0] ?? null)
         setShowCryptoForm(true)
       })
     },
-    [withVault],
+    [withVault, availableChains],
   )
 
   // Annotated because the vault retry closes over `handleSubmit` itself, and
@@ -282,11 +318,9 @@ export function useConnectWizardState({
           setEnrollOpen(true)
           return
         }
-        // Mobile's addition to the desktop copy: a sealed vault is a locked
-        // door, not a failure. The desktop page offers the unlock from its
-        // sealed banner, which the phone's connect flow has no room for — so
-        // the same retry mechanism that serves enrollment serves unlocking,
-        // and the user's filled-in form survives it.
+        // A sealed vault is a locked door, not a failure: the same retry
+        // mechanism that serves enrollment serves unlocking, and the user's
+        // filled-in form survives it.
         if (isVaultSealed(error)) {
           pendingAction.current = () => void handleSubmit(event)
           setUnlockOpen(true)
@@ -330,6 +364,7 @@ export function useConnectWizardState({
             // One EVM key covers Ethereum, Base, Arbitrum, BSC, Polygon, etc.
             address = await deriveEvmAddress(cryptoPrivateKey.trim())
           } else {
+            // Bitcoin: placeholder until chain-specific derivation is added
             throw new Error(
               `${cryptoChain} address derivation not yet supported`,
             )
@@ -420,10 +455,12 @@ export function useConnectWizardState({
     // Type picker
     showTypePicker,
     setShowTypePicker,
+    openTypePicker,
     pickKind,
     // Exchange / broker wizard
     showForm,
     closeWizard,
+    openWizard,
     openForMarket,
     openForChain,
     formKind,
@@ -451,10 +488,14 @@ export function useConnectWizardState({
     handleAddCryptoWallet,
     availableChains,
     wallets,
-    // Shared
+    // Venue universes
     exchangeSchemaMarkets,
     brokerSchemaMarkets,
+    allExchangeSchemaMarkets,
+    allBrokerSchemaMarkets,
+    // Shared
     isBusy,
+    setIsBusy,
     feedback,
     setFeedback,
     // Vault gate

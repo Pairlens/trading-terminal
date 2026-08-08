@@ -17,17 +17,26 @@
  * venue trades) rather than from a discovery query filtered by market:
  * `pluginManager.execute` falls back to wildcard providers when a venue's call
  * fails, so a discovery read cannot answer a question *about a venue*.
+ *
+ * "No results" is a claim, and the screen only makes it once the search has
+ * settled. Server search fans out across every DEX connector plus the catalog
+ * and lands hundreds of milliseconds after the keystroke, so the naive
+ * `results.length === 0` said "No pairs found" on the way to finding them —
+ * the single most-reported bug on this screen. `searching` below is the
+ * in-flight signal, and it drives skeleton rows instead.
  */
 import { memo, useCallback, useMemo, useState } from 'react'
 import { Search, Star, TriangleAlert, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
+import { Skeleton } from '@pairlens/ui/components/ui/skeleton'
 import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
 import { VENUE_KIND_KEY, venueKindOf } from '../lib/venue-kind'
 import { MobileRow } from '../primitives/mobile-row'
 import { MobileSheet } from '../primitives/mobile-sheet'
+import { isSearchInFlight } from './search-progress'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import type { MobileOverlay } from '../mobile-focus-context'
 import type { VenueKind } from '../lib/venue-kind'
@@ -41,6 +50,9 @@ import { useMarketData } from '@/lib/market-data-provider'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useRecentPairs } from '@/lib/recent-tickers'
 import { normalizePairKey } from '@/lib/pairs'
+import { useInstrumentSearch } from '@/hooks/use-instrument-search'
+import { useMarketInstruments } from '@/hooks/use-market-instruments'
+import { usePairlens } from '@/lib/pairlens-provider'
 
 type PairPickerScreenProps = {
   overlay: Extract<MobileOverlay, { kind: 'pairPicker' }>
@@ -86,13 +98,44 @@ export default memo(function PairPickerScreen({
   const activeListId = useWatchlistsStore((s) => s.state.activeListId)
   const addToWatchlist = useWatchlistsStore((s) => s.addToWatchlist)
 
+  // `showSearchResults` is deliberately not read: it is `showResults.length >
+  // 0` before the venue-kind filter runs, and the section here is driven by
+  // what survives that filter.
+  const { showResults, recentEntries, watchedEntries, hasQuery } =
+    usePairSearchData(query, watchedSymbols)
+
+  // The same two queries `usePairSearchData` reads, asked again for their
+  // status. Both are react-query hooks keyed identically, so this is a cache
+  // read and not a second fetch — and it is the only way to know the search is
+  // still running, which the data-only hook cannot say.
   const {
-    showSearchResults,
-    showResults,
-    recentEntries,
-    watchedEntries,
+    isSearchActive,
+    isFetching: searchFetching,
+    isPending: searchPending,
+  } = useInstrumentSearch(query)
+  const { isLoading: catalogLoading } = useMarketInstruments()
+
+  // A one-character query is filtered client-side out of the catalog, and a
+  // query the server answers needs a provider to answer it. Without this
+  // guard, a build with no discovery-search plugin would hold the skeleton
+  // open forever, because that query never leaves `pending`.
+  const { pluginManager, pluginStateVersion } = usePairlens()
+  const hasSearchProvider = useMemo(
+    () =>
+      pluginManager.getPluginForCapability('market-data:discovery:search') !==
+      null,
+    // pluginStateVersion is the re-run trigger; pluginManager reads are non-reactive
+    [pluginManager, pluginStateVersion],
+  )
+
+  const searching = isSearchInFlight({
     hasQuery,
-  } = usePairSearchData(query, watchedSymbols)
+    isSearchActive,
+    hasSearchProvider,
+    searchFetching,
+    searchPending,
+    catalogLoading,
+  })
 
   const { markets } = useAvailableMarkets()
   const { availableMarkets: adapterInfos } = useMarketData()
@@ -284,7 +327,11 @@ export default memo(function PairPickerScreen({
     >
       {/* The tab bar floats above the sheet, so the list ends where it starts. */}
       <div className="pb-[var(--pl-tabbar-total)]">
-        {hasQuery && showSearchResults ? (
+        {/* Stale results outlive a keystroke on purpose: react-query hands
+            back the previous query's items while the new one is in flight, so
+            the list holds still instead of blanking. The skeleton is only for
+            the case where there is genuinely nothing to hold. */}
+        {hasQuery && results.length > 0 ? (
           <PickerSection label={t('search.results')}>
             {results.map(({ entry, routing }) => (
               <PairResultRow
@@ -296,6 +343,10 @@ export default memo(function PairPickerScreen({
                 watched={watchedSymbols.has(entry.symbol)}
               />
             ))}
+          </PickerSection>
+        ) : searching ? (
+          <PickerSection label={t('search.results')}>
+            <PairResultSkeletons />
           </PickerSection>
         ) : null}
 
@@ -342,7 +393,9 @@ export default memo(function PairPickerScreen({
           </PickerSection>
         ) : null}
 
-        {hasQuery && results.length === 0 ? (
+        {/* Only once the search has settled. Saying "no pairs" while a request
+            is still out is the bug this screen was reported for. */}
+        {hasQuery && !searching && results.length === 0 ? (
           <p className="px-4 py-10 text-center text-[12.5px] text-muted-foreground">
             {t('pairPicker.noPairsFound')}
           </p>
@@ -357,6 +410,37 @@ export default memo(function PairPickerScreen({
     </MobileSheet>
   )
 })
+
+/** Rows the settled list will occupy, so the section does not jump on arrival. */
+const SKELETON_ROWS = [0, 1, 2, 3, 4]
+
+/**
+ * Deliberately shaped like `PairResultRow`: the same 44px row box, the same
+ * 32px avatar slot, the same two text lines. A generic spinner would tell the
+ * user something is happening; this tells them what is about to be there, and
+ * the list does not reflow when it lands.
+ */
+function PairResultSkeletons() {
+  return (
+    <div aria-hidden>
+      {SKELETON_ROWS.map((row) => (
+        <div
+          className="flex min-h-[44px] w-full items-center gap-[11px] border-t border-t-[rgba(255,255,255,0.055)] px-4 py-2.5"
+          key={row}
+        >
+          {/* `bg-muted` is nearly the sheet's own colour on this theme, so the
+              placeholder reads as an empty list. The sheet's own hairline
+              tint is the contrast that works over it. */}
+          <Skeleton className="size-8 shrink-0 rounded-full bg-white/[0.09]" />
+          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+            <Skeleton className="h-3.5 w-[92px] bg-white/[0.09]" />
+            <Skeleton className="h-2.5 w-[132px] bg-white/[0.06]" />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 function PickerSection({
   label,

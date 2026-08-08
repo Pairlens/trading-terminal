@@ -25,6 +25,7 @@ import {
   computeTickOptions,
   groupLevels,
 } from '@/components/terminal/orderbook-pane'
+import { computeMagnitudeReference } from '@/components/terminal/magnitude-intensity'
 import { useOptionalOrderbookData } from '@/lib/chart-terminal-context'
 import { useSwitchTransition } from '@/hooks/use-switch-transition'
 
@@ -39,6 +40,16 @@ export type MobileOrderbook = {
   bestAsk: number | null
   /** Deepest cumulative on either side — the depth bars' 100%. */
   maxCumulative: number
+  /**
+   * Level size that saturates the depth tint, pooled across BOTH sides.
+   *
+   * The bar's length is cumulative depth; its colour strength is this level's
+   * own size against this reference. Two variables, two channels — a wall reads
+   * as a hot band even where the cumulative bar is already near full width.
+   * Pooled because an equal bid and ask must paint identically or the book
+   * lies about which side is heavier.
+   */
+  sizeReference: number
   spread: { value: number; pct: number } | null
   /** Share of the shown depth resting on each side. */
   buyPct: number
@@ -145,6 +156,21 @@ export function useMobileOrderbook(rowsPerSide: number): MobileOrderbook {
     return Math.max(maxBid, maxAsk)
   }, [bids, asks])
 
+  // ONE reference for both sides, and computed once here rather than in each
+  // row: a row that derived its own scale would paint a bid and an equal ask
+  // differently, and the book would misreport which side is heavier. Two small
+  // arrays and one sort over the visible rows per book update — the same order
+  // of work the slicing above already does, and the same shape the desktop
+  // pane uses.
+  const sizeReference = useMemo(
+    () =>
+      computeMagnitudeReference(
+        bids.map((row) => row.size),
+        asks.map((row) => row.size),
+      ),
+    [bids, asks],
+  )
+
   const spread = useMemo(() => {
     if (bestBid == null || bestAsk == null) return null
     const value = bestAsk - bestBid
@@ -167,6 +193,7 @@ export function useMobileOrderbook(rowsPerSide: number): MobileOrderbook {
     bestBid,
     bestAsk,
     maxCumulative,
+    sizeReference,
     spread,
     buyPct,
     sellPct,

@@ -35,7 +35,6 @@ import type {
   PairCategory,
   PairEntry,
 } from '@/components/pair-picker/pair-picker-data'
-import type { TopCoin } from '@pairlens/shared/instrument-types'
 import type { BulkQuote } from '@/hooks/use-bulk-ticker-quotes'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
@@ -49,71 +48,10 @@ import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
-import { usePriceTick } from '@/hooks/use-price-tick'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
-import { TickArrow } from '@/components/tick-arrow'
-import { formatPrice } from '@/lib/format-price'
-
-/** Live exchange quote by exact pair symbol; top-coins base join as fallback. */
-function quoteForPair(
-  pair: PairEntry,
-  liveQuotes: Map<string, BulkQuote>,
-  coinsBySymbol: Map<string, TopCoin>,
-): BulkQuote | undefined {
-  const live = liveQuotes.get(pair.symbol)
-  if (live) return live
-  const coin = coinsBySymbol.get(pair.base.toUpperCase())
-  return coin
-    ? { price: coin.price, change24h: coin.percentChange24h }
-    : undefined
-}
-
-function PairQuote({
-  quote,
-  className,
-}: {
-  quote: BulkQuote | undefined
-  className?: string
-}) {
-  // These prices come from the 60s bulk snapshots, not a per-row stream —
-  // fanning a ticker subscription over two thousand instruments is the thing
-  // the bulk endpoint exists to avoid. So the flash marks a refresh rather
-  // than a trade, which is still exactly when the number on screen moved.
-  const direction = usePriceTick(quote?.price)
-  const change = quote?.change24h
-  return (
-    // A reserved column, not a shrink-wrapped one. Digit count varies per
-    // pair ($64,570.60 against $0.1984) and a venue with no price at all used
-    // to collapse the slot entirely — either way the chart beside it moved,
-    // and a list of charts that each start at a different x reads as broken
-    // alignment rather than as data.
-    <div className={cn('min-w-24 text-right tabular-nums', className)}>
-      <p
-        className={cn(
-          'tick-cell flex items-center justify-end gap-0.5 text-sm font-medium transition-colors duration-700',
-          direction === 'up'
-            ? 'tick-up text-up'
-            : direction === 'down'
-              ? 'tick-down text-down'
-              : undefined,
-        )}
-      >
-        <TickArrow direction={direction} />
-        {quote ? (
-          formatPrice(quote.price)
-        ) : (
-          <span className="text-muted-foreground">—</span>
-        )}
-      </p>
-      {change != null && (
-        <p className={cn('text-xs', change >= 0 ? 'text-up' : 'text-down')}>
-          {change >= 0 ? '+' : ''}
-          {change.toFixed(2)}%
-        </p>
-      )}
-    </div>
-  )
-}
+// Extracted verbatim so the mobile lists render the same reserved column and
+// the same tick flash as this pane instead of a second implementation.
+import { PairQuote, quoteForPair } from '@/components/discovery/pair-quote'
 
 export function MarketsPane() {
   const { t } = useTranslation()

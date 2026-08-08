@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "Hapus",
       "vaultRemoveLastBlocked": "Ini satu-satunya cara masuk ke brankas Anda. Tambahkan yang lain sebelum menghapusnya.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID tidak boleh jadi satu-satunya cara masuk — sidik jari di Mac ini bisa berubah. Simpan kata sandi atau passkey.",
-      "vaultProtectsBody": "Dengan brankas, kunci API dan dompet Anda disimpan terenkripsi. Siapa pun yang menyalin profil peramban ini — atau disk komputer ini — hanya mendapat teks tersandi yang tidak bisa dibuka tanpa kata sandi atau passkey Anda.",
+      "vaultProtectsBody": "Dengan brankas, kunci API dan dompet Anda disimpan terenkripsi. Siapa pun yang menyalin profil peramban ini — atau penyimpanan perangkat ini — hanya mendapat teks tersandi yang tidak bisa dibuka tanpa kata sandi atau passkey Anda.",
       "vaultCeiling": "Ini tidak melindungi kunci saat Anda memakainya. Apa pun yang berjalan di dalam halaman ini bisa meminta kunci pada brankas yang terbuka, persis seperti aplikasi. Untuk kunci paling berharga, aplikasi desktop tetap rekomendasinya.",
       "vaultNoRecovery": "Tidak ada pemulihan. Kehilangan semua cara masuk berarti kunci terenkripsi hilang — satu-satunya jalan kembali ke aplikasi menghapus data perangkat ini.",
       "vaultDesktopToggleHint": "Kunci Anda sudah ada di keychain sistem. Aktifkan ini untuk menambahkan kata sandi atau passkey di atasnya.",
@@ -3024,7 +3024,7 @@
     "back": "Kembali",
     "saveApiKey": "Simpan API Key",
     "saving": "Menyimpan...",
-    "storedSecurely": "Tersimpan aman hanya di komputer Anda",
+    "storedSecurely": "Tersimpan aman hanya di perangkat Anda",
     "storedSecurelyDetail": "Semua kredensial disimpan dengan aman di komputer Anda menggunakan OS keychain (macOS Keychain, Windows Credential Manager, atau Linux Secret Service), yang mengenkripsinya saat tersimpan. Kredensial tidak pernah dikirim ke atau disimpan di server Pairlens. Pastikan selalu menyimpan cadangan API key Anda di tempat yang aman.",
     "storedSecurelyDetailBrowser": "Di peramban ini setiap kredensial dienkripsi dengan AES-256-GCM sebelum disimpan, di bawah kunci yang hanya bisa dibuka oleh kata sandi vault, passkey, atau Touch ID Anda. Kredensial tidak pernah dikirim ke atau disimpan di server Pairlens. Pastikan selalu menyimpan cadangan API key Anda di tempat yang aman.",
     "storedSecurelyNever": "tidak pernah dikirim ke atau disimpan di server Pairlens",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}} venue",
       "venuesCount_other": "{{count}} venue"
     },
+    "discover": {
+      "featured": "Unggulan"
+    },
+    "markets": {
+      "filterPlaceholder": "Filter market",
+      "matchCount_one": "{{count}} hasil",
+      "matchCount_other": "{{count}} hasil"
+    },
     "trade": {
       "openBook": "Buka order book",
       "spread": "spread {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "Anotasi"
       }
     },
+    "drawing": {
+      "placementLabel": "Tempatkan gambar",
+      "setPoint": "Pasang titik",
+      "cancel": "Batal",
+      "done": "Selesai",
+      "step": "Titik {{current}} dari {{total}}",
+      "dragHint": "Seret untuk mengatur posisi",
+      "textLabel": "Teks label",
+      "textPlaceholder": "Tambahkan label"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "Akun & koneksi",
@@ -4722,6 +4740,24 @@
       "trading": "Trading",
       "connected": "Terhubung",
       "perOrder": "{{percent}}% per order"
+    },
+    "accounts": {
+      "permissionsLabel": "Izin",
+      "canTrade": "Trading aktif",
+      "canTradeHint": "Order yang Anda kirim di venue ini ditandatangani dengan kunci ini. Kunci ini tidak pernah meninggalkan perangkat ini.",
+      "readOnlyTitle": "Hanya-baca",
+      "readOnlyHint": "Data market mengalir dari venue ini, tetapi order tidak bisa dikirim dengan kunci ini di sini.",
+      "unavailableTitle": "Tidak tersedia di sini",
+      "modeLabel": "Mode",
+      "apiKeyLabel": "API key",
+      "connectedLabel": "Terhubung",
+      "renameSaved": "Nama diperbarui.",
+      "renameFailed": "Nama baru tidak tersimpan.",
+      "disconnectTitle": "Putuskan {{label}}?",
+      "disconnectBody": "Kunci dihapus dari perangkat ini. Tidak ada yang berubah di exchange, dan Anda bisa menghubungkannya lagi kapan saja.",
+      "sealedTitle": "Brankas terkunci",
+      "missingTitle": "Tidak terhubung",
+      "missingBody": "Akun ini tidak lagi tersimpan di perangkat ini."
     },
     "pickers": {
       "searchPlaceholder": "Cari pair, ticker, atau nama apa pun",

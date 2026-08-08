@@ -30,10 +30,24 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
+import { useRouter } from '@tanstack/react-router'
 
+import {
+  SHELL_DEPTH_KEY,
+  planShellMove,
+  reconcileHistory,
+  shellDepthOf,
+  shellEntryCount,
+  suppressPairAdoption,
+  truncateShell,
+} from './lib/mobile-history'
+import type { ShellEntries } from './lib/mobile-history'
+import type { AnyRouter } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import type { SettingsNavId } from '@/components/user-settings-dialog'
 import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
@@ -83,8 +97,25 @@ export type MobileNavValue = {
 export type MobileActionsValue = {
   setFocusedPair: (pairKey: string) => void
   setFocusedVenue: (market: string) => void
+  /**
+   * Sets the tab WITHOUT claiming a history entry — the seed path, for a URL
+   * that names a screen the app should open on. Back from the screen an app
+   * opened on leaves the app, which is the platform's own rule; user-driven
+   * tab changes go through `selectTab` and are undoable with back.
+   */
   setActiveTab: (tab: MobileTab) => void
-  /** Identical to `setActiveTab('chart')`. The tap-the-chart gesture. */
+  /**
+   * The tab bar's own action: close whatever covers the app AND go to the
+   * tab, as one move. Two calls would consume the overlays' history entries
+   * and change the tab in separate commits, and the back button would then
+   * step through a tab change that never had an entry of its own.
+   *
+   * The first panel this opens over the bare chart claims one history entry,
+   * so back dismisses the sheet. Panel → panel claims nothing: the entry
+   * belongs to "a sheet is up", not to a tab.
+   */
+  selectTab: (tab: MobileTab) => void
+  /** Back to the bare chart: tap-the-chart, drag-down, a row that navigates. */
   dismissPanel: () => void
   pushOverlay: (overlay: MobileOverlay) => void
   popOverlay: () => void
@@ -125,6 +156,47 @@ export function openPanelFor(
   return tab === 'chart' ? null : tab
 }
 
+/** Stable identity, so closing an already-empty stack re-renders nothing. */
+const NO_OVERLAYS: Array<MobileOverlay> = []
+
+/**
+ * One history entry per step that covers the chart, stamped with the depth it
+ * represents.
+ *
+ * It goes through `router.history` rather than `window.history` so the router
+ * keeps its own `__TSR_index` bookkeeping straight — a raw `pushState` leaves
+ * the index unset and every later back/forward is then read as a `GO` of an
+ * unknown distance. The href is the CURRENT one: neither a panel nor an
+ * overlay is a route, and they must not change what a refresh or a share
+ * resolves to.
+ */
+function pushShellEntry(router: AnyRouter, depth: number): void {
+  const location = router.history.location
+  router.history.push(location.href, {
+    ...(location.state as Record<string, unknown> | undefined),
+    [SHELL_DEPTH_KEY]: depth,
+  })
+}
+
+/**
+ * Put the depth back on an entry a URL rewrite stripped it from.
+ *
+ * `navigate({ replace: true })` builds the replacement entry's state from the
+ * router's own bookkeeping and nothing else, so every focus change — picking a
+ * pair from the watchlist while the sheet is up — silently blanks the stamp of
+ * the entry the sheet is standing on. That entry then reads as the base, and
+ * the next back press closes every sheet above it at once instead of one.
+ * Measured, not theorised: pick a pair in the Watchlist, open Settings, press
+ * back, and both the overlay and the panel used to vanish together.
+ */
+function restampShellEntry(router: AnyRouter, depth: number): void {
+  const location = router.history.location
+  router.history.replace(location.href, {
+    ...(location.state as Record<string, unknown> | undefined),
+    [SHELL_DEPTH_KEY]: depth,
+  })
+}
+
 export function MobileFocusProvider({
   focusedPair,
   onFocusPair,
@@ -137,37 +209,205 @@ export function MobileFocusProvider({
 }) {
   const { market } = useChartConfig()
   const { setMarket } = useChartActions()
+  const router = useRouter()
 
   const [activeTab, setTab] = useState<MobileTab>('chart')
-  const [overlays, setOverlays] = useState<Array<MobileOverlay>>([])
+  const [overlays, setOverlays] = useState<Array<MobileOverlay>>(NO_OVERLAYS)
 
-  const setActiveTab = useCallback((tab: MobileTab) => {
-    setTab((prev) => {
-      if (prev === tab) return prev
-      track('mobile_tab_changed', { tab })
-      return tab
-    })
+  /**
+   * Tab and stack are mirrored in refs because every shell action has to read
+   * the current depth AND touch history in the same tick. Doing that inside a
+   * `setState` updater would be a side effect in a function React is free to
+   * run twice (it does, in StrictMode), and two history entries would appear
+   * for one sheet.
+   */
+  const stackRef = useRef<Array<MobileOverlay>>(overlays)
+  const tabRef = useRef<MobileTab>(activeTab)
+  /**
+   * Whether the docked panel owns a history entry — not the same question as
+   * whether a panel is docked. See `ShellEntries` in lib/mobile-history: the
+   * screen the app opens on claims nothing.
+   */
+  const panelEntryRef = useRef(false)
+  /** popstate events we caused ourselves and must not read as a user back. */
+  const pendingEventsRef = useRef(0)
+  const disarmRef = useRef<number | undefined>(undefined)
+
+  /** Walk `count` of our own entries off the stack, silently. */
+  const consumeEntries = useCallback(
+    (count: number) => {
+      if (count <= 0) return
+      pendingEventsRef.current += 1
+      // The entry we land on may name the pair the user was on BEFORE they
+      // picked one in a sheet — see the rule-3 note in lib/mobile-history.
+      suppressPairAdoption()
+      router.history.go(-count)
+      // A traversal that never lands — two chevron taps the browser coalesces
+      // into one pop, a history it refuses to walk — would leave the counter
+      // armed and swallow the user's NEXT back press. Disarm on a timer: by
+      // then the popstate has either arrived or is not coming.
+      window.clearTimeout(disarmRef.current)
+      disarmRef.current = window.setTimeout(() => {
+        pendingEventsRef.current = 0
+      }, 400)
+    },
+    [router],
+  )
+
+  const setTabState = useCallback((tab: MobileTab) => {
+    if (tabRef.current === tab) return
+    tabRef.current = tab
+    setTab(tab)
+    track('mobile_tab_changed', { tab })
   }, [])
+
+  const currentEntries = useCallback(
+    (): ShellEntries => ({
+      panel: panelEntryRef.current,
+      overlays: stackRef.current.length,
+    }),
+    [],
+  )
+
+  /**
+   * The single place shell state and history move together: one commit, one
+   * history operation, computed from the counts either side of it.
+   *
+   * Splitting it — close the overlays, then change the tab — would `go(-n)`
+   * and `push` in the same tick, and the push lands on the entry the traversal
+   * has not walked off yet.
+   */
+  const commitShell = useCallback(
+    (next: {
+      tab: MobileTab
+      overlays: Array<MobileOverlay>
+      panelEntry: boolean
+    }) => {
+      const move = planShellMove(currentEntries(), {
+        panel: next.panelEntry,
+        overlays: next.overlays.length,
+      })
+      panelEntryRef.current = next.panelEntry
+      if (next.overlays !== stackRef.current) {
+        stackRef.current = next.overlays
+        setOverlays(next.overlays)
+      }
+      setTabState(next.tab)
+      for (const depth of move.push) pushShellEntry(router, depth)
+      consumeEntries(move.back)
+    },
+    [consumeEntries, currentEntries, router, setTabState],
+  )
+
+  const setActiveTab = useCallback(
+    (tab: MobileTab) => {
+      commitShell({
+        tab,
+        overlays: stackRef.current,
+        // Never CREATES an entry (see the action's doc comment), but going
+        // back to the bare chart still releases one the panel holds — a dead
+        // entry would cost the user an extra back press to leave the app.
+        panelEntry: tab !== 'chart' && panelEntryRef.current,
+      })
+    },
+    [commitShell],
+  )
 
   const dismissPanel = useCallback(() => {
-    setTab((prev) => {
-      if (prev === 'chart') return prev
-      track('mobile_tab_changed', { tab: 'chart' })
-      return 'chart'
-    })
-  }, [])
+    commitShell({ tab: 'chart', overlays: stackRef.current, panelEntry: false })
+  }, [commitShell])
 
-  const pushOverlay = useCallback((overlay: MobileOverlay) => {
-    setOverlays((prev) => [...prev, overlay])
-  }, [])
+  const pushOverlay = useCallback(
+    (overlay: MobileOverlay) => {
+      commitShell({
+        tab: tabRef.current,
+        overlays: [...stackRef.current, overlay],
+        panelEntry: panelEntryRef.current,
+      })
+    },
+    [commitShell],
+  )
 
   const popOverlay = useCallback(() => {
-    setOverlays((prev) => (prev.length === 0 ? prev : prev.slice(0, -1)))
-  }, [])
+    if (stackRef.current.length === 0) return
+    commitShell({
+      tab: tabRef.current,
+      overlays: stackRef.current.slice(0, -1),
+      panelEntry: panelEntryRef.current,
+    })
+  }, [commitShell])
 
   const closeOverlays = useCallback(() => {
-    setOverlays((prev) => (prev.length === 0 ? prev : []))
-  }, [])
+    if (stackRef.current.length === 0) return
+    commitShell({
+      tab: tabRef.current,
+      overlays: NO_OVERLAYS,
+      panelEntry: panelEntryRef.current,
+    })
+  }, [commitShell])
+
+  const selectTab = useCallback(
+    (tab: MobileTab) => {
+      commitShell({
+        tab,
+        overlays: NO_OVERLAYS,
+        // A panel the user opened is undoable with back, whether or not it is
+        // the first one: an overlay's entry becomes the panel's in place, so
+        // the count still says one sheet is up.
+        panelEntry: tab !== 'chart',
+      })
+    },
+    [commitShell],
+  )
+
+  // Hardware/browser back. `router.history` fires exactly one notification per
+  // popstate, so the pending count is a count of events, not of entries.
+  useEffect(() => {
+    return router.history.subscribe(({ action }) => {
+      if (action.type === 'PUSH') return
+      const entries = currentEntries()
+      if (action.type === 'REPLACE') {
+        // Self-healing rather than a rule every caller of `navigate` has to
+        // remember: the rewrite has already happened by the time we hear about
+        // it, and re-stamping is one more REPLACE that then agrees with the
+        // stack, so it cannot loop.
+        const depth = shellEntryCount(entries)
+        if (
+          depth > 0 &&
+          shellDepthOf(router.history.location.state) !== depth
+        ) {
+          restampShellEntry(router, depth)
+        }
+        return
+      }
+      const decision = reconcileHistory({
+        pendingEvents: pendingEventsRef.current,
+        entryDepth: shellDepthOf(router.history.location.state),
+        shellDepth: shellEntryCount(entries),
+      })
+      if (decision.type === 'consumed') {
+        pendingEventsRef.current -= 1
+        return
+      }
+      if (decision.type === 'settled') return
+      // The browser has already moved: apply the landing state, never push or
+      // consume for it.
+      const landing = truncateShell(entries, decision.depth)
+      panelEntryRef.current = landing.panel
+      const kept =
+        landing.overlays === 0
+          ? NO_OVERLAYS
+          : stackRef.current.slice(0, landing.overlays)
+      if (kept !== stackRef.current) {
+        stackRef.current = kept
+        setOverlays(kept)
+      }
+      if (landing.dismissesPanel) setTabState('chart')
+      suppressPairAdoption()
+    })
+  }, [router, currentEntries, setTabState])
+
+  useEffect(() => () => window.clearTimeout(disarmRef.current), [])
 
   const focus = useMemo<MobileFocusValue>(
     () => ({ focusedPair, focusedVenue: market }),
@@ -186,6 +426,7 @@ export function MobileFocusProvider({
       setFocusedPair: onFocusPair,
       setFocusedVenue: setMarket,
       setActiveTab,
+      selectTab,
       dismissPanel,
       pushOverlay,
       popOverlay,
@@ -195,6 +436,7 @@ export function MobileFocusProvider({
       onFocusPair,
       setMarket,
       setActiveTab,
+      selectTab,
       dismissPanel,
       pushOverlay,
       popOverlay,

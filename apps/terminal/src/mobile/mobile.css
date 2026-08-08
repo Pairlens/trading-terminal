@@ -46,32 +46,80 @@
     border-radius: 99px;
   }
 
+  /* The sheet TRAVELS between panels instead of teleporting: watchlist 150 →
+     trade 160 → copilot 186 are three heights of one sheet, and a jump cut
+     between them is what made a tab switch read as a page navigation.
+     Background travels too, so the co-pilot's darker fill fades in rather
+     than blinking.
+
+     `!important` on the transition is not decoration. vaul owns this
+     element's inline `transition` — it writes `transform .5s …` on release
+     and `none` while dragging — so a plain class declaration is overwritten
+     the first time a sheet is dragged and never applies again. The important
+     rule therefore also has to RESTATE vaul's transform transition, or the
+     drag release would stop animating. The dragging class (higher
+     specificity, also important) hands control straight back for the duration
+     of the drag. */
   .pl-sheet {
     background: rgba(20, 19, 17, 0.97);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 24px 24px 0 0;
     box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.65);
+    position: relative;
+    transition:
+      transform 0.5s cubic-bezier(0.32, 0.72, 0, 1),
+      top 280ms cubic-bezier(0.32, 0.72, 0, 1),
+      background-color 240ms ease-out !important;
+  }
+
+  .pl-sheet.vaul-dragging {
+    transition: none !important;
+  }
+
+  /* The panel content fades through the swap; the sheet itself does not. */
+  .pl-sheet-scroll {
+    transition: opacity 170ms ease-out;
+  }
+
+  .pl-sheet-scroll[data-swapping='true'] {
+    opacity: 0;
+    transition-duration: 110ms;
   }
 
   /* Co-pilot keeps the sheet geometry and swaps the fill, plus the 2px magic
-     hairline that marks every AI surface in this product. */
-  .pl-sheet-copilot {
-    background: #131217;
-    position: relative;
-  }
-
-  .pl-sheet-copilot::before {
+     hairline that marks every AI surface in this product. The hairline is
+     declared on every sheet and revealed by opacity so switching INTO the
+     co-pilot fades it in instead of popping a gradient bar into place. */
+  .pl-sheet::before {
     content: '';
     position: absolute;
     inset: 0 0 auto 0;
     height: 2px;
     border-radius: 24px 24px 0 0;
+    opacity: 0;
+    transition: opacity 240ms ease-out;
     background: linear-gradient(
       90deg,
       var(--magic-1),
       var(--magic-2),
       var(--magic-3)
     );
+  }
+
+  .pl-sheet-copilot {
+    background: #131217;
+  }
+
+  .pl-sheet-copilot::before {
+    opacity: 1;
+  }
+
+  /* A sheet-coloured sticky strip INSIDE a sheet's scroll region (the
+     watchlist's search/chips header): solid, so rows scrolling beneath cannot
+     ghost through `.pl-sheet`'s 0.97 alpha, and free of the sheet's hairline
+     pseudo, transition and edge chrome. */
+  .pl-sheet-solid {
+    background: rgb(20, 19, 17);
   }
 
   .pl-handle {
@@ -151,19 +199,67 @@
     animation: plPulse 1.8s ease-in-out infinite;
   }
 
-  /* 28px rounded-square venue mark — white plate, dark short name. */
+  /* 28px CIRCULAR venue mark — white plate, dark short name.
+     The design drew an 8px rounded square; round is the shipped answer, so
+     that a venue and an asset read as the same kind of thing in the same row
+     (the pair avatar beside it is a circle, and a square next to it looked
+     like a different control). `overflow: hidden` is what crops a square
+     logo into the circle, so it stays. */
   .pl-venue-mark {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 28px;
     height: 28px;
-    border-radius: 8px;
+    border-radius: 999px;
     background: #ffffff;
     color: #16130f;
     font-weight: 700;
     overflow: hidden;
     flex: none;
+  }
+
+  /* ── Motion ────────────────────────────────────────────────────── */
+
+  /* The tab bar's active pill. Absolutely positioned and tracked to the live
+     geometry of the active item (see mobile-tab-bar.tsx), so it slides and
+     resizes in lockstep with the label reveal instead of guessing at where
+     the item will end up. */
+  .pl-tab-pill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.11);
+    pointer-events: none;
+    transition: opacity 180ms ease-out;
+    will-change: transform;
+  }
+
+  /* The label reveal. `0fr → 1fr` measures itself, which is what keeps the
+     pill honest in every locale — a max-width would finish early in English
+     and clip in German. */
+  .pl-tab-label {
+    display: grid;
+    grid-template-columns: 0fr;
+    transition: grid-template-columns 260ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .pl-tab-label[data-on='true'] {
+    grid-template-columns: 1fr;
+  }
+
+  .pl-tab-item {
+    transition: color 200ms ease-out;
+  }
+
+  /* The chart band grows and shrinks with the sheet rather than snapping to
+     the new height a frame before the sheet arrives. */
+  .pl-chart-band {
+    transition:
+      height 280ms cubic-bezier(0.32, 0.72, 0, 1),
+      bottom 280ms cubic-bezier(0.32, 0.72, 0, 1),
+      opacity 200ms ease-out;
   }
 
   @keyframes plPulse {
@@ -176,9 +272,25 @@
     }
   }
 
+  /* Reduced motion is a jump cut, not a slower cut: every one of these is a
+     position or a height change, and easing them slowly is worse for someone
+     who asked for less movement than not easing them at all. */
   @media (prefers-reduced-motion: reduce) {
     .pl-live-dot {
       animation: none;
+    }
+
+    .pl-sheet {
+      transition: none !important;
+    }
+
+    .pl-sheet-scroll,
+    .pl-sheet::before,
+    .pl-tab-pill,
+    .pl-tab-label,
+    .pl-tab-item,
+    .pl-chart-band {
+      transition: none;
     }
   }
 }
@@ -187,6 +299,22 @@
    shell owns is hidden the moment the document is stamped mobile. */
 html[data-viewport='mobile'] [data-pl-desktop-only] {
   display: none !important;
+}
+
+/* Shared dialogs portal to <body> at z-50, below the mobile overlay scale
+   (sheets 40, tab bar 50, full-screen overlays 60). On a phone every dialog is
+   the topmost interaction — vault unlock, destructive confirms — so the whole
+   dialog layer rides above the overlays. The floating primitives that can open
+   INSIDE a dialog (popover, select, dropdown) come along at the same level;
+   equal z-index resolves by portal order, which is the order they opened. */
+html[data-viewport='mobile'] [data-slot='dialog-overlay'],
+html[data-viewport='mobile'] [data-slot='dialog-content'],
+html[data-viewport='mobile'] [data-slot='alert-dialog-overlay'],
+html[data-viewport='mobile'] [data-slot='alert-dialog-content'],
+html[data-viewport='mobile'] [data-slot='popover-content'],
+html[data-viewport='mobile'] [data-slot='select-content'],
+html[data-viewport='mobile'] [data-slot='dropdown-menu-content'] {
+  z-index: 70;
 }
 
 /* Pin the gesture surface: pan is the only browser-owned touch behavior, so

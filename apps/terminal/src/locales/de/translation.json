@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "Entfernen",
       "vaultRemoveLastBlocked": "Das ist der einzige Weg in deinen Tresor. Füge einen weiteren hinzu, bevor du ihn entfernst.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID darf nicht der einzige Weg hinein sein — die Fingerabdrücke auf diesem Mac können sich ändern. Behalte ein Passwort oder einen Passkey.",
-      "vaultProtectsBody": "Mit einem Tresor werden deine API- und Wallet-Schlüssel verschlüsselt gespeichert. Wer dieses Browserprofil — oder die Festplatte dieses Rechners — kopiert, bekommt Chiffrat, das er ohne dein Passwort oder deinen Passkey nicht öffnen kann.",
+      "vaultProtectsBody": "Mit einem Tresor werden deine API- und Wallet-Schlüssel verschlüsselt gespeichert. Wer dieses Browserprofil — oder den Speicher dieses Geräts — kopiert, bekommt Chiffrat, das er ohne dein Passwort oder deinen Passkey nicht öffnen kann.",
       "vaultCeiling": "Es schützt die Schlüssel nicht, während du sie benutzt. Alles, was in dieser Seite läuft, kann den entsperrten Tresor genauso nach einem Schlüssel fragen wie die App selbst. Für deine wertvollsten Schlüssel bleibt die Desktop-App die Empfehlung.",
       "vaultNoRecovery": "Es gibt keine Wiederherstellung. Verlierst du jeden Weg hinein, sind die verschlüsselten Schlüssel weg — der einzige Weg zurück in die App löscht die Daten dieses Geräts.",
       "vaultDesktopToggleHint": "Deine Schlüssel liegen bereits im Systemschlüsselbund. Aktiviere dies, um zusätzlich ein Passwort oder einen Passkey davorzusetzen.",
@@ -3024,7 +3024,7 @@
     "back": "Zurück",
     "saveApiKey": "API-Key speichern",
     "saving": "Wird gespeichert...",
-    "storedSecurely": "Sicher, nur auf deinem Computer gespeichert",
+    "storedSecurely": "Sicher, nur auf deinem Gerät gespeichert",
     "storedSecurelyDetail": "Alle Zugangsdaten werden sicher auf deinem Computer im OS-Schlüsselbund gespeichert (macOS Keychain, Windows Credential Manager oder Linux Secret Service), der sie im Ruhezustand verschlüsselt. Sie werden niemals an Pairlens-Server gesendet oder dort gespeichert. Sichere deine API-Keys stets zusätzlich an einem sicheren Ort.",
     "storedSecurelyDetailBrowser": "In diesem Browser werden alle Zugangsdaten mit AES-256-GCM verschlüsselt, bevor sie gespeichert werden, unter einem Schlüssel, den nur dein Tresor-Passwort, dein Passkey oder Touch ID öffnen kann. Sie werden niemals an Pairlens-Server gesendet oder dort gespeichert. Sichere deine API-Keys stets zusätzlich an einem sicheren Ort.",
     "storedSecurelyNever": "niemals an Pairlens-Server gesendet oder dort gespeichert",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}} Venue",
       "venuesCount_other": "{{count}} Venues"
     },
+    "discover": {
+      "featured": "Empfohlen"
+    },
+    "markets": {
+      "filterPlaceholder": "Märkte filtern",
+      "matchCount_one": "{{count}} Treffer",
+      "matchCount_other": "{{count}} Treffer"
+    },
     "trade": {
       "openBook": "Orderbuch öffnen",
       "spread": "Spread {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "Anmerkungen"
       }
     },
+    "drawing": {
+      "placementLabel": "Zeichnung platzieren",
+      "setPoint": "Punkt setzen",
+      "cancel": "Abbrechen",
+      "done": "Fertig",
+      "step": "Punkt {{current}} von {{total}}",
+      "dragHint": "Zum Platzieren ziehen",
+      "textLabel": "Beschriftung",
+      "textPlaceholder": "Beschriftung hinzufügen"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "Konten & Verbindungen",
@@ -4722,6 +4740,24 @@
       "trading": "Handel",
       "connected": "Verbunden",
       "perOrder": "{{percent}}% pro Order"
+    },
+    "accounts": {
+      "permissionsLabel": "Berechtigungen",
+      "canTrade": "Handel aktiviert",
+      "canTradeHint": "Orders, die du auf dieser Venue platzierst, werden mit diesem Key signiert. Er verlässt dieses Gerät nie.",
+      "readOnlyTitle": "Nur lesen",
+      "readOnlyHint": "Marktdaten streamen von dieser Venue, aber Orders lassen sich mit diesem Key hier nicht platzieren.",
+      "unavailableTitle": "Hier nicht verfügbar",
+      "modeLabel": "Modus",
+      "apiKeyLabel": "API-Key",
+      "connectedLabel": "Verbunden",
+      "renameSaved": "Name aktualisiert.",
+      "renameFailed": "Der neue Name wurde nicht gespeichert.",
+      "disconnectTitle": "{{label}} trennen?",
+      "disconnectBody": "Der Key wird von diesem Gerät entfernt. Auf der Exchange ändert sich nichts, und du kannst ihn jederzeit wieder verbinden.",
+      "sealedTitle": "Tresor gesperrt",
+      "missingTitle": "Nicht verbunden",
+      "missingBody": "Dieses Konto ist auf diesem Gerät nicht mehr gespeichert."
     },
     "pickers": {
       "searchPlaceholder": "Beliebiges Paar, Ticker oder Namen suchen",

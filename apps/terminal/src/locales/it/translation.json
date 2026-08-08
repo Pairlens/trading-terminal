@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "Rimuovi",
       "vaultRemoveLastBlocked": "Questo è l'unico modo per entrare nella cassaforte. Aggiungine un altro prima di rimuoverlo.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID non può essere l'unico modo per entrare: le impronte su questo Mac possono cambiare. Tieni una password o un passkey.",
-      "vaultProtectsBody": "Con una cassaforte, le tue chiavi API e di wallet sono salvate cifrate. Chi copia questo profilo del browser — o il disco di questo computer — ottiene testo cifrato che non può aprire senza la tua password o la tua passkey.",
+      "vaultProtectsBody": "Con una cassaforte, le tue chiavi API e di wallet sono salvate cifrate. Chi copia questo profilo del browser — o la memoria di questo dispositivo — ottiene testo cifrato che non può aprire senza la tua password o la tua passkey.",
       "vaultCeiling": "Non protegge le chiavi mentre le stai usando. Qualsiasi cosa in esecuzione in questa pagina può chiedere una chiave alla cassaforte sbloccata, esattamente come fa l'app. Per le chiavi più preziose l'app desktop resta la raccomandazione.",
       "vaultNoRecovery": "Non c'è recupero. Se perdi ogni modo di entrare, le chiavi cifrate sono perse: l'unico modo di rientrare nell'app cancella i dati di questo dispositivo.",
       "vaultDesktopToggleHint": "Le tue chiavi sono già nel portachiavi di sistema. Attiva questa opzione per aggiungere sopra una password o una passkey.",
@@ -3024,7 +3024,7 @@
     "back": "Indietro",
     "saveApiKey": "Salva chiave API",
     "saving": "Salvataggio in corso...",
-    "storedSecurely": "Memorizzato in modo sicuro solo sul tuo computer",
+    "storedSecurely": "Memorizzato in modo sicuro solo sul tuo dispositivo",
     "storedSecurelyDetail": "Tutte le credenziali sono memorizzate in modo sicuro sul tuo computer usando il keychain del sistema operativo (macOS Keychain, Windows Credential Manager o Linux Secret Service), che le cifra a riposo. Non vengono mai inviate né memorizzate sui server di Pairlens. Assicurati di mantenere sempre un backup delle tue chiavi API in un luogo sicuro.",
     "storedSecurelyDetailBrowser": "In questo browser ogni credenziale viene cifrata con AES-256-GCM prima di essere salvata, sotto una chiave che solo la password del tuo archivio, la tua passkey o Touch ID possono aprire. Non vengono mai inviate né memorizzate sui server di Pairlens. Assicurati di mantenere sempre un backup delle tue chiavi API in un luogo sicuro.",
     "storedSecurelyNever": "mai inviate né memorizzate sui server di Pairlens",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}} piattaforma",
       "venuesCount_other": "{{count}} piattaforme"
     },
+    "discover": {
+      "featured": "In evidenza"
+    },
+    "markets": {
+      "filterPlaceholder": "Filtra i mercati",
+      "matchCount_one": "{{count}} risultato",
+      "matchCount_other": "{{count}} risultati"
+    },
     "trade": {
       "openBook": "Apri l'order book",
       "spread": "spread {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "Annotazioni"
       }
     },
+    "drawing": {
+      "placementLabel": "Posiziona disegno",
+      "setPoint": "Imposta punto",
+      "cancel": "Annulla",
+      "done": "Fatto",
+      "step": "Punto {{current}} di {{total}}",
+      "dragHint": "Trascina per posizionare",
+      "textLabel": "Testo dell'etichetta",
+      "textPlaceholder": "Aggiungi un'etichetta"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "Account e connessioni",
@@ -4722,6 +4740,24 @@
       "trading": "Trading",
       "connected": "Connesso",
       "perOrder": "{{percent}}% per ordine"
+    },
+    "accounts": {
+      "permissionsLabel": "Permessi",
+      "canTrade": "Trading consentito",
+      "canTradeHint": "Gli ordini che invii su questa piattaforma vengono firmati con questa chiave. Non lascia mai questo dispositivo.",
+      "readOnlyTitle": "Sola lettura",
+      "readOnlyHint": "I dati di mercato arrivano da questa piattaforma, ma qui con questa chiave non si possono inviare ordini.",
+      "unavailableTitle": "Non disponibile qui",
+      "modeLabel": "Modalità",
+      "apiKeyLabel": "Chiave API",
+      "connectedLabel": "Connesso il",
+      "renameSaved": "Nome aggiornato.",
+      "renameFailed": "Il nuovo nome non è stato salvato.",
+      "disconnectTitle": "Disconnettere {{label}}?",
+      "disconnectBody": "La chiave viene rimossa da questo dispositivo. Sull'exchange non cambia nulla e potrai ricollegarla quando vuoi.",
+      "sealedTitle": "Cassaforte bloccata",
+      "missingTitle": "Non connesso",
+      "missingBody": "Questo account non è più memorizzato su questo dispositivo."
     },
     "pickers": {
       "searchPlaceholder": "Cerca coppie, ticker o nomi",

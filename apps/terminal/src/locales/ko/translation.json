@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "제거",
       "vaultRemoveLastBlocked": "이것이 보관함으로 들어가는 유일한 방법입니다. 제거하기 전에 다른 방법을 추가하세요.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID만 유일한 입구로 둘 수는 없습니다. 이 Mac의 지문은 바뀔 수 있습니다. 비밀번호나 패스키를 남겨 두세요.",
-      "vaultProtectsBody": "보관함이 있으면 API 키와 지갑 키가 암호화되어 저장됩니다. 이 브라우저 프로필 — 또는 이 컴퓨터의 디스크 — 를 복사한 사람은 당신의 비밀번호나 패스키 없이는 열 수 없는 암호문만 얻습니다.",
+      "vaultProtectsBody": "보관함이 있으면 API 키와 지갑 키가 암호화되어 저장됩니다. 이 브라우저 프로필 — 또는 이 기기의 저장소 — 를 복사한 사람은 당신의 비밀번호나 패스키 없이는 열 수 없는 암호문만 얻습니다.",
       "vaultCeiling": "사용 중인 키는 보호하지 않습니다. 이 페이지 안에서 실행되는 것은 무엇이든 앱과 똑같이 잠금 해제된 보관함에 키를 요청할 수 있습니다. 가장 중요한 키에는 여전히 데스크톱 앱을 권장합니다.",
       "vaultNoRecovery": "복구는 없습니다. 모든 진입 수단을 잃으면 암호화된 키도 사라집니다 — 앱으로 돌아가는 유일한 방법은 이 기기의 데이터를 지우는 것입니다.",
       "vaultDesktopToggleHint": "키는 이미 시스템 키체인에 있습니다. 그 위에 비밀번호나 패스키를 더하려면 이 옵션을 켜세요.",
@@ -3024,7 +3024,7 @@
     "back": "뒤로",
     "saveApiKey": "API 키 저장",
     "saving": "저장 중...",
-    "storedSecurely": "이 컴퓨터에만 안전하게 저장됩니다",
+    "storedSecurely": "이 기기에만 안전하게 저장됩니다",
     "storedSecurelyDetail": "모든 자격 증명은 OS 키체인(macOS 키체인, Windows 자격 증명 관리자, Linux Secret Service)을 사용해 이 컴퓨터에 안전하게 저장되며, 저장 시 암호화됩니다. Pairlens 서버로 전송되거나 저장되지 않습니다. API 키는 항상 안전한 곳에 백업해 두세요.",
     "storedSecurelyDetailBrowser": "이 브라우저에서는 모든 자격 증명이 저장되기 전에 AES-256-GCM으로 암호화되며, 그 키는 보관함 비밀번호나 패스키, Touch ID로만 열 수 있습니다. Pairlens 서버로 전송되거나 저장되지 않습니다. API 키의 백업은 반드시 안전한 곳에 보관하세요.",
     "storedSecurelyNever": "Pairlens 서버로 전송되거나 저장되지 않습니다",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "거래소 {{count}}개",
       "venuesCount_other": "거래소 {{count}}개"
     },
+    "discover": {
+      "featured": "추천"
+    },
+    "markets": {
+      "filterPlaceholder": "마켓 필터링",
+      "matchCount_one": "일치 {{count}}개",
+      "matchCount_other": "일치 {{count}}개"
+    },
     "trade": {
       "openBook": "호가창 열기",
       "spread": "스프레드 {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "주석"
       }
     },
+    "drawing": {
+      "placementLabel": "그리기 배치",
+      "setPoint": "점 지정",
+      "cancel": "취소",
+      "done": "완료",
+      "step": "점 {{current}}/{{total}}",
+      "dragHint": "드래그하여 위치 지정",
+      "textLabel": "라벨 텍스트",
+      "textPlaceholder": "라벨 추가"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "계정 & 연결",
@@ -4722,6 +4740,24 @@
       "trading": "거래",
       "connected": "연결됨",
       "perOrder": "주문당 {{percent}}%"
+    },
+    "accounts": {
+      "permissionsLabel": "권한",
+      "canTrade": "거래 가능",
+      "canTradeHint": "이 거래소에서 내는 주문은 이 키로 서명됩니다. 키는 이 기기를 벗어나지 않습니다.",
+      "readOnlyTitle": "읽기 전용",
+      "readOnlyHint": "이 거래소의 시세 데이터는 실시간으로 받지만, 여기서는 이 키로 주문을 낼 수 없습니다.",
+      "unavailableTitle": "여기서는 사용 불가",
+      "modeLabel": "모드",
+      "apiKeyLabel": "API 키",
+      "connectedLabel": "연결됨",
+      "renameSaved": "이름이 업데이트되었습니다.",
+      "renameFailed": "새 이름을 저장하지 못했습니다.",
+      "disconnectTitle": "{{label}} 연결을 해제할까요?",
+      "disconnectBody": "이 기기에서 키가 삭제됩니다. 거래소에서는 아무것도 바뀌지 않으며, 언제든 다시 연결할 수 있습니다.",
+      "sealedTitle": "보관함 잠김",
+      "missingTitle": "연결되지 않음",
+      "missingBody": "이 계정은 더 이상 이 기기에 저장되어 있지 않습니다."
     },
     "pickers": {
       "searchPlaceholder": "페어, 티커, 이름으로 검색",

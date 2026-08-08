@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "Remove",
       "vaultRemoveLastBlocked": "This is the only way into your vault. Add another before removing it.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID cannot be the only way in — the fingerprints on this Mac can change. Keep a password or a passkey.",
-      "vaultProtectsBody": "With a vault, your API keys and wallet keys are stored encrypted. Someone who copies this browser profile — or this computer's disk — gets ciphertext they cannot open without your password or your passkey.",
+      "vaultProtectsBody": "With a vault, your API keys and wallet keys are stored encrypted. Someone who copies this browser profile — or this device's storage — gets ciphertext they cannot open without your password or your passkey.",
       "vaultCeiling": "It does not protect keys while you are using them. Anything running inside this page can ask the unlocked vault for a key, the same way the app does. The desktop app remains the recommendation for your most valuable keys.",
       "vaultNoRecovery": "There is no recovery. Lose every way in and the encrypted keys are gone — the only way back into the app erases this device's data.",
       "vaultDesktopToggleHint": "Your keys are already in the system keychain. Turn this on to add a password or a passkey on top.",
@@ -3024,7 +3024,7 @@
     "back": "Back",
     "saveApiKey": "Save API Key",
     "saving": "Saving...",
-    "storedSecurely": "Stored securely only on your computer",
+    "storedSecurely": "Stored securely only on your device",
     "storedSecurelyDetail": "All credentials are stored securely on your computer using the OS keychain (macOS Keychain, Windows Credential Manager, or Linux Secret Service), which encrypts them at rest. They are never sent to or stored on Pairlens servers. Make sure to always keep a backup of your API keys in a safe place.",
     "storedSecurelyDetailBrowser": "In this browser every credential is encrypted with AES-256-GCM before it is saved, under a key that only your vault password, passkey or Touch ID can unwrap. They are never sent to or stored on Pairlens servers. Make sure to always keep a backup of your API keys in a safe place.",
     "storedSecurelyNever": "never sent to or stored on Pairlens servers",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}} venue",
       "venuesCount_other": "{{count}} venues"
     },
+    "discover": {
+      "featured": "Featured"
+    },
+    "markets": {
+      "filterPlaceholder": "Filter markets",
+      "matchCount_one": "{{count}} match",
+      "matchCount_other": "{{count}} matches"
+    },
     "trade": {
       "openBook": "Open the order book",
       "spread": "spread {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "Annotate"
       }
     },
+    "drawing": {
+      "placementLabel": "Place drawing",
+      "setPoint": "Set point",
+      "cancel": "Cancel",
+      "done": "Done",
+      "step": "Point {{current}} of {{total}}",
+      "dragHint": "Drag to position",
+      "textLabel": "Label text",
+      "textPlaceholder": "Add a label"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "Accounts & connections",
@@ -4722,6 +4740,24 @@
       "trading": "Trading",
       "connected": "Connected",
       "perOrder": "{{percent}}% per order"
+    },
+    "accounts": {
+      "permissionsLabel": "Permissions",
+      "canTrade": "Trading enabled",
+      "canTradeHint": "Orders you place on this venue are signed with this key. It never leaves this device.",
+      "readOnlyTitle": "Read-only",
+      "readOnlyHint": "Market data streams from this venue, but orders cannot be placed with this key here.",
+      "unavailableTitle": "Not available here",
+      "modeLabel": "Mode",
+      "apiKeyLabel": "API key",
+      "connectedLabel": "Connected",
+      "renameSaved": "Name updated.",
+      "renameFailed": "The new name was not saved.",
+      "disconnectTitle": "Disconnect {{label}}?",
+      "disconnectBody": "The key is removed from this device. Nothing changes on the exchange, and you can connect it again any time.",
+      "sealedTitle": "Vault locked",
+      "missingTitle": "Not connected",
+      "missingBody": "This account is no longer stored on this device."
     },
     "pickers": {
       "searchPlaceholder": "Search any pair, ticker or name",

@@ -122,14 +122,20 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
   // Compact: the chart ends where the sheet begins — the same min() the sheet
   // top uses, so the two agree on short phones. Full: it ends above the
   // toolbar when one is docked.
+  //
+  // BOTH branches resolve to a `height`, and that is load-bearing rather than
+  // tidy: the band eases between them, and a transition from a length to
+  // `auto` (which is what dropping `height` and leaning on `bottom` gives)
+  // does not animate at all. One property, two lengths, both directions.
+  const fullHeight = `calc(100svh - var(--pl-chart-top) - var(--pl-tabbar-total)${
+    footer ? ` - ${FOOTER_HEIGHT_PX}px` : ''
+  })`
   const chartFrame =
     band === 'compact' && bandHeight != null
       ? {
           height: `min(${bandHeight}px, calc(100svh - ${MIN_SHEET_HEIGHT}px - var(--pl-chart-top)))`,
         }
-      : footer
-        ? { bottom: `${FOOTER_HEIGHT_PX}px` }
-        : undefined
+      : { height: fullHeight }
 
   return (
     <div
@@ -149,8 +155,15 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
         // `isolate` keeps the engine's internal z-indexed canvases (up to
         // z-30) inside their own stacking context, so the tap layer at z-10
         // actually sits above the chart rather than under its UI canvas.
+        //
+        // `pl-chart-band` eases the height so the chart follows the sheet
+        // instead of snapping a frame ahead of it. That does mean the engine's
+        // ResizeObserver fires through the transition rather than once — see
+        // the measurement in the polish notes; a WebGL viewport resize is a
+        // uniform update and a redraw of a chart that is already redrawing
+        // every tick, and the measured frame budget held.
         <div
-          className="absolute inset-x-0 top-0 isolate bottom-0"
+          className="pl-chart-band absolute inset-x-0 top-0 isolate bottom-0"
           style={{ opacity, ...chartFrame }}
         >
           <MobileChart band={band} />
@@ -189,7 +202,7 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
           dragged into a price several screens below the plot. */}
       {overlay ? (
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 top-0 z-20"
+          className="pl-chart-band pointer-events-none absolute inset-x-0 bottom-0 top-0 z-20"
           style={chartFrame}
         >
           {overlay}

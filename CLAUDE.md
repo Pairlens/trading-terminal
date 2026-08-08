@@ -6,7 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 AI-native crypto spot trading terminal. **Desktop-first, but the browser is a shipped surface** — the primary distribution is a Tauri desktop app (`apps/desktop/`), and a hosted web terminal runs at `terminal.pairlens.finance` (the marketing site's main CTA). The browser build is a real product, not a dev harness; what it cannot do is bounded and explicit. Four connectors (Coinbase, Gate, KuCoin, MEXC) serve REST without CORS headers and stream no candle history, so they declare `requiresDesktop` and refuse in a browser with a typed `PlatformRestrictedError` rather than presenting a dead chart. Desktop additionally gets the OS keychain, background bots, wake-blocking and native windows. Deterministic strategies generate signals, an AI co-pilot provides contextual analysis (APPROVE/BLOCK/WATCH), and user-configurable risk guardrails are enforced at the infrastructure level. The AI augments decisions but never overrides risk limits.
 
-**Credential storage is local-only.** Due to legal constraints, user wallets and exchange API keys must never be persisted on Pairlens servers. On desktop they are stored in the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service) via the `keychain_*` Tauri commands in `apps/desktop/src-tauri` (backed by the Rust `keyring` crate). In browser dev/testing builds they are stored in localStorage encrypted at rest with AES-256-GCM (non-extractable WebCrypto key in IndexedDB) — this resists reading secrets off disk but not same-origin XSS; desktop is the supported home for live-trading secrets. The frontend entry point is `apps/terminal/src/lib/keychain.ts`. The App Server database must not contain plaintext or encrypted user exchange credentials.
+**Phones get the Mobile Trading Terminal.** Below 768px the same URL boots a chart-centric five-tab surface — Watchlist · Trade · Chart · Co-pilot · Discover — built from the same codebase, under `apps/terminal/src/mobile/`. It is a trading surface, not a shrunken dashboard: order entry with the same guarded order path, a full order book, drawings, the co-pilot, and the same connect-an-account flow. Architecture in [Mobile Terminal](#mobile-terminal).
+
+**Credential storage is local-only.** Due to legal constraints, user wallets and exchange API keys must never be persisted on Pairlens servers. On desktop they are stored in the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service) via the `keychain_*` Tauri commands in `apps/desktop/src-tauri` (backed by the Rust `keyring` crate). In a browser — the hosted web terminal and the phone — they live in the credential vault: AES-256-GCM ciphertext in localStorage under one data key, which every protector the user enrolls (a vault password, a passkey via PRF, Touch ID on macOS) wraps a copy of. Enrolling a protector is a precondition for the first credential, so a browser profile holds ciphertext or holds nothing, and a sealed vault throws rather than reporting a value as absent. That resists reading secrets off disk; it does not resist same-origin XSS, so desktop remains the strongest home for live-trading secrets. The frontend entry point is `apps/terminal/src/lib/keychain.ts` (vault internals in `src/lib/security/vault/`). The App Server database must not contain plaintext or encrypted user exchange credentials.
 
 **This repo is the public, source-available side of Pairlens — everything needed to run it.** It is licensed FSL-1.1-Apache-2.0 (each release converts to Apache 2.0 after two years; the external `@pairlens/fast-financial-charts` repo stays MIT). The one component whose source is not (yet) published is the App Server: a small optional backend for sign-in, cross-device sync, and a hosted AI proxy, developed in a separate private repo with plans to publish it. The terminal works fully standalone without it — auth is lean-in, persistence is local by default, and AI works with bring-your-own-key provider plugins.
 
@@ -66,15 +68,30 @@ DESKTOP APP (Tauri)                       OPTIONAL CLOUD (not in this repo)
 
 ALSO AVAILABLE
   Hosted web terminal (terminal.pairlens.finance, Vercel) — 11 of 15 venues
+  Mobile terminal — the same URL below 768px (apps/terminal/src/mobile/)
   CLI (bun apps/cli/src/index.ts)
   pairlens.finance (marketing, Vercel)
 ```
 
 **App Server** (optional; the backend whose source isn't published yet — see "What is Pairlens" above): the REST API the terminal talks to when signed in — auth (BetterAuth email OTP), remote persistence, AI proxy, and external-data endpoints (news, top coins, symbol logos, ...). Reached via `apps/terminal/src/lib/api.ts` (`VITE_APP_SERVER_URL`, default `http://localhost:4046`; production `https://api.pairlens.finance`). It never stores exchange credentials and never talks to exchanges — AI routes receive market data from the Terminal (pushed in request body).
 
-**Terminal** (`apps/terminal/`): TanStack Start SPA. Connects to App Server for REST. Market data streams directly from exchanges via **market connector plugins** (OKX, Binance, ByBit, Coinbase, Kraken, and 9 more CEXs, plus broker/DEX connectors) — no intermediate server. The `MarketDataProvider` wraps the plugin system for candle, ticker, and orderbook subscriptions.
+**Terminal** (`apps/terminal/`): TanStack Start SPA. Connects to App Server for REST. Market data streams directly from exchanges via **market connector plugins** (OKX, Binance, ByBit, Coinbase, Kraken, and 9 more CEXs, plus broker/DEX connectors) — no intermediate server. The `MarketDataProvider` wraps the plugin system for candle, ticker, and orderbook subscriptions. One codebase serves two shells: the desktop pane grid, and the mobile terminal below 768px.
 
 **CLI** (`apps/cli/`): Bun-based CLI for headless market interaction. Uses the same connector plugins and strategy engine as the terminal.
+
+### Mobile Terminal
+
+Below 768px the terminal renders a different shell. `apps/terminal/src/routes/_terminal.tsx` branches on `useViewportMode()` and returns `<MobileTerminalRoot />` in place of the whole desktop `SidebarProvider` subtree, `<Outlet />` included — so on a phone no desktop chrome and no child route component ever mounts. The gate is a pre-hydration inline script in `__root.tsx` that stamps `html[data-viewport]`, read back through `useSyncExternalStore`: correct on the first render, so a phone never paints a desktop frame. Every global provider sits above the branch, which is what lets a live resize swap shells without dropping plugins, sockets or the watchlist store.
+
+Everything mobile lives under `apps/terminal/src/mobile/` — `primitives/`, `chart/`, `panels/`, `screens/`, `lib/`, plus the shell files at the root of that directory. The rules that hold it together:
+
+- **Five destinations, one chart.** The tabs are local state, not routes — router-driven tabs would either unmount the chart or need a keep-alive hack, and local state is what ports to a native app. `/pair/$pair` stays canonical; `use-mobile-route-sync.ts` rewrites it on every focus change and redirects the desktop-only routes back with a single toast. Panels are bottom sheets layered over a chart that never unmounts, and tapping the chart dismisses whichever one is open.
+- **Separable.** Nothing outside `src/mobile/` imports from it, with three sanctioned exceptions: `routes/_terminal.tsx` (the branch), `components/onboarding/spotlight/onboarding-spotlight.tsx` (onboarding lives outside `_terminal` and reads the same viewport gate), and the `@import` in `styles.css`. `mobile/__tests__/separability.test.ts` fails loudly on a fourth. That one-way edge is what makes a native app or a browser extension a re-host rather than a rewrite.
+- **No `stateScope`.** The mobile `ChartTerminalProvider` is mounted without one, so timeframe and drawings persist to the desktop's own keys — a level drawn on the phone is there on the laptop.
+- **Credentials take the identical path.** The mobile connect flow mounts the same wizard, the same vault gate and the same keychain writes as the desktop Accounts page; both drive one shared hook, `hooks/use-connect-wizard-state.ts`. Orders go through the same guarded `placeOrder`.
+- **No per-tick renders in chrome.** Only the price readout, the chart, the order-book strip and the order-book screen may subscribe to the streaming contexts; everything else reads chart config or refs. `__root.tsx` carries a dev-only render counter for checking it.
+
+The marketing landing knows about the phone too: below 767px the hero drops "Launch in browser" and "Download for desktop" for a single **Launch Mobile Terminal** CTA (`apps/marketing/src/components/marketing/ZeusHero.astro` — a CSS-only swap at the terminal's own breakpoint, so the button and the shell always agree).
 
 ### Signal Pipeline
 
@@ -104,6 +121,7 @@ Market connectors are standard plugins that implement the `MarketAdapter` interf
 ```
 apps/
   terminal/           TanStack Start SPA (React 19, TanStack Router/Query)
+    src/mobile/       Mobile terminal shell (< 768px) — separable, see Mobile Terminal
   marketing/          Astro static site
   desktop/            Tauri 2 desktop app — PRIMARY distribution (wraps terminal SPA + OS keychain credentials)
   registry/           Plugin registry server (third-party plugin distribution)
@@ -138,7 +156,8 @@ scripts/
 - **Market connector plugins** are the only code that connects to exchange WebSockets and REST APIs. They run in the terminal process (or CLI). Each connector owns its WS connections, candle buffers, and order execution for its exchange.
 - **App Server** (the private backend) is the only service that talks to PostgreSQL. It owns auth (BetterAuth), persistence, and AI features. It never calls exchanges directly — the Terminal pushes market data in AI request bodies. The Terminal reaches it via REST (`apps/terminal/src/lib/api.ts`, `VITE_APP_SERVER_URL`, default `http://localhost:4046`).
 - **`packages/shared`** holds the client/server API contract types (`persistence-types`, `instrument-types`, `registry-types`, `affiliates`, ...). The App Server repo carries a mirrored copy — changes to REST payload shapes must be applied in both repos. The Drizzle DB schema lives only in the App Server repo.
-- **Credentials are local-only.** Exchange API keys and wallet secrets must never be sent to or stored on the App Server. The Tauri desktop app stores them in the OS keychain (macOS Keychain / Windows Credential Manager / Linux Secret Service) via the `keychain_*` commands in `apps/desktop/src-tauri`; browser dev builds fall back to AES-256-GCM-encrypted localStorage (see `apps/terminal/src/lib/keychain.ts`). Connector plugins receive credentials at runtime for order routing.
+- **Credentials are local-only.** Exchange API keys and wallet secrets must never be sent to or stored on the App Server. The Tauri desktop app stores them in the OS keychain (macOS Keychain / Windows Credential Manager / Linux Secret Service) via the `keychain_*` commands in `apps/desktop/src-tauri`; browsers store them as vault ciphertext in localStorage (see `apps/terminal/src/lib/keychain.ts`). Connector plugins receive credentials at runtime for order routing.
+- **Mobile is a one-way dependency.** `src/mobile/` imports into the app freely; the app does not import from `src/mobile/` except at the three seams listed in [Mobile Terminal](#mobile-terminal). A shared helper both shells need belongs outside `src/mobile/` (`src/hooks/`, `src/lib/`), never inside it.
 - **Strategy engine** (`packages/strategy-engine/`) is pure TypeScript math — no I/O, no exchange connections. Indicators: EMA, ATR, extremes, volume-MA. Strategies: breakout, EMA pullback, mean reversion. Regime detection in `src/regime.ts`. Consumed on demand by the terminal (copilot tools, research panel) and the CLI — not by connectors.
 
 ### Data Ownership
@@ -149,7 +168,7 @@ scripts/
 | Recent signals                     | Computed on candle close (in plugin)                      | Ephemeral, computed by strategy-engine             |
 | Order book state                   | Local book maps (in connector plugin)                     | Maintained from incremental WS updates             |
 | User state, trades, AI chat        | Local persistence by default; PostgreSQL via App Server when signed in | Durable remote persistence is opt-in |
-| Exchange API credentials           | OS keychain (desktop); AES-GCM localStorage (browser dev) | Legal: must never be persisted on Pairlens servers |
+| Exchange API credentials           | OS keychain (desktop); vault-encrypted localStorage (browser) | Legal: must never be persisted on Pairlens servers |
 | Auth sessions                      | App Server (BetterAuth)                                   | Session tokens, accounts, verifications            |
 
 ### Authentication (BetterAuth)
@@ -221,6 +240,8 @@ When validating UI changes, use the available browser tooling (Claude Code previ
 3. Read page text/accessibility snapshots to verify content
 4. Inspect DOM state or run assertions via the tool's JS evaluation
 5. Capture screenshots for visual verification
+
+The **mobile shell needs headless Chrome over CDP**, not the preview pane: the pane keeps the document hidden, so `requestAnimationFrame` never runs and anything animated reads as frozen, and its visibility flips trip the terminal lock shield. Launch `--headless=new`, drive the page over the CDP websocket, and set the viewport with `Emulation.setDeviceMetricsOverride` (402×874, `mobile: true`) so the `html[data-viewport]` stamp lands on `mobile`.
 
 ### Testing changes
 
@@ -299,7 +320,9 @@ A script exports `meta = indicator(title=..., pane='overlay'|'sub', inputs=[...]
 
 TanStack Router with file-based routing in `apps/terminal/src/routes/`. Route tree is auto-generated (`routeTree.gen.ts`). State management via TanStack Query. REST calls via `src/lib/api.ts`. Real-time data via plugin system.
 
-Major surfaces: the `_terminal.tsx` layout group hosts `index`, `pair/$pair` (chart terminal), `accounts`, `notifications`, `plugins` (Plugin Store), `workspace-store` (Workspace Store), `workspace/$workspaceId`, and `workflows`; standalone routes are `onboarding.tsx` (full-page spotlight onboarding) and `sign-in.tsx`.
+Major surfaces: the `_terminal.tsx` layout group hosts `index`, `pair/$pair` (chart terminal), `accounts`, `notifications`, `indicators` (Python indicator workbench), `bots`, `plugins` (Plugin Store), `workspace-store` (Workspace Store), `workspace/$workspaceId`, and `workflows`; standalone routes are `onboarding.tsx` (full-page spotlight onboarding), `sign-in.tsx` and `checkout.success.tsx`.
+
+Below 768px none of the `_terminal` children mount at all — the layout returns the mobile shell instead of `<Outlet />`, and the five mobile destinations are local state with the URL kept in step. Adding a route means deciding what the phone does with it: carry it as an overlay, or add it to `DESKTOP_ONLY_PREFIXES` in `mobile/use-mobile-route-sync.ts` so a shared link redirects with a toast instead of looking broken.
 
 ### Shared Package Imports
 
@@ -318,7 +341,7 @@ import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **pairlens-terminal-cla-fda829**. Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **pairlens**. Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
@@ -334,7 +357,7 @@ This project is indexed by GitNexus as **pairlens-terminal-cla-fda829**. Use the
 
 1. `gitnexus_query({query: "<error or symptom>"})` — find execution flows related to the issue
 2. `gitnexus_context({name: "<suspect function>"})` — see all callers, callees, and process participation
-3. `READ gitnexus://repo/pairlens-terminal-cla-fda829/process/{processName}` — trace the full execution flow step by step
+3. `READ gitnexus://repo/pairlens/process/{processName}` — trace the full execution flow step by step
 4. For regressions: `gitnexus_detect_changes({scope: "compare", base_ref: "main"})` — see what your branch changed
 
 ## When Refactoring
@@ -373,10 +396,10 @@ This project is indexed by GitNexus as **pairlens-terminal-cla-fda829**. Use the
 
 | Resource | Use for |
 |----------|---------|
-| `gitnexus://repo/pairlens-terminal-cla-fda829/context` | Codebase overview, check index freshness |
-| `gitnexus://repo/pairlens-terminal-cla-fda829/clusters` | All functional areas |
-| `gitnexus://repo/pairlens-terminal-cla-fda829/processes` | All execution flows |
-| `gitnexus://repo/pairlens-terminal-cla-fda829/process/{name}` | Step-by-step execution trace |
+| `gitnexus://repo/pairlens/context` | Codebase overview, check index freshness |
+| `gitnexus://repo/pairlens/clusters` | All functional areas |
+| `gitnexus://repo/pairlens/processes` | All execution flows |
+| `gitnexus://repo/pairlens/process/{name}` | Step-by-step execution trace |
 
 ## Self-Check Before Finishing
 

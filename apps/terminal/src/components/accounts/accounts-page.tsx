@@ -40,28 +40,15 @@ import { LocalOnlyBadge } from './local-only-badge'
 import { PortfolioOverview } from './portfolio-overview'
 import { SectionHeader } from './section-header'
 import { chainBrand, chainPosterSrc } from './venue-art'
-import type { CredentialKind } from './add-credential-picker'
-import type { FormEvent } from 'react'
 import type { KeyRound as LucideIcon } from 'lucide-react'
 import { track } from '@/lib/analytics-events'
-import {
-  WALLET_SCHEMAS,
-  deriveEvmAddress,
-  deriveSolanaAddress,
-  useWalletsStore,
-} from '@/stores/wallets-store'
-import {
-  CREDENTIAL_SCHEMAS,
-  isBrokerMarket,
-  useCredentialsStore,
-} from '@/stores/credentials-store'
-import { useMarketData } from '@/lib/market-data-provider'
+import { WALLET_SCHEMAS, useWalletsStore } from '@/stores/wallets-store'
+import { isBrokerMarket, useCredentialsStore } from '@/stores/credentials-store'
+import { useConnectWizardState } from '@/hooks/use-connect-wizard-state'
 import { usePortfolioValue } from '@/hooks/use-portfolio-value'
 import { PageHeader } from '@/components/page-header'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
-import { isVaultEnrollmentRequired } from '@/lib/security/vault/vault-errors'
-import { mustEnrollFirst } from '@/lib/security/vault/vault-policy'
 
 // ---------------------------------------------------------------------------
 // Empty section panel — dashed storefront-style placeholder
@@ -192,109 +179,76 @@ function ChainRail({
 
 export function AccountsPage() {
   const { t } = useTranslation()
-  const { availableMarkets } = useMarketData()
   const { holdings, totalValue, currencySymbol, displayCurrency } =
     usePortfolioValue()
-  // Derive market ID list from available market connector plugins
-  const availableMarketIds = availableMarkets.map((m) => m.marketId)
   const {
     credentials,
     loaded,
     sealed,
     status: credentialsStatus,
-    load,
     reload,
-    addCredential,
     removeCredential,
   } = useCredentialsStore()
-
-  // Crypto wallets
-  const {
-    wallets: cryptoWallets,
-    loaded: _walletsLoaded,
-    load: loadWallets,
-    addWallet: addCryptoWallet,
-    removeWallet: removeCryptoWallet,
-  } = useWalletsStore()
-  const [showCryptoForm, setShowCryptoForm] = useState(false)
-  const [cryptoChain, setCryptoChain] = useState<string | null>(null)
-  const [cryptoLabel, setCryptoLabel] = useState('')
-  const [cryptoPrivateKey, setCryptoPrivateKey] = useState('')
-
-  const [showTypePicker, setShowTypePicker] = useState(false)
-  const [showForm, setShowForm] = useState(false)
-  // Which flavor of the credential wizard is open — crypto CEX or stock broker
-  const [formKind, setFormKind] = useState<'exchange' | 'broker'>('exchange')
-  const [selectedMarket, setSelectedMarket] = useState<string | null>(null)
-  // Venue the wizard should skip its picker for — set only by the deep link
-  const [wizardInitialMarket, setWizardInitialMarket] = useState<string | null>(
-    null,
-  )
-  const [mode, setMode] = useState<'paper' | 'live'>('paper')
-  const [walletName, setWalletName] = useState('')
-  const [formFields, setFormFields] = useState<Record<string, string>>({})
-  const [feedback, setFeedback] = useState<{
-    type: 'error' | 'success'
-    message: string
-  } | null>(null)
-  const [isBusy, setIsBusy] = useState(false)
-  // Full-screen "all venues" page (opened from the section rails)
-  const [venuesOpen, setVenuesOpen] = useState(false)
-  // Vault enrollment gate. `pendingAction` is what to resume once the user has
-  // a protector — the wizard they were opening, or the submit that was
-  // rejected. Without it the enrollment dialog would be a dead end that
-  // silently discards a filled-in form.
-  const [enrollOpen, setEnrollOpen] = useState(false)
-  const [unlockOpen, setUnlockOpen] = useState(false)
-  const pendingAction = useRef<(() => void) | null>(null)
+  const { removeWallet: removeCryptoWallet } = useWalletsStore()
 
   /**
-   * Run `action`, or open enrollment first when this device requires a vault
-   * and does not have one.
-   *
-   * Proactive: the user meets the "set up a way to unlock" step before typing
-   * an API key, not after. The submit handlers keep their own reactive catch
-   * as a safety net for any path that skips this.
+   * The whole connect flow — type picker, API-key wizard, wallet dialog, and
+   * the vault gate in front of all three — including the loading of both
+   * stores. Shared verbatim with the mobile connect overlay, which is the
+   * point: a second copy is how the gate ends up guarding one surface and not
+   * the other. This page owns only what it shows: the lists, and removal.
    */
-  const withVault = async (action: () => void) => {
-    if (await mustEnrollFirst()) {
-      pendingAction.current = action
-      setEnrollOpen(true)
-      return
-    }
-    action()
-  }
+  const {
+    showTypePicker,
+    setShowTypePicker,
+    openTypePicker,
+    pickKind,
+    showForm,
+    closeWizard,
+    openWizard,
+    openForMarket,
+    openForChain,
+    formKind,
+    wizardMarkets,
+    wizardInitialMarket,
+    resolvedMarket,
+    schema,
+    mode,
+    setMode,
+    setSelectedMarket,
+    walletName,
+    setWalletName,
+    formFields,
+    setFormFields,
+    handleSubmit,
+    showCryptoForm,
+    setShowCryptoForm,
+    cryptoChain,
+    setCryptoChain,
+    cryptoLabel,
+    setCryptoLabel,
+    cryptoPrivateKey,
+    setCryptoPrivateKey,
+    handleAddCryptoWallet,
+    availableChains,
+    wallets: cryptoWallets,
+    exchangeSchemaMarkets,
+    brokerSchemaMarkets,
+    allExchangeSchemaMarkets,
+    allBrokerSchemaMarkets,
+    isBusy,
+    setIsBusy,
+    feedback,
+    setFeedback,
+    enrollOpen,
+    setEnrollOpen,
+    unlockOpen,
+    setUnlockOpen,
+    resumePending,
+  } = useConnectWizardState()
 
-  useEffect(() => {
-    void load()
-    void loadWallets()
-  }, [load, loadWallets])
-
-  // Available chains from DEX connectors
-  const availableChains = useMemo(() => {
-    const chains = new Set<string>()
-    for (const m of availableMarkets) {
-      if (m.walletChain) chains.add(m.walletChain)
-    }
-    return [...chains]
-  }, [availableMarkets])
-
-  const handlePickKind = (kind: CredentialKind) => {
-    setShowTypePicker(false)
-    setFeedback(null)
-    void withVault(() => {
-      if (kind === 'exchange') {
-        setFormKind('exchange')
-        setShowForm(true)
-      } else if (kind === 'crypto') {
-        setCryptoChain(availableChains[0] ?? null)
-        setShowCryptoForm(true)
-      } else if (kind === 'broker') {
-        setFormKind('broker')
-        setShowForm(true)
-      }
-    })
-  }
+  // Full-screen "all venues" page (opened from the section rails)
+  const [venuesOpen, setVenuesOpen] = useState(false)
 
   // Deep link — /accounts?connect=<market> or ?connectChain=<chain> opens that
   // venue's connect flow directly. The trade ticket's connect gate sends users
@@ -311,82 +265,9 @@ export function AccountsPage() {
     if (!connectMarket && !connectChain) return
     deepLinkConsumed.current = true
     void navigate({ to: '/accounts', search: {}, replace: true })
-    setFeedback(null)
-    void withVault(() => {
-      if (connectChain) {
-        setCryptoChain(connectChain)
-        setShowCryptoForm(true)
-        return
-      }
-      if (!connectMarket) return
-      setFormKind(isBrokerMarket(connectMarket) ? 'broker' : 'exchange')
-      setWizardInitialMarket(connectMarket)
-      setShowForm(true)
-    })
-    // withVault is recreated per render; the ref guard is what keeps this to
-    // a single run, so it stays out of the dependency list.
-  }, [connectMarket, connectChain, navigate])
-
-  const handleAddCryptoWallet = async (event: FormEvent) => {
-    event.preventDefault()
-    if (!cryptoChain || !cryptoPrivateKey.trim()) return
-    setIsBusy(true)
-    try {
-      // Derive public address from private key
-      let address: string
-      if (cryptoChain === 'solana') {
-        address = await deriveSolanaAddress(cryptoPrivateKey.trim())
-      } else if (cryptoChain === 'ethereum') {
-        // One EVM key covers Ethereum, Base, Arbitrum, BSC, Polygon, etc.
-        address = await deriveEvmAddress(cryptoPrivateKey.trim())
-      } else {
-        // Bitcoin: placeholder until chain-specific derivation is added
-        throw new Error(`${cryptoChain} address derivation not yet supported`)
-      }
-      const label =
-        cryptoLabel.trim() ||
-        t('accounts.defaultWalletName', {
-          chain:
-            WALLET_SCHEMAS[cryptoChain as keyof typeof WALLET_SCHEMAS]?.label ??
-            cryptoChain,
-        })
-      await addCryptoWallet(
-        {
-          chain: cryptoChain as 'solana' | 'ethereum' | 'bitcoin',
-          address,
-          label,
-        },
-        cryptoPrivateKey,
-      )
-      track('wallet_connected', { chain: cryptoChain })
-      setFeedback({
-        type: 'success',
-        message: t('accounts.walletSavedFeedback'),
-      })
-      setShowCryptoForm(false)
-      setCryptoLabel('')
-      setCryptoPrivateKey('')
-      setCryptoChain(null)
-    } catch (error) {
-      // The reactive half of the gate. Anything that reaches `addWallet`
-      // without going through `withVault` lands here rather than showing the
-      // user a raw error for a state they can simply fix.
-      if (isVaultEnrollmentRequired(error)) {
-        pendingAction.current = () => void handleAddCryptoWallet(event)
-        setEnrollOpen(true)
-        return
-      }
-      setFeedback({
-        type: 'error',
-        message:
-          error instanceof Error
-            ? error.message
-            : t('accounts.walletSaveFailed'),
-      })
-    } finally {
-      setIsBusy(false)
-    }
-  }
+    if (connectChain) openForChain(connectChain)
+    else if (connectMarket) openForMarket(connectMarket)
+  }, [connectMarket, connectChain, navigate, openForChain, openForMarket])
 
   const handleRemoveCryptoWallet = async (id: string) => {
     setIsBusy(true)
@@ -409,21 +290,6 @@ export function AccountsPage() {
     }
   }
 
-  // Markets that have credential schemas, split by venue kind
-  const exchangeSchemaMarkets = useMemo(
-    () =>
-      availableMarketIds.filter(
-        (m) => m in CREDENTIAL_SCHEMAS && !isBrokerMarket(m),
-      ),
-    [availableMarketIds],
-  )
-  const brokerSchemaMarkets = useMemo(
-    () =>
-      availableMarketIds.filter(
-        (m) => m in CREDENTIAL_SCHEMAS && isBrokerMarket(m),
-      ),
-    [availableMarketIds],
-  )
   const availableSchemaMarkets = useMemo(
     () => [...exchangeSchemaMarkets, ...brokerSchemaMarkets],
     [exchangeSchemaMarkets, brokerSchemaMarkets],
@@ -444,74 +310,17 @@ export function AccountsPage() {
     [credentials],
   )
 
-  // Venues the user could open a new account with, per asset class
-  const cexVenues = useOpenableVenues(exchangeSchemaMarkets, connectedMarkets)
-  const brokerVenues = useOpenableVenues(brokerSchemaMarkets, connectedMarkets)
-
-  const wizardMarkets =
-    formKind === 'broker' ? brokerSchemaMarkets : exchangeSchemaMarkets
-  const resolvedMarket = selectedMarket ?? wizardMarkets[0] ?? null
-  const schema = resolvedMarket ? CREDENTIAL_SCHEMAS[resolvedMarket] : null
-
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault()
-    if (!resolvedMarket || !schema) return
-    setFeedback(null)
-
-    // Validate required fields
-    for (const field of schema.fields) {
-      if (field.required && !formFields[field.key]?.trim()) {
-        setFeedback({
-          type: 'error',
-          message: t('accounts.fieldRequired', { field: field.label }),
-        })
-        return
-      }
-    }
-
-    setIsBusy(true)
-    try {
-      const name =
-        walletName.trim() ||
-        // A default NAME, not a sentence — composing venue + mode is fine, and
-        // the user can rename it. Both mode words already exist in all 17.
-        `${schema.label} ${mode === 'paper' ? t('accounts.paper') : t('accounts.live')}`
-      await addCredential({
-        market: resolvedMarket,
-        label: name,
-        mode,
-        apiKey: formFields['apiKey'] ?? '',
-        apiSecret: formFields['apiSecret'] ?? '',
-        passphrase: formFields['passphrase'],
-      })
-      track('venue_connected', { venue: resolvedMarket })
-      setFeedback({
-        type: 'success',
-        message: t('accounts.accountConnectedFeedback', {
-          label: schema.label,
-          mode: t(mode === 'paper' ? 'accounts.paper' : 'accounts.live'),
-        }),
-      })
-      setFormFields({})
-      setWalletName('')
-      setShowForm(false)
-    } catch (error) {
-      if (isVaultEnrollmentRequired(error)) {
-        pendingAction.current = () => void handleSubmit(event)
-        setEnrollOpen(true)
-        return
-      }
-      setFeedback({
-        type: 'error',
-        message:
-          error instanceof Error
-            ? error.message
-            : t('accounts.accountConnectFailed'),
-      })
-    } finally {
-      setIsBusy(false)
-    }
-  }
+  // Venues the user could open a new account with, per asset class. The FULL
+  // catalogue, not the connectable one: signing up at a venue this build can't
+  // reach and finishing on the desktop app is a real path.
+  const cexVenues = useOpenableVenues(
+    allExchangeSchemaMarkets,
+    connectedMarkets,
+  )
+  const brokerVenues = useOpenableVenues(
+    allBrokerSchemaMarkets,
+    connectedMarkets,
+  )
 
   const handleRemove = async (id: string) => {
     setFeedback(null)
@@ -558,13 +367,7 @@ export function AccountsPage() {
             <LocalOnlyBadge />
             {(availableSchemaMarkets.length > 0 ||
               availableChains.length > 0) && (
-              <Button
-                size="sm"
-                onClick={() => {
-                  setShowTypePicker(true)
-                  setFeedback(null)
-                }}
-              >
+              <Button size="sm" onClick={openTypePicker}>
                 <Plus className="size-3.5" />
                 {t('accounts.connect')}
               </Button>
@@ -594,18 +397,13 @@ export function AccountsPage() {
                   hasExchanges={exchangeSchemaMarkets.length > 0}
                   hasChains={availableChains.length > 0}
                   hasBrokers={brokerSchemaMarkets.length > 0}
-                  onPick={handlePickKind}
+                  onPick={pickKind}
                 />
 
                 {/* Exchange / broker API key wizard */}
                 <ConnectExchangeWizard
                   open={showForm}
-                  onOpenChange={(next) => {
-                    setShowForm(next)
-                    // The pre-picked venue belongs to that one deep-linked
-                    // open — the next manual open starts at the picker.
-                    if (!next) setWizardInitialMarket(null)
-                  }}
+                  onOpenChange={closeWizard}
                   initialMarket={wizardInitialMarket}
                   availableMarkets={wizardMarkets}
                   variant={formKind}
@@ -650,15 +448,15 @@ export function AccountsPage() {
                 <VaultEnrollmentDialog
                   open={enrollOpen}
                   onOpenChange={setEnrollOpen}
-                  onEnrolled={() => {
-                    const resume = pendingAction.current
-                    pendingAction.current = null
-                    resume?.()
-                  }}
+                  onEnrolled={resumePending}
                 />
+                {/* A sealed vault is a locked door, not a failed save:
+                    unlocking resumes the submit that hit it, with the form
+                    still filled in. */}
                 <VaultUnlockDialog
                   open={unlockOpen}
                   onOpenChange={setUnlockOpen}
+                  onUnlocked={resumePending}
                 />
 
                 {/* A sealed vault is NOT an empty account list. Saying so is
@@ -710,13 +508,7 @@ export function AccountsPage() {
                     </p>
                     {(availableSchemaMarkets.length > 0 ||
                       availableChains.length > 0) && (
-                      <Button
-                        className="mt-6"
-                        onClick={() => {
-                          setShowTypePicker(true)
-                          setFeedback(null)
-                        }}
-                      >
+                      <Button className="mt-6" onClick={openTypePicker}>
                         <Plus className="size-3.5" />
                         {t('accounts.connect')}
                       </Button>
@@ -762,13 +554,7 @@ export function AccountsPage() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => {
-                              setFeedback(null)
-                              void withVault(() => {
-                                setFormKind('exchange')
-                                setShowForm(true)
-                              })
-                            }}
+                            onClick={() => openWizard('exchange')}
                           >
                             <Plus className="size-3.5" />
                             {t('accounts.connectExchange')}
@@ -809,12 +595,7 @@ export function AccountsPage() {
                                 variant="outline"
                                 size="sm"
                                 className="mt-3 gap-2"
-                                onClick={() =>
-                                  void withVault(() => {
-                                    setFormKind('exchange')
-                                    setShowForm(true)
-                                  })
-                                }
+                                onClick={() => openWizard('exchange')}
                               >
                                 <Plus className="size-3.5" />
                                 {t('accounts.connectExchange')}
@@ -851,12 +632,7 @@ export function AccountsPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() =>
-                                void withVault(() => {
-                                  setCryptoChain(availableChains[0] ?? null)
-                                  setShowCryptoForm(true)
-                                })
-                              }
+                              onClick={() => openForChain()}
                             >
                               <Plus className="size-3.5" />
                               {t('accounts.addWallet')}
@@ -869,12 +645,7 @@ export function AccountsPage() {
                         rail={
                           <ChainRail
                             chains={availableChains}
-                            onAdd={(chain) =>
-                              void withVault(() => {
-                                setCryptoChain(chain)
-                                setShowCryptoForm(true)
-                              })
-                            }
+                            onAdd={openForChain}
                           />
                         }
                       >
@@ -889,12 +660,7 @@ export function AccountsPage() {
                                   variant="outline"
                                   size="sm"
                                   className="mt-3 gap-2"
-                                  onClick={() =>
-                                    void withVault(() => {
-                                      setCryptoChain(availableChains[0] ?? null)
-                                      setShowCryptoForm(true)
-                                    })
-                                  }
+                                  onClick={() => openForChain()}
                                 >
                                   <Plus className="size-3.5" />
                                   {t('accounts.addWallet')}
@@ -933,13 +699,7 @@ export function AccountsPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => {
-                                setFeedback(null)
-                                void withVault(() => {
-                                  setFormKind('broker')
-                                  setShowForm(true)
-                                })
-                              }}
+                              onClick={() => openWizard('broker')}
                             >
                               <Plus className="size-3.5" />
                               {t('accounts.connectBroker')}
@@ -968,12 +728,7 @@ export function AccountsPage() {
                                   variant="outline"
                                   size="sm"
                                   className="mt-3 gap-2"
-                                  onClick={() =>
-                                    void withVault(() => {
-                                      setFormKind('broker')
-                                      setShowForm(true)
-                                    })
-                                  }
+                                  onClick={() => openWizard('broker')}
                                 >
                                   <Plus className="size-3.5" />
                                   {t('accounts.connectBroker')}

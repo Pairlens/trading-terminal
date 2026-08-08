@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "Retirer",
       "vaultRemoveLastBlocked": "C'est le seul moyen d'entrer dans votre coffre. Ajoutez-en un autre avant de le retirer.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID ne peut pas être le seul moyen d'entrer : les empreintes de ce Mac peuvent changer. Gardez un mot de passe ou un passkey.",
-      "vaultProtectsBody": "Avec un coffre, vos clés API et de wallet sont stockées chiffrées. Qui copie ce profil de navigateur — ou le disque de cet ordinateur — obtient un texte chiffré qu'il ne peut pas ouvrir sans votre mot de passe ou votre passkey.",
+      "vaultProtectsBody": "Avec un coffre, vos clés API et de wallet sont stockées chiffrées. Qui copie ce profil de navigateur — ou le stockage de cet appareil — obtient un texte chiffré qu'il ne peut pas ouvrir sans votre mot de passe ou votre passkey.",
       "vaultCeiling": "Cela ne protège pas les clés pendant que vous les utilisez. Tout ce qui s'exécute dans cette page peut demander une clé au coffre déverrouillé, exactement comme le fait l'application. L'application de bureau reste la recommandation pour vos clés les plus précieuses.",
       "vaultNoRecovery": "Il n'y a aucune récupération. Perdez tous les moyens d'entrer et les clés chiffrées sont perdues — le seul retour dans l'application efface les données de cet appareil.",
       "vaultDesktopToggleHint": "Vos clés sont déjà dans le trousseau du système. Activez ceci pour ajouter par-dessus un mot de passe ou une passkey.",
@@ -3024,7 +3024,7 @@
     "back": "Retour",
     "saveApiKey": "Enregistrer la clé API",
     "saving": "Enregistrement...",
-    "storedSecurely": "Stocké en toute sécurité uniquement sur votre ordinateur",
+    "storedSecurely": "Stocké en toute sécurité uniquement sur votre appareil",
     "storedSecurelyDetail": "Tous les identifiants sont stockés en toute sécurité sur votre ordinateur via le trousseau du système (macOS Keychain, Windows Credential Manager, ou Linux Secret Service), qui les chiffre au repos. Ils ne sont jamais envoyés ni stockés sur les serveurs Pairlens. Veillez à toujours conserver une sauvegarde de vos clés API dans un endroit sûr.",
     "storedSecurelyDetailBrowser": "Dans ce navigateur, chaque identifiant est chiffré en AES-256-GCM avant d’être enregistré, sous une clé que seuls votre mot de passe de coffre, votre passkey ou Touch ID peuvent ouvrir. Ils ne sont jamais envoyés ni stockés sur les serveurs Pairlens. Veillez à toujours conserver une sauvegarde de vos clés API dans un endroit sûr.",
     "storedSecurelyNever": "jamais envoyés ni stockés sur les serveurs Pairlens",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}} place de marché",
       "venuesCount_other": "{{count}} places de marché"
     },
+    "discover": {
+      "featured": "En vedette"
+    },
+    "markets": {
+      "filterPlaceholder": "Filtrer les marchés",
+      "matchCount_one": "{{count}} résultat",
+      "matchCount_other": "{{count}} résultats"
+    },
     "trade": {
       "openBook": "Ouvrir le carnet d’ordres",
       "spread": "spread {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "Annotations"
       }
     },
+    "drawing": {
+      "placementLabel": "Placer le dessin",
+      "setPoint": "Placer le point",
+      "cancel": "Annuler",
+      "done": "Terminé",
+      "step": "Point {{current}} sur {{total}}",
+      "dragHint": "Glissez pour positionner",
+      "textLabel": "Texte du libellé",
+      "textPlaceholder": "Ajouter un libellé"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "Comptes et connexions",
@@ -4722,6 +4740,24 @@
       "trading": "Trading",
       "connected": "Connecté",
       "perOrder": "{{percent}}% par ordre"
+    },
+    "accounts": {
+      "permissionsLabel": "Autorisations",
+      "canTrade": "Trading activé",
+      "canTradeHint": "Les ordres que vous passez sur cette place de marché sont signés avec cette clé. Elle ne quitte jamais cet appareil.",
+      "readOnlyTitle": "Lecture seule",
+      "readOnlyHint": "Les données de marché arrivent en direct depuis cette place de marché, mais cette clé ne permet pas de passer des ordres ici.",
+      "unavailableTitle": "Indisponible ici",
+      "modeLabel": "Mode",
+      "apiKeyLabel": "Clé API",
+      "connectedLabel": "Connecté",
+      "renameSaved": "Nom mis à jour.",
+      "renameFailed": "Le nouveau nom n’a pas été enregistré.",
+      "disconnectTitle": "Déconnecter {{label}} ?",
+      "disconnectBody": "La clé est supprimée de cet appareil. Rien ne change sur l’exchange, et vous pourrez la reconnecter à tout moment.",
+      "sealedTitle": "Coffre verrouillé",
+      "missingTitle": "Non connecté",
+      "missingBody": "Ce compte n’est plus stocké sur cet appareil."
     },
     "pickers": {
       "searchPlaceholder": "Rechercher une paire, un ticker ou un nom",

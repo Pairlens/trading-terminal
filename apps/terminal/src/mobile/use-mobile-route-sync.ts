@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { useMobileActions, useMobileFocus } from './mobile-focus-context'
+import { consumePairAdoptionSuppression } from './lib/mobile-history'
 import { getInitialViewportMode } from './use-viewport-mode'
 import type { MarketOption } from '@/hooks/use-available-markets'
 import { track } from '@/lib/analytics-events'
@@ -109,7 +110,23 @@ export function useMobileRouteSync(): void {
     const routed = pairFromPath(pathname)
     if (routed) {
       handledRef.current = null
-      if (routed !== focusedPair) setFocusedPair(routed)
+      if (routed !== focusedPair) {
+        // Back out of an overlay and the entry underneath can still name the
+        // pair the user was on before they picked one INSIDE that overlay —
+        // every focus change rewrites the URL with `replace`, so it lands on
+        // the overlay's own entry and never reaches the one below. Adopting
+        // it would undo the pick the user just made, so the shell latches the
+        // move and the canonical URL is re-asserted instead.
+        if (consumePairAdoptionSuppression()) {
+          void navigate({
+            to: '/pair/$pair',
+            params: { pair: focusedPair },
+            replace: true,
+          })
+        } else {
+          setFocusedPair(routed)
+        }
+      }
       return
     }
 
@@ -117,24 +134,41 @@ export function useMobileRouteSync(): void {
     handledRef.current = pathname
 
     const goCanonical = () =>
-      void navigate({
+      navigate({
         to: '/pair/$pair',
         params: { pair: focusedPair },
         replace: true,
       })
 
     if (pathname === '/') {
+      // The seed claims no history entry (see `setActiveTab`), so the order
+      // here is free: the replace consumes `/` and back leaves the app, which
+      // is what back from an app's opening screen does.
       setActiveTab('discover')
-      goCanonical()
+      void goCanonical()
       return
     }
 
     if (pathname.startsWith('/accounts')) {
-      pushOverlay({ kind: 'settings', section: 'accounts' })
-      if (connectChain) pushOverlay({ kind: 'connect', chain: connectChain })
-      else if (connectMarket)
-        pushOverlay({ kind: 'connect', market: connectMarket })
-      goCanonical()
+      // Canonicalise FIRST and open the overlays on the entry that replaces
+      // it. Opening them first pushes above `/accounts`, the replace then
+      // lands on the overlay's own entry, and `/accounts` survives underneath
+      // — walking back onto it re-runs this branch, which pushes and
+      // canonicalises again, and the back button is dead for the session.
+      const connect = connectChain
+        ? ({ kind: 'connect', chain: connectChain } as const)
+        : connectMarket
+          ? ({ kind: 'connect', market: connectMarket } as const)
+          : null
+      void goCanonical().then(() => {
+        pushOverlay({ kind: 'settings', section: 'accounts' })
+        // `@tanstack/history` batches every entry queued in one microtask into
+        // a single `pushState`, so pushing the wizard here would hand both
+        // overlays the same entry and one back press would close the pair.
+        // Wait for that flush and the ladder is honest: wizard → Settings →
+        // chart → out.
+        if (connect) void Promise.resolve().then(() => pushOverlay(connect))
+      })
       return
     }
 
@@ -145,7 +179,7 @@ export function useMobileRouteSync(): void {
       // entry the user was on is not replaced out from under them.
       if (getInitialViewportMode() === 'desktop') return
       toast.info(t('mobile.shell.desktopOnlyRoute'))
-      goCanonical()
+      void goCanonical()
     }
   }, [
     pathname,

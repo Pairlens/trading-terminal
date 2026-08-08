@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "移除",
       "vaultRemoveLastBlocked": "這是進入保險庫的唯一方式。移除前請先新增另一種。",
       "vaultRemoveBiometricOnlyBlocked": "觸控 ID 不能是唯一的進入方式——這台 Mac 上的指紋可能會變更。請保留密碼或通行金鑰。",
-      "vaultProtectsBody": "有了保險庫，你的 API 金鑰與錢包金鑰會以加密形式儲存。複製這個瀏覽器設定檔 — 或這台電腦的磁碟 — 的人只會拿到沒有你的密碼或通行金鑰就打不開的密文。",
+      "vaultProtectsBody": "有了保險庫，你的 API 金鑰與錢包金鑰會以加密形式儲存。複製這個瀏覽器設定檔 — 或這台裝置的儲存空間 — 的人只會拿到沒有你的密碼或通行金鑰就打不開的密文。",
       "vaultCeiling": "它不保護使用中的金鑰。這個頁面裡執行的任何程式碼都能像應用本身一樣，向已解鎖的保險庫索取金鑰。對最貴重的金鑰，我們仍然推薦桌面應用程式。",
       "vaultNoRecovery": "沒有找回途徑。失去全部進入方式，加密的金鑰就沒了 — 回到應用程式的唯一辦法會清除本裝置的資料。",
       "vaultDesktopToggleHint": "你的金鑰已經在系統鑰匙圈裡。開啟此項可在其上再加一層密碼或通行金鑰。",
@@ -3024,7 +3024,7 @@
     "back": "上一步",
     "saveApiKey": "儲存 API 金鑰",
     "saving": "儲存中…",
-    "storedSecurely": "僅安全儲存在你的電腦上",
+    "storedSecurely": "僅安全儲存在你的裝置上",
     "storedSecurelyDetail": "所有憑證皆透過作業系統金鑰圈（macOS 鑰匙圈、Windows 認證管理員或 Linux Secret Service）安全儲存在你的電腦上，並在靜態儲存時加密。這些資料絕不會傳送到或儲存在 Pairlens 伺服器上。請務必將你的 API 金鑰備份存放在安全的地方。",
     "storedSecurelyDetailBrowser": "在這個瀏覽器中，每筆憑證在儲存前都會以 AES-256-GCM 加密，其金鑰只有你的金庫密碼、密碼金鑰或 Touch ID 才能解開。絕不會傳送到或儲存在 Pairlens 伺服器上。請務必將 API 金鑰的備份保存在安全的地方。",
     "storedSecurelyNever": "絕不會傳送到或儲存在 Pairlens 伺服器上",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}} 個交易所",
       "venuesCount_other": "{{count}} 個交易所"
     },
+    "discover": {
+      "featured": "精選"
+    },
+    "markets": {
+      "filterPlaceholder": "篩選市場",
+      "matchCount_one": "{{count}} 個符合項目",
+      "matchCount_other": "{{count}} 個符合項目"
+    },
     "trade": {
       "openBook": "開啟委託簿",
       "spread": "價差 {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "標註"
       }
     },
+    "drawing": {
+      "placementLabel": "放置繪圖",
+      "setPoint": "設定點位",
+      "cancel": "取消",
+      "done": "完成",
+      "step": "第 {{current}} / {{total}} 點",
+      "dragHint": "拖曳以定位",
+      "textLabel": "標籤文字",
+      "textPlaceholder": "新增標籤"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "帳戶與連線",
@@ -4722,6 +4740,24 @@
       "trading": "交易",
       "connected": "已連接",
       "perOrder": "每筆訂單 {{percent}}%"
+    },
+    "accounts": {
+      "permissionsLabel": "權限",
+      "canTrade": "已啟用交易",
+      "canTradeHint": "你在這個交易所下的訂單會以這把金鑰簽署。它絕不會離開這台裝置。",
+      "readOnlyTitle": "僅讀取",
+      "readOnlyHint": "市場資料照常從這個交易所串流，但這把金鑰在這裡無法下單。",
+      "unavailableTitle": "這裡無法使用",
+      "modeLabel": "模式",
+      "apiKeyLabel": "API 金鑰",
+      "connectedLabel": "已連接",
+      "renameSaved": "名稱已更新。",
+      "renameFailed": "新名稱未能儲存。",
+      "disconnectTitle": "要中斷連接 {{label}} 嗎？",
+      "disconnectBody": "金鑰會從這台裝置移除。交易所端不會有任何改變，之後隨時可以重新連接。",
+      "sealedTitle": "保險庫已鎖定",
+      "missingTitle": "未連接",
+      "missingBody": "這個帳戶已不再儲存在這台裝置上。"
     },
     "pickers": {
       "searchPlaceholder": "搜尋任何交易對、代號或名稱",

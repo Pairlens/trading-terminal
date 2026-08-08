@@ -240,6 +240,12 @@ type CredentialsState = {
     cred: Omit<ExchangeCredential, 'id' | 'createdAt'>,
   ) => Promise<void>
   removeCredential: (id: string) => Promise<void>
+  /**
+   * Rename a credential in place. Same record, same keychain slot, same vault
+   * envelope — only the user-facing label moves. Rejects (does not swallow)
+   * when the store cannot be written, so the caller can say so.
+   */
+  renameCredential: (id: string, label: string) => Promise<void>
   getCredentialForMarket: (market: string) => ExchangeCredential | undefined
   /** Update lastActivityAt for a credential (call when credentials are handed to a connector plugin). */
   touchCredential: (id: string) => Promise<void>
@@ -346,6 +352,37 @@ export const useCredentialsStore = create<CredentialsState>((set, get) => ({
       CREDENTIALS_INDEX_KEY,
       JSON.stringify(next.map((c) => c.id)),
     )
+  },
+
+  /**
+   * Writes BEFORE it publishes, which is the opposite order to
+   * `touchCredential` below and deliberately so. A lost activity timestamp is
+   * invisible; a rename that repaints the list with the new name and then
+   * fails to reach the keychain is a lie the user goes on to trust — and on a
+   * sealed vault `saveCredential` throws exactly that way. Persisting first
+   * means the in-memory list and the disk never disagree, and the caller gets
+   * the rejection to show.
+   *
+   * The index is not rewritten: it holds ids, and the id does not change.
+   */
+  renameCredential: async (id, label) => {
+    const trimmed = label.trim()
+    if (!trimmed) return
+    const current = get().credentials.find((c) => c.id === id)
+    if (!current || current.label === trimmed) return
+
+    await saveCredential(
+      `cred:${id}`,
+      JSON.stringify({ ...current, label: trimmed }),
+    )
+
+    // Re-read rather than reusing the array captured above: the await is a
+    // window in which a load or a remove could have replaced the list.
+    set({
+      credentials: get().credentials.map((c) =>
+        c.id === id ? { ...c, label: trimmed } : c,
+      ),
+    })
   },
 
   getCredentialForMarket: (market) => {

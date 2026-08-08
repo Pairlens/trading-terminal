@@ -23,8 +23,8 @@
  */
 import { memo, useEffect, useRef } from 'react'
 
-import { useConnectWizardState } from './use-connect-wizard-state'
 import type { MobileOverlay } from '../mobile-focus-context'
+import { useConnectWizardState } from '@/hooks/use-connect-wizard-state'
 import { AddCredentialPicker } from '@/components/accounts/add-credential-picker'
 import { AddCryptoWalletDialog } from '@/components/accounts/add-crypto-wallet-dialog'
 import { ConnectExchangeWizard } from '@/components/accounts/connect-wizard'

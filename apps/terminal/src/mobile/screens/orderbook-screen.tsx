@@ -14,6 +14,13 @@
  * It is one of the four components allowed to subscribe to a per-tick stream.
  * Rows are memoized on their own values so a single changing level repaints one
  * row, not twenty.
+ *
+ * Depth colouring is the desktop pane's, not a phone-sized approximation of it:
+ * the bar's WIDTH is cumulative depth and its COLOUR STRENGTH is that level's
+ * own size against `magnitude-intensity.ts`'s median-multiple reference. Two
+ * variables on two channels, so a wall deep in the book still reads as a wall
+ * where the cumulative bar is already near full width. The flat 15% tint this
+ * screen shipped with could not say that at all.
  */
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Check, ChevronDown } from 'lucide-react'
@@ -26,6 +33,11 @@ import { useMobileOrderbook } from '../lib/use-mobile-orderbook'
 import type { MobileBookRow } from '../lib/use-mobile-orderbook'
 import type { MobileOverlay } from '../mobile-focus-context'
 import { useOptionalTickerData } from '@/lib/chart-terminal-context'
+import {
+  magnitudeFillColor,
+  magnitudeIntensity,
+  magnitudeTextColor,
+} from '@/components/terminal/magnitude-intensity'
 
 /** The phone's row: the pane's 18px is a mouse density. */
 const ROW_HEIGHT = 24
@@ -67,6 +79,7 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
     bids,
     bestBid,
     maxCumulative,
+    sizeReference,
     spread,
     buyPct,
     sellPct,
@@ -170,6 +183,7 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
                   maxCumulative={maxCumulative}
                   row={row}
                   side="ask"
+                  sizeReference={sizeReference}
                 />
               ))}
             </div>
@@ -198,6 +212,7 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
                   maxCumulative={maxCumulative}
                   row={row}
                   side="bid"
+                  sizeReference={sizeReference}
                 />
               ))}
             </div>
@@ -261,28 +276,37 @@ const BookRow = memo(
   function BookRow({
     row,
     maxCumulative,
+    sizeReference,
     side,
     formatPrice,
   }: {
     row: MobileBookRow
     maxCumulative: number
+    sizeReference: number
     side: 'bid' | 'ask'
     formatPrice: (price: number) => string
   }) {
     const depthPct =
       maxCumulative > 0 ? (row.cumulative / maxCumulative) * 100 : 0
+    // Length is cumulative depth; strength is THIS level's own size. The two
+    // are independent on purpose — see the file header.
+    const intensity = magnitudeIntensity(row.size, sizeReference)
 
     return (
       <div className="relative grid h-6 shrink-0 grid-cols-3 items-center px-4 font-mono text-[12px] tabular-nums">
         {/* Depth is anchored right on both sides, as drawn. */}
         <div
           aria-hidden
-          className="absolute inset-y-0 right-0 transition-[width] duration-300"
+          className="absolute inset-y-0 right-0"
           style={{
             width: `${depthPct}%`,
-            backgroundColor: `color-mix(in oklch, var(${
-              side === 'bid' ? '--up' : '--down'
-            }) 15%, transparent)`,
+            backgroundColor: magnitudeFillColor(
+              side === 'bid' ? 'up' : 'down',
+              intensity,
+            ),
+            // Colour eases on the same curve as width so a level filling in
+            // reads as one motion, not a resize plus a separate flash.
+            transition: 'width 300ms ease-out, background-color 300ms ease-out',
           }}
         />
         <span
@@ -290,7 +314,13 @@ const BookRow = memo(
         >
           {formatPrice(row.price)}
         </span>
-        <span className="relative text-right text-foreground">
+        <span
+          className="relative text-right"
+          style={{
+            color: magnitudeTextColor(intensity),
+            transition: 'color 300ms ease-out',
+          }}
+        >
           {formatSize(row.size)}
         </span>
         <span className="relative text-right text-muted-foreground">
@@ -304,6 +334,7 @@ const BookRow = memo(
     prev.row.size === next.row.size &&
     prev.row.cumulative === next.row.cumulative &&
     prev.maxCumulative === next.maxCumulative &&
+    prev.sizeReference === next.sizeReference &&
     prev.side === next.side &&
     prev.formatPrice === next.formatPrice,
 )

@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "Quitar",
       "vaultRemoveLastBlocked": "Esta es la única forma de entrar en tu bóveda. Añade otra antes de quitarla.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID no puede ser la única forma de entrar: las huellas de este Mac pueden cambiar. Conserva una contraseña o un passkey.",
-      "vaultProtectsBody": "Con una bóveda, tus claves API y de wallet se guardan cifradas. Quien copie este perfil del navegador — o el disco de este ordenador — obtiene texto cifrado que no puede abrir sin tu contraseña o tu passkey.",
+      "vaultProtectsBody": "Con una bóveda, tus claves API y de wallet se guardan cifradas. Quien copie este perfil del navegador — o el almacenamiento de este dispositivo — obtiene texto cifrado que no puede abrir sin tu contraseña o tu passkey.",
       "vaultCeiling": "No protege las claves mientras las usas. Cualquier cosa que se ejecute dentro de esta página puede pedirle una clave a la bóveda desbloqueada, igual que lo hace la app. La app de escritorio sigue siendo la recomendación para tus claves más valiosas.",
       "vaultNoRecovery": "No hay recuperación. Si pierdes todas las formas de entrar, las claves cifradas se pierden: la única manera de volver a entrar en la app borra los datos de este dispositivo.",
       "vaultDesktopToggleHint": "Tus claves ya están en el llavero del sistema. Activa esto para añadir encima una contraseña o una passkey.",
@@ -3024,7 +3024,7 @@
     "back": "Volver",
     "saveApiKey": "Guardar clave API",
     "saving": "Guardando...",
-    "storedSecurely": "Almacenado de forma segura solo en tu computadora",
+    "storedSecurely": "Almacenado de forma segura solo en tu dispositivo",
     "storedSecurelyDetail": "Todas las credenciales se almacenan de forma segura en tu computadora usando el llavero del sistema operativo (macOS Keychain, Windows Credential Manager o Linux Secret Service), que las cifra en reposo. Nunca se envían ni se almacenan en los servidores de Pairlens. Asegúrate de mantener siempre un respaldo de tus claves API en un lugar seguro.",
     "storedSecurelyDetailBrowser": "En este navegador cada credencial se cifra con AES-256-GCM antes de guardarse, bajo una clave que solo tu contraseña de bóveda, tu passkey o Touch ID pueden abrir. Nunca se envían ni se almacenan en los servidores de Pairlens. Asegúrate de mantener siempre un respaldo de tus claves API en un lugar seguro.",
     "storedSecurelyNever": "Nunca se envían ni se almacenan en los servidores de Pairlens",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}} venue",
       "venuesCount_other": "{{count}} venues"
     },
+    "discover": {
+      "featured": "Destacados"
+    },
+    "markets": {
+      "filterPlaceholder": "Filtrar mercados",
+      "matchCount_one": "{{count}} coincidencia",
+      "matchCount_other": "{{count}} coincidencias"
+    },
     "trade": {
       "openBook": "Abrir el libro de órdenes",
       "spread": "spread {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "Anotaciones"
       }
     },
+    "drawing": {
+      "placementLabel": "Colocar dibujo",
+      "setPoint": "Fijar punto",
+      "cancel": "Cancelar",
+      "done": "Listo",
+      "step": "Punto {{current}} de {{total}}",
+      "dragHint": "Arrastra para colocar",
+      "textLabel": "Texto de la etiqueta",
+      "textPlaceholder": "Añade una etiqueta"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "Cuentas y conexiones",
@@ -4722,6 +4740,24 @@
       "trading": "Trading",
       "connected": "Conectado",
       "perOrder": "{{percent}}% por orden"
+    },
+    "accounts": {
+      "permissionsLabel": "Permisos",
+      "canTrade": "Trading activado",
+      "canTradeHint": "Las órdenes que envíes en este venue se firman con esta clave. Nunca sale de este dispositivo.",
+      "readOnlyTitle": "Solo lectura",
+      "readOnlyHint": "Los datos de mercado llegan en vivo desde este venue, pero con esta clave no se pueden enviar órdenes aquí.",
+      "unavailableTitle": "No disponible aquí",
+      "modeLabel": "Modo",
+      "apiKeyLabel": "Clave API",
+      "connectedLabel": "Conectado",
+      "renameSaved": "Nombre actualizado.",
+      "renameFailed": "No se guardó el nuevo nombre.",
+      "disconnectTitle": "¿Desconectar {{label}}?",
+      "disconnectBody": "La clave se elimina de este dispositivo. Nada cambia en el exchange, y puedes volver a conectarla cuando quieras.",
+      "sealedTitle": "Bóveda bloqueada",
+      "missingTitle": "No conectada",
+      "missingBody": "Esta cuenta ya no está guardada en este dispositivo."
     },
     "pickers": {
       "searchPlaceholder": "Busca cualquier par, ticker o nombre",

@@ -92,7 +92,11 @@ export function CopilotHeader({
           <Button
             variant="ghost"
             size="sm"
-            className="text-muted-foreground hover:text-destructive h-7 w-7 p-0"
+            // 28px is a fine desktop icon button and an unhittable phone
+            // target. Below the mobile breakpoint the box grows to 44 while
+            // the glyph stays 14px — this header is mounted verbatim inside
+            // the mobile co-pilot sheet, so the fix belongs here, not there.
+            className="text-muted-foreground hover:text-destructive h-7 w-7 p-0 max-md:h-11 max-md:w-11"
             onClick={onClearHistory}
             title={t('copilot.clearHistory')}
           >

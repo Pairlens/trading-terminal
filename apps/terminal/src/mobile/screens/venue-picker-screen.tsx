@@ -4,6 +4,14 @@
  * Venue picker (blueprint §D.20 — the design's one acknowledged gap, built
  * consistently with the pair picker).
  *
+ * It wears the pair picker's frame, not a full-screen overlay's. Picking a
+ * pair and picking a venue are the same act on this surface — "what am I
+ * looking at?" — and shipping one as a sheet that slides over the chart and
+ * the other as a screen that replaces it made the second feel like leaving
+ * the app. Same full-height `MobileSheet`, same header row with a Cancel
+ * beside the title, same `MobileRow` list, same tab-bar clearance at the
+ * bottom.
+ *
  * Venues this build cannot reach are SHOWN, disabled and explained, rather
  * than filtered out. Hiding four of fifteen connectors makes the product look
  * smaller than it is, and the design already establishes that venue capability
@@ -15,14 +23,14 @@
  * socket handshake, and the whole of what hovering bought on the desktop.
  */
 import { memo, useCallback } from 'react'
-import { Lock } from 'lucide-react'
+import { Check, Lock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
 import { VENUE_KIND_KEY, venueKindOf } from '../lib/venue-kind'
-import { FullScreenOverlay } from '../primitives/full-screen-overlay'
 import { MobileRow } from '../primitives/mobile-row'
+import { MobileSheet } from '../primitives/mobile-sheet'
 import type { MarketOption } from '@/hooks/use-available-markets'
 import type { MobileOverlay } from '../mobile-focus-context'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
@@ -61,46 +69,66 @@ export default memo(function VenuePickerScreen({
   )
 
   return (
-    <FullScreenOverlay
-      onBack={onClose}
-      opaque={false}
-      title={t('mobile.shell.overlays.venuePicker')}
+    <MobileSheet
+      band="full"
+      header={
+        <div className="flex items-center gap-3 px-4 pb-2.5">
+          <h2 className="min-w-0 flex-1 truncate text-[17px] font-semibold tracking-[-0.02em] text-foreground">
+            {t('mobile.shell.overlays.venuePicker')}
+          </h2>
+          <button
+            className="pl-hit-44 shrink-0 text-[13.5px] font-medium text-foreground"
+            onClick={onClose}
+            type="button"
+          >
+            {t('common.cancel')}
+          </button>
+        </div>
+      }
+      label={t('mobile.shell.overlays.venuePicker')}
+      onOpenChange={(open) => {
+        if (!open) onClose()
+      }}
+      open
     >
-      <section>
-        <SectionLabel>{t('mobile.pickers.availableVenues')}</SectionLabel>
-        {available.map((venue) => (
-          <VenueRow
-            key={venue.value}
-            onSelect={handleSelect}
-            onWarmup={handleWarmup}
-            selected={venue.value === focusedVenue}
-            venue={venue}
-          />
-        ))}
-      </section>
-
-      {desktopOnly.length > 0 ? (
+      {/* The tab bar floats above the sheet, so the list ends where it starts. */}
+      <div className="pb-[var(--pl-tabbar-total)]">
         <section>
-          <SectionLabel>{t('mobile.pickers.desktopOnlyVenues')}</SectionLabel>
-          {desktopOnly.map((venue) => (
-            <MobileRow
-              disabled
+          <SectionLabel>{t('mobile.pickers.availableVenues')}</SectionLabel>
+          {available.map((venue) => (
+            <VenueRow
               key={venue.value}
-              leading={<VenueMark venue={venue} />}
-              subtitle={t('mobile.pickers.desktopOnlyVenue')}
-              title={venue.label}
-              trailing={<Lock className="size-4 text-muted-foreground" />}
+              onSelect={handleSelect}
+              onWarmup={handleWarmup}
+              selected={venue.value === focusedVenue}
+              venue={venue}
             />
           ))}
         </section>
-      ) : null}
-    </FullScreenOverlay>
+
+        {desktopOnly.length > 0 ? (
+          <section>
+            <SectionLabel>{t('mobile.pickers.desktopOnlyVenues')}</SectionLabel>
+            {desktopOnly.map((venue) => (
+              <MobileRow
+                disabled
+                key={venue.value}
+                leading={<VenueMark venue={venue} />}
+                subtitle={t('mobile.pickers.desktopOnlyVenue')}
+                title={venue.label}
+                trailing={<Lock className="size-4 text-muted-foreground" />}
+              />
+            ))}
+          </section>
+        ) : null}
+      </div>
+    </MobileSheet>
   )
 })
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="px-4 pb-1 pt-4 text-[9.5px] font-semibold uppercase leading-none tracking-[0.09em] text-muted-foreground">
+    <h3 className="px-4 pb-1 pt-3.5 text-[9.5px] font-semibold uppercase leading-none tracking-[0.09em] text-muted-foreground">
       {children}
     </h3>
   )
@@ -148,6 +176,9 @@ const VenueRow = memo(function VenueRow({
             : t('mobile.shell.readOnly')
         }`}
         title={venue.label}
+        trailing={
+          selected ? <Check className="size-4 text-primary" /> : undefined
+        }
       />
     </div>
   )

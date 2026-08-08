@@ -6,51 +6,76 @@
  *
  * Four data sources, none of them a pane: the discovery panes all want a
  * `@container/pane` ancestor and draw at desk widths. What is reused is the
- * layer underneath them — `fetchFearGreedWithFallback`, `useTopCoinsSnapshot`,
- * and the desktop's news paging kit — so the phone is a second layout over the
- * same data rather than a second data path.
+ * layer underneath them — `fetchFearGreedWithFallback`, the Markets pane's
+ * featured selection and quote cell, and the desktop's news paging kit — so
+ * the phone is a second layout over the same data rather than a second data
+ * path.
+ *
+ * The featured strip is the Markets pane's, symbol for symbol: the same
+ * `featured` instruments out of the discovery catalog, the same
+ * `PairAvatar` logo pipeline, the same `MiniPriceChart` and the same
+ * `PairQuote`. It used to be the raw top-coins feed, which arrives with a
+ * `logoUrl` that is often missing and no trend line at all — rows that read as
+ * unfinished next to the rest of the terminal.
  */
 import { memo, useCallback, useMemo } from 'react'
 import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { cn } from '@pairlens/ui'
-import { useMobileActions } from '../mobile-focus-context'
+import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
+import { MobileRow } from '../primitives/mobile-row'
 import { DiscoverFearGreedCard } from './discover-fear-greed-card'
 import { DiscoverPnlCard } from './discover-pnl-card'
 import { useMobileNewsFeed } from './use-mobile-news-feed'
+import { TrendQuoteCell } from './trend-quote-cell'
+import { orderFeatured } from './featured-order'
 import type { NewsArticle } from '@pairlens/shared/instrument-types'
+import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
+import { useMarketInstruments } from '@/hooks/use-market-instruments'
+import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
+import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
+import { instrumentToPairEntry } from '@/components/pair-picker/pair-picker-data'
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
+import { quoteForPair } from '@/components/discovery/pair-quote'
 import {
   ArticleBanner,
   NewsFeedStatus,
   formatRelativeTime,
 } from '@/components/news/news-shared'
-import { formatPrice } from '@/lib/format-price'
 
-/** Design shows five ranked rows; the rest lives behind "All markets". */
-const TOP_TICKER_COUNT = 5
+/** Design shows five rows; the rest lives behind "All markets". */
+const FEATURED_COUNT = 5
 /** Enough to fill the sheet twice over without rendering a 50-row feed. */
 const NEWS_ROW_COUNT = 12
 
 export default memo(function MobileDiscoverPanel() {
   const { t } = useTranslation()
-  const { dismissPanel, setFocusedPair, pushOverlay } = useMobileActions()
+  const { dismissPanel, pushOverlay } = useMobileActions()
 
   const topCoins = useTopCoinsSnapshot()
+  const quotes = useBulkTickerQuotes()
+  const resolveMarket = usePreferredMarketResolver()
   const news = useMobileNewsFeed()
 
-  const coins = useMemo(
+  // The unfiltered catalog page — the same request the Markets pane makes, so
+  // opening Discover after Markets (or the reverse) is a cache read.
+  const { items } = useMarketInstruments()
+
+  // The Markets pane's featured pool, in its own order, except that anything
+  // this build can actually price comes first (see `orderFeatured`).
+  const featured = useMemo(
     () =>
-      [...topCoins.values()]
-        .sort((a, b) => a.rank - b.rank)
-        .slice(0, TOP_TICKER_COUNT),
-    [topCoins],
+      orderFeatured(
+        items.map(instrumentToPairEntry).filter((pair) => pair.featured),
+        (pair) => quoteForPair(pair, quotes, topCoins) !== undefined,
+        FEATURED_COUNT,
+      ),
+    [items, quotes, topCoins],
   )
 
   const openAllMarkets = useCallback(
-    () => pushOverlay({ kind: 'pairPicker', autoFocus: true }),
+    () => pushOverlay({ kind: 'markets' }),
     [pushOverlay],
   )
 
@@ -83,42 +108,24 @@ export default memo(function MobileDiscoverPanel() {
       <SectionHeader
         action={t('mobile.panels.allMarkets')}
         onAction={openAllMarkets}
-        title={t('mobile.panels.topTickers')}
+        title={t('mobile.discover.featured')}
       />
 
-      {coins.map((coin, index) => (
-        <button
-          className="flex w-full items-center gap-3 border-t border-t-[rgba(255,255,255,0.055)] px-4 py-2.5 text-left active:bg-white/[0.06]"
-          key={coin.symbol}
-          onClick={() => setFocusedPair(`${coin.symbol}-USDT`)}
-          type="button"
-        >
-          <span className="w-3 shrink-0 font-mono text-[11px] tabular-nums text-muted-foreground">
-            {index + 1}
-          </span>
-          <PairAvatar
-            base={coin.symbol}
-            className="size-7"
-            logoUrl={coin.logoUrl}
-            size="sm"
-          />
-          <span className="min-w-0 flex-1 truncate font-mono text-[14px] font-semibold text-foreground">
-            {coin.symbol}
-          </span>
-          <span className="shrink-0 font-mono text-[14px] font-medium tabular-nums text-foreground">
-            {formatPrice(coin.price)}
-          </span>
-          <span
-            className={cn(
-              'w-[58px] shrink-0 text-right font-mono text-[11.5px] tabular-nums',
-              coin.percentChange24h >= 0 ? 'text-up' : 'text-down',
-            )}
-          >
-            {coin.percentChange24h >= 0 ? '+' : ''}
-            {coin.percentChange24h.toFixed(2)}%
-          </span>
-        </button>
-      ))}
+      {featured.length === 0
+        ? [0, 1, 2].map((row) => (
+            <div
+              className="h-[55px] border-t border-t-[rgba(255,255,255,0.055)]"
+              key={row}
+            />
+          ))
+        : featured.map((pair) => (
+            <FeaturedRow
+              key={pair.symbol}
+              market={resolveMarket(pair.assetClass)}
+              pair={pair}
+              quote={quoteForPair(pair, quotes, topCoins)}
+            />
+          ))}
 
       <SectionHeader title={t('news.title')} />
 
@@ -151,6 +158,58 @@ export default memo(function MobileDiscoverPanel() {
           ))
       )}
     </div>
+  )
+})
+
+/**
+ * A featured tile from the Markets pane, folded into the phone's list row: the
+ * same logo, trend line and quote, laid out for 402px instead of a 288px card.
+ * Tapping focuses the pair and closes the panel, because Discover is a place
+ * you leave — unlike the watchlist, where the panel stays open so a scan is a
+ * sequence of taps.
+ */
+const FeaturedRow = memo(function FeaturedRow({
+  pair,
+  market,
+  quote,
+}: {
+  pair: PairEntry
+  market: string
+  quote: ReturnType<typeof quoteForPair>
+}) {
+  const { focusedVenue } = useMobileFocus()
+  const { setFocusedPair, setFocusedVenue, dismissPanel } = useMobileActions()
+
+  const handlePress = useCallback(() => {
+    if (market !== focusedVenue) setFocusedVenue(market)
+    setFocusedPair(pair.symbol)
+    dismissPanel()
+  }, [
+    market,
+    focusedVenue,
+    setFocusedVenue,
+    setFocusedPair,
+    pair.symbol,
+    dismissPanel,
+  ])
+
+  return (
+    <MobileRow
+      leading={
+        <PairAvatar
+          assetClass={pair.assetClass}
+          base={pair.base}
+          className="size-8"
+          size="md"
+        />
+      }
+      onPress={handlePress}
+      subtitle={pair.name}
+      title={<span className="font-mono">{pair.symbol}</span>}
+      trailing={
+        <TrendQuoteCell market={market} pair={pair.symbol} quote={quote} />
+      }
+    />
   )
 })
 

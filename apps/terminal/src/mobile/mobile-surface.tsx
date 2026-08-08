@@ -13,7 +13,15 @@
  * lib/lazy-chunk) and unmount when their tab is not active. The Trade draft
  * survives that because it lives in a store, not in the sheet.
  */
-import { Suspense, memo, useCallback } from 'react'
+import {
+  Suspense,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from 'react'
 import { Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -25,16 +33,32 @@ import {
 } from './mobile-focus-context'
 import { useMobileRouteSync } from './use-mobile-route-sync'
 import { SHEET_BAND } from './lib/mobile-geometry'
+import { litTab } from './lib/overlay-tabs'
+import { planPanelSwap } from './lib/panel-swap'
 import { ContextBar } from './primitives/context-bar'
 import { MobileSheet } from './primitives/mobile-sheet'
 import { MobileTabBar } from './primitives/mobile-tab-bar'
 import { MobileChartSurface } from './chart/mobile-chart-surface'
 import type { MobileOverlay, MobileTab } from './mobile-focus-context'
 import type { ComponentType, LazyExoticComponent } from 'react'
-import { lazyChunk } from '@/lib/lazy-chunk'
+import { importChunk, lazyChunk } from '@/lib/lazy-chunk'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 
 type PanelTab = Exclude<MobileTab, 'chart'>
+
+/**
+ * The panel modules, as bare factories.
+ *
+ * They are named rather than inlined into `lazyChunk` so the SAME specifier
+ * can be warmed ahead of time (see `usePanelPrefetch`): `lazyChunk` wraps an
+ * import, it does not expose it, and re-importing the identical specifier hits
+ * the module cache instead of fetching twice. A cache-busted variant would
+ * fork the module graph — the repo has paid for that lesson once already.
+ */
+const importWatchlistPanel = () => import('./panels/watchlist-panel')
+const importTradePanel = () => import('./panels/trade-panel')
+const importCopilotPanel = () => import('./panels/copilot-panel')
+const importDiscoverPanel = () => import('./panels/discover-panel')
 
 /**
  * The panel slot. Each module's DEFAULT export is the contract, and each file
@@ -42,10 +66,10 @@ type PanelTab = Exclude<MobileTab, 'chart'>
  * integration, no edit here required.
  */
 const PANELS: Record<PanelTab, LazyExoticComponent<ComponentType>> = {
-  watchlist: lazyChunk(() => import('./panels/watchlist-panel')),
-  trade: lazyChunk(() => import('./panels/trade-panel')),
-  copilot: lazyChunk(() => import('./panels/copilot-panel')),
-  discover: lazyChunk(() => import('./panels/discover-panel')),
+  watchlist: lazyChunk(importWatchlistPanel),
+  trade: lazyChunk(importTradePanel),
+  copilot: lazyChunk(importCopilotPanel),
+  discover: lazyChunk(importDiscoverPanel),
 }
 
 /** Sheet geometry and chart treatment per panel — one table, not per-panel CSS. */
@@ -97,28 +121,171 @@ const AccountDetailScreen = lazyChunk(
 )
 
 /** Chart-band extras, owned by WS-D (toolbar, timeframe) and WS-C (limit line). */
-const TimeframePopoverChip = lazyChunk(
-  () => import('./chart/timeframe-popover'),
-)
-const MobileDrawingToolbar = lazyChunk(() => import('./chart/drawing-toolbar'))
-const LimitLineOverlay = lazyChunk(() => import('./chart/limit-line-overlay'))
+const importTimeframePopover = () => import('./chart/timeframe-popover')
+const importDrawingToolbar = () => import('./chart/drawing-toolbar')
+const importLimitLine = () => import('./chart/limit-line-overlay')
+
+const TimeframePopoverChip = lazyChunk(importTimeframePopover)
+const MobileDrawingToolbar = lazyChunk(importDrawingToolbar)
+const LimitLineOverlay = lazyChunk(importLimitLine)
+
+/**
+ * Everything a tap can reach without a network round trip, warmed once the
+ * first screen is idle.
+ *
+ * A tab switch that stops on a Suspense spinner is the single loudest "this
+ * is a page navigation" signal the shell can send, and it is entirely
+ * avoidable: the four panel chunks together are small next to the chart engine
+ * that has already loaded by the time this runs. Order is by likelihood of
+ * being tapped, and they are awaited one at a time so the warm-up never
+ * competes with the market sockets for the connection.
+ */
+const PREFETCH: Array<() => Promise<unknown>> = [
+  importWatchlistPanel,
+  importTradePanel,
+  importDiscoverPanel,
+  importCopilotPanel,
+  importTimeframePopover,
+  importDrawingToolbar,
+  importLimitLine,
+]
+
+/** `requestIdleCallback`, with the timeout every Safari release still needs. */
+function onIdle(run: () => void): () => void {
+  if (typeof window === 'undefined') return () => {}
+  const idle = (
+    window as typeof window & {
+      requestIdleCallback?: (
+        cb: () => void,
+        opts?: { timeout: number },
+      ) => number
+      cancelIdleCallback?: (handle: number) => void
+    }
+  ).requestIdleCallback
+  if (typeof idle === 'function') {
+    const handle = idle(run, { timeout: 3000 })
+    return () => {
+      ;(
+        window as typeof window & { cancelIdleCallback?: (h: number) => void }
+      ).cancelIdleCallback?.(handle)
+    }
+  }
+  const timer = window.setTimeout(run, 1500)
+  return () => window.clearTimeout(timer)
+}
+
+function usePanelPrefetch(): void {
+  useEffect(() => {
+    let cancelled = false
+    const cancelIdle = onIdle(() => {
+      void (async () => {
+        for (const load of PREFETCH) {
+          if (cancelled) return
+          // A warm-up that fails is not an error the user should ever see;
+          // the real import will retry (and recover) when the tab is tapped.
+          await importChunk(load).catch(() => undefined)
+        }
+      })()
+    })
+    return () => {
+      cancelled = true
+      cancelIdle()
+    }
+  }, [])
+}
+
+/**
+ * Which panel the sheet is SHOWING, which is not always the one the tab bar
+ * points at: the outgoing panel is held while it fades, and held again while
+ * the sheet slides off screen. See lib/panel-swap.ts for the rule.
+ *
+ * Every adoption goes through `startTransition`, and that is what actually
+ * removes the spinner. Warming the module is only half the job: a
+ * `React.lazy` payload is still "uninitialized" until its component is
+ * rendered for the first time, so the first render of a warm chunk suspends
+ * anyway — and React then holds the fallback on screen for its
+ * just-noticeable-difference window, measured here at ~300ms. Inside a
+ * transition React keeps the CURRENT children instead of showing a fallback,
+ * so the panel simply arrives (next frame, because the module is already
+ * warm). `isPending` keeps the content faded for however long that takes, so
+ * a cold tap on a slow connection reads as a beat rather than a spinner.
+ */
+function usePanelSwap(requested: PanelTab | null): {
+  shown: PanelTab | null
+  leaving: boolean
+} {
+  const [shown, setShown] = useState<PanelTab | null>(requested)
+  const [fadingOut, setFadingOut] = useState(false)
+  const [isPending, startTransition] = useTransition()
+  // The INTENDED panel, which leads `shown` while a transition is in flight.
+  // Planning against the rendered value would re-plan a swap already underway.
+  const shownRef = useRef<PanelTab | null>(requested)
+
+  const adopt = useCallback(
+    (panel: PanelTab | null) => {
+      shownRef.current = panel
+      startTransition(() => setShown(panel))
+    },
+    [startTransition],
+  )
+
+  useEffect(() => {
+    const command = planPanelSwap(shownRef.current, requested)
+    if (command.kind === 'none') {
+      setFadingOut(false)
+      return
+    }
+    if (command.kind === 'show') {
+      setFadingOut(false)
+      adopt(command.panel)
+      return
+    }
+    if (command.kind === 'fadeThenShow') {
+      setFadingOut(true)
+      const timer = window.setTimeout(() => {
+        setFadingOut(false)
+        adopt(command.panel)
+      }, command.delay)
+      return () => window.clearTimeout(timer)
+    }
+    // clearAfter: the sheet is on its way out; keep the content until it is.
+    const timer = window.setTimeout(() => adopt(null), command.delay)
+    return () => window.clearTimeout(timer)
+  }, [requested, adopt])
+
+  return { shown, leaving: fadingOut || isPending }
+}
 
 export function MobileSurface() {
   const { t } = useTranslation()
   useMobileRouteSync()
+  usePanelPrefetch()
 
   const { activeTab, overlays } = useMobileNav()
   const { focusedVenue } = useMobileFocus()
-  const { setActiveTab, dismissPanel, pushOverlay, popOverlay } =
+  const { selectTab, dismissPanel, pushOverlay, popOverlay } =
     useMobileActions()
   const { markets } = useAvailableMarkets()
 
   const openPanel = openPanelFor(activeTab)
-  const chrome = openPanel ? PANEL_CHROME[openPanel] : null
-  const Panel = openPanel ? PANELS[openPanel] : null
+  // The sheet's own idea of what it holds — it lags `openPanel` through the
+  // fade and through vaul's exit, which is what keeps the chrome still.
+  const { shown, leaving } = usePanelSwap(openPanel)
+  const Panel = shown ? PANELS[shown] : null
+  // Geometry follows the REQUEST (the sheet starts travelling the instant the
+  // tab changes) and falls back to the outgoing panel while it slides away, so
+  // a closing sheet never re-aims at a height nobody asked for.
+  const chrome = openPanel
+    ? PANEL_CHROME[openPanel]
+    : shown
+      ? PANEL_CHROME[shown]
+      : null
   const venueLabel =
     markets.find((m) => m.value === focusedVenue)?.label ??
     focusedVenue.toUpperCase()
+  // Which tab the bar lights up: none while an overlay that belongs to no tab
+  // covers the app, Trade while the order book is open.
+  const lit = litTab(activeTab, overlays)
 
   const openPairPicker = useCallback(
     () => pushOverlay({ kind: 'pairPicker' }),
@@ -196,18 +363,21 @@ export function MobileSurface() {
         )}
         onOpenChange={handleSheetOpenChange}
         open={openPanel !== null}
+        swapping={leaving}
         variant={chrome?.variant ?? 'default'}
       >
-        {Panel ? (
-          <Suspense fallback={<PanelFallback />}>
-            <Panel />
-          </Suspense>
-        ) : null}
+        {/* The boundary is mounted even with nothing in it. A boundary that
+            appears WITH its suspending child has no current children to keep,
+            so React must paint the fallback; one that is already there simply
+            holds what it has until the transition above resolves. */}
+        <Suspense fallback={<PanelFallback />}>
+          {Panel ? <Panel /> : null}
+        </Suspense>
       </MobileSheet>
 
       <MobileTabBar
-        active={activeTab}
-        onChange={setActiveTab}
+        active={lit}
+        onChange={selectTab}
         variant={openPanel ? 'solid' : 'float'}
       />
 

@@ -80,6 +80,13 @@ export type MobileSheetProps = {
   label: string
   /** Non-scrolling region under the handle (search field, header row). */
   header?: ReactNode
+  /**
+   * True while the panel inside is on its way out and the next one has not
+   * arrived. Fades the scroll region — the sheet, its handle and its
+   * background are untouched, which is the whole point: one sheet changing
+   * its mind, not four sheets taking turns.
+   */
+  swapping?: boolean
   /** Scrolls; gets overscroll containment and safe-bottom padding. */
   children: ReactNode
   className?: string
@@ -93,6 +100,7 @@ export const MobileSheet = memo(function MobileSheet({
   handle = true,
   label,
   header,
+  swapping = false,
   children,
   className,
 }: MobileSheetProps) {
@@ -123,7 +131,8 @@ export const MobileSheet = memo(function MobileSheet({
           {handle ? <div aria-hidden className="pl-handle shrink-0" /> : null}
           {header ? <div className="shrink-0">{header}</div> : null}
           <div
-            className="flex-1 overflow-y-auto overscroll-contain pb-[max(var(--pl-safe-bottom),30px)]"
+            className="pl-sheet-scroll flex-1 overflow-y-auto overscroll-contain pb-[max(var(--pl-safe-bottom),30px)]"
+            data-swapping={swapping ? 'true' : undefined}
             ref={scrollRef}
           >
             <SheetScrollContext value={scrollRef}>

@@ -44,15 +44,19 @@ export const MobileRow = memo(function MobileRow({
       {leading ? (
         <span className="flex shrink-0 items-center">{leading}</span>
       ) : null}
+      {/* `max-w-full` and not just `min-w-0`: the column is `items-start`, so
+          its children size to content — a nowrap subtitle would grow past the
+          row and drag the whole screen into horizontal scroll before
+          `truncate` ever engaged. */}
       <span className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
-        <span className="flex min-w-0 items-center gap-1.5">
+        <span className="flex min-w-0 max-w-full items-center gap-1.5">
           <span className="min-w-0 truncate text-left text-[14.5px] font-semibold leading-tight text-foreground">
             {title}
           </span>
           {badge}
         </span>
         {subtitle ? (
-          <span className="min-w-0 truncate text-left text-[11px] font-normal leading-tight text-muted-foreground">
+          <span className="min-w-0 max-w-full truncate text-left text-[11px] font-normal leading-tight text-muted-foreground">
             {subtitle}
           </span>
         ) : null}

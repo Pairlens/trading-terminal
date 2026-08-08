@@ -8,7 +8,8 @@
  * in apps/desktop/src-tauri, backed by the `keyring` crate. Keychain
  * failures propagate — desktop never silently falls back to weaker storage.
  *
- * Browser (dev/testing builds): every credential lives inside the vault, as
+ * Browser (the hosted web terminal and the mobile terminal — a shipped
+ * surface, not a dev harness): every credential lives inside the vault, as
  * `enc.v2` ciphertext under the vault DEK. There is no weaker fallback and no
  * un-vaulted browser format — enrolling a protector is a precondition for the
  * first credential (vault-policy.ts), so a browser profile either holds

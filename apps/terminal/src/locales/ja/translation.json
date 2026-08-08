@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "削除",
       "vaultRemoveLastBlocked": "これが保管庫への唯一の入口です。削除する前に別の入口を追加してください。",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID を唯一の入口にはできません。この Mac の指紋は変更される可能性があります。パスワードかパスキーを残してください。",
-      "vaultProtectsBody": "保管庫があれば、API キーとウォレット鍵は暗号化されて保存されます。このブラウザプロファイル — あるいはこのコンピュータのディスク — をコピーした人が手にするのは、あなたのパスワードかパスキーなしでは開けない暗号文だけです。",
+      "vaultProtectsBody": "保管庫があれば、API キーとウォレット鍵は暗号化されて保存されます。このブラウザプロファイル — あるいはこのデバイスのストレージ — をコピーした人が手にするのは、あなたのパスワードかパスキーなしでは開けない暗号文だけです。",
       "vaultCeiling": "使用中の鍵は保護しません。このページ内で動くものはすべて、アプリと同じように解錠済みの保管庫へ鍵を要求できます。もっとも価値の高い鍵には、引き続きデスクトップアプリをおすすめします。",
       "vaultNoRecovery": "復旧手段はありません。すべての入口を失えば暗号化された鍵も失われます — アプリに戻る唯一の方法はこのデバイスのデータを消去することです。",
       "vaultDesktopToggleHint": "鍵はすでにシステムのキーチェーンにあります。その上にパスワードやパスキーを重ねるにはこれをオンにしてください。",
@@ -3024,7 +3024,7 @@
     "back": "戻る",
     "saveApiKey": "APIキーを保存",
     "saving": "保存中...",
-    "storedSecurely": "このコンピューターにのみ安全に保存されます",
+    "storedSecurely": "このデバイスにのみ安全に保存されます",
     "storedSecurelyDetail": "すべての認証情報は、保存時に暗号化するOSキーチェーン（macOSキーチェーン、Windows資格情報マネージャー、またはLinux Secret Service）を使用して、このコンピューターに安全に保存されます。Pairlensのサーバーに送信・保存されることは一切ありません。APIキーのバックアップは必ず安全な場所に保管してください。",
     "storedSecurelyDetailBrowser": "このブラウザーでは、すべての認証情報は保存前にAES-256-GCMで暗号化されます。その鍵を解けるのは、あなたのボールトのパスワード、パスキー、またはTouch IDだけです。Pairlensのサーバーに送信・保存されることは一切ありません。APIキーのバックアップは必ず安全な場所に保管してください。",
     "storedSecurelyNever": "Pairlensのサーバーに送信・保存されることは一切ありません",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}}件の取引所",
       "venuesCount_other": "{{count}}件の取引所"
     },
+    "discover": {
+      "featured": "注目"
+    },
+    "markets": {
+      "filterPlaceholder": "マーケットを絞り込む",
+      "matchCount_one": "{{count}}件が一致",
+      "matchCount_other": "{{count}}件が一致"
+    },
     "trade": {
       "openBook": "オーダーブックを開く",
       "spread": "スプレッド {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "注釈"
       }
     },
+    "drawing": {
+      "placementLabel": "描画を配置",
+      "setPoint": "点を設定",
+      "cancel": "キャンセル",
+      "done": "完了",
+      "step": "{{total}}点中{{current}}点目",
+      "dragHint": "ドラッグして位置を調整",
+      "textLabel": "ラベルのテキスト",
+      "textPlaceholder": "ラベルを追加"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "アカウント＆接続",
@@ -4722,6 +4740,24 @@
       "trading": "取引",
       "connected": "接続済み",
       "perOrder": "1注文あたり{{percent}}%"
+    },
+    "accounts": {
+      "permissionsLabel": "権限",
+      "canTrade": "取引可能",
+      "canTradeHint": "この取引所での注文はこのキーで署名されます。キーがこのデバイスから外に出ることはありません。",
+      "readOnlyTitle": "読み取り専用",
+      "readOnlyHint": "この取引所のマーケットデータは受信できますが、このキーでここから注文を出すことはできません。",
+      "unavailableTitle": "ここでは利用できません",
+      "modeLabel": "モード",
+      "apiKeyLabel": "APIキー",
+      "connectedLabel": "接続日",
+      "renameSaved": "名前を更新しました。",
+      "renameFailed": "新しい名前を保存できませんでした。",
+      "disconnectTitle": "{{label}}を切断しますか？",
+      "disconnectBody": "キーはこのデバイスから削除されます。取引所側では何も変わらず、いつでも再接続できます。",
+      "sealedTitle": "保管庫がロック中",
+      "missingTitle": "未接続",
+      "missingBody": "このアカウントはもうこのデバイスに保存されていません。"
     },
     "pickers": {
       "searchPlaceholder": "ペア、ティッカー、名前で検索",

@@ -12,7 +12,10 @@
  * Prices come from ONE bulk snapshot map (`useBulkTickerQuotes`), never from a
  * per-row `useTickerStream` — fanning that hook across rows puts one setState
  * origin per row on the render path at socket rate, which is the single rule
- * the terminal's render budget is built around.
+ * the terminal's render budget is built around. The cell that renders them is
+ * the desktop pane's own (`TrendQuoteCell` → `PairQuote`), so a row flashes
+ * up/down on every snapshot exactly as the desktop watchlist does, and the
+ * trend line lands at the same x on every row.
  *
  * The sheet owns the scroll container, so the search + list-chip header is
  * `sticky` rather than living in the sheet's header slot. Reordering stays on
@@ -36,6 +39,7 @@ import { useVenueTradePermission } from '../lib/venue-permission'
 import { VENUE_KIND_KEY, venueKindOf } from '../lib/venue-kind'
 import { MobileRow } from '../primitives/mobile-row'
 import { useSheetScrollRef } from '../primitives/mobile-sheet'
+import { TrendQuoteCell } from './trend-quote-cell'
 import type { Instrument } from '@pairlens/shared/instrument-types'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
@@ -44,8 +48,6 @@ import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useMarketData } from '@/lib/market-data-provider'
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
-import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
-import { formatPrice } from '@/lib/format-price'
 
 /** Lists at or below this length render as a plain map. */
 const VIRTUALIZE_ABOVE = 30
@@ -130,9 +132,11 @@ export default memo(function MobileWatchlistPanel() {
   return (
     <div className="flex flex-col">
       {/* Sticky rather than the sheet's header slot: the sheet owns the scroll
-          container, and `.pl-sheet` is the sanctioned fill for it — its radius,
-          border and shadow belong to the sheet's own edge, not to this strip. */}
-      <div className="pl-sheet sticky top-0 z-10 rounded-none border-t-0 pb-2 shadow-none">
+          container. `.pl-sheet-solid` and not `.pl-sheet`: the sheet's fill is
+          0.97 alpha, so rows scrolling beneath a translucent copy of it ghost
+          through, and its hairline pseudo/transition belong to the sheet's own
+          edge, not to this strip. */}
+      <div className="pl-sheet-solid sticky top-0 z-10 pb-2">
         <div className="flex items-center gap-2 px-4 pt-1">
           <button
             className="pl-field flex h-[38px] min-w-0 flex-1 items-center gap-2 rounded-[11px] px-3 text-left"
@@ -286,8 +290,6 @@ const WatchlistRow = memo(function WatchlistRow({
     setFocusedPair(instrument.symbol)
   }, [market, focusedVenue, setFocusedVenue, setFocusedPair, instrument.symbol])
 
-  const change = quote?.change24h ?? null
-
   return (
     <MobileRow
       badge={
@@ -317,29 +319,11 @@ const WatchlistRow = memo(function WatchlistRow({
       })}
       title={<span className="font-mono">{instrument.symbol}</span>}
       trailing={
-        <span className="flex items-center gap-2.5">
-          <MiniPriceChart
-            className="h-6 w-[50px] opacity-85"
-            market={market}
-            pair={instrument.symbol}
-          />
-          <span className="flex min-w-[68px] flex-col items-end gap-0.5">
-            <span className="font-mono text-[14.5px] font-medium tabular-nums leading-none text-foreground">
-              {quote ? formatPrice(quote.price) : '—'}
-            </span>
-            {change != null ? (
-              <span
-                className={cn(
-                  'font-mono text-[11.5px] tabular-nums leading-none',
-                  change >= 0 ? 'text-up' : 'text-down',
-                )}
-              >
-                {change >= 0 ? '+' : ''}
-                {change.toFixed(2)}%
-              </span>
-            ) : null}
-          </span>
-        </span>
+        <TrendQuoteCell
+          market={market}
+          pair={instrument.symbol}
+          quote={quote}
+        />
       }
     />
   )

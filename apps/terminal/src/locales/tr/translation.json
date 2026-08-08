@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "Kaldır",
       "vaultRemoveLastBlocked": "Bu, kasana giren tek yol. Kaldırmadan önce bir tane daha ekle.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID tek giriş yolu olamaz — bu Mac’teki parmak izleri değişebilir. Bir parola ya da passkey bırak.",
-      "vaultProtectsBody": "Kasa ile API ve cüzdan anahtarların şifreli olarak saklanır. Bu tarayıcı profilini — ya da bu bilgisayarın diskini — kopyalayan biri, parolan veya passkey'in olmadan açamayacağı şifreli metin elde eder.",
+      "vaultProtectsBody": "Kasa ile API ve cüzdan anahtarların şifreli olarak saklanır. Bu tarayıcı profilini — ya da bu cihazın depolama alanını — kopyalayan biri, parolan veya passkey'in olmadan açamayacağı şifreli metin elde eder.",
       "vaultCeiling": "Anahtarları kullanırken korumaz. Bu sayfada çalışan her şey, tıpkı uygulamanın yaptığı gibi açık kasadan bir anahtar isteyebilir. En değerli anahtarların için önerimiz hâlâ masaüstü uygulaması.",
       "vaultNoRecovery": "Kurtarma yoktur. Tüm giriş yollarını kaybedersen şifreli anahtarlar da gider — uygulamaya geri dönmenin tek yolu bu cihazın verilerini siler.",
       "vaultDesktopToggleHint": "Anahtarların zaten sistem anahtar zincirinde. Üstüne bir parola veya passkey eklemek için bunu aç.",
@@ -3024,7 +3024,7 @@
     "back": "Geri",
     "saveApiKey": "API Anahtarını Kaydet",
     "saving": "Kaydediliyor...",
-    "storedSecurely": "Yalnızca bilgisayarında güvenli şekilde saklanır",
+    "storedSecurely": "Yalnızca cihazında güvenli şekilde saklanır",
     "storedSecurelyDetail": "Tüm kimlik bilgileri, bunları depolamada şifreleyen işletim sistemi anahtarlığı (macOS Anahtarlığı, Windows Kimlik Bilgisi Yöneticisi veya Linux Secret Service) kullanılarak bilgisayarında güvenli şekilde saklanır. Pairlens sunucularına asla gönderilmez veya orada saklanmaz. API anahtarlarının yedeğini her zaman güvenli bir yerde tutmayı unutma.",
     "storedSecurelyDetailBrowser": "Bu tarayıcıda her kimlik bilgisi, kaydedilmeden önce yalnızca kasa şifrenin, passkey'in veya Touch ID'nin açabildiği bir anahtarla AES-256-GCM kullanılarak şifrelenir. Pairlens sunucularına asla gönderilmez veya orada saklanmaz. API anahtarlarının yedeğini her zaman güvenli bir yerde tutmayı unutma.",
     "storedSecurelyNever": "Pairlens sunucularına asla gönderilmez veya orada saklanmaz",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}} borsa",
       "venuesCount_other": "{{count}} borsa"
     },
+    "discover": {
+      "featured": "Öne çıkanlar"
+    },
+    "markets": {
+      "filterPlaceholder": "Piyasaları filtrele",
+      "matchCount_one": "{{count}} eşleşme",
+      "matchCount_other": "{{count}} eşleşme"
+    },
     "trade": {
       "openBook": "Emir defterini aç",
       "spread": "spread {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "Notlar"
       }
     },
+    "drawing": {
+      "placementLabel": "Çizimi yerleştir",
+      "setPoint": "Noktayı koy",
+      "cancel": "İptal",
+      "done": "Bitti",
+      "step": "Nokta {{current}}/{{total}}",
+      "dragHint": "Konumlandırmak için sürükle",
+      "textLabel": "Etiket metni",
+      "textPlaceholder": "Etiket ekle"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "Hesaplar ve bağlantılar",
@@ -4722,6 +4740,24 @@
       "trading": "İşlem",
       "connected": "Bağlı",
       "perOrder": "Emir başına %{{percent}}"
+    },
+    "accounts": {
+      "permissionsLabel": "İzinler",
+      "canTrade": "İşlem etkin",
+      "canTradeHint": "Bu borsada verdiğin emirler bu anahtarla imzalanır. Anahtar bu cihazdan asla çıkmaz.",
+      "readOnlyTitle": "Yalnızca okuma",
+      "readOnlyHint": "Bu borsadan piyasa verisi akar ama bu anahtarla burada emir verilemez.",
+      "unavailableTitle": "Burada kullanılamıyor",
+      "modeLabel": "Mod",
+      "apiKeyLabel": "API anahtarı",
+      "connectedLabel": "Bağlandı",
+      "renameSaved": "Ad güncellendi.",
+      "renameFailed": "Yeni ad kaydedilemedi.",
+      "disconnectTitle": "{{label}} bağlantısı kesilsin mi?",
+      "disconnectBody": "Anahtar bu cihazdan kaldırılır. Borsada hiçbir şey değişmez ve istediğin zaman yeniden bağlayabilirsin.",
+      "sealedTitle": "Kasa kilitli",
+      "missingTitle": "Bağlı değil",
+      "missingBody": "Bu hesap artık bu cihazda saklanmıyor."
     },
     "pickers": {
       "searchPlaceholder": "Herhangi bir parite, sembol veya isim ara",

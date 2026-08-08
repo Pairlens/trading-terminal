@@ -35,6 +35,8 @@ let getCredentialImpl: (key: string) => Promise<string | null> = async () =>
   null
 let saved: Array<{ key: string; value: string }> = []
 let mustEnroll = false
+/** Set to make the next write fail — a sealed vault throws exactly this way. */
+let saveFailure: Error | null = null
 
 // `mock.module` is process-global in bun. Capture the real modules first and
 // put them back in `afterAll`, spreading the namespace — handing the namespace
@@ -52,6 +54,7 @@ mock.module('@/lib/keychain', () => ({
   ...realKeychain,
   getCredential: (key: string) => getCredentialImpl(key),
   saveCredential: async (key: string, value: string) => {
+    if (saveFailure) throw saveFailure
     saved.push({ key, value })
   },
   deleteCredential: async () => undefined,
@@ -87,6 +90,7 @@ function resetStores(): void {
 beforeEach(() => {
   saved = []
   mustEnroll = false
+  saveFailure = null
   getCredentialImpl = async () => null
   resetStores()
 })
@@ -218,6 +222,86 @@ describe('credentials store: sealed is not empty', () => {
     expect(state.status).toBe('error')
     expect(state.sealed).toBe(false)
     expect(state.status).not.toBe('ready')
+  })
+})
+
+describe('renaming a credential', () => {
+  const stored = {
+    id: 'abc',
+    market: 'okx',
+    label: 'OKX Live',
+    mode: 'live' as const,
+    apiKey: 'k',
+    apiSecret: 's',
+    createdAt: 1,
+  }
+
+  function seed(): void {
+    useCredentialsStore.setState({
+      credentials: [{ ...stored }],
+      loaded: true,
+      status: 'ready',
+      sealed: false,
+    })
+  }
+
+  test('writes the whole record back to the same slot, then publishes', async () => {
+    seed()
+    await useCredentialsStore.getState().renameCredential('abc', 'Desk key')
+
+    expect(useCredentialsStore.getState().credentials[0].label).toBe('Desk key')
+    // One write, to the credential's own slot. The index holds ids, and the id
+    // did not change, so it must NOT be rewritten.
+    expect(saved).toHaveLength(1)
+    expect(saved[0].key).toBe('cred:abc')
+    const written = JSON.parse(saved[0].value)
+    expect(written.label).toBe('Desk key')
+    // Nothing else moved — a rename is not a re-issue.
+    expect(written.apiKey).toBe('k')
+    expect(written.apiSecret).toBe('s')
+    expect(written.createdAt).toBe(1)
+  })
+
+  test('trims the label', async () => {
+    seed()
+    await useCredentialsStore.getState().renameCredential('abc', '  Desk key  ')
+    expect(useCredentialsStore.getState().credentials[0].label).toBe('Desk key')
+    expect(JSON.parse(saved[0].value).label).toBe('Desk key')
+  })
+
+  test('an empty or whitespace label is a no-op, not a blank name', async () => {
+    seed()
+    await useCredentialsStore.getState().renameCredential('abc', '')
+    await useCredentialsStore.getState().renameCredential('abc', '   ')
+
+    expect(useCredentialsStore.getState().credentials[0].label).toBe('OKX Live')
+    expect(saved).toEqual([])
+  })
+
+  test('renaming to the same name writes nothing', async () => {
+    seed()
+    await useCredentialsStore.getState().renameCredential('abc', 'OKX Live')
+    expect(saved).toEqual([])
+  })
+
+  test('an unknown id writes nothing', async () => {
+    seed()
+    await useCredentialsStore.getState().renameCredential('nope', 'Desk key')
+    expect(saved).toEqual([])
+  })
+
+  test('a failed write rejects and leaves the name alone', async () => {
+    // The reason this action persists BEFORE it publishes. On a sealed vault
+    // `saveCredential` throws; a store that had already swapped the label would
+    // leave the UI showing a name that is on no disk anywhere.
+    seed()
+    saveFailure = new VaultSealedError()
+
+    await expect(
+      useCredentialsStore.getState().renameCredential('abc', 'Desk key'),
+    ).rejects.toBeInstanceOf(VaultSealedError)
+
+    expect(useCredentialsStore.getState().credentials[0].label).toBe('OKX Live')
   })
 })
 

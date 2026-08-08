@@ -11,6 +11,15 @@
  * It also stays SHARP in the not-connected state (design screen 9). Nothing
  * about the market is hidden when the user has no key; only the part that
  * needs one is.
+ *
+ * DEPTH-INTENSITY DECISION: the full book grades every level by size
+ * (`magnitude-intensity.ts`); this strip deliberately does not. It renders no
+ * levels — one best bid, one best ask, one spread and one pressure bar — and
+ * an intensity ramp needs a column of neighbours to mean anything. The split
+ * bar below already encodes which side is heavier, so tinting it by size would
+ * paint the same variable twice and make a wide spread look like a deep book.
+ * The strip's job is to say "the book is there, tap it"; the grading lives one
+ * tap away where there is something to compare against.
  */
 import { memo } from 'react'
 import { ChevronRight, Rows3 } from 'lucide-react'

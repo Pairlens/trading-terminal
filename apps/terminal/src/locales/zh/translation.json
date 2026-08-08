@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "移除",
       "vaultRemoveLastBlocked": "这是进入保险库的唯一方式。移除前请先添加另一种。",
       "vaultRemoveBiometricOnlyBlocked": "触控 ID 不能是唯一的进入方式——这台 Mac 上的指纹可能会变。请保留密码或通行密钥。",
-      "vaultProtectsBody": "有了保险库，你的 API 密钥和钱包密钥以加密形式保存。复制这个浏览器配置文件 — 或这台电脑的磁盘 — 的人只会拿到没有你的密码或通行密钥就打不开的密文。",
+      "vaultProtectsBody": "有了保险库，你的 API 密钥和钱包密钥以加密形式保存。复制这个浏览器配置文件 — 或这台设备的存储 — 的人只会拿到没有你的密码或通行密钥就打不开的密文。",
       "vaultCeiling": "它不保护正在使用中的密钥。这个页面里运行的任何代码都能像应用本身一样，向已解锁的保险库索取密钥。对最贵重的密钥，我们仍然推荐桌面应用。",
       "vaultNoRecovery": "没有找回途径。失去全部进入方式，加密的密钥就没了 — 回到应用的唯一办法会清除本设备的数据。",
       "vaultDesktopToggleHint": "你的密钥已经在系统钥匙串里。开启此项可在其上再加一层密码或通行密钥。",
@@ -3024,7 +3024,7 @@
     "back": "返回",
     "saveApiKey": "保存 API 密钥",
     "saving": "保存中……",
-    "storedSecurely": "仅安全存储在你的计算机上",
+    "storedSecurely": "仅安全存储在你的设备上",
     "storedSecurelyDetail": "所有凭证都通过操作系统密钥链(macOS 钥匙串、Windows 凭据管理器或 Linux Secret Service)安全存储在你的计算机上,并在静态时加密。它们绝不会发送到或存储在 Pairlens 服务器上。请务必将你的 API 密钥备份保存在安全的地方。",
     "storedSecurelyDetailBrowser": "在这个浏览器中,每条凭据在保存前都会用 AES-256-GCM 加密,其密钥只有你的保险库密码、通行密钥或 Touch ID 才能解开。绝不会发送到或存储在 Pairlens 服务器上。请务必将 API 密钥的备份保存在安全的地方。",
     "storedSecurelyNever": "绝不会发送到或存储在 Pairlens 服务器上",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}} 个交易所",
       "venuesCount_other": "{{count}} 个交易所"
     },
+    "discover": {
+      "featured": "精选"
+    },
+    "markets": {
+      "filterPlaceholder": "筛选市场",
+      "matchCount_one": "{{count}} 个匹配项",
+      "matchCount_other": "{{count}} 个匹配项"
+    },
     "trade": {
       "openBook": "打开订单簿",
       "spread": "点差 {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "标注"
       }
     },
+    "drawing": {
+      "placementLabel": "放置绘图",
+      "setPoint": "设定点",
+      "cancel": "取消",
+      "done": "完成",
+      "step": "第 {{current}}/{{total}} 个点",
+      "dragHint": "拖动以定位",
+      "textLabel": "标签文字",
+      "textPlaceholder": "添加标签"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "账户与连接",
@@ -4722,6 +4740,24 @@
       "trading": "交易",
       "connected": "已连接",
       "perOrder": "每笔订单 {{percent}}%"
+    },
+    "accounts": {
+      "permissionsLabel": "权限",
+      "canTrade": "已启用交易",
+      "canTradeHint": "你在此交易所下的订单都由此密钥签名。它永不离开这台设备。",
+      "readOnlyTitle": "仅读取",
+      "readOnlyHint": "行情数据仍从此交易所实时传入，但无法在这里用此密钥下单。",
+      "unavailableTitle": "在此不可用",
+      "modeLabel": "模式",
+      "apiKeyLabel": "API 密钥",
+      "connectedLabel": "已连接",
+      "renameSaved": "名称已更新。",
+      "renameFailed": "新名称未能保存。",
+      "disconnectTitle": "断开 {{label}} 的连接？",
+      "disconnectBody": "密钥将从这台设备移除。交易所那边不会有任何变化，之后随时可以重新连接。",
+      "sealedTitle": "保险库已锁定",
+      "missingTitle": "未连接",
+      "missingBody": "此账户已不再存储在这台设备上。"
     },
     "pickers": {
       "searchPlaceholder": "搜索任意交易对、代码或名称",

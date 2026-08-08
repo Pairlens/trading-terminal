@@ -65,7 +65,11 @@ export function WelcomeStatue({
       {/* Glow seated behind the head — the marketing hero's halo, in the
           active theme's primary. */}
       <div
-        className="absolute left-1/2 top-[-6%] h-[46%] w-[min(1100px,80vw)] -translate-x-1/2 rounded-full opacity-25 blur-[120px]"
+        // A 120px blur over a viewport-spanning box is real tile memory on a
+        // phone GPU, and the source is already a radial gradient with a soft
+        // falloff — below the mobile breakpoint 48px reads the same and costs
+        // a fraction. Desktop keeps the wide halo.
+        className="absolute left-1/2 top-[-6%] h-[46%] w-[min(1100px,80vw)] -translate-x-1/2 rounded-full opacity-25 blur-[120px] max-md:blur-[48px]"
         style={{
           background:
             'radial-gradient(closest-side, var(--primary), transparent 72%)',

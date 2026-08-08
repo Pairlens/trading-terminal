@@ -37,6 +37,7 @@ import {
 } from '@/components/settings/settings-nav'
 import { SettingsSectionBody } from '@/components/settings/settings-section-body'
 import { StoredLocallyDisclosure } from '@/components/accounts/stored-locally-disclosure'
+import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
 import { ExchangeBadge } from '@/components/accounts/venue-badges'
 import {
   CREDENTIAL_SCHEMAS,
@@ -71,6 +72,7 @@ export default memo(function SettingsScreen({
   const [section, setSection] = useState<SettingsNavId | null>(() =>
     initialSection(overlay.section),
   )
+  const [unlockOpen, setUnlockOpen] = useState(false)
 
   useEffect(() => {
     if (section) track('settings_section_viewed', { section })
@@ -104,7 +106,8 @@ export default memo(function SettingsScreen({
       title={t('mobile.shell.overlays.settings')}
     >
       <ProfileRow onOpen={() => setSection('profile')} />
-      <AccountsSection />
+      <AccountsSection onUnlock={() => setUnlockOpen(true)} />
+      <VaultUnlockDialog onOpenChange={setUnlockOpen} open={unlockOpen} />
 
       <SectionLabel>{t('mobile.settings.terminalHeader')}</SectionLabel>
       {VISIBLE_SETTINGS_NAV_GROUPS.map((group, index) => (
@@ -286,7 +289,7 @@ function ProfileDetail() {
  * each one opens its own portfolio subscription and draws a poster, which is a
  * lot of machinery for a row whose job is to answer "trade or read-only?".
  */
-function AccountsSection() {
+function AccountsSection({ onUnlock }: { onUnlock: () => void }) {
   const { t } = useTranslation()
   const { pushOverlay } = useMobileActions()
   const credentials = useCredentialsStore((s) => s.credentials)
@@ -312,10 +315,16 @@ function AccountsSection() {
       </SectionLabel>
 
       {sealed ? (
+        // A sealed vault is a row you can ACT on. Desktop puts an Unlock button
+        // in its banner; the phone shipped the same sentence with nothing
+        // behind it, which left "your accounts are still here" as a statement
+        // the user could read but not use.
         <MobileRow
           leading={<Lock className="size-[18px] text-muted-foreground" />}
+          onPress={onUnlock}
           subtitle={t('accounts.vaultSealedBody')}
           title={t('security.vault.sealedBannerAction')}
+          trailing={Chevron}
         />
       ) : credentials.length === 0 && wallets.length === 0 ? (
         <MobileRow
@@ -355,10 +364,21 @@ function AccountsSection() {
   )
 }
 
+/**
+ * A credential row is a door, not a label. The account detail behind it is
+ * where rename and disconnect live — before it existed this row was the end of
+ * the road on the phone and revoking a key meant opening the desktop app.
+ */
 function CredentialRow({ credential }: { credential: ExchangeCredential }) {
   const { t } = useTranslation()
+  const { pushOverlay } = useMobileActions()
   const permission = useVenueTradePermission(credential.market)
   const canTrade = permission === 'trade'
+
+  const open = useCallback(
+    () => pushOverlay({ kind: 'accountDetail', credentialId: credential.id }),
+    [credential.id, pushOverlay],
+  )
 
   return (
     <MobileRow
@@ -368,16 +388,19 @@ function CredentialRow({ credential }: { credential: ExchangeCredential }) {
         </Tag>
       }
       leading={<ExchangeBadge market={credential.market} />}
+      onPress={open}
+      // The venue names the row and the user's own label is the sub-line: two
+      // keys on one venue are told apart by the name they were given.
       subtitle={`${
-        isBrokerMarket(credential.market)
+        credential.label ||
+        (isBrokerMarket(credential.market)
           ? t('accounts.typeBroker')
-          : t('accounts.typeExchange')
+          : t('accounts.typeExchange'))
       } · ${
         credential.mode === 'paper' ? t('accounts.paper') : t('accounts.live')
       }`}
-      // No chevron: there is no account detail screen on the phone yet, and a
-      // chevron that opens nothing is worse than no chevron.
       title={CREDENTIAL_SCHEMAS[credential.market]?.label ?? credential.label}
+      trailing={Chevron}
     />
   )
 }

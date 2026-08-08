@@ -22,42 +22,12 @@ import { cn } from '@pairlens/ui'
 import { Glyph } from '../primitives/glyphs'
 import { MobileSheet } from '../primitives/mobile-sheet'
 import { SHEET_BAND, sheetTop } from '../lib/mobile-geometry'
+import { MOBILE_DRAWING_SECTIONS } from './drawing-sections'
 import { SLOT_GLYPHS } from './use-drawing-slots'
 import type { DrawingToolOption } from '@/components/terminal/drawing-tool-catalog'
 import { findDrawingTool } from '@/components/terminal/drawing-tool-catalog'
 import { drawingToolKey } from '@/lib/chart-drawing-tools'
 import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
-
-/**
- * The design's five groupings, expressed as catalog keys.
- *
- * Two honest substitutions where the design named a shape this build has no
- * tool for: "Fan" resolves to the Gann fan (the only fan the engine draws), and
- * Annotate's fourth tile is the highlighter rather than a price label, which
- * does not exist as a drawing type. Both are noted rather than invented.
- */
-const SECTIONS: Array<{ labelKey: string; keys: Array<string> }> = [
-  {
-    labelKey: 'chart.drawing.categories.lines',
-    keys: ['line', 'ray', 'hline', 'vline'],
-  },
-  {
-    labelKey: 'mobile.chart.sections.channelsFib',
-    keys: ['channel', 'fibonacci', 'fib-extension', 'gann-fan'],
-  },
-  {
-    labelKey: 'chart.drawing.categories.shapes',
-    keys: ['rectangle', 'ellipse', 'path:triangle', 'brush'],
-  },
-  {
-    labelKey: 'mobile.chart.sections.annotate',
-    keys: ['text', 'arrow', 'callout', 'highlighter'],
-  },
-  {
-    labelKey: 'chart.drawing.categories.measure',
-    keys: ['measure', 'long-position', 'short-position'],
-  },
-]
 
 export type DrawingToolsSheetProps = {
   open: boolean
@@ -83,7 +53,7 @@ export default memo(function DrawingToolsSheet({
   // rendered as a blank tile (the same contract `findDrawingTool` documents).
   const sections = useMemo(
     () =>
-      SECTIONS.map((section) => ({
+      MOBILE_DRAWING_SECTIONS.map((section) => ({
         labelKey: section.labelKey,
         tools: section.keys.flatMap((key) => {
           const option = findDrawingTool(key)

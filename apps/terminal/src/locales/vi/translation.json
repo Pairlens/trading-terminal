@@ -970,7 +970,7 @@
       "vaultRemoveProtector": "Xóa",
       "vaultRemoveLastBlocked": "Đây là cách duy nhất vào kho của bạn. Hãy thêm cách khác trước khi xóa nó.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID không thể là cách duy nhất để vào — vân tay trên máy Mac này có thể thay đổi. Hãy giữ lại mật khẩu hoặc passkey.",
-      "vaultProtectsBody": "Với kho, khóa API và khóa ví của bạn được lưu ở dạng mã hóa. Ai sao chép hồ sơ trình duyệt này — hoặc ổ đĩa của máy này — chỉ nhận được bản mã mà họ không mở nổi nếu không có mật khẩu hay passkey của bạn.",
+      "vaultProtectsBody": "Với kho, khóa API và khóa ví của bạn được lưu ở dạng mã hóa. Ai sao chép hồ sơ trình duyệt này — hoặc bộ nhớ của thiết bị này — chỉ nhận được bản mã mà họ không mở nổi nếu không có mật khẩu hay passkey của bạn.",
       "vaultCeiling": "Nó không bảo vệ khóa trong lúc bạn đang dùng. Bất cứ thứ gì chạy trong trang này đều có thể xin khóa từ kho đã mở, đúng như cách ứng dụng làm. Với những khóa giá trị nhất, ứng dụng desktop vẫn là lựa chọn được khuyến nghị.",
       "vaultNoRecovery": "Không có khôi phục. Mất hết mọi cách vào thì khóa đã mã hóa cũng mất — cách duy nhất quay lại ứng dụng sẽ xóa dữ liệu của thiết bị này.",
       "vaultDesktopToggleHint": "Khóa của bạn đã nằm trong keychain hệ thống. Bật mục này để thêm một mật khẩu hoặc passkey lên trên.",
@@ -3024,7 +3024,7 @@
     "back": "Quay lại",
     "saveApiKey": "Lưu API Key",
     "saving": "Đang lưu...",
-    "storedSecurely": "Lưu trữ an toàn chỉ trên máy tính của bạn",
+    "storedSecurely": "Lưu trữ an toàn chỉ trên thiết bị của bạn",
     "storedSecurelyDetail": "Mọi thông tin đăng nhập được lưu trữ an toàn trên máy tính của bạn bằng keychain hệ điều hành (macOS Keychain, Windows Credential Manager, hoặc Linux Secret Service), được mã hóa khi lưu trữ. Chúng không bao giờ được gửi đến hoặc lưu trữ trên máy chủ Pairlens. Hãy luôn giữ bản sao lưu API key của bạn ở nơi an toàn.",
     "storedSecurelyDetailBrowser": "Trong trình duyệt này, mọi thông tin đăng nhập đều được mã hóa bằng AES-256-GCM trước khi lưu, dưới một khóa mà chỉ mật khẩu kho, passkey hoặc Touch ID của bạn mới mở được. Chúng không bao giờ được gửi đến hoặc lưu trữ trên máy chủ Pairlens. Hãy luôn giữ một bản sao lưu API key của bạn ở nơi an toàn.",
     "storedSecurelyNever": "không bao giờ được gửi đến hoặc lưu trữ trên máy chủ Pairlens",
@@ -4684,6 +4684,14 @@
       "venuesCount_one": "{{count}} sàn",
       "venuesCount_other": "{{count}} sàn"
     },
+    "discover": {
+      "featured": "Nổi bật"
+    },
+    "markets": {
+      "filterPlaceholder": "Lọc thị trường",
+      "matchCount_one": "{{count}} kết quả",
+      "matchCount_other": "{{count}} kết quả"
+    },
     "trade": {
       "openBook": "Mở sổ lệnh",
       "spread": "spread {{value}}",
@@ -4715,6 +4723,16 @@
         "annotate": "Chú thích"
       }
     },
+    "drawing": {
+      "placementLabel": "Đặt hình vẽ",
+      "setPoint": "Đặt điểm",
+      "cancel": "Hủy",
+      "done": "Xong",
+      "step": "Điểm {{current}}/{{total}}",
+      "dragHint": "Kéo để định vị",
+      "textLabel": "Nội dung nhãn",
+      "textPlaceholder": "Thêm nhãn"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "Tài khoản & kết nối",
@@ -4722,6 +4740,24 @@
       "trading": "Giao dịch",
       "connected": "Đã kết nối",
       "perOrder": "{{percent}}% mỗi lệnh"
+    },
+    "accounts": {
+      "permissionsLabel": "Quyền hạn",
+      "canTrade": "Đã bật giao dịch",
+      "canTradeHint": "Lệnh bạn đặt trên sàn này được ký bằng key này. Key không bao giờ rời khỏi thiết bị này.",
+      "readOnlyTitle": "Chỉ đọc",
+      "readOnlyHint": "Dữ liệu thị trường vẫn truyền trực tiếp từ sàn này, nhưng không thể đặt lệnh bằng key này ở đây.",
+      "unavailableTitle": "Không khả dụng ở đây",
+      "modeLabel": "Chế độ",
+      "apiKeyLabel": "API key",
+      "connectedLabel": "Đã kết nối",
+      "renameSaved": "Đã cập nhật tên.",
+      "renameFailed": "Tên mới chưa được lưu.",
+      "disconnectTitle": "Ngắt kết nối {{label}}?",
+      "disconnectBody": "Key sẽ bị xóa khỏi thiết bị này. Không có gì thay đổi trên sàn, và bạn có thể kết nối lại bất cứ lúc nào.",
+      "sealedTitle": "Kho bị khóa",
+      "missingTitle": "Chưa kết nối",
+      "missingBody": "Tài khoản này không còn được lưu trên thiết bị này."
     },
     "pickers": {
       "searchPlaceholder": "Tìm bất kỳ cặp, mã hoặc tên nào",

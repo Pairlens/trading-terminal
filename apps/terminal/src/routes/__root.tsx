@@ -221,6 +221,21 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         rel: 'stylesheet',
         href: appCss,
       },
+      {
+        // Web app manifest — what makes "Add to Home Screen" install the
+        // mobile terminal as a standalone app instead of a Safari bookmark.
+        // No service worker: the terminal is live market data, and a cache
+        // that answers for an exchange is worse than no cache at all.
+        rel: 'manifest',
+        href: '/manifest.json',
+      },
+      {
+        // iOS ignores the manifest's icons and reads this one. Full-bleed
+        // square on purpose: iOS applies its own corner mask, and a PNG with
+        // transparent corners gets composited onto white first.
+        rel: 'apple-touch-icon',
+        href: '/apple-touch-icon.png',
+      },
     ],
   }),
   // Every route inherits this one: nothing else in the app defines an

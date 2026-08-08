@@ -972,7 +972,7 @@
       "vaultRemoveProtector": "Usuń",
       "vaultRemoveLastBlocked": "To jedyny sposób wejścia do sejfu. Dodaj kolejny, zanim go usuniesz.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID nie może być jedynym sposobem wejścia — odciski palców na tym Macu mogą się zmienić. Zachowaj hasło lub passkey.",
-      "vaultProtectsBody": "Z sejfem klucze API i klucze portfela są przechowywane w postaci zaszyfrowanej. Kto skopiuje ten profil przeglądarki — albo dysk tego komputera — dostanie szyfrogram, którego nie otworzy bez Twojego hasła lub passkey.",
+      "vaultProtectsBody": "Z sejfem klucze API i klucze portfela są przechowywane w postaci zaszyfrowanej. Kto skopiuje ten profil przeglądarki — albo pamięć tego urządzenia — dostanie szyfrogram, którego nie otworzy bez Twojego hasła lub passkey.",
       "vaultCeiling": "Nie chroni kluczy, gdy z nich korzystasz. Wszystko, co działa na tej stronie, może poprosić odblokowany sejf o klucz dokładnie tak, jak robi to aplikacja. Do najcenniejszych kluczy nadal rekomendujemy aplikację desktopową.",
       "vaultNoRecovery": "Nie ma odzyskiwania. Jeśli stracisz wszystkie sposoby wejścia, zaszyfrowane klucze przepadają — jedyny powrót do aplikacji kasuje dane tego urządzenia.",
       "vaultDesktopToggleHint": "Twoje klucze są już w pęku kluczy systemu. Włącz to, aby dodać na wierzchu hasło lub passkey.",
@@ -3044,7 +3044,7 @@
     "back": "Wstecz",
     "saveApiKey": "Zapisz klucz API",
     "saving": "Zapisywanie...",
-    "storedSecurely": "Przechowywane bezpiecznie tylko na Twoim komputerze",
+    "storedSecurely": "Przechowywane bezpiecznie tylko na Twoim urządzeniu",
     "storedSecurelyDetail": "Wszystkie dane uwierzytelniające są przechowywane bezpiecznie na Twoim komputerze za pomocą keychaina systemu operacyjnego (macOS Keychain, Windows Credential Manager lub Linux Secret Service), który szyfruje je w spoczynku. Nigdy nie są wysyłane ani przechowywane na serwerach Pairlens. Zawsze przechowuj kopię zapasową kluczy API w bezpiecznym miejscu.",
     "storedSecurelyDetailBrowser": "W tej przeglądarce każde poświadczenie jest szyfrowane AES-256-GCM przed zapisaniem, kluczem, który otworzy tylko Twoje hasło do sejfu, passkey albo Touch ID. Nigdy nie są wysyłane ani przechowywane na serwerach Pairlens. Zawsze przechowuj kopię zapasową kluczy API w bezpiecznym miejscu.",
     "storedSecurelyNever": "Nigdy nie są wysyłane ani przechowywane na serwerach Pairlens",
@@ -4714,6 +4714,16 @@
       "venuesCount_one": "{{count}} giełda",
       "venuesCount_other": "{{count}} giełd"
     },
+    "discover": {
+      "featured": "Polecane"
+    },
+    "markets": {
+      "filterPlaceholder": "Filtruj rynki",
+      "matchCount_one": "{{count}} wynik",
+      "matchCount_few": "{{count}} wyniki",
+      "matchCount_many": "{{count}} wyników",
+      "matchCount_other": "{{count}} wyników"
+    },
     "trade": {
       "openBook": "Otwórz arkusz zleceń",
       "spread": "spread {{value}}",
@@ -4745,6 +4755,16 @@
         "annotate": "Adnotacje"
       }
     },
+    "drawing": {
+      "placementLabel": "Umieść rysunek",
+      "setPoint": "Ustaw punkt",
+      "cancel": "Anuluj",
+      "done": "Gotowe",
+      "step": "Punkt {{current}} z {{total}}",
+      "dragHint": "Przeciągnij na miejsce",
+      "textLabel": "Tekst etykiety",
+      "textPlaceholder": "Dodaj etykietę"
+    },
     "copilot": {},
     "settings": {
       "accountsHeader": "Konta i połączenia",
@@ -4752,6 +4772,24 @@
       "trading": "Handel",
       "connected": "Połączono",
       "perOrder": "{{percent}}% na zlecenie"
+    },
+    "accounts": {
+      "permissionsLabel": "Uprawnienia",
+      "canTrade": "Handel włączony",
+      "canTradeHint": "Zlecenia składane na tej giełdzie są podpisywane tym kluczem. Nigdy nie opuszcza on tego urządzenia.",
+      "readOnlyTitle": "Tylko do odczytu",
+      "readOnlyHint": "Dane rynkowe z tej giełdy płyną na żywo, ale tym kluczem nie złożysz tutaj zleceń.",
+      "unavailableTitle": "Niedostępne tutaj",
+      "modeLabel": "Tryb",
+      "apiKeyLabel": "Klucz API",
+      "connectedLabel": "Połączono",
+      "renameSaved": "Zaktualizowano nazwę.",
+      "renameFailed": "Nie udało się zapisać nowej nazwy.",
+      "disconnectTitle": "Odłączyć {{label}}?",
+      "disconnectBody": "Klucz zostanie usunięty z tego urządzenia. Na giełdzie nic się nie zmienia — możesz połączyć go ponownie w każdej chwili.",
+      "sealedTitle": "Sejf zablokowany",
+      "missingTitle": "Nie połączono",
+      "missingBody": "To konto nie jest już zapisane na tym urządzeniu."
     },
     "pickers": {
       "searchPlaceholder": "Szukaj dowolnej pary, tickera lub nazwy",

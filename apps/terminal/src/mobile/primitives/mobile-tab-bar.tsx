@@ -7,10 +7,26 @@
  * item expands into a labelled pill; the rest are icon-only and share the
  * remaining width. Lucide throughout — no custom glyphs live here.
  *
+ * The active pill SLIDES. It is a single absolutely-positioned element rather
+ * than a background on each button, tracked to the live geometry of the
+ * active item for the length of the transition. Tracking beats interpolating
+ * between two measured rectangles because the item is also growing at the
+ * same time — the label reveals from `0fr` to `1fr` and flexbox redistributes
+ * the slack every frame — and a pill that animates to a rectangle measured
+ * before that growth arrives lands somewhere the button never was. Reading
+ * the rect each frame costs one layout on a five-button bar, only while a tab
+ * change is in flight, and it is exact in every locale.
+ *
+ * `active` may be null: while an overlay that belongs to no tab covers the
+ * app (Settings, the pair picker) the bar points at nothing and dims, rather
+ * than claiming the user is still on the tab they left. The order book is the
+ * exception the design asks for and it is expressed in lib/overlay-tabs.ts,
+ * not here.
+ *
  * `memo`, and it must show zero re-renders while a ticker streams: it reads
  * only its props, and its props come from MobileNavContext.
  */
-import { memo } from 'react'
+import { memo, useCallback, useLayoutEffect, useRef } from 'react'
 import {
   ArrowRightLeft,
   CandlestickChart,
@@ -25,7 +41,8 @@ import type { LucideIcon } from 'lucide-react'
 import type { MobileTab } from '../mobile-focus-context'
 
 export type MobileTabBarProps = {
-  active: MobileTab
+  /** The lit destination, or null while an overlay owns the screen. */
+  active: MobileTab | null
   onChange: (tab: MobileTab) => void
   /** 'float' over a bare chart, 'solid' when a sheet is docked above. */
   variant?: 'float' | 'solid'
@@ -49,12 +66,72 @@ const TABS: Array<{
   { id: 'discover', icon: Compass, labelKey: 'mobile.shell.tabs.discover' },
 ]
 
+/** The label reveal (260ms) plus a frame of slack. */
+const TRACK_MS = 320
+
 export const MobileTabBar = memo(function MobileTabBar({
   active,
   onChange,
   variant = 'float',
 }: MobileTabBarProps) {
   const { t } = useTranslation()
+  const navRef = useRef<HTMLElement | null>(null)
+  const pillRef = useRef<HTMLDivElement | null>(null)
+  const itemsRef = useRef(new Map<MobileTab, HTMLButtonElement>())
+
+  const registerItem = useCallback(
+    (id: MobileTab) => (node: HTMLButtonElement | null) => {
+      if (node) itemsRef.current.set(id, node)
+      else itemsRef.current.delete(id)
+    },
+    [],
+  )
+
+  useLayoutEffect(() => {
+    const nav = navRef.current
+    const pill = pillRef.current
+    if (!nav || !pill) return
+
+    if (active === null) {
+      pill.style.opacity = '0'
+      return
+    }
+
+    let frame = 0
+    let deadline = 0
+
+    const paint = (now: number) => {
+      const item = itemsRef.current.get(active)
+      if (item) {
+        const bar = nav.getBoundingClientRect()
+        const box = item.getBoundingClientRect()
+        pill.style.width = `${box.width}px`
+        pill.style.height = `${box.height}px`
+        pill.style.transform = `translate3d(${box.left - bar.left}px, ${
+          box.top - bar.top
+        }px, 0)`
+        pill.style.opacity = '1'
+      }
+      frame = now < deadline ? requestAnimationFrame(paint) : 0
+    }
+
+    const start = () => {
+      deadline = performance.now() + TRACK_MS
+      if (!frame) frame = requestAnimationFrame(paint)
+    }
+
+    start()
+    // A width change the transition never caused — an orientation flip, a
+    // language switch, the keyboard resizing the viewport — still has to move
+    // the pill, and neither of those runs this effect.
+    const observer = new ResizeObserver(start)
+    observer.observe(nav)
+
+    return () => {
+      observer.disconnect()
+      if (frame) cancelAnimationFrame(frame)
+    }
+  }, [active])
 
   return (
     <nav
@@ -63,8 +140,10 @@ export const MobileTabBar = memo(function MobileTabBar({
         'absolute inset-x-0 bottom-0 z-50 flex items-stretch gap-0.5 px-2 pt-2',
         variant === 'float' ? 'pl-tabbar-float' : 'pl-tabbar-solid',
       )}
+      ref={navRef}
       style={{ paddingBottom: 'max(var(--pl-safe-bottom), 30px)' }}
     >
+      <div aria-hidden className="pl-tab-pill" ref={pillRef} />
       {TABS.map((tab) => {
         const on = tab.id === active
         const Icon = tab.icon
@@ -72,18 +151,20 @@ export const MobileTabBar = memo(function MobileTabBar({
           <button
             aria-current={on ? 'page' : undefined}
             className={cn(
-              'flex min-h-[46px] items-center justify-center gap-[7px] rounded-[99px]',
-              on
-                ? 'flex-none bg-white/[0.11] px-[15px] text-foreground'
-                : 'flex-1 text-muted-foreground',
+              'pl-tab-item relative flex min-h-[46px] flex-auto items-center justify-center rounded-[99px] px-[15px]',
+              on ? 'text-foreground' : 'text-muted-foreground',
+              // Nothing is lit: the bar steps back rather than pointing at a
+              // destination the user is no longer looking at.
+              active === null && 'opacity-45',
             )}
             key={tab.id}
             onClick={() => onChange(tab.id)}
+            ref={registerItem(tab.id)}
             type="button"
           >
             <Icon
               className={cn(
-                'size-[22px]',
+                'size-[22px] shrink-0',
                 // The AI destination keeps the magic gradient's hue even as an
                 // outline glyph — a filled disc among outlines reads as
                 // "selected", which is the one thing it must not say.
@@ -91,13 +172,14 @@ export const MobileTabBar = memo(function MobileTabBar({
               )}
               strokeWidth={on ? 2 : 1.7}
             />
-            {on ? (
-              <span className="whitespace-nowrap text-[13px] font-semibold leading-none">
-                {t(tab.labelKey)}
+            <span className="pl-tab-label" data-on={on ? 'true' : undefined}>
+              <span className="overflow-hidden">
+                <span className="block whitespace-nowrap pl-[7px] text-[13px] font-semibold leading-none">
+                  {t(tab.labelKey)}
+                </span>
               </span>
-            ) : (
-              <span className="sr-only">{t(tab.labelKey)}</span>
-            )}
+            </span>
+            {on ? null : <span className="sr-only">{t(tab.labelKey)}</span>}
           </button>
         )
       })}
