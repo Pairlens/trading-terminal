@@ -426,7 +426,6 @@
     "loading": "Loading...",
     "error": "Something went wrong",
     "retry": "Retry",
-    "search": "Search",
     "noResults": "No results found.",
     "trend": "Trend",
     "trendAriaLabel": "24-hour price trend",
@@ -475,7 +474,6 @@
       "keyboard": "Keyboard",
       "performance": "Performance",
       "desktop": "Desktop",
-      "connection": "Connection",
       "language": "Language",
       "region": "Country",
       "currency": "Currency",
@@ -603,8 +601,7 @@
       "signInButton": "Sign in",
       "resetTutorialTitle": "Getting Started Tutorial",
       "resetTutorialDescription": "Show the onboarding tutorial again on next visit.",
-      "resetTutorialButton": "Reset",
-      "tutorialReset": "Tutorial will show on next visit"
+      "resetTutorialButton": "Reset"
     },
     "plugins": {
       "registry": "Plugin Registry",
@@ -633,7 +630,6 @@
       "publisherKeyAdd": "Add key…",
       "publisherKeyRemove": "Remove",
       "publisherKeyFingerprint": "Fingerprint",
-      "publisherKeyAddedAt": "Added",
       "publisherKeyConsentTitle": "Trust this publisher?",
       "publisherKeyConsentBody": "Plugins signed with this key will be installable on this device. A malicious publisher can ship plugins that request full trust — with access to your other plugins' data, stored exchange credentials, and trading. Compare the fingerprint with the publisher through a channel you trust before continuing.",
       "publisherKeyConsentConfirm": "Trust this key",
@@ -729,8 +725,6 @@
       "hintExample": "For example, OKX routes US/AU users to us.okx.com and EU users to eea.okx.com."
     },
     "risk": {
-      "title": "Risk Management",
-      "description": "Configure risk limits and automatic order controls to protect your trading.",
       "lockBanner": "Orders are locked due to a risk limit breach.",
       "lockBannerBuys": "Buy orders are locked due to a risk limit breach.",
       "unlockOrders": "Unlock Orders",
@@ -742,7 +736,6 @@
       "maxPositionSizeDescription": "Maximum size for a single position as a percentage of portfolio.",
       "maxDailyTrades": "Max trades",
       "maxDailyTradesDescription": "Maximum number of trades allowed within the reset window.",
-      "onBreach": "On breach",
       "actionBlockAll": "Block all orders",
       "actionBlockBuys": "Block buy orders",
       "actionWarn": "Warn only",
@@ -966,7 +959,6 @@
       "vaultStatusReady_one": "Protected by 1 way to unlock.",
       "vaultStatusReady_other": "Protected by {{count}} ways to unlock.",
       "vaultSetUp": "Set up vault",
-      "vaultAddProtector": "Add another way in",
       "vaultRemoveProtector": "Remove",
       "vaultRemoveLastBlocked": "This is the only way into your vault. Add another before removing it.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID cannot be the only way in — the fingerprints on this Mac can change. Keep a password or a passkey.",
@@ -1107,10 +1099,6 @@
   "userMenu": {
     "accountMenu": "Account menu",
     "settings": "Settings",
-    "loadingSettings": "Loading settings…",
-    "account": "Account",
-    "billing": "Billing",
-    "notifications": "Notifications",
     "colorMode": "Color Mode",
     "light": "Light",
     "dark": "Dark",
@@ -1173,7 +1161,6 @@
     "variables": {
       "title": "Variables",
       "emptyState": "No variables. Add variables to bind panes to different data sources.",
-      "namePlaceholder": "$name",
       "labelPlaceholder": "Display Name",
       "typePair": "Pair",
       "typeTimeframe": "Timeframe",
@@ -1218,17 +1205,9 @@
       "namePlaceholder": "My Workspace"
     }
   },
-  "session": {
-    "checking": "Checking session…",
-    "loadingSettings": "Loading settings…",
-    "loadingSettingsDescription": "Hold on while we load your settings panel."
-  },
   "signIn": {
     "checkingSession": "Checking session...",
-    "tagline": "AI-native trading terminal",
-    "title": "Sign in to Terminal",
     "description": "Enter your email and we'll send a one-time code. No passwords.",
-    "email": "Email",
     "sendingCode": "Sending code...",
     "continue": "Continue",
     "skip": "Continue without signing in",
@@ -1262,17 +1241,12 @@
       }
     },
     "codeSent": "Code sent to {{email}}. Check your inbox.",
-    "verifyTitle": "Verify your login",
     "verifyDescription": "Enter the verification code sent to",
-    "verificationCode": "Verification code",
     "wrongEmail": "Wrong email?",
     "changeIt": "Change it",
     "resendCode": "Resend code",
     "resendCodeTimer": "Resend code ({{seconds}}s)",
     "signingIn": "Signing in...",
-    "verify": "Verify",
-    "verifying": "Verifying...",
-    "verifyAndSignIn": "Verify and sign in",
     "codeRequired": "Code is required",
     "emailRequired": "Email is required",
     "dialogDescription": "Sign in to access this feature",
@@ -1288,10 +1262,6 @@
     "enterSecret": "Enter secret value"
   },
   "connection": {
-    "realtimeConnected": "Realtime connected",
-    "realtimeConnecting": "Realtime connecting",
-    "realtimeDisconnected": "Realtime disconnected",
-    "realtimeError": "Realtime error",
     "live": "Live",
     "connecting": "Connecting",
     "stalled": "Reconnecting",
@@ -1302,7 +1272,6 @@
     "latencyTooltipDetail": "Median of recent keepalive pings · best {{best}}",
     "latencyEstimateTitle": "Estimated round trip to {{venue}}",
     "latencyEstimateDetail": "This venue answers no keepalive we can time, so this is inferred from how old its trade timestamps are, corrected for this machine's clock",
-    "error": "Error",
     "pluginUpdatesReady_one": "{{count}} plugin update ready to install",
     "pluginUpdatesReady_other": "{{count}} plugin updates ready to install",
     "pluginUpdatesDescription": "Updates will apply after restarting the terminal.",
@@ -1568,14 +1537,12 @@
     "newBot": "New bot",
     "stopAll": "Stop all",
     "stopAllDone": "Every bot is off",
-    "localTitle": "Bots run on this machine",
     "keepAwakeLabel": "Keep this computer awake",
     "keepAwakeActive": "Idle sleep is blocked while a bot is on.",
     "keepAwakeIdle": "Idle sleep will be blocked once a bot is on.",
     "keepAwakeOff": "This computer may sleep, and your bots stop when it does.",
     "keepAwakeUnsupported": "Only the desktop app can hold off sleep.",
     "localBody": "Your strategies execute here, in Pairlens — not on a server we operate. That is what keeps your keys and your logic yours. The tradeoff is real: quit Pairlens or let this computer sleep and your bots stop with it, and an open position is left unwatched until you come back.",
-    "emptyTitle": "No bots yet",
     "emptyDescription": "A bot is one of your strategy scripts deployed to a market. Pick a script, a pair and a size, and it starts trading on paper.",
     "emptyHeadline": "Let a strategy watch the chart for you",
     "templateEmaCross": "Follows the trend both ways: long above the cross, short below it.",
@@ -2100,19 +2067,13 @@
     "side": "Side",
     "pair": "Pair",
     "size": "Size",
-    "entryPrice": "Entry Price",
-    "markPrice": "Mark Price",
-    "pnl": "P&L",
-    "pnlPercent": "P&L %",
     "type": "Type",
     "price": "Price",
     "status": "Status",
     "time": "Time",
     "fee": "Fee",
-    "noPositions": "No open positions",
     "noOrders": "No pending orders",
     "noFills": "No trade history",
-    "cancel": "Cancel",
     "live": "Open",
     "partiallyFilled": "Partial",
     "filled": "Filled",
@@ -2123,10 +2084,7 @@
     "spotNoPositions": "Spot mode — no margin positions",
     "balances": "Balances",
     "noBalances": "No balance data",
-    "available": "Available",
-    "frozen": "Frozen",
     "total": "Total",
-    "refreshBalances": "Refresh",
     "asset": "Asset",
     "cancelOrderTitle": "Cancel order?",
     "cancelOrderBody": "This will cancel your {{side}} order for {{pair}}.",
@@ -2167,7 +2125,6 @@
     "allClear": "All clear",
     "ordersLocked": "Orders Locked",
     "buysLocked": "Buys Locked",
-    "noLimits": "No limits configured",
     "configurePrompt": "Configure risk limits"
   },
   "webPane": {
@@ -2176,7 +2133,6 @@
     "refresh": "Refresh",
     "openExternal": "Open in browser",
     "emptyTitle": "Enter a URL above to embed a website",
-    "embedWarning": "Some websites block embedding in iframes. If a page doesn't load, try opening it in your browser instead.",
     "blockedTitle": "This site can't be embedded",
     "blockedDescription": "This website blocks being displayed inside other pages. You can open it in a separate browser tab instead.",
     "forward": "Forward",
@@ -2307,7 +2263,6 @@
   },
   "addPaneDialog": {
     "description": "Choose a pane to add to your workspace layout.",
-    "subtitle": "Choose a pane to add to your workspace",
     "added": "Added"
   },
   "layout": {
@@ -2410,12 +2365,7 @@
     "title": "Discovery"
   },
   "pluginStore": {
-    "discover": "Discover",
-    "discoverDescription": "Extend your terminal with plugins for market data, trading, AI, and more.",
     "registryOffline": "Plugin registry is offline. Showing installed plugins only.",
-    "featured": "Featured",
-    "all": "All",
-    "noPlugins": "No plugins found.",
     "activated": "Activated",
     "deactivated": "Deactivated",
     "operationFailed": "Operation failed",
@@ -2424,7 +2374,6 @@
     "desktopOnly": "Desktop Only",
     "browserOnly": "Browser Only",
     "platformIncompatible": "This plugin is {{badge}} and cannot be activated here.",
-    "serverRegion": "Server Region",
     "showMore": "Show all",
     "importPlugin": "Import plugin",
     "openFolder": "Open folder",
@@ -2842,8 +2791,6 @@
     }
   },
   "search": {
-    "title": "Search Pairs",
-    "description": "Search for an instrument to trade",
     "placeholder": "Search anything...",
     "noResults": "No results found.",
     "results": "Results",
@@ -3030,7 +2977,6 @@
     "storedSecurelyNever": "never sent to or stored on Pairlens servers",
     "demoKeysReminder": "Use demo API keys from your {{exchange}} {{region}} account.",
     "globalEndpoint": "Global endpoint",
-    "endpoint": "{{region}} endpoint",
     "localOnly": {
       "badge": "Local Only",
       "badgeAria": "Learn how your keys are kept private",
@@ -3146,8 +3092,6 @@
     "defaultWalletName": "{{chain}} Wallet"
   },
   "workspaceStore": {
-    "title": "Workspace Store",
-    "subtitle": "Start from a ready-made layout — filter by how and what you trade, then copy it into your own workspaces.",
     "searchPlaceholder": "Search workspaces…",
     "all": "All",
     "browseTemplates": "Browse templates",
@@ -3201,7 +3145,6 @@
     },
     "community": {
       "by": "by {{author}}",
-      "installs": "{{count}} copies",
       "downloads": "Downloads",
       "favorites": "Favorites",
       "favorite": "Favorite"
@@ -4679,7 +4622,6 @@
       "venueLine": "{{venue}} {{kind}} · {{permission}}",
       "trading": "trading",
       "discoverTitle": "Discover",
-      "topTickers": "Top tickers",
       "allMarkets": "All pairs",
       "pnlToday": "P&L today",
       "noPositions": "No open positions",

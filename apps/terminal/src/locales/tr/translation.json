@@ -426,7 +426,6 @@
     "loading": "Yükleniyor...",
     "error": "Bir şeyler ters gitti",
     "retry": "Tekrar dene",
-    "search": "Ara",
     "noResults": "Sonuç bulunamadı.",
     "trend": "Trend",
     "trendAriaLabel": "24 saatlik fiyat trendi",
@@ -475,7 +474,6 @@
       "keyboard": "Klavye",
       "performance": "Performans",
       "desktop": "Masaüstü",
-      "connection": "Bağlantı",
       "language": "Dil",
       "region": "Ülke",
       "currency": "Para birimi",
@@ -603,8 +601,7 @@
       "signInButton": "Giriş yap",
       "resetTutorialTitle": "Başlangıç Eğitimi",
       "resetTutorialDescription": "Onboarding eğitimini bir sonraki ziyarette tekrar göster.",
-      "resetTutorialButton": "Sıfırla",
-      "tutorialReset": "Eğitim bir sonraki ziyarette gösterilecek"
+      "resetTutorialButton": "Sıfırla"
     },
     "plugins": {
       "registry": "Eklenti Kayıt Defteri",
@@ -633,7 +630,6 @@
       "publisherKeyAdd": "Anahtar ekle…",
       "publisherKeyRemove": "Kaldır",
       "publisherKeyFingerprint": "Parmak izi",
-      "publisherKeyAddedAt": "Eklendi",
       "publisherKeyConsentTitle": "Bu yayıncıya güvenilsin mi?",
       "publisherKeyConsentBody": "Bu anahtarla imzalanan eklentiler bu cihaza kurulabilir olacak. Kötü niyetli bir yayıncı, diğer eklentilerinin verilerine, saklanan borsa kimlik bilgilerine ve işlemlere erişim isteyen eklentiler gönderebilir. Devam etmeden önce parmak izini güvendiğin bir kanaldan yayıncıyla karşılaştır.",
       "publisherKeyConsentConfirm": "Bu anahtara güven",
@@ -729,8 +725,6 @@
       "hintExample": "Örneğin OKX, ABD/AU kullanıcılarını us.okx.com'a, AB kullanıcılarını eea.okx.com'a yönlendirir."
     },
     "risk": {
-      "title": "Risk Yönetimi",
-      "description": "İşlemlerini korumak için risk sınırlarını ve otomatik emir kontrollerini yapılandır.",
       "lockBanner": "Bir risk sınırı ihlali nedeniyle emirler kilitlendi.",
       "lockBannerBuys": "Bir risk sınırı ihlali nedeniyle alış emirleri kilitlendi.",
       "unlockOrders": "Emirlerin Kilidini Aç",
@@ -742,7 +736,6 @@
       "maxPositionSizeDescription": "Portföyün yüzdesi olarak tek bir pozisyon için maksimum büyüklük.",
       "maxDailyTrades": "Maksimum işlem",
       "maxDailyTradesDescription": "Sıfırlama penceresi içinde izin verilen maksimum işlem sayısı.",
-      "onBreach": "İhlal durumunda",
       "actionBlockAll": "Tüm emirleri engelle",
       "actionBlockBuys": "Alış emirlerini engelle",
       "actionWarn": "Sadece uyar",
@@ -966,7 +959,6 @@
       "vaultStatusReady_one": "1 kilit açma yöntemiyle korunuyor.",
       "vaultStatusReady_other": "{{count}} kilit açma yöntemiyle korunuyor.",
       "vaultSetUp": "Kasayı kur",
-      "vaultAddProtector": "Başka bir giriş yolu ekle",
       "vaultRemoveProtector": "Kaldır",
       "vaultRemoveLastBlocked": "Bu, kasana giren tek yol. Kaldırmadan önce bir tane daha ekle.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID tek giriş yolu olamaz — bu Mac’teki parmak izleri değişebilir. Bir parola ya da passkey bırak.",
@@ -1107,10 +1099,6 @@
   "userMenu": {
     "accountMenu": "Hesap menüsü",
     "settings": "Ayarlar",
-    "loadingSettings": "Ayarlar yükleniyor…",
-    "account": "Hesap",
-    "billing": "Faturalama",
-    "notifications": "Bildirimler",
     "colorMode": "Renk Modu",
     "light": "Açık",
     "dark": "Koyu",
@@ -1173,7 +1161,6 @@
     "variables": {
       "title": "Değişkenler",
       "emptyState": "Değişken yok. Panoları farklı veri kaynaklarına bağlamak için değişken ekle.",
-      "namePlaceholder": "$ad",
       "labelPlaceholder": "Görünen Ad",
       "typePair": "Parite",
       "typeTimeframe": "Zaman dilimi",
@@ -1218,17 +1205,9 @@
       "namePlaceholder": "Çalışma Alanım"
     }
   },
-  "session": {
-    "checking": "Oturum kontrol ediliyor…",
-    "loadingSettings": "Ayarlar yükleniyor…",
-    "loadingSettingsDescription": "Ayarlar panelini yüklerken bekle."
-  },
   "signIn": {
     "checkingSession": "Oturum kontrol ediliyor...",
-    "tagline": "Yapay zeka destekli işlem terminali",
-    "title": "Terminal'e giriş yap",
     "description": "E-postanı gir, sana tek kullanımlık bir kod gönderelim. Şifre yok.",
-    "email": "E-posta",
     "sendingCode": "Kod gönderiliyor...",
     "continue": "Devam et",
     "skip": "Giriş yapmadan devam et",
@@ -1262,17 +1241,12 @@
       }
     },
     "codeSent": "Kod {{email}} adresine gönderildi. Gelen kutunu kontrol et.",
-    "verifyTitle": "Girişini doğrula",
     "verifyDescription": "Gönderilen doğrulama kodunu gir",
-    "verificationCode": "Doğrulama kodu",
     "wrongEmail": "Yanlış e-posta mı?",
     "changeIt": "Değiştir",
     "resendCode": "Kodu tekrar gönder",
     "resendCodeTimer": "Kodu tekrar gönder ({{seconds}}s)",
     "signingIn": "Giriş yapılıyor...",
-    "verify": "Doğrula",
-    "verifying": "Doğrulanıyor...",
-    "verifyAndSignIn": "Doğrula ve giriş yap",
     "codeRequired": "Kod gerekli",
     "emailRequired": "E-posta gerekli",
     "dialogDescription": "Bu özelliğe erişmek için giriş yap",
@@ -1288,10 +1262,6 @@
     "enterSecret": "Gizli değer gir"
   },
   "connection": {
-    "realtimeConnected": "Gerçek zamanlı bağlantı kuruldu",
-    "realtimeConnecting": "Gerçek zamanlı bağlanıyor",
-    "realtimeDisconnected": "Gerçek zamanlı bağlantı kesildi",
-    "realtimeError": "Gerçek zamanlı hata",
     "live": "Canlı",
     "connecting": "Bağlanıyor",
     "stalled": "Yeniden bağlanıyor",
@@ -1302,7 +1272,6 @@
     "latencyTooltipDetail": "Son keepalive ping'lerinin medyanı · en iyi {{best}}",
     "latencyEstimateTitle": "{{venue}} için tahmini gidiş-dönüş",
     "latencyEstimateDetail": "Bu borsa ölçebileceğimiz bir keepalive'a yanıt vermiyor; değer, işlem zaman damgalarının yaşından çıkarıldı ve bu makinenin saatine göre düzeltildi",
-    "error": "Hata",
     "pluginUpdatesReady_one": "Yüklemeye hazır {{count}} eklenti güncellemesi",
     "pluginUpdatesReady_other": "Yüklemeye hazır {{count}} eklenti güncellemesi",
     "pluginUpdatesDescription": "Güncellemeler, terminal yeniden başlatıldıktan sonra uygulanır.",
@@ -1568,14 +1537,12 @@
     "newBot": "Yeni bot",
     "stopAll": "Tümünü durdur",
     "stopAllDone": "Bütün botlar kapalı",
-    "localTitle": "Botlar bu makinede çalışır",
     "keepAwakeLabel": "Bu bilgisayarı uyanık tut",
     "keepAwakeActive": "Bir bot açıkken otomatik uyku engelleniyor.",
     "keepAwakeIdle": "Bir bot açıldığında otomatik uyku engellenecek.",
     "keepAwakeOff": "Bu bilgisayar uyuyabilir ve o zaman botların durur.",
     "keepAwakeUnsupported": "Uykuyu yalnızca masaüstü uygulaması engelleyebilir.",
     "localBody": "Stratejilerin burada, Pairlens içinde çalışır — bizim işlettiğimiz bir sunucuda değil. Anahtarlarını ve mantığını sana ait tutan da bu. Bedeli gerçek: Pairlens’i kapatırsan ya da bu bilgisayar uykuya geçerse botların da onunla birlikte durur ve açık bir pozisyon sen dönene kadar izlenmeden kalır.",
-    "emptyTitle": "Henüz bot yok",
     "emptyDescription": "Bot, strateji betiklerinden birinin bir piyasaya kurulmuş hâlidir. Bir betik, bir parite ve bir büyüklük seç; kağıt üzerinde işlem yapmaya başlar.",
     "emptyHeadline": "Grafiği senin yerine bir strateji izlesin",
     "templateEmaCross": "Trendi iki yönde de takip eder: kesişimin üstünde long, altında short.",
@@ -2100,19 +2067,13 @@
     "side": "Yön",
     "pair": "Parite",
     "size": "Büyüklük",
-    "entryPrice": "Giriş Fiyatı",
-    "markPrice": "İşaret Fiyatı",
-    "pnl": "Kâr/Zarar",
-    "pnlPercent": "Kâr/Zarar %",
     "type": "Tür",
     "price": "Fiyat",
     "status": "Durum",
     "time": "Zaman",
     "fee": "Ücret",
-    "noPositions": "Açık pozisyon yok",
     "noOrders": "Bekleyen emir yok",
     "noFills": "İşlem geçmişi yok",
-    "cancel": "İptal",
     "live": "Açık",
     "partiallyFilled": "Kısmi",
     "filled": "Gerçekleşti",
@@ -2123,10 +2084,7 @@
     "spotNoPositions": "Spot mod — marj pozisyonu yok",
     "balances": "Bakiyeler",
     "noBalances": "Bakiye verisi yok",
-    "available": "Kullanılabilir",
-    "frozen": "Donduruldu",
     "total": "Toplam",
-    "refreshBalances": "Yenile",
     "asset": "Varlık",
     "cancelOrderTitle": "Emir iptal edilsin mi?",
     "cancelOrderBody": "Bu, {{pair}} için {{side}} emrinizi iptal edecek.",
@@ -2167,7 +2125,6 @@
     "allClear": "Her şey yolunda",
     "ordersLocked": "Emirler Kilitli",
     "buysLocked": "Alışlar Kilitli",
-    "noLimits": "Sınır yapılandırılmadı",
     "configurePrompt": "Risk sınırlarını yapılandır"
   },
   "webPane": {
@@ -2176,7 +2133,6 @@
     "refresh": "Yenile",
     "openExternal": "Tarayıcıda aç",
     "emptyTitle": "Bir web sitesi eklemek için yukarıya bir URL gir",
-    "embedWarning": "Bazı web siteleri iframe içine yerleştirmeyi engeller. Bir sayfa yüklenmezse, bunun yerine tarayıcında açmayı dene.",
     "blockedTitle": "Bu site yerleştirilemez",
     "blockedDescription": "Bu web sitesi başka sayfaların içinde görüntülenmeyi engelliyor. Bunun yerine ayrı bir tarayıcı sekmesinde açabilirsin.",
     "forward": "İleri",
@@ -2307,7 +2263,6 @@
   },
   "addPaneDialog": {
     "description": "Çalışma alanı düzenine eklemek için bir pano seç.",
-    "subtitle": "Çalışma alanına eklemek için bir pano seç",
     "added": "Eklendi"
   },
   "layout": {
@@ -2410,12 +2365,7 @@
     "title": "Keşif"
   },
   "pluginStore": {
-    "discover": "Keşfet",
-    "discoverDescription": "Terminalini piyasa verisi, işlem, yapay zeka ve daha fazlası için eklentilerle genişlet.",
     "registryOffline": "Eklenti kayıt defteri çevrimdışı. Yalnızca kurulu eklentiler gösteriliyor.",
-    "featured": "Öne Çıkanlar",
-    "all": "Tümü",
-    "noPlugins": "Eklenti bulunamadı.",
     "activated": "Etkinleştirildi",
     "deactivated": "Devre dışı bırakıldı",
     "operationFailed": "İşlem başarısız oldu",
@@ -2424,7 +2374,6 @@
     "desktopOnly": "Yalnızca Masaüstü",
     "browserOnly": "Yalnızca Tarayıcı",
     "platformIncompatible": "Bu eklenti {{badge}} ve burada etkinleştirilemez.",
-    "serverRegion": "Sunucu Bölgesi",
     "showMore": "Tümünü göster",
     "importPlugin": "Eklenti içe aktar",
     "openFolder": "Klasörü aç",
@@ -2842,8 +2791,6 @@
     }
   },
   "search": {
-    "title": "Parite Ara",
-    "description": "İşlem yapmak için bir enstrüman ara",
     "placeholder": "Herhangi bir şey ara...",
     "noResults": "Sonuç bulunamadı.",
     "results": "Sonuçlar",
@@ -3030,7 +2977,6 @@
     "storedSecurelyNever": "Pairlens sunucularına asla gönderilmez veya orada saklanmaz",
     "demoKeysReminder": "{{exchange}} {{region}} hesabından demo API anahtarları kullan.",
     "globalEndpoint": "Genel uç nokta",
-    "endpoint": "{{region}} uç noktası",
     "localOnly": {
       "badge": "Yalnızca Yerel",
       "badgeAria": "Anahtarlarının nasıl gizli tutulduğunu öğren",
@@ -3146,8 +3092,6 @@
     "defaultWalletName": "{{chain}} Cüzdanı"
   },
   "workspaceStore": {
-    "title": "Çalışma Alanı Mağazası",
-    "subtitle": "Hazır bir düzenle başla — nasıl ve ne işlem yaptığına göre filtrele, ardından kendi çalışma alanlarına kopyala.",
     "searchPlaceholder": "Çalışma alanı ara…",
     "all": "Tümü",
     "browseTemplates": "Şablonlara göz at",
@@ -3201,7 +3145,6 @@
     },
     "community": {
       "by": "{{author}} tarafından",
-      "installs": "{{count}} kopya",
       "downloads": "İndirmeler",
       "favorites": "Favoriler",
       "favorite": "Favori"
@@ -4679,7 +4622,6 @@
       "venueLine": "{{venue}} {{kind}} · {{permission}}",
       "trading": "işlem",
       "discoverTitle": "Keşfet",
-      "topTickers": "Öne çıkan pariteler",
       "allMarkets": "Tüm pariteler",
       "pnlToday": "Bugünkü Kâr/Zarar",
       "noPositions": "Açık pozisyon yok",

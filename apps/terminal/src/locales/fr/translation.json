@@ -426,7 +426,6 @@
     "loading": "Chargement...",
     "error": "Une erreur est survenue",
     "retry": "Réessayer",
-    "search": "Rechercher",
     "noResults": "Aucun résultat trouvé.",
     "trend": "Tendance",
     "trendAriaLabel": "Tendance du prix sur 24 h",
@@ -475,7 +474,6 @@
       "keyboard": "Clavier",
       "performance": "Performance",
       "desktop": "Bureau",
-      "connection": "Connexion",
       "language": "Langue",
       "region": "Pays",
       "currency": "Devise",
@@ -603,8 +601,7 @@
       "signInButton": "Se connecter",
       "resetTutorialTitle": "Tutoriel de démarrage",
       "resetTutorialDescription": "Réafficher le tutoriel d’accueil lors de votre prochaine visite.",
-      "resetTutorialButton": "Réinitialiser",
-      "tutorialReset": "Le tutoriel s’affichera lors de votre prochaine visite"
+      "resetTutorialButton": "Réinitialiser"
     },
     "plugins": {
       "registry": "Registre de plugins",
@@ -633,7 +630,6 @@
       "publisherKeyAdd": "Ajouter une clé…",
       "publisherKeyRemove": "Retirer",
       "publisherKeyFingerprint": "Empreinte",
-      "publisherKeyAddedAt": "Ajoutée",
       "publisherKeyConsentTitle": "Faire confiance à cet éditeur ?",
       "publisherKeyConsentBody": "Les plugins signés avec cette clé pourront être installés sur cet appareil. Un éditeur malveillant peut publier des plugins demandant une confiance totale — avec accès aux données de vos autres plugins, à vos identifiants d’exchange stockés et au trading. Comparez l’empreinte avec l’éditeur via un canal de confiance avant de continuer.",
       "publisherKeyConsentConfirm": "Faire confiance à cette clé",
@@ -729,8 +725,6 @@
       "hintExample": "Par exemple, OKX achemine les utilisateurs US/AU vers us.okx.com et les utilisateurs européens vers eea.okx.com."
     },
     "risk": {
-      "title": "Gestion du risque",
-      "description": "Configurez les limites de risque et les contrôles d’ordres automatiques pour protéger votre trading.",
       "lockBanner": "Les ordres sont verrouillés suite à un dépassement de limite de risque.",
       "lockBannerBuys": "Les ordres d’achat sont verrouillés suite à un dépassement de limite de risque.",
       "unlockOrders": "Déverrouiller les ordres",
@@ -742,7 +736,6 @@
       "maxPositionSizeDescription": "Taille maximale d’une position unique en pourcentage du portefeuille.",
       "maxDailyTrades": "Trades max",
       "maxDailyTradesDescription": "Nombre maximal de trades autorisés dans la fenêtre de réinitialisation.",
-      "onBreach": "En cas de dépassement",
       "actionBlockAll": "Bloquer tous les ordres",
       "actionBlockBuys": "Bloquer les ordres d’achat",
       "actionWarn": "Avertir seulement",
@@ -966,7 +959,6 @@
       "vaultStatusReady_one": "Protégé par 1 moyen de déverrouillage.",
       "vaultStatusReady_other": "Protégé par {{count}} moyens de déverrouillage.",
       "vaultSetUp": "Configurer le coffre",
-      "vaultAddProtector": "Ajouter un autre moyen d'entrer",
       "vaultRemoveProtector": "Retirer",
       "vaultRemoveLastBlocked": "C'est le seul moyen d'entrer dans votre coffre. Ajoutez-en un autre avant de le retirer.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID ne peut pas être le seul moyen d'entrer : les empreintes de ce Mac peuvent changer. Gardez un mot de passe ou un passkey.",
@@ -1107,10 +1099,6 @@
   "userMenu": {
     "accountMenu": "Menu du compte",
     "settings": "Paramètres",
-    "loadingSettings": "Chargement des paramètres…",
-    "account": "Compte",
-    "billing": "Facturation",
-    "notifications": "Notifications",
     "colorMode": "Mode de couleur",
     "light": "Clair",
     "dark": "Sombre",
@@ -1173,7 +1161,6 @@
     "variables": {
       "title": "Variables",
       "emptyState": "Aucune variable. Ajoutez des variables pour lier des panneaux à différentes sources de données.",
-      "namePlaceholder": "$nom",
       "labelPlaceholder": "Nom d’affichage",
       "typePair": "Paire",
       "typeTimeframe": "Période",
@@ -1218,17 +1205,9 @@
       "namePlaceholder": "Mon espace de travail"
     }
   },
-  "session": {
-    "checking": "Vérification de la session…",
-    "loadingSettings": "Chargement des paramètres…",
-    "loadingSettingsDescription": "Patientez pendant le chargement de votre panneau de paramètres."
-  },
   "signIn": {
     "checkingSession": "Vérification de la session...",
-    "tagline": "Terminal de trading natif IA",
-    "title": "Se connecter au terminal",
     "description": "Saisissez votre email et nous vous enverrons un code à usage unique. Sans mot de passe.",
-    "email": "Email",
     "sendingCode": "Envoi du code...",
     "continue": "Continuer",
     "skip": "Continuer sans se connecter",
@@ -1262,17 +1241,12 @@
       }
     },
     "codeSent": "Code envoyé à {{email}}. Consultez votre boîte de réception.",
-    "verifyTitle": "Vérifiez votre connexion",
     "verifyDescription": "Saisissez le code de vérification envoyé à",
-    "verificationCode": "Code de vérification",
     "wrongEmail": "Mauvais email ?",
     "changeIt": "Le modifier",
     "resendCode": "Renvoyer le code",
     "resendCodeTimer": "Renvoyer le code ({{seconds}}s)",
     "signingIn": "Connexion en cours...",
-    "verify": "Vérifier",
-    "verifying": "Vérification...",
-    "verifyAndSignIn": "Vérifier et se connecter",
     "codeRequired": "Le code est requis",
     "emailRequired": "L’email est requis",
     "dialogDescription": "Connectez-vous pour accéder à cette fonctionnalité",
@@ -1288,10 +1262,6 @@
     "enterSecret": "Saisir la valeur secrète"
   },
   "connection": {
-    "realtimeConnected": "Temps réel connecté",
-    "realtimeConnecting": "Connexion en temps réel…",
-    "realtimeDisconnected": "Temps réel déconnecté",
-    "realtimeError": "Erreur temps réel",
     "live": "En direct",
     "connecting": "Connexion",
     "stalled": "Reconnexion",
@@ -1302,7 +1272,6 @@
     "latencyTooltipDetail": "Médiane des derniers pings keepalive · meilleur {{best}}",
     "latencyEstimateTitle": "Aller-retour estimé vers {{venue}}",
     "latencyEstimateDetail": "Cette plateforme ne répond à aucun keepalive mesurable : la valeur est déduite de l'ancienneté de ses horodatages de transactions, corrigée de l'horloge de cette machine",
-    "error": "Erreur",
     "pluginUpdatesReady_one": "{{count}} mise à jour de plugin prête à installer",
     "pluginUpdatesReady_other": "{{count}} mises à jour de plugins prêtes à installer",
     "pluginUpdatesDescription": "Les mises à jour s’appliqueront après le redémarrage du terminal.",
@@ -1568,14 +1537,12 @@
     "newBot": "Nouveau bot",
     "stopAll": "Tout arrêter",
     "stopAllDone": "Tous les bots sont arrêtés",
-    "localTitle": "Les bots tournent sur cette machine",
     "keepAwakeLabel": "Garder cet ordinateur éveillé",
     "keepAwakeActive": "La mise en veille automatique est bloquée tant qu’un bot tourne.",
     "keepAwakeIdle": "La mise en veille automatique sera bloquée dès qu’un bot tournera.",
     "keepAwakeOff": "Cet ordinateur peut se mettre en veille, et vos bots s’arrêtent avec lui.",
     "keepAwakeUnsupported": "Seule l’application de bureau peut empêcher la mise en veille.",
     "localBody": "Vos stratégies s’exécutent ici, dans Pairlens — pas sur un serveur que nous exploitons. C’est ce qui garde vos clés et votre logique chez vous. Le compromis est réel : quittez Pairlens ou laissez cet ordinateur se mettre en veille, et vos bots s’arrêtent avec lui, laissant une position ouverte sans surveillance jusqu’à votre retour.",
-    "emptyTitle": "Aucun bot pour l’instant",
     "emptyDescription": "Un bot, c’est un de vos scripts de stratégie déployé sur un marché. Choisissez un script, une paire et une taille, et il commence à trader en papier.",
     "emptyHeadline": "Laissez une stratégie surveiller le graphique à votre place",
     "templateEmaCross": "Suit la tendance dans les deux sens : long au-dessus du croisement, short en dessous.",
@@ -2100,19 +2067,13 @@
     "side": "Sens",
     "pair": "Paire",
     "size": "Taille",
-    "entryPrice": "Prix d’entrée",
-    "markPrice": "Prix de référence",
-    "pnl": "P&L",
-    "pnlPercent": "P&L %",
     "type": "Type",
     "price": "Prix",
     "status": "Statut",
     "time": "Heure",
     "fee": "Frais",
-    "noPositions": "Aucune position ouverte",
     "noOrders": "Aucun ordre en attente",
     "noFills": "Aucun historique de trades",
-    "cancel": "Annuler",
     "live": "Ouvert",
     "partiallyFilled": "Partiel",
     "filled": "Exécuté",
@@ -2123,10 +2084,7 @@
     "spotNoPositions": "Mode spot — aucune position sur marge",
     "balances": "Soldes",
     "noBalances": "Aucune donnée de solde",
-    "available": "Disponible",
-    "frozen": "Gelé",
     "total": "Total",
-    "refreshBalances": "Actualiser",
     "asset": "Actif",
     "cancelOrderTitle": "Annuler l’ordre ?",
     "cancelOrderBody": "Cela annulera votre ordre d’{{side}} sur {{pair}}.",
@@ -2167,7 +2125,6 @@
     "allClear": "Tout va bien",
     "ordersLocked": "Ordres verrouillés",
     "buysLocked": "Achats verrouillés",
-    "noLimits": "Aucune limite configurée",
     "configurePrompt": "Configurer les limites de risque"
   },
   "webPane": {
@@ -2176,7 +2133,6 @@
     "refresh": "Actualiser",
     "openExternal": "Ouvrir dans le navigateur",
     "emptyTitle": "Saisissez une URL ci-dessus pour intégrer un site web",
-    "embedWarning": "Certains sites web bloquent l’intégration en iframe. Si une page ne se charge pas, essayez de l’ouvrir dans votre navigateur à la place.",
     "blockedTitle": "Ce site ne peut pas être intégré",
     "blockedDescription": "Ce site web empêche son affichage dans d’autres pages. Vous pouvez l’ouvrir dans un onglet de navigateur séparé à la place.",
     "forward": "Suivant",
@@ -2307,7 +2263,6 @@
   },
   "addPaneDialog": {
     "description": "Choisissez un panneau à ajouter à la mise en page de votre espace de travail.",
-    "subtitle": "Choisissez un panneau à ajouter à votre espace de travail",
     "added": "Ajouté"
   },
   "layout": {
@@ -2410,12 +2365,7 @@
     "title": "Découverte"
   },
   "pluginStore": {
-    "discover": "Découvrir",
-    "discoverDescription": "Étendez votre terminal avec des plugins pour les données de marché, le trading, l’IA, et plus encore.",
     "registryOffline": "Le registre de plugins est hors ligne. Affichage des plugins installés uniquement.",
-    "featured": "En vedette",
-    "all": "Tous",
-    "noPlugins": "Aucun plugin trouvé.",
     "activated": "Activé",
     "deactivated": "Désactivé",
     "operationFailed": "Échec de l’opération",
@@ -2424,7 +2374,6 @@
     "desktopOnly": "Bureau uniquement",
     "browserOnly": "Navigateur uniquement",
     "platformIncompatible": "Ce plugin est {{badge}} et ne peut pas être activé ici.",
-    "serverRegion": "Région du serveur",
     "showMore": "Tout afficher",
     "importPlugin": "Importer un plugin",
     "openFolder": "Ouvrir le dossier",
@@ -2842,8 +2791,6 @@
     }
   },
   "search": {
-    "title": "Rechercher des paires",
-    "description": "Recherchez un instrument à trader",
     "placeholder": "Rechercher quelque chose...",
     "noResults": "Aucun résultat trouvé.",
     "results": "Résultats",
@@ -3030,7 +2977,6 @@
     "storedSecurelyNever": "jamais envoyés ni stockés sur les serveurs Pairlens",
     "demoKeysReminder": "Utilisez des clés API de démonstration depuis votre compte {{exchange}} {{region}}.",
     "globalEndpoint": "Point de terminaison global",
-    "endpoint": "Point de terminaison {{region}}",
     "localOnly": {
       "badge": "Local uniquement",
       "badgeAria": "Découvrez comment vos clés restent privées",
@@ -3146,8 +3092,6 @@
     "defaultWalletName": "Wallet {{chain}}"
   },
   "workspaceStore": {
-    "title": "Workspace Store",
-    "subtitle": "Partez d’une mise en page prête à l’emploi — filtrez selon votre façon de trader et ce que vous tradez, puis copiez-la dans vos propres espaces de travail.",
     "searchPlaceholder": "Rechercher des espaces de travail…",
     "all": "Tous",
     "browseTemplates": "Parcourir les modèles",
@@ -3201,7 +3145,6 @@
     },
     "community": {
       "by": "par {{author}}",
-      "installs": "{{count}} copies",
       "downloads": "Téléchargements",
       "favorites": "Favoris",
       "favorite": "Favori"
@@ -4679,7 +4622,6 @@
       "venueLine": "{{venue}} {{kind}} · {{permission}}",
       "trading": "trading",
       "discoverTitle": "Découverte",
-      "topTickers": "Top tickers",
       "allMarkets": "Toutes les paires",
       "pnlToday": "P&L du jour",
       "noPositions": "Aucune position ouverte",

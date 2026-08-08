@@ -426,7 +426,6 @@
     "loading": "Memuat...",
     "error": "Terjadi kesalahan",
     "retry": "Coba lagi",
-    "search": "Cari",
     "noResults": "Tidak ditemukan hasil.",
     "trend": "Tren",
     "trendAriaLabel": "Tren harga 24 jam",
@@ -475,7 +474,6 @@
       "keyboard": "Papan ketik",
       "performance": "Performa",
       "desktop": "Desktop",
-      "connection": "Koneksi",
       "language": "Bahasa",
       "region": "Negara",
       "currency": "Mata Uang",
@@ -603,8 +601,7 @@
       "signInButton": "Masuk",
       "resetTutorialTitle": "Tutorial Memulai",
       "resetTutorialDescription": "Tampilkan kembali tutorial onboarding pada kunjungan berikutnya.",
-      "resetTutorialButton": "Reset",
-      "tutorialReset": "Tutorial akan ditampilkan pada kunjungan berikutnya"
+      "resetTutorialButton": "Reset"
     },
     "plugins": {
       "registry": "Registri Plugin",
@@ -633,7 +630,6 @@
       "publisherKeyAdd": "Tambah kunci…",
       "publisherKeyRemove": "Hapus",
       "publisherKeyFingerprint": "Fingerprint",
-      "publisherKeyAddedAt": "Ditambahkan",
       "publisherKeyConsentTitle": "Percayai penerbit ini?",
       "publisherKeyConsentBody": "Plugin yang ditandatangani dengan kunci ini akan dapat dipasang di perangkat ini. Penerbit yang berniat jahat dapat mengirim plugin yang meminta kepercayaan penuh — dengan akses ke data plugin lain Anda, kredensial exchange yang tersimpan, dan trading. Bandingkan fingerprint dengan penerbit melalui saluran yang Anda percayai sebelum melanjutkan.",
       "publisherKeyConsentConfirm": "Percayai kunci ini",
@@ -729,8 +725,6 @@
       "hintExample": "Misalnya, OKX merutekan pengguna AS/AU ke us.okx.com dan pengguna UE ke eea.okx.com."
     },
     "risk": {
-      "title": "Manajemen Risiko",
-      "description": "Konfigurasikan batas risiko dan kontrol order otomatis untuk melindungi trading Anda.",
       "lockBanner": "Order terkunci karena pelanggaran batas risiko.",
       "lockBannerBuys": "Order beli terkunci karena pelanggaran batas risiko.",
       "unlockOrders": "Buka Kunci Order",
@@ -742,7 +736,6 @@
       "maxPositionSizeDescription": "Ukuran maksimum untuk satu posisi sebagai persentase dari portofolio.",
       "maxDailyTrades": "Trade maks",
       "maxDailyTradesDescription": "Jumlah maksimum trade yang diizinkan dalam jendela reset.",
-      "onBreach": "Saat dilanggar",
       "actionBlockAll": "Blokir semua order",
       "actionBlockBuys": "Blokir order beli",
       "actionWarn": "Hanya peringatan",
@@ -966,7 +959,6 @@
       "vaultStatusReady_one": "Dilindungi oleh 1 cara membuka.",
       "vaultStatusReady_other": "Dilindungi oleh {{count}} cara membuka.",
       "vaultSetUp": "Siapkan brankas",
-      "vaultAddProtector": "Tambah cara masuk lain",
       "vaultRemoveProtector": "Hapus",
       "vaultRemoveLastBlocked": "Ini satu-satunya cara masuk ke brankas Anda. Tambahkan yang lain sebelum menghapusnya.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID tidak boleh jadi satu-satunya cara masuk — sidik jari di Mac ini bisa berubah. Simpan kata sandi atau passkey.",
@@ -1107,10 +1099,6 @@
   "userMenu": {
     "accountMenu": "Menu akun",
     "settings": "Pengaturan",
-    "loadingSettings": "Memuat pengaturan…",
-    "account": "Akun",
-    "billing": "Penagihan",
-    "notifications": "Notifikasi",
     "colorMode": "Mode Warna",
     "light": "Terang",
     "dark": "Gelap",
@@ -1173,7 +1161,6 @@
     "variables": {
       "title": "Variabel",
       "emptyState": "Tidak ada variabel. Tambahkan variabel untuk mengikat panel ke sumber data yang berbeda.",
-      "namePlaceholder": "$nama",
       "labelPlaceholder": "Nama Tampilan",
       "typePair": "Pair",
       "typeTimeframe": "Timeframe",
@@ -1218,17 +1205,9 @@
       "namePlaceholder": "Ruang Kerja Saya"
     }
   },
-  "session": {
-    "checking": "Memeriksa sesi…",
-    "loadingSettings": "Memuat pengaturan…",
-    "loadingSettingsDescription": "Tunggu sebentar sementara kami memuat panel pengaturan Anda."
-  },
   "signIn": {
     "checkingSession": "Memeriksa sesi...",
-    "tagline": "Terminal trading AI-native",
-    "title": "Masuk ke Terminal",
     "description": "Masukkan email Anda dan kami akan mengirim kode sekali pakai. Tanpa kata sandi.",
-    "email": "Email",
     "sendingCode": "Mengirim kode...",
     "continue": "Lanjutkan",
     "skip": "Lanjutkan tanpa masuk",
@@ -1262,17 +1241,12 @@
       }
     },
     "codeSent": "Kode terkirim ke {{email}}. Periksa kotak masuk Anda.",
-    "verifyTitle": "Verifikasi login Anda",
     "verifyDescription": "Masukkan kode verifikasi yang dikirim ke",
-    "verificationCode": "Kode verifikasi",
     "wrongEmail": "Email salah?",
     "changeIt": "Ubah",
     "resendCode": "Kirim ulang kode",
     "resendCodeTimer": "Kirim ulang kode ({{seconds}}d)",
     "signingIn": "Sedang masuk...",
-    "verify": "Verifikasi",
-    "verifying": "Memverifikasi...",
-    "verifyAndSignIn": "Verifikasi dan masuk",
     "codeRequired": "Kode wajib diisi",
     "emailRequired": "Email wajib diisi",
     "dialogDescription": "Masuk untuk mengakses fitur ini",
@@ -1288,10 +1262,6 @@
     "enterSecret": "Masukkan nilai rahasia"
   },
   "connection": {
-    "realtimeConnected": "Realtime terhubung",
-    "realtimeConnecting": "Realtime menghubungkan",
-    "realtimeDisconnected": "Realtime terputus",
-    "realtimeError": "Kesalahan realtime",
     "live": "Live",
     "connecting": "Menghubungkan",
     "stalled": "Menghubungkan ulang",
@@ -1302,7 +1272,6 @@
     "latencyTooltipDetail": "Median ping keepalive terbaru · terbaik {{best}}",
     "latencyEstimateTitle": "Perkiraan waktu bolak-balik ke {{venue}}",
     "latencyEstimateDetail": "Bursa ini tidak menjawab keepalive yang bisa kami ukur, jadi nilainya disimpulkan dari usia stempel waktu transaksinya, dikoreksi terhadap jam perangkat ini",
-    "error": "Kesalahan",
     "pluginUpdatesReady_one": "{{count}} pembaruan plugin siap dipasang",
     "pluginUpdatesReady_other": "{{count}} pembaruan plugin siap dipasang",
     "pluginUpdatesDescription": "Pembaruan akan diterapkan setelah terminal dimulai ulang.",
@@ -1568,14 +1537,12 @@
     "newBot": "Bot baru",
     "stopAll": "Hentikan semua",
     "stopAllDone": "Semua bot sudah mati",
-    "localTitle": "Bot berjalan di perangkat ini",
     "keepAwakeLabel": "Jaga komputer ini tetap aktif",
     "keepAwakeActive": "Tidur otomatis diblokir selama ada bot yang aktif.",
     "keepAwakeIdle": "Tidur otomatis akan diblokir begitu ada bot yang aktif.",
     "keepAwakeOff": "Komputer ini boleh tidur, dan bot Anda ikut berhenti saat itu.",
     "keepAwakeUnsupported": "Hanya aplikasi desktop yang bisa mencegah tidur.",
     "localBody": "Strategi Anda dieksekusi di sini, di dalam Pairlens — bukan di server yang kami operasikan. Itulah yang membuat kunci dan logika Anda tetap milik Anda. Konsekuensinya nyata: tutup Pairlens atau biarkan komputer ini tidur, bot ikut berhenti, dan posisi yang sedang terbuka dibiarkan tanpa pengawasan sampai Anda kembali.",
-    "emptyTitle": "Belum ada bot",
     "emptyDescription": "Bot adalah salah satu skrip strategi Anda yang dipasang ke sebuah market. Pilih skrip, pair, dan ukuran, lalu bot mulai trading di mode paper.",
     "emptyHeadline": "Biarkan strategi yang mengawasi grafik untukmu",
     "templateEmaCross": "Mengikuti tren dua arah: long di atas persilangan, short di bawahnya.",
@@ -2100,19 +2067,13 @@
     "side": "Sisi",
     "pair": "Pair",
     "size": "Ukuran",
-    "entryPrice": "Harga Masuk",
-    "markPrice": "Harga Mark",
-    "pnl": "P&L",
-    "pnlPercent": "P&L %",
     "type": "Jenis",
     "price": "Harga",
     "status": "Status",
     "time": "Waktu",
     "fee": "Biaya",
-    "noPositions": "Tidak ada posisi terbuka",
     "noOrders": "Tidak ada order tertunda",
     "noFills": "Tidak ada riwayat trade",
-    "cancel": "Batal",
     "live": "Terbuka",
     "partiallyFilled": "Sebagian",
     "filled": "Terisi",
@@ -2123,10 +2084,7 @@
     "spotNoPositions": "Mode spot — tidak ada posisi margin",
     "balances": "Saldo",
     "noBalances": "Tidak ada data saldo",
-    "available": "Tersedia",
-    "frozen": "Dibekukan",
     "total": "Total",
-    "refreshBalances": "Segarkan",
     "asset": "Aset",
     "cancelOrderTitle": "Batalkan order?",
     "cancelOrderBody": "Ini akan membatalkan order {{side}} kamu untuk {{pair}}.",
@@ -2167,7 +2125,6 @@
     "allClear": "Semua aman",
     "ordersLocked": "Order Terkunci",
     "buysLocked": "Beli Terkunci",
-    "noLimits": "Tidak ada batas yang dikonfigurasi",
     "configurePrompt": "Konfigurasikan batas risiko"
   },
   "webPane": {
@@ -2176,7 +2133,6 @@
     "refresh": "Segarkan",
     "openExternal": "Buka di browser",
     "emptyTitle": "Masukkan URL di atas untuk menyematkan situs web",
-    "embedWarning": "Beberapa situs web memblokir penyematan dalam iframe. Jika halaman tidak dimuat, coba buka di browser Anda.",
     "blockedTitle": "Situs ini tidak dapat disematkan",
     "blockedDescription": "Situs web ini memblokir tampilan di dalam halaman lain. Anda dapat membukanya di tab browser terpisah.",
     "forward": "Maju",
@@ -2307,7 +2263,6 @@
   },
   "addPaneDialog": {
     "description": "Pilih panel untuk ditambahkan ke tata letak ruang kerja Anda.",
-    "subtitle": "Pilih panel untuk ditambahkan ke ruang kerja Anda",
     "added": "Ditambahkan"
   },
   "layout": {
@@ -2410,12 +2365,7 @@
     "title": "Penemuan"
   },
   "pluginStore": {
-    "discover": "Temukan",
-    "discoverDescription": "Perluas terminal Anda dengan plugin untuk data market, trading, AI, dan lainnya.",
     "registryOffline": "Registri plugin sedang offline. Hanya menampilkan plugin yang terpasang.",
-    "featured": "Unggulan",
-    "all": "Semua",
-    "noPlugins": "Tidak ada plugin ditemukan.",
     "activated": "Diaktifkan",
     "deactivated": "Dinonaktifkan",
     "operationFailed": "Operasi gagal",
@@ -2424,7 +2374,6 @@
     "desktopOnly": "Khusus Desktop",
     "browserOnly": "Khusus Browser",
     "platformIncompatible": "Plugin ini {{badge}} dan tidak dapat diaktifkan di sini.",
-    "serverRegion": "Wilayah Server",
     "showMore": "Tampilkan semua",
     "importPlugin": "Impor plugin",
     "openFolder": "Buka folder",
@@ -2842,8 +2791,6 @@
     }
   },
   "search": {
-    "title": "Cari Pair",
-    "description": "Cari instrumen untuk ditradingkan",
     "placeholder": "Cari apa saja...",
     "noResults": "Tidak ditemukan hasil.",
     "results": "Hasil",
@@ -3030,7 +2977,6 @@
     "storedSecurelyNever": "tidak pernah dikirim ke atau disimpan di server Pairlens",
     "demoKeysReminder": "Gunakan demo API key dari akun {{exchange}} {{region}} Anda.",
     "globalEndpoint": "Endpoint global",
-    "endpoint": "Endpoint {{region}}",
     "localOnly": {
       "badge": "Hanya Lokal",
       "badgeAria": "Pelajari bagaimana kunci Anda dijaga privat",
@@ -3146,8 +3092,6 @@
     "defaultWalletName": "Dompet {{chain}}"
   },
   "workspaceStore": {
-    "title": "Workspace Store",
-    "subtitle": "Mulai dari tata letak siap pakai — filter berdasarkan cara dan apa yang Anda tradingkan, lalu salin ke ruang kerja Anda sendiri.",
     "searchPlaceholder": "Cari ruang kerja…",
     "all": "Semua",
     "browseTemplates": "Jelajahi template",
@@ -3201,7 +3145,6 @@
     },
     "community": {
       "by": "oleh {{author}}",
-      "installs": "{{count}} salinan",
       "downloads": "Unduhan",
       "favorites": "Favorit",
       "favorite": "Favoritkan"
@@ -4679,7 +4622,6 @@
       "venueLine": "{{venue}} {{kind}} · {{permission}}",
       "trading": "trading",
       "discoverTitle": "Jelajahi",
-      "topTickers": "Ticker teratas",
       "allMarkets": "Semua pair",
       "pnlToday": "P&L hari ini",
       "noPositions": "Tidak ada posisi terbuka",

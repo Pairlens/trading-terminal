@@ -426,7 +426,6 @@
     "loading": "載入中…",
     "error": "發生錯誤",
     "retry": "重試",
-    "search": "搜尋",
     "noResults": "找不到結果。",
     "trend": "走勢",
     "trendAriaLabel": "24 小時價格走勢",
@@ -475,7 +474,6 @@
       "keyboard": "鍵盤",
       "performance": "效能",
       "desktop": "桌面",
-      "connection": "連線",
       "language": "語言",
       "region": "國家",
       "currency": "幣別",
@@ -603,8 +601,7 @@
       "signInButton": "登入",
       "resetTutorialTitle": "新手教學",
       "resetTutorialDescription": "下次造訪時再次顯示新手導覽教學。",
-      "resetTutorialButton": "重設",
-      "tutorialReset": "教學將於下次造訪時顯示"
+      "resetTutorialButton": "重設"
     },
     "plugins": {
       "registry": "外掛登錄庫",
@@ -633,7 +630,6 @@
       "publisherKeyAdd": "新增金鑰…",
       "publisherKeyRemove": "移除",
       "publisherKeyFingerprint": "指紋",
-      "publisherKeyAddedAt": "新增於",
       "publisherKeyConsentTitle": "要信任這位發布者嗎？",
       "publisherKeyConsentBody": "以此金鑰簽署的外掛將可在此裝置上安裝。惡意發布者可能發布要求完整信任的外掛——進而存取你其他外掛的資料、已儲存的交易所憑證與交易功能。繼續之前，請透過你信任的管道與發布者核對指紋。",
       "publisherKeyConsentConfirm": "信任此金鑰",
@@ -729,8 +725,6 @@
       "hintExample": "舉例來說，OKX 會將美國/澳洲使用者路由至 us.okx.com，歐盟使用者則路由至 eea.okx.com。"
     },
     "risk": {
-      "title": "風險管理",
-      "description": "設定風險限額與自動下單控管，保護你的交易安全。",
       "lockBanner": "因觸發風險限額，訂單已被鎖定。",
       "lockBannerBuys": "因觸發風險限額，買單已被鎖定。",
       "unlockOrders": "解鎖訂單",
@@ -742,7 +736,6 @@
       "maxPositionSizeDescription": "單一部位佔投資組合的最大百分比。",
       "maxDailyTrades": "最多交易次數",
       "maxDailyTradesDescription": "重置週期內允許的最多交易次數。",
-      "onBreach": "觸發限額時",
       "actionBlockAll": "封鎖所有訂單",
       "actionBlockBuys": "封鎖買單",
       "actionWarn": "僅提出警告",
@@ -966,7 +959,6 @@
       "vaultStatusReady_one": "受 1 種解鎖方式保護。",
       "vaultStatusReady_other": "受 {{count}} 種解鎖方式保護。",
       "vaultSetUp": "設定保險庫",
-      "vaultAddProtector": "新增另一種進入方式",
       "vaultRemoveProtector": "移除",
       "vaultRemoveLastBlocked": "這是進入保險庫的唯一方式。移除前請先新增另一種。",
       "vaultRemoveBiometricOnlyBlocked": "觸控 ID 不能是唯一的進入方式——這台 Mac 上的指紋可能會變更。請保留密碼或通行金鑰。",
@@ -1107,10 +1099,6 @@
   "userMenu": {
     "accountMenu": "帳戶選單",
     "settings": "設定",
-    "loadingSettings": "載入設定中…",
-    "account": "帳戶",
-    "billing": "帳單",
-    "notifications": "通知",
     "colorMode": "顯示模式",
     "light": "淺色",
     "dark": "深色",
@@ -1173,7 +1161,6 @@
     "variables": {
       "title": "變數",
       "emptyState": "尚無變數。新增變數以將面板綁定至不同的資料來源。",
-      "namePlaceholder": "$name",
       "labelPlaceholder": "顯示名稱",
       "typePair": "交易對",
       "typeTimeframe": "時間週期",
@@ -1218,17 +1205,9 @@
       "namePlaceholder": "我的工作區"
     }
   },
-  "session": {
-    "checking": "檢查工作階段中…",
-    "loadingSettings": "載入設定中…",
-    "loadingSettingsDescription": "請稍候，正在載入你的設定面板。"
-  },
   "signIn": {
     "checkingSession": "檢查工作階段中…",
-    "tagline": "AI 原生交易終端機",
-    "title": "登入終端機",
     "description": "輸入你的電子郵件，我們會寄送一次性驗證碼，無需密碼。",
-    "email": "電子郵件",
     "sendingCode": "傳送驗證碼中…",
     "continue": "繼續",
     "skip": "略過登入，直接使用",
@@ -1262,17 +1241,12 @@
       }
     },
     "codeSent": "驗證碼已寄送至 {{email}}，請查看你的收件匣。",
-    "verifyTitle": "驗證你的登入",
     "verifyDescription": "請輸入寄送至以下地址的驗證碼",
-    "verificationCode": "驗證碼",
     "wrongEmail": "電子郵件錯誤？",
     "changeIt": "修改",
     "resendCode": "重新傳送驗證碼",
     "resendCodeTimer": "重新傳送驗證碼（{{seconds}} 秒）",
     "signingIn": "登入中…",
-    "verify": "驗證",
-    "verifying": "驗證中…",
-    "verifyAndSignIn": "驗證並登入",
     "codeRequired": "請輸入驗證碼",
     "emailRequired": "請輸入電子郵件",
     "dialogDescription": "登入以使用此功能",
@@ -1288,10 +1262,6 @@
     "enterSecret": "輸入機密值"
   },
   "connection": {
-    "realtimeConnected": "即時連線已建立",
-    "realtimeConnecting": "即時連線建立中",
-    "realtimeDisconnected": "即時連線已中斷",
-    "realtimeError": "即時連線錯誤",
     "live": "即時",
     "connecting": "連線中",
     "stalled": "重新連線中",
@@ -1302,7 +1272,6 @@
     "latencyTooltipDetail": "近期保活 ping 的中位數 · 最佳 {{best}}",
     "latencyEstimateTitle": "到 {{venue}} 的往返時延（估算）",
     "latencyEstimateDetail": "該交易所不回應可計時的保活請求，因此此值根據成交時間戳的新舊程度推算，並已校正本機時鐘偏差",
-    "error": "錯誤",
     "pluginUpdatesReady_one": "{{count}} 個外掛更新已就緒,可以安裝",
     "pluginUpdatesReady_other": "{{count}} 個外掛更新已就緒,可以安裝",
     "pluginUpdatesDescription": "更新將在終端重新啟動後生效。",
@@ -1568,14 +1537,12 @@
     "newBot": "新增機器人",
     "stopAll": "全部停止",
     "stopAllDone": "所有機器人已停止",
-    "localTitle": "機器人在這台裝置上運行",
     "keepAwakeLabel": "讓這台電腦保持喚醒",
     "keepAwakeActive": "有機器人運行時，自動睡眠已被阻擋。",
     "keepAwakeIdle": "機器人一旦開啟，自動睡眠就會被阻擋。",
     "keepAwakeOff": "這台電腦可能進入睡眠，機器人也會隨之停止。",
     "keepAwakeUnsupported": "只有桌面應用程式能阻擋睡眠。",
     "localBody": "你的策略在這裡、在 Pairlens 內執行，而不是在我們營運的伺服器上。正因如此，你的金鑰與你的邏輯始終屬於你。代價也很真實：結束 Pairlens 或讓這台電腦進入睡眠，機器人就會隨之停止，而已經持有的部位會一直無人看管，直到你回來。",
-    "emptyTitle": "尚無機器人",
     "emptyDescription": "機器人就是把你的一個策略腳本部署到某個市場。選好腳本、交易對與下單規模，它就會開始模擬交易。",
     "emptyHeadline": "讓策略替你盯盤",
     "templateEmaCross": "雙向跟隨趨勢：金叉做多，死叉做空。",
@@ -2100,19 +2067,13 @@
     "side": "方向",
     "pair": "交易對",
     "size": "數量",
-    "entryPrice": "進場價",
-    "markPrice": "標記價",
-    "pnl": "損益",
-    "pnlPercent": "損益 %",
     "type": "類型",
     "price": "價格",
     "status": "狀態",
     "time": "時間",
     "fee": "手續費",
-    "noPositions": "目前無持倉部位",
     "noOrders": "目前無待成交訂單",
     "noFills": "無交易紀錄",
-    "cancel": "取消",
     "live": "掛單中",
     "partiallyFilled": "部分成交",
     "filled": "已成交",
@@ -2123,10 +2084,7 @@
     "spotNoPositions": "現貨模式——無槓桿部位",
     "balances": "餘額",
     "noBalances": "無餘額資料",
-    "available": "可用",
-    "frozen": "凍結",
     "total": "總計",
-    "refreshBalances": "重新整理",
     "asset": "資產",
     "cancelOrderTitle": "撤銷訂單？",
     "cancelOrderBody": "這將撤銷你在 {{pair}} 的{{side}}訂單。",
@@ -2167,7 +2125,6 @@
     "allClear": "一切正常",
     "ordersLocked": "訂單已鎖定",
     "buysLocked": "買單已鎖定",
-    "noLimits": "尚未設定限額",
     "configurePrompt": "設定風險限額"
   },
   "webPane": {
@@ -2176,7 +2133,6 @@
     "refresh": "重新整理",
     "openExternal": "在瀏覽器中開啟",
     "emptyTitle": "在上方輸入網址以嵌入網站",
-    "embedWarning": "部分網站會封鎖 iframe 嵌入。若頁面無法載入，請改在瀏覽器中開啟。",
     "blockedTitle": "此網站無法嵌入",
     "blockedDescription": "此網站封鎖在其他頁面內顯示。你可以改在獨立的瀏覽器分頁中開啟它。",
     "forward": "前進",
@@ -2307,7 +2263,6 @@
   },
   "addPaneDialog": {
     "description": "選擇要新增到工作區版面的面板。",
-    "subtitle": "選擇要新增到工作區的面板",
     "added": "已新增"
   },
   "layout": {
@@ -2410,12 +2365,7 @@
     "title": "探索"
   },
   "pluginStore": {
-    "discover": "探索",
-    "discoverDescription": "透過外掛擴充你的終端機，涵蓋市場資料、交易、AI 等更多功能。",
     "registryOffline": "外掛登錄庫目前離線，僅顯示已安裝的外掛。",
-    "featured": "精選",
-    "all": "全部",
-    "noPlugins": "找不到外掛。",
     "activated": "已啟用",
     "deactivated": "已停用",
     "operationFailed": "操作失敗",
@@ -2424,7 +2374,6 @@
     "desktopOnly": "僅限桌面版",
     "browserOnly": "僅限瀏覽器版",
     "platformIncompatible": "此外掛為{{badge}}，無法在此環境啟用。",
-    "serverRegion": "伺服器地區",
     "showMore": "顯示全部",
     "importPlugin": "匯入外掛",
     "openFolder": "開啟資料夾",
@@ -2842,8 +2791,6 @@
     }
   },
   "search": {
-    "title": "搜尋交易對",
-    "description": "搜尋要交易的商品",
     "placeholder": "搜尋任何內容…",
     "noResults": "找不到結果。",
     "results": "結果",
@@ -3030,7 +2977,6 @@
     "storedSecurelyNever": "絕不會傳送到或儲存在 Pairlens 伺服器上",
     "demoKeysReminder": "請使用你 {{exchange}} {{region}} 帳戶的模擬 API 金鑰。",
     "globalEndpoint": "全球節點",
-    "endpoint": "{{region}} 節點",
     "localOnly": {
       "badge": "僅限本機",
       "badgeAria": "了解你的金鑰如何保持私密",
@@ -3146,8 +3092,6 @@
     }
   },
   "workspaceStore": {
-    "title": "工作區商店",
-    "subtitle": "從現成的版面開始——依你的交易方式與交易內容篩選，再複製到你自己的工作區。",
     "searchPlaceholder": "搜尋工作區…",
     "all": "全部",
     "browseTemplates": "瀏覽範本",
@@ -3201,7 +3145,6 @@
     },
     "community": {
       "by": "作者：{{author}}",
-      "installs": "{{count}} 次複製",
       "downloads": "下載次數",
       "favorites": "收藏",
       "favorite": "收藏"
@@ -4679,7 +4622,6 @@
       "venueLine": "{{venue}} {{kind}} · {{permission}}",
       "trading": "交易",
       "discoverTitle": "探索",
-      "topTickers": "熱門行情",
       "allMarkets": "所有交易對",
       "pnlToday": "今日損益",
       "noPositions": "目前無持倉部位",

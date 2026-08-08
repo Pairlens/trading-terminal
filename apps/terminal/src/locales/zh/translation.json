@@ -426,7 +426,6 @@
     "loading": "加载中……",
     "error": "出了点问题",
     "retry": "重试",
-    "search": "搜索",
     "noResults": "未找到结果。",
     "trend": "走势",
     "trendAriaLabel": "24 小时价格走势",
@@ -475,7 +474,6 @@
       "keyboard": "键盘",
       "performance": "性能",
       "desktop": "桌面",
-      "connection": "连接",
       "language": "语言",
       "region": "国家",
       "currency": "货币",
@@ -603,8 +601,7 @@
       "signInButton": "登录",
       "resetTutorialTitle": "新手引导教程",
       "resetTutorialDescription": "下次访问时重新显示引导教程。",
-      "resetTutorialButton": "重置",
-      "tutorialReset": "教程将在下次访问时显示"
+      "resetTutorialButton": "重置"
     },
     "plugins": {
       "registry": "插件注册表",
@@ -633,7 +630,6 @@
       "publisherKeyAdd": "添加密钥……",
       "publisherKeyRemove": "移除",
       "publisherKeyFingerprint": "指纹",
-      "publisherKeyAddedAt": "添加于",
       "publisherKeyConsentTitle": "信任此发布者？",
       "publisherKeyConsentBody": "使用此密钥签名的插件将可在本设备上安装。恶意发布者可能会发布请求完全信任的插件 —— 从而访问你其他插件的数据、已存储的交易所凭证及交易权限。请在继续之前,通过你信任的渠道与发布者核对指纹。",
       "publisherKeyConsentConfirm": "信任此密钥",
@@ -729,8 +725,6 @@
       "hintExample": "例如,OKX 会将美国/澳大利亚用户路由到 us.okx.com,将欧盟用户路由到 eea.okx.com。"
     },
     "risk": {
-      "title": "风险管理",
-      "description": "配置风险限额和自动订单控制,保护你的交易。",
       "lockBanner": "由于触发了风险限额,订单已被锁定。",
       "lockBannerBuys": "由于触发了风险限额,买单已被锁定。",
       "unlockOrders": "解锁订单",
@@ -742,7 +736,6 @@
       "maxPositionSizeDescription": "单个仓位占投资组合的最大百分比。",
       "maxDailyTrades": "最大交易次数",
       "maxDailyTradesDescription": "在重置窗口内允许的最大交易次数。",
-      "onBreach": "触发后",
       "actionBlockAll": "阻止所有订单",
       "actionBlockBuys": "阻止买单",
       "actionWarn": "仅警告",
@@ -966,7 +959,6 @@
       "vaultStatusReady_one": "受 1 种解锁方式保护。",
       "vaultStatusReady_other": "受 {{count}} 种解锁方式保护。",
       "vaultSetUp": "设置保险库",
-      "vaultAddProtector": "添加另一种进入方式",
       "vaultRemoveProtector": "移除",
       "vaultRemoveLastBlocked": "这是进入保险库的唯一方式。移除前请先添加另一种。",
       "vaultRemoveBiometricOnlyBlocked": "触控 ID 不能是唯一的进入方式——这台 Mac 上的指纹可能会变。请保留密码或通行密钥。",
@@ -1107,10 +1099,6 @@
   "userMenu": {
     "accountMenu": "账户菜单",
     "settings": "设置",
-    "loadingSettings": "正在加载设置……",
-    "account": "账户",
-    "billing": "账单",
-    "notifications": "通知",
     "colorMode": "配色模式",
     "light": "浅色",
     "dark": "深色",
@@ -1173,7 +1161,6 @@
     "variables": {
       "title": "变量",
       "emptyState": "暂无变量。添加变量以将面板绑定到不同的数据源。",
-      "namePlaceholder": "$名称",
       "labelPlaceholder": "显示名称",
       "typePair": "交易对",
       "typeTimeframe": "周期",
@@ -1218,17 +1205,9 @@
       "namePlaceholder": "我的工作区"
     }
   },
-  "session": {
-    "checking": "正在检查会话……",
-    "loadingSettings": "正在加载设置……",
-    "loadingSettingsDescription": "请稍候,我们正在加载你的设置面板。"
-  },
   "signIn": {
     "checkingSession": "正在检查会话……",
-    "tagline": "AI 原生交易终端",
-    "title": "登录终端",
     "description": "输入你的邮箱,我们会发送一次性验证码。无需密码。",
-    "email": "邮箱",
     "sendingCode": "正在发送验证码……",
     "continue": "继续",
     "skip": "不登录,继续使用",
@@ -1262,17 +1241,12 @@
       }
     },
     "codeSent": "验证码已发送至 {{email}}。请查看你的收件箱。",
-    "verifyTitle": "验证你的登录",
     "verifyDescription": "输入发送至以下地址的验证码",
-    "verificationCode": "验证码",
     "wrongEmail": "邮箱错了？",
     "changeIt": "更改",
     "resendCode": "重新发送验证码",
     "resendCodeTimer": "重新发送验证码({{seconds}}秒)",
     "signingIn": "正在登录……",
-    "verify": "验证",
-    "verifying": "正在验证……",
-    "verifyAndSignIn": "验证并登录",
     "codeRequired": "请输入验证码",
     "emailRequired": "请输入邮箱",
     "dialogDescription": "登录以使用此功能",
@@ -1288,10 +1262,6 @@
     "enterSecret": "输入密钥值"
   },
   "connection": {
-    "realtimeConnected": "实时连接已建立",
-    "realtimeConnecting": "实时连接中",
-    "realtimeDisconnected": "实时连接已断开",
-    "realtimeError": "实时连接错误",
     "live": "实时",
     "connecting": "连接中",
     "stalled": "重新连接中",
@@ -1302,7 +1272,6 @@
     "latencyTooltipDetail": "近期保活 ping 的中位数 · 最优 {{best}}",
     "latencyEstimateTitle": "到 {{venue}} 的往返时延（估算）",
     "latencyEstimateDetail": "该交易所不响应可计时的保活请求，因此该值根据成交时间戳的新旧程度推算，并已校正本机时钟偏差",
-    "error": "错误",
     "pluginUpdatesReady_one": "{{count}} 个插件更新已就绪,可以安装",
     "pluginUpdatesReady_other": "{{count}} 个插件更新已就绪,可以安装",
     "pluginUpdatesDescription": "更新将在终端重启后生效。",
@@ -1568,14 +1537,12 @@
     "newBot": "新建机器人",
     "stopAll": "全部停止",
     "stopAllDone": "所有机器人已停止",
-    "localTitle": "机器人在这台设备上运行",
     "keepAwakeLabel": "让这台电脑保持唤醒",
     "keepAwakeActive": "有机器人运行时,自动睡眠已被阻止。",
     "keepAwakeIdle": "机器人一旦开启,自动睡眠就会被阻止。",
     "keepAwakeOff": "这台电脑可能进入睡眠,机器人也会随之停止。",
     "keepAwakeUnsupported": "只有桌面应用能阻止睡眠。",
     "localBody": "你的策略在这里、在 Pairlens 内执行,而不是在我们运营的服务器上。正因如此,你的密钥和你的逻辑始终属于你。代价也很真实:退出 Pairlens 或让这台电脑进入睡眠,机器人就会随之停止,而已经持有的仓位会一直无人看管,直到你回来。",
-    "emptyTitle": "还没有机器人",
     "emptyDescription": "机器人就是把你的一个策略脚本部署到某个市场。选好脚本、交易对和下单规模,它就会开始模拟交易。",
     "emptyHeadline": "让策略替你盯盘",
     "templateEmaCross": "双向跟随趋势：金叉做多，死叉做空。",
@@ -2100,19 +2067,13 @@
     "side": "方向",
     "pair": "交易对",
     "size": "数量",
-    "entryPrice": "开仓价",
-    "markPrice": "标记价格",
-    "pnl": "盈亏",
-    "pnlPercent": "盈亏百分比",
     "type": "类型",
     "price": "价格",
     "status": "状态",
     "time": "时间",
     "fee": "手续费",
-    "noPositions": "没有持仓",
     "noOrders": "没有挂单",
     "noFills": "没有成交历史",
-    "cancel": "取消",
     "live": "挂单中",
     "partiallyFilled": "部分成交",
     "filled": "已成交",
@@ -2123,10 +2084,7 @@
     "spotNoPositions": "现货模式 —— 无保证金仓位",
     "balances": "余额",
     "noBalances": "没有余额数据",
-    "available": "可用",
-    "frozen": "冻结",
     "total": "总计",
-    "refreshBalances": "刷新",
     "asset": "资产",
     "cancelOrderTitle": "撤销订单？",
     "cancelOrderBody": "这将撤销你在 {{pair}} 的{{side}}订单。",
@@ -2167,7 +2125,6 @@
     "allClear": "一切正常",
     "ordersLocked": "订单已锁定",
     "buysLocked": "买单已锁定",
-    "noLimits": "未配置限额",
     "configurePrompt": "配置风险限额"
   },
   "webPane": {
@@ -2176,7 +2133,6 @@
     "refresh": "刷新",
     "openExternal": "在浏览器中打开",
     "emptyTitle": "在上方输入网址以嵌入网站",
-    "embedWarning": "部分网站会阻止在 iframe 中嵌入。如果页面无法加载,请尝试在浏览器中打开。",
     "blockedTitle": "该网站无法被嵌入",
     "blockedDescription": "该网站禁止在其他页面中显示。你可以改为在单独的浏览器标签页中打开它。",
     "forward": "前进",
@@ -2307,7 +2263,6 @@
   },
   "addPaneDialog": {
     "description": "选择一个要添加到工作区布局的面板。",
-    "subtitle": "选择一个要添加到工作区的面板",
     "added": "已添加"
   },
   "layout": {
@@ -2410,12 +2365,7 @@
     "title": "发现"
   },
   "pluginStore": {
-    "discover": "发现",
-    "discoverDescription": "通过市场数据、交易、AI 等插件扩展你的终端。",
     "registryOffline": "插件注册表离线。仅显示已安装的插件。",
-    "featured": "精选",
-    "all": "全部",
-    "noPlugins": "未找到插件。",
     "activated": "已启用",
     "deactivated": "已停用",
     "operationFailed": "操作失败",
@@ -2424,7 +2374,6 @@
     "desktopOnly": "仅限桌面端",
     "browserOnly": "仅限浏览器",
     "platformIncompatible": "该插件{{badge}},无法在此处启用。",
-    "serverRegion": "服务器区域",
     "showMore": "显示全部",
     "importPlugin": "导入插件",
     "openFolder": "打开文件夹",
@@ -2842,8 +2791,6 @@
     }
   },
   "search": {
-    "title": "搜索交易对",
-    "description": "搜索要交易的标的",
     "placeholder": "搜索任意内容……",
     "noResults": "未找到结果。",
     "results": "结果",
@@ -3030,7 +2977,6 @@
     "storedSecurelyNever": "绝不会发送到或存储在 Pairlens 服务器上",
     "demoKeysReminder": "使用你 {{exchange}} {{region}} 账户中的模拟 API 密钥。",
     "globalEndpoint": "全球端点",
-    "endpoint": "{{region}} 端点",
     "localOnly": {
       "badge": "仅限本地",
       "badgeAria": "了解你的密钥如何保持私密",
@@ -3146,8 +3092,6 @@
     }
   },
   "workspaceStore": {
-    "title": "工作区商店",
-    "subtitle": "从现成的布局开始 —— 按你的交易方式和交易内容筛选,然后复制到你自己的工作区。",
     "searchPlaceholder": "搜索工作区……",
     "all": "全部",
     "browseTemplates": "浏览模板",
@@ -3201,7 +3145,6 @@
     },
     "community": {
       "by": "作者:{{author}}",
-      "installs": "{{count}} 次复制",
       "downloads": "下载次数",
       "favorites": "收藏",
       "favorite": "收藏"
@@ -4679,7 +4622,6 @@
       "venueLine": "{{venue}} {{kind}} · {{permission}}",
       "trading": "交易",
       "discoverTitle": "发现",
-      "topTickers": "热门行情",
       "allMarkets": "全部交易对",
       "pnlToday": "今日盈亏",
       "noPositions": "没有持仓",

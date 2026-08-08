@@ -426,7 +426,6 @@
     "loading": "Lädt...",
     "error": "Etwas ist schiefgelaufen",
     "retry": "Erneut versuchen",
-    "search": "Suchen",
     "noResults": "Keine Ergebnisse gefunden.",
     "trend": "Trend",
     "trendAriaLabel": "Kursverlauf der letzten 24 Stunden",
@@ -475,7 +474,6 @@
       "keyboard": "Tastatur",
       "performance": "Leistung",
       "desktop": "Desktop",
-      "connection": "Verbindung",
       "language": "Sprache",
       "region": "Land",
       "currency": "Währung",
@@ -603,8 +601,7 @@
       "signInButton": "Anmelden",
       "resetTutorialTitle": "Erste-Schritte-Tutorial",
       "resetTutorialDescription": "Zeige das Onboarding-Tutorial beim nächsten Besuch erneut an.",
-      "resetTutorialButton": "Zurücksetzen",
-      "tutorialReset": "Tutorial wird beim nächsten Besuch angezeigt"
+      "resetTutorialButton": "Zurücksetzen"
     },
     "plugins": {
       "registry": "Plugin-Registry",
@@ -633,7 +630,6 @@
       "publisherKeyAdd": "Key hinzufügen…",
       "publisherKeyRemove": "Entfernen",
       "publisherKeyFingerprint": "Fingerabdruck",
-      "publisherKeyAddedAt": "Hinzugefügt",
       "publisherKeyConsentTitle": "Diesem Publisher vertrauen?",
       "publisherKeyConsentBody": "Mit diesem Key signierte Plugins werden auf diesem Gerät installierbar. Ein böswilliger Publisher kann Plugins ausliefern, die vollen Vertrauensumfang anfordern — mit Zugriff auf die Daten deiner anderen Plugins, gespeicherte Exchange-Zugangsdaten und den Handel. Vergleiche den Fingerabdruck mit dem Publisher über einen vertrauenswürdigen Kanal, bevor du fortfährst.",
       "publisherKeyConsentConfirm": "Diesem Key vertrauen",
@@ -729,8 +725,6 @@
       "hintExample": "Zum Beispiel routet OKX US-/AU-Nutzer zu us.okx.com und EU-Nutzer zu eea.okx.com."
     },
     "risk": {
-      "title": "Risikomanagement",
-      "description": "Konfiguriere Risikolimits und automatische Ordersteuerung zum Schutz deines Handels.",
       "lockBanner": "Orders sind aufgrund einer Risikolimit-Überschreitung gesperrt.",
       "lockBannerBuys": "Kauf-Orders sind aufgrund einer Risikolimit-Überschreitung gesperrt.",
       "unlockOrders": "Orders entsperren",
@@ -742,7 +736,6 @@
       "maxPositionSizeDescription": "Maximale Größe einer einzelnen Position als Prozentsatz des Portfolios.",
       "maxDailyTrades": "Max. Trades",
       "maxDailyTradesDescription": "Maximale Anzahl an Trades innerhalb des Reset-Fensters.",
-      "onBreach": "Bei Überschreitung",
       "actionBlockAll": "Alle Orders blockieren",
       "actionBlockBuys": "Kauf-Orders blockieren",
       "actionWarn": "Nur warnen",
@@ -966,7 +959,6 @@
       "vaultStatusReady_one": "Durch 1 Entsperrmethode geschützt.",
       "vaultStatusReady_other": "Durch {{count}} Entsperrmethoden geschützt.",
       "vaultSetUp": "Tresor einrichten",
-      "vaultAddProtector": "Weiteren Weg hinein hinzufügen",
       "vaultRemoveProtector": "Entfernen",
       "vaultRemoveLastBlocked": "Das ist der einzige Weg in deinen Tresor. Füge einen weiteren hinzu, bevor du ihn entfernst.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID darf nicht der einzige Weg hinein sein — die Fingerabdrücke auf diesem Mac können sich ändern. Behalte ein Passwort oder einen Passkey.",
@@ -1107,10 +1099,6 @@
   "userMenu": {
     "accountMenu": "Kontomenü",
     "settings": "Einstellungen",
-    "loadingSettings": "Einstellungen werden geladen…",
-    "account": "Konto",
-    "billing": "Abrechnung",
-    "notifications": "Benachrichtigungen",
     "colorMode": "Farbmodus",
     "light": "Hell",
     "dark": "Dunkel",
@@ -1173,7 +1161,6 @@
     "variables": {
       "title": "Variablen",
       "emptyState": "Keine Variablen. Füge Variablen hinzu, um Panels an unterschiedliche Datenquellen zu binden.",
-      "namePlaceholder": "$name",
       "labelPlaceholder": "Anzeigename",
       "typePair": "Paar",
       "typeTimeframe": "Zeitrahmen",
@@ -1218,17 +1205,9 @@
       "namePlaceholder": "Mein Workspace"
     }
   },
-  "session": {
-    "checking": "Sitzung wird geprüft…",
-    "loadingSettings": "Einstellungen werden geladen…",
-    "loadingSettingsDescription": "Einen Moment, während dein Einstellungsbereich geladen wird."
-  },
   "signIn": {
     "checkingSession": "Sitzung wird geprüft...",
-    "tagline": "KI-natives Trading-Terminal",
-    "title": "Am Terminal anmelden",
     "description": "Gib deine E-Mail-Adresse ein, und wir senden dir einen Einmalcode. Keine Passwörter.",
-    "email": "E-Mail",
     "sendingCode": "Code wird gesendet...",
     "continue": "Weiter",
     "skip": "Ohne Anmeldung fortfahren",
@@ -1262,17 +1241,12 @@
       }
     },
     "codeSent": "Code an {{email}} gesendet. Sieh in deinem Postfach nach.",
-    "verifyTitle": "Bestätige deine Anmeldung",
     "verifyDescription": "Gib den Bestätigungscode ein, der gesendet wurde an",
-    "verificationCode": "Bestätigungscode",
     "wrongEmail": "Falsche E-Mail-Adresse?",
     "changeIt": "Ändern",
     "resendCode": "Code erneut senden",
     "resendCodeTimer": "Code erneut senden ({{seconds}}s)",
     "signingIn": "Wird angemeldet...",
-    "verify": "Verifizieren",
-    "verifying": "Wird verifiziert...",
-    "verifyAndSignIn": "Verifizieren und anmelden",
     "codeRequired": "Code ist erforderlich",
     "emailRequired": "E-Mail ist erforderlich",
     "dialogDescription": "Melde dich an, um auf diese Funktion zuzugreifen",
@@ -1288,10 +1262,6 @@
     "enterSecret": "Geheimen Wert eingeben"
   },
   "connection": {
-    "realtimeConnected": "Echtzeit verbunden",
-    "realtimeConnecting": "Echtzeitverbindung wird hergestellt",
-    "realtimeDisconnected": "Echtzeit getrennt",
-    "realtimeError": "Echtzeitfehler",
     "live": "Live",
     "connecting": "Verbindung wird hergestellt",
     "stalled": "Neu verbinden",
@@ -1302,7 +1272,6 @@
     "latencyTooltipDetail": "Median der letzten Keepalive-Pings · bester Wert {{best}}",
     "latencyEstimateTitle": "Geschätzte Umlaufzeit zu {{venue}}",
     "latencyEstimateDetail": "Diese Börse beantwortet kein messbares Keepalive; der Wert wird aus dem Alter ihrer Trade-Zeitstempel abgeleitet und um die Uhr dieses Geräts korrigiert",
-    "error": "Fehler",
     "pluginUpdatesReady_one": "{{count}} Plugin-Update bereit zur Installation",
     "pluginUpdatesReady_other": "{{count}} Plugin-Updates bereit zur Installation",
     "pluginUpdatesDescription": "Updates werden nach einem Neustart des Terminals angewendet.",
@@ -1568,14 +1537,12 @@
     "newBot": "Neuer Bot",
     "stopAll": "Alle stoppen",
     "stopAllDone": "Alle Bots sind aus",
-    "localTitle": "Bots laufen auf diesem Rechner",
     "keepAwakeLabel": "Diesen Computer wach halten",
     "keepAwakeActive": "Automatischer Ruhezustand ist blockiert, solange ein Bot läuft.",
     "keepAwakeIdle": "Automatischer Ruhezustand wird blockiert, sobald ein Bot läuft.",
     "keepAwakeOff": "Dieser Computer darf schlafen — deine Bots stoppen dann mit ihm.",
     "keepAwakeUnsupported": "Nur die Desktop-App kann den Ruhezustand aufhalten.",
     "localBody": "Deine Strategien werden hier in Pairlens ausgeführt — nicht auf einem Server, den wir betreiben. Genau das hält deine Keys und deine Logik bei dir. Der Preis dafür ist real: Beendest du Pairlens oder geht dieser Computer in den Ruhezustand, stoppen die Bots mit ihm, und eine offene Position bleibt unbeobachtet, bis du zurück bist.",
-    "emptyTitle": "Noch keine Bots",
     "emptyDescription": "Ein Bot ist eines deiner Strategie-Skripte, auf einen Markt angesetzt. Wähle Skript, Paar und Größe — dann handelt er auf Papier.",
     "emptyHeadline": "Lass eine Strategie den Chart für dich beobachten",
     "templateEmaCross": "Folgt dem Trend in beide Richtungen: long über dem Kreuz, short darunter.",
@@ -2100,19 +2067,13 @@
     "side": "Seite",
     "pair": "Paar",
     "size": "Größe",
-    "entryPrice": "Einstiegspreis",
-    "markPrice": "Mark-Preis",
-    "pnl": "P&L",
-    "pnlPercent": "P&L %",
     "type": "Typ",
     "price": "Preis",
     "status": "Status",
     "time": "Zeit",
     "fee": "Gebühr",
-    "noPositions": "Keine offenen Positionen",
     "noOrders": "Keine ausstehenden Orders",
     "noFills": "Keine Handelshistorie",
-    "cancel": "Abbrechen",
     "live": "Offen",
     "partiallyFilled": "Teilweise",
     "filled": "Ausgeführt",
@@ -2123,10 +2084,7 @@
     "spotNoPositions": "Spot-Modus — keine Margin-Positionen",
     "balances": "Guthaben",
     "noBalances": "Keine Guthabendaten",
-    "available": "Verfügbar",
-    "frozen": "Eingefroren",
     "total": "Gesamt",
-    "refreshBalances": "Aktualisieren",
     "asset": "Asset",
     "cancelOrderTitle": "Order stornieren?",
     "cancelOrderBody": "Damit wird deine {{side}}-Order für {{pair}} storniert.",
@@ -2167,7 +2125,6 @@
     "allClear": "Alles im grünen Bereich",
     "ordersLocked": "Orders gesperrt",
     "buysLocked": "Käufe gesperrt",
-    "noLimits": "Keine Limits konfiguriert",
     "configurePrompt": "Risikolimits konfigurieren"
   },
   "webPane": {
@@ -2176,7 +2133,6 @@
     "refresh": "Aktualisieren",
     "openExternal": "Im Browser öffnen",
     "emptyTitle": "Gib oben eine URL ein, um eine Website einzubetten",
-    "embedWarning": "Manche Websites blockieren das Einbetten in iFrames. Wenn eine Seite nicht lädt, öffne sie stattdessen in deinem Browser.",
     "blockedTitle": "Diese Seite kann nicht eingebettet werden",
     "blockedDescription": "Diese Website blockiert die Anzeige innerhalb anderer Seiten. Du kannst sie stattdessen in einem separaten Browser-Tab öffnen.",
     "forward": "Vorwärts",
@@ -2307,7 +2263,6 @@
   },
   "addPaneDialog": {
     "description": "Wähle ein Panel, das du zu deinem Workspace-Layout hinzufügen möchtest.",
-    "subtitle": "Wähle ein Panel, das du zu deinem Workspace hinzufügen möchtest",
     "added": "Hinzugefügt"
   },
   "layout": {
@@ -2410,12 +2365,7 @@
     "title": "Entdecken"
   },
   "pluginStore": {
-    "discover": "Entdecken",
-    "discoverDescription": "Erweitere dein Terminal mit Plugins für Marktdaten, Handel, KI und mehr.",
     "registryOffline": "Die Plugin-Registry ist offline. Es werden nur installierte Plugins angezeigt.",
-    "featured": "Empfohlen",
-    "all": "Alle",
-    "noPlugins": "Keine Plugins gefunden.",
     "activated": "Aktiviert",
     "deactivated": "Deaktiviert",
     "operationFailed": "Vorgang fehlgeschlagen",
@@ -2424,7 +2374,6 @@
     "desktopOnly": "Nur Desktop",
     "browserOnly": "Nur Browser",
     "platformIncompatible": "Dieses Plugin ist {{badge}} und kann hier nicht aktiviert werden.",
-    "serverRegion": "Serverregion",
     "showMore": "Alle anzeigen",
     "importPlugin": "Plugin importieren",
     "openFolder": "Ordner öffnen",
@@ -2842,8 +2791,6 @@
     }
   },
   "search": {
-    "title": "Paare suchen",
-    "description": "Suche nach einem Instrument zum Handeln",
     "placeholder": "Alles durchsuchen...",
     "noResults": "Keine Ergebnisse gefunden.",
     "results": "Ergebnisse",
@@ -3030,7 +2977,6 @@
     "storedSecurelyNever": "niemals an Pairlens-Server gesendet oder dort gespeichert",
     "demoKeysReminder": "Verwende Demo-API-Keys von deinem {{exchange}}-{{region}}-Konto.",
     "globalEndpoint": "Globaler Endpunkt",
-    "endpoint": "{{region}}-Endpunkt",
     "localOnly": {
       "badge": "Nur lokal",
       "badgeAria": "Erfahre, wie deine Keys privat gehalten werden",
@@ -3146,8 +3092,6 @@
     "defaultWalletName": "{{chain}}-Wallet"
   },
   "workspaceStore": {
-    "title": "Workspace Store",
-    "subtitle": "Starte mit einem fertigen Layout — filtere nach deiner Handelsweise und was du handelst, und kopiere es dann in deine eigenen Workspaces.",
     "searchPlaceholder": "Workspaces suchen…",
     "all": "Alle",
     "browseTemplates": "Vorlagen durchsuchen",
@@ -3201,7 +3145,6 @@
     },
     "community": {
       "by": "von {{author}}",
-      "installs": "{{count}} Kopien",
       "downloads": "Downloads",
       "favorites": "Favoriten",
       "favorite": "Favorit"
@@ -4679,7 +4622,6 @@
       "venueLine": "{{venue}} {{kind}} · {{permission}}",
       "trading": "Handel",
       "discoverTitle": "Entdecken",
-      "topTickers": "Top-Ticker",
       "allMarkets": "Alle Paare",
       "pnlToday": "P&L heute",
       "noPositions": "Keine offenen Positionen",

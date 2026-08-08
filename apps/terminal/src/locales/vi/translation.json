@@ -426,7 +426,6 @@
     "loading": "Đang tải...",
     "error": "Đã xảy ra lỗi",
     "retry": "Thử lại",
-    "search": "Tìm kiếm",
     "noResults": "Không tìm thấy kết quả.",
     "trend": "Xu hướng",
     "trendAriaLabel": "Xu hướng giá 24 giờ",
@@ -475,7 +474,6 @@
       "keyboard": "Bàn phím",
       "performance": "Hiệu suất",
       "desktop": "Máy tính để bàn",
-      "connection": "Kết nối",
       "language": "Ngôn ngữ",
       "region": "Quốc gia",
       "currency": "Tiền tệ",
@@ -603,8 +601,7 @@
       "signInButton": "Đăng nhập",
       "resetTutorialTitle": "Hướng dẫn bắt đầu",
       "resetTutorialDescription": "Hiển thị lại hướng dẫn onboarding vào lần truy cập tiếp theo.",
-      "resetTutorialButton": "Đặt lại",
-      "tutorialReset": "Hướng dẫn sẽ hiển thị vào lần truy cập tiếp theo"
+      "resetTutorialButton": "Đặt lại"
     },
     "plugins": {
       "registry": "Registry Plugin",
@@ -633,7 +630,6 @@
       "publisherKeyAdd": "Thêm khóa…",
       "publisherKeyRemove": "Xóa",
       "publisherKeyFingerprint": "Dấu vân tay",
-      "publisherKeyAddedAt": "Đã thêm",
       "publisherKeyConsentTitle": "Tin tưởng nhà phát hành này?",
       "publisherKeyConsentBody": "Plugin ký bằng khóa này sẽ có thể cài đặt trên thiết bị này. Một nhà phát hành độc hại có thể phát hành plugin yêu cầu toàn quyền — với quyền truy cập dữ liệu của các plugin khác, thông tin đăng nhập sàn giao dịch đã lưu, và giao dịch. So sánh dấu vân tay với nhà phát hành qua một kênh bạn tin tưởng trước khi tiếp tục.",
       "publisherKeyConsentConfirm": "Tin tưởng khóa này",
@@ -729,8 +725,6 @@
       "hintExample": "Ví dụ: OKX định tuyến người dùng Mỹ/Úc đến us.okx.com và người dùng EU đến eea.okx.com."
     },
     "risk": {
-      "title": "Quản lý rủi ro",
-      "description": "Cấu hình giới hạn rủi ro và kiểm soát lệnh tự động để bảo vệ hoạt động giao dịch của bạn.",
       "lockBanner": "Lệnh bị khóa do vi phạm giới hạn rủi ro.",
       "lockBannerBuys": "Lệnh mua bị khóa do vi phạm giới hạn rủi ro.",
       "unlockOrders": "Mở khóa lệnh",
@@ -742,7 +736,6 @@
       "maxPositionSizeDescription": "Kích thước tối đa cho một vị thế duy nhất, tính theo phần trăm danh mục.",
       "maxDailyTrades": "Số lệnh tối đa",
       "maxDailyTradesDescription": "Số lượng lệnh tối đa được phép trong cửa sổ đặt lại.",
-      "onBreach": "Khi vi phạm",
       "actionBlockAll": "Chặn mọi lệnh",
       "actionBlockBuys": "Chặn lệnh mua",
       "actionWarn": "Chỉ cảnh báo",
@@ -966,7 +959,6 @@
       "vaultStatusReady_one": "Được bảo vệ bởi 1 cách mở khóa.",
       "vaultStatusReady_other": "Được bảo vệ bởi {{count}} cách mở khóa.",
       "vaultSetUp": "Thiết lập kho",
-      "vaultAddProtector": "Thêm cách vào khác",
       "vaultRemoveProtector": "Xóa",
       "vaultRemoveLastBlocked": "Đây là cách duy nhất vào kho của bạn. Hãy thêm cách khác trước khi xóa nó.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID không thể là cách duy nhất để vào — vân tay trên máy Mac này có thể thay đổi. Hãy giữ lại mật khẩu hoặc passkey.",
@@ -1107,10 +1099,6 @@
   "userMenu": {
     "accountMenu": "Menu tài khoản",
     "settings": "Cài đặt",
-    "loadingSettings": "Đang tải cài đặt…",
-    "account": "Tài khoản",
-    "billing": "Thanh toán",
-    "notifications": "Thông báo",
     "colorMode": "Chế độ màu",
     "light": "Sáng",
     "dark": "Tối",
@@ -1173,7 +1161,6 @@
     "variables": {
       "title": "Biến",
       "emptyState": "Chưa có biến nào. Thêm biến để gắn panel với các nguồn dữ liệu khác nhau.",
-      "namePlaceholder": "$tên",
       "labelPlaceholder": "Tên hiển thị",
       "typePair": "Cặp giao dịch",
       "typeTimeframe": "Khung thời gian",
@@ -1218,17 +1205,9 @@
       "namePlaceholder": "Không gian làm việc của tôi"
     }
   },
-  "session": {
-    "checking": "Đang kiểm tra phiên đăng nhập…",
-    "loadingSettings": "Đang tải cài đặt…",
-    "loadingSettingsDescription": "Vui lòng chờ trong khi chúng tôi tải bảng cài đặt của bạn."
-  },
   "signIn": {
     "checkingSession": "Đang kiểm tra phiên đăng nhập...",
-    "tagline": "Terminal giao dịch AI-native",
-    "title": "Đăng nhập vào Terminal",
     "description": "Nhập email của bạn và chúng tôi sẽ gửi mã dùng một lần. Không cần mật khẩu.",
-    "email": "Email",
     "sendingCode": "Đang gửi mã...",
     "continue": "Tiếp tục",
     "skip": "Tiếp tục mà không đăng nhập",
@@ -1262,17 +1241,12 @@
       }
     },
     "codeSent": "Mã đã gửi đến {{email}}. Kiểm tra hộp thư của bạn.",
-    "verifyTitle": "Xác minh đăng nhập của bạn",
     "verifyDescription": "Nhập mã xác minh đã gửi đến",
-    "verificationCode": "Mã xác minh",
     "wrongEmail": "Sai email?",
     "changeIt": "Thay đổi",
     "resendCode": "Gửi lại mã",
     "resendCodeTimer": "Gửi lại mã ({{seconds}}s)",
     "signingIn": "Đang đăng nhập...",
-    "verify": "Xác minh",
-    "verifying": "Đang xác minh...",
-    "verifyAndSignIn": "Xác minh và đăng nhập",
     "codeRequired": "Cần nhập mã",
     "emailRequired": "Cần nhập email",
     "dialogDescription": "Đăng nhập để sử dụng tính năng này",
@@ -1288,10 +1262,6 @@
     "enterSecret": "Nhập giá trị bí mật"
   },
   "connection": {
-    "realtimeConnected": "Đã kết nối thời gian thực",
-    "realtimeConnecting": "Đang kết nối thời gian thực",
-    "realtimeDisconnected": "Đã ngắt kết nối thời gian thực",
-    "realtimeError": "Lỗi thời gian thực",
     "live": "Trực tiếp",
     "connecting": "Đang kết nối",
     "stalled": "Đang kết nối lại",
@@ -1302,7 +1272,6 @@
     "latencyTooltipDetail": "Trung vị các ping keepalive gần đây · tốt nhất {{best}}",
     "latencyEstimateTitle": "Ước tính thời gian khứ hồi tới {{venue}}",
     "latencyEstimateDetail": "Sàn này không trả lời keepalive nào có thể đo được, nên giá trị được suy ra từ độ cũ của dấu thời gian khớp lệnh, đã hiệu chỉnh theo đồng hồ của máy này",
-    "error": "Lỗi",
     "pluginUpdatesReady_one": "{{count}} bản cập nhật plugin đã sẵn sàng để cài đặt",
     "pluginUpdatesReady_other": "{{count}} bản cập nhật plugin đã sẵn sàng để cài đặt",
     "pluginUpdatesDescription": "Các bản cập nhật sẽ được áp dụng sau khi khởi động lại terminal.",
@@ -1568,14 +1537,12 @@
     "newBot": "Bot mới",
     "stopAll": "Dừng tất cả",
     "stopAllDone": "Tất cả bot đã tắt",
-    "localTitle": "Bot chạy trên máy này",
     "keepAwakeLabel": "Không để máy này ngủ",
     "keepAwakeActive": "Chế độ ngủ tự động bị chặn khi có bot đang chạy.",
     "keepAwakeIdle": "Chế độ ngủ tự động sẽ bị chặn khi bạn bật một bot.",
     "keepAwakeOff": "Máy này có thể ngủ, và bot của bạn sẽ dừng theo.",
     "keepAwakeUnsupported": "Chỉ ứng dụng desktop mới chặn được chế độ ngủ.",
     "localBody": "Chiến lược của bạn chạy ở đây, bên trong Pairlens — không phải trên máy chủ do chúng tôi vận hành. Đó là điều giữ cho khóa và logic của bạn vẫn là của bạn. Đánh đổi là có thật: thoát Pairlens hoặc để máy này ngủ thì bot cũng dừng theo, và vị thế đang mở sẽ không có ai trông chừng cho đến khi bạn quay lại.",
-    "emptyTitle": "Chưa có bot nào",
     "emptyDescription": "Bot là một script chiến lược của bạn được triển khai lên một thị trường. Chọn script, cặp giao dịch và khối lượng, bot sẽ bắt đầu giao dịch giả lập.",
     "emptyHeadline": "Để một chiến lược canh biểu đồ thay bạn",
     "templateEmaCross": "Bám xu hướng cả hai chiều: mua trên điểm cắt, bán dưới điểm cắt.",
@@ -2100,19 +2067,13 @@
     "side": "Chiều",
     "pair": "Cặp giao dịch",
     "size": "Khối lượng",
-    "entryPrice": "Giá vào",
-    "markPrice": "Giá đánh dấu",
-    "pnl": "Lãi/Lỗ",
-    "pnlPercent": "% Lãi/Lỗ",
     "type": "Loại",
     "price": "Giá",
     "status": "Trạng thái",
     "time": "Thời gian",
     "fee": "Phí",
-    "noPositions": "Không có vị thế mở",
     "noOrders": "Không có lệnh đang chờ",
     "noFills": "Không có lịch sử giao dịch",
-    "cancel": "Hủy",
     "live": "Mở",
     "partiallyFilled": "Khớp một phần",
     "filled": "Đã khớp",
@@ -2123,10 +2084,7 @@
     "spotNoPositions": "Chế độ giao ngay — không có vị thế ký quỹ",
     "balances": "Số dư",
     "noBalances": "Không có dữ liệu số dư",
-    "available": "Khả dụng",
-    "frozen": "Bị đóng băng",
     "total": "Tổng",
-    "refreshBalances": "Làm mới",
     "asset": "Tài sản",
     "cancelOrderTitle": "Hủy lệnh?",
     "cancelOrderBody": "Thao tác này sẽ hủy lệnh {{side}} của bạn cho {{pair}}.",
@@ -2167,7 +2125,6 @@
     "allClear": "An toàn",
     "ordersLocked": "Lệnh bị khóa",
     "buysLocked": "Lệnh mua bị khóa",
-    "noLimits": "Chưa cấu hình giới hạn",
     "configurePrompt": "Cấu hình giới hạn rủi ro"
   },
   "webPane": {
@@ -2176,7 +2133,6 @@
     "refresh": "Làm mới",
     "openExternal": "Mở trong trình duyệt",
     "emptyTitle": "Nhập URL ở trên để nhúng một trang web",
-    "embedWarning": "Một số trang web chặn nhúng trong iframe. Nếu trang không tải được, hãy thử mở trong trình duyệt của bạn thay vào đó.",
     "blockedTitle": "Trang này không thể nhúng được",
     "blockedDescription": "Trang web này chặn việc hiển thị bên trong các trang khác. Bạn có thể mở nó trong một tab trình duyệt riêng thay vào đó.",
     "forward": "Tiến",
@@ -2307,7 +2263,6 @@
   },
   "addPaneDialog": {
     "description": "Chọn một panel để thêm vào bố cục không gian làm việc của bạn.",
-    "subtitle": "Chọn một panel để thêm vào không gian làm việc của bạn",
     "added": "Đã thêm"
   },
   "layout": {
@@ -2410,12 +2365,7 @@
     "title": "Khám phá"
   },
   "pluginStore": {
-    "discover": "Khám phá",
-    "discoverDescription": "Mở rộng terminal của bạn với các plugin cho dữ liệu thị trường, giao dịch, AI và nhiều hơn nữa.",
     "registryOffline": "Registry plugin ngoại tuyến. Chỉ hiển thị các plugin đã cài đặt.",
-    "featured": "Nổi bật",
-    "all": "Tất cả",
-    "noPlugins": "Không tìm thấy plugin nào.",
     "activated": "Đã kích hoạt",
     "deactivated": "Đã tắt kích hoạt",
     "operationFailed": "Thao tác thất bại",
@@ -2424,7 +2374,6 @@
     "desktopOnly": "Chỉ trên Desktop",
     "browserOnly": "Chỉ trên trình duyệt",
     "platformIncompatible": "Plugin này là {{badge}} và không thể kích hoạt ở đây.",
-    "serverRegion": "Khu vực máy chủ",
     "showMore": "Hiển thị tất cả",
     "importPlugin": "Nhập plugin",
     "openFolder": "Mở thư mục",
@@ -2842,8 +2791,6 @@
     }
   },
   "search": {
-    "title": "Tìm cặp giao dịch",
-    "description": "Tìm một công cụ để giao dịch",
     "placeholder": "Tìm bất cứ gì...",
     "noResults": "Không tìm thấy kết quả.",
     "results": "Kết quả",
@@ -3030,7 +2977,6 @@
     "storedSecurelyNever": "không bao giờ được gửi đến hoặc lưu trữ trên máy chủ Pairlens",
     "demoKeysReminder": "Dùng API key demo từ tài khoản {{exchange}} {{region}} của bạn.",
     "globalEndpoint": "Endpoint toàn cầu",
-    "endpoint": "Endpoint {{region}}",
     "localOnly": {
       "badge": "Chỉ cục bộ",
       "badgeAria": "Tìm hiểu cách khóa của bạn được giữ riêng tư",
@@ -3146,8 +3092,6 @@
     "defaultWalletName": "Ví {{chain}}"
   },
   "workspaceStore": {
-    "title": "Workspace Store",
-    "subtitle": "Bắt đầu từ một bố cục dựng sẵn — lọc theo cách và những gì bạn giao dịch, rồi sao chép vào không gian làm việc của riêng bạn.",
     "searchPlaceholder": "Tìm không gian làm việc…",
     "all": "Tất cả",
     "browseTemplates": "Duyệt mẫu",
@@ -3201,7 +3145,6 @@
     },
     "community": {
       "by": "bởi {{author}}",
-      "installs": "{{count}} lượt sao chép",
       "downloads": "Lượt tải",
       "favorites": "Yêu thích",
       "favorite": "Yêu thích"
@@ -4679,7 +4622,6 @@
       "venueLine": "{{venue}} {{kind}} · {{permission}}",
       "trading": "giao dịch",
       "discoverTitle": "Khám phá",
-      "topTickers": "Mã hàng đầu",
       "allMarkets": "Tất cả cặp giao dịch",
       "pnlToday": "Lãi/Lỗ hôm nay",
       "noPositions": "Không có vị thế mở",
