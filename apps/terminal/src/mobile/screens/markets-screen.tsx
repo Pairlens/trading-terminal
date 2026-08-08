@@ -135,7 +135,7 @@ export default memo(function MarketsScreen({
               autoCapitalize="characters"
               autoComplete="off"
               autoCorrect="off"
-              className="min-w-0 flex-1 bg-transparent text-[14px] text-foreground outline-none placeholder:text-muted-foreground"
+              className="min-w-0 flex-1 bg-transparent text-[16px] text-foreground outline-none placeholder:text-muted-foreground"
               onChange={(event) => setQuery(event.target.value)}
               placeholder={t('mobile.markets.filterPlaceholder')}
               spellCheck={false}

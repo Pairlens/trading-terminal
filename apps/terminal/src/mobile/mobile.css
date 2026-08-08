@@ -83,6 +83,11 @@
 
   .pl-sheet-scroll[data-swapping='true'] {
     opacity: 0;
+    /* Invisible must mean untouchable: without this the outgoing Trade
+       ticket's slide-to-confirm stays hit-testable at opacity 0 for the
+       length of the swap. The handle and edges live outside this element, so
+       vaul's drag is unaffected. */
+    pointer-events: none;
     transition-duration: 110ms;
   }
 
@@ -324,7 +329,19 @@ html[data-viewport='mobile'] [data-slot='dropdown-menu-content'] {
    engine implements it in JS on its canvas. */
 html[data-viewport='mobile'],
 html[data-viewport='mobile'] body {
-  touch-action: pan-x pan-y;
+  /* `manipulation`, NOT `pan-x pan-y`: both kill double-tap zoom, but
+     `pan-x pan-y` also removes deliberate pinch-zoom from the whole document
+     on Chromium — an accessibility cost the accidental-zoom fix never needed.
+     Input-focus auto-zoom is solved at its real cause instead: every
+     focusable mobile field is ≥16px. */
+  touch-action: manipulation;
   -webkit-text-size-adjust: 100%;
   overscroll-behavior: none;
+}
+
+/* The chart band is the one place a stray pinch is a gesture conflict, not a
+   zoom request — the engine implements its own pinch in JS on the canvas.
+   Belt and braces over the engine's preventDefault. */
+html[data-viewport='mobile'] .pl-chart-band {
+  touch-action: pan-x pan-y;
 }

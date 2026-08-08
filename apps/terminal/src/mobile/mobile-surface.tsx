@@ -105,20 +105,25 @@ const PANEL_LABEL_KEY: Record<PanelTab, string> = {
  * frame (FullScreenOverlay or a full-height MobileSheet). Each file is owned
  * by one workstream; replacing a file's contents is the whole integration.
  */
-const OrderbookScreen = lazyChunk(() => import('./screens/orderbook-screen'))
-const PairPickerScreen = lazyChunk(() => import('./screens/pair-picker-screen'))
-const VenuePickerScreen = lazyChunk(
-  () => import('./screens/venue-picker-screen'),
-)
-const SettingsScreen = lazyChunk(() => import('./screens/settings-screen'))
-const ConnectAccountSheet = lazyChunk(
-  () => import('./screens/connect-account-sheet'),
-)
-const NewsReaderSheet = lazyChunk(() => import('./screens/news-reader-sheet'))
-const MarketsScreen = lazyChunk(() => import('./screens/markets-screen'))
-const AccountDetailScreen = lazyChunk(
-  () => import('./screens/account-detail-screen'),
-)
+const importOrderbookScreen = () => import('./screens/orderbook-screen')
+const importPairPickerScreen = () => import('./screens/pair-picker-screen')
+const importVenuePickerScreen = () => import('./screens/venue-picker-screen')
+const importSettingsScreen = () => import('./screens/settings-screen')
+const importConnectAccountSheet = () =>
+  import('./screens/connect-account-sheet')
+const importNewsReaderSheet = () => import('./screens/news-reader-sheet')
+const importMarketsScreen = () => import('./screens/markets-screen')
+const importAccountDetailScreen = () =>
+  import('./screens/account-detail-screen')
+
+const OrderbookScreen = lazyChunk(importOrderbookScreen)
+const PairPickerScreen = lazyChunk(importPairPickerScreen)
+const VenuePickerScreen = lazyChunk(importVenuePickerScreen)
+const SettingsScreen = lazyChunk(importSettingsScreen)
+const ConnectAccountSheet = lazyChunk(importConnectAccountSheet)
+const NewsReaderSheet = lazyChunk(importNewsReaderSheet)
+const MarketsScreen = lazyChunk(importMarketsScreen)
+const AccountDetailScreen = lazyChunk(importAccountDetailScreen)
 
 /** Chart-band extras, owned by WS-D (toolbar, timeframe) and WS-C (limit line). */
 const importTimeframePopover = () => import('./chart/timeframe-popover')
@@ -148,6 +153,15 @@ const PREFETCH: Array<() => Promise<unknown>> = [
   importTimeframePopover,
   importDrawingToolbar,
   importLimitLine,
+  // Overlay screens after the panels: same reasoning, one tier less likely.
+  importPairPickerScreen,
+  importSettingsScreen,
+  importVenuePickerScreen,
+  importOrderbookScreen,
+  importMarketsScreen,
+  importNewsReaderSheet,
+  importConnectAccountSheet,
+  importAccountDetailScreen,
 ]
 
 /** `requestIdleCallback`, with the timeout every Safari release still needs. */
@@ -249,11 +263,45 @@ function usePanelSwap(requested: PanelTab | null): {
       return () => window.clearTimeout(timer)
     }
     // clearAfter: the sheet is on its way out; keep the content until it is.
+    // The reset matters when a dismiss interrupts a panel→panel fade: without
+    // it `fadingOut` stays latched and the sheet slides away as an empty box —
+    // the exact defect SHEET_EXIT_MS exists to prevent. On a normal close the
+    // flag is already false and React bails out of the identical state.
+    setFadingOut(false)
     const timer = window.setTimeout(() => adopt(null), command.delay)
     return () => window.clearTimeout(timer)
   }, [requested, adopt])
 
   return { shown, leaving: fadingOut || isPending }
+}
+
+/**
+ * Which overlay is MOUNTED, which trails the stack top by one transition.
+ *
+ * Same contract `usePanelSwap` gives the sheet, for the same reason: a lazy
+ * payload stays uninitialized until first render even when the chunk is warm,
+ * so a plain conditional mount suspends and flashes the full-screen spinner.
+ * Adopting inside `startTransition` against an ALREADY-mounted boundary makes
+ * React hold the current frame until the screen is ready instead — which is
+ * also why `OverlayHost` must not carry its own inner `Suspense`: a boundary
+ * that mounts during the transition is allowed to show its fallback.
+ *
+ * Closing is synchronous: unmounting cannot suspend, and the tap must feel
+ * immediate.
+ */
+function useOverlayAdoption(
+  top: MobileOverlay | undefined,
+): MobileOverlay | null {
+  const [shown, setShown] = useState<MobileOverlay | null>(null)
+  const [, startTransition] = useTransition()
+  useEffect(() => {
+    if (!top) {
+      setShown(null)
+      return
+    }
+    startTransition(() => setShown(top))
+  }, [top, startTransition])
+  return shown
 }
 
 export function MobileSurface() {
@@ -314,6 +362,7 @@ export function MobileSurface() {
   // Only the top of the stack is on screen. It IS a stack because
   // Settings → Add account → Connect and Trade → Connect → back both need one.
   const topOverlay = overlays[overlays.length - 1]
+  const shownOverlay = useOverlayAdoption(topOverlay)
 
   return (
     <div className="pl-mobile-root relative flex h-svh w-full flex-col overflow-hidden bg-background">
@@ -381,9 +430,14 @@ export function MobileSurface() {
         variant={openPanel ? 'solid' : 'float'}
       />
 
-      {topOverlay ? (
-        <OverlayHost onClose={popOverlay} overlay={topOverlay} />
-      ) : null}
+      {/* Always mounted, empty or not: only a boundary that predates the
+          adoption transition can hold the current frame instead of showing
+          its fallback (see useOverlayAdoption). */}
+      <Suspense fallback={<OverlayFallback />}>
+        {shownOverlay ? (
+          <OverlayHost onClose={popOverlay} overlay={shownOverlay} />
+        ) : null}
+      </Suspense>
     </div>
   )
 }
@@ -410,28 +464,27 @@ const OverlayHost = memo(function OverlayHost({
   overlay: MobileOverlay
   onClose: () => void
 }) {
-  const screen = (() => {
-    switch (overlay.kind) {
-      case 'orderbook':
-        return <OrderbookScreen onClose={onClose} overlay={overlay} />
-      case 'pairPicker':
-        return <PairPickerScreen onClose={onClose} overlay={overlay} />
-      case 'venuePicker':
-        return <VenuePickerScreen onClose={onClose} overlay={overlay} />
-      case 'settings':
-        return <SettingsScreen onClose={onClose} overlay={overlay} />
-      case 'connect':
-        return <ConnectAccountSheet onClose={onClose} overlay={overlay} />
-      case 'news':
-        return <NewsReaderSheet onClose={onClose} overlay={overlay} />
-      case 'markets':
-        return <MarketsScreen onClose={onClose} overlay={overlay} />
-      case 'accountDetail':
-        return <AccountDetailScreen onClose={onClose} overlay={overlay} />
-    }
-  })()
-
-  return <Suspense fallback={<OverlayFallback />}>{screen}</Suspense>
+  // No inner Suspense on purpose: the hoisted boundary in MobileSurface is
+  // the one the adoption transition can wait on — a boundary mounted HERE
+  // would be new to the transition and would flash its fallback.
+  switch (overlay.kind) {
+    case 'orderbook':
+      return <OrderbookScreen onClose={onClose} overlay={overlay} />
+    case 'pairPicker':
+      return <PairPickerScreen onClose={onClose} overlay={overlay} />
+    case 'venuePicker':
+      return <VenuePickerScreen onClose={onClose} overlay={overlay} />
+    case 'settings':
+      return <SettingsScreen onClose={onClose} overlay={overlay} />
+    case 'connect':
+      return <ConnectAccountSheet onClose={onClose} overlay={overlay} />
+    case 'news':
+      return <NewsReaderSheet onClose={onClose} overlay={overlay} />
+    case 'markets':
+      return <MarketsScreen onClose={onClose} overlay={overlay} />
+    case 'accountDetail':
+      return <AccountDetailScreen onClose={onClose} overlay={overlay} />
+  }
 })
 
 function OverlayFallback() {

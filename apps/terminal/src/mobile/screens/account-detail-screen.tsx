@@ -161,7 +161,6 @@ function AccountDetail({
   const [label, setLabel] = useState(credential.label)
   const [savingName, setSavingName] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const [removing, setRemoving] = useState(false)
   const [unlockOpen, setUnlockOpen] = useState(false)
 
   /**
@@ -219,29 +218,29 @@ function AccountDetail({
     trimmed,
   ])
 
-  const handleDisconnect = useCallback(async () => {
-    setRemoving(true)
-    try {
-      // Exactly `accounts-page.tsx`'s `handleRemove`: the store's keychain
-      // deletion, then the venue event. No second persistence path exists.
-      await removeCredential(credential.id)
-      track('venue_disconnected', { venue: credential.market })
-      toast.success(t('accounts.accountRemovedFeedback'))
-      setConfirmOpen(false)
-      onClose()
-    } catch (error) {
-      setConfirmOpen(false)
-      reportFailure(error, 'accounts.accountRemoveFailed')
-      setRemoving(false)
-    }
-  }, [
-    credential.id,
-    credential.market,
-    onClose,
-    removeCredential,
-    reportFailure,
-    t,
-  ])
+  const handleDisconnect = useCallback(() => {
+    // Leave FIRST, await after: the store publishes the removal synchronously
+    // before its keychain work, which unmounts this screen on the spot — an
+    // awaited continuation here would run against an unmounted tree (its
+    // spinner, disabled guards and local dialogs all dead), and the interim
+    // render would flash the "no longer connected" card mid-flow. The outcome
+    // reports through the global toast, which survives the unmount. The store
+    // call is exactly `accounts-page.tsx`'s `handleRemove` pair: keychain
+    // deletion, then the venue event. No second persistence path exists.
+    setConfirmOpen(false)
+    onClose()
+    removeCredential(credential.id)
+      .then(() => {
+        track('venue_disconnected', { venue: credential.market })
+        toast.success(t('accounts.accountRemovedFeedback'))
+      })
+      .catch((error: unknown) => {
+        toast.error(t('accounts.accountRemoveFailed'), {
+          description:
+            error instanceof Error ? error.message : t('common.unknownError'),
+        })
+      })
+  }, [credential.id, credential.market, onClose, removeCredential, t])
 
   const name = venueLabel(credential.market)
   const keyHint = apiKeyHint(credential.apiKey)
@@ -380,18 +379,14 @@ function AccountDetail({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={removing}>
-              {t('accounts.keep')}
-            </AlertDialogCancel>
+            <AlertDialogCancel>{t('accounts.keep')}</AlertDialogCancel>
             <AlertDialogAction
-              disabled={removing}
               onClick={(event) => {
                 event.preventDefault()
-                void handleDisconnect()
+                handleDisconnect()
               }}
               variant="destructive"
             >
-              {removing ? <Loader2 className="size-4 animate-spin" /> : null}
               {t('accounts.disconnect')}
             </AlertDialogAction>
           </AlertDialogFooter>

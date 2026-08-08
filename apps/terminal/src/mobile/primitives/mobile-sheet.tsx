@@ -130,9 +130,13 @@ export const MobileSheet = memo(function MobileSheet({
           <Drawer.Title className="sr-only">{label}</Drawer.Title>
           {handle ? <div aria-hidden className="pl-handle shrink-0" /> : null}
           {header ? <div className="shrink-0">{header}</div> : null}
+          {/* `inert` alongside the CSS pointer-events cut: an invisible
+              outgoing panel must be unreachable by keyboard and screen
+              reader too, not just by touch. */}
           <div
             className="pl-sheet-scroll flex-1 overflow-y-auto overscroll-contain pb-[max(var(--pl-safe-bottom),30px)]"
             data-swapping={swapping ? 'true' : undefined}
+            inert={swapping || undefined}
             ref={scrollRef}
           >
             <SheetScrollContext value={scrollRef}>

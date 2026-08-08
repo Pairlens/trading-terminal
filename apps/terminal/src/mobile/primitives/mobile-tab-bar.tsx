@@ -172,14 +172,22 @@ export const MobileTabBar = memo(function MobileTabBar({
               )}
               strokeWidth={on ? 2 : 1.7}
             />
-            <span className="pl-tab-label" data-on={on ? 'true' : undefined}>
+            {/* aria-hidden: the 0fr grid clips this label visually but not
+                from name-from-content, so without it the active tab's name
+                reads twice. The sr-only span below is the single name source
+                for every tab, active or not. */}
+            <span
+              aria-hidden
+              className="pl-tab-label"
+              data-on={on ? 'true' : undefined}
+            >
               <span className="overflow-hidden">
                 <span className="block whitespace-nowrap pl-[7px] text-[13px] font-semibold leading-none">
                   {t(tab.labelKey)}
                 </span>
               </span>
             </span>
-            {on ? null : <span className="sr-only">{t(tab.labelKey)}</span>}
+            <span className="sr-only">{t(tab.labelKey)}</span>
           </button>
         )
       })}

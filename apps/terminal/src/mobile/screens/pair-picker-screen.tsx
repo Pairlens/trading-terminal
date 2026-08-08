@@ -209,8 +209,11 @@ export default memo(function PairPickerScreen({
     [route, filter],
   )
 
+  // Filter BEFORE truncating: a venue-kind chip must see the whole result
+  // set, or matches ranked past MAX_RESULTS read as a settled "No pairs
+  // found" while they exist. route() is map lookups, cheap over the full set.
   const results = useMemo(
-    () => apply(showResults.slice(0, MAX_RESULTS)),
+    () => apply(showResults).slice(0, MAX_RESULTS),
     [apply, showResults],
   )
   const recents = useMemo(() => apply(recentEntries), [apply, recentEntries])
@@ -274,7 +277,12 @@ export default memo(function PairPickerScreen({
                 autoComplete="off"
                 autoCorrect="off"
                 autoFocus={overlay.autoFocus}
-                className="min-w-0 flex-1 bg-transparent text-[14px] text-foreground outline-none placeholder:text-muted-foreground"
+                // 16px, not the design's 14: any focusable field under 16px
+                // makes iOS Safari auto-zoom the page on focus, and the zoom
+                // survives dismissal. The meta-viewport alternative
+                // (maximum-scale=1) kills Android pinch-zoom, so the font is
+                // the accessible fix.
+                className="min-w-0 flex-1 bg-transparent text-[16px] text-foreground outline-none placeholder:text-muted-foreground"
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder={t('mobile.pickers.searchPlaceholder')}
                 spellCheck={false}

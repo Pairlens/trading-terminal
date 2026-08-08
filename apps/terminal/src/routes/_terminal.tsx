@@ -334,7 +334,18 @@ function TerminalLayout() {
   return (
     <PerformanceModeContext.Provider value={perfMode}>
       <PairlensProvider>
-        <Toaster />
+        {/* sonner ≤600px pins the toaster full-width at bottom:16px — inside
+            the mobile tab bar's footprint. The offset rides the shell's own
+            geometry variable (declared on :root) and is inert on desktop,
+            where sonner never reads --mobile-offset-*. */}
+        <Toaster
+          mobileOffset={{
+            bottom: 'calc(var(--pl-tabbar-total) + 8px)',
+            left: '16px',
+            right: '16px',
+            top: '16px',
+          }}
+        />
         <MarketDataProvider>
           <ThemePluginBridge>
             <WatchlistsProvider>

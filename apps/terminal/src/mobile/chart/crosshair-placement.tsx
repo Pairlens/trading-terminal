@@ -445,7 +445,7 @@ function PlacementLayer({
                 aria-label={t('mobile.drawing.textLabel')}
                 autoComplete="off"
                 autoFocus
-                className="min-w-0 flex-1 bg-transparent text-[14px] text-foreground outline-none placeholder:text-muted-foreground"
+                className="min-w-0 flex-1 bg-transparent text-[16px] text-foreground outline-none placeholder:text-muted-foreground"
                 enterKeyHint="done"
                 onChange={(event) => setContent(event.target.value)}
                 onKeyDown={(event) => {

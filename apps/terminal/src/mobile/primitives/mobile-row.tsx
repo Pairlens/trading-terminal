@@ -77,7 +77,11 @@ export const MobileRow = memo(function MobileRow({
 
   if (!onPress) {
     return (
-      <div aria-disabled={disabled || undefined} className={shared}>
+      <div
+        aria-current={selected || undefined}
+        aria-disabled={disabled || undefined}
+        className={shared}
+      >
         {content}
       </div>
     )
@@ -85,6 +89,7 @@ export const MobileRow = memo(function MobileRow({
 
   return (
     <button
+      aria-current={selected || undefined}
       className={cn(shared, 'active:bg-white/[0.06]')}
       disabled={disabled}
       onClick={onPress}
