@@ -196,10 +196,13 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         name: 'viewport',
         // `viewport-fit=cover` is what makes env(safe-area-inset-*) non-zero,
         // and `interactive-widget=resizes-content` is what lifts the mobile
-        // co-pilot composer above the software keyboard. Neither has any
-        // effect on a desktop browser.
+        // co-pilot composer above the software keyboard. `maximum-scale=1`
+        // stops iOS Safari's auto-zoom when a sub-16px input takes focus —
+        // the zoom otherwise survives dismissal and shears the fixed chrome;
+        // iOS deliberately ignores it for pinch (accessibility), so users can
+        // still zoom on purpose. None of it affects a desktop browser.
         content:
-          'width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content',
+          'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, interactive-widget=resizes-content',
       },
       {
         // --background, so iOS Safari's chrome matches the app instead of

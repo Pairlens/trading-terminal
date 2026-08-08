@@ -188,3 +188,15 @@
 html[data-viewport='mobile'] [data-pl-desktop-only] {
   display: none !important;
 }
+
+/* Pin the gesture surface: pan is the only browser-owned touch behavior, so
+   double-taps and stray pinches never zoom the page and rubber-banding never
+   drags the fixed chrome (the viewport meta's maximum-scale=1 covers the
+   input-focus auto-zoom). The chart's own pinch-zoom is unaffected — the
+   engine implements it in JS on its canvas. */
+html[data-viewport='mobile'],
+html[data-viewport='mobile'] body {
+  touch-action: pan-x pan-y;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+}

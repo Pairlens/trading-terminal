@@ -63,6 +63,10 @@ export type MobileOverlay =
    */
   | { kind: 'connect'; market?: string; chain?: string }
   | { kind: 'news'; index: number }
+  /** Discover's "All markets" — the full list as its own screen. */
+  | { kind: 'markets' }
+  /** One connected credential: rename, permissions, disconnect. */
+  | { kind: 'accountDetail'; credentialId: string }
 
 export type MobileOverlayKind = MobileOverlay['kind']
 

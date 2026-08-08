@@ -91,6 +91,10 @@ const ConnectAccountSheet = lazyChunk(
   () => import('./screens/connect-account-sheet'),
 )
 const NewsReaderSheet = lazyChunk(() => import('./screens/news-reader-sheet'))
+const MarketsScreen = lazyChunk(() => import('./screens/markets-screen'))
+const AccountDetailScreen = lazyChunk(
+  () => import('./screens/account-detail-screen'),
+)
 
 /** Chart-band extras, owned by WS-D (toolbar, timeframe) and WS-C (limit line). */
 const TimeframePopoverChip = lazyChunk(
@@ -161,9 +165,14 @@ export function MobileSurface() {
         onSwitchVenue={openVenuePicker}
         opacity={chrome?.chartOpacity ?? 1}
         overlay={
-          <Suspense fallback={null}>
-            <LimitLineOverlay />
-          </Suspense>
+          // The draggable price level exists to place stop/limit levels, and
+          // those live on the Trade ticket — a persisted draft must not leave
+          // a grab handle floating over the bare chart or any other panel.
+          openPanel === 'trade' ? (
+            <Suspense fallback={null}>
+              <LimitLineOverlay />
+            </Suspense>
+          ) : null
         }
         timeframeSlot={
           <Suspense fallback={null}>
@@ -245,6 +254,10 @@ const OverlayHost = memo(function OverlayHost({
         return <ConnectAccountSheet onClose={onClose} overlay={overlay} />
       case 'news':
         return <NewsReaderSheet onClose={onClose} overlay={overlay} />
+      case 'markets':
+        return <MarketsScreen onClose={onClose} overlay={overlay} />
+      case 'accountDetail':
+        return <AccountDetailScreen onClose={onClose} overlay={overlay} />
     }
   })()
 
