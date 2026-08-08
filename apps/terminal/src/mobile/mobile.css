@@ -29,12 +29,30 @@
     --pl-ctx-h: 44px;
     --pl-chart-top: calc(max(var(--pl-safe-top), 8px) + var(--pl-ctx-h) + 6px);
     --pl-tabbar-h: 46px;
-    /* The tab bar's full footprint: 8px top padding + row + home-indicator
-       reserve. The chart floor stops here and sheets pad their scroll region
-       by the same amount. */
-    --pl-tabbar-total: calc(
-      var(--pl-tabbar-h) + 8px + max(var(--pl-safe-bottom), 30px)
-    );
+    /* The reserve under the bottom row.
+
+       On a home-indicator phone `env(safe-area-inset-bottom)` is ~34px and
+       wins. In Safari it is 0 or near it, because the browser's own bottom bar
+       already occupies that space — so the fallback is the gap the user sees
+       between our tab bar and the URL bar, and 30px of it read as dead air.
+       10px keeps the row off the chrome without stacking two paddings. */
+    --pl-bottom-inset: max(var(--pl-safe-bottom), 10px);
+    /* The tab bar's full footprint: 8px top padding + row + that reserve. The
+       chart floor stops here and sheets pad their scroll region by the same
+       amount. */
+    --pl-tabbar-total: calc(var(--pl-tabbar-h) + 8px + var(--pl-bottom-inset));
+  }
+
+  /* Resolves `--pl-chart-top` to px for the sheet's snap-point geometry (see
+     mobile-sheet.tsx). Measurable, invisible, never in flow. */
+  .pl-chart-top-probe {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: var(--pl-chart-top);
+    visibility: hidden;
+    pointer-events: none;
   }
 
   /* ── Surfaces ──────────────────────────────────────────────────── */
@@ -48,9 +66,11 @@
 
   /* The sheet TRAVELS between panels instead of teleporting: watchlist 150 →
      trade 160 → copilot 186 are three heights of one sheet, and a jump cut
-     between them is what made a tab switch read as a page navigation.
-     Background travels too, so the co-pilot's darker fill fades in rather
-     than blinking.
+     between them is what made a tab switch read as a page navigation. Since
+     the snap-point rebuild that travel is vaul's own transform — the element's
+     `top` no longer moves, so the `top` transition that used to carry it is
+     gone. Background still travels, so the co-pilot's darker fill fades in
+     rather than blinking.
 
      `!important` on the transition is not decoration. vaul owns this
      element's inline `transition` — it writes `transform .5s …` on release
@@ -60,15 +80,21 @@
      drag release would stop animating. The dragging class (higher
      specificity, also important) hands control straight back for the duration
      of the drag. */
+  /* Opaque, where the design drew 0.97.
+
+     That 3% was free when the chart stopped at the sheet's top edge: there was
+     nothing behind the sheet to show through. The chart now runs full height
+     underneath it, and 3% of a live plot is candle wicks and price-axis labels
+     crawling across the watchlist. Measured on device-sized screenshots — the
+     alpha is a regression the moment the chart stops resizing. */
   .pl-sheet {
-    background: rgba(20, 19, 17, 0.97);
+    background: rgb(20, 19, 17);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 24px 24px 0 0;
     box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.65);
     position: relative;
     transition:
       transform 0.5s cubic-bezier(0.32, 0.72, 0, 1),
-      top 280ms cubic-bezier(0.32, 0.72, 0, 1),
       background-color 240ms ease-out !important;
   }
 
@@ -76,9 +102,17 @@
     transition: none !important;
   }
 
-  /* The panel content fades through the swap; the sheet itself does not. */
+  /* The panel content fades through the swap; the sheet itself does not.
+
+     `padding-bottom` is the below-the-fold remainder of the largest snap (see
+     mobile-sheet.tsx) and eases on vaul's own curve, so a panel whose bottom
+     row is pinned by a percentage height — the co-pilot composer — travels
+     with the sheet instead of jumping to its new place half a second early.
+     A list never sees it: bottom padding moves nothing above it. */
   .pl-sheet-scroll {
-    transition: opacity 170ms ease-out;
+    transition:
+      opacity 170ms ease-out,
+      padding-bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1);
   }
 
   .pl-sheet-scroll[data-swapping='true'] {
@@ -127,12 +161,26 @@
     background: rgb(20, 19, 17);
   }
 
+  /* The grab strip. The bar is still the design's 40 × 4 at 9px from the top
+     and the block is still 21px tall, but the strip now spans the sheet: with
+     the scroll region opted out of dragging (see mobile-sheet.tsx) this is the
+     surface a drag-to-resize starts on, and a 40px-wide target is not one. */
   .pl-handle {
+    position: relative;
+    height: 21px;
+    touch-action: none;
+  }
+
+  .pl-handle::before {
+    content: '';
+    position: absolute;
+    top: 9px;
+    left: 50%;
     width: 40px;
     height: 4px;
+    margin-left: -20px;
     border-radius: 99px;
     background: rgba(255, 255, 255, 0.24);
-    margin: 9px auto 8px;
   }
 
   .pl-toolbar {
@@ -176,13 +224,38 @@
     background: rgba(8, 8, 10, 0.5);
   }
 
-  /* Keeps the hero price and the context bar legible over candles. */
+  /* Keeps the price readout legible over candles — and nothing more.
+
+     It used to be 148px tall with the first 98 of them FULLY opaque, which is
+     a solid black band across the top quarter of the plot: a series printing
+     near its high simply vanished under it. It is now the height of the
+     readout it protects plus a falloff, and it never reaches full opacity —
+     the readout's own text-shadow carries the last of the contrast, which is
+     what a scrim is supposed to be a backstop for rather than a replacement.
+     Candles under it are shaded, not erased. */
   .pl-chart-scrim {
     position: absolute;
     inset: 0 0 auto 0;
-    height: 148px;
-    background: linear-gradient(180deg, #100f0d 66%, rgba(16, 15, 13, 0));
+    height: 88px;
+    background: linear-gradient(
+      180deg,
+      rgba(16, 15, 13, 0.88) 0%,
+      rgba(16, 15, 13, 0.7) 30%,
+      rgba(16, 15, 13, 0.34) 62%,
+      rgba(16, 15, 13, 0) 100%
+    );
     pointer-events: none;
+  }
+
+  /* Under a docked panel the readout is the design's 22px compact line, so the
+     scrim shrinks with it instead of shading a strip the sheet is about to
+     cover anyway. At the expanded snap the strip IS the readout row. */
+  .pl-chart-scrim[data-scrim='compact'] {
+    height: 72px;
+  }
+
+  .pl-chart-scrim[data-scrim='expanded'] {
+    height: 56px;
   }
 
   /* ── Controls ──────────────────────────────────────────────────── */
@@ -258,13 +331,12 @@
     transition: color 200ms ease-out;
   }
 
-  /* The chart band grows and shrinks with the sheet rather than snapping to
-     the new height a frame before the sheet arrives. */
+  /* The chart's box is a constant now (see mobile-chart-surface.tsx) — panels
+     cover it, they never resize it — so the height/bottom transitions this
+     rule used to run have nothing left to smooth. Only the dim behind
+     Watchlist and Discover remains. */
   .pl-chart-band {
-    transition:
-      height 280ms cubic-bezier(0.32, 0.72, 0, 1),
-      bottom 280ms cubic-bezier(0.32, 0.72, 0, 1),
-      opacity 200ms ease-out;
+    transition: opacity 200ms ease-out;
   }
 
   @keyframes plPulse {

@@ -4676,7 +4676,7 @@
       "trading": "trading",
       "discoverTitle": "Jelajahi",
       "topTickers": "Ticker teratas",
-      "allMarkets": "Semua market",
+      "allMarkets": "Semua pair",
       "pnlToday": "P&L hari ini",
       "noPositions": "Tidak ada posisi terbuka",
       "positionsCount_one": "{{count}} posisi",
@@ -4688,9 +4688,16 @@
       "featured": "Unggulan"
     },
     "markets": {
-      "filterPlaceholder": "Filter market",
+      "title": "Semua pair",
+      "filterPlaceholder": "Filter pair",
       "matchCount_one": "{{count}} hasil",
       "matchCount_other": "{{count}} hasil"
+    },
+    "news": {
+      "searchLabel": "Cari berita",
+      "close": "Tutup berita",
+      "positionLabel": "Berita {{current}} dari {{total}}",
+      "swipeHint": "Geser ke atas untuk berita berikutnya"
     },
     "trade": {
       "openBook": "Buka order book",

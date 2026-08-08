@@ -4676,7 +4676,7 @@
       "trading": "Handel",
       "discoverTitle": "Entdecken",
       "topTickers": "Top-Ticker",
-      "allMarkets": "Alle Märkte",
+      "allMarkets": "Alle Paare",
       "pnlToday": "P&L heute",
       "noPositions": "Keine offenen Positionen",
       "positionsCount_one": "{{count}} Position",
@@ -4688,9 +4688,16 @@
       "featured": "Empfohlen"
     },
     "markets": {
-      "filterPlaceholder": "Märkte filtern",
+      "title": "Alle Paare",
+      "filterPlaceholder": "Paare filtern",
       "matchCount_one": "{{count}} Treffer",
       "matchCount_other": "{{count}} Treffer"
+    },
+    "news": {
+      "searchLabel": "News suchen",
+      "close": "News schließen",
+      "positionLabel": "Story {{current}} von {{total}}",
+      "swipeHint": "Für die nächste Story nach oben wischen"
     },
     "trade": {
       "openBook": "Orderbuch öffnen",

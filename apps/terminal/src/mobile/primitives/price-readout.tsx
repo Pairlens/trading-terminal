@@ -91,10 +91,14 @@ export const PriceReadout = memo(function PriceReadout({
     <div className={cn('flex flex-col items-start', className)}>
       <span
         className={cn(
+          // Two shadows, not one: the chart scrim behind this was cut back so
+          // it stops erasing candles, which moves the last of the contrast
+          // onto the type itself. The tight layer is what keeps a thin glyph
+          // readable directly over a wick; the wide one is the halo.
           'font-mono font-semibold tabular-nums text-foreground',
           hero
-            ? 'text-[34px] leading-none tracking-[-0.03em] [text-shadow:0_2px_12px_rgba(0,0,0,.75)]'
-            : 'text-[22px] leading-none tracking-[-0.02em] [text-shadow:0_2px_8px_rgba(0,0,0,.75)]',
+            ? 'text-[34px] leading-none tracking-[-0.03em] [text-shadow:0_1px_3px_rgba(0,0,0,.92),0_2px_14px_rgba(0,0,0,.8)]'
+            : 'text-[22px] leading-none tracking-[-0.02em] [text-shadow:0_1px_3px_rgba(0,0,0,.92),0_2px_10px_rgba(0,0,0,.8)]',
           direction === 'up' && 'text-up',
           direction === 'down' && 'text-down',
         )}
@@ -107,7 +111,7 @@ export const PriceReadout = memo(function PriceReadout({
       {change ? (
         <span
           className={cn(
-            'mt-1.5 font-mono font-medium tabular-nums [text-shadow:0_2px_8px_rgba(0,0,0,.75)]',
+            'mt-1.5 font-mono font-medium tabular-nums [text-shadow:0_1px_3px_rgba(0,0,0,.92),0_2px_10px_rgba(0,0,0,.8)]',
             hero ? 'text-[13.5px]' : 'text-[13px]',
             change.percent >= 0 ? 'text-up' : 'text-down',
           )}

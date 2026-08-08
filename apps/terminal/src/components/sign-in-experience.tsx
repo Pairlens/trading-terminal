@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useState } from 'react'
 import { ArrowRightIcon, MailIcon, RefreshCwIcon } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +19,7 @@ import {
 } from '@pairlens/ui/components/ui/input-otp'
 
 import { LegalNotice } from '@/components/legal-links'
+import { shouldAutoFocusFields } from '@/components/sign-in-focus'
 
 import './sign-in.css'
 
@@ -25,6 +27,27 @@ const EASE = [0.22, 1, 0.36, 1] as const
 const OTP_LENGTH = 6
 
 export type SignInPhase = 'email' | 'otp' | 'success'
+
+/**
+ * Autofocus is a pointer-device courtesy, not a universal one — see
+ * `shouldAutoFocusFields` for why a touch device is better off without it.
+ *
+ * Resolved once per mount rather than at module scope: the answer only exists
+ * in a browser, and reading it lazily keeps this module importable without one.
+ *
+ * Exported because the sign-in *dialog* has to answer the same question for
+ * Base UI's own initial-focus move, which happens outside this component.
+ */
+export function useAutoFocusFields(): boolean {
+  const [autoFocus] = useState(() =>
+    shouldAutoFocusFields(
+      typeof window === 'undefined' || typeof window.matchMedia !== 'function'
+        ? null
+        : (query) => window.matchMedia(query),
+    ),
+  )
+  return autoFocus
+}
 
 type SignInExperienceProps = {
   phase: SignInPhase
@@ -75,6 +98,7 @@ export function SignInExperience({
   const reduceMotion = useReducedMotion() ?? false
   const busy = isSendingOtp || isVerifyingOtp
   const compact = variant === 'dialog'
+  const autoFocusFields = useAutoFocusFields()
 
   const title =
     phase === 'email'
@@ -268,10 +292,14 @@ export function SignInExperience({
                     )}
                   >
                     <MailIcon className="size-4 flex-none text-muted-foreground transition-colors group-focus-within:text-primary" />
+                    {/* 16px below md is not a taste call: iOS Safari zooms the
+                        layout viewport when a focused field is under 16px,
+                        which would shove this dialog off-centre the moment the
+                        keyboard opens. */}
                     <input
                       autoComplete="email"
-                      autoFocus
-                      className="min-w-0 flex-1 bg-transparent text-[15px] text-foreground outline-none placeholder:text-muted-foreground"
+                      autoFocus={autoFocusFields}
+                      className="min-w-0 flex-1 bg-transparent text-[16px] text-foreground outline-none placeholder:text-muted-foreground md:text-[15px]"
                       onChange={(event) => onEmailChange(event.target.value)}
                       placeholder={t('signIn.emailPlaceholder')}
                       required
@@ -350,7 +378,7 @@ export function SignInExperience({
                     }
                   >
                     <InputOTP
-                      autoFocus
+                      autoFocus={autoFocusFields}
                       maxLength={OTP_LENGTH}
                       onChange={onOtpChange}
                       value={otp}

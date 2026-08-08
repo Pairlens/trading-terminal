@@ -4676,7 +4676,7 @@
       "trading": "işlem",
       "discoverTitle": "Keşfet",
       "topTickers": "Öne çıkan pariteler",
-      "allMarkets": "Tüm piyasalar",
+      "allMarkets": "Tüm pariteler",
       "pnlToday": "Bugünkü Kâr/Zarar",
       "noPositions": "Açık pozisyon yok",
       "positionsCount_one": "{{count}} pozisyon",
@@ -4688,9 +4688,16 @@
       "featured": "Öne çıkanlar"
     },
     "markets": {
-      "filterPlaceholder": "Piyasaları filtrele",
+      "title": "Tüm pariteler",
+      "filterPlaceholder": "Pariteleri filtrele",
       "matchCount_one": "{{count}} eşleşme",
       "matchCount_other": "{{count}} eşleşme"
+    },
+    "news": {
+      "searchLabel": "Haber ara",
+      "close": "Haberleri kapat",
+      "positionLabel": "Haber {{current}}/{{total}}",
+      "swipeHint": "Sonraki haber için yukarı kaydır"
     },
     "trade": {
       "openBook": "Emir defterini aç",

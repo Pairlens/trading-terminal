@@ -4676,7 +4676,7 @@
       "trading": "取引",
       "discoverTitle": "ディスカバリー",
       "topTickers": "値動き上位",
-      "allMarkets": "すべてのマーケット",
+      "allMarkets": "すべてのペア",
       "pnlToday": "本日の損益",
       "noPositions": "保有ポジションはありません",
       "positionsCount_one": "{{count}}件のポジション",
@@ -4688,9 +4688,16 @@
       "featured": "注目"
     },
     "markets": {
-      "filterPlaceholder": "マーケットを絞り込む",
+      "title": "すべてのペア",
+      "filterPlaceholder": "ペアを絞り込む",
       "matchCount_one": "{{count}}件が一致",
       "matchCount_other": "{{count}}件が一致"
+    },
+    "news": {
+      "searchLabel": "ニュースを検索",
+      "close": "ニュースを閉じる",
+      "positionLabel": "{{total}}件中{{current}}件目の記事",
+      "swipeHint": "上にスワイプして次の記事へ"
     },
     "trade": {
       "openBook": "オーダーブックを開く",

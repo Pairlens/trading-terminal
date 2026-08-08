@@ -4706,7 +4706,7 @@
       "trading": "handel",
       "discoverTitle": "Odkrywaj",
       "topTickers": "Najlepsze tickery",
-      "allMarkets": "Wszystkie rynki",
+      "allMarkets": "Wszystkie pary",
       "pnlToday": "Zysk/strata dzisiaj",
       "noPositions": "Brak otwartych pozycji",
       "positionsCount_one": "{{count}} pozycja",
@@ -4718,11 +4718,18 @@
       "featured": "Polecane"
     },
     "markets": {
-      "filterPlaceholder": "Filtruj rynki",
+      "title": "Wszystkie pary",
+      "filterPlaceholder": "Filtruj pary",
       "matchCount_one": "{{count}} wynik",
       "matchCount_few": "{{count}} wyniki",
       "matchCount_many": "{{count}} wyników",
       "matchCount_other": "{{count}} wyników"
+    },
+    "news": {
+      "searchLabel": "Szukaj wiadomości",
+      "close": "Zamknij wiadomości",
+      "positionLabel": "Wiadomość {{current}} z {{total}}",
+      "swipeHint": "Przesuń w górę, aby zobaczyć następną wiadomość"
     },
     "trade": {
       "openBook": "Otwórz arkusz zleceń",

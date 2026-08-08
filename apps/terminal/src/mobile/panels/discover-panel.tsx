@@ -44,7 +44,7 @@ import {
   formatRelativeTime,
 } from '@/components/news/news-shared'
 
-/** Design shows five rows; the rest lives behind "All markets". */
+/** Design shows five rows; the rest lives behind "All pairs". */
 const FEATURED_COUNT = 5
 /** Enough to fill the sheet twice over without rendering a 50-row feed. */
 const NEWS_ROW_COUNT = 12

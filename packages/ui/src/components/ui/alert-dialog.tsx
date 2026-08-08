@@ -4,6 +4,7 @@ import * as React from 'react'
 import { AlertDialog as AlertDialogPrimitive } from '@base-ui/react/alert-dialog'
 
 import { cn } from '../../lib/utils'
+import { useReleaseSheetFocusTraps } from '../../lib/use-release-sheet-focus-traps'
 import { Button } from './button'
 
 function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
@@ -45,6 +46,7 @@ function AlertDialogContent({
 }: AlertDialogPrimitive.Popup.Props & {
   size?: 'default' | 'sm'
 }) {
+  useReleaseSheetFocusTraps()
   return (
     <AlertDialogPortal>
       <AlertDialogOverlay />

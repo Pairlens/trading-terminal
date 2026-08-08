@@ -16,6 +16,22 @@
   }
 }
 
+/* Editable fields always opt back in to text selection.
+
+   A trading terminal sprinkles `select-none` freely — toolbars, chips, drag
+   surfaces, slide-to-confirm tracks — and WebKit refuses to focus a text field
+   that sits anywhere inside a `-webkit-user-select: none` subtree. On iOS that
+   failure is silent and total: the caret never lands and the keyboard never
+   opens. Declared unlayered so it outranks any Tailwind utility, and scoped to
+   things a user actually types into so nothing else becomes selectable. */
+input,
+textarea,
+select,
+[contenteditable]:not([contenteditable='false']) {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 /* While a layout pane is being dragged, force a consistent grabbing cursor
    across the whole surface (dnd-kit only styles the drag overlay itself). */
 body.is-dragging-pane,

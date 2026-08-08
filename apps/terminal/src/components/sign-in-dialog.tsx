@@ -12,7 +12,10 @@ import {
 } from '@pairlens/ui/components/ui/dialog'
 
 import type { SignInPhase } from '@/components/sign-in-experience'
-import { SignInExperience } from '@/components/sign-in-experience'
+import {
+  SignInExperience,
+  useAutoFocusFields,
+} from '@/components/sign-in-experience'
 import { SignInStatueScene } from '@/components/sign-in-statue'
 import { useOptimisticSession } from '@/lib/session'
 import { useSignInFlow } from '@/hooks/use-sign-in-flow'
@@ -25,6 +28,10 @@ type SignInDialogProps = {
   children: React.ReactNode
 }
 
+// A note on focus: this dialog can open above a vaul bottom sheet whose stray
+// Radix focus trap steals carets (vaul 1.1.2 never forwards `modal={false}`).
+// The release lives in the shared `DialogContent` itself now — see
+// packages/ui/src/lib/use-release-sheet-focus-traps.ts for the full account.
 export function SignInDialog({ children }: SignInDialogProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -33,6 +40,7 @@ export function SignInDialog({ children }: SignInDialogProps) {
   // A fresh sign-in holds the dialog for a "You're in." beat before closing.
   const [celebrating, setCelebrating] = useState(false)
   const splashTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const autoFocusFields = useAutoFocusFields()
 
   const flow = useSignInFlow({
     onSignedIn: () => {
@@ -70,8 +78,16 @@ export function SignInDialog({ children }: SignInDialogProps) {
     <>
       <span onClick={openFresh}>{children}</span>
       <Dialog open={open} onOpenChange={setOpen}>
+        {/* `initialFocus={false}` on a touch device: Base UI moves focus to
+            the first tabbable element — the email field — when the dialog
+            opens, and a field focused with no user gesture behind it is a
+            field iOS will not raise the keyboard for. Worse, the tap that
+            should fix that lands on an element that is already
+            `document.activeElement`, so it fires no focus event and raises no
+            keyboard either. Pointer devices keep the courtesy. */}
         <DialogContent
           className="gap-0 overflow-clip p-0 sm:max-w-md md:max-w-[760px]"
+          initialFocus={autoFocusFields}
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">{t('nav.signIn')}</DialogTitle>

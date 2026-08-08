@@ -4676,7 +4676,7 @@
       "trading": "giao dịch",
       "discoverTitle": "Khám phá",
       "topTickers": "Mã hàng đầu",
-      "allMarkets": "Tất cả thị trường",
+      "allMarkets": "Tất cả cặp giao dịch",
       "pnlToday": "Lãi/Lỗ hôm nay",
       "noPositions": "Không có vị thế mở",
       "positionsCount_one": "{{count}} vị thế",
@@ -4688,9 +4688,16 @@
       "featured": "Nổi bật"
     },
     "markets": {
-      "filterPlaceholder": "Lọc thị trường",
+      "title": "Tất cả cặp giao dịch",
+      "filterPlaceholder": "Lọc cặp giao dịch",
       "matchCount_one": "{{count}} kết quả",
       "matchCount_other": "{{count}} kết quả"
+    },
+    "news": {
+      "searchLabel": "Tìm tin tức",
+      "close": "Đóng tin tức",
+      "positionLabel": "Tin {{current}}/{{total}}",
+      "swipeHint": "Vuốt lên để xem tin tiếp theo"
     },
     "trade": {
       "openBook": "Mở sổ lệnh",

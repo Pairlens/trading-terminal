@@ -32,7 +32,7 @@ import {
   useMobileNav,
 } from './mobile-focus-context'
 import { useMobileRouteSync } from './use-mobile-route-sync'
-import { SHEET_BAND } from './lib/mobile-geometry'
+import { EXPANDED_BAND, SHEET_BAND } from './lib/mobile-geometry'
 import { litTab } from './lib/overlay-tabs'
 import { planPanelSwap } from './lib/panel-swap'
 import { ContextBar } from './primitives/context-bar'
@@ -315,6 +315,11 @@ export function MobileSurface() {
     useMobileActions()
   const { markets } = useAvailableMarkets()
 
+  // The sheet owns its snap; this mirrors it for the two things ABOVE the
+  // sheet that have to react to it — the price readout's scale and the scrim's
+  // height. A drag, not a tick, so it is off the per-tick path entirely.
+  const [sheetExpanded, setSheetExpanded] = useState(false)
+
   const openPanel = openPanelFor(activeTab)
   // The sheet's own idea of what it holds — it lags `openPanel` through the
   // fade and through vaul's exit, which is what keeps the chrome still.
@@ -368,8 +373,8 @@ export function MobileSurface() {
     <div className="pl-mobile-root relative flex h-svh w-full flex-col overflow-hidden bg-background">
       <MobileChartSurface
         band={openPanel ? 'compact' : 'full'}
-        bandHeight={chrome?.band}
         dismissible={openPanel !== null}
+        expanded={sheetExpanded}
         footer={
           openPanel === null ? (
             <Suspense fallback={null}>
@@ -386,7 +391,12 @@ export function MobileSurface() {
           // a grab handle floating over the bare chart or any other panel.
           openPanel === 'trade' ? (
             <Suspense fallback={null}>
-              <LimitLineOverlay />
+              {/* The chart is full height under the sheet, so the line needs
+                  the one number the shell owns: how much of it is on screen.
+                  That is the sheet's snap expressed as a band of chart. */}
+              <LimitLineOverlay
+                stripHeight={sheetExpanded ? EXPANDED_BAND : SHEET_BAND.trade}
+              />
             </Suspense>
           ) : null
         }
@@ -410,6 +420,7 @@ export function MobileSurface() {
         label={t(
           openPanel ? PANEL_LABEL_KEY[openPanel] : 'mobile.shell.tabs.label',
         )}
+        onExpandedChange={setSheetExpanded}
         onOpenChange={handleSheetOpenChange}
         open={openPanel !== null}
         swapping={leaving}

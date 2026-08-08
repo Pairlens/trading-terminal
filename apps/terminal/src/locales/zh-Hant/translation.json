@@ -4676,7 +4676,7 @@
       "trading": "交易",
       "discoverTitle": "探索",
       "topTickers": "熱門行情",
-      "allMarkets": "所有市場",
+      "allMarkets": "所有交易對",
       "pnlToday": "今日損益",
       "noPositions": "目前無持倉部位",
       "positionsCount_one": "{{count}} 個部位",
@@ -4688,9 +4688,16 @@
       "featured": "精選"
     },
     "markets": {
-      "filterPlaceholder": "篩選市場",
+      "title": "所有交易對",
+      "filterPlaceholder": "篩選交易對",
       "matchCount_one": "{{count}} 個符合項目",
       "matchCount_other": "{{count}} 個符合項目"
+    },
+    "news": {
+      "searchLabel": "搜尋新聞",
+      "close": "關閉新聞",
+      "positionLabel": "第 {{current}} / {{total}} 則新聞",
+      "swipeHint": "向上滑動看下一則新聞"
     },
     "trade": {
       "openBook": "開啟委託簿",

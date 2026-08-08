@@ -4676,7 +4676,7 @@
       "trading": "交易",
       "discoverTitle": "发现",
       "topTickers": "热门行情",
-      "allMarkets": "全部市场",
+      "allMarkets": "全部交易对",
       "pnlToday": "今日盈亏",
       "noPositions": "没有持仓",
       "positionsCount_one": "{{count}} 个仓位",
@@ -4688,9 +4688,16 @@
       "featured": "精选"
     },
     "markets": {
-      "filterPlaceholder": "筛选市场",
+      "title": "全部交易对",
+      "filterPlaceholder": "筛选交易对",
       "matchCount_one": "{{count}} 个匹配项",
       "matchCount_other": "{{count}} 个匹配项"
+    },
+    "news": {
+      "searchLabel": "搜索新闻",
+      "close": "关闭新闻",
+      "positionLabel": "第 {{current}}/{{total}} 条新闻",
+      "swipeHint": "上滑查看下一条"
     },
     "trade": {
       "openBook": "打开订单簿",

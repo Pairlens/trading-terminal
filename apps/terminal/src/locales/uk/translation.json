@@ -4706,7 +4706,7 @@
       "trading": "торгівля",
       "discoverTitle": "Огляд",
       "topTickers": "Топ тікери",
-      "allMarkets": "Усі ринки",
+      "allMarkets": "Усі пари",
       "pnlToday": "P&L сьогодні",
       "noPositions": "Немає відкритих позицій",
       "positionsCount_one": "{{count}} позиція",
@@ -4718,11 +4718,18 @@
       "featured": "Добірка"
     },
     "markets": {
-      "filterPlaceholder": "Фільтр ринків",
+      "title": "Усі пари",
+      "filterPlaceholder": "Фільтр пар",
       "matchCount_one": "{{count}} збіг",
       "matchCount_few": "{{count}} збіги",
       "matchCount_many": "{{count}} збігів",
       "matchCount_other": "{{count}} збігів"
+    },
+    "news": {
+      "searchLabel": "Пошук новин",
+      "close": "Закрити новини",
+      "positionLabel": "Новина {{current}} з {{total}}",
+      "swipeHint": "Проведіть угору до наступної новини"
     },
     "trade": {
       "openBook": "Відкрити книгу ордерів",

@@ -141,7 +141,9 @@ export const MobileTabBar = memo(function MobileTabBar({
         variant === 'float' ? 'pl-tabbar-float' : 'pl-tabbar-solid',
       )}
       ref={navRef}
-      style={{ paddingBottom: 'max(var(--pl-safe-bottom), 30px)' }}
+      // The same reserve `--pl-tabbar-total` is built from, so the chart floor
+      // and the bar cannot drift apart.
+      style={{ paddingBottom: 'var(--pl-bottom-inset)' }}
     >
       <div aria-hidden className="pl-tab-pill" ref={pillRef} />
       {TABS.map((tab) => {

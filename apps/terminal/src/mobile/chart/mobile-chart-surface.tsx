@@ -19,21 +19,21 @@ import { Monitor } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
-import { MIN_SHEET_HEIGHT } from '../lib/mobile-geometry'
 import { PriceReadout } from '../primitives/price-readout'
 import { MobileChart } from './mobile-chart'
 import type { ReactNode, PointerEvent as ReactPointerEvent } from 'react'
 import { useOptionalCandleData } from '@/lib/chart-terminal-context'
 
 export type MobileChartSurfaceProps = {
-  /** 'full' when the chart owns the screen, 'compact' under a docked panel. */
-  band: 'full' | 'compact'
   /**
-   * The docked panel's chart-band height in px (a SHEET_BAND value). The chart
-   * is sized to exactly the strip the sheet leaves visible — the design fills
-   * whatever band it is given rather than letting the sheet cover the series.
+   * 'full' when the chart owns the screen, 'compact' when a panel is docked
+   * over it. It is a STATE, not a size: the chart's box is the same in both
+   * (see `CHART_FRAME`). It gates the crosshair placement layer, the price
+   * readout's scale and the scrim's height.
    */
-  bandHeight?: number
+  band: 'full' | 'compact'
+  /** True while the docked sheet sits at its expanded snap. */
+  expanded?: boolean
   /** .7 behind Watchlist / Discover / the drawing-tools sheet, 1 elsewhere. */
   opacity?: number
   /** Mounts the tap-to-dismiss capture layer. */
@@ -56,8 +56,27 @@ export type MobileChartSurfaceProps = {
  * constant rather than an import from `./drawing-toolbar` — that module is
  * lazy-loaded and a static import of its exported constant would pull the
  * whole tool catalog into the shell chunk.
+ *
+ * It is reserved ALWAYS, not only while the toolbar is docked: the chart's box
+ * has to be identical in all five views (see `CHART_FRAME`), and the strip is
+ * covered by the sheet in the four panel views anyway.
  */
 const FOOTER_HEIGHT_PX = 50
+
+/**
+ * The chart's box — one constant, every view.
+ *
+ * The compact band used to size the chart to the sliver of screen a docked
+ * sheet left visible, which meant every panel open and close resized the WebGL
+ * viewport and re-laid-out the series. It now fills the band from the chart top
+ * to the toolbar reserve and panels simply COVER it: the same chart, the same
+ * bar spacing, the same price axis, running behind whatever is docked.
+ *
+ * The limit-line overlay carries the identical style because it converts price
+ * to pixels against its own box — a slot taller than the plot would let the
+ * line be dragged to a price the chart never shows.
+ */
+const CHART_FRAME = { bottom: `${FOOTER_HEIGHT_PX}px` } as const
 
 /** A tap: under 10px of travel and under 400ms. Anything else is a pan. */
 const TAP_SLOP_PX = 10
@@ -77,7 +96,7 @@ export function MobileChartSurface(props: MobileChartSurfaceProps) {
 
 const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
   band,
-  bandHeight,
+  expanded = false,
   opacity = 1,
   dismissible,
   onDismiss,
@@ -119,24 +138,6 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
 
   const unavailable = desktopOnly || (noData && !hasSnapshot)
 
-  // Compact: the chart ends where the sheet begins — the same min() the sheet
-  // top uses, so the two agree on short phones. Full: it ends above the
-  // toolbar when one is docked.
-  //
-  // BOTH branches resolve to a `height`, and that is load-bearing rather than
-  // tidy: the band eases between them, and a transition from a length to
-  // `auto` (which is what dropping `height` and leaning on `bottom` gives)
-  // does not animate at all. One property, two lengths, both directions.
-  const fullHeight = `calc(100svh - var(--pl-chart-top) - var(--pl-tabbar-total)${
-    footer ? ` - ${FOOTER_HEIGHT_PX}px` : ''
-  })`
-  const chartFrame =
-    band === 'compact' && bandHeight != null
-      ? {
-          height: `min(${bandHeight}px, calc(100svh - ${MIN_SHEET_HEIGHT}px - var(--pl-chart-top)))`,
-        }
-      : { height: fullHeight }
-
   return (
     <div
       className="absolute inset-x-0 overflow-hidden"
@@ -156,25 +157,32 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
         // z-30) inside their own stacking context, so the tap layer at z-10
         // actually sits above the chart rather than under its UI canvas.
         //
-        // `pl-chart-band` eases the height so the chart follows the sheet
-        // instead of snapping a frame ahead of it. That does mean the engine's
-        // ResizeObserver fires through the transition rather than once — see
-        // the measurement in the polish notes; a WebGL viewport resize is a
-        // uniform update and a redraw of a chart that is already redrawing
-        // every tick, and the measured frame budget held.
+        // `pl-chart-band` now carries only the opacity fade and the
+        // touch-action pin — the height transition it used to run died with
+        // the resize it was smoothing over.
         <div
-          className="pl-chart-band absolute inset-x-0 top-0 isolate bottom-0"
-          style={{ opacity, ...chartFrame }}
+          className="pl-chart-band absolute inset-x-0 top-0 isolate"
+          style={{ opacity, ...CHART_FRAME }}
         >
           <MobileChart band={band} />
         </div>
       )}
 
-      <div aria-hidden className="pl-chart-scrim" />
+      <div
+        aria-hidden
+        className="pl-chart-scrim"
+        data-scrim={expanded ? 'expanded' : band}
+      />
 
       {/* Price + timeframe chip, 8px under the chart top. */}
       <div className="pointer-events-none absolute inset-x-4 top-2 z-20 flex items-start justify-between gap-3">
-        <PriceReadout size={band === 'full' ? 'hero' : 'compact'} />
+        {/* Hero only when the chart owns the screen. A docked panel takes it to
+            the design's 22px panel price, and the expanded snap — which leaves
+            exactly that row above the sheet — pins it there whatever the band
+            says. */}
+        <PriceReadout
+          size={band === 'full' && !expanded ? 'hero' : 'compact'}
+        />
         {timeframeSlot ? (
           <div className="pointer-events-auto shrink-0">{timeframeSlot}</div>
         ) : null}
@@ -196,14 +204,14 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
       {/* Chart-space overlays. Non-interactive as a layer — the limit line's
           grab strip opts back in itself — so it never eats the dismiss tap.
 
-          It carries the SAME `chartFrame` as the chart, not the band's
+          It carries the SAME `CHART_FRAME` as the chart, not the band's
           `inset-0`: overlays in this slot measure themselves to convert price
           to pixels, and a slot taller than the chart lets the limit line be
           dragged into a price several screens below the plot. */}
       {overlay ? (
         <div
-          className="pl-chart-band pointer-events-none absolute inset-x-0 bottom-0 top-0 z-20"
-          style={chartFrame}
+          className="pointer-events-none absolute inset-x-0 top-0 z-20"
+          style={CHART_FRAME}
         >
           {overlay}
         </div>

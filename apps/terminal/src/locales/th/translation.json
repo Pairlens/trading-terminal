@@ -4676,7 +4676,7 @@
       "trading": "เทรดได้",
       "discoverTitle": "ค้นพบ",
       "topTickers": "ทิกเกอร์ยอดนิยม",
-      "allMarkets": "ตลาดทั้งหมด",
+      "allMarkets": "คู่เทรดทั้งหมด",
       "pnlToday": "กำไรขาดทุนวันนี้",
       "noPositions": "ไม่มีโพซิชันที่เปิดอยู่",
       "positionsCount_one": "{{count}} โพซิชัน",
@@ -4688,9 +4688,16 @@
       "featured": "แนะนำพิเศษ"
     },
     "markets": {
-      "filterPlaceholder": "กรองตลาด",
+      "title": "คู่เทรดทั้งหมด",
+      "filterPlaceholder": "กรองคู่เทรด",
       "matchCount_one": "{{count}} รายการที่ตรงกัน",
       "matchCount_other": "{{count}} รายการที่ตรงกัน"
+    },
+    "news": {
+      "searchLabel": "ค้นหาข่าว",
+      "close": "ปิดข่าว",
+      "positionLabel": "ข่าวที่ {{current}} จาก {{total}}",
+      "swipeHint": "ปัดขึ้นเพื่อดูข่าวถัดไป"
     },
     "trade": {
       "openBook": "เปิดสมุดคำสั่ง",

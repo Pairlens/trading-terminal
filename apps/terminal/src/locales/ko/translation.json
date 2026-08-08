@@ -4676,7 +4676,7 @@
       "trading": "거래 가능",
       "discoverTitle": "탐색",
       "topTickers": "상위 티커",
-      "allMarkets": "전체 마켓",
+      "allMarkets": "전체 페어",
       "pnlToday": "오늘 손익",
       "noPositions": "열린 포지션이 없습니다",
       "positionsCount_one": "포지션 {{count}}개",
@@ -4688,9 +4688,16 @@
       "featured": "추천"
     },
     "markets": {
-      "filterPlaceholder": "마켓 필터링",
+      "title": "전체 페어",
+      "filterPlaceholder": "페어 필터링",
       "matchCount_one": "일치 {{count}}개",
       "matchCount_other": "일치 {{count}}개"
+    },
+    "news": {
+      "searchLabel": "뉴스 검색",
+      "close": "뉴스 닫기",
+      "positionLabel": "기사 {{total}}개 중 {{current}}번째",
+      "swipeHint": "위로 밀어 다음 기사 보기"
     },
     "trade": {
       "openBook": "호가창 열기",

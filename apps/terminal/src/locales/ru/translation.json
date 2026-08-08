@@ -4706,7 +4706,7 @@
       "trading": "торговля",
       "discoverTitle": "Обзор",
       "topTickers": "Топ тикеров",
-      "allMarkets": "Все рынки",
+      "allMarkets": "Все пары",
       "pnlToday": "P&L за сегодня",
       "noPositions": "Нет открытых позиций",
       "positionsCount_one": "{{count}} позиция",
@@ -4718,11 +4718,18 @@
       "featured": "Рекомендуемые"
     },
     "markets": {
-      "filterPlaceholder": "Фильтр рынков",
+      "title": "Все пары",
+      "filterPlaceholder": "Фильтр пар",
       "matchCount_one": "{{count}} совпадение",
       "matchCount_few": "{{count}} совпадения",
       "matchCount_many": "{{count}} совпадений",
       "matchCount_other": "{{count}} совпадения"
+    },
+    "news": {
+      "searchLabel": "Поиск новостей",
+      "close": "Закрыть новости",
+      "positionLabel": "Новость {{current}} из {{total}}",
+      "swipeHint": "Смахните вверх для следующей новости"
     },
     "trade": {
       "openBook": "Открыть стакан ордеров",

@@ -1,7 +1,12 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Discover → "All markets": the whole catalog as a screen.
+ * Discover → "All pairs": the whole catalog as a screen.
+ *
+ * The title is `mobile.markets.title` rather than the desktop's
+ * `markets.title`: the pane on a desk is one of several "Markets" surfaces and
+ * says so, while the phone reached this screen through a button that promised
+ * pairs, and the two words have to agree across that tap.
  *
  * This is the desktop Markets pane's data, not its layout. It reads the same
  * `useMarketInstruments` pages (so arriving here from Discover is a cache
@@ -125,7 +130,11 @@ export default memo(function MarketsScreen({
       : 0
 
   return (
-    <FullScreenOverlay display onBack={onClose} title={t('markets.title')}>
+    <FullScreenOverlay
+      display
+      onBack={onClose}
+      title={t('mobile.markets.title')}
+    >
       <div className="flex h-full flex-col">
         <div className="shrink-0 px-4 pb-2.5">
           <div className="pl-field flex h-[38px] items-center gap-2 rounded-[11px] px-3">

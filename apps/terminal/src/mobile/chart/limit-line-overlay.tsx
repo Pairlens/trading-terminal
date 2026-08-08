@@ -27,11 +27,18 @@
  * Coordinates are CSS pixels from the top of the chart's MAIN PANE, and both
  * conversions are unclamped linear maps over `mainHeight - timeAxisHeight` —
  * feed them a y past the bottom of the plot and they extrapolate a price
- * happily. So the two numbers this file clamps against are the chart's, not
- * the band's: `MobileChartSurface` sizes the overlay slot with the same frame
- * it gives the chart (under a docked sheet that is a 160px strip, not the
- * ~730px band), and `CHART_TIME_AXIS_HEIGHT` takes off the axis gutter that
- * the price scale does not cover.
+ * happily. So the first two numbers this file clamps against are the chart's:
+ * `MobileChartSurface` sizes the overlay slot with the same frame it gives the
+ * chart, and `CHART_TIME_AXIS_HEIGHT` takes off the axis gutter that the price
+ * scale does not cover.
+ *
+ * The third is the sheet's. The chart no longer shrinks when a panel docks — it
+ * is full height in all five views and the Trade sheet covers most of it — so
+ * the plot is ~700px tall while only the top `stripHeight` px are on screen. A
+ * level below that strip is drawn correctly and seen by nobody, so it PINS to
+ * the bottom of the strip instead, flagged (`data-pinned`) and still grabbable.
+ * The rule lives in `./limit-line-geometry`; the strip's height arrives as a
+ * prop because only the shell knows which snap the sheet is resting at.
  *
  * Repositioning rides callbacks that already fire: `chartRef.current.subscribe()`
  * for the engine's own `visibleTimeRangeChange` (pan/zoom), `sizeChange` and
@@ -51,11 +58,12 @@
  */
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { GripVertical } from 'lucide-react'
+import { ChevronDown, GripVertical } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useOrderDraftStore } from '../lib/order-draft-store'
 import { CHART_TIME_AXIS_HEIGHT } from '../lib/mobile-geometry'
+import { clampLimitDragY, placeLimitLine } from './limit-line-geometry'
 import type { FastFinancialChartRef } from '@pairlens/fast-financial-charts/types'
 import type { PointerEvent as ReactPointerEvent, RefObject } from 'react'
 import { useChartConfig } from '@/lib/chart-terminal-context'
@@ -68,6 +76,25 @@ import { useChartConfig } from '@/lib/chart-terminal-context'
  * is on screen.
  */
 const ENGINE_WATCH_MS = 1000
+
+/**
+ * Travel, in px, before a press on the tag becomes a drag.
+ *
+ * A tap on a PINNED tag must leave the draft alone: the tag is sitting above
+ * its own level, so the first move event — one stray pixel of finger roll —
+ * would otherwise rewrite the price from wherever it really is to the strip's
+ * edge. Below the threshold the gesture writes neither the DOM nor the store,
+ * so "grabbed it and let go" is a no-op and "grabbed it and moved" hands the
+ * level to the finger. It applies to every drag, pinned or not; on an
+ * unpinned line the first 4px were writing back the price it already had.
+ */
+const DRAG_SLOP_PX = 4
+
+/** Toggle the pinned flag the tag and the dashes style themselves off. */
+function markPinned(line: HTMLDivElement, pinned: boolean): void {
+  if (pinned) line.dataset.pinned = 'below'
+  else line.removeAttribute('data-pinned')
+}
 
 /** Decimals a price of this magnitude is quoted in — mirrors formatChartPrice. */
 function priceDecimals(price: number): number {
@@ -97,17 +124,32 @@ function chartToY(
   return y == null || !Number.isFinite(y) ? null : y
 }
 
-export default function LimitLineOverlay() {
+export type LimitLineOverlayProps = {
+  /**
+   * Chart band visible above the docked sheet, in px, measured from the top of
+   * the overlay slot — i.e. the sheet's current snap expressed as a height of
+   * chart. `SHEET_BAND.trade` at the default snap, `EXPANDED_BAND` at the
+   * expanded one; omit it (Infinity) when nothing covers the chart and the
+   * whole plot is usable.
+   */
+  stripHeight?: number
+}
+
+export default function LimitLineOverlay({
+  stripHeight = Number.POSITIVE_INFINITY,
+}: LimitLineOverlayProps) {
   const orderType = useOrderDraftStore((s) => s.orderType)
   const ticketOpened = useOrderDraftStore((s) => s.ticketOpened)
 
   // Mounted only for a limit order on a ticket the user has actually opened —
   // a dashed level over a chart nobody has traded from is an unexplained mark.
   if (!ticketOpened || orderType !== 'limit') return null
-  return <LimitLine />
+  return <LimitLine stripHeight={stripHeight} />
 }
 
-const LimitLine = memo(function LimitLine() {
+const LimitLine = memo(function LimitLine({
+  stripHeight,
+}: Required<LimitLineOverlayProps>) {
   const { i18n } = useTranslation()
   const { chartRef } = useChartConfig()
   const limitPrice = useOrderDraftStore((s) => s.limitPrice)
@@ -128,12 +170,24 @@ const LimitLine = memo(function LimitLine() {
     height: 0,
   })
   const draggingRef = useRef(false)
+  /** The gesture has passed DRAG_SLOP_PX and may write. */
+  const movedRef = useRef(false)
+  const startYRef = useRef(0)
   const grabOffsetRef = useRef(0)
   const paintFrameRef = useRef<number | null>(null)
   const writeFrameRef = useRef<number | null>(null)
   const pendingPriceRef = useRef<string | null>(null)
   const localeRef = useRef(i18n.language)
   localeRef.current = i18n.language
+  /**
+   * The visible strip, read inside the rAF path. A ref and not the prop
+   * itself: `paint` and the drag handlers are stable callbacks bound to the
+   * engine's subscription, and re-creating them on every snap change would
+   * re-attach the listener for a number that only moves when the user drags
+   * the sheet.
+   */
+  const stripRef = useRef(stripHeight)
+  stripRef.current = stripHeight
 
   const parsed = Number(limitPrice)
   priceRef.current =
@@ -150,16 +204,21 @@ const LimitLine = memo(function LimitLine() {
     plotRef.current = { top: rect.top, height: plotHeight }
 
     const value = priceRef.current
-    const y = value == null ? null : chartToY(chartRef, value)
-    // Outside the plot means behind the sheet, in the time-axis gutter or
-    // above the context bar. The portal is not clipped by the chart's
-    // `overflow: hidden`, so the clamp that used to be free has to be explicit.
-    if (y == null || y < 0 || y > plotHeight) {
+    // Off the plot (the time-axis gutter, above the context bar, unmappable)
+    // hides; on the plot but under the sheet pins to the strip. The portal is
+    // not clipped by the chart's `overflow: hidden`, so both are explicit.
+    const placement = placeLimitLine(
+      value == null ? null : chartToY(chartRef, value),
+      plotHeight,
+      stripRef.current,
+    )
+    if (!placement.visible) {
       line.style.opacity = '0'
       return
     }
     line.style.opacity = '1'
-    line.style.transform = `translate3d(0, ${Math.round(rect.top + y)}px, 0)`
+    markPinned(line, placement.pinned)
+    line.style.transform = `translate3d(0, ${Math.round(rect.top + placement.y)}px, 0)`
   }, [chartRef])
 
   const schedulePaint = useCallback(() => {
@@ -225,6 +284,13 @@ const LimitLine = memo(function LimitLine() {
     schedulePaint()
   }, [limitPrice, schedulePaint])
 
+  // The sheet settled on its other snap. The strip changed size, so a level
+  // that was pinned may now be free (or the reverse) — one repaint per snap
+  // change, through the same rAF the market updates ride.
+  useEffect(() => {
+    schedulePaint()
+  }, [stripHeight, schedulePaint])
+
   const handlePointerDown = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
       const anchor = anchorRef.current
@@ -232,12 +298,18 @@ const LimitLine = memo(function LimitLine() {
       const y = chartToY(chartRef, priceRef.current)
       if (y == null) return
       const rect = anchor.getBoundingClientRect()
-      plotRef.current = {
-        top: rect.top,
-        height: Math.max(0, rect.height - CHART_TIME_AXIS_HEIGHT),
-      }
+      const plotHeight = Math.max(0, rect.height - CHART_TIME_AXIS_HEIGHT)
+      plotRef.current = { top: rect.top, height: plotHeight }
       draggingRef.current = true
-      grabOffsetRef.current = event.clientY - rect.top - y
+      movedRef.current = false
+      startYRef.current = event.clientY
+      // Measured against where the tag IS, not where its price maps: a pinned
+      // tag sits above its own level, and an offset taken from the true y would
+      // teleport the line by that difference on the first move.
+      grabOffsetRef.current =
+        event.clientY -
+        rect.top -
+        placeLimitLine(y, plotHeight, stripRef.current).y
       event.currentTarget.setPointerCapture(event.pointerId)
       event.preventDefault()
     },
@@ -251,14 +323,26 @@ const LimitLine = memo(function LimitLine() {
       const chart = chartRef.current
       if (!line || !chart) return
 
-      // Clamped to the PLOT, not to the slot: pointer capture keeps delivering
-      // moves once the finger crosses onto the sheet, and `coordinateToPrice`
-      // would extrapolate every one of those pixels into a price far off the
-      // chart and write it into the order draft.
+      // A press is not a drag: nothing is written until the finger has
+      // actually travelled (see DRAG_SLOP_PX). Crossing the threshold also
+      // clears the pinned flag — from here the line is wherever the finger is.
+      if (!movedRef.current) {
+        if (Math.abs(event.clientY - startYRef.current) < DRAG_SLOP_PX) return
+        movedRef.current = true
+        markPinned(line, false)
+      }
+
+      // Clamped to the visible STRIP, not to the slot and not to the whole
+      // plot: pointer capture keeps delivering moves once the finger crosses
+      // onto the sheet, and `coordinateToPrice` would extrapolate every one of
+      // those pixels into a price the user cannot see and write it into the
+      // order draft. Dragging to the strip's floor is as far down as the line
+      // goes; a level below the sheet is typed into the field, not dragged to.
       const plot = plotRef.current
-      const y = Math.min(
-        Math.max(event.clientY - plot.top - grabOffsetRef.current, 0),
+      const y = clampLimitDragY(
+        event.clientY - plot.top - grabOffsetRef.current,
         plot.height,
+        stripRef.current,
       )
       // Paint from the finger, not from the round-tripped price: the pixel is
       // what is being dragged, and the conversion back rounds.
@@ -286,6 +370,9 @@ const LimitLine = memo(function LimitLine() {
   const endDrag = useCallback(() => {
     if (!draggingRef.current) return
     draggingRef.current = false
+    // Nothing moved, so nothing is pending and the draft keeps the price it
+    // had — including the off-strip price a pinned tag was standing in for.
+    movedRef.current = false
     if (writeFrameRef.current != null) {
       cancelAnimationFrame(writeFrameRef.current)
       writeFrameRef.current = null
@@ -304,18 +391,24 @@ const LimitLine = memo(function LimitLine() {
       <div className="pointer-events-none absolute inset-0" ref={anchorRef} />
       {createPortal(
         <div
-          className="pointer-events-none fixed inset-x-0 top-0 z-[35] h-0 opacity-0"
+          className="group pointer-events-none fixed inset-x-0 top-0 z-[35] h-0 opacity-0"
           data-pl-limit-line
           ref={lineRef}
           style={{ willChange: 'transform' }}
         >
+          {/* Half-tone dashes while pinned: the level is real, this is not
+              where it sits. The chevron in the tag says which way. */}
           <div
             aria-hidden
-            className="absolute inset-x-0 top-0 border-t-[1.5px] border-dashed border-primary"
+            className="absolute inset-x-0 top-0 border-t-[1.5px] border-dashed border-primary group-data-[pinned=below]:opacity-45"
           />
           <span className="absolute right-1 top-[-13px] flex h-[26px] items-center gap-1 rounded-md bg-primary pl-1.5 pr-2 font-mono text-[11.5px] font-semibold tabular-nums text-primary-foreground shadow-[0_4px_14px_rgba(0,0,0,0.55)]">
             <GripVertical aria-hidden className="size-3 opacity-80" />
             <span ref={tagRef} />
+            <ChevronDown
+              aria-hidden
+              className="hidden size-3 opacity-80 group-data-[pinned=below]:block"
+            />
           </span>
           {/* A 44px grab strip centred on a 1.5px line. `pointer-events: auto`
               is load-bearing twice over: it re-enables hit-testing under the

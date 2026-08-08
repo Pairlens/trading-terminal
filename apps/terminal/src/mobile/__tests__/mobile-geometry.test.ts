@@ -3,10 +3,15 @@
 import { describe, expect, test } from 'bun:test'
 
 import {
+  EXPANDED_BAND,
   MIN_SHEET_HEIGHT,
   SHEET_BAND,
+  parseTranslateY,
+  resolveSheetSnaps,
   resolveSheetTop,
+  sheetDismissTravel,
   sheetTop,
+  shouldDismissSheet,
 } from '../lib/mobile-geometry'
 
 /**
@@ -68,5 +73,115 @@ describe('sheetTop', () => {
     expect(css).toContain('100svh')
     expect(css).not.toContain('100vh)')
     expect(css.startsWith('min(')).toBe(true)
+  })
+})
+
+/**
+ * The snap heights are what vaul translates the sheet by, so an error here is
+ * a panel that opens at the wrong height or an expanded snap that cannot be
+ * reached — neither of which a type check or a screenshot at one viewport size
+ * would catch.
+ */
+describe('resolveSheetSnaps', () => {
+  test('the default snap is exactly where the panel used to sit', () => {
+    for (const band of Object.values(SHEET_BAND)) {
+      const snaps = resolveSheetSnaps(band, 58, 874)
+      expect(snaps.defaultHeight).toBe(874 - resolveSheetTop(band, 58, 874))
+    }
+  })
+
+  test('the expanded snap stops below the context bar and the price row', () => {
+    const snaps = resolveSheetSnaps(SHEET_BAND.watchlist, 58, 874)
+    expect(snaps.expandedHeight).toBe(874 - 58 - EXPANDED_BAND)
+    // The compact readout (8 inset + 22 price + 6 + 13 change) has to survive.
+    expect(EXPANDED_BAND).toBeGreaterThanOrEqual(49)
+  })
+
+  test('every panel can actually be expanded', () => {
+    for (const band of Object.values(SHEET_BAND)) {
+      for (const viewport of [568, 667, 740, 874, 932]) {
+        const snaps = resolveSheetSnaps(band, 58, viewport)
+        expect(snaps.expandedHeight).toBeGreaterThan(snaps.defaultHeight)
+      }
+    }
+  })
+
+  test('a degenerate viewport still yields two distinct snaps', () => {
+    // Landscape-ish: the default is clamped by MIN_SHEET_HEIGHT and would
+    // otherwise overtake the expanded snap, which vaul indexes BY VALUE — two
+    // equal entries and the expanded snap becomes unreachable.
+    const snaps = resolveSheetSnaps(SHEET_BAND.copilot, 58, 320)
+    expect(snaps.defaultHeight).toBe(320 - (320 - MIN_SHEET_HEIGHT))
+    expect(snaps.expandedHeight).toBeGreaterThan(snaps.defaultHeight)
+  })
+})
+
+describe('shouldDismissSheet', () => {
+  const viewport = 874
+  const { defaultHeight, expandedHeight } = resolveSheetSnaps(
+    SHEET_BAND.watchlist,
+    58,
+    874,
+  )
+  const restingAtDefault = viewport - defaultHeight
+  const restingAtExpanded = viewport - expandedHeight
+
+  test('a sheet released at either snap is never a dismiss', () => {
+    expect(shouldDismissSheet(restingAtDefault, viewport, defaultHeight)).toBe(
+      false,
+    )
+    expect(shouldDismissSheet(restingAtExpanded, viewport, defaultHeight)).toBe(
+      false,
+    )
+  })
+
+  test('a nudge below the default springs back, a real pull dismisses', () => {
+    const travel = sheetDismissTravel(defaultHeight)
+    expect(
+      shouldDismissSheet(
+        restingAtDefault + travel - 1,
+        viewport,
+        defaultHeight,
+      ),
+    ).toBe(false)
+    expect(
+      shouldDismissSheet(
+        restingAtDefault + travel + 1,
+        viewport,
+        defaultHeight,
+      ),
+    ).toBe(true)
+  })
+
+  test('the threshold is measured from the default, not from where you were', () => {
+    // Dragged from expanded down to just short of the default: that gesture
+    // means "back to the middle", not "close", however long it was.
+    const justAboveDefault = restingAtDefault - 4
+    expect(shouldDismissSheet(justAboveDefault, viewport, defaultHeight)).toBe(
+      false,
+    )
+  })
+
+  test('a short sheet keeps a floor so a stray nudge cannot close it', () => {
+    expect(sheetDismissTravel(120)).toBe(56)
+    expect(sheetDismissTravel(800)).toBe(200)
+  })
+})
+
+describe('parseTranslateY', () => {
+  test('reads the Y offset out of both matrix forms', () => {
+    expect(parseTranslateY('matrix(1, 0, 0, 1, 0, 208)')).toBe(208)
+    expect(
+      parseTranslateY(
+        'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 208, 0, 1)',
+      ),
+    ).toBe(208)
+  })
+
+  test('an untransformed sheet reports nothing rather than zero', () => {
+    // Zero would be a real position (the top snap); null is "no drag happened".
+    expect(parseTranslateY('none')).toBeNull()
+    expect(parseTranslateY('')).toBeNull()
+    expect(parseTranslateY('translateY(10px)')).toBeNull()
   })
 })

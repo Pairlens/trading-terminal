@@ -36,24 +36,30 @@ const CrosshairPlacement = lazyChunk(() => import('./crosshair-placement'))
 export type MobileChartProps = {
   /**
    * 'full' when the chart owns the screen, 'compact' when a panel is docked
-   * over it. Drives the bar count only — the series always fills its band.
+   * over it.
+   *
+   * It changes NOTHING about the chart's geometry — same box, same bars, same
+   * gutter, so a panel opening cannot make the engine re-layout. Its one job
+   * here is the placement layer below, which must not sit over a chart strip
+   * whose remaining purpose is to be tapped.
    */
   band: 'full' | 'compact'
 }
 
-/** The design's Chart screen shows ~80 bars; a panel strip shows ~26. */
-const FULL_BARS = 80
-const COMPACT_BARS = 26
+/** The design's Chart screen shows ~80 bars. */
+const DEFAULT_BARS = 80
 
 /**
- * The price gutter, in px — 56 on the full Chart screen, 52 under a docked
- * panel (design §"Chart rendering"). The engine's own default is 74, drawn for
- * a desktop pane; on a 402px phone that is 18% of the width spent on five
- * digits. It is a theme layout field, so this is a config change and not a
- * charts-repo change.
+ * The price gutter, in px (design §"Chart rendering" draws 56 on the Chart
+ * screen). The engine's own default is 74, drawn for a desktop pane; on a
+ * 402px phone that is 18% of the width spent on five digits. It is a theme
+ * layout field, so this is a config change and not a charts-repo change.
+ *
+ * One value, not two: the design's narrower 52px gutter belonged to the
+ * shrunken compact chart, and a chart that no longer resizes must not re-layout
+ * its axis when a panel opens either.
  */
-const PRICE_AXIS_WIDTH_FULL = 56
-const PRICE_AXIS_WIDTH_COMPACT = 52
+const PRICE_AXIS_WIDTH = 56
 
 export const MobileChart = memo(function MobileChart({
   band,
@@ -80,9 +86,6 @@ export const MobileChart = memo(function MobileChart({
   const baseTheme = usePairlensChartTheme()
   const frameRef = useRef<HTMLDivElement | null>(null)
 
-  const priceAxisWidth =
-    band === 'full' ? PRICE_AXIS_WIDTH_FULL : PRICE_AXIS_WIDTH_COMPACT
-
   // `timeAxisHeight` is the engine's own default, pinned rather than inherited:
   // the limit-line overlay subtracts it to find the bottom of the plot box, and
   // an invariant two modules depend on should be written down in one of them.
@@ -94,10 +97,10 @@ export const MobileChart = memo(function MobileChart({
       fontSizeAxis: 10,
       layout: {
         timeAxisHeight: CHART_TIME_AXIS_HEIGHT,
-        priceAxisWidth,
+        priceAxisWidth: PRICE_AXIS_WIDTH,
       },
     }),
-    [baseTheme, priceAxisWidth],
+    [baseTheme],
   )
 
   const crosshairConfig = useMemo(
@@ -119,12 +122,11 @@ export const MobileChart = memo(function MobileChart({
     [],
   )
 
+  // Constant, like the box it draws into: re-aiming the viewport at a smaller
+  // bar count when a panel docks would zoom the series the user was reading.
   const defaultViewport = useMemo(
-    () => ({
-      type: 'last-bars' as const,
-      bars: band === 'full' ? FULL_BARS : COMPACT_BARS,
-    }),
-    [band],
+    () => ({ type: 'last-bars' as const, bars: DEFAULT_BARS }),
+    [],
   )
 
   const localization = useMemo(() => ({ priceFormatter: formatChartPrice }), [])
@@ -185,7 +187,7 @@ export const MobileChart = memo(function MobileChart({
         <Suspense fallback={null}>
           <CrosshairPlacement
             frameRef={frameRef}
-            priceAxisWidth={priceAxisWidth}
+            priceAxisWidth={PRICE_AXIS_WIDTH}
           />
         </Suspense>
       ) : null}
