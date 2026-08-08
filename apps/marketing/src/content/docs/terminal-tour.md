@@ -86,7 +86,8 @@ notification fires once rather than once per window.
 Everything above works with no account. Signing in with your email adds
 cross-device sync for workspaces, chart layouts, alerts, workflows, your trade
 journal, and AI conversations. It never adds anything to the credential path:
-exchange keys stay in your OS keychain either way.
+exchange keys stay on your device either way, in the OS keychain on desktop or
+the encrypted vault in a browser.
 
 ## Where to next
 

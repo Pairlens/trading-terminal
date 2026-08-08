@@ -22,7 +22,7 @@ export const DEFAULT_OS = 'macOS'
 
 export const OS_GUIDES: Record<string, OsGuide> = {
   macOS: {
-    sub: 'Apple silicon .dmg — Intel build linked below',
+    sub: 'Apple silicon .dmg · Intel build linked below',
     steps: [
       {
         n: '01',
@@ -32,7 +32,7 @@ export const OS_GUIDES: Record<string, OsGuide> = {
       {
         n: '02',
         title: 'Drag it across',
-        body: 'Drop Pairlens into Applications. That is the entire install — nothing is written outside that folder.',
+        body: 'Drop Pairlens into Applications. That is the entire install; nothing is written outside that folder.',
       },
       {
         n: '03',
@@ -42,7 +42,7 @@ export const OS_GUIDES: Record<string, OsGuide> = {
     ],
   },
   Windows: {
-    sub: '.exe setup — Windows 10 and 11, 64-bit',
+    sub: '.exe setup · Windows 10 and 11, 64-bit',
     steps: [
       {
         n: '01',
@@ -52,7 +52,7 @@ export const OS_GUIDES: Record<string, OsGuide> = {
       {
         n: '02',
         title: 'Get past SmartScreen',
-        body: 'Windows may warn about an unrecognized app while our builds earn their reputation. Choose More info, then Run anyway — every build ships from public CI you can read.',
+        body: 'Windows may warn about an unrecognized app while our builds earn their reputation. Choose More info, then Run anyway. Every build ships from public CI you can read.',
       },
       {
         n: '03',
@@ -62,7 +62,7 @@ export const OS_GUIDES: Record<string, OsGuide> = {
     ],
   },
   Linux: {
-    sub: 'AppImage — .deb and .rpm linked below',
+    sub: 'AppImage · .deb and .rpm linked below',
     steps: [
       {
         n: '01',

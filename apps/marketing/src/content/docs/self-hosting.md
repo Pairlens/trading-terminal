@@ -18,9 +18,10 @@ requirements, that means the full terminal can live inside your perimeter.
 
 Regardless of how you deploy it:
 
-**Exchange credentials** are stored in each machine's OS keychain and used only
-to sign requests to the venue. There is no server-side credential store to
-secure, audit, or breach.
+**Exchange credentials** are stored on each machine, in the OS keychain on
+desktop or the encrypted credential vault in a browser, and used only to sign
+requests to the venue. There is no server-side credential store to secure,
+audit, or breach.
 
 **Market data** streams directly between each terminal and the exchange. No
 Pairlens relay sits in the path.
@@ -57,9 +58,9 @@ desk.
 
 ## Build and distribute internally
 
-Build the desktop app from source with `bun run dev:desktop` (Rust toolchain
-required) and distribute it through your own channels. Everything needed to
-audit, reproduce, and patch the build is in the open repository.
+Build the desktop app from source (Rust toolchain required) and distribute it
+through your own channels. Everything needed to audit, reproduce, and patch
+the build is in the public repository.
 
 Production desktop builds must set `VITE_APP_SERVER_URL` in the environment of
 `tauri build`. A bare production build defaults to standalone, which is either

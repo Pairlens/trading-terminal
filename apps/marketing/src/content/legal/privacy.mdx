@@ -220,10 +220,11 @@ no cross-site tracking.
 
 **The terminal** does not use cookies for its own state. It uses your
 browser's or the desktop app's local storage for your settings and workspaces,
-your operating system's keychain for credentials, and IndexedDB for encryption
-keys in browser builds. When you sign in, the session token is kept in local
-storage rather than a cookie, because the desktop app talks to our API
-cross-origin, where a cookie would simply be blocked.
+your operating system's keychain for credentials on desktop, and an encrypted
+credential vault in local storage in browser builds. When you sign in, the
+session token is kept in local storage rather than a cookie, because the
+desktop app talks to our API cross-origin, where a cookie would simply be
+blocked.
 
 ## 8. Who else touches your data
 
@@ -355,7 +356,7 @@ believe a child has created an account, tell us and we will delete it.
 - Everything travels over TLS.
 - Sessions are opaque bearer tokens with an expiry, not guessable identifiers.
 - Synced plugin settings are encrypted at rest with AES-256-GCM, and fields that could carry trading credentials are stripped before they are ever written.
-- Credentials live in your operating system's keychain, on your machine, and our database is architecturally incapable of holding them.
+- Credentials live on your machine: in your operating system's keychain on desktop, or in an AES-256-GCM encrypted vault in browser builds. Our database is architecturally incapable of holding them.
 - Plugins run inside a sandbox with a network allowlist. Plugin code is signed with Ed25519 and verified against pinned publisher keys, and community-tier plugins are clamped to the sandbox with no full-trust option.
 - The desktop app ships a strict Content Security Policy, so it can only talk to hosts you have consented to.
 - Access to production systems is limited to those who need it.

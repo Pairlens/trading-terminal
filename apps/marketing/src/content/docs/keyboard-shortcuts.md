@@ -1,6 +1,6 @@
 ---
 title: Keyboard shortcuts
-description: Every chord in the terminal, from timeframe digits to drawing tools to window management.
+description: Every keyboard shortcut in the Pairlens trading terminal, from timeframe digits to drawing tools to window management, on macOS, Windows, and Linux.
 group: traders
 order: 10
 eyebrow: For traders

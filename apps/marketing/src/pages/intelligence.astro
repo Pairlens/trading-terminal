@@ -126,7 +126,7 @@ const PRICING: ReadonlyArray<Plan> = [
     tagline: 'Plug an API key into a provider plugin and pay them directly.',
     price: 'Variable cost',
     priceUnit: 'at market rates',
-    meta: '$0 to Pairlens — you pay your provider directly',
+    meta: '$0 to Pairlens; you pay your provider directly',
     accent: 'var(--pl-green)',
     border: 'var(--border)',
     ctaBg: 'transparent',
@@ -139,7 +139,7 @@ const PRICING: ReadonlyArray<Plan> = [
       'Every AI feature in the terminal, unlocked',
       'You pick the model and the provider',
       'You manage the keys, accounts and rate limits',
-      'Free forever — never gated behind a subscription',
+      'Free forever, never gated behind a subscription',
     ],
   },
   {
@@ -186,7 +186,7 @@ const PRICING: ReadonlyArray<Plan> = [
 const FAQ = [
   {
     q: 'Do I need Pairlens Intelligence to use Pairlens?',
-    a: 'No. The terminal is free, its source is public, and it is fully functional without it — including every AI feature, which also runs on your own provider keys. Intelligence is an optional convenience subscription, never a gate.',
+    a: 'No. The terminal is free, its source is public, and it is fully functional without it, including every AI feature, which also runs on your own provider keys. Intelligence is an optional convenience subscription, never a gate.',
   },
   {
     q: 'Can I use my own Anthropic, OpenAI, or other provider keys instead?',
@@ -202,7 +202,7 @@ const FAQ = [
   },
   {
     q: 'Does my trading data or my exchange keys ever reach your servers?',
-    a: 'Your exchange API keys and wallets never leave your machine; they live in your OS keychain and Pairlens servers cannot store them. AI requests carry only the market context you invoke, like the chart or pair you ask about.',
+    a: 'Your exchange API keys and wallets never leave your machine; they live in your OS keychain on desktop, or an encrypted vault in your browser, and Pairlens servers cannot store them. AI requests carry only the market context you invoke, like the chart or pair you ask about.',
   },
 ]
 
@@ -418,7 +418,7 @@ const jsonLd = [
             class="mt-[18px] max-w-[66ch] text-pretty text-[16px] leading-[1.7] text-muted-foreground"
           >
             Every AI feature works either way. Plug in your own provider key and
-            pay that provider directly at whatever they charge — or let Pairlens
+            pay that provider directly at whatever they charge, or let Pairlens
             host the whole thing for one predictable monthly price.
           </p>
         </div>
@@ -624,7 +624,7 @@ const jsonLd = [
           class="mt-[18px] max-w-[54ch] text-[16.5px] leading-[1.7] text-muted-foreground"
         >
           Open the terminal free, then flip on Intelligence from Settings
-          whenever you want the hosted brain, or plug in your own AI providers
+          whenever you want the hosted brain, or plug in your own AI provider
           keys. Either way, your exchange credentials never leave your machine.
         </p>
         <div
@@ -726,7 +726,7 @@ const jsonLd = [
           [
             {
               t: 'Open Pairlens',
-              d: 'Launch it in your browser or open the desktop app — both are free. Already there? Skip ahead.',
+              d: 'Launch it in your browser or open the desktop app; both are free. Already there? Skip ahead.',
             },
             {
               t: 'Sign in with your email',

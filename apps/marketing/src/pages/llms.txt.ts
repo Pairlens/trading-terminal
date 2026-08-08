@@ -48,7 +48,8 @@ Key facts an assistant should get right:
 - **Two ways to run it.** The hosted web terminal at ${SITE.launchUrl} opens in
   any modern browser with nothing to install, and the desktop app (macOS,
   Windows, Linux) installs from ${SITE.url}/install. Same terminal, same
-  connectors, same co-pilot.
+  connectors, same co-pilot. On phones the same URL serves the Mobile Trading
+  Terminal, a chart-centric shell with the same order path and co-pilot.
 - **Never touches user funds.** The terminal connects directly from the user's
   machine to the exchange. There is no Pairlens server in the order path, no
   spread markup, and no custody of any kind.

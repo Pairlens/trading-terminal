@@ -80,7 +80,8 @@ thing standing between you and a blown account.
 The co-pilot sees market data your terminal already has, plus whatever your
 prompt includes. Chat history is stored locally by default and synced when you
 are signed in. It never receives your API keys or private keys, because those
-live in the keychain and are only ever read by the connector signing an order.
+live in the OS keychain or your encrypted vault and are only ever read by the
+connector signing an order.
 
 ## Choosing a model
 

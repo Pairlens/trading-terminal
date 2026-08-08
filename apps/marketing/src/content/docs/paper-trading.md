@@ -1,6 +1,6 @@
 ---
 title: Paper trading
-description: Three separate ways to rehearse without money at stake, what each one actually simulates, and which to reach for.
+description: Paper trading in Pairlens, three ways, using exchange demo environments, bot paper mode, and co-pilot paper trades. What each simulates and which to use.
 group: traders
 parent: trading
 order: 4

@@ -1,6 +1,6 @@
 ---
 title: Panels
-description: Every panel you can put in a workspace, what it shows, and which plugin provides it.
+description: Every panel in the Pairlens crypto trading terminal, from charts and order books to AI research, what each shows, and which plugin provides it.
 group: traders
 parent: workspaces
 order: 1

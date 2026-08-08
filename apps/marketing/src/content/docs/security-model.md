@@ -20,15 +20,19 @@ to or stored on a Pairlens server, in any deployment, signed in or not.
 
 **Enforcement.** On desktop they are written to the OS keychain (macOS
 Keychain, Windows Credential Manager, Linux Secret Service) through Tauri
-commands backed by the Rust `keyring` crate. In browser builds they are
-AES-256-GCM encrypted with a non-extractable WebCrypto key held in IndexedDB.
+commands backed by the Rust `keyring` crate. In a browser they live in the
+credential vault: AES-256-GCM ciphertext in localStorage under a single data
+key, which every protector the user enrolls (a vault password, a passkey via
+PRF, or Touch ID on macOS) wraps a copy of. Enrolling a protector is a
+precondition for storing the first credential, and a sealed vault throws
+rather than reporting a value as absent.
 
 The App Server has no schema for user exchange credentials, encrypted or
 otherwise. There is no server-side credential store to audit, rotate, or
 breach.
 
-**Residual risk.** Browser builds resist reading secrets off disk, but not
-same-origin XSS. Desktop is the supported home for live-trading secrets.
+**Residual risk.** The browser vault resists reading secrets off disk, but not
+same-origin XSS. Desktop remains the strongest home for live-trading secrets.
 
 ## Order flow
 

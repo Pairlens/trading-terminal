@@ -1,6 +1,6 @@
 ---
 title: MarketAdapter API
-description: The interface every market connector implements to stream candles, tickers, and order books, and to route orders.
+description: The MarketAdapter interface every exchange connector plugin implements to stream candles, tickers, and order books, and to route orders to crypto venues.
 group: builders
 parent: plugin-sdk
 order: 2
@@ -126,7 +126,8 @@ correctly in the terminal without you having to click through it.
 
 Adapters receive credentials through `setCredentials` at the moment they are
 needed for order routing. They never read them from disk or from a server. The
-terminal hands them over straight from the OS keychain.
+terminal hands them over straight from the OS keychain on desktop, or from the
+encrypted credential vault in a browser.
 
 Never log a credential, never include one in an error message, and never send
 one to a host outside your declared allowlist. All three are things a reviewer
@@ -141,6 +142,11 @@ network blocked it".
 **REST on desktop.** Absolute-URL REST calls route through the native HTTP
 transport, which sidesteps CORS entirely. In the browser dev build they go
 through the Vite dev proxy. Write the calls once; the host picks the path.
+
+**Browsers and CORS.** The hosted web terminal calls your REST API from the
+page itself, so it only works if the venue serves CORS headers. If it does
+not, declare `requiresDesktop: true` and the connector refuses cleanly in a
+browser with a typed error instead of presenting a dead chart.
 
 **Declared hosts.** Every host your connector touches must be in your
 manifest's declared hosts, or the desktop CSP will block it. That includes any

@@ -1,6 +1,6 @@
 ---
 title: Introduction
-description: What Pairlens is, who it's for, and how the pieces fit together.
+description: What Pairlens is, a source-available, local-first, AI-native crypto trading terminal that runs in your browser, on your desktop, and on your phone.
 group: get-started
 order: 1
 eyebrow: Get started
@@ -58,8 +58,14 @@ provider key or subscribe to hosted Intelligence.
 
 ## How the pieces fit
 
-**Desktop app.** The primary distribution. A Tauri shell around the terminal,
-with credentials in your OS keychain.
+**Web terminal.** The fastest way in. Open
+[terminal.pairlens.finance](https://terminal.pairlens.finance) and you are on a
+live chart; below 768px the same URL serves the mobile terminal. Credentials
+live in an encrypted vault on your device.
+
+**Desktop app.** A Tauri shell around the same terminal, with credentials in
+your OS keychain. It adds the four CORS-restricted venues, background bots, and
+native windows, and it is the strongest home for live-trading secrets.
 
 **Terminal.** A React SPA. Market data streams directly from exchanges via
 connector plugins. There is no intermediate data server.

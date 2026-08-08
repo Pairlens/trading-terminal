@@ -58,7 +58,7 @@ trade.
 centre, with an optional sound. It reaches you when Pairlens is not the focused
 window, which is the whole point of an alert. The desktop app posts it natively;
 the browser uses the Web Notification API, which is the same notification centre
-and needs permission first — grant it under **Settings → Notifications**, where
+and needs permission first. Grant it under **Settings → Notifications**, where
 you can also fire a test one. Clicking a notification brings the terminal
 forward. If permission was never granted or was blocked, the alert is recorded
 as a failed delivery in the Activity log rather than quietly doing nothing.
@@ -66,7 +66,7 @@ as a failed delivery in the Activity log rather than quietly doing nothing.
 **Telegram.** A message to a Telegram chat, which is how an alert reaches you
 when you are not in front of the terminal. It moves the alert off this machine;
 it does not keep the rule running, so Pairlens still has to be up for anything to
-fire at all — on desktop that can mean running in the background with the window
+fire at all. On desktop that can mean running in the background with the window
 closed. Set it up once under **Settings → Notifications**
 (see below), then drop the channel into any flow. Leave the Chat ID blank to use
 the chat you linked in settings, or type one to send that flow somewhere else: a

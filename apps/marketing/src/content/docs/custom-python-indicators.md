@@ -73,7 +73,7 @@ def compute(ctx):
 ```
 
 You would not normally write that by hand. `pairlens.ta` ships an `rsi()`, along
-with about eighty other functions. The template spells it out because seeing
+with 81 other functions. The template spells it out because seeing
 the loop once makes everything else make sense.
 
 ## Anatomy of a script
@@ -170,7 +170,7 @@ def compute(ctx):
 
 ## The function library
 
-`pairlens.ta` covers the ground Pine's `ta.*` namespace covers: around eighty
+`pairlens.ta` covers the ground Pine's `ta.*` namespace covers: 82
 functions across moving averages, oscillators, bands, volatility, volume, and
 the comparison helpers (`crossover`, `crossunder`, `barssince`, `valuewhen`).
 

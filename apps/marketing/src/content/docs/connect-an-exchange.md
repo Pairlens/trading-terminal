@@ -1,6 +1,6 @@
 ---
 title: Connect an exchange
-description: Add exchange, broker, or wallet credentials that live in your OS keychain and only ever sign requests to that one venue.
+description: Connect exchange, broker, or wallet API keys. They stay on your device, in the OS keychain or encrypted vault, and only sign requests to that one venue.
 group: traders
 parent: trading
 order: 1
@@ -54,9 +54,10 @@ straight to signup, and some links carry a
 ## Where the secret goes
 
 On desktop, into the OS keychain: macOS Keychain, Windows Credential Manager,
-or Linux Secret Service. That is the same encrypted vault your operating system
-uses for its own passwords. In browser dev builds it is AES-256-GCM encrypted
-before it is written.
+or Linux Secret Service. That is the same encrypted store your operating system
+uses for its own passwords. In a browser, it goes into the credential vault:
+AES-256-GCM ciphertext in localStorage, unlocked by a protector you enroll
+first (a vault password, a passkey, or Touch ID on macOS).
 
 Either way it is never sent to a Pairlens server, not even while you are signed
 in. The **Local Only** badge on the Accounts page opens a panel explaining

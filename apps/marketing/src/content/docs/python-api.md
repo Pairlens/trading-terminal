@@ -1,6 +1,6 @@
 ---
 title: Python API reference
-description: Every builder in the pairlens module, the compute context, and the 82 functions in pairlens.ta.
+description: The full Python API for custom trading indicators in Pairlens, covering every builder, the compute context, and the 82 functions in pairlens.ta.
 group: traders
 parent: python-scripts
 order: 2

@@ -1,6 +1,6 @@
 ---
 title: Connectors
-description: The exchanges, brokers, and DEXs supported out of the box, and how to add your own.
+description: Every exchange connector in the Pairlens crypto trading terminal, 14 CEXs, Alpaca for US equities, and DEX aggregators, plus how to build your own.
 group: builders
 order: 4
 eyebrow: For builders
@@ -25,6 +25,11 @@ Arbitrum, BNB Chain, and Polygon through the KyberSwap aggregator.
 
 **DEX data.** GeckoTerminal as primary and DexPaprika as fallback, both
 read-only.
+
+All 15 venues work in the desktop app. In a browser, 11 of them do: Coinbase,
+Gate, KuCoin, and MEXC serve REST without CORS headers and stream no candle
+history, so they require the desktop app and refuse cleanly with a clear
+message rather than presenting a dead chart.
 
 Most CEX connectors are built from one shared factory,
 `createCexConnectorPlugin`, which is a base class rather than a plugin itself.

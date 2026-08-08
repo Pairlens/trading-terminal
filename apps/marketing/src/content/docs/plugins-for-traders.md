@@ -25,7 +25,7 @@ Open **Plugins** in the left nav.
 **Indicators.** Custom chart indicators, including Python ones other people
 wrote.
 
-**Themes.** Seventeen ship in the box, and more can be installed.
+**Themes.** Eighteen ship in the box, and more can be installed.
 
 **Workflow steps** and **notification channels**, extending the automation
 canvases.

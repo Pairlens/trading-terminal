@@ -1,6 +1,6 @@
 ---
 title: DEX and wallets
-description: Swap on-chain from the same terminal, on Solana and five EVM chains, with your private key in the OS keychain and routing across every DEX on the chain.
+description: Swap on-chain from the same crypto trading terminal, on Solana via Jupiter and five EVM chains via KyberSwap, with your private key stored only on your device.
 group: traders
 parent: trading
 order: 5
@@ -27,8 +27,8 @@ providers, GeckoTerminal first with DexPaprika as a fallback.
 ## Adding a wallet
 
 **Accounts → Connect Account → Crypto Wallet.** You import a private key, which
-goes into the OS keychain exactly like an exchange API key and never reaches a
-Pairlens server.
+is stored exactly like an exchange API key: in the OS keychain on desktop, in
+your encrypted vault in a browser, and never on a Pairlens server.
 
 The five EVM chains share one wallet entry, because one EVM private key
 controls the same address on all of them. Solana needs its own.

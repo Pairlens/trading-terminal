@@ -33,7 +33,7 @@ export const CLAUSES = [
   {
     n: 'IV',
     title: 'We cannot use patents against you.',
-    body: 'The FSL grants a patent license for your permitted use today, and the Apache 2.0 conversion carries Apache’s well-known patent grant — the reason large institutions trust it. Compliance review tends to be short.',
+    body: 'The FSL grants a patent license for your permitted use today, and the Apache 2.0 conversion carries Apache’s well-known patent grant, the reason large institutions trust it. Compliance review tends to be short.',
     cite: 'Patent licence granted under both the FSL and the Apache 2.0 future licence.',
   },
 ] as const
@@ -45,7 +45,7 @@ export const FAQ = [
   },
   {
     q: 'Is Pairlens open source?',
-    a: 'The precise term is source-available, sometimes called Fair Source. All the code is public on GitHub and you can use, modify, and self-host it freely. The one restriction — no competing commercial resale — means it doesn’t meet the strict open-source definition for its first two years. After that, each release converts to Apache 2.0, which is full open source by any definition.',
+    a: 'The precise term is source-available, sometimes called Fair Source. All the code is public on GitHub and you can use, modify, and self-host it freely. The one restriction (no competing commercial resale) means it doesn’t meet the strict open-source definition for its first two years. After that, each release converts to Apache 2.0, which is full open source by any definition.',
   },
   {
     q: 'Why not just use MIT for everything?',

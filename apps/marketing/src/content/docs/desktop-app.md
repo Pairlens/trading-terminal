@@ -1,6 +1,6 @@
 ---
 title: Desktop app
-description: Why the desktop app is the primary distribution, how credentials are stored, and how auto-updates work.
+description: The Pairlens desktop app for macOS, Windows, and Linux. OS-keychain credential storage, direct exchange connections, and signed auto-updates.
 group: get-started
 order: 4
 eyebrow: Get started
@@ -8,11 +8,11 @@ updated: AUG 2026
 readTime: 3 min read
 ---
 
-The Tauri desktop app is the supported home for live trading. It wraps the same
-terminal in a native shell and adds the things a browser tab cannot: a
-first-class OS credential store, direct exchange connections that no CORS
-policy can block, multiple windows, native notifications, and the ability to
-keep the machine awake while a bot runs.
+The Tauri desktop app is the strongest home for live-trading secrets. It wraps
+the same terminal that runs in your browser in a native shell and adds the
+things a browser tab cannot: a first-class OS credential store, direct exchange
+connections that no CORS policy can block, multiple windows, native
+notifications, and the ability to keep the machine awake while a bot runs.
 
 ## Credential storage
 
@@ -23,15 +23,18 @@ On desktop, exchange API keys and wallet secrets are stored in the OS keychain:
 - Linux: Secret Service
 
 These are reached through the `keychain_*` Tauri commands, backed by the Rust
-`keyring` crate. Browser dev builds fall back to AES-256-GCM-encrypted
-localStorage, which resists reading secrets off disk but not same-origin XSS,
-so desktop is the recommended home for live-trading secrets.
+`keyring` crate. In a browser, credentials live in the encrypted vault instead:
+AES-256-GCM ciphertext in localStorage, unlocked by a vault password, a
+passkey, or Touch ID on macOS. The vault resists reading secrets off disk but
+not same-origin XSS, which is why desktop remains the strongest home for
+live-trading secrets.
 
 ## What desktop adds
 
-**Direct venue access.** Several exchanges serve no CORS headers. On desktop,
-connector REST calls route through the native HTTP plugin, so those venues work
-without a proxy.
+**Direct venue access.** Four exchanges (Coinbase, Gate, KuCoin, and MEXC)
+serve no CORS headers, so a browser cannot reach them. On desktop, connector
+REST calls route through the native HTTP plugin, so all 15 venues work without
+a proxy.
 
 **Multiple windows.** <kbd>⌘N</kbd> duplicates the current view into its own
 window. State stays in sync, and one window is elected leader so notifications

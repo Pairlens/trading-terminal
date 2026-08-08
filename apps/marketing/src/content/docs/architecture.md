@@ -35,15 +35,15 @@ exchange credentials.
 
 ## Where data lives
 
-| Data                        | Lives in                                                    | Why                                    |
-| --------------------------- | ----------------------------------------------------------- | -------------------------------------- |
-| Candle history              | CandleBuffer, inside the plugin                             | Fast signal computation and streaming  |
-| Order book state            | Local book maps, inside the plugin                          | Rebuilt from incremental WS updates    |
-| Python scripts              | Local script store, synced when signed in                   | They run in your local runtime         |
-| Bot ledgers and event logs  | Local to the machine running the bot                        | The bot executes here, not on a server |
-| User state, trades, AI chat | Local by default, App Server when signed in                 | Remote sync is opt-in                  |
-| Exchange credentials        | OS keychain (desktop), encrypted localStorage (browser dev) | Must never be persisted server-side    |
-| Auth sessions               | App Server (BetterAuth, bearer tokens)                      | Cross-origin sign-in                   |
+| Data                        | Lives in                                                      | Why                                    |
+| --------------------------- | ------------------------------------------------------------- | -------------------------------------- |
+| Candle history              | CandleBuffer, inside the plugin                               | Fast signal computation and streaming  |
+| Order book state            | Local book maps, inside the plugin                            | Rebuilt from incremental WS updates    |
+| Python scripts              | Local script store, synced when signed in                     | They run in your local runtime         |
+| Bot ledgers and event logs  | Local to the machine running the bot                          | The bot executes here, not on a server |
+| User state, trades, AI chat | Local by default, App Server when signed in                   | Remote sync is opt-in                  |
+| Exchange credentials        | OS keychain (desktop), vault-encrypted localStorage (browser) | Must never be persisted server-side    |
+| Auth sessions               | App Server (BetterAuth, bearer tokens)                        | Cross-origin sign-in                   |
 
 ## The signal pipeline
 

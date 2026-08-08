@@ -55,8 +55,9 @@ Either way the risk limits above still apply.
 
 **Colour mode.** Light, Dark, or System.
 
-**Theme.** Seventeen bundled themes, plus any you have installed. Themes are
-independent of colour mode.
+**Theme.** Eighteen bundled themes, plus any you have installed. Themes are
+independent of colour mode, and every bundled theme ships a light-mode chart
+palette too.
 
 **Recent tickers marquee.** A running strip of live prices for pairs you have
 been looking at, above the pair header.
@@ -101,7 +102,7 @@ nothing at all and say so.
 file: profile, workspaces, chart layouts, AI conversations, trade journal,
 workflows, alerts, plugin settings, and billing history. Exchange API keys and
 wallet secrets are not in it, because they were never on our servers. They stay
-in your OS keychain.
+on your device: OS keychain on desktop, encrypted vault in the browser.
 
 **Delete account.** Permanently erases your account and everything synced to
 it, and cancels any active Intelligence subscription at the same time. You type
@@ -119,13 +120,12 @@ Where alerts go once they fire.
 
 **System notifications** shows whether Pairlens is allowed to post to your
 notification centre, and grants it from a button rather than from a prompt that
-appears mid-alert — Safari only grants from a click, and a dismissed prompt is
+appears mid-alert. Safari only grants from a click, and a dismissed prompt is
 hard to undo. If your browser has already blocked them, the card says so and
 points you at the padlock in the address bar. Test one from here.
 
-Connect a Telegram bot here — paste the token
-BotFather gives you, press Start in the bot, link the chat — and any alert flow
-can then deliver to it. The bot token is stored like an exchange key: OS
+Connect a Telegram bot here (paste the token BotFather gives you, press Start
+in the bot, link the chat) and any alert flow can then deliver to it. The bot token is stored like an exchange key: OS
 keychain on desktop, encrypted vault in the browser, never on a Pairlens
 server. Full walkthrough in
 [Alerts and notifications](/docs/alerts-notifications).

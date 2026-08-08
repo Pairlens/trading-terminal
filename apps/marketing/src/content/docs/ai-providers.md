@@ -23,7 +23,7 @@ paste your API key, and the co-pilot and research panel use it.
 but are built from market data alone.
 
 Your key is stored the same way an exchange key is: in the OS keychain on
-desktop, encrypted at rest in browser dev builds. Requests go from your machine
+desktop, in the encrypted credential vault in a browser. Requests go from your machine
 straight to the provider. Nothing routes through a Pairlens server.
 
 This is the option for anyone who already has an API key, wants a specific
@@ -84,5 +84,5 @@ See [self-hosting](/docs/self-hosting).
 ## What is never sent
 
 No AI request, hosted or otherwise, includes your exchange API keys or wallet
-private keys. Those live in the OS keychain and are read only by the connector
-signing an order.
+private keys. Those live in the OS keychain or your encrypted vault and are
+read only by the connector signing an order.
