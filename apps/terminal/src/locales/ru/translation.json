@@ -4665,5 +4665,106 @@
       "label": "Темы",
       "description": "Визуальные темы, переопределяющие цвета, палитру графика и стиль интерфейса"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "Разделы",
+        "watchlist": "Список наблюдения",
+        "trade": "Торговля",
+        "chart": "График",
+        "copilot": "Ко-пилот",
+        "discover": "Обзор"
+      },
+      "overlays": {
+        "orderbook": "Стакан ордеров",
+        "pairPicker": "Пары",
+        "venuePicker": "Площадка",
+        "settings": "Настройки",
+        "connect": "Подключить аккаунт",
+        "news": "Новости"
+      },
+      "changePair": "Сменить пару",
+      "changeVenue": "Сменить площадку",
+      "search": "Поиск пар",
+      "openSettings": "Открыть настройки",
+      "readOnly": "только чтение",
+      "timeframe": "Таймфрейм",
+      "dismiss": "Скрыть",
+      "comingSoon": "Скоро",
+      "priceChange": "{{absolute}} {{percent}} · 24ч",
+      "switchVenue": "Переключить площадку",
+      "noChartData": "Нет данных по этой паре здесь",
+      "noChartDataHint": "Эта площадка её не поддерживает. Попробуйте другую.",
+      "desktopOnlyRoute": "Этот экран доступен только в десктоп-приложении."
+    },
+    "panels": {
+      "searchAnyPair": "Найти любую пару, любую площадку…",
+      "inFocus": "В фокусе",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "торговля",
+      "discoverTitle": "Обзор",
+      "topTickers": "Топ тикеров",
+      "allMarkets": "Все рынки",
+      "pnlToday": "P&L за сегодня",
+      "noPositions": "Нет открытых позиций",
+      "positionsCount_one": "{{count}} позиция",
+      "positionsCount_other": "{{count}} позиции",
+      "venuesCount_one": "{{count}} площадка",
+      "venuesCount_other": "{{count}} площадки"
+    },
+    "trade": {
+      "openBook": "Открыть стакан ордеров",
+      "spread": "спред {{value}}",
+      "spreadDetail": "спред {{value}} · {{pct}}%",
+      "orderTypeStop": "Стоп",
+      "switchSizeCurrency": "Переключить валюту размера",
+      "max": "Макс.",
+      "orderValue": "Сумма ордера",
+      "available": "Доступно",
+      "riskUsed": "Использовано риска",
+      "riskUsedValue": "{{used}} из лимита {{cap}}",
+      "riskUsedNoCap": "{{used}} от портфеля",
+      "slideToBuy": "Проведите, чтобы купить на {{venue}}",
+      "slideToSell": "Проведите, чтобы продать на {{venue}}",
+      "connectBody": "Цены и стакан обновляются в реальном времени без этого — для размещения ордеров нужен API-ключ с правом на торговлю.",
+      "noPrice": "Нет актуальной цены, чтобы рассчитать этот своп",
+      "auto": "Авто",
+      "bookLoading": "Ожидание стакана…",
+      "pressureBuy": "Б {{pct}}%",
+      "pressureSell": "{{pct}}% П"
+    },
+    "chart": {
+      "pinned": "Закреплено",
+      "moreLongPress": "Ещё · долгое нажатие, чтобы закрепить",
+      "drawingTools": "Инструменты рисования",
+      "clearConfirm": "Очистить все рисунки на этом графике?",
+      "sections": {
+        "channelsFib": "Каналы и Фибоначчи",
+        "annotate": "Аннотации"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "Аккаунты и подключения",
+      "terminalHeader": "Терминал",
+      "trading": "Торговля",
+      "connected": "Подключено",
+      "perOrder": "{{percent}}% на ордер"
+    },
+    "pickers": {
+      "searchPlaceholder": "Поиск по паре, тикеру или названию",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "Акции",
+      "spot": "спот",
+      "onChain": "on-chain",
+      "equities": "акции",
+      "notListed": "нет на {{venue}}",
+      "notListedCallout": "{{pair}} не торгуется на {{venue}}. При выборе активная площадка переключится на {{other}}.",
+      "availableVenues": "Доступно",
+      "desktopOnlyVenues": "Только в десктоп-приложении",
+      "desktopOnlyVenue": "Доступно только из десктоп-приложения"
+    }
   }
 }

@@ -4635,5 +4635,106 @@
       "label": "主题",
       "description": "覆盖颜色、图表配色和界面样式的视觉主题"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "导航",
+        "watchlist": "自选列表",
+        "trade": "交易",
+        "chart": "图表",
+        "copilot": "副驾驶",
+        "discover": "发现"
+      },
+      "overlays": {
+        "orderbook": "订单簿",
+        "pairPicker": "交易对",
+        "venuePicker": "交易所",
+        "settings": "设置",
+        "connect": "连接账户",
+        "news": "新闻"
+      },
+      "changePair": "更改交易对",
+      "changeVenue": "更改交易所",
+      "search": "搜索交易对",
+      "openSettings": "打开设置",
+      "readOnly": "仅读取",
+      "timeframe": "周期",
+      "dismiss": "关闭",
+      "comingSoon": "即将推出",
+      "priceChange": "{{absolute}} {{percent}} · 24h",
+      "switchVenue": "切换交易所",
+      "noChartData": "该交易对在此没有数据",
+      "noChartDataHint": "该交易所未上架此交易对，换一个试试。",
+      "desktopOnlyRoute": "该页面仅在桌面应用中可用。"
+    },
+    "panels": {
+      "searchAnyPair": "搜索任意交易对、任意交易所……",
+      "inFocus": "当前关注",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "交易",
+      "discoverTitle": "发现",
+      "topTickers": "热门行情",
+      "allMarkets": "全部市场",
+      "pnlToday": "今日盈亏",
+      "noPositions": "没有持仓",
+      "positionsCount_one": "{{count}} 个仓位",
+      "positionsCount_other": "{{count}} 个仓位",
+      "venuesCount_one": "{{count}} 个交易所",
+      "venuesCount_other": "{{count}} 个交易所"
+    },
+    "trade": {
+      "openBook": "打开订单簿",
+      "spread": "点差 {{value}}",
+      "spreadDetail": "点差 {{value}} · {{pct}}%",
+      "orderTypeStop": "止损",
+      "switchSizeCurrency": "切换计价单位",
+      "max": "最大",
+      "orderValue": "订单金额",
+      "available": "可用",
+      "riskUsed": "风险占用",
+      "riskUsedValue": "{{used}} / {{cap}} 上限",
+      "riskUsedNoCap": "占投资组合 {{used}}",
+      "slideToBuy": "滑动以在 {{venue}} 买入",
+      "slideToSell": "滑动以在 {{venue}} 卖出",
+      "connectBody": "价格和订单簿无需连接账户即可实时更新——下单需要具备交易权限的 API 密钥。",
+      "noPrice": "没有可用于计算此次兑换数量的实时价格",
+      "auto": "自动",
+      "bookLoading": "等待订单簿…",
+      "pressureBuy": "买 {{pct}}%",
+      "pressureSell": "{{pct}}% 卖"
+    },
+    "chart": {
+      "pinned": "已固定",
+      "moreLongPress": "更多 · 长按以固定",
+      "drawingTools": "绘图工具",
+      "clearConfirm": "清除这张图表上的所有绘图？",
+      "sections": {
+        "channelsFib": "通道与斐波那契",
+        "annotate": "标注"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "账户与连接",
+      "terminalHeader": "终端",
+      "trading": "交易",
+      "connected": "已连接",
+      "perOrder": "每笔订单 {{percent}}%"
+    },
+    "pickers": {
+      "searchPlaceholder": "搜索任意交易对、代码或名称",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "股票",
+      "spot": "现货",
+      "onChain": "链上",
+      "equities": "股票",
+      "notListed": "未在 {{venue}} 上架",
+      "notListedCallout": "{{pair}} 未在 {{venue}} 上架。选择它将把当前交易所切换为 {{other}}。",
+      "availableVenues": "可用",
+      "desktopOnlyVenues": "需要桌面应用",
+      "desktopOnlyVenue": "仅桌面应用可访问"
+    }
   }
 }

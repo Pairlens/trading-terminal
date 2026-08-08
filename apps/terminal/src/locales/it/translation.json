@@ -4635,5 +4635,106 @@
       "label": "Temi",
       "description": "Temi visivi che sostituiscono colori, la palette del grafico e lo stile dell'interfaccia"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "Destinazioni",
+        "watchlist": "Watchlist",
+        "trade": "Trade",
+        "chart": "Grafico",
+        "copilot": "Co-pilot",
+        "discover": "Scopri"
+      },
+      "overlays": {
+        "orderbook": "Order book",
+        "pairPicker": "Coppie",
+        "venuePicker": "Piattaforma",
+        "settings": "Impostazioni",
+        "connect": "Collega account",
+        "news": "Notizie"
+      },
+      "changePair": "Cambia coppia",
+      "changeVenue": "Cambia piattaforma",
+      "search": "Cerca coppie",
+      "openSettings": "Apri impostazioni",
+      "readOnly": "sola lettura",
+      "timeframe": "Timeframe",
+      "dismiss": "Ignora",
+      "comingSoon": "In arrivo",
+      "priceChange": "{{absolute}} {{percent}} · 24h",
+      "switchVenue": "Cambia piattaforma",
+      "noChartData": "Nessun dato per questa coppia qui",
+      "noChartDataHint": "Questa piattaforma non la quota. Provane un'altra.",
+      "desktopOnlyRoute": "Quella schermata è disponibile solo nell'app desktop."
+    },
+    "panels": {
+      "searchAnyPair": "Cerca qualsiasi coppia, qualsiasi piattaforma…",
+      "inFocus": "In primo piano",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "trading",
+      "discoverTitle": "Scopri",
+      "topTickers": "Top ticker",
+      "allMarkets": "Tutti i mercati",
+      "pnlToday": "P&L oggi",
+      "noPositions": "Nessuna posizione aperta",
+      "positionsCount_one": "{{count}} posizione",
+      "positionsCount_other": "{{count}} posizioni",
+      "venuesCount_one": "{{count}} piattaforma",
+      "venuesCount_other": "{{count}} piattaforme"
+    },
+    "trade": {
+      "openBook": "Apri l'order book",
+      "spread": "spread {{value}}",
+      "spreadDetail": "spread {{value}} · {{pct}}%",
+      "orderTypeStop": "Stop",
+      "switchSizeCurrency": "Cambia valuta della dimensione",
+      "max": "Max",
+      "orderValue": "Valore ordine",
+      "available": "Disponibile",
+      "riskUsed": "Rischio usato",
+      "riskUsedValue": "{{used}} su {{cap}} massimo",
+      "riskUsedNoCap": "{{used}} del portafoglio",
+      "slideToBuy": "Scorri per comprare su {{venue}}",
+      "slideToSell": "Scorri per vendere su {{venue}}",
+      "connectBody": "Prezzi e book sono già in tempo reale senza di esso — per inviare ordini serve una chiave API con permesso di trading.",
+      "noPrice": "Nessun prezzo in tempo reale per dimensionare questo swap",
+      "auto": "Auto",
+      "bookLoading": "In attesa del book…",
+      "pressureBuy": "A {{pct}}%",
+      "pressureSell": "{{pct}}% V"
+    },
+    "chart": {
+      "pinned": "Fissato",
+      "moreLongPress": "Altro · tieni premuto per fissare",
+      "drawingTools": "Strumenti di disegno",
+      "clearConfirm": "Cancellare tutti i disegni su questo grafico?",
+      "sections": {
+        "channelsFib": "Canali e Fibonacci",
+        "annotate": "Annotazioni"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "Account e connessioni",
+      "terminalHeader": "Terminale",
+      "trading": "Trading",
+      "connected": "Connesso",
+      "perOrder": "{{percent}}% per ordine"
+    },
+    "pickers": {
+      "searchPlaceholder": "Cerca coppie, ticker o nomi",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "Azioni",
+      "spot": "spot",
+      "onChain": "on-chain",
+      "equities": "azioni",
+      "notListed": "non quotata su {{venue}}",
+      "notListedCallout": "{{pair}} non è quotata su {{venue}}. Selezionandola, la piattaforma attiva passerà a {{other}}.",
+      "availableVenues": "Disponibili",
+      "desktopOnlyVenues": "Richiede l'app desktop",
+      "desktopOnlyVenue": "Raggiungibile solo dall'app desktop"
+    }
   }
 }

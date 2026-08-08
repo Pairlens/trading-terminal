@@ -4635,5 +4635,106 @@
       "label": "Tema",
       "description": "Tema visual yang menggantikan warna, palet chart, dan gaya UI"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "Navigasi",
+        "watchlist": "Daftar Pantauan",
+        "trade": "Trade",
+        "chart": "Chart",
+        "copilot": "Co-pilot",
+        "discover": "Jelajahi"
+      },
+      "overlays": {
+        "orderbook": "Order Book",
+        "pairPicker": "Pair",
+        "venuePicker": "Venue",
+        "settings": "Pengaturan",
+        "connect": "Hubungkan akun",
+        "news": "Berita"
+      },
+      "changePair": "Ganti pair",
+      "changeVenue": "Ganti venue",
+      "search": "Cari pair",
+      "openSettings": "Buka pengaturan",
+      "readOnly": "hanya-baca",
+      "timeframe": "Timeframe",
+      "dismiss": "Tutup",
+      "comingSoon": "Segera hadir",
+      "priceChange": "{{absolute}} {{percent}} · 24j",
+      "switchVenue": "Beralih venue",
+      "noChartData": "Tidak ada data untuk pair ini di sini",
+      "noChartDataHint": "Venue ini tidak mencantumkan pair ini. Coba venue lain.",
+      "desktopOnlyRoute": "Layar ini hanya ada di aplikasi desktop."
+    },
+    "panels": {
+      "searchAnyPair": "Cari pair apa pun, venue apa pun…",
+      "inFocus": "Difokuskan",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "trading",
+      "discoverTitle": "Jelajahi",
+      "topTickers": "Ticker teratas",
+      "allMarkets": "Semua market",
+      "pnlToday": "P&L hari ini",
+      "noPositions": "Tidak ada posisi terbuka",
+      "positionsCount_one": "{{count}} posisi",
+      "positionsCount_other": "{{count}} posisi",
+      "venuesCount_one": "{{count}} venue",
+      "venuesCount_other": "{{count}} venue"
+    },
+    "trade": {
+      "openBook": "Buka order book",
+      "spread": "spread {{value}}",
+      "spreadDetail": "spread {{value}} · {{pct}}%",
+      "orderTypeStop": "Stop",
+      "switchSizeCurrency": "Ganti mata uang ukuran",
+      "max": "Maks",
+      "orderValue": "Nilai order",
+      "available": "Tersedia",
+      "riskUsed": "Risiko terpakai",
+      "riskUsedValue": "{{used}} dari batas {{cap}}",
+      "riskUsedNoCap": "{{used}} dari portofolio",
+      "slideToBuy": "Geser untuk membeli di {{venue}}",
+      "slideToSell": "Geser untuk menjual di {{venue}}",
+      "connectBody": "Harga dan order book tetap live tanpanya — mengirim order membutuhkan kunci API dengan izin trading.",
+      "noPrice": "Tidak ada harga live untuk menentukan ukuran swap ini",
+      "auto": "Otomatis",
+      "bookLoading": "Menunggu order book…",
+      "pressureBuy": "B {{pct}}%",
+      "pressureSell": "{{pct}}% J"
+    },
+    "chart": {
+      "pinned": "Disematkan",
+      "moreLongPress": "Lainnya · tekan lama untuk menyematkan",
+      "drawingTools": "Alat gambar",
+      "clearConfirm": "Hapus semua gambar di chart ini?",
+      "sections": {
+        "channelsFib": "Kanal & Fibonacci",
+        "annotate": "Anotasi"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "Akun & koneksi",
+      "terminalHeader": "Terminal",
+      "trading": "Trading",
+      "connected": "Terhubung",
+      "perOrder": "{{percent}}% per order"
+    },
+    "pickers": {
+      "searchPlaceholder": "Cari pair, ticker, atau nama apa pun",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "Saham",
+      "spot": "spot",
+      "onChain": "on-chain",
+      "equities": "saham",
+      "notListed": "tidak terdaftar di {{venue}}",
+      "notListedCallout": "{{pair}} tidak terdaftar di {{venue}}. Memilihnya akan mengalihkan venue yang difokuskan ke {{other}}.",
+      "availableVenues": "Tersedia",
+      "desktopOnlyVenues": "Butuh aplikasi desktop",
+      "desktopOnlyVenue": "Hanya bisa diakses dari aplikasi desktop"
+    }
   }
 }

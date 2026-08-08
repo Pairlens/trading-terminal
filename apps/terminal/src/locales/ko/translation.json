@@ -4635,5 +4635,106 @@
       "label": "테마",
       "description": "색상, 차트 팔레트, UI 스타일을 재정의하는 비주얼 테마"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "이동",
+        "watchlist": "관심 목록",
+        "trade": "거래",
+        "chart": "차트",
+        "copilot": "AI 렌즈",
+        "discover": "탐색"
+      },
+      "overlays": {
+        "orderbook": "호가창",
+        "pairPicker": "페어",
+        "venuePicker": "거래소",
+        "settings": "설정",
+        "connect": "계정 연결",
+        "news": "뉴스"
+      },
+      "changePair": "페어 변경",
+      "changeVenue": "거래소 변경",
+      "search": "페어 검색",
+      "openSettings": "설정 열기",
+      "readOnly": "읽기 전용",
+      "timeframe": "시간 프레임",
+      "dismiss": "닫기",
+      "comingSoon": "곧 제공됩니다",
+      "priceChange": "{{absolute}} {{percent}} · 24시간",
+      "switchVenue": "거래소 전환",
+      "noChartData": "이 거래소에는 이 페어의 데이터가 없습니다",
+      "noChartDataHint": "이 거래소에는 상장되어 있지 않습니다. 다른 거래소를 시도해 보세요.",
+      "desktopOnlyRoute": "이 화면은 데스크톱 앱에서만 사용할 수 있습니다."
+    },
+    "panels": {
+      "searchAnyPair": "모든 페어, 모든 거래소 검색…",
+      "inFocus": "포커스 중",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "거래 가능",
+      "discoverTitle": "탐색",
+      "topTickers": "상위 티커",
+      "allMarkets": "전체 마켓",
+      "pnlToday": "오늘 손익",
+      "noPositions": "열린 포지션이 없습니다",
+      "positionsCount_one": "포지션 {{count}}개",
+      "positionsCount_other": "포지션 {{count}}개",
+      "venuesCount_one": "거래소 {{count}}개",
+      "venuesCount_other": "거래소 {{count}}개"
+    },
+    "trade": {
+      "openBook": "호가창 열기",
+      "spread": "스프레드 {{value}}",
+      "spreadDetail": "스프레드 {{value}} · {{pct}}%",
+      "orderTypeStop": "Stop",
+      "switchSizeCurrency": "수량 통화 전환",
+      "max": "최대",
+      "orderValue": "주문 금액",
+      "available": "사용 가능",
+      "riskUsed": "리스크 사용량",
+      "riskUsedValue": "{{cap}} 한도 중 {{used}}",
+      "riskUsedNoCap": "포트폴리오 중 {{used}}",
+      "slideToBuy": "밀어서 {{venue}}에서 매수",
+      "slideToSell": "밀어서 {{venue}}에서 매도",
+      "connectBody": "이것 없이도 가격과 호가창은 실시간으로 표시됩니다 — 주문을 내려면 거래 권한이 있는 API 키가 필요합니다.",
+      "noPrice": "이 스왑의 수량을 계산할 실시간 가격이 없습니다",
+      "auto": "자동",
+      "bookLoading": "호가창을 기다리는 중…",
+      "pressureBuy": "매수 {{pct}}%",
+      "pressureSell": "{{pct}}% 매도"
+    },
+    "chart": {
+      "pinned": "고정됨",
+      "moreLongPress": "더보기 · 길게 눌러 고정",
+      "drawingTools": "그리기 도구",
+      "clearConfirm": "이 차트의 모든 그리기를 지울까요?",
+      "sections": {
+        "channelsFib": "채널 & 피보나치",
+        "annotate": "주석"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "계정 & 연결",
+      "terminalHeader": "터미널",
+      "trading": "거래",
+      "connected": "연결됨",
+      "perOrder": "주문당 {{percent}}%"
+    },
+    "pickers": {
+      "searchPlaceholder": "페어, 티커, 이름으로 검색",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "주식",
+      "spot": "현물",
+      "onChain": "온체인",
+      "equities": "주식",
+      "notListed": "{{venue}}에 없음",
+      "notListedCallout": "{{pair}}은(는) {{venue}}에 상장되어 있지 않습니다. 선택하면 포커스 거래소가 {{other}}(으)로 전환됩니다.",
+      "availableVenues": "사용 가능",
+      "desktopOnlyVenues": "데스크톱 앱이 필요합니다",
+      "desktopOnlyVenue": "데스크톱 앱에서만 연결할 수 있습니다"
+    }
   }
 }

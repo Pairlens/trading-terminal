@@ -4635,5 +4635,106 @@
       "label": "ธีม",
       "description": "ธีมภาพที่ปรับแต่งสี พาเลตสีของกราฟ และสไตล์ UI"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "ปลายทาง",
+        "watchlist": "รายการติดตาม",
+        "trade": "เทรด",
+        "chart": "กราฟ",
+        "copilot": "Co-pilot",
+        "discover": "ค้นพบ"
+      },
+      "overlays": {
+        "orderbook": "สมุดคำสั่ง",
+        "pairPicker": "คู่เทรด",
+        "venuePicker": "ตลาด",
+        "settings": "การตั้งค่า",
+        "connect": "เชื่อมต่อบัญชี",
+        "news": "ข่าว"
+      },
+      "changePair": "เปลี่ยนคู่เทรด",
+      "changeVenue": "เปลี่ยนตลาด",
+      "search": "ค้นหาคู่เทรด",
+      "openSettings": "เปิดการตั้งค่า",
+      "readOnly": "อ่านอย่างเดียว",
+      "timeframe": "ไทม์เฟรม",
+      "dismiss": "ปิด",
+      "comingSoon": "กำลังจะมาเร็ว ๆ นี้",
+      "priceChange": "{{absolute}} {{percent}} · 24ชม.",
+      "switchVenue": "สลับตลาด",
+      "noChartData": "ไม่มีข้อมูลของคู่นี้ที่นี่",
+      "noChartDataHint": "ตลาดนี้ไม่มีคู่นี้ ลองตลาดอื่นดู",
+      "desktopOnlyRoute": "หน้าจอนี้มีเฉพาะในแอปเดสก์ท็อป"
+    },
+    "panels": {
+      "searchAnyPair": "ค้นหาคู่เทรดใดก็ได้ ทุกตลาด…",
+      "inFocus": "กำลังโฟกัส",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "เทรดได้",
+      "discoverTitle": "ค้นพบ",
+      "topTickers": "ทิกเกอร์ยอดนิยม",
+      "allMarkets": "ตลาดทั้งหมด",
+      "pnlToday": "กำไรขาดทุนวันนี้",
+      "noPositions": "ไม่มีโพซิชันที่เปิดอยู่",
+      "positionsCount_one": "{{count}} โพซิชัน",
+      "positionsCount_other": "{{count}} โพซิชัน",
+      "venuesCount_one": "{{count}} ตลาด",
+      "venuesCount_other": "{{count}} ตลาด"
+    },
+    "trade": {
+      "openBook": "เปิดสมุดคำสั่ง",
+      "spread": "สเปรด {{value}}",
+      "spreadDetail": "สเปรด {{value}} · {{pct}}%",
+      "orderTypeStop": "Stop",
+      "switchSizeCurrency": "สลับสกุลเงินของขนาด",
+      "max": "สูงสุด",
+      "orderValue": "มูลค่าคำสั่ง",
+      "available": "ใช้ได้",
+      "riskUsed": "ความเสี่ยงที่ใช้ไป",
+      "riskUsedValue": "{{used}} จากขีดจำกัด {{cap}}",
+      "riskUsedNoCap": "{{used}} ของพอร์ต",
+      "slideToBuy": "เลื่อนเพื่อซื้อบน {{venue}}",
+      "slideToSell": "เลื่อนเพื่อขายบน {{venue}}",
+      "connectBody": "ราคาและสมุดคำสั่งยังคงสดแม้ไม่มีสิ่งนี้ — การส่งคำสั่งซื้อขายต้องใช้ API key ที่มีสิทธิ์เทรด",
+      "noPrice": "ไม่มีราคาสดสำหรับกำหนดขนาดสวอปนี้",
+      "auto": "อัตโนมัติ",
+      "bookLoading": "กำลังรอสมุดคำสั่ง…",
+      "pressureBuy": "B {{pct}}%",
+      "pressureSell": "{{pct}}% S"
+    },
+    "chart": {
+      "pinned": "ปักหมุดแล้ว",
+      "moreLongPress": "เพิ่มเติม · กดค้างเพื่อปักหมุด",
+      "drawingTools": "เครื่องมือวาด",
+      "clearConfirm": "ล้างภาพวาดทั้งหมดบนกราฟนี้หรือไม่?",
+      "sections": {
+        "channelsFib": "ช่องแนวโน้มและ Fibonacci",
+        "annotate": "คำอธิบายประกอบ"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "บัญชีและการเชื่อมต่อ",
+      "terminalHeader": "เทอร์มินัล",
+      "trading": "การเทรด",
+      "connected": "เชื่อมต่อแล้ว",
+      "perOrder": "{{percent}}% ต่อคำสั่ง"
+    },
+    "pickers": {
+      "searchPlaceholder": "ค้นหาคู่เทรด สัญลักษณ์ หรือชื่อ",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "หุ้น",
+      "spot": "สปอต",
+      "onChain": "ออนเชน",
+      "equities": "หุ้น",
+      "notListed": "ไม่มีใน {{venue}}",
+      "notListedCallout": "{{pair}} ไม่มีอยู่ในตลาด {{venue}} การเลือกคู่นี้จะสลับตลาดที่โฟกัสไปเป็น {{other}}",
+      "availableVenues": "พร้อมใช้งาน",
+      "desktopOnlyVenues": "ต้องใช้แอปเดสก์ท็อป",
+      "desktopOnlyVenue": "เข้าถึงได้เฉพาะจากแอปเดสก์ท็อป"
+    }
   }
 }

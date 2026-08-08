@@ -4635,5 +4635,106 @@
       "label": "Thèmes",
       "description": "Thèmes visuels qui remplacent les couleurs, la palette du graphique et le style de l'interface"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "Destinations",
+        "watchlist": "Liste de suivi",
+        "trade": "Trade",
+        "chart": "Graphique",
+        "copilot": "Copilote",
+        "discover": "Découverte"
+      },
+      "overlays": {
+        "orderbook": "Carnet d’ordres",
+        "pairPicker": "Paires",
+        "venuePicker": "Place de marché",
+        "settings": "Paramètres",
+        "connect": "Connecter un compte",
+        "news": "Actualités"
+      },
+      "changePair": "Changer de paire",
+      "changeVenue": "Changer de place de marché",
+      "search": "Rechercher des paires",
+      "openSettings": "Ouvrir les paramètres",
+      "readOnly": "lecture seule",
+      "timeframe": "Période",
+      "dismiss": "Ignorer",
+      "comingSoon": "Bientôt disponible",
+      "priceChange": "{{absolute}} {{percent}} · 24h",
+      "switchVenue": "Changer de place de marché",
+      "noChartData": "Aucune donnée pour cette paire ici",
+      "noChartDataHint": "Cette place de marché ne la référence pas. Essayez-en une autre.",
+      "desktopOnlyRoute": "Cet écran n’est disponible que sur l’app de bureau."
+    },
+    "panels": {
+      "searchAnyPair": "Rechercher n’importe quelle paire, n’importe quelle place de marché…",
+      "inFocus": "En focus",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "trading",
+      "discoverTitle": "Découverte",
+      "topTickers": "Top tickers",
+      "allMarkets": "Tous les marchés",
+      "pnlToday": "P&L du jour",
+      "noPositions": "Aucune position ouverte",
+      "positionsCount_one": "{{count}} position",
+      "positionsCount_other": "{{count}} positions",
+      "venuesCount_one": "{{count}} place de marché",
+      "venuesCount_other": "{{count}} places de marché"
+    },
+    "trade": {
+      "openBook": "Ouvrir le carnet d’ordres",
+      "spread": "spread {{value}}",
+      "spreadDetail": "spread {{value}} · {{pct}}%",
+      "orderTypeStop": "Stop",
+      "switchSizeCurrency": "Changer la devise de la taille",
+      "max": "Max",
+      "orderValue": "Valeur de l’ordre",
+      "available": "Disponible",
+      "riskUsed": "Risque utilisé",
+      "riskUsedValue": "{{used}} sur {{cap}} de plafond",
+      "riskUsedNoCap": "{{used}} du portefeuille",
+      "slideToBuy": "Glissez pour acheter sur {{venue}}",
+      "slideToSell": "Glissez pour vendre sur {{venue}}",
+      "connectBody": "Les prix et le carnet sont en direct sans cela — passer des ordres nécessite une clé API avec l’autorisation de trading.",
+      "noPrice": "Aucun prix en direct pour dimensionner ce swap",
+      "auto": "Auto",
+      "bookLoading": "En attente du carnet…",
+      "pressureBuy": "A {{pct}}%",
+      "pressureSell": "{{pct}}% V"
+    },
+    "chart": {
+      "pinned": "Épinglé",
+      "moreLongPress": "Plus · appui long pour épingler",
+      "drawingTools": "Outils de dessin",
+      "clearConfirm": "Effacer tous les dessins de ce graphique ?",
+      "sections": {
+        "channelsFib": "Canaux et Fibonacci",
+        "annotate": "Annotations"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "Comptes et connexions",
+      "terminalHeader": "Terminal",
+      "trading": "Trading",
+      "connected": "Connecté",
+      "perOrder": "{{percent}}% par ordre"
+    },
+    "pickers": {
+      "searchPlaceholder": "Rechercher une paire, un ticker ou un nom",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "Actions",
+      "spot": "spot",
+      "onChain": "on-chain",
+      "equities": "actions",
+      "notListed": "pas sur {{venue}}",
+      "notListedCallout": "{{pair}} n’est pas disponible sur {{venue}}. La sélectionner basculera la place de marché active vers {{other}}.",
+      "availableVenues": "Disponibles",
+      "desktopOnlyVenues": "Nécessitent l’app de bureau",
+      "desktopOnlyVenue": "Accessible uniquement depuis l’app de bureau"
+    }
   }
 }

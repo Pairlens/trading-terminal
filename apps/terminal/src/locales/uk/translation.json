@@ -4665,5 +4665,106 @@
       "label": "Теми",
       "description": "Візуальні теми, що перевизначають кольори, палітру графіка та стиль інтерфейсу"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "Розділи",
+        "watchlist": "Список відстеження",
+        "trade": "Торгівля",
+        "chart": "Графік",
+        "copilot": "Копілот",
+        "discover": "Огляд"
+      },
+      "overlays": {
+        "orderbook": "Книга ордерів",
+        "pairPicker": "Пари",
+        "venuePicker": "Майданчик",
+        "settings": "Налаштування",
+        "connect": "Підключити акаунт",
+        "news": "Новини"
+      },
+      "changePair": "Змінити пару",
+      "changeVenue": "Змінити майданчик",
+      "search": "Пошук пар",
+      "openSettings": "Відкрити налаштування",
+      "readOnly": "лише читання",
+      "timeframe": "Таймфрейм",
+      "dismiss": "Сховати",
+      "comingSoon": "Скоро",
+      "priceChange": "{{absolute}} {{percent}} · 24г",
+      "switchVenue": "Перемкнути майданчик",
+      "noChartData": "Тут немає даних для цієї пари",
+      "noChartDataHint": "Цей майданчик її не лістить. Спробуйте інший.",
+      "desktopOnlyRoute": "Цей екран доступний лише в десктоп-застосунку."
+    },
+    "panels": {
+      "searchAnyPair": "Пошук будь-якої пари, будь-якого майданчика…",
+      "inFocus": "У фокусі",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "торгівля",
+      "discoverTitle": "Огляд",
+      "topTickers": "Топ тікери",
+      "allMarkets": "Усі ринки",
+      "pnlToday": "P&L сьогодні",
+      "noPositions": "Немає відкритих позицій",
+      "positionsCount_one": "{{count}} позиція",
+      "positionsCount_other": "{{count}} позицій",
+      "venuesCount_one": "{{count}} майданчик",
+      "venuesCount_other": "{{count}} майданчиків"
+    },
+    "trade": {
+      "openBook": "Відкрити книгу ордерів",
+      "spread": "спред {{value}}",
+      "spreadDetail": "спред {{value}} · {{pct}}%",
+      "orderTypeStop": "Стоп",
+      "switchSizeCurrency": "Перемкнути валюту розміру",
+      "max": "Макс.",
+      "orderValue": "Вартість ордера",
+      "available": "Доступно",
+      "riskUsed": "Використано ризику",
+      "riskUsedValue": "{{used}} з {{cap}} ліміту",
+      "riskUsedNoCap": "{{used}} з портфеля",
+      "slideToBuy": "Проведіть, щоб купити на {{venue}}",
+      "slideToSell": "Проведіть, щоб продати на {{venue}}",
+      "connectBody": "Ціни та книга ордерів доступні наживо і без цього — для розміщення ордерів потрібен API-ключ із дозволом на торгівлю.",
+      "noPrice": "Немає живої ціни, щоб розрахувати розмір свопу",
+      "auto": "Авто",
+      "bookLoading": "Очікування книги ордерів…",
+      "pressureBuy": "К {{pct}}%",
+      "pressureSell": "{{pct}}% П"
+    },
+    "chart": {
+      "pinned": "Закріплено",
+      "moreLongPress": "Більше · довге натискання, щоб закріпити",
+      "drawingTools": "Інструменти малювання",
+      "clearConfirm": "Очистити всі малюнки на цьому графіку?",
+      "sections": {
+        "channelsFib": "Канали та Фібоначчі",
+        "annotate": "Анотації"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "Облікові записи та з'єднання",
+      "terminalHeader": "Термінал",
+      "trading": "Торгівля",
+      "connected": "Підключено",
+      "perOrder": "{{percent}}% на ордер"
+    },
+    "pickers": {
+      "searchPlaceholder": "Пошук будь-якої пари, тікера чи назви",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "Акції",
+      "spot": "спот",
+      "onChain": "on-chain",
+      "equities": "акції",
+      "notListed": "немає на {{venue}}",
+      "notListedCallout": "{{venue}} не лістить {{pair}}. Вибір цієї пари перемкне активний майданчик на {{other}}.",
+      "availableVenues": "Доступні",
+      "desktopOnlyVenues": "Потрібен десктоп-застосунок",
+      "desktopOnlyVenue": "Доступно лише з десктоп-застосунку"
+    }
   }
 }

@@ -4635,5 +4635,106 @@
       "label": "Giao diện",
       "description": "Giao diện hình ảnh ghi đè màu sắc, bảng màu biểu đồ và phong cách UI"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "Điều hướng",
+        "watchlist": "Danh sách theo dõi",
+        "trade": "Giao dịch",
+        "chart": "Biểu đồ",
+        "copilot": "Co-pilot",
+        "discover": "Khám phá"
+      },
+      "overlays": {
+        "orderbook": "Sổ lệnh",
+        "pairPicker": "Cặp giao dịch",
+        "venuePicker": "Sàn giao dịch",
+        "settings": "Cài đặt",
+        "connect": "Kết nối tài khoản",
+        "news": "Tin tức"
+      },
+      "changePair": "Đổi cặp giao dịch",
+      "changeVenue": "Đổi sàn giao dịch",
+      "search": "Tìm cặp giao dịch",
+      "openSettings": "Mở cài đặt",
+      "readOnly": "chỉ đọc",
+      "timeframe": "Khung thời gian",
+      "dismiss": "Bỏ qua",
+      "comingSoon": "Sắp ra mắt",
+      "priceChange": "{{absolute}} {{percent}} · 24h",
+      "switchVenue": "Chuyển sàn giao dịch",
+      "noChartData": "Không có dữ liệu cho cặp này ở đây",
+      "noChartDataHint": "Sàn này không niêm yết cặp đó. Hãy thử một sàn khác.",
+      "desktopOnlyRoute": "Màn hình đó chỉ có trên ứng dụng máy tính."
+    },
+    "panels": {
+      "searchAnyPair": "Tìm bất kỳ cặp nào, bất kỳ sàn nào…",
+      "inFocus": "Đang chọn",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "giao dịch",
+      "discoverTitle": "Khám phá",
+      "topTickers": "Mã hàng đầu",
+      "allMarkets": "Tất cả thị trường",
+      "pnlToday": "Lãi/Lỗ hôm nay",
+      "noPositions": "Không có vị thế mở",
+      "positionsCount_one": "{{count}} vị thế",
+      "positionsCount_other": "{{count}} vị thế",
+      "venuesCount_one": "{{count}} sàn",
+      "venuesCount_other": "{{count}} sàn"
+    },
+    "trade": {
+      "openBook": "Mở sổ lệnh",
+      "spread": "spread {{value}}",
+      "spreadDetail": "spread {{value}} · {{pct}}%",
+      "orderTypeStop": "Dừng",
+      "switchSizeCurrency": "Đổi đơn vị khối lượng",
+      "max": "Tối đa",
+      "orderValue": "Giá trị lệnh",
+      "available": "Khả dụng",
+      "riskUsed": "Rủi ro đã dùng",
+      "riskUsedValue": "{{used}} trên mức trần {{cap}}",
+      "riskUsedNoCap": "{{used}} của danh mục",
+      "slideToBuy": "Trượt để mua trên {{venue}}",
+      "slideToSell": "Trượt để bán trên {{venue}}",
+      "connectBody": "Giá và sổ lệnh vẫn cập nhật trực tiếp mà không cần nó — đặt lệnh cần một API key có quyền giao dịch.",
+      "noPrice": "Không có giá trực tiếp để xác định khối lượng cho swap này",
+      "auto": "Tự động",
+      "bookLoading": "Đang chờ sổ lệnh…",
+      "pressureBuy": "M {{pct}}%",
+      "pressureSell": "{{pct}}% B"
+    },
+    "chart": {
+      "pinned": "Đã ghim",
+      "moreLongPress": "Thêm · nhấn giữ để ghim",
+      "drawingTools": "Công cụ vẽ",
+      "clearConfirm": "Xóa tất cả hình vẽ trên biểu đồ này?",
+      "sections": {
+        "channelsFib": "Kênh & Fibonacci",
+        "annotate": "Chú thích"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "Tài khoản & kết nối",
+      "terminalHeader": "Terminal",
+      "trading": "Giao dịch",
+      "connected": "Đã kết nối",
+      "perOrder": "{{percent}}% mỗi lệnh"
+    },
+    "pickers": {
+      "searchPlaceholder": "Tìm bất kỳ cặp, mã hoặc tên nào",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "Cổ phiếu",
+      "spot": "giao ngay",
+      "onChain": "on-chain",
+      "equities": "cổ phiếu",
+      "notListed": "không niêm yết trên {{venue}}",
+      "notListedCallout": "{{pair}} không niêm yết trên {{venue}}. Chọn nó sẽ chuyển sàn đang chọn sang {{other}}.",
+      "availableVenues": "Khả dụng",
+      "desktopOnlyVenues": "Cần ứng dụng máy tính",
+      "desktopOnlyVenue": "Chỉ truy cập được từ ứng dụng máy tính"
+    }
   }
 }

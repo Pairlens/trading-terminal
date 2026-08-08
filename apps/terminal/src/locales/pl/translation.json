@@ -4665,5 +4665,106 @@
       "label": "Motywy",
       "description": "Motywy wizualne, które nadpisują kolory, paletę wykresu i styl interfejsu"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "Sekcje",
+        "watchlist": "Obserwowane",
+        "trade": "Handel",
+        "chart": "Wykres",
+        "copilot": "Co-pilot",
+        "discover": "Odkrywaj"
+      },
+      "overlays": {
+        "orderbook": "Arkusz zleceń",
+        "pairPicker": "Pary",
+        "venuePicker": "Giełda",
+        "settings": "Ustawienia",
+        "connect": "Podłącz konto",
+        "news": "Wiadomości"
+      },
+      "changePair": "Zmień parę",
+      "changeVenue": "Zmień giełdę",
+      "search": "Szukaj par",
+      "openSettings": "Otwórz ustawienia",
+      "readOnly": "tylko do odczytu",
+      "timeframe": "Interwał",
+      "dismiss": "Odrzuć",
+      "comingSoon": "Wkrótce",
+      "priceChange": "{{absolute}} {{percent}} · 24h",
+      "switchVenue": "Przełącz giełdę",
+      "noChartData": "Brak danych dla tej pary tutaj",
+      "noChartDataHint": "Ta giełda jej nie notuje. Wypróbuj inną.",
+      "desktopOnlyRoute": "Ten ekran jest dostępny tylko w aplikacji na komputer."
+    },
+    "panels": {
+      "searchAnyPair": "Szukaj dowolnej pary, na dowolnej giełdzie…",
+      "inFocus": "Aktywna",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "handel",
+      "discoverTitle": "Odkrywaj",
+      "topTickers": "Najlepsze tickery",
+      "allMarkets": "Wszystkie rynki",
+      "pnlToday": "Zysk/strata dzisiaj",
+      "noPositions": "Brak otwartych pozycji",
+      "positionsCount_one": "{{count}} pozycja",
+      "positionsCount_other": "{{count}} pozycji",
+      "venuesCount_one": "{{count}} giełda",
+      "venuesCount_other": "{{count}} giełd"
+    },
+    "trade": {
+      "openBook": "Otwórz arkusz zleceń",
+      "spread": "spread {{value}}",
+      "spreadDetail": "spread {{value}} · {{pct}}%",
+      "orderTypeStop": "Stop",
+      "switchSizeCurrency": "Przełącz walutę wielkości",
+      "max": "Maks.",
+      "orderValue": "Wartość zlecenia",
+      "available": "Dostępne",
+      "riskUsed": "Wykorzystane ryzyko",
+      "riskUsedValue": "{{used}} z limitu {{cap}}",
+      "riskUsedNoCap": "{{used}} portfela",
+      "slideToBuy": "Przesuń, aby kupić na {{venue}}",
+      "slideToSell": "Przesuń, aby sprzedać na {{venue}}",
+      "connectBody": "Ceny i arkusz zleceń działają na żywo bez tego — składanie zleceń wymaga klucza API z uprawnieniami do handlu.",
+      "noPrice": "Brak ceny na żywo, aby określić wielkość tego swapu",
+      "auto": "Auto",
+      "bookLoading": "Czekam na arkusz zleceń…",
+      "pressureBuy": "K {{pct}}%",
+      "pressureSell": "{{pct}}% S"
+    },
+    "chart": {
+      "pinned": "Przypięte",
+      "moreLongPress": "Więcej · przytrzymaj, aby przypiąć",
+      "drawingTools": "Narzędzia rysowania",
+      "clearConfirm": "Wyczyścić wszystkie rysunki na tym wykresie?",
+      "sections": {
+        "channelsFib": "Kanały i Fibonacci",
+        "annotate": "Adnotacje"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "Konta i połączenia",
+      "terminalHeader": "Terminal",
+      "trading": "Handel",
+      "connected": "Połączono",
+      "perOrder": "{{percent}}% na zlecenie"
+    },
+    "pickers": {
+      "searchPlaceholder": "Szukaj dowolnej pary, tickera lub nazwy",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "Akcje",
+      "spot": "spot",
+      "onChain": "on-chain",
+      "equities": "akcje",
+      "notListed": "niedostępne na {{venue}}",
+      "notListedCallout": "{{pair}} nie jest notowana na {{venue}}. Wybranie jej przełączy aktywną giełdę na {{other}}.",
+      "availableVenues": "Dostępne",
+      "desktopOnlyVenues": "Wymaga aplikacji na komputer",
+      "desktopOnlyVenue": "Dostępna tylko z aplikacji na komputer"
+    }
   }
 }

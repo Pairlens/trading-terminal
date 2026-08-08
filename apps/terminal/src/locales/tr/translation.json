@@ -4635,5 +4635,106 @@
       "label": "Temalar",
       "description": "Renkleri, grafik paletini ve arayüz stilini geçersiz kılan görsel temalar"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "Hedefler",
+        "watchlist": "İzleme Listesi",
+        "trade": "İşlem",
+        "chart": "Grafik",
+        "copilot": "Co-pilot",
+        "discover": "Keşfet"
+      },
+      "overlays": {
+        "orderbook": "Emir Defteri",
+        "pairPicker": "Pariteler",
+        "venuePicker": "Borsa",
+        "settings": "Ayarlar",
+        "connect": "Hesap Bağla",
+        "news": "Haberler"
+      },
+      "changePair": "Parite değiştir",
+      "changeVenue": "Borsa değiştir",
+      "search": "Parite ara",
+      "openSettings": "Ayarları aç",
+      "readOnly": "yalnızca okuma",
+      "timeframe": "Zaman dilimi",
+      "dismiss": "Kapat",
+      "comingSoon": "Yakında",
+      "priceChange": "{{absolute}} {{percent}} · 24s",
+      "switchVenue": "Borsa değiştir",
+      "noChartData": "Burada bu parite için veri yok",
+      "noChartDataHint": "Bu borsa onu listelemiyor. Başka birini dene.",
+      "desktopOnlyRoute": "Bu ekran yalnızca masaüstü uygulamasında bulunur."
+    },
+    "panels": {
+      "searchAnyPair": "Herhangi bir parite, herhangi bir borsa ara…",
+      "inFocus": "Odakta",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "işlem",
+      "discoverTitle": "Keşfet",
+      "topTickers": "Öne çıkan pariteler",
+      "allMarkets": "Tüm piyasalar",
+      "pnlToday": "Bugünkü Kâr/Zarar",
+      "noPositions": "Açık pozisyon yok",
+      "positionsCount_one": "{{count}} pozisyon",
+      "positionsCount_other": "{{count}} pozisyon",
+      "venuesCount_one": "{{count}} borsa",
+      "venuesCount_other": "{{count}} borsa"
+    },
+    "trade": {
+      "openBook": "Emir defterini aç",
+      "spread": "spread {{value}}",
+      "spreadDetail": "spread {{value}} · %{{pct}}",
+      "orderTypeStop": "Stop",
+      "switchSizeCurrency": "Miktar birimini değiştir",
+      "max": "Maks.",
+      "orderValue": "Emir değeri",
+      "available": "Kullanılabilir",
+      "riskUsed": "Kullanılan risk",
+      "riskUsedValue": "{{cap}} sınırından {{used}}",
+      "riskUsedNoCap": "Portföyün {{used}}'i",
+      "slideToBuy": "{{venue}} üzerinde almak için kaydır",
+      "slideToSell": "{{venue}} üzerinde satmak için kaydır",
+      "connectBody": "Fiyatlar ve defter bu olmadan da canlı — emir vermek işlem izni olan bir API anahtarı gerektirir.",
+      "noPrice": "Bu takasın büyüklüğünü hesaplamak için canlı fiyat yok",
+      "auto": "Otomatik",
+      "bookLoading": "Defter bekleniyor…",
+      "pressureBuy": "A %{{pct}}",
+      "pressureSell": "%{{pct}} S"
+    },
+    "chart": {
+      "pinned": "Sabitlendi",
+      "moreLongPress": "Daha fazla · sabitlemek için basılı tut",
+      "drawingTools": "Çizim araçları",
+      "clearConfirm": "Bu grafikteki tüm çizimler temizlensin mi?",
+      "sections": {
+        "channelsFib": "Kanallar ve Fibonacci",
+        "annotate": "Notlar"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "Hesaplar ve bağlantılar",
+      "terminalHeader": "Terminal",
+      "trading": "İşlem",
+      "connected": "Bağlı",
+      "perOrder": "Emir başına %{{percent}}"
+    },
+    "pickers": {
+      "searchPlaceholder": "Herhangi bir parite, sembol veya isim ara",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "Hisse senetleri",
+      "spot": "spot",
+      "onChain": "zincir üstü",
+      "equities": "hisse senedi",
+      "notListed": "{{venue}}'de listede yok",
+      "notListedCallout": "{{pair}}, {{venue}}'de listede yok. Seçmen, odaktaki borsayı {{other}} olarak değiştirir.",
+      "availableVenues": "Kullanılabilir",
+      "desktopOnlyVenues": "Masaüstü uygulaması gerekiyor",
+      "desktopOnlyVenue": "Yalnızca masaüstü uygulamasından erişilebilir"
+    }
   }
 }

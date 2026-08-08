@@ -4635,5 +4635,106 @@
       "label": "主題",
       "description": "覆蓋顏色、圖表配色和介面樣式的視覺主題"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "導覽",
+        "watchlist": "自選清單",
+        "trade": "交易",
+        "chart": "圖表",
+        "copilot": "副駕駛",
+        "discover": "探索"
+      },
+      "overlays": {
+        "orderbook": "委託簿",
+        "pairPicker": "交易對",
+        "venuePicker": "交易所",
+        "settings": "設定",
+        "connect": "連接帳戶",
+        "news": "新聞"
+      },
+      "changePair": "更換交易對",
+      "changeVenue": "更換交易所",
+      "search": "搜尋交易對",
+      "openSettings": "開啟設定",
+      "readOnly": "僅讀取",
+      "timeframe": "時間週期",
+      "dismiss": "關閉",
+      "comingSoon": "即將推出",
+      "priceChange": "{{absolute}} {{percent}} · 24h",
+      "switchVenue": "切換交易所",
+      "noChartData": "這裡沒有這個交易對的資料",
+      "noChartDataHint": "這個交易所沒有上架它，換一個交易所試試。",
+      "desktopOnlyRoute": "這個畫面僅限桌面應用程式使用。"
+    },
+    "panels": {
+      "searchAnyPair": "搜尋任何交易對、任何交易所…",
+      "inFocus": "使用中",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "交易",
+      "discoverTitle": "探索",
+      "topTickers": "熱門行情",
+      "allMarkets": "所有市場",
+      "pnlToday": "今日損益",
+      "noPositions": "目前無持倉部位",
+      "positionsCount_one": "{{count}} 個部位",
+      "positionsCount_other": "{{count}} 個部位",
+      "venuesCount_one": "{{count}} 個交易所",
+      "venuesCount_other": "{{count}} 個交易所"
+    },
+    "trade": {
+      "openBook": "開啟委託簿",
+      "spread": "價差 {{value}}",
+      "spreadDetail": "價差 {{value}} · {{pct}}%",
+      "orderTypeStop": "停損",
+      "switchSizeCurrency": "切換數量幣別",
+      "max": "最大",
+      "orderValue": "訂單金額",
+      "available": "可用",
+      "riskUsed": "已用風險額度",
+      "riskUsedValue": "{{used}} / {{cap}} 上限",
+      "riskUsedNoCap": "{{used}} 佔投資組合",
+      "slideToBuy": "滑動以在 {{venue}} 買入",
+      "slideToSell": "滑動以在 {{venue}} 賣出",
+      "connectBody": "沒有金鑰也能即時看到價格與委託簿——下單需要具備交易權限的 API 金鑰。",
+      "noPrice": "沒有即時價格可用來計算這筆兌換的規模",
+      "auto": "自動",
+      "bookLoading": "正在載入委託簿…",
+      "pressureBuy": "買 {{pct}}%",
+      "pressureSell": "{{pct}}% 賣"
+    },
+    "chart": {
+      "pinned": "已釘選",
+      "moreLongPress": "更多．長按以釘選",
+      "drawingTools": "繪圖工具",
+      "clearConfirm": "要清除這張圖表上的所有繪圖嗎？",
+      "sections": {
+        "channelsFib": "通道與費波那契",
+        "annotate": "標註"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "帳戶與連線",
+      "terminalHeader": "終端機",
+      "trading": "交易",
+      "connected": "已連接",
+      "perOrder": "每筆訂單 {{percent}}%"
+    },
+    "pickers": {
+      "searchPlaceholder": "搜尋任何交易對、代號或名稱",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "股票",
+      "spot": "現貨",
+      "onChain": "鏈上",
+      "equities": "股票",
+      "notListed": "未在 {{venue}} 上架",
+      "notListedCallout": "{{pair}} 未在 {{venue}} 上架。選擇它會將目前使用中的交易所切換為 {{other}}。",
+      "availableVenues": "可用",
+      "desktopOnlyVenues": "需要桌面應用程式",
+      "desktopOnlyVenue": "僅能從桌面應用程式連線"
+    }
   }
 }

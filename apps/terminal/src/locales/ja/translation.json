@@ -4635,5 +4635,106 @@
       "label": "テーマ",
       "description": "配色、チャートパレット、UIスタイルを上書きするビジュアルテーマ"
     }
+  },
+  "mobile": {
+    "shell": {
+      "tabs": {
+        "label": "ナビゲーション",
+        "watchlist": "ウォッチリスト",
+        "trade": "取引",
+        "chart": "チャート",
+        "copilot": "コパイロット",
+        "discover": "ディスカバリー"
+      },
+      "overlays": {
+        "orderbook": "オーダーブック",
+        "pairPicker": "ペア",
+        "venuePicker": "取引所",
+        "settings": "設定",
+        "connect": "アカウントを接続",
+        "news": "ニュース"
+      },
+      "changePair": "ペアを変更",
+      "changeVenue": "取引所を変更",
+      "search": "ペアを検索",
+      "openSettings": "設定を開く",
+      "readOnly": "読み取り専用",
+      "timeframe": "時間足",
+      "dismiss": "閉じる",
+      "comingSoon": "近日公開",
+      "priceChange": "{{absolute}} {{percent}} · 24h",
+      "switchVenue": "取引所を切り替え",
+      "noChartData": "このペアのデータはここにはありません",
+      "noChartDataHint": "この取引所には取り扱いがありません。別の取引所をお試しください。",
+      "desktopOnlyRoute": "この画面はデスクトップアプリでのみ利用できます。"
+    },
+    "panels": {
+      "searchAnyPair": "ペア、取引所を問わず検索…",
+      "inFocus": "フォーカス中",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "取引",
+      "discoverTitle": "ディスカバリー",
+      "topTickers": "値動き上位",
+      "allMarkets": "すべてのマーケット",
+      "pnlToday": "本日の損益",
+      "noPositions": "保有ポジションはありません",
+      "positionsCount_one": "{{count}}件のポジション",
+      "positionsCount_other": "{{count}}件のポジション",
+      "venuesCount_one": "{{count}}件の取引所",
+      "venuesCount_other": "{{count}}件の取引所"
+    },
+    "trade": {
+      "openBook": "オーダーブックを開く",
+      "spread": "スプレッド {{value}}",
+      "spreadDetail": "スプレッド {{value}} · {{pct}}%",
+      "orderTypeStop": "ストップ",
+      "switchSizeCurrency": "サイズの通貨を切り替え",
+      "max": "最大",
+      "orderValue": "注文額",
+      "available": "利用可能",
+      "riskUsed": "使用中のリスク",
+      "riskUsedValue": "{{cap}}の上限に対して{{used}}",
+      "riskUsedNoCap": "ポートフォリオの{{used}}",
+      "slideToBuy": "スライドして{{venue}}で買い",
+      "slideToSell": "スライドして{{venue}}で売り",
+      "connectBody": "APIキーがなくても価格とオーダーブックはライブで確認できます — 注文を出すには取引権限のあるAPIキーが必要です。",
+      "noPrice": "このスワップをサイズ計算するためのライブ価格がありません",
+      "auto": "自動",
+      "bookLoading": "板を読み込み中…",
+      "pressureBuy": "買 {{pct}}%",
+      "pressureSell": "{{pct}}% 売"
+    },
+    "chart": {
+      "pinned": "固定済み",
+      "moreLongPress": "その他 · 長押しで固定",
+      "drawingTools": "描画ツール",
+      "clearConfirm": "このチャート上のすべての描画を消去しますか？",
+      "sections": {
+        "channelsFib": "チャネル＆フィボナッチ",
+        "annotate": "注釈"
+      }
+    },
+    "copilot": {},
+    "settings": {
+      "accountsHeader": "アカウント＆接続",
+      "terminalHeader": "ターミナル",
+      "trading": "取引",
+      "connected": "接続済み",
+      "perOrder": "1注文あたり{{percent}}%"
+    },
+    "pickers": {
+      "searchPlaceholder": "ペア、ティッカー、名前で検索",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "株式",
+      "spot": "現物",
+      "onChain": "オンチェーン",
+      "equities": "株式",
+      "notListed": "{{venue}}の取り扱いなし",
+      "notListedCallout": "{{pair}}は{{venue}}の取り扱いがありません。選択すると、フォーカス中の取引所が{{other}}に切り替わります。",
+      "availableVenues": "利用可能",
+      "desktopOnlyVenues": "デスクトップアプリが必要です",
+      "desktopOnlyVenue": "デスクトップアプリからのみ利用可能"
+    }
   }
 }
