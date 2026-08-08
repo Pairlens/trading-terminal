@@ -32,9 +32,14 @@ import {
   useMobileNav,
 } from './mobile-focus-context'
 import { useMobileRouteSync } from './use-mobile-route-sync'
-import { EXPANDED_BAND, SHEET_BAND } from './lib/mobile-geometry'
+import {
+  EXPANDED_BAND,
+  SHEET_BAND,
+  TRADE_EXPANDED_BAND,
+} from './lib/mobile-geometry'
 import { litTab } from './lib/overlay-tabs'
 import { planPanelSwap } from './lib/panel-swap'
+import { useChartPaint } from './lib/chart-paint'
 import { ContextBar } from './primitives/context-bar'
 import { MobileSheet } from './primitives/mobile-sheet'
 import { MobileTabBar } from './primitives/mobile-tab-bar'
@@ -72,20 +77,45 @@ const PANELS: Record<PanelTab, LazyExoticComponent<ComponentType>> = {
   discover: lazyChunk(importDiscoverPanel),
 }
 
-/** Sheet geometry and chart treatment per panel — one table, not per-panel CSS. */
+/**
+ * Sheet geometry and chart treatment per panel — one table, not per-panel CSS.
+ *
+ * `expandedBand` is the only entry that is not the same for everyone: the
+ * expanded snap now stops a hairline under the chart top, because the price
+ * readout and the timeframe chip fade out on the way up and stop needing a row
+ * of their own. Trade is the exception — the draggable limit line's grab strip
+ * has to stay whole, and that costs 44px of chart (see mobile-geometry.ts).
+ */
 const PANEL_CHROME: Record<
   PanelTab,
-  { band: number; chartOpacity: number; variant: 'default' | 'copilot' }
+  {
+    band: number
+    expandedBand: number
+    chartOpacity: number
+    variant: 'default' | 'copilot'
+  }
 > = {
   watchlist: {
     band: SHEET_BAND.watchlist,
+    expandedBand: EXPANDED_BAND,
     chartOpacity: 0.7,
     variant: 'default',
   },
-  trade: { band: SHEET_BAND.trade, chartOpacity: 1, variant: 'default' },
-  copilot: { band: SHEET_BAND.copilot, chartOpacity: 1, variant: 'copilot' },
+  trade: {
+    band: SHEET_BAND.trade,
+    expandedBand: TRADE_EXPANDED_BAND,
+    chartOpacity: 1,
+    variant: 'default',
+  },
+  copilot: {
+    band: SHEET_BAND.copilot,
+    expandedBand: EXPANDED_BAND,
+    chartOpacity: 1,
+    variant: 'copilot',
+  },
   discover: {
     band: SHEET_BAND.discover,
+    expandedBand: EXPANDED_BAND,
     chartOpacity: 0.7,
     variant: 'default',
   },
@@ -115,6 +145,8 @@ const importNewsReaderSheet = () => import('./screens/news-reader-sheet')
 const importMarketsScreen = () => import('./screens/markets-screen')
 const importAccountDetailScreen = () =>
   import('./screens/account-detail-screen')
+const importFearGreedScreen = () => import('./screens/fear-greed-screen')
+const importPnlScreen = () => import('./screens/pnl-screen')
 
 const OrderbookScreen = lazyChunk(importOrderbookScreen)
 const PairPickerScreen = lazyChunk(importPairPickerScreen)
@@ -124,6 +156,8 @@ const ConnectAccountSheet = lazyChunk(importConnectAccountSheet)
 const NewsReaderSheet = lazyChunk(importNewsReaderSheet)
 const MarketsScreen = lazyChunk(importMarketsScreen)
 const AccountDetailScreen = lazyChunk(importAccountDetailScreen)
+const FearGreedScreen = lazyChunk(importFearGreedScreen)
+const PnlScreen = lazyChunk(importPnlScreen)
 
 /** Chart-band extras, owned by WS-D (toolbar, timeframe) and WS-C (limit line). */
 const importTimeframePopover = () => import('./chart/timeframe-popover')
@@ -162,6 +196,10 @@ const PREFETCH: Array<() => Promise<unknown>> = [
   importNewsReaderSheet,
   importConnectAccountSheet,
   importAccountDetailScreen,
+  // Last tier: both are one tap deep from a Discover card, and neither is on
+  // the path to a trade.
+  importFearGreedScreen,
+  importPnlScreen,
 ]
 
 /** `requestIdleCallback`, with the timeout every Safari release still needs. */
@@ -314,6 +352,10 @@ export function MobileSurface() {
   const { selectTab, dismissPanel, pushOverlay, popOverlay } =
     useMobileActions()
   const { markets } = useAvailableMarkets()
+  // The chart's own background and HUD ink, published as custom properties for
+  // the three pieces of chrome that sit ON the plot (see lib/chart-paint.ts).
+  // Theme-rate, not tick-rate.
+  const chartPaint = useChartPaint()
 
   // The sheet owns its snap; this mirrors it for the two things ABOVE the
   // sheet that have to react to it — the price readout's scale and the scrim's
@@ -370,17 +412,18 @@ export function MobileSurface() {
   const shownOverlay = useOverlayAdoption(topOverlay)
 
   return (
-    <div className="pl-mobile-root relative flex h-svh w-full flex-col overflow-hidden bg-background">
+    <div
+      className="pl-mobile-root relative flex h-svh w-full flex-col overflow-hidden bg-background"
+      style={chartPaint}
+    >
       <MobileChartSurface
         band={openPanel ? 'compact' : 'full'}
         dismissible={openPanel !== null}
         expanded={sheetExpanded}
         footer={
-          openPanel === null ? (
-            <Suspense fallback={null}>
-              <MobileDrawingToolbar />
-            </Suspense>
-          ) : null
+          <Suspense fallback={null}>
+            <MobileDrawingToolbar docked={openPanel !== null} />
+          </Suspense>
         }
         onDismiss={dismissPanel}
         onSwitchVenue={openVenuePicker}
@@ -395,7 +438,9 @@ export function MobileSurface() {
                   the one number the shell owns: how much of it is on screen.
                   That is the sheet's snap expressed as a band of chart. */}
               <LimitLineOverlay
-                stripHeight={sheetExpanded ? EXPANDED_BAND : SHEET_BAND.trade}
+                stripHeight={
+                  sheetExpanded ? TRADE_EXPANDED_BAND : SHEET_BAND.trade
+                }
               />
             </Suspense>
           ) : null
@@ -417,6 +462,7 @@ export function MobileSurface() {
 
       <MobileSheet
         band={chrome?.band ?? SHEET_BAND.watchlist}
+        expandedBand={chrome?.expandedBand ?? EXPANDED_BAND}
         label={t(
           openPanel ? PANEL_LABEL_KEY[openPanel] : 'mobile.shell.tabs.label',
         )}
@@ -495,6 +541,10 @@ const OverlayHost = memo(function OverlayHost({
       return <MarketsScreen onClose={onClose} overlay={overlay} />
     case 'accountDetail':
       return <AccountDetailScreen onClose={onClose} overlay={overlay} />
+    case 'fearGreed':
+      return <FearGreedScreen onClose={onClose} overlay={overlay} />
+    case 'pnl':
+      return <PnlScreen onClose={onClose} overlay={overlay} />
   }
 })
 

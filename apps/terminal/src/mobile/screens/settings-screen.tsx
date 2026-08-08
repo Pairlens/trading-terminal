@@ -17,7 +17,7 @@
  * `/accounts` deep-links land here for the same reason.
  */
 import { memo, useCallback, useEffect, useState } from 'react'
-import { ChevronRight, Lock, Plus } from 'lucide-react'
+import { ChevronRight, Lock, MonitorSmartphone, Plus, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
@@ -25,6 +25,7 @@ import { useMobileActions } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
 import { FullScreenOverlay } from '../primitives/full-screen-overlay'
 import { MobileRow } from '../primitives/mobile-row'
+import { DesktopExperienceBody } from './desktop-experience-screen'
 import type {
   MobileOverlay,
   MobileSettingsSection,
@@ -49,6 +50,8 @@ import { useRiskConfigStore } from '@/stores/risk-config-store'
 import { useDisplayCurrency } from '@/hooks/use-display-currency'
 import { useOptimisticSession } from '@/lib/session'
 import { hasAppServer } from '@/lib/auth-client'
+import { isStandalone } from '@/lib/platform'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 import { track } from '@/lib/analytics-events'
 
 type SettingsScreenProps = {
@@ -73,17 +76,40 @@ export default memo(function SettingsScreen({
     initialSection(overlay.section),
   )
   const [unlockOpen, setUnlockOpen] = useState(false)
+  // A screen, not an overlay kind: it is reached from one banner on one
+  // screen, and a local branch keeps the whole feature inside two files that
+  // one workstream owns. Same shape the section detail already uses.
+  const [inviteOpen, setInviteOpen] = useState(false)
 
   useEffect(() => {
     if (section) track('settings_section_viewed', { section })
   }, [section])
 
   const back = useCallback(() => setSection(null), [])
+  const closeInvite = useCallback(() => setInviteOpen(false), [])
+
+  // One frame for all three states. Swapping the CHILDREN of a persistent
+  // `FullScreenOverlay` keeps the same element, so a step inside Settings is
+  // an instant swap; mounting a second frame would remount and play the
+  // entry animation over a 220ms hole with the chart showing through.
+  if (inviteOpen) {
+    return (
+      <FullScreenOverlay
+        anchor="screen"
+        exitOnDismiss={false}
+        onBack={closeInvite}
+        title={t('mobile.desktopInvite.screenTitle')}
+      >
+        <DesktopExperienceBody />
+      </FullScreenOverlay>
+    )
+  }
 
   if (section) {
     return (
       <FullScreenOverlay
         anchor="screen"
+        exitOnDismiss={false}
         onBack={back}
         title={t(settingsSectionNameKey(section))}
       >
@@ -105,6 +131,7 @@ export default memo(function SettingsScreen({
       onBack={onClose}
       title={t('mobile.shell.overlays.settings')}
     >
+      <DesktopInviteBanner onOpen={() => setInviteOpen(true)} />
       <ProfileRow onOpen={() => setSection('profile')} />
       <AccountsSection onUnlock={() => setUnlockOpen(true)} />
       <VaultUnlockDialog onOpenChange={setUnlockOpen} open={unlockOpen} />
@@ -126,6 +153,67 @@ export default memo(function SettingsScreen({
     </FullScreenOverlay>
   )
 })
+
+/**
+ * The invitation at the top of Settings.
+ *
+ * Dismissible, and the dismissal sticks: the phone is a companion surface,
+ * and a permanent ad for the desktop at the top of a screen the user visits
+ * to change a currency would wear out fast. It stays out of the way in the
+ * desktop app for the obvious reason.
+ *
+ * The open and the dismiss are SIBLING buttons in one bordered row, not a
+ * button inside a button: nested interactive elements are invalid, and the
+ * inner one's taps are the ones that get eaten.
+ */
+function DesktopInviteBanner({ onOpen }: { onOpen: () => void }) {
+  const { t } = useTranslation()
+  const [dismissed, setDismissed] = usePersistedState(
+    'mobile.desktopInviteDismissed',
+    false,
+  )
+
+  if (dismissed || isStandalone) return null
+
+  return (
+    <div className="px-4 pb-1 pt-3">
+      <div
+        className="flex items-center rounded-2xl border border-primary/25"
+        style={{
+          background:
+            'linear-gradient(135deg, color-mix(in oklch, var(--primary) 14%, transparent), color-mix(in oklch, var(--primary) 4%, transparent))',
+        }}
+      >
+        <button
+          className="flex min-w-0 flex-1 items-center gap-3 py-3 pl-3.5 pr-1 text-left"
+          onClick={onOpen}
+          type="button"
+        >
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/15">
+            <MonitorSmartphone className="size-[18px] text-primary" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[13.5px] font-semibold leading-snug text-foreground">
+              {t('mobile.desktopInvite.bannerTitle')}
+            </span>
+            <span className="mt-0.5 block text-[11.5px] leading-snug text-muted-foreground">
+              {t('mobile.desktopInvite.bannerBody')}
+            </span>
+          </span>
+          <ChevronRight className="size-4 shrink-0 text-primary" />
+        </button>
+        <button
+          aria-label={t('mobile.desktopInvite.bannerDismiss')}
+          className="pl-hit-44 mr-1 flex size-9 shrink-0 items-center justify-center rounded-full text-muted-foreground"
+          onClick={() => setDismissed(true)}
+          type="button"
+        >
+          <X className="size-3.5" />
+        </button>
+      </div>
+    </div>
+  )
+}
 
 function SectionLabel({
   children,

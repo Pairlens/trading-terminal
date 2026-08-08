@@ -291,7 +291,7 @@ export default memo(function PairPickerScreen({
               {query ? (
                 <button
                   aria-label={t('common.clear')}
-                  className="pl-hit-44 flex size-5 shrink-0 items-center justify-center rounded-full bg-white/[0.12] text-muted-foreground"
+                  className="pl-hit-44 flex size-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--pl-wash-heavy)] text-muted-foreground"
                   onClick={() => setQuery('')}
                   type="button"
                 >
@@ -433,16 +433,16 @@ function PairResultSkeletons() {
     <div aria-hidden>
       {SKELETON_ROWS.map((row) => (
         <div
-          className="flex min-h-[44px] w-full items-center gap-[11px] border-t border-t-[rgba(255,255,255,0.055)] px-4 py-2.5"
+          className="flex min-h-[44px] w-full items-center gap-[11px] border-t border-t-[color:var(--pl-hairline)] px-4 py-2.5"
           key={row}
         >
           {/* `bg-muted` is nearly the sheet's own colour on this theme, so the
               placeholder reads as an empty list. The sheet's own hairline
               tint is the contrast that works over it. */}
-          <Skeleton className="size-8 shrink-0 rounded-full bg-white/[0.09]" />
+          <Skeleton className="size-8 shrink-0 rounded-full bg-[color:var(--pl-wash-strong)]" />
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-            <Skeleton className="h-3.5 w-[92px] bg-white/[0.09]" />
-            <Skeleton className="h-2.5 w-[132px] bg-white/[0.06]" />
+            <Skeleton className="h-3.5 w-[92px] bg-[color:var(--pl-wash-strong)]" />
+            <Skeleton className="h-2.5 w-[132px] bg-[color:var(--pl-wash-strong)]" />
           </div>
         </div>
       ))}

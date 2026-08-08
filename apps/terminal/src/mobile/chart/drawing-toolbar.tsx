@@ -16,7 +16,14 @@
  * `memo`, and it reads only ChartConfig/ChartActions: a streaming ticker must
  * leave it at zero re-renders.
  */
-import { Suspense, memo, useCallback, useMemo, useState } from 'react'
+import {
+  Suspense,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { Grid2x2, Magnet, MousePointer2, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -51,12 +58,30 @@ export const MOBILE_DRAWING_TOOLBAR_HEIGHT = 50
 const CHIP =
   'relative flex h-[34px] flex-1 items-center justify-center rounded-[10px] after:absolute after:inset-x-0 after:-inset-y-2 after:content-[""]'
 
-export default memo(function MobileDrawingToolbar() {
+export default memo(function MobileDrawingToolbar({
+  docked = false,
+}: {
+  /** True while a shell panel is docked over the chart. */
+  docked?: boolean
+}) {
   const { t } = useTranslation()
   const { activeTool, activeToolMeta, crosshairMode } = useChartConfig()
   const { applyTool, setCrosshairMode, clearAllDrawings } = useChartActions()
   const { slots, promote } = useDrawingSlots()
   const [sheetOpen, setSheetOpen] = useState(false)
+  // Once opened, the sheet stays MOUNTED and closes by `open` flipping false.
+  // Unmounting it while open both rips away its close animation and strands
+  // the `--pl-sheet-dock` channel it wrote at 1 — the effect that animates the
+  // vars back only runs on a rendered open→false transition.
+  const [everOpened, setEverOpened] = useState(false)
+
+  // A tab tap can dock a panel over an open tools sheet (the tab bar rides
+  // above every sheet). Two open tracked sheets would then contend for the
+  // shared position channel, so the tools sheet — the one whose context just
+  // left the screen — yields.
+  useEffect(() => {
+    if (docked) setSheetOpen(false)
+  }, [docked])
 
   const activeKey = activeTool
     ? drawingToolKey(activeTool, activeToolMeta)
@@ -138,14 +163,17 @@ export default memo(function MobileDrawingToolbar() {
         <ToolbarButton
           active={sheetOpen}
           label={t('mobile.chart.drawingTools')}
-          onPress={() => setSheetOpen(true)}
+          onPress={() => {
+            setEverOpened(true)
+            setSheetOpen(true)
+          }}
         >
           <Grid2x2 className="size-[18px]" strokeWidth={1.7} />
         </ToolbarButton>
 
         <span
           aria-hidden
-          className="mx-[7px] h-5 w-px shrink-0 bg-white/[.14]"
+          className="mx-[7px] h-5 w-px shrink-0 bg-[color:var(--pl-edge-strong)]"
         />
 
         <ToolbarButton
@@ -166,7 +194,7 @@ export default memo(function MobileDrawingToolbar() {
         </ToolbarButton>
       </div>
 
-      {sheetOpen ? (
+      {everOpened ? (
         <Suspense fallback={null}>
           <DrawingToolsSheet
             onOpenChange={setSheetOpen}

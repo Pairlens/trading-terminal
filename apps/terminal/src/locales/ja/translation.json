@@ -4650,18 +4650,22 @@
         "orderbook": "オーダーブック",
         "pairPicker": "ペア",
         "venuePicker": "取引所",
-        "settings": "設定",
-        "connect": "アカウントを接続",
-        "news": "ニュース"
+        "settings": "設定"
       },
       "changePair": "ペアを変更",
-      "changeVenue": "取引所を変更",
+      "changeVenueA11y": "取引所を変更。{{venue}}、{{status}}",
       "search": "ペアを検索",
       "openSettings": "設定を開く",
       "readOnly": "読み取り専用",
-      "timeframe": "時間足",
+      "live": {
+        "live": "ライブ",
+        "connecting": "…",
+        "offline": "オフライン",
+        "liveA11y": "ライブ受信中",
+        "connectingA11y": "接続中",
+        "offlineA11y": "このデバイスでは受信できません"
+      },
       "dismiss": "閉じる",
-      "comingSoon": "近日公開",
       "priceChange": "{{absolute}} {{percent}} · 24h",
       "switchVenue": "取引所を切り替え",
       "noChartData": "このペアのデータはここにはありません",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "注目"
+    },
+    "fearGreed": {
+      "historyLabel_one": "直近1日",
+      "historyLabel_other": "直近{{count}}日",
+      "noHistory": "履歴はまだありません",
+      "chartAria": "Fear and Greed指数の推移",
+      "bucketsLabel": "数値の意味",
+      "aboutBody": "ボラティリティ、モメンタムと出来高、SNSでの話題量、ビットコインドミナンス、検索トレンドから算出し、0〜100の1つの数値にまとめたものです。低ければ恐怖、高ければ強欲。示すのは相場の空気であって、方向ではありません。"
+    },
+    "pnl": {
+      "windowSince": "{{time}}から",
+      "tradesCount_one": "{{count}}件の取引",
+      "tradesCount_other": "{{count}}件の取引",
+      "explainer": "このセッション中の約定から算出しています。売りが損益として実現するのは、Pairlensが開くところを見ていたポジションに対してだけなので、もともと保有していたコインは何も実現しません。手数料は差し引かれていません。日次損失のガードレールが見ているのも、この数値です。",
+      "lockedHint": "期間がリセットされるか、リスク管理でロックを解除するまで、新規注文はブロックされたままです。",
+      "guardrailLabel": "日次損失のガードレール",
+      "guardrailUsed": "{{cap}}%の上限に対して{{used}}%",
+      "noLimit": "日次損失の上限は未設定です。設定しておけば、悪い一日がさらに悪くなる前にPairlensが注文の受付を止めます。",
+      "riskSettings": "リスク管理",
+      "holdingsLabel": "保有資産",
+      "connectTitle": "まだ何も接続されていません",
+      "connectBody": "取引所、ブローカー、ウォレットを接続すると、その残高がここに表示されます。キーはこのデバイスに留まります。",
+      "noPositionsBody": "接続済みのアカウントが残高を返した時点で、ここに表示されます。",
+      "pricedFrom": "公開されている取引所のスナップショットで評価し、1分ごとに更新しています。",
+      "someUnpriced": "現在価格のない保有分は合計に含まれません。",
+      "noFxRate": "現在{{currency}}のレートを取得できないため、金額は評価額なしで表示しています。"
     },
     "markets": {
       "title": "すべてのペア",
@@ -4747,6 +4777,52 @@
       "trading": "取引",
       "connected": "接続済み",
       "perOrder": "1注文あたり{{percent}}%"
+    },
+    "desktopInvite": {
+      "bannerTitle": "完全版のターミナルはパソコンに",
+      "bannerBody": "ワークスペース、ボット、自作インジケーター、そしてあと4つの取引所。",
+      "bannerDismiss": "非表示にする",
+      "screenTitle": "大きな画面では",
+      "lead": "スマートフォンには、手元に置いておきたいPairlensの機能が入っています。チャート、オーダーブック、トレードチケット、そしてコパイロット。それ以外の部分は、広げて使える画面のために作られたもので、そちらであなたを待っています。",
+      "widerWindow": "幅の広いウィンドウで",
+      "desktopApp": "デスクトップアプリで",
+      "workspaces": {
+        "title": "ワークスペース",
+        "body": "チャート、オーダーブック、約定履歴、コパイロットを並べて配置し、一度組んだら保存。ワークスペースストアには、ワンタップでコピーできる出来合いのレイアウトも揃っています。"
+      },
+      "bots": {
+        "title": "ボット",
+        "body": "ストラテジーをマーケットにデプロイし、まずはバックテスト。あとは、ここで設定したのと同じリスク上限のもとで動くのを見守るだけです。"
+      },
+      "indicators": {
+        "title": "自作インジケーター",
+        "body": "本物のPythonでチャートインジケーターを記述。pipのパッケージも使え、エディターの横でライブプレビューできます。"
+      },
+      "workflows": {
+        "title": "ワークフロー",
+        "body": "シグナルを一連のステップにつないでおけば、あなたが自分の一日を過ごしている間もマーケットを見張り続けます。"
+      },
+      "plugins": {
+        "title": "プラグインストア",
+        "body": "コネクタ、インジケーター、テーマ、AIプロバイダーを追加し、それぞれをどこまで信頼するかを自分で決められます。"
+      },
+      "keychain": {
+        "title": "キーはシステムのキーチェーンに",
+        "body": "デスクトップアプリは、取引所のキーをブラウザーのストレージに置くのではなく、macOSキーチェーン、Windows資格情報マネージャー、Linux Secret Serviceに預けます。"
+      },
+      "venues": {
+        "title": "あと4つの取引所",
+        "body": "Coinbase、Gate、KuCoin、MEXCはブラウザーからのリクエストに応じません。デスクトップアプリなら15カ所すべてに届きます。"
+      },
+      "background": {
+        "title": "閉じても動き続ける",
+        "body": "ウィンドウを閉じてもボットとアラートは動いたままで、発火した瞬間にシステム通知が届きます。"
+      },
+      "windows": {
+        "title": "ウィンドウは1つだけではない",
+        "body": "マーケットを独立したウィンドウに切り出して、2台目のモニターに置けます。"
+      },
+      "where": "パソコンでterminal.pairlens.financeを開けば、ここに挙げたものはウィンドウ1つ分の距離です。macOS、Windows、Linux向けのデスクトップアプリもあり、最後の4つを解放するのはそちらです。"
     },
     "accounts": {
       "permissionsLabel": "権限",

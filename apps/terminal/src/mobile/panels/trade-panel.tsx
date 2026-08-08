@@ -622,7 +622,7 @@ export default memo(function MobileTradePanel() {
       </div>
 
       {/* Order type */}
-      <div className="flex gap-1 rounded-[11px] bg-white/[0.06] p-[3px]">
+      <div className="flex gap-1 rounded-[11px] bg-[color:var(--pl-wash-strong)] p-[3px]">
         <SegmentButton
           active={orderType === 'limit'}
           disabled={!supportsLimit}
@@ -686,7 +686,7 @@ export default memo(function MobileTradePanel() {
       <div className="flex gap-2">
         {PERCENTS.map((pct) => (
           <button
-            className="h-[31px] flex-1 rounded-[9px] border border-white/10 font-mono text-[12px] tabular-nums text-muted-foreground active:bg-white/[0.06] active:text-foreground"
+            className="h-[31px] flex-1 rounded-[9px] border border-[color:var(--pl-edge)] font-mono text-[12px] tabular-nums text-muted-foreground active:bg-[color:var(--pl-wash-strong)] active:text-foreground"
             key={pct}
             onClick={() => handlePercent(pct)}
             type="button"
@@ -799,7 +799,7 @@ function SideButton({
           ? side === 'buy'
             ? 'text-up'
             : 'text-down'
-          : 'border border-white/10 text-muted-foreground',
+          : 'border border-[color:var(--pl-edge)] text-muted-foreground',
       )}
       onClick={onPress}
       style={
@@ -833,7 +833,7 @@ function SegmentButton({
       className={cn(
         'h-7 flex-1 rounded-lg text-[12.5px] font-medium',
         active
-          ? 'bg-white/[0.14] text-foreground'
+          ? 'bg-[color:var(--pl-wash-heavy)] text-foreground'
           : 'text-muted-foreground active:text-foreground',
         disabled && 'opacity-35',
       )}
@@ -931,7 +931,7 @@ function ConnectCard({
 
   return (
     <div className="absolute inset-0 flex items-center justify-center px-6">
-      <div className="flex w-full flex-col items-center gap-[13px] rounded-[18px] bg-[rgba(32,30,28,0.97)] px-5 pb-[18px] pt-[22px] text-center shadow-[0_20px_54px_rgba(0,0,0,0.66),inset_0_1px_0_rgba(255,255,255,0.08)]">
+      <div className="flex w-full flex-col items-center gap-[13px] rounded-[18px] bg-[color:var(--pl-surface-overlay)] px-5 pb-[18px] pt-[22px] text-center shadow-[var(--pl-shadow-popover)]">
         <PluginBrandTile
           id={venuePluginId(market)}
           name={venueLabel}

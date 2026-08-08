@@ -6,10 +6,13 @@ import {
   EXPANDED_BAND,
   MIN_SHEET_HEIGHT,
   SHEET_BAND,
+  TRADE_EXPANDED_BAND,
+  parseInlineTranslateY,
   parseTranslateY,
   resolveSheetSnaps,
   resolveSheetTop,
   sheetDismissTravel,
+  sheetProgress,
   sheetTop,
   shouldDismissSheet,
 } from '../lib/mobile-geometry'
@@ -90,11 +93,28 @@ describe('resolveSheetSnaps', () => {
     }
   })
 
-  test('the expanded snap stops below the context bar and the price row', () => {
+  test('the expanded snap stops a hairline under the chart top', () => {
     const snaps = resolveSheetSnaps(SHEET_BAND.watchlist, 58, 874)
     expect(snaps.expandedHeight).toBe(874 - 58 - EXPANDED_BAND)
-    // The compact readout (8 inset + 22 price + 6 + 13 change) has to survive.
-    expect(EXPANDED_BAND).toBeGreaterThanOrEqual(49)
+    // The readout and the timeframe chip fade out on the way up, so nothing
+    // above the sheet needs a row of its own any more — but the sheet must
+    // still stop short of the chart top rather than swallow it.
+    expect(EXPANDED_BAND).toBeGreaterThan(0)
+    expect(EXPANDED_BAND).toBeLessThan(24)
+  })
+
+  test('Trade keeps a band the limit line can hold its grab strip in', () => {
+    const snaps = resolveSheetSnaps(
+      SHEET_BAND.trade,
+      58,
+      874,
+      TRADE_EXPANDED_BAND,
+    )
+    expect(snaps.expandedHeight).toBe(874 - 58 - TRADE_EXPANDED_BAND)
+    // 44px = the grab strip, centred on the line: `limitStripBottom` floors at
+    // band − 22 and the strip then spans exactly 0–44.
+    expect(TRADE_EXPANDED_BAND).toBe(44)
+    expect(TRADE_EXPANDED_BAND).toBeGreaterThan(EXPANDED_BAND)
   })
 
   test('every panel can actually be expanded', () => {
@@ -183,5 +203,47 @@ describe('parseTranslateY', () => {
     expect(parseTranslateY('none')).toBeNull()
     expect(parseTranslateY('')).toBeNull()
     expect(parseTranslateY('translateY(10px)')).toBeNull()
+  })
+})
+
+describe('parseInlineTranslateY', () => {
+  test('reads the Y offset vaul writes inline, without a style recalc', () => {
+    expect(parseInlineTranslateY('translate3d(0, 244px, 0)')).toBe(244)
+    expect(parseInlineTranslateY('translate3d(0px, -12.5px, 0px)')).toBe(-12.5)
+  })
+
+  test('falls through on anything else so the computed style can answer', () => {
+    expect(parseInlineTranslateY('')).toBeNull()
+    expect(parseInlineTranslateY('none')).toBeNull()
+    expect(parseInlineTranslateY('matrix(1, 0, 0, 1, 0, 208)')).toBeNull()
+  })
+})
+
+describe('sheetProgress', () => {
+  const viewport = 874
+  const snaps = resolveSheetSnaps(SHEET_BAND.copilot, 58, viewport)
+  const at = (height: number) =>
+    sheetProgress(viewport - height, viewport, snaps)
+
+  test('the two snaps are the two ends', () => {
+    expect(at(snaps.defaultHeight)).toEqual({ dock: 1, expand: 0 })
+    expect(at(snaps.expandedHeight)).toEqual({ dock: 1, expand: 1 })
+  })
+
+  test('a sheet fully off screen is zero on both axes', () => {
+    expect(at(0)).toEqual({ dock: 0, expand: 0 })
+  })
+
+  test('dragging below the default snap unwinds the dock axis', () => {
+    // Which is what makes the readout grow back and the drawing toolbar rise
+    // while the finger is still pulling the sheet away.
+    const half = at(snaps.defaultHeight / 2)
+    expect(half.dock).toBeCloseTo(0.5, 5)
+    expect(half.expand).toBe(0)
+  })
+
+  test('never leaves 0–1, whatever vaul reports mid-flick', () => {
+    expect(at(-200)).toEqual({ dock: 0, expand: 0 })
+    expect(at(viewport + 400)).toEqual({ dock: 1, expand: 1 })
   })
 })

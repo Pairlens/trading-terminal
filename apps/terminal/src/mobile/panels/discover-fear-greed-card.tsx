@@ -12,19 +12,24 @@
  *
  * Classification comes from the value's bucket rather than the API's English
  * label, so the word is translated rather than passed through.
+ *
+ * The query key is the pane's own `['fear-greed']`, and the detail screen this
+ * card opens reuses it: the history is already in the cache by the time the
+ * screen mounts, so the tap opens a drawn chart rather than a spinner.
  */
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
+import { useMobileActions } from '../mobile-focus-context'
 import { StatCard } from './discover-pnl-card'
 import type { FearGreedResponse } from '@pairlens/shared/instrument-types'
 import { appServerUrl, authFetch } from '@/lib/api'
 import { fetchFearGreedWithFallback } from '@/lib/public-market-data'
 
 /** The five buckets `getValueColor` uses in the pane, as catalog keys. */
-function classificationKey(value: number): string {
+export function classificationKey(value: number): string {
   if (value <= 25) return 'fearGreed.classification.extremeFear'
   if (value <= 45) return 'fearGreed.classification.fear'
   if (value <= 55) return 'fearGreed.classification.neutral'
@@ -32,28 +37,71 @@ function classificationKey(value: number): string {
   return 'fearGreed.classification.extremeGreed'
 }
 
-function toneFor(value: number): string {
+export function toneFor(value: number): string {
   if (value <= 45) return 'text-down'
   if (value <= 55) return 'text-muted-foreground'
   return 'text-up'
 }
 
-export const DiscoverFearGreedCard = memo(function DiscoverFearGreedCard() {
-  const { t } = useTranslation()
+/** Shared by the card and the detail screen, so one tap does not restate it. */
+export const FEAR_GREED_QUERY_KEY = ['fear-greed'] as const
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['fear-greed'],
+export function useFearGreed() {
+  return useQuery({
+    queryKey: FEAR_GREED_QUERY_KEY,
     queryFn: (): Promise<FearGreedResponse> =>
       fetchFearGreedWithFallback((path) => authFetch(`${appServerUrl}${path}`)),
     staleTime: 5 * 60_000,
     gcTime: 30 * 60_000,
     retry: 1,
   })
+}
+
+/**
+ * Fear → greed as one continuous scale, mixed from the two P&L tokens so it
+ * tracks the theme instead of pinning five hexes. `null` marks nothing, which
+ * is what the legend on the detail screen wants.
+ */
+export function FearGreedScale({
+  value,
+  className,
+}: {
+  value: number | null
+  className?: string
+}) {
+  return (
+    <div
+      className={cn('relative h-1.5 rounded-full', className)}
+      style={{
+        background:
+          'linear-gradient(90deg, var(--down), color-mix(in oklch, var(--down), var(--up)), var(--up))',
+      }}
+    >
+      {value == null ? null : (
+        <span
+          aria-hidden
+          className="absolute top-1/2 size-[11px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background bg-foreground"
+          style={{ left: `${Math.max(0, Math.min(100, value))}%` }}
+        />
+      )}
+    </div>
+  )
+}
+
+export const DiscoverFearGreedCard = memo(function DiscoverFearGreedCard() {
+  const { t } = useTranslation()
+  const { pushOverlay } = useMobileActions()
+  const { data, isLoading } = useFearGreed()
 
   const value = data?.latest.value ?? null
 
+  const open = useCallback(
+    () => pushOverlay({ kind: 'fearGreed' }),
+    [pushOverlay],
+  )
+
   return (
-    <StatCard label={t('fearGreed.title')}>
+    <StatCard label={t('fearGreed.title')} onPress={open}>
       {value == null ? (
         <p className="text-[12.5px] text-muted-foreground">
           {isLoading ? t('common.loading') : t('fearGreed.noData')}
@@ -72,21 +120,7 @@ export const DiscoverFearGreedCard = memo(function DiscoverFearGreedCard() {
               {t(classificationKey(value))}
             </span>
           </div>
-          {/* Fear → greed as one continuous scale, mixed from the two P&L
-              tokens so it tracks the theme instead of pinning five hexes. */}
-          <div
-            className="relative mt-3 h-1.5 rounded-full"
-            style={{
-              background:
-                'linear-gradient(90deg, var(--down), color-mix(in oklch, var(--down), var(--up)), var(--up))',
-            }}
-          >
-            <span
-              aria-hidden
-              className="absolute top-1/2 size-[11px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background bg-foreground"
-              style={{ left: `${Math.max(0, Math.min(100, value))}%` }}
-            />
-          </div>
+          <FearGreedScale className="mt-3" value={value} />
         </>
       )}
     </StatCard>

@@ -17,7 +17,7 @@
  *
  * z-60: above sheets (40), the timeframe popover (45) and the tab bar (50).
  */
-import { memo, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { ChevronLeft, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -61,6 +61,107 @@ function useSheetFocusShield(rootRef: RefObject<HTMLDivElement | null>) {
   }, [rootRef])
 }
 
+/**
+ * How long the exit runs before the host is told to unmount. Must match the
+ * `[data-pl-overlay='exit']` transition in mobile.css.
+ */
+const EXIT_MS = 150
+
+/**
+ * Enter/exit motion for every full-screen screen in the shell.
+ *
+ * Two decisions worth keeping:
+ *
+ *   - **The phase is a DOM attribute, not React state.** An overlay body can
+ *     be a two-hundred-row order book, and re-rendering it twice just to fade
+ *     the frame is the kind of cost this shell budgets against. Nothing in
+ *     JSX declares the attribute either, which is what makes it survive a
+ *     re-render from the screen's own state: Settings swapping list → section
+ *     keeps the SAME element (same component, same position), so a
+ *     JSX-declared attribute would snap back to `enter` and replay the
+ *     animation on every keystroke inside a section.
+ *   - **Exit is owned here, not by the host.** `MobileSurface` renders the
+ *     overlay conditionally and unmounting cannot animate, so the dismiss
+ *     control runs the exit first and calls `onBack` when it is over. That
+ *     covers every dismissal that goes through this frame's own chevron or
+ *     close button. Dismissals that bypass it (hardware back, a tab tap, a
+ *     row that navigates) still cut — see the notes for the host-side change
+ *     that would extend the exit to those too.
+ *
+ * `armEnter` runs again after a deferred `onBack` that did NOT unmount us
+ * (Settings section → list), so the frame fades back in instead of staying
+ * stuck at `exit`.
+ */
+function useOverlayMotion(
+  rootRef: RefObject<HTMLDivElement | null>,
+  onBack: () => void,
+  exitOnDismiss: boolean,
+): () => void {
+  const framesRef = useRef<Array<number>>([])
+  const timerRef = useRef<number | null>(null)
+  const closingRef = useRef(false)
+
+  const armEnter = useCallback(() => {
+    const node = rootRef.current
+    if (!node || !node.isConnected) return
+    for (const handle of framesRef.current) cancelAnimationFrame(handle)
+    framesRef.current = []
+    node.dataset.plOverlay = 'enter'
+    // Two frames, not one: a style write and its flip inside the same frame
+    // land in one style recalculation and the transition never starts.
+    framesRef.current.push(
+      requestAnimationFrame(() => {
+        framesRef.current.push(
+          requestAnimationFrame(() => {
+            const current = rootRef.current
+            if (current?.isConnected) current.dataset.plOverlay = 'open'
+          }),
+        )
+      }),
+    )
+  }, [rootRef])
+
+  // Layout, not passive: the entry styles have to be on the node before the
+  // first paint, or the screen shows at its resting position for one frame
+  // and then jumps back to animate in.
+  useLayoutEffect(() => {
+    armEnter()
+    return () => {
+      for (const handle of framesRef.current) cancelAnimationFrame(handle)
+      framesRef.current = []
+      if (timerRef.current !== null) window.clearTimeout(timerRef.current)
+    }
+  }, [armEnter])
+
+  return useCallback(() => {
+    const node = rootRef.current
+    if (!node) {
+      onBack()
+      return
+    }
+    // An in-screen back step (Settings section → list) swaps CHILDREN inside
+    // this same fiber — running the exit there fades the whole frame off the
+    // live terminal and replays the entry for a screen that never left. The
+    // phase attribute must not be touched at all: staying at 'open' is what
+    // makes the swap instant, matching the already-instant forward direction.
+    if (!exitOnDismiss) {
+      onBack()
+      return
+    }
+    // A second tap while the exit runs must not queue a second `onBack`: on
+    // a stack two pops would take the screen behind with it.
+    if (closingRef.current) return
+    closingRef.current = true
+    node.dataset.plOverlay = 'exit'
+    timerRef.current = window.setTimeout(() => {
+      timerRef.current = null
+      closingRef.current = false
+      onBack()
+      armEnter()
+    }, EXIT_MS)
+  }, [armEnter, exitOnDismiss, onBack, rootRef])
+}
+
 export type FullScreenOverlayProps = {
   title: string
   /** Space Grotesk 20px/600 title (Order book, Discover). */
@@ -80,6 +181,12 @@ export type FullScreenOverlayProps = {
   anchor?: 'chart' | 'screen'
   /** Back chevron (a step in a flow) or a close X (a destination). */
   dismiss?: 'back' | 'close'
+  /**
+   * false ⇒ the dismiss control's `onBack` only swaps this frame's own
+   * children (Settings section → list), so it must run instantly with no exit
+   * phase. Default true: `onBack` unmounts the overlay and gets the exit.
+   */
+  exitOnDismiss?: boolean
   children: ReactNode
   className?: string
 }
@@ -92,6 +199,7 @@ export const FullScreenOverlay = memo(function FullScreenOverlay({
   opaque = true,
   anchor = 'chart',
   dismiss = 'back',
+  exitOnDismiss = true,
   children,
   className,
 }: FullScreenOverlayProps) {
@@ -99,11 +207,12 @@ export const FullScreenOverlay = memo(function FullScreenOverlay({
   const DismissIcon = dismiss === 'close' ? X : ChevronLeft
   const rootRef = useRef<HTMLDivElement | null>(null)
   useSheetFocusShield(rootRef)
+  const requestDismiss = useOverlayMotion(rootRef, onBack, exitOnDismiss)
 
   return (
     <div
       className={cn(
-        'fixed inset-x-0 z-[60] flex flex-col',
+        'pl-overlay fixed inset-x-0 z-[60] flex flex-col',
         opaque ? 'bg-background' : 'bg-background/95',
         className,
       )}
@@ -126,9 +235,11 @@ export const FullScreenOverlay = memo(function FullScreenOverlay({
           aria-label={t(dismiss === 'close' ? 'common.dismiss' : 'common.back')}
           className={cn(
             'flex size-11 shrink-0 items-center justify-center rounded-full text-foreground',
-            dismiss === 'close' ? '-mr-2 bg-white/[0.06]' : '-ml-2',
+            dismiss === 'close'
+              ? '-mr-2 bg-[color:var(--pl-wash-strong)]'
+              : '-ml-2',
           )}
-          onClick={onBack}
+          onClick={requestDismiss}
           type="button"
         >
           <DismissIcon className="size-5" />

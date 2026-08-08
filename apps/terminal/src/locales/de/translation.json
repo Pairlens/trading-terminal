@@ -4650,18 +4650,22 @@
         "orderbook": "Orderbuch",
         "pairPicker": "Paare",
         "venuePicker": "Venue",
-        "settings": "Einstellungen",
-        "connect": "Konto verbinden",
-        "news": "News"
+        "settings": "Einstellungen"
       },
       "changePair": "Paar ändern",
-      "changeVenue": "Venue ändern",
+      "changeVenueA11y": "Venue ändern. {{venue}}, {{status}}",
       "search": "Paare suchen",
       "openSettings": "Einstellungen öffnen",
       "readOnly": "Nur lesen",
-      "timeframe": "Zeitrahmen",
+      "live": {
+        "live": "LIVE",
+        "connecting": "…",
+        "offline": "OFFLINE",
+        "liveA11y": "überträgt live",
+        "connectingA11y": "verbindet",
+        "offlineA11y": "überträgt auf diesem Gerät nicht"
+      },
       "dismiss": "Ausblenden",
-      "comingSoon": "Bald verfügbar",
       "priceChange": "{{absolute}} {{percent}} · 24h",
       "switchVenue": "Venue wechseln",
       "noChartData": "Für dieses Paar gibt es hier keine Daten",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "Empfohlen"
+    },
+    "fearGreed": {
+      "historyLabel_one": "Letzter Tag",
+      "historyLabel_other": "Letzte {{count}} Tage",
+      "noHistory": "Noch kein Verlauf",
+      "chartAria": "Fear-and-Greed-Index im Zeitverlauf",
+      "bucketsLabel": "Was die Zahl bedeutet",
+      "aboutBody": "Aus Volatilität, Momentum und Volumen, Stimmen in sozialen Netzwerken, Bitcoin-Dominanz und Suchtrends verdichtet auf eine einzige Zahl zwischen 0 und 100. Niedrig ist Angst, hoch ist Gier. Er liest die Stimmung, nicht die Richtung."
+    },
+    "pnl": {
+      "windowSince": "Seit {{time}}",
+      "tradesCount_one": "{{count}} Trade",
+      "tradesCount_other": "{{count}} Trades",
+      "explainer": "Gezählt aus den Ausführungen dieser Sitzung: Ein Verkauf realisiert nur gegen eine Position, deren Eröffnung Pairlens mitbekommen hat. Coins, die du schon vorher hattest, realisieren nichts. Gebühren sind nicht abgezogen. Es ist dieselbe Zahl, die die Tagesverlust-Grenze prüft.",
+      "lockedHint": "Neue Orders bleiben gesperrt, bis das Fenster zurückgesetzt wird oder du sie im Risikomanagement entsperrst.",
+      "guardrailLabel": "Tagesverlust-Grenze",
+      "guardrailUsed": "{{used}}% des {{cap}}%-Limits",
+      "noLimit": "Kein Tagesverlust-Limit gesetzt. Setz eines, und Pairlens nimmt keine Orders mehr an, bevor aus einem schlechten Tag ein schlechterer wird.",
+      "riskSettings": "Risikomanagement",
+      "holdingsLabel": "Was du hältst",
+      "connectTitle": "Noch nichts verbunden",
+      "connectBody": "Verbinde eine Exchange, einen Broker oder ein Wallet, und die Bestände erscheinen hier. Die Keys bleiben auf diesem Gerät.",
+      "noPositionsBody": "Bestände erscheinen hier, sobald ein verbundenes Konto einen meldet.",
+      "pricedFrom": "Bewertet anhand öffentlicher Venue-Snapshots, jede Minute aktualisiert.",
+      "someUnpriced": "Bestände ohne aktuellen Kurs fließen nicht in die Summen ein.",
+      "noFxRate": "Derzeit kein {{currency}}-Kurs, deshalb werden Beträge ohne Wert angezeigt."
     },
     "markets": {
       "title": "Alle Paare",
@@ -4747,6 +4777,52 @@
       "trading": "Handel",
       "connected": "Verbunden",
       "perOrder": "{{percent}}% pro Order"
+    },
+    "desktopInvite": {
+      "bannerTitle": "Das ganze Terminal läuft am Rechner",
+      "bannerBody": "Workspaces, Bots, eigene Indikatoren und vier weitere Venues.",
+      "bannerDismiss": "Ausblenden",
+      "screenTitle": "Auf einem größeren Bildschirm",
+      "lead": "Dein Handy trägt die Teile von Pairlens, die du in der Hand haben willst: den Chart, das Orderbuch, das Order-Ticket und den Co-Piloten. Der Rest des Terminals ist für einen Bildschirm mit Platz zum Ausbreiten gebaut, und dort wartet er auf dich.",
+      "widerWindow": "In einem breiteren Fenster",
+      "desktopApp": "In der Desktop-App",
+      "workspaces": {
+        "title": "Workspaces",
+        "body": "Chart, Orderbuch, Handelsticker und Co-Pilot nebeneinander, einmal eingerichtet und gespeichert. Im Workspace Store liegen fertige Layouts, die du mit einem Tippen übernimmst."
+      },
+      "bots": {
+        "title": "Bots",
+        "body": "Setz eine Strategie auf einen Markt an, backteste sie zuerst und sieh ihr dann bei der Arbeit zu, unter denselben Risikolimits, die du hier setzt."
+      },
+      "indicators": {
+        "title": "Eigene Indikatoren",
+        "body": "Schreib Chart-Indikatoren in echtem Python, mit pip-Paketen und einer Live-Vorschau neben dem Editor."
+      },
+      "workflows": {
+        "title": "Workflows",
+        "body": "Mach aus einem Signal eine Kette von Schritten, die den Markt weiter beobachtet, während du deinen Tag weitermachst."
+      },
+      "plugins": {
+        "title": "Plugin Store",
+        "body": "Füge Konnektoren, Indikatoren, Themes und KI-Anbieter hinzu und entscheide, wie weit du jedem einzelnen vertraust."
+      },
+      "keychain": {
+        "title": "Keys im System-Schlüsselbund",
+        "body": "Die Desktop-App übergibt deine Exchange-Keys an die macOS Keychain, den Windows Credential Manager oder den Linux Secret Service, statt sie im Browser-Speicher zu halten."
+      },
+      "venues": {
+        "title": "Vier weitere Venues",
+        "body": "Coinbase, Gate, KuCoin und MEXC antworten einem Browser nicht. Die Desktop-App erreicht alle fünfzehn."
+      },
+      "background": {
+        "title": "Läuft weiter, wenn du es schließt",
+        "body": "Schließ das Fenster, und Bots und Alarme bleiben aktiv, mit einer Systembenachrichtigung in dem Moment, in dem einer auslöst."
+      },
+      "windows": {
+        "title": "Mehr als ein Fenster",
+        "body": "Zieh einen Markt in ein eigenes Fenster und stell ihn auf einen zweiten Bildschirm."
+      },
+      "where": "Öffne terminal.pairlens.finance auf deinem Rechner, und alles oben ist ein Fenster entfernt. Es gibt auch eine Desktop-App, für macOS, Windows und Linux, und sie ist es, die die letzten vier freischaltet."
     },
     "accounts": {
       "permissionsLabel": "Berechtigungen",

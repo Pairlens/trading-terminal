@@ -4650,18 +4650,22 @@
         "orderbook": "Carnet d’ordres",
         "pairPicker": "Paires",
         "venuePicker": "Place de marché",
-        "settings": "Paramètres",
-        "connect": "Connecter un compte",
-        "news": "Actualités"
+        "settings": "Paramètres"
       },
       "changePair": "Changer de paire",
-      "changeVenue": "Changer de place de marché",
+      "changeVenueA11y": "Changer de place de marché. {{venue}}, {{status}}",
       "search": "Rechercher des paires",
       "openSettings": "Ouvrir les paramètres",
       "readOnly": "lecture seule",
-      "timeframe": "Période",
+      "live": {
+        "live": "DIRECT",
+        "connecting": "…",
+        "offline": "HORS LIGNE",
+        "liveA11y": "diffusion en direct",
+        "connectingA11y": "connexion en cours",
+        "offlineA11y": "aucune diffusion sur cet appareil"
+      },
       "dismiss": "Ignorer",
-      "comingSoon": "Bientôt disponible",
       "priceChange": "{{absolute}} {{percent}} · 24h",
       "switchVenue": "Changer de place de marché",
       "noChartData": "Aucune donnée pour cette paire ici",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "En vedette"
+    },
+    "fearGreed": {
+      "historyLabel_one": "Dernier jour",
+      "historyLabel_other": "{{count}} derniers jours",
+      "noHistory": "Pas encore d’historique",
+      "chartAria": "Indice Fear and Greed au fil du temps",
+      "bucketsLabel": "Ce que le chiffre veut dire",
+      "aboutBody": "Construit à partir de la volatilité, du momentum et du volume, des conversations sur les réseaux, de la dominance de Bitcoin et des tendances de recherche, le tout ramené à un seul nombre entre 0 et 100. Bas, c’est la peur ; haut, c’est la cupidité. Il lit l’humeur, pas la direction."
+    },
+    "pnl": {
+      "windowSince": "Depuis {{time}}",
+      "tradesCount_one": "{{count}} trade",
+      "tradesCount_other": "{{count}} trades",
+      "explainer": "Compté à partir des exécutions de cette session : une vente ne réalise que face à une position que Pairlens vous a vu ouvrir, donc les coins que vous déteniez déjà ne réalisent rien. Les frais ne sont pas déduits. C’est le chiffre que vérifie le garde-fou de perte journalière.",
+      "lockedHint": "Les nouveaux ordres restent bloqués jusqu’à la réinitialisation de la fenêtre, ou jusqu’à ce que vous les déverrouilliez dans Gestion du risque.",
+      "guardrailLabel": "Garde-fou de perte journalière",
+      "guardrailUsed": "{{used}}% de la limite de {{cap}}%",
+      "noLimit": "Aucune limite de perte journalière. Fixez-en une et Pairlens cesse d’accepter des ordres avant qu’une mauvaise journée n’en devienne une pire.",
+      "riskSettings": "Gestion du risque",
+      "holdingsLabel": "Ce que vous détenez",
+      "connectTitle": "Rien de connecté pour l’instant",
+      "connectBody": "Connectez un exchange, un courtier ou un wallet et ses soldes apparaissent ici. Les clés restent sur cet appareil.",
+      "noPositionsBody": "Les soldes apparaissent ici dès qu’un compte connecté en signale un.",
+      "pricedFrom": "Valorisé à partir d’instantanés publics des places de marché, actualisés chaque minute.",
+      "someUnpriced": "Les avoirs sans prix pour le moment ne sont pas comptés dans les totaux.",
+      "noFxRate": "Pas de taux {{currency}} pour le moment, les montants sont donc affichés sans valeur."
     },
     "markets": {
       "title": "Toutes les paires",
@@ -4747,6 +4777,52 @@
       "trading": "Trading",
       "connected": "Connecté",
       "perOrder": "{{percent}}% par ordre"
+    },
+    "desktopInvite": {
+      "bannerTitle": "Le terminal complet est sur votre ordinateur",
+      "bannerBody": "Espaces de travail, bots, vos propres indicateurs et quatre places de marché de plus.",
+      "bannerDismiss": "Masquer",
+      "screenTitle": "Sur un écran plus grand",
+      "lead": "Votre téléphone porte les parties de Pairlens que vous voulez avoir en main : le graphique, le carnet, le ticket et le copilote. Le reste du terminal a été conçu pour un écran qui a de la place, et il vous y attend.",
+      "widerWindow": "Dans une fenêtre plus large",
+      "desktopApp": "Dans l’app de bureau",
+      "workspaces": {
+        "title": "Espaces de travail",
+        "body": "Graphique, carnet d’ordres, historique des transactions et copilote côte à côte, disposés une fois et enregistrés. Le Workspace Store propose des dispositions toutes prêtes à copier d’un geste."
+      },
+      "bots": {
+        "title": "Bots",
+        "body": "Déployez une stratégie sur un marché, backtestez-la d’abord, puis regardez-la travailler sous les mêmes limites de risque que vous fixez ici."
+      },
+      "indicators": {
+        "title": "Vos propres indicateurs",
+        "body": "Écrivez des indicateurs de graphique en vrai Python, avec des paquets pip et un aperçu en direct à côté de l’éditeur."
+      },
+      "workflows": {
+        "title": "Workflows",
+        "body": "Transformez un signal en une chaîne d’étapes qui continue de surveiller le marché pendant que vous vaquez à vos occupations."
+      },
+      "plugins": {
+        "title": "Plugin Store",
+        "body": "Ajoutez des connecteurs, des indicateurs, des thèmes et des fournisseurs d’IA, et décidez jusqu’où chacun est digne de confiance."
+      },
+      "keychain": {
+        "title": "Clés dans le trousseau du système",
+        "body": "L’app de bureau confie vos clés d’exchange au trousseau macOS, à Windows Credential Manager ou au Linux Secret Service, au lieu de les garder dans le stockage du navigateur."
+      },
+      "venues": {
+        "title": "Quatre places de marché de plus",
+        "body": "Coinbase, Gate, KuCoin et MEXC ne répondent pas à un navigateur. L’app de bureau les atteint toutes les quinze."
+      },
+      "background": {
+        "title": "Continue de tourner quand vous la fermez",
+        "body": "Fermez la fenêtre et les bots comme les alertes restent actifs, avec une notification système à l’instant où l’une se déclenche."
+      },
+      "windows": {
+        "title": "Plus d’une fenêtre",
+        "body": "Sortez un marché dans sa propre fenêtre et posez-la sur un second écran."
+      },
+      "where": "Ouvrez terminal.pairlens.finance sur votre ordinateur et tout ce qui précède n’est qu’à une fenêtre. Il existe aussi une app de bureau, pour macOS, Windows et Linux, et c’est elle qui débloque les quatre dernières."
     },
     "accounts": {
       "permissionsLabel": "Autorisations",

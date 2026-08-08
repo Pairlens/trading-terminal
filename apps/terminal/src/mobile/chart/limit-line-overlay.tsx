@@ -402,7 +402,7 @@ const LimitLine = memo(function LimitLine({
             aria-hidden
             className="absolute inset-x-0 top-0 border-t-[1.5px] border-dashed border-primary group-data-[pinned=below]:opacity-45"
           />
-          <span className="absolute right-1 top-[-13px] flex h-[26px] items-center gap-1 rounded-md bg-primary pl-1.5 pr-2 font-mono text-[11.5px] font-semibold tabular-nums text-primary-foreground shadow-[0_4px_14px_rgba(0,0,0,0.55)]">
+          <span className="absolute right-1 top-[-13px] flex h-[26px] items-center gap-1 rounded-md bg-primary pl-1.5 pr-2 font-mono text-[11.5px] font-semibold tabular-nums text-primary-foreground shadow-[var(--pl-shadow-tag)]">
             <GripVertical aria-hidden className="size-3 opacity-80" />
             <span ref={tagRef} />
             <ChevronDown

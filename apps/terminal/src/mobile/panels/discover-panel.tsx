@@ -84,6 +84,12 @@ export default memo(function MobileDiscoverPanel() {
     [pushOverlay],
   )
 
+  // `pb-2` below is air, not clearance. The tab bar is drawn over the sheet
+  // (z-50 against z-40) and used to hide the last ~54px of this list — the
+  // final news row showed only its timestamp. That reserve now lives in
+  // `mobile-sheet.tsx`, which pads its scroll region by `--pl-tabbar-total`,
+  // so no panel adds it again: doing so here put 61px of dead space under the
+  // feed (measured).
   return (
     <div className="flex flex-col pb-2">
       <header className="flex items-center justify-between gap-3 px-4 pb-3 pt-1">
@@ -114,7 +120,7 @@ export default memo(function MobileDiscoverPanel() {
       {featured.length === 0
         ? [0, 1, 2].map((row) => (
             <div
-              className="h-[55px] border-t border-t-[rgba(255,255,255,0.055)]"
+              className="h-[55px] border-t border-t-[color:var(--pl-hairline)]"
               key={row}
             />
           ))
@@ -249,7 +255,7 @@ const NewsRow = memo(function NewsRow({
 }) {
   return (
     <button
-      className="flex w-full items-start gap-3 border-t border-t-[rgba(255,255,255,0.055)] px-4 py-3 text-left active:bg-white/[0.06]"
+      className="flex w-full items-start gap-3 border-t border-t-[color:var(--pl-hairline)] px-4 py-3 text-left active:bg-[color:var(--pl-wash-strong)]"
       onClick={() => onOpen(index)}
       type="button"
     >

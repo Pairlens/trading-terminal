@@ -4,8 +4,8 @@
  * The bar that never leaves the screen: what is in focus, and on which venue.
  *
  * Everything it shows it reads itself, and everything it reads changes rarely.
- * It must NOT subscribe to a ticker — the live dot is a connection state, not
- * a price — and it is `memo` so a streaming market leaves it at zero
+ * It must NOT subscribe to a ticker — the LIVE badge is a connection state,
+ * not a price — and it is `memo` so a streaming market leaves it at zero
  * re-renders (see the performance budget in the blueprint).
  */
 import { memo } from 'react'
@@ -26,6 +26,54 @@ export type ContextBarProps = {
   onOpenVenuePicker: () => void
   onOpenSearch: () => void
   onOpenSettings: () => void
+}
+
+/**
+ * What the venue chip claims about the data behind it.
+ *
+ * Read from the two facts the chip already has in hand, both of which change
+ * on the order of once a session: whether the connectors have come up at all,
+ * and whether THIS venue is one this build can reach. A venue that declares
+ * `requiresDesktop` is present in the market list and still serves nothing in
+ * a browser, so it is `offline` rather than `live` — the old green dot said
+ * "connected" for all four of them.
+ */
+type VenueLiveState = 'live' | 'connecting' | 'offline'
+
+/** Static keys — the i18n audit cannot follow a template literal. */
+const LIVE_LABEL_KEY: Record<VenueLiveState, string> = {
+  live: 'mobile.shell.live.live',
+  connecting: 'mobile.shell.live.connecting',
+  offline: 'mobile.shell.live.offline',
+}
+
+const LIVE_A11Y_KEY: Record<VenueLiveState, string> = {
+  live: 'mobile.shell.live.liveA11y',
+  connecting: 'mobile.shell.live.connectingA11y',
+  offline: 'mobile.shell.live.offlineA11y',
+}
+
+/**
+ * The badge itself. Deliberately NOT uppercased in CSS: the label is a
+ * translated string and how it is cased belongs to the translator, not to a
+ * class name that assumes a bicameral script.
+ */
+function LiveBadge({ state }: { state: VenueLiveState }) {
+  const { t } = useTranslation()
+  return (
+    <span
+      className={cn(
+        'pl-live-badge flex shrink-0 items-center gap-[3px] rounded border px-[4px] py-[2.5px] text-[8px] font-semibold leading-none tracking-[0.09em]',
+        state === 'live'
+          ? 'border-up/45 text-up'
+          : 'border-border text-muted-foreground',
+      )}
+      data-state={state}
+    >
+      <span aria-hidden className="pl-live-mark" />
+      {t(LIVE_LABEL_KEY[state])}
+    </span>
+  )
 }
 
 function initialsFrom(name: string): string {
@@ -58,7 +106,12 @@ export const ContextBar = memo(function ContextBar({
   const base = focusedPair.split('-')[0] ?? focusedPair
   const venue = markets.find((m) => m.value === focusedVenue)
   const venueLabel = venue?.label ?? focusedVenue.toUpperCase()
-  const live = status === 'connected'
+  const liveState: VenueLiveState =
+    status !== 'connected'
+      ? 'connecting'
+      : venue && !venue.desktopOnly
+        ? 'live'
+        : 'offline'
   const userName = session?.user.name ?? session?.user.email ?? ''
   const initials = userName ? initialsFrom(userName) : 'PL'
 
@@ -94,39 +147,46 @@ export const ContextBar = memo(function ContextBar({
           below its own content, so the deficit lands on the pair chip instead
           of squeezing the venue name to "O…". */}
       <button
-        aria-label={t('mobile.shell.changeVenue')}
+        aria-label={t('mobile.shell.changeVenueA11y', {
+          venue: venueLabel,
+          status: t(LIVE_A11Y_KEY[liveState]),
+        })}
         className="pl-glass pointer-events-auto flex h-11 min-w-fit flex-1 items-center gap-1.5 py-0 pl-[5px] pr-1.5"
         onClick={onOpenVenuePicker}
         type="button"
       >
-        <span className="relative shrink-0">
-          <span className="pl-venue-mark text-[10px]">
-            {venue?.iconUrl ? (
-              <img
-                alt=""
-                className="size-full object-cover"
-                src={venue.iconUrl}
-              />
-            ) : (
-              venueLabel.slice(0, 3).toUpperCase()
-            )}
-          </span>
-          <span
-            aria-hidden
-            className={cn(
-              'absolute -right-0.5 -top-0.5 size-2 rounded-full ring-2 ring-[rgba(42,39,35,1)]',
-              live ? 'pl-live-dot bg-up' : 'bg-muted-foreground',
-            )}
-          />
+        <span className="pl-venue-mark shrink-0 text-[10px]">
+          {venue?.iconUrl ? (
+            <img
+              alt=""
+              className="size-full object-cover"
+              src={venue.iconUrl}
+            />
+          ) : (
+            venueLabel.slice(0, 3).toUpperCase()
+          )}
         </span>
-        <span className="shrink-0 whitespace-nowrap text-left text-[13.5px] font-semibold text-foreground">
-          {venueLabel}
-        </span>
-        {permission === 'read' ? (
-          <span className="shrink-0 whitespace-nowrap text-[9.5px] font-medium tracking-[-0.01em] text-muted-foreground">
-            {t('mobile.shell.readOnly')}
+        {/* Name over state. Stacking is what buys the badge its room: side by
+            side, `LIVE` plus `read-only` plus a long venue name is wider than
+            the chip's share of a 402px row, and this chip is the one that
+            refuses to shrink. Both lines stay `whitespace-nowrap` so the
+            deficit still lands on the pair chip, exactly as before. */}
+        <span className="flex shrink-0 flex-col items-start gap-[3px]">
+          <span className="whitespace-nowrap text-left text-[13.5px] font-semibold leading-none text-foreground">
+            {venueLabel}
           </span>
-        ) : null}
+          <span className="flex items-center gap-1">
+            <LiveBadge state={liveState} />
+            {/* A venue that serves nothing is not "read-only", it is nothing —
+                and dropping the tag is also what keeps the two-word line from
+                pushing the pair symbol into an ellipsis. */}
+            {permission === 'read' && liveState !== 'offline' ? (
+              <span className="shrink-0 whitespace-nowrap text-[9px] font-medium leading-none tracking-[-0.01em] text-muted-foreground">
+                {t('mobile.shell.readOnly')}
+              </span>
+            ) : null}
+          </span>
+        </span>
         <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
       </button>
 

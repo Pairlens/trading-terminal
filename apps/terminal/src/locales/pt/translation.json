@@ -4650,18 +4650,22 @@
         "orderbook": "Livro de ofertas",
         "pairPicker": "Pares",
         "venuePicker": "Corretora",
-        "settings": "Configurações",
-        "connect": "Conectar conta",
-        "news": "Notícias"
+        "settings": "Configurações"
       },
       "changePair": "Trocar par",
-      "changeVenue": "Trocar corretora",
+      "changeVenueA11y": "Trocar corretora. {{venue}}, {{status}}",
       "search": "Pesquisar pares",
       "openSettings": "Abrir configurações",
       "readOnly": "somente leitura",
-      "timeframe": "Timeframe",
+      "live": {
+        "live": "AO VIVO",
+        "connecting": "…",
+        "offline": "OFFLINE",
+        "liveA11y": "transmitindo ao vivo",
+        "connectingA11y": "conectando",
+        "offlineA11y": "sem transmissão neste dispositivo"
+      },
       "dismiss": "Dispensar",
-      "comingSoon": "Em breve",
       "priceChange": "{{absolute}} {{percent}} · 24h",
       "switchVenue": "Mudar de corretora",
       "noChartData": "Sem dados para este par aqui",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "Em destaque"
+    },
+    "fearGreed": {
+      "historyLabel_one": "Último dia",
+      "historyLabel_other": "Últimos {{count}} dias",
+      "noHistory": "Ainda sem histórico",
+      "chartAria": "Índice de Medo e Ganância ao longo do tempo",
+      "bucketsLabel": "O que o número significa",
+      "aboutBody": "Feito de volatilidade, momentum e volume, conversa nas redes, dominância do Bitcoin e tendências de busca, tudo reduzido a um número entre 0 e 100. Baixo é medo, alto é ganância. Ele lê o humor do mercado, não a direção."
+    },
+    "pnl": {
+      "windowSince": "Desde {{time}}",
+      "tradesCount_one": "{{count}} negociação",
+      "tradesCount_other": "{{count}} negociações",
+      "explainer": "Contado pelas execuções desta sessão: uma venda só realiza resultado contra uma posição que o Pairlens viu você abrir, então moedas que você já tinha não realizam nada. As taxas não são descontadas. É o mesmo número que a proteção de perda diária confere.",
+      "lockedHint": "Novas ordens seguem bloqueadas até a janela reiniciar ou você desbloqueá-las em Gestão de Risco.",
+      "guardrailLabel": "Proteção de perda diária",
+      "guardrailUsed": "{{used}}% do limite de {{cap}}%",
+      "noLimit": "Nenhum limite de perda diária definido. Defina um e o Pairlens para de aceitar ordens antes que um dia ruim vire um dia pior.",
+      "riskSettings": "Gestão de Risco",
+      "holdingsLabel": "O que você tem",
+      "connectTitle": "Nada conectado ainda",
+      "connectBody": "Conecte uma corretora, um broker ou uma carteira e os saldos aparecem aqui. As chaves ficam neste dispositivo.",
+      "noPositionsBody": "Os saldos aparecem aqui assim que uma conta conectada informar algum.",
+      "pricedFrom": "Avaliado por snapshots públicos das corretoras, atualizados a cada minuto.",
+      "someUnpriced": "Posições sem preço no momento não entram nos totais.",
+      "noFxRate": "Sem cotação de {{currency}} no momento, então as quantidades aparecem sem valor."
     },
     "markets": {
       "title": "Todos os pares",
@@ -4747,6 +4777,52 @@
       "trading": "Negociação",
       "connected": "Conectado",
       "perOrder": "{{percent}}% por ordem"
+    },
+    "desktopInvite": {
+      "bannerTitle": "O terminal completo está no seu computador",
+      "bannerBody": "Workspaces, bots, seus próprios indicadores e mais quatro corretoras.",
+      "bannerDismiss": "Ocultar",
+      "screenTitle": "Em uma tela maior",
+      "lead": "Seu celular carrega as partes do Pairlens que você quer na mão: o gráfico, o livro de ofertas, o ticket e o co-pilot. O resto do terminal foi feito para uma tela com espaço de sobra, e está esperando por você lá.",
+      "widerWindow": "Em uma janela mais larga",
+      "desktopApp": "No app de desktop",
+      "workspaces": {
+        "title": "Workspaces",
+        "body": "Gráfico, livro de ofertas, fluxo de negócios e co-pilot lado a lado, arrumados uma vez e salvos. A Workspace Store tem layouts prontos para copiar em um toque."
+      },
+      "bots": {
+        "title": "Bots",
+        "body": "Coloque uma estratégia em um mercado, faça o backtest antes e depois acompanhe o trabalho dela sob os mesmos limites de risco que você definiu aqui."
+      },
+      "indicators": {
+        "title": "Seus próprios indicadores",
+        "body": "Escreva indicadores de gráfico em Python de verdade, com pacotes do pip e uma prévia ao vivo ao lado do editor."
+      },
+      "workflows": {
+        "title": "Workflows",
+        "body": "Transforme um sinal em uma sequência de passos que segue observando o mercado enquanto você toca o seu dia."
+      },
+      "plugins": {
+        "title": "Plugin Store",
+        "body": "Adicione conectores, indicadores, temas e provedores de IA, e decida até onde cada um é confiável."
+      },
+      "keychain": {
+        "title": "Chaves no chaveiro do sistema",
+        "body": "O app de desktop entrega suas chaves de corretora ao macOS Keychain, ao Windows Credential Manager ou ao secret service do Linux, em vez de guardá-las no armazenamento do navegador."
+      },
+      "venues": {
+        "title": "Mais quatro corretoras",
+        "body": "Coinbase, Gate, KuCoin e MEXC não respondem a um navegador. O app de desktop alcança todas as quinze."
+      },
+      "background": {
+        "title": "Continua rodando quando você fecha",
+        "body": "Feche a janela e os bots e alertas seguem de pé, com uma notificação do sistema no instante em que um deles dispara."
+      },
+      "windows": {
+        "title": "Mais de uma janela",
+        "body": "Puxe um mercado para uma janela só dele e coloque em um segundo monitor."
+      },
+      "where": "Abra terminal.pairlens.finance no seu computador e tudo acima fica a uma janela de distância. Também existe um app de desktop, para macOS, Windows e Linux, e é ele que libera as últimas quatro."
     },
     "accounts": {
       "permissionsLabel": "Permissões",

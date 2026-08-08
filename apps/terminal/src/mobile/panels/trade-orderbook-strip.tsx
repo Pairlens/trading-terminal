@@ -76,7 +76,7 @@ export const TradeOrderbookStrip = memo(function TradeOrderbookStrip({
   return (
     <button
       aria-label={t('mobile.trade.openBook')}
-      className="flex w-full flex-col gap-2 rounded-xl bg-white/[0.045] px-3 pb-2.5 pt-[9px] text-left shadow-[inset_0_0_0_1px_rgba(255,255,255,0.07)] active:bg-white/[0.07]"
+      className="flex w-full flex-col gap-2 rounded-xl bg-[color:var(--pl-wash)] px-3 pb-2.5 pt-[9px] text-left shadow-[inset_0_0_0_1px_var(--pl-edge)] active:bg-[color:var(--pl-wash-strong)]"
       onClick={onOpen}
       type="button"
     >

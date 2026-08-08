@@ -168,23 +168,27 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
         </div>
       )}
 
-      <div
-        aria-hidden
-        className="pl-chart-scrim"
-        data-scrim={expanded ? 'expanded' : band}
-      />
+      {/* Two gradients with two jobs. The seam is a constant, tight fade that
+          hides the tonal step where the top chrome meets the chart canvas; the
+          scrim is the price readout's backstop and scales and fades with the
+          sheet, exactly like the readout it protects. */}
+      <div aria-hidden className="pl-chart-scrim" />
+      <div aria-hidden className="pl-chart-seam" />
 
-      {/* Price + timeframe chip, 8px under the chart top. */}
+      {/* Price + timeframe chip, 8px under the chart top. Both track the
+          sheet's live position through `--pl-sheet-dock` / `--pl-sheet-expand`
+          rather than through props — see mobile-sheet.tsx. */}
       <div className="pointer-events-none absolute inset-x-4 top-2 z-20 flex items-start justify-between gap-3">
-        {/* Hero only when the chart owns the screen. A docked panel takes it to
-            the design's 22px panel price, and the expanded snap — which leaves
-            exactly that row above the sheet — pins it there whatever the band
-            says. */}
-        <PriceReadout
-          size={band === 'full' && !expanded ? 'hero' : 'compact'}
-        />
+        <PriceReadout />
         {timeframeSlot ? (
-          <div className="pointer-events-auto shrink-0">{timeframeSlot}</div>
+          <div
+            className="pl-tf-chip pointer-events-auto shrink-0"
+            // Faded to nothing at the expanded snap: the chip is what the
+            // limit-line tag used to collide with up there.
+            data-faded={expanded ? 'true' : undefined}
+          >
+            {timeframeSlot}
+          </div>
         ) : null}
       </div>
 
@@ -217,8 +221,24 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
         </div>
       ) : null}
 
+      {/* The toolbar is mounted in every view and REVEALED by the sheet
+          leaving, rather than mounted when it has already left. Mounting it at
+          dismiss time is what made it pop: a drag-dismiss uncovers this strip
+          long before the gesture ends, so the toolbar used to appear into
+          already-visible empty space. Now it rides `--pl-sheet-dock`, which is
+          the sheet's own position — the entrance cannot desynchronise from the
+          exit because it IS the exit. */}
       {footer ? (
-        <div className="absolute inset-x-0 bottom-0 z-30">{footer}</div>
+        // `inert` while docked: the strip is hidden by opacity/transform, and
+        // an invisible toolbar must not keep nine buttons in the tab order and
+        // the accessibility tree under every panel.
+        <div
+          className="pl-chart-footer absolute inset-x-0 bottom-0 z-30"
+          data-docked={dismissible ? 'true' : undefined}
+          inert={dismissible || undefined}
+        >
+          {footer}
+        </div>
       ) : null}
     </div>
   )

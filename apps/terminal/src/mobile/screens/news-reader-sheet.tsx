@@ -338,7 +338,7 @@ export default memo(function NewsReaderSheet({
             />
             <button
               aria-label={t('common.clear')}
-              className="pl-hit-44 flex size-5 shrink-0 items-center justify-center rounded-full bg-white/[0.12] text-muted-foreground"
+              className="pl-hit-44 flex size-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--pl-wash-heavy)] text-muted-foreground"
               onClick={closeSearch}
               type="button"
             >

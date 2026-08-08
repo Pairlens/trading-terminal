@@ -4650,18 +4650,22 @@
         "orderbook": "Emir Defteri",
         "pairPicker": "Pariteler",
         "venuePicker": "Borsa",
-        "settings": "Ayarlar",
-        "connect": "Hesap Bağla",
-        "news": "Haberler"
+        "settings": "Ayarlar"
       },
       "changePair": "Parite değiştir",
-      "changeVenue": "Borsa değiştir",
+      "changeVenueA11y": "Borsa değiştir. {{venue}}, {{status}}",
       "search": "Parite ara",
       "openSettings": "Ayarları aç",
       "readOnly": "yalnızca okuma",
-      "timeframe": "Zaman dilimi",
+      "live": {
+        "live": "CANLI",
+        "connecting": "…",
+        "offline": "ÇEVRİMDIŞI",
+        "liveA11y": "canlı akıyor",
+        "connectingA11y": "bağlanıyor",
+        "offlineA11y": "bu cihazda akış yok"
+      },
       "dismiss": "Kapat",
-      "comingSoon": "Yakında",
       "priceChange": "{{absolute}} {{percent}} · 24s",
       "switchVenue": "Borsa değiştir",
       "noChartData": "Burada bu parite için veri yok",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "Öne çıkanlar"
+    },
+    "fearGreed": {
+      "historyLabel_one": "Son gün",
+      "historyLabel_other": "Son {{count}} gün",
+      "noHistory": "Henüz geçmiş yok",
+      "chartAria": "Zaman içinde Korku ve Açgözlülük endeksi",
+      "bucketsLabel": "Sayı ne anlama geliyor",
+      "aboutBody": "Oynaklık, momentum ve hacim, sosyal medya gürültüsü, Bitcoin hâkimiyeti ve arama trendlerinden derlenip 0 ile 100 arasında tek bir sayıya indirgenir. Düşük korku, yüksek açgözlülük demek. Yönü değil, havayı okur."
+    },
+    "pnl": {
+      "windowSince": "{{time}} itibarıyla",
+      "tradesCount_one": "{{count}} işlem",
+      "tradesCount_other": "{{count}} işlem",
+      "explainer": "Bu oturumdaki gerçekleşen emirlerden hesaplanır: bir satış yalnızca Pairlens'in açılışını gördüğü bir pozisyona karşı sonuç yazar, yani zaten elinde olan coinler hiçbir şey yazmaz. Komisyonlar düşülmez. Günlük kayıp sınırı da aynı rakama bakar.",
+      "lockedHint": "Pencere sıfırlanana ya da Risk Yönetimi'nden kilidi açana kadar yeni emirler engelli kalır.",
+      "guardrailLabel": "Günlük kayıp sınırı",
+      "guardrailUsed": "%{{cap}} sınırından %{{used}}",
+      "noLimit": "Günlük kayıp sınırı yok. Bir tane ekle, Pairlens kötü bir gün daha kötüye gitmeden emir almayı bıraksın.",
+      "riskSettings": "Risk Yönetimi",
+      "holdingsLabel": "Elindekiler",
+      "connectTitle": "Henüz bir şey bağlı değil",
+      "connectBody": "Bir borsa, bir aracı kurum ya da bir cüzdan bağla, bakiyeleri burada görünsün. Anahtarlar bu cihazda kalır.",
+      "noPositionsBody": "Bağlı bir hesap bakiye bildirdiği anda burada görünür.",
+      "pricedFrom": "Genel borsa anlık görüntülerinden değerlenir, her dakika yenilenir.",
+      "someUnpriced": "Şu anda fiyatı olmayan varlıklar toplamlara dahil edilmez.",
+      "noFxRate": "Şu anda {{currency}} kuru yok, bu yüzden tutarlar karşılığı olmadan gösteriliyor."
     },
     "markets": {
       "title": "Tüm pariteler",
@@ -4747,6 +4777,52 @@
       "trading": "İşlem",
       "connected": "Bağlı",
       "perOrder": "Emir başına %{{percent}}"
+    },
+    "desktopInvite": {
+      "bannerTitle": "Terminalin tamamı bilgisayarında",
+      "bannerBody": "Çalışma alanları, botlar, kendi göstergelerin ve dört borsa daha.",
+      "bannerDismiss": "Bunu gizle",
+      "screenTitle": "Daha büyük bir ekranda",
+      "lead": "Telefonun Pairlens'in elinin altında olmasını istediğin parçalarını taşır: grafik, emir defteri, işlem paneli ve co-pilot. Terminalin geri kalanı yayılacak yeri olan bir ekran için yapıldı ve seni orada bekliyor.",
+      "widerWindow": "Daha geniş bir pencerede",
+      "desktopApp": "Masaüstü uygulamasında",
+      "workspaces": {
+        "title": "Çalışma alanları",
+        "body": "Grafik, emir defteri, işlem şeridi ve co-pilot yan yana, bir kez düzenlenip kaydedilir. Çalışma Alanı Mağazası'nda tek dokunuşla kopyalayacağın hazır düzenler var."
+      },
+      "bots": {
+        "title": "Botlar",
+        "body": "Bir stratejiyi bir piyasaya kur, önce geçmiş veride test et, sonra burada belirlediğin risk sınırları altında çalışmasını izle."
+      },
+      "indicators": {
+        "title": "Kendi göstergelerin",
+        "body": "Grafik göstergelerini gerçek Python ile yaz; pip paketleri ve editörün yanında canlı önizleme var."
+      },
+      "workflows": {
+        "title": "İş akışları",
+        "body": "Bir sinyali, sen gününe devam ederken piyasayı izlemeyi sürdüren bir adım zincirine dönüştür."
+      },
+      "plugins": {
+        "title": "Eklenti Mağazası",
+        "body": "Bağlayıcı, gösterge, tema ve AI sağlayıcıları ekle; her birine ne kadar güvenileceğine sen karar ver."
+      },
+      "keychain": {
+        "title": "Anahtarlar sistem kasasında",
+        "body": "Masaüstü uygulaması borsa anahtarlarını tarayıcı deposunda tutmak yerine macOS Keychain, Windows Credential Manager ya da Linux gizli anahtar servisine teslim eder."
+      },
+      "venues": {
+        "title": "Dört borsa daha",
+        "body": "Coinbase, Gate, KuCoin ve MEXC bir tarayıcıya yanıt vermez. Masaüstü uygulaması on beşinin tamamına ulaşır."
+      },
+      "background": {
+        "title": "Kapattığında da çalışmayı sürdürür",
+        "body": "Pencereyi kapat, botlar ve uyarılar ayakta kalır; biri tetiklendiği anda sistem bildirimi gelir."
+      },
+      "windows": {
+        "title": "Birden fazla pencere",
+        "body": "Bir piyasayı kendi penceresine çıkar ve ikinci ekrana taşı."
+      },
+      "where": "Bilgisayarında terminal.pairlens.finance adresini aç, yukarıdakilerin hepsi bir pencere uzağında. Bir de masaüstü uygulaması var — macOS, Windows ve Linux için — son dördünü açan o."
     },
     "accounts": {
       "permissionsLabel": "İzinler",

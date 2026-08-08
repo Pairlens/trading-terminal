@@ -85,14 +85,26 @@ export function resolveSheetTop(
 /**
  * Chart band left above a sheet dragged to its EXPANDED snap.
  *
- * The design language decides this number, not the arithmetic: 64px is the
- * compact price readout's own row (8px inset + 22px price + 6px + 13px change
- * = 49) plus air. A panel dragged to the top therefore stops just under the
- * live price rather than under the context bar — on a trading terminal the
- * price is the one thing that may never be covered, and the readout is already
- * at its compact scale under any docked panel (design §"Panel price 22/600").
+ * It used to be 64px — the compact price readout's own row plus air — because
+ * the readout had to survive the expanded snap. It no longer does: the readout
+ * and the timeframe chip fade out as the sheet approaches the top (see
+ * `--pl-sheet-expand`), which is what buys the panel its real estate. So the
+ * band is now just the hairline of chart the sheet stops short of, and the
+ * sheet reaches essentially the top of the chart band.
  */
-export const EXPANDED_BAND = 64
+export const EXPANDED_BAND = 8
+
+/**
+ * The Trade panel's expanded band, which cannot be the generic one.
+ *
+ * The draggable limit line's grab strip is 44px tall and centred on the line,
+ * so 44px is the smallest band that can hold the pinned affordance whole
+ * (`limitStripBottom` floors it at `band - LIMIT_GRAB_HALF` = 22, and the strip
+ * then spans exactly 0–44). Anything less and half the tag and half the touch
+ * target would be clipped by the chart band's own overflow — the defect last
+ * round's pinning rule exists to prevent.
+ */
+export const TRADE_EXPANDED_BAND = 44
 
 /** The two heights one panel's sheet can have, in px, smallest first. */
 export type SheetSnaps = {
@@ -121,6 +133,7 @@ export function resolveSheetSnaps(
   band: number,
   chartTop: number,
   viewport: number,
+  expandedBand: number = EXPANDED_BAND,
 ): SheetSnaps {
   const defaultHeight = Math.max(
     viewport - resolveSheetTop(band, chartTop, viewport),
@@ -129,7 +142,7 @@ export function resolveSheetSnaps(
   return {
     defaultHeight,
     expandedHeight: Math.max(
-      viewport - chartTop - EXPANDED_BAND,
+      viewport - chartTop - expandedBand,
       defaultHeight + 1,
     ),
   }
@@ -186,4 +199,47 @@ export function parseTranslateY(transform: string): number | null {
   const parts = match[2].split(',').map((part) => Number(part.trim()))
   const value = match[1] ? parts[13] : parts[5]
   return typeof value === 'number' && Number.isFinite(value) ? value : null
+}
+
+/**
+ * The same number read off the INLINE `transform` vaul writes.
+ *
+ * Sampling the sheet's position once per animation frame is the one hot path
+ * on this surface, and `getComputedStyle` forces a style recalc every call.
+ * vaul sets `translate3d(0, Npx, 0)` inline, so the value can be had off the
+ * attribute string for free; `parseTranslateY` stays the fallback for the
+ * frames where the transform came from CSS instead.
+ */
+export function parseInlineTranslateY(transform: string): number | null {
+  const match = /translate3d\(\s*[^,]*,\s*(-?[\d.]+)px/.exec(transform)
+  if (!match) return null
+  const value = Number(match[1])
+  return Number.isFinite(value) ? value : null
+}
+
+/**
+ * The sheet's live position as the two 0→1 numbers the chart band reacts to.
+ *
+ * `dock` is how far the sheet has come up from off screen to its default snap;
+ * `expand` is how far it has gone on from there to the expanded snap. They are
+ * written to CSS custom properties from a rAF (never React state) so the price
+ * readout, the timeframe chip and the drawing toolbar can follow a finger
+ * frame by frame on the compositor.
+ */
+export function sheetProgress(
+  translateY: number,
+  viewport: number,
+  snaps: SheetSnaps,
+): { dock: number; expand: number } {
+  const visible = viewport - translateY
+  const span = Math.max(1, snaps.expandedHeight - snaps.defaultHeight)
+  return {
+    dock: clamp01(snaps.defaultHeight > 0 ? visible / snaps.defaultHeight : 0),
+    expand: clamp01((visible - snaps.defaultHeight) / span),
+  }
+}
+
+function clamp01(value: number): number {
+  if (!Number.isFinite(value)) return 0
+  return value < 0 ? 0 : value > 1 ? 1 : value
 }

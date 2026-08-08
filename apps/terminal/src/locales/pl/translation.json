@@ -4680,18 +4680,22 @@
         "orderbook": "Arkusz zleceń",
         "pairPicker": "Pary",
         "venuePicker": "Giełda",
-        "settings": "Ustawienia",
-        "connect": "Podłącz konto",
-        "news": "Wiadomości"
+        "settings": "Ustawienia"
       },
       "changePair": "Zmień parę",
-      "changeVenue": "Zmień giełdę",
+      "changeVenueA11y": "Zmień giełdę. {{venue}}, {{status}}",
       "search": "Szukaj par",
       "openSettings": "Otwórz ustawienia",
       "readOnly": "tylko do odczytu",
-      "timeframe": "Interwał",
+      "live": {
+        "live": "NA ŻYWO",
+        "connecting": "…",
+        "offline": "OFFLINE",
+        "liveA11y": "transmisja na żywo",
+        "connectingA11y": "łączenie",
+        "offlineA11y": "brak transmisji na tym urządzeniu"
+      },
       "dismiss": "Odrzuć",
-      "comingSoon": "Wkrótce",
       "priceChange": "{{absolute}} {{percent}} · 24h",
       "switchVenue": "Przełącz giełdę",
       "noChartData": "Brak danych dla tej pary tutaj",
@@ -4716,6 +4720,36 @@
     },
     "discover": {
       "featured": "Polecane"
+    },
+    "fearGreed": {
+      "historyLabel_one": "Ostatni dzień",
+      "historyLabel_few": "Ostatnie {{count}} dni",
+      "historyLabel_many": "Ostatnie {{count}} dni",
+      "historyLabel_other": "Ostatnie {{count}} dni",
+      "noHistory": "Brak historii",
+      "chartAria": "Indeks strachu i chciwości w czasie",
+      "bucketsLabel": "Co oznacza ta liczba",
+      "aboutBody": "Powstaje ze zmienności, momentum i wolumenu, szumu w mediach społecznościowych, dominacji Bitcoina i trendów wyszukiwania, sprowadzonych do jednej liczby od 0 do 100. Nisko to strach, wysoko to chciwość. Czyta nastrój, nie kierunek."
+    },
+    "pnl": {
+      "windowSince": "Od {{time}}",
+      "tradesCount_one": "{{count}} transakcja",
+      "tradesCount_few": "{{count}} transakcje",
+      "tradesCount_many": "{{count}} transakcji",
+      "tradesCount_other": "{{count}} transakcji",
+      "explainer": "Liczone z realizacji w tej sesji: sprzedaż realizuje wynik tylko względem pozycji, której otwarcie Pairlens widział, więc monety trzymane wcześniej nie realizują nic. Opłaty nie są odejmowane. To ta sama wartość, którą sprawdza limit dziennej straty.",
+      "lockedHint": "Nowe zlecenia pozostają zablokowane, dopóki okno się nie zresetuje albo nie odblokujesz ich w Zarządzaniu ryzykiem.",
+      "guardrailLabel": "Limit dziennej straty",
+      "guardrailUsed": "{{used}}% z limitu {{cap}}%",
+      "noLimit": "Nie ustawiono limitu dziennej straty. Ustaw go, a Pairlens przestanie przyjmować zlecenia, zanim słaby dzień zamieni się w gorszy.",
+      "riskSettings": "Zarządzanie ryzykiem",
+      "holdingsLabel": "Co posiadasz",
+      "connectTitle": "Nic jeszcze nie podłączono",
+      "connectBody": "Podłącz giełdę, brokera lub portfel, a jego salda pojawią się tutaj. Klucze zostają na tym urządzeniu.",
+      "noPositionsBody": "Salda pojawią się tutaj, gdy tylko podłączone konto je zgłosi.",
+      "pricedFrom": "Wycena na podstawie publicznych migawek z giełd, odświeżana co minutę.",
+      "someUnpriced": "Pozycje bez aktualnej ceny nie są wliczane do sum.",
+      "noFxRate": "Brak kursu {{currency}} w tej chwili, więc kwoty są pokazane bez wartości."
     },
     "markets": {
       "title": "Wszystkie pary",
@@ -4779,6 +4813,52 @@
       "trading": "Handel",
       "connected": "Połączono",
       "perOrder": "{{percent}}% na zlecenie"
+    },
+    "desktopInvite": {
+      "bannerTitle": "Pełny terminal jest na Twoim komputerze",
+      "bannerBody": "Obszary robocze, boty, własne wskaźniki i jeszcze cztery giełdy.",
+      "bannerDismiss": "Ukryj to",
+      "screenTitle": "Na większym ekranie",
+      "lead": "Telefon nosi te części Pairlens, które chcesz mieć pod ręką: wykres, arkusz zleceń, panel transakcyjny i Co-pilota. Resztę terminala zbudowano pod ekran, na którym jest się gdzie rozłożyć, i tam na Ciebie czeka.",
+      "widerWindow": "W szerszym oknie",
+      "desktopApp": "W aplikacji na komputer",
+      "workspaces": {
+        "title": "Obszary robocze",
+        "body": "Wykres, arkusz zleceń, transakcje i Co-pilot obok siebie, ułożone raz i zapisane. W Workspace Store czekają gotowe układy, które skopiujesz jednym dotknięciem."
+      },
+      "bots": {
+        "title": "Boty",
+        "body": "Wdróż strategię na rynek, najpierw przetestuj ją na danych historycznych, a potem patrz, jak pracuje pod tymi samymi limitami ryzyka, które ustawiasz tutaj."
+      },
+      "indicators": {
+        "title": "Własne wskaźniki",
+        "body": "Pisz wskaźniki wykresu w prawdziwym Pythonie, z pakietami pip i podglądem na żywo obok edytora."
+      },
+      "workflows": {
+        "title": "Workflowy",
+        "body": "Zamień sygnał w łańcuch kroków, który pilnuje rynku, gdy Ty zajmujesz się swoimi sprawami."
+      },
+      "plugins": {
+        "title": "Plugin Store",
+        "body": "Dodawaj konektory, wskaźniki, motywy i dostawców AI oraz decyduj, jak daleko sięga zaufanie do każdego z nich."
+      },
+      "keychain": {
+        "title": "Klucze w magazynie systemu",
+        "body": "Aplikacja na komputer przekazuje Twoje klucze giełdowe do macOS Keychain, Windows Credential Manager albo usługi sekretów Linuksa, zamiast trzymać je w pamięci przeglądarki."
+      },
+      "venues": {
+        "title": "Jeszcze cztery giełdy",
+        "body": "Coinbase, Gate, KuCoin i MEXC nie odpowiadają przeglądarce. Aplikacja na komputer sięga po wszystkie piętnaście."
+      },
+      "background": {
+        "title": "Działa dalej po zamknięciu",
+        "body": "Zamknij okno, a boty i alerty zostają na posterunku — system powiadomi Cię w chwili, gdy któryś się odpali."
+      },
+      "windows": {
+        "title": "Więcej niż jedno okno",
+        "body": "Wyciągnij rynek do własnego okna i przenieś go na drugi ekran."
+      },
+      "where": "Otwórz terminal.pairlens.finance na komputerze, a wszystko powyżej dzieli od Ciebie jedno okno. Jest też aplikacja na komputer — dla macOS, Windows i Linux — i to ona odblokowuje te ostatnie cztery."
     },
     "accounts": {
       "permissionsLabel": "Uprawnienia",

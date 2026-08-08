@@ -37,6 +37,8 @@ describe('litTab', () => {
     for (const value of Object.values(OVERLAY_OWNING_TAB)) {
       expect(value === null || typeof value === 'string').toBe(true)
     }
-    expect(Object.keys(OVERLAY_OWNING_TAB).length).toBe(8)
+    // The `Record<MobileOverlayKind, …>` type is the real guard; this count
+    // only catches a kind deleted from the union and left in the table.
+    expect(Object.keys(OVERLAY_OWNING_TAB).length).toBe(10)
   })
 })

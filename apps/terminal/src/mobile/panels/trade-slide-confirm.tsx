@@ -52,7 +52,11 @@ export const TradeSlideConfirm = memo(function TradeSlideConfirm({
   })
 
   const token = side === 'buy' ? '--up' : '--down'
-  const ink = side === 'buy' ? 'oklch(0.16 0.02 158)' : 'oklch(0.16 0.02 25)'
+  // Ink derived from the fill instead of a fixed dark green/red: `--up` and
+  // `--down` are `--chart-2`/`--destructive`, which every theme repaints. A
+  // heavy mix toward black keeps the label dark on any of them — buy/sell
+  // fills are saturated mid-to-bright by convention, in light themes too.
+  const ink = `color-mix(in oklab, var(${token}) 20%, black)`
 
   return (
     <div>

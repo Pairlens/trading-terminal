@@ -4650,18 +4650,22 @@
         "orderbook": "Order book",
         "pairPicker": "Coppie",
         "venuePicker": "Piattaforma",
-        "settings": "Impostazioni",
-        "connect": "Collega account",
-        "news": "Notizie"
+        "settings": "Impostazioni"
       },
       "changePair": "Cambia coppia",
-      "changeVenue": "Cambia piattaforma",
+      "changeVenueA11y": "Cambia piattaforma. {{venue}}, {{status}}",
       "search": "Cerca coppie",
       "openSettings": "Apri impostazioni",
       "readOnly": "sola lettura",
-      "timeframe": "Timeframe",
+      "live": {
+        "live": "LIVE",
+        "connecting": "…",
+        "offline": "OFFLINE",
+        "liveA11y": "trasmette in tempo reale",
+        "connectingA11y": "connessione in corso",
+        "offlineA11y": "non trasmette su questo dispositivo"
+      },
       "dismiss": "Ignora",
-      "comingSoon": "In arrivo",
       "priceChange": "{{absolute}} {{percent}} · 24h",
       "switchVenue": "Cambia piattaforma",
       "noChartData": "Nessun dato per questa coppia qui",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "In evidenza"
+    },
+    "fearGreed": {
+      "historyLabel_one": "Ultimo giorno",
+      "historyLabel_other": "Ultimi {{count}} giorni",
+      "noHistory": "Ancora nessuno storico",
+      "chartAria": "Indice di Paura e Avidità nel tempo",
+      "bucketsLabel": "Cosa significa il numero",
+      "aboutBody": "Nasce da volatilità, momentum e volumi, conversazioni social, dominanza di Bitcoin e tendenze di ricerca, condensati in un unico numero tra 0 e 100. Basso è paura, alto è avidità. Legge l'umore, non la direzione."
+    },
+    "pnl": {
+      "windowSince": "Dalle {{time}}",
+      "tradesCount_one": "{{count}} operazione",
+      "tradesCount_other": "{{count}} operazioni",
+      "explainer": "Calcolato dalle esecuzioni di questa sessione: una vendita realizza solo contro una posizione che Pairlens ti ha visto aprire, quindi le monete che avevi già non realizzano nulla. Le commissioni non sono dedotte. È la stessa cifra che controlla la protezione sulla perdita giornaliera.",
+      "lockedHint": "I nuovi ordini restano bloccati finché la finestra non si azzera o non li sblocchi in Gestione del rischio.",
+      "guardrailLabel": "Protezione sulla perdita giornaliera",
+      "guardrailUsed": "{{used}}% del limite del {{cap}}%",
+      "noLimit": "Nessun limite di perdita giornaliera impostato. Impostane uno e Pairlens smette di accettare ordini prima che una brutta giornata ne diventi una peggiore.",
+      "riskSettings": "Gestione del rischio",
+      "holdingsLabel": "Cosa possiedi",
+      "connectTitle": "Non hai ancora collegato nulla",
+      "connectBody": "Collega un exchange, un broker o un wallet e i suoi saldi compaiono qui. Le chiavi restano su questo dispositivo.",
+      "noPositionsBody": "I saldi compaiono qui appena un account collegato ne segnala uno.",
+      "pricedFrom": "Valorizzato da snapshot pubblici delle piattaforme, aggiornati ogni minuto.",
+      "someUnpriced": "Le posizioni senza prezzo al momento non rientrano nei totali.",
+      "noFxRate": "Al momento non c'è un tasso {{currency}}, quindi gli importi sono mostrati senza valore."
     },
     "markets": {
       "title": "Tutte le coppie",
@@ -4747,6 +4777,52 @@
       "trading": "Trading",
       "connected": "Connesso",
       "perOrder": "{{percent}}% per ordine"
+    },
+    "desktopInvite": {
+      "bannerTitle": "Il terminale completo è sul tuo computer",
+      "bannerBody": "Spazi di lavoro, bot, i tuoi indicatori e quattro piattaforme in più.",
+      "bannerDismiss": "Nascondi",
+      "screenTitle": "Su uno schermo più grande",
+      "lead": "Il telefono porta con sé le parti di Pairlens che vuoi avere in mano: il grafico, il book, il ticket e il co-pilot. Il resto del terminale è nato per uno schermo con spazio a sufficienza, e lì ti aspetta.",
+      "widerWindow": "In una finestra più ampia",
+      "desktopApp": "Nell'app desktop",
+      "workspaces": {
+        "title": "Spazi di lavoro",
+        "body": "Grafico, order book, flusso delle operazioni e co-pilot uno accanto all'altro, sistemati una volta e salvati. Nel Workspace Store trovi layout già pronti da copiare con un tocco."
+      },
+      "bots": {
+        "title": "Bot",
+        "body": "Applica una strategia a un mercato, prima fai il backtest, poi guardala lavorare con gli stessi limiti di rischio che imposti qui."
+      },
+      "indicators": {
+        "title": "I tuoi indicatori",
+        "body": "Scrivi indicatori di grafico in Python vero, con pacchetti pip e un'anteprima in tempo reale accanto all'editor."
+      },
+      "workflows": {
+        "title": "Workflow",
+        "body": "Trasforma un segnale in una catena di passaggi che continua a sorvegliare il mercato mentre tu vai avanti con la tua giornata."
+      },
+      "plugins": {
+        "title": "Plugin Store",
+        "body": "Aggiungi connettori, indicatori, temi e provider AI, e decidi fin dove fidarti di ciascuno."
+      },
+      "keychain": {
+        "title": "Chiavi nel portachiavi di sistema",
+        "body": "L'app desktop consegna le chiavi dell'exchange al Portachiavi (Keychain) di macOS, a Windows Credential Manager o al Linux Secret Service, invece di tenerle nella memoria del browser."
+      },
+      "venues": {
+        "title": "Quattro piattaforme in più",
+        "body": "Coinbase, Gate, KuCoin e MEXC non rispondono a un browser. L'app desktop le raggiunge tutte e quindici."
+      },
+      "background": {
+        "title": "Continua a girare quando la chiudi",
+        "body": "Chiudi la finestra e bot e avvisi restano attivi, con una notifica di sistema nel momento esatto in cui uno scatta."
+      },
+      "windows": {
+        "title": "Più di una finestra",
+        "body": "Porta un mercato in una finestra tutta sua e mettila su un secondo schermo."
+      },
+      "where": "Apri terminal.pairlens.finance sul tuo computer e tutto quello che c'è qui sopra è a una finestra di distanza. C'è anche un'app desktop, per macOS, Windows e Linux, ed è quella che sblocca le ultime quattro."
     },
     "accounts": {
       "permissionsLabel": "Permessi",

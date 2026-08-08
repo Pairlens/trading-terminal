@@ -4650,18 +4650,22 @@
         "orderbook": "Order book",
         "pairPicker": "Pairs",
         "venuePicker": "Venue",
-        "settings": "Settings",
-        "connect": "Connect account",
-        "news": "News"
+        "settings": "Settings"
       },
       "changePair": "Change pair",
-      "changeVenue": "Change venue",
+      "changeVenueA11y": "Change venue. {{venue}}, {{status}}",
       "search": "Search pairs",
       "openSettings": "Open settings",
       "readOnly": "read-only",
-      "timeframe": "Timeframe",
+      "live": {
+        "live": "LIVE",
+        "connecting": "…",
+        "offline": "OFFLINE",
+        "liveA11y": "streaming live",
+        "connectingA11y": "connecting",
+        "offlineA11y": "not streaming on this device"
+      },
       "dismiss": "Dismiss",
-      "comingSoon": "Coming soon",
       "priceChange": "{{absolute}} {{percent}} · 24h",
       "switchVenue": "Switch venue",
       "noChartData": "No data for this pair here",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "Featured"
+    },
+    "fearGreed": {
+      "historyLabel_one": "Last day",
+      "historyLabel_other": "Last {{count}} days",
+      "noHistory": "No history yet",
+      "chartAria": "Fear and Greed index over time",
+      "bucketsLabel": "What the number means",
+      "aboutBody": "Built from volatility, momentum and volume, social chatter, Bitcoin dominance and search trends, boiled down to one number between 0 and 100. Low is fear, high is greed. It reads the mood, not the direction."
+    },
+    "pnl": {
+      "windowSince": "Since {{time}}",
+      "tradesCount_one": "{{count}} trade",
+      "tradesCount_other": "{{count}} trades",
+      "explainer": "Counted from fills in this session: a sell only realises against a position Pairlens watched you open, so coins you already held realise nothing. Fees are not deducted. It is the same figure the daily-loss guardrail checks.",
+      "lockedHint": "New orders stay blocked until the window resets or you unlock them in Risk settings.",
+      "guardrailLabel": "Daily loss guardrail",
+      "guardrailUsed": "{{used}}% of the {{cap}}% limit",
+      "noLimit": "No daily loss limit set. Add one and Pairlens stops taking orders before a bad day turns into a worse one.",
+      "riskSettings": "Risk settings",
+      "holdingsLabel": "What you hold",
+      "connectTitle": "Nothing connected yet",
+      "connectBody": "Connect an exchange, a broker or a wallet and its balances show up here. The keys stay on this device.",
+      "noPositionsBody": "Balances appear here as soon as a connected account reports one.",
+      "pricedFrom": "Valued from public venue snapshots, refreshed every minute.",
+      "someUnpriced": "Holdings without a price right now are not counted in the totals.",
+      "noFxRate": "No {{currency}} rate right now, so amounts are shown without a value."
     },
     "markets": {
       "title": "All pairs",
@@ -4747,6 +4777,52 @@
       "trading": "Trading",
       "connected": "Connected",
       "perOrder": "{{percent}}% per order"
+    },
+    "desktopInvite": {
+      "bannerTitle": "The full terminal is on your computer",
+      "bannerBody": "Workspaces, bots, your own indicators and four more venues.",
+      "bannerDismiss": "Hide this",
+      "screenTitle": "On a bigger screen",
+      "lead": "Your phone carries the parts of Pairlens you want in your hand: the chart, the book, the ticket and the co-pilot. The rest of the terminal was built for a screen with room to spread out, and it is waiting for you there.",
+      "widerWindow": "In a wider window",
+      "desktopApp": "In the desktop app",
+      "workspaces": {
+        "title": "Workspaces",
+        "body": "Chart, order book, tape and co-pilot side by side, arranged once and saved. The Workspace Store has ready-made layouts you can copy in a tap."
+      },
+      "bots": {
+        "title": "Bots",
+        "body": "Deploy a strategy to a market, backtest it first, then watch it work under the same risk limits you set here."
+      },
+      "indicators": {
+        "title": "Your own indicators",
+        "body": "Write chart indicators in real Python, with pip packages and a live preview beside the editor."
+      },
+      "workflows": {
+        "title": "Workflows",
+        "body": "Turn a signal into a chain of steps that keeps watching the market while you get on with your day."
+      },
+      "plugins": {
+        "title": "Plugin Store",
+        "body": "Add connectors, indicators, themes and AI providers, and decide how far each one is trusted."
+      },
+      "keychain": {
+        "title": "Keys in the system keychain",
+        "body": "The desktop app hands your exchange keys to macOS Keychain, Windows Credential Manager or the Linux secret service instead of keeping them in browser storage."
+      },
+      "venues": {
+        "title": "Four more venues",
+        "body": "Coinbase, Gate, KuCoin and MEXC do not answer a browser. The desktop app reaches all fifteen."
+      },
+      "background": {
+        "title": "Keeps running when you close it",
+        "body": "Close the window and bots and alerts stay up, with a system notification the moment one fires."
+      },
+      "windows": {
+        "title": "More than one window",
+        "body": "Pull a market out into a window of its own and put it on a second screen."
+      },
+      "where": "Open terminal.pairlens.finance on your computer and everything above is one window away. There is a desktop app too, for macOS, Windows and Linux, and it is the one that unlocks the last four."
     },
     "accounts": {
       "permissionsLabel": "Permissions",

@@ -40,8 +40,14 @@ export function AuthRequiredPrompt({
 }: AuthRequiredPromptProps) {
   const { t } = useTranslation()
   return (
-    <div className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto p-6">
-      <Empty className="max-w-[280px]">
+    // Centred by `my-auto` on the card rather than by `justify-center` on the
+    // scroller. They look identical whenever the card fits — which is every
+    // desktop pane — but a centred flex child that does NOT fit overflows past
+    // BOTH ends of its scroll container and the top half becomes unreachable.
+    // Auto margins collapse to zero instead, so a short viewport (a phone's
+    // panel slice) gets a card that starts at the top and scrolls.
+    <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-6 py-2">
+      <Empty className="my-auto max-w-[280px] flex-none">
         <EmptyHeader className="gap-3">
           <AiOrb size="72px" className="mb-2" />
           <EmptyTitle className="text-base">

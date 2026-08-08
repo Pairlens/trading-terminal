@@ -79,6 +79,10 @@ export type MobileOverlay =
   | { kind: 'news'; index: number }
   /** Discover's "All markets" — the full list as its own screen. */
   | { kind: 'markets' }
+  /** Discover's Fear & Greed card, opened out into the index's history. */
+  | { kind: 'fearGreed' }
+  /** Discover's P&L card, opened out into the window and the holdings. */
+  | { kind: 'pnl' }
   /** One connected credential: rename, permissions, disconnect. */
   | { kind: 'accountDetail'; credentialId: string }
 

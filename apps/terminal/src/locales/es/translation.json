@@ -4650,18 +4650,22 @@
         "orderbook": "Libro de órdenes",
         "pairPicker": "Pares",
         "venuePicker": "Venue",
-        "settings": "Configuración",
-        "connect": "Conectar cuenta",
-        "news": "Noticias"
+        "settings": "Configuración"
       },
       "changePair": "Cambiar par",
-      "changeVenue": "Cambiar venue",
+      "changeVenueA11y": "Cambiar venue. {{venue}}, {{status}}",
       "search": "Buscar pares",
       "openSettings": "Abrir configuración",
       "readOnly": "solo lectura",
-      "timeframe": "Temporalidad",
+      "live": {
+        "live": "EN VIVO",
+        "connecting": "…",
+        "offline": "SIN DATOS",
+        "liveA11y": "transmitiendo en vivo",
+        "connectingA11y": "conectando",
+        "offlineA11y": "no transmite en este dispositivo"
+      },
       "dismiss": "Descartar",
-      "comingSoon": "Próximamente",
       "priceChange": "{{absolute}} {{percent}} · 24h",
       "switchVenue": "Cambiar de venue",
       "noChartData": "No hay datos para este par aquí",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "Destacados"
+    },
+    "fearGreed": {
+      "historyLabel_one": "Último día",
+      "historyLabel_other": "Últimos {{count}} días",
+      "noHistory": "Aún sin historial",
+      "chartAria": "Índice de Miedo y Codicia a lo largo del tiempo",
+      "bucketsLabel": "Qué significa el número",
+      "aboutBody": "Se construye con la volatilidad, el momentum y el volumen, la conversación en redes, la dominancia de Bitcoin y las tendencias de búsqueda, todo condensado en un solo número entre 0 y 100. Bajo es miedo, alto es codicia. Lee el ánimo, no la dirección."
+    },
+    "pnl": {
+      "windowSince": "Desde {{time}}",
+      "tradesCount_one": "{{count}} operación",
+      "tradesCount_other": "{{count}} operaciones",
+      "explainer": "Se calcula con las ejecuciones de esta sesión: una venta solo realiza contra una posición que Pairlens te vio abrir, así que las monedas que ya tenías no realizan nada. No se descuentan comisiones. Es la misma cifra que revisa la protección de pérdida diaria.",
+      "lockedHint": "Las órdenes nuevas siguen bloqueadas hasta que se reinicie la ventana o las desbloquees en Gestión de riesgo.",
+      "guardrailLabel": "Protección de pérdida diaria",
+      "guardrailUsed": "{{used}}% del límite del {{cap}}%",
+      "noLimit": "No hay límite de pérdida diaria. Pon uno y Pairlens dejará de aceptar órdenes antes de que un mal día se convierta en uno peor.",
+      "riskSettings": "Gestión de riesgo",
+      "holdingsLabel": "Lo que tienes",
+      "connectTitle": "Aún no hay nada conectado",
+      "connectBody": "Conecta un exchange, un bróker o una wallet y sus saldos aparecerán aquí. Las claves se quedan en este dispositivo.",
+      "noPositionsBody": "Los saldos aparecerán aquí en cuanto una cuenta conectada informe de alguno.",
+      "pricedFrom": "Valorado con snapshots públicos de los venues, actualizados cada minuto.",
+      "someUnpriced": "Las posiciones sin precio ahora mismo no se cuentan en los totales.",
+      "noFxRate": "Ahora mismo no hay tipo de cambio de {{currency}}, así que los importes se muestran sin valor."
     },
     "markets": {
       "title": "Todos los pares",
@@ -4747,6 +4777,52 @@
       "trading": "Trading",
       "connected": "Conectado",
       "perOrder": "{{percent}}% por orden"
+    },
+    "desktopInvite": {
+      "bannerTitle": "El terminal completo está en tu equipo",
+      "bannerBody": "Espacios de trabajo, bots, tus propios indicadores y cuatro venues más.",
+      "bannerDismiss": "Ocultar",
+      "screenTitle": "En una pantalla más grande",
+      "lead": "Tu teléfono lleva las partes de Pairlens que quieres tener en la mano: el gráfico, el libro, el ticket y el copiloto. El resto del terminal se hizo para una pantalla con sitio de sobra, y allí te espera.",
+      "widerWindow": "En una ventana más ancha",
+      "desktopApp": "En la app de escritorio",
+      "workspaces": {
+        "title": "Espacios de trabajo",
+        "body": "Gráfico, libro de órdenes, cinta de operaciones y copiloto uno al lado del otro, colocados una vez y guardados. La Tienda de espacios trae diseños ya hechos que copias con un toque."
+      },
+      "bots": {
+        "title": "Bots",
+        "body": "Despliega una estrategia en un mercado, hazle antes el backtest y luego mírala trabajar con los mismos límites de riesgo que fijas aquí."
+      },
+      "indicators": {
+        "title": "Tus propios indicadores",
+        "body": "Escribe indicadores de gráfico en Python de verdad, con paquetes de pip y una vista previa en vivo junto al editor."
+      },
+      "workflows": {
+        "title": "Flujos de trabajo",
+        "body": "Convierte una señal en una cadena de pasos que sigue vigilando el mercado mientras tú sigues con tu día."
+      },
+      "plugins": {
+        "title": "Tienda de plugins",
+        "body": "Añade conectores, indicadores, temas y proveedores de IA, y decide hasta dónde confías en cada uno."
+      },
+      "keychain": {
+        "title": "Claves en el llavero del sistema",
+        "body": "La app de escritorio entrega tus claves de exchange al Llavero de macOS, al Administrador de credenciales de Windows o al Secret Service de Linux, en vez de guardarlas en el almacenamiento del navegador."
+      },
+      "venues": {
+        "title": "Cuatro venues más",
+        "body": "Coinbase, Gate, KuCoin y MEXC no responden a un navegador. La app de escritorio llega a los quince."
+      },
+      "background": {
+        "title": "Sigue funcionando cuando la cierras",
+        "body": "Cierra la ventana y los bots y las alertas siguen en pie, con una notificación del sistema en cuanto una salta."
+      },
+      "windows": {
+        "title": "Más de una ventana",
+        "body": "Saca un mercado a su propia ventana y ponla en un segundo monitor."
+      },
+      "where": "Abre terminal.pairlens.finance en tu equipo y todo lo de arriba queda a una ventana de distancia. También hay app de escritorio, para macOS, Windows y Linux, y es la que desbloquea las últimas cuatro."
     },
     "accounts": {
       "permissionsLabel": "Permisos",

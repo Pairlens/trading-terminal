@@ -146,7 +146,7 @@ const ToolTile = memo(function ToolTile({
         'flex flex-col items-center gap-1.5 rounded-xl px-1 py-[9px]',
         selected
           ? 'bg-[color-mix(in_oklch,var(--primary)_20%,transparent)] text-foreground shadow-[inset_0_0_0_1px_color-mix(in_oklch,var(--primary)_46%,transparent)]'
-          : 'bg-white/[.045] text-muted-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,.06)]',
+          : 'bg-[color:var(--pl-wash)] text-muted-foreground shadow-[inset_0_0_0_1px_var(--pl-edge)]',
       )}
       onClick={() => onPick(toolKeyValue, option)}
       type="button"

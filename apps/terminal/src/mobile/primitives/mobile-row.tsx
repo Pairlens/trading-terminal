@@ -69,8 +69,8 @@ export const MobileRow = memo(function MobileRow({
 
   const shared = cn(
     'flex w-full items-center gap-[11px] px-4 py-2.5 text-left',
-    'min-h-[44px] border-t border-t-[rgba(255,255,255,0.055)]',
-    selected && 'bg-white/[0.045]',
+    'min-h-[44px] border-t border-t-[color:var(--pl-hairline)]',
+    selected && 'bg-[color:var(--pl-wash)]',
     disabled && 'opacity-45',
     className,
   )
@@ -90,7 +90,7 @@ export const MobileRow = memo(function MobileRow({
   return (
     <button
       aria-current={selected || undefined}
-      className={cn(shared, 'active:bg-white/[0.06]')}
+      className={cn(shared, 'active:bg-[color:var(--pl-wash-strong)]')}
       disabled={disabled}
       onClick={onPress}
       type="button"

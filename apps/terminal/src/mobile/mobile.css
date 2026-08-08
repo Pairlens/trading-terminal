@@ -4,10 +4,11 @@
  *
  * Mobile "Focus" surface paint.
  *
- * Every value here is a deliberate glass/scrim treatment from the design
- * handoff that has no semantic token — that is the ONLY reason a literal
- * colour is allowed to live in this file. Anything with a token (foreground,
- * up/down, primary, border) stays a token in the components.
+ * Every glass/scrim treatment from the design handoff, expressed against the
+ * theme tokens rather than against the Warm Precision literals it was drawn
+ * in — see the Paint block below for the mapping and for the four literals
+ * that survived it (the venue plate, the shadows, the pinned radii and the
+ * scrim's black).
  *
  * These are utilities rather than a <Glass> component on purpose: a wrapper
  * div around forty elements fights flex layout for values that are pure paint.
@@ -41,6 +42,175 @@
        chart floor stops here and sheets pad their scroll region by the same
        amount. */
     --pl-tabbar-total: calc(var(--pl-tabbar-h) + 8px + var(--pl-bottom-inset));
+
+    /* vaul's release curve, restated once for everything that has to settle in
+       lockstep with the sheet. */
+    --pl-sheet-ease: cubic-bezier(0.32, 0.72, 0, 1);
+    --pl-sheet-dur: 0.5s;
+  }
+
+  /* ── Paint ───────────────────────────────────────────────────────
+     Every fill, line and wash the shell draws, derived from the shadcn tokens
+     a `theme:override` plugin sets. Picking a theme repaints the sheet, the
+     top bar, the tab bar and the chips with it, and a LIGHT theme inverts
+     them — which the old alpha-on-white literals could not do, because white
+     at 6% over paper is still white.
+
+     Three questions decide which variable a colour becomes:
+       an opaque fill              → a surface step, `--pl-surface*`
+       a 1px division              → `--pl-hairline` / `--pl-edge*`
+       a tint over another surface → `--pl-wash*`
+     Accents stay `--primary`, P&L stays `--up`/`--down`, and the AI gradient
+     stays `--magic-*`. Shadows stay black: they read as depth over any fill.
+
+     `:root` ONLY — deliberately NOT also `.pl-mobile-root` like the geometry
+     block above. Custom properties resolve by proximity before specificity, so
+     a copy declared on the shell element would beat the inherited
+     `:root.dark` value for the whole subtree and every dark lift below would
+     silently never apply. Nothing here is portaled-only, so `:root` is
+     enough for the sheet and the overlays on <body> as well. */
+  :root {
+    /* The elevation ladder, built from `--card` rather than walking
+       `--card` → `--popover` → `--secondary`: `--popover` is not reliably a
+       step ABOVE `--card` (cyberpunk-neon puts it below), and a popover over
+       a toolbar over a sheet needs the ladder to be monotonic whoever wrote
+       the theme.
+
+       Light themes take no lift at all — paper is already the top of the
+       ladder and cannot get brighter, so there the step is carried by
+       `--pl-edge` and the shadows instead. */
+    --pl-surface: var(--card);
+    --pl-surface-raised: var(--card);
+    --pl-surface-overlay: var(--card);
+    --pl-surface-float: var(--card);
+
+    /* The co-pilot's sheet: the same surface pulled toward `--accent`, the one
+       token every theme defines in its primary's hue. It is the fill half of
+       the magic hairline — an AI surface should read as one before the
+       gradient on its edge is noticed. */
+    --pl-surface-ai: color-mix(in oklab, var(--card) 70%, var(--accent) 30%);
+
+    /* Lines and washes are foreground-relative, so they invert for free: what
+       was white-on-charcoal becomes ink-on-paper. Light needs more of itself
+       than dark does to read at 1px, hence two sets rather than one. */
+    --pl-hairline: color-mix(in oklab, var(--foreground) 9%, transparent);
+    --pl-edge: color-mix(in oklab, var(--foreground) 12%, transparent);
+    --pl-edge-strong: color-mix(in oklab, var(--foreground) 20%, transparent);
+    --pl-wash: color-mix(in oklab, var(--foreground) 5%, transparent);
+    --pl-wash-strong: color-mix(in oklab, var(--foreground) 9%, transparent);
+    --pl-wash-heavy: color-mix(in oklab, var(--foreground) 14%, transparent);
+
+    /* A dismiss veil dims in both modes — a light theme does not want a white
+       scrim, it wants less black. */
+    --pl-scrim: rgb(0 0 0 / 0.3);
+    --pl-shadow-a: 0.16;
+    --pl-shadow-soft-a: 0.12;
+
+    /* The chart's own colours. Overwritten from JS on `.pl-mobile-root` (see
+       lib/chart-paint.ts): the chart engine reads concrete colours from the
+       theme plugin's `chart` block, NOT the CSS tokens, so anything that has
+       to disappear into the plot has to come from that same source or it
+       reads as a grey band. These two are the CSS equivalents of
+       use-chart-theme's own defaults, for the frames before the shell
+       mounts. */
+    --pl-chart-ink-rgb: 15 13 11;
+    --pl-chart-fg: var(--foreground);
+
+    /* Composed shadows, so a Tailwind arbitrary value stays one token. */
+    --pl-shadow-tag: 0 4px 14px rgb(0 0 0 / var(--pl-shadow-soft-a));
+    --pl-shadow-popover:
+      0 20px 54px rgb(0 0 0 / var(--pl-shadow-a)),
+      inset 0 0 0 1px var(--pl-edge);
+  }
+
+  /* Everything DERIVED from the chart's colours, declared on the shell and
+     not on `:root` — that placement is load-bearing, not tidiness.
+
+     A custom property whose value contains `var()` is substituted at
+     computed-value time on the element the declaration lands on. JS writes
+     `--pl-chart-ink-rgb` as an inline style on `.pl-mobile-root`, so a
+     `--pl-halo-*` declared up on `:root` would resolve against `:root`'s
+     value — the pre-mount fallback — and inherit that resolved token down
+     for good. Shipped exactly that once: a light theme with a black halo
+     stamped around the price.
+
+     Everything in here lives inside the shell (the readout and the timeframe
+     chip), so the shell element is the right and only home. */
+  .pl-mobile-root {
+    --pl-chart-edge: color-mix(in oklab, var(--pl-chart-fg) 16%, transparent);
+
+    /* The price readout's halo. Two layers: the tight one keeps a thin glyph
+       readable directly over a wick, the wide one is the falloff. Made of the
+       chart's ink so it thickens the plot behind the type instead of painting
+       black over a light chart. */
+    --pl-halo-tight:
+      0 1px 3px rgb(var(--pl-chart-ink-rgb) / 0.92),
+      0 2px 10px rgb(var(--pl-chart-ink-rgb) / 0.8);
+    --pl-halo-wide:
+      0 1px 3px rgb(var(--pl-chart-ink-rgb) / 0.92),
+      0 2px 14px rgb(var(--pl-chart-ink-rgb) / 0.8);
+  }
+
+  /* Dark themes elevate by adding light. The three lift percentages are
+     calibrated so Warm Precision — the default — resolves to the literals
+     this shell shipped with (sheet rgb(20,19,17), toolbar 24, popover 32,
+     glass 42): the sweep to tokens is not allowed to restyle the default
+     theme, only to let the other seventeen through. */
+  :root.dark {
+    --pl-surface: color-mix(in oklab, var(--card) 97%, var(--foreground) 3%);
+    --pl-surface-raised: color-mix(
+      in oklab,
+      var(--card) 94%,
+      var(--foreground) 6%
+    );
+    --pl-surface-overlay: color-mix(
+      in oklab,
+      var(--card) 90%,
+      var(--foreground) 10%
+    );
+    --pl-surface-float: color-mix(
+      in oklab,
+      var(--card) 85%,
+      var(--foreground) 15%
+    );
+
+    --pl-hairline: color-mix(in oklab, var(--foreground) 5.5%, transparent);
+    --pl-edge: color-mix(in oklab, var(--foreground) 8%, transparent);
+    --pl-edge-strong: color-mix(in oklab, var(--foreground) 16%, transparent);
+    --pl-wash: color-mix(in oklab, var(--foreground) 4.5%, transparent);
+    --pl-wash-strong: color-mix(in oklab, var(--foreground) 8%, transparent);
+    --pl-wash-heavy: color-mix(in oklab, var(--foreground) 12%, transparent);
+
+    --pl-scrim: rgb(8 8 10 / 0.5);
+    --pl-shadow-a: 0.65;
+    --pl-shadow-soft-a: 0.55;
+  }
+
+  /* The docked sheet's live position, written from a rAF in mobile-sheet.tsx.
+     0 → 1 as the sheet comes up to its default snap, then 0 → 1 again as it
+     goes on to the expanded one.
+
+     `:root` ONLY, unlike the geometry above. The rAF writes these as inline
+     styles on <html> and they reach the whole document by inheritance; a
+     second declaration on `.pl-mobile-root` would re-declare them as 0 for the
+     entire shell subtree and every consumer inside it would read the default
+     forever. (The chart band is inside the shell; the sheet is portaled to
+     <body>. Only `:root` covers both.) */
+  :root {
+    --pl-sheet-dock: 0;
+    --pl-sheet-expand: 0;
+  }
+
+  /* While a rAF is driving the two variables above, nothing derived from them
+     may also be running a transition — a transition chasing a target that
+     moves every frame lags the finger by its own duration. */
+  html.pl-sheet-driving .pl-readout,
+  html.pl-sheet-driving .pl-readout-hero,
+  html.pl-sheet-driving .pl-readout-compact,
+  html.pl-sheet-driving .pl-tf-chip,
+  html.pl-sheet-driving .pl-chart-scrim,
+  html.pl-sheet-driving .pl-chart-footer {
+    transition: none;
   }
 
   /* Resolves `--pl-chart-top` to px for the sheet's snap-point geometry (see
@@ -56,11 +226,21 @@
   }
 
   /* ── Surfaces ──────────────────────────────────────────────────── */
+  /* The ring is what carries the pill on a LIGHT theme, where the fill is
+     paper over paper and the top sheen has nothing to highlight. In dark it
+     lands within a couple of RGB of the fill it surrounds, so it costs the
+     default nothing.
+
+     The 99px radius is PINNED, here and on the tab bar and the sheet's top
+     corners: the shell's silhouette stays the same shape under every theme,
+     `--radius` or not. Themes get to recolour the phone, not restyle it. */
   .pl-glass {
-    background: rgba(42, 39, 35, 0.86);
+    background: color-mix(in oklab, var(--pl-surface-float) 86%, transparent);
     backdrop-filter: blur(18px) saturate(180%);
     -webkit-backdrop-filter: blur(18px) saturate(180%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+    box-shadow:
+      inset 0 1px 0 var(--pl-wash-strong),
+      inset 0 0 0 1px var(--pl-edge);
     border-radius: 99px;
   }
 
@@ -87,11 +267,18 @@
      underneath it, and 3% of a live plot is candle wicks and price-axis labels
      crawling across the watchlist. Measured on device-sized screenshots — the
      alpha is a regression the moment the chart stops resizing. */
+  /* `--pl-surface` is a mix of two opaque theme tokens, so it stays opaque —
+     which the note above makes mandatory rather than nice. A theme that
+     shipped an alpha `--card` would put candle wicks back under the
+     watchlist, so the token contract (shadcn surfaces are opaque) is what
+     this rule leans on.
+
+     The 24px top radius is PINNED, not `--radius`: see `.pl-glass`. */
   .pl-sheet {
-    background: rgb(20, 19, 17);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--pl-surface);
+    border-top: 1px solid var(--pl-edge);
     border-radius: 24px 24px 0 0;
-    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.65);
+    box-shadow: 0 -20px 60px rgb(0 0 0 / var(--pl-shadow-a));
     position: relative;
     transition:
       transform 0.5s cubic-bezier(0.32, 0.72, 0, 1),
@@ -128,25 +315,36 @@
   /* Co-pilot keeps the sheet geometry and swaps the fill, plus the 2px magic
      hairline that marks every AI surface in this product. The hairline is
      declared on every sheet and revealed by opacity so switching INTO the
-     co-pilot fades it in instead of popping a gradient bar into place. */
+     co-pilot fades it in instead of popping a gradient bar into place.
+
+     The BOX is 24px tall — the corner radius — while the gradient it paints is
+     still only 2px. That is what keeps the hairline inside the sheet's rounded
+     silhouette: a 2px-tall box cannot hold a 24px vertical radius, so the
+     browser scales every corner down to ~2px and the strip squares off past
+     the curve, floating outside the sheet's own edge. At the radius' own
+     height the corners resolve unscaled and `border-radius` clips the
+     background to the curve. `pointer-events: none` because a 24px box over
+     the grab handle would otherwise be the drag target. */
   .pl-sheet::before {
     content: '';
     position: absolute;
     inset: 0 0 auto 0;
-    height: 2px;
+    height: 24px;
     border-radius: 24px 24px 0 0;
     opacity: 0;
+    pointer-events: none;
     transition: opacity 240ms ease-out;
     background: linear-gradient(
-      90deg,
-      var(--magic-1),
-      var(--magic-2),
-      var(--magic-3)
-    );
+        90deg,
+        var(--magic-1),
+        var(--magic-2),
+        var(--magic-3)
+      )
+      no-repeat top left / 100% 2px;
   }
 
   .pl-sheet-copilot {
-    background: #131217;
+    background: var(--pl-surface-ai);
   }
 
   .pl-sheet-copilot::before {
@@ -154,11 +352,11 @@
   }
 
   /* A sheet-coloured sticky strip INSIDE a sheet's scroll region (the
-     watchlist's search/chips header): solid, so rows scrolling beneath cannot
-     ghost through `.pl-sheet`'s 0.97 alpha, and free of the sheet's hairline
-     pseudo, transition and edge chrome. */
+     watchlist's search/chips header): the sheet's own fill exactly, so rows
+     scrolling beneath cannot ghost through it, and free of the sheet's
+     hairline pseudo, transition and edge chrome. */
   .pl-sheet-solid {
-    background: rgb(20, 19, 17);
+    background: var(--pl-surface);
   }
 
   /* The grab strip. The bar is still the design's 40 × 4 at 9px from the top
@@ -180,48 +378,54 @@
     height: 4px;
     margin-left: -20px;
     border-radius: 99px;
-    background: rgba(255, 255, 255, 0.24);
+    /* The one grab affordance on the surface, so it is a wash and not a
+       hairline — it has to be seen, not inferred. */
+    background: color-mix(in oklab, var(--foreground) 24%, transparent);
   }
 
   .pl-toolbar {
-    background: rgba(24, 22, 20, 0.92);
+    background: color-mix(in oklab, var(--pl-surface-raised) 92%, transparent);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-top: 1px solid var(--pl-hairline);
   }
 
   .pl-tabbar-float {
-    background: rgba(18, 17, 15, 0.92);
+    background: color-mix(in oklab, var(--pl-surface) 92%, transparent);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-top: 1px solid var(--pl-hairline);
   }
 
+  /* Solid means "a sheet is docked underneath me", and the bar is drawn OVER
+     that sheet — so it takes the sheet's own fill rather than raw `--card`,
+     or the two read as a seam across the bottom of every panel. */
   .pl-tabbar-solid {
-    background: var(--card);
-    border-top: 1px solid var(--border);
+    background: var(--pl-surface);
+    border-top: 1px solid var(--pl-edge);
   }
 
   .pl-popover {
-    background: rgba(32, 30, 28, 0.98);
+    background: color-mix(in oklab, var(--pl-surface-overlay) 98%, transparent);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow:
-      0 18px 48px rgba(0, 0, 0, 0.66),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      0 18px 48px rgb(0 0 0 / var(--pl-shadow-a)),
+      inset 0 1px 0 var(--pl-wash-strong),
+      inset 0 0 0 1px var(--pl-edge);
     border-radius: 16px;
   }
 
   .pl-field {
-    background: rgba(255, 255, 255, 0.045);
+    background: var(--pl-wash);
   }
 
   .pl-chip-active {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--pl-wash-strong);
   }
 
   .pl-scrim {
-    background: rgba(8, 8, 10, 0.5);
+    background: var(--pl-scrim);
   }
 
   /* Keeps the price readout legible over candles — and nothing more.
@@ -232,30 +436,145 @@
      readout it protects plus a falloff, and it never reaches full opacity —
      the readout's own text-shadow carries the last of the contrast, which is
      what a scrim is supposed to be a backstop for rather than a replacement.
-     Candles under it are shaded, not erased. */
+     Candles under it are shaded, not erased.
+
+     It SCALES with the readout instead of switching between three heights:
+     `scaleY` on a gradient is the same picture at a different length and it
+     runs on the compositor, where a height would relayout. At the expanded
+     snap the readout is gone, so the scrim goes with it — the seam fade below
+     is what keeps the boundary soft once this has faded out.
+
+     Its ink is the CHART's background, not the UI's. The engine paints from
+     the theme plugin's `chart` block, which is a different colour from
+     `--background` under all eighteen themes, and shading candles with
+     anything else is a grey wash lying over the plot. The rgb triple comes
+     from JS (mobile-surface.tsx) so the last stop can hold the ink's hue at
+     alpha 0 rather than falling back to `transparent`, which is black. */
   .pl-chart-scrim {
     position: absolute;
     inset: 0 0 auto 0;
     height: 88px;
+    transform-origin: top center;
+    transform: scaleY(
+      calc(
+        (1 - 0.18 * var(--pl-sheet-dock)) * (1 - 0.4 * var(--pl-sheet-expand))
+      )
+    );
+    opacity: calc(1 - var(--pl-sheet-expand));
     background: linear-gradient(
       180deg,
-      rgba(16, 15, 13, 0.88) 0%,
-      rgba(16, 15, 13, 0.7) 30%,
-      rgba(16, 15, 13, 0.34) 62%,
-      rgba(16, 15, 13, 0) 100%
+      rgb(var(--pl-chart-ink-rgb) / 0.88) 0%,
+      rgb(var(--pl-chart-ink-rgb) / 0.7) 30%,
+      rgb(var(--pl-chart-ink-rgb) / 0.34) 62%,
+      rgb(var(--pl-chart-ink-rgb) / 0) 100%
+    );
+    pointer-events: none;
+    transition:
+      transform var(--pl-sheet-dur) var(--pl-sheet-ease),
+      opacity var(--pl-sheet-dur) var(--pl-sheet-ease);
+  }
+
+  /* The seam, and ONLY the seam.
+
+     Where the top chrome ends and the chart canvas begins there is a tonal
+     step — two different blacks meeting on a straight line, with the plot's
+     first gridline often right under it. The old answer was to make the
+     readout scrim tall enough to hide it, which cost a quarter of the plot.
+     This is 22px of the page's own background falling off to nothing: enough
+     to blur the boundary, short enough that a candle printing near the high is
+     shaded for a few px rather than swallowed. It never moves and never fades
+     — the seam exists in all five views.
+
+     The colour is `--background` — the shell root's own fill — and NOT the
+     chart ink the scrim above uses: starting at exactly the strip above it is
+     the whole point, or the fade just moves the step down 22px.
+
+     Mixed `in srgb` rather than used raw. A `transparent` stop against an
+     OKLCH colour renders as a fade through black in WKWebView (the desktop
+     webview this shell also runs in below 768px); `color-mix(in srgb, …)`
+     resolves the token to sRGB first, so every stop in the gradient is an
+     sRGB colour and premultiplied interpolation carries the hue down to
+     nothing on its own. That is what makes it work on a light theme, where
+     fading through black would print a bar. */
+  .pl-chart-seam {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 22px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--background) 100%, transparent) 0%,
+      color-mix(in srgb, var(--background) 60%, transparent) 45%,
+      color-mix(in srgb, var(--background) 0%, transparent) 100%
     );
     pointer-events: none;
   }
 
-  /* Under a docked panel the readout is the design's 22px compact line, so the
-     scrim shrinks with it instead of shading a strip the sheet is about to
-     cover anyway. At the expanded snap the strip IS the readout row. */
-  .pl-chart-scrim[data-scrim='compact'] {
-    height: 72px;
+  /* The price readout, tracking the sheet.
+
+     The hero and the compact line are both in the DOM (see price-readout.tsx)
+     and cross-fade on `--pl-sheet-dock`; the pair then fades out together on
+     `--pl-sheet-expand`, which is what buys the expanded snap its extra 56px.
+     Scales are linear in the SIZE, so the price line is the same pixels in
+     both copies at every value: 34·(1 − 0.353·d) = 22·(1.545 − 0.545·d). */
+  .pl-readout {
+    transform-origin: top left;
+    transform: scale(calc(1 - 0.12 * var(--pl-sheet-expand)));
+    opacity: calc(1 - var(--pl-sheet-expand));
+    transition:
+      transform var(--pl-sheet-dur) var(--pl-sheet-ease),
+      opacity var(--pl-sheet-dur) var(--pl-sheet-ease);
   }
 
-  .pl-chart-scrim[data-scrim='expanded'] {
-    height: 56px;
+  .pl-readout-hero,
+  .pl-readout-compact {
+    transform-origin: top left;
+    transition:
+      transform var(--pl-sheet-dur) var(--pl-sheet-ease),
+      opacity var(--pl-sheet-dur) var(--pl-sheet-ease);
+  }
+
+  .pl-readout-hero {
+    opacity: calc(1 - var(--pl-sheet-dock));
+    transform: scale(calc(1 - 0.353 * var(--pl-sheet-dock)));
+  }
+
+  .pl-readout-compact {
+    opacity: var(--pl-sheet-dock);
+    transform: scale(calc(1.545 - 0.545 * var(--pl-sheet-dock)));
+  }
+
+  /* The timeframe chip goes with the readout at the expanded snap: that is
+     what stops the limit-line tag colliding with it up there. */
+  .pl-tf-chip {
+    transform-origin: top right;
+    transform: scale(calc(1 - 0.08 * var(--pl-sheet-expand)));
+    opacity: calc(1 - var(--pl-sheet-expand));
+    transition:
+      transform var(--pl-sheet-dur) var(--pl-sheet-ease),
+      opacity var(--pl-sheet-dur) var(--pl-sheet-ease);
+  }
+
+  .pl-tf-chip[data-faded='true'] {
+    pointer-events: none;
+  }
+
+  /* The drawing toolbar's entrance IS the sheet's exit.
+
+     It is mounted in all five views and tucked behind the tab bar while a
+     panel is docked, so dismissing a sheet reveals a toolbar that is already
+     there instead of mounting one into space the drag has already uncovered.
+     Riding `--pl-sheet-dock` means the two motions cannot drift: it is one
+     number, written from the sheet's own transform. */
+  .pl-chart-footer {
+    transform: translate3d(0, calc(100% * var(--pl-sheet-dock)), 0);
+    opacity: calc(1 - var(--pl-sheet-dock));
+    transition:
+      transform var(--pl-sheet-dur) var(--pl-sheet-ease),
+      opacity var(--pl-sheet-dur) var(--pl-sheet-ease);
+  }
+
+  .pl-chart-footer[data-docked='true'] {
+    pointer-events: none;
   }
 
   /* ── Controls ──────────────────────────────────────────────────── */
@@ -273,8 +592,42 @@
     inset: -8px;
   }
 
-  .pl-live-dot {
-    animation: plPulse 1.8s ease-in-out infinite;
+  /* The venue chip's LIVE tag.
+
+     It replaced a dot that faded to 0.35 and back forever, which is the one
+     thing a liveness mark must never do: something that DIMS on a loop reads
+     as a connection dying, and users read it that way on the first build. The
+     mark here never changes opacity — what moves is a ring travelling out of
+     it, so the presence signal is something arriving rather than something
+     fading. `connecting` is the only state that blinks, and it is transient
+     by definition. */
+  .pl-live-mark {
+    position: relative;
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: currentColor;
+    flex: none;
+  }
+
+  .pl-live-badge[data-state='live'] .pl-live-mark::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    animation: plLivePing 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  .pl-live-badge[data-state='connecting'] .pl-live-mark {
+    animation: plLiveBlink 1.4s ease-in-out infinite;
+  }
+
+  /* Hollow: nothing is arriving, and a filled mark in a muted colour still
+     reads as "on" at 4px. */
+  .pl-live-badge[data-state='offline'] .pl-live-mark {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px currentColor;
   }
 
   /* 28px CIRCULAR venue mark — white plate, dark short name.
@@ -282,7 +635,12 @@
      that a venue and an asset read as the same kind of thing in the same row
      (the pair avatar beside it is a circle, and a square next to it looked
      like a different control). `overflow: hidden` is what crops a square
-     logo into the circle, so it stays. */
+     logo into the circle, so it stays.
+
+     The plate stays WHITE under every theme, and that is the point: venue
+     logos are third-party artwork drawn for a light background, and tinting
+     the plate would tint them. The ring is what stops it disappearing into a
+     light theme's paper. */
   .pl-venue-mark {
     display: flex;
     align-items: center;
@@ -291,6 +649,7 @@
     height: 28px;
     border-radius: 999px;
     background: #ffffff;
+    box-shadow: inset 0 0 0 1px var(--pl-edge);
     color: #16130f;
     font-weight: 700;
     overflow: hidden;
@@ -303,12 +662,14 @@
      geometry of the active item (see mobile-tab-bar.tsx), so it slides and
      resizes in lockstep with the label reveal instead of guessing at where
      the item will end up. */
+  /* 99px, pinned like the rest of the shell's silhouette — a theme with a
+     square `--radius` still gets a pill here. */
   .pl-tab-pill {
     position: absolute;
     left: 0;
     top: 0;
     border-radius: 99px;
-    background: rgba(255, 255, 255, 0.11);
+    background: var(--pl-wash-heavy);
     pointer-events: none;
     transition: opacity 180ms ease-out;
     will-change: transform;
@@ -339,13 +700,66 @@
     transition: opacity 200ms ease-out;
   }
 
-  @keyframes plPulse {
+  /* ── Full-screen overlay motion ───────────────────────────────────
+     Settings, the order book, All pairs and the account detail all wear
+     `FullScreenOverlay`, so one rule gives the shell a single way of
+     arriving instead of four screens that just appear.
+
+     Transform and opacity only. This box IS the chart band, so animating its
+     `top` or `height` would relayout every frame over a WebGL canvas that
+     never stops painting.
+
+     At rest the transform resolves to `none`, and that matters beyond
+     tidiness: a live transform makes the box a containing block AND a
+     stacking context, and two screens put `position: fixed` children inside
+     it (the order book's grouping popover, the account detail's confirm
+     scrim). No `will-change` for the same reason — it would pin the stacking
+     context permanently. */
+  .pl-overlay {
+    transition:
+      opacity 220ms cubic-bezier(0.32, 0.72, 0, 1),
+      transform 220ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .pl-overlay[data-pl-overlay='enter'] {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.99);
+  }
+
+  /* Shorter and on an accelerating curve: leaving should feel decided, and
+     the frame is on its way out anyway.
+
+     Deliberately NOT `pointer-events: none`. The frame is invisible for
+     150ms but it is still the thing the user was just touching, and letting
+     taps fall through would land them on the chart or a sheet underneath —
+     a dismissal that also pans the plot. Swallowing them is the predictable
+     answer; the dismiss control itself is idempotent while closing. */
+  .pl-overlay[data-pl-overlay='exit'] {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.995);
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+  }
+
+  @keyframes plLivePing {
+    0% {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(2.6);
+    }
+  }
+
+  @keyframes plLiveBlink {
     0%,
     100% {
       opacity: 1;
     }
     50% {
-      opacity: 0.35;
+      opacity: 0.3;
     }
   }
 
@@ -353,8 +767,17 @@
      position or a height change, and easing them slowly is worse for someone
      who asked for less movement than not easing them at all. */
   @media (prefers-reduced-motion: reduce) {
-    .pl-live-dot {
+    .pl-live-badge[data-state='live'] .pl-live-mark::after,
+    .pl-live-badge[data-state='connecting'] .pl-live-mark {
       animation: none;
+    }
+
+    /* The one exception to the jump-cut rule above: a screen that replaces
+       the whole display still has to say it arrived, and a plain fade is
+       movement-free. The travel is what goes. */
+    .pl-overlay[data-pl-overlay='enter'],
+    .pl-overlay[data-pl-overlay='exit'] {
+      transform: none;
     }
 
     .pl-sheet {
@@ -368,6 +791,28 @@
     .pl-tab-item,
     .pl-chart-band {
       transition: none;
+    }
+
+    /* The chart band's sheet-tracked chrome degrades to a plain fade: the
+       drawing toolbar stops rising out of the tab bar, the readout stops
+       shrinking on its way to the expanded snap, and only opacity carries
+       the change. The hero/compact scales STAY — they are not motion, they
+       are how one number is two type sizes, and dropping them would stack a
+       34px price on a 22px one. */
+    .pl-readout,
+    .pl-readout-hero,
+    .pl-readout-compact,
+    .pl-tf-chip,
+    .pl-chart-scrim,
+    .pl-chart-footer {
+      transition: opacity 160ms linear;
+    }
+
+    .pl-readout,
+    .pl-tf-chip,
+    .pl-chart-scrim,
+    .pl-chart-footer {
+      transform: none;
     }
   }
 }

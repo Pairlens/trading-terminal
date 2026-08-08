@@ -14,11 +14,16 @@
  * them — a real cost on a phone for two integers. `getBalances()` already
  * filters to non-zero holdings, which is exactly the definition of "position"
  * this line means.
+ *
+ * The card is a door: tapping it opens the P&L screen, where the same figure
+ * gets its window, its guardrail and the holdings behind it.
  */
-import { memo, useSyncExternalStore } from 'react'
+import { memo, useCallback, useSyncExternalStore } from 'react'
+import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
+import { useMobileActions } from '../mobile-focus-context'
 import type { ReactNode } from 'react'
 import { useRiskConfigStore } from '@/stores/risk-config-store'
 import { getBalances, subscribeBalances } from '@/stores/balances-store'
@@ -26,33 +31,57 @@ import { getBalances, subscribeBalances } from '@/stores/balances-store'
 /**
  * The shared shell of both Discover stat cards: label, then whatever the card
  * measures. Lives here because this is the card that defines the geometry.
+ *
+ * With `onPress` it becomes a button and grows a chevron, so "there is more
+ * behind this" is visible before the tap rather than discovered by it.
  */
 export function StatCard({
   label,
   children,
   className,
+  onPress,
 }: {
   label: string
   children: ReactNode
   className?: string
+  onPress?: () => void
 }) {
-  return (
-    <div
-      className={cn(
-        'pl-field min-w-0 flex-1 rounded-[14px] p-3.5 [box-shadow:inset_0_0_0_1px_rgba(255,255,255,0.06)]',
-        className,
-      )}
-    >
-      <p className="mb-2.5 text-[9.5px] font-semibold uppercase leading-none tracking-[0.09em] text-muted-foreground">
-        {label}
+  const body = (
+    <>
+      <p className="mb-2.5 flex items-center gap-1 text-[9.5px] font-semibold uppercase leading-none tracking-[0.09em] text-muted-foreground">
+        <span className="min-w-0 truncate">{label}</span>
+        {onPress ? (
+          <ChevronRight
+            aria-hidden
+            className="-mr-0.5 size-3 shrink-0 opacity-70"
+          />
+        ) : null}
       </p>
       {children}
-    </div>
+    </>
+  )
+
+  const shell = cn(
+    'pl-field min-w-0 flex-1 rounded-[14px] p-3.5 [box-shadow:inset_0_0_0_1px_var(--pl-edge)]',
+    className,
+  )
+
+  if (!onPress) return <div className={shell}>{body}</div>
+
+  return (
+    <button
+      className={cn(shell, 'text-left active:bg-[color:var(--pl-wash-strong)]')}
+      onClick={onPress}
+      type="button"
+    >
+      {body}
+    </button>
   )
 }
 
 export const DiscoverPnlCard = memo(function DiscoverPnlCard() {
   const { t } = useTranslation()
+  const { pushOverlay } = useMobileActions()
   const dailyPnl = useRiskConfigStore((s) => s.dailyPnl)
   const balances = useSyncExternalStore(subscribeBalances, getBalances)
 
@@ -60,8 +89,10 @@ export const DiscoverPnlCard = memo(function DiscoverPnlCard() {
   const venues = new Set(balances.map((b) => b.market)).size
   const flat = dailyPnl === 0
 
+  const open = useCallback(() => pushOverlay({ kind: 'pnl' }), [pushOverlay])
+
   return (
-    <StatCard label={t('mobile.panels.pnlToday')}>
+    <StatCard label={t('mobile.panels.pnlToday')} onPress={open}>
       {/* A PERCENT, not the design's "+$1,000". `dailyPnl` is signed percent
           everywhere else in the product (the risk pane and the daily-loss
           guardrail both read it that way), and rendering it with a currency

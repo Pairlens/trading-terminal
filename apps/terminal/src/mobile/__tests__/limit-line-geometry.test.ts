@@ -8,7 +8,7 @@ import {
   limitStripBottom,
   placeLimitLine,
 } from '../chart/limit-line-geometry'
-import { EXPANDED_BAND, SHEET_BAND } from '../lib/mobile-geometry'
+import { SHEET_BAND, TRADE_EXPANDED_BAND } from '../lib/mobile-geometry'
 
 /**
  * The chart is full height in every view and the Trade sheet covers it, so the
@@ -29,7 +29,12 @@ describe('limitStripBottom', () => {
   })
 
   test('the expanded snap shrinks it to the same rule', () => {
-    expect(limitStripBottom(PLOT, EXPANDED_BAND)).toBe(42)
+    // Trade's expanded band IS the grab strip: the pinned line sits at its
+    // centre and the 44px target spans exactly 0–44, nothing clipped.
+    expect(limitStripBottom(PLOT, TRADE_EXPANDED_BAND)).toBe(22)
+    expect(limitStripBottom(PLOT, TRADE_EXPANDED_BAND)).toBe(
+      TRADE_EXPANDED_BAND - LIMIT_GRAB_HALF,
+    )
   })
 
   test('nothing covering the chart means the whole plot', () => {
@@ -68,8 +73,8 @@ describe('placeLimitLine', () => {
   test('expanding the sheet re-pins into the smaller strip', () => {
     const y = 100
     expect(placeLimitLine(y, PLOT, SHEET_BAND.trade).pinned).toBe(false)
-    expect(placeLimitLine(y, PLOT, EXPANDED_BAND)).toEqual({
-      y: 42,
+    expect(placeLimitLine(y, PLOT, TRADE_EXPANDED_BAND)).toEqual({
+      y: 22,
       pinned: true,
       visible: true,
     })
@@ -105,7 +110,7 @@ describe('clampLimitDragY', () => {
   })
 
   test('the drag floor is the same number the placement pins to', () => {
-    for (const strip of [SHEET_BAND.trade, EXPANDED_BAND, 96, 124]) {
+    for (const strip of [SHEET_BAND.trade, TRADE_EXPANDED_BAND, 96, 124]) {
       expect(clampLimitDragY(9999, PLOT, strip)).toBe(
         placeLimitLine(PLOT, PLOT, strip).y,
       )

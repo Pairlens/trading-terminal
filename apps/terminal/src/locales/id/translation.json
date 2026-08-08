@@ -4650,18 +4650,22 @@
         "orderbook": "Order Book",
         "pairPicker": "Pair",
         "venuePicker": "Venue",
-        "settings": "Pengaturan",
-        "connect": "Hubungkan akun",
-        "news": "Berita"
+        "settings": "Pengaturan"
       },
       "changePair": "Ganti pair",
-      "changeVenue": "Ganti venue",
+      "changeVenueA11y": "Ganti venue. {{venue}}, {{status}}",
       "search": "Cari pair",
       "openSettings": "Buka pengaturan",
       "readOnly": "hanya-baca",
-      "timeframe": "Timeframe",
+      "live": {
+        "live": "LIVE",
+        "connecting": "…",
+        "offline": "OFFLINE",
+        "liveA11y": "streaming langsung",
+        "connectingA11y": "sedang menghubungkan",
+        "offlineA11y": "tidak streaming di perangkat ini"
+      },
       "dismiss": "Tutup",
-      "comingSoon": "Segera hadir",
       "priceChange": "{{absolute}} {{percent}} · 24j",
       "switchVenue": "Beralih venue",
       "noChartData": "Tidak ada data untuk pair ini di sini",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "Unggulan"
+    },
+    "fearGreed": {
+      "historyLabel_one": "Hari terakhir",
+      "historyLabel_other": "{{count}} hari terakhir",
+      "noHistory": "Belum ada riwayat",
+      "chartAria": "Indeks Fear and Greed dari waktu ke waktu",
+      "bucketsLabel": "Arti angka ini",
+      "aboutBody": "Disusun dari volatilitas, momentum dan volume, obrolan di media sosial, dominasi Bitcoin, dan tren pencarian, lalu diringkas menjadi satu angka antara 0 dan 100. Rendah berarti takut, tinggi berarti serakah. Angka ini membaca suasana pasar, bukan arahnya."
+    },
+    "pnl": {
+      "windowSince": "Sejak {{time}}",
+      "tradesCount_one": "{{count}} trade",
+      "tradesCount_other": "{{count}} trade",
+      "explainer": "Dihitung dari eksekusi di sesi ini: penjualan hanya merealisasikan hasil terhadap posisi yang Pairlens lihat Anda buka, jadi koin yang sudah Anda pegang sebelumnya tidak merealisasikan apa pun. Biaya belum dipotong. Angkanya sama dengan yang diperiksa pengaman kerugian harian.",
+      "lockedHint": "Order baru tetap diblokir sampai jendelanya direset atau Anda membukanya di Manajemen Risiko.",
+      "guardrailLabel": "Pengaman kerugian harian",
+      "guardrailUsed": "{{used}}% dari batas {{cap}}%",
+      "noLimit": "Belum ada batas kerugian harian. Tetapkan satu dan Pairlens berhenti menerima order sebelum hari yang buruk berubah jadi lebih buruk.",
+      "riskSettings": "Manajemen Risiko",
+      "holdingsLabel": "Yang Anda pegang",
+      "connectTitle": "Belum ada yang terhubung",
+      "connectBody": "Hubungkan bursa, broker, atau dompet dan saldonya muncul di sini. Kuncinya tetap di perangkat ini.",
+      "noPositionsBody": "Saldo muncul di sini begitu akun yang terhubung melaporkannya.",
+      "pricedFrom": "Dinilai dari snapshot publik venue, diperbarui setiap menit.",
+      "someUnpriced": "Aset tanpa harga saat ini tidak dihitung dalam total.",
+      "noFxRate": "Tidak ada kurs {{currency}} saat ini, jadi jumlahnya ditampilkan tanpa nilai."
     },
     "markets": {
       "title": "Semua pair",
@@ -4747,6 +4777,52 @@
       "trading": "Trading",
       "connected": "Terhubung",
       "perOrder": "{{percent}}% per order"
+    },
+    "desktopInvite": {
+      "bannerTitle": "Terminal lengkapnya ada di komputer Anda",
+      "bannerBody": "Ruang kerja, bot, indikator buatan sendiri, dan empat venue lagi.",
+      "bannerDismiss": "Sembunyikan",
+      "screenTitle": "Di layar yang lebih besar",
+      "lead": "Ponsel Anda membawa bagian Pairlens yang ingin Anda genggam: chart, order book, tiket order, dan co-pilot. Sisa terminalnya dibuat untuk layar yang punya ruang untuk melebar, dan sudah menunggu Anda di sana.",
+      "widerWindow": "Di jendela yang lebih lebar",
+      "desktopApp": "Di aplikasi desktop",
+      "workspaces": {
+        "title": "Ruang Kerja",
+        "body": "Chart, order book, aliran transaksi, dan co-pilot berdampingan, ditata sekali lalu disimpan. Workspace Store punya tata letak siap pakai yang bisa Anda salin dengan satu ketukan."
+      },
+      "bots": {
+        "title": "Bot",
+        "body": "Terapkan sebuah strategi ke satu market, backtest dulu, lalu lihat ia bekerja di bawah batas risiko yang sama seperti yang Anda atur di sini."
+      },
+      "indicators": {
+        "title": "Indikator buatan Anda",
+        "body": "Tulis indikator chart dengan Python sungguhan, lengkap dengan paket pip dan pratinjau langsung di samping editor."
+      },
+      "workflows": {
+        "title": "Workflow",
+        "body": "Ubah sebuah sinyal menjadi rangkaian langkah yang terus mengawasi market sementara Anda melanjutkan hari Anda."
+      },
+      "plugins": {
+        "title": "Plugin Store",
+        "body": "Tambahkan konektor, indikator, tema, dan penyedia AI, lalu tentukan seberapa jauh masing-masing dipercaya."
+      },
+      "keychain": {
+        "title": "Kunci di keychain sistem",
+        "body": "Aplikasi desktop menyerahkan kunci bursa Anda ke macOS Keychain, Windows Credential Manager, atau secret service Linux, bukan menyimpannya di penyimpanan browser."
+      },
+      "venues": {
+        "title": "Empat venue lagi",
+        "body": "Coinbase, Gate, KuCoin, dan MEXC tidak menjawab browser. Aplikasi desktop menjangkau kelima belasnya."
+      },
+      "background": {
+        "title": "Tetap jalan setelah ditutup",
+        "body": "Tutup jendelanya dan bot serta peringatan tetap hidup, dengan notifikasi sistem begitu salah satunya berbunyi."
+      },
+      "windows": {
+        "title": "Lebih dari satu jendela",
+        "body": "Tarik sebuah market ke jendelanya sendiri dan letakkan di layar kedua."
+      },
+      "where": "Buka terminal.pairlens.finance di komputer Anda dan semua di atas hanya berjarak satu jendela. Ada juga aplikasi desktop, untuk macOS, Windows, dan Linux, dan itulah yang membuka empat venue terakhir."
     },
     "accounts": {
       "permissionsLabel": "Izin",

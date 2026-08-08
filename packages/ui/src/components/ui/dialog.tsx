@@ -7,7 +7,7 @@ import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
 
 import { XIcon } from 'lucide-react'
 import { cn } from '../../lib/utils'
-import { useReleaseSheetFocusTraps } from '../../lib/use-release-sheet-focus-traps'
+import { ReleaseSheetFocusTraps } from '../../lib/use-release-sheet-focus-traps'
 import { Button } from './button'
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
@@ -50,7 +50,6 @@ function DialogContent({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
 }) {
-  useReleaseSheetFocusTraps()
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -62,6 +61,9 @@ function DialogContent({
         )}
         {...props}
       >
+        {/* Renders nothing; it exists so the sheet-inerting effect lives for
+            exactly as long as the popup is on screen. */}
+        <ReleaseSheetFocusTraps />
         {children}
         {showCloseButton && (
           <DialogPrimitive.Close

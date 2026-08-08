@@ -129,7 +129,7 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
     () => (
       <>
         <button
-          className="flex h-[30px] items-center gap-1 rounded-[9px] bg-white/[0.06] px-2.5 font-mono text-[11.5px] text-muted-foreground"
+          className="flex h-[30px] items-center gap-1 rounded-[9px] bg-[color:var(--pl-wash-strong)] px-2.5 font-mono text-[11.5px] text-muted-foreground"
           onClick={() => setGroupingOpen((open) => !open)}
           type="button"
         >
@@ -140,8 +140,8 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
           className={cn(
             'h-[30px] rounded-[9px] px-2.5 text-[11.5px] font-medium',
             isAuto
-              ? 'bg-white/[0.12] text-foreground'
-              : 'bg-white/[0.06] text-muted-foreground',
+              ? 'bg-[color:var(--pl-wash-heavy)] text-foreground'
+              : 'bg-[color:var(--pl-wash-strong)] text-muted-foreground',
           )}
           onClick={() => setTickIndex(null)}
           type="button"
@@ -189,7 +189,7 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
             </div>
 
             {/* Spread */}
-            <div className="flex h-11 shrink-0 items-center justify-between border-y border-border bg-white/[0.03] px-4">
+            <div className="flex h-11 shrink-0 items-center justify-between border-y border-border bg-[color:var(--pl-wash)] px-4">
               <span className="font-mono text-[19px] font-semibold tracking-[-0.02em] tabular-nums text-up">
                 {lastPrice == null ? '—' : formatPrice(lastPrice)}
               </span>

@@ -295,7 +295,7 @@ function AccountDetail({
         <PermissionCard permission={permission} />
 
         {/* Metadata */}
-        <div className="mt-5 overflow-hidden rounded-xl bg-white/[0.035] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]">
+        <div className="mt-5 overflow-hidden rounded-xl bg-[color:var(--pl-wash)] shadow-[inset_0_0_0_1px_var(--pl-edge)]">
           <MetaRow
             label={t('mobile.accounts.modeLabel')}
             value={
@@ -454,7 +454,7 @@ function PermissionCard({
           ] as const)
 
   return (
-    <div className="flex items-start gap-2.5 rounded-xl bg-white/[0.035] px-3.5 py-3 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]">
+    <div className="flex items-start gap-2.5 rounded-xl bg-[color:var(--pl-wash)] px-3.5 py-3 shadow-[inset_0_0_0_1px_var(--pl-edge)]">
       {tone === 'up' ? (
         <ShieldCheck className="mt-px size-4 shrink-0 text-up" />
       ) : (
@@ -487,7 +487,7 @@ function MetaRow({
   mono?: boolean
 }) {
   return (
-    <div className="flex min-h-11 items-center justify-between gap-3 border-t border-t-[rgba(255,255,255,0.055)] px-3.5 py-2 first:border-t-0">
+    <div className="flex min-h-11 items-center justify-between gap-3 border-t border-t-[color:var(--pl-hairline)] px-3.5 py-2 first:border-t-0">
       <span className="text-[12.5px] text-muted-foreground">{label}</span>
       <span
         className={cn(
@@ -513,8 +513,8 @@ function StateCard({
   children?: React.ReactNode
 }) {
   return (
-    <div className="rounded-xl bg-white/[0.035] px-4 py-5 text-center shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]">
-      <span className="mx-auto flex size-11 items-center justify-center rounded-full bg-white/[0.05]">
+    <div className="rounded-xl bg-[color:var(--pl-wash)] px-4 py-5 text-center shadow-[inset_0_0_0_1px_var(--pl-edge)]">
+      <span className="mx-auto flex size-11 items-center justify-center rounded-full bg-[color:var(--pl-wash)]">
         {icon}
       </span>
       <p className="mt-3 text-[15px] font-semibold text-foreground">{title}</p>

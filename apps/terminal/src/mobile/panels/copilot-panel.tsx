@@ -27,6 +27,12 @@
  *     `interactive-widget=resizes-content` (the viewport meta) shrinks the
  *     layout viewport, the sheet's `bottom: 0` follows the keyboard up, and the
  *     composer comes with it.
+ *  4. **The signed-out gate is compact.** `AuthRequiredPrompt` is drawn for a
+ *     desktop pane; in a phone's panel slice its nested `p-6`s and gaps add up
+ *     to more than the visible height on a Safari viewport, and the privacy
+ *     note ended up under the tab bar. Padding and gaps are collapsed from
+ *     here rather than in the shared component, which desktop also renders.
+ *     Widening the card also costs it a line of description.
  *
  * No mobile header row: the design's `Co-pilot · BTC-USDT on OKX` line would
  * repeat the context bar 44px above it AND stack a second orb over the panel's
@@ -82,7 +88,7 @@ export default memo(function MobileCopilotPanel() {
 
   return (
     <div
-      className="flex h-full min-h-0 flex-col [&_form_button]:size-10 [&_form_button]:rounded-full [&_textarea]:min-h-10 [&_textarea]:text-[16px]"
+      className="flex h-full min-h-0 flex-col [&_[data-slot=empty-header]]:gap-2 [&_[data-slot=empty]>p]:mt-1 [&_[data-slot=empty]>span>button]:mt-3 [&_[data-slot=empty]]:max-w-[300px] [&_[data-slot=empty]]:gap-3 [&_[data-slot=empty]]:p-0 [&_form_button]:size-10 [&_form_button]:rounded-full [&_textarea]:min-h-10 [&_textarea]:text-[16px]"
       onKeyDownCapture={swallowEnter}
     >
       <CopilotPanel

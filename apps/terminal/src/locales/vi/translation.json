@@ -4650,18 +4650,22 @@
         "orderbook": "Sổ lệnh",
         "pairPicker": "Cặp giao dịch",
         "venuePicker": "Sàn giao dịch",
-        "settings": "Cài đặt",
-        "connect": "Kết nối tài khoản",
-        "news": "Tin tức"
+        "settings": "Cài đặt"
       },
       "changePair": "Đổi cặp giao dịch",
-      "changeVenue": "Đổi sàn giao dịch",
+      "changeVenueA11y": "Đổi sàn giao dịch. {{venue}}, {{status}}",
       "search": "Tìm cặp giao dịch",
       "openSettings": "Mở cài đặt",
       "readOnly": "chỉ đọc",
-      "timeframe": "Khung thời gian",
+      "live": {
+        "live": "LIVE",
+        "connecting": "…",
+        "offline": "OFFLINE",
+        "liveA11y": "đang truyền trực tiếp",
+        "connectingA11y": "đang kết nối",
+        "offlineA11y": "không truyền dữ liệu trên thiết bị này"
+      },
       "dismiss": "Bỏ qua",
-      "comingSoon": "Sắp ra mắt",
       "priceChange": "{{absolute}} {{percent}} · 24h",
       "switchVenue": "Chuyển sàn giao dịch",
       "noChartData": "Không có dữ liệu cho cặp này ở đây",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "Nổi bật"
+    },
+    "fearGreed": {
+      "historyLabel_one": "Ngày gần nhất",
+      "historyLabel_other": "{{count}} ngày gần nhất",
+      "noHistory": "Chưa có lịch sử",
+      "chartAria": "Chỉ số Sợ hãi và Tham lam theo thời gian",
+      "bucketsLabel": "Con số này nói lên điều gì",
+      "aboutBody": "Được dựng từ độ biến động, đà và khối lượng, chuyện bàn tán trên mạng xã hội, mức thống trị của Bitcoin và xu hướng tìm kiếm, rút gọn thành một con số từ 0 đến 100. Thấp là sợ hãi, cao là tham lam. Nó đọc tâm trạng của thị trường, không phải hướng đi."
+    },
+    "pnl": {
+      "windowSince": "Từ {{time}}",
+      "tradesCount_one": "{{count}} lệnh",
+      "tradesCount_other": "{{count}} lệnh",
+      "explainer": "Tính từ các lệnh khớp trong phiên này: một lệnh bán chỉ chốt lãi/lỗ với vị thế mà Pairlens thấy bạn mở, nên số coin bạn đã giữ sẵn không chốt gì cả. Phí chưa được trừ. Đây cũng chính là con số mà giới hạn bảo vệ lỗ mỗi ngày kiểm tra.",
+      "lockedHint": "Lệnh mới vẫn bị chặn cho đến khi cửa sổ đặt lại hoặc bạn tự mở khóa trong Quản lý rủi ro.",
+      "guardrailLabel": "Giới hạn bảo vệ lỗ mỗi ngày",
+      "guardrailUsed": "{{used}}% của giới hạn {{cap}}%",
+      "noLimit": "Chưa đặt giới hạn lỗ mỗi ngày. Đặt một mức và Pairlens sẽ ngừng nhận lệnh trước khi một ngày tệ biến thành ngày tệ hơn.",
+      "riskSettings": "Quản lý rủi ro",
+      "holdingsLabel": "Những gì bạn đang giữ",
+      "connectTitle": "Chưa kết nối gì cả",
+      "connectBody": "Kết nối một sàn giao dịch, một broker hoặc một ví, số dư của nó sẽ hiện ở đây. Khóa vẫn nằm trên thiết bị này.",
+      "noPositionsBody": "Số dư sẽ hiện ở đây ngay khi một tài khoản đã kết nối báo về.",
+      "pricedFrom": "Định giá theo dữ liệu công khai của các sàn, làm mới mỗi phút.",
+      "someUnpriced": "Các khoản nắm giữ chưa có giá hiện không được tính vào tổng.",
+      "noFxRate": "Hiện chưa có tỷ giá {{currency}}, nên số lượng hiển thị mà không kèm giá trị."
     },
     "markets": {
       "title": "Tất cả cặp giao dịch",
@@ -4747,6 +4777,52 @@
       "trading": "Giao dịch",
       "connected": "Đã kết nối",
       "perOrder": "{{percent}}% mỗi lệnh"
+    },
+    "desktopInvite": {
+      "bannerTitle": "Terminal đầy đủ nằm trên máy tính của bạn",
+      "bannerBody": "Không gian làm việc, bot, chỉ báo của riêng bạn và bốn sàn nữa.",
+      "bannerDismiss": "Ẩn đi",
+      "screenTitle": "Trên màn hình lớn hơn",
+      "lead": "Điện thoại mang theo những phần Pairlens bạn muốn cầm trong tay: biểu đồ, sổ lệnh, phiếu đặt lệnh và co-pilot. Phần còn lại của terminal được làm cho một màn hình có chỗ để trải rộng, và nó đang chờ bạn ở đó.",
+      "widerWindow": "Trong cửa sổ rộng hơn",
+      "desktopApp": "Trong ứng dụng máy tính",
+      "workspaces": {
+        "title": "Không gian làm việc",
+        "body": "Biểu đồ, sổ lệnh, dòng giao dịch và co-pilot nằm cạnh nhau, sắp một lần rồi lưu lại. Workspace Store có sẵn những bố cục dựng sẵn để bạn sao chép chỉ bằng một chạm."
+      },
+      "bots": {
+        "title": "Bot",
+        "body": "Triển khai một chiến lược lên một thị trường, backtest trước, rồi xem nó chạy dưới đúng những giới hạn rủi ro bạn đặt ở đây."
+      },
+      "indicators": {
+        "title": "Chỉ báo của riêng bạn",
+        "body": "Viết chỉ báo cho biểu đồ bằng Python thật, có gói pip và bản xem trước trực tiếp ngay cạnh trình soạn thảo."
+      },
+      "workflows": {
+        "title": "Quy trình",
+        "body": "Biến một tín hiệu thành chuỗi các bước tiếp tục canh thị trường trong lúc bạn lo việc của mình."
+      },
+      "plugins": {
+        "title": "Plugin Store",
+        "body": "Thêm connector, chỉ báo, giao diện và nhà cung cấp AI, rồi quyết định mỗi thứ được tin cậy tới đâu."
+      },
+      "keychain": {
+        "title": "Khóa nằm trong keychain hệ thống",
+        "body": "Ứng dụng máy tính giao khóa sàn của bạn cho macOS Keychain, Windows Credential Manager hoặc secret service của Linux, thay vì giữ trong bộ nhớ trình duyệt."
+      },
+      "venues": {
+        "title": "Thêm bốn sàn nữa",
+        "body": "Coinbase, Gate, KuCoin và MEXC không trả lời trình duyệt. Ứng dụng máy tính với tới cả mười lăm sàn."
+      },
+      "background": {
+        "title": "Đóng rồi vẫn chạy tiếp",
+        "body": "Đóng cửa sổ mà bot và cảnh báo vẫn hoạt động, kèm thông báo hệ thống ngay khi có cái nào kích hoạt."
+      },
+      "windows": {
+        "title": "Nhiều hơn một cửa sổ",
+        "body": "Kéo một thị trường ra thành cửa sổ riêng và đặt lên màn hình thứ hai."
+      },
+      "where": "Mở terminal.pairlens.finance trên máy tính của bạn và mọi thứ ở trên chỉ cách một cửa sổ. Còn có cả ứng dụng máy tính cho macOS, Windows và Linux, và chính nó mở khóa bốn sàn cuối cùng."
     },
     "accounts": {
       "permissionsLabel": "Quyền hạn",

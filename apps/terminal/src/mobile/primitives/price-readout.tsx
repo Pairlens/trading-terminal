@@ -16,6 +16,20 @@
  *
  * If profiling ever shows this leaf costing, the escalation is a render-null
  * sibling writing `textContent` into refs. Do not do that pre-emptively.
+ *
+ * ## Why BOTH sizes are always in the DOM
+ *
+ * The readout tracks the sheet: it is the design's 34px hero over a bare chart
+ * and its 22px panel line under a docked one, and the trip between them has to
+ * follow a finger frame by frame (see `--pl-sheet-dock` in mobile-sheet.tsx).
+ * Font size is a layout property and cannot be animated on the compositor, and
+ * the two variants do not even carry the same text — the hero states the
+ * absolute change and the window, the compact one only the percentage. So both
+ * are rendered, stacked at the same origin, and cross-faded by the sheet's own
+ * position. The scales are chosen so the PRICE line is pixel-identical in both
+ * at every value of the variable (34·(1−0.353d) = 22·(1.545−0.545d) = 34−12d),
+ * which is what makes the number read as one element scaling rather than two
+ * elements dissolving.
  */
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -30,8 +44,6 @@ import { usePriceTick } from '@/hooks/use-price-tick'
 import { formatBookPrice } from '@/lib/format-price'
 
 export type PriceReadoutProps = {
-  /** 34px/600 mono over the bare chart · 22px/600 mono under a panel. */
-  size: 'hero' | 'compact'
   className?: string
 }
 
@@ -68,8 +80,22 @@ function change24h(
   }
 }
 
+/** Two shadows, not one: the chart scrim behind this was cut back so it stops
+ *  erasing candles, which moves the last of the contrast onto the type itself.
+ *  The tight layer keeps a thin glyph readable directly over a wick; the wide
+ *  one is the halo. Both are made of the chart's own ink (see mobile.css), so
+ *  on a light chart they thicken the plot behind the number instead of
+ *  printing a black smudge on it. */
+const SHADOW_TIGHT = '[text-shadow:var(--pl-halo-tight)]'
+const SHADOW_WIDE = '[text-shadow:var(--pl-halo-wide)]'
+
+/** The number sits ON the plot, so it takes the chart's foreground rather than
+ *  the UI's: a theme may paint the chart a colour the shell never wears, and
+ *  `text-foreground` against it can come out dark-on-dark. `--up`/`--down`
+ *  still win when the price is moving — those are P&L, not chrome. */
+const INK = 'text-[color:var(--pl-chart-fg)]'
+
 export const PriceReadout = memo(function PriceReadout({
-  size,
   className,
 }: PriceReadoutProps) {
   const { t } = useTranslation()
@@ -85,45 +111,77 @@ export const PriceReadout = memo(function PriceReadout({
     null
   const direction = usePriceTick(price)
   const change = change24h(candles, price)
-  const hero = size === 'hero'
+  const text = price == null ? '—' : formatBookPrice(price)
+  const percent = change
+    ? `${change.percent >= 0 ? '+' : ''}${change.percent.toFixed(2)}%`
+    : null
+  const tone = change
+    ? change.percent >= 0
+      ? 'text-up'
+      : 'text-down'
+    : undefined
+  const priceTone =
+    direction === 'up' ? 'text-up' : direction === 'down' ? 'text-down' : ''
 
   return (
-    <div className={cn('flex flex-col items-start', className)}>
-      <span
-        className={cn(
-          // Two shadows, not one: the chart scrim behind this was cut back so
-          // it stops erasing candles, which moves the last of the contrast
-          // onto the type itself. The tight layer is what keeps a thin glyph
-          // readable directly over a wick; the wide one is the halo.
-          'font-mono font-semibold tabular-nums text-foreground',
-          hero
-            ? 'text-[34px] leading-none tracking-[-0.03em] [text-shadow:0_1px_3px_rgba(0,0,0,.92),0_2px_14px_rgba(0,0,0,.8)]'
-            : 'text-[22px] leading-none tracking-[-0.02em] [text-shadow:0_1px_3px_rgba(0,0,0,.92),0_2px_10px_rgba(0,0,0,.8)]',
-          direction === 'up' && 'text-up',
-          direction === 'down' && 'text-down',
-        )}
-      >
-        {/* No currency symbol: the design's hero price is the number alone,
-            and `$` in front of a 34px figure costs two characters of a 402px
-            row. `formatBookPrice` is the repo's separator-carrying formatter. */}
-        {price == null ? '—' : formatBookPrice(price)}
-      </span>
-      {change ? (
+    <div className={cn('pl-readout relative', className)}>
+      {/* Hero, over a bare chart. In flow, so it owns the box. */}
+      <div className="pl-readout-hero flex flex-col items-start">
         <span
           className={cn(
-            'mt-1.5 font-mono font-medium tabular-nums [text-shadow:0_1px_3px_rgba(0,0,0,.92),0_2px_10px_rgba(0,0,0,.8)]',
-            hero ? 'text-[13.5px]' : 'text-[13px]',
-            change.percent >= 0 ? 'text-up' : 'text-down',
+            'font-mono text-[34px] font-semibold leading-none tracking-[-0.03em] tabular-nums',
+            INK,
+            SHADOW_WIDE,
+            priceTone,
           )}
         >
-          {hero
-            ? t('mobile.shell.priceChange', {
-                absolute: `${change.absolute >= 0 ? '+' : ''}${change.absolute.toLocaleString(undefined, { maximumFractionDigits: 2 })}`,
-                percent: `${change.percent >= 0 ? '+' : ''}${change.percent.toFixed(2)}%`,
-              })
-            : `${change.percent >= 0 ? '+' : ''}${change.percent.toFixed(2)}%`}
+          {/* No currency symbol: the design's hero price is the number alone,
+              and `$` in front of a 34px figure costs two characters of a 402px
+              row. `formatBookPrice` carries the separators. */}
+          {text}
         </span>
-      ) : null}
+        {change ? (
+          <span
+            className={cn(
+              'mt-1.5 font-mono text-[13.5px] font-medium tabular-nums',
+              SHADOW_TIGHT,
+              tone,
+            )}
+          >
+            {t('mobile.shell.priceChange', {
+              absolute: `${change.absolute >= 0 ? '+' : ''}${change.absolute.toLocaleString(undefined, { maximumFractionDigits: 2 })}`,
+              percent: percent ?? '',
+            })}
+          </span>
+        ) : null}
+      </div>
+      {/* Compact, under a docked panel. Out of flow at the same origin. */}
+      <div
+        aria-hidden
+        className="pl-readout-compact absolute left-0 top-0 flex flex-col items-start"
+      >
+        <span
+          className={cn(
+            'font-mono text-[22px] font-semibold leading-none tracking-[-0.02em] tabular-nums',
+            INK,
+            SHADOW_TIGHT,
+            priceTone,
+          )}
+        >
+          {text}
+        </span>
+        {percent ? (
+          <span
+            className={cn(
+              'mt-1.5 font-mono text-[13px] font-medium tabular-nums',
+              SHADOW_TIGHT,
+              tone,
+            )}
+          >
+            {percent}
+          </span>
+        ) : null}
+      </div>
     </div>
   )
 })

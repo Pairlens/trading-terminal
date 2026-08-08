@@ -119,9 +119,14 @@ export default memo(function TimeframePopoverChip() {
         aria-label={t('chart.toolbar.timeframe')}
         className={cn(
           'flex h-9 items-center gap-1 rounded-[10px] pl-[11px] pr-[7px] font-mono text-[13.5px] font-semibold',
+          // At rest the chip is chrome floating on the bare plot, so it takes
+          // its ink and its ring from the CHART's palette, not the UI's — a
+          // theme is free to give the chart a background the UI never wears,
+          // and `text-foreground` on it can land dark-on-dark. Open, it is a
+          // popover trigger over a scrim and goes back to the UI tokens.
           open
             ? 'bg-foreground text-background'
-            : 'text-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,.16)]',
+            : 'text-[color:var(--pl-chart-fg)] shadow-[inset_0_0_0_1px_var(--pl-chart-edge)]',
         )}
         onClick={() => setOpen((value) => !value)}
         type="button"
@@ -130,7 +135,9 @@ export default memo(function TimeframePopoverChip() {
         <ChevronDown
           className={cn(
             'size-4',
-            open ? 'rotate-180 text-background' : 'text-muted-foreground',
+            open
+              ? 'rotate-180 text-background'
+              : 'text-[color:var(--pl-chart-fg)] opacity-65',
           )}
         />
       </button>
@@ -159,7 +166,7 @@ export default memo(function TimeframePopoverChip() {
                     CELL,
                     option.value === timeframe
                       ? 'bg-foreground text-background'
-                      : 'bg-white/[.09] text-foreground',
+                      : 'bg-[color:var(--pl-wash-strong)] text-foreground',
                   )}
                   key={option.value}
                   onClick={() => select(option.value)}
@@ -264,7 +271,7 @@ const MoreCell = memo(function MoreCell({
         CELL,
         selected
           ? 'bg-foreground text-background'
-          : 'text-muted-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)]',
+          : 'text-muted-foreground shadow-[inset_0_0_0_1px_var(--pl-edge)]',
       )}
       onClick={() => {
         if (firedRef.current) {

@@ -47,11 +47,14 @@ import { Drawer } from 'vaul'
 
 import { cn } from '@pairlens/ui'
 import {
+  parseInlineTranslateY,
   parseTranslateY,
   resolveSheetSnaps,
+  sheetProgress,
   sheetTop,
   shouldDismissSheet,
 } from '../lib/mobile-geometry'
+import type { SheetSnaps } from '../lib/mobile-geometry'
 import type {
   ReactNode,
   PointerEvent as ReactPointerEvent,
@@ -152,15 +155,159 @@ export function useSheetScrollRef(): RefObject<HTMLDivElement | null> | null {
   return useContext(SheetScrollContext)
 }
 
+/**
+ * The sheet's live position, published to CSS.
+ *
+ * `--pl-sheet-dock` runs 0 (off screen) → 1 (default snap);
+ * `--pl-sheet-expand` runs 0 (default snap) → 1 (expanded snap). Everything in
+ * the chart band that has to move WITH the sheet — the price readout's scale,
+ * the timeframe chip's fade, the drawing toolbar's entrance — reads these
+ * instead of a React prop, which is what keeps a finger-tracked sheet off the
+ * render path entirely. `.pl-sheet-driving` on <html> means "a rAF owns these
+ * values this frame"; consumers switch their transitions off while it is
+ * present and animate on vaul's curve when it is not.
+ */
+const DOCK_VAR = '--pl-sheet-dock'
+const EXPAND_VAR = '--pl-sheet-expand'
+const DRIVING_CLASS = 'pl-sheet-driving'
+
+/**
+ * How long tracking outlives the finger. vaul settles a released snap over
+ * 0.5s on its own curve; following its transform for a beat longer is what
+ * makes the readout ride the settle instead of racing it with a second
+ * transition of its own.
+ */
+const SETTLE_MS = 620
+
+function writeProgressVars(dock: number, expand: number): void {
+  const root = document.documentElement
+  root.style.setProperty(DOCK_VAR, dock.toFixed(3))
+  root.style.setProperty(EXPAND_VAR, expand.toFixed(3))
+}
+
+type ProgressState = {
+  open: boolean
+  expanded: boolean
+  /** Snap-mode sheets only. A full-height picker must not touch the vars. */
+  tracked: boolean
+  viewport: number
+  snaps: SheetSnaps
+}
+
+function useSheetProgressVars(
+  sheetRef: RefObject<HTMLDivElement | null>,
+  state: ProgressState,
+): () => void {
+  // A ref rather than deps: the rAF reads the newest geometry every frame and
+  // must never be torn down and rebuilt mid-gesture.
+  const live = useRef(state)
+  live.current = state
+
+  const frameRef = useRef(0)
+  const settleUntilRef = useRef(0)
+
+  const settle = useCallback(() => {
+    if (frameRef.current) cancelAnimationFrame(frameRef.current)
+    frameRef.current = 0
+    document.documentElement.classList.remove(DRIVING_CLASS)
+    const { open, expanded, tracked } = live.current
+    writeProgressVars(open ? 1 : 0, open && tracked && expanded ? 1 : 0)
+  }, [])
+
+  const step = useCallback(() => {
+    const element = sheetRef.current
+    const { tracked, viewport, snaps } = live.current
+    if (!element || !tracked) {
+      settle()
+      return
+    }
+    // While the finger owns the sheet, vaul's inline transform IS the live
+    // position and can be read for free. On release vaul writes the TARGET
+    // inline and hands the travel to a 0.5s CSS transition, so during the
+    // settle only the COMPUTED matrix interpolates — reading the inline value
+    // there would snap the chart-band chrome to the destination on frame one.
+    const dragging = element.classList.contains('vaul-dragging')
+    const translateY = dragging
+      ? (parseInlineTranslateY(element.style.transform) ??
+        parseTranslateY(getComputedStyle(element).transform))
+      : parseTranslateY(getComputedStyle(element).transform)
+    if (translateY !== null) {
+      const { dock, expand } = sheetProgress(translateY, viewport, snaps)
+      writeProgressVars(dock, expand)
+    }
+    // A dragging sheet keeps itself alive; anything else gets one settle
+    // window from the last pointer event. Nothing here can outlive a finger
+    // that never lifts, which a `pointerdown`-latched flag would.
+    const active = dragging || performance.now() < settleUntilRef.current
+    if (!active) {
+      settle()
+      return
+    }
+    frameRef.current = requestAnimationFrame(step)
+  }, [sheetRef, settle])
+
+  /** Idempotent: called from every pointer event of a gesture, down to up. */
+  const trackGesture = useCallback(() => {
+    settleUntilRef.current = performance.now() + SETTLE_MS
+    if (!live.current.tracked) return
+    document.documentElement.classList.add(DRIVING_CLASS)
+    if (!frameRef.current) frameRef.current = requestAnimationFrame(step)
+  }, [step])
+
+  // Everything that is NOT a finger — opening, closing, a tab switch — lands
+  // here: write the target once and let the consumers' own transitions carry
+  // it on vaul's curve, in lockstep with the sheet's travel.
+  useEffect(() => {
+    if (!state.tracked || frameRef.current) return
+    writeProgressVars(state.open ? 1 : 0, state.open && state.expanded ? 1 : 0)
+  }, [state.open, state.expanded, state.tracked])
+
+  useEffect(
+    () => () => {
+      if (frameRef.current) cancelAnimationFrame(frameRef.current)
+      frameRef.current = 0
+      document.documentElement.classList.remove(DRIVING_CLASS)
+      // A tracked sheet unmounting while still OPEN never rendered its
+      // open→false transition, so the effect that walks the vars back never
+      // ran — without this, `--pl-sheet-dock` stays pinned at 1 and the
+      // drawing toolbar plus the hero readout are gone until the next panel
+      // cycle. Guarded so an already-closed unmount cannot clobber a channel
+      // some other, legitimately docked sheet now owns.
+      if (live.current.tracked && live.current.open) writeProgressVars(0, 0)
+    },
+    [],
+  )
+
+  return trackGesture
+}
+
 /** vaul reads this off the pointer target to decide drag vs scroll. */
 const NO_DRAG_ATTR = 'data-vaul-no-drag'
+
+/**
+ * How far a finger has to travel before the gesture counts as a drag, in px.
+ *
+ * vaul has NO slop: `isDeltaInDirection` returns true for a 1px move (measured
+ * in vaul 1.1.2), so the first `pointermove` after a touch starts the drag,
+ * stamps `vaul-dragging` and swallows the click. A real finger jitters 1–3px
+ * during a tap — which is why every tap on a panel with nothing to scroll
+ * failed on device while headless mouse taps, which have zero jitter, passed.
+ */
+const DRAG_SLOP_PX = 8
 
 export type MobileSheetProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   /** Chart-band height below the context bar; use a SHEET_BAND constant. */
   band: number | 'full'
-  /** 'default' = rgba(20,19,17,.97). 'copilot' = #131217 + magic hairline. */
+  /**
+   * Chart band left above the EXPANDED snap. Defaults to `EXPANDED_BAND`; the
+   * Trade panel raises it so the limit line's grab strip stays whole.
+   */
+  expandedBand?: number
+  /** 'default' = `--pl-surface`. 'copilot' = `--pl-surface-ai` + the magic
+   *  hairline. Both follow the active theme; see the Paint block in
+   *  mobile.css. */
   variant?: 'default' | 'copilot'
   /** Grab handle 40×4. Default true. */
   handle?: boolean
@@ -190,6 +337,7 @@ export const MobileSheet = memo(function MobileSheet({
   open,
   onOpenChange,
   band,
+  expandedBand,
   variant = 'default',
   handle = true,
   label,
@@ -211,8 +359,9 @@ export const MobileSheet = memo(function MobileSheet({
         typeof band === 'number' ? band : 0,
         chartTop,
         viewport,
+        expandedBand,
       ),
-    [band, chartTop, viewport],
+    [band, chartTop, viewport, expandedBand],
   )
   // Memoized because vaul re-runs its snap effect whenever this array's
   // IDENTITY changes, and that effect re-stamps the "just arrived, ignore
@@ -241,6 +390,14 @@ export const MobileSheet = memo(function MobileSheet({
   useEffect(() => {
     applyExpanded(false)
   }, [band, open, applyExpanded])
+
+  const trackGesture = useSheetProgressVars(sheetRef, {
+    open,
+    expanded,
+    tracked: snapPoints !== undefined,
+    viewport,
+    snaps,
+  })
 
   const activeSnapPoint = snapPoints ? snapPoints[expanded ? 1 : 0] : undefined
   const handleSnapChange = useCallback(
@@ -290,15 +447,24 @@ export const MobileSheet = memo(function MobileSheet({
    * The attribute is re-armed on the next pointer DOWN and never on pointer up
    * — vaul asks again on release, and an attribute restored too early makes it
    * bail out of its own snap-back.
+   *
+   * The hand-off is ONE-WAY and gated on `DRAG_SLOP_PX` of vertically dominant
+   * travel. One-way because vaul latches `isAllowedToDrag` on the first move it
+   * accepts and never re-asks for the rest of the gesture, so re-arming
+   * mid-drag is dead code that only risks confusing the release path. Gated
+   * because without slop a tap's own jitter armed the drag and ate the click,
+   * and vertical dominance is what keeps a horizontal gesture — the Trade
+   * ticket's slide-to-confirm — from hauling the sheet.
    */
-  const dragOriginRef = useRef<number | null>(null)
+  const dragOriginRef = useRef<{ x: number; y: number } | null>(null)
 
   const handlePointerDown = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
-      dragOriginRef.current = event.clientY
+      dragOriginRef.current = { x: event.clientX, y: event.clientY }
       scrollRef.current?.setAttribute(NO_DRAG_ATTR, '')
+      trackGesture()
     },
-    [],
+    [trackGesture],
   )
 
   const handlePointerMove = useCallback(
@@ -306,15 +472,19 @@ export const MobileSheet = memo(function MobileSheet({
       const origin = dragOriginRef.current
       const scroll = scrollRef.current
       if (origin === null || !scroll) return
+      trackGesture()
+      // Already handed over: the gesture belongs to the sheet for good.
+      if (!scroll.hasAttribute(NO_DRAG_ATTR)) return
+      const dy = event.clientY - origin.y
+      const dx = event.clientX - origin.x
+      if (Math.abs(dy) < DRAG_SLOP_PX || Math.abs(dy) <= Math.abs(dx)) return
       const scrollable = scroll.scrollHeight > scroll.clientHeight + 1
-      const draggable =
-        !scrollable || (event.clientY > origin && scroll.scrollTop <= 0)
-      if (draggable === scroll.hasAttribute(NO_DRAG_ATTR)) {
-        if (draggable) scroll.removeAttribute(NO_DRAG_ATTR)
-        else scroll.setAttribute(NO_DRAG_ATTR, '')
-      }
+      // A panel with nothing to scroll drags from anywhere; a scrollable one
+      // only when it is already at its top and the pull is downward.
+      if (scrollable && !(dy > 0 && scroll.scrollTop <= 0)) return
+      scroll.removeAttribute(NO_DRAG_ATTR)
     },
-    [],
+    [trackGesture],
   )
 
   /**
@@ -327,8 +497,14 @@ export const MobileSheet = memo(function MobileSheet({
    * only when vaul actually moved the sheet, so a gesture that scrolled the
    * list can never be read as a dismiss.
    */
+  const handlePointerCancel = useCallback(() => {
+    dragOriginRef.current = null
+    trackGesture()
+  }, [trackGesture])
+
   const handlePointerUp = useCallback(() => {
     dragOriginRef.current = null
+    trackGesture()
     const element = sheetRef.current
     if (!element || !snapPoints) return
     if (!element.classList.contains('vaul-dragging')) return
@@ -337,7 +513,7 @@ export const MobileSheet = memo(function MobileSheet({
     if (shouldDismissSheet(translateY, viewport, snaps.defaultHeight)) {
       requestClose()
     }
-  }, [snapPoints, viewport, snaps.defaultHeight, requestClose])
+  }, [trackGesture, snapPoints, viewport, snaps.defaultHeight, requestClose])
 
   const activeHeight = expanded ? snaps.expandedHeight : snaps.defaultHeight
 
@@ -366,6 +542,7 @@ export const MobileSheet = memo(function MobileSheet({
               variant === 'copilot' && 'pl-sheet-copilot',
               className,
             )}
+            onPointerCancel={handlePointerCancel}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
@@ -395,9 +572,21 @@ export const MobileSheet = memo(function MobileSheet({
               // The below-the-fold remainder of the largest snap, handed back
               // as padding so a list ends at the fold and a percentage-height
               // child resolves to the visible slice.
+              //
+              // The fold is the TAB BAR, not the bottom of the screen: the bar
+              // is drawn over the sheet (z-50 against z-40) and owns
+              // `--pl-tabbar-total` of it. Reserving only the safe-area inset
+              // put the last ~54px of every panel underneath the bar — the
+              // clipped privacy note on the signed-out co-pilot gate, the
+              // half-visible final news row on Discover. One number, so no
+              // panel has to remember to add it back.
+              //
+              // Full-height sheets keep the old reserve: the pair and venue
+              // pickers already pad their own content by `--pl-tabbar-total`,
+              // and adding it here would double it.
               style={{
                 paddingBottom: snapPoints
-                  ? `calc(${snaps.expandedHeight - activeHeight}px + var(--pl-bottom-inset))`
+                  ? `calc(${snaps.expandedHeight - activeHeight}px + var(--pl-tabbar-total))`
                   : 'var(--pl-bottom-inset)',
               }}
             >

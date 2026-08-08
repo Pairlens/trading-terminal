@@ -13,9 +13,16 @@ import * as React from 'react'
  * caret for one tick and lose it — on iOS that reads as "the keyboard never
  * opens". `inert` makes the trap's `focus()` a silent no-op.
  *
- * Call from a component that only mounts while the dialog is open (a popup
- * content). Sheets already inert (their own swap machinery) are left alone
- * and NOT un-inerted on cleanup.
+ * Call ONLY from a component that mounts while the dialog is OPEN — i.e. from
+ * inside the popup, never from the `*Content` wrapper. A `<Dialog open={false}>`
+ * still mounts its `DialogContent` component, so a hook call up there inerts
+ * every sheet on the screen for as long as the closed dialog is rendered: the
+ * signed-out co-pilot panel renders a closed `SignInDialog`, and the whole
+ * sheet — CTA included — stopped responding to touch. Taps fell through to the
+ * chart's dismiss layer, which reads on device as "the button does nothing".
+ *
+ * Sheets already inert (their own swap machinery) are left alone and NOT
+ * un-inerted on cleanup.
  */
 export function useReleaseSheetFocusTraps(): void {
   React.useEffect(() => {
@@ -28,4 +35,14 @@ export function useReleaseSheetFocusTraps(): void {
       trapped.forEach((element) => element.removeAttribute('inert'))
     }
   }, [])
+}
+
+/**
+ * The hook as a render-nothing child, so its lifetime is the POPUP's and not
+ * the wrapper's. Mounted as the first child of a dialog popup: child effects
+ * run before the parent's, so the sheets are inert before base-ui moves focus.
+ */
+export function ReleaseSheetFocusTraps(): null {
+  useReleaseSheetFocusTraps()
+  return null
 }

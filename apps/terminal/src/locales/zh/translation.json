@@ -4650,18 +4650,22 @@
         "orderbook": "订单簿",
         "pairPicker": "交易对",
         "venuePicker": "交易所",
-        "settings": "设置",
-        "connect": "连接账户",
-        "news": "新闻"
+        "settings": "设置"
       },
       "changePair": "更改交易对",
-      "changeVenue": "更改交易所",
+      "changeVenueA11y": "更改交易所。{{venue}}，{{status}}",
       "search": "搜索交易对",
       "openSettings": "打开设置",
       "readOnly": "仅读取",
-      "timeframe": "周期",
+      "live": {
+        "live": "实时",
+        "connecting": "…",
+        "offline": "离线",
+        "liveA11y": "正在实时接收",
+        "connectingA11y": "连接中",
+        "offlineA11y": "本设备上没有实时数据"
+      },
       "dismiss": "关闭",
-      "comingSoon": "即将推出",
       "priceChange": "{{absolute}} {{percent}} · 24h",
       "switchVenue": "切换交易所",
       "noChartData": "该交易对在此没有数据",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "精选"
+    },
+    "fearGreed": {
+      "historyLabel_one": "最近一天",
+      "historyLabel_other": "最近 {{count}} 天",
+      "noHistory": "暂无历史数据",
+      "chartAria": "恐慌与贪婪指数走势",
+      "bucketsLabel": "这个数字代表什么",
+      "aboutBody": "由波动率、动量与成交量、社交讨论热度、比特币市占率和搜索趋势汇总而成，浓缩为 0 到 100 之间的一个数字。低是恐慌，高是贪婪。它读的是市场情绪，不是方向。"
+    },
+    "pnl": {
+      "windowSince": "自 {{time}} 起",
+      "tradesCount_one": "{{count}} 笔交易",
+      "tradesCount_other": "{{count}} 笔交易",
+      "explainer": "按本次会话中的成交计算：只有 Pairlens 看着你建立的仓位，卖出时才会实现盈亏，所以你原本就持有的币不会实现任何盈亏。未扣除手续费。日亏损风控查看的也是这个数字。",
+      "lockedHint": "在窗口重置或你在风险管理中解锁之前，新订单会一直被阻止。",
+      "guardrailLabel": "日亏损风控边界",
+      "guardrailUsed": "{{used}}% / {{cap}}% 上限",
+      "noLimit": "尚未设置日亏损上限。设一个，Pairlens 就会在糟糕的一天变得更糟之前停止接受订单。",
+      "riskSettings": "风险管理",
+      "holdingsLabel": "你持有的资产",
+      "connectTitle": "尚未连接任何账户",
+      "connectBody": "连接交易所、经纪商或钱包，它的余额就会显示在这里。密钥留在这台设备上。",
+      "noPositionsBody": "只要已连接的账户报出余额，就会显示在这里。",
+      "pricedFrom": "按各交易所的公开行情快照估值，每分钟刷新一次。",
+      "someUnpriced": "暂无价格的持仓不计入总计。",
+      "noFxRate": "当前没有 {{currency}} 汇率，因此金额不显示估值。"
     },
     "markets": {
       "title": "全部交易对",
@@ -4747,6 +4777,52 @@
       "trading": "交易",
       "connected": "已连接",
       "perOrder": "每笔订单 {{percent}}%"
+    },
+    "desktopInvite": {
+      "bannerTitle": "完整的终端在你的电脑上",
+      "bannerBody": "工作区、机器人、你自己的指标，还有另外四家交易所。",
+      "bannerDismiss": "隐藏此提示",
+      "screenTitle": "在更大的屏幕上",
+      "lead": "手机上装的是你想随身带着的那部分 Pairlens：图表、订单簿、交易面板和副驾驶。终端的其余部分是为一块铺得开的屏幕而生的，它们在那边等你。",
+      "widerWindow": "在更宽的窗口中",
+      "desktopApp": "在桌面应用中",
+      "workspaces": {
+        "title": "工作区",
+        "body": "图表、订单簿、成交记录和副驾驶并排摆好，排一次就存下来。工作区商店里还有现成布局，一点即可复制。"
+      },
+      "bots": {
+        "title": "机器人",
+        "body": "把策略部署到某个市场，先回测，再看着它在你在这里设定的同一套风险限额下运行。"
+      },
+      "indicators": {
+        "title": "你自己的指标",
+        "body": "用真正的 Python 编写图表指标，可以装 pip 包，编辑器旁边还有实时预览。"
+      },
+      "workflows": {
+        "title": "工作流",
+        "body": "把一个信号串成一连串步骤，你忙自己的事时，它会继续盯着行情。"
+      },
+      "plugins": {
+        "title": "插件商店",
+        "body": "添加连接器、指标、主题和 AI 服务商，并自己决定每一个能被信任到什么程度。"
+      },
+      "keychain": {
+        "title": "密钥存入系统钥匙串",
+        "body": "桌面应用不会把交易所密钥留在浏览器存储里，而是交给 macOS 钥匙串、Windows 凭据管理器或 Linux Secret Service 保管。"
+      },
+      "venues": {
+        "title": "多四家交易所",
+        "body": "Coinbase、Gate、KuCoin 和 MEXC 不响应浏览器的请求。桌面应用能连上全部十五家。"
+      },
+      "background": {
+        "title": "关掉也继续运行",
+        "body": "关闭窗口后，机器人和提醒依旧在跑，一旦触发就会收到系统通知。"
+      },
+      "windows": {
+        "title": "不止一个窗口",
+        "body": "把某个市场拖出来单独成窗，放到第二块显示器上。"
+      },
+      "where": "在电脑上打开 terminal.pairlens.finance，上面这些就只隔着一个窗口。还有面向 macOS、Windows 和 Linux 的桌面应用，最后那四项要靠它来解锁。"
     },
     "accounts": {
       "permissionsLabel": "权限",

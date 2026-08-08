@@ -4650,18 +4650,22 @@
         "orderbook": "호가창",
         "pairPicker": "페어",
         "venuePicker": "거래소",
-        "settings": "설정",
-        "connect": "계정 연결",
-        "news": "뉴스"
+        "settings": "설정"
       },
       "changePair": "페어 변경",
-      "changeVenue": "거래소 변경",
+      "changeVenueA11y": "거래소 변경. {{venue}}, {{status}}",
       "search": "페어 검색",
       "openSettings": "설정 열기",
       "readOnly": "읽기 전용",
-      "timeframe": "시간 프레임",
+      "live": {
+        "live": "실시간",
+        "connecting": "…",
+        "offline": "오프라인",
+        "liveA11y": "실시간 수신 중",
+        "connectingA11y": "연결 중",
+        "offlineA11y": "이 기기에서는 수신되지 않음"
+      },
       "dismiss": "닫기",
-      "comingSoon": "곧 제공됩니다",
       "priceChange": "{{absolute}} {{percent}} · 24시간",
       "switchVenue": "거래소 전환",
       "noChartData": "이 거래소에는 이 페어의 데이터가 없습니다",
@@ -4686,6 +4690,32 @@
     },
     "discover": {
       "featured": "추천"
+    },
+    "fearGreed": {
+      "historyLabel_one": "최근 1일",
+      "historyLabel_other": "최근 {{count}}일",
+      "noHistory": "아직 기록이 없습니다",
+      "chartAria": "공포와 탐욕 지수 추이",
+      "bucketsLabel": "숫자의 의미",
+      "aboutBody": "변동성, 모멘텀과 거래량, 소셜 언급량, 비트코인 도미넌스, 검색 트렌드를 모아 0에서 100 사이의 숫자 하나로 압축한 지표입니다. 낮으면 공포, 높으면 탐욕입니다. 방향이 아니라 분위기를 읽는 숫자입니다."
+    },
+    "pnl": {
+      "windowSince": "{{time}}부터",
+      "tradesCount_one": "거래 {{count}}건",
+      "tradesCount_other": "거래 {{count}}건",
+      "explainer": "이번 세션의 체결에서 계산합니다. 매도는 Pairlens가 여는 것을 지켜본 포지션에 대해서만 실현되므로, 이미 들고 있던 코인은 아무것도 실현되지 않습니다. 수수료는 차감하지 않습니다. 일일 손실 가드레일이 보는 것도 같은 숫자입니다.",
+      "lockedHint": "주기가 리셋되거나 리스크 관리에서 잠금을 해제할 때까지 새 주문은 계속 차단됩니다.",
+      "guardrailLabel": "일일 손실 가드레일",
+      "guardrailUsed": "{{cap}}% 한도 중 {{used}}%",
+      "noLimit": "일일 손실 한도가 설정되어 있지 않습니다. 하나 정해 두면 나쁜 하루가 더 나빠지기 전에 Pairlens가 주문 받기를 멈춥니다.",
+      "riskSettings": "리스크 관리",
+      "holdingsLabel": "보유 자산",
+      "connectTitle": "아직 연결된 계정이 없습니다",
+      "connectBody": "거래소, 브로커, 지갑을 연결하면 그 잔고가 여기에 표시됩니다. 키는 이 기기에 그대로 남습니다.",
+      "noPositionsBody": "연결된 계정이 잔고를 보고하는 즉시 여기에 표시됩니다.",
+      "pricedFrom": "공개된 거래소 스냅샷으로 평가하며, 1분마다 갱신됩니다.",
+      "someUnpriced": "현재 가격이 없는 보유 자산은 합계에 포함되지 않습니다.",
+      "noFxRate": "지금은 {{currency}} 환율이 없어 금액을 평가액 없이 표시합니다."
     },
     "markets": {
       "title": "전체 페어",
@@ -4747,6 +4777,52 @@
       "trading": "거래",
       "connected": "연결됨",
       "perOrder": "주문당 {{percent}}%"
+    },
+    "desktopInvite": {
+      "bannerTitle": "완전한 터미널은 컴퓨터에 있습니다",
+      "bannerBody": "워크스페이스, 봇, 직접 만든 지표, 그리고 거래소 4곳이 더.",
+      "bannerDismiss": "숨기기",
+      "screenTitle": "더 큰 화면에서는",
+      "lead": "휴대폰에는 손에 쥐고 쓰고 싶은 Pairlens가 담겨 있습니다. 차트, 호가창, 트레이드 티켓, 그리고 코파일럿. 나머지 터미널은 넉넉하게 펼칠 수 있는 화면을 위해 만들어졌고, 그곳에서 당신을 기다리고 있습니다.",
+      "widerWindow": "더 넓은 창에서",
+      "desktopApp": "데스크톱 앱에서",
+      "workspaces": {
+        "title": "워크스페이스",
+        "body": "차트, 호가창, 체결 내역, 코파일럿을 나란히 배치해 한 번 짜두고 저장하세요. 워크스페이스 스토어에는 한 번의 탭으로 복사할 수 있는 완성된 레이아웃이 준비되어 있습니다."
+      },
+      "bots": {
+        "title": "봇",
+        "body": "전략을 마켓에 배포하고, 먼저 백테스트한 뒤, 여기서 설정한 것과 같은 리스크 한도 아래에서 움직이는 모습을 지켜보세요."
+      },
+      "indicators": {
+        "title": "직접 만드는 지표",
+        "body": "진짜 Python으로 차트 지표를 작성하세요. pip 패키지를 쓸 수 있고, 에디터 옆에서 실시간으로 미리 볼 수 있습니다."
+      },
+      "workflows": {
+        "title": "워크플로우",
+        "body": "시그널을 여러 단계로 이어 두면, 당신이 하루를 보내는 동안에도 시장을 계속 지켜봅니다."
+      },
+      "plugins": {
+        "title": "플러그인 스토어",
+        "body": "커넥터, 지표, 테마, AI 제공자를 추가하고, 각각을 어디까지 신뢰할지 직접 정하세요."
+      },
+      "keychain": {
+        "title": "키는 시스템 키체인에",
+        "body": "데스크톱 앱은 거래소 키를 브라우저 저장소에 두지 않고 macOS 키체인, Windows 자격 증명 관리자 또는 Linux Secret Service에 맡깁니다."
+      },
+      "venues": {
+        "title": "거래소 4곳 더",
+        "body": "Coinbase, Gate, KuCoin, MEXC는 브라우저에 응답하지 않습니다. 데스크톱 앱은 15곳 모두에 닿습니다."
+      },
+      "background": {
+        "title": "닫아도 계속 실행됩니다",
+        "body": "창을 닫아도 봇과 알림은 그대로 살아 있고, 하나가 울리는 순간 시스템 알림이 옵니다."
+      },
+      "windows": {
+        "title": "창은 하나로 끝이 아닙니다",
+        "body": "마켓 하나를 별도 창으로 떼어내 두 번째 모니터에 올려 두세요."
+      },
+      "where": "컴퓨터에서 terminal.pairlens.finance를 열면 위의 모든 것이 창 하나 거리에 있습니다. macOS, Windows, Linux용 데스크톱 앱도 있고, 마지막 네 가지를 열어 주는 것은 그쪽입니다."
     },
     "accounts": {
       "permissionsLabel": "권한",
