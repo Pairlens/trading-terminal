@@ -16,12 +16,40 @@
  * events on everything behind, which kills both the tap-the-chart gesture and
  * the draggable limit line.
  */
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 import { Drawer } from 'vaul'
 
 import { cn } from '@pairlens/ui'
 import { sheetTop } from '../lib/mobile-geometry'
 import type { ReactNode } from 'react'
+
+/**
+ * vaul nulls `document.body.style.pointerEvents` while a sheet is present even
+ * with `modal={false}` (measured, vaul 1.1) — which would kill the
+ * tap-the-chart dismiss gesture and every context-bar control. Watch the body
+ * style while open and undo exactly that write. Setting '' when the value is
+ * 'none' cannot loop: the follow-up mutation no longer matches the guard.
+ */
+function useBodyPointerEventsGuard(open: boolean) {
+  useEffect(() => {
+    if (!open || typeof document === 'undefined') return
+    const clear = () => {
+      if (document.body.style.pointerEvents === 'none') {
+        document.body.style.pointerEvents = ''
+      }
+    }
+    clear()
+    const observer = new MutationObserver(clear)
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['style'],
+    })
+    return () => {
+      observer.disconnect()
+      clear()
+    }
+  }, [open])
+}
 
 export type MobileSheetProps = {
   open: boolean
@@ -52,6 +80,7 @@ export const MobileSheet = memo(function MobileSheet({
   children,
   className,
 }: MobileSheetProps) {
+  useBodyPointerEventsGuard(open)
   return (
     <Drawer.Root
       dismissible

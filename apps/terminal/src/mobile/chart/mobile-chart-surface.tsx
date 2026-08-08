@@ -19,6 +19,7 @@ import { Monitor } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
+import { MIN_SHEET_HEIGHT } from '../lib/mobile-geometry'
 import { PriceReadout } from '../primitives/price-readout'
 import { MobileChart } from './mobile-chart'
 import type { ReactNode, PointerEvent as ReactPointerEvent } from 'react'
@@ -27,6 +28,12 @@ import { useOptionalCandleData } from '@/lib/chart-terminal-context'
 export type MobileChartSurfaceProps = {
   /** 'full' when the chart owns the screen, 'compact' under a docked panel. */
   band: 'full' | 'compact'
+  /**
+   * The docked panel's chart-band height in px (a SHEET_BAND value). The chart
+   * is sized to exactly the strip the sheet leaves visible — the design fills
+   * whatever band it is given rather than letting the sheet cover the series.
+   */
+  bandHeight?: number
   /** .7 behind Watchlist / Discover / the drawing-tools sheet, 1 elsewhere. */
   opacity?: number
   /** Mounts the tap-to-dismiss capture layer. */
@@ -43,6 +50,14 @@ export type MobileChartSurfaceProps = {
   /** Docked directly above the tab bar — the drawing toolbar. */
   footer?: ReactNode
 }
+
+/**
+ * The drawing toolbar's height (8px padding × 2 + 34px chips). A local
+ * constant rather than an import from `./drawing-toolbar` — that module is
+ * lazy-loaded and a static import of its exported constant would pull the
+ * whole tool catalog into the shell chunk.
+ */
+const FOOTER_HEIGHT_PX = 50
 
 /** A tap: under 10px of travel and under 400ms. Anything else is a pan. */
 const TAP_SLOP_PX = 10
@@ -62,6 +77,7 @@ export function MobileChartSurface(props: MobileChartSurfaceProps) {
 
 const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
   band,
+  bandHeight,
   opacity = 1,
   dismissible,
   onDismiss,
@@ -103,6 +119,18 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
 
   const unavailable = desktopOnly || (noData && !hasSnapshot)
 
+  // Compact: the chart ends where the sheet begins — the same min() the sheet
+  // top uses, so the two agree on short phones. Full: it ends above the
+  // toolbar when one is docked.
+  const chartFrame =
+    band === 'compact' && bandHeight != null
+      ? {
+          height: `min(${bandHeight}px, calc(100svh - ${MIN_SHEET_HEIGHT}px - var(--pl-chart-top)))`,
+        }
+      : footer
+        ? { bottom: `${FOOTER_HEIGHT_PX}px` }
+        : undefined
+
   return (
     <div
       className="absolute inset-x-0 overflow-hidden"
@@ -118,7 +146,13 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
           venueLabel={venueLabel}
         />
       ) : (
-        <div className="absolute inset-0" style={{ opacity }}>
+        // `isolate` keeps the engine's internal z-indexed canvases (up to
+        // z-30) inside their own stacking context, so the tap layer at z-10
+        // actually sits above the chart rather than under its UI canvas.
+        <div
+          className="absolute inset-x-0 top-0 isolate bottom-0"
+          style={{ opacity, ...chartFrame }}
+        >
           <MobileChart band={band} />
         </div>
       )}
@@ -133,17 +167,26 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
         ) : null}
       </div>
 
-      {/* Tap-to-dismiss. Mounted only while something is docked over the chart. */}
+      {/* Tap-to-dismiss. Mounted only while something is docked over the
+          chart. `pointer-events-auto` is load-bearing: vaul nulls the body's
+          pointer events while a sheet is open and children inherit that
+          unless they opt back in. */}
       {dismissible ? (
         <div
           aria-hidden
-          className="absolute inset-0 z-10"
+          className="pointer-events-auto absolute inset-0 z-10"
           onPointerDown={handlePointerDown}
           onPointerUp={handlePointerUp}
         />
       ) : null}
 
-      {overlay ? <div className="absolute inset-0 z-20">{overlay}</div> : null}
+      {/* Chart-space overlays. Non-interactive as a layer — the limit line's
+          grab strip opts back in itself — so it never eats the dismiss tap. */}
+      {overlay ? (
+        <div className="pointer-events-none absolute inset-0 z-20">
+          {overlay}
+        </div>
+      ) : null}
 
       {footer ? (
         <div className="absolute inset-x-0 bottom-0 z-30">{footer}</div>

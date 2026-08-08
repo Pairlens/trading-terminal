@@ -148,6 +148,7 @@ export function MobileSurface() {
     <div className="pl-mobile-root relative flex h-svh w-full flex-col overflow-hidden bg-background">
       <MobileChartSurface
         band={openPanel ? 'compact' : 'full'}
+        bandHeight={chrome?.band}
         dismissible={openPanel !== null}
         footer={
           openPanel === null ? (
