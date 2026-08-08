@@ -4666,7 +4666,8 @@
       "switchVenue": "Venue wechseln",
       "noChartData": "Für dieses Paar gibt es hier keine Daten",
       "noChartDataHint": "Diese Venue listet es nicht. Versuche eine andere.",
-      "desktopOnlyRoute": "Diese Ansicht gibt es nur in der Desktop-App."
+      "desktopOnlyRoute": "Diese Ansicht gibt es nur in der Desktop-App.",
+      "connectorsManagedOnDesktop": "Connectors werden in der Desktop-App oder in einem breiteren Fenster verwaltet."
     },
     "panels": {
       "searchAnyPair": "Beliebiges Paar, beliebige Venue suchen…",

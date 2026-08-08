@@ -196,9 +196,35 @@ export function useConnectWizardState({
     (market: string) => {
       setFeedback(null)
       void withVault(() => {
+        // A venue with no credential schema is not an API-key venue: the
+        // wizard would silently reset to its own venue grid and ask for a key
+        // the connector never wanted. DEX venues arrive through `openForChain`
+        // instead; anything else that gets here (a third-party connector, say)
+        // is better served by the type picker than by the wrong form.
+        if (!(market in CREDENTIAL_SCHEMAS)) {
+          setShowTypePicker(true)
+          return
+        }
         setFormKind(isBrokerMarket(market) ? 'broker' : 'exchange')
         setWizardInitialMarket(market)
         setShowForm(true)
+      })
+    },
+    [withVault],
+  )
+
+  /**
+   * Open straight on the wallet dialog for a chain (the DEX connect gate).
+   *
+   * The counterpart to `openForMarket`: a DEX venue signs with a chain wallet,
+   * so its gate has to reach `AddCryptoWalletDialog`, never the API-key wizard.
+   */
+  const openForChain = useCallback(
+    (chain: string) => {
+      setFeedback(null)
+      void withVault(() => {
+        setCryptoChain(chain)
+        setShowCryptoForm(true)
       })
     },
     [withVault],
@@ -399,6 +425,7 @@ export function useConnectWizardState({
     showForm,
     closeWizard,
     openForMarket,
+    openForChain,
     formKind,
     wizardMarkets,
     wizardInitialMarket,

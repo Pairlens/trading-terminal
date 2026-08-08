@@ -4666,7 +4666,8 @@
       "switchVenue": "Changer de place de marché",
       "noChartData": "Aucune donnée pour cette paire ici",
       "noChartDataHint": "Cette place de marché ne la référence pas. Essayez-en une autre.",
-      "desktopOnlyRoute": "Cet écran n’est disponible que sur l’app de bureau."
+      "desktopOnlyRoute": "Cet écran n’est disponible que sur l’app de bureau.",
+      "connectorsManagedOnDesktop": "Les connecteurs se gèrent dans l’app de bureau ou dans une fenêtre plus large."
     },
     "panels": {
       "searchAnyPair": "Rechercher n’importe quelle paire, n’importe quelle place de marché…",

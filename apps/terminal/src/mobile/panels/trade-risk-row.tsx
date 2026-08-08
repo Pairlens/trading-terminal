@@ -15,8 +15,18 @@
  *
  * When no cap is configured the row still renders: the share of the portfolio
  * an order represents is worth knowing whether or not a limit is set on it.
+ *
+ * The row calls `useTradeRisk` ITSELF rather than taking a computed verdict.
+ * `usePortfolioValue` opens one ticker subscription per held asset and bumps
+ * state on every tick of every one of them; owned by the ticket, that woke the
+ * whole 900-line form — and the fields the user is typing into — at socket
+ * rate, which is exactly what the ticket's `LivePriceProbe` exists to prevent.
+ * Owned here, the ticks re-render one 12px line. The props are all scalars, so
+ * `memo` actually compares them (a verdict object never matched), and the one
+ * fact the ticket needs back — whether risk BLOCKS the order — is reported
+ * through `onBlocksChange`, which only fires when the answer changes.
  */
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
@@ -83,13 +93,31 @@ export function useTradeRisk(input: TradeRiskInput): TradeRiskVerdict {
   return { ratioPct, capPct, exceeds, blocks }
 }
 
+export type TradeRiskRowProps = TradeRiskInput & {
+  /**
+   * Fired when the verdict's `blocks` flips. The ticket disables its confirm
+   * on it; passing a `useState` setter keeps the identity stable and makes a
+   * repeat of the same answer a no-op render.
+   */
+  onBlocksChange: (blocks: boolean) => void
+}
+
 export const TradeRiskRow = memo(function TradeRiskRow({
-  verdict,
-}: {
-  verdict: TradeRiskVerdict
-}) {
+  onBlocksChange,
+  ...input
+}: TradeRiskRowProps) {
   const { t } = useTranslation()
-  const { ratioPct, capPct, exceeds } = verdict
+  const { ratioPct, capPct, exceeds, blocks } = useTradeRisk(input)
+
+  useEffect(() => {
+    onBlocksChange(blocks)
+  }, [blocks, onBlocksChange])
+
+  // Unmounting the row must not leave the ticket permanently blocked: the
+  // verdict it reported dies with it.
+  useEffect(() => {
+    return () => onBlocksChange(false)
+  }, [onBlocksChange])
 
   const used = ratioPct == null ? '—' : `${ratioPct.toFixed(1)}%`
   const value =

@@ -22,10 +22,16 @@
  * forms the blueprint named (`src/types/mcp.ts`, `core/mcp/executor.ts`, both
  * delegating to the same engine methods). The direct methods are used here:
  * same engine call, one hop fewer, and a typed `number | null` instead of an
- * unwrapped command result. Coordinates are CSS pixels from the top of the
- * chart's main pane, which is the top of this overlay's box —
- * `MobileChartSurface` gives the chart and the overlay slot the same
- * `absolute inset-0` frame.
+ * unwrapped command result.
+ *
+ * Coordinates are CSS pixels from the top of the chart's MAIN PANE, and both
+ * conversions are unclamped linear maps over `mainHeight - timeAxisHeight` —
+ * feed them a y past the bottom of the plot and they extrapolate a price
+ * happily. So the two numbers this file clamps against are the chart's, not
+ * the band's: `MobileChartSurface` sizes the overlay slot with the same frame
+ * it gives the chart (under a docked sheet that is a 160px strip, not the
+ * ~730px band), and `CHART_TIME_AXIS_HEIGHT` takes off the axis gutter that
+ * the price scale does not cover.
  *
  * Repositioning rides callbacks that already fire: `chartRef.current.subscribe()`
  * for the engine's own `visibleTimeRangeChange` (pan/zoom), `sizeChange` and
@@ -49,6 +55,7 @@ import { GripVertical } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useOrderDraftStore } from '../lib/order-draft-store'
+import { CHART_TIME_AXIS_HEIGHT } from '../lib/mobile-geometry'
 import type { FastFinancialChartRef } from '@pairlens/fast-financial-charts/types'
 import type { PointerEvent as ReactPointerEvent, RefObject } from 'react'
 import { useChartConfig } from '@/lib/chart-terminal-context'
@@ -111,8 +118,12 @@ const LimitLine = memo(function LimitLine() {
   const tagRef = useRef<HTMLSpanElement | null>(null)
   /** The price the line is drawn at, kept out of render on purpose. */
   const priceRef = useRef<number | null>(null)
-  /** Latest chart-band rect, refreshed by `paint` — the portal's frame. */
-  const bandRef = useRef<{ top: number; height: number }>({
+  /**
+   * Latest PLOT rect, refreshed by `paint` — the portal's frame and the drag's
+   * clamp. `height` is the anchor's height minus the time-axis gutter, i.e.
+   * exactly the box the engine maps prices into.
+   */
+  const plotRef = useRef<{ top: number; height: number }>({
     top: 0,
     height: 0,
   })
@@ -135,14 +146,15 @@ const LimitLine = memo(function LimitLine() {
     const anchor = anchorRef.current
     if (!line || !anchor) return
     const rect = anchor.getBoundingClientRect()
-    bandRef.current = { top: rect.top, height: rect.height }
+    const plotHeight = Math.max(0, rect.height - CHART_TIME_AXIS_HEIGHT)
+    plotRef.current = { top: rect.top, height: plotHeight }
 
     const value = priceRef.current
     const y = value == null ? null : chartToY(chartRef, value)
-    // Outside the band means behind the tab bar or above the context bar. The
-    // portal is not clipped by the chart's `overflow: hidden`, so the clamp
-    // that used to be free has to be explicit.
-    if (y == null || y < 0 || y > rect.height) {
+    // Outside the plot means behind the sheet, in the time-axis gutter or
+    // above the context bar. The portal is not clipped by the chart's
+    // `overflow: hidden`, so the clamp that used to be free has to be explicit.
+    if (y == null || y < 0 || y > plotHeight) {
       line.style.opacity = '0'
       return
     }
@@ -220,7 +232,10 @@ const LimitLine = memo(function LimitLine() {
       const y = chartToY(chartRef, priceRef.current)
       if (y == null) return
       const rect = anchor.getBoundingClientRect()
-      bandRef.current = { top: rect.top, height: rect.height }
+      plotRef.current = {
+        top: rect.top,
+        height: Math.max(0, rect.height - CHART_TIME_AXIS_HEIGHT),
+      }
       draggingRef.current = true
       grabOffsetRef.current = event.clientY - rect.top - y
       event.currentTarget.setPointerCapture(event.pointerId)
@@ -236,14 +251,18 @@ const LimitLine = memo(function LimitLine() {
       const chart = chartRef.current
       if (!line || !chart) return
 
-      const band = bandRef.current
+      // Clamped to the PLOT, not to the slot: pointer capture keeps delivering
+      // moves once the finger crosses onto the sheet, and `coordinateToPrice`
+      // would extrapolate every one of those pixels into a price far off the
+      // chart and write it into the order draft.
+      const plot = plotRef.current
       const y = Math.min(
-        Math.max(event.clientY - band.top - grabOffsetRef.current, 0),
-        band.height,
+        Math.max(event.clientY - plot.top - grabOffsetRef.current, 0),
+        plot.height,
       )
       // Paint from the finger, not from the round-tripped price: the pixel is
       // what is being dragged, and the conversion back rounds.
-      line.style.transform = `translate3d(0, ${Math.round(band.top + y)}px, 0)`
+      line.style.transform = `translate3d(0, ${Math.round(plot.top + y)}px, 0)`
 
       const next = chart.coordinateToPrice(y)
       if (next == null || !Number.isFinite(next) || next <= 0) return
@@ -279,8 +298,9 @@ const LimitLine = memo(function LimitLine() {
 
   return (
     <>
-      {/* Measurement anchor: it occupies the chart band and nothing else, so
-          the portal below always knows where the band is. */}
+      {/* Measurement anchor: it fills the overlay slot, which the surface
+          sizes to the chart element, so the portal below always knows where
+          the plot box is. */}
       <div className="pointer-events-none absolute inset-0" ref={anchorRef} />
       {createPortal(
         <div

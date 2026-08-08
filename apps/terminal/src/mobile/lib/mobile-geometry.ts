@@ -35,6 +35,16 @@ export type SheetBand = (typeof SHEET_BAND)[keyof typeof SHEET_BAND]
 export const SHEET_TOP_FULL = 0
 
 /**
+ * The chart engine's time-axis gutter, in px.
+ *
+ * `MobileChart` pins it in the theme it hands the engine so this is a fact and
+ * not an assumption: the engine maps price ↔ y against `mainHeight -
+ * timeAxisHeight`, so anything drawing over the chart in price space (the
+ * limit line) has to subtract it to know where the plot actually ends.
+ */
+export const CHART_TIME_AXIS_HEIGHT = 22
+
+/**
  * Smallest content height a sheet is allowed to have. Below this the sheet
  * stops following the band and pins itself, so a short phone gets a usable
  * panel instead of a sliver.

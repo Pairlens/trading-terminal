@@ -18,16 +18,24 @@
  * `sticky` rather than living in the sheet's header slot. Reordering stays on
  * the desktop: dnd-kit's 14px grip cannot be made a 44px target inside a 44px
  * row without swallowing the tap that selects it.
+ *
+ * Past `VIRTUALIZE_ABOVE` rows the list windows, because a row is not free —
+ * it carries a sparkline with its own IntersectionObserver plus two store
+ * subscriptions, and a 120-symbol list would mount all of them in one commit
+ * in the middle of a scroll-fling. Below that the plain map wins: no measured
+ * scroll offset, no spacers, nothing to get wrong.
  */
-import { memo, useCallback, useMemo } from 'react'
+import { memo, useCallback, useLayoutEffect, useMemo, useState } from 'react'
 import { Plus, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useVirtualizer } from '@tanstack/react-virtual'
 
 import { cn } from '@pairlens/ui'
 import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
 import { VENUE_KIND_KEY, venueKindOf } from '../lib/venue-kind'
 import { MobileRow } from '../primitives/mobile-row'
+import { useSheetScrollRef } from '../primitives/mobile-sheet'
 import type { Instrument } from '@pairlens/shared/instrument-types'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
@@ -38,6 +46,17 @@ import { useMarketData } from '@/lib/market-data-provider'
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 import { formatPrice } from '@/lib/format-price'
+
+/** Lists at or below this length render as a plain map. */
+const VIRTUALIZE_ABOVE = 30
+
+/**
+ * A watchlist row, measured: the 32px avatar and the two-line title/subtitle
+ * both clear the 44px minimum, so it is 10px padding × 2 + ~34px of content +
+ * the 1px hairline. Every row is the same height — the subtitle truncates
+ * rather than wrapping — so this is exact, not an estimate that drifts.
+ */
+const ROW_HEIGHT = 55
 
 export default memo(function MobileWatchlistPanel() {
   const { t } = useTranslation()
@@ -65,6 +84,34 @@ export default memo(function MobileWatchlistPanel() {
       (symbol) => bySymbol.get(symbol) ?? fallbackInstrument(symbol),
     )
   }, [activeList?.symbols, instruments])
+
+  // Windowing rides the sheet's scroll container — the panel has none of its
+  // own, and giving it one would nest a second scroller inside the sheet.
+  const scrollRef = useSheetScrollRef()
+  const virtualize = rows.length > VIRTUALIZE_ABOVE && scrollRef != null
+
+  // The sticky header sits inside that same scroller, so the list starts some
+  // way down it. Measured once rather than hardcoded: the chip strip's height
+  // depends on how many lists the user has.
+  const [listNode, setListNode] = useState<HTMLDivElement | null>(null)
+  const [scrollMargin, setScrollMargin] = useState(0)
+  useLayoutEffect(() => {
+    const scroller = scrollRef?.current
+    if (!listNode || !scroller) return
+    setScrollMargin(
+      listNode.getBoundingClientRect().top -
+        scroller.getBoundingClientRect().top +
+        scroller.scrollTop,
+    )
+  }, [listNode, scrollRef, lists.length])
+
+  const virtualizer = useVirtualizer({
+    count: virtualize ? rows.length : 0,
+    estimateSize: () => ROW_HEIGHT,
+    getScrollElement: () => scrollRef?.current ?? null,
+    overscan: 6,
+    scrollMargin,
+  })
 
   const openSearch = useCallback(
     () => pushOverlay({ kind: 'pairPicker', autoFocus: true }),
@@ -136,15 +183,51 @@ export default memo(function MobileWatchlistPanel() {
           </p>
         </div>
       ) : (
-        rows.map((instrument) => (
-          <WatchlistRow
-            focused={instrument.symbol === focusedPair}
-            instrument={instrument}
-            key={instrument.symbol}
-            market={resolveMarket(instrument.assetClass)}
-            quote={quotes.get(instrument.symbol) ?? null}
-          />
-        ))
+        <div ref={setListNode}>
+          {virtualize
+            ? (() => {
+                const items = virtualizer.getVirtualItems()
+                const first = items[0]
+                const last = items[items.length - 1]
+                // Spacers rather than absolute positioning: the rows keep
+                // their own flow height, so a row that measures taller than
+                // ROW_HEIGHT cannot overlap its neighbour.
+                const padTop = first ? first.start - scrollMargin : 0
+                const padBottom = last
+                  ? virtualizer.getTotalSize() - (last.end - scrollMargin)
+                  : 0
+                return (
+                  <>
+                    {padTop > 0 ? <div style={{ height: padTop }} /> : null}
+                    {items.map((item) => {
+                      const instrument = rows[item.index]
+                      if (!instrument) return null
+                      return (
+                        <WatchlistRow
+                          focused={instrument.symbol === focusedPair}
+                          instrument={instrument}
+                          key={instrument.symbol}
+                          market={resolveMarket(instrument.assetClass)}
+                          quote={quotes.get(instrument.symbol) ?? null}
+                        />
+                      )
+                    })}
+                    {padBottom > 0 ? (
+                      <div style={{ height: padBottom }} />
+                    ) : null}
+                  </>
+                )
+              })()
+            : rows.map((instrument) => (
+                <WatchlistRow
+                  focused={instrument.symbol === focusedPair}
+                  instrument={instrument}
+                  key={instrument.symbol}
+                  market={resolveMarket(instrument.assetClass)}
+                  quote={quotes.get(instrument.symbol) ?? null}
+                />
+              ))}
+        </div>
       )}
     </div>
   )

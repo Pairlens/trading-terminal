@@ -4666,7 +4666,8 @@
       "switchVenue": "Chuyển sàn giao dịch",
       "noChartData": "Không có dữ liệu cho cặp này ở đây",
       "noChartDataHint": "Sàn này không niêm yết cặp đó. Hãy thử một sàn khác.",
-      "desktopOnlyRoute": "Màn hình đó chỉ có trên ứng dụng máy tính."
+      "desktopOnlyRoute": "Màn hình đó chỉ có trên ứng dụng máy tính.",
+      "connectorsManagedOnDesktop": "Trình kết nối được quản lý trong ứng dụng máy tính hoặc ở cửa sổ rộng hơn."
     },
     "panels": {
       "searchAnyPair": "Tìm bất kỳ cặp nào, bất kỳ sàn nào…",

@@ -4666,7 +4666,8 @@
       "switchVenue": "Mudar de corretora",
       "noChartData": "Sem dados para este par aqui",
       "noChartDataHint": "Esta corretora não lista este par. Tente outra.",
-      "desktopOnlyRoute": "Essa tela está disponível apenas no app de desktop."
+      "desktopOnlyRoute": "Essa tela está disponível apenas no app de desktop.",
+      "connectorsManagedOnDesktop": "Os conectores são gerenciados no app de desktop ou em uma janela mais larga."
     },
     "panels": {
       "searchAnyPair": "Pesquisar qualquer par, em qualquer corretora…",

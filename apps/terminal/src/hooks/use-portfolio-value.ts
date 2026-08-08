@@ -160,6 +160,11 @@ export function usePortfolioValue(credentialId?: string) {
 
   // Compute holdings
   const effectiveRate = fxRateRef.current || 1
+  // Once per render, not once per holding: getChartColors() is a
+  // getComputedStyle(documentElement) plus five getPropertyValue reads, and a
+  // ticker tick re-runs this whole body. Resolving it here keeps the "no
+  // caching, so a theme change shows immediately" intent intact.
+  const chartColors = getColors()
   const holdings: Array<HoldingValue> = balances.map((bal, i) => {
     const amount = Number(bal.total)
     const usdtPrice = pricesRef.current.get(bal.currency) ?? null
@@ -169,7 +174,7 @@ export function usePortfolioValue(credentialId?: string) {
       amount,
       price,
       value: price != null ? amount * price : null,
-      color: getColors()[i % CHART_VAR_COUNT],
+      color: chartColors[i % CHART_VAR_COUNT],
     }
   })
 

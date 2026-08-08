@@ -17,7 +17,9 @@
  *
  * Opened from two places, both landing here: Settings → Accounts → Add
  * account (no venue, so it starts at the type picker), and the Trade panel's
- * connect card (a venue, so it starts inside the wizard).
+ * connect card. That card sends a VENUE for an exchange or broker and a CHAIN
+ * for a DEX — the two credentials are different objects, and a chain that took
+ * the venue path would open an API-key wizard with no wallet form behind it.
  */
 import { memo, useEffect, useRef } from 'react'
 
@@ -47,6 +49,7 @@ export default memo(function ConnectAccountSheet({
     showForm,
     closeWizard,
     openForMarket,
+    openForChain,
     formKind,
     wizardMarkets,
     wizardInitialMarket,
@@ -83,15 +86,23 @@ export default memo(function ConnectAccountSheet({
     resumePending,
   } = wizard
 
-  // Entry: a venue goes straight into the wizard, no venue starts at the type
-  // picker. Once, on mount — reopening after a close is what `onClose` is for.
+  // Entry: a chain goes straight into the wallet dialog, a venue straight into
+  // the wizard, and neither starts at the type picker. Once, on mount —
+  // reopening after a close is what `onClose` is for.
   const openedRef = useRef(false)
   useEffect(() => {
     if (openedRef.current) return
     openedRef.current = true
-    if (overlay.market) openForMarket(overlay.market)
+    if (overlay.chain) openForChain(overlay.chain)
+    else if (overlay.market) openForMarket(overlay.market)
     else setShowTypePicker(true)
-  }, [overlay.market, openForMarket, setShowTypePicker])
+  }, [
+    overlay.chain,
+    overlay.market,
+    openForChain,
+    openForMarket,
+    setShowTypePicker,
+  ])
 
   // When the last dialog closes, the overlay is done. The enrollment gate is
   // part of the flow, so it counts as open; without that the overlay would pop

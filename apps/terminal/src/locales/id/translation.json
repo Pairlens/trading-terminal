@@ -4666,7 +4666,8 @@
       "switchVenue": "Beralih venue",
       "noChartData": "Tidak ada data untuk pair ini di sini",
       "noChartDataHint": "Venue ini tidak mencantumkan pair ini. Coba venue lain.",
-      "desktopOnlyRoute": "Layar ini hanya ada di aplikasi desktop."
+      "desktopOnlyRoute": "Layar ini hanya ada di aplikasi desktop.",
+      "connectorsManagedOnDesktop": "Konektor dikelola di aplikasi desktop atau di jendela yang lebih lebar."
     },
     "panels": {
       "searchAnyPair": "Cari pair apa pun, venue apa pun…",

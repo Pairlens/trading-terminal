@@ -15,8 +15,14 @@
  * canonical one with a single toast — silently dropping them would make a
  * shared link look broken.
  *
+ * That redirect is for phones only. A desktop browser dragged or zoomed under
+ * 768px gets the shell without the URL rewrite: `replace: true` would burn the
+ * history entry it was on, and widening the window back has to land on the
+ * screen it left. `getInitialViewportMode()` is what tells the two apart.
+ *
  * `pair_opened` is emitted from here rather than from `$pair.tsx`, which never
- * mounts at mobile width.
+ * mounts at mobile width — and so is that route's asset-class correction, for
+ * the same reason.
  */
 import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from '@tanstack/react-router'
@@ -24,8 +30,11 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { useMobileActions, useMobileFocus } from './mobile-focus-context'
+import { getInitialViewportMode } from './use-viewport-mode'
+import type { MarketOption } from '@/hooks/use-available-markets'
 import { track } from '@/lib/analytics-events'
 import { usePersistedState } from '@/hooks/use-persisted-state'
+import { useAvailableMarkets } from '@/hooks/use-available-markets'
 
 /** Routes the phone deliberately does not carry. */
 const DESKTOP_ONLY_PREFIXES = [
@@ -39,6 +48,15 @@ const DESKTOP_ONLY_PREFIXES = [
 ]
 
 const PAIR_PATH = /^\/pair\/(.+)$/
+
+/** Whether a venue serves the stocks asset class — `$pair.tsx`'s own test. */
+function servesStocks(markets: Array<MarketOption>, marketId: string): boolean {
+  return (
+    markets
+      .find((m) => m.value === marketId)
+      ?.assetClasses.includes('stocks') ?? false
+  )
+}
 
 export function normalizePairKey(value: string): string {
   return value
@@ -63,16 +81,25 @@ export function useMobileRouteSync(): void {
   const navigate = useNavigate()
   const location = useLocation()
   const { focusedPair, focusedVenue } = useMobileFocus()
-  const { setFocusedPair, setActiveTab, pushOverlay } = useMobileActions()
+  const { setFocusedPair, setFocusedVenue, setActiveTab, pushOverlay } =
+    useMobileActions()
   const [assetClassMap] = usePersistedState<Record<string, string>>(
     'pair-picker.assetClassMap',
     {},
   )
+  const { markets } = useAvailableMarkets()
 
   const pathname = location.pathname
-  const search = location.search as { connect?: unknown } | undefined
+  const search = location.search as
+    | { connect?: unknown; connectChain?: unknown }
+    | undefined
   const connectMarket =
     typeof search?.connect === 'string' ? search.connect : undefined
+  // The desktop connect gate emits `?connectChain=` for DEX venues and
+  // `?connect=` for everything else. Reading only the second one turned a
+  // shared wallet link into a bare Settings screen.
+  const connectChain =
+    typeof search?.connectChain === 'string' ? search.connectChain : undefined
 
   // One redirect per visit to a non-canonical path. Without the guard the
   // effect re-runs on the focus change it just caused and toasts twice.
@@ -104,17 +131,25 @@ export function useMobileRouteSync(): void {
 
     if (pathname.startsWith('/accounts')) {
       pushOverlay({ kind: 'settings', section: 'accounts' })
-      if (connectMarket) pushOverlay({ kind: 'connect', market: connectMarket })
+      if (connectChain) pushOverlay({ kind: 'connect', chain: connectChain })
+      else if (connectMarket)
+        pushOverlay({ kind: 'connect', market: connectMarket })
       goCanonical()
       return
     }
 
     if (DESKTOP_ONLY_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
+      // Only for a session that STARTED on a phone. A desktop browser dragged
+      // (or zoomed) under 768px keeps its URL: the mobile shell renders over
+      // the route, widening back restores the exact screen, and the history
+      // entry the user was on is not replaced out from under them.
+      if (getInitialViewportMode() === 'desktop') return
       toast.info(t('mobile.shell.desktopOnlyRoute'))
       goCanonical()
     }
   }, [
     pathname,
+    connectChain,
     connectMarket,
     focusedPair,
     navigate,
@@ -123,6 +158,33 @@ export function useMobileRouteSync(): void {
     pushOverlay,
     t,
   ])
+
+  // The desktop route's asset-class correction, which never runs on a phone:
+  // `$pair.tsx` owns it and the mobile shell replaces that route entirely. A
+  // stock pair cannot stream from a crypto exchange, so a URL, bookmark or
+  // reload that lands on one has to take the venue with it.
+  //
+  // It is that route's rule verbatim — the stocks/not-stocks split over
+  // `markets` — and NOT `usePreferredMarketResolver`, for two measured
+  // reasons. The resolver reads `terminal.market` through a second
+  // `usePersistedState` instance, which learns about a write one microtask
+  // late, so given the stale value it re-resolves to the PREVIOUS venue and
+  // every manual venue pick snapped back. And it matches asset-class strings
+  // exactly, while the catalogue says `crypto` and the connectors declare
+  // `crypto-spot`, so it silently never corrects a crypto pair off a stock
+  // venue. The binary split is immune to both: it reads the live venue, and it
+  // only ever asks whether a venue is an equities venue.
+  useEffect(() => {
+    const assetClass = assetClassMap[focusedPair]
+    if (!assetClass) return
+    const wantStocks = assetClass === 'stocks'
+    if (servesStocks(markets, focusedVenue) === wantStocks) return
+    // A venue this build cannot reach is not a correction, it is a dead end.
+    const target = markets.find(
+      (m) => !m.desktopOnly && m.assetClasses.includes('stocks') === wantStocks,
+    )
+    if (target && target.value !== focusedVenue) setFocusedVenue(target.value)
+  }, [focusedPair, focusedVenue, assetClassMap, markets, setFocusedVenue])
 
   // Product analytics: which markets/venues users actually open. Same event
   // and the same property set the desktop route fires.

@@ -26,6 +26,7 @@ import { RouteError } from '@/components/route-error'
 import { TerminalLock } from '@/components/security/terminal-lock'
 import { QuitConfirm } from '@/components/quit-confirm'
 import { FullscreenShortcut } from '@/components/fullscreen-toggle'
+import { ThemeColorMeta } from '@/components/theme-color-meta'
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -202,7 +203,9 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
       {
         // --background, so iOS Safari's chrome matches the app instead of
-        // bracketing it in white.
+        // bracketing it in white. The DARK value on purpose: it is the
+        // shipped default and this is a pre-hydration constant. `ThemeColorMeta`
+        // rewrites it from the live background for light and for theme plugins.
         name: 'theme-color',
         content: '#0a0806',
       },
@@ -360,6 +363,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               two live handlers would toggle twice and cancel out. Inert on
               desktop. */}
           <FullscreenShortcut />
+          {/* The static theme-color in head() is the dark default, which is
+              right for the first paint and wrong for every light or
+              plugin-supplied theme. This corrects it from the live background
+              once a theme is resolved. */}
+          <ThemeColorMeta />
         </ThemeProvider>
         <TanStackDevtools
           config={{

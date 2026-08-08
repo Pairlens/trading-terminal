@@ -4666,7 +4666,8 @@
       "switchVenue": "取引所を切り替え",
       "noChartData": "このペアのデータはここにはありません",
       "noChartDataHint": "この取引所には取り扱いがありません。別の取引所をお試しください。",
-      "desktopOnlyRoute": "この画面はデスクトップアプリでのみ利用できます。"
+      "desktopOnlyRoute": "この画面はデスクトップアプリでのみ利用できます。",
+      "connectorsManagedOnDesktop": "コネクタはデスクトップアプリまたは幅の広いウィンドウで管理します。"
     },
     "panels": {
       "searchAnyPair": "ペア、取引所を問わず検索…",

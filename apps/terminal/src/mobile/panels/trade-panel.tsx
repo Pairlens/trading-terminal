@@ -16,8 +16,11 @@
  * Render budget: the ticket reads no stream context. The live price arrives
  * through a render-null probe that writes a ref on every tick and wakes this
  * component at most once a second, so a moving market never re-renders the
- * fields the user is typing into. The order-book strip subscribes on its own —
- * it is a leaf, and one of the four components allowed to.
+ * fields the user is typing into. The order-book strip and the risk row
+ * subscribe on their own — they are leaves, and among the components allowed
+ * to. Nothing that ticks may be read in THIS function body; a hook that looks
+ * innocent (`useTradeRisk` did) puts every held asset's socket on the ticket's
+ * render path.
  */
 import {
   memo,
@@ -28,7 +31,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import { KeyRound, Lock } from 'lucide-react'
+import { KeyRound, Lock, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 
@@ -36,7 +39,7 @@ import { cn } from '@pairlens/ui'
 import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { useOrderDraftStore } from '../lib/order-draft-store'
 import { TradeOrderbookStrip } from './trade-orderbook-strip'
-import { TradeRiskRow, useTradeRisk } from './trade-risk-row'
+import { TradeRiskRow } from './trade-risk-row'
 import { TradeSlideConfirm } from './trade-slide-confirm'
 import type { MobileOrderType } from '../lib/order-draft-store'
 import type { ReactNode, RefObject } from 'react'
@@ -401,14 +404,12 @@ export default memo(function MobileTradePanel() {
         ? sizeNumber * referencePrice
         : null
 
-  const risk = useTradeRisk({
-    pairKey: focusedPair,
-    side,
-    size: sizeNumber,
-    quoteDenominated: sizeCcy === 'quote',
-    price: referencePrice,
-    credentialId: selectedCred?.id,
-  })
+  // The risk verdict is computed inside `TradeRiskRow`, not here: the hook
+  // behind it subscribes a ticker per held asset and re-renders on each tick,
+  // which in this fiber would wake the whole ticket at socket rate and undo
+  // `LivePriceProbe`. Only the one bit the submit gate needs comes back up,
+  // and only when it changes.
+  const [riskBlocks, setRiskBlocks] = useState(false)
 
   const isLiveOrder = isDex || selectedCred?.mode === 'live'
   const canSubmit =
@@ -418,7 +419,7 @@ export default memo(function MobileTradePanel() {
     !submitting &&
     sizeNumber > 0 &&
     (orderType === 'market' || typedPrice > 0) &&
-    !risk.blocks
+    !riskBlocks
 
   const handleSubmit = useCallback(async () => {
     if (!canSubmit) return
@@ -578,9 +579,19 @@ export default memo(function MobileTradePanel() {
     () => pushOverlay({ kind: 'orderbook' }),
     [pushOverlay],
   )
+  // A DEX signs with a chain wallet, a CEX or broker with an API key. Sending
+  // the venue id for both is what used to drop a DEX user into the exchange
+  // wizard, which has no wallet form behind it — the desktop gate makes the
+  // same split with `?connectChain=` vs `?connect=`.
+  const walletChain = marketInfo?.walletChain
   const openConnect = useCallback(
-    () => pushOverlay({ kind: 'connect', market: focusedVenue }),
-    [pushOverlay, focusedVenue],
+    () =>
+      pushOverlay(
+        walletChain != null
+          ? { kind: 'connect', chain: walletChain }
+          : { kind: 'connect', market: focusedVenue },
+      ),
+    [pushOverlay, focusedVenue, walletChain],
   )
 
   const submitHint =
@@ -704,7 +715,15 @@ export default memo(function MobileTradePanel() {
             side === 'sell' ? availableBase : availableQuote,
           )} ${side === 'sell' ? baseAsset : quoteAsset}`}
         />
-        <TradeRiskRow verdict={risk} />
+        <TradeRiskRow
+          credentialId={selectedCred?.id}
+          onBlocksChange={setRiskBlocks}
+          pairKey={focusedPair}
+          price={referencePrice}
+          quoteDenominated={sizeCcy === 'quote'}
+          side={side}
+          size={sizeNumber}
+        />
       </div>
 
       <TradeSlideConfirm
@@ -744,6 +763,7 @@ export default memo(function MobileTradePanel() {
             {ticket}
           </div>
           <ConnectCard
+            isDex={isDex}
             market={focusedVenue}
             onConnect={openConnect}
             readOnly={!marketInfo?.capabilities.includes('trade')}
@@ -886,18 +906,24 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
 
 /**
  * Design screen 9. The copy is the desktop connect gate's, and the intent is
- * the same `/accounts?connect=<market>` one — but on a phone the wizard is an
- * overlay pushed onto the mobile stack rather than a route, so the user comes
- * back to the ticket they were standing on.
+ * the same `/accounts?connect=<market>` / `?connectChain=<chain>` one — but on
+ * a phone the wizard is an overlay pushed onto the mobile stack rather than a
+ * route, so the user comes back to the ticket they were standing on.
+ *
+ * A DEX asks for a wallet, not an account: same split as
+ * `trade-connect-gate.tsx`, so the card's promise matches the form it opens.
  */
 function ConnectCard({
   market,
   venueLabel,
+  isDex,
   readOnly,
   onConnect,
 }: {
   market: string
+  /** Venue name, or the CHAIN name for a DEX venue. */
   venueLabel: string
+  isDex: boolean
   readOnly: boolean
   onConnect: () => void
 }) {
@@ -915,20 +941,33 @@ function ConnectCard({
         <p className="text-[16px] font-semibold leading-[1.35] text-foreground">
           {readOnly
             ? t('terminal.wallet.gateNoTrading')
-            : t('terminal.wallet.connectHintAccount', { venue: venueLabel })}
+            : isDex
+              ? t('terminal.wallet.connectHintWallet', { chain: venueLabel })
+              : t('terminal.wallet.connectHintAccount', { venue: venueLabel })}
         </p>
         {!readOnly ? (
           <>
             <p className="text-[12.5px] leading-[1.5] text-muted-foreground">
-              {t('mobile.trade.connectBody')}
+              {/* The default body names an API key, which a DEX never asks
+                  for — the Accounts page's own wallet line is the accurate
+                  sentence and already ships in every locale. */}
+              {isDex
+                ? t('accounts.noCryptoWalletsDesc')
+                : t('mobile.trade.connectBody')}
             </p>
             <button
               className="flex h-[46px] w-full items-center justify-center gap-2 rounded-[13px] bg-primary text-[15px] font-semibold text-primary-foreground"
               onClick={onConnect}
               type="button"
             >
-              <KeyRound aria-hidden className="size-4" />
-              {t('terminal.wallet.connectAccount')}
+              {isDex ? (
+                <Wallet aria-hidden className="size-4" />
+              ) : (
+                <KeyRound aria-hidden className="size-4" />
+              )}
+              {isDex
+                ? t('terminal.wallet.connectWallet')
+                : t('terminal.wallet.connectAccount')}
             </button>
             <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
               <Lock aria-hidden className="size-3" />

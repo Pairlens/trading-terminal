@@ -4666,7 +4666,8 @@
       "switchVenue": "Cambiar de venue",
       "noChartData": "No hay datos para este par aquí",
       "noChartDataHint": "Este venue no lo lista. Prueba con otro.",
-      "desktopOnlyRoute": "Esa pantalla solo está en la app de escritorio."
+      "desktopOnlyRoute": "Esa pantalla solo está en la app de escritorio.",
+      "connectorsManagedOnDesktop": "Los conectores se gestionan en la app de escritorio o en una ventana más ancha."
     },
     "panels": {
       "searchAnyPair": "Busca cualquier par, en cualquier venue…",

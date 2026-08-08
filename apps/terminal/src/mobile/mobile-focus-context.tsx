@@ -53,7 +53,15 @@ export type MobileOverlay =
   | { kind: 'pairPicker'; autoFocus?: boolean; mode?: 'focus' | 'watchlistAdd' }
   | { kind: 'venuePicker' }
   | { kind: 'settings'; section?: MobileSettingsSection }
-  | { kind: 'connect'; market?: string }
+  /**
+   * `market` opens the API-key wizard for a CEX or broker; `chain` opens the
+   * wallet dialog for a DEX venue. They are separate channels because they are
+   * separate credentials — the desktop makes the same split in its
+   * `?connect=` / `?connectChain=` search params, and collapsing them lands a
+   * DEX user in a form asking for an exchange API key. Neither set means "the
+   * user picked Add account", which starts at the type picker.
+   */
+  | { kind: 'connect'; market?: string; chain?: string }
   | { kind: 'news'; index: number }
 
 export type MobileOverlayKind = MobileOverlay['kind']

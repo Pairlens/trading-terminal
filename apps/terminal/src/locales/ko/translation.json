@@ -4666,7 +4666,8 @@
       "switchVenue": "거래소 전환",
       "noChartData": "이 거래소에는 이 페어의 데이터가 없습니다",
       "noChartDataHint": "이 거래소에는 상장되어 있지 않습니다. 다른 거래소를 시도해 보세요.",
-      "desktopOnlyRoute": "이 화면은 데스크톱 앱에서만 사용할 수 있습니다."
+      "desktopOnlyRoute": "이 화면은 데스크톱 앱에서만 사용할 수 있습니다.",
+      "connectorsManagedOnDesktop": "커넥터는 데스크톱 앱이나 더 넓은 창에서 관리합니다."
     },
     "panels": {
       "searchAnyPair": "모든 페어, 모든 거래소 검색…",

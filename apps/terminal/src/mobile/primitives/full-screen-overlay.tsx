@@ -31,7 +31,13 @@ export type FullScreenOverlayProps = {
   onBack: () => void
   /** Rendered right of the title — grouping chips, an Auto chip, a close. */
   actions?: ReactNode
-  /** false ⇒ the chart stays visible behind (pair picker D1). Default true. */
+  /**
+   * false ⇒ a flat translucent scrim, so the chart stays faintly visible
+   * behind (the venue picker). Never a `backdrop-filter`: this box is the
+   * whole chart band, the WebGL chart under it never stops painting, and a
+   * blur that size is re-run by the compositor on every one of those frames.
+   * Default true.
+   */
   opaque?: boolean
   /** 'chart' keeps the context bar; 'screen' owns the top of the display. */
   anchor?: 'chart' | 'screen'
@@ -59,7 +65,7 @@ export const FullScreenOverlay = memo(function FullScreenOverlay({
     <div
       className={cn(
         'fixed inset-x-0 z-[60] flex flex-col',
-        opaque ? 'bg-background' : 'bg-background/80 backdrop-blur-sm',
+        opaque ? 'bg-background' : 'bg-background/95',
         className,
       )}
       role="dialog"

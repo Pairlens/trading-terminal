@@ -4696,7 +4696,8 @@
       "switchVenue": "Przełącz giełdę",
       "noChartData": "Brak danych dla tej pary tutaj",
       "noChartDataHint": "Ta giełda jej nie notuje. Wypróbuj inną.",
-      "desktopOnlyRoute": "Ten ekran jest dostępny tylko w aplikacji na komputer."
+      "desktopOnlyRoute": "Ten ekran jest dostępny tylko w aplikacji na komputer.",
+      "connectorsManagedOnDesktop": "Konektorami zarządzasz w aplikacji na komputer lub w szerszym oknie."
     },
     "panels": {
       "searchAnyPair": "Szukaj dowolnej pary, na dowolnej giełdzie…",

@@ -23,7 +23,7 @@
  * timeframe to 15m.
  */
 import { useCallback, useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from '@tanstack/react-router'
+import { useLocation, useNavigate } from '@tanstack/react-router'
 import { Loader2, Unplug } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -94,6 +94,11 @@ export function MobileTerminalRoot() {
       )
     }
 
+    // No link to /plugins: `_terminal.tsx` renders this shell INSTEAD of the
+    // <Outlet/> at mobile width, so that route can never mount here — the
+    // desktop twin's button would change the URL and repaint this same screen,
+    // on a page with nothing else on it. What the phone can offer is a retry
+    // and an honest sentence about where connectors are managed.
     return (
       <div className="flex h-svh flex-col items-center justify-center gap-3 bg-background px-8 text-center text-muted-foreground">
         <Unplug className="size-10 opacity-40" />
@@ -101,13 +106,16 @@ export function MobileTerminalRoot() {
         <p className="max-w-xs text-xs opacity-70">
           {t('routes.noConnectors.description')}
         </p>
-        <Link
+        <p className="max-w-xs text-xs opacity-70">
+          {t('mobile.shell.connectorsManagedOnDesktop')}
+        </p>
+        <button
           className="mt-2 rounded-md bg-accent px-3 py-2 text-xs font-medium text-foreground"
-          search={{ tab: 'markets' }}
-          to="/plugins"
+          onClick={() => window.location.reload()}
+          type="button"
         >
-          {t('routes.noConnectors.manage')}
-        </Link>
+          {t('common.retry')}
+        </button>
       </div>
     )
   }

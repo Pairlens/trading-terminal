@@ -181,9 +181,17 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
       ) : null}
 
       {/* Chart-space overlays. Non-interactive as a layer — the limit line's
-          grab strip opts back in itself — so it never eats the dismiss tap. */}
+          grab strip opts back in itself — so it never eats the dismiss tap.
+
+          It carries the SAME `chartFrame` as the chart, not the band's
+          `inset-0`: overlays in this slot measure themselves to convert price
+          to pixels, and a slot taller than the chart lets the limit line be
+          dragged into a price several screens below the plot. */}
       {overlay ? (
-        <div className="pointer-events-none absolute inset-0 z-20">
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 top-0 z-20"
+          style={chartFrame}
+        >
           {overlay}
         </div>
       ) : null}

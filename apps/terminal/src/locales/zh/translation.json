@@ -4666,7 +4666,8 @@
       "switchVenue": "切换交易所",
       "noChartData": "该交易对在此没有数据",
       "noChartDataHint": "该交易所未上架此交易对，换一个试试。",
-      "desktopOnlyRoute": "该页面仅在桌面应用中可用。"
+      "desktopOnlyRoute": "该页面仅在桌面应用中可用。",
+      "connectorsManagedOnDesktop": "连接器在桌面应用或更宽的窗口中管理。"
     },
     "panels": {
       "searchAnyPair": "搜索任意交易对、任意交易所……",

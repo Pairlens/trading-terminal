@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import type { BulkTickersResponse } from '@pairlens/shared/instrument-types'
@@ -67,16 +67,35 @@ const EMPTY_SNAPSHOTS: Array<BulkTickersResponse> = []
  */
 export function useBulkTickerQuotes(): Map<string, BulkQuote> {
   const data = useBulkTickerSnapshots()
+  // The previous map, kept so a symbol whose numbers did not move hands back
+  // the SAME object. Prices change between snapshots, so react-query's
+  // structural sharing cannot keep `data` identity and this memo re-runs in
+  // full every 60s — allocating a fresh quote per symbol would break `memo` on
+  // every consuming row at once and re-render a whole watchlist for the two
+  // symbols that actually ticked.
+  const previous = useRef<Map<string, BulkQuote>>(EMPTY_QUOTES)
 
   return useMemo(() => {
+    const prev = previous.current
     const map = new Map<string, BulkQuote>()
     for (const snapshot of data) {
       for (const t of snapshot.tickers) {
-        if (!map.has(t.symbol)) {
-          map.set(t.symbol, { price: t.price, change24h: t.change24h })
-        }
+        if (map.has(t.symbol)) continue
+        const before = prev.get(t.symbol)
+        map.set(
+          t.symbol,
+          before != null &&
+            before.price === t.price &&
+            before.change24h === t.change24h
+            ? before
+            : { price: t.price, change24h: t.change24h },
+        )
       }
     }
+    previous.current = map
     return map
   }, [data])
 }
+
+/** Stable identity for the first render's "no previous snapshot" case. */
+const EMPTY_QUOTES: Map<string, BulkQuote> = new Map()

@@ -16,12 +16,12 @@
  * events on everything behind, which kills both the tap-the-chart gesture and
  * the draggable limit line.
  */
-import { memo, useEffect } from 'react'
+import { createContext, memo, useContext, useEffect, useRef } from 'react'
 import { Drawer } from 'vaul'
 
 import { cn } from '@pairlens/ui'
 import { sheetTop } from '../lib/mobile-geometry'
-import type { ReactNode } from 'react'
+import type { ReactNode, RefObject } from 'react'
 
 /**
  * vaul nulls `document.body.style.pointerEvents` while a sheet is present even
@@ -49,6 +49,22 @@ function useBodyPointerEventsGuard(open: boolean) {
       clear()
     }
   }, [open])
+}
+
+/**
+ * The sheet's scrolling element, for panels that virtualize their list.
+ *
+ * A context rather than a prop because the sheet builds the element itself and
+ * the panel is a `children` several layers down; the value is a ref object, so
+ * publishing it costs no render anywhere. Null outside a `MobileSheet` — a
+ * panel must treat that as "not virtualizable yet" rather than assuming the
+ * window scrolls, because on this surface nothing does.
+ */
+const SheetScrollContext =
+  createContext<RefObject<HTMLDivElement | null> | null>(null)
+
+export function useSheetScrollRef(): RefObject<HTMLDivElement | null> | null {
+  return useContext(SheetScrollContext)
 }
 
 export type MobileSheetProps = {
@@ -81,6 +97,7 @@ export const MobileSheet = memo(function MobileSheet({
   className,
 }: MobileSheetProps) {
   useBodyPointerEventsGuard(open)
+  const scrollRef = useRef<HTMLDivElement | null>(null)
   return (
     <Drawer.Root
       dismissible
@@ -105,8 +122,13 @@ export const MobileSheet = memo(function MobileSheet({
           <Drawer.Title className="sr-only">{label}</Drawer.Title>
           {handle ? <div aria-hidden className="pl-handle shrink-0" /> : null}
           {header ? <div className="shrink-0">{header}</div> : null}
-          <div className="flex-1 overflow-y-auto overscroll-contain pb-[max(var(--pl-safe-bottom),30px)]">
-            {children}
+          <div
+            className="flex-1 overflow-y-auto overscroll-contain pb-[max(var(--pl-safe-bottom),30px)]"
+            ref={scrollRef}
+          >
+            <SheetScrollContext value={scrollRef}>
+              {children}
+            </SheetScrollContext>
           </div>
         </Drawer.Content>
       </Drawer.Portal>

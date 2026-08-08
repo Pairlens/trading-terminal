@@ -19,6 +19,7 @@
 import { memo, useMemo } from 'react'
 import { FastFinancialChart } from '@pairlens/fast-financial-charts/react'
 
+import { CHART_TIME_AXIS_HEIGHT } from '../lib/mobile-geometry'
 import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
 import { usePairlensChartTheme } from '@/hooks/use-chart-theme'
 import { formatChartPrice } from '@/lib/format-price'
@@ -59,7 +60,17 @@ export const MobileChart = memo(function MobileChart({
 
   const baseTheme = usePairlensChartTheme()
 
-  const theme = useMemo(() => ({ ...baseTheme, fontSizeAxis: 10 }), [baseTheme])
+  // `timeAxisHeight` is the engine's own default, pinned rather than inherited:
+  // the limit-line overlay subtracts it to find the bottom of the plot box, and
+  // an invariant two modules depend on should be written down in one of them.
+  const theme = useMemo(
+    () => ({
+      ...baseTheme,
+      fontSizeAxis: 10,
+      layout: { timeAxisHeight: CHART_TIME_AXIS_HEIGHT },
+    }),
+    [baseTheme],
+  )
 
   const crosshairConfig = useMemo(
     () => ({ mode: crosshairMode }),

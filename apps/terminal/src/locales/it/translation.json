@@ -4666,7 +4666,8 @@
       "switchVenue": "Cambia piattaforma",
       "noChartData": "Nessun dato per questa coppia qui",
       "noChartDataHint": "Questa piattaforma non la quota. Provane un'altra.",
-      "desktopOnlyRoute": "Quella schermata è disponibile solo nell'app desktop."
+      "desktopOnlyRoute": "Quella schermata è disponibile solo nell'app desktop.",
+      "connectorsManagedOnDesktop": "I connettori si gestiscono nell'app desktop o in una finestra più ampia."
     },
     "panels": {
       "searchAnyPair": "Cerca qualsiasi coppia, qualsiasi piattaforma…",
