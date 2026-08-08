@@ -1,57 +1,132 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Timeframe chip + popover (design screen 2): pinned row, "more" grid,
- * long-press to pin. Owned by WS-D — replace this file's contents; the
- * default export (a self-contained chip that owns its own trigger, scrim and
- * popover) is the contract. Rendered in MobileChartSurface's timeframeSlot.
+ * The `1D` chip and its popover — design screen 2.
  *
- * This stand-in is the shell's original fallback chip: same inversion, same
- * scrim, a flat grid instead of pinned/more. The real source of truth for the
- * interval list is TIMEFRAME_OPTIONS in components/terminal/chart-toolbar.tsx
- * (module-private today — WS-D exports it).
+ * Single-purpose by design: intervals, and nothing else. Chart type, crosshair
+ * mode and the price scale all live on the desktop toolbar and none of them
+ * belong under the one control a thumb reaches for mid-trade.
+ *
+ * The interval list is `TIMEFRAME_OPTIONS` from the desktop chart toolbar
+ * (exported for this file) rather than a second copy: a build that ships a new
+ * interval must not ship it to one surface only. The stored value stays
+ * lowercase (`1d`); `short` is the label the design draws (`1D`).
+ *
+ * Long-press promotes a "more" interval into the pinned row. It is a pointer
+ * timer rather than a context-menu hook because the gesture has to work
+ * identically under touch and a desktop-emulated pointer, and because the
+ * cancel condition (10px of travel) is what tells a press apart from the start
+ * of a scroll.
  */
-import { useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 import { MobileScrim } from '../primitives/mobile-scrim'
+import { usePinnedTimeframes } from './use-pinned-timeframes'
+import type { ReactNode, PointerEvent as ReactPointerEvent } from 'react'
+import type { TimeframeOption } from '@/components/terminal/chart-toolbar'
+import { TIMEFRAME_OPTIONS } from '@/components/terminal/chart-toolbar'
 import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
 import { track } from '@/lib/analytics-events'
 
-const FALLBACK_TIMEFRAMES = [
-  '1m',
-  '5m',
-  '15m',
-  '30m',
-  '1h',
-  '4h',
-  '1d',
-  '1w',
-  '1M',
-] as const
+/** Long enough not to fire on a tap, short enough not to feel stuck. */
+const LONG_PRESS_MS = 500
+/** Past this much travel the finger is scrolling, not pressing. */
+const PRESS_SLOP_PX = 10
 
-export default function TimeframePopoverChip() {
+/**
+ * A 38px cell in a 6px grid gap: the ±3px expansion lands the hit area at
+ * exactly 44px without overlapping its neighbour's, which `.pl-hit-44`'s fixed
+ * 8px inset would do (and the last sibling would then win the overlap).
+ */
+const CELL =
+  'relative flex h-[38px] items-center justify-center rounded-[10px] font-mono text-[12.5px] font-semibold select-none [-webkit-touch-callout:none] after:absolute after:inset-[-3px] after:content-[""]'
+
+export default memo(function TimeframePopoverChip() {
   const { t } = useTranslation()
   const { timeframe } = useChartConfig()
   const { setTimeframe } = useChartActions()
+  const { pinned, touch, promote } = usePinnedTimeframes()
   const [open, setOpen] = useState(false)
+
+  const byValue = useMemo(() => {
+    const map = new Map<string, TimeframeOption>()
+    for (const option of TIMEFRAME_OPTIONS) map.set(option.value, option)
+    return map
+  }, [])
+
+  // Canonical order for display; recency order stays in storage. A row that
+  // reshuffled after every pick would move the target under the thumb.
+  const pinnedOptions = useMemo(
+    () => TIMEFRAME_OPTIONS.filter((option) => pinned.includes(option.value)),
+    [pinned],
+  )
+  const moreOptions = useMemo(
+    () => TIMEFRAME_OPTIONS.filter((option) => !pinned.includes(option.value)),
+    [pinned],
+  )
+
+  const select = useCallback(
+    (value: string) => {
+      setTimeframe(value)
+      touch(value)
+      track('timeframe_changed', { timeframe: value })
+      setOpen(false)
+    },
+    [setTimeframe, touch],
+  )
+
+  /**
+   * Promotion moves the cell out of the "more" grid the instant it fires, and
+   * the grid reflows under a finger that is still down — so the click that
+   * arrives on release lands on whichever interval slid into that spot and
+   * switches the chart to it. Verified in a real long-press: pinning `4h` put
+   * the chart on `3D`.
+   *
+   * The promoted cell unmounts, so its own click guard never sees that click.
+   * One capture-phase listener on the document swallows exactly one click, and
+   * expires on its own if the release never produces one.
+   */
+  const promoteAndSwallowClick = useCallback(
+    (value: string) => {
+      promote(value, timeframe)
+      if (typeof document === 'undefined') return
+      const swallow = (event: MouseEvent) => {
+        event.stopPropagation()
+        event.preventDefault()
+        cleanup()
+      }
+      const cleanup = () => {
+        document.removeEventListener('click', swallow, true)
+        clearTimeout(timer)
+      }
+      const timer = setTimeout(cleanup, 900)
+      document.addEventListener('click', swallow, true)
+    },
+    [promote, timeframe],
+  )
+
+  const label = byValue.get(timeframe)?.short ?? timeframe
 
   return (
     <>
       <button
-        aria-label={t('mobile.shell.timeframe')}
+        aria-expanded={open}
+        aria-haspopup="true"
+        aria-label={t('chart.toolbar.timeframe')}
         className={cn(
-          'flex h-9 items-center gap-1.5 rounded-[10px] pl-[11px] pr-[7px] font-mono text-[13.5px] font-semibold',
+          'flex h-9 items-center gap-1 rounded-[10px] pl-[11px] pr-[7px] font-mono text-[13.5px] font-semibold',
           open
             ? 'bg-foreground text-background'
             : 'text-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,.16)]',
         )}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen((value) => !value)}
         type="button"
       >
-        {timeframe}
+        {label}
         <ChevronDown
           className={cn(
             'size-4',
@@ -59,35 +134,154 @@ export default function TimeframePopoverChip() {
           )}
         />
       </button>
+
       {open ? (
-        <>
+        // Portaled to the body, not rendered in place. The chip lives in the
+        // chart surface's price row, which carries `z-20` and therefore opens a
+        // stacking context: a z-46 popover nested inside it still paints
+        // *below* the surface's own z-20 overlay slot and z-30 toolbar, and
+        // loses every tap to them. Verified — the first build of this file was
+        // visible and completely untappable.
+        <Portal>
           <MobileScrim className="z-[45]" onDismiss={() => setOpen(false)} />
           <div
-            className="pl-popover fixed right-4 z-[46] grid w-[238px] grid-cols-4 gap-1.5 p-[9px]"
+            className="pl-popover fixed right-4 z-[46] w-[238px] p-[9px]"
+            role="dialog"
             style={{ top: 'calc(var(--pl-chart-top) + 52px)' }}
           >
-            {FALLBACK_TIMEFRAMES.map((value) => (
-              <button
-                className={cn(
-                  'flex h-[38px] items-center justify-center rounded-[10px] font-mono text-[12.5px] font-semibold',
-                  value === timeframe
-                    ? 'bg-foreground text-background'
-                    : 'text-muted-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)]',
-                )}
-                key={value}
-                onClick={() => {
-                  setTimeframe(value)
-                  track('timeframe_changed', { timeframe: value })
-                  setOpen(false)
-                }}
-                type="button"
-              >
-                {value}
-              </button>
-            ))}
+            <p className="px-1 pb-2 pt-[3px] text-[9.5px] font-semibold uppercase tracking-[.09em] text-muted-foreground">
+              {t('mobile.chart.pinned')}
+            </p>
+            <div className="grid grid-cols-4 gap-1.5">
+              {pinnedOptions.map((option) => (
+                <button
+                  className={cn(
+                    CELL,
+                    option.value === timeframe
+                      ? 'bg-foreground text-background'
+                      : 'bg-white/[.09] text-foreground',
+                  )}
+                  key={option.value}
+                  onClick={() => select(option.value)}
+                  type="button"
+                >
+                  {option.short}
+                </button>
+              ))}
+            </div>
+
+            <p className="px-1 pb-2 pt-[14px] text-[9.5px] font-semibold uppercase tracking-[.09em] text-muted-foreground">
+              {t('mobile.chart.moreLongPress')}
+            </p>
+            <div className="grid grid-cols-4 gap-1.5">
+              {moreOptions.map((option) => (
+                <MoreCell
+                  key={option.value}
+                  onPromote={() => promoteAndSwallowClick(option.value)}
+                  onSelect={() => select(option.value)}
+                  option={option}
+                  selected={option.value === timeframe}
+                />
+              ))}
+            </div>
           </div>
-        </>
+        </Portal>
       ) : null}
     </>
   )
+})
+
+/** Escapes the chart surface's stacking context. See the note at the call site. */
+function Portal({ children }: { children: ReactNode }) {
+  if (typeof document === 'undefined') return null
+  return createPortal(children, document.body)
 }
+
+/**
+ * A "more" interval: tap selects, long-press pins.
+ *
+ * The press timer lives per cell so a finger sliding from one cell to the next
+ * cancels the first press rather than promoting whatever it started on.
+ */
+const MoreCell = memo(function MoreCell({
+  option,
+  selected,
+  onSelect,
+  onPromote,
+}: {
+  option: TimeframeOption
+  selected: boolean
+  onSelect: () => void
+  onPromote: () => void
+}) {
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const originRef = useRef<{ x: number; y: number } | null>(null)
+  // A fired long-press must swallow the click that follows it, or promoting an
+  // interval would also switch the chart to it.
+  const firedRef = useRef(false)
+
+  const cancel = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = null
+    originRef.current = null
+  }, [])
+
+  useEffect(() => cancel, [cancel])
+
+  const handlePointerDown = useCallback(
+    (event: ReactPointerEvent) => {
+      firedRef.current = false
+      originRef.current = { x: event.clientX, y: event.clientY }
+      timerRef.current = setTimeout(() => {
+        firedRef.current = true
+        timerRef.current = null
+        onPromote()
+        // Guarded: only Android Chrome implements it, and iOS Safari does not
+        // even expose the property.
+        navigator.vibrate?.(10)
+      }, LONG_PRESS_MS)
+    },
+    [onPromote],
+  )
+
+  const handlePointerMove = useCallback(
+    (event: ReactPointerEvent) => {
+      const origin = originRef.current
+      if (!origin) return
+      if (
+        Math.abs(event.clientX - origin.x) > PRESS_SLOP_PX ||
+        Math.abs(event.clientY - origin.y) > PRESS_SLOP_PX
+      ) {
+        cancel()
+      }
+    },
+    [cancel],
+  )
+
+  return (
+    <button
+      className={cn(
+        CELL,
+        selected
+          ? 'bg-foreground text-background'
+          : 'text-muted-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)]',
+      )}
+      onClick={() => {
+        if (firedRef.current) {
+          firedRef.current = false
+          return
+        }
+        onSelect()
+      }}
+      onContextMenu={(event) => event.preventDefault()}
+      onPointerCancel={cancel}
+      onPointerDown={handlePointerDown}
+      onPointerLeave={cancel}
+      onPointerMove={handlePointerMove}
+      onPointerUp={cancel}
+      type="button"
+    >
+      {option.short}
+    </button>
+  )
+})

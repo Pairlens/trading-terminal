@@ -1,34 +1,42 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * News reader (design flow B) — a thin host over NewsReaderDialog. Owned by
- * WS-B — replace this file's contents; the default export and its props are
- * the contract.
+ * The news reader (design flow B) — a host, not a screen.
+ *
+ * `NewsReaderDialog` is already a vertical snap feed, one article per `svh`,
+ * with its own search, its own load-ahead paging and its own keyboard nav: a
+ * phone pattern that happened to be built for a desk. Re-drawing it for mobile
+ * would be re-drawing the thing that already fits.
+ *
+ * The feed comes from `useMobileNewsFeed`, the same query entry the Discover
+ * list read — so `overlay.index` still points at the article the user tapped,
+ * and paging inside the reader extends the list behind it.
  */
-import { useTranslation } from 'react-i18next'
+import { memo } from 'react'
 
-import { FullScreenOverlay } from '../primitives/full-screen-overlay'
+import { useMobileNewsFeed } from '../panels/use-mobile-news-feed'
 import type { MobileOverlay } from '../mobile-focus-context'
+import { NewsReaderDialog } from '@/components/news/news-reader'
 
 type NewsReaderSheetProps = {
   overlay: Extract<MobileOverlay, { kind: 'news' }>
   onClose: () => void
 }
 
-export default function NewsReaderSheet({ onClose }: NewsReaderSheetProps) {
-  const { t } = useTranslation()
+export default memo(function NewsReaderSheet({
+  overlay,
+  onClose,
+}: NewsReaderSheetProps) {
+  const { articles, hasMore, isLoadingMore, loadMore } = useMobileNewsFeed()
+
   return (
-    <FullScreenOverlay
-      anchor="screen"
-      dismiss="close"
-      onBack={onClose}
-      title={t('mobile.shell.overlays.news')}
-    >
-      <div className="flex h-full flex-col items-center justify-center gap-1 px-8 py-16 text-center">
-        <p className="text-[12.5px] text-muted-foreground">
-          {t('mobile.shell.comingSoon')}
-        </p>
-      </div>
-    </FullScreenOverlay>
+    <NewsReaderDialog
+      articles={articles}
+      hasMore={hasMore}
+      initialIndex={overlay.index}
+      isLoadingMore={isLoadingMore}
+      onClose={onClose}
+      onEndReached={loadMore}
+    />
   )
-}
+})

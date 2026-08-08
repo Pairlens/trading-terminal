@@ -1,27 +1,98 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * PLACEHOLDER — owned by WS-D (blueprint §D.6).
+ * Co-pilot — design screen 5. The biggest reuse win in the mobile build.
  *
- * WS-A ships this file so `mobile-surface.tsx`'s lazyChunk import resolves and
- * the five-tab surface is functional end to end. Replace the contents in
- * place: the default export is the contract, and the panel is rendered inside
- * a `MobileSheet` at `SHEET_BAND.copilot` with `variant="copilot"`, so it owns
- * no sheet chrome.
+ * This file mounts the desktop `CopilotPanel` unchanged: the agentic loop, the
+ * ~60 tools, order confirm cards, billing gates and history all come along, and
+ * the `chartRef` it receives is the live chart under the sheet — which is what
+ * makes the copilot's `addDrawing` commands land on the chart the user is
+ * looking at rather than on a detached instance. That is the whole reason the
+ * chart never unmounts.
+ *
+ * Three things are mobile's own, all of them local to this file:
+ *
+ *  1. **Enter must not send.** On a phone keyboard, Return is how you write a
+ *     second line; the send button is how you send. The desktop composer binds
+ *     Enter to submit, so a capture-phase listener swallows the plain-Enter
+ *     keydown before the textarea's own handler sees it. The desktop component
+ *     is not edited and not forked.
+ *  2. **16px composer text, pinned.** iOS Safari zooms the viewport when a
+ *     focused field is under 16px, which would break the sheet's geometry on
+ *     the one screen where the keyboard is guaranteed to open. The shared
+ *     `Textarea` happens to be 16px below `md` today; this pins it there
+ *     rather than depending on that.
+ *  3. **The composer rides above the keyboard.** It is the last child of the
+ *     panel's own flex column, so pinning it needs no sticky positioning —
+ *     `interactive-widget=resizes-content` (the viewport meta) shrinks the
+ *     layout viewport, the sheet's `bottom: 0` follows the keyboard up, and the
+ *     composer comes with it.
+ *
+ * No mobile header row: the design's `Co-pilot · BTC-USDT on OKX` line would
+ * repeat the context bar 44px above it AND stack a second orb over the panel's
+ * own header (orb, persona, clear history), which is the design's header in
+ * function. Named as a deliberate deviation rather than shipped as duplication.
  */
-import { memo } from 'react'
-import { useTranslation } from 'react-i18next'
+import { memo, useCallback, useMemo } from 'react'
+
+import { useMobileFocus } from '../mobile-focus-context'
+import type { KeyboardEvent as ReactKeyboardEvent } from 'react'
+import type { FastFinancialChartRef } from '@pairlens/fast-financial-charts/types'
+import { CopilotPanel } from '@/components/copilot/copilot-panel'
+import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
+
+/** The panel's props require a ref object; the chart may not be ready yet. */
+const NULL_CHART_REF: React.RefObject<FastFinancialChartRef | null> = {
+  current: null,
+}
 
 export default memo(function MobileCopilotPanel() {
-  const { t } = useTranslation()
+  const { focusedPair } = useMobileFocus()
+  const chartConfig = useChartConfig()
+  const chartActions = useChartActions()
+  const { market, timeframe, chartRef } = chartConfig
+
+  const indicatorActions = useMemo(
+    () => ({
+      add: chartActions.addIndicator,
+      remove: chartActions.removeIndicator,
+      removeAll: chartActions.removeAllIndicators,
+    }),
+    [
+      chartActions.addIndicator,
+      chartActions.removeIndicator,
+      chartActions.removeAllIndicators,
+    ],
+  )
+
+  /**
+   * Capture phase, so this runs before the composer's own bubble-phase
+   * handler and `stopPropagation` keeps that handler from ever firing. No
+   * `preventDefault` — the newline is exactly what we want the key to do.
+   * Shift+Enter and an IME's composition Enter are left alone, matching the
+   * desktop semantics for everything except the plain key.
+   */
+  const swallowEnter = useCallback((event: ReactKeyboardEvent) => {
+    if (event.key !== 'Enter' || event.shiftKey) return
+    if (event.nativeEvent.isComposing) return
+    const target = event.target as HTMLElement | null
+    if (target?.tagName !== 'TEXTAREA') return
+    event.stopPropagation()
+  }, [])
+
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-1 px-8 py-12 text-center">
-      <p className="text-[15px] font-semibold text-foreground">
-        {t('mobile.shell.tabs.copilot')}
-      </p>
-      <p className="text-[12.5px] text-muted-foreground">
-        {t('mobile.shell.comingSoon')}
-      </p>
+    <div
+      className="flex h-full min-h-0 flex-col [&_form_button]:size-10 [&_form_button]:rounded-full [&_textarea]:min-h-10 [&_textarea]:text-[16px]"
+      onKeyDownCapture={swallowEnter}
+    >
+      <CopilotPanel
+        chartActions={chartActions}
+        chartRef={chartRef ?? NULL_CHART_REF}
+        indicatorActions={indicatorActions}
+        market={market}
+        pairKey={focusedPair}
+        timeframe={timeframe}
+      />
     </div>
   )
 })

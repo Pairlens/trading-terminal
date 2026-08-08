@@ -72,11 +72,20 @@ import {
   savedFileFolder,
 } from '@/lib/save-file'
 
-const TIMEFRAME_OPTIONS: Array<{
+export type TimeframeOption = {
   value: string
+  /** Chip label — `1D`, not `1d`. The stored value stays lowercase. */
   short: string
   longKey: string
-}> = [
+}
+
+/**
+ * The intervals this build offers, in order. Exported because the mobile
+ * timeframe popover (`mobile/chart/timeframe-popover.tsx`) presents the same
+ * list in a different shape — one source of truth, so a new interval reaches
+ * both surfaces.
+ */
+export const TIMEFRAME_OPTIONS: Array<TimeframeOption> = [
   {
     value: '1m',
     short: '1m',

@@ -45,6 +45,7 @@ import { useOnboardingThemes } from './onboarding-themes'
 import {
   EXPERIENCE_VALUES,
   LAYOUT_PRESETS,
+  LAYOUT_PRESETS_PORTRAIT,
   LEGAL_ITEM_COUNT,
   RISK_VALUES,
   STEPS,
@@ -55,7 +56,7 @@ import {
 import type { AccountView } from './spotlight-account'
 import type { RenderOption } from './spotlight-bodies'
 import type { OnboardingThemeOption } from './onboarding-themes'
-import type { SpotlightStep } from './spotlight-steps'
+import type { LayoutPresetTable, SpotlightStep } from './spotlight-steps'
 import type { ReactNode } from 'react'
 import type { ColorMode } from '@/lib/settings/color-mode'
 import type {
@@ -63,6 +64,9 @@ import type {
   OnboardingSelections,
 } from '@/lib/onboarding-state'
 import type { StorySceneId } from './story-scenes'
+// The one mobile-owned module the desktop onboarding touches: the viewport
+// gate that picks the portrait layout presets (see the barrel's contract).
+import { useViewportMode } from '@/mobile'
 import { useNeedsTitlebar } from '@/components/tauri-drag-region'
 import { LegalNotice } from '@/components/legal-links'
 import { countryFlag, countryName, regionForCountry } from '@/lib/countries'
@@ -134,6 +138,10 @@ export function OnboardingSpotlight() {
   const needsTitlebar = useNeedsTitlebar()
   const { setTheme, resolvedTheme } = useTheme()
   const reduceMotion = useReducedMotion() ?? false
+  // Portrait is the only thing the phone changes about onboarding: the same 17
+  // steps, the same copy, the same orb — moved and scaled for a 402px frame.
+  const presets: LayoutPresetTable =
+    useViewportMode() === 'mobile' ? LAYOUT_PRESETS_PORTRAIT : LAYOUT_PRESETS
 
   const [stepIndex, setStepIndex] = useState(0)
   const [selections, setSelections] = useState<OnboardingSelections>({
@@ -174,46 +182,49 @@ export function OnboardingSpotlight() {
 
   // ── Orb + stage morph ─────────────────────────────────────────────
 
-  const applyLayout = useCallback((index: number, storyMedia = false) => {
-    const target = STEPS[index]
-    const mediaPhase = storyMedia && target.kind === 'story'
-    const preset = mediaPhase
-      ? STORY_MEDIA_LAYOUT
-      : LAYOUT_PRESETS[layoutTypeOf(target)]
-    const orb = orbRef.current
-    const stage = stageRef.current
-    const stageTop = target.stageTop ?? preset.stageTop
-    if (orb) {
-      orb.style.top = target.orbTop ?? preset.orbTop
-      // The horizontal drift is a hero-phase flourish; the retreated orb
-      // re-centers so it doesn't hang over the vignette.
-      orb.style.left = mediaPhase ? '50%' : (target.orbLeft ?? '50%')
-      orb.style.transform = `translate(-50%, -50%) scale(${target.orbScale ?? preset.scale})`
-      // The welcome lockup is measured, not guessed: the step's percentages
-      // only hold for one headline width, so short windows and the longer
-      // locales walked the orb onto the title. Take the seat the headline
-      // reserved (see ORB_LOCKUP_WIDTH) and land on its center instead.
-      if (target.kind === 'welcome') {
-        const seat = seatCenter(lockupRef.current, stage, stageTop)
-        if (seat) {
-          orb.style.left = `${seat.x}px`
-          orb.style.top = `${seat.y}px`
+  const applyLayout = useCallback(
+    (index: number, storyMedia = false) => {
+      const target = STEPS[index]
+      const mediaPhase = storyMedia && target.kind === 'story'
+      const preset = mediaPhase
+        ? STORY_MEDIA_LAYOUT
+        : presets[layoutTypeOf(target)]
+      const orb = orbRef.current
+      const stage = stageRef.current
+      const stageTop = target.stageTop ?? preset.stageTop
+      if (orb) {
+        orb.style.top = target.orbTop ?? preset.orbTop
+        // The horizontal drift is a hero-phase flourish; the retreated orb
+        // re-centers so it doesn't hang over the vignette.
+        orb.style.left = mediaPhase ? '50%' : (target.orbLeft ?? '50%')
+        orb.style.transform = `translate(-50%, -50%) scale(${target.orbScale ?? preset.scale})`
+        // The welcome lockup is measured, not guessed: the step's percentages
+        // only hold for one headline width, so short windows and the longer
+        // locales walked the orb onto the title. Take the seat the headline
+        // reserved (see ORB_LOCKUP_WIDTH) and land on its center instead.
+        if (target.kind === 'welcome') {
+          const seat = seatCenter(lockupRef.current, stage, stageTop)
+          if (seat) {
+            orb.style.left = `${seat.x}px`
+            orb.style.top = `${seat.y}px`
+          }
         }
       }
-    }
-    if (stage) stage.style.top = stageTop
-  }, [])
+      if (stage) stage.style.top = stageTop
+    },
+    [presets],
+  )
 
   const applySplashLayout = useCallback(() => {
     const orb = orbRef.current
     const stage = stageRef.current
     if (orb) {
-      orb.style.top = LAYOUT_PRESETS.splash.orbTop
+      orb.style.top = presets.splash.orbTop
       orb.style.left = '50%'
-      orb.style.transform = `translate(-50%, -50%) scale(${LAYOUT_PRESETS.splash.scale})`
+      orb.style.transform = `translate(-50%, -50%) scale(${presets.splash.scale})`
     }
-    if (stage) stage.style.top = LAYOUT_PRESETS.splash.stageTop
-  }, [])
+    if (stage) stage.style.top = presets.splash.stageTop
+  }, [presets])
 
   const pulse = useCallback(() => {
     clearTimeout(timersRef.current.pulse)
@@ -748,14 +759,20 @@ export function OnboardingSpotlight() {
       ref={rootRef}
       className="fixed inset-0 overflow-hidden bg-background font-sans text-foreground transition-colors duration-600"
     >
-      {/* Aurora background */}
+      {/* Aurora background. On coarse pointers the blur radius drops to ~28px:
+          an 80–90px filter over a viewport-sized layer is real tile memory on a
+          phone GPU (the lesson the marketing site already learned), and the
+          cost scales with the radius. It is not removed outright — verified at
+          402px, `blur-none` exposes the hard edge where each gradient meets its
+          own box, because a `circle` gradient in a tall ellipse is still ~60%
+          opaque at the left and right edges. 28px hides that seam. */}
       <div
         ref={auroraRef}
         aria-hidden
         className="pointer-events-none absolute -inset-[12%] z-0 transition-transform duration-1000 ease-[cubic-bezier(.22,1,.36,1)]"
       >
         <div
-          className="pl-onb-aurora absolute left-[16%] top-[2%] h-[60%] w-[52%] rounded-full opacity-50 blur-[80px]"
+          className="pl-onb-aurora absolute left-[16%] top-[2%] h-[60%] w-[52%] rounded-full opacity-50 blur-[80px] pointer-coarse:blur-[28px]"
           style={{
             background:
               'radial-gradient(circle at 50% 50%, color-mix(in oklch, var(--primary) 60%, transparent), transparent 68%)',
@@ -763,7 +780,7 @@ export function OnboardingSpotlight() {
           }}
         />
         <div
-          className="pl-onb-aurora absolute -bottom-[4%] right-[10%] h-[58%] w-[48%] rounded-full opacity-40 blur-[90px]"
+          className="pl-onb-aurora absolute -bottom-[4%] right-[10%] h-[58%] w-[48%] rounded-full opacity-40 blur-[90px] pointer-coarse:blur-[28px]"
           style={{
             background:
               'radial-gradient(circle at 50% 50%, oklch(60% .2 320 / .48), transparent 68%)',
@@ -834,13 +851,19 @@ export function OnboardingSpotlight() {
         />
       </div>
 
-      {/* Stage */}
+      {/* Stage. In portrait it is also the scroll region: a 17-language choice
+          grid is taller than a phone, and the frame itself is overflow-hidden,
+          so without this the last options would be unreachable. Above `sm` the
+          box is exactly as it was — height auto, no scrolling. */}
       <div
         ref={stageRef}
-        className="absolute left-1/2 z-[3] w-[min(760px,92vw)] -translate-x-1/2 text-center"
+        className="absolute left-1/2 z-[3] w-[min(760px,92vw)] -translate-x-1/2 text-center max-sm:bottom-0 max-sm:overflow-y-auto max-sm:overscroll-contain"
         style={{ transition: `top .66s ${EASE}` }}
       >
-        <div ref={contentRef} className="flex flex-col items-center gap-4">
+        <div
+          ref={contentRef}
+          className="flex flex-col items-center gap-4 max-sm:min-h-full"
+        >
           {launched ? (
             <>
               <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-primary">
@@ -941,8 +964,11 @@ export function OnboardingSpotlight() {
                 summaryRows={summaryRows}
               />
 
-              {/* Nav */}
-              <div className="mt-2 flex items-center justify-center gap-[11px]">
+              {/* Nav. On a phone it drops into thumb reach: `mt-auto` pushes
+                  it to the bottom of the stage when the step is short, and
+                  `sticky` keeps it there when the step scrolls. It is in flow
+                  either way, so the last option is never trapped underneath. */}
+              <div className="mt-2 flex items-center justify-center gap-[11px] max-sm:sticky max-sm:bottom-0 max-sm:z-10 max-sm:mt-auto max-sm:-mx-[4vw] max-sm:w-screen max-sm:bg-background/90 max-sm:pb-[max(env(safe-area-inset-bottom),20px)] max-sm:pt-4">
                 {stepIndex > 0 && (
                   <Button variant="ghost" onClick={handleBack}>
                     {t('onboarding.nav.back')}

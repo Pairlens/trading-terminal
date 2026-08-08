@@ -6,26 +6,11 @@ import * as React from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import {
-  AppWindow,
-  BellRing,
-  CircleUser,
   Cloud,
   CloudUpload,
-  Coins,
-  Fingerprint,
-  Gauge,
-  Globe,
-  Keyboard,
-  Loader2,
-  Lock,
   LogIn,
-  MapPin,
-  Paintbrush,
-  Puzzle,
   RotateCcw,
   Search,
-  ShieldCheck,
-  Sparkles,
   Upload,
   UserRound,
 } from 'lucide-react'
@@ -72,15 +57,25 @@ import {
   SidebarProvider,
 } from '@pairlens/ui/components/ui/sidebar'
 import type { SettingsSearchEntry } from '@/components/settings/settings-search-index'
+import type { SettingsNavId } from '@/components/settings/settings-nav'
 import { searchSettings } from '@/components/settings/settings-search-index'
 import { track } from '@/lib/analytics-events'
+
+// The nav map and the section bodies live beside the sections themselves, so
+// the mobile settings screen can render the same ids and the same chunks.
+import { SettingsSectionBody } from '@/components/settings/settings-section-body'
+import {
+  SETTINGS_NAV,
+  VISIBLE_SECTION_IDS,
+  VISIBLE_SETTINGS_NAV,
+  VISIBLE_SETTINGS_NAV_GROUPS,
+} from '@/components/settings/settings-nav'
 
 import { authClient, hasAppServer } from '@/lib/auth-client'
 import { api, queryKeys } from '@/lib/api'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { useAppVersion } from '@/lib/app-version'
 import { isStandalone } from '@/lib/platform'
-import { lazyChunk } from '@/lib/lazy-chunk'
 
 import {
   SECTION_TOURS_DISABLED_KEY,
@@ -92,167 +87,12 @@ import { ONBOARDING_KEY } from '@/lib/onboarding-state'
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024
 const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp'])
 
-// Lazy-load non-profile sections (single chunk, split per named export).
-// `lazyChunk` rather than `React.lazy`: these chunks are fetched long after
-// first paint, so a tab left open across a deploy asks for hashes the live
-// build no longer has — see @/lib/lazy-chunk.
-const loadSections = () => import('./user-settings-sections')
-const LazyPluginsSection = lazyChunk(() =>
-  loadSections().then((m) => ({ default: m.PluginsSection })),
-)
-const LazyAppearanceSection = lazyChunk(() =>
-  loadSections().then((m) => ({ default: m.AppearanceSection })),
-)
-const LazyPerformanceSection = lazyChunk(() =>
-  loadSections().then((m) => ({ default: m.PerformanceSection })),
-)
-const LazyLanguageSection = lazyChunk(() =>
-  loadSections().then((m) => ({ default: m.LanguageSection })),
-)
-const LazyRegionSection = lazyChunk(() =>
-  loadSections().then((m) => ({ default: m.RegionSection })),
-)
-const LazyCurrencySection = lazyChunk(() =>
-  loadSections().then((m) => ({ default: m.CurrencySection })),
-)
-const LazyRiskSection = lazyChunk(() =>
-  loadSections().then((m) => ({ default: m.RiskSection })),
-)
-const LazyPrivacySection = lazyChunk(() =>
-  loadSections().then((m) => ({ default: m.PrivacySection })),
-)
-const LazyIntelligenceSection = lazyChunk(() =>
-  loadSections().then((m) => ({ default: m.IntelligenceSection })),
-)
-// Keyboard lives in its own chunk: it pulls in the whole command catalog and
-// almost nobody opens it, so it shouldn't ride along with the common sections.
-const LazyKeyboardSection = lazyChunk(() =>
-  import('./settings/keyboard-section').then((m) => ({
-    default: m.KeyboardSection,
-  })),
-)
-// Security is its own chunk for the same reason as Keyboard: it carries its
-// own dialogs and a page of threat-model copy that nobody who never opens it
-// should have to download.
-const LazySecuritySection = lazyChunk(() =>
-  import('./settings/security-section').then((m) => ({
-    default: m.SecuritySection,
-  })),
-)
-// Notifications carries the Telegram connect flow (its own Bot API client and
-// the vault enrollment dialog), which nothing else in settings needs.
-const LazyNotificationsSection = lazyChunk(() =>
-  import('./settings/notifications-section').then((m) => ({
-    default: m.NotificationsSection,
-  })),
-)
-// Desktop is its own chunk too: it only exists in the Tauri build, so a
-// browser bundle should never carry it.
-const LazyDesktopSection = lazyChunk(() =>
-  import('./settings/desktop-section').then((m) => ({
-    default: m.DesktopSection,
-  })),
-)
-// Cloud Sync only exists when an App Server is configured, and it drags in the
-// sync taxonomy — its own chunk, same reasoning as Desktop.
-const LazyCloudSyncSection = lazyChunk(() =>
-  import('./settings/cloud-sync-section').then((m) => ({
-    default: m.CloudSyncSection,
-  })),
-)
-
-function SectionFallback() {
-  return (
-    <div className="flex h-32 items-center justify-center">
-      <Loader2 className="size-5 animate-spin text-muted-foreground" />
-    </div>
-  )
-}
-
 /**
- * Profile is not in a group: it renders as the identity card at the top of
- * the sidebar (avatar, name, email), the way Apple's System Settings leads
- * with the account.
+ * The dialog's own nav map and section bodies now live beside the sections
+ * (see the imports above). Re-exported here because the settings search
+ * index and the mobile shell both type against this module.
  */
-const PROFILE_NAV_ITEM = {
-  id: 'profile',
-  nameKey: 'settings.nav.profile',
-  icon: CircleUser,
-} as const
-
-/**
- * The rest of the sidebar, clustered by what a section configures: Pairlens
- * services (things that ride on your account), trading, protection, the app
- * itself, and locale. The gap between clusters is the only separator —
- * grouping conveyed by negative space, not labels.
- */
-const SETTINGS_NAV_GROUPS = [
-  [
-    { id: 'billing', nameKey: 'settings.nav.billing', icon: Sparkles },
-    { id: 'cloud-sync', nameKey: 'settings.nav.cloudSync', icon: Cloud },
-  ],
-  [{ id: 'risk', nameKey: 'settings.nav.risk', icon: ShieldCheck }],
-  [
-    { id: 'security', nameKey: 'settings.nav.security', icon: Lock },
-    { id: 'privacy', nameKey: 'settings.nav.privacy', icon: Fingerprint },
-  ],
-  [
-    { id: 'appearance', nameKey: 'settings.nav.appearance', icon: Paintbrush },
-    { id: 'keyboard', nameKey: 'settings.nav.keyboard', icon: Keyboard },
-    {
-      id: 'notifications',
-      nameKey: 'settings.nav.notifications',
-      icon: BellRing,
-    },
-    { id: 'performance', nameKey: 'settings.nav.performance', icon: Gauge },
-    // Plugins here, not with trading: the section configures registry source
-    // and publisher trust — app plumbing, even though most plugins are
-    // connectors. The store for browsing them is its own page.
-    { id: 'plugins', nameKey: 'settings.nav.plugins', icon: Puzzle },
-    { id: 'desktop', nameKey: 'settings.nav.desktop', icon: AppWindow },
-  ],
-  [
-    { id: 'language', nameKey: 'settings.nav.language', icon: Globe },
-    { id: 'region', nameKey: 'settings.nav.region', icon: MapPin },
-    { id: 'currency', nameKey: 'settings.nav.currency', icon: Coins },
-  ],
-] as const
-
-const SETTINGS_NAV = [PROFILE_NAV_ITEM, ...SETTINGS_NAV_GROUPS.flat()] as const
-
-export type SettingsNavId = (typeof SETTINGS_NAV)[number]['id']
-
-/** Sections that only exist in the Tauri build. */
-const DESKTOP_ONLY_SECTIONS = new Set<string>(['desktop'])
-
-/** Sections that only mean anything when there is an account to sync with. */
-const APP_SERVER_ONLY_SECTIONS = new Set<string>(['cloud-sync'])
-
-const isSectionVisible = (id: string) =>
-  (isStandalone || !DESKTOP_ONLY_SECTIONS.has(id)) &&
-  (hasAppServer || !APP_SERVER_ONLY_SECTIONS.has(id))
-
-/**
- * What the sidebar actually renders, and what a deep link may resolve to. An
- * additive filter over the grouped nav rather than a second list, so the nav
- * order and typing stay derived from one place — and so a stale `?section=`
- * deep link in a browser build falls back to Profile instead of opening an
- * empty pane. Groups that filter down to nothing disappear entirely, taking
- * their gap with them.
- */
-const VISIBLE_SETTINGS_NAV_GROUPS = SETTINGS_NAV_GROUPS.map((group) =>
-  group.filter((item) => isSectionVisible(item.id)),
-).filter((group) => group.length > 0)
-
-const VISIBLE_SETTINGS_NAV = [
-  PROFILE_NAV_ITEM,
-  ...VISIBLE_SETTINGS_NAV_GROUPS.flat(),
-]
-
-/** What settings search may return results for. */
-const VISIBLE_SECTION_IDS: ReadonlySet<string> = new Set(
-  VISIBLE_SETTINGS_NAV.map((item) => item.id),
-)
+export type { SettingsNavId } from '@/components/settings/settings-nav'
 
 type UserSettingsDialogProps = {
   open: boolean
@@ -689,46 +529,7 @@ export default function UserSettingsDialog({
                   </>
                 )
               ) : (
-                <React.Suspense fallback={<SectionFallback />}>
-                  {activeSection === 'plugins' ? (
-                    <LazyPluginsSection />
-                  ) : activeSection === 'appearance' ? (
-                    <LazyAppearanceSection />
-                  ) : activeSection === 'performance' ? (
-                    <LazyPerformanceSection />
-                  ) : activeSection === 'language' ? (
-                    <LazyLanguageSection />
-                  ) : activeSection === 'region' ? (
-                    <LazyRegionSection />
-                  ) : activeSection === 'currency' ? (
-                    <LazyCurrencySection />
-                  ) : activeSection === 'risk' ? (
-                    <LazyRiskSection />
-                  ) : activeSection === 'privacy' ? (
-                    <LazyPrivacySection />
-                  ) : activeSection === 'security' ? (
-                    <LazySecuritySection />
-                  ) : activeSection === 'keyboard' ? (
-                    <LazyKeyboardSection />
-                  ) : activeSection === 'notifications' ? (
-                    <LazyNotificationsSection />
-                  ) : activeSection === 'desktop' ? (
-                    <LazyDesktopSection />
-                  ) : activeSection === 'cloud-sync' ? (
-                    <LazyCloudSyncSection />
-                  ) : activeSection === 'billing' ? (
-                    <LazyIntelligenceSection />
-                  ) : (
-                    <div className="max-w-4xl rounded-xl border border-dashed p-5">
-                      <h3 className="font-medium">
-                        {t(currentSection.nameKey)}
-                      </h3>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {t('settings.comingSoon')}
-                      </p>
-                    </div>
-                  )}
-                </React.Suspense>
+                <SettingsSectionBody section={activeSection} />
               )}
             </div>
           </main>

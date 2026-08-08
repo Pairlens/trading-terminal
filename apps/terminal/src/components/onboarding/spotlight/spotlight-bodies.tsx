@@ -260,7 +260,7 @@ export function VenueChips({ chips }: { chips: Array<string> }) {
 
 export function OptionGrid({ options }: { options: Array<RenderOption> }) {
   return (
-    <div className="mx-auto grid w-full max-w-[660px] grid-cols-3 gap-[11px] max-md:grid-cols-2">
+    <div className="mx-auto grid w-full max-w-[660px] grid-cols-3 gap-[11px] max-md:grid-cols-2 max-sm:grid-cols-1">
       {options.map((opt) => (
         <button
           key={opt.value}
@@ -521,7 +521,10 @@ export function AssetCards({ options }: { options: Array<RenderOption> }) {
             type="button"
             onClick={opt.onSelect}
             className={cn(
-              'relative flex min-h-[166px] cursor-pointer flex-col items-start gap-[9px] rounded-2xl border border-border bg-card p-[19px] text-left text-foreground transition-[transform,border-color,box-shadow] duration-200 ease-[cubic-bezier(.22,1,.36,1)]',
+              // Below `sm` the three cards are stacked, so the 166px floor that
+              // squares them off in a row instead pushes the third card under the
+              // fold. Content height is enough once they are rows.
+              'relative flex min-h-[166px] cursor-pointer flex-col items-start gap-[9px] rounded-2xl border border-border bg-card p-[19px] text-left text-foreground transition-[transform,border-color,box-shadow] duration-200 ease-[cubic-bezier(.22,1,.36,1)] max-sm:min-h-0 max-sm:p-4',
               'hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(0,0,0,.7)]',
               HOVER_BORDER,
             )}

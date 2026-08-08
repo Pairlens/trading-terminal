@@ -46,7 +46,10 @@ function formatTickSize(tick: number): string {
 // Generate tick size options as a 1-2-5 decade series starting from the
 // exchange tick size. Values are always clean decimal powers-of-10 multied
 // by 1, 2, or 5 — avoiding float drift from raw tick * multiplier.
-function computeTickOptions(tickSize: number, bestBid: number): Array<number> {
+export function computeTickOptions(
+  tickSize: number,
+  bestBid: number,
+): Array<number> {
   if (bestBid <= 0 || tickSize <= 0) return []
 
   // Find the decade that contains tickSize (e.g. 0.01 → exp=-2)
@@ -71,7 +74,7 @@ function computeTickOptions(tickSize: number, bestBid: number): Array<number> {
 // Find the largest tick that produces >= targetRows grouped buckets.
 // When raw levels are sparse (e.g. books5 = 5 levels), use smallest tick
 // to avoid over-grouping.
-function computeAutoTickIndex(
+export function computeAutoTickIndex(
   options: Array<number>,
   levels?: Array<OrderBookLevel>,
   targetRows?: number,
@@ -99,7 +102,7 @@ function computeAutoTickIndex(
  * For asks: ceil(price / tick) * tick → aggregate size
  * Sorted: bids descending, asks ascending.
  */
-function groupLevels(
+export function groupLevels(
   levels: Array<OrderBookLevel>,
   tick: number,
   side: 'bids' | 'asks',
@@ -130,7 +133,7 @@ function groupLevels(
 
 type RowWithCumulative = OrderBookLevel & { cumulative: number }
 
-function addCumulative(
+export function addCumulative(
   levels: Array<OrderBookLevel>,
 ): Array<RowWithCumulative> {
   let cumulative = 0

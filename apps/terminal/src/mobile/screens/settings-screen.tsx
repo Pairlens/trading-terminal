@@ -1,22 +1,101 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Mobile Settings, list → detail (design screen 10). Owned by WS-B — replace
- * this file's contents; the default export and its props are the contract.
- * The screen owns its own frame (anchor="screen", closes with an X).
+ * Settings (design screen 10) — list → detail, opened from the avatar and
+ * never a tab.
+ *
+ * The list is derived from `SETTINGS_NAV_GROUPS` and the detail renders
+ * `SettingsSectionBody`, both of which the desktop dialog also uses. That is
+ * the whole point of extracting them: the phone reaches every section the
+ * desktop reaches, in the same order, with the same visibility rules
+ * (`isSectionVisible` hides the Tauri-only and App-Server-only ones), and a
+ * section added tomorrow appears here without anyone remembering to.
+ *
+ * Accounts is INLINE at the top rather than a detail row, following the
+ * design: what a key is allowed to do is the first thing this screen answers,
+ * and burying it one tap down would make "am I connected?" a navigation.
+ * `/accounts` deep-links land here for the same reason.
  */
+import { memo, useCallback, useEffect, useState } from 'react'
+import { ChevronRight, Lock, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { cn } from '@pairlens/ui'
+import { useMobileActions } from '../mobile-focus-context'
+import { useVenueTradePermission } from '../lib/venue-permission'
 import { FullScreenOverlay } from '../primitives/full-screen-overlay'
-import type { MobileOverlay } from '../mobile-focus-context'
+import { MobileRow } from '../primitives/mobile-row'
+import type {
+  MobileOverlay,
+  MobileSettingsSection,
+} from '../mobile-focus-context'
+import type { ExchangeCredential } from '@/stores/credentials-store'
+import type { SettingsNavId } from '@/components/settings/settings-nav'
+import {
+  VISIBLE_SETTINGS_NAV_GROUPS,
+  settingsSectionNameKey,
+} from '@/components/settings/settings-nav'
+import { SettingsSectionBody } from '@/components/settings/settings-section-body'
+import { StoredLocallyDisclosure } from '@/components/accounts/stored-locally-disclosure'
+import { ExchangeBadge } from '@/components/accounts/venue-badges'
+import {
+  CREDENTIAL_SCHEMAS,
+  isBrokerMarket,
+  useCredentialsStore,
+} from '@/stores/credentials-store'
+import { WALLET_SCHEMAS, useWalletsStore } from '@/stores/wallets-store'
+import { useRiskConfigStore } from '@/stores/risk-config-store'
+import { useDisplayCurrency } from '@/hooks/use-display-currency'
+import { useOptimisticSession } from '@/lib/session'
+import { hasAppServer } from '@/lib/auth-client'
+import { track } from '@/lib/analytics-events'
 
 type SettingsScreenProps = {
   overlay: Extract<MobileOverlay, { kind: 'settings' }>
   onClose: () => void
 }
 
-export default function SettingsScreen({ onClose }: SettingsScreenProps) {
+/** `accounts` is not a detail screen — it is the top of the list. */
+function initialSection(
+  section: MobileSettingsSection | undefined,
+): SettingsNavId | null {
+  if (!section || section === 'accounts') return null
+  return section
+}
+
+export default memo(function SettingsScreen({
+  overlay,
+  onClose,
+}: SettingsScreenProps) {
   const { t } = useTranslation()
+  const [section, setSection] = useState<SettingsNavId | null>(() =>
+    initialSection(overlay.section),
+  )
+
+  useEffect(() => {
+    if (section) track('settings_section_viewed', { section })
+  }, [section])
+
+  const back = useCallback(() => setSection(null), [])
+
+  if (section) {
+    return (
+      <FullScreenOverlay
+        anchor="screen"
+        onBack={back}
+        title={t(settingsSectionNameKey(section))}
+      >
+        <div className="px-4 pb-6 pt-1">
+          {section === 'profile' ? (
+            <ProfileDetail />
+          ) : (
+            <SettingsSectionBody section={section} />
+          )}
+        </div>
+      </FullScreenOverlay>
+    )
+  }
+
   return (
     <FullScreenOverlay
       anchor="screen"
@@ -24,11 +103,302 @@ export default function SettingsScreen({ onClose }: SettingsScreenProps) {
       onBack={onClose}
       title={t('mobile.shell.overlays.settings')}
     >
-      <div className="flex h-full flex-col items-center justify-center gap-1 px-8 py-16 text-center">
-        <p className="text-[12.5px] text-muted-foreground">
-          {t('mobile.shell.comingSoon')}
+      <ProfileRow onOpen={() => setSection('profile')} />
+      <AccountsSection />
+
+      <SectionLabel>{t('mobile.settings.terminalHeader')}</SectionLabel>
+      {VISIBLE_SETTINGS_NAV_GROUPS.map((group, index) => (
+        <div className={cn(index > 0 && 'mt-3')} key={group[0].id}>
+          {group.map((item) => (
+            <SettingsNavRow
+              icon={<item.icon className="size-[18px] text-muted-foreground" />}
+              id={item.id}
+              key={item.id}
+              label={t(item.nameKey)}
+              onOpen={setSection}
+            />
+          ))}
+        </div>
+      ))}
+    </FullScreenOverlay>
+  )
+})
+
+function SectionLabel({
+  children,
+  action,
+  onAction,
+}: {
+  children: React.ReactNode
+  action?: string
+  onAction?: () => void
+}) {
+  return (
+    <div className="flex items-baseline justify-between gap-3 px-4 pb-1.5 pt-5">
+      <h3 className="text-[9.5px] font-semibold uppercase leading-none tracking-[0.09em] text-muted-foreground">
+        {children}
+      </h3>
+      {action && onAction ? (
+        <button
+          className="pl-hit-44 shrink-0 text-[12.5px] font-medium text-primary"
+          onClick={onAction}
+          type="button"
+        >
+          {action}
+        </button>
+      ) : null}
+    </div>
+  )
+}
+
+const Chevron = <ChevronRight className="size-4 text-muted-foreground/70" />
+
+/**
+ * The two rows whose current value is worth restating in the list. Kept to
+ * settings a trader changes and then wants to confirm at a glance; a value for
+ * every row would turn the list into a table.
+ */
+function SettingsNavRow({
+  id,
+  label,
+  icon,
+  onOpen,
+}: {
+  id: SettingsNavId
+  label: string
+  icon: React.ReactNode
+  onOpen: (id: SettingsNavId) => void
+}) {
+  const { t } = useTranslation()
+  const { currency } = useDisplayCurrency()
+  const maxPositionSize = useRiskConfigStore((s) => s.maxPositionSize)
+
+  const value =
+    id === 'currency'
+      ? currency
+      : id === 'risk' && maxPositionSize > 0
+        ? t('mobile.settings.perOrder', { percent: maxPositionSize })
+        : null
+
+  return (
+    <MobileRow
+      leading={icon}
+      onPress={() => onOpen(id)}
+      title={label}
+      trailing={
+        <span className="flex items-center gap-1.5">
+          {value ? (
+            <span className="text-[12px] text-muted-foreground">{value}</span>
+          ) : null}
+          {Chevron}
+        </span>
+      }
+    />
+  )
+}
+
+function ProfileRow({ onOpen }: { onOpen: () => void }) {
+  const { t } = useTranslation()
+  const { session } = useOptimisticSession()
+  const name = session?.user.name ?? session?.user.email ?? ''
+
+  return (
+    <MobileRow
+      className="border-t-0"
+      leading={
+        <span
+          className="flex size-10 items-center justify-center rounded-full text-[13px] font-semibold text-foreground"
+          style={{
+            background:
+              'linear-gradient(135deg, color-mix(in oklch, var(--primary) 32%, transparent), color-mix(in oklch, var(--primary) 9%, transparent))',
+            boxShadow:
+              'inset 0 0 0 1px color-mix(in oklch, var(--primary) 24%, transparent)',
+          }}
+        >
+          {initialsFrom(name)}
+        </span>
+      }
+      onPress={onOpen}
+      subtitle={
+        session ? session.user.email : t('settings.profile.notSignedIn')
+      }
+      title={session ? name : t('settings.nav.profile')}
+      trailing={Chevron}
+    />
+  )
+}
+
+function initialsFrom(name: string): string {
+  const derived = name
+    .split(/[\s.@_-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((segment) => segment[0]?.toUpperCase() ?? '')
+    .join('')
+  return derived || 'PL'
+}
+
+/**
+ * Profile on the phone is identity plus a way in — the desktop dialog's avatar
+ * upload and display-name form stay on the desktop, where the file picker and
+ * the wide form belong. Signing IN is the part a phone genuinely needs.
+ */
+function ProfileDetail() {
+  const { t } = useTranslation()
+  const { session } = useOptimisticSession()
+
+  if (session) {
+    return (
+      <div className="pt-2">
+        <p className="text-[15px] font-semibold text-foreground">
+          {session.user.name || session.user.email}
+        </p>
+        <p className="mt-1 text-[12.5px] text-muted-foreground">
+          {session.user.email}
         </p>
       </div>
-    </FullScreenOverlay>
+    )
+  }
+
+  return (
+    <div className="pt-2">
+      <p className="text-[15px] font-semibold text-foreground">
+        {t('settings.profile.signInTitle')}
+      </p>
+      <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted-foreground">
+        {t('settings.profile.signInDescription')}
+      </p>
+      {hasAppServer ? (
+        <a
+          className="mt-4 flex h-11 items-center justify-center rounded-xl bg-primary px-5 text-[15px] font-semibold text-primary-foreground"
+          href="/sign-in"
+        >
+          {t('settings.profile.signInButton')}
+        </a>
+      ) : null}
+    </div>
+  )
+}
+
+/**
+ * Every key this device holds, in one list, each row saying what it is allowed
+ * to do. The cards from the desktop accounts page are deliberately not reused:
+ * each one opens its own portfolio subscription and draws a poster, which is a
+ * lot of machinery for a row whose job is to answer "trade or read-only?".
+ */
+function AccountsSection() {
+  const { t } = useTranslation()
+  const { pushOverlay } = useMobileActions()
+  const credentials = useCredentialsStore((s) => s.credentials)
+  const sealed = useCredentialsStore((s) => s.sealed)
+  const load = useCredentialsStore((s) => s.load)
+  const wallets = useWalletsStore((s) => s.wallets)
+  const loadWallets = useWalletsStore((s) => s.load)
+
+  useEffect(() => {
+    void load()
+    void loadWallets()
+  }, [load, loadWallets])
+
+  const openConnect = useCallback(
+    () => pushOverlay({ kind: 'connect' }),
+    [pushOverlay],
+  )
+
+  return (
+    <>
+      <SectionLabel action={t('common.add')} onAction={openConnect}>
+        {t('mobile.settings.accountsHeader')}
+      </SectionLabel>
+
+      {sealed ? (
+        <MobileRow
+          leading={<Lock className="size-[18px] text-muted-foreground" />}
+          subtitle={t('accounts.vaultSealedBody')}
+          title={t('security.vault.sealedBannerAction')}
+        />
+      ) : credentials.length === 0 && wallets.length === 0 ? (
+        <MobileRow
+          leading={<Plus className="size-[18px] text-muted-foreground" />}
+          onPress={openConnect}
+          subtitle={t('accounts.noExchangeAccountsDesc')}
+          title={t('accounts.connect')}
+          trailing={Chevron}
+        />
+      ) : (
+        <>
+          {credentials.map((credential) => (
+            <CredentialRow credential={credential} key={credential.id} />
+          ))}
+          {wallets.map((wallet) => (
+            <MobileRow
+              badge={<Tag tone="neutral">{t('mobile.settings.connected')}</Tag>}
+              key={wallet.id}
+              leading={
+                <span className="flex size-9 items-center justify-center rounded-lg bg-muted text-[10px] font-bold uppercase text-foreground">
+                  {wallet.chain.slice(0, 3)}
+                </span>
+              }
+              subtitle={`${t('accounts.typeCrypto')} · ${
+                WALLET_SCHEMAS[wallet.chain]?.label ?? wallet.chain
+              }`}
+              title={wallet.label}
+            />
+          ))}
+        </>
+      )}
+
+      <div className="px-4 pt-3">
+        <StoredLocallyDisclosure />
+      </div>
+    </>
+  )
+}
+
+function CredentialRow({ credential }: { credential: ExchangeCredential }) {
+  const { t } = useTranslation()
+  const permission = useVenueTradePermission(credential.market)
+  const canTrade = permission === 'trade'
+
+  return (
+    <MobileRow
+      badge={
+        <Tag tone={canTrade ? 'up' : 'neutral'}>
+          {canTrade ? t('mobile.settings.trading') : t('mobile.shell.readOnly')}
+        </Tag>
+      }
+      leading={<ExchangeBadge market={credential.market} />}
+      subtitle={`${
+        isBrokerMarket(credential.market)
+          ? t('accounts.typeBroker')
+          : t('accounts.typeExchange')
+      } · ${
+        credential.mode === 'paper' ? t('accounts.paper') : t('accounts.live')
+      }`}
+      // No chevron: there is no account detail screen on the phone yet, and a
+      // chevron that opens nothing is worse than no chevron.
+      title={CREDENTIAL_SCHEMAS[credential.market]?.label ?? credential.label}
+    />
+  )
+}
+
+function Tag({
+  tone,
+  children,
+}: {
+  tone: 'up' | 'neutral'
+  children: React.ReactNode
+}) {
+  return (
+    <span
+      className={cn(
+        'shrink-0 rounded border px-[5px] py-[3px] text-[8.5px] font-semibold uppercase leading-none tracking-[0.09em]',
+        tone === 'up'
+          ? 'border-up/50 text-up'
+          : 'border-border text-muted-foreground',
+      )}
+    >
+      {children}
+    </span>
   )
 }

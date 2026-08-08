@@ -140,6 +140,37 @@ export const LAYOUT_PRESETS = {
   splash: { scale: 0.95, orbTop: '33%', stageTop: '55%' },
 } as const
 
+export type LayoutPreset = {
+  scale: number
+  orbTop: string
+  stageTop: string
+}
+
+export type LayoutPresetTable = Record<
+  'story' | 'input' | 'summary' | 'splash',
+  LayoutPreset
+>
+
+/**
+ * The same four frames on a phone in portrait.
+ *
+ * Percentages of a 402 × 874 viewport rather than a 1440 × 900 one, so the
+ * landscape numbers do not transfer: the orb has to clear a top bar that now
+ * takes 7% of the height instead of 4%, and the stage has to start high enough
+ * that a three-row choice step and its nav still land above the fold. The orb
+ * also shrinks harder on input frames — at the desktop 0.36 its 180px ring is
+ * wider than half the screen and reads as a background, not a subject.
+ *
+ * Selected in `onboarding-spotlight.tsx` by `useViewportMode()`, which is the
+ * only mobile-owned module the desktop onboarding touches.
+ */
+export const LAYOUT_PRESETS_PORTRAIT: LayoutPresetTable = {
+  story: { scale: 0.78, orbTop: '22%', stageTop: '40%' },
+  input: { scale: 0.34, orbTop: '12%', stageTop: '19%' },
+  summary: { scale: 0.56, orbTop: '15%', stageTop: '26%' },
+  splash: { scale: 0.72, orbTop: '24%', stageTop: '48%' },
+}
+
 export function layoutTypeOf(
   step: SpotlightStep,
 ): 'story' | 'input' | 'summary' {

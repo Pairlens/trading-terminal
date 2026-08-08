@@ -1,15 +1,318 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Draggable limit-price line over the chart (design screen 7, blueprint
- * §D.9 — a DOM overlay, deliberately NOT an engine drawing). Owned by WS-C —
- * replace this file's contents; the default export is the contract. Rendered
- * through MobileChartSurface's `overlay` prop at z-20 (above the z-10
- * tap-to-dismiss layer), always mounted: the component itself decides
- * visibility from the order draft store (orderType === 'limit' etc.).
+ * The draggable limit price, drawn over the chart (design screen 7).
  *
- * Stand-in: renders nothing until WS-C lands.
+ * It is a DOM overlay, not an engine drawing, and that is a decision rather
+ * than a shortcut. Three candidates existed:
+ *
+ *   - `addDrawing` with an `hline` — draggable for free, but it flows through
+ *     `onDrawingsChange → handleDrawingsChange`, which PERSISTS to
+ *     `pairlens:terminal.drawings`. A transient order line would be saved on
+ *     the user's symbol and reappear on their desktop. Rejected.
+ *   - `addPrimitive` (`SeriesPrimitive`) — render-only. The engine gives
+ *     primitives a `paneRenderer` and coordinate helpers but no hit-testing,
+ *     so nothing can be dragged. Rejected.
+ *   - A DOM overlay — chosen.
+ *
+ * Chart API, verified against `@pairlens/fast-financial-charts` in
+ * node_modules: `FastFinancialChartRef` exposes `priceToCoordinate(price)` and
+ * `coordinateToPrice(y)` DIRECTLY, both returning `number | null`, alongside
+ * the `executeCommand({ type: 'priceToCoordinate' | 'coordinateToPrice' })`
+ * forms the blueprint named (`src/types/mcp.ts`, `core/mcp/executor.ts`, both
+ * delegating to the same engine methods). The direct methods are used here:
+ * same engine call, one hop fewer, and a typed `number | null` instead of an
+ * unwrapped command result. Coordinates are CSS pixels from the top of the
+ * chart's main pane, which is the top of this overlay's box —
+ * `MobileChartSurface` gives the chart and the overlay slot the same
+ * `absolute inset-0` frame.
+ *
+ * Repositioning rides callbacks that already fire: `chartRef.current.subscribe()`
+ * for the engine's own `visibleTimeRangeChange` (pan/zoom), `sizeChange` and
+ * `stateChange` (a tick that re-auto-scales the price axis), plus a
+ * `ResizeObserver` on the overlay. Everything coalesces into one rAF and is
+ * written straight to `style.transform`, so following the market costs no React
+ * render at all.
+ *
+ * Why the line is PORTALED to <body> rather than left in the overlay slot: the
+ * chart engine's topmost canvas — the one it hit-tests crosshair and drawing
+ * gestures on — carries `z-index: 30`, and the surface's overlay slot is
+ * `z-20`. Painted inside the slot the line is visible (the canvas is
+ * transparent) but not grabbable, because hit-testing goes to the topmost
+ * element regardless of what it painted. The portal lands the line at `z-35`:
+ * above that canvas, below the sheet (40) and the tab bar (50). An in-place
+ * anchor keeps the band's geometry, and the portal is positioned from its rect.
  */
-export default function LimitLineOverlay() {
-  return null
+import { memo, useCallback, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
+import { GripVertical } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { useOrderDraftStore } from '../lib/order-draft-store'
+import type { FastFinancialChartRef } from '@pairlens/fast-financial-charts/types'
+import type { PointerEvent as ReactPointerEvent, RefObject } from 'react'
+import { useChartConfig } from '@/lib/chart-terminal-context'
+
+/**
+ * How often the overlay checks it is still listening to the LIVE engine. A
+ * chart remount (fullscreen toggle, StrictMode cycle) builds a new engine and
+ * takes the old listeners with it; without this the line would silently stop
+ * following the market. One reference comparison a second, only while the line
+ * is on screen.
+ */
+const ENGINE_WATCH_MS = 1000
+
+/** Decimals a price of this magnitude is quoted in — mirrors formatChartPrice. */
+function priceDecimals(price: number): number {
+  if (price >= 1000) return 2
+  if (price >= 1) return 4
+  if (price >= 0.01) return 6
+  return 8
 }
+
+/** Drag output → a parseable field value, at the pair's own precision. */
+function roundPrice(price: number): string {
+  return String(Number(price.toFixed(priceDecimals(price))))
+}
+
+function formatTag(price: number, locale: string): string {
+  return price.toLocaleString(locale, {
+    minimumFractionDigits: Math.min(2, priceDecimals(price)),
+    maximumFractionDigits: priceDecimals(price),
+  })
+}
+
+function chartToY(
+  chartRef: RefObject<FastFinancialChartRef | null>,
+  price: number,
+): number | null {
+  const y = chartRef.current?.priceToCoordinate(price)
+  return y == null || !Number.isFinite(y) ? null : y
+}
+
+export default function LimitLineOverlay() {
+  const orderType = useOrderDraftStore((s) => s.orderType)
+  const ticketOpened = useOrderDraftStore((s) => s.ticketOpened)
+
+  // Mounted only for a limit order on a ticket the user has actually opened —
+  // a dashed level over a chart nobody has traded from is an unexplained mark.
+  if (!ticketOpened || orderType !== 'limit') return null
+  return <LimitLine />
+}
+
+const LimitLine = memo(function LimitLine() {
+  const { i18n } = useTranslation()
+  const { chartRef } = useChartConfig()
+  const limitPrice = useOrderDraftStore((s) => s.limitPrice)
+  const setLimitPrice = useOrderDraftStore((s) => s.setLimitPrice)
+
+  const anchorRef = useRef<HTMLDivElement | null>(null)
+  const lineRef = useRef<HTMLDivElement | null>(null)
+  const tagRef = useRef<HTMLSpanElement | null>(null)
+  /** The price the line is drawn at, kept out of render on purpose. */
+  const priceRef = useRef<number | null>(null)
+  /** Latest chart-band rect, refreshed by `paint` — the portal's frame. */
+  const bandRef = useRef<{ top: number; height: number }>({
+    top: 0,
+    height: 0,
+  })
+  const draggingRef = useRef(false)
+  const grabOffsetRef = useRef(0)
+  const paintFrameRef = useRef<number | null>(null)
+  const writeFrameRef = useRef<number | null>(null)
+  const pendingPriceRef = useRef<string | null>(null)
+  const localeRef = useRef(i18n.language)
+  localeRef.current = i18n.language
+
+  const parsed = Number(limitPrice)
+  priceRef.current =
+    limitPrice !== '' && Number.isFinite(parsed) && parsed > 0 ? parsed : null
+
+  /** Price → pixels. Writes the DOM directly; never sets React state. */
+  const paint = useCallback(() => {
+    paintFrameRef.current = null
+    const line = lineRef.current
+    const anchor = anchorRef.current
+    if (!line || !anchor) return
+    const rect = anchor.getBoundingClientRect()
+    bandRef.current = { top: rect.top, height: rect.height }
+
+    const value = priceRef.current
+    const y = value == null ? null : chartToY(chartRef, value)
+    // Outside the band means behind the tab bar or above the context bar. The
+    // portal is not clipped by the chart's `overflow: hidden`, so the clamp
+    // that used to be free has to be explicit.
+    if (y == null || y < 0 || y > rect.height) {
+      line.style.opacity = '0'
+      return
+    }
+    line.style.opacity = '1'
+    line.style.transform = `translate3d(0, ${Math.round(rect.top + y)}px, 0)`
+  }, [chartRef])
+
+  const schedulePaint = useCallback(() => {
+    if (paintFrameRef.current != null) return
+    paintFrameRef.current = requestAnimationFrame(paint)
+  }, [paint])
+
+  // Follow the chart. The engine already emits everything needed; the watchdog
+  // exists only to re-attach after a remount replaces the engine.
+  useEffect(() => {
+    let detach: (() => void) | null = null
+    let attached: FastFinancialChartRef | null = null
+
+    const attach = () => {
+      const chart = chartRef.current
+      if (chart === attached) return
+      detach?.()
+      attached = chart
+      detach =
+        chart?.subscribe((event) => {
+          if (
+            event.type === 'visibleTimeRangeChange' ||
+            event.type === 'sizeChange' ||
+            event.type === 'stateChange'
+          ) {
+            schedulePaint()
+          }
+        }) ?? null
+      schedulePaint()
+    }
+
+    attach()
+    const watchdog = setInterval(attach, ENGINE_WATCH_MS)
+    const observer = new ResizeObserver(schedulePaint)
+    if (anchorRef.current) observer.observe(anchorRef.current)
+
+    return () => {
+      clearInterval(watchdog)
+      observer.disconnect()
+      detach?.()
+      if (paintFrameRef.current != null) {
+        cancelAnimationFrame(paintFrameRef.current)
+        paintFrameRef.current = null
+      }
+      if (writeFrameRef.current != null) {
+        cancelAnimationFrame(writeFrameRef.current)
+        writeFrameRef.current = null
+      }
+    }
+  }, [chartRef, schedulePaint])
+
+  // Field → line. The other direction is the drag below; both read and write
+  // the one number in the draft store, so they cannot disagree.
+  useEffect(() => {
+    if (draggingRef.current) return
+    const tag = tagRef.current
+    if (tag) {
+      tag.textContent =
+        priceRef.current == null
+          ? '—'
+          : formatTag(priceRef.current, localeRef.current)
+    }
+    schedulePaint()
+  }, [limitPrice, schedulePaint])
+
+  const handlePointerDown = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      const anchor = anchorRef.current
+      if (!anchor || priceRef.current == null) return
+      const y = chartToY(chartRef, priceRef.current)
+      if (y == null) return
+      const rect = anchor.getBoundingClientRect()
+      bandRef.current = { top: rect.top, height: rect.height }
+      draggingRef.current = true
+      grabOffsetRef.current = event.clientY - rect.top - y
+      event.currentTarget.setPointerCapture(event.pointerId)
+      event.preventDefault()
+    },
+    [chartRef],
+  )
+
+  const handlePointerMove = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      if (!draggingRef.current) return
+      const line = lineRef.current
+      const chart = chartRef.current
+      if (!line || !chart) return
+
+      const band = bandRef.current
+      const y = Math.min(
+        Math.max(event.clientY - band.top - grabOffsetRef.current, 0),
+        band.height,
+      )
+      // Paint from the finger, not from the round-tripped price: the pixel is
+      // what is being dragged, and the conversion back rounds.
+      line.style.transform = `translate3d(0, ${Math.round(band.top + y)}px, 0)`
+
+      const next = chart.coordinateToPrice(y)
+      if (next == null || !Number.isFinite(next) || next <= 0) return
+      const tag = tagRef.current
+      if (tag) tag.textContent = formatTag(next, localeRef.current)
+
+      // One store write per frame at most: the field, the risk row and the
+      // order value all re-render off it.
+      pendingPriceRef.current = roundPrice(next)
+      if (writeFrameRef.current == null) {
+        writeFrameRef.current = requestAnimationFrame(() => {
+          writeFrameRef.current = null
+          const value = pendingPriceRef.current
+          if (value != null) setLimitPrice(value)
+        })
+      }
+    },
+    [chartRef, setLimitPrice],
+  )
+
+  const endDrag = useCallback(() => {
+    if (!draggingRef.current) return
+    draggingRef.current = false
+    if (writeFrameRef.current != null) {
+      cancelAnimationFrame(writeFrameRef.current)
+      writeFrameRef.current = null
+    }
+    const value = pendingPriceRef.current
+    pendingPriceRef.current = null
+    if (value != null) setLimitPrice(value)
+    schedulePaint()
+  }, [setLimitPrice, schedulePaint])
+
+  return (
+    <>
+      {/* Measurement anchor: it occupies the chart band and nothing else, so
+          the portal below always knows where the band is. */}
+      <div className="pointer-events-none absolute inset-0" ref={anchorRef} />
+      {createPortal(
+        <div
+          className="pointer-events-none fixed inset-x-0 top-0 z-[35] h-0 opacity-0"
+          data-pl-limit-line
+          ref={lineRef}
+          style={{ willChange: 'transform' }}
+        >
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-0 border-t-[1.5px] border-dashed border-primary"
+          />
+          <span className="absolute right-1 top-[-13px] flex h-[26px] items-center gap-1 rounded-md bg-primary pl-1.5 pr-2 font-mono text-[11.5px] font-semibold tabular-nums text-primary-foreground shadow-[0_4px_14px_rgba(0,0,0,0.55)]">
+            <GripVertical aria-hidden className="size-3 opacity-80" />
+            <span ref={tagRef} />
+          </span>
+          {/* A 44px grab strip centred on a 1.5px line. `pointer-events: auto`
+              is load-bearing twice over: it re-enables hit-testing under the
+              `pointer-events: none` vaul puts on <body> while a sheet is open,
+              and it is what makes the strip — rather than the chart's UI
+              canvas — the drag target. */}
+          <div
+            className="pointer-events-auto absolute inset-x-0 top-[-22px] h-11 touch-none"
+            data-pl-limit-grab
+            onPointerCancel={endDrag}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={endDrag}
+          />
+        </div>,
+        document.body,
+      )}
+    </>
+  )
+})

@@ -4668,11 +4668,73 @@
       "noChartDataHint": "This venue does not list it. Try another one.",
       "desktopOnlyRoute": "That screen is only on the desktop app."
     },
-    "panels": {},
-    "trade": {},
-    "chart": {},
+    "panels": {
+      "searchAnyPair": "Search any pair, any venue…",
+      "inFocus": "In focus",
+      "venueLine": "{{venue}} {{kind}} · {{permission}}",
+      "trading": "trading",
+      "discoverTitle": "Discover",
+      "topTickers": "Top tickers",
+      "allMarkets": "All markets",
+      "pnlToday": "P&L today",
+      "noPositions": "No open positions",
+      "positionsCount_one": "{{count}} position",
+      "positionsCount_other": "{{count}} positions",
+      "venuesCount_one": "{{count}} venue",
+      "venuesCount_other": "{{count}} venues"
+    },
+    "trade": {
+      "openBook": "Open the order book",
+      "spread": "spread {{value}}",
+      "spreadDetail": "spread {{value}} · {{pct}}%",
+      "orderTypeStop": "Stop",
+      "switchSizeCurrency": "Switch size currency",
+      "max": "Max",
+      "orderValue": "Order value",
+      "available": "Available",
+      "riskUsed": "Risk used",
+      "riskUsedValue": "{{used}} of {{cap}} cap",
+      "riskUsedNoCap": "{{used}} of portfolio",
+      "slideToBuy": "Slide to buy on {{venue}}",
+      "slideToSell": "Slide to sell on {{venue}}",
+      "connectBody": "Prices and the book are live without it — placing orders needs an API key with trade permission.",
+      "noPrice": "No live price to size this swap",
+      "auto": "Auto",
+      "bookLoading": "Waiting for the book…",
+      "pressureBuy": "B {{pct}}%",
+      "pressureSell": "{{pct}}% S"
+    },
+    "chart": {
+      "pinned": "Pinned",
+      "moreLongPress": "More · long-press to pin",
+      "drawingTools": "Drawing tools",
+      "clearConfirm": "Clear every drawing on this chart?",
+      "sections": {
+        "channelsFib": "Channels & Fibonacci",
+        "annotate": "Annotate"
+      }
+    },
     "copilot": {},
-    "settings": {},
-    "pickers": {}
+    "settings": {
+      "accountsHeader": "Accounts & connections",
+      "terminalHeader": "Terminal",
+      "trading": "Trading",
+      "connected": "Connected",
+      "perOrder": "{{percent}}% per order"
+    },
+    "pickers": {
+      "searchPlaceholder": "Search any pair, ticker or name",
+      "filterCex": "CEX",
+      "filterDex": "DEX",
+      "filterEquities": "Equities",
+      "spot": "spot",
+      "onChain": "on-chain",
+      "equities": "equities",
+      "notListed": "not on {{venue}}",
+      "notListedCallout": "{{pair}} is not listed on {{venue}}. Picking it will switch the focused venue to {{other}}.",
+      "availableVenues": "Available",
+      "desktopOnlyVenues": "Needs the desktop app",
+      "desktopOnlyVenue": "Reachable only from the desktop app"
+    }
   }
 }
