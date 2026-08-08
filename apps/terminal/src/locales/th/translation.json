@@ -4600,6 +4600,7 @@
       "search": "ค้นหาคู่เทรด",
       "openSettings": "เปิดการตั้งค่า",
       "readOnly": "อ่านอย่างเดียว",
+      "readOnlyA11y": "{{status}}, อ่านอย่างเดียว",
       "live": {
         "live": "สด",
         "connecting": "…",

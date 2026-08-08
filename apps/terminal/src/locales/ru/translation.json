@@ -4630,6 +4630,7 @@
       "search": "Поиск пар",
       "openSettings": "Открыть настройки",
       "readOnly": "только чтение",
+      "readOnlyA11y": "{{status}}, только чтение",
       "live": {
         "live": "ОНЛАЙН",
         "connecting": "…",

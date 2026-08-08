@@ -4600,6 +4600,7 @@
       "search": "ペアを検索",
       "openSettings": "設定を開く",
       "readOnly": "読み取り専用",
+      "readOnlyA11y": "{{status}}、読み取り専用",
       "live": {
         "live": "ライブ",
         "connecting": "…",

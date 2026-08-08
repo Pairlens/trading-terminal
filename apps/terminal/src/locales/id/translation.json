@@ -4600,6 +4600,7 @@
       "search": "Cari pair",
       "openSettings": "Buka pengaturan",
       "readOnly": "hanya-baca",
+      "readOnlyA11y": "{{status}}, hanya-baca",
       "live": {
         "live": "LIVE",
         "connecting": "…",

@@ -361,7 +361,9 @@ function ConnectForm() {
           value={token}
           onChange={(e) => setToken(e.target.value)}
           placeholder={t('settings.notifications.telegram.tokenPlaceholder')}
-          className="font-mono text-xs"
+          // 16px below md: this input renders inside the mobile Settings
+          // screen, and any focusable field under 16px triggers iOS focus-zoom.
+          className="font-mono text-xs max-md:text-[16px]"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !busy) void handleConnect()
           }}

@@ -9,12 +9,13 @@
  * re-renders (see the performance budget in the blueprint).
  */
 import { memo } from 'react'
-import { ChevronDown, Search } from 'lucide-react'
+import { ChevronDown, Eye, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 import { useMobileFocus } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
+import type { PointerEvent } from 'react'
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useMarketData } from '@/lib/market-data-provider'
@@ -76,6 +77,58 @@ function LiveBadge({ state }: { state: VenueLiveState }) {
   )
 }
 
+/**
+ * Press feedback, driven by pointer events onto a DOM attribute.
+ *
+ * `:active` alone is not enough. iOS Safari only asserts it on elements the
+ * page has touch-listened, and even on Chromium it waits for the gesture
+ * recognizer's show-press delay — a fast tap can paint nothing at all. What
+ * the paint reads instead is `[data-pressed]`, set on pointerdown and cleared
+ * on the up/cancel that always follows (a touch pointer is implicitly
+ * captured, so the release lands on this element wherever the finger ends).
+ *
+ * These are module-level handlers writing straight to the node: no state, no
+ * re-render, and the bar stays `memo`-clean while a market streams. The CSS
+ * keeps `:active` alongside for keyboard activation.
+ */
+const PRESS = {
+  onPointerDown: (e: PointerEvent<HTMLElement>) =>
+    e.currentTarget.setAttribute('data-pressed', 'true'),
+  onPointerUp: (e: PointerEvent<HTMLElement>) =>
+    e.currentTarget.removeAttribute('data-pressed'),
+  onPointerCancel: (e: PointerEvent<HTMLElement>) =>
+    e.currentTarget.removeAttribute('data-pressed'),
+  onPointerLeave: (e: PointerEvent<HTMLElement>) =>
+    e.currentTarget.removeAttribute('data-pressed'),
+} as const
+
+/**
+ * "You can watch this venue, you cannot trade on it."
+ *
+ * A TAG where there used to be a bare lowercase word hanging off the LIVE
+ * badge: same 15px height, same radius, filled and muted where that one is
+ * outlined and green. Two sibling status marks, one of them clearly the
+ * quieter — which is what the second line failed to look like before.
+ *
+ * It carries no label, and that is arithmetic rather than taste. The venue
+ * chip had ~3px of slack at 402px (measured: chip 144 against a row budget of
+ * 279 it shares with a pair chip that fits `BTC-USDT` exactly), while the word
+ * alone measured 37.9px in English and 51px in French — so any tag drawn
+ * around it costs 20-35px the row does not have, and the pair symbol pays in
+ * ellipsis. The glyph is 17px, so the chip HANDS BACK ~25px instead: English
+ * gains headroom and French and Spanish stop truncating at all.
+ *
+ * The words survive where they can afford to: the chip's own aria-label says
+ * them, and the venue picker one tap away spells out the capability in full.
+ */
+function ViewOnlyTag() {
+  return (
+    <span className="pl-view-tag flex h-[15px] shrink-0 items-center justify-center rounded px-[3.5px]">
+      <Eye aria-hidden className="size-[10px]" strokeWidth={2.1} />
+    </span>
+  )
+}
+
 function initialsFrom(name: string): string {
   const derived = name
     .split(/[\s.@_-]+/)
@@ -114,6 +167,11 @@ export const ContextBar = memo(function ContextBar({
         : 'offline'
   const userName = session?.user.name ?? session?.user.email ?? ''
   const initials = userName ? initialsFrom(userName) : 'PL'
+  const readOnly = permission === 'read' && liveState !== 'offline'
+  // The tag is a glyph (see ViewOnlyTag), so the words have to survive
+  // somewhere: the chip's accessible name is the only place left that a
+  // screen reader reaches without opening the picker.
+  const liveA11y = t(LIVE_A11Y_KEY[liveState])
 
   return (
     <div
@@ -123,21 +181,36 @@ export const ContextBar = memo(function ContextBar({
       {/* Pair chip. The only element on the row allowed to truncate: at 402px
           a 13-character symbol, a venue name, a read-only tag and two 44px
           buttons do not all fit, and of those the symbol is the one the hero
-          price and the asset avatar both restate. */}
+          price and the asset avatar both restate.
+
+          `flex-auto`, NOT `flex-1`: basis `auto` is what lets the two chips
+          start at their own content widths and split only the LEFTOVER
+          between them. With `flex-1`'s basis of 0 the row would hand a short
+          pair the same width as a long venue name and both would sit in dead
+          air; with basis `auto` a caret pinned right stays a few pixels from
+          the text it belongs to, and a deficit still lands here because this
+          is the only chip that may shrink (`min-w-0` against the venue's
+          `min-w-fit`). */}
       <button
         aria-label={t('mobile.shell.changePair')}
-        className="pl-glass pointer-events-auto flex h-11 min-w-0 shrink items-center gap-[5px] py-0 pl-[5px] pr-1.5"
+        className="pl-glass pl-press pointer-events-auto flex h-11 min-w-0 flex-auto items-center justify-between gap-1.5 py-0 pl-[5px] pr-1.5"
         onClick={onOpenPairPicker}
         type="button"
+        {...PRESS}
       >
-        <PairAvatar
-          assetClass={assetClassMap[focusedPair]}
-          base={base}
-          className="size-[30px] text-[9px]"
-          size="sm"
-        />
-        <span className="min-w-0 truncate font-mono text-[15px] font-semibold text-foreground">
-          {focusedPair}
+        {/* The caret is `justify-between`'d to the chip's right edge, so
+            everything it is NOT has to be one group — three loose children
+            would spread the avatar away from the symbol instead. */}
+        <span className="flex min-w-0 items-center gap-[5px]">
+          <PairAvatar
+            assetClass={assetClassMap[focusedPair]}
+            base={base}
+            className="size-[30px] text-[9px]"
+            size="sm"
+          />
+          <span className="min-w-0 truncate font-mono text-[15px] font-semibold text-foreground">
+            {focusedPair}
+          </span>
         </span>
         <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
       </button>
@@ -149,42 +222,42 @@ export const ContextBar = memo(function ContextBar({
       <button
         aria-label={t('mobile.shell.changeVenueA11y', {
           venue: venueLabel,
-          status: t(LIVE_A11Y_KEY[liveState]),
+          status: readOnly
+            ? t('mobile.shell.readOnlyA11y', { status: liveA11y })
+            : liveA11y,
         })}
-        className="pl-glass pointer-events-auto flex h-11 min-w-fit flex-1 items-center gap-1.5 py-0 pl-[5px] pr-1.5"
+        className="pl-glass pl-press pointer-events-auto flex h-11 min-w-fit flex-auto items-center justify-between gap-1.5 py-0 pl-[5px] pr-1.5"
         onClick={onOpenVenuePicker}
         type="button"
+        {...PRESS}
       >
-        <span className="pl-venue-mark shrink-0 text-[10px]">
-          {venue?.iconUrl ? (
-            <img
-              alt=""
-              className="size-full object-cover"
-              src={venue.iconUrl}
-            />
-          ) : (
-            venueLabel.slice(0, 3).toUpperCase()
-          )}
-        </span>
-        {/* Name over state. Stacking is what buys the badge its room: side by
-            side, `LIVE` plus `read-only` plus a long venue name is wider than
-            the chip's share of a 402px row, and this chip is the one that
-            refuses to shrink. Both lines stay `whitespace-nowrap` so the
-            deficit still lands on the pair chip, exactly as before. */}
-        <span className="flex shrink-0 flex-col items-start gap-[3px]">
-          <span className="whitespace-nowrap text-left text-[13.5px] font-semibold leading-none text-foreground">
-            {venueLabel}
+        <span className="flex items-center gap-1.5">
+          <span className="pl-venue-mark shrink-0 text-[10px]">
+            {venue?.iconUrl ? (
+              <img
+                alt=""
+                className="size-full object-cover"
+                src={venue.iconUrl}
+              />
+            ) : (
+              venueLabel.slice(0, 3).toUpperCase()
+            )}
           </span>
-          <span className="flex items-center gap-1">
-            <LiveBadge state={liveState} />
-            {/* A venue that serves nothing is not "read-only", it is nothing —
-                and dropping the tag is also what keeps the two-word line from
-                pushing the pair symbol into an ellipsis. */}
-            {permission === 'read' && liveState !== 'offline' ? (
-              <span className="shrink-0 whitespace-nowrap text-[9px] font-medium leading-none tracking-[-0.01em] text-muted-foreground">
-                {t('mobile.shell.readOnly')}
-              </span>
-            ) : null}
+          {/* Name over state. Stacking is what buys the badge its room: side
+              by side, `LIVE` plus a mode tag plus a long venue name is wider
+              than the chip's share of a 402px row, and this chip is the one
+              that refuses to shrink. Both lines stay `whitespace-nowrap` so
+              the deficit still lands on the pair chip, exactly as before. */}
+          <span className="flex shrink-0 flex-col items-start gap-[3px]">
+            <span className="whitespace-nowrap text-left text-[13.5px] font-semibold leading-none text-foreground">
+              {venueLabel}
+            </span>
+            <span className="flex items-center gap-1">
+              <LiveBadge state={liveState} />
+              {/* A venue that serves nothing is not "read-only", it is
+                  nothing — so an offline venue shows the liveness mark alone. */}
+              {readOnly ? <ViewOnlyTag /> : null}
+            </span>
           </span>
         </span>
         <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
@@ -193,25 +266,24 @@ export const ContextBar = memo(function ContextBar({
       {/* Search */}
       <button
         aria-label={t('mobile.shell.search')}
-        className="pl-glass pl-hit-44 pointer-events-auto flex size-10 shrink-0 items-center justify-center"
+        className="pl-glass pl-press pl-hit-44 pointer-events-auto flex size-10 shrink-0 items-center justify-center"
         onClick={onOpenSearch}
         type="button"
+        {...PRESS}
       >
         <Search className="size-[18px] text-foreground" />
       </button>
 
-      {/* Avatar → Settings (Settings is not a tab) */}
+      {/* Avatar → Settings (Settings is not a tab).
+          Its fill and ring live in `.pl-ctx-avatar` rather than inline: a
+          press state is a `:active` rule, and an inline `style` wins over
+          every class it would be written in. */}
       <button
         aria-label={t('mobile.shell.openSettings')}
-        className="pl-hit-44 pointer-events-auto flex size-10 shrink-0 items-center justify-center rounded-full text-[12.5px] font-semibold text-foreground"
+        className="pl-ctx-avatar pl-press pl-hit-44 pointer-events-auto flex size-10 shrink-0 items-center justify-center rounded-full text-[12.5px] font-semibold text-foreground"
         onClick={onOpenSettings}
-        style={{
-          background:
-            'linear-gradient(135deg, color-mix(in oklch, var(--primary) 32%, transparent), color-mix(in oklch, var(--primary) 9%, transparent))',
-          boxShadow:
-            'inset 0 0 0 1px color-mix(in oklch, var(--primary) 24%, transparent)',
-        }}
         type="button"
+        {...PRESS}
       >
         {initials}
       </button>

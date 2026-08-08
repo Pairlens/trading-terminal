@@ -289,6 +289,56 @@
     transition: none !important;
   }
 
+  /* The exit, owned outright.
+
+     It has to be an ANIMATION and not a transition: Radix's `Presence` keeps a
+     closing node mounted only while `animationName` is something, and waits
+     only for `animationend`. A transition-only exit is torn out of the DOM on
+     the close frame — the "it disappears all of a sudden" this rule fixes.
+
+     vaul ships such an animation (`slideToBottom`) and it is not usable here
+     for two reasons, both measured at 402×874:
+       · it travels to `--initial-transform` (default `100%` = the element's
+         OWN height). A snap sheet is `top: 0` and sized for its LARGEST snap,
+         so 100% left 66px of it still on screen when the animation ended and
+         the node vanished — while the drawing toolbar, which rides the sheet's
+         position, was still 10% out and finished its entrance alone afterwards.
+       · its start is IMPLICIT (a `to`-only keyframe), so it begins wherever
+         vaul's inline transform happens to be. On release vaul snaps the sheet
+         back to the nearest snap point before we get to close it — a drag of
+         more than 40% of the viewport teleported the sheet from the finger's
+         position back UP to its resting height and slid out from there.
+
+     So both ends are stated explicitly, in px the component computes: `from`
+     is where the sheet actually is at the moment of dismissal (the release
+     position for a drag, the resting snap otherwise) and `to` is the viewport.
+     Nothing vaul writes to the inline transform during the exit can move it.
+
+     `transition: none` alongside is not redundant: transitions outrank
+     animations in the cascade, and vaul's snap-back sets one on `transform` in
+     the same tick. Blink happens to skip a transition on a property an
+     animation already owns; WebKit is the shell's other engine and the spec is
+     on the transition's side, so the ambiguity is removed rather than relied
+     on.
+
+     `pointer-events` for the same reason the outgoing `.pl-sheet-scroll` drops
+     them mid-swap: half a second of a leaving sheet must not swallow a tap
+     meant for the chart it is uncovering. */
+  .pl-sheet[data-state='closed'] {
+    animation: plSheetOut var(--pl-sheet-dur) var(--pl-sheet-ease) forwards !important;
+    transition: none !important;
+    pointer-events: none;
+  }
+
+  @keyframes plSheetOut {
+    from {
+      transform: translate3d(0, var(--pl-sheet-exit-from, 0px), 0);
+    }
+    to {
+      transform: translate3d(0, var(--pl-sheet-exit-to, 100%), 0);
+    }
+  }
+
   /* The panel content fades through the swap; the sheet itself does not.
 
      `padding-bottom` is the below-the-fold remainder of the largest snap (see
@@ -349,6 +399,31 @@
 
   .pl-sheet-copilot::before {
     opacity: 1;
+  }
+
+  /* ONE magic hairline per surface.
+
+     The desktop `CopilotPanel` paints its own 3px `.magic-gradient` seam across
+     the top of its column, which is right in a pane with nothing above it. In
+     the sheet that seam lands 21px lower — the grab strip's height — and the
+     phone shows two parallel gradients with the handle between them. The
+     sheet's wins: it is the one that follows the rounded silhouette and fades
+     in as the panel swaps. Scoped to the mobile wrapper, so the desktop pane
+     keeps its own.
+
+     The wrapper also pins every text field it can grow to 16px. iOS Safari
+     zooms the viewport when a focused field is under that, and this is the one
+     screen where the keyboard is guaranteed to open; pinning the ELEMENT KINDS
+     rather than today's `textarea` is what keeps that true when the composer
+     changes shape. `!important` because the utilities layer outranks this one,
+     and a `text-sm` on some future field would otherwise win. */
+  .pl-copilot-mobile .magic-gradient {
+    display: none;
+  }
+
+  .pl-copilot-mobile
+    :is(input, textarea, [contenteditable]:not([contenteditable='false'])) {
+    font-size: 16px !important;
   }
 
   /* A sheet-coloured sticky strip INSIDE a sheet's scroll region (the
@@ -592,6 +667,88 @@
     inset: -8px;
   }
 
+  /* Press feedback for the context bar's four controls.
+
+     A wash step PLUS a 0.965 scale, because on a phone either one alone is
+     invisible: the wash is under the thumb that caused it, and a scale that
+     small is easy to miss on a 44px chip — together they read instantly.
+     `--pl-wash-strong` is the same step MobileRow presses with, so a chip and
+     a list row answer a finger the same way.
+
+     `[data-pressed]` is the touch path and `:active` the keyboard one — see
+     the PRESS handlers in context-bar.tsx for why the attribute exists at
+     all. Neither is React state: a press is paint, and this bar is `memo`
+     precisely so a streaming market never re-renders it.
+
+     The fill is an inset shadow with a 999px spread rather than a
+     `background`, because `.pl-glass` owns `background` and replacing it
+     would drop the blur/saturate backdrop for the length of the press. It is
+     declared LAST so the ring and the sheen still paint over it (inset
+     shadows stack first-on-top). */
+  .pl-press {
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      transform 130ms cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 130ms ease-out;
+  }
+
+  /* Fine pointers only. A touch device keeps `:hover` asserted on whatever it
+     last tapped, so a chip that opened a sheet would still look hovered when
+     the sheet closes — the classic sticky-hover bug. Declared BEFORE the
+     pressed rule: they tie on specificity, and a press on a fine pointer must
+     win by source order or the hover fill paints over it. */
+  @media (hover: hover) and (pointer: fine) {
+    .pl-press:hover {
+      box-shadow:
+        inset 0 1px 0 var(--pl-wash-strong),
+        inset 0 0 0 1px var(--pl-edge),
+        inset 0 0 0 999px var(--pl-wash);
+    }
+  }
+
+  .pl-press[data-pressed],
+  .pl-press:active {
+    transform: scale(0.965);
+    box-shadow:
+      inset 0 1px 0 var(--pl-wash-strong),
+      inset 0 0 0 1px var(--pl-edge-strong),
+      inset 0 0 0 999px var(--pl-wash-strong);
+    /* The press is the answer; the release is what eases. */
+    transition-duration: 60ms;
+  }
+
+  /* The settings avatar. Same press language, but it keeps its primary-tinted
+     ring through the press instead of taking `.pl-press`'s neutral one — the
+     rule is one specificity step above it for exactly that. */
+  .pl-ctx-avatar {
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklch, var(--primary) 32%, transparent),
+      color-mix(in oklch, var(--primary) 9%, transparent)
+    );
+    box-shadow: inset 0 0 0 1px
+      color-mix(in oklch, var(--primary) 24%, transparent);
+  }
+
+  /* Before the pressed rule for the same source-order reason as `.pl-press`. */
+  @media (hover: hover) and (pointer: fine) {
+    .pl-ctx-avatar.pl-press:hover {
+      box-shadow:
+        inset 0 0 0 1px color-mix(in oklch, var(--primary) 34%, transparent),
+        inset 0 0 0 999px var(--pl-wash);
+    }
+  }
+
+  /* A heavier step than the glass chips take: 40px of round gradient shows a
+     0.965 squeeze far less than a 147px pill does, so the fill has to carry
+     more of the signal. */
+  .pl-ctx-avatar.pl-press[data-pressed],
+  .pl-ctx-avatar.pl-press:active {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in oklch, var(--primary) 52%, transparent),
+      inset 0 0 0 999px var(--pl-wash-heavy);
+  }
+
   /* The venue chip's LIVE tag.
 
      It replaced a dot that faded to 0.35 and back forever, which is the one
@@ -628,6 +785,18 @@
   .pl-live-badge[data-state='offline'] .pl-live-mark {
     background: transparent;
     box-shadow: inset 0 0 0 1px currentColor;
+  }
+
+  /* The venue chip's mode tag, sibling to the LIVE badge above.
+
+     Filled where that one is outlined, and muted where it is green: two marks
+     of the same height and radius, one of which is clearly the quieter. A
+     bare `--border` outline was the first attempt and it disappeared next to
+     the green ring — the glyph read as loose furniture rather than a tag. */
+  .pl-view-tag {
+    background: var(--pl-wash-heavy);
+    box-shadow: inset 0 0 0 1px var(--pl-edge);
+    color: color-mix(in oklab, var(--foreground) 72%, transparent);
   }
 
   /* 28px CIRCULAR venue mark — white plate, dark short name.
@@ -763,6 +932,16 @@
     }
   }
 
+  /* The reduced-motion exit. It cannot simply be `animation: none`: Radix's
+     Presence unmounts a closing sheet the instant it sees no animation, and
+     the node vanishing on the close frame is the flicker this round removed.
+     So the travel is REPLACED by a fade rather than dropped. */
+  @keyframes plSheetFadeOut {
+    to {
+      opacity: 0;
+    }
+  }
+
   /* Reduced motion is a jump cut, not a slower cut: every one of these is a
      position or a height change, and easing them slowly is worse for someone
      who asked for less movement than not easing them at all. */
@@ -770,6 +949,17 @@
     .pl-live-badge[data-state='live'] .pl-live-mark::after,
     .pl-live-badge[data-state='connecting'] .pl-live-mark {
       animation: none;
+    }
+
+    /* A press still has to answer, so the fill stays and only the squeeze
+       goes — the one piece of this feedback that is movement. */
+    .pl-press {
+      transition: box-shadow 90ms ease-out;
+    }
+
+    .pl-press[data-pressed],
+    .pl-press:active {
+      transform: none;
     }
 
     /* The one exception to the jump-cut rule above: a screen that replaces
@@ -782,6 +972,17 @@
 
     .pl-sheet {
       transition: none !important;
+    }
+
+    /* `!important` and not specificity: vaul declares `slideToBottom` from an
+       injected, UNLAYERED stylesheet, which outranks anything in this layer
+       until importance flips the layer order. 140ms so the sheet is gone about
+       as fast as a jump cut, with just enough of a fade to say it left rather
+       than blinking out. */
+    .pl-sheet[data-state='closed'] {
+      animation-name: plSheetFadeOut !important;
+      animation-duration: 140ms !important;
+      animation-timing-function: linear !important;
     }
 
     .pl-sheet-scroll,
@@ -841,8 +1042,7 @@ html[data-viewport='mobile'] [data-slot='dropdown-menu-content'] {
 
 /* Pin the gesture surface: pan is the only browser-owned touch behavior, so
    double-taps and stray pinches never zoom the page and rubber-banding never
-   drags the fixed chrome (the viewport meta's maximum-scale=1 covers the
-   input-focus auto-zoom). The chart's own pinch-zoom is unaffected — the
+   drags the fixed chrome. The chart's own pinch-zoom is unaffected — the
    engine implements it in JS on its canvas. */
 html[data-viewport='mobile'],
 html[data-viewport='mobile'] body {

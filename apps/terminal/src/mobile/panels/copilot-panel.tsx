@@ -17,11 +17,13 @@
  *     Enter to submit, so a capture-phase listener swallows the plain-Enter
  *     keydown before the textarea's own handler sees it. The desktop component
  *     is not edited and not forked.
- *  2. **16px composer text, pinned.** iOS Safari zooms the viewport when a
- *     focused field is under 16px, which would break the sheet's geometry on
+ *  2. **16px text in every field, pinned.** iOS Safari zooms the viewport when
+ *     a focused field is under 16px, which would break the sheet's geometry on
  *     the one screen where the keyboard is guaranteed to open. The shared
- *     `Textarea` happens to be 16px below `md` today; this pins it there
- *     rather than depending on that.
+ *     `Textarea` happens to be 16px below `md` today; `.pl-copilot-mobile` in
+ *     mobile.css pins it there rather than depending on that, and pins it for
+ *     `input` and `contenteditable` too — the composer is free to change shape
+ *     without the rule having to be rediscovered.
  *  3. **The composer rides above the keyboard.** It is the last child of the
  *     panel's own flex column, so pinning it needs no sticky positioning —
  *     `interactive-widget=resizes-content` (the viewport meta) shrinks the
@@ -33,6 +35,11 @@
  *     note ended up under the tab bar. Padding and gaps are collapsed from
  *     here rather than in the shared component, which desktop also renders.
  *     Widening the card also costs it a line of description.
+ *  5. **One magic hairline.** The desktop panel paints its own gradient seam
+ *     across the top of its column; inside the sheet that lands 21px under the
+ *     sheet's own, and the phone showed two. `.pl-copilot-mobile` suppresses
+ *     the inner one — see the rule in mobile.css for why the sheet's is the
+ *     one that survives.
  *
  * No mobile header row: the design's `Co-pilot · BTC-USDT on OKX` line would
  * repeat the context bar 44px above it AND stack a second orb over the panel's
@@ -88,7 +95,7 @@ export default memo(function MobileCopilotPanel() {
 
   return (
     <div
-      className="flex h-full min-h-0 flex-col [&_[data-slot=empty-header]]:gap-2 [&_[data-slot=empty]>p]:mt-1 [&_[data-slot=empty]>span>button]:mt-3 [&_[data-slot=empty]]:max-w-[300px] [&_[data-slot=empty]]:gap-3 [&_[data-slot=empty]]:p-0 [&_form_button]:size-10 [&_form_button]:rounded-full [&_textarea]:min-h-10 [&_textarea]:text-[16px]"
+      className="pl-copilot-mobile flex h-full min-h-0 flex-col [&_[data-slot=empty-header]]:gap-2 [&_[data-slot=empty]>p]:mt-1 [&_[data-slot=empty]>span>button]:mt-3 [&_[data-slot=empty]]:max-w-[300px] [&_[data-slot=empty]]:gap-3 [&_[data-slot=empty]]:p-0 [&_form_button]:size-10 [&_form_button]:rounded-full [&_textarea]:min-h-10"
       onKeyDownCapture={swallowEnter}
     >
       <CopilotPanel

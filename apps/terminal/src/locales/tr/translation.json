@@ -4600,6 +4600,7 @@
       "search": "Parite ara",
       "openSettings": "Ayarları aç",
       "readOnly": "yalnızca okuma",
+      "readOnlyA11y": "{{status}}, yalnızca okuma",
       "live": {
         "live": "CANLI",
         "connecting": "…",

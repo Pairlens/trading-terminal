@@ -269,7 +269,7 @@ function AccountDetail({
         <div className="flex items-center gap-2">
           <Input
             aria-label={t('accounts.name')}
-            className="h-11 flex-1 text-[15px]"
+            className="h-11 flex-1 text-[16px]"
             enterKeyHint="done"
             onChange={(event) => setLabel(event.target.value)}
             onKeyDown={(event) => {

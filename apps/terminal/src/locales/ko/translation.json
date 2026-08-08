@@ -4600,6 +4600,7 @@
       "search": "페어 검색",
       "openSettings": "설정 열기",
       "readOnly": "읽기 전용",
+      "readOnlyA11y": "{{status}}, 읽기 전용",
       "live": {
         "live": "실시간",
         "connecting": "…",

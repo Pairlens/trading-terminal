@@ -4600,6 +4600,7 @@
       "search": "搜尋交易對",
       "openSettings": "開啟設定",
       "readOnly": "僅讀取",
+      "readOnlyA11y": "{{status}}，僅讀取",
       "live": {
         "live": "即時",
         "connecting": "…",

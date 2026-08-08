@@ -4630,6 +4630,7 @@
       "search": "Szukaj par",
       "openSettings": "Otwórz ustawienia",
       "readOnly": "tylko do odczytu",
+      "readOnlyA11y": "{{status}}, tylko do odczytu",
       "live": {
         "live": "NA ŻYWO",
         "connecting": "…",

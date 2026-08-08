@@ -4600,6 +4600,7 @@
       "search": "Pesquisar pares",
       "openSettings": "Abrir configurações",
       "readOnly": "somente leitura",
+      "readOnlyA11y": "{{status}}, somente leitura",
       "live": {
         "live": "AO VIVO",
         "connecting": "…",

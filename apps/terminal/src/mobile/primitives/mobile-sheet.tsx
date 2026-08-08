@@ -31,6 +31,19 @@
  *
  * A full-height sheet (`band === 'full'`, the pair and venue pickers) has
  * nowhere to expand to and keeps the original top-anchored geometry verbatim.
+ *
+ * ## The exit
+ *
+ * Closing has to be a CSS ANIMATION and not a transition: Radix's `Presence`
+ * keeps a closing node mounted only while `animationName` is something, and
+ * waits only for `animationend`. vaul does ship one (`slideToBottom`, gated on
+ * `data-vaul-snap-points=false` — an attribute that is `isOpen && hasSnapPoints`
+ * and so flips false exactly when the sheet closes), and it is not usable here:
+ * it travels to `--initial-transform`, which is short of the viewport for a
+ * snap sheet, and it starts wherever vaul's inline transform happens to be
+ * after its release logic has repositioned the sheet. Both ends are therefore
+ * restated by `.pl-sheet[data-state='closed']` in mobile.css, from px this
+ * component computes. The full argument lives on that rule.
  */
 import {
   createContext,
@@ -56,6 +69,7 @@ import {
 } from '../lib/mobile-geometry'
 import type { SheetSnaps } from '../lib/mobile-geometry'
 import type {
+  CSSProperties,
   ReactNode,
   PointerEvent as ReactPointerEvent,
   RefObject,
@@ -179,6 +193,20 @@ const DRIVING_CLASS = 'pl-sheet-driving'
  */
 const SETTLE_MS = 620
 
+/**
+ * How long tracking outlives a CLOSE.
+ *
+ * A dismiss is a gesture the sheet performs on its own: it animates out over
+ * the same 0.5s curve (see The exit, above), and the chart band's chrome has to
+ * RIDE that travel rather than race it with a transition of its own.
+ * Deliberately longer than the 0.5s exit, because the last frames
+ * are exactly the ones that hand the drawing toolbar its final few percent — a
+ * settle that fires early snaps the vars, drops `.pl-sheet-driving`, and lets a
+ * SECOND animation (the toolbar's own transition) finish the entrance after the
+ * sheet has already gone. That double-drive is what read as a flicker.
+ */
+const EXIT_TRACK_MS = 820
+
 function writeProgressVars(dock: number, expand: number): void {
   const root = document.documentElement
   root.style.setProperty(DOCK_VAR, dock.toFixed(3))
@@ -232,6 +260,20 @@ function useSheetProgressVars(
         parseTranslateY(getComputedStyle(element).transform))
       : parseTranslateY(getComputedStyle(element).transform)
     if (translateY !== null) {
+      // While the sheet is LEAVING, mirror the animation's position back into
+      // the inline transform it is overriding. Nothing sees it — an animation
+      // outranks an inline style — until the sheet is reopened mid-exit, at
+      // which point the animation stops applying and the browser falls back to
+      // exactly this value. Without the mirror it falls back to the resting
+      // snap instead, and the sheet pops the length of the screen into place;
+      // the transition that carries a resumed entrance has to have somewhere
+      // honest to start. (Blink's "before-change style" folds a removed
+      // animation out and reads the underlying value, which is why the obvious
+      // fixes — pinning the position in an effect or a frame callback — arrive
+      // after that transition has already been started from the wrong place.)
+      if (!live.current.open && !dragging) {
+        element.style.transform = `translate3d(0, ${translateY}px, 0)`
+      }
       const { dock, expand } = sheetProgress(translateY, viewport, snaps)
       writeProgressVars(dock, expand)
     }
@@ -254,9 +296,26 @@ function useSheetProgressVars(
     if (!frameRef.current) frameRef.current = requestAnimationFrame(step)
   }, [step])
 
-  // Everything that is NOT a finger — opening, closing, a tab switch — lands
-  // here: write the target once and let the consumers' own transitions carry
-  // it on vaul's curve, in lockstep with the sheet's travel.
+  // Every dismiss path — drag past the default snap, vaul's own flick, a tap
+  // on the chart, Android back, a tab tap — is tracked frame by frame, exactly
+  // like a finger. Declared ABOVE the settled-value effect so `frameRef` is
+  // already armed when that one asks: otherwise a tab-tap dismiss writes dock 0
+  // on the close frame and the toolbar arrives half a second before the sheet
+  // has actually left.
+  const wasOpenRef = useRef(state.open)
+  useEffect(() => {
+    const closing = wasOpenRef.current && !state.open
+    wasOpenRef.current = state.open
+    if (!closing || !state.tracked) return
+    settleUntilRef.current = performance.now() + EXIT_TRACK_MS
+    document.documentElement.classList.add(DRIVING_CLASS)
+    if (!frameRef.current) frameRef.current = requestAnimationFrame(step)
+  }, [state.open, state.tracked, step])
+
+  // Everything that is NOT a finger and NOT a dismiss — opening, an expand, a
+  // tab switch between two panels — lands here: write the target once and let
+  // the consumers' own transitions carry it on vaul's curve, in lockstep with
+  // the sheet's travel.
   useEffect(() => {
     if (!state.tracked || frameRef.current) return
     writeProgressVars(state.open ? 1 : 0, state.open && state.expanded ? 1 : 0)
@@ -400,6 +459,53 @@ export const MobileSheet = memo(function MobileSheet({
   })
 
   const activeSnapPoint = snapPoints ? snapPoints[expanded ? 1 : 0] : undefined
+
+  /**
+   * The snap vaul is told about — frozen for the length of the exit.
+   *
+   * Closing resets `expanded`, and vaul re-snaps the sheet the instant its
+   * `activeSnapPoint` prop changes: it writes an inline transform on the very
+   * frame the exit animation starts. Dismissing from the expanded snap
+   * therefore teleported the sheet 178px DOWN (measured at 402×874) before the
+   * exit had drawn a frame, and the animation then ran from the wrong place.
+   * While the sheet is closing it keeps the snap it was at, so the exit starts
+   * exactly where the user left it. The mirror still fires immediately —
+   * `onExpandedChange(false)` is what tells the chart band to stop treating the
+   * sheet as expanded, and that has to be true the moment it starts leaving.
+   */
+  const exitSnapRef = useRef(activeSnapPoint)
+  if (open) exitSnapRef.current = activeSnapPoint
+  const vaulSnapPoint = open ? activeSnapPoint : exitSnapRef.current
+
+  /**
+   * Reopening while the previous exit is still on screen.
+   *
+   * The exit keeps the SAME node mounted for half a second, and both of the
+   * things that would normally place a reopening sheet — the inline transform
+   * vaul wrote and the `--snap-point-height` rule behind it — still say
+   * "resting". A panel tapped 200ms after the last one was dismissed therefore
+   * popped straight to its snap instead of travelling to it, because the
+   * position the sheet was VISUALLY at belonged to an animation that stopped
+   * applying the instant `data-state` flipped back to open.
+   *
+   * The frame loop has already mirrored the exit into the inline transform
+   * (see `useSheetProgressVars`), so the sheet's position is honest the moment
+   * the animation stops applying. All that is left is to hand the target back:
+   * clearing the inline value lets vaul's `--snap-point-height` rule own the
+   * destination again, and `.pl-sheet`'s transition carries the sheet there
+   * from wherever the exit had got to. Reopening the SAME panel is why this is
+   * unconditional rather than left to vaul — its own snap effect only fires
+   * when the snap point changes, and a sheet reopened onto the panel it just
+   * closed would stay parked at the bottom of the screen.
+   *
+   * A fresh mount has no inline transform, so the common path is a no-op.
+   */
+  useLayoutEffect(() => {
+    if (!open) return
+    const element = sheetRef.current
+    if (element?.style.transform) element.style.transform = ''
+  }, [open])
+
   const handleSnapChange = useCallback(
     (snapPoint: number | string | null) => {
       if (!snapPoints) return
@@ -416,12 +522,31 @@ export const MobileSheet = memo(function MobileSheet({
    * — it consumes a history entry. The latch clears when the sheet reopens.
    */
   const closedRef = useRef(false)
+  /**
+   * Where the sheet IS at the moment of dismissal — the exit animation's
+   * `from`, in px. Null when the dismiss did not come through here (a tab tap,
+   * a tap on the chart), in which case the sheet is at rest and its snap is the
+   * answer.
+   *
+   * Read here rather than in an effect because this is the last moment the
+   * inline transform still says where the finger left the sheet: vaul's own
+   * release logic runs immediately after ours and snaps the sheet back to the
+   * nearest snap point, which is what used to teleport a long drag-dismiss
+   * back up before the exit had drawn a frame.
+   */
+  const exitFromRef = useRef<number | null>(null)
   useEffect(() => {
-    if (open) closedRef.current = false
+    if (!open) return
+    closedRef.current = false
+    exitFromRef.current = null
   }, [open])
   const requestClose = useCallback(() => {
     if (closedRef.current) return
     closedRef.current = true
+    const element = sheetRef.current
+    exitFromRef.current = element
+      ? parseTranslateY(getComputedStyle(element).transform)
+      : null
     onOpenChange(false)
   }, [onOpenChange])
   const handleOpenChange = useCallback(
@@ -517,17 +642,64 @@ export const MobileSheet = memo(function MobileSheet({
 
   const activeHeight = expanded ? snaps.expandedHeight : snaps.defaultHeight
 
+  /**
+   * Where the sheet IS on the render that closes it, for every dismiss that
+   * did NOT come through `requestClose` — a tap on the chart, a tab tap,
+   * Android back. Those are parent-driven: `open` simply flips, and the
+   * resting snap is only the right answer when the sheet was actually AT it.
+   * Interrupt an entrance or a settle and it is not, and `plSheetOut`'s
+   * explicit `from` would teleport the sheet the rest of its travel before it
+   * starts sliding out.
+   *
+   * Read during RENDER, because this is the last moment the DOM still carries
+   * the pre-close matrix: by the time a layout effect runs, `data-state` is
+   * already 'closed', `transition: none` has cancelled the travel and
+   * `getComputedStyle` reports the exit animation's own `from`.
+   */
+  const closingFromRef = useRef<number | null>(null)
+  const wasOpenForExitRef = useRef(open)
+  if (open) {
+    closingFromRef.current = null
+  } else if (wasOpenForExitRef.current) {
+    const element = sheetRef.current
+    closingFromRef.current = element
+      ? parseTranslateY(getComputedStyle(element).transform)
+      : null
+  }
+  wasOpenForExitRef.current = open
+
+  // The exit's two ends, in px. `from` is the release position when the
+  // dismiss came from a drag (sampled in `requestClose`, BEFORE vaul's release
+  // logic snaps the sheet back), else the live position on the closing render,
+  // else the resting snap — the FROZEN snap, because `expanded` has already
+  // been reset by the time this render runs and a sheet dismissed from the
+  // expanded snap would otherwise start its exit 178px below where it is.
+  const restingTranslate =
+    vaulSnapPoint === undefined ? 0 : viewport - parseFloat(vaulSnapPoint)
+  const exitFrom =
+    exitFromRef.current ?? closingFromRef.current ?? restingTranslate
+
   return (
     <>
       {/* Resolves `--pl-chart-top` (and its safe-area inset) to px. Zero-width,
           hidden, never in flow — its only job is to be measurable. */}
       <div aria-hidden className="pl-chart-top-probe" ref={probeRef} />
       <Drawer.Root
-        activeSnapPoint={activeSnapPoint}
+        activeSnapPoint={vaulSnapPoint}
         dismissible
         modal={false}
         onOpenChange={handleOpenChange}
         open={open}
+        // vaul's own keyboard handling is OFF. With `repositionInputs` it
+        // answers a `visualViewport` resize by writing `height` and `bottom`
+        // straight onto this element — clobbering the React-controlled height
+        // the snap geometry depends on, and pinning a `bottom` on a sheet that
+        // is positioned by `top` + `height`. The keyboard is already handled,
+        // once, by `interactive-widget=resizes-content` in the viewport meta:
+        // the layout viewport shrinks, `useShellMetrics` re-measures, the snaps
+        // are recomputed and vaul re-translates to them. Two mechanisms for one
+        // event is what left the co-pilot composer's sheet mis-sized on focus.
+        repositionInputs={false}
         setActiveSnapPoint={handleSnapChange}
         snapPoints={snapPoints}
       >
@@ -551,10 +723,32 @@ export const MobileSheet = memo(function MobileSheet({
             // a height that changed with the snap would relayout the panel on
             // every drag frame. Full mode: both `top` and `bottom` set, so the
             // height is implicit and vaul's transform drag still works.
+            // `--pl-sheet-exit-*` are the two ends of the exit animation (the
+            // `.pl-sheet[data-state='closed']` rule in mobile.css); the
+            // ENTRANCE reads `--initial-transform`, which is vaul's own
+            // escape hatch for the same number. Both default to `100%` — the
+            // element's own height — which is right for a full-height sheet
+            // (`top` + `bottom: 0`) and wrong for a snap sheet, which is
+            // `top: 0` and sized for its LARGEST snap: 100% of it is short of
+            // the viewport by the chart band, so the sheet both arrived from
+            // and left towards a position still 66px on screen (measured at
+            // 402×874). Everything here is px off `window.innerHeight`, never
+            // `svh` — the same number vaul computes its snap offsets from.
             style={
               snapPoints
-                ? { height: `${snaps.expandedHeight}px` }
-                : { top: sheetTop(band) }
+                ? ({
+                    height: `${snaps.expandedHeight}px`,
+                    '--initial-transform':
+                      viewport > 0 ? `${viewport}px` : '100%',
+                    '--pl-sheet-exit-from': `${Math.round(exitFrom)}px`,
+                    '--pl-sheet-exit-to':
+                      viewport > 0 ? `${viewport}px` : '100%',
+                  } as CSSProperties)
+                : ({
+                    top: sheetTop(band),
+                    '--pl-sheet-exit-from': '0px',
+                    '--pl-sheet-exit-to': '100%',
+                  } as CSSProperties)
             }
           >
             <Drawer.Title className="sr-only">{label}</Drawer.Title>

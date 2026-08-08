@@ -4600,6 +4600,7 @@
       "search": "Tìm cặp giao dịch",
       "openSettings": "Mở cài đặt",
       "readOnly": "chỉ đọc",
+      "readOnlyA11y": "{{status}}, chỉ đọc",
       "live": {
         "live": "LIVE",
         "connecting": "…",
