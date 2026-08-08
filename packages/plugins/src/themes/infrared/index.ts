@@ -103,6 +103,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#e8e8e844',
     volumeDown: '#e5393544',
   },
+  // Rose-tinted paper. The dark palette's neutral up-candle inverts into
+  // graphite ink and red stays the down — monochrome vs infrared, flipped.
+  chartLight: {
+    background: '#f9f3f4',
+    upCandle: '#493437',
+    downCandle: '#c32424',
+    crosshair: '#8b8082',
+    grid: '#e4dcdd',
+    axisText: '#716667',
+    axisBackground: '#f2eced',
+    hudBg: 'rgba(255, 253, 253, 0.93)',
+    hudText: '#1a0e0f',
+    volumeUp: '#49343744',
+    volumeDown: '#c3242444',
+  },
 }
 
 export const infraredManifest: PluginManifest = {

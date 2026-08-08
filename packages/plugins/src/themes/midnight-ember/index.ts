@@ -103,6 +103,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#e8873a44',
     volumeDown: '#8a9aaa44',
   },
+  // Warm paper. Ember orange up, ash slate down: the same warm/cool split
+  // the dark palette runs.
+  chartLight: {
+    background: '#f4ede8',
+    upCandle: '#b25e13',
+    downCandle: '#526678',
+    crosshair: '#8e8076',
+    grid: '#dfd6cf',
+    axisText: '#706761',
+    axisBackground: '#ede6e1',
+    hudBg: 'rgba(251, 248, 245, 0.93)',
+    hudText: '#221812',
+    volumeUp: '#b25e1344',
+    volumeDown: '#52667844',
+  },
 }
 
 export const midnightEmberManifest: PluginManifest = {

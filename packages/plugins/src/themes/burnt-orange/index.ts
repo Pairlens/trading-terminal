@@ -104,6 +104,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#ff660044',
     volumeDown: '#6366f144',
   },
+  // Warm paper. Burnt orange up, indigo down, both deepened — the orange
+  // stays the hero it is in dark mode.
+  chartLight: {
+    background: '#f7f5f2',
+    upCandle: '#bd4d00',
+    downCandle: '#4842cf',
+    crosshair: '#86837d',
+    grid: '#dfdcd8',
+    axisText: '#635c59',
+    axisBackground: '#f0eeeb',
+    hudBg: 'rgba(254, 253, 252, 0.93)',
+    hudText: '#15100e',
+    volumeUp: '#bd4d0044',
+    volumeDown: '#4842cf44',
+  },
 }
 
 export const burntOrangeManifest: PluginManifest = {

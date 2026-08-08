@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-export type { ThemeDefinition, ThemeVariableMap } from './types.ts'
+export type {
+  ThemeChartPalette,
+  ThemeDefinition,
+  ThemeVariableMap,
+} from './types.ts'
 export {
   pairlensThemeManifest,
   createPairlensThemePlugin,

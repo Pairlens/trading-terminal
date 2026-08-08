@@ -103,6 +103,23 @@ const theme: ThemeDefinition = {
     volumeUp: '#d4a43744',
     volumeDown: '#c0392b44',
   },
+  // Parchment. Gold up against brick red — the closest hue pair of any theme
+  // here, so the separation is carried by lightness (0.61 vs 0.47 in OKLCH) as
+  // well as hue. Pushing the gold lighter than this reads as gold but drops
+  // under 3:1 on parchment.
+  chartLight: {
+    background: '#f5ede4',
+    upCandle: '#a87800',
+    downCandle: '#a61d1d',
+    crosshair: '#90806e',
+    grid: '#e0d6ca',
+    axisText: '#6c6158',
+    axisBackground: '#eee6dd',
+    hudBg: 'rgba(251, 248, 244, 0.93)',
+    hudText: '#221811',
+    volumeUp: '#a8780044',
+    volumeDown: '#a61d1d44',
+  },
 }
 
 export const cryptoGoldManifest: PluginManifest = {

@@ -103,6 +103,20 @@ const theme: ThemeDefinition = {
     volumeUp: '#b388ff44',
     volumeDown: '#ff6e8044',
   },
+  // Violet paper. Amethyst up, crimson-rose down.
+  chartLight: {
+    background: '#f3f0f9',
+    upCandle: '#7739cf',
+    downCandle: '#cf1846',
+    crosshair: '#868091',
+    grid: '#ddd9e5',
+    axisText: '#64616e',
+    axisBackground: '#ece9f2',
+    hudBg: 'rgba(252, 251, 255, 0.93)',
+    hudText: '#171322',
+    volumeUp: '#7739cf44',
+    volumeDown: '#cf184644',
+  },
 }
 
 export const royalVioletManifest: PluginManifest = {

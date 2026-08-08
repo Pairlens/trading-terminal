@@ -10,7 +10,10 @@ import {
 } from 'react'
 
 import type { PluginManifest } from '@pairlens/plugin-system'
-import type { ThemeDefinition } from '@pairlens/plugins/themes'
+import type {
+  ThemeChartPalette,
+  ThemeDefinition,
+} from '@pairlens/plugins/themes'
 
 import { usePairlens } from '@/lib/pairlens-provider'
 import { usePersistedState } from '@/hooks/use-persisted-state'
@@ -25,10 +28,20 @@ type ThemePluginInfo = {
   manifest: PluginManifest
 }
 
+/**
+ * The active theme's chart palettes, one per color mode. `light: null` is a
+ * meaningful state: the theme declared no light palette, and the chart hook
+ * falls back to the ENGINE's light defaults — never to the dark palette.
+ */
+export type ActiveChartOverrides = {
+  dark: ThemeChartPalette | null
+  light: ThemeChartPalette | null
+}
+
 export type UseThemePluginReturn = {
   activeThemeId: string | null
   availableThemes: Array<ThemePluginInfo>
-  activeChartOverrides: ThemeDefinition['chart'] | null
+  activeChartOverrides: ActiveChartOverrides | null
   selectTheme: (id: string | null) => void
 }
 
@@ -98,9 +111,8 @@ export function useThemePlugin(): UseThemePluginReturn {
     'theme.activePluginId',
     null,
   )
-  const [chartOverrides, setChartOverrides] = useState<
-    ThemeDefinition['chart'] | null
-  >(null)
+  const [chartOverrides, setChartOverrides] =
+    useState<ActiveChartOverrides | null>(null)
 
   const availableThemes = useMemo<Array<ThemePluginInfo>>(() => {
     const plugins = pluginManager.getActivePlugins()
@@ -167,7 +179,10 @@ export function useThemePlugin(): UseThemePluginReturn {
         if (cancelled) return
 
         applyTheme(def)
-        setChartOverrides(def.chart ?? null)
+        setChartOverrides({
+          dark: def.chart ?? null,
+          light: def.chartLight ?? null,
+        })
       } catch {
         if (!cancelled) {
           applyTheme(null)

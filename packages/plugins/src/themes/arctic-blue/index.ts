@@ -103,6 +103,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#2196f344',
     volumeDown: '#ff704344',
   },
+  // Icy paper. Same glacier-blue / coral pairing as the dark palette, inked
+  // down so both candle colors hold on a light plot.
+  chartLight: {
+    background: '#f0f6f9',
+    upCandle: '#126fb8',
+    downCandle: '#c64912',
+    crosshair: '#79858b',
+    grid: '#d8e0e4',
+    axisText: '#5e6b73',
+    axisBackground: '#e9eff2',
+    hudBg: 'rgba(251, 254, 255, 0.93)',
+    hudText: '#0a1820',
+    volumeUp: '#126fb844',
+    volumeDown: '#c6491244',
+  },
 }
 
 export const arcticBlueManifest: PluginManifest = {

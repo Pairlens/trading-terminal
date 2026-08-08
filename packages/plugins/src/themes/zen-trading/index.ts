@@ -91,6 +91,21 @@ const theme: ThemeDefinition = {
     '--noise-opacity': '0.3',
     '--radius': '0.5rem',
   },
+  // Sand paper — the theme's own warm ground rather than the engine's paler
+  // default. Moss up, clay down, both muted to stay calm.
+  chartLight: {
+    background: '#e9e4d8',
+    upCandle: '#427751',
+    downCandle: '#ae3f27',
+    crosshair: '#8c826a',
+    grid: '#d7d0c0',
+    axisText: '#5e5a52',
+    axisBackground: '#e0dbcf',
+    hudBg: 'rgba(246, 244, 239, 0.93)',
+    hudText: '#1e1e1e',
+    volumeUp: '#42775144',
+    volumeDown: '#ae3f2744',
+  },
 }
 
 export const zenTradingManifest: PluginManifest = {

@@ -104,6 +104,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#84cc1644',
     volumeDown: '#ef444444',
   },
+  // Neutral paper. Lime survives as a deep olive-lime; the literal #84cc16
+  // is invisible on white (about 1.7:1).
+  chartLight: {
+    background: '#f8f8f8',
+    upCandle: '#578c00',
+    downCandle: '#c8252d',
+    crosshair: '#838383',
+    grid: '#dfdfdf',
+    axisText: '#555555',
+    axisBackground: '#f1f1f1',
+    hudBg: 'rgba(253, 253, 253, 0.93)',
+    hudText: '#0b0b0b',
+    volumeUp: '#578c0044',
+    volumeDown: '#c8252d44',
+  },
 }
 
 export const electricLimeManifest: PluginManifest = {

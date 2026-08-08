@@ -136,6 +136,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#28c93f55',
     volumeDown: '#f5333f55',
   },
+  // Cream paper that keeps the terminal's amber axis and crosshair; the
+  // green/red pair is darkened to read as ink rather than phosphor.
+  chartLight: {
+    background: '#f8f5ef',
+    upCandle: '#15892a',
+    downCandle: '#bf1e2b',
+    crosshair: '#b07d2c',
+    grid: '#e0dcd4',
+    axisText: '#7a5a20',
+    axisBackground: '#f1eee8',
+    hudBg: 'rgba(255, 253, 251, 0.93)',
+    hudText: '#1d140d',
+    volumeUp: '#15892a44',
+    volumeDown: '#bf1e2b44',
+  },
 }
 
 export const boomergManifest: PluginManifest = {

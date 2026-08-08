@@ -13,7 +13,10 @@ export function usePairlensChartTheme(): ChartThemeInput {
 
   return useMemo<ChartThemeInput>(() => {
     const isDark = resolvedTheme !== 'light'
-    const o = activeChartOverrides
+    // Palettes are per-mode: a theme with no light palette gets the engine's
+    // light defaults below, NOT its dark palette — the dark-plot-under-a-
+    // light-UI combination is exactly the bug this split exists to prevent.
+    const o = isDark ? activeChartOverrides?.dark : activeChartOverrides?.light
 
     // Warm Precision — graphite (dark) / warm-paper (light). Hex values are
     // OKLCH conversions of the design tokens so the WebGL chart stays cohesive

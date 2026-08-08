@@ -103,6 +103,20 @@ const theme: ThemeDefinition = {
     volumeUp: '#00c85344',
     volumeDown: '#ff525244',
   },
+  // Mint paper. Emerald up, signal red down.
+  chartLight: {
+    background: '#ecf4ee',
+    upCandle: '#00893d',
+    downCandle: '#c41f29',
+    crosshair: '#78887c',
+    grid: '#d3ded6',
+    axisText: '#5b675e',
+    axisBackground: '#e5ede7',
+    hudBg: 'rgba(249, 253, 250, 0.93)',
+    hudText: '#091a11',
+    volumeUp: '#00893d44',
+    volumeDown: '#c41f2944',
+  },
 }
 
 export const emeraldMatrixManifest: PluginManifest = {

@@ -105,6 +105,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#00cc0066',
     volumeDown: '#ff000066',
   },
+  // Genuinely high contrast: pure white ground, black axes and crosshair,
+  // candles above 6:1 and a full hue apart.
+  chartLight: {
+    background: '#ffffff',
+    upCandle: '#006b1f',
+    downCandle: '#c40000',
+    crosshair: '#000000',
+    grid: '#bdbdbd',
+    axisText: '#000000',
+    axisBackground: '#f0f0f0',
+    hudBg: 'rgba(255, 255, 255, 0.98)',
+    hudText: '#000000',
+    volumeUp: '#006b1f66',
+    volumeDown: '#c4000066',
+  },
 }
 
 export const highContrastManifest: PluginManifest = {

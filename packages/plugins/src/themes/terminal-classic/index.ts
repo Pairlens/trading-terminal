@@ -103,6 +103,20 @@ const theme: ThemeDefinition = {
     volumeUp: '#26a69a44',
     volumeDown: '#ef535044',
   },
+  // Cool paper with the classic terminal teal/red at light-mode depth.
+  chartLight: {
+    background: '#f3f5f8',
+    upCandle: '#16867c',
+    downCandle: '#c3232b',
+    crosshair: '#808389',
+    grid: '#dcdee2',
+    axisText: '#60676f',
+    axisBackground: '#eceef1',
+    hudBg: 'rgba(253, 253, 255, 0.93)',
+    hudText: '#1c2229',
+    volumeUp: '#16867c44',
+    volumeDown: '#c3232b44',
+  },
 }
 
 export const terminalClassicManifest: PluginManifest = {

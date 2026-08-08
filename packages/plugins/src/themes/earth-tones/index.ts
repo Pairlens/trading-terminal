@@ -103,6 +103,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#5a9e6f44',
     volumeDown: '#c45d3e44',
   },
+  // Sage paper. Forest green and terracotta, kept as muted as the dark
+  // palette's sage/clay pair.
+  chartLight: {
+    background: '#e6eee4',
+    upCandle: '#35724a',
+    downCandle: '#a44428',
+    crosshair: '#798975',
+    grid: '#ced8cb',
+    axisText: '#6f685c',
+    axisBackground: '#dfe7dd',
+    hudBg: 'rgba(243, 246, 242, 0.93)',
+    hudText: '#2a1f19',
+    volumeUp: '#35724a44',
+    volumeDown: '#a4442844',
+  },
 }
 
 export const earthTonesManifest: PluginManifest = {

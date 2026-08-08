@@ -104,6 +104,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#fcee0944',
     volumeDown: '#e11d4844',
   },
+  // Concrete paper. The neon yellow lands as brass (pure yellow reads at
+  // about 1.4:1 on paper), crimson down.
+  chartLight: {
+    background: '#eae8e2',
+    upCandle: '#927c00',
+    downCandle: '#c0163b',
+    crosshair: '#878377',
+    grid: '#d4d1c9',
+    axisText: '#605d57',
+    axisBackground: '#e3e1db',
+    hudBg: 'rgba(245, 244, 242, 0.93)',
+    hudText: '#13110d',
+    volumeUp: '#927c0044',
+    volumeDown: '#c0163b44',
+  },
 }
 
 export const nightCityManifest: PluginManifest = {

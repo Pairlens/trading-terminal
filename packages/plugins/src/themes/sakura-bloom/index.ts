@@ -103,6 +103,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#f298b044',
     volumeDown: '#7a8a9a44',
   },
+  // Blossom paper. Deep sakura pink up, slate down — the dark palette's
+  // pink/slate contrast in ink.
+  chartLight: {
+    background: '#faf3f6',
+    upCandle: '#b93f67',
+    downCandle: '#51667a',
+    crosshair: '#8c7f85',
+    grid: '#e5dbdf',
+    axisText: '#6d6368',
+    axisBackground: '#f3ecef',
+    hudBg: 'rgba(255, 253, 254, 0.93)',
+    hudText: '#291e24',
+    volumeUp: '#b93f6744',
+    volumeDown: '#51667a44',
+  },
 }
 
 export const sakuraBloomManifest: PluginManifest = {

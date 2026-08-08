@@ -106,6 +106,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#4ade8044',
     volumeDown: '#f8717144',
   },
+  // Low-glare paper. Desaturated sage and brick, taken straight from the
+  // theme's own light --primary / --destructive so nothing shouts.
+  chartLight: {
+    background: '#eeebe4',
+    upCandle: '#3c7055',
+    downCandle: '#aa4140',
+    crosshair: '#807a6c',
+    grid: '#d8d4cb',
+    axisText: '#66625e',
+    axisBackground: '#e7e4dd',
+    hudBg: 'rgba(246, 245, 242, 0.93)',
+    hudText: '#2c2824',
+    volumeUp: '#3c705544',
+    volumeDown: '#aa414044',
+  },
 }
 
 export const eyeComfortManifest: PluginManifest = {

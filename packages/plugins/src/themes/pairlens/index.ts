@@ -117,6 +117,22 @@ const theme: ThemeDefinition = {
     volumeUp: '#22c55e44',
     volumeDown: '#ef444444',
   },
+  // Crisp neutral paper — the theme's own #fafafa, deliberately NOT the
+  // engine's warm-paper fallback: this theme is black & white by design and
+  // a warm plot inside a neutral UI is the mismatch we're avoiding.
+  chartLight: {
+    background: '#fafafa',
+    upCandle: '#0b8c40',
+    downCandle: '#c8252d',
+    crosshair: '#838383',
+    grid: '#e1e1e1',
+    axisText: '#555555',
+    axisBackground: '#f4f4f4',
+    hudBg: 'rgba(253, 253, 253, 0.93)',
+    hudText: '#090909',
+    volumeUp: '#0b8c4044',
+    volumeDown: '#c8252d44',
+  },
 }
 
 export const pairlensThemeManifest: PluginManifest = {

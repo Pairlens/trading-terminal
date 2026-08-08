@@ -103,6 +103,21 @@ const theme: ThemeDefinition = {
     volumeUp: '#00e5ff44',
     volumeDown: '#ff2d7b44',
   },
+  // Lavender paper. The neon cyan/magenta pair rendered as ink instead of
+  // glow — the hues survive, the bloom does not.
+  chartLight: {
+    background: '#e1e3f2',
+    upCandle: '#00818c',
+    downCandle: '#cf0063',
+    crosshair: '#757895',
+    grid: '#cacce0',
+    axisText: '#61626f',
+    axisBackground: '#dadceb',
+    hudBg: 'rgba(243, 244, 251, 0.93)',
+    hudText: '#161423',
+    volumeUp: '#00818c44',
+    volumeDown: '#cf006344',
+  },
 }
 
 export const cyberpunkNeonManifest: PluginManifest = {
