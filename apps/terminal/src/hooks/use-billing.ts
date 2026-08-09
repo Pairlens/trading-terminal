@@ -17,7 +17,7 @@ import { openExternalUrl } from '@/lib/platform'
 // ---------------------------------------------------------------------------
 // Pairlens Intelligence billing state + checkout/portal actions.
 //
-// Checkout and the customer portal are hosted Polar pages opened in the
+// Checkout and the billing portal are hosted Stripe pages opened in the
 // system browser (never the app webview). While the user pays over there,
 // nothing signals this window directly — so the state query refetches on
 // window focus, and a plan/status transition re-syncs plugin entitlements via
@@ -38,7 +38,7 @@ export function useBillingState() {
   })
 
   // Announce subscription transitions so the capability gates react without
-  // a reload (e.g. the user comes back from Polar checkout) — and make the
+  // a reload (e.g. the user comes back from Stripe checkout) — and make the
   // payment moments visible: checkout happens in another browser, so these
   // toasts ARE the in-app payment confirmation (for both subscriptions and
   // one-time credit packs, which change the pack count, not the plan).
@@ -89,7 +89,7 @@ export function useBillingState() {
   return query
 }
 
-/** Open the hosted Polar checkout for a plan in the system browser. */
+/** Open the hosted Stripe checkout for a plan in the system browser. */
 export function useIntelligenceCheckout() {
   return useMutation({
     mutationFn: async (plan: IntelligencePlanId) => {
@@ -109,7 +109,7 @@ export function usePackCheckout() {
   })
 }
 
-/** Open the pre-authenticated Polar customer portal in the system browser. */
+/** Open the pre-authenticated Stripe billing portal in the system browser. */
 export function useBillingPortal() {
   return useMutation({
     mutationFn: async () => {

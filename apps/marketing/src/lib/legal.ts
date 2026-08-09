@@ -172,12 +172,12 @@ export const SUBPROCESSORS: ReadonlyArray<Subprocessor> = [
     href: 'https://vercel.com/docs/ai-gateway',
   },
   {
-    name: 'Polar Software Inc.',
+    name: 'Stripe, Inc.',
     purpose:
-      'Merchant of record for Pairlens Intelligence: checkout, payment processing, subscription management, invoicing, and sales tax. Polar is a separate controller for the payment data it collects.',
+      'Payment processing for Pairlens Intelligence: checkout, card processing, subscription management, invoicing, and tax calculation. Stripe is a separate controller for the payment data it collects; card numbers never touch Pairlens servers.',
     location: 'United States, European Union',
-    safeguard: 'Standard Contractual Clauses',
-    href: 'https://polar.sh/legal/privacy',
+    safeguard: 'Standard Contractual Clauses, EU-US Data Privacy Framework',
+    href: 'https://stripe.com/privacy',
   },
   {
     name: 'Resend, Inc.',

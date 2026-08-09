@@ -547,11 +547,11 @@ export const api = {
   deleteAccount: () =>
     fetchApi<AccountDeletionSummary>('/api/account', { method: 'DELETE' }),
 
-  // ---- Pairlens Intelligence billing (Polar via the App Server) ----
+  // ---- Pairlens Intelligence billing (Stripe via the App Server) ----
 
   getBillingState: () => fetchApi<BillingState>('/api/billing/state'),
 
-  /** Returns the hosted Polar checkout URL — open it in the system browser. */
+  /** Returns the hosted Stripe checkout URL — open it in the system browser. */
   createBillingCheckout: (plan: IntelligencePlanId) =>
     fetchApi<{ url: string; plan: IntelligencePlan }>('/api/billing/checkout', {
       method: 'POST',
@@ -565,7 +565,7 @@ export const api = {
       body: JSON.stringify({ pack }),
     }),
 
-  /** Returns the pre-authenticated Polar customer-portal URL. */
+  /** Returns the pre-authenticated Stripe billing-portal URL. */
   createBillingPortal: () =>
     fetchApi<{ url: string }>('/api/billing/portal', { method: 'POST' }),
 

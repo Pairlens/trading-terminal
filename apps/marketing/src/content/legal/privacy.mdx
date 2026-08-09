@@ -111,15 +111,15 @@ Section 5 covers this in full, because it deserves its own section.
 
 ### 4.4 Billing
 
-If you subscribe to Pairlens Intelligence, we store your Polar customer
-identifier, the product and price you bought, your subscription status, the
-current period end, whether you have scheduled a cancellation, and a ledger of
-expired credit packs.
+If you subscribe to Pairlens Intelligence, we store your Stripe customer
+identifier and a credit ledger: the credits granted for each billing cycle or
+credit-pack purchase, each metered AI request (model name, token counts, and
+the credits it cost — never the content of your prompts), and any credits
+that expired unused.
 
-**We never see your card.** Checkout, payment processing, invoicing, and sales
-tax are handled by Polar as our merchant of record. Your payment details go to
-them and their payment processors, not to us. Their privacy policy governs
-that part.
+**We never see your card.** Checkout, card processing, and invoicing are
+handled by Stripe as our payment processor. Your payment details go directly
+to Stripe, not to us. Their privacy policy governs that part.
 
 ### 4.5 Analytics and error reporting
 

@@ -4,22 +4,24 @@
 // Pairlens Intelligence billing contract
 //
 // Pairlens accounts are always free. "Pairlens Intelligence" is a paid add-on
-// subscription (billed via Polar.sh, managed by the App Server) that unlocks
+// subscription (billed via Stripe, managed by the App Server) that unlocks
 // AI usage with Pairlens as the provider — the hosted inference proxy and the
 // hosted web-research search. Bring-your-own-key AI provider plugins
 // (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa, ...) are never gated.
 //
 // Usage is metered in CREDITS: 1 credit = $0.001 USD of underlying cost.
 // Each plan grants a monthly credit budget of roughly 70% of the
-// subscription price (~30% gross margin covers payment processing, Polar's
-// merchant-of-record fee, and profit), rounded to a friendly number. Credits
+// subscription price (~30% gross margin covers payment processing fees,
+// sales tax handling, and profit), rounded to a friendly number. Credits
 // reset every billing cycle and do NOT roll over. All hosted AI usage —
 // inference (any model) and web research — draws from the same budget.
 //
-// The App Server owns all Polar interaction (checkout, customer portal,
-// webhooks, usage ingestion, balance checks). The terminal only consumes:
-//   - GET /api/billing/state            → BillingState (below)
-//   - BetterAuth Polar client endpoints → checkout / customer portal
+// The App Server owns all Stripe interaction (checkout, billing portal,
+// webhooks) AND the usage ledger itself — credit grants and usage events
+// live in its Postgres database, not with the payment processor. The
+// terminal only consumes:
+//   - GET /api/billing/state             → BillingState (below)
+//   - POST /api/billing/checkout|portal  → hosted Stripe URLs
 // and receives typed 402 errors from gated AI routes.
 // ---------------------------------------------------------------------------
 
@@ -40,9 +42,10 @@ export type IntelligencePlan = {
 
 /**
  * Plan catalog. `monthlyCredits` ≈ price × 70% in credits (≈30% margin),
- * rounded to a friendly number. The Polar products/benefits are provisioned
- * from this catalog (see the App Server's polar setup script) — rerun it
- * after changing these so the meter-credit benefits follow.
+ * rounded to a friendly number. The Stripe products/prices are provisioned
+ * from this catalog (see the App Server's stripe setup script) — rerun it
+ * after changing prices; credit budgets take effect from the next cycle
+ * grant without touching Stripe at all (the ledger is ours).
  */
 export const INTELLIGENCE_PLANS: Record<IntelligencePlanId, IntelligencePlan> =
   {
@@ -65,11 +68,11 @@ export const INTELLIGENCE_PLANS: Record<IntelligencePlanId, IntelligencePlan> =
 // ---------------------------------------------------------------------------
 // Credit packs — one-time top-ups (Intelligence Max subscribers only)
 //
-// Extra credits land on the same meter as the monthly budget and are spent
-// alongside it. They EXPIRE 30 days after purchase: Polar's one-time credit
-// grants are permanent, so the App Server enforces expiry by forfeiting each
-// pack's unused remainder (pack credits are counted as consumed FIRST, so an
-// actively-used pack forfeits little or nothing).
+// Extra credits land on the same ledger as the monthly budget and are spent
+// alongside it. They EXPIRE 30 days after purchase: the App Server enforces
+// expiry by forfeiting each pack's unused remainder (pack credits are
+// counted as consumed FIRST, so an actively-used pack forfeits little or
+// nothing).
 // ---------------------------------------------------------------------------
 
 export type CreditPackId = 'pack-10' | 'pack-20' | 'pack-50' | 'pack-100'
@@ -127,7 +130,7 @@ export type IntelligenceSubscriptionStatus = 'none' | 'active' | 'canceled'
 
 /** Payload of GET /api/billing/state (auth required). */
 export type BillingState = {
-  /** False when the server has no Polar configuration (self-hosted). */
+  /** False when the server has no Stripe configuration (self-hosted). */
   billingEnabled: boolean
   plan: IntelligencePlanId | null
   status: IntelligenceSubscriptionStatus
@@ -140,7 +143,7 @@ export type BillingState = {
   /**
    * True for complimentary access (core contributors / testing, granted via
    * the App Server's BILLING_COMPLIMENTARY_EMAILS allowlist): full
-   * Intelligence access, usage not metered against a Polar subscription.
+   * Intelligence access, usage not metered against a subscription.
    */
   complimentary?: boolean
   /**
@@ -151,7 +154,7 @@ export type BillingState = {
   packs?: Array<ActiveCreditPack>
 }
 
-/** Metered usage event types ingested to Polar. Same meter, same budget. */
+/** Metered usage event types recorded in the ledger. Same budget. */
 export type IntelligenceUsageEvent = 'ai_usage' | 'web_research'
 
 /**
