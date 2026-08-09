@@ -4724,6 +4724,8 @@
         "annotate": "คำอธิบายประกอบ"
       },
       "crosshairMode": "เส้นกากบาท: {{mode}}",
+      "indicatorsActive_one": "อินดิเคเตอร์ ใช้งานอยู่ {{count}} รายการ",
+      "indicatorsActive_other": "อินดิเคเตอร์ ใช้งานอยู่ {{count}} รายการ",
       "removeIndicator": "นำ {{name}} ออก"
     },
     "drawing": {

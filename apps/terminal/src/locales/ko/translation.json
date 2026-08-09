@@ -4724,6 +4724,8 @@
         "annotate": "주석"
       },
       "crosshairMode": "십자선: {{mode}}",
+      "indicatorsActive_one": "지표, {{count}}개 활성",
+      "indicatorsActive_other": "지표, {{count}}개 활성",
       "removeIndicator": "{{name}} 제거"
     },
     "drawing": {

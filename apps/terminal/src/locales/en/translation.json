@@ -4720,6 +4720,8 @@
       "drawingTools": "Drawing tools",
       "clearConfirm": "Clear every drawing on this chart?",
       "crosshairMode": "Crosshair: {{mode}}",
+      "indicatorsActive_one": "Indicators, {{count}} active",
+      "indicatorsActive_other": "Indicators, {{count}} active",
       "removeIndicator": "Remove {{name}}",
       "sections": {
         "channelsFib": "Channels & Fibonacci",

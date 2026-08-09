@@ -9,7 +9,7 @@
  * re-renders (see the performance budget in the blueprint).
  */
 import { memo } from 'react'
-import { ChevronDown, Eye } from 'lucide-react'
+import { ChevronDown, Eye, UserRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
@@ -103,14 +103,14 @@ function ViewOnlyTag() {
   )
 }
 
+/** '' when the name yields nothing to initial — the caller draws a person. */
 function initialsFrom(name: string): string {
-  const derived = name
+  return name
     .split(/[\s.@_-]+/)
     .filter(Boolean)
     .slice(0, 2)
     .map((segment) => segment[0]?.toUpperCase() ?? '')
     .join('')
-  return derived || 'PL'
 }
 
 export const ContextBar = memo(function ContextBar({
@@ -139,7 +139,11 @@ export const ContextBar = memo(function ContextBar({
         ? 'live'
         : 'offline'
   const userName = session?.user.name ?? session?.user.email ?? ''
-  const initials = userName ? initialsFrom(userName) : 'PL'
+  // Signed out there is nobody to initial, and the two letters the button used
+  // to fall back to were the PRODUCT's — a stranger reads "PL" as an account
+  // that is somehow already there. The desktop rail answers this with a person
+  // glyph (see `_terminal.tsx`), so the phone says the same thing.
+  const initials = userName ? initialsFrom(userName) : ''
   const readOnly = permission === 'read' && liveState !== 'offline'
   // The tag is a glyph (see ViewOnlyTag), so the words have to survive
   // somewhere: the chip's accessible name is the only place left that a
@@ -242,14 +246,22 @@ export const ContextBar = memo(function ContextBar({
           Its fill and ring live in `.pl-ctx-avatar` rather than inline: a
           press state is a `:active` rule, and an inline `style` wins over
           every class it would be written in. */}
+      {/* Signed in the circle is primary-tinted — that tint is what says "this
+          is you". Signed out there is no you, so it drops to the same glass
+          the two chips beside it wear and carries a person instead. */}
       <button
         aria-label={t('mobile.shell.openSettings')}
-        className="pl-ctx-avatar pl-press pl-hit-44 pointer-events-auto flex size-10 shrink-0 items-center justify-center rounded-full text-[12.5px] font-semibold text-foreground"
+        className={cn(
+          'pl-press pl-hit-44 pointer-events-auto flex size-10 shrink-0 items-center justify-center rounded-full text-[12.5px] font-semibold text-foreground',
+          initials ? 'pl-ctx-avatar' : 'pl-glass',
+        )}
         onClick={onOpenSettings}
         type="button"
         {...PRESS}
       >
-        {initials}
+        {initials || (
+          <UserRound className="size-[18px] text-muted-foreground" />
+        )}
       </button>
     </div>
   )

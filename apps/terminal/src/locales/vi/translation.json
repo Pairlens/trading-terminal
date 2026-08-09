@@ -4724,6 +4724,8 @@
         "annotate": "Chú thích"
       },
       "crosshairMode": "Con trỏ chữ thập: {{mode}}",
+      "indicatorsActive_one": "Chỉ báo, {{count}} đang hoạt động",
+      "indicatorsActive_other": "Chỉ báo, {{count}} đang hoạt động",
       "removeIndicator": "Gỡ {{name}}"
     },
     "drawing": {
