@@ -144,23 +144,28 @@ export type AccountExportCommunityWorkspace = {
 }
 
 export type AccountExportBilling = {
-  /** Polar customer id, when the account ever reached checkout. */
-  polarCustomerId: string | null
-  subscriptions: Array<{
+  /** Stripe customer id, when the account ever reached checkout. */
+  stripeCustomerId: string | null
+  /**
+   * The credit ledger's grant side: one entry per subscription cycle or
+   * pack purchase, including what the expiry sweep forfeited.
+   */
+  creditGrants: Array<{
     id: string
-    polarProductId: string
-    polarPriceId: string
-    status: string
-    currentPeriodEnd: string | null
-    cancelAtPeriodEnd: boolean
-    createdAt: string
-    updatedAt: string
+    source: string
+    packId: string | null
+    credits: number
+    grantedAt: string
+    expiresAt: string
+    forfeitedUnits: number | null
+    forfeitedAt: string | null
   }>
-  /** Credit packs whose unused remainder expired. */
-  creditPackForfeits: Array<{
-    grantId: string
-    units: number
-    forfeitedAt: string
+  /** The ledger's spend side: one entry per metered AI request. */
+  usageEvents: Array<{
+    name: string
+    credits: number
+    metadata: Record<string, unknown>
+    createdAt: string
   }>
 }
 
@@ -230,7 +235,7 @@ export type AnalyticsErasureOutcome = 'deleted' | 'not_configured' | 'failed'
 /** What `DELETE /api/account` actually erased. */
 export type AccountDeletionSummary = {
   ok: true
-  /** Active Polar subscriptions cancelled as part of the deletion. */
+  /** Active Stripe subscriptions cancelled as part of the deletion. */
   subscriptionsCancelled: number
   /** True when the stored avatar object was removed from object storage. */
   avatarDeleted: boolean

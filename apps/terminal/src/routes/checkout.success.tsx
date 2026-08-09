@@ -17,10 +17,10 @@ import type {
   IntelligencePlanId,
 } from '@pairlens/shared/billing-types'
 
-// Post-checkout landing — where Polar redirects after a successful payment.
+// Post-checkout landing — where Stripe redirects after a successful payment.
 //
 // Standalone on purpose: checkout usually completes in the system browser
-// (the desktop app opens Polar externally), so this page may load in a
+// (the desktop app opens Stripe externally), so this page may load in a
 // browser with no Pairlens state at all. It must NOT sit inside the
 // _terminal layout, whose first-run gate would bounce a fresh profile to
 // /onboarding — turning the "you just paid" moment into a setup wizard.

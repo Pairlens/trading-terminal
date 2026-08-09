@@ -5,7 +5,7 @@ import { useBillingState } from '@/hooks/use-billing'
 /**
  * Render-null global subscriber that keeps the Intelligence billing state
  * mounted for the whole terminal session. This is what makes returning from
- * a Polar checkout (completed in the system browser) feel instant: the query
+ * a Stripe checkout (completed in the system browser) feel instant: the query
  * refetches on window focus, and its plan-transition effect re-syncs
  * entitlements and fires the activation toast — regardless of which panels
  * happen to be open. Signed-out / standalone sessions keep the query
