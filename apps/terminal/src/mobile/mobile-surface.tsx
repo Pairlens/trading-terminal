@@ -386,10 +386,6 @@ export function MobileSurface() {
     () => pushOverlay({ kind: 'pairPicker' }),
     [pushOverlay],
   )
-  const openSearch = useCallback(
-    () => pushOverlay({ kind: 'pairPicker', autoFocus: true }),
-    [pushOverlay],
-  )
   const openVenuePicker = useCallback(
     () => pushOverlay({ kind: 'venuePicker' }),
     [pushOverlay],
@@ -465,7 +461,6 @@ export function MobileSurface() {
 
       <ContextBar
         onOpenPairPicker={openPairPicker}
-        onOpenSearch={openSearch}
         onOpenSettings={openSettings}
         onOpenVenuePicker={openVenuePicker}
       />

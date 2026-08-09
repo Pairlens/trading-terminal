@@ -4619,7 +4619,6 @@
       },
       "changePair": "Changer de paire",
       "changeVenueA11y": "Changer de place de marché. {{venue}}, {{status}}",
-      "search": "Rechercher des paires",
       "openSettings": "Ouvrir les paramètres",
       "readOnly": "lecture seule",
       "readOnlyA11y": "{{status}}, lecture seule",

@@ -4619,7 +4619,6 @@
       },
       "changePair": "เปลี่ยนคู่เทรด",
       "changeVenueA11y": "เปลี่ยนตลาด {{venue}}, {{status}}",
-      "search": "ค้นหาคู่เทรด",
       "openSettings": "เปิดการตั้งค่า",
       "readOnly": "อ่านอย่างเดียว",
       "readOnlyA11y": "{{status}}, อ่านอย่างเดียว",

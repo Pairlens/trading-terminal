@@ -4649,7 +4649,6 @@
       },
       "changePair": "Сменить пару",
       "changeVenueA11y": "Сменить площадку. {{venue}}, {{status}}",
-      "search": "Поиск пар",
       "openSettings": "Открыть настройки",
       "readOnly": "только чтение",
       "readOnlyA11y": "{{status}}, только чтение",

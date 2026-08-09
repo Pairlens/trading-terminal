@@ -9,7 +9,7 @@
  * re-renders (see the performance budget in the blueprint).
  */
 import { memo } from 'react'
-import { ChevronDown, Eye, Search } from 'lucide-react'
+import { ChevronDown, Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
@@ -25,7 +25,6 @@ import { useOptimisticSession } from '@/lib/session'
 export type ContextBarProps = {
   onOpenPairPicker: () => void
   onOpenVenuePicker: () => void
-  onOpenSearch: () => void
   onOpenSettings: () => void
 }
 
@@ -117,7 +116,6 @@ function initialsFrom(name: string): string {
 export const ContextBar = memo(function ContextBar({
   onOpenPairPicker,
   onOpenVenuePicker,
-  onOpenSearch,
   onOpenSettings,
 }: ContextBarProps) {
   const { t } = useTranslation()
@@ -154,9 +152,11 @@ export const ContextBar = memo(function ContextBar({
       style={{ paddingTop: 'max(var(--pl-safe-top), 8px)' }}
     >
       {/* Pair chip. The only element on the row allowed to truncate: at 402px
-          a 13-character symbol, a venue name, a read-only tag and two 44px
-          buttons do not all fit, and of those the symbol is the one the hero
-          price and the asset avatar both restate.
+          a 13-character symbol, a venue name, a read-only tag and the avatar
+          button do not all fit, and of those the symbol is the one the hero
+          price and the asset avatar both restate. (This chip IS the way into
+          search — it opens the pair picker, whose first row is the search
+          field — so the row carries no separate magnifier.)
 
           `flex-auto`, NOT `flex-1`: basis `auto` is what lets the two chips
           start at their own content widths and split only the LEFTOVER
@@ -236,17 +236,6 @@ export const ContextBar = memo(function ContextBar({
           </span>
         </span>
         <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
-      </button>
-
-      {/* Search */}
-      <button
-        aria-label={t('mobile.shell.search')}
-        className="pl-glass pl-press pl-hit-44 pointer-events-auto flex size-10 shrink-0 items-center justify-center"
-        onClick={onOpenSearch}
-        type="button"
-        {...PRESS}
-      >
-        <Search className="size-[18px] text-foreground" />
       </button>
 
       {/* Avatar → Settings (Settings is not a tab).
