@@ -62,6 +62,23 @@ export const SETTINGS_SEARCH_INDEX: ReadonlyArray<SettingsSearchEntry> = [
     titleKey: 'settings.billing.usageTitle',
     keywords: ['credits', 'usage', 'budget', 'billing', 'quota'],
   },
+  {
+    section: 'billing',
+    titleKey: 'aiProviders.title',
+    descriptionKey: 'aiProviders.description',
+    keywords: [
+      'api key',
+      'byok',
+      'openai',
+      'anthropic',
+      'groq',
+      'openrouter',
+      'tavily',
+      'exa',
+      'web search',
+      'provider',
+    ],
+  },
   // Cloud Sync
   {
     section: 'cloud-sync',

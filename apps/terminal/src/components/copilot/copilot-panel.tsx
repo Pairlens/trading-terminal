@@ -56,6 +56,7 @@ import {
 import i18n from '@/lib/i18n'
 import { normalizePair, normalizeTimeframe } from '@/lib/copilot/tool-deps'
 import { AuthRequiredPrompt } from '@/components/capability-gate'
+import { ConnectAiProviderButton } from '@/components/ai-provider-connect'
 import {
   BillingErrorNotice,
   IntelligenceUpgradePrompt,
@@ -777,23 +778,36 @@ export function CopilotPanel(props: CopilotPanelProps) {
   })
 
   if (access.status === 'auth-required') {
+    // Pairlens Intelligence is the recommended path and signing in is its
+    // first step — but only its first step, and the note says so rather than
+    // letting the plan appear after registration. The second path is real:
+    // an active BYOK provider grants `ai:inference` outright, so the wizard
+    // opens here instead of on a Plugins page a phone cannot even reach.
     return (
       <AuthRequiredPrompt
         title={t('copilot.authRequiredTitle')}
         description={t('copilot.authRequiredDescription')}
+        primaryNote={t('capabilityGate.intelligenceNote')}
+        alternative={<ConnectAiProviderButton />}
       />
     )
   }
 
   if (access.status === 'upgrade-required') {
+    // Signed in, no Intelligence plan. A key the user already pays for is a
+    // legitimate answer here too — the plans lead, BYOK sits under them.
     return (
       <IntelligenceUpgradePrompt
         description={t('copilot.upgradeRequiredDescription')}
+        alternative={<ConnectAiProviderButton />}
       />
     )
   }
 
   if (access.status !== 'granted') {
+    // Nothing resolves `ai:inference` at all — every provider is uninstalled
+    // or keyless. The key field is the fix, so it leads; the Plugins page
+    // (desktop-only) stays as the fuller route.
     return (
       <div className="flex min-h-0 flex-1 flex-col items-center justify-center p-6">
         <Empty className="max-w-xs">
@@ -806,15 +820,18 @@ export function CopilotPanel(props: CopilotPanelProps) {
               {t('copilot.aiLensUnavailableDescription')}
             </EmptyDescription>
           </EmptyHeader>
-          <Button
-            variant="outline"
-            className="mt-4 gap-2"
-            nativeButton={false}
-            render={<Link to="/plugins" />}
-          >
-            <Brain className="size-4" />
-            {t('copilot.goToPlugins')}
-          </Button>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <ConnectAiProviderButton />
+            <Button
+              variant="ghost"
+              size="sm"
+              nativeButton={false}
+              render={<Link to="/plugins" />}
+            >
+              <Brain className="size-3.5" />
+              {t('copilot.goToPlugins')}
+            </Button>
+          </div>
         </Empty>
       </div>
     )

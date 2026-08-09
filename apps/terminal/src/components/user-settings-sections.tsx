@@ -88,6 +88,7 @@ import {
   useIntelligenceCheckout,
 } from '@/hooks/use-billing'
 import { CreditPackButtons } from '@/components/billing/intelligence-upsell'
+import { AiProvidersSettingsCard } from '@/components/ai-provider-connect'
 import { LegalLinksRow, LegalNotice } from '@/components/legal-links'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import {
@@ -1798,7 +1799,20 @@ function AccountDataControls() {
 
 const PLAN_ORDER: Array<IntelligencePlanId> = ['pro', 'max']
 
+/**
+ * Hosted plan first, own keys underneath — the same two paths the AI gates
+ * offer, in the one place a user comes back to after the gates are gone.
+ */
 export function IntelligenceSection() {
+  return (
+    <div className="space-y-4">
+      <IntelligenceBillingBody />
+      <AiProvidersSettingsCard />
+    </div>
+  )
+}
+
+function IntelligenceBillingBody() {
   const { t } = useTranslation()
   const { session } = useOptimisticSession()
   const billing = useBillingState()

@@ -55,6 +55,7 @@ import { useCapabilityAccess } from '@/hooks/use-capability-access'
 import { useStickToBottom } from '@/hooks/use-stick-to-bottom'
 import { useTickerStream } from '@/hooks/use-ticker-stream'
 import { AuthRequiredPrompt } from '@/components/capability-gate'
+import { ConnectAiProviderButton } from '@/components/ai-provider-connect'
 import {
   BillingErrorNotice,
   IntelligenceUpgradePrompt,
@@ -455,11 +456,16 @@ export function ResearchPanel({ pairKey, market }: ResearchPanelProps) {
   const access = useCapabilityAccess('ai:inference')
   const tickerRef = useRef<TickerSnapshot | null>(null)
 
+  // The three denials carry the same second door as the copilot's: research
+  // resolves the very same `ai:inference` provider, so a user with their own
+  // key is already entitled to this panel and only the copy said otherwise.
   if (access.status === 'auth-required') {
     return (
       <AuthRequiredPrompt
         title={t('research.authRequiredTitle')}
         description={t('research.authRequiredDescription')}
+        primaryNote={t('capabilityGate.intelligenceNote')}
+        alternative={<ConnectAiProviderButton />}
       />
     )
   }
@@ -468,6 +474,7 @@ export function ResearchPanel({ pairKey, market }: ResearchPanelProps) {
     return (
       <IntelligenceUpgradePrompt
         description={t('research.upgradeDescription')}
+        alternative={<ConnectAiProviderButton />}
       />
     )
   }
@@ -485,15 +492,18 @@ export function ResearchPanel({ pairKey, market }: ResearchPanelProps) {
               {t('research.unavailableDescription')}
             </EmptyDescription>
           </EmptyHeader>
-          <Button
-            variant="outline"
-            className="mt-4 gap-2"
-            nativeButton={false}
-            render={<Link to="/plugins" />}
-          >
-            <Search className="size-4" />
-            {t('research.goToPlugins')}
-          </Button>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <ConnectAiProviderButton />
+            <Button
+              variant="ghost"
+              size="sm"
+              nativeButton={false}
+              render={<Link to="/plugins" />}
+            >
+              <Search className="size-3.5" />
+              {t('research.goToPlugins')}
+            </Button>
+          </div>
         </Empty>
       </div>
     )

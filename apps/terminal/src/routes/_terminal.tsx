@@ -95,6 +95,7 @@ import { api, clearSessionCache, queryKeys, resolveUrl } from '@/lib/api'
 import { PairlensProvider } from '@/lib/pairlens-provider'
 import { MarketDataProvider } from '@/lib/market-data-provider'
 import { GeoRestrictionDialog } from '@/components/geo-restriction-dialog'
+import { AiSetupDialogHost } from '@/components/ai-provider-connect'
 import { closeSplashScreen, isHosted, isStandalone } from '@/lib/platform'
 import { DESKTOP_CTA_SEEN_KEY } from '@/lib/desktop-download'
 import { DesktopMenuBridge } from '@/components/desktop-menu-bridge'
@@ -354,6 +355,10 @@ function TerminalLayout() {
                 <IdleGuard />
                 <ShortcutHintListener />
                 <GeoRestrictionDialog />
+                {/* Above the shell branch on purpose: the AI gates that open
+                    this wizard unmount the moment it connects a model, and a
+                    dialog held inside them would vanish mid-flow. */}
+                <AiSetupDialogHost />
                 <FeedbackDialog
                   open={feedbackOpen}
                   onOpenChange={setFeedbackOpen}

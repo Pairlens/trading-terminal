@@ -20,6 +20,7 @@ import {
 import { Link } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
+import type { ReactNode } from 'react'
 import type {
   BillingErrorCode,
   IntelligencePlanId,
@@ -109,9 +110,17 @@ export function IntelligencePlanButtons({
 export function IntelligenceUpgradePrompt({
   title,
   description,
+  alternative,
 }: {
   title?: string
   description?: string
+  /**
+   * A non-billing way to the same capability, shown under the plans. The AI
+   * panes pass the bring-your-own-key action: a user who already has an
+   * Anthropic/OpenAI/OpenRouter/Groq key is one paste away from a working
+   * copilot, and the `<plugins>` link below is desktop-only.
+   */
+  alternative?: ReactNode
 }) {
   const { t } = useTranslation()
   const resolvedTitle = title ?? t('intelligence.upsell.defaultTitle')
@@ -131,6 +140,16 @@ export function IntelligenceUpgradePrompt({
         <div className="mt-6 w-full">
           <IntelligencePlanButtons />
         </div>
+        {alternative && (
+          <div className="mt-4 flex w-full flex-col items-center gap-3">
+            <span className="flex w-full items-center gap-3 text-[10px] tracking-wide text-muted-foreground uppercase">
+              <span className="h-px flex-1 bg-border" />
+              {t('capabilityGate.or')}
+              <span className="h-px flex-1 bg-border" />
+            </span>
+            {alternative}
+          </div>
+        )}
         <p className="mt-4 text-center text-[11px] leading-snug text-muted-foreground">
           <Trans
             i18nKey="intelligence.upsell.byokNote"
