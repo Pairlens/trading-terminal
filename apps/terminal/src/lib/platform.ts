@@ -73,7 +73,7 @@ async function reportWindowFailure(err: unknown): Promise<void> {
 
 /**
  * Open a URL in the user's default system browser. Used for flows that must
- * NOT run inside the app webview — Polar checkout / customer portal pages
+ * NOT run inside the app webview — Stripe checkout / billing portal pages
  * (payment forms belong in a real browser session). In the browser build
  * this is a plain new tab.
  */
