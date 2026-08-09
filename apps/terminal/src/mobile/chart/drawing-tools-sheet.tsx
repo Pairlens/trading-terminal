@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * The full drawing-tools sheet — design screen 3.
+ * The full drawing-tools panel — design screen 3.
  *
  * The five sections are the design's groupings, not the catalog's nine
  * categories: a phone shows twenty tools, so they are grouped the way a hand
@@ -12,16 +12,16 @@
  * changes there changes here.
  *
  * Picking closes the sheet and pushes the tool into the toolbar's LRU slots.
+ *
+ * The `MobileSheet` frame lives in `chart-tool-sheet.tsx`, shared with the
+ * indicators panel — see the single-writer argument there.
  */
 import { memo, useCallback, useMemo } from 'react'
-import { createPortal } from 'react-dom'
-import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 import { Glyph } from '../primitives/glyphs'
-import { MobileSheet } from '../primitives/mobile-sheet'
-import { SHEET_BAND, sheetTop } from '../lib/mobile-geometry'
+import { PRESS } from '../primitives/press'
 import { MOBILE_DRAWING_SECTIONS } from './drawing-sections'
 import { SLOT_GLYPHS } from './use-drawing-slots'
 import type { DrawingToolOption } from '@/components/terminal/drawing-tool-catalog'
@@ -29,18 +29,17 @@ import { findDrawingTool } from '@/components/terminal/drawing-tool-catalog'
 import { drawingToolKey } from '@/lib/chart-drawing-tools'
 import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
 
-export type DrawingToolsSheetProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+export type DrawingToolsPanelProps = {
+  /** Dismisses the shared sheet once a tool is armed. */
+  onClose: () => void
   /** Pushes the picked tool into the toolbar's LRU slots. */
   onPick: (key: string) => void
 }
 
-export default memo(function DrawingToolsSheet({
-  open,
-  onOpenChange,
+export default memo(function DrawingToolsPanel({
+  onClose,
   onPick,
-}: DrawingToolsSheetProps) {
+}: DrawingToolsPanelProps) {
   const { t } = useTranslation()
   const { activeTool, activeToolMeta } = useChartConfig()
   const { applyTool } = useChartActions()
@@ -70,57 +69,32 @@ export default memo(function DrawingToolsSheet({
       // `drawing_tool_selected` itself, so neither is repeated here.
       applyTool(option.tool, option.meta)
       onPick(key)
-      onOpenChange(false)
+      onClose()
     },
-    [applyTool, onOpenChange, onPick],
+    [applyTool, onClose, onPick],
   )
 
   return (
-    <>
-      <ChartDim open={open} />
-      <MobileSheet
-        band={SHEET_BAND.drawingTools}
-        header={
-          <div className="flex items-center justify-between px-4 pb-2 pt-1">
-            <p className="text-[17px] font-semibold text-foreground">
-              {t('mobile.chart.drawingTools')}
-            </p>
-            <button
-              aria-label={t('mobile.shell.dismiss')}
-              className="pl-hit-44 -mr-1 flex size-9 items-center justify-center rounded-full text-muted-foreground"
-              onClick={() => onOpenChange(false)}
-              type="button"
-            >
-              <X className="size-[18px]" />
-            </button>
+    <div className="px-4 pt-1">
+      {sections.map((section) => (
+        <section className="mb-2.5" key={section.labelKey}>
+          <p className="px-0.5 pb-2 text-[9.5px] font-semibold uppercase tracking-[.09em] text-muted-foreground">
+            {t(section.labelKey)}
+          </p>
+          <div className="grid grid-cols-4 gap-[7px]">
+            {section.tools.map(({ key, option }) => (
+              <ToolTile
+                key={key}
+                onPick={pick}
+                option={option}
+                selected={key === activeKey}
+                toolKeyValue={key}
+              />
+            ))}
           </div>
-        }
-        label={t('mobile.chart.drawingTools')}
-        onOpenChange={onOpenChange}
-        open={open}
-      >
-        <div className="px-4 pt-1">
-          {sections.map((section) => (
-            <section className="mb-2.5" key={section.labelKey}>
-              <p className="px-0.5 pb-2 text-[9.5px] font-semibold uppercase tracking-[.09em] text-muted-foreground">
-                {t(section.labelKey)}
-              </p>
-              <div className="grid grid-cols-4 gap-[7px]">
-                {section.tools.map(({ key, option }) => (
-                  <ToolTile
-                    key={key}
-                    onPick={pick}
-                    option={option}
-                    selected={key === activeKey}
-                    toolKeyValue={key}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
-      </MobileSheet>
-    </>
+        </section>
+      ))}
+    </div>
   )
 })
 
@@ -143,13 +117,14 @@ const ToolTile = memo(function ToolTile({
     <button
       aria-pressed={selected}
       className={cn(
-        'flex flex-col items-center gap-1.5 rounded-xl px-1 py-[9px]',
+        'pl-press flex flex-col items-center gap-1.5 rounded-xl px-1 py-[9px]',
         selected
-          ? 'bg-[color-mix(in_oklch,var(--primary)_20%,transparent)] text-foreground shadow-[inset_0_0_0_1px_color-mix(in_oklch,var(--primary)_46%,transparent)]'
-          : 'bg-[color:var(--pl-wash)] text-muted-foreground shadow-[inset_0_0_0_1px_var(--pl-edge)]',
+          ? 'pl-ring-primary bg-[color-mix(in_oklch,var(--primary)_20%,transparent)] text-foreground'
+          : 'pl-ring bg-[color:var(--pl-wash)] text-muted-foreground',
       )}
       onClick={() => onPick(toolKeyValue, option)}
       type="button"
+      {...PRESS}
     >
       {glyph ? <Glyph name={glyph} size={20} /> : <Icon className="size-5" />}
       <span
@@ -163,28 +138,3 @@ const ToolTile = memo(function ToolTile({
     </button>
   )
 })
-
-/**
- * The chart dims to .7 behind this sheet (design screen 3) — the same
- * treatment the Watchlist and Discover panels get from the shell's panel
- * table, which the tools sheet is not part of.
- *
- * Portaled to the body because the toolbar renders inside the chart band's
- * `z-30` footer, and a stacking context cannot lift a child above its own
- * z-index. Bounded to the chart band so the context bar above it stays sharp,
- * and `pointer-events-none` so it never eats a gesture.
- */
-function ChartDim({ open }: { open: boolean }) {
-  if (!open || typeof document === 'undefined') return null
-  return createPortal(
-    <div
-      aria-hidden
-      className="pointer-events-none fixed inset-x-0 z-[39] bg-background/30"
-      style={{
-        top: 'var(--pl-chart-top)',
-        height: `calc(${sheetTop(SHEET_BAND.drawingTools)} - var(--pl-chart-top))`,
-      }}
-    />,
-    document.body,
-  )
-}

@@ -4,7 +4,6 @@
 
 import * as React from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
 import {
   Cloud,
   CloudUpload,
@@ -76,16 +75,13 @@ import { api, queryKeys } from '@/lib/api'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { useAppVersion } from '@/lib/app-version'
 import { isStandalone } from '@/lib/platform'
-
+// Shared with the phone's profile screen, which offers the same two actions.
 import {
-  SECTION_TOURS_DISABLED_KEY,
-  SECTION_TOURS_SEEN_KEY,
-} from '@/components/onboarding/use-section-tour'
-import { DESKTOP_NUDGE_SEEN_KEY } from '@/lib/desktop-nudge'
-import { ONBOARDING_KEY } from '@/lib/onboarding-state'
-
-const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024
-const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp'])
+  ALLOWED_IMAGE_TYPES,
+  AVATAR_ACCEPT,
+  MAX_IMAGE_SIZE_BYTES,
+} from '@/lib/avatar'
+import { useResetTutorial } from '@/hooks/use-reset-tutorial'
 
 /**
  * The dialog's own nav map and section bodies now live beside the sections
@@ -444,7 +440,7 @@ export default function UserSettingsDialog({
                           </Avatar>
                           <div className="space-y-2">
                             <input
-                              accept={Array.from(ALLOWED_IMAGE_TYPES).join(',')}
+                              accept={AVATAR_ACCEPT}
                               className="hidden"
                               onChange={onChooseAvatarFile}
                               ref={fileInputRef}
@@ -690,19 +686,9 @@ function ProfileSignInPrompt() {
 
 function ResetTutorialSection() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
-
-  // Clearing the flag re-arms the /_terminal gate; jump straight into the
-  // replayed onboarding instead of waiting for the next reload.
-  const handleReset = () => {
-    localStorage.removeItem(ONBOARDING_KEY)
-    localStorage.removeItem(SECTION_TOURS_SEEN_KEY)
-    localStorage.removeItem(SECTION_TOURS_DISABLED_KEY)
-    // Same family of first-visit tips, so a replay owes it the same reset.
-    localStorage.removeItem(DESKTOP_NUDGE_SEEN_KEY)
-    useSettingsDialogStore.getState().close()
-    void navigate({ to: '/onboarding' })
-  }
+  // The keys to clear and the navigation live in the hook, shared with the
+  // phone's profile screen.
+  const handleReset = useResetTutorial()
 
   return (
     <section className="max-w-4xl rounded-xl border p-4">

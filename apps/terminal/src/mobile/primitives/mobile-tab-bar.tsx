@@ -37,6 +37,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
+import { PRESS } from './press'
 import type { LucideIcon } from 'lucide-react'
 import type { MobileTab } from '../mobile-focus-context'
 
@@ -163,6 +164,12 @@ export const MobileTabBar = memo(function MobileTabBar({
             onClick={() => onChange(tab.id)}
             ref={registerItem(tab.id)}
             type="button"
+            // Paint only, straight onto the node: the bar is `memo` for the
+            // reason in the header comment and a press must not cost it a
+            // render. The fill is `.pl-tab-item`'s own pressed rule, which
+            // deliberately does NOT scale — the pill tracks this button's live
+            // rect and a transform here would drag it off the tab.
+            {...PRESS}
           >
             <Icon
               className={cn(

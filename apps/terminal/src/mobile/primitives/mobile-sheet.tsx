@@ -67,6 +67,7 @@ import {
   sheetTop,
   shouldDismissSheet,
 } from '../lib/mobile-geometry'
+import { SHEET_EXIT_MS } from '../lib/panel-swap'
 import type { SheetSnaps } from '../lib/mobile-geometry'
 import type {
   CSSProperties,
@@ -338,6 +339,121 @@ function useSheetProgressVars(
   )
 
   return trackGesture
+}
+
+/**
+ * Closing a sheet whose MOUNT belongs to somebody else.
+ *
+ * The full-height pickers are rendered from the overlay stack (`OverlayHost`
+ * in mobile-surface.tsx) and `popOverlay` unmounts the screen in the same
+ * tick, so vaul's `Presence` never sees open→false and the exit documented
+ * above never draws a frame — the picker vanished where every panel slides.
+ * The seam is per-screen rather than a change to the stack: hold the sheet's
+ * `open` locally, flip it, and hand the parent its close only once the
+ * animation has played. `chart/drawing-toolbar.tsx` closes the same way.
+ *
+ * Idempotent by latch, because vaul's `onOpenChange` and whatever the user
+ * tapped can both ask for the same close. `onClose` MUST be the
+ * identity-addressed close the host provides (`closeOverlay` bound to this
+ * screen's overlay — `closeShown` in mobile-surface.tsx), never the
+ * positional `popOverlay`: the exit is long enough for the user to open a
+ * DIFFERENT overlay on top, and a positional pop fired 500ms later would
+ * dismiss the one they just opened. Identity is also what lets unmount FLUSH
+ * the owed close instead of dropping it — firing against an entry that back
+ * or a tab tap already removed is a no-op.
+ *
+ * One duration for both paths. Under `prefers-reduced-motion` the sheet is a
+ * 140ms fade (mobile.css) and the stack entry is released at 500ms anyway:
+ * nothing is on screen for the difference, and a second number here would be
+ * a copy of a CSS one with nothing keeping the two in step.
+ *
+ * `reopenKey` is the overlay object the screen was handed. Pass it: the half
+ * second the exit now lasts is long enough for the user to tap the same chip
+ * again, and that second tap pushes a SECOND stack entry for a screen React
+ * reuses rather than remounts — the sheet would stay shut behind a shell that
+ * still believes a picker is up. See the reopen effect below for why the
+ * pending hand-off is deliberately left to run.
+ */
+export function useSheetExit(
+  onClose: () => void,
+  reopenKey?: unknown,
+): {
+  open: boolean
+  /**
+   * True for the length of the exit. Anything a tap on the sheet APPLIES has
+   * to check it: `.pl-sheet[data-state='closed']` cuts pointer events, but
+   * that declaration sits in a cascade layer and loses to vaul's own
+   * unlayered stylesheet (measured — the rows stay hit-testable for the whole
+   * half second), so a second tap on a list row would still pick a pair the
+   * user was not aiming at. Stable identity, and it reads a ref: guarding
+   * must not re-render a list mid-exit.
+   */
+  isClosing: () => boolean
+  requestClose: () => void
+} {
+  const [open, setOpen] = useState(true)
+  const closingRef = useRef(false)
+  // Every owed hand-off, not just the newest: asking to close, reopening and
+  // closing again inside half a second owes the stack TWO closes, and a
+  // single slot would drop the first one on the floor. Each entry carries the
+  // `onClose` captured when it was ARMED — the host rebinds `onClose` to
+  // whatever overlay the screen currently shows, and a close owed for the
+  // previous overlay must not fire against the new one.
+  const pendingRef = useRef<Array<{ timer: number; close: () => void }>>([])
+  useEffect(
+    () => () => {
+      // FLUSH, don't drop. The owed close is identity-addressed
+      // (`closeOverlay` removes the one entry this screen was showing, and
+      // no-ops if back or a tab tap already removed it), so firing it at
+      // unmount can never double-pop — but dropping it would strand the entry
+      // whenever the screen unmounts mid-exit because a DIFFERENT overlay
+      // adopted the top: the incoming screen would sit on a stack two deep,
+      // and dismissing it would resurrect this one.
+      for (const pending of pendingRef.current) {
+        window.clearTimeout(pending.timer)
+        pending.close()
+      }
+      pendingRef.current = []
+    },
+    [],
+  )
+
+  /**
+   * Asked for again mid-exit — the same chip tapped twice inside half a
+   * second. Reopening is only half of it: the close this screen still owes is
+   * left SCHEDULED on purpose. It is identity-addressed at the entry the
+   * first tap was showing, so it removes exactly that surplus entry and the
+   * stack lands at one entry for the one picker now on screen. Cancelling it
+   * instead would leave the stack one deep forever and cost the user a back
+   * press per double-tap.
+   */
+  const keyRef = useRef(reopenKey)
+  useEffect(() => {
+    if (reopenKey === keyRef.current) return
+    keyRef.current = reopenKey
+    closingRef.current = false
+    setOpen(true)
+  }, [reopenKey])
+
+  const requestClose = useCallback(() => {
+    if (closingRef.current) return
+    closingRef.current = true
+    // The keyboard retracts WITH the sheet rather than after it: a focused
+    // search field otherwise holds the layout viewport short for the whole
+    // exit, and the sheet slides towards a floor that is about to move.
+    const focused = document.activeElement
+    if (focused instanceof HTMLElement) focused.blur()
+    setOpen(false)
+    const pending = { timer: 0, close: onClose }
+    pending.timer = window.setTimeout(() => {
+      pendingRef.current = pendingRef.current.filter((p) => p !== pending)
+      pending.close()
+    }, SHEET_EXIT_MS)
+    pendingRef.current.push(pending)
+  }, [onClose])
+
+  const isClosing = useCallback(() => closingRef.current, [])
+  return { open, isClosing, requestClose }
 }
 
 /** vaul reads this off the pointer target to decide drag vs scroll. */
@@ -746,7 +862,14 @@ export const MobileSheet = memo(function MobileSheet({
                   } as CSSProperties)
                 : ({
                     top: sheetTop(band),
-                    '--pl-sheet-exit-from': '0px',
+                    // `exitFrom` and not a literal `0px`. A full-height sheet
+                    // rests at 0 so the two agree almost always — but a picker
+                    // FLICKED away is 260px down when vaul dismisses it
+                    // (measured), and starting the exit at 0 popped it back to
+                    // the top for a frame before it slid out. Invisible until
+                    // this round, because the pickers used to unmount without
+                    // animating at all.
+                    '--pl-sheet-exit-from': `${Math.round(exitFrom)}px`,
                     '--pl-sheet-exit-to': '100%',
                   } as CSSProperties)
             }

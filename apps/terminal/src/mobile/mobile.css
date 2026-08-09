@@ -323,11 +323,15 @@
 
      `pointer-events` for the same reason the outgoing `.pl-sheet-scroll` drops
      them mid-swap: half a second of a leaving sheet must not swallow a tap
-     meant for the chart it is uncovering. */
+     meant for the chart it is uncovering. It carries `!important` for the same
+     reason the two declarations above it do: vaul's injected stylesheet is
+     UNLAYERED and outranks this whole layer regardless of specificity —
+     without it a leaving sheet computes `auto` and stays hit-testable for the
+     length of the exit (measured). */
   .pl-sheet[data-state='closed'] {
     animation: plSheetOut var(--pl-sheet-dur) var(--pl-sheet-ease) forwards !important;
     transition: none !important;
-    pointer-events: none;
+    pointer-events: none !important;
   }
 
   @keyframes plSheetOut {
@@ -497,6 +501,26 @@
 
   .pl-chip-active {
     background: var(--pl-wash-strong);
+  }
+
+  /* Inset rings as CLASSES, not `shadow-[…]` utilities, for one reason: a
+     Tailwind utility lives in the utilities layer, which is declared after
+     this one and wins the whole `box-shadow` property at any specificity —
+     silently deleting `.pl-press`'s pressed fill (the fill IS a box-shadow).
+     These sit in the same layer, earlier in source order, so the pressed
+     rule below wins the tie exactly as `.pl-field`/`.pl-chip-active` do for
+     `background`. */
+  .pl-ring {
+    box-shadow: inset 0 0 0 1px var(--pl-edge);
+  }
+
+  .pl-ring-chart {
+    box-shadow: inset 0 0 0 1px var(--pl-chart-edge);
+  }
+
+  .pl-ring-primary {
+    box-shadow: inset 0 0 0 1px
+      color-mix(in oklch, var(--primary) 46%, transparent);
   }
 
   .pl-scrim {
@@ -717,6 +741,19 @@
     transition-duration: 60ms;
   }
 
+  /* A selected chip's primary-tinted ring survives its own press — without
+     this, `.pl-press[data-pressed]` swaps it for the neutral ring and the
+     accent flashes off under the thumb on exactly the tile the user is most
+     likely to press. One specificity step above the pressed rule, same trick
+     `.pl-ctx-avatar` uses below. */
+  .pl-ring-primary.pl-press[data-pressed],
+  .pl-ring-primary.pl-press:active {
+    box-shadow:
+      inset 0 1px 0 var(--pl-wash-strong),
+      inset 0 0 0 1px color-mix(in oklch, var(--primary) 46%, transparent),
+      inset 0 0 0 999px var(--pl-wash-strong);
+  }
+
   /* The settings avatar. Same press language, but it keeps its primary-tinted
      ring through the press instead of taking `.pl-press`'s neutral one — the
      rule is one specificity step above it for exactly that. */
@@ -747,6 +784,89 @@
     box-shadow:
       inset 0 0 0 1px color-mix(in oklch, var(--primary) 52%, transparent),
       inset 0 0 0 999px var(--pl-wash-heavy);
+  }
+
+  /* `.pl-press` is chip-shaped — a squeeze plus a ring, drawn for something
+     with its own silhouette. Three other shapes on this surface answer a
+     finger differently, and each of them takes the same timing (60ms in,
+     130ms out: the press is the answer, the release is what eases) and the
+     same `[data-pressed]`-first contract. Hover rules for fine pointers are
+     declared BEFORE their pressed rule throughout — they tie on specificity
+     and source order is what decides.
+
+     ── Rows. A 44px row that spans the screen cannot scale: its hairline
+     would visibly detach from the ones above and below it. The wash step
+     carries the whole signal, one further than a chip's because no movement
+     is helping it read.
+
+     `!important` on the fill is a cascade-LAYER problem and not a specificity
+     one: Tailwind's utilities layer is declared after this file's, so the
+     `bg-[color:var(--pl-wash)]` a selected row and the order-book strip carry
+     would win at any weight. The resting rule sets no fill and needs none. */
+  .pl-press-row {
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 130ms ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pl-press-row:hover {
+      background-color: var(--pl-wash);
+    }
+  }
+
+  .pl-press-row[data-pressed],
+  .pl-press-row:active {
+    background-color: var(--pl-wash-strong) !important;
+    transition-duration: 60ms;
+  }
+
+  /* ── Small round controls: a 20px clear-X inside a search field, the 44px
+     chevron on an overlay header. A ring would draw a border around a glyph
+     that has no silhouette of its own, and 0.965 is invisible at that size —
+     so the squeeze is deeper and the fill is an inset shadow rather than a
+     background, which STACKS on what the control already carries. The clear-X
+     is a `--pl-wash-heavy` disc: replacing its fill would make it LIGHTER
+     under the thumb. */
+  .pl-press-soft {
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      transform 130ms cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 130ms ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pl-press-soft:hover {
+      box-shadow: inset 0 0 0 999px var(--pl-wash);
+    }
+  }
+
+  .pl-press-soft[data-pressed],
+  .pl-press-soft:active {
+    transform: scale(0.94);
+    box-shadow: inset 0 0 0 999px var(--pl-wash-strong);
+    transition-duration: 60ms;
+  }
+
+  /* ── Bare text buttons — Cancel, "All markets", "See all". They have no box
+     to fill: a wash behind an unpadded label reads as a rectangle appearing
+     out of nowhere, which is why these get the platform answer instead, the
+     label itself dimming. Nothing moves, so nothing here needs a
+     reduced-motion variant. */
+  .pl-press-text {
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity 130ms ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pl-press-text:hover {
+      opacity: 0.75;
+    }
+  }
+
+  .pl-press-text[data-pressed],
+  .pl-press-text:active {
+    opacity: 0.5;
+    transition-duration: 60ms;
   }
 
   /* The venue chip's LIVE tag.
@@ -792,11 +912,63 @@
      Filled where that one is outlined, and muted where it is green: two marks
      of the same height and radius, one of which is clearly the quieter. A
      bare `--border` outline was the first attempt and it disappeared next to
-     the green ring — the glyph read as loose furniture rather than a tag. */
-  .pl-view-tag {
+     the green ring — the glyph read as loose furniture rather than a tag.
+
+     ONE declaration for the chip's bare mark and the venue picker's labelled
+     one, and that is the whole point: the eye on the chip and the eye beside
+     the word `read-only` in the picker have to be the same badge, or the
+     glyph never becomes shorthand for the word. Two rules would drift on the
+     first theme tweak. */
+  .pl-view-tag,
+  .pl-row-tag-muted {
     background: var(--pl-wash-heavy);
     box-shadow: inset 0 0 0 1px var(--pl-edge);
     color: color-mix(in oklab, var(--foreground) 72%, transparent);
+  }
+
+  /* ── List-row tags ───────────────────────────────────────────────
+     The venue picker's second line, where `spot · read-only` used to be a
+     plain sentence. The context bar spends its width on the venue name and
+     can only afford a bare glyph; this list has room, so it is the surface
+     that TEACHES what the glyph means — glyph and word, once, in the place
+     the user goes to change venues.
+
+     Geometry only; each tag below picks its own fill off the ladder. The
+     radius comes from the `rounded` utility at the call site, exactly like
+     `.pl-view-tag`, so the two can never round differently. */
+  .pl-row-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    height: 15px;
+    padding: 0 5px;
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.07em;
+    /* Caps for the reason the watchlist's IN FOCUS badge takes them: at 9px
+       an even top line reads as a token, lowercase reads as clipped prose.
+       A no-op in every unicameral script. */
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex: none;
+  }
+
+  /* What the venue TRADES. Descriptive rather than a status, so no ring and
+     the quieter wash — it must not compete with the capability beside it. */
+  .pl-row-tag-kind {
+    background: var(--pl-wash-strong);
+    color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  }
+
+  /* What you may DO on it. Tinted with `--primary`, deliberately not `--up`:
+     green is the LIVE badge's and P&L's, and a second green mark in the same
+     row would claim the venue is streaming as well as tradable. */
+  .pl-row-tag-trade {
+    background: color-mix(in oklch, var(--primary) 10%, transparent);
+    box-shadow: inset 0 0 0 1px
+      color-mix(in oklch, var(--primary) 26%, transparent);
+    color: color-mix(in oklab, var(--primary) 78%, var(--foreground));
   }
 
   /* 28px CIRCULAR venue mark — white plate, dark short name.
@@ -858,7 +1030,29 @@
   }
 
   .pl-tab-item {
-    transition: color 200ms ease-out;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      color 200ms ease-out,
+      box-shadow 130ms ease-out;
+  }
+
+  /* Before the pressed rule — source order, see `.pl-press`. */
+  @media (hover: hover) and (pointer: fine) {
+    .pl-tab-item:hover {
+      box-shadow: inset 0 0 0 999px var(--pl-wash);
+    }
+  }
+
+  /* The one control on this surface that must not scale under a finger: the
+     active pill is a SEPARATE element tracked to this button's live rect
+     every frame of a tab change (mobile-tab-bar.tsx), so a transform here
+     would haul the pill off the tab it is meant to be sitting on. A fill on
+     its own, then — and an inset shadow rather than a background because the
+     item paints after the pill and this has to land ON it, not behind it. */
+  .pl-tab-item[data-pressed],
+  .pl-tab-item:active {
+    box-shadow: inset 0 0 0 999px var(--pl-wash-strong);
+    transition-duration: 60ms;
   }
 
   /* The chart's box is a constant now (see mobile-chart-surface.tsx) — panels
@@ -959,6 +1153,17 @@
 
     .pl-press[data-pressed],
     .pl-press:active {
+      transform: none;
+    }
+
+    /* Same bargain for the small round controls. `.pl-press-row` and
+       `.pl-press-text` are already movement-free and keep their timings. */
+    .pl-press-soft {
+      transition: box-shadow 90ms ease-out;
+    }
+
+    .pl-press-soft[data-pressed],
+    .pl-press-soft:active {
       transform: none;
     }
 

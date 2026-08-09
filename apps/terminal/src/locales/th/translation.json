@@ -4701,7 +4701,9 @@
       "sections": {
         "channelsFib": "ช่องแนวโน้มและ Fibonacci",
         "annotate": "คำอธิบายประกอบ"
-      }
+      },
+      "crosshairMode": "เส้นกากบาท: {{mode}}",
+      "removeIndicator": "นำ {{name}} ออก"
     },
     "drawing": {
       "placementLabel": "วางภาพวาด",
@@ -4719,7 +4721,10 @@
       "terminalHeader": "เทอร์มินัล",
       "trading": "การเทรด",
       "connected": "เชื่อมต่อแล้ว",
-      "perOrder": "{{percent}}% ต่อคำสั่ง"
+      "perOrder": "{{percent}}% ต่อคำสั่ง",
+      "accountHeader": "บัญชี",
+      "signOutTitle": "ออกจากระบบใช่ไหม",
+      "signOutBody": "บัญชีที่เชื่อมต่อ รายการติดตาม และภาพวาดจะยังอยู่ในอุปกรณ์นี้ เข้าสู่ระบบอีกครั้งได้ทุกเมื่อเพื่อซิงก์ต่อ"
     },
     "desktopInvite": {
       "bannerTitle": "เทอร์มินัลเต็มรูปแบบอยู่บนคอมพิวเตอร์ของคุณ",
@@ -4797,7 +4802,7 @@
       "notListedCallout": "{{pair}} ไม่มีอยู่ในตลาด {{venue}} การเลือกคู่นี้จะสลับตลาดที่โฟกัสไปเป็น {{other}}",
       "availableVenues": "พร้อมใช้งาน",
       "desktopOnlyVenues": "ต้องใช้แอปเดสก์ท็อป",
-      "desktopOnlyVenue": "เข้าถึงได้เฉพาะจากแอปเดสก์ท็อป"
+      "desktopOnlyVenue": "เดสก์ท็อปเท่านั้น"
     }
   }
 }

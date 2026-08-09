@@ -138,7 +138,7 @@ export function OnboardingSpotlight() {
   const needsTitlebar = useNeedsTitlebar()
   const { setTheme, resolvedTheme } = useTheme()
   const reduceMotion = useReducedMotion() ?? false
-  // Portrait is the only thing the phone changes about onboarding: the same 17
+  // Portrait is the only thing the phone changes about onboarding: the same 18
   // steps, the same copy, the same orb — moved and scaled for a 402px frame.
   const presets: LayoutPresetTable =
     useViewportMode() === 'mobile' ? LAYOUT_PRESETS_PORTRAIT : LAYOUT_PRESETS
@@ -757,7 +757,7 @@ export function OnboardingSpotlight() {
   return (
     <div
       ref={rootRef}
-      className="fixed inset-0 overflow-hidden bg-background font-sans text-foreground transition-colors duration-600"
+      className="pl-onb-frame fixed inset-0 overflow-hidden bg-background font-sans text-foreground transition-colors duration-600"
     >
       {/* Aurora background. On coarse pointers the blur radius drops to ~28px:
           an 80–90px filter over a viewport-sized layer is real tile memory on a
@@ -851,18 +851,21 @@ export function OnboardingSpotlight() {
         />
       </div>
 
-      {/* Stage. In portrait it is also the scroll region: a 17-language choice
-          grid is taller than a phone, and the frame itself is overflow-hidden,
-          so without this the last options would be unreachable. Above `sm` the
-          box is exactly as it was — height auto, no scrolling. */}
+      {/* Stage. On a phone and on any short frame it is also the scroll region:
+          a 17-language choice grid is taller than the viewport and the frame
+          itself is clipped, so without this the last options would be
+          unreachable. The scroll system (widths, gutters, sticky nav, gesture
+          scoping) lives in spotlight.css — it spans two media conditions, not
+          one breakpoint. On a full-size window the box is height-auto with no
+          scrolling, exactly as it was. */}
       <div
         ref={stageRef}
-        className="absolute left-1/2 z-[3] w-[min(760px,92vw)] -translate-x-1/2 text-center max-sm:bottom-0 max-sm:overflow-y-auto max-sm:overscroll-contain"
+        className="pl-onb-stage absolute left-1/2 z-[3] w-[min(760px,92vw)] -translate-x-1/2 text-center"
         style={{ transition: `top .66s ${EASE}` }}
       >
         <div
           ref={contentRef}
-          className="flex flex-col items-center gap-4 max-sm:min-h-full"
+          className="pl-onb-content flex flex-col items-center gap-4"
         >
           {launched ? (
             <>
@@ -964,11 +967,9 @@ export function OnboardingSpotlight() {
                 summaryRows={summaryRows}
               />
 
-              {/* Nav. On a phone it drops into thumb reach: `mt-auto` pushes
-                  it to the bottom of the stage when the step is short, and
-                  `sticky` keeps it there when the step scrolls. It is in flow
-                  either way, so the last option is never trapped underneath. */}
-              <div className="mt-2 flex items-center justify-center gap-[11px] max-sm:sticky max-sm:bottom-0 max-sm:z-10 max-sm:mt-auto max-sm:-mx-[4vw] max-sm:w-screen max-sm:bg-background/90 max-sm:pb-[max(env(safe-area-inset-bottom),20px)] max-sm:pt-4">
+              {/* Nav. On a small frame it drops into thumb reach and sticks to
+                  the bottom edge — see `.pl-onb-nav` in spotlight.css. */}
+              <div className="pl-onb-nav mt-2 flex items-center justify-center gap-[11px]">
                 {stepIndex > 0 && (
                   <Button variant="ghost" onClick={handleBack}>
                     {t('onboarding.nav.back')}

@@ -3,6 +3,7 @@
 import { memo } from 'react'
 
 import { cn } from '@pairlens/ui'
+import { PRESS } from './press'
 import type { ReactNode } from 'react'
 
 export type MobileRowProps = {
@@ -87,13 +88,17 @@ export const MobileRow = memo(function MobileRow({
     )
   }
 
+  // `.pl-press-row` and not the bare `active:` utility it replaced: `:active`
+  // is not asserted reliably under touch (see primitives/press.ts), which is
+  // why thirteen call sites' worth of rows answered a finger with nothing.
   return (
     <button
       aria-current={selected || undefined}
-      className={cn(shared, 'active:bg-[color:var(--pl-wash-strong)]')}
+      className={cn(shared, 'pl-press-row')}
       disabled={disabled}
       onClick={onPress}
       type="button"
+      {...PRESS}
     >
       {content}
     </button>

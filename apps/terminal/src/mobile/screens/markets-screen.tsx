@@ -59,6 +59,7 @@ import { Skeleton } from '@pairlens/ui/components/ui/skeleton'
 import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { MobileRow } from '../primitives/mobile-row'
 import { FullScreenOverlay } from '../primitives/full-screen-overlay'
+import { PRESS } from '../primitives/press'
 import { TrendQuoteCell } from '../panels/trend-quote-cell'
 import type { RefObject } from 'react'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
@@ -305,9 +306,10 @@ export default memo(function MarketsScreen({
               {query ? (
                 <button
                   aria-label={t('common.clear')}
-                  className="pl-hit-44 flex size-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--pl-wash-heavy)] text-muted-foreground"
+                  className="pl-hit-44 pl-press-soft flex size-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--pl-wash-heavy)] text-muted-foreground"
                   onClick={() => setQuery('')}
                   type="button"
+                  {...PRESS}
                 >
                   <X className="size-3" />
                 </button>

@@ -4701,7 +4701,9 @@
       "sections": {
         "channelsFib": "Kanal & Fibonacci",
         "annotate": "Anotasi"
-      }
+      },
+      "crosshairMode": "Crosshair: {{mode}}",
+      "removeIndicator": "Hapus {{name}}"
     },
     "drawing": {
       "placementLabel": "Tempatkan gambar",
@@ -4719,7 +4721,10 @@
       "terminalHeader": "Terminal",
       "trading": "Trading",
       "connected": "Terhubung",
-      "perOrder": "{{percent}}% per order"
+      "perOrder": "{{percent}}% per order",
+      "accountHeader": "Akun",
+      "signOutTitle": "Keluar?",
+      "signOutBody": "Akun yang terhubung, daftar pantauan, dan gambar tetap ada di perangkat ini. Masuk lagi kapan saja untuk terus menyinkronkan."
     },
     "desktopInvite": {
       "bannerTitle": "Terminal lengkapnya ada di komputer Anda",
@@ -4797,7 +4802,7 @@
       "notListedCallout": "{{pair}} tidak terdaftar di {{venue}}. Memilihnya akan mengalihkan venue yang difokuskan ke {{other}}.",
       "availableVenues": "Tersedia",
       "desktopOnlyVenues": "Butuh aplikasi desktop",
-      "desktopOnlyVenue": "Hanya bisa diakses dari aplikasi desktop"
+      "desktopOnlyVenue": "Hanya desktop"
     }
   }
 }

@@ -4701,7 +4701,9 @@
       "sections": {
         "channelsFib": "通道與費波那契",
         "annotate": "標註"
-      }
+      },
+      "crosshairMode": "十字游標：{{mode}}",
+      "removeIndicator": "移除{{name}}"
     },
     "drawing": {
       "placementLabel": "放置繪圖",
@@ -4719,7 +4721,10 @@
       "terminalHeader": "終端機",
       "trading": "交易",
       "connected": "已連接",
-      "perOrder": "每筆訂單 {{percent}}%"
+      "perOrder": "每筆訂單 {{percent}}%",
+      "accountHeader": "帳號",
+      "signOutTitle": "登出？",
+      "signOutBody": "已連線的帳戶、自選清單和繪圖都會留在這部裝置上。隨時重新登入即可繼續同步。"
     },
     "desktopInvite": {
       "bannerTitle": "完整的終端機在你的電腦上",
@@ -4797,7 +4802,7 @@
       "notListedCallout": "{{pair}} 未在 {{venue}} 上架。選擇它會將目前使用中的交易所切換為 {{other}}。",
       "availableVenues": "可用",
       "desktopOnlyVenues": "需要桌面應用程式",
-      "desktopOnlyVenue": "僅能從桌面應用程式連線"
+      "desktopOnlyVenue": "僅桌面版"
     }
   }
 }

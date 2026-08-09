@@ -46,6 +46,7 @@ import { cn } from '@pairlens/ui'
 import { useMobileActions } from '../mobile-focus-context'
 import { FullScreenOverlay } from '../primitives/full-screen-overlay'
 import { MobileRow } from '../primitives/mobile-row'
+import { PRESS } from '../primitives/press'
 import type { BalanceRecord } from '@/stores/balances-store'
 import type { CryptoWallet } from '@/stores/wallets-store'
 import type { ExchangeCredential } from '@/stores/credentials-store'
@@ -331,9 +332,10 @@ export default memo(function PnlScreen({
               {t('accounts.vaultSealedBody')}
             </p>
             <button
-              className="mt-4 flex h-11 w-full items-center justify-center rounded-xl bg-primary px-5 text-[15px] font-semibold text-primary-foreground"
+              className="pl-press mt-4 flex h-11 w-full items-center justify-center rounded-xl bg-primary px-5 text-[15px] font-semibold text-primary-foreground"
               onClick={() => setUnlockOpen(true)}
               type="button"
+              {...PRESS}
             >
               {t('security.vault.sealedBannerAction')}
             </button>
@@ -350,9 +352,10 @@ export default memo(function PnlScreen({
               {t('mobile.pnl.connectBody')}
             </p>
             <button
-              className="mt-4 flex h-11 w-full items-center justify-center rounded-xl bg-primary px-5 text-[15px] font-semibold text-primary-foreground"
+              className="pl-press mt-4 flex h-11 w-full items-center justify-center rounded-xl bg-primary px-5 text-[15px] font-semibold text-primary-foreground"
               onClick={openConnect}
               type="button"
+              {...PRESS}
             >
               {t('accounts.connect')}
             </button>

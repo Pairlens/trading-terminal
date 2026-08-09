@@ -43,6 +43,7 @@ import { Check, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { CHART_TIME_AXIS_HEIGHT } from '../lib/mobile-geometry'
+import { PRESS } from '../primitives/press'
 import {
   buildPlacedDrawing,
   centreOfPlot,
@@ -402,9 +403,10 @@ function PlacementLayer({
           <div className="pl-popover flex items-center gap-2 p-1.5">
             <button
               aria-label={t('mobile.drawing.cancel')}
-              className="flex size-11 shrink-0 items-center justify-center rounded-xl text-muted-foreground"
+              className="pl-press-soft flex size-11 shrink-0 items-center justify-center rounded-xl text-muted-foreground"
               onClick={cancel}
               type="button"
+              {...PRESS}
             >
               <X className="size-[18px]" />
             </button>
@@ -422,9 +424,10 @@ function PlacementLayer({
               </p>
             </div>
             <button
-              className="flex h-11 shrink-0 items-center gap-1.5 rounded-xl bg-primary px-4 text-[13.5px] font-semibold text-primary-foreground"
+              className="pl-press flex h-11 shrink-0 items-center gap-1.5 rounded-xl bg-primary px-4 text-[13.5px] font-semibold text-primary-foreground"
               onClick={confirmPoint}
               type="button"
+              {...PRESS}
             >
               <Check className="size-4" />
               {t('mobile.drawing.setPoint')}
@@ -434,9 +437,10 @@ function PlacementLayer({
           <div className="pl-popover flex items-center gap-2 p-1.5">
             <button
               aria-label={t('mobile.drawing.cancel')}
-              className="flex size-11 shrink-0 items-center justify-center rounded-xl text-muted-foreground"
+              className="pl-press-soft flex size-11 shrink-0 items-center justify-center rounded-xl text-muted-foreground"
               onClick={cancel}
               type="button"
+              {...PRESS}
             >
               <X className="size-[18px]" />
             </button>
@@ -456,9 +460,10 @@ function PlacementLayer({
               />
             </div>
             <button
-              className="flex h-11 shrink-0 items-center rounded-xl bg-primary px-4 text-[13.5px] font-semibold text-primary-foreground"
+              className="pl-press flex h-11 shrink-0 items-center rounded-xl bg-primary px-4 text-[13.5px] font-semibold text-primary-foreground"
               onClick={() => commit(placed, content)}
               type="button"
+              {...PRESS}
             >
               {t('mobile.drawing.done')}
             </button>

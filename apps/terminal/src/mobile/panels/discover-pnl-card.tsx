@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 import { useMobileActions } from '../mobile-focus-context'
+import { PRESS } from '../primitives/press'
 import type { ReactNode } from 'react'
 import { useRiskConfigStore } from '@/stores/risk-config-store'
 import { getBalances, subscribeBalances } from '@/stores/balances-store'
@@ -70,9 +71,10 @@ export function StatCard({
 
   return (
     <button
-      className={cn(shell, 'text-left active:bg-[color:var(--pl-wash-strong)]')}
+      className={cn(shell, 'pl-press-row text-left')}
       onClick={onPress}
       type="button"
+      {...PRESS}
     >
       {body}
     </button>

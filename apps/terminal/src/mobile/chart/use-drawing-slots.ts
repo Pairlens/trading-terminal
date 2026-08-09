@@ -1,21 +1,27 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * The five tool slots in the mobile drawing toolbar, as an LRU list.
+ * The three tool slots in the mobile drawing toolbar: a pinned cursor and two
+ * earned tools.
  *
- * A phone has room for five of the forty-odd tools the catalog ships, so the
- * five are earned rather than configured: picking anything from the full sheet
- * inserts it at the front and drops the oldest. A trader's five stay one tap
- * away without ever opening a settings screen.
+ * A phone has room for a handful of the forty-odd tools the catalog ships, so
+ * the ones on the bar are earned rather than configured: picking anything from
+ * the full sheet inserts it at the front of the LRU and drops the oldest. A
+ * trader's two most recent stay one tap away without ever opening a settings
+ * screen.
  *
- * Two rules the toolbar depends on, both enforced here rather than at the call
+ * Three rules the toolbar depends on, all enforced here rather than at the call
  * site:
  *
- *   - **The grid button is not a slot.** It is the door to the sheet, so it can
- *     never be evicted — expressing that as "it is not in the list" is what
- *     makes it structurally impossible rather than a condition someone has to
- *     remember. `GRID_SLOT` exists only so the test can assert it never lands
- *     in the list.
+ *   - **The cursor is pinned at position 0.** It is the way back to pan-and-
+ *     select, and a two-deep LRU would evict it after two picks. It used to be
+ *     an ordinary member of a five-long list, which was survivable at five and
+ *     is not at three.
+ *   - **The sheet buttons are not slots.** They are the doors to the tools and
+ *     indicators panels, so they can never be evicted — expressing that as
+ *     "they are not in the list" is what makes it structurally impossible
+ *     rather than a condition someone has to remember. `GRID_SLOT` exists only
+ *     so the test can assert it never lands in the list.
  *   - **Tapping a toolbar slot does not reorder the toolbar.** Only a pick from
  *     the sheet does. Buttons that rearrange themselves under a thumb mid-draw
  *     are worse than a stale order.
@@ -24,7 +30,7 @@
  * synthetic `select` (the cursor — the absence of a tool, which the chart
  * models as `applyTool(null)`).
  */
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import type { GlyphName } from '../primitives/glyphs'
 import { usePersistedState } from '@/hooks/use-persisted-state'
@@ -41,32 +47,55 @@ export const SELECT_SLOT = 'select'
  */
 export const GRID_SLOT = 'grid'
 
-/** The design's toolbar: cursor, trend line, horizontal, retracement, text. */
-export const DEFAULT_DRAWING_SLOTS = [
-  SELECT_SLOT,
-  'line',
-  'hline',
-  'fibonacci',
-  'text',
-]
-
-/** Five chips fit a 402px bar beside the grid button, divider, magnet, trash. */
-export const DRAWING_SLOT_LIMIT = 5
+/** The design's toolbar: cursor, trend line, horizontal. */
+export const DEFAULT_DRAWING_SLOTS = [SELECT_SLOT, 'line', 'hline']
 
 /**
- * Insert a tool at the front, evicting the least recently used.
+ * Three chips fit the 402px bar beside two sheet doors, two dividers, the
+ * crosshair-mode cycler, undo and trash.
+ */
+export const DRAWING_SLOT_LIMIT = 3
+
+/**
+ * Insert a tool at the front of the LRU, evicting the least recently used.
  *
- * A tool already in the list is moved to the front and nothing is evicted —
- * re-picking a slot must not cost the user a different one.
+ * "Front" is position 1, not 0: the cursor holds 0 and is never moved, never
+ * evicted and never inserted. A tool already in the list is moved up and
+ * nothing is evicted — re-picking a slot must not cost the user a different
+ * one.
  */
 export function insertSlot(
   slots: Array<string>,
   key: string,
   limit: number = DRAWING_SLOT_LIMIT,
 ): Array<string> {
-  if (key === GRID_SLOT) return slots
-  if (slots[0] === key) return slots
-  return [key, ...slots.filter((entry) => entry !== key)].slice(0, limit)
+  if (key === GRID_SLOT || key === SELECT_SLOT) return slots
+  if (slots[0] === SELECT_SLOT && slots[1] === key) return slots
+  const rest = slots.filter((entry) => entry !== key && entry !== SELECT_SLOT)
+  return [SELECT_SLOT, key, ...rest].slice(0, limit)
+}
+
+/**
+ * A persisted value made safe to render.
+ *
+ * The list shipped five slots with an evictable cursor, so an existing user's
+ * storage can be longer than the bar and can be missing `select` entirely.
+ * Both are repaired on READ rather than written back: a migration write on
+ * mount would churn localStorage and the cross-tab sync bus for every user who
+ * never touches the toolbar. The first pick from the sheet persists the
+ * normalized shape on its own.
+ */
+export function normalizeSlots(
+  value: unknown,
+  limit: number = DRAWING_SLOT_LIMIT,
+): Array<string> {
+  if (!Array.isArray(value)) return DEFAULT_DRAWING_SLOTS
+  const tools = value.filter(
+    (entry): entry is string =>
+      typeof entry === 'string' && entry !== SELECT_SLOT && entry !== GRID_SLOT,
+  )
+  if (tools.length === 0) return DEFAULT_DRAWING_SLOTS
+  return [SELECT_SLOT, ...tools].slice(0, limit)
 }
 
 /**
@@ -103,14 +132,13 @@ export function useDrawingSlots(): DrawingSlots {
     DRAWING_SLOTS_KEY,
     DEFAULT_DRAWING_SLOTS,
   )
-  // Cloud-hydrated values arrive as `unknown` — never hand a non-array on.
-  const slots = Array.isArray(stored) ? stored : DEFAULT_DRAWING_SLOTS
+  // Memoized on the stored value, not recomputed per render: the toolbar keys
+  // its `useMemo` off this array's identity.
+  const slots = useMemo(() => normalizeSlots(stored), [stored])
 
   const promote = useCallback(
     (key: string) => {
-      setSlots((prev) =>
-        insertSlot(Array.isArray(prev) ? prev : DEFAULT_DRAWING_SLOTS, key),
-      )
+      setSlots((prev) => insertSlot(normalizeSlots(prev), key))
     },
     [setSlots],
   )

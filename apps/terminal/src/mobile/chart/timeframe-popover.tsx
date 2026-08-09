@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 import { MobileScrim } from '../primitives/mobile-scrim'
+import { PRESS } from '../primitives/press'
 import { usePinnedTimeframes } from './use-pinned-timeframes'
 import type { ReactNode, PointerEvent as ReactPointerEvent } from 'react'
 import type { TimeframeOption } from '@/components/terminal/chart-toolbar'
@@ -118,7 +119,7 @@ export default memo(function TimeframePopoverChip() {
         aria-haspopup="true"
         aria-label={t('chart.toolbar.timeframe')}
         className={cn(
-          'flex h-9 items-center gap-1 rounded-[10px] pl-[11px] pr-[7px] font-mono text-[13.5px] font-semibold',
+          'pl-press flex h-9 items-center gap-1 rounded-[10px] pl-[11px] pr-[7px] font-mono text-[13.5px] font-semibold',
           // At rest the chip is chrome floating on the bare plot, so it takes
           // its ink and its ring from the CHART's palette, not the UI's — a
           // theme is free to give the chart a background the UI never wears,
@@ -126,10 +127,11 @@ export default memo(function TimeframePopoverChip() {
           // popover trigger over a scrim and goes back to the UI tokens.
           open
             ? 'bg-foreground text-background'
-            : 'text-[color:var(--pl-chart-fg)] shadow-[inset_0_0_0_1px_var(--pl-chart-edge)]',
+            : 'pl-ring-chart text-[color:var(--pl-chart-fg)]',
         )}
         onClick={() => setOpen((value) => !value)}
         type="button"
+        {...PRESS}
       >
         {label}
         <ChevronDown
@@ -163,6 +165,7 @@ export default memo(function TimeframePopoverChip() {
               {pinnedOptions.map((option) => (
                 <button
                   className={cn(
+                    'pl-press',
                     CELL,
                     option.value === timeframe
                       ? 'bg-foreground text-background'
@@ -171,6 +174,7 @@ export default memo(function TimeframePopoverChip() {
                   key={option.value}
                   onClick={() => select(option.value)}
                   type="button"
+                  {...PRESS}
                 >
                   {option.short}
                 </button>
@@ -268,10 +272,11 @@ const MoreCell = memo(function MoreCell({
   return (
     <button
       className={cn(
+        'pl-press',
         CELL,
         selected
           ? 'bg-foreground text-background'
-          : 'text-muted-foreground shadow-[inset_0_0_0_1px_var(--pl-edge)]',
+          : 'pl-ring text-muted-foreground',
       )}
       onClick={() => {
         if (firedRef.current) {
@@ -281,11 +286,25 @@ const MoreCell = memo(function MoreCell({
         onSelect()
       }}
       onContextMenu={(event) => event.preventDefault()}
-      onPointerCancel={cancel}
-      onPointerDown={handlePointerDown}
-      onPointerLeave={cancel}
+      // PRESS is paint and these are the long-press promote timer: both must
+      // run. Spreading `{...PRESS}` here would replace the promote handlers.
+      onPointerCancel={(event) => {
+        PRESS.onPointerCancel(event)
+        cancel()
+      }}
+      onPointerDown={(event) => {
+        PRESS.onPointerDown(event)
+        handlePointerDown(event)
+      }}
+      onPointerLeave={(event) => {
+        PRESS.onPointerLeave(event)
+        cancel()
+      }}
       onPointerMove={handlePointerMove}
-      onPointerUp={cancel}
+      onPointerUp={(event) => {
+        PRESS.onPointerUp(event)
+        cancel()
+      }}
       type="button"
     >
       {option.short}

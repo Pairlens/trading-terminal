@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@pairlens/ui'
 import { useMobileFocus } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
-import type { PointerEvent } from 'react'
+import { PRESS } from './press'
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useMarketData } from '@/lib/market-data-provider'
@@ -76,31 +76,6 @@ function LiveBadge({ state }: { state: VenueLiveState }) {
     </span>
   )
 }
-
-/**
- * Press feedback, driven by pointer events onto a DOM attribute.
- *
- * `:active` alone is not enough. iOS Safari only asserts it on elements the
- * page has touch-listened, and even on Chromium it waits for the gesture
- * recognizer's show-press delay — a fast tap can paint nothing at all. What
- * the paint reads instead is `[data-pressed]`, set on pointerdown and cleared
- * on the up/cancel that always follows (a touch pointer is implicitly
- * captured, so the release lands on this element wherever the finger ends).
- *
- * These are module-level handlers writing straight to the node: no state, no
- * re-render, and the bar stays `memo`-clean while a market streams. The CSS
- * keeps `:active` alongside for keyboard activation.
- */
-const PRESS = {
-  onPointerDown: (e: PointerEvent<HTMLElement>) =>
-    e.currentTarget.setAttribute('data-pressed', 'true'),
-  onPointerUp: (e: PointerEvent<HTMLElement>) =>
-    e.currentTarget.removeAttribute('data-pressed'),
-  onPointerCancel: (e: PointerEvent<HTMLElement>) =>
-    e.currentTarget.removeAttribute('data-pressed'),
-  onPointerLeave: (e: PointerEvent<HTMLElement>) =>
-    e.currentTarget.removeAttribute('data-pressed'),
-} as const
 
 /**
  * "You can watch this venue, you cannot trade on it."

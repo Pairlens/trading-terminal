@@ -348,6 +348,19 @@ export function OptionRows({ options }: { options: Array<RenderOption> }) {
 // coarse region. Popular shortlist first; typing searches the full list
 // by localized name (Intl.DisplayNames), English name, or ISO code.
 
+/**
+ * Phone frames skip the search autofocus: the software keyboard would cover
+ * the popular-country shortlist before the user has said they want to type,
+ * and the shortlist is the primary path there. `autoFocus` is read once at
+ * mount, so this needs no subscription.
+ */
+function autoFocusSearch(): boolean {
+  return (
+    typeof window === 'undefined' ||
+    !window.matchMedia('(max-width: 767px)').matches
+  )
+}
+
 export function CountryPicker({
   value,
   onSelect,
@@ -398,12 +411,18 @@ export function CountryPicker({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t('onboarding.country.searchPlaceholder')}
-        autoFocus
+        autoFocus={autoFocusSearch()}
         autoComplete="off"
         spellCheck={false}
-        className="w-full rounded-[13px] border border-border bg-card px-[17px] py-[13px] text-[15px] text-foreground outline-none placeholder:text-muted-foreground focus:border-[color-mix(in_oklch,var(--primary)_55%,var(--border))] focus:shadow-[0_0_0_4px_color-mix(in_oklch,var(--primary)_12%,transparent)]"
+        // 16px below the mobile gate, same rule the ui `Input` follows: iOS
+        // auto-zooms the page when a sub-16px field takes focus, and the zoom
+        // does not come back on blur.
+        className="w-full rounded-[13px] border border-border bg-card px-[17px] py-[13px] text-base text-foreground outline-none placeholder:text-muted-foreground focus:border-[color-mix(in_oklch,var(--primary)_55%,var(--border))] focus:shadow-[0_0_0_4px_color-mix(in_oklch,var(--primary)_12%,transparent)] md:text-[15px]"
       />
-      <div className="flex max-h-[min(296px,38vh)] flex-col gap-[9px] overflow-y-auto pb-0.5">
+      {/* `overflow-x: hidden` is explicit because `overflow-y` alone computes
+          the other axis to `auto` — a nested sideways scroller inside the
+          stage is the one thing that reads as broken on a phone. */}
+      <div className="flex max-h-[min(296px,38vh)] flex-col gap-[9px] overflow-y-auto overflow-x-hidden pb-0.5">
         {results.map((c) => (
           <button
             key={c.code}
@@ -521,10 +540,11 @@ export function AssetCards({ options }: { options: Array<RenderOption> }) {
             type="button"
             onClick={opt.onSelect}
             className={cn(
-              // Below `sm` the three cards are stacked, so the 166px floor that
-              // squares them off in a row instead pushes the third card under the
-              // fold. Content height is enough once they are rows.
-              'relative flex min-h-[166px] cursor-pointer flex-col items-start gap-[9px] rounded-2xl border border-border bg-card p-[19px] text-left text-foreground transition-[transform,border-color,box-shadow] duration-200 ease-[cubic-bezier(.22,1,.36,1)] max-sm:min-h-0 max-sm:p-4',
+              // Below `md` the three cards are stacked (`grid-cols-1` above), so
+              // the 166px floor that squares them off in a row instead pushes the
+              // third card under the fold. Content height is enough once they are
+              // rows.
+              'relative flex min-h-[166px] cursor-pointer flex-col items-start gap-[9px] rounded-2xl border border-border bg-card p-[19px] text-left text-foreground transition-[transform,border-color,box-shadow] duration-200 ease-[cubic-bezier(.22,1,.36,1)] max-md:min-h-0 max-md:p-4',
               'hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(0,0,0,.7)]',
               HOVER_BORDER,
             )}
@@ -695,10 +715,10 @@ export function ThemePalettes({
       <span className="font-mono text-[10.5px] uppercase tracking-[0.08em] text-muted-foreground">
         {t('onboarding.themeStep.paletteTitle')}
       </span>
-      {/* Seventeen bundled themes: three rows sit on stage, the rest scroll —
-          the bottom fade is the only hint the step needs. */}
+      {/* Eighteen bundled themes plus the stock look: three rows sit on stage,
+          the rest scroll — the bottom fade is the only hint the step needs. */}
       <div
-        className="flex max-h-[min(178px,25vh)] w-full flex-wrap justify-center gap-2 overflow-y-auto px-1 pb-1"
+        className="flex max-h-[min(178px,25vh)] w-full flex-wrap justify-center gap-2 overflow-y-auto overflow-x-hidden px-1 pb-1"
         style={{
           maskImage:
             'linear-gradient(to bottom, #000 74%, rgba(0,0,0,.35) 94%, transparent)',
@@ -712,11 +732,15 @@ export function ThemePalettes({
             type="button"
             onClick={() => onPick(chip.id)}
             className={cn(
-              'relative flex cursor-pointer items-center gap-2 rounded-full border border-border bg-card py-1.5 pl-2.5 pr-3.5 text-foreground transition-[transform,border-color] duration-200 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-px',
+              // Names come from plugin manifests, so the width is not ours to
+              // predict — a long one truncates instead of pushing the row past
+              // a 402px frame. A thumb gets 40px of height (three rows still
+              // clear the shelf's 178px); 44 would cost a row.
+              'relative flex max-w-full cursor-pointer items-center gap-2 rounded-full border border-border bg-card py-1.5 pl-2.5 pr-3.5 text-foreground transition-[transform,border-color] duration-200 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-px pointer-coarse:min-h-10',
               HOVER_BORDER,
             )}
           >
-            <span aria-hidden className="flex -space-x-1">
+            <span aria-hidden className="flex flex-none -space-x-1">
               {chip.colors.map((color, i) => (
                 <span
                   key={i}
@@ -725,7 +749,7 @@ export function ThemePalettes({
                 />
               ))}
             </span>
-            <span className="text-[12.5px] font-medium tracking-[-0.01em]">
+            <span className="min-w-0 truncate text-[12.5px] font-medium tracking-[-0.01em]">
               {chip.name}
             </span>
             {activeId === chip.id && <SelectedRing radius={999} />}
@@ -764,7 +788,7 @@ export function LegalCard({
       <div className="w-full" style={{ perspective: 1400 }}>
         <div
           ref={cardRef}
-          className="max-h-[min(322px,44vh)] overflow-y-auto rounded-2xl border border-border bg-card shadow-[0_24px_60px_-34px_rgba(0,0,0,.85)] will-change-[transform,opacity]"
+          className="max-h-[min(322px,44vh)] overflow-y-auto overflow-x-hidden rounded-2xl border border-border bg-card shadow-[0_24px_60px_-34px_rgba(0,0,0,.85)] will-change-[transform,opacity]"
         >
           {pageItems.map(({ text, index }) => {
             const isAccepted = accepted.includes(index)
@@ -819,7 +843,9 @@ export function LegalCard({
           <button
             type="button"
             onClick={onFirstSet}
-            className="cursor-pointer border-none bg-transparent p-0 text-xs text-primary"
+            // The hit box is padded out to 44px and the padding paid back with
+            // a negative margin, so the row's height is unchanged.
+            className="-my-[14px] cursor-pointer border-none bg-transparent px-2 py-[14px] text-xs text-primary"
           >
             ‹ {t('onboarding.legal.firstSet')}
           </button>

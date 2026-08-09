@@ -4701,7 +4701,9 @@
       "sections": {
         "channelsFib": "チャネル＆フィボナッチ",
         "annotate": "注釈"
-      }
+      },
+      "crosshairMode": "十字線：{{mode}}",
+      "removeIndicator": "{{name}}を削除"
     },
     "drawing": {
       "placementLabel": "描画を配置",
@@ -4719,7 +4721,10 @@
       "terminalHeader": "ターミナル",
       "trading": "取引",
       "connected": "接続済み",
-      "perOrder": "1注文あたり{{percent}}%"
+      "perOrder": "1注文あたり{{percent}}%",
+      "accountHeader": "アカウント",
+      "signOutTitle": "サインアウトしますか？",
+      "signOutBody": "接続済みのアカウント、ウォッチリスト、描画はこの端末に残ります。いつでもサインインし直せば同期を再開できます。"
     },
     "desktopInvite": {
       "bannerTitle": "完全版のターミナルはパソコンに",
@@ -4797,7 +4802,7 @@
       "notListedCallout": "{{pair}}は{{venue}}の取り扱いがありません。選択すると、フォーカス中の取引所が{{other}}に切り替わります。",
       "availableVenues": "利用可能",
       "desktopOnlyVenues": "デスクトップアプリが必要です",
-      "desktopOnlyVenue": "デスクトップアプリからのみ利用可能"
+      "desktopOnlyVenue": "デスクトップのみ"
     }
   }
 }

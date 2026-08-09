@@ -4701,7 +4701,9 @@
       "sections": {
         "channelsFib": "Kênh & Fibonacci",
         "annotate": "Chú thích"
-      }
+      },
+      "crosshairMode": "Con trỏ chữ thập: {{mode}}",
+      "removeIndicator": "Gỡ {{name}}"
     },
     "drawing": {
       "placementLabel": "Đặt hình vẽ",
@@ -4719,7 +4721,10 @@
       "terminalHeader": "Terminal",
       "trading": "Giao dịch",
       "connected": "Đã kết nối",
-      "perOrder": "{{percent}}% mỗi lệnh"
+      "perOrder": "{{percent}}% mỗi lệnh",
+      "accountHeader": "Tài khoản",
+      "signOutTitle": "Đăng xuất?",
+      "signOutBody": "Các tài khoản đã kết nối, danh sách theo dõi và hình vẽ vẫn ở lại trên thiết bị này. Đăng nhập lại bất cứ lúc nào để tiếp tục đồng bộ."
     },
     "desktopInvite": {
       "bannerTitle": "Terminal đầy đủ nằm trên máy tính của bạn",
@@ -4797,7 +4802,7 @@
       "notListedCallout": "{{pair}} không niêm yết trên {{venue}}. Chọn nó sẽ chuyển sàn đang chọn sang {{other}}.",
       "availableVenues": "Khả dụng",
       "desktopOnlyVenues": "Cần ứng dụng máy tính",
-      "desktopOnlyVenue": "Chỉ truy cập được từ ứng dụng máy tính"
+      "desktopOnlyVenue": "Chỉ trên máy tính"
     }
   }
 }

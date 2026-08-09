@@ -4701,7 +4701,9 @@
       "sections": {
         "channelsFib": "Canales y Fibonacci",
         "annotate": "Anotaciones"
-      }
+      },
+      "crosshairMode": "Cursor: {{mode}}",
+      "removeIndicator": "Quitar {{name}}"
     },
     "drawing": {
       "placementLabel": "Colocar dibujo",
@@ -4719,7 +4721,10 @@
       "terminalHeader": "Terminal",
       "trading": "Trading",
       "connected": "Conectado",
-      "perOrder": "{{percent}}% por orden"
+      "perOrder": "{{percent}}% por orden",
+      "accountHeader": "Cuenta",
+      "signOutTitle": "¿Cerrar sesión?",
+      "signOutBody": "Tus cuentas conectadas, listas de seguimiento y dibujos se quedan en este dispositivo. Vuelve a iniciar sesión cuando quieras para seguir sincronizando."
     },
     "desktopInvite": {
       "bannerTitle": "El terminal completo está en tu equipo",
@@ -4797,7 +4802,7 @@
       "notListedCallout": "{{pair}} no cotiza en {{venue}}. Elegirlo cambiará el venue activo a {{other}}.",
       "availableVenues": "Disponibles",
       "desktopOnlyVenues": "Necesita la app de escritorio",
-      "desktopOnlyVenue": "Solo accesible desde la app de escritorio"
+      "desktopOnlyVenue": "Solo escritorio"
     }
   }
 }

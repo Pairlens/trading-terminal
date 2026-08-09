@@ -29,6 +29,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@pairlens/ui'
 import { FullScreenOverlay } from '../primitives/full-screen-overlay'
 import { MobileScrim } from '../primitives/mobile-scrim'
+import { PRESS } from '../primitives/press'
 import { useMobileOrderbook } from '../lib/use-mobile-orderbook'
 import type { MobileBookRow } from '../lib/use-mobile-orderbook'
 import type { MobileOverlay } from '../mobile-focus-context'
@@ -129,22 +130,24 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
     () => (
       <>
         <button
-          className="flex h-[30px] items-center gap-1 rounded-[9px] bg-[color:var(--pl-wash-strong)] px-2.5 font-mono text-[11.5px] text-muted-foreground"
+          className="pl-press flex h-[30px] items-center gap-1 rounded-[9px] bg-[color:var(--pl-wash-strong)] px-2.5 font-mono text-[11.5px] text-muted-foreground"
           onClick={() => setGroupingOpen((open) => !open)}
           type="button"
+          {...PRESS}
         >
           {groupingLabel}
           <ChevronDown aria-hidden className="size-3" />
         </button>
         <button
           className={cn(
-            'h-[30px] rounded-[9px] px-2.5 text-[11.5px] font-medium',
+            'pl-press h-[30px] rounded-[9px] px-2.5 text-[11.5px] font-medium',
             isAuto
               ? 'bg-[color:var(--pl-wash-heavy)] text-foreground'
               : 'bg-[color:var(--pl-wash-strong)] text-muted-foreground',
           )}
           onClick={() => setTickIndex(null)}
           type="button"
+          {...PRESS}
         >
           {t('mobile.trade.auto')}
         </button>
@@ -351,11 +354,12 @@ function GroupingOption({
   return (
     <button
       className={cn(
-        'flex h-11 w-full items-center justify-between px-3 font-mono text-[12.5px]',
+        'pl-press-row flex h-11 w-full items-center justify-between px-3 font-mono text-[12.5px]',
         selected ? 'text-foreground' : 'text-muted-foreground',
       )}
       onClick={onPress}
       type="button"
+      {...PRESS}
     >
       {label}
       {selected ? <Check aria-hidden className="size-3.5" /> : null}

@@ -22,6 +22,7 @@ import { ChevronLeft, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
+import { PRESS } from './press'
 import type { ReactNode, RefObject } from 'react'
 
 /**
@@ -234,13 +235,14 @@ export const FullScreenOverlay = memo(function FullScreenOverlay({
         <button
           aria-label={t(dismiss === 'close' ? 'common.dismiss' : 'common.back')}
           className={cn(
-            'flex size-11 shrink-0 items-center justify-center rounded-full text-foreground',
+            'pl-press-soft flex size-11 shrink-0 items-center justify-center rounded-full text-foreground',
             dismiss === 'close'
               ? '-mr-2 bg-[color:var(--pl-wash-strong)]'
               : '-ml-2',
           )}
           onClick={requestDismiss}
           type="button"
+          {...PRESS}
         >
           <DismissIcon className="size-5" />
         </button>

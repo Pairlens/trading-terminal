@@ -4698,6 +4698,8 @@
       "moreLongPress": "More · long-press to pin",
       "drawingTools": "Drawing tools",
       "clearConfirm": "Clear every drawing on this chart?",
+      "crosshairMode": "Crosshair: {{mode}}",
+      "removeIndicator": "Remove {{name}}",
       "sections": {
         "channelsFib": "Channels & Fibonacci",
         "annotate": "Annotate"
@@ -4716,10 +4718,13 @@
     "copilot": {},
     "settings": {
       "accountsHeader": "Accounts & connections",
+      "accountHeader": "Account",
       "terminalHeader": "Terminal",
       "trading": "Trading",
       "connected": "Connected",
-      "perOrder": "{{percent}}% per order"
+      "perOrder": "{{percent}}% per order",
+      "signOutTitle": "Sign out?",
+      "signOutBody": "Your connected accounts, watchlists and drawings stay on this device. Sign in again any time to keep syncing."
     },
     "desktopInvite": {
       "bannerTitle": "The full terminal is on your computer",
@@ -4797,7 +4802,7 @@
       "notListedCallout": "{{pair}} is not listed on {{venue}}. Picking it will switch the focused venue to {{other}}.",
       "availableVenues": "Available",
       "desktopOnlyVenues": "Needs the desktop app",
-      "desktopOnlyVenue": "Reachable only from the desktop app"
+      "desktopOnlyVenue": "Desktop only"
     }
   }
 }

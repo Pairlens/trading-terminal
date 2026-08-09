@@ -35,7 +35,8 @@ import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
 import { VENUE_KIND_KEY, venueKindOf } from '../lib/venue-kind'
 import { MobileRow } from '../primitives/mobile-row'
-import { MobileSheet } from '../primitives/mobile-sheet'
+import { MobileSheet, useSheetExit } from '../primitives/mobile-sheet'
+import { PRESS } from '../primitives/press'
 import { isSearchInFlight } from './search-progress'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import type { MobileOverlay } from '../mobile-focus-context'
@@ -90,6 +91,11 @@ export default memo(function PairPickerScreen({
   const { t } = useTranslation()
   const { focusedPair, focusedVenue } = useMobileFocus()
   const { setFocusedPair, setFocusedVenue } = useMobileActions()
+  // Every dismiss routes through `requestClose` so the sheet gets to play its
+  // exit before the overlay stack unmounts this screen. `overlay` is the
+  // reopen key: a second tap on the pair chip during that exit pushes a new
+  // one, and the sheet has to come back rather than stay shut behind it.
+  const { open, isClosing, requestClose } = useSheetExit(onClose, overlay)
 
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<PairFilter>('all')
@@ -223,6 +229,9 @@ export default memo(function PairPickerScreen({
 
   const handleSelect = useCallback(
     (entry: PairEntry, routing: VenueRouting) => {
+      // A row tapped while the sheet is already leaving is not a choice — see
+      // `isClosing`.
+      if (isClosing()) return
       if (isAdd) {
         addToWatchlist(entry.symbol, [activeListId])
         return
@@ -238,9 +247,13 @@ export default memo(function PairPickerScreen({
           [entry.symbol]: entry.assetClass as string,
         }))
       }
-      onClose()
+      // The selection lands NOW and only the hand-off waits: the chart behind
+      // the sheet is already on the new pair by the time it has slid away,
+      // which is the whole point of animating the exit rather than cutting it.
+      requestClose()
     },
     [
+      isClosing,
       isAdd,
       addToWatchlist,
       activeListId,
@@ -249,7 +262,7 @@ export default memo(function PairPickerScreen({
       setFocusedPair,
       trackRecent,
       setAssetClassMap,
-      onClose,
+      requestClose,
     ],
   )
 
@@ -291,18 +304,20 @@ export default memo(function PairPickerScreen({
               {query ? (
                 <button
                   aria-label={t('common.clear')}
-                  className="pl-hit-44 flex size-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--pl-wash-heavy)] text-muted-foreground"
+                  className="pl-hit-44 pl-press-soft flex size-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--pl-wash-heavy)] text-muted-foreground"
                   onClick={() => setQuery('')}
                   type="button"
+                  {...PRESS}
                 >
                   <X className="size-3" />
                 </button>
               ) : null}
             </div>
             <button
-              className="pl-hit-44 shrink-0 text-[13.5px] font-medium text-foreground"
-              onClick={onClose}
+              className="pl-hit-44 pl-press-text shrink-0 text-[13.5px] font-medium text-foreground"
+              onClick={requestClose}
               type="button"
+              {...PRESS}
             >
               {t('common.cancel')}
             </button>
@@ -312,7 +327,7 @@ export default memo(function PairPickerScreen({
             {FILTERS.map((option) => (
               <button
                 className={cn(
-                  'flex h-7 items-center rounded-full px-3 text-[12.5px] font-medium',
+                  'pl-press flex h-7 items-center rounded-full px-3 text-[12.5px] font-medium',
                   option.id === filter
                     ? 'bg-foreground text-background'
                     : 'pl-field text-muted-foreground',
@@ -320,6 +335,7 @@ export default memo(function PairPickerScreen({
                 key={option.id}
                 onClick={() => setFilter(option.id)}
                 type="button"
+                {...PRESS}
               >
                 {t(option.labelKey)}
               </button>
@@ -328,10 +344,10 @@ export default memo(function PairPickerScreen({
         </div>
       }
       label={t('mobile.shell.overlays.pairPicker')}
-      onOpenChange={(open) => {
-        if (!open) onClose()
+      onOpenChange={(next) => {
+        if (!next) requestClose()
       }}
-      open
+      open={open}
     >
       {/* The tab bar floats above the sheet, so the list ends where it starts. */}
       <div className="pb-[var(--pl-tabbar-total)]">

@@ -4701,7 +4701,9 @@
       "sections": {
         "channelsFib": "Kanäle & Fibonacci",
         "annotate": "Anmerkungen"
-      }
+      },
+      "crosshairMode": "Fadenkreuz: {{mode}}",
+      "removeIndicator": "{{name}} entfernen"
     },
     "drawing": {
       "placementLabel": "Zeichnung platzieren",
@@ -4719,7 +4721,10 @@
       "terminalHeader": "Terminal",
       "trading": "Handel",
       "connected": "Verbunden",
-      "perOrder": "{{percent}}% pro Order"
+      "perOrder": "{{percent}}% pro Order",
+      "accountHeader": "Konto",
+      "signOutTitle": "Abmelden?",
+      "signOutBody": "Deine verbundenen Konten, Watchlists und Zeichnungen bleiben auf diesem Gerät. Melde dich jederzeit wieder an, um weiter zu synchronisieren."
     },
     "desktopInvite": {
       "bannerTitle": "Das ganze Terminal läuft am Rechner",
@@ -4797,7 +4802,7 @@
       "notListedCallout": "{{pair}} ist nicht auf {{venue}} gelistet. Bei Auswahl wechselt die fokussierte Venue zu {{other}}.",
       "availableVenues": "Verfügbar",
       "desktopOnlyVenues": "Braucht die Desktop-App",
-      "desktopOnlyVenue": "Nur aus der Desktop-App erreichbar"
+      "desktopOnlyVenue": "Nur Desktop"
     }
   }
 }

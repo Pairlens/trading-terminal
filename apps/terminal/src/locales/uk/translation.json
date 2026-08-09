@@ -4737,7 +4737,9 @@
       "sections": {
         "channelsFib": "Канали та Фібоначчі",
         "annotate": "Анотації"
-      }
+      },
+      "crosshairMode": "Перехрестя: {{mode}}",
+      "removeIndicator": "Прибрати {{name}}"
     },
     "drawing": {
       "placementLabel": "Розміщення малюнка",
@@ -4755,7 +4757,10 @@
       "terminalHeader": "Термінал",
       "trading": "Торгівля",
       "connected": "Підключено",
-      "perOrder": "{{percent}}% на ордер"
+      "perOrder": "{{percent}}% на ордер",
+      "accountHeader": "Обліковий запис",
+      "signOutTitle": "Вийти?",
+      "signOutBody": "Підключені облікові записи, списки відстеження та малюнки залишаться на цьому пристрої. Увійдіть знову будь-коли, щоб продовжити синхронізацію."
     },
     "desktopInvite": {
       "bannerTitle": "Повний термінал — на вашому комп'ютері",
@@ -4833,7 +4838,7 @@
       "notListedCallout": "{{venue}} не лістить {{pair}}. Вибір цієї пари перемкне активний майданчик на {{other}}.",
       "availableVenues": "Доступні",
       "desktopOnlyVenues": "Потрібен десктоп-застосунок",
-      "desktopOnlyVenue": "Доступно лише з десктоп-застосунку"
+      "desktopOnlyVenue": "Лише десктоп"
     }
   }
 }

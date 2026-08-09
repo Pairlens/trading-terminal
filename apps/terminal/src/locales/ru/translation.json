@@ -4737,7 +4737,9 @@
       "sections": {
         "channelsFib": "Каналы и Фибоначчи",
         "annotate": "Аннотации"
-      }
+      },
+      "crosshairMode": "Перекрестие: {{mode}}",
+      "removeIndicator": "Убрать {{name}}"
     },
     "drawing": {
       "placementLabel": "Размещение рисунка",
@@ -4755,7 +4757,10 @@
       "terminalHeader": "Терминал",
       "trading": "Торговля",
       "connected": "Подключено",
-      "perOrder": "{{percent}}% на ордер"
+      "perOrder": "{{percent}}% на ордер",
+      "accountHeader": "Аккаунт",
+      "signOutTitle": "Выйти?",
+      "signOutBody": "Подключённые аккаунты, списки наблюдения и рисунки останутся на этом устройстве. Войдите снова в любой момент, чтобы продолжить синхронизацию."
     },
     "desktopInvite": {
       "bannerTitle": "Полный терминал — на вашем компьютере",
@@ -4833,7 +4838,7 @@
       "notListedCallout": "{{pair}} не торгуется на {{venue}}. При выборе активная площадка переключится на {{other}}.",
       "availableVenues": "Доступно",
       "desktopOnlyVenues": "Только в десктоп-приложении",
-      "desktopOnlyVenue": "Доступно только из десктоп-приложения"
+      "desktopOnlyVenue": "Только десктоп"
     }
   }
 }

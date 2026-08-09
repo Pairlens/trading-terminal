@@ -4701,7 +4701,9 @@
       "sections": {
         "channelsFib": "Canali e Fibonacci",
         "annotate": "Annotazioni"
-      }
+      },
+      "crosshairMode": "Mirino: {{mode}}",
+      "removeIndicator": "Rimuovi {{name}}"
     },
     "drawing": {
       "placementLabel": "Posiziona disegno",
@@ -4719,7 +4721,10 @@
       "terminalHeader": "Terminale",
       "trading": "Trading",
       "connected": "Connesso",
-      "perOrder": "{{percent}}% per ordine"
+      "perOrder": "{{percent}}% per ordine",
+      "accountHeader": "Account",
+      "signOutTitle": "Uscire?",
+      "signOutBody": "I tuoi account collegati, le watchlist e i disegni restano su questo dispositivo. Accedi di nuovo in qualsiasi momento per continuare a sincronizzare."
     },
     "desktopInvite": {
       "bannerTitle": "Il terminale completo è sul tuo computer",
@@ -4797,7 +4802,7 @@
       "notListedCallout": "{{pair}} non è quotata su {{venue}}. Selezionandola, la piattaforma attiva passerà a {{other}}.",
       "availableVenues": "Disponibili",
       "desktopOnlyVenues": "Richiede l'app desktop",
-      "desktopOnlyVenue": "Raggiungibile solo dall'app desktop"
+      "desktopOnlyVenue": "Solo desktop"
     }
   }
 }

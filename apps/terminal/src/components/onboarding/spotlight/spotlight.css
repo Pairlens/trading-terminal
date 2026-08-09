@@ -83,3 +83,124 @@
     animation: none !important;
   }
 }
+
+/* The frame is a shell, not a scroller. `overflow: hidden` still leaves a
+   scroll port, so any `scrollIntoView` inside a step that does not itself
+   scroll — the country search's autofocus, the OTP field, a Radix focus move —
+   drags the whole experience off its own top and nothing ever brings it back:
+   the headline ends up clipped and the nav floats mid-screen. `clip` paints
+   identically with no scroll port at all. */
+html .pl-onb-frame {
+  overflow: clip;
+}
+
+/* Step one has neither a Back nor a Continue; an empty sticky bar would just
+   fog the last option for no reason. */
+.pl-onb-nav:empty {
+  display: none;
+}
+
+/* Thumb-sized targets. The shared button sizes are 36px (`lg`) and 32px
+   (`ghost`) — fine for a cursor, under the 44px a finger needs. Keyed off the
+   pointer rather than the width, because a phone in landscape is 874px wide
+   and still a thumb. */
+@media (pointer: coarse) {
+  .pl-onb-frame .pl-onb-nav button,
+  .pl-onb-frame .pl-onb-action {
+    min-height: 44px;
+  }
+}
+
+/* ── Small-frame scroll system ────────────────────────────────────────
+ *
+ * The frame is a fixed, clipped shell, so whenever a step is taller than the
+ * viewport the stage has to be the scroll region or the last rows — and the
+ * nav under them — are simply unreachable. Two frames need it: the
+ * phone (below the 768px viewport gate, where a 17-language grid or the
+ * 19-chip palette row is always taller than the screen), and any short
+ * landscape frame (a phone on its side is 402px tall against desktop presets
+ * that assume ~900px).
+ *
+ * Written here rather than as `max-sm:` utilities because it is one system
+ * across two unrelated media conditions; the two-class selectors beat any
+ * single Tailwind utility regardless of stylesheet order, so no `!important`.
+ */
+
+/* Width/gutters are a phone concern only — a short but wide window keeps the
+   760px reading measure. */
+@media (max-width: 767px) {
+  .pl-onb-frame .pl-onb-stage {
+    width: 100%;
+    padding-inline: 4vw;
+  }
+
+  /* Spend exactly the stage's own padding so the bar reaches both edges
+     without adding scrollable width. The previous `w-screen -mx-[4vw]` was
+     measured against the viewport instead: inside a 92vw scroll container it
+     bled 4vw past the right edge (a real horizontal drag) while the left 4vw
+     fell into the unreachable left overflow. */
+  .pl-onb-frame .pl-onb-nav {
+    margin-inline: -4vw;
+  }
+}
+
+@media (max-width: 767px), (max-height: 560px) {
+  .pl-onb-frame .pl-onb-stage {
+    bottom: 0;
+    overflow-y: auto;
+    /* Explicit, not incidental: per spec `overflow-x` computes to `auto` when
+       the other axis is non-visible, so `overflow-y: auto` alone would leave
+       the stage a horizontal scroller for any child that overhangs. */
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    /* Locks the horizontal axis (no accidental sideways pans) while KEEPING
+       pinch-zoom: on a phone the stage covers ~80% of the viewport — all the
+       small type — so dropping `pinch-zoom` here would take zoom away from
+       exactly the region a low-vision user needs it, which is the same
+       accessibility stance that forbids `maximum-scale` in the viewport
+       meta. Double-tap zoom stays suppressed by the app-wide
+       `touch-action: manipulation` on html/body. */
+    touch-action: pan-y pinch-zoom;
+  }
+
+  /* Full-height content is what lets the nav's `margin-top: auto` sit at the
+     bottom of a short step instead of hugging the last option. */
+  .pl-onb-frame .pl-onb-content {
+    min-height: 100%;
+  }
+
+  /* The first step has no nav, so nothing else is carrying the bottom inset —
+     without this the last option ends under the home indicator. */
+  .pl-onb-frame .pl-onb-stage:has(.pl-onb-nav:empty) {
+    padding-bottom: max(env(safe-area-inset-bottom), 20px);
+  }
+
+  /* Thumb reach: bottom of the stage when the step is short, stuck to the
+     bottom edge when it scrolls. In flow either way, so the last option is
+     never trapped underneath. */
+  .pl-onb-frame .pl-onb-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    align-self: stretch;
+    margin-top: auto;
+    padding-top: 1rem;
+    padding-bottom: max(env(safe-area-inset-bottom), 20px);
+    /* Opaque, with the fade above it doing the work: at 90% the palette shelf
+       and the tail of a long option list showed through the bar as ghosts,
+       which reads as a paint bug rather than as chrome. */
+    background: var(--background);
+  }
+
+  /* Scrolled content dissolves into the bar instead of being guillotined by
+     it. Sits above the bar, never takes a tap. */
+  .pl-onb-frame .pl-onb-nav::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 100%;
+    height: 28px;
+    background: linear-gradient(to top, var(--background), transparent);
+    pointer-events: none;
+  }
+}

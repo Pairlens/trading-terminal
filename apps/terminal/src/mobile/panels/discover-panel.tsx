@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { MobileRow } from '../primitives/mobile-row'
+import { PRESS } from '../primitives/press'
 import { DiscoverFearGreedCard } from './discover-fear-greed-card'
 import { DiscoverPnlCard } from './discover-pnl-card'
 import { useMobileNewsFeed } from './use-mobile-news-feed'
@@ -98,9 +99,10 @@ export default memo(function MobileDiscoverPanel() {
         </h2>
         <button
           aria-label={t('mobile.shell.dismiss')}
-          className="pl-hit-44 -mr-1 flex size-9 shrink-0 items-center justify-center rounded-full text-muted-foreground"
+          className="pl-hit-44 pl-press-soft -mr-1 flex size-9 shrink-0 items-center justify-center rounded-full text-muted-foreground"
           onClick={dismissPanel}
           type="button"
+          {...PRESS}
         >
           <X className="size-5" />
         </button>
@@ -233,9 +235,10 @@ function SectionHeader({
       <h3 className="text-[15px] font-semibold text-foreground">{title}</h3>
       {action && onAction ? (
         <button
-          className="pl-hit-44 shrink-0 text-[12px] font-medium text-primary"
+          className="pl-hit-44 pl-press-text shrink-0 text-[12px] font-medium text-primary"
           onClick={onAction}
           type="button"
+          {...PRESS}
         >
           {action}
         </button>
@@ -255,9 +258,10 @@ const NewsRow = memo(function NewsRow({
 }) {
   return (
     <button
-      className="flex w-full items-start gap-3 border-t border-t-[color:var(--pl-hairline)] px-4 py-3 text-left active:bg-[color:var(--pl-wash-strong)]"
+      className="pl-press-row flex w-full items-start gap-3 border-t border-t-[color:var(--pl-hairline)] px-4 py-3 text-left"
       onClick={() => onOpen(index)}
       type="button"
+      {...PRESS}
     >
       <span className="min-w-0 flex-1">
         <span className="block text-[11px] leading-none text-muted-foreground">

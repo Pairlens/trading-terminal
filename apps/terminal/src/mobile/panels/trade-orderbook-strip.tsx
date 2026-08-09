@@ -26,6 +26,7 @@ import { ChevronRight, Rows3 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useMobileOrderbook } from '../lib/use-mobile-orderbook'
+import { PRESS } from '../primitives/press'
 import { formatBookPrice } from '@/lib/format-price'
 
 /** Deep enough for an honest pressure split, cheap enough to group per tick. */
@@ -76,9 +77,12 @@ export const TradeOrderbookStrip = memo(function TradeOrderbookStrip({
   return (
     <button
       aria-label={t('mobile.trade.openBook')}
-      className="flex w-full flex-col gap-2 rounded-xl bg-[color:var(--pl-wash)] px-3 pb-2.5 pt-[9px] text-left shadow-[inset_0_0_0_1px_var(--pl-edge)] active:bg-[color:var(--pl-wash-strong)]"
+      className="pl-press-row flex w-full flex-col gap-2 rounded-xl bg-[color:var(--pl-wash)] px-3 pb-2.5 pt-[9px] text-left shadow-[inset_0_0_0_1px_var(--pl-edge)]"
       onClick={onOpen}
       type="button"
+      // Stateless DOM writes, so this stays off the render path — the strip is
+      // on the per-tick allowlist and re-renders on every book update.
+      {...PRESS}
     >
       <span className="flex min-w-0 items-center gap-2">
         <Rows3

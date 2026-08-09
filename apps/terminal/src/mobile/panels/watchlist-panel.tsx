@@ -39,6 +39,7 @@ import { useVenueTradePermission } from '../lib/venue-permission'
 import { VENUE_KIND_KEY, venueKindOf } from '../lib/venue-kind'
 import { MobileRow } from '../primitives/mobile-row'
 import { useSheetScrollRef } from '../primitives/mobile-sheet'
+import { PRESS } from '../primitives/press'
 import { TrendQuoteCell } from './trend-quote-cell'
 import type { Instrument } from '@pairlens/shared/instrument-types'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
@@ -139,9 +140,10 @@ export default memo(function MobileWatchlistPanel() {
       <div className="pl-sheet-solid sticky top-0 z-10 pb-2">
         <div className="flex items-center gap-2 px-4 pt-1">
           <button
-            className="pl-field flex h-[38px] min-w-0 flex-1 items-center gap-2 rounded-[11px] px-3 text-left"
+            className="pl-field pl-press flex h-[38px] min-w-0 flex-1 items-center gap-2 rounded-[11px] px-3 text-left"
             onClick={openSearch}
             type="button"
+            {...PRESS}
           >
             <Search className="size-4 shrink-0 text-muted-foreground" />
             <span className="min-w-0 truncate text-[14px] text-muted-foreground">
@@ -150,9 +152,10 @@ export default memo(function MobileWatchlistPanel() {
           </button>
           <button
             aria-label={t('watchlist.addSymbol')}
-            className="pl-field flex size-[38px] shrink-0 items-center justify-center rounded-[11px] text-foreground"
+            className="pl-field pl-press flex size-[38px] shrink-0 items-center justify-center rounded-[11px] text-foreground"
             onClick={openAdd}
             type="button"
+            {...PRESS}
           >
             <Plus className="size-[18px]" />
           </button>
@@ -162,7 +165,7 @@ export default memo(function MobileWatchlistPanel() {
           {lists.map((list) => (
             <button
               className={cn(
-                'flex h-7 shrink-0 items-center rounded-full px-3 text-[12.5px] font-medium',
+                'pl-press flex h-7 shrink-0 items-center rounded-full px-3 text-[12.5px] font-medium',
                 list.id === activeList?.id
                   ? 'pl-chip-active text-foreground'
                   : 'text-muted-foreground',
@@ -170,6 +173,7 @@ export default memo(function MobileWatchlistPanel() {
               key={list.id}
               onClick={() => setActiveList(list.id)}
               type="button"
+              {...PRESS}
             >
               {list.name}
             </button>

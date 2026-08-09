@@ -38,6 +38,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@pairlens/ui'
 import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { useOrderDraftStore } from '../lib/order-draft-store'
+import { PRESS } from '../primitives/press'
 import { TradeOrderbookStrip } from './trade-orderbook-strip'
 import { TradeRiskRow } from './trade-risk-row'
 import { TradeSlideConfirm } from './trade-slide-confirm'
@@ -665,7 +666,8 @@ export default memo(function MobileTradePanel() {
         unit={
           <button
             aria-label={t('mobile.trade.switchSizeCurrency')}
-            className="pl-hit-44 -my-2 rounded-md px-1 py-2"
+            className="pl-hit-44 pl-press-soft -my-2 rounded-md px-1 py-2"
+            {...PRESS}
             onClick={(event) => {
               // The field is a <label>, so a click anywhere inside it focuses
               // the input — switching BTC to USDT would open the keyboard as a
@@ -686,10 +688,11 @@ export default memo(function MobileTradePanel() {
       <div className="flex gap-2">
         {PERCENTS.map((pct) => (
           <button
-            className="h-[31px] flex-1 rounded-[9px] border border-[color:var(--pl-edge)] font-mono text-[12px] tabular-nums text-muted-foreground active:bg-[color:var(--pl-wash-strong)] active:text-foreground"
+            className="pl-press h-[31px] flex-1 rounded-[9px] border border-[color:var(--pl-edge)] font-mono text-[12px] tabular-nums text-muted-foreground"
             key={pct}
             onClick={() => handlePercent(pct)}
             type="button"
+            {...PRESS}
           >
             {pct === 100 ? t('mobile.trade.max') : `${pct}%`}
           </button>
@@ -794,7 +797,10 @@ function SideButton({
   return (
     <button
       className={cn(
-        'h-[42px] flex-1 rounded-xl text-[15.5px] font-semibold',
+        // Inline styles carry the active side's fill and ring, so `.pl-press`'s
+        // own box-shadow never lands on it — the squeeze is the whole press
+        // here, and it is enough on a 42px control.
+        'pl-press h-[42px] flex-1 rounded-xl text-[15.5px] font-semibold',
         active
           ? side === 'buy'
             ? 'text-up'
@@ -802,6 +808,7 @@ function SideButton({
           : 'border border-[color:var(--pl-edge)] text-muted-foreground',
       )}
       onClick={onPress}
+      {...PRESS}
       style={
         active
           ? {
@@ -831,15 +838,16 @@ function SegmentButton({
   return (
     <button
       className={cn(
-        'h-7 flex-1 rounded-lg text-[12.5px] font-medium',
+        'pl-press h-7 flex-1 rounded-lg text-[12.5px] font-medium',
         active
           ? 'bg-[color:var(--pl-wash-heavy)] text-foreground'
-          : 'text-muted-foreground active:text-foreground',
+          : 'text-muted-foreground',
         disabled && 'opacity-35',
       )}
       disabled={disabled}
       onClick={onPress}
       type="button"
+      {...PRESS}
     >
       {label}
     </button>
@@ -956,9 +964,10 @@ function ConnectCard({
                 : t('mobile.trade.connectBody')}
             </p>
             <button
-              className="flex h-[46px] w-full items-center justify-center gap-2 rounded-[13px] bg-primary text-[15px] font-semibold text-primary-foreground"
+              className="pl-press flex h-[46px] w-full items-center justify-center gap-2 rounded-[13px] bg-primary text-[15px] font-semibold text-primary-foreground"
               onClick={onConnect}
               type="button"
+              {...PRESS}
             >
               {isDex ? (
                 <Wallet aria-hidden className="size-4" />

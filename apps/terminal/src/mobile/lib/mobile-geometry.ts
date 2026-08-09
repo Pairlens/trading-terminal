@@ -19,6 +19,15 @@
 export const SHEET_BAND = {
   /** Design sheet top 246. */
   drawingTools: 96,
+  /**
+   * The indicators sheet, deliberately the SAME band as the tools sheet.
+   *
+   * They are the two doors on one toolbar and they swap inside a single
+   * `MobileSheet` — a different band would resize the sheet mid-swap, and the
+   * list is the longest content on the surface, so it wants the taller of the
+   * two geometries rather than the shorter one.
+   */
+  indicators: 96,
   /** Design sheet top 274. */
   discover: 124,
   /** Design sheet top 300. */

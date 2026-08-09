@@ -132,7 +132,7 @@ export function AccountStep({
             {hasAppServer && !session && (
               <Button
                 size="lg"
-                className="w-full"
+                className="pl-onb-action w-full"
                 onClick={() => onViewChange('email')}
               >
                 {t('onboarding.account.create')}
@@ -147,7 +147,7 @@ export function AccountStep({
             )}
             <Button
               variant="ghost"
-              className="w-full text-muted-foreground"
+              className="pl-onb-action w-full text-muted-foreground"
               onClick={onAdvance}
             >
               {session
@@ -186,7 +186,12 @@ export function AccountStep({
                 {sendOtp.error.message}
               </p>
             )}
-            <Button size="lg" type="submit" disabled={sendOtp.isPending}>
+            <Button
+              size="lg"
+              type="submit"
+              className="pl-onb-action"
+              disabled={sendOtp.isPending}
+            >
               {sendOtp.isPending
                 ? t('signIn.sendingCode')
                 : t('signIn.continue')}
@@ -244,7 +249,7 @@ export function AccountStep({
               type="button"
               onClick={() => sendOtp.mutate()}
               disabled={sendOtp.isPending || secondsLeft > 0}
-              className="w-full cursor-pointer text-center text-xs text-muted-foreground hover:text-foreground disabled:opacity-50"
+              className="pl-onb-action w-full cursor-pointer text-center text-xs text-muted-foreground hover:text-foreground disabled:opacity-50"
             >
               {secondsLeft > 0
                 ? t('signIn.resendCodeTimer', { seconds: secondsLeft })

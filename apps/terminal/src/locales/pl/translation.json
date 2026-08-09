@@ -4737,7 +4737,9 @@
       "sections": {
         "channelsFib": "Kanały i Fibonacci",
         "annotate": "Adnotacje"
-      }
+      },
+      "crosshairMode": "Celownik: {{mode}}",
+      "removeIndicator": "Usuń {{name}}"
     },
     "drawing": {
       "placementLabel": "Umieść rysunek",
@@ -4755,7 +4757,10 @@
       "terminalHeader": "Terminal",
       "trading": "Handel",
       "connected": "Połączono",
-      "perOrder": "{{percent}}% na zlecenie"
+      "perOrder": "{{percent}}% na zlecenie",
+      "accountHeader": "Konto",
+      "signOutTitle": "Wylogować się?",
+      "signOutBody": "Połączone konta, obserwowane i rysunki zostają na tym urządzeniu. Zaloguj się ponownie w dowolnej chwili, aby dalej synchronizować."
     },
     "desktopInvite": {
       "bannerTitle": "Pełny terminal jest na Twoim komputerze",
@@ -4833,7 +4838,7 @@
       "notListedCallout": "{{pair}} nie jest notowana na {{venue}}. Wybranie jej przełączy aktywną giełdę na {{other}}.",
       "availableVenues": "Dostępne",
       "desktopOnlyVenues": "Wymaga aplikacji na komputer",
-      "desktopOnlyVenue": "Dostępna tylko z aplikacji na komputer"
+      "desktopOnlyVenue": "Tylko desktop"
     }
   }
 }

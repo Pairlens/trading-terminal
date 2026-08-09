@@ -349,7 +349,7 @@ export function MobileSurface() {
 
   const { activeTab, overlays } = useMobileNav()
   const { focusedVenue } = useMobileFocus()
-  const { selectTab, dismissPanel, pushOverlay, popOverlay } =
+  const { selectTab, dismissPanel, pushOverlay, closeOverlay } =
     useMobileActions()
   const { markets } = useAvailableMarkets()
   // The chart's own background and HUD ink, published as custom properties for
@@ -410,6 +410,16 @@ export function MobileSurface() {
   // Settings → Add account → Connect and Trade → Connect → back both need one.
   const topOverlay = overlays[overlays.length - 1]
   const shownOverlay = useOverlayAdoption(topOverlay)
+
+  // Identity-addressed, and memoized on the SHOWN overlay: the screen's owed
+  // close (deferred 500ms by `useSheetExit`) must remove the entry it was
+  // showing, not whatever is on top when the timer fires — a picker's exit is
+  // long enough for the user to have opened something else. Keying on
+  // `shownOverlay` also keeps `OverlayHost`'s memo effective: an inline arrow
+  // would hand it a fresh identity every time `sheetExpanded` settles.
+  const closeShown = useCallback(() => {
+    if (shownOverlay) closeOverlay(shownOverlay)
+  }, [closeOverlay, shownOverlay])
 
   return (
     <div
@@ -492,7 +502,7 @@ export function MobileSurface() {
           its fallback (see useOverlayAdoption). */}
       <Suspense fallback={<OverlayFallback />}>
         {shownOverlay ? (
-          <OverlayHost onClose={popOverlay} overlay={shownOverlay} />
+          <OverlayHost onClose={closeShown} overlay={shownOverlay} />
         ) : null}
       </Suspense>
     </div>

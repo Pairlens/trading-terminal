@@ -56,6 +56,7 @@ import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
 import { Button } from '@pairlens/ui/components/ui/button'
 import { useMobileNewsFeed } from '../panels/use-mobile-news-feed'
+import { PRESS } from '../primitives/press'
 import {
   feedCounter,
   filterNewsArticles,
@@ -338,9 +339,10 @@ export default memo(function NewsReaderSheet({
             />
             <button
               aria-label={t('common.clear')}
-              className="pl-hit-44 flex size-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--pl-wash-heavy)] text-muted-foreground"
+              className="pl-hit-44 pl-press-soft flex size-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--pl-wash-heavy)] text-muted-foreground"
               onClick={closeSearch}
               type="button"
+              {...PRESS}
             >
               <X className="size-3" />
             </button>
@@ -349,9 +351,10 @@ export default memo(function NewsReaderSheet({
           <>
             <button
               aria-label={t('mobile.news.searchLabel')}
-              className="pl-glass pl-hit-44 flex size-9 shrink-0 items-center justify-center text-foreground"
+              className="pl-glass pl-hit-44 pl-press flex size-9 shrink-0 items-center justify-center text-foreground"
               onClick={() => setSearchOpen(true)}
               type="button"
+              {...PRESS}
             >
               <Search className="size-4" />
             </button>
@@ -372,9 +375,10 @@ export default memo(function NewsReaderSheet({
 
         <button
           aria-label={t('mobile.news.close')}
-          className="pl-glass pl-hit-44 flex size-9 shrink-0 items-center justify-center text-foreground"
+          className="pl-glass pl-hit-44 pl-press flex size-9 shrink-0 items-center justify-center text-foreground"
           onClick={onClose}
           type="button"
+          {...PRESS}
         >
           <X className="size-4" />
         </button>

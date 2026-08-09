@@ -25,7 +25,13 @@ import { useMobileActions } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
 import { FullScreenOverlay } from '../primitives/full-screen-overlay'
 import { MobileRow } from '../primitives/mobile-row'
+import { PRESS } from '../primitives/press'
 import { DesktopExperienceBody } from './desktop-experience-screen'
+import {
+  AvatarCircle,
+  ProfileScreen,
+  useProfileIdentity,
+} from './profile-screen'
 import type {
   MobileOverlay,
   MobileSettingsSection,
@@ -48,8 +54,6 @@ import {
 import { WALLET_SCHEMAS, useWalletsStore } from '@/stores/wallets-store'
 import { useRiskConfigStore } from '@/stores/risk-config-store'
 import { useDisplayCurrency } from '@/hooks/use-display-currency'
-import { useOptimisticSession } from '@/lib/session'
-import { hasAppServer } from '@/lib/auth-client'
 import { isStandalone } from '@/lib/platform'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { track } from '@/lib/analytics-events'
@@ -113,13 +117,16 @@ export default memo(function SettingsScreen({
         onBack={back}
         title={t(settingsSectionNameKey(section))}
       >
-        <div className="px-4 pb-6 pt-1">
-          {section === 'profile' ? (
-            <ProfileDetail />
-          ) : (
+        {/* Profile owns its own gutter: its rows are full-bleed, and the
+            shared `px-4` wrapper the desktop sections need would inset the
+            hairlines by a gutter the rest of the shell never has. */}
+        {section === 'profile' ? (
+          <ProfileScreen />
+        ) : (
+          <div className="px-4 pb-6 pt-1">
             <SettingsSectionBody section={section} />
-          )}
-        </div>
+          </div>
+        )}
       </FullScreenOverlay>
     )
   }
@@ -185,9 +192,10 @@ function DesktopInviteBanner({ onOpen }: { onOpen: () => void }) {
         }}
       >
         <button
-          className="flex min-w-0 flex-1 items-center gap-3 py-3 pl-3.5 pr-1 text-left"
+          className="pl-press-row flex min-w-0 flex-1 items-center gap-3 py-3 pl-3.5 pr-1 text-left"
           onClick={onOpen}
           type="button"
+          {...PRESS}
         >
           <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/15">
             <MonitorSmartphone className="size-[18px] text-primary" />
@@ -204,9 +212,10 @@ function DesktopInviteBanner({ onOpen }: { onOpen: () => void }) {
         </button>
         <button
           aria-label={t('mobile.desktopInvite.bannerDismiss')}
-          className="pl-hit-44 mr-1 flex size-9 shrink-0 items-center justify-center rounded-full text-muted-foreground"
+          className="pl-hit-44 pl-press-soft mr-1 flex size-9 shrink-0 items-center justify-center rounded-full text-muted-foreground"
           onClick={() => setDismissed(true)}
           type="button"
+          {...PRESS}
         >
           <X className="size-3.5" />
         </button>
@@ -231,9 +240,10 @@ function SectionLabel({
       </h3>
       {action && onAction ? (
         <button
-          className="pl-hit-44 shrink-0 text-[12.5px] font-medium text-primary"
+          className="pl-hit-44 pl-press-text shrink-0 text-[12.5px] font-medium text-primary"
           onClick={onAction}
           type="button"
+          {...PRESS}
         >
           {action}
         </button>
@@ -288,86 +298,30 @@ function SettingsNavRow({
   )
 }
 
+/**
+ * The row carries the real avatar when there is one — the same picture the
+ * desktop's account menu shows. It is the one place on the phone that can,
+ * and a circle of initials over an uploaded photo reads as "not signed in".
+ */
 function ProfileRow({ onOpen }: { onOpen: () => void }) {
   const { t } = useTranslation()
-  const { session } = useOptimisticSession()
-  const name = session?.user.name ?? session?.user.email ?? ''
+  const { avatarUrl, email, initials, name, session } = useProfileIdentity()
 
   return (
     <MobileRow
       className="border-t-0"
       leading={
-        <span
-          className="flex size-10 items-center justify-center rounded-full text-[13px] font-semibold text-foreground"
-          style={{
-            background:
-              'linear-gradient(135deg, color-mix(in oklch, var(--primary) 32%, transparent), color-mix(in oklch, var(--primary) 9%, transparent))',
-            boxShadow:
-              'inset 0 0 0 1px color-mix(in oklch, var(--primary) 24%, transparent)',
-          }}
-        >
-          {initialsFrom(name)}
-        </span>
+        <AvatarCircle
+          initials={session ? initials : 'PL'}
+          size={40}
+          url={session ? avatarUrl : undefined}
+        />
       }
       onPress={onOpen}
-      subtitle={
-        session ? session.user.email : t('settings.profile.notSignedIn')
-      }
+      subtitle={session ? email : t('settings.profile.notSignedIn')}
       title={session ? name : t('settings.nav.profile')}
       trailing={Chevron}
     />
-  )
-}
-
-function initialsFrom(name: string): string {
-  const derived = name
-    .split(/[\s.@_-]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((segment) => segment[0]?.toUpperCase() ?? '')
-    .join('')
-  return derived || 'PL'
-}
-
-/**
- * Profile on the phone is identity plus a way in — the desktop dialog's avatar
- * upload and display-name form stay on the desktop, where the file picker and
- * the wide form belong. Signing IN is the part a phone genuinely needs.
- */
-function ProfileDetail() {
-  const { t } = useTranslation()
-  const { session } = useOptimisticSession()
-
-  if (session) {
-    return (
-      <div className="pt-2">
-        <p className="text-[15px] font-semibold text-foreground">
-          {session.user.name || session.user.email}
-        </p>
-        <p className="mt-1 text-[12.5px] text-muted-foreground">
-          {session.user.email}
-        </p>
-      </div>
-    )
-  }
-
-  return (
-    <div className="pt-2">
-      <p className="text-[15px] font-semibold text-foreground">
-        {t('settings.profile.signInTitle')}
-      </p>
-      <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted-foreground">
-        {t('settings.profile.signInDescription')}
-      </p>
-      {hasAppServer ? (
-        <a
-          className="mt-4 flex h-11 items-center justify-center rounded-xl bg-primary px-5 text-[15px] font-semibold text-primary-foreground"
-          href="/sign-in"
-        >
-          {t('settings.profile.signInButton')}
-        </a>
-      ) : null}
-    </div>
   )
 }
 

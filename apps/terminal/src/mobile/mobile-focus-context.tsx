@@ -123,6 +123,14 @@ export type MobileActionsValue = {
   dismissPanel: () => void
   pushOverlay: (overlay: MobileOverlay) => void
   popOverlay: () => void
+  /**
+   * Identity-addressed close: removes THIS entry wherever it sits in the
+   * stack, and no-ops if something else (hardware back, a tab tap) already
+   * removed it. The owed close a sheet's 500ms exit schedules must use this,
+   * never the positional `popOverlay` — by the time the timer fires, the top
+   * may be an overlay the user just opened.
+   */
+  closeOverlay: (overlay: MobileOverlay) => void
   closeOverlays: () => void
 }
 
@@ -332,6 +340,26 @@ export function MobileFocusProvider({
     [commitShell],
   )
 
+  const closeOverlay = useCallback(
+    (overlay: MobileOverlay) => {
+      // Filtering by identity handles every ordering in one branch: the entry
+      // is the top (the normal owed close), it is buried under an overlay
+      // pushed during its exit (the close reaches past the newcomer), or it
+      // is already gone (back / tab tap beat the timer — a no-op, which is
+      // what lets a sheet's unmount FLUSH its owed close instead of dropping
+      // it). Routing through `commitShell` keeps the history-entry arithmetic
+      // intact; a bare slice would strand an entry.
+      const next = stackRef.current.filter((o) => o !== overlay)
+      if (next.length === stackRef.current.length) return
+      commitShell({
+        tab: tabRef.current,
+        overlays: next.length > 0 ? next : NO_OVERLAYS,
+        panelEntry: panelEntryRef.current,
+      })
+    },
+    [commitShell],
+  )
+
   const popOverlay = useCallback(() => {
     if (stackRef.current.length === 0) return
     commitShell({
@@ -434,6 +462,7 @@ export function MobileFocusProvider({
       dismissPanel,
       pushOverlay,
       popOverlay,
+      closeOverlay,
       closeOverlays,
     }),
     [
@@ -444,6 +473,7 @@ export function MobileFocusProvider({
       dismissPanel,
       pushOverlay,
       popOverlay,
+      closeOverlay,
       closeOverlays,
     ],
   )

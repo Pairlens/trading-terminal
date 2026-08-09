@@ -4701,7 +4701,9 @@
       "sections": {
         "channelsFib": "Kanallar ve Fibonacci",
         "annotate": "Notlar"
-      }
+      },
+      "crosshairMode": "İmleç: {{mode}}",
+      "removeIndicator": "{{name}} kaldır"
     },
     "drawing": {
       "placementLabel": "Çizimi yerleştir",
@@ -4719,7 +4721,10 @@
       "terminalHeader": "Terminal",
       "trading": "İşlem",
       "connected": "Bağlı",
-      "perOrder": "Emir başına %{{percent}}"
+      "perOrder": "Emir başına %{{percent}}",
+      "accountHeader": "Hesap",
+      "signOutTitle": "Çıkış yapılsın mı?",
+      "signOutBody": "Bağlı hesapların, izleme listelerin ve çizimlerin bu cihazda kalır. İstediğin zaman tekrar giriş yaparak eşitlemeye devam edebilirsin."
     },
     "desktopInvite": {
       "bannerTitle": "Terminalin tamamı bilgisayarında",
@@ -4797,7 +4802,7 @@
       "notListedCallout": "{{pair}}, {{venue}}'de listede yok. Seçmen, odaktaki borsayı {{other}} olarak değiştirir.",
       "availableVenues": "Kullanılabilir",
       "desktopOnlyVenues": "Masaüstü uygulaması gerekiyor",
-      "desktopOnlyVenue": "Yalnızca masaüstü uygulamasından erişilebilir"
+      "desktopOnlyVenue": "Yalnızca masaüstü"
     }
   }
 }

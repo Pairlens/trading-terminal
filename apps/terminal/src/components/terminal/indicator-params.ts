@@ -1,8 +1,8 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { INDICATOR_CATALOG } from './indicator-picker'
 import type { IndicatorType } from '@pairlens/fast-financial-charts/types'
-import type { IndicatorCatalogEntry } from './indicator-picker'
+import type { IndicatorCatalogEntry } from '@/lib/indicators/indicator-catalog'
+import { INDICATOR_CATALOG } from '@/lib/indicators/indicator-catalog'
 import {
   customIndicatorRegistry,
   isCustomIndicatorType,
