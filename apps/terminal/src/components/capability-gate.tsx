@@ -26,6 +26,21 @@ type AuthRequiredPromptProps = {
   /** What signing in unlocks, phrased as an invitation — not a wall */
   title?: string
   description?: string
+  /**
+   * A second way in, under an "or" rule — for capabilities an account is not
+   * the only route to. `ai:inference` is the case that exists: a user with
+   * their own Anthropic/OpenAI/OpenRouter/Groq key already satisfies it, and
+   * only the copy ever said otherwise.
+   */
+  alternative?: ReactNode
+  /**
+   * One line under the sign-in button, for gates where the account is the
+   * first step rather than the whole answer. The AI panes say so out loud:
+   * Pairlens Intelligence is a plan on top of a (free) account, and letting
+   * someone discover that only after registering is the kind of surprise
+   * that reads as a bait.
+   */
+  primaryNote?: string
 }
 
 /**
@@ -37,6 +52,8 @@ type AuthRequiredPromptProps = {
 export function AuthRequiredPrompt({
   title,
   description,
+  alternative,
+  primaryNote,
 }: AuthRequiredPromptProps) {
   const { t } = useTranslation()
   return (
@@ -63,6 +80,21 @@ export function AuthRequiredPrompt({
             {t('capabilityGate.signInFree')}
           </Button>
         </SignInDialog>
+        {primaryNote && (
+          <p className="mt-2 text-[11px] leading-snug text-muted-foreground">
+            {primaryNote}
+          </p>
+        )}
+        {alternative && (
+          <div className="mt-4 flex w-full flex-col items-center gap-3">
+            <span className="flex w-full items-center gap-3 text-[10px] tracking-wide text-muted-foreground uppercase">
+              <span className="h-px flex-1 bg-border" />
+              {t('capabilityGate.or')}
+              <span className="h-px flex-1 bg-border" />
+            </span>
+            {alternative}
+          </div>
+        )}
         <p className="mt-4 flex items-start justify-center gap-1.5 text-[11px] leading-snug text-muted-foreground">
           <ShieldCheck className="mt-px size-3.5 shrink-0" />
           {t('capabilityGate.authNote')}

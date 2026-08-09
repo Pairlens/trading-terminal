@@ -114,6 +114,10 @@ export interface AnalyticsEvents {
   }
   /** User pinned a provider plugin for a capability ('auto' = unpinned). */
   ai_provider_selected: { capability: string; plugin_id: string }
+  /** A bring-your-own-key AI provider (model or web search) was activated
+   * from an AI gate — the other half of the funnel `ai_billing_gate_shown`
+   * measures. */
+  ai_provider_connected: { plugin_id: string; capability: string }
   /** A typed billing gate (402) was shown — subscription required or
    * credits exhausted. Key funnel signal for Intelligence. */
   ai_billing_gate_shown: { code: string }
