@@ -420,12 +420,11 @@ export function useSheetExit(
 
   /**
    * Asked for again mid-exit — the same chip tapped twice inside half a
-   * second. Reopening is only half of it: the close this screen still owes is
-   * left SCHEDULED on purpose. It is identity-addressed at the entry the
-   * first tap was showing, so it removes exactly that surplus entry and the
-   * stack lands at one entry for the one picker now on screen. Cancelling it
-   * instead would leave the stack one deep forever and cost the user a back
-   * press per double-tap.
+   * second. A picker→picker push REPLACES the leaving entry (see
+   * lib/overlay-stack.ts), so this screen is re-driven by the new overlay
+   * without remounting; all that is left to do is reopen the sheet. The close
+   * it still owes stays scheduled and simply no-ops: it is identity-addressed
+   * at the replaced entry, which is already gone.
    */
   const keyRef = useRef(reopenKey)
   useEffect(() => {

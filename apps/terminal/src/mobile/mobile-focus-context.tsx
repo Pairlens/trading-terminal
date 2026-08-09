@@ -46,6 +46,7 @@ import {
   suppressPairAdoption,
   truncateShell,
 } from './lib/mobile-history'
+import { stackWithOverlay } from './lib/overlay-stack'
 import type { ShellEntries } from './lib/mobile-history'
 import type { AnyRouter } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
@@ -331,9 +332,11 @@ export function MobileFocusProvider({
 
   const pushOverlay = useCallback(
     (overlay: MobileOverlay) => {
+      // Picker → picker swaps the top entry instead of stacking; everything
+      // else stacks. The rule and its rationale live in lib/overlay-stack.ts.
       commitShell({
         tab: tabRef.current,
-        overlays: [...stackRef.current, overlay],
+        overlays: stackWithOverlay(stackRef.current, overlay),
         panelEntry: panelEntryRef.current,
       })
     },
