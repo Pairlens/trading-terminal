@@ -4724,6 +4724,8 @@
         "annotate": "Anmerkungen"
       },
       "crosshairMode": "Fadenkreuz: {{mode}}",
+      "indicatorsActive_one": "Indikatoren, {{count}} aktiv",
+      "indicatorsActive_other": "Indikatoren, {{count}} aktiv",
       "removeIndicator": "{{name}} entfernen"
     },
     "drawing": {

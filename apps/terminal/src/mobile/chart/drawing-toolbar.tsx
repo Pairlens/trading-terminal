@@ -111,8 +111,13 @@ export default memo(function MobileDrawingToolbar({
   docked?: boolean
 }) {
   const { t } = useTranslation()
-  const { activeTool, activeToolMeta, crosshairMode, drawingHistory } =
-    useChartConfig()
+  const {
+    activeIndicators,
+    activeTool,
+    activeToolMeta,
+    crosshairMode,
+    drawingHistory,
+  } = useChartConfig()
   const { applyTool, setCrosshairMode, clearAllDrawings, runCommand } =
     useChartActions()
   const { slots, promote } = useDrawingSlots()
@@ -206,6 +211,7 @@ export default memo(function MobileDrawingToolbar({
   }, [runCommand])
 
   const CrosshairIcon = CROSSHAIR_ICON[crosshairMode]
+  const indicatorCount = activeIndicators.length
 
   return (
     <>
@@ -242,9 +248,20 @@ export default memo(function MobileDrawingToolbar({
 
         <Divider />
 
+        {/* The count is the whole point of the badge: a chart carrying three
+            indicators looks, from the toolbar, exactly like a bare one, so
+            nothing tells a trader this chip is where they go to take them off
+            again. `activeIndicators` is already in this component's
+            ChartConfig read — no extra subscription, and it changes on an add
+            or a remove, never on a tick. */}
         <ToolbarButton
           active={openSheet === 'indicators'}
-          label={t('chart.toolbar.indicators')}
+          badge={indicatorCount}
+          label={
+            indicatorCount > 0
+              ? t('mobile.chart.indicatorsActive', { count: indicatorCount })
+              : t('chart.toolbar.indicators')
+          }
           onPress={() => openView('indicators')}
         >
           <ChartSpline className="size-[18px]" strokeWidth={1.7} />
@@ -314,6 +331,7 @@ function Divider() {
 
 const ToolbarButton = memo(function ToolbarButton({
   active = false,
+  badge = 0,
   dim = false,
   disabled = false,
   label,
@@ -321,6 +339,8 @@ const ToolbarButton = memo(function ToolbarButton({
   children,
 }: {
   active?: boolean
+  /** How many things this chip is currently holding; 0 draws nothing. */
+  badge?: number
   /** Crosshair, undo and trash sit back from the tools — they act on them. */
   dim?: boolean
   disabled?: boolean
@@ -348,6 +368,15 @@ const ToolbarButton = memo(function ToolbarButton({
       {...PRESS}
     >
       {children}
+      {/* `aria-hidden`: the number is already in the button's accessible name,
+          and a second reading of a bare "3" is noise. Two digits is the cap —
+          the chip is ~41px wide at 402px, and the badge overhangs its icon
+          rather than the chip's edge so a neighbour never paints over it. */}
+      {badge > 0 ? (
+        <span aria-hidden className="pl-chip-badge">
+          {badge > 99 ? '99' : badge}
+        </span>
+      ) : null}
     </button>
   )
 })

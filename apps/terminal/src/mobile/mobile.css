@@ -503,6 +503,37 @@
     background: var(--pl-wash-strong);
   }
 
+  /* The count a toolbar chip carries — how many indicators are on the chart.
+     Anchored to the chip's own box (`.pl-press` chips are `relative`) and
+     tucked over the icon's top-right corner rather than the chip's, so it
+     stays clear of the 2px gap it would otherwise share with a neighbour.
+
+     `--primary` filled rather than outlined: at 9px a ring plus a numeral is
+     mush, and this badge has to survive against a candle chart. The ring is
+     the toolbar's own `--pl-surface-raised`, so the badge reads as punched
+     out of the bar rather than stuck on top of the icon.
+     `font-variant-numeric: tabular-nums` keeps 1 and 8 the same width, so the
+     badge does not twitch as indicators come and go. */
+  .pl-chip-badge {
+    position: absolute;
+    top: 3px;
+    left: 50%;
+    translate: 4px 0;
+    min-width: 13px;
+    height: 13px;
+    padding: 0 3px;
+    border-radius: 99px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: 0 0 0 1.5px var(--pl-surface-raised);
+    font-size: 9px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 13px;
+    text-align: center;
+    pointer-events: none;
+  }
+
   /* Inset rings as CLASSES, not `shadow-[…]` utilities, for one reason: a
      Tailwind utility lives in the utilities layer, which is declared after
      this one and wins the whole `box-shadow` property at any specificity —

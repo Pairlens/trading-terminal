@@ -4724,6 +4724,8 @@
         "annotate": "Annotazioni"
       },
       "crosshairMode": "Mirino: {{mode}}",
+      "indicatorsActive_one": "Indicatori, {{count}} attivo",
+      "indicatorsActive_other": "Indicatori, {{count}} attivi",
       "removeIndicator": "Rimuovi {{name}}"
     },
     "drawing": {

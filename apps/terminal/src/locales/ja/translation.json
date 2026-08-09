@@ -4724,6 +4724,8 @@
         "annotate": "注釈"
       },
       "crosshairMode": "十字線：{{mode}}",
+      "indicatorsActive_one": "インジケーター、{{count}}件使用中",
+      "indicatorsActive_other": "インジケーター、{{count}}件使用中",
       "removeIndicator": "{{name}}を削除"
     },
     "drawing": {

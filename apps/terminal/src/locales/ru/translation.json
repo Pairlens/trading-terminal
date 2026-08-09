@@ -4760,6 +4760,10 @@
         "annotate": "Аннотации"
       },
       "crosshairMode": "Перекрестие: {{mode}}",
+      "indicatorsActive_one": "Индикаторы, {{count}} активный",
+      "indicatorsActive_few": "Индикаторы, {{count}} активных",
+      "indicatorsActive_many": "Индикаторы, {{count}} активных",
+      "indicatorsActive_other": "Индикаторы, {{count}} активных",
       "removeIndicator": "Убрать {{name}}"
     },
     "drawing": {

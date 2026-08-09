@@ -4724,6 +4724,8 @@
         "annotate": "Notlar"
       },
       "crosshairMode": "İmleç: {{mode}}",
+      "indicatorsActive_one": "Göstergeler, {{count}} aktif",
+      "indicatorsActive_other": "Göstergeler, {{count}} aktif",
       "removeIndicator": "{{name}} kaldır"
     },
     "drawing": {

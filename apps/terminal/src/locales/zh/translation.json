@@ -4724,6 +4724,8 @@
         "annotate": "标注"
       },
       "crosshairMode": "十字光标：{{mode}}",
+      "indicatorsActive_one": "指标，已启用 {{count}} 个",
+      "indicatorsActive_other": "指标，已启用 {{count}} 个",
       "removeIndicator": "移除{{name}}"
     },
     "drawing": {

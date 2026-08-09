@@ -4724,6 +4724,8 @@
         "annotate": "Anotasi"
       },
       "crosshairMode": "Crosshair: {{mode}}",
+      "indicatorsActive_one": "Indikator, {{count}} aktif",
+      "indicatorsActive_other": "Indikator, {{count}} aktif",
       "removeIndicator": "Hapus {{name}}"
     },
     "drawing": {
