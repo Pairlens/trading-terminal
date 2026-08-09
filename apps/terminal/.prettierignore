@@ -1,0 +1,18 @@
+# Prettier reads only the `.prettierignore` in its own CWD, so the repo-root
+# one does NOT protect a run started from this directory — `bun run format`
+# here (this workspace has its own script), or a bare `prettier --write .`.
+# Without this file that run expands `public/_sdk/plugin-sdk.js`, a minified
+# artifact checked into the repo, from one line into 216 and dirties the tree.
+#
+# Anything the root file ignores under `apps/terminal/` belongs here too, minus
+# the prefix. `src/__tests__/prettierignore-parity.test.ts` fails if they drift.
+
+# Build artifacts checked into the repo — plugin-sdk.js ships minified.
+public/_sdk/
+
+# Pyodide core assets, staged out of node_modules by a Vite plugin.
+public/_pyodide/
+
+# Build output. Nothing under a dist/ is tracked, and rewriting a bundle the
+# dev server is serving is a bad trade for formatting nobody reads.
+dist/
