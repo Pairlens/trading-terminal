@@ -4619,7 +4619,6 @@
       },
       "changePair": "ペアを変更",
       "changeVenueA11y": "取引所を変更。{{venue}}、{{status}}",
-      "search": "ペアを検索",
       "openSettings": "設定を開く",
       "readOnly": "読み取り専用",
       "readOnlyA11y": "{{status}}、読み取り専用",

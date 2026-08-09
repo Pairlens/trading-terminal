@@ -4619,7 +4619,6 @@
       },
       "changePair": "Cambiar par",
       "changeVenueA11y": "Cambiar venue. {{venue}}, {{status}}",
-      "search": "Buscar pares",
       "openSettings": "Abrir configuración",
       "readOnly": "solo lectura",
       "readOnlyA11y": "{{status}}, solo lectura",

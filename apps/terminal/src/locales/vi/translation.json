@@ -4619,7 +4619,6 @@
       },
       "changePair": "Đổi cặp giao dịch",
       "changeVenueA11y": "Đổi sàn giao dịch. {{venue}}, {{status}}",
-      "search": "Tìm cặp giao dịch",
       "openSettings": "Mở cài đặt",
       "readOnly": "chỉ đọc",
       "readOnlyA11y": "{{status}}, chỉ đọc",

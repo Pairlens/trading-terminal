@@ -4619,7 +4619,6 @@
       },
       "changePair": "Parite değiştir",
       "changeVenueA11y": "Borsa değiştir. {{venue}}, {{status}}",
-      "search": "Parite ara",
       "openSettings": "Ayarları aç",
       "readOnly": "yalnızca okuma",
       "readOnlyA11y": "{{status}}, yalnızca okuma",

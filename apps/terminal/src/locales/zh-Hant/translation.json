@@ -4619,7 +4619,6 @@
       },
       "changePair": "更換交易對",
       "changeVenueA11y": "更換交易所。{{venue}}，{{status}}",
-      "search": "搜尋交易對",
       "openSettings": "開啟設定",
       "readOnly": "僅讀取",
       "readOnlyA11y": "{{status}}，僅讀取",
