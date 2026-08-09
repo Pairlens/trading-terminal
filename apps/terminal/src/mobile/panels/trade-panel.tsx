@@ -219,6 +219,7 @@ export default memo(function MobileTradePanel() {
   const setSizeCcy = useOrderDraftStore((s) => s.setSizeCcy)
   const focusMarket = useOrderDraftStore((s) => s.focusMarket)
   const markTicketOpened = useOrderDraftStore((s) => s.markTicketOpened)
+  const setTradeReady = useOrderDraftStore((s) => s.setTradeReady)
   const clearAmount = useOrderDraftStore((s) => s.clearAmount)
 
   const [submitting, setSubmitting] = useState(false)
@@ -298,6 +299,14 @@ export default memo(function MobileTradePanel() {
     (isDex ? walletsLoaded : credentialsLoaded) &&
     (!marketInfo.capabilities.includes('trade') ||
       (isDex ? chainWallets.length === 0 : marketCreds.length === 0))
+
+  // Published for the chart's limit line: the draggable level only renders on
+  // a ticket that can actually place an order (user-reported — the line was
+  // floating over the ConnectCard). Live on purpose: connecting flips it on,
+  // switching to an unconnected venue flips it off.
+  useEffect(() => {
+    setTradeReady(!needsConnect)
+  }, [needsConnect, setTradeReady])
 
   const balanceScope = isDex
     ? selectedWallet

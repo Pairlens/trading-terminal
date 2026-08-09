@@ -140,10 +140,14 @@ export default function LimitLineOverlay({
 }: LimitLineOverlayProps) {
   const orderType = useOrderDraftStore((s) => s.orderType)
   const ticketOpened = useOrderDraftStore((s) => s.ticketOpened)
+  const tradeReady = useOrderDraftStore((s) => s.tradeReady)
 
-  // Mounted only for a limit order on a ticket the user has actually opened —
-  // a dashed level over a chart nobody has traded from is an unexplained mark.
-  if (!ticketOpened || orderType !== 'limit') return null
+  // Mounted only for a limit order on a ticket the user has actually opened
+  // AND that can place an order (`tradeReady`, written by the trade panel) —
+  // a dashed level over a chart nobody has traded from is an unexplained
+  // mark, and one over the ConnectCard sells a capability the ticket does
+  // not have yet.
+  if (!ticketOpened || !tradeReady || orderType !== 'limit') return null
   return <LimitLine stripHeight={stripHeight} />
 }
 

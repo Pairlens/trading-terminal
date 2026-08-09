@@ -79,6 +79,15 @@ export type OrderDraftState = {
    * would be an unexplained artifact.
    */
   ticketOpened: boolean
+  /**
+   * The ticket can actually place an order — the panel's own connect gate is
+   * NOT showing. Written by the trade panel (the one place that computes
+   * `needsConnect`, mirroring the desktop gate) and read by the chart's limit
+   * line: a draggable price level over a ConnectCard sells a capability the
+   * ticket does not have yet. Live, not latched — connecting flips it on,
+   * switching to a venue with no key flips it off.
+   */
+  tradeReady: boolean
 
   setSide: (side: OrderSide) => void
   setOrderType: (orderType: MobileOrderType) => void
@@ -97,6 +106,7 @@ export type OrderDraftState = {
    */
   focusMarket: (market: string, pairKey: string) => void
   markTicketOpened: () => void
+  setTradeReady: (ready: boolean) => void
   /** After a placed order: the size is spent, the price preference is not. */
   clearAmount: () => void
   reset: () => void
@@ -111,6 +121,7 @@ const initial = {
   stopPrice: '',
   amount: '',
   ticketOpened: false,
+  tradeReady: false,
 }
 
 export const useOrderDraftStore = create<OrderDraftState>()((set) => ({
@@ -146,9 +157,21 @@ export const useOrderDraftStore = create<OrderDraftState>()((set) => ({
       state.ticketOpened ? state : { ...state, ticketOpened: true },
     ),
 
+  setTradeReady: (tradeReady) =>
+    set((state) => (state.tradeReady === tradeReady ? state : { tradeReady })),
+
   clearAmount: () => set({ amount: '' }),
 
-  reset: () => set({ ...initial, sizeCcy: readSizeCcy() }),
+  // `tradeReady` survives a draft reset: it describes the venue connection,
+  // not the draft, and the panel's effect only rewrites it when the computed
+  // readiness CHANGES — a reset that zeroed it with no change coming would
+  // hide the line under a fully connected ticket.
+  reset: () =>
+    set((state) => ({
+      ...initial,
+      sizeCcy: readSizeCcy(),
+      tradeReady: state.tradeReady,
+    })),
 }))
 
 /** The price field that matters for the current order type, as a number. */
