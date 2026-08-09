@@ -4,10 +4,12 @@
  * Watchlist (design screen 4) — the phone's fastest way to change what is in
  * focus.
  *
- * The headline behaviour is that a row tap does NOT close the panel: the chart
- * behind repaints in place and the list stays where the thumb is, so scanning a
- * list is a sequence of taps rather than a sequence of open/close cycles. That
- * is why `setFocusedPair` is called without `dismissPanel`.
+ * A row tap changes focus and CLOSES the panel (`setFocusedPair` then
+ * `dismissPanel`). The list once stayed up so a trader could walk it tap by
+ * tap, but the sheet covers the bottom half of the very chart the tap just
+ * changed, so the tap looked like it had done nothing until you dismissed the
+ * thing yourself. Picking is the errand; the errand ends at the chart, and the
+ * way back is the one tap on the Watchlist tab that opened it.
  *
  * Prices come from ONE bulk snapshot map (`useBulkTickerQuotes`), never from a
  * per-row `useTickerStream` — fanning that hook across rows puts one setState
@@ -277,7 +279,7 @@ const WatchlistRow = memo(function WatchlistRow({
 }) {
   const { t } = useTranslation()
   const { focusedVenue } = useMobileFocus()
-  const { setFocusedPair, setFocusedVenue } = useMobileActions()
+  const { setFocusedPair, setFocusedVenue, dismissPanel } = useMobileActions()
   const { markets } = useAvailableMarkets()
   const { availableMarkets } = useMarketData()
   const permission = useVenueTradePermission(market)
@@ -288,11 +290,20 @@ const WatchlistRow = memo(function WatchlistRow({
 
   const handlePress = useCallback(() => {
     // An equity cannot stream from a crypto exchange, so a row whose venue was
-    // resolved away from the focused one takes the venue with it. The panel
-    // stays open either way — that is the screen's whole point.
+    // resolved away from the focused one takes the venue with it.
     if (market !== focusedVenue) setFocusedVenue(market)
     setFocusedPair(instrument.symbol)
-  }, [market, focusedVenue, setFocusedVenue, setFocusedPair, instrument.symbol])
+    // Then get out of the way: picking is the errand, and the chart the row
+    // just changed is the half of the screen the sheet is sitting on.
+    dismissPanel()
+  }, [
+    market,
+    focusedVenue,
+    setFocusedVenue,
+    setFocusedPair,
+    dismissPanel,
+    instrument.symbol,
+  ])
 
   return (
     <MobileRow
