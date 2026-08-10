@@ -1,0 +1,29 @@
+diff --git a/package.json b/package.json
+index 0ad39aff74652cede311a265b2eb5d5b7403ac9d..f509631efa96336b305aa82c7cd0a86904bef0c5 100644
+--- a/package.json
++++ b/package.json
+@@ -15,6 +15,24 @@
+         "types": "./index.d.cts",
+         "default": "./dist/ccxt.cjs"
+       }
++    },
++    "./js/src/*": {
++      "import": {
++        "types": "./js/src/*.d.ts",
++        "default": "./js/src/*.js"
++      }
++    },
++    "./js/src/pro/*": {
++      "import": {
++        "types": "./js/src/pro/*.d.ts",
++        "default": "./js/src/pro/*.js"
++      }
++    },
++    "./js/src/base/*": {
++      "import": {
++        "types": "./js/src/base/*.d.ts",
++        "default": "./js/src/base/*.js"
++      }
+     }
+   },
+   "engines": {
