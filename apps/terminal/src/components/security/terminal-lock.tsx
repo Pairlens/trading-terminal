@@ -27,6 +27,7 @@ import { Label } from '@pairlens/ui/components/ui/label'
 import { Spinner } from '@pairlens/ui/components/ui/spinner'
 
 import { useBlockedSeconds } from './use-lock-attempts'
+import { useLockBiometric } from './use-lock-biometric'
 import {
   cancelTradeChallenge,
   getLockState,
@@ -101,6 +102,13 @@ type VerifyState =
    * and must point at the only thing that fixes it.
    */
   | 'biometric-invalidated'
+  /**
+   * The lock screen's own Face ID / fingerprint door refused, and not because
+   * the prompt was dismissed. Distinct from `'wrong'`: nobody typed anything,
+   * so the message has to send them to the password field rather than imply
+   * they mistyped.
+   */
+  | 'biometric-failed'
 
 // ── Full-screen lock ─────────────────────────────────────────────────
 
@@ -111,6 +119,16 @@ function LockOverlay({ reason }: { reason: string }) {
   const [resetOpen, setResetOpen] = React.useState(false)
   const blockedSeconds = useBlockedSeconds()
   const vault = useVaultState()
+  const { enrolled: biometricEnrolled } = useLockBiometric()
+
+  /**
+   * Offered only when the vault has nothing better. A vault passkey or Touch ID
+   * protector opens the screen AND the keys in one gesture; this one opens the
+   * screen. Two buttons that both say "use your face" and do different amounts
+   * would be the worst of both.
+   */
+  const showLockBiometric =
+    biometricEnrolled && !vault.hasPasskey && !vault.hasBiometric
 
   // The overlay's DOM (dialog portal included) is committed by the time a
   // layout effect runs, and this frame has not painted yet — so handing the
@@ -162,6 +180,49 @@ function LockOverlay({ reason }: { reason: string }) {
         return
       }
       setStatus('wrong')
+    }
+  }
+
+  /**
+   * The lock screen's own biometric door. Opens the SCREEN — see the module
+   * note in lock-biometric.ts for why it deliberately cannot open the vault.
+   * When a vault is enrolled and sealed, the sealed banner takes it from here.
+   */
+  const unlockWithFace = async () => {
+    if (status === 'checking' || blockedSeconds > 0) return
+    setStatus('checking')
+    try {
+      const { refreshLockBiometric, verifyLockBiometric } =
+        await import('@/lib/security/lock-biometric')
+      const result = await verifyLockBiometric()
+      if (result === 'ok') {
+        setStatus('idle')
+        track('security_lock_biometric', { action: 'unlocked' })
+        unlockNow()
+        return
+      }
+      // A dismissed prompt is a change of mind, not a failure: no message, and
+      // nothing counted against the backoff — biometrics are not guessable, so
+      // spending an attempt here would only penalise a mis-tap.
+      if (result === 'cancelled') {
+        setStatus('idle')
+        return
+      }
+      if (result === 'missing') {
+        // The record went out from under us (cleared site data, a sibling
+        // window turning it off). Correct the flag so the button stops being
+        // offered, and let the password field — already on screen — do the work.
+        setStatus('idle')
+        void refreshLockBiometric()
+        return
+      }
+      setStatus('biometric-failed')
+    } catch {
+      // `verifyLockBiometric` swallows its own failures, so this is the chunk
+      // load. Leaving `checking` set would wedge the overlay: the biometric
+      // button AND the password submit are both disabled by it, and the only
+      // way out would be a reload.
+      setStatus('biometric-failed')
     }
   }
 
@@ -260,12 +321,37 @@ function LockOverlay({ reason }: { reason: string }) {
               })}
             </DialogDescription>
 
-            <form className="mt-6 space-y-3" onSubmit={submit}>
+            {/* Above the password field, not below it: on a phone this is the
+                way in, and a button under an autofocused input sits behind the
+                software keyboard. */}
+            {showLockBiometric && (
+              <Button
+                className="mt-6 w-full"
+                disabled={status === 'checking' || blockedSeconds > 0}
+                onClick={() => void unlockWithFace()}
+              >
+                {status === 'checking' ? (
+                  <Spinner />
+                ) : (
+                  <ScanFace className="size-4" />
+                )}
+                {t('security.lock.biometricUnlock')}
+              </Button>
+            )}
+
+            <form
+              className={
+                showLockBiometric ? 'mt-3 space-y-3' : 'mt-6 space-y-3'
+              }
+              onSubmit={submit}
+            >
               <Label htmlFor="pairlens-lock-password" className="sr-only">
                 {t('security.lock.passwordLabel')}
               </Label>
               <Input
-                autoFocus
+                // Not with biometrics enrolled: focusing this pops the phone's
+                // keyboard over the button the user actually came for.
+                autoFocus={!showLockBiometric}
                 id="pairlens-lock-password"
                 type="password"
                 autoComplete="current-password"
@@ -305,9 +391,17 @@ function LockOverlay({ reason }: { reason: string }) {
                   {t('security.vault.biometricInvalidated')}
                 </p>
               )}
+              {status === 'biometric-failed' && (
+                <p className="text-destructive text-xs">
+                  {t('security.lock.biometricFailed')}
+                </p>
+              )}
 
               <Button
                 type="submit"
+                // Secondary once there is a biometric button above: two filled
+                // buttons stacked read as two equal choices, and they are not.
+                variant={showLockBiometric ? 'outline' : 'default'}
                 className="w-full"
                 disabled={
                   status === 'checking' || blockedSeconds > 0 || !password
@@ -446,6 +540,43 @@ function TradeChallengeDialog() {
   const { t } = useTranslation()
   const [password, setPassword] = React.useState('')
   const [status, setStatus] = React.useState<VerifyState>('idle')
+  const { enrolled: biometricEnrolled } = useLockBiometric()
+
+  /**
+   * The same door as the lock screen, and it belongs here for the same reason
+   * it belongs there: "confirm before every order" is a setting people turn off
+   * when confirming means typing. A face is still an identity check.
+   */
+  const confirmWithFace = async () => {
+    if (status === 'checking') return
+    setStatus('checking')
+    try {
+      const { refreshLockBiometric, verifyLockBiometric } =
+        await import('@/lib/security/lock-biometric')
+      const result = await verifyLockBiometric()
+      if (result === 'ok') {
+        setStatus('idle')
+        track('security_lock_biometric', { action: 'unlocked' })
+        passTradeChallenge()
+        return
+      }
+      if (result === 'cancelled') {
+        setStatus('idle')
+        return
+      }
+      if (result === 'missing') {
+        setStatus('idle')
+        void refreshLockBiometric()
+        return
+      }
+      setStatus('biometric-failed')
+    } catch {
+      // Same wedge as the lock overlay, with an order waiting on it: a stuck
+      // `checking` disables both ways of answering, and the challenge would sit
+      // there until its 2-minute timeout cancelled the order.
+      setStatus('biometric-failed')
+    }
+  }
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -487,12 +618,27 @@ function TradeChallengeDialog() {
           {t('security.challenge.description')}
         </DialogDescription>
 
+        {biometricEnrolled && (
+          <Button
+            className="w-full"
+            disabled={status === 'checking'}
+            onClick={() => void confirmWithFace()}
+          >
+            {status === 'checking' ? (
+              <Spinner />
+            ) : (
+              <ScanFace className="size-4" />
+            )}
+            {t('security.lock.biometricConfirm')}
+          </Button>
+        )}
+
         <form className="space-y-3" onSubmit={submit}>
           <Label htmlFor="pairlens-challenge-password" className="sr-only">
             {t('security.lock.passwordLabel')}
           </Label>
           <Input
-            autoFocus
+            autoFocus={!biometricEnrolled}
             id="pairlens-challenge-password"
             type="password"
             autoComplete="current-password"
@@ -512,6 +658,11 @@ function TradeChallengeDialog() {
           {status === 'unavailable' && (
             <p className="text-destructive text-xs">
               {t('security.lock.keychainUnavailable')}
+            </p>
+          )}
+          {status === 'biometric-failed' && (
+            <p className="text-destructive text-xs">
+              {t('security.lock.biometricFailed')}
             </p>
           )}
           <div className="flex justify-end gap-2">

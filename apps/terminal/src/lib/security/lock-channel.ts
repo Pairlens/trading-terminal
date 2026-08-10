@@ -24,6 +24,12 @@ export type LockMessage =
   | { type: 'config'; config: LockConfig }
   | { type: 'attempts'; fails: number; blockedUntil: number }
   /**
+   * Biometric unlock was enrolled or removed. Carries the flag, not the
+   * record: a sibling window only needs to know whether to draw the button,
+   * and the credential id belongs in one place.
+   */
+  | { type: 'lock-biometric'; enrolled: boolean }
+  /**
    * This device was erased by the destructive reset. Every other window is
    * holding a full in-memory copy of what was just deleted and would write it
    * straight back, so they reload into the first-run state instead.
