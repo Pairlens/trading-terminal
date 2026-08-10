@@ -1,11 +1,11 @@
 ---
 title: Settings
-description: Every setting in the terminal, from themes and languages to regional endpoint routing, data rate, analytics, and account deletion.
+description: Every setting in the terminal, from the terminal lock and credential vault to themes, languages, regional endpoint routing, data rate, analytics, and account deletion.
 group: traders
 order: 9
 eyebrow: For traders
 updated: AUG 2026
-readTime: 5 min read
+readTime: 10 min read
 ---
 
 Open settings with <kbd>⌘,</kbd>, from the user menu, or by searching for a
@@ -50,6 +50,103 @@ is the most important page in settings and it has its own guide:
 button until it fills, and live orders hold longer than paper. Switch it to a
 single click if you place a lot of orders and want the ticket out of your way.
 Either way the risk limits above still apply.
+
+## Security
+
+Two different things live here. The **terminal lock** puts a password prompt in
+front of the screen and stops the person at your desk. The **credential vault**
+encrypts your exchange API keys and wallet keys and stops someone who copies
+your disk. Turning one on does not turn on the other.
+
+### Terminal lock
+
+Set a password of at least twelve characters and the terminal asks for it
+before it can be used on this device. There is no recovery. Nothing is
+encrypted with this password, so there is no key to escrow and no account to
+prove ownership against. Save it in your password manager before you close the
+dialog.
+
+**Biometric unlock.** In a browser, phone included, you can add Face ID, Touch
+ID, a fingerprint reader, or Windows Hello as a way past the lock screen. It
+rides your device's own unlock, so there is no new secret anywhere: what
+Pairlens stores is a credential id. Your password keeps working, and it stays
+the only way back in if the sensor stops recognising you.
+
+It opens the screen and nothing else. If you also have a vault, your keys ask
+for their own password after the screen unlocks. What opens both in one gesture
+is a vault passkey, added under Ways to unlock below.
+
+The desktop app has no biometric row: it serves the terminal from a `tauri://`
+origin, which is not a valid WebAuthn origin. Touch ID on a Mac is offered
+through the vault there instead.
+
+**When to lock.** Five independent triggers:
+
+| Trigger                      | What it does                                                                                                                                                                            |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **When the app starts**      | Prompts on a cold start. A reload or a second window is not a cold start                                                                                                                |
+| **After inactivity**         | 1, 5, 15, 30, or 60 minutes with no mouse or keyboard                                                                                                                                   |
+| **On a schedule**            | Every 1, 4, 8, 12, or 24 hours, however busy the session is                                                                                                                             |
+| **After the computer wakes** | Prompts when the machine comes back from sleep                                                                                                                                          |
+| **Before placing an order**  | Confirms orders you place by hand or through the copilot, auto-approved proposals included. Bots are never asked. A grace window of 0, 1, 5, or 15 minutes decides how often you retype |
+
+**Lock now** closes settings and locks immediately. It ships without a keyboard
+shortcut on purpose, because the obvious chords belong to the workspace menu,
+the browser address bar, and macOS's own screen lock. Assign one under
+[Keyboard](/docs/keyboard-shortcuts), or run it from the command palette.
+
+### Credential vault
+
+In a browser the vault is not optional: enrolling a way to unlock it is a
+precondition for storing your first key, so it turns itself on the first time
+you connect an account. On desktop it is a switch. Your keys are already in the
+OS keychain there, and the vault adds a password or a passkey on top of that.
+
+**Ways to unlock** lists everything enrolled, everything you can still add, and
+anything visible but out of reach with the reason written on the row. Any of
+them also opens the terminal lock screen.
+
+| Method       | What it is                                                                         |
+| ------------ | ---------------------------------------------------------------------------------- |
+| **Password** | The same password that unlocks the terminal. One secret, both doors                |
+| **Passkey**  | Touch ID, Windows Hello, or a USB security key, through WebAuthn                   |
+| **Touch ID** | macOS desktop only, and only ever added to a vault that already has another way in |
+
+Touch ID cannot be your only way in: macOS invalidates the key whenever the
+fingerprints on the Mac change, and a vault with nothing else in it would be
+one System Settings visit from unopenable. You cannot remove the last method
+either, and removing any of them means unlocking the vault first. There is no
+recovery here.
+
+**Hard lock** seals the vault rather than just covering the screen. Live bots
+and automations stop trading until you unlock again; paper bots keep running.
+It is the button for someone standing behind you, and it is unbound for the
+same reason.
+
+### What this does and does not protect
+
+Armed bots keep trading while the screen is locked. Locking the screen is not
+pausing your strategies; hard lock is.
+
+The vault and the lock screen share one attempt limit. Five wrong passwords arm
+a doubling delay capped at five minutes, and it survives a reload and a second
+window, so a wrong vault password also delays the lock screen.
+
+On desktop your password check lives in the system keychain and never leaves
+the machine. In a browser it is in browser storage, which means clearing site
+data removes the lock. The command-line tool takes API keys as arguments and
+never reads the vault at all.
+
+For the guarantees behind all of this, and how each one is enforced, see the
+[security model](/docs/security-model).
+
+### If you forget the password
+
+The lock screen's **Forgot your password?** leads to the only way past it:
+erase this device. It removes every exchange API key, wallet key, workspace,
+chart layout, and chat stored here, and you type `RESET` to confirm. Settings
+that sync to the cloud come back when you sign in again. Keys never do, because
+they were only ever on the device.
 
 ## Appearance
 
