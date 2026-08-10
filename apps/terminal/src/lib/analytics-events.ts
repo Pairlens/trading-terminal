@@ -153,6 +153,12 @@ export interface AnalyticsEvents {
   security_unlocked: { reason: LockReason }
   /** A before-trade identity check was answered. */
   security_trade_challenge: { outcome: 'passed' | 'failed' | 'cancelled' }
+  /**
+   * The lock screen's Face ID / fingerprint door. What happened, never which
+   * sensor answered or how often it was refused — a refusal rate describes how
+   * well someone's biometrics work, which is not ours to measure.
+   */
+  security_lock_biometric: { action: 'enrolled' | 'removed' | 'unlocked' }
   /** The forgotten-password path erased this device. */
   security_lock_reset: Record<string, never>
   /** A credential-vault protector was enrolled. Kind only — never key material,

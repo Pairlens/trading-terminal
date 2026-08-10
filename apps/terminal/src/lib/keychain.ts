@@ -33,7 +33,7 @@
 import { invoke } from '@tauri-apps/api/core'
 
 import { isStandalone } from './platform'
-import { LOCK_VERIFIER_KEY } from './security/keys'
+import { LOCK_BIOMETRIC_KEY, LOCK_VERIFIER_KEY } from './security/keys'
 import {
   CIPHER_V2,
   decryptWithDek,
@@ -57,6 +57,12 @@ export const KEYCHAIN_STORAGE_PREFIX = 'pairlens:keychain:'
  * that would open the vault. One entry, and it is a fixed point of the
  * design, not an oversight.
  *
+ * The lock screen's WebAuthn credential is exempt for exactly the same reason,
+ * and holds even less: a credential id and a label. The secret it stands for
+ * never leaves the authenticator, so there is nothing here to encrypt in the
+ * first place — what matters is that the lock screen can still find it while
+ * the vault is sealed.
+ *
  * What the exemption costs, stated because "nothing secret in it" only covers
  * half of it: the digest is unauthenticated on disk. On desktop that is
  * unchanged — it was always plaintext in the OS keychain, which has its own
@@ -68,7 +74,10 @@ export const KEYCHAIN_STORAGE_PREFIX = 'pairlens:keychain:'
  * credential disclosure — but it is a real difference from the pre-vault
  * browser format, which encrypted this slot too.
  */
-const VAULT_EXEMPT: ReadonlySet<string> = new Set([LOCK_VERIFIER_KEY])
+const VAULT_EXEMPT: ReadonlySet<string> = new Set([
+  LOCK_VERIFIER_KEY,
+  LOCK_BIOMETRIC_KEY,
+])
 
 // ── Raw storage ──────────────────────────────────────────────────────
 

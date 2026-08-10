@@ -25,7 +25,7 @@
 import { clearLockConfig } from './lock-config'
 import { clearLockState } from './lock-store'
 import { postLock } from './lock-channel'
-import { LOCK_VERIFIER_KEY, VAULT_RECORD_KEY } from './keys'
+import { LOCK_BIOMETRIC_KEY, LOCK_VERIFIER_KEY, VAULT_RECORD_KEY } from './keys'
 import { clearUiMirror } from './vault/vault-storage'
 import { deleteCredential, getCredential } from '@/lib/keychain'
 import { CREDENTIALS_INDEX_KEY } from '@/stores/credentials-store'
@@ -79,6 +79,11 @@ export async function resetAndErase(): Promise<void> {
   await forget(CREDENTIALS_INDEX_KEY)
   await forget(WALLETS_INDEX_KEY)
   await forget(LOCK_VERIFIER_KEY)
+  // The lock screen's WebAuthn credential id. The credential itself lives in
+  // the platform authenticator and no relying party can delete one — but with
+  // this record gone it is an orphan that opens nothing, which is the most an
+  // erase can honestly promise here.
+  await forget(LOCK_BIOMETRIC_KEY)
 
   // Biometric key material, read out of the record BEFORE the record is
   // destroyed: the record is the only thing that remembers which OS keychain

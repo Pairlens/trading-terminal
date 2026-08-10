@@ -14,6 +14,15 @@
 export const LOCK_VERIFIER_KEY = 'security:lock-verifier'
 
 /**
+ * The lock screen's WebAuthn credential — Face ID, Touch ID, a fingerprint
+ * reader, Windows Hello. Exempt from vault encryption for the same reason the
+ * verifier is: the lock screen has to be answerable while the vault is sealed,
+ * and a biometric door that only works once the vault is already open would be
+ * a door onto a room the user is already standing in.
+ */
+export const LOCK_BIOMETRIC_KEY = 'security:lock-biometric'
+
+/**
  * The vault record (protector list + wrapped DEKs). On desktop this is an OS
  * keychain entry; in the browser the record lives in localStorage instead, so
  * it dies with the ciphertext it belongs to (see vault/vault-storage.ts).

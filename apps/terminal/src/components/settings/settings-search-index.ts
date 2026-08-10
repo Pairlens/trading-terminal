@@ -154,6 +154,20 @@ export const SETTINGS_SEARCH_INDEX: ReadonlyArray<SettingsSearchEntry> = [
   },
   {
     section: 'security',
+    titleKey: 'settings.security.biometricUnlockTitle',
+    descriptionKey: 'settings.security.biometricUnlockDescription',
+    keywords: [
+      'biometric',
+      'face id',
+      'touch id',
+      'fingerprint',
+      'windows hello',
+      'unlock',
+      'lock screen',
+    ],
+  },
+  {
+    section: 'security',
     titleKey: 'settings.security.vaultTitle',
     descriptionKey: 'settings.security.vaultDescription',
     keywords: [

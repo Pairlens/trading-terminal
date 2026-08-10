@@ -54,6 +54,7 @@ import {
 } from '@/lib/security/vault/vault-session'
 import { removalStrandsVault } from '@/lib/security/vault/vault-record'
 import { MIN_PASSWORD_LENGTH } from '@/lib/security/vault/vault-policy'
+import { useLockBiometric } from '@/components/security/use-lock-biometric'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
 import { VaultCeiling } from '@/components/security/vault-ceiling'
@@ -130,6 +131,8 @@ export function SecuritySection() {
             </Button>
           </div>
         )}
+
+        {enabled && <BiometricUnlockRow />}
 
         <p className="mt-3 flex items-start gap-1.5 text-xs text-amber-600 dark:text-amber-400">
           <TriangleAlert className="mt-0.5 size-3.5 shrink-0" />
@@ -298,6 +301,108 @@ export function SecuritySection() {
         onOpenChange={setChangeOpen}
         mode="change"
       />
+    </div>
+  )
+}
+
+// ── Biometric unlock (the lock screen's own door) ────────────────────
+
+/**
+ * Face ID, Touch ID, a fingerprint reader, Windows Hello — as a way past the
+ * LOCK SCREEN. It lives inside the lock card and not in the vault's list of
+ * ways in, because that is exactly what it is and is not: it opens the screen
+ * and it opens nothing else (see lock-biometric.ts).
+ *
+ * That distinction is the whole reason the note below exists. A user with a
+ * vault who turns this on and then meets a sealed-vault banner would reasonably
+ * conclude the feature is broken; told up front, they either accept it or go
+ * add the vault passkey that does open both.
+ *
+ * Rendered only where a prompt can actually be raised — no platform
+ * authenticator, an insecure origin, or the packaged desktop app (whose
+ * `tauri://` origin is not a valid WebAuthn origin; desktop gets Touch ID
+ * through the vault instead) and there is nothing to offer.
+ */
+function BiometricUnlockRow() {
+  const { t } = useTranslation()
+  const vault = useVaultState()
+  const { enrolled, supported } = useLockBiometric()
+  const [busy, setBusy] = React.useState(false)
+  const [error, setError] = React.useState<string | null>(null)
+
+  /** The vault already has a door that opens the screen AND the keys. */
+  const coveredByVault = vault.hasPasskey || vault.hasBiometric
+
+  const toggle = async (next: boolean) => {
+    if (busy) return
+    setBusy(true)
+    setError(null)
+    // Loaded before the try so the catch below can ask it whether the failure
+    // was a dismissed prompt. A chunk that will not load is its own outcome.
+    const lockBiometric = await import('@/lib/security/lock-biometric').catch(
+      () => null,
+    )
+    if (!lockBiometric) {
+      setError(t('security.lock.keychainUnavailable'))
+      setBusy(false)
+      return
+    }
+    try {
+      if (next) {
+        await lockBiometric.enrollLockBiometric({
+          label: t('security.lock.biometricLabel'),
+          userName: t('security.lock.biometricUserName'),
+          userDisplayName: 'Pairlens',
+        })
+        track('security_lock_biometric', { action: 'enrolled' })
+      } else {
+        await lockBiometric.clearLockBiometric()
+        track('security_lock_biometric', { action: 'removed' })
+      }
+    } catch (err) {
+      // A dismissed prompt is not an error worth a red line — the switch snaps
+      // back on its own because the state is read, not assumed.
+      if (!lockBiometric.isLockBiometricCancellation(err)) {
+        setError(err instanceof Error ? err.message : String(err))
+      }
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (supported !== true) return null
+
+  return (
+    <div className="mt-4 border-t pt-4">
+      <div className="flex items-center justify-between gap-4">
+        <div className="min-w-0">
+          <Label className="flex items-center gap-2 text-sm font-medium">
+            <ScanFace className="size-4 text-muted-foreground" />
+            {t('settings.security.biometricUnlockTitle')}
+          </Label>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {t('settings.security.biometricUnlockDescription')}
+          </p>
+        </div>
+        <Switch
+          checked={enrolled}
+          // Adding a second, weaker biometric door next to one that already
+          // opens the keys would be a downgrade dressed as a feature. Removing
+          // a leftover one stays possible.
+          disabled={busy || (coveredByVault && !enrolled)}
+          onCheckedChange={(next: boolean) => void toggle(next)}
+        />
+      </div>
+
+      <p className="mt-2 text-xs text-muted-foreground">
+        {coveredByVault
+          ? t('settings.security.biometricUnlockCoveredByVault')
+          : vault.enrolled
+            ? t('settings.security.biometricUnlockVaultNote')
+            : t('settings.security.biometricUnlockScreenOnly')}
+      </p>
+
+      {error && <p className="mt-2 text-destructive text-xs">{error}</p>}
     </div>
   )
 }
@@ -1190,6 +1295,13 @@ function ConfirmPasswordDialog({
       // successful disable rather than trapping the user in a broken state.
       if (mode === 'disable' || result === 'missing') {
         setLockEnabled(false)
+        // The biometric door only ever opened the lock screen, so it dies with
+        // it. Leaving the record would quietly re-arm the button if the lock is
+        // switched back on later, under a password it was never enrolled
+        // against — a way in the user did not choose this time round.
+        const { clearLockBiometric } =
+          await import('@/lib/security/lock-biometric')
+        await clearLockBiometric()
         // The verifier is ALSO the vault's twin secret. Deleting it while a
         // password protector exists orphans that protector: the vault would
         // still expect the password, and the lock screen would have nothing
