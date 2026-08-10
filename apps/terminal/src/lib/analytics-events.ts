@@ -88,6 +88,14 @@ export interface AnalyticsEvents {
   timeframe_changed: { timeframe: string }
   chart_type_changed: { chart_type: string }
   drawing_tool_selected: { tool: string }
+  /** Chart bars were exported to CSV. Shape of the export only — never the
+   * instrument, the row count, or anything priced. */
+  chart_data_exported: {
+    range: 'visible' | 'all'
+    time_format: string
+    with_indicators: boolean
+    with_compares: boolean
+  }
 
   // ── Revenue attribution ───────────────────────────────────────────
   /** User clicked a venue signup (affiliate) link. */

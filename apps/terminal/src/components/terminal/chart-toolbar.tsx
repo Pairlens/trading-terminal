@@ -11,6 +11,7 @@ import {
   Download,
   Equal,
   EyeOff,
+  FileSpreadsheet,
   Hash,
   History,
   LineChart,
@@ -23,7 +24,7 @@ import {
   TrendingUp,
 } from 'lucide-react'
 
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -54,6 +55,7 @@ import type {
 } from '@pairlens/fast-financial-charts/types'
 import type { ChartType } from '@/hooks/use-chart-terminal-state'
 import { CompareMenu } from '@/components/terminal/compare-symbol-menu'
+import { ChartExportDataDialog } from '@/components/terminal/chart-export-data-dialog'
 import { ShortcutHint } from '@/components/shortcut-hints'
 import {
   useKeybindingLabel,
@@ -238,7 +240,9 @@ const PRICE_SCALE_MODE_OPTIONS: Array<{
 
 export function ChartToolbar() {
   const { t } = useTranslation()
+  const [exportDataOpen, setExportDataOpen] = useState(false)
   const {
+    market,
     timeframe,
     chartType,
     crosshairMode,
@@ -492,6 +496,34 @@ export function ChartToolbar() {
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
+
+      {/* Export chart data (CSV) — one click to the dialog rather than a
+          one-item menu next to the screenshot's. */}
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <Button
+              size="sm"
+              variant="ghost"
+              className="size-7 p-0"
+              aria-label={t('chart.toolbar.exportData')}
+              onClick={() => setExportDataOpen(true)}
+            />
+          }
+        >
+          <FileSpreadsheet className="size-3.5" />
+        </TooltipTrigger>
+        <TooltipContent>{t('chart.toolbar.exportData')}</TooltipContent>
+      </Tooltip>
+
+      <ChartExportDataDialog
+        open={exportDataOpen}
+        onOpenChange={setExportDataOpen}
+        chartRef={chartRef}
+        pairKey={chartSeries[0]?.id ?? ''}
+        market={market}
+        timeframe={timeframe}
+      />
 
       {/* Indicators button */}
       <Tooltip>
