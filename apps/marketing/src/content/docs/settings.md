@@ -1,11 +1,11 @@
 ---
 title: Settings
-description: Every setting in the terminal, from the terminal lock and credential vault to themes, languages, regional endpoint routing, data rate, analytics, and account deletion.
+description: Every setting in the terminal, from the terminal lock and credential vault to cloud sync, keyboard shortcuts, themes, languages, regional endpoint routing, data rate, analytics, and account deletion.
 group: traders
 order: 9
 eyebrow: For traders
 updated: AUG 2026
-readTime: 10 min read
+readTime: 14 min read
 ---
 
 Open settings with <kbd>⌘,</kbd>, from the user menu, or by searching for a
@@ -20,6 +20,53 @@ Display name and profile image, when you are signed in. Purely cosmetic.
 Your hosted AI subscription: current plan, credits used against granted, reset
 date, checkout, credit packs, and the billing portal. See
 [AI providers](/docs/ai-providers).
+
+## Cloud Sync
+
+What this device is willing to put in your account. The section only exists
+when the terminal is talking to an App Server, and it only has anything to say
+once you are signed in. Signed out, nothing syncs and everything you do stays
+here.
+
+The switch at the top pauses everything without touching the switches below it,
+which is what you want for a machine you are borrowing. Under it is a live
+status line: syncing, up to date, nothing to send, or a failed attempt that will
+retry on your next change.
+
+Then one switch per domain:
+
+| Domain                       | What travels                                                                                      |
+| ---------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Settings and preferences** | Language, theme, keyboard shortcuts, country, plugin registry settings, and the pair you had open |
+| **Chart setup**              | Indicators, drawings, chart type, favourite tools, and your default drawing styles                |
+| **Workspaces and layouts**   | Custom workspaces, folders, panel layouts, and workspace variables                                |
+| **Workflows and alerts**     | Automation workflows, alert rules, and the pairs they watch                                       |
+| **Plugins**                  | Which plugins are enabled, their settings, and your provider pins                                 |
+| **AI chat history**          | Copilot conversations, per pair                                                                   |
+| **Trade journal**            | Trades you or the copilot log                                                                     |
+
+Three things about these switches are worth knowing before you flip one.
+
+**Switching something off never deletes anything.** It stays on this device and
+the copy already in your account is left alone. It just stops updating and goes
+stale. Switch it back on and the two sides merge, newest change winning, which
+means something you deleted while it was off can come back if your account still
+has it.
+
+**Two of them have no local store.** AI chat history and the trade journal only
+ever live in your account, so off there means not recorded anywhere rather than
+recorded locally. Clearing chat history while sync is off clears this device
+only; the conversations in your account come back when you turn it on again.
+
+**Plugin settings include plugin API keys.** An AI provider key you typed into a
+plugin's own settings travels with the Plugins domain. Exchange API keys and
+wallet secrets never do, in any domain, with any switch on: they are on the
+blocklist alongside the terminal lock, and the App Server has no schema to put
+them in. See [Security](#security) and the
+[security model](/docs/security-model).
+
+The switches themselves are never synced. They describe what this device sends,
+so each device decides for itself.
 
 ## Plugins
 
@@ -158,6 +205,46 @@ palette too.
 
 **Recent tickers marquee.** A running strip of live prices for pairs you have
 been looking at, above the pair header.
+
+## Keyboard
+
+Every shortcut in the terminal is yours to change. The
+[shortcut reference](/docs/keyboard-shortcuts) lists what the defaults are; this
+section is where you change them.
+
+**Presets** are the starting point, and your own edits sit on top of whichever
+one you pick, so switching preset never throws your customizations away.
+
+| Preset                | What it changes                                                         |
+| --------------------- | ----------------------------------------------------------------------- |
+| **Pairlens**          | The shipped defaults                                                    |
+| **TradingView style** | Drawing chords and redo follow TradingView habits                       |
+| **Bloomberg style**   | Function keys jump between sections, the way a Bloomberg keyboard works |
+
+Below that is every command, grouped as General, Navigation, Workspace, Chart,
+Timeframes, and Drawing tools, with a search box because the list runs past
+forty rows. Hover a row to add a chord, remove one, or restore its default. A
+command can carry more than one chord, and a command can carry none: a few ship
+deliberately unbound, including **Lock terminal** and **Hard lock**, because the
+obvious chords are already taken and stealing one is worse than leaving a
+command discoverable and assignable here.
+
+Recording is literal. The very next combination you press is the one that gets
+assigned, Escape and Enter included, so the recorder takes the keyboard away
+from everything else while it is armed. Leave it with the Stop button rather
+than a key.
+
+Two warnings show up on their own. A chord bound to more than one command is
+listed under **Shortcut conflicts** at the top, and only the first command
+listed runs. A chord the browser or the operating system is likely to claim
+before Pairlens sees it is marked on its row: it is allowed, but it may never
+reach the app.
+
+**Reset all** puts every command back to what the current preset says.
+
+Rows marked for chart panes follow the routing rule in the
+[shortcut reference](/docs/keyboard-shortcuts): they go to the chart pane you
+last pointed at, and they are suppressed while you are typing.
 
 ## Data Rate
 
