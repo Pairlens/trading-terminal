@@ -40,7 +40,8 @@
     "./geckoterminal-data-provider": "./src/geckoterminal-data-provider/index.ts",
     "./jupiter-dex-connector": "./src/jupiter-dex-connector/index.ts",
     "./evm-dex-connector": "./src/evm-dex-connector/index.ts",
-    "./all": "./src/index.ts"
+    "./all": "./src/index.ts",
+    "./ccxt-connector": "./src/ccxt-connector/index.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3",
