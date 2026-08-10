@@ -1,6 +1,6 @@
 ---
 title: The chart
-description: 16 chart types, 11 timeframes, four price-scale modes, bar replay, symbol comparison, and screenshots. Everything the chart panel can do.
+description: 16 chart types, 11 timeframes, four price-scale modes, bar replay, symbol comparison, screenshots, and CSV export. Everything the chart panel can do.
 group: traders
 order: 1
 eyebrow: For traders
@@ -85,6 +85,20 @@ The camera menu gives you **Copy image** (straight to your clipboard) and
 **Download image**. On desktop the file lands in a real folder and the toast
 tells you which one. Screenshots capture the chart exactly as rendered,
 drawings and indicators included.
+
+### Export data
+
+The spreadsheet button next to the camera saves the chart's bars as a CSV.
+Pick **Visible bars** to take only what is on screen, or **All loaded bars**
+for everything the chart has pulled in, and choose how timestamps are written:
+ISO 8601, a plain UTC date and time, or a Unix timestamp in seconds or
+milliseconds.
+
+Every row is one bar, with time, open, high, low, close and volume. Indicators
+you have on the chart come along as extra columns, one per plot, so a MACD
+arrives as three. Compare symbols add a close column each. Bars from before an
+indicator had enough history leave the cell empty rather than borrowing the
+next value.
 
 ### Fullscreen
 
