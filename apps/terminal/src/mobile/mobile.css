@@ -1094,6 +1094,44 @@
     transition: opacity 200ms ease-out;
   }
 
+  /* The "next market is loading" badge (chart-switch-indicator.tsx).
+
+     The delay is the feature. A venue that answers in 150ms — most taps
+     between two liquid pairs on a warm socket — must not flash a pill on its
+     way, or every watchlist tap blinks. So the badge spends its first 260ms
+     invisible and only then fades in, which means it appears exactly when a
+     switch has taken long enough to be worth explaining. `both` is what holds
+     it at opacity 0 through the delay; without it the pill paints instantly
+     and animates from full opacity.
+
+     A delayed CSS animation and not a JS timer: the element is mounted for the
+     whole wait either way, and a timer would put a setState on the path of
+     every pair switch to schedule something the compositor can do alone. */
+  .pl-chart-switch {
+    animation: plSwitchIn 160ms ease-out 260ms both;
+  }
+
+  .pl-chart-switch-spin {
+    animation: plSwitchSpin 900ms linear infinite;
+  }
+
+  @keyframes plSwitchIn {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -4px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes plSwitchSpin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   /* ── Full-screen overlay motion ───────────────────────────────────
      Settings, the order book, All pairs and the account detail all wear
      `FullScreenOverlay`, so one rule gives the shell a single way of
@@ -1250,6 +1288,28 @@
     .pl-chart-scrim,
     .pl-chart-footer {
       transform: none;
+    }
+
+    /* The switch badge keeps its 260ms wait — that is timing, not motion, and
+       it is the whole reason a fast switch stays silent — and loses the 4px
+       it travelled in on. The spinner stops outright: an endlessly rotating
+       glyph is precisely what this preference is asking us not to draw, and
+       the badge says "Switching…" in words anyway. */
+    .pl-chart-switch {
+      animation: plSwitchFadeIn 160ms linear 260ms both;
+    }
+
+    .pl-chart-switch-spin {
+      animation: none;
+    }
+
+    @keyframes plSwitchFadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
   }
 }
