@@ -11,8 +11,10 @@
  * Trade screen's draggable limit line stays draggable while a panel is open.
  *
  * The outer component subscribes to the candle stream (a sanctioned per-tick
- * read) and hands three booleans to a memoized inner, which is the same
+ * read) and hands a handful of booleans to a memoized inner, which is the same
  * isolation `ChartPane` uses: the tick reaches this function, not the tree.
+ * Those booleans are also what says whether the market on screen has arrived
+ * yet — see `ChartSwitchIndicator` for the wait it draws.
  */
 import { memo, useCallback, useRef } from 'react'
 import { Monitor } from 'lucide-react'
@@ -20,7 +22,13 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
 import { PriceReadout } from '../primitives/price-readout'
+import {
+  advanceChartSwitch,
+  initialChartSwitchState,
+} from '../lib/chart-switch'
+import { useMobileFocus } from '../mobile-focus-context'
 import { MobileChart } from './mobile-chart'
+import { ChartSwitchIndicator } from './chart-switch-indicator'
 import type { ReactNode, PointerEvent as ReactPointerEvent } from 'react'
 import { useOptionalCandleData } from '@/lib/chart-terminal-context'
 
@@ -78,18 +86,49 @@ const FOOTER_HEIGHT_PX = 50
  */
 const CHART_FRAME = { bottom: `${FOOTER_HEIGHT_PX}px` } as const
 
+/**
+ * How far the chart falls back while the next market loads.
+ *
+ * Softer than the desktop's 0.45 because there is less to dim: the phone's
+ * plot is already empty by then, so this only takes the axis and the grid
+ * down, and the badge — not the dim — is what carries the message.
+ */
+const SWITCH_DIM = 0.55
+
 /** A tap: under 10px of travel and under 400ms. Anything else is a pan. */
 const TAP_SLOP_PX = 10
 const TAP_MS = 400
 
 export function MobileChartSurface(props: MobileChartSurfaceProps) {
   const candleData = useOptionalCandleData()
+  const hasSnapshot = candleData?.hasSnapshot ?? false
+
+  // `useMobileFocus` and not `useChartConfig`: the venue is the only field of
+  // the chart config this needs, and the focus context changes on a pair or
+  // venue switch where the config object changes on every tool arm, timeframe
+  // and drawing edit. Same value either way (see mobile-focus-context.tsx).
+  const { focusedVenue } = useMobileFocus()
+
+  // The venue-change bit has to be remembered by something that outlives the
+  // indicator: the switch and the cleared snapshot happen in the SAME render,
+  // so a component mounted afterwards would compare a venue against itself and
+  // always conclude nothing changed. This function is mounted for the life of
+  // the session, so the ref is safe here and nowhere below it. The write is a
+  // pure fold (see `advanceChartSwitch`) — idempotent under StrictMode.
+  const switchRef = useRef(initialChartSwitchState(focusedVenue))
+  switchRef.current = advanceChartSwitch(
+    switchRef.current,
+    focusedVenue,
+    hasSnapshot,
+  )
+
   return (
     <MobileChartSurfaceInner
       {...props}
       desktopOnly={candleData?.desktopOnly ?? false}
-      hasSnapshot={candleData?.hasSnapshot ?? false}
+      hasSnapshot={hasSnapshot}
       noData={candleData?.noData ?? false}
+      venueChanged={switchRef.current.venueChanged}
     />
   )
 }
@@ -108,10 +147,12 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
   desktopOnly,
   noData,
   hasSnapshot,
+  venueChanged,
 }: MobileChartSurfaceProps & {
   desktopOnly: boolean
   noData: boolean
   hasSnapshot: boolean
+  venueChanged: boolean
 }) {
   const tapRef = useRef<{ x: number; y: number; t: number } | null>(null)
 
@@ -137,6 +178,11 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
   )
 
   const unavailable = desktopOnly || (noData && !hasSnapshot)
+  // Same test the desktop pane runs (`phase` in chart-pane.tsx): the buffer is
+  // cleared the moment the request changes, so "no snapshot yet" IS "waiting".
+  // It is bounded by the states above — a venue that never answers resolves to
+  // `noData` and the empty state takes over from the indicator.
+  const switching = !unavailable && !hasSnapshot
 
   return (
     <div
@@ -162,11 +208,25 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
         // the resize it was smoothing over.
         <div
           className="pl-chart-band absolute inset-x-0 top-0 isolate"
-          style={{ opacity, ...CHART_FRAME }}
+          // Dimmed while the next market loads, on the band's own 200ms
+          // opacity transition — the desktop's dim-then-crossfade, multiplied
+          // into whatever dim the docked panel already asked for rather than
+          // overriding it.
+          style={{
+            opacity: switching ? opacity * SWITCH_DIM : opacity,
+            ...CHART_FRAME,
+          }}
         >
           <MobileChart band={band} />
         </div>
       )}
+
+      {switching ? (
+        <ChartSwitchIndicator
+          venueChanged={venueChanged}
+          venueLabel={venueLabel}
+        />
+      ) : null}
 
       {/* Two gradients with two jobs. The seam is a constant, tight fade that
           hides the tonal step where the top chrome meets the chart canvas; the
