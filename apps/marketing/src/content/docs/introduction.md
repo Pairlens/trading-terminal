@@ -60,8 +60,11 @@ provider key or subscribe to hosted Intelligence.
 
 **Web terminal.** The fastest way in. Open
 [terminal.pairlens.finance](https://terminal.pairlens.finance) and you are on a
-live chart; below 768px the same URL serves the mobile terminal. Credentials
-live in an encrypted vault on your device.
+live chart. Credentials live in an encrypted vault on your device.
+
+**Mobile terminal.** Below 768px the same URL serves a chart-first shell with
+five destinations and real order entry, not a shrunken dashboard. See
+[mobile terminal](/docs/mobile-terminal).
 
 **Desktop app.** A Tauri shell around the same terminal, with credentials in
 your OS keychain. It adds the four CORS-restricted venues, background bots, and

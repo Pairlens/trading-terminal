@@ -2,7 +2,7 @@
 title: Architecture
 description: How the terminal, connector plugins, strategy engine, and optional App Server relate, and where every piece of data lives.
 group: get-started
-order: 5
+order: 6
 eyebrow: Get started
 updated: AUG 2026
 readTime: 5 min read
