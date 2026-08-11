@@ -100,6 +100,88 @@ export type CcxtExchangeLike = {
   unWatchOrderBook?: (symbol: string) => Promise<unknown>
   unWatchTrades?: (symbol: string) => Promise<unknown>
 
+  // ── Trading ────────────────────────────────────────────────────────────
+  //
+  // Optional on the structural type, not because ccxt omits them (every
+  // exchange class inherits all of these from the base) but because the
+  // bridge must be drivable by a fake that implements only the read path —
+  // and because `has[...]` is the real capability signal anyway, so every
+  // call site checks that first.
+
+  /** Set by `setSandboxMode`; unreliable on venues whose `urls.test` is undefined. */
+  isSandboxModeEnabled?: boolean
+  /**
+   * Swaps `urls.api` for `urls.test` — or, on venues that override it
+   * (Bitget), flips a demo-trading flag that only changes a header. Throws
+   * `NotSupported` when the venue has neither, and silently BLANKS
+   * `urls.api` when `urls.test` is present-but-undefined (Kraken, Upbit and
+   * six others), which is why `exchange-host` verifies the result instead of
+   * trusting the call.
+   */
+  setSandboxMode?: (enabled: boolean) => void
+
+  createOrder?: (
+    symbol: string,
+    type: string,
+    side: string,
+    amount: number,
+    price?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, unknown>>
+  /** Quote-denominated market buy. Each venue's override owns its own quirk. */
+  createMarketBuyOrderWithCost?: (
+    symbol: string,
+    cost: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, unknown>>
+  createMarketSellOrderWithCost?: (
+    symbol: string,
+    cost: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, unknown>>
+  createMarketOrderWithCost?: (
+    symbol: string,
+    side: string,
+    cost: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, unknown>>
+  cancelOrder?: (
+    id: string,
+    symbol?: string,
+    params?: Record<string, unknown>,
+  ) => Promise<unknown>
+  fetchOpenOrders?: (
+    symbol?: string,
+    since?: number,
+    limit?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Array<Record<string, unknown>>>
+  fetchClosedOrders?: (
+    symbol?: string,
+    since?: number,
+    limit?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Array<Record<string, unknown>>>
+  fetchOrders?: (
+    symbol?: string,
+    since?: number,
+    limit?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Array<Record<string, unknown>>>
+  fetchBalance?: (
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, unknown>>
+
+  watchOrders?: (
+    symbol?: string,
+    since?: number,
+    limit?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Array<Record<string, unknown>>>
+  watchBalance?: (
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, unknown>>
+
   fetchOHLCV: (
     symbol: string,
     timeframe?: string,
@@ -168,6 +250,21 @@ export type CcxtVenueConfig = {
    */
   historyPageParams?: (endTs: number) => Record<string, unknown>
   /**
+   * Full-context version of `historyPageParams`, and takes precedence over it.
+   *
+   * Coinbase cannot express "the 300 bars before T": its REST candles endpoint
+   * demands BOTH `start` and `end`, rejects an inverted pair with a 400 and
+   * rejects a window wider than ~350 bars — so the cursor alone is not enough
+   * to build a request, the timeframe and the limit are needed to size the
+   * window. ccxt's own default (`start = now - limit·duration`) is only
+   * correct for the first, unpaged page.
+   */
+  historyParams?: (ctx: {
+    timeframe: string
+    limit: number
+    endTs?: number
+  }) => Record<string, unknown>
+  /**
    * Inbound-silence budget before the socket is force-closed. Derived from
    * ccxt's `streaming.keepAlive` where the venue answers an app-level ping
    * (that pong IS inbound traffic); generous where it does not.
@@ -179,4 +276,45 @@ export type CcxtVenueConfig = {
    * BASE/QUOTE with certainty.
    */
   synthesizeMarket?: (pair: string) => CcxtMarketSeed | null
+
+  // ── Trading (all optional; every default is derived from ccxt) ──────────
+
+  /**
+   * Fix up the endpoints `setSandboxMode(true)` installed. It replaces the
+   * whole `urls.api` subtree with `urls.test`, so anything `applyUrls` did —
+   * a portless WS host, a regional REST base — is gone by the time a paper
+   * instance makes its first call. Runs only on paper instances, after the
+   * sandbox is enabled.
+   */
+  applyPaperUrls?: (exchange: CcxtExchangeLike, country: string) => void
+  /**
+   * Params merged into every `createOrder` call on this venue.
+   */
+  orderParams?: Record<string, unknown>
+  /**
+   * Params that make an order a dry run on a venue with no sandbox
+   * environment (Kraken: `{ validate: true }`). Without either, a paper slot
+   * is refused rather than routed to the live matching engine.
+   */
+  paperOrderParams?: Record<string, unknown>
+  /**
+   * Params that address the venue's trigger-order id space on cancel and on
+   * the second `fetchOpenOrders` pass. Defaults to `{ trigger: true, stop:
+   * true }` — ccxt reads both spellings (`safeValue2(params,'stop','trigger')`)
+   * and which one a venue honors changed across releases.
+   */
+  triggerQueryParams?: Record<string, unknown>
+  /**
+   * Force trigger-order support on or off. Default: derived from
+   * `exchange.has` (`createTriggerOrder` / `createStopLossOrder` /
+   * `createTakeProfitOrder` / `createStopOrder`), which is `false` on Upbit
+   * and true everywhere else in the fleet.
+   */
+  supportsTriggerOrders?: boolean
+  /**
+   * REST poll cadence for the private state ccxt cannot stream on this venue
+   * (Coinbase has no `watchBalance`). Default 15 s, and only while a private
+   * subscription is open.
+   */
+  privatePollMs?: number
 }

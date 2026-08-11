@@ -28,13 +28,14 @@ import { GeoRestrictedError } from '@pairlens/market-engine/errors'
 import { createCexConnectorPlugin } from '../cex-connector'
 import { CcxtExchangeHost } from './exchange-host'
 import { CcxtMarketsProvider } from './markets'
+import { CcxtTradingRuntime } from './orders'
+import { createCcxtPrivateStream } from './private-stream'
 import { fetchCcxtBulkTickers, fetchCcxtHistory } from './rest'
 import { mapTimeframeToCcxt, toCcxtSymbol } from './parser'
 import { CcxtStreamHub } from './watch-driver'
 import type {
   CexConnectorSpec,
   CexCredentials,
-  CexPrivateWsClient,
   CexPublicWsClient,
 } from '../cex-connector'
 import type {
@@ -42,21 +43,26 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 import type { MarketsStorage } from './markets'
+import type { CcxtPrivateStreamOptions } from './private-stream'
 import type { CcxtExchangeLike, CcxtVenueConfig } from './types'
 import type { Candle } from '@pairlens/shared/types'
 
 export type { CcxtVenueConfig, CcxtExchangeLike, CcxtMarketSeed } from './types'
 export { CcxtStreamHub } from './watch-driver'
-export { CcxtExchangeHost } from './exchange-host'
+export { CcxtExchangeHost, enableCcxtSandbox } from './exchange-host'
+export {
+  CcxtTradingRuntime,
+  buildCcxtOrderCall,
+  normalizeCcxtBalances,
+  normalizeCcxtOrder,
+} from './orders'
+export { CcxtPrivateStream, createCcxtPrivateStream } from './private-stream'
 export {
   CcxtMarketsProvider,
   memoryMarketsStorage,
   trimMarket,
   trimMarkets,
 } from './markets'
-
-/** Trading is a follow-up phase; the hooks exist so the shell dispatch is real. */
-const TRADING_TODO = 'not yet implemented'
 
 export type CreateCcxtConnectorOptions = {
   /** Injectable markets cache — the CLI and tests run on an in-memory map. */
@@ -70,6 +76,11 @@ export type CreateCcxtConnectorOptions = {
     livenessTimeoutMs: number
     backfillRetryDelayMs: number
   }>
+  /** Forwarded to the private stream (backoff knobs, poll cadence, clocks). */
+  privateStream?: Omit<
+    CcxtPrivateStreamOptions,
+    'venue' | 'ensureMarkets' | 'onError'
+  >
 }
 
 /**
@@ -81,11 +92,12 @@ class CcxtVenueRuntime {
   readonly host: CcxtExchangeHost
   readonly markets: CcxtMarketsProvider
   readonly hub: CcxtStreamHub
+  readonly trading: CcxtTradingRuntime
   private client: CexPublicWsClient | null = null
 
   constructor(
     private readonly venue: CcxtVenueConfig,
-    options: CreateCcxtConnectorOptions = {},
+    private readonly options: CreateCcxtConnectorOptions = {},
   ) {
     this.markets = new CcxtMarketsProvider(
       venue.exchangeId,
@@ -105,6 +117,50 @@ class CcxtVenueRuntime {
       onError: (scope, error) => warn(venue.marketId, scope, error),
       ...options.hub,
     })
+    this.trading = new CcxtTradingRuntime({
+      venue,
+      ensureMarkets: (exchange) => this.ensureMarkets(exchange),
+      onError: (scope, error) => warn(venue.marketId, scope, error),
+    })
+  }
+
+  privateClient() {
+    return createCcxtPrivateStream({
+      venue: this.venue,
+      ensureMarkets: (exchange) => this.ensureMarkets(exchange),
+      onError: (scope, error) => warn(this.venue.marketId, scope, error),
+      ...this.options.privateStream,
+    })
+  }
+
+  /**
+   * Give an AUTHED instance a market table without letting it load one itself.
+   *
+   * ccxt signs opportunistically during `loadMarkets` — KuCoin adds
+   * `privateGetMarginSymbols`, five venues switch `fetchCurrencies` to a
+   * private endpoint — and the download is multi-MB. The public instance has
+   * already paid for it (or will, once), so the authed one is handed the
+   * trimmed copy. Cold profile with no cache: the PUBLIC instance does the
+   * unsigned load and the result is copied across.
+   */
+  private async ensureMarkets(target: CcxtExchangeLike): Promise<void> {
+    if (target.markets !== undefined) return
+    const cached = this.markets.peek() ?? (await this.markets.prefetch())
+    if (cached && cached.markets.length > 0) {
+      target.setMarkets(cached.markets)
+      return
+    }
+    const lease = await this.host.acquire()
+    await this.markets.whenReady(lease.exchange)
+    this.hub.touchIdle()
+    const loaded = this.markets.peek()
+    if (loaded && loaded.markets.length > 0) {
+      target.setMarkets(loaded.markets)
+      return
+    }
+    // Nothing cacheable came back (a venue whose table trims to nothing);
+    // the authed instance loading its own is better than a BadSymbol throw.
+    await target.loadMarkets()
   }
 
   publicClient(): CexPublicWsClient {
@@ -129,6 +185,11 @@ class CcxtVenueRuntime {
       }
     }
     return this.client
+  }
+
+  /** Everything this venue holds open: sockets, timers, ccxt instances. */
+  async destroy(): Promise<void> {
+    await Promise.all([this.hub.destroy(), this.trading.destroy()])
   }
 
   /**
@@ -217,14 +278,6 @@ class CcxtVenueRuntime {
 
 const GEO_MARKERS = /restricted|region|country|location|unavailable in your/i
 
-/** Trading arrives in the follow-up phase; the socket never opens today. */
-function stubPrivateWsClient(): CexPrivateWsClient<CexCredentials> {
-  return {
-    connect: () => {},
-    destroy: () => {},
-  }
-}
-
 export function createCcxtConnectorPlugin(
   venue: CcxtVenueConfig,
   manifest: PluginManifest,
@@ -240,24 +293,31 @@ export function createCcxtConnectorPlugin(
     ...(venue.requiresDesktop ? { requiresDesktop: true } : {}),
     ...(venue.geoCheck ? { geoCheck: venue.geoCheck } : {}),
     createWsClient: () => runtime.publicClient(),
-    createPrivateWsClient: stubPrivateWsClient,
+    createPrivateWsClient: () => runtime.privateClient(),
     fetchCandles: (pair, timeframe, limit, country, endTs) =>
       runtime.fetchCandles(pair, timeframe, limit, country, endTs),
     fetchTickerSnapshot: (country) => runtime.fetchTickerSnapshot(country),
-    fetchOpenOrders: async () => [],
-    fetchOrderHistory: async () => [],
-    fetchBalances: async () => [],
-    cancelOrder: async () => ({
-      success: false,
-      error: `${venue.displayName} order cancel: ${TRADING_TODO}`,
-    }),
-    placeOrder: async () => ({
-      success: false,
-      error: `${venue.displayName} order placement: ${TRADING_TODO}`,
-    }),
+    fetchOpenOrders: (slot) => runtime.trading.fetchOpenOrders(slot),
+    fetchOrderHistory: (slot) => runtime.trading.fetchOrderHistory(slot),
+    fetchBalances: (slot) => runtime.trading.fetchBalances(slot),
+    cancelOrder: (orderId, pair, slot, opts) =>
+      runtime.trading.cancelOrder(orderId, pair, slot, opts),
+    placeOrder: (order, slot) => runtime.trading.placeOrder(order, slot),
   }
 
-  return createCexConnectorPlugin(spec, manifest)
+  const instance = createCexConnectorPlugin(spec, manifest)
+  return {
+    ...instance,
+    // The shell's `destroy()` reaches the public client and each slot's private
+    // client, both of which it created — but the authed REST instances have no
+    // hook there, and a plugin that only ever traded never built a public
+    // client for the shell to tear down. So the runtime's teardown hangs off
+    // the plugin's, not off a client that may not exist.
+    destroy: async () => {
+      await instance.destroy?.()
+      await runtime.destroy()
+    },
+  }
 }
 
 function warn(marketId: string, scope: string, error: unknown): void {
