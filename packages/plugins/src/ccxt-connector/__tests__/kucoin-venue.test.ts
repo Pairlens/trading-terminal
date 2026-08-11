@@ -2,10 +2,6 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { describe, expect, it } from 'bun:test'
 import {
-  KUCOIN_ADAPTER_INFO as NATIVE_ADAPTER_INFO,
-  kucoinMarketConnectorManifest as nativeManifest,
-} from '../../kucoin-market-connector'
-import {
   KUCOIN_ADAPTER_INFO,
   kucoinCcxtVenue,
   kucoinMarketConnectorManifest,
@@ -18,13 +14,28 @@ import {
 } from '../venues/kucoin-regions'
 import type { CcxtExchangeCtor } from '../types'
 
-describe('kucoin manifest parity', () => {
-  it('is byte-equal to the native manifest', () => {
-    expect(kucoinMarketConnectorManifest).toEqual(nativeManifest)
-  })
-
-  it('keeps the native adapter info', () => {
-    expect(KUCOIN_ADAPTER_INFO).toEqual(NATIVE_ADAPTER_INFO)
+describe('kucoin manifest', () => {
+  // Until the native connector was deleted this read `toEqual(nativeManifest)`.
+  // What that assertion was really protecting is below: the identity a saved
+  // workspace, a provisioned credential and a capability scope are all keyed
+  // by. Changing any of it strands user state, which is why it is pinned by
+  // value rather than against a sibling implementation.
+  it('keeps the identity the terminal and stored user state key by', () => {
+    expect(kucoinMarketConnectorManifest.id).toBe('kucoin-market-connector')
+    expect(KUCOIN_ADAPTER_INFO.marketId).toBe('kucoin')
+    expect(KUCOIN_ADAPTER_INFO.displayName).toBe('KuCoin')
+    expect(kucoinMarketConnectorManifest.capabilities.map((c) => c.id)).toEqual(
+      [
+        'market-data:candles',
+        'market-data:ticker',
+        'market-data:orderbook',
+        'market-data:history',
+        'trading:orders',
+        'trading:balances',
+        'market-data:ticker-snapshot',
+        'market-data:trades',
+      ],
+    )
   })
 
   it('declares desktop-only in the spec half too', () => {

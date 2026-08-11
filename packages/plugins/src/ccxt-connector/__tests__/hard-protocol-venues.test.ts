@@ -3,11 +3,11 @@
 /**
  * Kraken, HTX and Bitfinex: the drop-in check.
  *
- * The strongest parity assertion available at unit level is to hold the ccxt
- * manifest next to the native one and demand they are the same object — the
- * terminal reads the manifest and nothing else to decide a venue's id, display
- * name, capability scopes and desktop gate, so an equal manifest is an
- * indistinguishable venue.
+ * The terminal reads the manifest and nothing else to decide a venue's id,
+ * display name, capability scopes and desktop gate, so the manifest IS the
+ * venue's identity. While the native connectors still existed this held the
+ * ccxt manifest next to the native one and demanded they be the same object;
+ * with the natives deleted the same contract is pinned by value below.
  *
  * The rest pins the venue-specific values that throw at RUNTIME when they are
  * wrong, which is the whole reason this trio was split out: three of the four
@@ -17,9 +17,6 @@
  */
 
 import { describe, expect, it } from 'bun:test'
-import * as nativeBitfinex from '../../bitfinex-market-connector'
-import * as nativeHtx from '../../htx-market-connector'
-import * as nativeKraken from '../../kraken-market-connector'
 import {
   bitfinexCcxtVenue,
   bitfinexMarketConnectorManifest,
@@ -29,38 +26,62 @@ import {
   krakenCcxtVenue,
   krakenMarketConnectorManifest,
 } from '../venues/kraken'
-import type { PluginManifest } from '@pairlens/plugin-system/types'
+import type {
+  CapabilityId,
+  PluginManifest,
+} from '@pairlens/plugin-system/types'
 
-describe('manifest parity with the native connectors', () => {
-  it('kraken is byte-equal', () => {
-    expect(krakenMarketConnectorManifest).toEqual(
-      nativeKraken.krakenMarketConnectorManifest,
-    )
+describe('manifest identity', () => {
+  // The ids and capability scopes a saved workspace and a provisioned
+  // credential are keyed by. All three carried the same capability set on the
+  // native connectors and still do.
+  const CAPABILITIES: Array<CapabilityId> = [
+    'market-data:candles',
+    'market-data:ticker',
+    'market-data:orderbook',
+    'market-data:history',
+    'trading:orders',
+    'trading:balances',
+    'market-data:ticker-snapshot',
+    'market-data:trades',
+  ]
+
+  const manifests: Array<[string, PluginManifest]> = [
+    ['kraken', krakenMarketConnectorManifest],
+    ['htx', htxMarketConnectorManifest],
+    ['bitfinex', bitfinexMarketConnectorManifest],
+  ]
+
+  it('keeps each venue`s plugin id and capability scope', () => {
+    for (const [name, manifest] of manifests) {
+      expect(manifest.id).toBe(`${name}-market-connector`)
+      expect(manifest.capabilities.map((c) => c.id)).toEqual(CAPABILITIES)
+      for (const capability of manifest.capabilities) {
+        // Scoping is what makes the resolver pick this plugin for this venue.
+        // The bulk snapshot is the one exception: it is offered wildcard so the
+        // instrument search can reach it without naming a market first.
+        const expected =
+          capability.id === 'market-data:ticker-snapshot' ? '*' : name
+        expect(capability.markets, `${name} ${capability.id}`).toEqual([
+          expected,
+        ])
+      }
+    }
   })
 
-  it('htx is byte-equal', () => {
-    expect(htxMarketConnectorManifest).toEqual(
-      nativeHtx.htxMarketConnectorManifest,
-    )
-  })
-
-  it('bitfinex differs in exactly one field: requiresDesktop', () => {
-    const native = nativeBitfinex.bitfinexMarketConnectorManifest
-    expect(native.metadata?.['requiresDesktop']).toBeUndefined()
+  it('gates only bitfinex on desktop', () => {
+    // The one deliberate deviation from the native connectors: api-pub.bitfinex
+    // .com sends no Access-Control-Allow-Origin and ccxt's mandatory
+    // loadMarkets is a REST call, so a browser cannot reach the venue at all.
+    expect(
+      krakenMarketConnectorManifest.metadata?.['requiresDesktop'],
+    ).toBeUndefined()
+    expect(
+      htxMarketConnectorManifest.metadata?.['requiresDesktop'],
+    ).toBeUndefined()
     expect(bitfinexMarketConnectorManifest.metadata?.['requiresDesktop']).toBe(
       true,
     )
-
-    // Everything else has to match, or "one deliberate deviation" is a story
-    // rather than a fact.
-    const stripped = (manifest: PluginManifest) => ({
-      ...manifest,
-      metadata: {
-        ...manifest.metadata,
-        requiresDesktop: undefined,
-      },
-    })
-    expect(stripped(bitfinexMarketConnectorManifest)).toEqual(stripped(native))
   })
 })
 

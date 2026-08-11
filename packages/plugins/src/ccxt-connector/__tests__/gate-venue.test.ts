@@ -2,10 +2,6 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { describe, expect, it } from 'bun:test'
 import {
-  GATE_ADAPTER_INFO as NATIVE_ADAPTER_INFO,
-  gateMarketConnectorManifest as nativeManifest,
-} from '../../gate-market-connector'
-import {
   GATE_ADAPTER_INFO,
   gateCcxtVenue,
   gateMarketConnectorManifest,
@@ -14,13 +10,23 @@ import { applyGateRestBase, resolveGateCcxtUrls } from '../venues/gate-regions'
 import { withGateQuirks } from '../venues/gate-exchange'
 import type { CcxtExchangeCtor } from '../types'
 
-describe('gate manifest parity', () => {
-  it('is byte-equal to the native manifest', () => {
-    expect(gateMarketConnectorManifest).toEqual(nativeManifest)
-  })
-
-  it('keeps the native adapter info', () => {
-    expect(GATE_ADAPTER_INFO).toEqual(NATIVE_ADAPTER_INFO)
+describe('gate manifest', () => {
+  // Was `toEqual(nativeManifest)` until the native connector was deleted; the
+  // identity it was guarding is pinned by value instead. See kucoin-venue.test.
+  it('keeps the identity the terminal and stored user state key by', () => {
+    expect(gateMarketConnectorManifest.id).toBe('gate-market-connector')
+    expect(GATE_ADAPTER_INFO.marketId).toBe('gate')
+    expect(GATE_ADAPTER_INFO.displayName).toBe('Gate.io')
+    expect(gateMarketConnectorManifest.capabilities.map((c) => c.id)).toEqual([
+      'market-data:candles',
+      'market-data:ticker',
+      'market-data:orderbook',
+      'market-data:history',
+      'trading:orders',
+      'trading:balances',
+      'market-data:ticker-snapshot',
+      'market-data:trades',
+    ])
   })
 
   it('declares desktop-only in the spec half too', () => {

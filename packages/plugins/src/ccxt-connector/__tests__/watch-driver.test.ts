@@ -3,8 +3,8 @@
 /**
  * Lifecycle suite for the ccxt watch driver.
  *
- * The native connectors get this coverage from `describePrivateWsLifecycle`,
- * which drives a `ReconnectingWsSession` over a fake socket. A ccxt Pro client
+ * The deleted native connectors got this coverage from a shared harness that
+ * drove a `ReconnectingWsSession` over a fake socket. A ccxt Pro client
  * owns its own socket, so that seam does not exist here — the injectable
  * surface is the exchange itself. Everything below runs against a fake
  * exchange whose `watch*` promises are resolved and rejected by hand, with

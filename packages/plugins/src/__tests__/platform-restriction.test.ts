@@ -42,31 +42,21 @@ import {
   bitgetMarketConnectorManifest,
   bitvavoMarketConnectorManifest,
   bybitMarketConnectorManifest,
-  cryptocomMarketConnectorManifest,
-  htxMarketConnectorManifest,
-  krakenMarketConnectorManifest,
-  upbitMarketConnectorManifest,
-} from '../index'
-import {
   coinbaseMarketConnectorManifest,
   createCoinbaseMarketConnectorPlugin,
-} from '../coinbase-market-connector'
-import {
   createGateMarketConnectorPlugin,
-  gateMarketConnectorManifest,
-} from '../gate-market-connector'
-import {
   createKucoinMarketConnectorPlugin,
-  kucoinMarketConnectorManifest,
-} from '../kucoin-market-connector'
-import {
   createMexcMarketConnectorPlugin,
-  mexcMarketConnectorManifest,
-} from '../mexc-market-connector'
-import {
   createOkxMarketConnectorPlugin,
+  cryptocomMarketConnectorManifest,
+  gateMarketConnectorManifest,
+  htxMarketConnectorManifest,
+  krakenMarketConnectorManifest,
+  kucoinMarketConnectorManifest,
+  mexcMarketConnectorManifest,
   okxMarketConnectorManifest,
-} from '../okx-market-connector'
+  upbitMarketConnectorManifest,
+} from '../index'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
   PluginExecuteParams,

@@ -3,8 +3,8 @@
 /**
  * Lifecycle suite for the authenticated stream.
  *
- * The native private clients get this coverage from `describePrivateWsLifecycle`,
- * which injects a fake socket into `ReconnectingWsSession`. A ccxt Pro client
+ * The deleted native private clients got this coverage from a shared harness
+ * that injected a fake socket into `ReconnectingWsSession`. A ccxt Pro client
  * owns its socket, so that seam does not exist — the injectable surface is the
  * exchange class itself, and the venue config's `loadExchangeClass` is where it
  * goes in. Everything below runs against a fake whose `watchOrders` and

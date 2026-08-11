@@ -3,172 +3,204 @@
 /**
  * Per-connector drivers for the live conformance harness.
  *
- * Each connector ships a WsClient class (structurally compatible with
- * WsClientLike) plus a standalone `fetch*Candles` REST fn whose trailing
- * argument differs (country vs. a `paper` boolean). The wrappers below adapt
- * those into the uniform LiveDriver shape so harness.ts can treat every
- * exchange identically.
+ * Every CEX now reads through the ccxt bridge, which exposes one uniform
+ * surface — the plugin instance — instead of the WsClient-class-plus-loose-REST
+ * -function pair each native connector used to ship. So this file is a single
+ * adapter over `PluginInstance` plus a table of venues, rather than fourteen
+ * hand-written wrappers.
+ *
+ * Driving the PLUGIN rather than some inner client is also the more honest
+ * instrument: it is the exact surface the terminal talks to, so a venue that
+ * streams fine but is mis-wired at the capability boundary now fails here.
  */
 
-import { OkxWsClient } from '../../okx-market-connector/ws-client'
-import { fetchOkxCandles } from '../../okx-market-connector/rest-client'
-import { BinanceWsClient } from '../../binance-market-connector/ws-client'
-import { fetchBinanceCandles } from '../../binance-market-connector/rest-client'
-import { BybitWsClient } from '../../bybit-market-connector/ws-client'
-import { fetchBybitCandles } from '../../bybit-market-connector/rest-client'
-import { CoinbaseWsClient } from '../../coinbase-market-connector/ws-client'
-import { fetchCoinbaseCandles } from '../../coinbase-market-connector/rest-client'
-import { GateWsClient } from '../../gate-market-connector/ws-client'
-import { fetchGateCandles } from '../../gate-market-connector/rest-client'
-import { HtxWsClient } from '../../htx-market-connector/ws-client'
-import { fetchHtxCandles } from '../../htx-market-connector/rest-client'
-import { UpbitWsClient } from '../../upbit-market-connector/ws-client'
-import { fetchUpbitCandles } from '../../upbit-market-connector/rest-client'
-import { KrakenWsClient } from '../../kraken-market-connector/ws-client'
-import { fetchKrakenCandles } from '../../kraken-market-connector/rest-client'
-import { KucoinWsClient } from '../../kucoin-market-connector/ws-client'
-import { fetchKucoinCandles } from '../../kucoin-market-connector/rest-client'
-import { MexcWsClient } from '../../mexc-market-connector/ws-client'
-import { fetchMexcCandles } from '../../mexc-market-connector/rest-client'
-import { BitgetWsClient } from '../../bitget-market-connector/ws-client'
-import { fetchBitgetCandles } from '../../bitget-market-connector/rest-client'
-import { CryptocomWsClient } from '../../cryptocom-market-connector/ws-client'
-import { fetchCryptocomCandles } from '../../cryptocom-market-connector/rest-client'
-import { BfxWsClient } from '../../bitfinex-market-connector/ws-client'
-import { fetchBfxCandles } from '../../bitfinex-market-connector/rest-client'
-import type { LiveDriver } from './harness'
+import {
+  binanceMarketConnectorManifest,
+  bitfinexMarketConnectorManifest,
+  bitgetMarketConnectorManifest,
+  bybitMarketConnectorManifest,
+  coinbaseMarketConnectorManifest,
+  createBinanceMarketConnectorPlugin,
+  createBitfinexMarketConnectorPlugin,
+  createBitgetMarketConnectorPlugin,
+  createBybitMarketConnectorPlugin,
+  createCoinbaseMarketConnectorPlugin,
+  createCryptocomMarketConnectorPlugin,
+  createGateMarketConnectorPlugin,
+  createHtxMarketConnectorPlugin,
+  createKrakenMarketConnectorPlugin,
+  createKucoinMarketConnectorPlugin,
+  createMexcMarketConnectorPlugin,
+  createOkxMarketConnectorPlugin,
+  createUpbitMarketConnectorPlugin,
+  cryptocomMarketConnectorManifest,
+  gateMarketConnectorManifest,
+  htxMarketConnectorManifest,
+  krakenMarketConnectorManifest,
+  kucoinMarketConnectorManifest,
+  mexcMarketConnectorManifest,
+  okxMarketConnectorManifest,
+  upbitMarketConnectorManifest,
+} from '../../index'
+import type { LiveDriver, WsClientLike } from './harness'
+import type { Candle } from '@pairlens/shared/types'
+import type {
+  CapabilityId,
+  PluginInstance,
+  PluginManifest,
+} from '@pairlens/plugin-system/types'
 
 // Default test pair mirrors what the user reports against: BTC-USDT.
-// Coinbase's deepest USD book is BTC-USD; each connector's own normalizePair
-// maps the canonical base-quote string to its native symbol.
+// Each venue's own market table maps the canonical base-quote string to its
+// native symbol.
 const PAIR = 'BTC-USDT'
 const TF = '1m'
 const COUNTRY = ''
 
+type MakePlugin = (manifest: PluginManifest) => PluginInstance
+
+/**
+ * Adapts a plugin instance to the harness's client shape.
+ *
+ * One plugin per client so a check tears its venue all the way down: the ccxt
+ * exchange, its market table and its sockets all hang off the instance, and a
+ * shared one would leak state between checks.
+ */
+function pluginClient(
+  plugin: PluginInstance,
+  market: string,
+  timeframe: string,
+): WsClientLike {
+  const subscribe = (
+    capability: CapabilityId,
+    pair: string,
+    country: string,
+    callback: (data: never) => void,
+  ) =>
+    plugin.subscribe!(
+      {
+        capability,
+        params: { pair, timeframe },
+        context: { pair, market, timeframe, mode: 'paper', country },
+      },
+      callback as (data: unknown) => void,
+    )
+
+  return {
+    subscribeCandles: (pair, _tf, country, cb) =>
+      subscribe('market-data:candles', pair, country, cb as never),
+    subscribeTicker: (pair, country, cb) =>
+      subscribe('market-data:ticker', pair, country, cb as never),
+    subscribeOrderbook: (pair, country, cb) =>
+      subscribe('market-data:orderbook', pair, country, cb as never),
+    // The harness tears down between checks; the plugin's own destroy closes
+    // the ccxt client and every socket under it.
+    destroy: () => void plugin.destroy?.(),
+  }
+}
+
+function driver(
+  name: string,
+  make: MakePlugin,
+  manifest: PluginManifest,
+  overrides: Partial<Pick<LiveDriver, 'pair' | 'timeframe' | 'country'>> = {},
+): LiveDriver {
+  const pair = overrides.pair ?? PAIR
+  const timeframe = overrides.timeframe ?? TF
+  const country = overrides.country ?? COUNTRY
+
+  return {
+    name,
+    pair,
+    timeframe,
+    country,
+    makeClient: () => pluginClient(make(manifest), name, timeframe),
+    fetchHistory: async (p, tf, limit, c): Promise<Array<Candle>> => {
+      const plugin = make(manifest)
+      try {
+        return (await plugin.execute({
+          capability: 'market-data:history',
+          params: { pair: p, timeframe: tf, limit },
+          context: {
+            pair: p,
+            market: name,
+            timeframe: tf,
+            mode: 'paper',
+            country: c,
+          },
+        })) as Array<Candle>
+      } finally {
+        await plugin.destroy?.()
+      }
+    },
+  }
+}
+
 export const LIVE_DRIVERS: Array<LiveDriver> = [
-  {
-    name: 'okx',
-    pair: PAIR,
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new OkxWsClient(),
-    fetchHistory: (p, tf, limit, country) =>
-      fetchOkxCandles(p, tf, limit, country),
-  },
-  {
-    name: 'binance',
-    pair: PAIR,
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new BinanceWsClient(),
-    fetchHistory: (p, tf, limit, country) =>
-      fetchBinanceCandles(p, tf, limit, country),
-  },
-  {
-    name: 'bybit',
-    pair: PAIR,
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new BybitWsClient(),
-    fetchHistory: (p, tf, limit, country) =>
-      fetchBybitCandles(p, tf, limit, country),
-  },
-  {
-    name: 'coinbase',
-    pair: 'BTC-USD',
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new CoinbaseWsClient(),
-    fetchHistory: (p, tf, limit) => fetchCoinbaseCandles(p, tf, limit),
-  },
-  {
-    name: 'gate',
-    pair: PAIR,
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new GateWsClient(),
-    // 5th arg is a `paper` flag, NOT country — keep it false.
-    fetchHistory: (p, tf, limit) => fetchGateCandles(p, tf, limit, '', false),
-  },
-  {
-    name: 'htx',
-    pair: PAIR,
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new HtxWsClient(),
-    fetchHistory: (p, tf, limit) => fetchHtxCandles(p, tf, limit),
-  },
-  {
-    name: 'upbit',
-    pair: PAIR,
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new UpbitWsClient(),
-    fetchHistory: (p, tf, limit, country) =>
-      fetchUpbitCandles(p, tf, limit, country),
-  },
-  {
-    name: 'kraken',
-    // Not the default BTC-USDT, and not a connector quirk — a liquidity one.
-    // Kraken's OHLC channel emits on trades, and its USDT book is thin enough
-    // that the forming-bar check is a coin flip: measured over 45s it produced
-    // one update (first at 12.9s) against a 40s ceiling, where BTC-USD
-    // produced ten (first at 1.9s). So the check was passing or failing on
-    // whether a trade happened to land, which is what took the nightly red on
-    // its first run while the connector was working correctly.
-    //
-    // Every other venue streams BTC-USDT comfortably, so this stays a
-    // per-driver exception rather than a change of default. Widening the
-    // timeout instead would only make the flake rarer and slower.
-    pair: 'BTC-USD',
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new KrakenWsClient(),
-    fetchHistory: (p, tf, limit) => fetchKrakenCandles(p, tf, limit),
-  },
-  {
-    name: 'kucoin',
-    pair: PAIR,
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new KucoinWsClient(),
-    fetchHistory: (p, tf, limit, country) =>
-      fetchKucoinCandles(p, tf, limit, country),
-  },
-  {
-    name: 'mexc',
-    pair: PAIR,
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new MexcWsClient(),
-    fetchHistory: (p, tf, limit, country) =>
-      fetchMexcCandles(p, tf, limit, country),
-  },
-  {
-    name: 'bitget',
-    pair: PAIR,
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new BitgetWsClient(),
-    fetchHistory: (p, tf, limit) => fetchBitgetCandles(p, tf, limit),
-  },
-  {
-    name: 'cryptocom',
-    pair: PAIR,
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new CryptocomWsClient(),
-    // 4th arg is a `paper` flag, NOT country — keep it false.
-    fetchHistory: (p, tf, limit) => fetchCryptocomCandles(p, tf, limit, false),
-  },
-  {
-    name: 'bitfinex',
-    pair: PAIR,
-    timeframe: TF,
-    country: COUNTRY,
-    makeClient: () => new BfxWsClient(),
-    fetchHistory: (p, tf, limit) => fetchBfxCandles(p, tf, limit),
-  },
+  driver('okx', createOkxMarketConnectorPlugin, okxMarketConnectorManifest),
+  driver(
+    'binance',
+    createBinanceMarketConnectorPlugin,
+    binanceMarketConnectorManifest,
+  ),
+  driver(
+    'bybit',
+    createBybitMarketConnectorPlugin,
+    bybitMarketConnectorManifest,
+  ),
+  driver(
+    'coinbase',
+    createCoinbaseMarketConnectorPlugin,
+    coinbaseMarketConnectorManifest,
+    { pair: 'BTC-USD' },
+  ),
+  driver('gate', createGateMarketConnectorPlugin, gateMarketConnectorManifest),
+  driver('htx', createHtxMarketConnectorPlugin, htxMarketConnectorManifest),
+  driver(
+    'upbit',
+    createUpbitMarketConnectorPlugin,
+    upbitMarketConnectorManifest,
+  ),
+  driver(
+    'kraken',
+    createKrakenMarketConnectorPlugin,
+    krakenMarketConnectorManifest,
+    {
+      // Not the default BTC-USDT, and not a connector quirk — a liquidity one.
+      // Kraken's OHLC channel emits on trades, and its USDT book is thin enough
+      // that the forming-bar check is a coin flip: measured over 45s it produced
+      // one update (first at 12.9s) against a 40s ceiling, where BTC-USD
+      // produced ten (first at 1.9s). So the check was passing or failing on
+      // whether a trade happened to land, which is what took the nightly red on
+      // its first run while the connector was working correctly.
+      //
+      // Every other venue streams BTC-USDT comfortably, so this stays a
+      // per-driver exception rather than a change of default. Widening the
+      // timeout instead would only make the flake rarer and slower.
+      pair: 'BTC-USD',
+    },
+  ),
+  driver(
+    'kucoin',
+    createKucoinMarketConnectorPlugin,
+    kucoinMarketConnectorManifest,
+  ),
+  driver('mexc', createMexcMarketConnectorPlugin, mexcMarketConnectorManifest),
+  driver(
+    'bitget',
+    createBitgetMarketConnectorPlugin,
+    bitgetMarketConnectorManifest,
+  ),
+  driver(
+    'cryptocom',
+    createCryptocomMarketConnectorPlugin,
+    cryptocomMarketConnectorManifest,
+  ),
+  driver(
+    'bitfinex',
+    createBitfinexMarketConnectorPlugin,
+    bitfinexMarketConnectorManifest,
+  ),
 ]
 
 /**
@@ -195,7 +227,7 @@ const ONLY = (process.env.PAIRLENS_LIVE_MARKETS ?? '')
   .map((name) => name.trim().toLowerCase())
   .filter(Boolean)
 
-const KNOWN = new Set(LIVE_DRIVERS.map((driver) => driver.name))
+const KNOWN = new Set(LIVE_DRIVERS.map((d) => d.name))
 // A typo would otherwise silently shrink the run — possibly to nothing — and
 // still report success, the one outcome a drift detector must never fake.
 const UNKNOWN = ONLY.filter((name) => !KNOWN.has(name))
@@ -209,10 +241,10 @@ if (UNKNOWN.length > 0) {
 /** The drivers this run will actually exercise. */
 export const SELECTED_DRIVERS: Array<LiveDriver> =
   ONLY.length > 0
-    ? LIVE_DRIVERS.filter((driver) => ONLY.includes(driver.name))
+    ? LIVE_DRIVERS.filter((d) => ONLY.includes(d.name))
     : LIVE_DRIVERS
 
 /** Named so a narrowed run can never be read as a full sweep. */
 export const SKIPPED_DRIVER_NAMES: Array<string> = LIVE_DRIVERS.filter(
-  (driver) => !SELECTED_DRIVERS.includes(driver),
-).map((driver) => driver.name)
+  (d) => !SELECTED_DRIVERS.includes(d),
+).map((d) => d.name)

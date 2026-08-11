@@ -3,10 +3,6 @@
 import { describe, expect, it } from 'bun:test'
 import { isGeoRestrictedError } from '@pairlens/market-engine/errors'
 import {
-  MEXC_ADAPTER_INFO as NATIVE_ADAPTER_INFO,
-  mexcMarketConnectorManifest as nativeManifest,
-} from '../../mexc-market-connector'
-import {
   MEXC_ADAPTER_INFO,
   mexcCcxtVenue,
   mexcMarketConnectorManifest,
@@ -22,13 +18,13 @@ import type { CcxtExchangeCtor } from '../types'
 
 const BLOCKED = ['US', 'GB', 'UK', 'CA', 'CN', 'SG', 'HK']
 
-describe('mexc manifest parity', () => {
-  it('is byte-equal to the native manifest', () => {
-    expect(mexcMarketConnectorManifest).toEqual(nativeManifest)
-  })
-
-  it('keeps the native adapter info', () => {
-    expect(MEXC_ADAPTER_INFO).toEqual(NATIVE_ADAPTER_INFO)
+describe('mexc manifest', () => {
+  // Was `toEqual(nativeManifest)` until the native connector was deleted; the
+  // identity it was guarding is pinned by value instead. See kucoin-venue.test.
+  it('keeps the identity the terminal and stored user state key by', () => {
+    expect(mexcMarketConnectorManifest.id).toBe('mexc-market-connector')
+    expect(MEXC_ADAPTER_INFO.marketId).toBe('mexc')
+    expect(MEXC_ADAPTER_INFO.displayName).toBe('MEXC')
   })
 
   it('declares no market-data:trades — the aggressor side is unmeasured', () => {

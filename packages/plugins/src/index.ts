@@ -5,8 +5,9 @@ export {
   createPairlensCorePlugin,
 } from './pairlens-core/index.ts'
 // Every CEX venue is served by the CCXT bridge (packages/plugins/src/
-// ccxt-connector). Same plugin ids, same manifests, same exported triple —
-// the native directories stay on disk only until final removal.
+// ccxt-connector). Same plugin ids, same manifests, same exported triple as the
+// hand-written connectors these replaced, so a saved workspace and a
+// provisioned credential still resolve.
 export {
   okxMarketConnectorManifest,
   createOkxMarketConnectorPlugin,
