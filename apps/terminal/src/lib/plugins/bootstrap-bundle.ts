@@ -19,14 +19,17 @@ import {
   createPairlensIntelligencePlugin,
   pairlensIntelligenceManifest,
 } from '@pairlens/plugins/pairlens-intelligence'
+// OKX and Binance run on the CCXT bridge. Same plugin ids, same manifests —
+// only the subpath moved, and the ccxt exchange class behind each one is a
+// dynamic import, so neither venue's ~1 MB chunk is in the entry graph.
 import {
   createOkxMarketConnectorPlugin,
   okxMarketConnectorManifest,
-} from '@pairlens/plugins/okx-market-connector'
+} from '@pairlens/plugins/ccxt-connector/okx'
 import {
   binanceMarketConnectorManifest,
   createBinanceMarketConnectorPlugin,
-} from '@pairlens/plugins/binance-market-connector'
+} from '@pairlens/plugins/ccxt-connector/binance'
 import {
   bybitMarketConnectorManifest,
   createBybitMarketConnectorPlugin,

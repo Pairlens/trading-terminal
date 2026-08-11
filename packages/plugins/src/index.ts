@@ -4,16 +4,20 @@ export {
   pairlensCoreManifest,
   createPairlensCorePlugin,
 } from './pairlens-core/index.ts'
+// OKX and Binance are served by the CCXT bridge (packages/plugins/src/
+// ccxt-connector). Same plugin ids, same manifests, same exported triple —
+// the native directories stay on disk for the golden conformance suite and as
+// the reference implementation while the remaining twelve venues migrate.
 export {
   okxMarketConnectorManifest,
   createOkxMarketConnectorPlugin,
   OKX_ADAPTER_INFO,
-} from './okx-market-connector/index.ts'
+} from './ccxt-connector/venues/okx.ts'
 export {
   binanceMarketConnectorManifest,
   createBinanceMarketConnectorPlugin,
   BINANCE_ADAPTER_INFO,
-} from './binance-market-connector/index.ts'
+} from './ccxt-connector/venues/binance.ts'
 export {
   bybitMarketConnectorManifest,
   createBybitMarketConnectorPlugin,

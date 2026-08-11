@@ -25,6 +25,7 @@ import * as htx from '../htx-market-connector/parser'
 import * as cryptocom from '../cryptocom-market-connector/parser'
 import * as bitfinex from '../bitfinex-market-connector/parser'
 import * as upbit from '../upbit-market-connector/parser'
+import * as ccxt from '../ccxt-connector/parser'
 import type {
   OrderbookLevel,
   TickerSnapshot,
@@ -465,6 +466,44 @@ const ADAPTERS: Array<ConnectorGolden> = [
         trade_timestamp: C.ts,
       }),
       parse: (raw: any) => upbit.parseUpbitTicker(raw),
+    },
+  },
+  {
+    // The CCXT bridge's unified row. Not a fifteenth venue — it is the shape
+    // every ccxt-backed connector normalizes from, so this single row is the
+    // regression gate for all of them at once. The native rows above stay: they
+    // are still the reference for what "correct" means, and while a venue is
+    // mid-migration both parsers have to agree with the same scenario.
+    name: 'ccxt (unified)',
+    // ccxt OHLCV: [ts(ms), open, high, low, close, volume], numeric — except on
+    // Kraken's WS, where they arrive as strings, hence the mixed encoding.
+    candle: {
+      encode: () => [C.ts, C.open, String(C.high), C.low, C.close, C.volume],
+      parse: (raw: any) => ccxt.parseCcxtOhlcv(raw),
+    },
+    // ccxt has ALREADY converted every venue's native unit into `percentage`,
+    // a percent. The one thing this row exists to catch is the bridge
+    // multiplying it a second time.
+    ticker: {
+      encode: () => ({
+        symbol: 'BTC/USDT',
+        last: T.last,
+        close: T.last,
+        bid: T.bid,
+        ask: T.ask,
+        high: T.high24h,
+        low: T.low24h,
+        baseVolume: T.volume24h,
+        open: T.prevPrice,
+        percentage: T.changePct,
+        timestamp: C.ts,
+      }),
+      parse: (raw: any) => ccxt.parseCcxtTicker(raw),
+    },
+    book: {
+      encodeBids: () => B.bids.map(([p, s]) => [p, s]),
+      encodeAsks: () => B.asks.map(([p, s]) => [p, s]),
+      parse: (raw: any) => ccxt.parseCcxtBookLevels(raw),
     },
   },
 ]

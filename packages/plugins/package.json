@@ -41,7 +41,9 @@
     "./jupiter-dex-connector": "./src/jupiter-dex-connector/index.ts",
     "./evm-dex-connector": "./src/evm-dex-connector/index.ts",
     "./all": "./src/index.ts",
-    "./ccxt-connector": "./src/ccxt-connector/index.ts"
+    "./ccxt-connector": "./src/ccxt-connector/index.ts",
+    "./ccxt-connector/binance": "./src/ccxt-connector/venues/binance.ts",
+    "./ccxt-connector/okx": "./src/ccxt-connector/venues/okx.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3",

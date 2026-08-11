@@ -12,5 +12,7 @@ export default typeof self !== 'undefined'
   : (globalThis as { WebSocket?: unknown }).WebSocket
 
 export const createWebSocketStream = (): never => {
-  throw new Error('ws.createWebSocketStream is Node-only and unused in the browser')
+  throw new Error(
+    'ws.createWebSocketStream is Node-only and unused in the browser',
+  )
 }
