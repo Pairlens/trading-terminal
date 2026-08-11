@@ -22,7 +22,7 @@
 
 import { ReconnectingWsSession } from '@pairlens/market-engine/ws-session'
 import { hmacSign } from '@pairlens/market-engine/hmac-signer'
-import { resolveOkxUrls } from './regions'
+import { resolveOkxTradingCountry, resolveOkxUrls } from './regions'
 import type { WsSessionOptions } from '@pairlens/market-engine/ws-session'
 import type {
   NormalizedBalance,
@@ -36,6 +36,8 @@ type Credentials = {
   apiKey: string
   apiSecret: string
   passphrase: string
+  /** Account's home entity override ('global' | 'eea' | 'us'); '' = by country. */
+  entity?: string
 }
 
 const PING_INTERVAL_MS = 20_000
@@ -108,12 +110,15 @@ export class OkxPrivateWsClient {
     cb: OrderUpdateCallback,
     onBalance?: BalanceUpdateCallback,
   ): void {
+    // The credential's account entity overrides country routing here exactly
+    // as it does for REST — the key only logs in on its home entity's host.
+    const routedCountry = resolveOkxTradingCountry(credentials.entity, country)
     const endpointChanged =
       this.release !== null &&
-      (this.connectedCountry !== country || this.connectedPaper !== paper)
+      (this.connectedCountry !== routedCountry || this.connectedPaper !== paper)
 
     this.credentials = credentials
-    this.country = country
+    this.country = routedCountry
     this.paper = paper
     this.callback = cb
     this.balanceCallback = onBalance ?? null

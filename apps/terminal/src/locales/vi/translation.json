@@ -3092,6 +3092,8 @@
     "walletRemoveFailed": "Không thể xóa ví.",
     "accountConnectFailed": "Không thể kết nối tài khoản.",
     "accountRemoveFailed": "Không thể xóa tài khoản.",
+    "accountEntityUpdatedFeedback": "Đã cập nhật pháp nhân tài khoản.",
+    "accountEntityUpdateFailed": "Không thể cập nhật pháp nhân tài khoản.",
     "fieldRequired": "{{field}} là bắt buộc",
     "accountConnectedFeedback": "Đã kết nối tài khoản {{label}} {{mode}}.",
     "walletChains": {

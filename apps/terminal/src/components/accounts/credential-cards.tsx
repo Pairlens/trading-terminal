@@ -7,6 +7,13 @@ import { AlertTriangle, Link2Off, ShieldCheck } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 import { Button } from '@pairlens/ui/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@pairlens/ui/components/ui/select'
 
 import { PluginPosterArt } from '../plugins/plugin-icon'
 import {
@@ -20,7 +27,7 @@ import type { ExchangeCredential } from '@/stores/credentials-store'
 import type { CryptoWallet } from '@/stores/wallets-store'
 import { usePortfolioValue } from '@/hooks/use-portfolio-value'
 import { formatValue } from '@/lib/format-price'
-import { getExpiryStatus } from '@/stores/credentials-store'
+import { CREDENTIAL_SCHEMAS, getExpiryStatus } from '@/stores/credentials-store'
 import { WALLET_SCHEMAS } from '@/stores/wallets-store'
 
 // ---------------------------------------------------------------------------
@@ -85,17 +92,24 @@ export function ExchangeAccountCard({
   credential,
   index,
   onRemove,
+  onEntityChange,
   isBusy,
   currencySymbol,
 }: {
   credential: ExchangeCredential
   index: number
   onRemove: () => void
+  /**
+   * Move this account to a different regional entity. Only ever called for
+   * venues whose schema declares one; omit it and the row is not rendered.
+   */
+  onEntityChange?: (entity: string) => void
   isBusy: boolean
   currencySymbol: string
 }) {
   const { t } = useTranslation()
   const expiry = getExpiryStatus(credential)
+  const entitySchema = CREDENTIAL_SCHEMAS[credential.market]?.entity
   const { totalValue } = usePortfolioValue(credential.id)
   const brand = venueBrand(credential.market, credential.label)
   const isLive = credential.mode === 'live'
@@ -189,6 +203,52 @@ export function ExchangeAccountCard({
               })
             : t('accounts.unknownDate')}
         </div>
+
+        {/* Account entity — editable in place, because the only symptom of
+            getting it wrong is the venue claiming the key doesn't exist, and
+            the fix should not be "delete the credential and start over". */}
+        {entitySchema && onEntityChange && (
+          <div className="mt-3 space-y-1.5">
+            <label
+              htmlFor={`cred-entity-${credential.id}`}
+              className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground"
+            >
+              {entitySchema.label}
+            </label>
+            <Select
+              value={credential.entity || 'auto'}
+              disabled={isBusy}
+              onValueChange={(value) =>
+                onEntityChange(!value || value === 'auto' ? '' : value)
+              }
+            >
+              <SelectTrigger
+                id={`cred-entity-${credential.id}`}
+                size="sm"
+                className="w-full"
+              >
+                {/* Explicit label: Radix only learns an item's text once its
+                    content has mounted, so a never-opened trigger would
+                    otherwise render the raw value. */}
+                <SelectValue>
+                  {entitySchema.options.find(
+                    (option) => option.value === (credential.entity ?? ''),
+                  )?.label ?? entitySchema.options[0]?.label}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {entitySchema.options.map((option) => (
+                  <SelectItem
+                    key={option.value || 'auto'}
+                    value={option.value || 'auto'}
+                  >
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {/* Inactivity expiry warning */}
         {expiry?.warning && (

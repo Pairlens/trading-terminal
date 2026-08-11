@@ -3122,6 +3122,8 @@
     "walletRemoveFailed": "Nie udało się usunąć portfela.",
     "accountConnectFailed": "Nie udało się połączyć konta.",
     "accountRemoveFailed": "Nie udało się usunąć konta.",
+    "accountEntityUpdatedFeedback": "Zaktualizowano podmiot konta.",
+    "accountEntityUpdateFailed": "Nie udało się zaktualizować podmiotu konta.",
     "fieldRequired": "Pole {{field}} jest wymagane",
     "accountConnectedFeedback": "Połączono konto {{label}} ({{mode}}).",
     "defaultWalletName": "Portfel {{chain}}",

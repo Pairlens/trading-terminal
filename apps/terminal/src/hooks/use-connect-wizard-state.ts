@@ -299,6 +299,9 @@ export function useConnectWizardState({
           apiKey: formFields['apiKey'] ?? '',
           apiSecret: formFields['apiSecret'] ?? '',
           passphrase: formFields['passphrase'],
+          // Venue-entity override (schemas with an `entity` selector, e.g.
+          // OKX). Empty string = auto, stored as absent.
+          entity: formFields['entity'] || undefined,
         })
         track('venue_connected', { venue: resolvedMarket })
         setFeedback({

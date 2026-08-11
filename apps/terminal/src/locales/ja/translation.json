@@ -3092,6 +3092,8 @@
     "walletRemoveFailed": "ウォレットを削除できませんでした。",
     "accountConnectFailed": "アカウントを接続できませんでした。",
     "accountRemoveFailed": "アカウントを削除できませんでした。",
+    "accountEntityUpdatedFeedback": "アカウントの運営法人を更新しました。",
+    "accountEntityUpdateFailed": "アカウントの運営法人を更新できませんでした。",
     "fieldRequired": "{{field}}は必須です",
     "accountConnectedFeedback": "{{label}}の{{mode}}アカウントを接続しました。",
     "defaultWalletName": "{{chain}} ウォレット",

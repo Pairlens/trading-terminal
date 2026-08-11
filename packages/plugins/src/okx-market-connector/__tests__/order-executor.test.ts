@@ -234,6 +234,94 @@ describe('placeOkxOrder — request signing & shape', () => {
     expect(JSON.parse(String(calls[0].init.body)).clOrdId).toBeUndefined()
   })
 
+  // An OKX key exists on exactly ONE regional entity (verified live: an EEA
+  // key returns 50119 on www/us and works on eea). The credential's `entity`
+  // must beat country-based routing for every credentialed call.
+  it('routes to the credential entity over the country (eea key, global country)', async () => {
+    const { calls } = stubFetch({
+      code: '0',
+      data: [{ ordId: 'X', sCode: '0' }],
+    })
+    await placeOkxOrder(
+      {
+        market: 'okx',
+        pair: 'BTC-EUR',
+        side: 'buy',
+        type: 'market',
+        size: '1',
+        mode: 'paper',
+      },
+      { ...CREDS, entity: 'eea' },
+      '', // country says global — the account's entity must win
+    )
+    expect(calls[0].url).toBe('https://eea.okx.com/api/v5/trade/order')
+  })
+
+  it('treats an empty entity as no override (routes by country)', async () => {
+    const { calls } = stubFetch({
+      code: '0',
+      data: [{ ordId: 'X', sCode: '0' }],
+    })
+    await placeOkxOrder(
+      {
+        market: 'okx',
+        pair: 'BTC-USDT',
+        side: 'buy',
+        type: 'market',
+        size: '1',
+        mode: 'paper',
+      },
+      { ...CREDS, entity: '' },
+      'US',
+    )
+    expect(calls[0].url).toBe('https://us.okx.com/api/v5/trade/order')
+  })
+
+  it('rewrites 50119 into the entity-mismatch explanation', async () => {
+    stubFetch({
+      code: '1',
+      msg: '',
+      data: [{ sCode: '50119', sMsg: "API key doesn't exist" }],
+    })
+    const result = await placeOkxOrder(
+      {
+        market: 'okx',
+        pair: 'BTC-USDT',
+        side: 'buy',
+        type: 'market',
+        size: '1',
+        mode: 'paper',
+      },
+      CREDS,
+      '',
+    )
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('www.okx.com')
+    expect(result.error).toContain('50119')
+    expect(result.error).toContain('regional entity')
+  })
+
+  it('leaves non-50119 rejections untouched', async () => {
+    stubFetch({
+      code: '1',
+      msg: '',
+      data: [{ sCode: '51008', sMsg: 'Insufficient balance' }],
+    })
+    const result = await placeOkxOrder(
+      {
+        market: 'okx',
+        pair: 'BTC-USDT',
+        side: 'buy',
+        type: 'market',
+        size: '1',
+        mode: 'paper',
+      },
+      CREDS,
+      '',
+    )
+    expect(result.error).toBe('Insufficient balance')
+  })
+
   it('routes US accounts to the us.okx.com host', async () => {
     const { calls } = stubFetch({
       code: '0',
@@ -354,8 +442,20 @@ describe('fetchOkxBalances', () => {
       data: [
         {
           details: [
-            { ccy: 'BTC', availEq: '0.5', frozenBal: '0.1', eq: '0.6' },
-            { ccy: 'USDT', availEq: '0', frozenBal: '0', eq: '0' },
+            {
+              ccy: 'BTC',
+              availBal: '0.5',
+              availEq: '',
+              frozenBal: '0.1',
+              eq: '0.6',
+            },
+            {
+              ccy: 'USDT',
+              availBal: '0',
+              availEq: '',
+              frozenBal: '0',
+              eq: '0',
+            },
           ],
         },
       ],
@@ -368,6 +468,22 @@ describe('fetchOkxBalances', () => {
       frozen: '0.1',
       total: '0.6',
     })
+  })
+
+  // Cash (spot) accounts return availEq as an EMPTY string for every
+  // currency (verified live against OKX demo) — the spendable balance is
+  // availBal. Mapping availEq directly reported 0 available across the board.
+  it('falls back to availEq only when availBal is absent (margin/unified)', async () => {
+    stubFetch({
+      code: '0',
+      data: [
+        {
+          details: [{ ccy: 'ETH', availEq: '2.5', frozenBal: '0', eq: '2.5' }],
+        },
+      ],
+    })
+    const balances = await fetchOkxBalances(CREDS, '', false)
+    expect(balances[0]?.available).toBe('2.5')
   })
 })
 

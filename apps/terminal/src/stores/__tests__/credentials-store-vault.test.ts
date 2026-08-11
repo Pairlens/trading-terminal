@@ -305,6 +305,81 @@ describe('renaming a credential', () => {
   })
 })
 
+describe('changing a credential account entity', () => {
+  const stored = {
+    id: 'abc',
+    market: 'okx',
+    label: 'OKX Live',
+    mode: 'live' as const,
+    apiKey: 'k',
+    apiSecret: 's',
+    createdAt: 1,
+  }
+
+  function seed(entity?: string): void {
+    useCredentialsStore.setState({
+      credentials: [{ ...stored, ...(entity ? { entity } : {}) }],
+      loaded: true,
+      status: 'ready',
+      sealed: false,
+    })
+  }
+
+  test('writes the whole record to the same slot, then publishes', async () => {
+    seed()
+    await useCredentialsStore.getState().updateCredentialEntity('abc', 'eea')
+
+    expect(useCredentialsStore.getState().credentials[0].entity).toBe('eea')
+    expect(saved).toHaveLength(1)
+    expect(saved[0].key).toBe('cred:abc')
+    const written = JSON.parse(saved[0].value)
+    expect(written.entity).toBe('eea')
+    // Routing moved; the key did not.
+    expect(written.apiKey).toBe('k')
+    expect(written.apiSecret).toBe('s')
+    expect(written.label).toBe('OKX Live')
+  })
+
+  test('back to auto drops the field rather than storing an empty string', async () => {
+    seed('eea')
+    await useCredentialsStore.getState().updateCredentialEntity('abc', '')
+
+    expect(useCredentialsStore.getState().credentials[0].entity).toBeUndefined()
+    expect('entity' in JSON.parse(saved[0].value)).toBe(false)
+  })
+
+  test('auto on a credential that never had one writes nothing', async () => {
+    seed()
+    await useCredentialsStore.getState().updateCredentialEntity('abc', '')
+    expect(saved).toEqual([])
+  })
+
+  test('picking the current entity writes nothing', async () => {
+    seed('eea')
+    await useCredentialsStore.getState().updateCredentialEntity('abc', 'eea')
+    expect(saved).toEqual([])
+  })
+
+  test('an unknown id writes nothing', async () => {
+    seed()
+    await useCredentialsStore.getState().updateCredentialEntity('nope', 'us')
+    expect(saved).toEqual([])
+  })
+
+  test('a failed write rejects and leaves routing alone', async () => {
+    // Same reason as rename: a sealed vault must not leave the card showing an
+    // entity that no disk agrees with, while orders still sign for the old one.
+    seed()
+    saveFailure = new VaultSealedError()
+
+    await expect(
+      useCredentialsStore.getState().updateCredentialEntity('abc', 'us'),
+    ).rejects.toBeInstanceOf(VaultSealedError)
+
+    expect(useCredentialsStore.getState().credentials[0].entity).toBeUndefined()
+  })
+})
+
 describe('wallets store: same rule', () => {
   test('a sealed load reports sealed, never ready', async () => {
     getCredentialImpl = async () => {

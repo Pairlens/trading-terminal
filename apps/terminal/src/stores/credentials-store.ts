@@ -14,6 +14,12 @@ export type ExchangeCredential = {
   apiKey: string
   apiSecret: string
   passphrase?: string
+  /**
+   * Account's home regional entity, for venues whose API keys bind to one
+   * (OKX: 'global' | 'eea' | 'us'). Empty/absent = route by the country
+   * setting. See the `entity` selector on the venue's credential schema.
+   */
+  entity?: string
   createdAt: number
   /** Timestamp of last use (credentials provisioned to a connector plugin). Used for inactivity expiry warnings. */
   lastActivityAt?: number
@@ -40,6 +46,19 @@ export const CREDENTIAL_SCHEMAS: Record<
     modes: Array<'paper' | 'live'>
     /** If set, the exchange expires API keys after N days of inactivity. */
     inactivityExpiry?: InactivityExpiryPolicy
+    /**
+     * Account-entity selector, for venues whose API keys exist on exactly one
+     * regional entity (the one the account was registered with). Rendered as
+     * a select in the connect wizard; the choice lands on
+     * `ExchangeCredential.entity` and overrides country-based routing for
+     * every credentialed call. Without it, a key registered on another entity
+     * fails with the venue's misleading "key doesn't exist" error.
+     */
+    entity?: {
+      label: string
+      help: string
+      options: Array<{ value: string; label: string }>
+    }
   }
 > = {
   okx: {
@@ -49,6 +68,16 @@ export const CREDENTIAL_SCHEMAS: Record<
       { key: 'apiSecret', label: 'API Secret', required: true },
       { key: 'passphrase', label: 'Passphrase', required: true },
     ],
+    entity: {
+      label: 'OKX account entity',
+      help: 'OKX API keys only work on the regional entity where the account was created. Pick the one this account belongs to — if unsure, leave Auto and switch when you see "API key doesn\'t exist" (50119).',
+      options: [
+        { value: '', label: 'Auto (match my region)' },
+        { value: 'global', label: 'OKX Global (okx.com)' },
+        { value: 'eea', label: 'OKX EEA (eea.okx.com)' },
+        { value: 'us', label: 'OKX US (us.okx.com)' },
+      ],
+    },
     modes: ['paper', 'live'],
     inactivityExpiry: {
       days: 14,
@@ -246,6 +275,13 @@ type CredentialsState = {
    * when the store cannot be written, so the caller can say so.
    */
   renameCredential: (id: string, label: string) => Promise<void>
+  /**
+   * Change which regional entity a credential's account belongs to (venues
+   * with an `entity` selector on their schema). Same persist-before-publish
+   * contract as `renameCredential` — and the connector re-provisions off the
+   * new value, so the next order routes to the new entity without a reload.
+   */
+  updateCredentialEntity: (id: string, entity: string) => Promise<void>
   getCredentialForMarket: (market: string) => ExchangeCredential | undefined
   /** Update lastActivityAt for a credential (call when credentials are handed to a connector plugin). */
   touchCredential: (id: string) => Promise<void>
@@ -382,6 +418,27 @@ export const useCredentialsStore = create<CredentialsState>((set, get) => ({
       credentials: get().credentials.map((c) =>
         c.id === id ? { ...c, label: trimmed } : c,
       ),
+    })
+  },
+
+  // Persists before it publishes, for the reason spelled out on
+  // `renameCredential`: a routing change the UI shows but the keychain never
+  // took would send the next order to the entity the user just moved away from.
+  updateCredentialEntity: async (id, entity) => {
+    const current = get().credentials.find((c) => c.id === id)
+    if (!current) return
+    // Normalize: 'auto' is stored as an absent field, not an empty string, so
+    // a credential saved before this option existed and one explicitly set
+    // back to auto are the same record.
+    const next = entity || undefined
+    if ((current.entity || undefined) === next) return
+
+    const { entity: _dropped, ...rest } = current
+    const updated = next ? { ...rest, entity: next } : rest
+    await saveCredential(`cred:${id}`, JSON.stringify(updated))
+
+    set({
+      credentials: get().credentials.map((c) => (c.id === id ? updated : c)),
     })
   },
 

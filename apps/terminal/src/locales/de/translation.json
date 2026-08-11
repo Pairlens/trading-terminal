@@ -3092,6 +3092,8 @@
     "walletRemoveFailed": "Wallet konnte nicht entfernt werden.",
     "accountConnectFailed": "Konto konnte nicht verbunden werden.",
     "accountRemoveFailed": "Konto konnte nicht entfernt werden.",
+    "accountEntityUpdatedFeedback": "Kontoeinheit aktualisiert.",
+    "accountEntityUpdateFailed": "Kontoeinheit konnte nicht aktualisiert werden.",
     "fieldRequired": "{{field}} ist erforderlich",
     "accountConnectedFeedback": "{{label}}-{{mode}}-Konto verbunden.",
     "walletChains": {

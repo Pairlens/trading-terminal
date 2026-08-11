@@ -3092,6 +3092,8 @@
     "walletRemoveFailed": "지갑을 삭제하지 못했습니다.",
     "accountConnectFailed": "계정을 연결하지 못했습니다.",
     "accountRemoveFailed": "계정을 삭제하지 못했습니다.",
+    "accountEntityUpdatedFeedback": "계정 운영 법인을 변경했습니다.",
+    "accountEntityUpdateFailed": "계정 운영 법인을 변경하지 못했습니다.",
     "fieldRequired": "{{field}}은(는) 필수입니다",
     "accountConnectedFeedback": "{{label}} {{mode}} 계정이 연결되었습니다.",
     "defaultWalletName": "{{chain}} 지갑",

@@ -3092,6 +3092,8 @@
     "walletRemoveFailed": "Gagal menghapus wallet.",
     "accountConnectFailed": "Gagal menghubungkan akun.",
     "accountRemoveFailed": "Gagal menghapus akun.",
+    "accountEntityUpdatedFeedback": "Entitas akun diperbarui.",
+    "accountEntityUpdateFailed": "Gagal memperbarui entitas akun.",
     "fieldRequired": "{{field}} wajib diisi",
     "accountConnectedFeedback": "Akun {{label}} {{mode}} terhubung.",
     "walletChains": {

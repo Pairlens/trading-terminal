@@ -3092,6 +3092,8 @@
     "walletRemoveFailed": "Échec de la suppression du wallet.",
     "accountConnectFailed": "Échec de la connexion du compte.",
     "accountRemoveFailed": "Échec de la suppression du compte.",
+    "accountEntityUpdatedFeedback": "Entité du compte mise à jour.",
+    "accountEntityUpdateFailed": "Échec de la mise à jour de l'entité du compte.",
     "fieldRequired": "{{field}} est requis",
     "accountConnectedFeedback": "Compte {{label}} {{mode}} connecté.",
     "walletChains": {

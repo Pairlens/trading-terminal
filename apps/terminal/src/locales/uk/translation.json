@@ -3122,6 +3122,8 @@
     "walletRemoveFailed": "Не вдалося видалити гаманець.",
     "accountConnectFailed": "Не вдалося підключити обліковий запис.",
     "accountRemoveFailed": "Не вдалося видалити обліковий запис.",
+    "accountEntityUpdatedFeedback": "Юридичну особу облікового запису оновлено.",
+    "accountEntityUpdateFailed": "Не вдалося оновити юридичну особу облікового запису.",
     "fieldRequired": "Поле «{{field}}» обов'язкове",
     "accountConnectedFeedback": "Обліковий запис {{label}} ({{mode}}) підключено.",
     "defaultWalletName": "Гаманець {{chain}}",
