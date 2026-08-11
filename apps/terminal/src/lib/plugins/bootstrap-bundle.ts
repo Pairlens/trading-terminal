@@ -19,9 +19,9 @@ import {
   createPairlensIntelligencePlugin,
   pairlensIntelligenceManifest,
 } from '@pairlens/plugins/pairlens-intelligence'
-// OKX and Binance run on the CCXT bridge. Same plugin ids, same manifests —
+// Every CEX venue runs on the CCXT bridge. Same plugin ids, same manifests —
 // only the subpath moved, and the ccxt exchange class behind each one is a
-// dynamic import, so neither venue's ~1 MB chunk is in the entry graph.
+// dynamic import, so no venue's chunk is in the entry graph.
 import {
   createOkxMarketConnectorPlugin,
   okxMarketConnectorManifest,
@@ -33,51 +33,51 @@ import {
 import {
   bybitMarketConnectorManifest,
   createBybitMarketConnectorPlugin,
-} from '@pairlens/plugins/bybit-market-connector'
+} from '@pairlens/plugins/ccxt-connector/bybit'
 import {
   bitvavoMarketConnectorManifest,
   createBitvavoMarketConnectorPlugin,
-} from '@pairlens/plugins/bitvavo-market-connector'
+} from '@pairlens/plugins/ccxt-connector/bitvavo'
 import {
   createMexcMarketConnectorPlugin,
   mexcMarketConnectorManifest,
-} from '@pairlens/plugins/mexc-market-connector'
+} from '@pairlens/plugins/ccxt-connector/mexc'
 import {
   createKucoinMarketConnectorPlugin,
   kucoinMarketConnectorManifest,
-} from '@pairlens/plugins/kucoin-market-connector'
+} from '@pairlens/plugins/ccxt-connector/kucoin'
 import {
   createGateMarketConnectorPlugin,
   gateMarketConnectorManifest,
-} from '@pairlens/plugins/gate-market-connector'
+} from '@pairlens/plugins/ccxt-connector/gate'
 import {
   coinbaseMarketConnectorManifest,
   createCoinbaseMarketConnectorPlugin,
-} from '@pairlens/plugins/coinbase-market-connector'
+} from '@pairlens/plugins/ccxt-connector/coinbase'
 import {
   bitgetMarketConnectorManifest,
   createBitgetMarketConnectorPlugin,
-} from '@pairlens/plugins/bitget-market-connector'
+} from '@pairlens/plugins/ccxt-connector/bitget'
 import {
   createKrakenMarketConnectorPlugin,
   krakenMarketConnectorManifest,
-} from '@pairlens/plugins/kraken-market-connector'
+} from '@pairlens/plugins/ccxt-connector/kraken'
 import {
   createHtxMarketConnectorPlugin,
   htxMarketConnectorManifest,
-} from '@pairlens/plugins/htx-market-connector'
+} from '@pairlens/plugins/ccxt-connector/htx'
 import {
   createCryptocomMarketConnectorPlugin,
   cryptocomMarketConnectorManifest,
-} from '@pairlens/plugins/cryptocom-market-connector'
+} from '@pairlens/plugins/ccxt-connector/cryptocom'
 import {
   bitfinexMarketConnectorManifest,
   createBitfinexMarketConnectorPlugin,
-} from '@pairlens/plugins/bitfinex-market-connector'
+} from '@pairlens/plugins/ccxt-connector/bitfinex'
 import {
   createUpbitMarketConnectorPlugin,
   upbitMarketConnectorManifest,
-} from '@pairlens/plugins/upbit-market-connector'
+} from '@pairlens/plugins/ccxt-connector/upbit'
 import {
   alpacaMarketConnectorManifest,
   createAlpacaMarketConnectorPlugin,

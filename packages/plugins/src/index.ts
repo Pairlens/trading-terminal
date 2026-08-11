@@ -4,10 +4,9 @@ export {
   pairlensCoreManifest,
   createPairlensCorePlugin,
 } from './pairlens-core/index.ts'
-// OKX and Binance are served by the CCXT bridge (packages/plugins/src/
+// Every CEX venue is served by the CCXT bridge (packages/plugins/src/
 // ccxt-connector). Same plugin ids, same manifests, same exported triple —
-// the native directories stay on disk for the golden conformance suite and as
-// the reference implementation while the remaining twelve venues migrate.
+// the native directories stay on disk only until final removal.
 export {
   okxMarketConnectorManifest,
   createOkxMarketConnectorPlugin,
@@ -22,62 +21,62 @@ export {
   bybitMarketConnectorManifest,
   createBybitMarketConnectorPlugin,
   BYBIT_ADAPTER_INFO,
-} from './bybit-market-connector/index.ts'
+} from './ccxt-connector/venues/bybit.ts'
 export {
   bitvavoMarketConnectorManifest,
   createBitvavoMarketConnectorPlugin,
   BITVAVO_ADAPTER_INFO,
-} from './bitvavo-market-connector/index.ts'
+} from './ccxt-connector/venues/bitvavo.ts'
 export {
   mexcMarketConnectorManifest,
   createMexcMarketConnectorPlugin,
   MEXC_ADAPTER_INFO,
-} from './mexc-market-connector/index.ts'
+} from './ccxt-connector/venues/mexc.ts'
 export {
   kucoinMarketConnectorManifest,
   createKucoinMarketConnectorPlugin,
   KUCOIN_ADAPTER_INFO,
-} from './kucoin-market-connector/index.ts'
+} from './ccxt-connector/venues/kucoin.ts'
 export {
   gateMarketConnectorManifest,
   createGateMarketConnectorPlugin,
   GATE_ADAPTER_INFO,
-} from './gate-market-connector/index.ts'
+} from './ccxt-connector/venues/gate.ts'
 export {
   coinbaseMarketConnectorManifest,
   createCoinbaseMarketConnectorPlugin,
   COINBASE_ADAPTER_INFO,
-} from './coinbase-market-connector/index.ts'
+} from './ccxt-connector/venues/coinbase.ts'
 export {
   bitgetMarketConnectorManifest,
   createBitgetMarketConnectorPlugin,
   BITGET_ADAPTER_INFO,
-} from './bitget-market-connector/index.ts'
+} from './ccxt-connector/venues/bitget.ts'
 export {
   krakenMarketConnectorManifest,
   createKrakenMarketConnectorPlugin,
   KRAKEN_ADAPTER_INFO,
-} from './kraken-market-connector/index.ts'
+} from './ccxt-connector/venues/kraken.ts'
 export {
   htxMarketConnectorManifest,
   createHtxMarketConnectorPlugin,
   HTX_ADAPTER_INFO,
-} from './htx-market-connector/index.ts'
+} from './ccxt-connector/venues/htx.ts'
 export {
   cryptocomMarketConnectorManifest,
   createCryptocomMarketConnectorPlugin,
   CRYPTOCOM_ADAPTER_INFO,
-} from './cryptocom-market-connector/index.ts'
+} from './ccxt-connector/venues/cryptocom.ts'
 export {
   bitfinexMarketConnectorManifest,
   createBitfinexMarketConnectorPlugin,
   BITFINEX_ADAPTER_INFO,
-} from './bitfinex-market-connector/index.ts'
+} from './ccxt-connector/venues/bitfinex.ts'
 export {
   upbitMarketConnectorManifest,
   createUpbitMarketConnectorPlugin,
   UPBIT_ADAPTER_INFO,
-} from './upbit-market-connector/index.ts'
+} from './ccxt-connector/venues/upbit.ts'
 export {
   alpacaMarketConnectorManifest,
   createAlpacaMarketConnectorPlugin,
