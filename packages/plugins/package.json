@@ -43,7 +43,19 @@
     "./all": "./src/index.ts",
     "./ccxt-connector": "./src/ccxt-connector/index.ts",
     "./ccxt-connector/binance": "./src/ccxt-connector/venues/binance.ts",
-    "./ccxt-connector/okx": "./src/ccxt-connector/venues/okx.ts"
+    "./ccxt-connector/okx": "./src/ccxt-connector/venues/okx.ts",
+    "./ccxt-connector/bybit": "./src/ccxt-connector/venues/bybit.ts",
+    "./ccxt-connector/bitget": "./src/ccxt-connector/venues/bitget.ts",
+    "./ccxt-connector/cryptocom": "./src/ccxt-connector/venues/cryptocom.ts",
+    "./ccxt-connector/kraken": "./src/ccxt-connector/venues/kraken.ts",
+    "./ccxt-connector/htx": "./src/ccxt-connector/venues/htx.ts",
+    "./ccxt-connector/bitfinex": "./src/ccxt-connector/venues/bitfinex.ts",
+    "./ccxt-connector/kucoin": "./src/ccxt-connector/venues/kucoin.ts",
+    "./ccxt-connector/gate": "./src/ccxt-connector/venues/gate.ts",
+    "./ccxt-connector/mexc": "./src/ccxt-connector/venues/mexc.ts",
+    "./ccxt-connector/coinbase": "./src/ccxt-connector/venues/coinbase.ts",
+    "./ccxt-connector/bitvavo": "./src/ccxt-connector/venues/bitvavo.ts",
+    "./ccxt-connector/upbit": "./src/ccxt-connector/venues/upbit.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3",
