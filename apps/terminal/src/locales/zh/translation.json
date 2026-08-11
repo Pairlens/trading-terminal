@@ -3092,6 +3092,8 @@
     "walletRemoveFailed": "移除钱包失败。",
     "accountConnectFailed": "连接账户失败。",
     "accountRemoveFailed": "移除账户失败。",
+    "accountEntityUpdatedFeedback": "已更新账户实体。",
+    "accountEntityUpdateFailed": "更新账户实体失败。",
     "fieldRequired": "{{field}}为必填项",
     "accountConnectedFeedback": "{{label}}{{mode}}账户已连接。",
     "defaultWalletName": "{{chain}} 钱包",

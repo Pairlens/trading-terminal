@@ -3092,6 +3092,8 @@
     "walletRemoveFailed": "No se pudo eliminar la wallet.",
     "accountConnectFailed": "No se pudo conectar la cuenta.",
     "accountRemoveFailed": "No se pudo eliminar la cuenta.",
+    "accountEntityUpdatedFeedback": "Entidad de la cuenta actualizada.",
+    "accountEntityUpdateFailed": "No se pudo actualizar la entidad de la cuenta.",
     "fieldRequired": "{{field}} es obligatorio",
     "accountConnectedFeedback": "Cuenta {{label}} {{mode}} conectada.",
     "walletChains": {

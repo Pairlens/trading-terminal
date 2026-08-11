@@ -188,6 +188,7 @@ export function AccountsPage() {
     status: credentialsStatus,
     reload,
     removeCredential,
+    updateCredentialEntity,
   } = useCredentialsStore()
   const { removeWallet: removeCryptoWallet } = useWalletsStore()
 
@@ -340,6 +341,33 @@ export function AccountsPage() {
           error instanceof Error
             ? error.message
             : t('accounts.accountRemoveFailed'),
+      })
+    } finally {
+      setIsBusy(false)
+    }
+  }
+
+  /**
+   * Move a connected account to a different regional entity (OKX today). The
+   * store persists before it publishes and the connector re-provisions off the
+   * new value, so this takes effect on the next order without a reload.
+   */
+  const handleEntityChange = async (id: string, entity: string) => {
+    setFeedback(null)
+    setIsBusy(true)
+    try {
+      await updateCredentialEntity(id, entity)
+      setFeedback({
+        type: 'success',
+        message: t('accounts.accountEntityUpdatedFeedback'),
+      })
+    } catch (error) {
+      setFeedback({
+        type: 'error',
+        message:
+          error instanceof Error
+            ? error.message
+            : t('accounts.accountEntityUpdateFailed'),
       })
     } finally {
       setIsBusy(false)
@@ -611,6 +639,9 @@ export function AccountsPage() {
                               credential={cred}
                               index={index}
                               onRemove={() => void handleRemove(cred.id)}
+                              onEntityChange={(entity) =>
+                                void handleEntityChange(cred.id, entity)
+                              }
                               isBusy={isBusy}
                               currencySymbol={currencySymbol}
                             />
@@ -744,6 +775,9 @@ export function AccountsPage() {
                                 credential={cred}
                                 index={index}
                                 onRemove={() => void handleRemove(cred.id)}
+                                onEntityChange={(entity) =>
+                                  void handleEntityChange(cred.id, entity)
+                                }
                                 isBusy={isBusy}
                                 currencySymbol={currencySymbol}
                               />

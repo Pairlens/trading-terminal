@@ -460,7 +460,16 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
   const credentials = useCredentialsStore((s) => s.credentials)
   const credentialsLoaded = useCredentialsStore((s) => s.loaded)
   const loadCredentials = useCredentialsStore((s) => s.load)
-  const provisionedIdsRef = useRef(new Set<string>())
+  /**
+   * credentialId → the provisioning signature the connector currently holds.
+   *
+   * Not a Set of ids: a credential can be EDITED in place (its account entity,
+   * its mode, a rotated key), and those decide which host the connector signs
+   * and streams against. Keyed by id alone, an edit would sit in the store
+   * while every order kept going to the old endpoint until a reload. The
+   * signature carries no secret the store doesn't already hold in memory.
+   */
+  const provisionedIdsRef = useRef(new Map<string, string>())
 
   useEffect(() => {
     loadCredentials()
@@ -471,21 +480,32 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
 
     const currentIds = new Set(credentials.map((c) => c.id))
 
+    /** Everything the connector reads at initialize that decides routing. */
+    const signatureOf = (cred: (typeof credentials)[number]) =>
+      `${cred.market}|${cred.mode}|${cred.entity ?? ''}|${cred.apiKey}`
+
+    /** Drop this credential's streams; the slot is about to go or be rebuilt. */
+    const teardown = (id: string) => {
+      clearBalancesForCredential(id)
+      const unsubs = credentialUnsubsRef.current.get(id)
+      if (unsubs) {
+        for (const u of unsubs) u()
+        credentialUnsubsRef.current.delete(id)
+      }
+    }
+
     // Deprovision removed credentials
-    for (const id of provisionedIdsRef.current) {
+    for (const id of [...provisionedIdsRef.current.keys()]) {
       if (!currentIds.has(id)) {
         provisionedIdsRef.current.delete(id)
-        clearBalancesForCredential(id)
-        const unsubs = credentialUnsubsRef.current.get(id)
-        if (unsubs) {
-          for (const u of unsubs) u()
-          credentialUnsubsRef.current.delete(id)
-        }
+        teardown(id)
       }
     }
 
     for (const cred of credentials) {
-      if (provisionedIdsRef.current.has(cred.id)) continue
+      const signature = signatureOf(cred)
+      const provisioned = provisionedIdsRef.current.get(cred.id)
+      if (provisioned === signature) continue
 
       const connectorId = `${cred.market}-market-connector`
       const plugin = pluginManager
@@ -493,7 +513,13 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         .find((p) => p.manifest.id === connectorId)
       if (!plugin?.initialize) continue
 
-      provisionedIdsRef.current.add(cred.id)
+      // An edited credential is re-provisioned, not provisioned twice: drop
+      // the sockets opened against the previous endpoint first. The connector
+      // destroys the old private WS itself when the slot is rebuilt, but the
+      // unsub closures held here would otherwise leak and double-subscribe.
+      if (provisioned !== undefined) teardown(cred.id)
+
+      provisionedIdsRef.current.set(cred.id, signature)
 
       plugin
         .initialize({
@@ -502,6 +528,9 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
           apiKey: cred.apiKey,
           apiSecret: cred.apiSecret,
           passphrase: cred.passphrase ?? '',
+          // Account-entity override (e.g. OKX) — the connector routes this
+          // credential's calls to its home entity instead of by country.
+          entity: cred.entity ?? '',
           mode: cred.mode,
           country: getCountrySetting(),
         })

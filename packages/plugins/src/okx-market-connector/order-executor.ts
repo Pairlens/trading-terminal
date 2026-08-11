@@ -3,7 +3,7 @@
 import { hmacSign } from '@pairlens/market-engine/hmac-signer'
 import { restFetch as fetch } from '@pairlens/market-engine/http'
 import { normalizePair } from './parser'
-import { resolveOkxUrls } from './regions'
+import { resolveOkxTradingCountry, resolveOkxUrls } from './regions'
 import type {
   NormalizedBalance,
   NormalizedOrderUpdate,
@@ -11,15 +11,46 @@ import type {
   OrderResult,
 } from '@pairlens/market-engine/types'
 
-/** Resolve the REST base URL for OKX API calls. */
-function resolveRestBase(country: string): string {
-  return resolveOkxUrls(country).restBase
+/**
+ * Resolve the REST base URL for credentialed OKX calls. The credential's
+ * account entity (see `OkxEntity` in ./regions) overrides country routing —
+ * the key only exists on the entity the account was registered with.
+ */
+function resolveRestBase(country: string, credentials: OkxCredentials): string {
+  return resolveOkxUrls(resolveOkxTradingCountry(credentials.entity, country))
+    .restBase
 }
 
 type OkxCredentials = {
   apiKey: string
   apiSecret: string
   passphrase: string
+  /** Account's home entity override ('global' | 'eea' | 'us'); '' = by country. */
+  entity?: string
+}
+
+/** OKX error code for "API key doesn't exist". */
+const OKX_KEY_NOT_FOUND = '50119'
+
+/**
+ * 50119 against the wrong regional entity reads like a typo'd key, and OKX
+ * keys exist on exactly one entity (www / eea / us — the one the account was
+ * registered with). Say what actually happened and how to fix it, naming the
+ * host so the mismatch is visible.
+ */
+function describeOkxError(
+  code: string | undefined,
+  message: string,
+  restBase: string,
+): string {
+  if (code !== OKX_KEY_NOT_FOUND) return message
+  const host = restBase.replace(/^https?:\/\//, '').replace(/^\/__okx-/, 'okx ')
+  return (
+    `OKX rejected this API key on ${host} (50119: API key doesn't exist). ` +
+    `OKX keys only work on the regional entity where the account was created — ` +
+    `if this account was registered on a different OKX entity (Global, EEA or US), ` +
+    `reconnect it and pick that entity under "OKX account entity".`
+  )
 }
 
 /** Sign and execute an OKX REST order. */
@@ -95,7 +126,7 @@ async function postOkxOrder(
   params: OrderParams,
   idField: 'ordId' | 'algoId',
 ): Promise<OrderResult> {
-  const restBase = resolveRestBase(country)
+  const restBase = resolveRestBase(country, credentials)
   const headers = await buildSignedHeaders(
     credentials,
     'POST',
@@ -124,7 +155,11 @@ async function postOkxOrder(
 
     const data = json.data?.[0]
     if (json.code !== '0' || (data?.sCode && data.sCode !== '0')) {
-      const errorMsg = data?.sMsg || json.msg || `OKX error ${json.code}`
+      const errorMsg = describeOkxError(
+        data?.sCode !== '0' ? (data?.sCode ?? json.code) : json.code,
+        data?.sMsg || json.msg || `OKX error ${json.code}`,
+        restBase,
+      )
       console.warn(
         `[okx-order] rejected: ${errorMsg} (${restBase}, paper=${params.mode === 'paper'})`,
       )
@@ -150,7 +185,7 @@ export async function cancelOkxOrder(
   mode: 'paper' | 'live',
   opts?: { trigger?: boolean },
 ): Promise<OrderResult> {
-  const restBase = resolveRestBase(country)
+  const restBase = resolveRestBase(country, credentials)
   const path = opts?.trigger
     ? '/api/v5/trade/cancel-algos'
     : '/api/v5/trade/cancel-order'
@@ -184,7 +219,11 @@ export async function cancelOkxOrder(
     if (json.code !== '0' || (item?.sCode && item.sCode !== '0')) {
       return {
         success: false,
-        error: item?.sMsg || `${json.code}: ${json.msg}`,
+        error: describeOkxError(
+          item?.sCode && item.sCode !== '0' ? item.sCode : json.code,
+          item?.sMsg || `${json.code}: ${json.msg}`,
+          restBase,
+        ),
       }
     }
     return { success: true, orderId }
@@ -265,7 +304,7 @@ export async function fetchOkxBalances(
   country: string,
   paper: boolean,
 ): Promise<Array<NormalizedBalance>> {
-  const restBase = resolveRestBase(country)
+  const restBase = resolveRestBase(country, credentials)
   const path = '/api/v5/account/balance'
   const headers = await buildSignedHeaders(credentials, 'GET', path, '', paper)
 
@@ -273,15 +312,28 @@ export async function fetchOkxBalances(
     const resp = await fetch(`${restBase}${path}`, { headers })
     const json = (await resp.json()) as {
       code: string
+      msg?: string
       data: Array<{ details: Array<Record<string, string>> }>
     }
-    if (json.code !== '0') return []
+    if (json.code !== '0') {
+      // Read paths swallow errors by contract (an empty account and a failed
+      // fetch both render as "no balances") — an entity mismatch would be
+      // invisible, so at least say so where it can be diagnosed.
+      if (json.code === OKX_KEY_NOT_FOUND) {
+        console.warn(
+          `[okx-balances] ${describeOkxError(json.code, json.msg ?? '', restBase)}`,
+        )
+      }
+      return []
+    }
     const details = json.data?.[0]?.details ?? []
     return details
       .filter((d) => Number(d['eq'] ?? 0) > 0)
       .map((d) => ({
         currency: d['ccy'] ?? '',
-        available: d['availEq'] ?? '0',
+        // Cash (spot) accounts leave availEq empty — availBal carries the
+        // spendable balance there. availEq only populates on margin/unified.
+        available: d['availBal'] || d['availEq'] || '0',
         frozen: d['frozenBal'] ?? '0',
         total: d['eq'] ?? '0',
       }))
@@ -324,7 +376,7 @@ export async function fetchOkxOpenOrders(
   country: string,
   paper: boolean,
 ): Promise<Array<NormalizedOrderUpdate>> {
-  const restBase = resolveRestBase(country)
+  const restBase = resolveRestBase(country, credentials)
 
   const fetchList = async (path: string): Promise<Array<OkxOrderRecord>> => {
     const headers = await buildSignedHeaders(
@@ -364,7 +416,7 @@ export async function fetchOkxOrderHistory(
   country: string,
   paper: boolean,
 ): Promise<Array<NormalizedOrderUpdate>> {
-  const restBase = resolveRestBase(country)
+  const restBase = resolveRestBase(country, credentials)
   const path = '/api/v5/trade/orders-history?instType=SPOT&limit=50'
   const headers = await buildSignedHeaders(credentials, 'GET', path, '', paper)
 

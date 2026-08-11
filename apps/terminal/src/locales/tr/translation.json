@@ -3092,6 +3092,8 @@
     "walletRemoveFailed": "Cüzdan kaldırılamadı.",
     "accountConnectFailed": "Hesap bağlanamadı.",
     "accountRemoveFailed": "Hesap kaldırılamadı.",
+    "accountEntityUpdatedFeedback": "Hesap kuruluşu güncellendi.",
+    "accountEntityUpdateFailed": "Hesap kuruluşu güncellenemedi.",
     "fieldRequired": "{{field}} gereklidir",
     "accountConnectedFeedback": "{{label}} {{mode}} hesabı bağlandı.",
     "walletChains": {

@@ -25,6 +25,13 @@ import {
 } from '@pairlens/ui/components/ui/dialog'
 import { Input } from '@pairlens/ui/components/ui/input'
 import { Label } from '@pairlens/ui/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@pairlens/ui/components/ui/select'
 
 import { ExchangeBadge } from './venue-badges'
 import { CreateAccountHint } from './create-account-links'
@@ -492,6 +499,51 @@ export function ConnectExchangeWizard({
                     />
                   </div>
                 ))}
+
+                {/* Account-entity selector (venues whose keys bind to one
+                    regional entity — e.g. OKX). Stored as '' for Auto; Radix
+                    Select items cannot carry an empty value, hence the
+                    'auto' sentinel that never leaves this component. */}
+                {schema.entity && (
+                  <div className="space-y-1.5">
+                    <Label htmlFor="wallet-entity">{schema.entity.label}</Label>
+                    <Select
+                      value={formFields['entity'] || 'auto'}
+                      disabled={isBusy}
+                      onValueChange={(value) =>
+                        setFormFields((prev) => ({
+                          ...prev,
+                          entity: !value || value === 'auto' ? '' : value,
+                        }))
+                      }
+                    >
+                      <SelectTrigger id="wallet-entity" className="w-full">
+                        {/* Explicit label, not a bare SelectValue: Radix only
+                            learns an item's text once the content has mounted,
+                            so an unopened trigger would show the raw value. */}
+                        <SelectValue>
+                          {schema.entity.options.find(
+                            (option) =>
+                              option.value === (formFields['entity'] ?? ''),
+                          )?.label ?? schema.entity.options[0]?.label}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {schema.entity.options.map((option) => (
+                          <SelectItem
+                            key={option.value || 'auto'}
+                            value={option.value || 'auto'}
+                          >
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-[11px] text-muted-foreground">
+                      {schema.entity.help}
+                    </p>
+                  </div>
+                )}
 
                 {/* Error feedback */}
                 {feedback?.type === 'error' && (

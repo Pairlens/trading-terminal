@@ -3092,6 +3092,8 @@
     "walletRemoveFailed": "ลบกระเป๋าเงินไม่สำเร็จ",
     "accountConnectFailed": "เชื่อมต่อบัญชีไม่สำเร็จ",
     "accountRemoveFailed": "ลบบัญชีไม่สำเร็จ",
+    "accountEntityUpdatedFeedback": "อัปเดตนิติบุคคลของบัญชีแล้ว",
+    "accountEntityUpdateFailed": "อัปเดตนิติบุคคลของบัญชีไม่สำเร็จ",
     "fieldRequired": "ต้องระบุ {{field}}",
     "accountConnectedFeedback": "เชื่อมต่อบัญชี {{label}} {{mode}} แล้ว",
     "defaultWalletName": "วอลเล็ต {{chain}}",

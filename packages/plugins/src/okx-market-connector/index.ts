@@ -78,7 +78,13 @@ export const okxMarketConnectorManifest: PluginManifest =
       'https://s.yimg.com/ny/api/res/1.2/YcL1Jo0JCQlMJdZnj6SkYg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTY0MTtjZj13ZWJw/https://media.zenfs.com/en/reuters-finance.com/852f3f6259d5f775f388a1786a9f4a17',
   })
 
-type OkxCredentials = { apiKey: string; apiSecret: string; passphrase: string }
+type OkxCredentials = {
+  apiKey: string
+  apiSecret: string
+  passphrase: string
+  /** Account's home entity override ('global' | 'eea' | 'us'); '' = by country. */
+  entity?: string
+}
 
 const okxSpec: CexConnectorSpec<OkxCredentials> = {
   id: 'okx-market-connector',
@@ -87,6 +93,9 @@ const okxSpec: CexConnectorSpec<OkxCredentials> = {
     { key: 'apiKey', required: true },
     { key: 'apiSecret', required: true },
     { key: 'passphrase', required: true },
+    // Account's home regional entity ('global' | 'eea' | 'us', '' = route by
+    // country). An OKX key exists on exactly one entity; see OkxEntity.
+    { key: 'entity', required: false },
   ],
   defaultMode: 'paper',
   createWsClient: () => new OkxWsClient(),

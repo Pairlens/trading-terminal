@@ -3092,6 +3092,8 @@
     "walletRemoveFailed": "Falha ao remover a carteira.",
     "accountConnectFailed": "Falha ao conectar a conta.",
     "accountRemoveFailed": "Falha ao remover a conta.",
+    "accountEntityUpdatedFeedback": "Entidade da conta atualizada.",
+    "accountEntityUpdateFailed": "Falha ao atualizar a entidade da conta.",
     "fieldRequired": "{{field}} é obrigatório",
     "accountConnectedFeedback": "Conta {{label}} {{mode}} conectada.",
     "defaultWalletName": "Carteira {{chain}}",
