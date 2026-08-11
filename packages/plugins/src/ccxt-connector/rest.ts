@@ -40,13 +40,21 @@ export async function fetchCcxtHistory(
   limit: number,
   endTs?: number,
 ): Promise<Array<Candle>> {
-  const params =
-    endTs !== undefined ? (venue.historyPageParams?.(endTs) ?? {}) : {}
+  const pageLimit = Math.min(limit, venue.maxHistoryLimit)
+  const params = venue.historyParams
+    ? venue.historyParams({
+        timeframe,
+        limit: pageLimit,
+        ...(endTs !== undefined ? { endTs } : {}),
+      })
+    : endTs !== undefined
+      ? (venue.historyPageParams?.(endTs) ?? {})
+      : {}
   const rows = await exchange.fetchOHLCV(
     symbol,
     timeframe,
     undefined,
-    Math.min(limit, venue.maxHistoryLimit),
+    pageLimit,
     params,
   )
   // ccxt sorts OHLCV ascending in `parseOHLCVs`, but a venue that changes its
