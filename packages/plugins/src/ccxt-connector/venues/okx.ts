@@ -38,7 +38,7 @@
 
 import { createCexConnectorManifest } from '../../cex-connector'
 import { createCcxtConnectorPlugin } from '../index'
-import { resolveOkxCcxtUrls } from './okx-regions'
+import { okxPaperWs, resolveOkxCcxtUrls } from './okx-regions'
 import type { CcxtExchangeCtor, CcxtVenueConfig } from '../types'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
@@ -119,12 +119,28 @@ export const okxCcxtVenue: CcxtVenueConfig = {
     type: 'HistoryCandles',
   }),
   livenessTimeoutMs: 60_000,
+  // Every Pairlens OKX order is plain spot. ccxt defaults algo (trigger)
+  // orders to `tdMode: "cross"` — margin — which a Simple-mode account
+  // rejects with 51010 (found by the demo E2E). The native always sent
+  // `cash`; forcing it here covers plain and algo orders alike.
+  orderParams: { tdMode: 'cash' },
+  // ccxt's algo listing defaults to `ordType: "trigger"`, but every Pairlens
+  // TP/SL lands as `conditional` — without this the resting order places and
+  // cancels fine yet never shows in the open list (found by the demo E2E).
+  triggerQueryParams: { trigger: true, ordType: 'conditional' },
   applyUrls: (exchange, country) => {
     const urls = resolveOkxCcxtUrls(country)
     const api = exchange.urls['api'] as Record<string, unknown>
     api['rest'] = urls.rest
     api['ws'] = urls.ws
     exchange.hostname = urls.hostname
+  },
+  // Runs after `setSandboxMode`, which swaps in the GLOBAL demo socket
+  // (`wspap`) — but demo keys are regional: an EEA key does not exist there
+  // (60032). REST keeps the regional host from `applyUrls`; only WS moves.
+  applyPaperUrls: (exchange, country) => {
+    const api = exchange.urls['api'] as Record<string, unknown>
+    api['ws'] = okxPaperWs(country)
   },
   synthesizeMarket: (pair) => {
     const [base, quote] = pair.split('-')

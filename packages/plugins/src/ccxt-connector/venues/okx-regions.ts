@@ -96,6 +96,19 @@ function wsFor(code: string): string {
   return 'wss://ws.okx.com:8443/ws/v5'
 }
 
+/**
+ * Demo-trading WS hosts are regional too — a key created on my.okx.com (EEA)
+ * does not exist on the global `wspap` demo socket (error 60032, found by the
+ * authenticated demo E2E). ccxt's `setSandboxMode` clobbers the regional WS
+ * with the global demo host, so the venue re-applies this via `applyPaperUrls`.
+ */
+export function okxPaperWs(country: string): string {
+  const code = country.toUpperCase()
+  if (US_COUNTRIES.has(code)) return 'wss://wsuspap.okx.com:8443/ws/v5'
+  if (EU_COUNTRIES.has(code)) return 'wss://wseeapap.okx.com:8443/ws/v5'
+  return 'wss://wspap.okx.com:8443/ws/v5'
+}
+
 export function resolveOkxCcxtUrls(country: string): OkxCcxtUrls {
   const code = country.toUpperCase()
   const ws = wsFor(code)
