@@ -4,6 +4,43 @@ index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2
 diff --git a/node_modules/ccxt/.bun-tag-67d0023f6e214961 b/.bun-tag-67d0023f6e214961
 new file mode 100644
 index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/ccxt/.bun-tag-83c9ca72b1c5490b b/.bun-tag-83c9ca72b1c5490b
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/js/src/base/ws/Client.js b/js/src/base/ws/Client.js
+index 9cf97fe7322b2245afeac00ef729f834f76ea703..72e537ecb12ecda6b71ec4a14d2ca7f45046dcf3 100644
+--- a/js/src/base/ws/Client.js
++++ b/js/src/base/ws/Client.js
+@@ -293,6 +293,18 @@ export default class Client {
+         let arrayBuffer;
+         try {
+             if (typeof message !== 'string') {
++                // PAIRLENS PATCH: browsers deliver binary frames as ArrayBuffer
++                // (WsClient sets binaryType = 'arraybuffer'), but this method was
++                // written for Node Buffers — `message.buffer` is undefined on an
++                // ArrayBuffer, so every gzip venue (HTX) crashed with
++                // "Cannot read properties of undefined (reading 'slice')", and
++                // the decompressBinary path stringified to "[object ArrayBuffer]"
++                // (Upbit's binary JSON). Normalizing to Uint8Array keeps every
++                // downstream branch working in browsers, bun and node alike
++                // (Buffer is a Uint8Array subclass).
++                if (message instanceof ArrayBuffer) {
++                    message = new Uint8Array(message);
++                }
+                 if (this.gunzip || this.inflate) {
+                     arrayBuffer = new Uint8Array(message.buffer.slice(message.byteOffset, message.byteOffset + message.byteLength));
+                     if (this.gunzip) {
+@@ -305,7 +317,9 @@ export default class Client {
+                 }
+                 else {
+                     if (this.decompressBinary) {
+-                        message = message.toString();
++                        message = typeof Buffer !== 'undefined' && Buffer.isBuffer(message)
++                            ? message.toString()
++                            : utf8.encode(new Uint8Array(message.buffer.slice(message.byteOffset, message.byteOffset + message.byteLength)));
+                     }
+                 }
+             }
 diff --git a/package.json b/package.json
 index 0ad39aff74652cede311a265b2eb5d5b7403ac9d..0ba99c79ddd188662f4af1ac886fd54dd9805008 100644
 --- a/package.json
