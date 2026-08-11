@@ -292,6 +292,44 @@ describe('buildCcxtOrderCall', () => {
     expect(sl.kind === 'order' && sl.params['stopLossPrice']).toBe(59000)
   })
 
+  it('prefers the explicit TP/SL spelling when a venue declares both (Binance)', () => {
+    // Regression pinned by the testnet E2E: the generic `triggerPrice` maps to
+    // STOP_LOSS_LIMIT on Binance, so a take-profit sell above market came back
+    // "Stop price would trigger immediately". The explicit spelling must win.
+    const both = {
+      createTriggerOrder: true,
+      createTakeProfitOrder: true,
+      createStopLossOrder: true,
+    }
+    const tp = buildCcxtOrderCall(
+      {
+        ...BASE_ORDER,
+        side: 'sell',
+        type: 'limit',
+        price: '95000',
+        trigger: { triggerPrice: '90000', triggerType: 'tp' },
+      },
+      both,
+      VENUE,
+    )
+    expect(tp.kind === 'order' && tp.params['takeProfitPrice']).toBe(90000)
+    expect(tp.kind === 'order' && tp.params['triggerPrice']).toBeUndefined()
+
+    const sl = buildCcxtOrderCall(
+      {
+        ...BASE_ORDER,
+        side: 'sell',
+        type: 'limit',
+        price: '58000',
+        trigger: { triggerPrice: '59000', triggerType: 'sl' },
+      },
+      both,
+      VENUE,
+    )
+    expect(sl.kind === 'order' && sl.params['stopLossPrice']).toBe(59000)
+    expect(sl.kind === 'order' && sl.params['triggerPrice']).toBeUndefined()
+  })
+
   it('refuses a trigger order on a venue that has none at all (Upbit)', () => {
     const call = buildCcxtOrderCall(
       { ...BASE_ORDER, trigger: { triggerPrice: '61000', triggerType: 'sl' } },

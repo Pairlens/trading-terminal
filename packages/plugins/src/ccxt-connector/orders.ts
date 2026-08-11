@@ -109,10 +109,15 @@ export function normalizeCcxtOrder(
   const timestamp = numberOf(raw['timestamp'])
   const updated = numberOf(raw['lastUpdateTimestamp'])
   const createdAt = timestamp ?? Date.now()
-  const triggerPrice =
+  // Some venues report `triggerPrice: "0"` on PLAIN orders (Binance testnet
+  // does, found by the E2E) — a zero trigger is "no trigger", and tagging a
+  // plain order `triggerOrder: true` would route its cancel through the
+  // trigger id space. Only a positive price counts.
+  const rawTrigger =
     stringOf(raw['triggerPrice']) ||
     stringOf(raw['stopLossPrice']) ||
     stringOf(raw['takeProfitPrice'])
+  const triggerPrice = Number(rawTrigger) > 0 ? rawTrigger : ''
 
   const fee = raw['fee']
   const feeRecord = fee && typeof fee === 'object' ? (fee as CcxtOrderLike) : {}
@@ -259,14 +264,14 @@ export function buildCcxtOrderCall(
         error: `${label} only accepts trigger orders with a limit price — set one and resubmit`,
       }
     }
-    // Preference order mirrors ccxt's own helpers, which do nothing but set one
-    // of these three params and hand off to createOrder. `triggerPrice` is the
-    // conditional-order spelling and the one 10 of 14 venues declare; the
-    // TP/SL pair is the position-attached spelling the rest understand;
+    // The explicit TP/SL spelling comes FIRST: a Pairlens trigger always
+    // carries the tp/sl semantic, and only `takeProfitPrice`/`stopLossPrice`
+    // preserve it. The generic `triggerPrice` collapses both into the venue's
+    // conditional-order default — on Binance that is STOP_LOSS_LIMIT, which
+    // inverts the trigger direction of a take-profit and gets rejected live
+    // with "Stop price would trigger immediately" (found by the testnet E2E).
     // `stopPrice` is the pre-4.2 name a couple of parsers still read.
-    if (has['createTriggerOrder'] === true) {
-      params['triggerPrice'] = triggerPrice
-    } else if (
+    if (
       order.trigger.triggerType === 'tp' &&
       has['createTakeProfitOrder'] === true
     ) {
@@ -276,6 +281,8 @@ export function buildCcxtOrderCall(
       has['createStopLossOrder'] === true
     ) {
       params['stopLossPrice'] = triggerPrice
+    } else if (has['createTriggerOrder'] === true) {
+      params['triggerPrice'] = triggerPrice
     } else {
       params['stopPrice'] = triggerPrice
     }
