@@ -21,6 +21,7 @@ import {
   patchCryptocom,
   scaleCryptocomChangeToPercent,
 } from '../venues/cryptocom'
+import { PUBLIC_CTX } from './url-context'
 
 function declaration(capability: string) {
   return cryptocomMarketConnectorManifest.capabilities.find(
@@ -209,6 +210,7 @@ describe('cryptocom urls', () => {
         NonNullable<typeof cryptocomCcxtVenue.applyUrls>
       >[0],
       '',
+      PUBLIC_CTX,
     )
     expect(exchange.urls.api).toEqual({
       base: 'https://api.crypto.com',

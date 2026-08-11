@@ -19,6 +19,7 @@ import {
   clampBitgetBookDepth,
   resolveBitgetCcxtRestBase,
 } from '../venues/bitget'
+import { PUBLIC_CTX } from './url-context'
 
 function declaration(capability: string) {
   return bitgetMarketConnectorManifest.capabilities.find(
@@ -140,6 +141,7 @@ describe('bitget urls', () => {
         NonNullable<typeof bitgetCcxtVenue.applyUrls>
       >[0],
       '',
+      PUBLIC_CTX,
     )
     expect(exchange.urls.api.spot).toBe('https://api.bitget.com')
     expect(exchange.urls.api.mix).toBe('https://api.bitget.com')

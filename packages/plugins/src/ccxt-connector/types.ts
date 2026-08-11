@@ -10,6 +10,8 @@
  * exchange with no ccxt in the graph at all.
  */
 
+import type { CexCredentials, CexSlot } from '../cex-connector'
+
 /** A ccxt unified OHLCV row: [ts, open, high, low, close, volume]. */
 export type CcxtOhlcvRow = Array<number | string | undefined>
 
@@ -201,6 +203,26 @@ export type CcxtExchangeCtor = new (
   config: Record<string, unknown>,
 ) => CcxtExchangeLike
 
+/**
+ * What an instance IS, handed to the URL hooks alongside the country.
+ *
+ * Regional routing is not one decision per venue, it is one decision per
+ * instance: OKX public reads may fall back to the CORS-enabled global host from
+ * a browser build, but ORDERS always go to the caller's regional entity — that
+ * is the boundary with legal meaning. Without this the whole instance inherits
+ * whichever answer the read path wanted, and an EEA user's orders leave for
+ * `www.okx.com`, where the key does not exist (50119).
+ */
+export type CcxtUrlContext = {
+  /**
+   * The instance signs its requests — a trading or private-stream instance.
+   * `false` is the market-data instance, which must never carry a signature.
+   */
+  authed: boolean
+  /** The instance is being routed at the venue's sandbox/demo environment. */
+  paper: boolean
+}
+
 /** Per-venue wiring for `createCcxtConnectorPlugin`. */
 export type CcxtVenueConfig = {
   /** ccxt exchange id — 'binance', 'okx', … */
@@ -231,12 +253,40 @@ export type CcxtVenueConfig = {
    * Runs once per instance, right after construction — ccxt reads
    * `urls.api.*` on every call, but the REST base is also baked into signed
    * requests, so a region change rebuilds the instance rather than mutating it.
+   *
+   * `ctx` says what this instance is. Read it wherever public and authed
+   * traffic route differently (OKX's CORS fallback is public-only).
    */
-  applyUrls?: (exchange: CcxtExchangeLike, country: string) => void
+  applyUrls?: (
+    exchange: CcxtExchangeLike,
+    country: string,
+    ctx: CcxtUrlContext,
+  ) => void
   /** Venue is unreachable from a CORS-constrained browser build. */
   requiresDesktop?: boolean
-  /** Throw GeoRestrictedError to refuse a capability in a region. */
+  /**
+   * Throw GeoRestrictedError to refuse a capability in a region. Runs at the
+   * top of BOTH `execute` and `subscribe`, before slot resolution, with the
+   * app-level country — so a refusal from `subscribe` is SYNCHRONOUS, which is
+   * what the terminal's region dialog keys on.
+   */
   geoCheck?: (country: string, capability: string) => void
+  /**
+   * Geo gate for `trading:orders` execute, run AFTER credential-slot
+   * resolution with the SLOT's country.
+   *
+   * Two reasons this cannot be folded into `geoCheck`: the country a
+   * credential was provisioned under is not necessarily the app-level one, and
+   * running before slot resolution would report a geo error to a user whose
+   * real problem is that they have no credentials at all.
+   *
+   * It must live here rather than lean on `applyUrls` throwing during the
+   * instance build: everything on the trading path is caught and returned as
+   * `{success:false, error}` (see orders.ts), which silently downgrades a typed
+   * `GeoRestrictedError` into a plain order rejection and the region dialog
+   * never fires.
+   */
+  tradeGeoCheck?: (slot: CexSlot<CexCredentials>) => void
   /**
    * Depth passed to `watchOrderBook`. Venue-specific enums apply (see the
    * venue matrix §1g) — an unsupported value throws at runtime on some venues.
@@ -286,7 +336,11 @@ export type CcxtVenueConfig = {
    * instance makes its first call. Runs only on paper instances, after the
    * sandbox is enabled.
    */
-  applyPaperUrls?: (exchange: CcxtExchangeLike, country: string) => void
+  applyPaperUrls?: (
+    exchange: CcxtExchangeLike,
+    country: string,
+    ctx: CcxtUrlContext,
+  ) => void
   /**
    * Params merged into every `createOrder` call on this venue.
    */

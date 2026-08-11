@@ -109,16 +109,36 @@ export function okxPaperWs(country: string): string {
   return 'wss://wspap.okx.com:8443/ws/v5'
 }
 
-export function resolveOkxCcxtUrls(country: string): OkxCcxtUrls {
+/**
+ * The REST base, WS base and hostname for one INSTANCE.
+ *
+ * `authed` is not a nicety. The native connector resolved two different bases
+ * from the same country — `resolveOkxPublicRestBase` (CORS fallback allowed)
+ * for market data, `resolveOkxUrls().restBase` (never) for orders — because
+ * where orders go is the boundary that carries legal meaning. ccxt has no
+ * per-call base to split: `urls.api.rest` is instance state, so the split has
+ * to happen here, per instance, and the exchange host builds a separate
+ * instance for every credential slot precisely so it can.
+ *
+ * Getting this wrong is not a visible failure. An EEA user placing an order
+ * from the hosted web terminal would sign it for `www.okx.com`, where their
+ * key does not exist, and read back `50119 API key doesn't exist` — a
+ * wrong-platform error that looks like a bad credential.
+ */
+export function resolveOkxCcxtUrls(
+  country: string,
+  opts: { authed?: boolean } = {},
+): OkxCcxtUrls {
   const code = country.toUpperCase()
   const ws = wsFor(code)
   if (isBrowser()) {
     return { rest: proxyPrefix(code), ws, hostname: hostFor(code) }
   }
-  if (isCorsConstrained()) {
+  if (isCorsConstrained() && !opts.authed) {
     // Public reads only — the global host is CORS-enabled and serves the same
-    // instruments and candles as the regional ones. Orders resolve regionally
-    // in the trading phase.
+    // instruments and candles as the regional ones. An authed instance falls
+    // through to the regional origin and fails honestly (network/CORS) rather
+    // than succeeding against the wrong legal entity.
     return { rest: 'https://www.okx.com', ws, hostname: 'www.okx.com' }
   }
   return { rest: originFor(code), ws, hostname: hostFor(code) }

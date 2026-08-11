@@ -8,6 +8,7 @@ import {
 } from '../venues/gate'
 import { applyGateRestBase, resolveGateCcxtUrls } from '../venues/gate-regions'
 import { withGateQuirks } from '../venues/gate-exchange'
+import { PUBLIC_CTX } from './url-context'
 import type { CcxtExchangeCtor } from '../types'
 
 describe('gate manifest', () => {
@@ -95,7 +96,7 @@ describe('gate urls', () => {
         },
       },
     }
-    gateCcxtVenue.applyUrls?.(exchange as never, 'DE')
+    gateCcxtVenue.applyUrls?.(exchange as never, 'DE', PUBLIC_CTX)
     expect(exchange.urls.api.public.spot).toBe('https://api.gateio.ws/api/v4')
     expect(exchange.urls.api.spot).toBe('wss://api.gateio.ws/ws/v4/')
   })

@@ -198,6 +198,15 @@ export class CcxtMarketsProvider {
    * await `whenReady`). Always kicks off whatever background work is needed to
    * reach a real table.
    *
+   * The background loads are fire-and-forget AND explicitly `.catch`ed. Not
+   * defensive noise: `primeSync` runs inside `subscribe`, which cannot await,
+   * so a venue that refuses the caller's region answers the market load with a
+   * 451 and there is nobody left to hand the rejection to. Unhandled, it
+   * reaches the terminal as a console error — or, in the Tauri webview, an
+   * overlay — for a condition the geo gate has already reported properly. The
+   * AWAITED path (`whenReady`) keeps its rejection, which is where callers
+   * classify it.
+   *
    * Ordering matters here: a second synthetic seed arriving after the
    * background load resolved must NOT `setMarkets` over the real table, which
    * is why `synthetic` is tracked explicitly rather than inferred from
@@ -221,7 +230,7 @@ export class CcxtMarketsProvider {
       this.synthetic = false
       this.seeds.clear()
       if (Date.now() - cached.savedAt > this.ttlMs) {
-        void this.refresh(exchange)
+        void this.refresh(exchange).catch(() => {})
       }
       return 'cache'
     }
@@ -237,10 +246,10 @@ export class CcxtMarketsProvider {
         this.seeds.set(seed.symbol, seed)
         exchange.setMarkets([...this.seeds.values()])
       }
-      void this.refresh(exchange)
+      void this.refresh(exchange).catch(() => {})
       return 'synthetic'
     }
-    void this.refresh(exchange)
+    void this.refresh(exchange).catch(() => {})
     return 'none'
   }
 

@@ -39,6 +39,10 @@
  */
 
 import { restFetch } from '@pairlens/market-engine/http'
+import {
+  assertResponseOk,
+  isGeoRestrictedError,
+} from '@pairlens/market-engine/errors'
 import type { CcxtExchangeLike, CcxtVenueConfig } from './types'
 
 /** How long to wait on `close()` before discarding the instance anyway. */
@@ -121,6 +125,70 @@ export function enableCcxtSandbox(exchange: CcxtExchangeLike): boolean {
   // "changed" alone would under-report; the flag alone would over-report on the
   // venues repaired above.
   return after !== before || exchange.options['sandboxMode'] === true
+}
+
+type FetchLike = (
+  input: string | URL | Request,
+  init?: RequestInit,
+) => Promise<Response>
+
+/**
+ * Wrap a transport so a geo-block HTTP status becomes a typed
+ * `GeoRestrictedError` before ccxt can lose it.
+ *
+ * The native connectors ran `assertResponseOk(resp, …)` at every REST call
+ * site, which read `resp.status` directly. ccxt gives the bridge no such seam
+ * downstream: `handleRestResponse` calls the VENUE's `handleErrors` first, and
+ * most venues parse the body and throw their own error without ever mentioning
+ * the status — ByBit answers a 451 with `ExchangeError('bybit {}')`. Recovering
+ * "451" from that message is impossible, because it is not in it.
+ *
+ * The one place the status is still visible is the response itself, and the
+ * bridge owns the transport (`fetchImplementation`), so the classification goes
+ * here — the same layer, and the same rule, as the native's.
+ *
+ * ccxt's own `catch` around `fetchImplementation` rethrows anything that is not
+ * an abort, a `TypeError` or a coded connection error, so the typed error
+ * reaches the caller intact.
+ *
+ * Only 451 and 403 pay anything: every other status returns the untouched
+ * response, and the 403 body is read from a `clone()` so ccxt still gets its
+ * own unread stream.
+ */
+export function withGeoClassification(
+  base: FetchLike,
+  exchange: string,
+  country: () => string,
+): FetchLike {
+  return async (input, init) => {
+    const response = await base(input, init)
+    if (response.ok) return response
+    // 451 is unambiguous; 403 needs body evidence (exchanges also use it for a
+    // revoked key and for WAF bans, and calling those a region block would send
+    // the user to a dialog that cannot help them).
+    if (response.status !== 451 && response.status !== 403) return response
+    const body =
+      response.status === 403
+        ? await response
+            .clone()
+            .text()
+            .catch(() => '')
+        : ''
+    try {
+      assertResponseOk(
+        { ok: false, status: response.status },
+        exchange,
+        country(),
+        body,
+      )
+    } catch (error) {
+      // `assertResponseOk` also throws a generic `<exchange> REST error: 403`
+      // for a 403 with no evidence. That one is NOT ours to raise — ccxt's own
+      // handler produces a better message from the body it is about to read.
+      if (isGeoRestrictedError(error)) throw error
+    }
+    return response
+  }
 }
 
 function isUsableApiUrls(value: unknown): boolean {
@@ -227,13 +295,27 @@ export class CcxtExchangeHost {
     })
 
     // Must be assigned before the first request: ccxt memoizes the resolved
-    // implementation on the instance the first time it fetches.
-    exchange.fetchImplementation = restFetch
+    // implementation on the instance the first time it fetches. Assigning
+    // anything here also keeps `fetchIsNative` false, which matters — ccxt
+    // bypasses `fetchImplementation` entirely for the native fetch on node.
+    exchange.fetchImplementation = withGeoClassification(
+      restFetch,
+      venue.displayName,
+      () => this.country,
+    )
 
     if (venue.timeframeOverrides) {
       Object.assign(exchange.timeframes, venue.timeframeOverrides)
     }
-    venue.applyUrls?.(exchange, this.country)
+    // What this instance IS travels with the country: a venue whose public and
+    // authed traffic route to different origins (OKX) cannot tell them apart
+    // from the country alone, and getting it wrong sends an EEA user's orders
+    // to a host their key does not exist on.
+    const urlContext = {
+      authed: credentials !== null,
+      paper: this.opts.paper === true,
+    }
+    venue.applyUrls?.(exchange, this.country, urlContext)
 
     // Sandbox last: it replaces the whole `urls.api` subtree, so anything
     // `applyUrls` installed is gone afterwards. `applyPaperUrls` is the venue's
@@ -241,7 +323,9 @@ export class CcxtExchangeHost {
     // portless WS host, a missing spot channel).
     if (this.opts.paper) {
       this.paperActiveFlag = enableCcxtSandbox(exchange)
-      if (this.paperActiveFlag) venue.applyPaperUrls?.(exchange, this.country)
+      if (this.paperActiveFlag) {
+        venue.applyPaperUrls?.(exchange, this.country, urlContext)
+      }
     }
 
     // Bound once per client at client construction — wrapping after the first

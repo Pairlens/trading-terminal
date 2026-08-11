@@ -8,15 +8,28 @@
  *
  * Venue specifics the bridge has to encode:
  *
- * - **Port 443, not 9443.** ccxt hardcodes `wss://stream.binance.com:9443/ws`
- *   for spot and margin. Binance serves the identical combined-stream endpoint
- *   on 443, and 9443 is a non-standard port that corporate firewalls, ISPs and
- *   VPNs routinely block outbound — which is exactly why Pairlens moved off it.
- *   `getWsUrl` reads `urls.api.ws[type]` unmodified for spot, so the fix is a
+ * - **Port 443 on binance.com, 9443 on binance.us.** ccxt hardcodes
+ *   `wss://stream.binance.com:9443/ws` for spot and margin. Binance serves the
+ *   identical combined-stream endpoint on 443, and 9443 is a non-standard port
+ *   that corporate firewalls, ISPs and VPNs routinely block outbound — which is
+ *   exactly why Pairlens moved off it. `stream.binance.us` gives no such
+ *   choice: 443 is not listening at all (immediate TCP refusal, not a geo
+ *   block — measured 2026-08-11; `:9443` accepts the handshake and answers a
+ *   SUBSCRIBE). The native carried the 443 rule across to `.us` unconditionally
+ *   and so left US users with a socket that could never open, which is the one
+ *   place this bridge does not reproduce it.
+ *   `getWsUrl` reads `urls.api.ws[type]` unmodified for spot, so both are a
  *   post-construction assignment.
- * - **US routes to binance.us**, both REST and WS, matching the native's
- *   region split. No dev proxy exists (and none is needed): both hosts send
- *   `Access-Control-Allow-Origin`, so the browser build goes direct.
+ * - **US routes to binance.us**, REST and WS, for the market-data instance and
+ *   every credential slot alike — `applyUrls` runs on each instance the
+ *   exchange host builds. Matches the native's region split. No dev proxy
+ *   exists (and none is needed): both hosts send `Access-Control-Allow-Origin`,
+ *   so the browser build goes direct.
+ * - **Paper is region-free.** `setSandboxMode` replaces `urls.api` wholesale
+ *   with the testnet table (`testnet.binance.vision`), which carries no
+ *   `{hostname}` template and so cannot inherit the US split — matching the
+ *   native's `resolveBinanceTradingUrls(country, paper)`, which ignores the
+ *   country entirely when `paper`.
  * - **Synthetic markets must carry `info.orderTypes`.** Binance is the only
  *   venue of the fourteen whose `createOrder` reads `market.info`
  *   (`binance.js:5600`) and it throws `InvalidOrder` when the field is absent.
@@ -120,8 +133,10 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
   applyUrls: (exchange, country) => {
     const us = country.toUpperCase() === 'US'
     const restHost = us ? 'https://api.binance.us' : 'https://api.binance.com'
+    // 443 on `.com`, 9443 on `.us` — see the header. Not symmetric because the
+    // hosts are not: `stream.binance.us` has nothing listening on 443.
     const wsHost = us
-      ? 'wss://stream.binance.us/ws'
+      ? 'wss://stream.binance.us:9443/ws'
       : 'wss://stream.binance.com/ws'
     const api = exchange.urls['api'] as Record<string, unknown>
     api['public'] = `${restHost}/api/v3`

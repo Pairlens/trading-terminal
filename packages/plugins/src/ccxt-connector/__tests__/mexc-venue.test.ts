@@ -14,6 +14,7 @@ import {
   withMexcQuirks,
 } from '../venues/mexc-exchange'
 import { parseCcxtTicker } from '../parser'
+import { PUBLIC_CTX } from './url-context'
 import type { CcxtExchangeCtor } from '../types'
 
 const BLOCKED = ['US', 'GB', 'UK', 'CA', 'CN', 'SG', 'HK']
@@ -88,16 +89,16 @@ describe('mexc region gate', () => {
 
   it('refuses to even build an instance for a blocked region', () => {
     const exchange = { urls: { api: { spot: {}, ws: {} } } }
-    expect(() => mexcCcxtVenue.applyUrls?.(exchange as never, 'US')).toThrow(
-      /not available in your region/,
-    )
+    expect(() =>
+      mexcCcxtVenue.applyUrls?.(exchange as never, 'US', PUBLIC_CTX),
+    ).toThrow(/not available in your region/)
   })
 
   it('points spot REST and the spot socket at the venue', () => {
     const exchange = {
       urls: { api: { spot: { public: '', private: '' }, ws: { spot: '' } } },
     }
-    mexcCcxtVenue.applyUrls?.(exchange as never, 'DE')
+    mexcCcxtVenue.applyUrls?.(exchange as never, 'DE', PUBLIC_CTX)
     expect(exchange.urls.api.spot).toEqual({
       public: 'https://api.mexc.com',
       private: 'https://api.mexc.com',

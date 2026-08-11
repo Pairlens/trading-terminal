@@ -21,6 +21,7 @@ import {
 import { scaleSnapshotChange, scaleTickerChange } from '../upbit-change-percent'
 import { fromCcxtSymbol, toCcxtSymbol } from '../parser'
 import { assertTickerConformant } from '../../test-utils/conformance'
+import { PUBLIC_CTX } from './url-context'
 import type { CcxtExchangeLike } from '../types'
 import type { TickerSnapshot } from '@pairlens/market-engine/types'
 
@@ -83,7 +84,7 @@ describe('upbit regional routing', () => {
       hostname: 'api.upbit.com',
       urls: { api: {} },
     } as unknown as CcxtExchangeLike
-    upbitCcxtVenue.applyUrls?.(exchange, 'ID')
+    upbitCcxtVenue.applyUrls?.(exchange, 'ID', PUBLIC_CTX)
     expect(exchange.hostname).toBe('id-api.upbit.com')
   })
 

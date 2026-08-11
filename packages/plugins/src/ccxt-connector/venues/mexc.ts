@@ -11,9 +11,11 @@
  * - **Desktop-only, in both halves.** `api.mexc.com` sends no
  *   `Access-Control-Allow-Origin` and there is no sibling host that does.
  * - **Region-blocked in seven jurisdictions.** `geoCheck` refuses every
- *   `market-data:*` capability, exactly as the native does, and the URL resolver
- *   refuses too — so the trading path is covered the moment it is wired, without
- *   depending on a `tradeGeoCheck` hook the bridge config does not have yet.
+ *   `market-data:*` capability on the app-level country and `tradeGeoCheck`
+ *   refuses `trading:orders` on the slot's, exactly as the native does. The URL
+ *   resolver refuses as well, but that throw lands inside the trading runtime's
+ *   catch-all and would surface as an ordinary order rejection — the typed
+ *   error the region dialog needs only survives from the shell-level hook.
  * - **No `market-data:trades`.** The native does not declare it and neither does
  *   this: the aggressor-side semantics of MEXC's protobuf deals frames have
  *   never been measured against live top-of-book, and a tape with the side
@@ -94,11 +96,23 @@ export const mexcCcxtVenue: CcxtVenueConfig = {
     const Base = (module.default ?? module) as unknown as CcxtExchangeCtor
     return withMexcQuirks(Base)
   },
-  // Market data is gated here; trading is gated by the URL resolver until the
-  // bridge config grows a post-slot `tradeGeoCheck` hook.
+  // Market data is gated on the app-level country, before slot resolution.
   geoCheck: (country, capability) => {
     if (!capability.startsWith('market-data:')) return
     if (isMexcBlocked(country)) throw new GeoRestrictedError('MEXC', country)
+  },
+  // Trading is gated on the SLOT's country, after slot resolution — so a user
+  // with no credentials in a blocked region still reads 'No credentials
+  // configured', which is their actual problem.
+  //
+  // `applyUrls` also refuses a blocked region, but that throw happens inside
+  // the trading runtime, whose contract is that nothing escapes: it comes back
+  // as `{success:false, error}` and the terminal's region dialog never sees a
+  // GeoRestrictedError. This hook runs in the shell, where the throw survives.
+  tradeGeoCheck: (slot) => {
+    if (isMexcBlocked(slot.country)) {
+      throw new GeoRestrictedError('MEXC', slot.country)
+    }
   },
   maxHistoryLimit: 500,
   // ccxt reads `until` and sends `endTime = until + 1`; MEXC's `endTime` is

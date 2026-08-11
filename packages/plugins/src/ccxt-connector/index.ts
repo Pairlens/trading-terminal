@@ -258,10 +258,17 @@ class CcxtVenueRuntime {
   }
 
   /**
-   * ccxt collapses every HTTP failure into its own error classes, so the geo
-   * signal the terminal's region dialog keys off has to be recovered from the
-   * status code ccxt embeds in the message. Same classification as
-   * `assertResponseOk`: 451 is unambiguous, 403 only counts with body evidence.
+   * Second line of defence for the geo signal.
+   *
+   * The FIRST is the transport: `withGeoClassification` inspects the HTTP
+   * status before ccxt sees the response, because most venues' `handleErrors`
+   * throws from the body alone and never mentions the status (ByBit answers a
+   * 451 with `ExchangeError('bybit {}')` — there is nothing left to parse).
+   *
+   * This still earns its place for the errors ccxt raises itself rather than
+   * from a response the bridge fetched: a `RestrictedLocation`, or a message
+   * that does carry the code. Same rule either way — 451 is unambiguous, 403
+   * only counts with body evidence.
    */
   private classify(error: unknown, country: string): unknown {
     if (!(error instanceof Error)) return error
@@ -292,6 +299,12 @@ export function createCcxtConnectorPlugin(
     defaultMode: venue.defaultMode,
     ...(venue.requiresDesktop ? { requiresDesktop: true } : {}),
     ...(venue.geoCheck ? { geoCheck: venue.geoCheck } : {}),
+    // Runs in the SHELL, after slot resolution and outside the trading
+    // runtime's try/catch — which is the whole point. A geo refusal raised
+    // inside `placeOrder` comes back as `{success:false, error}` and the
+    // terminal's region dialog, which keys on a thrown GeoRestrictedError,
+    // never fires.
+    ...(venue.tradeGeoCheck ? { tradeGeoCheck: venue.tradeGeoCheck } : {}),
     createWsClient: () => runtime.publicClient(),
     createPrivateWsClient: () => runtime.privateClient(),
     fetchCandles: (pair, timeframe, limit, country, endTs) =>

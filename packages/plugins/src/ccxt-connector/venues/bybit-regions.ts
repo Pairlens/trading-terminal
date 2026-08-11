@@ -114,9 +114,14 @@ type UrlTable = Record<string, unknown>
  * `paper` swaps in the testnet table (`api-testnet.{hostname}` /
  * `stream-testnet.{hostname}`), which is what ccxt's own `setSandboxMode(true)`
  * does — reproduced here rather than called because `sandbox` is a constructor
- * flag and the bridge builds one instance per region, not per mode. The
- * testnet is region-agnostic on ByBit's side, but the hostname template still
- * has to be filled, so the region is applied first either way.
+ * flag and the bridge builds one instance per region, not per mode.
+ *
+ * **The testnet is ONE global environment**, not a regional pair: the native's
+ * `resolveBybitTestnetUrls()` takes no country at all and always returns
+ * `api-testnet.bybit.com` / `stream-testnet.bybit.com`. Left to the hostname
+ * template an EU slot would come out on `api-testnet.bybit.nl` — which does
+ * answer (measured 2026-08-11, both REST and WS) but is not the environment the
+ * native's testnet keys were issued against. So paper pins the global host.
  *
  * An unserved region falls back to the global host. That is deliberate: the
  * refusal belongs to `geoCheck`, which runs before any call reaches this
@@ -129,7 +134,7 @@ export function applyBybitCcxtUrls(
   paper = false,
 ): void {
   const region = resolveBybitRegion(country)
-  exchange.hostname = region?.hostname ?? 'bybit.com'
+  exchange.hostname = paper ? 'bybit.com' : (region?.hostname ?? 'bybit.com')
   if (!paper) return
   const test = exchange.urls['test']
   if (test && typeof test === 'object') {

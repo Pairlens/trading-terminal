@@ -12,6 +12,7 @@ import {
   requireKucoinCcxtUrls,
   resolveKucoinCcxtUrls,
 } from '../venues/kucoin-regions'
+import { PUBLIC_CTX } from './url-context'
 import type { CcxtExchangeCtor } from '../types'
 
 describe('kucoin manifest', () => {
@@ -90,7 +91,7 @@ describe('kucoin region resolution', () => {
         api: { public: '', private: '', uta: '', utaPrivate: '', earn: '' },
       },
     }
-    kucoinCcxtVenue.applyUrls?.(exchange as never, 'DE')
+    kucoinCcxtVenue.applyUrls?.(exchange as never, 'DE', PUBLIC_CTX)
     expect(exchange.urls.api).toEqual({
       public: 'https://api.kucoin.com',
       uta: 'https://api.kucoin.com',

@@ -139,6 +139,13 @@ export const bybitCcxtVenue: CcxtVenueConfig = {
   applyUrls: (exchange, country) => {
     applyBybitCcxtUrls(exchange, country)
   },
+  // `setSandboxMode` has already swapped `urls.api` for the testnet table, but
+  // every entry in it is `{hostname}`-templated and the hostname is still the
+  // REGIONAL one — so an EU paper slot would come out on `api-testnet.bybit.nl`
+  // instead of the single global testnet the native always used.
+  applyPaperUrls: (exchange, country) => {
+    applyBybitCcxtUrls(exchange, country, true)
+  },
   // ByBit blocks US users for all capabilities; resolveBybitRegion only yields
   // null for unserved regions, so both checks surface the same typed error.
   geoCheck: (country, capability) => {

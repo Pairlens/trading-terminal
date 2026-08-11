@@ -15,14 +15,15 @@
  *   imports and three chunks for one venue — `getUrl()` re-reads
  *   `urls.api.ws` on every subscribe, so overriding both URLs on the base
  *   class after construction is equivalent and cheaper.
- * - **Public REST falls back to the global host under CORS.** `eea.okx.com`
- *   and `us.okx.com` send no `Access-Control-Allow-Origin`, which in the hosted
- *   terminal left EU/US users on a chart stuck at one live candle. The three
- *   hosts are one matching engine behind separate legal entities and return
- *   byte-identical instruments and candles, so a CORS-constrained build reads
- *   public data from `www.okx.com`. Where ORDERS go stays regional — that is
- *   the boundary with legal meaning, and it is resolved again in the trading
- *   phase rather than inherited from this read path.
+ * - **Public REST falls back to the global host under CORS — orders never do.**
+ *   `eea.okx.com` and `us.okx.com` send no `Access-Control-Allow-Origin`, which
+ *   in the hosted terminal left EU/US users on a chart stuck at one live
+ *   candle. The three hosts are one matching engine behind separate legal
+ *   entities and return byte-identical instruments and candles, so a
+ *   CORS-constrained build reads public data from `www.okx.com`. Where ORDERS
+ *   go stays regional — that is the boundary with legal meaning — so the
+ *   fallback is gated on `ctx.authed`, which the exchange host sets per
+ *   instance (the read path and each credential slot get their own).
  * - **`3d` is missing from ccxt's timeframe table** even though OKX serves
  *   `3D`. Without the override ccxt passes '3d' straight through and OKX
  *   rejects the request.
@@ -128,19 +129,32 @@ export const okxCcxtVenue: CcxtVenueConfig = {
   // TP/SL lands as `conditional` — without this the resting order places and
   // cancels fine yet never shows in the open list (found by the demo E2E).
   triggerQueryParams: { trigger: true, ordType: 'conditional' },
-  applyUrls: (exchange, country) => {
-    const urls = resolveOkxCcxtUrls(country)
+  applyUrls: (exchange, country, ctx) => {
+    const urls = resolveOkxCcxtUrls(country, { authed: ctx.authed })
     const api = exchange.urls['api'] as Record<string, unknown>
     api['rest'] = urls.rest
     api['ws'] = urls.ws
     exchange.hostname = urls.hostname
   },
-  // Runs after `setSandboxMode`, which swaps in the GLOBAL demo socket
-  // (`wspap`) — but demo keys are regional: an EEA key does not exist there
-  // (60032). REST keeps the regional host from `applyUrls`; only WS moves.
-  applyPaperUrls: (exchange, country) => {
+  // Runs after `setSandboxMode`, which replaces the whole `urls.api` subtree
+  // with `urls.test` — and OKX's is `{ rest: 'https://{hostname}', ws:
+  // 'wss://wspap.okx.com:8443/ws/v5' }`. So BOTH halves of `applyUrls` are
+  // gone by this point:
+  //
+  //  - the socket is the GLOBAL demo host, but demo keys are regional — an
+  //    EEA key does not exist on `wspap` (60032, found by the demo E2E);
+  //  - the REST base is back to the raw `{hostname}` template, which drops the
+  //    dev-proxy prefix in browser dev and sends the request straight at the
+  //    regional origin, where the webview's CORS check kills it.
+  //
+  // Both are restored from the same resolver the live path uses, so a paper
+  // instance routes exactly where its live twin would.
+  applyPaperUrls: (exchange, country, ctx) => {
+    const urls = resolveOkxCcxtUrls(country, { authed: ctx.authed })
     const api = exchange.urls['api'] as Record<string, unknown>
+    api['rest'] = urls.rest
     api['ws'] = okxPaperWs(country)
+    exchange.hostname = urls.hostname
   },
   synthesizeMarket: (pair) => {
     const [base, quote] = pair.split('-')
