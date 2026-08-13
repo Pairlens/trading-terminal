@@ -40,9 +40,12 @@ import { GeoRestrictedError } from '@pairlens/market-engine/errors'
 import { pageEndMs } from '@pairlens/market-engine/candle-paging'
 import { createCexConnectorManifest } from '../../cex-connector'
 import { createCcxtConnectorPlugin } from '../index'
+import { withDerivedCandles } from '../derived-candle-plugin'
 import { withMexcQuirks } from './mexc-exchange'
 import { isMexcBlocked, resolveMexcCcxtUrls } from './mexc-regions'
+import type { LiveCandleSource } from '../derived-candle-plugin'
 import type { CcxtExchangeCtor, CcxtVenueConfig } from '../types'
+import type { Timeframe } from '@pairlens/shared/types'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
   PluginInstance,
@@ -62,7 +65,7 @@ export const MEXC_ADAPTER_INFO: MarketAdapterInfo = {
     { key: 'apiKey', label: 'API Key', type: 'text', required: true },
     { key: 'apiSecret', label: 'API Secret', type: 'secret', required: true },
   ],
-  supportedTimeframes: ['1m', '5m', '15m', '30m', '1h', '4h', '1d', '1w', '1M'],
+  supportedTimeframes: ['1m', '5m', '15m', '30m', '1h', '2h', '4h', '1d', '1w', '1M'],
   iconUrl: ICON_URL,
 }
 
@@ -149,8 +152,30 @@ export const mexcCcxtVenue: CcxtVenueConfig = {
   },
 }
 
+/**
+ * The venue serves no 2h interval anywhere — REST or WS — while the chart
+ * toolbar offers 2h on every venue. Folded from 1h instead, the same
+ * machinery Upbit and Coinbase already ship: history pages read 1h and fold,
+ * live bars fold off the venue's own 1h candle stream. The native connector
+ * did not have 2h either (its supportedTimeframes omitted it); this closes
+ * the toolbar gap rather than reproducing it.
+ */
+const MEXC_HISTORY_FOLD: Partial<Record<string, Timeframe>> = {
+  '2h': '1h',
+}
+
+function mexcLiveSource(timeframe: string): LiveCandleSource {
+  return timeframe === '2h'
+    ? { kind: 'fold', source: '1h' }
+    : { kind: 'passthrough' }
+}
+
 export function createMexcMarketConnectorPlugin(
   manifest: PluginManifest,
 ): PluginInstance {
-  return createCcxtConnectorPlugin(mexcCcxtVenue, manifest)
+  const base = createCcxtConnectorPlugin(mexcCcxtVenue, manifest)
+  return withDerivedCandles(base, {
+    historyFold: MEXC_HISTORY_FOLD,
+    liveSource: mexcLiveSource,
+  })
 }

@@ -73,7 +73,10 @@ import { isDevProxyAvailable } from '@pairlens/market-engine/platform'
 import { createCexConnectorManifest } from '../../cex-connector'
 import { withBitfinexHistoryOrder } from '../bitfinex-history'
 import { createCcxtConnectorPlugin } from '../index'
+import { withDerivedCandles } from '../derived-candle-plugin'
+import type { LiveCandleSource } from '../derived-candle-plugin'
 import type { CcxtExchangeCtor, CcxtVenueConfig } from '../types'
+import type { Timeframe } from '@pairlens/shared/types'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
   PluginInstance,
@@ -97,7 +100,7 @@ export const BITFINEX_ADAPTER_INFO: MarketAdapterInfo = {
       required: true,
     },
   ],
-  supportedTimeframes: ['1m', '5m', '15m', '30m', '1h', '4h', '1d', '1w', '1M'],
+  supportedTimeframes: ['1m', '5m', '15m', '30m', '1h', '2h', '4h', '1d', '1w', '1M'],
   iconUrl: ICON_URL,
   triggerOrders: true,
   requiresDesktop: true,
@@ -170,8 +173,30 @@ export const bitfinexCcxtVenue: CcxtVenueConfig = {
   },
 }
 
+/**
+ * The venue serves no 2h interval anywhere — REST or WS — while the chart
+ * toolbar offers 2h on every venue. Folded from 1h instead, the same
+ * machinery Upbit and Coinbase already ship: history pages read 1h and fold,
+ * live bars fold off the venue's own 1h candle stream. The native connector
+ * did not have 2h either (its supportedTimeframes omitted it); this closes
+ * the toolbar gap rather than reproducing it.
+ */
+const BITFINEX_HISTORY_FOLD: Partial<Record<string, Timeframe>> = {
+  '2h': '1h',
+}
+
+function bitfinexLiveSource(timeframe: string): LiveCandleSource {
+  return timeframe === '2h'
+    ? { kind: 'fold', source: '1h' }
+    : { kind: 'passthrough' }
+}
+
 export function createBitfinexMarketConnectorPlugin(
   manifest: PluginManifest,
 ): PluginInstance {
-  return createCcxtConnectorPlugin(bitfinexCcxtVenue, manifest)
+  const base = createCcxtConnectorPlugin(bitfinexCcxtVenue, manifest)
+  return withDerivedCandles(base, {
+    historyFold: BITFINEX_HISTORY_FOLD,
+    liveSource: bitfinexLiveSource,
+  })
 }

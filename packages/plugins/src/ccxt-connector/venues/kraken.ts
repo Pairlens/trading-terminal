@@ -52,8 +52,11 @@
 
 import { createCexConnectorManifest } from '../../cex-connector'
 import { createCcxtConnectorPlugin } from '../index'
+import { withDerivedCandles } from '../derived-candle-plugin'
 import { withKrakenOhlcvGuard } from '../kraken-ohlcv'
+import type { LiveCandleSource } from '../derived-candle-plugin'
 import type { CcxtExchangeCtor, CcxtVenueConfig } from '../types'
+import type { Timeframe } from '@pairlens/shared/types'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
   PluginInstance,
@@ -77,7 +80,7 @@ export const KRAKEN_ADAPTER_INFO: MarketAdapterInfo = {
       required: true,
     },
   ],
-  supportedTimeframes: ['1m', '5m', '15m', '30m', '1h', '4h', '1d', '1w'],
+  supportedTimeframes: ['1m', '5m', '15m', '30m', '1h', '2h', '4h', '1d', '1w'],
   iconUrl: ICON_URL,
   triggerOrders: true,
 }
@@ -138,8 +141,35 @@ export const krakenCcxtVenue: CcxtVenueConfig = {
   livenessTimeoutMs: 45_000,
 }
 
+/**
+ * The venue serves no 2h interval anywhere — REST or WS — while the chart
+ * toolbar offers 2h on every venue. Folded from 1h instead, the same
+ * machinery Upbit and Coinbase already ship: history pages read 1h and fold,
+ * live bars fold off the venue's own 1h candle stream. The native connector
+ * did not have 2h either (its supportedTimeframes omitted it); this closes
+ * the toolbar gap rather than reproducing it.
+ *
+ * The 1h source stream rides Kraken's single-tenant OHLCV guard like any
+ * other timeframe: a second pane on the SAME pair at a different timeframe
+ * still parks one of the two (see kraken-ohlcv.ts) — the fold neither
+ * worsens nor fixes that venue constraint.
+ */
+const KRAKEN_HISTORY_FOLD: Partial<Record<string, Timeframe>> = {
+  '2h': '1h',
+}
+
+function krakenLiveSource(timeframe: string): LiveCandleSource {
+  return timeframe === '2h'
+    ? { kind: 'fold', source: '1h' }
+    : { kind: 'passthrough' }
+}
+
 export function createKrakenMarketConnectorPlugin(
   manifest: PluginManifest,
 ): PluginInstance {
-  return createCcxtConnectorPlugin(krakenCcxtVenue, manifest)
+  const base = createCcxtConnectorPlugin(krakenCcxtVenue, manifest)
+  return withDerivedCandles(base, {
+    historyFold: KRAKEN_HISTORY_FOLD,
+    liveSource: krakenLiveSource,
+  })
 }
