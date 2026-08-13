@@ -27,6 +27,28 @@ function formatSize(size: number): string {
   return size.toPrecision(4)
 }
 
+/**
+ * What the print actually moved, in the quote currency.
+ *
+ * Sizes are only comparable within one asset — 0.004 and 300 say nothing to
+ * each other until they are both a few hundred dollars — so the notional is
+ * the column that makes two rows of the same tape comparable. K/M above a
+ * thousand keeps it inside its track; a BTC-quoted pair lands under 1, where
+ * significant digits say more than a fixed two decimals would.
+ */
+function formatNotional(value: number): string {
+  if (!Number.isFinite(value)) return '—'
+  // Each unit is picked from the ROUNDED figure, not the raw one: 999.999
+  // renders as "1000.00" at two decimals, which is both a unit behind the row
+  // above it and the widest string the track would ever have to hold.
+  const round2 = (n: number) => Math.round(n * 100) / 100
+  if (round2(value / 1_000_000) >= 1)
+    return `${round2(value / 1e6).toFixed(2)}M`
+  if (round2(value / 1_000) >= 1) return `${round2(value / 1e3).toFixed(2)}K`
+  if (value >= 1) return value.toFixed(2)
+  return value.toPrecision(3)
+}
+
 function formatTime(ts: number): string {
   const d = new Date(ts)
   const hh = String(d.getHours()).padStart(2, '0')
@@ -44,8 +66,17 @@ function formatTime(ts: number): string {
 // the word to sit next to it without squeezing the price out of its track.
 // 17rem/4.25rem is what the longest translation needs — Polish "Sprzedaż" —
 // not what English would get away with.
+//
+// The value column is the same bargain one step up: at 24rem there is room
+// for a fourth fractional track without any of the other three dropping below
+// what their widest content needs (a ten-character micro-price, a
+// ten-character size, an eight-character clock), so it appears there and is
+// display:none — out of the grid entirely, not merely invisible — below it.
 const TAPE_GRID =
-  'grid grid-cols-[0.85rem_1.15fr_1.15fr_1fr] gap-1 @min-[17rem]/pane:grid-cols-[4.25rem_1.15fr_1.15fr_1fr]'
+  'grid grid-cols-[0.85rem_1.15fr_1.15fr_1fr] gap-1 @min-[17rem]/pane:grid-cols-[4.25rem_1.15fr_1.15fr_1fr] @min-[24rem]/pane:grid-cols-[4.25rem_1.15fr_1.15fr_1.15fr_1fr]'
+
+/** The value cell, hidden below the width its track needs. See TAPE_GRID. */
+const TAPE_VALUE_CELL = 'hidden @min-[24rem]/pane:block text-right'
 
 /** Buy/sell wording, resolved once per render of the pane rather than per row. */
 type SideLabels = { buy: string; sell: string }
@@ -121,6 +152,11 @@ const TradeRow = memo(
           style={{ color: magnitudeTextColor(intensity) }}
         >
           {formatSize(trade.size)}
+        </span>
+        <span
+          className={cn('relative z-10 text-foreground/70', TAPE_VALUE_CELL)}
+        >
+          {formatNotional(trade.price * trade.size)}
         </span>
         <span className="relative z-10 text-right text-muted-foreground">
           {formatTime(trade.ts)}
@@ -227,6 +263,7 @@ function TradesPaneInner({
           </span>
           <span>{t('terminal.columns.price')}</span>
           <span className="text-right">{t('terminal.columns.size')}</span>
+          <span className={TAPE_VALUE_CELL}>{t('terminal.columns.value')}</span>
           <span className="text-right">{t('positions.time')}</span>
         </div>
       </div>

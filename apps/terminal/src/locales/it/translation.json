@@ -2941,6 +2941,7 @@
     "columns": {
       "price": "Prezzo",
       "size": "Dimensione",
+      "value": "Valore",
       "total": "Totale",
       "open": "Apertura",
       "close": "Chiusura"

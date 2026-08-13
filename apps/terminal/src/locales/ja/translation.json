@@ -2941,6 +2941,7 @@
     "columns": {
       "price": "価格",
       "size": "数量",
+      "value": "金額",
       "total": "合計",
       "open": "始値",
       "close": "終値"
