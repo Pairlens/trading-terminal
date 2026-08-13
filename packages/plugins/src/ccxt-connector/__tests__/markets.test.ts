@@ -103,12 +103,24 @@ describe('trimMarket', () => {
   it('rejects a row with no usable identity', () => {
     expect(trimMarket({ symbol: 'BTC/USDT' })).toBeNull()
   })
+
+  it("keeps OKX's instIdCode — the WS trade API refuses orders without it", () => {
+    const trimmed = trimMarket({
+      id: 'BTC-USDT',
+      symbol: 'BTC/USDT',
+      base: 'BTC',
+      quote: 'USDT',
+      instIdCode: 4_242,
+      spot: true,
+    })
+    expect(trimmed?.instIdCode).toBe(4_242)
+  })
 })
 
 describe('CcxtMarketsProvider', () => {
   it('applies a cached table synchronously — no await before the first watch', async () => {
     const storage = memoryMarketsStorage()
-    await storage.set('binance:v1', {
+    await storage.set('binance:v2', {
       savedAt: Date.now(),
       markets: REAL_TABLE,
     })
@@ -162,7 +174,7 @@ describe('CcxtMarketsProvider', () => {
     const provider = new CcxtMarketsProvider('binance', storage)
     const { exchange } = fakeExchange(REAL_TABLE)
     await provider.whenReady(exchange)
-    const stored = await storage.get('binance:v1')
+    const stored = await storage.get('binance:v2')
     expect(stored?.markets).toHaveLength(3)
   })
 
@@ -180,7 +192,7 @@ describe('CcxtMarketsProvider', () => {
 
   it('serves the persisted cache on a cold start without an explicit prefetch', async () => {
     const storage = memoryMarketsStorage()
-    await storage.set('binance:v1', {
+    await storage.set('binance:v2', {
       savedAt: Date.now(),
       markets: REAL_TABLE,
     })
@@ -202,7 +214,7 @@ describe('CcxtMarketsProvider', () => {
 
   it('whenReady is satisfied by the persisted cache even over a stand-in', async () => {
     const storage = memoryMarketsStorage()
-    await storage.set('binance:v1', {
+    await storage.set('binance:v2', {
       savedAt: Date.now(),
       markets: REAL_TABLE,
     })
@@ -239,7 +251,7 @@ describe('CcxtMarketsProvider', () => {
 
   it('refreshes in the background when the cached table is past its TTL', async () => {
     const storage = memoryMarketsStorage()
-    await storage.set('binance:v1', {
+    await storage.set('binance:v2', {
       savedAt: Date.now() - 48 * 60 * 60 * 1000,
       markets: [seed('BTC', 'USDT')],
     })

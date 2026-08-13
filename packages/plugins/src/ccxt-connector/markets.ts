@@ -38,7 +38,7 @@ import type { CcxtExchangeLike, CcxtMarketSeed } from './types'
  * Bump when the trimmed shape changes — it is part of the cache key, so old
  * rows are ignored rather than migrated.
  */
-const MARKETS_SCHEMA_VERSION = 1
+const MARKETS_SCHEMA_VERSION = 2
 
 /** Refresh a cached table older than this, in the background. */
 export const MARKETS_TTL_MS = 24 * 60 * 60 * 1000
@@ -117,6 +117,12 @@ export function trimMarket(
       : {}),
     ...(typeof market['quoteId'] === 'string'
       ? { quoteId: market['quoteId'] }
+      : {}),
+    // OKX only: its WS trade API sends this numeric code in place of the
+    // instrument id and the venue rejects orders without it — see the field's
+    // doc on CcxtMarketSeed.
+    ...(typeof market['instIdCode'] === 'number'
+      ? { instIdCode: market['instIdCode'] }
       : {}),
     type: 'spot',
     spot: true,

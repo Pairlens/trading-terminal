@@ -900,6 +900,14 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         // Health is marked on RAW arrival, ahead of the throttle: the throttle
         // legitimately drops frames under load, and "we are receiving data" is
         // a different question from "we are painting every frame".
+        // The FIRST trades frame after a subscribe is the venue's replay of
+        // recent executions, and on a quiet pair the newest replayed print can
+        // be minutes old — its age measures the pair's activity, not the link.
+        // One such sample parked a 51 s "round trip" on the header for minutes
+        // (Crypto.com, measured 2026-08-14), because the median only heals as
+        // fast as new trades arrive. Every frame after the first is a live
+        // print, so only those are sampled.
+        let firstFeedFrame = true
         e.unsub = start((data: unknown) => {
           streamHealth.mark(key)
           // Sampled on RAW arrival for the same reason health is: the throttle
@@ -908,7 +916,11 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
           if (feedVenue) {
             const eventTs = feedEventTs(data)
             if (eventTs !== null) {
-              latencyMonitor.recordFeedAge(feedVenue, eventTs)
+              if (firstFeedFrame) {
+                firstFeedFrame = false
+              } else {
+                latencyMonitor.recordFeedAge(feedVenue, eventTs)
+              }
             }
           }
           e.throttled(data)

@@ -130,23 +130,22 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
     // same path pretends a pong arrived and detects nothing. Off, as on Gate
     // and Bitfinex — liveness lives with the hub's inbound-silence watchdog.
     streaming: { keepAlive: 0 },
-    options: {
-      // ccxt's binance is the only pro class that shards subscriptions across
-      // numbered stream URLs (`…/ws/<index>`), one per DISTINCT subscription
-      // hash — and the ticker/book/trades hashes embed the symbol list. At the
-      // default `streamLimits.spot: 50` that is four sockets for one pair and
-      // three fresh TLS handshakes on every pair switch, accumulating toward
-      // fifty. The native connector held ONE socket and multiplexed with
-      // SUBSCRIBE frames, precisely because heavy switching once tripped
-      // Binance's per-IP connection limit (~300 new connections / 5 min) and
-      // blanked the terminal for 30 s. `spot: 1` maps every hash to `…/ws/0`.
-      streamLimits: { spot: 1, margin: 1 },
-      // ccxt guards each stream at 200 subscriptions and `numSubscriptions`
-      // only ever grows; with one stream carrying everything, a long session
-      // of pair switches would hit it. Binance's own per-stream cap is 1024
-      // (ccxt's comment on `streamLimits`).
-      subscriptionLimitByStream: { spot: 1024, margin: 1024 },
-    },
+    // `streamLimits` stays at ccxt's DEFAULT (spot: 50 — roughly one socket
+    // per subscription hash). This venue briefly shipped `spot: 1` to
+    // multiplex everything on one socket like the native did, and it broke
+    // live data on every pair switch: Binance enforces ~5 inbound messages
+    // per second PER CONNECTION, ccxt sends one SUBSCRIBE frame per watch
+    // call (it cannot batch streams into one message the way the native
+    // did), and a switch's unsubscribe+subscribe burst on the shared socket
+    // tripped the limit — Binance closed the socket with code 1008, killing
+    // every channel at once, and the reconnect's resubscribe burst could
+    // trip it again (measured 2026-08-14: repeated 1008s, live data stalled
+    // for up to tens of seconds). With ccxt's default sharding each hash
+    // opens with its own connection carrying exactly one SUBSCRIBE, the
+    // burst limit is unreachable, and revisited pairs still reuse their
+    // memoized stream. Measured clean: book live in 1-2.5 s across
+    // switches, no 1008s. The per-switch TLS handshakes this costs are the
+    // lesser evil; do not re-add a low streamLimits cap.
   },
   // ccxt caps the book it maintains at exactly this depth (`pro/binance.js`
   // seeds `this.orderBook({}, limit)` from a REST snapshot of the same size),

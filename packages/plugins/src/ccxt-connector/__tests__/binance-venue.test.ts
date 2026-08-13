@@ -4,22 +4,27 @@ import { describe, expect, it } from 'bun:test'
 import { binanceCcxtVenue } from '../venues/binance'
 
 describe('binance venue options', () => {
-  // ccxt's binance is the only pro class that shards subscriptions across
-  // numbered stream URLs, one per distinct subscription hash — and the
-  // ticker/book/trades hashes embed the symbol. Left at the default
-  // `streamLimits.spot: 50` that is four sockets for one pair and three fresh
-  // TLS handshakes per pair switch. The venue pins everything onto one stream,
-  // and raises the per-stream subscription guard to Binance's own 1024 cap so
-  // a long session of switches cannot trip ccxt's 200 default.
-  it('collapses every subscription hash onto a single spot stream', () => {
-    const options = binanceCcxtVenue.options?.['options'] as Record<
+  // Binance enforces ~5 inbound messages per second PER CONNECTION, and ccxt
+  // sends one SUBSCRIBE frame per watch call. A low `streamLimits` cap (this
+  // venue briefly shipped `spot: 1`) concentrates a pair switch's
+  // unsubscribe+subscribe burst onto one socket, which Binance closes with
+  // code 1008 — killing every live channel at once and stalling real-time
+  // data for tens of seconds (measured 2026-08-14). ccxt's default sharding
+  // gives each hash its own connection carrying exactly one SUBSCRIBE, so the
+  // burst limit is unreachable. This test pins the ABSENCE of the override.
+  it('leaves stream sharding at the ccxt default — a low cap trips the 1008 message limit', () => {
+    const options = binanceCcxtVenue.options?.['options'] as
+      | Record<string, unknown>
+      | undefined
+    expect(options?.['streamLimits']).toBeUndefined()
+    expect(options?.['subscriptionLimitByStream']).toBeUndefined()
+  })
+
+  it('keeps ccxt keepalive off — no app-level ping exists to send', () => {
+    const streaming = binanceCcxtVenue.options?.['streaming'] as Record<
       string,
-      Record<string, number>
+      number
     >
-    expect(options['streamLimits']).toEqual({ spot: 1, margin: 1 })
-    expect(options['subscriptionLimitByStream']).toEqual({
-      spot: 1024,
-      margin: 1024,
-    })
+    expect(streaming['keepAlive']).toBe(0)
   })
 })
