@@ -56,6 +56,18 @@ const DEFAULT_TRIGGER_QUERY = { trigger: true, stop: true } as const
 /** Orders pulled per `'list'` call. Matches the native OKX history page. */
 const ORDER_HISTORY_LIMIT = 50
 
+/**
+ * WS placement failures that provably happened BEFORE the order frame could
+ * be sent (ccxt's `authenticate()` raises them while connecting/logging in),
+ * making a REST re-route safe. Names, not instanceof — the bridge never
+ * imports ccxt's error classes (see watch-driver's isClosedByUser).
+ */
+const WS_PRE_SEND_FAILURES = new Set([
+  'NotSupported',
+  'AuthenticationError',
+  'ExchangeNotAvailable',
+])
+
 // ── Pure mapping ───────────────────────────────────────────────────────────
 
 type CcxtOrderLike = Record<string, unknown>
@@ -458,11 +470,7 @@ export class CcxtTradingRuntime {
               cost: call.cost,
               params,
             })
-          : await callOrThrow(
-              exchange.createOrder,
-              exchange,
-              `${this.opts.venue.displayName} cannot place orders`,
-            )(call.symbol, call.type, call.side, call.amount, price, params)
+          : await this.createOverWire(exchange, call, price, params)
 
       const orderId = stringOf(raw['id'])
       return orderId ? { success: true, orderId } : { success: true }
@@ -479,19 +487,33 @@ export class CcxtTradingRuntime {
   ): Promise<OrderResult> {
     try {
       const { exchange } = await this.acquire(slot)
+      const symbol = toCcxtSymbol(pair)
+      // Trigger orders live in a separate id space on OKX, Bitget, Gate and
+      // friends; without the flag the venue looks the id up in the regular book
+      // and reports "order not found" for an order that is plainly resting.
+      const params = opts?.trigger ? this.triggerQuery() : {}
+
+      // A cancel is retry-safe (cancelling twice cancels once), so the WS
+      // attempt can fall back to REST on ANY failure — unlike placement.
+      if (
+        this.opts.venue.wsOrders === true &&
+        exchange.has['cancelOrderWs'] === true &&
+        typeof exchange.cancelOrderWs === 'function'
+      ) {
+        try {
+          await exchange.cancelOrderWs(orderId, symbol, params)
+          return { success: true, orderId }
+        } catch {
+          // Fall through to REST below.
+        }
+      }
+
       const cancel = callOrThrow(
         exchange.cancelOrder,
         exchange,
         `${this.opts.venue.displayName} cannot cancel orders`,
       )
-      // Trigger orders live in a separate id space on OKX, Bitget, Gate and
-      // friends; without the flag the venue looks the id up in the regular book
-      // and reports "order not found" for an order that is plainly resting.
-      await cancel(
-        orderId,
-        toCcxtSymbol(pair),
-        opts?.trigger ? this.triggerQuery() : {},
-      )
+      await cancel(orderId, symbol, params)
       return { success: true, orderId }
     } catch (error) {
       return this.failure('cancel', error, slot)
@@ -619,6 +641,64 @@ export class CcxtTradingRuntime {
     return {
       success: false,
       error: `${this.opts.venue.displayName} has no paper trading environment — switch this credential to live or paper-trade on another venue`,
+    }
+  }
+
+  /**
+   * Place the order over the venue's WS trade API where the venue opts in,
+   * REST otherwise.
+   *
+   * The fallback rules are about double-execution, the one failure money
+   * cannot absorb. `authenticate()` runs — connect, login — BEFORE the order
+   * frame is sent, so `NotSupported`, `AuthenticationError` and
+   * `ExchangeNotAvailable` mean nothing reached the venue: safe to re-route
+   * to REST. Everything else either IS the venue's answer (an
+   * `InvalidOrder`/`InsufficientFunds` would repeat identically over REST) or
+   * is ambiguous about whether the frame was delivered (`RequestTimeout`, a
+   * socket that died mid-flight) — those must surface as failures, never
+   * silently retry, because the order may be resting.
+   */
+  private async createOverWire(
+    exchange: CcxtExchangeLike,
+    call: { symbol: string; type: string; side: string; amount: number },
+    price: number | undefined,
+    params: Record<string, unknown>,
+  ): Promise<Record<string, unknown>> {
+    const rest = () =>
+      callOrThrow(
+        exchange.createOrder,
+        exchange,
+        `${this.opts.venue.displayName} cannot place orders`,
+      )(call.symbol, call.type, call.side, call.amount, price, params)
+
+    const wsCapable =
+      this.opts.venue.wsOrders === true &&
+      exchange.has['createOrderWs'] === true &&
+      typeof exchange.createOrderWs === 'function'
+    if (!wsCapable) return rest()
+
+    try {
+      return await exchange.createOrderWs!(
+        call.symbol,
+        call.type,
+        call.side,
+        call.amount,
+        price,
+        params,
+      )
+    } catch (error) {
+      if (error instanceof Error && WS_PRE_SEND_FAILURES.has(error.name)) {
+        return rest()
+      }
+      if (error instanceof Error && error.name === 'RequestTimeout') {
+        // The frame may have been delivered; a blind retry can double-fill.
+        const advisory = new Error(
+          `${error.message} — sent over the trading socket; the order may still have been accepted, check open orders before retrying`,
+        )
+        advisory.name = error.name
+        throw advisory
+      }
+      throw error
     }
   }
 

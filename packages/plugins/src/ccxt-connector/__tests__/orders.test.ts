@@ -521,6 +521,173 @@ describe('reference price for gated market buys', () => {
   })
 })
 
+describe('ws order placement', () => {
+  type WireLog = Array<string>
+
+  function wsVenue(options: {
+    wsOrders?: boolean
+    createWsError?: Error
+    cancelWsError?: Error
+  }) {
+    const wire: WireLog = []
+    class FakeWsExchange {
+      id = 'fakex'
+      has: Record<string, unknown> = {
+        createOrderWs: true,
+        cancelOrderWs: true,
+      }
+      timeframes: Record<string, string> = {}
+      urls: Record<string, unknown> = { api: {} }
+      options: Record<string, unknown> = {}
+      markets: Record<string, unknown> | undefined
+      setMarkets(markets: Array<CcxtMarketSeed>) {
+        this.markets = Object.fromEntries(markets.map((m) => [m.symbol, m]))
+        return this.markets
+      }
+      async loadMarkets() {
+        return this.markets
+      }
+      market(symbol: string) {
+        return (this.markets?.[symbol] ?? {}) as Record<string, unknown>
+      }
+      async createOrderWs() {
+        wire.push('ws:create')
+        if (options.createWsError) throw options.createWsError
+        return { id: 'ws-oid' }
+      }
+      async createOrder() {
+        wire.push('rest:create')
+        return { id: 'rest-oid' }
+      }
+      async cancelOrderWs() {
+        wire.push('ws:cancel')
+        if (options.cancelWsError) throw options.cancelWsError
+        return {}
+      }
+      async cancelOrder() {
+        wire.push('rest:cancel')
+        return {}
+      }
+      async close() {}
+    }
+    const venue: CcxtVenueConfig = {
+      exchangeId: 'fakex',
+      marketId: 'fakex',
+      displayName: 'Fakex',
+      credentialKeys: [
+        { key: 'apiKey', required: true },
+        { key: 'apiSecret', required: true },
+      ],
+      defaultMode: 'live',
+      maxHistoryLimit: 100,
+      ...(options.wsOrders === false ? {} : { wsOrders: true }),
+      loadExchangeClass: async () =>
+        FakeWsExchange as unknown as CcxtExchangeCtor,
+    }
+    return { venue, wire }
+  }
+
+  function namedError(name: string): Error {
+    const error = new Error(`${name} raised`)
+    error.name = name
+    return error
+  }
+
+  async function wsPlugin(venue: CcxtVenueConfig): Promise<PluginInstance> {
+    return track(
+      await build(venue, binanceMarketConnectorManifest, BINANCE_MARKET, {
+        mode: 'live',
+      }),
+    )
+  }
+
+  it('places over the socket and never touches REST', async () => {
+    const { venue, wire } = wsVenue({})
+    const plugin = await wsPlugin(venue)
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+    })
+    expect(result).toEqual({ success: true, orderId: 'ws-oid' })
+    expect(wire).toEqual(['ws:create'])
+  })
+
+  it('falls back to REST when the socket fails before anything was sent', async () => {
+    const { venue, wire } = wsVenue({
+      createWsError: namedError('ExchangeNotAvailable'),
+    })
+    const plugin = await wsPlugin(venue)
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+    })
+    expect(result).toEqual({ success: true, orderId: 'rest-oid' })
+    expect(wire).toEqual(['ws:create', 'rest:create'])
+  })
+
+  it('NEVER retries an ambiguous timeout — the order may be resting', async () => {
+    const { venue, wire } = wsVenue({
+      createWsError: namedError('RequestTimeout'),
+    })
+    const plugin = await wsPlugin(venue)
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+    })
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('may still have been accepted')
+    expect(wire).toEqual(['ws:create'])
+  })
+
+  it('surfaces a venue rejection without a pointless REST replay', async () => {
+    const { venue, wire } = wsVenue({
+      createWsError: namedError('InsufficientFunds'),
+    })
+    const plugin = await wsPlugin(venue)
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+    })
+    expect(result.success).toBe(false)
+    expect(wire).toEqual(['ws:create'])
+  })
+
+  it('cancel falls back to REST on any socket failure — cancelling is retry-safe', async () => {
+    const { venue, wire } = wsVenue({
+      cancelWsError: namedError('RequestTimeout'),
+    })
+    const plugin = await wsPlugin(venue)
+    const result = (await plugin.execute({
+      capability: 'trading:orders' as never,
+      params: { action: 'cancel', orderId: 'oid-1', pair: 'BTC-USDT' },
+      context: context(),
+    })) as { success: boolean }
+    expect(result.success).toBe(true)
+    expect(wire).toEqual(['ws:cancel', 'rest:cancel'])
+  })
+
+  it('a venue without the opt-in stays on REST even when ccxt advertises WS', async () => {
+    const { venue, wire } = wsVenue({ wsOrders: false })
+    const plugin = await wsPlugin(venue)
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+    })
+    expect(result.success).toBe(true)
+    expect(wire).toEqual(['rest:create'])
+  })
+})
+
 describe('re-provisioned credential slots', () => {
   it('tears down the previous authed host instead of leaking it', async () => {
     const { CcxtTradingRuntime } = await import('../orders')

@@ -130,6 +130,20 @@ export type CcxtExchangeLike = {
     price?: number,
     params?: Record<string, unknown>,
   ) => Promise<Record<string, unknown>>
+  /** WS-native order placement — see `CcxtVenueConfig.wsOrders`. */
+  createOrderWs?: (
+    symbol: string,
+    type: string,
+    side: string,
+    amount: number,
+    price?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, unknown>>
+  cancelOrderWs?: (
+    id: string,
+    symbol?: string,
+    params?: Record<string, unknown>,
+  ) => Promise<unknown>
   /** Quote-denominated market buy. Each venue's override owns its own quirk. */
   createMarketBuyOrderWithCost?: (
     symbol: string,
@@ -415,6 +429,21 @@ export type CcxtVenueConfig = {
    * that is real hides resting TP/SLs from the order pane.
    */
   separateTriggerOrderBook?: boolean
+  /**
+   * Place and cancel over the venue's WebSocket trade API
+   * (`createOrderWs`/`cancelOrderWs`) instead of signed REST. After the first
+   * call the authed socket stays open on the trading instance, so an order is
+   * one frame instead of a TLS+HTTP round trip, and it leaves the REST
+   * rate-limit budget to the open-orders/balances polls.
+   *
+   * Deliberately opt-in per venue rather than derived from `has`: the WS URL
+   * must be one the venue's `applyUrls`/`applyPaperUrls` actually route
+   * (Binance's `ws-api` host ignores the US split, OKX's private socket
+   * carries the regional-entity stakes), and the venue's sandbox must serve
+   * the trade socket. Enabled where the host is single and static: Kraken,
+   * Crypto.com, Bitvavo, Gate — all already inside the desktop CSP baseline.
+   */
+  wsOrders?: boolean
   /**
    * Force trigger-order support on or off. Default: derived from
    * `exchange.has` (`createTriggerOrder` / `createStopLossOrder` /

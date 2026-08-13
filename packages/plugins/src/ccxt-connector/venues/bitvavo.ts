@@ -128,6 +128,10 @@ export const bitvavoCcxtVenue: CcxtVenueConfig = {
   ],
   defaultMode: 'live',
   geoCheck: (country) => assertBitvavoRegionAllowed(country),
+  // Orders and cancels ride the venue's WS trade API — single static host,
+  // already routed by this venue's URL hooks and inside the CSP baseline.
+  // See CcxtVenueConfig.wsOrders for why this is per-venue opt-in.
+  wsOrders: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/bitvavo.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor

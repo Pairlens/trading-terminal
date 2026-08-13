@@ -104,6 +104,10 @@ export const gateCcxtVenue: CcxtVenueConfig = {
   // runtime fetches a reference price and passes it through.
   marketBuyRequiresPrice: true,
   requiresDesktop: true,
+  // Orders and cancels ride the venue's WS trade API — single static host,
+  // already routed by this venue's URL hooks and inside the CSP baseline.
+  // See CcxtVenueConfig.wsOrders for why this is per-venue opt-in.
+  wsOrders: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/gate.js')
     const Base = (module.default ?? module) as unknown as CcxtExchangeCtor

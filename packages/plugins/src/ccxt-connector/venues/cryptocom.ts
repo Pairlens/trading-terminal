@@ -271,6 +271,10 @@ export const cryptocomCcxtVenue: CcxtVenueConfig = {
   // BuyOrderRequiresPrice`) so it can compute the cost to spend; the trading
   // runtime fetches a reference price and passes it through.
   marketBuyRequiresPrice: true,
+  // Orders and cancels ride the venue's WS trade API — single static host,
+  // already routed by this venue's URL hooks and inside the CSP baseline.
+  // See CcxtVenueConfig.wsOrders for why this is per-venue opt-in.
+  wsOrders: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/cryptocom.js')
     const Base = (module.default ?? module) as unknown as CryptocomPatchableCtor

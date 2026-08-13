@@ -65,7 +65,18 @@ export const MEXC_ADAPTER_INFO: MarketAdapterInfo = {
     { key: 'apiKey', label: 'API Key', type: 'text', required: true },
     { key: 'apiSecret', label: 'API Secret', type: 'secret', required: true },
   ],
-  supportedTimeframes: ['1m', '5m', '15m', '30m', '1h', '2h', '4h', '1d', '1w', '1M'],
+  supportedTimeframes: [
+    '1m',
+    '5m',
+    '15m',
+    '30m',
+    '1h',
+    '2h',
+    '4h',
+    '1d',
+    '1w',
+    '1M',
+  ],
   iconUrl: ICON_URL,
 }
 
