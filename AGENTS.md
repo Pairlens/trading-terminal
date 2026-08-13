@@ -8,6 +8,7 @@ Pairlens is an AI-native crypto spot trading terminal. The primary distribution 
 - Before finalizing any work: `bun run typecheck && bun run lint && bun run format && bun run test` — all must pass.
 - Code style: Prettier (no semicolons, single quotes), TypeScript strict, Bun as the package manager (never npm/yarn).
 - Exchange credentials are local-only — the OS keychain on desktop, the encrypted credential vault in a browser — and must never be sent to or stored on the App Server.
+- The 14 CEX connectors are a bridge over a pinned, patched `ccxt@4.5.71` (`packages/plugins/src/ccxt-connector/`; patch in `patches/`). Never import the ccxt barrel — venues deep-import `ccxt/js/src/pro/<id>.js` — and after any ccxt bump, re-verify the venue-local bug patches and browser-verify the binary-frame venues (HTX, Upbit, MEXC): bun tests cannot catch browser-only frame handling. See the "CCXT bridge" section in CLAUDE.md.
 - The mobile shell lives entirely under `apps/terminal/src/mobile/` and is separable: it imports into the app, the app does not import from it (a test pins the three sanctioned exceptions). A helper both shells need goes in `src/hooks/` or `src/lib/`, never in `src/mobile/`.
 - User-facing strings are translated into 17 locales. Add new keys to `apps/terminal/src/locales/en/translation.json` and the other sixteen in the same change — a parity test enforces it.
 
