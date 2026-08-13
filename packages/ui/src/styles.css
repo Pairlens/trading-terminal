@@ -414,32 +414,46 @@
 
    The loading state is a real trendline shape with a short highlight
    travelling along it, not a grey bar: a row still fetching should read as
-   "a chart is coming here", which a bar does not say. Both animations drive
-   stroke-dashoffset against pathLength="1", so the numbers are fractions of
-   the path and work at any width the container query hands the chart. */
-.spark-sweep {
+   "a chart is coming here", which a bar does not say.
+
+   Both animations move a clip window across the chart's own coordinate
+   space rather than offsetting a dash pattern along the stroke. A dash is
+   the obvious way to draw a line on, but these charts stroke with
+   `vector-effect: non-scaling-stroke` inside a box that is stretched to fit
+   (`preserveAspectRatio="none"`): the browser then dashes the path in device
+   pixels while the pathLength="1" normalisation was measured in user units,
+   and the two only agree when the two lengths happen to match. A chart given
+   a wide slot — `w-full` in a markets table cell — draws its line for a
+   fraction of the width and stops. The clip window carries the viewBox's own
+   transform, so it stays honest at every size. */
+.spark-sweep-window {
+  transform-box: view-box;
+  transform-origin: 0 0;
   animation: spark-sweep 1.5s linear infinite;
 }
 @keyframes spark-sweep {
   from {
-    stroke-dashoffset: 1;
+    /* Fully off the left edge — the window is 25% of the box wide. */
+    transform: translateX(-25%);
   }
   to {
-    stroke-dashoffset: 0;
+    transform: translateX(100%);
   }
 }
 
 /* One-shot reveal when the candles land — the line draws itself in left to
    right while the fill comes up under it. */
-.spark-draw {
-  animation: spark-draw var(--dur-slow) var(--ease-out) both;
+.spark-wipe {
+  transform-box: view-box;
+  transform-origin: 0 0;
+  animation: spark-wipe var(--dur-slow) var(--ease-out) both;
 }
-@keyframes spark-draw {
+@keyframes spark-wipe {
   from {
-    stroke-dashoffset: 1;
+    transform: scaleX(0);
   }
   to {
-    stroke-dashoffset: 0;
+    transform: scaleX(1);
   }
 }
 .spark-fade-in {
@@ -483,7 +497,7 @@
   .tick-up,
   .tick-down,
   .panel-rise,
-  .spark-draw,
+  .spark-wipe,
   .spark-fade-in {
     animation: none;
   }
