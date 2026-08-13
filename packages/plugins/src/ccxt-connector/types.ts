@@ -46,6 +46,13 @@ export type CcxtMarketSeed = {
   type: 'spot'
   spot: true
   active: boolean
+  /**
+   * OKX's numeric instrument code, a top-level unified-market field its WS
+   * trade API requires (`createOrderWs` sends `instIdCode` in place of
+   * `instId`; the demo/EEA endpoint rejects orders without it — measured
+   * 2026-08-14, sCode 50014). Absent everywhere else.
+   */
+  instIdCode?: number
   precision?: { amount?: number; price?: number }
   limits?: Record<string, { min?: number; max?: number }>
   info?: Record<string, unknown>
