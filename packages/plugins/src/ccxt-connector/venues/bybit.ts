@@ -43,6 +43,7 @@ import { pageEndMs } from '@pairlens/market-engine/candle-paging'
 import { createCexConnectorManifest } from '../../cex-connector'
 import { createCcxtConnectorPlugin } from '../index'
 import {
+  BYBIT_DEFAULT_BOOK_DEPTH,
   applyBybitCcxtUrls,
   clampBybitBookDepth,
   resolveBybitRegion,
@@ -102,8 +103,8 @@ export const bybitMarketConnectorManifest: PluginManifest =
     trades: true,
   })
 
-/** What the native asks for, and what ccxt's spot enum accepts unchanged. */
-const BOOK_DEPTH = clampBybitBookDepth(50)
+/** Through the clamp so the value is enum-checked, not just asserted to be. */
+const BOOK_DEPTH = clampBybitBookDepth(BYBIT_DEFAULT_BOOK_DEPTH)
 
 export const bybitCcxtVenue: CcxtVenueConfig = {
   exchangeId: 'bybit',

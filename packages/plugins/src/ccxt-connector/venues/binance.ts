@@ -148,15 +148,21 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
       subscriptionLimitByStream: { spot: 1024, margin: 1024 },
     },
   },
-  // Under ccxt this no longer selects the native's `@depth20@100ms` snapshot
-  // channel: `watchOrderBook` always subscribes the incremental diff stream
-  // and spawns a REST `/api/v3/depth` snapshot per subscription (and per
-  // reconnect), with 20 only sizing that snapshot and the local book.
-  // Accepted: api.binance.com is CORS-open so the call works from every
-  // build, and the diff book is what ccxt checksums. If the zero-REST
-  // subscribe ever matters again, a subclass overriding `watchOrderBook`
-  // onto the partial-book stream is the kraken-ohlcv.ts pattern.
-  orderbookDepth: 20,
+  // ccxt caps the book it maintains at exactly this depth (`pro/binance.js`
+  // seeds `this.orderBook({}, limit)` from a REST snapshot of the same size),
+  // and Binance quotes BTC/USDT to the cent. At the 20 this shipped with, the
+  // whole book was a ~$2 band whose best level carried ~80% of the visible
+  // size, so the pane's cumulative bars pinned near full width and the ladder
+  // read as flat rather than the usual pyramid — measured live 2026-08-13,
+  // together with the depth pane and the liquidity heatmap, which bin the same
+  // levels and were seeing $4 of price. 500 reproduces OKX's 400-level `books`
+  // (the reference the pane's Auto grouping was tuned against) across the
+  // liquidity range: BTC 0.19% of price vs OKX's 0.36%, ETH/SOL/DOGE within
+  // 0.01% of it. 1000 overshoots — SOL and DOGE past a 15% band. The cost is
+  // one REST snapshot per subscribe (`/api/v3/depth` weight 25 at this limit,
+  // against a 6000/min budget); the WS side is the same `@depth@100ms` diff
+  // stream at any depth.
+  orderbookDepth: 500,
   // Binance spot answers trigger/stop probes from the SAME open-orders
   // endpoint (the conditional branch is futures-only), so the second
   // fetchOpenOrders pass would be a duplicate signed request.
