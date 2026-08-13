@@ -276,6 +276,15 @@ export const cryptocomCcxtVenue: CcxtVenueConfig = {
     const Base = (module.default ?? module) as unknown as CryptocomPatchableCtor
     return patchCryptocom(Base) as unknown as CcxtExchangeCtor
   },
+  options: {
+    // No app-level ping and no pong handler (the venue's own heartbeat is
+    // server-initiated and answered in handleMessage, which never touches
+    // `lastPong`), so ccxt's keepalive degrades to the runtime's protocol
+    // PING: under bun it kills a healthy socket every keepAlive ×
+    // maxPingPongMisses; in a browser it cannot fire at all. Off, as on Gate
+    // and Bitfinex — liveness lives with the hub's inbound-silence watchdog.
+    streaming: { keepAlive: 0 },
+  },
   // `2h` is absent from ccxt's table but valid on the wire, and both
   // `fetchOHLCV` and `watchOHLCV` fall back to the raw key — restated so the
   // channel name is a decision rather than a fallthrough. `3d` stays unmapped

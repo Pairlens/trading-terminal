@@ -132,6 +132,14 @@ export const bitvavoCcxtVenue: CcxtVenueConfig = {
     const module = await import('ccxt/js/src/pro/bitvavo.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor
   },
+  options: {
+    // No app-level ping and no pong handler, so ccxt's keepalive degrades to
+    // the runtime's protocol PING: under bun it kills a healthy socket every
+    // keepAlive × maxPingPongMisses; in a browser it cannot fire at all. Off,
+    // as on Gate and Bitfinex — liveness lives with the hub's inbound-silence
+    // watchdog.
+    streaming: { keepAlive: 0 },
+  },
   // Free-form depth on this venue; the native subscribes the full book.
   orderbookDepth: undefined,
   maxHistoryLimit: 1440,

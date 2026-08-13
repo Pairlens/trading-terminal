@@ -123,6 +123,13 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
     return (module.default ?? module) as unknown as CcxtExchangeCtor
   },
   options: {
+    // No app-level ping and no pong handler, so ccxt's keepalive degrades to
+    // the runtime's protocol PING: under bun the pong listener is never
+    // attached (`isNode && !isBun`), `lastPong` never advances, and ccxt kills
+    // a healthy socket every keepAlive × maxPingPongMisses; in a browser the
+    // same path pretends a pong arrived and detects nothing. Off, as on Gate
+    // and Bitfinex — liveness lives with the hub's inbound-silence watchdog.
+    streaming: { keepAlive: 0 },
     options: {
       // ccxt's binance is the only pro class that shards subscriptions across
       // numbered stream URLs (`…/ws/<index>`), one per DISTINCT subscription

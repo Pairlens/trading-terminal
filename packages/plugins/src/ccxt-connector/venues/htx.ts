@@ -117,6 +117,13 @@ export const htxCcxtVenue: CcxtVenueConfig = {
     return (module.default ?? module) as unknown as CcxtExchangeCtor
   },
   options: {
+    // No app-level ping and no pong handler (HTX's own ping/pong rides inside
+    // gzipped frames ccxt answers in handleMessage, which never touches
+    // `lastPong`), so ccxt's keepalive degrades to the runtime's protocol
+    // PING: under bun it kills a healthy socket every keepAlive ×
+    // maxPingPongMisses; in a browser it cannot fire at all. Off, as on Gate
+    // and Bitfinex — liveness lives with the hub's inbound-silence watchdog.
+    streaming: { keepAlive: 0 },
     options: {
       // Object form, not the array the other venues take — see the header.
       fetchMarkets: { types: { spot: true, linear: false, inverse: false } },

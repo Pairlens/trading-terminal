@@ -139,6 +139,14 @@ export const coinbaseCcxtVenue: CcxtVenueConfig = {
     const module = await import('ccxt/js/src/pro/coinbase.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor
   },
+  options: {
+    // No app-level ping and no pong handler, so ccxt's keepalive degrades to
+    // the runtime's protocol PING: under bun it kills a healthy socket every
+    // keepAlive × maxPingPongMisses; in a browser it cannot fire at all. Off,
+    // as on Gate and Bitfinex — liveness lives with the hub's inbound-silence
+    // watchdog.
+    streaming: { keepAlive: 0 },
+  },
   // `l2_data` carries the whole book; ccxt ignores the depth argument here.
   orderbookDepth: undefined,
   maxHistoryLimit: 300,
