@@ -71,7 +71,19 @@ export function computeTickOptions(
   return options.length > 0 ? options : [tickSize]
 }
 
-// Find the largest tick that produces >= targetRows grouped buckets.
+// Widest slice of the instrument's own price that Auto will let one side of the
+// book span. "Enough buckets" alone is only a lower bound, so the tick it picks
+// tracks however deep the venue's book happens to reach: a venue that pushes
+// its entire ladder (Binance's SHIB/USDT tops out around 260 levels, and those
+// run most of the way to zero) satisfies the bucket count at a tick two decades
+// too coarse, and the pane ends up quoting a price range nobody trades in.
+// Measured across the bundled venues, every liquid pair clears 6% with room to
+// spare — BTC lands near 0.2%, SOL and DOGE near 3% — so the cap only ever
+// bites the degenerate books.
+export const MAX_AUTO_BAND_FRACTION = 0.06
+
+// Find the largest tick that produces >= targetRows grouped buckets without
+// spanning more than MAX_AUTO_BAND_FRACTION of the price.
 // When raw levels are sparse (e.g. books5 = 5 levels), use smallest tick
 // to avoid over-grouping.
 export function computeAutoTickIndex(
@@ -85,8 +97,13 @@ export function computeAutoTickIndex(
   // With very few raw levels, don't group at all
   if (levels.length <= targetRows) return 0
 
+  // targetRows buckets of `tick` is the band this side will actually show.
+  // levels[0] is the best price (bids descending, asks ascending).
+  const maxTick = (levels[0].price * MAX_AUTO_BAND_FRACTION) / targetRows
+
   for (let i = options.length - 1; i >= 0; i--) {
     const tick = options[i]
+    if (tick > maxTick) continue
     const buckets = new Set<number>()
     for (const { price } of levels) {
       buckets.add(Math.floor(price / tick) * tick)

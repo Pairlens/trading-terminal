@@ -112,8 +112,18 @@ const WS_TIMEFRAME_GAPS = { '3d': '3D', '1M': '1M' }
 /** Bitget WS orderbook channels — anything else degrades to full `books`. */
 export const BITGET_BOOK_DEPTHS = [1, 5, 15, 50] as const
 
-/** The native's channel is `books15`; ccxt maps depth 15 onto it exactly. */
-export const BITGET_DEFAULT_BOOK_DEPTH = 15
+/**
+ * `books50` — the deepest snapshot channel Bitget serves.
+ *
+ * The native's channel was `books15`, and 15 levels is the same starvation
+ * Binance shipped with: measured live 2026-08-13 on BTC/USDT, the top bid held
+ * 82% of the depth the pane could show, so its cumulative bars sat pinned near
+ * full width instead of stepping down a ladder. `books50` brings it back in
+ * line with the rest of the fleet. Anything above 50 falls off ccxt's channel
+ * table onto the incremental `books` feed, which is a different (and unasked
+ * for) sequencing contract.
+ */
+export const BITGET_DEFAULT_BOOK_DEPTH = 50
 
 /** Snap a requested depth up to the smallest `books<N>` channel covering it. */
 export function clampBitgetBookDepth(requested?: number): number {

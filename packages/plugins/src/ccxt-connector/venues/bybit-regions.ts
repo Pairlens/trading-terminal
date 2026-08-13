@@ -86,8 +86,24 @@ export function resolveBybitRegion(country: string): BybitCcxtRegion | null {
  */
 export const BYBIT_SPOT_BOOK_DEPTHS = [1, 50, 200, 1000] as const
 
-/** The native connector's channel is `orderbook.50` — ccxt's default matches. */
-export const BYBIT_DEFAULT_BOOK_DEPTH = 50
+/**
+ * `orderbook.200` — the depth the terminal subscribes at.
+ *
+ * The native connector's channel was `orderbook.50`, which ccxt also defaults
+ * to, and 50 levels is a ~0.04% band on BTC/USDT with roughly a quarter of the
+ * visible depth resting on the best level (measured 2026-08-13). 200 widens it
+ * to ~0.19%, matching OKX's `books` and Binance's 500, and the pane's Auto
+ * grouping lands on the same tick across all three.
+ *
+ * ByBit ties push rate to depth on spot, and that trade is deliberate: over 60
+ * frames of BTC/USDT the median gap was 21ms at `orderbook.50` and 99ms at
+ * `orderbook.200` (the docs quote 20ms and 200ms; 200 measures twice as fast
+ * as advertised). Neither rate is one the pane can show — its depth bars ease
+ * over 300ms — so the frames 50 bought were being coalesced away regardless.
+ * The bridge copies every level of every frame across the plugin boundary, and
+ * that total barely moves: 4.9k levels/s at 50, 4.1k at 200.
+ */
+export const BYBIT_DEFAULT_BOOK_DEPTH = 200
 
 /**
  * Snap a requested depth up to the smallest ByBit spot channel that covers it.
