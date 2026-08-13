@@ -267,6 +267,10 @@ export const cryptocomCcxtVenue: CcxtVenueConfig = {
     { key: 'apiSecret', required: true },
   ],
   defaultMode: 'paper',
+  // ccxt gates a base-denominated market buy on a price here (`createMarket-
+  // BuyOrderRequiresPrice`) so it can compute the cost to spend; the trading
+  // runtime fetches a reference price and passes it through.
+  marketBuyRequiresPrice: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/cryptocom.js')
     const Base = (module.default ?? module) as unknown as CryptocomPatchableCtor
@@ -289,6 +293,13 @@ export const cryptocomCcxtVenue: CcxtVenueConfig = {
     const api = exchange.urls['api'] as Record<string, unknown>
     for (const [key, value] of Object.entries(bases)) api[key] = value
   },
+  // `setSandboxMode` replaces `urls.api` with Crypto.com's `urls.test`, which
+  // has NO `ws` key at all — ccxt then throws reading
+  // `urls.api.ws.private` on every private-stream attempt, so a paper slot
+  // could never stream orders or balances. Reinstall the UAT REST bases and
+  // both sockets. Runs only on paper instances, so the read path keeps
+  // production data (the sandbox's book is synthetic).
+  applyPaperUrls: (exchange) => applyCryptocomPaperUrls(exchange),
   synthesizeMarket: (pair) => {
     const [base, quote] = pair.split('-')
     if (!base || !quote) return null

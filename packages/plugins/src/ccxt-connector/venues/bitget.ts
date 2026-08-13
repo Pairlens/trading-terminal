@@ -172,6 +172,10 @@ export const bitgetCcxtVenue: CcxtVenueConfig = {
     { key: 'passphrase', required: true },
   ],
   defaultMode: 'paper',
+  // ccxt gates a base-denominated market buy on a price here (`createMarket-
+  // BuyOrderRequiresPrice`) so it can compute the cost to spend; the trading
+  // runtime fetches a reference price and passes it through.
+  marketBuyRequiresPrice: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/bitget.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor
@@ -181,6 +185,25 @@ export const bitgetCcxtVenue: CcxtVenueConfig = {
       // Merged into the pro describe's table by ccxt's deepExtend, not
       // replacing it — only the two missing keys are added.
       timeframes: WS_TIMEFRAME_GAPS,
+      // ccxt's REST spot granularity table asks for the UTC-aligned variants
+      // (`1Dutc`) for timeframes >= 6h, while the WS candle channels — the
+      // pro table above included — are Hong-Kong aligned (`candle1D`): two
+      // bar conventions 8 h apart, so the live daily bar could never land on
+      // a REST bar. Restore the non-UTC granularities the native used
+      // (`TF_TO_REST`), so both transports speak UTC+8. deepExtend merges
+      // per key; the sub-6h entries keep ccxt's defaults.
+      fetchOHLCV: {
+        timeframes: {
+          spot: {
+            '6h': '6h',
+            '12h': '12h',
+            '1d': '1day',
+            '3d': '3day',
+            '1w': '1week',
+            '1M': '1M',
+          },
+        },
+      },
     },
   },
   // Repairs `1M → 1m` in the REST describe's top-level table (see header).

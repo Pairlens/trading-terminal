@@ -38,7 +38,11 @@ import {
 } from '../venues/binance'
 import { okxCcxtVenue, okxMarketConnectorManifest } from '../venues/okx'
 import type { MarketsStorage } from '../markets'
-import type { CcxtMarketSeed, CcxtVenueConfig } from '../types'
+import type {
+  CcxtExchangeCtor,
+  CcxtMarketSeed,
+  CcxtVenueConfig,
+} from '../types'
 import type { PluginInstance } from '@pairlens/plugin-system/types'
 import type { OrderParams } from '@pairlens/market-engine/types'
 
@@ -379,6 +383,141 @@ describe('buildCcxtOrderCall', () => {
       VENUE,
     )
     expect(call.kind).toBe('order')
+  })
+
+  it('marks a base market buy for a reference price where the venue requires one', () => {
+    // Six venues (Gate, Coinbase, Bitget, HTX, Crypto.com, Upbit) throw
+    // client-side on a base-denominated market buy without a price
+    // (`createMarketBuyOrderRequiresPrice`) — the runtime must fill one in.
+    const venue = { ...VENUE, marketBuyRequiresPrice: true }
+    const buy = buildCcxtOrderCall(BASE_ORDER, {}, venue)
+    expect(buy.kind === 'order' && buy.needsReferencePrice).toBe(true)
+
+    // Sells, limit orders and quote-denominated buys are never gated.
+    const sell = buildCcxtOrderCall({ ...BASE_ORDER, side: 'sell' }, {}, venue)
+    expect(sell.kind === 'order' && sell.needsReferencePrice).toBeUndefined()
+    const limit = buildCcxtOrderCall(
+      { ...BASE_ORDER, type: 'limit', price: '60000' },
+      {},
+      venue,
+    )
+    expect(limit.kind === 'order' && limit.needsReferencePrice).toBeUndefined()
+    const quote = buildCcxtOrderCall(
+      { ...BASE_ORDER, size: '25', tgtCcy: 'quote_ccy' },
+      { createMarketBuyOrderWithCost: true },
+      venue,
+    )
+    expect(quote.kind).toBe('cost')
+  })
+
+  it('marks a market trigger buy too — the venue gate does not care about triggers', () => {
+    const call = buildCcxtOrderCall(
+      { ...BASE_ORDER, trigger: { triggerPrice: '61000', triggerType: 'sl' } },
+      { createStopLossOrder: true },
+      { ...VENUE, marketBuyRequiresPrice: true },
+    )
+    expect(call.kind === 'order' && call.needsReferencePrice).toBe(true)
+  })
+})
+
+describe('reference price for gated market buys', () => {
+  type CreateOrderArgs = {
+    symbol: string
+    type: string
+    side: string
+    amount: number
+    price: number | undefined
+  }
+
+  function gatedVenue(options: { tickerFails?: boolean } = {}) {
+    const created: Array<CreateOrderArgs> = []
+    let tickerCalls = 0
+    class FakeGatedExchange {
+      id = 'fakex'
+      has: Record<string, unknown> = {}
+      timeframes: Record<string, string> = {}
+      urls: Record<string, unknown> = { api: {} }
+      options: Record<string, unknown> = {}
+      markets: Record<string, unknown> | undefined
+      setMarkets(markets: Array<CcxtMarketSeed>) {
+        this.markets = Object.fromEntries(markets.map((m) => [m.symbol, m]))
+        return this.markets
+      }
+      async loadMarkets() {
+        return this.markets
+      }
+      market(symbol: string) {
+        return (this.markets?.[symbol] ?? {}) as Record<string, unknown>
+      }
+      async fetchTicker() {
+        tickerCalls++
+        if (options.tickerFails) throw new Error('ticker down')
+        return { last: 64_250 }
+      }
+      async createOrder(
+        symbol: string,
+        type: string,
+        side: string,
+        amount: number,
+        price?: number,
+      ) {
+        created.push({ symbol, type, side, amount, price })
+        return { id: 'oid-1' }
+      }
+      async close() {}
+    }
+    const venue: CcxtVenueConfig = {
+      exchangeId: 'fakex',
+      marketId: 'fakex',
+      displayName: 'Fakex',
+      credentialKeys: [
+        { key: 'apiKey', required: true },
+        { key: 'apiSecret', required: true },
+      ],
+      defaultMode: 'live',
+      marketBuyRequiresPrice: true,
+      maxHistoryLimit: 1000,
+      loadExchangeClass: async () =>
+        FakeGatedExchange as unknown as CcxtExchangeCtor,
+    }
+    return { venue, created, tickerCalls: () => tickerCalls }
+  }
+
+  it('fetches the venue ticker and passes it as the price argument', async () => {
+    const { venue, created, tickerCalls } = gatedVenue()
+    const plugin = await track(
+      await build(venue, binanceMarketConnectorManifest, BINANCE_MARKET, {
+        mode: 'live',
+      }),
+    )
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'market',
+      size: '0.001',
+    })
+    expect(result.success).toBe(true)
+    expect(tickerCalls()).toBe(1)
+    expect(created).toHaveLength(1)
+    expect(created[0]?.price).toBe(64_250)
+    expect(created[0]?.amount).toBe(0.001)
+  })
+
+  it('rejects with an actionable message when no reference price is available', async () => {
+    const { venue, created } = gatedVenue({ tickerFails: true })
+    const plugin = await track(
+      await build(venue, binanceMarketConnectorManifest, BINANCE_MARKET, {
+        mode: 'live',
+      }),
+    )
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'market',
+      size: '0.001',
+    })
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('reference price')
+    // Nothing may reach the wire on the failure path.
+    expect(created).toHaveLength(0)
   })
 })
 

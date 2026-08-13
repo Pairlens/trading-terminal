@@ -1027,6 +1027,101 @@ describe('upbit host routing', () => {
   })
 })
 
+// ── Paper socket parity ────────────────────────────────────────────────────
+
+/**
+ * Gate's merged `urls.test` carries REST `public`/`private` and WS
+ * `swap`/`future`/`option` — but no top-level `spot`, the key ccxt's private
+ * spot stream resolves through `getUrlByMarketType('spot')`.
+ */
+const GATE: Harness = {
+  name: 'gate',
+  venue: gateCcxtVenue,
+  seed: () =>
+    fake({
+      api: {
+        public: { spot: 'https://api.gateio.ws/api/v4' },
+        private: { spot: 'https://api.gateio.ws/api/v4' },
+      },
+      test: {
+        public: { spot: 'https://api-testnet.gateapi.io/api/v4' },
+        private: { spot: 'https://api-testnet.gateapi.io/api/v4' },
+        swap: { usdt: 'wss://ws-testnet.gate.com/v4/ws/futures/usdt' },
+      },
+    }),
+  read: (exchange) => {
+    const api = exchange.urls['api'] as Record<string, unknown>
+    const rest = api['private'] as Record<string, unknown> | undefined
+    return {
+      wsSpot: String(api['spot'] ?? ''),
+      restSpotPrivate: String(rest?.['spot'] ?? ''),
+    }
+  },
+}
+
+/**
+ * Crypto.com's merged `urls.test` is `{ v1, v2, derivatives, public, private }`
+ * with no `ws` key at all — ccxt reads `urls.api.ws.private` for the private
+ * stream, which threw on every paper attempt before `applyPaperUrls`.
+ */
+const CRYPTOCOM: Harness = {
+  name: 'cryptocom',
+  venue: cryptocomCcxtVenue,
+  seed: () =>
+    fake({
+      api: {
+        v1: 'https://api.crypto.com/exchange/v1',
+        v2: 'https://api.crypto.com/v2',
+        ws: {
+          public: 'wss://stream.crypto.com/exchange/v1/market',
+          private: 'wss://stream.crypto.com/exchange/v1/user',
+        },
+      },
+      test: {
+        v1: 'https://uat-api.3ona.co/exchange/v1',
+        v2: 'https://uat-api.3ona.co/v2',
+        derivatives: 'https://uat-api.3ona.co/v2',
+        public: 'wss://uat-stream.3ona.co/exchange/v1/market',
+        private: 'wss://uat-stream.3ona.co/exchange/v1/user',
+      },
+    }),
+  read: (exchange) => {
+    const api = exchange.urls['api'] as Record<string, unknown>
+    const ws = api['ws'] as Record<string, unknown> | undefined
+    return {
+      restV1: String(api['v1'] ?? ''),
+      wsPublic: String(ws?.['public'] ?? ''),
+      wsPrivate: String(ws?.['private'] ?? ''),
+    }
+  },
+}
+
+describe('paper socket parity', () => {
+  // Both venues ENTER the sandbox successfully, which is exactly why the swap
+  // is dangerous: `checkPaper` waves the order through while the private
+  // stream has lost its socket URL. The probes assert the sockets survive.
+  it('gate: a paper build still resolves the spot socket and testnet REST', () => {
+    asHeadless()
+    const probe = route(GATE, '', AUTHED_PAPER_CTX)
+    expect(probe['paperActive']).toBe('true')
+    expect(probe['wsSpot']).toBe('wss://ws-testnet.gate.com/v4/ws/spot')
+    expect(probe['restSpotPrivate']).toBe(
+      'https://api-testnet.gateapi.io/api/v4',
+    )
+  })
+
+  it('cryptocom: a paper build still resolves both sockets on the UAT hosts', () => {
+    asHeadless()
+    const probe = route(CRYPTOCOM, '', AUTHED_PAPER_CTX)
+    expect(probe['paperActive']).toBe('true')
+    expect(probe['wsPrivate']).toBe('wss://uat-stream.3ona.co/exchange/v1/user')
+    expect(probe['wsPublic']).toBe(
+      'wss://uat-stream.3ona.co/exchange/v1/market',
+    )
+    expect(probe['restV1']).toBe('https://uat-api.3ona.co/exchange/v1')
+  })
+})
+
 // ── The country-free seven ─────────────────────────────────────────────────
 
 describe('country-agnostic venues', () => {

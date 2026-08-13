@@ -108,6 +108,13 @@ export const kucoinCcxtVenue: CcxtVenueConfig = {
     { key: 'passphrase', required: true },
   ],
   defaultMode: 'paper',
+  // ccxt has no KuCoin sandbox (`urls.test` is declared-but-undefined, so
+  // `setSandboxMode` cannot take), which used to make every paper order a
+  // hard refusal. `test: true` is ccxt's documented dry run instead: the spot
+  // order routes to `/api/v1/orders/test`, which validates size, precision
+  // and balance against the REAL account and never reaches the matching
+  // engine.
+  paperOrderParams: { test: true },
   requiresDesktop: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/kucoin.js')

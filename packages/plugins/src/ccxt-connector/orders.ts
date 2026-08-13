@@ -20,10 +20,11 @@
  *   than a hand-kept table, every branch reads the flag ccxt already publishes
  *   and refuses with a sentence naming the venue when it is absent.
  * - **Paper is not universal.** Six venues have a sandbox ccxt can switch to;
- *   Kraken has a `validate: true` dry run instead; the rest have neither. A
- *   paper slot on a venue with neither is REFUSED. Falling through to the live
- *   endpoint would execute a real trade against a credential the user marked
- *   paper, which is the worst failure mode in this file.
+ *   KuCoin and Coinbase ride their venue's dry-run/preview endpoint via
+ *   `paperOrderParams` instead; the rest have neither. A paper slot on a venue
+ *   with neither is REFUSED. Falling through to the live endpoint would
+ *   execute a real trade against a credential the user marked paper, which is
+ *   the worst failure mode in this file.
  * - **Secrets must not leak.** ccxt error messages carry the response body and,
  *   on some venues, the echoed request. Every message that leaves this module —
  *   returned or logged — goes through `redactSecrets` first.
@@ -202,6 +203,12 @@ export type CcxtOrderCall =
       amount: number
       price: number | undefined
       params: Record<string, unknown>
+      /**
+       * The venue computes a market buy's cost as amount × price and throws
+       * without one (`createMarketBuyOrderRequiresPrice`). The runtime must
+       * fill `price` with a reference price before making the call.
+       */
+      needsReferencePrice?: true
     }
   | {
       kind: 'cost'
@@ -226,7 +233,10 @@ export function buildCcxtOrderCall(
   has: OrderCapabilities,
   venue: Pick<
     CcxtVenueConfig,
-    'displayName' | 'orderParams' | 'supportsTriggerOrders'
+    | 'displayName'
+    | 'orderParams'
+    | 'supportsTriggerOrders'
+    | 'marketBuyRequiresPrice'
   >,
 ): CcxtOrderCall {
   const label = venue.displayName
@@ -243,6 +253,16 @@ export function buildCcxtOrderCall(
 
   const params: Record<string, unknown> = { ...venue.orderParams }
   if (order.clientOrderId) params['clientOrderId'] = order.clientOrderId
+
+  // Six venues gate a BASE-denominated market buy on a price so they can
+  // compute the cost to spend; without one ccxt throws client-side and the raw
+  // sentence lands in the order pane. The quote-denominated path is exempt —
+  // `createMarketBuyOrderWithCost` disables the gate itself.
+  const needsReferencePrice =
+    venue.marketBuyRequiresPrice === true &&
+    order.type === 'market' &&
+    order.side === 'buy' &&
+    order.tgtCcy !== 'quote_ccy'
 
   if (order.trigger) {
     const triggerPrice = Number(order.trigger.triggerPrice)
@@ -294,6 +314,7 @@ export function buildCcxtOrderCall(
       amount: size,
       price,
       params,
+      ...(needsReferencePrice ? { needsReferencePrice: true as const } : {}),
     }
   }
 
@@ -318,6 +339,7 @@ export function buildCcxtOrderCall(
     amount: size,
     price,
     params,
+    ...(needsReferencePrice ? { needsReferencePrice: true as const } : {}),
   }
 }
 
@@ -394,6 +416,25 @@ export class CcxtTradingRuntime {
       const call = buildCcxtOrderCall(order, exchange.has, this.opts.venue)
       if (call.kind === 'reject') return { success: false, error: call.error }
 
+      // The venue computes a base-denominated market buy's cost as
+      // amount × price (`createMarketBuyOrderRequiresPrice`), so hand it the
+      // current price — the same base→quote conversion the native connectors
+      // did. The venue fills by that cost, so the executed base amount can
+      // drift a tick from the requested size; the alternative is a hard
+      // client-side rejection.
+      let price = call.kind === 'order' ? call.price : undefined
+      if (call.kind === 'order' && call.needsReferencePrice) {
+        const reference = await this.referencePrice(exchange, call.symbol)
+        if (reference === null) {
+          const quote = call.symbol.split('/')[1] ?? 'the quote asset'
+          return {
+            success: false,
+            error: `${this.opts.venue.displayName} sizes market buys by cost and no reference price is available — try a limit order, or size the order in ${quote}`,
+          }
+        }
+        price = reference
+      }
+
       const params =
         order.mode === 'paper' && !host.paperActive
           ? { ...call.params, ...this.opts.venue.paperOrderParams }
@@ -409,14 +450,7 @@ export class CcxtTradingRuntime {
               exchange.createOrder,
               exchange,
               `${this.opts.venue.displayName} cannot place orders`,
-            )(
-              call.symbol,
-              call.type,
-              call.side,
-              call.amount,
-              call.price,
-              params,
-            )
+            )(call.symbol, call.type, call.side, call.amount, price, params)
 
       const orderId = stringOf(raw['id'])
       return orderId ? { success: true, orderId } : { success: true }
@@ -570,6 +604,29 @@ export class CcxtTradingRuntime {
     return {
       success: false,
       error: `${this.opts.venue.displayName} has no paper trading environment — switch this credential to live or paper-trade on another venue`,
+    }
+  }
+
+  /**
+   * A current price for the base→cost conversion, from the venue's own ticker.
+   * `last` first — it is what the native connectors converted with — then the
+   * book, which is never empty on a listed pair even when the day has no
+   * prints yet.
+   */
+  private async referencePrice(
+    exchange: CcxtExchangeLike,
+    symbol: string,
+  ): Promise<number | null> {
+    if (typeof exchange.fetchTicker !== 'function') return null
+    try {
+      const ticker = await exchange.fetchTicker(symbol)
+      for (const key of ['last', 'close', 'ask', 'bid']) {
+        const value = numberOf(ticker[key])
+        if (value !== null && value > 0) return value
+      }
+      return null
+    } catch {
+      return null
     }
   }
 

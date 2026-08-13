@@ -108,6 +108,10 @@ export const htxCcxtVenue: CcxtVenueConfig = {
   ],
   // No sandbox; CREDENTIAL_SCHEMAS lists HTX as live-only.
   defaultMode: 'live',
+  // ccxt gates a base-denominated market buy on a price here (`createMarket-
+  // BuyOrderRequiresPrice`) so it can compute the cost to spend; the trading
+  // runtime fetches a reference price and passes it through.
+  marketBuyRequiresPrice: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/htx.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor

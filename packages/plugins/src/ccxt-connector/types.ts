@@ -191,6 +191,10 @@ export type CcxtExchangeLike = {
     limit?: number,
     params?: Record<string, unknown>,
   ) => Promise<Array<CcxtOhlcvRow>>
+  fetchTicker?: (
+    symbol: string,
+    params?: Record<string, unknown>,
+  ) => Promise<CcxtTickerLike>
   fetchTickers: (
     symbols?: Array<string>,
     params?: Record<string, unknown>,
@@ -355,6 +359,18 @@ export type CcxtVenueConfig = {
    * Params merged into every `createOrder` call on this venue.
    */
   orderParams?: Record<string, unknown>
+  /**
+   * The venue's ccxt class gates BASE-denominated market buys on a price
+   * (`createMarketBuyOrderRequiresPrice`) so it can compute the cost to spend
+   * — without one, `createOrder` throws client-side before any request. Six of
+   * the fourteen are in this state (Gate, Coinbase, Bitget, HTX, Crypto.com,
+   * Upbit); the flag cannot be read generically at runtime because it hides in
+   * a different `options` corner per venue (Bitget nests it under
+   * `options.createOrder`, Crypto.com defaults it true with no entry at all).
+   * Set it and the trading runtime fetches a reference price and passes it
+   * through, restoring the native connectors' base→quote conversion.
+   */
+  marketBuyRequiresPrice?: boolean
   /**
    * Params that make an order a dry run on a venue with no sandbox
    * environment (Kraken: `{ validate: true }`). Without either, a paper slot

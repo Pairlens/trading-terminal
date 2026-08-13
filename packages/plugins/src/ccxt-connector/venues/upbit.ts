@@ -119,6 +119,10 @@ export const upbitCcxtVenue: CcxtVenueConfig = {
     { key: 'apiSecret', required: true },
   ],
   defaultMode: 'live',
+  // ccxt gates a base-denominated market buy on a price here (`createMarket-
+  // BuyOrderRequiresPrice`) so it can compute the cost to spend; the trading
+  // runtime fetches a reference price and passes it through.
+  marketBuyRequiresPrice: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/upbit.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor
