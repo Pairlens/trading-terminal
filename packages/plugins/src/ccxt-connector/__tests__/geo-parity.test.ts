@@ -611,6 +611,50 @@ describe('okx host routing', () => {
       )
     })
   })
+
+  /**
+   * The account-entity override (parity with 53cf500a). An OKX key exists on
+   * exactly ONE regional entity — the one the account was registered with —
+   * and the user's country is only a guess at it. A credential that declares
+   * its home entity routes there regardless of where the user is trading
+   * from; '' or absent keeps the by-country guess.
+   */
+  describe('account entity outranks country', () => {
+    const ENTITY_CASES: Array<[string, Country, string, string]> = [
+      // entity, country, rest origin, ws host
+      ['eea', 'KR', 'https://eea.okx.com', 'wseea.okx.com'],
+      ['eea', '', 'https://eea.okx.com', 'wseea.okx.com'],
+      ['us', 'ES', 'https://us.okx.com', 'wsus.okx.com'],
+      ['global', 'ES', 'https://www.okx.com', 'ws.okx.com'],
+      ['', 'ES', 'https://eea.okx.com', 'wseea.okx.com'],
+    ]
+
+    for (const [entity, country, rest, wsHost] of ENTITY_CASES) {
+      it(`okx entity=${entity || '(auto)'} country=${country || '(unset)'}: authed calls ride the account's entity`, () => {
+        asHeadless()
+        const probe = route(OKX, country, { ...AUTHED_CTX, entity })
+        expect(probe['rest']).toBe(rest)
+        expect(probe['wsPrivate']).toBe(`wss://${wsHost}:8443/ws/v5/private`)
+      })
+    }
+
+    it('okx entity=eea: the demo socket is the ENTITY region, not the country', () => {
+      // The scenario the authenticated demo E2E hit: an EEA demo key, a user
+      // whose country setting says something else, and a global `wspap`
+      // socket that answers 60032.
+      asHeadless()
+      const probe = route(OKX, 'KR', { ...AUTHED_PAPER_CTX, entity: 'eea' })
+      expect(probe['paperActive']).toBe('true')
+      expect(probe['rest']).toBe('https://eea.okx.com')
+      expect(probe['wsPrivate']).toBe('wss://wseeapap.okx.com:8443/ws/v5/private')
+    })
+
+    it('okx entity=eea: no CORS fallback for an authed browser instance', () => {
+      asHostedBrowser()
+      const probe = route(OKX, 'KR', { ...AUTHED_CTX, entity: 'eea' })
+      expect(probe['rest']).toBe('https://eea.okx.com')
+    })
+  })
 })
 
 // ── ByBit ──────────────────────────────────────────────────────────────────

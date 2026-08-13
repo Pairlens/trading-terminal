@@ -133,6 +133,11 @@ export class CcxtPrivateStream implements CexPrivateWsClient<CexCredentials> {
     const host = create({
       venue: this.opts.venue,
       credentials: mapped,
+      // The account's home entity (venues that declare one — OKX). The demo
+      // sockets are regional too: an EEA key logging in on the global demo
+      // host gets 60032, so `applyPaperUrls` needs the entity as much as the
+      // live path does.
+      entity: credentials['entity'] ?? '',
       paper,
       onInbound: () => this.noteInbound(),
       onError: (scope, error) => this.warn(scope, error),

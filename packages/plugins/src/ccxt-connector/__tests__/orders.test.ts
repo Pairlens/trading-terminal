@@ -820,6 +820,54 @@ describe('okx through the spec hooks', () => {
     }
   })
 
+  it("routes by the account's entity when the credential declares one", async () => {
+    // Parity with 53cf500a: an OKX key exists on exactly one regional entity,
+    // and the user's country is only a guess at it. A KR user whose account
+    // lives on the EEA entity must sign against eea.okx.com, not www.
+    const stub = stubFetch({ routes: [['/api/v5/', ACK]] })
+    try {
+      const plugin = await track(
+        await build(okxCcxtVenue, okxMarketConnectorManifest, OKX_MARKET, {
+          mode: 'live',
+          country: 'KR',
+          entity: 'eea',
+        }),
+      )
+      await place(plugin, { side: 'buy', type: 'market', size: '0.001' }, 'KR')
+      expect(stub.captured.at(-1)?.url).toContain('https://eea.okx.com/')
+    } finally {
+      stub.restore()
+    }
+  })
+
+  it('explains 50119 as a wrong-entity rejection, naming the host', async () => {
+    // The venue's answer to a key on the wrong entity reads like a typo'd
+    // key. The describeTradingError hook turns it into the actual fix.
+    const stub = stubFetch({
+      routes: [
+        ['/api/v5/', { code: '50119', msg: "API key doesn't exist", data: [] }],
+      ],
+    })
+    try {
+      const plugin = await track(
+        await build(okxCcxtVenue, okxMarketConnectorManifest, OKX_MARKET, {
+          mode: 'live',
+          entity: 'eea',
+        }),
+      )
+      const result = await place(plugin, {
+        side: 'buy',
+        type: 'market',
+        size: '0.001',
+      })
+      expect(result.success).toBe(false)
+      expect(result.error).toContain('eea.okx.com')
+      expect(result.error).toContain('regional entity')
+    } finally {
+      stub.restore()
+    }
+  })
+
   it('cancels a trigger order through the algo endpoint', async () => {
     const stub = stubFetch({ routes: [['/api/v5/', ACK]] })
     try {

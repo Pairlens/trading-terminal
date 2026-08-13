@@ -221,6 +221,16 @@ export type CcxtUrlContext = {
   authed: boolean
   /** The instance is being routed at the venue's sandbox/demo environment. */
   paper: boolean
+  /**
+   * The credential's declared home entity, for venues whose keys exist on
+   * exactly one regional legal entity (OKX: 'global' | 'eea' | 'us'). Routing
+   * by the user's country is only a guess at that entity, and it is wrong for
+   * anyone trading away from where they registered — the venue then disowns
+   * the key (OKX 50119) in a way that reads like a typo. Absent or '' means
+   * "route by country"; only authed instances can carry one, because only a
+   * credential has a home.
+   */
+  entity?: string
 }
 
 /** Per-venue wiring for `createCcxtConnectorPlugin`. */
@@ -371,4 +381,16 @@ export type CcxtVenueConfig = {
    * subscription is open.
    */
   privatePollMs?: number
+  /**
+   * Rewrite a trading-path error message the user cannot act on into one they
+   * can. Runs on every rejection and warning after secret redaction, with the
+   * slot for routing context. Return the message unchanged when it isn't
+   * yours. OKX uses this for 50119: a key rejected by the wrong regional
+   * entity reads like a typo'd key, and the fix — picking the account's
+   * entity on the Accounts card — is not something an error code teaches.
+   */
+  describeTradingError?: (
+    message: string,
+    slot: CexSlot<CexCredentials>,
+  ) => string
 }

@@ -97,6 +97,42 @@ function wsFor(code: string): string {
 }
 
 /**
+ * An OKX API key exists on exactly ONE regional entity — the one the account
+ * was registered with (verified live: an EEA key returns 50119 "API key
+ * doesn't exist" on www/us and authenticates on eea). Routing by the user's
+ * country is only a guess at that entity, and it is wrong whenever someone
+ * trades away from where they registered. `entity` is the per-credential
+ * override: it names the account's home entity directly, and credentialed
+ * calls route there regardless of the country setting. Empty = no override.
+ *
+ * This KEEPS the legal boundary — orders still go to the entity the account
+ * belongs to; the override only corrects which entity that is.
+ */
+export type OkxEntity = 'global' | 'eea' | 'us' | ''
+
+/**
+ * Resolve the routing country for credentialed calls: an explicit account
+ * entity wins, otherwise the caller's country. Returns a representative
+ * country code so every downstream path (regional origin, dev-proxy prefix,
+ * demo WS host) keeps working unchanged.
+ */
+export function resolveOkxTradingCountry(
+  entity: string | undefined,
+  country: string,
+): string {
+  switch (entity) {
+    case 'us':
+      return 'US'
+    case 'eea':
+      return 'DE'
+    case 'global':
+      return ''
+    default:
+      return country
+  }
+}
+
+/**
  * Demo-trading WS hosts are regional too — a key created on my.okx.com (EEA)
  * does not exist on the global `wspap` demo socket (error 60032, found by the
  * authenticated demo E2E). ccxt's `setSandboxMode` clobbers the regional WS

@@ -15,6 +15,14 @@
  *   imports and three chunks for one venue — `getUrl()` re-reads
  *   `urls.api.ws` on every subscribe, so overriding both URLs on the base
  *   class after construction is equivalent and cheaper.
+ * - **A credential's home entity outranks the user's country.** An OKX key
+ *   exists on exactly one regional entity, and routing authed calls by the
+ *   user's country is only a guess at it — wrong for anyone trading away from
+ *   where they registered, and the venue's answer (50119 "API key doesn't
+ *   exist") reads like a typo'd key. The credential's optional `entity`
+ *   ('global' | 'eea' | 'us', set on the Accounts card) resolves to a routing
+ *   country via `resolveOkxTradingCountry` before any URL is picked, live and
+ *   demo alike. Public market data never carries an entity.
  * - **Public REST falls back to the global host under CORS — orders never do.**
  *   `eea.okx.com` and `us.okx.com` send no `Access-Control-Allow-Origin`, which
  *   in the hosted terminal left EU/US users on a chart stuck at one live
@@ -39,7 +47,11 @@
 
 import { createCexConnectorManifest } from '../../cex-connector'
 import { createCcxtConnectorPlugin } from '../index'
-import { okxPaperWs, resolveOkxCcxtUrls } from './okx-regions'
+import {
+  okxPaperWs,
+  resolveOkxCcxtUrls,
+  resolveOkxTradingCountry,
+} from './okx-regions'
 import type { CcxtExchangeCtor, CcxtVenueConfig } from '../types'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
@@ -101,6 +113,9 @@ export const okxCcxtVenue: CcxtVenueConfig = {
     { key: 'apiKey', required: true },
     { key: 'apiSecret', required: true },
     { key: 'passphrase', required: true },
+    // Account's home regional entity ('global' | 'eea' | 'us', '' = route by
+    // country). An OKX key exists on exactly one entity; see OkxEntity.
+    { key: 'entity', required: false },
   ],
   defaultMode: 'paper',
   loadExchangeClass: async () => {
@@ -129,8 +144,31 @@ export const okxCcxtVenue: CcxtVenueConfig = {
   // TP/SL lands as `conditional` — without this the resting order places and
   // cancels fine yet never shows in the open list (found by the demo E2E).
   triggerQueryParams: { trigger: true, ordType: 'conditional' },
+  // 50119 against the wrong regional entity reads like a typo'd key, and OKX
+  // keys exist on exactly one entity (www / eea / us — the one the account
+  // was registered with). Say what actually happened and how to fix it,
+  // naming the host so the mismatch is visible.
+  describeTradingError: (message, slot) => {
+    if (!/\b50119\b/.test(message)) return message
+    const routed = resolveOkxTradingCountry(
+      slot.credentials['entity'],
+      slot.country,
+    )
+    const host = resolveOkxCcxtUrls(routed, { authed: true }).hostname
+    return (
+      `OKX rejected this API key on ${host} (50119: API key doesn't exist). ` +
+      `OKX keys only work on the regional entity where the account was created — ` +
+      `if this account was registered on a different OKX entity (Global, EEA or US), ` +
+      `pick that entity on the account's card under "OKX account entity".`
+    )
+  },
   applyUrls: (exchange, country, ctx) => {
-    const urls = resolveOkxCcxtUrls(country, { authed: ctx.authed })
+    // An authed instance routes to the ACCOUNT's home entity when the
+    // credential declares one — the user's country is only a guess at it, and
+    // guessing wrong reads back as 50119 "API key doesn't exist". The public
+    // instance never carries an entity, so this is `country` there.
+    const routed = resolveOkxTradingCountry(ctx.entity, country)
+    const urls = resolveOkxCcxtUrls(routed, { authed: ctx.authed })
     const api = exchange.urls['api'] as Record<string, unknown>
     api['rest'] = urls.rest
     api['ws'] = urls.ws
@@ -150,10 +188,14 @@ export const okxCcxtVenue: CcxtVenueConfig = {
   // Both are restored from the same resolver the live path uses, so a paper
   // instance routes exactly where its live twin would.
   applyPaperUrls: (exchange, country, ctx) => {
-    const urls = resolveOkxCcxtUrls(country, { authed: ctx.authed })
+    // Same entity-over-country resolution as the live path: demo keys are as
+    // regional as live ones (an EEA demo key does not exist on the global
+    // `wspap` socket — 60032).
+    const routed = resolveOkxTradingCountry(ctx.entity, country)
+    const urls = resolveOkxCcxtUrls(routed, { authed: ctx.authed })
     const api = exchange.urls['api'] as Record<string, unknown>
     api['rest'] = urls.rest
-    api['ws'] = okxPaperWs(country)
+    api['ws'] = okxPaperWs(routed)
     exchange.hostname = urls.hostname
   },
   synthesizeMarket: (pair) => {

@@ -633,6 +633,12 @@ export class CcxtTradingRuntime {
     const host = create({
       venue: this.opts.venue,
       credentials,
+      // The account's home entity, where the venue declares one (OKX). Rides
+      // in the slot's credential record because that is what the shell copies
+      // from `initialize` config — and because the hosts map is keyed on that
+      // record's identity, an in-place entity edit lands as a fresh record and
+      // therefore a fresh host on the right endpoints.
+      entity: slot.credentials['entity'] ?? '',
       paper,
       onError: (scope, error) => this.warn(scope, error, slot),
     })
@@ -646,9 +652,12 @@ export class CcxtTradingRuntime {
     error: unknown,
     slot: CexSlot<CexCredentials>,
   ): OrderResult {
-    const message = redactSecrets(
-      error instanceof Error ? error.message : 'Network error',
-      slot.credentials,
+    const message = this.describe(
+      redactSecrets(
+        error instanceof Error ? error.message : 'Network error',
+        slot.credentials,
+      ),
+      slot,
     )
     this.opts.onError?.(`${scope}:rejected`, new Error(message))
     return { success: false, error: message }
@@ -659,11 +668,19 @@ export class CcxtTradingRuntime {
     error: unknown,
     slot: CexSlot<CexCredentials>,
   ): void {
-    const message = redactSecrets(
-      error instanceof Error ? error.message : String(error),
-      slot.credentials,
+    const message = this.describe(
+      redactSecrets(
+        error instanceof Error ? error.message : String(error),
+        slot.credentials,
+      ),
+      slot,
     )
     this.opts.onError?.(scope, new Error(message))
+  }
+
+  /** Venue's chance to turn an unactionable rejection into an actionable one. */
+  private describe(message: string, slot: CexSlot<CexCredentials>): string {
+    return this.opts.venue.describeTradingError?.(message, slot) ?? message
   }
 }
 

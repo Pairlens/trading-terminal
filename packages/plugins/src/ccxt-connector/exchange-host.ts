@@ -68,6 +68,12 @@ export type CcxtExchangeHostOptions = {
    * instance, which must never sign — see the file header.
    */
   credentials?: CcxtCredentialSet | null
+  /**
+   * The credential's home regional entity ('' = route by country). Carried
+   * into the `CcxtUrlContext` handed to the venue's URL hooks — see the type's
+   * own doc for why a key's home entity outranks the user's country.
+   */
+  entity?: string
   /** Route this instance at the venue's sandbox/demo environment. */
   paper?: boolean
   /** Raw inbound frame observed (the liveness signal). */
@@ -314,6 +320,7 @@ export class CcxtExchangeHost {
     const urlContext = {
       authed: credentials !== null,
       paper: this.opts.paper === true,
+      entity: this.opts.entity ?? '',
     }
     venue.applyUrls?.(exchange, this.country, urlContext)
 
