@@ -290,13 +290,20 @@ export class CcxtStreamHub {
         if (!sub.running || this.destroyed) return
         if (lease.generation !== this.opts.host.generation) continue
 
-        this.noteInbound()
         sub.immediateReentries = 0
         if (sub.firstSuccessAt === null) sub.firstSuccessAt = this.now()
         else if (this.now() - sub.firstSuccessAt >= this.stableResetMs()) {
           sub.attempt = 0
         }
-        if (payload !== null) this.deliver(sub, payload)
+        if (payload !== null) {
+          // Only a resolution that carried data counts as inbound — the
+          // Kraken guard parks a losing timeframe with `sleep(); return []`,
+          // and letting that empty tick refresh the clock would keep the
+          // silence watchdog satisfied forever. Real frames already feed the
+          // clock through the host's `handleMessage` wrap regardless.
+          this.noteInbound()
+          this.deliver(sub, payload)
+        }
       } catch (error) {
         if (!sub.running || this.destroyed) return
         sub.firstSuccessAt = null

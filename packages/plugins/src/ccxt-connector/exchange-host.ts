@@ -211,6 +211,8 @@ export class CcxtExchangeHost {
   private generationCounter = 0
   private destroyed = false
   private paperActiveFlag = false
+  /** What the venue chose to carry out of the last discarded instance. */
+  private captured: { value: unknown; country: string } | null = null
 
   constructor(private readonly opts: CcxtExchangeHostOptions) {}
 
@@ -273,6 +275,17 @@ export class CcxtExchangeHost {
     const exchange = new Exchange({
       enableRateLimit: true,
       timeout: 15_000,
+      // The public instance never reads `exchange.currencies` — the trimmed
+      // markets table stores no currency fields — but `loadMarketsHelper`
+      // awaits `fetchCurrencies()` BEFORE `fetchMarkets()`, a serialized
+      // round trip plus a throttle slot on the exact path first paint waits
+      // on. Six venues issue that call unauthenticated (Gate, Bitget,
+      // Bitvavo, HTX, Bitfinex, Kraken); all but Kraken (see
+      // `needsPublicCurrencies`) skip it now. The ccxt constructor
+      // deep-extends `has`, so only this one flag changes.
+      ...(credentials === null && venue.needsPublicCurrencies !== true
+        ? { has: { fetchCurrencies: false } }
+        : {}),
       ...venue.options,
       // After the venue's own config, so a venue can never accidentally pin a
       // credential, and before `options`, which is merged separately below.
@@ -296,6 +309,14 @@ export class CcxtExchangeHost {
         // heavier rate-limit weight is the documented opt-in; the call runs once
         // per credential, not on a timer.
         fetchOpenOrders: { warnWithoutSymbol: false },
+        // ccxt retains 1000 trades and 1000 OHLCV rows per symbol in its WS
+        // caches. The bridge copies everything out on delivery and keeps
+        // candle history in its own CandleBuffer, so that depth is pure
+        // retained memory — and the Kraken guard copies-and-sorts the whole
+        // OHLCV cache once per frame. 60 stays comfortably above the largest
+        // subscribe burst measured (~15 bars); a venue can override either.
+        tradesLimit: 200,
+        OHLCVLimit: 60,
         ...((venue.options?.['options'] as Record<string, unknown>) ?? {}),
       },
     })
@@ -335,6 +356,17 @@ export class CcxtExchangeHost {
       }
     }
 
+    // A venue may carry expensive negotiated state (KuCoin's bullet URL)
+    // across the discard-and-rebuild lifecycle — same country only, since
+    // endpoints move with it.
+    if (this.captured && this.captured.country === this.country) {
+      try {
+        venue.seedOptions?.(exchange, this.captured.value)
+      } catch {
+        // A bad carry must never break a build — the venue just re-earns it.
+      }
+    }
+
     // Bound once per client at client construction — wrapping after the first
     // socket opens would miss that socket's traffic entirely.
     const onInbound = this.opts.onInbound
@@ -360,6 +392,16 @@ export class CcxtExchangeHost {
    */
   async close(): Promise<void> {
     const exchange = this.instance
+    if (exchange && this.opts.venue.captureOptions) {
+      try {
+        this.captured = {
+          value: this.opts.venue.captureOptions(exchange),
+          country: this.instanceCountry,
+        }
+      } catch {
+        this.captured = null
+      }
+    }
     this.instance = null
     this.instanceCountry = ''
     this.paperActiveFlag = false

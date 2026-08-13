@@ -106,14 +106,29 @@ export const krakenCcxtVenue: CcxtVenueConfig = {
     { key: 'apiKey', required: true },
     { key: 'apiSecret', required: true },
   ],
-  // No public testnet — paper orders are `validate: true` on AddOrder, and
-  // CREDENTIAL_SCHEMAS lists Kraken as live-only anyway.
+  // No public testnet — paper orders are `validate: true` on AddOrder (see
+  // `paperOrderParams`); CREDENTIAL_SCHEMAS gates which modes the wizard
+  // offers.
   defaultMode: 'live',
+  // AddOrder's documented dry run: the order is validated (pair, size,
+  // precision, funds) and never reaches the matching engine. What makes a
+  // paper slot on a sandbox-less venue safe to allow.
+  paperOrderParams: { validate: true },
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/kraken.js')
     const Base = (module.default ?? module) as unknown as CcxtExchangeCtor
     return withKrakenOhlcvGuard(Base)
   },
+  // Kraken's `parseMarkets` reads `options.cachedCurrencies` (populated by
+  // `fetchCurrencies`) to WIDEN amount precision where the currency is
+  // coarser than the market — without it the table carries a finer precision
+  // than Kraken accepts, and the authed instance inherits the public table.
+  // The one venue that keeps the public currencies call.
+  needsPublicCurrencies: true,
+  // Kraken keeps no separate trigger-order id space: `fetchOpenOrders`
+  // ignores the trigger/stop params entirely and answers with the same book,
+  // so the second probe would be a byte-for-byte duplicate signed request.
+  separateTriggerOrderBook: false,
   // 10 | 25 | 100 | 500 | 1000 — anything else throws NotSupported.
   orderbookDepth: 100,
   maxHistoryLimit: 720,

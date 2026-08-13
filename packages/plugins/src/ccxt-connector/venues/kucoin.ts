@@ -32,7 +32,11 @@
 import { pageEndMs } from '@pairlens/market-engine/candle-paging'
 import { createCexConnectorManifest } from '../../cex-connector'
 import { createCcxtConnectorPlugin } from '../index'
-import { withKucoinQuirks } from './kucoin-exchange'
+import {
+  captureKucoinWsUrls,
+  seedKucoinWsUrls,
+  withKucoinQuirks,
+} from './kucoin-exchange'
 import { requireKucoinCcxtUrls } from './kucoin-regions'
 import type { CcxtExchangeCtor, CcxtVenueConfig } from '../types'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
@@ -130,6 +134,11 @@ export const kucoinCcxtVenue: CcxtVenueConfig = {
       fetchMarkets: { types: ['spot'], fetchTickersFees: false },
     },
   },
+  // The negotiated bullet URL (a serial REST POST in front of every cold WS
+  // connect) survives the host's discard-and-rebuild — the native cached it
+  // for 23 h as an explicit market-switch latency fix.
+  captureOptions: captureKucoinWsUrls,
+  seedOptions: seedKucoinWsUrls,
   // 5 | 20 | 50 | 100 or ccxt throws; 50 is the native's channel and needs no
   // REST snapshot to seed.
   orderbookDepth: 50,

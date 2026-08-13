@@ -505,9 +505,11 @@ export class CcxtTradingRuntime {
       if (typeof fetch !== 'function') return []
 
       const regular = await fetch.call(exchange, symbol)
-      const supportsTrigger =
-        this.opts.venue.supportsTriggerOrders ?? hasTriggerSupport(exchange.has)
-      const triggers = supportsTrigger
+      const probeTriggerBook =
+        this.opts.venue.separateTriggerOrderBook !== false &&
+        (this.opts.venue.supportsTriggerOrders ??
+          hasTriggerSupport(exchange.has))
+      const triggers = probeTriggerBook
         ? await fetch
             .call(exchange, symbol, undefined, undefined, this.triggerQuery())
             .catch(() => [])

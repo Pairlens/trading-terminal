@@ -340,6 +340,28 @@ export type CcxtVenueConfig = {
    * BASE/QUOTE with certainty.
    */
   synthesizeMarket?: (pair: string) => CcxtMarketSeed | null
+  /**
+   * Keep `fetchCurrencies` enabled on the PUBLIC instance. By default the
+   * host disables it there: ccxt's `loadMarketsHelper` awaits currencies
+   * before markets — a serialized public round trip plus a throttle slot in
+   * front of the download first paint is waiting on — and the bridge's
+   * trimmed table stores no currency fields. Kraken is the one venue that
+   * needs it: its `parseMarkets` reads `options.cachedCurrencies` to widen
+   * amount precision, and the authed instance inherits the public table.
+   */
+  needsPublicCurrencies?: boolean
+  /**
+   * Carry venue-negotiated connection state across the host's discard-and-
+   * rebuild lifecycle. `captureOptions` runs as an instance is closed;
+   * `seedOptions` runs on the next instance built for the SAME country, with
+   * whatever capture returned. The host discards instances on purpose (it is
+   * the only reliable way to clear ccxt's per-instance `options` caches), but
+   * some of that state is expensive to re-earn — KuCoin's bullet-token URL is
+   * a serial REST POST in front of every cold WS connect, and the token is
+   * valid for ~24 h. The venue owns what is safe to carry and for how long.
+   */
+  captureOptions?: (exchange: CcxtExchangeLike) => unknown
+  seedOptions?: (exchange: CcxtExchangeLike, captured: unknown) => void
 
   // ── Trading (all optional; every default is derived from ccxt) ──────────
 
@@ -384,6 +406,15 @@ export type CcxtVenueConfig = {
    * and which one a venue honors changed across releases.
    */
   triggerQueryParams?: Record<string, unknown>
+  /**
+   * `false` when the venue keeps trigger orders in the SAME book as regular
+   * ones — its `fetchOpenOrders` ignores the trigger flag, so the second
+   * probe would be a byte-for-byte duplicate signed request whose rows the
+   * id de-dup throws away (Kraken; Binance spot). Defaults to true: probing
+   * an id space that turns out shared costs a duplicate call, skipping one
+   * that is real hides resting TP/SLs from the order pane.
+   */
+  separateTriggerOrderBook?: boolean
   /**
    * Force trigger-order support on or off. Default: derived from
    * `exchange.has` (`createTriggerOrder` / `createStopLossOrder` /

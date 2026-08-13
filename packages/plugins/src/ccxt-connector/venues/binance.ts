@@ -148,7 +148,19 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
       subscriptionLimitByStream: { spot: 1024, margin: 1024 },
     },
   },
+  // Under ccxt this no longer selects the native's `@depth20@100ms` snapshot
+  // channel: `watchOrderBook` always subscribes the incremental diff stream
+  // and spawns a REST `/api/v3/depth` snapshot per subscription (and per
+  // reconnect), with 20 only sizing that snapshot and the local book.
+  // Accepted: api.binance.com is CORS-open so the call works from every
+  // build, and the diff book is what ccxt checksums. If the zero-REST
+  // subscribe ever matters again, a subclass overriding `watchOrderBook`
+  // onto the partial-book stream is the kraken-ohlcv.ts pattern.
   orderbookDepth: 20,
+  // Binance spot answers trigger/stop probes from the SAME open-orders
+  // endpoint (the conditional branch is futures-only), so the second
+  // fetchOpenOrders pass would be a duplicate signed request.
+  separateTriggerOrderBook: false,
   // Spot cap is 1000/call; ccxt clamps anyway, but the bridge should not ask
   // for a page the venue will silently truncate.
   maxHistoryLimit: 1000,
