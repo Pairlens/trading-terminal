@@ -109,9 +109,9 @@ describe('bitget orderbook depth', () => {
     expect(clampBitgetBookDepth(400)).toBe(50)
   })
 
-  it('defaults to the native connector s books15 channel', () => {
-    expect(clampBitgetBookDepth()).toBe(15)
-    expect(bitgetCcxtVenue.orderbookDepth).toBe(15)
+  it('defaults to the deepest snapshot channel, books50', () => {
+    expect(clampBitgetBookDepth()).toBe(50)
+    expect(bitgetCcxtVenue.orderbookDepth).toBe(50)
     expect(BITGET_BOOK_DEPTHS).toContain(
       bitgetCcxtVenue.orderbookDepth as (typeof BITGET_BOOK_DEPTHS)[number],
     )

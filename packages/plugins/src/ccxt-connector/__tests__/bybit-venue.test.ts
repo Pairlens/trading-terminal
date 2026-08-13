@@ -162,10 +162,14 @@ describe('bybit orderbook depth', () => {
     expect(clampBybitBookDepth(5_000)).toBe(1_000)
   })
 
-  it('defaults to the native connector s orderbook.50 channel', () => {
-    expect(clampBybitBookDepth()).toBe(50)
-    expect(clampBybitBookDepth(Number.NaN)).toBe(50)
-    expect(bybitCcxtVenue.orderbookDepth).toBe(50)
+  it('subscribes at orderbook.200, not the native s orderbook.50', () => {
+    // 50 levels is a ~0.04% band on BTC/USDT and reads as a near-flat ladder;
+    // 200 widens it to ~0.19%, matching OKX's `books` and Binance's 500. The
+    // 21ms → 99ms push rate that comes with it is the deliberate half of the
+    // trade — see BYBIT_DEFAULT_BOOK_DEPTH.
+    expect(clampBybitBookDepth()).toBe(200)
+    expect(clampBybitBookDepth(Number.NaN)).toBe(200)
+    expect(bybitCcxtVenue.orderbookDepth).toBe(200)
   })
 
   it('never configures a depth ccxt would reject', () => {

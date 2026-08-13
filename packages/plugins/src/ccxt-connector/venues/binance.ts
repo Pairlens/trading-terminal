@@ -122,7 +122,21 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
     const module = await import('ccxt/js/src/pro/binance.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor
   },
-  orderbookDepth: 20,
+  // ccxt caps the book it maintains at exactly this depth (`pro/binance.js`
+  // seeds `this.orderBook({}, limit)` from a REST snapshot of the same size),
+  // and Binance quotes BTC/USDT to the cent. At the 20 this shipped with, the
+  // whole book was a ~$2 band whose best level carried ~80% of the visible
+  // size, so the pane's cumulative bars pinned near full width and the ladder
+  // read as flat rather than the usual pyramid — measured live 2026-08-13,
+  // together with the depth pane and the liquidity heatmap, which bin the same
+  // levels and were seeing $4 of price. 500 reproduces OKX's 400-level `books`
+  // (the reference the pane's Auto grouping was tuned against) across the
+  // liquidity range: BTC 0.19% of price vs OKX's 0.36%, ETH/SOL/DOGE within
+  // 0.01% of it. 1000 overshoots — SOL and DOGE past a 15% band. The cost is
+  // one REST snapshot per subscribe (`/api/v3/depth` weight 25 at this limit,
+  // against a 6000/min budget); the WS side is the same `@depth@100ms` diff
+  // stream at any depth.
+  orderbookDepth: 500,
   // Spot cap is 1000/call; ccxt clamps anyway, but the bridge should not ask
   // for a page the venue will silently truncate.
   maxHistoryLimit: 1000,
