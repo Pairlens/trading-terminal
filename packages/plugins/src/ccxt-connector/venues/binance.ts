@@ -122,6 +122,25 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
     const module = await import('ccxt/js/src/pro/binance.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor
   },
+  options: {
+    options: {
+      // ccxt's binance is the only pro class that shards subscriptions across
+      // numbered stream URLs (`…/ws/<index>`), one per DISTINCT subscription
+      // hash — and the ticker/book/trades hashes embed the symbol list. At the
+      // default `streamLimits.spot: 50` that is four sockets for one pair and
+      // three fresh TLS handshakes on every pair switch, accumulating toward
+      // fifty. The native connector held ONE socket and multiplexed with
+      // SUBSCRIBE frames, precisely because heavy switching once tripped
+      // Binance's per-IP connection limit (~300 new connections / 5 min) and
+      // blanked the terminal for 30 s. `spot: 1` maps every hash to `…/ws/0`.
+      streamLimits: { spot: 1, margin: 1 },
+      // ccxt guards each stream at 200 subscriptions and `numSubscriptions`
+      // only ever grows; with one stream carrying everything, a long session
+      // of pair switches would hit it. Binance's own per-stream cap is 1024
+      // (ccxt's comment on `streamLimits`).
+      subscriptionLimitByStream: { spot: 1024, margin: 1024 },
+    },
+  },
   orderbookDepth: 20,
   // Spot cap is 1000/call; ccxt clamps anyway, but the bridge should not ask
   // for a page the venue will silently truncate.
