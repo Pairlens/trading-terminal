@@ -94,6 +94,14 @@ type DerivedStream = {
   historyLoaded: boolean
   hasSnapshot: boolean
   disposed: boolean
+  /**
+   * The subscribe context this stream's REST reads run under, refreshed on
+   * every (re)subscribe of THIS key. Per stream rather than module-level:
+   * `context.country` feeds the venue's geo gate and the exchange host's
+   * region routing, and a reconcile firing with another key's context could
+   * evade a refusal or tear the host down for a country nobody asked for.
+   */
+  context: PluginExecuteParams['context']
 }
 
 export function withDerivedCandles(
@@ -104,8 +112,6 @@ export function withDerivedCandles(
   const now = spec.now ?? Date.now
   /** Source bars of the newest folded bucket, handed from fetch to apply. */
   const pendingTail = new Map<string, Array<Candle>>()
-  /** Latest context seen on a subscribe — reconciliation runs outside a call. */
-  let lastContext: PluginExecuteParams['context'] | null = null
   let nextCallbackId = 0
 
   // ── History ────────────────────────────────────────────────────────────
@@ -271,8 +277,7 @@ export function withDerivedCandles(
   }
 
   async function reconcile(stream: DerivedStream): Promise<void> {
-    const context = lastContext
-    if (!context) return
+    const context = stream.context
     try {
       const loaded = await loadHistory(
         stream.pair,
@@ -447,10 +452,12 @@ export function withDerivedCandles(
       String(params.params['pair'] ?? params.context.pair),
     )
     const key = `${pair}:${timeframe}`
-    lastContext = params.context
 
     let stream = streams.get(key)
     const fresh = stream === undefined
+    // The newest subscriber's context wins for this key's REST reads — see
+    // the field's doc for why it is per stream.
+    if (stream) stream.context = params.context
     if (!stream) {
       stream = {
         key,
@@ -469,6 +476,7 @@ export function withDerivedCandles(
         historyLoaded: false,
         hasSnapshot: false,
         disposed: false,
+        context: params.context,
       }
       streams.set(key, stream)
     }

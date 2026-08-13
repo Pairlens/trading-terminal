@@ -1,12 +1,3 @@
-diff --git a/node_modules/ccxt/.bun-tag-27314562b8fdda14 b/.bun-tag-27314562b8fdda14
-new file mode 100644
-index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
-diff --git a/node_modules/ccxt/.bun-tag-67d0023f6e214961 b/.bun-tag-67d0023f6e214961
-new file mode 100644
-index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
-diff --git a/node_modules/ccxt/.bun-tag-83c9ca72b1c5490b b/.bun-tag-83c9ca72b1c5490b
-new file mode 100644
-index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/js/src/base/ws/Client.js b/js/src/base/ws/Client.js
 index 9cf97fe7322b2245afeac00ef729f834f76ea703..72e537ecb12ecda6b71ec4a14d2ca7f45046dcf3 100644
 --- a/js/src/base/ws/Client.js

@@ -130,6 +130,20 @@ export type CcxtExchangeLike = {
     price?: number,
     params?: Record<string, unknown>,
   ) => Promise<Record<string, unknown>>
+  /** WS-native order placement — see `CcxtVenueConfig.wsOrders`. */
+  createOrderWs?: (
+    symbol: string,
+    type: string,
+    side: string,
+    amount: number,
+    price?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, unknown>>
+  cancelOrderWs?: (
+    id: string,
+    symbol?: string,
+    params?: Record<string, unknown>,
+  ) => Promise<unknown>
   /** Quote-denominated market buy. Each venue's override owns its own quirk. */
   createMarketBuyOrderWithCost?: (
     symbol: string,
@@ -191,6 +205,10 @@ export type CcxtExchangeLike = {
     limit?: number,
     params?: Record<string, unknown>,
   ) => Promise<Array<CcxtOhlcvRow>>
+  fetchTicker?: (
+    symbol: string,
+    params?: Record<string, unknown>,
+  ) => Promise<CcxtTickerLike>
   fetchTickers: (
     symbols?: Array<string>,
     params?: Record<string, unknown>,
@@ -336,6 +354,28 @@ export type CcxtVenueConfig = {
    * BASE/QUOTE with certainty.
    */
   synthesizeMarket?: (pair: string) => CcxtMarketSeed | null
+  /**
+   * Keep `fetchCurrencies` enabled on the PUBLIC instance. By default the
+   * host disables it there: ccxt's `loadMarketsHelper` awaits currencies
+   * before markets — a serialized public round trip plus a throttle slot in
+   * front of the download first paint is waiting on — and the bridge's
+   * trimmed table stores no currency fields. Kraken is the one venue that
+   * needs it: its `parseMarkets` reads `options.cachedCurrencies` to widen
+   * amount precision, and the authed instance inherits the public table.
+   */
+  needsPublicCurrencies?: boolean
+  /**
+   * Carry venue-negotiated connection state across the host's discard-and-
+   * rebuild lifecycle. `captureOptions` runs as an instance is closed;
+   * `seedOptions` runs on the next instance built for the SAME country, with
+   * whatever capture returned. The host discards instances on purpose (it is
+   * the only reliable way to clear ccxt's per-instance `options` caches), but
+   * some of that state is expensive to re-earn — KuCoin's bullet-token URL is
+   * a serial REST POST in front of every cold WS connect, and the token is
+   * valid for ~24 h. The venue owns what is safe to carry and for how long.
+   */
+  captureOptions?: (exchange: CcxtExchangeLike) => unknown
+  seedOptions?: (exchange: CcxtExchangeLike, captured: unknown) => void
 
   // ── Trading (all optional; every default is derived from ccxt) ──────────
 
@@ -356,6 +396,18 @@ export type CcxtVenueConfig = {
    */
   orderParams?: Record<string, unknown>
   /**
+   * The venue's ccxt class gates BASE-denominated market buys on a price
+   * (`createMarketBuyOrderRequiresPrice`) so it can compute the cost to spend
+   * — without one, `createOrder` throws client-side before any request. Six of
+   * the fourteen are in this state (Gate, Coinbase, Bitget, HTX, Crypto.com,
+   * Upbit); the flag cannot be read generically at runtime because it hides in
+   * a different `options` corner per venue (Bitget nests it under
+   * `options.createOrder`, Crypto.com defaults it true with no entry at all).
+   * Set it and the trading runtime fetches a reference price and passes it
+   * through, restoring the native connectors' base→quote conversion.
+   */
+  marketBuyRequiresPrice?: boolean
+  /**
    * Params that make an order a dry run on a venue with no sandbox
    * environment (Kraken: `{ validate: true }`). Without either, a paper slot
    * is refused rather than routed to the live matching engine.
@@ -368,6 +420,30 @@ export type CcxtVenueConfig = {
    * and which one a venue honors changed across releases.
    */
   triggerQueryParams?: Record<string, unknown>
+  /**
+   * `false` when the venue keeps trigger orders in the SAME book as regular
+   * ones — its `fetchOpenOrders` ignores the trigger flag, so the second
+   * probe would be a byte-for-byte duplicate signed request whose rows the
+   * id de-dup throws away (Kraken; Binance spot). Defaults to true: probing
+   * an id space that turns out shared costs a duplicate call, skipping one
+   * that is real hides resting TP/SLs from the order pane.
+   */
+  separateTriggerOrderBook?: boolean
+  /**
+   * Place and cancel over the venue's WebSocket trade API
+   * (`createOrderWs`/`cancelOrderWs`) instead of signed REST. After the first
+   * call the authed socket stays open on the trading instance, so an order is
+   * one frame instead of a TLS+HTTP round trip, and it leaves the REST
+   * rate-limit budget to the open-orders/balances polls.
+   *
+   * Deliberately opt-in per venue rather than derived from `has`: the WS URL
+   * must be one the venue's `applyUrls`/`applyPaperUrls` actually route
+   * (Binance's `ws-api` host ignores the US split, OKX's private socket
+   * carries the regional-entity stakes), and the venue's sandbox must serve
+   * the trade socket. Enabled where the host is single and static: Kraken,
+   * Crypto.com, Bitvavo, Gate — all already inside the desktop CSP baseline.
+   */
+  wsOrders?: boolean
   /**
    * Force trigger-order support on or off. Default: derived from
    * `exchange.has` (`createTriggerOrder` / `createStopLossOrder` /

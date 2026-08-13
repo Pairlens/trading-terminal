@@ -124,10 +124,28 @@ export const coinbaseCcxtVenue: CcxtVenueConfig = {
     { key: 'apiSecret', required: true },
   ],
   defaultMode: 'paper',
+  // ccxt has no Coinbase sandbox (`urls.test` is declared-but-undefined), so
+  // paper used to be a hard refusal. `preview: true` is ccxt's dry run: the
+  // order routes to the Advanced Trade order-preview endpoint
+  // (`/brokerage/orders/preview`), which prices and validates it against the
+  // real account without executing.
+  paperOrderParams: { preview: true },
+  // ccxt gates a base-denominated market buy on a price here (`createMarket-
+  // BuyOrderRequiresPrice`) so it can compute the cost to spend; the trading
+  // runtime fetches a reference price and passes it through.
+  marketBuyRequiresPrice: true,
   requiresDesktop: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/coinbase.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor
+  },
+  options: {
+    // No app-level ping and no pong handler, so ccxt's keepalive degrades to
+    // the runtime's protocol PING: under bun it kills a healthy socket every
+    // keepAlive × maxPingPongMisses; in a browser it cannot fire at all. Off,
+    // as on Gate and Bitfinex — liveness lives with the hub's inbound-silence
+    // watchdog.
+    streaming: { keepAlive: 0 },
   },
   // `l2_data` carries the whole book; ccxt ignores the depth argument here.
   orderbookDepth: undefined,

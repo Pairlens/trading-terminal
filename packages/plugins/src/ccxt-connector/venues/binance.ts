@@ -122,6 +122,32 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
     const module = await import('ccxt/js/src/pro/binance.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor
   },
+  options: {
+    // No app-level ping and no pong handler, so ccxt's keepalive degrades to
+    // the runtime's protocol PING: under bun the pong listener is never
+    // attached (`isNode && !isBun`), `lastPong` never advances, and ccxt kills
+    // a healthy socket every keepAlive × maxPingPongMisses; in a browser the
+    // same path pretends a pong arrived and detects nothing. Off, as on Gate
+    // and Bitfinex — liveness lives with the hub's inbound-silence watchdog.
+    streaming: { keepAlive: 0 },
+    options: {
+      // ccxt's binance is the only pro class that shards subscriptions across
+      // numbered stream URLs (`…/ws/<index>`), one per DISTINCT subscription
+      // hash — and the ticker/book/trades hashes embed the symbol list. At the
+      // default `streamLimits.spot: 50` that is four sockets for one pair and
+      // three fresh TLS handshakes on every pair switch, accumulating toward
+      // fifty. The native connector held ONE socket and multiplexed with
+      // SUBSCRIBE frames, precisely because heavy switching once tripped
+      // Binance's per-IP connection limit (~300 new connections / 5 min) and
+      // blanked the terminal for 30 s. `spot: 1` maps every hash to `…/ws/0`.
+      streamLimits: { spot: 1, margin: 1 },
+      // ccxt guards each stream at 200 subscriptions and `numSubscriptions`
+      // only ever grows; with one stream carrying everything, a long session
+      // of pair switches would hit it. Binance's own per-stream cap is 1024
+      // (ccxt's comment on `streamLimits`).
+      subscriptionLimitByStream: { spot: 1024, margin: 1024 },
+    },
+  },
   // ccxt caps the book it maintains at exactly this depth (`pro/binance.js`
   // seeds `this.orderBook({}, limit)` from a REST snapshot of the same size),
   // and Binance quotes BTC/USDT to the cent. At the 20 this shipped with, the
@@ -137,6 +163,10 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
   // against a 6000/min budget); the WS side is the same `@depth@100ms` diff
   // stream at any depth.
   orderbookDepth: 500,
+  // Binance spot answers trigger/stop probes from the SAME open-orders
+  // endpoint (the conditional branch is futures-only), so the second
+  // fetchOpenOrders pass would be a duplicate signed request.
+  separateTriggerOrderBook: false,
   // Spot cap is 1000/call; ccxt clamps anyway, but the bridge should not ask
   // for a page the venue will silently truncate.
   maxHistoryLimit: 1000,

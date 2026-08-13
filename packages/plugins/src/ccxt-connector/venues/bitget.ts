@@ -30,11 +30,13 @@
  *   (`bitget.js:4352-4411`), picking the endpoint by the age of the computed
  *   window — which is strictly better than the native, whose paged reads only
  *   ever hit the recent endpoint.
- * - **Paper trading is a header, not a host, on REST** (`paptrading: 1` on the
- *   same `api.bitget.com`) but a different host on the socket
- *   (`wspap.bitget.com`, exposed by ccxt as `urls.api.demo`). Read paths are
- *   mode-agnostic, so nothing here branches on it; `applyBitgetPaperWsUrls`
- *   exists for the trading phase.
+ * - **Paper trading needs no URL hook at all.** Bitget's `setSandboxMode`
+ *   override just sets `options.sandboxMode`, and ccxt's pro class routes
+ *   sockets at `urls.api.demo` (`wspap.bitget.com`) on its own whenever that
+ *   flag is set — REST paper is a `paptrading: 1` header on the same
+ *   `api.bitget.com`, carried on the signed request. So no `applyPaperUrls`
+ *   here, deliberately: the venues that DO need one (OKX, ByBit, Gate,
+ *   Crypto.com) are repairing a `urls.api` swap Bitget never performs.
  * - App-level ping with ccxt's default 30 s keep-alive and a real `handlePong`,
  *   so the silence budget is 3 × 30 s.
  */
@@ -43,7 +45,10 @@ import { isDevProxyAvailable } from '@pairlens/market-engine/platform'
 import { pageEndMs } from '@pairlens/market-engine/candle-paging'
 import { createCexConnectorManifest } from '../../cex-connector'
 import { createCcxtConnectorPlugin } from '../index'
+import { withDerivedCandles } from '../derived-candle-plugin'
+import type { LiveCandleSource } from '../derived-candle-plugin'
 import type { CcxtExchangeCtor, CcxtVenueConfig } from '../types'
+import type { Timeframe } from '@pairlens/shared/types'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
   PluginInstance,
@@ -79,6 +84,7 @@ export const BITGET_ADAPTER_INFO: MarketAdapterInfo = {
     '15m',
     '30m',
     '1h',
+    '2h',
     '4h',
     '6h',
     '1d',
@@ -149,23 +155,6 @@ export function resolveBitgetCcxtRestBase(): string {
   return isDevProxyAvailable() ? '/__bitget' : 'https://api.bitget.com'
 }
 
-/**
- * Swap the socket over to Bitget's demo endpoints for paper trading.
- *
- * Unused by the read path (public market data is identical on both, and the
- * native subscribes to production for reads too) — it exists so the trading
- * phase has one obvious place to flip. REST paper is a `paptrading: 1` header
- * on the SAME host, which belongs on the signed request, not here.
- */
-export function applyBitgetPaperWsUrls(exchange: {
-  urls: Record<string, unknown>
-}): void {
-  const api = exchange.urls['api'] as Record<string, unknown> | undefined
-  if (!api) return
-  const demo = api['demo']
-  if (demo && typeof demo === 'object') api['ws'] = demo
-}
-
 export const bitgetCcxtVenue: CcxtVenueConfig = {
   exchangeId: 'bitget',
   marketId: 'bitget',
@@ -182,6 +171,10 @@ export const bitgetCcxtVenue: CcxtVenueConfig = {
     { key: 'passphrase', required: true },
   ],
   defaultMode: 'paper',
+  // ccxt gates a base-denominated market buy on a price here (`createMarket-
+  // BuyOrderRequiresPrice`) so it can compute the cost to spend; the trading
+  // runtime fetches a reference price and passes it through.
+  marketBuyRequiresPrice: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/bitget.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor
@@ -191,6 +184,25 @@ export const bitgetCcxtVenue: CcxtVenueConfig = {
       // Merged into the pro describe's table by ccxt's deepExtend, not
       // replacing it — only the two missing keys are added.
       timeframes: WS_TIMEFRAME_GAPS,
+      // ccxt's REST spot granularity table asks for the UTC-aligned variants
+      // (`1Dutc`) for timeframes >= 6h, while the WS candle channels — the
+      // pro table above included — are Hong-Kong aligned (`candle1D`): two
+      // bar conventions 8 h apart, so the live daily bar could never land on
+      // a REST bar. Restore the non-UTC granularities the native used
+      // (`TF_TO_REST`), so both transports speak UTC+8. deepExtend merges
+      // per key; the sub-6h entries keep ccxt's defaults.
+      fetchOHLCV: {
+        timeframes: {
+          spot: {
+            '6h': '6h',
+            '12h': '12h',
+            '1d': '1day',
+            '3d': '3day',
+            '1w': '1week',
+            '1M': '1M',
+          },
+        },
+      },
     },
   },
   // Repairs `1M → 1m` in the REST describe's top-level table (see header).
@@ -233,8 +245,30 @@ export const bitgetCcxtVenue: CcxtVenueConfig = {
   },
 }
 
+/**
+ * The venue serves no 2h interval anywhere — REST or WS — while the chart
+ * toolbar offers 2h on every venue. Folded from 1h instead, the same
+ * machinery Upbit and Coinbase already ship: history pages read 1h and fold,
+ * live bars fold off the venue's own 1h candle stream. The native connector
+ * did not have 2h either (its supportedTimeframes omitted it); this closes
+ * the toolbar gap rather than reproducing it.
+ */
+const BITGET_HISTORY_FOLD: Partial<Record<string, Timeframe>> = {
+  '2h': '1h',
+}
+
+function bitgetLiveSource(timeframe: string): LiveCandleSource {
+  return timeframe === '2h'
+    ? { kind: 'fold', source: '1h' }
+    : { kind: 'passthrough' }
+}
+
 export function createBitgetMarketConnectorPlugin(
   manifest: PluginManifest,
 ): PluginInstance {
-  return createCcxtConnectorPlugin(bitgetCcxtVenue, manifest)
+  const base = createCcxtConnectorPlugin(bitgetCcxtVenue, manifest)
+  return withDerivedCandles(base, {
+    historyFold: BITGET_HISTORY_FOLD,
+    liveSource: bitgetLiveSource,
+  })
 }

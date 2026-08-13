@@ -73,6 +73,30 @@ const BACKFILL_LIMIT = 300
  * should be followed by data; a stream of them is a wedge, not a restart.
  */
 const MAX_IMMEDIATE_REENTRIES = 3
+/**
+ * Releases with no wire unsubscribe tolerated before the exchange is rebuilt.
+ *
+ * Five venues (OKX, Bitget, Kraken, Crypto.com, Upbit) expose no `unWatch*`
+ * at all, and the grace close only arms at zero subscriptions — which never
+ * happens while a chart is open. Every pair the user visits would leave its
+ * channels subscribed for the whole session, each frame still parsed on the
+ * main thread and appended to ccxt's per-symbol caches. Past this many
+ * orphans, one forced rebuild clears clients, subscriptions and caches
+ * wholesale, at the cost of a single reconnect for the live keys. Twelve is
+ * three full pair switches on a four-channel venue: rare enough that the
+ * reconnect blip is not part of ordinary switching, soon enough that a
+ * long session cannot accumulate dozens of dead channels.
+ */
+const ORPHANED_CHANNEL_REBUILD_THRESHOLD = 12
+/**
+ * Trade ids remembered per trades key. A reconnect rebuilds the ccxt instance
+ * with an empty trade cache, and venues whose subscribe opens with a snapshot
+ * (Coinbase's `market_trades`) hand the whole snapshot back as fresh updates —
+ * without memory, those prints re-enter the tape and, on trade-derived candle
+ * venues, re-add their volume to the forming bar. Sized well above any
+ * venue's snapshot depth; the memory is a few KB per subscribed tape.
+ */
+const RECENT_TRADE_IDS = 500
 
 export type WatchChannel = 'candles' | 'ticker' | 'orderbook' | 'trades'
 
@@ -124,6 +148,9 @@ type Sub = {
   buffer: CandleBuffer | null
   /** Last frame delivered, replayed synchronously to a late joiner. */
   cached: unknown
+  /** Trades keys only: delivered ids, so a reconnect snapshot cannot replay. */
+  recentTradeIds: Set<string> | null
+  recentTradeIdOrder: Array<string> | null
   running: boolean
   attempt: number
   /** When the current uninterrupted run of successes began. */
@@ -139,6 +166,9 @@ export class CcxtStreamHub {
   private lastInboundAt = 0
   private livenessTimer: ReturnType<typeof setInterval> | null = null
   private graceTimer: ReturnType<typeof setTimeout> | null = null
+  /** Releases the venue could not unsubscribe on the wire, per instance. */
+  private orphanedChannels = 0
+  private orphanedGeneration = -1
   private releaseWake: (() => void) | null = null
   /** Backoff sleeps that a wake event can cut short. */
   private sleepers = new Set<() => void>()
@@ -195,6 +225,8 @@ export class CcxtStreamHub {
         callbacks: new Map(),
         buffer: request.channel === 'candles' ? new CandleBuffer() : null,
         cached: null,
+        recentTradeIds: request.channel === 'trades' ? new Set() : null,
+        recentTradeIdOrder: request.channel === 'trades' ? [] : null,
         running: true,
         attempt: 0,
         firstSuccessAt: null,
@@ -272,13 +304,20 @@ export class CcxtStreamHub {
         if (!sub.running || this.destroyed) return
         if (lease.generation !== this.opts.host.generation) continue
 
-        this.noteInbound()
         sub.immediateReentries = 0
         if (sub.firstSuccessAt === null) sub.firstSuccessAt = this.now()
         else if (this.now() - sub.firstSuccessAt >= this.stableResetMs()) {
           sub.attempt = 0
         }
-        if (payload !== null) this.deliver(sub, payload)
+        if (payload !== null) {
+          // Only a resolution that carried data counts as inbound — the
+          // Kraken guard parks a losing timeframe with `sleep(); return []`,
+          // and letting that empty tick refresh the clock would keep the
+          // silence watchdog satisfied forever. Real frames already feed the
+          // clock through the host's `handleMessage` wrap regardless.
+          this.noteInbound()
+          this.deliver(sub, payload)
+        }
       } catch (error) {
         if (!sub.running || this.destroyed) return
         sub.firstSuccessAt = null
@@ -333,7 +372,17 @@ export class CcxtStreamHub {
     const trades: Array<Trade> = []
     for (const entry of raw) {
       const trade = parseCcxtTrade(entry)
-      if (trade) trades.push(trade)
+      if (!trade) continue
+      if (sub.recentTradeIds && sub.recentTradeIdOrder) {
+        if (sub.recentTradeIds.has(trade.id)) continue
+        sub.recentTradeIds.add(trade.id)
+        sub.recentTradeIdOrder.push(trade.id)
+        if (sub.recentTradeIdOrder.length > RECENT_TRADE_IDS) {
+          const evicted = sub.recentTradeIdOrder.shift()
+          if (evicted !== undefined) sub.recentTradeIds.delete(evicted)
+        }
+      }
+      trades.push(trade)
     }
     if (trades.length === 0) return null
     return { type: 'update' as const, trades }
@@ -408,9 +457,10 @@ export class CcxtStreamHub {
   }
 
   /**
-   * Best-effort wire unsubscribe. Only Binance of the two PoC venues declares
-   * `unWatch*`; OKX does not, and there the channel simply keeps arriving into
-   * a loop nobody reads until the grace-period close. Rejections are expected
+   * Best-effort wire unsubscribe. Where the venue declares no `unWatch*`, the
+   * channel keeps arriving into a loop nobody reads — so those releases are
+   * COUNTED, and past `ORPHANED_CHANNEL_REBUILD_THRESHOLD` the exchange is
+   * rebuilt to shed them (see the constant's doc). Rejections are expected
    * (ccxt rejects the in-flight watch with `UnsubscribeError`) and ignored.
    */
   private unwatch(sub: Sub): void {
@@ -432,11 +482,36 @@ export class CcxtStreamHub {
             : exchange.has['unWatchTrades'] === true
               ? () => exchange.unWatchTrades?.(sub.symbol)
               : null
-    if (!call) return
+    if (!call) {
+      this.noteOrphanedChannel()
+      return
+    }
     try {
       void Promise.resolve(call()).catch(() => {})
     } catch {
       // A synchronous throw from an unsubscribe is never worth surfacing.
+    }
+  }
+
+  /**
+   * A release left its channel subscribed. The count is per instance — a
+   * rebuild (any reason) starts a clean socket, so the generation stamp
+   * resets it — and a rebuild is only worth one when someone is still
+   * listening: with no subscribers the grace close is already on its way.
+   */
+  private noteOrphanedChannel(): void {
+    const generation = this.opts.host.generation
+    if (generation !== this.orphanedGeneration) {
+      this.orphanedGeneration = generation
+      this.orphanedChannels = 0
+    }
+    this.orphanedChannels++
+    if (
+      this.orphanedChannels >= ORPHANED_CHANNEL_REBUILD_THRESHOLD &&
+      this.subs.size > 0
+    ) {
+      this.orphanedChannels = 0
+      void this.forceReconnect('orphaned-channels')
     }
   }
 

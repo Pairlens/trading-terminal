@@ -122,6 +122,19 @@ export const okxCcxtVenue: CcxtVenueConfig = {
     const module = await import('ccxt/js/src/pro/okx.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor
   },
+  options: {
+    options: {
+      // ccxt's REST `fetchOHLCV` defaults to the UTC-aligned bar variants
+      // (`1Dutc`) for timeframes >= 6h, while ccxt Pro's `watchOHLCV`
+      // subscribes to the Hong-Kong-aligned channels (`candle1D`) — two bar
+      // conventions 8 h apart, so the live daily bar could never match the
+      // REST history behind it: the buffer dropped every live 1d update for
+      // 16 h after UTC midnight, then appended it as a phantom extra bar.
+      // 'HK' pins REST to the WS convention (any non-'UTC' value skips the
+      // `utc` suffix), which is also what the native used on both transports.
+      fetchOHLCV: { timezone: 'HK' },
+    },
+  },
   timeframeOverrides: { '3d': '3D' },
   // `books` (400 levels, checksum-validated) is what the native subscribes to.
   // Deliberately NOT 50: `books50-l2-tbt` needs VIP4 and an authenticated

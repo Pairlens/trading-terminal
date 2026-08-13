@@ -38,7 +38,11 @@ import {
 } from '../venues/binance'
 import { okxCcxtVenue, okxMarketConnectorManifest } from '../venues/okx'
 import type { MarketsStorage } from '../markets'
-import type { CcxtMarketSeed, CcxtVenueConfig } from '../types'
+import type {
+  CcxtExchangeCtor,
+  CcxtMarketSeed,
+  CcxtVenueConfig,
+} from '../types'
 import type { PluginInstance } from '@pairlens/plugin-system/types'
 import type { OrderParams } from '@pairlens/market-engine/types'
 
@@ -379,6 +383,397 @@ describe('buildCcxtOrderCall', () => {
       VENUE,
     )
     expect(call.kind).toBe('order')
+  })
+
+  it('marks a base market buy for a reference price where the venue requires one', () => {
+    // Six venues (Gate, Coinbase, Bitget, HTX, Crypto.com, Upbit) throw
+    // client-side on a base-denominated market buy without a price
+    // (`createMarketBuyOrderRequiresPrice`) — the runtime must fill one in.
+    const venue = { ...VENUE, marketBuyRequiresPrice: true }
+    const buy = buildCcxtOrderCall(BASE_ORDER, {}, venue)
+    expect(buy.kind === 'order' && buy.needsReferencePrice).toBe(true)
+
+    // Sells, limit orders and quote-denominated buys are never gated.
+    const sell = buildCcxtOrderCall({ ...BASE_ORDER, side: 'sell' }, {}, venue)
+    expect(sell.kind === 'order' && sell.needsReferencePrice).toBeUndefined()
+    const limit = buildCcxtOrderCall(
+      { ...BASE_ORDER, type: 'limit', price: '60000' },
+      {},
+      venue,
+    )
+    expect(limit.kind === 'order' && limit.needsReferencePrice).toBeUndefined()
+    const quote = buildCcxtOrderCall(
+      { ...BASE_ORDER, size: '25', tgtCcy: 'quote_ccy' },
+      { createMarketBuyOrderWithCost: true },
+      venue,
+    )
+    expect(quote.kind).toBe('cost')
+  })
+
+  it('marks a market trigger buy too — the venue gate does not care about triggers', () => {
+    const call = buildCcxtOrderCall(
+      { ...BASE_ORDER, trigger: { triggerPrice: '61000', triggerType: 'sl' } },
+      { createStopLossOrder: true },
+      { ...VENUE, marketBuyRequiresPrice: true },
+    )
+    expect(call.kind === 'order' && call.needsReferencePrice).toBe(true)
+  })
+})
+
+describe('reference price for gated market buys', () => {
+  type CreateOrderArgs = {
+    symbol: string
+    type: string
+    side: string
+    amount: number
+    price: number | undefined
+  }
+
+  function gatedVenue(options: { tickerFails?: boolean } = {}) {
+    const created: Array<CreateOrderArgs> = []
+    let tickerCalls = 0
+    class FakeGatedExchange {
+      id = 'fakex'
+      has: Record<string, unknown> = {}
+      timeframes: Record<string, string> = {}
+      urls: Record<string, unknown> = { api: {} }
+      options: Record<string, unknown> = {}
+      markets: Record<string, unknown> | undefined
+      setMarkets(markets: Array<CcxtMarketSeed>) {
+        this.markets = Object.fromEntries(markets.map((m) => [m.symbol, m]))
+        return this.markets
+      }
+      async loadMarkets() {
+        return this.markets
+      }
+      market(symbol: string) {
+        return (this.markets?.[symbol] ?? {}) as Record<string, unknown>
+      }
+      async fetchTicker() {
+        tickerCalls++
+        if (options.tickerFails) throw new Error('ticker down')
+        return { last: 64_250 }
+      }
+      async createOrder(
+        symbol: string,
+        type: string,
+        side: string,
+        amount: number,
+        price?: number,
+      ) {
+        created.push({ symbol, type, side, amount, price })
+        return { id: 'oid-1' }
+      }
+      async close() {}
+    }
+    const venue: CcxtVenueConfig = {
+      exchangeId: 'fakex',
+      marketId: 'fakex',
+      displayName: 'Fakex',
+      credentialKeys: [
+        { key: 'apiKey', required: true },
+        { key: 'apiSecret', required: true },
+      ],
+      defaultMode: 'live',
+      marketBuyRequiresPrice: true,
+      maxHistoryLimit: 1000,
+      loadExchangeClass: async () =>
+        FakeGatedExchange as unknown as CcxtExchangeCtor,
+    }
+    return { venue, created, tickerCalls: () => tickerCalls }
+  }
+
+  it('fetches the venue ticker and passes it as the price argument', async () => {
+    const { venue, created, tickerCalls } = gatedVenue()
+    const plugin = await track(
+      await build(venue, binanceMarketConnectorManifest, BINANCE_MARKET, {
+        mode: 'live',
+      }),
+    )
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'market',
+      size: '0.001',
+    })
+    expect(result.success).toBe(true)
+    expect(tickerCalls()).toBe(1)
+    expect(created).toHaveLength(1)
+    expect(created[0]?.price).toBe(64_250)
+    expect(created[0]?.amount).toBe(0.001)
+  })
+
+  it('rejects with an actionable message when no reference price is available', async () => {
+    const { venue, created } = gatedVenue({ tickerFails: true })
+    const plugin = await track(
+      await build(venue, binanceMarketConnectorManifest, BINANCE_MARKET, {
+        mode: 'live',
+      }),
+    )
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'market',
+      size: '0.001',
+    })
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('reference price')
+    // Nothing may reach the wire on the failure path.
+    expect(created).toHaveLength(0)
+  })
+})
+
+describe('ws order placement', () => {
+  type WireLog = Array<string>
+
+  function wsVenue(options: {
+    wsOrders?: boolean
+    createWsError?: Error
+    cancelWsError?: Error
+  }) {
+    const wire: WireLog = []
+    class FakeWsExchange {
+      id = 'fakex'
+      has: Record<string, unknown> = {
+        createOrderWs: true,
+        cancelOrderWs: true,
+      }
+      timeframes: Record<string, string> = {}
+      urls: Record<string, unknown> = { api: {} }
+      options: Record<string, unknown> = {}
+      markets: Record<string, unknown> | undefined
+      setMarkets(markets: Array<CcxtMarketSeed>) {
+        this.markets = Object.fromEntries(markets.map((m) => [m.symbol, m]))
+        return this.markets
+      }
+      async loadMarkets() {
+        return this.markets
+      }
+      market(symbol: string) {
+        return (this.markets?.[symbol] ?? {}) as Record<string, unknown>
+      }
+      async createOrderWs() {
+        wire.push('ws:create')
+        if (options.createWsError) throw options.createWsError
+        return { id: 'ws-oid' }
+      }
+      async createOrder() {
+        wire.push('rest:create')
+        return { id: 'rest-oid' }
+      }
+      async cancelOrderWs() {
+        wire.push('ws:cancel')
+        if (options.cancelWsError) throw options.cancelWsError
+        return {}
+      }
+      async cancelOrder() {
+        wire.push('rest:cancel')
+        return {}
+      }
+      async close() {}
+    }
+    const venue: CcxtVenueConfig = {
+      exchangeId: 'fakex',
+      marketId: 'fakex',
+      displayName: 'Fakex',
+      credentialKeys: [
+        { key: 'apiKey', required: true },
+        { key: 'apiSecret', required: true },
+      ],
+      defaultMode: 'live',
+      maxHistoryLimit: 100,
+      ...(options.wsOrders === false ? {} : { wsOrders: true }),
+      loadExchangeClass: async () =>
+        FakeWsExchange as unknown as CcxtExchangeCtor,
+    }
+    return { venue, wire }
+  }
+
+  function namedError(name: string): Error {
+    const error = new Error(`${name} raised`)
+    error.name = name
+    return error
+  }
+
+  async function wsPlugin(venue: CcxtVenueConfig): Promise<PluginInstance> {
+    return track(
+      await build(venue, binanceMarketConnectorManifest, BINANCE_MARKET, {
+        mode: 'live',
+      }),
+    )
+  }
+
+  it('places over the socket and never touches REST', async () => {
+    const { venue, wire } = wsVenue({})
+    const plugin = await wsPlugin(venue)
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+    })
+    expect(result).toEqual({ success: true, orderId: 'ws-oid' })
+    expect(wire).toEqual(['ws:create'])
+  })
+
+  it('falls back to REST when the socket fails before anything was sent', async () => {
+    const { venue, wire } = wsVenue({
+      createWsError: namedError('ExchangeNotAvailable'),
+    })
+    const plugin = await wsPlugin(venue)
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+    })
+    expect(result).toEqual({ success: true, orderId: 'rest-oid' })
+    expect(wire).toEqual(['ws:create', 'rest:create'])
+  })
+
+  it('NEVER retries an ambiguous timeout — the order may be resting', async () => {
+    const { venue, wire } = wsVenue({
+      createWsError: namedError('RequestTimeout'),
+    })
+    const plugin = await wsPlugin(venue)
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+    })
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('may still have been accepted')
+    expect(wire).toEqual(['ws:create'])
+  })
+
+  it('surfaces a venue rejection without a pointless REST replay', async () => {
+    const { venue, wire } = wsVenue({
+      createWsError: namedError('InsufficientFunds'),
+    })
+    const plugin = await wsPlugin(venue)
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+    })
+    expect(result.success).toBe(false)
+    expect(wire).toEqual(['ws:create'])
+  })
+
+  it('cancel falls back to REST on any socket failure — cancelling is retry-safe', async () => {
+    const { venue, wire } = wsVenue({
+      cancelWsError: namedError('RequestTimeout'),
+    })
+    const plugin = await wsPlugin(venue)
+    const result = (await plugin.execute({
+      capability: 'trading:orders' as never,
+      params: { action: 'cancel', orderId: 'oid-1', pair: 'BTC-USDT' },
+      context: context(),
+    })) as { success: boolean }
+    expect(result.success).toBe(true)
+    expect(wire).toEqual(['ws:cancel', 'rest:cancel'])
+  })
+
+  it('a venue without the opt-in stays on REST even when ccxt advertises WS', async () => {
+    const { venue, wire } = wsVenue({ wsOrders: false })
+    const plugin = await wsPlugin(venue)
+    const result = await place(plugin, {
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+    })
+    expect(result.success).toBe(true)
+    expect(wire).toEqual(['rest:create'])
+  })
+})
+
+describe('re-provisioned credential slots', () => {
+  it('tears down the previous authed host instead of leaking it', async () => {
+    const { CcxtTradingRuntime } = await import('../orders')
+    const destroyed: Array<string> = []
+    let built = 0
+    const fakeExchange = {
+      has: {},
+      createOrder: async () => ({ id: 'oid' }),
+    }
+    const venue: CcxtVenueConfig = {
+      exchangeId: 'fakex',
+      marketId: 'fakex',
+      displayName: 'Fakex',
+      credentialKeys: [
+        { key: 'apiKey', required: true },
+        { key: 'apiSecret', required: true },
+      ],
+      defaultMode: 'live',
+      maxHistoryLimit: 100,
+      loadExchangeClass: async () => {
+        throw new Error('not used')
+      },
+    }
+    const runtime = new CcxtTradingRuntime({
+      venue,
+      ensureMarkets: async () => {},
+      createHost: () => {
+        const tag = `host-${built++}`
+        return {
+          setCountry: () => false,
+          acquire: async () => ({
+            exchange: fakeExchange,
+            generation: 0,
+          }),
+          close: async () => {},
+          destroy: async () => {
+            destroyed.push(tag)
+          },
+          peek: () => null,
+          paperActive: false,
+          generation: 0,
+          authed: true,
+        } as unknown as ReturnType<
+          NonNullable<
+            ConstructorParameters<typeof CcxtTradingRuntime>[0]['createHost']
+          >
+        >
+      },
+    })
+
+    const slot = (credentials: Record<string, string>) => ({
+      id: 'cred-1',
+      credentials,
+      mode: 'live' as const,
+      country: '',
+      privateWsClient: null,
+      orderCallback: null,
+      balanceCallback: null,
+      currentPair: '',
+    })
+    const order: OrderParams = {
+      market: 'fakex',
+      pair: 'BTC-USDT',
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+      mode: 'live',
+    }
+
+    // Two provisions of the SAME slot id: the shell allocates a fresh
+    // credentials object each time, which is exactly the case the WeakMap
+    // lookup can never catch.
+    await runtime.placeOrder(
+      order,
+      slot({ apiKey: API_KEY, apiSecret: API_SECRET }),
+    )
+    await runtime.placeOrder(
+      order,
+      slot({ apiKey: API_KEY, apiSecret: API_SECRET }),
+    )
+    expect(built).toBe(2)
+    expect(destroyed).toEqual(['host-0'])
+
+    await runtime.destroy()
+    expect(destroyed).toEqual(['host-0', 'host-1'])
   })
 })
 

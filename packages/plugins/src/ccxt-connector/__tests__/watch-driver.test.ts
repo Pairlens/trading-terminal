@@ -457,6 +457,104 @@ describe('CcxtStreamHub — reconnect policy', () => {
   })
 })
 
+describe('CcxtStreamHub — trades dedup', () => {
+  const rawTrade = (id: string) => ({
+    id,
+    price: 100,
+    amount: 1,
+    side: 'buy',
+    timestamp: 1_700_000_000_000,
+  })
+
+  it('drops already-delivered prints, so a reconnect snapshot cannot replay the tape', async () => {
+    const { hub, host } = makeHub()
+    const seen: Array<{ trades: Array<{ id: string }> }> = []
+    hub.acquire({ channel: 'trades', pair: 'BTC-USDT' }, '', (d) =>
+      seen.push(d as { trades: Array<{ id: string }> }),
+    )
+    const exchange = await host.current()
+    await waitFor(() => exchange.parked > 0)
+    exchange.settle([rawTrade('t1'), rawTrade('t2')])
+    await waitFor(() => seen.length === 1)
+    expect(seen[0]?.trades.map((t) => t.id)).toEqual(['t1', 't2'])
+
+    // The venue replays t2 in its next frame (a snapshot after a reconnect
+    // does exactly this) alongside a genuinely new print.
+    await waitFor(() => exchange.parked > 0)
+    exchange.settle([rawTrade('t2'), rawTrade('t3')])
+    await waitFor(() => seen.length === 2)
+    expect(seen[1]?.trades.map((t) => t.id)).toEqual(['t3'])
+    await hub.destroy()
+  })
+})
+
+describe('CcxtStreamHub — orphaned channels', () => {
+  it('rebuilds the exchange after enough releases with no wire unsubscribe', async () => {
+    const { hub, host } = makeHub()
+    // A key that stays live for the whole test — the rebuild only pays off
+    // while someone is still listening.
+    hub.acquire({ channel: 'ticker', pair: 'LIVE-USDT' }, '', () => {})
+    const first = await host.current()
+    expect(first.has['unWatchTicker']).toBeUndefined()
+
+    // Visit and leave pairs on a venue with no unWatch* — every release
+    // orphans its channel on the socket.
+    for (let i = 0; i < 12; i++) {
+      const release = hub.acquire(
+        { channel: 'ticker', pair: `P${i}-USDT` },
+        '',
+        () => {},
+      )
+      release()
+    }
+
+    // The twelfth orphan crosses the threshold: the instance is discarded and
+    // the surviving key re-enters against a fresh one.
+    await waitFor(() => host.built.length === 2)
+    expect(host.generation).toBe(1)
+    await hub.destroy()
+  })
+
+  it('does not rebuild when the venue can unsubscribe on the wire', async () => {
+    const { hub, host } = makeHub()
+    hub.acquire({ channel: 'ticker', pair: 'LIVE-USDT' }, '', () => {})
+    const exchange = await host.current()
+    exchange.has['unWatchTicker'] = true
+
+    for (let i = 0; i < 20; i++) {
+      const release = hub.acquire(
+        { channel: 'ticker', pair: `P${i}-USDT` },
+        '',
+        () => {},
+      )
+      release()
+    }
+
+    await sleep(10)
+    expect(host.built.length).toBe(1)
+    expect(host.generation).toBe(0)
+    await hub.destroy()
+  })
+
+  it('leaves an all-released hub to the grace close, not a rebuild', async () => {
+    const { hub, host } = makeHub({ gracePeriodMs: 15 })
+    for (let i = 0; i < 15; i++) {
+      const release = hub.acquire(
+        { channel: 'ticker', pair: `P${i}-USDT` },
+        '',
+        () => {},
+      )
+      release()
+    }
+    // Nothing is listening: the threshold path must not fire a rebuild —
+    // the grace timer closes the host on its own.
+    expect(host.built.length).toBe(1)
+    await waitFor(() => host.generation === 1)
+    expect(host.built.length).toBe(1)
+    await hub.destroy()
+  })
+})
+
 describe('CcxtStreamHub — teardown', () => {
   it('closes the exchange after the grace period once the last key is released', async () => {
     const { hub, host } = makeHub()
