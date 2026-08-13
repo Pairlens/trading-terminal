@@ -521,6 +521,95 @@ describe('reference price for gated market buys', () => {
   })
 })
 
+describe('re-provisioned credential slots', () => {
+  it('tears down the previous authed host instead of leaking it', async () => {
+    const { CcxtTradingRuntime } = await import('../orders')
+    const destroyed: Array<string> = []
+    let built = 0
+    const fakeExchange = {
+      has: {},
+      createOrder: async () => ({ id: 'oid' }),
+    }
+    const venue: CcxtVenueConfig = {
+      exchangeId: 'fakex',
+      marketId: 'fakex',
+      displayName: 'Fakex',
+      credentialKeys: [
+        { key: 'apiKey', required: true },
+        { key: 'apiSecret', required: true },
+      ],
+      defaultMode: 'live',
+      maxHistoryLimit: 100,
+      loadExchangeClass: async () => {
+        throw new Error('not used')
+      },
+    }
+    const runtime = new CcxtTradingRuntime({
+      venue,
+      ensureMarkets: async () => {},
+      createHost: () => {
+        const tag = `host-${built++}`
+        return {
+          setCountry: () => false,
+          acquire: async () => ({
+            exchange: fakeExchange,
+            generation: 0,
+          }),
+          close: async () => {},
+          destroy: async () => {
+            destroyed.push(tag)
+          },
+          peek: () => null,
+          paperActive: false,
+          generation: 0,
+          authed: true,
+        } as unknown as ReturnType<
+          NonNullable<
+            ConstructorParameters<typeof CcxtTradingRuntime>[0]['createHost']
+          >
+        >
+      },
+    })
+
+    const slot = (credentials: Record<string, string>) => ({
+      id: 'cred-1',
+      credentials,
+      mode: 'live' as const,
+      country: '',
+      privateWsClient: null,
+      orderCallback: null,
+      balanceCallback: null,
+      currentPair: '',
+    })
+    const order: OrderParams = {
+      market: 'fakex',
+      pair: 'BTC-USDT',
+      side: 'buy',
+      type: 'limit',
+      price: '100',
+      size: '1',
+      mode: 'live',
+    }
+
+    // Two provisions of the SAME slot id: the shell allocates a fresh
+    // credentials object each time, which is exactly the case the WeakMap
+    // lookup can never catch.
+    await runtime.placeOrder(
+      order,
+      slot({ apiKey: API_KEY, apiSecret: API_SECRET }),
+    )
+    await runtime.placeOrder(
+      order,
+      slot({ apiKey: API_KEY, apiSecret: API_SECRET }),
+    )
+    expect(built).toBe(2)
+    expect(destroyed).toEqual(['host-0'])
+
+    await runtime.destroy()
+    expect(destroyed).toEqual(['host-0', 'host-1'])
+  })
+})
+
 describe('normalizeCcxtOrder', () => {
   it('maps a partially filled open order and satisfies the order contract', () => {
     const order = normalizeCcxtOrder({

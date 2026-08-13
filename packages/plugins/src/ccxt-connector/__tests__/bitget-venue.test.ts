@@ -13,7 +13,6 @@ import { describe, expect, it } from 'bun:test'
 import {
   BITGET_ADAPTER_INFO,
   BITGET_BOOK_DEPTHS,
-  applyBitgetPaperWsUrls,
   bitgetCcxtVenue,
   bitgetMarketConnectorManifest,
   clampBitgetBookDepth,
@@ -150,19 +149,11 @@ describe('bitget urls', () => {
     })
   })
 
-  it('swaps the socket onto the demo hosts for paper trading', () => {
-    const exchange = {
-      urls: {
-        api: {
-          ws: { public: 'wss://ws.bitget.com/v2/ws/public' },
-          demo: { public: 'wss://wspap.bitget.com/v2/ws/public' },
-        },
-      },
-    }
-    applyBitgetPaperWsUrls(exchange)
-    expect(exchange.urls.api.ws).toEqual({
-      public: 'wss://wspap.bitget.com/v2/ws/public',
-    })
+  it('declares no paper URL hook — ccxt routes Bitget demo sockets itself', () => {
+    // setSandboxMode on Bitget only sets options.sandboxMode, and the pro
+    // class picks urls.api.demo from that flag on its own. An applyPaperUrls
+    // here would duplicate routing ccxt already owns.
+    expect(bitgetCcxtVenue.applyPaperUrls).toBeUndefined()
   })
 })
 

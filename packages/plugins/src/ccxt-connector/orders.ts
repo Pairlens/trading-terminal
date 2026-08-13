@@ -391,9 +391,21 @@ type SlotHost = {
  * credential, as most recently provisioned" and a stale host can never be
  * handed to a re-keyed slot. A WeakMap also keeps the key material out of any
  * string that could reach a log line.
+ *
+ * The WeakMap alone leaked, though: precisely BECAUSE every provision is a
+ * fresh object, the lookup on a re-provisioned slot always missed, the
+ * teardown branch behind it was dead code, and each key/mode/entity edit
+ * appended another live authed instance to `live` until plugin teardown. The
+ * id registry below exists to make the previous host findable — it holds no
+ * key material, only the host and the credential object's identity.
  */
 export class CcxtTradingRuntime {
   private hosts = new WeakMap<CexCredentials, SlotHost>()
+  /** Per slot id: the host to tear down when the slot is re-provisioned. */
+  private hostsBySlotId = new Map<
+    string,
+    { host: CcxtExchangeHost; credentials: CexCredentials }
+  >()
   private live = new Set<CcxtExchangeHost>()
   private destroyed = false
 
@@ -583,6 +595,7 @@ export class CcxtTradingRuntime {
     const hosts = [...this.live]
     this.live.clear()
     this.hosts = new WeakMap()
+    this.hostsBySlotId.clear()
     await Promise.all(hosts.map((host) => host.destroy()))
   }
 
@@ -687,6 +700,16 @@ export class CcxtTradingRuntime {
       this.live.delete(existing.host)
       void existing.host.destroy()
     }
+    // A re-provisioned slot arrives with a FRESH credentials object, so the
+    // WeakMap lookup above misses by design — the previous host is found by
+    // slot id and torn down here, or it would stay in `live` until plugin
+    // teardown with its markets table and sockets.
+    const prior = this.hostsBySlotId.get(slot.id)
+    if (prior && prior.credentials !== slot.credentials) {
+      this.live.delete(prior.host)
+      void prior.host.destroy()
+      this.hostsBySlotId.delete(slot.id)
+    }
 
     const create = this.opts.createHost ?? ((o) => new CcxtExchangeHost(o))
     const host = create({
@@ -702,6 +725,7 @@ export class CcxtTradingRuntime {
       onError: (scope, error) => this.warn(scope, error, slot),
     })
     this.hosts.set(slot.credentials, { host, country: slot.country, paper })
+    this.hostsBySlotId.set(slot.id, { host, credentials: slot.credentials })
     this.live.add(host)
     return host
   }

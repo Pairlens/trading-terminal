@@ -30,11 +30,13 @@
  *   (`bitget.js:4352-4411`), picking the endpoint by the age of the computed
  *   window — which is strictly better than the native, whose paged reads only
  *   ever hit the recent endpoint.
- * - **Paper trading is a header, not a host, on REST** (`paptrading: 1` on the
- *   same `api.bitget.com`) but a different host on the socket
- *   (`wspap.bitget.com`, exposed by ccxt as `urls.api.demo`). Read paths are
- *   mode-agnostic, so nothing here branches on it; `applyBitgetPaperWsUrls`
- *   exists for the trading phase.
+ * - **Paper trading needs no URL hook at all.** Bitget's `setSandboxMode`
+ *   override just sets `options.sandboxMode`, and ccxt's pro class routes
+ *   sockets at `urls.api.demo` (`wspap.bitget.com`) on its own whenever that
+ *   flag is set — REST paper is a `paptrading: 1` header on the same
+ *   `api.bitget.com`, carried on the signed request. So no `applyPaperUrls`
+ *   here, deliberately: the venues that DO need one (OKX, ByBit, Gate,
+ *   Crypto.com) are repairing a `urls.api` swap Bitget never performs.
  * - App-level ping with ccxt's default 30 s keep-alive and a real `handlePong`,
  *   so the silence budget is 3 × 30 s.
  */
@@ -137,23 +139,6 @@ export function clampBitgetBookDepth(requested?: number): number {
  */
 export function resolveBitgetCcxtRestBase(): string {
   return isDevProxyAvailable() ? '/__bitget' : 'https://api.bitget.com'
-}
-
-/**
- * Swap the socket over to Bitget's demo endpoints for paper trading.
- *
- * Unused by the read path (public market data is identical on both, and the
- * native subscribes to production for reads too) — it exists so the trading
- * phase has one obvious place to flip. REST paper is a `paptrading: 1` header
- * on the SAME host, which belongs on the signed request, not here.
- */
-export function applyBitgetPaperWsUrls(exchange: {
-  urls: Record<string, unknown>
-}): void {
-  const api = exchange.urls['api'] as Record<string, unknown> | undefined
-  if (!api) return
-  const demo = api['demo']
-  if (demo && typeof demo === 'object') api['ws'] = demo
 }
 
 export const bitgetCcxtVenue: CcxtVenueConfig = {

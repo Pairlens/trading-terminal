@@ -88,6 +88,15 @@ const MAX_IMMEDIATE_REENTRIES = 3
  * long session cannot accumulate dozens of dead channels.
  */
 const ORPHANED_CHANNEL_REBUILD_THRESHOLD = 12
+/**
+ * Trade ids remembered per trades key. A reconnect rebuilds the ccxt instance
+ * with an empty trade cache, and venues whose subscribe opens with a snapshot
+ * (Coinbase's `market_trades`) hand the whole snapshot back as fresh updates —
+ * without memory, those prints re-enter the tape and, on trade-derived candle
+ * venues, re-add their volume to the forming bar. Sized well above any
+ * venue's snapshot depth; the memory is a few KB per subscribed tape.
+ */
+const RECENT_TRADE_IDS = 500
 
 export type WatchChannel = 'candles' | 'ticker' | 'orderbook' | 'trades'
 
@@ -139,6 +148,9 @@ type Sub = {
   buffer: CandleBuffer | null
   /** Last frame delivered, replayed synchronously to a late joiner. */
   cached: unknown
+  /** Trades keys only: delivered ids, so a reconnect snapshot cannot replay. */
+  recentTradeIds: Set<string> | null
+  recentTradeIdOrder: Array<string> | null
   running: boolean
   attempt: number
   /** When the current uninterrupted run of successes began. */
@@ -213,6 +225,8 @@ export class CcxtStreamHub {
         callbacks: new Map(),
         buffer: request.channel === 'candles' ? new CandleBuffer() : null,
         cached: null,
+        recentTradeIds: request.channel === 'trades' ? new Set() : null,
+        recentTradeIdOrder: request.channel === 'trades' ? [] : null,
         running: true,
         attempt: 0,
         firstSuccessAt: null,
@@ -358,7 +372,17 @@ export class CcxtStreamHub {
     const trades: Array<Trade> = []
     for (const entry of raw) {
       const trade = parseCcxtTrade(entry)
-      if (trade) trades.push(trade)
+      if (!trade) continue
+      if (sub.recentTradeIds && sub.recentTradeIdOrder) {
+        if (sub.recentTradeIds.has(trade.id)) continue
+        sub.recentTradeIds.add(trade.id)
+        sub.recentTradeIdOrder.push(trade.id)
+        if (sub.recentTradeIdOrder.length > RECENT_TRADE_IDS) {
+          const evicted = sub.recentTradeIdOrder.shift()
+          if (evicted !== undefined) sub.recentTradeIds.delete(evicted)
+        }
+      }
+      trades.push(trade)
     }
     if (trades.length === 0) return null
     return { type: 'update' as const, trades }

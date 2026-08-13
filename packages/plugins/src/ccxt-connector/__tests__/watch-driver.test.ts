@@ -457,6 +457,37 @@ describe('CcxtStreamHub — reconnect policy', () => {
   })
 })
 
+describe('CcxtStreamHub — trades dedup', () => {
+  const rawTrade = (id: string) => ({
+    id,
+    price: 100,
+    amount: 1,
+    side: 'buy',
+    timestamp: 1_700_000_000_000,
+  })
+
+  it('drops already-delivered prints, so a reconnect snapshot cannot replay the tape', async () => {
+    const { hub, host } = makeHub()
+    const seen: Array<{ trades: Array<{ id: string }> }> = []
+    hub.acquire({ channel: 'trades', pair: 'BTC-USDT' }, '', (d) =>
+      seen.push(d as { trades: Array<{ id: string }> }),
+    )
+    const exchange = await host.current()
+    await waitFor(() => exchange.parked > 0)
+    exchange.settle([rawTrade('t1'), rawTrade('t2')])
+    await waitFor(() => seen.length === 1)
+    expect(seen[0]?.trades.map((t) => t.id)).toEqual(['t1', 't2'])
+
+    // The venue replays t2 in its next frame (a snapshot after a reconnect
+    // does exactly this) alongside a genuinely new print.
+    await waitFor(() => exchange.parked > 0)
+    exchange.settle([rawTrade('t2'), rawTrade('t3')])
+    await waitFor(() => seen.length === 2)
+    expect(seen[1]?.trades.map((t) => t.id)).toEqual(['t3'])
+    await hub.destroy()
+  })
+})
+
 describe('CcxtStreamHub — orphaned channels', () => {
   it('rebuilds the exchange after enough releases with no wire unsubscribe', async () => {
     const { hub, host } = makeHub()

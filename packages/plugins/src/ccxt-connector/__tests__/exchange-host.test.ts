@@ -45,8 +45,7 @@ function recordingVenue(overrides: Partial<CcxtVenueConfig> = {}): {
     ],
     defaultMode: 'live',
     maxHistoryLimit: 100,
-    loadExchangeClass: async () =>
-      FakeExchange as unknown as CcxtExchangeCtor,
+    loadExchangeClass: async () => FakeExchange as unknown as CcxtExchangeCtor,
     ...overrides,
   }
   return { venue, configs, instances }
