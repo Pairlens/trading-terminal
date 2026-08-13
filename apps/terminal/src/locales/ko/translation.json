@@ -2941,6 +2941,7 @@
     "columns": {
       "price": "가격",
       "size": "수량",
+      "value": "금액",
       "total": "합계",
       "open": "시가",
       "close": "종가"

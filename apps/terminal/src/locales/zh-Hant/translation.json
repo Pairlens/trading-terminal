@@ -2941,6 +2941,7 @@
     "columns": {
       "price": "價格",
       "size": "數量",
+      "value": "金額",
       "total": "累計",
       "open": "開盤",
       "close": "收盤"

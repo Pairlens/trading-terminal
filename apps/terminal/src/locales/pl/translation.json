@@ -2967,6 +2967,7 @@
     "columns": {
       "price": "Cena",
       "size": "Wielkość",
+      "value": "Wartość",
       "total": "Razem",
       "open": "Otwarcie",
       "close": "Zamknięcie"
