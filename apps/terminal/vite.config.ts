@@ -88,6 +88,22 @@ function versionManifest(): Plugin {
 }
 
 const config = defineConfig({
+  resolve: {
+    alias: {
+      // ccxt support in the browser build. WsClient.js imports 'ws' at module
+      // level but only dereferences it under Node — browsers use
+      // self.WebSocket — so 'ws' maps to a shim exporting the native
+      // WebSocket. undici is reached only through lazy imports on Node-only
+      // paths; an empty shim keeps Rollup satisfied without shipping it.
+      // protobufjs is NOT shimmed: MEXC's WS frames are protobuf and the real
+      // module (a dependency of @pairlens/plugins) must load in the browser.
+      // node:zlib/node:http stay on Vite's built-in browser-external handling
+      // (ccxt catches the failed import and falls back to fflate for WS
+      // decompression).
+      ws: join(import.meta.dirname, 'src/lib/ccxt/ws-shim.ts'),
+      undici: join(import.meta.dirname, 'src/lib/ccxt/empty-shim.ts'),
+    },
+  },
   define: {
     __APP_VERSION__: JSON.stringify(appVersion),
     __APP_BUILD_ID__: JSON.stringify(buildId),

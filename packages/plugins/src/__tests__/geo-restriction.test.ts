@@ -10,11 +10,10 @@ import {
 import {
   bybitMarketConnectorManifest,
   createBybitMarketConnectorPlugin,
-} from '../bybit-market-connector'
-import {
   createMexcMarketConnectorPlugin,
   mexcMarketConnectorManifest,
-} from '../mexc-market-connector'
+} from '../index'
+import { bybitCcxtVenue } from '../ccxt-connector/venues/bybit'
 import type { GeoRestrictedError } from '@pairlens/market-engine/errors'
 import type { PluginExecuteParams } from '@pairlens/plugin-system/types'
 
@@ -174,16 +173,15 @@ describe('ByBit proactive geo block', () => {
   })
 
   it('does not throw a geo error for a supported region', () => {
-    // A supported region resolves URLs and proceeds to open a socket; it must
-    // not raise a GeoRestrictedError. (Any later network failure is unrelated.)
-    let thrown: unknown
-    try {
-      const unsub = plugin.subscribe!(candleSub('DE'), () => {})
-      unsub()
-    } catch (e) {
-      thrown = e
-    }
-    expect(isGeoRestrictedError(thrown)).toBe(false)
+    // Asserted against the gate rather than by driving a real subscribe: under
+    // the ccxt bridge a permitted subscribe starts loadMarkets and a reconnect
+    // loop that outlives the test, and that stray traffic lands in whichever
+    // file's fetch stub is installed by the time it resolves. The refusal case
+    // above still goes through the plugin because the gate runs ahead of any
+    // I/O, which is the half that has to be proven end to end.
+    expect(() =>
+      bybitCcxtVenue.geoCheck?.('DE', 'market-data:candles'),
+    ).not.toThrow()
   })
 })
 

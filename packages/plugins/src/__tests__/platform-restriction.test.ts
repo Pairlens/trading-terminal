@@ -42,31 +42,21 @@ import {
   bitgetMarketConnectorManifest,
   bitvavoMarketConnectorManifest,
   bybitMarketConnectorManifest,
-  cryptocomMarketConnectorManifest,
-  htxMarketConnectorManifest,
-  krakenMarketConnectorManifest,
-  upbitMarketConnectorManifest,
-} from '../index'
-import {
   coinbaseMarketConnectorManifest,
   createCoinbaseMarketConnectorPlugin,
-} from '../coinbase-market-connector'
-import {
   createGateMarketConnectorPlugin,
-  gateMarketConnectorManifest,
-} from '../gate-market-connector'
-import {
   createKucoinMarketConnectorPlugin,
-  kucoinMarketConnectorManifest,
-} from '../kucoin-market-connector'
-import {
   createMexcMarketConnectorPlugin,
-  mexcMarketConnectorManifest,
-} from '../mexc-market-connector'
-import {
   createOkxMarketConnectorPlugin,
+  cryptocomMarketConnectorManifest,
+  gateMarketConnectorManifest,
+  htxMarketConnectorManifest,
+  krakenMarketConnectorManifest,
+  kucoinMarketConnectorManifest,
+  mexcMarketConnectorManifest,
   okxMarketConnectorManifest,
-} from '../okx-market-connector'
+  upbitMarketConnectorManifest,
+} from '../index'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
   PluginExecuteParams,
@@ -204,8 +194,19 @@ describe('a venue that needs desktop says so in its manifest', () => {
     expect(fromManifest).toEqual(fromAdapterInfo)
   })
 
-  it('marks exactly the four venues a browser cannot reach', () => {
+  it('marks exactly the five venues a browser cannot reach', () => {
+    // Bitfinex joined the list with the ccxt bridge: api-pub.bitfinex.com
+    // sends no Access-Control-Allow-Origin (measured 2026-08), and ccxt's
+    // mandatory loadMarkets is a REST call, so a production browser cannot
+    // reach the venue at all. The native connector papered over it by seeding
+    // history from a WS snapshot; the honest answer is requiresDesktop.
     const marked = CONNECTORS.filter(([, m]) => declared(m)).map(([v]) => v)
-    expect(marked.sort()).toEqual(['coinbase', 'gate', 'kucoin', 'mexc'])
+    expect(marked.sort()).toEqual([
+      'bitfinex',
+      'coinbase',
+      'gate',
+      'kucoin',
+      'mexc',
+    ])
   })
 })
