@@ -646,7 +646,9 @@ describe('okx host routing', () => {
       const probe = route(OKX, 'KR', { ...AUTHED_PAPER_CTX, entity: 'eea' })
       expect(probe['paperActive']).toBe('true')
       expect(probe['rest']).toBe('https://eea.okx.com')
-      expect(probe['wsPrivate']).toBe('wss://wseeapap.okx.com:8443/ws/v5/private')
+      expect(probe['wsPrivate']).toBe(
+        'wss://wseeapap.okx.com:8443/ws/v5/private',
+      )
     })
 
     it('okx entity=eea: no CORS fallback for an authed browser instance', () => {

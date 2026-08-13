@@ -5,8 +5,9 @@ description: CCXT cryptocurrency exchange library for TypeScript and JavaScript 
 
 # CCXT for TypeScript/JavaScript
 
-> **Pairlens note (local addition — everything below is verbatim upstream,**
-> **from ccxt/ccxt `.claude/skills/ccxt-typescript/SKILL.md`):** in this repo
+> **Pairlens note (local addition — everything below is upstream content**
+> **from ccxt/ccxt `.claude/skills/ccxt-typescript/SKILL.md`, reformatted by**
+> **this repo's Prettier):** in this repo
 > ccxt is pinned and patched (`patches/ccxt@4.5.71.patch`) and only
 > `packages/plugins` may depend on it. Never `import ccxt from 'ccxt'` — the
 > barrel pulls ~130 exchange classes into one chunk; venues dynamically
@@ -21,11 +22,13 @@ A comprehensive guide to using CCXT in TypeScript and JavaScript projects for cr
 ## Installation
 
 ### REST API (Standard CCXT)
+
 ```bash
 npm install ccxt
 ```
 
 ### WebSocket API (Real-time, ccxt.pro)
+
 ```bash
 npm install ccxt
 ```
@@ -35,6 +38,7 @@ Both REST and WebSocket APIs are included in the same package.
 ## Quick Start
 
 ### REST API - TypeScript
+
 ```typescript
 import ccxt from 'ccxt'
 
@@ -45,47 +49,49 @@ console.log(ticker)
 ```
 
 ### REST API - JavaScript (CommonJS)
-```javascript
-const ccxt = require('ccxt')
 
-(async () => {
-    const exchange = new ccxt.binance()
-    await exchange.loadMarkets()
-    const ticker = await exchange.fetchTicker('BTC/USDT')
-    console.log(ticker)
+```javascript
+const ccxt = require('ccxt')(async () => {
+  const exchange = new ccxt.binance()
+  await exchange.loadMarkets()
+  const ticker = await exchange.fetchTicker('BTC/USDT')
+  console.log(ticker)
 })()
 ```
 
 ### WebSocket API - Real-time Updates
+
 ```typescript
 import ccxt from 'ccxt'
 
 const exchange = new ccxt.pro.binance()
 while (true) {
-    const ticker = await exchange.watchTicker('BTC/USDT')
-    console.log(ticker)  // Live updates!
+  const ticker = await exchange.watchTicker('BTC/USDT')
+  console.log(ticker) // Live updates!
 }
 await exchange.close()
 ```
 
 ## REST vs WebSocket
 
-| Feature | REST API | WebSocket API |
-|---------|----------|---------------|
-| **Use for** | One-time queries, placing orders | Real-time monitoring, live price feeds |
+| Feature           | REST API                               | WebSocket API                          |
+| ----------------- | -------------------------------------- | -------------------------------------- |
+| **Use for**       | One-time queries, placing orders       | Real-time monitoring, live price feeds |
 | **Method prefix** | `fetch*` (fetchTicker, fetchOrderBook) | `watch*` (watchTicker, watchOrderBook) |
-| **Speed** | Slower (HTTP request/response) | Faster (persistent connection) |
-| **Rate limits** | Strict (1-2 req/sec) | More lenient (continuous stream) |
-| **Import** | `ccxt.exchange()` | `ccxt.pro.exchange()` |
-| **Best for** | Trading, account management | Price monitoring, arbitrage detection |
+| **Speed**         | Slower (HTTP request/response)         | Faster (persistent connection)         |
+| **Rate limits**   | Strict (1-2 req/sec)                   | More lenient (continuous stream)       |
+| **Import**        | `ccxt.exchange()`                      | `ccxt.pro.exchange()`                  |
+| **Best for**      | Trading, account management            | Price monitoring, arbitrage detection  |
 
 **When to use REST:**
+
 - Placing orders
 - Fetching account balance
 - One-time data queries
 - Order management (cancel, fetch orders)
 
 **When to use WebSocket:**
+
 - Real-time price monitoring
 - Live orderbook updates
 - Arbitrage detection
@@ -94,29 +100,31 @@ await exchange.close()
 ## Creating Exchange Instance
 
 ### REST API
+
 ```typescript
 // Public API (no authentication)
 const exchange = new ccxt.binance({
-    enableRateLimit: true  // Recommended!
+  enableRateLimit: true, // Recommended!
 })
 
 // Private API (with authentication)
 const exchange = new ccxt.binance({
-    apiKey: 'YOUR_API_KEY',
-    secret: 'YOUR_SECRET',
-    enableRateLimit: true
+  apiKey: 'YOUR_API_KEY',
+  secret: 'YOUR_SECRET',
+  enableRateLimit: true,
 })
 ```
 
 ### WebSocket API
+
 ```typescript
 // Public WebSocket
 const exchange = new ccxt.pro.binance()
 
 // Private WebSocket (with authentication)
 const exchange = new ccxt.pro.binance({
-    apiKey: 'YOUR_API_KEY',
-    secret: 'YOUR_SECRET'
+  apiKey: 'YOUR_API_KEY',
+  secret: 'YOUR_SECRET',
 })
 
 // Always close when done
@@ -126,42 +134,46 @@ await exchange.close()
 ## Common REST Operations
 
 ### Loading Markets
+
 ```typescript
 // Load all available trading pairs
 await exchange.loadMarkets()
 
 // Access market information
 const btcMarket = exchange.market('BTC/USDT')
-console.log(btcMarket.limits.amount.min)  // Minimum order amount
+console.log(btcMarket.limits.amount.min) // Minimum order amount
 ```
 
 ### Fetching Ticker
+
 ```typescript
 // Single ticker
 const ticker = await exchange.fetchTicker('BTC/USDT')
-console.log(ticker.last)      // Last price
-console.log(ticker.bid)       // Best bid
-console.log(ticker.ask)       // Best ask
-console.log(ticker.volume)    // 24h volume
+console.log(ticker.last) // Last price
+console.log(ticker.bid) // Best bid
+console.log(ticker.ask) // Best ask
+console.log(ticker.volume) // 24h volume
 
 // Multiple tickers (if supported)
 const tickers = await exchange.fetchTickers(['BTC/USDT', 'ETH/USDT'])
 ```
 
 ### Fetching Order Book
+
 ```typescript
 // Full orderbook
 const orderbook = await exchange.fetchOrderBook('BTC/USDT')
-console.log(orderbook.bids[0])  // [price, amount]
-console.log(orderbook.asks[0])  // [price, amount]
+console.log(orderbook.bids[0]) // [price, amount]
+console.log(orderbook.asks[0]) // [price, amount]
 
 // Limited depth
-const orderbook = await exchange.fetchOrderBook('BTC/USDT', 5)  // Top 5 levels
+const orderbook = await exchange.fetchOrderBook('BTC/USDT', 5) // Top 5 levels
 ```
 
 ### Creating Orders
 
 #### Limit Order
+
 ```typescript
 // Buy limit order
 const order = await exchange.createLimitBuyOrder('BTC/USDT', 0.01, 50000)
@@ -171,10 +183,17 @@ console.log(order.id)
 const order = await exchange.createLimitSellOrder('BTC/USDT', 0.01, 60000)
 
 // Generic limit order
-const order = await exchange.createOrder('BTC/USDT', 'limit', 'buy', 0.01, 50000)
+const order = await exchange.createOrder(
+  'BTC/USDT',
+  'limit',
+  'buy',
+  0.01,
+  50000,
+)
 ```
 
 #### Market Order
+
 ```typescript
 // Buy market order
 const order = await exchange.createMarketBuyOrder('BTC/USDT', 0.01)
@@ -187,14 +206,16 @@ const order = await exchange.createOrder('BTC/USDT', 'market', 'sell', 0.01)
 ```
 
 ### Fetching Balance
+
 ```typescript
 const balance = await exchange.fetchBalance()
-console.log(balance.BTC.free)   // Available balance
-console.log(balance.BTC.used)   // Balance in orders
-console.log(balance.BTC.total)  // Total balance
+console.log(balance.BTC.free) // Available balance
+console.log(balance.BTC.used) // Balance in orders
+console.log(balance.BTC.total) // Total balance
 ```
 
 ### Fetching Orders
+
 ```typescript
 // Open orders
 const openOrders = await exchange.fetchOpenOrders('BTC/USDT')
@@ -210,6 +231,7 @@ const order = await exchange.fetchOrder(orderId, 'BTC/USDT')
 ```
 
 ### Fetching Trades
+
 ```typescript
 // Recent public trades
 const trades = await exchange.fetchTrades('BTC/USDT', undefined, 10)
@@ -219,6 +241,7 @@ const myTrades = await exchange.fetchMyTrades('BTC/USDT')
 ```
 
 ### Canceling Orders
+
 ```typescript
 // Cancel single order
 await exchange.cancelOrder(orderId, 'BTC/USDT')
@@ -230,88 +253,94 @@ await exchange.cancelAllOrders('BTC/USDT')
 ## WebSocket Operations (Real-time)
 
 ### Watching Ticker (Live Price Updates)
+
 ```typescript
 const exchange = new ccxt.pro.binance()
 
 while (true) {
-    const ticker = await exchange.watchTicker('BTC/USDT')
-    console.log(ticker.last, ticker.timestamp)
+  const ticker = await exchange.watchTicker('BTC/USDT')
+  console.log(ticker.last, ticker.timestamp)
 }
 
 await exchange.close()
 ```
 
 ### Watching Order Book (Live Depth Updates)
+
 ```typescript
 const exchange = new ccxt.pro.binance()
 
 while (true) {
-    const orderbook = await exchange.watchOrderBook('BTC/USDT')
-    console.log('Best bid:', orderbook.bids[0])
-    console.log('Best ask:', orderbook.asks[0])
+  const orderbook = await exchange.watchOrderBook('BTC/USDT')
+  console.log('Best bid:', orderbook.bids[0])
+  console.log('Best ask:', orderbook.asks[0])
 }
 
 await exchange.close()
 ```
 
 ### Watching Trades (Live Trade Stream)
+
 ```typescript
 const exchange = new ccxt.pro.binance()
 
 while (true) {
-    const trades = await exchange.watchTrades('BTC/USDT')
-    for (const trade of trades) {
-        console.log(trade.price, trade.amount, trade.side)
-    }
+  const trades = await exchange.watchTrades('BTC/USDT')
+  for (const trade of trades) {
+    console.log(trade.price, trade.amount, trade.side)
+  }
 }
 
 await exchange.close()
 ```
 
 ### Watching Your Orders (Live Order Updates)
+
 ```typescript
 const exchange = new ccxt.pro.binance({
-    apiKey: 'YOUR_API_KEY',
-    secret: 'YOUR_SECRET'
+  apiKey: 'YOUR_API_KEY',
+  secret: 'YOUR_SECRET',
 })
 
 while (true) {
-    const orders = await exchange.watchOrders('BTC/USDT')
-    for (const order of orders) {
-        console.log(order.id, order.status, order.filled)
-    }
+  const orders = await exchange.watchOrders('BTC/USDT')
+  for (const order of orders) {
+    console.log(order.id, order.status, order.filled)
+  }
 }
 
 await exchange.close()
 ```
 
 ### Watching Balance (Live Balance Updates)
+
 ```typescript
 const exchange = new ccxt.pro.binance({
-    apiKey: 'YOUR_API_KEY',
-    secret: 'YOUR_SECRET'
+  apiKey: 'YOUR_API_KEY',
+  secret: 'YOUR_SECRET',
 })
 
 while (true) {
-    const balance = await exchange.watchBalance()
-    console.log('BTC:', balance.BTC)
-    console.log('USDT:', balance.USDT)
+  const balance = await exchange.watchBalance()
+  console.log('BTC:', balance.BTC)
+  console.log('USDT:', balance.USDT)
 }
 
 await exchange.close()
 ```
 
 ### Watching Multiple Symbols
+
 ```typescript
 const exchange = new ccxt.pro.binance()
 const symbols = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT']
 
 while (true) {
-    // Watch all symbols concurrently
-    const tickers = await exchange.watchTickers(symbols)
-    for (const symbol in tickers) {
-        console.log(symbol, tickers[symbol].last)
-    }
+  // Watch all symbols concurrently
+  const tickers = await exchange.watchTickers(symbols)
+  for (const symbol in tickers) {
+    console.log(symbol, tickers[symbol].last)
+  }
 }
 
 await exchange.close()
@@ -322,6 +351,7 @@ await exchange.close()
 ### Market Data Methods
 
 #### Tickers & Prices
+
 - `fetchTicker(symbol)` - Fetch ticker for one symbol
 - `fetchTickers([symbols])` - Fetch multiple tickers at once
 - `fetchBidsAsks([symbols])` - Fetch best bid/ask for multiple symbols
@@ -329,17 +359,20 @@ await exchange.close()
 - `fetchMarkPrices([symbols])` - Fetch mark prices (derivatives)
 
 #### Order Books
+
 - `fetchOrderBook(symbol, limit)` - Fetch order book
 - `fetchOrderBooks([symbols])` - Fetch multiple order books
 - `fetchL2OrderBook(symbol)` - Fetch level 2 order book
 - `fetchL3OrderBook(symbol)` - Fetch level 3 order book (if supported)
 
 #### Trades
+
 - `fetchTrades(symbol, since, limit)` - Fetch public trades
 - `fetchMyTrades(symbol, since, limit)` - Fetch your trades (auth required)
 - `fetchOrderTrades(orderId, symbol)` - Fetch trades for specific order
 
 #### OHLCV (Candlesticks)
+
 - `fetchOHLCV(symbol, timeframe, since, limit)` - Fetch candlestick data
 - `fetchIndexOHLCV(symbol, timeframe)` - Fetch index price OHLCV
 - `fetchMarkOHLCV(symbol, timeframe)` - Fetch mark price OHLCV
@@ -359,6 +392,7 @@ await exchange.close()
 ### Trading Methods
 
 #### Creating Orders
+
 - `createOrder(symbol, type, side, amount, price, params)` - Create order (generic)
 - `createLimitOrder(symbol, side, amount, price)` - Create limit order
 - `createMarketOrder(symbol, side, amount)` - Create market order
@@ -380,6 +414,7 @@ await exchange.close()
 - `createOrderWithTakeProfitAndStopLoss(symbol, type, side, amount, price, tpPrice, slPrice)` - OCO order
 
 #### Managing Orders
+
 - `fetchOrder(orderId, symbol)` - Fetch single order
 - `fetchOrders(symbol, since, limit)` - Fetch all orders
 - `fetchOpenOrders(symbol, since, limit)` - Fetch open orders
@@ -411,6 +446,7 @@ await exchange.close()
 ### Derivatives & Futures
 
 #### Positions
+
 - `fetchPosition(symbol)` - Fetch single position
 - `fetchPositions([symbols])` - Fetch all positions
 - `fetchPositionsForSymbol(symbol)` - Fetch positions for symbol
@@ -422,6 +458,7 @@ await exchange.close()
 - `closeAllPositions()` - Close all positions
 
 #### Funding & Settlement
+
 - `fetchFundingRate(symbol)` - Current funding rate
 - `fetchFundingRates([symbols])` - Multiple funding rates
 - `fetchFundingRateHistory(symbol, since, limit)` - Funding rate history
@@ -431,6 +468,7 @@ await exchange.close()
 - `fetchMySettlementHistory(symbol, since, limit)` - Your settlement history
 
 #### Open Interest & Liquidations
+
 - `fetchOpenInterest(symbol)` - Open interest for symbol
 - `fetchOpenInterests([symbols])` - Multiple open interests
 - `fetchOpenInterestHistory(symbol, timeframe, since, limit)` - OI history
@@ -438,6 +476,7 @@ await exchange.close()
 - `fetchMyLiquidations(symbol, since, limit)` - Your liquidations
 
 #### Options
+
 - `fetchOption(symbol)` - Fetch option info
 - `fetchOptionChain(code)` - Fetch option chain
 - `fetchGreeks(symbol)` - Fetch option greeks
@@ -493,6 +532,7 @@ await exchange.close()
 All REST methods have WebSocket equivalents with `watch*` prefix:
 
 #### Real-time Market Data
+
 - `watchTicker(symbol)` - Watch single ticker
 - `watchTickers([symbols])` - Watch multiple tickers
 - `watchOrderBook(symbol)` - Watch order book updates
@@ -502,6 +542,7 @@ All REST methods have WebSocket equivalents with `watch*` prefix:
 - `watchBidsAsks([symbols])` - Watch best bid/ask
 
 #### Real-time Account Data (Auth Required)
+
 - `watchBalance()` - Watch balance updates
 - `watchOrders(symbol)` - Watch your order updates
 - `watchMyTrades(symbol)` - Watch your trade updates
@@ -553,8 +594,6 @@ console.log(exchange.has)
 - `set*` - Configure settings (leverage, margin mode)
 - `*Ws` suffix - WebSocket variant (some exchanges)
 
-
-
 ## Proxy Configuration
 
 CCXT supports HTTP, HTTPS, and SOCKS proxies for both REST and WebSocket connections.
@@ -565,7 +604,7 @@ CCXT supports HTTP, HTTPS, and SOCKS proxies for both REST and WebSocket connect
 // HTTP Proxy
 exchange.httpProxy = 'http://your-proxy-host:port'
 
-// HTTPS Proxy  
+// HTTPS Proxy
 exchange.httpsProxy = 'https://your-proxy-host:port'
 
 // SOCKS Proxy
@@ -603,6 +642,7 @@ Some exchanges provide WebSocket variants of REST methods for faster order place
 ### Trading via WebSocket
 
 **Creating Orders:**
+
 - `createOrderWs` - Create order via WebSocket (faster than REST)
 - `createLimitOrderWs` - Create limit order via WebSocket
 - `createMarketOrderWs` - Create market order via WebSocket
@@ -620,12 +660,14 @@ Some exchanges provide WebSocket variants of REST methods for faster order place
 - `createReduceOnlyOrderWs` - Reduce-only order via WebSocket
 
 **Managing Orders:**
+
 - `editOrderWs` - Edit order via WebSocket
 - `cancelOrderWs` - Cancel order via WebSocket (faster than REST)
 - `cancelOrdersWs` - Cancel multiple orders via WebSocket
 - `cancelAllOrdersWs` - Cancel all orders via WebSocket
 
 **Fetching Data:**
+
 - `fetchOrderWs` - Fetch order via WebSocket
 - `fetchOrdersWs` - Fetch orders via WebSocket
 - `fetchOpenOrdersWs` - Fetch open orders via WebSocket
@@ -640,12 +682,14 @@ Some exchanges provide WebSocket variants of REST methods for faster order place
 ### When to Use WebSocket Methods
 
 **Use `*Ws` methods when:**
+
 - You need faster order placement (lower latency)
 - You're already connected via WebSocket
 - You want to reduce REST API rate limit usage
 - Trading strategies require sub-100ms latency
 
 **Use REST methods when:**
+
 - You need guaranteed execution confirmation
 - You're making one-off requests
 - The exchange doesn't support the WebSocket variant
@@ -654,11 +698,13 @@ Some exchanges provide WebSocket variants of REST methods for faster order place
 ### Example: Order Placement Comparison
 
 **REST API (slower, more reliable):**
+
 ```
 const order = await exchange.createOrder('BTC/USDT', 'limit', 'buy', 0.01, 50000)
 ```
 
 **WebSocket API (faster, lower latency):**
+
 ```
 const order = await exchange.createOrderWs('BTC/USDT', 'limit', 'buy', 0.01, 50000)
 ```
@@ -677,7 +723,6 @@ if (exchange.has['createOrderWs']) {
 }
 ```
 
-
 ## Authentication
 
 ### Setting API Keys
@@ -685,9 +730,9 @@ if (exchange.has['createOrderWs']) {
 ```typescript
 // During instantiation
 const exchange = new ccxt.binance({
-    apiKey: 'YOUR_API_KEY',
-    secret: 'YOUR_SECRET',
-    enableRateLimit: true
+  apiKey: 'YOUR_API_KEY',
+  secret: 'YOUR_SECRET',
+  enableRateLimit: true,
 })
 
 // After instantiation
@@ -696,29 +741,32 @@ exchange.secret = 'YOUR_SECRET'
 ```
 
 ### Environment Variables (Recommended)
+
 ```typescript
 const exchange = new ccxt.binance({
-    apiKey: process.env.BINANCE_API_KEY,
-    secret: process.env.BINANCE_SECRET,
-    enableRateLimit: true
+  apiKey: process.env.BINANCE_API_KEY,
+  secret: process.env.BINANCE_SECRET,
+  enableRateLimit: true,
 })
 ```
 
 ### Testing Authentication
+
 ```typescript
 try {
-    const balance = await exchange.fetchBalance()
-    console.log('Authentication successful!')
+  const balance = await exchange.fetchBalance()
+  console.log('Authentication successful!')
 } catch (error) {
-    if (error instanceof ccxt.AuthenticationError) {
-        console.error('Invalid API credentials')
-    }
+  if (error instanceof ccxt.AuthenticationError) {
+    console.error('Invalid API credentials')
+  }
 }
 ```
 
 ## Error Handling
 
 ### Exception Hierarchy
+
 ```
 BaseError
 ├─ NetworkError (recoverable - retry)
@@ -734,110 +782,125 @@ BaseError
 ```
 
 ### Basic Error Handling
+
 ```typescript
 import ccxt from 'ccxt'
 
 try {
-    const ticker = await exchange.fetchTicker('BTC/USDT')
+  const ticker = await exchange.fetchTicker('BTC/USDT')
 } catch (error) {
-    if (error instanceof ccxt.NetworkError) {
-        console.error('Network error - retry:', error.message)
-    } else if (error instanceof ccxt.ExchangeError) {
-        console.error('Exchange error - do not retry:', error.message)
-    } else {
-        console.error('Unknown error:', error)
-    }
+  if (error instanceof ccxt.NetworkError) {
+    console.error('Network error - retry:', error.message)
+  } else if (error instanceof ccxt.ExchangeError) {
+    console.error('Exchange error - do not retry:', error.message)
+  } else {
+    console.error('Unknown error:', error)
+  }
 }
 ```
 
 ### Specific Exception Handling
+
 ```typescript
 try {
-    const order = await exchange.createOrder('BTC/USDT', 'limit', 'buy', 0.01, 50000)
+  const order = await exchange.createOrder(
+    'BTC/USDT',
+    'limit',
+    'buy',
+    0.01,
+    50000,
+  )
 } catch (error) {
-    if (error instanceof ccxt.InsufficientFunds) {
-        console.error('Not enough balance')
-    } else if (error instanceof ccxt.InvalidOrder) {
-        console.error('Invalid order parameters')
-    } else if (error instanceof ccxt.RateLimitExceeded) {
-        console.error('Rate limit hit - wait before retrying')
-        await exchange.sleep(1000)  // Wait 1 second
-    } else if (error instanceof ccxt.AuthenticationError) {
-        console.error('Check your API credentials')
-    }
+  if (error instanceof ccxt.InsufficientFunds) {
+    console.error('Not enough balance')
+  } else if (error instanceof ccxt.InvalidOrder) {
+    console.error('Invalid order parameters')
+  } else if (error instanceof ccxt.RateLimitExceeded) {
+    console.error('Rate limit hit - wait before retrying')
+    await exchange.sleep(1000) // Wait 1 second
+  } else if (error instanceof ccxt.AuthenticationError) {
+    console.error('Check your API credentials')
+  }
 }
 ```
 
 ### Retry Logic for Network Errors
+
 ```typescript
 async function fetchWithRetry(maxRetries = 3) {
-    for (let i = 0; i < maxRetries; i++) {
-        try {
-            return await exchange.fetchTicker('BTC/USDT')
-        } catch (error) {
-            if (error instanceof ccxt.NetworkError && i < maxRetries - 1) {
-                console.log(`Retry ${i + 1}/${maxRetries}`)
-                await exchange.sleep(1000 * (i + 1))  // Exponential backoff
-            } else {
-                throw error
-            }
-        }
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await exchange.fetchTicker('BTC/USDT')
+    } catch (error) {
+      if (error instanceof ccxt.NetworkError && i < maxRetries - 1) {
+        console.log(`Retry ${i + 1}/${maxRetries}`)
+        await exchange.sleep(1000 * (i + 1)) // Exponential backoff
+      } else {
+        throw error
+      }
     }
+  }
 }
 ```
 
 ## Rate Limiting
 
 ### Built-in Rate Limiter (Recommended)
+
 ```typescript
 const exchange = new ccxt.binance({
-    enableRateLimit: true  // Automatically throttles requests
+  enableRateLimit: true, // Automatically throttles requests
 })
 ```
 
 ### Manual Delays
+
 ```typescript
 await exchange.fetchTicker('BTC/USDT')
-await exchange.sleep(1000)  // Wait 1 second
+await exchange.sleep(1000) // Wait 1 second
 await exchange.fetchTicker('ETH/USDT')
 ```
 
 ### Checking Rate Limit
+
 ```typescript
-console.log(exchange.rateLimit)  // Milliseconds between requests
+console.log(exchange.rateLimit) // Milliseconds between requests
 ```
 
 ## Common Pitfalls
 
 ### Forgetting `await`
+
 ```typescript
 // Wrong - returns Promise, not data
 const ticker = exchange.fetchTicker('BTC/USDT')
-console.log(ticker.last)  // ERROR: ticker is a Promise!
+console.log(ticker.last) // ERROR: ticker is a Promise!
 
 // Correct
 const ticker = await exchange.fetchTicker('BTC/USDT')
-console.log(ticker.last)  // Works!
+console.log(ticker.last) // Works!
 ```
 
 ### Using REST for Real-time Monitoring
+
 ```typescript
 // Wrong - wastes rate limits, slow
 while (true) {
-    const ticker = await exchange.fetchTicker('BTC/USDT')  // REST
-    console.log(ticker.last)
-    await exchange.sleep(1000)
+  const ticker = await exchange.fetchTicker('BTC/USDT') // REST
+  console.log(ticker.last)
+  await exchange.sleep(1000)
 }
 
 // Correct - use WebSocket
 const exchange = new ccxt.pro.binance()
 while (true) {
-    const ticker = await exchange.watchTicker('BTC/USDT')  // WebSocket
-    console.log(ticker.last)
+  const ticker = await exchange.watchTicker('BTC/USDT') // WebSocket
+  console.log(ticker.last)
 }
 ```
 
 ### Not Closing WebSocket Connections
+
 ```typescript
 // Wrong - memory leak
 const exchange = new ccxt.pro.binance()
@@ -847,22 +910,23 @@ const ticker = await exchange.watchTicker('BTC/USDT')
 // Correct
 const exchange = new ccxt.pro.binance()
 try {
-    while (true) {
-        const ticker = await exchange.watchTicker('BTC/USDT')
-        console.log(ticker)
-    }
+  while (true) {
+    const ticker = await exchange.watchTicker('BTC/USDT')
+    console.log(ticker)
+  }
 } finally {
-    await exchange.close()
+  await exchange.close()
 }
 ```
 
 ### Multiple Instances with Same API Keys
+
 ```typescript
 // Wrong - nonce conflicts
 const ex1 = new ccxt.binance({ apiKey: 'key', secret: 'secret' })
 const ex2 = new ccxt.binance({ apiKey: 'key', secret: 'secret' })
 await ex1.fetchBalance()
-await ex2.fetchBalance()  // May fail due to nonce issues!
+await ex2.fetchBalance() // May fail due to nonce issues!
 
 // Correct - reuse single instance
 const exchange = new ccxt.binance({ apiKey: 'key', secret: 'secret' })
@@ -871,36 +935,42 @@ await exchange.fetchBalance()
 ```
 
 ### Not Enabling Rate Limiter
+
 ```typescript
 // Wrong - may hit rate limits
 const exchange = new ccxt.binance()
 for (let i = 0; i < 100; i++) {
-    await exchange.fetchTicker('BTC/USDT')  // May fail!
+  await exchange.fetchTicker('BTC/USDT') // May fail!
 }
 
 // Correct
 const exchange = new ccxt.binance({ enableRateLimit: true })
 for (let i = 0; i < 100; i++) {
-    await exchange.fetchTicker('BTC/USDT')  // Automatically throttled
+  await exchange.fetchTicker('BTC/USDT') // Automatically throttled
 }
 ```
 
 ## Browser Usage
 
 ### Via CDN
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/ccxt@latest/dist/ccxt.browser.js"></script>
 <script>
-    const exchange = new ccxt.binance()
-    exchange.loadMarkets().then(() => {
-        return exchange.fetchTicker('BTC/USDT')
-    }).then(ticker => {
-        console.log(ticker)
+  const exchange = new ccxt.binance()
+  exchange
+    .loadMarkets()
+    .then(() => {
+      return exchange.fetchTicker('BTC/USDT')
+    })
+    .then((ticker) => {
+      console.log(ticker)
     })
 </script>
 ```
 
 ### ES Modules
+
 ```javascript
 import ccxt from 'https://cdn.jsdelivr.net/npm/ccxt@latest/dist/ccxt.browser.js'
 
@@ -915,32 +985,39 @@ console.log(ticker)
 ### Common Issues
 
 **1. "Cannot find module 'ccxt'"**
+
 - Solution: Run `npm install ccxt`
 
 **2. "RateLimitExceeded"**
+
 - Solution: Enable rate limiter: `enableRateLimit: true`
 - Or add manual delays between requests
 
 **3. "AuthenticationError"**
+
 - Solution: Check API key and secret
 - Verify API key permissions on exchange
 - Check system clock is synced (use NTP)
 
 **4. "InvalidNonce"**
+
 - Solution: Sync system clock
 - Use only one exchange instance per API key
 - Don't run multiple bots with same credentials
 
 **5. "InsufficientFunds"**
+
 - Solution: Check available balance (`balance.BTC.free`)
 - Account for trading fees
 
 **6. "ExchangeNotAvailable"**
+
 - Solution: Check exchange status/maintenance
 - Retry after a delay
 - Use different exchange endpoint if available
 
 **7. WebSocket connection drops**
+
 - Solution: Implement reconnection logic
 - Use try-catch and restart `watch*` methods
 - Check network stability
@@ -973,21 +1050,21 @@ console.log(exchange.last_json_response)
 CCXT supports prediction-market exchanges (Polymarket, Kalshi, Limitless, Myriad, Hyperliquid) under a dedicated `ccxt.prediction` namespace. They use the same unified API, but prices are quoted **0–1** (USDC per outcome share) and the tradeable unit is an **outcome** (e.g. a market's YES/NO token), not a regular market symbol.
 
 ```typescript
-import ccxt from 'ccxt';
+import ccxt from 'ccxt'
 
-const exchange = new ccxt.prediction.polymarket ();
-await exchange.loadMarkets ();
+const exchange = new ccxt.prediction.polymarket()
+await exchange.loadMarkets()
 // discover events → markets → outcomes
-const events = await exchange.fetchEvents ({ 'query': 'Trump' });
-const outcome = events[0]['markets'][0]['outcomes'][0];
+const events = await exchange.fetchEvents({ query: 'Trump' })
+const outcome = events[0]['markets'][0]['outcomes'][0]
 // each outcome has: outcome (the handle, e.g. 'TRUMP_OUT_PRESIDENT_2027:YES'),
 // outcomeId, market, label ('YES'/'NO')
-const handle = outcome['outcome'];
-const ticker = await exchange.fetchTicker (handle);
-const book = await exchange.fetchOrderBook (handle);
+const handle = outcome['outcome']
+const ticker = await exchange.fetchTicker(handle)
+const book = await exchange.fetchOrderBook(handle)
 // limit buy 5 YES shares @ 0.40 USDC (price is 0..1 per share)
-const order = await exchange.createOrder (handle, 'limit', 'buy', 5, 0.40);
-await exchange.cancelOrder (order['id'], handle);
+const order = await exchange.createOrder(handle, 'limit', 'buy', 5, 0.4)
+await exchange.cancelOrder(order['id'], handle)
 ```
 
 - Price/trade methods (`fetchTicker`, `fetchOrderBook`, `fetchOHLCV`, `fetchTrades`, `createOrder`, `cancelOrder`, …) take an **outcome handle or outcomeId** (the `outcome` / `outcomes` parameter), not `symbol`.
