@@ -96,6 +96,7 @@ Everything above runs without any Pairlens server. Optional cloud conveniences (
 | `bun run lint`             | ESLint across all workspaces                     |
 | `bun run test`             | All TypeScript tests                             |
 | `bun run test:conformance` | Cross-connector market-data/order contract suite |
+| `bun run conformance`      | Same suite, live per-connector grid              |
 | `bun run format`           | Prettier format                                  |
 | `bun run create:plugin`    | Scaffold a new plugin                            |
 
