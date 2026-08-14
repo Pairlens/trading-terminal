@@ -43,4 +43,26 @@ describe('binance venue options', () => {
   it('paces REST at the venue’s real weight budget (10 ms/unit)', () => {
     expect(binanceCcxtVenue.options?.['rateLimit']).toBe(10)
   })
+
+  // rateLimit 10 under a ROLLING WINDOW is Binance's actual limit semantics
+  // (6000 weight per rolling minute, bursts free) — the leaky bucket would
+  // still serialize a reload's burst one call at a time.
+  it('uses the rolling-window rate limiter, matching the venue’s own semantics', () => {
+    expect(binanceCcxtVenue.options?.['rateLimiterAlgorithm']).toBe(
+      'rollingWindow',
+    )
+  })
+
+  // The book is diff-stream + REST snapshot here — the slowest first paint
+  // of the fleet without the parallel REST seed.
+  it('seeds the order book’s first paint over REST', () => {
+    expect(binanceCcxtVenue.seedOrderBook).toBe(true)
+  })
+
+  // The trade stream sends only new prints — an empty tape until the market
+  // moves. Safe to seed: Binance candles come from watchOHLCV, never folded
+  // from the tape.
+  it('seeds the tape over REST', () => {
+    expect(binanceCcxtVenue.seedTrades).toBe(true)
+  })
 })

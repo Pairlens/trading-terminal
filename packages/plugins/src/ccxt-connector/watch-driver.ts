@@ -112,6 +112,12 @@ const FAN_COALESCE_MS = 25
  * venue's snapshot depth; the memory is a few KB per subscribed tape.
  */
 const RECENT_TRADE_IDS = 500
+/**
+ * Prints fetched for the tape's REST first-paint seed (`seedTrades`
+ * venues). Well under `RECENT_TRADE_IDS`, so every seeded id fits in the
+ * dedup memory that fences the stream's overlap.
+ */
+const TRADES_SEED_LIMIT = 100
 
 export type WatchChannel = 'candles' | 'ticker' | 'orderbook' | 'trades'
 
@@ -289,6 +295,15 @@ export class CcxtStreamHub {
         void this.runLoop(current)
       }
       if (current.channel === 'candles') this.startBackfill(current)
+      if (
+        current.channel === 'orderbook' &&
+        this.opts.venue.seedOrderBook === true
+      ) {
+        void this.seedBookFirstPaint(current)
+      }
+      if (current.channel === 'trades' && this.opts.venue.seedTrades === true) {
+        void this.seedTradesFirstPaint(current)
+      }
     } else {
       this.replay(current, callback)
     }
@@ -428,6 +443,21 @@ export class CcxtStreamHub {
       }
     }
     const raw = await exchange.watchTrades(sub.symbol)
+    const trades = this.dedupeTrades(sub, raw)
+    if (trades.length === 0) return null
+    return { type: 'update' as const, trades }
+  }
+
+  /**
+   * Parse a batch of raw trades, registering each id in the key's dedup
+   * memory and dropping the ones already delivered — shared between the
+   * stream loop and the REST tape seed, which is exactly why neither can
+   * double a print the other delivered first.
+   */
+  private dedupeTrades(
+    sub: Sub,
+    raw: Array<Record<string, unknown>>,
+  ): Array<Trade> {
     const trades: Array<Trade> = []
     for (const entry of raw) {
       const trade = parseCcxtTrade(entry)
@@ -443,8 +473,7 @@ export class CcxtStreamHub {
       }
       trades.push(trade)
     }
-    if (trades.length === 0) return null
-    return { type: 'update' as const, trades }
+    return trades
   }
 
   // ── Ticker fan ─────────────────────────────────────────────────────────
@@ -638,6 +667,65 @@ export class CcxtStreamHub {
         for (const sub of unseeded) this.fanSeeded.delete(sub.symbol)
       }
     })()
+  }
+
+  /**
+   * First-paint seed for a book key on a `seedOrderBook` venue (see the
+   * flag's doc for why the stream alone is seconds late on Binance). Runs in
+   * parallel with the watch loop's own acquire — the host shares one build —
+   * and delivers only while the key has never painted: the stream's synced
+   * snapshot always wins from the first live frame onward.
+   */
+  private async seedBookFirstPaint(sub: Sub): Promise<void> {
+    try {
+      const lease = await this.opts.host.acquire()
+      if (this.destroyed || this.subs.get(sub.key) !== sub) return
+      if (typeof lease.exchange.fetchOrderBook !== 'function') return
+      this.opts.primeMarkets?.(lease.exchange, sub.pair)
+      const book = await lease.exchange.fetchOrderBook(
+        sub.symbol,
+        this.opts.venue.orderbookDepth,
+      )
+      if (this.destroyed || this.subs.get(sub.key) !== sub) return
+      if (sub.cached !== null) return
+      this.deliver(sub, {
+        type: 'snapshot' as const,
+        bids: parseCcxtBookLevels(book.bids),
+        asks: parseCcxtBookLevels(book.asks),
+        ts: ccxtBookTimestamp(book),
+      })
+    } catch {
+      // Purely a first-paint accelerant — the watch loop owns correctness,
+      // and its own snapshot is already on the way.
+    }
+  }
+
+  /**
+   * First-paint seed for a tape key on a `seedTrades` venue: the stream
+   * opens EMPTY on these venues, so a REST page of recent prints fills the
+   * pane immediately. Stands down entirely once any live print has been
+   * delivered (the id memory doubles as that signal), and every seeded id
+   * enters the same memory, so the stream's overlap dedupes to nothing.
+   */
+  private async seedTradesFirstPaint(sub: Sub): Promise<void> {
+    try {
+      const lease = await this.opts.host.acquire()
+      if (this.destroyed || this.subs.get(sub.key) !== sub) return
+      if (typeof lease.exchange.fetchTrades !== 'function') return
+      this.opts.primeMarkets?.(lease.exchange, sub.pair)
+      const raw = await lease.exchange.fetchTrades(
+        sub.symbol,
+        undefined,
+        TRADES_SEED_LIMIT,
+      )
+      if (this.destroyed || this.subs.get(sub.key) !== sub) return
+      if (sub.recentTradeIds && sub.recentTradeIds.size > 0) return
+      const trades = this.dedupeTrades(sub, raw)
+      if (trades.length === 0) return
+      this.deliver(sub, { type: 'update' as const, trades })
+    } catch {
+      // Accelerant only — the stream fills the tape as prints occur.
+    }
   }
 
   /**

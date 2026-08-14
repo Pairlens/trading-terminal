@@ -228,6 +228,19 @@ export type CcxtExchangeLike = {
     limit?: number,
     params?: Record<string, unknown>,
   ) => Promise<Array<CcxtOhlcvRow>>
+  /** REST book snapshot — the first-paint seed, see `seedOrderBook`. */
+  fetchOrderBook?: (
+    symbol: string,
+    limit?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<CcxtOrderBookLike>
+  /** REST recent public trades — the tape's first-paint seed, see `seedTrades`. */
+  fetchTrades?: (
+    symbol: string,
+    since?: number,
+    limit?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Array<CcxtTradeLike>>
   fetchTicker?: (
     symbol: string,
     params?: Record<string, unknown>,
@@ -356,6 +369,33 @@ export type CcxtVenueConfig = {
    * buys nothing and adds a resubscribe on every watchlist change.
    */
   batchTickers?: boolean
+  /**
+   * Paint the first order-book frame from a REST snapshot fired AT SUBSCRIBE
+   * TIME, in parallel with the WebSocket dial.
+   *
+   * Exists for venues whose ccxt book algorithm is diff-stream + REST
+   * snapshot (Binance): the stream cannot deliver anything until the socket
+   * is dialed, the SUBSCRIBE is acked, a REST snapshot is fetched and the
+   * buffered diffs are replayed against it — 1.5-2.5 s end to end, while
+   * snapshot-push venues (OKX, ByBit, Kraken, Crypto.com) hand the book over
+   * in their first socket frame. The seed is a plain `fetchOrderBook` racing
+   * that pipeline; whichever arrives first paints, and the stream's own
+   * synced snapshot always supersedes. Correctness is untouched — the seed
+   * is display-only and never enters ccxt's book state.
+   */
+  seedOrderBook?: boolean
+  /**
+   * Fill the tape's first paint from REST `fetchTrades`, for venues whose
+   * trade stream opens EMPTY (Binance sends only new prints — on a quiet
+   * pair the pane sits blank until the next market trade). The per-key
+   * trade-id memory dedupes the overlap when the stream starts, so no print
+   * ever doubles.
+   *
+   * NEVER enable on a venue whose candles are derived from the trades
+   * stream (`liveSource: 'trades'` folds): the seed's historical prints
+   * would re-add their volume to the forming bar.
+   */
+  seedTrades?: boolean
   /**
    * Depth passed to `watchOrderBook`. Venue-specific enums apply (see the
    * venue matrix §1g) — an unsupported value throws at runtime on some venues.
