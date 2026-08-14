@@ -14,4 +14,21 @@ staged=$(git diff --cached --name-only --diff-filter=ACMR)
 echo '[pre-commit] license-headers --check (staged files)'
 printf '%s\n' "$staged" | tr '\n' '\0' | xargs -0 bun scripts/license-headers.ts --check
 
+# GitNexus regenerates its own block in CLAUDE.md / AGENTS.md on every reindex
+# and stamps the name of the CHECKOUT it ran in. A reindex from a worktree
+# therefore renames the repo for everyone who reads those files on main, and
+# the wrong name silently breaks every `gitnexus://repo/<name>/...` read and
+# every tool call that takes a repo argument. Normalise it back on the way in.
+GITNEXUS_REPO_NAME=pairlens
+for doc in CLAUDE.md AGENTS.md; do
+  printf '%s\n' "$staged" | grep -qx "$doc" || continue
+  grep -q 'gitnexus' "$doc" || continue
+  perl -pi -e "
+    s{(gitnexus://repo/)[A-Za-z0-9._-]+}{\$1$GITNEXUS_REPO_NAME}g;
+    s{(indexed by GitNexus as \*\*)[^*]+(\*\*)}{\$1$GITNEXUS_REPO_NAME\$2}g;
+  " "$doc"
+  git add "$doc"
+  echo "[pre-commit] normalised GitNexus repo name in $doc"
+done
+
 echo '[pre-commit] ok'
