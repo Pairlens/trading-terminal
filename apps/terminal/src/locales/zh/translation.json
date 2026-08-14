@@ -2424,6 +2424,8 @@
     "buildExamplesNote": "参见仓库中的 dev-starter 和 dev-sync 示例以获取可运行的参考。",
     "applied": "已应用",
     "applyTheme": "应用主题",
+    "themeActions": "主题操作",
+    "useDefaultTheme": "使用默认主题",
     "author": "作者",
     "backToStore": "商店",
     "capabilities": "能力",

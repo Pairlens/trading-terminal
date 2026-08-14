@@ -2424,6 +2424,8 @@
     "buildExamplesNote": "Çalışan referanslar için repodaki dev-starter ve dev-sync örneklerine bak.",
     "applied": "Uygulandı",
     "applyTheme": "Temayı uygula",
+    "themeActions": "Tema işlemleri",
+    "useDefaultTheme": "Varsayılan temayı kullan",
     "author": "Yazar",
     "backToStore": "Mağaza",
     "capabilities": "Yetenekler",

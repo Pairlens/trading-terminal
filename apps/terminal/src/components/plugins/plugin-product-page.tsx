@@ -1,7 +1,15 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useMemo, useRef } from 'react'
-import { ChevronLeft, ExternalLink, Globe } from 'lucide-react'
+import {
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ExternalLink,
+  Globe,
+  Palette,
+  Trash2,
+} from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import { useTheme } from 'next-themes'
 import { useTranslation } from 'react-i18next'
@@ -11,6 +19,13 @@ import { AiOrb } from '@pairlens/ui/components/ui/ai-orb'
 import { Alert, AlertDescription } from '@pairlens/ui/components/ui/alert'
 import { Badge } from '@pairlens/ui/components/ui/badge'
 import { Button } from '@pairlens/ui/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@pairlens/ui/components/ui/dropdown-menu'
 
 import { POSTER_MORPH, SectionEyebrow, StoreAurora } from '../store/store-shell'
 import { pluginBrand, pluginPosterSrc } from './plugin-brand'
@@ -182,28 +197,6 @@ export function PluginProductPage({
                 : t('pluginStore.installedActive', 'Installed & active')}
             </span>
           )}
-          {/* Themes: "Remove" drops back to the built-in palette and keeps the
-              plugin around; uninstalling a downloaded theme is its own step. */}
-          {theme && themeApplied && (
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={busy}
-              onClick={onRemoveTheme}
-            >
-              {t('pluginStore.removeTheme', 'Remove')}
-            </Button>
-          )}
-          {theme && installed && !entry.bundled && (
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={busy}
-              onClick={() => onToggle(false)}
-            >
-              {t('pluginStore.uninstall', 'Uninstall')}
-            </Button>
-          )}
           {!theme && active && (
             <Button
               variant="outline"
@@ -214,14 +207,26 @@ export function PluginProductPage({
               {t('pluginStore.disable', 'Disable')}
             </Button>
           )}
-          <Button
-            disabled={
-              busy || (theme ? themeApplied : active) || !!platformBadge
-            }
-            onClick={() => (theme ? onApplyTheme() : onToggle(true))}
-          >
-            {installLabel}
-          </Button>
+          {theme ? (
+            <ThemeActionButton
+              applyLabel={installLabel}
+              applied={themeApplied}
+              installed={installed}
+              bundled={!!entry.bundled}
+              busy={busy}
+              blocked={!!platformBadge}
+              onApply={onApplyTheme}
+              onUseDefault={onRemoveTheme}
+              onRemove={() => onToggle(false)}
+            />
+          ) : (
+            <Button
+              disabled={busy || active || !!platformBadge}
+              onClick={() => onToggle(true)}
+            >
+              {installLabel}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -648,6 +653,103 @@ export function PluginProductPage({
         </aside>
       </div>
     </motion.div>
+  )
+}
+
+/**
+ * Every theme action in one split button: the primary half applies, the menu
+ * half carries the same apply, the drop back to the built-in palette, and the
+ * removal. Removing a theme used to live behind applying it first — the
+ * buttons were rendered per state — which made getting rid of a theme you had
+ * only ever previewed impossible without first painting the terminal with it.
+ */
+function ThemeActionButton({
+  applyLabel,
+  applied,
+  installed,
+  bundled,
+  busy,
+  blocked,
+  onApply,
+  onUseDefault,
+  onRemove,
+}: {
+  applyLabel: string
+  applied: boolean
+  installed: boolean
+  /** Bundled themes ship with the app: they turn off rather than uninstall. */
+  bundled: boolean
+  busy: boolean
+  /** Platform-incompatible — apply is off the table, removal still is not. */
+  blocked: boolean
+  onApply: () => void
+  onUseDefault: () => void
+  onRemove: () => void
+}) {
+  const { t } = useTranslation()
+
+  return (
+    <div className="flex items-center">
+      <Button
+        className="rounded-r-none"
+        disabled={busy || applied || blocked}
+        onClick={onApply}
+      >
+        {applyLabel}
+      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          render={
+            <Button
+              className="rounded-l-none border-l border-primary-foreground/25 px-2"
+              disabled={busy}
+              aria-label={t('pluginStore.themeActions', 'Theme actions')}
+            />
+          }
+        >
+          <ChevronDown className="size-4" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            disabled={applied || blocked}
+            onClick={onApply}
+            className="gap-2"
+          >
+            {applied ? (
+              <Check className="size-3.5" />
+            ) : (
+              <Palette className="size-3.5" />
+            )}
+            {applied
+              ? t('pluginStore.applied', 'Applied')
+              : t('pluginStore.applyTheme', 'Apply theme')}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={!applied}
+            onClick={onUseDefault}
+            className="gap-2"
+          >
+            <Palette className="size-3.5" />
+            {t('pluginStore.useDefaultTheme', 'Use default theme')}
+          </DropdownMenuItem>
+          {installed && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={onRemove}
+                className="gap-2"
+              >
+                <Trash2 className="size-3.5" />
+                {bundled
+                  ? t('pluginStore.removeTheme', 'Remove')
+                  : t('pluginStore.uninstall', 'Uninstall')}
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   )
 }
 

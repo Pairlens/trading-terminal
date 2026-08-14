@@ -2424,6 +2424,8 @@
     "buildExamplesNote": "請參考版本庫中的 dev-starter 與 dev-sync 範例作為實作參考。",
     "applied": "已套用",
     "applyTheme": "套用主題",
+    "themeActions": "主題操作",
+    "useDefaultTheme": "使用預設主題",
     "author": "作者",
     "backToStore": "商店",
     "capabilities": "功能",
