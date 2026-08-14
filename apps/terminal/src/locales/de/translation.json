@@ -3876,6 +3876,7 @@
     "available": "Update verfügbar",
     "availableDesc": "Pairlens",
     "checkFailed": "Updates konnten nicht geprüft werden.",
+    "checkNow": "Nach Updates suchen",
     "downloading": "Update wird heruntergeladen…",
     "installFailed": "Update fehlgeschlagen",
     "installNow": "Neu starten & aktualisieren",

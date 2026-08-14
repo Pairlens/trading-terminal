@@ -3876,6 +3876,7 @@
     "available": "有可用更新",
     "availableDesc": "Pairlens",
     "checkFailed": "无法检查更新。",
+    "checkNow": "检查更新",
     "downloading": "正在下载更新……",
     "installFailed": "更新失败",
     "installNow": "重启并更新",

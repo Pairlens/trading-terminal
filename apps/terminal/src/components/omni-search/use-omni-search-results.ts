@@ -32,6 +32,7 @@ import { toggleFullscreen } from '@/lib/fullscreen'
 import { getLockConfig } from '@/lib/security/lock-config'
 import { lockNow } from '@/lib/security/lock-store'
 import { isStandalone, openTerminalWindow } from '@/lib/platform'
+import { manualUpdateCheck } from '@/lib/update-check'
 import { useOptimisticSession } from '@/lib/session'
 import { authClient, hasAppServer } from '@/lib/auth-client'
 import { useCreateWorkspaceDialogStore } from '@/stores/create-workspace-dialog-store'
@@ -479,6 +480,17 @@ export function useOmniSearchResults(
         icon: 'RefreshCw',
         keywords: ['refresh', 'restart'],
         execute: () => window.location.reload(),
+      },
+      // One action for both surfaces: desktop asks the Tauri updater,
+      // browsers compare against /version.json — feedback lands as a toast
+      // either way, so firing from the palette is enough.
+      {
+        type: 'action',
+        id: 'check-updates',
+        label: t('updater.checkNow'),
+        icon: 'CloudDownload',
+        keywords: ['update', 'updates', 'upgrade', 'version', 'latest'],
+        execute: () => void manualUpdateCheck(),
       },
       // Web only: on desktop the native window controls own fullscreen.
       ...(isStandalone

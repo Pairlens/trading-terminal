@@ -69,27 +69,72 @@ export function initWebUpdater(): void {
   })
 }
 
-async function checkForNewVersion(): Promise<void> {
+/**
+ * Manual check — the browser counterpart of the desktop
+ * `checkForUpdates({ manual: true })`, behind the same affordances (omni
+ * search action, settings footer button). Unlike background checks the
+ * result is always surfaced: "up to date", the refresh prompt, or a failure.
+ * A dev server serves the working tree over HMR, so there it answers
+ * up-to-date outright instead of reading the SPA fallback as a manifest.
+ */
+export async function checkForWebUpdates(): Promise<void> {
+  if (isStandalone) return
+  if (import.meta.env.DEV) {
+    notifyUpToDate()
+    return
+  }
+  await checkForNewVersion({ manual: true })
+}
+
+async function checkForNewVersion(
+  opts: { manual?: boolean } = {},
+): Promise<void> {
   lastCheckAt = Date.now()
   try {
     const res = await fetch('/version.json', { cache: 'no-store' })
-    if (!res.ok) return
+    if (!res.ok) {
+      if (opts.manual) notifyCheckFailed(`HTTP ${res.status}`)
+      return
+    }
     const data: unknown = await res.json()
     const manifest =
       typeof data === 'object' && data !== null
         ? (data as { version?: unknown; build?: unknown })
         : {}
     const version = manifest.version
-    if (typeof version !== 'string') return
+    if (typeof version !== 'string') {
+      if (opts.manual) notifyCheckFailed('malformed version manifest')
+      return
+    }
     const build = typeof manifest.build === 'string' ? manifest.build : ''
 
-    if (!isNewer(version, BUILD_VERSION) && !isDifferentBuild(build, BUILD_ID))
+    if (
+      !isNewer(version, BUILD_VERSION) &&
+      !isDifferentBuild(build, BUILD_ID)
+    ) {
+      if (opts.manual) notifyUpToDate()
       return
+    }
     promptRefresh(version)
-  } catch {
+  } catch (err) {
     // Offline, a network hiccup, or the SPA fallback answering with HTML for
-    // a missing manifest — all fine, the next check will try again.
+    // a missing manifest — for background checks all fine, the next check
+    // will try again. A manual check owes an answer.
+    if (opts.manual) notifyCheckFailed(err)
   }
+}
+
+function notifyUpToDate(): void {
+  toast.success(t('updater.upToDate', "You're on the latest version."), {
+    id: TOAST_ID,
+  })
+}
+
+function notifyCheckFailed(err: unknown): void {
+  toast.error(t('updater.checkFailed', 'Could not check for updates.'), {
+    id: TOAST_ID,
+    description: String(err),
+  })
 }
 
 /**

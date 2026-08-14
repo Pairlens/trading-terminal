@@ -6,6 +6,7 @@ import * as React from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   Cloud,
+  CloudDownload,
   CloudUpload,
   LogIn,
   RotateCcw,
@@ -75,6 +76,7 @@ import { api, queryKeys } from '@/lib/api'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { useAppVersion } from '@/lib/app-version'
 import { isStandalone } from '@/lib/platform'
+import { manualUpdateCheck } from '@/lib/update-check'
 // Shared with the phone's profile screen, which offers the same two actions.
 import {
   ALLOWED_IMAGE_TYPES,
@@ -555,6 +557,17 @@ function AppVersionFooter() {
         <span className="px-1">·</span>
         {platform}
       </p>
+      {/* Same manual check as the omni search action; the answer — up to
+          date, an update prompt, or a failure — arrives as a toast. */}
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-7 justify-start px-2 text-xs font-normal text-muted-foreground"
+        onClick={() => void manualUpdateCheck()}
+      >
+        <CloudDownload className="size-3.5" />
+        {t('updater.checkNow')}
+      </Button>
     </SidebarFooter>
   )
 }
