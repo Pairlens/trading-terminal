@@ -77,8 +77,9 @@ export function BotsEmptyState({
       templates={templates}
       onPickTemplate={handlePick}
       pendingId={pendingId}
-      // Same string on both builder pages; the indicators namespace owns it.
-      shelfLabel={t('indicatorsPage.startFromTemplate')}
+      // Same label the create dialog gives this group, so the shelf and the
+      // dialog visibly offer the same thing.
+      shelfLabel={t('botsPage.groupTemplates')}
       blankLabel={t('botsPage.newBot')}
       onCreateBlank={onCreate}
       // The "runs on this machine" caveat, in the one slot the panel has for

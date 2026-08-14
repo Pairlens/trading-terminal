@@ -37,11 +37,22 @@ Four steps.
 
 ### 1. Strategy
 
-Pick one of your scripts. Only scripts declaring `meta = strategy(...)` are
-deployable, because only those say when to enter, when to exit, and how much to
-commit. An `indicator(...)` script draws and nothing more, so there is nothing
-for a bot to execute. Scripts you have not run yet are listed but not
-selectable: run them once in the workbench first.
+Pick the script the bot will run. The step offers three ways in, so it never
+dead-ends:
+
+- **Your strategies.** Scripts declaring `meta = strategy(...)`, because only
+  those say when to enter, when to exit, and how much to commit. An
+  `indicator(...)` script draws and nothing more, so there is nothing for a
+  bot to execute. Scripts you have not run yet are listed but not selectable:
+  run them once in the workbench first.
+- **Ready-made strategies.** The shipped strategies (EMA cross, RSI reversion,
+  breakout) can be created right here. Picking one writes the script into your
+  workbench and selects it, code and all, yours to edit afterwards.
+- **Write your own.** The link at the bottom opens
+  [Indicators & Strategies](/docs/strategies-and-backtests), the Python
+  workbench where strategies are written. A strategy script there has a
+  **Deploy as bot** button that lands back in this dialog with the script
+  preselected.
 
 ### 2. Market
 

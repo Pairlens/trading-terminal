@@ -16,12 +16,22 @@ const IndicatorWorkbench = lazyChunk(() =>
   })),
 )
 
+/** `script` deep-links straight to one script — a bot's Strategy stat sends
+ *  the user here to edit the exact code their bot is running. */
+type IndicatorsSearch = {
+  script?: string
+}
+
 export const Route = createFileRoute('/_terminal/indicators')({
   component: IndicatorsPage,
+  validateSearch: (search: Record<string, unknown>): IndicatorsSearch => ({
+    script: typeof search.script === 'string' ? search.script : undefined,
+  }),
 })
 
 function IndicatorsPage() {
   const { t } = useTranslation()
+  const { script } = Route.useSearch()
   return (
     <SidebarInset className="overflow-hidden">
       <PageHeader>
@@ -38,7 +48,7 @@ function IndicatorsPage() {
             </div>
           }
         >
-          <IndicatorWorkbench />
+          <IndicatorWorkbench focusScriptId={script ?? null} />
         </Suspense>
       </div>
     </SidebarInset>

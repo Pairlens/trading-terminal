@@ -25,6 +25,7 @@ import { ArrowUpNarrowWide, TrendingUp, Undo2 } from 'lucide-react'
 
 import type { StarterTemplate } from '../starter-empty-state'
 import type { LucideIcon } from 'lucide-react'
+import type { CustomIndicatorMeta } from '@pairlens/shared/plugin-types'
 import type { ExampleScript } from '@/lib/python/examples'
 import { EXAMPLE_SCRIPTS } from '@/lib/python/examples'
 import { getPythonRuntime } from '@/lib/python/python-runtime'
@@ -98,16 +99,17 @@ export function botTemplates(t: (key: string) => string): Array<BotTemplate> {
 }
 
 /**
- * Create the strategy script, give it metadata, and deploy it on paper.
+ * Create the template's strategy script and give it metadata, without
+ * deploying anything.
  *
- * Returns the new bot's id so the page can select it. Throws if the Python
- * runtime cannot register the script — the caller surfaces that rather than
- * leaving behind a bot that would fail on its first bar.
+ * This is the half of applying a template that the create-bot dialog also
+ * needs: its strategy step offers the same ready-made strategies inline, and
+ * picking one there should produce a selectable script, not a finished bot.
+ * Throws if the Python runtime cannot register the script.
  */
-export async function applyBotTemplate(
+export async function ensureBotTemplateScript(
   template: BotTemplate,
-  target: { market: string; pair?: string; timeframe?: string },
-): Promise<string> {
+): Promise<{ scriptId: string; meta: CustomIndicatorMeta }> {
   const scripts = useIndicatorScriptsStore.getState()
   const { example } = template
 
@@ -131,13 +133,29 @@ export async function applyBotTemplate(
     metaError: null,
   })
 
+  return { scriptId, meta }
+}
+
+/**
+ * Create the strategy script, give it metadata, and deploy it on paper.
+ *
+ * Returns the new bot's id so the page can select it. Throws if the Python
+ * runtime cannot register the script — the caller surfaces that rather than
+ * leaving behind a bot that would fail on its first bar.
+ */
+export async function applyBotTemplate(
+  template: BotTemplate,
+  target: { market: string; pair?: string; timeframe?: string },
+): Promise<string> {
+  const { scriptId, meta } = await ensureBotTemplateScript(template)
+
   // The script's own declared defaults, the way the create dialog seeds them.
   const params: Record<string, unknown> = {}
   for (const input of meta.inputs) params[input.key] = input.default
 
   const pair = target.pair ?? TEMPLATE_PAIR
   return useBotsStore.getState().createBot({
-    name: `${example.name} · ${pair}`,
+    name: `${template.example.name} · ${pair}`,
     scriptId,
     market: target.market,
     pair,

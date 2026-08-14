@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 
 import { ArmLiveDialog } from './arm-live-dialog'
 import { BotDetail } from './bot-detail'
@@ -21,7 +22,17 @@ import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
  * event log and settings are dense enough that they need the room, and picking
  * a different bot should never cost more than a click.
  */
-export function BotsPage() {
+export function BotsPage({
+  deployScriptId = null,
+}: {
+  /**
+   * Strategy script arriving from the workbench's "Deploy as bot" — opens
+   * the create dialog with it preselected. Consumed once: the URL is cleaned
+   * so closing the dialog doesn't resurrect it.
+   */
+  deployScriptId?: string | null
+} = {}) {
+  const navigate = useNavigate()
   const bots = useBotsStore((s) => s.bots)
   const loaded = useBotsStore((s) => s.loaded)
   const loadBots = useBotsStore((s) => s.load)
@@ -32,6 +43,7 @@ export function BotsPage() {
 
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
+  const [createScriptId, setCreateScriptId] = useState<string | null>(null)
   const [armTarget, setArmTarget] = useState<BotDefinition | null>(null)
 
   useEffect(() => {
@@ -39,6 +51,16 @@ export function BotsPage() {
     loadRuns()
     loadScripts()
   }, [loadBots, loadRuns, loadScripts])
+
+  // Arriving from the workbench's "Deploy as bot": open the create flow with
+  // that strategy already picked, then drop the param from the URL so a
+  // cancelled dialog stays cancelled.
+  useEffect(() => {
+    if (!deployScriptId) return
+    setCreateScriptId(deployScriptId)
+    setCreateOpen(true)
+    void navigate({ to: '/bots', search: {}, replace: true })
+  }, [deployScriptId, navigate])
 
   // Auto-select the first bot, and re-select after a delete: an empty main
   // area while bots exist reads as "nothing here" when there plainly is.
@@ -82,8 +104,13 @@ export function BotsPage() {
 
       <CreateBotDialog
         open={createOpen}
-        onOpenChange={setCreateOpen}
+        onOpenChange={(next) => {
+          setCreateOpen(next)
+          // A plain "New bot" afterwards should start from nothing.
+          if (!next) setCreateScriptId(null)
+        }}
         onCreated={setSelectedId}
+        initialScriptId={createScriptId}
       />
 
       <ArmLiveDialog

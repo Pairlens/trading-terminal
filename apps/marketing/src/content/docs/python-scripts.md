@@ -13,7 +13,7 @@ actual CPython interpreter compiled to WebAssembly (Pyodide), living in a
 dedicated Web Worker, with numpy preloaded and pip packages available. Your
 code and your candles never touch a server.
 
-Open **Indicators** in the left nav. That is the workbench.
+Open **Indicators & Strategies** in the left nav. That is the workbench.
 
 ## Two kinds of script
 

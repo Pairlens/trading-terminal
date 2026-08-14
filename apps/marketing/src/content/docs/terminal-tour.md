@@ -15,16 +15,16 @@ away. Here is the map.
 
 The rail down the left side is how you move between the big surfaces.
 
-| Entry             | What lives there                                                             |
-| ----------------- | ---------------------------------------------------------------------------- |
-| **Pairs**         | Every instrument your installed connectors can reach, plus your recent pairs |
-| **Charts**        | Your workspaces and workspace folders                                        |
-| **Accounts**      | Exchange keys, broker keys, and on-chain wallets, plus a portfolio overview  |
-| **Notifications** | Your alerts, what they delivered, and the flow builder for the complex ones  |
-| **Workflows**     | The order-automation canvas                                                  |
-| **Indicators**    | The Python workbench for indicators and strategies                           |
-| **Bots**          | Strategies deployed to a market, running on paper or live                    |
-| **Plugins**       | The Plugin Store and everything you have installed                           |
+| Entry                       | What lives there                                                             |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| **Pairs**                   | Every instrument your installed connectors can reach, plus your recent pairs |
+| **Charts**                  | Your workspaces and workspace folders                                        |
+| **Accounts**                | Exchange keys, broker keys, and on-chain wallets, plus a portfolio overview  |
+| **Notifications**           | Your alerts, what they delivered, and the flow builder for the complex ones  |
+| **Workflows**               | The order-automation canvas                                                  |
+| **Indicators & Strategies** | The Python workbench for chart indicators and bot strategies                 |
+| **Bots**                    | Strategies deployed to a market, running on paper or live                    |
+| **Plugins**                 | The Plugin Store and everything you have installed                           |
 
 Below those sit your workspaces, your recent pairs, and the Workspace Store.
 

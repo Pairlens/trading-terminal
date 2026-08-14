@@ -18,12 +18,22 @@ const BotsPage = lazyChunk(() =>
   })),
 )
 
+/** `create` deep-links into the create flow with a strategy preselected —
+ *  the workbench's "Deploy as bot" button sends the user here. */
+type BotsSearch = {
+  create?: string
+}
+
 export const Route = createFileRoute('/_terminal/bots')({
   component: BotsRoute,
+  validateSearch: (search: Record<string, unknown>): BotsSearch => ({
+    create: typeof search.create === 'string' ? search.create : undefined,
+  }),
 })
 
 function BotsRoute() {
   const { t } = useTranslation()
+  const { create } = Route.useSearch()
   return (
     <SidebarInset className="overflow-hidden">
       {/* Browser build only, once per device: a bot runs in this tab, and a
@@ -43,7 +53,7 @@ function BotsRoute() {
             </div>
           }
         >
-          <BotsPage />
+          <BotsPage deployScriptId={create ?? null} />
         </Suspense>
       </div>
     </SidebarInset>

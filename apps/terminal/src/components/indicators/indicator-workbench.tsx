@@ -19,6 +19,7 @@ import {
   SquareFunction,
   Wand2,
 } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
 import { Badge } from '@pairlens/ui/components/ui/badge'
@@ -194,8 +195,18 @@ function draftKey(scriptId: string, path: string): string {
   return `${scriptId}::${path}`
 }
 
-export function IndicatorWorkbench() {
+export function IndicatorWorkbench({
+  focusScriptId = null,
+}: {
+  /**
+   * Script to open on arrival — the deep link a bot's Strategy stat follows.
+   * Applied once per value, so it never fights a selection the user makes
+   * afterwards.
+   */
+  focusScriptId?: string | null
+} = {}) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const scripts = useIndicatorScriptsStore((s) => s.scripts)
   const loaded = useIndicatorScriptsStore((s) => s.loaded)
   const load = useIndicatorScriptsStore((s) => s.load)
@@ -249,6 +260,16 @@ export function IndicatorWorkbench() {
     if (selectedId && scripts.some((s) => s.id === selectedId)) return
     setSelectedId(scripts[0]?.id ?? null)
   }, [loaded, scripts, selectedId])
+
+  // Deep link: open the script the URL names, once it exists in the store.
+  const appliedFocusRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (!focusScriptId || !loaded) return
+    if (appliedFocusRef.current === focusScriptId) return
+    if (!scripts.some((s) => s.id === focusScriptId)) return
+    appliedFocusRef.current = focusScriptId
+    setSelectedId(focusScriptId)
+  }, [focusScriptId, loaded, scripts])
 
   // Default the market to the first available venue when okx isn't around.
   useEffect(() => {
@@ -731,6 +752,25 @@ export function IndicatorWorkbench() {
                   )}
                   {t('indicatorsPage.run')}
                 </Button>
+                {/* The payoff move for a strategy script, right where the
+                    badge says "can be deployed": one click lands in the
+                    bots page's create flow with this script preselected. */}
+                {selected.meta?.strategy && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 gap-1.5 text-xs"
+                    onClick={() =>
+                      void navigate({
+                        to: '/bots',
+                        search: { create: selected.id },
+                      })
+                    }
+                  >
+                    <Bot className="size-3.5" />
+                    {t('indicatorsPage.deployAsBot')}
+                  </Button>
+                )}
               </div>
             </div>
 

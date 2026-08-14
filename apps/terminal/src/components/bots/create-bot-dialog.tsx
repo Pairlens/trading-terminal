@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Check, SquareFunction } from 'lucide-react'
+import { Bot, Check, PenLine, SquareFunction } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
@@ -16,16 +17,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@pairlens/ui/components/ui/dialog'
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@pairlens/ui/components/ui/empty'
 import { Input } from '@pairlens/ui/components/ui/input'
 import { Label } from '@pairlens/ui/components/ui/label'
+import { Spinner } from '@pairlens/ui/components/ui/spinner'
 import {
   Select,
   SelectContent,
@@ -35,8 +29,10 @@ import {
 } from '@pairlens/ui/components/ui/select'
 
 import { GuardsEditor, SizingEditor } from './bot-sizing-guards'
+import { botTemplates, ensureBotTemplateScript } from './bot-templates'
 import { mergeBotParams } from './bot-display'
 
+import type { BotTemplate } from './bot-templates'
 import type { BotGuardConfig, BotSizing } from '@pairlens/bot-engine/types'
 import type { IndicatorScript } from '@/stores/indicator-scripts-store'
 import type { PreviewParams } from '@/components/indicators/preview-params'
@@ -83,6 +79,12 @@ type CreateBotDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   onCreated?: (botId: string) => void
+  /**
+   * Script to arrive with already selected — the workbench's "Deploy as bot"
+   * lands here, and re-picking the strategy it was just looking at would be
+   * make-work.
+   */
+  initialScriptId?: string | null
 }
 
 /**
@@ -92,11 +94,16 @@ type CreateBotDialogProps = {
  * from different places in the user's head — which strategy, which market,
  * how big, and what stops it. Mode is not among them: every bot starts on
  * paper, and going live is its own deliberate dialog.
+ *
+ * The strategy step can never dead-end: alongside the user's own strategy
+ * scripts it offers the shipped ready-made strategies inline, so a first bot
+ * never requires a round trip through the workbench.
  */
 export function CreateBotDialog({
   open,
   onOpenChange,
   onCreated,
+  initialScriptId = null,
 }: CreateBotDialogProps) {
   const { t } = useTranslation()
   const scripts = useIndicatorScriptsStore((s) => s.scripts)
@@ -107,6 +114,9 @@ export function CreateBotDialog({
 
   const [step, setStep] = useState<Step>('strategy')
   const [scriptId, setScriptId] = useState<string | null>(null)
+  const [pendingTemplateId, setPendingTemplateId] = useState<string | null>(
+    null,
+  )
   const [name, setName] = useState('')
   const [nameTouched, setNameTouched] = useState(false)
   const [market, setMarket] = useState(defaultMarket)
@@ -126,6 +136,7 @@ export function CreateBotDialog({
     if (!open) return
     setStep('strategy')
     setScriptId(null)
+    setPendingTemplateId(null)
     setName('')
     setNameTouched(false)
     setMarket(defaultMarket)
@@ -135,6 +146,23 @@ export function CreateBotDialog({
     setSizing(DEFAULT_SIZING)
     setGuards(DEFAULT_GUARDS)
   }, [open, defaultMarket])
+
+  // A deep-linked script (the workbench's "Deploy as bot") arrives selected.
+  // Separate from the reset effect because the scripts store may still be
+  // hydrating when the dialog opens; the selection lands once its meta does.
+  useEffect(() => {
+    if (!open || !initialScriptId) return
+    const meta = scripts.find(
+      (script) => script.id === initialScriptId && script.meta?.strategy,
+    )?.meta
+    if (!meta) return
+    setScriptId((current) => current ?? initialScriptId)
+    setParams((existing) =>
+      Object.keys(existing).length > 0
+        ? existing
+        : mergeBotParams(meta, undefined),
+    )
+  }, [open, initialScriptId, scripts])
 
   /** Only scripts that declared `strategy(...)` can be deployed. */
   const strategies = useMemo(
@@ -154,6 +182,61 @@ export function CreateBotDialog({
   )
 
   const selected = strategies.find((script) => script.id === scriptId) ?? null
+
+  /**
+   * The shipped ready-made strategies, minus any the user already holds a
+   * working copy of — those are in the lists above, and offering the same
+   * code twice would read as two different things. A card only retires once
+   * its script has strategy metadata: while registration is in flight (or
+   * after it failed) the card stays, spinning or offering a retry.
+   */
+  const templates = useMemo(() => botTemplates(t), [t])
+  const freshTemplates = useMemo(
+    () =>
+      templates.filter(
+        (template) =>
+          !scripts.some(
+            (script) =>
+              script.name === template.example.name &&
+              script.meta?.strategy !== undefined,
+          ),
+      ),
+    [templates, scripts],
+  )
+
+  /**
+   * A pending template's half-made script must not flash up as "can't run as
+   * a bot yet" while Pyodide boots — the spinner on its card is the truth.
+   */
+  const pendingTemplateName = pendingTemplateId
+    ? templates.find((template) => template.id === pendingTemplateId)?.example
+        .name
+    : undefined
+  const visibleUndeployable = useMemo(
+    () => undeployable.filter((script) => script.name !== pendingTemplateName),
+    [undeployable, pendingTemplateName],
+  )
+
+  /**
+   * Picking a ready-made strategy creates and registers the script in place —
+   * the card spins while Pyodide boots — then selects it like any other row.
+   * The user continues the wizard without ever leaving it.
+   */
+  const handlePickTemplate = (template: BotTemplate) => {
+    if (pendingTemplateId) return
+    setPendingTemplateId(template.id)
+    ensureBotTemplateScript(template)
+      .then(({ scriptId: id, meta }) => {
+        setScriptId(id)
+        setParams(mergeBotParams(meta, undefined))
+      })
+      .catch((err: unknown) => {
+        toast.error(t('botsPage.templateFailed'), {
+          description: err instanceof Error ? err.message : String(err),
+        })
+      })
+      .finally(() => setPendingTemplateId(null))
+  }
 
   const timeframes = useMemo(() => {
     const supported = marketData.getTimeframes(market)
@@ -181,7 +264,7 @@ export function CreateBotDialog({
   const stepIndex = STEPS.indexOf(step)
   const canAdvance =
     step === 'strategy'
-      ? selected !== null
+      ? selected !== null && pendingTemplateId === null
       : step === 'market'
         ? pair.includes('-') &&
           pair.split('-').every((part) => part.length > 0) &&
@@ -206,212 +289,214 @@ export function CreateBotDialog({
     onOpenChange(false)
   }
 
-  const noStrategies = strategies.length === 0
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{t('botsPage.createTitle')}</DialogTitle>
           <DialogDescription>
-            {noStrategies
-              ? t('botsPage.createDescription')
-              : t('botsPage.stepProgress', {
-                  current: stepIndex + 1,
-                  total: STEPS.length,
-                  title: t(STEP_TITLE_KEY[step]),
-                })}
+            {t('botsPage.stepProgress', {
+              current: stepIndex + 1,
+              total: STEPS.length,
+              title: t(STEP_TITLE_KEY[step]),
+            })}
           </DialogDescription>
         </DialogHeader>
 
-        {noStrategies ? (
-          <div className="grid max-h-[55vh] gap-3 overflow-y-auto">
-            <Empty className="border-none py-2">
-              <EmptyHeader>
-                <EmptyMedia variant="icon">
-                  <SquareFunction />
-                </EmptyMedia>
-                <EmptyTitle>{t('botsPage.noStrategiesTitle')}</EmptyTitle>
-                {/* Two beats: why an indicator can't be deployed, then the one
-                    edit that fixes it. Pointing at /indicators without either
-                    is what left users guessing. */}
-                <EmptyDescription>
-                  {t('botsPage.noStrategiesDescription')}
-                </EmptyDescription>
-                <EmptyDescription>
-                  {t('botsPage.noStrategiesHint')}
-                </EmptyDescription>
-              </EmptyHeader>
-              <EmptyContent>
-                <Button
-                  size="sm"
-                  nativeButton={false}
-                  render={<Link to="/indicators" />}
-                  onClick={() => onOpenChange(false)}
-                >
-                  {t('botsPage.openIndicators')}
-                </Button>
-              </EmptyContent>
-            </Empty>
-
-            {/* The scripts they do have, named and explained — so "where is my
-                indicator?" is answered here rather than left to guesswork. */}
-            {undeployable.length > 0 && (
-              <div className="grid gap-2">
-                <GroupLabel>{t('botsPage.groupUndeployable')}</GroupLabel>
-                {undeployable.map((script) => (
-                  <ScriptOption key={script.id} script={script} />
-                ))}
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="grid max-h-[55vh] gap-3 overflow-y-auto">
-            {step === 'strategy' && (
-              <div className="grid gap-2">
-                {/* Deployable first, so the selectable path stays obvious. The
-                    heading only earns its space once there is a second group
-                    to tell it apart from. */}
-                {undeployable.length > 0 && (
-                  <GroupLabel>{t('botsPage.groupStrategies')}</GroupLabel>
-                )}
-                {strategies.map((script) => (
-                  <ScriptOption
-                    key={script.id}
-                    script={script}
-                    active={script.id === scriptId}
-                    onSelect={() => handleSelectScript(script.id)}
-                  />
-                ))}
-
-                {undeployable.length > 0 && (
-                  <>
-                    <GroupLabel className="mt-1">
-                      {t('botsPage.groupUndeployable')}
-                    </GroupLabel>
-                    {undeployable.map((script) => (
-                      <ScriptOption key={script.id} script={script} />
-                    ))}
-                  </>
-                )}
-
-                {/* The script's own declared inputs — same editors the
-                    workbench uses, so a dialled-in length transfers. */}
-                {selected?.meta && (
-                  <div className="rounded-lg border border-border">
-                    <PreviewParamsBar
-                      meta={selected.meta}
-                      params={params}
-                      onChange={setParams}
-                    />
-                  </div>
-                )}
-              </div>
-            )}
-
-            {step === 'market' && (
-              <div className="grid gap-3">
-                <div className="grid gap-1.5">
-                  <Label htmlFor="bot-name" className="text-xs">
-                    {t('common.name')}
-                  </Label>
-                  <Input
-                    id="bot-name"
-                    value={nameTouched ? name : suggestedName}
-                    onChange={(event) => {
-                      setNameTouched(true)
-                      setName(event.target.value)
-                    }}
-                    placeholder={suggestedName}
-                    className="text-sm"
-                  />
-                </div>
-
-                <div className="grid gap-1.5">
-                  <Label className="text-xs">{t('botsPage.venue')}</Label>
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <MarketPicker
-                      market={market}
-                      marketOptions={markets}
-                      onMarketChange={(value) => value && setMarket(value)}
-                      className="h-7"
-                      aria-label={t('botsPage.venue')}
-                    />
-                    <PreviewPairPicker
-                      market={market}
-                      pair={pair}
-                      onPairChange={setPair}
-                    />
-                    <Select
-                      value={timeframe}
-                      onValueChange={(next) => next && setTimeframe(next)}
-                    >
-                      <SelectTrigger
-                        size="sm"
-                        className="h-7 w-auto min-w-16 text-xs"
-                        aria-label={t('botsPage.timeframe')}
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {timeframes.map((tf) => (
-                          <SelectItem key={tf} value={tf}>
-                            {tf}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <p className="text-[11px] text-muted-foreground">
-                    {t('botsPage.marketHint')}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {step === 'sizing' && (
-              <SizingEditor sizing={sizing} onChange={setSizing} />
-            )}
-
-            {step === 'guards' && (
-              <div className="grid gap-3">
-                <p className="text-xs text-muted-foreground">
-                  {t('botsPage.guardsDescription')}
+        <div className="grid max-h-[55vh] gap-3 overflow-y-auto">
+          {step === 'strategy' && (
+            <div className="grid gap-2">
+              {/* First bot, no scripts yet: one breath of orientation. The
+                    ready-made cards below mean the answer is always right
+                    here, never on another page. */}
+              {strategies.length === 0 && (
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {t('botsPage.strategyIntro')}
                 </p>
-                <GuardsEditor guards={guards} onChange={setGuards} />
-              </div>
-            )}
-          </div>
-        )}
+              )}
 
-        {!noStrategies && (
-          <DialogFooter>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                stepIndex === 0
-                  ? onOpenChange(false)
-                  : setStep(STEPS[stepIndex - 1])
-              }
-            >
-              {stepIndex === 0 ? t('common.cancel') : t('botsPage.back')}
-            </Button>
-            {step === 'guards' ? (
-              <Button size="sm" onClick={handleCreate} disabled={!selected}>
-                {t('botsPage.createBot')}
-              </Button>
-            ) : (
+              {strategies.length > 0 && (
+                <>
+                  <GroupLabel>{t('botsPage.groupStrategies')}</GroupLabel>
+                  {strategies.map((script) => (
+                    <ScriptOption
+                      key={script.id}
+                      script={script}
+                      active={script.id === scriptId}
+                      onSelect={() => handleSelectScript(script.id)}
+                    />
+                  ))}
+                </>
+              )}
+
+              {/* The script's own declared inputs — same editors the
+                    workbench uses, so a dialled-in length transfers. */}
+              {selected?.meta && (
+                <div className="rounded-lg border border-border">
+                  <PreviewParamsBar
+                    meta={selected.meta}
+                    params={params}
+                    onChange={setParams}
+                  />
+                </div>
+              )}
+
+              {/* Ready-made strategies, created and registered in place.
+                    This is what keeps "New bot" self-sufficient: the shipped
+                    strategy code is offered here, not on another page. */}
+              {freshTemplates.length > 0 && (
+                <>
+                  <GroupLabel
+                    className={strategies.length > 0 ? 'mt-1' : undefined}
+                  >
+                    {t('botsPage.groupTemplates')}
+                  </GroupLabel>
+                  {freshTemplates.map((template) => (
+                    <TemplateOption
+                      key={template.id}
+                      template={template}
+                      pending={pendingTemplateId === template.id}
+                      disabled={
+                        pendingTemplateId !== null &&
+                        pendingTemplateId !== template.id
+                      }
+                      onPick={() => handlePickTemplate(template)}
+                    />
+                  ))}
+                </>
+              )}
+
+              {/* The scripts that can't be deployed, named and explained —
+                    so "where is my indicator?" is answered here rather than
+                    left to guesswork. */}
+              {visibleUndeployable.length > 0 && (
+                <>
+                  <GroupLabel className="mt-1">
+                    {t('botsPage.groupUndeployable')}
+                  </GroupLabel>
+                  {visibleUndeployable.map((script) => (
+                    <ScriptOption key={script.id} script={script} />
+                  ))}
+                </>
+              )}
+
+              {/* The advanced way in, ranked last on purpose: the workbench
+                    is where strategies are written, and this is the one line
+                    that says so. */}
               <Button
+                variant="ghost"
                 size="sm"
-                onClick={() => setStep(STEPS[stepIndex + 1])}
-                disabled={!canAdvance}
+                className="justify-start gap-1.5 text-xs text-muted-foreground"
+                nativeButton={false}
+                render={<Link to="/indicators" />}
+                onClick={() => onOpenChange(false)}
               >
-                {t('botsPage.next')}
+                <PenLine className="size-3.5" />
+                {t('botsPage.writeYourOwn')}
               </Button>
-            )}
-          </DialogFooter>
-        )}
+            </div>
+          )}
+
+          {step === 'market' && (
+            <div className="grid gap-3">
+              <div className="grid gap-1.5">
+                <Label htmlFor="bot-name" className="text-xs">
+                  {t('common.name')}
+                </Label>
+                <Input
+                  id="bot-name"
+                  value={nameTouched ? name : suggestedName}
+                  onChange={(event) => {
+                    setNameTouched(true)
+                    setName(event.target.value)
+                  }}
+                  placeholder={suggestedName}
+                  className="text-sm"
+                />
+              </div>
+
+              <div className="grid gap-1.5">
+                <Label className="text-xs">{t('botsPage.venue')}</Label>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <MarketPicker
+                    market={market}
+                    marketOptions={markets}
+                    onMarketChange={(value) => value && setMarket(value)}
+                    className="h-7"
+                    aria-label={t('botsPage.venue')}
+                  />
+                  <PreviewPairPicker
+                    market={market}
+                    pair={pair}
+                    onPairChange={setPair}
+                  />
+                  <Select
+                    value={timeframe}
+                    onValueChange={(next) => next && setTimeframe(next)}
+                  >
+                    <SelectTrigger
+                      size="sm"
+                      className="h-7 w-auto min-w-16 text-xs"
+                      aria-label={t('botsPage.timeframe')}
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {timeframes.map((tf) => (
+                        <SelectItem key={tf} value={tf}>
+                          {tf}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  {t('botsPage.marketHint')}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {step === 'sizing' && (
+            <SizingEditor sizing={sizing} onChange={setSizing} />
+          )}
+
+          {step === 'guards' && (
+            <div className="grid gap-3">
+              <p className="text-xs text-muted-foreground">
+                {t('botsPage.guardsDescription')}
+              </p>
+              <GuardsEditor guards={guards} onChange={setGuards} />
+            </div>
+          )}
+        </div>
+
+        <DialogFooter>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              stepIndex === 0
+                ? onOpenChange(false)
+                : setStep(STEPS[stepIndex - 1])
+            }
+          >
+            {stepIndex === 0 ? t('common.cancel') : t('botsPage.back')}
+          </Button>
+          {step === 'guards' ? (
+            <Button size="sm" onClick={handleCreate} disabled={!selected}>
+              {t('botsPage.createBot')}
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              onClick={() => setStep(STEPS[stepIndex + 1])}
+              disabled={!canAdvance}
+            >
+              {t('botsPage.next')}
+            </Button>
+          )}
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
@@ -474,7 +559,13 @@ function ScriptOption({
             : 'border-border hover:bg-accent/25',
       )}
     >
-      <SquareFunction className="size-4 shrink-0 text-muted-foreground" />
+      {/* Same iconography as the workbench header: a strategy is a Bot in
+          waiting, an indicator stays a function. */}
+      {strategy ? (
+        <Bot className="size-4 shrink-0 text-muted-foreground" />
+      ) : (
+        <SquareFunction className="size-4 shrink-0 text-muted-foreground" />
+      )}
       <span className="grid min-w-0 gap-0.5">
         <span className="truncate text-sm font-medium">{script.name}</span>
         <span className="truncate text-[11px] text-muted-foreground">
@@ -488,6 +579,68 @@ function ScriptOption({
           </Badge>
         )}
         {active && <Check className="size-4 text-primary" />}
+      </span>
+    </button>
+  )
+}
+
+/**
+ * One ready-made strategy in the picker.
+ *
+ * Picking it creates the script through the same registration the workbench's
+ * Run performs; the spinner covers the Pyodide boot the first one pays for.
+ * Once created, the card disappears and the script shows up above as one of
+ * the user's own strategies, already selected.
+ */
+function TemplateOption({
+  template,
+  pending,
+  disabled,
+  onPick,
+}: {
+  template: BotTemplate
+  pending: boolean
+  disabled: boolean
+  onPick: () => void
+}) {
+  const Icon = template.icon
+  const inert = pending || disabled
+  return (
+    <button
+      type="button"
+      disabled={inert}
+      onClick={onPick}
+      className={cn(
+        'flex items-start gap-3 rounded-lg border px-3 py-2 text-left transition-colors',
+        pending
+          ? 'border-primary/45'
+          : disabled
+            ? 'cursor-default border-border opacity-60'
+            : 'border-border hover:border-primary/45 hover:bg-accent/25',
+      )}
+    >
+      <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+        {pending ? (
+          <Spinner className="size-3.5" />
+        ) : (
+          <Icon className="size-3.5" />
+        )}
+      </span>
+      <span className="grid min-w-0 gap-0.5">
+        <span className="truncate text-sm font-medium">{template.title}</span>
+        <span className="text-[11px] leading-snug text-muted-foreground">
+          {template.description}
+        </span>
+        <span className="flex flex-wrap gap-1 pt-0.5">
+          {template.chips.map((chip) => (
+            <span
+              key={chip}
+              className="rounded border border-border/70 bg-muted/50 px-1.5 py-px font-mono text-[9.5px] uppercase tracking-wide text-muted-foreground"
+            >
+              {chip}
+            </span>
+          ))}
+        </span>
       </span>
     </button>
   )

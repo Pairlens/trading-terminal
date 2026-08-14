@@ -6,12 +6,18 @@
  * Same three states as Workflows and Notifications: not hydrated yet (blank,
  * so a returning user is never pitched at), scripts exist but none is open
  * (a one-line nudge), otherwise the full panel with the starter shelf.
+ *
+ * Two shelves, ranked: indicator templates on top (this is where indicators
+ * live), the deployable strategies below them — so a first visit already
+ * teaches that this one workbench writes both kinds of script.
  */
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { SquareFunction } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import { StarterEmptyState } from '../starter-empty-state'
+import { botTemplates, ensureBotTemplateScript } from '../bots/bot-templates'
 import {
   applyIndicatorTemplate,
   indicatorTemplates,
@@ -27,6 +33,8 @@ export function IndicatorsEmptyState() {
   const createScript = useIndicatorScriptsStore((s) => s.createScript)
 
   const templates = useMemo(() => indicatorTemplates(t), [t])
+  const strategyShelf = useMemo(() => botTemplates(t), [t])
+  const [pendingId, setPendingId] = useState<string | null>(null)
 
   const handlePick = useCallback(
     (picked: StarterTemplate) => {
@@ -34,6 +42,28 @@ export function IndicatorsEmptyState() {
       if (full) applyIndicatorTemplate(full)
     },
     [templates],
+  )
+
+  /**
+   * A strategy template creates and registers its script — the same call the
+   * bots page makes, so the badge, the auto-run preview and the Deploy button
+   * are all live the moment the workbench opens it. The registration boots
+   * Pyodide, hence the pending spinner.
+   */
+  const handlePickStrategy = useCallback(
+    (picked: StarterTemplate) => {
+      const full = strategyShelf.find((candidate) => candidate.id === picked.id)
+      if (!full || pendingId) return
+      setPendingId(full.id)
+      ensureBotTemplateScript(full)
+        .catch((err: unknown) => {
+          toast.error(t('botsPage.templateFailed'), {
+            description: err instanceof Error ? err.message : String(err),
+          })
+        })
+        .finally(() => setPendingId(null))
+    },
+    [strategyShelf, pendingId, t],
   )
 
   const handleBlank = useCallback(() => {
@@ -58,7 +88,11 @@ export function IndicatorsEmptyState() {
       icon={SquareFunction}
       templates={templates}
       onPickTemplate={handlePick}
-      shelfLabel={t('indicatorsPage.startFromTemplate')}
+      pendingId={pendingId}
+      shelfLabel={t('indicatorsPage.templatesIndicators')}
+      secondaryLabel={t('indicatorsPage.templatesStrategies')}
+      secondaryTemplates={strategyShelf}
+      onPickSecondary={handlePickStrategy}
       blankLabel={t('indicatorsPage.startFromScratch')}
       onCreateBlank={handleBlank}
       footnote={t('indicatorsPage.emptyFootnote')}
