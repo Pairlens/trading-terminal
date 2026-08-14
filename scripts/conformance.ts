@@ -1,28 +1,30 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Connector conformance gate with live per-suite status.
+ * Connector conformance run with live per-suite status.
  *
- * `bun run dev` verifies the cross-connector contract before starting the
- * terminal. Running the whole thing as one silent `bun test` made that a
- * ~13s black box, so instead we split the suite into one child `bun test`
- * per connector (plus the shared contract suites and the market engine),
- * run them concurrently, and render a live grid:
+ * Running the cross-connector contract as one silent `bun test` is a ~13s
+ * black box, so instead we split the suite into one child `bun test` per
+ * connector (plus the shared contract suites and the market engine), run
+ * them concurrently, and render a live grid:
  *
  *   ·  pending    ◐  running    ✔  passed    ✖  failed    –  skipped
  *
  * Splitting is also faster in wall-clock terms — the suites are mostly
  * waiting on fake timers, so they pack well across cores.
  *
+ * This is an on-demand tool, not a gate: CI runs the same suites on every
+ * push, and `.github/workflows/live-connectors.yml` runs the live-exchange
+ * conformance daily.
+ *
  * Usage:
- *   bun scripts/dev/conformance.ts          # standalone, exits non-zero on failure
- *   import { runConformanceGate } from './dev/conformance'
+ *   bun run conformance                     # exits non-zero on failure
  */
 
 import { resolve } from 'node:path'
 import { Glob } from 'bun'
 
-const REPO_ROOT = resolve(import.meta.dir, '..', '..')
+const REPO_ROOT = resolve(import.meta.dir, '..')
 
 // ---------------------------------------------------------------------------
 // Suite discovery
@@ -427,7 +429,7 @@ export async function runConformanceGate(): Promise<ConformanceReport> {
   const startedAt = Date.now()
 
   console.info(
-    `  ${DIM}[1/2]${RESET} Verifying connector conformance ${DIM}(${suites.length} suites)${RESET}`,
+    `  ${DIM}▸${RESET} Verifying connector conformance ${DIM}(${suites.length} suites)${RESET}`,
   )
 
   const renderer = createGridRenderer(
@@ -468,7 +470,7 @@ export async function runConformanceGate(): Promise<ConformanceReport> {
   console.info('')
   if (failed.length === 0) {
     console.info(
-      `  ${DIM}[1/2]${RESET} ${GREEN}Connector conformance OK${RESET} ${DIM}${totals.pass} tests${totals.skip ? `, ${totals.skip} skipped` : ''} across ${suites.length} suites in ${fmtDuration(durationMs)}${RESET}`,
+      `  ${DIM}▸${RESET} ${GREEN}Connector conformance OK${RESET} ${DIM}${totals.pass} tests${totals.skip ? `, ${totals.skip} skipped` : ''} across ${suites.length} suites in ${fmtDuration(durationMs)}${RESET}`,
     )
   } else {
     console.info(

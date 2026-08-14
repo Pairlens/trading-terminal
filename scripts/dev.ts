@@ -24,7 +24,6 @@
  */
 
 import { resolve } from 'node:path'
-import { runConformanceGate } from './dev/conformance'
 import {
   CLOUD_APP_SERVER_URL,
   resolveAppServerUrl,
@@ -195,23 +194,6 @@ async function main() {
   }
   console.info('')
 
-  // ── Connector conformance gate ──
-  // Run the cross-connector contract suite so a broken market-data / order
-  // contract is caught the moment you start dev. Each connector is its own
-  // child `bun test`, so the terminal shows live per-connector status instead
-  // of a silent multi-second pause. We warn loudly but still start (so you can
-  // debug the break); production builds hard-fail on this same suite via turbo
-  // (`build` dependsOn `test`). Set SKIP_CONFORMANCE=1 to skip it.
-  if (process.env['SKIP_CONFORMANCE'] !== '1') {
-    const report = await runConformanceGate()
-    if (!report.ok) {
-      console.info(
-        `  ${DIM}   (set SKIP_CONFORMANCE=1 to skip this gate; starting dev anyway…)${RESET}`,
-      )
-      console.info('')
-    }
-  }
-
   // ── App Server resolution ──
   // Explicit VITE_APP_SERVER_URL (shell or .env.local) wins; otherwise a
   // locally-running App Server on :4046; otherwise Pairlens Cloud so dev
@@ -230,7 +212,7 @@ async function main() {
   }
 
   if (withDesktop) {
-    console.info(`  ${DIM}[2/2]${RESET} Starting Tauri Desktop...`)
+    console.info(`  ${DIM}▸${RESET} Starting Tauri Desktop...`)
     // Tauri's `devUrl` is statically `http://localhost:3000` in tauri.conf.json,
     // but in a git worktree Vite runs on a derived port. Merge the correct
     // devUrl via `--config` so Tauri points at the running dev server.
@@ -250,7 +232,7 @@ async function main() {
     })
   } else {
     console.info(
-      `  ${DIM}[2/2]${RESET} Starting Terminal on :${terminalPort} ${DIM}(Vite)${RESET}...`,
+      `  ${DIM}▸${RESET} Starting Terminal on :${terminalPort} ${DIM}(Vite)${RESET}...`,
     )
     procs.push({
       label: 'terminal',
