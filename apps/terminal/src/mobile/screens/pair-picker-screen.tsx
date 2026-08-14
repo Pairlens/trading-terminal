@@ -25,7 +25,7 @@
  * the single most-reported bug on this screen. `searching` below is the
  * in-flight signal, and it drives skeleton rows instead.
  */
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Search, Star, TriangleAlert, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -35,7 +35,11 @@ import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
 import { VENUE_KIND_KEY, venueKindOf } from '../lib/venue-kind'
 import { MobileRow } from '../primitives/mobile-row'
-import { MobileSheet, useSheetExit } from '../primitives/mobile-sheet'
+import {
+  MobileSheet,
+  useSheetExit,
+  useSheetScrollRef,
+} from '../primitives/mobile-sheet'
 import { PRESS } from '../primitives/press'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import type { MobileOverlay } from '../mobile-focus-context'
@@ -359,6 +363,7 @@ export default memo(function PairPickerScreen({
       open={open}
     >
       {/* The tab bar floats above the sheet, so the list ends where it starts. */}
+      <ListScrollReset filter={filter} query={query} />
       <div className="pb-[var(--pl-tabbar-total)]">
         {/* Stale results outlive a keystroke on purpose: react-query hands
             back the previous query's items while the new one is in flight, so
@@ -445,6 +450,22 @@ export default memo(function PairPickerScreen({
     </MobileSheet>
   )
 })
+
+/**
+ * A new query (or venue-kind filter) starts a new list, so it starts at the
+ * top — the desktop pickers make the same reset. A child of the sheet rather
+ * than an effect in the screen because the scroll region belongs to
+ * `MobileSheet` and is only published through context to what it wraps.
+ * Keyed on the query and filter only: async search waves appending rows must
+ * not yank a scroll the user owns.
+ */
+function ListScrollReset({ query, filter }: { query: string; filter: string }) {
+  const scrollRef = useSheetScrollRef()
+  useEffect(() => {
+    scrollRef?.current?.scrollTo({ top: 0 })
+  }, [scrollRef, query, filter])
+  return null
+}
 
 /** Rows the settled list will occupy, so the section does not jump on arrival. */
 const SKELETON_ROWS = [0, 1, 2, 3, 4]
