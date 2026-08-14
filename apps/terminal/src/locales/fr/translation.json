@@ -2098,13 +2098,12 @@
     "placeholder": "Saisissez une URL...",
     "go": "Aller",
     "refresh": "Actualiser",
-    "openExternal": "Ouvrir dans le navigateur",
     "emptyTitle": "Saisissez une URL ci-dessus pour intégrer un site web",
-    "blockedTitle": "Ce site ne peut pas être intégré",
-    "blockedDescription": "Ce site web empêche son affichage dans d’autres pages. Vous pouvez l’ouvrir dans un onglet de navigateur séparé à la place.",
     "forward": "Suivant",
     "failedToLoad": "Échec du chargement",
-    "viewPaused": "Affichage web en pause"
+    "viewPaused": "Affichage web en pause",
+    "desktopOnlyTitle": "Le panneau Web nécessite l’app de bureau",
+    "desktopOnlyDescription": "Intégrer un site demande une fenêtre native que l’app de bureau place au-dessus de ce panneau. Un onglet de navigateur n’a qu’une iframe, et la plupart des sites refusent de s’y charger."
   },
   "intelligence": {
     "analyzing": "Analyse du marché…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "Choisissez un panneau à ajouter à la mise en page de votre espace de travail.",
-    "added": "Ajouté"
+    "added": "Ajouté",
+    "desktopOnly": "Bureau uniquement"
   },
   "layout": {
     "workspaces": "Espaces de travail",

@@ -2098,13 +2098,12 @@
     "placeholder": "Nhập một URL...",
     "go": "Đi",
     "refresh": "Làm mới",
-    "openExternal": "Mở trong trình duyệt",
     "emptyTitle": "Nhập URL ở trên để nhúng một trang web",
-    "blockedTitle": "Trang này không thể nhúng được",
-    "blockedDescription": "Trang web này chặn việc hiển thị bên trong các trang khác. Bạn có thể mở nó trong một tab trình duyệt riêng thay vào đó.",
     "forward": "Tiến",
     "failedToLoad": "Tải không thành công",
-    "viewPaused": "Đã tạm dừng chế độ xem web"
+    "viewPaused": "Đã tạm dừng chế độ xem web",
+    "desktopOnlyTitle": "Bảng Web cần ứng dụng máy tính",
+    "desktopOnlyDescription": "Nhúng một trang web cần cửa sổ native mà ứng dụng máy tính đặt lên trên bảng này. Tab trình duyệt chỉ có iframe, và phần lớn trang web từ chối tải bên trong iframe."
   },
   "intelligence": {
     "analyzing": "Đang phân tích thị trường…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "Chọn một panel để thêm vào bố cục không gian làm việc của bạn.",
-    "added": "Đã thêm"
+    "added": "Đã thêm",
+    "desktopOnly": "Chỉ trên Desktop"
   },
   "layout": {
     "workspaces": "Không gian làm việc",

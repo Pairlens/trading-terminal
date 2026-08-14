@@ -2098,13 +2098,12 @@
     "placeholder": "URLを入力...",
     "go": "移動",
     "refresh": "更新",
-    "openExternal": "ブラウザで開く",
     "emptyTitle": "上部にURLを入力してウェブサイトを埋め込む",
-    "blockedTitle": "このサイトは埋め込めません",
-    "blockedDescription": "このウェブサイトは他のページ内での表示をブロックしています。代わりに別のブラウザタブで開くことができます。",
     "forward": "進む",
     "failedToLoad": "読み込みに失敗しました",
-    "viewPaused": "Web表示を一時停止中"
+    "viewPaused": "Web表示を一時停止中",
+    "desktopOnlyTitle": "Web パネルにはデスクトップアプリが必要です",
+    "desktopOnlyDescription": "サイトの埋め込みには、デスクトップアプリがこのパネルの上に重ねるネイティブウィンドウが必要です。ブラウザのタブでは iframe しか使えず、多くのサイトは iframe 内での読み込みを拒否します。"
   },
   "intelligence": {
     "analyzing": "市場を分析中…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "ワークスペースレイアウトに追加するペインを選択してください。",
-    "added": "追加済み"
+    "added": "追加済み",
+    "desktopOnly": "デスクトップ専用"
   },
   "layout": {
     "workspaces": "ワークスペース",

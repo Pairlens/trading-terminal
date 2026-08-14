@@ -2098,13 +2098,12 @@
     "placeholder": "输入网址……",
     "go": "前往",
     "refresh": "刷新",
-    "openExternal": "在浏览器中打开",
     "emptyTitle": "在上方输入网址以嵌入网站",
-    "blockedTitle": "该网站无法被嵌入",
-    "blockedDescription": "该网站禁止在其他页面中显示。你可以改为在单独的浏览器标签页中打开它。",
     "forward": "前进",
     "failedToLoad": "加载失败",
-    "viewPaused": "网页视图已暂停"
+    "viewPaused": "网页视图已暂停",
+    "desktopOnlyTitle": "Web 面板需要桌面应用",
+    "desktopOnlyDescription": "嵌入网站需要桌面应用在此面板上叠加的原生窗口。浏览器标签页只有 iframe，而大多数网站拒绝在 iframe 中加载。"
   },
   "intelligence": {
     "analyzing": "正在分析市场…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "选择一个要添加到工作区布局的面板。",
-    "added": "已添加"
+    "added": "已添加",
+    "desktopOnly": "仅限桌面端"
   },
   "layout": {
     "workspaces": "工作区",

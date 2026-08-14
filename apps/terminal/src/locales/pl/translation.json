@@ -2120,13 +2120,12 @@
     "placeholder": "Wprowadź adres URL...",
     "go": "Przejdź",
     "refresh": "Odśwież",
-    "openExternal": "Otwórz w przeglądarce",
     "emptyTitle": "Wprowadź powyżej adres URL, aby osadzić stronę",
-    "blockedTitle": "Tej strony nie można osadzić",
-    "blockedDescription": "Ta strona blokuje wyświetlanie w innych stronach. Możesz zamiast tego otworzyć ją w osobnej karcie przeglądarki.",
     "forward": "Dalej",
     "failedToLoad": "Nie udało się załadować",
-    "viewPaused": "Widok WWW wstrzymany"
+    "viewPaused": "Widok WWW wstrzymany",
+    "desktopOnlyTitle": "Panel Web wymaga aplikacji na komputer",
+    "desktopOnlyDescription": "Osadzenie strony wymaga natywnego okna, które aplikacja na komputer umieszcza nad tym panelem. Karta przeglądarki ma tylko iframe, a większość stron odmawia wczytania się w nim."
   },
   "intelligence": {
     "analyzing": "Analizowanie rynku…",
@@ -2252,7 +2251,8 @@
   },
   "addPaneDialog": {
     "description": "Wybierz panel, aby dodać go do układu obszaru roboczego.",
-    "added": "Dodano"
+    "added": "Dodano",
+    "desktopOnly": "Tylko desktop"
   },
   "layout": {
     "workspaces": "Obszary robocze",

@@ -387,6 +387,10 @@ export function useOmniSearchResults(
   const paneResults = useMemo<ScoredCategory<PaneResult>>(() => {
     const items: Array<PaneResult> = Object.entries(paneDefinitions)
       .filter(([key]) => key !== 'empty')
+      // Desktop-only panes are dropped here rather than badged: every result
+      // in this list is one keystroke from being added, and the add-pane
+      // dialog is the surface that shows what the desktop app adds.
+      .filter(([, def]) => !def.requiresDesktop || isStandalone)
       .map(([key, def]) => ({
         type: 'pane' as const,
         paneType: key,

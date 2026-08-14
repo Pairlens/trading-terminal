@@ -2098,13 +2098,12 @@
     "placeholder": "Enter a URL...",
     "go": "Go",
     "refresh": "Refresh",
-    "openExternal": "Open in browser",
     "emptyTitle": "Enter a URL above to embed a website",
-    "blockedTitle": "This site can't be embedded",
-    "blockedDescription": "This website blocks being displayed inside other pages. You can open it in a separate browser tab instead.",
     "forward": "Forward",
     "failedToLoad": "Failed to load",
-    "viewPaused": "Web view paused"
+    "viewPaused": "Web view paused",
+    "desktopOnlyTitle": "The Web panel needs the desktop app",
+    "desktopOnlyDescription": "Embedding a site takes a native window the desktop app places over this panel. A browser tab only has an iframe, and most sites refuse to load inside one."
   },
   "intelligence": {
     "analyzing": "Analyzing market…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "Choose a pane to add to your workspace layout.",
-    "added": "Added"
+    "added": "Added",
+    "desktopOnly": "Desktop only"
   },
   "layout": {
     "workspaces": "Workspaces",

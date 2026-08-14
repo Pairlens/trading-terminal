@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Search } from 'lucide-react'
+import { Monitor, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Badge } from '@pairlens/ui/components/ui/badge'
@@ -16,6 +16,7 @@ import type { PaneDefinition, WorkspaceConfig } from '@/lib/layout/types'
 import { PANE_CATEGORIES } from '@/lib/layout/pane-categories'
 import { getPaneIcon } from '@/lib/layout/pane-icons'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
+import { isStandalone } from '@/lib/platform'
 
 type AddPaneDialogProps = {
   open: boolean
@@ -221,10 +222,18 @@ export function AddPaneDialog({
                 <div className="space-y-1">
                   {cat.panes.map(([type, def]) => {
                     const Icon = getPaneIcon(def.icon)
-                    const isDisabled =
+                    // Offered, not hidden: a browser user should see what the
+                    // desktop app adds, which is the same argument the venue
+                    // list makes. It just cannot be picked here.
+                    const isDesktopOnly = Boolean(
+                      def.requiresDesktop && !isStandalone,
+                    )
+                    const isAdded = Boolean(
                       def.singleton &&
                       existingTypes.has(type) &&
-                      !isSingletonRelaxed(def, workspace)
+                      !isSingletonRelaxed(def, workspace),
+                    )
+                    const isDisabled = isAdded || isDesktopOnly
 
                     return (
                       <button
@@ -244,9 +253,15 @@ export function AddPaneDialog({
                             <span className="text-sm font-medium">
                               {t(def.labelKey)}
                             </span>
-                            {isDisabled && (
+                            {isAdded && (
                               <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
                                 {t('addPaneDialog.added')}
+                              </span>
+                            )}
+                            {isDesktopOnly && (
+                              <span className="inline-flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                <Monitor className="size-2.5" />
+                                {t('addPaneDialog.desktopOnly')}
                               </span>
                             )}
                             {def.requiredAccessLevel && (
