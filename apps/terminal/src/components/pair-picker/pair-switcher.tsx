@@ -220,6 +220,14 @@ export function PairSwitcher({
     setActiveIndex(0)
   }, [searchValue, sections])
 
+  // A new query starts a new list at the top. The activeIndex effect below
+  // cannot do this: when the index is already 0 it never fires again, so a
+  // leftover scroll offset would survive the re-filter. Keyed on the query
+  // only — async waves appending below must not yank the scroll.
+  useEffect(() => {
+    listRef.current?.scrollTo({ top: 0 })
+  }, [searchValue])
+
   useEffect(() => {
     if (!open) return
     listRef.current
