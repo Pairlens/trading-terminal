@@ -94,14 +94,19 @@ export function useInstrumentSearch(query: string) {
   const isDeferredActive = deferredQuery.length >= 2
 
   // ── Wave 1: synchronous, frozen ────────────────────────────────────────
+  // Keyed on the LIVE query, not the deferred one: the local index answers in
+  // the same render as the keystroke. Deferring it opened a one-frame window
+  // (live query active, deferred query lagging) where `data` went empty, the
+  // pickers unmounted their result rows, and cmdk's selection/scroll landed on
+  // whatever transient DOM it found — the list ended up scrolled mid-way.
   const wave1 = useMemo(
     () =>
-      isDeferredActive
-        ? searchLocalInstruments(deferredQuery, 50)
+      isSearchActive
+        ? searchLocalInstruments(trimmed, 50)
         : { items: [], total: 0 },
     // indexVersion re-runs the search when the index (re)builds
 
-    [deferredQuery, isDeferredActive, indexVersion],
+    [trimmed, isSearchActive, indexVersion],
   )
 
   // ── Waves 2+3: async fan-out ───────────────────────────────────────────
@@ -193,7 +198,7 @@ export function useInstrumentSearch(query: string) {
   // ── Merge: frozen wave 1, then appended-by-identity ────────────────────
   const asyncItems = result.data
   const data = useMemo(() => {
-    if (!isDeferredActive) return undefined
+    if (!isSearchActive) return undefined
     const seen = new Set<string>()
     for (const inst of wave1.items) seen.add(instrumentIdentityKey(inst))
     const merged = [...wave1.items]
@@ -207,7 +212,7 @@ export function useInstrumentSearch(query: string) {
       merged.push({ ...inst, id: identity, rank: merged.length })
     }
     return merged
-  }, [wave1, asyncItems, isDeferredActive])
+  }, [wave1, asyncItems, isSearchActive])
 
   const localCount = wave1.items.length
 
