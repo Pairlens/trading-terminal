@@ -660,7 +660,9 @@
       "themeDescription": "Selecciona un tema de color para la interfaz del terminal.",
       "defaultTheme": "Predeterminado",
       "recentTickers": "Marquesina de tickers recientes",
-      "recentTickersDescription": "Muestra los pares vistos recientemente con precios en vivo en una marquesina sobre el encabezado del par."
+      "recentTickersDescription": "Muestra los pares vistos recientemente con precios en vivo en una marquesina sobre el encabezado del par.",
+      "haptics": "Respuesta háptica",
+      "hapticsDescription": "Un toque breve al cambiar de par, de exchange o de pestaña en el terminal móvil."
     },
     "performance": {
       "title": "Velocidad de datos",

@@ -36,6 +36,7 @@ import { PRESS } from '../primitives/press'
 import type { LucideIcon } from 'lucide-react'
 import type { MarketOption } from '@/hooks/use-available-markets'
 import type { MobileOverlay } from '../mobile-focus-context'
+import { haptic } from '@/lib/haptics'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useMarketData } from '@/lib/market-data-provider'
 import { useChartConfig } from '@/lib/chart-terminal-context'
@@ -71,6 +72,9 @@ export default memo(function VenuePickerScreen({
       // A row tapped while the sheet is already leaving is not a choice — see
       // `isClosing`.
       if (isClosing()) return
+      // Before the switch, not after: the tick answers the finger, and the
+      // venue change behind it costs a socket handshake.
+      haptic('selection')
       if (market !== focusedVenue) setFocusedVenue(market)
       // The venue switches NOW and only the hand-off waits: the chart behind
       // the sheet is already reconnecting by the time it has slid away.

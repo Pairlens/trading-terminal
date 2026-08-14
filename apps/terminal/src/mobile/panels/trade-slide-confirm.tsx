@@ -14,11 +14,12 @@
  * The ink colour follows `TradeConfirmButton`'s precedent: a dark oklch on the
  * up/down token, which stays legible whichever theme the tokens resolve to.
  */
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import { Lock } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 import { Spinner } from '@pairlens/ui/components/ui/spinner'
+import { haptic } from '@/lib/haptics'
 import { useHoldConfirm } from '@/hooks/use-trade-confirm'
 
 export type TradeSlideConfirmProps = {
@@ -44,11 +45,21 @@ export const TradeSlideConfirm = memo(function TradeSlideConfirm({
   onConfirm,
 }: TradeSlideConfirmProps) {
   const blocked = Boolean(disabled) || Boolean(busy)
+
+  // The hold ends with the finger still down and the fill already at 100%, so
+  // nothing else tells the user the order went. Wrapped HERE rather than
+  // inside `useHoldConfirm`, which the desktop shares: the hook lives outside
+  // `src/mobile/` and must not learn about a phone-only capability.
+  const confirm = useCallback(() => {
+    haptic('impact')
+    onConfirm()
+  }, [onConfirm])
+
   const { controlProps, fillProps } = useHoldConfirm({
     holdMs,
     disabled,
     busy,
-    onConfirm,
+    onConfirm: confirm,
   })
 
   const token = side === 'buy' ? '--up' : '--down'

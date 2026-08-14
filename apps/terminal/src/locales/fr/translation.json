@@ -660,7 +660,9 @@
       "themeDescription": "Sélectionnez un thème de couleur pour l’interface du terminal.",
       "defaultTheme": "Par défaut",
       "recentTickers": "Bandeau des tickers récents",
-      "recentTickersDescription": "Afficher les paires récemment consultées avec leurs prix en direct dans un bandeau au-dessus de l’en-tête de paire."
+      "recentTickersDescription": "Afficher les paires récemment consultées avec leurs prix en direct dans un bandeau au-dessus de l’en-tête de paire.",
+      "haptics": "Retour haptique",
+      "hapticsDescription": "Une brève impulsion quand vous changez de paire, de plateforme ou d’onglet sur le terminal mobile."
     },
     "performance": {
       "title": "Fréquence des données",

@@ -660,7 +660,9 @@
       "themeDescription": "터미널 인터페이스의 색상 테마를 선택하세요.",
       "defaultTheme": "기본값",
       "recentTickers": "최근 티커 마퀴",
-      "recentTickersDescription": "페어 헤더 위에 최근에 본 페어를 실시간 가격과 함께 마퀴로 표시합니다."
+      "recentTickersDescription": "페어 헤더 위에 최근에 본 페어를 실시간 가격과 함께 마퀴로 표시합니다.",
+      "haptics": "햅틱 피드백",
+      "hapticsDescription": "모바일 터미널에서 페어, 거래소, 탭을 전환할 때 짧게 진동합니다."
     },
     "performance": {
       "title": "데이터 속도",

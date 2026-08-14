@@ -29,6 +29,7 @@ import { PRESS } from '../primitives/press'
 import { usePinnedTimeframes } from './use-pinned-timeframes'
 import type { ReactNode, PointerEvent as ReactPointerEvent } from 'react'
 import type { TimeframeOption } from '@/components/terminal/chart-toolbar'
+import { haptic } from '@/lib/haptics'
 import { TIMEFRAME_OPTIONS } from '@/components/terminal/chart-toolbar'
 import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
 import { track } from '@/lib/analytics-events'
@@ -72,6 +73,7 @@ export default memo(function TimeframePopoverChip() {
 
   const select = useCallback(
     (value: string) => {
+      haptic('selection')
       setTimeframe(value)
       touch(value)
       track('timeframe_changed', { timeframe: value })
@@ -247,9 +249,10 @@ const MoreCell = memo(function MoreCell({
         firedRef.current = true
         timerRef.current = null
         onPromote()
-        // Guarded: only Android Chrome implements it, and iOS Safari does not
-        // even expose the property.
-        navigator.vibrate?.(10)
+        // The long press has fired without the finger moving, so the tick is
+        // the only thing that can say so. See lib/haptics.ts for what backs it
+        // on each platform.
+        haptic('impact')
       }, LONG_PRESS_MS)
     },
     [onPromote],

@@ -64,6 +64,7 @@ import { TrendQuoteCell } from '../panels/trend-quote-cell'
 import type { RefObject } from 'react'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import type { MobileOverlay } from '../mobile-focus-context'
+import { haptic } from '@/lib/haptics'
 import { instrumentToPairEntry } from '@/components/pair-picker/pair-picker-data'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
@@ -252,6 +253,7 @@ export default memo(function MarketsScreen({
 
   const handleSelect = useCallback(
     (pair: PairEntry, market: string) => {
+      haptic('selection')
       if (market !== focusedVenue) setFocusedVenue(market)
       setFocusedPair(pair.symbol)
       trackRecent(pair.symbol)

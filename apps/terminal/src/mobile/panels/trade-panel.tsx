@@ -44,6 +44,7 @@ import { TradeRiskRow } from './trade-risk-row'
 import { TradeSlideConfirm } from './trade-slide-confirm'
 import type { MobileOrderType } from '../lib/order-draft-store'
 import type { ReactNode, RefObject } from 'react'
+import { haptic } from '@/lib/haptics'
 import {
   useOptionalCandleData,
   useOptionalTickerData,
@@ -360,10 +361,22 @@ export default memo(function MobileTradePanel() {
 
   const handleOrderType = useCallback(
     (next: MobileOrderType) => {
+      if (next !== orderType) haptic('selection')
       setOrderType(next)
       seedPrice(next)
     },
-    [setOrderType, seedPrice],
+    [orderType, setOrderType, seedPrice],
+  )
+
+  // Buy/Sell and the order type are segment controls, which is the one control
+  // class iOS itself ticks for — and here the segment repaints the whole
+  // ticket, so the tick is confirming a change the user is about to type into.
+  const handleSide = useCallback(
+    (next: 'buy' | 'sell') => {
+      if (next !== side) haptic('selection')
+      setSide(next)
+    },
+    [side, setSide],
   )
 
   const handlePercent = useCallback(
@@ -512,6 +525,10 @@ export default memo(function MobileTradePanel() {
       const result = await placeOrder(params)
 
       if (!result.success) {
+        // The one place the phone is allowed a long haptic. A rejection lands
+        // as a toast at the top of a screen whose bottom half the user is
+        // still looking at, and the venue can take a second to say no.
+        haptic('error')
         toast.error(t('terminal.trade.orderRejected'), {
           description: result.error ?? t('common.unknownError'),
         })
@@ -549,6 +566,7 @@ export default memo(function MobileTradePanel() {
         refreshWalletBalances(focusedVenue, selectedWallet.id, focusedPair)
       }
 
+      haptic('success')
       toast.success(
         side === 'buy'
           ? t('terminal.trade.buyAsset', { asset: baseAsset })
@@ -557,6 +575,7 @@ export default memo(function MobileTradePanel() {
       )
       clearAmount()
     } catch (err) {
+      haptic('error')
       toast.error(t('terminal.trade.orderFailed'), { description: String(err) })
     } finally {
       setSubmitting(false)
@@ -620,13 +639,13 @@ export default memo(function MobileTradePanel() {
         <SideButton
           active={side === 'buy'}
           label={t('terminal.trade.buy')}
-          onPress={() => setSide('buy')}
+          onPress={() => handleSide('buy')}
           side="buy"
         />
         <SideButton
           active={side === 'sell'}
           label={t('terminal.trade.sell')}
-          onPress={() => setSide('sell')}
+          onPress={() => handleSide('sell')}
           side="sell"
         />
       </div>

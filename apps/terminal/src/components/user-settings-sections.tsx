@@ -115,6 +115,12 @@ import { COLOR_MODES } from '@/lib/settings/color-mode'
 import { useIdleGuardEnabled } from '@/components/idle-guard'
 import { isAnalyticsConfigured, useAnalyticsEnabled } from '@/lib/analytics'
 import { useRecentTickersMarqueeEnabled } from '@/lib/recent-tickers'
+import {
+  HAPTICS_PREF_KEY,
+  haptic,
+  hapticsAvailable,
+  setHapticsEnabled,
+} from '@/lib/haptics'
 import { usePluginAutoUpdateSettings } from '@/stores/plugin-updates-store'
 import { useAccountDeletion, useAccountExport } from '@/hooks/use-account'
 import { savedFileFolder } from '@/lib/save-file'
@@ -786,7 +792,56 @@ export function AppearanceSection() {
           />
         </div>
       </section>
+
+      <HapticsCard />
     </div>
+  )
+}
+
+/**
+ * Haptic feedback — the one card in Settings that is absent on most machines.
+ *
+ * `hapticsAvailable()` is a HARDWARE question, not an API one: desktop Chrome
+ * defines `navigator.vibrate` on a laptop with nothing to vibrate, so a card
+ * gated on the API alone would appear on every desktop browser attached to a
+ * switch that could never do anything. See `isHandheld` in lib/haptics.ts.
+ *
+ * Rendering nothing rather than disabling the switch: a greyed-out control
+ * invites the user to go looking for what would enable it, and on a laptop the
+ * answer is "buy a phone".
+ */
+function HapticsCard() {
+  const { t } = useTranslation()
+  const [enabled, setEnabled] = usePersistedState(HAPTICS_PREF_KEY, true)
+
+  if (!hapticsAvailable()) return null
+
+  return (
+    <section className="rounded-xl border p-4">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <h3 className="font-medium">{t('settings.appearance.haptics')}</h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t('settings.appearance.hapticsDescription')}
+          </p>
+        </div>
+        <Switch
+          checked={enabled}
+          onCheckedChange={(next) => {
+            setEnabled(next)
+            // Both, and in this order. `setEnabled` persists and syncs but only
+            // reaches `haptic()` a microtask later (`usePersistedState` defers
+            // `emitWrite`), which is after the tick below — so turning haptics
+            // ON would be silent, reading exactly like a switch that is broken.
+            setHapticsEnabled(next)
+            // Only on the way ON, and it is the whole demonstration: it is also
+            // the only way to find out whether the device's own System Haptics
+            // setting is letting anything through, which no web API reports.
+            if (next) haptic('selection')
+          }}
+        />
+      </div>
+    </section>
   )
 }
 

@@ -32,6 +32,7 @@ import { TrendQuoteCell } from './trend-quote-cell'
 import { orderFeatured } from './featured-order'
 import type { NewsArticle } from '@pairlens/shared/instrument-types'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
+import { haptic } from '@/lib/haptics'
 import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
@@ -189,6 +190,7 @@ const FeaturedRow = memo(function FeaturedRow({
   const { setFocusedPair, setFocusedVenue, dismissPanel } = useMobileActions()
 
   const handlePress = useCallback(() => {
+    haptic('selection')
     if (market !== focusedVenue) setFocusedVenue(market)
     setFocusedPair(pair.symbol)
     dismissPanel()

@@ -40,6 +40,7 @@ import { cn } from '@pairlens/ui'
 import { PRESS } from './press'
 import type { LucideIcon } from 'lucide-react'
 import type { MobileTab } from '../mobile-focus-context'
+import { haptic } from '@/lib/haptics'
 
 export type MobileTabBarProps = {
   /** The lit destination, or null while an overlay owns the screen. */
@@ -161,7 +162,13 @@ export const MobileTabBar = memo(function MobileTabBar({
               active === null && 'opacity-45',
             )}
             key={tab.id}
-            onClick={() => onChange(tab.id)}
+            onClick={() => {
+              // Only a real move earns a tick. Tapping the tab you are already
+              // on is a no-op the shell deliberately swallows, and a phone that
+              // buzzes for nothing teaches the user to stop trusting it.
+              if (tab.id !== active) haptic('selection')
+              onChange(tab.id)
+            }}
             ref={registerItem(tab.id)}
             type="button"
             // Paint only, straight onto the node: the bar is `memo` for the

@@ -58,6 +58,7 @@ import type {
   DrawingToolType,
 } from '@pairlens/fast-financial-charts/types'
 import type { PointerEvent as ReactPointerEvent, RefObject } from 'react'
+import { haptic } from '@/lib/haptics'
 import { findDrawingTool } from '@/components/terminal/drawing-tool-catalog'
 import { drawingToolKey } from '@/lib/chart-drawing-tools'
 import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
@@ -246,7 +247,7 @@ function PlacementLayer({
     if (!cursor) return
     const point = toPoint(cursor)
     if (!point) return
-    navigator.vibrate?.(10)
+    haptic('impact')
     const next = [...placed, point]
     if (next.length < needed) {
       setPlaced(next)

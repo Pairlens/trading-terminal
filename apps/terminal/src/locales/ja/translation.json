@@ -660,7 +660,9 @@
       "themeDescription": "ターミナルインターフェースのカラーテーマを選択します。",
       "defaultTheme": "デフォルト",
       "recentTickers": "最近見たティッカーのマーキー",
-      "recentTickersDescription": "ペアヘッダーの上部に、最近表示したペアをライブ価格付きのマーキーで表示します。"
+      "recentTickersDescription": "ペアヘッダーの上部に、最近表示したペアをライブ価格付きのマーキーで表示します。",
+      "haptics": "触覚フィードバック",
+      "hapticsDescription": "モバイルターミナルでペア・取引所・タブを切り替えたときに短く振動します。"
     },
     "performance": {
       "title": "データレート",

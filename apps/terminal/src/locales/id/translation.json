@@ -660,7 +660,9 @@
       "themeDescription": "Pilih tema warna untuk antarmuka terminal.",
       "defaultTheme": "Default",
       "recentTickers": "Marquee ticker terbaru",
-      "recentTickersDescription": "Tampilkan pair yang baru dilihat dengan harga live dalam marquee di atas header pair."
+      "recentTickersDescription": "Tampilkan pair yang baru dilihat dengan harga live dalam marquee di atas header pair.",
+      "haptics": "Umpan balik haptik",
+      "hapticsDescription": "Ketukan singkat saat kamu mengganti pair, bursa, atau tab di terminal mobile."
     },
     "performance": {
       "title": "Laju Data",

@@ -660,7 +660,9 @@
       "themeDescription": "为终端界面选择一个配色主题。",
       "defaultTheme": "默认",
       "recentTickers": "最近查看行情跑马灯",
-      "recentTickersDescription": "在交易对标题上方以跑马灯形式显示最近查看的交易对及其实时价格。"
+      "recentTickersDescription": "在交易对标题上方以跑马灯形式显示最近查看的交易对及其实时价格。",
+      "haptics": "触感反馈",
+      "hapticsDescription": "在移动终端切换交易对、交易所或标签页时轻微震动。"
     },
     "performance": {
       "title": "数据速率",
