@@ -2868,7 +2868,9 @@
       "workflow": "工作流程",
       "notSupportedOn": "{{venue}} 不支援",
       "available": "可用：{{amount}}",
-      "slippage": "滑價"
+      "slippage": "滑價",
+      "extendedHours": "盤前盤後交易",
+      "extendedHoursHint": "在盤前與盤後時段成交。盤口較薄，價差較大。"
     },
     "status": {
       "connecting": "連線中…",

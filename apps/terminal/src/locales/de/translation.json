@@ -2868,7 +2868,9 @@
       "workflow": "Workflow",
       "notSupportedOn": "Nicht unterstützt auf {{venue}}",
       "available": "Verfügbar: {{amount}}",
-      "slippage": "Slippage"
+      "slippage": "Slippage",
+      "extendedHours": "Erweiterte Handelszeiten",
+      "extendedHoursHint": "Ausführung im vor- und nachbörslichen Handel. Dünneres Orderbuch, größere Spreads."
     },
     "status": {
       "connecting": "Verbinde…",

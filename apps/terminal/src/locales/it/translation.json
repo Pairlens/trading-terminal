@@ -2868,7 +2868,9 @@
       "workflow": "Workflow",
       "notSupportedOn": "Non supportato su {{venue}}",
       "available": "Disponibile: {{amount}}",
-      "slippage": "Slippage"
+      "slippage": "Slippage",
+      "extendedHours": "Orario esteso",
+      "extendedHoursHint": "Esecuzione nelle sessioni pre-mercato e after-hours. Book più sottile, spread più ampi."
     },
     "status": {
       "connecting": "Connessione…",

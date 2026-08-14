@@ -2868,7 +2868,9 @@
       "workflow": "Workflow",
       "notSupportedOn": "Non pris en charge sur {{venue}}",
       "available": "Disponible : {{amount}}",
-      "slippage": "Slippage"
+      "slippage": "Slippage",
+      "extendedHours": "Séances étendues",
+      "extendedHoursHint": "Exécution lors des séances avant-Bourse et après-Bourse. Carnet plus mince, écarts plus larges."
     },
     "status": {
       "connecting": "Connexion…",

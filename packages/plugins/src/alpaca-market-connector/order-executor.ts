@@ -45,6 +45,26 @@ function mapAlpacaStatus(status: string): NormalizedOrderUpdate['status'] {
 
 type AlpacaOrderRecord = Record<string, unknown>
 
+/** The value when it parses to a non-zero number, else undefined. */
+function nonZero(v: unknown): unknown {
+  const n = Number(v)
+  return Number.isFinite(n) && n !== 0 ? v : undefined
+}
+
+/**
+ * Alpaca accepts fractional share quantities only on DAY orders — any
+ * fractional qty with `time_in_force: 'gtc'` is rejected outright with
+ * "fractional orders must be DAY orders".
+ *
+ * This is not an edge case here: the trade panel's 25/50/75/100% sizing and
+ * its quote→base conversion both emit up to 8 decimal places, so a partial
+ * position sold with a limit order is fractional far more often than not.
+ */
+function isFractionalSize(size: string): boolean {
+  const n = Number(size)
+  return Number.isFinite(n) && !Number.isInteger(n)
+}
+
 export function normalizeAlpacaOrder(
   d: AlpacaOrderRecord,
 ): NormalizedOrderUpdate {
@@ -70,8 +90,12 @@ export function normalizeAlpacaOrder(
       : rawType === 'limit'
         ? 'limit'
         : 'market',
-    // Notional (dollar-amount) orders have qty=null until filled.
-    size: String(d['qty'] ?? d['filled_qty'] ?? ''),
+    // Share count. Notional (dollar-amount) orders carry qty=null for their
+    // whole life — even once filled, only `filled_qty` ever holds shares — so
+    // the fallback reads that instead. It stays EMPTY rather than '0' while
+    // such an order is still pending: '0' renders as a zero-share order in the
+    // orders pane, which is a wrong number rather than an absent one.
+    size: String(d['qty'] ?? nonZero(d['filled_qty']) ?? ''),
     price: String(d['limit_price'] ?? ''),
     fillSize: String(d['filled_qty'] ?? '0'),
     avgPrice: String(d['filled_avg_price'] ?? '0'),
@@ -106,11 +130,38 @@ export async function placeAlpacaOrder(
       : 'limit'
     : params.type
 
+  // Extended-hours eligibility, verified against the API: only limit orders
+  // qualify. A market order answers "extended hours order must be DAY or GTC
+  // limit orders", stops answer "stop orders are not eligible for extended
+  // hours trading". Both are refused here so the caller gets the reason in
+  // its own terms rather than the venue's, and neither is quietly downgraded
+  // into a regular-session order the trader did not ask for.
+  if (params.extendedHours) {
+    if (trigger) {
+      return {
+        success: false,
+        error:
+          'Alpaca does not accept stop or take-profit orders in the pre-market and after-hours sessions. Place it as a plain limit order, or leave extended hours off so it arms at the next regular open.',
+      }
+    }
+    if (params.type !== 'limit') {
+      return {
+        success: false,
+        error:
+          'Extended-hours trading needs a limit order — those sessions have no continuous auction to fill a market order against. Switch to Limit and set your price.',
+      }
+    }
+  }
+
   const body: Record<string, unknown> = {
     symbol,
     side: params.side,
     type: alpacaType,
   }
+
+  // Both DAY and GTC limit orders are accepted with the flag, so this composes
+  // with the fractional rule below rather than overriding it.
+  if (params.extendedHours) body['extended_hours'] = true
 
   // Sizing: base-denominated size maps to share qty; quote-denominated maps
   // to notional dollars (market orders only, per Alpaca rules — trigger
@@ -121,7 +172,22 @@ export async function placeAlpacaOrder(
     body['qty'] = params.size
   }
 
+  // Share-denominated orders can be fractional; notional orders are sized in
+  // dollars and are always DAY regardless.
+  const fractional = body['qty'] !== undefined && isFractionalSize(params.size)
+
   if (trigger) {
+    // A fractional trigger order can only be DAY at Alpaca, and a DAY stop is
+    // gone at the closing bell. Silently handing back a protective order that
+    // expires overnight is the kind of surprise a stop-loss exists to prevent,
+    // so refuse it and say what to change.
+    if (fractional) {
+      return {
+        success: false,
+        error:
+          'Alpaca requires a whole number of shares for stop and take-profit orders — fractional quantities can only be day orders, which would expire at the close. Round the size to whole shares.',
+      }
+    }
     if (trigger.triggerType === 'sl') {
       body['stop_price'] = trigger.triggerPrice
       if (params.type === 'limit' && params.price) {
@@ -133,7 +199,8 @@ export async function placeAlpacaOrder(
     body['time_in_force'] = 'gtc'
   } else if (params.type === 'limit') {
     if (params.price) body['limit_price'] = params.price
-    body['time_in_force'] = 'gtc'
+    // Whole-share limits rest as GTC; fractional ones are DAY-only per above.
+    body['time_in_force'] = fractional ? 'day' : 'gtc'
   } else {
     // Fractional/notional market orders require 'day'.
     body['time_in_force'] = 'day'

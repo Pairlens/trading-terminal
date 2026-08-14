@@ -214,6 +214,7 @@ export function createAlpacaMarketConnectorPlugin(
         price: p['price'] ? String(p['price']) : undefined,
         trigger,
         mode: slot.mode,
+        extendedHours: p['extendedHours'] === true,
         tgtCcy: p['tgtCcy'] ? String(p['tgtCcy']) : undefined,
         clientOrderId: p['clientOrderId']
           ? String(p['clientOrderId'])

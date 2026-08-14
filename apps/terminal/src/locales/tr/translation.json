@@ -2868,7 +2868,9 @@
       "workflow": "İş akışı",
       "notSupportedOn": "{{venue}} üzerinde desteklenmiyor",
       "available": "Kullanılabilir: {{amount}}",
-      "slippage": "Kayma"
+      "slippage": "Kayma",
+      "extendedHours": "Uzatılmış seans",
+      "extendedHoursHint": "Seans öncesi ve sonrası oturumlarda gerçekleşir. Daha ince emir defteri, daha geniş makas."
     },
     "status": {
       "connecting": "Bağlanıyor…",

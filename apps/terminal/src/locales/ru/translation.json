@@ -2894,7 +2894,9 @@
       "workflow": "Воркфлоу",
       "notSupportedOn": "Не поддерживается на {{venue}}",
       "available": "Доступно: {{amount}}",
-      "slippage": "Проскальзывание"
+      "slippage": "Проскальзывание",
+      "extendedHours": "Расширенные торги",
+      "extendedHoursHint": "Исполнение на премаркете и постмаркете. Стакан тоньше, спреды шире."
     },
     "status": {
       "connecting": "Подключение…",

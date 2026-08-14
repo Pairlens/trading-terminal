@@ -2868,7 +2868,9 @@
       "workflow": "Workflow",
       "notSupportedOn": "Não compatível com {{venue}}",
       "available": "Disponível: {{amount}}",
-      "slippage": "Slippage"
+      "slippage": "Slippage",
+      "extendedHours": "Horário alargado",
+      "extendedHoursHint": "Execução nas sessões de pré-abertura e após o fecho. Livro mais fino, spreads mais largos."
     },
     "status": {
       "connecting": "Conectando…",

@@ -2894,7 +2894,9 @@
       "workflow": "Workflow",
       "notSupportedOn": "Nieobsługiwane na {{venue}}",
       "available": "Dostępne: {{amount}}",
-      "slippage": "Poślizg cenowy"
+      "slippage": "Poślizg cenowy",
+      "extendedHours": "Handel poza sesją",
+      "extendedHoursHint": "Realizacja na sesjach przed otwarciem i po zamknięciu. Cieńszy arkusz, szersze spready."
     },
     "status": {
       "connecting": "Łączenie…",

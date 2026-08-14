@@ -2868,7 +2868,9 @@
       "workflow": "ワークフロー",
       "notSupportedOn": "{{venue}}では未対応です",
       "available": "利用可能: {{amount}}",
-      "slippage": "スリッページ"
+      "slippage": "スリッページ",
+      "extendedHours": "時間外取引",
+      "extendedHoursHint": "プレマーケットと時間外セッションで約定します。板が薄く、スプレッドは広がります。"
     },
     "status": {
       "connecting": "接続中…",

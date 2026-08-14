@@ -25,6 +25,7 @@ import {
 } from '@pairlens/ui/components/ui/dialog'
 import { Input } from '@pairlens/ui/components/ui/input'
 import { Slider } from '@pairlens/ui/components/ui/slider'
+import { Switch } from '@pairlens/ui/components/ui/switch'
 import { Tabs, TabsList, TabsTrigger } from '@pairlens/ui/components/ui/tabs'
 import { executeWorkflow } from '@pairlens/workflow-engine/executor'
 import { checkWorkflowMarketCompat } from '@pairlens/workflow-engine/market-compat'
@@ -408,6 +409,10 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   const isDex = marketInfo?.walletChain != null
   // Resting limit orders (Jupiter Trigger / KyberSwap LO) where supported
   const dexSupportsLimit = isDex && marketInfo?.dexLimitOrders === true
+  // Equities trade on a session clock, which crypto does not. Read off the
+  // connector's declared asset classes rather than a venue allowlist, so a
+  // second stock broker inherits the session controls for free.
+  const isEquities = marketInfo?.assetClasses?.includes('stocks') === true
 
   // Steps in the selected workflow this venue cannot execute (e.g. a
   // stop-loss on an exchange without native trigger orders). Blocks
@@ -469,6 +474,17 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     'trade:slippageBps',
     100,
   )
+
+  // Pre-market / after-hours routing for equities. Deliberately NOT persisted:
+  // those sessions are thin, and a toggle left on from last night would send
+  // tomorrow's order somewhere the trader stopped thinking about.
+  const [extendedHours, setExtendedHours] = useState(false)
+  // Only plain limit orders are eligible at the venue, so the flag cannot
+  // survive a switch to Market or Workflow.
+  const extendedHoursEligible = isEquities && orderType === 'limit'
+  useEffect(() => {
+    if (!extendedHoursEligible && extendedHours) setExtendedHours(false)
+  }, [extendedHoursEligible, extendedHours])
 
   // DEX venues support market swaps and (where the venue offers it) resting
   // limit orders — never workflows.
@@ -905,6 +921,9 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           credentialId: selectedCred.id,
           ...(tgtCcy ? { tgtCcy } : {}),
           ...(orderType === 'limit' ? { price: String(limitPrice) } : {}),
+          ...(extendedHours && extendedHoursEligible
+            ? { extendedHours: true }
+            : {}),
         })
 
         if (result.success) {
@@ -1323,6 +1342,32 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             onChange={setLimitPrice}
             pricesRef={pricesRef}
           />
+        )}
+
+        {/* Pre-market / after-hours routing (equities limit orders only —
+            the venue accepts nothing else in those sessions). Off by default
+            and never remembered: the thin book is the whole point of making
+            this a deliberate choice each time. */}
+        {extendedHoursEligible && (
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <label
+                htmlFor="trade-extended-hours"
+                className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground"
+              >
+                {t('terminal.trade.extendedHours')}
+              </label>
+              <p className="mt-0.5 text-[10.5px] leading-snug text-muted-foreground/70">
+                {t('terminal.trade.extendedHoursHint')}
+              </p>
+            </div>
+            <Switch
+              id="trade-extended-hours"
+              checked={extendedHours}
+              onCheckedChange={setExtendedHours}
+              className="mt-0.5 shrink-0"
+            />
+          </div>
         )}
 
         {/* Submit — press & hold to commit (single click if the user set that

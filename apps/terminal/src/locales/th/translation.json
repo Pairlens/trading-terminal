@@ -2868,7 +2868,9 @@
       "workflow": "เวิร์กโฟลว์",
       "notSupportedOn": "ไม่รองรับบน {{venue}}",
       "available": "พร้อมใช้งาน: {{amount}}",
-      "slippage": "สลิปเพจ"
+      "slippage": "สลิปเพจ",
+      "extendedHours": "ช่วงนอกเวลาทำการ",
+      "extendedHoursHint": "จับคู่คำสั่งในช่วงก่อนเปิดและหลังปิดตลาด สภาพคล่องบางกว่า สเปรดกว้างกว่า"
     },
     "status": {
       "connecting": "กำลังเชื่อมต่อ…",

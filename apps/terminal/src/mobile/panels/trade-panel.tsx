@@ -31,7 +31,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import { KeyRound, Lock, Wallet } from 'lucide-react'
+import { Check, KeyRound, Lock, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 
@@ -326,6 +326,18 @@ export default memo(function MobileTradePanel() {
     if (orderType === 'stop' && !supportsStop) setOrderType('market')
   }, [orderType, supportsLimit, supportsStop, setOrderType])
 
+  // ── Extended hours (equities) ──
+  // Stocks trade on a session clock; outside it a limit order queues for the
+  // next open unless it is explicitly routed to the pre-market/after-hours
+  // book. Local state, never persisted: those sessions are thin enough that
+  // the choice should be made per order, not inherited from last night.
+  const isEquities = marketInfo?.assetClasses?.includes('stocks') === true
+  const [extendedHours, setExtendedHours] = useState(false)
+  const extendedHoursEligible = isEquities && orderType === 'limit'
+  useEffect(() => {
+    if (!extendedHoursEligible && extendedHours) setExtendedHours(false)
+  }, [extendedHoursEligible, extendedHours])
+
   // Seeding the price field from the live market is what puts the chart's
   // limit line where the user is looking instead of at zero. Seeded once per
   // (pair, order type): a field the user deliberately emptied stays empty.
@@ -501,6 +513,9 @@ export default memo(function MobileTradePanel() {
             sizeCcy === 'quote'
               ? baseSizeAt(sizeNumber, toNumber(limitPrice))
               : amount
+          if (extendedHours && extendedHoursEligible) {
+            params['extendedHours'] = true
+          }
         } else if (orderType === 'stop') {
           // A stop is a market order behind an exchange-native trigger. Venues
           // take the size in base units for trigger orders, so a quote-
@@ -726,6 +741,40 @@ export default memo(function MobileTradePanel() {
           </button>
         ))}
       </div>
+
+      {/* Extended hours — equities limit orders only. Fires the haptic from
+          the gesture, not the state change, so the tap feels immediate. */}
+      {extendedHoursEligible ? (
+        <button
+          aria-pressed={extendedHours}
+          className={cn(
+            'pl-press flex h-[31px] w-full items-center justify-between rounded-[9px] border px-2.5 text-[12px]',
+            extendedHours
+              ? 'border-[color:var(--pl-edge-strong)] bg-[color:var(--pl-wash-heavy)] text-foreground'
+              : 'border-[color:var(--pl-edge)] text-muted-foreground',
+          )}
+          onClick={() => {
+            haptic('selection')
+            setExtendedHours(!extendedHours)
+          }}
+          type="button"
+          {...PRESS}
+        >
+          <span>{t('terminal.trade.extendedHours')}</span>
+          <span
+            className={cn(
+              'flex size-[15px] items-center justify-center rounded-[5px] border',
+              extendedHours
+                ? 'border-transparent bg-foreground text-background'
+                : 'border-[color:var(--pl-edge-strong)]',
+            )}
+          >
+            {extendedHours ? (
+              <Check className="size-2.5" strokeWidth={3} />
+            ) : null}
+          </span>
+        </button>
+      ) : null}
 
       {/* Summary */}
       <div className="flex flex-col gap-1 pt-0.5">

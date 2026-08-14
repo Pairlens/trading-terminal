@@ -90,6 +90,17 @@ export type OrderParams = {
   tgtCcy?: string // 'base_ccy' or 'quote_ccy' — which currency the size is denominated in
   slippageBps?: number // slippage tolerance in basis points (DEX swaps)
   walletId?: string // which wallet to use (DEX trading)
+  /**
+   * Route an equities order into the pre-market / after-hours sessions
+   * instead of queueing it for the next regular open.
+   *
+   * Opt-in per order, never inferred: those sessions are thinner and wider,
+   * so a fill there is a decision the trader makes, not one the terminal
+   * makes for them. Venues restrict which orders are eligible at all
+   * (Alpaca: limit orders only, no stops) and must reject the rest rather
+   * than silently dropping the flag.
+   */
+  extendedHours?: boolean
   // Client-generated idempotency key. The exchange rejects a second order
   // carrying an id it has already seen, so a retried/double-clicked submit
   // cannot execute twice. Generated once per logical order by the caller and

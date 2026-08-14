@@ -2868,7 +2868,9 @@
       "workflow": "워크플로우",
       "notSupportedOn": "{{venue}}에서 지원되지 않습니다",
       "available": "사용 가능: {{amount}}",
-      "slippage": "슬리피지"
+      "slippage": "슬리피지",
+      "extendedHours": "시간 외 거래",
+      "extendedHoursHint": "프리마켓과 애프터마켓 세션에서 체결됩니다. 호가가 얇고 스프레드가 넓습니다."
     },
     "status": {
       "connecting": "연결 중…",

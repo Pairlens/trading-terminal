@@ -2868,7 +2868,9 @@
       "workflow": "Quy trình",
       "notSupportedOn": "Không được hỗ trợ trên {{venue}}",
       "available": "Khả dụng: {{amount}}",
-      "slippage": "Trượt giá"
+      "slippage": "Trượt giá",
+      "extendedHours": "Ngoài giờ giao dịch",
+      "extendedHoursHint": "Khớp lệnh trong phiên trước và sau giờ chính. Sổ lệnh mỏng hơn, chênh lệch giá rộng hơn."
     },
     "status": {
       "connecting": "Đang kết nối…",

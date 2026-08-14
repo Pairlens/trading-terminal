@@ -2868,7 +2868,9 @@
       "workflow": "Workflow",
       "notSupportedOn": "Tidak didukung di {{venue}}",
       "available": "Tersedia: {{amount}}",
-      "slippage": "Slippage"
+      "slippage": "Slippage",
+      "extendedHours": "Jam diperpanjang",
+      "extendedHoursHint": "Eksekusi di sesi pra-pasar dan pasca-penutupan. Order book lebih tipis, spread lebih lebar."
     },
     "status": {
       "connecting": "Menghubungkan…",

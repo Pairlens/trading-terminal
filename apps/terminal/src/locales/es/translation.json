@@ -2868,7 +2868,9 @@
       "workflow": "Flujo de trabajo",
       "notSupportedOn": "No compatible con {{venue}}",
       "available": "Disponible: {{amount}}",
-      "slippage": "Deslizamiento"
+      "slippage": "Deslizamiento",
+      "extendedHours": "Horario ampliado",
+      "extendedHoursHint": "Ejecución en las sesiones previas a la apertura y posteriores al cierre. Libro más fino, diferenciales más amplios."
     },
     "status": {
       "connecting": "Conectando…",

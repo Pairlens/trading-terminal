@@ -2894,7 +2894,9 @@
       "workflow": "Робочий процес",
       "notSupportedOn": "Не підтримується на {{venue}}",
       "available": "Доступно: {{amount}}",
-      "slippage": "Прослизання"
+      "slippage": "Прослизання",
+      "extendedHours": "Розширені торги",
+      "extendedHoursHint": "Виконання на премаркеті та постмаркеті. Стакан тонший, спреди ширші."
     },
     "status": {
       "connecting": "Підключення…",
