@@ -8,23 +8,232 @@ export type InstrumentCategory =
   | 'gaming'
   | 'infrastructure'
 
-export type Instrument = {
+/**
+ * Instrument identity is a discriminated union — one arm per asset class the
+ * platform targets (CEX spot, CEX derivatives, on-chain tokens, equities,
+ * prediction markets). Two rules bind every producer and consumer:
+ *
+ * 1. **No identity by symbol parsing.** Every row carries the opaque,
+ *    connector-resolvable identifiers of its arm (venue-native market id,
+ *    chain + contract address, MIC ticker, prediction market id). Nothing in
+ *    the discovery layer may derive identity from a `BASE-QUOTE` string —
+ *    pair-shaped classes happen to fit that mold; derivatives and prediction
+ *    markets do not.
+ * 2. **Rows are gated on a serving connector.** Discovery never surfaces an
+ *    instrument no active plugin can chart. "Spot-only" is a property of
+ *    today's content, not a contract invariant — derivative and prediction
+ *    rows ship when a connector serves them, with no schema break.
+ */
+export type InstrumentKind =
+  | 'cex-pair'
+  | 'cex-derivative'
+  | 'token'
+  | 'equity'
+  | 'prediction'
+
+type InstrumentCommon = {
   id: string // 'okx:BTC-USDT'
+  kind: InstrumentKind
   market: string
   symbol: string // 'BTC-USDT'
   name: string // 'Bitcoin'
   base: string // 'BTC'
   quote: string // 'USDT'
-  assetClass: string // 'crypto' | 'stocks'
+  assetClass: string // 'crypto' | 'stocks' | 'dex'
   categories: Array<InstrumentCategory>
   rank: number
   featured: boolean
+}
+
+/** A centralized-exchange spot pair, keyed by its dash-canonical symbol. */
+export type CexPairInstrument = InstrumentCommon & {
+  kind: 'cex-pair'
+}
+
+/**
+ * A centralized-exchange derivative. Maps directly onto ccxt's unified
+ * `BTC/USDT:USDT` scheme: on one venue "BTC-USDT" can be a spot pair, a
+ * linear perp and several dated futures — distinct instruments sharing a
+ * ticker. No bundled connector serves these yet; the arm exists so the
+ * contract never needs a breaking change to admit them.
+ */
+export type CexDerivativeInstrument = InstrumentCommon & {
+  kind: 'cex-derivative'
+  /** Settlement currency, e.g. 'USDT' for a linear perp. */
+  settle: string
+  contract: 'perp' | 'future'
+  linear: boolean
+  /** Expiry timestamp in ms for dated futures; absent for perps. */
+  expiryMs?: number
+}
+
+/**
+ * An on-chain token, keyed by `(chain, address)` — never by symbol. There
+ * are hundreds of tokens named PEPE; symbol-keyed identity merges a rug with
+ * the real token. Selecting a token row pins exactly the address it
+ * displayed (see-what-you-trade); liquidity and verification metadata are
+ * the vetting a venue listing provides for CEX pairs.
+ */
+export type TokenInstrument = InstrumentCommon & {
+  kind: 'token'
+  /** Chain slug: 'solana' | 'ethereum' | 'base' | 'arbitrum' | 'bsc' | 'polygon' | ... */
+  chain: string
+  /** Contract address / mint on that chain. */
+  address: string
+  decimals?: number
+  liquidityUsd?: number
+  volume24hUsd?: number
+  verified?: boolean
+}
+
+/**
+ * An exchange-listed equity. Identified by ticker plus (optionally) MIC or
+ * FIGI, which are open identifiers — never ISIN/CUSIP, which are licensed.
+ */
+export type EquityInstrument = InstrumentCommon & {
+  kind: 'equity'
+  /** ISO 10383 market identifier code, e.g. 'XNAS'. */
+  mic?: string
+  figi?: string
+}
+
+/**
+ * A prediction-market outcome, keyed `venue + marketId + outcome`. Its
+ * display name is a question, not a ticker. Deep-search-tier content — these
+ * are born and resolved daily.
+ */
+export type PredictionInstrument = InstrumentCommon & {
+  kind: 'prediction'
+  predictionMarketId: string
+  outcome: string
+}
+
+export type Instrument =
+  | CexPairInstrument
+  | CexDerivativeInstrument
+  | TokenInstrument
+  | EquityInstrument
+  | PredictionInstrument
+
+/**
+ * The dedupe/merge key for discovery results: identity, never bare symbol.
+ * Tokens key by chain+address; everything else keys by kind + the fields
+ * that make the instrument unique within its arm. Two assets sharing a
+ * ticker are two rows.
+ */
+export function instrumentIdentityKey(inst: Instrument): string {
+  switch (inst.kind) {
+    case 'token':
+      return `token:${inst.chain}:${inst.address.toLowerCase()}`
+    case 'cex-derivative':
+      return `deriv:${inst.symbol}:${inst.settle}:${inst.contract}:${inst.expiryMs ?? ''}`
+    case 'equity':
+      return `equity:${inst.symbol}:${inst.mic ?? ''}`
+    case 'prediction':
+      return `prediction:${inst.market}:${inst.predictionMarketId}:${inst.outcome}`
+    case 'cex-pair':
+      return `pair:${inst.symbol}`
+  }
 }
 
 export type InstrumentPage = {
   items: Array<Instrument>
   total: number
   hasMore: boolean
+}
+
+// ── Instruments index snapshot (App Server → terminal) ────────────────
+//
+// The server-built discovery snapshot: which venues list which pairs, the
+// top-token slice, and the equity universe. Normalization rules are part of
+// this contract (the server repo cannot import packages/plugins, so this
+// comment is the only thing preventing drift against the client's
+// trimMarkets):
+//
+// - `symbol` is dash-canonical `BASE-QUOTE`, uppercase, derived from ccxt's
+//   unified symbol with '/' → '-'. Spot, active markets only in schema v1.
+// - Venue ids are the client's marketIds ('binance', 'okx', ...), and the
+//   per-venue value is the VENUE-NATIVE market id (ccxt `market.id`), so a
+//   row resolves against the client's own tables without symbol parsing.
+// - Region-neutral semantics: a row asserts "venue lists this pair", never
+//   "you can reach it". The client's geo gate stays authoritative, which is
+//   why every payload carries per-venue sweep health.
+// - Snapshot absence is "unknown", never "not listed". Only a venue that
+//   published a live listing may ground a negative claim.
+export const INSTRUMENTS_INDEX_SCHEMA_VERSION = 1
+
+export type VenueSweepStatus = 'ok' | 'geo-blocked' | 'error'
+
+export type VenueSweepHealth = {
+  venue: string
+  /** Epoch ms of the last successful sweep for this venue. */
+  sweptAt: number
+  status: VenueSweepStatus
+  /** Listing rows the last good sweep produced. */
+  rows: number
+}
+
+export type SnapshotPairRow = {
+  /** Dash-canonical 'BASE-QUOTE'. */
+  symbol: string
+  base: string
+  quote: string
+  /** venue marketId → venue-native market id. */
+  venues: Record<string, string>
+}
+
+export type SnapshotTokenRow = {
+  chain: string
+  address: string
+  symbol: string
+  name: string
+  decimals?: number
+  liquidityUsd?: number
+  volume24hUsd?: number
+  verified?: boolean
+}
+
+export type SnapshotEquityRow = {
+  symbol: string
+  name: string
+  mic?: string
+}
+
+export type InstrumentsIndexSnapshot = {
+  schemaVersion: number
+  /** Epoch ms the blob was compiled. */
+  builtAt: number
+  /** ccxt version the sweeper ran — pinned to the client's (4.5.71). */
+  ccxtVersion: string
+  venues: Array<VenueSweepHealth>
+  pairs: Array<SnapshotPairRow>
+  tokens: Array<SnapshotTokenRow>
+  equities: Array<SnapshotEquityRow>
+}
+
+/**
+ * Served at GET /api/instruments/index — the mutable entry point that names
+ * the current immutable blob URL (long max-age, CDN-cacheable).
+ */
+export type InstrumentsIndexMeta = {
+  schemaVersion: number
+  hash: string
+  /** Server-relative URL of the immutable snapshot blob. */
+  url: string
+  builtAt: number
+  bytes: number
+}
+
+/** Response of GET /api/instruments/search — the deep-search endpoint. */
+export type DeepSearchResponse = {
+  schemaVersion: number
+  query: string
+  items: Array<Instrument>
+  /**
+   * Venue qualification for cex-pair items, carried out-of-band so the
+   * identity types stay pure: symbol → (venue marketId → venue-native id).
+   */
+  listings?: Record<string, Record<string, string>>
 }
 
 export type TopCoin = {

@@ -20,7 +20,31 @@ import type {
   PluginInstance,
   PluginManifest,
 } from '@pairlens/plugin-system/types'
-import type { WalletSlot } from './types'
+import type { JupiterToken, WalletSlot } from './types'
+
+/**
+ * Token-arm identity: every discovery row carries the exact mint it
+ * displayed, so selection can pin `(solana, address)` and never re-resolve
+ * by symbol (see-what-you-trade).
+ */
+function toInstrument(t: JupiterToken): Instrument {
+  return {
+    id: `${t.symbol}-USDC`,
+    kind: 'token',
+    chain: 'solana',
+    address: t.address,
+    decimals: t.decimals,
+    market: 'jupiter',
+    symbol: `${t.symbol}/USDC`,
+    name: `${t.name} / USD Coin`,
+    base: t.symbol,
+    quote: 'USDC',
+    assetClass: 'dex',
+    categories: [],
+    rank: 100_000,
+    featured: false,
+  }
+}
 
 export const jupiterDexConnectorManifest: PluginManifest = {
   id: 'jupiter-dex-connector',
@@ -116,15 +140,7 @@ export function createJupiterDexConnectorPlugin(
       // empty page rather than throwing.
       for (const t of tokens) {
         if (t.symbol.toUpperCase() === 'USDC') continue
-        instruments.push({
-          id: `${t.symbol}-USDC`,
-          market: 'jupiter',
-          symbol: `${t.symbol}/USDC`,
-          name: `${t.name} / USD Coin`,
-          base: t.symbol,
-          quote: 'USDC',
-          assetClass: 'dex',
-        })
+        instruments.push(toInstrument(t))
       }
       const page = instruments.slice(offset, offset + limit)
       return {
@@ -139,17 +155,7 @@ export function createJupiterDexConnectorPlugin(
       if (!query) return { items: [], total: 0, hasMore: false }
 
       const tokens = await searchTokens(query, 50)
-      const items = tokens.map(
-        (t): Instrument => ({
-          id: `${t.symbol}-USDC`,
-          market: 'jupiter',
-          symbol: `${t.symbol}/USDC`,
-          name: `${t.name} / USD Coin`,
-          base: t.symbol,
-          quote: 'USDC',
-          assetClass: 'dex',
-        }),
-      )
+      const items = tokens.map((t) => toInstrument(t))
       return { items, total: items.length, hasMore: false }
     }
 

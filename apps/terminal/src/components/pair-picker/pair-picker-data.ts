@@ -12,6 +12,7 @@ import {
   Star,
   TrendingUp,
 } from 'lucide-react'
+import { registerToken } from '@pairlens/market-engine/token-directory'
 import type { LucideIcon } from 'lucide-react'
 
 import type { Instrument } from '@pairlens/shared/instrument-types'
@@ -41,6 +42,12 @@ export type PairCategory =
 export type Regime = 'Trend' | 'Range' | 'High Volatility' | 'Balanced' | 'Chop'
 
 export interface PairEntry {
+  /**
+   * Unique row identity. Distinct from `symbol` because two assets can share
+   * a ticker (a wave-1 CEX pair and an appended on-chain token) — React keys
+   * and cmdk values must not collide when both render.
+   */
+  id: string
   symbol: string
   name: string
   base: string
@@ -51,6 +58,14 @@ export interface PairEntry {
   signalBias?: string
   rank: number
   featured?: boolean
+  /**
+   * Token-arm identity (kind === 'token' rows only). Selection pins exactly
+   * this chain+address via the token directory — symbol re-resolution after
+   * display is forbidden (see-what-you-trade).
+   */
+  chain?: string
+  address?: string
+  decimals?: number
 }
 
 export interface CategoryTab {
@@ -103,6 +118,7 @@ export const REGIME_STYLES: Record<
 
 export function instrumentToPairEntry(inst: Instrument): PairEntry {
   return {
+    id: inst.id || inst.symbol,
     symbol: inst.symbol,
     name: inst.name,
     base: inst.base,
@@ -111,5 +127,24 @@ export function instrumentToPairEntry(inst: Instrument): PairEntry {
     categories: inst.categories as Array<PairCategory>,
     rank: inst.rank,
     featured: inst.featured,
+    ...(inst.kind === 'token'
+      ? { chain: inst.chain, address: inst.address, decimals: inst.decimals }
+      : {}),
   }
+}
+
+/**
+ * Pin a selected token row's exact chain+address into the token directory,
+ * so downstream resolution (pool lookups, swaps) uses what the user SAW,
+ * never a fresh symbol match. No-op for non-token rows.
+ */
+export function pinSelectedEntry(entry: PairEntry): void {
+  if (!entry.chain || !entry.address) return
+  registerToken({
+    network: entry.chain,
+    symbol: entry.base,
+    address: entry.address,
+    ...(typeof entry.decimals === 'number' ? { decimals: entry.decimals } : {}),
+    name: entry.name,
+  })
 }

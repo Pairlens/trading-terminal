@@ -457,7 +457,10 @@
       "confirmPrompt": "输入 {{email}} 以确认",
       "confirmCancel": "保留我的账户",
       "confirmAction": "永久删除",
-      "deleteDoneAnalyticsFailed": "你的账户已删除，但我们无法连接分析服务商来清除你的使用档案。请发邮件至 privacy@pairlens.finance，我们会手动完成。"
+      "deleteDoneAnalyticsFailed": "你的账户已删除，但我们无法连接分析服务商来清除你的使用档案。请发邮件至 privacy@pairlens.finance，我们会手动完成。",
+      "deepSearchTitle": "通过 Pairlens Cloud 深度搜索",
+      "deepSearchDescription": "将你的搜索文本发送到 Pairlens 服务器，以查找本地索引之外的交易对和代币。",
+      "deepSearchOff": "搜索仅在本设备上进行。"
     },
     "cloudSync": {
       "masterTitle": "云同步",
@@ -2806,7 +2809,8 @@
     "switchMarket": "切换市场",
     "marketActive": "使用中",
     "marketSwitched": "已切换到 {{name}}",
-    "topMarkets": "热门市场"
+    "topMarkets": "热门市场",
+    "staleListings": "交易所上币列表更新于 {{date}}"
   },
   "terminal": {
     "manageWatchlists": "管理自选列表",

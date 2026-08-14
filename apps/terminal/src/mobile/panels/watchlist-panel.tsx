@@ -252,6 +252,9 @@ function fallbackInstrument(symbol: string): Instrument {
   const [base = symbol, quote = ''] = symbol.split('-')
   return {
     id: symbol,
+    // 'cex-pair' as the neutral default for an unknown watchlist symbol: the
+    // pair-shaped arm carries no extra identity fields to fabricate.
+    kind: 'cex-pair',
     market: '',
     symbol,
     name: symbol,

@@ -457,7 +457,10 @@
       "confirmPrompt": "พิมพ์ {{email}} เพื่อยืนยัน",
       "confirmCancel": "เก็บบัญชีของฉันไว้",
       "confirmAction": "ลบถาวร",
-      "deleteDoneAnalyticsFailed": "บัญชีของคุณถูกลบแล้ว แต่เราติดต่อผู้ให้บริการวิเคราะห์ข้อมูลเพื่อลบโปรไฟล์การใช้งานไม่ได้ กรุณาอีเมลถึง privacy@pairlens.finance แล้วเราจะดำเนินการให้ด้วยตนเอง"
+      "deleteDoneAnalyticsFailed": "บัญชีของคุณถูกลบแล้ว แต่เราติดต่อผู้ให้บริการวิเคราะห์ข้อมูลเพื่อลบโปรไฟล์การใช้งานไม่ได้ กรุณาอีเมลถึง privacy@pairlens.finance แล้วเราจะดำเนินการให้ด้วยตนเอง",
+      "deepSearchTitle": "ค้นหาเชิงลึกผ่าน Pairlens Cloud",
+      "deepSearchDescription": "ส่งข้อความค้นหาของคุณไปยังเซิร์ฟเวอร์ Pairlens เพื่อค้นหาคู่เทรดและโทเคนนอกเหนือจากดัชนีในเครื่อง",
+      "deepSearchOff": "การค้นหาอยู่ในอุปกรณ์นี้เท่านั้น"
     },
     "cloudSync": {
       "masterTitle": "ซิงก์คลาวด์",
@@ -2806,7 +2809,8 @@
     "switchMarket": "สลับตลาด",
     "marketActive": "ใช้งานอยู่",
     "marketSwitched": "สลับไปที่ {{name}} แล้ว",
-    "topMarkets": "ตลาดยอดนิยม"
+    "topMarkets": "ตลาดยอดนิยม",
+    "staleListings": "รายการจดทะเบียนของกระดานเทรดอัปเดตล่าสุด {{date}}"
   },
   "terminal": {
     "manageWatchlists": "จัดการรายการติดตาม",

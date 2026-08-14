@@ -31,9 +31,14 @@ import { Skeleton } from '@pairlens/ui/components/ui/skeleton'
 
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
-import { instrumentToPairEntry } from '@/components/pair-picker/pair-picker-data'
+import {
+  instrumentToPairEntry,
+  pinSelectedEntry,
+} from '@/components/pair-picker/pair-picker-data'
 import { usePairSearchData } from '@/components/pair-picker/pair-search-results'
 import { isSearchInFlight } from '@/components/pair-picker/search-progress'
+import { VenueBadge } from '@/components/pair-picker/venue-badge'
+import { SnapshotAgeFooter } from '@/components/pair-picker/snapshot-age-footer'
 import { useInstrumentSearch } from '@/hooks/use-instrument-search'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { usePersistedState } from '@/hooks/use-persisted-state'
@@ -48,6 +53,12 @@ const MAX_RESULTS = 20
 type PairSwitcherProps = {
   pairKey: string
   assetClass?: string
+  /**
+   * Fired after a row stays highlighted (hover or arrow keys) for 200 ms —
+   * the switch-warmup hook. Dwell-gated so a sweep down the list doesn't
+   * fire per row; the provider additionally caps concurrent warmups.
+   */
+  onPairHover?: (pair: string) => void
 }
 
 type Section = {
@@ -73,6 +84,7 @@ function synthesizeEntry(symbol: string): PairEntry {
   const base = idx === -1 ? symbol : symbol.slice(0, idx)
   const quote = idx === -1 ? '' : symbol.slice(idx + 1)
   return {
+    id: symbol,
     symbol,
     name: base,
     base,
@@ -82,7 +94,11 @@ function synthesizeEntry(symbol: string): PairEntry {
   }
 }
 
-export function PairSwitcher({ pairKey, assetClass }: PairSwitcherProps) {
+export function PairSwitcher({
+  pairKey,
+  assetClass,
+  onPairHover,
+}: PairSwitcherProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -114,6 +130,7 @@ export function PairSwitcher({ pairKey, assetClass }: PairSwitcherProps) {
     isSearchActive,
     isFetching: searchFetching,
     isPending: searchPending,
+    hasLocalResults,
   } = useInstrumentSearch(searchValue)
   const { pluginManager, pluginStateVersion } = usePairlens()
   const hasSearchProvider = useMemo(
@@ -130,6 +147,7 @@ export function PairSwitcher({ pairKey, assetClass }: PairSwitcherProps) {
     searchFetching,
     searchPending,
     catalogLoading,
+    hasLocalResults,
   })
 
   const pairsBySymbol = useMemo(
@@ -209,6 +227,16 @@ export function PairSwitcher({ pairKey, assetClass }: PairSwitcherProps) {
       ?.scrollIntoView({ block: 'nearest' })
   }, [activeIndex, open])
 
+  // The switch lands warm: a row highlighted for ≥200 ms speculatively opens
+  // its streams so selecting it renders instantly.
+  useEffect(() => {
+    if (!open || !onPairHover) return
+    const item = flatItems[activeIndex]
+    if (!item || item.symbol === pairKey) return
+    const timer = setTimeout(() => onPairHover(item.symbol), 200)
+    return () => clearTimeout(timer)
+  }, [open, onPairHover, flatItems, activeIndex, pairKey])
+
   const handleOpenChange = useCallback((next: boolean) => {
     setOpen(next)
     if (next) {
@@ -219,6 +247,9 @@ export function PairSwitcher({ pairKey, assetClass }: PairSwitcherProps) {
 
   const handleSelect = useCallback(
     (pair: PairEntry) => {
+      // Pin BEFORE navigation: a selected token's exact address must be in
+      // the directory before anything downstream resolves the symbol.
+      pinSelectedEntry(pair)
       const cls = pair.assetClass
       if (cls) {
         setAssetClassMap((prev) => ({ ...prev, [pair.symbol]: cls }))
@@ -312,7 +343,7 @@ export function PairSwitcher({ pairKey, assetClass }: PairSwitcherProps) {
                 const index = (sectionOffsets[si] ?? 0) + i
                 return (
                   <PairSwitcherRow
-                    key={`${section.id}:${pair.symbol}`}
+                    key={`${section.id}:${pair.id}`}
                     pair={pair}
                     index={index}
                     isActive={index === activeIndex}
@@ -342,6 +373,8 @@ export function PairSwitcher({ pairKey, assetClass }: PairSwitcherProps) {
                   : t('pairPicker.startTyping')}
               </div>
             ))}
+
+          <SnapshotAgeFooter visible={hasQuery} />
         </div>
       </PopoverContent>
     </Popover>
@@ -387,6 +420,7 @@ const PairSwitcherRow = memo(function PairSwitcherRow({
       <span className="flex-1 truncate text-xs text-muted-foreground">
         {pair.name}
       </span>
+      <VenueBadge symbol={pair.symbol} />
       {isCurrent && <Check className="size-3.5 shrink-0 text-primary" />}
     </button>
   )

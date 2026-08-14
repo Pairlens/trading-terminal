@@ -457,7 +457,10 @@
       "confirmPrompt": "Wpisz {{email}}, aby potwierdzić",
       "confirmCancel": "Zostaw moje konto",
       "confirmAction": "Usuń na zawsze",
-      "deleteDoneAnalyticsFailed": "Twoje konto zostało usunięte, ale nie udało się połączyć z dostawcą analityki, aby skasować profil użycia. Napisz na privacy@pairlens.finance, a dokończymy to ręcznie."
+      "deleteDoneAnalyticsFailed": "Twoje konto zostało usunięte, ale nie udało się połączyć z dostawcą analityki, aby skasować profil użycia. Napisz na privacy@pairlens.finance, a dokończymy to ręcznie.",
+      "deepSearchTitle": "Głębsze wyszukiwanie przez Pairlens Cloud",
+      "deepSearchDescription": "Wysyła wpisywany tekst do serwerów Pairlens, aby znaleźć pary i tokeny spoza lokalnego indeksu.",
+      "deepSearchOff": "Wyszukiwanie pozostaje na tym urządzeniu."
     },
     "cloudSync": {
       "masterTitle": "Synchronizacja w chmurze",
@@ -2832,7 +2835,8 @@
     "switchMarket": "Zmień rynek",
     "marketActive": "Aktywny",
     "marketSwitched": "Przełączono na {{name}}",
-    "topMarkets": "Najlepsze rynki"
+    "topMarkets": "Najlepsze rynki",
+    "staleListings": "Listingi giełd zaktualizowano {{date}}"
   },
   "terminal": {
     "manageWatchlists": "Zarządzaj listami obserwowanych",

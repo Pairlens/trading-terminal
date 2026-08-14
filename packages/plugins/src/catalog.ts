@@ -199,6 +199,7 @@ function generateCatalog(): Array<Instrument> {
       const symbol = `${asset.base}-${quote}`
       instruments.push({
         id: symbol,
+        kind: 'cex-pair',
         market: '',
         symbol,
         name: asset.name,
@@ -221,6 +222,7 @@ function generateCatalog(): Array<Instrument> {
     const symbol = stock.symbol
     instruments.push({
       id: symbol,
+      kind: 'equity',
       market: '',
       symbol,
       name: stock.name,

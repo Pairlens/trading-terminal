@@ -110,15 +110,11 @@ export type InstrumentFilter = {
   q?: string
 }
 
-export type Instrument = {
-  id: string
-  market: string
-  symbol: string
-  name: string
-  base: string
-  quote: string
-  assetClass: string
-}
+// Instrument identity is owned by the shared contract (a discriminated
+// union across asset classes). Re-exported here so connector code keeps a
+// single import path; the loose local shape this replaced let DEX
+// connectors emit rows with no identity — exactly the drift the union kills.
+export type { Instrument } from '@pairlens/shared/instrument-types'
 
 export type CandleCallback = (update: CandleUpdate) => void
 export type TickerCallback = (update: TickerUpdate) => void

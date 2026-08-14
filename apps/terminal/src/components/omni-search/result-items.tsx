@@ -62,6 +62,7 @@ import type {
   WorkspaceResult,
 } from './omni-search-types'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
+import { pinSelectedEntry } from '@/components/pair-picker/pair-picker-data'
 import { ASSET_CLASS_LABELS } from '@/components/terminal/market-picker'
 import { getWorkspaceIcon } from '@/components/workspace/workspace-icons'
 import { getPaneIcon } from '@/lib/layout/pane-icons'
@@ -193,8 +194,13 @@ export const PairResultItem = memo(function PairResultItem({
   const { pair, isWatched } = result
   return (
     <CommandItem
-      value={`pair:${pair.symbol}`}
-      onSelect={onSelect}
+      value={`pair:${pair.id}`}
+      onSelect={() => {
+        // Pin BEFORE navigation: a selected token's exact address must be in
+        // the directory before anything downstream resolves the symbol.
+        pinSelectedEntry(pair)
+        onSelect()
+      }}
       className={ROW_CLASS}
     >
       <PairLogo

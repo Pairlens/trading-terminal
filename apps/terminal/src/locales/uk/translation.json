@@ -457,7 +457,10 @@
       "confirmPrompt": "Введіть {{email}} для підтвердження",
       "confirmCancel": "Залишити мій запис",
       "confirmAction": "Видалити назавжди",
-      "deleteDoneAnalyticsFailed": "Обліковий запис видалено, але звʼязатися з сервісом аналітики, щоб стерти профіль використання, не вдалося. Напишіть на privacy@pairlens.finance — ми довершимо це вручну."
+      "deleteDoneAnalyticsFailed": "Обліковий запис видалено, але звʼязатися з сервісом аналітики, щоб стерти профіль використання, не вдалося. Напишіть на privacy@pairlens.finance — ми довершимо це вручну.",
+      "deepSearchTitle": "Розширений пошук через Pairlens Cloud",
+      "deepSearchDescription": "Надсилає текст пошуку на сервери Pairlens, щоб знаходити пари й токени поза локальним індексом.",
+      "deepSearchOff": "Пошук не залишає цей пристрій."
     },
     "cloudSync": {
       "masterTitle": "Хмарна синхронізація",
@@ -2832,7 +2835,8 @@
     "switchMarket": "Змінити ринок",
     "marketActive": "Активний",
     "marketSwitched": "Перемкнено на {{name}}",
-    "topMarkets": "Топ ринки"
+    "topMarkets": "Топ ринки",
+    "staleListings": "Списки бірж оновлено {{date}}"
   },
   "terminal": {
     "manageWatchlists": "Керувати списками відстеження",

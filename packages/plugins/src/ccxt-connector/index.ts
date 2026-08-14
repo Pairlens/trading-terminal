@@ -62,7 +62,13 @@ export {
   memoryMarketsStorage,
   trimMarket,
   trimMarkets,
+  CCXT_VENUE_IDS,
+  MARKETS_TTL_MS,
+  readCachedVenueListings,
+  readCcxtKv,
+  writeCcxtKv,
 } from './markets'
+export type { CachedVenueListings, VenueListingRow } from './markets'
 
 export type CreateCcxtConnectorOptions = {
   /** Injectable markets cache — the CLI and tests run on an in-memory map. */

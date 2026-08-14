@@ -75,6 +75,8 @@ export type MarketDataStatus = 'disconnected' | 'connecting' | 'connected'
 // hover-then-decide, short enough that hovering the whole dropdown doesn't
 // pin a dozen venue connections.
 const WARMUP_TTL_MS = 15_000
+/** Speculative streams open at once — hover sweeps must not fan out. */
+const MAX_CONCURRENT_WARMUPS = 3
 
 // ── Trade analytics (opt-in, privacy-bounded) ──
 // Orders are described by venue/side/type/mode only — never by pair, size,
@@ -1127,6 +1129,17 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
           existing.release()
         }, WARMUP_TTL_MS)
         return
+      }
+      // Cap concurrent warmups so an arrow-key sweep down a result list
+      // doesn't open dozens of speculative streams. Maps iterate in insertion
+      // order — evict the oldest.
+      while (warmups.size >= MAX_CONCURRENT_WARMUPS) {
+        const oldest = warmups.entries().next()
+        if (oldest.done) break
+        const [oldKey, oldWarmup] = oldest.value
+        warmups.delete(oldKey)
+        clearTimeout(oldWarmup.timer)
+        oldWarmup.release()
       }
       const noop = () => {}
       const unsubs: Array<() => void> = []
