@@ -37,12 +37,13 @@
     "country": {
       "status": "Bölgesel yönlendirme ayarlanıyor",
       "title": "Hangi ülkeden işlem yapıyorsun?",
-      "sub": "Eklentiler doğru bölgesel uç noktalara yönlendirilir ve bulunduğun yerde kullanılabilen borsaları senin için seçeriz.",
+      "sub": "Bazı borsalar bölge kısıtlamalı ya da ayrı bölgesel uç noktalar kullanıyor — bu seçim bağlayıcılarını doğru olanlara yönlendirir.",
       "searchPlaceholder": "Ülke ara…",
       "noResults": "Aramanla eşleşen ülke yok",
       "global": "Belirtmek istemiyorum",
       "globalSub": "Genel uç noktaları ve varsayılanları kullan",
-      "label": "Ülke"
+      "label": "Ülke",
+      "localNote": "Yalnızca bu cihazda saklanır — Pairlens sunucularına asla gönderilmez."
     },
     "privacy": {
       "eyebrow": "Tasarımdan gelen gizlilik",

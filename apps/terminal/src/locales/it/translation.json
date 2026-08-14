@@ -37,12 +37,13 @@
     "country": {
       "status": "Ottimizzazione del routing regionale",
       "title": "Da quale paese fai trading?",
-      "sub": "I connettori instradano verso gli endpoint regionali corretti e selezioniamo le piattaforme disponibili nella tua zona.",
+      "sub": "Alcune piattaforme hanno restrizioni geografiche o endpoint regionali separati — così i tuoi connettori puntano a quelli giusti.",
       "searchPlaceholder": "Cerca paesi…",
       "noResults": "Nessun paese corrisponde alla ricerca",
       "global": "Preferisco non specificarlo",
       "globalSub": "Usa endpoint ed impostazioni predefinite globali",
-      "label": "Paese"
+      "label": "Paese",
+      "localNote": "Salvato solo su questo dispositivo — mai inviato ai server Pairlens."
     },
     "privacy": {
       "eyebrow": "Privato per progettazione",

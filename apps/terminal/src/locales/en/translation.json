@@ -37,12 +37,13 @@
     "country": {
       "status": "Tuning regional routing",
       "title": "Which country are you trading from?",
-      "sub": "Connectors route to the right regional endpoints and we curate venues available where you are.",
+      "sub": "Some venues are geo-restricted or run separate regional endpoints — this points your connectors at the right ones.",
       "searchPlaceholder": "Search countries…",
       "noResults": "No countries match your search",
       "global": "Prefer not to say",
       "globalSub": "Use global endpoints and defaults",
-      "label": "Country"
+      "label": "Country",
+      "localNote": "Stored only on this device — never sent to Pairlens servers."
     },
     "privacy": {
       "eyebrow": "Private by design",

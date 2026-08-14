@@ -37,12 +37,13 @@
     "country": {
       "status": "Ajustando o roteamento regional",
       "title": "De qual país você está negociando?",
-      "sub": "Os conectores roteiam para os endpoints regionais corretos e selecionamos as corretoras disponíveis na sua região.",
+      "sub": "Algumas corretoras têm restrições geográficas ou endpoints regionais separados — isso aponta seus conectores para os corretos.",
       "searchPlaceholder": "Pesquisar países…",
       "noResults": "Nenhum país corresponde à sua pesquisa",
       "global": "Prefiro não informar",
       "globalSub": "Usar endpoints e padrões globais",
-      "label": "País"
+      "label": "País",
+      "localNote": "Guardado apenas neste dispositivo — nunca enviado aos servidores da Pairlens."
     },
     "privacy": {
       "eyebrow": "Privado por design",

@@ -37,12 +37,13 @@
     "country": {
       "status": "Dostrajanie routingu regionalnego",
       "title": "Z jakiego kraju handlujesz?",
-      "sub": "Konektory kierują do właściwych punktów końcowych regionu, a my dobieramy giełdy dostępne w Twojej lokalizacji.",
+      "sub": "Niektóre giełdy mają ograniczenia geograficzne lub osobne regionalne endpointy — dzięki temu Twoje konektory łączą się z właściwymi.",
       "searchPlaceholder": "Szukaj krajów…",
       "noResults": "Żaden kraj nie pasuje do wyszukiwania",
       "global": "Wolę nie podawać",
       "globalSub": "Użyj globalnych punktów końcowych i ustawień domyślnych",
-      "label": "Kraj"
+      "label": "Kraj",
+      "localNote": "Zapisywane tylko na tym urządzeniu — nigdy nie wysyłane na serwery Pairlens."
     },
     "privacy": {
       "eyebrow": "Prywatność w założeniu",

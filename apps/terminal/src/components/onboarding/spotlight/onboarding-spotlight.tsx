@@ -990,7 +990,9 @@ function StepBody({
         {step.field === 'analytics' && (
           <LegalNotice kind="analytics" className="text-center" />
         )}
-        <AutoAdvanceHint />
+        {/* The country step carries its own fine print (the local-only
+            note); stacking the advance hint under it reads as clutter. */}
+        {step.layout !== 'country' && <AutoAdvanceHint />}
       </div>
     )
   }

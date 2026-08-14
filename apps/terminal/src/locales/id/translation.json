@@ -37,12 +37,13 @@
     "country": {
       "status": "Menyesuaikan routing regional",
       "title": "Anda trading dari negara mana?",
-      "sub": "Connector akan merutekan ke endpoint regional yang tepat dan kami kurasi venue yang tersedia di lokasi Anda.",
+      "sub": "Beberapa venue dibatasi secara geografis atau memakai endpoint regional terpisah — pilihan ini mengarahkan konektor Anda ke yang tepat.",
       "searchPlaceholder": "Cari negara…",
       "noResults": "Tidak ada negara yang cocok dengan pencarian Anda",
       "global": "Lebih baik tidak disebutkan",
       "globalSub": "Gunakan endpoint dan default global",
-      "label": "Negara"
+      "label": "Negara",
+      "localNote": "Disimpan hanya di perangkat ini — tidak pernah dikirim ke server Pairlens."
     },
     "privacy": {
       "eyebrow": "Privat sejak dirancang",

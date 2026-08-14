@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Sparkles } from 'lucide-react'
+import { Lock, Sparkles } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 import { ChartLineIcon } from '@pairlens/ui/components/ui/chart-line'
@@ -413,7 +413,7 @@ export function CountryPicker({
       {/* `overflow-x: hidden` is explicit because `overflow-y` alone computes
           the other axis to `auto` — a nested sideways scroller inside the
           stage is the one thing that reads as broken on a phone. */}
-      <div className="flex max-h-[min(296px,38vh)] flex-col gap-[9px] overflow-y-auto overflow-x-hidden pb-0.5">
+      <div className="flex max-h-[min(296px,30vh)] flex-col gap-[9px] overflow-y-auto overflow-x-hidden pb-0.5">
         {results.map((c) => (
           <button
             key={c.code}
@@ -441,30 +441,33 @@ export function CountryPicker({
             {t('onboarding.country.noResults')}
           </div>
         )}
-        {!q && (
-          <button
-            type="button"
-            onClick={() => onSelect('')}
-            className={rowClass}
-          >
-            <span className="text-xl leading-none">🌐</span>
-            <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-              <span className="text-[15px] font-semibold tracking-[-0.01em]">
-                {t('onboarding.country.global')}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {t('onboarding.country.globalSub')}
-              </span>
-            </span>
-            {value === '' && (
-              <>
-                <SelectedRing radius={13} />
-                <CheckBadge className="right-[13px] top-1/2 size-[18px] -translate-y-1/2" />
-              </>
-            )}
-          </button>
-        )}
       </div>
+      {/* The decline option sits OUTSIDE the scroll region: an escape hatch
+          buried below the fold reads as "answering is mandatory", which is
+          the opposite of the local-only story this step tells. */}
+      {!q && (
+        <button type="button" onClick={() => onSelect('')} className={rowClass}>
+          <span className="text-xl leading-none">🌐</span>
+          <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <span className="text-[15px] font-semibold tracking-[-0.01em]">
+              {t('onboarding.country.global')}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {t('onboarding.country.globalSub')}
+            </span>
+          </span>
+          {value === '' && (
+            <>
+              <SelectedRing radius={13} />
+              <CheckBadge className="right-[13px] top-1/2 size-[18px] -translate-y-1/2" />
+            </>
+          )}
+        </button>
+      )}
+      <span className="mt-1 inline-flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+        <Lock size={12} aria-hidden className="flex-none opacity-80" />
+        {t('onboarding.country.localNote')}
+      </span>
     </div>
   )
 }

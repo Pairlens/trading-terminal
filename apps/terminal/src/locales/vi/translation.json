@@ -37,12 +37,13 @@
     "country": {
       "status": "Đang tinh chỉnh định tuyến khu vực",
       "title": "Bạn đang giao dịch từ quốc gia nào?",
-      "sub": "Các connector định tuyến đến đúng endpoint khu vực và chúng tôi chọn lọc các sàn khả dụng ở nơi bạn ở.",
+      "sub": "Một số sàn bị giới hạn theo khu vực hoặc dùng endpoint khu vực riêng — lựa chọn này giúp connector trỏ đến đúng nơi.",
       "searchPlaceholder": "Tìm quốc gia…",
       "noResults": "Không có quốc gia nào khớp với tìm kiếm của bạn",
       "global": "Không muốn tiết lộ",
       "globalSub": "Dùng endpoint và mặc định toàn cầu",
-      "label": "Quốc gia"
+      "label": "Quốc gia",
+      "localNote": "Chỉ lưu trên thiết bị này — không bao giờ gửi đến máy chủ Pairlens."
     },
     "privacy": {
       "eyebrow": "Riêng tư theo thiết kế",

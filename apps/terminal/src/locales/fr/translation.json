@@ -37,12 +37,13 @@
     "country": {
       "status": "Ajustement du routage régional",
       "title": "Depuis quel pays tradez-vous ?",
-      "sub": "Les connecteurs acheminent vers les bons points de terminaison régionaux et nous sélectionnons les places de marché disponibles là où vous êtes.",
+      "sub": "Certaines plateformes sont géo-restreintes ou utilisent des endpoints régionaux distincts — ceci oriente vos connecteurs vers les bons.",
       "searchPlaceholder": "Rechercher des pays…",
       "noResults": "Aucun pays ne correspond à votre recherche",
       "global": "Préférer ne pas préciser",
       "globalSub": "Utiliser les points de terminaison et paramètres globaux",
-      "label": "Pays"
+      "label": "Pays",
+      "localNote": "Stocké uniquement sur cet appareil — jamais envoyé aux serveurs Pairlens."
     },
     "privacy": {
       "eyebrow": "Privé par conception",

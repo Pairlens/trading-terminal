@@ -37,12 +37,13 @@
     "country": {
       "status": "Ajustando el enrutado regional",
       "title": "¿Desde qué país operas?",
-      "sub": "Los conectores usan el endpoint regional correcto y seleccionamos los venues disponibles en tu zona.",
+      "sub": "Algunos exchanges tienen restricciones geográficas o endpoints regionales separados — esto dirige tus conectores a los correctos.",
       "searchPlaceholder": "Buscar países…",
       "noResults": "Ningún país coincide con tu búsqueda",
       "global": "Prefiero no decirlo",
       "globalSub": "Usar endpoints y valores globales",
-      "label": "País"
+      "label": "País",
+      "localNote": "Se guarda solo en este dispositivo — nunca se envía a los servidores de Pairlens."
     },
     "privacy": {
       "eyebrow": "Privado por diseño",

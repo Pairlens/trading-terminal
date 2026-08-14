@@ -37,12 +37,13 @@
     "country": {
       "status": "Regionales Routing wird abgestimmt",
       "title": "Aus welchem Land handelst du?",
-      "sub": "Connectors routen zu den passenden regionalen Endpunkten, und wir kuratieren die Venues, die in deiner Region verfügbar sind.",
+      "sub": "Manche Börsen sind geobeschränkt oder nutzen eigene regionale Endpunkte — damit verbinden sich deine Connectors mit den richtigen.",
       "searchPlaceholder": "Länder suchen…",
       "noResults": "Keine Länder gefunden",
       "global": "Möchte ich nicht angeben",
       "globalSub": "Globale Endpunkte und Standardeinstellungen verwenden",
-      "label": "Land"
+      "label": "Land",
+      "localNote": "Wird nur auf diesem Gerät gespeichert — nie an Pairlens-Server gesendet."
     },
     "privacy": {
       "eyebrow": "Privat by Design",
