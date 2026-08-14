@@ -41,9 +41,16 @@
       "searchPlaceholder": "Search countries…",
       "noResults": "No countries match your search",
       "global": "Prefer not to say",
-      "globalSub": "Use global endpoints and defaults",
+      "globalSub": "Not recommended — uses global endpoints and defaults",
       "label": "Country",
-      "localNote": "Stored only on this device — never sent to Pairlens servers."
+      "localNote": "Stored only on this device — never sent to Pairlens servers.",
+      "globalConfirm": {
+        "title": "Continue without a location?",
+        "body": "Without a country set, orders and market data fall back to global endpoints. On venues with regional or geo-restricted access, features may not work and trades may fail to execute. We recommend setting your location — it is only ever stored on this device.",
+        "ack": "I understand the consequences of not configuring my location",
+        "cancel": "Set a location",
+        "confirm": "Continue without location"
+      }
     },
     "privacy": {
       "eyebrow": "Private by design",

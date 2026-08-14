@@ -41,9 +41,16 @@
       "searchPlaceholder": "Ülke ara…",
       "noResults": "Aramanla eşleşen ülke yok",
       "global": "Belirtmek istemiyorum",
-      "globalSub": "Genel uç noktaları ve varsayılanları kullan",
+      "globalSub": "Önerilmez — global uç noktaları ve varsayılanları kullanır",
       "label": "Ülke",
-      "localNote": "Yalnızca bu cihazda saklanır — Pairlens sunucularına asla gönderilmez."
+      "localNote": "Yalnızca bu cihazda saklanır — Pairlens sunucularına asla gönderilmez.",
+      "globalConfirm": {
+        "title": "Konum belirtmeden devam edilsin mi?",
+        "body": "Ülke seçilmediğinde emirler ve piyasa verileri global uç noktaları kullanır. Bölgesel veya coğrafi kısıtlamalı borsalarda özellikler çalışmayabilir ve işlemler gerçekleşmeyebilir. Konumunu ayarlamanı öneririz — yalnızca bu cihazda saklanır.",
+        "ack": "Konumumu ayarlamamanın sonuçlarını anlıyorum",
+        "cancel": "Ülke seç",
+        "confirm": "Konumsuz devam et"
+      }
     },
     "privacy": {
       "eyebrow": "Tasarımdan gelen gizlilik",

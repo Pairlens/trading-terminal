@@ -41,9 +41,16 @@
       "searchPlaceholder": "Länder suchen…",
       "noResults": "Keine Länder gefunden",
       "global": "Möchte ich nicht angeben",
-      "globalSub": "Globale Endpunkte und Standardeinstellungen verwenden",
+      "globalSub": "Nicht empfohlen — nutzt globale Endpunkte und Standardwerte",
       "label": "Land",
-      "localNote": "Wird nur auf diesem Gerät gespeichert — nie an Pairlens-Server gesendet."
+      "localNote": "Wird nur auf diesem Gerät gespeichert — nie an Pairlens-Server gesendet.",
+      "globalConfirm": {
+        "title": "Ohne Standort fortfahren?",
+        "body": "Ohne Länderangabe nutzen Orders und Marktdaten globale Endpunkte. Bei Börsen mit regionalem oder geobeschränktem Zugang können Funktionen ausfallen und Trades fehlschlagen. Wir empfehlen, deinen Standort festzulegen — er wird nur auf diesem Gerät gespeichert.",
+        "ack": "Ich verstehe die Folgen, wenn ich meinen Standort nicht festlege",
+        "cancel": "Land wählen",
+        "confirm": "Ohne Standort fortfahren"
+      }
     },
     "privacy": {
       "eyebrow": "Privat by Design",

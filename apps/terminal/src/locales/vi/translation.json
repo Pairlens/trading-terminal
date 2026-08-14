@@ -41,9 +41,16 @@
       "searchPlaceholder": "Tìm quốc gia…",
       "noResults": "Không có quốc gia nào khớp với tìm kiếm của bạn",
       "global": "Không muốn tiết lộ",
-      "globalSub": "Dùng endpoint và mặc định toàn cầu",
+      "globalSub": "Không khuyến nghị — dùng endpoint và mặc định toàn cầu",
       "label": "Quốc gia",
-      "localNote": "Chỉ lưu trên thiết bị này — không bao giờ gửi đến máy chủ Pairlens."
+      "localNote": "Chỉ lưu trên thiết bị này — không bao giờ gửi đến máy chủ Pairlens.",
+      "globalConfirm": {
+        "title": "Tiếp tục mà không đặt vị trí?",
+        "body": "Khi chưa chọn quốc gia, lệnh và dữ liệu thị trường dùng endpoint toàn cầu. Trên các sàn có giới hạn khu vực, tính năng có thể không hoạt động và lệnh có thể không được khớp. Chúng tôi khuyên bạn đặt vị trí — chỉ lưu trên thiết bị này.",
+        "ack": "Tôi hiểu hậu quả của việc không thiết lập vị trí",
+        "cancel": "Chọn quốc gia",
+        "confirm": "Tiếp tục không vị trí"
+      }
     },
     "privacy": {
       "eyebrow": "Riêng tư theo thiết kế",

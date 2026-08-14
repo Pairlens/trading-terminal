@@ -41,9 +41,16 @@
       "searchPlaceholder": "Rechercher des pays…",
       "noResults": "Aucun pays ne correspond à votre recherche",
       "global": "Préférer ne pas préciser",
-      "globalSub": "Utiliser les points de terminaison et paramètres globaux",
+      "globalSub": "Déconseillé — utilise les endpoints et réglages globaux",
       "label": "Pays",
-      "localNote": "Stocké uniquement sur cet appareil — jamais envoyé aux serveurs Pairlens."
+      "localNote": "Stocké uniquement sur cet appareil — jamais envoyé aux serveurs Pairlens.",
+      "globalConfirm": {
+        "title": "Continuer sans localisation ?",
+        "body": "Sans pays défini, les ordres et les données de marché passent par les endpoints globaux. Sur les plateformes à accès régional ou géo-restreint, des fonctionnalités peuvent ne pas marcher et des ordres peuvent échouer. Nous recommandons de définir votre localisation — elle n'est stockée que sur cet appareil.",
+        "ack": "Je comprends les conséquences de ne pas configurer ma localisation",
+        "cancel": "Choisir un pays",
+        "confirm": "Continuer sans localisation"
+      }
     },
     "privacy": {
       "eyebrow": "Privé par conception",
