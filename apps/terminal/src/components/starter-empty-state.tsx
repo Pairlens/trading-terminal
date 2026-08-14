@@ -102,9 +102,15 @@ export function StarterEmptyState({
   const hasSecondary =
     !!secondaryTemplates && secondaryTemplates.length > 0 && !!onPickSecondary
   return (
-    <div className="relative flex min-w-0 flex-1 overflow-y-auto">
-      {/* Aurora wash, echoing the onboarding page. Purely decorative. */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
+    <div className="@container/starter relative flex min-w-0 flex-1 overflow-y-auto">
+      {/* Aurora wash, echoing the onboarding page. Purely decorative.
+          `overflow-hidden` is load-bearing: the orbs hang past the bottom
+          edge, and inside a scroll container that bleed would otherwise
+          count as ~25% of phantom scrollable height. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
         <div
           className="absolute -left-[8%] -top-[18%] h-[55%] w-[45%] rounded-full opacity-25 blur-[80px]"
           style={{
@@ -124,7 +130,12 @@ export function StarterEmptyState({
       {/* `min-h-full` + `justify-center`: centred when it fits, top-anchored
           and scrollable when it doesn't. Plain `justify-center` inside a
           scroll container clips the top of tall content out of reach. */}
-      <div className="relative mx-auto flex min-h-full w-full max-w-[720px] flex-col justify-center px-6 py-10">
+      {/* The width grows with the panel so the shelves can spread to three
+          columns — the empty state's job is to fit on one screen, and extra
+          rows cost the height that extra columns absorb for free. Container
+          queries, not viewport breakpoints: the panel sits beside sidebars,
+          and the preview pane reports window.innerWidth === 0. */}
+      <div className="relative mx-auto flex min-h-full w-full max-w-[720px] flex-col justify-center px-6 py-8 @4xl/starter:max-w-[1000px]">
         <Empty className="border-none p-0">
           <EmptyHeader className="max-w-none">
             <EmptyMedia
@@ -153,7 +164,7 @@ export function StarterEmptyState({
               <span className="h-px flex-1 bg-border" />
             </div>
 
-            <div className="grid w-full gap-2 sm:grid-cols-2">
+            <div className="grid w-full gap-2 @xl/starter:grid-cols-2 @4xl/starter:grid-cols-3">
               {templates.map((template) => (
                 <TemplateCard
                   key={template.id}
@@ -174,7 +185,7 @@ export function StarterEmptyState({
                   </span>
                   <span className="h-px flex-1 bg-border" />
                 </div>
-                <div className="grid w-full gap-2 sm:grid-cols-2">
+                <div className="grid w-full gap-2 @xl/starter:grid-cols-2 @4xl/starter:grid-cols-3">
                   {secondaryTemplates.map((template) => (
                     <TemplateCard
                       key={template.id}
