@@ -2946,6 +2946,11 @@
       "open": "始値",
       "close": "終値"
     },
+    "sort": {
+      "by": "{{column}}で並べ替え",
+      "ascending": "{{column}}で昇順に並べ替え済み",
+      "descending": "{{column}}で降順に並べ替え済み"
+    },
     "panel": {
       "expand": "パネルを展開",
       "collapse": "パネルを折りたたむ"

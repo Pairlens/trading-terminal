@@ -2946,6 +2946,11 @@
       "open": "開盤",
       "close": "收盤"
     },
+    "sort": {
+      "by": "依{{column}}排序",
+      "ascending": "已依{{column}}遞增排序",
+      "descending": "已依{{column}}遞減排序"
+    },
     "panel": {
       "expand": "展開面板",
       "collapse": "收合面板"

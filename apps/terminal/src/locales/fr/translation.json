@@ -2946,6 +2946,11 @@
       "open": "Ouverture",
       "close": "Clôture"
     },
+    "sort": {
+      "by": "Trier par {{column}}",
+      "ascending": "Trié par {{column}}, croissant",
+      "descending": "Trié par {{column}}, décroissant"
+    },
     "panel": {
       "expand": "Déplier le panneau",
       "collapse": "Replier le panneau"

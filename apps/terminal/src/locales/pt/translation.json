@@ -2946,6 +2946,11 @@
       "open": "Abertura",
       "close": "Fechamento"
     },
+    "sort": {
+      "by": "Ordenar por {{column}}",
+      "ascending": "Ordenado por {{column}}, crescente",
+      "descending": "Ordenado por {{column}}, decrescente"
+    },
     "panel": {
       "expand": "Expandir painel",
       "collapse": "Recolher painel"
