@@ -24,6 +24,7 @@ export const TIER1_KEYS: ReadonlySet<string> = new Set([
   'terminal.priceScaleMode',
   'terminal.drawingToolMode',
   'terminal.drawingFavorites',
+  'terminal.orderbookMetric',
   'copilot.persona',
   'pair-picker.assetClass',
   'pair-picker.category',

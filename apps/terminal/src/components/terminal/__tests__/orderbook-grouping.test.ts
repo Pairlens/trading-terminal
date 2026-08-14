@@ -12,6 +12,12 @@
 import { describe, expect, it } from 'bun:test'
 
 import type { OrderBookLevel } from '@/hooks/use-orderbook-stream'
+import { ORDERBOOK_METRIC_KEY } from '@/hooks/use-orderbook-metric'
+import {
+  TIER1_KEYS,
+  domainForSyncKey,
+  isBlocked,
+} from '@/lib/sync/sync-domains'
 import {
   MAX_AUTO_BAND_FRACTION,
   addCumulative,
@@ -105,5 +111,22 @@ describe('addCumulative', () => {
     // The row keeps its OrderBookLevel identity — value mode changes what is
     // displayed and cumulated, not what the level is.
     expect(addCumulative(levels, 'value').map((r) => r.size)).toEqual([2, 3])
+  })
+})
+
+/**
+ * The switch is a stored preference, not per-pane state, and the wiring that
+ * makes it one is a single entry in a set nobody edits when adding a book
+ * feature. Pin it: without the tier-1 registration the key persists locally and
+ * then silently fails to follow a signed-in user to their other device.
+ */
+describe('the metric preference', () => {
+  it('is a synced tier-1 preference', () => {
+    expect(TIER1_KEYS.has(ORDERBOOK_METRIC_KEY)).toBe(true)
+    expect(domainForSyncKey(ORDERBOOK_METRIC_KEY)).toBe('preferences')
+  })
+
+  it('is never blocked from sync', () => {
+    expect(isBlocked(ORDERBOOK_METRIC_KEY)).toBe(false)
   })
 })

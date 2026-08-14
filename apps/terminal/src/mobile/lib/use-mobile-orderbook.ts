@@ -19,7 +19,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMobileFocus } from '../mobile-focus-context'
 import type { OrderBookLevel } from '@/hooks/use-orderbook-stream'
-import type { BookMetric } from '@/components/terminal/orderbook-pane'
+import type { BookMetric } from '@/hooks/use-orderbook-metric'
 import {
   addCumulative,
   computeAutoTickIndex,

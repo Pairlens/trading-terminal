@@ -39,7 +39,8 @@ import { PRESS } from '../primitives/press'
 import { useMobileOrderbook } from '../lib/use-mobile-orderbook'
 import type { MobileBookRow } from '../lib/use-mobile-orderbook'
 import type { MobileOverlay } from '../mobile-focus-context'
-import type { BookMetric } from '@/components/terminal/orderbook-pane'
+import type { BookMetric } from '@/hooks/use-orderbook-metric'
+import { useOrderbookMetric } from '@/hooks/use-orderbook-metric'
 import { useOptionalTickerData } from '@/lib/chart-terminal-context'
 import { formatAmount } from '@/components/terminal/orderbook-pane'
 import {
@@ -68,7 +69,9 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
   const { t, i18n } = useTranslation()
   const [rowsPerSide, setRowsPerSide] = useState(DEFAULT_ROWS_PER_SIDE)
   const [groupingOpen, setGroupingOpen] = useState(false)
-  const [metric, setMetric] = useState<BookMetric>('size')
+  // The same stored preference the desktop pane reads — a book opened on the
+  // phone shows the reading the laptop was left on, and vice versa.
+  const [metric, setMetric] = useOrderbookMetric()
   const bodyRef = useRef<HTMLDivElement | null>(null)
 
   // The spread row names the LAST TRADE, not the best bid — it is the price

@@ -7,7 +7,9 @@ import { ChevronDown, Loader2 } from 'lucide-react'
 import { cn } from '@pairlens/ui/lib/utils'
 import { usePanePair } from '@pairlens/plugin-sdk'
 import type { OrderBookLevel } from '@/hooks/use-orderbook-stream'
+import type { BookMetric } from '@/hooks/use-orderbook-metric'
 import type { OrderbookStreamValue } from '@/lib/chart-terminal-context'
+import { useOrderbookMetric } from '@/hooks/use-orderbook-metric'
 import {
   useOptionalChartConfig,
   useOptionalOrderbookData,
@@ -28,14 +30,6 @@ import { usePairUnavailable } from '@/stores/pair-availability-store'
 // Market data now comes through plugin-based connectors
 
 const ROW_HEIGHT = 18
-
-/**
- * What the second column measures: resting base size, or the quote-currency
- * notional that size is worth (price × size). Both columns follow the choice —
- * Total is the running sum of whichever one is on screen, or it would stop
- * being the sum of the rows above it.
- */
-export type BookMetric = 'size' | 'value'
 
 function formatSize(size: number): string {
   if (size >= 1_000_000) return `${(size / 1_000_000).toFixed(2)}M`
@@ -419,7 +413,10 @@ function OrderbookPaneInner({
   const [containerEl, setContainerEl] = useState<HTMLDivElement | null>(null)
   const [visibleRows, setVisibleRows] = useState(20)
   const [tickIndex, setTickIndex] = useState<number | null>(null)
-  const [metric, setMetric] = useState<BookMetric>('size')
+  // Persisted and shared: unlike the tick, which describes THIS book's depth,
+  // the metric is a reading preference — a second pane, a second window and the
+  // phone all follow it, and it survives a reload.
+  const [metric, setMetric] = useOrderbookMetric()
 
   // Header (~28px), spread row (~26px), buy/sell bar (~32px) — plus the venue
   // footer (~24px) on the panes that render one.
@@ -548,7 +545,7 @@ function OrderbookPaneInner({
 
   const handleMetricToggle = useCallback(() => {
     setMetric((current) => (current === 'size' ? 'value' : 'size'))
-  }, [])
+  }, [setMetric])
 
   // Ahead of the loading and error states: "this venue doesn't list the pair"
   // is the specific answer, and the book has nothing true left to show.
