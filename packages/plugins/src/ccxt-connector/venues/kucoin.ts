@@ -149,6 +149,9 @@ export const kucoinCcxtVenue: CcxtVenueConfig = {
   // The trade stream opens empty; candles come from watchOHLCV, never the
   // tape, so the REST fill is safe.
   seedTrades: true,
+  // The ticker channel emits per trade — a quiet pair's price header sat on
+  // '—' for up to 7 s after a switch (measured 2026-08-14, DOGE-USDT).
+  seedTicker: true,
   maxHistoryLimit: 1500,
   // Nudged to strictly-older here and translated into ccxt's `since` argument
   // by the subclass — KuCoin's own request has no `until`.

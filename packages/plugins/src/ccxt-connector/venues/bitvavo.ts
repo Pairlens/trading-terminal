@@ -150,6 +150,9 @@ export const bitvavoCcxtVenue: CcxtVenueConfig = {
   // tape measured 10 s to its first print on BTC-EUR. Candles come from
   // watchOHLCV, so the REST fill is safe.
   seedTrades: true,
+  // ticker24h pushes on change only — quiet EUR pairs measured ~1.5 s to a
+  // first price after a switch.
+  seedTicker: true,
   maxHistoryLimit: 1440,
   historyPageParams: (endTs) => ({ until: pageEndMs(endTs) }),
   livenessTimeoutMs: 120_000,

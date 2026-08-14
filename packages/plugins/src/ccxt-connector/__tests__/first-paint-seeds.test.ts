@@ -41,17 +41,24 @@ describe('order-book seed policy', () => {
     expect(kucoinCcxtVenue.seedOrderBook).toBe(100)
   })
 
-  it('skips the venues whose first socket frame IS the book', () => {
+  // Socket-snapshot venues whose snapshot is nonetheless slow: HTX's depth
+  // channel pushes on a ~1 s cadence (~1.5 s to first book), Bitfinex's
+  // subscribe snapshot trailed 1.7-2.3 s and Bitget's 0.5-1.9 s across
+  // switches (all measured 2026-08-14).
+  it('covers the slow socket-snapshot books', () => {
+    expect(htxCcxtVenue.seedOrderBook).toBe(true)
+    expect(bitfinexCcxtVenue.seedOrderBook).toBe(true)
+    expect(bitgetCcxtVenue.seedOrderBook).toBe(true)
+  })
+
+  it('skips the venues whose first socket frame IS the book, promptly', () => {
     for (const venue of [
       okxCcxtVenue,
       bybitCcxtVenue,
       bitvavoCcxtVenue,
       coinbaseCcxtVenue,
-      bitgetCcxtVenue,
       krakenCcxtVenue,
-      htxCcxtVenue,
       cryptocomCcxtVenue,
-      bitfinexCcxtVenue,
       upbitCcxtVenue,
     ]) {
       expect(venue.seedOrderBook).toBeUndefined()
@@ -96,13 +103,84 @@ describe('trades seed policy', () => {
     expect(upbitCcxtVenue.seedTrades).toBeUndefined()
   })
 
+  // Kraken's v1 trade channel sends no snapshot at all — a quiet pair's
+  // tape never painted in 20 s (measured 2026-08-14) — but its throttler is
+  // a strict ~1 s/call serial queue, so the seed is held past the subscribe
+  // burst instead of queueing ahead of the chart backfill.
+  it('seeds Kraken late, behind the chart backfill', () => {
+    expect(krakenCcxtVenue.seedTrades).toBe(true)
+    expect(krakenCcxtVenue.seedTradesDelayMs).toBe(2_500)
+  })
+
   it('skips venues where the seed buys nothing or costs elsewhere', () => {
     // Bitfinex's trade channel already opens with a snapshot.
     expect(bitfinexCcxtVenue.seedTrades).toBeUndefined()
-    // Kraken's REST budget is a strict serial queue (~1 s/call) — a seed
-    // would delay the chart backfill queued behind it.
-    expect(krakenCcxtVenue.seedTrades).toBeUndefined()
     // MEXC exposes no trades capability at all.
     expect(mexcCcxtVenue.seedTrades).toBeUndefined()
+  })
+})
+
+describe('ticker seed policy', () => {
+  // Venues whose per-symbol ticker stream emits only when the pair trades —
+  // a switch to a quiet pair left the price header on '—' for seconds
+  // (measured 2026-08-14: KuCoin 7 s, Gate 8.5 s, MEXC 2 s worst case).
+  it('seeds every trade-driven ticker stream', () => {
+    for (const venue of [
+      kucoinCcxtVenue,
+      gateCcxtVenue,
+      mexcCcxtVenue,
+      bitvavoCcxtVenue,
+      bitgetCcxtVenue,
+      coinbaseCcxtVenue,
+    ]) {
+      expect(venue.seedTicker).toBe(true)
+    }
+  })
+
+  it('skips venues whose subscribe answers with a ticker snapshot', () => {
+    for (const venue of [
+      okxCcxtVenue,
+      bybitCcxtVenue,
+      krakenCcxtVenue,
+      htxCcxtVenue,
+      cryptocomCcxtVenue,
+      upbitCcxtVenue,
+    ]) {
+      expect(venue.seedTicker).toBeUndefined()
+    }
+    // Binance's fan runs its own batched REST seed — the singular flag
+    // must stay off so the two never race.
+    expect(binanceCcxtVenue.seedTicker).toBeUndefined()
+    expect(binanceCcxtVenue.batchTickers).toBe(true)
+  })
+})
+
+describe('unwatch suppression policy', () => {
+  // Coinbase's ccxt unsubscribe wedges `unSubscriptionPending` and leaves
+  // the local subscription entry behind — a revisited pair's watch parks on
+  // a channel the server no longer sends (dead price header, verified live
+  // on BTC-USD 2026-08-14). Orphan-counting instead is the fix.
+  it('suppresses Coinbase unwatch calls', () => {
+    expect(coinbaseCcxtVenue.suppressUnwatch).toBe(true)
+  })
+
+  it('leaves every other venue on real unsubscribes', () => {
+    for (const venue of [
+      binanceCcxtVenue,
+      okxCcxtVenue,
+      bybitCcxtVenue,
+      bitvavoCcxtVenue,
+      mexcCcxtVenue,
+      kucoinCcxtVenue,
+      gateCcxtVenue,
+      bitgetCcxtVenue,
+      krakenCcxtVenue,
+      htxCcxtVenue,
+      cryptocomCcxtVenue,
+      bitfinexCcxtVenue,
+      upbitCcxtVenue,
+    ]) {
+      expect(venue.suppressUnwatch).toBeUndefined()
+    }
   })
 })

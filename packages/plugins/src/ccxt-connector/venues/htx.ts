@@ -145,6 +145,12 @@ export const htxCcxtVenue: CcxtVenueConfig = {
   },
   // 5 | 20 | 150 | 400 — anything else throws ExchangeError.
   orderbookDepth: 150,
+  // The depth channel pushes a full snapshot only on its ~1 s cadence, so a
+  // switch waits ~1.5 s for the first book (measured 2026-08-14). ccxt's
+  // REST fetchOrderBook accepts limit 5|10|20|150 and treats 150 (step0's
+  // implicit default) by omitting the depth param — so `true`, riding
+  // `orderbookDepth` 150 through, is exactly the valid full-depth call.
+  seedOrderBook: true,
   // Empty-opening trade stream; candles come from watchOHLCV (the 2h fold
   // derives from 1h CANDLES, not the tape) — safe to fill.
   seedTrades: true,

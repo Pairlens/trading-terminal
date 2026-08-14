@@ -165,6 +165,11 @@ export const bitfinexCcxtVenue: CcxtVenueConfig = {
   },
   // 25 or 100 only — anything else throws ExchangeError.
   orderbookDepth: 25,
+  // The book channel's subscribe snapshot trails 1.7-2.3 s behind the other
+  // channels on every switch (measured 2026-08-14). REST book/P0 accepts
+  // len 25, so `true` rides `orderbookDepth` through. Desktop-only venue —
+  // in a browser the connector refuses before any seed could run.
+  seedOrderBook: true,
   maxHistoryLimit: 10_000,
   // `end` is inclusive; `olderThan` still filters the page.
   historyPageParams: (endTs) => ({ until: pageEndMs(endTs) }),

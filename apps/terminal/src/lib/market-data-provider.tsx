@@ -1140,6 +1140,9 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       }
       unsubs.push(subscribeTicker(market, pair, noop))
       unsubs.push(subscribeOrderbook(market, pair, noop))
+      // The tape too — it is one of the four panes a switch mounts, and
+      // subscribeTrades already resolves to a no-op on venues without a feed.
+      unsubs.push(subscribeTrades(market, pair, noop))
       const release = () => {
         for (const u of unsubs) u()
       }
@@ -1151,7 +1154,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         }, WARMUP_TTL_MS),
       })
     },
-    [subscribe, subscribeTicker, subscribeOrderbook],
+    [subscribe, subscribeTicker, subscribeOrderbook, subscribeTrades],
   )
 
   // Release outstanding warmups on unmount.

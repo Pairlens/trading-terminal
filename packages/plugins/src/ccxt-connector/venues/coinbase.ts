@@ -147,6 +147,18 @@ export const coinbaseCcxtVenue: CcxtVenueConfig = {
     // watchdog.
     streaming: { keepAlive: 0 },
   },
+  // ccxt's coinbase unsubscribe poisons the instance: `unSubscriptionPending`
+  // wedges true after the first unwatch (its ack only matches an EMPTY
+  // subscription list) and the unsubscribed channel keeps its local
+  // subscription entry, so revisiting a pair parks a watch on a channel the
+  // server no longer sends — a permanently dead price header, verified live
+  // on BTC-USD (2026-08-14). Orphan-counting instead lets the threshold
+  // rebuild shed channels wholesale.
+  suppressUnwatch: true,
+  // The ticker channel emits per trade. With unwatch suppressed a revisited
+  // pair re-attaches to the live channel and waits for the next print — the
+  // REST seed paints the header immediately either way.
+  seedTicker: true,
   // `l2_data` carries the whole book; ccxt ignores the depth argument here.
   orderbookDepth: undefined,
   maxHistoryLimit: 300,
