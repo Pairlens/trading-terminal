@@ -393,7 +393,29 @@ export function SimpleAlertChannelPicker({
   const openSettings = useSettingsDialogStore((s) => s.open)
   const { permission, request } = useSystemNotificationPermission()
 
+  /**
+   * The platform has no Notification API at all — a phone browser (iOS
+   * exposes it only to a Home Screen app, and this build registers no service
+   * worker, so it cannot deliver there either), an insecure context, or
+   * WKWebView.
+   *
+   * `null` is "still reading", not "no": treating it as unavailable would
+   * un-arm the channel for a frame on every open and quietly rewrite a saved
+   * alert's channels the moment its form was looked at.
+   */
+  const osUnavailable = permission === 'unsupported'
+
+  // A channel that cannot deliver must not sit armed. Otherwise the summary
+  // promises a notification the platform will never show, and the failure only
+  // surfaces later in the activity log — silence being exactly the failure mode
+  // an alerting system cannot afford. Self-limiting rather than a loop: the
+  // guard is false immediately after the first pass.
+  useEffect(() => {
+    if (osUnavailable && channels.os) onChange({ ...channels, os: false })
+  }, [osUnavailable, channels, onChange])
+
   const toggle = (key: keyof SimpleAlertChannels) => {
+    if (key === 'os' && osUnavailable) return
     const next = { ...channels, [key]: !channels[key] }
     onChange(next)
     // Asking here is the honest moment: the user just said they want desktop
@@ -426,16 +448,23 @@ export function SimpleAlertChannelPicker({
         {options.map((option) => {
           const active = channels[option.key]
           const Icon = option.icon
+          const unavailable = option.key === 'os' && osUnavailable
           return (
             <button
               key={option.key}
               type="button"
               aria-pressed={active}
+              disabled={unavailable}
               className={cn(
                 'flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs transition-colors',
                 active
                   ? 'border-primary/50 bg-primary/10 text-foreground'
                   : 'border-border text-muted-foreground hover:bg-muted hover:text-foreground',
+                // Shown and struck through, not hidden: a chip that vanished on
+                // one device would read as a feature this build forgot, and the
+                // line below is what turns it into an answer.
+                unavailable &&
+                  'cursor-not-allowed line-through opacity-45 hover:bg-transparent hover:text-muted-foreground',
               )}
               onClick={() => toggle(option.key)}
             >
@@ -449,6 +478,16 @@ export function SimpleAlertChannelPicker({
       {channels.os && permission === 'denied' && (
         <p className="mt-1.5 text-[11px] text-amber-600 dark:text-amber-400">
           {t('notifications.simple.osBlocked')}
+        </p>
+      )}
+      {/* Unconditional, not gated on `channels.os` — the effect above has
+          already un-armed it, so gating on it would strike the chip through
+          and then explain nothing. Same sentence Settings shows for the same
+          state, deliberately: two different phrasings for one platform fact is
+          how a user ends up believing they are two different problems. */}
+      {osUnavailable && (
+        <p className="mt-1.5 text-[11px] text-muted-foreground">
+          {t('settings.notifications.system.unsupportedHelp')}
         </p>
       )}
       {channels.telegram && !telegram && (
