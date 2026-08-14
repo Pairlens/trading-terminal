@@ -133,6 +133,16 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
     // serve back to back. A whole reload spends well under 100 weight, so
     // even at the true rate the budget is never approached.
     rateLimit: 10,
+    // …and pace with the SAME semantics the venue uses. ccxt's default
+    // leaky bucket banks at most ONE token of idle credit (`capacity: 1`),
+    // so even a long-idle instance serializes a burst at cost × rateLimit
+    // per call. Binance's actual limit is a 6000-weight ROLLING MINUTE —
+    // bursts are free until the window fills — and ccxt ships exactly that
+    // as `rollingWindow`: with rateLimit 10 the window's maxWeight computes
+    // to 60000/10 = 6000, the venue's real number. Requests dispatch
+    // immediately unless the last minute's spend would actually exceed the
+    // budget, which normal terminal use never approaches.
+    rateLimiterAlgorithm: 'rollingWindow',
     // No app-level ping and no pong handler, so ccxt's keepalive degrades to
     // the runtime's protocol PING: under bun the pong listener is never
     // attached (`isNode && !isBun`), `lastPong` never advances, and ccxt kills
@@ -181,6 +191,19 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
   // against a 6000/min budget); the WS side is the same `@depth@100ms` diff
   // stream at any depth.
   orderbookDepth: 500,
+  // ccxt's Binance book is diff-stream + REST snapshot: nothing can render
+  // until the socket dials, the SUBSCRIBE is acked, the snapshot downloads
+  // and the buffered diffs replay — 1.5-2.5 s, against venues that push the
+  // book in their first socket frame. The seed fires the same REST snapshot
+  // at subscribe time, in parallel with the dial, so the pane paints at
+  // plain REST latency and the stream's synced book takes over on its first
+  // frame.
+  seedOrderBook: true,
+  // The trade stream sends only NEW prints — the tape opens empty and waits
+  // for the market. A REST page of recent trades fills it immediately; safe
+  // here because Binance's candles come from watchOHLCV, never folded from
+  // the tape.
+  seedTrades: true,
   // Binance spot answers trigger/stop probes from the SAME open-orders
   // endpoint (the conditional branch is futures-only), so the second
   // fetchOpenOrders pass would be a duplicate signed request.

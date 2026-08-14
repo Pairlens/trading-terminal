@@ -94,6 +94,26 @@ class FakeExchange {
   /** What REST `fetchTickers` answers — the fan's first-paint seed source. */
   restTickers: Record<string, Record<string, unknown>> = {}
   fetchTickers = async () => this.restTickers
+  /** What REST `fetchOrderBook` answers — the book's first-paint seed. */
+  restBook: {
+    bids: Array<Array<number>>
+    asks: Array<Array<number>>
+    timestamp?: number
+  } | null = null
+  /** Deferred gate: when set, `fetchOrderBook` waits on it before answering. */
+  restBookGate: Promise<void> | null = null
+  fetchOrderBook = async (symbol: string, limit?: number) => {
+    this.calls.push(`restbook:${symbol}:${limit ?? ''}`)
+    if (this.restBookGate) await this.restBookGate
+    if (!this.restBook) throw new Error('no rest book')
+    return this.restBook
+  }
+  /** What REST `fetchTrades` answers — the tape's first-paint seed. */
+  restTrades: Array<Record<string, unknown>> = []
+  fetchTrades = async (symbol: string, _since?: number, limit?: number) => {
+    this.calls.push(`resttrades:${symbol}:${limit ?? ''}`)
+    return this.restTrades
+  }
   setMarkets = () => this.markets
   loadMarkets = async () => this.markets
   market = () => ({})
@@ -136,6 +156,12 @@ class FakeHost implements ExchangeHostLike {
   stripBatch = false
   /** Copied onto every built exchange's `restTickers` (the seed source). */
   seedTickers: Record<string, Record<string, unknown>> = {}
+  /** Copied onto every built exchange's `restBook`. */
+  seedBook: FakeExchange['restBook'] = null
+  /** Copied onto every built exchange's `restBookGate`. */
+  seedBookGate: Promise<void> | null = null
+  /** Copied onto every built exchange's `restTrades`. */
+  seedTrades: Array<Record<string, unknown>> = []
 
   peek(): CcxtExchangeLike | null {
     return this.instance as unknown as CcxtExchangeLike | null
@@ -154,6 +180,9 @@ class FakeHost implements ExchangeHostLike {
       this.instance = new FakeExchange()
       if (this.stripBatch) this.instance.watchTickers = undefined
       this.instance.restTickers = this.seedTickers
+      this.instance.restBook = this.seedBook
+      this.instance.restBookGate = this.seedBookGate
+      this.instance.restTrades = this.seedTrades
       this.built.push(this.instance)
     }
     return {
@@ -810,6 +839,134 @@ describe('CcxtStreamHub — ticker fan', () => {
     // Later tickers go straight down the per-symbol path too.
     hub.acquire({ channel: 'ticker', pair: 'SOL-USDT' }, '', () => {})
     await waitFor(() => exchange.calls.includes('ticker:SOL/USDT'))
+    await hub.destroy()
+  })
+})
+
+// ── Order-book first-paint seed (seedOrderBook venues) ───────────────────
+
+const SEED_BOOK_VENUE: CcxtVenueConfig = {
+  ...VENUE,
+  seedOrderBook: true,
+  orderbookDepth: 500,
+}
+
+describe('CcxtStreamHub — order-book seed', () => {
+  it('paints the book from REST before the stream has delivered anything', async () => {
+    const { hub, host } = makeHub({ venue: SEED_BOOK_VENUE })
+    host.seedBook = {
+      bids: [[100, 1]],
+      asks: [[101, 2]],
+      timestamp: 1_700_000_000_000,
+    }
+    const frames: Array<unknown> = []
+    hub.acquire({ channel: 'orderbook', pair: 'BTC-USDT' }, '', (d) =>
+      frames.push(d),
+    )
+
+    // The watch call is parked and never settled — REST alone paints.
+    await waitFor(() => frames.length > 0)
+    expect(frames[0]).toEqual({
+      type: 'snapshot',
+      bids: [[100, 1]],
+      asks: [[101, 2]],
+      ts: 1_700_000_000_000,
+    })
+    const exchange = await host.current()
+    // The seed asked for the venue's configured depth.
+    expect(exchange.calls).toContain('restbook:BTC/USDT:500')
+    await hub.destroy()
+  })
+
+  it('a live frame that wins the race is never overwritten by the stale seed', async () => {
+    const { hub, host } = makeHub({ venue: SEED_BOOK_VENUE })
+    let releaseGate = () => {}
+    host.seedBookGate = new Promise<void>((resolve) => {
+      releaseGate = resolve
+    })
+    host.seedBook = { bids: [[1, 1]], asks: [[2, 2]] }
+    const frames: Array<unknown> = []
+    hub.acquire({ channel: 'orderbook', pair: 'BTC-USDT' }, '', (d) =>
+      frames.push(d),
+    )
+    const exchange = await host.current()
+    await waitFor(() => exchange.parked > 0)
+
+    // The stream's synced snapshot lands while the REST seed is in flight.
+    exchange.settle({
+      bids: [[100, 5]],
+      asks: [[101, 6]],
+      timestamp: 1_700_000_000_500,
+    })
+    await waitFor(() => frames.length > 0)
+    releaseGate()
+    await sleep(10)
+    // Only the live frames — the seed saw `cached` set and stood down.
+    expect(frames.length).toBeGreaterThan(0)
+    for (const frame of frames) {
+      expect((frame as { bids: Array<Array<number>> }).bids[0]).toEqual([
+        100, 5,
+      ])
+    }
+    await hub.destroy()
+  })
+
+  it('a venue without the flag never fetches a REST book', async () => {
+    const { hub, host } = makeHub()
+    host.seedBook = { bids: [[1, 1]], asks: [[2, 2]] }
+    hub.acquire({ channel: 'orderbook', pair: 'BTC-USDT' }, '', () => {})
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+    await sleep(10)
+    expect(exchange.calls.some((c) => c.startsWith('restbook:'))).toBe(false)
+    await hub.destroy()
+  })
+})
+
+// ── Trades first-paint seed (seedTrades venues) ──────────────────────────
+
+const SEED_TRADES_VENUE: CcxtVenueConfig = { ...VENUE, seedTrades: true }
+
+describe('CcxtStreamHub — trades seed', () => {
+  const rawTrade = (id: string) => ({
+    id,
+    price: 100,
+    amount: 1,
+    side: 'buy',
+    timestamp: 1_700_000_000_000,
+  })
+
+  it('fills the tape from REST and the stream overlap dedupes to nothing', async () => {
+    const { hub, host } = makeHub({ venue: SEED_TRADES_VENUE })
+    host.seedTrades = [rawTrade('t1'), rawTrade('t2')]
+    const seen: Array<{ trades: Array<{ id: string }> }> = []
+    hub.acquire({ channel: 'trades', pair: 'BTC-USDT' }, '', (d) =>
+      seen.push(d as { trades: Array<{ id: string }> }),
+    )
+
+    // The parked watch is never settled — REST alone fills the tape.
+    await waitFor(() => seen.length === 1)
+    expect(seen[0]?.trades.map((t) => t.id)).toEqual(['t1', 't2'])
+    const exchange = await host.current()
+    expect(exchange.calls).toContain('resttrades:BTC/USDT:100')
+
+    // The stream's first frame replays a seeded print next to a new one:
+    // only the new one comes through.
+    await waitFor(() => exchange.parked > 0)
+    exchange.settle([rawTrade('t2'), rawTrade('t3')])
+    await waitFor(() => seen.length === 2)
+    expect(seen[1]?.trades.map((t) => t.id)).toEqual(['t3'])
+    await hub.destroy()
+  })
+
+  it('a venue without the flag never fetches REST trades', async () => {
+    const { hub, host } = makeHub()
+    host.seedTrades = [rawTrade('t1')]
+    hub.acquire({ channel: 'trades', pair: 'BTC-USDT' }, '', () => {})
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+    await sleep(10)
+    expect(exchange.calls.some((c) => c.startsWith('resttrades:'))).toBe(false)
     await hub.destroy()
   })
 })
