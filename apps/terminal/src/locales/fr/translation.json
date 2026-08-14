@@ -2426,6 +2426,8 @@
     "buildExamplesNote": "Consultez les exemples dev-starter et dev-sync dans le dépôt pour des références fonctionnelles.",
     "applied": "Appliqué",
     "applyTheme": "Appliquer le thème",
+    "themeActions": "Actions du thème",
+    "useDefaultTheme": "Utiliser le thème par défaut",
     "author": "Auteur",
     "backToStore": "Store",
     "capabilities": "Capacités",
@@ -2943,9 +2945,15 @@
     "columns": {
       "price": "Prix",
       "size": "Taille",
+      "value": "Valeur",
       "total": "Total",
       "open": "Ouverture",
       "close": "Clôture"
+    },
+    "sort": {
+      "by": "Trier par {{column}}",
+      "ascending": "Trié par {{column}}, croissant",
+      "descending": "Trié par {{column}}, décroissant"
     },
     "panel": {
       "expand": "Déplier le panneau",
@@ -4140,6 +4148,8 @@
     "switchTo": "Passer à {{venue}}"
   },
   "pairPicker": {
+    "popular": "Populaires",
+    "switchPair": "Changer de paire",
     "noPairsFound": "Aucune paire trouvée.",
     "startTyping": "Commencez à taper pour rechercher des paires."
   },

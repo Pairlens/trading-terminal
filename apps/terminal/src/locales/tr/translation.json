@@ -2426,6 +2426,8 @@
     "buildExamplesNote": "Çalışan referanslar için repodaki dev-starter ve dev-sync örneklerine bak.",
     "applied": "Uygulandı",
     "applyTheme": "Temayı uygula",
+    "themeActions": "Tema işlemleri",
+    "useDefaultTheme": "Varsayılan temayı kullan",
     "author": "Yazar",
     "backToStore": "Mağaza",
     "capabilities": "Yetenekler",
@@ -2943,9 +2945,15 @@
     "columns": {
       "price": "Fiyat",
       "size": "Miktar",
+      "value": "Değer",
       "total": "Toplam",
       "open": "Açılış",
       "close": "Kapanış"
+    },
+    "sort": {
+      "by": "{{column}} ölçütüne göre sırala",
+      "ascending": "{{column}} ölçütüne göre artan sırada sıralandı",
+      "descending": "{{column}} ölçütüne göre azalan sırada sıralandı"
     },
     "panel": {
       "expand": "Paneli genişlet",
@@ -4140,6 +4148,8 @@
     "switchTo": "{{venue}}'a geç"
   },
   "pairPicker": {
+    "popular": "Popüler",
+    "switchPair": "Parite değiştir",
     "noPairsFound": "Parite bulunamadı.",
     "startTyping": "Parite aramak için yazmaya başla."
   },

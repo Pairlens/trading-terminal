@@ -2448,6 +2448,8 @@
     "buildExamplesNote": "Смотрите примеры dev-starter и dev-sync в репозитории для рабочих референсов.",
     "applied": "Применено",
     "applyTheme": "Применить тему",
+    "themeActions": "Действия с темой",
+    "useDefaultTheme": "Тема по умолчанию",
     "author": "Автор",
     "backToStore": "Магазин",
     "capabilities": "Возможности",
@@ -2969,9 +2971,15 @@
     "columns": {
       "price": "Цена",
       "size": "Объём",
+      "value": "Сумма",
       "total": "Итого",
       "open": "Открытие",
       "close": "Закрытие"
+    },
+    "sort": {
+      "by": "Сортировать по: {{column}}",
+      "ascending": "Отсортировано по: {{column}}, по возрастанию",
+      "descending": "Отсортировано по: {{column}}, по убыванию"
     },
     "panel": {
       "expand": "Развернуть панель",
@@ -4176,6 +4184,8 @@
     "switchTo": "Переключиться на {{venue}}"
   },
   "pairPicker": {
+    "popular": "Популярные",
+    "switchPair": "Сменить пару",
     "noPairsFound": "Пары не найдены.",
     "startTyping": "Начните вводить текст, чтобы найти пары."
   },

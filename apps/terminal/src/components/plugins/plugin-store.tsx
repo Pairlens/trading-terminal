@@ -443,6 +443,13 @@ export function PluginStore({
         const registryEntry = findRegistryEntry(manifest.id)
         const isRemote = registryEntry?.moduleUrl && !registryEntry.bundled
 
+        // A theme being removed while it paints the terminal has to hand the
+        // palette back first — the plugin is about to stop answering for it.
+        if (isTheme && activeThemeId === manifest.id) {
+          selectTheme(null)
+          track('theme_changed', { theme: 'default' })
+        }
+
         await pluginManager.deactivatePlugin(manifest.id)
 
         if (isRemote) {

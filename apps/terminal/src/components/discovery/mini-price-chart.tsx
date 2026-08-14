@@ -52,6 +52,40 @@ const STROKE = {
   vectorEffect: 'non-scaling-stroke',
 } as const
 
+/**
+ * The moving part of both animations: a rectangle in the chart's own
+ * coordinate space that the CSS animates, clipping whichever line it is
+ * pointed at.
+ *
+ * Deliberately not a dash offset. `non-scaling-stroke` above means the
+ * browser strokes — and so dashes — in device pixels, while a
+ * `pathLength="1"` normalisation is measured in viewBox units; stretch the
+ * box (`w-full` in a markets table cell is nearly 3× the natural aspect) and
+ * the dash covers a fraction of the line, which reads as a chart cut off
+ * mid-flight. A clip window rides the same transform as the geometry, so it
+ * is a proportion of the chart at every size.
+ *
+ * It reaches well past the top and bottom of the viewBox: the clip must never
+ * be what decides where the line ends, only how much of it has arrived.
+ */
+function ClipWindow({
+  className,
+  width = VIEW_W + VIEW_PAD * 2,
+}: {
+  className: string
+  width?: number | string
+}) {
+  return (
+    <rect
+      className={className}
+      x={-VIEW_PAD}
+      y={-VIEW_H}
+      width={width}
+      height={VIEW_H * 3}
+    />
+  )
+}
+
 export function MiniPriceChartView({
   values,
   state,
@@ -79,7 +113,9 @@ export function MiniPriceChartView({
   const { t } = useTranslation()
   const rawId = useId()
   // useId's delimiters are not valid inside a `url(#…)` reference.
-  const gradientId = `spark-${rawId.replace(/[^a-zA-Z0-9]/g, '')}`
+  const uid = rawId.replace(/[^a-zA-Z0-9]/g, '')
+  const gradientId = `spark-fill-${uid}`
+  const clipId = `spark-clip-${uid}`
 
   const geometry =
     state === 'ready' ? buildSparkline(values, VIEW_W, VIEW_H, VIEW_PAD) : null
@@ -131,33 +167,36 @@ export function MiniPriceChartView({
               <stop offset="0%" stopColor="currentColor" stopOpacity={0.3} />
               <stop offset="100%" stopColor="currentColor" stopOpacity={0} />
             </linearGradient>
+            <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+              <ClipWindow className="spark-wipe" />
+            </clipPath>
           </defs>
           <path
             className="spark-fade-in"
             d={geometry.area}
             fill={`url(#${gradientId})`}
           />
-          <path
-            {...STROKE}
-            className="spark-draw"
-            d={geometry.line}
-            pathLength={1}
-            strokeDasharray={1}
-          />
+          <path {...STROKE} d={geometry.line} clipPath={`url(#${clipId})`} />
         </>
       ) : skeleton ? (
         <>
           <path {...STROKE} d={skeleton.line} strokeOpacity={0.16} />
           {/* A short segment travelling the same path — the shimmer. */}
           {animate && (
-            <path
-              {...STROKE}
-              className="spark-sweep"
-              d={skeleton.line}
-              pathLength={1}
-              strokeDasharray="0.22 0.78"
-              strokeOpacity={0.45}
-            />
+            <>
+              <defs>
+                <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+                  <ClipWindow className="spark-sweep-window" width="25%" />
+                </clipPath>
+              </defs>
+              <path
+                {...STROKE}
+                className="spark-sweep"
+                d={skeleton.line}
+                clipPath={`url(#${clipId})`}
+                strokeOpacity={0.45}
+              />
+            </>
           )}
         </>
       ) : (

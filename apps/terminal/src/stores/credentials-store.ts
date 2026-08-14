@@ -157,7 +157,10 @@ export const CREDENTIAL_SCHEMAS: Record<
       { key: 'apiKey', label: 'API Key', required: true },
       { key: 'apiSecret', label: 'API Secret', required: true },
     ],
-    modes: ['live'],
+    // Paper rides AddOrder's `validate: true` dry run (no Kraken sandbox
+    // exists) — orders are checked against the real account and never reach
+    // the matching engine.
+    modes: ['paper', 'live'],
   },
   htx: {
     label: 'HTX',

@@ -2426,6 +2426,8 @@
     "buildExamplesNote": "ดูตัวอย่าง dev-starter และ dev-sync ในรีโปสำหรับการอ้างอิงที่ใช้งานได้จริง",
     "applied": "ใช้งานแล้ว",
     "applyTheme": "ใช้ธีม",
+    "themeActions": "การดำเนินการกับธีม",
+    "useDefaultTheme": "ใช้ธีมเริ่มต้น",
     "author": "ผู้สร้าง",
     "backToStore": "สโตร์",
     "capabilities": "ความสามารถ",
@@ -2943,9 +2945,15 @@
     "columns": {
       "price": "ราคา",
       "size": "ปริมาณ",
+      "value": "มูลค่า",
       "total": "รวม",
       "open": "ราคาเปิด",
       "close": "ราคาปิด"
+    },
+    "sort": {
+      "by": "เรียงตาม {{column}}",
+      "ascending": "เรียงตาม {{column}} จากน้อยไปมาก",
+      "descending": "เรียงตาม {{column}} จากมากไปน้อย"
     },
     "panel": {
       "expand": "ขยายแผง",
@@ -4140,6 +4148,8 @@
     "switchTo": "เปลี่ยนไปใช้ {{venue}}"
   },
   "pairPicker": {
+    "popular": "ยอดนิยม",
+    "switchPair": "เปลี่ยนคู่เทรด",
     "noPairsFound": "ไม่พบคู่เทรด",
     "startTyping": "เริ่มพิมพ์เพื่อค้นหาคู่เทรด"
   },

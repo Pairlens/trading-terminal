@@ -267,10 +267,27 @@ export const cryptocomCcxtVenue: CcxtVenueConfig = {
     { key: 'apiSecret', required: true },
   ],
   defaultMode: 'paper',
+  // ccxt gates a base-denominated market buy on a price here (`createMarket-
+  // BuyOrderRequiresPrice`) so it can compute the cost to spend; the trading
+  // runtime fetches a reference price and passes it through.
+  marketBuyRequiresPrice: true,
+  // Orders and cancels ride the venue's WS trade API — single static host,
+  // already routed by this venue's URL hooks and inside the CSP baseline.
+  // See CcxtVenueConfig.wsOrders for why this is per-venue opt-in.
+  wsOrders: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/cryptocom.js')
     const Base = (module.default ?? module) as unknown as CryptocomPatchableCtor
     return patchCryptocom(Base) as unknown as CcxtExchangeCtor
+  },
+  options: {
+    // No app-level ping and no pong handler (the venue's own heartbeat is
+    // server-initiated and answered in handleMessage, which never touches
+    // `lastPong`), so ccxt's keepalive degrades to the runtime's protocol
+    // PING: under bun it kills a healthy socket every keepAlive ×
+    // maxPingPongMisses; in a browser it cannot fire at all. Off, as on Gate
+    // and Bitfinex — liveness lives with the hub's inbound-silence watchdog.
+    streaming: { keepAlive: 0 },
   },
   // `2h` is absent from ccxt's table but valid on the wire, and both
   // `fetchOHLCV` and `watchOHLCV` fall back to the raw key — restated so the
@@ -278,6 +295,8 @@ export const cryptocomCcxtVenue: CcxtVenueConfig = {
   // on purpose: Crypto.com does not serve it, and the native leaves it out too.
   timeframeOverrides: { '2h': '2h' },
   orderbookDepth: CRYPTOCOM_BOOK_DEPTH,
+  // Empty-opening trade stream; candles come from watchOHLCV — safe to fill.
+  seedTrades: true,
   maxHistoryLimit: 300,
   // ccxt maps `until` onto `end_ts`, which is inclusive.
   historyPageParams: (endTs) => ({ until: pageEndMs(endTs) }),
@@ -289,6 +308,13 @@ export const cryptocomCcxtVenue: CcxtVenueConfig = {
     const api = exchange.urls['api'] as Record<string, unknown>
     for (const [key, value] of Object.entries(bases)) api[key] = value
   },
+  // `setSandboxMode` replaces `urls.api` with Crypto.com's `urls.test`, which
+  // has NO `ws` key at all — ccxt then throws reading
+  // `urls.api.ws.private` on every private-stream attempt, so a paper slot
+  // could never stream orders or balances. Reinstall the UAT REST bases and
+  // both sockets. Runs only on paper instances, so the read path keeps
+  // production data (the sandbox's book is synthetic).
+  applyPaperUrls: (exchange) => applyCryptocomPaperUrls(exchange),
   synthesizeMarket: (pair) => {
     const [base, quote] = pair.split('-')
     if (!base || !quote) return null

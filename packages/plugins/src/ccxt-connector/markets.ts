@@ -38,7 +38,7 @@ import type { CcxtExchangeLike, CcxtMarketSeed } from './types'
  * Bump when the trimmed shape changes — it is part of the cache key, so old
  * rows are ignored rather than migrated.
  */
-const MARKETS_SCHEMA_VERSION = 1
+const MARKETS_SCHEMA_VERSION = 2
 
 /** Refresh a cached table older than this, in the background. */
 export const MARKETS_TTL_MS = 24 * 60 * 60 * 1000
@@ -118,6 +118,12 @@ export function trimMarket(
     ...(typeof market['quoteId'] === 'string'
       ? { quoteId: market['quoteId'] }
       : {}),
+    // OKX only: its WS trade API sends this numeric code in place of the
+    // instrument id and the venue rejects orders without it — see the field's
+    // doc on CcxtMarketSeed.
+    ...(typeof market['instIdCode'] === 'number'
+      ? { instIdCode: market['instIdCode'] }
+      : {}),
     type: 'spot',
     spot: true,
     active: market['active'] !== false,
@@ -152,8 +158,9 @@ export function trimMarkets(
 export class CcxtMarketsProvider {
   private cached: CachedMarkets | null = null
   private loading: Promise<CachedMarkets | null> | null = null
-  private refreshing = false
   private ready: Promise<void> | null = null
+  /** The instance the in-flight `ready` refresh was started for. */
+  private refreshingFor: CcxtExchangeLike | null = null
   /** The instance the current table was applied to — a rebuild needs its own. */
   private appliedTo: CcxtExchangeLike | null = null
   /** True while `appliedTo` holds stand-in markets rather than the real table. */
@@ -164,7 +171,14 @@ export class CcxtMarketsProvider {
     private readonly exchangeId: string,
     private readonly storage: MarketsStorage = defaultMarketsStorage(),
     private readonly ttlMs: number = MARKETS_TTL_MS,
-  ) {}
+  ) {
+    // Start the storage read at construction, not at first use: the first
+    // `primeSync` of a session otherwise always misses the in-memory copy and
+    // pays a forced network load for a table that is sitting in IndexedDB.
+    // Construction happens at plugin-load time, so the read overlaps the
+    // venue's exchange-class import instead of racing it.
+    void this.prefetch()
+  }
 
   private get key(): string {
     return `${this.exchangeId}:v${MARKETS_SCHEMA_VERSION}`
@@ -216,12 +230,10 @@ export class CcxtMarketsProvider {
     exchange: CcxtExchangeLike,
     seed: CcxtMarketSeed | null,
   ): 'cache' | 'synthetic' | 'none' {
-    const real = this.appliedTo === exchange && !this.synthetic
-    if (real || (this.synthetic === false && exchange.markets !== undefined)) {
-      this.appliedTo = exchange
-      this.synthetic = false
-      return 'cache'
-    }
+    // Only THIS instance's real table counts — `exchange.markets !== undefined`
+    // alone would let a fresh instance carrying a stand-in inherit another
+    // instance's 'real' flag after a mid-load rebuild.
+    if (this.appliedTo === exchange && !this.synthetic) return 'cache'
 
     const cached = this.cached
     if (cached && cached.markets.length > 0) {
@@ -235,7 +247,21 @@ export class CcxtMarketsProvider {
       return 'cache'
     }
 
+    // No in-memory table yet. The persisted-vs-network decision waits for the
+    // storage read this class kicked off at construction — refreshing here
+    // unconditionally is what made the cache-hit path unreachable on every
+    // session's first subscribe. The synthetic seed below keeps this call
+    // synchronous either way.
     void this.prefetch()
+      .then((stored) => {
+        if (stored && stored.markets.length > 0) {
+          this.applyPrefetched(exchange, stored)
+        } else {
+          void this.refresh(exchange).catch(() => {})
+        }
+      })
+      .catch(() => {})
+
     if (seed) {
       if (this.appliedTo !== exchange) {
         this.seeds.clear()
@@ -246,11 +272,32 @@ export class CcxtMarketsProvider {
         this.seeds.set(seed.symbol, seed)
         exchange.setMarkets([...this.seeds.values()])
       }
-      void this.refresh(exchange).catch(() => {})
       return 'synthetic'
     }
-    void this.refresh(exchange).catch(() => {})
     return 'none'
+  }
+
+  /**
+   * A storage read resolved after `primeSync` had already seeded (or skipped)
+   * this instance. Swap the persisted table in unless the instance has moved
+   * on: a real table (a completed refresh, or an earlier arrival of this same
+   * callback) must not be clobbered, and an instance retired by a rebuild is
+   * not ours to touch — applying to it would be harmless for the exchange but
+   * would mislabel `appliedTo`.
+   */
+  private applyPrefetched(
+    exchange: CcxtExchangeLike,
+    stored: CachedMarkets,
+  ): void {
+    if (this.appliedTo === exchange && !this.synthetic) return
+    if (this.appliedTo !== null && this.appliedTo !== exchange) return
+    exchange.setMarkets(stored.markets)
+    this.appliedTo = exchange
+    this.synthetic = false
+    this.seeds.clear()
+    if (Date.now() - stored.savedAt > this.ttlMs) {
+      void this.refresh(exchange).catch(() => {})
+    }
   }
 
   /** True when `exchange` can resolve `symbol` right now. */
@@ -264,13 +311,26 @@ export class CcxtMarketsProvider {
    * The trading path and the bulk ticker snapshot must await this — a
    * stand-in table would make `safeMarket` invent symbols for every row it
    * cannot resolve. The candle/ticker/book read path does not.
+   *
+   * The persisted cache satisfies this even over a synthetic seed: the cached
+   * rows ARE a real table (trimmed precision/limits included), and falling
+   * through to a network reload here was the second half of the cold-start
+   * cache bypass. A stale-but-present table is applied and refreshed in the
+   * background, same as `primeSync`.
    */
   async whenReady(exchange: CcxtExchangeLike): Promise<void> {
     if (this.appliedTo === exchange && !this.synthetic) return
-    if (this.cached && this.cached.markets.length > 0 && !this.synthetic) {
-      exchange.setMarkets(this.cached.markets)
-      this.appliedTo = exchange
-      this.synthetic = false
+    const cached = this.cached ?? (await this.prefetch())
+    if (cached && cached.markets.length > 0) {
+      if (this.appliedTo !== exchange || this.synthetic) {
+        exchange.setMarkets(cached.markets)
+        this.appliedTo = exchange
+        this.synthetic = false
+        this.seeds.clear()
+      }
+      if (Date.now() - cached.savedAt > this.ttlMs) {
+        void this.refresh(exchange).catch(() => {})
+      }
       return
     }
     await this.refresh(exchange)
@@ -279,32 +339,50 @@ export class CcxtMarketsProvider {
   /**
    * Pull the venue's market table and cache the trimmed copy.
    *
-   * Deduped: several subscriptions racing on a cold profile share one load.
-   * `loadMarkets(true)` is a FORCED reload — a synthetic seed already made
-   * `markets` truthy, and ccxt's own guard would otherwise short-circuit to a
-   * no-op and leave the stand-in table in place forever.
+   * Deduped PER INSTANCE: several subscriptions racing on a cold profile share
+   * one load, but a rebuilt instance must get its own — sharing the retired
+   * instance's promise would resolve without ever loading the new one, and the
+   * completion below would then mark the new instance's stand-in table as real
+   * forever. `loadMarkets(true)` is a FORCED reload — a synthetic seed already
+   * made `markets` truthy, and ccxt's own guard would otherwise short-circuit
+   * to a no-op and leave the stand-in table in place.
    */
   private refresh(exchange: CcxtExchangeLike): Promise<void> {
-    if (this.ready && this.refreshing) return this.ready
-    this.refreshing = true
-    this.ready = (async () => {
+    if (this.ready && this.refreshingFor === exchange) return this.ready
+    this.refreshingFor = exchange
+    // Initialized before the IIFE so the `finally` can compare against it —
+    // the body only reaches the comparison after its first await, by which
+    // point the assignment below has run.
+    let run: Promise<void> | null = null
+    run = (async () => {
       try {
         await exchange.loadMarkets(true)
         const markets = exchange.markets
         if (!markets) return
-        this.appliedTo = exchange
-        this.synthetic = false
-        this.seeds.clear()
+        // A load superseded by a rebuilt instance's own refresh still caches
+        // its (current) table below, but the applied-state flags belong to the
+        // load that owns the slot — adopting a retired instance here is what
+        // used to mark the live instance's stand-in table as real.
+        if (this.refreshingFor === exchange) {
+          this.appliedTo = exchange
+          this.synthetic = false
+          this.seeds.clear()
+        }
         const trimmed = trimMarkets(markets)
         if (trimmed.length === 0) return
         const value: CachedMarkets = { savedAt: Date.now(), markets: trimmed }
         this.cached = value
         await this.storage.set(this.key, value).catch(() => {})
       } finally {
-        this.refreshing = false
+        // Only the load that still owns the slot clears it — a superseded
+        // load finishing late must not free a slot another instance holds.
+        if (this.refreshingFor === exchange && this.ready === run) {
+          this.refreshingFor = null
+        }
       }
     })()
-    return this.ready
+    this.ready = run
+    return run
   }
 }
 

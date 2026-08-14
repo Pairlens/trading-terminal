@@ -52,8 +52,11 @@
 
 import { createCexConnectorManifest } from '../../cex-connector'
 import { createCcxtConnectorPlugin } from '../index'
+import { withDerivedCandles } from '../derived-candle-plugin'
 import { withKrakenOhlcvGuard } from '../kraken-ohlcv'
+import type { LiveCandleSource } from '../derived-candle-plugin'
 import type { CcxtExchangeCtor, CcxtVenueConfig } from '../types'
+import type { Timeframe } from '@pairlens/shared/types'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
   PluginInstance,
@@ -77,7 +80,7 @@ export const KRAKEN_ADAPTER_INFO: MarketAdapterInfo = {
       required: true,
     },
   ],
-  supportedTimeframes: ['1m', '5m', '15m', '30m', '1h', '4h', '1d', '1w'],
+  supportedTimeframes: ['1m', '5m', '15m', '30m', '1h', '2h', '4h', '1d', '1w'],
   iconUrl: ICON_URL,
   triggerOrders: true,
 }
@@ -106,14 +109,33 @@ export const krakenCcxtVenue: CcxtVenueConfig = {
     { key: 'apiKey', required: true },
     { key: 'apiSecret', required: true },
   ],
-  // No public testnet — paper orders are `validate: true` on AddOrder, and
-  // CREDENTIAL_SCHEMAS lists Kraken as live-only anyway.
+  // No public testnet — paper orders are `validate: true` on AddOrder (see
+  // `paperOrderParams`); CREDENTIAL_SCHEMAS gates which modes the wizard
+  // offers.
   defaultMode: 'live',
+  // AddOrder's documented dry run: the order is validated (pair, size,
+  // precision, funds) and never reaches the matching engine. What makes a
+  // paper slot on a sandbox-less venue safe to allow.
+  paperOrderParams: { validate: true },
+  // Orders and cancels ride the venue's WS trade API — single static host,
+  // already routed by this venue's URL hooks and inside the CSP baseline.
+  // See CcxtVenueConfig.wsOrders for why this is per-venue opt-in.
+  wsOrders: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/kraken.js')
     const Base = (module.default ?? module) as unknown as CcxtExchangeCtor
     return withKrakenOhlcvGuard(Base)
   },
+  // Kraken's `parseMarkets` reads `options.cachedCurrencies` (populated by
+  // `fetchCurrencies`) to WIDEN amount precision where the currency is
+  // coarser than the market — without it the table carries a finer precision
+  // than Kraken accepts, and the authed instance inherits the public table.
+  // The one venue that keeps the public currencies call.
+  needsPublicCurrencies: true,
+  // Kraken keeps no separate trigger-order id space: `fetchOpenOrders`
+  // ignores the trigger/stop params entirely and answers with the same book,
+  // so the second probe would be a byte-for-byte duplicate signed request.
+  separateTriggerOrderBook: false,
   // 10 | 25 | 100 | 500 | 1000 — anything else throws NotSupported.
   orderbookDepth: 100,
   maxHistoryLimit: 720,
@@ -123,8 +145,35 @@ export const krakenCcxtVenue: CcxtVenueConfig = {
   livenessTimeoutMs: 45_000,
 }
 
+/**
+ * The venue serves no 2h interval anywhere — REST or WS — while the chart
+ * toolbar offers 2h on every venue. Folded from 1h instead, the same
+ * machinery Upbit and Coinbase already ship: history pages read 1h and fold,
+ * live bars fold off the venue's own 1h candle stream. The native connector
+ * did not have 2h either (its supportedTimeframes omitted it); this closes
+ * the toolbar gap rather than reproducing it.
+ *
+ * The 1h source stream rides Kraken's single-tenant OHLCV guard like any
+ * other timeframe: a second pane on the SAME pair at a different timeframe
+ * still parks one of the two (see kraken-ohlcv.ts) — the fold neither
+ * worsens nor fixes that venue constraint.
+ */
+const KRAKEN_HISTORY_FOLD: Partial<Record<string, Timeframe>> = {
+  '2h': '1h',
+}
+
+function krakenLiveSource(timeframe: string): LiveCandleSource {
+  return timeframe === '2h'
+    ? { kind: 'fold', source: '1h' }
+    : { kind: 'passthrough' }
+}
+
 export function createKrakenMarketConnectorPlugin(
   manifest: PluginManifest,
 ): PluginInstance {
-  return createCcxtConnectorPlugin(krakenCcxtVenue, manifest)
+  const base = createCcxtConnectorPlugin(krakenCcxtVenue, manifest)
+  return withDerivedCandles(base, {
+    historyFold: KRAKEN_HISTORY_FOLD,
+    liveSource: krakenLiveSource,
+  })
 }

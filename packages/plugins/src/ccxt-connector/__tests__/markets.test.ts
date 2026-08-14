@@ -103,12 +103,24 @@ describe('trimMarket', () => {
   it('rejects a row with no usable identity', () => {
     expect(trimMarket({ symbol: 'BTC/USDT' })).toBeNull()
   })
+
+  it("keeps OKX's instIdCode — the WS trade API refuses orders without it", () => {
+    const trimmed = trimMarket({
+      id: 'BTC-USDT',
+      symbol: 'BTC/USDT',
+      base: 'BTC',
+      quote: 'USDT',
+      instIdCode: 4_242,
+      spot: true,
+    })
+    expect(trimmed?.instIdCode).toBe(4_242)
+  })
 })
 
 describe('CcxtMarketsProvider', () => {
   it('applies a cached table synchronously — no await before the first watch', async () => {
     const storage = memoryMarketsStorage()
-    await storage.set('binance:v1', {
+    await storage.set('binance:v2', {
       savedAt: Date.now(),
       markets: REAL_TABLE,
     })
@@ -162,7 +174,7 @@ describe('CcxtMarketsProvider', () => {
     const provider = new CcxtMarketsProvider('binance', storage)
     const { exchange } = fakeExchange(REAL_TABLE)
     await provider.whenReady(exchange)
-    const stored = await storage.get('binance:v1')
+    const stored = await storage.get('binance:v2')
     expect(stored?.markets).toHaveLength(3)
   })
 
@@ -178,9 +190,68 @@ describe('CcxtMarketsProvider', () => {
     expect(provider.hasSymbol(second.exchange, 'SOL/USDT')).toBe(true)
   })
 
+  it('serves the persisted cache on a cold start without an explicit prefetch', async () => {
+    const storage = memoryMarketsStorage()
+    await storage.set('binance:v2', {
+      savedAt: Date.now(),
+      markets: REAL_TABLE,
+    })
+    // No `await provider.prefetch()` — production never calls it by hand. The
+    // constructor's own read must be what makes the cache reachable.
+    const provider = new CcxtMarketsProvider('binance', storage)
+    const { exchange, state } = fakeExchange(REAL_TABLE)
+
+    // First touch is still synchronous: the storage read hasn't resolved yet,
+    // so the stand-in serves the subscribe.
+    expect(provider.primeSync(exchange, seed('BTC', 'USDT'))).toBe('synthetic')
+    await new Promise((resolve) => setTimeout(resolve, 5))
+
+    // The persisted table replaced the stand-in and NO network load ran.
+    expect(state.loadCalls).toBe(0)
+    expect(provider.hasSymbol(exchange, 'ETH/USDT')).toBe(true)
+    expect(provider.primeSync(exchange, seed('SOL', 'USDT'))).toBe('cache')
+  })
+
+  it('whenReady is satisfied by the persisted cache even over a stand-in', async () => {
+    const storage = memoryMarketsStorage()
+    await storage.set('binance:v2', {
+      savedAt: Date.now(),
+      markets: REAL_TABLE,
+    })
+    const provider = new CcxtMarketsProvider('binance', storage)
+    const { exchange, state } = fakeExchange(REAL_TABLE)
+
+    provider.primeSync(exchange, seed('BTC', 'USDT'))
+    await provider.whenReady(exchange)
+
+    expect(state.loadCalls).toBe(0)
+    expect(provider.hasSymbol(exchange, 'SOL/USDT')).toBe(true)
+  })
+
+  it('a rebuild during the initial cold load gets its own refresh, not the retired one', async () => {
+    const provider = new CcxtMarketsProvider('binance', memoryMarketsStorage())
+    const first = fakeExchange(REAL_TABLE)
+
+    provider.primeSync(first.exchange, seed('BTC', 'USDT'))
+    // Let the (empty) storage read resolve so the first network load starts.
+    await Promise.resolve()
+    await Promise.resolve()
+
+    // A liveness/wake rebuild discards the first instance mid-load.
+    const second = fakeExchange(REAL_TABLE)
+    provider.primeSync(second.exchange, seed('BTC', 'USDT'))
+    await provider.whenReady(second.exchange)
+
+    // The second instance holds a REAL table — before the per-instance refresh
+    // guard it inherited the first load's promise, kept its one-row stand-in,
+    // and was permanently flagged as real.
+    expect(provider.hasSymbol(second.exchange, 'ETH/USDT')).toBe(true)
+    expect(Object.keys(second.exchange.markets ?? {})).toHaveLength(3)
+  })
+
   it('refreshes in the background when the cached table is past its TTL', async () => {
     const storage = memoryMarketsStorage()
-    await storage.set('binance:v1', {
+    await storage.set('binance:v2', {
       savedAt: Date.now() - 48 * 60 * 60 * 1000,
       markets: [seed('BTC', 'USDT')],
     })

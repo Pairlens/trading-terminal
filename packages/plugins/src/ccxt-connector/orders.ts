@@ -20,10 +20,11 @@
  *   than a hand-kept table, every branch reads the flag ccxt already publishes
  *   and refuses with a sentence naming the venue when it is absent.
  * - **Paper is not universal.** Six venues have a sandbox ccxt can switch to;
- *   Kraken has a `validate: true` dry run instead; the rest have neither. A
- *   paper slot on a venue with neither is REFUSED. Falling through to the live
- *   endpoint would execute a real trade against a credential the user marked
- *   paper, which is the worst failure mode in this file.
+ *   KuCoin and Coinbase ride their venue's dry-run/preview endpoint via
+ *   `paperOrderParams` instead; the rest have neither. A paper slot on a venue
+ *   with neither is REFUSED. Falling through to the live endpoint would
+ *   execute a real trade against a credential the user marked paper, which is
+ *   the worst failure mode in this file.
  * - **Secrets must not leak.** ccxt error messages carry the response body and,
  *   on some venues, the echoed request. Every message that leaves this module —
  *   returned or logged — goes through `redactSecrets` first.
@@ -54,6 +55,18 @@ const DEFAULT_TRIGGER_QUERY = { trigger: true, stop: true } as const
 
 /** Orders pulled per `'list'` call. Matches the native OKX history page. */
 const ORDER_HISTORY_LIMIT = 50
+
+/**
+ * WS placement failures that provably happened BEFORE the order frame could
+ * be sent (ccxt's `authenticate()` raises them while connecting/logging in),
+ * making a REST re-route safe. Names, not instanceof — the bridge never
+ * imports ccxt's error classes (see watch-driver's isClosedByUser).
+ */
+const WS_PRE_SEND_FAILURES = new Set([
+  'NotSupported',
+  'AuthenticationError',
+  'ExchangeNotAvailable',
+])
 
 // ── Pure mapping ───────────────────────────────────────────────────────────
 
@@ -202,6 +215,12 @@ export type CcxtOrderCall =
       amount: number
       price: number | undefined
       params: Record<string, unknown>
+      /**
+       * The venue computes a market buy's cost as amount × price and throws
+       * without one (`createMarketBuyOrderRequiresPrice`). The runtime must
+       * fill `price` with a reference price before making the call.
+       */
+      needsReferencePrice?: true
     }
   | {
       kind: 'cost'
@@ -226,7 +245,10 @@ export function buildCcxtOrderCall(
   has: OrderCapabilities,
   venue: Pick<
     CcxtVenueConfig,
-    'displayName' | 'orderParams' | 'supportsTriggerOrders'
+    | 'displayName'
+    | 'orderParams'
+    | 'supportsTriggerOrders'
+    | 'marketBuyRequiresPrice'
   >,
 ): CcxtOrderCall {
   const label = venue.displayName
@@ -243,6 +265,16 @@ export function buildCcxtOrderCall(
 
   const params: Record<string, unknown> = { ...venue.orderParams }
   if (order.clientOrderId) params['clientOrderId'] = order.clientOrderId
+
+  // Six venues gate a BASE-denominated market buy on a price so they can
+  // compute the cost to spend; without one ccxt throws client-side and the raw
+  // sentence lands in the order pane. The quote-denominated path is exempt —
+  // `createMarketBuyOrderWithCost` disables the gate itself.
+  const needsReferencePrice =
+    venue.marketBuyRequiresPrice === true &&
+    order.type === 'market' &&
+    order.side === 'buy' &&
+    order.tgtCcy !== 'quote_ccy'
 
   if (order.trigger) {
     const triggerPrice = Number(order.trigger.triggerPrice)
@@ -294,6 +326,7 @@ export function buildCcxtOrderCall(
       amount: size,
       price,
       params,
+      ...(needsReferencePrice ? { needsReferencePrice: true as const } : {}),
     }
   }
 
@@ -318,6 +351,7 @@ export function buildCcxtOrderCall(
     amount: size,
     price,
     params,
+    ...(needsReferencePrice ? { needsReferencePrice: true as const } : {}),
   }
 }
 
@@ -369,9 +403,21 @@ type SlotHost = {
  * credential, as most recently provisioned" and a stale host can never be
  * handed to a re-keyed slot. A WeakMap also keeps the key material out of any
  * string that could reach a log line.
+ *
+ * The WeakMap alone leaked, though: precisely BECAUSE every provision is a
+ * fresh object, the lookup on a re-provisioned slot always missed, the
+ * teardown branch behind it was dead code, and each key/mode/entity edit
+ * appended another live authed instance to `live` until plugin teardown. The
+ * id registry below exists to make the previous host findable — it holds no
+ * key material, only the host and the credential object's identity.
  */
 export class CcxtTradingRuntime {
   private hosts = new WeakMap<CexCredentials, SlotHost>()
+  /** Per slot id: the host to tear down when the slot is re-provisioned. */
+  private hostsBySlotId = new Map<
+    string,
+    { host: CcxtExchangeHost; credentials: CexCredentials }
+  >()
   private live = new Set<CcxtExchangeHost>()
   private destroyed = false
 
@@ -394,6 +440,25 @@ export class CcxtTradingRuntime {
       const call = buildCcxtOrderCall(order, exchange.has, this.opts.venue)
       if (call.kind === 'reject') return { success: false, error: call.error }
 
+      // The venue computes a base-denominated market buy's cost as
+      // amount × price (`createMarketBuyOrderRequiresPrice`), so hand it the
+      // current price — the same base→quote conversion the native connectors
+      // did. The venue fills by that cost, so the executed base amount can
+      // drift a tick from the requested size; the alternative is a hard
+      // client-side rejection.
+      let price = call.kind === 'order' ? call.price : undefined
+      if (call.kind === 'order' && call.needsReferencePrice) {
+        const reference = await this.referencePrice(exchange, call.symbol)
+        if (reference === null) {
+          const quote = call.symbol.split('/')[1] ?? 'the quote asset'
+          return {
+            success: false,
+            error: `${this.opts.venue.displayName} sizes market buys by cost and no reference price is available — try a limit order, or size the order in ${quote}`,
+          }
+        }
+        price = reference
+      }
+
       const params =
         order.mode === 'paper' && !host.paperActive
           ? { ...call.params, ...this.opts.venue.paperOrderParams }
@@ -405,18 +470,7 @@ export class CcxtTradingRuntime {
               cost: call.cost,
               params,
             })
-          : await callOrThrow(
-              exchange.createOrder,
-              exchange,
-              `${this.opts.venue.displayName} cannot place orders`,
-            )(
-              call.symbol,
-              call.type,
-              call.side,
-              call.amount,
-              call.price,
-              params,
-            )
+          : await this.createOverWire(exchange, call, price, params)
 
       const orderId = stringOf(raw['id'])
       return orderId ? { success: true, orderId } : { success: true }
@@ -433,19 +487,33 @@ export class CcxtTradingRuntime {
   ): Promise<OrderResult> {
     try {
       const { exchange } = await this.acquire(slot)
+      const symbol = toCcxtSymbol(pair)
+      // Trigger orders live in a separate id space on OKX, Bitget, Gate and
+      // friends; without the flag the venue looks the id up in the regular book
+      // and reports "order not found" for an order that is plainly resting.
+      const params = opts?.trigger ? this.triggerQuery() : {}
+
+      // A cancel is retry-safe (cancelling twice cancels once), so the WS
+      // attempt can fall back to REST on ANY failure — unlike placement.
+      if (
+        this.opts.venue.wsOrders === true &&
+        exchange.has['cancelOrderWs'] === true &&
+        typeof exchange.cancelOrderWs === 'function'
+      ) {
+        try {
+          await exchange.cancelOrderWs(orderId, symbol, params)
+          return { success: true, orderId }
+        } catch {
+          // Fall through to REST below.
+        }
+      }
+
       const cancel = callOrThrow(
         exchange.cancelOrder,
         exchange,
         `${this.opts.venue.displayName} cannot cancel orders`,
       )
-      // Trigger orders live in a separate id space on OKX, Bitget, Gate and
-      // friends; without the flag the venue looks the id up in the regular book
-      // and reports "order not found" for an order that is plainly resting.
-      await cancel(
-        orderId,
-        toCcxtSymbol(pair),
-        opts?.trigger ? this.triggerQuery() : {},
-      )
+      await cancel(orderId, symbol, params)
       return { success: true, orderId }
     } catch (error) {
       return this.failure('cancel', error, slot)
@@ -471,9 +539,11 @@ export class CcxtTradingRuntime {
       if (typeof fetch !== 'function') return []
 
       const regular = await fetch.call(exchange, symbol)
-      const supportsTrigger =
-        this.opts.venue.supportsTriggerOrders ?? hasTriggerSupport(exchange.has)
-      const triggers = supportsTrigger
+      const probeTriggerBook =
+        this.opts.venue.separateTriggerOrderBook !== false &&
+        (this.opts.venue.supportsTriggerOrders ??
+          hasTriggerSupport(exchange.has))
+      const triggers = probeTriggerBook
         ? await fetch
             .call(exchange, symbol, undefined, undefined, this.triggerQuery())
             .catch(() => [])
@@ -547,6 +617,7 @@ export class CcxtTradingRuntime {
     const hosts = [...this.live]
     this.live.clear()
     this.hosts = new WeakMap()
+    this.hostsBySlotId.clear()
     await Promise.all(hosts.map((host) => host.destroy()))
   }
 
@@ -570,6 +641,87 @@ export class CcxtTradingRuntime {
     return {
       success: false,
       error: `${this.opts.venue.displayName} has no paper trading environment — switch this credential to live or paper-trade on another venue`,
+    }
+  }
+
+  /**
+   * Place the order over the venue's WS trade API where the venue opts in,
+   * REST otherwise.
+   *
+   * The fallback rules are about double-execution, the one failure money
+   * cannot absorb. `authenticate()` runs — connect, login — BEFORE the order
+   * frame is sent, so `NotSupported`, `AuthenticationError` and
+   * `ExchangeNotAvailable` mean nothing reached the venue: safe to re-route
+   * to REST. Everything else either IS the venue's answer (an
+   * `InvalidOrder`/`InsufficientFunds` would repeat identically over REST) or
+   * is ambiguous about whether the frame was delivered (`RequestTimeout`, a
+   * socket that died mid-flight) — those must surface as failures, never
+   * silently retry, because the order may be resting.
+   */
+  private async createOverWire(
+    exchange: CcxtExchangeLike,
+    call: { symbol: string; type: string; side: string; amount: number },
+    price: number | undefined,
+    params: Record<string, unknown>,
+  ): Promise<Record<string, unknown>> {
+    const rest = () =>
+      callOrThrow(
+        exchange.createOrder,
+        exchange,
+        `${this.opts.venue.displayName} cannot place orders`,
+      )(call.symbol, call.type, call.side, call.amount, price, params)
+
+    const wsCapable =
+      this.opts.venue.wsOrders === true &&
+      exchange.has['createOrderWs'] === true &&
+      typeof exchange.createOrderWs === 'function'
+    if (!wsCapable) return rest()
+
+    try {
+      return await exchange.createOrderWs!(
+        call.symbol,
+        call.type,
+        call.side,
+        call.amount,
+        price,
+        params,
+      )
+    } catch (error) {
+      if (error instanceof Error && WS_PRE_SEND_FAILURES.has(error.name)) {
+        return rest()
+      }
+      if (error instanceof Error && error.name === 'RequestTimeout') {
+        // The frame may have been delivered; a blind retry can double-fill.
+        const advisory = new Error(
+          `${error.message} — sent over the trading socket; the order may still have been accepted, check open orders before retrying`,
+        )
+        advisory.name = error.name
+        throw advisory
+      }
+      throw error
+    }
+  }
+
+  /**
+   * A current price for the base→cost conversion, from the venue's own ticker.
+   * `last` first — it is what the native connectors converted with — then the
+   * book, which is never empty on a listed pair even when the day has no
+   * prints yet.
+   */
+  private async referencePrice(
+    exchange: CcxtExchangeLike,
+    symbol: string,
+  ): Promise<number | null> {
+    if (typeof exchange.fetchTicker !== 'function') return null
+    try {
+      const ticker = await exchange.fetchTicker(symbol)
+      for (const key of ['last', 'close', 'ask', 'bid']) {
+        const value = numberOf(ticker[key])
+        if (value !== null && value > 0) return value
+      }
+      return null
+    } catch {
+      return null
     }
   }
 
@@ -628,6 +780,16 @@ export class CcxtTradingRuntime {
       this.live.delete(existing.host)
       void existing.host.destroy()
     }
+    // A re-provisioned slot arrives with a FRESH credentials object, so the
+    // WeakMap lookup above misses by design — the previous host is found by
+    // slot id and torn down here, or it would stay in `live` until plugin
+    // teardown with its markets table and sockets.
+    const prior = this.hostsBySlotId.get(slot.id)
+    if (prior && prior.credentials !== slot.credentials) {
+      this.live.delete(prior.host)
+      void prior.host.destroy()
+      this.hostsBySlotId.delete(slot.id)
+    }
 
     const create = this.opts.createHost ?? ((o) => new CcxtExchangeHost(o))
     const host = create({
@@ -643,6 +805,7 @@ export class CcxtTradingRuntime {
       onError: (scope, error) => this.warn(scope, error, slot),
     })
     this.hosts.set(slot.credentials, { host, country: slot.country, paper })
+    this.hostsBySlotId.set(slot.id, { host, credentials: slot.credentials })
     this.live.add(host)
     return host
   }

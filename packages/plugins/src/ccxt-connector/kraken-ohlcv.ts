@@ -46,20 +46,22 @@
  * timeframe's, because a wrong-but-plausible candle is the failure this whole
  * module exists to prevent.
  *
- * ── 2. `fetchOHLCV`: `limit` keeps the OLDEST rows, not the newest ────────
+ * ── 2. `fetchOHLCV`: `until` has to become `since`, Kraken's only cursor ──
  *
- * `/0/public/OHLC` takes no count parameter — it always returns its most recent
- * 720 bars — so ccxt applies `limit` client-side in `parseOHLCVs`, and
- * `filterBySinceLimit(..., tail = false)` slices from the FRONT. Asking Kraken
- * for 300 candles therefore returns bars 1..300 of 720: a snapshot that ends
- * roughly 420 bars in the past, which the live stream then appends to across a
- * gap. Every other venue in the fleet passes the limit to the venue, gets back
- * exactly that many rows, and never trips this.
+ * `/0/public/OHLC` takes no count parameter — it always returns its most
+ * recent 720 bars — and no end cursor either: its REST paging only runs
+ * FORWARDS from `since`. The bridge's pan-left `until` cursor is translated
+ * into a `since` window (`until - limit·width`) here, which is what makes
+ * pan-left work at all on this venue.
  *
- * The patch asks ccxt for everything (no `limit`) and trims the tail here. It
- * also turns the bridge's `until` cursor into the only cursor Kraken has —
- * `since` — by walking back `limit` bar widths from it, which is what makes
- * pan-left work at all on a venue whose REST paging only runs forwards.
+ * `limit` is still not forwarded, but for the window math, not for a slicing
+ * defect: on the unpaged call ccxt 4.5.71's `filterBySinceLimit(sorted,
+ * undefined, limit, 0, false)` reaches `filterByLimit(..., fromStart=false)`
+ * and keeps the NEWEST rows (an earlier note here claimed it front-sliced to
+ * the oldest — that does not reproduce against the pinned source; re-check on
+ * a bump before re-adding the claim). The guard asks for everything and trims
+ * with `slice(-want)` after applying its own `until` bound, which needs the
+ * full page anyway.
  */
 
 import type { CcxtExchangeCtor, CcxtExchangeLike, CcxtOhlcvRow } from './types'
@@ -213,7 +215,8 @@ export function installKrakenOhlcvGuard(
       if (width > 0) effectiveSince = until - want * width
     }
 
-    // `limit` is deliberately not forwarded: ccxt would keep the OLDEST rows.
+    // `limit` is deliberately not forwarded: the `until` bound below needs
+    // the full 720-bar page before its own tail trim (see header §2).
     const rows = await fetchOriginal(
       symbol,
       timeframe,

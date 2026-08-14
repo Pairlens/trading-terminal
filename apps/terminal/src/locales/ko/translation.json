@@ -2426,6 +2426,8 @@
     "buildExamplesNote": "저장소의 dev-starter 및 dev-sync 예제에서 실제 참고 사례를 확인하세요.",
     "applied": "적용됨",
     "applyTheme": "테마 적용",
+    "themeActions": "테마 작업",
+    "useDefaultTheme": "기본 테마 사용",
     "author": "제작자",
     "backToStore": "스토어",
     "capabilities": "기능",
@@ -2943,9 +2945,15 @@
     "columns": {
       "price": "가격",
       "size": "수량",
+      "value": "금액",
       "total": "합계",
       "open": "시가",
       "close": "종가"
+    },
+    "sort": {
+      "by": "{{column}} 기준 정렬",
+      "ascending": "{{column}} 기준 오름차순 정렬됨",
+      "descending": "{{column}} 기준 내림차순 정렬됨"
     },
     "panel": {
       "expand": "패널 펼치기",
@@ -4140,6 +4148,8 @@
     "switchTo": "{{venue}}(으)로 전환"
   },
   "pairPicker": {
+    "popular": "인기",
+    "switchPair": "페어 변경",
     "noPairsFound": "페어를 찾을 수 없습니다.",
     "startTyping": "입력을 시작해 페어를 검색하세요."
   },

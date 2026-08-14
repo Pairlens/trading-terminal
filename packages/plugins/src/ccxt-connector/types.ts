@@ -46,6 +46,13 @@ export type CcxtMarketSeed = {
   type: 'spot'
   spot: true
   active: boolean
+  /**
+   * OKX's numeric instrument code, a top-level unified-market field its WS
+   * trade API requires (`createOrderWs` sends `instIdCode` in place of
+   * `instId`; the demo/EEA endpoint rejects orders without it — measured
+   * 2026-08-14, sCode 50014). Absent everywhere else.
+   */
+  instIdCode?: number
   precision?: { amount?: number; price?: number }
   limits?: Record<string, { min?: number; max?: number }>
   info?: Record<string, unknown>
@@ -65,6 +72,13 @@ export type CcxtExchangeLike = {
   options: Record<string, unknown>
   markets?: Record<string, unknown> | undefined
   symbols?: Array<string> | undefined
+  /**
+   * ccxt's per-symbol ticker cache, rewritten (object REPLACED, not mutated)
+   * on every inbound ticker frame. The ticker fan reads it because a
+   * `watchTickers` future resolves for only ONE of the frames in a batched
+   * burst — the rest land only here (see the fan's cache sweep).
+   */
+  tickers?: Record<string, CcxtTickerLike> | undefined
   hostname?: string
   fetchImplementation?: unknown
   /** Bound once per client by ccxt — wrap it BEFORE the first socket opens. */
@@ -85,6 +99,15 @@ export type CcxtExchangeLike = {
     symbol: string,
     params?: Record<string, unknown>,
   ) => Promise<CcxtTickerLike>
+  /** Batched ticker stream — see `CcxtVenueConfig.batchTickers`. */
+  watchTickers?: (
+    symbols?: Array<string>,
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, CcxtTickerLike>>
+  unWatchTickers?: (
+    symbols?: Array<string>,
+    params?: Record<string, unknown>,
+  ) => Promise<unknown>
   watchOrderBook: (
     symbol: string,
     limit?: number,
@@ -130,6 +153,20 @@ export type CcxtExchangeLike = {
     price?: number,
     params?: Record<string, unknown>,
   ) => Promise<Record<string, unknown>>
+  /** WS-native order placement — see `CcxtVenueConfig.wsOrders`. */
+  createOrderWs?: (
+    symbol: string,
+    type: string,
+    side: string,
+    amount: number,
+    price?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, unknown>>
+  cancelOrderWs?: (
+    id: string,
+    symbol?: string,
+    params?: Record<string, unknown>,
+  ) => Promise<unknown>
   /** Quote-denominated market buy. Each venue's override owns its own quirk. */
   createMarketBuyOrderWithCost?: (
     symbol: string,
@@ -191,6 +228,23 @@ export type CcxtExchangeLike = {
     limit?: number,
     params?: Record<string, unknown>,
   ) => Promise<Array<CcxtOhlcvRow>>
+  /** REST book snapshot — the first-paint seed, see `seedOrderBook`. */
+  fetchOrderBook?: (
+    symbol: string,
+    limit?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<CcxtOrderBookLike>
+  /** REST recent public trades — the tape's first-paint seed, see `seedTrades`. */
+  fetchTrades?: (
+    symbol: string,
+    since?: number,
+    limit?: number,
+    params?: Record<string, unknown>,
+  ) => Promise<Array<CcxtTradeLike>>
+  fetchTicker?: (
+    symbol: string,
+    params?: Record<string, unknown>,
+  ) => Promise<CcxtTickerLike>
   fetchTickers: (
     symbols?: Array<string>,
     params?: Record<string, unknown>,
@@ -298,6 +352,67 @@ export type CcxtVenueConfig = {
    */
   tradeGeoCheck?: (slot: CexSlot<CexCredentials>) => void
   /**
+   * Multiplex every ticker subscription through ONE `watchTickers(symbols)`
+   * call instead of one `watchTicker` per pair.
+   *
+   * Exists for venues whose ccxt class shards subscriptions across
+   * connections (Binance's `stream()` gives each new subscription hash its
+   * own socket): a 15-pair watchlist otherwise dials 15 TLS+WS handshakes on
+   * a fresh page load and the chips fill in one by one. A batched call is a
+   * single socket carrying a single SUBSCRIBE frame listing every stream —
+   * one inbound message, so Binance's ~5 msg/s per-connection limit (the
+   * reason a low `streamLimits` cap is forbidden, see venues/binance.ts)
+   * cannot be tripped no matter how many pairs the list holds.
+   *
+   * Opt-in per venue rather than derived from `has.watchTickers`: on venues
+   * that already share one socket per URL (everyone but Binance) batching
+   * buys nothing and adds a resubscribe on every watchlist change.
+   */
+  batchTickers?: boolean
+  /**
+   * Paint the first order-book frame from a REST snapshot fired AT SUBSCRIBE
+   * TIME, in parallel with the WebSocket dial.
+   *
+   * Exists for venues whose ccxt book algorithm is diff-stream + REST
+   * snapshot (Binance): the stream cannot deliver anything until the socket
+   * is dialed, the SUBSCRIBE is acked, a REST snapshot is fetched and the
+   * buffered diffs are replayed against it — 1.5-2.5 s end to end, while
+   * snapshot-push venues (OKX, ByBit, Kraken, Crypto.com) hand the book over
+   * in their first socket frame. The seed is a plain `fetchOrderBook` racing
+   * that pipeline; whichever arrives first paints, and the stream's own
+   * synced snapshot always supersedes. Correctness is untouched — the seed
+   * is display-only and never enters ccxt's book state.
+   *
+   * Also earns its keep on the buffered-delta venues (MEXC, KuCoin, Gate):
+   * their ccxt classes buffer `snapshotDelay` diff FRAMES before even
+   * requesting the REST snapshot, so the stream cannot paint for seconds —
+   * unbounded on a quiet pair, where frames only arrive when the book moves.
+   *
+   * A number enables the seed AND overrides the REST depth, for venues
+   * whose REST book endpoint accepts different limits than their WS
+   * subscription (KuCoin's public REST serves exactly 20 or 100 levels;
+   * `orderbookDepth` is 50). `true` fetches `orderbookDepth`.
+   */
+  seedOrderBook?: boolean | number
+  /**
+   * Fill the tape's first paint from REST `fetchTrades`, for venues whose
+   * trade stream opens EMPTY (Binance sends only new prints — on a quiet
+   * pair the pane sits blank until the next market trade). The per-key
+   * trade-id memory dedupes the overlap when the stream starts, so no print
+   * ever doubles.
+   *
+   * NEVER enable on a venue whose candles are derived from the trades
+   * stream (`liveSource: 'trades'` folds — Coinbase, Upbit): the seed's
+   * historical prints would re-add their volume to the forming bar. Also
+   * skip venues whose stream already opens with a snapshot (Bitfinex) and
+   * venues whose REST budget is a strict serial queue (Kraken at 1 s/call —
+   * a seed there would delay the chart backfill behind it).
+   *
+   * A number enables the seed AND overrides the page size, for venues whose
+   * recent-trades endpoint caps below the default 100 (ByBit spot: 60).
+   */
+  seedTrades?: boolean | number
+  /**
    * Depth passed to `watchOrderBook`. Venue-specific enums apply (see the
    * venue matrix §1g) — an unsupported value throws at runtime on some venues.
    */
@@ -336,6 +451,28 @@ export type CcxtVenueConfig = {
    * BASE/QUOTE with certainty.
    */
   synthesizeMarket?: (pair: string) => CcxtMarketSeed | null
+  /**
+   * Keep `fetchCurrencies` enabled on the PUBLIC instance. By default the
+   * host disables it there: ccxt's `loadMarketsHelper` awaits currencies
+   * before markets — a serialized public round trip plus a throttle slot in
+   * front of the download first paint is waiting on — and the bridge's
+   * trimmed table stores no currency fields. Kraken is the one venue that
+   * needs it: its `parseMarkets` reads `options.cachedCurrencies` to widen
+   * amount precision, and the authed instance inherits the public table.
+   */
+  needsPublicCurrencies?: boolean
+  /**
+   * Carry venue-negotiated connection state across the host's discard-and-
+   * rebuild lifecycle. `captureOptions` runs as an instance is closed;
+   * `seedOptions` runs on the next instance built for the SAME country, with
+   * whatever capture returned. The host discards instances on purpose (it is
+   * the only reliable way to clear ccxt's per-instance `options` caches), but
+   * some of that state is expensive to re-earn — KuCoin's bullet-token URL is
+   * a serial REST POST in front of every cold WS connect, and the token is
+   * valid for ~24 h. The venue owns what is safe to carry and for how long.
+   */
+  captureOptions?: (exchange: CcxtExchangeLike) => unknown
+  seedOptions?: (exchange: CcxtExchangeLike, captured: unknown) => void
 
   // ── Trading (all optional; every default is derived from ccxt) ──────────
 
@@ -356,6 +493,18 @@ export type CcxtVenueConfig = {
    */
   orderParams?: Record<string, unknown>
   /**
+   * The venue's ccxt class gates BASE-denominated market buys on a price
+   * (`createMarketBuyOrderRequiresPrice`) so it can compute the cost to spend
+   * — without one, `createOrder` throws client-side before any request. Six of
+   * the fourteen are in this state (Gate, Coinbase, Bitget, HTX, Crypto.com,
+   * Upbit); the flag cannot be read generically at runtime because it hides in
+   * a different `options` corner per venue (Bitget nests it under
+   * `options.createOrder`, Crypto.com defaults it true with no entry at all).
+   * Set it and the trading runtime fetches a reference price and passes it
+   * through, restoring the native connectors' base→quote conversion.
+   */
+  marketBuyRequiresPrice?: boolean
+  /**
    * Params that make an order a dry run on a venue with no sandbox
    * environment (Kraken: `{ validate: true }`). Without either, a paper slot
    * is refused rather than routed to the live matching engine.
@@ -368,6 +517,30 @@ export type CcxtVenueConfig = {
    * and which one a venue honors changed across releases.
    */
   triggerQueryParams?: Record<string, unknown>
+  /**
+   * `false` when the venue keeps trigger orders in the SAME book as regular
+   * ones — its `fetchOpenOrders` ignores the trigger flag, so the second
+   * probe would be a byte-for-byte duplicate signed request whose rows the
+   * id de-dup throws away (Kraken; Binance spot). Defaults to true: probing
+   * an id space that turns out shared costs a duplicate call, skipping one
+   * that is real hides resting TP/SLs from the order pane.
+   */
+  separateTriggerOrderBook?: boolean
+  /**
+   * Place and cancel over the venue's WebSocket trade API
+   * (`createOrderWs`/`cancelOrderWs`) instead of signed REST. After the first
+   * call the authed socket stays open on the trading instance, so an order is
+   * one frame instead of a TLS+HTTP round trip, and it leaves the REST
+   * rate-limit budget to the open-orders/balances polls.
+   *
+   * Deliberately opt-in per venue rather than derived from `has`: the WS URL
+   * must be one the venue's `applyUrls`/`applyPaperUrls` actually route
+   * (Binance's `ws-api` host ignores the US split, OKX's private socket
+   * carries the regional-entity stakes), and the venue's sandbox must serve
+   * the trade socket. Enabled where the host is single and static: Kraken,
+   * Crypto.com, Bitvavo, Gate — all already inside the desktop CSP baseline.
+   */
+  wsOrders?: boolean
   /**
    * Force trigger-order support on or off. Default: derived from
    * `exchange.has` (`createTriggerOrder` / `createStopLossOrder` /

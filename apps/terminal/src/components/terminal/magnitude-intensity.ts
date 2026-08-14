@@ -76,6 +76,39 @@ export function magnitudeIntensity(value: number, reference: number): number {
   return ratio >= 1 ? 1 : ratio ** CURVE
 }
 
+/**
+ * Resolution of the quantized intensity ladder. See `magnitudeIntensityStep`.
+ *
+ * 24 steps spread over the tint's 6%→26% ramp puts consecutive steps 0.83
+ * percentage points of `color-mix` apart, which is below what the eye
+ * resolves against a dark pane — the ladder is a render optimisation, not a
+ * visual one, and it must not be visible as banding.
+ */
+export const INTENSITY_STEPS = 24
+
+/**
+ * The same intensity, snapped to a small integer.
+ *
+ * For the tape this is the difference between re-rendering every row on every
+ * flush and re-rendering almost none of them. The reference is a median over
+ * the visible rows, so one new print nudges it, so every row's raw intensity
+ * moves by a hair, so every memoized row sees a changed prop and re-renders —
+ * 200 rows, ten times a second, to repaint colours nobody can tell apart.
+ * Comparing the STEP instead means a row re-renders only when its tint has
+ * somewhere to go.
+ */
+export function magnitudeIntensityStep(
+  value: number,
+  reference: number,
+): number {
+  return Math.round(magnitudeIntensity(value, reference) * INTENSITY_STEPS)
+}
+
+/** The other half of the ladder: a step back to the 0..1 the colours take. */
+export function intensityFromStep(step: number): number {
+  return step / INTENSITY_STEPS
+}
+
 /** Row tint, in `color-mix` percent, at rest and at a full wall. */
 const FILL_MIN_PCT = 6
 const FILL_MAX_PCT = 26

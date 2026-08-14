@@ -99,7 +99,15 @@ export const gateCcxtVenue: CcxtVenueConfig = {
     { key: 'apiSecret', required: true },
   ],
   defaultMode: 'paper',
+  // ccxt gates a base-denominated market buy on a price here (`createMarket-
+  // BuyOrderRequiresPrice`) so it can compute the cost to spend; the trading
+  // runtime fetches a reference price and passes it through.
+  marketBuyRequiresPrice: true,
   requiresDesktop: true,
+  // Orders and cancels ride the venue's WS trade API — single static host,
+  // already routed by this venue's URL hooks and inside the CSP baseline.
+  // See CcxtVenueConfig.wsOrders for why this is per-venue opt-in.
+  wsOrders: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/gate.js')
     const Base = (module.default ?? module) as unknown as CcxtExchangeCtor
@@ -122,6 +130,11 @@ export const gateCcxtVenue: CcxtVenueConfig = {
   // Spot default; `spot.obu` pushes a full book at this depth. 400 would switch
   // the push interval, which nothing asks for.
   orderbookDepth: 50,
+  // Buffered-delta book (ccxt waits 10 depth frames, then REST-syncs): the
+  // seed paints at REST latency instead.
+  seedOrderBook: true,
+  // Empty-opening trade stream; candles come from watchOHLCV — safe to fill.
+  seedTrades: true,
   maxHistoryLimit: 1000,
   // Gate's `to` is INCLUSIVE (ccxt forwards `until` as `to`), so the boundary
   // bar comes back unless the cursor is nudged.
@@ -129,6 +142,19 @@ export const gateCcxtVenue: CcxtVenueConfig = {
   livenessTimeoutMs: 120_000,
   applyUrls: (exchange) => {
     const urls = resolveGateCcxtUrls()
+    const api = exchange.urls['api'] as Record<string, unknown>
+    applyGateRestBase(api, urls.rest)
+    api['spot'] = urls.ws
+  },
+  // `setSandboxMode` replaces the whole `urls.api` subtree with Gate's
+  // `urls.test`, which carries REST `public`/`private` and WS
+  // `swap`/`future`/`option` — but NO top-level `spot`, the key ccxt's
+  // private spot stream resolves through `getUrlByMarketType('spot')`. Without
+  // this hook a paper slot's order/balance socket resolved `undefined` and
+  // retried forever behind backoff. Reinstall the testnet REST base (with its
+  // dev-proxy prefix, which the swap also discards) and the spot socket.
+  applyPaperUrls: (exchange) => {
+    const urls = resolveGateCcxtUrls(true)
     const api = exchange.urls['api'] as Record<string, unknown>
     applyGateRestBase(api, urls.rest)
     api['spot'] = urls.ws

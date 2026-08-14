@@ -2426,6 +2426,8 @@
     "buildExamplesNote": "請參考版本庫中的 dev-starter 與 dev-sync 範例作為實作參考。",
     "applied": "已套用",
     "applyTheme": "套用主題",
+    "themeActions": "主題操作",
+    "useDefaultTheme": "使用預設主題",
     "author": "作者",
     "backToStore": "商店",
     "capabilities": "功能",
@@ -2943,9 +2945,15 @@
     "columns": {
       "price": "價格",
       "size": "數量",
+      "value": "金額",
       "total": "累計",
       "open": "開盤",
       "close": "收盤"
+    },
+    "sort": {
+      "by": "依{{column}}排序",
+      "ascending": "已依{{column}}遞增排序",
+      "descending": "已依{{column}}遞減排序"
     },
     "panel": {
       "expand": "展開面板",
@@ -4140,6 +4148,8 @@
     "switchTo": "切換到 {{venue}}"
   },
   "pairPicker": {
+    "popular": "熱門",
+    "switchPair": "更換交易對",
     "noPairsFound": "找不到交易對。",
     "startTyping": "開始輸入以搜尋交易對。"
   },

@@ -122,7 +122,92 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
     const module = await import('ccxt/js/src/pro/binance.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor
   },
-  orderbookDepth: 20,
+  options: {
+    // ccxt paces REST at `rateLimit` ms per weight unit and ships 50 for
+    // Binance — a 1200-weight/min budget, when the venue's actual IP budget
+    // is 6000/min (10 ms per unit, exactly this value). The 5× conservative
+    // default is what made a fresh reload's order book take seconds to seed:
+    // the bulk 24h-ticker snapshot (weight 40) plus the depth-500 book
+    // snapshot (weight 25) queue on the shared throttler, 65 weight × 50 ms
+    // = 3.25 s of self-inflicted delay for calls the venue would happily
+    // serve back to back. A whole reload spends well under 100 weight, so
+    // even at the true rate the budget is never approached.
+    rateLimit: 10,
+    // …and pace with the SAME semantics the venue uses. ccxt's default
+    // leaky bucket banks at most ONE token of idle credit (`capacity: 1`),
+    // so even a long-idle instance serializes a burst at cost × rateLimit
+    // per call. Binance's actual limit is a 6000-weight ROLLING MINUTE —
+    // bursts are free until the window fills — and ccxt ships exactly that
+    // as `rollingWindow`: with rateLimit 10 the window's maxWeight computes
+    // to 60000/10 = 6000, the venue's real number. Requests dispatch
+    // immediately unless the last minute's spend would actually exceed the
+    // budget, which normal terminal use never approaches.
+    rateLimiterAlgorithm: 'rollingWindow',
+    // No app-level ping and no pong handler, so ccxt's keepalive degrades to
+    // the runtime's protocol PING: under bun the pong listener is never
+    // attached (`isNode && !isBun`), `lastPong` never advances, and ccxt kills
+    // a healthy socket every keepAlive × maxPingPongMisses; in a browser the
+    // same path pretends a pong arrived and detects nothing. Off, as on Gate
+    // and Bitfinex — liveness lives with the hub's inbound-silence watchdog.
+    streaming: { keepAlive: 0 },
+    // `streamLimits` stays at ccxt's DEFAULT (spot: 50 — roughly one socket
+    // per subscription hash). This venue briefly shipped `spot: 1` to
+    // multiplex everything on one socket like the native did, and it broke
+    // live data on every pair switch: Binance enforces ~5 inbound messages
+    // per second PER CONNECTION, ccxt sends one SUBSCRIBE frame per watch
+    // call (it cannot batch streams into one message the way the native
+    // did), and a switch's unsubscribe+subscribe burst on the shared socket
+    // tripped the limit — Binance closed the socket with code 1008, killing
+    // every channel at once, and the reconnect's resubscribe burst could
+    // trip it again (measured 2026-08-14: repeated 1008s, live data stalled
+    // for up to tens of seconds). With ccxt's default sharding each hash
+    // opens with its own connection carrying exactly one SUBSCRIBE, the
+    // burst limit is unreachable, and revisited pairs still reuse their
+    // memoized stream. Measured clean: book live in 1-2.5 s across
+    // switches, no 1008s. The per-switch TLS handshakes this costs are the
+    // lesser evil; do not re-add a low streamLimits cap.
+  },
+  // Default sharding has one visible cost: a 15-pair watchlist is 15 ticker
+  // hashes, so a fresh page load dials 15 sockets and the chips fill in one
+  // by one as each handshake completes. `batchTickers` multiplexes every
+  // ticker through ONE `watchTickers(symbols)` call instead — a single
+  // socket whose single SUBSCRIBE frame lists all the streams, which is one
+  // inbound message and therefore CANNOT trip the 5 msg/s limit above no
+  // matter how long the list grows. This is the native connector's batching,
+  // recovered through the one ccxt entry point that offers it.
+  batchTickers: true,
+  // ccxt caps the book it maintains at exactly this depth (`pro/binance.js`
+  // seeds `this.orderBook({}, limit)` from a REST snapshot of the same size),
+  // and Binance quotes BTC/USDT to the cent. At the 20 this shipped with, the
+  // whole book was a ~$2 band whose best level carried ~80% of the visible
+  // size, so the pane's cumulative bars pinned near full width and the ladder
+  // read as flat rather than the usual pyramid — measured live 2026-08-13,
+  // together with the depth pane and the liquidity heatmap, which bin the same
+  // levels and were seeing $4 of price. 500 reproduces OKX's 400-level `books`
+  // (the reference the pane's Auto grouping was tuned against) across the
+  // liquidity range: BTC 0.19% of price vs OKX's 0.36%, ETH/SOL/DOGE within
+  // 0.01% of it. 1000 overshoots — SOL and DOGE past a 15% band. The cost is
+  // one REST snapshot per subscribe (`/api/v3/depth` weight 25 at this limit,
+  // against a 6000/min budget); the WS side is the same `@depth@100ms` diff
+  // stream at any depth.
+  orderbookDepth: 500,
+  // ccxt's Binance book is diff-stream + REST snapshot: nothing can render
+  // until the socket dials, the SUBSCRIBE is acked, the snapshot downloads
+  // and the buffered diffs replay — 1.5-2.5 s, against venues that push the
+  // book in their first socket frame. The seed fires the same REST snapshot
+  // at subscribe time, in parallel with the dial, so the pane paints at
+  // plain REST latency and the stream's synced book takes over on its first
+  // frame.
+  seedOrderBook: true,
+  // The trade stream sends only NEW prints — the tape opens empty and waits
+  // for the market. A REST page of recent trades fills it immediately; safe
+  // here because Binance's candles come from watchOHLCV, never folded from
+  // the tape.
+  seedTrades: true,
+  // Binance spot answers trigger/stop probes from the SAME open-orders
+  // endpoint (the conditional branch is futures-only), so the second
+  // fetchOpenOrders pass would be a duplicate signed request.
+  separateTriggerOrderBook: false,
   // Spot cap is 1000/call; ccxt clamps anyway, but the bridge should not ask
   // for a page the venue will silently truncate.
   maxHistoryLimit: 1000,

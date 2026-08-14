@@ -43,6 +43,7 @@ import { pageEndMs } from '@pairlens/market-engine/candle-paging'
 import { createCexConnectorManifest } from '../../cex-connector'
 import { createCcxtConnectorPlugin } from '../index'
 import {
+  BYBIT_DEFAULT_BOOK_DEPTH,
   applyBybitCcxtUrls,
   clampBybitBookDepth,
   resolveBybitRegion,
@@ -102,8 +103,8 @@ export const bybitMarketConnectorManifest: PluginManifest =
     trades: true,
   })
 
-/** What the native asks for, and what ccxt's spot enum accepts unchanged. */
-const BOOK_DEPTH = clampBybitBookDepth(50)
+/** Through the clamp so the value is enum-checked, not just asserted to be. */
+const BOOK_DEPTH = clampBybitBookDepth(BYBIT_DEFAULT_BOOK_DEPTH)
 
 export const bybitCcxtVenue: CcxtVenueConfig = {
   exchangeId: 'bybit',
@@ -125,6 +126,10 @@ export const bybitCcxtVenue: CcxtVenueConfig = {
     },
   },
   orderbookDepth: BOOK_DEPTH,
+  // Empty-opening trade stream; candles come from watchOHLCV — safe to
+  // fill. 60, not the default 100: the spot recent-trades endpoint caps at
+  // 60 and ccxt passes the limit through unclamped.
+  seedTrades: 60,
   // Native parity: `fetchBybitCandles` clamps to 200 on every call, so the
   // 300-bar default the shell would otherwise pass still yields 200 bars.
   // ccxt's own cap is 1000; raising this is a paging change, not a port.

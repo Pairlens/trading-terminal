@@ -2426,6 +2426,8 @@
     "buildExamplesNote": "Xem ví dụ dev-starter và dev-sync trong repo để tham khảo cách hoạt động.",
     "applied": "Đã áp dụng",
     "applyTheme": "Áp dụng giao diện",
+    "themeActions": "Tác vụ giao diện",
+    "useDefaultTheme": "Dùng giao diện mặc định",
     "author": "Tác giả",
     "backToStore": "Store",
     "capabilities": "Khả năng",
@@ -2943,9 +2945,15 @@
     "columns": {
       "price": "Giá",
       "size": "Khối lượng",
+      "value": "Giá trị",
       "total": "Tổng",
       "open": "Mở cửa",
       "close": "Đóng cửa"
+    },
+    "sort": {
+      "by": "Sắp xếp theo {{column}}",
+      "ascending": "Đã sắp xếp theo {{column}}, tăng dần",
+      "descending": "Đã sắp xếp theo {{column}}, giảm dần"
     },
     "panel": {
       "expand": "Mở rộng bảng",
@@ -4140,6 +4148,8 @@
     "switchTo": "Chuyển sang {{venue}}"
   },
   "pairPicker": {
+    "popular": "Phổ biến",
+    "switchPair": "Đổi cặp giao dịch",
     "noPairsFound": "Không tìm thấy cặp nào.",
     "startTyping": "Bắt đầu nhập để tìm cặp giao dịch."
   },

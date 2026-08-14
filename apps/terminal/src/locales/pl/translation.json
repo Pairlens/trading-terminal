@@ -2448,6 +2448,8 @@
     "buildExamplesNote": "Zobacz przykłady dev-starter i dev-sync w repozytorium jako działające wzorce.",
     "applied": "Zastosowano",
     "applyTheme": "Zastosuj motyw",
+    "themeActions": "Akcje motywu",
+    "useDefaultTheme": "Użyj motywu domyślnego",
     "author": "Autor",
     "backToStore": "Sklep",
     "capabilities": "Możliwości",
@@ -2969,9 +2971,15 @@
     "columns": {
       "price": "Cena",
       "size": "Wielkość",
+      "value": "Wartość",
       "total": "Razem",
       "open": "Otwarcie",
       "close": "Zamknięcie"
+    },
+    "sort": {
+      "by": "Sortuj według: {{column}}",
+      "ascending": "Posortowano według: {{column}}, rosnąco",
+      "descending": "Posortowano według: {{column}}, malejąco"
     },
     "panel": {
       "expand": "Rozwiń panel",
@@ -4176,6 +4184,8 @@
     "switchTo": "Przełącz na {{venue}}"
   },
   "pairPicker": {
+    "popular": "Popularne",
+    "switchPair": "Zmień parę",
     "noPairsFound": "Nie znaleziono par.",
     "startTyping": "Zacznij pisać, aby wyszukać pary."
   },

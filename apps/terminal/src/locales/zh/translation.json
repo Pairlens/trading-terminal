@@ -2426,6 +2426,8 @@
     "buildExamplesNote": "参见仓库中的 dev-starter 和 dev-sync 示例以获取可运行的参考。",
     "applied": "已应用",
     "applyTheme": "应用主题",
+    "themeActions": "主题操作",
+    "useDefaultTheme": "使用默认主题",
     "author": "作者",
     "backToStore": "商店",
     "capabilities": "能力",
@@ -2943,9 +2945,15 @@
     "columns": {
       "price": "价格",
       "size": "数量",
+      "value": "金额",
       "total": "累计",
       "open": "开盘",
       "close": "收盘"
+    },
+    "sort": {
+      "by": "按{{column}}排序",
+      "ascending": "已按{{column}}升序排序",
+      "descending": "已按{{column}}降序排序"
     },
     "panel": {
       "expand": "展开面板",
@@ -4140,6 +4148,8 @@
     "switchTo": "切换到 {{venue}}"
   },
   "pairPicker": {
+    "popular": "热门",
+    "switchPair": "更改交易对",
     "noPairsFound": "未找到交易对。",
     "startTyping": "开始输入以搜索交易对。"
   },

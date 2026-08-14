@@ -32,7 +32,11 @@
 import { pageEndMs } from '@pairlens/market-engine/candle-paging'
 import { createCexConnectorManifest } from '../../cex-connector'
 import { createCcxtConnectorPlugin } from '../index'
-import { withKucoinQuirks } from './kucoin-exchange'
+import {
+  captureKucoinWsUrls,
+  seedKucoinWsUrls,
+  withKucoinQuirks,
+} from './kucoin-exchange'
 import { requireKucoinCcxtUrls } from './kucoin-regions'
 import type { CcxtExchangeCtor, CcxtVenueConfig } from '../types'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
@@ -108,6 +112,13 @@ export const kucoinCcxtVenue: CcxtVenueConfig = {
     { key: 'passphrase', required: true },
   ],
   defaultMode: 'paper',
+  // ccxt has no KuCoin sandbox (`urls.test` is declared-but-undefined, so
+  // `setSandboxMode` cannot take), which used to make every paper order a
+  // hard refusal. `test: true` is ccxt's documented dry run instead: the spot
+  // order routes to `/api/v1/orders/test`, which validates size, precision
+  // and balance against the REAL account and never reaches the matching
+  // engine.
+  paperOrderParams: { test: true },
   requiresDesktop: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/kucoin.js')
@@ -123,9 +134,21 @@ export const kucoinCcxtVenue: CcxtVenueConfig = {
       fetchMarkets: { types: ['spot'], fetchTickersFees: false },
     },
   },
+  // The negotiated bullet URL (a serial REST POST in front of every cold WS
+  // connect) survives the host's discard-and-rebuild — the native cached it
+  // for 23 h as an explicit market-switch latency fix.
+  captureOptions: captureKucoinWsUrls,
+  seedOptions: seedKucoinWsUrls,
   // 5 | 20 | 50 | 100 or ccxt throws; 50 is the native's channel and needs no
   // REST snapshot to seed.
   orderbookDepth: 50,
+  // Buffered-delta book (ccxt waits 5 depth frames, then REST-syncs): the
+  // seed paints at REST latency instead. 100, not `orderbookDepth` — the
+  // public REST book serves exactly 20 or 100 levels, and 50 throws.
+  seedOrderBook: 100,
+  // The trade stream opens empty; candles come from watchOHLCV, never the
+  // tape, so the REST fill is safe.
+  seedTrades: true,
   maxHistoryLimit: 1500,
   // Nudged to strictly-older here and translated into ccxt's `since` argument
   // by the subclass — KuCoin's own request has no `until`.

@@ -2426,6 +2426,8 @@
     "buildExamplesNote": "Lihat contoh dev-starter dan dev-sync di repo untuk referensi yang berfungsi.",
     "applied": "Diterapkan",
     "applyTheme": "Terapkan tema",
+    "themeActions": "Tindakan tema",
+    "useDefaultTheme": "Gunakan tema bawaan",
     "author": "Penulis",
     "backToStore": "Store",
     "capabilities": "Kapabilitas",
@@ -2943,9 +2945,15 @@
     "columns": {
       "price": "Harga",
       "size": "Ukuran",
+      "value": "Nilai",
       "total": "Total",
       "open": "Pembukaan",
       "close": "Penutupan"
+    },
+    "sort": {
+      "by": "Urutkan menurut {{column}}",
+      "ascending": "Diurutkan menurut {{column}}, menaik",
+      "descending": "Diurutkan menurut {{column}}, menurun"
     },
     "panel": {
       "expand": "Buka panel",
@@ -4140,6 +4148,8 @@
     "switchTo": "Beralih ke {{venue}}"
   },
   "pairPicker": {
+    "popular": "Populer",
+    "switchPair": "Ganti pair",
     "noPairsFound": "Tidak ada pair yang ditemukan.",
     "startTyping": "Mulai mengetik untuk mencari pair."
   },

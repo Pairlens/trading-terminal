@@ -6,7 +6,12 @@ import {
   kucoinCcxtVenue,
   kucoinMarketConnectorManifest,
 } from '../venues/kucoin'
-import { kucoinPagedSince, withKucoinQuirks } from '../venues/kucoin-exchange'
+import {
+  captureKucoinWsUrls,
+  kucoinPagedSince,
+  seedKucoinWsUrls,
+  withKucoinQuirks,
+} from '../venues/kucoin-exchange'
 import {
   KUCOIN_US_ERROR,
   requireKucoinCcxtUrls,
@@ -211,6 +216,60 @@ describe('withKucoinQuirks', () => {
     }
     await exchange.fetchOHLCV('BTC/USDT', '1h', undefined, 50, {})
     expect(calls[0]?.args).toEqual(['BTC/USDT', '1h', undefined, 50, {}])
+  })
+
+  it('captures the bullet memo and re-seeds it inside the TTL', () => {
+    const memo = { public: Promise.resolve('wss://x/?token=1') }
+    const first = { options: { urls: memo } } as unknown as Parameters<
+      typeof captureKucoinWsUrls
+    >[0]
+    const captured = captureKucoinWsUrls(first)
+    const second = { options: {} } as unknown as Parameters<
+      typeof seedKucoinWsUrls
+    >[0]
+    seedKucoinWsUrls(second, captured)
+    expect(second.options['urls']).toBe(memo)
+  })
+
+  it('refuses a capture past the 23 h bullet TTL', () => {
+    const second = { options: {} } as unknown as Parameters<
+      typeof seedKucoinWsUrls
+    >[0]
+    seedKucoinWsUrls(second, {
+      urls: { public: Promise.resolve('wss://x/?token=old') },
+      capturedAt: Date.now() - 24 * 60 * 60 * 1000,
+    })
+    expect(second.options['urls']).toBeUndefined()
+  })
+
+  it('gives a carried bullet URL one dial before the no-client rule retires it', async () => {
+    const calls: Array<Call> = []
+    const Exchange = fakeKucoinBase(calls)
+    const exchange = new Exchange({}) as unknown as {
+      options: Record<string, unknown>
+      clients: Record<string, unknown>
+      negotiate: (privateChannel: boolean) => Promise<string | undefined>
+    }
+    const carried = 'wss://ws-api-spot.kucoin.com/?token=carried'
+    seedKucoinWsUrls(
+      exchange as unknown as Parameters<typeof seedKucoinWsUrls>[0],
+      { urls: { public: Promise.resolve(carried) }, capturedAt: Date.now() },
+    )
+    await Promise.resolve()
+
+    // First negotiate: no client behind the memo, but it is freshly carried —
+    // the memo survives so the first dial can reuse the token.
+    await exchange.negotiate(false)
+    expect(
+      (exchange.options['urls'] as Record<string, unknown>)['public'],
+    ).toBeDefined()
+
+    // Still no client on the next negotiate: the exemption is spent and the
+    // normal dead-URL rule retires it.
+    await exchange.negotiate(false)
+    expect(
+      (exchange.options['urls'] as Record<string, unknown>)['public'],
+    ).toBeUndefined()
   })
 
   it('re-negotiates when the memoized bullet URL has no client left', async () => {

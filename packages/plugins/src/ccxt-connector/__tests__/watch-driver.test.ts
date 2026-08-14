@@ -54,7 +54,17 @@ class FakeExchange {
   readonly timeframes: Record<string, string> = {}
   readonly urls: Record<string, unknown> = {}
   readonly options: Record<string, unknown> = {}
-  markets: Record<string, unknown> | undefined = { 'BTC/USDT': {} }
+  // Every symbol the suite subscribes must resolve here — the ticker fan
+  // (correctly) excludes symbols absent from the market table.
+  markets: Record<string, unknown> | undefined = {
+    'BTC/USDT': {},
+    'ETH/USDT': {},
+    'SOL/USDT': {},
+    'LIVE/USDT': {},
+    ...Object.fromEntries(
+      Array.from({ length: 12 }, (_, i) => [`P${i}/USDT`, {}]),
+    ),
+  }
   closed = false
   /** Every watch call made on this instance, newest last. */
   readonly calls: Array<string> = []
@@ -71,6 +81,19 @@ class FakeExchange {
     this.park<Array<CcxtOhlcvRow>>(`ohlcv:${symbol}:${timeframe ?? ''}`)
   watchTicker = (symbol: string) =>
     this.park<Record<string, unknown>>(`ticker:${symbol}`)
+  watchTickers?: (
+    symbols?: Array<string>,
+  ) => Promise<Record<string, Record<string, unknown>>> = (symbols) =>
+    this.park<Record<string, Record<string, unknown>>>(
+      `tickers:${(symbols ?? []).join(',')}`,
+    )
+  /** ccxt's per-symbol ticker cache, swept by the fan after any resolution. */
+  tickers?: Record<string, Record<string, unknown>>
+  /** Every retired set handed to `unWatchTickers`, joined, newest last. */
+  readonly unWatched: Array<string> = []
+  unWatchTickers = async (symbols?: Array<string>) => {
+    this.unWatched.push((symbols ?? []).join(','))
+  }
   watchOrderBook = (symbol: string) =>
     this.park<{ bids: Array<Array<number>>; asks: Array<Array<number>> }>(
       `book:${symbol}`,
@@ -78,7 +101,29 @@ class FakeExchange {
   watchTrades = (symbol: string) =>
     this.park<Array<Record<string, unknown>>>(`trades:${symbol}`)
   fetchOHLCV = async () => []
-  fetchTickers = async () => ({})
+  /** What REST `fetchTickers` answers — the fan's first-paint seed source. */
+  restTickers: Record<string, Record<string, unknown>> = {}
+  fetchTickers = async () => this.restTickers
+  /** What REST `fetchOrderBook` answers — the book's first-paint seed. */
+  restBook: {
+    bids: Array<Array<number>>
+    asks: Array<Array<number>>
+    timestamp?: number
+  } | null = null
+  /** Deferred gate: when set, `fetchOrderBook` waits on it before answering. */
+  restBookGate: Promise<void> | null = null
+  fetchOrderBook = async (symbol: string, limit?: number) => {
+    this.calls.push(`restbook:${symbol}:${limit ?? ''}`)
+    if (this.restBookGate) await this.restBookGate
+    if (!this.restBook) throw new Error('no rest book')
+    return this.restBook
+  }
+  /** What REST `fetchTrades` answers — the tape's first-paint seed. */
+  restTrades: Array<Record<string, unknown>> = []
+  fetchTrades = async (symbol: string, _since?: number, limit?: number) => {
+    this.calls.push(`resttrades:${symbol}:${limit ?? ''}`)
+    return this.restTrades
+  }
   setMarkets = () => this.markets
   loadMarkets = async () => this.markets
   market = () => ({})
@@ -117,6 +162,16 @@ class FakeHost implements ExchangeHostLike {
   private instance: FakeExchange | null = null
   /** Set to make `acquire()` reject, exercising the acquire-failure path. */
   failAcquire = false
+  /** Built exchanges get no `watchTickers`, exercising the fan fallback. */
+  stripBatch = false
+  /** Copied onto every built exchange's `restTickers` (the seed source). */
+  seedTickers: Record<string, Record<string, unknown>> = {}
+  /** Copied onto every built exchange's `restBook`. */
+  seedBook: FakeExchange['restBook'] = null
+  /** Copied onto every built exchange's `restBookGate`. */
+  seedBookGate: Promise<void> | null = null
+  /** Copied onto every built exchange's `restTrades`. */
+  seedTrades: Array<Record<string, unknown>> = []
 
   peek(): CcxtExchangeLike | null {
     return this.instance as unknown as CcxtExchangeLike | null
@@ -133,6 +188,11 @@ class FakeHost implements ExchangeHostLike {
     if (this.failAcquire) throw new Error('acquire failed')
     if (!this.instance) {
       this.instance = new FakeExchange()
+      if (this.stripBatch) this.instance.watchTickers = undefined
+      this.instance.restTickers = this.seedTickers
+      this.instance.restBook = this.seedBook
+      this.instance.restBookGate = this.seedBookGate
+      this.instance.restTrades = this.seedTrades
       this.built.push(this.instance)
     }
     return {
@@ -457,6 +517,104 @@ describe('CcxtStreamHub — reconnect policy', () => {
   })
 })
 
+describe('CcxtStreamHub — trades dedup', () => {
+  const rawTrade = (id: string) => ({
+    id,
+    price: 100,
+    amount: 1,
+    side: 'buy',
+    timestamp: 1_700_000_000_000,
+  })
+
+  it('drops already-delivered prints, so a reconnect snapshot cannot replay the tape', async () => {
+    const { hub, host } = makeHub()
+    const seen: Array<{ trades: Array<{ id: string }> }> = []
+    hub.acquire({ channel: 'trades', pair: 'BTC-USDT' }, '', (d) =>
+      seen.push(d as { trades: Array<{ id: string }> }),
+    )
+    const exchange = await host.current()
+    await waitFor(() => exchange.parked > 0)
+    exchange.settle([rawTrade('t1'), rawTrade('t2')])
+    await waitFor(() => seen.length === 1)
+    expect(seen[0]?.trades.map((t) => t.id)).toEqual(['t1', 't2'])
+
+    // The venue replays t2 in its next frame (a snapshot after a reconnect
+    // does exactly this) alongside a genuinely new print.
+    await waitFor(() => exchange.parked > 0)
+    exchange.settle([rawTrade('t2'), rawTrade('t3')])
+    await waitFor(() => seen.length === 2)
+    expect(seen[1]?.trades.map((t) => t.id)).toEqual(['t3'])
+    await hub.destroy()
+  })
+})
+
+describe('CcxtStreamHub — orphaned channels', () => {
+  it('rebuilds the exchange after enough releases with no wire unsubscribe', async () => {
+    const { hub, host } = makeHub()
+    // A key that stays live for the whole test — the rebuild only pays off
+    // while someone is still listening.
+    hub.acquire({ channel: 'ticker', pair: 'LIVE-USDT' }, '', () => {})
+    const first = await host.current()
+    expect(first.has['unWatchTicker']).toBeUndefined()
+
+    // Visit and leave pairs on a venue with no unWatch* — every release
+    // orphans its channel on the socket.
+    for (let i = 0; i < 12; i++) {
+      const release = hub.acquire(
+        { channel: 'ticker', pair: `P${i}-USDT` },
+        '',
+        () => {},
+      )
+      release()
+    }
+
+    // The twelfth orphan crosses the threshold: the instance is discarded and
+    // the surviving key re-enters against a fresh one.
+    await waitFor(() => host.built.length === 2)
+    expect(host.generation).toBe(1)
+    await hub.destroy()
+  })
+
+  it('does not rebuild when the venue can unsubscribe on the wire', async () => {
+    const { hub, host } = makeHub()
+    hub.acquire({ channel: 'ticker', pair: 'LIVE-USDT' }, '', () => {})
+    const exchange = await host.current()
+    exchange.has['unWatchTicker'] = true
+
+    for (let i = 0; i < 20; i++) {
+      const release = hub.acquire(
+        { channel: 'ticker', pair: `P${i}-USDT` },
+        '',
+        () => {},
+      )
+      release()
+    }
+
+    await sleep(10)
+    expect(host.built.length).toBe(1)
+    expect(host.generation).toBe(0)
+    await hub.destroy()
+  })
+
+  it('leaves an all-released hub to the grace close, not a rebuild', async () => {
+    const { hub, host } = makeHub({ gracePeriodMs: 15 })
+    for (let i = 0; i < 15; i++) {
+      const release = hub.acquire(
+        { channel: 'ticker', pair: `P${i}-USDT` },
+        '',
+        () => {},
+      )
+      release()
+    }
+    // Nothing is listening: the threshold path must not fire a rebuild —
+    // the grace timer closes the host on its own.
+    expect(host.built.length).toBe(1)
+    await waitFor(() => host.generation === 1)
+    expect(host.built.length).toBe(1)
+    await hub.destroy()
+  })
+})
+
 describe('CcxtStreamHub — teardown', () => {
   it('closes the exchange after the grace period once the last key is released', async () => {
     const { hub, host } = makeHub()
@@ -531,5 +689,329 @@ describe('CcxtStreamHub — teardown', () => {
     const built = host.built.length
     await sleep(120)
     expect(host.built.length).toBe(built)
+  })
+})
+
+// ── Ticker fan (batchTickers venues) ─────────────────────────────────────
+
+const BATCH_VENUE: CcxtVenueConfig = { ...VENUE, batchTickers: true }
+
+/** Fan harness: batched venue, near-instant retire delay. */
+function makeFanHub(overrides: Record<string, unknown> = {}): HubHarness {
+  return makeHub({ venue: BATCH_VENUE, fanRetireDelayMs: 5, ...overrides })
+}
+
+const TICKER_FRAME = (last: number) => ({
+  last,
+  timestamp: 1_700_000_000_000,
+})
+
+describe('CcxtStreamHub — ticker fan', () => {
+  it('multiplexes every ticker through one watchTickers call and routes by symbol', async () => {
+    const { hub, host } = makeFanHub()
+    const btc: Array<unknown> = []
+    const eth: Array<unknown> = []
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', (d) => btc.push(d))
+    hub.acquire({ channel: 'ticker', pair: 'ETH-USDT' }, '', (d) => eth.push(d))
+    hub.acquire({ channel: 'ticker', pair: 'SOL-USDT' }, '', () => {})
+
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+    // One batched call for the whole synchronous flush — not one per pair,
+    // and no singular watchTicker calls at all.
+    expect(exchange.calls).toEqual(['tickers:BTC/USDT,ETH/USDT,SOL/USDT'])
+
+    exchange.settle({ 'ETH/USDT': TICKER_FRAME(2_000) })
+    await waitFor(() => eth.length > 0)
+    expect(btc.length).toBe(0)
+    const update = eth[0] as { type: string; ticker: { last: number } }
+    expect(update.type).toBe('ticker')
+    expect(update.ticker.last).toBe(2_000)
+
+    // The loop re-enters with the same set: same batched call again.
+    await waitFor(() => exchange.calls.length >= 2)
+    expect(exchange.calls[1]).toBe('tickers:BTC/USDT,ETH/USDT,SOL/USDT')
+    await hub.destroy()
+  })
+
+  it('seeds first paint over REST — a chip never waits on a quiet stream', async () => {
+    const { hub, host } = makeFanHub()
+    host.seedTickers = { 'BTC/USDT': TICKER_FRAME(60_000) }
+    const btc: Array<unknown> = []
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', (d) => btc.push(d))
+
+    // No watch frame is ever settled — the REST seed alone paints the chip.
+    await waitFor(() => btc.length > 0)
+    expect((btc[0] as { ticker: { last: number } }).ticker.last).toBe(60_000)
+
+    // A late joiner on the seeded key replays the seeded frame.
+    const replayed: Array<unknown> = []
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', (d) =>
+      replayed.push(d),
+    )
+    expect(replayed.length).toBe(1)
+    await hub.destroy()
+  })
+
+  it('sweeps the ticker cache on each resolution, so a batched burst starves nobody', async () => {
+    const { hub, host } = makeFanHub()
+    const btc: Array<unknown> = []
+    const eth: Array<unknown> = []
+    const sol: Array<unknown> = []
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', (d) => btc.push(d))
+    hub.acquire({ channel: 'ticker', pair: 'ETH-USDT' }, '', (d) => eth.push(d))
+    hub.acquire({ channel: 'ticker', pair: 'SOL-USDT' }, '', (d) => sol.push(d))
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+
+    // A burst arrived on the socket: only SOL's frame resolved the parked
+    // future; BTC and ETH landed in the cache alone.
+    exchange.tickers = {
+      'BTC/USDT': TICKER_FRAME(60_000),
+      'ETH/USDT': TICKER_FRAME(2_000),
+    }
+    exchange.settle({ 'SOL/USDT': TICKER_FRAME(150) })
+    await waitFor(() => sol.length > 0)
+    await waitFor(() => btc.length > 0 && eth.length > 0)
+    expect((btc[0] as { ticker: { last: number } }).ticker.last).toBe(60_000)
+
+    // Unchanged cache entries (same object identity) are not re-delivered on
+    // the next resolution; a REPLACED entry is.
+    exchange.tickers['ETH/USDT'] = TICKER_FRAME(2_001)
+    exchange.settle({ 'SOL/USDT': TICKER_FRAME(151) })
+    await waitFor(() => sol.length >= 2 && eth.length >= 2)
+    expect(btc.length).toBe(1)
+    expect((eth[1] as { ticker: { last: number } }).ticker.last).toBe(2_001)
+    await hub.destroy()
+  })
+
+  it('a late joiner resubscribes the widened set and retires the old one', async () => {
+    const { hub, host } = makeFanHub()
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', () => {})
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+    expect(exchange.calls[0]).toBe('tickers:BTC/USDT')
+
+    hub.acquire({ channel: 'ticker', pair: 'ETH-USDT' }, '', () => {})
+    await waitFor(() => exchange.calls.includes('tickers:BTC/USDT,ETH/USDT'))
+    // New SUBSCRIBE first, then the superseded set is unsubscribed.
+    await waitFor(() => exchange.unWatched.length > 0)
+    expect(exchange.unWatched).toEqual(['BTC/USDT'])
+    await hub.destroy()
+  })
+
+  it('a release shrinks the set and retires the superseded subscription', async () => {
+    const { hub, host } = makeFanHub()
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', () => {})
+    const releaseEth = hub.acquire(
+      { channel: 'ticker', pair: 'ETH-USDT' },
+      '',
+      () => {},
+    )
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+    expect(exchange.calls[0]).toBe('tickers:BTC/USDT,ETH/USDT')
+
+    releaseEth()
+    await waitFor(() => exchange.calls.includes('tickers:BTC/USDT'))
+    await waitFor(() => exchange.unWatched.length > 0)
+    expect(exchange.unWatched).toEqual(['BTC/USDT,ETH/USDT'])
+    await hub.destroy()
+  })
+
+  it('survives a forced reconnect: the fresh instance gets the full set again', async () => {
+    const { hub, host, wake } = makeFanHub()
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', () => {})
+    hub.acquire({ channel: 'ticker', pair: 'ETH-USDT' }, '', () => {})
+    const first = await host.current()
+    await waitFor(() => first.calls.length > 0)
+
+    wake.fire()
+    await waitFor(() => host.built.length === 2)
+    const second = host.built[1]
+    await waitFor(() => second.calls.length > 0)
+    expect(second.calls[0]).toBe('tickers:BTC/USDT,ETH/USDT')
+    await hub.destroy()
+  })
+
+  it('excludes a pair the venue does not list, instead of poisoning the batch', async () => {
+    const { hub, host } = makeFanHub()
+    const btc: Array<unknown> = []
+    const alien: Array<unknown> = []
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', (d) => btc.push(d))
+    // Not in the fake's market table — `watchTickers` would throw on it and
+    // take every other chip down with it.
+    hub.acquire({ channel: 'ticker', pair: 'ALIEN-XXX' }, '', (d) =>
+      alien.push(d),
+    )
+
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+    expect(exchange.calls[0]).toBe('tickers:BTC/USDT')
+
+    exchange.settle({ 'BTC/USDT': TICKER_FRAME(60_000) })
+    await waitFor(() => btc.length > 0)
+    expect(alien.length).toBe(0)
+    await hub.destroy()
+  })
+
+  it('an unresolvable joiner does not retire the live subscription', async () => {
+    const { hub, host } = makeFanHub()
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', () => {})
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+
+    // The epoch bumps, but the RESOLVABLE set is unchanged — unsubscribing
+    // the "retired" set would tear down the live streams.
+    hub.acquire({ channel: 'ticker', pair: 'ALIEN-XXX' }, '', () => {})
+    await sleep(60)
+    expect(exchange.unWatched).toEqual([])
+    await hub.destroy()
+  })
+
+  it('falls back to per-symbol loops when the class lacks watchTickers', async () => {
+    const { hub, host } = makeFanHub()
+    host.stripBatch = true
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', () => {})
+    hub.acquire({ channel: 'ticker', pair: 'ETH-USDT' }, '', () => {})
+
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length >= 2)
+    expect([...exchange.calls].sort()).toEqual([
+      'ticker:BTC/USDT',
+      'ticker:ETH/USDT',
+    ])
+    // Later tickers go straight down the per-symbol path too.
+    hub.acquire({ channel: 'ticker', pair: 'SOL-USDT' }, '', () => {})
+    await waitFor(() => exchange.calls.includes('ticker:SOL/USDT'))
+    await hub.destroy()
+  })
+})
+
+// ── Order-book first-paint seed (seedOrderBook venues) ───────────────────
+
+const SEED_BOOK_VENUE: CcxtVenueConfig = {
+  ...VENUE,
+  seedOrderBook: true,
+  orderbookDepth: 500,
+}
+
+describe('CcxtStreamHub — order-book seed', () => {
+  it('paints the book from REST before the stream has delivered anything', async () => {
+    const { hub, host } = makeHub({ venue: SEED_BOOK_VENUE })
+    host.seedBook = {
+      bids: [[100, 1]],
+      asks: [[101, 2]],
+      timestamp: 1_700_000_000_000,
+    }
+    const frames: Array<unknown> = []
+    hub.acquire({ channel: 'orderbook', pair: 'BTC-USDT' }, '', (d) =>
+      frames.push(d),
+    )
+
+    // The watch call is parked and never settled — REST alone paints.
+    await waitFor(() => frames.length > 0)
+    expect(frames[0]).toEqual({
+      type: 'snapshot',
+      bids: [[100, 1]],
+      asks: [[101, 2]],
+      ts: 1_700_000_000_000,
+    })
+    const exchange = await host.current()
+    // The seed asked for the venue's configured depth.
+    expect(exchange.calls).toContain('restbook:BTC/USDT:500')
+    await hub.destroy()
+  })
+
+  it('a live frame that wins the race is never overwritten by the stale seed', async () => {
+    const { hub, host } = makeHub({ venue: SEED_BOOK_VENUE })
+    let releaseGate = () => {}
+    host.seedBookGate = new Promise<void>((resolve) => {
+      releaseGate = resolve
+    })
+    host.seedBook = { bids: [[1, 1]], asks: [[2, 2]] }
+    const frames: Array<unknown> = []
+    hub.acquire({ channel: 'orderbook', pair: 'BTC-USDT' }, '', (d) =>
+      frames.push(d),
+    )
+    const exchange = await host.current()
+    await waitFor(() => exchange.parked > 0)
+
+    // The stream's synced snapshot lands while the REST seed is in flight.
+    exchange.settle({
+      bids: [[100, 5]],
+      asks: [[101, 6]],
+      timestamp: 1_700_000_000_500,
+    })
+    await waitFor(() => frames.length > 0)
+    releaseGate()
+    await sleep(10)
+    // Only the live frames — the seed saw `cached` set and stood down.
+    expect(frames.length).toBeGreaterThan(0)
+    for (const frame of frames) {
+      expect((frame as { bids: Array<Array<number>> }).bids[0]).toEqual([
+        100, 5,
+      ])
+    }
+    await hub.destroy()
+  })
+
+  it('a venue without the flag never fetches a REST book', async () => {
+    const { hub, host } = makeHub()
+    host.seedBook = { bids: [[1, 1]], asks: [[2, 2]] }
+    hub.acquire({ channel: 'orderbook', pair: 'BTC-USDT' }, '', () => {})
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+    await sleep(10)
+    expect(exchange.calls.some((c) => c.startsWith('restbook:'))).toBe(false)
+    await hub.destroy()
+  })
+})
+
+// ── Trades first-paint seed (seedTrades venues) ──────────────────────────
+
+const SEED_TRADES_VENUE: CcxtVenueConfig = { ...VENUE, seedTrades: true }
+
+describe('CcxtStreamHub — trades seed', () => {
+  const rawTrade = (id: string) => ({
+    id,
+    price: 100,
+    amount: 1,
+    side: 'buy',
+    timestamp: 1_700_000_000_000,
+  })
+
+  it('fills the tape from REST and the stream overlap dedupes to nothing', async () => {
+    const { hub, host } = makeHub({ venue: SEED_TRADES_VENUE })
+    host.seedTrades = [rawTrade('t1'), rawTrade('t2')]
+    const seen: Array<{ trades: Array<{ id: string }> }> = []
+    hub.acquire({ channel: 'trades', pair: 'BTC-USDT' }, '', (d) =>
+      seen.push(d as { trades: Array<{ id: string }> }),
+    )
+
+    // The parked watch is never settled — REST alone fills the tape.
+    await waitFor(() => seen.length === 1)
+    expect(seen[0]?.trades.map((t) => t.id)).toEqual(['t1', 't2'])
+    const exchange = await host.current()
+    expect(exchange.calls).toContain('resttrades:BTC/USDT:100')
+
+    // The stream's first frame replays a seeded print next to a new one:
+    // only the new one comes through.
+    await waitFor(() => exchange.parked > 0)
+    exchange.settle([rawTrade('t2'), rawTrade('t3')])
+    await waitFor(() => seen.length === 2)
+    expect(seen[1]?.trades.map((t) => t.id)).toEqual(['t3'])
+    await hub.destroy()
+  })
+
+  it('a venue without the flag never fetches REST trades', async () => {
+    const { hub, host } = makeHub()
+    host.seedTrades = [rawTrade('t1')]
+    hub.acquire({ channel: 'trades', pair: 'BTC-USDT' }, '', () => {})
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+    await sleep(10)
+    expect(exchange.calls.some((c) => c.startsWith('resttrades:'))).toBe(false)
+    await hub.destroy()
   })
 })
