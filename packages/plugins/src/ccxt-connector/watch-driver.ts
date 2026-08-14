@@ -76,9 +76,11 @@ const MAX_IMMEDIATE_REENTRIES = 3
 /**
  * Releases with no wire unsubscribe tolerated before the exchange is rebuilt.
  *
- * Five venues (OKX, Bitget, Kraken, Crypto.com, Upbit) expose no `unWatch*`
- * at all, and the grace close only arms at zero subscriptions — which never
- * happens while a chart is open. Every pair the user visits would leave its
+ * Several venues (Kraken and Upbit expose no `unWatch*` at all; OKX,
+ * Crypto.com and Gate cover only some channels; Coinbase's is suppressed as
+ * actively harmful — see `CcxtVenueConfig.suppressUnwatch`), and the grace
+ * close only arms at zero subscriptions — which never happens while a chart
+ * is open. Every pair the user visits would leave its
  * channels subscribed for the whole session, each frame still parsed on the
  * main thread and appended to ccxt's per-symbol caches. Past this many
  * orphans, one forced rebuild clears clients, subscriptions and caches
@@ -88,6 +90,16 @@ const MAX_IMMEDIATE_REENTRIES = 3
  * long session cannot accumulate dozens of dead channels.
  */
 const ORPHANED_CHANNEL_REBUILD_THRESHOLD = 12
+/**
+ * How long past the threshold the orphan rebuild waits before firing. The
+ * threshold is crossed DURING a pair switch (releases are what orphan
+ * channels), and rebuilding right then tears down the new pair's streams
+ * mid-handshake — measured live 2026-08-14 as a +700-900 ms first-frame
+ * penalty on every third switch (OKX, Crypto.com). Five seconds later the
+ * panes are painted from their seeds and caches, the reconnect happens
+ * against a settled subscription set, and the brief re-watch is invisible.
+ */
+const ORPHAN_REBUILD_SETTLE_MS = 5_000
 /**
  * How long a retired ticker-fan set keeps its wire subscription before the
  * `unWatchTickers` cleanup fires. The new set's SUBSCRIBE goes out first (the
@@ -163,6 +175,8 @@ export type CcxtStreamHubOptions = {
   wakeSource?: WakeSource | null
   /** Test knob for `FAN_RETIRE_DELAY_MS`. */
   fanRetireDelayMs?: number
+  /** Test knob for `ORPHAN_REBUILD_SETTLE_MS`. */
+  orphanRebuildSettleMs?: number
   onReconnectScheduled?: (delayMs: number, attempt: number, key: string) => void
   onError?: (scope: string, error: unknown) => void
 }
@@ -198,6 +212,8 @@ export class CcxtStreamHub {
   /** Releases the venue could not unsubscribe on the wire, per instance. */
   private orphanedChannels = 0
   private orphanedGeneration = -1
+  /** Pending deferred orphan rebuild — see `noteOrphanedChannel`. */
+  private orphanRebuildTimer: ReturnType<typeof setTimeout> | null = null
   private releaseWake: (() => void) | null = null
   /** Backoff sleeps that a wake event can cut short. */
   private sleepers = new Set<() => void>()
@@ -302,6 +318,15 @@ export class CcxtStreamHub {
       }
       if (current.channel === 'candles') this.startBackfill(current)
       if (
+        current.channel === 'ticker' &&
+        this.opts.venue.seedTicker === true &&
+        !this.fansTickers('ticker')
+      ) {
+        // Batch venues never take this path — the fan runs its own batched
+        // REST seed over the whole set.
+        void this.seedTickerFirstPaint(current)
+      }
+      if (
         current.channel === 'orderbook' &&
         (this.opts.venue.seedOrderBook ?? false) !== false
       ) {
@@ -351,6 +376,10 @@ export class CcxtStreamHub {
     this.wakeSleepers()
     this.stopLiveness()
     this.cancelGrace()
+    if (this.orphanRebuildTimer) {
+      clearTimeout(this.orphanRebuildTimer)
+      this.orphanRebuildTimer = null
+    }
     this.releaseWake?.()
     this.releaseWake = null
     await this.opts.host.destroy()
@@ -744,6 +773,43 @@ export class CcxtStreamHub {
   }
 
   /**
+   * First-paint seed for a per-symbol ticker key on a `seedTicker` venue —
+   * the singular counterpart of `seedFanFirstPaint`, for venues whose ticker
+   * stream emits only when the pair trades. One REST `fetchTicker` paints
+   * the price header at REST latency; a WS frame that beats it wins via the
+   * `cached === null` guard, and failure is silent (accelerant only).
+   */
+  private async seedTickerFirstPaint(sub: Sub): Promise<void> {
+    try {
+      const lease = await this.opts.host.acquire()
+      if (this.destroyed || this.subs.get(sub.key) !== sub) return
+      const exchange = lease.exchange
+      // The venue may route the seed at a cheaper endpoint than the unified
+      // fetchTicker — see `seedTickerFetch` (MEXC's weight-25 ticker/24hr
+      // starved the chart backfill queued behind it).
+      const venueFetch = this.opts.venue.seedTickerFetch
+      let raw: CcxtTickerLike
+      if (venueFetch) {
+        this.opts.primeMarkets?.(exchange, sub.pair)
+        raw = await venueFetch(exchange, sub.symbol)
+      } else if (typeof exchange.fetchTicker === 'function') {
+        this.opts.primeMarkets?.(exchange, sub.pair)
+        raw = await exchange.fetchTicker(sub.symbol)
+      } else {
+        return
+      }
+      if (this.destroyed || this.subs.get(sub.key) !== sub) return
+      if (sub.cached !== null) return
+      this.deliver(sub, {
+        type: 'ticker' as const,
+        ticker: parseCcxtTicker(raw),
+      })
+    } catch {
+      // The stream owns correctness; its next frame paints the header.
+    }
+  }
+
+  /**
    * First-paint seed for a tape key on a `seedTrades` venue: the stream
    * opens EMPTY on these venues, so a REST page of recent prints fills the
    * pane immediately. Stands down entirely once any live print has been
@@ -752,6 +818,14 @@ export class CcxtStreamHub {
    */
   private async seedTradesFirstPaint(sub: Sub): Promise<void> {
     try {
+      // Serial-throttler venues push the seed past the subscribe burst so
+      // the chart backfill keeps the first queue slot — see the flag's doc.
+      const delayMs = this.opts.venue.seedTradesDelayMs ?? 0
+      if (delayMs > 0) {
+        await this.sleep(delayMs)
+        if (this.destroyed || this.subs.get(sub.key) !== sub) return
+        if (sub.recentTradeIds && sub.recentTradeIds.size > 0) return
+      }
       const lease = await this.opts.host.acquire()
       if (this.destroyed || this.subs.get(sub.key) !== sub) return
       if (typeof lease.exchange.fetchTrades !== 'function') return
@@ -924,6 +998,13 @@ export class CcxtStreamHub {
   private unwatch(sub: Sub): void {
     const exchange = this.opts.host.peek()
     if (!exchange) return
+    // Some venues' unWatch* is worse than none: Coinbase's poisons the whole
+    // instance (see the flag's doc). Orphan-count instead — the threshold
+    // rebuild sheds the channels wholesale.
+    if (this.opts.venue.suppressUnwatch === true) {
+      this.noteOrphanedChannel()
+      return
+    }
     const call =
       sub.channel === 'candles'
         ? exchange.has['unWatchOHLCV'] === true
@@ -956,6 +1037,13 @@ export class CcxtStreamHub {
    * rebuild (any reason) starts a clean socket, so the generation stamp
    * resets it — and a rebuild is only worth one when someone is still
    * listening: with no subscribers the grace close is already on its way.
+   *
+   * The rebuild itself is DEFERRED, not immediate: the threshold is always
+   * crossed by the releases of a pair switch, and firing right then tears
+   * down the streams the new pair just opened (see the settle constant's
+   * doc). At fire time the rebuild re-checks everything — a wake/region
+   * rebuild in the interim already shed the channels (generation moved),
+   * and an emptied hub belongs to the grace close.
    */
   private noteOrphanedChannel(): void {
     const generation = this.opts.host.generation
@@ -966,10 +1054,19 @@ export class CcxtStreamHub {
     this.orphanedChannels++
     if (
       this.orphanedChannels >= ORPHANED_CHANNEL_REBUILD_THRESHOLD &&
-      this.subs.size > 0
+      this.orphanRebuildTimer === null
     ) {
-      this.orphanedChannels = 0
-      void this.forceReconnect('orphaned-channels')
+      const generationAtSchedule = generation
+      const timer = setTimeout(() => {
+        this.orphanRebuildTimer = null
+        if (this.destroyed || this.subs.size === 0) return
+        if (this.opts.host.generation !== generationAtSchedule) return
+        this.orphanedChannels = 0
+        void this.forceReconnect('orphaned-channels')
+      }, this.opts.orphanRebuildSettleMs ?? ORPHAN_REBUILD_SETTLE_MS)
+      const unrefable = timer as unknown as { unref?: () => void }
+      unrefable.unref?.()
+      this.orphanRebuildTimer = timer
     }
   }
 

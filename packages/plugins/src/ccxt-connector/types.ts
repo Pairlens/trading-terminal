@@ -413,6 +413,56 @@ export type CcxtVenueConfig = {
    */
   seedTrades?: boolean | number
   /**
+   * Hold the tape seed back this long before its REST fetch, for venues whose
+   * throttler is a strict serial queue (Kraken: ~1 s per public call). Fired
+   * at subscribe time the seed would enter the queue AHEAD of the chart's
+   * candle backfill and delay the primary pane by a full slot; delayed past
+   * the subscribe burst it runs in the queue's idle tail instead. Only read
+   * when `seedTrades` is enabled.
+   */
+  seedTradesDelayMs?: number
+  /**
+   * Paint the ticker's first frame from REST `fetchTicker`, for venues whose
+   * per-symbol ticker stream emits only when the pair TRADES — on a quiet
+   * pair the price header sits on '—' for seconds (measured 2026-08-14:
+   * KuCoin 7 s, Gate 8.5 s worst-case first frame). Same contract as the
+   * other seeds: delivered only while the key has never painted, any WS
+   * frame wins the race, failure is silent. Venues whose subscribe already
+   * answers with a ticker snapshot (OKX, ByBit, Kraken, Crypto.com, HTX,
+   * Upbit) don't need it, and `batchTickers` venues have the fan's own
+   * batched REST seed instead.
+   */
+  seedTicker?: boolean
+  /**
+   * Replace the ticker seed's `fetchTicker` with a cheaper venue call. MEXC's
+   * unified fetchTicker maps to `ticker/24hr` at throttle weight 25 — 1.25 s
+   * of budget at its 50 ms rateLimit, which starved the chart backfill queued
+   * behind the seed (measured: chart 0.56 s → 1.8 s). Its `avgPrice` endpoint
+   * answers a current price at weight 1. The hook returns a (possibly
+   * partial) unified ticker; the WS frame that follows carries the full
+   * 24 h fields. Only read when `seedTicker` is enabled.
+   */
+  seedTickerFetch?: (
+    exchange: CcxtExchangeLike,
+    symbol: string,
+  ) => Promise<CcxtTickerLike>
+  /**
+   * Never call the venue's `unWatch*` methods — count every release as an
+   * orphaned channel instead, letting the threshold rebuild shed them.
+   *
+   * Exists for Coinbase, whose ccxt unsubscribe path is broken in a way
+   * that poisons the whole instance (verified live on ccxt 4.5.71,
+   * 2026-08-14): `unSubscribe` sets `options.unSubscriptionPending` and
+   * awaits an ack that `handleSubscriptionStatus` only matches when the
+   * post-unsubscribe subscription list comes back EMPTY — never true while
+   * any other channel is live. The flag wedges true (every later unWatch
+   * throws 'another unSubscription is pending'), and the unsubscribed
+   * channel keeps its local subscription entry, so a re-watch parks a
+   * future on a channel the server no longer sends: revisiting a pair
+   * leaves its price header dead forever, even on BTC-USD.
+   */
+  suppressUnwatch?: boolean
+  /**
    * Depth passed to `watchOrderBook`. Venue-specific enums apply (see the
    * venue matrix §1g) — an unsupported value throws at runtime on some venues.
    */

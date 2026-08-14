@@ -135,6 +135,9 @@ export const gateCcxtVenue: CcxtVenueConfig = {
   seedOrderBook: true,
   // Empty-opening trade stream; candles come from watchOHLCV — safe to fill.
   seedTrades: true,
+  // The ticker channel emits per trade — measured up to 8.5 s to a quiet
+  // pair's first price after a switch (2026-08-14, DOGE-USDT).
+  seedTicker: true,
   maxHistoryLimit: 1000,
   // Gate's `to` is INCLUSIVE (ccxt forwards `until` as `to`), so the boundary
   // bar comes back unless the cursor is nudged.

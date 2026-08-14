@@ -138,6 +138,15 @@ export const krakenCcxtVenue: CcxtVenueConfig = {
   separateTriggerOrderBook: false,
   // 10 | 25 | 100 | 500 | 1000 — anything else throws NotSupported.
   orderbookDepth: 100,
+  // The v1 trade channel sends no snapshot and Kraken exposes no unWatch, so
+  // a quiet pair's tape is empty for minutes both cold and on revisit
+  // (measured 2026-08-14: BTC-USDT never painted in 20 s). The seed is held
+  // back past the subscribe burst because Kraken's throttler is a strict
+  // ~1 s/call serial queue — fired at subscribe time it would push the
+  // chart's candle backfill a full slot back; delayed, it rides the idle
+  // tail and the tape paints ~3 s in instead of never.
+  seedTrades: true,
+  seedTradesDelayMs: 2_500,
   maxHistoryLimit: 720,
   // Consumed by the guard's patched `fetchOHLCV`, which converts it into the
   // `since` window Kraken actually understands and strips it before the call.

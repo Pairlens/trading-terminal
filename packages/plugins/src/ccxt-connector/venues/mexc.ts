@@ -143,6 +143,29 @@ export const mexcCcxtVenue: CcxtVenueConfig = {
   // Buffered-delta book (see above): nothing paints until the delta window
   // fills and the REST snapshot lands. The seed paints at REST latency.
   seedOrderBook: true,
+  // The miniTicker stream emits on change only — a quiet pair measured 2 s+
+  // to its first price after a switch (2026-08-14).
+  seedTicker: true,
+  // NOT the unified fetchTicker: MEXC's ticker/24hr costs throttle weight 25
+  // (1.25 s of budget at the 50 ms rateLimit) and the seed queueing ahead of
+  // the chart backfill pushed the chart from 0.56 s to 1.8 s, measured. The
+  // avgPrice endpoint answers a current price at weight 1; the WS frame that
+  // follows carries the full 24 h fields.
+  seedTickerFetch: async (exchange, symbol) => {
+    const host = exchange as unknown as {
+      spotPublicGetAvgPrice: (
+        params: Record<string, string>,
+      ) => Promise<{ price?: string }>
+    }
+    const raw = await host.spotPublicGetAvgPrice({
+      symbol: symbol.replace('/', ''),
+    })
+    const last = Number(raw.price)
+    if (!Number.isFinite(last) || last <= 0) {
+      throw new Error(`mexc avgPrice: unusable price '${String(raw.price)}'`)
+    }
+    return { symbol, last, timestamp: Date.now() }
+  },
   maxHistoryLimit: 500,
   // ccxt reads `until` and sends `endTime = until + 1`; MEXC's `endTime` is
   // exclusive, so the nudged cursor lands exactly on "strictly older".
