@@ -2446,6 +2446,8 @@
     "buildExamplesNote": "Дивіться приклади dev-starter і dev-sync у репозиторії для робочих зразків.",
     "applied": "Застосовано",
     "applyTheme": "Застосувати тему",
+    "themeActions": "Дії з темою",
+    "useDefaultTheme": "Тема за умовчанням",
     "author": "Автор",
     "backToStore": "Магазин",
     "capabilities": "Можливості",

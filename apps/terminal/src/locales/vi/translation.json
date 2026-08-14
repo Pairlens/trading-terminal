@@ -2424,6 +2424,8 @@
     "buildExamplesNote": "Xem ví dụ dev-starter và dev-sync trong repo để tham khảo cách hoạt động.",
     "applied": "Đã áp dụng",
     "applyTheme": "Áp dụng giao diện",
+    "themeActions": "Tác vụ giao diện",
+    "useDefaultTheme": "Dùng giao diện mặc định",
     "author": "Tác giả",
     "backToStore": "Store",
     "capabilities": "Khả năng",

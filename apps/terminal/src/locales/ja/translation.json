@@ -2424,6 +2424,8 @@
     "buildExamplesNote": "動作するリファレンスについては、リポジトリ内のdev-starterおよびdev-syncのサンプルをご覧ください。",
     "applied": "適用済み",
     "applyTheme": "テーマを適用",
+    "themeActions": "テーマの操作",
+    "useDefaultTheme": "デフォルトのテーマを使う",
     "author": "作者",
     "backToStore": "ストア",
     "capabilities": "機能",

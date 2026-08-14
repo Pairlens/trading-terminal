@@ -2424,6 +2424,8 @@
     "buildExamplesNote": "저장소의 dev-starter 및 dev-sync 예제에서 실제 참고 사례를 확인하세요.",
     "applied": "적용됨",
     "applyTheme": "테마 적용",
+    "themeActions": "테마 작업",
+    "useDefaultTheme": "기본 테마 사용",
     "author": "제작자",
     "backToStore": "스토어",
     "capabilities": "기능",

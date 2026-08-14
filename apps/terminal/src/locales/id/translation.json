@@ -2424,6 +2424,8 @@
     "buildExamplesNote": "Lihat contoh dev-starter dan dev-sync di repo untuk referensi yang berfungsi.",
     "applied": "Diterapkan",
     "applyTheme": "Terapkan tema",
+    "themeActions": "Tindakan tema",
+    "useDefaultTheme": "Gunakan tema bawaan",
     "author": "Penulis",
     "backToStore": "Store",
     "capabilities": "Kapabilitas",

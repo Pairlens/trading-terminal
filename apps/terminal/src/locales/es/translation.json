@@ -2424,6 +2424,8 @@
     "buildExamplesNote": "Consulta los ejemplos dev-starter y dev-sync en el repositorio como referencia.",
     "applied": "Aplicado",
     "applyTheme": "Aplicar tema",
+    "themeActions": "Acciones del tema",
+    "useDefaultTheme": "Usar el tema predeterminado",
     "author": "Autor",
     "backToStore": "Tienda",
     "capabilities": "Capacidades",
