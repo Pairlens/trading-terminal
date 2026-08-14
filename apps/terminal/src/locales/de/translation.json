@@ -3401,7 +3401,6 @@
     "builder": {
       "sidebar": {
         "tabRules": "Regeln",
-        "tabActivity": "Aktivität",
         "noRules": "Noch keine Benachrichtigungsregeln",
         "newRuleTitle": "Neue Benachrichtigungsregel",
         "rulePlaceholder": "Regelname",
@@ -3418,7 +3417,8 @@
         "testFailed": "Test konnte nicht zugestellt werden",
         "noActivity": "Noch keine Benachrichtigungen ausgelöst",
         "clearActivity": "Aktivität löschen",
-        "channelFailed": "{{channel}} fehlgeschlagen"
+        "channelFailed": "{{channel}} fehlgeschlagen",
+        "recentLabel": "Zuletzt"
       },
       "commitBar": {
         "cycleDetected": "Zyklus erkannt",

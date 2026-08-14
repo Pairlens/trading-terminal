@@ -3401,7 +3401,6 @@
     "builder": {
       "sidebar": {
         "tabRules": "Quy tắc",
-        "tabActivity": "Hoạt động",
         "noRules": "Chưa có quy tắc thông báo nào",
         "newRuleTitle": "Quy tắc thông báo mới",
         "rulePlaceholder": "Tên quy tắc",
@@ -3418,7 +3417,8 @@
         "testFailed": "Không gửi được thử nghiệm",
         "noActivity": "Chưa có thông báo nào được kích hoạt",
         "clearActivity": "Xóa hoạt động",
-        "channelFailed": "{{channel}} thất bại"
+        "channelFailed": "{{channel}} thất bại",
+        "recentLabel": "Gần đây"
       },
       "commitBar": {
         "cycleDetected": "Đã phát hiện vòng lặp",

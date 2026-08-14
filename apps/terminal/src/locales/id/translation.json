@@ -3401,7 +3401,6 @@
     "builder": {
       "sidebar": {
         "tabRules": "Aturan",
-        "tabActivity": "Aktivitas",
         "noRules": "Belum ada aturan notifikasi",
         "newRuleTitle": "Aturan Notifikasi Baru",
         "rulePlaceholder": "Nama aturan",
@@ -3418,7 +3417,8 @@
         "testFailed": "Tes tidak terkirim",
         "noActivity": "Belum ada notifikasi yang terpicu",
         "clearActivity": "Hapus aktivitas",
-        "channelFailed": "{{channel}} gagal"
+        "channelFailed": "{{channel}} gagal",
+        "recentLabel": "Terbaru"
       },
       "commitBar": {
         "cycleDetected": "Siklus terdeteksi",

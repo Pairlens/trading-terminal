@@ -3433,7 +3433,6 @@
     "builder": {
       "sidebar": {
         "tabRules": "Правила",
-        "tabActivity": "Активность",
         "noRules": "Пока нет правил уведомлений",
         "newRuleTitle": "Новое правило уведомления",
         "rulePlaceholder": "Название правила",
@@ -3450,7 +3449,8 @@
         "testFailed": "Тест не удалось доставить",
         "noActivity": "Уведомления ещё не срабатывали",
         "clearActivity": "Очистить активность",
-        "channelFailed": "Сбой: {{channel}}"
+        "channelFailed": "Сбой: {{channel}}",
+        "recentLabel": "Недавние"
       },
       "commitBar": {
         "cycleDetected": "Обнаружен цикл",

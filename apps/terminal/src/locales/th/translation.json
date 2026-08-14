@@ -3401,7 +3401,6 @@
     "builder": {
       "sidebar": {
         "tabRules": "กฎ",
-        "tabActivity": "กิจกรรม",
         "noRules": "ยังไม่มีกฎการแจ้งเตือน",
         "newRuleTitle": "กฎการแจ้งเตือนใหม่",
         "rulePlaceholder": "ชื่อกฎ",
@@ -3418,7 +3417,8 @@
         "testFailed": "ส่งการทดสอบไม่สำเร็จ",
         "noActivity": "ยังไม่มีการแจ้งเตือนเกิดขึ้น",
         "clearActivity": "ล้างกิจกรรม",
-        "channelFailed": "{{channel}} ล้มเหลว"
+        "channelFailed": "{{channel}} ล้มเหลว",
+        "recentLabel": "ล่าสุด"
       },
       "commitBar": {
         "cycleDetected": "ตรวจพบการวนซ้ำ",
