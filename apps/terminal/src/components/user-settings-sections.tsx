@@ -114,6 +114,7 @@ import {
 import { COLOR_MODES } from '@/lib/settings/color-mode'
 import { useIdleGuardEnabled } from '@/components/idle-guard'
 import { isAnalyticsConfigured, useAnalyticsEnabled } from '@/lib/analytics'
+import { useDeepSearchEnabled } from '@/lib/instruments/deep-search-setting'
 import { useRecentTickersMarqueeEnabled } from '@/lib/recent-tickers'
 import {
   HAPTICS_PREF_KEY,
@@ -1623,6 +1624,7 @@ export function RiskSection() {
 export function PrivacySection() {
   const { t } = useTranslation()
   const [analyticsEnabled, setAnalyticsEnabled] = useAnalyticsEnabled()
+  const [deepSearchEnabled, setDeepSearchEnabled] = useDeepSearchEnabled()
   const configured = isAnalyticsConfigured()
 
   return (
@@ -1648,6 +1650,33 @@ export function PrivacySection() {
         </div>
         <LegalLinksRow className="mt-4 border-t pt-3" />
       </section>
+
+      {/* Hidden (not disabled) in standalone builds: with no App Server
+          there is nothing to consent to. A privacy choice, not a
+          performance one — local search is faster. */}
+      {hasAppServer && (
+        <section className="rounded-xl border p-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h3 className="font-medium">
+                {t('settings.privacy.deepSearchTitle')}
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {t('settings.privacy.deepSearchDescription')}
+              </p>
+              {!deepSearchEnabled && (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {t('settings.privacy.deepSearchOff')}
+                </p>
+              )}
+            </div>
+            <Switch
+              checked={deepSearchEnabled}
+              onCheckedChange={setDeepSearchEnabled}
+            />
+          </div>
+        </section>
+      )}
 
       <AccountDataControls />
     </div>

@@ -36,6 +36,7 @@ import {
   ensureLocalInstrumentIndex,
   searchLocalInstruments,
 } from '@/lib/instruments/local-index'
+import { isDeepSearchAllowed } from '@/lib/instruments/deep-search-setting'
 import { useLocalIndexVersion } from '@/lib/instruments/use-local-index'
 
 /** Normalize pair separators: "BTC USDT" or "BTC/USDT" → "BTC-USDT" */
@@ -142,10 +143,47 @@ export function useInstrumentSearch(query: string) {
         }
       })
 
-      const dexPages = await Promise.all(dexPromises)
-      return dexPages.flatMap((page) =>
-        page.items.map((raw) => normalizeDexInstrument(raw)),
-      )
+      // Wave 3: server deep search via the pairlens-intelligence plugin —
+      // invoked directly (not resolver-routed, which would stop at
+      // pairlens-core) and gated on the deep-search consent setting. The
+      // plugin applies the same gate internally; this check just avoids a
+      // pointless round-trip into its local fallback.
+      const deepPromise = (async (): Promise<Array<Instrument>> => {
+        if (!isDeepSearchAllowed()) return []
+        const plugin = pluginManager
+          .getActivePlugins()
+          .find((pl) => pl.manifest.id === 'pairlens-intelligence')
+        if (!plugin) return []
+        try {
+          const page = (await plugin.execute({
+            capability: 'market-data:discovery:search',
+            params: { query: deferredQuery },
+            context: {
+              pair: '',
+              market: '',
+              timeframe: '',
+              mode: 'paper' as const,
+              country: '',
+            },
+          })) as InstrumentPage
+          return Array.isArray(page?.items) ? page.items : []
+        } catch {
+          return []
+        }
+      })()
+
+      const [dexPages, deepItems] = await Promise.all([
+        Promise.all(dexPromises),
+        deepPromise,
+      ])
+      // Wave order in the appended block: DEX (on-chain) first, then deep
+      // server hits — identity dedupe in the merge drops overlaps.
+      return [
+        ...dexPages.flatMap((page) =>
+          page.items.map((raw) => normalizeDexInstrument(raw)),
+        ),
+        ...deepItems,
+      ]
     },
     enabled,
     staleTime: 30_000,

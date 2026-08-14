@@ -197,6 +197,12 @@ export const SETTINGS_SEARCH_INDEX: ReadonlyArray<SettingsSearchEntry> = [
   },
   {
     section: 'privacy',
+    titleKey: 'settings.privacy.deepSearchTitle',
+    descriptionKey: 'settings.privacy.deepSearchDescription',
+    keywords: ['search', 'deep search', 'cloud', 'discovery', 'local only'],
+  },
+  {
+    section: 'privacy',
     titleKey: 'settings.privacy.exportTitle',
     descriptionKey: 'settings.privacy.exportDescription',
     keywords: ['export', 'download', 'gdpr', 'data', 'backup'],

@@ -12,6 +12,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 import type {
+  DeepSearchResponse,
   Instrument,
   InstrumentCategory,
 } from '@pairlens/shared/instrument-types'
@@ -180,6 +181,24 @@ export function createPairlensIntelligencePlugin(
     return String(config['appServerUrl'] ?? PAIRLENS_APP_SERVER_URL)
   }
 
+  /**
+   * The deep-search consent choke point: the host threads a live getter in
+   * at activation. When it says no, any discovery request that would carry
+   * USER-TYPED text to the server answers from the bundled catalog instead —
+   * one gate for every server-bound search path, so the settings toggle is
+   * never a false promise. Browse-shaped discovery (no query text) is not
+   * gated: it sends nothing the user typed.
+   */
+  function discoveryTextAllowed(): boolean {
+    const gate = config['discoverySearchAllowed']
+    if (typeof gate !== 'function') return true
+    try {
+      return (gate as () => unknown)() !== false
+    } catch {
+      return true
+    }
+  }
+
   /** Resolve relative URLs from App Server responses against the base URL */
   function resolveAppServerUrl(url: string | null): string | null {
     if (!url) return null
@@ -314,7 +333,10 @@ export function createPairlensIntelligencePlugin(
       const offset = typeof p['offset'] === 'number' ? p['offset'] : 0
       const limit = typeof p['limit'] === 'number' ? p['limit'] : 50
 
-      if (!appUrl) return queryInstruments(market ?? '', p)
+      // Browse is fine without consent; a typed filter (`q`) is not.
+      if (!appUrl || (q && !discoveryTextAllowed())) {
+        return queryInstruments(market ?? '', p)
+      }
 
       try {
         const qs = new URLSearchParams()
@@ -370,23 +392,40 @@ export function createPairlensIntelligencePlugin(
       const query = String(p['query'] ?? '')
       const assetClass = p['assetClass'] ? String(p['assetClass']) : undefined
 
-      if (!appUrl) {
+      // The privacy choke point: search text may only leave the device when
+      // the deep-search consent flag allows it.
+      if (!appUrl || !discoveryTextAllowed()) {
         if (!query) return { items: [], total: 0, hasMore: false }
         return queryInstruments('', { ...p, q: query })
       }
 
       try {
         const qs = new URLSearchParams({ q: query })
-        const url = `${appUrl}/api/instruments?${qs}`
-        const response = await fetch(url)
-        if (!response.ok) {
+        // The deep endpoint first — fuzzy names plus the full venue-listings
+        // long tail. An older server without it answers 404 and we fall back
+        // to the legacy catalog route.
+        const deepRes = await fetch(`${appUrl}/api/instruments/search?${qs}`)
+        let searchRaw: Array<Instrument>
+        if (deepRes.ok) {
+          const body = (await deepRes.json()) as DeepSearchResponse
+          searchRaw = normalizeServerInstruments(
+            Array.isArray(body.items) ? body.items : [],
+          )
+        } else if (deepRes.status === 404) {
+          const response = await fetch(`${appUrl}/api/instruments?${qs}`)
+          if (!response.ok) {
+            throw new Error(
+              `pairlens-intelligence: instrument search failed (${response.status})`,
+            )
+          }
+          searchRaw = normalizeServerInstruments(
+            (await response.json()) as Array<Instrument>,
+          )
+        } else {
           throw new Error(
-            `pairlens-intelligence: instrument search failed (${response.status})`,
+            `pairlens-intelligence: instrument search failed (${deepRes.status})`,
           )
         }
-        const searchRaw = normalizeServerInstruments(
-          (await response.json()) as Array<Instrument>,
-        )
         const searchSeen = new Map<string, Instrument>()
         for (const inst of searchRaw) {
           if (!searchSeen.has(inst.symbol)) {

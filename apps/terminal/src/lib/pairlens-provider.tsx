@@ -39,6 +39,8 @@ import type {
 import type { PluginModule } from '@/lib/plugins/plugin-module-loader'
 import { startInstrumentIndexFill } from '@/lib/instruments/ttl-fill'
 import { ensureLocalInstrumentIndex } from '@/lib/instruments/local-index'
+import { syncInstrumentsSnapshot } from '@/lib/instruments/snapshot-sync'
+import { deepSearchSetting } from '@/lib/instruments/deep-search-setting'
 import i18n from '@/lib/i18n'
 import { lazyChunk } from '@/lib/lazy-chunk'
 import { api, appServerUrl, getSessionToken } from '@/lib/api'
@@ -1044,6 +1046,9 @@ export function PairlensProvider({
       const officialConfig = {
         appServerUrl: appServerUrl,
         authToken: fetchAuthToken,
+        // The deep-search consent choke point: a live getter, so a settings
+        // flip applies to the very next request without re-activation.
+        discoverySearchAllowed: () => deepSearchSetting.get(),
       }
 
       // pairlens-core
@@ -1062,7 +1067,10 @@ export function PairlensProvider({
           await manager.activatePlugin('pairlens-intelligence', {
             ...officialConfig,
             ...cfgOf('pairlens-intelligence'),
+            // Re-applied after the ledger spread: a persisted config must
+            // never clobber the auth accessor or the consent gate.
             authToken: fetchAuthToken,
+            discoverySearchAllowed: officialConfig.discoverySearchAllowed,
           })
         } catch {
           // Activation failed — leave installed
@@ -1178,10 +1186,14 @@ export function PairlensProvider({
       // ── 10b. Build the local instrument index at idle ─────────────
       // Every window needs its own in-memory index (search is synchronous),
       // but never on the boot critical path — idle callback with a timeout
-      // floor, falling back to a plain timer.
+      // floor, falling back to a plain timer. The server snapshot syncs
+      // after the first build; a fresh KV copy short-circuits the fetch.
       if (!destroyed) {
         const buildIndex = () => {
-          if (!destroyed) void ensureLocalInstrumentIndex(manager)
+          if (destroyed) return
+          void ensureLocalInstrumentIndex(manager).then(() => {
+            if (!destroyed) void syncInstrumentsSnapshot(manager)
+          })
         }
         if (typeof requestIdleCallback === 'function') {
           requestIdleCallback(buildIndex, { timeout: 5_000 })

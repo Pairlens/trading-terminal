@@ -457,7 +457,10 @@
       "confirmPrompt": "Onaylamak için {{email}} yazın",
       "confirmCancel": "Hesabımı koru",
       "confirmAction": "Kalıcı olarak sil",
-      "deleteDoneAnalyticsFailed": "Hesabınız silindi, ancak kullanım profilinizi silmek için analiz sağlayıcısına ulaşamadık. privacy@pairlens.finance adresine yazın, kalanını elle tamamlayalım."
+      "deleteDoneAnalyticsFailed": "Hesabınız silindi, ancak kullanım profilinizi silmek için analiz sağlayıcısına ulaşamadık. privacy@pairlens.finance adresine yazın, kalanını elle tamamlayalım.",
+      "deepSearchTitle": "Pairlens Cloud ile derin arama",
+      "deepSearchDescription": "Arama metninizi yerel dizinin ötesindeki pariteleri ve tokenları bulmak için Pairlens sunucularına gönderir.",
+      "deepSearchOff": "Arama bu cihazda kalır."
     },
     "cloudSync": {
       "masterTitle": "Bulut eşitleme",
@@ -2806,7 +2809,8 @@
     "switchMarket": "Piyasa değiştir",
     "marketActive": "Etkin",
     "marketSwitched": "{{name}} piyasasına geçildi",
-    "topMarkets": "En İyi Piyasalar"
+    "topMarkets": "En İyi Piyasalar",
+    "staleListings": "Borsa listeleri son güncelleme: {{date}}"
   },
   "terminal": {
     "manageWatchlists": "İzleme listelerini yönet",

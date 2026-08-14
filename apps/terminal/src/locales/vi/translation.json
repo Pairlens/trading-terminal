@@ -457,7 +457,10 @@
       "confirmPrompt": "Nhập {{email}} để xác nhận",
       "confirmCancel": "Giữ tài khoản của tôi",
       "confirmAction": "Xóa vĩnh viễn",
-      "deleteDoneAnalyticsFailed": "Tài khoản của bạn đã bị xóa, nhưng chúng tôi không kết nối được với nhà cung cấp phân tích để xóa hồ sơ sử dụng. Hãy gửi email tới privacy@pairlens.finance và chúng tôi sẽ hoàn tất thủ công."
+      "deleteDoneAnalyticsFailed": "Tài khoản của bạn đã bị xóa, nhưng chúng tôi không kết nối được với nhà cung cấp phân tích để xóa hồ sơ sử dụng. Hãy gửi email tới privacy@pairlens.finance và chúng tôi sẽ hoàn tất thủ công.",
+      "deepSearchTitle": "Tìm kiếm chuyên sâu qua Pairlens Cloud",
+      "deepSearchDescription": "Gửi nội dung tìm kiếm của bạn đến máy chủ Pairlens để tìm các cặp và token ngoài chỉ mục cục bộ.",
+      "deepSearchOff": "Tìm kiếm chỉ diễn ra trên thiết bị này."
     },
     "cloudSync": {
       "masterTitle": "Đồng bộ đám mây",
@@ -2806,7 +2809,8 @@
     "switchMarket": "Chuyển thị trường",
     "marketActive": "Đang dùng",
     "marketSwitched": "Đã chuyển sang {{name}}",
-    "topMarkets": "Thị trường hàng đầu"
+    "topMarkets": "Thị trường hàng đầu",
+    "staleListings": "Danh sách niêm yết của sàn cập nhật lần cuối {{date}}"
   },
   "terminal": {
     "manageWatchlists": "Quản lý danh sách theo dõi",

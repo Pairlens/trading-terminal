@@ -457,7 +457,10 @@
       "confirmPrompt": "Ketik {{email}} untuk mengonfirmasi",
       "confirmCancel": "Pertahankan akun saya",
       "confirmAction": "Hapus permanen",
-      "deleteDoneAnalyticsFailed": "Akun Anda sudah dihapus, tetapi kami tidak dapat menghubungi penyedia analitik untuk menghapus profil penggunaan Anda. Kirim email ke privacy@pairlens.finance dan kami selesaikan secara manual."
+      "deleteDoneAnalyticsFailed": "Akun Anda sudah dihapus, tetapi kami tidak dapat menghubungi penyedia analitik untuk menghapus profil penggunaan Anda. Kirim email ke privacy@pairlens.finance dan kami selesaikan secara manual.",
+      "deepSearchTitle": "Pencarian lebih dalam via Pairlens Cloud",
+      "deepSearchDescription": "Mengirim teks pencarian Anda ke server Pairlens untuk menemukan pasangan dan token di luar indeks lokal.",
+      "deepSearchOff": "Pencarian tetap di perangkat ini."
     },
     "cloudSync": {
       "masterTitle": "Sinkronisasi cloud",
@@ -2806,7 +2809,8 @@
     "switchMarket": "Ganti market",
     "marketActive": "Aktif",
     "marketSwitched": "Beralih ke {{name}}",
-    "topMarkets": "Market Teratas"
+    "topMarkets": "Market Teratas",
+    "staleListings": "Daftar bursa terakhir diperbarui {{date}}"
   },
   "terminal": {
     "manageWatchlists": "Kelola daftar pantauan",

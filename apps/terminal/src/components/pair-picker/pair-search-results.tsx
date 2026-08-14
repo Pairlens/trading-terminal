@@ -6,7 +6,10 @@ import { Star } from 'lucide-react'
 
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
-import { instrumentToPairEntry } from '@/components/pair-picker/pair-picker-data'
+import {
+  instrumentToPairEntry,
+  pinSelectedEntry,
+} from '@/components/pair-picker/pair-picker-data'
 import { VenueBadge } from '@/components/pair-picker/venue-badge'
 import { useInstrumentSearch } from '@/hooks/use-instrument-search'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
@@ -208,7 +211,12 @@ const PairResultItem = memo(function PairResultItem({
   return (
     <button
       className="flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-accent transition-colors rounded-sm"
-      onClick={() => onSelect(pair.symbol, pair.assetClass)}
+      onClick={() => {
+        // Pin BEFORE navigation: the selected token's exact address must be
+        // in the directory before anything downstream resolves the symbol.
+        pinSelectedEntry(pair)
+        onSelect(pair.symbol, pair.assetClass)
+      }}
     >
       <PairLogo
         base={pair.base}

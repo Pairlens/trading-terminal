@@ -457,7 +457,10 @@
       "confirmPrompt": "確認のため {{email}} と入力してください",
       "confirmCancel": "アカウントを残す",
       "confirmAction": "完全に削除",
-      "deleteDoneAnalyticsFailed": "アカウントは削除されましたが、分析プロバイダーに接続できず利用状況のプロファイルを消去できませんでした。privacy@pairlens.finance までご連絡いただければ手動で対応します。"
+      "deleteDoneAnalyticsFailed": "アカウントは削除されましたが、分析プロバイダーに接続できず利用状況のプロファイルを消去できませんでした。privacy@pairlens.finance までご連絡いただければ手動で対応します。",
+      "deepSearchTitle": "Pairlens Cloud によるディープ検索",
+      "deepSearchDescription": "検索テキストを Pairlens サーバーに送信し、ローカルインデックスにないペアやトークンを検索します。",
+      "deepSearchOff": "検索はこのデバイス内で完結します。"
     },
     "cloudSync": {
       "masterTitle": "クラウド同期",
@@ -2806,7 +2809,8 @@
     "switchMarket": "マーケットを切り替え",
     "marketActive": "使用中",
     "marketSwitched": "{{name}} に切り替えました",
-    "topMarkets": "トップマーケット"
+    "topMarkets": "トップマーケット",
+    "staleListings": "取引所の銘柄リストの最終更新: {{date}}"
   },
   "terminal": {
     "manageWatchlists": "ウォッチリストを管理",

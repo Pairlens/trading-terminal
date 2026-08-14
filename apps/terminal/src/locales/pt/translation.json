@@ -457,7 +457,10 @@
       "confirmPrompt": "Escreva {{email}} para confirmar",
       "confirmCancel": "Manter a minha conta",
       "confirmAction": "Eliminar definitivamente",
-      "deleteDoneAnalyticsFailed": "A sua conta foi eliminada, mas não conseguimos contactar o fornecedor de analítica para apagar o seu perfil de utilização. Escreva para privacy@pairlens.finance e terminamos à mão."
+      "deleteDoneAnalyticsFailed": "A sua conta foi eliminada, mas não conseguimos contactar o fornecedor de analítica para apagar o seu perfil de utilização. Escreva para privacy@pairlens.finance e terminamos à mão.",
+      "deepSearchTitle": "Busca aprofundada via Pairlens Cloud",
+      "deepSearchDescription": "Envia seu texto de busca aos servidores da Pairlens para encontrar pares e tokens além do índice local.",
+      "deepSearchOff": "A busca permanece neste dispositivo."
     },
     "cloudSync": {
       "masterTitle": "Sincronização na nuvem",
@@ -2806,7 +2809,8 @@
     "switchMarket": "Trocar de mercado",
     "marketActive": "Ativo",
     "marketSwitched": "Alterado para {{name}}",
-    "topMarkets": "Principais Mercados"
+    "topMarkets": "Principais Mercados",
+    "staleListings": "Listagens das corretoras atualizadas em {{date}}"
   },
   "terminal": {
     "manageWatchlists": "Gerenciar watchlists",

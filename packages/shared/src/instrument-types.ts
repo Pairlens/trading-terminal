@@ -229,6 +229,11 @@ export type DeepSearchResponse = {
   schemaVersion: number
   query: string
   items: Array<Instrument>
+  /**
+   * Venue qualification for cex-pair items, carried out-of-band so the
+   * identity types stay pure: symbol → (venue marketId → venue-native id).
+   */
+  listings?: Record<string, Record<string, string>>
 }
 
 export type TopCoin = {

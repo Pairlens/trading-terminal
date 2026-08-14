@@ -457,7 +457,10 @@
       "confirmPrompt": "Введите {{email}} для подтверждения",
       "confirmCancel": "Оставить аккаунт",
       "confirmAction": "Удалить навсегда",
-      "deleteDoneAnalyticsFailed": "Аккаунт удалён, но связаться с сервисом аналитики, чтобы стереть профиль использования, не удалось. Напишите на privacy@pairlens.finance — мы доделаем это вручную."
+      "deleteDoneAnalyticsFailed": "Аккаунт удалён, но связаться с сервисом аналитики, чтобы стереть профиль использования, не удалось. Напишите на privacy@pairlens.finance — мы доделаем это вручную.",
+      "deepSearchTitle": "Расширенный поиск через Pairlens Cloud",
+      "deepSearchDescription": "Отправляет текст поиска на серверы Pairlens, чтобы находить пары и токены за пределами локального индекса.",
+      "deepSearchOff": "Поиск не покидает это устройство."
     },
     "cloudSync": {
       "masterTitle": "Облачная синхронизация",
@@ -2832,7 +2835,8 @@
     "switchMarket": "Сменить рынок",
     "marketActive": "Активен",
     "marketSwitched": "Переключено на {{name}}",
-    "topMarkets": "Топ рынков"
+    "topMarkets": "Топ рынков",
+    "staleListings": "Списки бирж обновлены {{date}}"
   },
   "terminal": {
     "manageWatchlists": "Управление списками наблюдения",

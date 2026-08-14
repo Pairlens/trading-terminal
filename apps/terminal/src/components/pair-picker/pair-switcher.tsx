@@ -31,10 +31,14 @@ import { Skeleton } from '@pairlens/ui/components/ui/skeleton'
 
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
-import { instrumentToPairEntry } from '@/components/pair-picker/pair-picker-data'
+import {
+  instrumentToPairEntry,
+  pinSelectedEntry,
+} from '@/components/pair-picker/pair-picker-data'
 import { usePairSearchData } from '@/components/pair-picker/pair-search-results'
 import { isSearchInFlight } from '@/components/pair-picker/search-progress'
 import { VenueBadge } from '@/components/pair-picker/venue-badge'
+import { SnapshotAgeFooter } from '@/components/pair-picker/snapshot-age-footer'
 import { useInstrumentSearch } from '@/hooks/use-instrument-search'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { usePersistedState } from '@/hooks/use-persisted-state'
@@ -243,6 +247,9 @@ export function PairSwitcher({
 
   const handleSelect = useCallback(
     (pair: PairEntry) => {
+      // Pin BEFORE navigation: a selected token's exact address must be in
+      // the directory before anything downstream resolves the symbol.
+      pinSelectedEntry(pair)
       const cls = pair.assetClass
       if (cls) {
         setAssetClassMap((prev) => ({ ...prev, [pair.symbol]: cls }))
@@ -366,6 +373,8 @@ export function PairSwitcher({
                   : t('pairPicker.startTyping')}
               </div>
             ))}
+
+          <SnapshotAgeFooter visible={hasQuery} />
         </div>
       </PopoverContent>
     </Popover>

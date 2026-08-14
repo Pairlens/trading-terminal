@@ -40,6 +40,8 @@ import { PRESS } from '../primitives/press'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import type { MobileOverlay } from '../mobile-focus-context'
 import type { VenueKind } from '../lib/venue-kind'
+import { SnapshotAgeFooter } from '@/components/pair-picker/snapshot-age-footer'
+import { pinSelectedEntry } from '@/components/pair-picker/pair-picker-data'
 import { haptic } from '@/lib/haptics'
 import { isSearchInFlight } from '@/components/pair-picker/search-progress'
 import { usePairSearchData } from '@/components/pair-picker/pair-search-results'
@@ -236,6 +238,9 @@ export default memo(function PairPickerScreen({
       // `isClosing`.
       if (isClosing()) return
       haptic('selection')
+      // Pin BEFORE navigation: a selected token's exact address must be in
+      // the directory before anything downstream resolves the symbol.
+      pinSelectedEntry(entry)
       if (isAdd) {
         addToWatchlist(entry.symbol, [activeListId])
         return
@@ -377,6 +382,8 @@ export default memo(function PairPickerScreen({
             <PairResultSkeletons />
           </PickerSection>
         ) : null}
+
+        <SnapshotAgeFooter visible={hasQuery && results.length > 0} />
 
         {callout ? (
           <div className="mx-4 mt-3 flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2.5">

@@ -457,7 +457,10 @@
       "confirmPrompt": "Type {{email}} to confirm",
       "confirmCancel": "Keep my account",
       "confirmAction": "Delete permanently",
-      "deleteDoneAnalyticsFailed": "Your account is gone, but we could not reach the analytics provider to erase your usage profile. Email privacy@pairlens.finance and we will finish it by hand."
+      "deleteDoneAnalyticsFailed": "Your account is gone, but we could not reach the analytics provider to erase your usage profile. Email privacy@pairlens.finance and we will finish it by hand.",
+      "deepSearchTitle": "Deeper search via Pairlens Cloud",
+      "deepSearchDescription": "Sends your search text to Pairlens servers to find pairs and tokens beyond the local index.",
+      "deepSearchOff": "Search stays on this device."
     },
     "cloudSync": {
       "masterTitle": "Cloud sync",
@@ -2806,7 +2809,8 @@
     "switchMarket": "Switch market",
     "marketActive": "Active",
     "marketSwitched": "Switched to {{name}}",
-    "topMarkets": "Top Markets"
+    "topMarkets": "Top Markets",
+    "staleListings": "Venue listings last updated {{date}}"
   },
   "terminal": {
     "manageWatchlists": "Manage watchlists",
