@@ -4,11 +4,11 @@
 
 # Pairlens
 
-**The AI trading terminal that never touches your money.**
+**The local-first AI trading terminal. Your keys. Your machine. Your rules.**
 
 The kind of trading desk that usually costs thousands of dollars a year: free, private, and entirely yours. 14 crypto exchanges, US equities, and on-chain DEX trading in one desk, with professional charts, an AI co-pilot, and your keys on your machine.
 
-[Website](https://pairlens.finance) · [Launch Web Terminal](https://terminal.pairlens.finance) · [Docs](https://pairlens.finance/docs) · [Download](https://github.com/Pairlens/trading-terminal/releases) · [Charts Engine](https://github.com/Pairlens/fast-financial-charts)
+[Website](https://pairlens.finance) · [Launch Web Terminal](https://terminal.pairlens.finance) · [Docs](https://pairlens.finance/docs) · [Download](https://github.com/Pairlens/trading-terminal/releases) · [Charts Engine](https://github.com/Pairlens/fast-financial-charts) · [X](https://x.com/pairlens)
 
 [![CI](https://github.com/Pairlens/trading-terminal/actions/workflows/ci.yml/badge.svg)](https://github.com/Pairlens/trading-terminal/actions/workflows/ci.yml)
 [![License: FSL-1.1-Apache-2.0](https://img.shields.io/badge/License-FSL--1.1--Apache--2.0-blue.svg)](LICENSE.md)

@@ -5,7 +5,8 @@
 
 export const SITE = {
   name: 'Pairlens',
-  tagline: 'The terminal that never touches your money.',
+  tagline:
+    'The local-first AI trading terminal. Your keys. Your machine. Your rules.',
   description:
     'A free, source-available, AI-native trading terminal. Run it in your browser or install it on your desktop, and trade crypto and stocks on 15+ exchanges, brokers and DEXs. Your keys, any venue, any country. No middleman, no lock-in.',
   url: 'https://pairlens.finance',
