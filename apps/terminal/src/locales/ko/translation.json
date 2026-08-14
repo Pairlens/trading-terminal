@@ -2098,13 +2098,12 @@
     "placeholder": "URL 입력...",
     "go": "이동",
     "refresh": "새로고침",
-    "openExternal": "브라우저에서 열기",
     "emptyTitle": "위에 URL을 입력해 웹사이트를 삽입하세요",
-    "blockedTitle": "이 사이트는 삽입할 수 없습니다",
-    "blockedDescription": "이 웹사이트는 다른 페이지 안에 표시되는 것을 차단합니다. 대신 별도의 브라우저 탭에서 열 수 있습니다.",
     "forward": "앞으로",
     "failedToLoad": "로드하지 못했습니다",
-    "viewPaused": "웹 보기 일시중지됨"
+    "viewPaused": "웹 보기 일시중지됨",
+    "desktopOnlyTitle": "웹 패널에는 데스크톱 앱이 필요합니다",
+    "desktopOnlyDescription": "사이트를 삽입하려면 데스크톱 앱이 이 패널 위에 얹는 네이티브 창이 필요합니다. 브라우저 탭에는 iframe만 있고, 대부분의 사이트는 iframe 안에서 열리기를 거부합니다."
   },
   "intelligence": {
     "analyzing": "시장 분석 중…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "워크스페이스 레이아웃에 추가할 패널을 선택하세요.",
-    "added": "추가됨"
+    "added": "추가됨",
+    "desktopOnly": "데스크톱 전용"
   },
   "layout": {
     "workspaces": "워크스페이스",

@@ -2098,13 +2098,12 @@
     "placeholder": "Ingresa una URL...",
     "go": "Ir",
     "refresh": "Actualizar",
-    "openExternal": "Abrir en navegador",
     "emptyTitle": "Ingresa una URL arriba para incrustar un sitio web",
-    "blockedTitle": "Este sitio no se puede incrustar",
-    "blockedDescription": "Este sitio web bloquea ser mostrado dentro de otras páginas. Puedes abrirlo en una pestaña separada del navegador.",
     "forward": "Adelante",
     "failedToLoad": "Error al cargar",
-    "viewPaused": "Vista web en pausa"
+    "viewPaused": "Vista web en pausa",
+    "desktopOnlyTitle": "El panel Web necesita la app de escritorio",
+    "desktopOnlyDescription": "Incrustar un sitio requiere una ventana nativa que la app de escritorio coloca sobre este panel. Una pestaña del navegador solo tiene un iframe, y la mayoría de los sitios se niegan a cargarse dentro de uno."
   },
   "intelligence": {
     "analyzing": "Analizando el mercado…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "Elige un panel para agregar a tu espacio de trabajo.",
-    "added": "Agregado"
+    "added": "Agregado",
+    "desktopOnly": "Solo escritorio"
   },
   "layout": {
     "workspaces": "Espacios de trabajo",

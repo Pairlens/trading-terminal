@@ -2098,13 +2098,12 @@
     "placeholder": "URL eingeben...",
     "go": "Los",
     "refresh": "Aktualisieren",
-    "openExternal": "Im Browser öffnen",
     "emptyTitle": "Gib oben eine URL ein, um eine Website einzubetten",
-    "blockedTitle": "Diese Seite kann nicht eingebettet werden",
-    "blockedDescription": "Diese Website blockiert die Anzeige innerhalb anderer Seiten. Du kannst sie stattdessen in einem separaten Browser-Tab öffnen.",
     "forward": "Vorwärts",
     "failedToLoad": "Laden fehlgeschlagen",
-    "viewPaused": "Web-Ansicht pausiert"
+    "viewPaused": "Web-Ansicht pausiert",
+    "desktopOnlyTitle": "Das Web-Panel braucht die Desktop-App",
+    "desktopOnlyDescription": "Eine Website einzubetten braucht ein natives Fenster, das die Desktop-App über dieses Panel legt. Ein Browser-Tab hat nur ein Iframe, und die meisten Websites lassen sich darin nicht laden."
   },
   "intelligence": {
     "analyzing": "Markt wird analysiert…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "Wähle ein Panel, das du zu deinem Workspace-Layout hinzufügen möchtest.",
-    "added": "Hinzugefügt"
+    "added": "Hinzugefügt",
+    "desktopOnly": "Nur Desktop"
   },
   "layout": {
     "workspaces": "Workspaces",

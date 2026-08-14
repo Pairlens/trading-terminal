@@ -71,6 +71,7 @@ export class DynamicPaneRegistry {
         fitContent: panel.fitContent,
         requires: panel.requires,
         requiredAccessLevel: panel.requiredAccessLevel,
+        requiresDesktop: panel.requiresDesktop,
       }
 
       this.entries.set(typeKey, { definition, component, pluginId })

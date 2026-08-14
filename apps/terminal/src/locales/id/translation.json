@@ -2098,13 +2098,12 @@
     "placeholder": "Masukkan URL...",
     "go": "Buka",
     "refresh": "Segarkan",
-    "openExternal": "Buka di browser",
     "emptyTitle": "Masukkan URL di atas untuk menyematkan situs web",
-    "blockedTitle": "Situs ini tidak dapat disematkan",
-    "blockedDescription": "Situs web ini memblokir tampilan di dalam halaman lain. Anda dapat membukanya di tab browser terpisah.",
     "forward": "Maju",
     "failedToLoad": "Gagal memuat",
-    "viewPaused": "Tampilan web dijeda"
+    "viewPaused": "Tampilan web dijeda",
+    "desktopOnlyTitle": "Panel Web memerlukan aplikasi desktop",
+    "desktopOnlyDescription": "Menyematkan situs membutuhkan jendela native yang ditempatkan aplikasi desktop di atas panel ini. Tab browser hanya punya iframe, dan sebagian besar situs menolak dimuat di dalamnya."
   },
   "intelligence": {
     "analyzing": "Menganalisis pasar…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "Pilih panel untuk ditambahkan ke tata letak ruang kerja Anda.",
-    "added": "Ditambahkan"
+    "added": "Ditambahkan",
+    "desktopOnly": "Khusus Desktop"
   },
   "layout": {
     "workspaces": "Ruang Kerja",

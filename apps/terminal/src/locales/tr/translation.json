@@ -2098,13 +2098,12 @@
     "placeholder": "Bir URL gir...",
     "go": "Git",
     "refresh": "Yenile",
-    "openExternal": "Tarayıcıda aç",
     "emptyTitle": "Bir web sitesi eklemek için yukarıya bir URL gir",
-    "blockedTitle": "Bu site yerleştirilemez",
-    "blockedDescription": "Bu web sitesi başka sayfaların içinde görüntülenmeyi engelliyor. Bunun yerine ayrı bir tarayıcı sekmesinde açabilirsin.",
     "forward": "İleri",
     "failedToLoad": "Yükleme başarısız oldu",
-    "viewPaused": "Web görünümü duraklatıldı"
+    "viewPaused": "Web görünümü duraklatıldı",
+    "desktopOnlyTitle": "Web paneli masaüstü uygulamasını gerektiriyor",
+    "desktopOnlyDescription": "Bir siteyi gömmek, masaüstü uygulamasının bu panelin üzerine yerleştirdiği yerel bir pencere gerektirir. Tarayıcı sekmesinde yalnızca iframe vardır ve çoğu site iframe içinde açılmayı reddeder."
   },
   "intelligence": {
     "analyzing": "Piyasa analiz ediliyor…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "Çalışma alanı düzenine eklemek için bir pano seç.",
-    "added": "Eklendi"
+    "added": "Eklendi",
+    "desktopOnly": "Yalnızca Masaüstü"
   },
   "layout": {
     "workspaces": "Çalışma alanları",

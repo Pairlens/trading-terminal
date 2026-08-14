@@ -341,6 +341,15 @@ export type ContributedPanel = {
   fitContent?: boolean
   requires?: Array<string> // 'workspace:active-pair', CapabilityId
   requiredAccessLevel?: string
+  /**
+   * The panel only works inside the desktop app — same declaration a connector
+   * makes, at panel granularity. The Web panel is the first: embedding an
+   * arbitrary site needs a native child webview, and a browser tab has only an
+   * iframe, which most sites refuse. The picker badges and disables it in a
+   * browser; a panel that arrives anyway (a synced layout, a template) says so
+   * in place of pretending to work.
+   */
+  requiresDesktop?: boolean
 }
 
 // Command contribution declared in plugin manifest

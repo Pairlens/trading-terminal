@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import { isStandalone } from '@/lib/platform'
 import { usePaneContext } from '@/lib/layout/pane-context'
 import { useLayout } from '@/lib/layout/context'
@@ -258,7 +259,28 @@ function useTauriWebview(
 
 // ── Component ───────────────────────────────────────────────────────
 
+/**
+ * Desktop only. Embedding a site means a native Tauri child webview positioned
+ * over this pane; a browser tab has only an iframe, and the sites people
+ * actually put here (exchanges, TradingView, X) all send X-Frame-Options or a
+ * frame-ancestors CSP, so the browser version was an address bar in front of a
+ * blank box. The pane declares `requiresDesktop` in the pairlens-core manifest,
+ * which is what badges and disables it in the picker; this branch is what a
+ * layout that already contains one renders in a browser.
+ */
 export function WebPane() {
+  if (!isStandalone) {
+    return (
+      <PaneDesktopOnly
+        titleKey="webPane.desktopOnlyTitle"
+        descriptionKey="webPane.desktopOnlyDescription"
+      />
+    )
+  }
+  return <WebPaneNative />
+}
+
+function WebPaneNative() {
   const { t } = useTranslation()
   const { paneId, setPaneOverride } = usePaneContext()
   const { layout, pendingAddPaneType } = useLayout()
@@ -270,16 +292,15 @@ export function WebPane() {
 
   const [inputValue, setInputValue] = useState(persistedUrl)
   const [loadedUrl, setLoadedUrl] = useState(persistedUrl)
-  const [status, setStatus] = useState<
-    'idle' | 'loading' | 'loaded' | 'blocked' | 'error'
-  >('idle')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'loaded' | 'error'>(
+    'idle',
+  )
   const [errorMsg, setErrorMsg] = useState('')
   const [historyStack, setHistoryStack] = useState<Array<string>>(
     persistedUrl ? [persistedUrl] : [],
   )
   const [historyIndex, setHistoryIndex] = useState(persistedUrl ? 0 : -1)
   const inputRef = useRef<HTMLInputElement>(null)
-  const iframeRef = useRef<HTMLIFrameElement>(null)
   const nativeContainerRef = useRef<HTMLDivElement>(null)
 
   const onWebviewReady = useCallback(() => setStatus('loaded'), [])
@@ -293,7 +314,7 @@ export function WebPane() {
 
   const { suspended } = useTauriWebview(
     nativeContainerRef,
-    isStandalone ? loadedUrl : '',
+    loadedUrl,
     shouldHideWebview,
     onWebviewReady,
     onWebviewError,
@@ -306,17 +327,6 @@ export function WebPane() {
       setStatus('loading')
     }
   }, [persistedUrl, loadedUrl])
-
-  // CSP violation detection (browser iframe only)
-  useEffect(() => {
-    if (!loadedUrl || isStandalone) return
-    const handler = (e: SecurityPolicyViolationEvent) => {
-      if (e.violatedDirective === 'frame-ancestors') setStatus('blocked')
-    }
-    document.addEventListener('securitypolicyviolation', handler)
-    return () =>
-      document.removeEventListener('securitypolicyviolation', handler)
-  }, [loadedUrl])
 
   const navigate = useCallback(
     (raw: string) => {
@@ -369,21 +379,6 @@ export function WebPane() {
     setStatus('loading')
     requestAnimationFrame(() => setLoadedUrl(prev))
   }
-
-  const handleIframeLoad = useCallback(() => {
-    const iframe = iframeRef.current
-    if (!iframe) return
-    try {
-      const doc = iframe.contentDocument
-      if (doc && doc.location.href === 'about:blank') {
-        setStatus('blocked')
-        return
-      }
-    } catch {
-      // Cross-origin — normal
-    }
-    setStatus('loaded')
-  }, [])
 
   const hasUrl = loadedUrl.length > 0
 
@@ -450,8 +445,8 @@ export function WebPane() {
             </p>
           </div>
         </div>
-      ) : isStandalone ? (
-        // Tauri: native webview overlays this container
+      ) : (
+        // Native webview overlays this container
         <div ref={nativeContainerRef} className="relative flex-1">
           {status === 'loading' && (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -477,35 +472,6 @@ export function WebPane() {
             </div>
           )}
         </div>
-      ) : status === 'blocked' ? (
-        <div className="flex flex-1 items-center justify-center p-6">
-          <div className="max-w-xs text-center">
-            <p className="text-foreground text-sm font-medium mb-1">
-              {t('webPane.blockedTitle')}
-            </p>
-            <p className="text-muted-foreground text-xs mb-3">
-              {t('webPane.blockedDescription')}
-            </p>
-            <a
-              href={loadedUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-md bg-muted px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted/80 transition-colors"
-            >
-              {t('webPane.openExternal')}
-            </a>
-          </div>
-        </div>
-      ) : (
-        <iframe
-          ref={iframeRef}
-          src={loadedUrl}
-          title={t('panes.web')}
-          className="flex-1 border-0"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-          onLoad={handleIframeLoad}
-          onError={() => setStatus('blocked')}
-        />
       )}
     </div>
   )

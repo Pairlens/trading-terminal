@@ -2098,13 +2098,12 @@
     "placeholder": "Digite uma URL...",
     "go": "Ir",
     "refresh": "Atualizar",
-    "openExternal": "Abrir no navegador",
     "emptyTitle": "Digite uma URL acima para incorporar um site",
-    "blockedTitle": "Este site não pode ser incorporado",
-    "blockedDescription": "Este site bloqueia sua exibição dentro de outras páginas. Você pode abri-lo em uma aba separada do navegador.",
     "forward": "Avançar",
     "failedToLoad": "Falha ao carregar",
-    "viewPaused": "Visualização web pausada"
+    "viewPaused": "Visualização web pausada",
+    "desktopOnlyTitle": "O painel Web precisa do app de desktop",
+    "desktopOnlyDescription": "Incorporar um site exige uma janela nativa que o app de desktop coloca sobre este painel. Uma aba do navegador só tem um iframe, e a maioria dos sites recusa carregar dentro de um."
   },
   "intelligence": {
     "analyzing": "Analisando o mercado…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "Escolha um painel para adicionar ao layout do seu workspace.",
-    "added": "Adicionado"
+    "added": "Adicionado",
+    "desktopOnly": "Somente Desktop"
   },
   "layout": {
     "workspaces": "Workspaces",

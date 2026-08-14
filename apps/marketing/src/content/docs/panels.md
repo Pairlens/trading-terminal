@@ -58,10 +58,16 @@ glance. See [risk guardrails](/docs/risk-guardrails).
 | **Recent Tickers** | Recently viewed pairs with live prices, for quick switching |
 | **Top Coins**      | Coins ranked by volume, market cap, and price change        |
 | **Heatmap**        | Market performance across sectors at a glance               |
-| **Web**            | Any website, embedded as a panel                            |
+| **Web**            | Any website, embedded as a panel (desktop app only)         |
 
 The Web panel is a genuine escape hatch. Put your exchange's own page, a
 TradingView idea, a Dune dashboard, or your notes app next to your chart.
+
+It runs in the desktop app only. Embedding a site takes a native window the app
+places over the panel, and a browser tab has nothing but an iframe, which most
+sites refuse to load in. In the browser the panel is offered but marked Desktop
+only, and a layout that already has one says the same thing in place of the
+site.
 
 ## AI and research
 

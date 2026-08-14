@@ -16,6 +16,7 @@ export type PaneDefinition = {
   fitContent?: boolean // size to content height instead of filling available space
   requires?: Array<string> // 'workspace:*' for context, CapabilityId for data
   requiredAccessLevel?: string // subscription tier required (e.g. 'pro', 'max')
+  requiresDesktop?: boolean // only functional inside the Tauri desktop app
 }
 
 export type PaneInstance = {

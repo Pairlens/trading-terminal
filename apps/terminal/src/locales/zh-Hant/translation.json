@@ -2098,13 +2098,12 @@
     "placeholder": "輸入網址…",
     "go": "前往",
     "refresh": "重新整理",
-    "openExternal": "在瀏覽器中開啟",
     "emptyTitle": "在上方輸入網址以嵌入網站",
-    "blockedTitle": "此網站無法嵌入",
-    "blockedDescription": "此網站封鎖在其他頁面內顯示。你可以改在獨立的瀏覽器分頁中開啟它。",
     "forward": "前進",
     "failedToLoad": "載入失敗",
-    "viewPaused": "網頁檢視已暫停"
+    "viewPaused": "網頁檢視已暫停",
+    "desktopOnlyTitle": "Web 面板需要桌面應用程式",
+    "desktopOnlyDescription": "嵌入網站需要桌面應用程式疊在此面板上的原生視窗。瀏覽器分頁只有 iframe，而多數網站拒絕在 iframe 中載入。"
   },
   "intelligence": {
     "analyzing": "正在分析市場…",
@@ -2230,7 +2229,8 @@
   },
   "addPaneDialog": {
     "description": "選擇要新增到工作區版面的面板。",
-    "added": "已新增"
+    "added": "已新增",
+    "desktopOnly": "僅限桌面版"
   },
   "layout": {
     "workspaces": "工作區",

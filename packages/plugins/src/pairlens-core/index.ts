@@ -204,6 +204,11 @@ export const pairlensCoreManifest: PluginManifest = {
         icon: 'Globe',
         category: 'discovery',
         minHeight: 100,
+        // Embedding a site means a native child webview positioned over the
+        // pane. A browser tab has only an iframe, and the sites people put
+        // here (exchanges, TradingView, X) all send X-Frame-Options or a
+        // frame-ancestors CSP, so the browser version is a blank box.
+        requiresDesktop: true,
       },
     ],
   },
