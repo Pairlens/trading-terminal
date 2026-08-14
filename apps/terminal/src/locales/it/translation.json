@@ -660,7 +660,9 @@
       "themeDescription": "Seleziona un tema di colore per l'interfaccia del terminale.",
       "defaultTheme": "Predefinito",
       "recentTickers": "Barra scorrevole dei ticker recenti",
-      "recentTickersDescription": "Mostra le coppie visualizzate di recente con i prezzi in tempo reale in una barra scorrevole sopra l'intestazione della coppia."
+      "recentTickersDescription": "Mostra le coppie visualizzate di recente con i prezzi in tempo reale in una barra scorrevole sopra l'intestazione della coppia.",
+      "haptics": "Feedback aptico",
+      "hapticsDescription": "Un breve tocco quando cambi coppia, exchange o scheda nel terminale mobile."
     },
     "performance": {
       "title": "Frequenza dati",

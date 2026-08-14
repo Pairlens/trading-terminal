@@ -660,7 +660,9 @@
       "themeDescription": "Select a color theme for the terminal interface.",
       "defaultTheme": "Default",
       "recentTickers": "Recent tickers marquee",
-      "recentTickersDescription": "Show recently viewed pairs with live prices in a marquee above the pair header."
+      "recentTickersDescription": "Show recently viewed pairs with live prices in a marquee above the pair header.",
+      "haptics": "Haptic feedback",
+      "hapticsDescription": "A short tap when you switch pairs, venues or tabs on the mobile terminal."
     },
     "performance": {
       "title": "Data Rate",

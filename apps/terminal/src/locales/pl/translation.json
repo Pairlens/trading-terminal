@@ -660,7 +660,9 @@
       "themeDescription": "Wybierz motyw kolorystyczny interfejsu terminala.",
       "defaultTheme": "Domyślny",
       "recentTickers": "Pasek ostatnich tickerów",
-      "recentTickersDescription": "Pokaż ostatnio przeglądane pary z cenami na żywo w pasku nad nagłówkiem pary."
+      "recentTickersDescription": "Pokaż ostatnio przeglądane pary z cenami na żywo w pasku nad nagłówkiem pary.",
+      "haptics": "Wibracje dotykowe",
+      "hapticsDescription": "Krótkie stuknięcie przy zmianie pary, giełdy lub karty w terminalu mobilnym."
     },
     "performance": {
       "title": "Częstotliwość danych",

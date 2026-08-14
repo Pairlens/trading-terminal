@@ -41,6 +41,7 @@ import { isSearchInFlight } from './search-progress'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import type { MobileOverlay } from '../mobile-focus-context'
 import type { VenueKind } from '../lib/venue-kind'
+import { haptic } from '@/lib/haptics'
 import { usePairSearchData } from '@/components/pair-picker/pair-search-results'
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
@@ -232,6 +233,7 @@ export default memo(function PairPickerScreen({
       // A row tapped while the sheet is already leaving is not a choice — see
       // `isClosing`.
       if (isClosing()) return
+      haptic('selection')
       if (isAdd) {
         addToWatchlist(entry.symbol, [activeListId])
         return

@@ -660,7 +660,9 @@
       "themeDescription": "Chọn một giao diện màu cho terminal.",
       "defaultTheme": "Mặc định",
       "recentTickers": "Băng chạy mã gần đây",
-      "recentTickersDescription": "Hiển thị các cặp xem gần đây với giá trực tiếp trong băng chạy phía trên tiêu đề cặp."
+      "recentTickersDescription": "Hiển thị các cặp xem gần đây với giá trực tiếp trong băng chạy phía trên tiêu đề cặp.",
+      "haptics": "Phản hồi rung",
+      "hapticsDescription": "Rung nhẹ khi bạn đổi cặp, sàn hoặc tab trên terminal di động."
     },
     "performance": {
       "title": "Tốc độ dữ liệu",

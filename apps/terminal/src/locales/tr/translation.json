@@ -660,7 +660,9 @@
       "themeDescription": "Terminal arayüzü için bir renk teması seç.",
       "defaultTheme": "Varsayılan",
       "recentTickers": "Son görülen paritelerin kayan bandı",
-      "recentTickersDescription": "Parite başlığının üstünde canlı fiyatlarla son görüntülenen pariteleri kayan bant olarak göster."
+      "recentTickersDescription": "Parite başlığının üstünde canlı fiyatlarla son görüntülenen pariteleri kayan bant olarak göster.",
+      "haptics": "Dokunsal geri bildirim",
+      "hapticsDescription": "Mobil terminalde parite, borsa veya sekme değiştirdiğinizde kısa bir titreşim."
     },
     "performance": {
       "title": "Veri Hızı",

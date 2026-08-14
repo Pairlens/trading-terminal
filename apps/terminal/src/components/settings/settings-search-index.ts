@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 
 import type { SettingsNavId } from '../user-settings-dialog'
+import { hapticsAvailable } from '@/lib/haptics'
 
 /**
  * A hand-kept map of what lives inside each settings section, so settings
@@ -225,6 +226,20 @@ export const SETTINGS_SEARCH_INDEX: ReadonlyArray<SettingsSearchEntry> = [
     descriptionKey: 'settings.appearance.recentTickersDescription',
     keywords: ['marquee', 'tickers', 'recent', 'pairs'],
   },
+  // Gated on the same hardware check as the card itself. A search hit that
+  // opens Appearance and shows nothing is worse than no hit at all, and on a
+  // desktop browser — where `navigator.vibrate` exists but nothing vibrates —
+  // that is exactly what an ungated entry would do.
+  ...(hapticsAvailable()
+    ? [
+        {
+          section: 'appearance' as const,
+          titleKey: 'settings.appearance.haptics',
+          descriptionKey: 'settings.appearance.hapticsDescription',
+          keywords: ['haptics', 'vibration', 'vibrate', 'taptic', 'feedback'],
+        },
+      ]
+    : []),
   // Keyboard
   {
     section: 'keyboard',

@@ -44,6 +44,7 @@ import { useSheetScrollRef } from '../primitives/mobile-sheet'
 import { PRESS } from '../primitives/press'
 import { TrendQuoteCell } from './trend-quote-cell'
 import type { Instrument } from '@pairlens/shared/instrument-types'
+import { haptic } from '@/lib/haptics'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
@@ -289,6 +290,7 @@ const WatchlistRow = memo(function WatchlistRow({
   const kind = venueKindOf(market, availableMarkets)
 
   const handlePress = useCallback(() => {
+    haptic('selection')
     // An equity cannot stream from a crypto exchange, so a row whose venue was
     // resolved away from the focused one takes the venue with it.
     if (market !== focusedVenue) setFocusedVenue(market)

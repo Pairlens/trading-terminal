@@ -660,7 +660,9 @@
       "themeDescription": "Selecione um tema de cores para a interface do terminal.",
       "defaultTheme": "Padrão",
       "recentTickers": "Faixa de tickers recentes",
-      "recentTickersDescription": "Mostrar pares vistos recentemente com preços em tempo real em uma faixa acima do cabeçalho do par."
+      "recentTickersDescription": "Mostrar pares vistos recentemente com preços em tempo real em uma faixa acima do cabeçalho do par.",
+      "haptics": "Retorno tátil",
+      "hapticsDescription": "Um toque curto ao trocar de par, corretora ou aba no terminal móvel."
     },
     "performance": {
       "title": "Taxa de Dados",

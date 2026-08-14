@@ -660,7 +660,9 @@
       "themeDescription": "為終端機介面選擇一個配色主題。",
       "defaultTheme": "預設",
       "recentTickers": "近期行情跑馬燈",
-      "recentTickersDescription": "在交易對標頭上方以跑馬燈顯示近期查看過的交易對即時報價。"
+      "recentTickersDescription": "在交易對標頭上方以跑馬燈顯示近期查看過的交易對即時報價。",
+      "haptics": "觸覺回饋",
+      "hapticsDescription": "在行動終端機切換交易對、交易所或分頁時輕微震動。"
     },
     "performance": {
       "title": "資料更新頻率",

@@ -660,7 +660,9 @@
       "themeDescription": "Wähle ein Farbdesign für die Terminal-Oberfläche.",
       "defaultTheme": "Standard",
       "recentTickers": "Marquee zuletzt angesehener Ticker",
-      "recentTickersDescription": "Zeige zuletzt angesehene Paare mit Live-Kursen in einem Laufband über dem Paar-Header."
+      "recentTickersDescription": "Zeige zuletzt angesehene Paare mit Live-Kursen in einem Laufband über dem Paar-Header.",
+      "haptics": "Haptisches Feedback",
+      "hapticsDescription": "Ein kurzes Tippen, wenn du im mobilen Terminal Paar, Börse oder Tab wechselst."
     },
     "performance": {
       "title": "Datenrate",
