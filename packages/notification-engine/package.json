@@ -19,6 +19,7 @@
     "./types": "./src/types.ts",
     "./step-registry": "./src/step-registry.ts",
     "./core-steps": "./src/core-steps.ts",
+    "./simple-alerts": "./src/simple-alerts.ts",
     "./validator": "./src/validator.ts",
     "./evaluator": "./src/evaluator.ts"
   },

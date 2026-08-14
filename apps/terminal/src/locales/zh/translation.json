@@ -3471,9 +3471,8 @@
         "untitledRule": "未命名规则",
         "eyebrow": "通知",
         "title": "让 Pairlens 替你盯盘",
-        "description": "一条规则就是一个小流程：某件事发生了——价格突破某个水平、K 线收盘、订单成交、指标警报触发——然后经过你添加的条件，最终以应用内提示、系统通知、Telegram 消息或 Webhook 的形式送达给你。",
+        "description": "一条提醒只有一句话：穿越一个价位，或出现值得注意的波动 — 选好交易对就已生效。流程留给其余情况：条件判断、订单成交、指标提醒，以及送达方式。",
         "startBlank": "从空白画布开始",
-        "startFromTemplate": "从模板开始",
         "footnote": "模板创建后立即生效，绑定到 {{market}} 的 {{pair}}。你可以修改步骤，或在规则列表下方更换交易对，然后保存改动。规则只在 Pairlens 运行时触发。"
       },
       "direction": "方向",
@@ -3537,6 +3536,9 @@
           "title": "时间窗口",
           "start": "开始（UTC）",
           "end": "结束（UTC）"
+        },
+        "percentMove": {
+          "title": "价格波动"
         }
       }
     },
@@ -3747,6 +3749,35 @@
             "label": "静默消息"
           }
         }
+      },
+      "percent-move": {
+        "label": "价格波动",
+        "fields": {
+          "percent": {
+            "label": "百分比"
+          },
+          "direction": {
+            "label": "方向",
+            "options": {
+              "up": "上涨",
+              "down": "下跌",
+              "either": "任一"
+            }
+          },
+          "window": {
+            "label": "时间窗口",
+            "options": {
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "24h": "24H"
+            }
+          }
+        },
+        "handles": {
+          "out": "已触发"
+        }
       }
     },
     "messages": {
@@ -3775,14 +3806,6 @@
       }
     },
     "templates": {
-      "price-level": {
-        "title": "价格突破某个水平",
-        "description": "在 {{pair}} 突破 {{level}} 的那一刻送出应用内提示加系统通知。把水平线拖到你想要的价位。",
-        "chips": {
-          "0": "价格高于",
-          "1": "提示"
-        }
-      },
       "volatile-candle": {
         "title": "小时K线大幅波动",
         "description": "当小时K线收盘价与开盘价相差超过 3%（无论涨跌）时触发。",
@@ -3809,6 +3832,56 @@
       "session-drop": {
         "title": "急跌，只在我醒着的时候",
         "description": "2% 下跌K线会唤醒你，但仅限 UTC 13:00 到 21:00 之间。"
+      }
+    },
+    "simple": {
+      "newTitle": "新建提醒",
+      "newDescription": "选择要盯住的行情，以及希望怎样收到通知。",
+      "kindLevel": "价格水平",
+      "kindLevelHint": "价格穿越某个数字时通知我。",
+      "kindMove": "价格波动",
+      "kindMoveHint": "在这段时间内波动这么多时通知我。",
+      "rises": "涨破",
+      "drops": "跌破",
+      "currentPrice": "当前 {{price}}",
+      "percent": "波动幅度",
+      "within": "时间窗口",
+      "deliverLabel": "通知方式",
+      "channelToast": "应用内",
+      "channelOs": "桌面",
+      "channelTelegram": "Telegram",
+      "osBlocked": "系统正在阻止 Pairlens 的通知。",
+      "create": "创建提醒",
+      "created": "已为 {{pair}} 开启提醒",
+      "summaryAbove": "当 {{pair}} 在 {{venue}} 上涨破 {{price}} 时通知你。",
+      "summaryBelow": "当 {{pair}} 在 {{venue}} 上跌破 {{price}} 时通知你。",
+      "summaryUp": "当 {{pair}} 在 {{venue}} 上于 {{window}} 内上涨 {{percent}}% 或更多时通知你。",
+      "summaryDown": "当 {{pair}} 在 {{venue}} 上于 {{window}} 内下跌 {{percent}}% 或更多时通知你。",
+      "summaryEither": "当 {{pair}} 在 {{venue}} 上于 {{window}} 内双向波动 {{percent}}% 时通知你。",
+      "watching": "正在监控",
+      "addPair": "添加交易对",
+      "openInBuilder": "在流程编辑器中打开",
+      "runsWhileOpen": "修改即时保存。提醒仅在 Pairlens 运行时评估。",
+      "newFlow": "创建自定义流程",
+      "shelfLabel": "从一条提醒开始",
+      "flowShelfLabel": "或者创建流程",
+      "card": {
+        "price-level": {
+          "title": "价格触及水平",
+          "description": "交易对穿越你在意的数字时立刻告诉你。",
+          "chips": {
+            "0": "上方或下方",
+            "1": "一个数字"
+          }
+        },
+        "percent-move": {
+          "title": "价格快速波动",
+          "description": "交易对在一段时间内波动达到你设定的百分比时告诉你。",
+          "chips": {
+            "0": "涨、跌或双向",
+            "1": "5m 到 24h"
+          }
+        }
       }
     }
   },

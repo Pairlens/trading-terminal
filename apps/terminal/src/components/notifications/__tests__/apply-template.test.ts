@@ -58,7 +58,9 @@ afterEach(() => {
   useNotificationStore.setState({ rules: [], bindings: [], draft: null })
 })
 
-const graphTemplates = NOTIFICATION_TEMPLATES.filter((t) => t.kind === 'graph')
+// Every notification template is a graph now: a bare price level is a simple
+// alert made in the New alert dialog, not a template that expands to nodes.
+const graphTemplates = NOTIFICATION_TEMPLATES
 
 describe('applying a notification template', () => {
   it('has graph templates to cover', () => {

@@ -3471,9 +3471,8 @@
         "untitledRule": "Unbenannte Regel",
         "eyebrow": "Benachrichtigungen",
         "title": "Beobachte den Markt, ohne selbst hinzuschauen",
-        "description": "Eine Regel ist ein kleiner Ablauf: Etwas passiert — ein Niveau wird gekreuzt, eine Kerze schließt, ein Order wird ausgeführt, ein Indikator schlägt an — sie durchläuft die Bedingungen, die du hinzufügst, und erreicht dich dann als Toast, Systembenachrichtigung, Telegram-Nachricht oder Webhook.",
+        "description": "Eine Benachrichtigung ist eine Zeile: eine Marke, die gekreuzt wird, oder eine Bewegung, die auffällt — Paar nennen, fertig. Flows sind für den Rest: Bedingungen, ausgeführte Orders, Indikator-Alarme und die Zustellwege.",
         "startBlank": "Mit einer leeren Zeichenfläche beginnen",
-        "startFromTemplate": "Mit einer Vorlage beginnen",
         "footnote": "Vorlagen sind sofort scharf, gebunden an {{pair}} auf {{market}}. Passe die Schritte an oder ändere das Paar unter der Regelliste, dann speichere mit Commit. Regeln laufen nur, solange Pairlens läuft."
       },
       "direction": "Richtung",
@@ -3537,6 +3536,9 @@
           "title": "Zeitfenster",
           "start": "Start (UTC)",
           "end": "Ende (UTC)"
+        },
+        "percentMove": {
+          "title": "Preisbewegung"
         }
       }
     },
@@ -3747,6 +3749,35 @@
             "label": "Stumme Nachricht"
           }
         }
+      },
+      "percent-move": {
+        "label": "Preisbewegung",
+        "fields": {
+          "percent": {
+            "label": "Prozent"
+          },
+          "direction": {
+            "label": "Richtung",
+            "options": {
+              "up": "Aufwärts",
+              "down": "Abwärts",
+              "either": "Beide"
+            }
+          },
+          "window": {
+            "label": "Innerhalb",
+            "options": {
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "24h": "24H"
+            }
+          }
+        },
+        "handles": {
+          "out": "Ausgelöst"
+        }
       }
     },
     "messages": {
@@ -3775,14 +3806,6 @@
       }
     },
     "templates": {
-      "price-level": {
-        "title": "Preis kreuzt ein Niveau",
-        "description": "Toast plus Systembenachrichtigung in dem Moment, in dem {{pair}} {{level}} kreuzt. Ziehe das Niveau auf deins.",
-        "chips": {
-          "0": "Preis über",
-          "1": "Toast"
-        }
-      },
       "volatile-candle": {
         "title": "Die Stundenkerze schlägt groß aus",
         "description": "Löst aus, wenn eine Stundenkerze mehr als 3 % von ihrem Eröffnungspreis entfernt schließt, egal in welche Richtung.",
@@ -3809,6 +3832,56 @@
       "session-drop": {
         "title": "Scharfer Einbruch — aber nur, während ich wach bin",
         "description": "Eine 2-%-Abwärtskerze weckt dich, aber nur zwischen 13:00 und 21:00 UTC."
+      }
+    },
+    "simple": {
+      "newTitle": "Neue Benachrichtigung",
+      "newDescription": "Wähle, was beobachtet wird und wie du davon erfährst.",
+      "kindLevel": "Preisniveau",
+      "kindLevelHint": "Sag Bescheid, wenn der Preis eine Marke kreuzt.",
+      "kindMove": "Preisbewegung",
+      "kindMoveHint": "Sag Bescheid, wenn es so stark und so schnell schwankt.",
+      "rises": "Steigt über",
+      "drops": "Fällt unter",
+      "currentPrice": "Jetzt {{price}}",
+      "percent": "Bewegt sich um",
+      "within": "Innerhalb",
+      "deliverLabel": "Benachrichtige mich per",
+      "channelToast": "In der App",
+      "channelOs": "Desktop",
+      "channelTelegram": "Telegram",
+      "osBlocked": "Dein System blockiert Benachrichtigungen von Pairlens.",
+      "create": "Benachrichtigung erstellen",
+      "created": "Benachrichtigung für {{pair}} aktiv",
+      "summaryAbove": "Meldet sich, wenn {{pair}} auf {{venue}} über {{price}} handelt.",
+      "summaryBelow": "Meldet sich, wenn {{pair}} auf {{venue}} unter {{price}} handelt.",
+      "summaryUp": "Meldet sich, wenn {{pair}} auf {{venue}} innerhalb von {{window}} um {{percent}} % oder mehr steigt.",
+      "summaryDown": "Meldet sich, wenn {{pair}} auf {{venue}} innerhalb von {{window}} um {{percent}} % oder mehr fällt.",
+      "summaryEither": "Meldet sich, wenn {{pair}} auf {{venue}} innerhalb von {{window}} um {{percent}} % in eine der beiden Richtungen schwankt.",
+      "watching": "Beobachtet",
+      "addPair": "Paar hinzufügen",
+      "openInBuilder": "Im Flow-Editor öffnen",
+      "runsWhileOpen": "Änderungen werden sofort gespeichert. Benachrichtigungen laufen, solange Pairlens läuft.",
+      "newFlow": "Eigenen Flow bauen",
+      "shelfLabel": "Starte mit einer Benachrichtigung",
+      "flowShelfLabel": "Oder baue einen Flow",
+      "card": {
+        "price-level": {
+          "title": "Preis erreicht eine Marke",
+          "description": "Erfahre es in dem Moment, in dem ein Paar deine Marke kreuzt.",
+          "chips": {
+            "0": "Darüber oder darunter",
+            "1": "Eine Zahl"
+          }
+        },
+        "percent-move": {
+          "title": "Preis bewegt sich schnell",
+          "description": "Erfahre es, wenn ein Paar deinen Prozentsatz innerhalb eines Fensters schwankt.",
+          "chips": {
+            "0": "Hoch, runter oder beides",
+            "1": "5m bis 24h"
+          }
+        }
       }
     }
   },

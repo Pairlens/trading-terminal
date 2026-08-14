@@ -1,7 +1,16 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useTranslation } from 'react-i18next'
-import { Bell, Copy, FlaskConical, Pencil, Plus, Trash2, X } from 'lucide-react'
+import {
+  Bell,
+  Copy,
+  FlaskConical,
+  Pencil,
+  Plus,
+  Trash2,
+  Workflow,
+  X,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -17,10 +26,14 @@ import {
   DialogTitle,
 } from '@pairlens/ui/components/ui/dialog'
 
+import { isSimpleAlert } from '@pairlens/notification-engine/simple-alerts'
+
 import {
   MASTER_DETAIL_LIST_CLASS,
   MASTER_DETAIL_LIST_HEADER_CLASS,
 } from '../master-detail'
+import { NewAlertDialog } from './new-alert-dialog'
+import { useSimpleAlertView } from './use-simple-alert-view'
 import type { NotificationLogEntry } from '@/lib/notifications/notification-runtime'
 import { sendTestNotification } from '@/lib/notifications/test-fire'
 import { useNotificationStore } from '@/stores/notification-store'
@@ -39,11 +52,13 @@ export function NotificationsSidebar() {
   const startEditing = useNotificationStore((s) => s.startEditing)
 
   const [tab, setTab] = useState<'rules' | 'activity'>('rules')
+  const [alertOpen, setAlertOpen] = useState(false)
   const [createOpen, setCreateOpen] = useState(false)
   const [newName, setNewName] = useState('')
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [renameId, setRenameId] = useState<string | null>(null)
   const [renameName, setRenameName] = useState('')
+  const simpleSelected = useSimpleAlertView(activeRuleId)
 
   // Pre-fill rename dialog with current name
   useEffect(() => {
@@ -109,7 +124,8 @@ export function NotificationsSidebar() {
             variant="ghost"
             size="icon"
             className="size-6"
-            onClick={() => setCreateOpen(true)}
+            aria-label={t('notifications.simple.newTitle')}
+            onClick={() => setAlertOpen(true)}
           >
             <Plus className="size-3.5" />
           </Button>
@@ -129,6 +145,9 @@ export function NotificationsSidebar() {
             )}
             {rules.map((rule) => {
               const disabled = rule.enabled === false
+              // A bell for the alerts, the flow mark for everything else —
+              // the list says which editor a row opens before it is clicked.
+              const RowIcon = isSimpleAlert(rule) ? Bell : Workflow
               return (
                 <div
                   key={rule.id}
@@ -144,7 +163,7 @@ export function NotificationsSidebar() {
                     startEditing(rule.id)
                   }}
                 >
-                  <Bell className="size-3.5 shrink-0" />
+                  <RowIcon className="size-3.5 shrink-0" />
                   <span className="min-w-0 flex-1 truncate">{rule.name}</span>
                   <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
                     <button
@@ -186,10 +205,37 @@ export function NotificationsSidebar() {
             })}
           </div>
 
-          {/* Bindings for the selected rule */}
-          {activeRuleId && <BindingsPanel ruleId={activeRuleId} />}
+          {/* The way to something the two-field form cannot say. Bottom of
+              the list, quiet: most people never need it, and the ones who do
+              are looking for it. */}
+          <div className="border-t border-border p-1.5">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-full justify-start gap-2 text-[11px] text-muted-foreground"
+              onClick={() => setCreateOpen(true)}
+            >
+              <Workflow className="size-3.5" />
+              {t('notifications.simple.newFlow')}
+            </Button>
+          </div>
+
+          {/* Bindings for the selected rule. Simple alerts manage their own
+              pairs in the form, so this would be a second editable copy. */}
+          {activeRuleId && !simpleSelected && (
+            <BindingsPanel ruleId={activeRuleId} />
+          )}
         </>
       )}
+
+      <NewAlertDialog
+        open={alertOpen}
+        onOpenChange={setAlertOpen}
+        onCreated={(id) => {
+          selectRule(id)
+          startEditing(id)
+        }}
+      />
 
       {/* Create Dialog */}
       <Dialog

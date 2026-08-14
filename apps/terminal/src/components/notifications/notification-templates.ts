@@ -1,26 +1,25 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Starter notification rules for the empty state.
+ * Starter FLOWS for the empty state — the multi-step rules, not the alerts.
+ *
+ * A price level and a percent move are not here: those are simple alerts
+ * now, made in the New alert dialog with two fields and no canvas. What is
+ * left is the shape a flow is actually for — a trigger with conditions
+ * attached, or an event with no simple form (fills, indicator alerts).
  *
  * Built only from step types the notification engine actually registers —
- * events (price-alert, order-executed, indicator-alert, candle-close),
- * conditions (percent-change, time-window) and channels (local-toast,
- * os-notification). Webhook is deliberately absent: it needs a URL, so a
- * template using it would open invalid.
+ * events (order-executed, indicator-alert, candle-close), conditions
+ * (percent-change, time-window) and channels (local-toast, os-notification).
+ * Webhook is deliberately absent: it needs a URL, so a template using it
+ * would open invalid.
  *
  * Each template also gets a binding, because a rule with no pair attached is
  * inert and the empty state's whole promise is "click this and it works".
  * BTC-USDT on OKX matches the default the workspace templates use; the Pairs
  * panel under the rule list is where the user retargets it.
  */
-import {
-  Bell,
-  CandlestickChart,
-  Clock,
-  Receipt,
-  SquareFunction,
-} from 'lucide-react'
+import { CandlestickChart, Clock, Receipt, SquareFunction } from 'lucide-react'
 
 import type { StarterTemplate } from '../starter-empty-state'
 import type {
@@ -49,33 +48,13 @@ type TemplateEdge = {
 }
 
 export type NotificationTemplate = StarterTemplate & {
-  /**
-   * Price-level alerts already have a dedicated creation path (the chart's
-   * right-click "alert here"); this flag routes the template through it
-   * instead of hand-assembling the same three steps a second time.
-   */
-  kind: 'price-level' | 'graph'
   steps: Array<TemplateStep>
   edges: Array<TemplateEdge>
 }
 
-/** The level the price template starts at — round, obviously a placeholder. */
-export const TEMPLATE_PRICE_LEVEL = 100000
-
 export const NOTIFICATION_TEMPLATES: Array<NotificationTemplate> = [
   {
-    id: 'price-level',
-    kind: 'price-level',
-    title: 'Price crosses a level',
-    description: `Toast plus an OS notification the moment ${TEMPLATE_PAIR} crosses ${TEMPLATE_PRICE_LEVEL.toLocaleString()}. Drag the level to yours.`,
-    icon: Bell,
-    chips: ['Price above', 'Toast', 'OS notification'],
-    steps: [],
-    edges: [],
-  },
-  {
     id: 'volatile-candle',
-    kind: 'graph',
     title: 'The hourly candle went big',
     description:
       'Fires when an hourly candle closes more than 3% from where it opened, up or down.',
@@ -115,7 +94,6 @@ export const NOTIFICATION_TEMPLATES: Array<NotificationTemplate> = [
   },
   {
     id: 'fills',
-    kind: 'graph',
     title: 'Tell me when an order fills',
     description:
       'Every filled order on the pair reaches you, so the terminal can sit in the background.',
@@ -148,7 +126,6 @@ export const NOTIFICATION_TEMPLATES: Array<NotificationTemplate> = [
   },
   {
     id: 'indicator-relay',
-    kind: 'graph',
     title: 'Relay my indicator alerts',
     description:
       'Alert conditions declared by your Python indicators become real notifications.',
@@ -181,7 +158,6 @@ export const NOTIFICATION_TEMPLATES: Array<NotificationTemplate> = [
   },
   {
     id: 'session-drop',
-    kind: 'graph',
     title: 'Sharp drop, only while I am up',
     description:
       'A 2% down candle wakes you, but only between 13:00 and 21:00 UTC.',
@@ -240,16 +216,6 @@ export function notificationTemplateChips(
 ): Array<string> {
   const [c0, c1, c2] = template.chips
   switch (template.id) {
-    case 'price-level':
-      return [
-        t('notifications.templates.price-level.chips.0', {
-          defaultValue: c0,
-        }),
-        t('notifications.templates.price-level.chips.1', {
-          defaultValue: c1,
-        }),
-        t('common.chips.osNotification', { defaultValue: c2 }),
-      ]
     case 'volatile-candle':
       return [
         t('common.chips.timeframeClose', { defaultValue: c0 }),
@@ -286,10 +252,9 @@ export function notificationTemplateChips(
 }
 
 /**
- * The DSL a graph template expands to. Pure, so a test can hand it straight to
+ * The DSL a template expands to. Pure, so a test can hand it straight to
  * `validateRule` — a template that opens with a red commit bar is worse than
- * no template at all. (`price-level` goes through `createPriceAlertRule`
- * instead and carries no steps of its own.)
+ * no template at all.
  */
 export function notificationTemplateGraph(template: NotificationTemplate): {
   steps: Array<NotificationStepDSL>
@@ -315,15 +280,14 @@ export function notificationTemplateGraph(template: NotificationTemplate): {
 /**
  * Create the rule, bind it to a pair, and open it in the editor pre-filled.
  *
- * Same store actions the sidebar and canvas already use — `createRule` /
- * `createPriceAlertRule`, `startEditing`, then `addStep`/`addEdge` per element
- * exactly as a drop on the canvas does.
+ * Same store actions the sidebar and canvas already use — `createRule`,
+ * `startEditing`, then `addStep`/`addEdge` per element exactly as a drop on
+ * the canvas does.
  *
  * The graph is then committed, so the rule is armed the moment it appears.
  * Leaving it as an uncommitted draft meant the rule showed up in the list with
  * its toggle on while `rule.steps` was still empty: enabled, visible, and
  * incapable of firing until the user happened to notice the Commit button.
- * The price-level branch below has always committed for exactly this reason.
  * Editing still works the usual way — commitDraft re-opens the rule with a
  * clean draft, so the canvas stays live and the next change is pending again.
  */
@@ -331,18 +295,6 @@ export function applyNotificationTemplate(
   template: NotificationTemplate,
 ): string {
   const store = useNotificationStore.getState()
-
-  if (template.kind === 'price-level') {
-    const ruleId = store.createPriceAlertRule({
-      pair: TEMPLATE_PAIR,
-      market: TEMPLATE_MARKET,
-      price: TEMPLATE_PRICE_LEVEL,
-      direction: 'above',
-    })
-    store.selectRule(ruleId)
-    store.startEditing(ruleId)
-    return ruleId
-  }
 
   const ruleId = store.createRule(
     i18n.t(`notifications.templates.${template.id}.title`, {

@@ -3471,9 +3471,8 @@
         "untitledRule": "Aturan tanpa judul",
         "eyebrow": "Notifikasi",
         "title": "Pantau market agar Anda tidak perlu melakukannya sendiri",
-        "description": "Aturan adalah alur kecil: sesuatu terjadi — level tertembus, candle ditutup, order terisi, alert indikator terpicu — lalu melewati kondisi yang Anda tambahkan, dan akhirnya sampai ke Anda sebagai toast, notifikasi sistem, pesan Telegram, atau webhook.",
+        "description": "Satu peringatan cukup satu baris: level yang dilewati, atau pergerakan yang layak diperhatikan — sebut pasangannya dan langsung aktif. Alur untuk sisanya: kondisi, order terisi, peringatan indikator, dan ke mana dikirimnya.",
         "startBlank": "Mulai dari kanvas kosong",
-        "startFromTemplate": "Mulai dari template",
         "footnote": "Templat langsung aktif, terikat ke {{pair}} di {{market}}. Ubah langkahnya atau ganti pasangan di bawah daftar aturan, lalu Simpan perubahannya. Aturan hanya berjalan selama Pairlens terbuka."
       },
       "direction": "Arah",
@@ -3537,6 +3536,9 @@
           "title": "Jendela Waktu",
           "start": "Mulai (UTC)",
           "end": "Selesai (UTC)"
+        },
+        "percentMove": {
+          "title": "Pergerakan Harga"
         }
       }
     },
@@ -3747,6 +3749,35 @@
             "label": "Pesan senyap"
           }
         }
+      },
+      "percent-move": {
+        "label": "Pergerakan Harga",
+        "fields": {
+          "percent": {
+            "label": "Persentase"
+          },
+          "direction": {
+            "label": "Arah",
+            "options": {
+              "up": "Naik",
+              "down": "Turun",
+              "either": "Keduanya"
+            }
+          },
+          "window": {
+            "label": "Dalam",
+            "options": {
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "24h": "24H"
+            }
+          }
+        },
+        "handles": {
+          "out": "Terpicu"
+        }
       }
     },
     "messages": {
@@ -3775,14 +3806,6 @@
       }
     },
     "templates": {
-      "price-level": {
-        "title": "Harga melewati sebuah level",
-        "description": "Toast plus notifikasi sistem tepat saat {{pair}} melewati {{level}}. Seret level ke milik Anda.",
-        "chips": {
-          "0": "Harga di atas",
-          "1": "Toast"
-        }
-      },
       "volatile-candle": {
         "title": "Candle per jam bergerak besar",
         "description": "Terpicu saat candle per jam ditutup lebih dari 3% dari harga pembukaannya, naik atau turun.",
@@ -3809,6 +3832,56 @@
       "session-drop": {
         "title": "Penurunan tajam, hanya saat saya bangun",
         "description": "Candle turun 2% membangunkan Anda, tapi hanya antara pukul 13:00 dan 21:00 UTC."
+      }
+    },
+    "simple": {
+      "newTitle": "Peringatan baru",
+      "newDescription": "Pilih apa yang dipantau dan bagaimana Anda ingin diberi tahu.",
+      "kindLevel": "Level harga",
+      "kindLevelHint": "Beri tahu saya saat harga melewati suatu angka.",
+      "kindMove": "Pergerakan harga",
+      "kindMoveHint": "Beri tahu saya saat bergerak sebanyak ini, secepat ini.",
+      "rises": "Naik di atas",
+      "drops": "Turun di bawah",
+      "currentPrice": "Kini {{price}}",
+      "percent": "Bergerak",
+      "within": "Dalam",
+      "deliverLabel": "Beri tahu lewat",
+      "channelToast": "Dalam aplikasi",
+      "channelOs": "Desktop",
+      "channelTelegram": "Telegram",
+      "osBlocked": "Sistem Anda memblokir notifikasi dari Pairlens.",
+      "create": "Buat peringatan",
+      "created": "Peringatan aktif di {{pair}}",
+      "summaryAbove": "Memberi tahu saat {{pair}} diperdagangkan di atas {{price}} di {{venue}}.",
+      "summaryBelow": "Memberi tahu saat {{pair}} diperdagangkan di bawah {{price}} di {{venue}}.",
+      "summaryUp": "Memberi tahu saat {{pair}} naik {{percent}}% atau lebih dalam {{window}} di {{venue}}.",
+      "summaryDown": "Memberi tahu saat {{pair}} turun {{percent}}% atau lebih dalam {{window}} di {{venue}}.",
+      "summaryEither": "Memberi tahu saat {{pair}} bergerak {{percent}}% ke arah mana pun dalam {{window}} di {{venue}}.",
+      "watching": "Memantau",
+      "addPair": "Tambah pasangan",
+      "openInBuilder": "Buka di editor alur",
+      "runsWhileOpen": "Perubahan tersimpan otomatis. Peringatan dievaluasi selama Pairlens berjalan.",
+      "newFlow": "Bangun alur khusus",
+      "shelfLabel": "Mulai dengan peringatan",
+      "flowShelfLabel": "Atau bangun alur",
+      "card": {
+        "price-level": {
+          "title": "Harga menyentuh level",
+          "description": "Tahu persis saat sebuah pasangan melewati angka yang Anda pedulikan.",
+          "chips": {
+            "0": "Di atas atau di bawah",
+            "1": "Satu angka"
+          }
+        },
+        "percent-move": {
+          "title": "Harga bergerak cepat",
+          "description": "Tahu saat sebuah pasangan berayun sebesar persentase Anda dalam satu jendela waktu.",
+          "chips": {
+            "0": "Naik, turun, atau keduanya",
+            "1": "5m sampai 24h"
+          }
+        }
       }
     }
   },

@@ -3471,9 +3471,8 @@
         "untitledRule": "제목 없는 규칙",
         "eyebrow": "알림",
         "title": "시장 감시는 Pairlens에 맡기세요",
-        "description": "규칙은 작은 흐름입니다. 무언가 발생하면 — 가격이 특정 수준을 넘거나, 캔들이 마감되거나, 주문이 체결되거나, 지표 알림이 트리거되면 — 추가한 조건을 통과한 뒤 토스트, 시스템 알림, 텔레그램 메시지, 웹훅으로 전달됩니다.",
+        "description": "알림은 한 줄이면 됩니다. 넘어야 할 레벨이나 눈여겨볼 움직임 — 페어만 고르면 바로 작동합니다. 플로우는 나머지를 위한 것입니다: 조건, 주문 체결, 지표 알림, 그리고 전달 경로.",
         "startBlank": "빈 캔버스에서 시작",
-        "startFromTemplate": "템플릿에서 시작",
         "footnote": "템플릿은 {{market}}의 {{pair}}에 연결된 채 바로 활성화됩니다. 단계를 수정하거나 규칙 목록 아래에서 페어를 바꾼 뒤 저장하세요. 규칙은 Pairlens가 실행 중일 때만 작동합니다."
       },
       "direction": "방향",
@@ -3537,6 +3536,9 @@
           "title": "시간대",
           "start": "시작 (UTC)",
           "end": "종료 (UTC)"
+        },
+        "percentMove": {
+          "title": "가격 변동"
         }
       }
     },
@@ -3747,6 +3749,35 @@
             "label": "무음 메시지"
           }
         }
+      },
+      "percent-move": {
+        "label": "가격 변동",
+        "fields": {
+          "percent": {
+            "label": "퍼센트"
+          },
+          "direction": {
+            "label": "방향",
+            "options": {
+              "up": "상승",
+              "down": "하락",
+              "either": "둘 다"
+            }
+          },
+          "window": {
+            "label": "기간",
+            "options": {
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "24h": "24H"
+            }
+          }
+        },
+        "handles": {
+          "out": "트리거됨"
+        }
       }
     },
     "messages": {
@@ -3775,14 +3806,6 @@
       }
     },
     "templates": {
-      "price-level": {
-        "title": "가격이 수준을 넘을 때",
-        "description": "{{pair}}이(가) {{level}}을(를) 넘는 순간 토스트와 OS 알림을 보냅니다. 수준은 드래그해서 원하는 값으로 조정하세요.",
-        "chips": {
-          "0": "가격 상향 돌파",
-          "1": "토스트"
-        }
-      },
       "volatile-candle": {
         "title": "1시간 캔들이 크게 움직였을 때",
         "description": "1시간 캔들이 시가 대비 3% 넘게 상승 또는 하락한 채로 마감되면 발동합니다.",
@@ -3809,6 +3832,56 @@
       "session-drop": {
         "title": "급락, 내가 깨어 있을 때만",
         "description": "2% 하락 캔들이 깨워주지만, UTC 13:00~21:00 사이에만 작동합니다."
+      }
+    },
+    "simple": {
+      "newTitle": "새 알림",
+      "newDescription": "무엇을 지켜볼지, 어떻게 알릴지 고르세요.",
+      "kindLevel": "가격 레벨",
+      "kindLevelHint": "가격이 지정한 숫자를 넘으면 알려 줍니다.",
+      "kindMove": "가격 변동",
+      "kindMoveHint": "이만큼, 이렇게 빠르게 움직이면 알려 줍니다.",
+      "rises": "이상으로 상승",
+      "drops": "이하로 하락",
+      "currentPrice": "현재 {{price}}",
+      "percent": "변동 폭",
+      "within": "기간",
+      "deliverLabel": "알림 방법",
+      "channelToast": "앱 내",
+      "channelOs": "데스크톱",
+      "channelTelegram": "Telegram",
+      "osBlocked": "시스템이 Pairlens 알림을 차단하고 있습니다.",
+      "create": "알림 만들기",
+      "created": "{{pair}} 알림을 켰습니다",
+      "summaryAbove": "{{venue}}에서 {{pair}}가 {{price}} 위로 거래되면 알려 줍니다.",
+      "summaryBelow": "{{venue}}에서 {{pair}}가 {{price}} 아래로 거래되면 알려 줍니다.",
+      "summaryUp": "{{venue}}에서 {{pair}}가 {{window}} 안에 {{percent}}% 이상 오르면 알려 줍니다.",
+      "summaryDown": "{{venue}}에서 {{pair}}가 {{window}} 안에 {{percent}}% 이상 내리면 알려 줍니다.",
+      "summaryEither": "{{venue}}에서 {{pair}}가 {{window}} 안에 어느 방향으로든 {{percent}}% 움직이면 알려 줍니다.",
+      "watching": "감시 중",
+      "addPair": "페어 추가",
+      "openInBuilder": "플로우 빌더에서 열기",
+      "runsWhileOpen": "변경은 바로 저장됩니다. 알림은 Pairlens가 실행 중일 때 평가됩니다.",
+      "newFlow": "맞춤 플로우 만들기",
+      "shelfLabel": "알림부터 시작하기",
+      "flowShelfLabel": "또는 플로우 만들기",
+      "card": {
+        "price-level": {
+          "title": "가격이 레벨에 닿을 때",
+          "description": "관심 있는 숫자를 페어가 넘는 순간 바로 알려 줍니다.",
+          "chips": {
+            "0": "위 또는 아래",
+            "1": "숫자 하나"
+          }
+        },
+        "percent-move": {
+          "title": "가격이 빠르게 움직일 때",
+          "description": "정한 기간 안에 페어가 지정한 비율만큼 움직이면 알려 줍니다.",
+          "chips": {
+            "0": "상승·하락·양방향",
+            "1": "5m~24h"
+          }
+        }
       }
     }
   },

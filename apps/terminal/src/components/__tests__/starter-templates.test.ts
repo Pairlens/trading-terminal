@@ -163,11 +163,9 @@ describe('notification starter templates', () => {
     expect(missing).toEqual([])
   })
 
-  // `price-level` is assembled by `createPriceAlertRule`, which the chart's
-  // "alert here" action already exercises; it carries no steps of its own.
-  const graphTemplates = NOTIFICATION_TEMPLATES.filter(
-    (t) => t.kind === 'graph',
-  )
+  // All of them, now that the bare price level has moved to the simple-alert
+  // dialog: what is left in this catalog is flows with steps.
+  const graphTemplates = NOTIFICATION_TEMPLATES
 
   it('has at least one graph template', () => {
     expect(graphTemplates.length).toBeGreaterThan(0)

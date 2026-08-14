@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { PriceAlertStep } from './price-alert-step'
+import { PercentMoveStep } from './percent-move-step'
 import { OrderExecutedStep } from './order-executed-step'
 import { SignalGeneratedStep } from './signal-generated-step'
 import { IndicatorAlertStep } from './indicator-alert-step'
@@ -17,6 +18,7 @@ import type { ComponentType } from 'react'
 
 export {
   PriceAlertStep,
+  PercentMoveStep,
   OrderExecutedStep,
   SignalGeneratedStep,
   IndicatorAlertStep,
@@ -36,6 +38,7 @@ export const notificationStepComponents: Record<
   ComponentType<NodeProps>
 > = {
   'price-alert': PriceAlertStep,
+  'percent-move': PercentMoveStep,
   'order-executed': OrderExecutedStep,
   'signal-generated': SignalGeneratedStep,
   'indicator-alert': IndicatorAlertStep,

@@ -11,6 +11,7 @@ import {
   Send,
   ShoppingCart,
   TrendingUp,
+  TrendingUpDown,
   Webhook,
   Zap,
 } from 'lucide-react'
@@ -19,6 +20,7 @@ import type { LucideIcon } from 'lucide-react'
 const NOTIFICATION_STEP_ICONS: Record<string, LucideIcon> = {
   // Events
   TrendingUp,
+  TrendingUpDown,
   ShoppingCart,
   Zap,
   CandlestickChart,
