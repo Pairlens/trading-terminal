@@ -19,6 +19,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMobileFocus } from '../mobile-focus-context'
 import type { OrderBookLevel } from '@/hooks/use-orderbook-stream'
+import type { BookMetric } from '@/components/terminal/orderbook-pane'
 import {
   addCumulative,
   computeAutoTickIndex,
@@ -29,7 +30,11 @@ import { computeMagnitudeReference } from '@/components/terminal/magnitude-inten
 import { useOptionalOrderbookData } from '@/lib/chart-terminal-context'
 import { useSwitchTransition } from '@/hooks/use-switch-transition'
 
-export type MobileBookRow = OrderBookLevel & { cumulative: number }
+export type MobileBookRow = OrderBookLevel & {
+  /** The magnitude this row displays: base size, or its quote notional. */
+  amount: number
+  cumulative: number
+}
 
 export type MobileOrderbook = {
   /** Asks in render order: worst price first, best ask last (above the spread). */
@@ -41,15 +46,16 @@ export type MobileOrderbook = {
   /** Deepest cumulative on either side — the depth bars' 100%. */
   maxCumulative: number
   /**
-   * Level size that saturates the depth tint, pooled across BOTH sides.
+   * Level amount that saturates the depth tint, pooled across BOTH sides.
    *
    * The bar's length is cumulative depth; its colour strength is this level's
-   * own size against this reference. Two variables, two channels — a wall reads
-   * as a hot band even where the cumulative bar is already near full width.
-   * Pooled because an equal bid and ask must paint identically or the book
-   * lies about which side is heavier.
+   * own amount against this reference. Two variables, two channels — a wall
+   * reads as a hot band even where the cumulative bar is already near full
+   * width. Pooled because an equal bid and ask must paint identically or the
+   * book lies about which side is heavier, and scaled to the metric on screen
+   * so value mode grades notionals rather than the base sizes behind them.
    */
-  sizeReference: number
+  amountReference: number
   spread: { value: number; pct: number } | null
   /** Share of the shown depth resting on each side. */
   buyPct: number
@@ -76,7 +82,16 @@ export function tickDecimals(tick: number): number {
   return Math.min(8, Math.max(1, decimals))
 }
 
-export function useMobileOrderbook(rowsPerSide: number): MobileOrderbook {
+/**
+ * `metric` is a parameter rather than state held here because the two callers
+ * are separate hook instances: the strip reads one best bid and one best ask,
+ * which base size describes as well as notional does, so only the full book
+ * offers the switch and only the full book has to remember it.
+ */
+export function useMobileOrderbook(
+  rowsPerSide: number,
+  metric: BookMetric = 'size',
+): MobileOrderbook {
   const orderbookData = useOptionalOrderbookData()
   const { focusedPair, focusedVenue: market } = useMobileFocus()
 
@@ -137,15 +152,15 @@ export function useMobileOrderbook(rowsPerSide: number): MobileOrderbook {
     if (!book?.asks.length) return []
     const grouped =
       tickSize > 0 ? groupLevels(book.asks, tickSize, 'asks') : book.asks
-    return addCumulative(grouped.slice(0, rowsPerSide)).reverse()
-  }, [book?.asks, rowsPerSide, tickSize])
+    return addCumulative(grouped.slice(0, rowsPerSide), metric).reverse()
+  }, [book?.asks, rowsPerSide, tickSize, metric])
 
   const bids = useMemo(() => {
     if (!book?.bids.length) return []
     const grouped =
       tickSize > 0 ? groupLevels(book.bids, tickSize, 'bids') : book.bids
-    return addCumulative(grouped.slice(0, rowsPerSide))
-  }, [book?.bids, rowsPerSide, tickSize])
+    return addCumulative(grouped.slice(0, rowsPerSide), metric)
+  }, [book?.bids, rowsPerSide, tickSize, metric])
 
   const bestBid = bids[0]?.price ?? null
   const bestAsk = asks[asks.length - 1]?.price ?? null
@@ -162,11 +177,11 @@ export function useMobileOrderbook(rowsPerSide: number): MobileOrderbook {
   // arrays and one sort over the visible rows per book update — the same order
   // of work the slicing above already does, and the same shape the desktop
   // pane uses.
-  const sizeReference = useMemo(
+  const amountReference = useMemo(
     () =>
       computeMagnitudeReference(
-        bids.map((row) => row.size),
-        asks.map((row) => row.size),
+        bids.map((row) => row.amount),
+        asks.map((row) => row.amount),
       ),
     [bids, asks],
   )
@@ -193,7 +208,7 @@ export function useMobileOrderbook(rowsPerSide: number): MobileOrderbook {
     bestBid,
     bestAsk,
     maxCumulative,
-    sizeReference,
+    amountReference,
     spread,
     buyPct,
     sellPct,

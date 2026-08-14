@@ -15,6 +15,12 @@
  * Rows are memoized on their own values so a single changing level repaints one
  * row, not twenty.
  *
+ * The middle column is the pane's size/value switch, at a phone's tap size: it
+ * names the reading in force and a tap swaps base size for the quote notional
+ * it is worth, Total and the depth bars following it. The hit area is stretched
+ * downward into the first ask row — 26px of header is a mouse's target, not a
+ * thumb's, and nothing under it is tappable.
+ *
  * Depth colouring is the desktop pane's, not a phone-sized approximation of it:
  * the bar's WIDTH is cumulative depth and its COLOUR STRENGTH is that level's
  * own size against `magnitude-intensity.ts`'s median-multiple reference. Two
@@ -33,7 +39,9 @@ import { PRESS } from '../primitives/press'
 import { useMobileOrderbook } from '../lib/use-mobile-orderbook'
 import type { MobileBookRow } from '../lib/use-mobile-orderbook'
 import type { MobileOverlay } from '../mobile-focus-context'
+import type { BookMetric } from '@/components/terminal/orderbook-pane'
 import { useOptionalTickerData } from '@/lib/chart-terminal-context'
+import { formatAmount } from '@/components/terminal/orderbook-pane'
 import {
   magnitudeFillColor,
   magnitudeIntensity,
@@ -51,13 +59,6 @@ type OrderbookScreenProps = {
   onClose: () => void
 }
 
-function formatSize(size: number): string {
-  if (size >= 1_000_000) return `${(size / 1_000_000).toFixed(2)}M`
-  if (size >= 1_000) return `${(size / 1_000).toFixed(2)}K`
-  if (size >= 1) return size.toFixed(4)
-  return size.toPrecision(4)
-}
-
 function formatTick(tick: number): string {
   if (tick >= 1) return tick.toLocaleString()
   return String(parseFloat(tick.toPrecision(2)))
@@ -67,6 +68,7 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
   const { t, i18n } = useTranslation()
   const [rowsPerSide, setRowsPerSide] = useState(DEFAULT_ROWS_PER_SIDE)
   const [groupingOpen, setGroupingOpen] = useState(false)
+  const [metric, setMetric] = useState<BookMetric>('size')
   const bodyRef = useRef<HTMLDivElement | null>(null)
 
   // The spread row names the LAST TRADE, not the best bid — it is the price
@@ -74,13 +76,13 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
   // allowed to read a per-tick context directly.
   const ticker = useOptionalTickerData()
 
-  const book = useMobileOrderbook(rowsPerSide)
+  const book = useMobileOrderbook(rowsPerSide, metric)
   const {
     asks,
     bids,
     bestBid,
     maxCumulative,
-    sizeReference,
+    amountReference,
     spread,
     buyPct,
     sellPct,
@@ -167,7 +169,28 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
         {/* Column header */}
         <div className="grid h-[26px] shrink-0 grid-cols-3 items-center border-b border-border px-4 text-[10px] font-medium uppercase tracking-[0.05em] text-muted-foreground">
           <span>{t('terminal.columns.price')}</span>
-          <span className="text-right">{t('terminal.columns.size')}</span>
+          <button
+            aria-label={`${t('terminal.columns.size')} / ${t('terminal.columns.value')}`}
+            aria-pressed={metric === 'value'}
+            className={cn(
+              // `-mr-2` pays back the padding so the label still ends on the
+              // column edge the sizes below are right-aligned to.
+              'pl-press relative -mr-2 flex h-[22px] items-center justify-self-end rounded-[7px] px-2 uppercase',
+              // Thumb-sized without moving the header: the hit area reaches
+              // down into the first ask row, which is not tappable.
+              "after:absolute after:inset-x-0 after:-bottom-[18px] after:top-0 after:content-['']",
+              metric === 'value' && 'text-foreground',
+            )}
+            onClick={() =>
+              setMetric((current) => (current === 'size' ? 'value' : 'size'))
+            }
+            type="button"
+            {...PRESS}
+          >
+            {metric === 'value'
+              ? t('terminal.columns.value')
+              : t('terminal.columns.size')}
+          </button>
           <span className="text-right">{t('terminal.columns.total')}</span>
         </div>
 
@@ -183,10 +206,11 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
                 <BookRow
                   formatPrice={formatPrice}
                   key={row.price}
+                  amountReference={amountReference}
                   maxCumulative={maxCumulative}
+                  metric={metric}
                   row={row}
                   side="ask"
-                  sizeReference={sizeReference}
                 />
               ))}
             </div>
@@ -212,10 +236,11 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
                 <BookRow
                   formatPrice={formatPrice}
                   key={row.price}
+                  amountReference={amountReference}
                   maxCumulative={maxCumulative}
+                  metric={metric}
                   row={row}
                   side="bid"
-                  sizeReference={sizeReference}
                 />
               ))}
             </div>
@@ -279,21 +304,23 @@ const BookRow = memo(
   function BookRow({
     row,
     maxCumulative,
-    sizeReference,
+    amountReference,
+    metric,
     side,
     formatPrice,
   }: {
     row: MobileBookRow
     maxCumulative: number
-    sizeReference: number
+    amountReference: number
+    metric: BookMetric
     side: 'bid' | 'ask'
     formatPrice: (price: number) => string
   }) {
     const depthPct =
       maxCumulative > 0 ? (row.cumulative / maxCumulative) * 100 : 0
-    // Length is cumulative depth; strength is THIS level's own size. The two
+    // Length is cumulative depth; strength is THIS level's own amount. The two
     // are independent on purpose — see the file header.
-    const intensity = magnitudeIntensity(row.size, sizeReference)
+    const intensity = magnitudeIntensity(row.amount, amountReference)
 
     return (
       <div className="relative grid h-6 shrink-0 grid-cols-3 items-center px-4 font-mono text-[12px] tabular-nums">
@@ -324,20 +351,21 @@ const BookRow = memo(
             transition: 'color 300ms ease-out',
           }}
         >
-          {formatSize(row.size)}
+          {formatAmount(row.amount, metric)}
         </span>
         <span className="relative text-right text-muted-foreground">
-          {formatSize(row.cumulative)}
+          {formatAmount(row.cumulative, metric)}
         </span>
       </div>
     )
   },
   (prev, next) =>
     prev.row.price === next.row.price &&
-    prev.row.size === next.row.size &&
+    prev.row.amount === next.row.amount &&
     prev.row.cumulative === next.row.cumulative &&
     prev.maxCumulative === next.maxCumulative &&
-    prev.sizeReference === next.sizeReference &&
+    prev.amountReference === next.amountReference &&
+    prev.metric === next.metric &&
     prev.side === next.side &&
     prev.formatPrice === next.formatPrice,
 )
