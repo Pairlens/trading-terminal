@@ -45,6 +45,7 @@ import { TradeSlideConfirm } from './trade-slide-confirm'
 import type { MobileOrderType } from '../lib/order-draft-store'
 import type { ReactNode, RefObject } from 'react'
 import { haptic } from '@/lib/haptics'
+import { splitPairAssets } from '@/lib/pairs'
 import {
   useOptionalCandleData,
   useOptionalTickerData,
@@ -229,10 +230,6 @@ export default memo(function MobileTradePanel() {
   const [slippageBps] = usePersistedState<number>('trade:slippageBps', 100)
   const [confirmMode] = useTradeConfirmMode()
 
-  const baseAsset = focusedPair.split('-')[0] ?? focusedPair
-  const quoteAsset = focusedPair.split('-')[1] ?? 'USDT'
-  const sizeAsset = sizeCcy === 'base' ? baseAsset : quoteAsset
-
   // The draft belongs to a (venue, pair); moving pair clears the numbers.
   useEffect(() => {
     focusMarket(focusedVenue, focusedPair)
@@ -261,6 +258,17 @@ export default memo(function MobileTradePanel() {
 
   const marketInfo = availableMarkets.find((m) => m.marketId === focusedVenue)
   const isDex = marketInfo?.walletChain != null
+  // Read off the connector's declared asset classes rather than a venue
+  // allowlist, so a second stock broker inherits both the session controls
+  // below and the USD quote here for free.
+  const isEquities = marketInfo?.assetClasses?.includes('stocks') === true
+
+  // Derived after the venue is known: a stock's key is the bare ticker, so its
+  // quote cannot come from the string.
+  const { base: baseAsset, quote: quoteAsset } = splitPairAssets(focusedPair, {
+    equity: isEquities,
+  })
+  const sizeAsset = sizeCcy === 'base' ? baseAsset : quoteAsset
   const venueLabel =
     marketInfo?.walletChain != null
       ? CHAIN_NAME[marketInfo.walletChain]
@@ -331,7 +339,6 @@ export default memo(function MobileTradePanel() {
   // next open unless it is explicitly routed to the pre-market/after-hours
   // book. Local state, never persisted: those sessions are thin enough that
   // the choice should be made per order, not inherited from last night.
-  const isEquities = marketInfo?.assetClasses?.includes('stocks') === true
   const [extendedHours, setExtendedHours] = useState(false)
   const extendedHoursEligible = isEquities && orderType === 'limit'
   useEffect(() => {

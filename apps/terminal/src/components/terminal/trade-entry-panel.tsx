@@ -37,6 +37,7 @@ import type { RefObject } from 'react'
 import type { OrderExecutor } from '@pairlens/workflow-engine/types'
 import type { BalanceRecord } from '@/stores/balances-store'
 import { track } from '@/lib/analytics-events'
+import { splitPairAssets } from '@/lib/pairs'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 
 import { useMarketData } from '@/lib/market-data-provider'
@@ -373,14 +374,6 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   const [regionHintDismissed, setRegionHintDismissed] = useState(false)
   const [unlockOpen, setUnlockOpen] = useState(false)
 
-  const baseAsset = pairKey.split('-')[0] ?? pairKey
-  const quoteAsset = pairKey.split('-')[1] ?? 'USDT'
-
-  const [presets, setPresets] = usePersistedState<Array<number>>(
-    `trade:presets:${quoteAsset}`,
-    [10, 25, 50, 100],
-  )
-
   const {
     placeOrder,
     placeUnattendedOrder,
@@ -413,6 +406,17 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   // connector's declared asset classes rather than a venue allowlist, so a
   // second stock broker inherits the session controls for free.
   const isEquities = marketInfo?.assetClasses?.includes('stocks') === true
+
+  // Derived here rather than beside the other pair state above, because a
+  // stock's key is the bare ticker and its quote can only come from the venue.
+  const { base: baseAsset, quote: quoteAsset } = splitPairAssets(pairKey, {
+    equity: isEquities,
+  })
+
+  const [presets, setPresets] = usePersistedState<Array<number>>(
+    `trade:presets:${quoteAsset}`,
+    [10, 25, 50, 100],
+  )
 
   // Steps in the selected workflow this venue cannot execute (e.g. a
   // stop-loss on an exchange without native trigger orders). Blocks
