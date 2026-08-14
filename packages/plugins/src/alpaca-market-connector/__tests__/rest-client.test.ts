@@ -3,6 +3,7 @@
 import { afterEach, describe, expect, it, mock } from 'bun:test'
 import { fetchAlpacaBulkTickers, fetchAlpacaQuoteBook } from '../rest-client'
 import { alpacaMarketConnectorManifest } from '../index'
+import { stockSymbols } from '../../catalog'
 
 const CREDS = { apiKey: 'PKTEST123', apiSecret: 'alpaca-secret-DO-NOT-LEAK' }
 
@@ -47,14 +48,19 @@ describe('fetchAlpacaBulkTickers — watchlist quotes', () => {
     expect(calls[0].url).toContain('feed=iex')
   })
 
-  it('returns canonical pair keys and percent change against the prior close', async () => {
+  // Keyed by the BARE ticker, because consumers do `quotes.get(instrument
+  // .symbol)` and a stock instrument's symbol is 'AAPL', not 'AAPL-USD'. This
+  // was wrong once, and it fails in the worst way: every lookup misses, the
+  // cell stays blank, and it looks identical to the capability not existing.
+  it('keys entries by the bare ticker the catalog uses, not a pair key', async () => {
     stubFetch({
       AAPL: snapshot(305.94, 305.305),
       MSFT: snapshot(495.35, 496.79),
     })
     const out = await fetchAlpacaBulkTickers(['AAPL', 'MSFT'], CREDS)
     expect(out).toHaveLength(2)
-    expect(out[0].symbol).toBe('AAPL-USD')
+    expect(out.map((t) => t.symbol)).toEqual(['AAPL', 'MSFT'])
+    expect(out[0].symbol).not.toContain('-')
     expect(out[0].price).toBe(305.94)
     // (305.94 - 305.305) / 305.305 * 100
     expect(out[0].change24h).toBeCloseTo(0.20799, 4)
@@ -70,7 +76,18 @@ describe('fetchAlpacaBulkTickers — watchlist quotes', () => {
       ZERO: snapshot(0, 10),
     })
     const out = await fetchAlpacaBulkTickers(['AAPL', 'NOPE', 'ZERO'], CREDS)
-    expect(out.map((t) => t.symbol)).toEqual(['AAPL-USD'])
+    expect(out.map((t) => t.symbol)).toEqual(['AAPL'])
+  })
+
+  // The catalog is the contract: every symbol asked for must come back under
+  // a key the catalog actually uses, or the row silently never resolves.
+  it('returns keys that match the catalog symbols exactly', async () => {
+    const catalog = stockSymbols()
+    const body: Record<string, unknown> = {}
+    for (const s of catalog) body[s] = snapshot(100, 99)
+    stubFetch(body)
+    const out = await fetchAlpacaBulkTickers(catalog, CREDS)
+    expect(out.map((t) => t.symbol)).toEqual(catalog)
   })
 
   it('makes no request at all for an empty symbol list', async () => {

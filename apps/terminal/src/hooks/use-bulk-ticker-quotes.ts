@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import type { BulkTickersResponse } from '@pairlens/shared/instrument-types'
 import { usePairlens } from '@/lib/pairlens-provider'
+import { useMarketData } from '@/lib/market-data-provider'
 
 export type BulkQuote = { price: number; change24h: number }
 
@@ -20,10 +21,18 @@ export type BulkQuote = { price: number; change24h: number }
  */
 export function useBulkTickerSnapshots(): Array<BulkTickersResponse> {
   const { pluginManager, pluginStateVersion } = usePairlens()
+  // A broker's quotes need credentials, so with a sealed vault its rows come
+  // back empty and would stay that way until this query's own 60s tick — a
+  // full minute of blank stock rows starting exactly when someone has just
+  // connected an account and is looking straight at them. `streamVersion` is
+  // bumped when such a connector is provisioned, so keying on it refetches at
+  // that moment instead. It also bumps on resume, which is welcome here: the
+  // snapshot is up to a minute stale by the time a paused terminal comes back.
+  const { streamVersion } = useMarketData()
 
   const { data } = useQuery({
     // pluginStateVersion re-runs the query as connectors (de)activate
-    queryKey: ['bulk-ticker-quotes', pluginStateVersion],
+    queryKey: ['bulk-ticker-quotes', pluginStateVersion, streamVersion],
     queryFn: async () => {
       const providers = pluginManager.getPluginsForCapability(
         'market-data:ticker-snapshot',

@@ -8,7 +8,6 @@ import {
   parseAlpacaQuoteBook,
   parseAlpacaSnapshot,
   toAlpacaSymbol,
-  toPairKey,
 } from './parser'
 import { ALPACA_DATA_REST } from './regions'
 import type { Candle } from '@pairlens/shared/types'
@@ -159,6 +158,13 @@ export async function fetchAlpacaQuoteBook(
  * A CEX answers this from a single "all tickers" endpoint; Alpaca's snapshots
  * route wants an explicit symbol list, so the catalog supplies it. Symbols the
  * feed has no data for are dropped rather than reported at zero.
+ *
+ * Entries are keyed by the BARE ticker, not a 'BASE-QUOTE' pair key. Consumers
+ * look a quote up by `instrument.symbol`, and a stock instrument's symbol is
+ * the bare ticker — the same key the App Server catalog serves, so a watchlist
+ * saved online still resolves against this. Emitting 'AAPL-USD' here misses
+ * every row silently: the price is simply never found and the cell stays
+ * blank, which looks exactly like the connector not implementing this at all.
  */
 export async function fetchAlpacaBulkTickers(
   symbols: Array<string>,
@@ -181,7 +187,7 @@ export async function fetchAlpacaBulkTickers(
     const snapshot = parseAlpacaSnapshot(json[symbol])
     if (!snapshot || snapshot.last <= 0) continue
     out.push({
-      symbol: toPairKey(symbol),
+      symbol,
       price: snapshot.last,
       change24h: snapshot.change24h,
     })
