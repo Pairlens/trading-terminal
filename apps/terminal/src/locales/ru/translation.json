@@ -4175,6 +4175,8 @@
     "switchTo": "Переключиться на {{venue}}"
   },
   "pairPicker": {
+    "popular": "Популярные",
+    "switchPair": "Сменить пару",
     "noPairsFound": "Пары не найдены.",
     "startTyping": "Начните вводить текст, чтобы найти пары."
   },

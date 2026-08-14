@@ -4139,6 +4139,8 @@
     "switchTo": "切換到 {{venue}}"
   },
   "pairPicker": {
+    "popular": "熱門",
+    "switchPair": "更換交易對",
     "noPairsFound": "找不到交易對。",
     "startTyping": "開始輸入以搜尋交易對。"
   },

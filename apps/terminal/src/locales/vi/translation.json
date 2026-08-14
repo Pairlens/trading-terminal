@@ -4139,6 +4139,8 @@
     "switchTo": "Chuyển sang {{venue}}"
   },
   "pairPicker": {
+    "popular": "Phổ biến",
+    "switchPair": "Đổi cặp giao dịch",
     "noPairsFound": "Không tìm thấy cặp nào.",
     "startTyping": "Bắt đầu nhập để tìm cặp giao dịch."
   },
