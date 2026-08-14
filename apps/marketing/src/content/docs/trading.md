@@ -2,7 +2,7 @@
 title: Trading
 description: Connect a venue, place an order that goes straight to the exchange, and keep risk guardrails between you and a bad fill.
 group: traders
-order: 2
+order: 3
 eyebrow: For traders
 updated: AUG 2026
 readTime: 2 min read
@@ -25,6 +25,8 @@ anything.
   without money at stake.
 - **[DEX and wallets](/docs/dex-trading).** Swapping on-chain on Solana and
   five EVM chains.
+- **[Positions and portfolio](/docs/positions-and-portfolio).** Open orders,
+  fills, balances, allocation, and the guardrail readout.
 
 ## The golden rule
 

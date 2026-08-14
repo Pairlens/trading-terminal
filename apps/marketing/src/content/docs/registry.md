@@ -2,7 +2,7 @@
 title: Registry
 description: How the plugin registry distributes third-party connectors, AI providers, indicators, and themes, with signatures and declared network hosts.
 group: builders
-order: 3
+order: 6
 eyebrow: For builders
 updated: AUG 2026
 readTime: 2 min read

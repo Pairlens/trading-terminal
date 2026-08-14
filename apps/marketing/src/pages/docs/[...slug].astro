@@ -20,6 +20,7 @@ const pages = flattenDocs(allDocs).map((d) => ({
   title: d.data.title,
   href: `/docs/${d.id}`,
   group: d.data.group ?? '',
+  description: d.data.description,
 }))
 ---
 

@@ -2,7 +2,7 @@
 title: The AI co-pilot
 description: A co-pilot that reads your market data and drives your chart, with around sixty tools, three personas, and a hard boundary at your risk limits.
 group: traders
-order: 3
+order: 4
 eyebrow: For traders
 updated: AUG 2026
 readTime: 5 min read
@@ -93,4 +93,5 @@ and bring-your-own-key is always free. See
 
 - [Research reports](/docs/research-reports) for the long-form analysis panel
 - [AI providers](/docs/ai-providers) for keys, plans, and credits
+- [Co-pilot tool reference](/docs/copilot-tools) for all 63 tools it can call
 - [Risk guardrails](/docs/risk-guardrails) for the limits the AI cannot move

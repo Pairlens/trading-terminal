@@ -2,7 +2,7 @@
 title: Plugins
 description: Add venues, AI providers, panels, indicators, and themes from the Plugin Store, and understand what each one is allowed to do.
 group: traders
-order: 8
+order: 9
 eyebrow: For traders
 updated: AUG 2026
 readTime: 4 min read

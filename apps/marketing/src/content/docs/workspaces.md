@@ -2,7 +2,7 @@
 title: Workspaces
 description: Build layouts that suit how you trade, bind panels to variables so one workspace serves every pair, and copy ready-made ones from the store.
 group: traders
-order: 7
+order: 8
 eyebrow: For traders
 updated: AUG 2026
 readTime: 5 min read

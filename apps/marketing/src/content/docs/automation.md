@@ -2,7 +2,7 @@
 title: Automation
 description: Workflows chain orders and conditions into brackets you can reuse. Alerts watch the market and tell you. Bots trade a strategy on their own.
 group: traders
-order: 6
+order: 7
 eyebrow: For traders
 updated: AUG 2026
 readTime: 2 min read

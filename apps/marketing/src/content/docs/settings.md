@@ -2,7 +2,7 @@
 title: Settings
 description: Every setting in the terminal, from the terminal lock and credential vault to cloud sync, keyboard shortcuts, themes, languages, regional endpoint routing, data rate, analytics, and account deletion.
 group: traders
-order: 9
+order: 10
 eyebrow: For traders
 updated: AUG 2026
 readTime: 14 min read

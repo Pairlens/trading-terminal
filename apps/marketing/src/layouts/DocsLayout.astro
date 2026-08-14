@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import type { MarkdownHeading } from 'astro'
 import type { NavGroup } from '@/lib/docs'
-import { groupLabel, parentTitle } from '@/lib/docs'
+import { groupHref, groupLabel, parentNode } from '@/lib/docs'
 import SiteLayout from '@/layouts/SiteLayout.astro'
 import SiteFooter from '@/components/SiteFooter.astro'
 import DocsHeader from '@/components/docs/DocsHeader.astro'
@@ -16,6 +16,7 @@ interface PageMeta {
   title: string
   href: string
   group: string
+  description: string
 }
 
 interface Props {
@@ -51,7 +52,22 @@ const eyebrowText = eyebrow ?? groupLabel(group)
 const idx = pages.findIndex((p) => p.id === currentId)
 const prev = idx > 0 ? pages[idx - 1] : null
 const next = idx >= 0 && idx < pages.length - 1 ? pages[idx + 1] : null
-const parent = parentTitle(nav, currentId)
+const parent = parentNode(nav, currentId)
+
+// Every crumb but the last is a destination. A group has no page of its own,
+// so it resolves to its opener — unless that opener is this very page, which
+// would make the crumb one step to the left of the title a link back to it.
+const here = `/docs/${currentId}`
+const sectionHref = groupHref(nav, group)
+const crumbs: Array<{ label: string; href?: string }> = [
+  { label: 'Docs', href: '/docs/quickstart' },
+  {
+    label: groupLabel(group),
+    href: sectionHref === here ? undefined : sectionHref,
+  },
+  ...(parent ? [{ label: parent.title, href: parent.href }] : []),
+  { label: title },
+]
 
 const shellRule = 'color-mix(in oklch, var(--border) 55%, transparent)'
 const cellRule = 'color-mix(in oklch, var(--border) 70%, transparent)'
@@ -83,25 +99,37 @@ const softRule = 'color-mix(in oklch, var(--border) 62%, transparent)'
             class="font-mono text-[11px] tracking-[0.04em]"
             style="color: color-mix(in oklch, var(--muted-foreground) 58%, transparent);"
           >
-            <a href="/docs/quickstart" class="text-inherit hover:text-foreground"
-              >Docs</a
-            >
-            <span aria-hidden="true" class="px-1.5">/</span>
-            <span>{groupLabel(group)}</span>
-            {
-              parent && (
-                <>
-                  <span aria-hidden="true" class="px-1.5">
-                    /
-                  </span>
-                  <span>{parent}</span>
-                </>
-              )
-            }
-            <span aria-hidden="true" class="px-1.5">/</span>
-            <span style="color: color-mix(in oklch, var(--foreground) 74%, transparent);"
-              >{title}</span
-            >
+            <ol class="flex flex-wrap items-center">
+              {
+                crumbs.map((crumb, i) => (
+                  <li class="flex items-center">
+                    {i > 0 && (
+                      <span aria-hidden="true" class="px-1.5">
+                        /
+                      </span>
+                    )}
+                    {crumb.href ? (
+                      <a href={crumb.href} class="pl-crumb text-inherit">
+                        {crumb.label}
+                      </a>
+                    ) : (
+                      <span
+                        aria-current={
+                          i === crumbs.length - 1 ? 'page' : undefined
+                        }
+                        style={
+                          i === crumbs.length - 1
+                            ? 'color: color-mix(in oklch, var(--foreground) 74%, transparent);'
+                            : undefined
+                        }
+                      >
+                        {crumb.label}
+                      </span>
+                    )}
+                  </li>
+                ))
+              }
+            </ol>
           </nav>
 
           <p
@@ -236,10 +264,11 @@ const softRule = 'color-mix(in oklch, var(--border) 62%, transparent)'
   <SiteFooter />
 
   <DocsCommand
-    pages={pages.map(({ title, href, group }) => ({
+    pages={pages.map(({ title, href, group, description }) => ({
       title,
       href,
       group: groupLabel(group),
+      description,
     }))}
     client:load
   />
@@ -300,6 +329,13 @@ const softRule = 'color-mix(in oklch, var(--border) 62%, transparent)'
     .docs-scrim {
       transition: none;
     }
+  }
+
+  .pl-crumb {
+    transition: color 0.18s var(--ease-out);
+  }
+  .pl-crumb:hover {
+    color: var(--foreground);
   }
 
   .docs-pager {

@@ -158,4 +158,5 @@ or focused, so digits and tool chords always land where you expect.
 - [Drawing tools](/docs/drawing-tools)
 - [Indicators](/docs/chart-indicators)
 - [Custom Python indicators](/docs/custom-python-indicators)
+- [Reading the market](/docs/market-data) for the book, tape, and depth panels
 - [Keyboard shortcuts](/docs/keyboard-shortcuts)

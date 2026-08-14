@@ -2,7 +2,7 @@
 title: Python scripts
 description: The workbench where you write indicators and strategies in real Python, run them against live candles, backtest them, and ship them to your charts or a bot.
 group: traders
-order: 4
+order: 5
 eyebrow: For traders
 updated: AUG 2026
 readTime: 4 min read
