@@ -2946,6 +2946,11 @@
       "open": "ราคาเปิด",
       "close": "ราคาปิด"
     },
+    "sort": {
+      "by": "เรียงตาม {{column}}",
+      "ascending": "เรียงตาม {{column}} จากน้อยไปมาก",
+      "descending": "เรียงตาม {{column}} จากมากไปน้อย"
+    },
     "panel": {
       "expand": "ขยายแผง",
       "collapse": "ย่อแผง"

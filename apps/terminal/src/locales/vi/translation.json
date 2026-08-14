@@ -2946,6 +2946,11 @@
       "open": "Mở cửa",
       "close": "Đóng cửa"
     },
+    "sort": {
+      "by": "Sắp xếp theo {{column}}",
+      "ascending": "Đã sắp xếp theo {{column}}, tăng dần",
+      "descending": "Đã sắp xếp theo {{column}}, giảm dần"
+    },
     "panel": {
       "expand": "Mở rộng bảng",
       "collapse": "Thu gọn bảng"

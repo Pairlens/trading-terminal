@@ -2946,6 +2946,11 @@
       "open": "Pembukaan",
       "close": "Penutupan"
     },
+    "sort": {
+      "by": "Urutkan menurut {{column}}",
+      "ascending": "Diurutkan menurut {{column}}, menaik",
+      "descending": "Diurutkan menurut {{column}}, menurun"
+    },
     "panel": {
       "expand": "Buka panel",
       "collapse": "Tutup panel"

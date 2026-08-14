@@ -2972,6 +2972,11 @@
       "open": "Otwarcie",
       "close": "Zamknięcie"
     },
+    "sort": {
+      "by": "Sortuj według: {{column}}",
+      "ascending": "Posortowano według: {{column}}, rosnąco",
+      "descending": "Posortowano według: {{column}}, malejąco"
+    },
     "panel": {
       "expand": "Rozwiń panel",
       "collapse": "Zwiń panel"

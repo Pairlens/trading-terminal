@@ -2946,6 +2946,11 @@
       "open": "Açılış",
       "close": "Kapanış"
     },
+    "sort": {
+      "by": "{{column}} ölçütüne göre sırala",
+      "ascending": "{{column}} ölçütüne göre artan sırada sıralandı",
+      "descending": "{{column}} ölçütüne göre azalan sırada sıralandı"
+    },
     "panel": {
       "expand": "Paneli genişlet",
       "collapse": "Paneli daralt"

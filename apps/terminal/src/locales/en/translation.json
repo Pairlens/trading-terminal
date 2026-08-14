@@ -2946,6 +2946,11 @@
       "open": "Open",
       "close": "Close"
     },
+    "sort": {
+      "by": "Sort by {{column}}",
+      "ascending": "Sorted by {{column}}, ascending",
+      "descending": "Sorted by {{column}}, descending"
+    },
     "panel": {
       "expand": "Expand panel",
       "collapse": "Collapse panel"
