@@ -382,8 +382,18 @@ export type CcxtVenueConfig = {
    * that pipeline; whichever arrives first paints, and the stream's own
    * synced snapshot always supersedes. Correctness is untouched — the seed
    * is display-only and never enters ccxt's book state.
+   *
+   * Also earns its keep on the buffered-delta venues (MEXC, KuCoin, Gate):
+   * their ccxt classes buffer `snapshotDelay` diff FRAMES before even
+   * requesting the REST snapshot, so the stream cannot paint for seconds —
+   * unbounded on a quiet pair, where frames only arrive when the book moves.
+   *
+   * A number enables the seed AND overrides the REST depth, for venues
+   * whose REST book endpoint accepts different limits than their WS
+   * subscription (KuCoin's public REST serves exactly 20 or 100 levels;
+   * `orderbookDepth` is 50). `true` fetches `orderbookDepth`.
    */
-  seedOrderBook?: boolean
+  seedOrderBook?: boolean | number
   /**
    * Fill the tape's first paint from REST `fetchTrades`, for venues whose
    * trade stream opens EMPTY (Binance sends only new prints — on a quiet
@@ -392,10 +402,16 @@ export type CcxtVenueConfig = {
    * ever doubles.
    *
    * NEVER enable on a venue whose candles are derived from the trades
-   * stream (`liveSource: 'trades'` folds): the seed's historical prints
-   * would re-add their volume to the forming bar.
+   * stream (`liveSource: 'trades'` folds — Coinbase, Upbit): the seed's
+   * historical prints would re-add their volume to the forming bar. Also
+   * skip venues whose stream already opens with a snapshot (Bitfinex) and
+   * venues whose REST budget is a strict serial queue (Kraken at 1 s/call —
+   * a seed there would delay the chart backfill behind it).
+   *
+   * A number enables the seed AND overrides the page size, for venues whose
+   * recent-trades endpoint caps below the default 100 (ByBit spot: 60).
    */
-  seedTrades?: boolean
+  seedTrades?: boolean | number
   /**
    * Depth passed to `watchOrderBook`. Venue-specific enums apply (see the
    * venue matrix §1g) — an unsupported value throws at runtime on some venues.

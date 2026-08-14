@@ -128,6 +128,21 @@ export const mexcCcxtVenue: CcxtVenueConfig = {
       throw new GeoRestrictedError('MEXC', slot.country)
     }
   },
+  options: {
+    options: {
+      // ccxt buffers this many depth FRAMES before requesting the REST
+      // snapshot the book syncs against — at the 100 ms stream cadence the
+      // shipped 25 is 2.5 s of deliberate waiting (measured 5.3 s to first
+      // book on a cold start), and frames only arrive when the book moves,
+      // so a quiet pair waits unboundedly. Five frames is still plenty of
+      // overlap for the version handshake (KuCoin ships 5), and a snapshot
+      // that misses the window just retries — invisible behind the seed.
+      watchOrderBook: { snapshotDelay: 5 },
+    },
+  },
+  // Buffered-delta book (see above): nothing paints until the delta window
+  // fills and the REST snapshot lands. The seed paints at REST latency.
+  seedOrderBook: true,
   maxHistoryLimit: 500,
   // ccxt reads `until` and sends `endTime = until + 1`; MEXC's `endTime` is
   // exclusive, so the nudged cursor lands exactly on "strictly older".

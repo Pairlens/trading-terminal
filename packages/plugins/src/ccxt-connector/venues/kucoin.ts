@@ -142,6 +142,13 @@ export const kucoinCcxtVenue: CcxtVenueConfig = {
   // 5 | 20 | 50 | 100 or ccxt throws; 50 is the native's channel and needs no
   // REST snapshot to seed.
   orderbookDepth: 50,
+  // Buffered-delta book (ccxt waits 5 depth frames, then REST-syncs): the
+  // seed paints at REST latency instead. 100, not `orderbookDepth` — the
+  // public REST book serves exactly 20 or 100 levels, and 50 throws.
+  seedOrderBook: 100,
+  // The trade stream opens empty; candles come from watchOHLCV, never the
+  // tape, so the REST fill is safe.
+  seedTrades: true,
   maxHistoryLimit: 1500,
   // Nudged to strictly-older here and translated into ccxt's `since` argument
   // by the subclass — KuCoin's own request has no `until`.

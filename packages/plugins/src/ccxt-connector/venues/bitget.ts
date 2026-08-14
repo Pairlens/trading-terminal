@@ -208,6 +208,9 @@ export const bitgetCcxtVenue: CcxtVenueConfig = {
   // Repairs `1M → 1m` in the REST describe's top-level table (see header).
   timeframeOverrides: { '1M': '1M' },
   orderbookDepth: BITGET_DEFAULT_BOOK_DEPTH,
+  // Empty-opening trade stream; candles come from watchOHLCV (the 2h fold
+  // derives from 1h CANDLES, not the tape) — safe to fill.
+  seedTrades: true,
   // The recent endpoint's ceiling. ccxt clamps further per timeframe and
   // switches to the 200-bar history endpoint for older windows on its own.
   maxHistoryLimit: 1000,

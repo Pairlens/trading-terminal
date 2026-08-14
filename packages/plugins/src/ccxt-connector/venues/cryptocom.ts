@@ -295,6 +295,8 @@ export const cryptocomCcxtVenue: CcxtVenueConfig = {
   // on purpose: Crypto.com does not serve it, and the native leaves it out too.
   timeframeOverrides: { '2h': '2h' },
   orderbookDepth: CRYPTOCOM_BOOK_DEPTH,
+  // Empty-opening trade stream; candles come from watchOHLCV — safe to fill.
+  seedTrades: true,
   maxHistoryLimit: 300,
   // ccxt maps `until` onto `end_ts`, which is inclusive.
   historyPageParams: (endTs) => ({ until: pageEndMs(endTs) }),

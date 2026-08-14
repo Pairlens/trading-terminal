@@ -146,6 +146,10 @@ export const bitvavoCcxtVenue: CcxtVenueConfig = {
   },
   // Free-form depth on this venue; the native subscribes the full book.
   orderbookDepth: undefined,
+  // Empty-opening trade stream on a venue of mostly quiet EUR pairs — the
+  // tape measured 10 s to its first print on BTC-EUR. Candles come from
+  // watchOHLCV, so the REST fill is safe.
+  seedTrades: true,
   maxHistoryLimit: 1440,
   historyPageParams: (endTs) => ({ until: pageEndMs(endTs) }),
   livenessTimeoutMs: 120_000,
