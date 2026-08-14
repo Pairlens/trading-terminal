@@ -41,9 +41,16 @@
       "searchPlaceholder": "Szukaj krajów…",
       "noResults": "Żaden kraj nie pasuje do wyszukiwania",
       "global": "Wolę nie podawać",
-      "globalSub": "Użyj globalnych punktów końcowych i ustawień domyślnych",
+      "globalSub": "Niezalecane — używa globalnych endpointów i ustawień",
       "label": "Kraj",
-      "localNote": "Zapisywane tylko na tym urządzeniu — nigdy nie wysyłane na serwery Pairlens."
+      "localNote": "Zapisywane tylko na tym urządzeniu — nigdy nie wysyłane na serwery Pairlens.",
+      "globalConfirm": {
+        "title": "Kontynuować bez lokalizacji?",
+        "body": "Bez ustawionego kraju zlecenia i dane rynkowe korzystają z globalnych endpointów. Na giełdach z dostępem regionalnym lub ograniczeniami geograficznymi funkcje mogą nie działać, a zlecenia mogą nie zostać zrealizowane. Zalecamy ustawienie lokalizacji — jest zapisywana tylko na tym urządzeniu.",
+        "ack": "Rozumiem konsekwencje braku konfiguracji mojej lokalizacji",
+        "cancel": "Wybierz kraj",
+        "confirm": "Kontynuuj bez lokalizacji"
+      }
     },
     "privacy": {
       "eyebrow": "Prywatność w założeniu",

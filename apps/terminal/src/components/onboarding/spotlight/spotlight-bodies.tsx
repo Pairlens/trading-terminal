@@ -6,6 +6,17 @@ import { useTranslation } from 'react-i18next'
 import { Lock, Sparkles } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@pairlens/ui/components/ui/alert-dialog'
+import { Checkbox } from '@pairlens/ui/components/ui/checkbox'
 import { ChartLineIcon } from '@pairlens/ui/components/ui/chart-line'
 import { LayersIcon } from '@pairlens/ui/components/ui/layers'
 import { WaypointsIcon } from '@pairlens/ui/components/ui/waypoints'
@@ -361,6 +372,11 @@ export function CountryPicker({
 }) {
   const { t, i18n } = useTranslation()
   const [query, setQuery] = useState('')
+  // Declining a location is consequential (wrong regional endpoints → broken
+  // features, failed orders), so it is gated behind an explicit, checkbox-
+  // acknowledged confirmation instead of firing on first tap.
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [acknowledged, setAcknowledged] = useState(false)
 
   const localized = useMemo(
     () =>
@@ -446,7 +462,14 @@ export function CountryPicker({
           buried below the fold reads as "answering is mandatory", which is
           the opposite of the local-only story this step tells. */}
       {!q && (
-        <button type="button" onClick={() => onSelect('')} className={rowClass}>
+        <button
+          type="button"
+          onClick={() => {
+            setAcknowledged(false)
+            setConfirmOpen(true)
+          }}
+          className={rowClass}
+        >
           <span className="text-xl leading-none">🌐</span>
           <span className="flex min-w-0 flex-1 flex-col gap-0.5">
             <span className="text-[15px] font-semibold tracking-[-0.01em]">
@@ -464,6 +487,37 @@ export function CountryPicker({
           )}
         </button>
       )}
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent className="text-left">
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('onboarding.country.globalConfirm.title')}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('onboarding.country.globalConfirm.body')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <label className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-border bg-card/60 px-3 py-2.5 text-[13px] leading-normal text-foreground">
+            <Checkbox
+              checked={acknowledged}
+              onCheckedChange={(next) => setAcknowledged(next === true)}
+              className="mt-px"
+            />
+            {t('onboarding.country.globalConfirm.ack')}
+          </label>
+          <AlertDialogFooter>
+            <AlertDialogCancel>
+              {t('onboarding.country.globalConfirm.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={!acknowledged}
+              onClick={() => onSelect('')}
+            >
+              {t('onboarding.country.globalConfirm.confirm')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <span className="mt-1 inline-flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
         <Lock size={12} aria-hidden className="flex-none opacity-80" />
         {t('onboarding.country.localNote')}

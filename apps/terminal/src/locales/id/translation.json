@@ -41,9 +41,16 @@
       "searchPlaceholder": "Cari negara…",
       "noResults": "Tidak ada negara yang cocok dengan pencarian Anda",
       "global": "Lebih baik tidak disebutkan",
-      "globalSub": "Gunakan endpoint dan default global",
+      "globalSub": "Tidak disarankan — memakai endpoint dan pengaturan global",
       "label": "Negara",
-      "localNote": "Disimpan hanya di perangkat ini — tidak pernah dikirim ke server Pairlens."
+      "localNote": "Disimpan hanya di perangkat ini — tidak pernah dikirim ke server Pairlens.",
+      "globalConfirm": {
+        "title": "Lanjut tanpa lokasi?",
+        "body": "Tanpa negara yang dipilih, order dan data market memakai endpoint global. Pada venue dengan akses regional atau pembatasan geografis, fitur bisa tidak berfungsi dan trade bisa gagal dieksekusi. Kami sarankan mengatur lokasi Anda — hanya disimpan di perangkat ini.",
+        "ack": "Saya memahami konsekuensi tidak mengatur lokasi saya",
+        "cancel": "Pilih negara",
+        "confirm": "Lanjut tanpa lokasi"
+      }
     },
     "privacy": {
       "eyebrow": "Privat sejak dirancang",

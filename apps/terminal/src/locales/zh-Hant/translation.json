@@ -41,9 +41,16 @@
       "searchPlaceholder": "搜尋國家…",
       "noResults": "找不到符合的國家",
       "global": "不願透露",
-      "globalSub": "使用全球節點與預設值",
+      "globalSub": "不建議——使用全域接入點與預設值",
       "label": "國家",
-      "localNote": "僅儲存在本裝置上，絕不會傳送到 Pairlens 伺服器。"
+      "localNote": "僅儲存在本裝置上，絕不會傳送到 Pairlens 伺服器。",
+      "globalConfirm": {
+        "title": "不設定位置就繼續？",
+        "body": "未設定國家時，訂單與行情資料將使用全域接入點。在有地區限制的交易所上，部分功能可能無法使用，交易可能無法執行。建議設定你的位置——它僅儲存在本裝置上。",
+        "ack": "我了解不設定位置可能造成的後果",
+        "cancel": "選擇國家",
+        "confirm": "不設定位置並繼續"
+      }
     },
     "privacy": {
       "eyebrow": "設計即私密",

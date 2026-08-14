@@ -41,9 +41,16 @@
       "searchPlaceholder": "Buscar países…",
       "noResults": "Ningún país coincide con tu búsqueda",
       "global": "Prefiero no decirlo",
-      "globalSub": "Usar endpoints y valores globales",
+      "globalSub": "No recomendado — usa endpoints y valores globales",
       "label": "País",
-      "localNote": "Se guarda solo en este dispositivo — nunca se envía a los servidores de Pairlens."
+      "localNote": "Se guarda solo en este dispositivo — nunca se envía a los servidores de Pairlens.",
+      "globalConfirm": {
+        "title": "¿Continuar sin ubicación?",
+        "body": "Sin un país configurado, las órdenes y los datos de mercado usan endpoints globales. En exchanges con acceso regional o restricciones geográficas, algunas funciones pueden no funcionar y las operaciones pueden no ejecutarse. Recomendamos configurar tu ubicación — solo se guarda en este dispositivo.",
+        "ack": "Entiendo las consecuencias de no configurar mi ubicación",
+        "cancel": "Elegir un país",
+        "confirm": "Continuar sin ubicación"
+      }
     },
     "privacy": {
       "eyebrow": "Privado por diseño",

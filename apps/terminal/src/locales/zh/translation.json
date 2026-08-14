@@ -41,9 +41,16 @@
       "searchPlaceholder": "搜索国家……",
       "noResults": "没有匹配的国家",
       "global": "不愿透露",
-      "globalSub": "使用全球端点和默认设置",
+      "globalSub": "不推荐 —— 使用全局接入点和默认设置",
       "label": "国家",
-      "localNote": "仅保存在本设备上，绝不会发送到 Pairlens 服务器。"
+      "localNote": "仅保存在本设备上，绝不会发送到 Pairlens 服务器。",
+      "globalConfirm": {
+        "title": "不设置位置就继续？",
+        "body": "未设置国家时，订单和行情数据将使用全局接入点。在有地区限制的交易所上，部分功能可能无法使用，交易可能无法执行。建议设置你的位置 —— 它仅保存在本设备上。",
+        "ack": "我了解不配置位置可能带来的后果",
+        "cancel": "选择国家",
+        "confirm": "不设置位置并继续"
+      }
     },
     "privacy": {
       "eyebrow": "设计上就注重隐私",
