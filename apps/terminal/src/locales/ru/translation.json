@@ -4713,13 +4713,11 @@
         "orderbook": "Стакан ордеров",
         "pairPicker": "Пары",
         "venuePicker": "Площадка",
-        "settings": "Настройки",
-        "alerts": "Оповещения"
+        "settings": "Настройки"
       },
       "changePair": "Сменить пару",
       "changeVenueA11y": "Сменить площадку. {{venue}}, {{status}}",
       "openSettings": "Открыть настройки",
-      "openAlerts": "Открыть оповещения",
       "readOnly": "только чтение",
       "readOnlyA11y": "{{status}}, только чтение",
       "live": {
@@ -4934,13 +4932,6 @@
       "availableVenues": "Доступно",
       "desktopOnlyVenues": "Только в десктоп-приложении",
       "desktopOnlyVenue": "Только десктоп"
-    },
-    "alerts": {
-      "editTitle": "Изменить оповещение",
-      "empty": "Оповещений пока нет",
-      "emptyHint": "Создайте оповещение, и мы будем следить за этой парой, пока Pairlens открыт.",
-      "flowsHint": "Созданы на компьютере. Здесь их можно отключить.",
-      "toggleA11y": "Включить {{name}}"
     }
   }
 }

@@ -4677,13 +4677,11 @@
         "orderbook": "Order book",
         "pairPicker": "Coppie",
         "venuePicker": "Piattaforma",
-        "settings": "Impostazioni",
-        "alerts": "Avvisi"
+        "settings": "Impostazioni"
       },
       "changePair": "Cambia coppia",
       "changeVenueA11y": "Cambia piattaforma. {{venue}}, {{status}}",
       "openSettings": "Apri impostazioni",
-      "openAlerts": "Apri avvisi",
       "readOnly": "sola lettura",
       "readOnlyA11y": "{{status}}, sola lettura",
       "live": {
@@ -4890,13 +4888,6 @@
       "availableVenues": "Disponibili",
       "desktopOnlyVenues": "Richiede l'app desktop",
       "desktopOnlyVenue": "Solo desktop"
-    },
-    "alerts": {
-      "editTitle": "Modifica avviso",
-      "empty": "Ancora nessun avviso",
-      "emptyHint": "Creane uno e terremo d'occhio questa coppia finché Pairlens è aperto.",
-      "flowsHint": "Creati sul desktop. Qui puoi silenziarli.",
-      "toggleA11y": "Attiva {{name}}"
     }
   }
 }

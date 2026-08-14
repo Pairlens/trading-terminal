@@ -430,14 +430,6 @@
     font-size: 16px !important;
   }
 
-  /* Same 16px pin, same reason, for the alert form — whose fields come from
-     the desktop dialog and are sized `text-sm` for a mouse. The price level is
-     the one number on this surface a user types digit by digit, so a viewport
-     zoom on focus lands squarely on the field that can least afford it. */
-  .pl-alert-form :is(input, textarea, [role='combobox']) {
-    font-size: 16px !important;
-  }
-
   /* A sheet-coloured sticky strip INSIDE a sheet's scroll region (the
      watchlist's search/chips header): the sheet's own fill exactly, so rows
      scrolling beneath cannot ghost through it, and free of the sheet's

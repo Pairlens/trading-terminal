@@ -4677,13 +4677,11 @@
         "orderbook": "สมุดคำสั่ง",
         "pairPicker": "คู่เทรด",
         "venuePicker": "ตลาด",
-        "settings": "การตั้งค่า",
-        "alerts": "การแจ้งเตือน"
+        "settings": "การตั้งค่า"
       },
       "changePair": "เปลี่ยนคู่เทรด",
       "changeVenueA11y": "เปลี่ยนตลาด {{venue}}, {{status}}",
       "openSettings": "เปิดการตั้งค่า",
-      "openAlerts": "เปิดการแจ้งเตือน",
       "readOnly": "อ่านอย่างเดียว",
       "readOnlyA11y": "{{status}}, อ่านอย่างเดียว",
       "live": {
@@ -4890,13 +4888,6 @@
       "availableVenues": "พร้อมใช้งาน",
       "desktopOnlyVenues": "ต้องใช้แอปเดสก์ท็อป",
       "desktopOnlyVenue": "เดสก์ท็อปเท่านั้น"
-    },
-    "alerts": {
-      "editTitle": "แก้ไขการแจ้งเตือน",
-      "empty": "ยังไม่มีการแจ้งเตือน",
-      "emptyHint": "สร้างสักรายการ แล้วเราจะเฝ้าดูคู่นี้ขณะที่ Pairlens เปิดอยู่",
-      "flowsHint": "สร้างไว้บนเดสก์ท็อป ปิดเสียงได้ที่นี่",
-      "toggleA11y": "เปิดใช้ {{name}}"
     }
   }
 }

@@ -4677,13 +4677,11 @@
         "orderbook": "Emir Defteri",
         "pairPicker": "Pariteler",
         "venuePicker": "Borsa",
-        "settings": "Ayarlar",
-        "alerts": "Uyarılar"
+        "settings": "Ayarlar"
       },
       "changePair": "Parite değiştir",
       "changeVenueA11y": "Borsa değiştir. {{venue}}, {{status}}",
       "openSettings": "Ayarları aç",
-      "openAlerts": "Uyarıları aç",
       "readOnly": "yalnızca okuma",
       "readOnlyA11y": "{{status}}, yalnızca okuma",
       "live": {
@@ -4890,13 +4888,6 @@
       "availableVenues": "Kullanılabilir",
       "desktopOnlyVenues": "Masaüstü uygulaması gerekiyor",
       "desktopOnlyVenue": "Yalnızca masaüstü"
-    },
-    "alerts": {
-      "editTitle": "Uyarıyı düzenle",
-      "empty": "Henüz uyarı yok",
-      "emptyHint": "Bir tane oluşturun; Pairlens açıkken bu paritenin başında bekleriz.",
-      "flowsHint": "Masaüstünde oluşturuldu. Burada susturabilirsiniz.",
-      "toggleA11y": "{{name}} etkinleştir"
     }
   }
 }

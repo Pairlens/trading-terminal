@@ -4677,13 +4677,11 @@
         "orderbook": "Carnet d’ordres",
         "pairPicker": "Paires",
         "venuePicker": "Place de marché",
-        "settings": "Paramètres",
-        "alerts": "Alertes"
+        "settings": "Paramètres"
       },
       "changePair": "Changer de paire",
       "changeVenueA11y": "Changer de place de marché. {{venue}}, {{status}}",
       "openSettings": "Ouvrir les paramètres",
-      "openAlerts": "Ouvrir les alertes",
       "readOnly": "lecture seule",
       "readOnlyA11y": "{{status}}, lecture seule",
       "live": {
@@ -4890,13 +4888,6 @@
       "availableVenues": "Disponibles",
       "desktopOnlyVenues": "Nécessitent l’app de bureau",
       "desktopOnlyVenue": "Bureau uniquement"
-    },
-    "alerts": {
-      "editTitle": "Modifier l'alerte",
-      "empty": "Aucune alerte pour l'instant",
-      "emptyHint": "Créez-en une et nous surveillerons cette paire tant que Pairlens est ouvert.",
-      "flowsHint": "Créés sur le bureau. Vous pouvez les couper ici.",
-      "toggleA11y": "Activer {{name}}"
     }
   }
 }

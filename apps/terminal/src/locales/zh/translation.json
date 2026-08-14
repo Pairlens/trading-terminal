@@ -4677,13 +4677,11 @@
         "orderbook": "订单簿",
         "pairPicker": "交易对",
         "venuePicker": "交易所",
-        "settings": "设置",
-        "alerts": "提醒"
+        "settings": "设置"
       },
       "changePair": "更改交易对",
       "changeVenueA11y": "更改交易所。{{venue}}，{{status}}",
       "openSettings": "打开设置",
-      "openAlerts": "打开提醒",
       "readOnly": "仅读取",
       "readOnlyA11y": "{{status}}，仅读取",
       "live": {
@@ -4890,13 +4888,6 @@
       "availableVenues": "可用",
       "desktopOnlyVenues": "需要桌面应用",
       "desktopOnlyVenue": "仅桌面端"
-    },
-    "alerts": {
-      "editTitle": "编辑提醒",
-      "empty": "还没有提醒",
-      "emptyHint": "创建一个，Pairlens 打开时我们会盯着这个交易对。",
-      "flowsHint": "在桌面端创建。可以在这里静音。",
-      "toggleA11y": "启用 {{name}}"
     }
   }
 }

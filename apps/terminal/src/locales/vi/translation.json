@@ -4677,13 +4677,11 @@
         "orderbook": "Sổ lệnh",
         "pairPicker": "Cặp giao dịch",
         "venuePicker": "Sàn giao dịch",
-        "settings": "Cài đặt",
-        "alerts": "Cảnh báo"
+        "settings": "Cài đặt"
       },
       "changePair": "Đổi cặp giao dịch",
       "changeVenueA11y": "Đổi sàn giao dịch. {{venue}}, {{status}}",
       "openSettings": "Mở cài đặt",
-      "openAlerts": "Mở cảnh báo",
       "readOnly": "chỉ đọc",
       "readOnlyA11y": "{{status}}, chỉ đọc",
       "live": {
@@ -4890,13 +4888,6 @@
       "availableVenues": "Khả dụng",
       "desktopOnlyVenues": "Cần ứng dụng máy tính",
       "desktopOnlyVenue": "Chỉ trên máy tính"
-    },
-    "alerts": {
-      "editTitle": "Sửa cảnh báo",
-      "empty": "Chưa có cảnh báo",
-      "emptyHint": "Tạo một cảnh báo và chúng tôi sẽ theo dõi cặp này khi Pairlens đang mở.",
-      "flowsHint": "Được tạo trên máy tính. Bạn có thể tắt tiếng tại đây.",
-      "toggleA11y": "Bật {{name}}"
     }
   }
 }

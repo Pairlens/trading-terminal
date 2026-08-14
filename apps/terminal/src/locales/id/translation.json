@@ -4677,13 +4677,11 @@
         "orderbook": "Order Book",
         "pairPicker": "Pair",
         "venuePicker": "Venue",
-        "settings": "Pengaturan",
-        "alerts": "Peringatan"
+        "settings": "Pengaturan"
       },
       "changePair": "Ganti pair",
       "changeVenueA11y": "Ganti venue. {{venue}}, {{status}}",
       "openSettings": "Buka pengaturan",
-      "openAlerts": "Buka peringatan",
       "readOnly": "hanya-baca",
       "readOnlyA11y": "{{status}}, hanya-baca",
       "live": {
@@ -4890,13 +4888,6 @@
       "availableVenues": "Tersedia",
       "desktopOnlyVenues": "Butuh aplikasi desktop",
       "desktopOnlyVenue": "Hanya desktop"
-    },
-    "alerts": {
-      "editTitle": "Edit peringatan",
-      "empty": "Belum ada peringatan",
-      "emptyHint": "Buat satu dan kami akan memantau pasangan ini selama Pairlens terbuka.",
-      "flowsHint": "Dibuat di desktop. Di sini kamu bisa membisukannya.",
-      "toggleA11y": "Aktifkan {{name}}"
     }
   }
 }

@@ -384,17 +384,9 @@ export function SimpleAlertTriggerFields({
 export function SimpleAlertChannelPicker({
   channels,
   onChange,
-  onConnectTelegram,
 }: {
   channels: SimpleAlertChannels
   onChange: (channels: SimpleAlertChannels) => void
-  /**
-   * Where "Connect" goes. Defaults to the settings dialog, which is the right
-   * answer everywhere it is mounted — and it is mounted under `_terminal`,
-   * which does not render below 768px. The mobile alerts sheet passes its own
-   * route to the same section rather than showing a link that does nothing.
-   */
-  onConnectTelegram?: () => void
 }) {
   const { t } = useTranslation()
   const telegram = useTelegramConnection()
@@ -505,11 +497,7 @@ export function SimpleAlertChannelPicker({
             variant="link"
             size="sm"
             className="h-auto p-0 text-[11px]"
-            onClick={() =>
-              onConnectTelegram
-                ? onConnectTelegram()
-                : openSettings('notifications')
-            }
+            onClick={() => openSettings('notifications')}
           >
             {t('notifications.builder.steps.telegram.connect')}
           </Button>
