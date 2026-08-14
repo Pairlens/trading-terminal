@@ -309,7 +309,7 @@ hard to undo. If your browser has already blocked them, the card says so and
 points you at the padlock in the address bar. Test one from here.
 
 Connect a Telegram bot here (paste the token BotFather gives you, press Start
-in the bot, link the chat) and any alert flow can then deliver to it. The bot token is stored like an exchange key: OS
+in the bot, link the chat) and any alert can then deliver to it. The bot token is stored like an exchange key: OS
 keychain on desktop, encrypted vault in the browser, never on a Pairlens
 server. Full walkthrough in
 [Alerts and notifications](/docs/alerts-notifications).
