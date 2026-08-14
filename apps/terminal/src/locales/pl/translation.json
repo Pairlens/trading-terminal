@@ -37,12 +37,13 @@
     "country": {
       "status": "Dostrajanie routingu regionalnego",
       "title": "Z jakiego kraju handlujesz?",
-      "sub": "Konektory kierują do właściwych punktów końcowych regionu, a my dobieramy giełdy dostępne w Twojej lokalizacji.",
+      "sub": "Niektóre giełdy mają ograniczenia geograficzne lub osobne regionalne endpointy — dzięki temu Twoje konektory łączą się z właściwymi.",
       "searchPlaceholder": "Szukaj krajów…",
       "noResults": "Żaden kraj nie pasuje do wyszukiwania",
       "global": "Wolę nie podawać",
       "globalSub": "Użyj globalnych punktów końcowych i ustawień domyślnych",
-      "label": "Kraj"
+      "label": "Kraj",
+      "localNote": "Zapisywane tylko na tym urządzeniu — nigdy nie wysyłane na serwery Pairlens."
     },
     "privacy": {
       "eyebrow": "Prywatność w założeniu",
@@ -66,26 +67,6 @@
       "sub": "Salda, zysk/strata i kwotowania będą wyświetlane w tej walucie.",
       "label": "Waluta"
     },
-    "asset": {
-      "status": "Dostosowywanie terminala",
-      "title": "Czym handlujesz?",
-      "sub": "Wybierz jedną lub więcej opcji. Terminal, routing i copilot dopasują się do Ciebie.",
-      "options": {
-        "cex": {
-          "label": "CEX",
-          "sub": "Scentralizowany spot — OKX, Binance, Coinbase"
-        },
-        "dex": {
-          "label": "DEX",
-          "sub": "Swapy on-chain — Jupiter, KyberSwap"
-        },
-        "equities": {
-          "label": "Akcje",
-          "sub": "Akcje i ETF-y z USA — przez Alpaca"
-        }
-      },
-      "label": "Aktywa"
-    },
     "routing": {
       "eyebrow": "Bezpośredni routing",
       "title": "Prosto na giełdy.",
@@ -101,58 +82,10 @@
       },
       "label": "Routing"
     },
-    "venues": {
-      "status": "Dobieranie giełd",
-      "title": "Połącz swoje giełdy",
-      "sub": "Dobrane pod Twój region i klasy aktywów — wybierz te, z których korzystasz.",
-      "label": "Giełdy"
-    },
-    "experience": {
-      "status": "Kalibrowanie ustawień domyślnych",
-      "title": "Jak byś się opisał/a?",
-      "sub": "Ustawimy sensowne wartości domyślne oraz to, jak szczegółowo copilot będzie tłumaczył.",
-      "options": {
-        "beginner": {
-          "label": "Początkujący",
-          "sub": "Nowy w handlu spot"
-        },
-        "intermediate": {
-          "label": "Pewny siebie",
-          "sub": "Handluję regularnie"
-        },
-        "pro": {
-          "label": "Profesjonalista",
-          "sub": "Pełna kontrola, minimum podpowiedzi"
-        }
-      },
-      "label": "Doświadczenie"
-    },
-    "risk": {
-      "status": "Dostrajanie zabezpieczeń",
-      "title": "Ustaw apetyt na ryzyko",
-      "sub": "To wpływa na wielkość pozycji i to, jak stanowczo interweniuje copilot.",
-      "calmer": "Spokojniej",
-      "hotter": "Odważniej",
-      "options": {
-        "conservative": {
-          "label": "Konserwatywny",
-          "sub": "≈1% ryzyka / transakcja"
-        },
-        "balanced": {
-          "label": "Zbalansowany",
-          "sub": "≈2% ryzyka / transakcja"
-        },
-        "aggressive": {
-          "label": "Agresywny",
-          "sub": "≈5% ryzyka / transakcja"
-        }
-      },
-      "label": "Ryzyko"
-    },
     "copilot": {
       "eyebrow": "Twój copilot",
       "title": "Copilot, który gra według Twoich zasad.",
-      "sub": "Czyta rynek za Ciebie — i nigdy nie przekracza granic, które właśnie wyznaczyłeś/aś.",
+      "sub": "Czyta rynek za Ciebie — i nigdy nie przekracza granic, które wyznaczasz.",
       "points": {
         "0": "Śledzi sygnały na Twoich rynkach",
         "1": "Zatwierdza, blokuje lub oznacza każdy układ",
@@ -251,15 +184,11 @@
     "summary": {
       "eyebrow": "Gotowe",
       "title": "Twój Pairlens jest gotowy",
-      "sub": "Dostrojony do Twojego stylu handlu. Wszystko poniżej powierzchni jest ustawione.",
+      "sub": "Skonfigurowany po Twojemu. Wszystko poniżej powierzchni jest gotowe.",
       "labels": {
         "language": "Język",
         "country": "Kraj",
         "currency": "Waluta bazowa",
-        "assetClasses": "Klasy aktywów",
-        "venues": "Giełdy",
-        "experience": "Doświadczenie",
-        "risk": "Profil ryzyka",
         "theme": "Motyw",
         "palette": "Paleta",
         "analytics": "Analityka"

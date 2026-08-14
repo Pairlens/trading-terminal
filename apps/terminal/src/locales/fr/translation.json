@@ -37,12 +37,13 @@
     "country": {
       "status": "Ajustement du routage régional",
       "title": "Depuis quel pays tradez-vous ?",
-      "sub": "Les connecteurs acheminent vers les bons points de terminaison régionaux et nous sélectionnons les places de marché disponibles là où vous êtes.",
+      "sub": "Certaines plateformes sont géo-restreintes ou utilisent des endpoints régionaux distincts — ceci oriente vos connecteurs vers les bons.",
       "searchPlaceholder": "Rechercher des pays…",
       "noResults": "Aucun pays ne correspond à votre recherche",
       "global": "Préférer ne pas préciser",
       "globalSub": "Utiliser les points de terminaison et paramètres globaux",
-      "label": "Pays"
+      "label": "Pays",
+      "localNote": "Stocké uniquement sur cet appareil — jamais envoyé aux serveurs Pairlens."
     },
     "privacy": {
       "eyebrow": "Privé par conception",
@@ -66,26 +67,6 @@
       "sub": "Les soldes, le P&L et les cotations sont affichés dans cette devise.",
       "label": "Devise"
     },
-    "asset": {
-      "status": "Personnalisation de votre terminal",
-      "title": "Que tradez-vous ?",
-      "sub": "Choisissez-en un ou plusieurs. Votre terminal, le routage et le co-pilote s’adaptent en conséquence.",
-      "options": {
-        "cex": {
-          "label": "CEX",
-          "sub": "Spot centralisé — OKX, Binance, Coinbase"
-        },
-        "dex": {
-          "label": "DEX",
-          "sub": "Swaps on-chain — Jupiter, KyberSwap"
-        },
-        "equities": {
-          "label": "Actions",
-          "sub": "Actions et ETF américains — via Alpaca"
-        }
-      },
-      "label": "Actifs"
-    },
     "routing": {
       "eyebrow": "Routage direct",
       "title": "Directement vers les exchanges.",
@@ -101,58 +82,10 @@
       },
       "label": "Routage"
     },
-    "venues": {
-      "status": "Sélection des places de marché adaptées",
-      "title": "Connectez vos places de marché",
-      "sub": "Sélectionnées selon votre région et vos classes d’actifs — choisissez celles que vous utilisez.",
-      "label": "Places de marché"
-    },
-    "experience": {
-      "status": "Calibrage des réglages par défaut",
-      "title": "Comment vous décririez-vous ?",
-      "sub": "Nous définirons des réglages par défaut adaptés et le niveau d’explication du co-pilote.",
-      "options": {
-        "beginner": {
-          "label": "Débutant",
-          "sub": "Nouveau dans le trading spot"
-        },
-        "intermediate": {
-          "label": "Confiant",
-          "sub": "Je trade régulièrement"
-        },
-        "pro": {
-          "label": "Professionnel",
-          "sub": "Contrôle total, accompagnement minimal"
-        }
-      },
-      "label": "Expérience"
-    },
-    "risk": {
-      "status": "Ajustement de vos garde-fous",
-      "title": "Définissez votre appétence au risque",
-      "sub": "Cela détermine le dimensionnement des positions et la fermeté avec laquelle le co-pilote intervient.",
-      "calmer": "Plus calme",
-      "hotter": "Plus agressif",
-      "options": {
-        "conservative": {
-          "label": "Prudent",
-          "sub": "≈1 % de risque / trade"
-        },
-        "balanced": {
-          "label": "Équilibré",
-          "sub": "≈2 % de risque / trade"
-        },
-        "aggressive": {
-          "label": "Agressif",
-          "sub": "≈5 % de risque / trade"
-        }
-      },
-      "label": "Risque"
-    },
     "copilot": {
       "eyebrow": "Votre co-pilote",
       "title": "Un co-pilote qui respecte vos règles.",
-      "sub": "Il lit le marché à votre place — et ne franchit jamais les limites que vous venez de fixer.",
+      "sub": "Il lit le marché à votre place — et ne franchit jamais les limites que vous fixez.",
       "points": {
         "0": "Surveille les signaux sur tous vos marchés",
         "1": "Approuve, bloque ou signale chaque configuration",
@@ -251,15 +184,11 @@
     "summary": {
       "eyebrow": "Prêt",
       "title": "Votre Pairlens est prêt",
-      "sub": "Ajusté à votre façon de trader. Tout est configuré en coulisses.",
+      "sub": "Configuré selon vos choix. Tout est prêt en coulisses.",
       "labels": {
         "language": "Langue",
         "country": "Pays",
         "currency": "Devise de base",
-        "assetClasses": "Classes d’actifs",
-        "venues": "Places de marché",
-        "experience": "Expérience",
-        "risk": "Profil de risque",
         "theme": "Thème",
         "palette": "Palette",
         "analytics": "Analytique"

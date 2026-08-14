@@ -37,12 +37,13 @@
     "country": {
       "status": "调整区域路由",
       "title": "你在哪个国家交易？",
-      "sub": "连接器会路由到正确的区域端点,我们也会为你所在地区筛选可用的交易场所。",
+      "sub": "部分交易所有地区限制或使用独立的区域接入点 —— 这个选择让连接器指向正确的接入点。",
       "searchPlaceholder": "搜索国家……",
       "noResults": "没有匹配的国家",
       "global": "不愿透露",
       "globalSub": "使用全球端点和默认设置",
-      "label": "国家"
+      "label": "国家",
+      "localNote": "仅保存在本设备上，绝不会发送到 Pairlens 服务器。"
     },
     "privacy": {
       "eyebrow": "设计上就注重隐私",
@@ -66,26 +67,6 @@
       "sub": "余额、盈亏和报价都将以此显示。",
       "label": "货币"
     },
-    "asset": {
-      "status": "定制你的终端",
-      "title": "你交易什么？",
-      "sub": "可多选。你的终端、路由和副驾驶都会随之适配。",
-      "options": {
-        "cex": {
-          "label": "中心化交易所",
-          "sub": "中心化现货 —— OKX、Binance、Coinbase"
-        },
-        "dex": {
-          "label": "去中心化交易所",
-          "sub": "链上兑换 —— Jupiter、KyberSwap"
-        },
-        "equities": {
-          "label": "股票",
-          "sub": "美股与 ETF —— 通过 Alpaca"
-        }
-      },
-      "label": "资产"
-    },
     "routing": {
       "eyebrow": "直连路由",
       "title": "直达交易所。",
@@ -101,58 +82,10 @@
       },
       "label": "路由"
     },
-    "venues": {
-      "status": "为你匹配交易场所",
-      "title": "连接你的交易场所",
-      "sub": "根据你的地区和资产类别精选 —— 选择你会用到的。",
-      "label": "交易场所"
-    },
-    "experience": {
-      "status": "校准默认设置",
-      "title": "你如何形容自己？",
-      "sub": "我们会据此设置合理的默认值,以及副驾驶讲解的详细程度。",
-      "options": {
-        "beginner": {
-          "label": "刚起步",
-          "sub": "现货交易新手"
-        },
-        "intermediate": {
-          "label": "有信心",
-          "sub": "我经常交易"
-        },
-        "pro": {
-          "label": "专业人士",
-          "sub": "完全掌控,少加干预"
-        }
-      },
-      "label": "经验"
-    },
-    "risk": {
-      "status": "调整你的风控边界",
-      "title": "设置你的风险偏好",
-      "sub": "这将决定仓位大小,以及副驾驶介入的力度。",
-      "calmer": "更保守",
-      "hotter": "更激进",
-      "options": {
-        "conservative": {
-          "label": "保守",
-          "sub": "每笔交易约 1% 风险"
-        },
-        "balanced": {
-          "label": "均衡",
-          "sub": "每笔交易约 2% 风险"
-        },
-        "aggressive": {
-          "label": "激进",
-          "sub": "每笔交易约 5% 风险"
-        }
-      },
-      "label": "风险"
-    },
     "copilot": {
       "eyebrow": "你的副驾驶",
       "title": "一个遵守你规则的副驾驶。",
-      "sub": "它替你读盘 —— 且绝不逾越你刚刚设定的界限。",
+      "sub": "它替你读盘 —— 且绝不逾越你设定的界限。",
       "points": {
         "0": "监视你所有市场中的信号",
         "1": "对每个行情做出批准、拦截或标记",
@@ -251,15 +184,11 @@
     "summary": {
       "eyebrow": "已就绪",
       "title": "你的 Pairlens 已就绪",
-      "sub": "已按你的交易方式调优。所有底层设置均已完成。",
+      "sub": "已按你的选择完成设置，所有底层配置均已就绪。",
       "labels": {
         "language": "语言",
         "country": "国家",
         "currency": "基础货币",
-        "assetClasses": "资产类别",
-        "venues": "交易场所",
-        "experience": "经验水平",
-        "risk": "风险画像",
         "theme": "主题",
         "palette": "配色",
         "analytics": "分析"

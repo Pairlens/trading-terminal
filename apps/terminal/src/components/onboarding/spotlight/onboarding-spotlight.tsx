@@ -23,13 +23,11 @@ import { ShimmeringText } from '@pairlens/ui/components/ui/shimmering-text'
 import './spotlight.css'
 
 import {
-  AssetCards,
   AutoAdvanceHint,
   CountryPicker,
   LegalCard,
   OptionGrid,
   OptionRows,
-  RiskSpectrum,
   RotatingGreeting,
   StoryPointsHorizontal,
   StoryPointsVertical,
@@ -43,15 +41,12 @@ import { AccountStep } from './spotlight-account'
 import { WelcomeStatue } from './welcome-statue'
 import { useOnboardingThemes } from './onboarding-themes'
 import {
-  EXPERIENCE_VALUES,
   LAYOUT_PRESETS,
   LAYOUT_PRESETS_PORTRAIT,
   LEGAL_ITEM_COUNT,
-  RISK_VALUES,
+  ORB_COLORS,
   STEPS,
   layoutTypeOf,
-  orbHuesFor,
-  venuesFor,
 } from './spotlight-steps'
 import type { AccountView } from './spotlight-account'
 import type { RenderOption } from './spotlight-bodies'
@@ -59,17 +54,14 @@ import type { OnboardingThemeOption } from './onboarding-themes'
 import type { LayoutPresetTable, SpotlightStep } from './spotlight-steps'
 import type { ReactNode } from 'react'
 import type { ColorMode } from '@/lib/settings/color-mode'
-import type {
-  OnboardingAssetClass,
-  OnboardingSelections,
-} from '@/lib/onboarding-state'
+import type { OnboardingSelections } from '@/lib/onboarding-state'
 import type { StorySceneId } from './story-scenes'
 // The one mobile-owned module the desktop onboarding touches: the viewport
 // gate that picks the portrait layout presets (see the barrel's contract).
 import { useViewportMode } from '@/mobile'
 import { useNeedsTitlebar } from '@/components/tauri-drag-region'
 import { LegalNotice } from '@/components/legal-links'
-import { countryFlag, countryName, regionForCountry } from '@/lib/countries'
+import { countryFlag, countryName } from '@/lib/countries'
 import {
   markLegalAcknowledged,
   markOnboardingComplete,
@@ -81,7 +73,7 @@ import {
   DISPLAY_CURRENCY_KEY,
 } from '@/hooks/use-display-currency'
 import { STORAGE_PREFIX } from '@/hooks/use-persisted-state'
-import { analyticsSetting, setPersonProperties } from '@/lib/analytics'
+import { analyticsSetting } from '@/lib/analytics'
 import { track } from '@/lib/analytics-events'
 import { setCountrySetting } from '@/lib/region-settings'
 import { emitWrite } from '@/lib/sync/sync-channel'
@@ -138,7 +130,7 @@ export function OnboardingSpotlight() {
   const needsTitlebar = useNeedsTitlebar()
   const { setTheme, resolvedTheme } = useTheme()
   const reduceMotion = useReducedMotion() ?? false
-  // Portrait is the only thing the phone changes about onboarding: the same 18
+  // Portrait is the only thing the phone changes about onboarding: the same
   // steps, the same copy, the same orb — moved and scaled for a 402px frame.
   const presets: LayoutPresetTable =
     useViewportMode() === 'mobile' ? LAYOUT_PRESETS_PORTRAIT : LAYOUT_PRESETS
@@ -146,8 +138,6 @@ export function OnboardingSpotlight() {
   const [stepIndex, setStepIndex] = useState(0)
   const [selections, setSelections] = useState<OnboardingSelections>({
     language: i18n.language,
-    assetClasses: [],
-    venues: [],
     theme: 'dark',
   })
   const [legalAccepted, setLegalAccepted] = useState<Array<number>>([])
@@ -357,73 +347,14 @@ export function OnboardingSpotlight() {
     timersRef.current.advance = setTimeout(() => go(1), AUTO_ADVANCE_MS)
   }, [go, pulse])
 
-  const pruneVenues = useCallback(
-    (
-      country: string | undefined,
-      assetClasses: Array<OnboardingAssetClass>,
-      venues: Array<string>,
-    ) => {
-      const available = new Set(
-        venuesFor(regionForCountry(country), assetClasses).map((v) => v.value),
-      )
-      return venues.filter((v) => available.has(v))
-    },
-    [],
-  )
-
   const pickSingle = useCallback(
-    (
-      field:
-        | 'language'
-        | 'country'
-        | 'currency'
-        | 'experience'
-        | 'risk'
-        | 'analytics',
-    ) =>
+    (field: 'language' | 'country' | 'currency' | 'analytics') =>
       (value: string) => {
-        setSelections((prev) => {
-          const next = { ...prev, [field]: value }
-          if (field === 'country') {
-            next.venues = pruneVenues(value, prev.assetClasses, prev.venues)
-          }
-          return next
-        })
+        setSelections((prev) => ({ ...prev, [field]: value }))
         if (field === 'language') applyLanguage(value)
         scheduleAdvance()
       },
-    [pruneVenues, scheduleAdvance],
-  )
-
-  const toggleAsset = useCallback(
-    (value: string) => {
-      pulse()
-      setSelections((prev) => {
-        const asset = value as OnboardingAssetClass
-        const assetClasses = prev.assetClasses.includes(asset)
-          ? prev.assetClasses.filter((a) => a !== asset)
-          : [...prev.assetClasses, asset]
-        return {
-          ...prev,
-          assetClasses,
-          venues: pruneVenues(prev.country, assetClasses, prev.venues),
-        }
-      })
-    },
-    [pruneVenues, pulse],
-  )
-
-  const toggleVenue = useCallback(
-    (value: string) => {
-      pulse()
-      setSelections((prev) => ({
-        ...prev,
-        venues: prev.venues.includes(value)
-          ? prev.venues.filter((v) => v !== value)
-          : [...prev.venues, value],
-      }))
-    },
-    [pulse],
+    [scheduleAdvance],
   )
 
   const pickTheme = useCallback(
@@ -534,12 +465,6 @@ export function OnboardingSpotlight() {
     // Queued by the analytics layer until the just-granted consent finishes
     // loading PostHog; dropped entirely if consent was declined.
     track('onboarding_completed')
-    // Declared persona for segmentation — coarse self-reported enums only.
-    setPersonProperties({
-      onboarding_experience: sel.experience ?? 'unset',
-      onboarding_risk: sel.risk ?? 'unset',
-      onboarding_asset_classes: sel.assetClasses,
-    })
     pulse()
     setLaunched(true)
     applySplashLayout()
@@ -580,33 +505,6 @@ export function OnboardingSpotlight() {
           selected: selections.currency === currency.code,
           onSelect: () => pickSingle('currency')(currency.code),
         }))
-      case 'asset':
-        return (['cex', 'dex', 'equities'] as const).map((value) => ({
-          value,
-          label: t(`onboarding.asset.options.${value}.label`),
-          sub: t(`onboarding.asset.options.${value}.sub`),
-          selected: selections.assetClasses.includes(value),
-          onSelect: () => toggleAsset(value),
-        }))
-      case 'venues':
-        return venuesFor(
-          regionForCountry(selections.country),
-          selections.assetClasses,
-        ).map((venue) => ({
-          value: venue.value,
-          label: venue.label,
-          tag: venue.kind,
-          selected: selections.venues.includes(venue.value),
-          onSelect: () => toggleVenue(venue.value),
-        }))
-      case 'experience':
-        return EXPERIENCE_VALUES.map((value) => ({
-          value,
-          label: t(`onboarding.experience.options.${value}.label`),
-          sub: t(`onboarding.experience.options.${value}.sub`),
-          selected: selections.experience === value,
-          onSelect: () => pickSingle('experience')(value),
-        }))
       case 'analytics':
         return (['enabled', 'disabled'] as const).map((value) => ({
           value,
@@ -615,38 +513,16 @@ export function OnboardingSpotlight() {
           selected: selections.analytics === value,
           onSelect: () => pickSingle('analytics')(value),
         }))
-      case 'risk':
-        return RISK_VALUES.map(({ value, tone }) => ({
-          value,
-          label: t(`onboarding.risk.options.${value}.label`),
-          sub: t(`onboarding.risk.options.${value}.sub`),
-          dotColor:
-            tone === 'calm'
-              ? 'var(--up)'
-              : tone === 'hot'
-                ? 'var(--down)'
-                : 'var(--primary)',
-          selected: selections.risk === value,
-          onSelect: () => pickSingle('risk')(value),
-        }))
       default:
         return []
     }
-  }, [step, selections, t, pickSingle, toggleAsset, toggleVenue])
-
-  const orbColors = useMemo(
-    () => orbHuesFor(selections.assetClasses, selections.risk),
-    [selections.assetClasses, selections.risk],
-  )
+  }, [step, selections, t, pickSingle])
 
   const summaryRows = useMemo(() => {
     if (step.kind !== 'summary') return []
     const language = SUPPORTED_LANGUAGES.find(
       (l) => l.code === selections.language,
     )?.nativeName
-    const assetClasses = selections.assetClasses
-      .map((a) => t(`onboarding.asset.options.${a}.label`))
-      .join(' · ')
     return [
       {
         label: t('onboarding.summary.labels.language'),
@@ -665,30 +541,6 @@ export function OnboardingSpotlight() {
       {
         label: t('onboarding.summary.labels.currency'),
         value: summaryValue(selections.currency),
-      },
-      {
-        label: t('onboarding.summary.labels.assetClasses'),
-        value: summaryValue(assetClasses),
-      },
-      {
-        label: t('onboarding.summary.labels.venues'),
-        value: summaryValue(selections.venues.join(' · ')),
-      },
-      {
-        label: t('onboarding.summary.labels.experience'),
-        value: summaryValue(
-          selections.experience
-            ? t(`onboarding.experience.options.${selections.experience}.label`)
-            : null,
-        ),
-      },
-      {
-        label: t('onboarding.summary.labels.risk'),
-        value: summaryValue(
-          selections.risk
-            ? t(`onboarding.risk.options.${selections.risk}.label`)
-            : null,
-        ),
       },
       {
         label: t('onboarding.summary.labels.theme'),
@@ -718,24 +570,10 @@ export function OnboardingSpotlight() {
   )
 
   const legalComplete = legalAccepted.length === LEGAL_ITEM_COUNT
-  const multiCount =
-    step.field === 'asset'
-      ? selections.assetClasses.length
-      : step.field === 'venues'
-        ? selections.venues.length
-        : 0
 
   const showContinue =
-    step.kind === 'story' ||
-    step.kind === 'theme' ||
-    step.kind === 'legal' ||
-    (step.kind === 'choice' && step.multi === true)
-  const continueDisabled =
-    step.kind === 'legal'
-      ? !legalComplete
-      : step.kind === 'choice' && step.multi === true
-        ? multiCount === 0
-        : false
+    step.kind === 'story' || step.kind === 'theme' || step.kind === 'legal'
+  const continueDisabled = step.kind === 'legal' && !legalComplete
 
   const handleBack = useCallback(() => {
     if (step.kind === 'connect' && accountView !== 'benefits') {
@@ -847,7 +685,7 @@ export function OnboardingSpotlight() {
         <AiOrb
           size="132px"
           state={busy ? 'thinking' : 'idle'}
-          colors={orbColors}
+          colors={ORB_COLORS}
         />
       </div>
 
@@ -1140,24 +978,21 @@ function StepBody({
   }
 
   if (step.kind === 'choice') {
-    const single = step.multi !== true
     return (
       <div className="mt-0.5 flex w-full flex-col items-center gap-3">
         {step.layout === 'country' ? (
           <CountryPicker value={country} onSelect={onPickCountry} />
         ) : step.layout === 'rows' ? (
           <OptionRows options={options} />
-        ) : step.layout === 'spectrum' ? (
-          <RiskSpectrum options={options} />
-        ) : step.layout === 'asset' ? (
-          <AssetCards options={options} />
         ) : (
           <OptionGrid options={options} />
         )}
         {step.field === 'analytics' && (
           <LegalNotice kind="analytics" className="text-center" />
         )}
-        {single && <AutoAdvanceHint />}
+        {/* The country step carries its own fine print (the local-only
+            note); stacking the advance hint under it reads as clutter. */}
+        {step.layout !== 'country' && <AutoAdvanceHint />}
       </div>
     )
   }

@@ -37,12 +37,13 @@
     "country": {
       "status": "Đang tinh chỉnh định tuyến khu vực",
       "title": "Bạn đang giao dịch từ quốc gia nào?",
-      "sub": "Các connector định tuyến đến đúng endpoint khu vực và chúng tôi chọn lọc các sàn khả dụng ở nơi bạn ở.",
+      "sub": "Một số sàn bị giới hạn theo khu vực hoặc dùng endpoint khu vực riêng — lựa chọn này giúp connector trỏ đến đúng nơi.",
       "searchPlaceholder": "Tìm quốc gia…",
       "noResults": "Không có quốc gia nào khớp với tìm kiếm của bạn",
       "global": "Không muốn tiết lộ",
       "globalSub": "Dùng endpoint và mặc định toàn cầu",
-      "label": "Quốc gia"
+      "label": "Quốc gia",
+      "localNote": "Chỉ lưu trên thiết bị này — không bao giờ gửi đến máy chủ Pairlens."
     },
     "privacy": {
       "eyebrow": "Riêng tư theo thiết kế",
@@ -66,26 +67,6 @@
       "sub": "Số dư, lãi/lỗ và báo giá sẽ hiển thị theo đơn vị này.",
       "label": "Tiền tệ"
     },
-    "asset": {
-      "status": "Đang định hình terminal của bạn",
-      "title": "Bạn giao dịch gì?",
-      "sub": "Chọn một hoặc nhiều. Terminal, định tuyến và co-pilot của bạn sẽ thích ứng theo.",
-      "options": {
-        "cex": {
-          "label": "CEX",
-          "sub": "Spot tập trung — OKX, Binance, Coinbase"
-        },
-        "dex": {
-          "label": "DEX",
-          "sub": "Swap on-chain — Jupiter, KyberSwap"
-        },
-        "equities": {
-          "label": "Cổ phiếu",
-          "sub": "Cổ phiếu & ETF Mỹ — qua Alpaca"
-        }
-      },
-      "label": "Tài sản"
-    },
     "routing": {
       "eyebrow": "Định tuyến trực tiếp",
       "title": "Thẳng tới các sàn giao dịch.",
@@ -101,58 +82,10 @@
       },
       "label": "Định tuyến"
     },
-    "venues": {
-      "status": "Đang khớp sàn giao dịch phù hợp với bạn",
-      "title": "Kết nối các sàn của bạn",
-      "sub": "Được chọn lọc theo khu vực và loại tài sản của bạn — chọn những sàn bạn dùng.",
-      "label": "Sàn giao dịch"
-    },
-    "experience": {
-      "status": "Đang hiệu chỉnh mặc định",
-      "title": "Bạn tự mô tả mình như thế nào?",
-      "sub": "Chúng tôi sẽ đặt mặc định hợp lý và mức độ giải thích của co-pilot.",
-      "options": {
-        "beginner": {
-          "label": "Mới bắt đầu",
-          "sub": "Mới với giao dịch spot"
-        },
-        "intermediate": {
-          "label": "Tự tin",
-          "sub": "Tôi giao dịch thường xuyên"
-        },
-        "pro": {
-          "label": "Chuyên nghiệp",
-          "sub": "Toàn quyền kiểm soát, ít hướng dẫn"
-        }
-      },
-      "label": "Kinh nghiệm"
-    },
-    "risk": {
-      "status": "Đang tinh chỉnh giới hạn rủi ro",
-      "title": "Đặt khẩu vị rủi ro của bạn",
-      "sub": "Điều này định hình cỡ vị thế và mức độ can thiệp của co-pilot.",
-      "calmer": "Thận trọng hơn",
-      "hotter": "Mạo hiểm hơn",
-      "options": {
-        "conservative": {
-          "label": "Thận trọng",
-          "sub": "≈1% rủi ro / lệnh"
-        },
-        "balanced": {
-          "label": "Cân bằng",
-          "sub": "≈2% rủi ro / lệnh"
-        },
-        "aggressive": {
-          "label": "Mạo hiểm",
-          "sub": "≈5% rủi ro / lệnh"
-        }
-      },
-      "label": "Rủi ro"
-    },
     "copilot": {
       "eyebrow": "Co-pilot của bạn",
       "title": "Một co-pilot tuân thủ luật chơi của bạn.",
-      "sub": "Nó đọc thị trường thay bạn — và không bao giờ vượt qua ranh giới bạn vừa đặt ra.",
+      "sub": "Nó đọc thị trường thay bạn — và không bao giờ vượt qua ranh giới bạn đặt ra.",
       "points": {
         "0": "Theo dõi tín hiệu trên các thị trường của bạn",
         "1": "Duyệt, chặn hoặc gắn cờ mọi setup",
@@ -251,15 +184,11 @@
     "summary": {
       "eyebrow": "Sẵn sàng",
       "title": "Pairlens của bạn đã sẵn sàng",
-      "sub": "Được tinh chỉnh theo cách bạn giao dịch. Mọi thứ bên dưới đã được thiết lập.",
+      "sub": "Được thiết lập theo lựa chọn của bạn. Mọi thứ bên dưới đã sẵn sàng.",
       "labels": {
         "language": "Ngôn ngữ",
         "country": "Quốc gia",
         "currency": "Tiền tệ cơ sở",
-        "assetClasses": "Loại tài sản",
-        "venues": "Sàn giao dịch",
-        "experience": "Kinh nghiệm",
-        "risk": "Hồ sơ rủi ro",
         "theme": "Giao diện",
         "palette": "Bảng màu",
         "analytics": "Phân tích"

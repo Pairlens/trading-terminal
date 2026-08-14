@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Sparkles } from 'lucide-react'
+import { Lock, Sparkles } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 import { ChartLineIcon } from '@pairlens/ui/components/ui/chart-line'
@@ -32,10 +32,6 @@ export type RenderOption = {
   flag?: string
   /** Serif currency symbol shown before the label (currency step). */
   symbol?: string
-  /** Mono kind tag on the right (venues step). */
-  tag?: string
-  /** Spectrum dot color (risk step). */
-  dotColor?: string
   selected: boolean
   onSelect: () => void
 }
@@ -322,11 +318,6 @@ export function OptionRows({ options }: { options: Array<RenderOption> }) {
               <span className="text-xs text-muted-foreground">{opt.sub}</span>
             )}
           </span>
-          {opt.tag && (
-            <span className="flex-none font-mono text-[10.5px] tracking-[0.06em] text-primary">
-              {opt.tag}
-            </span>
-          )}
           <span className="size-[22px] flex-none rounded-full border-[1.5px] border-border" />
           {opt.selected && (
             <>
@@ -422,7 +413,7 @@ export function CountryPicker({
       {/* `overflow-x: hidden` is explicit because `overflow-y` alone computes
           the other axis to `auto` — a nested sideways scroller inside the
           stage is the one thing that reads as broken on a phone. */}
-      <div className="flex max-h-[min(296px,38vh)] flex-col gap-[9px] overflow-y-auto overflow-x-hidden pb-0.5">
+      <div className="flex max-h-[min(296px,30vh)] flex-col gap-[9px] overflow-y-auto overflow-x-hidden pb-0.5">
         {results.map((c) => (
           <button
             key={c.code}
@@ -450,123 +441,33 @@ export function CountryPicker({
             {t('onboarding.country.noResults')}
           </div>
         )}
-        {!q && (
-          <button
-            type="button"
-            onClick={() => onSelect('')}
-            className={rowClass}
-          >
-            <span className="text-xl leading-none">🌐</span>
-            <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-              <span className="text-[15px] font-semibold tracking-[-0.01em]">
-                {t('onboarding.country.global')}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {t('onboarding.country.globalSub')}
-              </span>
-            </span>
-            {value === '' && (
-              <>
-                <SelectedRing radius={13} />
-                <CheckBadge className="right-[13px] top-1/2 size-[18px] -translate-y-1/2" />
-              </>
-            )}
-          </button>
-        )}
       </div>
-    </div>
-  )
-}
-
-export function RiskSpectrum({ options }: { options: Array<RenderOption> }) {
-  const { t } = useTranslation()
-  return (
-    <div className="mx-auto mt-1 flex w-full max-w-[600px] flex-col gap-[15px]">
-      <div className="flex items-center gap-[11px]">
-        <span className="text-[11px] text-muted-foreground">
-          {t('onboarding.risk.calmer')}
-        </span>
-        <span className="h-1.5 flex-1 rounded-[3px] bg-[linear-gradient(90deg,var(--up),var(--primary),var(--down))] opacity-75" />
-        <span className="text-[11px] text-muted-foreground">
-          {t('onboarding.risk.hotter')}
-        </span>
-      </div>
-      <div className="flex gap-2.5 max-md:flex-col">
-        {options.map((opt) => (
-          <button
-            key={opt.value}
-            type="button"
-            onClick={opt.onSelect}
-            className={cn(
-              'relative flex flex-1 cursor-pointer flex-col items-center gap-2 rounded-[14px] border border-border bg-card px-2.5 py-[18px] text-foreground transition-[transform,border-color] duration-200 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-[3px]',
-              HOVER_BORDER,
-            )}
-          >
-            <span
-              className="size-[26px] rounded-full"
-              style={{
-                background: opt.dotColor,
-                boxShadow: `0 0 18px -2px ${opt.dotColor}`,
-              }}
-            />
-            <span className="text-sm font-semibold tracking-[-0.01em]">
-              {opt.label}
+      {/* The decline option sits OUTSIDE the scroll region: an escape hatch
+          buried below the fold reads as "answering is mandatory", which is
+          the opposite of the local-only story this step tells. */}
+      {!q && (
+        <button type="button" onClick={() => onSelect('')} className={rowClass}>
+          <span className="text-xl leading-none">🌐</span>
+          <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <span className="text-[15px] font-semibold tracking-[-0.01em]">
+              {t('onboarding.country.global')}
             </span>
-            <span className="text-[11.5px] text-muted-foreground">
-              {opt.sub}
+            <span className="text-xs text-muted-foreground">
+              {t('onboarding.country.globalSub')}
             </span>
-            {opt.selected && <SelectedRing radius={14} />}
-          </button>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-const ASSET_ICONS: Record<string, ComponentType<{ size?: number }>> = {
-  cex: LayersIcon,
-  dex: WaypointsIcon,
-  equities: ChartLineIcon,
-}
-
-export function AssetCards({ options }: { options: Array<RenderOption> }) {
-  return (
-    <div className="mx-auto grid w-full max-w-[700px] grid-cols-3 gap-[13px] max-md:grid-cols-1">
-      {options.map((opt) => {
-        const Icon = ASSET_ICONS[opt.value] ?? LayersIcon
-        return (
-          <button
-            key={opt.value}
-            type="button"
-            onClick={opt.onSelect}
-            className={cn(
-              // Below `md` the three cards are stacked (`grid-cols-1` above), so
-              // the 166px floor that squares them off in a row instead pushes the
-              // third card under the fold. Content height is enough once they are
-              // rows.
-              'relative flex min-h-[166px] cursor-pointer flex-col items-start gap-[9px] rounded-2xl border border-border bg-card p-[19px] text-left text-foreground transition-[transform,border-color,box-shadow] duration-200 ease-[cubic-bezier(.22,1,.36,1)] max-md:min-h-0 max-md:p-4',
-              'hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(0,0,0,.7)]',
-              HOVER_BORDER,
-            )}
-          >
-            <span className="flex size-11 items-center justify-center rounded-xl bg-[color-mix(in_oklch,var(--primary)_13%,transparent)] text-primary">
-              <Icon size={24} />
-            </span>
-            <span className="font-serif text-[19px] font-semibold">
-              {opt.label}
-            </span>
-            <span className="text-[12.5px] leading-[1.45] text-muted-foreground">
-              {opt.sub}
-            </span>
-            {opt.selected && (
-              <>
-                <SelectedRing radius={16} />
-                <CheckBadge className="right-3 top-3 size-[19px] text-[11px]" />
-              </>
-            )}
-          </button>
-        )
-      })}
+          </span>
+          {value === '' && (
+            <>
+              <SelectedRing radius={13} />
+              <CheckBadge className="right-[13px] top-1/2 size-[18px] -translate-y-1/2" />
+            </>
+          )}
+        </button>
+      )}
+      <span className="mt-1 inline-flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+        <Lock size={12} aria-hidden className="flex-none opacity-80" />
+        {t('onboarding.country.localNote')}
+      </span>
     </div>
   )
 }
