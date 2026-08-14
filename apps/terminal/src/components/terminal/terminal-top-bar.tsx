@@ -23,7 +23,7 @@ import { ConnectionIndicator } from '@/components/terminal/connection-indicator'
 import { LatencyIndicator } from '@/components/terminal/latency-indicator'
 import { MarketPicker } from '@/components/terminal/market-picker'
 import { WalletSelector } from '@/components/terminal/wallet-selector'
-import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
+import { PairSwitcher } from '@/components/pair-picker/pair-switcher'
 import { formatPrice } from '@/lib/format-price'
 import { useOptionalTickerData } from '@/lib/chart-terminal-context'
 import { useNotificationStore } from '@/stores/notification-store'
@@ -70,15 +70,7 @@ export function TerminalTopBar({
         />
       }
     >
-      <div className="flex items-center gap-1.5">
-        <PairLogo
-          base={pairKey.split('-')[0] ?? ''}
-          quote={pairKey.split('-')[1] ?? ''}
-          assetClass={assetClass}
-          size="sm"
-        />
-        <PairSymbol symbol={pairKey} className="text-base tracking-tight" />
-      </div>
+      <PairSwitcher pairKey={pairKey} assetClass={assetClass} />
       <Button
         size="icon-xs"
         variant="ghost"

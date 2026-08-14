@@ -4144,6 +4144,8 @@
     "switchTo": "{{venue}}に切り替え"
   },
   "pairPicker": {
+    "popular": "人気",
+    "switchPair": "ペアを変更",
     "noPairsFound": "ペアが見つかりません。",
     "startTyping": "入力を開始してペアを検索してください。"
   },

@@ -4144,6 +4144,8 @@
     "switchTo": "เปลี่ยนไปใช้ {{venue}}"
   },
   "pairPicker": {
+    "popular": "ยอดนิยม",
+    "switchPair": "เปลี่ยนคู่เทรด",
     "noPairsFound": "ไม่พบคู่เทรด",
     "startTyping": "เริ่มพิมพ์เพื่อค้นหาคู่เทรด"
   },

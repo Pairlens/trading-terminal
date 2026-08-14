@@ -4144,6 +4144,8 @@
     "switchTo": "Beralih ke {{venue}}"
   },
   "pairPicker": {
+    "popular": "Populer",
+    "switchPair": "Ganti pair",
     "noPairsFound": "Tidak ada pair yang ditemukan.",
     "startTyping": "Mulai mengetik untuk mencari pair."
   },

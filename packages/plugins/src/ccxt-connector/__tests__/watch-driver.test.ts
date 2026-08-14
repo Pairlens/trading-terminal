@@ -54,7 +54,17 @@ class FakeExchange {
   readonly timeframes: Record<string, string> = {}
   readonly urls: Record<string, unknown> = {}
   readonly options: Record<string, unknown> = {}
-  markets: Record<string, unknown> | undefined = { 'BTC/USDT': {} }
+  // Every symbol the suite subscribes must resolve here — the ticker fan
+  // (correctly) excludes symbols absent from the market table.
+  markets: Record<string, unknown> | undefined = {
+    'BTC/USDT': {},
+    'ETH/USDT': {},
+    'SOL/USDT': {},
+    'LIVE/USDT': {},
+    ...Object.fromEntries(
+      Array.from({ length: 12 }, (_, i) => [`P${i}/USDT`, {}]),
+    ),
+  }
   closed = false
   /** Every watch call made on this instance, newest last. */
   readonly calls: Array<string> = []
@@ -821,6 +831,41 @@ describe('CcxtStreamHub — ticker fan', () => {
     const second = host.built[1]
     await waitFor(() => second.calls.length > 0)
     expect(second.calls[0]).toBe('tickers:BTC/USDT,ETH/USDT')
+    await hub.destroy()
+  })
+
+  it('excludes a pair the venue does not list, instead of poisoning the batch', async () => {
+    const { hub, host } = makeFanHub()
+    const btc: Array<unknown> = []
+    const alien: Array<unknown> = []
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', (d) => btc.push(d))
+    // Not in the fake's market table — `watchTickers` would throw on it and
+    // take every other chip down with it.
+    hub.acquire({ channel: 'ticker', pair: 'ALIEN-XXX' }, '', (d) =>
+      alien.push(d),
+    )
+
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+    expect(exchange.calls[0]).toBe('tickers:BTC/USDT')
+
+    exchange.settle({ 'BTC/USDT': TICKER_FRAME(60_000) })
+    await waitFor(() => btc.length > 0)
+    expect(alien.length).toBe(0)
+    await hub.destroy()
+  })
+
+  it('an unresolvable joiner does not retire the live subscription', async () => {
+    const { hub, host } = makeFanHub()
+    hub.acquire({ channel: 'ticker', pair: 'BTC-USDT' }, '', () => {})
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+
+    // The epoch bumps, but the RESOLVABLE set is unchanged — unsubscribing
+    // the "retired" set would tear down the live streams.
+    hub.acquire({ channel: 'ticker', pair: 'ALIEN-XXX' }, '', () => {})
+    await sleep(60)
+    expect(exchange.unWatched).toEqual([])
     await hub.destroy()
   })
 

@@ -104,6 +104,12 @@ const FAN_RETIRE_DELAY_MS = 1_000
  */
 const FAN_COALESCE_MS = 25
 /**
+ * Poll cadence while every fan pair is unresolvable (markets still loading,
+ * or the whole watchlist alien to this venue) — the loop waits rather than
+ * exits, and each retry re-primes markets.
+ */
+const FAN_UNRESOLVABLE_RETRY_MS = 2_000
+/**
  * Trade ids remembered per trades key. A reconnect rebuilds the ccxt instance
  * with an empty trade cache, and venues whose subscribe opens with a snapshot
  * (Coinbase's `market_trades`) hand the whole snapshot back as fresh updates —
@@ -297,11 +303,14 @@ export class CcxtStreamHub {
       if (current.channel === 'candles') this.startBackfill(current)
       if (
         current.channel === 'orderbook' &&
-        this.opts.venue.seedOrderBook === true
+        (this.opts.venue.seedOrderBook ?? false) !== false
       ) {
         void this.seedBookFirstPaint(current)
       }
-      if (current.channel === 'trades' && this.opts.venue.seedTrades === true) {
+      if (
+        current.channel === 'trades' &&
+        (this.opts.venue.seedTrades ?? false) !== false
+      ) {
         void this.seedTradesFirstPaint(current)
       }
     } else {
@@ -502,6 +511,26 @@ export class CcxtStreamHub {
     return [...seen]
   }
 
+  /**
+   * The fan subs whose symbols the exchange can actually resolve right now.
+   *
+   * The watchlist is user data — it can hold a pair this venue does not
+   * list (a recent from another venue's asset class), and `watchTickers`
+   * resolves EVERY symbol before subscribing, so one unlisted pair would
+   * throw the whole batched call into the error loop and freeze every chip
+   * on the venue (measured live 2026-08-14: one alien recent froze the
+   * Binance marquee). While the synthetic seeds are in place the pair
+   * resolves and simply never ticks; once the real table lands and evicts
+   * the seed, it must be excluded — its chip shows '—', exactly what a
+   * per-symbol loop would have produced. Membership is re-checked every
+   * iteration, so a pair the venue lists later joins the set by itself.
+   */
+  private fanResolvableSubs(exchange: CcxtExchangeLike): Array<Sub> {
+    return this.fanSubs().filter(
+      (sub) => exchange.markets?.[sub.symbol] !== undefined,
+    )
+  }
+
   private bumpFanEpoch(): void {
     this.fanEpoch++
     this.wakeFan()
@@ -556,10 +585,19 @@ export class CcxtStreamHub {
       // above is what lets all of it land before the first SUBSCRIBE — one
       // call for the lot instead of one for the first chip plus a
       // resubscribe for the rest.
-      const subs = this.fanSubs()
-      const symbols = this.fanSymbols()
-      if (symbols.length === 0) return
-      for (const sub of subs) this.opts.primeMarkets?.(lease.exchange, sub.pair)
+      if (this.fanSubs().length === 0) return
+      for (const sub of this.fanSubs()) {
+        this.opts.primeMarkets?.(lease.exchange, sub.pair)
+      }
+      const subs = this.fanResolvableSubs(lease.exchange)
+      const symbols = [...new Set(subs.map((sub) => sub.symbol))]
+      if (symbols.length === 0) {
+        // Every wanted pair is currently unresolvable (markets still
+        // loading, or all of them alien to this venue). Poll rather than
+        // exit — an exit here would fight the restart in `ensureFanLoop`.
+        await this.sleep(FAN_UNRESOLVABLE_RETRY_MS)
+        continue
+      }
       this.seedFanFirstPaint(lease.exchange, subs)
 
       if (typeof lease.exchange.watchTickers !== 'function') {
@@ -682,9 +720,14 @@ export class CcxtStreamHub {
       if (this.destroyed || this.subs.get(sub.key) !== sub) return
       if (typeof lease.exchange.fetchOrderBook !== 'function') return
       this.opts.primeMarkets?.(lease.exchange, sub.pair)
+      // A numeric flag overrides the depth: some venues' REST book accepts
+      // different limits than their WS subscription (see the flag's doc).
+      const seedFlag = this.opts.venue.seedOrderBook
       const book = await lease.exchange.fetchOrderBook(
         sub.symbol,
-        this.opts.venue.orderbookDepth,
+        typeof seedFlag === 'number'
+          ? seedFlag
+          : this.opts.venue.orderbookDepth,
       )
       if (this.destroyed || this.subs.get(sub.key) !== sub) return
       if (sub.cached !== null) return
@@ -713,10 +756,11 @@ export class CcxtStreamHub {
       if (this.destroyed || this.subs.get(sub.key) !== sub) return
       if (typeof lease.exchange.fetchTrades !== 'function') return
       this.opts.primeMarkets?.(lease.exchange, sub.pair)
+      const seedFlag = this.opts.venue.seedTrades
       const raw = await lease.exchange.fetchTrades(
         sub.symbol,
         undefined,
-        TRADES_SEED_LIMIT,
+        typeof seedFlag === 'number' ? seedFlag : TRADES_SEED_LIMIT,
       )
       if (this.destroyed || this.subs.get(sub.key) !== sub) return
       if (sub.recentTradeIds && sub.recentTradeIds.size > 0) return
@@ -786,7 +830,14 @@ export class CcxtStreamHub {
       await this.sleep(this.opts.fanRetireDelayMs ?? FAN_RETIRE_DELAY_MS)
       if (this.destroyed) return
       if (this.opts.host.peek() !== exchange) return
-      if (this.fanSymbols().join(',') === retiredKey) return
+      // Compare against the RESOLVABLE set — the same filter the loop
+      // subscribes with. An epoch bump whose only change is an unresolvable
+      // pair leaves the wire set identical, and the raw comparison would
+      // call that a change and unsubscribe the live streams.
+      const live = [
+        ...new Set(this.fanResolvableSubs(exchange).map((sub) => sub.symbol)),
+      ]
+      if (live.join(',') === retiredKey) return
       try {
         await exchange.unWatchTickers?.(retired)
       } catch {

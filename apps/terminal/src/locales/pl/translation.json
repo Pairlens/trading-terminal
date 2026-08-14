@@ -4180,6 +4180,8 @@
     "switchTo": "Przełącz na {{venue}}"
   },
   "pairPicker": {
+    "popular": "Popularne",
+    "switchPair": "Zmień parę",
     "noPairsFound": "Nie znaleziono par.",
     "startTyping": "Zacznij pisać, aby wyszukać pary."
   },

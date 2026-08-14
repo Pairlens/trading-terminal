@@ -3,6 +3,9 @@
 /**
  * Is the pair search still running?
  *
+ * Shared by both pair pickers — the desktop top-bar switcher and the phone's
+ * pair screen — because the claim they make is the same one.
+ *
  * "No pairs found" is a claim about the whole market, and the picker used to
  * make it the instant a query had no results yet — which is most of the time a
  * search is running, because the server search fans out across the catalog and

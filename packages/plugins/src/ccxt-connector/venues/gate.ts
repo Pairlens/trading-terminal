@@ -130,6 +130,11 @@ export const gateCcxtVenue: CcxtVenueConfig = {
   // Spot default; `spot.obu` pushes a full book at this depth. 400 would switch
   // the push interval, which nothing asks for.
   orderbookDepth: 50,
+  // Buffered-delta book (ccxt waits 10 depth frames, then REST-syncs): the
+  // seed paints at REST latency instead.
+  seedOrderBook: true,
+  // Empty-opening trade stream; candles come from watchOHLCV — safe to fill.
+  seedTrades: true,
   maxHistoryLimit: 1000,
   // Gate's `to` is INCLUSIVE (ccxt forwards `until` as `to`), so the boundary
   // bar comes back unless the cursor is nudged.

@@ -4144,6 +4144,8 @@
     "switchTo": "Passer à {{venue}}"
   },
   "pairPicker": {
+    "popular": "Populaires",
+    "switchPair": "Changer de paire",
     "noPairsFound": "Aucune paire trouvée.",
     "startTyping": "Commencez à taper pour rechercher des paires."
   },

@@ -140,6 +140,10 @@ export const okxCcxtVenue: CcxtVenueConfig = {
   // Deliberately NOT 50: `books50-l2-tbt` needs VIP4 and an authenticated
   // socket, and throws AuthenticationError on a public one.
   orderbookDepth: undefined,
+  // The trade channel sends only new prints — a quiet pair's tape sits
+  // empty until the market moves. Candles come from watchOHLCV, so the
+  // REST fill is safe.
+  seedTrades: true,
   maxHistoryLimit: 300,
   historyPageParams: (endTs) => ({
     // OKX's `after` is already strictly-older, so the cursor is passed raw;
