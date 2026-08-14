@@ -1,11 +1,11 @@
 ---
 title: Troubleshooting
-description: 'Fixes for the problems people actually hit: a venue that will not connect, frozen market data, a missing panel, a sealed vault, orders that will not submit, and indicators that will not run.'
+description: 'Fixes for the problems people actually hit: a venue that will not connect, frozen market data, gaps in a stock chart, a missing panel, a sealed vault, orders that will not submit, and indicators that will not run.'
 group: reference
 order: 2
 eyebrow: Reference
 updated: AUG 2026
-readTime: 6 min read
+readTime: 7 min read
 ---
 
 Most problems in Pairlens have one of five causes: the wrong country is set,
@@ -46,6 +46,22 @@ venue is likely having an incident.
 If the dot is green but nothing moves, check
 [Data Rate](/docs/settings#data-rate): Energy Saver caps the book and ticker at
 one update per second, which on a quiet pair genuinely looks static.
+
+## A stock chart has gaps in it
+
+Blank stretches on a US stock chart are almost always the market being shut.
+Equities trade 9:30am to 4:00pm Eastern on weekdays, so every intraday chart
+has a hole across each night and a wider one across each weekend. Crypto never
+closes, so the contrast is jarring the first time.
+
+Shorter gaps inside a session are the feed rather than the clock. The free
+Alpaca plan carries the IEX tape, which is a single exchange and a small slice
+of total volume, so a quiet pre-market or after-hours bucket can pass with no
+trade printing on it at all and no candle to draw. Regular hours are dense; the
+edges of the day are patchy.
+
+Neither is affected by whether the account is paper or live. Market data is the
+same feed either way.
 
 ## A panel says it needs something
 

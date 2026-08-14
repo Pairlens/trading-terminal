@@ -14,6 +14,7 @@ import {
 } from './parser'
 import {
   fetchAlpacaCandles,
+  fetchAlpacaQuoteBook,
   fetchAlpacaSnapshot,
   missingCredentialsError,
 } from './rest-client'
@@ -255,18 +256,19 @@ export class AlpacaWsClient {
     this.scheduleReconcile()
 
     // Seed with the REST quote so the book renders before the first WS tick.
-    fetchAlpacaSnapshot(symbol, credentials)
-      .then((snapshot) => {
+    // Sizes come from the quote itself: seeding from a TickerSnapshot would
+    // report both levels at size zero, which reads as a broken book rather
+    // than a one-level one.
+    fetchAlpacaQuoteBook(symbol, credentials)
+      .then((book) => {
         const sub = this.bookSubs.get(symbol)
-        if (!sub) return
-        if (snapshot.bid > 0 || snapshot.ask > 0) {
-          sub.callback({
-            type: 'snapshot',
-            bids: snapshot.bid > 0 ? [[snapshot.bid, 0]] : [],
-            asks: snapshot.ask > 0 ? [[snapshot.ask, 0]] : [],
-            ts: snapshot.ts,
-          })
-        }
+        if (!sub || !book) return
+        sub.callback({
+          type: 'snapshot',
+          bids: book.bids,
+          asks: book.asks,
+          ts: book.ts,
+        })
       })
       .catch(() => {
         // WS quotes will populate the book.

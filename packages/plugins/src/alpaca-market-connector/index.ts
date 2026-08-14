@@ -1,8 +1,13 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { stockSymbols } from '../catalog'
 import { AlpacaWsClient } from './ws-client'
 import { AlpacaOrderPoller } from './order-poller'
-import { fetchAlpacaCandles, missingCredentialsError } from './rest-client'
+import {
+  fetchAlpacaBulkTickers,
+  fetchAlpacaCandles,
+  missingCredentialsError,
+} from './rest-client'
 import {
   cancelAlpacaOrder,
   fetchAlpacaBalances,
@@ -87,6 +92,18 @@ export const alpacaMarketConnectorManifest: PluginManifest = {
     // the ACTIVE market, so a venue-scoped discovery would hijack the global
     // Markets pane whenever Alpaca is the charted market. Stocks live in the
     // shared pairlens-core catalog instead (assetClass 'stocks').
+    {
+      // Bulk quotes for the watchlist and discovery rows. markets: ['*']
+      // matches the CEX connectors: the snapshot serves the whole app whatever
+      // the charted venue is, so without it a stock row sits blank while every
+      // crypto row around it ticks. Stock symbols never collide with a CEX
+      // pair, so this only ever ADDS rows to the merged map.
+      id: 'market-data:ticker-snapshot',
+      singleton: false,
+      markets: ['*'],
+      priority: 20,
+      streaming: false,
+    },
     {
       id: 'trading:orders',
       singleton: false,
@@ -174,6 +191,22 @@ export function createAlpacaMarketConnectorPlugin(
       const limit = typeof p['limit'] === 'number' ? p['limit'] : 300
       const endTs = typeof p['endTs'] === 'number' ? p['endTs'] : undefined
       return fetchAlpacaCandles(pair, timeframe, limit, credentials, endTs)
+    }
+
+    if (capability === 'market-data:ticker-snapshot') {
+      // Returns empty rather than throwing when the vault is still sealed:
+      // this feeds a merged, multi-venue map, and a rejection there would
+      // discard nothing but its own rows anyway. Once a credential lands the
+      // query refetches on its own 60s cadence.
+      const credentials = dataCredentials()
+      if (!credentials) {
+        return { market: 'alpaca', tickers: [], ts: Date.now() }
+      }
+      return {
+        market: 'alpaca',
+        tickers: await fetchAlpacaBulkTickers(stockSymbols(), credentials),
+        ts: Date.now(),
+      }
     }
 
     if (capability === 'trading:orders') {
