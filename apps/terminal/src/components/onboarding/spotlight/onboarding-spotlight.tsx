@@ -254,13 +254,19 @@ export function OnboardingSpotlight() {
     const orb = orbRef.current
     const content = contentRef.current
     if (reduceMotion) return
-    orb?.animate(
-      [
-        { opacity: 0, transform: 'translate(-50%, -50%) scale(.6)' },
-        { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
-      ],
-      { duration: 850, easing: EASE },
-    )
+    if (orb) {
+      // Land exactly on the transform applyLayout just applied. Animating to
+      // scale(1) renders the orb full-size for 850ms and then snaps it down
+      // to the first step's resting scale the instant the animation ends.
+      const target = orb.style.transform
+      orb.animate(
+        [
+          { opacity: 0, transform: `${target} scale(.6)` },
+          { opacity: 1, transform: target },
+        ],
+        { duration: 850, easing: EASE },
+      )
+    }
     content?.animate(
       [
         { opacity: 0, transform: 'translateY(24px)', filter: 'blur(8px)' },
@@ -293,6 +299,12 @@ export function OnboardingSpotlight() {
     clearTimeout(timersRef.current.story)
     setStoryPhase('hero')
     const entered = STEPS[stepIndex]
+    // Warm the remotion chunk a full step ahead: the first story vignette is
+    // two taps from the welcome frame, and warming only on story entry left
+    // the hero beat racing the network on a cold cache.
+    if (entered.kind === 'welcome' && !reduceMotion) {
+      void import('./story-media')
+    }
     if (
       entered.kind === 'story' &&
       !reduceMotion &&
@@ -970,7 +982,11 @@ function StepBody({
           animation: `pl-onb-fadeup .55s ${EASE} .18s both`,
         }}
       >
-        <Suspense fallback={staticBody}>
+        {/* Quiet fallback: the box is already reserved, so a still-loading
+            vignette shows nothing rather than flashing the static point list
+            and swapping it out mid-read. The list remains the reduced-motion
+            and non-scene experience via the early return above. */}
+        <Suspense fallback={null}>
           <StoryMedia scene={step.id} />
         </Suspense>
       </div>
