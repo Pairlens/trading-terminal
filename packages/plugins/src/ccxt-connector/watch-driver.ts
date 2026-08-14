@@ -48,7 +48,7 @@ import {
   parseCcxtTrade,
   toCcxtSymbol,
 } from './parser'
-import type { CcxtExchangeLike, CcxtVenueConfig } from './types'
+import type { CcxtExchangeLike, CcxtTickerLike, CcxtVenueConfig } from './types'
 import type { Candle } from '@pairlens/shared/types'
 import type { Trade } from '@pairlens/market-engine/types'
 import type { WakeSource } from '@pairlens/market-engine/wake-monitor'
@@ -88,6 +88,21 @@ const MAX_IMMEDIATE_REENTRIES = 3
  * long session cannot accumulate dozens of dead channels.
  */
 const ORPHANED_CHANNEL_REBUILD_THRESHOLD = 12
+/**
+ * How long a retired ticker-fan set keeps its wire subscription before the
+ * `unWatchTickers` cleanup fires. The new set's SUBSCRIBE goes out first (the
+ * next loop iteration), so the delay is what guarantees new-before-old and
+ * turns a set change into a handover instead of a gap. One second is far
+ * beyond the subscribe round trip and far below what a duplicate ticker
+ * stream costs.
+ */
+const FAN_RETIRE_DELAY_MS = 1_000
+/**
+ * Pause after a fan set change before resubscribing, so a burst of chip
+ * mounts (a watchlist hydrating row by row) coalesces into one SUBSCRIBE
+ * instead of one socket per row.
+ */
+const FAN_COALESCE_MS = 25
 /**
  * Trade ids remembered per trades key. A reconnect rebuilds the ccxt instance
  * with an empty trade cache, and venues whose subscribe opens with a snapshot
@@ -134,6 +149,8 @@ export type CcxtStreamHubOptions = {
   now?: () => number
   /** Defaults to the shared wakeMonitor; null opts out. */
   wakeSource?: WakeSource | null
+  /** Test knob for `FAN_RETIRE_DELAY_MS`. */
+  fanRetireDelayMs?: number
   onReconnectScheduled?: (delayMs: number, attempt: number, key: string) => void
   onError?: (scope: string, error: unknown) => void
 }
@@ -172,6 +189,30 @@ export class CcxtStreamHub {
   private releaseWake: (() => void) | null = null
   /** Backoff sleeps that a wake event can cut short. */
   private sleepers = new Set<() => void>()
+
+  // ── Ticker fan (venues with `batchTickers`) ────────────────────────────
+  /** Bumped whenever the set of ticker subscriptions changes. */
+  private fanEpoch = 0
+  private fanLoopActive = false
+  /** Resolvers parked on the epoch race in `runFanLoop`. */
+  private fanWakers = new Set<() => void>()
+  /** Reconnect state, shaped like a Sub's slice so `backoff` is shared. */
+  private fanState = {
+    key: 'ticker:*',
+    attempt: 0,
+    firstSuccessAt: null as number | null,
+    immediateReentries: 0,
+  }
+  /** The built exchange turned out to lack `watchTickers` — fall back. */
+  private fanUnavailable = false
+  /**
+   * Last ticker OBJECT delivered per symbol. ccxt replaces the cache entry
+   * on every frame, so identity inequality IS the "new frame" signal — no
+   * timestamp parsing, no per-venue field knowledge.
+   */
+  private fanLastSeen = new Map<string, unknown>()
+  /** Symbols whose first paint was (or is being) seeded over REST. */
+  private fanSeeded = new Set<string>()
 
   constructor(private readonly opts: CcxtStreamHubOptions) {
     const source = opts.wakeSource === undefined ? wakeMonitor : opts.wakeSource
@@ -241,7 +282,12 @@ export class CcxtStreamHub {
 
     if (isNew) {
       this.startLiveness()
-      void this.runLoop(current)
+      if (this.fansTickers(current.channel)) {
+        this.bumpFanEpoch()
+        this.ensureFanLoop()
+      } else {
+        void this.runLoop(current)
+      }
       if (current.channel === 'candles') this.startBackfill(current)
     } else {
       this.replay(current, callback)
@@ -256,7 +302,19 @@ export class CcxtStreamHub {
       if (entry.callbacks.size > 0) return
       entry.running = false
       this.subs.delete(key)
-      this.unwatch(entry)
+      if (this.fansTickers(entry.channel)) {
+        // The fan owns the wire state for every ticker: the next iteration
+        // resubscribes the shrunken set and retires the old one wholesale. A
+        // per-symbol `unWatchTicker` here would target a subscription hash
+        // that never existed individually — on Binance that OPENS a fresh
+        // socket just to send an UNSUBSCRIBE for a stream it never carried.
+        // The seed mark goes with it, so a pair revisited later gets its
+        // first paint re-seeded instead of waiting on the stream.
+        this.fanSeeded.delete(entry.symbol)
+        this.bumpFanEpoch()
+      } else {
+        this.unwatch(entry)
+      }
       if (this.subs.size === 0) this.startGrace()
     }
   }
@@ -265,6 +323,7 @@ export class CcxtStreamHub {
     this.destroyed = true
     for (const sub of this.subs.values()) sub.running = false
     this.subs.clear()
+    this.wakeFan()
     this.wakeSleepers()
     this.stopLiveness()
     this.cancelGrace()
@@ -386,6 +445,266 @@ export class CcxtStreamHub {
     }
     if (trades.length === 0) return null
     return { type: 'update' as const, trades }
+  }
+
+  // ── Ticker fan ─────────────────────────────────────────────────────────
+
+  /** Whether this channel's wire work is owned by the batched ticker loop. */
+  private fansTickers(channel: WatchChannel): boolean {
+    return (
+      channel === 'ticker' &&
+      this.opts.venue.batchTickers === true &&
+      !this.fanUnavailable
+    )
+  }
+
+  private fanSubs(): Array<Sub> {
+    const out: Array<Sub> = []
+    for (const sub of this.subs.values()) {
+      if (sub.channel === 'ticker') out.push(sub)
+    }
+    return out
+  }
+
+  /** Current fan symbol set, deduped, in subscription order. */
+  private fanSymbols(): Array<string> {
+    const seen = new Set<string>()
+    for (const sub of this.fanSubs()) seen.add(sub.symbol)
+    return [...seen]
+  }
+
+  private bumpFanEpoch(): void {
+    this.fanEpoch++
+    this.wakeFan()
+  }
+
+  private wakeFan(): void {
+    for (const wake of [...this.fanWakers]) wake()
+    this.fanWakers.clear()
+  }
+
+  private ensureFanLoop(): void {
+    if (this.fanLoopActive) return
+    this.fanLoopActive = true
+    void this.runFanLoop().finally(() => {
+      this.fanLoopActive = false
+      // A ticker acquired between the loop deciding to exit and this reset
+      // would otherwise wait forever for a loop that never restarts. The
+      // `fanUnavailable` guard matters: the fallback exit hands its subs to
+      // individual loops and MUST NOT restart, or it spawns duplicates
+      // forever.
+      if (
+        !this.destroyed &&
+        !this.fanUnavailable &&
+        this.fanSymbols().length > 0
+      ) {
+        this.ensureFanLoop()
+      }
+    })
+  }
+
+  /**
+   * One `watchTickers` loop carrying EVERY ticker subscription — the batched
+   * counterpart of `runLoop`, sharing its reconnect policy. The await is
+   * raced against an epoch bump so a watchlist change re-enters promptly with
+   * the new set instead of waiting for a quiet pair to tick.
+   */
+  private async runFanLoop(): Promise<void> {
+    while (!this.destroyed) {
+      let lease: { exchange: CcxtExchangeLike; generation: number }
+      try {
+        lease = await this.opts.host.acquire()
+        if (this.destroyed) return
+      } catch (error) {
+        if (this.destroyed) return
+        this.opts.onError?.(`${this.fanState.key}:acquire`, error)
+        await this.backoff(this.fanState)
+        continue
+      }
+
+      // Read the set AFTER the acquire's await: a page load registers its
+      // whole watchlist in one synchronous flush, and the microtask boundary
+      // above is what lets all of it land before the first SUBSCRIBE — one
+      // call for the lot instead of one for the first chip plus a
+      // resubscribe for the rest.
+      const subs = this.fanSubs()
+      const symbols = this.fanSymbols()
+      if (symbols.length === 0) return
+      for (const sub of subs) this.opts.primeMarkets?.(lease.exchange, sub.pair)
+      this.seedFanFirstPaint(lease.exchange, subs)
+
+      if (typeof lease.exchange.watchTickers !== 'function') {
+        // The flag promised a method the class does not have. Demote every
+        // ticker to its own `watchTicker` loop — degraded (one socket per
+        // pair on Binance) beats silent.
+        this.fanUnavailable = true
+        for (const sub of this.fanSubs()) void this.runLoop(sub)
+        return
+      }
+
+      const epochAtCall = this.fanEpoch
+      let cancelEpochWaker: (() => void) | null = null
+      try {
+        const epochChanged = new Promise<null>((resolve) => {
+          const wake = () => resolve(null)
+          this.fanWakers.add(wake)
+          cancelEpochWaker = () => this.fanWakers.delete(wake)
+        })
+        const raw = await Promise.race([
+          lease.exchange.watchTickers(symbols),
+          epochChanged,
+        ])
+        if (this.destroyed) return
+
+        if (this.fanEpoch !== epochAtCall) {
+          // The set changed under the pending watch. Coalesce a mount burst,
+          // resubscribe (next iteration), and retire the superseded set once
+          // the new SUBSCRIBE has had time to land.
+          await this.sleep(FAN_COALESCE_MS)
+          this.retireFanSet(lease.exchange, symbols)
+          continue
+        }
+        if (lease.generation !== this.opts.host.generation) continue
+
+        this.fanState.immediateReentries = 0
+        if (this.fanState.firstSuccessAt === null) {
+          this.fanState.firstSuccessAt = this.now()
+        } else if (
+          this.now() - this.fanState.firstSuccessAt >=
+          this.stableResetMs()
+        ) {
+          this.fanState.attempt = 0
+        }
+        if (raw !== null) {
+          this.noteInbound()
+          this.deliverFan(raw, lease.exchange)
+        }
+      } catch (error) {
+        if (this.destroyed) return
+        this.fanState.firstSuccessAt = null
+        if (
+          isClosedByUser(error) &&
+          this.fanState.immediateReentries < MAX_IMMEDIATE_REENTRIES
+        ) {
+          this.fanState.immediateReentries++
+          await this.sleep(0)
+          continue
+        }
+        this.opts.onError?.(this.fanState.key, error)
+        await this.backoff(this.fanState)
+      } finally {
+        // The race leaves its loser's waker parked; without this, one waker
+        // accumulates per delivered frame.
+        ;(cancelEpochWaker as (() => void) | null)?.()
+      }
+    }
+  }
+
+  /**
+   * First-paint seed for the fan. A venue's per-symbol ticker stream emits
+   * only when the symbol has an UPDATE — a quiet pair's first WS frame can
+   * be tens of seconds out (measured 25 s on DOT-USDT, 2026-08-14), which
+   * is a watchlist chip showing '—' for that long on a fresh load. One
+   * batched REST `fetchTickers(symbols)` (weight 2 on Binance for up to 20
+   * symbols) paints every unseeded chip at REST latency instead; a WS frame
+   * that beats the response wins via the `cached === null` guard. Failure
+   * clears the marks so the next loop iteration retries.
+   */
+  private seedFanFirstPaint(
+    exchange: CcxtExchangeLike,
+    subs: Array<Sub>,
+  ): void {
+    if (typeof exchange.fetchTickers !== 'function') return
+    const unseeded = subs.filter(
+      (sub) => sub.cached === null && !this.fanSeeded.has(sub.symbol),
+    )
+    if (unseeded.length === 0) return
+    for (const sub of unseeded) this.fanSeeded.add(sub.symbol)
+    const symbols = [...new Set(unseeded.map((sub) => sub.symbol))]
+    void (async () => {
+      try {
+        const raw = await exchange.fetchTickers(symbols)
+        for (const sub of unseeded) {
+          if (sub.cached !== null) continue
+          if (this.subs.get(sub.key) !== sub) continue
+          const entry = raw[sub.symbol]
+          if (entry === undefined) continue
+          this.deliver(sub, {
+            type: 'ticker' as const,
+            ticker: parseCcxtTicker(entry),
+          })
+        }
+      } catch {
+        for (const sub of unseeded) this.fanSeeded.delete(sub.symbol)
+      }
+    })()
+  }
+
+  /**
+   * Route ticker frames to their subscriptions — the resolved entry AND a
+   * sweep of ccxt's ticker cache.
+   *
+   * The sweep is not an optimization, it is where most frames come from:
+   * Binance pushes every subscribed `@ticker` once a second in one burst,
+   * the socket dispatches the burst's frames back to back, and ccxt resolves
+   * a parked future only for the FIRST — every later frame merely rewrites
+   * `exchange.tickers[symbol]` (the future it would resolve is already gone
+   * until the loop re-awaits). Delivering only the resolved entry starves
+   * whichever symbols consistently lose that race — measured live 2026-08-14:
+   * two of twelve watchlist pairs took 20+ s to first paint. The cache entry
+   * is replaced per frame, so object identity per symbol is a complete "new
+   * data" signal, and one sweep after any resolution drains the whole burst.
+   */
+  private deliverFan(
+    raw: Record<string, unknown>,
+    exchange: CcxtExchangeLike,
+  ): void {
+    const cache = exchange.tickers
+    const live = new Set<string>()
+    for (const sub of this.subs.values()) {
+      if (sub.channel !== 'ticker') continue
+      live.add(sub.symbol)
+      const entry = raw[sub.symbol] ?? cache?.[sub.symbol]
+      if (entry === undefined || this.fanLastSeen.get(sub.symbol) === entry) {
+        continue
+      }
+      this.fanLastSeen.set(sub.symbol, entry)
+      this.deliver(sub, {
+        type: 'ticker' as const,
+        ticker: parseCcxtTicker(entry as CcxtTickerLike),
+      })
+    }
+    // Symbols released from the fan should not pin their last frame forever.
+    for (const symbol of this.fanLastSeen.keys()) {
+      if (!live.has(symbol)) this.fanLastSeen.delete(symbol)
+    }
+  }
+
+  /**
+   * Unsubscribe a superseded fan set, delayed so the replacement SUBSCRIBE
+   * lands first (new-before-old — a set change is a handover, not a gap).
+   * Skipped when the instance was discarded meanwhile (the socket died with
+   * it) or when the live set is byte-identical to the retiree — Binance
+   * memoizes the subscription hash, so unsubscribing an identical set would
+   * tear down the LIVE subscription.
+   */
+  private retireFanSet(
+    exchange: CcxtExchangeLike,
+    retired: Array<string>,
+  ): void {
+    if (typeof exchange.unWatchTickers !== 'function') return
+    const retiredKey = retired.join(',')
+    void (async () => {
+      await this.sleep(this.opts.fanRetireDelayMs ?? FAN_RETIRE_DELAY_MS)
+      if (this.destroyed) return
+      if (this.opts.host.peek() !== exchange) return
+      if (this.fanSymbols().join(',') === retiredKey) return
+      try {
+        await exchange.unWatchTickers?.(retired)
+      } catch {
+        // Expected: ccxt rejects the in-flight watch future on unsubscribe.
+      }
+    })()
   }
 
   /**
@@ -521,7 +840,9 @@ export class CcxtStreamHub {
     return this.opts.stableResetMs ?? DEFAULT_STABLE_RESET_MS
   }
 
-  private async backoff(sub: Sub): Promise<void> {
+  // Takes the slice both a Sub and the fan's state carry, so the two loops
+  // share one policy.
+  private async backoff(sub: { attempt: number; key: string }): Promise<void> {
     const base = this.opts.baseBackoffMs ?? DEFAULT_BASE_BACKOFF_MS
     const max = this.opts.maxBackoffMs ?? DEFAULT_MAX_BACKOFF_MS
     const exponent =
@@ -613,6 +934,8 @@ export class CcxtStreamHub {
       sub.attempt = 0
       sub.immediateReentries = 0
     }
+    this.fanState.attempt = 0
+    this.fanState.immediateReentries = 0
     this.wakeSleepers()
     void this.forceReconnect('wake')
   }

@@ -123,6 +123,16 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
     return (module.default ?? module) as unknown as CcxtExchangeCtor
   },
   options: {
+    // ccxt paces REST at `rateLimit` ms per weight unit and ships 50 for
+    // Binance — a 1200-weight/min budget, when the venue's actual IP budget
+    // is 6000/min (10 ms per unit, exactly this value). The 5× conservative
+    // default is what made a fresh reload's order book take seconds to seed:
+    // the bulk 24h-ticker snapshot (weight 40) plus the depth-500 book
+    // snapshot (weight 25) queue on the shared throttler, 65 weight × 50 ms
+    // = 3.25 s of self-inflicted delay for calls the venue would happily
+    // serve back to back. A whole reload spends well under 100 weight, so
+    // even at the true rate the budget is never approached.
+    rateLimit: 10,
     // No app-level ping and no pong handler, so ccxt's keepalive degrades to
     // the runtime's protocol PING: under bun the pong listener is never
     // attached (`isNode && !isBun`), `lastPong` never advances, and ccxt kills
@@ -147,6 +157,15 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
     // switches, no 1008s. The per-switch TLS handshakes this costs are the
     // lesser evil; do not re-add a low streamLimits cap.
   },
+  // Default sharding has one visible cost: a 15-pair watchlist is 15 ticker
+  // hashes, so a fresh page load dials 15 sockets and the chips fill in one
+  // by one as each handshake completes. `batchTickers` multiplexes every
+  // ticker through ONE `watchTickers(symbols)` call instead — a single
+  // socket whose single SUBSCRIBE frame lists all the streams, which is one
+  // inbound message and therefore CANNOT trip the 5 msg/s limit above no
+  // matter how long the list grows. This is the native connector's batching,
+  // recovered through the one ccxt entry point that offers it.
+  batchTickers: true,
   // ccxt caps the book it maintains at exactly this depth (`pro/binance.js`
   // seeds `this.orderBook({}, limit)` from a REST snapshot of the same size),
   // and Binance quotes BTC/USDT to the cent. At the 20 this shipped with, the

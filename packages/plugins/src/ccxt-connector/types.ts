@@ -72,6 +72,13 @@ export type CcxtExchangeLike = {
   options: Record<string, unknown>
   markets?: Record<string, unknown> | undefined
   symbols?: Array<string> | undefined
+  /**
+   * ccxt's per-symbol ticker cache, rewritten (object REPLACED, not mutated)
+   * on every inbound ticker frame. The ticker fan reads it because a
+   * `watchTickers` future resolves for only ONE of the frames in a batched
+   * burst — the rest land only here (see the fan's cache sweep).
+   */
+  tickers?: Record<string, CcxtTickerLike> | undefined
   hostname?: string
   fetchImplementation?: unknown
   /** Bound once per client by ccxt — wrap it BEFORE the first socket opens. */
@@ -92,6 +99,15 @@ export type CcxtExchangeLike = {
     symbol: string,
     params?: Record<string, unknown>,
   ) => Promise<CcxtTickerLike>
+  /** Batched ticker stream — see `CcxtVenueConfig.batchTickers`. */
+  watchTickers?: (
+    symbols?: Array<string>,
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, CcxtTickerLike>>
+  unWatchTickers?: (
+    symbols?: Array<string>,
+    params?: Record<string, unknown>,
+  ) => Promise<unknown>
   watchOrderBook: (
     symbol: string,
     limit?: number,
@@ -322,6 +338,24 @@ export type CcxtVenueConfig = {
    * never fires.
    */
   tradeGeoCheck?: (slot: CexSlot<CexCredentials>) => void
+  /**
+   * Multiplex every ticker subscription through ONE `watchTickers(symbols)`
+   * call instead of one `watchTicker` per pair.
+   *
+   * Exists for venues whose ccxt class shards subscriptions across
+   * connections (Binance's `stream()` gives each new subscription hash its
+   * own socket): a 15-pair watchlist otherwise dials 15 TLS+WS handshakes on
+   * a fresh page load and the chips fill in one by one. A batched call is a
+   * single socket carrying a single SUBSCRIBE frame listing every stream —
+   * one inbound message, so Binance's ~5 msg/s per-connection limit (the
+   * reason a low `streamLimits` cap is forbidden, see venues/binance.ts)
+   * cannot be tripped no matter how many pairs the list holds.
+   *
+   * Opt-in per venue rather than derived from `has.watchTickers`: on venues
+   * that already share one socket per URL (everyone but Binance) batching
+   * buys nothing and adds a resubscribe on every watchlist change.
+   */
+  batchTickers?: boolean
   /**
    * Depth passed to `watchOrderBook`. Venue-specific enums apply (see the
    * venue matrix §1g) — an unsupported value throws at runtime on some venues.

@@ -27,4 +27,20 @@ describe('binance venue options', () => {
     >
     expect(streaming['keepAlive']).toBe(0)
   })
+
+  // The safe replacement for the reverted cap above: tickers batch through
+  // ONE watchTickers call — a single socket whose single SUBSCRIBE frame
+  // cannot trip the per-connection message limit — while candles, book and
+  // trades keep ccxt's burst-proof default sharding.
+  it('batches tickers through watchTickers', () => {
+    expect(binanceCcxtVenue.batchTickers).toBe(true)
+  })
+
+  // ccxt ships 50 ms per weight unit — a 1200/min budget against Binance's
+  // real 6000/min. The conservative default queues the reload's REST burst
+  // (bulk tickers weight 40 + depth-500 snapshot weight 25) into seconds of
+  // self-inflicted delay before the order book can seed.
+  it('paces REST at the venue’s real weight budget (10 ms/unit)', () => {
+    expect(binanceCcxtVenue.options?.['rateLimit']).toBe(10)
+  })
 })
