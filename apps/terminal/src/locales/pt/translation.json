@@ -4677,11 +4677,13 @@
         "orderbook": "Livro de ofertas",
         "pairPicker": "Pares",
         "venuePicker": "Corretora",
-        "settings": "Configurações"
+        "settings": "Configurações",
+        "alerts": "Alertas"
       },
       "changePair": "Trocar par",
       "changeVenueA11y": "Trocar corretora. {{venue}}, {{status}}",
       "openSettings": "Abrir configurações",
+      "openAlerts": "Abrir alertas",
       "readOnly": "somente leitura",
       "readOnlyA11y": "{{status}}, somente leitura",
       "live": {
@@ -4888,6 +4890,13 @@
       "availableVenues": "Disponíveis",
       "desktopOnlyVenues": "Precisa do app de desktop",
       "desktopOnlyVenue": "Somente desktop"
+    },
+    "alerts": {
+      "editTitle": "Editar alerta",
+      "empty": "Ainda sem alertas",
+      "emptyHint": "Crie um e vamos acompanhar este par enquanto o Pairlens estiver aberto.",
+      "flowsHint": "Criados no desktop. Aqui você pode silenciá-los.",
+      "toggleA11y": "Ativar {{name}}"
     }
   }
 }

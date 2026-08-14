@@ -37,6 +37,9 @@ export const OVERLAY_OWNING_TAB: Record<MobileOverlayKind, MobileTab | null> = {
   fearGreed: 'discover',
   pnl: 'discover',
   accountDetail: null,
+  // Opened from the context bar, which belongs to no tab — and an alert is
+  // about the pair, not about the panel that happened to be docked.
+  alerts: null,
 }
 
 /**

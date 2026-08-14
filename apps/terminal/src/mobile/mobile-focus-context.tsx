@@ -80,6 +80,12 @@ export type MobileOverlay =
   | { kind: 'news'; index: number }
   /** Discover's "All markets" — the full list as its own screen. */
   | { kind: 'markets' }
+  /**
+   * Price alerts: the list, and the two-field form that creates and edits
+   * one. NOT the flow builder — `/notifications` stays desktop-only, and the
+   * phone deliberately reaches only the shape the form can express.
+   */
+  | { kind: 'alerts' }
   /** Discover's Fear & Greed card, opened out into the index's history. */
   | { kind: 'fearGreed' }
   /** Discover's P&L card, opened out into the window and the holdings. */

@@ -4713,11 +4713,13 @@
         "orderbook": "Книга ордерів",
         "pairPicker": "Пари",
         "venuePicker": "Майданчик",
-        "settings": "Налаштування"
+        "settings": "Налаштування",
+        "alerts": "Сповіщення"
       },
       "changePair": "Змінити пару",
       "changeVenueA11y": "Змінити майданчик. {{venue}}, {{status}}",
       "openSettings": "Відкрити налаштування",
+      "openAlerts": "Відкрити сповіщення",
       "readOnly": "лише читання",
       "readOnlyA11y": "{{status}}, лише читання",
       "live": {
@@ -4932,6 +4934,13 @@
       "availableVenues": "Доступні",
       "desktopOnlyVenues": "Потрібен десктоп-застосунок",
       "desktopOnlyVenue": "Лише десктоп"
+    },
+    "alerts": {
+      "editTitle": "Редагувати сповіщення",
+      "empty": "Сповіщень поки немає",
+      "emptyHint": "Створіть сповіщення, і ми стежитимемо за цією парою, поки Pairlens відкритий.",
+      "flowsHint": "Створені на комп'ютері. Тут їх можна вимкнути.",
+      "toggleA11y": "Увімкнути {{name}}"
     }
   }
 }

@@ -4713,11 +4713,13 @@
         "orderbook": "Arkusz zleceń",
         "pairPicker": "Pary",
         "venuePicker": "Giełda",
-        "settings": "Ustawienia"
+        "settings": "Ustawienia",
+        "alerts": "Alerty"
       },
       "changePair": "Zmień parę",
       "changeVenueA11y": "Zmień giełdę. {{venue}}, {{status}}",
       "openSettings": "Otwórz ustawienia",
+      "openAlerts": "Otwórz alerty",
       "readOnly": "tylko do odczytu",
       "readOnlyA11y": "{{status}}, tylko do odczytu",
       "live": {
@@ -4932,6 +4934,13 @@
       "availableVenues": "Dostępne",
       "desktopOnlyVenues": "Wymaga aplikacji na komputer",
       "desktopOnlyVenue": "Tylko desktop"
+    },
+    "alerts": {
+      "editTitle": "Edytuj alert",
+      "empty": "Brak alertów",
+      "emptyHint": "Utwórz jeden, a będziemy obserwować tę parę, gdy Pairlens jest otwarty.",
+      "flowsHint": "Utworzone na komputerze. Tutaj możesz je wyciszyć.",
+      "toggleA11y": "Włącz {{name}}"
     }
   }
 }

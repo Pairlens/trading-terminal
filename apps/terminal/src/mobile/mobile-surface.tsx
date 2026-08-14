@@ -147,6 +147,7 @@ const importAccountDetailScreen = () =>
   import('./screens/account-detail-screen')
 const importFearGreedScreen = () => import('./screens/fear-greed-screen')
 const importPnlScreen = () => import('./screens/pnl-screen')
+const importAlertsSheet = () => import('./screens/alerts-sheet')
 
 const OrderbookScreen = lazyChunk(importOrderbookScreen)
 const PairPickerScreen = lazyChunk(importPairPickerScreen)
@@ -158,6 +159,7 @@ const MarketsScreen = lazyChunk(importMarketsScreen)
 const AccountDetailScreen = lazyChunk(importAccountDetailScreen)
 const FearGreedScreen = lazyChunk(importFearGreedScreen)
 const PnlScreen = lazyChunk(importPnlScreen)
+const AlertsSheet = lazyChunk(importAlertsSheet)
 
 /** Chart-band extras, owned by WS-D (toolbar, timeframe) and WS-C (limit line). */
 const importTimeframePopover = () => import('./chart/timeframe-popover')
@@ -196,6 +198,9 @@ const PREFETCH: Array<() => Promise<unknown>> = [
   importNewsReaderSheet,
   importConnectAccountSheet,
   importAccountDetailScreen,
+  // One tap from the context bar's bell, and it pulls the shared alert form
+  // in with it — worth warming before the two Discover leaves below.
+  importAlertsSheet,
   // Last tier: both are one tap deep from a Discover card, and neither is on
   // the path to a trade.
   importFearGreedScreen,
@@ -394,6 +399,10 @@ export function MobileSurface() {
     () => pushOverlay({ kind: 'settings' }),
     [pushOverlay],
   )
+  const openAlerts = useCallback(
+    () => pushOverlay({ kind: 'alerts' }),
+    [pushOverlay],
+  )
 
   const handleSheetOpenChange = useCallback(
     (open: boolean) => {
@@ -460,6 +469,7 @@ export function MobileSurface() {
       />
 
       <ContextBar
+        onOpenAlerts={openAlerts}
         onOpenPairPicker={openPairPicker}
         onOpenSettings={openSettings}
         onOpenVenuePicker={openVenuePicker}
@@ -550,6 +560,8 @@ const OverlayHost = memo(function OverlayHost({
       return <FearGreedScreen onClose={onClose} overlay={overlay} />
     case 'pnl':
       return <PnlScreen onClose={onClose} overlay={overlay} />
+    case 'alerts':
+      return <AlertsSheet onClose={onClose} overlay={overlay} />
   }
 })
 

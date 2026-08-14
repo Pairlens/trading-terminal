@@ -4677,11 +4677,13 @@
         "orderbook": "オーダーブック",
         "pairPicker": "ペア",
         "venuePicker": "取引所",
-        "settings": "設定"
+        "settings": "設定",
+        "alerts": "アラート"
       },
       "changePair": "ペアを変更",
       "changeVenueA11y": "取引所を変更。{{venue}}、{{status}}",
       "openSettings": "設定を開く",
+      "openAlerts": "アラートを開く",
       "readOnly": "読み取り専用",
       "readOnlyA11y": "{{status}}、読み取り専用",
       "live": {
@@ -4888,6 +4890,13 @@
       "availableVenues": "利用可能",
       "desktopOnlyVenues": "デスクトップアプリが必要です",
       "desktopOnlyVenue": "デスクトップのみ"
+    },
+    "alerts": {
+      "editTitle": "アラートを編集",
+      "empty": "アラートはまだありません",
+      "emptyHint": "作成すると、Pairlens を開いている間このペアを監視します。",
+      "flowsHint": "デスクトップで作成したものです。ここでオフにできます。",
+      "toggleA11y": "{{name}} を有効にする"
     }
   }
 }

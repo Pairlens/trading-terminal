@@ -4677,11 +4677,13 @@
         "orderbook": "Order book",
         "pairPicker": "Pairs",
         "venuePicker": "Venue",
-        "settings": "Settings"
+        "settings": "Settings",
+        "alerts": "Alerts"
       },
       "changePair": "Change pair",
       "changeVenueA11y": "Change venue. {{venue}}, {{status}}",
       "openSettings": "Open settings",
+      "openAlerts": "Open alerts",
       "readOnly": "read-only",
       "readOnlyA11y": "{{status}}, read-only",
       "live": {
@@ -4888,6 +4890,13 @@
       "availableVenues": "Available",
       "desktopOnlyVenues": "Needs the desktop app",
       "desktopOnlyVenue": "Desktop only"
+    },
+    "alerts": {
+      "editTitle": "Edit alert",
+      "empty": "No alerts yet",
+      "emptyHint": "Set one and we'll watch this pair while Pairlens is open.",
+      "flowsHint": "Built on the desktop. You can silence them here.",
+      "toggleA11y": "Enable {{name}}"
     }
   }
 }

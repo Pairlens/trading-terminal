@@ -9,7 +9,7 @@
  * re-renders (see the performance budget in the blueprint).
  */
 import { memo } from 'react'
-import { ChevronDown, Eye, UserRound } from 'lucide-react'
+import { Bell, ChevronDown, Eye, UserRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
@@ -26,6 +26,7 @@ export type ContextBarProps = {
   onOpenPairPicker: () => void
   onOpenVenuePicker: () => void
   onOpenSettings: () => void
+  onOpenAlerts: () => void
 }
 
 /**
@@ -117,6 +118,7 @@ export const ContextBar = memo(function ContextBar({
   onOpenPairPicker,
   onOpenVenuePicker,
   onOpenSettings,
+  onOpenAlerts,
 }: ContextBarProps) {
   const { t } = useTranslation()
   const { focusedPair, focusedVenue } = useMobileFocus()
@@ -262,6 +264,23 @@ export const ContextBar = memo(function ContextBar({
         {initials || (
           <UserRound className="size-[18px] text-muted-foreground" />
         )}
+      </button>
+
+      {/* Alerts. Last on the row, right of the avatar, because it is the one
+          control here that acts on the pair NAMED to its left rather than on
+          the app around it — and because the row's shrink rule already has an
+          answer for the ~45px it costs: the pair chip is the only element
+          allowed to truncate, and it absorbs this the same way it absorbs a
+          long venue name. Glass rather than the avatar's tint: the tint means
+          "this is you", and nothing else on the bar may borrow it. */}
+      <button
+        aria-label={t('mobile.shell.openAlerts')}
+        className="pl-glass pl-press pl-hit-44 pointer-events-auto flex size-10 shrink-0 items-center justify-center rounded-full"
+        onClick={onOpenAlerts}
+        type="button"
+        {...PRESS}
+      >
+        <Bell className="size-[18px] text-muted-foreground" />
       </button>
     </div>
   )

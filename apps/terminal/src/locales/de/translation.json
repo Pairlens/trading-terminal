@@ -4677,11 +4677,13 @@
         "orderbook": "Orderbuch",
         "pairPicker": "Paare",
         "venuePicker": "Venue",
-        "settings": "Einstellungen"
+        "settings": "Einstellungen",
+        "alerts": "Benachrichtigungen"
       },
       "changePair": "Paar ändern",
       "changeVenueA11y": "Venue ändern. {{venue}}, {{status}}",
       "openSettings": "Einstellungen öffnen",
+      "openAlerts": "Benachrichtigungen öffnen",
       "readOnly": "Nur lesen",
       "readOnlyA11y": "{{status}}, Nur lesen",
       "live": {
@@ -4888,6 +4890,13 @@
       "availableVenues": "Verfügbar",
       "desktopOnlyVenues": "Braucht die Desktop-App",
       "desktopOnlyVenue": "Nur Desktop"
+    },
+    "alerts": {
+      "editTitle": "Benachrichtigung bearbeiten",
+      "empty": "Noch keine Benachrichtigungen",
+      "emptyHint": "Erstelle eine, und wir behalten dieses Paar im Blick, solange Pairlens läuft.",
+      "flowsHint": "Auf dem Desktop erstellt. Hier kannst du sie stummschalten.",
+      "toggleA11y": "{{name}} aktivieren"
     }
   }
 }
