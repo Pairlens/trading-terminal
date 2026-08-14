@@ -3837,6 +3837,7 @@
     "available": "Доступно обновление",
     "availableDesc": "Pairlens",
     "checkFailed": "Не удалось проверить наличие обновлений.",
+    "checkNow": "Проверить обновления",
     "downloading": "Загрузка обновления…",
     "installFailed": "Не удалось обновить",
     "installNow": "Перезапустить и обновить",

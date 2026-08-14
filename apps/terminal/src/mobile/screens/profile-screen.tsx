@@ -30,6 +30,7 @@ import {
   Loader2,
   LogIn,
   LogOut,
+  RefreshCw,
   RotateCcw,
   UserRound,
 } from 'lucide-react'
@@ -60,7 +61,9 @@ import {
 import { useResetTutorial } from '@/hooks/use-reset-tutorial'
 import { useOptimisticSession } from '@/lib/session'
 import { useAppVersion } from '@/lib/app-version'
+import { haptic } from '@/lib/haptics'
 import { isStandalone } from '@/lib/platform'
+import { manualUpdateCheck } from '@/lib/update-check'
 import { track } from '@/lib/analytics-events'
 
 /** Shared with the Settings list row, which draws the same circle. */
@@ -475,17 +478,42 @@ function ReplayTutorialRow() {
  * Which build is running. The desktop parks this in the settings sidebar; the
  * phone has no sidebar, so it sits at the bottom of the one screen people
  * already open when asked "what version are you on?".
+ *
+ * Tapping it checks for updates — the phone translation of the desktop
+ * footer's icon button: no hover means no tooltip, so the whole line is the
+ * target and the spinning glyph is the feedback. The answer lands as a toast.
  */
 function VersionFooter() {
   const { t } = useTranslation()
   const version = useAppVersion()
+  const [checking, setChecking] = useState(false)
+
+  const onCheck = () => {
+    if (checking) return
+    haptic('selection')
+    setChecking(true)
+    void manualUpdateCheck().finally(() => setChecking(false))
+  }
 
   return (
-    <p className="px-4 pt-6 text-center text-[11px] text-muted-foreground tabular-nums">
-      Pairlens v{version}
-      <span className="px-1">·</span>
-      {isStandalone ? t('settings.about.desktop') : t('settings.about.browser')}
-    </p>
+    <button
+      aria-label={t('updater.checkNow')}
+      className="mx-auto mt-2 flex min-h-11 items-center justify-center gap-1.5 px-4 text-[11px] text-muted-foreground tabular-nums"
+      onClick={onCheck}
+      type="button"
+    >
+      <span>
+        Pairlens v{version}
+        <span className="px-1">·</span>
+        {isStandalone
+          ? t('settings.about.desktop')
+          : t('settings.about.browser')}
+      </span>
+      <RefreshCw
+        aria-hidden
+        className={cn('size-3', checking && 'animate-spin')}
+      />
+    </button>
   )
 }
 

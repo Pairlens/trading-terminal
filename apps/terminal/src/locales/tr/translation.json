@@ -3805,6 +3805,7 @@
     "available": "Güncelleme mevcut",
     "availableDesc": "Pairlens",
     "checkFailed": "Güncellemeler kontrol edilemedi.",
+    "checkNow": "Güncellemeleri kontrol et",
     "downloading": "Güncelleme indiriliyor…",
     "installFailed": "Güncelleme başarısız oldu",
     "installNow": "Yeniden başlat ve güncelle",

@@ -8,6 +8,7 @@ import {
   Cloud,
   CloudUpload,
   LogIn,
+  RefreshCw,
   RotateCcw,
   Search,
   Upload,
@@ -43,6 +44,12 @@ import {
 } from '@pairlens/ui/components/ui/field'
 import { Input } from '@pairlens/ui/components/ui/input'
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@pairlens/ui/components/ui/tooltip'
+import { cn } from '@pairlens/ui'
+import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -75,6 +82,7 @@ import { api, queryKeys } from '@/lib/api'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { useAppVersion } from '@/lib/app-version'
 import { isStandalone } from '@/lib/platform'
+import { manualUpdateCheck } from '@/lib/update-check'
 // Shared with the phone's profile screen, which offers the same two actions.
 import {
   ALLOWED_IMAGE_TYPES,
@@ -544,17 +552,47 @@ export default function UserSettingsDialog({
 function AppVersionFooter() {
   const { t } = useTranslation()
   const version = useAppVersion()
+  const [checking, setChecking] = React.useState(false)
   const platform = isStandalone
     ? t('settings.about.desktop')
     : t('settings.about.browser')
 
+  // Same manual check as the omni search action; the answer — up to date,
+  // an update prompt, or a failure — arrives as a toast. The icon spins for
+  // as long as the check is in flight.
+  const onCheck = () => {
+    if (checking) return
+    setChecking(true)
+    void manualUpdateCheck().finally(() => setChecking(false))
+  }
+
   return (
     <SidebarFooter className="shrink-0 border-t">
-      <p className="truncate px-2 text-xs text-muted-foreground tabular-nums">
-        Pairlens v{version}
-        <span className="px-1">·</span>
-        {platform}
-      </p>
+      <div className="flex items-center justify-between gap-1">
+        <p className="truncate px-2 text-xs text-muted-foreground tabular-nums">
+          Pairlens v{version}
+          <span className="px-1">·</span>
+          {platform}
+        </p>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-6 shrink-0 text-muted-foreground"
+                aria-label={t('updater.checkNow')}
+                onClick={onCheck}
+              >
+                <RefreshCw
+                  className={cn('size-3.5', checking && 'animate-spin')}
+                />
+              </Button>
+            }
+          />
+          <TooltipContent>{t('updater.checkNow')}</TooltipContent>
+        </Tooltip>
+      </div>
     </SidebarFooter>
   )
 }

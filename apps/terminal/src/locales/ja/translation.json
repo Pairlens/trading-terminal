@@ -3805,6 +3805,7 @@
     "available": "アップデートが利用可能",
     "availableDesc": "Pairlens",
     "checkFailed": "アップデートを確認できませんでした。",
+    "checkNow": "アップデートを確認",
     "downloading": "アップデートをダウンロード中…",
     "installFailed": "アップデートに失敗しました",
     "installNow": "再起動してアップデート",

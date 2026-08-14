@@ -3805,6 +3805,7 @@
     "available": "Update available",
     "availableDesc": "Pairlens",
     "checkFailed": "Could not check for updates.",
+    "checkNow": "Check for updates",
     "downloading": "Downloading update…",
     "installFailed": "Update failed",
     "installNow": "Restart & update",

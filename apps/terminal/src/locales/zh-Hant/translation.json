@@ -3805,6 +3805,7 @@
     "available": "有可用更新",
     "availableDesc": "Pairlens",
     "checkFailed": "無法檢查更新。",
+    "checkNow": "檢查更新",
     "downloading": "下載更新中…",
     "installFailed": "更新失敗",
     "installNow": "重新啟動並更新",
