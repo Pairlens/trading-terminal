@@ -218,10 +218,19 @@ export function createPairlensIntelligencePlugin(
 
   async function execute(params: PluginExecuteParams): Promise<unknown> {
     const { capability, params: p } = params
+    // Empty string = standalone mode (explicitly empty VITE_APP_SERVER_URL).
+    // Never fetch with an empty base: the URLs would resolve relative to the
+    // hosting origin, wasting a request per call and leaking query params
+    // into that origin's access logs.
     const appUrl = getAppServerUrl()
     const headers = await authHeaders()
 
     if (capability === 'ai:inference') {
+      if (!appUrl) {
+        throw new Error(
+          'pairlens-intelligence: ai inference requires an App Server (standalone mode)',
+        )
+      }
       // Non-streaming completion through the App Server's OpenAI-compatible
       // inference proxy (the server decides the actual model)
       const response = await fetch(`${appUrl}/api/ai/v1/chat/completions`, {
@@ -256,6 +265,11 @@ export function createPairlensIntelligencePlugin(
     }
 
     if (capability === 'ai:web-search') {
+      if (!appUrl) {
+        throw new Error(
+          'pairlens-intelligence: web search requires an App Server (standalone mode)',
+        )
+      }
       // Web search through the App Server's search proxy (gateway-backed).
       // The terminal owns the research prompts — this just returns raw
       // results for the client-side loop to format.
@@ -285,6 +299,8 @@ export function createPairlensIntelligencePlugin(
       const symbolsRaw = p['symbols'] ? String(p['symbols']) : undefined
       const offset = typeof p['offset'] === 'number' ? p['offset'] : 0
       const limit = typeof p['limit'] === 'number' ? p['limit'] : 50
+
+      if (!appUrl) return queryInstruments(market ?? '', p)
 
       try {
         const qs = new URLSearchParams()
@@ -337,6 +353,12 @@ export function createPairlensIntelligencePlugin(
     if (capability === 'market-data:discovery:search') {
       const query = String(p['query'] ?? '')
       const assetClass = p['assetClass'] ? String(p['assetClass']) : undefined
+
+      if (!appUrl) {
+        if (!query) return { items: [], total: 0, hasMore: false }
+        return queryInstruments('', { ...p, q: query })
+      }
+
       try {
         const qs = new URLSearchParams({ q: query })
         const url = `${appUrl}/api/instruments?${qs}`
@@ -373,6 +395,7 @@ export function createPairlensIntelligencePlugin(
         throw new Error(
           'pairlens-intelligence: symbol-logo requires a symbol param',
         )
+      if (!appUrl) return { url: null }
       const assetClass = p['assetClass'] ? String(p['assetClass']) : undefined
       const logoQs = assetClass === 'stocks' ? '?type=ticker' : ''
       const url = `${appUrl}/api/symbol-logo/${encodeURIComponent(symbol)}${logoQs}`
@@ -396,6 +419,12 @@ export function createPairlensIntelligencePlugin(
   // so the id here is a placeholder the server maps per workload. Auth is
   // injected per request since the session token rotates.
   function getLanguageModel(purpose?: 'chat' | 'research'): unknown {
+    const appUrl = getAppServerUrl()
+    if (!appUrl) {
+      throw new Error(
+        'pairlens-intelligence: hosted AI requires an App Server (standalone mode)',
+      )
+    }
     const authedFetch = async (
       input: RequestInfo | URL,
       init?: RequestInit,
@@ -410,7 +439,7 @@ export function createPairlensIntelligencePlugin(
     }
     return createOpenAICompatible({
       name: 'pairlens-intelligence',
-      baseURL: `${getAppServerUrl()}/api/ai/v1`,
+      baseURL: `${appUrl}/api/ai/v1`,
       fetch: authedFetch as typeof fetch,
     }).chatModel(
       purpose === 'research' ? 'pairlens-research' : 'pairlens-default',
