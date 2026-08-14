@@ -33,8 +33,8 @@ import {
   MASTER_DETAIL_LIST_HEADER_CLASS,
 } from '../master-detail'
 import { NewAlertDialog } from './new-alert-dialog'
+import { NotificationActivityList } from './notification-activity'
 import { useSimpleAlertView } from './use-simple-alert-view'
-import type { NotificationLogEntry } from '@/lib/notifications/notification-runtime'
 import { sendTestNotification } from '@/lib/notifications/test-fire'
 import { useNotificationStore } from '@/stores/notification-store'
 import { useNotificationLogStore } from '@/stores/notification-log-store'
@@ -472,80 +472,32 @@ function BindingsPanel({ ruleId }: { ruleId: string }) {
 
 // ── Activity List ────────────────────────────────────────────────────
 // Recent notification deliveries (leader window appends, all windows
-// mirror). Failed channel deliveries are called out inline.
-
-const severityDot: Record<NotificationLogEntry['severity'], string> = {
-  info: 'bg-sky-500',
-  success: 'bg-emerald-500',
-  warning: 'bg-amber-500',
-  error: 'bg-red-500',
-}
+// mirror). Rows come from the shared renderer the bell and the history
+// sheet use, so a firing reads the same wherever it is looked at.
 
 function ActivityList() {
   const { t } = useTranslation()
   const entries = useNotificationLogStore((s) => s.entries)
   const clear = useNotificationLogStore((s) => s.clear)
   const load = useNotificationLogStore((s) => s.load)
+  const markSeen = useNotificationLogStore((s) => s.markSeen)
 
   useEffect(() => {
     load()
   }, [load])
 
+  // This tab IS the log; showing it is what "seen" means.
+  useEffect(() => {
+    markSeen()
+  }, [entries, markSeen])
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex-1 overflow-y-auto p-1.5">
-        {entries.length === 0 && (
-          <p className="px-2 py-4 text-center text-xs text-muted-foreground">
-            {t('notifications.builder.sidebar.noActivity')}
-          </p>
-        )}
-        {entries.map((entry) => {
-          const failures = entry.deliveries?.filter((d) => !d.ok) ?? []
-          return (
-            <div
-              key={entry.id}
-              className="rounded-md px-2 py-1.5 hover:bg-muted"
-            >
-              <div className="flex items-center gap-1.5">
-                <span
-                  className={cn(
-                    'size-1.5 shrink-0 rounded-full',
-                    severityDot[entry.severity],
-                  )}
-                />
-                <span className="min-w-0 flex-1 truncate text-xs font-medium">
-                  {entry.title}
-                </span>
-                <span className="shrink-0 text-[9px] text-muted-foreground">
-                  {new Date(entry.timestamp).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </span>
-              </div>
-              <p className="mt-0.5 truncate pl-3 text-[11px] text-muted-foreground">
-                {entry.body}
-              </p>
-              <div className="mt-0.5 flex flex-wrap items-center gap-1 pl-3">
-                <span className="text-[9px] text-muted-foreground">
-                  {entry.ruleName} · {entry.channels.join(', ')}
-                </span>
-                {failures.map((f) => (
-                  <span
-                    key={f.channel}
-                    className="rounded bg-red-500/10 px-1 text-[9px] text-red-600 dark:text-red-400"
-                    title={f.error}
-                  >
-                    {t('notifications.builder.sidebar.channelFailed', {
-                      channel: f.channel,
-                    })}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )
-        })}
-      </div>
+      <NotificationActivityList
+        className="flex-1 overflow-y-auto p-1.5"
+        entries={entries}
+        emptyLabel={t('notifications.builder.sidebar.noActivity')}
+      />
       {entries.length > 0 && (
         <div className="border-t border-border p-1.5">
           <Button

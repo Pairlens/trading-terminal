@@ -3397,9 +3397,7 @@
     }
   },
   "notifications": {
-    "flows": "流程",
     "newFlow": "新增流程",
-    "noFlows": "尚無通知流程",
     "builder": {
       "sidebar": {
         "tabRules": "規則",
@@ -3883,6 +3881,19 @@
           }
         }
       }
+    },
+    "bell": {
+      "tabArmed": "已啟用",
+      "tabActivity": "紀錄",
+      "manage": "管理提醒",
+      "onPair": "在 {{pair}} 上",
+      "nothingArmed": "還沒有任何提醒盯著這個交易對。",
+      "alsoWatch": "也在這裡盯著",
+      "noActivityYet": "還沒有觸發過。一旦觸發，就會出現在這裡。",
+      "seeAll": "查看全部（{{count}}）",
+      "unread": "{{count}} 則新訊息",
+      "historyTitle": "通知紀錄",
+      "historyDescription": "提醒告訴過你的一切，最新的在前。"
     }
   },
   "updater": {
@@ -3902,7 +3913,9 @@
     "justNow": "剛剛",
     "minutesAgo": "{{n}}分鐘前",
     "hoursAgo": "{{n}}小時前",
-    "daysAgo": "{{n}}天前"
+    "daysAgo": "{{n}}天前",
+    "today": "今天",
+    "yesterday": "昨天"
   },
   "markets": {
     "title": "市場",

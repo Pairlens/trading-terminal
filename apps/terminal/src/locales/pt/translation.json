@@ -3397,9 +3397,7 @@
     }
   },
   "notifications": {
-    "flows": "Fluxos",
     "newFlow": "Novo fluxo",
-    "noFlows": "Ainda não há fluxos de notificação",
     "builder": {
       "sidebar": {
         "tabRules": "Regras",
@@ -3883,6 +3881,19 @@
           }
         }
       }
+    },
+    "bell": {
+      "tabArmed": "Ativos",
+      "tabActivity": "Atividade",
+      "manage": "Gerenciar alertas",
+      "onPair": "Em {{pair}}",
+      "nothingArmed": "Nada está vigiando esse par ainda.",
+      "alsoWatch": "Vigiar aqui também",
+      "noActivityYet": "Nada disparou ainda. Quando disparar, aparece aqui.",
+      "seeAll": "Ver todos ({{count}})",
+      "unread": "{{count}} novos",
+      "historyTitle": "Histórico de notificações",
+      "historyDescription": "Tudo o que seus alertas já avisaram, do mais recente para o mais antigo."
     }
   },
   "updater": {
@@ -3902,7 +3913,9 @@
     "justNow": "agora mesmo",
     "minutesAgo": "há {{n}} min",
     "hoursAgo": "há {{n}} h",
-    "daysAgo": "há {{n}} d"
+    "daysAgo": "há {{n}} d",
+    "today": "Hoje",
+    "yesterday": "Ontem"
   },
   "markets": {
     "title": "Mercados",
