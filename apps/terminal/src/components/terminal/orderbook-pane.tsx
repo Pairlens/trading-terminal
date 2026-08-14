@@ -29,11 +29,34 @@ import { usePairUnavailable } from '@/stores/pair-availability-store'
 
 const ROW_HEIGHT = 18
 
+/**
+ * What the second column measures: resting base size, or the quote-currency
+ * notional that size is worth (price × size). Both columns follow the choice —
+ * Total is the running sum of whichever one is on screen, or it would stop
+ * being the sum of the rows above it.
+ */
+export type BookMetric = 'size' | 'value'
+
 function formatSize(size: number): string {
   if (size >= 1_000_000) return `${(size / 1_000_000).toFixed(2)}M`
   if (size >= 1_000) return `${(size / 1_000).toFixed(2)}K`
   if (size >= 1) return size.toFixed(4)
   return size.toPrecision(4)
+}
+
+// Notional is money, so it reads in money's units: two decimals, and a decade
+// suffix once a level is worth more than a thousand of them.
+function formatValue(value: number): string {
+  if (value >= 1_000_000_000) return `${(value / 1_000_000_000).toFixed(2)}B`
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(2)}M`
+  if (value >= 1_000) return `${(value / 1_000).toFixed(2)}K`
+  if (value >= 1) return value.toFixed(2)
+  return value.toPrecision(3)
+}
+
+/** Shared with the mobile book so both shells print a notional the same way. */
+export function formatAmount(amount: number, metric: BookMetric): string {
+  return metric === 'value' ? formatValue(amount) : formatSize(amount)
 }
 
 function formatTickSize(tick: number): string {
@@ -148,15 +171,24 @@ export function groupLevels(
   return grouped
 }
 
-type RowWithCumulative = OrderBookLevel & { cumulative: number }
+type RowWithCumulative = OrderBookLevel & {
+  /** The magnitude this row displays — base size, or its quote notional. */
+  amount: number
+  cumulative: number
+}
 
 export function addCumulative(
   levels: Array<OrderBookLevel>,
+  metric: BookMetric = 'size',
 ): Array<RowWithCumulative> {
   let cumulative = 0
   return levels.map((level) => {
-    cumulative += level.size
-    return { ...level, cumulative }
+    // Notional is the bucket's OWN price × size, not a re-sum of the raw
+    // levels: everything inside a bucket sits within one tick of the price on
+    // screen, so this is the money the displayed row actually represents.
+    const amount = metric === 'value' ? level.price * level.size : level.size
+    cumulative += amount
+    return { ...level, amount, cumulative }
   })
 }
 
@@ -164,18 +196,20 @@ const OrderBookRow = memo(
   function OrderBookRow({
     row,
     maxCumulative,
-    sizeReference,
+    amountReference,
+    metric,
     side,
   }: {
     row: RowWithCumulative
     maxCumulative: number
-    sizeReference: number
+    amountReference: number
+    metric: BookMetric
     side: 'bid' | 'ask'
   }) {
     const depthPct =
       maxCumulative > 0 ? (row.cumulative / maxCumulative) * 100 : 0
-    // Bar length = cumulative depth, bar strength = this level's own size.
-    const intensity = magnitudeIntensity(row.size, sizeReference)
+    // Bar length = cumulative depth, bar strength = this level's own amount.
+    const intensity = magnitudeIntensity(row.amount, amountReference)
 
     return (
       <div className="relative grid grid-cols-3 gap-1 px-2 py-[1px] font-mono text-[11px] leading-[18px]">
@@ -208,20 +242,21 @@ const OrderBookRow = memo(
             transition: 'color 300ms ease-out',
           }}
         >
-          {formatSize(row.size)}
+          {formatAmount(row.amount, metric)}
         </span>
         <span className="relative z-10 text-right text-muted-foreground">
-          {formatSize(row.cumulative)}
+          {formatAmount(row.cumulative, metric)}
         </span>
       </div>
     )
   },
   (prev, next) =>
     prev.row.price === next.row.price &&
-    prev.row.size === next.row.size &&
+    prev.row.amount === next.row.amount &&
     prev.row.cumulative === next.row.cumulative &&
     prev.maxCumulative === next.maxCumulative &&
-    prev.sizeReference === next.sizeReference &&
+    prev.amountReference === next.amountReference &&
+    prev.metric === next.metric &&
     prev.side === next.side,
 )
 
@@ -299,6 +334,44 @@ function TickSelector({
   )
 }
 
+/**
+ * The second column's header is its own switch: it names the reading in force
+ * and a click swaps it, so the column carries two meanings without costing a
+ * third column of a pane this narrow.
+ *
+ * It shows ONE label, not "Size / Value". The pane routinely renders at ~200px,
+ * where a third is 65px — enough for `Dimensione` or `Khối lượng` alone and
+ * nowhere near enough for a pair of them, so a both-labels header would read
+ * fine in English and paint over the price header in half the catalog. Both
+ * readings live in the tooltip instead, and the hover affordance is the tick
+ * selector's, three pixels to the right.
+ */
+function MetricHeader({
+  metric,
+  onToggle,
+}: {
+  metric: BookMetric
+  onToggle: () => void
+}) {
+  const { t } = useTranslation()
+  const both = `${t('terminal.columns.size')} / ${t('terminal.columns.value')}`
+
+  return (
+    <button
+      onClick={onToggle}
+      type="button"
+      aria-label={both}
+      aria-pressed={metric === 'value'}
+      title={both}
+      className="-mx-1 justify-self-end rounded px-1 uppercase whitespace-nowrap transition-colors hover:bg-accent hover:text-foreground"
+    >
+      {metric === 'value'
+        ? t('terminal.columns.value')
+        : t('terminal.columns.size')}
+    </button>
+  )
+}
+
 export function OrderbookPane() {
   const activePair = usePanePair()
   const orderbookData = useOptionalOrderbookData()
@@ -346,6 +419,7 @@ function OrderbookPaneInner({
   const [containerEl, setContainerEl] = useState<HTMLDivElement | null>(null)
   const [visibleRows, setVisibleRows] = useState(20)
   const [tickIndex, setTickIndex] = useState<number | null>(null)
+  const [metric, setMetric] = useState<BookMetric>('size')
 
   // Header (~28px), spread row (~26px), buy/sell bar (~32px) — plus the venue
   // footer (~24px) on the panes that render one.
@@ -429,16 +503,16 @@ function OrderbookPaneInner({
     const grouped =
       tickSize > 0 ? groupLevels(book.asks, tickSize, 'asks') : book.asks
     const sliced = grouped.slice(0, rowsPerSide)
-    return addCumulative(sliced).reverse()
-  }, [book?.asks, rowsPerSide, tickSize])
+    return addCumulative(sliced, metric).reverse()
+  }, [book?.asks, rowsPerSide, tickSize, metric])
 
   const bids = useMemo(() => {
     if (!book?.bids.length) return []
     const grouped =
       tickSize > 0 ? groupLevels(book.bids, tickSize, 'bids') : book.bids
     const sliced = grouped.slice(0, rowsPerSide)
-    return addCumulative(sliced)
-  }, [book?.bids, rowsPerSide, tickSize])
+    return addCumulative(sliced, metric)
+  }, [book?.bids, rowsPerSide, tickSize, metric])
 
   const maxCumulative = useMemo(() => {
     const maxBid = bids[bids.length - 1]?.cumulative ?? 0
@@ -446,13 +520,15 @@ function OrderbookPaneInner({
     return Math.max(maxBid, maxAsk)
   }, [bids, asks])
 
-  // One reference for both sides — a bid and an ask of equal size must paint
-  // identically or the book misreports which side is heavier.
-  const sizeReference = useMemo(
+  // One reference for both sides — a bid and an ask of equal amount must paint
+  // identically or the book misreports which side is heavier. Scaled to the
+  // metric on screen: in value mode a cheap venue's raw sizes are the wrong
+  // yardstick for the notionals being drawn.
+  const amountReference = useMemo(
     () =>
       computeMagnitudeReference(
-        bids.map((r) => r.size),
-        asks.map((r) => r.size),
+        bids.map((r) => r.amount),
+        asks.map((r) => r.amount),
       ),
     [bids, asks],
   )
@@ -468,6 +544,10 @@ function OrderbookPaneInner({
 
   const handleTickChange = useCallback((index: number | null) => {
     setTickIndex(index)
+  }, [])
+
+  const handleMetricToggle = useCallback(() => {
+    setMetric((current) => (current === 'size' ? 'value' : 'size'))
   }, [])
 
   // Ahead of the loading and error states: "this venue doesn't list the pair"
@@ -508,7 +588,7 @@ function OrderbookPaneInner({
       <div className="flex items-center justify-between border-b border-border/50 px-2 py-1">
         <div className="grid flex-1 grid-cols-3 gap-1 font-mono text-[10.5px] font-medium uppercase tracking-[.11em] text-muted-foreground">
           <span>{t('terminal.columns.price')}</span>
-          <span className="text-right">{t('terminal.columns.size')}</span>
+          <MetricHeader metric={metric} onToggle={handleMetricToggle} />
           <span className="text-right">{t('terminal.columns.total')}</span>
         </div>
         {tickOptions.length > 0 && (
@@ -528,7 +608,8 @@ function OrderbookPaneInner({
             key={row.price}
             row={row}
             maxCumulative={maxCumulative}
-            sizeReference={sizeReference}
+            amountReference={amountReference}
+            metric={metric}
             side="ask"
           />
         ))}
@@ -556,7 +637,8 @@ function OrderbookPaneInner({
             key={row.price}
             row={row}
             maxCumulative={maxCumulative}
-            sizeReference={sizeReference}
+            amountReference={amountReference}
+            metric={metric}
             side="bid"
           />
         ))}

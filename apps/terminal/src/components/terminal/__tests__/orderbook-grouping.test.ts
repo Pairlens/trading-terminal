@@ -14,6 +14,7 @@ import { describe, expect, it } from 'bun:test'
 import type { OrderBookLevel } from '@/hooks/use-orderbook-stream'
 import {
   MAX_AUTO_BAND_FRACTION,
+  addCumulative,
   computeAutoTickIndex,
   computeTickOptions,
 } from '@/components/terminal/orderbook-pane'
@@ -72,5 +73,37 @@ describe('computeAutoTickIndex', () => {
     const options = [0.5, 1, 2]
     const levels = ladder(1, 0.5, 40)
     expect(computeAutoTickIndex(options, levels, ROWS)).toBe(0)
+  })
+})
+
+/**
+ * The size/value switch. Value mode is not a formatting change: Total, the
+ * depth bars and the pressure footer all read the cumulative, so the cumulative
+ * has to be the running sum of whatever the middle column shows.
+ */
+describe('addCumulative', () => {
+  const levels: Array<OrderBookLevel> = [
+    { price: 100, size: 2 },
+    { price: 99, size: 3 },
+  ]
+
+  it('cumulates base size by default', () => {
+    expect(addCumulative(levels)).toEqual([
+      { price: 100, size: 2, amount: 2, cumulative: 2 },
+      { price: 99, size: 3, amount: 3, cumulative: 5 },
+    ])
+  })
+
+  it('cumulates quote notional in value mode', () => {
+    expect(addCumulative(levels, 'value')).toEqual([
+      { price: 100, size: 2, amount: 200, cumulative: 200 },
+      { price: 99, size: 3, amount: 297, cumulative: 497 },
+    ])
+  })
+
+  it('leaves the raw size on the row in either mode', () => {
+    // The row keeps its OrderBookLevel identity — value mode changes what is
+    // displayed and cumulated, not what the level is.
+    expect(addCumulative(levels, 'value').map((r) => r.size)).toEqual([2, 3])
   })
 })
