@@ -10,6 +10,7 @@ export const GROUPS = [
   { key: 'traders', label: 'For traders' },
   { key: 'builders', label: 'For builders' },
   { key: 'institutions', label: 'For institutions' },
+  { key: 'reference', label: 'Reference' },
 ] as const
 
 export type NavNode = {
@@ -73,17 +74,29 @@ export function groupLabel(key?: string): string {
   return GROUPS.find((g) => g.key === key)?.label ?? 'Docs'
 }
 
-/** Title of the doc that owns `id` as a nested child — the breadcrumb middle. */
-export function parentTitle(
+/** The doc that owns `id` as a nested child — the breadcrumb middle. */
+export function parentNode(
   nav: Array<NavGroup>,
   id: string,
-): string | undefined {
+): NavNode | undefined {
   for (const group of nav) {
     for (const item of group.items) {
-      if (item.children.some((c) => c.id === id)) return item.title
+      if (item.children.some((c) => c.id === id)) return item
     }
   }
   return undefined
+}
+
+/**
+ * Where the group segment of a breadcrumb points. A group has no page of its
+ * own, so it resolves to its first doc — which is written as that section's
+ * opener, and is where the sidebar would send you anyway.
+ */
+export function groupHref(
+  nav: Array<NavGroup>,
+  key?: string,
+): string | undefined {
+  return nav.find((g) => g.key === key)?.items[0]?.href
 }
 
 /**

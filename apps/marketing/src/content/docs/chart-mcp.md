@@ -125,3 +125,5 @@ between a correct read of a pattern and a confident wrong one.
 - Tool names are stable across minor versions. New tools are additive.
 - Full argument shapes live in
   [the README](https://github.com/Pairlens/fast-financial-charts#ai--mcp-integration).
+- This surface controls a chart. For the ways an agent can reach market data,
+  the portfolio, or an order, see [agent interfaces](/docs/agent-interfaces).

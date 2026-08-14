@@ -18,11 +18,11 @@ install one. Everything below ships in the box, from **Pairlens Core** or
 | Panel                 | What it shows                                                                                 |
 | --------------------- | --------------------------------------------------------------------------------------------- |
 | **Chart**             | The main chart: 16 types, 90 indicators, 45 drawing tools. See [the chart](/docs/chart-panel) |
-| **Order Book**        | Live bids and asks with depth visualisation                                                   |
-| **Trades**            | The live tape: every print with side, size, and time                                          |
-| **Market Depth**      | The cumulative depth curve for the active pair                                                |
-| **Liquidity Heatmap** | Order-book liquidity across price levels over time                                            |
-| **Multi-Price**       | The active pair quoted on every venue at once, ranked by price                                |
+| **Order Book**        | Live bids and asks. See [the order book](/docs/order-book)                                    |
+| **Trades**            | The live tape. See [time and sales](/docs/time-and-sales)                                     |
+| **Market Depth**      | The cumulative depth curve. See [depth and liquidity](/docs/depth-and-liquidity)              |
+| **Liquidity Heatmap** | Resting liquidity over time. See [depth and liquidity](/docs/depth-and-liquidity)             |
+| **Multi-Price**       | Every venue at once. See [cross-venue pricing](/docs/cross-venue-pricing)                     |
 | **Pair Info**         | Key stats and metadata for the active pair                                                    |
 | **Data Log**          | The raw signal and event feed                                                                 |
 
@@ -38,12 +38,15 @@ around it.
 
 ## Trading
 
-| Panel           | What it shows                                                   |
-| --------------- | --------------------------------------------------------------- |
-| **Trade Entry** | The order ticket. See [place an order](/docs/place-an-order)    |
-| **Positions**   | Open positions, resting orders, and fill history, in three tabs |
-| **Portfolio**   | Account holdings with an allocation breakdown                   |
-| **Risk**        | Current window P&L, trade count, and guardrail state            |
+| Panel           | What it shows                                                |
+| --------------- | ------------------------------------------------------------ |
+| **Trade Entry** | The order ticket. See [place an order](/docs/place-an-order) |
+| **Positions**   | Positions, orders, fills, and balances, in four tabs         |
+| **Portfolio**   | Account holdings with an allocation breakdown                |
+| **Risk**        | Current window P&L, trade count, and guardrail state         |
+
+Trading panels get their own page: see
+[positions and portfolio](/docs/positions-and-portfolio).
 
 The Risk panel is compact by design. It sits in a corner and reads **All
 clear**, **Caution**, or **Limit hit**, which is all you need to know at a
@@ -51,14 +54,14 @@ glance. See [risk guardrails](/docs/risk-guardrails).
 
 ## Discovery
 
-| Panel              | What it shows                                               |
-| ------------------ | ----------------------------------------------------------- |
-| **Markets**        | Every trading pair your connectors can reach                |
-| **Watchlist**      | Tracked pairs, starting with Top Crypto and Top Equities    |
-| **Recent Tickers** | Recently viewed pairs with live prices, for quick switching |
-| **Top Coins**      | Coins ranked by volume, market cap, and price change        |
-| **Heatmap**        | Market performance across sectors at a glance               |
-| **Web**            | Any website, embedded as a panel (desktop app only)         |
+| Panel              | What it shows                                                             |
+| ------------------ | ------------------------------------------------------------------------- |
+| **Markets**        | Every pair your connectors reach. See [discovery](/docs/market-discovery) |
+| **Watchlist**      | Tracked pairs, starting with Top Crypto and Top Equities                  |
+| **Recent Tickers** | Recently viewed pairs with live prices, for quick switching               |
+| **Top Coins**      | Coins ranked by volume, market cap, and price change                      |
+| **Heatmap**        | Market performance across sectors at a glance                             |
+| **Web**            | Any website, embedded as a panel (desktop app only)                       |
 
 The Web panel is a genuine escape hatch. Put your exchange's own page, a
 TradingView idea, a Dune dashboard, or your notes app next to your chart.

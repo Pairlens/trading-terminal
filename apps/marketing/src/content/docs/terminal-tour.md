@@ -92,6 +92,9 @@ the encrypted vault in a browser.
 ## Where to next
 
 - [The chart](/docs/chart-panel) for chart types, drawings, and indicators
+- [Reading the market](/docs/market-data) for the book, the tape, and depth
 - [Trading](/docs/trading) to connect a venue and place your first order
 - [Keyboard shortcuts](/docs/keyboard-shortcuts) for the full chord list
 - [Settings](/docs/settings) for themes, language, region routing, and privacy
+- [Glossary](/docs/glossary) if a term here was new, and
+  [troubleshooting](/docs/troubleshooting) if something is not behaving

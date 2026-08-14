@@ -1,9 +1,9 @@
 ---
 title: Keyboard shortcuts
 description: Every keyboard shortcut in the Pairlens trading terminal, from timeframe digits to drawing tools to window management, on macOS, Windows, and Linux.
-group: traders
-order: 10
-eyebrow: For traders
+group: reference
+order: 3
+eyebrow: Reference
 updated: AUG 2026
 readTime: 2 min read
 ---

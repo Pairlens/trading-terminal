@@ -57,6 +57,8 @@ so your bundle stays small and the WebGL chart engine is never duplicated:
 - **[MarketAdapter API](/docs/marketadapter-api).** The interface every
   connector implements.
 - **[Publish to the registry](/docs/publish-to-registry).** Sign and ship.
+- **[Agent interfaces](/docs/agent-interfaces).** Every way an AI agent can
+  drive the terminal, and where the trading boundary sits.
 
 ## Sandboxed by default
 

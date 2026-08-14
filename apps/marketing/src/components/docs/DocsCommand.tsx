@@ -14,8 +14,43 @@ import type { ReactNode } from 'react'
 import { SITE } from '@/lib/site'
 import { track } from '@/scripts/analytics-events'
 
-type Page = { title: string; href: string; group: string }
+type Page = {
+  title: string
+  href: string
+  group: string
+  description: string
+}
 type Section = { label: string; items: Array<Page> }
+
+/**
+ * Ranking for the palette.
+ *
+ * cmdk's default scorer is a fuzzy subsequence match, which is fine over a
+ * dozen short titles and useless once every item also carries a sentence of
+ * description: "order book" ranked Introduction above The order book, because
+ * those letters appear in that order somewhere in its blurb. This scores
+ * explicitly instead — the title decides the top of the list, the description
+ * only decides whether an item is in the list at all.
+ *
+ * Returning 0 hides the item, which is what makes a two-word query narrow
+ * rather than widen the results.
+ */
+function score(value: string, search: string, keywords?: Array<string>) {
+  const q = search.trim().toLowerCase()
+  if (!q) return 1
+  const title = value.toLowerCase()
+  const rest = (keywords ?? []).join(' ').toLowerCase()
+
+  if (title === q) return 1
+  if (title.startsWith(q)) return 0.9
+  if (title.includes(q)) return 0.8
+
+  const words = q.split(/\s+/)
+  if (words.every((w) => title.includes(w))) return 0.7
+  if (rest.includes(q)) return 0.5
+  if (words.every((w) => `${title} ${rest}`.includes(w))) return 0.35
+  return 0
+}
 
 function navigateTo(href: string) {
   import('astro:transitions/client')
@@ -148,7 +183,10 @@ export function DocsCommand({ pages }: { pages: Array<Page> }) {
       description="Search docs, guides, and commands"
       className="overflow-hidden border-border/70 sm:max-w-[580px]"
     >
-      <Command className="bg-transparent [&_[cmdk-group-heading]]:px-2.5 [&_[cmdk-group-heading]]:pb-1 [&_[cmdk-group-heading]]:pt-2 [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.08em] [&_[cmdk-group-heading]]:text-muted-foreground/50">
+      <Command
+        filter={score}
+        className="bg-transparent [&_[cmdk-group-heading]]:px-2.5 [&_[cmdk-group-heading]]:pb-1 [&_[cmdk-group-heading]]:pt-2 [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.08em] [&_[cmdk-group-heading]]:text-muted-foreground/50"
+      >
         <CommandInput placeholder="Search the docs…" />
         <CommandList className="max-h-[400px] scroll-py-2 px-1 pb-2">
           <CommandEmpty className="py-10 text-center text-sm text-muted-foreground">
@@ -161,7 +199,11 @@ export function DocsCommand({ pages }: { pages: Array<Page> }) {
               {section.items.map((p) => (
                 <CommandItem
                   key={p.href}
-                  value={`${p.title} ${section.label}`}
+                  // Titles are unique across the corpus, so the value can be
+                  // the title alone and `score` gets to weigh it against the
+                  // section and description separately.
+                  value={p.title}
+                  keywords={[section.label, p.description]}
                   onSelect={() =>
                     select(() => {
                       track('docs_search_selected', {
@@ -173,8 +215,13 @@ export function DocsCommand({ pages }: { pages: Array<Page> }) {
                   }
                   className={itemClass}
                 >
-                  <DocIcon className="size-[17px]" />
-                  <span className="truncate">{p.title}</span>
+                  <DocIcon className="size-[17px] shrink-0" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate">{p.title}</span>
+                    <span className="block truncate text-[11.5px] text-muted-foreground/60">
+                      {p.description}
+                    </span>
+                  </span>
                 </CommandItem>
               ))}
             </CommandGroup>

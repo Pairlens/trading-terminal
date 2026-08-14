@@ -2,7 +2,7 @@
 title: Bots
 description: Deploy a Python strategy to a market and let it trade. Sizing, guards, paper mode, the live-arming gate, and the honest limits of running on your own machine.
 group: traders
-order: 5
+order: 6
 eyebrow: For traders
 updated: AUG 2026
 readTime: 6 min read

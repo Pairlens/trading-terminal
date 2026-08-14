@@ -11,7 +11,7 @@ const docs = defineCollection({
     description: z.string(),
     /** Sidebar group (audience-oriented). Omit to hide from the grouped nav. */
     group: z
-      .enum(['get-started', 'traders', 'builders', 'institutions'])
+      .enum(['get-started', 'traders', 'builders', 'institutions', 'reference'])
       .optional(),
     /** Slug of the parent doc — makes this a nested child in the sidebar. */
     parent: z.string().optional(),

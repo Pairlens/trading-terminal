@@ -2,7 +2,7 @@
 title: CLI reference
 description: Candles, tickers, order books, signals, and orders from the command line, using the same connectors and strategy engine as the terminal.
 group: builders
-order: 2
+order: 3
 eyebrow: For builders
 updated: AUG 2026
 readTime: 4 min read
@@ -116,3 +116,6 @@ It is a market-interaction tool, not a headless terminal. Workflows, bots,
 alerts, Python indicators, and the AI co-pilot all live in the terminal
 process. A bot in particular needs the running app, which is
 [covered in its own doc](/docs/bots).
+
+For how the CLI compares to the other ways an agent can drive Pairlens, see
+[agent interfaces](/docs/agent-interfaces).
