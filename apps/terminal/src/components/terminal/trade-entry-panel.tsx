@@ -1361,8 +1361,12 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                 {t('terminal.trade.extendedHoursHint')}
               </p>
             </div>
+            {/* The id lands on the hidden form input, not the role="switch"
+                element, so the label is wired for a click but leaves the
+                control itself unnamed to a screen reader. */}
             <Switch
               id="trade-extended-hours"
+              aria-label={t('terminal.trade.extendedHours')}
               checked={extendedHours}
               onCheckedChange={setExtendedHours}
               className="mt-0.5 shrink-0"

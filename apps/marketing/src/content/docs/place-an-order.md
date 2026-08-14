@@ -90,10 +90,11 @@ placed on a Friday evening sits until Monday morning.
 To trade before the open or after the close instead of waiting for it, switch
 the ticket to **Limit** and turn on **Extended hours**. The order then works
 the pre-market session from 4:00am and the after-hours session through 8:00pm
-Eastern. The toggle appears only on stock venues, only for limit orders, and
-resets every time: those sessions are thin, spreads are wider, and routing into
-them is a decision worth making per order rather than one inherited from last
-night.
+Eastern. The toggle appears only on stock venues and only for limit orders. It
+stays on while you keep placing limit orders, clears the moment you switch to
+Market or Workflow, and is never carried over to your next session: those
+sessions are thin and spreads are wider, so routing into them should be a
+choice you still remember making, not one inherited from last night.
 
 Only limit orders are eligible. A market order has no continuous auction to
 fill against out of session, and stops and take-profits are not accepted at
