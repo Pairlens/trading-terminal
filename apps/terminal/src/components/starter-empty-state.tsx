@@ -12,6 +12,7 @@
  * wash behind — so the first thing a section says looks like the tour that
  * just finished saying it.
  */
+import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
@@ -187,12 +188,16 @@ export function StarterEmptyState({
               </>
             )}
 
+            {/* The escape hatch has to survive sitting under a wall of
+                template cards — outline chrome and an icon, not a ghost
+                label that reads as a caption. */}
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              className="mt-1 gap-1.5"
               disabled={pendingId !== null}
               onClick={onCreateBlank}
             >
+              <Plus className="size-4" />
               {blankLabel}
             </Button>
 
