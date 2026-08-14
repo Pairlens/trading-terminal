@@ -37,6 +37,8 @@ import type {
   PluginUpdateInfo,
 } from '@/stores/plugin-updates-store'
 import type { PluginModule } from '@/lib/plugins/plugin-module-loader'
+import { startInstrumentIndexFill } from '@/lib/instruments/ttl-fill'
+import { ensureLocalInstrumentIndex } from '@/lib/instruments/local-index'
 import i18n from '@/lib/i18n'
 import { lazyChunk } from '@/lib/lazy-chunk'
 import { api, appServerUrl, getSessionToken } from '@/lib/api'
@@ -1173,6 +1175,21 @@ export function PairlensProvider({
         stopUpdateScheduler = startUpdateCheckScheduler(manager)
       }
 
+      // ── 10b. Build the local instrument index at idle ─────────────
+      // Every window needs its own in-memory index (search is synchronous),
+      // but never on the boot critical path — idle callback with a timeout
+      // floor, falling back to a plain timer.
+      if (!destroyed) {
+        const buildIndex = () => {
+          if (!destroyed) void ensureLocalInstrumentIndex(manager)
+        }
+        if (typeof requestIdleCallback === 'function') {
+          requestIdleCallback(buildIndex, { timeout: 5_000 })
+        } else {
+          setTimeout(buildIndex, 3_000)
+        }
+      }
+
       // ── 11. Initialize notification system ─────────────────────────
       if (!destroyed) {
         // Register core notification steps in the global engine registry
@@ -1211,6 +1228,10 @@ export function PairlensProvider({
           useBotsStore.getState().load()
           useBotRunsStore.getState().load()
           botRuntime.start(manager)
+          // Instrument-index TTL fill is leader-gated for the same reason as
+          // alerts: N windows would fetch N copies of every venue table.
+          stopIndexFill?.()
+          stopIndexFill = startInstrumentIndexFill(manager)
         })
       }
     }
@@ -1218,6 +1239,7 @@ export function PairlensProvider({
     let stopUpdateScheduler: (() => void) | undefined
     let stopOrderAdapter: (() => void) | undefined
     let stopLeaderSub: (() => void) | undefined
+    let stopIndexFill: (() => void) | undefined
 
     void setup().catch((err) => {
       // Plugin setup failure is non-fatal — core UI still works
@@ -1232,6 +1254,7 @@ export function PairlensProvider({
       stopUpdateScheduler?.()
       stopLeaderSub?.()
       stopOrderAdapter?.()
+      stopIndexFill?.()
       notificationRuntime.stop()
       notificationSubscriptionManager.stop()
       botRuntime.stop()

@@ -201,6 +201,7 @@ function PairTerminalContent({
           market={market}
           onMarketChange={setMarket}
           onMarketHover={(m) => warmupMarket(m, pairKey, timeframe)}
+          onPairHover={(p) => warmupMarket(market, p, timeframe)}
           workspacesOpen={workspacesOpen}
           onWorkspacesOpenChange={setWorkspacesOpen}
         />

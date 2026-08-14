@@ -119,6 +119,7 @@ export default memo(function PairPickerScreen({
     isSearchActive,
     isFetching: searchFetching,
     isPending: searchPending,
+    hasLocalResults,
   } = useInstrumentSearch(query)
   const { isLoading: catalogLoading } = useMarketInstruments()
 
@@ -142,6 +143,7 @@ export default memo(function PairPickerScreen({
     searchFetching,
     searchPending,
     catalogLoading,
+    hasLocalResults,
   })
 
   const { markets } = useAvailableMarkets()
@@ -363,7 +365,7 @@ export default memo(function PairPickerScreen({
               <PairResultRow
                 entry={entry}
                 focused={entry.symbol === focusedPair}
-                key={entry.symbol}
+                key={entry.id}
                 onSelect={handleSelect}
                 routing={routing}
                 watched={watchedSymbols.has(entry.symbol)}

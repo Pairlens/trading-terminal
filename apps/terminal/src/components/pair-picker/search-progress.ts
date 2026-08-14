@@ -39,6 +39,13 @@ export type SearchProgressInput = {
   searchPending: boolean
   /** The instrument catalog's first page has not landed. */
   catalogLoading: boolean
+  /**
+   * The synchronous local index answered this query (wave 1). Once it has,
+   * nothing is "in flight" from the user's point of view — async waves only
+   * append below the results already on screen, and a skeleton over painted
+   * rows would be a lie.
+   */
+  hasLocalResults?: boolean
 }
 
 export function isSearchInFlight({
@@ -48,8 +55,10 @@ export function isSearchInFlight({
   searchFetching,
   searchPending,
   catalogLoading,
+  hasLocalResults,
 }: SearchProgressInput): boolean {
   if (!hasQuery) return false
+  if (hasLocalResults) return false
   if (!isSearchActive) return catalogLoading
   return hasSearchProvider && (searchFetching || searchPending)
 }

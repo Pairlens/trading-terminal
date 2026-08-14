@@ -41,6 +41,12 @@ export type PairCategory =
 export type Regime = 'Trend' | 'Range' | 'High Volatility' | 'Balanced' | 'Chop'
 
 export interface PairEntry {
+  /**
+   * Unique row identity. Distinct from `symbol` because two assets can share
+   * a ticker (a wave-1 CEX pair and an appended on-chain token) — React keys
+   * and cmdk values must not collide when both render.
+   */
+  id: string
   symbol: string
   name: string
   base: string
@@ -103,6 +109,7 @@ export const REGIME_STYLES: Record<
 
 export function instrumentToPairEntry(inst: Instrument): PairEntry {
   return {
+    id: inst.id || inst.symbol,
     symbol: inst.symbol,
     name: inst.name,
     base: inst.base,

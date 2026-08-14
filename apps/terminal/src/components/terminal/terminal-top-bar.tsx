@@ -38,6 +38,8 @@ type TerminalTopBarProps = {
   onMarketChange: (market: string) => void
   /** Speculative pre-connect when a venue in the dropdown is hovered/focused. */
   onMarketHover?: (market: string) => void
+  /** Speculative pre-connect when a pair result is dwelled on in the switcher. */
+  onPairHover?: (pair: string) => void
   workspacesOpen?: boolean
   onWorkspacesOpenChange?: (open: boolean) => void
 }
@@ -51,6 +53,7 @@ export function TerminalTopBar({
   market,
   onMarketChange,
   onMarketHover,
+  onPairHover,
   workspacesOpen,
   onWorkspacesOpenChange,
 }: TerminalTopBarProps) {
@@ -70,7 +73,11 @@ export function TerminalTopBar({
         />
       }
     >
-      <PairSwitcher pairKey={pairKey} assetClass={assetClass} />
+      <PairSwitcher
+        pairKey={pairKey}
+        assetClass={assetClass}
+        onPairHover={onPairHover}
+      />
       <Button
         size="icon-xs"
         variant="ghost"

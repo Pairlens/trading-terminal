@@ -193,7 +193,7 @@ export const PairResultItem = memo(function PairResultItem({
   const { pair, isWatched } = result
   return (
     <CommandItem
-      value={`pair:${pair.symbol}`}
+      value={`pair:${pair.id}`}
       onSelect={onSelect}
       className={ROW_CLASS}
     >

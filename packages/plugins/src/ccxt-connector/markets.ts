@@ -456,6 +456,148 @@ export function defaultMarketsStorage(): MarketsStorage {
   }
 }
 
+// ── Cached listings (discovery reads) ────────────────────────────────────
+//
+// The terminal's local instrument index wants "which pairs does each venue
+// list" without constructing exchanges or touching the network. This module
+// owns the cache's key scheme and row shape, so the read lives here rather
+// than leaking `${venue}:v2` knowledge into app code.
+
+/**
+ * Every bundled ccxt venue, by marketId. For all fourteen, marketId equals
+ * the ccxt exchangeId (asserted by a test against the venue configs), which
+ * is also the markets-cache key prefix.
+ */
+export const CCXT_VENUE_IDS: ReadonlyArray<string> = [
+  'binance',
+  'bitfinex',
+  'bitget',
+  'bitvavo',
+  'bybit',
+  'coinbase',
+  'cryptocom',
+  'gate',
+  'htx',
+  'kraken',
+  'kucoin',
+  'mexc',
+  'okx',
+  'upbit',
+]
+
+export type VenueListingRow = {
+  /** Dash-canonical 'BASE-QUOTE'. */
+  symbol: string
+  base: string
+  quote: string
+  /** Venue-native market id (ccxt `market.id`) — identity without symbol parsing. */
+  marketId: string
+}
+
+export type CachedVenueListings = {
+  venue: string
+  /** Epoch ms the venue's table was last persisted. */
+  savedAt: number
+  listings: Array<VenueListingRow>
+}
+
+/**
+ * Read the locally cached market tables for the given venues (default: all
+ * bundled venues) and trim them to listing rows. Purely a cache read — never
+ * constructs an exchange, never fetches. A venue with no cached table (or an
+ * unreadable one) is simply absent from the result: absence means "unknown",
+ * not "lists nothing".
+ */
+export async function readCachedVenueListings(
+  venues: ReadonlyArray<string> = CCXT_VENUE_IDS,
+  storage: MarketsStorage = defaultMarketsStorage(),
+): Promise<Array<CachedVenueListings>> {
+  const out: Array<CachedVenueListings> = []
+  await Promise.all(
+    venues.map(async (venue) => {
+      try {
+        const cached = await storage.get(`${venue}:v${MARKETS_SCHEMA_VERSION}`)
+        if (!cached || cached.markets.length === 0) return
+        const listings: Array<VenueListingRow> = []
+        for (const seed of cached.markets) {
+          if (seed.active === false) continue
+          if (!seed.base || !seed.quote) continue
+          listings.push({
+            symbol: `${seed.base}-${seed.quote}`,
+            base: seed.base,
+            quote: seed.quote,
+            marketId: seed.id,
+          })
+        }
+        out.push({ venue, savedAt: cached.savedAt, listings })
+      } catch {
+        // Unreadable rows degrade to "unknown" for that venue.
+      }
+    }),
+  )
+  return out
+}
+
+// ── Generic KV on the same store ─────────────────────────────────────────
+//
+// The instruments-index snapshot (and anything else that follows the
+// versioned-key pattern) rides the same 'pairlens-ccxt' database. Keys are
+// version-suffixed strings; the DATABASE version is never bumped — an
+// upgrade transaction blocks while any other tab holds the old connection,
+// and this app is explicitly multi-tab.
+
+let kvDbPromise: Promise<IDBDatabase> | null = null
+const kvMemory = new Map<string, unknown>()
+
+function openKvDb(): Promise<IDBDatabase> {
+  if (!kvDbPromise) {
+    kvDbPromise = new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open(DB_NAME, 1)
+      request.onupgradeneeded = () => {
+        if (!request.result.objectStoreNames.contains(STORE_NAME)) {
+          request.result.createObjectStore(STORE_NAME)
+        }
+      }
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+  }
+  return kvDbPromise
+}
+
+export async function readCcxtKv(key: string): Promise<unknown> {
+  if (typeof indexedDB === 'undefined') return kvMemory.get(key) ?? null
+  try {
+    const db = await openKvDb()
+    return await new Promise<unknown>((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readonly')
+      const request = tx.objectStore(STORE_NAME).get(key)
+      request.onsuccess = () => resolve(request.result ?? null)
+      request.onerror = () => reject(request.error)
+    })
+  } catch {
+    return null
+  }
+}
+
+export async function writeCcxtKv(key: string, value: unknown): Promise<void> {
+  if (typeof indexedDB === 'undefined') {
+    kvMemory.set(key, value)
+    return
+  }
+  try {
+    const db = await openKvDb()
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite')
+      tx.objectStore(STORE_NAME).put(value, key)
+      tx.oncomplete = () => resolve()
+      tx.onerror = () => reject(tx.error)
+    })
+  } catch {
+    // Private browsing / quota — the feature degrades, never throws.
+  }
+}
+
 // ── Helpers ──────────────────────────────────────────────────────────────
 
 function asNumberRecord(value: unknown): { amount?: number; price?: number } {
