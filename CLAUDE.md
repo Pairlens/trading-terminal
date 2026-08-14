@@ -274,6 +274,25 @@ bun run test                   # All TS tests pass
 
 If any of these fail, fix the issues before committing.
 
+### Docs ship with the change
+
+The user-facing documentation is a shipped surface, not a follow-up. It lives in `apps/marketing/src/content/docs/` (~50 pages; nav, search, and `llms.txt` are all derived from each page's frontmatter) and is served at `/docs` on the marketing site.
+
+**Every change that alters what a user sees or does must update the docs in the same change.** A new surface, a renamed control, a moved default, a behaviour a page now describes wrongly. A page that documents the old way is worse than no page: it is a confident wrong answer.
+
+Before considering any user-visible work complete:
+
+1. Find the pages that describe what you touched. Read them, don't guess:
+   ```bash
+   grep -rln "<feature or control name>" apps/marketing/src/content/docs/
+   ```
+2. Update the prose, and bump `updated:` (plus `readTime:` when a page gains or loses a section).
+3. A new page needs full frontmatter — `title`, `description`, `group`, `parent`, `order`, `eyebrow`, `updated`, `readTime` — because nothing else registers it with the nav or the search index.
+4. Check the README and `docs/API.md` too when the change alters the pitch, the feature list, or a public API.
+5. Voice rules are enforced by review, not by a linter: no em dashes, no `**Word** — description` bullets. Restructure with commas, colons, or separate sentences, and `grep -n "—"` the page before committing.
+
+If a change genuinely has no user-visible surface (an internal refactor, a type-only change, a test), say so in the commit body rather than skipping this silently.
+
 ## Code Style
 
 - **Prettier**: no semicolons, single quotes, trailing commas

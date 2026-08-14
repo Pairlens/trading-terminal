@@ -20,7 +20,7 @@ The rail down the left side is how you move between the big surfaces.
 | **Pairs**         | Every instrument your installed connectors can reach, plus your recent pairs |
 | **Charts**        | Your workspaces and workspace folders                                        |
 | **Accounts**      | Exchange keys, broker keys, and on-chain wallets, plus a portfolio overview  |
-| **Notifications** | Alert rules and their delivery channels                                      |
+| **Notifications** | Your alerts, what they delivered, and the flow builder for the complex ones  |
 | **Workflows**     | The order-automation canvas                                                  |
 | **Indicators**    | The Python workbench for indicators and strategies                           |
 | **Bots**          | Strategies deployed to a market, running on paper or live                    |

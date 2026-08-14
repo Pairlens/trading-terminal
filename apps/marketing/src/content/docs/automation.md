@@ -23,8 +23,9 @@ from the order ticket. See [build a workflow](/docs/build-a-workflow).
 
 ## Alerts
 
-An event, optionally guarded by a condition, ending in a notification. Nothing
-is placed. Use it when you want to know, not to act. See
+Something happens, you get told. Nothing is placed. A price level or a percent
+move takes two fields and no canvas; add conditions and channels when you want
+more. Use it when you want to know, not to act. See
 [alerts and notifications](/docs/alerts-notifications).
 
 ## Bots

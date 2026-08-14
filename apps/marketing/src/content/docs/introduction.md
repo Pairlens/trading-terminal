@@ -49,8 +49,8 @@ locally in an embedded runtime. See
 live. See [bots](/docs/bots).
 
 **Automation.** [Workflows](/docs/build-a-workflow) chain orders and
-conditions; [alerts](/docs/alerts-notifications) watch prices, signals, and
-candle closes.
+conditions; [alerts](/docs/alerts-notifications) watch price levels, percent
+moves, signals, and candle closes.
 
 **AI.** A [co-pilot](/docs/ai-copilot) that reads your charts and can drive
 them, plus deep-dive [research reports](/docs/research-reports). Bring your own
