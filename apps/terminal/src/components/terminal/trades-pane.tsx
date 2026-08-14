@@ -98,6 +98,23 @@ const TAPE_GRID =
 const TAPE_VALUE_CELL = 'hidden @min-[24rem]/pane:block text-right'
 
 /**
+ * The same visibility rule for the value HEADING, which is a flex button.
+ *
+ * It cannot reuse TAPE_VALUE_CELL: that constant restores the cell with
+ * `block`, and handing a second display utility to a button whose own class
+ * list already says `flex` makes the merge pick one and drop the other. The
+ * loser was `flex`, which left the heading laid out as a block — `justify-end`
+ * inert, and the chevron pushed out of the inline flow onto a second line at
+ * the track's left edge, where it read as belonging to the Size column.
+ *
+ * Both constants therefore restate the SAME breakpoint, and a change to one is
+ * a change to the other: the heading has to disappear at exactly the width
+ * where its column leaves the grid, or the header and the rows disagree about
+ * how many cells there are.
+ */
+const TAPE_VALUE_HEADER = 'hidden @min-[24rem]/pane:flex justify-end'
+
+/**
  * Row height in pixels, and the one number the virtualizer is not allowed to
  * guess wrong: `h-5` on the row is the same 20px as `py-[1px]` around an
  * 18px line box, stated twice so that changing one without the other is a
@@ -407,7 +424,7 @@ function TradesPaneInner({
           />
           <TapeHeader
             {...headerProps('value', t('terminal.columns.value'))}
-            className={cn(TAPE_VALUE_CELL, 'justify-end')}
+            className={TAPE_VALUE_HEADER}
           />
           <TapeHeader
             {...headerProps('time', t('positions.time'))}
