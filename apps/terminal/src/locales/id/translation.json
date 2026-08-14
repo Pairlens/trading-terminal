@@ -3397,9 +3397,7 @@
     }
   },
   "notifications": {
-    "flows": "Alur",
     "newFlow": "Alur baru",
-    "noFlows": "Belum ada alur notifikasi",
     "builder": {
       "sidebar": {
         "tabRules": "Aturan",
@@ -3883,6 +3881,19 @@
           }
         }
       }
+    },
+    "bell": {
+      "tabArmed": "Aktif",
+      "tabActivity": "Aktivitas",
+      "manage": "Kelola peringatan",
+      "onPair": "Di {{pair}}",
+      "nothingArmed": "Belum ada yang memantau pasangan ini.",
+      "alsoWatch": "Pantau di sini juga",
+      "noActivityYet": "Belum ada yang berbunyi. Begitu ada, muncul di sini.",
+      "seeAll": "Lihat semua ({{count}})",
+      "unread": "{{count}} baru",
+      "historyTitle": "Riwayat notifikasi",
+      "historyDescription": "Semua yang pernah disampaikan peringatan Anda, terbaru dulu."
     }
   },
   "updater": {
@@ -3902,7 +3913,9 @@
     "justNow": "baru saja",
     "minutesAgo": "{{n}} mnt lalu",
     "hoursAgo": "{{n}} jam lalu",
-    "daysAgo": "{{n}} hari lalu"
+    "daysAgo": "{{n}} hari lalu",
+    "today": "Hari ini",
+    "yesterday": "Kemarin"
   },
   "markets": {
     "title": "Market",

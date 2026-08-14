@@ -3429,9 +3429,7 @@
     }
   },
   "notifications": {
-    "flows": "Потоки",
     "newFlow": "Новий потік",
-    "noFlows": "Поки що немає потоків сповіщень",
     "builder": {
       "sidebar": {
         "tabRules": "Правила",
@@ -3915,6 +3913,19 @@
           }
         }
       }
+    },
+    "bell": {
+      "tabArmed": "Активні",
+      "tabActivity": "Активність",
+      "manage": "Керування сповіщеннями",
+      "onPair": "На {{pair}}",
+      "nothingArmed": "За цією парою поки ніхто не стежить.",
+      "alsoWatch": "Стежити і тут",
+      "noActivityYet": "Поки нічого не спрацювало. Коли спрацює, з’явиться тут.",
+      "seeAll": "Показати всі ({{count}})",
+      "unread": "{{count}} нових",
+      "historyTitle": "Історія сповіщень",
+      "historyDescription": "Усе, про що повідомляли сповіщення, починаючи з останнього."
     }
   },
   "updater": {
@@ -3934,7 +3945,9 @@
     "justNow": "щойно",
     "minutesAgo": "{{n}} хв тому",
     "hoursAgo": "{{n}} год тому",
-    "daysAgo": "{{n}} дн тому"
+    "daysAgo": "{{n}} дн тому",
+    "today": "Сьогодні",
+    "yesterday": "Учора"
   },
   "markets": {
     "title": "Ринки",

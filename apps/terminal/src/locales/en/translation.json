@@ -3397,9 +3397,7 @@
     }
   },
   "notifications": {
-    "flows": "Flows",
     "newFlow": "New flow",
-    "noFlows": "No notification flows yet",
     "builder": {
       "sidebar": {
         "tabRules": "Rules",
@@ -3883,6 +3881,19 @@
           }
         }
       }
+    },
+    "bell": {
+      "tabArmed": "Armed",
+      "tabActivity": "Activity",
+      "manage": "Manage alerts",
+      "onPair": "On {{pair}}",
+      "nothingArmed": "Nothing is watching this pair yet.",
+      "alsoWatch": "Also watch here",
+      "noActivityYet": "Nothing has fired yet. When an alert does, it lands here.",
+      "seeAll": "See all {{count}}",
+      "unread": "{{count}} new",
+      "historyTitle": "Notification history",
+      "historyDescription": "Everything your alerts have told you, newest first."
     }
   },
   "updater": {
@@ -3902,7 +3913,9 @@
     "justNow": "just now",
     "minutesAgo": "{{n}}m ago",
     "hoursAgo": "{{n}}h ago",
-    "daysAgo": "{{n}}d ago"
+    "daysAgo": "{{n}}d ago",
+    "today": "Today",
+    "yesterday": "Yesterday"
   },
   "markets": {
     "title": "Markets",

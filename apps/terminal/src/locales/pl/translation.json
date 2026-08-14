@@ -3429,9 +3429,7 @@
     }
   },
   "notifications": {
-    "flows": "Przepływy",
     "newFlow": "Nowy przepływ",
-    "noFlows": "Brak jeszcze przepływów powiadomień",
     "builder": {
       "sidebar": {
         "tabRules": "Reguły",
@@ -3915,6 +3913,19 @@
           }
         }
       }
+    },
+    "bell": {
+      "tabArmed": "Aktywne",
+      "tabActivity": "Aktywność",
+      "manage": "Zarządzaj alertami",
+      "onPair": "Na {{pair}}",
+      "nothingArmed": "Nic jeszcze nie obserwuje tej pary.",
+      "alsoWatch": "Obserwuj też tutaj",
+      "noActivityYet": "Nic jeszcze się nie odezwało. Gdy alert zadziała, pojawi się tutaj.",
+      "seeAll": "Zobacz wszystkie ({{count}})",
+      "unread": "{{count}} nowych",
+      "historyTitle": "Historia powiadomień",
+      "historyDescription": "Wszystko, co powiedziały Ci alerty, od najnowszych."
     }
   },
   "updater": {
@@ -3934,7 +3945,9 @@
     "justNow": "przed chwilą",
     "minutesAgo": "{{n}} min temu",
     "hoursAgo": "{{n}} godz. temu",
-    "daysAgo": "{{n}} dni temu"
+    "daysAgo": "{{n}} dni temu",
+    "today": "Dzisiaj",
+    "yesterday": "Wczoraj"
   },
   "markets": {
     "title": "Rynki",

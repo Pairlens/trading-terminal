@@ -9,6 +9,26 @@ import { emitWrite, onHydrate } from '@/lib/sync/sync-channel'
 
 const LOG_KEY = 'pairlens:notification-log'
 
+/**
+ * When the user last looked at the log.
+ *
+ * Window-local and deliberately NOT synced: "seen" is a fact about this
+ * screen, not about the account. A second window mirroring the leader's log
+ * has its own bell, and marking one read from the other would hide the badge
+ * on a monitor nobody is sitting at.
+ */
+const SEEN_KEY = 'pairlens:notification-log-seen'
+
+function loadSeenAt(): number {
+  try {
+    const raw = localStorage.getItem(SEEN_KEY)
+    const parsed = raw ? Number(raw) : 0
+    return Number.isFinite(parsed) ? parsed : 0
+  } catch {
+    return 0
+  }
+}
+
 /** Newest-first cap — the log is a debugging/audit aid, not an archive. */
 const MAX_ENTRIES = 200
 
@@ -42,20 +62,24 @@ function saveLog(entries: Array<NotificationLogEntry>) {
 type NotificationLogStore = {
   entries: Array<NotificationLogEntry>
   loaded: boolean
+  /** Timestamp of the newest entry the user has actually looked at. */
+  seenAt: number
 
   load: () => void
   append: (entry: NotificationLogEntry) => void
   clear: () => void
+  markSeen: () => void
 }
 
 export const useNotificationLogStore = create<NotificationLogStore>(
   (set, get) => ({
     entries: [],
     loaded: false,
+    seenAt: 0,
 
     load() {
       if (get().loaded) return
-      set({ entries: loadLog(), loaded: true })
+      set({ entries: loadLog(), seenAt: loadSeenAt(), loaded: true })
     },
 
     append(entry: NotificationLogEntry) {
@@ -68,8 +92,29 @@ export const useNotificationLogStore = create<NotificationLogStore>(
       set({ entries: [] })
       saveLog([])
     },
+
+    /**
+     * Stamp the newest entry as seen, not `Date.now()` — a firing that lands
+     * in the same millisecond the panel opens would otherwise be marked read
+     * before it was ever painted.
+     */
+    markSeen() {
+      const newest = get().entries[0]?.timestamp ?? 0
+      if (newest <= get().seenAt) return
+      set({ seenAt: newest })
+      try {
+        localStorage.setItem(SEEN_KEY, String(newest))
+      } catch {
+        // Quota or unavailable storage — the badge degrades to in-memory.
+      }
+    },
   }),
 )
+
+/** How many entries arrived since the user last looked. */
+export function selectUnreadCount(state: NotificationLogStore): number {
+  return state.entries.filter((entry) => entry.timestamp > state.seenAt).length
+}
 
 // Cross-window hydration: the leader window evaluates and appends; sibling
 // windows mirror its log.

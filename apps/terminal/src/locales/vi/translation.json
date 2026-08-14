@@ -3397,9 +3397,7 @@
     }
   },
   "notifications": {
-    "flows": "Luồng",
     "newFlow": "Luồng mới",
-    "noFlows": "Chưa có luồng thông báo nào",
     "builder": {
       "sidebar": {
         "tabRules": "Quy tắc",
@@ -3883,6 +3881,19 @@
           }
         }
       }
+    },
+    "bell": {
+      "tabArmed": "Đang bật",
+      "tabActivity": "Hoạt động",
+      "manage": "Quản lý cảnh báo",
+      "onPair": "Trên {{pair}}",
+      "nothingArmed": "Chưa có gì theo dõi cặp này.",
+      "alsoWatch": "Theo dõi cả ở đây",
+      "noActivityYet": "Chưa có gì kích hoạt. Khi có, nó sẽ hiện ở đây.",
+      "seeAll": "Xem tất cả ({{count}})",
+      "unread": "{{count}} mới",
+      "historyTitle": "Lịch sử thông báo",
+      "historyDescription": "Mọi điều cảnh báo đã báo cho bạn, mới nhất trước."
     }
   },
   "updater": {
@@ -3902,7 +3913,9 @@
     "justNow": "vừa xong",
     "minutesAgo": "{{n}} phút trước",
     "hoursAgo": "{{n}} giờ trước",
-    "daysAgo": "{{n}} ngày trước"
+    "daysAgo": "{{n}} ngày trước",
+    "today": "Hôm nay",
+    "yesterday": "Hôm qua"
   },
   "markets": {
     "title": "Thị trường",

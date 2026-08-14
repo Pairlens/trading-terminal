@@ -3397,9 +3397,7 @@
     }
   },
   "notifications": {
-    "flows": "フロー",
     "newFlow": "新しいフロー",
-    "noFlows": "通知フローはまだありません",
     "builder": {
       "sidebar": {
         "tabRules": "ルール",
@@ -3883,6 +3881,19 @@
           }
         }
       }
+    },
+    "bell": {
+      "tabArmed": "稼働中",
+      "tabActivity": "履歴",
+      "manage": "アラートを管理",
+      "onPair": "{{pair}} で",
+      "nothingArmed": "このペアはまだ何にも見張られていません。",
+      "alsoWatch": "ここでも見張る",
+      "noActivityYet": "まだ何も発火していません。発火したらここに出ます。",
+      "seeAll": "すべて表示（{{count}}）",
+      "unread": "新着 {{count}} 件",
+      "historyTitle": "通知の履歴",
+      "historyDescription": "アラートが伝えたことすべて。新しい順です。"
     }
   },
   "updater": {
@@ -3902,7 +3913,9 @@
     "justNow": "たった今",
     "minutesAgo": "{{n}}分前",
     "hoursAgo": "{{n}}時間前",
-    "daysAgo": "{{n}}日前"
+    "daysAgo": "{{n}}日前",
+    "today": "今日",
+    "yesterday": "昨日"
   },
   "markets": {
     "title": "マーケット",

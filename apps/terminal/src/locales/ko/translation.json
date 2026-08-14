@@ -3397,9 +3397,7 @@
     }
   },
   "notifications": {
-    "flows": "플로우",
     "newFlow": "새 플로우",
-    "noFlows": "아직 알림 플로우가 없습니다",
     "builder": {
       "sidebar": {
         "tabRules": "규칙",
@@ -3883,6 +3881,19 @@
           }
         }
       }
+    },
+    "bell": {
+      "tabArmed": "작동 중",
+      "tabActivity": "기록",
+      "manage": "알림 관리",
+      "onPair": "{{pair}}에서",
+      "nothingArmed": "아직 이 페어를 지켜보는 것이 없습니다.",
+      "alsoWatch": "여기도 지켜보기",
+      "noActivityYet": "아직 아무것도 울리지 않았습니다. 울리면 여기에 남습니다.",
+      "seeAll": "전체 보기 ({{count}})",
+      "unread": "새 알림 {{count}}건",
+      "historyTitle": "알림 기록",
+      "historyDescription": "알림이 알려준 모든 것, 최신순입니다."
     }
   },
   "updater": {
@@ -3902,7 +3913,9 @@
     "justNow": "방금 전",
     "minutesAgo": "{{n}}분 전",
     "hoursAgo": "{{n}}시간 전",
-    "daysAgo": "{{n}}일 전"
+    "daysAgo": "{{n}}일 전",
+    "today": "오늘",
+    "yesterday": "어제"
   },
   "markets": {
     "title": "마켓",

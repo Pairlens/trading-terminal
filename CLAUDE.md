@@ -351,7 +351,7 @@ import { CandleBuffer } from '@pairlens/market-engine/candle-buffer'
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **cctx-venues-connectors-review-a3934a**. Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **markets-chart-cutoff-6d4b04**. Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
@@ -367,7 +367,7 @@ This project is indexed by GitNexus as **cctx-venues-connectors-review-a3934a**.
 
 1. `gitnexus_query({query: "<error or symptom>"})` — find execution flows related to the issue
 2. `gitnexus_context({name: "<suspect function>"})` — see all callers, callees, and process participation
-3. `READ gitnexus://repo/cctx-venues-connectors-review-a3934a/process/{processName}` — trace the full execution flow step by step
+3. `READ gitnexus://repo/markets-chart-cutoff-6d4b04/process/{processName}` — trace the full execution flow step by step
 4. For regressions: `gitnexus_detect_changes({scope: "compare", base_ref: "main"})` — see what your branch changed
 
 ## When Refactoring
@@ -406,10 +406,10 @@ This project is indexed by GitNexus as **cctx-venues-connectors-review-a3934a**.
 
 | Resource | Use for |
 |----------|---------|
-| `gitnexus://repo/cctx-venues-connectors-review-a3934a/context` | Codebase overview, check index freshness |
-| `gitnexus://repo/cctx-venues-connectors-review-a3934a/clusters` | All functional areas |
-| `gitnexus://repo/cctx-venues-connectors-review-a3934a/processes` | All execution flows |
-| `gitnexus://repo/cctx-venues-connectors-review-a3934a/process/{name}` | Step-by-step execution trace |
+| `gitnexus://repo/markets-chart-cutoff-6d4b04/context` | Codebase overview, check index freshness |
+| `gitnexus://repo/markets-chart-cutoff-6d4b04/clusters` | All functional areas |
+| `gitnexus://repo/markets-chart-cutoff-6d4b04/processes` | All execution flows |
+| `gitnexus://repo/markets-chart-cutoff-6d4b04/process/{name}` | Step-by-step execution trace |
 
 ## Self-Check Before Finishing
 
