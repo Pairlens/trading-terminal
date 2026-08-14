@@ -297,11 +297,14 @@ export class CcxtStreamHub {
       if (current.channel === 'candles') this.startBackfill(current)
       if (
         current.channel === 'orderbook' &&
-        this.opts.venue.seedOrderBook === true
+        (this.opts.venue.seedOrderBook ?? false) !== false
       ) {
         void this.seedBookFirstPaint(current)
       }
-      if (current.channel === 'trades' && this.opts.venue.seedTrades === true) {
+      if (
+        current.channel === 'trades' &&
+        (this.opts.venue.seedTrades ?? false) !== false
+      ) {
         void this.seedTradesFirstPaint(current)
       }
     } else {
@@ -682,9 +685,14 @@ export class CcxtStreamHub {
       if (this.destroyed || this.subs.get(sub.key) !== sub) return
       if (typeof lease.exchange.fetchOrderBook !== 'function') return
       this.opts.primeMarkets?.(lease.exchange, sub.pair)
+      // A numeric flag overrides the depth: some venues' REST book accepts
+      // different limits than their WS subscription (see the flag's doc).
+      const seedFlag = this.opts.venue.seedOrderBook
       const book = await lease.exchange.fetchOrderBook(
         sub.symbol,
-        this.opts.venue.orderbookDepth,
+        typeof seedFlag === 'number'
+          ? seedFlag
+          : this.opts.venue.orderbookDepth,
       )
       if (this.destroyed || this.subs.get(sub.key) !== sub) return
       if (sub.cached !== null) return
@@ -713,10 +721,11 @@ export class CcxtStreamHub {
       if (this.destroyed || this.subs.get(sub.key) !== sub) return
       if (typeof lease.exchange.fetchTrades !== 'function') return
       this.opts.primeMarkets?.(lease.exchange, sub.pair)
+      const seedFlag = this.opts.venue.seedTrades
       const raw = await lease.exchange.fetchTrades(
         sub.symbol,
         undefined,
-        TRADES_SEED_LIMIT,
+        typeof seedFlag === 'number' ? seedFlag : TRADES_SEED_LIMIT,
       )
       if (this.destroyed || this.subs.get(sub.key) !== sub) return
       if (sub.recentTradeIds && sub.recentTradeIds.size > 0) return

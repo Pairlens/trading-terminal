@@ -145,6 +145,9 @@ export const htxCcxtVenue: CcxtVenueConfig = {
   },
   // 5 | 20 | 150 | 400 — anything else throws ExchangeError.
   orderbookDepth: 150,
+  // Empty-opening trade stream; candles come from watchOHLCV (the 2h fold
+  // derives from 1h CANDLES, not the tape) — safe to fill.
+  seedTrades: true,
   // The historical spot endpoint (the one that honours from/to) caps at 1000.
   maxHistoryLimit: 1000,
   historyPageParams: (endTs) => ({ until: pageEndMs(endTs) }),
