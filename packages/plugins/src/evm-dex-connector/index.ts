@@ -108,15 +108,28 @@ export const polygonDexConnectorManifest = createEvmDexManifest(
   EVM_CHAINS['polygon'],
 )
 
+/**
+ * Token-arm identity: every discovery row carries the exact contract
+ * address it displayed, so selection can pin `(chain, address)` and never
+ * re-resolve by symbol (see-what-you-trade). `chain.market` doubles as the
+ * token-directory network slug ('ethereum' | 'base' | ...).
+ */
 function toInstrument(token: EvmToken, chain: EvmChainConfig): Instrument {
   return {
     id: `${token.symbol}-${chain.quote.symbol}`,
+    kind: 'token',
+    chain: chain.market,
+    address: token.address,
+    decimals: token.decimals,
     market: chain.market,
     symbol: `${token.symbol}/${chain.quote.symbol}`,
     name: `${token.name} / ${chain.quote.symbol}`,
     base: token.symbol,
     quote: chain.quote.symbol,
     assetClass: 'dex',
+    categories: [],
+    rank: 100_000,
+    featured: false,
   }
 }
 

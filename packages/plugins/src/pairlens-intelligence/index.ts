@@ -157,6 +157,20 @@ export const pairlensIntelligenceManifest: PluginManifest = {
   },
 }
 
+/**
+ * Deployed App Servers may predate the Instrument union and serve rows
+ * without a `kind` discriminant. Stamp one from the asset class at the wire
+ * boundary so everything downstream can rely on the union.
+ */
+function normalizeServerInstruments(raw: Array<Instrument>): Array<Instrument> {
+  return raw.map((inst) => {
+    // The union types `kind` as always-present; the wire row may not have it.
+    if ((inst as { kind?: string }).kind) return inst
+    const kind = inst.assetClass === 'stocks' ? 'equity' : 'cex-pair'
+    return { ...inst, kind } as Instrument
+  })
+}
+
 export function createPairlensIntelligencePlugin(
   manifest: PluginManifest,
 ): PluginInstance {
@@ -314,7 +328,9 @@ export function createPairlensIntelligencePlugin(
             `pairlens-intelligence: instruments fetch failed (${response.status})`,
           )
         }
-        const rawItems = (await response.json()) as Array<Instrument>
+        const rawItems = normalizeServerInstruments(
+          (await response.json()) as Array<Instrument>,
+        )
 
         const seen = new Map<string, Instrument>()
         for (const inst of rawItems) {
@@ -368,7 +384,9 @@ export function createPairlensIntelligencePlugin(
             `pairlens-intelligence: instrument search failed (${response.status})`,
           )
         }
-        const searchRaw = (await response.json()) as Array<Instrument>
+        const searchRaw = normalizeServerInstruments(
+          (await response.json()) as Array<Instrument>,
+        )
         const searchSeen = new Map<string, Instrument>()
         for (const inst of searchRaw) {
           if (!searchSeen.has(inst.symbol)) {
