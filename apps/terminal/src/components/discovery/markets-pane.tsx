@@ -1,6 +1,14 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import {
@@ -174,19 +182,55 @@ export function MarketsPane() {
 
   // Table virtualization
   const scrollContainerRef = useRef<HTMLElement>(null)
+  const tableBodyRef = useRef<HTMLTableSectionElement>(null)
+  // The rows don't start at the top of the scroll container — the recent
+  // strip, the featured tiles and the table header scroll above them. The
+  // virtualizer must know that offset (scrollMargin), otherwise every row is
+  // placed too high by exactly that height and scrolling opens a blank band
+  // between the header and the first rendered row.
+  const [rowsScrollMargin, setRowsScrollMargin] = useState(0)
+  useLayoutEffect(() => {
+    const scrollEl = scrollContainerRef.current
+    if (!scrollEl) return
+
+    const measure = () => {
+      const bodyEl = tableBodyRef.current
+      if (!bodyEl) return
+      const offset =
+        bodyEl.getBoundingClientRect().top -
+        scrollEl.getBoundingClientRect().top +
+        scrollEl.scrollTop
+      setRowsScrollMargin((prev) => (prev === offset ? prev : offset))
+    }
+
+    measure()
+    // Width changes rewrap the featured tiles and change their height;
+    // content-driven height changes (recent strip appearing, featured pairs
+    // loading) re-run this effect via its deps below.
+    const observer = new ResizeObserver(measure)
+    observer.observe(scrollEl)
+    return () => observer.disconnect()
+  }, [showLoader, recentPairEntries.length, showFeatured, featuredPairs.length])
+
   const rowVirtualizer = useVirtualizer({
     count: sortedPairs.length,
     getScrollElement: () => scrollContainerRef.current,
     estimateSize: () => 52,
     overscan: 10,
+    scrollMargin: rowsScrollMargin,
   })
 
   const virtualItems = rowVirtualizer.getVirtualItems()
-  const virtualPaddingTop = virtualItems[0]?.start ?? 0
+  // Item starts include scrollMargin; getTotalSize() excludes it. Normalize
+  // both spacers back into table-local coordinates.
+  const virtualPaddingTop =
+    virtualItems.length > 0
+      ? (virtualItems[0]?.start ?? 0) - rowsScrollMargin
+      : 0
   const virtualPaddingBottom =
     virtualItems.length > 0
       ? rowVirtualizer.getTotalSize() -
-        (virtualItems[virtualItems.length - 1]?.end ?? 0)
+        ((virtualItems[virtualItems.length - 1]?.end ?? 0) - rowsScrollMargin)
       : 0
 
   return (
@@ -424,7 +468,7 @@ export function MarketsPane() {
                       <TableHead className="w-10" />
                     </TableRow>
                   </TableHeader>
-                  <TableBody>
+                  <TableBody ref={tableBodyRef}>
                     {virtualPaddingTop > 0 && (
                       <tr>
                         <td style={{ height: virtualPaddingTop }} />
