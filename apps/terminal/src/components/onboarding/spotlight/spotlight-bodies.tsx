@@ -32,10 +32,6 @@ export type RenderOption = {
   flag?: string
   /** Serif currency symbol shown before the label (currency step). */
   symbol?: string
-  /** Mono kind tag on the right (venues step). */
-  tag?: string
-  /** Spectrum dot color (risk step). */
-  dotColor?: string
   selected: boolean
   onSelect: () => void
 }
@@ -322,11 +318,6 @@ export function OptionRows({ options }: { options: Array<RenderOption> }) {
               <span className="text-xs text-muted-foreground">{opt.sub}</span>
             )}
           </span>
-          {opt.tag && (
-            <span className="flex-none font-mono text-[10.5px] tracking-[0.06em] text-primary">
-              {opt.tag}
-            </span>
-          )}
           <span className="size-[22px] flex-none rounded-full border-[1.5px] border-border" />
           {opt.selected && (
             <>
@@ -474,99 +465,6 @@ export function CountryPicker({
           </button>
         )}
       </div>
-    </div>
-  )
-}
-
-export function RiskSpectrum({ options }: { options: Array<RenderOption> }) {
-  const { t } = useTranslation()
-  return (
-    <div className="mx-auto mt-1 flex w-full max-w-[600px] flex-col gap-[15px]">
-      <div className="flex items-center gap-[11px]">
-        <span className="text-[11px] text-muted-foreground">
-          {t('onboarding.risk.calmer')}
-        </span>
-        <span className="h-1.5 flex-1 rounded-[3px] bg-[linear-gradient(90deg,var(--up),var(--primary),var(--down))] opacity-75" />
-        <span className="text-[11px] text-muted-foreground">
-          {t('onboarding.risk.hotter')}
-        </span>
-      </div>
-      <div className="flex gap-2.5 max-md:flex-col">
-        {options.map((opt) => (
-          <button
-            key={opt.value}
-            type="button"
-            onClick={opt.onSelect}
-            className={cn(
-              'relative flex flex-1 cursor-pointer flex-col items-center gap-2 rounded-[14px] border border-border bg-card px-2.5 py-[18px] text-foreground transition-[transform,border-color] duration-200 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-[3px]',
-              HOVER_BORDER,
-            )}
-          >
-            <span
-              className="size-[26px] rounded-full"
-              style={{
-                background: opt.dotColor,
-                boxShadow: `0 0 18px -2px ${opt.dotColor}`,
-              }}
-            />
-            <span className="text-sm font-semibold tracking-[-0.01em]">
-              {opt.label}
-            </span>
-            <span className="text-[11.5px] text-muted-foreground">
-              {opt.sub}
-            </span>
-            {opt.selected && <SelectedRing radius={14} />}
-          </button>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-const ASSET_ICONS: Record<string, ComponentType<{ size?: number }>> = {
-  cex: LayersIcon,
-  dex: WaypointsIcon,
-  equities: ChartLineIcon,
-}
-
-export function AssetCards({ options }: { options: Array<RenderOption> }) {
-  return (
-    <div className="mx-auto grid w-full max-w-[700px] grid-cols-3 gap-[13px] max-md:grid-cols-1">
-      {options.map((opt) => {
-        const Icon = ASSET_ICONS[opt.value] ?? LayersIcon
-        return (
-          <button
-            key={opt.value}
-            type="button"
-            onClick={opt.onSelect}
-            className={cn(
-              // Below `md` the three cards are stacked (`grid-cols-1` above), so
-              // the 166px floor that squares them off in a row instead pushes the
-              // third card under the fold. Content height is enough once they are
-              // rows.
-              'relative flex min-h-[166px] cursor-pointer flex-col items-start gap-[9px] rounded-2xl border border-border bg-card p-[19px] text-left text-foreground transition-[transform,border-color,box-shadow] duration-200 ease-[cubic-bezier(.22,1,.36,1)] max-md:min-h-0 max-md:p-4',
-              'hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(0,0,0,.7)]',
-              HOVER_BORDER,
-            )}
-          >
-            <span className="flex size-11 items-center justify-center rounded-xl bg-[color-mix(in_oklch,var(--primary)_13%,transparent)] text-primary">
-              <Icon size={24} />
-            </span>
-            <span className="font-serif text-[19px] font-semibold">
-              {opt.label}
-            </span>
-            <span className="text-[12.5px] leading-[1.45] text-muted-foreground">
-              {opt.sub}
-            </span>
-            {opt.selected && (
-              <>
-                <SelectedRing radius={16} />
-                <CheckBadge className="right-3 top-3 size-[19px] text-[11px]" />
-              </>
-            )}
-          </button>
-        )
-      })}
     </div>
   )
 }

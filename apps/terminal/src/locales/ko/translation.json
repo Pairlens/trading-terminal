@@ -66,26 +66,6 @@
       "sub": "잔고, 손익, 시세가 이 통화로 표시됩니다.",
       "label": "통화"
     },
-    "asset": {
-      "status": "터미널 구성 중",
-      "title": "무엇을 거래하시나요?",
-      "sub": "하나 이상 선택하세요. 터미널, 라우팅, 코파일럿이 이에 맞춰 조정됩니다.",
-      "options": {
-        "cex": {
-          "label": "CEX",
-          "sub": "중앙화 현물 — OKX, Binance, Coinbase"
-        },
-        "dex": {
-          "label": "DEX",
-          "sub": "온체인 스왑 — Jupiter, KyberSwap"
-        },
-        "equities": {
-          "label": "주식",
-          "sub": "미국 주식 및 ETF — Alpaca 연동"
-        }
-      },
-      "label": "자산"
-    },
     "routing": {
       "eyebrow": "다이렉트 라우팅",
       "title": "거래소로 바로 연결됩니다.",
@@ -101,58 +81,10 @@
       },
       "label": "라우팅"
     },
-    "venues": {
-      "status": "맞춤 거래소 매칭 중",
-      "title": "거래소를 연결하세요",
-      "sub": "지역과 자산군에 맞게 선별했습니다 — 사용하는 곳을 선택하세요.",
-      "label": "거래소"
-    },
-    "experience": {
-      "status": "기본값 조정 중",
-      "title": "본인을 어떻게 소개하시겠어요?",
-      "sub": "이에 맞춰 적절한 기본값과 코파일럿의 설명 수준을 설정합니다.",
-      "options": {
-        "beginner": {
-          "label": "입문자",
-          "sub": "현물 거래가 처음입니다"
-        },
-        "intermediate": {
-          "label": "숙련자",
-          "sub": "정기적으로 거래합니다"
-        },
-        "pro": {
-          "label": "전문가",
-          "sub": "완전한 제어, 최소한의 안내"
-        }
-      },
-      "label": "숙련도"
-    },
-    "risk": {
-      "status": "리스크 가드레일 조정 중",
-      "title": "리스크 성향을 설정하세요",
-      "sub": "포지션 규모와 코파일럿의 개입 강도를 결정합니다.",
-      "calmer": "보수적",
-      "hotter": "공격적",
-      "options": {
-        "conservative": {
-          "label": "보수적",
-          "sub": "거래당 약 1% 리스크"
-        },
-        "balanced": {
-          "label": "균형",
-          "sub": "거래당 약 2% 리스크"
-        },
-        "aggressive": {
-          "label": "공격적",
-          "sub": "거래당 약 5% 리스크"
-        }
-      },
-      "label": "리스크"
-    },
     "copilot": {
       "eyebrow": "당신의 코파일럿",
       "title": "당신의 규칙을 따르는 코파일럿.",
-      "sub": "시장을 대신 읽어주지만, 방금 설정한 선을 절대 넘지 않습니다.",
+      "sub": "시장을 대신 읽어주지만, 당신이 설정한 선을 절대 넘지 않습니다.",
       "points": {
         "0": "모든 마켓의 시그널을 감시합니다",
         "1": "모든 셋업을 승인·차단·플래그 처리합니다",
@@ -251,15 +183,11 @@
     "summary": {
       "eyebrow": "준비 완료",
       "title": "Pairlens 준비가 끝났습니다",
-      "sub": "당신의 거래 방식에 맞춰 조정되었습니다. 세부 설정은 모두 완료되었습니다.",
+      "sub": "선택하신 대로 설정되었습니다. 세부 준비는 모두 완료되었습니다.",
       "labels": {
         "language": "언어",
         "country": "국가",
         "currency": "기준 통화",
-        "assetClasses": "자산군",
-        "venues": "거래소",
-        "experience": "숙련도",
-        "risk": "리스크 프로필",
         "theme": "테마",
         "palette": "팔레트",
         "analytics": "분석"

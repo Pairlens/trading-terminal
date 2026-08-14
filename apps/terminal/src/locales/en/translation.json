@@ -66,26 +66,6 @@
       "sub": "Balances, P&L and quotes are shown in this.",
       "label": "Currency"
     },
-    "asset": {
-      "status": "Shaping your terminal",
-      "title": "What do you trade?",
-      "sub": "Pick one or more. Your terminal, routing and co-pilot adapt to match.",
-      "options": {
-        "cex": {
-          "label": "CEX",
-          "sub": "Centralized spot — OKX, Binance, Coinbase"
-        },
-        "dex": {
-          "label": "DEX",
-          "sub": "On-chain swaps — Jupiter, KyberSwap"
-        },
-        "equities": {
-          "label": "Equities",
-          "sub": "US stocks & ETFs — via Alpaca"
-        }
-      },
-      "label": "Assets"
-    },
     "routing": {
       "eyebrow": "Direct routing",
       "title": "Straight to the exchanges.",
@@ -101,58 +81,10 @@
       },
       "label": "Routing"
     },
-    "venues": {
-      "status": "Matching venues to you",
-      "title": "Connect your venues",
-      "sub": "Curated for your region and asset classes — pick the ones you use.",
-      "label": "Venues"
-    },
-    "experience": {
-      "status": "Calibrating defaults",
-      "title": "How would you describe yourself?",
-      "sub": "We’ll set sensible defaults and how much the co-pilot explains.",
-      "options": {
-        "beginner": {
-          "label": "Getting started",
-          "sub": "New to spot trading"
-        },
-        "intermediate": {
-          "label": "Confident",
-          "sub": "I trade regularly"
-        },
-        "pro": {
-          "label": "Professional",
-          "sub": "Full control, minimal hand-holding"
-        }
-      },
-      "label": "Experience"
-    },
-    "risk": {
-      "status": "Tuning your guardrails",
-      "title": "Set your risk appetite",
-      "sub": "This shapes position sizing and how firmly the co-pilot intervenes.",
-      "calmer": "Calmer",
-      "hotter": "Hotter",
-      "options": {
-        "conservative": {
-          "label": "Conservative",
-          "sub": "≈1% risk / trade"
-        },
-        "balanced": {
-          "label": "Balanced",
-          "sub": "≈2% risk / trade"
-        },
-        "aggressive": {
-          "label": "Aggressive",
-          "sub": "≈5% risk / trade"
-        }
-      },
-      "label": "Risk"
-    },
     "copilot": {
       "eyebrow": "Your co-pilot",
       "title": "A co-pilot that plays by your rules.",
-      "sub": "It reads the market so you don’t have to — and never crosses the lines you just drew.",
+      "sub": "It reads the market so you don’t have to — and never crosses the lines you set.",
       "points": {
         "0": "Watches signals across your markets",
         "1": "Approves, blocks or flags every setup",
@@ -251,15 +183,11 @@
     "summary": {
       "eyebrow": "Ready",
       "title": "Your Pairlens is ready",
-      "sub": "Tuned to how you trade. Everything below the surface is set.",
+      "sub": "Set up your way. Everything below the surface is ready.",
       "labels": {
         "language": "Language",
         "country": "Country",
         "currency": "Base currency",
-        "assetClasses": "Asset classes",
-        "venues": "Venues",
-        "experience": "Experience",
-        "risk": "Risk profile",
         "theme": "Theme",
         "palette": "Palette",
         "analytics": "Analytics"

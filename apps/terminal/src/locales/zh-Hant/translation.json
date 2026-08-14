@@ -66,26 +66,6 @@
       "sub": "餘額、損益與報價都會以此顯示。",
       "label": "幣別"
     },
-    "asset": {
-      "status": "打造你的終端機",
-      "title": "你交易什麼？",
-      "sub": "可複選。你的終端機、路由與副駕駛都會依此調整。",
-      "options": {
-        "cex": {
-          "label": "中心化交易所",
-          "sub": "集中式現貨——OKX、Binance、Coinbase"
-        },
-        "dex": {
-          "label": "去中心化交易所",
-          "sub": "鏈上兌換——Jupiter、KyberSwap"
-        },
-        "equities": {
-          "label": "股票",
-          "sub": "美股與 ETF——透過 Alpaca"
-        }
-      },
-      "label": "資產類別"
-    },
     "routing": {
       "eyebrow": "直接路由",
       "title": "直達交易所。",
@@ -101,58 +81,10 @@
       },
       "label": "路由"
     },
-    "venues": {
-      "status": "為你配對交易所",
-      "title": "連接你的交易所",
-      "sub": "依你的所在地區與資產類別精選——選擇你會用到的。",
-      "label": "交易所"
-    },
-    "experience": {
-      "status": "校準預設值",
-      "title": "你會怎麼形容自己？",
-      "sub": "我們會依此設定合理的預設值，以及副駕駛解說的詳細程度。",
-      "options": {
-        "beginner": {
-          "label": "剛入門",
-          "sub": "初次接觸現貨交易"
-        },
-        "intermediate": {
-          "label": "有信心",
-          "sub": "我經常交易"
-        },
-        "pro": {
-          "label": "專業",
-          "sub": "完全掌控，最少提示"
-        }
-      },
-      "label": "經驗程度"
-    },
-    "risk": {
-      "status": "調整你的風險護欄",
-      "title": "設定你的風險偏好",
-      "sub": "這會影響部位大小，以及副駕駛介入的力道。",
-      "calmer": "更保守",
-      "hotter": "更積極",
-      "options": {
-        "conservative": {
-          "label": "保守",
-          "sub": "每筆交易約 1% 風險"
-        },
-        "balanced": {
-          "label": "均衡",
-          "sub": "每筆交易約 2% 風險"
-        },
-        "aggressive": {
-          "label": "積極",
-          "sub": "每筆交易約 5% 風險"
-        }
-      },
-      "label": "風險"
-    },
     "copilot": {
       "eyebrow": "你的副駕駛",
       "title": "一個遵守你規則的副駕駛。",
-      "sub": "它替你解讀市場——而且絕不會逾越你剛設下的界線。",
+      "sub": "它替你解讀市場——而且絕不會逾越你設下的界線。",
       "points": {
         "0": "監看你所有市場的訊號",
         "1": "為每個交易機會核准、封鎖或標記",
@@ -251,15 +183,11 @@
     "summary": {
       "eyebrow": "已就緒",
       "title": "你的 Pairlens 已準備就緒",
-      "sub": "已依你的交易方式調校完成，幕後的一切都已設定妥當。",
+      "sub": "已依你的選擇完成設定，幕後的一切都已就緒。",
       "labels": {
         "language": "語言",
         "country": "國家",
         "currency": "基準幣別",
-        "assetClasses": "資產類別",
-        "venues": "交易所",
-        "experience": "經驗程度",
-        "risk": "風險偏好",
         "theme": "佈景主題",
         "palette": "配色",
         "analytics": "使用分析"

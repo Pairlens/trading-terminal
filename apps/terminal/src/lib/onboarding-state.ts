@@ -15,19 +15,11 @@ const LEGAL_ACK_KEY = 'pairlens:legal-acknowledged'
 /** Bump when the acknowledgment copy changes materially. */
 export const LEGAL_VERSION = 1
 
-export type OnboardingAssetClass = 'cex' | 'dex' | 'equities'
-export type OnboardingExperience = 'beginner' | 'intermediate' | 'pro'
-export type OnboardingRisk = 'conservative' | 'balanced' | 'aggressive'
-
 export type OnboardingSelections = {
   language?: string
   /** ISO 3166-1 alpha-2; '' means explicitly global. See lib/countries.ts. */
   country?: string
   currency?: string
-  assetClasses: Array<OnboardingAssetClass>
-  venues: Array<string>
-  experience?: OnboardingExperience
-  risk?: OnboardingRisk
   /** Color mode — 'system' follows the OS. Same values next-themes takes. */
   theme: ColorMode
   /** `theme:override` plugin id; undefined/null = the stock Pairlens look. */

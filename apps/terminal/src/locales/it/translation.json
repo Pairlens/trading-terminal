@@ -66,26 +66,6 @@
       "sub": "Saldi, P&L e quotazioni sono mostrati in questa valuta.",
       "label": "Valuta"
     },
-    "asset": {
-      "status": "Personalizzazione del terminale",
-      "title": "Cosa fai trading?",
-      "sub": "Scegline una o più. Il tuo terminale, il routing e il co-pilota si adattano di conseguenza.",
-      "options": {
-        "cex": {
-          "label": "CEX",
-          "sub": "Spot centralizzato — OKX, Binance, Coinbase"
-        },
-        "dex": {
-          "label": "DEX",
-          "sub": "Swap on-chain — Jupiter, KyberSwap"
-        },
-        "equities": {
-          "label": "Azioni",
-          "sub": "Azioni ed ETF USA — via Alpaca"
-        }
-      },
-      "label": "Asset"
-    },
     "routing": {
       "eyebrow": "Routing diretto",
       "title": "Dritto agli exchange.",
@@ -101,58 +81,10 @@
       },
       "label": "Routing"
     },
-    "venues": {
-      "status": "Abbinamento delle piattaforme",
-      "title": "Collega le tue piattaforme",
-      "sub": "Selezionate per la tua regione e le tue classi di asset — scegli quelle che usi.",
-      "label": "Piattaforme"
-    },
-    "experience": {
-      "status": "Calibrazione delle impostazioni predefinite",
-      "title": "Come ti descriveresti?",
-      "sub": "Imposteremo valori predefiniti sensati e quanto il co-pilota deve spiegare.",
-      "options": {
-        "beginner": {
-          "label": "Alle prime armi",
-          "sub": "Nuovo al trading spot"
-        },
-        "intermediate": {
-          "label": "Sicuro",
-          "sub": "Faccio trading regolarmente"
-        },
-        "pro": {
-          "label": "Professionista",
-          "sub": "Controllo totale, minimo accompagnamento"
-        }
-      },
-      "label": "Esperienza"
-    },
-    "risk": {
-      "status": "Regolazione dei limiti di rischio",
-      "title": "Imposta la tua propensione al rischio",
-      "sub": "Questo determina il dimensionamento delle posizioni e quanto il co-pilota interviene con fermezza.",
-      "calmer": "Più prudente",
-      "hotter": "Più aggressivo",
-      "options": {
-        "conservative": {
-          "label": "Conservativo",
-          "sub": "≈1% rischio / operazione"
-        },
-        "balanced": {
-          "label": "Bilanciato",
-          "sub": "≈2% rischio / operazione"
-        },
-        "aggressive": {
-          "label": "Aggressivo",
-          "sub": "≈5% rischio / operazione"
-        }
-      },
-      "label": "Rischio"
-    },
     "copilot": {
       "eyebrow": "Il tuo co-pilota",
       "title": "Un co-pilota che gioca secondo le tue regole.",
-      "sub": "Legge il mercato al posto tuo — e non supera mai i limiti che hai appena definito.",
+      "sub": "Legge il mercato al posto tuo — e non supera mai i limiti che definisci.",
       "points": {
         "0": "Monitora i segnali sui tuoi mercati",
         "1": "Approva, blocca o segnala ogni setup",
@@ -251,15 +183,11 @@
     "summary": {
       "eyebrow": "Pronto",
       "title": "Il tuo Pairlens è pronto",
-      "sub": "Personalizzato in base a come fai trading. Tutto dietro le quinte è impostato.",
+      "sub": "Configurato a modo tuo. Tutto dietro le quinte è pronto.",
       "labels": {
         "language": "Lingua",
         "country": "Paese",
         "currency": "Valuta base",
-        "assetClasses": "Classi di asset",
-        "venues": "Piattaforme",
-        "experience": "Esperienza",
-        "risk": "Profilo di rischio",
         "theme": "Tema",
         "palette": "Palette",
         "analytics": "Analisi"

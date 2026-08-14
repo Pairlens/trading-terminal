@@ -66,26 +66,6 @@
       "sub": "Saldo, P&L, dan kuotasi ditampilkan dalam mata uang ini.",
       "label": "Mata Uang"
     },
-    "asset": {
-      "status": "Membentuk terminal Anda",
-      "title": "Apa yang Anda tradingkan?",
-      "sub": "Pilih satu atau lebih. Terminal, routing, dan co-pilot Anda akan menyesuaikan.",
-      "options": {
-        "cex": {
-          "label": "CEX",
-          "sub": "Spot centralized — OKX, Binance, Coinbase"
-        },
-        "dex": {
-          "label": "DEX",
-          "sub": "Swap on-chain — Jupiter, KyberSwap"
-        },
-        "equities": {
-          "label": "Saham",
-          "sub": "Saham & ETF AS — via Alpaca"
-        }
-      },
-      "label": "Aset"
-    },
     "routing": {
       "eyebrow": "Routing langsung",
       "title": "Langsung ke exchange.",
@@ -101,58 +81,10 @@
       },
       "label": "Routing"
     },
-    "venues": {
-      "status": "Mencocokkan venue untuk Anda",
-      "title": "Hubungkan venue Anda",
-      "sub": "Dikurasi untuk wilayah dan kelas aset Anda — pilih yang Anda gunakan.",
-      "label": "Venue"
-    },
-    "experience": {
-      "status": "Menyesuaikan default",
-      "title": "Bagaimana Anda menggambarkan diri Anda?",
-      "sub": "Kami akan mengatur default yang sesuai dan seberapa banyak penjelasan dari co-pilot.",
-      "options": {
-        "beginner": {
-          "label": "Baru mulai",
-          "sub": "Baru dalam trading spot"
-        },
-        "intermediate": {
-          "label": "Percaya diri",
-          "sub": "Saya trading secara rutin"
-        },
-        "pro": {
-          "label": "Profesional",
-          "sub": "Kontrol penuh, minim bimbingan"
-        }
-      },
-      "label": "Pengalaman"
-    },
-    "risk": {
-      "status": "Menyesuaikan guardrail Anda",
-      "title": "Atur selera risiko Anda",
-      "sub": "Ini menentukan ukuran posisi dan seberapa tegas co-pilot melakukan intervensi.",
-      "calmer": "Lebih tenang",
-      "hotter": "Lebih agresif",
-      "options": {
-        "conservative": {
-          "label": "Konservatif",
-          "sub": "≈1% risiko / trade"
-        },
-        "balanced": {
-          "label": "Seimbang",
-          "sub": "≈2% risiko / trade"
-        },
-        "aggressive": {
-          "label": "Agresif",
-          "sub": "≈5% risiko / trade"
-        }
-      },
-      "label": "Risiko"
-    },
     "copilot": {
       "eyebrow": "Co-pilot Anda",
       "title": "Co-pilot yang bermain sesuai aturan Anda.",
-      "sub": "Ia membaca market agar Anda tidak perlu — dan tidak pernah melewati batas yang baru saja Anda tetapkan.",
+      "sub": "Ia membaca market agar Anda tidak perlu — dan tidak pernah melewati batas yang Anda tetapkan.",
       "points": {
         "0": "Memantau sinyal di seluruh market Anda",
         "1": "Menyetujui, memblokir, atau menandai setiap setup",
@@ -251,15 +183,11 @@
     "summary": {
       "eyebrow": "Siap",
       "title": "Pairlens Anda sudah siap",
-      "sub": "Disesuaikan dengan cara Anda trading. Semua di baliknya sudah diatur.",
+      "sub": "Diatur sesuai pilihan Anda. Semua di baliknya sudah siap.",
       "labels": {
         "language": "Bahasa",
         "country": "Negara",
         "currency": "Mata uang dasar",
-        "assetClasses": "Kelas aset",
-        "venues": "Venue",
-        "experience": "Pengalaman",
-        "risk": "Profil risiko",
         "theme": "Tema",
         "palette": "Palet",
         "analytics": "Analitik"

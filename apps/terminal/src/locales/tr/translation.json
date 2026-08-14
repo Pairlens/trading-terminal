@@ -66,26 +66,6 @@
       "sub": "Bakiyeler, kâr/zarar ve fiyatlar bu birimde gösterilir.",
       "label": "Para birimi"
     },
-    "asset": {
-      "status": "Terminalin şekillendiriliyor",
-      "title": "Ne işlem yapıyorsun?",
-      "sub": "Bir veya daha fazlasını seç. Terminalin, yönlendirmen ve co-pilotun buna göre uyum sağlar.",
-      "options": {
-        "cex": {
-          "label": "CEX",
-          "sub": "Merkezi spot — OKX, Binance, Coinbase"
-        },
-        "dex": {
-          "label": "DEX",
-          "sub": "Zincir üstü takaslar — Jupiter, KyberSwap"
-        },
-        "equities": {
-          "label": "Hisse senetleri",
-          "sub": "ABD hisseleri ve ETF'ler — Alpaca ile"
-        }
-      },
-      "label": "Varlıklar"
-    },
     "routing": {
       "eyebrow": "Doğrudan yönlendirme",
       "title": "Doğrudan borsalara.",
@@ -101,58 +81,10 @@
       },
       "label": "Yönlendirme"
     },
-    "venues": {
-      "status": "Borsalar sana göre eşleştiriliyor",
-      "title": "Borsalarını bağla",
-      "sub": "Bölgene ve varlık sınıflarına göre seçildi — kullandıklarını seç.",
-      "label": "Borsalar"
-    },
-    "experience": {
-      "status": "Varsayılanlar ayarlanıyor",
-      "title": "Kendini nasıl tanımlarsın?",
-      "sub": "Makul varsayılanları ve co-pilotun ne kadar açıklama yapacağını buna göre ayarlarız.",
-      "options": {
-        "beginner": {
-          "label": "Yeni başlıyorum",
-          "sub": "Spot işlemlerde yeniyim"
-        },
-        "intermediate": {
-          "label": "Kendinden emin",
-          "sub": "Düzenli olarak işlem yapıyorum"
-        },
-        "pro": {
-          "label": "Profesyonel",
-          "sub": "Tam kontrol, minimum yönlendirme"
-        }
-      },
-      "label": "Deneyim"
-    },
-    "risk": {
-      "status": "Risk sınırların ayarlanıyor",
-      "title": "Risk iştahını belirle",
-      "sub": "Bu, pozisyon büyüklüğünü ve co-pilotun ne kadar sıkı müdahale edeceğini şekillendirir.",
-      "calmer": "Daha sakin",
-      "hotter": "Daha agresif",
-      "options": {
-        "conservative": {
-          "label": "Muhafazakâr",
-          "sub": "İşlem başına ≈%1 risk"
-        },
-        "balanced": {
-          "label": "Dengeli",
-          "sub": "İşlem başına ≈%2 risk"
-        },
-        "aggressive": {
-          "label": "Agresif",
-          "sub": "İşlem başına ≈%5 risk"
-        }
-      },
-      "label": "Risk"
-    },
     "copilot": {
       "eyebrow": "Co-pilotun",
       "title": "Senin kurallarına göre çalışan bir co-pilot.",
-      "sub": "Piyasayı senin yerine okur — ve az önce çizdiğin sınırları asla aşmaz.",
+      "sub": "Piyasayı senin yerine okur — ve çizdiğin sınırları asla aşmaz.",
       "points": {
         "0": "Piyasalarındaki sinyalleri izler",
         "1": "Her kurulumu onaylar, engeller veya işaretler",
@@ -251,15 +183,11 @@
     "summary": {
       "eyebrow": "Hazır",
       "title": "Pairlens'in hazır",
-      "sub": "Nasıl işlem yaptığına göre ayarlandı. Yüzeyin altındaki her şey ayarlandı.",
+      "sub": "Senin seçimlerine göre kuruldu. Yüzeyin altındaki her şey hazır.",
       "labels": {
         "language": "Dil",
         "country": "Ülke",
         "currency": "Temel para birimi",
-        "assetClasses": "Varlık sınıfları",
-        "venues": "Borsalar",
-        "experience": "Deneyim",
-        "risk": "Risk profili",
         "theme": "Tema",
         "palette": "Palet",
         "analytics": "Analitik"
