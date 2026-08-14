@@ -3471,9 +3471,8 @@
         "untitledRule": "Regla sin título",
         "eyebrow": "Notificaciones",
         "title": "Vigila el mercado para que tú no tengas que hacerlo",
-        "description": "Una regla es un flujo pequeño: algo ocurre — se cruza un nivel, cierra una vela, se ejecuta una orden, salta una alerta de indicador — pasa por las condiciones que agregues y luego te llega como un toast, una notificación del sistema, un mensaje de Telegram o un webhook.",
+        "description": "Una alerta cabe en una línea: un nivel que cruzar o un movimiento que merece atención; eliges el par y queda activa. Los flujos son para lo demás: condiciones, órdenes ejecutadas, alertas de indicadores y por dónde se entregan.",
         "startBlank": "Empezar con un lienzo en blanco",
-        "startFromTemplate": "Empezar con una plantilla",
         "footnote": "Las plantillas llegan activas, vinculadas a {{pair}} en {{market}}. Edita los pasos o cambia el par bajo la lista de reglas y pulsa Guardar para conservar los cambios. Las reglas solo se disparan mientras Pairlens está abierto."
       },
       "direction": "Dirección",
@@ -3537,6 +3536,9 @@
           "title": "Ventana horaria",
           "start": "Inicio (UTC)",
           "end": "Fin (UTC)"
+        },
+        "percentMove": {
+          "title": "Movimiento de precio"
         }
       }
     },
@@ -3747,6 +3749,35 @@
             "label": "Mensaje silencioso"
           }
         }
+      },
+      "percent-move": {
+        "label": "Movimiento de precio",
+        "fields": {
+          "percent": {
+            "label": "Porcentaje"
+          },
+          "direction": {
+            "label": "Dirección",
+            "options": {
+              "up": "Sube",
+              "down": "Baja",
+              "either": "Cualquiera"
+            }
+          },
+          "window": {
+            "label": "En",
+            "options": {
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "24h": "24H"
+            }
+          }
+        },
+        "handles": {
+          "out": "Disparado"
+        }
       }
     },
     "messages": {
@@ -3775,14 +3806,6 @@
       }
     },
     "templates": {
-      "price-level": {
-        "title": "El precio cruza un nivel",
-        "description": "Toast más notificación del sistema en el momento en que {{pair}} cruza {{level}}. Arrastra el nivel al tuyo.",
-        "chips": {
-          "0": "Precio por encima",
-          "1": "Toast"
-        }
-      },
       "volatile-candle": {
         "title": "La vela horaria se mueve fuerte",
         "description": "Se dispara cuando una vela horaria cierra a más del 3% de donde abrió, al alza o a la baja.",
@@ -3809,6 +3832,56 @@
       "session-drop": {
         "title": "Caída fuerte, solo mientras estoy despierto",
         "description": "Una vela bajista del 2% te despierta, pero solo entre las 13:00 y las 21:00 UTC."
+      }
+    },
+    "simple": {
+      "newTitle": "Nueva alerta",
+      "newDescription": "Elige qué vigilar y cómo quieres enterarte.",
+      "kindLevel": "Nivel de precio",
+      "kindLevelHint": "Avísame cuando el precio cruce un número.",
+      "kindMove": "Movimiento de precio",
+      "kindMoveHint": "Avísame cuando se mueva tanto, y tan rápido.",
+      "rises": "Sube por encima de",
+      "drops": "Cae por debajo de",
+      "currentPrice": "Ahora {{price}}",
+      "percent": "Se mueve un",
+      "within": "En",
+      "deliverLabel": "Avísame con",
+      "channelToast": "En la app",
+      "channelOs": "Escritorio",
+      "channelTelegram": "Telegram",
+      "osBlocked": "Tu sistema está bloqueando las notificaciones de Pairlens.",
+      "create": "Crear alerta",
+      "created": "Alerta activada en {{pair}}",
+      "summaryAbove": "Te avisa cuando {{pair}} cotice por encima de {{price}} en {{venue}}.",
+      "summaryBelow": "Te avisa cuando {{pair}} cotice por debajo de {{price}} en {{venue}}.",
+      "summaryUp": "Te avisa cuando {{pair}} suba un {{percent}}% o más en {{window}} en {{venue}}.",
+      "summaryDown": "Te avisa cuando {{pair}} caiga un {{percent}}% o más en {{window}} en {{venue}}.",
+      "summaryEither": "Te avisa cuando {{pair}} se mueva un {{percent}}% en cualquier dirección en {{window}} en {{venue}}.",
+      "watching": "Vigilando",
+      "addPair": "Añadir par",
+      "openInBuilder": "Abrir en el editor de flujos",
+      "runsWhileOpen": "Los cambios se guardan solos. Las alertas se evalúan mientras Pairlens está en marcha.",
+      "newFlow": "Crear un flujo personalizado",
+      "shelfLabel": "Empieza con una alerta",
+      "flowShelfLabel": "O crea un flujo",
+      "card": {
+        "price-level": {
+          "title": "El precio toca un nivel",
+          "description": "Entérate en cuanto un par cruce el número que te importa.",
+          "chips": {
+            "0": "Por encima o por debajo",
+            "1": "Un número"
+          }
+        },
+        "percent-move": {
+          "title": "El precio se mueve rápido",
+          "description": "Entérate cuando un par se mueva tu porcentaje dentro de una ventana.",
+          "chips": {
+            "0": "Sube, baja o ambas",
+            "1": "De 5m a 24h"
+          }
+        }
       }
     }
   },

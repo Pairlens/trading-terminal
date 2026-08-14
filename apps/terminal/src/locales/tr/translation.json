@@ -3471,9 +3471,8 @@
         "untitledRule": "Adsız kural",
         "eyebrow": "Bildirimler",
         "title": "Piyasayı sen izlemeden Pairlens izlesin",
-        "description": "Bir kural küçük bir akıştır: bir şey olur — bir seviye geçilir, bir mum kapanır, bir emir gerçekleşir, bir gösterge uyarısı tetiklenir — eklediğin koşullardan geçer ve sana toast, sistem bildirimi, Telegram mesajı ya da webhook olarak ulaşır.",
+        "description": "Bir uyarı tek satırdır: geçilecek bir seviye ya da dikkate değer bir hareket — pariteyi seç, devreye girsin. Akışlar gerisi için: koşullar, gerçekleşen emirler, gösterge uyarıları ve nereye iletileceği.",
         "startBlank": "Boş bir tuvalden başla",
-        "startFromTemplate": "Bir şablondan başla",
         "footnote": "Şablonlar {{market}} üzerindeki {{pair}} çiftine bağlı olarak hazır gelir. Adımları düzenleyin ya da kural listesinin altından çifti değiştirin, sonra değişikliklerinizi kaydedin. Kurallar yalnızca Pairlens açıkken çalışır."
       },
       "direction": "Yön",
@@ -3537,6 +3536,9 @@
           "title": "Zaman Aralığı",
           "start": "Başlangıç (UTC)",
           "end": "Bitiş (UTC)"
+        },
+        "percentMove": {
+          "title": "Fiyat Hareketi"
         }
       }
     },
@@ -3747,6 +3749,35 @@
             "label": "Sessiz mesaj"
           }
         }
+      },
+      "percent-move": {
+        "label": "Fiyat Hareketi",
+        "fields": {
+          "percent": {
+            "label": "Yüzde"
+          },
+          "direction": {
+            "label": "Yön",
+            "options": {
+              "up": "Yukarı",
+              "down": "Aşağı",
+              "either": "İkisi de"
+            }
+          },
+          "window": {
+            "label": "Şu sürede",
+            "options": {
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "24h": "24H"
+            }
+          }
+        },
+        "handles": {
+          "out": "Tetiklendi"
+        }
       }
     },
     "messages": {
@@ -3775,14 +3806,6 @@
       }
     },
     "templates": {
-      "price-level": {
-        "title": "Fiyat bir seviyeyi geçtiğinde",
-        "description": "{{pair}}, {{level}} seviyesini geçtiği anda toast artı bir sistem bildirimi. Seviyeyi kendininkine sürükle.",
-        "chips": {
-          "0": "Fiyat üzerinde",
-          "1": "Toast"
-        }
-      },
       "volatile-candle": {
         "title": "Saatlik mum büyüdü",
         "description": "Saatlik bir mum, açıldığı yerden yukarı ya da aşağı %3'ten fazla uzakta kapandığında tetiklenir.",
@@ -3809,6 +3832,56 @@
       "session-drop": {
         "title": "Sert düşüş, yalnızca ben uyanıkken",
         "description": "%2'lik aşağı bir mum seni uyandırır, ama yalnızca UTC 13:00 ile 21:00 arasında."
+      }
+    },
+    "simple": {
+      "newTitle": "Yeni uyarı",
+      "newDescription": "Neyi izleyeceğini ve nasıl haber alacağını seç.",
+      "kindLevel": "Fiyat seviyesi",
+      "kindLevelHint": "Fiyat bir seviyeyi geçtiğinde haber ver.",
+      "kindMove": "Fiyat hareketi",
+      "kindMoveHint": "Bu kadar ve bu hızda hareket edince haber ver.",
+      "rises": "Şunun üstüne çıkarsa",
+      "drops": "Şunun altına inerse",
+      "currentPrice": "Şu an {{price}}",
+      "percent": "Şu kadar oynarsa",
+      "within": "Şu sürede",
+      "deliverLabel": "Şununla haber ver",
+      "channelToast": "Uygulama içi",
+      "channelOs": "Masaüstü",
+      "channelTelegram": "Telegram",
+      "osBlocked": "Sisteminiz Pairlens bildirimlerini engelliyor.",
+      "create": "Uyarı oluştur",
+      "created": "{{pair}} için uyarı devrede",
+      "summaryAbove": "{{venue}} borsasında {{pair}} {{price}} üzerinde işlem görünce haber verir.",
+      "summaryBelow": "{{venue}} borsasında {{pair}} {{price}} altında işlem görünce haber verir.",
+      "summaryUp": "{{venue}} borsasında {{pair}} {{window}} içinde %{{percent}} veya daha fazla yükselince haber verir.",
+      "summaryDown": "{{venue}} borsasında {{pair}} {{window}} içinde %{{percent}} veya daha fazla düşünce haber verir.",
+      "summaryEither": "{{venue}} borsasında {{pair}} {{window}} içinde iki yönde de %{{percent}} oynayınca haber verir.",
+      "watching": "İzleniyor",
+      "addPair": "Parite ekle",
+      "openInBuilder": "Akış düzenleyicide aç",
+      "runsWhileOpen": "Değişiklikler anında kaydedilir. Uyarılar Pairlens açıkken değerlendirilir.",
+      "newFlow": "Özel akış oluştur",
+      "shelfLabel": "Bir uyarıyla başla",
+      "flowShelfLabel": "Ya da bir akış kur",
+      "card": {
+        "price-level": {
+          "title": "Fiyat bir seviyeye ulaşır",
+          "description": "Bir parite önemsediğin sayıyı geçtiği anda haberin olsun.",
+          "chips": {
+            "0": "Üstünde ya da altında",
+            "1": "Tek bir sayı"
+          }
+        },
+        "percent-move": {
+          "title": "Fiyat hızlı hareket eder",
+          "description": "Bir parite belirlediğin yüzde kadar oynayınca haberin olsun.",
+          "chips": {
+            "0": "Yukarı, aşağı ya da her ikisi",
+            "1": "5m ile 24h arası"
+          }
+        }
       }
     }
   },

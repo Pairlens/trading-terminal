@@ -441,3 +441,126 @@ describe('signal-generated', () => {
     ).toThrow()
   })
 })
+
+// ── Rolling percent moves ────────────────────────────────────────────
+// The window is measured HERE — the step only carries a threshold — so this
+// is the layer that decides whether "5% in an hour" ever becomes an event.
+
+/** `count` bars at `price`, spaced by `stepMinutes`, oldest first. */
+function series(count: number, price: number, stepMinutes: number) {
+  return Array.from({ length: count }, (_, i) =>
+    candle(i * stepMinutes * MINUTE, price, price),
+  )
+}
+
+describe('percent-move windows', () => {
+  const moveRule = (percent: number, direction: string, window: string) =>
+    ruleWith('mv', 'percent-move', { percent, direction, window })
+
+  /** A 1h window rides 5m bars: 20 of them span 95 minutes. */
+  const seedHour = (h: Harness) => {
+    h.emit('5m', { type: 'snapshot', candles: series(20, 100, 5) })
+  }
+
+  it('measures the window on the base timeframe, not the window itself', () => {
+    harness = start([moveRule(5, 'either', '1h')])
+    // Subscribing on '1h' bars would notice an hourly move an hour late.
+    expect(() =>
+      harness!.emit('1h', { type: 'snapshot', candles: [] }),
+    ).toThrow()
+    expect(() => seedHour(harness!)).not.toThrow()
+  })
+
+  it('says nothing on the snapshot — that is history, not a move', async () => {
+    harness = start([moveRule(5, 'either', '1h')])
+    harness.emit('5m', {
+      type: 'snapshot',
+      candles: [...series(19, 100, 5), candle(19 * 5 * MINUTE, 100, 80)],
+    })
+    await harness.settle()
+
+    expect(harness.log).toHaveLength(0)
+  })
+
+  it('fires when the trailing move crosses the threshold', async () => {
+    harness = start([moveRule(5, 'either', '1h')])
+    seedHour(harness)
+    // The forming bar drops 6% below where the price was an hour ago.
+    harness.emit('5m', {
+      type: 'update',
+      candles: [candle(19 * 5 * MINUTE, 100, 94)],
+    })
+    await harness.settle()
+
+    expect(harness.log).toHaveLength(1)
+    expect(harness.log[0].body).toContain('6.00%')
+  })
+
+  it('does not re-fire while the move stays past the threshold', async () => {
+    harness = start([moveRule(5, 'either', '1h')])
+    seedHour(harness)
+    harness.emit('5m', {
+      type: 'update',
+      candles: [candle(19 * 5 * MINUTE, 100, 94)],
+    })
+    await harness.settle()
+    harness.emit('5m', {
+      type: 'update',
+      candles: [candle(19 * 5 * MINUTE, 100, 93.5)],
+    })
+    await harness.settle()
+
+    expect(harness.log).toHaveLength(1)
+  })
+
+  it('ignores a move in the direction the rule does not watch', async () => {
+    harness = start([moveRule(5, 'up', '1h')])
+    seedHour(harness)
+    harness.emit('5m', {
+      type: 'update',
+      candles: [candle(19 * 5 * MINUTE, 100, 90)],
+    })
+    await harness.settle()
+
+    expect(harness.log).toHaveLength(0)
+  })
+
+  it('waits until the history reaches back across the window', async () => {
+    harness = start([moveRule(5, 'either', '24h')])
+    // 1h bars, but only six of them — no honest 24h baseline exists yet, and
+    // measuring against the oldest bar we happen to have would invent one.
+    harness.emit('1h', { type: 'snapshot', candles: series(6, 100, 60) })
+    harness.emit('1h', {
+      type: 'update',
+      candles: [candle(5 * 60 * MINUTE, 100, 50)],
+    })
+    await harness.settle()
+
+    expect(harness.log).toHaveLength(0)
+  })
+
+  it('serves two windows off one subscription without crossing them', async () => {
+    // 5m and 15m both ride 1m bars. The 15m rule must not fire on the 5m
+    // reading that shares its stream.
+    const fast = ruleWith('fast', 'percent-move', {
+      percent: 3,
+      direction: 'either',
+      window: '5m',
+    })
+    const slow = ruleWith('slow', 'percent-move', {
+      percent: 20,
+      direction: 'either',
+      window: '15m',
+    })
+    harness = start([fast, slow])
+    harness.emit('1m', { type: 'snapshot', candles: series(30, 100, 1) })
+    harness.emit('1m', {
+      type: 'update',
+      candles: [candle(29 * MINUTE, 100, 95)],
+    })
+    await harness.settle()
+
+    // -5%: past the 5m rule's 3%, nowhere near the 15m rule's 20%.
+    expect(harness.log.map((e) => e.ruleName)).toEqual(['rule-fast'])
+  })
+})

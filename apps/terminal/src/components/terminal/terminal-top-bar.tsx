@@ -1,7 +1,8 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useNavigate } from '@tanstack/react-router'
-import { Bell, Check, Plus, Star } from 'lucide-react'
+import { Bell, Check, Plus, Star, Workflow } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
@@ -23,6 +24,7 @@ import { ConnectionIndicator } from '@/components/terminal/connection-indicator'
 import { LatencyIndicator } from '@/components/terminal/latency-indicator'
 import { MarketPicker } from '@/components/terminal/market-picker'
 import { WalletSelector } from '@/components/terminal/wallet-selector'
+import { NewAlertDialog } from '@/components/notifications/new-alert-dialog'
 import { PairSwitcher } from '@/components/pair-picker/pair-switcher'
 import { formatPrice } from '@/lib/format-price'
 import { useOptionalTickerData } from '@/lib/chart-terminal-context'
@@ -63,6 +65,7 @@ export function TerminalTopBar({
   const bindings = useNotificationStore((s) => s.bindings)
   const addBinding = useNotificationStore((s) => s.addBinding)
   const removeBinding = useNotificationStore((s) => s.removeBinding)
+  const [alertOpen, setAlertOpen] = useState(false)
 
   return (
     <PageHeader
@@ -155,12 +158,25 @@ export function TerminalTopBar({
             )
           })}
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate({ to: '/notifications' })}>
+          {/* The common case first: an alert on the pair already on screen,
+              made here instead of on the Notifications canvas. */}
+          <DropdownMenuItem onClick={() => setAlertOpen(true)}>
             <Plus className="mr-2 size-3.5" />
+            {t('notifications.simple.newTitle')}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate({ to: '/notifications' })}>
+            <Workflow className="mr-2 size-3.5" />
             {t('notifications.newFlow')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <NewAlertDialog
+        open={alertOpen}
+        onOpenChange={setAlertOpen}
+        defaultPair={pairKey}
+        defaultMarket={market}
+      />
 
       <Separator orientation="vertical" className="mx-1 self-stretch" />
 

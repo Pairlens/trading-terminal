@@ -1,7 +1,13 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { computeSignals } from '@pairlens/strategy-engine'
+import {
+  PERCENT_WINDOW_BASE_TIMEFRAME,
+  PERCENT_WINDOW_MS,
+  isPercentWindow,
+} from '@pairlens/notification-engine/simple-alerts'
 import { notificationRuntime } from './notification-runtime'
+import type { PercentWindow } from '@pairlens/notification-engine/simple-alerts'
 import type { PluginManager } from '@pairlens/plugin-system'
 import type { NotificationEventPayload } from '@pairlens/notification-engine/types'
 import type { Candle } from '@pairlens/shared/types'
@@ -24,6 +30,12 @@ type SubscriptionSpec = {
    * string inside means "every alert-declaring script".
    */
   indicatorFilters: Array<string>
+  /**
+   * Rolling windows ('1h', '24h', …) measured off this candle stream for
+   * percent-move rules. One entry serves every rule watching that window —
+   * the threshold is the evaluator's business, not the stream's.
+   */
+  moveWindows: Array<PercentWindow>
 }
 
 /**
@@ -55,6 +67,9 @@ export class NotificationSubscriptionManager {
   /** Last signal emitted per key (`strategy:direction`), so a signal that
    * keeps evaluating across bars notifies once on its edge, not every close. */
   private lastSignal = new Map<string, string>()
+  /** Last measured move per `${key}:${window}`. The evaluator fires on the
+   * crossing, so it needs the previous reading as well as the current one. */
+  private lastMovePct = new Map<string, number>()
   /**
    * Live spec per active key, refreshed on every reconcile. The subscribe
    * callback reads THIS rather than closing over the spec it was created with:
@@ -82,6 +97,7 @@ export class NotificationSubscriptionManager {
     this.candleBuffers.clear()
     this.formingBarTs.clear()
     this.lastSignal.clear()
+    this.lastMovePct.clear()
     this.specs.clear()
     this.pluginManager = null
   }
@@ -108,8 +124,28 @@ export class NotificationSubscriptionManager {
               eventType: 'price-alert',
               market: binding.market,
               indicatorFilters: [],
+              moveWindows: [],
             })
           }
+        }
+        if (step.type === 'percent-move') {
+          // The window says which candle stream measures it; several windows
+          // share one stream (5m and 15m both ride 1m bars).
+          const window = isPercentWindow(step.data.window)
+            ? step.data.window
+            : '1h'
+          const tf = PERCENT_WINDOW_BASE_TIMEFRAME[window]
+          const key = `candles:${binding.pair}:${binding.market}:${tf}`
+          const spec = needed.get(key) ?? {
+            capability: 'market-data:candles',
+            params: { pair: binding.pair, timeframe: tf },
+            eventType: 'candle-close',
+            market: binding.market,
+            indicatorFilters: [],
+            moveWindows: [],
+          }
+          if (!spec.moveWindows.includes(window)) spec.moveWindows.push(window)
+          needed.set(key, spec)
         }
         if (
           step.type === 'candle-close' ||
@@ -130,6 +166,7 @@ export class NotificationSubscriptionManager {
             eventType: 'candle-close', // handleCandles emits both types
             market: binding.market,
             indicatorFilters: [],
+            moveWindows: [],
           }
           // Indicator alerts have no event source of their own — the scripts
           // have to be run for them. Collect which ones this subscription is
@@ -159,6 +196,9 @@ export class NotificationSubscriptionManager {
         this.candleBuffers.delete(key)
         this.formingBarTs.delete(key)
         this.lastSignal.delete(key)
+        for (const stateKey of this.lastMovePct.keys()) {
+          if (stateKey.startsWith(`${key}:`)) this.lastMovePct.delete(stateKey)
+        }
       }
     }
 
@@ -256,7 +296,10 @@ export class NotificationSubscriptionManager {
       if (seeded.length === 0) return
       this.candleBuffers.set(key, seeded)
       this.formingBarTs.set(key, seeded[seeded.length - 1].ts)
-      // Deliberately no event: nothing closed, we just learned the history.
+      // Prime the move baselines so the first live tick has something to be
+      // a crossing FROM. Deliberately no event: nothing closed, we just
+      // learned the history.
+      this.evaluateMoveWindows(key, spec, pair, market)
       return
     }
 
@@ -269,6 +312,11 @@ export class NotificationSubscriptionManager {
     if (buffer.length > MAX_BUFFERED_CANDLES) {
       buffer.splice(0, buffer.length - MAX_BUFFERED_CANDLES)
     }
+
+    // Rolling moves are measured on every tick, not on bar close: a 5% drop
+    // inside an hour is news while it is happening, and waiting for the bar
+    // to close would report it up to a full base bar late.
+    this.evaluateMoveWindows(key, spec, pair, market)
 
     const newestTs = buffer[buffer.length - 1].ts
     const previousTs = this.formingBarTs.get(key)
@@ -344,6 +392,59 @@ export class NotificationSubscriptionManager {
         regime: signal.regime,
       },
     })
+  }
+
+  /**
+   * Measure each rolling window this stream serves and emit a `percent-move`
+   * event carrying the reading plus the previous one.
+   *
+   * The baseline is the close of the newest bar at or before the cutoff, so
+   * the measurement is granular to one base bar (a minute for the short
+   * windows, an hour for 24h) — the same resolution the chart shows. Until
+   * the buffer reaches back across the window there is no honest baseline
+   * and the window is skipped rather than measured against whatever history
+   * happens to have loaded.
+   */
+  private evaluateMoveWindows(
+    key: string,
+    spec: SubscriptionSpec,
+    pair: string,
+    market: string,
+  ): void {
+    if (spec.moveWindows.length === 0) return
+    const buffer = this.candleBuffers.get(key)
+    if (!buffer || buffer.length < 2) return
+
+    const latest = buffer[buffer.length - 1]
+    if (!(latest.close > 0)) return
+
+    for (const window of spec.moveWindows) {
+      const cutoff = latest.ts - PERCENT_WINDOW_MS[window]
+      let baseline: number | undefined
+      for (let i = buffer.length - 1; i >= 0; i--) {
+        if (buffer[i].ts <= cutoff) {
+          baseline = buffer[i].close
+          break
+        }
+      }
+      if (baseline === undefined || !(baseline > 0)) continue
+
+      const change = ((latest.close - baseline) / baseline) * 100
+      const stateKey = `${key}:${window}`
+      const prev = this.lastMovePct.get(stateKey)
+      this.lastMovePct.set(stateKey, change)
+      // First reading on this stream: a baseline, not a crossing.
+      if (prev === undefined) continue
+
+      notificationRuntime.handleEvent({
+        eventType: 'percent-move',
+        timestamp: Date.now(),
+        pair,
+        market,
+        price: latest.close,
+        data: { window, percentChange: change, prevPercentChange: prev },
+      })
+    }
   }
 }
 

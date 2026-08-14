@@ -2,6 +2,15 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { create } from 'zustand'
 
+import {
+  DEFAULT_SIMPLE_ALERT_CHANNELS,
+  buildSimpleAlertGraph,
+  readSimpleAlert,
+  simpleAlertCooldownSeconds,
+  simpleAlertName,
+} from '@pairlens/notification-engine/simple-alerts'
+
+import type { SimpleAlertSpec } from '@pairlens/notification-engine/simple-alerts'
 import type {
   NotificationBinding,
   NotificationEdgeDSL,
@@ -147,12 +156,34 @@ type NotificationStore = {
   loaded: boolean
   activeRuleId: string | null
   draft: NotificationDraft | null
+  /**
+   * Simple alerts the user has chosen to open on the canvas this session.
+   *
+   * Deliberately not persisted: it is a view preference, not a property of
+   * the rule. A rule stops being simple the moment its graph stops matching
+   * the canonical shape, and until then the form is the better editor —
+   * remembering "show me the graph for this one" forever would quietly
+   * hand a novice back the canvas they escaped.
+   */
+  advancedRuleIds: Array<string>
+  openInBuilder: (ruleId: string) => void
 
   // Lifecycle
   load: () => void
 
   // Rule CRUD
   createRule: (name: string) => string
+  /**
+   * Create an armed simple alert bound to one pair — the whole of what the
+   * New alert dialog, the chart's "alert here" and the copilot need.
+   */
+  createSimpleAlert: (input: {
+    pair: string
+    market: string
+    spec: SimpleAlertSpec
+  }) => string
+  /** Rewrite a simple alert's graph in place from an edited spec. */
+  updateSimpleAlert: (ruleId: string, spec: SimpleAlertSpec) => void
   createPriceAlertRule: (input: {
     pair: string
     market: string
@@ -209,6 +240,13 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
   loaded: false,
   activeRuleId: null,
   draft: null,
+  advancedRuleIds: [],
+
+  openInBuilder(ruleId: string) {
+    const { advancedRuleIds } = get()
+    if (advancedRuleIds.includes(ruleId)) return
+    set({ advancedRuleIds: [...advancedRuleIds, ruleId] })
+  },
 
   load() {
     if (get().loaded) return
@@ -243,47 +281,22 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
     return id
   },
 
-  createPriceAlertRule({ pair, market, price, direction }) {
+  createSimpleAlert({ pair, market, spec }) {
     const now = Date.now()
     const ruleId = crypto.randomUUID()
-    const eventId = crypto.randomUUID()
-    const toastId = crypto.randomUUID()
-    const osId = crypto.randomUUID()
-    const displayPrice = Number(price.toPrecision(8))
+    const { steps, edges } = buildSimpleAlertGraph(spec)
     const rule: NotificationRuleDSL = {
       version: 1,
       id: ruleId,
-      name: `${pair} ${direction} ${displayPrice}`,
-      steps: [
-        {
-          id: eventId,
-          type: 'price-alert',
-          position: { x: 0, y: 80 },
-          data: { direction, price: displayPrice },
-        },
-        {
-          id: toastId,
-          type: 'local-toast',
-          position: { x: 320, y: 0 },
-          data: {},
-        },
-        {
-          id: osId,
-          type: 'os-notification',
-          position: { x: 320, y: 160 },
-          data: { sound: true },
-        },
-      ],
-      edges: [
-        { id: crypto.randomUUID(), source: eventId, target: toastId },
-        { id: crypto.randomUUID(), source: eventId, target: osId },
-      ],
-      // Level alerts re-fire while the price stays past the threshold —
-      // the cooldown keeps that to one notification per 5 minutes.
-      cooldown: 300,
+      name: simpleAlertName(spec, pair),
+      steps,
+      edges,
+      cooldown: simpleAlertCooldownSeconds(spec),
       createdAt: now,
       updatedAt: now,
     }
+    // Armed on creation. A simple alert that needed a second "bind it to a
+    // pair" step would be exactly the chore this path exists to remove.
     const binding: NotificationBinding = {
       id: crypto.randomUUID(),
       ruleId,
@@ -297,8 +310,61 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
     set({ rules: nextRules, bindings: nextBindings })
     saveRules(nextRules)
     saveBindings(nextBindings)
-    track('alert_created', { kind: 'price-alert' })
+    track('alert_created', { kind: spec.kind })
     return ruleId
+  },
+
+  updateSimpleAlert(ruleId, spec) {
+    const { rules, bindings, draft } = get()
+    const rule = rules.find((r) => r.id === ruleId)
+    if (!rule) return
+
+    // Follow the name only while it is still the generated one. Someone who
+    // renamed "BTC-USDT ≥ 100,000" to "take profit" means it.
+    const previous = readSimpleAlert(rule)
+    const pair = bindings.find((b) => b.ruleId === ruleId)?.pair ?? ''
+    const isGeneratedName =
+      previous !== null && rule.name === simpleAlertName(previous, pair)
+
+    const { steps, edges } = buildSimpleAlertGraph(spec)
+    const updated: NotificationRuleDSL = {
+      ...rule,
+      name: isGeneratedName ? simpleAlertName(spec, pair) : rule.name,
+      steps,
+      edges,
+      cooldown: simpleAlertCooldownSeconds(spec),
+      updatedAt: Date.now(),
+    }
+    const next = rules.map((r) => (r.id === ruleId ? updated : r))
+    set({ rules: next })
+    saveRules(next)
+
+    // A draft opened on this rule holds the pre-edit graph; leaving it would
+    // let a later Commit in the builder restore the steps we just replaced.
+    if (draft?.ruleId === ruleId) {
+      const freshDraft: NotificationDraft = {
+        ruleId,
+        baseSnapshot: structuredClone(updated),
+        currentSteps: structuredClone(updated.steps),
+        currentEdges: structuredClone(updated.edges),
+        pendingChanges: [],
+      }
+      set({ draft: freshDraft })
+      saveDraft(freshDraft)
+    }
+  },
+
+  createPriceAlertRule({ pair, market, price, direction }) {
+    return get().createSimpleAlert({
+      pair,
+      market,
+      spec: {
+        kind: 'price-level',
+        direction,
+        price: Number(price.toPrecision(8)),
+        channels: DEFAULT_SIMPLE_ALERT_CHANNELS,
+      },
+    })
   },
 
   deleteRule(id: string) {

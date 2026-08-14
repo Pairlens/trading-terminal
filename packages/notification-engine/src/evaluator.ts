@@ -307,5 +307,29 @@ function matchesEventFilter(
     }
   }
 
+  // Filter by move size (percent-move). One candle stream serves every rule
+  // watching a window, so the threshold lives here rather than in the event
+  // source. Crossing semantics mirror price-alert: the move has to ENTER the
+  // threshold, or a 6% hour would re-notify on every bar it stayed 6%.
+  if (eventStep.type === 'percent-move') {
+    const want = String(data.window ?? '')
+    if (want && want !== String(payload.data.window ?? '')) return false
+
+    const threshold = Math.abs(Number(data.percent ?? 0))
+    if (!(threshold > 0)) return false
+
+    const direction = String(data.direction ?? 'either')
+    const breaches = (value: number) => {
+      if (direction === 'up') return value >= threshold
+      if (direction === 'down') return value <= -threshold
+      return Math.abs(value) >= threshold
+    }
+
+    const change = Number(payload.data.percentChange ?? 0)
+    if (!Number.isFinite(change) || !breaches(change)) return false
+    const prev = payload.data.prevPercentChange
+    if (typeof prev === 'number' && breaches(prev)) return false
+  }
+
   return true
 }

@@ -3471,9 +3471,8 @@
         "untitledRule": "Untitled rule",
         "eyebrow": "Notifications",
         "title": "Watch the market so you don't have to",
-        "description": "A rule is a small flow: something happens — a level is crossed, a candle closes, an order fills, an indicator alert trips — it passes whatever conditions you attach, and then it reaches you as a toast, an OS notification, a Telegram message, or a webhook.",
+        "description": "An alert is one line: a level to cross, or a move worth noticing — name a pair and it is armed. Flows are for the rest: conditions, order fills, indicator alerts, and where they get delivered.",
         "startBlank": "Start from a blank canvas",
-        "startFromTemplate": "Start from a template",
         "footnote": "Templates arrive armed, bound to {{pair}} on {{market}}. Edit the steps or retarget the pair under the rule list, then Commit to save your changes. Rules only fire while Pairlens is running."
       },
       "direction": "Direction",
@@ -3537,6 +3536,9 @@
           "title": "Time Window",
           "start": "Start (UTC)",
           "end": "End (UTC)"
+        },
+        "percentMove": {
+          "title": "Price Move"
         }
       }
     },
@@ -3747,6 +3749,35 @@
             "label": "Silent Message"
           }
         }
+      },
+      "percent-move": {
+        "label": "Price Move",
+        "fields": {
+          "percent": {
+            "label": "Percent"
+          },
+          "direction": {
+            "label": "Direction",
+            "options": {
+              "up": "Up",
+              "down": "Down",
+              "either": "Either"
+            }
+          },
+          "window": {
+            "label": "Within",
+            "options": {
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "24h": "24H"
+            }
+          }
+        },
+        "handles": {
+          "out": "Triggered"
+        }
       }
     },
     "messages": {
@@ -3775,14 +3806,6 @@
       }
     },
     "templates": {
-      "price-level": {
-        "title": "Price crosses a level",
-        "description": "Toast plus an OS notification the moment {{pair}} crosses {{level}}. Drag the level to yours.",
-        "chips": {
-          "0": "Price above",
-          "1": "Toast"
-        }
-      },
       "volatile-candle": {
         "title": "The hourly candle went big",
         "description": "Fires when an hourly candle closes more than 3% from where it opened, up or down.",
@@ -3809,6 +3832,56 @@
       "session-drop": {
         "title": "Sharp drop, only while I am up",
         "description": "A 2% down candle wakes you, but only between 13:00 and 21:00 UTC."
+      }
+    },
+    "simple": {
+      "newTitle": "New alert",
+      "newDescription": "Pick what to watch and how you want to hear about it.",
+      "kindLevel": "Price level",
+      "kindLevelHint": "Tell me when the price crosses a number.",
+      "kindMove": "Price move",
+      "kindMoveHint": "Tell me when it moves this much, this fast.",
+      "rises": "Rises above",
+      "drops": "Drops below",
+      "currentPrice": "Now {{price}}",
+      "percent": "Moves by",
+      "within": "Within",
+      "deliverLabel": "Notify me with",
+      "channelToast": "In-app",
+      "channelOs": "Desktop",
+      "channelTelegram": "Telegram",
+      "osBlocked": "Your system is blocking notifications from Pairlens.",
+      "create": "Create alert",
+      "created": "Alert armed on {{pair}}",
+      "summaryAbove": "Notifies you when {{pair}} trades above {{price}} on {{venue}}.",
+      "summaryBelow": "Notifies you when {{pair}} trades below {{price}} on {{venue}}.",
+      "summaryUp": "Notifies you when {{pair}} gains {{percent}}% or more within {{window}} on {{venue}}.",
+      "summaryDown": "Notifies you when {{pair}} drops {{percent}}% or more within {{window}} on {{venue}}.",
+      "summaryEither": "Notifies you when {{pair}} moves {{percent}}% either way within {{window}} on {{venue}}.",
+      "watching": "Watching",
+      "addPair": "Add pair",
+      "openInBuilder": "Open in the flow builder",
+      "runsWhileOpen": "Changes save as you make them. Alerts are evaluated while Pairlens is running.",
+      "newFlow": "Build a custom flow",
+      "shelfLabel": "Start with an alert",
+      "flowShelfLabel": "Or build a flow",
+      "card": {
+        "price-level": {
+          "title": "Price hits a level",
+          "description": "Get told the moment a pair crosses the number you care about.",
+          "chips": {
+            "0": "Above or below",
+            "1": "One number"
+          }
+        },
+        "percent-move": {
+          "title": "Price moves fast",
+          "description": "Get told when a pair swings by your percentage inside a window.",
+          "chips": {
+            "0": "Up, down or either",
+            "1": "5m to 24h"
+          }
+        }
       }
     }
   },

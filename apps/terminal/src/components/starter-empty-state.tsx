@@ -68,6 +68,16 @@ type StarterEmptyStateProps = {
    * second job while the first is still booting.
    */
   pendingId?: string | null
+  /**
+   * A second, lower shelf for the advanced way in.
+   *
+   * Notifications uses it to rank two things a section can offer at once:
+   * the alert anyone can fill in on top, the flow templates that need the
+   * canvas underneath. One shelf would have made them look like peers.
+   */
+  secondaryLabel?: string
+  secondaryTemplates?: Array<StarterTemplate>
+  onPickSecondary?: (template: StarterTemplate) => void
 }
 
 export function StarterEmptyState({
@@ -82,9 +92,14 @@ export function StarterEmptyState({
   footnote,
   shelfLabel,
   pendingId = null,
+  secondaryLabel,
+  secondaryTemplates,
+  onPickSecondary,
 }: StarterEmptyStateProps) {
   const { t } = useTranslation()
   const shelfHeading = shelfLabel ?? t('common.startFromTemplate')
+  const hasSecondary =
+    !!secondaryTemplates && secondaryTemplates.length > 0 && !!onPickSecondary
   return (
     <div className="relative flex min-w-0 flex-1 overflow-y-auto">
       {/* Aurora wash, echoing the onboarding page. Purely decorative. */}
@@ -148,6 +163,29 @@ export function StarterEmptyState({
                 />
               ))}
             </div>
+
+            {hasSecondary && (
+              <>
+                <div className="mt-2 flex w-full items-center gap-3">
+                  <span className="h-px flex-1 bg-border" />
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    {secondaryLabel}
+                  </span>
+                  <span className="h-px flex-1 bg-border" />
+                </div>
+                <div className="grid w-full gap-2 sm:grid-cols-2">
+                  {secondaryTemplates.map((template) => (
+                    <TemplateCard
+                      key={template.id}
+                      template={template}
+                      pending={pendingId === template.id}
+                      disabled={pendingId !== null && pendingId !== template.id}
+                      onPick={() => onPickSecondary(template)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
 
             <Button
               variant="ghost"

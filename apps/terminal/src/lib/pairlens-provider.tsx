@@ -307,6 +307,13 @@ const FIRST_PARTY_NOTIFICATION_COMPONENTS: Record<
         default: m.PriceAlertStep,
       })),
     ),
+    'percent-move': lazyChunk(() =>
+      import('@/components/notifications/steps/percent-move-step').then(
+        (m) => ({
+          default: m.PercentMoveStep,
+        }),
+      ),
+    ),
     'order-executed': lazyChunk(() =>
       import('@/components/notifications/steps/order-executed-step').then(
         (m) => ({

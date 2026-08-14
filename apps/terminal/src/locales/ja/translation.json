@@ -3471,9 +3471,8 @@
         "untitledRule": "無題のルール",
         "eyebrow": "通知",
         "title": "マーケットの監視はPairlensにおまかせ",
-        "description": "ルールは小さなフローです。何かが起きる — 水準を超える、ローソク足が確定する、注文が約定する、インジケーターのアラートが発火する — そこに追加した条件を通過すると、トースト、システム通知、Telegramのメッセージ、またはWebhookとして届きます。",
+        "description": "アラートは一行で済みます。超えるべき水準か、見逃せない値動きか — ペアを指定すればすぐ有効です。フローはそれ以外のため: 条件、約定、インジケーターのアラート、そして届け先。",
         "startBlank": "空のキャンバスから始める",
-        "startFromTemplate": "テンプレートから始める",
         "footnote": "テンプレートは{{market}}の{{pair}}に紐づいた状態で、すぐに有効になります。ステップを編集したり、ルール一覧の下でペアを変更したら、保存してください。ルールはPairlensの起動中のみ動作します。"
       },
       "direction": "方向",
@@ -3537,6 +3536,9 @@
           "title": "時間帯",
           "start": "開始（UTC）",
           "end": "終了（UTC）"
+        },
+        "percentMove": {
+          "title": "価格の変動"
         }
       }
     },
@@ -3747,6 +3749,35 @@
             "label": "サイレント送信"
           }
         }
+      },
+      "percent-move": {
+        "label": "価格の変動",
+        "fields": {
+          "percent": {
+            "label": "パーセント"
+          },
+          "direction": {
+            "label": "方向",
+            "options": {
+              "up": "上昇",
+              "down": "下落",
+              "either": "どちらでも"
+            }
+          },
+          "window": {
+            "label": "期間",
+            "options": {
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "24h": "24H"
+            }
+          }
+        },
+        "handles": {
+          "out": "発火"
+        }
       }
     },
     "messages": {
@@ -3775,14 +3806,6 @@
       }
     },
     "templates": {
-      "price-level": {
-        "title": "価格が水準を突破",
-        "description": "{{pair}}が{{level}}を突破した瞬間に、トーストとOS通知を送信。水準はドラッグして自分の値に調整できます。",
-        "chips": {
-          "0": "価格上抜け",
-          "1": "トースト"
-        }
-      },
       "volatile-candle": {
         "title": "1時間足が大きく動いた",
         "description": "1時間足が始値から3%を超えて上下どちらかに動いて確定したときに発火します。",
@@ -3809,6 +3832,56 @@
       "session-drop": {
         "title": "急落を、自分が起きている間だけ",
         "description": "2%下落の足で起こしますが、UTC 13:00〜21:00の間だけです。"
+      }
+    },
+    "simple": {
+      "newTitle": "新しいアラート",
+      "newDescription": "何を見張るか、どう知らせるかを選んでください。",
+      "kindLevel": "価格ライン",
+      "kindLevelHint": "価格が指定した数値を超えたら知らせます。",
+      "kindMove": "価格の変動",
+      "kindMoveHint": "この幅を、この速さで動いたら知らせます。",
+      "rises": "上抜け",
+      "drops": "下抜け",
+      "currentPrice": "現在 {{price}}",
+      "percent": "変動幅",
+      "within": "期間",
+      "deliverLabel": "通知方法",
+      "channelToast": "アプリ内",
+      "channelOs": "デスクトップ",
+      "channelTelegram": "Telegram",
+      "osBlocked": "システムが Pairlens の通知をブロックしています。",
+      "create": "アラートを作成",
+      "created": "{{pair}} のアラートを有効にしました",
+      "summaryAbove": "{{venue}} の {{pair}} が {{price}} を上回ったら通知します。",
+      "summaryBelow": "{{venue}} の {{pair}} が {{price}} を下回ったら通知します。",
+      "summaryUp": "{{venue}} の {{pair}} が {{window}} 以内に {{percent}}% 以上上昇したら通知します。",
+      "summaryDown": "{{venue}} の {{pair}} が {{window}} 以内に {{percent}}% 以上下落したら通知します。",
+      "summaryEither": "{{venue}} の {{pair}} が {{window}} 以内に上下どちらかへ {{percent}}% 動いたら通知します。",
+      "watching": "監視中",
+      "addPair": "ペアを追加",
+      "openInBuilder": "フロービルダーで開く",
+      "runsWhileOpen": "変更はその場で保存されます。アラートは Pairlens の起動中に判定されます。",
+      "newFlow": "カスタムフローを作る",
+      "shelfLabel": "まずはアラートから",
+      "flowShelfLabel": "またはフローを作る",
+      "card": {
+        "price-level": {
+          "title": "価格が水準に到達",
+          "description": "気にしている数値をペアが超えた瞬間に知らせます。",
+          "chips": {
+            "0": "上または下",
+            "1": "数値ひとつ"
+          }
+        },
+        "percent-move": {
+          "title": "価格が急に動く",
+          "description": "指定した期間内に指定した割合だけペアが動いたら知らせます。",
+          "chips": {
+            "0": "上昇・下落・両方",
+            "1": "5m〜24h"
+          }
+        }
       }
     }
   },

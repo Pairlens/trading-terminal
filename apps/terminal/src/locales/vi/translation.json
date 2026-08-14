@@ -3471,9 +3471,8 @@
         "untitledRule": "Quy tắc chưa đặt tên",
         "eyebrow": "Thông báo",
         "title": "Theo dõi thị trường để bạn không phải làm điều đó",
-        "description": "Một quy tắc là một luồng nhỏ: điều gì đó xảy ra — giá vượt qua một mức, một nến đóng lại, một lệnh được khớp, một cảnh báo chỉ báo được kích hoạt — nó đi qua các điều kiện bạn thêm vào, rồi đến với bạn dưới dạng toast, thông báo hệ thống, tin nhắn Telegram, hoặc webhook.",
+        "description": "Một cảnh báo gói gọn trong một dòng: một mốc để vượt qua, hoặc một biến động đáng chú ý — chọn cặp là nó đã sẵn sàng. Luồng dành cho phần còn lại: điều kiện, lệnh khớp, cảnh báo chỉ báo và nơi chúng được gửi tới.",
         "startBlank": "Bắt đầu từ khung vẽ trống",
-        "startFromTemplate": "Bắt đầu từ mẫu",
         "footnote": "Mẫu có hiệu lực ngay, gắn với {{pair}} trên {{market}}. Sửa các bước hoặc đổi cặp bên dưới danh sách quy tắc, rồi lưu thay đổi. Quy tắc chỉ chạy khi Pairlens đang mở."
       },
       "direction": "Hướng",
@@ -3537,6 +3536,9 @@
           "title": "Khung thời gian",
           "start": "Bắt đầu (UTC)",
           "end": "Kết thúc (UTC)"
+        },
+        "percentMove": {
+          "title": "Biến động giá"
         }
       }
     },
@@ -3747,6 +3749,35 @@
             "label": "Tin nhắn im lặng"
           }
         }
+      },
+      "percent-move": {
+        "label": "Biến động giá",
+        "fields": {
+          "percent": {
+            "label": "Phần trăm"
+          },
+          "direction": {
+            "label": "Hướng",
+            "options": {
+              "up": "Tăng",
+              "down": "Giảm",
+              "either": "Cả hai"
+            }
+          },
+          "window": {
+            "label": "Trong",
+            "options": {
+              "5m": "5m",
+              "15m": "15m",
+              "1h": "1H",
+              "4h": "4H",
+              "24h": "24H"
+            }
+          }
+        },
+        "handles": {
+          "out": "Đã kích hoạt"
+        }
       }
     },
     "messages": {
@@ -3775,14 +3806,6 @@
       }
     },
     "templates": {
-      "price-level": {
-        "title": "Giá vượt qua một mức",
-        "description": "Toast cộng với thông báo hệ thống ngay khi {{pair}} vượt qua {{level}}. Kéo mức giá theo ý bạn.",
-        "chips": {
-          "0": "Giá trên",
-          "1": "Toast"
-        }
-      },
       "volatile-candle": {
         "title": "Nến giờ biến động mạnh",
         "description": "Kích hoạt khi một nến giờ đóng cách giá mở hơn 3%, dù tăng hay giảm.",
@@ -3809,6 +3832,56 @@
       "session-drop": {
         "title": "Giảm mạnh, chỉ khi tôi đang thức",
         "description": "Một nến giảm 2% sẽ đánh thức bạn, nhưng chỉ trong khoảng 13:00 đến 21:00 UTC."
+      }
+    },
+    "simple": {
+      "newTitle": "Cảnh báo mới",
+      "newDescription": "Chọn thứ cần theo dõi và cách bạn muốn được báo.",
+      "kindLevel": "Mức giá",
+      "kindLevelHint": "Báo cho tôi khi giá vượt một mốc.",
+      "kindMove": "Biến động giá",
+      "kindMoveHint": "Báo cho tôi khi giá dịch chuyển mạnh và nhanh như vậy.",
+      "rises": "Vượt lên trên",
+      "drops": "Rơi xuống dưới",
+      "currentPrice": "Hiện tại {{price}}",
+      "percent": "Biến động",
+      "within": "Trong",
+      "deliverLabel": "Báo cho tôi bằng",
+      "channelToast": "Trong ứng dụng",
+      "channelOs": "Máy tính",
+      "channelTelegram": "Telegram",
+      "osBlocked": "Hệ thống của bạn đang chặn thông báo từ Pairlens.",
+      "create": "Tạo cảnh báo",
+      "created": "Đã bật cảnh báo cho {{pair}}",
+      "summaryAbove": "Báo cho bạn khi {{pair}} giao dịch trên {{price}} tại {{venue}}.",
+      "summaryBelow": "Báo cho bạn khi {{pair}} giao dịch dưới {{price}} tại {{venue}}.",
+      "summaryUp": "Báo cho bạn khi {{pair}} tăng {{percent}}% trở lên trong {{window}} tại {{venue}}.",
+      "summaryDown": "Báo cho bạn khi {{pair}} giảm {{percent}}% trở lên trong {{window}} tại {{venue}}.",
+      "summaryEither": "Báo cho bạn khi {{pair}} biến động {{percent}}% theo bất kỳ chiều nào trong {{window}} tại {{venue}}.",
+      "watching": "Đang theo dõi",
+      "addPair": "Thêm cặp",
+      "openInBuilder": "Mở trong trình dựng luồng",
+      "runsWhileOpen": "Thay đổi được lưu ngay. Cảnh báo chạy khi Pairlens đang mở.",
+      "newFlow": "Dựng luồng tùy chỉnh",
+      "shelfLabel": "Bắt đầu bằng một cảnh báo",
+      "flowShelfLabel": "Hoặc dựng một luồng",
+      "card": {
+        "price-level": {
+          "title": "Giá chạm một mốc",
+          "description": "Biết ngay khoảnh khắc một cặp vượt qua con số bạn quan tâm.",
+          "chips": {
+            "0": "Trên hoặc dưới",
+            "1": "Một con số"
+          }
+        },
+        "percent-move": {
+          "title": "Giá chạy nhanh",
+          "description": "Biết khi một cặp dao động đúng tỷ lệ bạn đặt trong một khoảng thời gian.",
+          "chips": {
+            "0": "Tăng, giảm hoặc cả hai",
+            "1": "Từ 5m đến 24h"
+          }
+        }
       }
     }
   },

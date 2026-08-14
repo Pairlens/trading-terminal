@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 // ── Built-in Notification Step Definitions ──────────────────────────
 //
-// Event steps:     price-alert, order-executed, signal-generated,
-//                  indicator-alert, candle-close
+// Event steps:     price-alert, percent-move, order-executed,
+//                  signal-generated, indicator-alert, candle-close
 // Condition steps: price-condition, percent-change, time-window
 // Channel steps:   local-toast, os-notification, webhook, telegram
 //
@@ -12,6 +12,7 @@
 // incoming edges. Channel `deliver` functions are stubs — the terminal
 // registers concrete implementations at runtime.
 
+import { PERCENT_WINDOWS } from './simple-alerts'
 import type { NotificationStepTypeDefinition } from './step-registry'
 
 /** First value that is real text, skipping nullish and blank strings. */
@@ -77,6 +78,90 @@ const priceAlert: NotificationStepTypeDefinition = {
     body: `${String(payload.pair ?? '')} is now ${String(data.direction)} ${String(data.price)} — current: ${String(payload.price ?? 'N/A')}`,
     severity: 'info',
   }),
+}
+
+/** Window labels for the `percent-move` config select. */
+const PERCENT_WINDOW_OPTIONS = PERCENT_WINDOWS.map((window) => ({
+  value: window,
+  label:
+    window === '24h'
+      ? '24H'
+      : window === '4h'
+        ? '4H'
+        : window === '1h'
+          ? '1H'
+          : window,
+}))
+
+/**
+ * "It moved 5% in the last hour."
+ *
+ * The rolling counterpart to `price-alert`: instead of a level, a
+ * magnitude over a trailing window. The percent-change CONDITION step
+ * cannot express this — it reads whatever `percentChange` its upstream
+ * event happens to carry, which is one candle's body on a close event and
+ * the 24h figure on a ticker, never an arbitrary window. The subscription
+ * manager measures the window and emits the event; the filter below owns
+ * the threshold, so one stream serves every rule watching that window.
+ */
+const percentMove: NotificationStepTypeDefinition = {
+  type: 'percent-move',
+  label: 'Price Move',
+  icon: 'TrendingUpDown',
+  category: 'event',
+  handles: {
+    inputs: [],
+    outputs: [{ id: 'out', label: 'Triggered' }],
+  },
+  configSchema: [
+    {
+      key: 'percent',
+      type: 'number',
+      label: 'Percent',
+      default: 5,
+      min: 0,
+      step: 0.1,
+    },
+    {
+      key: 'direction',
+      type: 'select',
+      label: 'Direction',
+      default: 'either',
+      options: [
+        { value: 'up', label: 'Up' },
+        { value: 'down', label: 'Down' },
+        { value: 'either', label: 'Either' },
+      ],
+    },
+    {
+      key: 'window',
+      type: 'select',
+      label: 'Within',
+      default: '1h',
+      options: PERCENT_WINDOW_OPTIONS,
+    },
+  ],
+  validate: (data) => {
+    const errors: Array<string> = []
+    if (!data.percent || Number(data.percent) <= 0)
+      errors.push('Percent must be positive')
+    return errors
+  },
+  defaultData: () => ({ percent: 5, direction: 'either', window: '1h' }),
+  formatMessage: (data, payload) => {
+    const change = Number(payload.data.percentChange ?? 0)
+    const window = firstText(payload.data.window, data.window) ?? ''
+    const signed = `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`
+    return {
+      title: `${String(payload.pair ?? 'Price')} ${signed} in ${window}`,
+      body: `${String(payload.pair ?? '')} is ${change >= 0 ? 'up' : 'down'} ${Math.abs(
+        change,
+      ).toFixed(
+        2,
+      )}% over the last ${window} — now ${String(payload.price ?? 'N/A')}`,
+      severity: change >= 0 ? 'success' : 'warning',
+    }
+  },
 }
 
 const orderExecuted: NotificationStepTypeDefinition = {
@@ -543,6 +628,7 @@ const telegram: NotificationStepTypeDefinition = {
 export const CORE_NOTIFICATION_STEPS: Array<NotificationStepTypeDefinition> = [
   // Events
   priceAlert,
+  percentMove,
   orderExecuted,
   signalGenerated,
   indicatorAlert,
