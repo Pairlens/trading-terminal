@@ -6,9 +6,9 @@ import * as React from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   Cloud,
-  CloudDownload,
   CloudUpload,
   LogIn,
+  RefreshCw,
   RotateCcw,
   Search,
   Upload,
@@ -43,6 +43,12 @@ import {
   FieldLabel,
 } from '@pairlens/ui/components/ui/field'
 import { Input } from '@pairlens/ui/components/ui/input'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@pairlens/ui/components/ui/tooltip'
+import { cn } from '@pairlens/ui'
 import {
   Sidebar,
   SidebarContent,
@@ -546,28 +552,47 @@ export default function UserSettingsDialog({
 function AppVersionFooter() {
   const { t } = useTranslation()
   const version = useAppVersion()
+  const [checking, setChecking] = React.useState(false)
   const platform = isStandalone
     ? t('settings.about.desktop')
     : t('settings.about.browser')
 
+  // Same manual check as the omni search action; the answer — up to date,
+  // an update prompt, or a failure — arrives as a toast. The icon spins for
+  // as long as the check is in flight.
+  const onCheck = () => {
+    if (checking) return
+    setChecking(true)
+    void manualUpdateCheck().finally(() => setChecking(false))
+  }
+
   return (
     <SidebarFooter className="shrink-0 border-t">
-      <p className="truncate px-2 text-xs text-muted-foreground tabular-nums">
-        Pairlens v{version}
-        <span className="px-1">·</span>
-        {platform}
-      </p>
-      {/* Same manual check as the omni search action; the answer — up to
-          date, an update prompt, or a failure — arrives as a toast. */}
-      <Button
-        variant="ghost"
-        size="sm"
-        className="h-7 justify-start px-2 text-xs font-normal text-muted-foreground"
-        onClick={() => void manualUpdateCheck()}
-      >
-        <CloudDownload className="size-3.5" />
-        {t('updater.checkNow')}
-      </Button>
+      <div className="flex items-center justify-between gap-1">
+        <p className="truncate px-2 text-xs text-muted-foreground tabular-nums">
+          Pairlens v{version}
+          <span className="px-1">·</span>
+          {platform}
+        </p>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-6 shrink-0 text-muted-foreground"
+                aria-label={t('updater.checkNow')}
+                onClick={onCheck}
+              >
+                <RefreshCw
+                  className={cn('size-3.5', checking && 'animate-spin')}
+                />
+              </Button>
+            }
+          />
+          <TooltipContent>{t('updater.checkNow')}</TooltipContent>
+        </Tooltip>
+      </div>
     </SidebarFooter>
   )
 }
