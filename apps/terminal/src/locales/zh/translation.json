@@ -4139,6 +4139,8 @@
     "switchTo": "切换到 {{venue}}"
   },
   "pairPicker": {
+    "popular": "热门",
+    "switchPair": "更改交易对",
     "noPairsFound": "未找到交易对。",
     "startTyping": "开始输入以搜索交易对。"
   },

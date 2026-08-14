@@ -4139,6 +4139,8 @@
     "switchTo": "{{venue}}'a geç"
   },
   "pairPicker": {
+    "popular": "Popüler",
+    "switchPair": "Parite değiştir",
     "noPairsFound": "Parite bulunamadı.",
     "startTyping": "Parite aramak için yazmaya başla."
   },

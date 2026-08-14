@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { describe, expect, it } from 'bun:test'
 
-import { isSearchInFlight } from '../screens/search-progress'
-import type { SearchProgressInput } from '../screens/search-progress'
+import { isSearchInFlight } from '../search-progress'
+import type { SearchProgressInput } from '../search-progress'
 
 /** Settled server search with results — the state "No pairs found" is for. */
 const SETTLED: SearchProgressInput = {
