@@ -108,6 +108,15 @@ export const alpacaMarketConnectorManifest: PluginManifest = {
     abbr: 'ALP',
     logoUrl: ALPACA_ICON,
     triggerOrders: true,
+    /**
+     * Unlike every CEX, Alpaca gates MARKET DATA on API keys too — there is
+     * no public feed to fall back on. A browser vault is sealed on load, so
+     * the chart's first subscribe lands before any credential exists and
+     * fails; the terminal watches for this flag and re-subscribes market data
+     * once a credential is provisioned, instead of leaving the pane spinning
+     * for the rest of the session.
+     */
+    credentialedMarketData: true,
   },
   config: {},
 }

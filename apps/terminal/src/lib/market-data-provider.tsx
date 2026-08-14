@@ -537,6 +537,18 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
           country: getCountrySetting(),
         })
         .then(() => {
+          // Connectors whose MARKET DATA needs credentials (Alpaca: no public
+          // feed) are subscribed to before the vault is unlocked, so their
+          // first subscribe threw and the pane has been spinning ever since.
+          // Nothing else re-runs those effects — unlocking a vault is not a
+          // pair, venue or timeframe change — so bump the version the stream
+          // hooks already watch for pause/resume and let them re-subscribe.
+          // Gated on the flag so unlocking a vault does NOT tear down and
+          // refetch every crypto chart, whose data never needed a key.
+          if (plugin.manifest.metadata?.['credentialedMarketData'] === true) {
+            setStreamVersion((v) => v + 1)
+          }
+
           const unsubs: Array<() => void> = []
 
           pluginManager.setContext({
