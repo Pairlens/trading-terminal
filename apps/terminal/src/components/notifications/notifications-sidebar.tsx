@@ -3,6 +3,7 @@
 import { useTranslation } from 'react-i18next'
 import {
   Bell,
+  ChevronRight,
   Copy,
   FlaskConical,
   Pencil,
@@ -34,10 +35,14 @@ import {
 } from '../master-detail'
 import { NewAlertDialog } from './new-alert-dialog'
 import { NotificationActivityList } from './notification-activity'
+import { NotificationHistorySheet } from './notification-history-sheet'
 import { useSimpleAlertView } from './use-simple-alert-view'
 import { sendTestNotification } from '@/lib/notifications/test-fire'
 import { useNotificationStore } from '@/stores/notification-store'
 import { useNotificationLogStore } from '@/stores/notification-log-store'
+
+/** Firings shown under the rule list. The rest are one click away. */
+const RECENT_ACTIVITY = 4
 
 export function NotificationsSidebar() {
   const { t } = useTranslation()
@@ -51,7 +56,6 @@ export function NotificationsSidebar() {
   const duplicateRule = useNotificationStore((s) => s.duplicateRule)
   const startEditing = useNotificationStore((s) => s.startEditing)
 
-  const [tab, setTab] = useState<'rules' | 'activity'>('rules')
   const [alertOpen, setAlertOpen] = useState(false)
   const [createOpen, setCreateOpen] = useState(false)
   const [newName, setNewName] = useState('')
@@ -91,142 +95,112 @@ export function NotificationsSidebar() {
 
   return (
     <div className={MASTER_DETAIL_LIST_CLASS}>
-      {/* Header with tabs */}
       <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
-        <div className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider">
-          <button
-            type="button"
-            className={cn(
-              'rounded px-1.5 py-0.5 transition-colors',
-              tab === 'rules'
-                ? 'bg-accent text-accent-foreground'
-                : 'text-muted-foreground hover:text-foreground',
-            )}
-            onClick={() => setTab('rules')}
-          >
-            {t('notifications.builder.sidebar.tabRules')}
-          </button>
-          <button
-            type="button"
-            className={cn(
-              'rounded px-1.5 py-0.5 transition-colors',
-              tab === 'activity'
-                ? 'bg-accent text-accent-foreground'
-                : 'text-muted-foreground hover:text-foreground',
-            )}
-            onClick={() => setTab('activity')}
-          >
-            {t('notifications.builder.sidebar.tabActivity')}
-          </button>
-        </div>
-        {tab === 'rules' && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-6"
-            aria-label={t('notifications.simple.newTitle')}
-            onClick={() => setAlertOpen(true)}
-          >
-            <Plus className="size-3.5" />
-          </Button>
-        )}
+        <span className="text-xs font-semibold uppercase tracking-wider">
+          {t('notifications.builder.sidebar.tabRules')}
+        </span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-6"
+          aria-label={t('notifications.simple.newTitle')}
+          onClick={() => setAlertOpen(true)}
+        >
+          <Plus className="size-3.5" />
+        </Button>
       </div>
 
-      {tab === 'activity' ? (
-        <ActivityList />
-      ) : (
-        <>
-          {/* List */}
-          <div className="flex-1 overflow-y-auto p-1.5">
-            {rules.length === 0 && (
-              <p className="px-2 py-4 text-center text-xs text-muted-foreground">
-                {t('notifications.builder.sidebar.noRules')}
-              </p>
-            )}
-            {rules.map((rule) => {
-              const disabled = rule.enabled === false
-              // A bell for the alerts, the flow mark for everything else —
-              // the list says which editor a row opens before it is clicked.
-              const RowIcon = isSimpleAlert(rule) ? Bell : Workflow
-              return (
-                <div
-                  key={rule.id}
-                  className={cn(
-                    'group flex items-center gap-2 rounded-md px-2 py-1.5 text-sm cursor-pointer transition-colors',
-                    activeRuleId === rule.id
-                      ? 'bg-accent text-accent-foreground'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-                    disabled && 'opacity-60',
-                  )}
-                  onClick={() => {
-                    selectRule(rule.id)
-                    startEditing(rule.id)
+      {/* List */}
+      <div className="flex-1 overflow-y-auto p-1.5">
+        {rules.length === 0 && (
+          <p className="px-2 py-4 text-center text-xs text-muted-foreground">
+            {t('notifications.builder.sidebar.noRules')}
+          </p>
+        )}
+        {rules.map((rule) => {
+          const disabled = rule.enabled === false
+          // A bell for the alerts, the flow mark for everything else —
+          // the list says which editor a row opens before it is clicked.
+          const RowIcon = isSimpleAlert(rule) ? Bell : Workflow
+          return (
+            <div
+              key={rule.id}
+              className={cn(
+                'group flex items-center gap-2 rounded-md px-2 py-1.5 text-sm cursor-pointer transition-colors',
+                activeRuleId === rule.id
+                  ? 'bg-accent text-accent-foreground'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                disabled && 'opacity-60',
+              )}
+              onClick={() => {
+                selectRule(rule.id)
+                startEditing(rule.id)
+              }}
+            >
+              <RowIcon className="size-3.5 shrink-0" />
+              <span className="min-w-0 flex-1 truncate">{rule.name}</span>
+              <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setRenameId(rule.id)
                   }}
                 >
-                  <RowIcon className="size-3.5 shrink-0" />
-                  <span className="min-w-0 flex-1 truncate">{rule.name}</span>
-                  <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setRenameId(rule.id)
-                      }}
-                    >
-                      <Pencil className="size-3 text-muted-foreground hover:text-foreground" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        duplicateRule(rule.id)
-                      }}
-                    >
-                      <Copy className="size-3 text-muted-foreground hover:text-foreground" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setDeleteId(rule.id)
-                      }}
-                    >
-                      <Trash2 className="size-3 text-muted-foreground hover:text-destructive" />
-                    </button>
-                  </div>
-                  <Switch
-                    className="scale-75"
-                    checked={!disabled}
-                    onCheckedChange={() => toggleRule(rule.id)}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                </div>
-              )
-            })}
-          </div>
+                  <Pencil className="size-3 text-muted-foreground hover:text-foreground" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    duplicateRule(rule.id)
+                  }}
+                >
+                  <Copy className="size-3 text-muted-foreground hover:text-foreground" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setDeleteId(rule.id)
+                  }}
+                >
+                  <Trash2 className="size-3 text-muted-foreground hover:text-destructive" />
+                </button>
+              </div>
+              <Switch
+                className="scale-75"
+                checked={!disabled}
+                onCheckedChange={() => toggleRule(rule.id)}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+          )
+        })}
+      </div>
 
-          {/* The way to something the two-field form cannot say. Bottom of
-              the list, quiet: most people never need it, and the ones who do
-              are looking for it. */}
-          <div className="border-t border-border p-1.5">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 w-full justify-start gap-2 text-[11px] text-muted-foreground"
-              onClick={() => setCreateOpen(true)}
-            >
-              <Workflow className="size-3.5" />
-              {t('notifications.simple.newFlow')}
-            </Button>
-          </div>
+      {/* The way to something the two-field form cannot say. Bottom of the
+          list, quiet: most people never need it, and the ones who do are
+          looking for it. */}
+      <div className="border-t border-border p-1.5">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-full justify-start gap-2 text-[11px] text-muted-foreground"
+          onClick={() => setCreateOpen(true)}
+        >
+          <Workflow className="size-3.5" />
+          {t('notifications.simple.newFlow')}
+        </Button>
+      </div>
 
-          {/* Bindings for the selected rule. Simple alerts manage their own
-              pairs in the form, so this would be a second editable copy. */}
-          {activeRuleId && !simpleSelected && (
-            <BindingsPanel ruleId={activeRuleId} />
-          )}
-        </>
+      {/* Bindings for the selected rule. Simple alerts manage their own
+          pairs in the form, so this would be a second editable copy. */}
+      {activeRuleId && !simpleSelected && (
+        <BindingsPanel ruleId={activeRuleId} />
       )}
+
+      <RecentActivity />
 
       <NewAlertDialog
         open={alertOpen}
@@ -470,46 +444,62 @@ function BindingsPanel({ ruleId }: { ruleId: string }) {
   )
 }
 
-// ── Activity List ────────────────────────────────────────────────────
-// Recent notification deliveries (leader window appends, all windows
-// mirror). Rows come from the shared renderer the bell and the history
-// sheet use, so a firing reads the same wherever it is looked at.
+// ── Recent activity ──────────────────────────────────────────────────
 
-function ActivityList() {
+/**
+ * The last few firings, pinned under the rule list.
+ *
+ * This used to be a TAB, which meant looking at what fired hid the rules
+ * that fired it — on the one screen where the two belong side by side. The
+ * full log lives in the same sheet the bell opens; what sits here is only
+ * enough to answer "is any of this actually working?" while editing.
+ */
+function RecentActivity() {
   const { t } = useTranslation()
   const entries = useNotificationLogStore((s) => s.entries)
-  const clear = useNotificationLogStore((s) => s.clear)
   const load = useNotificationLogStore((s) => s.load)
   const markSeen = useNotificationLogStore((s) => s.markSeen)
+  const [historyOpen, setHistoryOpen] = useState(false)
 
   useEffect(() => {
     load()
   }, [load])
 
-  // This tab IS the log; showing it is what "seen" means.
+  // Visible on this page by definition, so being here IS having seen it.
   useEffect(() => {
     markSeen()
   }, [entries, markSeen])
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <NotificationActivityList
-        className="flex-1 overflow-y-auto p-1.5"
-        entries={entries}
-        emptyLabel={t('notifications.builder.sidebar.noActivity')}
-      />
-      {entries.length > 0 && (
-        <div className="border-t border-border p-1.5">
+    <div className="border-t border-border">
+      <div className="flex items-center justify-between px-3 py-2">
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          {t('notifications.builder.sidebar.recentLabel')}
+        </span>
+        {entries.length > 0 && (
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 w-full text-[10px] text-muted-foreground"
-            onClick={clear}
+            className="h-6 gap-1 px-1.5 text-[10px] text-muted-foreground"
+            onClick={() => setHistoryOpen(true)}
           >
-            {t('notifications.builder.sidebar.clearActivity')}
+            {t('notifications.bell.seeAll', { count: entries.length })}
+            <ChevronRight className="size-3" />
           </Button>
-        </div>
-      )}
+        )}
+      </div>
+
+      <NotificationActivityList
+        className="max-h-44 overflow-y-auto px-1.5 pb-1.5"
+        entries={entries.slice(0, RECENT_ACTIVITY)}
+        compact
+        emptyLabel={t('notifications.builder.sidebar.noActivity')}
+      />
+
+      <NotificationHistorySheet
+        open={historyOpen}
+        onOpenChange={setHistoryOpen}
+      />
     </div>
   )
 }

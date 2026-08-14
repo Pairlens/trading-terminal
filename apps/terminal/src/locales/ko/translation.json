@@ -3401,7 +3401,6 @@
     "builder": {
       "sidebar": {
         "tabRules": "규칙",
-        "tabActivity": "활동",
         "noRules": "아직 알림 규칙이 없습니다",
         "newRuleTitle": "새 알림 규칙",
         "rulePlaceholder": "규칙 이름",
@@ -3418,7 +3417,8 @@
         "testFailed": "테스트를 전달하지 못했습니다",
         "noActivity": "아직 발생한 알림이 없습니다",
         "clearActivity": "활동 지우기",
-        "channelFailed": "{{channel}} 실패"
+        "channelFailed": "{{channel}} 실패",
+        "recentLabel": "최근"
       },
       "commitBar": {
         "cycleDetected": "순환 감지됨",

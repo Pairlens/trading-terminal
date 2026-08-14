@@ -3433,7 +3433,6 @@
     "builder": {
       "sidebar": {
         "tabRules": "Reguły",
-        "tabActivity": "Aktywność",
         "noRules": "Brak jeszcze reguł powiadomień",
         "newRuleTitle": "Nowa reguła powiadomienia",
         "rulePlaceholder": "Nazwa reguły",
@@ -3450,7 +3449,8 @@
         "testFailed": "Testu nie udało się dostarczyć",
         "noActivity": "Żadne powiadomienie jeszcze nie zadziałało",
         "clearActivity": "Wyczyść aktywność",
-        "channelFailed": "{{channel}} nie powiodło się"
+        "channelFailed": "{{channel}} nie powiodło się",
+        "recentLabel": "Ostatnie"
       },
       "commitBar": {
         "cycleDetected": "Wykryto cykl",

@@ -3401,7 +3401,6 @@
     "builder": {
       "sidebar": {
         "tabRules": "規則",
-        "tabActivity": "活動",
         "noRules": "尚無通知規則",
         "newRuleTitle": "新增通知規則",
         "rulePlaceholder": "規則名稱",
@@ -3418,7 +3417,8 @@
         "testFailed": "測試未送達",
         "noActivity": "尚無已觸發的通知",
         "clearActivity": "清除活動",
-        "channelFailed": "{{channel}} 失敗"
+        "channelFailed": "{{channel}} 失敗",
+        "recentLabel": "最近"
       },
       "commitBar": {
         "cycleDetected": "偵測到循環",

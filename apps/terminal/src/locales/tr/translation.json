@@ -3401,7 +3401,6 @@
     "builder": {
       "sidebar": {
         "tabRules": "Kurallar",
-        "tabActivity": "Etkinlik",
         "noRules": "Henüz bildirim kuralı yok",
         "newRuleTitle": "Yeni Bildirim Kuralı",
         "rulePlaceholder": "Kural adı",
@@ -3418,7 +3417,8 @@
         "testFailed": "Test iletilemedi",
         "noActivity": "Henüz tetiklenen bildirim yok",
         "clearActivity": "Etkinliği temizle",
-        "channelFailed": "{{channel}} başarısız oldu"
+        "channelFailed": "{{channel}} başarısız oldu",
+        "recentLabel": "Son"
       },
       "commitBar": {
         "cycleDetected": "Döngü tespit edildi",

@@ -3401,7 +3401,6 @@
     "builder": {
       "sidebar": {
         "tabRules": "ルール",
-        "tabActivity": "アクティビティ",
         "noRules": "通知ルールはまだありません",
         "newRuleTitle": "新しい通知ルール",
         "rulePlaceholder": "ルール名",
@@ -3418,7 +3417,8 @@
         "testFailed": "テストを配信できませんでした",
         "noActivity": "まだ通知は発火していません",
         "clearActivity": "アクティビティを消去",
-        "channelFailed": "{{channel}}が失敗しました"
+        "channelFailed": "{{channel}}が失敗しました",
+        "recentLabel": "最近"
       },
       "commitBar": {
         "cycleDetected": "循環を検出",

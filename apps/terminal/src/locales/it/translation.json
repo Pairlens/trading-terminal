@@ -3401,7 +3401,6 @@
     "builder": {
       "sidebar": {
         "tabRules": "Regole",
-        "tabActivity": "Attività",
         "noRules": "Ancora nessuna regola di notifica",
         "newRuleTitle": "Nuova regola di notifica",
         "rulePlaceholder": "Nome regola",
@@ -3418,7 +3417,8 @@
         "testFailed": "Il test non è stato recapitato",
         "noActivity": "Nessuna notifica ancora scattata",
         "clearActivity": "Cancella attività",
-        "channelFailed": "{{channel}} non riuscito"
+        "channelFailed": "{{channel}} non riuscito",
+        "recentLabel": "Recenti"
       },
       "commitBar": {
         "cycleDetected": "Ciclo rilevato",
