@@ -46,6 +46,7 @@ import { TrendQuoteCell } from './trend-quote-cell'
 import type { Instrument } from '@pairlens/shared/instrument-types'
 import { haptic } from '@/lib/haptics'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
+import { entryToInstrumentRef } from '@/lib/market-ref/entry'
 import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
@@ -297,7 +298,7 @@ const WatchlistRow = memo(function WatchlistRow({
     // An equity cannot stream from a crypto exchange, so a row whose venue was
     // resolved away from the focused one takes the venue with it.
     if (market !== focusedVenue) setFocusedVenue(market)
-    setFocusedPair(instrument.symbol)
+    setFocusedPair(instrument.symbol, entryToInstrumentRef(instrument).cls)
     // Then get out of the way: picking is the errand, and the chart the row
     // just changed is the half of the screen the sheet is sitting on.
     dismissPanel()
@@ -307,7 +308,7 @@ const WatchlistRow = memo(function WatchlistRow({
     setFocusedVenue,
     setFocusedPair,
     dismissPanel,
-    instrument.symbol,
+    instrument,
   ])
 
   return (

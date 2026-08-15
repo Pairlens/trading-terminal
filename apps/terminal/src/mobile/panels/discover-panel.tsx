@@ -44,6 +44,7 @@ import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { instrumentToPairEntry } from '@/components/pair-picker/pair-picker-data'
+import { entryToInstrumentRef } from '@/lib/market-ref/entry'
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
 import { quoteForPair } from '@/components/discovery/pair-quote'
 import {
@@ -203,14 +204,17 @@ const FeaturedRow = memo(function FeaturedRow({
   const handlePress = useCallback(() => {
     haptic('selection')
     if (market !== focusedVenue) setFocusedVenue(market)
-    setFocusedPair(pair.symbol)
+    // The class travels with the pair: `setFocusedPair` keeps the previous
+    // class when none is given, so a spot pick made while a prediction pair
+    // was focused minted /prediction/okx/ETH-USDT.
+    setFocusedPair(pair.symbol, entryToInstrumentRef(pair).cls)
     dismissPanel()
   }, [
     market,
     focusedVenue,
     setFocusedVenue,
     setFocusedPair,
-    pair.symbol,
+    pair,
     dismissPanel,
   ])
 
