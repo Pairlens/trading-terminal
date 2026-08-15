@@ -79,6 +79,14 @@ type CopilotInputProps = {
    * AI" entry points, when the rail is already open).
    */
   focusSignal?: number
+  /**
+   * Text to drop into the composer for the user to edit before sending,
+   * applied whenever `seedSignal` changes. This is the half of
+   * `askAssistant` that does NOT send: a "Build with AI" button that
+   * opens the chat with the request already typed.
+   */
+  seedText?: string
+  seedSignal?: number
 }
 
 export function CopilotInput({
@@ -88,6 +96,8 @@ export function CopilotInput({
   quickActions,
   placeholder,
   focusSignal = 0,
+  seedText,
+  seedSignal = 0,
 }: CopilotInputProps) {
   const { t } = useTranslation()
   const [value, setValue] = useState('')
@@ -104,6 +114,17 @@ export function CopilotInput({
   useEffect(() => {
     if (focusSignal > 0) inputRef.current?.focus()
   }, [focusSignal])
+
+  useEffect(() => {
+    if (seedSignal <= 0 || !seedText) return
+    setValue(seedText)
+    const field = inputRef.current
+    if (!field) return
+    field.focus()
+    // Caret at the end, not selecting the seed: the point is to let the
+    // user add to it, and a selection would delete it on the next key.
+    field.setSelectionRange(seedText.length, seedText.length)
+  }, [seedSignal, seedText])
 
   // Grow the composer with its content so a long message wraps into a block
   // instead of scrolling away on one endless line. Measured rather than left to

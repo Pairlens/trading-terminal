@@ -20,7 +20,7 @@
     "oneTerminal": {
       "eyebrow": "Dlaczego Pairlens",
       "title": "Jeden terminal. Każdy rynek.",
-      "sub": "Handluj spot scentralizowanym i on-chain jednocześnie, z copilotem AI analizującym każdy układ.",
+      "sub": "Handluj spot scentralizowanym i on-chain jednocześnie, z jednym asystentem AI analizującym każdy układ.",
       "points": {
         "0": "Scentralizowany spot — OKX, Binance, Coinbase",
         "1": "Swapy DEX on-chain, inteligentnie routowane",
@@ -90,9 +90,9 @@
       "label": "Routing"
     },
     "copilot": {
-      "eyebrow": "Twój copilot",
-      "title": "Copilot, który gra według Twoich zasad.",
-      "sub": "Czyta rynek za Ciebie — i nigdy nie przekracza granic, które wyznaczasz.",
+      "eyebrow": "Twój asystent",
+      "title": "Asystent, który gra według Twoich zasad.",
+      "sub": "Czyta rynek za Ciebie i nigdy nie przekracza granic, które wyznaczasz.",
       "points": {
         "0": "Śledzi sygnały na Twoich rynkach",
         "1": "Zatwierdza, blokuje lub oznacza każdy układ",
@@ -101,7 +101,7 @@
       "scene": {
         "guardrail": "Twój limit ryzyka"
       },
-      "label": "Copilot"
+      "label": "Asystent"
     },
     "themeStep": {
       "status": "Dostosowywanie oświetlenia",
@@ -166,11 +166,11 @@
     "account": {
       "status": "Ostatnia rzecz",
       "title": "Zsynchronizować?",
-      "sub": "Opcjonalnie — wszystko, co widziałeś/aś, działa bez konta. Konto dodaje AI copilota i synchronizację między urządzeniami. Twoje klucze zawsze pozostają na tym urządzeniu.",
+      "sub": "Opcjonalnie: wszystko, co widziałeś/aś, działa bez konta. Konto dodaje hostowanego asystenta AI i synchronizację między urządzeniami. Twoje klucze zawsze pozostają na tym urządzeniu.",
       "benefits": {
         "ai": {
-          "title": "AI copilot i research",
-          "sub": "Kontekstowa analiza dowolnej pary — w cenie"
+          "title": "Asystent AI i research",
+          "sub": "Działa w całym terminalu, za darmo"
         },
         "sync": {
           "title": "Synchronizacja w chmurze",
@@ -503,12 +503,12 @@
         },
         "copilot": {
           "title": "Historia czatu z AI",
-          "description": "Twoje rozmowy z copilotem, osobno dla każdej pary.",
+          "description": "Jedna rozmowa z asystentem, dla całego terminala.",
           "caveat": "Dopóki to jest wyłączone, wyczyszczenie historii czatu czyści tylko to urządzenie. Rozmowy zapisane na Twoim koncie zostają i pojawią się ponownie po włączeniu synchronizacji."
         },
         "trades": {
           "title": "Dziennik transakcji",
-          "description": "Transakcje, które Ty lub copilot zapisujecie w dzienniku."
+          "description": "Transakcje, które Ty lub asystent zapisujecie w dzienniku."
         }
       }
     },
@@ -693,24 +693,24 @@
       "dailyTradeCount": "Transakcje",
       "windowStart": "Okno rozpoczęte",
       "confirmGesture": "Potwierdzanie zleceń",
-      "confirmGestureDescription": "Jak zatwierdzasz zlecenie składane samodzielnie — w tickecie i na kartach zleceń copilota.",
+      "confirmGestureDescription": "Jak zatwierdzasz zlecenie składane samodzielnie, w tickecie i na kartach zleceń asystenta.",
       "confirmHold": "Naciśnij i przytrzymaj",
       "confirmHoldDescription": "Trzymaj przycisk, aż się wypełni. Zlecenia live trzyma się nieco dłużej niż paper.",
       "confirmClick": "Pojedyncze kliknięcie",
       "confirmClickDescription": "Pierwsze kliknięcie składa zlecenie. Między pomyłką a prawdziwym zleceniem nie ma już nic.",
       "confirmGestureNote": "Limity ryzyka działają tak samo — zmienia się gest, nie zabezpieczenia.",
       "aiPermissions": "Uprawnienia handlowe AI",
-      "aiPermissionsDescription": "Co copilot AI może zrobić bez pytania. Zlecenia poza tymi uprawnieniami zawsze wymagają Twojego potwierdzenia na karcie w czacie, a każde zlecenie — automatycznie zatwierdzone lub nie — jest egzekwowane wobec powyższych limitów ryzyka.",
+      "aiPermissionsDescription": "Co asystent AI może zrobić bez pytania. Zlecenia poza tymi uprawnieniami zawsze wymagają Twojego potwierdzenia na karcie w czacie, a każde zlecenie, automatycznie zatwierdzone lub nie, jest egzekwowane wobec powyższych limitów ryzyka.",
       "aiPaperAuto": "Automatycznie zatwierdzaj zlecenia paper",
-      "aiPaperAutoDescription": "Tylko symulowane środki. Copilot składa zlecenia paper bez karty potwierdzenia.",
+      "aiPaperAutoDescription": "Tylko symulowane środki. Asystent składa zlecenia paper bez karty potwierdzenia.",
       "aiLiveAuto": "Automatycznie zatwierdzaj zlecenia live",
       "aiLiveAutoEmpty": "Nie przyznano dostępu żadnej giełdzie — każde zlecenie live wymaga Twojego potwierdzenia. Przyznaj dostęp giełdzie z karty zlecenia opcją „Nie pytaj ponownie”.",
-      "aiLiveAutoDescription": "Prawdziwe środki. Copilot składa zlecenia live na tych giełdach bez karty potwierdzenia:",
+      "aiLiveAutoDescription": "Prawdziwe środki. Asystent składa zlecenia live na tych giełdach bez karty potwierdzenia:",
       "aiLiveAutoRevoke": "Odbierz dostęp {{market}}"
     },
     "billing": {
       "title": "Pairlens Intelligence",
-      "description": "Hostowany AI-kopilot, raporty badawcze i wyszukiwanie w sieci — bez kluczy API.",
+      "description": "Hostowany asystent AI, z pogłębionym researchem i wyszukiwaniem w sieci. Bez kluczy API.",
       "signInFirst": "Zaloguj się, aby zarządzać subskrypcją Pairlens Intelligence.",
       "selfHosted": "Na tym serwerze nie skonfigurowano rozliczeń — hostowane funkcje AI działają bez subskrypcji.",
       "loadError": "Nie udało się wczytać stanu rozliczeń. Spróbuj ponownie.",
@@ -879,7 +879,7 @@
       "triggerWake": "Po wybudzeniu komputera",
       "triggerWakeHint": "Zablokuj, gdy komputer wraca z uśpienia.",
       "triggerTrade": "Przed złożeniem zlecenia",
-      "triggerTradeHint": "Potwierdzaj zlecenia składane ręcznie lub przez copilota, także propozycje zatwierdzane automatycznie. Boty nigdy nie są pytane.",
+      "triggerTradeHint": "Potwierdzaj zlecenia składane ręcznie lub przez asystenta, także propozycje zatwierdzane automatycznie. Boty nigdy nie są pytane.",
       "afterMinutes": "Po {{minutes}} min",
       "everyHours": "Co {{hours}} godz.",
       "graceNever": "Za każdym razem",
@@ -1249,50 +1249,14 @@
     "buildWithAi": "Buduj z AI",
     "buildWithAiHint": "Opisz to, a asystent to napisze",
     "recommended": "Zalecane",
-    "placeholder": "Opisz, co zbudować...",
-    "answerPlaceholder": "Odpowiedz albo powiedz coś innego...",
-    "close": "Zamknij asystenta",
-    "clearChat": "Wyczyść rozmowę",
-    "emptyTitle": "Co budujemy?",
-    "emptyHintIndicators": "Opisz wskaźnik albo strategię — asystent zapisze je w edytorze, zweryfikuje i uruchomi podgląd.",
-    "emptyHintBots": "Poproś go o wdrożenie strategii jako bota na papierze, dostrojenie parametrów albo ustawienie guardów ryzyka. Uzbrojenie bota zostaje w twoich rękach.",
-    "emptyHintWorkflows": "Opisz, co ma się stać po realizacji zlecenia. Asystent połączy kroki; ty przeglądasz różnice i zatwierdzasz.",
-    "emptyHintNotifications": "Powiedz, o czym chcesz wiedzieć. Asystent zbuduje alert i uzbroi go na wskazanej parze.",
-    "genericError": "Asystent napotkał błąd — spróbuj wysłać wiadomość ponownie.",
-    "authRequiredTitle": "Buduj z AI",
-    "authRequiredDescription": "Opisz wskaźnik, strategię albo bota zwykłymi słowami — asystent napisze Pythona, zweryfikuje go i zrobi z tobą backtest.",
-    "upgradeRequiredDescription": "Asystent-budowniczy pisze z tobą wskaźniki, strategie i boty. Zasubskrybuj Pairlens Intelligence lub podłącz własny klucz AI — za darmo.",
-    "unavailableTitle": "Asystent niedostępny",
-    "unavailableDescription": "Włącz dostawcę AI na stronie Plugins, aby budować wskaźniki, strategie i boty przez czat.",
-    "quickNewIndicator": "Zbuduj wskaźnik dywergencji RSI",
-    "quickNewStrategy": "Napisz strategię wybicia, dla której mogę zrobić backtest",
-    "quickImprove": "Przejrzyj ten skrypt i zaproponuj ulepszenia",
-    "quickBotFromScratch": "Zbuduj mi bota od zera",
-    "quickCreateBot": "Wdróż jedną z moich strategii jako bota na papierze",
-    "quickGuards": "Zaproponuj guardy ryzyka dla jednego z moich botów",
-    "quickReview": "Jak radzą sobie moje boty?",
-    "quickBracket": "Zabezpiecz moje wejście stopem i celem",
-    "quickScaleOut": "Wyjdź z pozycji w trzech krokach",
-    "quickExplainWorkflow": "Wyjaśnij, co robi ten workflow",
-    "quickPriceAlert": "Daj znać, gdy BTC przetnie cenę",
-    "quickMoveAlert": "Ostrzeż mnie przy szybkim ruchu procentowym",
-    "quickAlertReview": "Przejrzyj alerty, które już mam",
     "questionHint": "Wybierz jedną albo wpisz własną odpowiedź poniżej.",
     "questionHintOpen": "Wpisz swoją odpowiedź poniżej.",
     "youAnswered": "Wybrano: {{answer}}",
-    "handoffToIndicators": "Kontynuujemy we Wskaźnikach i strategiach",
-    "handoffToBots": "Kontynuujemy w Botach",
-    "handoffToWorkflows": "Kontynuujemy w Workflowach",
-    "handoffToNotifications": "Kontynuujemy w Powiadomieniach",
     "starterTitle": "Opisz to, a powstanie",
     "starterBodyIndicators": "Powiedz, co chcesz zobaczyć na wykresie. Asystent napisze Pythona, zweryfikuje go i uruchomi podgląd, żebyś mógł to ocenić.",
     "starterBodyBots": "Powiedz, co bot ma robić. Asystent napisze strategię, zrobi backtest i wdroży ją na papierze. Uzbrojenie zostaje po twojej stronie.",
     "starterBodyWorkflows": "Powiedz, co ma się stać po realizacji zlecenia. Asystent połączy kroki na planszy; ty przeglądasz różnice i zatwierdzasz.",
     "starterBodyNotifications": "Powiedz, o czym chcesz wiedzieć. Asystent zbuduje alert, dobierze rozsądny odstęp i go uzbroi.",
-    "starterPlaceholderIndicators": "RSI, który cieniuje tło, gdy momentum się odwraca...",
-    "starterPlaceholderBots": "Bot kupujący korekty w trendzie wzrostowym na 4h...",
-    "starterPlaceholderWorkflows": "Po realizacji wejścia realizuj zysk na +5% i ucinaj na -3%...",
-    "starterPlaceholderNotifications": "Daj znać, gdy BTC przetnie 100 000 na OKX...",
     "starterIdeaIndicator1": "Wstęga trendu ważona wolumenem",
     "starterIdeaIndicator2": "Wykrywacz dywergencji",
     "starterIdeaIndicator3": "Wstęgi ściśnięcia zmienności",
@@ -1304,14 +1268,56 @@
     "starterIdeaWorkflow3": "Wejście drabinką na spadku",
     "starterIdeaAlert1": "BTC przecina poziom",
     "starterIdeaAlert2": "Ruch 5% w godzinę",
-    "starterIdeaAlert3": "Daj znać, gdy bot zawrze transakcję",
-    "starterSend": "Wyślij do asystenta"
+    "starterIdeaAlert3": "Daj znać, gdy bot zawrze transakcję"
+  },
+  "assistantDock": {
+    "title": "Asystent",
+    "open": "Otwórz asystenta",
+    "close": "Zminimalizuj asystenta",
+    "clear": "Wyczyść rozmowę",
+    "placeholder": "Zapytaj o cokolwiek albo powiedz, co zbudować...",
+    "answerPlaceholder": "Wpisz swoją odpowiedź...",
+    "emptyTitle": "Nad czym pracujemy?",
+    "emptyDescription": "Odczytam każdy rynek, poprowadzę wykres, napiszę wskaźniki i strategie, zbuduję alerty i workflowy oraz przygotuję zlecenia, które zatwierdzasz.",
+    "defaultSuggestion": "Zapytaj asystenta",
+    "statusThinking": "Myślę...",
+    "statusUsingTools": "Używam narzędzi...",
+    "statusSearching": "Szukam w sieci...",
+    "genericError": "Coś poszło nie tak. Spróbuj ponownie.",
+    "authRequiredTitle": "Zaloguj się, aby korzystać z asystenta",
+    "authRequiredDescription": "Asystent działa na Pairlens Intelligence albo na twoim własnym kluczu dostawcy.",
+    "upgradeRequiredDescription": "Dodaj Intelligence do swojego planu albo podłącz własny klucz dostawcy.",
+    "unavailableTitle": "Asystent niedostępny",
+    "unavailableDescription": "Żaden dostawca AI nie jest włączony. Podłącz jednego, aby zacząć.",
+    "goToPlugins": "Otwórz Plugin Store",
+    "suggest": {
+      "chart": "Przeanalizuj wykres {{pair}}",
+      "discovery": "Znajdź mi coś do handlu",
+      "workflows": "Zbuduj workflow",
+      "notifications": "Ustaw alert",
+      "bots": "Wdróż bota tradingowego",
+      "indicators": "Napisz wskaźnik",
+      "indicatorsScript": "Popraw {{name}}",
+      "accounts": "Przejrzyj moje konta",
+      "plugins": "Znajdź mi wtyczkę",
+      "workspaceStore": "Zaprojektuj mój obszar roboczy"
+    },
+    "researchCardTitle": "Raport research: {{pair}} na {{market}}",
+    "researchCardTitleGeneric": "Raport research",
+    "researchCardSources_one": "{{count}} źródło",
+    "researchCardSources_other": "Źródła: {{count}}",
+    "quickAnalyze": "Przeanalizuj {{pair}}",
+    "quickLevels": "Zaznacz kluczowe poziomy na {{symbol}}",
+    "quickAlert": "Daj znać, gdy {{symbol}} wybije",
+    "quickWhatsMoving": "Co się dziś rusza?",
+    "quickPortfolio": "Jak radzi sobie mój portfel?",
+    "quickBuildAlert": "Zbuduj mi alert",
+    "approvalApprove": "Zatwierdź",
+    "approvalDecline": "Odrzuć",
+    "approvalApproved": "Zatwierdzone",
+    "approvalDeclined": "Odrzucone"
   },
   "copilot": {
-    "aiLens": "AI Lens",
-    "thinking": "Myślę...",
-    "idle": "Bezczynny",
-    "clearHistory": "Wyczyść historię czatu",
     "placeholder": "Zapytaj swój lens...",
     "lensPersona": "Osobowość Lens",
     "persona": {
@@ -1345,22 +1351,7 @@
     "keep": "Zachowaj",
     "tradingUnavailable": "Handel jest niedostępny.",
     "noCredentialsForMarket": "Brak połączonych danych uwierzytelniających dla {{market}}. Dodaj klucze API w Kontach, aby handlować na żywo.",
-    "watchingPair": "Obserwowanie {{pair}} · {{timeframe}}",
-    "genericChatError": "Copilot napotkał błąd — spróbuj wysłać wiadomość ponownie.",
-    "quickActionHowIsDoing": "Jak radzi sobie {{symbol}}?",
-    "quickActionSuggestedIndicators": "Sugerowane wskaźniki",
-    "quickActionAnySignals": "Są jakieś sygnały?",
     "scheduledCheckPrefix": "[Zaplanowane sprawdzenie — ustawione {{minutes}} min temu]",
-    "authRequiredTitle": "Poznaj swojego copilota AI",
-    "authRequiredDescription": "Analiza kontekstowa dla dowolnej pary — odczytuje wykres, sprawdza Twoje limity ryzyka i odpowiada z uzasadnieniem, które możesz zakwestionować.",
-    "upgradeRequiredDescription": "Twój copilot AI odczytuje wykres, sprawdza Twoje limity ryzyka i odpowiada z uzasadnieniem, które możesz zakwestionować. Zasubskrybuj Pairlens Intelligence lub podłącz własny klucz AI — za darmo.",
-    "aiLensUnavailableTitle": "AI Lens niedostępne",
-    "aiLensUnavailableDescription": "Włącz wtyczkę AI na stronie Plugins, aby uzyskać analizę rynku w czasie rzeczywistym i wsparcie w handlu.",
-    "goToPlugins": "Przejdź do Plugins",
-    "analyzePair": "Analizuj {{pair}}",
-    "startConversation": "Rozpocznij rozmowę",
-    "emptyStateHint": "Zapytaj o warunki rynkowe, zweryfikuj swój setup lub poproś o ocenę ryzyka — AI zna pełny kontekst tej pary.",
-    "contextAware": "Świadome kontekstu",
     "toolFailed": "Narzędzie zawiodło"
   },
   "chart": {
@@ -2217,7 +2208,7 @@
       "priceMonthly": "{{price}} USD/mies.",
       "taxNotice": "Ceny nie zawierają podatku — jest on naliczany przy płatności.",
       "defaultTitle": "Odblokuj Pairlens Intelligence",
-      "defaultDescription": "Hostowany kopilot AI i research w sieci, bez potrzeby własnych kluczy API. Każdy plan zawiera miesięczny limit wykorzystania współdzielony między czat, research i wyszukiwanie w sieci.",
+      "defaultDescription": "Hostowany asystent AI, z pogłębionym researchem i wyszukiwaniem w sieci, bez kluczy API do pilnowania. Każdy plan zawiera miesięczny limit wykorzystania współdzielony między czat, research i wyszukiwanie w sieci.",
       "byokNote": "Wolisz własnego dostawcę? Połącz klucz Anthropic, OpenAI, Groq lub OpenRouter na stronie <plugins>Wtyczki</plugins> — AI z własnym kluczem jest zawsze bezpłatna.",
       "checkoutOpenedTitle": "Płatność otwarta w przeglądarce",
       "checkoutActivates": "Twoja subskrypcja aktywuje się tutaj zaraz po zakończeniu płatności.",
@@ -2245,7 +2236,6 @@
     "fearGreed": "Strach i chciwość",
     "chart": "Wykres",
     "trade": "Handel",
-    "aiLens": "AI Lens",
     "dataLog": "Dziennik danych",
     "positions": "Pozycje",
     "portfolio": "Portfel",
@@ -2254,7 +2244,6 @@
     "marketDepth": "Głębokość rynku",
     "pairInfo": "Informacje o parze",
     "multiPrice": "Porównanie cen",
-    "research": "Research",
     "social": "Społeczność",
     "risk": "Ryzyko",
     "symbolNews": "Wiadomości o symbolu",
@@ -2275,7 +2264,6 @@
     "fearGreed": "Wskaźnik nastrojów rynkowych oparty na Indeksie Strachu i Chciwości",
     "chart": "Wykres świecowy z wskaźnikami i narzędziami rysowania",
     "trade": "Składaj zlecenia rynkowe, z limitem i stop z kontrolą ryzyka",
-    "aiLens": "Copilot AI, który analizuje sygnały i dostarcza kontekst transakcji",
     "dataLog": "Surowy strumień sygnałów i zdarzeń dla aktywnej pary",
     "positions": "Monitoruj otwarte pozycje, zysk/stratę i historię transakcji",
     "portfolio": "Aktywa konta z podziałem alokacji",
@@ -2284,7 +2272,6 @@
     "marketDepth": "Skumulowany wykres głębokości rynku dla aktywnej pary",
     "pairInfo": "Kluczowe statystyki, stopa finansowania i metadane dla aktywnej pary",
     "multiPrice": "Ta sama para wyceniana jednocześnie na wszystkich giełdach, posortowana pod najlepsze wykonanie",
-    "research": "Wygenerowane przez AI szczegółowe raporty dla aktywnej pary",
     "social": "Nastroje społeczne i aktywność społeczności dla pary",
     "risk": "Metryki ryzyka portfela i konfiguracja zabezpieczeń",
     "symbolNews": "Wiadomości i analiza nastrojów dla aktywnej pary handlowej",
@@ -3112,10 +3099,6 @@
       "ascending": "Posortowano według: {{column}}, rosnąco",
       "descending": "Posortowano według: {{column}}, malejąco"
     },
-    "panel": {
-      "expand": "Rozwiń panel",
-      "collapse": "Zwiń panel"
-    },
     "recentlyViewed": "Ostatnio oglądane",
     "noMarketsFound": "Nie znaleziono rynków",
     "modeLive": "LIVE",
@@ -3183,7 +3166,7 @@
       "statusBrowserVault": "W tej chwili: każdy klucz zaszyfrowany w Twoim sejfie, wyłącznie w tej przeglądarce.",
       "statusBrowserNone": "W tej przeglądarce nie ma jeszcze sejfu. Utworzysz go, zanim będzie można zapisać pierwszy klucz.",
       "deviceTitle": "Przechowywane tylko na Twoim urządzeniu",
-      "deviceBody": "Twoje klucze API giełd i klucze portfela są zapisywane na tym komputerze i nigdzie indziej. Nigdy nie trafiają do Pairlens: ani przy logowaniu, ani przy synchronizacji ustawień, ani gdy copilot czyta wykres. Na naszych serwerach nie ma kopii, która mogłaby wyciec.",
+      "deviceBody": "Twoje klucze API giełd i klucze portfela są zapisywane na tym komputerze i nigdzie indziej. Nigdy nie trafiają do Pairlens: ani przy logowaniu, ani przy synchronizacji ustawień, ani gdy asystent czyta wykres. Na naszych serwerach nie ma kopii, która mogłaby wyciec.",
       "osTitle": "Zaszyfrowane, gdy tam leżą",
       "osBodyDesktop": "Są przechowywane w {{vault}}, tym samym chronionym magazynie, którego Twój system używa dla własnych haseł, zaszyfrowane na dysku i wydawane wyłącznie tej aplikacji.",
       "osBodyDesktopVault": "Są przechowywane w {{vault}}, tym samym chronionym magazynie, którego Twój system używa dla własnych haseł. Twój sejf dokłada warstwę na wierzchu: każda wartość jest zapieczętowana AES-256-GCM, zanim keychain w ogóle ją zobaczy.",
@@ -3427,8 +3410,8 @@
       },
       "ai-research-desk": {
         "name": "AI Research Desk",
-        "tagline": "Copilot, research i kanał wiadomości obok Twojego wykresu.",
-        "description": "Połącz wykres z copilotem AI, dogłębnym researchem oraz kanałami wiadomości globalnych i o symbolu. Stworzone do handlu napędzanego katalizatorami, gdzie historia liczy się tak samo jak cena. Wymaga dostawcy wnioskowania AI dla Copilota i Researchu."
+        "tagline": "Wykres między wiadomościami o symbolu a globalnym kanałem.",
+        "description": "Połącz wykres z kanałem wiadomości o symbolu i z kanałem globalnym, do handlu napędzanego katalizatorami, gdzie historia liczy się tak samo jak cena. Asystent AI siedzi w docku, więc jest tu pod ręką i nie zabiera kolumny."
       },
       "market-discovery": {
         "name": "Odkrywanie Rynków",
@@ -3443,7 +3426,7 @@
       "prediction-terminal": {
         "name": "Terminal Prognoz",
         "tagline": "Wykres prawdopodobieństwa, a obok całe wydarzenie.",
-        "description": "Domyślny układ dla rynków prognostycznych: wykres prawdopodobieństwa z transakcjami i Twoimi otwartymi kontraktami pod spodem, arkusz zleceń i panel transakcyjny na środku oraz przeglądarka wydarzeń obok copilota AI, bo sąsiednie wyniki to połowa analizy.",
+        "description": "Domyślny układ dla rynków prognostycznych: wykres prawdopodobieństwa z transakcjami i Twoimi otwartymi kontraktami pod spodem, arkusz zleceń i panel transakcyjny na środku oraz przeglądarka wydarzeń na pełną wysokość po prawej, bo sąsiednie wyniki to połowa analizy.",
         "menuLabel": "Domyślny"
       },
       "prediction-discovery": {
@@ -3460,7 +3443,7 @@
       "dex-terminal": {
         "name": "Terminal DEX",
         "tagline": "Handel on-chain bez udawanego arkusza zleceń.",
-        "description": "Domyślny układ on-chain: wykres ze statystykami puli i transakcjami pod spodem, ticket swapa nad ostatnimi tickerami do wychwytywania nowych listingów oraz copilot AI nad kanałem społecznościowym. Nie ma kolumny z arkuszem zleceń: głębokość wyliczona z puli jest syntetyczna, więc jej nie pokazujemy.",
+        "description": "Domyślny układ on-chain: wykres ze statystykami puli i transakcjami pod spodem, ticket swapa nad ostatnimi tickerami do wychwytywania nowych listingów oraz kanał społecznościowy po prawej. Nie ma kolumny z arkuszem zleceń: głębokość wyliczona z puli jest syntetyczna, więc jej nie pokazujemy.",
         "menuLabel": "Domyślny"
       },
       "quant-signals": {
@@ -3476,36 +3459,36 @@
       "equities-terminal": {
         "name": "Terminal Akcji",
         "tagline": "Akcje z panelem transakcyjnym nad wiadomościami o symbolu.",
-        "description": "Domyślny układ dla akcji: wykres z transakcjami, pozycjami i danymi fundamentalnymi pod spodem, panel transakcyjny nad wiadomościami o symbolu (katalizatory ruszają akcjami tak, jak przepływy ruszają kryptowalutami), a po prawej copilot AI.",
+        "description": "Domyślny układ dla akcji: wykres z transakcjami, pozycjami i danymi fundamentalnymi pod spodem oraz panel transakcyjny nad wiadomościami o symbolu, bo katalizatory ruszają akcjami tak, jak przepływy ruszają kryptowalutami.",
         "menuLabel": "Domyślny"
       },
       "ultrawide-trading-floor": {
         "name": "Ultrawide Trading Floor",
         "tagline": "Wszystko, wszędzie — na duży ekran.",
-        "description": "Czterokolumnowe centrum dowodzenia, które wypełnia monitor ultrawide lub drugi ekran: skaner, wykres, arkusz zleceń i głębokość, panel transakcyjny z pozycjami oraz copilot AI. Maksymalistyczny układ."
+        "description": "Czterokolumnowe centrum dowodzenia, które wypełnia monitor ultrawide lub drugi ekran: skaner, wykres, arkusz zleceń i głębokość oraz panel transakcyjny nad Twoimi otwartymi pozycjami. Maksymalistyczny układ."
       },
       "classic-terminal": {
         "name": "Klasyczny Terminal",
-        "tagline": "Klasyczny desk Pairlens — wykres, dane, handel, copilot.",
-        "description": "Domyślny układ terminala: duży wykres z paskiem danych w zakładkach i paskiem ryzyka po lewej oraz panel transakcyjny nad copilotem AI po prawej.",
+        "tagline": "Klasyczny desk Pairlens: wykres, dane, arkusz, panel.",
+        "description": "Domyślny układ terminala: duży wykres z paskiem danych w zakładkach i paskiem ryzyka po lewej oraz arkusz zleceń nad panelem transakcyjnym po prawej.",
         "menuLabel": "Domyślny"
       },
       "chart-focus": {
         "name": "Wykres na Pierwszym Planie",
         "tagline": "Jeden duży wykres z danymi w zakładkach na dole.",
-        "description": "Jednokolumnowy układ, który daje wykresowi maksymalnie dużo miejsca, z pozycjami, dziennikiem danych, copilotem i panelem transakcyjnym schowanymi w pasku zakładek na dole.",
+        "description": "Jednokolumnowy układ, który daje wykresowi maksymalnie dużo miejsca, z pozycjami, dziennikiem danych i panelem transakcyjnym schowanymi w pasku zakładek na dole.",
         "menuLabel": "Wykres na Pierwszym Planie"
       },
       "trading": {
         "name": "Handel",
-        "tagline": "Arkusz zleceń i panel transakcyjny po bokach centralnego wykresu.",
-        "description": "Trzykolumnowy desk egzekucyjny: arkusz zleceń i panel transakcyjny po lewej, wykres z pozycjami i ryzykiem na środku oraz copilot AI po prawej.",
+        "tagline": "Arkusz zleceń i panel obok wykresu na pełną wysokość.",
+        "description": "Dwukolumnowy desk egzekucyjny: arkusz zleceń nad panelem transakcyjnym po lewej, a wykres z pozycjami i ryzykiem zajmuje resztę szerokości.",
         "menuLabel": "Handel"
       },
       "chart-analysis": {
         "name": "Analiza Wykresu",
-        "tagline": "Wykres i dane po lewej, copilot i egzekucja po prawej.",
-        "description": "Podział nastawiony na analizę: wykres, dane, research i ryzyko po lewej; copilot, arkusz zleceń i panel transakcyjny po prawej.",
+        "tagline": "Wykres i dane po lewej, egzekucja po prawej.",
+        "description": "Podział nastawiony na analizę: wykres, dane i ryzyko po lewej; arkusz zleceń i panel transakcyjny po prawej.",
         "menuLabel": "Analiza"
       },
       "dual-charts": {
@@ -3533,23 +3516,23 @@
       },
       "laptop-split": {
         "name": "Podział na Laptopie",
-        "tagline": "Wykres + dane po lewej, handel + copilot po prawej — na mniejsze ekrany.",
-        "description": "Dwukolumnowy podział dopasowany do laptopów: wykres i pozycje po lewej, panel transakcyjny nad copilotem po prawej."
+        "tagline": "Wykres i dane po lewej, panel po prawej, w sam raz na laptopa.",
+        "description": "Dwukolumnowy podział dopasowany do laptopów: wykres, pozycje i ryzyko po lewej, panel transakcyjny po prawej."
       },
       "ultrawide-dashboard": {
         "name": "Dashboard Ultrawide",
         "tagline": "Każdy panel rozłożony na monitorze ultrawide.",
-        "description": "Czterokolumnowy dashboard dla ekranów ultrawide: arkusz zleceń, wykres z ryzykiem, pozycje i research oraz kolumna handel + copilot."
+        "description": "Czterokolumnowy dashboard dla ekranów ultrawide: arkusz zleceń, wykres z ryzykiem, pozycje i dziennik danych oraz kolumna z panelem transakcyjnym."
       },
       "ultrawide-trading": {
         "name": "Handel Ultrawide",
         "tagline": "Arkusz zleceń, głębokość, wykres i egzekucja na całej szerokości.",
-        "description": "Układ egzekucyjny ultrawide: arkusz zleceń i głębokość rynku po lewej, wykres z pozycjami na środku oraz kolumna handel + copilot po prawej."
+        "description": "Układ egzekucyjny ultrawide: arkusz zleceń i głębokość rynku po lewej, wykres z pozycjami na środku oraz panel transakcyjny po prawej."
       },
       "command-center": {
         "name": "Centrum Dowodzenia 4K",
         "tagline": "Pełne centrum dowodzenia dla ekranu 4K.",
-        "description": "Wszystko na ekranie dla monitora 4K: arkusz zleceń i informacje o parze, wykres z researchem i ryzykiem, pozycje i społeczność oraz kolumna handel + copilot."
+        "description": "Wszystko na ekranie dla monitora 4K: arkusz zleceń i informacje o parze, wykres z paskiem ryzyka, pozycje i społeczność oraz kolumna z panelem transakcyjnym."
       },
       "home-pulse": {
         "name": "Home",
@@ -3584,7 +3567,7 @@
       "perps-terminal": {
         "name": "Terminal Perps",
         "tagline": "Desk futures: pozycje z ceną mark i poziomem likwidacji.",
-        "description": "Domyślny układ dla wieczystych kontraktów futures: duży wykres, a pod nim w zakładkach transakcje, otwarte kontrakty (wejście, mark, likwidacja) i dane rynkowe, na środku arkusz zleceń i panel transakcyjny uwzględniający dźwignię, a po prawej copilot AI.",
+        "description": "Domyślny układ dla wieczystych kontraktów futures: duży wykres, a pod nim w zakładkach transakcje, otwarte kontrakty (wejście, mark, likwidacja) i dane rynkowe, a po prawej arkusz zleceń nad panelem transakcyjnym uwzględniającym dźwignię.",
         "menuLabel": "Domyślny"
       },
       "perps-discovery": {
@@ -4411,28 +4394,7 @@
     "exit": "Wyjdź z pełnego ekranu"
   },
   "research": {
-    "phaseSearching": "Przeszukiwanie internetu...",
-    "phaseReading": "Wczytywanie źródeł...",
-    "phaseAnalyzing": "Analizowanie danych rynkowych...",
-    "phaseWriting": "Pisanie raportu...",
-    "authRequiredTitle": "Panel research — wystarczy się zalogować",
-    "authRequiredDescription": "Uporządkowane raporty research dla dowolnej pary, oparte na aktualnych źródłach internetowych.",
-    "upgradeDescription": "Uporządkowane raporty research dla dowolnej pary, oparte na aktualnych źródłach internetowych. Subskrybuj Pairlens Intelligence lub podłącz własny klucz AI — za darmo.",
-    "unavailableTitle": "Research niedostępny",
-    "unavailableDescription": "Włącz wtyczkę AI na stronie Wtyczki, aby generować raporty research dla tej pary.",
-    "goToPlugins": "Przejdź do Wtyczek",
-    "navigateToPair": "Przejdź do pary, aby zobaczyć research.",
-    "researchingSymbol": "Analizowanie {{symbol}}",
-    "generatingReport": "Generowanie raportu...",
-    "cachedGenerated": "Z pamięci podręcznej — wygenerowano {{time}}",
-    "freshGenerated": "Świeże — wygenerowano przed chwilą",
-    "refresh": "Odśwież",
-    "sourcesCount": "Źródła ({{count}})",
-    "reportTitle": "Raport research",
-    "fullscreenDescription": "Raport research w trybie pełnoekranowym. Naciśnij Escape, aby zamknąć.",
-    "sections": "Sekcje",
-    "sparklineAriaLabel": "Wykres iskrowy ceny dziennej",
-    "errorTitle": "Research niedostępny"
+    "sparklineAriaLabel": "Wykres iskrowy ceny dziennej"
   },
   "capabilityGate": {
     "authTitle": "Wystarczy jedno bezpłatne logowanie",
@@ -4529,8 +4491,8 @@
       "titlePlan": "{{label}} jest teraz Twój.",
       "titleDefault": "Pairlens Intelligence jest teraz Twój.",
       "bodyPack": "Doliczają się do Twojego miesięcznego budżetu i wygasają za {{days}} dni. Wróć do aplikacji Pairlens — Twoje saldo zaktualizuje się w ciągu kilku sekund.",
-      "bodyPlanWithCredits": "Twój hostowany AI-kopilot, research i wyszukiwanie w sieci są odblokowane z {{credits}} kredytami miesięcznie. Wróć do aplikacji Pairlens — rozpozna Twoją subskrypcję w ciągu kilku sekund.",
-      "bodyPlanNoCredits": "Twój hostowany AI-kopilot, research i wyszukiwanie w sieci są odblokowane. Wróć do aplikacji Pairlens — rozpozna Twoją subskrypcję w ciągu kilku sekund.",
+      "bodyPlanWithCredits": "Twój hostowany asystent AI jest odblokowany, razem z pogłębionym researchem i wyszukiwaniem w sieci, z {{credits}} kredytami miesięcznie. Wróć do aplikacji Pairlens: rozpozna Twoją subskrypcję w ciągu kilku sekund.",
+      "bodyPlanNoCredits": "Twój hostowany asystent AI jest odblokowany, razem z pogłębionym researchem i wyszukiwaniem w sieci. Wróć do aplikacji Pairlens: rozpozna Twoją subskrypcję w ciągu kilku sekund.",
       "openTerminal": "Otwórz terminal",
       "closeTabHint": "Zapłaciłeś z aplikacji na komputer? Możesz po prostu zamknąć tę kartę.",
       "receiptHint": "Paragon i faktury znajdziesz w e-mailu oraz w portalu rozliczeniowym (Ustawienia → Intelligence)."
@@ -4918,7 +4880,7 @@
     "ai": {
       "inference": {
         "label": "Wnioskowanie",
-        "description": "Wnioskowanie LLM do analizy copilota"
+        "description": "Wnioskowanie LLM dla asystenta AI"
       },
       "web-search": {
         "label": "Wyszukiwanie w sieci",
@@ -4985,7 +4947,7 @@
     },
     "ai": {
       "label": "Dostawcy AI",
-      "description": "Dostawcy modeli językowych do analizy copilota AI"
+      "description": "Dostawcy modeli językowych dla asystenta AI"
     },
     "intelligence": {
       "label": "Analityka",
@@ -5015,7 +4977,7 @@
         "watchlist": "Obserwowane",
         "trade": "Handel",
         "chart": "Wykres",
-        "copilot": "Co-pilot",
+        "copilot": "Asystent",
         "discover": "Odkrywaj"
       },
       "overlays": {
@@ -5171,12 +5133,12 @@
       "bannerBody": "Obszary robocze, boty, własne wskaźniki i jeszcze cztery giełdy.",
       "bannerDismiss": "Ukryj to",
       "screenTitle": "Na większym ekranie",
-      "lead": "Telefon nosi te części Pairlens, które chcesz mieć pod ręką: wykres, arkusz zleceń, panel transakcyjny i Co-pilota. Resztę terminala zbudowano pod ekran, na którym jest się gdzie rozłożyć, i tam na Ciebie czeka.",
+      "lead": "Telefon nosi te części Pairlens, które chcesz mieć pod ręką: wykres, arkusz zleceń, panel transakcyjny i asystenta. Resztę terminala zbudowano pod ekran, na którym jest się gdzie rozłożyć, i tam na Ciebie czeka.",
       "widerWindow": "W szerszym oknie",
       "desktopApp": "W aplikacji na komputer",
       "workspaces": {
         "title": "Obszary robocze",
-        "body": "Wykres, arkusz zleceń, transakcje i Co-pilot obok siebie, ułożone raz i zapisane. W Workspace Store czekają gotowe układy, które skopiujesz jednym dotknięciem."
+        "body": "Wykres, arkusz zleceń, transakcje i panel transakcyjny obok siebie, ułożone raz i zapisane. W Workspace Store czekają gotowe układy, które skopiujesz jednym dotknięciem."
       },
       "bots": {
         "title": "Boty",

@@ -1,11 +1,11 @@
 ---
 title: Paper trading
-description: Paper trading in Pairlens, three ways, using exchange demo environments, bot paper mode, and co-pilot paper trades. What each simulates and which to use.
+description: Paper trading in Pairlens, three ways, using exchange demo environments, bot paper mode, and assistant paper trades. What each simulates and which to use.
 group: traders
 parent: trading
 order: 4
 eyebrow: For traders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 3 min read
 ---
 
@@ -50,11 +50,11 @@ rather than from a backtest curve.
 
 Going live is a separate, deliberate gate. You type **ARM LIVE** to confirm.
 
-## 3. Co-pilot paper trades
+## 3. Assistant paper trades
 
 The AI's order proposals default to paper on the confirmation card, and
 **Settings → Risk Management** lets you auto-approve paper trades so the
-co-pilot can act without interrupting you. Live auto-approval is a separate
+assistant can act without interrupting you. Live auto-approval is a separate
 grant, per exchange, that you can only give from a live order card.
 
 ## Which to use
@@ -63,7 +63,7 @@ grant, per exchange, that you can only give from a live order card.
 | -------------------------------------- | --------------------------------------------- |
 | Whether your keys and sizing are right | A paper credential                            |
 | Whether a strategy makes money         | A bot in paper mode                           |
-| Whether you trust the AI's suggestions | Co-pilot paper trades                         |
+| Whether you trust the AI's suggestions | Assistant paper trades                        |
 | Whether a setup would have worked      | [Backtesting](/docs/strategies-and-backtests) |
 
 ## What is not simulated

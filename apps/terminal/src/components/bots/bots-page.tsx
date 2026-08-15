@@ -3,12 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from '@pairlens/ui/components/ui/resizable'
-
 import { ArmLiveDialog } from './arm-live-dialog'
 import { BotDetail } from './bot-detail'
 import { BotList } from './bot-list'
@@ -16,15 +10,9 @@ import { BotsEmptyState } from './bots-empty-state'
 import { CreateBotDialog } from './create-bot-dialog'
 
 import type { BotDefinition } from '@pairlens/bot-engine/types'
-import { AssistantPanel } from '@/components/assistant/assistant-panel'
-import {
-  hasAssistantIntent,
-  subscribeAssistantIntents,
-} from '@/lib/assistant/assistant-chat-cache'
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
-import { usePersistedState } from '@/hooks/use-persisted-state'
 
 /**
  * The bots surface, as master-detail: the deployments down the left, one bot's
@@ -57,23 +45,6 @@ export function BotsPage({
   const [createOpen, setCreateOpen] = useState(false)
   const [createScriptId, setCreateScriptId] = useState<string | null>(null)
   const [armTarget, setArmTarget] = useState<BotDefinition | null>(null)
-  // Open by default, like the workbench: building a bot from nothing is a
-  // conversation (which strategy, which market, how big), and the rail is
-  // where that happens. Persisted, so closing it sticks.
-  const [assistantOpen, setAssistantOpen] = usePersistedState<boolean>(
-    'assistant.bots.open',
-    true,
-  )
-
-  // The empty state's composer, or a handoff arriving from the workbench.
-  // The panel consumes the request; this makes sure it is mounted to do so.
-  useEffect(() => {
-    const open = () => {
-      if (hasAssistantIntent('bots')) setAssistantOpen(true)
-    }
-    open()
-    return subscribeAssistantIntents(open)
-  }, [setAssistantOpen])
 
   useEffect(() => {
     loadBots()
@@ -114,40 +85,22 @@ export function BotsPage({
         onSelect={setSelectedId}
         onCreate={() => setCreateOpen(true)}
         onRequestArm={setArmTarget}
-        onToggleAssistant={() => setAssistantOpen(!assistantOpen)}
-        assistantOpen={assistantOpen}
       />
 
-      <ResizablePanelGroup orientation="horizontal" className="min-w-0 flex-1">
-        <ResizablePanel id="bots-main" defaultSize={72} minSize={40}>
-          <div className="flex h-full min-w-0 flex-1 flex-col">
-            {selected ? (
-              <BotDetail
-                key={selected.id}
-                bot={selected}
-                onRequestArm={setArmTarget}
-              />
-            ) : (
-              <BotsEmptyState
-                onCreate={() => setCreateOpen(true)}
-                onCreated={setSelectedId}
-                onStartAssistant={() => setAssistantOpen(true)}
-              />
-            )}
-          </div>
-        </ResizablePanel>
-        {assistantOpen && (
-          <>
-            <ResizableHandle />
-            <ResizablePanel id="bots-assistant" defaultSize={28} minSize={18}>
-              <AssistantPanel
-                surface="bots"
-                onClose={() => setAssistantOpen(false)}
-              />
-            </ResizablePanel>
-          </>
+      <div className="flex h-full min-w-0 flex-1 flex-col">
+        {selected ? (
+          <BotDetail
+            key={selected.id}
+            bot={selected}
+            onRequestArm={setArmTarget}
+          />
+        ) : (
+          <BotsEmptyState
+            onCreate={() => setCreateOpen(true)}
+            onCreated={setSelectedId}
+          />
         )}
-      </ResizablePanelGroup>
+      </div>
 
       <CreateBotDialog
         open={createOpen}

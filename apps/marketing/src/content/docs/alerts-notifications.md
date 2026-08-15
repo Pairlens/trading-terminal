@@ -5,7 +5,7 @@ group: traders
 parent: automation
 order: 2
 eyebrow: For traders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 7 min read
 ---
 
@@ -16,10 +16,10 @@ and never in your way.
 
 ## Or just say it
 
-The rail on the right of the Notifications page takes the sentence directly.
-"Tell me when BTC crosses 100,000 on OKX" creates the alert, picks a cooldown
-that suits the kind, and arms it on that pair, and you can see the result in
-the list before you reply. It knows which of the two shapes it is building: a
+The assistant takes the sentence directly, from the sparkle above the alert
+list or from its dock on any page. "Tell me when BTC crosses 100,000 on OKX"
+creates the alert, picks a cooldown that suits the kind, and arms it on that
+pair, and you can see the result in the list before you reply. It knows which of the two shapes it is building: a
 level or a percent move stays a two-field alert, and only a request the simple
 form cannot express (a condition, an order filling, a webhook) becomes a flow
 on the canvas.

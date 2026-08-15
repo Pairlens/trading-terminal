@@ -1,0 +1,672 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+// ── The one conversation ─────────────────────────────────────────────
+//
+// Mounted once per window: inside the desktop dock, or as the mobile
+// Co-pilot tab. Never both, because the viewport gate is exclusive and
+// two mounts would mean two runs answering the same user.
+//
+// It stays mounted while the dock is collapsed, which is what lets a
+// long run keep working while the user goes back to the chart.
+
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { useChat } from '@ai-sdk/react'
+import { lastAssistantMessageIsCompleteWithToolCalls } from 'ai'
+import { Brain, Loader2 } from 'lucide-react'
+
+import { Button } from '@pairlens/ui/components/ui/button'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@pairlens/ui/components/ui/empty'
+import { parseBillingErrorCode } from '@pairlens/shared/billing-types'
+
+import {
+  AssistantResearchCard,
+  readResearchOutput,
+} from './assistant-research-card'
+import { AssistantApprovalCard } from './assistant-approval-card'
+import type { UIMessage } from 'ai'
+import type { AssistantRunStatus } from '@/lib/assistant-core/run-status'
+import type { AssistantPersona } from '@/lib/assistant-core/assistant-brain'
+import type {
+  CopilotCancelRequest,
+  CopilotOrderActions,
+  CopilotOrderRequest,
+} from '@/components/copilot/copilot-order-card'
+import i18n from '@/lib/i18n'
+import { api, queryKeys } from '@/lib/api'
+import { track } from '@/lib/analytics-events'
+import { useCapabilityAccess } from '@/hooks/use-capability-access'
+import { useStickToBottom } from '@/hooks/use-stick-to-bottom'
+import { useMarketData } from '@/lib/market-data-provider'
+import { useMarketRefWithPreferred } from '@/lib/market-ref/use-market-ref'
+import { credentialMarketFor } from '@/lib/venues/credential-alias'
+import { useCredentialsStore } from '@/stores/credentials-store'
+import {
+  isVaultEnrolled,
+  isVaultUnlocked,
+} from '@/lib/security/vault/vault-session'
+import { usePersistedState } from '@/hooks/use-persisted-state'
+import { AuthRequiredPrompt } from '@/components/capability-gate'
+import {
+  BillingErrorNotice,
+  IntelligenceUpgradePrompt,
+} from '@/components/billing/intelligence-upsell'
+import { ConnectAiProviderButton } from '@/components/ai-provider-connect'
+import { CopilotChatMessage } from '@/components/copilot/copilot-chat-message'
+import { CopilotInput } from '@/components/copilot/copilot-input'
+import { asToolPart } from '@/components/copilot/tool-part'
+import { CopilotOrderActionsProvider } from '@/components/copilot/copilot-order-card'
+import {
+  AssistantQuestionCard,
+  readQuestion,
+} from '@/components/assistant/assistant-question-card'
+
+import { AssistantTransport } from '@/lib/assistant-core/assistant-transport'
+import { useAssistantDeps } from '@/lib/assistant-core/assistant-provider'
+import { executeClientTool } from '@/lib/assistant-core/client-tools'
+import { ASSISTANT_ALL_TOOL_LABELS } from '@/lib/assistant-core/tool-labels'
+import { humanizeToolName } from '@/lib/copilot/tool-labels'
+import { runSurfaceAction } from '@/lib/assistant-core/surface-tools'
+import { deriveRunStatus } from '@/lib/assistant-core/run-status'
+import { useAssistantStore } from '@/stores/assistant-store'
+
+/**
+ * The assistant's history is not scoped to a pair any more, so it rides
+ * the existing per-pair endpoint under one fixed key. One conversation,
+ * one thread, regardless of where the user has been.
+ */
+const HISTORY_MARKET = 'assistant'
+const HISTORY_KEY = 'global'
+
+const MAX_SCHEDULED_CHECKS = 8
+
+/** Actions the surrounding chrome drives, published once on mount. */
+export type AssistantConversationHandle = {
+  clear: () => void
+  hasMessages: boolean
+}
+
+export type AssistantConversationProps = {
+  /** Reports run phase up to the orb. Only called when the phase moves. */
+  onStatusChange?: (status: AssistantRunStatus) => void
+  /**
+   * Owned by the chrome, because the control that changes it lives in
+   * the window header. Falls back to the stored preference so the
+   * mobile tab, which has no header, still gets the user's choice.
+   */
+  persona?: AssistantPersona
+  /**
+   * Filled in with the conversation's controls so the window header can
+   * offer a clear button without the chat owning a second header row.
+   */
+  controlsRef?: React.RefObject<AssistantConversationHandle | null>
+}
+
+export function AssistantConversation(props: AssistantConversationProps) {
+  const { t } = useTranslation()
+  const access = useCapabilityAccess('ai:inference')
+
+  const historyQuery = useQuery({
+    queryKey: queryKeys.aiMessages(HISTORY_MARKET, HISTORY_KEY),
+    queryFn: () => api.getAiMessages(HISTORY_MARKET, HISTORY_KEY),
+    enabled: access.status === 'granted',
+  })
+
+  if (access.status === 'auth-required') {
+    return (
+      <AuthRequiredPrompt
+        title={t('assistantDock.authRequiredTitle')}
+        description={t('assistantDock.authRequiredDescription')}
+        primaryNote={t('capabilityGate.intelligenceNote')}
+        alternative={<ConnectAiProviderButton />}
+      />
+    )
+  }
+
+  if (access.status === 'upgrade-required') {
+    return (
+      <IntelligenceUpgradePrompt
+        description={t('assistantDock.upgradeRequiredDescription')}
+        alternative={<ConnectAiProviderButton />}
+      />
+    )
+  }
+
+  if (access.status !== 'granted') {
+    return (
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center p-6">
+        <Empty className="max-w-xs">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <Brain className="size-5" />
+            </EmptyMedia>
+            <EmptyTitle>{t('assistantDock.unavailableTitle')}</EmptyTitle>
+            <EmptyDescription>
+              {t('assistantDock.unavailableDescription')}
+            </EmptyDescription>
+          </EmptyHeader>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <ConnectAiProviderButton />
+            <Button
+              variant="ghost"
+              size="sm"
+              nativeButton={false}
+              render={<Link to="/plugins" />}
+            >
+              <Brain className="size-3.5" />
+              {t('assistantDock.goToPlugins')}
+            </Button>
+          </div>
+        </Empty>
+      </div>
+    )
+  }
+
+  if (historyQuery.isLoading) {
+    return (
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
+        <Loader2 className="text-muted-foreground size-5 animate-spin" />
+      </div>
+    )
+  }
+
+  return (
+    <AssistantConversationInner
+      {...props}
+      initialMessages={(historyQuery.data ?? []) as Array<UIMessage>}
+    />
+  )
+}
+
+function AssistantConversationInner({
+  onStatusChange,
+  controlsRef,
+  persona: personaProp,
+  initialMessages,
+}: AssistantConversationProps & { initialMessages: Array<UIMessage> }) {
+  const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const resolveMarketRef = useMarketRefWithPreferred()
+  const marketData = useMarketData()
+  const marketDataRef = useRef(marketData)
+  marketDataRef.current = marketData
+
+  const [storedPersona] = usePersistedState<AssistantPersona>(
+    'copilot.persona',
+    'balanced',
+  )
+  const personaRef = useRef(personaProp ?? storedPersona)
+  personaRef.current = personaProp ?? storedPersona
+
+  // schedule_check timers. The dock outlives navigation, so unlike the
+  // old pane-bound copilot a scheduled follow-up actually survives the
+  // user walking to another page.
+  const handleSendRef = useRef<(text: string) => void>(() => {})
+  const timersRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set())
+  useEffect(() => {
+    const timers = timersRef.current
+    return () => {
+      for (const timer of timers) clearTimeout(timer)
+      timers.clear()
+    }
+  }, [])
+  const scheduleCheck = useCallback((minutes: number, instruction: string) => {
+    if (timersRef.current.size >= MAX_SCHEDULED_CHECKS) return
+    const timer = setTimeout(() => {
+      timersRef.current.delete(timer)
+      handleSendRef.current(
+        `${i18n.t('copilot.scheduledCheckPrefix', { minutes })} ${instruction}`,
+      )
+    }, minutes * 60_000)
+    timersRef.current.add(timer)
+  }, [])
+
+  const deps = useAssistantDeps({ scheduleCheck })
+  const depsRef = useRef(deps)
+  depsRef.current = deps
+
+  const transport = useMemo(
+    () =>
+      new AssistantTransport({
+        getDeps: () => depsRef.current,
+        getPersona: () => personaRef.current,
+      }),
+    [],
+  )
+
+  const runStartRef = useRef(0)
+  const runToolCallsRef = useRef(0)
+
+  const {
+    messages,
+    status,
+    sendMessage,
+    setMessages,
+    stop,
+    error,
+    addToolResult,
+  } = useChat({
+    id: 'pairlens-assistant',
+    messages: initialMessages,
+    transport,
+    // ask_user and approval-gated surface actions have no execute: the
+    // run parks on them and resumes by itself once every call in the
+    // last message carries a result.
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+    onToolCall: ({ toolCall }) => {
+      runToolCallsRef.current += 1
+      executeClientTool(
+        toolCall.toolName,
+        toolCall.input as Record<string, unknown> | undefined,
+        {
+          chart: depsRef.current.getChart(),
+          navigate,
+          resolveMarketRef,
+          scheduleCheck,
+        },
+      )
+    },
+    onFinish: ({ message }) => {
+      track('assistant_run_completed', {
+        outcome: 'success',
+        tool_calls: runToolCallsRef.current,
+        duration_ms: runStartRef.current ? Date.now() - runStartRef.current : 0,
+      })
+      api.saveAiMessage(HISTORY_MARKET, HISTORY_KEY, message).catch(() => {
+        // Persistence is best-effort; the conversation is still live.
+      })
+    },
+  })
+
+  // ── Run status, reported up to the orb ────────────────────────────
+  const runStatus = deriveRunStatus(messages, status)
+  const lastReportedRef = useRef<string>('')
+  useEffect(() => {
+    const key = `${runStatus.phase}:${runStatus.toolName ?? ''}`
+    if (lastReportedRef.current === key) return
+    lastReportedRef.current = key
+    onStatusChange?.(runStatus)
+  }, [runStatus, onStatusChange])
+
+  // ── Sending ───────────────────────────────────────────────────────
+  const pendingQuestion = findPendingQuestion(messages)
+
+  const answerQuestion = useCallback(
+    (toolCallId: string, answer: string) => {
+      addToolResult({
+        tool: 'ask_user',
+        toolCallId,
+        output: { answer },
+      } as Parameters<typeof addToolResult>[0])
+    },
+    [addToolResult],
+  )
+
+  const handleSend = useCallback(
+    (text: string) => {
+      // A typed message while a question is open answers it. Sending a
+      // fresh turn instead would leave the tool call dangling, and a
+      // conversation with a dangling call cannot be continued at all.
+      if (pendingQuestion) {
+        answerQuestion(pendingQuestion.toolCallId, text)
+        return
+      }
+      runStartRef.current = Date.now()
+      runToolCallsRef.current = 0
+      sendMessage({ text })
+      api
+        .saveAiMessage(HISTORY_MARKET, HISTORY_KEY, {
+          role: 'user' as const,
+          parts: [{ type: 'text' as const, text }],
+        })
+        .catch(() => {
+          // Best-effort.
+        })
+    },
+    [sendMessage, pendingQuestion, answerQuestion],
+  )
+  handleSendRef.current = handleSend
+
+  // A surface asked the assistant something. Consumed once. A seed that
+  // does not send lands in the composer instead, so a "Build with AI"
+  // button can open the chat with the request already typed.
+  const seed = useAssistantStore((state) => state.seed)
+  const consumeSeed = useAssistantStore((state) => state.consumeSeed)
+  const [composerSeed, setComposerSeed] = useState<{
+    text: string
+    signal: number
+  }>({ text: '', signal: 0 })
+  useEffect(() => {
+    if (!seed) return
+    const taken = consumeSeed()
+    if (!taken || !taken.prompt.trim()) return
+    if (taken.send) {
+      handleSend(taken.prompt)
+      return
+    }
+    setComposerSeed((previous) => ({
+      text: taken.prompt,
+      signal: previous.signal + 1,
+    }))
+  }, [seed, consumeSeed, handleSend])
+
+  const handleClear = useCallback(() => {
+    api.clearAiMessages(HISTORY_MARKET, HISTORY_KEY).catch(() => {
+      // Best-effort.
+    })
+    setMessages([])
+    queryClient.invalidateQueries({
+      queryKey: queryKeys.aiMessages(HISTORY_MARKET, HISTORY_KEY),
+    })
+  }, [setMessages, queryClient])
+
+  // Published after commit, not during render: a render React throws
+  // away must not be the one the window header ends up holding.
+  const hasMessages = messages.length > 0
+  useEffect(() => {
+    if (!controlsRef) return
+    controlsRef.current = { clear: handleClear, hasMessages }
+    return () => {
+      controlsRef.current = null
+    }
+  }, [controlsRef, handleClear, hasMessages])
+
+  // ── Order execution for the confirm cards ─────────────────────────
+  const orderActions = useMemo<CopilotOrderActions>(
+    () => ({
+      tradingMode: 'paper',
+      placeOrder: async (req: CopilotOrderRequest, mode) => {
+        const md = marketDataRef.current
+        if (!md)
+          return { success: false, error: i18n.t('copilot.tradingUnavailable') }
+        // Sealed vault is checked BEFORE the credential lookup: the store
+        // is empty because it could not read, not because nothing is
+        // stored, and "add API keys" would be exactly the wrong advice.
+        if (isVaultEnrolled() && !isVaultUnlocked()) {
+          return {
+            success: false,
+            error: i18n.t('security.vault.orderBlocked'),
+          }
+        }
+        const cred = useCredentialsStore
+          .getState()
+          .getCredentialForMarket(credentialMarketFor(req.market))
+        if (mode === 'live' && !cred) {
+          return {
+            success: false,
+            error: i18n.t('copilot.noCredentialsForMarket', {
+              market: req.market,
+            }),
+          }
+        }
+        const params: Record<string, unknown> = {
+          market: req.market,
+          pair: req.pair,
+          side: req.side,
+          type: req.type,
+          size: String(req.size),
+          mode,
+          analyticsSource: 'copilot',
+        }
+        if (cred) params.credentialId = cred.id
+        if (req.type === 'limit' && req.price != null) {
+          params.price = String(req.price)
+        }
+        try {
+          const result = await md.placeOrder(params)
+          return {
+            success: result.success,
+            orderId: result.orderId,
+            error: result.error,
+          }
+        } catch (err) {
+          return {
+            success: false,
+            error: err instanceof Error ? err.message : String(err),
+          }
+        }
+      },
+      cancelOrder: async (req: CopilotCancelRequest) => {
+        const md = marketDataRef.current
+        if (!md)
+          return { success: false, error: i18n.t('copilot.tradingUnavailable') }
+        const cred = useCredentialsStore
+          .getState()
+          .getCredentialForMarket(credentialMarketFor(req.market))
+        try {
+          const result = await md.cancelOrder(
+            req.market,
+            req.orderId,
+            req.pair,
+            cred?.id,
+          )
+          return { success: result.success, error: result.error }
+        } catch (err) {
+          return {
+            success: false,
+            error: err instanceof Error ? err.message : String(err),
+          }
+        }
+      },
+    }),
+    [],
+  )
+
+  // The assistant's own UI vocabulary. A tool that has something better
+  // to show than a status chip claims its own renderer here; everything
+  // else falls through to the chip, and a tool nobody has taught the UI
+  // about still renders.
+  const renderToolPart = useCallback(
+    (tool: ReturnType<typeof asToolPart>) => {
+      if (!tool) return null
+
+      if (tool.toolName === 'ask_user' && tool.toolCallId) {
+        const { question, options } = readQuestion(tool.input)
+        if (!question) return null
+        const answered = tool.output?.answer
+        const toolCallId = tool.toolCallId
+        return (
+          <AssistantQuestionCard
+            question={question}
+            options={options}
+            answer={typeof answered === 'string' ? answered : null}
+            onAnswer={(answer) => answerQuestion(toolCallId, answer)}
+          />
+        )
+      }
+
+      if (tool.toolName === 'deep_research') {
+        const research = readResearchOutput(tool.output)
+        if (research) return <AssistantResearchCard {...research} />
+      }
+
+      // A surface action marked needsApproval is declared without an
+      // execute, so the run is parked right here waiting for an answer.
+      const gated = depsRef.current.registry.getAction(tool.toolName)
+      if (gated?.needsApproval && tool.toolCallId) {
+        const toolCallId = tool.toolCallId
+        const output = tool.output as
+          | { approved?: boolean; declined?: boolean }
+          | undefined
+        return (
+          <AssistantApprovalCard
+            title={humanizeToolName(tool.toolName)}
+            description={gated.description}
+            args={tool.input}
+            outcome={output?.declined ? 'declined' : output ? 'approved' : null}
+            onApprove={async () => {
+              const result = await runSurfaceAction(
+                depsRef.current.registry,
+                tool.toolName,
+                tool.input,
+              )
+              addToolResult({
+                tool: tool.toolName,
+                toolCallId,
+                output: { approved: true, result },
+              } as Parameters<typeof addToolResult>[0])
+            }}
+            onDecline={() =>
+              addToolResult({
+                tool: tool.toolName,
+                toolCallId,
+                output: {
+                  declined: true,
+                  reason: 'The user declined this action.',
+                },
+              } as Parameters<typeof addToolResult>[0])
+            }
+          />
+        )
+      }
+
+      return null
+    },
+    [answerQuestion, addToolResult],
+  )
+
+  // Starter chips follow the screen: on a chart they name the pair, on a
+  // builder page they name what that page makes.
+  const chart = deps.getChart()
+  const quickActions = useMemo(() => {
+    if (chart) {
+      const symbol = chart.pair.split('-')[0]
+      return [
+        t('assistantDock.quickAnalyze', { pair: chart.pair.replace('-', '/') }),
+        t('assistantDock.quickLevels', { symbol }),
+        t('assistantDock.quickAlert', { symbol }),
+      ]
+    }
+    return [
+      t('assistantDock.quickWhatsMoving'),
+      t('assistantDock.quickPortfolio'),
+      t('assistantDock.quickBuildAlert'),
+    ]
+  }, [chart, t])
+
+  const billingErrorCode = parseBillingErrorCode(error?.message)
+  const trackedErrorRef = useRef<unknown>(null)
+  useEffect(() => {
+    if (!error || trackedErrorRef.current === error) return
+    trackedErrorRef.current = error
+    track('assistant_run_completed', {
+      outcome: 'error',
+      tool_calls: runToolCallsRef.current,
+      duration_ms: runStartRef.current ? Date.now() - runStartRef.current : 0,
+    })
+  }, [error])
+
+  return (
+    <CopilotOrderActionsProvider value={orderActions}>
+      <AssistantMessageList
+        messages={messages}
+        status={status}
+        renderToolPart={renderToolPart}
+      />
+      {error ? (
+        <div className="px-3 pb-1">
+          {billingErrorCode ? (
+            <BillingErrorNotice code={billingErrorCode} />
+          ) : (
+            <p className="text-destructive border-destructive/30 bg-destructive/5 rounded-lg border px-3 py-2 text-xs">
+              {t('assistantDock.genericError')}
+            </p>
+          )}
+        </div>
+      ) : null}
+      <CopilotInput
+        onSend={handleSend}
+        status={status}
+        onStop={stop}
+        // Only on an empty thread: mid-conversation the chips are noise,
+        // and the user already knows what to type.
+        quickActions={messages.length === 0 ? quickActions : []}
+        seedText={composerSeed.text}
+        seedSignal={composerSeed.signal}
+        placeholder={
+          pendingQuestion
+            ? t('assistantDock.answerPlaceholder')
+            : t('assistantDock.placeholder')
+        }
+      />
+    </CopilotOrderActionsProvider>
+  )
+}
+
+// ── Message list ─────────────────────────────────────────────────────
+
+function AssistantMessageList({
+  messages,
+  status,
+  renderToolPart,
+}: {
+  messages: Array<UIMessage>
+  status: string
+  renderToolPart: (tool: ReturnType<typeof asToolPart>) => React.ReactNode
+}) {
+  const { t } = useTranslation()
+  const isStreaming = status === 'streaming' || status === 'submitted'
+  const { contentRef } = useStickToBottom({ enabled: isStreaming })
+
+  if (messages.length === 0) {
+    return (
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 p-6 text-center">
+        <p className="text-sm font-medium">{t('assistantDock.emptyTitle')}</p>
+        <p className="text-muted-foreground max-w-[28ch] text-xs">
+          {t('assistantDock.emptyDescription')}
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-0 flex-1 overflow-y-auto" ref={contentRef}>
+      <div className="flex flex-col gap-2 p-3">
+        {messages.map((message) => (
+          <CopilotChatMessage
+            key={message.id}
+            message={message}
+            toolLabels={ASSISTANT_ALL_TOOL_LABELS}
+            renderToolPart={renderToolPart}
+          />
+        ))}
+        {isStreaming ? (
+          <div className="text-muted-foreground flex items-center gap-1.5 px-1 text-xs">
+            <Loader2 className="size-3 animate-spin" />
+          </div>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
+// ── Pending question ─────────────────────────────────────────────────
+
+type PendingQuestion = { toolCallId: string; question: string }
+
+function findPendingQuestion(
+  messages: Array<UIMessage>,
+): PendingQuestion | null {
+  const last = messages[messages.length - 1]
+  if (!last || last.role !== 'assistant') return null
+  for (const part of last.parts) {
+    const tool = asToolPart(part)
+    if (!tool || tool.toolName !== 'ask_user') continue
+    // `input-available` means the arguments are complete and no result
+    // has been added yet: exactly the window where an answer is owed.
+    if (tool.state !== 'input-available' || !tool.toolCallId) continue
+    const { question } = readQuestion(tool.input)
+    if (!question) continue
+    return { toolCallId: tool.toolCallId, question }
+  }
+  return null
+}

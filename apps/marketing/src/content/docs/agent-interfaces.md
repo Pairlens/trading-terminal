@@ -1,31 +1,44 @@
 ---
 title: Agent interfaces
-description: 'Every way an AI agent can drive Pairlens: the in-app co-pilot tool surface, the builder assistant, the chart MCP tools, the headless CLI, and deployed Python bots. What each can do, and where the trading boundary sits.'
+description: 'Every way an AI agent can drive Pairlens: the in-app assistant, the chart MCP tools, the headless CLI, and deployed Python bots. What each can do, and where the trading boundary sits.'
 group: builders
 order: 2
 eyebrow: For builders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 6 min read
 ---
 
-There are five ways an agent can operate Pairlens, and they differ in one
+There are four ways an agent can operate Pairlens, and they differ in one
 important respect: how close to an order they get, and who confirms it.
 
-| Surface                                                 | Runs where          | Can place orders                   |
-| ------------------------------------------------------- | ------------------- | ---------------------------------- |
-| [Co-pilot tools](/docs/copilot-tools)                   | Inside the terminal | As proposals you confirm           |
-| [Builder assistant](/docs/python-scripts#build-with-ai) | Inside the terminal | No. Builds what you commit and arm |
-| [Chart MCP tools](/docs/chart-mcp)                      | Any MCP client      | No. Chart control only             |
-| [CLI](/docs/cli-reference)                              | Your shell or CI    | Yes, headless and unattended       |
-| [Bots](/docs/bots)                                      | Your machine        | Yes, once you arm them             |
+| Surface                              | Runs where          | Can place orders             |
+| ------------------------------------ | ------------------- | ---------------------------- |
+| [The assistant](/docs/copilot-tools) | Inside the terminal | As proposals you confirm     |
+| [Chart MCP tools](/docs/chart-mcp)   | Any MCP client      | No. Chart control only       |
+| [CLI](/docs/cli-reference)           | Your shell or CI    | Yes, headless and unattended |
+| [Bots](/docs/bots)                   | Your machine        | Yes, once you arm them       |
 
-## Co-pilot tools
+## The assistant
 
-The agentic loop runs client-side, in the terminal, over 63 tools: market data,
-context, portfolio reads, chart control, drawings, workspace actions, and two
-trading tools. The App Server, when you use one, is nothing but an
+One in-app agent, docked bottom-right, mounted above the routed content so it is
+the same conversation on a chart, on the bots page and in the script workbench.
+The agentic loop runs client-side over 94 tools: market data, research, chart
+control, portfolio reads, watchlists and alerts, Python scripts and backtests,
+bots, workflows, navigation, and two trading tools. One turn runs up to 28
+tool-calling steps. The App Server, when you use one, is nothing but an
 OpenAI-compatible inference proxy. It does not run the loop and it never sees
 your credentials.
+
+It replaced four separate chats: a co-pilot pane scoped to one pair, a research
+pane, and a builder rail on each of the four builder pages. Merging them removed
+the question nobody should have had to answer, which was which chat can do the
+thing I want.
+
+Two mechanisms make it context-aware rather than merely global. Mounted surfaces
+publish what they are showing, so "this" has a referent. And a surface can
+publish **actions** that only it can perform: the workspace board publishes
+`add_pane` and `remove_pane`, and they withdraw the moment you leave the board.
+Its abilities grow with what is on screen.
 
 Trading tools are **proposals**. `place_order` and `cancel_order` do not execute;
 they render a confirm card that you approve, and the approved order then goes
@@ -33,40 +46,19 @@ through the same guarded order path as one you typed by hand, risk limits
 included. An AI cannot raise its own limit, and it cannot route around the
 ticket.
 
-Full list in the [co-pilot tool reference](/docs/copilot-tools).
+The rest of its write surface is fenced the same way, structurally rather than
+by prompt. A bot it creates is always paper mode and switched off, and no tool
+it has can enable, arm or retarget one; the ARM LIVE gate stays yours. Workflow
+graphs and alert flows land in the open builder as pending changes, and it has
+no tool that commits. Simple price and percent-move alerts are the exception and
+arm on creation, because an alert nobody armed is not an alert.
 
-## Builder assistant
-
-The second in-app agent, hosted by all four builder pages. Its tool surface is
-the build loop rather than the market, and which tools it has depends on where
-it is.
-
-On **Indicators & Strategies** and **Bots**: create, read, edit and delete
-Python script files (validated in the Pyodide runtime, tracebacks fed back to
-the model so it repairs its own code before it answers), move the preview onto
-the venue, pair, timeframe and depth a script needs, run backtests through the
-same engine live bots use, and create or tune bot deployments.
-
-On **Workflows** and **Notifications**: read the installed step palette, then
-write a whole step graph in one call, laid out and validated. Workflow graphs
-and alert flows land in the open draft as pending changes, so the commit bar
-you already use is what makes them real; the assistant has no tool that
-commits. Simple price and percent-move alerts are the exception and arm on
-creation, because an alert nobody armed is not an alert.
-
-Two of its tools are conversational rather than mechanical. `ask_user` has no
+One tool is conversational rather than mechanical. `ask_user` has no
 implementation at all: the model's turn ends on the call, the terminal renders
 the options, and the answer you tap becomes the tool result that resumes the
-run, which is how a decision that is yours stays yours. `handoff_to_builder`
-moves you between the four surfaces and briefs the assistant on the other side,
-so building a bot that needs a new indicator, or an order plan that turned out
-to be an alert, is one thread rather than two.
+run, which is how a decision that is yours stays yours.
 
-Its trading boundary is structural. A bot it creates is always paper mode and
-switched off, and its tools have no way to enable, arm, or retarget one; the
-ARM LIVE gate stays yours. Same inference resolution as the co-pilot: Pairlens
-Intelligence or any bring-your-own-key provider. See
-[Build with AI](/docs/python-scripts#build-with-ai).
+Full list in the [assistant tool reference](/docs/copilot-tools).
 
 ## Chart MCP tools
 
@@ -128,13 +120,13 @@ what executes is deterministic, inspectable logic that you backtested. The AI
 can help you write one. It is not what runs it.
 
 Bots are the right shape for unattended trading. An LLM in the order path is
-not, which is why the co-pilot's trading tools stop at a confirm card.
+not, which is why the assistant's trading tools stop at a confirm card.
 
 ## Is there an MCP server for trading?
 
 Not today. MCP in Pairlens covers the chart engine. If you want an agent placing
 orders, the supported paths are the CLI (headless, unattended, no confirmation)
-or the co-pilot (in-app, confirmed).
+or the assistant (in-app, confirmed).
 
 If you want to build one, everything you need is already public: the
 [MarketAdapter API](/docs/marketadapter-api) is the venue interface, the
@@ -152,7 +144,7 @@ which one is driving. See [risk guardrails](/docs/risk-guardrails).
 
 ## Where to next
 
-- [Co-pilot tool reference](/docs/copilot-tools) for all 63 tools
+- [Assistant tool reference](/docs/copilot-tools) for all 94 tools
 - [CLI reference](/docs/cli-reference) for every flag
 - [The MCP tool surface](/docs/chart-mcp) for chart control
 - [Plugin SDK](/docs/plugin-sdk) to add a surface of your own

@@ -37,9 +37,9 @@ import {
 // ---------------------------------------------------------------------------
 // Pairlens Intelligence upsell surfaces
 //
-// Shown wherever hosted AI is gated: the copilot/research panes when the
-// signed-in user has no Intelligence subscription, and inline when a request
-// comes back with a typed billing 402. Checkout opens in the system browser;
+// Shown wherever hosted AI is gated: the assistant and the research report
+// when the signed-in user has no Intelligence subscription, and inline when a
+// request comes back with a typed billing 402. Checkout opens in the browser;
 // the billing state query picks the new subscription up on window focus.
 // ---------------------------------------------------------------------------
 
@@ -116,7 +116,7 @@ export function IntelligenceUpgradePrompt({
   description?: string
   /**
    * A non-billing way to the same capability, shown under the plans. The AI
-   * panes pass the bring-your-own-key action: a user who already has an
+   * surfaces pass the bring-your-own-key action: a user who already has an
    * Anthropic/OpenAI/OpenRouter/Groq key is one paste away from a working
    * copilot, and the `<plugins>` link below is desktop-only.
    */

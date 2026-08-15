@@ -30,7 +30,7 @@ export const EQUITIES_TERMINAL_LAYOUT = {
   columns: [
     {
       id: 'col-left',
-      widthPercent: 55,
+      widthPercent: 79,
       cells: [
         {
           id: 'cell-chart',
@@ -72,18 +72,6 @@ export const EQUITIES_TERMINAL_LAYOUT = {
           heightPercent: 55,
           activeTabIndex: 0,
           panes: [{ id: 'pane-symbol-news', type: 'symbol-news' }],
-        },
-      ],
-    },
-    {
-      id: 'col-copilot',
-      widthPercent: 24,
-      cells: [
-        {
-          id: 'cell-copilot',
-          heightPercent: 100,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-copilot', type: 'copilot' }],
         },
       ],
     },
@@ -207,7 +195,7 @@ export const EQUITIES_WORKSPACES: Array<ContributedWorkspace> = [
     icon: 'BarChart3',
     tagline: 'Stocks with the ticket over the symbol news wire.',
     description:
-      'The default stock layout: a chart with the tape, positions, and fundamentals below it, the order ticket above the symbol news wire (catalysts move stocks the way flow moves crypto), and the AI Copilot on the right.',
+      'The default stock layout: a chart with the tape, positions, and fundamentals below it, and the order ticket above the symbol news wire, because catalysts move stocks the way flow moves crypto.',
     facets: {
       traderTypes: ['day-trader', 'position-investor'],
       assetClasses: ['equities'],

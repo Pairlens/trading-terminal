@@ -11,9 +11,9 @@ import {
 } from '../automation-tools'
 import { AUTOMATION_TOOL_LABELS } from '../automation-tool-labels'
 import { layoutGraph, onExternalGraphWrite } from '../graph-apply'
-import { consumeAssistantIntent } from '../assistant-chat-cache'
 import type { AutomationToolDeps } from '../automation-tools'
 import type { ToolCallOptions } from 'ai'
+import { useAssistantStore } from '@/stores/assistant-store'
 import { useNotificationStore } from '@/stores/notification-store'
 import { useWorkflowStore } from '@/stores/workflow-store'
 
@@ -469,8 +469,9 @@ describe('shared tools', () => {
 
     expect(result.handedOff).toBe('workflows')
     expect(routes).toEqual([{ to: 'workflows', scriptId: undefined }])
-    expect(consumeAssistantIntent('workflows')).toEqual({
+    expect(useAssistantStore.getState().consumeSeed()).toEqual({
       prompt: 'Bracket the entry this alert watches.',
+      send: true,
     })
   })
 

@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { Bell, Percent } from 'lucide-react'
 
 import { StarterEmptyState } from '../starter-empty-state'
-import { AssistantStarter } from '../assistant/assistant-starter'
+import { AssistantCta } from '../assistant/assistant-cta'
 import { NewAlertDialog } from './new-alert-dialog'
 import {
   NOTIFICATION_TEMPLATES,
@@ -36,12 +36,7 @@ const ALERT_CARD_ICONS: Record<SimpleAlertKind, typeof Bell> = {
   'percent-move': Percent,
 }
 
-export function NotificationsEmptyState({
-  onStartAssistant,
-}: {
-  /** Opens the assistant rail, where the starter's request lands. */
-  onStartAssistant?: () => void
-} = {}) {
+export function NotificationsEmptyState() {
   const { t } = useTranslation()
   const rules = useNotificationStore((s) => s.rules)
   const loaded = useNotificationStore((s) => s.loaded)
@@ -121,12 +116,7 @@ export function NotificationsEmptyState({
           pair: TEMPLATE_PAIR,
           market: TEMPLATE_MARKET,
         })}
-        hero={
-          <AssistantStarter
-            surface="notifications"
-            onStarted={onStartAssistant}
-          />
-        }
+        hero={<AssistantCta surface="notifications" />}
       />
       <NewAlertDialog
         open={alertKind !== null}

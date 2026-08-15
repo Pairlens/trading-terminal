@@ -16,6 +16,7 @@ import { loadLayout, saveLayoutDebounced } from './persistence'
 import { normalizeLayout } from './utils'
 import { useWorkspace } from './workspace-context'
 import { usePaneRegistry } from './pane-registry'
+import { LayoutAssistantSurface } from './layout-assistant-surface'
 import type { ReactNode } from 'react'
 import type { DropZone, LayoutAction, TerminalLayout } from './types'
 import { track } from '@/lib/analytics-events'
@@ -183,7 +184,14 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
     ],
   )
 
-  return <LayoutContext value={contextValue}>{children}</LayoutContext>
+  return (
+    <LayoutContext value={contextValue}>
+      {/* Publishes add_pane / remove_pane to the assistant. Inside the
+          provider so the actions withdraw when the board unmounts. */}
+      <LayoutAssistantSurface />
+      {children}
+    </LayoutContext>
+  )
 }
 
 export function useLayout(): LayoutContextValue {

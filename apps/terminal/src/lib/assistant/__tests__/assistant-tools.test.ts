@@ -5,7 +5,6 @@ import {
   buildAssistantTools,
   collectAssistantPromptContext,
 } from '../assistant-tools'
-import { consumeAssistantIntent } from '../assistant-chat-cache'
 import { ASSISTANT_TOOL_LABELS } from '../assistant-tool-labels'
 import type {
   AssistantPythonRuntime,
@@ -15,6 +14,7 @@ import type {
 import type { CustomIndicatorMeta } from '@pairlens/shared/plugin-types'
 import type { ToolCallOptions } from 'ai'
 import { formatToolLabel } from '@/lib/copilot/tool-labels'
+import { useAssistantStore } from '@/stores/assistant-store'
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
@@ -472,7 +472,7 @@ describe('set_preview_target', () => {
 })
 
 describe('handoff_to_builder', () => {
-  test('queues the message for the other surface and navigates there', async () => {
+  test('hands the message to the assistant and navigates there', async () => {
     const scriptId = seedScript(strategyMeta('h1'))
     const routes: Array<{ to: string; scriptId?: string }> = []
     const tools = buildAssistantTools(
@@ -491,11 +491,12 @@ describe('handoff_to_builder', () => {
     expect(result.error).toBeUndefined()
     expect(result.handedOff).toBe('indicators')
     expect(routes).toEqual([{ to: 'indicators', scriptId }])
-    expect(consumeAssistantIntent('indicators')).toEqual({
+    expect(useAssistantStore.getState().consumeSeed()).toEqual({
       prompt: 'Add a volume filter to this strategy.',
+      send: true,
     })
     // Consumed once: a remount must not replay it.
-    expect(consumeAssistantIntent('indicators')).toBeNull()
+    expect(useAssistantStore.getState().consumeSeed()).toBeNull()
   })
 
   test('refuses to hand over to the surface it is already on', async () => {
@@ -510,7 +511,7 @@ describe('handoff_to_builder', () => {
 
     expect(result.error).toContain('already')
     expect(routes).toHaveLength(0)
-    expect(consumeAssistantIntent('indicators')).toBeNull()
+    expect(useAssistantStore.getState().consumeSeed()).toBeNull()
   })
 })
 

@@ -54,7 +54,7 @@ export const INTELLIGENCE_PLANS: Record<IntelligencePlanId, IntelligencePlan> =
       label: 'Intelligence Pro',
       priceUsdMonthly: 19,
       monthlyCredits: 13_000,
-      tagline: 'Hosted AI copilot and research for active traders',
+      tagline: 'Hosted AI assistant and research for active traders',
     },
     max: {
       id: 'max',

@@ -4,7 +4,7 @@ description: Connect a venue, place an order that goes straight to the exchange,
 group: traders
 order: 3
 eyebrow: For traders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 3 min read
 ---
 
@@ -35,5 +35,5 @@ anything.
 ## The golden rule
 
 The AI augments decisions but never overrides risk limits. Every order, whether
-you placed it, a workflow fired it, a bot generated it, or the co-pilot
+you placed it, a workflow fired it, a bot generated it, or the assistant
 proposed it, is checked against your guardrails before it leaves the machine.

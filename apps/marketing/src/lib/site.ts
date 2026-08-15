@@ -49,7 +49,7 @@ export const FOOTER_COLUMNS = [
       { label: 'Launch terminal', href: SITE.launchUrl },
       { label: 'Download for desktop', href: '/install' },
       { label: 'Terminal', href: '/#features' },
-      { label: 'Co-pilot', href: '/#features' },
+      { label: 'AI assistant', href: '/#features' },
       { label: 'Intelligence', href: '/intelligence' },
       { label: 'Workflows', href: '/docs/build-a-workflow' },
       { label: 'Connectors', href: '/docs/connectors' },

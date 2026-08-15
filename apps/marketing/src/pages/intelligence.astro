@@ -22,7 +22,7 @@ import {
 
 const title = 'Pairlens Intelligence: hosted AI for your trading terminal'
 const description =
-  'The simplest way to power AI in the Pairlens terminal: hosted copilot, research reports, and web search on the best frontier models, with automatic fallbacks. One subscription, no API keys, and entirely optional: your own provider keys always work, free.'
+  'The simplest way to power AI in the Pairlens terminal: the hosted assistant, deep research, and web search on the best frontier models, with automatic fallbacks. One subscription, no API keys, and entirely optional: your own provider keys always work, free.'
 
 const fmt = (n: number) => n.toLocaleString('en-US')
 
@@ -54,7 +54,7 @@ const FEATURES = [
     stat: '0',
     statLabel: 'API keys to manage',
     title: 'Sign in and it just works',
-    body: 'No provider accounts, no separate billing dashboards, no keys pasted into a terminal. Subscribe once and the copilot, research reports and web search all light up.',
+    body: 'No provider accounts, no separate billing dashboards, no keys pasted into a terminal. Subscribe once and the assistant, deep research and web search all light up.',
   },
   {
     accent: 'var(--chart-1)',
@@ -68,14 +68,14 @@ const FEATURES = [
     stat: 'Multi',
     statLabel: 'provider fallbacks',
     title: 'More reliable than one key',
-    body: 'One provider having a bad day won’t take your copilot down: requests reroute across providers automatically. A single bring-your-own key can’t do that.',
+    body: 'One provider having a bad day won’t take the assistant down: requests reroute across providers automatically. A single bring-your-own key can’t do that.',
   },
   {
     accent: 'var(--chart-4)',
     stat: '1',
     statLabel: 'credit meter',
     title: 'One budget for everything',
-    body: 'Copilot chat, research reports and web search draw from the same transparent budget, metered live in Settings → Intelligence.',
+    body: 'Assistant chat, deep research and web search draw from the same transparent budget, metered live in Settings → Intelligence.',
   },
   {
     accent: 'var(--chart-5)',
@@ -94,7 +94,7 @@ const FEATURES = [
 ]
 
 const PLAN_BULLETS = [
-  'Hosted AI copilot on frontier models',
+  'The hosted AI assistant on frontier models',
   'AI research reports',
   `Hosted web search (${WEB_RESEARCH_CREDITS_PER_SEARCH} credits per search)`,
   'Automatic model routing with multi-provider fallbacks',
@@ -145,7 +145,7 @@ const PRICING: ReadonlyArray<Plan> = [
   {
     billedBy: 'Billed by Pairlens · flat rate',
     label: pro.label,
-    tagline: 'Hosted AI copilot and research for active traders.',
+    tagline: 'Hosted AI assistant and research for active traders.',
     price: `$${pro.priceUsdMonthly}`,
     priceUnit: '/ month',
     meta: `${fmt(pro.monthlyCredits)} credits every month`,
@@ -272,9 +272,9 @@ const jsonLd = [
               style="--reveal-delay: 140ms; color: var(--ml-muted);"
               class="mt-[30px] max-w-[48ch] text-pretty text-[18px] leading-[1.62]"
             >
-              Intelligence is the hosted brain for your terminal: copilot,
-              research reports and web search running on the best frontier
-              models, with automatic fallbacks across providers. One
+              Intelligence is the hosted brain for your terminal: the AI
+              assistant, deep research and web search running on the best
+              frontier models, with automatic fallbacks across providers. One
               subscription, zero setup and entirely optional.
             </p>
             <div

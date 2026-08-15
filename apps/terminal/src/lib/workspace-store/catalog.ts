@@ -145,8 +145,6 @@ const PANES_NEEDING_PAIR = new Set([
   'multi-price',
   'liquidity-heatmap',
   'trade-entry',
-  'copilot',
-  'research',
   'symbol-news',
 ])
 
@@ -463,9 +461,9 @@ const STANDALONE_TEMPLATES: Array<WorkspaceTemplate> = [
   {
     id: 'template:ai-research-desk',
     name: 'AI Research Desk',
-    tagline: 'Copilot, research, and the news wire beside your chart.',
+    tagline: 'A chart flanked by the symbol wire and the global feed.',
     description:
-      'Pair a chart with the AI Copilot, deep research, and both the global and symbol news feeds. Built for catalyst-driven trading where the story matters as much as the tape. Needs an AI inference provider for Copilot and Research.',
+      'Pair a chart with both the symbol news feed and the global wire, for catalyst-driven trading where the story matters as much as the tape. The AI assistant rides in the dock, so it is on hand here without taking a column.',
     icon: 'Brain',
     author: 'Pairlens',
     featured: true,
@@ -479,10 +477,9 @@ const STANDALONE_TEMPLATES: Array<WorkspaceTemplate> = [
     layout: buildLayout(
       'airesearch',
       [
-        { w: 44, cells: [{ h: 100, panes: ['chart'] }] },
-        { w: 30, cells: [{ h: 100, panes: ['copilot', 'research'] }] },
+        { w: 60, cells: [{ h: 100, panes: ['chart'] }] },
         {
-          w: 26,
+          w: 40,
           cells: [
             { h: 55, panes: ['symbol-news'] },
             { h: 45, panes: ['news'] },
@@ -603,7 +600,7 @@ const STANDALONE_TEMPLATES: Array<WorkspaceTemplate> = [
     name: 'Ultrawide Trading Floor',
     tagline: 'Everything, everywhere — for the big screen.',
     description:
-      'A four-column command center that fills an ultrawide or second monitor: scanner, chart, order book and depth, a trade ticket with positions, and the AI Copilot. The maximalist layout.',
+      'A four-column command center that fills an ultrawide or second monitor: scanner, chart, order book and depth, and a trade ticket over your open positions. The maximalist layout.',
     icon: 'Layers',
     author: 'Pairlens',
     facets: {
@@ -628,9 +625,8 @@ const STANDALONE_TEMPLATES: Array<WorkspaceTemplate> = [
         {
           w: 20,
           cells: [
-            { h: 34, panes: ['trade-entry'] },
-            { h: 33, panes: ['positions'] },
-            { h: 33, panes: ['copilot'] },
+            { h: 50, panes: ['trade-entry'] },
+            { h: 50, panes: ['positions'] },
           ],
         },
       ],
@@ -720,9 +716,9 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
     context: 'pair',
     routeMenu: true,
     icon: 'CandlestickChart',
-    tagline: 'The classic Pairlens desk — chart, data, trade, copilot.',
+    tagline: 'The classic Pairlens desk: chart, data, book, ticket.',
     description:
-      'The default terminal layout: a large chart with a tabbed data strip and risk bar on the left, and a trade ticket over the AI Copilot on the right.',
+      'The default terminal layout: a large chart with a tabbed data strip and risk bar on the left, and the order book over a trade ticket on the right.',
     facets: {
       traderTypes: ['day-trader'],
       assetClasses: ['crypto-spot'],
@@ -740,7 +736,7 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
     icon: 'Target',
     tagline: 'One big chart with tabbed data underneath.',
     description:
-      'A single-column layout that gives the chart maximum room, with positions, data log, copilot, and the trade ticket tucked into a tab strip below.',
+      'A single-column layout that gives the chart maximum room, with positions, the data log, and the trade ticket tucked into a tab strip below.',
     facets: {
       traderTypes: ['scalper', 'day-trader'],
       assetClasses: ['crypto-spot'],
@@ -756,9 +752,9 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
     context: 'pair',
     routeMenu: true,
     icon: 'Zap',
-    tagline: 'Order book and ticket flanking a central chart.',
+    tagline: 'Order book and ticket beside a full-height chart.',
     description:
-      'A three-column execution desk: order book and trade ticket on the left, chart with positions and risk in the middle, and the AI Copilot on the right.',
+      'A two-column execution desk: order book over the trade ticket on the left, and the chart with positions and risk taking the rest of the width.',
     facets: {
       traderTypes: ['day-trader', 'scalper'],
       assetClasses: ['crypto-spot'],
@@ -774,9 +770,9 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
     context: 'pair',
     routeMenu: true,
     icon: 'Activity',
-    tagline: 'Chart and data left, copilot and execution right.',
+    tagline: 'Chart and data left, execution right.',
     description:
-      'A study-oriented split: chart, data, research, and risk on the left; copilot, order book, and trade ticket on the right.',
+      'A study-oriented split: chart, data, and risk on the left; the order book and trade ticket on the right.',
     facets: {
       traderTypes: ['swing-trader', 'day-trader'],
       assetClasses: ['crypto-spot'],
@@ -886,9 +882,9 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
     name: 'Laptop Split',
     context: 'pair',
     icon: 'Layers',
-    tagline: 'Chart + data left, trade + copilot right — for smaller screens.',
+    tagline: 'Chart and data left, the ticket right, sized for laptops.',
     description:
-      'A two-column split sized for laptops: chart and positions on the left, trade ticket over copilot on the right.',
+      'A two-column split sized for laptops: chart, positions, and risk on the left, with the trade ticket on the right.',
     facets: {
       traderTypes: ['day-trader'],
       assetClasses: ['crypto-spot'],
@@ -904,7 +900,7 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
     icon: 'Radio',
     tagline: 'Every panel spread across an ultrawide monitor.',
     description:
-      'A four-column dashboard for ultrawide displays: order book, chart with risk, positions and research, and a trade + copilot column.',
+      'A four-column dashboard for ultrawide displays: order book, chart with risk, positions and the data log, and a trade ticket rail.',
     facets: {
       traderTypes: ['day-trader'],
       assetClasses: ['crypto-spot'],
@@ -920,7 +916,7 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
     icon: 'Zap',
     tagline: 'Order book, depth, chart, and execution across the width.',
     description:
-      'An ultrawide execution layout: order book and market depth on the left, chart with positions in the center, and a trade + copilot column on the right.',
+      'An ultrawide execution layout: order book and market depth on the left, chart with positions in the center, and the trade ticket on the right.',
     facets: {
       traderTypes: ['day-trader', 'scalper'],
       assetClasses: ['crypto-spot'],
@@ -936,7 +932,7 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
     icon: 'Diamond',
     tagline: 'The full command center for a 4K display.',
     description:
-      'Everything on screen for a 4K monitor: order book and pair info, chart with research and risk, positions and social, and a trade + copilot column.',
+      'Everything on screen for a 4K monitor: order book and pair info, chart with the risk bar, positions and social, and a trade ticket rail.',
     facets: {
       traderTypes: ['day-trader'],
       assetClasses: ['crypto-spot', 'multi-asset'],

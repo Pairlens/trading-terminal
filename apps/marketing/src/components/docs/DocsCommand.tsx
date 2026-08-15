@@ -249,12 +249,12 @@ export function DocsCommand({ pages }: { pages: Array<Page> }) {
               <span>Copy install command</span>
             </CommandItem>
             <CommandItem
-              value="ask the co-pilot ai assistant"
+              value="ask the ai assistant"
               onSelect={() =>
                 select(() => {
                   track('docs_search_selected', {
                     kind: 'action',
-                    target: 'ask-the-copilot',
+                    target: 'ask-the-assistant',
                   })
                   track('terminal_launched', { surface: 'docs-command' })
                   window.location.assign(SITE.launchUrl)
@@ -263,7 +263,7 @@ export function DocsCommand({ pages }: { pages: Array<Page> }) {
               className={itemClass}
             >
               <SparkleIcon className="size-[17px]" />
-              <span>Ask the co-pilot…</span>
+              <span>Ask the AI assistant…</span>
             </CommandItem>
           </CommandGroup>
         </CommandList>

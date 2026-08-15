@@ -35,7 +35,6 @@ import type {
   CustomIndicatorMeta,
   CustomIndicatorModule,
 } from '@pairlens/shared/plugin-types'
-import type { AssistantPromptContext } from './assistant-brain'
 import type { BacktestSignals } from '@/lib/indicators/backtest'
 import {
   ENTRY_FILE,
@@ -928,6 +927,36 @@ export type AssistantToolSet = ReturnType<typeof buildAssistantTools>
 // ---------------------------------------------------------------------------
 // Prompt context — the fresh snapshot the transport reads at send time
 // ---------------------------------------------------------------------------
+
+export type AssistantScriptContext = {
+  id: string
+  name: string
+  kind: 'indicator' | 'strategy' | 'draft'
+  metaError: string | null
+  files: Array<{ path: string; source: string }>
+}
+
+export type AssistantBotContext = {
+  id: string
+  name: string
+  scriptName: string | null
+  market: string
+  pair: string
+  timeframe: string
+  mode: string
+  enabled: boolean
+  status: string
+}
+
+export type AssistantPromptContext = {
+  surface: AssistantSurface
+  selectedScript: AssistantScriptContext | null
+  scriptCount: number
+  strategyCount: number
+  bots: Array<AssistantBotContext>
+  venues: Array<string>
+  previewTarget: AssistantPreviewTarget | null
+}
 
 export function collectAssistantPromptContext(
   deps: AssistantToolDeps,

@@ -4,7 +4,7 @@ description: Candles, tickers, order books, signals, and orders from the command
 group: builders
 order: 3
 eyebrow: For builders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 4 min read
 ---
 
@@ -116,7 +116,7 @@ terminal are reachable from the CLI on any machine.
 ## What the CLI does not do
 
 It is a market-interaction tool, not a headless terminal. Workflows, bots,
-alerts, Python indicators, and the AI co-pilot all live in the terminal
+alerts, Python indicators, and the AI assistant all live in the terminal
 process. A bot in particular needs the running app, which is
 [covered in its own doc](/docs/bots).
 

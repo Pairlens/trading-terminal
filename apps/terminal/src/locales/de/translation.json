@@ -20,7 +20,7 @@
     "oneTerminal": {
       "eyebrow": "Warum Pairlens",
       "title": "Ein Terminal. Jeder Markt.",
-      "sub": "Handle zentralisiert und On-Chain im Spot-Markt nebeneinander, mit einem KI-Co-Piloten, der jedes Setup mitliest.",
+      "sub": "Handle zentralisiert und On-Chain im Spot-Markt nebeneinander, mit einem KI-Assistenten, der jedes Setup mitliest.",
       "points": {
         "0": "Zentralisierter Spot-Handel — OKX, Binance, Coinbase",
         "1": "On-Chain-DEX-Swaps, smart geroutet",
@@ -90,9 +90,9 @@
       "label": "Routing"
     },
     "copilot": {
-      "eyebrow": "Dein Co-Pilot",
-      "title": "Ein Co-Pilot, der sich an deine Regeln hält.",
-      "sub": "Er liest den Markt, damit du es nicht musst — und überschreitet nie die Grenzen, die du setzt.",
+      "eyebrow": "Dein Assistent",
+      "title": "Ein Assistent, der sich an deine Regeln hält.",
+      "sub": "Er liest den Markt, damit du es nicht musst, und überschreitet nie die Grenzen, die du setzt.",
       "points": {
         "0": "Beobachtet Signale über all deine Märkte hinweg",
         "1": "Genehmigt, blockiert oder markiert jedes Setup",
@@ -101,7 +101,7 @@
       "scene": {
         "guardrail": "dein Risikolimit"
       },
-      "label": "Co-Pilot"
+      "label": "Assistent"
     },
     "themeStep": {
       "status": "Beleuchtung wird angepasst",
@@ -166,11 +166,11 @@
     "account": {
       "status": "Eine letzte Sache",
       "title": "Synchron halten?",
-      "sub": "Optional — alles, was du bisher gesehen hast, funktioniert auch ohne Konto. Ein Konto ergänzt den KI-Co-Piloten und die geräteübergreifende Synchronisierung. Deine Keys bleiben immer auf diesem Gerät.",
+      "sub": "Optional: alles, was du bisher gesehen hast, funktioniert auch ohne Konto. Ein Konto ergänzt den gehosteten KI-Assistenten und die geräteübergreifende Synchronisierung. Deine Keys bleiben immer auf diesem Gerät.",
       "benefits": {
         "ai": {
-          "title": "KI-Co-Pilot & Research",
-          "sub": "Kontextbezogene Analyse für jedes Paar — kostenlos inklusive"
+          "title": "KI-Assistent & Research",
+          "sub": "Arbeitet im ganzen Terminal, kostenlos inklusive"
         },
         "sync": {
           "title": "Cloud-Synchronisierung",
@@ -503,12 +503,12 @@
         },
         "copilot": {
           "title": "KI-Chatverlauf",
-          "description": "Deine Copilot-Unterhaltungen, pro Paar.",
+          "description": "Eine Unterhaltung mit dem Assistenten, für das ganze Terminal.",
           "caveat": "Solange das aus ist, leert das Löschen des Chatverlaufs nur dieses Gerät. Unterhaltungen in deinem Konto bleiben erhalten und tauchen wieder auf, sobald du die Synchronisierung wieder einschaltest."
         },
         "trades": {
           "title": "Trade-Journal",
-          "description": "Trades, die du oder der Copilot ins Journal einträgst."
+          "description": "Trades, die du oder der Assistent ins Journal einträgst."
         }
       }
     },
@@ -693,24 +693,24 @@
       "dailyTradeCount": "Trades",
       "windowStart": "Fenster gestartet",
       "confirmGesture": "Orderbestätigung",
-      "confirmGestureDescription": "Wie du eine selbst platzierte Order abschickst — im Ticket und auf den Orderkarten des Co-Piloten.",
+      "confirmGestureDescription": "Wie du eine selbst platzierte Order abschickst, im Ticket und auf den Orderkarten des Assistenten.",
       "confirmHold": "Gedrückt halten",
       "confirmHoldDescription": "Halte den Senden-Button, bis er sich füllt. Live-Orders hältst du etwas länger als Paper-Orders.",
       "confirmClick": "Einfacher Klick",
       "confirmClickDescription": "Der erste Klick sendet. Zwischen einem Fehlklick und einer echten Order steht dann nichts mehr.",
       "confirmGestureNote": "Die Risikolimits gelten in beiden Fällen — das ändert die Geste, nicht die Schutzgrenzen.",
       "aiPermissions": "KI-Handelsberechtigungen",
-      "aiPermissionsDescription": "Was der KI-Co-Pilot ohne Rückfrage tun darf. Orders außerhalb dieser Freigaben erfordern immer deine Bestätigung über eine Karte im Chat, und jede Order — automatisch genehmigt oder nicht — wird gegen die oben genannten Risikolimits geprüft.",
+      "aiPermissionsDescription": "Was der KI-Assistent ohne Rückfrage tun darf. Orders außerhalb dieser Freigaben erfordern immer deine Bestätigung über eine Karte im Chat, und jede Order wird gegen die oben genannten Risikolimits geprüft, ob automatisch genehmigt oder nicht.",
       "aiPaperAuto": "Paper-Trades automatisch genehmigen",
-      "aiPaperAutoDescription": "Nur simuliertes Kapital. Der Co-Pilot platziert Paper-Orders ohne Bestätigungskarte.",
+      "aiPaperAutoDescription": "Nur simuliertes Kapital. Der Assistent platziert Paper-Orders ohne Bestätigungskarte.",
       "aiLiveAuto": "Live-Trades automatisch genehmigen",
       "aiLiveAutoEmpty": "Keine Exchange freigegeben — jeder Live-Trade erfordert deine Bestätigung. Gib eine Exchange über eine Order-Karte mit „Nicht mehr fragen“ frei.",
-      "aiLiveAutoDescription": "Echtes Kapital. Der Co-Pilot platziert Live-Orders auf diesen Exchanges ohne Bestätigungskarte:",
+      "aiLiveAutoDescription": "Echtes Kapital. Der Assistent platziert Live-Orders auf diesen Exchanges ohne Bestätigungskarte:",
       "aiLiveAutoRevoke": "{{market}} widerrufen"
     },
     "billing": {
       "title": "Pairlens Intelligence",
-      "description": "Gehosteter KI-Copilot, Research-Berichte und Websuche — ohne API-Schlüssel.",
+      "description": "Der gehostete KI-Assistent, mit Deep Research und Websuche. Ohne API-Schlüssel.",
       "signInFirst": "Melde dich an, um dein Pairlens-Intelligence-Abo zu verwalten.",
       "selfHosted": "Auf diesem Server ist keine Abrechnung konfiguriert — gehostete KI-Funktionen laufen ohne Abo.",
       "loadError": "Dein Abrechnungsstatus konnte nicht geladen werden. Bitte versuche es erneut.",
@@ -879,7 +879,7 @@
       "triggerWake": "Nach dem Aufwachen",
       "triggerWakeHint": "Sperren, wenn der Rechner aus dem Ruhezustand kommt.",
       "triggerTrade": "Vor einer Order",
-      "triggerTradeHint": "Orders bestätigen, die du selbst oder über den Copilot aufgibst, auch automatisch freigegebene Vorschläge. Bots werden nie gefragt.",
+      "triggerTradeHint": "Orders bestätigen, die du selbst oder über den Assistenten aufgibst, auch automatisch freigegebene Vorschläge. Bots werden nie gefragt.",
       "afterMinutes": "Nach {{minutes}} Min.",
       "everyHours": "Alle {{hours}} Std.",
       "graceNever": "Jedes Mal",
@@ -1241,50 +1241,14 @@
     "buildWithAi": "Mit KI bauen",
     "buildWithAiHint": "Beschreib es, der Assistent schreibt es",
     "recommended": "Empfohlen",
-    "placeholder": "Beschreib, was gebaut werden soll...",
-    "answerPlaceholder": "Antworten, oder etwas anderes sagen...",
-    "close": "Assistent schließen",
-    "clearChat": "Unterhaltung löschen",
-    "emptyTitle": "Was bauen wir?",
-    "emptyHintIndicators": "Beschreib einen Indikator oder eine Strategie — der Assistent schreibt sie in den Editor, validiert sie und startet die Vorschau.",
-    "emptyHintBots": "Bitte ihn, eine Strategie als Paper-Bot einzusetzen, Parameter zu tunen oder Risiko-Guards zu setzen. Das Scharfschalten eines Bots bleibt in deiner Hand.",
-    "emptyHintWorkflows": "Beschreibe, was nach der Ausführung deiner Order passieren soll. Der Assistent verdrahtet die Schritte; du prüfst das Diff und committest.",
-    "emptyHintNotifications": "Sag, worüber du Bescheid wissen willst. Der Assistent baut den Alarm und schaltet ihn für das genannte Paar scharf.",
-    "genericError": "Der Assistent ist auf einen Fehler gestoßen — schick die Nachricht einfach noch einmal.",
-    "authRequiredTitle": "Mit KI bauen",
-    "authRequiredDescription": "Beschreib einen Indikator, eine Strategie oder einen Bot in eigenen Worten — der Assistent schreibt das Python, validiert es und backtestet es mit dir.",
-    "upgradeRequiredDescription": "Der Builder-Assistent schreibt Indikatoren, Strategien und Bots mit dir. Abonniere Pairlens Intelligence oder verbinde deinen eigenen KI-Key — kostenlos.",
-    "unavailableTitle": "Assistent nicht verfügbar",
-    "unavailableDescription": "Aktiviere einen KI-Anbieter auf der Plugins-Seite, um Indikatoren, Strategien und Bots per Chat zu bauen.",
-    "quickNewIndicator": "Bau einen RSI-Divergenz-Indikator",
-    "quickNewStrategy": "Schreib eine Breakout-Strategie, die ich backtesten kann",
-    "quickImprove": "Prüf dieses Skript und schlag Verbesserungen vor",
-    "quickBotFromScratch": "Bau mir einen Bot von Grund auf",
-    "quickCreateBot": "Setz eine meiner Strategien als Paper-Bot ein",
-    "quickGuards": "Schlag Risiko-Guards für einen meiner Bots vor",
-    "quickReview": "Wie schlagen sich meine Bots?",
-    "quickBracket": "Sichere meinen Einstieg mit Stop und Ziel ab",
-    "quickScaleOut": "Steige in drei Schritten aus einer Position aus",
-    "quickExplainWorkflow": "Erkläre, was dieser Workflow macht",
-    "quickPriceAlert": "Sag mir Bescheid, wenn BTC einen Kurs überschreitet",
-    "quickMoveAlert": "Warne mich bei einer schnellen prozentualen Bewegung",
-    "quickAlertReview": "Sieh dir meine bestehenden Alarme an",
     "questionHint": "Wähl eine Option, oder tipp unten deine eigene Antwort.",
     "questionHintOpen": "Tipp deine Antwort unten ein.",
     "youAnswered": "Du hast gewählt: {{answer}}",
-    "handoffToIndicators": "Weiter geht es in Indikatoren & Strategien",
-    "handoffToBots": "Weiter geht es in Bots",
-    "handoffToWorkflows": "Weiter geht es in Workflows",
-    "handoffToNotifications": "Weiter geht es in Benachrichtigungen",
     "starterTitle": "Beschreib es, und es wird gebaut",
     "starterBodyIndicators": "Sag, was du im Chart sehen willst. Der Assistent schreibt das Python, validiert es und startet die Vorschau, damit du es beurteilen kannst.",
     "starterBodyBots": "Sag, was der Bot tun soll. Der Assistent schreibt die Strategie, backtestet sie und setzt sie als Paper-Bot ein. Das Scharfschalten bleibt bei dir.",
     "starterBodyWorkflows": "Sag, was nach der Ausführung deiner Order passieren soll. Der Assistent verdrahtet die Schritte auf der Canvas; du prüfst das Diff und committest.",
     "starterBodyNotifications": "Sag, worüber du Bescheid wissen willst. Der Assistent baut den Alarm, wählt eine sinnvolle Abklingzeit und schaltet ihn scharf.",
-    "starterPlaceholderIndicators": "Ein RSI, der den Hintergrund einfärbt, wenn das Momentum dreht...",
-    "starterPlaceholderBots": "Ein Bot, der im Aufwärtstrend Rücksetzer auf dem 4h kauft...",
-    "starterPlaceholderWorkflows": "Wenn mein Einstieg gefüllt ist, Gewinn bei +5 % mitnehmen und bei -3 % rauswerfen ...",
-    "starterPlaceholderNotifications": "Sag mir Bescheid, wenn BTC auf OKX 100.000 überschreitet ...",
     "starterIdeaIndicator1": "Volumengewichtetes Trendband",
     "starterIdeaIndicator2": "Divergenz-Finder",
     "starterIdeaIndicator3": "Volatilitäts-Squeeze-Bänder",
@@ -1296,14 +1260,56 @@
     "starterIdeaWorkflow3": "Gestaffelt in einen Rücksetzer",
     "starterIdeaAlert1": "BTC überschreitet ein Level",
     "starterIdeaAlert2": "5 % Bewegung in einer Stunde",
-    "starterIdeaAlert3": "Sag mir, wenn mein Bot handelt",
-    "starterSend": "An den Assistenten senden"
+    "starterIdeaAlert3": "Sag mir, wenn mein Bot handelt"
+  },
+  "assistantDock": {
+    "title": "Assistent",
+    "open": "Assistent öffnen",
+    "close": "Assistent minimieren",
+    "clear": "Unterhaltung löschen",
+    "placeholder": "Frag alles, oder sag mir, was gebaut werden soll...",
+    "answerPlaceholder": "Antwort eingeben...",
+    "emptyTitle": "Woran arbeiten wir?",
+    "emptyDescription": "Ich lese jeden Markt, steuere den Chart, schreibe Indikatoren und Strategien, baue Alerts und Workflows und bereite Orders vor, die du bestätigst.",
+    "defaultSuggestion": "Frag den Assistenten",
+    "statusThinking": "Denkt nach...",
+    "statusUsingTools": "Nutzt Tools...",
+    "statusSearching": "Sucht im Web...",
+    "genericError": "Etwas ist schiefgelaufen. Versuch es noch mal.",
+    "authRequiredTitle": "Melde dich an, um den Assistenten zu nutzen",
+    "authRequiredDescription": "Der Assistent läuft über Pairlens Intelligence oder über deinen eigenen Provider-Key.",
+    "upgradeRequiredDescription": "Füge Intelligence zu deinem Plan hinzu, oder verbinde deinen eigenen Provider-Key.",
+    "unavailableTitle": "Assistent nicht verfügbar",
+    "unavailableDescription": "Es ist kein KI-Anbieter aktiv. Verbinde einen, um zu starten.",
+    "goToPlugins": "Plugin Store öffnen",
+    "suggest": {
+      "chart": "Analysiere den Chart von {{pair}}",
+      "discovery": "Finde mir etwas zum Handeln",
+      "workflows": "Baue einen Workflow",
+      "notifications": "Richte einen Alert ein",
+      "bots": "Setze einen Trading-Bot ein",
+      "indicators": "Schreibe einen Indikator",
+      "indicatorsScript": "Verbessere {{name}}",
+      "accounts": "Sieh dir meine Konten an",
+      "plugins": "Finde mir ein Plugin",
+      "workspaceStore": "Gestalte meinen Arbeitsbereich"
+    },
+    "researchCardTitle": "Research-Bericht: {{pair}} auf {{market}}",
+    "researchCardTitleGeneric": "Research-Bericht",
+    "researchCardSources_one": "{{count}} Quelle",
+    "researchCardSources_other": "{{count}} Quellen",
+    "quickAnalyze": "Analysiere {{pair}}",
+    "quickLevels": "Markiere die wichtigen Level auf {{symbol}}",
+    "quickAlert": "Sag mir Bescheid, wenn {{symbol}} ausbricht",
+    "quickWhatsMoving": "Was bewegt sich heute?",
+    "quickPortfolio": "Wie läuft mein Portfolio?",
+    "quickBuildAlert": "Bau mir einen Alert",
+    "approvalApprove": "Freigeben",
+    "approvalDecline": "Ablehnen",
+    "approvalApproved": "Freigegeben",
+    "approvalDeclined": "Abgelehnt"
   },
   "copilot": {
-    "aiLens": "KI-Lens",
-    "thinking": "Denkt nach...",
-    "idle": "Untätig",
-    "clearHistory": "Chatverlauf löschen",
     "placeholder": "Frag deine Lens...",
     "lensPersona": "Lens-Persona",
     "persona": {
@@ -1337,22 +1343,7 @@
     "keep": "Behalten",
     "tradingUnavailable": "Trading ist nicht verfügbar.",
     "noCredentialsForMarket": "Keine Zugangsdaten für {{market}} verbunden. Füge in Accounts API-Keys hinzu, um live zu handeln.",
-    "watchingPair": "Beobachte {{pair}} · {{timeframe}}",
-    "genericChatError": "Beim Copilot ist ein Fehler aufgetreten — versuch es noch mal.",
-    "quickActionHowIsDoing": "Wie steht’s um {{symbol}}?",
-    "quickActionSuggestedIndicators": "Empfohlene Indikatoren",
-    "quickActionAnySignals": "Gibt es Signale?",
     "scheduledCheckPrefix": "[Geplante Prüfung — vor {{minutes}} Min. eingerichtet]",
-    "authRequiredTitle": "Lerne deinen KI-Copilot kennen",
-    "authRequiredDescription": "Kontextbezogene Analyse für jedes Paar — er liest den Chart, prüft deine Risikolimits und antwortet mit Begründungen, die du hinterfragen kannst.",
-    "upgradeRequiredDescription": "Dein KI-Copilot liest den Chart, prüft deine Risikolimits und antwortet mit Begründungen, die du hinterfragen kannst. Abonniere Pairlens Intelligence oder verbinde deinen eigenen KI-Key — kostenlos.",
-    "aiLensUnavailableTitle": "AI Lens nicht verfügbar",
-    "aiLensUnavailableDescription": "Aktiviere ein KI-Plugin auf der Plugins-Seite, um Echtzeit-Marktanalysen und Handelsunterstützung zu erhalten.",
-    "goToPlugins": "Zu Plugins",
-    "analyzePair": "{{pair}} analysieren",
-    "startConversation": "Unterhaltung starten",
-    "emptyStateHint": "Frag nach Marktbedingungen, überprüfe dein Setup oder lass dir eine Risikoeinschätzung geben — die KI kennt den vollen Kontext dieses Paars.",
-    "contextAware": "Kontextbewusst",
     "toolFailed": "Tool fehlgeschlagen"
   },
   "chart": {
@@ -2195,7 +2186,7 @@
       "priceMonthly": "{{price}} $/Monat",
       "taxNotice": "Preise verstehen sich zzgl. Steuern – werden beim Bezahlvorgang berechnet.",
       "defaultTitle": "Pairlens Intelligence freischalten",
-      "defaultDescription": "Gehosteter KI-Copilot und Web-Research, ohne eigene API-Schlüssel. Jeder Plan enthält ein monatliches Nutzungsbudget für Chat, Research und Websuchen.",
+      "defaultDescription": "Der gehostete KI-Assistent, mit Deep Research und Websuche, ohne eigene API-Schlüssel. Jeder Plan enthält ein monatliches Nutzungsbudget für Chat, Research und Websuchen.",
       "byokNote": "Lieber einen eigenen Anbieter? Verbinde einen Anthropic-, OpenAI-, Groq- oder OpenRouter-Schlüssel auf der Seite <plugins>Plugins</plugins> — KI mit eigenem Schlüssel ist immer kostenlos.",
       "checkoutOpenedTitle": "Bezahlvorgang im Browser geöffnet",
       "checkoutActivates": "Dein Abo wird hier aktiviert, sobald die Zahlung abgeschlossen ist.",
@@ -2223,7 +2214,6 @@
     "fearGreed": "Angst & Gier",
     "chart": "Chart",
     "trade": "Handel",
-    "aiLens": "KI-Lens",
     "dataLog": "Daten-Log",
     "positions": "Positionen",
     "portfolio": "Portfolio",
@@ -2232,7 +2222,6 @@
     "marketDepth": "Markttiefe",
     "pairInfo": "Paar-Info",
     "multiPrice": "Preisvergleich",
-    "research": "Research",
     "social": "Social",
     "risk": "Risiko",
     "symbolNews": "Symbol-News",
@@ -2253,7 +2242,6 @@
     "fearGreed": "Marktstimmungs-Anzeige basierend auf dem Angst-&-Gier-Index",
     "chart": "Kerzenchart mit Indikatoren und Zeichenwerkzeugen",
     "trade": "Platziere Market-, Limit- und Stop-Orders mit Risikokontrollen",
-    "aiLens": "KI-Co-Pilot, der Signale analysiert und Handelskontext liefert",
     "dataLog": "Rohdaten-Feed für Signale und Ereignisse des aktiven Paars",
     "positions": "Überwache offene Positionen, P&L und Handelshistorie",
     "portfolio": "Kontobestände mit Allokationsaufschlüsselung",
@@ -2262,7 +2250,6 @@
     "marketDepth": "Kumulatives Marktiefe-Chart für das aktive Paar",
     "pairInfo": "Wichtige Kennzahlen, Funding-Rate und Metadaten für das aktive Paar",
     "multiPrice": "Dasselbe Paar gleichzeitig an allen Börsen, sortiert für die beste Ausführung",
-    "research": "KI-generierte Tiefenanalysen für das aktive Paar",
     "social": "Social-Stimmung und Community-Aktivität für ein Paar",
     "risk": "Portfolio-Risikokennzahlen und Guardrail-Konfiguration",
     "symbolNews": "News und Stimmungsanalyse für das aktive Handelspaar",
@@ -3086,10 +3073,6 @@
       "ascending": "Sortiert nach {{column}}, aufsteigend",
       "descending": "Sortiert nach {{column}}, absteigend"
     },
-    "panel": {
-      "expand": "Panel ausklappen",
-      "collapse": "Panel einklappen"
-    },
     "recentlyViewed": "Zuletzt angesehen",
     "noMarketsFound": "Keine Märkte gefunden",
     "modeLive": "LIVE",
@@ -3157,7 +3140,7 @@
       "statusBrowserVault": "Aktuell: jeder Key in deinem Tresor verschlüsselt, nur in diesem Browser.",
       "statusBrowserNone": "Noch kein Tresor in diesem Browser. Du richtest einen ein, bevor der erste Key gespeichert werden kann.",
       "deviceTitle": "Nur auf deinem Gerät gespeichert",
-      "deviceBody": "Deine Exchange-API-Keys und Wallet-Keys werden auf diesem Computer gespeichert und nirgendwo sonst. Sie werden nie zu Pairlens hochgeladen: nicht beim Anmelden, nicht wenn deine Einstellungen synchronisiert werden, nicht wenn der Copilot einen Chart liest. Es gibt keine Kopie auf unseren Servern, die durchsickern könnte.",
+      "deviceBody": "Deine Exchange-API-Keys und Wallet-Keys werden auf diesem Computer gespeichert und nirgendwo sonst. Sie werden nie zu Pairlens hochgeladen: nicht beim Anmelden, nicht wenn deine Einstellungen synchronisiert werden, nicht wenn der Assistent einen Chart liest. Es gibt keine Kopie auf unseren Servern, die durchsickern könnte.",
       "osTitle": "Verschlüsselt, solange sie dort liegen",
       "osBodyDesktop": "Sie liegen in {{vault}}, demselben geschützten Speicher, den dein System für seine eigenen Passwörter nutzt, verschlüsselt auf der Festplatte und nur an diese App herausgegeben.",
       "osBodyDesktopVault": "Sie liegen in {{vault}}, demselben geschützten Speicher, den dein System für seine eigenen Passwörter nutzt. Dein Tresor legt eine Schicht darüber: Jeder Wert wird mit AES-256-GCM versiegelt, bevor der Schlüsselbund ihn überhaupt sieht.",
@@ -3395,8 +3378,8 @@
       },
       "ai-research-desk": {
         "name": "KI-Research-Desk",
-        "tagline": "Co-Pilot, Research und der News-Ticker neben deinem Chart.",
-        "description": "Kombiniere einen Chart mit dem KI-Co-Piloten, Deep Research und sowohl dem globalen als auch dem symbolbezogenen News-Feed. Gebaut für katalysatorgetriebenes Trading, bei dem die Story genauso zählt wie der Ticker. Braucht einen KI-Inferenz-Anbieter für Co-Pilot und Research."
+        "tagline": "Ein Chart, flankiert von Symbol-News und globalem News-Ticker.",
+        "description": "Kombiniere einen Chart mit dem Symbol-News-Feed und dem globalen News-Ticker, für katalysatorgetriebenes Trading, bei dem die Story genauso zählt wie der Ticker. Der KI-Assistent sitzt im Dock und ist deshalb auch hier zur Hand, ohne eine Spalte zu belegen."
       },
       "market-discovery": {
         "name": "Marktentdeckung",
@@ -3411,7 +3394,7 @@
       "prediction-terminal": {
         "name": "Prognose-Terminal",
         "tagline": "Die Wahrscheinlichkeiten im Chart, das ganze Ereignis daneben.",
-        "description": "Das Standard-Layout für Prognosemärkte: ein Wahrscheinlichkeits-Chart mit den Trades und deinen offenen Kontrakten darunter, Orderbuch und Ticket in der Mitte, und der Ereignis-Browser neben dem KI-Co-Piloten, denn die benachbarten Ergebnisse sind die halbe Analyse.",
+        "description": "Das Standard-Layout für Prognosemärkte: ein Wahrscheinlichkeits-Chart mit den Trades und deinen offenen Kontrakten darunter, Orderbuch und Ticket in der Mitte, und rechts der Ereignis-Browser über die volle Höhe, denn die benachbarten Ergebnisse sind die halbe Analyse.",
         "menuLabel": "Standard"
       },
       "prediction-discovery": {
@@ -3428,7 +3411,7 @@
       "dex-terminal": {
         "name": "DEX-Terminal",
         "tagline": "On-Chain handeln, ohne falsches Orderbuch.",
-        "description": "Das Standard-Layout für On-Chain: ein Chart mit Pool-Statistiken und den Trades darunter, ein Swap-Ticket über deinen zuletzt angesehenen Tickern, um neue Listings zu erwischen, und der KI-Co-Pilot über dem Social-Feed. Es gibt keine Orderbuch-Spalte: die aus dem Pool abgeleitete Tiefe ist synthetisch und wird deshalb nicht gezeigt.",
+        "description": "Das Standard-Layout für On-Chain: ein Chart mit Pool-Statistiken und den Trades darunter, ein Swap-Ticket über deinen zuletzt angesehenen Tickern, um neue Listings zu erwischen, und rechts der Social-Feed. Es gibt keine Orderbuch-Spalte: die aus dem Pool abgeleitete Tiefe ist synthetisch und wird deshalb nicht gezeigt.",
         "menuLabel": "Standard"
       },
       "quant-signals": {
@@ -3444,36 +3427,36 @@
       "equities-terminal": {
         "name": "Aktien-Terminal",
         "tagline": "Aktien mit dem Ticket über dem Symbol-News-Ticker.",
-        "description": "Das Standard-Layout für Aktien: ein Chart mit den Trades, Positionen und Fundamentaldaten darunter, das Order-Ticket über den Symbol-News (Katalysatoren bewegen Aktien so wie Flow die Kryptomärkte), und rechts der KI-Co-Pilot.",
+        "description": "Das Standard-Layout für Aktien: ein Chart mit den Trades, Positionen und Fundamentaldaten darunter, und das Order-Ticket über den Symbol-News, denn Katalysatoren bewegen Aktien so wie Flow die Kryptomärkte.",
         "menuLabel": "Standard"
       },
       "ultrawide-trading-floor": {
         "name": "Ultrawide-Handelsparkett",
         "tagline": "Alles, überall — für den großen Bildschirm.",
-        "description": "Eine vierspaltige Kommandozentrale, die einen Ultrawide- oder zweiten Monitor ausfüllt: Scanner, Chart, Orderbuch und Tiefe, ein Order-Ticket mit Positionen und der KI-Co-Pilot. Das maximalistische Layout."
+        "description": "Eine vierspaltige Kommandozentrale, die einen Ultrawide- oder zweiten Monitor ausfüllt: Scanner, Chart, Orderbuch und Tiefe, sowie ein Order-Ticket über deinen offenen Positionen. Das maximalistische Layout."
       },
       "classic-terminal": {
         "name": "Klassisches Terminal",
-        "tagline": "Das klassische Pairlens-Setup — Chart, Daten, Trade, Co-Pilot.",
-        "description": "Das Standard-Terminal-Layout: ein großer Chart mit einer Daten-Leiste mit Reitern und einer Risikoleiste links, sowie ein Order-Ticket über dem KI-Co-Piloten rechts.",
+        "tagline": "Das klassische Pairlens-Setup: Chart, Daten, Orderbuch, Ticket.",
+        "description": "Das Standard-Terminal-Layout: ein großer Chart mit einer Daten-Leiste mit Reitern und einer Risikoleiste links, rechts das Orderbuch über einem Order-Ticket.",
         "menuLabel": "Standard"
       },
       "chart-focus": {
         "name": "Chart-Fokus",
         "tagline": "Ein großer Chart mit Daten in Reitern darunter.",
-        "description": "Ein einspaltiges Layout, das dem Chart maximalen Platz gibt, mit Positionen, Daten-Log, Co-Pilot und Order-Ticket in einer Reiterleiste darunter.",
+        "description": "Ein einspaltiges Layout, das dem Chart maximalen Platz gibt, mit Positionen, Daten-Log und Order-Ticket in einer Reiterleiste darunter.",
         "menuLabel": "Chart-Fokus"
       },
       "trading": {
         "name": "Trading",
-        "tagline": "Orderbuch und Ticket flankieren einen zentralen Chart.",
-        "description": "Ein dreispaltiges Ausführungs-Setup: Orderbuch und Order-Ticket links, Chart mit Positionen und Risiko in der Mitte, und der KI-Co-Pilot rechts.",
+        "tagline": "Orderbuch und Ticket neben einem Chart über die volle Höhe.",
+        "description": "Ein zweispaltiges Ausführungs-Setup: Orderbuch über dem Order-Ticket links, daneben der Chart mit Positionen und Risiko über die restliche Breite.",
         "menuLabel": "Trading"
       },
       "chart-analysis": {
         "name": "Chart-Analyse",
-        "tagline": "Chart und Daten links, Co-Pilot und Ausführung rechts.",
-        "description": "Eine studienorientierte Aufteilung: Chart, Daten, Research und Risiko links; Co-Pilot, Orderbuch und Order-Ticket rechts.",
+        "tagline": "Chart und Daten links, Ausführung rechts.",
+        "description": "Eine studienorientierte Aufteilung: Chart, Daten und Risiko links; Orderbuch und Order-Ticket rechts.",
         "menuLabel": "Analyse"
       },
       "dual-charts": {
@@ -3501,23 +3484,23 @@
       },
       "laptop-split": {
         "name": "Laptop-Split",
-        "tagline": "Chart + Daten links, Trade + Co-Pilot rechts — für kleinere Bildschirme.",
-        "description": "Eine zweispaltige Aufteilung für Laptops: Chart und Positionen links, Order-Ticket über Co-Pilot rechts."
+        "tagline": "Chart und Daten links, Ticket rechts, passend für Laptops.",
+        "description": "Eine zweispaltige Aufteilung für Laptops: Chart, Positionen und Risiko links, das Order-Ticket rechts."
       },
       "ultrawide-dashboard": {
         "name": "Ultrawide-Dashboard",
         "tagline": "Jedes Panel verteilt über einen Ultrawide-Monitor.",
-        "description": "Ein vierspaltiges Dashboard für Ultrawide-Displays: Orderbuch, Chart mit Risiko, Positionen und Research, sowie eine Trade + Co-Pilot-Spalte."
+        "description": "Ein vierspaltiges Dashboard für Ultrawide-Displays: Orderbuch, Chart mit Risiko, Positionen und Daten-Log, sowie eine Spalte mit dem Order-Ticket."
       },
       "ultrawide-trading": {
         "name": "Ultrawide Trading",
         "tagline": "Orderbuch, Tiefe, Chart und Ausführung über die gesamte Breite.",
-        "description": "Ein Ultrawide-Ausführungslayout: Orderbuch und Markttiefe links, Chart mit Positionen in der Mitte, und eine Trade + Co-Pilot-Spalte rechts."
+        "description": "Ein Ultrawide-Ausführungslayout: Orderbuch und Markttiefe links, Chart mit Positionen in der Mitte, das Order-Ticket rechts."
       },
       "command-center": {
         "name": "4K-Kommandozentrale",
         "tagline": "Die vollständige Kommandozentrale für ein 4K-Display.",
-        "description": "Alles auf dem Bildschirm für einen 4K-Monitor: Orderbuch und Paar-Infos, Chart mit Research und Risiko, Positionen und Social, sowie eine Trade + Co-Pilot-Spalte."
+        "description": "Alles auf dem Bildschirm für einen 4K-Monitor: Orderbuch und Paar-Infos, Chart mit Risikoleiste, Positionen und Social, sowie eine Spalte mit dem Order-Ticket."
       },
       "home-pulse": {
         "name": "Startseite",
@@ -3552,7 +3535,7 @@
       "perps-terminal": {
         "name": "Perps-Terminal",
         "tagline": "Das Futures-Setup: Positionen mit Mark-Preis und Liquidation.",
-        "description": "Das Standard-Layout für Perpetual Futures: ein großer Chart, darunter mit Reitern die Trades, offene Kontrakte (Einstieg, Mark-Preis, Liquidation) und Marktdaten, in der Mitte ein Orderbuch und ein Order-Ticket mit Hebel, und rechts der KI-Co-Pilot.",
+        "description": "Das Standard-Layout für Perpetual Futures: ein großer Chart, darunter mit Reitern die Trades, offene Kontrakte (Einstieg, Mark-Preis, Liquidation) und Marktdaten, rechts ein Orderbuch über einem Order-Ticket mit Hebel.",
         "menuLabel": "Standard"
       },
       "perps-discovery": {
@@ -4375,28 +4358,7 @@
     "exit": "Vollbild verlassen"
   },
   "research": {
-    "phaseSearching": "Web wird durchsucht ...",
-    "phaseReading": "Quellen werden gelesen ...",
-    "phaseAnalyzing": "Marktdaten werden analysiert ...",
-    "phaseWriting": "Bericht wird geschrieben ...",
-    "authRequiredTitle": "Research-Desk, nur eine Anmeldung entfernt",
-    "authRequiredDescription": "Strukturierte Research-Berichte zu jedem Paar, gestützt auf aktuelle Webquellen.",
-    "upgradeDescription": "Strukturierte Research-Berichte zu jedem Paar, gestützt auf aktuelle Webquellen. Abonniere Pairlens Intelligence oder verbinde deinen eigenen KI-Schlüssel — kostenlos.",
-    "unavailableTitle": "Research nicht verfügbar",
-    "unavailableDescription": "Aktiviere ein KI-Plugin auf der Plugins-Seite, um Research-Berichte für dieses Paar zu erstellen.",
-    "goToPlugins": "Zu den Plugins",
-    "navigateToPair": "Wechsle zu einem Paar, um Research anzuzeigen.",
-    "researchingSymbol": "Analysiere {{symbol}}",
-    "generatingReport": "Bericht wird erstellt ...",
-    "cachedGenerated": "Zwischengespeichert — erstellt {{time}}",
-    "freshGenerated": "Aktuell — gerade erst erstellt",
-    "refresh": "Aktualisieren",
-    "sourcesCount": "Quellen ({{count}})",
-    "reportTitle": "Research-Bericht",
-    "fullscreenDescription": "Research-Bericht im Vollbildmodus. Drücke Escape zum Beenden.",
-    "sections": "Abschnitte",
-    "sparklineAriaLabel": "Täglicher Kurs-Sparkline",
-    "errorTitle": "Research nicht verfügbar"
+    "sparklineAriaLabel": "Täglicher Kurs-Sparkline"
   },
   "capabilityGate": {
     "authTitle": "Nur eine kostenlose Anmeldung entfernt",
@@ -4493,8 +4455,8 @@
       "titlePlan": "{{label}} gehört jetzt dir.",
       "titleDefault": "Pairlens Intelligence gehört jetzt dir.",
       "bodyPack": "Sie kommen zusätzlich zu deinem monatlichen Budget und verfallen in {{days}} Tagen. Geh zurück zur Pairlens-App — dein Guthaben aktualisiert sich innerhalb weniger Sekunden.",
-      "bodyPlanWithCredits": "Dein gehosteter KI-Copilot, Research und Websuche sind freigeschaltet — mit {{credits}} Credits pro Monat. Geh zurück zur Pairlens-App — sie erkennt dein Abo innerhalb weniger Sekunden.",
-      "bodyPlanNoCredits": "Dein gehosteter KI-Copilot, Research und Websuche sind freigeschaltet. Geh zurück zur Pairlens-App — sie erkennt dein Abo innerhalb weniger Sekunden.",
+      "bodyPlanWithCredits": "Dein gehosteter KI-Assistent ist freigeschaltet, inklusive Deep Research und Websuche, mit {{credits}} Credits pro Monat. Geh zurück zur Pairlens-App: sie erkennt dein Abo innerhalb weniger Sekunden.",
+      "bodyPlanNoCredits": "Dein gehosteter KI-Assistent ist freigeschaltet, inklusive Deep Research und Websuche. Geh zurück zur Pairlens-App: sie erkennt dein Abo innerhalb weniger Sekunden.",
       "openTerminal": "Terminal öffnen",
       "closeTabHint": "Über die Desktop-App bezahlt? Du kannst diesen Tab einfach schließen.",
       "receiptHint": "Beleg und Rechnungen findest du in deiner E-Mail und im Abrechnungsportal (Einstellungen → Intelligence)."
@@ -4882,7 +4844,7 @@
     "ai": {
       "inference": {
         "label": "Inferenz",
-        "description": "LLM-Inferenz für die Co-Pilot-Analyse"
+        "description": "LLM-Inferenz für den KI-Assistenten"
       },
       "web-search": {
         "label": "Websuche",
@@ -4949,7 +4911,7 @@
     },
     "ai": {
       "label": "KI-Anbieter",
-      "description": "Sprachmodell-Anbieter für die Analyse des KI-Co-Piloten"
+      "description": "Sprachmodell-Anbieter für den KI-Assistenten"
     },
     "intelligence": {
       "label": "Intelligence",
@@ -4979,7 +4941,7 @@
         "watchlist": "Watchlist",
         "trade": "Handel",
         "chart": "Chart",
-        "copilot": "Co-Pilot",
+        "copilot": "Assistent",
         "discover": "Entdecken"
       },
       "overlays": {
@@ -5127,12 +5089,12 @@
       "bannerBody": "Workspaces, Bots, eigene Indikatoren und vier weitere Venues.",
       "bannerDismiss": "Ausblenden",
       "screenTitle": "Auf einem größeren Bildschirm",
-      "lead": "Dein Handy trägt die Teile von Pairlens, die du in der Hand haben willst: den Chart, das Orderbuch, das Order-Ticket und den Co-Piloten. Der Rest des Terminals ist für einen Bildschirm mit Platz zum Ausbreiten gebaut, und dort wartet er auf dich.",
+      "lead": "Dein Handy trägt die Teile von Pairlens, die du in der Hand haben willst: den Chart, das Orderbuch, das Order-Ticket und den Assistenten. Der Rest des Terminals ist für einen Bildschirm mit Platz zum Ausbreiten gebaut, und dort wartet er auf dich.",
       "widerWindow": "In einem breiteren Fenster",
       "desktopApp": "In der Desktop-App",
       "workspaces": {
         "title": "Workspaces",
-        "body": "Chart, Orderbuch, Handelsticker und Co-Pilot nebeneinander, einmal eingerichtet und gespeichert. Im Workspace Store liegen fertige Layouts, die du mit einem Tippen übernimmst."
+        "body": "Chart, Orderbuch, Handelsticker und Order-Ticket nebeneinander, einmal eingerichtet und gespeichert. Im Workspace Store liegen fertige Layouts, die du mit einem Tippen übernimmst."
       },
       "bots": {
         "title": "Bots",
