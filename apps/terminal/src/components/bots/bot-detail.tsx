@@ -233,12 +233,22 @@ export function BotDetail({ bot, onRequestArm }: BotDetailProps) {
             commonly backs several bots. Without this the page never says what
             code is making the decisions. */}
         <Stat label={t('botsPage.strategyLabel')}>
-          <span
-            className={cn('truncate', !script && 'text-destructive')}
-            title={script?.name}
-          >
-            {script?.name ?? t('botsPage.scriptMissing')}
-          </span>
+          {script ? (
+            // Links to the exact code this bot runs — the workbench opens
+            // with it selected, so "what is it doing?" is one click away.
+            <Link
+              to="/indicators"
+              search={{ script: script.id }}
+              className="truncate underline-offset-2 hover:underline"
+              title={t('botsPage.editStrategyHint', { name: script.name })}
+            >
+              {script.name}
+            </Link>
+          ) : (
+            <span className="truncate text-destructive">
+              {t('botsPage.scriptMissing')}
+            </span>
+          )}
         </Stat>
         <Stat label={t('botsPage.venue')}>
           <span className="font-mono">

@@ -189,6 +189,16 @@ export function OmniSearchPalette({
     ],
   )
 
+  // A new query (or tab) starts a new list, so it starts at the top. cmdk
+  // only scrolls when the selected VALUE changes — when consecutive queries
+  // keep the same top result ("so" → "sol", both led by SOL-USDT) it leaves
+  // the list wherever it was, and async result waves landing later would
+  // drift a non-zero offset further via browser scroll anchoring.
+  const listRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    listRef.current?.scrollTo({ top: 0 })
+  }, [searchValue, activeCategory])
+
   // Tab key cycles through categories (disabled while a prefix scopes the search)
   const commandRef = useRef<HTMLDivElement>(null)
   const handleKeyDown = useCallback(
@@ -250,7 +260,7 @@ export function OmniSearchPalette({
           locked={prefixCategory !== null}
           isLoading={isLoading}
         />
-        <CommandList className="max-h-80">
+        <CommandList ref={listRef} className="max-h-80">
           {!hasResults && <CommandEmpty>{t('search.noResults')}</CommandEmpty>}
 
           {groups.map((group) => (

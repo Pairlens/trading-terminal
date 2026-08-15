@@ -289,9 +289,30 @@ Before considering any user-visible work complete:
 2. Update the prose, and bump `updated:` (plus `readTime:` when a page gains or loses a section).
 3. A new page needs full frontmatter — `title`, `description`, `group`, `parent`, `order`, `eyebrow`, `updated`, `readTime` — because nothing else registers it with the nav or the search index.
 4. Check the README and `docs/API.md` too when the change alters the pitch, the feature list, or a public API.
-5. Voice rules are enforced by review, not by a linter: no em dashes, no `**Word** — description` bullets. Restructure with commas, colons, or separate sentences, and `grep -n "—"` the page before committing.
+5. Follow the [Voice and tone](#voice-and-tone-all-copy-and-ui-text) rules below. They are enforced by review, not by a linter.
 
 If a change genuinely has no user-visible surface (an internal refactor, a type-only change, a test), say so in the commit body rather than skipping this silently.
+
+### Voice and tone (all copy and UI text)
+
+These rules apply to every string a user reads, not just docs: terminal UI text (translation keys, toasts, dialogs, tooltips, empty states, error messages, onboarding), docs pages, marketing copy, READMEs, release notes, plugin store listings, CLI output. If a user sees it, it follows these rules.
+
+**Never write an em dash (—) or en dash (–). No exceptions.** This is the single most reliable tell of AI-written prose and it undermines credibility with the developers we are courting. Restructure with commas, colons, parentheses, or separate sentences instead. Before committing, grep everything you touched:
+
+```bash
+grep -rn "—\|–" <files you changed>
+```
+
+Hyphens in compound words are fine. Arrows (→, ↔) and Δ in technical text are fine.
+
+The rest of the voice:
+
+- **No `**Word** — description` bullets.** Use `**Word.** Description` or a plain sentence.
+- **Write like a developer who markets, not a model that summarizes.** Lead with what the thing does and why the reader cares. Sell with concrete specifics: counts, guarantees, real numbers, named behaviors. Skip filler adjectives.
+- **Vary sentence length.** Keep some short. Uniform medium-length sentences read as generated.
+- The approved reference for tone and structure is the pairlens-charts README (`Pairlens/fast-financial-charts`).
+
+New terminal UI strings land in `apps/terminal/src/locales/en/translation.json` first: get the English right there, because the other sixteen locales are translated from it. Internal-only text (code comments, commit messages, this file) is exempt, but do not let internal habits leak into shipped strings.
 
 ## Code Style
 

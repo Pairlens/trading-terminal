@@ -149,6 +149,9 @@ happened yet.
 
 ## From strategy to bot
 
-Once the numbers hold up, deploy it: **Bots → New bot**, pick the script, pick
-a market and timeframe, set sizing and guards. It starts on paper. Going live
-is a separate, explicit gate. See [bots](/docs/bots).
+Once the numbers hold up, deploy it. The workbench header shows a **Deploy as
+bot** button on any strategy script that has run: one click opens the bot
+create flow with that script preselected. Pick a market and timeframe, set
+sizing and guards, and it starts on paper. Going live is a separate, explicit
+gate. The same flow is reachable from **Bots → New bot**, where your
+strategies sit next to the ready-made ones. See [bots](/docs/bots).

@@ -18,8 +18,8 @@ server.
 
 ## Quickstart
 
-1. Open **Indicators** in the left nav.
-2. Click **New indicator** and start from the **RSI** template.
+1. Open **Indicators & Strategies** in the left nav.
+2. Click **New script** and start from the **RSI** template.
 3. Hit **Run**. The first run boots the Python runtime, which takes a few
    seconds, then the indicator renders on a live preview chart.
 4. That is it. The indicator now appears in every chart's indicator picker
