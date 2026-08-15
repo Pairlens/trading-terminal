@@ -48,7 +48,10 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL = 'https://polymarket.com/favicon.ico'
+// Bundled rather than hotlinked, same as Kalshi: polymarket.com's bot
+// protection refuses the image request, so the mark never loaded.
+// `bun scripts/fetch-plugin-posters.ts polymarket-market-connector` refreshes.
+const ICON_URL = '/posters/polymarket-market-connector.png'
 
 /**
  * ccxt publishes `1m, 5m, 1h, 6h, 1d`. `6h` is not in the app's `Timeframe`

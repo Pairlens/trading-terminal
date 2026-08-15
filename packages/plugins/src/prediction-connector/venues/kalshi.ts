@@ -45,7 +45,12 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL = 'https://kalshi.com/favicon.ico'
+// Served from the terminal's own bundle, unlike the CEX venues that hotlink a
+// CDN mark: kalshi.com resets the TLS handshake on an image request, so every
+// surface that showed the venue — picker, Accounts, connect gate — rendered a
+// broken image. `bun scripts/fetch-plugin-posters.ts kalshi-market-connector`
+// refreshes the file.
+const ICON_URL = '/posters/kalshi-market-connector.png'
 
 /** The venue's own OHLCV intervals — 1, 60 and 1440 minutes. Nothing else. */
 export const KALSHI_TIMEFRAMES = ['1m', '1h', '1d'] as const
