@@ -8,22 +8,29 @@ import { useTranslation } from 'react-i18next'
 import { Input } from '@pairlens/ui/components/ui/input'
 import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
+import type { AssetClass } from '@/lib/workspace-store/types'
 import { PageHeader } from '@/components/page-header'
 import { WorkspaceStore } from '@/components/workspace-store/workspace-store'
+import { ASSET_CLASSES } from '@/lib/workspace-store/catalog'
 
 type WorkspaceStoreSearch = {
   template?: string
+  /** Pre-selects the asset-class facet (links from a pair page's menu). */
+  assetClass?: AssetClass
 }
 
 export const Route = createFileRoute('/_terminal/workspace-store')({
   component: WorkspaceStorePage,
   validateSearch: (search: Record<string, unknown>): WorkspaceStoreSearch => ({
     template: typeof search.template === 'string' ? search.template : undefined,
+    assetClass: ASSET_CLASSES.includes(search.assetClass as AssetClass)
+      ? (search.assetClass as AssetClass)
+      : undefined,
   }),
 })
 
 function WorkspaceStorePage() {
-  const { template } = Route.useSearch()
+  const { template, assetClass } = Route.useSearch()
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
 
@@ -62,7 +69,11 @@ function WorkspaceStorePage() {
           </h1>
         </PageHeader>
         <div className="relative min-h-0 flex-1 overflow-hidden">
-          <WorkspaceStore autoOpenTemplateId={template} search={search} />
+          <WorkspaceStore
+            autoOpenTemplateId={template}
+            initialAssetClass={assetClass}
+            search={search}
+          />
         </div>
       </div>
     </SidebarInset>

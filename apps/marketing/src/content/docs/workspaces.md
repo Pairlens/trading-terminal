@@ -5,7 +5,7 @@ group: traders
 order: 8
 eyebrow: For traders
 updated: AUG 2026
-readTime: 5 min read
+readTime: 6 min read
 ---
 
 A workspace is a saved arrangement of panels. Scalping wants a book, a depth
@@ -24,6 +24,25 @@ workspace, which is why you cannot end up with two Portfolio panels quietly
 disagreeing.
 
 Rename a workspace, change its icon, or delete it from its context menu.
+
+## One pair layout per asset class
+
+The pair page itself is a workspace too, and it is saved per asset class. Spot,
+perpetuals, DEX tokens, stocks, and prediction markets each keep their own
+arrangement: rearrange the panels while charting a perp and your spot layout
+has not moved.
+
+Each class ships a default built for what it trades. Perps swap the spot
+positions panel for **Futures Positions** with mark and liquidation. Prediction
+markets get the **Events** browser and **Prediction Positions** beside the
+book. DEX pairs drop the order book entirely, because pool-quoted depth is
+synthetic, and pair the swap ticket with recent tickers. Stocks put the ticket
+over the symbol news wire.
+
+The **Workspaces** menu follows the same rule: on a prediction market it
+suggests layouts built for prediction markets, not a spot execution desk, and
+**Browse Workspace Store** opens the store already filtered to that asset
+class.
 
 ## Folders
 

@@ -32,6 +32,7 @@ describe('domainForSyncKey', () => {
     const tier2 = [
       'custom-workspaces',
       'terminal.layout',
+      'terminal.layout.perp',
       'discovery.layout',
       'workspace.abc.layout',
       'workspace-vars:abc',
@@ -54,6 +55,7 @@ describe('domainForSyncKey', () => {
     expect(domainForSyncKey('drawing-last-lines')).toBe('charts')
     expect(domainForSyncKey('terminal.drawingFavorites')).toBe('charts')
     expect(domainForSyncKey('custom-workspaces')).toBe('workspaces')
+    expect(domainForSyncKey('terminal.layout.prediction')).toBe('workspaces')
     expect(domainForSyncKey('workspace.abc.layout')).toBe('workspaces')
     expect(domainForSyncKey('workspace-vars:abc')).toBe('workspaces')
     expect(domainForSyncKey('workflows')).toBe('automation')

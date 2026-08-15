@@ -3346,10 +3346,22 @@
         "tagline": "Bir bakışta bakiyeler, pozisyonlar ve risk.",
         "description": "Hesap odaklı bir kokpit: portföy dağılımın, açık pozisyonların, canlı risk sınırların ve defterin geri kalanını gözünün önünde tutmak için bir izleme listesi. Zaten sahip olduklarını yönetmek için."
       },
+      "prediction-terminal": {
+        "name": "Tahmin Terminali",
+        "tagline": "Olasılıkları grafikte, olayın tamamı hemen yanında.",
+        "description": "Tahmin piyasaları için varsayılan düzen: altında işlemler ve açık sözleşmelerin bulunduğu bir olasılık grafiği, ortada emir defteri ve işlem paneli, Yapay Zeka Co-pilotunun yanında ise olay tarayıcısı; çünkü komşu sonuçlar analizin yarısıdır.",
+        "menuLabel": "Varsayılan"
+      },
       "dex-degen": {
         "name": "DEX Degen",
         "tagline": "Zincir üstü grafikler, takaslar ve sosyal akış.",
         "description": "Zincir üstü avlanmak için tasarlandı: bir takas paneli olan bir grafik, yeni listelemeleri yakalamak için son görülen pariteler ve alfa için sosyal akış. Takasları Jupiter gibi bir DEX bağlayıcısı üzerinden yönlendir."
+      },
+      "dex-terminal": {
+        "name": "DEX Terminali",
+        "tagline": "Sahte emir defteri olmadan zincir üstü işlem.",
+        "description": "Varsayılan zincir üstü düzen: altında havuz istatistikleri ve işlemler bulunan bir grafik, yeni listelemeleri yakalamak için son görülen paritelerin üzerinde bir takas paneli ve sosyal akışın üzerinde Yapay Zeka Co-pilotu. Emir defteri sütunu yok: havuzdan türetilen derinlik sentetiktir, bu yüzden gösterilmez.",
+        "menuLabel": "Varsayılan"
       },
       "quant-signals": {
         "name": "Quant Sinyalleri",
@@ -3360,6 +3372,12 @@
         "name": "Hisse Senedi Masası",
         "tagline": "Tarayıcı, grafik ve pozisyonlarla hisse senedi işlemi yap.",
         "description": "Bir hisse senedi işlem düzeni: piyasa tarayıcısı, bir grafik, açık pozisyonlar ve haber akışı. ABD hisse senetlerini akış olarak almak ve emirleri yönlendirmek için Alpaca broker eklentisini bağla."
+      },
+      "equities-terminal": {
+        "name": "Hisse Senedi Terminali",
+        "tagline": "İşlem paneli sembol haber akışının üzerinde, hisse senetleri için.",
+        "description": "Hisse senetleri için varsayılan düzen: altında işlemler, pozisyonlar ve temel veriler bulunan bir grafik, sembol haber akışının üzerinde işlem paneli (akış kriptoyu nasıl hareket ettiriyorsa, katalizörler de hisseleri öyle hareket ettirir) ve sağda Yapay Zeka Co-pilotu.",
+        "menuLabel": "Varsayılan"
       },
       "ultrawide-trading-floor": {
         "name": "Ultra Geniş İşlem Katı",
@@ -3462,6 +3480,12 @@
         "tagline": "En çok hareket edenlerin ve haber akışının yanında piyasalar.",
         "description": "En çok hareket edenlerin ve canlı haber akışının yanında piyasa tarayıcısı — katalizör odaklı işlemler için bir ana üs.",
         "menuLabel": "Haberler"
+      },
+      "perps-terminal": {
+        "name": "Perp Terminali",
+        "tagline": "Vadeli işlem masası: mark fiyatı ve likidasyonla birlikte pozisyonlar.",
+        "description": "Sürekli vadeli işlemler için varsayılan düzen: altında sekmeler halinde işlemler, açık sözleşmeler (giriş, mark, likidasyon) ve piyasa verileri bulunan büyük bir grafik, ortada emir defteri ve kaldıracı hesaba katan bir işlem paneli, sağda ise Yapay Zeka Co-pilotu.",
+        "menuLabel": "Varsayılan"
       }
     },
     "traderTypes": {
@@ -3498,11 +3522,17 @@
       "crypto-spot": {
         "label": "Kripto Spot"
       },
+      "crypto-perp": {
+        "label": "Perp"
+      },
       "dex": {
         "label": "DEX"
       },
       "equities": {
         "label": "Hisse Senetleri"
+      },
+      "predictions": {
+        "label": "Tahminler"
       },
       "multi-asset": {
         "label": "Çoklu Varlık"

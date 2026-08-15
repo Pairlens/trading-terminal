@@ -55,7 +55,7 @@ import { ActiveWalletProvider } from '@/lib/active-wallet-context'
 import { useCredentialsStore } from '@/stores/credentials-store'
 import { LayoutProvider } from '@/lib/layout/context'
 import { WorkspaceProvider } from '@/lib/layout/workspace-context'
-import { PAIR_WORKSPACE } from '@/lib/layout/workspaces/pair-workspace'
+import { pairWorkspaceFor } from '@/lib/layout/workspaces/pair-workspace'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 
 export const Route = createFileRoute('/_terminal/$cls/$market/$id')({
@@ -227,8 +227,13 @@ function ChartTerminalContent({
       marketOverride={marketRef.market}
       onMarketChange={handleMarketChange}
     >
-      <WorkspaceProvider config={PAIR_WORKSPACE}>
-        <LayoutProvider>
+      {/* The workspace follows the ASSET CLASS: each class persists its own
+          layout under its own key. Keyed by class because this component stays
+          mounted across param changes — without the remount, LayoutProvider's
+          lazy reducer init would keep the old class's layout in state and the
+          persistence effect would write it into the new class's key. */}
+      <WorkspaceProvider config={pairWorkspaceFor(marketRef.cls)}>
+        <LayoutProvider key={marketRef.cls}>
           <ChartTerminalBody marketRef={marketRef} markets={markets} />
         </LayoutProvider>
       </WorkspaceProvider>

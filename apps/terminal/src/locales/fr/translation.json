@@ -3346,10 +3346,22 @@
         "tagline": "Soldes, positions et risque en un coup d'œil.",
         "description": "Un cockpit centré sur le compte : la répartition de votre portefeuille, les positions ouvertes, des garde-fous de risque en direct, et une liste de suivi pour garder un œil sur le reste de vos positions. Pour gérer ce que vous détenez déjà."
       },
+      "prediction-terminal": {
+        "name": "Terminal Prédictions",
+        "tagline": "Le graphique des probabilités, tout l'événement à côté.",
+        "description": "La mise en page par défaut pour les marchés de prédiction : un graphique de probabilité avec les transactions et vos contrats ouverts en dessous, le carnet d'ordres et le ticket au centre, et l'explorateur d'événements à côté du co-pilote IA, car les issues voisines font la moitié de l'analyse.",
+        "menuLabel": "Par défaut"
+      },
       "dex-degen": {
         "name": "DEX Degen",
         "tagline": "Graphiques on-chain, swaps et fil social.",
         "description": "Conçu pour la chasse on-chain : un graphique avec ticket de swap, des tickers récents pour repérer les nouvelles cotations, et le fil social pour l'alpha. Acheminez les swaps via un connecteur DEX comme Jupiter."
+      },
+      "dex-terminal": {
+        "name": "Terminal DEX",
+        "tagline": "Le trading on-chain sans faux carnet d'ordres.",
+        "description": "La mise en page on-chain par défaut : un graphique avec les statistiques du pool et les transactions en dessous, un ticket de swap au-dessus de vos tickers récents pour repérer les nouvelles cotations, et le co-pilote IA au-dessus du fil social. Il n'y a pas de colonne carnet d'ordres : la profondeur cotée par un pool est synthétique, elle n'est donc pas affichée.",
+        "menuLabel": "Par défaut"
       },
       "quant-signals": {
         "name": "Signaux Quant",
@@ -3360,6 +3372,12 @@
         "name": "Poste Actions",
         "tagline": "Tradez des actions avec un scanner, un graphique et des positions.",
         "description": "Une mise en page pour le trading d'actions : le scanner de marchés, un graphique, les positions ouvertes, et le fil d'actualités. Connectez le plugin broker Alpaca pour recevoir les actions américaines en flux et acheminer les ordres."
+      },
+      "equities-terminal": {
+        "name": "Terminal Actions",
+        "tagline": "Les actions avec le ticket au-dessus du fil d'actualités du symbole.",
+        "description": "La mise en page par défaut pour les actions : un graphique avec les transactions, les positions et les fondamentaux en dessous, le ticket d'ordre au-dessus des actualités du symbole (les catalyseurs font bouger les actions comme le flux fait bouger les cryptos), et le co-pilote IA à droite.",
+        "menuLabel": "Par défaut"
       },
       "ultrawide-trading-floor": {
         "name": "Salle des marchés Ultrawide",
@@ -3462,6 +3480,12 @@
         "tagline": "Marchés aux côtés des mouvements et du flux d'actualités.",
         "description": "Le scanner de marchés aux côtés des principaux mouvements et du flux d'actualités en direct — une base pour le trading piloté par les catalyseurs.",
         "menuLabel": "Actualités"
+      },
+      "perps-terminal": {
+        "name": "Terminal Perpétuels",
+        "tagline": "Le poste futures : positions avec prix de marquage et liquidation.",
+        "description": "La mise en page par défaut pour les futures perpétuels : un grand graphique avec, en onglets en dessous, les transactions, les contrats ouverts (entrée, marquage, liquidation) et les données de marché, un carnet d'ordres et un ticket tenant compte du levier au centre, et le co-pilote IA à droite.",
+        "menuLabel": "Par défaut"
       }
     },
     "traderTypes": {
@@ -3498,11 +3522,17 @@
       "crypto-spot": {
         "label": "Crypto Spot"
       },
+      "crypto-perp": {
+        "label": "Perpétuels"
+      },
       "dex": {
         "label": "DEX"
       },
       "equities": {
         "label": "Actions"
+      },
+      "predictions": {
+        "label": "Prédictions"
       },
       "multi-asset": {
         "label": "Multi-actifs"

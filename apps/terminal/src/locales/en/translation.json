@@ -3311,78 +3311,10 @@
     "nextSlide": "Next",
     "goToSlide": "Go to slide {{number}}",
     "templates": {
-      "scalpers-cockpit": {
-        "name": "Scalper's Cockpit",
-        "tagline": "Chart, book, and one-click entry — nothing else.",
-        "description": "A minimal two-column cockpit for fast execution: a chart beside a live order book, market depth, and a trade-entry ticket. Built for speed on a single screen."
-      },
-      "day-trader-pro": {
-        "name": "Day Trader Pro",
-        "tagline": "Scan, chart, and trade the intraday session.",
-        "description": "A balanced three-column desk: a markets scanner on the left, a large chart in the middle, and an order book plus trade ticket and open positions on the right. The everyday driver for active crypto trading."
-      },
-      "cross-venue-desk": {
-        "name": "Cross-Venue Desk",
-        "tagline": "One pair, every venue, cheapest fill on top.",
-        "description": "Built around the Multi-Price panel: the active pair quoted on every venue that lists it, ranked by price so the best fill is the top row. A chart and the tape sit beside it, with the order book and a trade ticket ready to act on the gap."
-      },
-      "swing-overview": {
-        "name": "Swing Overview",
-        "tagline": "Trend context with a watchlist and the movers.",
-        "description": "A calmer layout for multi-day positions: a full chart alongside your watchlist, the top movers, and pair fundamentals. Enough context to size a swing without the noise of an execution desk."
-      },
       "ai-research-desk": {
         "name": "AI Research Desk",
         "tagline": "Copilot, research, and the news wire beside your chart.",
         "description": "Pair a chart with the AI Copilot, deep research, and both the global and symbol news feeds. Built for catalyst-driven trading where the story matters as much as the tape. Needs an AI inference provider for Copilot and Research."
-      },
-      "market-discovery": {
-        "name": "Market Discovery",
-        "tagline": "Find what is moving before you commit.",
-        "description": "A pure discovery board: the markets scanner, top movers, a sector heatmap, your watchlist, and the Fear & Greed gauge. No chart, no ticket — just for hunting the next setup."
-      },
-      "portfolio-command": {
-        "name": "Portfolio Command",
-        "tagline": "Balances, positions, and risk at a glance.",
-        "description": "An account-centric cockpit: your portfolio breakdown, open positions, live risk guardrails, and a watchlist to keep an eye on the rest of the book. For managing what you already hold."
-      },
-      "dex-degen": {
-        "name": "DEX Degen",
-        "tagline": "On-chain charts, swaps, and the social feed.",
-        "description": "Built for on-chain hunting: a chart with a swap ticket, recent tickers to catch new listings, and the social feed for alpha. Route swaps through a DEX connector such as Jupiter."
-      },
-      "quant-signals": {
-        "name": "Quant Signals",
-        "tagline": "Data log, heatmap, and risk for signal-driven trading.",
-        "description": "A data-first desk: a chart paired with the raw data log, a liquidity heatmap, live risk state, and the markets scanner. For traders who read the tape as numbers, not candles."
-      },
-      "equities-desk": {
-        "name": "Equities Desk",
-        "tagline": "Trade stocks with a scanner, chart, and positions.",
-        "description": "A stock-trading layout: the markets scanner, a chart, open positions, and the news wire. Connect the Alpaca broker plugin to stream US equities and route orders."
-      },
-      "ultrawide-trading-floor": {
-        "name": "Ultrawide Trading Floor",
-        "tagline": "Everything, everywhere — for the big screen.",
-        "description": "A four-column command center that fills an ultrawide or second monitor: scanner, chart, order book and depth, a trade ticket with positions, and the AI Copilot. The maximalist layout."
-      },
-      "classic-terminal": {
-        "name": "Classic Terminal",
-        "tagline": "The classic Pairlens desk — chart, data, trade, copilot.",
-        "description": "The default terminal layout: a large chart with a tabbed data strip and risk bar on the left, and a trade ticket over the AI Copilot on the right.",
-        "menuLabel": "Default"
-      },
-      "chart-focus": {
-        "name": "Chart Focus",
-        "tagline": "One big chart with tabbed data underneath.",
-        "description": "A single-column layout that gives the chart maximum room, with positions, data log, copilot, and the trade ticket tucked into a tab strip below.",
-        "menuLabel": "Chart Focus"
-      },
-      "trading": {
-        "name": "Trading",
-        "tagline": "Order book and ticket flanking a central chart.",
-        "description": "A three-column execution desk: order book and trade ticket on the left, chart with positions and risk in the middle, and the AI Copilot on the right.",
-        "menuLabel": "Trading"
       },
       "chart-analysis": {
         "name": "Chart Analysis",
@@ -3390,23 +3322,66 @@
         "description": "A study-oriented split: chart, data, research, and risk on the left; copilot, order book, and trade ticket on the right.",
         "menuLabel": "Analysis"
       },
+      "chart-focus": {
+        "name": "Chart Focus",
+        "tagline": "One big chart with tabbed data underneath.",
+        "description": "A single-column layout that gives the chart maximum room, with positions, data log, copilot, and the trade ticket tucked into a tab strip below.",
+        "menuLabel": "Chart Focus"
+      },
+      "classic-terminal": {
+        "name": "Classic Terminal",
+        "tagline": "The classic Pairlens desk — chart, data, trade, copilot.",
+        "description": "The default terminal layout: a large chart with a tabbed data strip and risk bar on the left, and a trade ticket over the AI Copilot on the right.",
+        "menuLabel": "Default"
+      },
+      "command-center": {
+        "name": "4K Command Center",
+        "tagline": "The full command center for a 4K display.",
+        "description": "Everything on screen for a 4K monitor: order book and pair info, chart with research and risk, positions and social, and a trade + copilot column."
+      },
+      "cross-venue-desk": {
+        "name": "Cross-Venue Desk",
+        "tagline": "One pair, every venue, cheapest fill on top.",
+        "description": "Built around the Multi-Price panel: the active pair quoted on every venue that lists it, ranked by price so the best fill is the top row. A chart and the tape sit beside it, with the order book and a trade ticket ready to act on the gap."
+      },
+      "day-trader-pro": {
+        "name": "Day Trader Pro",
+        "tagline": "Scan, chart, and trade the intraday session.",
+        "description": "A balanced three-column desk: a markets scanner on the left, a large chart in the middle, and an order book plus trade ticket and open positions on the right. The everyday driver for active crypto trading."
+      },
+      "dex-degen": {
+        "name": "DEX Degen",
+        "tagline": "On-chain charts, swaps, and the social feed.",
+        "description": "Built for on-chain hunting: a chart with a swap ticket, recent tickers to catch new listings, and the social feed for alpha. Route swaps through a DEX connector such as Jupiter."
+      },
+      "dex-terminal": {
+        "name": "DEX Terminal",
+        "tagline": "On-chain trading without the fake order book.",
+        "description": "The default on-chain layout: a chart with pool stats and the tape below it, a swap ticket over your recent tickers for catching new listings, and the AI Copilot above the social feed. There is no order book column: pool-quoted depth is synthetic, so it is not shown.",
+        "menuLabel": "Default"
+      },
       "dual-charts": {
         "name": "Dual Charts",
         "tagline": "Two side-by-side charts.",
         "description": "Two independent chart panes side by side — each keeps its own market, timeframe, and chart type. Set a different pair per pane with its pair picker.",
         "menuLabel": "Dual Charts"
       },
-      "triple-charts": {
-        "name": "Triple Charts",
-        "tagline": "One large chart with two stacked beside it.",
-        "description": "A large primary chart with two smaller charts stacked to the right — each independent, for watching a lead pair against two others.",
-        "menuLabel": "Triple Charts"
+      "equities-desk": {
+        "name": "Equities Desk",
+        "tagline": "Trade stocks with a scanner, chart, and positions.",
+        "description": "A stock-trading layout: the markets scanner, a chart, open positions, and the news wire. Connect the Alpaca broker plugin to stream US equities and route orders."
       },
-      "quad-charts": {
-        "name": "Quad Charts",
-        "tagline": "A 2×2 grid of charts.",
-        "description": "Four independent charts in a 2×2 grid — a full multi-chart cockpit for tracking several markets at once.",
-        "menuLabel": "Quad Charts"
+      "equities-terminal": {
+        "name": "Equities Terminal",
+        "tagline": "Stocks with the ticket over the symbol news wire.",
+        "description": "The default stock layout: a chart with the tape, positions, and fundamentals below it, the order ticket above the symbol news wire (catalysts move stocks the way flow moves crypto), and the AI Copilot on the right.",
+        "menuLabel": "Default"
+      },
+      "home-pulse": {
+        "name": "Home",
+        "tagline": "The default board: scanner, sentiment, movers, and news.",
+        "description": "The default home board — markets scanner, a market-pulse rail with the Fear & Greed gauge and top coins tabbed with your watchlist, and a full-height news column. Everything on it works without an account.",
+        "menuLabel": "Home"
       },
       "laptop-focus": {
         "name": "Laptop Focus",
@@ -3418,26 +3393,10 @@
         "tagline": "Chart + data left, trade + copilot right — for smaller screens.",
         "description": "A two-column split sized for laptops: chart and positions on the left, trade ticket over copilot on the right."
       },
-      "ultrawide-dashboard": {
-        "name": "Ultrawide Dashboard",
-        "tagline": "Every panel spread across an ultrawide monitor.",
-        "description": "A four-column dashboard for ultrawide displays: order book, chart with risk, positions and research, and a trade + copilot column."
-      },
-      "ultrawide-trading": {
-        "name": "Ultrawide Trading",
-        "tagline": "Order book, depth, chart, and execution across the width.",
-        "description": "An ultrawide execution layout: order book and market depth on the left, chart with positions in the center, and a trade + copilot column on the right."
-      },
-      "command-center": {
-        "name": "4K Command Center",
-        "tagline": "The full command center for a 4K display.",
-        "description": "Everything on screen for a 4K monitor: order book and pair info, chart with research and risk, positions and social, and a trade + copilot column."
-      },
-      "home-pulse": {
-        "name": "Home",
-        "tagline": "The default board: scanner, sentiment, movers, and news.",
-        "description": "The default home board — markets scanner, a market-pulse rail with the Fear & Greed gauge and top coins tabbed with your watchlist, and a full-height news column. Everything on it works without an account.",
-        "menuLabel": "Home"
+      "market-discovery": {
+        "name": "Market Discovery",
+        "tagline": "Find what is moving before you commit.",
+        "description": "A pure discovery board: the markets scanner, top movers, a sector heatmap, your watchlist, and the Fear & Greed gauge. No chart, no ticket — just for hunting the next setup."
       },
       "markets-board": {
         "name": "Markets Board",
@@ -3451,17 +3410,82 @@
         "description": "The markets scanner alongside the top movers and your watchlist — a balanced home for finding and tracking setups.",
         "menuLabel": "Overview"
       },
+      "news-board": {
+        "name": "News Board",
+        "tagline": "Markets alongside movers and the news feed.",
+        "description": "The markets scanner beside the top movers and the live news feed — a home base for catalyst-driven trading.",
+        "menuLabel": "News"
+      },
+      "perps-terminal": {
+        "name": "Perps Terminal",
+        "tagline": "The futures desk: positions with mark and liquidation.",
+        "description": "The default perpetual-futures layout: a large chart with the tape, open contracts (entry, mark, liquidation), and market data tabbed below it, an order book and leverage-aware ticket in the middle, and the AI Copilot on the right.",
+        "menuLabel": "Default"
+      },
+      "portfolio-command": {
+        "name": "Portfolio Command",
+        "tagline": "Balances, positions, and risk at a glance.",
+        "description": "An account-centric cockpit: your portfolio breakdown, open positions, live risk guardrails, and a watchlist to keep an eye on the rest of the book. For managing what you already hold."
+      },
+      "prediction-terminal": {
+        "name": "Prediction Terminal",
+        "tagline": "Chart the odds with the whole event beside them.",
+        "description": "The default prediction-market layout: a probability chart with the tape and your open contracts below it, the order book and ticket in the middle, and the event browser beside the AI Copilot, because the neighbouring outcomes are half the analysis.",
+        "menuLabel": "Default"
+      },
+      "quad-charts": {
+        "name": "Quad Charts",
+        "tagline": "A 2×2 grid of charts.",
+        "description": "Four independent charts in a 2×2 grid — a full multi-chart cockpit for tracking several markets at once.",
+        "menuLabel": "Quad Charts"
+      },
+      "quant-signals": {
+        "name": "Quant Signals",
+        "tagline": "Data log, heatmap, and risk for signal-driven trading.",
+        "description": "A data-first desk: a chart paired with the raw data log, a liquidity heatmap, live risk state, and the markets scanner. For traders who read the tape as numbers, not candles."
+      },
+      "scalpers-cockpit": {
+        "name": "Scalper's Cockpit",
+        "tagline": "Chart, book, and one-click entry — nothing else.",
+        "description": "A minimal two-column cockpit for fast execution: a chart beside a live order book, market depth, and a trade-entry ticket. Built for speed on a single screen."
+      },
       "sector-analysis": {
         "name": "Sector Analysis",
         "tagline": "Scanner, heatmap, movers, and watchlist.",
         "description": "A discovery board with a sector heatmap in the middle: scanner on the left, heatmap in the center, and movers over your watchlist on the right.",
         "menuLabel": "Analysis"
       },
-      "news-board": {
-        "name": "News Board",
-        "tagline": "Markets alongside movers and the news feed.",
-        "description": "The markets scanner beside the top movers and the live news feed — a home base for catalyst-driven trading.",
-        "menuLabel": "News"
+      "swing-overview": {
+        "name": "Swing Overview",
+        "tagline": "Trend context with a watchlist and the movers.",
+        "description": "A calmer layout for multi-day positions: a full chart alongside your watchlist, the top movers, and pair fundamentals. Enough context to size a swing without the noise of an execution desk."
+      },
+      "trading": {
+        "name": "Trading",
+        "tagline": "Order book and ticket flanking a central chart.",
+        "description": "A three-column execution desk: order book and trade ticket on the left, chart with positions and risk in the middle, and the AI Copilot on the right.",
+        "menuLabel": "Trading"
+      },
+      "triple-charts": {
+        "name": "Triple Charts",
+        "tagline": "One large chart with two stacked beside it.",
+        "description": "A large primary chart with two smaller charts stacked to the right — each independent, for watching a lead pair against two others.",
+        "menuLabel": "Triple Charts"
+      },
+      "ultrawide-dashboard": {
+        "name": "Ultrawide Dashboard",
+        "tagline": "Every panel spread across an ultrawide monitor.",
+        "description": "A four-column dashboard for ultrawide displays: order book, chart with risk, positions and research, and a trade + copilot column."
+      },
+      "ultrawide-trading": {
+        "name": "Ultrawide Trading",
+        "tagline": "Order book, depth, chart, and execution across the width.",
+        "description": "An ultrawide execution layout: order book and market depth on the left, chart with positions in the center, and a trade + copilot column on the right."
+      },
+      "ultrawide-trading-floor": {
+        "name": "Ultrawide Trading Floor",
+        "tagline": "Everything, everywhere — for the big screen.",
+        "description": "A four-column command center that fills an ultrawide or second monitor: scanner, chart, order book and depth, a trade ticket with positions, and the AI Copilot. The maximalist layout."
       }
     },
     "traderTypes": {
@@ -3498,11 +3522,17 @@
       "crypto-spot": {
         "label": "Crypto Spot"
       },
+      "crypto-perp": {
+        "label": "Perps"
+      },
       "dex": {
         "label": "DEX"
       },
       "equities": {
         "label": "Equities"
+      },
+      "predictions": {
+        "label": "Predictions"
       },
       "multi-asset": {
         "label": "Multi-Asset"

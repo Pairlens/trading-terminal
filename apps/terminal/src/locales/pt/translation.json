@@ -3346,10 +3346,22 @@
         "tagline": "Saldos, posições e risco em um relance.",
         "description": "Um cockpit centrado na conta: a divisão do seu portfólio, posições abertas, limites de risco em tempo real e uma watchlist para ficar de olho no restante da sua carteira. Para gerenciar o que você já possui."
       },
+      "prediction-terminal": {
+        "name": "Terminal de Previsões",
+        "tagline": "As probabilidades no gráfico, com o evento inteiro ao lado.",
+        "description": "O layout padrão para mercados de previsão: um gráfico de probabilidade com os negócios e seus contratos abertos abaixo, o livro de ofertas e o painel de negociação no centro, e o navegador de eventos ao lado do copiloto de IA, porque os desfechos vizinhos são metade da análise.",
+        "menuLabel": "Padrão"
+      },
       "dex-degen": {
         "name": "DEX Degen",
         "tagline": "Gráficos on-chain, swaps e o feed social.",
         "description": "Feito para a caça on-chain: um gráfico com ticket de swap, tickers recentes para pegar novas listagens e o feed social em busca de alpha. Roteie os swaps por um conector DEX como o Jupiter."
+      },
+      "dex-terminal": {
+        "name": "Terminal DEX",
+        "tagline": "Negociação on-chain sem livro de ofertas de mentira.",
+        "description": "O layout on-chain padrão: um gráfico com as estatísticas da pool e os negócios abaixo, um ticket de swap sobre seus tickers recentes para pegar novas listagens, e o copiloto de IA acima do feed social. Não há coluna de livro de ofertas: a profundidade cotada por uma pool é sintética, então não é exibida.",
+        "menuLabel": "Padrão"
       },
       "quant-signals": {
         "name": "Sinais Quant",
@@ -3360,6 +3372,12 @@
         "name": "Mesa de Ações",
         "tagline": "Negocie ações com scanner, gráfico e posições.",
         "description": "Um layout para negociação de ações: o scanner de mercados, um gráfico, posições abertas e o feed de notícias. Conecte o plugin de corretora Alpaca para transmitir ações dos EUA e rotear ordens."
+      },
+      "equities-terminal": {
+        "name": "Terminal de Ações",
+        "tagline": "Ações com o painel de negociação sobre as notícias do símbolo.",
+        "description": "O layout padrão para ações: um gráfico com os negócios, as posições e os fundamentos abaixo dele, o painel de negociação acima das notícias do símbolo (catalisadores movem ações como o fluxo move as cripto), e o copiloto de IA à direita.",
+        "menuLabel": "Padrão"
       },
       "ultrawide-trading-floor": {
         "name": "Ultrawide Trading Floor",
@@ -3462,6 +3480,12 @@
         "tagline": "Mercados junto a movers e feed de notícias.",
         "description": "O scanner de mercados ao lado dos principais movers e do feed de notícias ao vivo — uma base para negociação guiada por catalisadores.",
         "menuLabel": "Notícias"
+      },
+      "perps-terminal": {
+        "name": "Terminal de Perpétuos",
+        "tagline": "A mesa de futuros: posições com preço de marcação e liquidação.",
+        "description": "O layout padrão para futuros perpétuos: um grande gráfico com os negócios, os contratos abertos (entrada, marcação, liquidação) e os dados de mercado em abas abaixo dele, um livro de ofertas e um painel de negociação com alavancagem no centro, e o copiloto de IA à direita.",
+        "menuLabel": "Padrão"
       }
     },
     "traderTypes": {
@@ -3498,11 +3522,17 @@
       "crypto-spot": {
         "label": "Spot Cripto"
       },
+      "crypto-perp": {
+        "label": "Perpétuos"
+      },
       "dex": {
         "label": "DEX"
       },
       "equities": {
         "label": "Ações"
+      },
+      "predictions": {
+        "label": "Previsões"
       },
       "multi-asset": {
         "label": "Multi-Asset"

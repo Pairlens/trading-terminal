@@ -291,9 +291,12 @@ function FacetGroup<T extends string>({
 
 export function WorkspaceStore({
   autoOpenTemplateId,
+  initialAssetClass,
   search = '',
 }: {
   autoOpenTemplateId?: string
+  /** Pre-selected asset-class facet (links from a pair page's menu). */
+  initialAssetClass?: AssetClass
   /** Live search query — owned by the page header. */
   search?: string
 }) {
@@ -317,7 +320,9 @@ export function WorkspaceStore({
 
   const [source, setSource] = useState<SourceFilter>('all')
   const [trader, setTrader] = useState<TraderType | null>(null)
-  const [asset, setAsset] = useState<AssetClass | null>(null)
+  const [asset, setAsset] = useState<AssetClass | null>(
+    initialAssetClass ?? null,
+  )
   const [screen, setScreen] = useState<ScreenSize | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(
     autoOpenTemplateId ?? null,

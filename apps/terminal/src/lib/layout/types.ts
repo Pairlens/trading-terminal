@@ -116,6 +116,10 @@ export type WorkspaceConfig = {
   presets: Record<string, { label: string; layout: TerminalLayout }>
   screenPresets?: Array<ScreenPresetGroup>
   variables?: Array<WorkspaceVariableDefinition>
+  // The instrument class a pair-route workspace serves — tailors the
+  // Workspace Store links this workspace's menus emit. Absent on
+  // discovery/custom workspaces.
+  pairClass?: string
 }
 
 export type CustomWorkspaceDefinition = {

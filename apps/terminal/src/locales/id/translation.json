@@ -3346,10 +3346,22 @@
         "tagline": "Saldo, posisi, dan risiko sekilas pandang.",
         "description": "Kokpit yang berpusat pada akun: rincian portofolio Anda, posisi terbuka, guardrail risiko langsung, dan daftar pantauan untuk mengawasi sisa order book. Untuk mengelola apa yang sudah Anda miliki."
       },
+      "prediction-terminal": {
+        "name": "Terminal Prediksi",
+        "tagline": "Grafikkan peluangnya, dengan seluruh acara di sampingnya.",
+        "description": "Tata letak default untuk market prediksi: chart probabilitas dengan transaksi dan kontrak terbuka Anda di bawahnya, order book dan tiket order di tengah, serta penjelajah acara di samping AI Copilot, karena hasil-hasil di sebelahnya adalah separuh dari analisisnya.",
+        "menuLabel": "Default"
+      },
       "dex-degen": {
         "name": "DEX Degen",
         "tagline": "Chart on-chain, swap, dan feed sosial.",
         "description": "Dibuat untuk perburuan on-chain: chart dengan tiket swap, ticker terbaru untuk menangkap listing baru, dan feed sosial untuk alpha. Rutekan swap melalui konektor DEX seperti Jupiter."
+      },
+      "dex-terminal": {
+        "name": "Terminal DEX",
+        "tagline": "Trading on-chain tanpa order book palsu.",
+        "description": "Tata letak on-chain default: chart dengan statistik pool dan transaksi di bawahnya, tiket swap di atas ticker terbaru Anda untuk menangkap listing baru, dan AI Copilot di atas feed sosial. Tidak ada kolom order book: kedalaman yang berasal dari pool bersifat sintetis, jadi tidak ditampilkan.",
+        "menuLabel": "Default"
       },
       "quant-signals": {
         "name": "Sinyal Quant",
@@ -3360,6 +3372,12 @@
         "name": "Meja Saham",
         "tagline": "Trading saham dengan scanner, chart, dan posisi.",
         "description": "Tata letak trading saham: scanner market, sebuah chart, posisi terbuka, dan feed berita. Hubungkan plugin broker Alpaca untuk streaming saham AS dan merutekan order."
+      },
+      "equities-terminal": {
+        "name": "Terminal Saham",
+        "tagline": "Saham dengan tiket order di atas feed berita simbol.",
+        "description": "Tata letak default untuk saham: chart dengan transaksi, posisi, dan data fundamental di bawahnya, tiket order di atas berita simbol (katalis menggerakkan saham seperti aliran dana menggerakkan kripto), dan AI Copilot di kanan.",
+        "menuLabel": "Default"
       },
       "ultrawide-trading-floor": {
         "name": "Lantai Trading Ultrawide",
@@ -3462,6 +3480,12 @@
         "tagline": "Market bersebelahan dengan para penggerak dan feed berita.",
         "description": "Scanner market bersebelahan dengan para penggerak teratas dan feed berita langsung — basis utama untuk trading yang digerakkan katalis.",
         "menuLabel": "Berita"
+      },
+      "perps-terminal": {
+        "name": "Terminal Perps",
+        "tagline": "Meja futures: posisi dengan harga mark dan likuidasi.",
+        "description": "Tata letak default untuk perpetual futures: chart besar dengan transaksi, kontrak terbuka (entry, mark, likuidasi), dan data market dalam tab di bawahnya, order book serta tiket order yang memperhitungkan leverage di tengah, dan AI Copilot di kanan.",
+        "menuLabel": "Default"
       }
     },
     "traderTypes": {
@@ -3498,11 +3522,17 @@
       "crypto-spot": {
         "label": "Kripto Spot"
       },
+      "crypto-perp": {
+        "label": "Perps"
+      },
       "dex": {
         "label": "DEX"
       },
       "equities": {
         "label": "Saham"
+      },
+      "predictions": {
+        "label": "Prediksi"
       },
       "multi-asset": {
         "label": "Multi-Aset"

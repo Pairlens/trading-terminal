@@ -3378,10 +3378,22 @@
         "tagline": "Salda, pozycje i ryzyko na pierwszy rzut oka.",
         "description": "Kokpit skupiony na koncie: podział Twojego portfela, otwarte pozycje, limity ryzyka na żywo i lista obserwowanych, by mieć oko na resztę Twojego portfela. Do zarządzania tym, co już posiadasz."
       },
+      "prediction-terminal": {
+        "name": "Terminal Prognoz",
+        "tagline": "Wykres prawdopodobieństwa, a obok całe wydarzenie.",
+        "description": "Domyślny układ dla rynków prognostycznych: wykres prawdopodobieństwa z transakcjami i Twoimi otwartymi kontraktami pod spodem, arkusz zleceń i panel transakcyjny na środku oraz przeglądarka wydarzeń obok copilota AI, bo sąsiednie wyniki to połowa analizy.",
+        "menuLabel": "Domyślny"
+      },
       "dex-degen": {
         "name": "DEX Degen",
         "tagline": "Wykresy on-chain, swapy i kanał społecznościowy.",
         "description": "Stworzone do polowania on-chain: wykres z ticketem swapa, ostatnie tickery do wychwytywania nowych listingów i kanał społecznościowy w poszukiwaniu alpha. Kieruj swapy przez konektor DEX, taki jak Jupiter."
+      },
+      "dex-terminal": {
+        "name": "Terminal DEX",
+        "tagline": "Handel on-chain bez udawanego arkusza zleceń.",
+        "description": "Domyślny układ on-chain: wykres ze statystykami puli i transakcjami pod spodem, ticket swapa nad ostatnimi tickerami do wychwytywania nowych listingów oraz copilot AI nad kanałem społecznościowym. Nie ma kolumny z arkuszem zleceń: głębokość wyliczona z puli jest syntetyczna, więc jej nie pokazujemy.",
+        "menuLabel": "Domyślny"
       },
       "quant-signals": {
         "name": "Sygnały Quant",
@@ -3392,6 +3404,12 @@
         "name": "Desk Akcji",
         "tagline": "Handluj akcjami ze skanerem, wykresem i pozycjami.",
         "description": "Układ do handlu akcjami: skaner rynków, wykres, otwarte pozycje i kanał wiadomości. Podłącz wtyczkę brokera Alpaca, aby przesyłać dane o akcjach z USA i kierować zleceniami."
+      },
+      "equities-terminal": {
+        "name": "Terminal Akcji",
+        "tagline": "Akcje z panelem transakcyjnym nad wiadomościami o symbolu.",
+        "description": "Domyślny układ dla akcji: wykres z transakcjami, pozycjami i danymi fundamentalnymi pod spodem, panel transakcyjny nad wiadomościami o symbolu (katalizatory ruszają akcjami tak, jak przepływy ruszają kryptowalutami), a po prawej copilot AI.",
+        "menuLabel": "Domyślny"
       },
       "ultrawide-trading-floor": {
         "name": "Ultrawide Trading Floor",
@@ -3494,6 +3512,12 @@
         "tagline": "Rynki obok liderów rynku i kanału wiadomości.",
         "description": "Skaner rynków obok czołowych liderów rynku i kanału wiadomości na żywo — baza do handlu napędzanego katalizatorami.",
         "menuLabel": "Wiadomości"
+      },
+      "perps-terminal": {
+        "name": "Terminal Perps",
+        "tagline": "Desk futures: pozycje z ceną mark i poziomem likwidacji.",
+        "description": "Domyślny układ dla wieczystych kontraktów futures: duży wykres, a pod nim w zakładkach transakcje, otwarte kontrakty (wejście, mark, likwidacja) i dane rynkowe, na środku arkusz zleceń i panel transakcyjny uwzględniający dźwignię, a po prawej copilot AI.",
+        "menuLabel": "Domyślny"
       }
     },
     "traderTypes": {
@@ -3530,11 +3554,17 @@
       "crypto-spot": {
         "label": "Spot krypto"
       },
+      "crypto-perp": {
+        "label": "Perps"
+      },
       "dex": {
         "label": "DEX"
       },
       "equities": {
         "label": "Akcje"
+      },
+      "predictions": {
+        "label": "Prognozy"
       },
       "multi-asset": {
         "label": "Multi-Asset"

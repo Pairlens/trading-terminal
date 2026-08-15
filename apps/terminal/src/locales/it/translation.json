@@ -3346,10 +3346,22 @@
         "tagline": "Saldi, posizioni e rischio a colpo d'occhio.",
         "description": "Un cockpit centrato sull'account: la suddivisione del tuo portafoglio, le posizioni aperte, i limiti di rischio in tempo reale e una watchlist per tenere d'occhio il resto del tuo portafoglio. Per gestire quello che possiedi già."
       },
+      "prediction-terminal": {
+        "name": "Terminal Previsioni",
+        "tagline": "Il grafico delle probabilità con l'intero evento accanto.",
+        "description": "Il layout predefinito per i mercati previsionali: un grafico di probabilità con le operazioni e i tuoi contratti aperti sotto, l'order book e il pannello di trading al centro, e il browser degli eventi accanto al co-pilota AI, perché gli esiti vicini sono metà dell'analisi.",
+        "menuLabel": "Predefinito"
+      },
       "dex-degen": {
         "name": "DEX Degen",
         "tagline": "Grafici on-chain, swap e il feed social.",
         "description": "Pensato per la caccia on-chain: un grafico con ticket di swap, ticker recenti per cogliere nuove quotazioni e il feed social per l'alpha. Instrada gli swap tramite un connettore DEX come Jupiter."
+      },
+      "dex-terminal": {
+        "name": "Terminal DEX",
+        "tagline": "Trading on-chain senza il finto order book.",
+        "description": "Il layout on-chain predefinito: un grafico con le statistiche della pool e le operazioni sotto, un ticket di swap sopra i tuoi ticker recenti per cogliere nuove quotazioni, e il co-pilota AI sopra il feed social. Non c'è la colonna dell'order book: la profondità quotata da una pool è sintetica, quindi non viene mostrata.",
+        "menuLabel": "Predefinito"
       },
       "quant-signals": {
         "name": "Segnali Quant",
@@ -3360,6 +3372,12 @@
         "name": "Desk Azioni",
         "tagline": "Fai trading di azioni con scanner, grafico e posizioni.",
         "description": "Un layout per il trading azionario: lo scanner dei mercati, un grafico, le posizioni aperte e il feed di notizie. Collega il plugin broker Alpaca per trasmettere le azioni USA e instradare gli ordini."
+      },
+      "equities-terminal": {
+        "name": "Terminal Azioni",
+        "tagline": "Azioni con il pannello di trading sopra le notizie sul simbolo.",
+        "description": "Il layout predefinito per le azioni: un grafico con operazioni, posizioni e dati fondamentali sotto di esso, il pannello di trading sopra le notizie sul simbolo (i catalizzatori muovono le azioni come i flussi muovono le crypto), e il co-pilota AI a destra.",
+        "menuLabel": "Predefinito"
       },
       "ultrawide-trading-floor": {
         "name": "Ultrawide Trading Floor",
@@ -3462,6 +3480,12 @@
         "tagline": "Mercati insieme a mover e feed di notizie.",
         "description": "Lo scanner dei mercati accanto ai principali mover e al feed di notizie live — una base per il trading guidato dai catalizzatori.",
         "menuLabel": "Notizie"
+      },
+      "perps-terminal": {
+        "name": "Terminal Perpetui",
+        "tagline": "Il desk dei futures: posizioni con prezzo mark e liquidazione.",
+        "description": "Il layout predefinito per i futures perpetui: un grande grafico con operazioni, contratti aperti (ingresso, mark, liquidazione) e dati di mercato a schede sotto di esso, un order book e un pannello di trading che tiene conto della leva al centro, e il co-pilota AI a destra.",
+        "menuLabel": "Predefinito"
       }
     },
     "traderTypes": {
@@ -3498,11 +3522,17 @@
       "crypto-spot": {
         "label": "Spot Crypto"
       },
+      "crypto-perp": {
+        "label": "Perpetui"
+      },
       "dex": {
         "label": "DEX"
       },
       "equities": {
         "label": "Azioni"
+      },
+      "predictions": {
+        "label": "Previsioni"
       },
       "multi-asset": {
         "label": "Multi-Asset"

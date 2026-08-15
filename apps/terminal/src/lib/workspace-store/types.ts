@@ -22,7 +22,13 @@ export type TraderType =
   | 'quant'
 
 /** What the workspace is built to trade. */
-export type AssetClass = 'crypto-spot' | 'dex' | 'equities' | 'multi-asset'
+export type AssetClass =
+  | 'crypto-spot'
+  | 'crypto-perp'
+  | 'dex'
+  | 'equities'
+  | 'predictions'
+  | 'multi-asset'
 
 /** Roughly how wide the layout wants to be (derived from column count). */
 export type ScreenSize = 'compact' | 'standard' | 'wide' | 'multi'
