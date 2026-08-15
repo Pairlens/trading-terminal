@@ -41,7 +41,7 @@ import {
 import { formatTimeUntil } from '@/lib/format-time'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { registerPredictionOutcome } from '@/stores/prediction-directory-store'
-import { switchActiveMarket } from '@/lib/switch-market'
+import { chartLinkProps } from '@/lib/market-ref/link'
 
 export function EventsPane() {
   const { t } = useTranslation()
@@ -94,11 +94,17 @@ export function EventsPane() {
         ...(market.endMs !== undefined ? { endMs: market.endMs } : {}),
       })
       setAssetClassMap((prev) => ({ ...prev, [pairKey]: 'prediction' }))
-      // The route re-homes a prediction pair onto "the first venue that serves
-      // predictions", which is a coin flip once both venues are installed. The
-      // card knows exactly which one it came from.
-      switchActiveMarket(venue.market)
-      void navigate({ to: '/pair/$pair', params: { pair: pairKey } })
+      // The venue is in the address, so the card's own venue travels with the
+      // link. This used to need a venue switch as a side effect because
+      // the route could only re-home the pair onto "the first venue that
+      // serves predictions", which is a coin flip with both venues installed.
+      void navigate(
+        chartLinkProps({
+          cls: 'prediction',
+          market: venue.market,
+          id: pairKey,
+        }),
+      )
     },
     [navigate, setAssetClassMap],
   )

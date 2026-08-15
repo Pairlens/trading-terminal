@@ -66,6 +66,7 @@ const MAX_RECENT_ACTIONS = 8
 function pathHasLayout(pathname: string): boolean {
   return (
     pathname === '/' ||
+    Boolean(parseMarketRefPath(pathname)) ||
     pathname.startsWith('/pair/') ||
     (pathname.startsWith('/workspace/') &&
       !pathname.startsWith('/workspace-store'))
