@@ -74,6 +74,8 @@ import {
 } from '@pairlens/ui/components/ui/sidebar'
 import { toast } from 'sonner'
 import { Toaster } from '@pairlens/ui/components/ui/sonner'
+import { formatInstrumentRef } from '@pairlens/shared/market-ref'
+import type { InstrumentRef } from '@pairlens/shared/market-ref'
 import type { ReactNode } from 'react'
 import type { ShortcutDefinition } from '@/hooks/use-keyboard-shortcuts'
 import { track } from '@/lib/analytics-events'
@@ -90,6 +92,8 @@ import { SectionTour } from '@/components/onboarding/section-tour'
 import { isOnboardingComplete } from '@/lib/onboarding-state'
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
 import { usePersistedState } from '@/hooks/use-persisted-state'
+import { useRecentPairs } from '@/lib/recent-tickers'
+import { chartLinkProps } from '@/lib/market-ref/link'
 import { authClient, hasAppServer } from '@/lib/auth-client'
 import { api, clearSessionCache, queryKeys, resolveUrl } from '@/lib/api'
 import { PairlensProvider } from '@/lib/pairlens-provider'
@@ -139,6 +143,21 @@ const NAV_ITEMS = [
   { id: 'accounts', labelKey: 'nav.accounts', AnimatedIcon: HandCoinsIcon },
   { id: 'plugins', labelKey: 'nav.plugins', AnimatedIcon: PlugZapIcon },
 ] as const
+
+/**
+ * Where a stored recent points.
+ *
+ * Deliberately hook-free: `TerminalLayout` is the component that RENDERS
+ * `MarketDataProvider`, so it sits above its own context and cannot call the
+ * resolver. A qualified entry already names its venue and goes straight
+ * there; a legacy bare symbol goes through `/pair/$pair`, which is the
+ * resolver route and exists for exactly this.
+ */
+function chartTargetFor(inst: InstrumentRef) {
+  return inst.market
+    ? chartLinkProps({ cls: inst.cls, market: inst.market, id: inst.id })
+    : ({ to: '/pair/$pair', params: { pair: inst.id } } as const)
+}
 
 function TerminalLayout() {
   const navigate = useNavigate()
@@ -234,10 +253,7 @@ function TerminalLayout() {
 
   // Section jumps + the app-wide chords. Each names a keybinding command; what
   // chord that command answers to is the user's call (see lib/keybindings).
-  const [recentPairs] = usePersistedState<Array<string>>(
-    'pair-picker.recent',
-    [],
-  )
+  const [recentPairs] = useRecentPairs()
   const lastPair = recentPairs[0]
   const navShortcuts = useMemo<Array<ShortcutDefinition>>(
     () => [
@@ -249,7 +265,7 @@ function TerminalLayout() {
         commandId: 'navigation.charts',
         action: () => {
           if (lastPair) {
-            void navigate({ to: '/pair/$pair', params: { pair: lastPair } })
+            void navigate(chartTargetFor(lastPair))
           } else {
             void navigate({ to: '/' })
           }
@@ -717,14 +733,7 @@ function ChartsNavItem({ isActive }: { isActive: boolean }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const chartsShortcut = useKeybindingLabel('navigation.charts')
-  const [recentPairs] = usePersistedState<Array<string>>(
-    'pair-picker.recent',
-    [],
-  )
-  const [assetClassMap] = usePersistedState<Record<string, string>>(
-    'pair-picker.assetClassMap',
-    {},
-  )
+  const [recentPairs] = useRecentPairs()
 
   return (
     <SidebarMenuItem>
@@ -759,21 +768,17 @@ function ChartsNavItem({ isActive }: { isActive: boolean }) {
               {t('nav.noRecentPairs')}
             </div>
           ) : (
-            recentPairs.slice(0, 8).map((symbol) => {
+            recentPairs.slice(0, 8).map((inst) => {
+              const symbol = inst.id
               const base = symbol.split('-')[0] ?? symbol
               return (
                 <DropdownMenuItem
-                  key={symbol}
-                  onClick={() =>
-                    void navigate({
-                      to: '/pair/$pair',
-                      params: { pair: symbol },
-                    })
-                  }
+                  key={formatInstrumentRef(inst)}
+                  onClick={() => void navigate(chartTargetFor(inst))}
                 >
                   <PairAvatar
                     base={base}
-                    assetClass={assetClassMap[symbol]}
+                    assetClass={inst.cls}
                     size="sm"
                     className="size-5 text-[8px]"
                   />

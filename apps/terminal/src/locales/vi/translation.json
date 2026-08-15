@@ -4200,6 +4200,18 @@
       "description": "Cần có plugin trình kết nối thị trường để truyền dữ liệu trực tiếp. Hãy bật hoặc cài đặt một trình kết nối để bắt đầu.",
       "manage": "Quản lý trình kết nối thị trường"
     },
+    "unknownClass": {
+      "title": "Loại thị trường không xác định",
+      "description": "\"{{cls}}\" không phải loại thị trường mà Pairlens vẽ biểu đồ. Hãy kiểm tra liên kết hoặc chọn một thị trường từ ô tìm kiếm."
+    },
+    "unknownVenue": {
+      "title": "Sàn chưa được kết nối",
+      "description": "Liên kết này mở {{venue}}, không nằm trong các trình kết nối của bạn. Hãy cài đặt nó để mở liên kết, hoặc chọn sàn khác."
+    },
+    "unresolvedPair": {
+      "title": "Không thể vẽ biểu đồ",
+      "description": "Không sàn nào đang kết nối cung cấp {{pair}}. Hãy cài trình kết nối cho loại thị trường đó, hoặc chọn một cặp từ ô tìm kiếm."
+    },
     "workspace": {
       "notFound": "Không tìm thấy không gian làm việc",
       "edit": "Chỉnh sửa"

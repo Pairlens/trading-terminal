@@ -4200,6 +4200,18 @@
       "description": "Sono necessari plugin connettore di mercato per trasmettere dati in tempo reale. Attiva o installa un connettore per iniziare.",
       "manage": "Gestisci connettori di mercato"
     },
+    "unknownClass": {
+      "title": "Tipo di mercato sconosciuto",
+      "description": "\"{{cls}}\" non è un tipo di mercato che Pairlens rappresenta. Controlla il link o scegli un mercato dalla ricerca."
+    },
+    "unknownVenue": {
+      "title": "Exchange non connesso",
+      "description": "Questo link apre {{venue}}, che non è tra i tuoi connettori. Installalo per aprire il link o scegli un altro exchange."
+    },
+    "unresolvedPair": {
+      "title": "Nessun grafico disponibile",
+      "description": "Nessun exchange connesso offre {{pair}}. Installa un connettore per quel tipo di mercato o scegli una coppia dalla ricerca."
+    },
     "workspace": {
       "notFound": "Spazio di lavoro non trovato",
       "edit": "Modifica"

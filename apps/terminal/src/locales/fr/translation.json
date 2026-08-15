@@ -4200,6 +4200,18 @@
       "description": "Des plugins de connecteur de marché sont nécessaires pour diffuser des données en direct. Activez ou installez un connecteur pour commencer.",
       "manage": "Gérer les connecteurs de marché"
     },
+    "unknownClass": {
+      "title": "Type de marché inconnu",
+      "description": "« {{cls}} » n’est pas un type de marché affiché par Pairlens. Vérifiez le lien ou choisissez un marché depuis la recherche."
+    },
+    "unknownVenue": {
+      "title": "Plateforme non connectée",
+      "description": "Ce lien affiche {{venue}}, qui ne fait pas partie de vos connecteurs. Installez-le pour ouvrir le lien ou choisissez une autre plateforme."
+    },
+    "unresolvedPair": {
+      "title": "Aucun graphique possible",
+      "description": "Aucune plateforme connectée ne propose {{pair}}. Installez un connecteur pour ce type de marché ou choisissez une paire depuis la recherche."
+    },
     "workspace": {
       "notFound": "Espace de travail introuvable",
       "edit": "Modifier"

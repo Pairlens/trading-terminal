@@ -65,6 +65,7 @@ import type { RefObject } from 'react'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import type { MobileOverlay } from '../mobile-focus-context'
 import { haptic } from '@/lib/haptics'
+import { entryToMarketRef } from '@/lib/market-ref/entry'
 import { instrumentToPairEntry } from '@/components/pair-picker/pair-picker-data'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
@@ -256,7 +257,7 @@ export default memo(function MarketsScreen({
       haptic('selection')
       if (market !== focusedVenue) setFocusedVenue(market)
       setFocusedPair(pair.symbol)
-      trackRecent(pair.symbol)
+      trackRecent(entryToMarketRef(pair, market))
       // The whole stack, not one level: this screen was opened from a panel
       // the user is done with, and the point of the tap was the chart.
       closeOverlays()

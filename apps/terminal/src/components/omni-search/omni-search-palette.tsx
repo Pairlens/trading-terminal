@@ -15,6 +15,7 @@ import {
 } from '@pairlens/ui/components/ui/command'
 import { cn } from '@pairlens/ui'
 
+import { parseMarketRefPath } from '@pairlens/shared/market-ref'
 import { CategoryTabs } from './category-tabs'
 import {
   ActionResultItem,
@@ -36,6 +37,10 @@ import { useWorkflowStore } from '@/stores/workflow-store'
 import { useNotificationStore } from '@/stores/notification-store'
 import { usePaneAddRequestStore } from '@/stores/pane-add-request-store'
 import { usePersistedState } from '@/hooks/use-persisted-state'
+import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
+import { useRecentPairs } from '@/lib/recent-tickers'
+import { entryToMarketRef } from '@/lib/market-ref/entry'
+import { chartLinkProps } from '@/lib/market-ref/link'
 
 type OmniSearchPaletteProps = {
   open: boolean
@@ -79,10 +84,9 @@ export function OmniSearchPalette({
   const [searchValue, setSearchValue] = useState('')
   const [activeCategory, setActiveCategory] =
     useState<OmniSearchCategory>('all')
-  const [, setRecentPairs] = usePersistedState<Array<string>>(
-    'pair-picker.recent',
-    [],
-  )
+  // The shared store rather than a third writer to `pair-picker.recent`.
+  const [, trackRecent] = useRecentPairs()
+  const resolveMarket = usePreferredMarketResolver()
   const [recentActionIds, setRecentActionIds] = usePersistedState<
     Array<string>
   >('omni-search.recent-actions', [])
@@ -112,10 +116,9 @@ export function OmniSearchPalette({
           if (assetClass) {
             setAssetClassMap((prev) => ({ ...prev, [symbol]: assetClass }))
           }
-          setRecentPairs((prev) =>
-            [symbol, ...prev.filter((s) => s !== symbol)].slice(0, 20),
-          )
-          void navigate({ to: '/pair/$pair', params: { pair: symbol } })
+          const ref = entryToMarketRef(result.pair, resolveMarket(assetClass))
+          trackRecent(ref)
+          void navigate(chartLinkProps(ref))
           break
         }
         case 'market': {
@@ -124,7 +127,7 @@ export function OmniSearchPalette({
           // the new connector. Off the chart page the switch has no visible
           // surface, so say what happened.
           switchActiveMarket(result.marketId)
-          if (!window.location.pathname.startsWith('/pair/')) {
+          if (!parseMarketRefPath(window.location.pathname)) {
             toast.success(t('search.marketSwitched', { name: result.label }))
           }
           break
@@ -179,7 +182,8 @@ export function OmniSearchPalette({
       close,
       navigate,
       t,
-      setRecentPairs,
+      trackRecent,
+      resolveMarket,
       setAssetClassMap,
       setRecentActionIds,
       selectWorkflow,

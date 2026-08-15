@@ -4200,6 +4200,18 @@
       "description": "Markt-Connector-Plugins werden benötigt, um Live-Daten zu streamen. Aktiviere oder installiere einen Connector, um loszulegen.",
       "manage": "Market-Connectors verwalten"
     },
+    "unknownClass": {
+      "title": "Unbekannter Markttyp",
+      "description": "„{{cls}}“ ist kein Markttyp, den Pairlens darstellt. Prüfe den Link oder wähle einen Markt aus der Suche."
+    },
+    "unknownVenue": {
+      "title": "Handelsplatz nicht verbunden",
+      "description": "Dieser Link zeigt {{venue}}, der nicht zu deinen Konnektoren gehört. Installiere ihn, um den Link zu öffnen, oder wähle einen anderen Handelsplatz."
+    },
+    "unresolvedPair": {
+      "title": "Kein Chart möglich",
+      "description": "Kein verbundener Handelsplatz führt {{pair}}. Installiere einen Konnektor für diesen Markttyp oder wähle ein Paar aus der Suche."
+    },
     "workspace": {
       "notFound": "Workspace nicht gefunden",
       "edit": "Bearbeiten"

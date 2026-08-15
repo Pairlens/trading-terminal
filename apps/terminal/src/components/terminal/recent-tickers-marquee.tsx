@@ -7,86 +7,58 @@ import { History, X } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 
-import type { MarketOption } from '@/hooks/use-available-markets'
+import {
+  formatInstrumentRef,
+  formatMarketRef,
+  marketRefToPath,
+} from '@pairlens/shared/market-ref'
+import type { InstrumentRef, MarketRef } from '@pairlens/shared/market-ref'
+
 import type { TickDirection } from '@/hooks/use-live-pair-price'
-import { useAvailableMarkets } from '@/hooks/use-available-markets'
-import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
 import { useLivePairPrice } from '@/hooks/use-live-pair-price'
-import { usePersistedState } from '@/hooks/use-persisted-state'
+import { useMarketRefOrNull } from '@/lib/market-ref/use-market-ref'
 import { useRecentPairs } from '@/lib/recent-tickers'
-import { assetClassFromQuoteLeg } from '@/lib/pairs'
 import { formatPrice } from '@/lib/format-price'
 
 // Horizontal scroll speed of the marquee track, px/s.
 const SCROLL_SPEED = 30
 
 /**
- * Pick a venue that can actually stream the pair's asset class.
+ * Auto-scrolling strip of recently viewed markets with live prices, rendered
+ * above the chart route's top bar. Clicking a chip jumps to that market. When
+ * the chips fit the viewport the strip is static; when they overflow, the
+ * track is duplicated and scrolled continuously (paused on hover).
  *
- * The asset class comes from the instruments index, which is an App Server
- * read: standalone, offline, or simply not signed in, EVERY symbol comes back
- * unknown. Falling back to the preferred venue there is how a crypto pair got
- * priced by a stocks-only venue — Alpaca quoted 'BTC-USDT' as its base leg
+ * Every chip resolves its own venue through the shared resolver, and a row
+ * that resolves to nothing is not rendered. The strip used to guess a venue
+ * per chip and fall back to the preferred one, which is how a crypto pair got
+ * priced by a stocks-only venue: Alpaca answered 'BTC-USDT' with its base leg
  * 'BTC', a real NYSE Arca spot-bitcoin ETF near $28, under the crypto pair's
- * own label. The connector refuses that now, but the routing decision was
- * wrong before it ever got there.
- *
- * So the quote leg is read off the pair key when the index has nothing to say.
- * It is not a full asset-class inference and does not try to be: a quote leg
- * that is not USD is not a US equity, which is the only call that has to be
- * right here. Anything still unknown keeps the old assume-compatible rule.
+ * own label.
  */
-function resolveVenue(
-  symbol: string,
-  preferred: string,
-  markets: Array<MarketOption>,
-  assetClass: string | undefined,
-): string {
-  const known = assetClass ?? assetClassFromQuoteLeg(symbol)
-  if (!known) return preferred
-  const supports = (m: MarketOption) =>
-    (m.assetClasses as Array<string>).includes(known)
-  const preferredOption = markets.find((m) => m.value === preferred)
-  // Unknown markets are assumed compatible (mirrors market-asset-classes).
-  if (!preferredOption || supports(preferredOption)) return preferred
-  return markets.find(supports)?.value ?? preferred
-}
-
-/**
- * Auto-scrolling strip of recently viewed pairs with live prices, rendered
- * above the pair page top bar. Clicking a chip jumps to that pair. When the
- * chips fit the viewport the strip is static; when they overflow, the track
- * is duplicated and scrolled continuously (paused on hover).
- */
-export function RecentTickersMarquee({
-  currentPairKey,
-}: {
-  currentPairKey: string
-}) {
+export function RecentTickersMarquee({ current }: { current: MarketRef }) {
   const { t } = useTranslation()
   const [recentPairs, , removeRecent] = useRecentPairs()
-  const { items } = useInstrumentsBySymbols(recentPairs)
-  const { markets, defaultMarket } = useAvailableMarkets()
-  const [preferredMarket] = usePersistedState('terminal.market', defaultMarket)
+  const resolveRef = useMarketRefOrNull()
   const navigate = useNavigate()
 
-  const assetClassBySymbol = useMemo(
-    () => new Map(items.map((i) => [i.symbol, i.assetClass])),
-    [items],
+  const currentKey = formatMarketRef(current)
+
+  const rows = useMemo(
+    () =>
+      recentPairs
+        .map((inst) => ({ inst, ref: resolveRef(inst) }))
+        .filter((row): row is { inst: InstrumentRef; ref: MarketRef } =>
+          Boolean(row.ref),
+        ),
+    [recentPairs, resolveRef],
   )
 
   const handleSelect = useCallback(
-    (symbol: string) => {
-      void navigate({ to: '/pair/$pair', params: { pair: symbol } })
+    (ref: MarketRef) => {
+      void navigate({ to: marketRefToPath(ref) })
     },
     [navigate],
-  )
-
-  const handleRemove = useCallback(
-    (symbol: string) => {
-      removeRecent(symbol)
-    },
-    [removeRecent],
   )
 
   // Auto-scroll only when the chips overflow the container.
@@ -113,7 +85,7 @@ export function RecentTickersMarquee({
     observer.observe(container)
     observer.observe(content)
     return () => observer.disconnect()
-  }, [recentPairs.length])
+  }, [rows.length])
 
   // Honour the user's reduced-motion preference: instead of auto-scrolling we
   // fall back to a manually scrollable strip.
@@ -166,21 +138,16 @@ export function RecentTickersMarquee({
     }
   }, [autoScroll])
 
-  if (recentPairs.length === 0) return null
+  if (rows.length === 0) return null
 
-  const chips = recentPairs.map((symbol) => (
+  const chips = rows.map(({ inst, ref }) => (
     <MarqueeChip
-      key={symbol}
-      symbol={symbol}
-      market={resolveVenue(
-        symbol,
-        preferredMarket,
-        markets,
-        assetClassBySymbol.get(symbol),
-      )}
-      isActive={symbol === currentPairKey}
+      key={formatInstrumentRef(inst)}
+      instrument={inst}
+      marketRef={ref}
+      isActive={formatMarketRef(ref) === currentKey}
       onSelect={handleSelect}
-      onRemove={handleRemove}
+      onRemove={removeRecent}
     />
   ))
 
@@ -236,19 +203,20 @@ export function RecentTickersMarquee({
 // Memoized: each chip re-renders on its own ticker tick only, so sibling
 // updates and marquee-level re-measures don't cascade across the strip.
 const MarqueeChip = memo(function MarqueeChip({
-  symbol,
-  market,
+  instrument,
+  marketRef,
   isActive,
   onSelect,
   onRemove,
 }: {
-  symbol: string
-  market: string
+  instrument: InstrumentRef
+  marketRef: MarketRef
   isActive: boolean
-  onSelect: (symbol: string) => void
-  onRemove: (symbol: string) => void
+  onSelect: (ref: MarketRef) => void
+  onRemove: (inst: InstrumentRef) => void
 }) {
-  const { price, direction } = useLivePairPrice(symbol, market)
+  const symbol = marketRef.id
+  const { price, direction } = useLivePairPrice(symbol, marketRef.market)
 
   return (
     <div
@@ -260,7 +228,7 @@ const MarqueeChip = memo(function MarqueeChip({
     >
       <button
         type="button"
-        onClick={() => onSelect(symbol)}
+        onClick={() => onSelect(marketRef)}
         className="flex h-full cursor-pointer items-center gap-1.5 py-0 pl-3 pr-1.5"
       >
         <span
@@ -286,7 +254,7 @@ const MarqueeChip = memo(function MarqueeChip({
         type="button"
         onClick={(event) => {
           event.stopPropagation()
-          onRemove(symbol)
+          onRemove(instrument)
         }}
         aria-label={`Remove ${symbol} from recent`}
         title={`Remove ${symbol}`}

@@ -4236,6 +4236,18 @@
       "description": "Do przesyłania danych na żywo wymagane są wtyczki konektorów rynkowych. Włącz lub zainstaluj konektor, aby zacząć.",
       "manage": "Zarządzaj konektorami rynkowymi"
     },
+    "unknownClass": {
+      "title": "Nieznany typ rynku",
+      "description": "„{{cls}}” nie jest typem rynku, który Pairlens pokazuje na wykresie. Sprawdź link lub wybierz rynek z wyszukiwarki."
+    },
+    "unknownVenue": {
+      "title": "Giełda niepodłączona",
+      "description": "Ten link otwiera {{venue}}, której nie ma wśród Twoich konektorów. Zainstaluj go, aby otworzyć link, albo wybierz inną giełdę."
+    },
+    "unresolvedPair": {
+      "title": "Nie da się tego pokazać",
+      "description": "Żadna podłączona giełda nie oferuje {{pair}}. Zainstaluj konektor dla tego typu rynku lub wybierz parę z wyszukiwarki."
+    },
     "workspace": {
       "notFound": "Nie znaleziono obszaru roboczego",
       "edit": "Edytuj"

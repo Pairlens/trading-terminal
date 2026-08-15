@@ -23,20 +23,21 @@
  * timeframe to 15m.
  */
 import { useCallback, useEffect, useState } from 'react'
-import { useLocation, useNavigate } from '@tanstack/react-router'
+import { useLocation } from '@tanstack/react-router'
 import { Loader2, Unplug } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { MobileFocusProvider } from './mobile-focus-context'
 import { MobileSurface } from './mobile-surface'
-import { normalizePairKey, pairFromPath } from './use-mobile-route-sync'
+import { marketRefFromPath, normalizePairKey } from './use-mobile-route-sync'
 import { getInitialViewportMode } from './use-viewport-mode'
+import type { InstrumentClass } from '@pairlens/shared/market-ref'
+import { useRecentPairs } from '@/lib/recent-tickers'
 import { ActivePairProvider } from '@/lib/active-pair-context'
 import { ActiveWalletProvider } from '@/lib/active-wallet-context'
 import { ChartTerminalProvider } from '@/lib/chart-terminal-context'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useMarketData } from '@/lib/market-data-provider'
-import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useCredentialsStore } from '@/stores/credentials-store'
 import { track } from '@/lib/analytics-events'
 
@@ -45,38 +46,43 @@ const FALLBACK_PAIR = 'BTC-USDT'
 
 export function MobileTerminalRoot() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const location = useLocation()
   const { markets, defaultMarket } = useAvailableMarkets()
   const { status, pluginsReady } = useMarketData()
   const credentials = useCredentialsStore((s) => s.credentials)
-  const [recentPairs] = usePersistedState<Array<string>>(
-    'pair-picker.recent',
-    [],
-  )
+  const [recentPairs] = useRecentPairs()
 
   // Resolved once, synchronously, from the URL the app opened on — an effect
-  // here would paint one frame of the wrong pair on every cold load.
-  const [focusedPair, setPair] = useState<string>(
-    () =>
-      pairFromPath(location.pathname) ??
-      (recentPairs[0] ? normalizePairKey(recentPairs[0]) : null) ??
-      FALLBACK_PAIR,
+  // here would paint one frame of the wrong pair on every cold load. The class
+  // travels with the pair: it is half of what decides which venue may serve
+  // it, and deriving it later from a side table is what let a crypto pair sit
+  // on a stock venue long enough to render.
+  const [focus, setFocus] = useState<{ pair: string; cls: InstrumentClass }>(
+    () => {
+      const routed = marketRefFromPath(location.pathname)
+      if (routed) return { pair: routed.id, cls: routed.cls }
+      const recent = recentPairs[0]
+      if (recent) return { pair: recent.id, cls: recent.cls }
+      return { pair: FALLBACK_PAIR, cls: 'spot' }
+    },
   )
+  const focusedPair = focus.pair
+  const focusedClass = focus.cls
 
-  // Changing the focused pair rewrites the URL, so refresh, share and deep
-  // links all keep working — and `pair_opened` keeps firing from route sync.
+  // State only. The URL is written by `useMobileRouteSync`, which is the one
+  // place that can see all three parts of the address: the venue lives in
+  // chart config, BELOW this component, so a rewrite from here could only ever
+  // guess at it.
   const setFocusedPair = useCallback(
-    (pairKey: string) => {
-      const next = normalizePairKey(pairKey)
-      setPair(next)
-      void navigate({
-        to: '/pair/$pair',
-        params: { pair: next },
-        replace: true,
+    (pairKey: string, cls?: InstrumentClass) => {
+      setFocus((prev) => {
+        const pair = normalizePairKey(pairKey)
+        const next = cls ?? prev.cls
+        if (prev.pair === pair && prev.cls === next) return prev
+        return { pair, cls: next }
       })
     },
-    [navigate],
+    [],
   )
 
   useEffect(() => {
@@ -140,6 +146,7 @@ export function MobileTerminalRoot() {
         >
           <MobileFocusProvider
             focusedPair={focusedPair}
+            focusedClass={focusedClass}
             onFocusPair={setFocusedPair}
           >
             <MobileSurface />

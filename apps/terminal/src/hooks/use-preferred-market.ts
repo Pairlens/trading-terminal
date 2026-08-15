@@ -1,41 +1,37 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 
-import { resolveMarketForAssetClass } from '@/lib/market-asset-classes'
-import { useAvailableMarkets } from '@/hooks/use-available-markets'
-import { useMarketData } from '@/lib/market-data-provider'
-import { usePersistedState } from '@/hooks/use-persisted-state'
+import { normalizeInstrumentClass } from '@pairlens/shared/market-ref'
+
+import { resolveVenueForClass } from '@/lib/market-ref/resolve'
+import { useMarketRefContext } from '@/lib/market-ref/use-market-ref'
 
 /**
  * Which venue a discovery row should price itself against.
  *
- * Starts from the market the user last charted, then steps off it when the
- * instrument's asset class says it has to: an equity can't stream from a
- * crypto exchange. Venues this build cannot reach are excluded outright —
- * a browser resolving to a desktop-only connector would just fail every call.
+ * A thin wrapper over the shared resolver for the many rows that hold an asset
+ * class and no instrument: they only need somewhere to draw a trend line from.
+ * It used to be its own copy of the policy, and it disagreed with the resolver
+ * in the two ways that mattered — it compared class strings raw, so the
+ * index's `'crypto'` never matched a connector's `'crypto-spot'`, and it ended
+ * in `return preferred` so a venue that could not serve the class got asked
+ * anyway.
+ *
+ * Returns the preferred venue as a last resort when NOTHING serves the class,
+ * because a row still has to render something and the call sites here draw
+ * sparklines rather than prices. Anything quoting a number resolves a full ref
+ * and gets a real refusal instead.
  */
 export function usePreferredMarketResolver(): (assetClass?: string) => string {
-  const { markets, defaultMarket } = useAvailableMarkets()
-  const { availableMarkets: adapterInfos } = useMarketData()
-  const [preferred] = usePersistedState('terminal.market', defaultMarket)
-
-  const reachable = useMemo(
-    () => markets.filter((m) => !m.desktopOnly).map((m) => m.value),
-    [markets],
-  )
-  const validPreferred = reachable.includes(preferred)
-    ? preferred
-    : defaultMarket
+  const ctx = useMarketRefContext()
 
   return useCallback(
-    (assetClass?: string) =>
-      resolveMarketForAssetClass(
-        validPreferred,
-        reachable,
-        assetClass,
-        adapterInfos,
-      ),
-    [validPreferred, reachable, adapterInfos],
+    (assetClass?: string) => {
+      const cls = normalizeInstrumentClass(assetClass)
+      if (!cls) return ctx.preferred
+      return resolveVenueForClass(cls, ctx) ?? ctx.preferred
+    },
+    [ctx],
   )
 }

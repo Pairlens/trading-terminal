@@ -7,59 +7,61 @@ import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 
+import {
+  formatInstrumentRef,
+  marketRefToPath,
+} from '@pairlens/shared/market-ref'
+import type { InstrumentRef, MarketRef } from '@pairlens/shared/market-ref'
 import type { Instrument } from '@pairlens/shared/instrument-types'
-import type { MarketOption } from '@/hooks/use-available-markets'
 import type { TickDirection } from '@/hooks/use-live-pair-price'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
-import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
 import { useLivePairPrice } from '@/hooks/use-live-pair-price'
-import { usePersistedState } from '@/hooks/use-persisted-state'
+import { useMarketRefOrNull } from '@/lib/market-ref/use-market-ref'
 import { useRecentPairs } from '@/lib/recent-tickers'
 import { formatPrice } from '@/lib/format-price'
-import { useMarketData } from '@/lib/market-data-provider'
-import { resolveMarketForAssetClass } from '@/lib/market-asset-classes'
 
 /**
- * Workspace pane listing recently viewed pairs with live prices —
- * a vertical counterpart to the pair page marquee for quick pair switching.
+ * Workspace pane listing recently viewed markets with live prices — a vertical
+ * counterpart to the chart route's marquee for quick switching. Venue
+ * resolution is the shared resolver's, so a row that no connected venue can
+ * serve is left out rather than priced by one that cannot.
  */
 export function RecentTickersPane() {
   const { t } = useTranslation()
   const [recentPairs, , removeRecent] = useRecentPairs()
-  const { items } = useInstrumentsBySymbols(recentPairs)
-  const { markets, defaultMarket } = useAvailableMarkets()
-  const [preferredMarket] = usePersistedState('terminal.market', defaultMarket)
-  // The adapters' declared asset classes — without them every venue looks
-  // compatible and a stocks row never leaves the sticky crypto venue.
-  const { availableMarkets: adapterInfos } = useMarketData()
+  const resolveRef = useMarketRefOrNull()
   const navigate = useNavigate()
 
+  const rows = useMemo(
+    () =>
+      recentPairs
+        .map((inst) => ({ inst, ref: resolveRef(inst) }))
+        .filter((row): row is { inst: InstrumentRef; ref: MarketRef } =>
+          Boolean(row.ref),
+        ),
+    [recentPairs, resolveRef],
+  )
+
+  // Row metadata (name, logo) is presentation only — identity comes from the
+  // ref, never from a symbol match against this list.
+  const { items } = useInstrumentsBySymbols(
+    useMemo(() => rows.map((r) => r.ref.id), [rows]),
+  )
   const instrumentsBySymbol = useMemo(
     () => new Map(items.map((i) => [i.symbol, i])),
     [items],
   )
-  const availableMarketValues = useMemo(
-    () => markets.map((m: MarketOption) => m.value),
-    [markets],
-  )
 
   const handleSelect = useCallback(
-    (symbol: string) => {
-      void navigate({ to: '/pair/$pair', params: { pair: symbol } })
+    (ref: MarketRef) => {
+      void navigate({ to: marketRefToPath(ref) })
     },
     [navigate],
   )
 
-  const handleRemove = useCallback(
-    (symbol: string) => {
-      removeRecent(symbol)
-    },
-    [removeRecent],
-  )
-
-  if (recentPairs.length === 0) {
+  if (rows.length === 0) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-muted-foreground">
         <History className="size-8 opacity-40" />
@@ -73,24 +75,16 @@ export function RecentTickersPane() {
 
   return (
     <div className="h-full overflow-y-auto">
-      {recentPairs.map((symbol) => {
-        const inst = instrumentsBySymbol.get(symbol)
-        return (
-          <RecentTickerRow
-            key={symbol}
-            symbol={symbol}
-            inst={inst ?? null}
-            market={resolveMarketForAssetClass(
-              preferredMarket,
-              availableMarketValues,
-              inst?.assetClass,
-              adapterInfos,
-            )}
-            onSelect={handleSelect}
-            onRemove={handleRemove}
-          />
-        )
-      })}
+      {rows.map(({ inst, ref }) => (
+        <RecentTickerRow
+          key={formatInstrumentRef(inst)}
+          instrument={inst}
+          marketRef={ref}
+          inst={instrumentsBySymbol.get(ref.id) ?? null}
+          onSelect={handleSelect}
+          onRemove={removeRecent}
+        />
+      ))}
     </div>
   )
 }
@@ -99,26 +93,28 @@ export function RecentTickersPane() {
 // ticker updates) skip rows whose data didn't change. Each row still
 // re-renders on its own ticker tick.
 const RecentTickerRow = memo(function RecentTickerRow({
-  symbol,
+  instrument,
+  marketRef,
   inst,
-  market,
   onSelect,
   onRemove,
 }: {
-  symbol: string
+  instrument: InstrumentRef
+  marketRef: MarketRef
   inst: Instrument | null
-  market: string
-  onSelect: (symbol: string) => void
-  onRemove: (symbol: string) => void
+  onSelect: (ref: MarketRef) => void
+  onRemove: (inst: InstrumentRef) => void
 }) {
   const { t } = useTranslation()
+  const symbol = marketRef.id
+  const market = marketRef.market
   const { price, direction } = useLivePairPrice(symbol, market)
   const removeLabel = t('recentTickers.remove', { symbol })
 
   return (
     <div
       className="group flex cursor-pointer items-center gap-2 border-b px-2 py-2 transition-colors hover:bg-accent/40"
-      onClick={() => onSelect(symbol)}
+      onClick={() => onSelect(marketRef)}
     >
       {inst && (
         <PairLogo
@@ -155,7 +151,7 @@ const RecentTickerRow = memo(function RecentTickerRow({
         type="button"
         onClick={(event) => {
           event.stopPropagation()
-          onRemove(symbol)
+          onRemove(instrument)
         }}
         aria-label={removeLabel}
         title={removeLabel}

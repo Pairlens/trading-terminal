@@ -36,9 +36,9 @@ chart behind never redraws from scratch. Drag a sheet up to expand it, down to
 dismiss it, or just tap the chart.
 
 That is also why the tabs are not URLs. The address bar stays on
-`/pair/BTC-USDT`, rewritten as you change pair so a refresh or a shared link
-lands where you were, while the browser's back button walks the shell one step
-at a time: back closes the sheet, then leaves.
+`/spot/okx/BTC-USDT`, rewritten as you change pair or venue so a refresh or a
+shared link lands on exactly what you were looking at, while the browser's back
+button walks the shell one step at a time: back closes the sheet, then leaves.
 
 ## The bar at the top
 

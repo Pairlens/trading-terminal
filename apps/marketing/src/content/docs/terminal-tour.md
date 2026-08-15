@@ -5,7 +5,7 @@ group: get-started
 order: 3
 eyebrow: Get started
 updated: AUG 2026
-readTime: 4 min read
+readTime: 5 min read
 ---
 
 Pairlens opens on a live chart. Everything else is one click or one keystroke
@@ -58,6 +58,31 @@ instance after your laptop wakes from sleep.
 
 Turn on the recent-tickers marquee in **Settings → Appearance** if you want a
 running strip of live prices for the pairs you have been looking at.
+
+## What the address bar says
+
+A chart's URL names three things, in order: the market type, the venue, and the
+instrument.
+
+```
+/spot/okx/BTC-USDT        a crypto spot pair on OKX
+/spot/gate/BTC-USDT       the same pair, Gate's book
+/stocks/alpaca/AAPL       a US equity through your broker
+/dex/base/0x532f…-WETH    a token on Base, addressed by contract
+```
+
+The venue is in the address because a price is only meaningful with the book it
+came from. Switching venue changes the URL, so the back button returns you to
+the previous venue along with the drawings you made on it, and a link you send
+someone opens the exact tape you were looking at rather than whichever venue
+they happen to prefer.
+
+Tokens are addressed by contract, never by ticker. Dozens of tokens share a
+symbol, so a link built from a ticker can open a different asset than the one
+the sender meant; a link built from an address cannot.
+
+Older `/pair/BTC-USDT` links still work. They resolve once and redirect to the
+canonical form, so old bookmarks keep opening and start reproducing.
 
 ## Search everything
 
