@@ -1323,6 +1323,10 @@
   },
   "copilot": {
     "placeholder": "詢問你的 AI 透鏡…",
+    "send": "傳送",
+    "stop": "停止",
+    "copyMessage": "複製訊息",
+    "messageCopied": "已複製訊息",
     "lensPersona": "透鏡人格",
     "persona": {
       "mentor": "導師型",

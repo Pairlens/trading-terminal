@@ -6,6 +6,9 @@
 /* Mobile "Focus" surface paint — glass, sheets, safe-area geometry. Inert
    until html[data-viewport='mobile'] and the .pl-mobile-root shell exist. */
 @import './mobile/mobile.css';
+/* Assistant glass — the dock's panel, pill, composer and bubbles. Shared with
+   the mobile Assistant tab, which mounts the same conversation. */
+@import './components/assistant-dock/assistant-glass.css';
 @source "./**/*.{ts,tsx}";
 
 @utility no-scrollbar {

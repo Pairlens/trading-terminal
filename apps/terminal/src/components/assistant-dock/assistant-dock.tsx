@@ -89,7 +89,7 @@ export function AssistantDock() {
       >
         {/*
           No `pointer-events-auto` here. The window is hidden, never
-          unmounted, so its 420x620 box stays in the layout while
+          unmounted, so its 440x660 box stays in the layout while
           collapsed: enabling hits on this wrapper parks an invisible
           target over the workspace and eats wheel events aimed at the
           pane underneath (the news column on the Discovery board). The
@@ -102,7 +102,11 @@ export function AssistantDock() {
             open={isOpen}
             onClose={close}
             title={t('assistantDock.title')}
-            subtitle={busy ? label : null}
+            // The orb's own line, busy or idle. Idle it is the suggestion the
+            // collapsed orb was showing, so opening the window never loses the
+            // context that made the user open it.
+            subtitle={label}
+            busy={busy}
             closeLabel={t('assistantDock.close')}
             dragging={drag.dragging}
             dragHandleProps={drag.dragHandleProps}
@@ -115,7 +119,7 @@ export function AssistantDock() {
                         <Button
                           variant="ghost"
                           size="icon-sm"
-                          className="size-7"
+                          className="text-muted-foreground hover:text-foreground size-7 rounded-full"
                           aria-label={t('assistantDock.resetPosition')}
                           onClick={drag.reset}
                         >
@@ -135,7 +139,7 @@ export function AssistantDock() {
                       <Button
                         variant="ghost"
                         size="icon-sm"
-                        className="size-7"
+                        className="text-muted-foreground hover:text-foreground size-7 rounded-full"
                         aria-label={t('assistantDock.clear')}
                         onClick={() => controlsRef.current?.clear()}
                       >

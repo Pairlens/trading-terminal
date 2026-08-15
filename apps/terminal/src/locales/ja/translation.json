@@ -1323,6 +1323,10 @@
   },
   "copilot": {
     "placeholder": "レンズに質問する...",
+    "send": "送信",
+    "stop": "停止",
+    "copyMessage": "メッセージをコピー",
+    "messageCopied": "メッセージをコピーしました",
     "lensPersona": "レンズのペルソナ",
     "persona": {
       "mentor": "メンター",

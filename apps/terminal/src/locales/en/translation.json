@@ -1323,6 +1323,10 @@
   },
   "copilot": {
     "placeholder": "Ask your lens...",
+    "send": "Send",
+    "stop": "Stop",
+    "copyMessage": "Copy message",
+    "messageCopied": "Message copied",
     "lensPersona": "Lens Persona",
     "persona": {
       "mentor": "Mentor",

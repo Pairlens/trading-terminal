@@ -1323,6 +1323,10 @@
   },
   "copilot": {
     "placeholder": "问问你的透镜……",
+    "send": "发送",
+    "stop": "停止",
+    "copyMessage": "复制消息",
+    "messageCopied": "已复制消息",
     "lensPersona": "透镜人格",
     "persona": {
       "mentor": "导师型",

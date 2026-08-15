@@ -1323,6 +1323,10 @@
   },
   "copilot": {
     "placeholder": "Merceğine sor...",
+    "send": "Gönder",
+    "stop": "Durdur",
+    "copyMessage": "Mesajı kopyala",
+    "messageCopied": "Mesaj kopyalandı",
     "lensPersona": "Mercek Kişiliği",
     "persona": {
       "mentor": "Rehber",

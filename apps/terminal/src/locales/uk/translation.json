@@ -1331,6 +1331,10 @@
   },
   "copilot": {
     "placeholder": "Запитайте свою лінзу...",
+    "send": "Надіслати",
+    "stop": "Зупинити",
+    "copyMessage": "Копіювати повідомлення",
+    "messageCopied": "Повідомлення скопійовано",
     "lensPersona": "Стиль AI-лінзи",
     "persona": {
       "mentor": "Ментор",

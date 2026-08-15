@@ -1323,6 +1323,10 @@
   },
   "copilot": {
     "placeholder": "Chiedi alla tua lente...",
+    "send": "Invia",
+    "stop": "Ferma",
+    "copyMessage": "Copia messaggio",
+    "messageCopied": "Messaggio copiato",
     "lensPersona": "Personalità della lente",
     "persona": {
       "mentor": "Mentore",

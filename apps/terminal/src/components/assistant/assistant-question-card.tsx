@@ -41,15 +41,15 @@ export function AssistantQuestionCard({
   return (
     <div
       className={cn(
-        'rounded-lg border px-2.5 py-2 text-xs',
-        answered ? 'border-border/50 bg-muted/30' : 'border-primary/30',
+        'rounded-xl px-3 py-2.5 text-xs',
+        answered ? 'ai-tile' : 'border border-[var(--ai-ring)]',
       )}
       style={
         answered
           ? undefined
           : {
               background:
-                'linear-gradient(180deg, color-mix(in oklch, var(--magic-1) 7%, transparent), transparent)',
+                'linear-gradient(180deg, color-mix(in oklch, var(--magic-1) 9%, transparent), transparent)',
             }
       }
     >

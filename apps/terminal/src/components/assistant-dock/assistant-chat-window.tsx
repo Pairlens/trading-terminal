@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Floating chat panel for the unified assistant dock. It grows out of the orb
+ * Floating glass panel for the unified assistant dock. It grows out of the orb
  * (transform origin bottom right), holds a header, a body, an optional notice
  * strip and an optional footer.
  *
@@ -9,13 +9,20 @@
  * on close would tear down the conversation inside it, and the whole point of
  * the dock is that minimizing it does not stop a run that is under way.
  *
+ * The panel is glass because it hangs over a live chart and an opaque card
+ * there reads as a hole in the screen. The fill has a floor (see
+ * assistant-glass.css) so body text keeps its contrast whatever runs
+ * underneath it.
+ *
  * Purely presentational: no data, no chat state. The parent owns placement and
  * every string arrives translated.
  */
-import { Sparkles, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 
+import { AiOrb } from '@pairlens/ui/components/ui/ai-orb'
 import { Button } from '@pairlens/ui/components/ui/button'
+import { ShimmeringText } from '@pairlens/ui/components/ui/shimmering-text'
 
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 
@@ -24,8 +31,10 @@ export type AssistantChatWindowProps = {
   onClose: () => void
   /** Header title, translated. */
   title: string
-  /** Optional subtitle line under the title (e.g. what it is watching). */
+  /** Optional status line under the title (e.g. what it is doing right now). */
   subtitle?: string | null
+  /** true while a run is in flight: the orb animates and the status shimmers. */
+  busy?: boolean
   /** Accessible name for the close button, translated. */
   closeLabel?: string
   /** Right-hand header slot: persona menu, clear button etc. */
@@ -52,6 +61,7 @@ export function AssistantChatWindow({
   onClose,
   title,
   subtitle,
+  busy = false,
   closeLabel,
   headerActions,
   children,
@@ -103,35 +113,51 @@ export function AssistantChatWindow({
               },
             }
       }
-      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
       style={{
         transformOrigin: 'bottom right',
         pointerEvents: open ? 'auto' : 'none',
       }}
-      className="bg-card text-card-foreground border-border relative flex h-[min(620px,calc(100svh-8rem))] w-[420px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-xl border shadow-lg"
+      className="ai-glass ai-aura text-card-foreground relative flex h-[min(660px,calc(100svh-7.5rem))] w-[440px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[20px]"
     >
-      {/* Decorative seam, the same one the copilot and builder panels wear. */}
-      <div className="magic-gradient pointer-events-none absolute inset-x-0 top-0 z-20 h-[3px]" />
+      {/* Light on the top edge, masked to nothing at both ends so it reads as
+          a highlight and not a progress bar. */}
+      <div className="ai-seam pointer-events-none absolute inset-x-0 top-0 z-20 h-px" />
 
       {/* The header is the title bar: grab anywhere on it that is not a
           control and the window follows. `select-none` so a drag does
           not smear a text selection across the title. */}
-      <div
+      <header
         {...dragHandleProps}
-        className={`border-border/60 flex shrink-0 items-center gap-2 border-b px-3 py-2 select-none ${
+        className={`relative z-10 flex shrink-0 items-center gap-2.5 px-3.5 pt-3 pb-2.5 select-none ${
           dragging ? 'cursor-grabbing' : 'cursor-grab'
         }`}
       >
-        <Sparkles
-          className="size-3.5 shrink-0"
-          style={{ color: 'var(--magic-1)' }}
+        <AiOrb
+          size="26px"
+          animationDuration={15}
+          state={busy ? 'thinking' : 'idle'}
+          className="shrink-0"
         />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-medium leading-none">{title}</p>
+          <p className="truncate text-[13px] leading-tight font-medium">
+            {title}
+          </p>
           {subtitle ? (
-            <p className="text-muted-foreground mt-1 truncate font-mono text-[10px] leading-none tracking-tight">
-              {subtitle}
-            </p>
+            <div className="text-muted-foreground mt-0.5 truncate text-[11px] leading-tight">
+              {busy ? (
+                <ShimmeringText
+                  text={subtitle}
+                  duration={1.5}
+                  repeatDelay={0.3}
+                  spread={3}
+                  startOnView={false}
+                  className="text-[11px]"
+                />
+              ) : (
+                subtitle
+              )}
+            </div>
           ) : null}
         </div>
         <div className="flex shrink-0 items-center gap-0.5">
@@ -139,22 +165,28 @@ export function AssistantChatWindow({
           <Button
             variant="ghost"
             size="icon"
-            className="size-7"
+            className="text-muted-foreground hover:text-foreground size-7 rounded-full"
             onClick={onClose}
             aria-label={closeLabel}
           >
             <X className="size-3.5" />
           </Button>
         </div>
-      </div>
+      </header>
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      {/* Hairline under the header. A `border-b` would inherit the panel's own
+          edge colour; the assistant's edges are its own token. */}
+      <div className="pointer-events-none mx-3.5 h-px shrink-0 bg-[var(--ai-edge-soft)]" />
+
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden">
         {children}
       </div>
 
-      {notice ? <div className="shrink-0 px-3 pb-1">{notice}</div> : null}
+      {notice ? (
+        <div className="relative z-10 shrink-0 px-3.5 pb-1">{notice}</div>
+      ) : null}
 
-      {footer ? <div className="shrink-0">{footer}</div> : null}
+      {footer ? <div className="relative z-10 shrink-0">{footer}</div> : null}
     </motion.div>
   )
 }

@@ -55,6 +55,24 @@ when floating and beside the rail in sidebar mode, which is why it stays put
 when you resize. Once it has been moved, a reset button appears in the header
 next to the persona menu and puts it back on that anchor.
 
+## The chat window
+
+It is a glass panel, not a solid card. The terminal underneath stays visible
+through it, blurred, so the chat reads as something floating over your workspace
+rather than a hole punched in it. The fill has a floor: whatever runs behind it,
+candles, a book, a tape, body text keeps its contrast.
+
+The header repeats the same contextual line the collapsed orb showed, so opening
+the window never costs you the context that made you open it. While a run is
+going the line becomes the status and shimmers. The persona dropdown and the
+eraser that clears the thread sit on the right of it.
+
+On an empty thread the window offers three starters for whatever screen you are
+on: on a chart they name the pair, on the workflows page they name a workflow.
+Click one to send it. Hover any answer the assistant writes and a copy button
+appears under it, which is the fastest way to get a level or a size out of the
+chat and into an order ticket.
+
 ## One assistant, one conversation
 
 There used to be four AI chats in Pairlens: a co-pilot pane scoped to one pair,
