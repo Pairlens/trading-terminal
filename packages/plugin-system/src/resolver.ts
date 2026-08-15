@@ -19,6 +19,20 @@ export class PluginResolver {
 
   unregisterPlugin(pluginId: string): void {
     this.plugins.delete(pluginId)
+    // A pin naming a plugin that is gone is worse than no pin: resolution
+    // silently falls through to priority order while the UI still reports an
+    // override, and reinstalling the plugin would resurrect a choice the user
+    // made before uninstalling it.
+    this.removeUserPinsFor(pluginId)
+  }
+
+  /** Drop every pin that names this plugin. Returns the pins removed. */
+  removeUserPinsFor(pluginId: string): Array<UserPluginPin> {
+    const removed = this.getUserPins().filter((p) => p.pluginId === pluginId)
+    for (const pin of removed) {
+      this.userPins.delete(`${pin.capability}|${pin.market}`)
+    }
+    return removed
   }
 
   setUserPin(capability: CapabilityId, market: string, pluginId: string): void {

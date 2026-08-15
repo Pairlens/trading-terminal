@@ -8,6 +8,16 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { Alert, AlertDescription } from '@pairlens/ui/components/ui/alert'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@pairlens/ui/components/ui/alert-dialog'
 
 import { StoreAurora, StoreShelf } from '../store/store-shell'
 import { useFullTrustConsent } from './full-trust-consent'
@@ -35,12 +45,21 @@ import { track } from '@/lib/analytics-events'
 import { authClient } from '@/lib/auth-client'
 import { api, queryKeys } from '@/lib/api'
 import {
-  removeFromLedger,
   setLedgerConfig,
   setLedgerEnabled,
   upsertLedgerEntry,
 } from '@/lib/plugins/plugin-ledger'
 import { buildActivationConfig } from '@/lib/plugins/official-config'
+import { BOOTSTRAP_PLUGINS } from '@/lib/plugins/bootstrap-bundle'
+import {
+  isReinstallableBundledPlugin,
+  reinstallBundledPlugin,
+} from '@/lib/plugins/bootstrap-reinstall'
+import {
+  PluginUninstallRefusedError,
+  canUninstallPlugin,
+  uninstallPluginEverywhere,
+} from '@/lib/plugins/uninstall-plugin'
 import {
   reloadForGrants,
   requestAndApplyNetworkConsent,
@@ -118,7 +137,8 @@ export function PluginStore({
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const reduceMotion = useReducedMotion() ?? false
-  const { pluginManager, notifyPluginStateChange } = usePairlens()
+  const { pluginManager, pluginStateVersion, notifyPluginStateChange } =
+    usePairlens()
   // A theme plugin being *active* only means its tokens are available — the
   // one that actually paints the terminal is `activeThemeId`. The store speaks
   // in "applied", so it reads and writes that selection directly instead of
@@ -154,14 +174,20 @@ export function PluginStore({
   const featuredQuery = useRegistryFeatured()
   const registryOffline = registryQuery.isError
 
-  // Auto-open the product page when ?manage=pluginId is present
+  // Auto-open the product page when ?manage=pluginId is present. A bundled
+  // plugin the user uninstalled has no manager entry, so fall back to its
+  // shipped manifest — otherwise the deep link lands on the shelves with no
+  // explanation, which is exactly the plugin the user asked to see.
   useEffect(() => {
     if (!autoOpenPluginId) return
-    const plugin = pluginManager
-      .getInstalledPlugins()
-      .find((p) => p.manifest.id === autoOpenPluginId)
-    if (plugin) {
-      setSelectedEntry(manifestToEntry(plugin.manifest))
+    const manifest =
+      pluginManager
+        .getInstalledPlugins()
+        .find((p) => p.manifest.id === autoOpenPluginId)?.manifest ??
+      BOOTSTRAP_PLUGINS.find((p) => p.manifest.id === autoOpenPluginId)
+        ?.manifest
+    if (manifest && !isFamilyExcluded(manifest)) {
+      setSelectedEntry(manifestToEntry(manifest))
     }
   }, [autoOpenPluginId, pluginManager])
 
@@ -206,6 +232,9 @@ export function PluginStore({
     Record<string, { type: 'error' | 'success'; message: string }>
   >({})
   const [busyPluginId, setBusyPluginId] = useState<string | null>(null)
+  const [confirmUninstallId, setConfirmUninstallId] = useState<string | null>(
+    null,
+  )
 
   // Helpers
   const isActive = useCallback(
@@ -399,8 +428,31 @@ export function PluginStore({
 
     try {
       if (checked) {
-        // Check if this is a remote plugin that needs to be fetched first
         if (!isInstalled(manifest.id)) {
+          // Bundled plugins install from the compiled-in bundle, never from
+          // the registry: downloading one would rewrite its ledger source to
+          // 'registry' and it would stop being a built-in for good.
+          if (isReinstallableBundledPlugin(manifest.id)) {
+            await reinstallBundledPlugin({
+              manager: pluginManager,
+              pluginId: manifest.id,
+              persistState: (data) => saveStateMutation.mutate(data),
+            })
+            notifyPluginStateChange()
+            setPluginFeedback(
+              manifest.id,
+              'success',
+              t('pluginStore.installedActive'),
+            )
+            toast.success(
+              t('pluginStore.installedToast', 'Installed & activated'),
+              { description: manifest.name },
+            )
+            setBusyPluginId(null)
+            return
+          }
+
+          // Otherwise: a remote plugin that needs to be fetched first
           const registryEntry = findRegistryEntry(manifest.id)
           if (registryEntry?.moduleUrl) {
             await installRemotePlugin(registryEntry)
@@ -450,12 +502,12 @@ export function PluginStore({
           { description: manifest.name },
         )
       } else {
-        // Deactivate — for remote plugins, also uninstall + evict cache
-        const registryEntry = findRegistryEntry(manifest.id)
-        const isRemote = registryEntry?.moduleUrl && !registryEntry.bundled
-
-        // A theme being removed while it paints the terminal has to hand the
-        // palette back first — the plugin is about to stop answering for it.
+        // Disable means disable, for every source alike. Removing a plugin for
+        // good is its own action now (handleUninstall), so turning a registry
+        // plugin off no longer silently deletes it.
+        //
+        // A theme being switched off while it paints the terminal has to hand
+        // the palette back first — the plugin is about to stop answering for it.
         if (isTheme && activeThemeId === manifest.id) {
           selectTheme(null)
           track('theme_changed', { theme: 'default' })
@@ -463,31 +515,17 @@ export function PluginStore({
 
         await pluginManager.deactivatePlugin(manifest.id)
 
-        if (isRemote) {
-          await pluginManager.uninstallPlugin(manifest.id)
-          await moduleLoaderRef.current!.evict(manifest.id)
-          removeFromLedger(manifest.id)
-          api.removePluginState(manifest.id).catch(() => {})
-          track('plugin_uninstalled', { plugin_id: manifest.id })
-        } else {
-          const savedConfig = statesMap[manifest.id]?.config ?? {}
-          setLedgerEnabled(manifest.id, false)
-          track('plugin_toggled', { plugin_id: manifest.id, enabled: false })
-          saveStateMutation.mutate({
-            pluginId: manifest.id,
-            enabled: false,
-            config: savedConfig,
-          })
-        }
+        const savedConfig = statesMap[manifest.id]?.config ?? {}
+        setLedgerEnabled(manifest.id, false)
+        track('plugin_toggled', { plugin_id: manifest.id, enabled: false })
+        saveStateMutation.mutate({
+          pluginId: manifest.id,
+          enabled: false,
+          config: savedConfig,
+        })
 
         notifyPluginStateChange()
-        setPluginFeedback(
-          manifest.id,
-          'success',
-          isRemote
-            ? t('pluginStore.uninstalled', 'Uninstalled')
-            : t('pluginStore.deactivated'),
-        )
+        setPluginFeedback(manifest.id, 'success', t('pluginStore.deactivated'))
       }
     } catch (err) {
       setPluginFeedback(
@@ -497,6 +535,49 @@ export function PluginStore({
       )
     } finally {
       setBusyPluginId(null)
+    }
+  }
+
+  /**
+   * Remove a plugin for good, from the same page that installed it. Bundled
+   * plugins leave a ledger tombstone so boot skips them; the Store keeps
+   * listing them with an Install action, which is what makes dropping a whole
+   * asset class (uninstall the family's connectors and its panel plugin) a
+   * reversible decision rather than a one-way door.
+   */
+  const handleUninstall = async (manifest: PluginManifest) => {
+    clearPluginFeedback(manifest.id)
+    setBusyPluginId(manifest.id)
+    try {
+      // A theme cannot be uninstalled while it paints the terminal — hand the
+      // palette back to the built-in look first.
+      if (isThemeManifest(manifest) && activeThemeId === manifest.id) {
+        selectTheme(null)
+        track('theme_changed', { theme: 'default' })
+      }
+      await uninstallPluginEverywhere({
+        manager: pluginManager,
+        pluginId: manifest.id,
+        moduleLoader: moduleLoaderRef.current,
+      })
+      notifyPluginStateChange()
+      setPluginFeedback(manifest.id, 'success', t('pluginStore.uninstalled'))
+      toast.success(t('pluginStore.uninstalledToast'), {
+        description: manifest.name,
+      })
+    } catch (err) {
+      setPluginFeedback(
+        manifest.id,
+        'error',
+        err instanceof PluginUninstallRefusedError
+          ? t('pluginStore.uninstallRefusedCore')
+          : err instanceof Error
+            ? err.message
+            : t('pluginStore.operationFailed'),
+      )
+    } finally {
+      setBusyPluginId(null)
+      setConfirmUninstallId(null)
     }
   }
 
@@ -512,13 +593,24 @@ export function PluginStore({
 
     try {
       if (!isInstalled(manifest.id)) {
-        const registryEntry = findRegistryEntry(manifest.id)
-        if (registryEntry?.moduleUrl) {
-          await installRemotePlugin(registryEntry)
+        if (isReinstallableBundledPlugin(manifest.id)) {
+          // A bundled theme the user uninstalled comes straight back from the
+          // binary — applying it is one click, not a trip through the registry.
+          await reinstallBundledPlugin({
+            manager: pluginManager,
+            pluginId: manifest.id,
+            persistState: (data) => saveStateMutation.mutate(data),
+          })
           notifyPluginStateChange()
-          // Consent was declined — installRemotePlugin leaves nothing behind,
-          // and the user already answered, so say nothing more.
-          if (!isInstalled(manifest.id)) return
+        } else {
+          const registryEntry = findRegistryEntry(manifest.id)
+          if (registryEntry?.moduleUrl) {
+            await installRemotePlugin(registryEntry)
+            notifyPluginStateChange()
+            // Consent was declined — installRemotePlugin leaves nothing behind,
+            // and the user already answered, so say nothing more.
+            if (!isInstalled(manifest.id)) return
+          }
         }
       }
 
@@ -631,29 +723,32 @@ export function PluginStore({
     }
   }
 
-  // Build plugin entries list — merge registry with installed.
+  // Build plugin entries list — merge registry with installed, and with the
+  // bundled plugins the user has uninstalled. Those still ship in the binary,
+  // so the Store is where they come back: without them here, uninstalling a
+  // built-in connector made it invisible whenever the registry was offline and
+  // "Reset to defaults" was the only way to recover it.
   // Families this deployment excluded are not offered: the registry still
   // advertises them (it is shared across deployments), so they are dropped
   // here. Only bundled plugins are ever family-filtered.
   const entries: Array<RegistryPluginEntry> = useMemo(() => {
-    if (registryOffline) {
-      // Fallback: show installed plugins as synthetic entries
-      return pluginManager
-        .getInstalledPlugins()
-        .map((p) => manifestToEntry(p.manifest))
-        .filter((e) => !isFamilyExcluded(e.manifest))
-    }
+    const installed = pluginManager.getInstalledPlugins()
+    const installedIds = new Set(installed.map((p) => p.manifest.id))
+    const local = [
+      ...installed.map((p) => manifestToEntry(p.manifest)),
+      ...BOOTSTRAP_PLUGINS.filter((p) => !installedIds.has(p.manifest.id)).map(
+        (p) => manifestToEntry(p.manifest),
+      ),
+    ].filter((e) => !isFamilyExcluded(e.manifest))
+
+    if (registryOffline) return local
 
     const registryPlugins = (registryQuery.data?.plugins ?? []).filter(
       (e) => !isFamilyExcluded(e.manifest),
     )
 
     const registryIds = new Set(registryPlugins.map((e) => e.manifest.id))
-    const installed = pluginManager.getInstalledPlugins()
-    const extras = installed
-      .filter((p) => !registryIds.has(p.manifest.id))
-      .map((p) => manifestToEntry(p.manifest))
-      .filter((e) => !isFamilyExcluded(e.manifest))
+    const extras = local.filter((e) => !registryIds.has(e.manifest.id))
 
     // When a category filter is active, only include extras that match it
     if (categoryFilter) {
@@ -662,7 +757,14 @@ export function PluginStore({
     }
 
     return [...registryPlugins, ...extras]
-  }, [registryOffline, registryQuery.data, pluginManager, categoryFilter])
+    // pluginStateVersion is the re-run trigger; pluginManager reads are non-reactive
+  }, [
+    registryOffline,
+    registryQuery.data,
+    pluginManager,
+    pluginStateVersion,
+    categoryFilter,
+  ])
 
   const query = search.trim().toLowerCase()
   const searching = query.length > 0
@@ -921,10 +1023,12 @@ export function PluginStore({
               selectedEntry.manifest,
             )}
             platformBadge={resolvePlatformBadge(selectedEntry.manifest)}
+            uninstallable={canUninstallPlugin(selectedEntry.manifest.id)}
             onBack={() => setSelectedEntry(null)}
             onToggle={(checked) =>
               void handleToggle(selectedEntry.manifest, checked)
             }
+            onUninstall={() => setConfirmUninstallId(selectedEntry.manifest.id)}
             onApplyTheme={() => void handleApplyTheme(selectedEntry.manifest)}
             onRemoveTheme={() => handleRemoveTheme(selectedEntry.manifest)}
             onConfigChange={(key, value) =>
@@ -936,6 +1040,38 @@ export function PluginStore({
           />
         )}
       </AnimatePresence>
+
+      {/* Confirm uninstall — same wording as the Installed tab's trash button */}
+      <AlertDialog
+        open={!!confirmUninstallId}
+        onOpenChange={(open) => {
+          if (!open) setConfirmUninstallId(null)
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('pluginStore.removePluginTitle')}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('pluginStore.removePluginDescription')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                const manifest = selectedEntry?.manifest
+                if (manifest && manifest.id === confirmUninstallId) {
+                  void handleUninstall(manifest)
+                }
+              }}
+            >
+              {t('pluginStore.uninstall')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {fullTrustDialog}
       {networkConsentDialog}

@@ -5,7 +5,7 @@ group: institutions
 order: 1
 eyebrow: For institutions
 updated: AUG 2026
-readTime: 6 min read
+readTime: 7 min read
 ---
 
 Pairlens is source-available under the Functional Source License (FSL), which
@@ -46,11 +46,24 @@ chosen provider. See [AI providers](/docs/ai-providers).
 
 ## Excluding plugin families
 
-Not every desk wants every asset class. A bank may have no business showing
-memecoin surfaces, and a crypto fund has no use for an equities broker. Set
-`VITE_PAIRLENS_DISABLED_FAMILIES` at build time to a comma-separated list of
-family ids and those plugins are never seeded, never installed, and never
-listed in the Plugin Store. A stale ledger row from an earlier build is skipped
+There are two levels of control here, and picking the right one matters.
+
+**The trader's level is the Plugin Store.** Every plugin Pairlens ships can be
+uninstalled from its store page and installed again later straight from the
+binary. Dropping an asset class is uninstalling its plugins: prediction markets
+are Pairlens Predictions, Kalshi and Polymarket, and with those three gone
+there is no prediction surface left in the terminal. Nothing needs a rebuild,
+and nothing is permanent. See
+[plugins](/docs/plugins-for-traders#dropping-an-asset-class).
+
+**The deployment's level is the build.** When the decision is the
+organization's rather than the user's, exclude the family so it is not in the
+product at all. Not every desk wants every asset class: a bank may have no
+business showing memecoin surfaces, and a crypto fund has no use for an
+equities broker. Set `VITE_PAIRLENS_DISABLED_FAMILIES` at build time to a
+comma-separated list of family ids and those plugins are never seeded, never
+installed, never listed in the Plugin Store, and cannot be reinstalled by
+anyone using that build. A stale ledger row from an earlier build is skipped
 too, so flipping the switch on an existing install takes effect on the next
 boot.
 
@@ -72,8 +85,7 @@ Two limits are deliberate. Core and Intelligence cannot be excluded, and asking
 for them logs a warning and is ignored, because the shell does not boot without
 them. And exclusion applies only to the plugins we ship: a third-party plugin
 that happens to share a family is never uninstalled by a deployment switch,
-because it is the user's, not ours. Traders can still turn families on and off
-for themselves in the Plugin Store. See
+because it is the user's, not ours. See
 [plugins](/docs/plugins-for-traders#families).
 
 ## Your own plugin registry
