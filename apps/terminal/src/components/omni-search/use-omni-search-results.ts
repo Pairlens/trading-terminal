@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from 'next-themes'
 
+import { parseInstrumentRef } from '@pairlens/shared/market-ref'
 import { rankItems } from './fuzzy'
 import { buildMarketResults } from './market-results'
 import type { MarketResults } from './market-results'
@@ -20,7 +21,12 @@ import type {
   WorkflowResult,
   WorkspaceResult,
 } from './omni-search-types'
-import { instrumentToPairEntry } from '@/components/pair-picker/pair-picker-data'
+import type { InstrumentRef } from '@pairlens/shared/market-ref'
+import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
+import {
+  instrumentToPairEntry,
+  pairEntryForRef,
+} from '@/components/pair-picker/pair-picker-data'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useInstrumentSearch } from '@/hooks/use-instrument-search'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
@@ -39,6 +45,8 @@ import { useCreateWorkspaceDialogStore } from '@/stores/create-workspace-dialog-
 import { useCustomWorkspacesStore } from '@/stores/custom-workspaces-store'
 import { useNotificationStore } from '@/stores/notification-store'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
+import { isEntryWatched } from '@/lib/market-ref/entry'
+import { useRecentPairs } from '@/lib/recent-tickers'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { useWorkflowStore } from '@/stores/workflow-store'
 import {
@@ -79,6 +87,7 @@ export function useOmniSearchResults(
   const { session } = useOptimisticSession()
   const registry = usePaneRegistry()
   const allSymbolsSet = useWatchlistsStore((s) => s.allSymbolsSet)
+  const watchedRefs = useWatchlistsStore((s) => s.watchedRefs)
   const workspaces = useCustomWorkspacesStore((s) => s.workspaces)
   const workflows = useWorkflowStore((s) => s.workflows)
   const notificationRules = useNotificationStore((s) => s.rules)
@@ -106,10 +115,8 @@ export function useOmniSearchResults(
     isSearchActive,
     isLoading,
   } = useInstrumentSearch(pairSearchEnabled ? q : '')
-  const [recentPairs] = usePersistedState<Array<string>>(
-    'pair-picker.recent',
-    [],
-  )
+  // The shared store: entries are refs, so a token here keeps its address.
+  const [recentPairs] = useRecentPairs()
 
   // ── Pairs ───────────────────────────────────────────────────────────
 
@@ -130,20 +137,25 @@ export function useOmniSearchResults(
     if (pairQ.length === 0) {
       // Empty state: recent + watched
       const recent = recentPairs
-        .map((s) => pairsBySymbol.get(s))
-        .filter(Boolean)
+        .map((ref) => pairEntryForRef(ref, pairsBySymbol))
+        .filter((p): p is PairEntry => p !== null)
         .slice(0, 8)
         .map(
           (pair): PairResult => ({
             type: 'pair',
-            pair: pair!,
-            isWatched: allSymbolsSet.has(pair!.symbol),
+            pair,
+            isWatched: isEntryWatched(pair, watchedRefs),
           }),
         )
-      const watched = [...allSymbolsSet]
-        .map((s) => pairsBySymbol.get(s))
-        .filter(Boolean)
-        .filter((p) => !recentPairs.includes(p!.symbol))
+      const recentIds = new Set(recent.map((r) => r.pair.symbol))
+      // From the refs, not the symbol set: a token is stored by address, so
+      // a symbol-keyed lookup would drop it out of this section entirely.
+      const watched = [...watchedRefs]
+        .map((key) => parseInstrumentRef(key))
+        .filter((ref): ref is InstrumentRef => ref !== null)
+        .map((ref) => pairEntryForRef(ref, pairsBySymbol))
+        .filter((p): p is PairEntry => p !== null)
+        .filter((p) => !recentIds.has(p.symbol))
         .slice(0, 8)
         .map(
           (pair): PairResult => ({
@@ -178,7 +190,7 @@ export function useOmniSearchResults(
           (pair): PairResult => ({
             type: 'pair',
             pair,
-            isWatched: allSymbolsSet.has(pair.symbol),
+            isWatched: isEntryWatched(pair, watchedRefs),
           }),
         )
       return { items, isFallback: false }
@@ -204,7 +216,7 @@ export function useOmniSearchResults(
           (pair): PairResult => ({
             type: 'pair',
             pair,
-            isWatched: allSymbolsSet.has(pair.symbol),
+            isWatched: isEntryWatched(pair, watchedRefs),
           }),
         )
       return { items, isFallback: false }

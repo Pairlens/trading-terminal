@@ -3,13 +3,32 @@
 import { create } from 'zustand'
 
 import { DEFAULT_WATCHLIST_ID } from '@pairlens/persistence'
+import {
+  formatInstrumentRef,
+  parseInstrumentRef,
+} from '@pairlens/shared/market-ref'
 import type { PersistenceAdapter, WatchlistsState } from '@pairlens/persistence'
+import type { InstrumentRef } from '@pairlens/shared/market-ref'
+import { legacySymbolToInstrumentRef } from '@/lib/market-ref/legacy'
 import { track } from '@/lib/analytics-events'
 import {
   TOP_CRYPTO_WATCHLIST_ID,
   createStarterLists,
   seedStarterAssetClasses,
 } from '@/lib/starter-watchlists'
+
+/**
+ * What callers may hand the watchlist. A ref when the caller has a row (which
+ * is the only way a token or an outcome can be identified correctly), a bare
+ * symbol for the surfaces that genuinely only hold one.
+ */
+export type WatchlistTarget = InstrumentRef | string
+
+function asInstrumentRef(target: WatchlistTarget): InstrumentRef {
+  return typeof target === 'string'
+    ? legacySymbolToInstrumentRef(target)
+    : target
+}
 
 function generateId(): string {
   return Math.random().toString(36).slice(2, 10)
@@ -30,8 +49,41 @@ function createDefaultState(): WatchlistsState {
   }
 }
 
+/**
+ * What a stored entry names. Entries are serialized `InstrumentRef`s
+ * (`spot:BTC-USDT`, `dex:base:0x532f…-WETH`); bare symbols left by earlier
+ * builds are upgraded on read, exactly as recents does, so no list is ever
+ * dropped and the persisted shape (`Array<string>`) never changed.
+ */
+export function readWatchlistEntry(entry: string): InstrumentRef {
+  return parseInstrumentRef(entry) ?? legacySymbolToInstrumentRef(entry)
+}
+
+/**
+ * The canonical key for "is this watched".
+ *
+ * Refs, not symbols, because for the venue-bound arms the id is an address or
+ * a venue-native key while the row still DISPLAYS a ticker. Comparing tickers
+ * is what let one PEPE's star light up for a different PEPE.
+ */
+function buildWatchedRefs(state: WatchlistsState): Set<string> {
+  return new Set(
+    state.lists.flatMap((l) =>
+      l.symbols.map((entry) => formatInstrumentRef(readWatchlistEntry(entry))),
+    ),
+  )
+}
+
+/**
+ * Display-level symbols, kept for the surfaces that only have a ticker to
+ * check against (a catalog row with no chain, a bare pair key from prose).
+ * For spot, perp and stocks the id IS the symbol, so this stays exact; it is
+ * the token and prediction rows that need `watchedRefs` instead.
+ */
 function buildAllSymbolsSet(state: WatchlistsState): Set<string> {
-  return new Set(state.lists.flatMap((l) => l.symbols))
+  return new Set(
+    state.lists.flatMap((l) => l.symbols.map((e) => readWatchlistEntry(e).id)),
+  )
 }
 
 /**
@@ -67,10 +119,11 @@ type WatchlistsStore = {
   // State
   state: WatchlistsState
   loaded: boolean
-  dialog: { open: boolean; symbol: string | null }
+  dialog: { open: boolean; target: InstrumentRef | null }
 
   // Derived (recomputed in actions, stored for O(1) lookups)
   allSymbolsSet: Set<string>
+  watchedRefs: Set<string>
 
   // Internal refs (not reactive)
   _persistence: PersistenceAdapter | null
@@ -81,14 +134,14 @@ type WatchlistsStore = {
   // Actions
   init: (persistence: PersistenceAdapter, userId: string) => Promise<void>
   dispose: () => void
-  addToWatchlist: (symbol: string, listIds: Array<string>) => void
-  removeFromWatchlist: (symbol: string, listId: string) => void
+  addToWatchlist: (target: WatchlistTarget, listIds: Array<string>) => void
+  removeFromWatchlist: (target: WatchlistTarget, listId: string) => void
   reorderSymbols: (fromIndex: number, toIndex: number) => void
   setActiveList: (listId: string) => void
   createList: (name: string) => string
   deleteList: (listId: string) => void
   renameList: (listId: string, name: string) => void
-  openAddDialog: (symbol: string) => void
+  openAddDialog: (target: WatchlistTarget) => void
   closeDialog: () => void
 }
 
@@ -106,8 +159,9 @@ function persist(store: WatchlistsStore) {
 export const useWatchlistsStore = create<WatchlistsStore>((set, get) => ({
   state: createDefaultState(),
   loaded: false,
-  dialog: { open: false, symbol: null },
+  dialog: { open: false, target: null },
   allSymbolsSet: new Set(),
+  watchedRefs: new Set(),
   _persistence: null,
   _userId: null,
   _unsub: null,
@@ -154,6 +208,7 @@ export const useWatchlistsStore = create<WatchlistsStore>((set, get) => ({
       set({
         state: externalState,
         allSymbolsSet: buildAllSymbolsSet(externalState),
+        watchedRefs: buildWatchedRefs(externalState),
       })
     })
 
@@ -161,6 +216,7 @@ export const useWatchlistsStore = create<WatchlistsStore>((set, get) => ({
       state,
       loaded: true,
       allSymbolsSet: buildAllSymbolsSet(state),
+      watchedRefs: buildWatchedRefs(state),
       _persistence: persistence,
       _userId: userId,
       _unsub: unsub,
@@ -172,12 +228,20 @@ export const useWatchlistsStore = create<WatchlistsStore>((set, get) => ({
     set({ _unsub: null, _persistence: null, _userId: null })
   },
 
-  addToWatchlist(symbol, listIds) {
+  addToWatchlist(target, listIds) {
     const store = get()
+    const ref = asInstrumentRef(target)
+    const key = formatInstrumentRef(ref)
     const listIdSet = new Set(listIds)
     const nextLists = store.state.lists.map((l) => {
-      if (listIdSet.has(l.id) && !l.symbols.includes(symbol)) {
-        return { ...l, symbols: [...l.symbols, symbol] }
+      // Compare by REF, not by stored string: a list still holding the legacy
+      // bare symbol for this instrument already has it, and appending the
+      // qualified form beside it would show the row twice.
+      const already = l.symbols.some(
+        (entry) => formatInstrumentRef(readWatchlistEntry(entry)) === key,
+      )
+      if (listIdSet.has(l.id) && !already) {
+        return { ...l, symbols: [...l.symbols, key] }
       }
       return l
     })
@@ -185,22 +249,32 @@ export const useWatchlistsStore = create<WatchlistsStore>((set, get) => ({
     set({
       state: nextState,
       allSymbolsSet: buildAllSymbolsSet(nextState),
+      watchedRefs: buildWatchedRefs(nextState),
     })
     persist(get())
     track('watchlist_changed', { action: 'added' })
   },
 
-  removeFromWatchlist(symbol, listId) {
+  removeFromWatchlist(target, listId) {
     const store = get()
+    const key = formatInstrumentRef(asInstrumentRef(target))
     const nextLists = store.state.lists.map((l) =>
       l.id === listId
-        ? { ...l, symbols: l.symbols.filter((s) => s !== symbol) }
+        ? {
+            ...l,
+            // By ref, so removing works whether the entry was stored
+            // qualified or is still a legacy bare symbol.
+            symbols: l.symbols.filter(
+              (entry) => formatInstrumentRef(readWatchlistEntry(entry)) !== key,
+            ),
+          }
         : l,
     )
     const nextState = { ...store.state, lists: nextLists }
     set({
       state: nextState,
       allSymbolsSet: buildAllSymbolsSet(nextState),
+      watchedRefs: buildWatchedRefs(nextState),
     })
     persist(get())
     track('watchlist_changed', { action: 'removed' })
@@ -269,11 +343,11 @@ export const useWatchlistsStore = create<WatchlistsStore>((set, get) => ({
     persist(get())
   },
 
-  openAddDialog(symbol) {
-    set({ dialog: { open: true, symbol } })
+  openAddDialog(target) {
+    set({ dialog: { open: true, target: asInstrumentRef(target) } })
   },
 
   closeDialog() {
-    set({ dialog: { open: false, symbol: null } })
+    set({ dialog: { open: false, target: null } })
   },
 }))

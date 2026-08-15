@@ -6,6 +6,7 @@ import { CandlestickChart, Search, Unlink, Variable } from 'lucide-react'
 
 import { Input } from '@pairlens/ui/components/ui/input'
 
+import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import { PairSearchResults } from '@/components/pair-picker/pair-search-results'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { usePersistedState } from '@/hooks/use-persisted-state'
@@ -53,9 +54,10 @@ export function PanePairPicker() {
   const displayLabel = boundVariableLabel ?? boundVariableName
 
   const handleSelect = useCallback(
-    (symbol: string, assetClass?: string) => {
-      if (assetClass) {
-        setAssetClassMap((prev) => ({ ...prev, [symbol]: assetClass }))
+    (entry: PairEntry) => {
+      const symbol = entry.symbol
+      if (entry.assetClass) {
+        setAssetClassMap((prev) => ({ ...prev, [symbol]: entry.assetClass! }))
       }
       const pairValue = { pairKey: symbol, market: selectedMarket }
       if (isBoundToVariable) {

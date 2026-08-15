@@ -6,6 +6,7 @@
  * row into a ref here, so they all pin identity the same way.
  */
 import {
+  formatInstrumentRef,
   isTokenAddress,
   normalizeInstrumentClass,
   normalizeInstrumentId,
@@ -100,4 +101,18 @@ export function tokenIdFromPairKey(pairKey: string): string | null {
   return base && isTokenAddress(base)
     ? normalizeInstrumentId('dex', base)
     : null
+}
+
+/**
+ * Whether a row is in a watchlist, compared by ref.
+ *
+ * The obvious `watchedSymbols.has(row.symbol)` is wrong for the venue-bound
+ * arms: a token is stored by address while its row still displays a ticker,
+ * so a ticker comparison lights one PEPE's star for a different PEPE.
+ */
+export function isEntryWatched(
+  entry: RefSource,
+  watchedRefs: ReadonlySet<string>,
+): boolean {
+  return watchedRefs.has(formatInstrumentRef(entryToInstrumentRef(entry)))
 }

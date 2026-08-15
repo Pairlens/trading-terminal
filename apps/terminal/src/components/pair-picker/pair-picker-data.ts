@@ -17,7 +17,15 @@ import { registerToken } from '@pairlens/market-engine/token-directory'
 import type { LucideIcon } from 'lucide-react'
 
 import type { Instrument } from '@pairlens/shared/instrument-types'
-import { registerPredictionOutcome } from '@/stores/prediction-directory-store'
+import type { InstrumentRef } from '@pairlens/shared/market-ref'
+import {
+  lookupPredictionOutcome,
+  registerPredictionOutcome,
+} from '@/stores/prediction-directory-store'
+import {
+  lookupDisplayToken,
+  registerDisplayToken,
+} from '@/stores/token-directory-store'
 
 export type AssetClassFilter = 'all' | 'crypto' | 'stocks' | 'prediction'
 
@@ -197,6 +205,10 @@ export function predictionQuestionOf(entry: {
  */
 export function pinSelectedEntry(entry: PairEntry): void {
   if (entry.chain && entry.address) {
+    // Two directories, two questions. The connector-side one answers
+    // "symbol → address" for pool resolution and lives in memory; this one
+    // answers "address → what the user saw" for a watchlist row and persists,
+    // because the row it labels persists.
     registerToken({
       network: entry.chain,
       symbol: entry.base,
@@ -205,6 +217,15 @@ export function pinSelectedEntry(entry: PairEntry): void {
         ? { decimals: entry.decimals }
         : {}),
       name: entry.name,
+    })
+    registerDisplayToken({
+      chain: entry.chain,
+      address: entry.address,
+      symbol: entry.base,
+      name: entry.name,
+      ...(typeof entry.decimals === 'number'
+        ? { decimals: entry.decimals }
+        : {}),
     })
     return
   }
@@ -219,4 +240,91 @@ export function pinSelectedEntry(entry: PairEntry): void {
       ...(typeof entry.endMs === 'number' ? { endMs: entry.endMs } : {}),
     })
   }
+}
+
+/**
+ * A row for a pair key the catalog does not have.
+ *
+ * Long-tail tokens, symbols past the first discovery page, and anything a
+ * standalone build never fetched. A picker that silently drops what you were
+ * just looking at is worse than one that renders it from its own key.
+ */
+export function synthesizeEntry(symbol: string): PairEntry {
+  const idx = symbol.indexOf('-')
+  const base = idx === -1 ? symbol : symbol.slice(0, idx)
+  const quote = idx === -1 ? '' : symbol.slice(idx + 1)
+  return {
+    id: symbol,
+    symbol,
+    name: base,
+    base,
+    quote,
+    categories: [],
+    rank: Number.MAX_SAFE_INTEGER,
+  }
+}
+
+/**
+ * The row a stored ref names.
+ *
+ * Three sources, in order: the instrument catalog (symbol-keyed, so it can
+ * only answer for the symbol-shaped arms), the persisted directories for the
+ * venue-bound arms, and finally the key itself. The directories are what stop
+ * a watchlist's token and prediction rows from vanishing out of these lists
+ * once entries are stored by address rather than by ticker.
+ */
+export function pairEntryForRef(
+  ref: InstrumentRef,
+  bySymbol: Map<string, PairEntry>,
+): PairEntry | null {
+  if (ref.cls === 'dex') {
+    if (!ref.market) return null
+    const [address, quote] = splitDexId(ref.id)
+    const pinned = lookupDisplayToken(ref.market, address)
+    if (!pinned) return null
+    return {
+      id: `${ref.market}:${address}`,
+      symbol: ref.id,
+      name: pinned.name ?? pinned.symbol,
+      base: pinned.symbol,
+      quote,
+      assetClass: 'dex',
+      categories: [],
+      rank: Number.MAX_SAFE_INTEGER,
+      chain: ref.market,
+      address,
+      ...(typeof pinned.decimals === 'number'
+        ? { decimals: pinned.decimals }
+        : {}),
+    }
+  }
+
+  if (ref.cls === 'prediction') {
+    const pinned = lookupPredictionOutcome(ref.id)
+    if (!pinned) return null
+    return {
+      id: `${pinned.market}:${ref.id}`,
+      symbol: ref.id,
+      name: pinned.name,
+      base: ref.id,
+      quote: '',
+      assetClass: 'prediction',
+      categories: [],
+      rank: Number.MAX_SAFE_INTEGER,
+      predictionMarketId: pinned.predictionMarketId,
+      outcome: pinned.outcome,
+      market: pinned.market,
+      ...(pinned.eventTitle ? { eventTitle: pinned.eventTitle } : {}),
+      ...(pinned.eventId ? { eventId: pinned.eventId } : {}),
+      ...(typeof pinned.endMs === 'number' ? { endMs: pinned.endMs } : {}),
+    }
+  }
+
+  return bySymbol.get(ref.id) ?? synthesizeEntry(ref.id)
+}
+
+/** `0x532f…-WETH` → `['0x532f…', 'WETH']`. The base is the address. */
+function splitDexId(id: string): [string, string] {
+  const at = id.lastIndexOf('-')
+  return at === -1 ? [id, ''] : [id.slice(0, at), id.slice(at + 1)]
 }

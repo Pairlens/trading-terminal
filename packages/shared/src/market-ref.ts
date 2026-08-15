@@ -193,6 +193,20 @@ export function formatMarketRef(ref: MarketRef): string {
   return `${ref.cls}${SEP}${ref.market}${SEP}${ref.id}`
 }
 
+/**
+ * Drop the venue from a market ref, unless the venue is part of identity.
+ *
+ * What a watchlist stores: "I am watching BTC" does not name a venue, so
+ * charting BTC-USDT on Binance and on OKX must light the same star. Formatting
+ * a `MarketRef` directly gives `spot:binance:BTC-USDT`, which matches nothing
+ * a watchlist ever wrote.
+ */
+export function toWatchlistRef(ref: MarketRef): InstrumentRef {
+  return isVenueBoundClass(ref.cls)
+    ? { cls: ref.cls, market: ref.market, id: ref.id }
+    : { cls: ref.cls, id: ref.id }
+}
+
 /** `spot:BTC-USDT`, or `dex:base:0xabc…` for the venue-bound arms. */
 export function formatInstrumentRef(ref: InstrumentRef): string {
   return ref.market

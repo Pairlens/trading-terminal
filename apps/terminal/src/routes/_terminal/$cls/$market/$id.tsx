@@ -27,8 +27,10 @@ import { Loader2, Unplug } from 'lucide-react'
 import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
 import {
+  formatInstrumentRef,
   normalizeInstrumentClass,
   normalizeInstrumentId,
+  toWatchlistRef,
 } from '@pairlens/shared/market-ref'
 import type { MarketRef } from '@pairlens/shared/market-ref'
 
@@ -242,7 +244,12 @@ function ChartTerminalBody({
   markets: Array<MarketOption>
 }) {
   const pairKey = marketRef.id
-  const isWatched = useWatchlistsStore((s) => s.allSymbolsSet.has(pairKey))
+  // By ref, not by ticker: this page may be charting a token, whose stored
+  // identity is its address while the header still shows a symbol. The VENUE
+  // comes off first for the symbol-shaped arms, because a watchlist entry is
+  // an instrument, not a tape: BTC-USDT starred on Binance is starred on OKX.
+  const watchKey = formatInstrumentRef(toWatchlistRef(marketRef))
+  const isWatched = useWatchlistsStore((s) => s.watchedRefs.has(watchKey))
   const openAddDialog = useWatchlistsStore((s) => s.openAddDialog)
 
   const { market, timeframe } = useChartConfig()
@@ -287,7 +294,7 @@ function ChartTerminalBody({
         pairKey={pairKey}
         assetClass={marketRef.cls}
         isWatched={isWatched}
-        onStarClick={() => openAddDialog(pairKey)}
+        onStarClick={() => openAddDialog(toWatchlistRef(marketRef))}
         market={market}
         onMarketChange={setMarket}
         onMarketHover={(m) => warmupMarket(m, pairKey, timeframe)}

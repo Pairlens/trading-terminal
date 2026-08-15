@@ -68,16 +68,21 @@ import { DEFAULT_WATCHLIST_ID } from '@pairlens/persistence'
 import type { DragEndEvent } from '@dnd-kit/core'
 
 import type { Instrument } from '@pairlens/shared/instrument-types'
+import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
+import type { InstrumentRef } from '@pairlens/shared/market-ref'
 import { formatPrice } from '@/lib/format-price'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
-import { entryToMarketRef } from '@/lib/market-ref/entry'
+import { entryToInstrumentRef, entryToMarketRef } from '@/lib/market-ref/entry'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useTickerStream } from '@/hooks/use-ticker-stream'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useActivePair } from '@/lib/active-pair-context'
-import { useWatchlistsStore } from '@/stores/watchlists-store'
+import {
+  readWatchlistEntry,
+  useWatchlistsStore,
+} from '@/stores/watchlists-store'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import { PairSearchResults } from '@/components/pair-picker/pair-search-results'
 import { PaneTransition } from '@/components/layout/pane-transition'
@@ -100,19 +105,25 @@ export function WatchlistPane() {
   const activeList = lists.find((l) => l.id === state.activeListId) ?? lists[0]!
 
   // Sort symbols for the query key so reordering doesn't trigger a refetch
-  const sortedSymbols = useMemo(
-    () => [...activeList.symbols].sort(),
+  // The catalog is symbol-keyed, so it is asked for display ids rather than
+  // for the stored refs themselves.
+  const listRefs = useMemo(
+    () => activeList.symbols.map(readWatchlistEntry),
     [activeList.symbols],
+  )
+  const sortedSymbols = useMemo(
+    () => [...listRefs.map((r) => r.id)].sort(),
+    [listRefs],
   )
   const { items: instruments } = useInstrumentsBySymbols(sortedSymbols)
 
   const watchlistItems = useMemo(() => {
     if (!instruments.length) return []
     const bySymbol = new Map(instruments.map((i) => [i.symbol, i]))
-    return activeList.symbols
-      .map((sym) => bySymbol.get(sym))
+    return listRefs
+      .map((ref) => bySymbol.get(ref.id))
       .filter((i): i is Instrument => i !== undefined)
-  }, [activeList.symbols, instruments])
+  }, [listRefs, instruments])
 
   // User's preferred market (last selected in the chart terminal).
   const { markets: availableMarkets, defaultMarket } = useAvailableMarkets()
@@ -514,14 +525,24 @@ function AddSymbolButton({
     {},
   )
 
-  const listSymbolsSet = useMemo(() => new Set(listSymbols), [listSymbols])
+  // Stored entries are refs; the search rows compare symbols, so this is the
+  // display id of each entry rather than its raw stored string.
+  const listSymbolsSet = useMemo(
+    () => new Set(listSymbols.map((entry) => readWatchlistEntry(entry).id)),
+    [listSymbols],
+  )
 
   const handleSelect = useCallback(
-    (symbol: string, assetClass?: string) => {
-      if (assetClass) {
-        setAssetClassMap((prev) => ({ ...prev, [symbol]: assetClass }))
+    (entry: PairEntry) => {
+      if (entry.assetClass) {
+        setAssetClassMap((prev) => ({
+          ...prev,
+          [entry.symbol]: entry.assetClass!,
+        }))
       }
-      addToWatchlist(symbol, [listId])
+      // By ref, so a token is saved under its address rather than under a
+      // ticker that dozens of other tokens also answer to.
+      addToWatchlist(entryToInstrumentRef(entry), [listId])
     },
     [addToWatchlist, listId, setAssetClassMap],
   )
@@ -598,7 +619,7 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
   market: string
   priceCache: React.RefObject<Map<string, CachedTicker>>
   justDraggedRef: React.RefObject<boolean>
-  onRemove: (symbol: string, listId: string) => void
+  onRemove: (target: InstrumentRef, listId: string) => void
 }) {
   const navigate = useNavigate()
   const {
@@ -646,9 +667,11 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
   const handleRemove = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation()
-      onRemove(inst.symbol, listId)
+      // By ref: the stored entry for a token is its address, so removing by
+      // ticker would leave the row in place.
+      onRemove(entryToInstrumentRef(inst), listId)
     },
-    [onRemove, inst.symbol, listId],
+    [onRemove, inst, listId],
   )
 
   const handleClick = useCallback(() => {

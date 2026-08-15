@@ -13,6 +13,7 @@
  * (`packages/plugins/src/catalog.ts`) — anything listed here must exist there
  * or the row silently drops out of the pane.
  */
+import { formatInstrumentRef } from '@pairlens/shared/market-ref'
 import type { Watchlist } from '@pairlens/persistence'
 
 import { STORAGE_PREFIX } from '@/hooks/use-persisted-state'
@@ -52,12 +53,24 @@ const STARTER_WATCHLISTS: Array<StarterWatchlist> = [
   },
 ]
 
-/** Fresh copies of the starter lists, safe to hand to the store. */
+/**
+ * Fresh copies of the starter lists, safe to hand to the store.
+ *
+ * Seeded as qualified refs rather than bare symbols, so a first-run list is
+ * already in the format everything reads. Both starters are symbol-shaped
+ * arms (spot and stocks), so the class above is all the qualification they
+ * need; a token starter would have to carry its chain and address.
+ */
 export function createStarterLists(): Array<Watchlist> {
-  return STARTER_WATCHLISTS.map(({ id, name, symbols }) => ({
+  return STARTER_WATCHLISTS.map(({ id, name, symbols, assetClass }) => ({
     id,
     name,
-    symbols: [...symbols],
+    symbols: symbols.map((symbol) =>
+      formatInstrumentRef({
+        cls: assetClass === 'stocks' ? 'stocks' : 'spot',
+        id: symbol,
+      }),
+    ),
   }))
 }
 

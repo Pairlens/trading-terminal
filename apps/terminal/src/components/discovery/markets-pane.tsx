@@ -44,6 +44,7 @@ import type {
   PairEntry,
 } from '@/components/pair-picker/pair-picker-data'
 import type { BulkQuote } from '@/hooks/use-bulk-ticker-quotes'
+import type { InstrumentRef } from '@pairlens/shared/market-ref'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
@@ -57,7 +58,11 @@ import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { useRecentPairs } from '@/lib/recent-tickers'
-import { entryToMarketRef } from '@/lib/market-ref/entry'
+import {
+  entryToInstrumentRef,
+  entryToMarketRef,
+  isEntryWatched,
+} from '@/lib/market-ref/entry'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 // Extracted verbatim so the mobile lists render the same reserved column and
@@ -76,6 +81,7 @@ export function MarketsPane() {
     'list',
   )
   const allSymbolsSet = useWatchlistsStore((s) => s.allSymbolsSet)
+  const watchedRefs = useWatchlistsStore((s) => s.watchedRefs)
   const openAddDialog = useWatchlistsStore((s) => s.openAddDialog)
   const coinsBySymbol = useTopCoinsSnapshot()
   const liveQuotes = useBulkTickerQuotes()
@@ -506,7 +512,7 @@ export function MarketsPane() {
                           pair={pair}
                           quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
                           market={resolveMarket(pair.assetClass)}
-                          isWatched={allSymbolsSet.has(pair.symbol)}
+                          isWatched={isEntryWatched(pair, watchedRefs)}
                           onStarClick={openAddDialog}
                           onNavigate={trackRecent}
                         />
@@ -537,7 +543,7 @@ export function MarketsPane() {
                   pair={pair}
                   quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
                   market={resolveMarket(pair.assetClass)}
-                  isWatched={allSymbolsSet.has(pair.symbol)}
+                  isWatched={isEntryWatched(pair, watchedRefs)}
                   onStarClick={openAddDialog}
                   onNavigate={trackRecent}
                 />
@@ -571,7 +577,7 @@ const PairTableRow = memo(function PairTableRow({
   /** Venue the trend line is drawn from — resolved for the asset class. */
   market: string
   isWatched: boolean
-  onStarClick: (symbol: string) => void
+  onStarClick: (target: InstrumentRef) => void
   onNavigate: (pair: PairEntry) => void
 }) {
   const { t } = useTranslation()
@@ -591,7 +597,7 @@ const PairTableRow = memo(function PairTableRow({
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            onStarClick(pair.symbol)
+            onStarClick(entryToInstrumentRef(pair))
           }}
         >
           <Star
@@ -672,7 +678,7 @@ const PairCard = memo(function PairCard({
   /** Venue the trend line is drawn from — resolved for the asset class. */
   market: string
   isWatched: boolean
-  onStarClick: (symbol: string) => void
+  onStarClick: (target: InstrumentRef) => void
   onNavigate: (pair: PairEntry) => void
 }) {
   const { t } = useTranslation()
@@ -730,7 +736,7 @@ const PairCard = memo(function PairCard({
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            onStarClick(pair.symbol)
+            onStarClick(entryToInstrumentRef(pair))
           }}
         >
           <Star

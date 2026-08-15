@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from 'bun:test'
 
 import { DEFAULT_WATCHLIST_ID } from '@pairlens/persistence'
 
-import { useWatchlistsStore } from '../watchlists-store'
+import { readWatchlistEntry, useWatchlistsStore } from '../watchlists-store'
 import type { PersistenceAdapter, WatchlistsState } from '@pairlens/persistence'
 import {
   TOP_CRYPTO_WATCHLIST_ID,
@@ -64,8 +64,14 @@ describe('watchlists store — starter lists', () => {
     ])
     // Opens on a list that actually has markets in it.
     expect(state.activeListId).toBe(TOP_CRYPTO_WATCHLIST_ID)
-    expect(state.lists[1].symbols).toContain('BTC-USDT')
-    expect(state.lists[2].symbols).toContain('AAPL')
+    // Seeded as qualified refs, so a first-run list is already in the format
+    // every reader expects and no entry needs upgrading on first paint.
+    expect(state.lists[1].symbols).toContain('spot:BTC-USDT')
+    expect(state.lists[2].symbols).toContain('stocks:AAPL')
+    expect(readWatchlistEntry(state.lists[1].symbols[0])).toEqual({
+      cls: 'spot',
+      id: 'BTC-USDT',
+    })
     // Persisted immediately, so a later delete has something to overwrite.
     expect(store.get('local')).toEqual(state)
   })
