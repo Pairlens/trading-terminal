@@ -10,6 +10,7 @@
 // and the assistant dock (mounted above the routed content, reaching the
 // chart through the ServiceRegistry) run one table rather than two.
 
+import { putScreenshot } from './screenshot-store'
 import type { useNavigate } from '@tanstack/react-router'
 import type {
   FastFinancialChartRef,
@@ -133,6 +134,8 @@ const drawingToolMap: Record<
 }
 
 // Client-executed chart command names → executeCommand type.
+// `take_screenshot` is deliberately absent: it is the one command whose
+// return value matters, so it is handled on its own below.
 const SIMPLE_CHART_COMMANDS: Record<string, string> = {
   remove_drawing: 'removeDrawing',
   clear_drawings: 'clearDrawings',
@@ -140,7 +143,6 @@ const SIMPLE_CHART_COMMANDS: Record<string, string> = {
   redo: 'redo',
   fit_content: 'fitContent',
   scroll_to_latest: 'scrollToLatest',
-  take_screenshot: 'takeScreenshot',
 }
 
 export type ClientToolContext = {
@@ -154,6 +156,8 @@ export type ClientToolContext = {
   ) => MarketRef | null
   /** Arm a deferred copilot check (schedule_check tool). */
   scheduleCheck?: (delayMinutes: number, instruction: string) => void
+  /** Identifies the call, so a captured screenshot can find its chip again. */
+  toolCallId?: string
 }
 
 /**
@@ -279,6 +283,22 @@ export function executeClientTool(
     }
 
     // ── Simple pass-through commands ──
+    // The engine hands the PNG back and this used to discard it, so the
+    // tool reported a screenshot the user never got. Park it for the
+    // renderer instead; it cannot ride in the tool result, which is what
+    // the model reads.
+    if (toolName === 'take_screenshot') {
+      const shot = chart?.executeCommand({
+        type: 'takeScreenshot',
+        payload: p,
+      } as Parameters<FastFinancialChartRef['executeCommand']>[0]) as
+        | { ok?: boolean; result?: { dataUrl?: string } }
+        | undefined
+      const dataUrl = shot?.result?.dataUrl
+      if (dataUrl && ctx.toolCallId) putScreenshot(ctx.toolCallId, dataUrl)
+      return
+    }
+
     const command = SIMPLE_CHART_COMMANDS[toolName]
     if (command) {
       chart.executeCommand({

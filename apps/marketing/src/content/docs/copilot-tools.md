@@ -67,8 +67,10 @@ badge, sparkline with levels, trade-setup card, source cards. It takes tens of
 seconds and costs accordingly. See [research reports](/docs/research-reports).
 
 `web_search` needs an `ai:web-search` provider (Tavily or Exa with your own key,
-or hosted Intelligence). The rest of this family reads from the App Server and is
-unavailable in [standalone mode](/docs/self-hosting#standalone-mode).
+or hosted Intelligence). Whatever it finds is attributed: an answer built on a
+search carries a source count under it that opens into the list of pages. The
+rest of this family reads from the App Server and is unavailable in
+[standalone mode](/docs/self-hosting#standalone-mode).
 
 ## Portfolio
 
@@ -102,7 +104,9 @@ the risk-reward visible instead of described.
 
 **View (9).** `set_chart_type`, `set_price_scale`, `fit_content`,
 `scroll_to_latest`, `take_screenshot`, `add_compare_symbol`,
-`remove_compare_symbol`, `start_replay`, `exit_replay`.
+`remove_compare_symbol`, `start_replay`, `exit_replay`. `take_screenshot`
+puts the captured chart in the conversation, which is how "mark the levels
+and show me" ends with a picture rather than a sentence.
 
 **Read-back (3).** `get_chart_state`, `get_chart_indicators`,
 `get_chart_drawings`. These are what let it answer questions about what is

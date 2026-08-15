@@ -5,7 +5,7 @@ group: traders
 order: 4
 eyebrow: For traders
 updated: 16 AUG 2026
-readTime: 8 min read
+readTime: 9 min read
 ---
 
 The assistant sits outside the content area: an orb, and a line of text that
@@ -78,6 +78,46 @@ on: on a chart they name the pair, on the workflows page they name a workflow.
 Click one to send it. Hover any answer the assistant writes and a copy button
 appears under it, which is the fastest way to get a level or a size out of the
 chat and into an order ticket.
+
+## Reading a run
+
+A turn can run 28 steps, so the thread shows the work rather than a spinner.
+
+**Thinking is visible.** On a reasoning model the chat shows the reasoning as it
+arrives, open while it streams and folded to "Reasoned for 12s" once the answer
+starts. One click reopens it. Models that do not reason show nothing here.
+
+**Tool calls collapse into one group.** Thirty calls do not become thirty rows.
+While the run works, the group is open and names the call in flight; when it
+finishes it folds to "Used 7 tools". Open any call to see the arguments it was
+given and the result it got back, which is how you check what the assistant
+actually read before it formed an opinion.
+
+**Answers that searched the web carry their sources.** A count sits under the
+answer, and opening it lists the pages, same as a
+[research report](/docs/research-reports) does. If the assistant tells you a
+listing is confirmed, you can see where it read that.
+
+**Code gets a block of its own,** with the language, a copy button, and for
+Python an **Open in workbench** action. That writes the script into your library
+and opens it in the [indicator workbench](/docs/python-scripts), so an indicator
+the assistant wrote is one click from running on live candles.
+
+**Chart screenshots land in the thread.** When the assistant captures the chart,
+the image appears in the conversation instead of being announced and lost.
+
+## While it is working
+
+The composer never locks. Type during a run and the message waits its turn: it
+appears at the end of the thread marked **Queued** and sends itself the moment
+the current answer is finished. One message waits, not a backlog, because a
+second one would be answered with context from before an answer you have not
+read yet.
+
+Scrolling up parks the view so you can read while it writes, and a **Jump to
+latest** button appears to get you back. If a run fails, the error carries a
+**Retry** rather than making you retype the prompt, and every finished answer has
+a regenerate button beside its copy button.
 
 ## One assistant, one conversation
 

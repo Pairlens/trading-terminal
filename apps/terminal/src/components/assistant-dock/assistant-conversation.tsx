@@ -15,7 +15,15 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useChat } from '@ai-sdk/react'
 import { lastAssistantMessageIsCompleteWithToolCalls } from 'ai'
-import { ArrowUpRight, Brain, Loader2, Sparkles } from 'lucide-react'
+import {
+  ArrowDown,
+  ArrowUpRight,
+  Brain,
+  Clock,
+  Loader2,
+  RefreshCw,
+  Sparkles,
+} from 'lucide-react'
 
 import { AiOrb } from '@pairlens/ui/components/ui/ai-orb'
 import { Button } from '@pairlens/ui/components/ui/button'
@@ -77,6 +85,11 @@ import { ASSISTANT_ALL_TOOL_LABELS } from '@/lib/assistant-core/tool-labels'
 import { humanizeToolName } from '@/lib/copilot/tool-labels'
 import { runSurfaceAction } from '@/lib/assistant-core/surface-tools'
 import { deriveRunStatus } from '@/lib/assistant-core/run-status'
+import { hasParkedToolCall } from '@/lib/assistant-core/run-gate'
+import {
+  clearScreenshots,
+  getScreenshot,
+} from '@/lib/assistant-core/screenshot-store'
 import { useAssistantStore } from '@/stores/assistant-store'
 
 /**
@@ -254,6 +267,7 @@ function AssistantConversationInner({
     setMessages,
     stop,
     error,
+    regenerate,
     addToolResult,
   } = useChat({
     id: 'pairlens-assistant',
@@ -273,6 +287,7 @@ function AssistantConversationInner({
           navigate,
           resolveMarketRef,
           scheduleCheck,
+          toolCallId: toolCall.toolCallId,
         },
       )
     },
@@ -312,15 +327,8 @@ function AssistantConversationInner({
     [addToolResult],
   )
 
-  const handleSend = useCallback(
+  const send = useCallback(
     (text: string) => {
-      // A typed message while a question is open answers it. Sending a
-      // fresh turn instead would leave the tool call dangling, and a
-      // conversation with a dangling call cannot be continued at all.
-      if (pendingQuestion) {
-        answerQuestion(pendingQuestion.toolCallId, text)
-        return
-      }
       runStartRef.current = Date.now()
       runToolCallsRef.current = 0
       sendMessage({ text })
@@ -333,9 +341,46 @@ function AssistantConversationInner({
           // Best-effort.
         })
     },
-    [sendMessage, pendingQuestion, answerQuestion],
+    [sendMessage],
+  )
+
+  // One message may wait for the run in flight. A turn can span 28 steps
+  // and minutes of wall-clock, and the composer used to be dead for all of
+  // it, so a correction that occurred to the user halfway through was
+  // simply lost. A backlog is deliberately not supported: the second
+  // queued message would be answered with context from before an answer
+  // the user has not read yet.
+  const [queued, setQueued] = useState<string | null>(null)
+
+  const handleSend = useCallback(
+    (text: string) => {
+      // A typed message while a question is open answers it. Sending a
+      // fresh turn instead would leave the tool call dangling, and a
+      // conversation with a dangling call cannot be continued at all.
+      if (pendingQuestion) {
+        answerQuestion(pendingQuestion.toolCallId, text)
+        return
+      }
+      if (status !== 'ready') {
+        track('assistant_message_queued')
+        setQueued(text)
+        return
+      }
+      send(text)
+    },
+    [send, status, pendingQuestion, answerQuestion],
   )
   handleSendRef.current = handleSend
+
+  // Flush when the run is genuinely over, not merely idle. A parked
+  // approval or question also reads as `ready`, and sending there would
+  // strand the tool call the run is waiting on.
+  const parked = pendingQuestion !== null || hasParkedToolCall(messages)
+  useEffect(() => {
+    if (queued === null || status !== 'ready' || parked) return
+    setQueued(null)
+    send(queued)
+  }, [queued, status, parked, send])
 
   // A surface asked the assistant something. Consumed once. A seed that
   // does not send lands in the composer instead, so a "Build with AI"
@@ -360,10 +405,18 @@ function AssistantConversationInner({
     }))
   }, [seed, consumeSeed, handleSend])
 
+  const handleRegenerate = useCallback(() => {
+    track('assistant_regenerated', { after_error: Boolean(error) })
+    runStartRef.current = Date.now()
+    runToolCallsRef.current = 0
+    regenerate()
+  }, [regenerate, error])
+
   const handleClear = useCallback(() => {
     api.clearAiMessages(HISTORY_MARKET, HISTORY_KEY).catch(() => {
       // Best-effort.
     })
+    clearScreenshots()
     setMessages([])
     queryClient.invalidateQueries({
       queryKey: queryKeys.aiMessages(HISTORY_MARKET, HISTORY_KEY),
@@ -485,6 +538,22 @@ function AssistantConversationInner({
         )
       }
 
+      // The chart PNG the engine handed back during the call. Kept out of
+      // the tool result on purpose (see screenshot-store.ts), so this is
+      // the only place it can appear.
+      if (tool.toolName === 'take_screenshot') {
+        const dataUrl = getScreenshot(tool.toolCallId)
+        if (dataUrl) {
+          return (
+            <img
+              src={dataUrl}
+              alt={t('copilot.chartScreenshot')}
+              className="max-h-72 w-auto max-w-full rounded-xl"
+            />
+          )
+        }
+      }
+
       if (tool.toolName === 'deep_research') {
         const research = readResearchOutput(tool.output)
         if (research) return <AssistantResearchCard {...research} />
@@ -532,7 +601,7 @@ function AssistantConversationInner({
 
       return null
     },
-    [answerQuestion, addToolResult],
+    [answerQuestion, addToolResult, t],
   )
 
   // Starter chips follow the screen: on a chart they name the pair, on a
@@ -578,15 +647,30 @@ function AssistantConversationInner({
         quickActions={quickActions}
         onQuickAction={handleSend}
         starterContext={chart ? 'chart' : 'global'}
+        queued={queued}
+        onRegenerate={status === 'ready' ? handleRegenerate : undefined}
       />
       {error ? (
         <div className="shrink-0 px-3 pb-1">
           {billingErrorCode ? (
             <BillingErrorNotice code={billingErrorCode} />
           ) : (
-            <p className="text-destructive border-destructive/30 bg-destructive/5 rounded-xl border px-3 py-2 text-xs">
-              {t('assistantDock.genericError')}
-            </p>
+            // A failed run used to be a dead end: the prompt was gone and
+            // the only way forward was to type it again.
+            <div className="text-destructive border-destructive/30 bg-destructive/5 flex items-center gap-2 rounded-xl border px-3 py-2 text-xs">
+              <span className="min-w-0 flex-1">
+                {t('assistantDock.genericError')}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-destructive hover:text-destructive h-6 shrink-0 gap-1 rounded-full px-2 text-[11px]"
+                onClick={handleRegenerate}
+              >
+                <RefreshCw className="size-3" />
+                {t('copilot.retry')}
+              </Button>
+            </div>
           )}
         </div>
       ) : null}
@@ -594,6 +678,7 @@ function AssistantConversationInner({
         onSend={handleSend}
         status={status}
         onStop={stop}
+        queued={queued !== null}
         seedText={composerSeed.text}
         seedSignal={composerSeed.signal}
         placeholder={
@@ -615,6 +700,8 @@ function AssistantMessageList({
   quickActions,
   onQuickAction,
   starterContext,
+  queued,
+  onRegenerate,
 }: {
   messages: Array<UIMessage>
   status: string
@@ -622,10 +709,16 @@ function AssistantMessageList({
   quickActions: Array<string>
   onQuickAction: (text: string) => void
   starterContext: 'chart' | 'global'
+  /** Text waiting for the current run to finish, shown as a pending turn. */
+  queued: string | null
+  onRegenerate?: () => void
 }) {
   const { t } = useTranslation()
   const isStreaming = status === 'streaming' || status === 'submitted'
-  const { contentRef } = useStickToBottom({ enabled: isStreaming })
+  const { contentRef, scrollToBottom, isPinned } = useStickToBottom({
+    enabled: isStreaming,
+  })
+  const lastId = messages[messages.length - 1]?.id
 
   if (messages.length === 0) {
     return (
@@ -674,21 +767,67 @@ function AssistantMessageList({
   }
 
   return (
-    <div
-      className="ai-fade-y min-h-0 flex-1 overflow-y-auto overscroll-contain"
-      ref={contentRef}
-    >
-      <div className="flex flex-col gap-3.5 px-3.5 py-3">
-        {messages.map((message) => (
-          <CopilotChatMessage
-            key={message.id}
-            message={message}
-            toolLabels={ASSISTANT_ALL_TOOL_LABELS}
-            renderToolPart={renderToolPart}
-          />
-        ))}
-        {isStreaming ? <TypingIndicator /> : null}
+    // `relative` so the jump-to-latest button can hang over the scroller
+    // without a second wrapper in the flex chain.
+    <div className="relative flex min-h-0 flex-1 flex-col">
+      <div
+        className="ai-fade-y min-h-0 flex-1 overflow-y-auto overscroll-contain"
+        ref={contentRef}
+      >
+        <div className="flex flex-col gap-3.5 px-3.5 py-3">
+          {messages.map((message) => (
+            <CopilotChatMessage
+              key={message.id}
+              message={message}
+              toolLabels={ASSISTANT_ALL_TOOL_LABELS}
+              renderToolPart={renderToolPart}
+              // Only the newest answer can be regenerated. Rewriting an
+              // older one would throw away every turn after it.
+              onRegenerate={
+                message.id === lastId && message.role === 'assistant'
+                  ? onRegenerate
+                  : undefined
+              }
+            />
+          ))}
+          {queued !== null ? <QueuedTurn text={queued} /> : null}
+          {isStreaming ? <TypingIndicator /> : null}
+        </div>
       </div>
+
+      {/* Scrolling up during a long run parks the view, which is the
+          point — but then the answer lands off screen with nothing to say
+          so. The hook already tracked this; nothing had ever asked it. */}
+      {!isPinned && messages.length > 0 ? (
+        <button
+          type="button"
+          onClick={() => scrollToBottom()}
+          className="ai-glass-pill text-muted-foreground hover:text-foreground absolute inset-x-0 bottom-2 mx-auto flex h-7 w-fit items-center gap-1.5 rounded-full px-3 text-[11px]"
+        >
+          <ArrowDown className="size-3" />
+          {t('copilot.jumpToLatest')}
+        </button>
+      ) : null}
+    </div>
+  )
+}
+
+/**
+ * A message the user wrote while the assistant was still working. It is a
+ * real turn that has not left yet, so it looks like one and says plainly
+ * that it is waiting.
+ */
+function QueuedTurn({ text }: { text: string }) {
+  const { t } = useTranslation()
+  return (
+    <div className="flex min-w-0 flex-col items-end gap-1">
+      <div className="ai-bubble-user text-foreground min-w-0 max-w-[86%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] break-words opacity-60">
+        <p className="leading-relaxed whitespace-pre-wrap">{text}</p>
+      </div>
+      <p className="text-muted-foreground flex items-center gap-1 text-[10px]">
+        <Clock className="size-2.5" />
+        {t('copilot.queued')}
+      </p>
     </div>
   )
 }
