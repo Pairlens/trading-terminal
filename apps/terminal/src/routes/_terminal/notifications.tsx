@@ -9,6 +9,7 @@ import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 import { DesktopSurfaceNudge } from '@/components/feedback/desktop-nudge'
 import { PageHeader } from '@/components/page-header'
 import { lazyChunk } from '@/lib/lazy-chunk'
+import { parseEntityId } from '@/lib/routing/pages'
 
 const NotificationsBuilder = lazyChunk(() =>
   import('@/components/notifications/notifications-builder').then((m) => ({
@@ -16,12 +17,22 @@ const NotificationsBuilder = lazyChunk(() =>
   })),
 )
 
+/**
+ * `?alert=<rule id>` is which alert is open in the editor. Written on every
+ * selection, so the address names the rule the user is actually tuning.
+ */
+type NotificationsSearch = { alert?: string }
+
 export const Route = createFileRoute('/_terminal/notifications')({
   component: NotificationsPage,
+  validateSearch: (search: Record<string, unknown>): NotificationsSearch => ({
+    alert: parseEntityId(search.alert),
+  }),
 })
 
 function NotificationsPage() {
   const { t } = useTranslation()
+  const { alert } = Route.useSearch()
   return (
     <SidebarInset className="overflow-hidden">
       {/* Browser build only, once per device: alert rules are evaluated in
@@ -41,7 +52,7 @@ function NotificationsPage() {
             </div>
           }
         >
-          <NotificationsBuilder />
+          <NotificationsBuilder ruleId={alert ?? null} />
         </Suspense>
       </div>
     </SidebarInset>

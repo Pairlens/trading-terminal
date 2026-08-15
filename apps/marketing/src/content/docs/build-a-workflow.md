@@ -5,7 +5,7 @@ group: traders
 parent: automation
 order: 1
 eyebrow: For traders
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 6 min read
 ---
 
@@ -116,6 +116,13 @@ and the reason instead of letting you run something that would half-execute.
 While a workflow is executing you get a progress toast, and its steps report as
 executed or skipped, so a chain that took the fail branch is legible after the
 fact rather than mysterious.
+
+## Linking to one workflow
+
+The workflow on the canvas is in the address, as `/workflows?workflow=<id>`. A
+link opens that plan rather than an empty canvas, the back button walks between
+the ones you were comparing, and "add a second take-profit to this" needs no
+further explanation to the assistant.
 
 ## Guardrails still apply
 

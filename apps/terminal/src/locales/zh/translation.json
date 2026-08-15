@@ -1301,6 +1301,9 @@
       "bots": "部署一个交易机器人",
       "indicators": "写一个指标",
       "indicatorsScript": "改进 {{name}}",
+      "workflowSelected": "改进 {{name}} 工作流",
+      "alertSelected": "调整 {{name}} 提醒",
+      "botSelected": "查看 {{name}}",
       "accounts": "检查我的账户",
       "plugins": "帮我找一个插件",
       "workspaceStore": "设计我的工作区"

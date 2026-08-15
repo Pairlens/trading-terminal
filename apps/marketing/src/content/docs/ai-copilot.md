@@ -155,9 +155,28 @@ three.
 
 Every mounted surface publishes what it is showing, and the assistant is handed
 that description on every turn. A chart reports its pair, venue, timeframe,
-indicators and drawing count. A page reports which page it is. So "is this
-overbought" is a complete question, and "add an order book to this" has a
-referent.
+indicators and drawing count. So "is this overbought" is a complete question,
+and "add an order book to this" has a referent.
+
+Pages report the record they have open, not just their own name. Ask "what am I
+looking at" on Workflows and the answer is the workflow: its name, its id, how
+many steps it has, and whether the canvas is holding uncommitted edits. On Bots
+it is the deployment, with its mode, market and current run status, so an answer
+about "this bot" can never come back about the wrong one. Alerts report the rule,
+whether it is armed and which pairs it watches. The workbench reports the script
+and the file open in the editor. Discovery reports which asset-class section you
+are on, because that decides what every pane on it is listing.
+
+That means "tighten the stop on this" needs no follow-up question. The assistant
+already has the id, so it reads the record with `get_workflow`, `get_bot`,
+`get_alert` or `get_script` and gets on with it.
+
+Each of those records lives in the address too. `/workflows?workflow=…`,
+`/bots?bot=…`, `/notifications?alert=…`, `/indicators?script=…` and
+`/?section=…` are written as you click, so a link you send someone opens what
+you were looking at, and the back button walks between records instead of
+jumping straight off the page. A link to something you have since deleted drops
+the dead id rather than showing an empty screen.
 
 Some surfaces publish **actions** as well, and those become tools only while the
 surface is mounted. The workspace board is the clearest example: it publishes

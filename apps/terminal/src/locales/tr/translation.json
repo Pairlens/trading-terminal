@@ -1301,6 +1301,9 @@
       "bots": "Bir işlem botu devreye al",
       "indicators": "Bir gösterge yaz",
       "indicatorsScript": "{{name}} betiğini geliştir",
+      "workflowSelected": "{{name}} akışını geliştir",
+      "alertSelected": "{{name}} uyarısını ayarla",
+      "botSelected": "{{name}} botunu incele",
       "accounts": "Hesaplarımı gözden geçir",
       "plugins": "Bana bir eklenti bul",
       "workspaceStore": "Çalışma alanımı tasarla"

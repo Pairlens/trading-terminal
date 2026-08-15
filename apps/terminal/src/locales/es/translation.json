@@ -1301,6 +1301,9 @@
       "bots": "Despliega un bot de trading",
       "indicators": "Escribe un indicador",
       "indicatorsScript": "Mejora {{name}}",
+      "workflowSelected": "Mejora el flujo {{name}}",
+      "alertSelected": "Ajusta la alerta {{name}}",
+      "botSelected": "Revisa {{name}}",
       "accounts": "Revisa mis cuentas",
       "plugins": "Búscame un plugin",
       "workspaceStore": "Diseña mi espacio de trabajo"

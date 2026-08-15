@@ -1301,6 +1301,9 @@
       "bots": "Jalankan bot trading",
       "indicators": "Tulis sebuah indikator",
       "indicatorsScript": "Tingkatkan {{name}}",
+      "workflowSelected": "Perbaiki alur kerja {{name}}",
+      "alertSelected": "Sesuaikan peringatan {{name}}",
+      "botSelected": "Tinjau {{name}}",
       "accounts": "Tinjau akun saya",
       "plugins": "Carikan saya sebuah plugin",
       "workspaceStore": "Rancang ruang kerja saya"
