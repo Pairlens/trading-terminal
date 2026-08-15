@@ -219,6 +219,8 @@ function toMarketSummary(
   return {
     id,
     title: marketTitle(raw, info, id),
+    ...opt('shortTitle', marketShortTitle(info)),
+    ...opt('imageUrl', str(info['icon']) || str(info['image'])),
     outcomes,
     // Neither venue populates the unified `volume`/`end` on a market row;
     // both keep them on the venue payload, and `expiry` is where ccxt puts
@@ -260,6 +262,24 @@ function marketTitle(
     str(info['groupItemTitle'])
   if (!title) return id
   return withStrike(title, str(info['yes_sub_title']))
+}
+
+/**
+ * The market's short label within its event, or '' when the venue has none.
+ *
+ * This is the inverse of `marketTitle`: that one wants the longest readable
+ * thing, because a pair picker row has to stand on its own. This one wants the
+ * shortest thing that still tells two siblings apart, because it goes where a
+ * ticker went — a marquee chip, the top-bar title, a watchlist row. On
+ * "Democratic Presidential Nominee 2028" the question is 68 characters and
+ * this is "Gavin Newsom".
+ *
+ * A binary event usually publishes neither field, and that is the correct
+ * answer rather than a gap: there are no siblings to separate, so the event
+ * heading already names the market and the display layer falls back to it.
+ */
+function marketShortTitle(info: Record<string, unknown>): string {
+  return str(info['groupItemTitle']) || str(info['yes_sub_title'])
 }
 
 /**
@@ -324,6 +344,7 @@ function toInstrument(
     featured: false,
     predictionMarketId: market.id,
     outcome: outcome.label,
+    ...(market.shortTitle ? { shortTitle: market.shortTitle } : {}),
     eventId: event.id,
     eventTitle: event.title,
     ...(market.endMs !== undefined ? { endMs: market.endMs } : {}),

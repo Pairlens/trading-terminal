@@ -5171,7 +5171,16 @@
     "desktopOnlyTitle": "Los eventos requieren la app de escritorio",
     "desktopOnlyDescription": "La API de esta plataforma rechaza los orígenes del navegador, así que su tablero de eventos solo es accesible desde la app de escritorio.",
     "venueDesktopOnly": "Los eventos de {{venue}} requieren la app de escritorio.",
-    "volume": "Vol. {{value}}"
+    "volume": "Vol. {{value}}",
+    "moreMarkets_one": "Ver 1 mercado más",
+    "moreMarkets_other": "Ver {{count}} mercados más",
+    "moreOutcomes_one": "+1 más",
+    "moreOutcomes_other": "+{{count}} más",
+    "closes": "Cierra",
+    "volumeLabel": "Volumen",
+    "liquidityLabel": "Liquidez",
+    "marketsLabel": "Mercados",
+    "noMarketsBody": "Este evento no tiene mercados abiertos ahora mismo."
   },
   "predictionPositions": {
     "connect": "Conectar una cuenta",

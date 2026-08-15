@@ -5215,7 +5215,20 @@
     "desktopOnlyTitle": "Wydarzenia wymagają aplikacji desktopowej",
     "desktopOnlyDescription": "API tej giełdy odrzuca żądania z przeglądarki, więc jej tablica wydarzeń jest dostępna tylko w wersji desktopowej.",
     "venueDesktopOnly": "Wydarzenia {{venue}} wymagają aplikacji desktopowej.",
-    "volume": "Wol. {{value}}"
+    "volume": "Wol. {{value}}",
+    "moreMarkets_one": "Pokaż jeszcze 1 rynek",
+    "moreMarkets_few": "Pokaż jeszcze {{count}} rynki",
+    "moreMarkets_many": "Pokaż jeszcze {{count}} rynków",
+    "moreMarkets_other": "Pokaż jeszcze {{count}} rynku",
+    "moreOutcomes_one": "Jeszcze 1",
+    "moreOutcomes_few": "Jeszcze {{count}}",
+    "moreOutcomes_many": "Jeszcze {{count}}",
+    "moreOutcomes_other": "Jeszcze {{count}}",
+    "closes": "Zamknięcie",
+    "volumeLabel": "Wolumen",
+    "liquidityLabel": "Płynność",
+    "marketsLabel": "Rynki",
+    "noMarketsBody": "To wydarzenie nie ma teraz otwartych rynków."
   },
   "predictionPositions": {
     "connect": "Podłącz konto",

@@ -52,7 +52,7 @@ import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useMarketData } from '@/lib/market-data-provider'
-import { PairAvatar } from '@/components/pair-picker/pair-avatar'
+import { PairAvatar, PairSymbol } from '@/components/pair-picker/pair-avatar'
 
 /** Lists at or below this length render as a plain map. */
 const VIRTUALIZE_ABOVE = 30
@@ -338,7 +338,13 @@ const WatchlistRow = memo(function WatchlistRow({
             ? t('mobile.panels.trading')
             : t('mobile.shell.readOnly'),
       })}
-      title={<span className="font-mono">{instrument.symbol}</span>}
+      title={
+        <PairSymbol
+          assetClass={instrument.assetClass}
+          className="font-mono"
+          symbol={instrument.symbol}
+        />
+      }
       trailing={
         <TrendQuoteCell
           market={market}

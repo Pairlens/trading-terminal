@@ -36,6 +36,7 @@ import {
 } from '../lib/prediction-preview'
 import { PredictionEventCard } from './prediction-event-card'
 import { SectionHeader } from './section-header'
+import type { PredictionEventRow } from '../lib/prediction-preview'
 import {
   usePredictionEvents,
   usePredictionVenues,
@@ -70,6 +71,17 @@ export const PredictionMarketsSection = memo(
       [pushOverlay],
     )
 
+    const openEvent = useCallback(
+      (row: PredictionEventRow) =>
+        pushOverlay({
+          kind: 'predictionEvent',
+          event: row.event,
+          venue: row.market,
+          venueLabel: row.label,
+        }),
+      [pushOverlay],
+    )
+
     // Hooks first, gate second: the venue list is the compliance check and it
     // cannot short-circuit the query hook above it.
     if (venues.length === 0) return null
@@ -94,6 +106,7 @@ export const PredictionMarketsSection = memo(
             <PredictionEventCard
               compact
               key={`${row.market}:${row.event.id}`}
+              onOpenEvent={openEvent}
               onOutcome={openOutcome}
               row={row}
               showVenue={shouldNameVenues(rows)}

@@ -15,6 +15,7 @@ import {
 import type { InstrumentRef, MarketRef } from '@pairlens/shared/market-ref'
 
 import type { TickDirection } from '@/hooks/use-live-pair-price'
+import { PairSymbol } from '@/components/pair-picker/pair-avatar'
 import { useLivePairPrice } from '@/hooks/use-live-pair-price'
 import { useMarketRefOrNull } from '@/lib/market-ref/use-market-ref'
 import { useRecentPairs } from '@/lib/recent-tickers'
@@ -231,14 +232,18 @@ const MarqueeChip = memo(function MarqueeChip({
         onClick={() => onSelect(marketRef)}
         className="flex h-full cursor-pointer items-center gap-1.5 py-0 pl-3 pr-1.5"
       >
-        <span
+        {/* Bounded, because one of these can be an event slug. The chips
+            refuse to shrink (the track's seamless loop depends on it), so an
+            unbounded chip does not compress — it runs past the viewport and
+            the second copy of the track lays out on top of it. */}
+        <PairSymbol
+          symbol={symbol}
+          assetClass={instrument.cls}
           className={cn(
-            'font-medium',
+            'min-w-0 max-w-56 font-medium',
             isActive ? 'text-foreground' : 'text-muted-foreground',
           )}
-        >
-          {symbol}
-        </span>
+        />
         <span
           className={cn(
             'font-mono tabular-nums transition-colors',

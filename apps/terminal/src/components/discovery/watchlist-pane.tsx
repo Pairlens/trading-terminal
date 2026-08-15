@@ -731,7 +731,11 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
         size="sm"
       />
       <div className="min-w-0 flex-1">
-        <PairSymbol symbol={inst.symbol} className="text-sm" />
+        <PairSymbol
+          symbol={inst.symbol}
+          assetClass={inst.assetClass}
+          className="text-sm"
+        />
         <p className="truncate text-xs text-muted-foreground">{inst.name}</p>
       </div>
       {/* Trend cue. It grows with the pane and is the first thing to go when

@@ -5171,7 +5171,16 @@
     "desktopOnlyTitle": "イベント閲覧にはデスクトップアプリが必要です",
     "desktopOnlyDescription": "この取引所の API はブラウザからのオリジンを拒否するため、イベント一覧はデスクトップ版からのみ利用できます。",
     "venueDesktopOnly": "{{venue}} のイベントにはデスクトップアプリが必要です。",
-    "volume": "出来高 {{value}}"
+    "volume": "出来高 {{value}}",
+    "moreMarkets_one": "他 1 件のマーケットを表示",
+    "moreMarkets_other": "他 {{count}} 件のマーケットを表示",
+    "moreOutcomes_one": "他 1 件",
+    "moreOutcomes_other": "他 {{count}} 件",
+    "closes": "終了",
+    "volumeLabel": "出来高",
+    "liquidityLabel": "流動性",
+    "marketsLabel": "マーケット",
+    "noMarketsBody": "このイベントには現在オープンなマーケットがありません。"
   },
   "predictionPositions": {
     "connect": "アカウントを接続",

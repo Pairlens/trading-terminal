@@ -43,6 +43,12 @@ export type PredictionDirectoryEntry = {
   outcome: string
   /** The market question — what the row shows instead of the pair key. */
   name: string
+  /**
+   * The market's short label within its event ('Gavin Newsom', 'Above 13.5M').
+   * This is what a ticker slot renders; the question is too long for one and
+   * the pair key is unreadable in one.
+   */
+  shortTitle?: string
   /** Event headline, when it differs from the question. */
   eventTitle?: string
   /** Venue event grouping this market belongs to. */
@@ -130,6 +136,7 @@ function shallowEqual(
     a.predictionMarketId === b.predictionMarketId &&
     a.outcome === b.outcome &&
     a.name === b.name &&
+    a.shortTitle === b.shortTitle &&
     a.eventTitle === b.eventTitle &&
     a.eventId === b.eventId &&
     a.endMs === b.endMs

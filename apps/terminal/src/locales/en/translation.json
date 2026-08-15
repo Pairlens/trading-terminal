@@ -5171,7 +5171,16 @@
     "desktopOnlyTitle": "Events need the desktop app",
     "desktopOnlyDescription": "This venue's API refuses browser origins, so its event board is only reachable from the desktop build.",
     "venueDesktopOnly": "{{venue}} events need the desktop app.",
-    "volume": "Vol {{value}}"
+    "volume": "Vol {{value}}",
+    "moreMarkets_one": "Show 1 more market",
+    "moreMarkets_other": "Show {{count}} more markets",
+    "moreOutcomes_one": "+1 more",
+    "moreOutcomes_other": "+{{count}} more",
+    "closes": "Closes",
+    "volumeLabel": "Volume",
+    "liquidityLabel": "Liquidity",
+    "marketsLabel": "Markets",
+    "noMarketsBody": "This event has no open markets right now."
   },
   "predictionPositions": {
     "connect": "Connect an account",

@@ -48,6 +48,7 @@ import {
 } from './lib/mobile-history'
 import { stackWithOverlay } from './lib/overlay-stack'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
+import type { PredictionEventSummary } from '@pairlens/shared/instrument-types'
 import type { ShellEntries } from './lib/mobile-history'
 import type { AnyRouter } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
@@ -83,6 +84,18 @@ export type MobileOverlay =
   | { kind: 'markets' }
   /** Discover's "All events" — every open prediction contract, as a screen. */
   | { kind: 'events' }
+  /**
+   * One event in full: every market, every outcome. The event travels ON the
+   * overlay rather than as an id, because the two surfaces that open it
+   * (Discover's strip and the events screen) browse with different scopes, so
+   * an id would resolve against a cache entry that may not hold it.
+   */
+  | {
+      kind: 'predictionEvent'
+      venue: string
+      venueLabel: string
+      event: PredictionEventSummary
+    }
   /** Discover's Fear & Greed card, opened out into the index's history. */
   | { kind: 'fearGreed' }
   /** Discover's P&L card, opened out into the window and the holdings. */

@@ -5171,7 +5171,16 @@
     "desktopOnlyTitle": "이벤트를 보려면 데스크톱 앱이 필요합니다",
     "desktopOnlyDescription": "이 거래소의 API는 브라우저 출처를 거부하므로 이벤트 보드는 데스크톱 빌드에서만 이용할 수 있습니다.",
     "venueDesktopOnly": "{{venue}} 이벤트는 데스크톱 앱이 필요합니다.",
-    "volume": "거래대금 {{value}}"
+    "volume": "거래대금 {{value}}",
+    "moreMarkets_one": "1개 마켓 더 보기",
+    "moreMarkets_other": "{{count}}개 마켓 더 보기",
+    "moreOutcomes_one": "+1개 더",
+    "moreOutcomes_other": "+{{count}}개 더",
+    "closes": "마감",
+    "volumeLabel": "거래량",
+    "liquidityLabel": "유동성",
+    "marketsLabel": "마켓",
+    "noMarketsBody": "이 이벤트에는 현재 열린 마켓이 없습니다."
   },
   "predictionPositions": {
     "connect": "계정 연결",

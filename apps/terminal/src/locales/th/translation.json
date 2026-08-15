@@ -5171,7 +5171,16 @@
     "desktopOnlyTitle": "การดูเหตุการณ์ต้องใช้แอปเดสก์ท็อป",
     "desktopOnlyDescription": "API ของแพลตฟอร์มนี้ปฏิเสธคำขอจากเบราว์เซอร์ กระดานเหตุการณ์จึงเข้าถึงได้เฉพาะจากแอปเดสก์ท็อป",
     "venueDesktopOnly": "เหตุการณ์ของ {{venue}} ต้องใช้แอปเดสก์ท็อป",
-    "volume": "วอลุ่ม {{value}}"
+    "volume": "วอลุ่ม {{value}}",
+    "moreMarkets_one": "ดูอีก 1 ตลาด",
+    "moreMarkets_other": "ดูอีก {{count}} ตลาด",
+    "moreOutcomes_one": "อีก 1",
+    "moreOutcomes_other": "อีก {{count}}",
+    "closes": "ปิด",
+    "volumeLabel": "ปริมาณ",
+    "liquidityLabel": "สภาพคล่อง",
+    "marketsLabel": "ตลาด",
+    "noMarketsBody": "กิจกรรมนี้ยังไม่มีตลาดที่เปิดอยู่ในขณะนี้"
   },
   "predictionPositions": {
     "connect": "เชื่อมต่อบัญชี",

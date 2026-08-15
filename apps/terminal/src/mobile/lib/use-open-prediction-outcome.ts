@@ -36,7 +36,7 @@ import { haptic } from '@/lib/haptics'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useRecentPairs } from '@/lib/recent-tickers'
 import { registerPredictionOutcome } from '@/stores/prediction-directory-store'
-import { predictionOutcomeName } from '@/lib/predictions/event-labels'
+import { predictionEntryFor } from '@/lib/predictions/pin'
 
 export type OpenPredictionOutcome = (
   /** Venue market id the row came from. */
@@ -58,25 +58,10 @@ export function useOpenPredictionOutcome(): OpenPredictionOutcome {
   return useCallback(
     (market, event, predictionMarket, outcome) => {
       haptic('selection')
-      registerPredictionOutcome(outcome.pairKey, {
-        market,
-        predictionMarketId: predictionMarket.id,
-        outcome: outcome.label,
-        // The same `<question> - <outcome>` join the connectors build `name`
-        // from, with the venue's opaque market id resolved to something
-        // readable first.
-        name: predictionOutcomeName(
-          predictionMarket.title,
-          event.title,
-          outcome.label,
-          event.markets.length,
-        ),
-        eventTitle: event.title,
-        eventId: event.id,
-        ...(predictionMarket.endMs !== undefined
-          ? { endMs: predictionMarket.endMs }
-          : {}),
-      })
+      registerPredictionOutcome(
+        outcome.pairKey,
+        predictionEntryFor(market, event, predictionMarket, outcome.label),
+      )
       setAssetClassMap((prev) => ({ ...prev, [outcome.pairKey]: 'prediction' }))
       if (market !== focusedVenue) setFocusedVenue(market)
       setFocusedPair(outcome.pairKey, 'prediction')

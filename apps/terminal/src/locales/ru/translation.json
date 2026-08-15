@@ -5215,7 +5215,20 @@
     "desktopOnlyTitle": "Для событий нужно настольное приложение",
     "desktopOnlyDescription": "API этой площадки отклоняет запросы из браузера, поэтому её доска событий доступна только в настольной сборке.",
     "venueDesktopOnly": "События {{venue}} доступны только в настольном приложении.",
-    "volume": "Объём {{value}}"
+    "volume": "Объём {{value}}",
+    "moreMarkets_one": "Показать ещё 1 рынок",
+    "moreMarkets_few": "Показать ещё {{count}} рынка",
+    "moreMarkets_many": "Показать ещё {{count}} рынков",
+    "moreMarkets_other": "Показать ещё {{count}} рынка",
+    "moreOutcomes_one": "Ещё 1",
+    "moreOutcomes_few": "Ещё {{count}}",
+    "moreOutcomes_many": "Ещё {{count}}",
+    "moreOutcomes_other": "Ещё {{count}}",
+    "closes": "Закрытие",
+    "volumeLabel": "Объём",
+    "liquidityLabel": "Ликвидность",
+    "marketsLabel": "Рынки",
+    "noMarketsBody": "У этого события сейчас нет открытых рынков."
   },
   "predictionPositions": {
     "connect": "Подключить аккаунт",

@@ -125,7 +125,11 @@ const RecentTickerRow = memo(function RecentTickerRow({
         />
       )}
       <div className="min-w-0 flex-1">
-        <PairSymbol symbol={symbol} className="text-sm" />
+        <PairSymbol
+          symbol={symbol}
+          assetClass={inst?.assetClass}
+          className="text-sm"
+        />
         {inst && (
           <p className="truncate text-xs text-muted-foreground">{inst.name}</p>
         )}

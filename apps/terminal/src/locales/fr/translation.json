@@ -5171,7 +5171,16 @@
     "desktopOnlyTitle": "Les événements nécessitent l'application de bureau",
     "desktopOnlyDescription": "L'API de cette plateforme refuse les origines navigateur : son tableau d'événements n'est accessible que depuis la version bureau.",
     "venueDesktopOnly": "Les événements {{venue}} nécessitent l'application de bureau.",
-    "volume": "Vol. {{value}}"
+    "volume": "Vol. {{value}}",
+    "moreMarkets_one": "Voir 1 marché de plus",
+    "moreMarkets_other": "Voir {{count}} marchés de plus",
+    "moreOutcomes_one": "+1 autre",
+    "moreOutcomes_other": "+{{count}} autres",
+    "closes": "Clôture",
+    "volumeLabel": "Volume",
+    "liquidityLabel": "Liquidité",
+    "marketsLabel": "Marchés",
+    "noMarketsBody": "Cet événement n'a aucun marché ouvert pour le moment."
   },
   "predictionPositions": {
     "connect": "Connecter un compte",

@@ -144,6 +144,8 @@ const importConnectAccountSheet = () =>
 const importNewsReaderSheet = () => import('./screens/news-reader-sheet')
 const importMarketsScreen = () => import('./screens/markets-screen')
 const importEventsScreen = () => import('./screens/events-screen')
+const importPredictionEventScreen = () =>
+  import('./screens/prediction-event-screen')
 const importAccountDetailScreen = () =>
   import('./screens/account-detail-screen')
 const importFearGreedScreen = () => import('./screens/fear-greed-screen')
@@ -157,6 +159,7 @@ const ConnectAccountSheet = lazyChunk(importConnectAccountSheet)
 const NewsReaderSheet = lazyChunk(importNewsReaderSheet)
 const MarketsScreen = lazyChunk(importMarketsScreen)
 const EventsScreen = lazyChunk(importEventsScreen)
+const PredictionEventScreen = lazyChunk(importPredictionEventScreen)
 const AccountDetailScreen = lazyChunk(importAccountDetailScreen)
 const FearGreedScreen = lazyChunk(importFearGreedScreen)
 const PnlScreen = lazyChunk(importPnlScreen)
@@ -552,6 +555,8 @@ const OverlayHost = memo(function OverlayHost({
       return <MarketsScreen onClose={onClose} overlay={overlay} />
     case 'events':
       return <EventsScreen onClose={onClose} overlay={overlay} />
+    case 'predictionEvent':
+      return <PredictionEventScreen onClose={onClose} overlay={overlay} />
     case 'accountDetail':
       return <AccountDetailScreen onClose={onClose} overlay={overlay} />
     case 'fearGreed':

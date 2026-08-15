@@ -18,10 +18,29 @@
 import { useMemo } from 'react'
 
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { predictionTicker } from '@/lib/predictions/event-labels'
 import { usePredictionOutcome } from '@/stores/prediction-directory-store'
 
 /** Reactive read of the outcome a pair key names, or null. */
 export { usePredictionOutcome }
+
+/**
+ * The pair as a single line of plain text — for the places that cannot render
+ * a component: the chart's watermark (painted into WebGL), the copilot's
+ * heading, an aria-label.
+ *
+ * A pair key passes through untouched. A pinned prediction outcome becomes
+ * `Gavin Newsom · Yes`, because the alternative is a hundred characters of
+ * event slug drawn across the chart at 48px.
+ */
+export function usePairDisplayLabel(pairKey: string): string {
+  const pinned = usePredictionOutcome(pairKey)
+  return useMemo(() => {
+    if (!pinned) return pairKey
+    const { subject, outcome } = predictionTicker(pinned, pairKey)
+    return outcome ? `${subject} · ${outcome}` : subject
+  }, [pinned, pairKey])
+}
 
 export function useIsPredictionPair(pairKey: string, market?: string): boolean {
   const pinned = usePredictionOutcome(pairKey)

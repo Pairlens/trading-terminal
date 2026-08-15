@@ -26,7 +26,7 @@
  * cards are variable-height (one to twenty markets each), which is the shape a
  * virtualizer is worst at; the desktop pane renders the same rows unwindowed.
  */
-import { memo, useDeferredValue, useMemo, useState } from 'react'
+import { memo, useCallback, useDeferredValue, useMemo, useState } from 'react'
 import { Search, Vote, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -40,7 +40,9 @@ import {
   mergePredictionEvents,
   shouldNameVenues,
 } from '../lib/prediction-preview'
+import { useMobileActions } from '../mobile-focus-context'
 import type { MobileOverlay } from '../mobile-focus-context'
+import type { PredictionEventRow } from '../lib/prediction-preview'
 import {
   usePredictionEvents,
   usePredictionVenues,
@@ -55,6 +57,17 @@ export default memo(function EventsScreen({
   const { t } = useTranslation()
   const venues = usePredictionVenues()
   const openOutcome = useOpenPredictionOutcome()
+  const { pushOverlay } = useMobileActions()
+  const openEvent = useCallback(
+    (row: PredictionEventRow) =>
+      pushOverlay({
+        kind: 'predictionEvent',
+        event: row.event,
+        venue: row.market,
+        venueLabel: row.label,
+      }),
+    [pushOverlay],
+  )
 
   const [query, setQuery] = useState('')
   const deferredQuery = useDeferredValue(query.trim())
@@ -135,6 +148,7 @@ export default memo(function EventsScreen({
           {rows.map((row) => (
             <PredictionEventCard
               key={`${row.market}:${row.event.id}`}
+              onOpenEvent={openEvent}
               onOutcome={openOutcome}
               row={row}
               showVenue={shouldNameVenues(rows)}
