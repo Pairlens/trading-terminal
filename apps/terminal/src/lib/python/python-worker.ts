@@ -18,6 +18,7 @@
  */
 import { loadPyodide, version as pyodideVersion } from 'pyodide'
 
+import { installNetworkGuard } from '../plugins/sandbox/network-guard'
 import { alignOutputs } from './align'
 import { KNOWN_IMPORT_DISTS } from './libraries'
 import {
@@ -40,7 +41,10 @@ import type {
   PythonToHostMessage,
   RequestSeries,
 } from './protocol'
-import { installNetworkGuard } from '@/lib/plugins/sandbox/network-guard'
+// Relative on purpose: worker entries are bundled by Vite's SEPARATE worker
+// pipeline, which does not run the tsconfig-paths plugin, so an `@/` import
+// here resolves in dev and the typecheck but fails the production build.
+// The sandbox worker next to the guard imports it the same way.
 
 /**
  * Everything the runtime itself reaches for, and nothing else.
