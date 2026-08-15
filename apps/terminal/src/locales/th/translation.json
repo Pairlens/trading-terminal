@@ -1290,6 +1290,9 @@
       "bots": "เปิดใช้งานบอทเทรด",
       "indicators": "เขียนอินดิเคเตอร์",
       "indicatorsScript": "ปรับปรุง {{name}}",
+      "workflowSelected": "ปรับปรุงเวิร์กโฟลว์ {{name}}",
+      "alertSelected": "ปรับการแจ้งเตือน {{name}}",
+      "botSelected": "ตรวจสอบ {{name}}",
       "accounts": "ตรวจสอบบัญชีของฉัน",
       "plugins": "หาปลั๊กอินให้หน่อย",
       "workspaceStore": "ออกแบบพื้นที่ทำงานของฉัน"

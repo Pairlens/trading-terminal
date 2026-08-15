@@ -3,11 +3,16 @@
 // ── The surfaces the terminal always has ─────────────────────────────
 //
 // Two registrations that need no cooperation from any route or pane:
-// the page the user is on, and the chart they are looking at. Both are
-// derivable from above the routed content, so adding the assistant cost
-// the routes nothing.
+// the address the user is at, and the chart they are looking at. Both
+// are derivable from above the routed content, so adding the assistant
+// cost the routes nothing.
 //
-// Anything richer than this a pane publishes for itself with
+// The address is worth more than it used to be. Every page that shows one
+// record at a time now carries that record's id in a search param, so
+// this floor already names the workflow, bot, alert or script on screen
+// before any page-specific surface has a chance to mount.
+//
+// Anything richer than this a page or pane publishes for itself with
 // `useAssistantSurface`.
 
 import { useSyncExternalStore } from 'react'
@@ -18,74 +23,55 @@ import { useAssistantSurface } from './use-assistant-surface'
 import type { ChartServiceHandle } from './chart-service'
 import type { AssistantSuggestion } from './types'
 import { useServiceRegistry } from '@/lib/service-registry-context'
+import { TERMINAL_PAGES, pageForPath } from '@/lib/routing/pages'
 
 // ── The page ─────────────────────────────────────────────────────────
 
 /**
- * Route prefix to what the assistant should offer there. Longest match
- * wins, so `/workspace-store` is not swallowed by `/workspace`.
+ * The address, read back through the page table. Every page that shows
+ * one thing at a time carries that thing's id in a search param, so this
+ * surface can name it — "the Workflows page, workflow wf-42 open" — even
+ * before the page's own surface has mounted, and for the pages that never
+ * publish one of their own.
+ *
+ * Lowest rank of anything mounted: a page that describes itself always
+ * knows more than its URL does.
  */
-const ROUTE_SURFACES: Array<{
-  prefix: string
-  page: string
-  suggestion: string
-}> = [
-  {
-    prefix: '/workspace-store',
-    page: 'the Workspace Store',
-    suggestion: 'workspaceStore',
-  },
-  {
-    prefix: '/notifications',
-    page: 'the alerts and notifications page',
-    suggestion: 'notifications',
-  },
-  {
-    prefix: '/indicators',
-    page: 'the indicator and strategy workbench',
-    suggestion: 'indicators',
-  },
-  { prefix: '/workflows', page: 'the workflows page', suggestion: 'workflows' },
-  {
-    prefix: '/accounts',
-    page: 'the accounts page, where venues and wallets are connected',
-    suggestion: 'accounts',
-  },
-  { prefix: '/plugins', page: 'the Plugin Store', suggestion: 'plugins' },
-  { prefix: '/bots', page: 'the bots page', suggestion: 'bots' },
-]
-
-const DISCOVERY = {
-  page: 'the discovery board: markets, movers and news',
-  suggestion: 'discovery',
-}
-
-function routeSurfaceFor(pathname: string) {
-  const match = ROUTE_SURFACES.find((entry) =>
-    pathname.startsWith(entry.prefix),
-  )
-  if (match) return match
-  if (pathname === '/') return { prefix: '/', ...DISCOVERY }
-  return null
-}
-
 function RouteSurface() {
-  const { pathname } = useLocation()
-  const match = routeSurfaceFor(pathname)
+  const { pathname, search, searchStr } = useLocation()
+  const page = pageForPath(pathname)
+  const entry = page ? TERMINAL_PAGES[page] : null
+  const href = `${pathname}${searchStr}`
+
+  const target =
+    entry?.targetParam && typeof search === 'object' && search !== null
+      ? (search as Record<string, unknown>)[entry.targetParam]
+      : undefined
+  const targetId = typeof target === 'string' ? target : null
 
   useAssistantSurface({
     id: 'route',
-    // Lowest rank: any pane that describes itself is more specific than
-    // the page it sits on.
     getPriority: () => -100,
-    revision: pathname,
-    getContext: () => ({
-      summary: match
-        ? `The user is on ${match.page} (${pathname}).`
-        : `The user is on ${pathname}.`,
-    }),
+    revision: href,
+    getContext: () => {
+      if (!entry) return { summary: `The user is at ${href}.` }
+      const naming =
+        targetId && entry.targetNoun
+          ? ` The address names the ${entry.targetNoun} "${targetId}", which is the one they are looking at.`
+          : ''
+      return {
+        summary: `The user is on ${entry.screen} (${href}).${naming}`,
+        detail: {
+          url: href,
+          page,
+          ...(targetId && entry.targetParam
+            ? { [entry.targetParam]: targetId }
+            : {}),
+        },
+      }
+    },
     getSuggestion: (): AssistantSuggestion | null =>
-      match ? { key: `assistantDock.suggest.${match.suggestion}` } : null,
+      entry ? { key: `assistantDock.suggest.${entry.suggestion}` } : null,
   })
 
   return null

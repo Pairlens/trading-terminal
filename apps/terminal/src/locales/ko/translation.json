@@ -1290,6 +1290,9 @@
       "bots": "트레이딩 봇을 배포해 줘",
       "indicators": "지표를 작성해 줘",
       "indicatorsScript": "{{name}} 개선해 줘",
+      "workflowSelected": "{{name}} 워크플로 개선하기",
+      "alertSelected": "{{name}} 알림 조정하기",
+      "botSelected": "{{name}} 살펴보기",
       "accounts": "내 계정을 점검해 줘",
       "plugins": "플러그인을 찾아 줘",
       "workspaceStore": "내 워크스페이스를 설계해 줘"

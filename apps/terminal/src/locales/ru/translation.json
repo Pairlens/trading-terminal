@@ -1298,6 +1298,9 @@
       "bots": "Запусти торгового бота",
       "indicators": "Напиши индикатор",
       "indicatorsScript": "Улучши {{name}}",
+      "workflowSelected": "Улучши сценарий {{name}}",
+      "alertSelected": "Настрой оповещение {{name}}",
+      "botSelected": "Проверь {{name}}",
       "accounts": "Проверь мои аккаунты",
       "plugins": "Найди мне плагин",
       "workspaceStore": "Спроектируй моё рабочее пространство"

@@ -5,7 +5,7 @@ group: traders
 parent: automation
 order: 2
 eyebrow: For traders
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 7 min read
 ---
 
@@ -203,6 +203,12 @@ With several Pairlens windows open, exactly one is elected leader through a Web
 Lock, so an alert fires once rather than once per window. Alerts sync across
 your devices when you are signed in, but evaluation and delivery happen on the
 machine that is running: nothing fires while Pairlens is closed.
+
+## Linking to one alert
+
+The rule you have open is in the address, as `/notifications?alert=<id>`. That
+makes an alert something you can link to, walk back to, and point the assistant
+at without naming it twice.
 
 ## Alerts against workflows against bots
 

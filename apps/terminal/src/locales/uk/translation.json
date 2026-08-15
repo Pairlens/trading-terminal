@@ -1298,6 +1298,9 @@
       "bots": "Запусти торгового бота",
       "indicators": "Напиши індикатор",
       "indicatorsScript": "Покращ {{name}}",
+      "workflowSelected": "Покращ сценарій {{name}}",
+      "alertSelected": "Налаштуй сповіщення {{name}}",
+      "botSelected": "Перевір {{name}}",
       "accounts": "Переглянь мої облікові записи",
       "plugins": "Знайди мені плагін",
       "workspaceStore": "Спроєктуй мій робочий простір"
