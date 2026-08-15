@@ -74,10 +74,10 @@ function describeAlerts(alerts: Array<AutomationAlertContext>): string {
 const WORKFLOW_GUIDE = [
   '## What a workflow is',
   'A workflow is an order plan that hangs off a trade the USER places. The step with id "trigger" is that order, arriving from the trade panel with its side, size, pair and market; every other step reacts to it. So workflows are brackets, ladders, scale-outs and timed follow-ups, never price watchers — a rule that should fire on its own is an alert, and belongs on the Notifications page.',
-  '- Steps come from the installed plugins. Call get_step_reference and use its type ids and config keys verbatim; a type you invent silently drops out of the graph.',
+  '- Steps come from the installed plugins. Call get_step_reference first, then build each step by copying its `defaults` object and changing only the keys you mean to change. Type ids and config keys are exact and are NOT the display labels ("Close %" is the label, `sizePercent` is the key); inventing either is how a graph ends up invalid.',
   '- Sizes downstream are usually percentages of what the trigger filled, which is what makes one workflow work at any order size.',
   '- Write the whole graph in one update_workflow call: it replaces steps and edges wholesale, so include everything you want to keep, trigger included.',
-  '- Read the validation you get back. "Must have a trigger step", a dangling edge or a cycle means the graph is not runnable, and fixing it is your job, not the user’s.',
+  '- Read the validation you get back. "Must have a trigger step", a dangling edge or a cycle means the graph is not runnable, and fixing it is your job, not the user’s. When a step fails validation the result carries that step type’s `expectedConfig`: use it and fix the call, rather than trying another spelling.',
 ].join('\n')
 
 const NOTIFICATION_GUIDE = [
@@ -86,6 +86,7 @@ const NOTIFICATION_GUIDE = [
   '- create_simple_alert covers a price level and a percent move, arms itself on creation, and needs no canvas. Almost every request is one of these two. Use it.',
   '- create_alert_flow is for what the simple form cannot say: a condition, a non-price event (an order filling, a signal, a candle close), or a channel like a webhook. It costs the user a graph to maintain, so only reach for it when they need it.',
   '- Every flow needs at least one event step and at least one channel step, and a rule with no binding watches nothing. Bind it with bind_alert.',
+  '- Build each step by copying its `defaults` from get_step_reference and changing only what you mean to change. Config keys are exact and are not the display labels; when validation rejects a step, the result carries that type’s `expectedConfig`, so fix the call rather than guessing another spelling.',
   '- Delivery: in-app and OS notifications are safe defaults. Never switch on Telegram unless the user asks for it and has already connected a bot token, and never invent a webhook URL.',
   '- Cooldowns exist so one piece of news is not forty notifications. Simple alerts get a sensible one automatically; say what it is when it matters.',
 ].join('\n')
