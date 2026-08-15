@@ -4,7 +4,7 @@ description: Deploy a Python strategy to a market and let it trade. Sizing, guar
 group: traders
 order: 6
 eyebrow: For traders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 7 min read
 ---
 
@@ -54,17 +54,16 @@ dead-ends:
   **Deploy as bot** button that lands back in this dialog with the script
   preselected.
 
-There is also a fourth way that skips the dialog entirely: the assistant rail
-beside the bot list, open by default and also reachable from the sparkle
-button above the list. "Deploy my breakout strategy on OKX BTC-USDT, 1h"
-creates the bot in one exchange.
+There is also a fourth way that skips the dialog entirely: the assistant, one
+tap away on the sparkle button above the bot list or on its dock from any
+page. "Deploy my breakout strategy on OKX BTC-USDT, 1h" creates the bot in one
+exchange.
 
 It can start further back than that. A bot is a strategy on a market, so
 asking for one you have no script for ("a bot that buys pullbacks in an
 uptrend on the 4h") gets both: it writes the strategy, validates it, backtests
-it, and deploys the result. When the code needs real work, it hands you to the
-workbench with the conversation already carried over rather than making you
-explain it twice.
+it, and deploys the result. When the code needs real work it opens the
+workbench and keeps going there, in the same conversation.
 
 Anything it creates arrives in paper mode and switched off, exactly as if you
 had walked the steps yourself, and it can never arm a bot. It can also rename

@@ -4,7 +4,7 @@ description: 'Fixes for the problems people actually hit: a venue that will not 
 group: reference
 order: 2
 eyebrow: Reference
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 8 min read
 ---
 
@@ -160,7 +160,7 @@ Work down this list.
 
 "Paper" means three different things depending on where you are, and they
 simulate different amounts of reality: venue demo environments, bot paper mode,
-and co-pilot paper trades. Not every venue offers a demo environment. See
+and assistant paper trades. Not every venue offers a demo environment. See
 [paper trading](/docs/paper-trading).
 
 ## A Python indicator or strategy will not run

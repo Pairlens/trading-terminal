@@ -20,7 +20,7 @@
     "oneTerminal": {
       "eyebrow": "为什么选择 Pairlens",
       "title": "一个终端，覆盖所有市场。",
-      "sub": "并肩交易中心化和链上现货,配备实时解读每个行情的 AI 副驾驶。",
+      "sub": "并肩交易中心化和链上现货，由一个 AI 助手实时解读每个行情。",
       "points": {
         "0": "中心化现货 —— OKX、Binance、Coinbase",
         "1": "链上 DEX 兑换,智能路由",
@@ -90,9 +90,9 @@
       "label": "路由"
     },
     "copilot": {
-      "eyebrow": "你的副驾驶",
-      "title": "一个遵守你规则的副驾驶。",
-      "sub": "它替你读盘 —— 且绝不逾越你设定的界限。",
+      "eyebrow": "你的助手",
+      "title": "一个遵守你规则的助手。",
+      "sub": "它替你读盘，且绝不逾越你设定的界限。",
       "points": {
         "0": "监视你所有市场中的信号",
         "1": "对每个行情做出批准、拦截或标记",
@@ -101,7 +101,7 @@
       "scene": {
         "guardrail": "你的风险限额"
       },
-      "label": "副驾驶"
+      "label": "助手"
     },
     "themeStep": {
       "status": "调整亮度",
@@ -166,11 +166,11 @@
     "account": {
       "status": "最后一步",
       "title": "保持同步？",
-      "sub": "可选 —— 前面你看到的一切无需账户即可使用。账户会带来 AI 副驾驶和跨设备同步。你的密钥始终留在这台设备上。",
+      "sub": "可选：前面你看到的一切无需账户即可使用。账户会带来托管 AI 助手和跨设备同步。你的密钥始终留在这台设备上。",
       "benefits": {
         "ai": {
-          "title": "AI 副驾驶与研究",
-          "sub": "对任意交易对的情境分析 —— 免费提供"
+          "title": "AI 助手与研究",
+          "sub": "在整个终端里都能用，免费包含"
         },
         "sync": {
           "title": "云同步",
@@ -503,12 +503,12 @@
         },
         "copilot": {
           "title": "AI 聊天记录",
-          "description": "你与 copilot 的对话，按交易对区分。",
+          "description": "与助手的一段对话，整个终端共用。",
           "caveat": "关闭期间，清除聊天记录只会清除这台设备上的内容。账号里已有的对话会保留，重新开启同步后会再次出现。"
         },
         "trades": {
           "title": "交易日志",
-          "description": "你或 copilot 记入日志的交易。"
+          "description": "你或助手记入日志的交易。"
         }
       }
     },
@@ -693,24 +693,24 @@
       "dailyTradeCount": "交易次数",
       "windowStart": "窗口开始时间",
       "confirmGesture": "下单确认方式",
-      "confirmGestureDescription": "你亲手下单时的确认方式,交易面板和副驾驶的订单卡片都适用。",
+      "confirmGestureDescription": "你亲手下单时的确认方式，交易面板和助手的订单卡片都适用。",
       "confirmHold": "长按",
       "confirmHoldDescription": "按住提交按钮直到填满。实盘订单要比模拟盘多按一会儿。",
       "confirmClick": "单击",
       "confirmClickDescription": "第一次点击即下单。误点与真实订单之间不再有缓冲。",
       "confirmGestureNote": "两种方式都受风险限额约束,改变的只是操作方式,不是防护。",
       "aiPermissions": "AI 交易权限",
-      "aiPermissionsDescription": "AI 副驾驶无需询问即可执行的操作。超出这些授权范围的订单始终需要你在聊天窗口的卡片上确认,且每一笔订单 —— 无论是否自动批准 —— 都会依照上面的风险限额进行检查。",
+      "aiPermissionsDescription": "AI 助手无需询问即可执行的操作。超出这些授权范围的订单始终需要你在聊天窗口的卡片上确认，且无论是否自动批准，每一笔订单都会依照上面的风险限额进行检查。",
       "aiPaperAuto": "自动批准模拟交易",
-      "aiPaperAutoDescription": "仅限模拟资金。副驾驶下达模拟订单时无需确认卡片。",
+      "aiPaperAutoDescription": "仅限模拟资金。助手下达模拟订单时无需确认卡片。",
       "aiLiveAuto": "自动批准实盘交易",
       "aiLiveAutoEmpty": "未授权任何交易所 —— 每笔实盘交易都需要你确认。可在订单卡片上通过“不再询问”授权某个交易所。",
-      "aiLiveAutoDescription": "真实资金。副驾驶在以下交易所下达实盘订单时无需确认卡片:",
+      "aiLiveAutoDescription": "真实资金。助手在以下交易所下达实盘订单时无需确认卡片:",
       "aiLiveAutoRevoke": "撤销 {{market}}"
     },
     "billing": {
       "title": "Pairlens Intelligence",
-      "description": "托管 AI 副驾驶、研究报告和网页搜索 — 无需 API 密钥。",
+      "description": "托管 AI 助手，附带深度研究与网页搜索，无需 API 密钥。",
       "signInFirst": "登录以管理你的 Pairlens Intelligence 订阅。",
       "selfHosted": "此服务器未配置计费 — 托管 AI 功能无需订阅即可使用。",
       "loadError": "无法加载你的计费状态,请重试。",
@@ -879,7 +879,7 @@
       "triggerWake": "电脑唤醒之后",
       "triggerWakeHint": "设备从睡眠中恢复时锁定。",
       "triggerTrade": "下单之前",
-      "triggerTradeHint": "确认你手动或通过副驾下的订单，包括自动批准的提案。机器人永远不会被询问。",
+      "triggerTradeHint": "确认你手动或通过助手下的订单，包括自动批准的提案。机器人永远不会被询问。",
       "afterMinutes": "{{minutes}} 分钟后",
       "everyHours": "每 {{hours}} 小时",
       "graceNever": "每次都问",
@@ -1241,50 +1241,14 @@
     "buildWithAi": "用 AI 构建",
     "buildWithAiHint": "描述一下，助手来写",
     "recommended": "推荐",
-    "placeholder": "描述你想构建什么……",
-    "answerPlaceholder": "回答，或者说点别的……",
-    "close": "关闭助手",
-    "clearChat": "清空对话",
-    "emptyTitle": "我们来构建点什么？",
-    "emptyHintIndicators": "描述一个指标或策略，助手会把它写进编辑器、完成校验并运行预览。",
-    "emptyHintBots": "让它把策略部署为模拟机器人、调整参数或设置风控。是否让机器人上实盘，决定权始终在你手里。",
-    "emptyHintWorkflows": "说明订单成交后要做什么。助手会把步骤连好，你查看差异后再提交。",
-    "emptyHintNotifications": "说明你想被提醒什么。助手会建好提醒，并在你指定的交易对上启用。",
-    "genericError": "助手遇到了错误——请再发送一次。",
-    "authRequiredTitle": "用 AI 构建",
-    "authRequiredDescription": "用平常的话描述一个指标、策略或机器人——助手会写好 Python、完成校验，并和你一起回测。",
-    "upgradeRequiredDescription": "构建助手会和你一起编写指标、策略和机器人。订阅 Pairlens Intelligence，或连接你自己的 AI 密钥——免费。",
-    "unavailableTitle": "助手不可用",
-    "unavailableDescription": "在插件页面启用一个 AI 提供方，即可通过聊天构建指标、策略和机器人。",
-    "quickNewIndicator": "构建一个 RSI 背离指标",
-    "quickNewStrategy": "写一个我可以回测的突破策略",
-    "quickImprove": "审查这个脚本并提出改进建议",
-    "quickBotFromScratch": "从零帮我构建一个机器人",
-    "quickCreateBot": "把我的一个策略部署为模拟机器人",
-    "quickGuards": "为我的一个机器人推荐风控设置",
-    "quickReview": "我的机器人表现如何？",
-    "quickBracket": "给我的入场加上止损和目标",
-    "quickScaleOut": "分三批退出一个仓位",
-    "quickExplainWorkflow": "说明这个工作流做了什么",
-    "quickPriceAlert": "BTC 突破某个价格时提醒我",
-    "quickMoveAlert": "出现快速百分比波动时提醒我",
-    "quickAlertReview": "检查我现有的提醒",
     "questionHint": "选一个，或在下方输入你自己的答案。",
     "questionHintOpen": "在下方输入你的答案。",
     "youAnswered": "你选择了：{{answer}}",
-    "handoffToIndicators": "转到指标与策略继续",
-    "handoffToBots": "转到机器人继续",
-    "handoffToWorkflows": "转到工作流继续",
-    "handoffToNotifications": "转到通知继续",
     "starterTitle": "你来描述，它来构建",
     "starterBodyIndicators": "说出你想在图表上看到什么。助手会写好 Python、完成校验并运行预览，好让你自己判断。",
     "starterBodyBots": "说出机器人该做什么。助手会写好策略、完成回测，并以模拟方式部署。是否上实盘，仍由你决定。",
     "starterBodyWorkflows": "说明订单成交后要做什么。助手会在画布上连好步骤，你查看差异后再提交。",
     "starterBodyNotifications": "说明你想被提醒什么。助手会建好提醒，选一个合理的冷却时间并启用它。",
-    "starterPlaceholderIndicators": "一个在动量反转时给背景着色的 RSI……",
-    "starterPlaceholderBots": "一个在 4 小时上涨趋势中买回调的机器人……",
-    "starterPlaceholderWorkflows": "入场成交后，+5% 止盈、-3% 止损……",
-    "starterPlaceholderNotifications": "BTC 在 OKX 突破 100,000 时提醒我……",
     "starterIdeaIndicator1": "成交量加权趋势带",
     "starterIdeaIndicator2": "背离侦测器",
     "starterIdeaIndicator3": "波动率挤压通道",
@@ -1296,14 +1260,56 @@
     "starterIdeaWorkflow3": "回调时分批建仓",
     "starterIdeaAlert1": "BTC 突破关键位",
     "starterIdeaAlert2": "一小时内波动 5%",
-    "starterIdeaAlert3": "机器人成交时提醒我",
-    "starterSend": "发送给助手"
+    "starterIdeaAlert3": "机器人成交时提醒我"
+  },
+  "assistantDock": {
+    "title": "助手",
+    "open": "打开助手",
+    "close": "最小化助手",
+    "clear": "清空对话",
+    "placeholder": "问任何问题，或告诉我要构建什么……",
+    "answerPlaceholder": "输入你的回答……",
+    "emptyTitle": "我们来做点什么？",
+    "emptyDescription": "我可以读取任意市场、操控图表、编写指标和策略、搭建提醒和工作流，并为你准备好待确认的订单。",
+    "defaultSuggestion": "问问助手",
+    "statusThinking": "思考中……",
+    "statusUsingTools": "正在调用工具……",
+    "statusSearching": "正在联网搜索……",
+    "genericError": "出了点问题，请重试。",
+    "authRequiredTitle": "登录后使用助手",
+    "authRequiredDescription": "助手运行在 Pairlens Intelligence 上，也可以使用你自己的服务商密钥。",
+    "upgradeRequiredDescription": "把 Intelligence 加入你的套餐，或连接你自己的服务商密钥。",
+    "unavailableTitle": "助手不可用",
+    "unavailableDescription": "没有启用任何 AI 提供方。连接一个即可开始。",
+    "goToPlugins": "打开插件商店",
+    "suggest": {
+      "chart": "分析 {{pair}} 的图表",
+      "discovery": "帮我找点可交易的标的",
+      "workflows": "搭建一个工作流",
+      "notifications": "设置一个提醒",
+      "bots": "部署一个交易机器人",
+      "indicators": "写一个指标",
+      "indicatorsScript": "改进 {{name}}",
+      "accounts": "检查我的账户",
+      "plugins": "帮我找一个插件",
+      "workspaceStore": "设计我的工作区"
+    },
+    "researchCardTitle": "研究报告：{{market}} 上的 {{pair}}",
+    "researchCardTitleGeneric": "研究报告",
+    "researchCardSources_one": "{{count}} 个来源",
+    "researchCardSources_other": "{{count}} 个来源",
+    "quickAnalyze": "分析 {{pair}}",
+    "quickLevels": "标出 {{symbol}} 的关键价位",
+    "quickAlert": "{{symbol}} 突破时提醒我",
+    "quickWhatsMoving": "今天什么在动？",
+    "quickPortfolio": "我的投资组合怎么样？",
+    "quickBuildAlert": "帮我做一个提醒",
+    "approvalApprove": "批准",
+    "approvalDecline": "拒绝",
+    "approvalApproved": "已批准",
+    "approvalDeclined": "已拒绝"
   },
   "copilot": {
-    "aiLens": "AI 透镜",
-    "thinking": "思考中……",
-    "idle": "空闲",
-    "clearHistory": "清空聊天记录",
     "placeholder": "问问你的透镜……",
     "lensPersona": "透镜人格",
     "persona": {
@@ -1337,22 +1343,7 @@
     "keep": "保留",
     "tradingUnavailable": "交易当前不可用。",
     "noCredentialsForMarket": "尚未连接 {{market}} 的凭证。请在“账户”中添加 API 密钥以进行实盘交易。",
-    "watchingPair": "正在关注 {{pair}} · {{timeframe}}",
-    "genericChatError": "Copilot 出现了错误 —— 请重新发送试试。",
-    "quickActionHowIsDoing": "{{symbol}} 表现如何?",
-    "quickActionSuggestedIndicators": "推荐指标",
-    "quickActionAnySignals": "有信号吗?",
     "scheduledCheckPrefix": "[定时检查 —— 于 {{minutes}} 分钟前设置]",
-    "authRequiredTitle": "认识你的 AI 副驾",
-    "authRequiredDescription": "针对任意交易对的情境化分析 —— 它会读取图表、核对你的风险限额,并给出可供质疑的推理过程。",
-    "upgradeRequiredDescription": "你的 AI 副驾会读取图表、核对你的风险限额,并给出可供质疑的推理过程。订阅 Pairlens Intelligence，或连接你自己的 AI 密钥——免费。",
-    "aiLensUnavailableTitle": "AI Lens 不可用",
-    "aiLensUnavailableDescription": "在插件页面启用一个 AI 插件,即可获得实时市场分析与交易辅助。",
-    "goToPlugins": "前往插件页面",
-    "analyzePair": "分析 {{pair}}",
-    "startConversation": "开始对话",
-    "emptyStateHint": "问问市场状况、核对你的交易设置,或请求风险评估 —— AI 掌握这个交易对的完整上下文。",
-    "contextAware": "理解上下文",
     "toolFailed": "工具执行失败"
   },
   "chart": {
@@ -2195,7 +2186,7 @@
       "priceMonthly": "${{price}}/月",
       "taxNotice": "价格不含税，税费将在结账时计算。",
       "defaultTitle": "解锁 Pairlens Intelligence",
-      "defaultDescription": "托管式 AI 副驾驶与网络研究功能，无需 API 密钥。每个套餐都包含在聊天、研究和网络搜索之间共享的每月用量额度。",
+      "defaultDescription": "托管 AI 助手，附带深度研究与网页搜索，没有 API 密钥要管。每个套餐都包含在聊天、研究和网页搜索之间共享的每月用量额度。",
       "byokNote": "更想用自己的服务商？在<plugins>插件</plugins>中连接 Anthropic、OpenAI、Groq 或 OpenRouter 密钥——使用自有密钥的 AI 始终免费。",
       "checkoutOpenedTitle": "已在浏览器中打开结账页面",
       "checkoutActivates": "付款完成后，订阅会立即在此激活。",
@@ -2223,7 +2214,6 @@
     "fearGreed": "恐慌与贪婪",
     "chart": "图表",
     "trade": "交易",
-    "aiLens": "AI 透镜",
     "dataLog": "数据日志",
     "positions": "仓位",
     "portfolio": "投资组合",
@@ -2232,7 +2222,6 @@
     "marketDepth": "市场深度",
     "pairInfo": "交易对信息",
     "multiPrice": "多平台价格",
-    "research": "研究",
     "social": "社交",
     "risk": "风险",
     "symbolNews": "标的资讯",
@@ -2253,7 +2242,6 @@
     "fearGreed": "基于恐慌与贪婪指数的市场情绪仪表",
     "chart": "带有指标和绘图工具的蜡烛图",
     "trade": "下达带风险控制的市价单、限价单和止损单",
-    "aiLens": "分析信号并提供交易背景的 AI 副驾驶",
     "dataLog": "当前交易对的原始信号与事件流",
     "positions": "监控持仓、盈亏和交易历史",
     "portfolio": "账户持仓及配置明细",
@@ -2262,7 +2250,6 @@
     "marketDepth": "当前交易对的累计市场深度图",
     "pairInfo": "当前交易对的关键统计数据、资金费率和元数据",
     "multiPrice": "同一交易对在所有交易所的实时价格，按最优成交排序",
-    "research": "针对当前交易对生成的 AI 深度研究报告",
     "social": "交易对的社交情绪和社区活跃度",
     "risk": "投资组合风险指标和风控配置",
     "symbolNews": "当前交易对的资讯与情绪分析",
@@ -3086,10 +3073,6 @@
       "ascending": "已按{{column}}升序排序",
       "descending": "已按{{column}}降序排序"
     },
-    "panel": {
-      "expand": "展开面板",
-      "collapse": "折叠面板"
-    },
     "recentlyViewed": "最近查看",
     "noMarketsFound": "未找到市场",
     "modeLive": "实盘",
@@ -3157,7 +3140,7 @@
       "statusBrowserVault": "此刻:每个密钥都在你的保险库中加密,只在这个浏览器里。",
       "statusBrowserNone": "这个浏览器还没有保险库。保存第一个密钥之前,你会先建立一个。",
       "deviceTitle": "仅存储在你的设备上",
-      "deviceBody": "你的交易所 API 密钥和钱包密钥保存在这台计算机上,别无他处。它们从不上传给 Pairlens:登录时不会,设置同步时不会,副驾读取图表时也不会。我们的服务器上没有可供泄露的副本。",
+      "deviceBody": "你的交易所 API 密钥和钱包密钥保存在这台计算机上,别无他处。它们从不上传给 Pairlens:登录时不会,设置同步时不会,助手读取图表时也不会。我们的服务器上没有可供泄露的副本。",
       "osTitle": "静置时也处于加密状态",
       "osBodyDesktop": "它们保存在{{vault}}中,与你系统存储自身密码相同的受保护存储库,在磁盘上加密,且只交给这个应用。",
       "osBodyDesktopVault": "它们保存在{{vault}}中,与你系统存储自身密码相同的受保护存储库。你的保险库在其上再加一层:每个值在钥匙串看到它之前,就已用 AES-256-GCM 封装。",
@@ -3395,8 +3378,8 @@
       },
       "ai-research-desk": {
         "name": "AI 研究台",
-        "tagline": "副驾驶、研究与资讯，就在图表旁边。",
-        "description": "把图表与 AI 副驾驶、深度研究，以及全球和标的资讯双信息流搭配在一起。专为催化剂驱动的交易而生，消息面和盘面同样重要。需要 AI 推理服务商才能使用副驾驶与研究功能。"
+        "tagline": "图表旁边是标的资讯与全球资讯流。",
+        "description": "把图表与标的资讯和全球资讯流搭配在一起，专为催化剂驱动的交易而生，消息面和盘面同样重要。AI 助手常驻在停靠栏里，不占一整栏也能随时在这里调用。"
       },
       "market-discovery": {
         "name": "市场发现",
@@ -3411,7 +3394,7 @@
       "prediction-terminal": {
         "name": "预测市场终端",
         "tagline": "把概率画成图表，整个事件就在旁边。",
-        "description": "预测市场的默认布局：概率图表下方是成交记录和你的持仓合约，中间是订单簿与下单面板，AI 副驾驶旁边是事件浏览器，因为相邻结果就是分析的一半。",
+        "description": "预测市场的默认布局：概率图表下方是成交记录和你的持仓合约，中间是订单簿与下单面板，右侧是通高的事件浏览器，因为相邻结果就是分析的一半。",
         "menuLabel": "默认"
       },
       "prediction-discovery": {
@@ -3428,7 +3411,7 @@
       "dex-terminal": {
         "name": "DEX 终端",
         "tagline": "链上交易，不用假的订单簿。",
-        "description": "链上默认布局：图表下方是流动性池数据与成交记录，兑换面板叠在最近行情之上，方便捕捉新上线代币，AI 副驾驶位于社交动态上方。没有订单簿栏位：由资金池推算的深度是合成的，因此不予显示。",
+        "description": "链上默认布局：图表下方是流动性池数据与成交记录，兑换面板叠在最近行情之上，方便捕捉新上线代币，右侧是社交动态。没有订单簿栏位：由资金池推算的深度是合成的，因此不予显示。",
         "menuLabel": "默认"
       },
       "quant-signals": {
@@ -3444,36 +3427,36 @@
       "equities-terminal": {
         "name": "股票终端",
         "tagline": "股票交易，下单面板就在标的资讯之上。",
-        "description": "股票的默认布局：图表下方是成交记录、持仓与基本面数据，下单面板位于标的资讯之上（催化剂推动股票，就像资金流推动加密货币），右侧是 AI 副驾驶。",
+        "description": "股票的默认布局：图表下方是成交记录、持仓与基本面数据，下单面板位于标的资讯之上，因为催化剂推动股票，就像资金流推动加密货币。",
         "menuLabel": "默认"
       },
       "ultrawide-trading-floor": {
         "name": "超宽屏交易大厅",
         "tagline": "一应俱全，为大屏幕而生。",
-        "description": "填满超宽屏或第二块显示器的四栏指挥中心：扫描器、图表、订单簿与深度、带持仓的下单面板，以及 AI 副驾驶。极繁主义布局。"
+        "description": "填满超宽屏或第二块显示器的四栏指挥中心：扫描器、图表、订单簿与深度，以及叠在你持仓之上的下单面板。极繁主义布局。"
       },
       "classic-terminal": {
         "name": "经典终端",
-        "tagline": "经典 Pairlens 工作台——图表、数据、交易、副驾驶。",
-        "description": "默认终端布局：左侧是大图表搭配标签式数据条与风险条，右侧是下单面板叠加 AI 副驾驶。",
+        "tagline": "经典 Pairlens 工作台：图表、数据、订单簿、下单面板。",
+        "description": "默认终端布局：左侧是大图表搭配标签式数据条与风险条，右侧是订单簿叠加下单面板。",
         "menuLabel": "默认"
       },
       "chart-focus": {
         "name": "图表聚焦",
         "tagline": "一张大图表，底部是标签式数据。",
-        "description": "单栏布局把最大空间留给图表，持仓、数据日志、副驾驶和下单面板都收进下方的标签条。",
+        "description": "单栏布局把最大空间留给图表，持仓、数据日志和下单面板都收进下方的标签条。",
         "menuLabel": "图表聚焦"
       },
       "trading": {
         "name": "交易",
-        "tagline": "订单簿与下单面板环绕中央图表。",
-        "description": "三栏执行工作台：左侧是订单簿与下单面板，中间是带持仓与风险的图表，右侧是 AI 副驾驶。",
+        "tagline": "订单簿与下单面板紧邻一张通高图表。",
+        "description": "双栏执行工作台：左侧是订单簿叠加下单面板，剩下的宽度全部留给带持仓与风险的图表。",
         "menuLabel": "交易"
       },
       "chart-analysis": {
         "name": "图表分析",
-        "tagline": "左侧图表与数据，右侧副驾驶与交易执行。",
-        "description": "偏研究型的分栏布局：左侧是图表、数据、研究与风险，右侧是副驾驶、订单簿与下单面板。",
+        "tagline": "左侧图表与数据，右侧交易执行。",
+        "description": "偏研究型的分栏布局：左侧是图表、数据与风险，右侧是订单簿与下单面板。",
         "menuLabel": "分析"
       },
       "dual-charts": {
@@ -3501,23 +3484,23 @@
       },
       "laptop-split": {
         "name": "笔记本分栏",
-        "tagline": "左侧图表+数据，右侧交易+副驾驶——为较小屏幕设计。",
-        "description": "为笔记本电脑设计的双栏布局：左侧是图表与持仓，右侧是下单面板叠加副驾驶。"
+        "tagline": "左侧图表与数据，右侧下单面板，按笔记本尺寸裁剪。",
+        "description": "为笔记本电脑设计的双栏布局：左侧是图表、持仓与风险，右侧是下单面板。"
       },
       "ultrawide-dashboard": {
         "name": "超宽屏仪表盘",
         "tagline": "每个面板都铺展在超宽屏显示器上。",
-        "description": "为超宽屏显示器设计的四栏仪表盘：订单簿、带风险的图表、持仓与研究，以及交易+副驾驶栏。"
+        "description": "为超宽屏显示器设计的四栏仪表盘：订单簿、带风险的图表、持仓与数据日志，以及下单面板栏。"
       },
       "ultrawide-trading": {
         "name": "超宽屏交易",
         "tagline": "订单簿、深度、图表与交易执行，横贯整个宽度。",
-        "description": "超宽屏执行布局：左侧是订单簿与市场深度，中间是带持仓的图表，右侧是交易+副驾驶栏。"
+        "description": "超宽屏执行布局：左侧是订单簿与市场深度，中间是带持仓的图表，右侧是下单面板。"
       },
       "command-center": {
         "name": "4K 指挥中心",
         "tagline": "为 4K 显示器打造的完整指挥中心。",
-        "description": "为 4K 显示器铺满全部内容：订单簿与交易对信息、带研究和风险的图表、持仓与社交动态，以及交易+副驾驶栏。"
+        "description": "为 4K 显示器铺满全部内容：订单簿与交易对信息、带风险条的图表、持仓与社交动态，以及下单面板栏。"
       },
       "home-pulse": {
         "name": "首页",
@@ -3552,7 +3535,7 @@
       "perps-terminal": {
         "name": "永续合约终端",
         "tagline": "期货工作台：带标记价格与强平价的持仓。",
-        "description": "永续合约的默认布局：一张大图表，下方以标签页显示成交记录、持仓合约（开仓价、标记价格、强平价）与市场数据，中间是订单簿和支持杠杆的下单面板，右侧是 AI 副驾驶。",
+        "description": "永续合约的默认布局：一张大图表，下方以标签页显示成交记录、持仓合约（开仓价、标记价格、强平价）与市场数据，右侧是订单簿叠加支持杠杆的下单面板。",
         "menuLabel": "默认"
       },
       "perps-discovery": {
@@ -4375,28 +4358,7 @@
     "exit": "退出全屏"
   },
   "research": {
-    "phaseSearching": "正在搜索网络...",
-    "phaseReading": "正在阅读来源...",
-    "phaseAnalyzing": "正在分析市场数据...",
-    "phaseWriting": "正在撰写报告...",
-    "authRequiredTitle": "研究工作台，只差一次登录",
-    "authRequiredDescription": "基于实时网络来源，为任意交易对生成结构化研究报告。",
-    "upgradeDescription": "基于实时网络来源，为任意交易对生成结构化研究报告。订阅 Pairlens Intelligence，或连接你自己的 AI 密钥——免费。",
-    "unavailableTitle": "研究功能不可用",
-    "unavailableDescription": "请在插件页面启用一个 AI 插件，以生成该交易对的研究报告。",
-    "goToPlugins": "前往插件",
-    "navigateToPair": "前往某个交易对以查看研究报告。",
-    "researchingSymbol": "正在研究 {{symbol}}",
-    "generatingReport": "正在生成报告...",
-    "cachedGenerated": "缓存内容 — 生成于 {{time}}",
-    "freshGenerated": "最新 — 刚刚生成",
-    "refresh": "刷新",
-    "sourcesCount": "来源（{{count}}）",
-    "reportTitle": "研究报告",
-    "fullscreenDescription": "研究报告已全屏显示。按 Esc 键退出。",
-    "sections": "章节",
-    "sparklineAriaLabel": "每日价格迷你图",
-    "errorTitle": "研究功能不可用"
+    "sparklineAriaLabel": "每日价格迷你图"
   },
   "capabilityGate": {
     "authTitle": "只需一次免费登录",
@@ -4493,8 +4455,8 @@
       "titlePlan": "{{label}} 已属于你。",
       "titleDefault": "Pairlens Intelligence 已属于你。",
       "bodyPack": "这些积分叠加在你的每月额度之上,将在 {{days}} 天后过期。回到 Pairlens 应用 — 你的余额会在几秒内更新。",
-      "bodyPlanWithCredits": "你的托管 AI 副驾驶、研究和网页搜索已解锁,每月附带 {{credits}} 积分。回到 Pairlens 应用 — 它会在几秒内识别你的订阅。",
-      "bodyPlanNoCredits": "你的托管 AI 副驾驶、研究和网页搜索已解锁。回到 Pairlens 应用 — 它会在几秒内识别你的订阅。",
+      "bodyPlanWithCredits": "你的托管 AI 助手已解锁，深度研究与网页搜索一并奉上，每月还有 {{credits}} 积分。回到 Pairlens 应用：它会在几秒内识别你的订阅。",
+      "bodyPlanNoCredits": "你的托管 AI 助手已解锁，深度研究与网页搜索一并奉上。回到 Pairlens 应用：它会在几秒内识别你的订阅。",
       "openTerminal": "打开终端",
       "closeTabHint": "是从桌面应用付款的吗?直接关闭此标签页即可。",
       "receiptHint": "收据和发票已发送到你的邮箱,也可在账单管理页面查看(设置 → Intelligence)。"
@@ -4882,7 +4844,7 @@
     "ai": {
       "inference": {
         "label": "推理",
-        "description": "用于副驾驶分析的 LLM 推理"
+        "description": "用于 AI 助手的 LLM 推理"
       },
       "web-search": {
         "label": "网页搜索",
@@ -4949,7 +4911,7 @@
     },
     "ai": {
       "label": "AI 服务商",
-      "description": "为 AI 副驾驶分析提供支持的语言模型服务商"
+      "description": "为 AI 助手提供支持的语言模型服务商"
     },
     "intelligence": {
       "label": "情报",
@@ -4979,7 +4941,7 @@
         "watchlist": "自选列表",
         "trade": "交易",
         "chart": "图表",
-        "copilot": "副驾驶",
+        "copilot": "助手",
         "discover": "发现"
       },
       "overlays": {
@@ -5127,12 +5089,12 @@
       "bannerBody": "工作区、机器人、你自己的指标，还有另外四家交易所。",
       "bannerDismiss": "隐藏此提示",
       "screenTitle": "在更大的屏幕上",
-      "lead": "手机上装的是你想随身带着的那部分 Pairlens：图表、订单簿、交易面板和副驾驶。终端的其余部分是为一块铺得开的屏幕而生的，它们在那边等你。",
+      "lead": "手机上装的是你想随身带着的那部分 Pairlens：图表、订单簿、交易面板和助手。终端的其余部分是为一块铺得开的屏幕而生的，它们在那边等你。",
       "widerWindow": "在更宽的窗口中",
       "desktopApp": "在桌面应用中",
       "workspaces": {
         "title": "工作区",
-        "body": "图表、订单簿、成交记录和副驾驶并排摆好，排一次就存下来。工作区商店里还有现成布局，一点即可复制。"
+        "body": "图表、订单簿、成交记录和下单面板并排摆好，排一次就存下来。工作区商店里还有现成布局，一点即可复制。"
       },
       "bots": {
         "title": "机器人",

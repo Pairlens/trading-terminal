@@ -4,7 +4,7 @@ description: How the terminal, connector plugins, strategy engine, and optional 
 group: get-started
 order: 6
 eyebrow: Get started
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 5 min read
 ---
 
@@ -16,14 +16,17 @@ AI to UI, is downstream of data the plugin already holds locally.
 
 **Terminal.** A TanStack Start SPA on React 19. Owns the UI, the plugin system,
 and the AI agentic loop. Talks to the App Server over REST when signed in, and
-streams market data directly from exchanges either way.
+streams market data directly from exchanges either way. The
+[assistant](/docs/ai-copilot) is mounted above the routed content, which is why
+one conversation spans every page and a run survives navigation.
 
 **Market connector plugins.** Each implements the `MarketAdapter` interface and
 owns its WebSocket connections, candle buffers, and order execution for one
 venue. They run in the terminal process, or in the CLI.
 
 **Strategy engine.** Pure functions over the candle buffer. Consumed on demand
-by the co-pilot tools, the research panel, and the CLI.
+by the assistant's market and research tools, the chart's signal strip, and the
+CLI.
 
 **Python runtime.** Pyodide (CPython compiled to WebAssembly) in a dedicated
 Web Worker, executing your indicator and strategy scripts. Local only, on

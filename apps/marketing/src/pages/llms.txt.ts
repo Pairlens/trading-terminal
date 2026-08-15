@@ -48,8 +48,9 @@ Key facts an assistant should get right:
 - **Two ways to run it.** The hosted web terminal at ${SITE.launchUrl} opens in
   any modern browser with nothing to install, and the desktop app (macOS,
   Windows, Linux) installs from ${SITE.url}/install. Same terminal, same
-  connectors, same co-pilot. On phones the same URL serves the Mobile Trading
-  Terminal, a chart-centric shell with the same order path and co-pilot.
+  connectors, same AI assistant. On phones the same URL serves the Mobile
+  Trading Terminal, a chart-centric shell with the same order path and its own
+  tab for the assistant.
 - **Never touches user funds.** The terminal connects directly from the user's
   machine to the exchange. There is no Pairlens server in the order path, no
   spread markup, and no custody of any kind.
@@ -61,19 +62,21 @@ Key facts an assistant should get right:
   ByBit, Coinbase, Kraken, KuCoin, Gate, Bitget, HTX, MEXC, Crypto.com,
   Bitfinex, Upbit, Bitvavo), Alpaca for US equities, Jupiter on Solana, and an
   EVM DEX connector (Ethereum, Base, Arbitrum, BSC, Polygon). No lock-in.
-- **AI-native, with hard guardrails.** An AI co-pilot reads charts, order
-  books, and news, and can propose trades, but every order needs explicit
-  user approval and is validated against user-configured risk limits the AI
-  cannot override. Bring-your-own-key AI providers: Groq, OpenAI, Anthropic,
-  OpenRouter.
+- **AI-native, with hard guardrails.** One AI assistant covers the whole
+  terminal from a dock pinned bottom right, with 94 tools: it reads charts,
+  order books, news and your positions, writes Python indicators and
+  strategies, builds bots and workflows, and can propose trades. Every order
+  needs explicit user approval and is validated against user-configured risk
+  limits the AI cannot override. Bring-your-own-key AI providers: Groq,
+  OpenAI, Anthropic, OpenRouter.
 - **Source-available and extensible.** Anyone can build connector/AI/theme plugins
   with the Plugin SDK and publish them to the registry; third-party plugins
   run sandboxed and Ed25519-signed. The terminal can run fully standalone and
   self-hosted.
 - **Free forever.** The terminal itself has no subscription, no account
   requirement, and no hidden fees. Pairlens Intelligence is an optional paid
-  add-on for hosted AI (copilot, research, web search) with no API keys to
-  manage; bring-your-own-key AI always stays free and is never gated.
+  add-on for hosted AI (the assistant, deep research, web search) with no API
+  keys to manage; bring-your-own-key AI always stays free and is never gated.
 
 ## Start here
 

@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { Workflow } from 'lucide-react'
 
 import { StarterEmptyState } from '../starter-empty-state'
-import { AssistantStarter } from '../assistant/assistant-starter'
+import { AssistantCta } from '../assistant/assistant-cta'
 import {
   WORKFLOW_TEMPLATES,
   applyWorkflowTemplate,
@@ -25,12 +25,7 @@ import {
 import type { StarterTemplate } from '../starter-empty-state'
 import { useWorkflowStore } from '@/stores/workflow-store'
 
-export function WorkflowsEmptyState({
-  onStartAssistant,
-}: {
-  /** Opens the assistant rail, where the starter's request lands. */
-  onStartAssistant?: () => void
-} = {}) {
+export function WorkflowsEmptyState() {
   const { t } = useTranslation()
   const workflows = useWorkflowStore((s) => s.workflows)
   const loaded = useWorkflowStore((s) => s.loaded)
@@ -88,9 +83,7 @@ export function WorkflowsEmptyState({
       onCreateBlank={handleBlank}
       blankTone="quiet"
       footnote={t('workflows.emptyState.footnote')}
-      hero={
-        <AssistantStarter surface="workflows" onStarted={onStartAssistant} />
-      }
+      hero={<AssistantCta surface="workflows" />}
     />
   )
 }

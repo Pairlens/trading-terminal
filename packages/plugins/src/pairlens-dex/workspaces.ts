@@ -19,7 +19,8 @@ import type {
  * book pane would render fabricated depth. Pair Info leads the data strip
  * (pool stats always stream from the data providers, while the tape depends on
  * the venue), the swap ticket pairs with Recent Tickers for new listings, and
- * the social feed rides next to the copilot.
+ * the social feed takes the right rail, because on-chain alpha travels there
+ * first.
  */
 export const DEX_TERMINAL_LAYOUT = {
   version: 1,
@@ -75,14 +76,8 @@ export const DEX_TERMINAL_LAYOUT = {
       widthPercent: 24,
       cells: [
         {
-          id: 'cell-copilot',
-          heightPercent: 60,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-copilot', type: 'copilot' }],
-        },
-        {
           id: 'cell-social',
-          heightPercent: 40,
+          heightPercent: 100,
           activeTabIndex: 0,
           panes: [{ id: 'pane-social', type: 'social' }],
         },
@@ -207,7 +202,7 @@ export const DEX_WORKSPACES: Array<ContributedWorkspace> = [
     icon: 'Flame',
     tagline: 'On-chain trading without the fake order book.',
     description:
-      'The default on-chain layout: a chart with pool stats and the tape below it, a swap ticket over your recent tickers for catching new listings, and the AI Copilot above the social feed. There is no order book column: pool-quoted depth is synthetic, so it is not shown.',
+      'The default on-chain layout: a chart with pool stats and the tape below it, a swap ticket over your recent tickers for catching new listings, and the social feed on the right. There is no order book column: pool-quoted depth is synthetic, so it is not shown.',
     facets: {
       traderTypes: ['dex-degen', 'day-trader'],
       assetClasses: ['dex'],

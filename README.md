@@ -6,7 +6,7 @@
 
 **The local-first AI trading terminal. Your keys. Your machine. Your rules.**
 
-The kind of trading desk that usually costs thousands of dollars a year: free, private, and entirely yours. 14 crypto spot exchanges, perpetual futures, US equities, prediction markets, and on-chain DEX trading in one desk, with professional charts, an AI co-pilot, and your keys on your machine.
+The kind of trading desk that usually costs thousands of dollars a year: free, private, and entirely yours. 14 crypto spot exchanges, perpetual futures, US equities, prediction markets, and on-chain DEX trading in one desk, with professional charts, an AI assistant that can drive all of it, and your keys on your machine.
 
 [Website](https://pairlens.finance) · [Launch Web Terminal](https://terminal.pairlens.finance) · [Docs](https://pairlens.finance/docs) · [Download](https://github.com/Pairlens/trading-terminal/releases) · [Charts Engine](https://github.com/Pairlens/fast-financial-charts) · [X](https://x.com/pairlens)
 
@@ -15,7 +15,7 @@ The kind of trading desk that usually costs thousands of dollars a year: free, p
 [![Platforms](https://img.shields.io/badge/platforms-macOS%20·%20Windows%20·%20Linux%20·%20Web-8b5cf6)](https://pairlens.finance/install)
 [![Built with Tauri](https://img.shields.io/badge/desktop-Tauri%202-24C8DB?logo=tauri&logoColor=white)](apps/desktop/)
 
-<a href="https://terminal.pairlens.finance"><img src="docs/assets/terminal.webp" alt="The Pairlens chart terminal: live BTC chart, order book, guarded order entry, and the AI Lens analyzing the market" width="100%" /></a>
+<a href="https://terminal.pairlens.finance"><img src="docs/assets/terminal.webp" alt="The Pairlens chart terminal: live BTC chart, order book, guarded order entry, and the AI assistant analyzing the market" width="100%" /></a>
 
 </div>
 
@@ -23,7 +23,7 @@ The kind of trading desk that usually costs thousands of dollars a year: free, p
 
 - **Every market on one desk.** Trade spot on OKX, Binance, Coinbase, Kraken, and 10 more exchanges, US equities through Alpaca, event contracts on Kalshi and Polymarket, and on-chain DEXs across Solana, Ethereum, Base, Arbitrum, BNB Chain, and Polygon, side by side in the same interface.
 - **Your keys never leave your machine.** Market data streams directly from exchanges to you. API keys and wallet secrets live in your OS keychain on desktop, or in an encrypted local vault in the browser. There is no server between you and your exchange, and nothing to trust but your own machine.
-- **An AI co-pilot, on your terms.** It reads your charts, portfolio, and market context, runs research, and proposes trades that you explicitly confirm. It never overrides your risk guardrails, which are enforced below the AI, not by it. Bring your own AI key (Groq, OpenAI, Anthropic, OpenRouter) or subscribe to the hosted Pairlens Intelligence plan.
+- **One AI assistant for the whole terminal.** It sits in a dock in the corner, follows you from the chart to the workbench to the bots page in one conversation, and it sees what you are looking at. 94 tools: read any market, drive the chart, run sourced research, write Python indicators and strategies, backtest them, deploy bots, build workflows and alerts. Trades it prepares are proposals you explicitly confirm, and it never overrides your risk guardrails, which are enforced below the AI, not by it. Bring your own AI key (Groq, OpenAI, Anthropic, OpenRouter) or subscribe to the hosted Pairlens Intelligence plan.
 - **Professional charts, no paywall.** Powered by [Fast Financial Charts](https://github.com/Pairlens/fast-financial-charts), our own MIT-licensed WebGL2 engine: 90 indicators, 42 drawing tools, multi-pane layouts, and buttery live streaming. Write your own indicators in real Python, with pip packages, running locally in the terminal.
 - **Automation with guardrails.** Deterministic strategy signals, price and indicator alerts, and user-defined workflows. Everything that can place an order goes through the same guarded path with your risk limits.
 - **Make it yours.** Panels, workspaces, and 18 themes compose into whatever desk you want. Connectors, AI providers, data sources, and themes are plugins with a public SDK: install from the Plugin Store, build your own, or run a private registry for your team. Everything official is grouped into families (crypto exchanges, crypto futures, DEX, equities, prediction markets, AI providers, themes) you can switch off per user, or exclude from a build entirely. Anything you can't change in config, you can change in code. The full source is in the open, no watermark, no "contact sales".
@@ -106,7 +106,7 @@ ALSO
 - **Terminal** (`apps/terminal/`): TanStack Start SPA (React 19). Market data streams directly from exchanges via market connector plugins; there is no intermediate market-data server. One codebase serves the desktop pane grid, the hosted web terminal, and the mobile shell.
 - **Market connector plugins** (`packages/plugins/`): each connector implements the `MarketAdapter` interface and owns its exchange WebSocket/REST connections, candle buffers, and order routing.
 - **Strategy engine** (`packages/strategy-engine/`): pure TypeScript signal math (EMA, ATR, breakout, pullback, mean reversion, regime detection), computed on demand by the terminal and CLI. No I/O.
-- **AI co-pilot**: the agentic loop runs entirely client-side in the terminal (~60 tools: chart control, market/portfolio reads, workspace actions, confirm-gated trading). Inference goes through bring-your-own-key provider plugins.
+- **AI assistant**: the agentic loop runs entirely client-side in the terminal, mounted above the routed content so one conversation spans every page (94 tools: market and chart control, portfolio reads, Python scripts and backtests, bots, workflows and alerts, deep research, confirm-gated trading). Mounted surfaces publish their own context and actions, so its abilities grow with what is on screen. Inference goes through bring-your-own-key provider plugins.
 - **Charts**: [Fast Financial Charts](https://github.com/Pairlens/fast-financial-charts), a standalone MIT-licensed WebGL2 charting engine (own repo), consumed by the terminal as the `@pairlens/fast-financial-charts` dependency. React bindings ship under `@pairlens/fast-financial-charts/react`.
 - **CLI** (`apps/cli/`): headless access to the same connectors and strategy engine.
 - **Plugin registry** (`apps/registry/`): distribution point for third-party plugins built with `packages/plugin-sdk/`.

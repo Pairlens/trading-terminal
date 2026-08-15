@@ -20,7 +20,7 @@
     "oneTerminal": {
       "eyebrow": "Kenapa Pairlens",
       "title": "Satu terminal. Semua market.",
-      "sub": "Trading spot centralized dan on-chain berdampingan, dengan AI co-pilot yang membaca setiap setup.",
+      "sub": "Trading spot centralized dan on-chain berdampingan, dengan satu asisten AI yang membaca setiap setup.",
       "points": {
         "0": "Spot centralized — OKX, Binance, Coinbase",
         "1": "Swap DEX on-chain, dengan smart routing",
@@ -90,9 +90,9 @@
       "label": "Routing"
     },
     "copilot": {
-      "eyebrow": "Co-pilot Anda",
-      "title": "Co-pilot yang bermain sesuai aturan Anda.",
-      "sub": "Ia membaca market agar Anda tidak perlu — dan tidak pernah melewati batas yang Anda tetapkan.",
+      "eyebrow": "Asisten Anda",
+      "title": "Asisten yang bermain sesuai aturan Anda.",
+      "sub": "Ia membaca market agar Anda tidak perlu, dan tidak pernah melewati batas yang Anda tetapkan.",
       "points": {
         "0": "Memantau sinyal di seluruh market Anda",
         "1": "Menyetujui, memblokir, atau menandai setiap setup",
@@ -101,7 +101,7 @@
       "scene": {
         "guardrail": "batas risiko Anda"
       },
-      "label": "Co-pilot"
+      "label": "Asisten"
     },
     "themeStep": {
       "status": "Menyesuaikan pencahayaan",
@@ -166,11 +166,11 @@
     "account": {
       "status": "Satu hal terakhir",
       "title": "Sinkronkan?",
-      "sub": "Opsional — semua yang telah Anda lihat berfungsi tanpa akun. Akun menambahkan AI copilot dan sinkronisasi lintas perangkat. Kunci Anda selalu tetap di perangkat ini.",
+      "sub": "Opsional: semua yang telah Anda lihat berfungsi tanpa akun. Akun menambahkan asisten AI terkelola dan sinkronisasi lintas perangkat. Kunci Anda selalu tetap di perangkat ini.",
       "benefits": {
         "ai": {
-          "title": "AI copilot & riset",
-          "sub": "Analisis kontekstual untuk pair apa pun — termasuk gratis"
+          "title": "Asisten AI & riset",
+          "sub": "Bekerja di seluruh terminal, gratis"
         },
         "sync": {
           "title": "Sinkronisasi cloud",
@@ -503,12 +503,12 @@
         },
         "copilot": {
           "title": "Riwayat obrolan AI",
-          "description": "Percakapanmu dengan copilot, per pasangan.",
+          "description": "Satu percakapan dengan asisten, untuk seluruh terminal.",
           "caveat": "Selama ini mati, menghapus riwayat chat hanya menghapusnya di perangkat ini. Percakapan yang sudah ada di akunmu tetap tersimpan dan akan muncul lagi saat sinkronisasi dinyalakan kembali."
         },
         "trades": {
           "title": "Jurnal transaksi",
-          "description": "Transaksi yang kamu atau copilot catat ke jurnal."
+          "description": "Transaksi yang kamu atau asisten catat ke jurnal."
         }
       }
     },
@@ -693,24 +693,24 @@
       "dailyTradeCount": "Trade",
       "windowStart": "Jendela dimulai",
       "confirmGesture": "Konfirmasi order",
-      "confirmGestureDescription": "Cara Anda mengirim order yang Anda pasang sendiri, di tiket trading dan di kartu order copilot.",
+      "confirmGestureDescription": "Cara Anda mengirim order yang Anda pasang sendiri, di tiket trading dan di kartu order asisten.",
       "confirmHold": "Tekan & tahan",
       "confirmHoldDescription": "Tahan tombol kirim sampai terisi penuh. Order live ditahan sedikit lebih lama daripada order paper.",
       "confirmClick": "Sekali klik",
       "confirmClickDescription": "Klik pertama langsung mengirim. Tidak ada jeda antara salah klik dan order sungguhan.",
       "confirmGestureNote": "Batas risiko tetap berlaku — yang berubah caranya, bukan pengamannya.",
       "aiPermissions": "Izin trading AI",
-      "aiPermissionsDescription": "Apa yang boleh dilakukan AI copilot tanpa bertanya. Order di luar izin ini selalu memerlukan konfirmasi Anda pada kartu di chat, dan setiap order — disetujui otomatis atau tidak — diberlakukan sesuai batas risiko di atas.",
+      "aiPermissionsDescription": "Apa yang boleh dilakukan asisten AI tanpa bertanya. Order di luar izin ini selalu memerlukan konfirmasi Anda pada kartu di chat, dan setiap order, disetujui otomatis atau tidak, tetap diberlakukan sesuai batas risiko di atas.",
       "aiPaperAuto": "Setujui otomatis trade paper",
-      "aiPaperAutoDescription": "Hanya dana simulasi. Copilot menempatkan order paper tanpa kartu konfirmasi.",
+      "aiPaperAutoDescription": "Hanya dana simulasi. Asisten menempatkan order paper tanpa kartu konfirmasi.",
       "aiLiveAuto": "Setujui otomatis trade live",
       "aiLiveAutoEmpty": "Tidak ada exchange yang diberi izin — setiap trade live memerlukan konfirmasi Anda. Berikan izin exchange dari kartu order dengan “Jangan tanya lagi”.",
-      "aiLiveAutoDescription": "Dana nyata. Copilot menempatkan order live di exchange berikut tanpa kartu konfirmasi:",
+      "aiLiveAutoDescription": "Dana nyata. Asisten menempatkan order live di exchange berikut tanpa kartu konfirmasi:",
       "aiLiveAutoRevoke": "Cabut {{market}}"
     },
     "billing": {
       "title": "Pairlens Intelligence",
-      "description": "Kopilot AI terkelola, laporan riset, dan pencarian web — tanpa kunci API.",
+      "description": "Asisten AI terkelola, dengan riset mendalam dan pencarian web. Tanpa kunci API.",
       "signInFirst": "Masuk untuk mengelola langganan Pairlens Intelligence Anda.",
       "selfHosted": "Penagihan tidak dikonfigurasi di server ini — fitur AI terkelola berjalan tanpa langganan.",
       "loadError": "Tidak dapat memuat status penagihan Anda. Silakan coba lagi.",
@@ -879,7 +879,7 @@
       "triggerWake": "Setelah komputer bangun",
       "triggerWakeHint": "Kunci saat mesin kembali dari mode tidur.",
       "triggerTrade": "Sebelum mengirim order",
-      "triggerTradeHint": "Konfirmasi order yang kamu kirim manual atau lewat copilot, termasuk usulan yang disetujui otomatis. Bot tidak pernah ditanya.",
+      "triggerTradeHint": "Konfirmasi order yang kamu kirim manual atau lewat asisten, termasuk usulan yang disetujui otomatis. Bot tidak pernah ditanya.",
       "afterMinutes": "Setelah {{minutes}} mnt",
       "everyHours": "Tiap {{hours}} jam",
       "graceNever": "Setiap kali",
@@ -1241,50 +1241,14 @@
     "buildWithAi": "Bangun dengan AI",
     "buildWithAiHint": "Jelaskan saja, asisten yang menuliskannya",
     "recommended": "Direkomendasikan",
-    "placeholder": "Jelaskan apa yang ingin dibangun...",
-    "answerPlaceholder": "Jawab, atau katakan hal lain...",
-    "close": "Tutup asisten",
-    "clearChat": "Hapus percakapan",
-    "emptyTitle": "Mau bangun apa?",
-    "emptyHintIndicators": "Jelaskan sebuah indikator atau strategi — asisten menuliskannya ke editor, memvalidasinya, dan menjalankan pratinjau.",
-    "emptyHintBots": "Minta ia memasang strategi sebagai bot paper, menyetel parameter, atau mengatur pengaman risiko. Mengaktifkan bot ke live tetap di tangan Anda.",
-    "emptyHintWorkflows": "Jelaskan apa yang harus terjadi setelah order kamu terisi. Asisten merangkai langkahnya; kamu tinjau diff-nya lalu commit.",
-    "emptyHintNotifications": "Sebutkan hal yang ingin kamu ketahui. Asisten membuat peringatannya dan mengaktifkannya di pair yang kamu sebut.",
-    "genericError": "Asisten mengalami error — coba kirim ulang pesan itu.",
-    "authRequiredTitle": "Bangun dengan AI",
-    "authRequiredDescription": "Jelaskan indikator, strategi, atau bot dengan kata-kata biasa — asisten menulis Python-nya, memvalidasinya, dan mem-backtest-nya bersama Anda.",
-    "upgradeRequiredDescription": "Asisten builder menulis indikator, strategi, dan bot bersama Anda. Berlangganan Pairlens Intelligence, atau hubungkan kunci AI Anda sendiri — gratis.",
-    "unavailableTitle": "Asisten tidak tersedia",
-    "unavailableDescription": "Aktifkan penyedia AI di halaman Plugins untuk membangun indikator, strategi, dan bot lewat chat.",
-    "quickNewIndicator": "Buat indikator divergensi RSI",
-    "quickNewStrategy": "Tulis strategi breakout yang bisa saya backtest",
-    "quickImprove": "Tinjau skrip ini dan sarankan perbaikan",
-    "quickBotFromScratch": "Buatkan saya bot dari nol",
-    "quickCreateBot": "Pasang salah satu strategi saya sebagai bot paper",
-    "quickGuards": "Sarankan pengaman risiko untuk salah satu bot saya",
-    "quickReview": "Bagaimana performa bot saya?",
-    "quickBracket": "Lindungi entry saya dengan stop dan target",
-    "quickScaleOut": "Keluar dari posisi dalam tiga tahap",
-    "quickExplainWorkflow": "Jelaskan apa yang dilakukan workflow ini",
-    "quickPriceAlert": "Beri tahu saya saat BTC melewati sebuah harga",
-    "quickMoveAlert": "Peringatkan saya saat ada pergerakan persen yang cepat",
-    "quickAlertReview": "Tinjau peringatan yang sudah saya punya",
     "questionHint": "Pilih salah satu, atau ketik jawaban Anda sendiri di bawah.",
     "questionHintOpen": "Ketik jawaban Anda di bawah.",
     "youAnswered": "Anda memilih: {{answer}}",
-    "handoffToIndicators": "Dilanjutkan di Indikator & Strategi",
-    "handoffToBots": "Dilanjutkan di Bot",
-    "handoffToWorkflows": "Dilanjutkan di Workflow",
-    "handoffToNotifications": "Dilanjutkan di Notifikasi",
     "starterTitle": "Jelaskan, dan langsung dibuatkan",
     "starterBodyIndicators": "Katakan apa yang ingin Anda lihat di chart. Asisten menulis Python-nya, memvalidasinya, dan menjalankan pratinjau agar Anda bisa menilainya.",
     "starterBodyBots": "Katakan apa yang harus dilakukan bot. Asisten menulis strateginya, mem-backtest-nya, dan memasangnya sebagai bot paper. Mengaktifkannya ke live tetap di tangan Anda.",
     "starterBodyWorkflows": "Sebutkan apa yang harus terjadi setelah order kamu terisi. Asisten merangkai langkahnya di kanvas; kamu tinjau diff-nya lalu commit.",
     "starterBodyNotifications": "Sebutkan hal yang ingin kamu ketahui. Asisten membuat peringatannya, memilih jeda yang masuk akal, lalu mengaktifkannya.",
-    "starterPlaceholderIndicators": "RSI yang mewarnai latar saat momentum berbalik...",
-    "starterPlaceholderBots": "Bot yang membeli pullback dalam tren naik di 4h...",
-    "starterPlaceholderWorkflows": "Setelah entry saya terisi, ambil untung di +5% dan stop di -3%...",
-    "starterPlaceholderNotifications": "Beri tahu saya saat BTC melewati 100.000 di OKX...",
     "starterIdeaIndicator1": "Pita tren berbobot volume",
     "starterIdeaIndicator2": "Pendeteksi divergensi",
     "starterIdeaIndicator3": "Pita volatility squeeze",
@@ -1296,14 +1260,56 @@
     "starterIdeaWorkflow3": "Masuk bertahap saat turun",
     "starterIdeaAlert1": "BTC melewati sebuah level",
     "starterIdeaAlert2": "Gerak 5% dalam sejam",
-    "starterIdeaAlert3": "Beri tahu saat bot saya bertransaksi",
-    "starterSend": "Kirim ke asisten"
+    "starterIdeaAlert3": "Beri tahu saat bot saya bertransaksi"
+  },
+  "assistantDock": {
+    "title": "Asisten",
+    "open": "Buka asisten",
+    "close": "Perkecil asisten",
+    "clear": "Hapus percakapan",
+    "placeholder": "Tanya apa saja, atau beri tahu saya apa yang mau dibangun...",
+    "answerPlaceholder": "Ketik jawaban Anda...",
+    "emptyTitle": "Kita kerjakan apa?",
+    "emptyDescription": "Saya bisa membaca pasar mana pun, mengendalikan chart, menulis indikator dan strategi, membuat alert dan workflow, serta menyiapkan order untuk Anda konfirmasi.",
+    "defaultSuggestion": "Tanya asisten",
+    "statusThinking": "Berpikir...",
+    "statusUsingTools": "Memakai tools...",
+    "statusSearching": "Mencari di web...",
+    "genericError": "Terjadi kesalahan. Coba lagi.",
+    "authRequiredTitle": "Masuk untuk memakai asisten",
+    "authRequiredDescription": "Asisten berjalan di Pairlens Intelligence, atau dengan kunci penyedia Anda sendiri.",
+    "upgradeRequiredDescription": "Tambahkan Intelligence ke paket Anda, atau hubungkan kunci penyedia Anda sendiri.",
+    "unavailableTitle": "Asisten tidak tersedia",
+    "unavailableDescription": "Belum ada penyedia AI yang aktif. Hubungkan satu untuk mulai.",
+    "goToPlugins": "Buka Plugin Store",
+    "suggest": {
+      "chart": "Analisis chart {{pair}}",
+      "discovery": "Carikan sesuatu untuk saya tradingkan",
+      "workflows": "Buat sebuah workflow",
+      "notifications": "Siapkan sebuah alert",
+      "bots": "Jalankan bot trading",
+      "indicators": "Tulis sebuah indikator",
+      "indicatorsScript": "Tingkatkan {{name}}",
+      "accounts": "Tinjau akun saya",
+      "plugins": "Carikan saya sebuah plugin",
+      "workspaceStore": "Rancang ruang kerja saya"
+    },
+    "researchCardTitle": "Laporan Riset: {{pair}} di {{market}}",
+    "researchCardTitleGeneric": "Laporan Riset",
+    "researchCardSources_one": "{{count}} sumber",
+    "researchCardSources_other": "{{count}} sumber",
+    "quickAnalyze": "Analisis {{pair}}",
+    "quickLevels": "Tandai level penting di {{symbol}}",
+    "quickAlert": "Beri tahu saya kalau {{symbol}} breakout",
+    "quickWhatsMoving": "Apa yang bergerak hari ini?",
+    "quickPortfolio": "Bagaimana portofolio saya?",
+    "quickBuildAlert": "Buatkan saya sebuah alert",
+    "approvalApprove": "Setujui",
+    "approvalDecline": "Tolak",
+    "approvalApproved": "Disetujui",
+    "approvalDeclined": "Ditolak"
   },
   "copilot": {
-    "aiLens": "AI Lens",
-    "thinking": "Berpikir...",
-    "idle": "Idle",
-    "clearHistory": "Hapus riwayat chat",
     "placeholder": "Tanyakan lens Anda...",
     "lensPersona": "Persona Lens",
     "persona": {
@@ -1337,22 +1343,7 @@
     "keep": "Simpan",
     "tradingUnavailable": "Trading tidak tersedia.",
     "noCredentialsForMarket": "Tidak ada kredensial yang terhubung untuk {{market}}. Tambahkan API key di Accounts untuk trading live.",
-    "watchingPair": "Memantau {{pair}} · {{timeframe}}",
-    "genericChatError": "Copilot mengalami error — coba kirim lagi.",
-    "quickActionHowIsDoing": "Bagaimana kabar {{symbol}}?",
-    "quickActionSuggestedIndicators": "Indikator yang disarankan",
-    "quickActionAnySignals": "Ada sinyal?",
     "scheduledCheckPrefix": "[Pemeriksaan terjadwal — Anda mengatur ini {{minutes}} menit lalu]",
-    "authRequiredTitle": "Kenalan dengan copilot AI Anda",
-    "authRequiredDescription": "Analisis kontekstual untuk pasangan apa pun — ia membaca chart, memeriksa batas risiko Anda, dan menjawab dengan penalaran yang bisa Anda pertanyakan.",
-    "upgradeRequiredDescription": "Copilot AI Anda membaca chart, memeriksa batas risiko Anda, dan menjawab dengan penalaran yang bisa Anda pertanyakan. Berlangganan Pairlens Intelligence, atau hubungkan kunci AI Anda sendiri — gratis.",
-    "aiLensUnavailableTitle": "AI Lens Tidak Tersedia",
-    "aiLensUnavailableDescription": "Aktifkan plugin AI di halaman Plugins untuk mendapatkan analisis pasar real-time dan bantuan trading.",
-    "goToPlugins": "Buka Plugins",
-    "analyzePair": "Analisis {{pair}}",
-    "startConversation": "Mulai percakapan",
-    "emptyStateHint": "Tanyakan kondisi pasar, validasi setup Anda, atau minta penilaian risiko — AI punya konteks chart.",
-    "contextAware": "Sadar konteks",
     "toolFailed": "Tool gagal"
   },
   "chart": {
@@ -2195,7 +2186,7 @@
       "priceMonthly": "${{price}}/bln",
       "taxNotice": "Harga belum termasuk pajak — dihitung saat checkout.",
       "defaultTitle": "Buka Pairlens Intelligence",
-      "defaultDescription": "Kopilot AI dan riset web yang dihosting, tanpa perlu kunci API. Setiap paket mencakup kuota penggunaan bulanan yang dibagi antara chat, riset, dan pencarian web.",
+      "defaultDescription": "Asisten AI terkelola, dengan riset mendalam dan pencarian web, tanpa perlu mengurus kunci API. Setiap paket mencakup kuota penggunaan bulanan yang dibagi antara chat, riset, dan pencarian web.",
       "byokNote": "Lebih suka penyedia sendiri? Hubungkan kunci Anthropic, OpenAI, Groq, atau OpenRouter di <plugins>Plugin</plugins> — AI dengan kunci sendiri selalu gratis.",
       "checkoutOpenedTitle": "Checkout dibuka di browser Anda",
       "checkoutActivates": "Langganan Anda aktif di sini begitu pembayaran selesai.",
@@ -2223,7 +2214,6 @@
     "fearGreed": "Fear & Greed",
     "chart": "Chart",
     "trade": "Trade",
-    "aiLens": "AI Lens",
     "dataLog": "Log Data",
     "positions": "Posisi",
     "portfolio": "Portofolio",
@@ -2232,7 +2222,6 @@
     "marketDepth": "Kedalaman Market",
     "pairInfo": "Info Pair",
     "multiPrice": "Multi-Harga",
-    "research": "Riset",
     "social": "Sosial",
     "risk": "Risiko",
     "symbolNews": "Berita Simbol",
@@ -2253,7 +2242,6 @@
     "fearGreed": "Pengukur sentimen market berdasarkan Fear & Greed Index",
     "chart": "Chart candlestick dengan indikator dan alat gambar",
     "trade": "Tempatkan order market, limit, dan stop dengan kontrol risiko",
-    "aiLens": "AI co-pilot yang menganalisis sinyal dan memberikan konteks trade",
     "dataLog": "Feed sinyal dan event mentah untuk pair aktif",
     "positions": "Pantau posisi terbuka, P&L, dan riwayat trade",
     "portfolio": "Kepemilikan akun dengan rincian alokasi",
@@ -2262,7 +2250,6 @@
     "marketDepth": "Chart kedalaman market kumulatif untuk pair aktif",
     "pairInfo": "Statistik utama, funding rate, dan metadata untuk pair aktif",
     "multiPrice": "Pasangan yang sama di semua bursa sekaligus, diurutkan untuk menemukan eksekusi terbaik",
-    "research": "Laporan mendalam yang dihasilkan AI untuk pair aktif",
     "social": "Sentimen sosial dan aktivitas komunitas untuk sebuah pair",
     "risk": "Metrik risiko portofolio dan konfigurasi guardrail",
     "symbolNews": "Berita dan analisis sentimen untuk pair trading aktif",
@@ -3086,10 +3073,6 @@
       "ascending": "Diurutkan menurut {{column}}, menaik",
       "descending": "Diurutkan menurut {{column}}, menurun"
     },
-    "panel": {
-      "expand": "Buka panel",
-      "collapse": "Tutup panel"
-    },
     "recentlyViewed": "Baru dilihat",
     "noMarketsFound": "Tidak ada pasar ditemukan",
     "modeLive": "LIVE",
@@ -3157,7 +3140,7 @@
       "statusBrowserVault": "Saat ini: setiap kunci terenkripsi di vault Anda, hanya di peramban ini.",
       "statusBrowserNone": "Belum ada vault di peramban ini. Anda akan menyiapkannya sebelum kunci pertama bisa disimpan.",
       "deviceTitle": "Hanya tersimpan di perangkat Anda",
-      "deviceBody": "API key exchange dan kunci dompet Anda disimpan di komputer ini dan tidak di tempat lain. Semuanya tidak pernah diunggah ke Pairlens: tidak saat Anda masuk, tidak saat pengaturan Anda tersinkron, tidak saat kopilot membaca grafik. Tidak ada salinan di server kami yang bisa bocor.",
+      "deviceBody": "API key exchange dan kunci dompet Anda disimpan di komputer ini dan tidak di tempat lain. Semuanya tidak pernah diunggah ke Pairlens: tidak saat Anda masuk, tidak saat pengaturan Anda tersinkron, tidak saat asisten membaca grafik. Tidak ada salinan di server kami yang bisa bocor.",
       "osTitle": "Terenkripsi selama tersimpan",
       "osBodyDesktop": "Kunci disimpan di {{vault}}, penyimpanan terproteksi yang sama yang dipakai sistem Anda untuk kata sandinya sendiri, dienkripsi di disk dan hanya diserahkan ke aplikasi ini.",
       "osBodyDesktopVault": "Kunci disimpan di {{vault}}, penyimpanan terproteksi yang sama yang dipakai sistem Anda untuk kata sandinya sendiri. Vault Anda menambah satu lapis di atasnya: setiap nilai disegel dengan AES-256-GCM sebelum keychain sempat melihatnya.",
@@ -3395,8 +3378,8 @@
       },
       "ai-research-desk": {
         "name": "Meja Riset AI",
-        "tagline": "Copilot, riset, dan feed berita di samping chart Anda.",
-        "description": "Padukan chart dengan AI Copilot, riset mendalam, dan feed berita global maupun simbol. Dibuat untuk trading yang digerakkan katalis, di mana cerita di baliknya sama pentingnya dengan datanya. Membutuhkan penyedia inferensi AI untuk Copilot dan Riset."
+        "tagline": "Chart diapit berita simbol dan feed berita global.",
+        "description": "Padukan chart dengan feed berita simbol dan feed berita global, untuk trading yang digerakkan katalis, di mana cerita di baliknya sama pentingnya dengan datanya. Asisten AI ada di dock, jadi tetap siap di sini tanpa memakan satu kolom."
       },
       "market-discovery": {
         "name": "Penemuan Market",
@@ -3411,7 +3394,7 @@
       "prediction-terminal": {
         "name": "Terminal Prediksi",
         "tagline": "Grafikkan peluangnya, dengan seluruh acara di sampingnya.",
-        "description": "Tata letak default untuk market prediksi: chart probabilitas dengan transaksi dan kontrak terbuka Anda di bawahnya, order book dan tiket order di tengah, serta penjelajah acara di samping AI Copilot, karena hasil-hasil di sebelahnya adalah separuh dari analisisnya.",
+        "description": "Tata letak default untuk market prediksi: chart probabilitas dengan transaksi dan kontrak terbuka Anda di bawahnya, order book dan tiket order di tengah, serta penjelajah acara setinggi layar di kanan, karena hasil-hasil di sebelahnya adalah separuh dari analisisnya.",
         "menuLabel": "Default"
       },
       "prediction-discovery": {
@@ -3428,7 +3411,7 @@
       "dex-terminal": {
         "name": "Terminal DEX",
         "tagline": "Trading on-chain tanpa order book palsu.",
-        "description": "Tata letak on-chain default: chart dengan statistik pool dan transaksi di bawahnya, tiket swap di atas ticker terbaru Anda untuk menangkap listing baru, dan AI Copilot di atas feed sosial. Tidak ada kolom order book: kedalaman yang berasal dari pool bersifat sintetis, jadi tidak ditampilkan.",
+        "description": "Tata letak on-chain default: chart dengan statistik pool dan transaksi di bawahnya, tiket swap di atas ticker terbaru Anda untuk menangkap listing baru, dan feed sosial di kanan. Tidak ada kolom order book: kedalaman yang berasal dari pool bersifat sintetis, jadi tidak ditampilkan.",
         "menuLabel": "Default"
       },
       "quant-signals": {
@@ -3444,36 +3427,36 @@
       "equities-terminal": {
         "name": "Terminal Saham",
         "tagline": "Saham dengan tiket order di atas feed berita simbol.",
-        "description": "Tata letak default untuk saham: chart dengan transaksi, posisi, dan data fundamental di bawahnya, tiket order di atas berita simbol (katalis menggerakkan saham seperti aliran dana menggerakkan kripto), dan AI Copilot di kanan.",
+        "description": "Tata letak default untuk saham: chart dengan transaksi, posisi, dan data fundamental di bawahnya, dan tiket order di atas berita simbol, karena katalis menggerakkan saham seperti aliran dana menggerakkan kripto.",
         "menuLabel": "Default"
       },
       "ultrawide-trading-floor": {
         "name": "Lantai Trading Ultrawide",
         "tagline": "Semuanya, di mana-mana — untuk layar besar.",
-        "description": "Pusat komando empat kolom yang memenuhi monitor ultrawide atau kedua: scanner, chart, order book dan kedalaman, tiket order dengan posisi, dan AI Copilot. Tata letak paling maksimal."
+        "description": "Pusat komando empat kolom yang memenuhi monitor ultrawide atau kedua: scanner, chart, order book dan kedalaman, serta tiket order di atas posisi terbuka Anda. Tata letak paling maksimal."
       },
       "classic-terminal": {
         "name": "Terminal Klasik",
-        "tagline": "Meja kerja klasik Pairlens — chart, data, trading, copilot.",
-        "description": "Tata letak terminal default: chart besar dengan strip data bertab dan bar risiko di kiri, serta tiket order di atas AI Copilot di kanan.",
+        "tagline": "Meja kerja klasik Pairlens: chart, data, order book, tiket.",
+        "description": "Tata letak terminal default: chart besar dengan strip data bertab dan bar risiko di kiri, serta order book di atas tiket order di kanan.",
         "menuLabel": "Default"
       },
       "chart-focus": {
         "name": "Fokus Chart",
         "tagline": "Satu chart besar dengan data bertab di bawahnya.",
-        "description": "Tata letak satu kolom yang memberi ruang maksimal pada chart, dengan posisi, log data, copilot, dan tiket order terselip dalam strip tab di bawah.",
+        "description": "Tata letak satu kolom yang memberi ruang maksimal pada chart, dengan posisi, log data, dan tiket order terselip dalam strip tab di bawah.",
         "menuLabel": "Fokus Chart"
       },
       "trading": {
         "name": "Trading",
-        "tagline": "Order book dan tiket mengapit chart utama.",
-        "description": "Meja eksekusi tiga kolom: order book dan tiket order di kiri, chart dengan posisi dan risiko di tengah, dan AI Copilot di kanan.",
+        "tagline": "Order book dan tiket di samping chart setinggi layar.",
+        "description": "Meja eksekusi dua kolom: order book di atas tiket order di kiri, dan chart dengan posisi serta risiko mengisi sisa lebarnya.",
         "menuLabel": "Trading"
       },
       "chart-analysis": {
         "name": "Analisis Chart",
-        "tagline": "Chart dan data di kiri, copilot dan eksekusi di kanan.",
-        "description": "Pembagian berorientasi studi: chart, data, riset, dan risiko di kiri; copilot, order book, dan tiket order di kanan.",
+        "tagline": "Chart dan data di kiri, eksekusi di kanan.",
+        "description": "Pembagian berorientasi studi: chart, data, dan risiko di kiri; order book dan tiket order di kanan.",
         "menuLabel": "Analisis"
       },
       "dual-charts": {
@@ -3501,23 +3484,23 @@
       },
       "laptop-split": {
         "name": "Split Laptop",
-        "tagline": "Chart + data di kiri, trading + copilot di kanan — untuk layar lebih kecil.",
-        "description": "Pembagian dua kolom berukuran laptop: chart dan posisi di kiri, tiket order di atas copilot di kanan."
+        "tagline": "Chart dan data di kiri, tiket di kanan, pas untuk laptop.",
+        "description": "Pembagian dua kolom berukuran laptop: chart, posisi, dan risiko di kiri, tiket order di kanan."
       },
       "ultrawide-dashboard": {
         "name": "Dashboard Ultrawide",
         "tagline": "Setiap panel tersebar di monitor ultrawide.",
-        "description": "Dashboard empat kolom untuk layar ultrawide: order book, chart dengan risiko, posisi dan riset, serta kolom trading + copilot."
+        "description": "Dashboard empat kolom untuk layar ultrawide: order book, chart dengan risiko, posisi dan log data, serta kolom berisi tiket order."
       },
       "ultrawide-trading": {
         "name": "Trading Ultrawide",
         "tagline": "Order book, kedalaman, chart, dan eksekusi di sepanjang lebar layar.",
-        "description": "Tata letak eksekusi ultrawide: order book dan kedalaman market di kiri, chart dengan posisi di tengah, dan kolom trading + copilot di kanan."
+        "description": "Tata letak eksekusi ultrawide: order book dan kedalaman market di kiri, chart dengan posisi di tengah, dan tiket order di kanan."
       },
       "command-center": {
         "name": "Pusat Komando 4K",
         "tagline": "Pusat komando lengkap untuk layar 4K.",
-        "description": "Semuanya di layar untuk monitor 4K: order book dan info pair, chart dengan riset dan risiko, posisi dan sosial, serta kolom trading + copilot."
+        "description": "Semuanya di layar untuk monitor 4K: order book dan info pair, chart dengan bar risiko, posisi dan sosial, serta kolom berisi tiket order."
       },
       "home-pulse": {
         "name": "Beranda",
@@ -3552,7 +3535,7 @@
       "perps-terminal": {
         "name": "Terminal Perps",
         "tagline": "Meja futures: posisi dengan harga mark dan likuidasi.",
-        "description": "Tata letak default untuk perpetual futures: chart besar dengan transaksi, kontrak terbuka (entry, mark, likuidasi), dan data market dalam tab di bawahnya, order book serta tiket order yang memperhitungkan leverage di tengah, dan AI Copilot di kanan.",
+        "description": "Tata letak default untuk perpetual futures: chart besar dengan transaksi, kontrak terbuka (entry, mark, likuidasi), dan data market dalam tab di bawahnya, serta order book di atas tiket order yang memperhitungkan leverage di kanan.",
         "menuLabel": "Default"
       },
       "perps-discovery": {
@@ -4375,28 +4358,7 @@
     "exit": "Keluar dari layar penuh"
   },
   "research": {
-    "phaseSearching": "Menelusuri web...",
-    "phaseReading": "Membaca sumber...",
-    "phaseAnalyzing": "Menganalisis data pasar...",
-    "phaseWriting": "Menulis laporan...",
-    "authRequiredTitle": "Meja riset, tinggal satu langkah masuk",
-    "authRequiredDescription": "Laporan riset terstruktur untuk pasangan mana pun, berdasarkan sumber web langsung.",
-    "upgradeDescription": "Laporan riset terstruktur untuk pasangan mana pun, berdasarkan sumber web langsung. Berlangganan Pairlens Intelligence, atau hubungkan kunci AI Anda sendiri — gratis.",
-    "unavailableTitle": "Riset Tidak Tersedia",
-    "unavailableDescription": "Aktifkan plugin AI di halaman Plugin untuk membuat laporan riset pasangan ini.",
-    "goToPlugins": "Buka Plugin",
-    "navigateToPair": "Buka sebuah pasangan untuk melihat riset.",
-    "researchingSymbol": "Meriset {{symbol}}",
-    "generatingReport": "Membuat laporan...",
-    "cachedGenerated": "Tersimpan cache — dibuat {{time}}",
-    "freshGenerated": "Baru — baru saja dibuat",
-    "refresh": "Segarkan",
-    "sourcesCount": "Sumber ({{count}})",
-    "reportTitle": "Laporan Riset",
-    "fullscreenDescription": "Laporan riset dalam mode layar penuh. Tekan Escape untuk keluar.",
-    "sections": "Bagian",
-    "sparklineAriaLabel": "Sparkline harga harian",
-    "errorTitle": "Riset tidak tersedia"
+    "sparklineAriaLabel": "Sparkline harga harian"
   },
   "capabilityGate": {
     "authTitle": "Hanya perlu satu kali masuk gratis",
@@ -4493,8 +4455,8 @@
       "titlePlan": "{{label}} kini milik Anda.",
       "titleDefault": "Pairlens Intelligence kini milik Anda.",
       "bodyPack": "Kredit ini bertumpuk di atas anggaran bulanan Anda dan kedaluwarsa dalam {{days}} hari. Kembali ke aplikasi Pairlens — saldo Anda akan diperbarui dalam beberapa detik.",
-      "bodyPlanWithCredits": "Kopilot AI terkelola, riset, dan pencarian web Anda kini terbuka dengan {{credits}} kredit setiap bulan. Kembali ke aplikasi Pairlens — langganan Anda akan terdeteksi dalam beberapa detik.",
-      "bodyPlanNoCredits": "Kopilot AI terkelola, riset, dan pencarian web Anda kini terbuka. Kembali ke aplikasi Pairlens — langganan Anda akan terdeteksi dalam beberapa detik.",
+      "bodyPlanWithCredits": "Asisten AI terkelola Anda kini terbuka, lengkap dengan riset mendalam dan pencarian web, plus {{credits}} kredit setiap bulan. Kembali ke aplikasi Pairlens: langganan Anda akan terdeteksi dalam beberapa detik.",
+      "bodyPlanNoCredits": "Asisten AI terkelola Anda kini terbuka, lengkap dengan riset mendalam dan pencarian web. Kembali ke aplikasi Pairlens: langganan Anda akan terdeteksi dalam beberapa detik.",
       "openTerminal": "Buka terminal",
       "closeTabHint": "Membayar dari aplikasi desktop? Anda bisa langsung menutup tab ini.",
       "receiptHint": "Struk dan faktur ada di email Anda dan portal penagihan (Pengaturan → Intelligence)."
@@ -4882,7 +4844,7 @@
     "ai": {
       "inference": {
         "label": "Inferensi",
-        "description": "Inferensi LLM untuk analisis co-pilot"
+        "description": "Inferensi LLM untuk asisten AI"
       },
       "web-search": {
         "label": "Pencarian Web",
@@ -4949,7 +4911,7 @@
     },
     "ai": {
       "label": "Provider AI",
-      "description": "Provider model bahasa untuk analisis AI co-pilot"
+      "description": "Provider model bahasa untuk asisten AI"
     },
     "intelligence": {
       "label": "Intelligence",
@@ -4979,7 +4941,7 @@
         "watchlist": "Daftar Pantauan",
         "trade": "Trade",
         "chart": "Chart",
-        "copilot": "Co-pilot",
+        "copilot": "Asisten",
         "discover": "Jelajahi"
       },
       "overlays": {
@@ -5127,12 +5089,12 @@
       "bannerBody": "Ruang kerja, bot, indikator buatan sendiri, dan empat venue lagi.",
       "bannerDismiss": "Sembunyikan",
       "screenTitle": "Di layar yang lebih besar",
-      "lead": "Ponsel Anda membawa bagian Pairlens yang ingin Anda genggam: chart, order book, tiket order, dan co-pilot. Sisa terminalnya dibuat untuk layar yang punya ruang untuk melebar, dan sudah menunggu Anda di sana.",
+      "lead": "Ponsel Anda membawa bagian Pairlens yang ingin Anda genggam: chart, order book, tiket order, dan asisten. Sisa terminalnya dibuat untuk layar yang punya ruang untuk melebar, dan sudah menunggu Anda di sana.",
       "widerWindow": "Di jendela yang lebih lebar",
       "desktopApp": "Di aplikasi desktop",
       "workspaces": {
         "title": "Ruang Kerja",
-        "body": "Chart, order book, aliran transaksi, dan co-pilot berdampingan, ditata sekali lalu disimpan. Workspace Store punya tata letak siap pakai yang bisa Anda salin dengan satu ketukan."
+        "body": "Chart, order book, aliran transaksi, dan tiket order berdampingan, ditata sekali lalu disimpan. Workspace Store punya tata letak siap pakai yang bisa Anda salin dengan satu ketukan."
       },
       "bots": {
         "title": "Bot",

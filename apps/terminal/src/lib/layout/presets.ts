@@ -4,9 +4,10 @@ import { layoutId, normalizeLayout } from './utils'
 import type { TerminalLayout } from './types'
 
 /**
- * Default — Chart+Data left, a narrow Order Book+Trade rail in the middle,
- * and the AI copilot as its own full-height column: the conversation (or its
- * sign-in invitation) gets room to breathe instead of sharing a column.
+ * Default — Chart+Data left, and a narrow Order Book+Trade rail on the right.
+ * The AI assistant used to hold a 24% column of its own; it now lives in the
+ * floating dock outside the grid, so that width goes back to the chart and the
+ * rail keeps the exact pixel size it always had.
  *
  * The data strip opens on Trades rather than Positions. A fresh terminal has
  * no positions to show, so the first tab was an empty state on every install;
@@ -18,7 +19,7 @@ export const PRESET_DEFAULT: TerminalLayout = {
   columns: [
     {
       id: 'col-left',
-      widthPercent: 55,
+      widthPercent: 79,
       cells: [
         {
           id: 'cell-chart',
@@ -36,7 +37,6 @@ export const PRESET_DEFAULT: TerminalLayout = {
             { id: 'pane-data-log', type: 'data-log' },
             { id: 'pane-depth', type: 'depth' },
             { id: 'pane-pair-info', type: 'pair-info' },
-            { id: 'pane-research', type: 'research' },
             { id: 'pane-social', type: 'social' },
           ],
         },
@@ -66,18 +66,6 @@ export const PRESET_DEFAULT: TerminalLayout = {
         },
       ],
     },
-    {
-      id: 'col-copilot',
-      widthPercent: 24,
-      cells: [
-        {
-          id: 'cell-copilot',
-          heightPercent: 100,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-copilot', type: 'copilot' }],
-        },
-      ],
-    },
   ],
 }
 
@@ -90,7 +78,7 @@ export const PRESET_DEFAULT: TerminalLayout = {
 // statically, because a saved layout has to boot whether or not the plugin
 // is installed.
 
-/** Chart Focus — Single column: Chart (77%) + Positions/Copilot tabs (18%) + Risk (5%) */
+/** Chart Focus — Single column: Chart (77%) + Positions/Data tabs (18%) + Risk (5%) */
 export const PRESET_CHART_FOCUS: TerminalLayout = {
   version: 1,
   columns: [
@@ -111,7 +99,6 @@ export const PRESET_CHART_FOCUS: TerminalLayout = {
           panes: [
             { id: 'pane-positions', type: 'positions' },
             { id: 'pane-data-log', type: 'data-log' },
-            { id: 'pane-copilot', type: 'copilot' },
             { id: 'pane-trade-entry', type: 'trade-entry' },
           ],
         },
@@ -126,7 +113,7 @@ export const PRESET_CHART_FOCUS: TerminalLayout = {
   ],
 }
 
-/** Trading — 3 columns: Orderbook+Trade (20%), Chart+Positions+Risk (55%), Copilot (25%) */
+/** Trading — 2 columns: Orderbook+Trade (20%), Chart+Positions+Risk (80%) */
 export const PRESET_TRADING: TerminalLayout = {
   version: 1,
   columns: [
@@ -150,7 +137,7 @@ export const PRESET_TRADING: TerminalLayout = {
     },
     {
       id: 'col-center',
-      widthPercent: 55,
+      widthPercent: 80,
       cells: [
         {
           id: 'cell-chart',
@@ -175,31 +162,20 @@ export const PRESET_TRADING: TerminalLayout = {
         },
       ],
     },
-    {
-      id: 'col-right',
-      widthPercent: 25,
-      cells: [
-        {
-          id: 'cell-copilot',
-          heightPercent: 100,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-copilot', type: 'copilot' }],
-        },
-      ],
-    },
   ],
 }
 
 /**
- * Analysis — Chart+Data+Risk left (58%), a squeezed Order Book+Trade rail
- * (18%), and the AI copilot as its own full-height column (24%).
+ * Analysis — Chart+Data+Risk left (82%) with a squeezed Order Book+Trade rail
+ * (18%) beside it. The rail keeps its width; the column the copilot used to
+ * hold goes to the chart.
  */
 export const PRESET_ANALYSIS: TerminalLayout = {
   version: 1,
   columns: [
     {
       id: 'col-left',
-      widthPercent: 58,
+      widthPercent: 82,
       cells: [
         {
           id: 'cell-chart',
@@ -214,7 +190,6 @@ export const PRESET_ANALYSIS: TerminalLayout = {
           panes: [
             { id: 'pane-positions', type: 'positions' },
             { id: 'pane-data-log', type: 'data-log' },
-            { id: 'pane-research', type: 'research' },
           ],
         },
         {
@@ -240,18 +215,6 @@ export const PRESET_ANALYSIS: TerminalLayout = {
           heightPercent: 48,
           activeTabIndex: 0,
           panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
-        },
-      ],
-    },
-    {
-      id: 'col-copilot',
-      widthPercent: 24,
-      cells: [
-        {
-          id: 'cell-copilot',
-          heightPercent: 100,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-copilot', type: 'copilot' }],
         },
       ],
     },
@@ -396,7 +359,6 @@ export const LAPTOP_FOCUSED: TerminalLayout = {
           panes: [
             { id: 'pane-positions', type: 'positions' },
             { id: 'pane-data-log', type: 'data-log' },
-            { id: 'pane-copilot', type: 'copilot' },
           ],
         },
         {
@@ -415,7 +377,7 @@ export const LAPTOP_SPLIT: TerminalLayout = {
   columns: [
     {
       id: 'col-left',
-      widthPercent: 65,
+      widthPercent: 72,
       cells: [
         {
           id: 'cell-chart',
@@ -442,19 +404,13 @@ export const LAPTOP_SPLIT: TerminalLayout = {
     },
     {
       id: 'col-right',
-      widthPercent: 35,
+      widthPercent: 28,
       cells: [
         {
           id: 'cell-trade',
-          heightPercent: 40,
+          heightPercent: 100,
           activeTabIndex: 0,
           panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
-        },
-        {
-          id: 'cell-copilot',
-          heightPercent: 60,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-copilot', type: 'copilot' }],
         },
       ],
     },
@@ -479,7 +435,7 @@ export const ULTRAWIDE_FULL_DASHBOARD: TerminalLayout = {
     },
     {
       id: 'col-chart',
-      widthPercent: 45,
+      widthPercent: 51,
       cells: [
         {
           id: 'cell-chart',
@@ -501,36 +457,24 @@ export const ULTRAWIDE_FULL_DASHBOARD: TerminalLayout = {
       cells: [
         {
           id: 'cell-positions',
-          heightPercent: 55,
+          heightPercent: 100,
           activeTabIndex: 0,
           panes: [
             { id: 'pane-positions', type: 'positions' },
             { id: 'pane-data-log', type: 'data-log' },
           ],
         },
-        {
-          id: 'cell-research',
-          heightPercent: 45,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-research', type: 'research' }],
-        },
       ],
     },
     {
       id: 'col-right',
-      widthPercent: 20,
+      widthPercent: 14,
       cells: [
         {
           id: 'cell-trade',
-          heightPercent: 35,
+          heightPercent: 100,
           activeTabIndex: 0,
           panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
-        },
-        {
-          id: 'cell-copilot',
-          heightPercent: 65,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-copilot', type: 'copilot' }],
         },
       ],
     },
@@ -560,7 +504,7 @@ export const ULTRAWIDE_WIDE_TRADING: TerminalLayout = {
     },
     {
       id: 'col-center',
-      widthPercent: 50,
+      widthPercent: 68,
       cells: [
         {
           id: 'cell-chart',
@@ -587,19 +531,13 @@ export const ULTRAWIDE_WIDE_TRADING: TerminalLayout = {
     },
     {
       id: 'col-right',
-      widthPercent: 32,
+      widthPercent: 14,
       cells: [
         {
           id: 'cell-trade',
-          heightPercent: 35,
+          heightPercent: 100,
           activeTabIndex: 0,
           panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
-        },
-        {
-          id: 'cell-copilot',
-          heightPercent: 65,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-copilot', type: 'copilot' }],
         },
       ],
     },
@@ -630,19 +568,13 @@ export const FOURK_COMMAND_CENTER: TerminalLayout = {
     },
     {
       id: 'col-chart',
-      widthPercent: 40,
+      widthPercent: 53,
       cells: [
         {
           id: 'cell-chart',
-          heightPercent: 65,
+          heightPercent: 95,
           activeTabIndex: 0,
           panes: [{ id: 'pane-chart', type: 'chart' }],
-        },
-        {
-          id: 'cell-research',
-          heightPercent: 30,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-research', type: 'research' }],
         },
         {
           id: 'cell-risk',
@@ -675,19 +607,13 @@ export const FOURK_COMMAND_CENTER: TerminalLayout = {
     },
     {
       id: 'col-right',
-      widthPercent: 25,
+      widthPercent: 12,
       cells: [
         {
           id: 'cell-trade',
-          heightPercent: 35,
+          heightPercent: 100,
           activeTabIndex: 0,
           panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
-        },
-        {
-          id: 'cell-copilot',
-          heightPercent: 65,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-copilot', type: 'copilot' }],
         },
       ],
     },

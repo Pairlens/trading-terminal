@@ -4,8 +4,8 @@ description: The left nav, the workspace grid, the pair header, and the search p
 group: get-started
 order: 3
 eyebrow: Get started
-updated: AUG 2026
-readTime: 5 min read
+updated: 15 AUG 2026
+readTime: 6 min read
 ---
 
 Pairlens opens on a live chart. Everything else is one click or one keystroke
@@ -42,7 +42,7 @@ Info, Data Log.
 
 **Trading.** Trade Entry, Positions, Portfolio, Risk.
 
-**AI and research.** AI Lens, Research, Social, Symbol News.
+**News and sentiment.** Social, Symbol News.
 
 Drag a separator to resize. Use the pane menu to split, replace, or close.
 Panels marked as singletons can only appear once per workspace. Both the pair
@@ -62,6 +62,19 @@ instance after your laptop wakes from sleep.
 
 Turn on the recent-tickers marquee in **Settings → Appearance** if you want a
 running strip of live prices for the pairs you have been looking at.
+
+## The assistant, bottom-right
+
+An orb sits in the bottom-right corner with a line of text beside it, and the
+text is contextual: **Analyze the chart of BTC/USDT** on a chart, **Build a
+workflow** on the workflows page, **Write an indicator** in the workbench. Click
+the orb, or press <kbd>⌘J</kbd>, and the chat opens over the terminal.
+
+It lives outside the workspace grid, so it takes no layout space and it does not
+reset when you change page, pair or workspace. Minimizing it does not stop a run
+either: the line beside the orb turns into **Thinking...** or **Using tools...**
+and keeps you posted while you work. See
+[the AI assistant](/docs/ai-copilot).
 
 ## What the address bar says
 

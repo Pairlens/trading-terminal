@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { memo, useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -26,11 +26,15 @@ import type {
   ChartCommand,
   DrawingToolType,
 } from '@pairlens/fast-financial-charts/types'
+import type { CopilotMarketContext } from '@/lib/copilot/tool-deps'
+import type { ChartServiceHandle } from '@/lib/assistant-core/chart-service'
 import {
   useOptionalCandleData,
   useOptionalChartActions,
   useOptionalChartConfig,
 } from '@/lib/chart-terminal-context'
+import { CHART_SERVICE_NAME } from '@/lib/assistant-core/chart-service'
+import { buildChartSnapshot } from '@/lib/assistant-core/client-tools'
 import { useChartPaneShortcuts } from '@/lib/chart-shortcuts'
 import { matchCommand } from '@/lib/keybindings/store'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
@@ -53,6 +57,16 @@ export function ChartPane() {
   const chartActions = useOptionalChartActions()
   const activePair = usePanePair()
 
+  // The live candle context the assistant reads, mirrored into a ref rather
+  // than passed down: this component already re-renders on every candle tick
+  // (it subscribes to the stream), and the memoized inner pane must not join
+  // it. A ref object is a stable prop, so the memo still holds.
+  const marketContextRef = useRef<CopilotMarketContext>({})
+  marketContextRef.current = {
+    candles: candleData?.candles ?? [],
+    signal: candleData?.latestSignal ?? undefined,
+  }
+
   if (!candleData || !chartConfig || !chartActions || !activePair) {
     return <PanePairPicker />
   }
@@ -66,6 +80,7 @@ export function ChartPane() {
       desktopOnly={candleData.desktopOnly}
       chartConfig={chartConfig}
       chartActions={chartActions}
+      marketContextRef={marketContextRef}
     />
   )
 }
@@ -78,6 +93,7 @@ const ChartPaneInner = memo(function ChartPaneInner({
   desktopOnly,
   chartConfig,
   chartActions,
+  marketContextRef,
 }: {
   pairKey: string
   signalScan: SignalScan | null
@@ -86,6 +102,7 @@ const ChartPaneInner = memo(function ChartPaneInner({
   desktopOnly: boolean
   chartConfig: NonNullable<ReturnType<typeof useOptionalChartConfig>>
   chartActions: NonNullable<ReturnType<typeof useOptionalChartActions>>
+  marketContextRef: React.RefObject<CopilotMarketContext>
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const serviceRegistry = useServiceRegistry()
@@ -188,21 +205,66 @@ const ChartPaneInner = memo(function ChartPaneInner({
   )
 
   // Register chart actions via the shared service registry so cross-plugin
-  // consumers (e.g. copilot from pairlens-intelligence) can discover them.
-  useEffect(() => {
-    return serviceRegistry.register('chart-actions', {
-      chartRef,
-      addIndicator,
-      removeIndicator,
-      removeAllIndicators,
-    })
-  }, [
-    serviceRegistry,
+  // consumers (e.g. copilot from pairlens-intelligence) can discover them,
+  // and so the assistant, which mounts above the router outlet where
+  // ChartTerminalContext does not reach, can drive the chart the user is on.
+  //
+  // Everything is read through this ref so the object we register is stable
+  // for the pane's lifetime. `register` notifies every listener on each call,
+  // and the config below changes on every venue or timeframe switch.
+  const live = {
     chartRef,
-    addIndicator,
-    removeIndicator,
-    removeAllIndicators,
-  ])
+    chartActions,
+    market: chartConfig.market,
+    pair: pairKey,
+    timeframe: chartConfig.timeframe,
+    marketContextRef,
+  }
+  const liveRef = useRef(live)
+  liveRef.current = live
+
+  const chartService = useMemo<ChartServiceHandle>(
+    () => ({
+      get chartRef() {
+        return liveRef.current.chartRef
+      },
+      get chartActions() {
+        return liveRef.current.chartActions
+      },
+      get market() {
+        return liveRef.current.market
+      },
+      get pair() {
+        return liveRef.current.pair
+      },
+      get timeframe() {
+        return liveRef.current.timeframe
+      },
+      addIndicator: (indicator) =>
+        liveRef.current.chartActions.addIndicator(indicator),
+      removeIndicator: (id) => liveRef.current.chartActions.removeIndicator(id),
+      removeAllIndicators: () =>
+        liveRef.current.chartActions.removeAllIndicators(),
+      getSnapshot: () =>
+        buildChartSnapshot(liveRef.current.chartRef.current ?? null),
+      // Candles and the latest signal only. The ticker is deliberately absent:
+      // subscribing to it here would make the chart pane re-render on every
+      // ticker message, which is exactly the invariant the pane exists to keep.
+      getMarketContext: () => liveRef.current.marketContextRef.current,
+    }),
+    [],
+  )
+
+  // `useServiceRegistry()` hands back a fresh wrapper on every render, so it
+  // can never be a dependency: it would re-register (and notify every
+  // listener) on each one.
+  const serviceRegistryRef = useRef(serviceRegistry)
+  serviceRegistryRef.current = serviceRegistry
+
+  useEffect(
+    () => serviceRegistryRef.current.register(CHART_SERVICE_NAME, chartService),
+    [chartService],
+  )
 
   // Keyboard shortcuts delivered by the window-level router — they work no
   // matter where DOM focus sits, targeting the active (last-used) chart pane.

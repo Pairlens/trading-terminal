@@ -31,7 +31,8 @@ const EXAMPLES: Record<string, { cfg: ChartConfig; caption: string }> = {
   },
   e4: {
     cfg: { type: 'candles', ema: false, bb: true, rsi: false, vol: false },
-    caption: 'The co-pilot drives the chart through the same tools you get.',
+    caption:
+      'The AI assistant drives the chart through the same tools you get.',
   },
 }
 

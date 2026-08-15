@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 7
 eyebrow: For traders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 5 min read
 ---
 
@@ -97,7 +97,7 @@ from the venue every time, so they are as current as the venue's API and they
 disappear the moment you disconnect the account.
 
 The one exception is the **trade journal**, which is yours: trades you or the
-[co-pilot](/docs/ai-copilot) log, stored in your account when you are signed in
+[assistant](/docs/ai-copilot) log, stored in your account when you are signed in
 and sync is on. It exists to hold the reasoning behind a trade, which no
 exchange API will ever give you back.
 

@@ -5,7 +5,7 @@ group: builders
 parent: charts
 order: 1
 eyebrow: For builders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 4 min read
 ---
 
@@ -13,7 +13,7 @@ readTime: 4 min read
 schema plus an executor, so a model can add indicators, draw, navigate, read
 data back, and take screenshots without you writing a per-action bridge.
 
-This is the same surface the Pairlens co-pilot uses, which is why "draw the
+This is the same surface the Pairlens assistant uses, which is why "draw the
 levels you would trade this off" produces drawings that persist on the user's
 chart rather than a description of drawings.
 

@@ -224,16 +224,6 @@ const FIRST_PARTY_COMPONENTS: Record<
     ),
   },
   'pairlens-intelligence': {
-    copilot: lazyChunk(() =>
-      import('@/components/terminal/copilot-pane').then((m) => ({
-        default: m.CopilotPane,
-      })),
-    ),
-    research: lazyChunk(() =>
-      import('@/components/terminal/research-pane').then((m) => ({
-        default: m.ResearchPane,
-      })),
-    ),
     news: lazyChunk(() =>
       import('@/components/discovery/news-pane').then((m) => ({
         default: m.NewsPane,

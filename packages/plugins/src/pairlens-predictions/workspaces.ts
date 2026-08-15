@@ -15,11 +15,11 @@ import type {
 
 /**
  * Prediction Terminal — the default pair layout for the `prediction` asset
- * class. The Events browser gets a real column: on a prediction market the
- * question next door (the other outcomes of the same event, the adjacent
- * strikes) is half the analysis, where a spot desk would show a copilot
- * conversation. The data strip opens on the tape and carries
- * `prediction-positions` (open contracts) instead of the spot positions pane.
+ * class. The Events browser gets a full-height column of its own: on a
+ * prediction market the question next door (the other outcomes of the same
+ * event, the adjacent strikes) is half the analysis. The data strip opens on
+ * the tape and carries `prediction-positions` (open contracts) instead of the
+ * spot positions pane.
  */
 export const PREDICTION_TERMINAL_LAYOUT = {
   version: 1,
@@ -79,15 +79,9 @@ export const PREDICTION_TERMINAL_LAYOUT = {
       cells: [
         {
           id: 'cell-events',
-          heightPercent: 58,
+          heightPercent: 100,
           activeTabIndex: 0,
           panes: [{ id: 'pane-events', type: 'events' }],
-        },
-        {
-          id: 'cell-copilot',
-          heightPercent: 42,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-copilot', type: 'copilot' }],
         },
       ],
     },
@@ -166,7 +160,7 @@ export const PREDICTIONS_WORKSPACES: Array<ContributedWorkspace> = [
     icon: 'Scale',
     tagline: 'Chart the odds with the whole event beside them.',
     description:
-      'The default prediction-market layout: a probability chart with the tape and your open contracts below it, the order book and ticket in the middle, and the event browser beside the AI Copilot, because the neighbouring outcomes are half the analysis.',
+      'The default prediction-market layout: a probability chart with the tape and your open contracts below it, the order book and ticket in the middle, and a full-height event browser on the right, because the neighbouring outcomes are half the analysis.',
     facets: {
       traderTypes: ['news-trader', 'swing-trader'],
       assetClasses: ['predictions'],

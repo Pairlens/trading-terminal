@@ -20,7 +20,7 @@
     "oneTerminal": {
       "eyebrow": "Vì sao chọn Pairlens",
       "title": "Một terminal. Mọi thị trường.",
-      "sub": "Giao dịch spot tập trung và on-chain song song, cùng AI co-pilot đọc từng setup.",
+      "sub": "Giao dịch spot tập trung và on-chain song song, cùng một trợ lý AI duy nhất đọc từng setup.",
       "points": {
         "0": "Spot tập trung — OKX, Binance, Coinbase",
         "1": "Swap DEX on-chain, định tuyến thông minh",
@@ -90,9 +90,9 @@
       "label": "Định tuyến"
     },
     "copilot": {
-      "eyebrow": "Co-pilot của bạn",
-      "title": "Một co-pilot tuân thủ luật chơi của bạn.",
-      "sub": "Nó đọc thị trường thay bạn — và không bao giờ vượt qua ranh giới bạn đặt ra.",
+      "eyebrow": "Trợ lý của bạn",
+      "title": "Một trợ lý tuân thủ luật chơi của bạn.",
+      "sub": "Nó đọc thị trường thay bạn, và không bao giờ vượt qua ranh giới bạn đặt ra.",
       "points": {
         "0": "Theo dõi tín hiệu trên các thị trường của bạn",
         "1": "Duyệt, chặn hoặc gắn cờ mọi setup",
@@ -101,7 +101,7 @@
       "scene": {
         "guardrail": "giới hạn rủi ro của bạn"
       },
-      "label": "Co-pilot"
+      "label": "Trợ lý"
     },
     "themeStep": {
       "status": "Đang điều chỉnh ánh sáng",
@@ -166,11 +166,11 @@
     "account": {
       "status": "Bước cuối cùng",
       "title": "Đồng bộ hóa?",
-      "sub": "Tùy chọn — mọi thứ bạn vừa thấy đều hoạt động mà không cần tài khoản. Tài khoản bổ sung AI copilot và đồng bộ đa thiết bị. Khóa của bạn luôn ở lại trên máy này.",
+      "sub": "Tùy chọn: mọi thứ bạn vừa thấy đều hoạt động mà không cần tài khoản. Tài khoản bổ sung trợ lý AI được lưu trữ sẵn và đồng bộ đa thiết bị. Khóa của bạn luôn ở lại trên máy này.",
       "benefits": {
         "ai": {
-          "title": "AI copilot & nghiên cứu",
-          "sub": "Phân tích theo ngữ cảnh trên mọi cặp — miễn phí"
+          "title": "Trợ lý AI & nghiên cứu",
+          "sub": "Hoạt động trên toàn bộ terminal, miễn phí"
         },
         "sync": {
           "title": "Đồng bộ đám mây",
@@ -503,12 +503,12 @@
         },
         "copilot": {
           "title": "Lịch sử trò chuyện AI",
-          "description": "Các cuộc trò chuyện với copilot, theo từng cặp.",
+          "description": "Một cuộc trò chuyện duy nhất với trợ lý, dùng chung cho cả terminal.",
           "caveat": "Khi mục này đang tắt, xóa lịch sử trò chuyện chỉ xóa trên thiết bị này. Các cuộc trò chuyện đã có trong tài khoản vẫn được giữ và sẽ xuất hiện lại khi bật đồng bộ trở lại."
         },
         "trades": {
           "title": "Nhật ký giao dịch",
-          "description": "Các giao dịch mà bạn hoặc copilot ghi vào nhật ký."
+          "description": "Các giao dịch mà bạn hoặc trợ lý ghi vào nhật ký."
         }
       }
     },
@@ -693,24 +693,24 @@
       "dailyTradeCount": "Số lệnh",
       "windowStart": "Cửa sổ bắt đầu",
       "confirmGesture": "Xác nhận lệnh",
-      "confirmGestureDescription": "Cách bạn xác nhận lệnh do chính bạn đặt, trong phiếu lệnh và trên thẻ lệnh của copilot.",
+      "confirmGestureDescription": "Cách bạn xác nhận lệnh do chính bạn đặt, trong phiếu lệnh và trên thẻ lệnh của trợ lý.",
       "confirmHold": "Nhấn giữ",
       "confirmHoldDescription": "Giữ nút gửi cho đến khi đầy. Lệnh tiền thật giữ lâu hơn lệnh giả lập một chút.",
       "confirmClick": "Nhấp một lần",
       "confirmClickDescription": "Nhấp đầu tiên là gửi lệnh. Không còn gì ngăn giữa một cú nhấp nhầm và một lệnh thật.",
       "confirmGestureNote": "Giới hạn rủi ro vẫn áp dụng như nhau — chỉ thay đổi thao tác, không thay đổi lớp bảo vệ.",
       "aiPermissions": "Quyền giao dịch của AI",
-      "aiPermissionsDescription": "Những gì AI copilot có thể làm mà không cần hỏi. Lệnh nằm ngoài các quyền này luôn cần bạn xác nhận trên thẻ trong khung chat, và mọi lệnh — dù tự động duyệt hay không — đều được kiểm soát theo các giới hạn rủi ro ở trên.",
+      "aiPermissionsDescription": "Những gì trợ lý AI có thể làm mà không cần hỏi. Lệnh nằm ngoài các quyền này luôn cần bạn xác nhận trên thẻ trong khung chat, và mọi lệnh, dù tự động duyệt hay không, đều được kiểm soát theo các giới hạn rủi ro ở trên.",
       "aiPaperAuto": "Tự động duyệt lệnh giả lập",
-      "aiPaperAutoDescription": "Chỉ dùng quỹ giả lập. Copilot đặt lệnh giả lập mà không cần thẻ xác nhận.",
+      "aiPaperAutoDescription": "Chỉ dùng quỹ giả lập. Trợ lý đặt lệnh giả lập mà không cần thẻ xác nhận.",
       "aiLiveAuto": "Tự động duyệt lệnh thật",
       "aiLiveAutoEmpty": "Chưa cấp quyền cho sàn giao dịch nào — mọi lệnh thật đều cần bạn xác nhận. Cấp quyền cho một sàn giao dịch từ thẻ lệnh bằng \"Không hỏi lại\".",
-      "aiLiveAutoDescription": "Quỹ thật. Copilot đặt lệnh thật trên các sàn giao dịch này mà không cần thẻ xác nhận:",
+      "aiLiveAutoDescription": "Quỹ thật. Trợ lý đặt lệnh thật trên các sàn giao dịch này mà không cần thẻ xác nhận:",
       "aiLiveAutoRevoke": "Thu hồi {{market}}"
     },
     "billing": {
       "title": "Pairlens Intelligence",
-      "description": "Trợ lý AI được lưu trữ, báo cáo nghiên cứu và tìm kiếm web — không cần khóa API.",
+      "description": "Trợ lý AI được lưu trữ sẵn, kèm nghiên cứu chuyên sâu và tìm kiếm web. Không cần khóa API.",
       "signInFirst": "Đăng nhập để quản lý gói Pairlens Intelligence của bạn.",
       "selfHosted": "Máy chủ này chưa cấu hình thanh toán — các tính năng AI được lưu trữ hoạt động không cần gói đăng ký.",
       "loadError": "Không thể tải trạng thái thanh toán. Vui lòng thử lại.",
@@ -879,7 +879,7 @@
       "triggerWake": "Sau khi máy thức dậy",
       "triggerWakeHint": "Khoá khi máy quay lại từ chế độ ngủ.",
       "triggerTrade": "Trước khi đặt lệnh",
-      "triggerTradeHint": "Xác nhận lệnh bạn đặt bằng tay hoặc qua copilot, kể cả đề xuất được duyệt tự động. Bot không bao giờ bị hỏi.",
+      "triggerTradeHint": "Xác nhận lệnh bạn đặt bằng tay hoặc qua trợ lý, kể cả đề xuất được duyệt tự động. Bot không bao giờ bị hỏi.",
       "afterMinutes": "Sau {{minutes}} phút",
       "everyHours": "Mỗi {{hours}} giờ",
       "graceNever": "Mỗi lần",
@@ -1241,50 +1241,14 @@
     "buildWithAi": "Xây dựng với AI",
     "buildWithAiHint": "Cứ mô tả, trợ lý sẽ viết",
     "recommended": "Khuyến nghị",
-    "placeholder": "Mô tả thứ bạn muốn xây...",
-    "answerPlaceholder": "Trả lời, hoặc nói điều khác...",
-    "close": "Đóng trợ lý",
-    "clearChat": "Xóa cuộc trò chuyện",
-    "emptyTitle": "Chúng ta xây gì đây?",
-    "emptyHintIndicators": "Mô tả một chỉ báo hoặc chiến lược — trợ lý sẽ viết vào trình soạn thảo, kiểm tra tính hợp lệ và chạy bản xem trước.",
-    "emptyHintBots": "Hãy nhờ nó triển khai một chiến lược thành bot giả lập, tinh chỉnh tham số, hoặc đặt giới hạn rủi ro. Việc kích hoạt bot thật vẫn nằm trong tay bạn.",
-    "emptyHintWorkflows": "Mô tả điều cần xảy ra sau khi lệnh của bạn khớp. Trợ lý nối các bước; bạn xem phần thay đổi rồi commit.",
-    "emptyHintNotifications": "Nói bạn muốn được báo về điều gì. Trợ lý tạo cảnh báo và bật nó trên cặp bạn chỉ định.",
-    "genericError": "Trợ lý gặp lỗi — hãy thử gửi lại.",
-    "authRequiredTitle": "Xây dựng với AI",
-    "authRequiredDescription": "Mô tả một chỉ báo, chiến lược hay bot bằng lời thường — trợ lý sẽ viết Python, kiểm tra và backtest cùng bạn.",
-    "upgradeRequiredDescription": "Trợ lý xây dựng viết chỉ báo, chiến lược và bot cùng bạn. Đăng ký Pairlens Intelligence hoặc kết nối khóa AI của riêng bạn — miễn phí.",
-    "unavailableTitle": "Trợ lý không khả dụng",
-    "unavailableDescription": "Bật một nhà cung cấp AI trên trang Plugins để xây chỉ báo, chiến lược và bot qua chat.",
-    "quickNewIndicator": "Xây một chỉ báo phân kỳ RSI",
-    "quickNewStrategy": "Viết một chiến lược breakout mà tôi có thể backtest",
-    "quickImprove": "Xem lại script này và gợi ý cải thiện",
-    "quickBotFromScratch": "Xây cho tôi một bot từ đầu",
-    "quickCreateBot": "Triển khai một chiến lược của tôi thành bot giả lập",
-    "quickGuards": "Gợi ý giới hạn rủi ro cho một bot của tôi",
-    "quickReview": "Các bot của tôi đang hoạt động thế nào?",
-    "quickBracket": "Bọc lệnh vào của tôi bằng cắt lỗ và chốt lời",
-    "quickScaleOut": "Thoát vị thế theo ba nấc",
-    "quickExplainWorkflow": "Giải thích quy trình này làm gì",
-    "quickPriceAlert": "Báo tôi khi BTC vượt một mức giá",
-    "quickMoveAlert": "Cảnh báo khi có biến động phần trăm nhanh",
-    "quickAlertReview": "Xem lại các cảnh báo tôi đang có",
     "questionHint": "Chọn một mục, hoặc nhập câu trả lời của bạn bên dưới.",
     "questionHintOpen": "Nhập câu trả lời của bạn bên dưới.",
     "youAnswered": "Bạn đã chọn: {{answer}}",
-    "handoffToIndicators": "Tiếp tục trong Chỉ báo & Chiến lược",
-    "handoffToBots": "Tiếp tục trong Bot",
-    "handoffToWorkflows": "Tiếp tục trong Quy trình",
-    "handoffToNotifications": "Tiếp tục trong Thông báo",
     "starterTitle": "Mô tả, và nó được dựng xong",
     "starterBodyIndicators": "Nói bạn muốn thấy gì trên biểu đồ. Trợ lý sẽ viết Python, kiểm tra tính hợp lệ và chạy bản xem trước để bạn tự đánh giá.",
     "starterBodyBots": "Nói bot cần làm gì. Trợ lý sẽ viết chiến lược, backtest và triển khai ở chế độ giả lập. Việc kích hoạt thật vẫn là của bạn.",
     "starterBodyWorkflows": "Nói điều cần xảy ra sau khi lệnh của bạn khớp. Trợ lý nối các bước trên canvas; bạn xem phần thay đổi rồi commit.",
     "starterBodyNotifications": "Nói bạn muốn được báo về điều gì. Trợ lý tạo cảnh báo, chọn thời gian chờ hợp lý và bật nó lên.",
-    "starterPlaceholderIndicators": "Một RSI tô nền khi động lượng đảo chiều...",
-    "starterPlaceholderBots": "Một bot mua nhịp điều chỉnh trong xu hướng tăng trên khung 4h...",
-    "starterPlaceholderWorkflows": "Sau khi lệnh vào khớp, chốt lời ở +5% và cắt lỗ ở -3%...",
-    "starterPlaceholderNotifications": "Báo tôi khi BTC vượt 100.000 trên OKX...",
     "starterIdeaIndicator1": "Dải xu hướng theo trọng số khối lượng",
     "starterIdeaIndicator2": "Bộ dò phân kỳ",
     "starterIdeaIndicator3": "Dải nén biến động",
@@ -1296,14 +1260,56 @@
     "starterIdeaWorkflow3": "Vào từng phần khi giá giảm",
     "starterIdeaAlert1": "BTC vượt một mức",
     "starterIdeaAlert2": "Biến động 5% trong một giờ",
-    "starterIdeaAlert3": "Báo khi bot của tôi giao dịch",
-    "starterSend": "Gửi cho trợ lý"
+    "starterIdeaAlert3": "Báo khi bot của tôi giao dịch"
+  },
+  "assistantDock": {
+    "title": "Trợ lý",
+    "open": "Mở trợ lý",
+    "close": "Thu nhỏ trợ lý",
+    "clear": "Xóa cuộc trò chuyện",
+    "placeholder": "Hỏi bất cứ điều gì, hoặc cho tôi biết bạn muốn xây gì...",
+    "answerPlaceholder": "Nhập câu trả lời của bạn...",
+    "emptyTitle": "Chúng ta làm gì đây?",
+    "emptyDescription": "Tôi có thể đọc mọi thị trường, điều khiển biểu đồ, viết chỉ báo và chiến lược, tạo cảnh báo và quy trình, và chuẩn bị lệnh để bạn xác nhận.",
+    "defaultSuggestion": "Hỏi trợ lý",
+    "statusThinking": "Đang suy nghĩ...",
+    "statusUsingTools": "Đang dùng công cụ...",
+    "statusSearching": "Đang tìm trên web...",
+    "genericError": "Đã xảy ra lỗi. Hãy thử lại.",
+    "authRequiredTitle": "Đăng nhập để dùng trợ lý",
+    "authRequiredDescription": "Trợ lý chạy trên Pairlens Intelligence, hoặc bằng khóa nhà cung cấp của riêng bạn.",
+    "upgradeRequiredDescription": "Thêm Intelligence vào gói của bạn, hoặc kết nối khóa nhà cung cấp của riêng bạn.",
+    "unavailableTitle": "Trợ lý không khả dụng",
+    "unavailableDescription": "Chưa có nhà cung cấp AI nào được bật. Hãy kết nối một cái để bắt đầu.",
+    "goToPlugins": "Mở Plugin Store",
+    "suggest": {
+      "chart": "Phân tích biểu đồ {{pair}}",
+      "discovery": "Tìm cho tôi thứ gì đó để giao dịch",
+      "workflows": "Xây một quy trình",
+      "notifications": "Thiết lập một cảnh báo",
+      "bots": "Triển khai một bot giao dịch",
+      "indicators": "Viết một chỉ báo",
+      "indicatorsScript": "Cải thiện {{name}}",
+      "accounts": "Xem lại tài khoản của tôi",
+      "plugins": "Tìm cho tôi một plugin",
+      "workspaceStore": "Thiết kế không gian làm việc của tôi"
+    },
+    "researchCardTitle": "Báo cáo nghiên cứu: {{pair}} trên {{market}}",
+    "researchCardTitleGeneric": "Báo cáo nghiên cứu",
+    "researchCardSources_one": "{{count}} nguồn",
+    "researchCardSources_other": "{{count}} nguồn",
+    "quickAnalyze": "Phân tích {{pair}}",
+    "quickLevels": "Đánh dấu các mức giá quan trọng của {{symbol}}",
+    "quickAlert": "Báo tôi nếu {{symbol}} bứt phá",
+    "quickWhatsMoving": "Hôm nay có gì đang chạy?",
+    "quickPortfolio": "Danh mục của tôi thế nào?",
+    "quickBuildAlert": "Tạo cho tôi một cảnh báo",
+    "approvalApprove": "Chấp nhận",
+    "approvalDecline": "Từ chối",
+    "approvalApproved": "Đã chấp nhận",
+    "approvalDeclined": "Đã từ chối"
   },
   "copilot": {
-    "aiLens": "AI Lens",
-    "thinking": "Đang suy nghĩ...",
-    "idle": "Nhàn rỗi",
-    "clearHistory": "Xóa lịch sử trò chuyện",
     "placeholder": "Hỏi lens của bạn...",
     "lensPersona": "Phong cách Lens",
     "persona": {
@@ -1337,22 +1343,7 @@
     "keep": "Giữ lại",
     "tradingUnavailable": "Giao dịch hiện không khả dụng.",
     "noCredentialsForMarket": "Chưa có thông tin xác thực nào được kết nối cho {{market}}. Thêm API key trong Accounts để giao dịch thật.",
-    "watchingPair": "Đang theo dõi {{pair}} · {{timeframe}}",
-    "genericChatError": "Copilot gặp lỗi — hãy thử gửi lại.",
-    "quickActionHowIsDoing": "{{symbol}} đang thế nào?",
-    "quickActionSuggestedIndicators": "Chỉ báo được đề xuất",
-    "quickActionAnySignals": "Có tín hiệu nào không?",
     "scheduledCheckPrefix": "[Kiểm tra theo lịch — được đặt cách đây {{minutes}} phút]",
-    "authRequiredTitle": "Gặp gỡ copilot AI của bạn",
-    "authRequiredDescription": "Phân tích theo ngữ cảnh cho bất kỳ cặp nào — nó đọc biểu đồ, kiểm tra giới hạn rủi ro của bạn và trả lời kèm lý lẽ mà bạn có thể chất vấn.",
-    "upgradeRequiredDescription": "Copilot AI của bạn đọc biểu đồ, kiểm tra giới hạn rủi ro của bạn và trả lời kèm lý lẽ mà bạn có thể chất vấn. Đăng ký Pairlens Intelligence hoặc kết nối khóa AI của riêng bạn — miễn phí.",
-    "aiLensUnavailableTitle": "AI Lens không khả dụng",
-    "aiLensUnavailableDescription": "Bật một plugin AI trên trang Plugins để nhận phân tích thị trường theo thời gian thực và hỗ trợ giao dịch.",
-    "goToPlugins": "Đến trang Plugins",
-    "analyzePair": "Phân tích {{pair}}",
-    "startConversation": "Bắt đầu trò chuyện",
-    "emptyStateHint": "Hỏi về điều kiện thị trường, kiểm tra thiết lập của bạn, hoặc yêu cầu đánh giá rủi ro — AI có đầy đủ ngữ cảnh của cặp này.",
-    "contextAware": "Hiểu ngữ cảnh",
     "toolFailed": "Công cụ thất bại"
   },
   "chart": {
@@ -2195,7 +2186,7 @@
       "priceMonthly": "${{price}}/tháng",
       "taxNotice": "Giá chưa bao gồm thuế — thuế được tính khi thanh toán.",
       "defaultTitle": "Mở khóa Pairlens Intelligence",
-      "defaultDescription": "Trợ lý AI và nghiên cứu web được lưu trữ sẵn, không cần khóa API. Mỗi gói đi kèm ngân sách sử dụng hằng tháng dùng chung cho trò chuyện, nghiên cứu và tìm kiếm web.",
+      "defaultDescription": "Trợ lý AI được lưu trữ sẵn, kèm nghiên cứu chuyên sâu và tìm kiếm web, và không có khóa API nào để bạn phải quản lý. Mỗi gói đi kèm ngân sách sử dụng hằng tháng dùng chung cho trò chuyện, nghiên cứu và tìm kiếm web.",
       "byokNote": "Muốn dùng nhà cung cấp riêng? Kết nối khóa Anthropic, OpenAI, Groq hoặc OpenRouter tại <plugins>Plugin</plugins> — AI dùng khóa riêng luôn miễn phí.",
       "checkoutOpenedTitle": "Đã mở trang thanh toán trong trình duyệt",
       "checkoutActivates": "Gói đăng ký của bạn sẽ kích hoạt tại đây ngay khi thanh toán hoàn tất.",
@@ -2223,7 +2214,6 @@
     "fearGreed": "Sợ hãi & Tham lam",
     "chart": "Biểu đồ",
     "trade": "Giao dịch",
-    "aiLens": "AI Lens",
     "dataLog": "Nhật ký dữ liệu",
     "positions": "Vị thế",
     "portfolio": "Danh mục",
@@ -2232,7 +2222,6 @@
     "marketDepth": "Độ sâu thị trường",
     "pairInfo": "Thông tin cặp",
     "multiPrice": "Giá đa sàn",
-    "research": "Nghiên cứu",
     "social": "Mạng xã hội",
     "risk": "Rủi ro",
     "symbolNews": "Tin tức mã",
@@ -2253,7 +2242,6 @@
     "fearGreed": "Đồng hồ đo tâm lý thị trường dựa trên chỉ số Sợ hãi & Tham lam",
     "chart": "Biểu đồ nến với chỉ báo và công cụ vẽ",
     "trade": "Đặt lệnh thị trường, giới hạn và dừng với kiểm soát rủi ro",
-    "aiLens": "AI co-pilot phân tích tín hiệu và cung cấp ngữ cảnh giao dịch",
     "dataLog": "Luồng tín hiệu và sự kiện thô cho cặp đang hoạt động",
     "positions": "Theo dõi vị thế mở, lãi/lỗ và lịch sử giao dịch",
     "portfolio": "Số dư tài khoản với phân bổ chi tiết",
@@ -2262,7 +2250,6 @@
     "marketDepth": "Biểu đồ độ sâu thị trường tích lũy cho cặp đang hoạt động",
     "pairInfo": "Số liệu chính, tỷ lệ funding và metadata cho cặp đang hoạt động",
     "multiPrice": "Cùng một cặp trên mọi sàn cùng lúc, sắp xếp để tìm mức khớp tốt nhất",
-    "research": "Báo cáo phân tích chuyên sâu do AI tạo cho cặp đang hoạt động",
     "social": "Tâm lý mạng xã hội và hoạt động cộng đồng cho một cặp",
     "risk": "Chỉ số rủi ro danh mục và cấu hình giới hạn bảo vệ",
     "symbolNews": "Tin tức và phân tích tâm lý cho cặp giao dịch đang hoạt động",
@@ -3086,10 +3073,6 @@
       "ascending": "Đã sắp xếp theo {{column}}, tăng dần",
       "descending": "Đã sắp xếp theo {{column}}, giảm dần"
     },
-    "panel": {
-      "expand": "Mở rộng bảng",
-      "collapse": "Thu gọn bảng"
-    },
     "recentlyViewed": "Xem gần đây",
     "noMarketsFound": "Không tìm thấy thị trường",
     "modeLive": "LIVE",
@@ -3157,7 +3140,7 @@
       "statusBrowserVault": "Ngay lúc này: mọi khóa đều được mã hóa trong kho của bạn, chỉ trong trình duyệt này.",
       "statusBrowserNone": "Trình duyệt này chưa có kho. Bạn sẽ thiết lập một kho trước khi khóa đầu tiên được lưu.",
       "deviceTitle": "Chỉ lưu trữ trên thiết bị của bạn",
-      "deviceBody": "API key sàn giao dịch và khóa ví của bạn được lưu trên máy tính này và không đâu khác. Chúng không bao giờ được tải lên Pairlens: không khi bạn đăng nhập, không khi cài đặt của bạn đồng bộ, không khi copilot đọc biểu đồ. Không có bản sao nào trên máy chủ của chúng tôi để rò rỉ.",
+      "deviceBody": "API key sàn giao dịch và khóa ví của bạn được lưu trên máy tính này và không đâu khác. Chúng không bao giờ được tải lên Pairlens: không khi bạn đăng nhập, không khi cài đặt của bạn đồng bộ, không khi trợ lý đọc biểu đồ. Không có bản sao nào trên máy chủ của chúng tôi để rò rỉ.",
       "osTitle": "Được mã hóa ngay khi nằm yên",
       "osBodyDesktop": "Chúng nằm trong {{vault}}, chính kho được bảo vệ mà hệ thống của bạn dùng cho mật khẩu riêng, mã hóa trên đĩa và chỉ giao cho ứng dụng này.",
       "osBodyDesktopVault": "Chúng nằm trong {{vault}}, chính kho được bảo vệ mà hệ thống của bạn dùng cho mật khẩu riêng. Kho của bạn thêm một lớp bên trên: mọi giá trị đều được niêm phong bằng AES-256-GCM trước khi keychain kịp nhìn thấy.",
@@ -3395,8 +3378,8 @@
       },
       "ai-research-desk": {
         "name": "Bàn Nghiên Cứu AI",
-        "tagline": "Copilot, nghiên cứu và bảng tin bên cạnh biểu đồ của bạn.",
-        "description": "Kết hợp một biểu đồ với AI Copilot, nghiên cứu chuyên sâu, và cả luồng tin tức toàn cầu lẫn theo mã. Được tạo ra cho giao dịch theo sự kiện xúc tác, nơi câu chuyện đằng sau quan trọng không kém dữ liệu giá. Cần một nhà cung cấp suy luận AI cho Copilot và Nghiên cứu."
+        "tagline": "Biểu đồ nằm giữa tin tức mã và bảng tin toàn cầu.",
+        "description": "Ghép một biểu đồ với luồng tin tức theo mã và luồng tin toàn cầu, cho giao dịch theo sự kiện xúc tác, nơi câu chuyện đằng sau quan trọng không kém dữ liệu giá. Trợ lý AI luôn nằm ở dock, nên vẫn trong tầm tay ở đây mà không chiếm cột nào."
       },
       "market-discovery": {
         "name": "Khám Phá Thị Trường",
@@ -3411,7 +3394,7 @@
       "prediction-terminal": {
         "name": "Terminal Dự Đoán",
         "tagline": "Vẽ biểu đồ xác suất với toàn bộ sự kiện ngay bên cạnh.",
-        "description": "Bố cục mặc định cho thị trường dự đoán: một biểu đồ xác suất với giao dịch và các hợp đồng đang mở của bạn bên dưới, sổ lệnh và phiếu đặt lệnh ở giữa, và trình duyệt sự kiện nằm cạnh AI Copilot, vì các kết quả lân cận chiếm một nửa phần phân tích.",
+        "description": "Bố cục mặc định cho thị trường dự đoán: một biểu đồ xác suất với giao dịch và các hợp đồng đang mở của bạn bên dưới, sổ lệnh và phiếu đặt lệnh ở giữa, và một trình duyệt sự kiện cao hết khung bên phải, vì các kết quả lân cận chiếm một nửa phần phân tích.",
         "menuLabel": "Mặc định"
       },
       "prediction-discovery": {
@@ -3428,7 +3411,7 @@
       "dex-terminal": {
         "name": "Terminal DEX",
         "tagline": "Giao dịch on-chain mà không cần sổ lệnh giả.",
-        "description": "Bố cục on-chain mặc định: một biểu đồ với thống kê pool và giao dịch bên dưới, phiếu swap nằm trên các mã gần đây để bắt kịp niêm yết mới, và AI Copilot phía trên luồng mạng xã hội. Không có cột sổ lệnh: độ sâu suy ra từ pool chỉ là con số tổng hợp nhân tạo nên không được hiển thị.",
+        "description": "Bố cục on-chain mặc định: một biểu đồ với thống kê pool và giao dịch bên dưới, phiếu swap nằm trên các mã gần đây để bắt kịp niêm yết mới, và luồng mạng xã hội bên phải. Không có cột sổ lệnh: độ sâu suy ra từ pool chỉ là con số tổng hợp nhân tạo nên không được hiển thị.",
         "menuLabel": "Mặc định"
       },
       "quant-signals": {
@@ -3444,36 +3427,36 @@
       "equities-terminal": {
         "name": "Terminal Cổ Phiếu",
         "tagline": "Cổ phiếu với phiếu đặt lệnh nằm trên bảng tin tức mã.",
-        "description": "Bố cục mặc định cho cổ phiếu: một biểu đồ với giao dịch, vị thế và dữ liệu cơ bản bên dưới, phiếu đặt lệnh nằm trên tin tức mã (chất xúc tác làm cổ phiếu chạy giống như dòng tiền làm crypto chạy), và AI Copilot bên phải.",
+        "description": "Bố cục mặc định cho cổ phiếu: một biểu đồ với giao dịch, vị thế và dữ liệu cơ bản bên dưới, và phiếu đặt lệnh nằm trên tin tức mã, vì chất xúc tác làm cổ phiếu chạy giống như dòng tiền làm crypto chạy.",
         "menuLabel": "Mặc định"
       },
       "ultrawide-trading-floor": {
         "name": "Sàn Giao Dịch Ultrawide",
         "tagline": "Mọi thứ, ở khắp mọi nơi — cho màn hình lớn.",
-        "description": "Một trung tâm chỉ huy bốn cột lấp đầy màn hình ultrawide hoặc màn hình phụ: bộ quét, biểu đồ, sổ lệnh và độ sâu, một phiếu đặt lệnh kèm vị thế, và AI Copilot. Bố cục tối đa nhất."
+        "description": "Một trung tâm chỉ huy bốn cột lấp đầy màn hình ultrawide hoặc màn hình phụ: bộ quét, biểu đồ, sổ lệnh và độ sâu, và một phiếu đặt lệnh nằm trên các vị thế đang mở của bạn. Bố cục tối đa nhất."
       },
       "classic-terminal": {
         "name": "Terminal Cổ Điển",
-        "tagline": "Bàn làm việc Pairlens cổ điển — biểu đồ, dữ liệu, giao dịch, copilot.",
-        "description": "Bố cục terminal mặc định: một biểu đồ lớn với dải dữ liệu dạng tab và thanh rủi ro bên trái, và một phiếu đặt lệnh nằm trên AI Copilot bên phải.",
+        "tagline": "Bàn làm việc Pairlens cổ điển: biểu đồ, dữ liệu, sổ lệnh, phiếu đặt lệnh.",
+        "description": "Bố cục terminal mặc định: một biểu đồ lớn với dải dữ liệu dạng tab và thanh rủi ro bên trái, và sổ lệnh nằm trên một phiếu đặt lệnh bên phải.",
         "menuLabel": "Mặc định"
       },
       "chart-focus": {
         "name": "Tập Trung Biểu Đồ",
         "tagline": "Một biểu đồ lớn duy nhất với dữ liệu dạng tab bên dưới.",
-        "description": "Một bố cục một cột cho biểu đồ không gian tối đa, với vị thế, nhật ký dữ liệu, copilot, và phiếu đặt lệnh được gói gọn trong dải tab bên dưới.",
+        "description": "Một bố cục một cột cho biểu đồ không gian tối đa, với vị thế, nhật ký dữ liệu và phiếu đặt lệnh được gói gọn trong dải tab bên dưới.",
         "menuLabel": "Tập Trung Biểu Đồ"
       },
       "trading": {
         "name": "Giao Dịch",
-        "tagline": "Sổ lệnh và phiếu đặt lệnh kẹp hai bên một biểu đồ trung tâm.",
-        "description": "Một bàn thực thi ba cột: sổ lệnh và phiếu đặt lệnh bên trái, biểu đồ với vị thế và rủi ro ở giữa, và AI Copilot bên phải.",
+        "tagline": "Sổ lệnh và phiếu đặt lệnh bên cạnh một biểu đồ cao hết khung.",
+        "description": "Một bàn thực thi hai cột: sổ lệnh nằm trên phiếu đặt lệnh bên trái, còn biểu đồ với vị thế và rủi ro chiếm toàn bộ phần chiều rộng còn lại.",
         "menuLabel": "Giao Dịch"
       },
       "chart-analysis": {
         "name": "Phân Tích Biểu Đồ",
-        "tagline": "Biểu đồ và dữ liệu bên trái, copilot và thực thi bên phải.",
-        "description": "Một cách chia hướng nghiên cứu: biểu đồ, dữ liệu, nghiên cứu và rủi ro bên trái; copilot, sổ lệnh và phiếu đặt lệnh bên phải.",
+        "tagline": "Biểu đồ và dữ liệu bên trái, thực thi bên phải.",
+        "description": "Một cách chia hướng nghiên cứu: biểu đồ, dữ liệu và rủi ro bên trái; sổ lệnh và phiếu đặt lệnh bên phải.",
         "menuLabel": "Phân Tích"
       },
       "dual-charts": {
@@ -3501,23 +3484,23 @@
       },
       "laptop-split": {
         "name": "Chia Đôi Laptop",
-        "tagline": "Biểu đồ + dữ liệu bên trái, giao dịch + copilot bên phải — cho màn hình nhỏ hơn.",
-        "description": "Một cách chia hai cột vừa cỡ laptop: biểu đồ và vị thế bên trái, phiếu đặt lệnh nằm trên copilot bên phải."
+        "tagline": "Biểu đồ và dữ liệu bên trái, phiếu đặt lệnh bên phải, vừa cỡ laptop.",
+        "description": "Một cách chia hai cột vừa cỡ laptop: biểu đồ, vị thế và rủi ro bên trái, phiếu đặt lệnh bên phải."
       },
       "ultrawide-dashboard": {
         "name": "Bảng Điều Khiển Ultrawide",
         "tagline": "Mọi panel trải rộng trên một màn hình ultrawide.",
-        "description": "Một bảng điều khiển bốn cột cho màn hình ultrawide: sổ lệnh, biểu đồ với rủi ro, vị thế và nghiên cứu, và một cột giao dịch + copilot."
+        "description": "Một bảng điều khiển bốn cột cho màn hình ultrawide: sổ lệnh, biểu đồ với rủi ro, vị thế và nhật ký dữ liệu, và một cột phiếu đặt lệnh."
       },
       "ultrawide-trading": {
         "name": "Giao Dịch Ultrawide",
         "tagline": "Sổ lệnh, độ sâu, biểu đồ và thực thi trải suốt chiều rộng.",
-        "description": "Một bố cục thực thi ultrawide: sổ lệnh và độ sâu thị trường bên trái, biểu đồ với vị thế ở giữa, và một cột giao dịch + copilot bên phải."
+        "description": "Một bố cục thực thi ultrawide: sổ lệnh và độ sâu thị trường bên trái, biểu đồ với vị thế ở giữa, và phiếu đặt lệnh bên phải."
       },
       "command-center": {
         "name": "Trung Tâm Chỉ Huy 4K",
         "tagline": "Trung tâm chỉ huy đầy đủ cho màn hình 4K.",
-        "description": "Mọi thứ trên màn hình cho một màn hình 4K: sổ lệnh và thông tin cặp, biểu đồ với nghiên cứu và rủi ro, vị thế và mạng xã hội, và một cột giao dịch + copilot."
+        "description": "Mọi thứ trên màn hình cho một màn hình 4K: sổ lệnh và thông tin cặp, biểu đồ với thanh rủi ro, vị thế và mạng xã hội, và một cột phiếu đặt lệnh."
       },
       "home-pulse": {
         "name": "Trang chủ",
@@ -3552,7 +3535,7 @@
       "perps-terminal": {
         "name": "Terminal Perps",
         "tagline": "Bàn futures: vị thế kèm giá mark và giá thanh lý.",
-        "description": "Bố cục mặc định cho hợp đồng tương lai vĩnh cửu: một biểu đồ lớn với các tab giao dịch, hợp đồng đang mở (giá vào, giá mark, giá thanh lý) và dữ liệu thị trường bên dưới, sổ lệnh cùng phiếu đặt lệnh có tính đòn bẩy ở giữa, và AI Copilot bên phải.",
+        "description": "Bố cục mặc định cho hợp đồng tương lai vĩnh cửu: một biểu đồ lớn với các tab giao dịch, hợp đồng đang mở (giá vào, giá mark, giá thanh lý) và dữ liệu thị trường bên dưới, bên phải là sổ lệnh nằm trên phiếu đặt lệnh có tính đòn bẩy.",
         "menuLabel": "Mặc định"
       },
       "perps-discovery": {
@@ -4375,28 +4358,7 @@
     "exit": "Thoát toàn màn hình"
   },
   "research": {
-    "phaseSearching": "Đang tìm kiếm trên web...",
-    "phaseReading": "Đang đọc nguồn...",
-    "phaseAnalyzing": "Đang phân tích dữ liệu thị trường...",
-    "phaseWriting": "Đang viết báo cáo...",
-    "authRequiredTitle": "Bàn nghiên cứu chỉ cách một lần đăng nhập",
-    "authRequiredDescription": "Báo cáo nghiên cứu có cấu trúc cho bất kỳ cặp nào, dựa trên nguồn web trực tiếp.",
-    "upgradeDescription": "Báo cáo nghiên cứu có cấu trúc cho bất kỳ cặp nào, dựa trên nguồn web trực tiếp. Đăng ký Pairlens Intelligence hoặc kết nối khóa AI của riêng bạn — miễn phí.",
-    "unavailableTitle": "Không có nghiên cứu",
-    "unavailableDescription": "Bật một plugin AI ở trang Plugin để tạo báo cáo nghiên cứu cho cặp này.",
-    "goToPlugins": "Đến trang Plugin",
-    "navigateToPair": "Chuyển đến một cặp để xem nghiên cứu.",
-    "researchingSymbol": "Đang nghiên cứu {{symbol}}",
-    "generatingReport": "Đang tạo báo cáo...",
-    "cachedGenerated": "Từ bộ nhớ đệm — tạo lúc {{time}}",
-    "freshGenerated": "Mới — vừa tạo xong",
-    "refresh": "Làm mới",
-    "sourcesCount": "Nguồn ({{count}})",
-    "reportTitle": "Báo cáo nghiên cứu",
-    "fullscreenDescription": "Báo cáo nghiên cứu ở chế độ toàn màn hình. Nhấn Escape để thoát.",
-    "sections": "Mục",
-    "sparklineAriaLabel": "Biểu đồ mini giá theo ngày",
-    "errorTitle": "Không có nghiên cứu"
+    "sparklineAriaLabel": "Biểu đồ mini giá theo ngày"
   },
   "capabilityGate": {
     "authTitle": "Chỉ cần một lần đăng nhập miễn phí",
@@ -4493,8 +4455,8 @@
       "titlePlan": "{{label}} giờ đã là của bạn.",
       "titleDefault": "Pairlens Intelligence giờ đã là của bạn.",
       "bodyPack": "Số tín dụng này cộng thêm vào ngân sách hằng tháng của bạn và hết hạn sau {{days}} ngày. Quay lại ứng dụng Pairlens — số dư của bạn sẽ cập nhật trong vài giây.",
-      "bodyPlanWithCredits": "Trợ lý AI được lưu trữ, nghiên cứu và tìm kiếm web của bạn đã được mở khóa với {{credits}} tín dụng mỗi tháng. Quay lại ứng dụng Pairlens — ứng dụng sẽ nhận diện gói đăng ký của bạn trong vài giây.",
-      "bodyPlanNoCredits": "Trợ lý AI được lưu trữ, nghiên cứu và tìm kiếm web của bạn đã được mở khóa. Quay lại ứng dụng Pairlens — ứng dụng sẽ nhận diện gói đăng ký của bạn trong vài giây.",
+      "bodyPlanWithCredits": "Trợ lý AI được lưu trữ sẵn của bạn đã mở khóa, kèm nghiên cứu chuyên sâu và tìm kiếm web, cùng {{credits}} tín dụng mỗi tháng. Quay lại ứng dụng Pairlens: ứng dụng sẽ nhận diện gói đăng ký của bạn trong vài giây.",
+      "bodyPlanNoCredits": "Trợ lý AI được lưu trữ sẵn của bạn đã mở khóa, kèm nghiên cứu chuyên sâu và tìm kiếm web. Quay lại ứng dụng Pairlens: ứng dụng sẽ nhận diện gói đăng ký của bạn trong vài giây.",
       "openTerminal": "Mở terminal",
       "closeTabHint": "Đã thanh toán từ ứng dụng máy tính? Bạn có thể đóng tab này.",
       "receiptHint": "Biên nhận và hóa đơn có trong email của bạn và trên cổng thanh toán (Cài đặt → Intelligence)."
@@ -4882,7 +4844,7 @@
     "ai": {
       "inference": {
         "label": "Suy luận",
-        "description": "Suy luận LLM cho phân tích co-pilot"
+        "description": "Suy luận LLM cho trợ lý AI"
       },
       "web-search": {
         "label": "Tìm kiếm web",
@@ -4949,7 +4911,7 @@
     },
     "ai": {
       "label": "Nhà cung cấp AI",
-      "description": "Nhà cung cấp mô hình ngôn ngữ cho phân tích của AI co-pilot"
+      "description": "Nhà cung cấp mô hình ngôn ngữ cho trợ lý AI"
     },
     "intelligence": {
       "label": "Intelligence",
@@ -4979,7 +4941,7 @@
         "watchlist": "Danh sách theo dõi",
         "trade": "Giao dịch",
         "chart": "Biểu đồ",
-        "copilot": "Co-pilot",
+        "copilot": "Trợ lý",
         "discover": "Khám phá"
       },
       "overlays": {
@@ -5127,12 +5089,12 @@
       "bannerBody": "Không gian làm việc, bot, chỉ báo của riêng bạn và bốn sàn nữa.",
       "bannerDismiss": "Ẩn đi",
       "screenTitle": "Trên màn hình lớn hơn",
-      "lead": "Điện thoại mang theo những phần Pairlens bạn muốn cầm trong tay: biểu đồ, sổ lệnh, phiếu đặt lệnh và co-pilot. Phần còn lại của terminal được làm cho một màn hình có chỗ để trải rộng, và nó đang chờ bạn ở đó.",
+      "lead": "Điện thoại mang theo những phần Pairlens bạn muốn cầm trong tay: biểu đồ, sổ lệnh, phiếu đặt lệnh và trợ lý. Phần còn lại của terminal được làm cho một màn hình có chỗ để trải rộng, và nó đang chờ bạn ở đó.",
       "widerWindow": "Trong cửa sổ rộng hơn",
       "desktopApp": "Trong ứng dụng máy tính",
       "workspaces": {
         "title": "Không gian làm việc",
-        "body": "Biểu đồ, sổ lệnh, dòng giao dịch và co-pilot nằm cạnh nhau, sắp một lần rồi lưu lại. Workspace Store có sẵn những bố cục dựng sẵn để bạn sao chép chỉ bằng một chạm."
+        "body": "Biểu đồ, sổ lệnh, dòng giao dịch và phiếu đặt lệnh nằm cạnh nhau, sắp một lần rồi lưu lại. Workspace Store có sẵn những bố cục dựng sẵn để bạn sao chép chỉ bằng một chạm."
       },
       "bots": {
         "title": "Bot",

@@ -407,13 +407,14 @@
 
   /* ONE magic hairline per surface.
 
-     The desktop `CopilotPanel` paints its own 3px `.magic-gradient` seam across
-     the top of its column, which is right in a pane with nothing above it. In
-     the sheet that seam lands 21px lower — the grab strip's height — and the
-     phone shows two parallel gradients with the handle between them. The
-     sheet's wins: it is the one that follows the rounded silhouette and fades
-     in as the panel swaps. Scoped to the mobile wrapper, so the desktop pane
-     keeps its own.
+     The desktop AI surfaces paint their own 3px `.magic-gradient` seam across
+     the top of their column, which is right in a pane or a window with nothing
+     above it. In the sheet that seam lands 21px lower (the grab strip's
+     height) and the phone shows two parallel gradients with the handle between
+     them. The sheet's wins: it is the one that follows the rounded silhouette
+     and fades in as the panel swaps. Scoped to the mobile wrapper, so every
+     desktop surface keeps its own, and it stays a guard rather than a
+     correction when the mounted chat happens to paint no seam at all.
 
      The wrapper also pins every text field it can grow to 16px. iOS Safari
      zooms the viewport when a focused field is under that, and this is the one

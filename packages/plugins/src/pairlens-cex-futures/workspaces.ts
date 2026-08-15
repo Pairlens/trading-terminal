@@ -26,7 +26,7 @@ export const PERPS_TERMINAL_LAYOUT = {
   columns: [
     {
       id: 'col-left',
-      widthPercent: 55,
+      widthPercent: 79,
       cells: [
         {
           id: 'cell-chart',
@@ -69,18 +69,6 @@ export const PERPS_TERMINAL_LAYOUT = {
           heightPercent: 48,
           activeTabIndex: 0,
           panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
-        },
-      ],
-    },
-    {
-      id: 'col-copilot',
-      widthPercent: 24,
-      cells: [
-        {
-          id: 'cell-copilot',
-          heightPercent: 100,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-copilot', type: 'copilot' }],
         },
       ],
     },
@@ -161,7 +149,7 @@ export const CEX_FUTURES_WORKSPACES: Array<ContributedWorkspace> = [
     icon: 'TrendingUp',
     tagline: 'The futures desk: positions with mark and liquidation.',
     description:
-      'The default perpetual-futures layout: a large chart with the tape, open contracts (entry, mark, liquidation), and market data tabbed below it, an order book and leverage-aware ticket in the middle, and the AI Copilot on the right.',
+      'The default perpetual-futures layout: a large chart with the tape, open contracts (entry, mark, liquidation), and market data tabbed below it, with an order book over a leverage-aware ticket on the right.',
     facets: {
       traderTypes: ['day-trader', 'scalper'],
       assetClasses: ['crypto-perp'],

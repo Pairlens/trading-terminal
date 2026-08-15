@@ -80,27 +80,6 @@ export const pairlensIntelligenceManifest: PluginManifest = {
   contributes: {
     panels: [
       {
-        id: 'copilot',
-        label: 'AI Copilot',
-        labelKey: 'panes.aiLens',
-        descriptionKey: 'paneDescriptions.aiLens',
-        icon: 'Brain',
-        category: 'ai-research',
-        minHeight: 200,
-        singleton: true,
-        requires: ['workspace:active-pair'],
-      },
-      {
-        id: 'research',
-        label: 'Research',
-        labelKey: 'panes.research',
-        descriptionKey: 'paneDescriptions.research',
-        icon: 'Search',
-        category: 'ai-research',
-        minHeight: 100,
-        requires: ['workspace:active-pair'],
-      },
-      {
         id: 'news',
         label: 'News Feed',
         labelKey: 'panes.news',

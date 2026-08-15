@@ -4,13 +4,13 @@ description: What Pairlens is, a source-available, local-first, AI-native crypto
 group: get-started
 order: 1
 eyebrow: Get started
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 3 min read
 ---
 
 Pairlens is a source-available, local-first, AI-native trading terminal for
 crypto spot markets, US equities, and prediction markets. Deterministic
-strategies generate signals, an AI co-pilot provides contextual analysis, and
+strategies generate signals, an AI assistant provides contextual analysis, and
 risk guardrails you configure are enforced by the order path itself. The AI
 augments your decisions. It never overrides your risk limits.
 
@@ -57,9 +57,10 @@ live. See [bots](/docs/bots).
 conditions; [alerts](/docs/alerts-notifications) watch price levels, percent
 moves, signals, and candle closes.
 
-**AI.** A [co-pilot](/docs/ai-copilot) that reads your charts and can drive
-them, plus deep-dive [research reports](/docs/research-reports). Bring your own
-provider key or subscribe to hosted Intelligence.
+**AI.** One [assistant](/docs/ai-copilot), docked in the corner of every page,
+with 94 tools over markets, charts, your portfolio, scripts, bots and
+automation, plus sourced [research reports](/docs/research-reports) on demand.
+Bring your own provider key or subscribe to hosted Intelligence.
 
 ## How the pieces fit
 
@@ -85,7 +86,8 @@ prediction markets, and DEX connectors ship in the box.
 **Strategy engine.** Pure TypeScript math: EMA, ATR, breakout, pullback,
 mean-reversion, regime detection. No I/O, no network.
 
-**AI co-pilot.** The terminal owns the agentic loop. The optional App Server is
+**AI assistant.** The terminal owns the agentic loop, mounted above the routed
+content so one conversation follows you across pages. The optional App Server is
 only an inference proxy. Bring your own provider key, or use the bundled
 fallback.
 

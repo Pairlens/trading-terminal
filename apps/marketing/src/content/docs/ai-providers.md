@@ -5,17 +5,17 @@ group: traders
 parent: ai-copilot
 order: 2
 eyebrow: For traders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 4 min read
 ---
 
-Every AI feature in Pairlens runs on a provider you choose. There are two ways
+The assistant runs on an `ai:inference` provider you choose. There are two ways
 to supply one, and they are not exclusive.
 
 ## Bring your own key
 
 Free, always, and never gated. Install a provider plugin from the Plugin Store,
-paste your API key, and the co-pilot and research panel use it.
+paste your API key, and the assistant uses it, research included.
 
 **Inference.** Anthropic, OpenAI, Groq, OpenRouter.
 

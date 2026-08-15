@@ -1,9 +1,9 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { streamText } from 'ai'
-import { summarizeCandles } from './copilot-brain'
+import { summarizeCandles } from './copilot/tool-deps'
 import type { LanguageModel } from 'ai'
-import type { CopilotCandle } from './copilot-brain'
+import type { CopilotCandle } from './copilot/tool-deps'
 import type { PluginInstance, PluginManager } from '@pairlens/plugin-system'
 import type {
   InferenceMessage,
@@ -14,7 +14,7 @@ import type {
 
 // The research brain: prompts + two-phase loop for AI research reports.
 //
-// Like the copilot (copilot-brain.ts), ALL research logic lives here in the
+// Like the assistant, ALL research logic lives here in the
 // terminal. The resolved plugins only supply access:
 //   - ai:web-search  → raw web results (Pairlens Intelligence proxies the
 //     gateway's parallel search; absent for signed-out BYOK users, in which

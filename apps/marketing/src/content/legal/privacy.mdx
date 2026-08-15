@@ -38,7 +38,7 @@ This policy covers the services we run:
 - **pairlens.finance**, this website, including the documentation and the plugin and workspace stores.
 - **Pairlens accounts**, the sign-in and account system used across Pairlens services.
 - **Cloud sync**, the optional storage of your workspaces, layouts, and other terminal state on our servers.
-- **Pairlens Intelligence**, our hosted AI co-pilot and research service.
+- **Pairlens Intelligence**, our hosted AI assistant and research service.
 - **The plugin registry**, which serves plugin listings and downloads to the terminal.
 
 It does **not** cover:
@@ -141,14 +141,14 @@ none of this section applies to you.
 
 ### 5.1 What gets sent
 
-When you send a message to the co-pilot or run a research query, the request
+When you send a message to the assistant or run a research query, the request
 that leaves your device carries:
 
 - **Your message**, and the earlier messages in that conversation, so the model has context.
-- **The market context the terminal attaches**, which can include the instrument you are looking at, recent candles, computed indicator values, and the results of any tool the co-pilot ran on your behalf. If a tool reads your balances or open positions to answer your question, that reading is in the request.
+- **The market context the terminal attaches**, which can include the instrument you are looking at, recent candles, computed indicator values, and the results of any tool the assistant ran on your behalf. If a tool reads your balances or open positions to answer your question, that reading is in the request.
 - **Your account identifier**, for authentication, rate limiting, and billing.
 
-Because the co-pilot can pull your portfolio into a request, treat the chat
+Because the assistant can pull your portfolio into a request, treat the chat
 box the way you would treat any cloud service: **do not paste API keys, seed
 phrases, or passwords into it**. Nothing in the product needs them there.
 
@@ -160,7 +160,7 @@ and streams the answer back. The request itself is forwarded to the **Vercel AI
 Gateway**, which routes it to the model provider that serves the model we have
 selected for that workload. Today those providers are large commercial AI
 companies including OpenAI, Anthropic, xAI, and Google. Which one handles a
-given request depends on the model configured for the co-pilot or for
+given request depends on the model configured for the assistant or for
 research, and we change that configuration as better models ship.
 
 **The model provider's own terms govern what happens to your content inside
@@ -339,7 +339,7 @@ first, though we would rather you gave us the chance to fix it.
 ## 12. Automated decision-making
 
 **We do not make decisions about you by automated means that produce legal
-effects or similarly significantly affect you.** The AI co-pilot produces
+effects or similarly significantly affect you.** The AI assistant produces
 analysis and suggestions, and it is wrong sometimes. It cannot place an order.
 Every trade requires your explicit confirmation on your own device, and the
 risk guardrails that can block a trade are deterministic rules that you

@@ -1,11 +1,11 @@
 ---
 title: Panels
-description: Every panel in the Pairlens crypto trading terminal, from charts and order books to AI research, what each shows, and which plugin provides it.
+description: Every panel in the Pairlens crypto trading terminal, from charts and order books to news and sentiment, what each shows, and which plugin provides it.
 group: traders
 parent: workspaces
 order: 1
 eyebrow: For traders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 4 min read
 ---
 
@@ -75,16 +75,22 @@ sites refuse to load in. In the browser the panel is offered but marked Desktop
 only, and a layout that already has one says the same thing in place of the
 site.
 
-## AI and research
+## News and sentiment
 
-| Panel            | What it shows                                                             |
-| ---------------- | ------------------------------------------------------------------------- |
-| **AI Lens**      | The co-pilot chat. See [the AI co-pilot](/docs/ai-copilot)                |
-| **Research**     | Long-form analyst reports. See [research reports](/docs/research-reports) |
-| **News**         | Crypto news aggregated from top sources                                   |
-| **Symbol News**  | News and sentiment filtered to the active pair                            |
-| **Social**       | Social sentiment and community activity for a pair                        |
-| **Fear & Greed** | The market sentiment gauge                                                |
+| Panel            | What it shows                                      |
+| ---------------- | -------------------------------------------------- |
+| **News**         | Crypto news aggregated from top sources            |
+| **Symbol News**  | News and sentiment filtered to the active pair     |
+| **Social**       | Social sentiment and community activity for a pair |
+| **Fear & Greed** | The market sentiment gauge                         |
+
+## The AI is not a panel
+
+There is no AI Lens panel and no Research panel to add. The
+[assistant](/docs/ai-copilot) is docked in the bottom-right corner of the
+terminal, outside the workspace grid, so it costs you no layout space and stays
+with you when you change workspace, page or pair. Research is one of its tools
+rather than a pane. See [research reports](/docs/research-reports).
 
 ## Requirements
 
@@ -96,8 +102,6 @@ Panels declare what they need to render:
 - News, Top Coins, Heatmap, and Fear and Greed read from the App Server, so
   they are hidden when the terminal runs
   [standalone](/docs/self-hosting#standalone-mode)
-- AI Lens and Research need an inference provider, either your own key or a
-  hosted [Intelligence](/docs/ai-providers) subscription
 
 When a requirement is unmet, the panel says what to pick rather than rendering
 blank. Bind them once through

@@ -1,17 +1,17 @@
 ---
 title: Mobile terminal
-description: The Pairlens Mobile Trading Terminal. The same URL below 768px, with five destinations over one chart, real order entry, drawings, and the co-pilot.
+description: The Pairlens Mobile Trading Terminal. The same URL below 768px, with five destinations over one chart, real order entry, drawings, and the assistant.
 group: get-started
 order: 5
 eyebrow: Get started
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 9 min read
 ---
 
 Open [terminal.pairlens.finance](https://terminal.pairlens.finance) on a phone
 and you get a different shell. Not the desktop grid squeezed into a column: a
 chart-first surface with five destinations, built from the same codebase, with
-the same connectors, the same drawings, the same co-pilot and the same guarded
+the same connectors, the same drawings, the same assistant and the same guarded
 order path.
 
 The switch happens at 767px. Anything narrower gets the mobile terminal,
@@ -27,13 +27,19 @@ connections, your sockets or your watchlist.
 | **Watchlist** | Your lists, each row with a live price and a trend line. Tapping one switches the pair |
 | **Trade**     | Order entry, with the order book above it                                              |
 | **Chart**     | The chart on its own, with the drawing toolbar                                         |
-| **Co-pilot**  | The full co-pilot, same tools and same confirm cards as the desktop                    |
+| **Assistant** | The full assistant, same 94 tools and same confirm cards as the desktop                |
 | **Discover**  | Featured pairs, prediction markets, news, Fear and Greed, and today's P&L              |
 
 The chart is underneath all five and never unmounts. The other four are bottom
 sheets that slide over it, so switching destination is not a page load and the
 chart behind never redraws from scratch. Drag a sheet up to expand it, down to
 dismiss it, or just tap the chart.
+
+The [assistant](/docs/ai-copilot) gets a tab rather than the desktop's
+bottom-right dock, because a phone has no room for a floating window over a
+chart. It is the same conversation underneath: it draws on the live chart under
+the sheet, prepares orders on the same confirm cards, and asks its questions on
+the same tappable option cards.
 
 That is also why the tabs are not URLs. The address bar stays on
 `/spot/okx/BTC-USDT`, rewritten as you change pair or venue so a refresh or a

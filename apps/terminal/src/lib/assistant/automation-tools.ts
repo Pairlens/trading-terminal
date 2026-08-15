@@ -45,7 +45,6 @@ import type {
 } from './assistant-shared-tools'
 import type { WorkflowStepTypeDefinition } from '@pairlens/workflow-engine/step-registry'
 import type { NotificationStepTypeDefinition } from '@pairlens/notification-engine/step-registry'
-import type { AutomationPromptContext } from './automation-brain'
 import type { DesiredEdge, DesiredStep, GraphDraftAccess } from './graph-apply'
 import type { SimpleAlertSpec } from '@pairlens/notification-engine/simple-alerts'
 import type { AssistantMarketDataHandle } from './assistant-tools'
@@ -249,7 +248,7 @@ function validateWorkflowDraft(workflowId: string) {
 }
 
 /** Workflow tools need nothing from deps: the graph is entirely local. */
-function buildWorkflowTools() {
+export function buildWorkflowTools() {
   return {
     list_workflows: tool({
       description:
@@ -511,7 +510,7 @@ function checkTarget(
   return null
 }
 
-function buildNotificationTools(deps: AutomationToolDeps) {
+export function buildNotificationTools(deps: AutomationToolDeps) {
   return {
     list_alerts: tool({
       description:
@@ -757,6 +756,31 @@ export function buildAutomationTools(deps: AutomationToolDeps) {
 }
 
 export type AutomationToolSet = ReturnType<typeof buildAutomationTools>
+
+export type AutomationWorkflowContext = {
+  id: string
+  name: string
+  steps: number
+  editing: boolean
+  uncommittedChanges: number
+}
+
+export type AutomationAlertContext = {
+  id: string
+  name: string
+  kind: 'simple' | 'flow'
+  enabled: boolean
+  watching: Array<string>
+}
+
+export type AutomationPromptContext = {
+  surface: AutomationSurface
+  workflows: Array<AutomationWorkflowContext>
+  alerts: Array<AutomationAlertContext>
+  /** Step type ids the installed plugins actually registered. */
+  stepTypes: Array<string>
+  venues: Array<string>
+}
 
 /**
  * The fresh snapshot the transport reads at send time, so the prompt always

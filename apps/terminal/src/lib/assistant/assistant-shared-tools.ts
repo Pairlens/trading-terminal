@@ -3,19 +3,20 @@
 /**
  * The two tools every assistant surface gets, whatever it builds.
  *
- * `ask_user` is how a decision that belongs to the user stays with the user,
- * and `handoff_to_builder` is what makes four separate builders one workflow:
- * a bot that needs an indicator, an alert that should have been a workflow.
- * Both are surface-agnostic, so they live here rather than being copied into
- * each tool set and drifting apart.
+ * `ask_user` is how a decision that belongs to the user stays with the user.
+ * `handoff_to_builder` moves them to another builder and carries the request
+ * across; the unified assistant strips it out of its own set, since one chat
+ * has nothing to hand over to, and it survives for tool sets built on their
+ * own. Both are surface-agnostic, so they live here rather than being copied
+ * into each tool set and drifting apart.
  */
 import { tool } from 'ai'
 import { z } from 'zod'
 
-import { requestAssistant } from './assistant-chat-cache'
+import { askAssistant } from '@/stores/assistant-store'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
 
-/** Every page that can host the assistant rail. */
+/** Every builder page the assistant can work on. */
 export type AssistantSurface =
   | 'indicators'
   | 'bots'
@@ -107,7 +108,7 @@ export function buildSharedAssistantTools(deps: AssistantSharedDeps) {
         ) {
           return { error: `No script with id '${scriptId}'.` }
         }
-        requestAssistant(target, { prompt: message })
+        askAssistant(message, { send: true })
         deps.navigate({ to: target, scriptId })
         return {
           handedOff: target,

@@ -4,7 +4,7 @@ description: The workbench where you write indicators and strategies in real Pyt
 group: traders
 order: 5
 eyebrow: For traders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 6 min read
 ---
 
@@ -69,13 +69,13 @@ before a chart tells you.
 
 ## Build with AI
 
-The assistant is the rail on the right of the workbench, open by default, and
-the composer on the empty page is the same thing: a chat that writes scripts
-with you. Describe what you want in plain words ("an RSI that colours red
-above 70", "a breakout strategy with a 3% stop") and it writes the Python
-straight into your editor, validates it in the runtime, and re-runs the
+The assistant lives in a dock you can open from any page, and on this one it
+writes scripts with you. Describe what you want in plain words ("an RSI that
+colours red above 70", "a breakout strategy with a 3% stop") and it writes the
+Python straight into your editor, validates it in the runtime, and re-runs the
 preview so the result is on the chart before you reply. **Build with AI** in
-the **+** menu above the script list starts the same conversation.
+the **+** menu above the script list opens it with the request started, and an
+empty workbench offers the same thing above the template shelf.
 
 It checks its own work. Every write goes through the Python runtime, and when
 the runtime rejects it the traceback comes back to the assistant, not to you:
@@ -101,11 +101,10 @@ card with two to four options you tap, and you can always type something else
 instead. It is the difference between a builder that picks your timeframe and
 one that asks which you meant.
 
-The two builders are one workflow. From here, a finished strategy you want
-running goes to [Bots](/docs/bots) with a tap, and the assistant there picks
-up the thread with the context already written down. It works the other way
-too: ask the Bots assistant for something that needs real code and it brings
-you back here.
+It is one assistant, not one per page. A finished strategy you want running
+goes to [Bots](/docs/bots) inside the same conversation, and a bot idea that
+turns out to need real code comes back here the same way. Nothing is explained
+twice.
 
 The assistant uses whatever AI provider the terminal resolves: Pairlens
 Intelligence when you are signed in with a plan, or any bring-your-own-key
