@@ -20,7 +20,7 @@
     "oneTerminal": {
       "eyebrow": "Neden Pairlens",
       "title": "Tek terminal. Her piyasa.",
-      "sub": "Merkezi ve zincir üstü spot işlemleri yan yana yap; her kurulumu okuyan bir yapay zeka co-pilot eşliğinde.",
+      "sub": "Merkezi ve zincir üstü spot işlemleri yan yana yap; her kurulumu okuyan tek bir yapay zekâ asistanı eşliğinde.",
       "points": {
         "0": "Merkezi spot — OKX, Binance, Coinbase",
         "1": "Zincir üstü DEX takasları, akıllı yönlendirmeli",
@@ -90,9 +90,9 @@
       "label": "Yönlendirme"
     },
     "copilot": {
-      "eyebrow": "Co-pilotun",
-      "title": "Senin kurallarına göre çalışan bir co-pilot.",
-      "sub": "Piyasayı senin yerine okur — ve çizdiğin sınırları asla aşmaz.",
+      "eyebrow": "Asistanın",
+      "title": "Senin kurallarına göre çalışan bir asistan.",
+      "sub": "Piyasayı senin yerine okur ve çizdiğin sınırları asla aşmaz.",
       "points": {
         "0": "Piyasalarındaki sinyalleri izler",
         "1": "Her kurulumu onaylar, engeller veya işaretler",
@@ -101,7 +101,7 @@
       "scene": {
         "guardrail": "risk sınırın"
       },
-      "label": "Co-pilot"
+      "label": "Asistan"
     },
     "themeStep": {
       "status": "Işık ayarlanıyor",
@@ -166,11 +166,11 @@
     "account": {
       "status": "Son bir şey",
       "title": "Senkronize tutalım mı?",
-      "sub": "İsteğe bağlı — şimdiye kadar gördüğün her şey hesap olmadan da çalışır. Bir hesap, yapay zeka co-pilotu ve cihazlar arası senkronizasyonu ekler. Anahtarların her zaman bu makinede kalır.",
+      "sub": "İsteğe bağlı: şimdiye kadar gördüğün her şey hesap olmadan da çalışır. Bir hesap, barındırılan yapay zekâ asistanını ve cihazlar arası senkronizasyonu ekler. Anahtarların her zaman bu makinede kalır.",
       "benefits": {
         "ai": {
-          "title": "Yapay zeka co-pilotu ve araştırma",
-          "sub": "Herhangi bir parite için bağlamsal analiz — ücretsiz dahil"
+          "title": "Yapay zekâ asistanı ve araştırma",
+          "sub": "Terminalin tamamında çalışır, ücretsiz"
         },
         "sync": {
           "title": "Bulut senkronizasyonu",
@@ -503,12 +503,12 @@
         },
         "copilot": {
           "title": "Yapay zekâ sohbet geçmişi",
-          "description": "Parite bazında copilot konuşmaların.",
+          "description": "Asistanla tek bir konuşma, terminalin tamamı için.",
           "caveat": "Bu kapalıyken sohbet geçmişini temizlemek yalnızca bu cihazı temizler. Hesabında kayıtlı konuşmalar durur ve senkronizasyonu tekrar açtığında yeniden görünür."
         },
         "trades": {
           "title": "İşlem günlüğü",
-          "description": "Senin ya da copilot'un günlüğe kaydettiği işlemler."
+          "description": "Senin ya da asistanın günlüğe kaydettiği işlemler."
         }
       }
     },
@@ -693,24 +693,24 @@
       "dailyTradeCount": "İşlemler",
       "windowStart": "Pencere başlangıcı",
       "confirmGesture": "Emir onayı",
-      "confirmGestureDescription": "Kendi verdiğin emri nasıl onayladığın — işlem bileti ve co-pilot emir kartları için geçerli.",
+      "confirmGestureDescription": "Kendi verdiğin emri nasıl onayladığın; işlem bileti ve asistanın emir kartları için geçerli.",
       "confirmHold": "Basılı tut",
       "confirmHoldDescription": "Düğme dolana kadar basılı tut. Gerçek emirler kağıt emirlerden biraz daha uzun sürer.",
       "confirmClick": "Tek tıklama",
       "confirmClickDescription": "İlk tıklama emri gönderir. Yanlış bir tıklama ile gerçek bir emir arasında hiçbir şey kalmaz.",
       "confirmGestureNote": "Risk sınırları her iki durumda da geçerli — değişen hareket, koruma değil.",
       "aiPermissions": "Yapay zeka işlem izinleri",
-      "aiPermissionsDescription": "Yapay zeka co-pilotunun sormadan yapabilecekleri. Bu izinlerin dışındaki emirler her zaman sohbetteki bir kartla onayını gerektirir ve otomatik onaylı olsun ya da olmasın her emir yukarıdaki risk sınırlarına göre uygulanır.",
+      "aiPermissionsDescription": "Yapay zekâ asistanının sormadan yapabilecekleri. Bu izinlerin dışındaki emirler her zaman sohbetteki bir kartla onayını gerektirir ve otomatik onaylı olsun ya da olmasın her emir yukarıdaki risk sınırlarına göre uygulanır.",
       "aiPaperAuto": "Kağıt üzerinde işlemleri otomatik onayla",
-      "aiPaperAutoDescription": "Yalnızca simüle edilmiş fonlar. Co-pilot, onay kartı olmadan kağıt üzerinde emirler verir.",
+      "aiPaperAutoDescription": "Yalnızca simüle edilmiş fonlar. Asistan, onay kartı olmadan kağıt üzerinde emirler verir.",
       "aiLiveAuto": "Gerçek işlemleri otomatik onayla",
       "aiLiveAutoEmpty": "İzin verilen borsa yok — her gerçek işlem onayını gerektirir. Bir emir kartından \"Bir daha sorma\" ile bir borsaya izin ver.",
-      "aiLiveAutoDescription": "Gerçek fonlar. Co-pilot, onay kartı olmadan bu borsalarda gerçek emirler verir:",
+      "aiLiveAutoDescription": "Gerçek fonlar. Asistan, onay kartı olmadan bu borsalarda gerçek emirler verir:",
       "aiLiveAutoRevoke": "{{market}} iznini iptal et"
     },
     "billing": {
       "title": "Pairlens Intelligence",
-      "description": "Barındırılan yapay zeka yardımcı pilotu, araştırma raporları ve web araması — API anahtarı gerekmez.",
+      "description": "Barındırılan yapay zekâ asistanı, derinlemesine araştırma ve web aramasıyla birlikte. API anahtarı gerekmez.",
       "signInFirst": "Pairlens Intelligence aboneliğinizi yönetmek için giriş yapın.",
       "selfHosted": "Bu sunucuda faturalandırma yapılandırılmamış — barındırılan yapay zeka özellikleri aboneliksiz çalışır.",
       "loadError": "Faturalandırma durumunuz yüklenemedi. Lütfen tekrar deneyin.",
@@ -879,7 +879,7 @@
       "triggerWake": "Bilgisayar uyanınca",
       "triggerWakeHint": "Makine uykudan döndüğünde kilitle.",
       "triggerTrade": "Emir göndermeden önce",
-      "triggerTradeHint": "Elle ya da copilot üzerinden verdiğin emirleri doğrula; otomatik onaylanan öneriler dahil. Botlara asla sorulmaz.",
+      "triggerTradeHint": "Elle ya da asistan üzerinden verdiğin emirleri doğrula; otomatik onaylanan öneriler dahil. Botlara asla sorulmaz.",
       "afterMinutes": "{{minutes}} dk sonra",
       "everyHours": "Her {{hours}} sa",
       "graceNever": "Her seferinde",
@@ -1241,50 +1241,14 @@
     "buildWithAi": "Yapay zekâ ile oluştur",
     "buildWithAiHint": "Anlat, asistan yazsın",
     "recommended": "Önerilen",
-    "placeholder": "Ne oluşturmak istediğini anlat...",
-    "answerPlaceholder": "Yanıtla ya da başka bir şey söyle...",
-    "close": "Asistanı kapat",
-    "clearChat": "Konuşmayı temizle",
-    "emptyTitle": "Ne oluşturalım?",
-    "emptyHintIndicators": "Bir gösterge ya da strateji anlat; asistan onu editöre yazar, doğrular ve önizlemeyi çalıştırır.",
-    "emptyHintBots": "Ondan bir stratejiyi kağıt bot olarak kurmasını, parametreleri ayarlamasını ya da risk sınırları koymasını iste. Botu canlıya alma kararı senin elinde kalır.",
-    "emptyHintWorkflows": "Emrin gerçekleştikten sonra ne olması gerektiğini anlat. Asistan adımları bağlar; farkı sen inceleyip işlersin.",
-    "emptyHintNotifications": "Neyden haberdar olmak istediğini söyle. Asistan uyarıyı kurar ve söylediğin paritede devreye alır.",
-    "genericError": "Asistan bir hatayla karşılaştı — mesajı yeniden göndermeyi dene.",
-    "authRequiredTitle": "Yapay zekâ ile oluştur",
-    "authRequiredDescription": "Bir göstergeyi, stratejiyi ya da botu kendi kelimelerinle anlat — asistan Python'ı yazar, doğrular ve seninle birlikte geriye dönük test eder.",
-    "upgradeRequiredDescription": "Oluşturucu asistan göstergeleri, stratejileri ve botları seninle birlikte yazar. Pairlens Intelligence'a abone ol veya kendi yapay zekâ anahtarını bağla — ücretsiz.",
-    "unavailableTitle": "Asistan kullanılamıyor",
-    "unavailableDescription": "Sohbetle gösterge, strateji ve bot oluşturmak için Plugins sayfasından bir yapay zekâ sağlayıcısı etkinleştir.",
-    "quickNewIndicator": "RSI uyumsuzluğu göstergesi oluştur",
-    "quickNewStrategy": "Geriye dönük test edebileceğim bir kırılma stratejisi yaz",
-    "quickImprove": "Bu betiği incele ve iyileştirmeler öner",
-    "quickBotFromScratch": "Bana sıfırdan bir bot oluştur",
-    "quickCreateBot": "Stratejilerimden birini kağıt bot olarak kur",
-    "quickGuards": "Botlarımdan biri için risk sınırları öner",
-    "quickReview": "Botlarım nasıl performans gösteriyor?",
-    "quickBracket": "Girişimi stop ve hedefle koru",
-    "quickScaleOut": "Pozisyondan üç kademede çık",
-    "quickExplainWorkflow": "Bu iş akışının ne yaptığını anlat",
-    "quickPriceAlert": "BTC bir fiyatı geçtiğinde haber ver",
-    "quickMoveAlert": "Hızlı yüzde hareketinde beni uyar",
-    "quickAlertReview": "Mevcut uyarılarımı gözden geçir",
     "questionHint": "Birini seç ya da kendi yanıtını aşağıya yaz.",
     "questionHintOpen": "Yanıtını aşağıya yaz.",
     "youAnswered": "Seçtiğin: {{answer}}",
-    "handoffToIndicators": "Göstergeler ve Stratejiler’de devam ediliyor",
-    "handoffToBots": "Botlar’da devam ediliyor",
-    "handoffToWorkflows": "İş akışları’nda devam ediliyor",
-    "handoffToNotifications": "Bildirimler’de devam ediliyor",
     "starterTitle": "Anlat, gerisini o yazsın",
     "starterBodyIndicators": "Grafikte ne görmek istediğini söyle. Asistan Python’ı yazar, doğrular ve önizlemeyi çalıştırır; sen de sonucu değerlendirirsin.",
     "starterBodyBots": "Botun ne yapmasını istediğini söyle. Asistan stratejiyi yazar, geriye dönük test eder ve kağıt bot olarak kurar. Canlıya alma kararı sende kalır.",
     "starterBodyWorkflows": "Emrin gerçekleştikten sonra ne olması gerektiğini söyle. Asistan adımları tuvale bağlar; farkı sen inceleyip işlersin.",
     "starterBodyNotifications": "Neyden haberdar olmak istediğini söyle. Asistan uyarıyı kurar, makul bir bekleme süresi seçer ve devreye alır.",
-    "starterPlaceholderIndicators": "Momentum döndüğünde arka planı boyayan bir RSI...",
-    "starterPlaceholderBots": "4 saatlikte yükseliş trendinde geri çekilmeleri alan bir bot...",
-    "starterPlaceholderWorkflows": "Girişim gerçekleşince +%5’te kâr al, -%3’te zararı kes...",
-    "starterPlaceholderNotifications": "BTC OKX’te 100.000’i geçtiğinde haber ver...",
     "starterIdeaIndicator1": "Hacim ağırlıklı trend şeridi",
     "starterIdeaIndicator2": "Uyumsuzluk avcısı",
     "starterIdeaIndicator3": "Volatilite sıkışma bantları",
@@ -1296,14 +1260,56 @@
     "starterIdeaWorkflow3": "Düşüşte kademeli giriş",
     "starterIdeaAlert1": "BTC bir seviyeyi geçiyor",
     "starterIdeaAlert2": "Bir saatte %5 hareket",
-    "starterIdeaAlert3": "Botum işlem yapınca haber ver",
-    "starterSend": "Asistana gönder"
+    "starterIdeaAlert3": "Botum işlem yapınca haber ver"
+  },
+  "assistantDock": {
+    "title": "Asistan",
+    "open": "Asistanı aç",
+    "close": "Asistanı küçült",
+    "clear": "Konuşmayı temizle",
+    "placeholder": "Ne istersen sor ya da ne oluşturacağımı söyle...",
+    "answerPlaceholder": "Yanıtını yaz...",
+    "emptyTitle": "Ne üzerinde çalışıyoruz?",
+    "emptyDescription": "Her piyasayı okuyabilir, grafiği yönetebilir, gösterge ve strateji yazabilir, uyarı ve iş akışları kurabilir, onaylaman için emirleri hazırlayabilirim.",
+    "defaultSuggestion": "Asistana sor",
+    "statusThinking": "Düşünüyor...",
+    "statusUsingTools": "Araçlar kullanılıyor...",
+    "statusSearching": "Web'de aranıyor...",
+    "genericError": "Bir şeyler ters gitti. Tekrar dene.",
+    "authRequiredTitle": "Asistanı kullanmak için giriş yap",
+    "authRequiredDescription": "Asistan Pairlens Intelligence üzerinde ya da kendi sağlayıcı anahtarınla çalışır.",
+    "upgradeRequiredDescription": "Planına Intelligence ekle ya da kendi sağlayıcı anahtarını bağla.",
+    "unavailableTitle": "Asistan kullanılamıyor",
+    "unavailableDescription": "Etkin bir yapay zekâ sağlayıcısı yok. Başlamak için bir tane bağla.",
+    "goToPlugins": "Eklenti Mağazası'nı aç",
+    "suggest": {
+      "chart": "{{pair}} grafiğini analiz et",
+      "discovery": "Bana işlem yapacak bir şey bul",
+      "workflows": "Bir iş akışı kur",
+      "notifications": "Bir uyarı ayarla",
+      "bots": "Bir işlem botu devreye al",
+      "indicators": "Bir gösterge yaz",
+      "indicatorsScript": "{{name}} betiğini geliştir",
+      "accounts": "Hesaplarımı gözden geçir",
+      "plugins": "Bana bir eklenti bul",
+      "workspaceStore": "Çalışma alanımı tasarla"
+    },
+    "researchCardTitle": "Research Raporu: {{market}} üzerinde {{pair}}",
+    "researchCardTitleGeneric": "Research Raporu",
+    "researchCardSources_one": "{{count}} kaynak",
+    "researchCardSources_other": "{{count}} kaynak",
+    "quickAnalyze": "{{pair}} analiz et",
+    "quickLevels": "{{symbol}} üzerindeki kilit seviyeleri işaretle",
+    "quickAlert": "{{symbol}} kırılım yaparsa haber ver",
+    "quickWhatsMoving": "Bugün ne hareketleniyor?",
+    "quickPortfolio": "Portföyüm nasıl gidiyor?",
+    "quickBuildAlert": "Bana bir uyarı kur",
+    "approvalApprove": "Onayla",
+    "approvalDecline": "Reddet",
+    "approvalApproved": "Onaylandı",
+    "approvalDeclined": "Reddedildi"
   },
   "copilot": {
-    "aiLens": "Yapay Zeka Merceği",
-    "thinking": "Düşünüyor...",
-    "idle": "Boşta",
-    "clearHistory": "Sohbet geçmişini temizle",
     "placeholder": "Merceğine sor...",
     "lensPersona": "Mercek Kişiliği",
     "persona": {
@@ -1337,22 +1343,7 @@
     "keep": "Koru",
     "tradingUnavailable": "İşlem yapılamıyor.",
     "noCredentialsForMarket": "{{market}} için bağlı bir kimlik bilgisi yok. Gerçek işlem yapmak için Hesaplar bölümünden API anahtarı ekleyin.",
-    "watchingPair": "{{pair}} · {{timeframe}} izleniyor",
-    "genericChatError": "Kopilotta bir hata oluştu — tekrar göndermeyi deneyin.",
-    "quickActionHowIsDoing": "{{symbol}} nasıl gidiyor?",
-    "quickActionSuggestedIndicators": "Önerilen göstergeler",
-    "quickActionAnySignals": "Herhangi bir sinyal var mı?",
     "scheduledCheckPrefix": "[Zamanlanmış kontrol — {{minutes}} dk önce ayarlandı]",
-    "authRequiredTitle": "Yapay zekâ kopilotunuzla tanışın",
-    "authRequiredDescription": "Herhangi bir parite için bağlamsal analiz — grafiği okur, risk sınırlarını kontrol eder ve sorgulayabileceğin bir gerekçeyle yanıtlar.",
-    "upgradeRequiredDescription": "Yapay zekâ kopilotun grafiği okur, risk sınırlarını kontrol eder ve sorgulayabileceğin bir gerekçeyle yanıtlar. Pairlens Intelligence'a abone ol veya kendi yapay zekâ anahtarını bağla — ücretsiz.",
-    "aiLensUnavailableTitle": "AI Lens Kullanılamıyor",
-    "aiLensUnavailableDescription": "Gerçek zamanlı piyasa analizi ve işlem desteği almak için Plugins sayfasından bir yapay zekâ eklentisi etkinleştirin.",
-    "goToPlugins": "Plugins'e Git",
-    "analyzePair": "{{pair}} analiz et",
-    "startConversation": "Sohbeti başlat",
-    "emptyStateHint": "Piyasa koşullarını sorun, kurulumunuzu doğrulayın veya risk değerlendirmesi isteyin — yapay zekâ bu paritenin tüm bağlamına sahiptir.",
-    "contextAware": "Bağlamı bilir",
     "toolFailed": "Araç başarısız oldu"
   },
   "chart": {
@@ -2195,7 +2186,7 @@
       "priceMonthly": "{{price}} $/ay",
       "taxNotice": "Fiyatlara vergi dahil değildir; ödeme sırasında hesaplanır.",
       "defaultTitle": "Pairlens Intelligence'ın kilidini açın",
-      "defaultDescription": "API anahtarı gerektirmeyen barındırılan AI kopilotu ve web research'ü. Her planda sohbet, research ve web aramaları arasında paylaşılan aylık kullanım bütçesi bulunur.",
+      "defaultDescription": "Barındırılan yapay zekâ asistanı, derinlemesine araştırma ve web aramasıyla birlikte, uğraşacağın bir API anahtarı olmadan. Her planda sohbet, araştırma ve web aramaları arasında paylaşılan aylık kullanım bütçesi bulunur.",
       "byokNote": "Kendi sağlayıcını mı tercih edersin? <plugins>Eklentiler</plugins> sayfasında bir Anthropic, OpenAI, Groq veya OpenRouter anahtarı bağla — kendi anahtarınla yapay zekâ her zaman ücretsizdir.",
       "checkoutOpenedTitle": "Ödeme tarayıcınızda açıldı",
       "checkoutActivates": "Ödeme tamamlanır tamamlanmaz aboneliğin burada etkinleşir.",
@@ -2223,7 +2214,6 @@
     "fearGreed": "Korku ve Açgözlülük",
     "chart": "Grafik",
     "trade": "İşlem",
-    "aiLens": "Yapay Zeka Merceği",
     "dataLog": "Veri Günlüğü",
     "positions": "Pozisyonlar",
     "portfolio": "Portföy",
@@ -2232,7 +2222,6 @@
     "marketDepth": "Piyasa Derinliği",
     "pairInfo": "Parite Bilgisi",
     "multiPrice": "Çoklu Fiyat",
-    "research": "Araştırma",
     "social": "Sosyal",
     "risk": "Risk",
     "symbolNews": "Sembol Haberleri",
@@ -2253,7 +2242,6 @@
     "fearGreed": "Korku ve Açgözlülük Endeksi'ne dayalı piyasa duyarlılığı göstergesi",
     "chart": "Göstergeler ve çizim araçlarıyla mum grafiği",
     "trade": "Risk kontrolleriyle piyasa, limit ve stop emirleri ver",
-    "aiLens": "Sinyalleri analiz eden ve işlem bağlamı sağlayan yapay zeka co-pilotu",
     "dataLog": "Aktif parite için ham sinyal ve olay akışı",
     "positions": "Açık pozisyonları, kâr/zararı ve işlem geçmişini izle",
     "portfolio": "Dağılım kırılımıyla hesap varlıkları",
@@ -2262,7 +2250,6 @@
     "marketDepth": "Aktif parite için kümülatif piyasa derinliği grafiği",
     "pairInfo": "Aktif parite için önemli istatistikler, fonlama oranı ve meta veri",
     "multiPrice": "Aynı parite tüm borsalarda aynı anda, en iyi gerçekleşme için sıralanmış",
-    "research": "Aktif parite için yapay zeka tarafından oluşturulan derinlemesine raporlar",
     "social": "Bir parite için sosyal duyarlılık ve topluluk aktivitesi",
     "risk": "Portföy risk ölçümleri ve sınır yapılandırması",
     "symbolNews": "Aktif işlem paritesi için haberler ve duyarlılık analizi",
@@ -3153,7 +3140,7 @@
       "statusBrowserVault": "Şu anda: her anahtar kasanda şifreli, yalnızca bu tarayıcıda.",
       "statusBrowserNone": "Bu tarayıcıda henüz kasa yok. İlk anahtar kaydedilmeden önce bir tane kuracaksın.",
       "deviceTitle": "Yalnızca cihazında saklanır",
-      "deviceBody": "Borsa API anahtarların ve cüzdan anahtarların bu bilgisayarda ve başka hiçbir yerde kaydedilir. Pairlens'e asla yüklenmez: oturum açtığında da, ayarların eşitlenirken de, kopilot bir grafiği okurken de. Sunucularımızda sızabilecek bir kopya yok.",
+      "deviceBody": "Borsa API anahtarların ve cüzdan anahtarların bu bilgisayarda ve başka hiçbir yerde kaydedilir. Pairlens'e asla yüklenmez: oturum açtığında da, ayarların eşitlenirken de, asistan bir grafiği okurken de. Sunucularımızda sızabilecek bir kopya yok.",
       "osTitle": "Dururken bile şifreli",
       "osBodyDesktop": "Sisteminin kendi şifrelerini sakladığı korumalı depo olan {{vault}} içinde, diskte şifrelenmiş olarak ve yalnızca bu uygulamaya verilmek üzere tutulurlar.",
       "osBodyDesktopVault": "Sisteminin kendi şifrelerini sakladığı korumalı depo olan {{vault}} içinde tutulurlar. Kasan üstüne bir katman ekler: her değer, anahtarlık onu görmeden önce AES-256-GCM ile mühürlenir.",
@@ -3391,8 +3378,8 @@
       },
       "ai-research-desk": {
         "name": "Yapay Zeka Araştırma Masası",
-        "tagline": "Grafiğinin yanında co-pilot, araştırma ve haber akışı.",
-        "description": "Bir grafiği Yapay Zeka Co-pilotu, derinlemesine araştırma ve hem genel hem de sembol haber akışlarıyla eşleştir. Hikayenin tape kadar önemli olduğu katalizör odaklı işlemler için tasarlandı. Co-pilot ve Araştırma için bir yapay zeka çıkarım sağlayıcısı gerektirir."
+        "tagline": "Sembol haberleri ile genel haber akışı arasında bir grafik.",
+        "description": "Bir grafiği sembol haber akışı ve genel haber akışıyla eşleştir. Hikayenin tape kadar önemli olduğu katalizör odaklı işlemler için tasarlandı. Yapay zekâ asistanı zaten dock'ta durur, yani burada bir sütun kaplamadan elinin altında."
       },
       "market-discovery": {
         "name": "Piyasa Keşfi",
@@ -3407,7 +3394,7 @@
       "prediction-terminal": {
         "name": "Tahmin Terminali",
         "tagline": "Olasılıkları grafikte, olayın tamamı hemen yanında.",
-        "description": "Tahmin piyasaları için varsayılan düzen: altında işlemler ve açık sözleşmelerin bulunduğu bir olasılık grafiği, ortada emir defteri ve işlem paneli, Yapay Zeka Co-pilotunun yanında ise olay tarayıcısı; çünkü komşu sonuçlar analizin yarısıdır.",
+        "description": "Tahmin piyasaları için varsayılan düzen: altında işlemler ve açık sözleşmelerin bulunduğu bir olasılık grafiği, ortada emir defteri ve işlem paneli, sağda ise tam yükseklikte bir olay tarayıcısı; çünkü komşu sonuçlar analizin yarısıdır.",
         "menuLabel": "Varsayılan"
       },
       "prediction-discovery": {
@@ -3424,7 +3411,7 @@
       "dex-terminal": {
         "name": "DEX Terminali",
         "tagline": "Sahte emir defteri olmadan zincir üstü işlem.",
-        "description": "Varsayılan zincir üstü düzen: altında havuz istatistikleri ve işlemler bulunan bir grafik, yeni listelemeleri yakalamak için son görülen paritelerin üzerinde bir takas paneli ve sosyal akışın üzerinde Yapay Zeka Co-pilotu. Emir defteri sütunu yok: havuzdan türetilen derinlik sentetiktir, bu yüzden gösterilmez.",
+        "description": "Varsayılan zincir üstü düzen: altında havuz istatistikleri ve işlemler bulunan bir grafik, yeni listelemeleri yakalamak için son görülen paritelerin üzerinde bir takas paneli ve sağda sosyal akış. Emir defteri sütunu yok: havuzdan türetilen derinlik sentetiktir, bu yüzden gösterilmez.",
         "menuLabel": "Varsayılan"
       },
       "quant-signals": {
@@ -3440,36 +3427,36 @@
       "equities-terminal": {
         "name": "Hisse Senedi Terminali",
         "tagline": "İşlem paneli sembol haber akışının üzerinde, hisse senetleri için.",
-        "description": "Hisse senetleri için varsayılan düzen: altında işlemler, pozisyonlar ve temel veriler bulunan bir grafik, sembol haber akışının üzerinde işlem paneli (akış kriptoyu nasıl hareket ettiriyorsa, katalizörler de hisseleri öyle hareket ettirir) ve sağda Yapay Zeka Co-pilotu.",
+        "description": "Hisse senetleri için varsayılan düzen: altında işlemler, pozisyonlar ve temel veriler bulunan bir grafik ve sembol haber akışının üzerinde işlem paneli; çünkü akış kriptoyu nasıl hareket ettiriyorsa, katalizörler de hisseleri öyle hareket ettirir.",
         "menuLabel": "Varsayılan"
       },
       "ultrawide-trading-floor": {
         "name": "Ultra Geniş İşlem Katı",
         "tagline": "Her şey, her yerde — büyük ekran için.",
-        "description": "Ultra geniş veya ikinci bir monitörü dolduran dört sütunlu bir komuta merkezi: tarayıcı, grafik, emir defteri ve derinlik, pozisyonlarla birlikte bir işlem paneli ve Yapay Zeka Co-pilotu. Maksimalist düzen."
+        "description": "Ultra geniş veya ikinci bir monitörü dolduran dört sütunlu bir komuta merkezi: tarayıcı, grafik, emir defteri ve derinlik, ve açık pozisyonlarının üzerinde bir işlem paneli. Maksimalist düzen."
       },
       "classic-terminal": {
         "name": "Klasik Terminal",
-        "tagline": "Klasik Pairlens masası — grafik, veri, işlem, co-pilot.",
-        "description": "Varsayılan terminal düzeni: solda sekmeli bir veri şeridi ve risk çubuğu olan büyük bir grafik, sağda ise Yapay Zeka Co-pilotu üzerinde bir işlem paneli.",
+        "tagline": "Klasik Pairlens masası: grafik, veri, emir defteri, panel.",
+        "description": "Varsayılan terminal düzeni: solda sekmeli bir veri şeridi ve risk çubuğu olan büyük bir grafik, sağda ise işlem panelinin üzerinde emir defteri.",
         "menuLabel": "Varsayılan"
       },
       "chart-focus": {
         "name": "Grafik Odağı",
         "tagline": "Altında sekmeli veri olan tek büyük bir grafik.",
-        "description": "Grafiğe maksimum alan veren tek sütunlu bir düzen; pozisyonlar, veri günlüğü, co-pilot ve işlem paneli altta bir sekme şeridine sığdırılmış.",
+        "description": "Grafiğe maksimum alan veren tek sütunlu bir düzen; pozisyonlar, veri günlüğü ve işlem paneli altta bir sekme şeridine sığdırılmış.",
         "menuLabel": "Grafik Odağı"
       },
       "trading": {
         "name": "İşlem",
-        "tagline": "Merkezi bir grafiğin iki yanında emir defteri ve işlem paneli.",
-        "description": "Üç sütunlu bir işlem masası: solda emir defteri ve işlem paneli, ortada pozisyonlar ve riskle grafik, sağda ise Yapay Zeka Co-pilotu.",
+        "tagline": "Tam yükseklikte bir grafiğin yanında emir defteri ve panel.",
+        "description": "İki sütunlu bir işlem masası: solda işlem panelinin üzerinde emir defteri, kalan genişliği ise pozisyonlar ve riskle birlikte grafik dolduruyor.",
         "menuLabel": "İşlem"
       },
       "chart-analysis": {
         "name": "Grafik Analizi",
-        "tagline": "Solda grafik ve veri, sağda co-pilot ve işlem.",
-        "description": "Çalışma odaklı bir bölünme: solda grafik, veri, araştırma ve risk; sağda co-pilot, emir defteri ve işlem paneli.",
+        "tagline": "Solda grafik ve veri, sağda işlem.",
+        "description": "Çalışma odaklı bir bölünme: solda grafik, veri ve risk; sağda emir defteri ve işlem paneli.",
         "menuLabel": "Analiz"
       },
       "dual-charts": {
@@ -3497,23 +3484,23 @@
       },
       "laptop-split": {
         "name": "Dizüstü Bölünmesi",
-        "tagline": "Solda grafik + veri, sağda işlem + co-pilot — daha küçük ekranlar için.",
-        "description": "Dizüstü bilgisayarlar için boyutlandırılmış iki sütunlu bir bölünme: solda grafik ve pozisyonlar, sağda co-pilot üzerinde işlem paneli."
+        "tagline": "Solda grafik ve veri, sağda işlem paneli, dizüstü ölçüsünde.",
+        "description": "Dizüstü bilgisayarlar için boyutlandırılmış iki sütunlu bir bölünme: solda grafik, pozisyonlar ve risk, sağda işlem paneli."
       },
       "ultrawide-dashboard": {
         "name": "Ultra Geniş Gösterge Paneli",
         "tagline": "Ultra geniş bir monitöre yayılmış her panel.",
-        "description": "Ultra geniş ekranlar için dört sütunlu bir gösterge paneli: emir defteri, riskle grafik, pozisyonlar ve araştırma, ve bir işlem + co-pilot sütunu."
+        "description": "Ultra geniş ekranlar için dört sütunlu bir gösterge paneli: emir defteri, riskle grafik, pozisyonlar ve veri günlüğü, ve bir işlem paneli sütunu."
       },
       "ultrawide-trading": {
         "name": "Ultra Geniş İşlem",
         "tagline": "Genişlik boyunca emir defteri, derinlik, grafik ve işlem.",
-        "description": "Ultra geniş bir işlem düzeni: solda emir defteri ve piyasa derinliği, ortada pozisyonlarla grafik, sağda ise bir işlem + co-pilot sütunu."
+        "description": "Ultra geniş bir işlem düzeni: solda emir defteri ve piyasa derinliği, ortada pozisyonlarla grafik, sağda ise işlem paneli."
       },
       "command-center": {
         "name": "4K Komuta Merkezi",
         "tagline": "4K bir ekran için tam komuta merkezi.",
-        "description": "4K bir monitör için ekrandaki her şey: emir defteri ve parite bilgisi, araştırma ve riskle grafik, pozisyonlar ve sosyal, ve bir işlem + co-pilot sütunu."
+        "description": "4K bir monitör için ekrandaki her şey: emir defteri ve parite bilgisi, risk çubuğuyla grafik, pozisyonlar ve sosyal, ve bir işlem paneli sütunu."
       },
       "home-pulse": {
         "name": "Ana Sayfa",
@@ -3548,7 +3535,7 @@
       "perps-terminal": {
         "name": "Perp Terminali",
         "tagline": "Vadeli işlem masası: mark fiyatı ve likidasyonla birlikte pozisyonlar.",
-        "description": "Sürekli vadeli işlemler için varsayılan düzen: altında sekmeler halinde işlemler, açık sözleşmeler (giriş, mark, likidasyon) ve piyasa verileri bulunan büyük bir grafik, ortada emir defteri ve kaldıracı hesaba katan bir işlem paneli, sağda ise Yapay Zeka Co-pilotu.",
+        "description": "Sürekli vadeli işlemler için varsayılan düzen: altında sekmeler halinde işlemler, açık sözleşmeler (giriş, mark, likidasyon) ve piyasa verileri bulunan büyük bir grafik, sağda ise kaldıracı hesaba katan işlem panelinin üzerinde emir defteri.",
         "menuLabel": "Varsayılan"
       },
       "perps-discovery": {
@@ -4371,28 +4358,7 @@
     "exit": "Tam ekrandan çık"
   },
   "research": {
-    "phaseSearching": "Web'de aranıyor...",
-    "phaseReading": "Kaynaklar okunuyor...",
-    "phaseAnalyzing": "Piyasa verileri analiz ediliyor...",
-    "phaseWriting": "Rapor yazılıyor...",
-    "authRequiredTitle": "Research masasına bir oturum açma kadar yakınsın",
-    "authRequiredDescription": "Canlı web kaynaklarına dayanan, herhangi bir parite için yapılandırılmış research raporları.",
-    "upgradeDescription": "Canlı web kaynaklarına dayanan, herhangi bir parite için yapılandırılmış research raporları. Pairlens Intelligence'a abone olun veya kendi yapay zekâ anahtarınızı bağlayın — ücretsiz.",
-    "unavailableTitle": "Research kullanılamıyor",
-    "unavailableDescription": "Bu parite için research raporu oluşturmak üzere Eklentiler sayfasından bir AI eklentisi etkinleştirin.",
-    "goToPlugins": "Eklentilere git",
-    "navigateToPair": "Research'ü görüntülemek için bir pariteye gidin.",
-    "researchingSymbol": "{{symbol}} analiz ediliyor",
-    "generatingReport": "Rapor oluşturuluyor...",
-    "cachedGenerated": "Önbellekten — {{time}} oluşturuldu",
-    "freshGenerated": "Güncel — az önce oluşturuldu",
-    "refresh": "Yenile",
-    "sourcesCount": "Kaynaklar ({{count}})",
-    "reportTitle": "Research Raporu",
-    "fullscreenDescription": "Research raporu tam ekran modunda. Çıkmak için Escape tuşuna basın.",
-    "sections": "Bölümler",
-    "sparklineAriaLabel": "Günlük fiyat mini grafiği",
-    "errorTitle": "Research kullanılamıyor"
+    "sparklineAriaLabel": "Günlük fiyat mini grafiği"
   },
   "capabilityGate": {
     "authTitle": "Sadece ücretsiz bir girişe uzaklıkta",
@@ -4489,8 +4455,8 @@
       "titlePlan": "{{label}} artık sizin.",
       "titleDefault": "Pairlens Intelligence artık sizin.",
       "bodyPack": "Bunlar aylık bütçenize eklenir ve {{days}} gün sonra sona erer. Pairlens uygulamasına dönün — bakiyeniz birkaç saniye içinde güncellenir.",
-      "bodyPlanWithCredits": "Barındırılan yapay zeka yardımcı pilotun, araştırma ve web araman ayda {{credits}} kredi ile açıldı. Pairlens uygulamasına dön — aboneliğini birkaç saniye içinde tanır.",
-      "bodyPlanNoCredits": "Barındırılan yapay zeka yardımcı pilotun, araştırma ve web araman açıldı. Pairlens uygulamasına dön — aboneliğini birkaç saniye içinde tanır.",
+      "bodyPlanWithCredits": "Barındırılan yapay zekâ asistanın açıldı; derinlemesine araştırma ve web araması dahil, ayda {{credits}} kredi ile. Pairlens uygulamasına dön: aboneliğini birkaç saniye içinde tanır.",
+      "bodyPlanNoCredits": "Barındırılan yapay zekâ asistanın açıldı; derinlemesine araştırma ve web araması dahil. Pairlens uygulamasına dön: aboneliğini birkaç saniye içinde tanır.",
       "openTerminal": "Terminali aç",
       "closeTabHint": "Masaüstü uygulamasından mı ödedin? Bu sekmeyi kapatabilirsin.",
       "receiptHint": "Makbuz ve faturalar e-postanızda ve faturalandırma portalında (Ayarlar → Intelligence) bulunur."
@@ -4878,7 +4844,7 @@
     "ai": {
       "inference": {
         "label": "Çıkarım",
-        "description": "Co-pilot analizi için LLM çıkarımı"
+        "description": "Yapay zekâ asistanı için LLM çıkarımı"
       },
       "web-search": {
         "label": "Web Araması",
@@ -4945,7 +4911,7 @@
     },
     "ai": {
       "label": "AI Sağlayıcıları",
-      "description": "AI co-pilot analizi için dil modeli sağlayıcıları"
+      "description": "Yapay zekâ asistanı için dil modeli sağlayıcıları"
     },
     "intelligence": {
       "label": "İstihbarat",
@@ -4975,7 +4941,7 @@
         "watchlist": "İzleme Listesi",
         "trade": "İşlem",
         "chart": "Grafik",
-        "copilot": "Co-pilot",
+        "copilot": "Asistan",
         "discover": "Keşfet"
       },
       "overlays": {
@@ -5123,12 +5089,12 @@
       "bannerBody": "Çalışma alanları, botlar, kendi göstergelerin ve dört borsa daha.",
       "bannerDismiss": "Bunu gizle",
       "screenTitle": "Daha büyük bir ekranda",
-      "lead": "Telefonun Pairlens'in elinin altında olmasını istediğin parçalarını taşır: grafik, emir defteri, işlem paneli ve co-pilot. Terminalin geri kalanı yayılacak yeri olan bir ekran için yapıldı ve seni orada bekliyor.",
+      "lead": "Telefonun Pairlens'in elinin altında olmasını istediğin parçalarını taşır: grafik, emir defteri, işlem paneli ve asistan. Terminalin geri kalanı yayılacak yeri olan bir ekran için yapıldı ve seni orada bekliyor.",
       "widerWindow": "Daha geniş bir pencerede",
       "desktopApp": "Masaüstü uygulamasında",
       "workspaces": {
         "title": "Çalışma alanları",
-        "body": "Grafik, emir defteri, işlem şeridi ve co-pilot yan yana, bir kez düzenlenip kaydedilir. Çalışma Alanı Mağazası'nda tek dokunuşla kopyalayacağın hazır düzenler var."
+        "body": "Grafik, emir defteri, işlem şeridi ve işlem paneli yan yana, bir kez düzenlenip kaydedilir. Çalışma Alanı Mağazası'nda tek dokunuşla kopyalayacağın hazır düzenler var."
       },
       "bots": {
         "title": "Botlar",

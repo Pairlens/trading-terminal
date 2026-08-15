@@ -4,7 +4,7 @@ description: Every setting in the terminal, from the terminal lock and credentia
 group: traders
 order: 10
 eyebrow: For traders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 10 min read
 ---
 
@@ -35,15 +35,15 @@ retry on your next change.
 
 Then one switch per domain:
 
-| Domain                       | What travels                                                                                      |
-| ---------------------------- | ------------------------------------------------------------------------------------------------- |
-| **Settings and preferences** | Language, theme, keyboard shortcuts, country, plugin registry settings, and the pair you had open |
-| **Chart setup**              | Indicators, drawings, chart type, favourite tools, and your default drawing styles                |
-| **Workspaces and layouts**   | Custom workspaces, folders, panel layouts, and workspace variables                                |
-| **Workflows and alerts**     | Automation workflows, alert rules, and the pairs they watch                                       |
-| **Plugins**                  | Which plugins are enabled, their settings, and your provider pins                                 |
-| **AI chat history**          | Copilot conversations, per pair                                                                   |
-| **Trade journal**            | Trades you or the copilot log                                                                     |
+| Domain                       | What travels                                                                                                              |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **Settings and preferences** | Language, theme, keyboard shortcuts, country, plugin registry settings, your assistant persona, and the pair you had open |
+| **Chart setup**              | Indicators, drawings, chart type, favourite tools, and your default drawing styles                                        |
+| **Workspaces and layouts**   | Custom workspaces, folders, panel layouts, and workspace variables                                                        |
+| **Workflows and alerts**     | Automation workflows, alert rules, and the pairs they watch                                                               |
+| **Plugins**                  | Which plugins are enabled, their settings, and your provider pins                                                         |
+| **AI chat history**          | Your conversation with the assistant                                                                                      |
+| **Trade journal**            | Trades you or the assistant log                                                                                           |
 
 Three things about these switches are worth knowing before you flip one.
 
@@ -129,13 +129,13 @@ through the vault there instead.
 
 **When to lock.** Five independent triggers:
 
-| Trigger                      | What it does                                                                                                                                                                            |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **When the app starts**      | Prompts on a cold start. A reload or a second window is not a cold start                                                                                                                |
-| **After inactivity**         | 1, 5, 15, 30, or 60 minutes with no mouse or keyboard                                                                                                                                   |
-| **On a schedule**            | Every 1, 4, 8, 12, or 24 hours, however busy the session is                                                                                                                             |
-| **After the computer wakes** | Prompts when the machine comes back from sleep                                                                                                                                          |
-| **Before placing an order**  | Confirms orders you place by hand or through the copilot, auto-approved proposals included. Bots are never asked. A grace window of 0, 1, 5, or 15 minutes decides how often you retype |
+| Trigger                      | What it does                                                                                                                                                                              |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **When the app starts**      | Prompts on a cold start. A reload or a second window is not a cold start                                                                                                                  |
+| **After inactivity**         | 1, 5, 15, 30, or 60 minutes with no mouse or keyboard                                                                                                                                     |
+| **On a schedule**            | Every 1, 4, 8, 12, or 24 hours, however busy the session is                                                                                                                               |
+| **After the computer wakes** | Prompts when the machine comes back from sleep                                                                                                                                            |
+| **Before placing an order**  | Confirms orders you place by hand or through the assistant, auto-approved proposals included. Bots are never asked. A grace window of 0, 1, 5, or 15 minutes decides how often you retype |
 
 **Lock now** closes settings and locks immediately. It ships without a keyboard
 shortcut on purpose, because the obvious chords belong to the workspace menu,

@@ -121,17 +121,17 @@ describe('DynamicPaneRegistry', () => {
     it('removes all panes for a plugin', () => {
       registry.registerPluginPanes(
         'pairlens-intelligence',
-        [makePanel('copilot'), makePanel('research')],
-        { copilot: DummyComponent, research: DummyComponent },
+        [makePanel('news'), makePanel('heatmap')],
+        { news: DummyComponent, heatmap: DummyComponent },
       )
 
-      expect(registry.getDefinition('copilot')).toBeTruthy()
-      expect(registry.getDefinition('research')).toBeTruthy()
+      expect(registry.getDefinition('news')).toBeTruthy()
+      expect(registry.getDefinition('heatmap')).toBeTruthy()
 
       registry.unregisterPluginPanes('pairlens-intelligence')
 
-      expect(registry.getDefinition('copilot')).toBeNull()
-      expect(registry.getDefinition('research')).toBeNull()
+      expect(registry.getDefinition('news')).toBeNull()
+      expect(registry.getDefinition('heatmap')).toBeNull()
     })
 
     it('is a no-op for unknown plugin', () => {
@@ -145,14 +145,16 @@ describe('DynamicPaneRegistry', () => {
       })
       registry.registerPluginPanes(
         'pairlens-intelligence',
-        [makePanel('copilot')],
-        { copilot: DummyComponent },
+        [makePanel('news')],
+        {
+          news: DummyComponent,
+        },
       )
 
       registry.unregisterPluginPanes('pairlens-intelligence')
 
       expect(registry.getDefinition('chart')).toBeTruthy()
-      expect(registry.getDefinition('copilot')).toBeNull()
+      expect(registry.getDefinition('news')).toBeNull()
     })
   })
 

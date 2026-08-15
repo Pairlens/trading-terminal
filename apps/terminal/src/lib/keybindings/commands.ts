@@ -116,6 +116,12 @@ export const KEYBINDING_COMMANDS: Array<KeybindingCommand> = [
     labelKey: 'search.omniTitle',
   },
   {
+    id: 'general.toggleAssistant',
+    categoryId: 'general',
+    scope: 'global',
+    labelKey: 'assistantDock.title',
+  },
+  {
     id: 'general.settings',
     categoryId: 'general',
     scope: 'global',
@@ -328,6 +334,7 @@ export type Keymap = {
  */
 const PAIRLENS_BINDINGS: Record<string, Array<string>> = {
   'general.commandPalette': ['Mod+K'],
+  'general.toggleAssistant': ['Mod+J'],
   'general.settings': ['Mod+,'],
   // Shipped unbound on purpose: ⌘⇧L is the workspace menu, ⌘L is the
   // browser's focus-address-bar, and ⌃⌘Q is the macOS system lock. The

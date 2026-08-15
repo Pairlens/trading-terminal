@@ -88,6 +88,9 @@ import {
   useKeybindingLabels,
 } from '@/hooks/use-keybindings'
 import { BillingStateSync } from '@/components/billing/billing-state-sync'
+import { AssistantProvider } from '@/lib/assistant-core/assistant-provider'
+import { AssistantDock } from '@/components/assistant-dock/assistant-dock'
+import { useAssistantStore } from '@/stores/assistant-store'
 import { SectionTour } from '@/components/onboarding/section-tour'
 import { isOnboardingComplete } from '@/lib/onboarding-state'
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
@@ -318,6 +321,13 @@ function TerminalLayout() {
         commandId: 'general.hardLock',
         action: () => useSettingsDialogStore.getState().open('security'),
       },
+      {
+        commandId: 'general.toggleAssistant',
+        action: () => useAssistantStore.getState().toggle(),
+        // Fires while a field has focus: the whole point is to reach the
+        // assistant without leaving whatever you were typing in.
+        allowInInput: true,
+      },
     ],
     [navigate, lastPair, setWorkspaceTreeOpen],
   )
@@ -390,300 +400,315 @@ function TerminalLayout() {
                   />
                 )}
                 <BillingStateSync />
-                {/* The phone gets its own shell, branched here so that every
+                {/* Wraps the shell branch, not the routed content: surfaces
+                    below register what they can see and do, and the dock
+                    reads that union from up here. It is also what lets one
+                    conversation survive every navigation. */}
+                <AssistantProvider>
+                  {/* The phone gets its own shell, branched here so that every
                     global provider above stays mounted across a resize in
                     both directions — plugins, sockets, watchlists and theme
                     all survive the swap. `useViewportMode` is correct on the
                     FIRST render (see mobile/use-viewport-mode.ts), so no
                     desktop frame is ever painted on a phone. */}
-                {viewport === 'mobile' ? (
-                  <Suspense
-                    fallback={<div className="h-svh w-full bg-background" />}
-                  >
-                    <MobileTerminalRoot />
-                  </Suspense>
-                ) : (
-                  <SidebarProvider
-                    className={cn(
-                      'h-svh overflow-hidden',
-                      needsTitlebar && 'pt-8',
-                    )}
-                    defaultOpen
-                  >
-                    <TauriDragRegion sectionLabel={sectionLabel} />
-                    <SectionTour key={activeItem} sectionId={activeItem} />
-                    <Sidebar
-                      side="left"
-                      variant="inset"
-                      collapsible="none"
-                      sidebarWidth="3.75rem"
-                      className="[&>[data-slot=sidebar-inner]]:bg-transparent [&>[data-slot=sidebar-inner]]:shadow-none [&>[data-slot=sidebar-inner]]:ring-0"
+                  {viewport === 'mobile' ? (
+                    <Suspense
+                      fallback={<div className="h-svh w-full bg-background" />}
                     >
-                      <SidebarContent className="p-2">
-                        <SidebarGroup className="p-0">
-                          <SidebarGroupContent>
-                            <SidebarMenu className="items-center gap-1">
-                              <SidebarMenuItem>
-                                <SidebarMenuButton
-                                  aria-label={t('nav.pairs')}
-                                  className="size-9 justify-center p-0"
-                                  isActive={activeItem === 'pairs'}
-                                  onClick={() => void navigate({ to: '/' })}
-                                  type="button"
-                                >
-                                  <HomeIcon size={16} />
-                                  <span className="sr-only">
-                                    {t('nav.pairs')}
-                                  </span>
-                                  <ShortcutHint
-                                    keys={shortcutLabel('navigation.pairs')}
-                                  />
-                                </SidebarMenuButton>
-                              </SidebarMenuItem>
-                              <ChartsNavItem
-                                isActive={activeItem === 'charts'}
-                              />
-                              <SidebarSeparator className="my-1" />
-                              <SidebarMenuItem>
-                                <SidebarMenuButton
-                                  aria-label={t('nav.notifications')}
-                                  className="size-9 justify-center p-0"
-                                  isActive={activeItem === 'notifications'}
-                                  onClick={() =>
-                                    void navigate({ to: '/notifications' })
-                                  }
-                                  type="button"
-                                >
-                                  <BellIcon size={16} />
-                                  <span className="sr-only">
-                                    {t('nav.notifications')}
-                                  </span>
-                                  <ShortcutHint
-                                    keys={shortcutLabel(
-                                      'navigation.notifications',
-                                    )}
-                                  />
-                                </SidebarMenuButton>
-                              </SidebarMenuItem>
-                              <SidebarMenuItem>
-                                <SidebarMenuButton
-                                  aria-label={t('nav.workflows')}
-                                  className="size-9 justify-center p-0"
-                                  isActive={activeItem === 'workflows'}
-                                  onClick={() =>
-                                    void navigate({ to: '/workflows' })
-                                  }
-                                  type="button"
-                                >
-                                  <WaypointsIcon size={16} />
-                                  <span className="sr-only">
-                                    {t('nav.workflows')}
-                                  </span>
-                                  <ShortcutHint
-                                    keys={shortcutLabel('navigation.workflows')}
-                                  />
-                                </SidebarMenuButton>
-                              </SidebarMenuItem>
-                              <SidebarMenuItem>
-                                <SidebarMenuButton
-                                  aria-label={t('nav.indicators')}
-                                  className="size-9 justify-center p-0"
-                                  isActive={activeItem === 'indicators'}
-                                  onClick={() =>
-                                    void navigate({ to: '/indicators' })
-                                  }
-                                  type="button"
-                                >
-                                  <SquareFunction size={16} />
-                                  <span className="sr-only">
-                                    {t('nav.indicators')}
-                                  </span>
-                                  <ShortcutHint
-                                    keys={shortcutLabel(
-                                      'navigation.indicators',
-                                    )}
-                                  />
-                                </SidebarMenuButton>
-                              </SidebarMenuItem>
-                              <SidebarMenuItem>
-                                <SidebarMenuButton
-                                  aria-label={t('nav.bots')}
-                                  className="size-9 justify-center p-0"
-                                  isActive={activeItem === 'bots'}
-                                  onClick={() => void navigate({ to: '/bots' })}
-                                  type="button"
-                                >
-                                  <Bot size={16} />
-                                  <span className="sr-only">
-                                    {t('nav.bots')}
-                                  </span>
-                                  <ShortcutHint
-                                    keys={shortcutLabel('navigation.bots')}
-                                  />
-                                </SidebarMenuButton>
-                              </SidebarMenuItem>
-                              <SidebarSeparator className="my-1" />
-                              {NAV_ITEMS.map((item) => (
-                                <SidebarMenuItem key={item.id}>
+                      <MobileTerminalRoot />
+                    </Suspense>
+                  ) : (
+                    <SidebarProvider
+                      className={cn(
+                        'h-svh overflow-hidden',
+                        needsTitlebar && 'pt-8',
+                      )}
+                      defaultOpen
+                    >
+                      <TauriDragRegion sectionLabel={sectionLabel} />
+                      <SectionTour key={activeItem} sectionId={activeItem} />
+                      <Sidebar
+                        side="left"
+                        variant="inset"
+                        collapsible="none"
+                        sidebarWidth="3.75rem"
+                        className="[&>[data-slot=sidebar-inner]]:bg-transparent [&>[data-slot=sidebar-inner]]:shadow-none [&>[data-slot=sidebar-inner]]:ring-0"
+                      >
+                        <SidebarContent className="p-2">
+                          <SidebarGroup className="p-0">
+                            <SidebarGroupContent>
+                              <SidebarMenu className="items-center gap-1">
+                                <SidebarMenuItem>
                                   <SidebarMenuButton
-                                    aria-label={t(item.labelKey)}
-                                    className="relative size-9 justify-center p-0"
-                                    isActive={item.id === activeItem}
-                                    onClick={() => {
-                                      if (item.id === 'accounts') {
-                                        void navigate({ to: '/accounts' })
-                                      }
-                                      if (item.id === 'plugins') {
-                                        void navigate({ to: '/plugins' })
-                                      }
-                                    }}
+                                    aria-label={t('nav.pairs')}
+                                    className="size-9 justify-center p-0"
+                                    isActive={activeItem === 'pairs'}
+                                    onClick={() => void navigate({ to: '/' })}
                                     type="button"
                                   >
-                                    <item.AnimatedIcon size={16} />
+                                    <HomeIcon size={16} />
                                     <span className="sr-only">
-                                      {t(item.labelKey)}
+                                      {t('nav.pairs')}
+                                    </span>
+                                    <ShortcutHint
+                                      keys={shortcutLabel('navigation.pairs')}
+                                    />
+                                  </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <ChartsNavItem
+                                  isActive={activeItem === 'charts'}
+                                />
+                                <SidebarSeparator className="my-1" />
+                                <SidebarMenuItem>
+                                  <SidebarMenuButton
+                                    aria-label={t('nav.notifications')}
+                                    className="size-9 justify-center p-0"
+                                    isActive={activeItem === 'notifications'}
+                                    onClick={() =>
+                                      void navigate({ to: '/notifications' })
+                                    }
+                                    type="button"
+                                  >
+                                    <BellIcon size={16} />
+                                    <span className="sr-only">
+                                      {t('nav.notifications')}
                                     </span>
                                     <ShortcutHint
                                       keys={shortcutLabel(
-                                        item.id === 'accounts'
-                                          ? 'navigation.accounts'
-                                          : 'navigation.plugins',
+                                        'navigation.notifications',
                                       )}
                                     />
                                   </SidebarMenuButton>
-                                  {/* Outside the button on purpose — see DesktopCtaBadge. */}
-                                  {item.id === 'plugins' && (
-                                    <PluginUpdateBadge />
-                                  )}
                                 </SidebarMenuItem>
-                              ))}
-                              <SidebarSeparator className="my-1" />
-                              <SidebarMenuItem>
-                                <SidebarMenuButton
-                                  aria-label={t('layout.workspaces')}
-                                  className="size-9 justify-center p-0"
-                                  isActive={
-                                    activeItem === 'workspaces' ||
-                                    workspaceTreeOpen
-                                  }
-                                  onClick={() =>
-                                    setWorkspaceTreeOpen((prev) => !prev)
-                                  }
-                                  type="button"
-                                >
-                                  <LayersIcon size={16} />
-                                  <span className="sr-only">
-                                    {t('layout.workspaces')}
-                                  </span>
-                                  <ShortcutHint
-                                    keys={shortcutLabel(
-                                      'navigation.workspaceTree',
+                                <SidebarMenuItem>
+                                  <SidebarMenuButton
+                                    aria-label={t('nav.workflows')}
+                                    className="size-9 justify-center p-0"
+                                    isActive={activeItem === 'workflows'}
+                                    onClick={() =>
+                                      void navigate({ to: '/workflows' })
+                                    }
+                                    type="button"
+                                  >
+                                    <WaypointsIcon size={16} />
+                                    <span className="sr-only">
+                                      {t('nav.workflows')}
+                                    </span>
+                                    <ShortcutHint
+                                      keys={shortcutLabel(
+                                        'navigation.workflows',
+                                      )}
+                                    />
+                                  </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                  <SidebarMenuButton
+                                    aria-label={t('nav.indicators')}
+                                    className="size-9 justify-center p-0"
+                                    isActive={activeItem === 'indicators'}
+                                    onClick={() =>
+                                      void navigate({ to: '/indicators' })
+                                    }
+                                    type="button"
+                                  >
+                                    <SquareFunction size={16} />
+                                    <span className="sr-only">
+                                      {t('nav.indicators')}
+                                    </span>
+                                    <ShortcutHint
+                                      keys={shortcutLabel(
+                                        'navigation.indicators',
+                                      )}
+                                    />
+                                  </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                  <SidebarMenuButton
+                                    aria-label={t('nav.bots')}
+                                    className="size-9 justify-center p-0"
+                                    isActive={activeItem === 'bots'}
+                                    onClick={() =>
+                                      void navigate({ to: '/bots' })
+                                    }
+                                    type="button"
+                                  >
+                                    <Bot size={16} />
+                                    <span className="sr-only">
+                                      {t('nav.bots')}
+                                    </span>
+                                    <ShortcutHint
+                                      keys={shortcutLabel('navigation.bots')}
+                                    />
+                                  </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarSeparator className="my-1" />
+                                {NAV_ITEMS.map((item) => (
+                                  <SidebarMenuItem key={item.id}>
+                                    <SidebarMenuButton
+                                      aria-label={t(item.labelKey)}
+                                      className="relative size-9 justify-center p-0"
+                                      isActive={item.id === activeItem}
+                                      onClick={() => {
+                                        if (item.id === 'accounts') {
+                                          void navigate({ to: '/accounts' })
+                                        }
+                                        if (item.id === 'plugins') {
+                                          void navigate({ to: '/plugins' })
+                                        }
+                                      }}
+                                      type="button"
+                                    >
+                                      <item.AnimatedIcon size={16} />
+                                      <span className="sr-only">
+                                        {t(item.labelKey)}
+                                      </span>
+                                      <ShortcutHint
+                                        keys={shortcutLabel(
+                                          item.id === 'accounts'
+                                            ? 'navigation.accounts'
+                                            : 'navigation.plugins',
+                                        )}
+                                      />
+                                    </SidebarMenuButton>
+                                    {/* Outside the button on purpose — see DesktopCtaBadge. */}
+                                    {item.id === 'plugins' && (
+                                      <PluginUpdateBadge />
                                     )}
-                                  />
-                                </SidebarMenuButton>
-                              </SidebarMenuItem>
-                              <SidebarMenuItem>
-                                <SidebarMenuButton
-                                  aria-label={t('nav.workspaceStore')}
-                                  className="size-9 justify-center p-0"
-                                  isActive={activeItem === 'workspace-store'}
-                                  onClick={() =>
-                                    void navigate({ to: '/workspace-store' })
-                                  }
-                                  type="button"
-                                >
-                                  <LayoutTemplate size={16} />
-                                  <span className="sr-only">
-                                    {t('nav.workspaceStore')}
-                                  </span>
-                                  <ShortcutHint
-                                    keys={shortcutLabel(
-                                      'navigation.workspaceStore',
-                                    )}
-                                  />
-                                </SidebarMenuButton>
-                              </SidebarMenuItem>
-                            </SidebarMenu>
-                          </SidebarGroupContent>
-                        </SidebarGroup>
-                      </SidebarContent>
+                                  </SidebarMenuItem>
+                                ))}
+                                <SidebarSeparator className="my-1" />
+                                <SidebarMenuItem>
+                                  <SidebarMenuButton
+                                    aria-label={t('layout.workspaces')}
+                                    className="size-9 justify-center p-0"
+                                    isActive={
+                                      activeItem === 'workspaces' ||
+                                      workspaceTreeOpen
+                                    }
+                                    onClick={() =>
+                                      setWorkspaceTreeOpen((prev) => !prev)
+                                    }
+                                    type="button"
+                                  >
+                                    <LayersIcon size={16} />
+                                    <span className="sr-only">
+                                      {t('layout.workspaces')}
+                                    </span>
+                                    <ShortcutHint
+                                      keys={shortcutLabel(
+                                        'navigation.workspaceTree',
+                                      )}
+                                    />
+                                  </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                  <SidebarMenuButton
+                                    aria-label={t('nav.workspaceStore')}
+                                    className="size-9 justify-center p-0"
+                                    isActive={activeItem === 'workspace-store'}
+                                    onClick={() =>
+                                      void navigate({ to: '/workspace-store' })
+                                    }
+                                    type="button"
+                                  >
+                                    <LayoutTemplate size={16} />
+                                    <span className="sr-only">
+                                      {t('nav.workspaceStore')}
+                                    </span>
+                                    <ShortcutHint
+                                      keys={shortcutLabel(
+                                        'navigation.workspaceStore',
+                                      )}
+                                    />
+                                  </SidebarMenuButton>
+                                </SidebarMenuItem>
+                              </SidebarMenu>
+                            </SidebarGroupContent>
+                          </SidebarGroup>
+                        </SidebarContent>
 
-                      <SidebarFooter className="p-2">
-                        <SidebarMenu className="items-center">
-                          {isHosted && (
+                        <SidebarFooter className="p-2">
+                          <SidebarMenu className="items-center">
+                            {isHosted && (
+                              <SidebarMenuItem>
+                                <SidebarMenuButton
+                                  aria-label={t('nav.getDesktopApp')}
+                                  className="relative size-9 justify-center p-0"
+                                  onClick={() => setDesktopCtaOpen(true)}
+                                  type="button"
+                                >
+                                  <MonitorDown size={16} />
+                                  <span className="sr-only">
+                                    {t('nav.getDesktopApp')}
+                                  </span>
+                                </SidebarMenuButton>
+                                {/* Outside the button on purpose — see DesktopCtaBadge. */}
+                                {!desktopCtaSeen && <DesktopCtaBadge />}
+                              </SidebarMenuItem>
+                            )}
                             <SidebarMenuItem>
                               <SidebarMenuButton
-                                aria-label={t('nav.getDesktopApp')}
-                                className="relative size-9 justify-center p-0"
-                                onClick={() => setDesktopCtaOpen(true)}
+                                aria-label={t('nav.feedback')}
+                                className="size-9 justify-center p-0"
+                                onClick={() => setFeedbackOpen(true)}
                                 type="button"
                               >
-                                <MonitorDown size={16} />
+                                <Bug size={16} />
                                 <span className="sr-only">
-                                  {t('nav.getDesktopApp')}
+                                  {t('nav.feedback')}
                                 </span>
                               </SidebarMenuButton>
-                              {/* Outside the button on purpose — see DesktopCtaBadge. */}
-                              {!desktopCtaSeen && <DesktopCtaBadge />}
                             </SidebarMenuItem>
-                          )}
-                          <SidebarMenuItem>
-                            <SidebarMenuButton
-                              aria-label={t('nav.feedback')}
-                              className="size-9 justify-center p-0"
-                              onClick={() => setFeedbackOpen(true)}
-                              type="button"
-                            >
-                              <Bug size={16} />
-                              <span className="sr-only">
-                                {t('nav.feedback')}
-                              </span>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        </SidebarMenu>
-                        <TerminalUserMenu
-                          initials={initials || 'PL'}
-                          isSigningOut={signOut.isPending}
-                          onSignOut={() => signOut.mutate()}
-                          authUserImage={authUserImage}
-                          customAvatarUrl={customAvatarUrl}
-                          userEmail={userEmail}
-                          userImage={userImage}
-                          userName={userName}
-                          hasSession={Boolean(session)}
-                        />
-                        {signOut.isError ? (
-                          <p className="text-center text-xs text-red-600">
-                            {signOut.error.message}
-                          </p>
-                        ) : null}
-                      </SidebarFooter>
-                    </Sidebar>
-                    <div className="bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2 flex min-h-0 flex-1 flex-col overflow-hidden">
-                      <div className="flex min-h-0 flex-1 overflow-hidden">
-                        {/* Workspace tree panel — inside inset container */}
-                        <div
-                          className={cn(
-                            'overflow-hidden shrink-0',
-                            workspaceTreeOpen ? 'w-64 border-r' : 'w-0',
-                          )}
-                        >
-                          <div className="flex h-full w-64 flex-col bg-card text-card-foreground">
-                            <WorkspaceTreeSidebar />
+                          </SidebarMenu>
+                          <TerminalUserMenu
+                            initials={initials || 'PL'}
+                            isSigningOut={signOut.isPending}
+                            onSignOut={() => signOut.mutate()}
+                            authUserImage={authUserImage}
+                            customAvatarUrl={customAvatarUrl}
+                            userEmail={userEmail}
+                            userImage={userImage}
+                            userName={userName}
+                            hasSession={Boolean(session)}
+                          />
+                          {signOut.isError ? (
+                            <p className="text-center text-xs text-red-600">
+                              {signOut.error.message}
+                            </p>
+                          ) : null}
+                        </SidebarFooter>
+                      </Sidebar>
+                      <div className="bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2 flex min-h-0 flex-1 flex-col overflow-hidden">
+                        <div className="flex min-h-0 flex-1 overflow-hidden">
+                          {/* Workspace tree panel — inside inset container */}
+                          <div
+                            className={cn(
+                              'overflow-hidden shrink-0',
+                              workspaceTreeOpen ? 'w-64 border-r' : 'w-0',
+                            )}
+                          >
+                            <div className="flex h-full w-64 flex-col bg-card text-card-foreground">
+                              <WorkspaceTreeSidebar />
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-                          {/* Above the routed content, not inside it: parked
+                          <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                            {/* Above the routed content, not inside it: parked
                             live bots must be visible from any screen, not
                             only from the bots page. */}
-                          <VaultSealedBanner />
-                          <Outlet />
+                            <VaultSealedBanner />
+                            <Outlet />
+                          </div>
                         </div>
+                        <StatusBar />
                       </div>
-                      <StatusBar />
-                    </div>
-                  </SidebarProvider>
-                )}
+                    </SidebarProvider>
+                  )}
+                  {/* Outside the content area on both shells. On a phone the
+                    dock renders nothing: there is no room for a floating
+                    window, and the Co-pilot tab already mounts the same
+                    conversation. */}
+                  {viewport !== 'mobile' && <AssistantDock />}
+                </AssistantProvider>
               </OmniSearchProvider>
             </WatchlistsProvider>
           </ThemePluginBridge>

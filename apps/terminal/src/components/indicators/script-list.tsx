@@ -64,6 +64,7 @@ import type {
   IndicatorScript,
 } from '@/stores/indicator-scripts-store'
 import { BLANK_SCRIPT, EXAMPLE_SCRIPTS } from '@/lib/python/examples'
+import { askAssistant } from '@/stores/assistant-store'
 import { botsUsingScript } from '@/lib/bots/bot-script-link'
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
@@ -77,12 +78,6 @@ type ScriptListProps = {
   onShowHistory: (script: IndicatorScript) => void
   /** Open the import/fork dialog. */
   onImport: () => void
-  /**
-   * Open the assistant rail with the composer focused. First in the create
-   * menu because "describe it" is the fastest of the three ways to a script,
-   * and a menu that only offered blank files and templates hid that.
-   */
-  onBuildWithAi: () => void
 }
 
 /**
@@ -153,7 +148,6 @@ export function ScriptList({
   onExport,
   onShowHistory,
   onImport,
-  onBuildWithAi,
 }: ScriptListProps) {
   const { t } = useTranslation()
   const scripts = useIndicatorScriptsStore((s) => s.scripts)
@@ -247,7 +241,14 @@ export function ScriptList({
             <Plus className="size-3.5" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={onBuildWithAi}>
+            {/* First in the create menu because "describe it" is the fastest
+                of the three ways to a script, and a menu that only offered
+                blank files and templates hid that. */}
+            <DropdownMenuItem
+              onClick={() =>
+                askAssistant(t('assistantDock.suggest.indicators'))
+              }
+            >
               <Sparkles
                 className="size-3.5"
                 style={{ color: 'var(--magic-1)' }}

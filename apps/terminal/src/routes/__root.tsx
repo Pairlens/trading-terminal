@@ -389,7 +389,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         </ThemeProvider>
         <TanStackDevtools
           config={{
-            position: 'bottom-right',
+            // Bottom-left, because bottom-right is the assistant dock and
+            // the devtools badge sat right on top of the orb.
+            position: 'bottom-left',
           }}
           plugins={[
             {

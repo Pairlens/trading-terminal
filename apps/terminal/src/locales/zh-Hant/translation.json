@@ -20,7 +20,7 @@
     "oneTerminal": {
       "eyebrow": "為什麼選擇 Pairlens",
       "title": "一個終端機，涵蓋所有市場。",
-      "sub": "集中式交易所與鏈上現貨並列交易，AI 副駕駛隨時解讀每一個交易機會。",
+      "sub": "集中式交易所與鏈上現貨並列交易，由一個 AI 助理隨時解讀每一個交易機會。",
       "points": {
         "0": "集中式現貨——OKX、Binance、Coinbase",
         "1": "鏈上 DEX 兌換，智慧路由",
@@ -90,9 +90,9 @@
       "label": "路由"
     },
     "copilot": {
-      "eyebrow": "你的副駕駛",
-      "title": "一個遵守你規則的副駕駛。",
-      "sub": "它替你解讀市場——而且絕不會逾越你設下的界線。",
+      "eyebrow": "你的助理",
+      "title": "一個遵守你規則的助理。",
+      "sub": "它替你解讀市場，而且絕不會逾越你設下的界線。",
       "points": {
         "0": "監看你所有市場的訊號",
         "1": "為每個交易機會核准、封鎖或標記",
@@ -101,7 +101,7 @@
       "scene": {
         "guardrail": "你的風險限額"
       },
-      "label": "副駕駛"
+      "label": "助理"
     },
     "themeStep": {
       "status": "調整亮度",
@@ -166,11 +166,11 @@
     "account": {
       "status": "最後一步",
       "title": "要同步你的資料嗎？",
-      "sub": "此為選用功能——前面看到的所有內容都無需帳號即可使用。建立帳號可解鎖 AI 副駕駛與跨裝置同步，你的金鑰仍會保留在這台裝置上。",
+      "sub": "此為選用功能：前面看到的所有內容都無需帳號即可使用。建立帳號可解鎖託管 AI 助理與跨裝置同步，你的金鑰仍會保留在這台裝置上。",
       "benefits": {
         "ai": {
-          "title": "AI 副駕駛與研究",
-          "sub": "任何交易對的情境分析——免費提供"
+          "title": "AI 助理與研究",
+          "sub": "在整個終端都能用，免費包含"
         },
         "sync": {
           "title": "雲端同步",
@@ -503,12 +503,12 @@
         },
         "copilot": {
           "title": "AI 聊天記錄",
-          "description": "你與 copilot 的對話，依交易對區分。",
+          "description": "與助理的一段對話，整個終端共用。",
           "caveat": "關閉期間，清除聊天記錄只會清除這台裝置上的內容。帳號裡已有的對話會保留，重新開啟同步後會再次出現。"
         },
         "trades": {
           "title": "交易日誌",
-          "description": "你或 copilot 記入日誌的交易。"
+          "description": "你或助理記入日誌的交易。"
         }
       }
     },
@@ -693,24 +693,24 @@
       "dailyTradeCount": "交易次數",
       "windowStart": "週期開始於",
       "confirmGesture": "下單確認方式",
-      "confirmGestureDescription": "你親手下單時的確認方式，交易面板與副駕駛的訂單卡片皆適用。",
+      "confirmGestureDescription": "你親手下單時的確認方式，交易面板與助理的訂單卡片皆適用。",
       "confirmHold": "長按",
       "confirmHoldDescription": "按住送出按鈕直到填滿。實盤訂單要比模擬盤多按一會兒。",
       "confirmClick": "單擊",
       "confirmClickDescription": "第一次點擊即送出。誤點與真實訂單之間不再有緩衝。",
       "confirmGestureNote": "兩種方式都受風險限額約束，改變的只是操作方式，不是防護。",
       "aiPermissions": "AI 交易權限",
-      "aiPermissionsDescription": "AI 副駕駛在未經詢問下可執行的動作。超出這些授權範圍的訂單一律需要你在聊天中的卡片上確認，且無論是否自動核准，每筆訂單都會依上述風險限額執行檢核。",
+      "aiPermissionsDescription": "AI 助理在未經詢問下可執行的動作。超出這些授權範圍的訂單一律需要你在聊天中的卡片上確認，且無論是否自動核准，每筆訂單都會依上述風險限額執行檢核。",
       "aiPaperAuto": "自動核准模擬交易",
-      "aiPaperAutoDescription": "僅限模擬資金。副駕駛下達模擬訂單時不需要確認卡片。",
+      "aiPaperAutoDescription": "僅限模擬資金。助理下達模擬訂單時不需要確認卡片。",
       "aiLiveAuto": "自動核准實盤交易",
       "aiLiveAutoEmpty": "尚未授權任何交易所——每筆實盤交易都需要你的確認。可在訂單卡片上選擇「不再詢問」以授權交易所。",
-      "aiLiveAutoDescription": "真實資金。副駕駛可在以下交易所下達實盤訂單，且不需要確認卡片：",
+      "aiLiveAutoDescription": "真實資金。助理可在以下交易所下達實盤訂單，且不需要確認卡片：",
       "aiLiveAutoRevoke": "撤銷 {{market}} 的授權"
     },
     "billing": {
       "title": "Pairlens Intelligence",
-      "description": "託管 AI 副駕駛、研究報告與網頁搜尋 — 無需 API 金鑰。",
+      "description": "託管 AI 助理，附帶深度研究與網頁搜尋，無需 API 金鑰。",
       "signInFirst": "登入以管理你的 Pairlens Intelligence 訂閱。",
       "selfHosted": "此伺服器未設定計費 — 託管 AI 功能無需訂閱即可使用。",
       "loadError": "無法載入你的計費狀態,請重試。",
@@ -879,7 +879,7 @@
       "triggerWake": "電腦喚醒之後",
       "triggerWakeHint": "裝置從睡眠恢復時鎖定。",
       "triggerTrade": "下單之前",
-      "triggerTradeHint": "確認你手動或透過副駕下的委託，包括自動核准的提案。機器人永遠不會被詢問。",
+      "triggerTradeHint": "確認你手動或透過助理下的委託，包括自動核准的提案。機器人永遠不會被詢問。",
       "afterMinutes": "{{minutes}} 分鐘後",
       "everyHours": "每 {{hours}} 小時",
       "graceNever": "每次都問",
@@ -1241,50 +1241,14 @@
     "buildWithAi": "用 AI 打造",
     "buildWithAiHint": "描述一下，助理來寫",
     "recommended": "建議使用",
-    "placeholder": "描述你想打造什麼…",
-    "answerPlaceholder": "回答，或說點別的…",
-    "close": "關閉助理",
-    "clearChat": "清除對話",
-    "emptyTitle": "我們來打造什麼？",
-    "emptyHintIndicators": "描述一個指標或策略，助理會把它寫進編輯器、完成驗證並執行預覽。",
-    "emptyHintBots": "請它把策略部署為模擬機器人、調整參數或設定風控。是否讓機器人上實盤，決定權始終在你手上。",
-    "emptyHintWorkflows": "說明訂單成交後要做什麼。助手會把步驟接好，你檢視差異後再提交。",
-    "emptyHintNotifications": "說明你想被提醒什麼。助手會建好提醒，並在你指定的交易對上啟用。",
-    "genericError": "助理遇到了錯誤——請再傳送一次。",
-    "authRequiredTitle": "用 AI 打造",
-    "authRequiredDescription": "用平常的話描述一個指標、策略或機器人——助理會寫好 Python、完成驗證，並和你一起回測。",
-    "upgradeRequiredDescription": "建構助理會和你一起撰寫指標、策略和機器人。訂閱 Pairlens Intelligence，或連接你自己的 AI 金鑰——免費。",
-    "unavailableTitle": "助理無法使用",
-    "unavailableDescription": "在外掛頁面啟用一個 AI 供應商，即可透過聊天打造指標、策略和機器人。",
-    "quickNewIndicator": "打造一個 RSI 背離指標",
-    "quickNewStrategy": "寫一個我可以回測的突破策略",
-    "quickImprove": "檢視這個腳本並提出改進建議",
-    "quickBotFromScratch": "從零幫我打造一個機器人",
-    "quickCreateBot": "把我的一個策略部署為模擬機器人",
-    "quickGuards": "為我的一個機器人建議風控設定",
-    "quickReview": "我的機器人表現如何？",
-    "quickBracket": "為我的進場加上停損與目標",
-    "quickScaleOut": "分三批退出一個部位",
-    "quickExplainWorkflow": "說明這個工作流程做了什麼",
-    "quickPriceAlert": "BTC 突破某個價格時提醒我",
-    "quickMoveAlert": "出現快速百分比波動時提醒我",
-    "quickAlertReview": "檢視我現有的提醒",
     "questionHint": "選一個，或在下方輸入你自己的答案。",
     "questionHintOpen": "在下方輸入你的答案。",
     "youAnswered": "你選擇了：{{answer}}",
-    "handoffToIndicators": "轉到指標與策略繼續",
-    "handoffToBots": "轉到機器人繼續",
-    "handoffToWorkflows": "轉到工作流程繼續",
-    "handoffToNotifications": "轉到通知繼續",
     "starterTitle": "你來描述，它來打造",
     "starterBodyIndicators": "說出你想在圖表上看到什麼。助理會寫好 Python、完成驗證並執行預覽，好讓你自己判斷。",
     "starterBodyBots": "說出機器人該做什麼。助理會寫好策略、完成回測，並以模擬方式部署。是否上實盤，仍由你決定。",
     "starterBodyWorkflows": "說明訂單成交後要做什麼。助手會在畫布上接好步驟，你檢視差異後再提交。",
     "starterBodyNotifications": "說明你想被提醒什麼。助手會建好提醒，選一個合理的冷卻時間並啟用它。",
-    "starterPlaceholderIndicators": "一個在動能反轉時為背景上色的 RSI…",
-    "starterPlaceholderBots": "一個在 4 小時上升趨勢中買回檔的機器人…",
-    "starterPlaceholderWorkflows": "進場成交後，+5% 停利、-3% 停損…",
-    "starterPlaceholderNotifications": "BTC 在 OKX 突破 100,000 時提醒我…",
     "starterIdeaIndicator1": "成交量加權趨勢帶",
     "starterIdeaIndicator2": "背離偵測器",
     "starterIdeaIndicator3": "波動率壓縮通道",
@@ -1296,14 +1260,56 @@
     "starterIdeaWorkflow3": "回檔時分批建倉",
     "starterIdeaAlert1": "BTC 突破關鍵價位",
     "starterIdeaAlert2": "一小時內波動 5%",
-    "starterIdeaAlert3": "機器人成交時提醒我",
-    "starterSend": "發送給助理"
+    "starterIdeaAlert3": "機器人成交時提醒我"
+  },
+  "assistantDock": {
+    "title": "助理",
+    "open": "開啟助理",
+    "close": "縮小助理",
+    "clear": "清除對話",
+    "placeholder": "問任何問題，或告訴我要打造什麼…",
+    "answerPlaceholder": "輸入你的回答…",
+    "emptyTitle": "我們來做什麼？",
+    "emptyDescription": "我可以讀取任何市場、操作圖表、撰寫指標和策略、建立提醒與工作流程，並準備好等你確認的訂單。",
+    "defaultSuggestion": "問問助理",
+    "statusThinking": "思考中…",
+    "statusUsingTools": "正在使用工具…",
+    "statusSearching": "正在搜尋網路…",
+    "genericError": "發生問題，請再試一次。",
+    "authRequiredTitle": "登入以使用助理",
+    "authRequiredDescription": "助理運行在 Pairlens Intelligence 上，也可以使用你自己的供應商金鑰。",
+    "upgradeRequiredDescription": "將 Intelligence 加入你的方案，或連接你自己的供應商金鑰。",
+    "unavailableTitle": "助理無法使用",
+    "unavailableDescription": "尚未啟用任何 AI 供應商。連接一個即可開始。",
+    "goToPlugins": "開啟外掛商店",
+    "suggest": {
+      "chart": "分析 {{pair}} 的圖表",
+      "discovery": "幫我找點可以交易的標的",
+      "workflows": "建立一個工作流程",
+      "notifications": "設定一個提醒",
+      "bots": "部署一個交易機器人",
+      "indicators": "寫一個指標",
+      "indicatorsScript": "改進 {{name}}",
+      "accounts": "檢查我的帳戶",
+      "plugins": "幫我找一個外掛",
+      "workspaceStore": "設計我的工作區"
+    },
+    "researchCardTitle": "研究報告：{{market}} 上的 {{pair}}",
+    "researchCardTitleGeneric": "研究報告",
+    "researchCardSources_one": "{{count}} 個來源",
+    "researchCardSources_other": "{{count}} 個來源",
+    "quickAnalyze": "分析 {{pair}}",
+    "quickLevels": "標出 {{symbol}} 的關鍵價位",
+    "quickAlert": "{{symbol}} 突破時提醒我",
+    "quickWhatsMoving": "今天什麼在動？",
+    "quickPortfolio": "我的投資組合如何？",
+    "quickBuildAlert": "幫我做一個提醒",
+    "approvalApprove": "核准",
+    "approvalDecline": "拒絕",
+    "approvalApproved": "已核准",
+    "approvalDeclined": "已拒絕"
   },
   "copilot": {
-    "aiLens": "AI 透鏡",
-    "thinking": "思考中…",
-    "idle": "閒置",
-    "clearHistory": "清除對話紀錄",
     "placeholder": "詢問你的 AI 透鏡…",
     "lensPersona": "透鏡人格",
     "persona": {
@@ -1337,22 +1343,7 @@
     "keep": "保留",
     "tradingUnavailable": "目前無法交易。",
     "noCredentialsForMarket": "尚未連接 {{market}} 的憑證。請在「帳戶」中新增 API 金鑰以進行實盤交易。",
-    "watchingPair": "正在關注 {{pair}} · {{timeframe}}",
-    "genericChatError": "Copilot 發生錯誤——請試著重新傳送。",
-    "quickActionHowIsDoing": "{{symbol}} 表現如何?",
-    "quickActionSuggestedIndicators": "建議指標",
-    "quickActionAnySignals": "有訊號嗎?",
     "scheduledCheckPrefix": "[排程檢查——於 {{minutes}} 分鐘前設定]",
-    "authRequiredTitle": "認識你的 AI 副駕",
-    "authRequiredDescription": "針對任何交易對的情境化分析——它會讀取圖表、核對你的風險限額,並給出你可以質疑的推理依據。",
-    "upgradeRequiredDescription": "你的 AI 副駕會讀取圖表、核對你的風險限額,並給出你可以質疑的推理依據。訂閱 Pairlens Intelligence，或連接你自己的 AI 金鑰——免費。",
-    "aiLensUnavailableTitle": "AI Lens 無法使用",
-    "aiLensUnavailableDescription": "在外掛頁面啟用一個 AI 外掛,即可取得即時市場分析與交易協助。",
-    "goToPlugins": "前往外掛頁面",
-    "analyzePair": "分析 {{pair}}",
-    "startConversation": "開始對話",
-    "emptyStateHint": "問問市場狀況、核對你的交易設定,或請求風險評估——AI 掌握這個交易對的完整脈絡。",
-    "contextAware": "理解脈絡",
     "toolFailed": "工具執行失敗"
   },
   "chart": {
@@ -2195,7 +2186,7 @@
       "priceMonthly": "${{price}}/月",
       "taxNotice": "價格不含稅，稅費將於結帳時計算。",
       "defaultTitle": "解鎖 Pairlens Intelligence",
-      "defaultDescription": "託管式 AI 副駕駛與網路研究功能，不需要 API 金鑰。每個方案都包含在聊天、研究與網路搜尋之間共享的每月用量額度。",
+      "defaultDescription": "託管 AI 助理，附帶深度研究與網頁搜尋，也沒有 API 金鑰要管。每個方案都包含在聊天、研究與網頁搜尋之間共享的每月用量額度。",
       "byokNote": "比較想用自己的服務商？在<plugins>外掛</plugins>中連接 Anthropic、OpenAI、Groq 或 OpenRouter 金鑰——使用自有金鑰的 AI 永遠免費。",
       "checkoutOpenedTitle": "已在瀏覽器中開啟結帳頁面",
       "checkoutActivates": "付款完成後，訂閱會立即在此啟用。",
@@ -2223,7 +2214,6 @@
     "fearGreed": "恐懼與貪婪指數",
     "chart": "圖表",
     "trade": "交易",
-    "aiLens": "AI 透鏡",
     "dataLog": "資料日誌",
     "positions": "部位",
     "portfolio": "投資組合",
@@ -2232,7 +2222,6 @@
     "marketDepth": "市場深度",
     "pairInfo": "交易對資訊",
     "multiPrice": "多平台價格",
-    "research": "研究報告",
     "social": "社群動態",
     "risk": "風險",
     "symbolNews": "商品新聞",
@@ -2253,7 +2242,6 @@
     "fearGreed": "以恐懼與貪婪指數呈現市場情緒",
     "chart": "含指標與繪圖工具的 K 線圖",
     "trade": "以風險控管下達市價、限價與停損訂單",
-    "aiLens": "分析訊號並提供交易情境的 AI 副駕駛",
     "dataLog": "目前交易對的原始訊號與事件動態",
     "positions": "監控未平倉部位、損益與交易紀錄",
     "portfolio": "帳戶持倉與配置分析",
@@ -2262,7 +2250,6 @@
     "marketDepth": "目前交易對的累積市場深度圖",
     "pairInfo": "目前交易對的關鍵數據、資金費率與詮釋資料",
     "multiPrice": "同一交易對在所有交易所的即時價格，依最佳成交排序",
-    "research": "針對目前交易對的 AI 深度研究報告",
     "social": "交易對的社群情緒與討論動態",
     "risk": "投資組合風險指標與護欄設定",
     "symbolNews": "目前交易對的新聞與情緒分析",
@@ -3153,7 +3140,7 @@
       "statusBrowserVault": "此刻：每把金鑰都在你的金庫中加密，只在這個瀏覽器裡。",
       "statusBrowserNone": "這個瀏覽器還沒有金庫。儲存第一把金鑰之前，你會先建立一個。",
       "deviceTitle": "僅儲存在你的裝置上",
-      "deviceBody": "你的交易所 API 金鑰與錢包金鑰只會保存在這台電腦上，不會存放在其他任何地方。它們絕不會上傳給 Pairlens：登入時不會，設定同步時不會，副駕讀取圖表時也不會。我們的伺服器上沒有可供外洩的副本。",
+      "deviceBody": "你的交易所 API 金鑰與錢包金鑰只會保存在這台電腦上，不會存放在其他任何地方。它們絕不會上傳給 Pairlens：登入時不會，設定同步時不會，助理讀取圖表時也不會。我們的伺服器上沒有可供外洩的副本。",
       "osTitle": "靜置時也維持加密",
       "osBodyDesktop": "它們儲存在 {{vault}} 中，與你系統儲存自身密碼相同的受保護金庫，在磁碟上加密，且只交給這個應用程式。",
       "osBodyDesktopVault": "它們儲存在 {{vault}} 中，與你系統儲存自身密碼相同的受保護金庫。你的金庫在其上再加一層：每個值在鑰匙圈看到它之前，就已用 AES-256-GCM 封裝。",
@@ -3391,8 +3378,8 @@
       },
       "ai-research-desk": {
         "name": "AI 研究台",
-        "tagline": "副駕駛、研究與新聞，就在圖表旁邊。",
-        "description": "把圖表與 AI 副駕駛、深度研究，以及全球和商品新聞雙資訊流搭配在一起。專為催化劑驅動的交易而生，消息面與盤面同樣重要。需要 AI 推論服務商才能使用副駕駛與研究功能。"
+        "tagline": "圖表旁邊是商品新聞與全球新聞流。",
+        "description": "把圖表與商品新聞和全球新聞流搭配在一起，專為催化劑驅動的交易而生，消息面與盤面同樣重要。AI 助理常駐在停駐列裡，不佔一整欄也能隨時在這裡叫出來。"
       },
       "market-discovery": {
         "name": "市場探索",
@@ -3407,7 +3394,7 @@
       "prediction-terminal": {
         "name": "預測市場終端",
         "tagline": "把機率畫成圖表，整個事件就在旁邊。",
-        "description": "預測市場的預設版面：機率圖表下方是成交紀錄與你持有的合約，中間是委託簿與下單面板，AI 副駕駛旁邊是事件瀏覽器，因為相鄰的結果就是分析的一半。",
+        "description": "預測市場的預設版面：機率圖表下方是成交紀錄與你持有的合約，中間是委託簿與下單面板，右側是通高的事件瀏覽器，因為相鄰的結果就是分析的一半。",
         "menuLabel": "預設"
       },
       "prediction-discovery": {
@@ -3424,7 +3411,7 @@
       "dex-terminal": {
         "name": "DEX 終端",
         "tagline": "鏈上交易，不需要假的委託簿。",
-        "description": "鏈上預設版面：圖表下方是流動性池數據與成交紀錄，兌換面板疊在近期行情之上，方便捕捉新上線代幣，AI 副駕駛位於社群動態上方。沒有委託簿欄位：由資金池推算的深度是合成的，因此不予顯示。",
+        "description": "鏈上預設版面：圖表下方是流動性池數據與成交紀錄，兌換面板疊在近期行情之上，方便捕捉新上線代幣，右側是社群動態。沒有委託簿欄位：由資金池推算的深度是合成的，因此不予顯示。",
         "menuLabel": "預設"
       },
       "quant-signals": {
@@ -3440,36 +3427,36 @@
       "equities-terminal": {
         "name": "股票終端",
         "tagline": "股票交易，下單面板就在商品新聞之上。",
-        "description": "股票的預設版面：圖表下方是成交紀錄、持倉部位與基本面資料，下單面板位於商品新聞之上（催化劑推動股票，就像資金流推動加密貨幣），右側是 AI 副駕駛。",
+        "description": "股票的預設版面：圖表下方是成交紀錄、持倉部位與基本面資料，下單面板位於商品新聞之上，因為催化劑推動股票，就像資金流推動加密貨幣。",
         "menuLabel": "預設"
       },
       "ultrawide-trading-floor": {
         "name": "超寬螢幕交易大廳",
         "tagline": "應有盡有，為大螢幕而生。",
-        "description": "填滿超寬螢幕或第二個螢幕的四欄指揮中心：掃描器、圖表、委託簿與深度、帶持倉部位的下單面板，以及 AI 副駕駛。極繁主義版面。"
+        "description": "填滿超寬螢幕或第二個螢幕的四欄指揮中心：掃描器、圖表、委託簿與深度，以及疊在你持倉部位之上的下單面板。極繁主義版面。"
       },
       "classic-terminal": {
         "name": "經典終端",
-        "tagline": "經典 Pairlens 工作台——圖表、數據、交易、副駕駛。",
-        "description": "預設終端版面：左側是大圖表搭配標籤式資料條與風險條，右側是下單面板疊加 AI 副駕駛。",
+        "tagline": "經典 Pairlens 工作台：圖表、數據、委託簿、下單面板。",
+        "description": "預設終端版面：左側是大圖表搭配標籤式資料條與風險條，右側是委託簿疊加下單面板。",
         "menuLabel": "預設"
       },
       "chart-focus": {
         "name": "圖表聚焦",
         "tagline": "一張大圖表，底部是標籤式資料。",
-        "description": "單欄版面把最大空間留給圖表，持倉部位、資料日誌、副駕駛與下單面板都收進下方的標籤條。",
+        "description": "單欄版面把最大空間留給圖表，持倉部位、資料日誌與下單面板都收進下方的標籤條。",
         "menuLabel": "圖表聚焦"
       },
       "trading": {
         "name": "交易",
-        "tagline": "委託簿與下單面板環繞中央圖表。",
-        "description": "三欄執行工作台：左側是委託簿與下單面板，中間是帶持倉部位與風險的圖表，右側是 AI 副駕駛。",
+        "tagline": "委託簿與下單面板緊鄰一張通高圖表。",
+        "description": "雙欄執行工作台：左側是委託簿疊加下單面板，剩下的寬度全部留給帶持倉部位與風險的圖表。",
         "menuLabel": "交易"
       },
       "chart-analysis": {
         "name": "圖表分析",
-        "tagline": "左側圖表與數據，右側副駕駛與交易執行。",
-        "description": "偏研究型的分欄版面：左側是圖表、數據、研究與風險，右側是副駕駛、委託簿與下單面板。",
+        "tagline": "左側圖表與數據，右側交易執行。",
+        "description": "偏研究型的分欄版面：左側是圖表、數據與風險，右側是委託簿與下單面板。",
         "menuLabel": "分析"
       },
       "dual-charts": {
@@ -3497,23 +3484,23 @@
       },
       "laptop-split": {
         "name": "筆電分欄",
-        "tagline": "左側圖表＋數據，右側交易＋副駕駛——為較小螢幕設計。",
-        "description": "為筆電設計的雙欄版面：左側是圖表與持倉部位，右側是下單面板疊加副駕駛。"
+        "tagline": "左側圖表與數據，右側下單面板，按筆電尺寸裁切。",
+        "description": "為筆電設計的雙欄版面：左側是圖表、持倉部位與風險，右側是下單面板。"
       },
       "ultrawide-dashboard": {
         "name": "超寬螢幕儀表板",
         "tagline": "每個面板都鋪展在超寬螢幕上。",
-        "description": "為超寬螢幕設計的四欄儀表板：委託簿、帶風險的圖表、持倉部位與研究，以及交易＋副駕駛欄。"
+        "description": "為超寬螢幕設計的四欄儀表板：委託簿、帶風險的圖表、持倉部位與資料日誌，以及下單面板欄。"
       },
       "ultrawide-trading": {
         "name": "超寬螢幕交易",
         "tagline": "委託簿、深度、圖表與交易執行，橫貫整個寬度。",
-        "description": "超寬螢幕執行版面：左側是委託簿與市場深度，中間是帶持倉部位的圖表，右側是交易＋副駕駛欄。"
+        "description": "超寬螢幕執行版面：左側是委託簿與市場深度，中間是帶持倉部位的圖表，右側是下單面板。"
       },
       "command-center": {
         "name": "4K 指揮中心",
         "tagline": "為 4K 螢幕打造的完整指揮中心。",
-        "description": "為 4K 螢幕鋪滿全部內容：委託簿與交易對資訊、帶研究和風險的圖表、持倉部位與社群動態，以及交易＋副駕駛欄。"
+        "description": "為 4K 螢幕鋪滿全部內容：委託簿與交易對資訊、帶風險條的圖表、持倉部位與社群動態，以及下單面板欄。"
       },
       "home-pulse": {
         "name": "首頁",
@@ -3548,7 +3535,7 @@
       "perps-terminal": {
         "name": "永續合約終端",
         "tagline": "期貨工作台：帶標記價格與強平價的部位。",
-        "description": "永續合約的預設版面：一張大圖表，下方以標籤頁顯示成交紀錄、持有合約（進場價、標記價格、強平價）與市場資料，中間是委託簿和支援槓桿的下單面板，右側是 AI 副駕駛。",
+        "description": "永續合約的預設版面：一張大圖表，下方以標籤頁顯示成交紀錄、持有合約（進場價、標記價格、強平價）與市場資料，右側是委託簿疊加支援槓桿的下單面板。",
         "menuLabel": "預設"
       },
       "perps-discovery": {
@@ -4371,28 +4358,7 @@
     "exit": "離開全螢幕"
   },
   "research": {
-    "phaseSearching": "正在搜尋網路...",
-    "phaseReading": "正在讀取來源...",
-    "phaseAnalyzing": "正在分析市場資料...",
-    "phaseWriting": "正在撰寫報告...",
-    "authRequiredTitle": "研究工作台，只差一次登入",
-    "authRequiredDescription": "根據即時網路來源，為任意交易對產生結構化研究報告。",
-    "upgradeDescription": "根據即時網路來源，為任意交易對產生結構化研究報告。訂閱 Pairlens Intelligence，或連接你自己的 AI 金鑰——免費。",
-    "unavailableTitle": "研究功能無法使用",
-    "unavailableDescription": "請在外掛頁面啟用一個 AI 外掛，以產生此交易對的研究報告。",
-    "goToPlugins": "前往外掛",
-    "navigateToPair": "前往某個交易對以檢視研究報告。",
-    "researchingSymbol": "正在研究 {{symbol}}",
-    "generatingReport": "正在產生報告...",
-    "cachedGenerated": "快取內容 — 產生於 {{time}}",
-    "freshGenerated": "最新 — 剛剛產生",
-    "refresh": "重新整理",
-    "sourcesCount": "來源（{{count}}）",
-    "reportTitle": "研究報告",
-    "fullscreenDescription": "研究報告已全螢幕顯示。按 Esc 鍵結束。",
-    "sections": "章節",
-    "sparklineAriaLabel": "每日價格迷你圖",
-    "errorTitle": "研究功能無法使用"
+    "sparklineAriaLabel": "每日價格迷你圖"
   },
   "capabilityGate": {
     "authTitle": "只需一次免費登入",
@@ -4489,8 +4455,8 @@
       "titlePlan": "{{label}} 已屬於你。",
       "titleDefault": "Pairlens Intelligence 已屬於你。",
       "bodyPack": "這些點數會疊加在你的每月額度之上,將於 {{days}} 天後到期。回到 Pairlens 應用程式 — 你的餘額會在幾秒內更新。",
-      "bodyPlanWithCredits": "你的託管 AI 副駕駛、研究與網頁搜尋已解鎖,每月附帶 {{credits}} 點數。回到 Pairlens 應用程式 — 它會在幾秒內識別你的訂閱。",
-      "bodyPlanNoCredits": "你的託管 AI 副駕駛、研究與網頁搜尋已解鎖。回到 Pairlens 應用程式 — 它會在幾秒內識別你的訂閱。",
+      "bodyPlanWithCredits": "你的託管 AI 助理已解鎖，深度研究與網頁搜尋一併奉上，每月還有 {{credits}} 點數。回到 Pairlens 應用程式：它會在幾秒內識別你的訂閱。",
+      "bodyPlanNoCredits": "你的託管 AI 助理已解鎖，深度研究與網頁搜尋一併奉上。回到 Pairlens 應用程式：它會在幾秒內識別你的訂閱。",
       "openTerminal": "開啟終端",
       "closeTabHint": "是從桌面應用程式付款的嗎?直接關閉此分頁即可。",
       "receiptHint": "收據和發票已寄到你的信箱,也可在帳單管理頁面查看(設定 → Intelligence)。"
@@ -4878,7 +4844,7 @@
     "ai": {
       "inference": {
         "label": "推論",
-        "description": "用於副駕駛分析的 LLM 推論"
+        "description": "用於 AI 助理的 LLM 推論"
       },
       "web-search": {
         "label": "網頁搜尋",
@@ -4945,7 +4911,7 @@
     },
     "ai": {
       "label": "AI 供應商",
-      "description": "為 AI 副駕駛分析提供支援的語言模型供應商"
+      "description": "為 AI 助理提供支援的語言模型供應商"
     },
     "intelligence": {
       "label": "情報",
@@ -4975,7 +4941,7 @@
         "watchlist": "自選清單",
         "trade": "交易",
         "chart": "圖表",
-        "copilot": "副駕駛",
+        "copilot": "助理",
         "discover": "探索"
       },
       "overlays": {
@@ -5123,12 +5089,12 @@
       "bannerBody": "工作區、機器人、你自己的指標，還有另外四家交易所。",
       "bannerDismiss": "隱藏此提示",
       "screenTitle": "在更大的螢幕上",
-      "lead": "手機上裝的是你想隨身帶著的那部分 Pairlens：圖表、委託簿、交易面板與副駕駛。終端機的其餘部分是為一塊攤得開的螢幕而生的，它們在那邊等你。",
+      "lead": "手機上裝的是你想隨身帶著的那部分 Pairlens：圖表、委託簿、交易面板與助理。終端機的其餘部分是為一塊攤得開的螢幕而生的，它們在那邊等你。",
       "widerWindow": "在更寬的視窗中",
       "desktopApp": "在桌面應用程式中",
       "workspaces": {
         "title": "工作區",
-        "body": "圖表、委託簿、成交紀錄與副駕駛並排擺好，排一次就存下來。工作區商店裡還有現成版面，一點即可複製。"
+        "body": "圖表、委託簿、成交紀錄與下單面板並排擺好，排一次就存下來。工作區商店裡還有現成版面，一點即可複製。"
       },
       "bots": {
         "title": "機器人",

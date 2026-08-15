@@ -20,7 +20,7 @@
     "oneTerminal": {
       "eyebrow": "Pourquoi Pairlens",
       "title": "Un seul terminal. Tous les marchés.",
-      "sub": "Tradez le spot centralisé et on-chain côte à côte, avec un co-pilote IA qui analyse chaque configuration.",
+      "sub": "Tradez le spot centralisé et on-chain côte à côte, avec un seul assistant IA qui analyse chaque configuration.",
       "points": {
         "0": "Spot centralisé — OKX, Binance, Coinbase",
         "1": "Swaps DEX on-chain, routés intelligemment",
@@ -90,9 +90,9 @@
       "label": "Routage"
     },
     "copilot": {
-      "eyebrow": "Votre co-pilote",
-      "title": "Un co-pilote qui respecte vos règles.",
-      "sub": "Il lit le marché à votre place — et ne franchit jamais les limites que vous fixez.",
+      "eyebrow": "Votre assistant",
+      "title": "Un assistant qui respecte vos règles.",
+      "sub": "Il lit le marché à votre place, et ne franchit jamais les limites que vous fixez.",
       "points": {
         "0": "Surveille les signaux sur tous vos marchés",
         "1": "Approuve, bloque ou signale chaque configuration",
@@ -101,7 +101,7 @@
       "scene": {
         "guardrail": "votre limite de risque"
       },
-      "label": "Co-pilote"
+      "label": "Assistant"
     },
     "themeStep": {
       "status": "Réglage de la luminosité",
@@ -166,11 +166,11 @@
     "account": {
       "status": "Une dernière chose",
       "title": "Rester synchronisé ?",
-      "sub": "Facultatif — tout ce que vous avez vu fonctionne sans compte. Un compte ajoute le co-pilote IA et la synchronisation multi-appareils. Vos clés restent toujours sur cette machine.",
+      "sub": "Facultatif : tout ce que vous avez vu fonctionne sans compte. Un compte ajoute l'assistant IA hébergé et la synchronisation multi-appareils. Vos clés restent toujours sur cette machine.",
       "benefits": {
         "ai": {
-          "title": "Co-pilote IA et recherche",
-          "sub": "Analyse contextuelle sur toute paire — inclus gratuitement"
+          "title": "Assistant IA et recherche",
+          "sub": "Fonctionne dans tout le terminal, inclus gratuitement"
         },
         "sync": {
           "title": "Synchronisation cloud",
@@ -503,12 +503,12 @@
         },
         "copilot": {
           "title": "Historique du chat IA",
-          "description": "Vos conversations avec le copilote, paire par paire.",
+          "description": "Une seule conversation avec l'assistant, pour tout le terminal.",
           "caveat": "Tant que c'est désactivé, effacer l'historique de chat n'efface que cet appareil. Les conversations déjà présentes dans votre compte sont conservées et réapparaîtront quand vous réactiverez la synchronisation."
         },
         "trades": {
           "title": "Journal de trading",
-          "description": "Les trades que vous ou le copilote consignez dans le journal."
+          "description": "Les trades que vous ou l'assistant consignez dans le journal."
         }
       }
     },
@@ -693,24 +693,24 @@
       "dailyTradeCount": "Trades",
       "windowStart": "Fenêtre démarrée",
       "confirmGesture": "Confirmation des ordres",
-      "confirmGestureDescription": "Comment vous validez un ordre que vous passez vous-même, dans le ticket et sur les cartes d'ordre du co-pilote.",
+      "confirmGestureDescription": "Comment vous validez un ordre que vous passez vous-même, dans le ticket et sur les cartes d'ordre de l'assistant.",
       "confirmHold": "Appui long",
       "confirmHoldDescription": "Maintenez le bouton jusqu'à ce qu'il se remplisse. Les ordres réels se maintiennent un peu plus longtemps que les ordres papier.",
       "confirmClick": "Simple clic",
       "confirmClickDescription": "Le premier clic envoie l'ordre. Plus rien ne sépare un clic malheureux d'un ordre réel.",
       "confirmGestureNote": "Les limites de risque s'appliquent dans les deux cas — cela change le geste, pas les garde-fous.",
       "aiPermissions": "Autorisations de trading IA",
-      "aiPermissionsDescription": "Ce que le co-pilote IA peut faire sans demander. Les ordres hors de ces autorisations nécessitent toujours votre confirmation sur une carte dans le chat, et chaque ordre — auto-approuvé ou non — est soumis aux limites de risque ci-dessus.",
+      "aiPermissionsDescription": "Ce que l'assistant IA peut faire sans demander. Les ordres hors de ces autorisations nécessitent toujours votre confirmation sur une carte dans le chat, et chaque ordre, auto-approuvé ou non, est soumis aux limites de risque ci-dessus.",
       "aiPaperAuto": "Auto-approuver les trades papier",
-      "aiPaperAutoDescription": "Fonds simulés uniquement. Le co-pilote passe les ordres papier sans carte de confirmation.",
+      "aiPaperAutoDescription": "Fonds simulés uniquement. L'assistant passe les ordres papier sans carte de confirmation.",
       "aiLiveAuto": "Auto-approuver les trades en direct",
       "aiLiveAutoEmpty": "Aucun exchange autorisé — chaque trade en direct nécessite votre confirmation. Autorisez un exchange depuis une carte d’ordre avec « Ne plus demander ».",
-      "aiLiveAutoDescription": "Fonds réels. Le co-pilote passe des ordres en direct sur ces exchanges sans carte de confirmation :",
+      "aiLiveAutoDescription": "Fonds réels. L'assistant passe des ordres en direct sur ces exchanges sans carte de confirmation :",
       "aiLiveAutoRevoke": "Révoquer {{market}}"
     },
     "billing": {
       "title": "Pairlens Intelligence",
-      "description": "Copilote IA hébergé, rapports de recherche et recherche web — sans clés API.",
+      "description": "L'assistant IA hébergé, avec recherche approfondie et recherche web. Sans clés API.",
       "signInFirst": "Connectez-vous pour gérer votre abonnement Pairlens Intelligence.",
       "selfHosted": "La facturation n’est pas configurée sur ce serveur — les fonctions IA hébergées fonctionnent sans abonnement.",
       "loadError": "Impossible de charger votre état de facturation. Veuillez réessayer.",
@@ -879,7 +879,7 @@
       "triggerWake": "Au réveil de l'ordinateur",
       "triggerWakeHint": "Verrouiller quand la machine sort de veille.",
       "triggerTrade": "Avant de passer un ordre",
-      "triggerTradeHint": "Confirmer les ordres que tu passes à la main ou via le copilote, y compris les propositions approuvées automatiquement. Les bots ne sont jamais interrogés.",
+      "triggerTradeHint": "Confirmer les ordres que tu passes à la main ou via l'assistant, y compris les propositions approuvées automatiquement. Les bots ne sont jamais interrogés.",
       "afterMinutes": "Après {{minutes}} min",
       "everyHours": "Toutes les {{hours}} h",
       "graceNever": "À chaque fois",
@@ -1241,50 +1241,14 @@
     "buildWithAi": "Créer avec l’IA",
     "buildWithAiHint": "Décrivez-le et l’assistant l’écrit",
     "recommended": "Recommandé",
-    "placeholder": "Décrivez ce qu’il faut créer...",
-    "answerPlaceholder": "Répondez, ou dites autre chose...",
-    "close": "Fermer l’assistant",
-    "clearChat": "Effacer la conversation",
-    "emptyTitle": "Qu’est-ce qu’on construit ?",
-    "emptyHintIndicators": "Décrivez un indicateur ou une stratégie : l’assistant l’écrit dans l’éditeur, le valide et lance l’aperçu.",
-    "emptyHintBots": "Demandez-lui de déployer une stratégie comme bot en papier, d’ajuster les paramètres ou de poser des garde-fous de risque. Armer un bot reste entre vos mains.",
-    "emptyHintWorkflows": "Décris ce qui doit se passer après l'exécution de ton ordre. L'assistant câble les étapes ; tu relis le diff et tu valides.",
-    "emptyHintNotifications": "Dis ce dont tu veux être averti. L'assistant crée l'alerte et l'arme sur la paire que tu indiques.",
-    "genericError": "L’assistant a rencontré une erreur — réessayez d’envoyer votre message.",
-    "authRequiredTitle": "Créer avec l’IA",
-    "authRequiredDescription": "Décrivez un indicateur, une stratégie ou un bot avec vos mots — l’assistant écrit le Python, le valide et le backteste avec vous.",
-    "upgradeRequiredDescription": "L’assistant de création écrit des indicateurs, des stratégies et des bots avec vous. Abonnez-vous à Pairlens Intelligence ou connectez votre propre clé IA — gratuitement.",
-    "unavailableTitle": "Assistant indisponible",
-    "unavailableDescription": "Activez un fournisseur d’IA sur la page Plugins pour créer des indicateurs, des stratégies et des bots par chat.",
-    "quickNewIndicator": "Créer un indicateur de divergence RSI",
-    "quickNewStrategy": "Écrire une stratégie de cassure que je peux backtester",
-    "quickImprove": "Relire ce script et suggérer des améliorations",
-    "quickBotFromScratch": "Créer un bot en partant de zéro",
-    "quickCreateBot": "Déployer une de mes stratégies comme bot en papier",
-    "quickGuards": "Suggérer des garde-fous de risque pour un de mes bots",
-    "quickReview": "Comment se portent mes bots ?",
-    "quickBracket": "Encadre mon entrée avec un stop et un objectif",
-    "quickScaleOut": "Sors d’une position en trois paliers",
-    "quickExplainWorkflow": "Explique ce que fait ce workflow",
-    "quickPriceAlert": "Préviens-moi quand BTC franchit un prix",
-    "quickMoveAlert": "Alerte-moi sur un mouvement rapide en pourcentage",
-    "quickAlertReview": "Passe en revue mes alertes existantes",
     "questionHint": "Choisissez une option, ou tapez votre propre réponse ci-dessous.",
     "questionHintOpen": "Tapez votre réponse ci-dessous.",
     "youAnswered": "Vous avez choisi : {{answer}}",
-    "handoffToIndicators": "On continue dans Indicateurs et stratégies",
-    "handoffToBots": "On continue dans Bots",
-    "handoffToWorkflows": "On continue dans Workflows",
-    "handoffToNotifications": "On continue dans Notifications",
     "starterTitle": "Décrivez-le, et il est construit",
     "starterBodyIndicators": "Dites ce que vous voulez voir sur le graphique. L’assistant écrit le Python, le valide et lance l’aperçu pour que vous puissiez juger.",
     "starterBodyBots": "Dites ce que le bot doit faire. L’assistant écrit la stratégie, la backteste et la déploie en papier. L’armer reste votre décision.",
     "starterBodyWorkflows": "Dis ce qui doit se passer après l'exécution de ton ordre. L'assistant câble les étapes sur le canevas ; tu relis le diff et tu valides.",
     "starterBodyNotifications": "Dis ce dont tu veux être averti. L'assistant crée l'alerte, choisit un délai de répétition sensé et l'arme.",
-    "starterPlaceholderIndicators": "Un RSI qui colore le fond quand le momentum s’inverse...",
-    "starterPlaceholderBots": "Un bot qui achète les replis dans une tendance haussière en 4h...",
-    "starterPlaceholderWorkflows": "Après mon entrée, prendre +5 % et couper à -3 %...",
-    "starterPlaceholderNotifications": "Préviens-moi quand BTC franchit 100 000 sur OKX...",
     "starterIdeaIndicator1": "Ruban de tendance pondéré par le volume",
     "starterIdeaIndicator2": "Détecteur de divergences",
     "starterIdeaIndicator3": "Bandes de compression de volatilité",
@@ -1296,14 +1260,56 @@
     "starterIdeaWorkflow3": "Entrer en échelle sur un repli",
     "starterIdeaAlert1": "BTC franchit un niveau",
     "starterIdeaAlert2": "5 % en une heure",
-    "starterIdeaAlert3": "Préviens-moi quand mon bot trade",
-    "starterSend": "Envoyer à l’assistant"
+    "starterIdeaAlert3": "Préviens-moi quand mon bot trade"
+  },
+  "assistantDock": {
+    "title": "Assistant",
+    "open": "Ouvrir l’assistant",
+    "close": "Réduire l’assistant",
+    "clear": "Effacer la conversation",
+    "placeholder": "Posez une question, ou dites-moi quoi créer...",
+    "answerPlaceholder": "Saisissez votre réponse...",
+    "emptyTitle": "Sur quoi travaille-t-on ?",
+    "emptyDescription": "Je peux lire n’importe quel marché, piloter le graphique, écrire des indicateurs et des stratégies, créer des alertes et des workflows, et préparer des ordres que vous validez.",
+    "defaultSuggestion": "Demandez à l’assistant",
+    "statusThinking": "Réflexion en cours...",
+    "statusUsingTools": "Utilisation des outils...",
+    "statusSearching": "Recherche sur le web...",
+    "genericError": "Un problème est survenu. Réessayez.",
+    "authRequiredTitle": "Connectez-vous pour utiliser l’assistant",
+    "authRequiredDescription": "L’assistant fonctionne avec Pairlens Intelligence, ou avec votre propre clé de fournisseur.",
+    "upgradeRequiredDescription": "Ajoutez Intelligence à votre forfait, ou connectez votre propre clé de fournisseur.",
+    "unavailableTitle": "Assistant indisponible",
+    "unavailableDescription": "Aucun fournisseur d’IA n’est activé. Connectez-en un pour commencer.",
+    "goToPlugins": "Ouvrir le Plugin Store",
+    "suggest": {
+      "chart": "Analyse le graphique de {{pair}}",
+      "discovery": "Trouve-moi quelque chose à trader",
+      "workflows": "Construis un workflow",
+      "notifications": "Configure une alerte",
+      "bots": "Déploie un bot de trading",
+      "indicators": "Écris un indicateur",
+      "indicatorsScript": "Améliore {{name}}",
+      "accounts": "Passe en revue mes comptes",
+      "plugins": "Trouve-moi un plugin",
+      "workspaceStore": "Conçois mon espace de travail"
+    },
+    "researchCardTitle": "Rapport de research : {{pair}} sur {{market}}",
+    "researchCardTitleGeneric": "Rapport de research",
+    "researchCardSources_one": "{{count}} source",
+    "researchCardSources_other": "{{count}} sources",
+    "quickAnalyze": "Analyse {{pair}}",
+    "quickLevels": "Marque les niveaux clés de {{symbol}}",
+    "quickAlert": "Préviens-moi si {{symbol}} sort de son range",
+    "quickWhatsMoving": "Qu’est-ce qui bouge aujourd’hui ?",
+    "quickPortfolio": "Comment va mon portefeuille ?",
+    "quickBuildAlert": "Crée-moi une alerte",
+    "approvalApprove": "Approuver",
+    "approvalDecline": "Refuser",
+    "approvalApproved": "Approuvé",
+    "approvalDeclined": "Refusé"
   },
   "copilot": {
-    "aiLens": "AI Lens",
-    "thinking": "Réflexion en cours...",
-    "idle": "Inactif",
-    "clearHistory": "Effacer l’historique du chat",
     "placeholder": "Interrogez votre lens...",
     "lensPersona": "Personnalité du Lens",
     "persona": {
@@ -1337,22 +1343,7 @@
     "keep": "Conserver",
     "tradingUnavailable": "Le trading n’est pas disponible.",
     "noCredentialsForMarket": "Aucun identifiant connecté pour {{market}}. Ajoutez des clés API dans Comptes pour trader en réel.",
-    "watchingPair": "Suivi de {{pair}} · {{timeframe}}",
-    "genericChatError": "Le copilote a rencontré une erreur — essayez de renvoyer votre message.",
-    "quickActionHowIsDoing": "Comment se comporte {{symbol}} ?",
-    "quickActionSuggestedIndicators": "Indicateurs suggérés",
-    "quickActionAnySignals": "Y a-t-il des signaux ?",
     "scheduledCheckPrefix": "[Vérification planifiée — programmée il y a {{minutes}} min]",
-    "authRequiredTitle": "Découvrez votre copilote IA",
-    "authRequiredDescription": "Analyse contextuelle sur toute paire — il lit le graphique, vérifie vos limites de risque et répond avec un raisonnement que vous pouvez questionner.",
-    "upgradeRequiredDescription": "Votre copilote IA lit le graphique, vérifie vos limites de risque et répond avec un raisonnement que vous pouvez questionner. Abonnez-vous à Pairlens Intelligence ou connectez votre propre clé IA — gratuitement.",
-    "aiLensUnavailableTitle": "AI Lens indisponible",
-    "aiLensUnavailableDescription": "Activez un plugin IA sur la page Plugins pour obtenir une analyse de marché en temps réel et une assistance au trading.",
-    "goToPlugins": "Aller aux Plugins",
-    "analyzePair": "Analyser {{pair}}",
-    "startConversation": "Démarrer une conversation",
-    "emptyStateHint": "Interrogez les conditions de marché, validez votre setup, ou demandez une évaluation de risque — l’IA a le contexte complet de cette paire.",
-    "contextAware": "Sensible au contexte",
     "toolFailed": "Échec de l’outil"
   },
   "chart": {
@@ -2195,7 +2186,7 @@
       "priceMonthly": "{{price}} $/mois",
       "taxNotice": "Les prix s'entendent hors taxes ; elles sont calculées lors du paiement.",
       "defaultTitle": "Débloquez Pairlens Intelligence",
-      "defaultDescription": "Copilote IA hébergé et research web, sans clé API à fournir. Chaque forfait inclut un budget d'utilisation mensuel partagé entre le chat, le research et les recherches web.",
+      "defaultDescription": "L'assistant IA hébergé, avec recherche approfondie et recherche web, sans clé API à fournir. Chaque forfait inclut un budget d'utilisation mensuel partagé entre le chat, la recherche et les recherches web.",
       "byokNote": "Vous préférez votre propre fournisseur ? Connectez une clé Anthropic, OpenAI, Groq ou OpenRouter dans <plugins>Plugins</plugins> — l'IA avec votre propre clé est toujours gratuite.",
       "checkoutOpenedTitle": "Paiement ouvert dans votre navigateur",
       "checkoutActivates": "Votre abonnement s'active ici dès que le paiement est finalisé.",
@@ -2223,7 +2214,6 @@
     "fearGreed": "Peur & avidité",
     "chart": "Graphique",
     "trade": "Trade",
-    "aiLens": "AI Lens",
     "dataLog": "Journal de données",
     "positions": "Positions",
     "portfolio": "Portefeuille",
@@ -2232,7 +2222,6 @@
     "marketDepth": "Profondeur de marché",
     "pairInfo": "Infos paire",
     "multiPrice": "Multi-prix",
-    "research": "Recherche",
     "social": "Social",
     "risk": "Risque",
     "symbolNews": "Actualités du symbole",
@@ -2253,7 +2242,6 @@
     "fearGreed": "Jauge de sentiment de marché basée sur l’indice Peur & Avidité",
     "chart": "Graphique en chandeliers avec indicateurs et outils de dessin",
     "trade": "Passez des ordres au marché, à cours limité et stop avec contrôles de risque",
-    "aiLens": "Co-pilote IA qui analyse les signaux et fournit du contexte de trading",
     "dataLog": "Flux brut de signaux et d’événements pour la paire active",
     "positions": "Surveillez les positions ouvertes, le P&L et l’historique des trades",
     "portfolio": "Avoirs du compte avec répartition de l’allocation",
@@ -2262,7 +2250,6 @@
     "marketDepth": "Graphique de profondeur de marché cumulative pour la paire active",
     "pairInfo": "Statistiques clés, taux de financement et métadonnées pour la paire active",
     "multiPrice": "La même paire cotée sur tous les exchanges en même temps, classée pour repérer la meilleure exécution",
-    "research": "Rapports d’analyse approfondie générés par IA sur la paire active",
     "social": "Sentiment social et activité communautaire pour une paire",
     "risk": "Métriques de risque du portefeuille et configuration des garde-fous",
     "symbolNews": "Actualités et analyse de sentiment pour la paire de trading active",
@@ -3153,7 +3140,7 @@
       "statusBrowserVault": "En ce moment : chaque clé chiffrée dans votre coffre, dans ce navigateur uniquement.",
       "statusBrowserNone": "Pas encore de coffre dans ce navigateur. Vous en créerez un avant que la première clé puisse être enregistrée.",
       "deviceTitle": "Stockées uniquement sur votre appareil",
-      "deviceBody": "Vos clés API d’exchange et clés de wallet sont enregistrées sur cet ordinateur et nulle part ailleurs. Elles ne sont jamais téléversées vers Pairlens : ni à la connexion, ni lors de la synchronisation de vos réglages, ni quand le copilote lit un graphique. Il n’existe aucune copie sur nos serveurs qui pourrait fuiter.",
+      "deviceBody": "Vos clés API d’exchange et clés de wallet sont enregistrées sur cet ordinateur et nulle part ailleurs. Elles ne sont jamais téléversées vers Pairlens : ni à la connexion, ni lors de la synchronisation de vos réglages, ni quand l’assistant lit un graphique. Il n’existe aucune copie sur nos serveurs qui pourrait fuiter.",
       "osTitle": "Chiffrées là où elles reposent",
       "osBodyDesktop": "Elles sont conservées dans {{vault}}, le même coffre protégé que votre système utilise pour ses propres mots de passe, chiffré sur disque et accessible à cette seule application.",
       "osBodyDesktopVault": "Elles sont conservées dans {{vault}}, le même coffre protégé que votre système utilise pour ses propres mots de passe. Votre coffre ajoute une couche par-dessus : chaque valeur est scellée en AES-256-GCM avant même que le trousseau ne la voie.",
@@ -3391,8 +3378,8 @@
       },
       "ai-research-desk": {
         "name": "Poste Research IA",
-        "tagline": "Copilote, recherche et le fil d'actualités à côté de votre graphique.",
-        "description": "Associez un graphique au co-pilote IA, à la recherche approfondie, et aux flux d'actualités globaux et du symbole. Conçu pour le trading piloté par les catalyseurs, où l'histoire compte autant que le ticker. Nécessite un fournisseur d'inférence IA pour le Copilote et la Recherche."
+        "tagline": "Un graphique encadré par les actualités du symbole et le fil global.",
+        "description": "Associez un graphique au flux d'actualités du symbole et au fil global, pour le trading piloté par les catalyseurs, où l'histoire compte autant que le ticker. L'assistant IA vit dans le dock : il est donc à portée de main ici sans occuper une colonne."
       },
       "market-discovery": {
         "name": "Découverte de marché",
@@ -3407,7 +3394,7 @@
       "prediction-terminal": {
         "name": "Terminal Prédictions",
         "tagline": "Le graphique des probabilités, tout l'événement à côté.",
-        "description": "La mise en page par défaut pour les marchés de prédiction : un graphique de probabilité avec les transactions et vos contrats ouverts en dessous, le carnet d'ordres et le ticket au centre, et l'explorateur d'événements à côté du co-pilote IA, car les issues voisines font la moitié de l'analyse.",
+        "description": "La mise en page par défaut pour les marchés de prédiction : un graphique de probabilité avec les transactions et vos contrats ouverts en dessous, le carnet d'ordres et le ticket au centre, et un explorateur d'événements pleine hauteur à droite, car les issues voisines font la moitié de l'analyse.",
         "menuLabel": "Par défaut"
       },
       "prediction-discovery": {
@@ -3424,7 +3411,7 @@
       "dex-terminal": {
         "name": "Terminal DEX",
         "tagline": "Le trading on-chain sans faux carnet d'ordres.",
-        "description": "La mise en page on-chain par défaut : un graphique avec les statistiques du pool et les transactions en dessous, un ticket de swap au-dessus de vos tickers récents pour repérer les nouvelles cotations, et le co-pilote IA au-dessus du fil social. Il n'y a pas de colonne carnet d'ordres : la profondeur cotée par un pool est synthétique, elle n'est donc pas affichée.",
+        "description": "La mise en page on-chain par défaut : un graphique avec les statistiques du pool et les transactions en dessous, un ticket de swap au-dessus de vos tickers récents pour repérer les nouvelles cotations, et le fil social à droite. Il n'y a pas de colonne carnet d'ordres : la profondeur cotée par un pool est synthétique, elle n'est donc pas affichée.",
         "menuLabel": "Par défaut"
       },
       "quant-signals": {
@@ -3440,36 +3427,36 @@
       "equities-terminal": {
         "name": "Terminal Actions",
         "tagline": "Les actions avec le ticket au-dessus du fil d'actualités du symbole.",
-        "description": "La mise en page par défaut pour les actions : un graphique avec les transactions, les positions et les fondamentaux en dessous, le ticket d'ordre au-dessus des actualités du symbole (les catalyseurs font bouger les actions comme le flux fait bouger les cryptos), et le co-pilote IA à droite.",
+        "description": "La mise en page par défaut pour les actions : un graphique avec les transactions, les positions et les fondamentaux en dessous, et le ticket d'ordre au-dessus des actualités du symbole, car les catalyseurs font bouger les actions comme le flux fait bouger les cryptos.",
         "menuLabel": "Par défaut"
       },
       "ultrawide-trading-floor": {
         "name": "Salle des marchés Ultrawide",
         "tagline": "Tout, partout — pour le grand écran.",
-        "description": "Un centre de commande à quatre colonnes qui remplit un écran ultrawide ou un second écran : scanner, graphique, carnet d'ordres et profondeur, un ticket d'ordre avec positions, et le co-pilote IA. La mise en page maximaliste."
+        "description": "Un centre de commande à quatre colonnes qui remplit un écran ultrawide ou un second écran : scanner, graphique, carnet d'ordres et profondeur, et un ticket d'ordre au-dessus de vos positions ouvertes. La mise en page maximaliste."
       },
       "classic-terminal": {
         "name": "Terminal Classique",
-        "tagline": "Le poste Pairlens classique — graphique, données, trading, copilote.",
-        "description": "La mise en page de terminal par défaut : un grand graphique avec un bandeau de données à onglets et une barre de risque à gauche, et un ticket d'ordre au-dessus du co-pilote IA à droite.",
+        "tagline": "Le poste Pairlens classique : graphique, données, carnet, ticket.",
+        "description": "La mise en page de terminal par défaut : un grand graphique avec un bandeau de données à onglets et une barre de risque à gauche, et le carnet d'ordres au-dessus d'un ticket d'ordre à droite.",
         "menuLabel": "Par défaut"
       },
       "chart-focus": {
         "name": "Focus Graphique",
         "tagline": "Un grand graphique avec les données en onglets en dessous.",
-        "description": "Une mise en page à une colonne qui donne au graphique le maximum d'espace, avec les positions, le journal de données, le copilote et le ticket d'ordre nichés dans un bandeau d'onglets en dessous.",
+        "description": "Une mise en page à une colonne qui donne au graphique le maximum d'espace, avec les positions, le journal de données et le ticket d'ordre nichés dans un bandeau d'onglets en dessous.",
         "menuLabel": "Focus Graphique"
       },
       "trading": {
         "name": "Trading",
-        "tagline": "Carnet d'ordres et ticket encadrant un graphique central.",
-        "description": "Un poste d'exécution à trois colonnes : carnet d'ordres et ticket d'ordre à gauche, graphique avec positions et risque au centre, et le co-pilote IA à droite.",
+        "tagline": "Carnet d'ordres et ticket à côté d'un graphique pleine hauteur.",
+        "description": "Un poste d'exécution à deux colonnes : carnet d'ordres au-dessus du ticket d'ordre à gauche, et le graphique avec positions et risque sur toute la largeur restante.",
         "menuLabel": "Trading"
       },
       "chart-analysis": {
         "name": "Analyse Graphique",
-        "tagline": "Graphique et données à gauche, copilote et exécution à droite.",
-        "description": "Une répartition orientée étude : graphique, données, recherche et risque à gauche ; copilote, carnet d'ordres et ticket d'ordre à droite.",
+        "tagline": "Graphique et données à gauche, exécution à droite.",
+        "description": "Une répartition orientée étude : graphique, données et risque à gauche ; carnet d'ordres et ticket d'ordre à droite.",
         "menuLabel": "Analyse"
       },
       "dual-charts": {
@@ -3497,23 +3484,23 @@
       },
       "laptop-split": {
         "name": "Partage Portable",
-        "tagline": "Graphique + données à gauche, trading + copilote à droite — pour les écrans plus petits.",
-        "description": "Une répartition à deux colonnes dimensionnée pour les ordinateurs portables : graphique et positions à gauche, ticket d'ordre au-dessus du copilote à droite."
+        "tagline": "Graphique et données à gauche, ticket à droite, taillé pour les portables.",
+        "description": "Une répartition à deux colonnes dimensionnée pour les ordinateurs portables : graphique, positions et risque à gauche, ticket d'ordre à droite."
       },
       "ultrawide-dashboard": {
         "name": "Tableau de bord Ultrawide",
         "tagline": "Chaque panneau réparti sur un écran ultrawide.",
-        "description": "Un tableau de bord à quatre colonnes pour écrans ultrawide : carnet d'ordres, graphique avec risque, positions et recherche, et une colonne trading + copilote."
+        "description": "Un tableau de bord à quatre colonnes pour écrans ultrawide : carnet d'ordres, graphique avec risque, positions et journal de données, et une colonne avec le ticket d'ordre."
       },
       "ultrawide-trading": {
         "name": "Trading Ultrawide",
         "tagline": "Carnet d'ordres, profondeur, graphique et exécution sur toute la largeur.",
-        "description": "Une mise en page d'exécution ultrawide : carnet d'ordres et profondeur de marché à gauche, graphique avec positions au centre, et une colonne trading + copilote à droite."
+        "description": "Une mise en page d'exécution ultrawide : carnet d'ordres et profondeur de marché à gauche, graphique avec positions au centre, et le ticket d'ordre à droite."
       },
       "command-center": {
         "name": "Centre de commande 4K",
         "tagline": "Le centre de commande complet pour un écran 4K.",
-        "description": "Tout à l'écran pour un moniteur 4K : carnet d'ordres et infos de paire, graphique avec recherche et risque, positions et social, et une colonne trading + copilote."
+        "description": "Tout à l'écran pour un moniteur 4K : carnet d'ordres et infos de paire, graphique avec la barre de risque, positions et social, et une colonne avec le ticket d'ordre."
       },
       "home-pulse": {
         "name": "Accueil",
@@ -3548,7 +3535,7 @@
       "perps-terminal": {
         "name": "Terminal Perpétuels",
         "tagline": "Le poste futures : positions avec prix de marquage et liquidation.",
-        "description": "La mise en page par défaut pour les futures perpétuels : un grand graphique avec, en onglets en dessous, les transactions, les contrats ouverts (entrée, marquage, liquidation) et les données de marché, un carnet d'ordres et un ticket tenant compte du levier au centre, et le co-pilote IA à droite.",
+        "description": "La mise en page par défaut pour les futures perpétuels : un grand graphique avec, en onglets en dessous, les transactions, les contrats ouverts (entrée, marquage, liquidation) et les données de marché, et à droite un carnet d'ordres au-dessus d'un ticket tenant compte du levier.",
         "menuLabel": "Par défaut"
       },
       "perps-discovery": {
@@ -4371,28 +4358,7 @@
     "exit": "Quitter le plein écran"
   },
   "research": {
-    "phaseSearching": "Recherche sur le web…",
-    "phaseReading": "Lecture des sources…",
-    "phaseAnalyzing": "Analyse des données de marché…",
-    "phaseWriting": "Rédaction du rapport…",
-    "authRequiredTitle": "Le research desk, à une connexion près",
-    "authRequiredDescription": "Des rapports de research structurés sur n'importe quelle paire, fondés sur des sources web en direct.",
-    "upgradeDescription": "Des rapports de research structurés sur n'importe quelle paire, fondés sur des sources web en direct. Abonnez-vous à Pairlens Intelligence ou connectez votre propre clé IA — gratuitement.",
-    "unavailableTitle": "Research indisponible",
-    "unavailableDescription": "Activez un plugin IA sur la page Plugins pour générer des rapports de research pour cette paire.",
-    "goToPlugins": "Aller aux Plugins",
-    "navigateToPair": "Accédez à une paire pour afficher le research.",
-    "researchingSymbol": "Analyse de {{symbol}} en cours",
-    "generatingReport": "Génération du rapport…",
-    "cachedGenerated": "En cache — généré {{time}}",
-    "freshGenerated": "Récent — généré à l'instant",
-    "refresh": "Actualiser",
-    "sourcesCount": "Sources ({{count}})",
-    "reportTitle": "Rapport de research",
-    "fullscreenDescription": "Rapport de research en mode plein écran. Appuyez sur Échap pour quitter.",
-    "sections": "Sections",
-    "sparklineAriaLabel": "Mini-graphique du prix quotidien",
-    "errorTitle": "Research indisponible"
+    "sparklineAriaLabel": "Mini-graphique du prix quotidien"
   },
   "capabilityGate": {
     "authTitle": "À une connexion gratuite près",
@@ -4489,8 +4455,8 @@
       "titlePlan": "{{label}} est désormais à vous.",
       "titleDefault": "Pairlens Intelligence est désormais à vous.",
       "bodyPack": "Ils s’ajoutent à votre budget mensuel et expirent dans {{days}} jours. Retournez sur l’application Pairlens — votre solde se met à jour en quelques secondes.",
-      "bodyPlanWithCredits": "Votre copilote IA hébergé, la recherche et la recherche web sont débloqués avec {{credits}} crédits chaque mois. Retournez sur l’application Pairlens — elle détectera votre abonnement en quelques secondes.",
-      "bodyPlanNoCredits": "Votre copilote IA hébergé, la recherche et la recherche web sont débloqués. Retournez sur l’application Pairlens — elle détectera votre abonnement en quelques secondes.",
+      "bodyPlanWithCredits": "Votre assistant IA hébergé est débloqué, recherche approfondie et recherche web comprises, avec {{credits}} crédits chaque mois. Retournez sur l’application Pairlens : elle détectera votre abonnement en quelques secondes.",
+      "bodyPlanNoCredits": "Votre assistant IA hébergé est débloqué, recherche approfondie et recherche web comprises. Retournez sur l’application Pairlens : elle détectera votre abonnement en quelques secondes.",
       "openTerminal": "Ouvrir le terminal",
       "closeTabHint": "Vous avez payé depuis l’application de bureau ? Vous pouvez simplement fermer cet onglet.",
       "receiptHint": "Le reçu et les factures se trouvent dans votre e-mail et sur le portail de facturation (Paramètres → Intelligence)."
@@ -4878,7 +4844,7 @@
     "ai": {
       "inference": {
         "label": "Inférence",
-        "description": "Inférence LLM pour l'analyse du co-pilote"
+        "description": "Inférence LLM pour l'assistant IA"
       },
       "web-search": {
         "label": "Recherche web",
@@ -4945,7 +4911,7 @@
     },
     "ai": {
       "label": "Fournisseurs d'IA",
-      "description": "Fournisseurs de modèles de langage pour l'analyse du co-pilote IA"
+      "description": "Fournisseurs de modèles de langage pour l'assistant IA"
     },
     "intelligence": {
       "label": "Intelligence",
@@ -4975,7 +4941,7 @@
         "watchlist": "Liste de suivi",
         "trade": "Trade",
         "chart": "Graphique",
-        "copilot": "Copilote",
+        "copilot": "Assistant",
         "discover": "Découverte"
       },
       "overlays": {
@@ -5123,12 +5089,12 @@
       "bannerBody": "Espaces de travail, bots, vos propres indicateurs et quatre places de marché de plus.",
       "bannerDismiss": "Masquer",
       "screenTitle": "Sur un écran plus grand",
-      "lead": "Votre téléphone porte les parties de Pairlens que vous voulez avoir en main : le graphique, le carnet, le ticket et le copilote. Le reste du terminal a été conçu pour un écran qui a de la place, et il vous y attend.",
+      "lead": "Votre téléphone porte les parties de Pairlens que vous voulez avoir en main : le graphique, le carnet, le ticket et l'assistant. Le reste du terminal a été conçu pour un écran qui a de la place, et il vous y attend.",
       "widerWindow": "Dans une fenêtre plus large",
       "desktopApp": "Dans l’app de bureau",
       "workspaces": {
         "title": "Espaces de travail",
-        "body": "Graphique, carnet d’ordres, historique des transactions et copilote côte à côte, disposés une fois et enregistrés. Le Workspace Store propose des dispositions toutes prêtes à copier d’un geste."
+        "body": "Graphique, carnet d’ordres, historique des transactions et ticket d’ordre côte à côte, disposés une fois et enregistrés. Le Workspace Store propose des dispositions toutes prêtes à copier d’un geste."
       },
       "bots": {
         "title": "Bots",

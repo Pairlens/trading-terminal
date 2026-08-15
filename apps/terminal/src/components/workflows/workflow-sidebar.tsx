@@ -27,17 +27,12 @@ import {
   MASTER_DETAIL_LIST_HEADER_CLASS,
 } from '../master-detail'
 import type { WorkflowRunRecord } from '@/stores/workflow-run-store'
+import { askAssistant } from '@/stores/assistant-store'
 import { useWorkflowStore } from '@/stores/workflow-store'
 import { useWorkflowRunStore } from '@/stores/workflow-run-store'
 import { stepTypeLabelById } from '@/lib/registry-labels'
 
-export function WorkflowSidebar({
-  assistantOpen = false,
-  onToggleAssistant,
-}: {
-  assistantOpen?: boolean
-  onToggleAssistant?: () => void
-} = {}) {
+export function WorkflowSidebar() {
   const { t } = useTranslation()
   const workflows = useWorkflowStore((s) => s.workflows)
   const activeWorkflowId = useWorkflowStore((s) => s.activeWorkflowId)
@@ -118,10 +113,10 @@ export function WorkflowSidebar({
             {/* Describing a plan beats dragging one, so the assistant sits
                 beside the plain "+" rather than under it. */}
             <Button
-              variant={assistantOpen ? 'secondary' : 'ghost'}
+              variant="ghost"
               size="icon"
               className="size-6"
-              onClick={onToggleAssistant}
+              onClick={() => askAssistant(t('assistantDock.suggest.workflows'))}
               aria-label={t('assistant.title')}
             >
               <Sparkles

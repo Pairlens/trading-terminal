@@ -5,7 +5,7 @@ group: traders
 parent: market-data
 order: 5
 eyebrow: For traders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 7 min read
 ---
 
@@ -130,7 +130,7 @@ keeps the venue that lists it for the same reason.
 Watchlists sync across your devices when you are signed in and cloud sync is on
 for workspaces. See [settings](/docs/settings#cloud-sync).
 
-The [co-pilot](/docs/ai-copilot) can read and edit your watchlist, so "add
+The [assistant](/docs/ai-copilot) can read and edit your watchlist, so "add
 everything that broke out today" is a request it can act on.
 
 ## Availability, not just existence

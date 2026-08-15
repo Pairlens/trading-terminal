@@ -20,7 +20,7 @@
     "oneTerminal": {
       "eyebrow": "Pairlens를 선택하는 이유",
       "title": "하나의 터미널, 모든 시장.",
-      "sub": "중앙화 거래소와 온체인 현물을 나란히 거래하고, AI 코파일럿이 모든 셋업을 함께 분석합니다.",
+      "sub": "중앙화 거래소와 온체인 현물을 나란히 거래하고, 하나의 AI 어시스턴트가 모든 셋업을 함께 분석합니다.",
       "points": {
         "0": "중앙화 현물 — OKX, Binance, Coinbase",
         "1": "스마트 라우팅되는 온체인 DEX 스왑",
@@ -90,8 +90,8 @@
       "label": "라우팅"
     },
     "copilot": {
-      "eyebrow": "당신의 코파일럿",
-      "title": "당신의 규칙을 따르는 코파일럿.",
+      "eyebrow": "당신의 어시스턴트",
+      "title": "당신의 규칙을 따르는 어시스턴트.",
       "sub": "시장을 대신 읽어주지만, 당신이 설정한 선을 절대 넘지 않습니다.",
       "points": {
         "0": "모든 마켓의 시그널을 감시합니다",
@@ -101,7 +101,7 @@
       "scene": {
         "guardrail": "설정한 리스크 한도"
       },
-      "label": "코파일럿"
+      "label": "어시스턴트"
     },
     "themeStep": {
       "status": "화면 밝기 조정 중",
@@ -166,11 +166,11 @@
     "account": {
       "status": "마지막 단계",
       "title": "기기 간 동기화할까요?",
-      "sub": "선택 사항입니다 — 지금까지 본 모든 기능은 계정 없이도 작동합니다. 계정을 만들면 AI 코파일럿과 기기 간 동기화가 추가됩니다. 키는 항상 이 기기에만 저장됩니다.",
+      "sub": "선택 사항입니다. 지금까지 본 모든 기능은 계정 없이도 작동합니다. 계정을 만들면 호스팅 AI 어시스턴트와 기기 간 동기화가 추가됩니다. 키는 항상 이 기기에만 저장됩니다.",
       "benefits": {
         "ai": {
-          "title": "AI 코파일럿 & 리서치",
-          "sub": "모든 페어에 대한 맥락 분석 — 무료 제공"
+          "title": "AI 어시스턴트 & 리서치",
+          "sub": "터미널 전체에서 작동하며, 무료입니다"
         },
         "sync": {
           "title": "클라우드 동기화",
@@ -503,12 +503,12 @@
         },
         "copilot": {
           "title": "AI 대화 기록",
-          "description": "페어별 copilot 대화.",
+          "description": "터미널 전체에서 이어지는 어시스턴트와의 대화 하나.",
           "caveat": "이 항목이 꺼져 있는 동안 채팅 기록 지우기는 이 기기에서만 지워집니다. 계정에 이미 저장된 대화는 남아 있으며 동기화를 다시 켜면 다시 나타납니다."
         },
         "trades": {
           "title": "매매 일지",
-          "description": "사용자나 copilot이 일지에 기록한 매매."
+          "description": "사용자나 어시스턴트가 일지에 기록한 매매."
         }
       }
     },
@@ -693,24 +693,24 @@
       "dailyTradeCount": "거래 횟수",
       "windowStart": "주기 시작",
       "confirmGesture": "주문 확인 방식",
-      "confirmGestureDescription": "직접 내는 주문을 확정하는 방식입니다. 트레이드 티켓과 코파일럿 주문 카드에 모두 적용됩니다.",
+      "confirmGestureDescription": "직접 내는 주문을 확정하는 방식입니다. 트레이드 티켓과 어시스턴트 주문 카드에 모두 적용됩니다.",
       "confirmHold": "길게 누르기",
       "confirmHoldDescription": "버튼이 가득 찰 때까지 누르고 있습니다. 라이브 주문은 모의 주문보다 조금 더 깁니다.",
       "confirmClick": "한 번 클릭",
       "confirmClickDescription": "첫 클릭에 바로 주문됩니다. 잘못 누른 클릭과 실제 주문 사이에 아무것도 남지 않습니다.",
       "confirmGestureNote": "어느 쪽이든 리스크 한도는 그대로 적용됩니다. 바뀌는 것은 조작 방식뿐입니다.",
       "aiPermissions": "AI 거래 권한",
-      "aiPermissionsDescription": "AI 코파일럿이 확인 없이 수행할 수 있는 작업입니다. 이 권한 밖의 주문은 항상 채팅의 카드에서 확인이 필요하며, 자동 승인 여부와 관계없이 모든 주문은 위의 리스크 한도가 적용됩니다.",
+      "aiPermissionsDescription": "AI 어시스턴트가 확인 없이 수행할 수 있는 작업입니다. 이 권한 밖의 주문은 항상 채팅의 카드에서 확인이 필요하며, 자동 승인 여부와 관계없이 모든 주문은 위의 리스크 한도가 적용됩니다.",
       "aiPaperAuto": "모의 거래 자동 승인",
-      "aiPaperAutoDescription": "가상 자금만 사용합니다. 코파일럿이 확인 카드 없이 모의 주문을 실행합니다.",
+      "aiPaperAutoDescription": "가상 자금만 사용합니다. 어시스턴트가 확인 카드 없이 모의 주문을 실행합니다.",
       "aiLiveAuto": "실거래 자동 승인",
       "aiLiveAutoEmpty": "허용된 거래소가 없습니다 — 모든 실거래는 확인이 필요합니다. 주문 카드에서 “다시 묻지 않기”로 거래소를 허용하세요.",
-      "aiLiveAutoDescription": "실제 자금입니다. 코파일럿이 다음 거래소에서 확인 카드 없이 실거래 주문을 실행합니다:",
+      "aiLiveAutoDescription": "실제 자금입니다. 어시스턴트가 다음 거래소에서 확인 카드 없이 실거래 주문을 실행합니다:",
       "aiLiveAutoRevoke": "{{market}} 취소"
     },
     "billing": {
       "title": "Pairlens Intelligence",
-      "description": "호스팅 AI 코파일럿, 리서치 리포트, 웹 검색 — API 키가 필요 없습니다.",
+      "description": "호스팅 AI 어시스턴트. 심층 리서치와 웹 검색까지, API 키는 필요 없습니다.",
       "signInFirst": "Pairlens Intelligence 구독을 관리하려면 로그인하세요.",
       "selfHosted": "이 서버에는 결제가 설정되어 있지 않습니다 — 호스팅 AI 기능은 구독 없이 작동합니다.",
       "loadError": "결제 상태를 불러오지 못했습니다. 다시 시도해 주세요.",
@@ -879,7 +879,7 @@
       "triggerWake": "컴퓨터가 깨어난 뒤",
       "triggerWakeHint": "기기가 절전에서 돌아오면 잠급니다.",
       "triggerTrade": "주문을 내기 전",
-      "triggerTradeHint": "직접 또는 코파일럿으로 내는 주문을 확인합니다. 자동 승인된 제안도 포함됩니다. 봇에게는 절대 묻지 않습니다.",
+      "triggerTradeHint": "직접 또는 어시스턴트로 내는 주문을 확인합니다. 자동 승인된 제안도 포함됩니다. 봇에게는 절대 묻지 않습니다.",
       "afterMinutes": "{{minutes}}분 후",
       "everyHours": "{{hours}}시간마다",
       "graceNever": "매번",
@@ -1241,50 +1241,14 @@
     "buildWithAi": "AI로 만들기",
     "buildWithAiHint": "설명만 하면 어시스턴트가 작성합니다",
     "recommended": "권장",
-    "placeholder": "무엇을 만들지 설명하세요...",
-    "answerPlaceholder": "답하거나, 다른 이야기를 해 보세요...",
-    "close": "어시스턴트 닫기",
-    "clearChat": "대화 지우기",
-    "emptyTitle": "무엇을 만들까요?",
-    "emptyHintIndicators": "지표나 전략을 설명하면 어시스턴트가 에디터에 작성하고, 검증하고, 미리보기를 실행합니다.",
-    "emptyHintBots": "전략을 모의 봇으로 배포하거나, 파라미터를 조정하거나, 리스크 가드를 설정해 달라고 요청하세요. 봇을 실전으로 전환하는 결정은 당신의 몫입니다.",
-    "emptyHintWorkflows": "주문이 체결된 뒤 무엇을 할지 말해 주세요. 어시스턴트가 단계를 연결하고, 변경 내용을 확인한 뒤 커밋합니다.",
-    "emptyHintNotifications": "알림받고 싶은 내용을 말해 주세요. 어시스턴트가 알림을 만들어 지정한 페어에 켜 둡니다.",
-    "genericError": "어시스턴트에 오류가 발생했습니다 — 다시 보내 보세요.",
-    "authRequiredTitle": "AI로 만들기",
-    "authRequiredDescription": "지표, 전략, 봇을 평소 말로 설명하면 어시스턴트가 Python을 작성하고, 검증하고, 함께 백테스트합니다.",
-    "upgradeRequiredDescription": "빌더 어시스턴트는 지표, 전략, 봇을 당신과 함께 작성합니다. Pairlens Intelligence를 구독하거나 직접 AI 키를 연결하세요 — 무료입니다.",
-    "unavailableTitle": "어시스턴트 사용 불가",
-    "unavailableDescription": "Plugins 페이지에서 AI 제공자를 활성화하면 채팅으로 지표, 전략, 봇을 만들 수 있습니다.",
-    "quickNewIndicator": "RSI 다이버전스 지표 만들어 줘",
-    "quickNewStrategy": "백테스트할 수 있는 돌파 전략을 써 줘",
-    "quickImprove": "이 스크립트를 검토하고 개선점을 제안해 줘",
-    "quickBotFromScratch": "봇을 처음부터 만들어 줘",
-    "quickCreateBot": "내 전략 하나를 모의 봇으로 배포해 줘",
-    "quickGuards": "내 봇에 쓸 리스크 가드를 제안해 줘",
-    "quickReview": "내 봇들은 성과가 어때?",
-    "quickBracket": "진입에 손절과 목표가를 붙여 줘",
-    "quickScaleOut": "포지션을 세 번에 나눠서 정리해 줘",
-    "quickExplainWorkflow": "이 워크플로우가 무엇을 하는지 설명해 줘",
-    "quickPriceAlert": "BTC가 특정 가격을 넘으면 알려 줘",
-    "quickMoveAlert": "짧은 시간의 급한 변동률을 알려 줘",
-    "quickAlertReview": "이미 있는 알림을 점검해 줘",
     "questionHint": "하나를 고르거나, 아래에 직접 답을 입력하세요.",
     "questionHintOpen": "아래에 답을 입력하세요.",
     "youAnswered": "선택: {{answer}}",
-    "handoffToIndicators": "지표 & 전략에서 이어서 진행합니다",
-    "handoffToBots": "봇에서 이어서 진행합니다",
-    "handoffToWorkflows": "워크플로우에서 이어서 진행합니다",
-    "handoffToNotifications": "알림에서 이어서 진행합니다",
     "starterTitle": "설명하면, 그대로 만들어집니다",
     "starterBodyIndicators": "차트에 무엇을 보고 싶은지 말하세요. 어시스턴트가 Python을 작성하고, 검증하고, 미리보기를 실행해 바로 판단할 수 있게 합니다.",
     "starterBodyBots": "봇이 무엇을 해야 하는지 말하세요. 어시스턴트가 전략을 작성하고, 백테스트하고, 모의로 배포합니다. 실전으로 전환하는 결정은 당신의 몫입니다.",
     "starterBodyWorkflows": "주문이 체결된 뒤 무엇을 할지 말해 주세요. 어시스턴트가 캔버스에 단계를 연결하고, 변경 내용을 확인한 뒤 커밋합니다.",
     "starterBodyNotifications": "알림받고 싶은 내용을 말해 주세요. 어시스턴트가 알림을 만들고 적당한 쿨다운을 정해 켭니다.",
-    "starterPlaceholderIndicators": "모멘텀이 뒤집히면 배경을 칠하는 RSI...",
-    "starterPlaceholderBots": "4시간봉 상승 추세에서 눌림목을 사는 봇...",
-    "starterPlaceholderWorkflows": "진입이 체결되면 +5%에 익절하고 -3%에 손절...",
-    "starterPlaceholderNotifications": "OKX에서 BTC가 100,000을 넘으면 알려 줘...",
     "starterIdeaIndicator1": "거래량 가중 추세 리본",
     "starterIdeaIndicator2": "다이버전스 탐지기",
     "starterIdeaIndicator3": "변동성 스퀴즈 밴드",
@@ -1296,14 +1260,56 @@
     "starterIdeaWorkflow3": "하락에 분할 매수",
     "starterIdeaAlert1": "BTC가 기준선 돌파",
     "starterIdeaAlert2": "한 시간에 5% 변동",
-    "starterIdeaAlert3": "봇이 거래하면 알림",
-    "starterSend": "어시스턴트에 보내기"
+    "starterIdeaAlert3": "봇이 거래하면 알림"
+  },
+  "assistantDock": {
+    "title": "어시스턴트",
+    "open": "어시스턴트 열기",
+    "close": "어시스턴트 최소화",
+    "clear": "대화 지우기",
+    "placeholder": "무엇이든 물어보거나, 만들 것을 알려 주세요...",
+    "answerPlaceholder": "답변을 입력하세요...",
+    "emptyTitle": "무엇을 해 볼까요?",
+    "emptyDescription": "어떤 시장이든 읽고, 차트를 조작하고, 지표와 전략을 작성하고, 알림과 워크플로우를 만들고, 확인만 하면 되는 주문까지 준비해 드립니다.",
+    "defaultSuggestion": "어시스턴트에게 물어보기",
+    "statusThinking": "생각 중...",
+    "statusUsingTools": "도구 사용 중...",
+    "statusSearching": "웹 검색 중...",
+    "genericError": "문제가 발생했습니다. 다시 시도해 주세요.",
+    "authRequiredTitle": "로그인하고 어시스턴트를 사용하세요",
+    "authRequiredDescription": "어시스턴트는 Pairlens Intelligence 또는 직접 연결한 제공자 키로 동작합니다.",
+    "upgradeRequiredDescription": "플랜에 Intelligence를 추가하거나, 직접 제공자 키를 연결하세요.",
+    "unavailableTitle": "어시스턴트 사용 불가",
+    "unavailableDescription": "활성화된 AI 제공자가 없습니다. 하나를 연결하면 시작할 수 있습니다.",
+    "goToPlugins": "플러그인 스토어 열기",
+    "suggest": {
+      "chart": "{{pair}} 차트를 분석해 줘",
+      "discovery": "거래할 만한 것을 찾아 줘",
+      "workflows": "워크플로우를 만들어 줘",
+      "notifications": "알림을 설정해 줘",
+      "bots": "트레이딩 봇을 배포해 줘",
+      "indicators": "지표를 작성해 줘",
+      "indicatorsScript": "{{name}} 개선해 줘",
+      "accounts": "내 계정을 점검해 줘",
+      "plugins": "플러그인을 찾아 줘",
+      "workspaceStore": "내 워크스페이스를 설계해 줘"
+    },
+    "researchCardTitle": "리서치 리포트: {{market}}의 {{pair}}",
+    "researchCardTitleGeneric": "리서치 리포트",
+    "researchCardSources_one": "출처 {{count}}개",
+    "researchCardSources_other": "출처 {{count}}개",
+    "quickAnalyze": "{{pair}} 분석해 줘",
+    "quickLevels": "{{symbol}}의 주요 가격대를 표시해 줘",
+    "quickAlert": "{{symbol}}이(가) 돌파하면 알려 줘",
+    "quickWhatsMoving": "오늘은 뭐가 움직이고 있어?",
+    "quickPortfolio": "내 포트폴리오는 어때?",
+    "quickBuildAlert": "알림을 만들어 줘",
+    "approvalApprove": "승인",
+    "approvalDecline": "거절",
+    "approvalApproved": "승인함",
+    "approvalDeclined": "거절함"
   },
   "copilot": {
-    "aiLens": "AI 렌즈",
-    "thinking": "생각 중...",
-    "idle": "대기 중",
-    "clearHistory": "대화 기록 지우기",
     "placeholder": "렌즈에 물어보세요...",
     "lensPersona": "렌즈 페르소나",
     "persona": {
@@ -1337,22 +1343,7 @@
     "keep": "유지",
     "tradingUnavailable": "거래를 이용할 수 없습니다.",
     "noCredentialsForMarket": "{{market}}에 연결된 인증 정보가 없습니다. 실거래를 하려면 계정에서 API 키를 추가하세요.",
-    "watchingPair": "{{pair}} · {{timeframe}} 확인 중",
-    "genericChatError": "코파일럿에서 오류가 발생했습니다 — 다시 전송해 보세요.",
-    "quickActionHowIsDoing": "{{symbol}} 상태가 어떤가요?",
-    "quickActionSuggestedIndicators": "추천 지표",
-    "quickActionAnySignals": "시그널이 있나요?",
     "scheduledCheckPrefix": "[예약된 확인 — {{minutes}}분 전에 설정함]",
-    "authRequiredTitle": "AI 코파일럿을 만나보세요",
-    "authRequiredDescription": "모든 페어에 대한 맥락 기반 분석을 제공합니다 — 차트를 읽고, 리스크 한도를 확인하고, 되물을 수 있는 근거와 함께 답합니다.",
-    "upgradeRequiredDescription": "AI 코파일럿은 차트를 읽고, 리스크 한도를 확인하고, 되물을 수 있는 근거와 함께 답합니다. Pairlens Intelligence를 구독하거나 직접 AI 키를 연결하세요 — 무료입니다.",
-    "aiLensUnavailableTitle": "AI Lens를 사용할 수 없습니다",
-    "aiLensUnavailableDescription": "Plugins 페이지에서 AI 플러그인을 활성화하면 실시간 시장 분석과 거래 지원을 받을 수 있습니다.",
-    "goToPlugins": "Plugins로 이동",
-    "analyzePair": "{{pair}} 분석",
-    "startConversation": "대화 시작하기",
-    "emptyStateHint": "시장 상황을 물어보거나, 셋업을 검증하거나, 리스크 평가를 요청해 보세요 — AI는 이 페어의 전체 맥락을 파악하고 있습니다.",
-    "contextAware": "맥락 인식",
     "toolFailed": "도구 실행 실패"
   },
   "chart": {
@@ -2195,7 +2186,7 @@
       "priceMonthly": "월 ${{price}}",
       "taxNotice": "가격에는 세금이 포함되어 있지 않습니다. 세금은 결제 시 계산됩니다.",
       "defaultTitle": "Pairlens Intelligence 잠금 해제",
-      "defaultDescription": "API 키 없이 사용하는 호스팅 AI 코파일럿과 웹 리서치입니다. 모든 플랜에는 채팅, 리서치, 웹 검색에서 공유되는 월간 사용 예산이 포함됩니다.",
+      "defaultDescription": "호스팅 AI 어시스턴트에 심층 리서치와 웹 검색이 함께 딸려 오고, 관리할 API 키는 없습니다. 모든 플랜에는 채팅, 리서치, 웹 검색에서 공유되는 월간 사용 예산이 포함됩니다.",
       "byokNote": "직접 제공자를 선호하시나요? <plugins>플러그인</plugins>에서 Anthropic, OpenAI, Groq 또는 OpenRouter 키를 연결하세요 — 자체 키를 사용하는 AI는 항상 무료입니다.",
       "checkoutOpenedTitle": "브라우저에서 결제 페이지가 열렸습니다",
       "checkoutActivates": "결제가 완료되는 즉시 여기서 구독이 활성화됩니다.",
@@ -2223,7 +2214,6 @@
     "fearGreed": "공포 & 탐욕",
     "chart": "차트",
     "trade": "거래",
-    "aiLens": "AI 렌즈",
     "dataLog": "데이터 로그",
     "positions": "포지션",
     "portfolio": "포트폴리오",
@@ -2232,7 +2222,6 @@
     "marketDepth": "시장 심도",
     "pairInfo": "페어 정보",
     "multiPrice": "멀티 프라이스",
-    "research": "리서치",
     "social": "소셜",
     "risk": "리스크",
     "symbolNews": "심볼 뉴스",
@@ -2253,7 +2242,6 @@
     "fearGreed": "공포 & 탐욕 지수 기반의 시장 심리 게이지",
     "chart": "지표와 그리기 도구가 있는 캔들스틱 차트",
     "trade": "리스크 제어와 함께 시장가, 지정가, 스탑 주문을 실행하세요",
-    "aiLens": "시그널을 분석하고 거래 맥락을 제공하는 AI 코파일럿",
     "dataLog": "활성 페어의 원시 시그널 및 이벤트 피드",
     "positions": "열린 포지션, 손익, 거래 내역을 모니터링하세요",
     "portfolio": "배분 내역이 포함된 계정 보유 자산",
@@ -2262,7 +2250,6 @@
     "marketDepth": "활성 페어의 누적 시장 심도 차트",
     "pairInfo": "활성 페어의 주요 통계, 펀딩비, 메타데이터",
     "multiPrice": "같은 페어를 모든 거래소에서 한눈에, 최적 체결 순으로 정렬합니다",
-    "research": "활성 페어에 대한 AI 생성 심층 분석 리포트",
     "social": "페어에 대한 소셜 심리 및 커뮤니티 활동",
     "risk": "포트폴리오 리스크 지표 및 가드레일 설정",
     "symbolNews": "활성 거래 페어에 대한 뉴스 및 심리 분석",
@@ -3153,7 +3140,7 @@
       "statusBrowserVault": "현재: 모든 키가 보관함에서 암호화된 채, 이 브라우저에만 있습니다.",
       "statusBrowserNone": "이 브라우저에는 아직 보관함이 없습니다. 첫 키를 저장하기 전에 만들게 됩니다.",
       "deviceTitle": "이 기기에만 저장됩니다",
-      "deviceBody": "거래소 API 키와 지갑 키는 이 컴퓨터에만 저장되며 그 외 어디에도 저장되지 않습니다. Pairlens로 업로드되는 일은 없습니다. 로그인할 때도, 설정이 동기화될 때도, 코파일럿이 차트를 읽을 때도 마찬가지입니다. 유출될 사본이 서버에 존재하지 않습니다.",
+      "deviceBody": "거래소 API 키와 지갑 키는 이 컴퓨터에만 저장되며 그 외 어디에도 저장되지 않습니다. Pairlens로 업로드되는 일은 없습니다. 로그인할 때도, 설정이 동기화될 때도, 어시스턴트가 차트를 읽을 때도 마찬가지입니다. 유출될 사본이 서버에 존재하지 않습니다.",
       "osTitle": "보관되는 동안에도 암호화",
       "osBodyDesktop": "{{vault}}에 보관됩니다. 시스템이 자체 비밀번호를 저장할 때 쓰는 것과 같은 보호된 저장소로, 디스크에 암호화되어 있고 이 앱에만 전달됩니다.",
       "osBodyDesktopVault": "{{vault}}에 보관됩니다. 시스템이 자체 비밀번호를 저장할 때 쓰는 것과 같은 보호된 저장소입니다. 보관함은 그 위에 한 겹을 더합니다. 모든 값은 키체인이 보기도 전에 AES-256-GCM으로 봉인됩니다.",
@@ -3391,8 +3378,8 @@
       },
       "ai-research-desk": {
         "name": "AI 리서치 데스크",
-        "tagline": "차트 옆에 AI 렌즈, 리서치, 뉴스 피드를.",
-        "description": "차트에 AI 렌즈, 심층 리서치, 글로벌·심볼 뉴스 피드를 함께 배치합니다. 시세만큼 스토리가 중요한 촉매 중심 트레이딩을 위해 만들었습니다. AI 렌즈와 리서치에는 AI 추론 제공자가 필요합니다."
+        "tagline": "심볼 뉴스와 글로벌 뉴스 사이에 놓인 차트.",
+        "description": "차트를 심볼 뉴스 피드와 글로벌 뉴스 피드 사이에 배치합니다. 시세만큼 스토리가 중요한 촉매 중심 트레이딩을 위해 만들었습니다. AI 어시스턴트는 독에 상주하므로, 열 하나를 내주지 않고도 여기서 바로 부를 수 있습니다."
       },
       "market-discovery": {
         "name": "마켓 탐색",
@@ -3407,7 +3394,7 @@
       "prediction-terminal": {
         "name": "예측 시장 터미널",
         "tagline": "확률을 차트로, 이벤트 전체를 그 옆에.",
-        "description": "예측 시장 기본 레이아웃: 확률 차트 아래에 체결 내역과 보유 계약, 가운데에 호가창과 거래 티켓, 그리고 AI 렌즈 옆에 이벤트 브라우저. 옆에 놓인 결과들이 분석의 절반이기 때문입니다.",
+        "description": "예측 시장 기본 레이아웃: 확률 차트 아래에 체결 내역과 보유 계약, 가운데에 호가창과 거래 티켓, 오른쪽에 전체 높이 이벤트 브라우저. 옆에 놓인 결과들이 분석의 절반이기 때문입니다.",
         "menuLabel": "기본"
       },
       "prediction-discovery": {
@@ -3424,7 +3411,7 @@
       "dex-terminal": {
         "name": "DEX 터미널",
         "tagline": "가짜 호가창 없는 온체인 트레이딩.",
-        "description": "온체인 기본 레이아웃: 차트 아래에 풀 통계와 체결 내역, 신규 상장을 포착하도록 최근 티커 위에 스왑 티켓, 소셜 피드 위에 AI 렌즈. 호가창 열은 없습니다. 풀에서 산출한 호가 깊이는 합성된 값이라 표시하지 않습니다.",
+        "description": "온체인 기본 레이아웃: 차트 아래에 풀 통계와 체결 내역, 신규 상장을 포착하도록 최근 티커 위에 스왑 티켓, 오른쪽에 소셜 피드. 호가창 열은 없습니다. 풀에서 산출한 호가 깊이는 합성된 값이라 표시하지 않습니다.",
         "menuLabel": "기본"
       },
       "quant-signals": {
@@ -3440,36 +3427,36 @@
       "equities-terminal": {
         "name": "주식 터미널",
         "tagline": "심볼 뉴스 위에 거래 티켓을 올린 주식 화면.",
-        "description": "주식 기본 레이아웃: 차트 아래에 체결 내역, 포지션, 펀더멘털, 심볼 뉴스 위에 거래 티켓(암호화폐를 수급이 움직이듯 주식은 촉매가 움직입니다), 오른쪽에 AI 렌즈.",
+        "description": "주식 기본 레이아웃: 차트 아래에 체결 내역, 포지션, 펀더멘털, 심볼 뉴스 위에 거래 티켓. 암호화폐를 수급이 움직이듯 주식은 촉매가 움직이기 때문입니다.",
         "menuLabel": "기본"
       },
       "ultrawide-trading-floor": {
         "name": "울트라와이드 트레이딩 플로어",
         "tagline": "모든 것을, 어디에나 — 큰 화면을 위해.",
-        "description": "울트라와이드나 듀얼 모니터를 가득 채우는 4단 커맨드 센터 — 스캐너, 차트, 호가창과 심도, 포지션이 딸린 거래 티켓, AI 렌즈. 극대화된 레이아웃입니다."
+        "description": "울트라와이드나 듀얼 모니터를 가득 채우는 4단 커맨드 센터: 스캐너, 차트, 호가창과 심도, 그리고 보유 포지션 위에 놓인 거래 티켓. 극대화된 레이아웃입니다."
       },
       "classic-terminal": {
         "name": "클래식 터미널",
-        "tagline": "클래식한 Pairlens 데스크 — 차트, 데이터, 거래, 코파일럿.",
-        "description": "기본 터미널 레이아웃 — 왼쪽에 큰 차트와 탭으로 전환되는 데이터 스트립, 리스크 바, 오른쪽에 AI 렌즈 위에 거래 티켓을 배치했습니다.",
+        "tagline": "클래식한 Pairlens 데스크: 차트, 데이터, 호가창, 티켓.",
+        "description": "기본 터미널 레이아웃: 왼쪽에 큰 차트와 탭으로 전환되는 데이터 스트립, 리스크 바, 오른쪽에 호가창과 그 아래 거래 티켓.",
         "menuLabel": "기본"
       },
       "chart-focus": {
         "name": "차트 포커스",
         "tagline": "큰 차트 하나와 그 아래 탭형 데이터.",
-        "description": "차트에 최대한의 공간을 주는 싱글 컬럼 레이아웃 — 포지션, 데이터 로그, AI 렌즈, 거래 티켓은 하단 탭 스트립에 모아뒀습니다.",
+        "description": "차트에 최대한의 공간을 주는 싱글 컬럼 레이아웃: 포지션, 데이터 로그, 거래 티켓은 하단 탭 스트립에 모아뒀습니다.",
         "menuLabel": "차트 포커스"
       },
       "trading": {
         "name": "트레이딩",
-        "tagline": "중앙 차트를 감싸는 호가창과 티켓.",
-        "description": "3단 체결 데스크 — 왼쪽에 호가창과 거래 티켓, 가운데에 포지션과 리스크를 곁들인 차트, 오른쪽에 AI 렌즈.",
+        "tagline": "전체 높이 차트 옆에 호가창과 티켓.",
+        "description": "2단 체결 데스크: 왼쪽에 호가창과 그 아래 거래 티켓, 나머지 폭을 채우는 포지션과 리스크를 곁들인 차트.",
         "menuLabel": "트레이딩"
       },
       "chart-analysis": {
         "name": "차트 분석",
-        "tagline": "왼쪽엔 차트와 데이터, 오른쪽엔 코파일럿과 체결.",
-        "description": "분석 중심의 분할 레이아웃 — 왼쪽에 차트, 데이터, 리서치, 리스크, 오른쪽에 AI 렌즈, 호가창, 거래 티켓.",
+        "tagline": "왼쪽엔 차트와 데이터, 오른쪽엔 체결.",
+        "description": "분석 중심의 분할 레이아웃: 왼쪽에 차트, 데이터, 리스크, 오른쪽에 호가창과 거래 티켓.",
         "menuLabel": "분석"
       },
       "dual-charts": {
@@ -3497,23 +3484,23 @@
       },
       "laptop-split": {
         "name": "노트북 스플릿",
-        "tagline": "왼쪽엔 차트+데이터, 오른쪽엔 거래+코파일럿 — 작은 화면을 위해.",
-        "description": "노트북에 맞춘 2단 분할 — 왼쪽에 차트와 포지션, 오른쪽에 AI 렌즈 위에 거래 티켓."
+        "tagline": "왼쪽엔 차트와 데이터, 오른쪽엔 티켓. 노트북 크기에 맞췄습니다.",
+        "description": "노트북에 맞춘 2단 분할: 왼쪽에 차트, 포지션, 리스크, 오른쪽에 거래 티켓."
       },
       "ultrawide-dashboard": {
         "name": "울트라와이드 대시보드",
         "tagline": "모든 패널을 울트라와이드 모니터 전체에.",
-        "description": "울트라와이드 디스플레이용 4단 대시보드 — 호가창, 리스크를 곁들인 차트, 포지션과 리서치, 거래+AI 렌즈 컬럼."
+        "description": "울트라와이드 디스플레이용 4단 대시보드: 호가창, 리스크를 곁들인 차트, 포지션과 데이터 로그, 거래 티켓 컬럼."
       },
       "ultrawide-trading": {
         "name": "울트라와이드 트레이딩",
         "tagline": "호가창, 심도, 차트, 체결을 화면 폭 전체에.",
-        "description": "울트라와이드용 체결 레이아웃 — 왼쪽에 호가창과 시장 심도, 가운데에 포지션을 곁들인 차트, 오른쪽에 거래+AI 렌즈 컬럼."
+        "description": "울트라와이드용 체결 레이아웃: 왼쪽에 호가창과 시장 심도, 가운데에 포지션을 곁들인 차트, 오른쪽에 거래 티켓."
       },
       "command-center": {
         "name": "4K 커맨드 센터",
         "tagline": "4K 디스플레이를 위한 완전한 커맨드 센터.",
-        "description": "4K 모니터 화면을 가득 채우는 모든 것 — 호가창과 페어 정보, 리서치와 리스크를 곁들인 차트, 포지션과 소셜, 그리고 거래+AI 렌즈 컬럼."
+        "description": "4K 모니터 화면을 가득 채우는 모든 것: 호가창과 페어 정보, 리스크 바를 곁들인 차트, 포지션과 소셜, 그리고 거래 티켓 컬럼."
       },
       "home-pulse": {
         "name": "홈",
@@ -3548,7 +3535,7 @@
       "perps-terminal": {
         "name": "무기한 선물 터미널",
         "tagline": "선물 데스크: 마크 가격과 청산가가 함께 보이는 포지션.",
-        "description": "무기한 선물 기본 레이아웃: 큰 차트 아래에 체결 내역, 보유 계약(진입가, 마크 가격, 청산가), 마켓 데이터를 탭으로 배치하고, 가운데에 호가창과 레버리지를 반영한 거래 티켓, 오른쪽에 AI 렌즈.",
+        "description": "무기한 선물 기본 레이아웃: 큰 차트 아래에 체결 내역, 보유 계약(진입가, 마크 가격, 청산가), 마켓 데이터를 탭으로 배치하고, 오른쪽에 호가창과 그 아래 레버리지를 반영한 거래 티켓.",
         "menuLabel": "기본"
       },
       "perps-discovery": {
@@ -4371,28 +4358,7 @@
     "exit": "전체 화면 종료"
   },
   "research": {
-    "phaseSearching": "웹을 검색하는 중...",
-    "phaseReading": "출처를 읽는 중...",
-    "phaseAnalyzing": "시장 데이터를 분석하는 중...",
-    "phaseWriting": "리포트를 작성하는 중...",
-    "authRequiredTitle": "리서치 데스크, 로그인만 하면 됩니다",
-    "authRequiredDescription": "실시간 웹 소스를 기반으로 한 모든 페어의 구조화된 리서치 리포트입니다.",
-    "upgradeDescription": "실시간 웹 소스를 기반으로 한 모든 페어의 구조화된 리서치 리포트입니다. Pairlens Intelligence를 구독하거나 직접 AI 키를 연결하세요 — 무료입니다.",
-    "unavailableTitle": "리서치를 사용할 수 없음",
-    "unavailableDescription": "이 페어의 리서치 리포트를 생성하려면 플러그인 페이지에서 AI 플러그인을 활성화하세요.",
-    "goToPlugins": "플러그인으로 이동",
-    "navigateToPair": "리서치를 보려면 페어로 이동하세요.",
-    "researchingSymbol": "{{symbol}} 리서치 중",
-    "generatingReport": "리포트를 생성하는 중...",
-    "cachedGenerated": "캐시됨 — {{time}} 생성",
-    "freshGenerated": "최신 — 방금 생성됨",
-    "refresh": "새로고침",
-    "sourcesCount": "출처 ({{count}}개)",
-    "reportTitle": "리서치 리포트",
-    "fullscreenDescription": "전체 화면 모드로 표시된 리서치 리포트입니다. Esc 키를 누르면 종료됩니다.",
-    "sections": "섹션",
-    "sparklineAriaLabel": "일별 가격 스파크라인",
-    "errorTitle": "리서치를 사용할 수 없음"
+    "sparklineAriaLabel": "일별 가격 스파크라인"
   },
   "capabilityGate": {
     "authTitle": "무료 로그인 한 번이면 됩니다",
@@ -4489,8 +4455,8 @@
       "titlePlan": "{{label}}이(가) 활성화되었습니다.",
       "titleDefault": "Pairlens Intelligence가 활성화되었습니다.",
       "bodyPack": "월별 예산에 추가로 쌓이며 {{days}}일 후 만료됩니다. Pairlens 앱으로 돌아가세요 — 잔액은 몇 초 안에 업데이트됩니다.",
-      "bodyPlanWithCredits": "호스팅 AI 코파일럿, 리서치, 웹 검색이 매월 {{credits}} 크레딧과 함께 잠금 해제되었습니다. Pairlens 앱으로 돌아가세요 — 몇 초 안에 구독이 반영됩니다.",
-      "bodyPlanNoCredits": "호스팅 AI 코파일럿, 리서치, 웹 검색이 잠금 해제되었습니다. Pairlens 앱으로 돌아가세요 — 몇 초 안에 구독이 반영됩니다.",
+      "bodyPlanWithCredits": "호스팅 AI 어시스턴트가 심층 리서치와 웹 검색까지 포함해, 매월 {{credits}} 크레딧과 함께 잠금 해제되었습니다. Pairlens 앱으로 돌아가세요. 몇 초 안에 구독이 반영됩니다.",
+      "bodyPlanNoCredits": "호스팅 AI 어시스턴트가 심층 리서치와 웹 검색까지 포함해 잠금 해제되었습니다. Pairlens 앱으로 돌아가세요. 몇 초 안에 구독이 반영됩니다.",
       "openTerminal": "터미널 열기",
       "closeTabHint": "데스크톱 앱에서 결제하셨나요? 이 탭은 그냥 닫으셔도 됩니다.",
       "receiptHint": "영수증과 청구서는 이메일과 결제 포털(설정 → Intelligence)에서 확인할 수 있습니다."
@@ -4878,7 +4844,7 @@
     "ai": {
       "inference": {
         "label": "추론",
-        "description": "AI 렌즈 분석을 위한 LLM 추론"
+        "description": "AI 어시스턴트를 위한 LLM 추론"
       },
       "web-search": {
         "label": "웹 검색",
@@ -4945,7 +4911,7 @@
     },
     "ai": {
       "label": "AI 제공자",
-      "description": "AI 코파일럿 분석을 지원하는 언어 모델 제공자"
+      "description": "AI 어시스턴트를 지원하는 언어 모델 제공자"
     },
     "intelligence": {
       "label": "인텔리전스",
@@ -4975,7 +4941,7 @@
         "watchlist": "관심 목록",
         "trade": "거래",
         "chart": "차트",
-        "copilot": "AI 렌즈",
+        "copilot": "어시스턴트",
         "discover": "탐색"
       },
       "overlays": {
@@ -5123,12 +5089,12 @@
       "bannerBody": "워크스페이스, 봇, 직접 만든 지표, 그리고 거래소 4곳이 더.",
       "bannerDismiss": "숨기기",
       "screenTitle": "더 큰 화면에서는",
-      "lead": "휴대폰에는 손에 쥐고 쓰고 싶은 Pairlens가 담겨 있습니다. 차트, 호가창, 트레이드 티켓, 그리고 코파일럿. 나머지 터미널은 넉넉하게 펼칠 수 있는 화면을 위해 만들어졌고, 그곳에서 당신을 기다리고 있습니다.",
+      "lead": "휴대폰에는 손에 쥐고 쓰고 싶은 Pairlens가 담겨 있습니다. 차트, 호가창, 트레이드 티켓, 그리고 어시스턴트. 나머지 터미널은 넉넉하게 펼칠 수 있는 화면을 위해 만들어졌고, 그곳에서 당신을 기다리고 있습니다.",
       "widerWindow": "더 넓은 창에서",
       "desktopApp": "데스크톱 앱에서",
       "workspaces": {
         "title": "워크스페이스",
-        "body": "차트, 호가창, 체결 내역, 코파일럿을 나란히 배치해 한 번 짜두고 저장하세요. 워크스페이스 스토어에는 한 번의 탭으로 복사할 수 있는 완성된 레이아웃이 준비되어 있습니다."
+        "body": "차트, 호가창, 체결 내역, 거래 티켓을 나란히 배치해 한 번 짜두고 저장하세요. 워크스페이스 스토어에는 한 번의 탭으로 복사할 수 있는 완성된 레이아웃이 준비되어 있습니다."
       },
       "bots": {
         "title": "봇",

@@ -4,7 +4,7 @@ description: Every term Pairlens uses with a specific meaning, from capabilities
 group: reference
 order: 1
 eyebrow: Reference
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 5 min read
 ---
 
@@ -21,6 +21,11 @@ connected. Stored on this device only. See
 proxy, and cloud panels. The terminal is fully functional without one. It never
 sees exchange credentials and is never in the order path.
 
+**Assistant.** The one AI chat in the terminal, docked bottom-right and mounted
+above every page. Its loop runs client-side over 94 tools. It can propose
+trades. It cannot execute them unattended. See
+[the AI assistant](/docs/ai-copilot).
+
 **Bot.** A Python strategy deployed to a market, evaluating on closed candles
 and acting on its own. Not an LLM. See [bots](/docs/bots).
 
@@ -30,10 +35,6 @@ The resolver picks the best plugin for each requested capability at runtime.
 
 **Connector.** A plugin that talks to a venue: streams its data and routes its
 orders, directly from your machine. See [connectors](/docs/connectors).
-
-**Co-pilot.** The in-terminal AI chat. Its loop runs client-side over 63 tools.
-It can propose trades. It cannot execute them unattended. See
-[the AI co-pilot](/docs/ai-copilot).
 
 **Deep search.** The server-side third wave of instrument search, which sends
 your typed query to Pairlens Cloud. Consent-gated in Settings → Privacy. See
@@ -51,12 +52,12 @@ Distinct from the terminal lock, which only covers the screen. See
 assembled from a curated catalog, cached venue tables, and an optional cloud
 snapshot of listings metadata.
 
-**Pane / panel.** A panel is a kind of view (Chart, Order Book, AI Lens). A pane
+**Pane / panel.** A panel is a kind of view (Chart, Order Book, Watchlist). A pane
 is one instance of it in a workspace layout. Some panels are singletons: one per
 workspace. See [panels](/docs/panels).
 
 **Paper trading.** Three different things depending on where you are: a venue's
-own demo environment, a bot's paper mode, or a co-pilot paper trade. They
+own demo environment, a bot's paper mode, or an assistant paper trade. They
 simulate different amounts of reality. See [paper trading](/docs/paper-trading).
 
 **Plugin.** The unit of extension. Connectors, AI providers, panels, indicators,
@@ -67,7 +68,7 @@ signed. See [the Plugin SDK](/docs/plugin-sdk).
 passkey, or Touch ID on macOS desktop. Each one wraps its own copy of the vault's
 data key. See [settings](/docs/settings#credential-vault).
 
-**Proposal.** An order the co-pilot has prepared but not placed. It renders as a
+**Proposal.** An order the assistant has prepared but not placed. It renders as a
 confirm card and goes through the normal guarded order path once you approve it.
 
 **Sandbox.** The isolated worker a third-party plugin runs in, with an explicit
@@ -81,6 +82,11 @@ buffer, never pushed by a connector. See
 **Standalone.** Running with no App Server at all: no auth, no sync, no cloud
 panels, local persistence only. Everything market-related still works. See
 [self-hosting](/docs/self-hosting).
+
+**Surface.** Anything mounted that tells the assistant what it is showing, and
+optionally publishes actions only it can perform. A workspace board publishes
+`add_pane` and `remove_pane`; leave the board and they withdraw. See
+[the AI assistant](/docs/ai-copilot).
 
 **Terminal lock.** A password prompt in front of the screen. It stops the person
 at your desk. It does not stop armed bots, and it is not the vault.

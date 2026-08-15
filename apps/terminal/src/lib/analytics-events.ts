@@ -121,16 +121,18 @@ export interface AnalyticsEvents {
     cached: boolean
     duration_ms: number
   }
-  /** A builder-assistant chat request reached the transport (content is
-   * never captured). `surface` is which page hosts the chat. */
+  /** An assistant chat request reached the transport (content is never
+   * captured). `surface` only applies to the per-page builder chats the
+   * unified assistant replaces; it carries a persona instead. */
   assistant_message_sent: {
     provider: string
     model: string
-    surface: 'indicators' | 'bots' | 'workflows' | 'notifications'
+    surface?: 'indicators' | 'bots' | 'workflows' | 'notifications'
+    persona?: string
   }
-  /** One event per tool invocation in a builder-assistant run. */
+  /** One event per tool invocation in an assistant run. */
   assistant_tool_used: { tool: string }
-  /** A builder-assistant run finished. */
+  /** An assistant run finished. */
   assistant_run_completed: {
     outcome: 'success' | 'error'
     tool_calls: number

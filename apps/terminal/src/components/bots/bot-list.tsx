@@ -68,6 +68,7 @@ import {
 } from './bot-display'
 
 import type { BotDefinition } from '@pairlens/bot-engine/types'
+import { askAssistant } from '@/stores/assistant-store'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { isScriptMissing } from '@/lib/bots/bot-script-link'
 import { useBotRunsStore } from '@/stores/bot-runs-store'
@@ -81,9 +82,6 @@ type BotListProps = {
   onCreate: () => void
   /** Arming a live bot is the page's dialog, not something a row decides. */
   onRequestArm: (bot: BotDefinition) => void
-  /** Toggles the builder-assistant rail the page hosts. */
-  onToggleAssistant?: () => void
-  assistantOpen?: boolean
 }
 
 /** Pick a name that doesn't collide with an existing bot ("EMA cross 2", ...). */
@@ -100,8 +98,6 @@ export function BotList({
   onSelect,
   onCreate,
   onRequestArm,
-  onToggleAssistant,
-  assistantOpen = false,
 }: BotListProps) {
   const { t } = useTranslation()
   const bots = useBotsStore((s) => s.bots)
@@ -144,27 +140,28 @@ export function BotList({
           {t('botsPage.sidebarTitle')}
         </span>
         <div className="flex items-center gap-0.5">
-          {onToggleAssistant && (
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <Button
-                    variant={assistantOpen ? 'secondary' : 'ghost'}
-                    size="icon"
-                    className="size-6"
-                    onClick={onToggleAssistant}
-                    aria-label={t('assistant.title')}
-                  />
-                }
-              >
-                <Sparkles
-                  className="size-3.5"
-                  style={{ color: 'var(--magic-1)' }}
+          {/* Deploying a bot from nothing is a conversation (which strategy,
+              which market, how big), so the assistant sits beside the plain
+              "+" with the request already written. */}
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-6"
+                  onClick={() => askAssistant(t('assistantDock.suggest.bots'))}
+                  aria-label={t('assistant.title')}
                 />
-              </TooltipTrigger>
-              <TooltipContent>{t('assistant.title')}</TooltipContent>
-            </Tooltip>
-          )}
+              }
+            >
+              <Sparkles
+                className="size-3.5"
+                style={{ color: 'var(--magic-1)' }}
+              />
+            </TooltipTrigger>
+            <TooltipContent>{t('assistant.title')}</TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger
               render={

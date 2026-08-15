@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { StarterEmptyState } from '../starter-empty-state'
-import { AssistantStarter } from '../assistant/assistant-starter'
+import { AssistantCta } from '../assistant/assistant-cta'
 import { botTemplates, ensureBotTemplateScript } from '../bots/bot-templates'
 import {
   applyIndicatorTemplate,
@@ -29,12 +29,7 @@ import type { StarterTemplate } from '../starter-empty-state'
 import { BLANK_SCRIPT } from '@/lib/python/examples'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
 
-export function IndicatorsEmptyState({
-  onOpenAssistant,
-}: {
-  /** Opens the builder-assistant rail, where the starter's request lands. */
-  onOpenAssistant?: () => void
-} = {}) {
+export function IndicatorsEmptyState() {
   const { t } = useTranslation()
   const scripts = useIndicatorScriptsStore((s) => s.scripts)
   const loaded = useIndicatorScriptsStore((s) => s.loaded)
@@ -105,11 +100,7 @@ export function IndicatorsEmptyState({
       onCreateBlank={handleBlank}
       blankTone="quiet"
       footnote={t('indicatorsPage.emptyFootnote')}
-      hero={
-        onOpenAssistant ? (
-          <AssistantStarter surface="indicators" onStarted={onOpenAssistant} />
-        ) : undefined
-      }
+      hero={<AssistantCta surface="indicators" />}
     />
   )
 }

@@ -4,7 +4,7 @@ description: Every keyboard shortcut in the Pairlens trading terminal, from time
 group: reference
 order: 3
 eyebrow: Reference
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 2 min read
 ---
 
@@ -16,6 +16,7 @@ macOS uses <kbd>⌘</kbd> and <kbd>⌥</kbd>. Windows and Linux use
 | Chord         | Action               |
 | ------------- | -------------------- |
 | <kbd>⌘K</kbd> | Open omni-search     |
+| <kbd>⌘J</kbd> | Open the assistant   |
 | <kbd>⌘,</kbd> | Open settings        |
 | <kbd>⌘N</kbd> | New window (desktop) |
 | <kbd>⌘[</kbd> | Back                 |

@@ -1,11 +1,11 @@
 ---
 title: Place an order
-description: The order ticket, market and limit orders, bracket orders built from a workflow, US stock hours and fractional shares, and how the co-pilot proposes trades you approve.
+description: The order ticket, market and limit orders, bracket orders built from a workflow, US stock hours and fractional shares, and how the assistant proposes trades you approve.
 group: traders
 parent: trading
 order: 2
 eyebrow: For traders
-updated: AUG 2026
+updated: 15 AUG 2026
 readTime: 7 min read
 ---
 
@@ -41,7 +41,7 @@ stake.
 
 If you would rather not wait through the hold, switch the gesture to a single
 click in Settings, Risk Management, under Order confirmation. It applies to
-this ticket and to the co-pilot's order cards, and the note under the button
+this ticket and to the assistant's order cards, and the note under the button
 tells you which gesture is live. Risk limits are enforced the same either way.
 
 ## Market and limit
@@ -142,22 +142,23 @@ hold with entry price, mark price, and P&L; **Orders** for anything still
 resting, with a cancel button; and **Fills** for your trade history with fees.
 The **Portfolio** panel shows holdings and allocation across the account.
 
-## Co-pilot proposals
+## Assistant proposals
 
-The AI can propose a trade. It fills a card in the chat showing the pair, side,
-size, and limit price, along with its reasoning, and nothing happens until you
-confirm. The card lets you choose paper or live at the moment of approval, with
-paper preselected.
+The [assistant](/docs/ai-copilot) in the bottom-right corner can propose a
+trade. It fills a card in the chat showing the pair, side, size, and limit
+price, along with its reasoning, and nothing happens until you confirm. The card
+lets you choose paper or live at the moment of approval, with paper preselected.
+Spot, perpetual and prediction-market orders all work this way.
 
 If you tick **Don't ask again**, that becomes a standing grant: paper trades
 across the board, or live trades on that one exchange. You can see and revoke
 every grant in **Settings → Risk Management**, under AI trade permissions. Even
 an auto-approved order is still validated against your
 [risk guardrails](/docs/risk-guardrails). Read
-[the co-pilot](/docs/ai-copilot) before you turn live auto-approval on.
+[the assistant](/docs/ai-copilot) before you turn live auto-approval on.
 
 ## Every route ends the same way
 
-Manual ticket, workflow, bot, or co-pilot proposal: all four converge on the
+Manual ticket, workflow, bot, or assistant proposal: all four converge on the
 same guarded order path. Guardrails are checked there, once, so there is no
 route that skips them.

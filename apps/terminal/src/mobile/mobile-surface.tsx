@@ -44,6 +44,7 @@ import { ContextBar } from './primitives/context-bar'
 import { MobileSheet } from './primitives/mobile-sheet'
 import { MobileTabBar } from './primitives/mobile-tab-bar'
 import { MobileChartSurface } from './chart/mobile-chart-surface'
+import { MobileChartService } from './chart/mobile-chart-service'
 import type { MobileOverlay, MobileTab } from './mobile-focus-context'
 import type { ComponentType, LazyExoticComponent } from 'react'
 import { importChunk, lazyChunk } from '@/lib/lazy-chunk'
@@ -431,6 +432,14 @@ export function MobileSurface() {
       className="pl-mobile-root relative flex h-svh w-full flex-col overflow-hidden bg-background"
       style={chartPaint}
     >
+      {/* Renders nothing. It publishes the chart into the ServiceRegistry so
+          the assistant, which mounts above the routed content where the chart
+          context does not reach, can drive the chart under the sheet. On
+          desktop `ChartPane` does this; the phone never mounts that pane. Kept
+          out here rather than inside the band so the handle survives the
+          states where the chart is replaced by an empty state. */}
+      <MobileChartService />
+
       <MobileChartSurface
         band={openPanel ? 'compact' : 'full'}
         dismissible={openPanel !== null}

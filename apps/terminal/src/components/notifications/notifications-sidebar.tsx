@@ -38,6 +38,7 @@ import { NewAlertDialog } from './new-alert-dialog'
 import { NotificationActivityList } from './notification-activity'
 import { NotificationHistorySheet } from './notification-history-sheet'
 import { useSimpleAlertView } from './use-simple-alert-view'
+import { askAssistant } from '@/stores/assistant-store'
 import { sendTestNotification } from '@/lib/notifications/test-fire'
 import { useNotificationStore } from '@/stores/notification-store'
 import { useNotificationLogStore } from '@/stores/notification-log-store'
@@ -45,13 +46,7 @@ import { useNotificationLogStore } from '@/stores/notification-log-store'
 /** Firings shown under the rule list. The rest are one click away. */
 const RECENT_ACTIVITY = 4
 
-export function NotificationsSidebar({
-  assistantOpen = false,
-  onToggleAssistant,
-}: {
-  assistantOpen?: boolean
-  onToggleAssistant?: () => void
-} = {}) {
+export function NotificationsSidebar() {
   const { t } = useTranslation()
   const rules = useNotificationStore((s) => s.rules)
   const activeRuleId = useNotificationStore((s) => s.activeRuleId)
@@ -110,10 +105,12 @@ export function NotificationsSidebar({
           {/* One sentence beats the two-field dialog when the alert is not
               one of the two the dialog covers, so the assistant leads. */}
           <Button
-            variant={assistantOpen ? 'secondary' : 'ghost'}
+            variant="ghost"
             size="icon"
             className="size-6"
-            onClick={onToggleAssistant}
+            onClick={() =>
+              askAssistant(t('assistantDock.suggest.notifications'))
+            }
             aria-label={t('assistant.title')}
           >
             <Sparkles
