@@ -101,8 +101,11 @@ import {
 import {
   reloadForGrants,
   requestAndApplyNetworkConsent,
-  revokeNetworkGrant,
 } from '@/lib/plugins/network-grants'
+import {
+  IRREDUCIBLE_PLUGIN_ID,
+  uninstallPluginEverywhere,
+} from '@/lib/plugins/uninstall-plugin'
 import {
   clearPendingFullTrust,
   getPendingFullTrust,
@@ -285,15 +288,13 @@ export function InstalledPlugins() {
     async (pluginId: string) => {
       setBusyId(pluginId)
       try {
-        await pluginManager.uninstallPlugin(pluginId)
-        // Tombstone bootstrap plugins (so they don't reappear on boot) or drop
-        // the ledger entry for remote/local plugins; evict any cached code.
-        removeFromLedger(pluginId)
-        track('plugin_uninstalled', { plugin_id: pluginId })
-        await moduleLoaderRef.current?.evict(pluginId)
-        // Drop any desktop network-egress grant this plugin held.
-        void revokeNetworkGrant(pluginId)
-        api.removePluginState(pluginId).catch(() => {})
+        // One shared sequence for every surface: manager, ledger (tombstone for
+        // bundled plugins), module cache, network grant, server state, pins.
+        await uninstallPluginEverywhere({
+          manager: pluginManager,
+          pluginId,
+          moduleLoader: moduleLoaderRef.current,
+        })
         notifyPluginStateChange()
       } catch {
         // Removal failed
@@ -888,7 +889,9 @@ export function InstalledPlugins() {
     return { byFamily, local, other }
   }, [plugins, sourceOf])
 
-  const CORE_ID = 'pairlens-core'
+  // The one plugin nothing may uninstall — the guard itself lives in
+  // uninstall-plugin.ts; the row just hides the button.
+  const CORE_ID = IRREDUCIBLE_PLUGIN_ID
 
   // Toggle handler that intercepts disabling the irreducible core plugin.
   const onToggleRow = useCallback(

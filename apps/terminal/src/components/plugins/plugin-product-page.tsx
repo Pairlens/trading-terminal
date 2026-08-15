@@ -94,8 +94,10 @@ export function PluginProductPage({
   savedConfig,
   platformBadge,
   posterLayoutId,
+  uninstallable,
   onBack,
   onToggle,
+  onUninstall,
   onApplyTheme,
   onRemoveTheme,
   onConfigChange,
@@ -114,8 +116,12 @@ export function PluginProductPage({
   platformBadge?: string | null
   /** Shared-element id of the poster this page was opened from. */
   posterLayoutId?: string | null
+  /** False only for the irreducible core plugin. */
+  uninstallable: boolean
   onBack: () => void
   onToggle: (checked: boolean) => void
+  /** Remove the plugin for good — the caller confirms before acting. */
+  onUninstall: () => void
   onApplyTheme: () => void
   onRemoveTheme: () => void
   onConfigChange: (key: string, value: unknown) => void
@@ -207,17 +213,31 @@ export function PluginProductPage({
               {t('pluginStore.disable', 'Disable')}
             </Button>
           )}
+          {/* Uninstall is a real action here, not a synonym for Disable: a
+              bundled plugin leaves a ledger tombstone and stops loading at
+              boot, which is how a whole asset class gets dropped. */}
+          {!theme && installed && uninstallable && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5 text-muted-foreground hover:text-destructive"
+              disabled={busy}
+              onClick={onUninstall}
+            >
+              <Trash2 className="size-3.5" />
+              {t('pluginStore.uninstall', 'Uninstall')}
+            </Button>
+          )}
           {theme ? (
             <ThemeActionButton
               applyLabel={installLabel}
               applied={themeApplied}
-              installed={installed}
-              bundled={!!entry.bundled}
+              installed={installed && uninstallable}
               busy={busy}
               blocked={!!platformBadge}
               onApply={onApplyTheme}
               onUseDefault={onRemoveTheme}
-              onRemove={() => onToggle(false)}
+              onUninstall={onUninstall}
             />
           ) : (
             <Button
@@ -659,32 +679,33 @@ export function PluginProductPage({
 /**
  * Every theme action in one split button: the primary half applies, the menu
  * half carries the same apply, the drop back to the built-in palette, and the
- * removal. Removing a theme used to live behind applying it first — the
+ * uninstall. Removing a theme used to live behind applying it first — the
  * buttons were rendered per state — which made getting rid of a theme you had
  * only ever previewed impossible without first painting the terminal with it.
+ *
+ * Bundled themes uninstall like any other bundled plugin: the ledger keeps a
+ * tombstone, the Store keeps listing the theme, and installing it again brings
+ * it back from the binary.
  */
 function ThemeActionButton({
   applyLabel,
   applied,
   installed,
-  bundled,
   busy,
   blocked,
   onApply,
   onUseDefault,
-  onRemove,
+  onUninstall,
 }: {
   applyLabel: string
   applied: boolean
   installed: boolean
-  /** Bundled themes ship with the app: they turn off rather than uninstall. */
-  bundled: boolean
   busy: boolean
   /** Platform-incompatible — apply is off the table, removal still is not. */
   blocked: boolean
   onApply: () => void
   onUseDefault: () => void
-  onRemove: () => void
+  onUninstall: () => void
 }) {
   const { t } = useTranslation()
 
@@ -737,13 +758,11 @@ function ThemeActionButton({
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 variant="destructive"
-                onClick={onRemove}
+                onClick={onUninstall}
                 className="gap-2"
               >
                 <Trash2 className="size-3.5" />
-                {bundled
-                  ? t('pluginStore.removeTheme', 'Remove')
-                  : t('pluginStore.uninstall', 'Uninstall')}
+                {t('pluginStore.uninstall', 'Uninstall')}
               </DropdownMenuItem>
             </>
           )}

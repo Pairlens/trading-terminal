@@ -61,7 +61,7 @@ export function paneMeta(type: string): PaneMeta | null {
 export type RequiredPluginStatus =
   | 'active' // installed and running — ready
   | 'disabled' // installed but not active — can be enabled
-  | 'missing-bundled' // not installed, but ships with Pairlens (re-installable locally)
+  | 'missing-bundled' // not installed, but ships in the binary — apply reinstalls it
   | 'missing-remote' // not installed, must be fetched from the Plugin Store
   | 'unknown' // referenced but no manifest could be resolved
 
@@ -153,8 +153,10 @@ export function analyzeTemplateDependencies(
     if (instance) {
       status = instance.status === 'active' ? 'active' : 'disabled'
     } else if (bootstrap) {
-      // Bundled with Pairlens — re-installable locally whether or not the user
-      // previously tombstoned it.
+      // Bundled with Pairlens: the code ships in the binary, so applying the
+      // template installs it locally (workspace-store.tsx calls
+      // reinstallBundledPlugin before creating the workspace). "Will install"
+      // in the requirements list is a promise the apply flow keeps.
       status = 'missing-bundled'
     } else {
       status = manifest ? 'missing-remote' : 'unknown'

@@ -9,6 +9,10 @@
  *    so the app is usefully populated out of the box.
  *  - Uninstalling a bootstrap plugin leaves a **tombstone** so it does not
  *    reappear on the next boot, even though its code still ships in the binary.
+ *  - Reinstalling one clears that tombstone (`reviveBootstrapEntry`) and the
+ *    Plugin Store installs it straight from the compiled-in bundle, so a
+ *    bundled plugin stays a bundled plugin across an uninstall/reinstall round
+ *    trip instead of being rewritten as a registry download.
  *  - Registry / URL / local plugins are recorded with their source so boot can
  *    re-load their code from the right backend (IndexedDB cache or disk).
  *
@@ -135,6 +139,34 @@ export function removeFromLedger(pluginId: string): void {
     delete ledger[pluginId]
   }
   saveLedger(ledger)
+}
+
+/**
+ * Reinstall a bundled plugin the user had uninstalled: clear the tombstone and
+ * switch it back on, keeping whatever config the row already carried.
+ *
+ * A missing row is created rather than treated as an error — a plugin can be
+ * uninstalled on one build and reappear in a later one, and the caller has
+ * already checked that the id is part of the shipped bundle.
+ */
+export function reviveBootstrapEntry(
+  pluginId: string,
+  version: string,
+): PluginLedgerEntry {
+  const ledger = getLedger()
+  const prev = ledger[pluginId]
+  const revived: PluginLedgerEntry = {
+    pluginId,
+    source: 'bootstrap',
+    enabled: true,
+    config: prev?.config ?? {},
+    version,
+    tombstoned: false,
+    trust: prev?.trust,
+  }
+  ledger[pluginId] = revived
+  saveLedger(ledger)
+  return revived
 }
 
 /**

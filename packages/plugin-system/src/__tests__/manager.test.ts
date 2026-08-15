@@ -577,6 +577,25 @@ describe('PluginManager', () => {
       const result = await manager.execute('market-data:discovery', {})
       expect((result as { source: string }).source).toBe('p-high')
     })
+
+    it('drops pins that name an uninstalled plugin', async () => {
+      // A pin left behind by an uninstall is a phantom: the UI reports an
+      // override that no longer resolves, and reinstalling the plugin would
+      // resurrect a choice the user made before removing it.
+      const mHigh = makeManifest('p-high', 'market-data:discovery', ['okx'], 5)
+      const mLow = makeManifest('p-low', 'market-data:discovery', ['okx'], 50)
+
+      await manager.installPlugin(mHigh, (m) => makeInstance(m))
+      await manager.installPlugin(mLow, (m) => makeInstance(m))
+      await manager.activatePlugin('p-high', {})
+      await manager.activatePlugin('p-low', {})
+
+      manager.pinPlugin('market-data:discovery', 'okx', 'p-low')
+      await manager.uninstallPlugin('p-low')
+
+      expect(manager.getUserPins()).toEqual([])
+      expect(manager.isPinned('market-data:discovery', 'okx')).toBeNull()
+    })
   })
 
   // -------------------------------------------------------------------------

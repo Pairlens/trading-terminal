@@ -28,6 +28,7 @@ import { useFullTrustConsent } from '@/components/plugins/full-trust-consent'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { setPluginTrust } from '@/lib/plugins/plugin-ledger'
+import { reinstallBundledPlugin } from '@/lib/plugins/bootstrap-reinstall'
 import { analyzeTemplateDependencies } from '@/lib/workspace-store/dependency-analysis'
 import {
   ASSET_CLASSES,
@@ -437,6 +438,44 @@ export function WorkspaceStore({
         }
         if (toTrust.length > 0) notifyPluginStateChange()
 
+        // Bundled plugins this workspace needs but the user uninstalled come
+        // straight back from the binary — first-party code, already trusted,
+        // no download. Registry plugins still have to be fetched by hand from
+        // the Plugin Store, which is what the "missing" toast below is about.
+        const bundledMissing = (report?.plugins ?? []).filter(
+          (p) => p.status === 'missing-bundled',
+        )
+        const reinstalled: Array<string> = []
+        const failed: Array<string> = []
+        for (const plugin of bundledMissing) {
+          try {
+            const manifest = await reinstallBundledPlugin({
+              manager: pluginManager,
+              pluginId: plugin.pluginId,
+            })
+            reinstalled.push(manifest.name)
+          } catch {
+            failed.push(plugin.name)
+          }
+        }
+        if (reinstalled.length > 0 || failed.length > 0) {
+          notifyPluginStateChange()
+        }
+        if (reinstalled.length > 0) {
+          toast.success(
+            t('workspaceStore.bundledInstalled', {
+              names: reinstalled.join(', '),
+            }),
+          )
+        }
+        if (failed.length > 0) {
+          toast.error(
+            t('workspaceStore.bundledInstallFailed', {
+              names: failed.join(', '),
+            }),
+          )
+        }
+
         const id = createWorkspace(templateToWorkspaceParams(template))
         track('workspace_template_applied', {
           template_id: template.id,
@@ -455,7 +494,8 @@ export function WorkspaceStore({
             .catch(() => {})
         }
         setSelectedId(null)
-        if (report && report.missingCount > 0) {
+        const stillMissing = (report?.missingCount ?? 0) - reinstalled.length
+        if (stillMissing > 0) {
           toast.info(
             t('workspaceStore.addedWithMissing', {
               defaultValue:
@@ -483,6 +523,7 @@ export function WorkspaceStore({
     [
       reports,
       requestFullTrust,
+      pluginManager,
       notifyPluginStateChange,
       createWorkspace,
       navigate,
