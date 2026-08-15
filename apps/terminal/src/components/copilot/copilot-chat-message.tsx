@@ -33,6 +33,7 @@ import type { ReactNode } from 'react'
 import type { UIMessage } from 'ai'
 import type { ToolLabelMap } from '@/lib/copilot/tool-labels'
 import { formatToolLabel } from '@/lib/copilot/tool-labels'
+import { track } from '@/lib/analytics-events'
 
 type CopilotChatMessageProps = {
   message: UIMessage
@@ -196,6 +197,7 @@ function CopyMessageButton({ text }: { text: string }) {
     navigator.clipboard
       ?.writeText(text)
       .then(() => {
+        track('assistant_answer_copied')
         setCopied(true)
         if (timerRef.current) clearTimeout(timerRef.current)
         timerRef.current = setTimeout(() => setCopied(false), 1600)
