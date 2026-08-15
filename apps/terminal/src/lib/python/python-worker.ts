@@ -40,6 +40,44 @@ import type {
   PythonToHostMessage,
   RequestSeries,
 } from './protocol'
+import { installNetworkGuard } from '@/lib/plugins/sandbox/network-guard'
+
+/**
+ * Everything the runtime itself reaches for, and nothing else.
+ *
+ * This worker evaluates code the user did not necessarily write: the
+ * `chart:indicator` capability lets an installed plugin contribute Python
+ * scripts, and a script exported from the workbench travels as a plugin zip.
+ * Pyodide hands that code the JS globals through its `js` module, so
+ * `js.fetch(...)` from Python is an ordinary call — and until this guard the
+ * worker had none installed, while the plugin sandbox next door strips storage
+ * globals and enforces a per-plugin allowlist.
+ *
+ * The document CSP is not a substitute here, and it is worth being precise
+ * about why: `connect-src` is one list for the whole webview, so it already
+ * contains every exchange, the App Server, the AI providers and Telegram. It
+ * bounds the app; it cannot bound one worker inside it. This list can.
+ *
+ * `self.location.hostname` is the terminal's own origin, needed for the
+ * pyodide core assets under `/_pyodide/`. The other three are where compiled
+ * wheels and pure-Python wheels come from, and they are the same three the
+ * desktop CSP baseline carries for exactly this reason.
+ */
+const PYTHON_RUNTIME_HOSTS: ReadonlyArray<string> = Object.freeze([
+  self.location.hostname,
+  'cdn.jsdelivr.net',
+  'pypi.org',
+  'files.pythonhosted.org',
+])
+
+// Before `loadPyodide`, and before any Python is evaluated: a guard installed
+// afterwards is a guard the first script can race.
+installNetworkGuard(
+  self as unknown as typeof globalThis,
+  { hosts: PYTHON_RUNTIME_HOSTS },
+  'Python indicators may only reach the package registries the runtime ' +
+    'installs from. There is no way to widen this from a script.',
+)
 
 type Pyodide = Awaited<ReturnType<typeof loadPyodide>>
 

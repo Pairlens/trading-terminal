@@ -1,8 +1,14 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Network + storage guard installed inside the plugin sandbox worker BEFORE
- * any plugin code is evaluated.
+ * Network + storage guard installed inside a worker BEFORE any untrusted code
+ * is evaluated.
+ *
+ * Two callers, and they differ only in where the allowlist comes from: the
+ * plugin sandbox takes it from the plugin's signed manifest and mutates it
+ * after import, while the Python indicator worker pins a fixed list of the
+ * package registries the runtime itself needs. Both run code the user did not
+ * necessarily write.
  *
  * - `fetch`, `WebSocket`, `XMLHttpRequest`, `EventSource` are replaced with
  *   wrappers that enforce a host allowlist (the plugin manifest's signed
@@ -13,9 +19,10 @@
  *   cross-plugin cache tampering), `caches`, `BroadcastChannel`, and nested
  *   `Worker` creation (a sub-worker would get fresh, unguarded globals).
  *
- * The allowlist is a mutable ref: the worker installs the guard with an empty
- * list (module top-level code gets zero network), then sets the list from the
- * module's own exported manifest after import.
+ * The allowlist is a mutable ref because the plugin sandbox needs it to be:
+ * it installs the guard with an empty list (module top-level code gets zero
+ * network), then sets the list from the module's own exported manifest after
+ * import. A caller with a fixed list just passes a frozen one.
  */
 
 export type MutableAllowlist = { hosts: ReadonlyArray<string> }
@@ -46,11 +53,18 @@ export function isUrlAllowed(
   })
 }
 
+/**
+ * `reason` names the list that refused, because the reader has to know which
+ * one to go and change. A plugin author edits `network.hosts` in a manifest; a
+ * Python indicator author has no manifest at all, and sending them looking for
+ * one is worse than saying nothing.
+ */
 export class PluginNetworkDeniedError extends Error {
-  constructor(url: string) {
-    super(
-      `[plugin-sandbox] Network access to "${url}" denied — not in the plugin's declared network.hosts allowlist`,
-    )
+  constructor(
+    url: string,
+    reason = "not in the plugin's declared network.hosts allowlist",
+  ) {
+    super(`[sandbox] Network access to "${url}" denied — ${reason}`)
     this.name = 'PluginNetworkDeniedError'
   }
 }
@@ -98,9 +112,11 @@ const BLOCKED_GLOBALS = [
 export function installNetworkGuard(
   scope: typeof globalThis,
   allowlist: MutableAllowlist,
+  /** Names the list that refused, for the error the author reads. */
+  denyReason?: string,
 ): void {
   const deny = (url: string): never => {
-    throw new PluginNetworkDeniedError(url)
+    throw new PluginNetworkDeniedError(url, denyReason)
   }
 
   // ── fetch ─────────────────────────────────────────────────────────
@@ -113,7 +129,7 @@ export function installNetworkGuard(
           ? input.href
           : input.url
     if (!isUrlAllowed(url, allowlist.hosts)) {
-      return Promise.reject(new PluginNetworkDeniedError(url))
+      return Promise.reject(new PluginNetworkDeniedError(url, denyReason))
     }
     return realFetch(input, init)
   }
