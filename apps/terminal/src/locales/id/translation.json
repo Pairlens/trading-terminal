@@ -428,10 +428,12 @@
     "ai": {
       "placement": "Posisi asisten",
       "placementDescription": "Tempat asisten menunggu saat Anda bekerja. Jendela chat terbuka dari posisi asisten, dan dari sana Anda bisa menyeretnya ke mana saja.",
-      "placementFloating": "Mengambang",
-      "placementFloatingDescription": "Di kanan bawah terminal, tidak menutupi panel Anda, dan sarannya selalu terbaca. Paling mudah terlihat.",
       "placementSidebar": "Sidebar",
       "placementSidebarDescription": "Di bilah kiri bersama alat-alat lain. Saran muncul saat kursor diarahkan ke sana, atau selagi asisten bekerja. Lebih tenang, dan selalu di tempat yang sama.",
+      "placementBottom": "Bilah bawah",
+      "placementBottomDescription": "Di bilah tipis di bawah terminal, di samping panel Anda dan bukan menutupinya. Sudut yang sama dengan mengambang, dan sarannya tetap terbaca.",
+      "placementFloating": "Mengambang",
+      "placementFloatingDescription": "Pil kecil di atas sudut kanan bawah panel Anda, saran selalu terbaca. Paling mudah terlihat, dan satu-satunya yang menutupi sebagian tata letak Anda.",
       "persona": "Persona",
       "personaDescription": "Seberapa banyak asisten menjelaskan saat menjawab. Perubahan berlaku mulai pesan Anda berikutnya."
     },

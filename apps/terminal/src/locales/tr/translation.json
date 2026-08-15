@@ -428,10 +428,12 @@
     "ai": {
       "placement": "Asistan konumu",
       "placementDescription": "Sen çalışırken asistanın beklediği yer. Sohbet penceresi asistanın durduğu yerden açılır, oradan da istediğin yere sürükleyebilirsin.",
-      "placementFloating": "Yüzen",
-      "placementFloatingDescription": "Terminalin sağ altında, panellerinin önüne geçmeden durur ve önerisi her zaman okunur. Fark etmesi en kolay olanı.",
       "placementSidebar": "Kenar çubuğu",
       "placementSidebarDescription": "Soldaki çubukta, diğer araçlarınla birlikte. Öneri, üzerine geldiğinde ya da asistan çalışırken görünür. Daha sessiz ve hep aynı yerde.",
+      "placementBottom": "Alt çubuk",
+      "placementBottomDescription": "Terminalin altındaki bir şeritte, panellerinin üstünde değil yanında durur. Yüzen ile aynı köşe ve öneri okunur kalır.",
+      "placementFloating": "Yüzen",
+      "placementFloatingDescription": "Panellerinin sağ alt köşesinin üzerinde duran bir hap, önerisi her zaman okunur. Fark etmesi en kolay olanı ve düzeninin bir kısmını kapatan tek seçenek.",
       "persona": "Kişilik",
       "personaDescription": "Asistanın yanıt verirken ne kadar açıkladığı. Değişiklik bir sonraki mesajından itibaren geçerli olur."
     },

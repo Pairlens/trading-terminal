@@ -428,10 +428,12 @@
     "ai": {
       "placement": "Emplacement de l’assistant",
       "placementDescription": "L’endroit où l’assistant attend pendant que vous travaillez. La fenêtre de chat s’ouvre là où se trouve l’assistant, et vous pouvez ensuite la déplacer où vous voulez.",
-      "placementFloating": "Flottant",
-      "placementFloatingDescription": "En bas à droite du terminal, à l’écart de vos panneaux, avec sa suggestion toujours lisible. Le plus facile à repérer.",
       "placementSidebar": "Barre latérale",
       "placementSidebarDescription": "Dans la barre de gauche, avec vos autres outils. La suggestion apparaît au survol, ou pendant que l’assistant travaille. Plus discret, et toujours au même endroit.",
+      "placementBottom": "Barre du bas",
+      "placementBottomDescription": "Dans un bandeau sous le terminal, à côté de vos panneaux plutôt que par-dessus. Le même coin que le mode flottant, et la suggestion reste lisible.",
+      "placementFloating": "Flottant",
+      "placementFloatingDescription": "Une pastille par-dessus le coin inférieur droit de vos panneaux, suggestion toujours lisible. Le plus facile à repérer, et le seul qui recouvre une partie de votre disposition.",
       "persona": "Personnalité",
       "personaDescription": "À quel point l’assistant détaille ses réponses. Le changement s’applique à votre prochain message."
     },

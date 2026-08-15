@@ -428,10 +428,12 @@
     "ai": {
       "placement": "Posizione dell’assistente",
       "placementDescription": "Dove l’assistente aspetta mentre lavori. La finestra della chat si apre dal punto in cui si trova l’assistente, e da lì puoi trascinarla ovunque.",
-      "placementFloating": "Fluttuante",
-      "placementFloatingDescription": "In basso a destra nel terminale, lontano dai tuoi pannelli, con il suggerimento sempre leggibile. La più facile da notare.",
       "placementSidebar": "Barra laterale",
       "placementSidebarDescription": "Nella barra di sinistra, insieme agli altri strumenti. Il suggerimento compare al passaggio del mouse, o mentre l’assistente lavora. Più discreta, e sempre nello stesso punto.",
+      "placementBottom": "Barra inferiore",
+      "placementBottomDescription": "In una striscia sotto il terminale, accanto ai tuoi pannelli invece che sopra. Stesso angolo della fluttuante, e il suggerimento resta leggibile.",
+      "placementFloating": "Fluttuante",
+      "placementFloatingDescription": "Una pillola sopra l’angolo in basso a destra dei tuoi pannelli, suggerimento sempre leggibile. La più facile da notare, e l’unica che copre una parte del tuo layout.",
       "persona": "Personalità",
       "personaDescription": "Quanto l’assistente spiega quando risponde. La modifica vale dal tuo prossimo messaggio."
     },

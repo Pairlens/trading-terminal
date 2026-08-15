@@ -428,10 +428,12 @@
     "ai": {
       "placement": "Położenie asystenta",
       "placementDescription": "Miejsce, w którym asystent czeka podczas twojej pracy. Okno czatu otwiera się tam, gdzie stoi asystent, a stamtąd możesz je przeciągnąć w dowolne miejsce.",
-      "placementFloating": "Pływający",
-      "placementFloatingDescription": "W prawym dolnym rogu terminala, z dala od twoich paneli, z zawsze czytelną podpowiedzią. Najłatwiej go zauważyć.",
       "placementSidebar": "Pasek boczny",
       "placementSidebarDescription": "W lewym pasku, razem z innymi narzędziami. Podpowiedź pojawia się po najechaniu kursorem albo gdy asystent pracuje. Spokojniej i zawsze w tym samym miejscu.",
+      "placementBottom": "Dolny pasek",
+      "placementBottomDescription": "W pasku pod terminalem, obok twoich paneli, a nie na nich. Ten sam róg co pływający, a podpowiedź pozostaje czytelna.",
+      "placementFloating": "Pływający",
+      "placementFloatingDescription": "Pigułka nad prawym dolnym rogiem twoich paneli, podpowiedź zawsze czytelna. Najłatwiej go zauważyć i jako jedyny zasłania część układu.",
       "persona": "Osobowość",
       "personaDescription": "Jak dużo asystent tłumaczy w odpowiedziach. Zmiana obowiązuje od następnej wiadomości."
     },

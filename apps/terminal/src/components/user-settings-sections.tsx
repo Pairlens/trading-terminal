@@ -17,6 +17,7 @@ import {
   Moon,
   MousePointerClick,
   Orbit,
+  PanelBottom,
   PanelLeft,
   RefreshCw,
   Scale,
@@ -85,7 +86,10 @@ import type { ColorMode } from '@/lib/settings/color-mode'
 import type { TradeConfirmMode } from '@/lib/settings/trade-confirm'
 import type { AssistantPlacement } from '@/lib/assistant-core/placement'
 import type { Persona } from '@/components/copilot/persona-menu'
-import { useAssistantPlacement } from '@/lib/assistant-core/placement'
+import {
+  ASSISTANT_PLACEMENT_VALUES,
+  useAssistantPlacement,
+} from '@/lib/assistant-core/placement'
 import { PERSONA_OPTIONS } from '@/components/copilot/persona-menu'
 import { track } from '@/lib/analytics-events'
 import { useOptimisticSession } from '@/lib/session'
@@ -1890,26 +1894,31 @@ function AccountDataControls() {
  * Where the assistant lives, and how it talks. Two questions, two cards,
  * both of them a straight write to a persisted key: the orb re-reads the
  * placement live, so the choice moves it without a reload.
+ *
+ * A Record keyed by the union, rendered in ASSISTANT_PLACEMENT_VALUES
+ * order: a fourth placement is a type error here until it has copy, and
+ * then it appears in this card without anyone editing it.
  */
-const ASSISTANT_PLACEMENTS: Array<{
-  value: AssistantPlacement
-  labelKey: string
-  descKey: string
-  Icon: typeof Orbit
-}> = [
-  {
-    value: 'floating',
-    labelKey: 'settings.ai.placementFloating',
-    descKey: 'settings.ai.placementFloatingDescription',
-    Icon: Orbit,
-  },
-  {
-    value: 'sidebar',
+const ASSISTANT_PLACEMENTS: Record<
+  AssistantPlacement,
+  { labelKey: string; descKey: string; Icon: typeof Orbit }
+> = {
+  sidebar: {
     labelKey: 'settings.ai.placementSidebar',
     descKey: 'settings.ai.placementSidebarDescription',
     Icon: PanelLeft,
   },
-]
+  bottom: {
+    labelKey: 'settings.ai.placementBottom',
+    descKey: 'settings.ai.placementBottomDescription',
+    Icon: PanelBottom,
+  },
+  floating: {
+    labelKey: 'settings.ai.placementFloating',
+    descKey: 'settings.ai.placementFloatingDescription',
+    Icon: Orbit,
+  },
+}
 
 export function AiSection() {
   const { t } = useTranslation()
@@ -1924,11 +1933,11 @@ export function AiSection() {
 
   return (
     <div className="max-w-4xl space-y-5">
-      {/* Placement is a desktop question. The phone renders neither the
-          floating dock nor the nav rail, so on a phone this control
-          would sit there doing nothing. `useIsMobile` is right here even
-          though the shell branch needs a pre-hydration gate instead: a
-          card inside a dialog can correct itself in an effect. */}
+      {/* Placement is a desktop question. The phone renders none of the
+          three surfaces, so on a phone this control would sit there
+          doing nothing. `useIsMobile` is right here even though the
+          shell branch needs a pre-hydration gate instead: a card inside
+          a dialog can correct itself in an effect. */}
       {isMobile ? null : (
         <section className="rounded-xl border p-4">
           <h3 className="font-medium">{t('settings.ai.placement')}</h3>
@@ -1940,24 +1949,27 @@ export function AiSection() {
             value={placement}
             onValueChange={(v: string) => setPlacement(v as AssistantPlacement)}
           >
-            {ASSISTANT_PLACEMENTS.map(({ value, labelKey, descKey, Icon }) => (
-              <label
-                key={value}
-                className="flex cursor-pointer items-start gap-3 rounded-lg border px-4 py-3 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
-              >
-                <RadioGroupItem value={value} className="mt-0.5 sr-only" />
-                <Icon className="mt-0.5 size-4 shrink-0" />
-                <div className="grid gap-0.5">
-                  <span className="text-sm font-medium">{t(labelKey)}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {t(descKey)}
-                  </span>
-                </div>
-                {placement === value && (
-                  <Check className="mt-0.5 ml-auto size-4 shrink-0 text-primary" />
-                )}
-              </label>
-            ))}
+            {ASSISTANT_PLACEMENT_VALUES.map((value) => {
+              const { labelKey, descKey, Icon } = ASSISTANT_PLACEMENTS[value]
+              return (
+                <label
+                  key={value}
+                  className="flex cursor-pointer items-start gap-3 rounded-lg border px-4 py-3 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+                >
+                  <RadioGroupItem value={value} className="mt-0.5 sr-only" />
+                  <Icon className="mt-0.5 size-4 shrink-0" />
+                  <div className="grid gap-0.5">
+                    <span className="text-sm font-medium">{t(labelKey)}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {t(descKey)}
+                    </span>
+                  </div>
+                  {placement === value && (
+                    <Check className="mt-0.5 ml-auto size-4 shrink-0 text-primary" />
+                  )}
+                </label>
+              )
+            })}
           </RadioGroup>
         </section>
       )}

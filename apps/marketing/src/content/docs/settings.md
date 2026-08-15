@@ -20,12 +20,14 @@ Display name and profile image, when you are signed in. Purely cosmetic.
 Where the assistant waits while you work, and how it talks. What powers it is
 the next section down.
 
-**Placement.** **Floating**, the default, puts the orb at the bottom right of
-the terminal, clear of your panes, with its suggestion line always readable.
-**Sidebar** moves it into the left nav rail with your other tools, where the
-suggestion flies out on hover or keyboard focus and appears on its own while a
-run is going. The orb moves as soon as you pick, no reload. Either way the chat
-window drags anywhere you want it by its header. See
+**Placement.** Three choices. **Sidebar**, the default, docks the orb in the left
+nav rail with your other tools, where the suggestion flies out on hover or
+keyboard focus and appears on its own while a run is going. **Bottom bar** moves
+it to the bottom right in a strip below the workspace, suggestion readable, with
+the panes shrinking to make room so nothing is covered. **Floating** puts the
+same pill over the bottom right of your panes: the easiest to notice, and the
+only one that overlaps your layout. The orb moves as soon as you pick, no reload.
+Whichever you pick, the chat window drags anywhere you want it by its header. See
 [the AI assistant](/docs/ai-copilot).
 
 **Persona.** Mentor, Balanced, or Technical: how much the assistant explains
