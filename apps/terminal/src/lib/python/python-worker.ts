@@ -22,7 +22,11 @@ import { loadPyodide, version as pyodideVersion } from 'pyodide'
 // pipeline, which does not run the tsconfig-paths plugin, so an `@/` import
 // here resolves in dev and the typecheck but fails the production build.
 // The sandbox worker next to the guard imports it the same way.
-import { installNetworkGuard } from '../plugins/sandbox/network-guard'
+import {
+  PluginNetworkDeniedError,
+  installNetworkGuard,
+  workerOriginHost,
+} from '../plugins/sandbox/network-guard'
 import { alignOutputs } from './align'
 import { KNOWN_IMPORT_DISTS } from './libraries'
 import {
@@ -62,17 +66,22 @@ import type {
  * contains every exchange, the App Server, the AI providers and Telegram. It
  * bounds the app; it cannot bound one worker inside it. This list can.
  *
- * `self.location.hostname` is the terminal's own origin, needed for the
- * pyodide core assets under `/_pyodide/`. The other three are where compiled
- * wheels and pure-Python wheels come from, and they are the same three the
- * desktop CSP baseline carries for exactly this reason.
+ * The first entry is the terminal's own origin, needed for the pyodide core
+ * assets under `/_pyodide/`. It goes through `workerOriginHost` because this
+ * worker is a Blob: `self.location.hostname` is empty here in a production
+ * build, and an empty entry allowlists nothing, which denies Pyodide its own
+ * wasm. The other three are where compiled wheels and pure-Python wheels come
+ * from, and they are the same three the desktop CSP baseline carries for
+ * exactly this reason.
  */
-const PYTHON_RUNTIME_HOSTS: ReadonlyArray<string> = Object.freeze([
-  self.location.hostname,
-  'cdn.jsdelivr.net',
-  'pypi.org',
-  'files.pythonhosted.org',
-])
+const PYTHON_RUNTIME_HOSTS: ReadonlyArray<string> = Object.freeze(
+  [
+    workerOriginHost(self.location),
+    'cdn.jsdelivr.net',
+    'pypi.org',
+    'files.pythonhosted.org',
+  ].filter((host) => host.length > 0),
+)
 
 // Before `loadPyodide`, and before any Python is evaluated: a guard installed
 // afterwards is a guard the first script can race.
@@ -201,18 +210,48 @@ function missingModuleName(err: unknown): string | null {
   return match ? match[1] : null
 }
 
+/**
+ * A promise that rejects the moment a guard denial goes unhandled.
+ *
+ * Pyodide fetches its own boot assets on promises it never joins to the one
+ * `loadPyodide` returns, so a refused asset surfaces only as an unhandled
+ * rejection: `loadPyodide` simply never settles, and the caller waits out the
+ * host's 60s init timeout with the workbench sitting on "Running…". Racing
+ * this against it turns that into an immediate error naming the URL. Only
+ * denials are caught, so no unrelated rejection can abort a boot.
+ */
+function watchForDenial(): { denied: Promise<never>; stop: () => void } {
+  let onRejection: (event: PromiseRejectionEvent) => void = () => {}
+  const denied = new Promise<never>((_, reject) => {
+    onRejection = (event: PromiseRejectionEvent) => {
+      if (!(event.reason instanceof PluginNetworkDeniedError)) return
+      event.preventDefault()
+      reject(event.reason)
+    }
+    self.addEventListener('unhandledrejection', onRejection)
+  })
+  return {
+    denied,
+    stop: () => self.removeEventListener('unhandledrejection', onRejection),
+  }
+}
+
 async function ensurePyodide(indexURL: string): Promise<Pyodide> {
   if (pyodide) return pyodide
-  const py = await loadPyodide({
-    indexURL,
-    // Compiled wheels are not hosted on our origin; resolve the lockfile's
-    // relative file names against the official CDN for this pyodide version.
-    packageBaseUrl: `https://cdn.jsdelivr.net/pyodide/v${pyodideVersion}/full/`,
-    // print() and friends stream to the editor's console panel — the only
-    // way to debug a script that runs off the main thread.
-    stdout: (text: string) => postLog('stdout', text),
-    stderr: (text: string) => postLog('stderr', text),
-  })
+  const watch = watchForDenial()
+  const py = await Promise.race([
+    loadPyodide({
+      indexURL,
+      // Compiled wheels are not hosted on our origin; resolve the lockfile's
+      // relative file names against the official CDN for this pyodide version.
+      packageBaseUrl: `https://cdn.jsdelivr.net/pyodide/v${pyodideVersion}/full/`,
+      // print() and friends stream to the editor's console panel — the only
+      // way to debug a script that runs off the main thread.
+      stdout: (text: string) => postLog('stdout', text),
+      stderr: (text: string) => postLog('stderr', text),
+    }),
+    watch.denied,
+  ]).finally(watch.stop)
   // Install the pairlens SDK as an importable package: `pairlens` is the
   // declaration API and `pairlens.ta` the indicator standard library, so
   // `from pairlens.ta import ema` resolves like any installed package.

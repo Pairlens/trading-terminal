@@ -54,6 +54,34 @@ export function isUrlAllowed(
 }
 
 /**
+ * The hostname of a worker's OWN origin, ready to put in an allowlist.
+ *
+ * A worker spawned from a Blob — which is how both workers here ship, via
+ * Vite's `?worker&inline` — has a location like
+ * `blob:https://terminal.pairlens.finance/<uuid>`. `blob:` is not a special
+ * scheme, so the parser treats everything after it as an opaque path and
+ * `hostname` comes back as the EMPTY STRING; `origin` still carries the
+ * creating document's origin, so that is what to read.
+ *
+ * Dev never shows this. Vite inlines only at build time, so a dev worker is
+ * served from a real URL with a real hostname, and reading `location.hostname`
+ * directly works right up until the production build, where it silently
+ * allowlists nothing.
+ */
+export function workerOriginHost(location: {
+  hostname: string
+  origin: string
+}): string {
+  if (location.hostname) return location.hostname
+  try {
+    // Opaque origins serialize to "null", which is not a parseable URL.
+    return new URL(location.origin).hostname
+  } catch {
+    return ''
+  }
+}
+
+/**
  * `reason` names the list that refused, because the reader has to know which
  * one to go and change. A plugin author edits `network.hosts` in a manifest; a
  * Python indicator author has no manifest at all, and sending them looking for

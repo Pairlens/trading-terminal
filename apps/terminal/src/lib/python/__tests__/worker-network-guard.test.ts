@@ -9,16 +9,22 @@
  * shipped with no guard installed at all while the plugin sandbox next door
  * stripped storage globals and enforced a per-plugin allowlist.
  *
- * The guard is verified end to end in the browser (boot Pyodide, pull numpy
- * from jsDelivr, deny example.com). What is pinned here is the allowlist
- * itself, because it is the part that can silently rot: drop a host and the
- * runtime stops booting, add one and the boundary quietly widens.
+ * The guard is verified end to end in a PRODUCTION build in the browser (boot
+ * Pyodide, pull numpy from jsDelivr, deny example.com) — a dev server cannot
+ * stand in for it, since Vite inlines the worker into a Blob only at build
+ * time and the Blob is what makes the same-origin entry hard to get right.
+ * What is pinned here is the allowlist itself, because it is the part that can
+ * silently rot: drop a host and the runtime stops booting, add one and the
+ * boundary quietly widens.
  */
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, test } from 'bun:test'
 
-import { isUrlAllowed } from '../../plugins/sandbox/network-guard'
+import {
+  isUrlAllowed,
+  workerOriginHost,
+} from '../../plugins/sandbox/network-guard'
 
 const WORKER = readFileSync(
   join(import.meta.dir, '..', 'python-worker.ts'),
@@ -36,18 +42,53 @@ const HOSTS = [
 describe('the worker installs a guard before Pyodide', () => {
   test('the call is above loadPyodide, not inside a handler', () => {
     const install = WORKER.indexOf('installNetworkGuard(')
-    const load = WORKER.indexOf('await loadPyodide(')
+    const load = WORKER.indexOf('loadPyodide({')
     expect(install).toBeGreaterThan(-1)
     // A guard installed after the runtime is one the first script can race.
     expect(install).toBeLessThan(load)
   })
 
   test('the allowlist is frozen and holds exactly the runtime hosts', () => {
-    expect(WORKER).toContain('Object.freeze([')
-    expect(WORKER).toContain('self.location.hostname')
+    expect(WORKER).toContain('Object.freeze(')
+    expect(WORKER).toContain('workerOriginHost(self.location)')
     for (const host of HOSTS.slice(1)) {
       expect(WORKER).toContain(`'${host}'`)
     }
+  })
+
+  /**
+   * The same-origin entry has to survive being read from a Blob worker, which
+   * is what the production build ships. Reading `location.hostname` there
+   * yields '' — an entry that allowlists nothing — so Pyodide was refused its
+   * own wasm and the workbench sat on "Running…" until the boot timed out.
+   * Dev could not show it: Vite inlines the worker only at build time.
+   */
+  test('the same-origin entry survives a Blob worker location', () => {
+    const blobLocation = {
+      href: 'blob:https://terminal.pairlens.finance/16673247-a245-41f9',
+      hostname: '',
+      origin: 'https://terminal.pairlens.finance',
+    }
+    expect(workerOriginHost(blobLocation)).toBe('terminal.pairlens.finance')
+    expect(
+      isUrlAllowed(
+        'https://terminal.pairlens.finance/_pyodide/pyodide.asm.wasm',
+        [workerOriginHost(blobLocation)],
+      ),
+    ).toBe(true)
+  })
+
+  test('a real worker URL and an opaque origin both resolve sanely', () => {
+    expect(
+      workerOriginHost({
+        hostname: 'localhost',
+        origin: 'http://localhost:3210',
+      }),
+    ).toBe('localhost')
+    // An opaque origin serializes to "null"; the list must not gain '' from it,
+    // which is why the worker filters empties out.
+    expect(workerOriginHost({ hostname: '', origin: 'null' })).toBe('')
+    expect(WORKER).toContain('.filter((host) => host.length > 0)')
   })
 
   /**
