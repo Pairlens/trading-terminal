@@ -36,6 +36,7 @@ import type { MarketOption } from '@/hooks/use-available-markets'
 import { track } from '@/lib/analytics-events'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { lookupPredictionOutcome } from '@/stores/prediction-directory-store'
 
 /** Routes the phone deliberately does not carry. */
 const DESKTOP_ONLY_PREFIXES = [
@@ -56,6 +57,18 @@ function servesStocks(markets: Array<MarketOption>, marketId: string): boolean {
     markets
       .find((m) => m.value === marketId)
       ?.assetClasses.includes('stocks') ?? false
+  )
+}
+
+/** Whether a venue serves prediction outcomes — `$pair.tsx`'s own test. */
+function servesPredictions(
+  markets: Array<MarketOption>,
+  marketId: string,
+): boolean {
+  return (
+    markets
+      .find((m) => m.value === marketId)
+      ?.assetClasses.includes('prediction') ?? false
   )
 }
 
@@ -211,11 +224,49 @@ export function useMobileRouteSync(): void {
   useEffect(() => {
     const assetClass = assetClassMap[focusedPair]
     if (!assetClass) return
+    // Predictions are a third venue set, not the other half of the binary: an
+    // outcome key streams from a prediction venue or from nowhere, and a
+    // crypto exchange is correctly "not stocks", so the binary alone would
+    // strand it. Routed explicitly, both ways.
+    if (assetClass === 'prediction') {
+      // The directory pin names the one venue that lists this outcome —
+      // class-level routing can chart a Polymarket key against Kalshi. The
+      // pin wins even over a desktop-only venue; the connector's own refusal
+      // copy is the truthful state.
+      const owner = lookupPredictionOutcome(focusedPair)?.market
+      const ownerOption = owner
+        ? markets.find((m) => m.value === owner)
+        : undefined
+      if (ownerOption) {
+        if (ownerOption.value !== focusedVenue)
+          setFocusedVenue(ownerOption.value)
+        return
+      }
+      // Cold link: reachability, not just class — Kalshi is desktop-only in a
+      // browser, so "already on a prediction venue" is not enough to leave it
+      // alone.
+      const current = markets.find((m) => m.value === focusedVenue)
+      const onPredictionVenue =
+        current?.assetClasses.includes('prediction') ?? false
+      if (onPredictionVenue && !current?.desktopOnly) return
+      const target = markets.find(
+        (m) => !m.desktopOnly && m.assetClasses.includes('prediction'),
+      )
+      if (target && target.value !== focusedVenue) setFocusedVenue(target.value)
+      return
+    }
     const wantStocks = assetClass === 'stocks'
-    if (servesStocks(markets, focusedVenue) === wantStocks) return
+    if (
+      !servesPredictions(markets, focusedVenue) &&
+      servesStocks(markets, focusedVenue) === wantStocks
+    )
+      return
     // A venue this build cannot reach is not a correction, it is a dead end.
     const target = markets.find(
-      (m) => !m.desktopOnly && m.assetClasses.includes('stocks') === wantStocks,
+      (m) =>
+        !m.desktopOnly &&
+        !m.assetClasses.includes('prediction') &&
+        m.assetClasses.includes('stocks') === wantStocks,
     )
     if (target && target.value !== focusedVenue) setFocusedVenue(target.value)
   }, [focusedPair, focusedVenue, assetClassMap, markets, setFocusedVenue])

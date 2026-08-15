@@ -38,6 +38,7 @@ import { PaneTransition } from '@/components/layout/pane-transition'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { DesktopOnlyState } from '@/components/layout/desktop-only-state'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
 import { useNotificationStore } from '@/stores/notification-store'
 
 /** Command-id prefixes the chart dispatches generically. */
@@ -87,6 +88,9 @@ const ChartPaneInner = memo(function ChartPaneInner({
   const containerRef = useRef<HTMLDivElement>(null)
   const serviceRegistry = useServiceRegistry()
   const { markets } = useAvailableMarkets()
+  // A probability series reads in cents on both axes; the venue's asset class
+  // is the signal, with the directory pin covering a shared link.
+  const predictionPrices = useIsPredictionPair(pairKey, chartConfig.market)
   const marketLabel =
     markets.find((m) => m.value === chartConfig.market)?.label ??
     chartConfig.market
@@ -99,6 +103,7 @@ const ChartPaneInner = memo(function ChartPaneInner({
     chartSeries,
     chartTimeframe,
     chartType,
+    supportedTimeframes,
     crosshairMode,
     priceScaleMode,
     invertedScale,
@@ -212,7 +217,16 @@ const ChartPaneInner = memo(function ChartPaneInner({
           commandId.slice(TOOL_COMMAND_PREFIX.length) as DrawingToolType,
         )
       } else if (commandId.startsWith(TIMEFRAME_COMMAND_PREFIX)) {
-        setTimeframe(commandId.slice(TIMEFRAME_COMMAND_PREFIX.length))
+        const requested = commandId.slice(TIMEFRAME_COMMAND_PREFIX.length)
+        // All eleven digits are bound, but the venue being charted may serve
+        // three. Storing an interval it cannot draw is worse than doing
+        // nothing: the chart clamps and stays where it was, so the keypress
+        // looks like a no-op while it has quietly replaced the preference the
+        // user gets back on their next CEX — and fired a timeframe_changed
+        // event for an interval that was never charted. So an unsupported
+        // digit is simply not a timeframe command here.
+        if (supportedTimeframes.includes(requested)) setTimeframe(requested)
+        else handled = false
       } else if (commandId === 'chart.indicators') {
         setIndicatorPaletteOpen(true)
       } else if (commandId === 'chart.undo') {
@@ -245,6 +259,7 @@ const ChartPaneInner = memo(function ChartPaneInner({
       setIsFullscreen,
       setIndicatorPaletteOpen,
       setTimeframe,
+      supportedTimeframes,
       isFullscreen,
       indicatorPaletteOpen,
       chartRef,
@@ -315,6 +330,7 @@ const ChartPaneInner = memo(function ChartPaneInner({
             activeTool={activeTool}
             drawingStyleDefaults={drawingStyleDefaults}
             pairKey={pairKey}
+            predictionPrices={predictionPrices}
             onContextMenu={setContextMenuState}
             onRemoveIndicator={removeIndicator}
             onActiveToolChange={applyTool}

@@ -46,6 +46,7 @@ export type ChartConfigValue = Pick<
   ChartTerminalStateValue,
   | 'market'
   | 'timeframe'
+  | 'supportedTimeframes'
   | 'chartType'
   | 'crosshairMode'
   | 'priceScaleMode'
@@ -207,6 +208,7 @@ export function ChartTerminalProvider({
     () => ({
       market: state.market,
       timeframe: state.timeframe,
+      supportedTimeframes: state.supportedTimeframes,
       chartType: state.chartType,
       crosshairMode: state.crosshairMode,
       priceScaleMode: state.priceScaleMode,
@@ -234,6 +236,7 @@ export function ChartTerminalProvider({
     [
       state.market,
       state.timeframe,
+      state.supportedTimeframes,
       state.chartType,
       state.crosshairMode,
       state.priceScaleMode,

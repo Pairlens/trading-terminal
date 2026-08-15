@@ -30,6 +30,7 @@ import { WorkspaceProvider } from '@/lib/layout/workspace-context'
 import { PAIR_WORKSPACE } from '@/lib/layout/workspaces/pair-workspace'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
+import { lookupPredictionOutcome } from '@/stores/prediction-directory-store'
 
 export const Route = createFileRoute('/_terminal/pair/$pair')({
   component: PairTerminalPage,
@@ -45,6 +46,15 @@ const normalizePairKey = (value: string) =>
 const marketsSupportStocks = (markets: Array<MarketOption>, marketId: string) =>
   markets.find((m) => m.value === marketId)?.assetClasses.includes('stocks') ??
   false
+
+/** Whether the given market id serves the prediction asset class. */
+const marketsSupportPredictions = (
+  markets: Array<MarketOption>,
+  marketId: string,
+) =>
+  markets
+    .find((m) => m.value === marketId)
+    ?.assetClasses.includes('prediction') ?? false
 
 function PairTerminalPage() {
   const { t } = useTranslation()
@@ -176,14 +186,65 @@ function PairTerminalContent({
   }, [pairKey, market, assetClass])
   useEffect(() => {
     if (!assetClass) return
+    // Predictions are their own venue set, not the other half of a binary: an
+    // outcome key streams from Kalshi or Polymarket and from nowhere else, and
+    // the stocks/not-stocks split would happily leave it on Binance (a crypto
+    // venue is correctly "not stocks"). So route it explicitly first, and only
+    // then fall through to the binary the other classes share.
+    if (assetClass === 'prediction') {
+      // An event contract exists on exactly one venue, and the directory pin
+      // names it. Class-level routing ("any prediction venue") is wrong here:
+      // it left a Polymarket key charting against Kalshi, which then queried a
+      // market that does not exist there. The pin wins even over a
+      // desktop-only venue — the connector's own "needs the desktop app" is
+      // the truthful state, not a reason to hop venues.
+      const owner = lookupPredictionOutcome(pairKey)?.market
+      const ownerOption = owner
+        ? markets.find((m) => m.value === owner)
+        : undefined
+      if (ownerOption) {
+        if (ownerOption.value !== market) setMarket(ownerOption.value)
+        return
+      }
+      // Cold link the directory never saw: fall back to reachability, not
+      // just class. Kalshi registers before Polymarket and its REST hosts
+      // answer 403 to any foreign Origin, so "the first venue that serves
+      // predictions" put every shared outcome link on a venue a browser
+      // cannot load — a dead end rather than a correction. Verified in the
+      // browser preview. On desktop nothing is desktop-only and this reads
+      // as the plain first match.
+      const current = markets.find((m) => m.value === market)
+      const onPredictionVenue =
+        current?.assetClasses.includes('prediction') ?? false
+      if (onPredictionVenue && !current?.desktopOnly) return
+      const reachable = markets.find(
+        (m) => m.assetClasses.includes('prediction') && !m.desktopOnly,
+      )
+      // With no reachable one, a venue already serving predictions is left
+      // alone: the connector refuses with its own "needs the desktop app",
+      // which says more than silently hopping to another unreachable venue.
+      const target =
+        reachable ??
+        (onPredictionVenue
+          ? undefined
+          : markets.find((m) => m.assetClasses.includes('prediction')))
+      if (target && target.value !== market) setMarket(target.value)
+      return
+    }
     const current = marketsSupportStocks(markets, market)
     const wantStocks = assetClass === 'stocks'
-    if (wantStocks === current) return
+    // A prediction venue reads as "not stocks", so the binary alone would
+    // leave a crypto pair sitting on Kalshi. Leaving one is always wrong for
+    // a non-prediction pair, whichever side of the binary it wants.
+    if (!marketsSupportPredictions(markets, market) && wantStocks === current)
+      return
     const target = markets.find(
-      (m) => m.assetClasses.includes('stocks') === wantStocks,
+      (m) =>
+        !m.assetClasses.includes('prediction') &&
+        m.assetClasses.includes('stocks') === wantStocks,
     )
     if (target) setMarket(target.value)
-  }, [assetClass, market, markets, setMarket])
+  }, [assetClass, pairKey, market, markets, setMarket])
 
   return (
     <>

@@ -131,6 +131,7 @@ export function createCexConnectorManifest(
         : []),
     ],
     metadata: {
+      family: 'cex-spot',
       assetClass: 'crypto-spot',
       gradient: opts.gradient,
       abbr: opts.abbr,

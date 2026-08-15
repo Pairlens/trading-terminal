@@ -45,6 +45,7 @@ import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useRecentPairs } from '@/lib/recent-tickers'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
+import { lookupPredictionOutcome } from '@/stores/prediction-directory-store'
 
 const MAX_RECENT = 6
 const MAX_POPULAR = 8
@@ -75,11 +76,42 @@ type Section = {
  */
 function classOf(symbol: string, assetClass?: string): string {
   if (assetClass) return assetClass
+  // A prediction key is a venue ticker with dashes in it, so the shape test
+  // below would call it crypto. The directory is the only thing that knows,
+  // and it knows because the row that opened this pair pinned it.
+  if (lookupPredictionOutcome(symbol)) return 'prediction'
   return symbol.includes('-') ? 'crypto' : 'stocks'
 }
 
-/** A pair the catalog doesn't know, rendered from its symbol alone. */
+/**
+ * A pair the catalog doesn't know, rendered from its symbol alone.
+ *
+ * The prediction arm is directory-backed rather than parsed: an outcome key
+ * has no base/quote to split, and its display name is a question that exists
+ * nowhere in the key. A pinned outcome renders as what the user picked; an
+ * unpinned one falls through to the BASE-QUOTE reading, which is at worst the
+ * bare key it already was.
+ */
 function synthesizeEntry(symbol: string): PairEntry {
+  const pinned = lookupPredictionOutcome(symbol)
+  if (pinned) {
+    return {
+      id: symbol,
+      symbol,
+      name: pinned.name,
+      base: symbol,
+      quote: '',
+      assetClass: 'prediction',
+      categories: [],
+      rank: Number.MAX_SAFE_INTEGER,
+      predictionMarketId: pinned.predictionMarketId,
+      outcome: pinned.outcome,
+      market: pinned.market,
+      ...(pinned.eventTitle ? { eventTitle: pinned.eventTitle } : {}),
+      ...(pinned.eventId ? { eventId: pinned.eventId } : {}),
+      ...(typeof pinned.endMs === 'number' ? { endMs: pinned.endMs } : {}),
+    }
+  }
   const idx = symbol.indexOf('-')
   const base = idx === -1 ? symbol : symbol.slice(0, idx)
   const quote = idx === -1 ? '' : symbol.slice(idx + 1)

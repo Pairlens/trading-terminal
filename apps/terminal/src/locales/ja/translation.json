@@ -2164,7 +2164,9 @@
     "web": "ウェブパネル",
     "liquidityHeatmap": "流動性ヒートマップ",
     "recentTickers": "最近見たティッカー",
-    "empty": "空"
+    "empty": "空",
+    "events": "イベント",
+    "predictionPositions": "予測ポジション"
   },
   "paneDescriptions": {
     "markets": "全取引所の全取引ペアを閲覧",
@@ -2190,7 +2192,9 @@
     "symbolNews": "アクティブな取引ペアに関するニュースとセンチメント分析",
     "web": "任意のウェブサイトをワークスペースのパネルとして埋め込み",
     "liquidityHeatmap": "時間経過に伴う価格帯ごとの深さを示すオーダーブック流動性ヒートマップ",
-    "recentTickers": "素早く切り替えられる、ライブ価格付きの最近見たペア"
+    "recentTickers": "素早く切り替えられる、ライブ価格付きの最近見たペア",
+    "events": "予測市場のイベントを閲覧し、結果のチャートを開きます",
+    "predictionPositions": "保有している契約、そのコスト、決済時期"
   },
   "multiPrice": {
     "venue": "取引所",
@@ -2262,7 +2266,11 @@
     "paneUnavailable": {
       "title": "{{pair}} は {{venue}} では取り扱いがありません",
       "titleAnyVenue": "{{pair}} は取り扱いがありません",
-      "description": "このコネクタはこのペアの市場データを返しませんでした。取り扱いのある別のコネクタをお試しください。"
+      "description": "このコネクタはこのペアの市場データを返しませんでした。取り扱いのある別のコネクタをお試しください。",
+      "predictionDescription": "イベントの結果は 1 つの取引所でのみ取引されるため、ほかに試せる場所はありません。取引所が 1 回のリクエストを拒否しただけの可能性もあります。",
+      "retry": "再試行",
+      "desktopOnlyTitle": "この取引所にはデスクトップアプリが必要です",
+      "desktopOnlyDescription": "その API はブラウザからのオリジンを拒否するため、このペアの市場データはデスクトップ版からのみ利用できます。"
     },
     "paneTransition": {
       "switchingTo": "{{venue}} に切り替え中…",
@@ -2464,9 +2472,43 @@
     "needsFullTrustToRun": "実行には完全な信頼が必要です",
     "pendingTrustDescription": "UI を提供するためサンドボックス内では動作できません — 有効にするには完全な信頼を付与するか、アンインストールしてください。",
     "remove": "削除",
-    "groupCore": "コア",
     "groupProvidersExtensions": "プロバイダーと拡張機能",
-    "groupThemes": "テーマ",
+    "families": {
+      "core": {
+        "label": "コア",
+        "description": "ターミナル本体：チャート、板情報、発注、ワークスペースツール。"
+      },
+      "intelligence": {
+        "label": "インテリジェンス",
+        "description": "ホスト型 AI、銘柄検索、ニュース、マーケットインテリジェンス。"
+      },
+      "cexSpot": {
+        "label": "暗号資産取引所",
+        "description": "暗号資産の相場データと取引を提供する中央集権型スポット取引所。"
+      },
+      "dex": {
+        "label": "オンチェーン DEX",
+        "description": "オンチェーンのスワップ取引所と DEX データプロバイダー。"
+      },
+      "equities": {
+        "label": "株式",
+        "description": "株式の相場データと取引を提供するブローカー接続。"
+      },
+      "predictions": {
+        "label": "予測市場",
+        "description": "現実の結果を取引するイベント契約の取引所。"
+      },
+      "aiByok": {
+        "label": "AI プロバイダー",
+        "description": "自分の API キーで使う言語モデルとウェブ検索。"
+      },
+      "themes": {
+        "label": "テーマ",
+        "description": "UI とチャート配色のビジュアルテーマ。"
+      }
+    },
+    "familyToggleAria": "{{family}}のプラグインをすべて有効または無効にする",
+    "familyToggleFailed": "一部の{{family}}プラグインを変更できませんでした",
     "removePluginTitle": "プラグインを削除",
     "removePluginDescription": "プラグインを無効化して削除します。このプラグインが提供していたパネルには復元用のプレースホルダーが表示されます。いつでも Plugin Store から再インストールできます。",
     "resetDefaultsTitle": "デフォルトにリセット",
@@ -2728,6 +2770,14 @@
         "title": "Alpaca マーケットコネクタ",
         "description": "Alpaca ブローカー API による米国株式・ETF — リアルタイムのマーケットデータ、ペーパー・ライブ両対応の取引"
       },
+      "kalshi-market-connector": {
+        "title": "Kalshi マーケットコネクタ",
+        "description": "CFTC 規制の予測取引所 Kalshi のイベント契約 — 資産ではなく結果を取引"
+      },
+      "polymarket-market-connector": {
+        "title": "Polymarket マーケットコネクタ",
+        "description": "Polymarket CLOB のイベント契約 — ウォレット署名で発注、USDC で決済"
+      },
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "DexPaprika が提供する DEX マーケットデータ"
@@ -2759,6 +2809,10 @@
       "polygon-dex-connector": {
         "title": "Polygon DEXコネクタ",
         "description": "オンチェーンPolygonスワップ — KyberSwapアグリゲーター経由で全 Polygon DEX から最良価格をルーティング"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens 予測",
+        "description": "予測市場のイベントブラウザと建玉ポジション"
       }
     }
   },
@@ -2868,7 +2922,14 @@
       "workflow": "ワークフロー",
       "notSupportedOn": "{{venue}}では未対応です",
       "available": "利用可能: {{amount}}",
-      "slippage": "スリッページ"
+      "slippage": "スリッページ",
+      "contracts": "枚数",
+      "maxLoss": "最大損失",
+      "priceCents": "価格（¢）",
+      "thisOutcome": "この結果",
+      "decreaseContracts": "契約を1枚減らす",
+      "increaseContracts": "契約を1枚増やす",
+      "priceCentsRange": "0¢ から 100¢ の価格を入力してください"
     },
     "status": {
       "connecting": "接続中…",
@@ -3915,7 +3976,11 @@
     "hoursAgo": "{{n}}時間前",
     "daysAgo": "{{n}}日前",
     "today": "今日",
-    "yesterday": "昨日"
+    "yesterday": "昨日",
+    "closed": "終了",
+    "inMinutes": "{{n}}分後",
+    "inHours": "{{n}}時間後",
+    "inDays": "{{n}}日後"
   },
   "markets": {
     "title": "マーケット",
@@ -3937,7 +4002,8 @@
     "assetClass": {
       "all": "すべて",
       "crypto": "暗号資産",
-      "stocks": "株式"
+      "stocks": "株式",
+      "prediction": "予測"
     },
     "category": {
       "all": "すべて",
@@ -3948,7 +4014,9 @@
       "ai": "AI",
       "gaming": "Gaming",
       "infrastructure": "Infra"
-    }
+    },
+    "predictionsEmptyTitle": "予測の結果は「イベント」パネルにあります",
+    "predictionsEmptyBody": "結果は毎日上場し決済されるため、カタログではなく取引所自身のボードから閲覧します。"
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -4569,9 +4637,17 @@
         "label": "オーダーブック",
         "description": "ライブのオーダーブック深度ストリーム"
       },
+      "trades": {
+        "label": "約定",
+        "description": "リアルタイムの歩み値ストリーム"
+      },
       "history": {
         "label": "履歴",
         "description": "チャート用の過去ローソク足バックフィル"
+      },
+      "events": {
+        "label": "イベント",
+        "description": "予測市場のイベントと結果を閲覧"
       },
       "discovery": {
         "label": "ディスカバリー",
@@ -4613,6 +4689,10 @@
       "balances": {
         "label": "残高",
         "description": "接続した取引所からアカウントの資産残高を取得"
+      },
+      "positions": {
+        "label": "ポジション",
+        "description": "接続先取引所の保有ポジションと決済を取得"
       }
     },
     "workflow": {
@@ -4658,6 +4738,14 @@
     "broker": {
       "label": "ブローカー",
       "description": "株式データと取引のための証券ブローカー接続"
+    },
+    "predictions": {
+      "label": "予測市場",
+      "description": "現実の結果を取引するイベント契約の取引所"
+    },
+    "dex": {
+      "label": "オンチェーン DEX",
+      "description": "オンチェーンのスワップ取引所と DEX データプロバイダー"
     },
     "ai": {
       "label": "AI プロバイダー",
@@ -4896,11 +4984,45 @@
       "spot": "現物",
       "onChain": "オンチェーン",
       "equities": "株式",
+      "predictions": "予測",
       "notListed": "{{venue}}の取り扱いなし",
       "notListedCallout": "{{pair}}は{{venue}}の取り扱いがありません。選択すると、フォーカス中の取引所が{{other}}に切り替わります。",
       "availableVenues": "利用可能",
       "desktopOnlyVenues": "デスクトップアプリが必要です",
-      "desktopOnlyVenue": "デスクトップのみ"
+      "desktopOnlyVenue": "デスクトップのみ",
+      "filterPredictions": "予測"
     }
+  },
+  "events": {
+    "searchPlaceholder": "イベントや設問を検索",
+    "allCategories": "すべて",
+    "loading": "イベントを読み込み中…",
+    "failed": "イベントを読み込めませんでした",
+    "tryLater": "取引所から応答がありませんでした。少し待って再試行してください。",
+    "emptyTitle": "進行中のイベントはありません",
+    "emptyBody": "この取引所には現在、掲載中のイベントがありません。",
+    "noMatchesTitle": "一致するイベントがありません",
+    "noMatchesBody": "もっと短い設問か、別のカテゴリーを試してください。",
+    "noVenuesTitle": "予測取引所が接続されていません",
+    "noVenuesBody": "プラグインストアから Kalshi または Polymarket をインストールすると、イベント契約を閲覧できます。",
+    "desktopOnlyTitle": "イベント閲覧にはデスクトップアプリが必要です",
+    "desktopOnlyDescription": "この取引所の API はブラウザからのオリジンを拒否するため、イベント一覧はデスクトップ版からのみ利用できます。",
+    "venueDesktopOnly": "{{venue}} のイベントにはデスクトップアプリが必要です。",
+    "volume": "出来高 {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "アカウントを接続",
+    "noAccountsTitle": "予測アカウントが接続されていません",
+    "noAccountsBody": "Kalshi の API キーまたは Polygon ウォレットを追加すると、保有契約が表示されます。",
+    "loading": "ポジションを読み込み中…",
+    "emptyTitle": "建玉はありません",
+    "emptyBody": "注文が約定すると、ここにポジションが表示されます。",
+    "colMarket": "マーケット",
+    "colOutcome": "結果",
+    "colContracts": "枚数",
+    "colAvgPrice": "平均",
+    "colCost": "コスト",
+    "colResolves": "決済",
+    "resolved": "決済済み"
   }
 }

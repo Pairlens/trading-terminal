@@ -136,6 +136,7 @@ export const burntOrangeManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'burnt-orange',

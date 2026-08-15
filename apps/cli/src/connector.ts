@@ -24,18 +24,22 @@ import {
   createCryptocomMarketConnectorPlugin,
   createGateMarketConnectorPlugin,
   createHtxMarketConnectorPlugin,
+  createKalshiMarketConnectorPlugin,
   createKrakenMarketConnectorPlugin,
   createKucoinMarketConnectorPlugin,
   createMexcMarketConnectorPlugin,
   createOkxMarketConnectorPlugin,
+  createPolymarketMarketConnectorPlugin,
   createUpbitMarketConnectorPlugin,
   cryptocomMarketConnectorManifest,
   gateMarketConnectorManifest,
   htxMarketConnectorManifest,
+  kalshiMarketConnectorManifest,
   krakenMarketConnectorManifest,
   kucoinMarketConnectorManifest,
   mexcMarketConnectorManifest,
   okxMarketConnectorManifest,
+  polymarketMarketConnectorManifest,
   upbitMarketConnectorManifest,
 } from '@pairlens/plugins/all'
 
@@ -99,6 +103,16 @@ const CONNECTORS = [
   {
     manifest: alpacaMarketConnectorManifest,
     factory: createAlpacaMarketConnectorPlugin,
+  },
+  // Prediction venues. Both are reachable headlessly: bun sends no Origin, so
+  // Kalshi's browser-only 403 does not apply here.
+  {
+    manifest: kalshiMarketConnectorManifest,
+    factory: createKalshiMarketConnectorPlugin,
+  },
+  {
+    manifest: polymarketMarketConnectorManifest,
+    factory: createPolymarketMarketConnectorPlugin,
   },
 ]
 

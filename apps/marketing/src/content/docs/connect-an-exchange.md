@@ -12,7 +12,7 @@ readTime: 4 min read
 Open **Accounts** in the left nav and hit **Connect Account**. Everything you
 add is stored on this device and nowhere else.
 
-## Three kinds of account
+## Four kinds of account
 
 **Crypto exchange.** A centralized venue such as Binance, OKX, or Kraken,
 connected with an API key. Your funds stay on the exchange. Fourteen ship in
@@ -25,6 +25,10 @@ through DEXs. Covers Solana via Jupiter and five EVM chains. See
 **Stock broker.** Alpaca today, for US equities and ETFs. Alpaca hands out free
 paper-trading keys in minutes, which makes it the easiest venue to try the
 whole flow on.
+
+**Prediction market.** Kalshi with an API key and an RSA private key, or
+Polymarket with an Ethereum wallet. See
+[prediction markets](/docs/prediction-markets).
 
 ## The wizard
 

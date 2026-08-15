@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What is Pairlens
 
-AI-native crypto spot trading terminal. **Desktop-first, but the browser is a shipped surface** — the primary distribution is a Tauri desktop app (`apps/desktop/`), and a hosted web terminal runs at `terminal.pairlens.finance` (the marketing site's main CTA). The browser build is a real product, not a dev harness; what it cannot do is bounded and explicit. Five connectors (Coinbase, Gate, KuCoin, MEXC, Bitfinex) serve REST without CORS headers and stream no candle history, so they declare `requiresDesktop` and refuse in a browser with a typed `PlatformRestrictedError` rather than presenting a dead chart. Desktop additionally gets the OS keychain, background bots, wake-blocking and native windows. Deterministic strategies generate signals, an AI co-pilot provides contextual analysis (APPROVE/BLOCK/WATCH), and user-configurable risk guardrails are enforced at the infrastructure level. The AI augments decisions but never overrides risk limits.
+AI-native crypto spot trading terminal. **Desktop-first, but the browser is a shipped surface** — the primary distribution is a Tauri desktop app (`apps/desktop/`), and a hosted web terminal runs at `terminal.pairlens.finance` (the marketing site's main CTA). The browser build is a real product, not a dev harness; what it cannot do is bounded and explicit. Six connectors (Coinbase, Gate, KuCoin, MEXC, Bitfinex, Kalshi) serve REST without CORS headers, so they declare `requiresDesktop` and refuse in a browser with a typed `PlatformRestrictedError` rather than presenting a dead chart. Desktop additionally gets the OS keychain, background bots, wake-blocking and native windows. Deterministic strategies generate signals, an AI co-pilot provides contextual analysis (APPROVE/BLOCK/WATCH), and user-configurable risk guardrails are enforced at the infrastructure level. The AI augments decisions but never overrides risk limits.
 
 **Phones get the Mobile Trading Terminal.** Below 768px the same URL boots a chart-centric five-tab surface — Watchlist · Trade · Chart · Co-pilot · Discover — built from the same codebase, under `apps/terminal/src/mobile/`. It is a trading surface, not a shrunken dashboard: order entry with the same guarded order path, a full order book, drawings, the co-pilot, and the same connect-an-account flow. Architecture in [Mobile Terminal](#mobile-terminal).
 
@@ -67,7 +67,7 @@ DESKTOP APP (Tauri)                       OPTIONAL CLOUD (not in this repo)
   Local credential store (OS keychain)
 
 ALSO AVAILABLE
-  Hosted web terminal (terminal.pairlens.finance, Vercel) — 11 of 15 venues
+  Hosted web terminal (terminal.pairlens.finance, Vercel) — 11 of 17 venues
   Mobile terminal — the same URL below 768px (apps/terminal/src/mobile/)
   CLI (bun apps/cli/src/index.ts)
   pairlens.finance (marketing, Vercel)
@@ -106,11 +106,14 @@ Market connectors are standard plugins that implement the `MarketAdapter` interf
 - **CEX** (14, all read + trade via the **CCXT bridge**: `createCcxtConnectorPlugin` in `packages/plugins/src/ccxt-connector/` builds a `CexConnectorSpec` per venue and delegates to the `cex-connector` shell in `packages/plugins/src/cex-connector/` — neither is a plugin itself): OKX (regional routing US/EU/global + per-credential account entity), Binance, ByBit (region-gated, blocked in US), Bitvavo (region-gated, EU), MEXC (region-gated), KuCoin, Gate, Coinbase, Bitget, Kraken, HTX, Crypto.com, Bitfinex, Upbit (no trigger orders). Venue protocol work (WS channels, signing, order mapping) is ccxt's; the bridge owns everything ccxt lacks in a browser — reconnect pacing, inbound-silence liveness, wake recovery, the markets pipeline, regional/geo routing, and per-venue ccxt bug patches (see `ccxt-connector/venues/*.ts`). See "CCXT bridge" below.
 - **Broker**: Alpaca (US equities, requires API keys; standalone connector, not the CEX factory)
 - **DEX**: Jupiter (Solana), EVM DEX connector — one factory that emits 5 chain plugins (Ethereum, Base, Arbitrum, BSC, Polygon) with swaps via KyberSwap routing
+- **Predictions** (2, event contracts): Kalshi (`requiresDesktop` — its API 403s any foreign `Origin`; API Key ID + RSA PEM, paper via ccxt `urls.test` demo env, limit-only, 1m/1h/1d) and Polymarket (browser-capable, wallet-signed EOA like the EVM DEX connectors, live-only, market + limit, 1m/5m/1h/1d, refuses US at trade time). Both ride the **prediction runtime** in `packages/plugins/src/prediction-connector/`, which hosts ccxt `PredictionExchange` venues and deep-imports `ccxt/js/src/prediction/<id>.js`. Instruments are outcomes priced 0..1 (UI shows cents); each outcome is its own instrument, so `OrderParams` is unchanged and sizes are contract counts.
 - **DEX data providers** (read-only): GeckoTerminal (primary), DexPaprika
 - **AI inference** (bring-your-own-key): Groq, OpenAI, Anthropic, OpenRouter
 - **AI web search** (bring-your-own-key): Tavily, Exa
-- **Core**: `pairlens-core` (instrument discovery, panels, workflow step types), `pairlens-intelligence` (fallback-only AI inference/search + discovery + symbol logos). `basic-symbols` is deprecated (absorbed into pairlens-core, kept for registry back-compat).
+- **Core**: `pairlens-core` (instrument discovery, panels, workflow step types), `pairlens-intelligence` (fallback-only AI inference/search + discovery + symbol logos), `pairlens-predictions` (panels only, zero capabilities: the `events` browser and the `prediction-positions` pane, kept out of pairlens-core so a deployment that drops the `predictions` family drops them too). `basic-symbols` is deprecated (absorbed into pairlens-core, kept for registry back-compat).
 - **Themes**: 18 `theme:override` plugins
+
+**Plugin families.** Every official manifest stamps `metadata.family` with a `PluginFamilyId` from `packages/shared/src/plugin-families.ts` (`core`, `intelligence`, `themes`, `ai-byok`, `cex-spot`, `dex`, `equities`, `predictions`). A family is presentation plus policy only: plugin ids, capabilities and persisted state are unaffected. It buys two things. A deployment can drop a whole asset class with `VITE_PAIRLENS_DISABLED_FAMILIES` (excluded families are never seeded into the ledger, never installed at boot even with a stale ledger row, and never listed in the Plugin Store; `core` and `intelligence` are `required` and refuse exclusion). And the Plugin Store's Installed tab groups by family with an enable/disable-all switch per non-required family, which just drives the existing per-plugin ledger toggle. The filter only ever touches plugins whose ledger source is `bootstrap`, so a user's own plugins are never family-filtered. `pluginFamilyOf(manifest)` resolves the explicit stamp first, then falls back to capability shape; null means unfamilied, which is never filtered.
 
 **Third-party connectors** can be installed from the Plugin Store at runtime. Any developer can build a connector by implementing `MarketAdapter` and publishing to the registry.
 
@@ -118,7 +121,7 @@ Market connectors are standard plugins that implement the `MarketAdapter` interf
 
 ### CCXT bridge
 
-The 14 CEX connectors ride on **ccxt@4.5.71, pinned in `packages/plugins` only** and patched via bun's patch mechanism (`patches/ccxt@4.5.71.patch`). The patch has exactly three items: `./js/src/*.js` subpath exports (the key must carry `.js` — bun is lenient, Vite is strict), `fflate` added to ccxt's deps (isolated-linker resolution for browser WS gunzip), and an `onMessage` fix normalizing browser `ArrayBuffer` frames to `Uint8Array` (ccxt assumes Node Buffers; without it HTX is completely dead in a browser and Upbit/MEXC binary frames parse wrong). Rules that keep it working:
+The 14 CEX connectors ride on **ccxt@4.5.71, pinned in `packages/plugins` only** (the 2 prediction venues ride the same pinned ccxt but a **separate runtime**, `prediction-connector/` — the spot bridge assumes symbols, base/quote and spot markets throughout, so do not try to host a `PredictionExchange` on it) and patched via bun's patch mechanism (`patches/ccxt@4.5.71.patch`). The patch has exactly three items: `./js/src/*.js` subpath exports (the key must carry `.js` — bun is lenient, Vite is strict), `fflate` added to ccxt's deps (isolated-linker resolution for browser WS gunzip), and an `onMessage` fix normalizing browser `ArrayBuffer` frames to `Uint8Array` (ccxt assumes Node Buffers; without it HTX is completely dead in a browser and Upbit/MEXC binary frames parse wrong). Rules that keep it working:
 
 - **Never import the ccxt barrel.** Venues load their exchange class with a dynamic deep import (`ccxt/js/src/pro/<id>.js`) so each ~1 MB class is its own chunk. Only `packages/plugins` may import ccxt at all.
 - **Browser shims** live in the terminal: `vite.config.ts` aliases `ws` and `undici` to stubs. `protobufjs` is a real dependency (MEXC WS frames) — never shim it.
@@ -318,10 +321,11 @@ For self-hosted production, create a root `.env.local`. Env precedence (later wi
 | --------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `VITE_APP_SERVER_URL` | Terminal | App Server URL. Dev resolution when unset: local `:4046` if running, else Pairlens Cloud (`https://api.pairlens.finance`). Explicitly empty = standalone (auth off) |
 | `PAIRLENS_STANDALONE` | Terminal | `1` = fully offline dev: no App Server, auth off, cloud panels hidden, local persistence only |
+| `VITE_REGISTRY_URL`   | Terminal | Plugin registry URL (auto-derived for local dev)                                                                             |
+| `VITE_PAIRLENS_DISABLED_FAMILIES` | Terminal | Build-time, comma-separated `PluginFamilyId` list this deployment does not ship (e.g. `predictions,equities`). Unknown ids and the `required` families (`core`, `intelligence`) are warned about and ignored. Unset = every family enabled |
+| `TERMINAL_PORT`       | Terminal | Dev server port override (worktree-derived by default)                                                                      |
 
 Production **desktop release builds** must set `VITE_APP_SERVER_URL=https://api.pairlens.finance` in the environment of `tauri build` (the dev-time cloud fallback lives in dev scripts only — a bare production build defaults to standalone).
-| `VITE_REGISTRY_URL`   | Terminal | Plugin registry URL (auto-derived for local dev)                                                                             |
-| `TERMINAL_PORT`       | Terminal | Dev server port override (worktree-derived by default)                                                                      |
 
 Server-side variables (`DATABASE_URL`, `BETTER_AUTH_SECRET`, `AI_GATEWAY_API_KEY`, `CMC_API_KEY`, ...) belong to the App Server and are not used in this repo.
 
@@ -333,7 +337,9 @@ Capability-based plugin resolution in `packages/plugin-system/`. Plugins declare
 
 The terminal integrates via `PairlensProvider` (`src/lib/pairlens-provider.tsx`) for plugin lifecycle, and `MarketDataProvider` (`src/lib/market-data-provider.tsx`) for market data streaming. Market connector plugins connect directly to exchange WebSockets — no intermediate server. Candle streaming uses `pluginManager.subscribe('market-data:candles', ...)`.
 
-**Capability IDs** (source of truth: `packages/shared/src/plugin-types.ts`): `market-data:discovery`, `market-data:discovery:search`, `market-data:candles`, `market-data:ticker`, `market-data:ticker-snapshot`, `market-data:orderbook`, `market-data:trades`, `market-data:history`, `market-data:symbol-logo`, `ai:inference`, `ai:web-search`, `trading:orders`, `trading:balances`, `workflow:step-types`, `theme:override`, `chart:indicator` (plus `notification:channel` and `workspace-store:catalog`, defined in the type but with no bundled provider yet). Note: there is no `ai:context` or `ai:search` — AI capabilities are exactly `ai:inference` and `ai:web-search`; chat vs research is a runtime `purpose` selector on `ai:inference`, not a capability.
+**Capability IDs** (source of truth: `packages/shared/src/plugin-types.ts`): `market-data:discovery`, `market-data:discovery:search`, `market-data:candles`, `market-data:ticker`, `market-data:ticker-snapshot`, `market-data:orderbook`, `market-data:trades`, `market-data:history`, `market-data:symbol-logo`, `market-data:events`, `ai:inference`, `ai:web-search`, `trading:orders`, `trading:balances`, `trading:positions`, `workflow:step-types`, `theme:override`, `chart:indicator` (plus `notification:channel` and `workspace-store:catalog`, defined in the type but with no bundled provider yet). Note: there is no `ai:context` or `ai:search` — AI capabilities are exactly `ai:inference` and `ai:web-search`; chat vs research is a runtime `purpose` selector on `ai:inference`, not a capability. `trading:positions` is under `trading:*`, so it is banned in the community tier like the rest of that namespace.
+
+Every official manifest also carries a `metadata.family` stamp; see "Plugin families" under Bundled plugins for what a family does and does not affect.
 
 ### Custom Python Indicators
 

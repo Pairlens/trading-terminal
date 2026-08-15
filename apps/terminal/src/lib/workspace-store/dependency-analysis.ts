@@ -4,6 +4,7 @@ import type { PluginManifest, PluginStatus } from '@pairlens/plugin-system'
 
 import type { TerminalLayout } from '@/lib/layout/types'
 import type { WorkspaceTemplate } from './types'
+import { paneTypeKey } from '@/lib/layout/pane-registry'
 import { localizedText } from '@/lib/plugin-text'
 import {
   BOOTSTRAP_PLUGINS,
@@ -18,19 +19,10 @@ import {
 //
 // Built once from the bundled plugins so a template's dependencies resolve
 // even when the owning plugin isn't installed (e.g. a bootstrap plugin the
-// user uninstalled, or a connector that ships disabled). Mirrors the pane-type
-// keying rule in DynamicPaneRegistry so pane types map to the right owner.
-
-const FIRST_PARTY_PLUGIN_IDS = new Set([
-  'pairlens-core',
-  'pairlens-intelligence',
-])
-
-function paneTypeKey(pluginId: string, panelId: string): string {
-  return FIRST_PARTY_PLUGIN_IDS.has(pluginId)
-    ? panelId
-    : `${pluginId}:${panelId}`
-}
+// user uninstalled, or a connector that ships disabled). It IMPORTS the
+// pane-type keying rule from DynamicPaneRegistry rather than restating it —
+// the two had drifted apart once already, and a mismatch here shows up as a
+// template pane with no owner rather than as an error.
 
 export type PaneMeta = {
   type: string

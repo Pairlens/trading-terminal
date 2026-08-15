@@ -42,6 +42,7 @@ export const communityStoreManifest: PluginManifest = {
   ],
   config: {},
   metadata: {
+    family: 'core',
     // Consumed by the store-provider adapter (createPluginStoreProvider).
     storeCapabilities: {
       submit: true,

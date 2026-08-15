@@ -25,8 +25,10 @@ the best plugin for each requested capability at runtime.
 | `market-data:discovery`        | Instrument listing               |
 | `market-data:discovery:search` | Instrument search                |
 | `market-data:symbol-logo`      | Asset logos                      |
+| `market-data:events`           | Prediction-market event browsing |
 | `trading:orders`               | Order placement and cancellation |
 | `trading:balances`             | Account balances                 |
+| `trading:positions`            | Open positions and contracts     |
 | `ai:inference`                 | A language model                 |
 | `ai:web-search`                | Web search for research          |
 | `workflow:step-types`          | New workflow canvas steps        |

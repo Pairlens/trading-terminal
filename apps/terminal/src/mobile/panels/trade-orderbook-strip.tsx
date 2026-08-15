@@ -27,7 +27,9 @@ import { useTranslation } from 'react-i18next'
 
 import { useMobileOrderbook } from '../lib/use-mobile-orderbook'
 import { PRESS } from '../primitives/press'
-import { formatBookPrice } from '@/lib/format-price'
+import { useMobileFocus } from '../mobile-focus-context'
+import { formatBookPrice, formatPredictionBookPrice } from '@/lib/format-price'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
 
 /** Deep enough for an honest pressure split, cheap enough to group per tick. */
 const PRESSURE_ROWS = 20
@@ -41,7 +43,10 @@ const PRESSURE_ROWS = 20
  * four) decimals push the spread into an ellipsis. The full book, which has a
  * column each, keeps every digit.
  */
-function formatStripPrice(value: number): string {
+function formatStripPrice(value: number, prediction: boolean): string {
+  // A probability never needs the thousands branch and never wants the
+  // trimmed decimals — "53¢" is already the shortest true reading.
+  if (prediction) return formatPredictionBookPrice(value)
   if (value >= 1000) {
     return value.toLocaleString(undefined, {
       minimumFractionDigits: 1,
@@ -51,7 +56,8 @@ function formatStripPrice(value: number): string {
   return trimZeros(formatBookPrice(value))
 }
 
-function formatSpread(value: number): string {
+function formatSpread(value: number, prediction: boolean): string {
+  if (prediction) return formatPredictionBookPrice(value)
   return value >= 1 ? value.toFixed(2) : trimZeros(formatBookPrice(value))
 }
 
@@ -73,6 +79,8 @@ export const TradeOrderbookStrip = memo(function TradeOrderbookStrip({
   const { t } = useTranslation()
   const { bestBid, bestAsk, spread, buyPct, sellPct, ready } =
     useMobileOrderbook(PRESSURE_ROWS)
+  const { focusedPair, focusedVenue } = useMobileFocus()
+  const prediction = useIsPredictionPair(focusedPair, focusedVenue)
 
   return (
     <button
@@ -94,16 +102,18 @@ export const TradeOrderbookStrip = memo(function TradeOrderbookStrip({
         </span>
         <span className="min-w-0 flex-1 truncate font-mono text-[11px] font-normal tabular-nums text-muted-foreground">
           {spread
-            ? t('mobile.trade.spread', { value: formatSpread(spread.value) })
+            ? t('mobile.trade.spread', {
+                value: formatSpread(spread.value, prediction),
+              })
             : null}
         </span>
         <span className="shrink-0 font-mono text-[12px] font-medium tabular-nums">
           <span className="text-up">
-            {bestBid == null ? '—' : formatStripPrice(bestBid)}
+            {bestBid == null ? '—' : formatStripPrice(bestBid, prediction)}
           </span>
           <span className="px-1 text-muted-foreground">/</span>
           <span className="text-down">
-            {bestAsk == null ? '—' : formatStripPrice(bestAsk)}
+            {bestAsk == null ? '—' : formatStripPrice(bestAsk, prediction)}
           </span>
         </span>
         <ChevronRight

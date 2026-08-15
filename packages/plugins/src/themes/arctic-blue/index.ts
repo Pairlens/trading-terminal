@@ -135,6 +135,7 @@ export const arcticBlueManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'arctic-blue',

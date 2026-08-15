@@ -1,0 +1,157 @@
+---
+title: Prediction markets
+description: Trade event contracts on Kalshi and Polymarket from the same terminal, with prices in cents, a Yes and No ticket, an event browser, and positions that settle.
+group: traders
+parent: trading
+order: 6
+eyebrow: For traders
+updated: AUG 2026
+readTime: 5 min read
+---
+
+An event contract is a market on something that either happens or does not.
+Will the Fed cut in September, will this team win, will BTC close above 53k.
+In Pairlens it behaves like any other instrument: it has a chart, an order
+book, a tape, and the same guarded ticket. What changes is the unit. A contract
+is priced between 0 and 1, shown in cents, and pays one unit of collateral if
+its outcome resolves true.
+
+## Two venues
+
+**Kalshi.** A CFTC-regulated event exchange in the US, connected with an API
+key. It needs the [desktop app](/docs/desktop-app), because its API refuses any
+request carrying a browser origin. Collateral is USD, and it issues demo
+credentials so you can run the whole flow on paper first.
+
+**Polymarket.** A CLOB settled in USDC on Polygon, connected with an Ethereum
+wallet rather than an API key. It works in the hosted web terminal and on a
+phone, because its APIs are open to browsers. Polymarket does not serve US
+persons for trading: market data stays open everywhere, and an order from a US
+country setting is refused before it is signed.
+
+|               | Kalshi          | Polymarket       |
+| ------------- | --------------- | ---------------- |
+| Where it runs | Desktop app     | Anywhere         |
+| Connects with | API key and PEM | Ethereum wallet  |
+| Collateral    | USD             | USDC on Polygon  |
+| Order types   | Limit only      | Market and limit |
+| Paper mode    | Yes, demo keys  | No, live only    |
+| Timeframes    | 1m, 1h, 1d      | 1m, 5m, 1h, 1d   |
+
+Both venues stream candles, tickers, order books, and trades, and both report
+your open contracts back to the terminal.
+
+## Connecting Kalshi
+
+**Accounts → Connect Account → Kalshi**, in the desktop app. Kalshi signs with
+RSA rather than a shared secret, so the form asks for two things:
+
+1. **API Key ID**, the identifier Kalshi shows next to the key.
+2. **RSA Private Key (PEM)**, the file it downloads once when you create the
+   key. Paste it whole, `BEGIN` line included. Pairlens accepts it with real
+   line breaks or with escaped ones, so a copy out of a text editor and a copy
+   out of a JSON blob both work.
+
+Pick **Paper** and the credential signs against Kalshi's demo environment,
+which is a genuinely separate venue rather than a simulation, so fills come
+from a real matching engine with no real money behind them. **Live** points at
+production. Either way the secret goes into your OS keychain and never to a
+Pairlens server. See [connect an exchange](/docs/connect-an-exchange).
+
+## Connecting Polymarket
+
+**Accounts → Connect Account → Crypto Wallet**, with an Ethereum key, the same
+entry the [EVM DEX](/docs/dex-trading) chains use. One key covers both, because
+the address is the same everywhere on EVM.
+
+That key does two jobs. It signs each CLOB order, and Polymarket derives your
+API credentials from it on the first authenticated call, so there is nothing
+else to paste. There is no paper mode: the contracts being signed against are
+on Polygon mainnet. Fund a hot wallet with what you intend to trade and leave
+the rest somewhere else.
+
+## Finding an event
+
+Add the **Events** panel from the Add Pane dialog, under Discovery. It queries
+every prediction venue you have connected and shows what is busy right now:
+category chips across the top, a search box that matches question text, and a
+card per event with how long until it closes, its volume, and a price for each
+outcome.
+Click an outcome and it opens in the chart terminal. A venue that needs the
+desktop app says so in place of its results rather than returning nothing.
+
+Search works from the pair picker too. It grows a **Predictions** tab beside
+Crypto and Stocks, and prediction rows are rendered as the question rather than
+as a ticker, because `KXBTCD-26AUG15-T53` is not something you scan. Once you
+have opened an outcome, the watchlist and the recent-pairs list show its
+question as well.
+
+## Reading a price in cents
+
+A price of 53¢ means the market puts the outcome at roughly 53%. One contract
+costs 53 cents and pays a dollar if it resolves true, nothing if it does not.
+The chart, the order book, the depth curve, the tape, and the mobile shell all
+switch to cents for a prediction instrument, so nothing on screen quotes the
+underlying 0.53.
+
+Each outcome is its own instrument. Yes and No are two separate contracts on
+the same question, and you can buy or sell either one. Selling Yes at 53¢ and
+buying No at 47¢ are close cousins, not the same order, and the book will tell
+you which is cheaper.
+
+## The ticket
+
+Select a prediction outcome and the Trade Entry panel switches modes on its
+own. What you get:
+
+**The question, not the ticker.** It sits at the top of the ticket, so the last
+thing you read before committing is what you are actually trading.
+
+**An outcome switch.** When the question has exactly one other side, a
+segmented control names it. Tap it and the ticket, the chart, and the book
+follow to that contract. A market with several outcomes has no single sibling,
+so the switch is left off rather than guessing.
+
+**Contracts, not amounts.** Size is a whole number of contracts with a stepper
+and a configurable preset row. There is no base and quote toggle, and no sell
+percentage slider, because selling here opens the opposite exposure rather than
+disposing of a holding.
+
+**Prices in cents.** The limit field takes 53 for 53¢ and prefills from the
+live book, the same as anywhere else in the terminal.
+
+**A max loss line.** Above the submit button, the worst case in dollars:
+contracts multiplied by price when you buy, contracts multiplied by one minus
+price when you sell, because a sold contract can settle at a dollar.
+
+Kalshi has no market orders at all, so the ticket offers Limit only there
+rather than letting you find out from a rejection. Neither venue offers the
+Workflow tab: bracket orders need exchange-native trigger orders, and neither
+prediction venue has them.
+
+## Positions and settlement
+
+Add the **Prediction Positions** panel from the Add Pane dialog, under Trading.
+It lists what you hold across your connected prediction venues: the market, the
+outcome, the number of contracts, your average price in cents, what it cost,
+and how long until it resolves. Once a market settles, the row reads
+**Resolved** and shows the payout.
+
+Prediction positions are their own panel rather than a tab in
+[Positions](/docs/positions-and-portfolio), because a contract that expires
+against a real-world event has different columns than a spot position with a
+mark price and an unrealized P&L.
+
+## Guardrails still apply
+
+Every prediction order goes down the same guarded path as a spot order or a
+swap, and your [risk guardrails](/docs/risk-guardrails) are checked there.
+Position caps, trade caps, and loss caps size on notional, which for a bought
+contract is the premium at risk. The hold-to-confirm submit gesture and the
+paper badge behave exactly as they do on a CEX.
+
+## Next
+
+- [Connect an exchange](/docs/connect-an-exchange) for where credentials live
+- [Place an order](/docs/place-an-order) for the rest of the ticket
+- [Panels](/docs/panels) for everything else you can put beside the chart

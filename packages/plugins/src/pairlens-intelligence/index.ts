@@ -34,6 +34,7 @@ export const pairlensIntelligenceManifest: PluginManifest = {
   // at 'free' (no hosted AI); an active subscription grants 'intelligence'
   // via /api/entitlements. BYOK AI provider plugins are never gated.
   accessLevels: ['free', 'intelligence'],
+  metadata: { family: 'intelligence' },
   capabilities: [
     {
       id: 'ai:inference',

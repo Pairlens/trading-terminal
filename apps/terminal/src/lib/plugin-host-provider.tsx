@@ -146,17 +146,25 @@ export function PluginHostProvider({
     [serviceRegistry],
   )
 
-  // Access level for a specific plugin — delegates to the AccessProvider
+  // Access level for a specific plugin — delegates to the AccessProvider.
+  //
+  // The probe works by naming one of the plugin's own capabilities, because
+  // the AccessProvider is keyed by the plugin that SERVES a capability. That
+  // leaves one case the fallback gets wrong: a plugin with no capabilities at
+  // all (a panels-only plugin like `pairlens-predictions`) would fall through
+  // to 'market-data:discovery' and be answered by whichever plugin serves
+  // discovery — reporting someone else's entitlement as its own. An installed
+  // plugin we cannot probe gets null, which callers read as "unrestricted",
+  // and a plugin that declares nothing is gating nothing.
   const getAccessLevel = useCallback(
     (targetPluginId: string) => {
-      // Walk through installed plugins to find one whose access we can check.
-      // The AccessProvider stores per-plugin access levels from entitlements.
+      const target = pluginManager
+        .getInstalledPlugins()
+        .find((p) => p.manifest.id === targetPluginId)
+      const own = target?.manifest.capabilities[0]?.id
+      if (target && !own) return null
       const access = pluginManager.getCapabilityAccess(
-        // Pick any capability from the target plugin to probe its access level
-        pluginManager
-          .getInstalledPlugins()
-          .find((p) => p.manifest.id === targetPluginId)?.manifest
-          .capabilities[0]?.id ?? 'market-data:discovery',
+        own ?? 'market-data:discovery',
       )
       return access.currentAccessLevel ?? null
     },

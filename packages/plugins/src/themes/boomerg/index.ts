@@ -169,6 +169,7 @@ export const boomergManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'boomerg',

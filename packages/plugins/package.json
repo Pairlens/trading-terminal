@@ -19,6 +19,7 @@
     "./anthropic-inference": "./src/anthropic-inference/index.ts",
     "./pairlens-intelligence": "./src/pairlens-intelligence/index.ts",
     "./pairlens-core": "./src/pairlens-core/index.ts",
+    "./pairlens-predictions": "./src/pairlens-predictions/index.ts",
     "./basic-symbols": "./src/basic-symbols/index.ts",
     "./themes": "./src/themes/index.ts",
     "./alpaca-market-connector": "./src/alpaca-market-connector/index.ts",
@@ -41,7 +42,10 @@
     "./ccxt-connector/mexc": "./src/ccxt-connector/venues/mexc.ts",
     "./ccxt-connector/coinbase": "./src/ccxt-connector/venues/coinbase.ts",
     "./ccxt-connector/bitvavo": "./src/ccxt-connector/venues/bitvavo.ts",
-    "./ccxt-connector/upbit": "./src/ccxt-connector/venues/upbit.ts"
+    "./ccxt-connector/upbit": "./src/ccxt-connector/venues/upbit.ts",
+    "./prediction-connector": "./src/prediction-connector/index.ts",
+    "./prediction-connector/kalshi": "./src/prediction-connector/venues/kalshi.ts",
+    "./prediction-connector/polymarket": "./src/prediction-connector/venues/polymarket.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3",

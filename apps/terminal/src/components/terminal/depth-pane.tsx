@@ -17,11 +17,12 @@ import {
   useOptionalChartConfig,
   useOptionalOrderbookData,
 } from '@/lib/chart-terminal-context'
-import { formatBookPrice } from '@/lib/format-price'
+import { formatBookPrice, formatPredictionBookPrice } from '@/lib/format-price'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
 import { useSwitchTransition } from '@/hooks/use-switch-transition'
 import { usePairUnavailable } from '@/stores/pair-availability-store'
 
@@ -64,6 +65,7 @@ function DepthPaneInner({
   const market = chartConfig?.market ?? ''
   const { markets } = useAvailableMarkets()
   const marketLabel = markets.find((m) => m.value === market)?.label ?? market
+  const predictionPrices = useIsPredictionPair(pairKey, market)
   const unavailable = usePairUnavailable(market, pairKey)
   const {
     phase,
@@ -83,35 +85,40 @@ function DepthPaneInner({
   const hoverPriceRef = useRef<HTMLSpanElement>(null)
   const hoverCumRef = useRef<HTMLSpanElement>(null)
 
-  const handleHover = useCallback((info: DepthChartHoverInfo | null) => {
-    const panel = hoverPanelRef.current
-    if (!panel) return
+  const handleHover = useCallback(
+    (info: DepthChartHoverInfo | null) => {
+      const panel = hoverPanelRef.current
+      if (!panel) return
 
-    if (!info) {
-      panel.style.display = 'none'
-      return
-    }
+      if (!info) {
+        panel.style.display = 'none'
+        return
+      }
 
-    panel.style.display = ''
-    panel.style.transform = `translate(${info.x + 12}px,${info.y - 36}px)`
+      panel.style.display = ''
+      panel.style.transform = `translate(${info.x + 12}px,${info.y - 36}px)`
 
-    const badge = hoverBadgeRef.current
-    const price = hoverPriceRef.current
-    const cum = hoverCumRef.current
-    if (!badge || !price || !cum) return
+      const badge = hoverBadgeRef.current
+      const price = hoverPriceRef.current
+      const cum = hoverCumRef.current
+      if (!badge || !price || !cum) return
 
-    // The panel is DOM, not canvas, so it can use the P&L tokens directly and
-    // follow whatever theme plugin is active — unlike the chart body, whose
-    // themes still bake in fixed hexes upstream.
-    const isBid = info.side === 'bid'
-    const token = isBid ? '--up' : '--down'
-    badge.textContent = isBid ? 'Bid' : 'Ask'
-    badge.style.background = `color-mix(in oklch, var(${token}) 15%, transparent)`
-    badge.style.color = `var(${token})`
-    price.textContent = formatBookPrice(info.price)
-    cum.textContent = formatSize(info.cumulative)
-    cum.style.color = `var(${token})`
-  }, [])
+      // The panel is DOM, not canvas, so it can use the P&L tokens directly and
+      // follow whatever theme plugin is active — unlike the chart body, whose
+      // themes still bake in fixed hexes upstream.
+      const isBid = info.side === 'bid'
+      const token = isBid ? '--up' : '--down'
+      badge.textContent = isBid ? 'Bid' : 'Ask'
+      badge.style.background = `color-mix(in oklch, var(${token}) 15%, transparent)`
+      badge.style.color = `var(${token})`
+      price.textContent = predictionPrices
+        ? formatPredictionBookPrice(info.price)
+        : formatBookPrice(info.price)
+      cum.textContent = formatSize(info.cumulative)
+      cum.style.color = `var(${token})`
+    },
+    [predictionPrices],
+  )
 
   // Trim orderbook to a symmetric price range around the mid-price.
   // Without this, exchanges with deep asymmetric books (e.g. 400 bid levels

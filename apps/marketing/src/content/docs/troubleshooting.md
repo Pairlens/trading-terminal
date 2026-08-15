@@ -23,13 +23,15 @@ several venues refuse some regions entirely. Set it under
 **Some venues refuse some regions outright.** When one does, you get a typed
 refusal and a dialog that names the region and offers venues that will serve
 you, rather than a timeout with no explanation. ByBit refuses the US. Bitvavo is
-EU only. Others vary. This is the venue's rule, not ours, and no setting works
-around it.
+EU only. Polymarket serves market data everywhere but refuses an order from a US
+country setting. Others vary. This is the venue's rule, not ours, and no setting
+works around it.
 
-**Five venues need the desktop app.** Coinbase, Gate, KuCoin, MEXC, and Bitfinex
-serve REST without CORS headers, which a browser will not allow. In the hosted
-web terminal they refuse with a clear message rather than presenting a dead
-chart. [Install the desktop app](/docs/desktop-app) or use one of the other ten.
+**Six venues need the desktop app.** Coinbase, Gate, KuCoin, MEXC, Bitfinex,
+and Kalshi serve REST without CORS headers, which a browser will not allow. In
+the hosted web terminal they refuse with a clear message rather than presenting
+a dead chart. [Install the desktop app](/docs/desktop-app) or use one of the
+other eleven.
 
 **Check the connection page.** [Settings → Connection](/docs/settings#connection)
 shows which sockets are actually up.

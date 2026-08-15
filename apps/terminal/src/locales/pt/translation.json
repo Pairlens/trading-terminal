@@ -2164,7 +2164,9 @@
     "web": "Painel Web",
     "liquidityHeatmap": "Mapa de Calor de Liquidez",
     "recentTickers": "Tickers Recentes",
-    "empty": "Vazio"
+    "empty": "Vazio",
+    "events": "Eventos",
+    "predictionPositions": "Posições de previsão"
   },
   "paneDescriptions": {
     "markets": "Explore todos os pares de negociação disponíveis nas exchanges",
@@ -2190,7 +2192,9 @@
     "symbolNews": "Notícias e análise de sentimento para o par de negociação ativo",
     "web": "Incorpore qualquer site como um painel no seu workspace",
     "liquidityHeatmap": "Mapa de calor de liquidez do livro de ofertas mostrando a profundidade entre níveis de preço ao longo do tempo",
-    "recentTickers": "Pares vistos recentemente com preços ao vivo para alternância rápida"
+    "recentTickers": "Pares vistos recentemente com preços ao vivo para alternância rápida",
+    "events": "Explore eventos de mercados de previsão e abra o gráfico de um resultado",
+    "predictionPositions": "Contratos que você detém, seu custo e quando são liquidados"
   },
   "multiPrice": {
     "venue": "Exchange",
@@ -2262,7 +2266,11 @@
     "paneUnavailable": {
       "title": "{{pair}} não está disponível na {{venue}}",
       "titleAnyVenue": "{{pair}} não está disponível",
-      "description": "Este conector não retornou dados de mercado para este par. Tente outro que o liste."
+      "description": "Este conector não retornou dados de mercado para este par. Tente outro que o liste.",
+      "predictionDescription": "Um resultado de evento é negociado em apenas uma plataforma, então não há outro lugar para tentar. A plataforma pode ter apenas recusado uma requisição.",
+      "retry": "Tentar novamente",
+      "desktopOnlyTitle": "Esta plataforma exige o app para desktop",
+      "desktopOnlyDescription": "Sua API recusa origens de navegador, então os dados de mercado deste par só são acessíveis no app para desktop."
     },
     "paneTransition": {
       "switchingTo": "Mudando para {{venue}}…",
@@ -2464,9 +2472,43 @@
     "needsFullTrustToRun": "Precisa de confiança total para funcionar",
     "pendingTrustDescription": "Contribui com interface e não pode rodar no sandbox — conceda confiança total para ativá-lo, ou desinstale-o.",
     "remove": "Remover",
-    "groupCore": "Principais",
     "groupProvidersExtensions": "Provedores e extensões",
-    "groupThemes": "Temas",
+    "families": {
+      "core": {
+        "label": "Principais",
+        "description": "O próprio terminal: gráficos, livro de ofertas, envio de ordens e ferramentas do espaço de trabalho."
+      },
+      "intelligence": {
+        "label": "Inteligência",
+        "description": "IA hospedada, descoberta de instrumentos, notícias e inteligência de mercado."
+      },
+      "cexSpot": {
+        "label": "Exchanges de cripto",
+        "description": "Mercados spot centralizados para dados de mercado e negociação de cripto."
+      },
+      "dex": {
+        "label": "DEX on-chain",
+        "description": "Mercados de swap on-chain e provedores de dados DEX."
+      },
+      "equities": {
+        "label": "Ações",
+        "description": "Conexões com corretoras para dados e negociação de ações."
+      },
+      "predictions": {
+        "label": "Mercados de previsão",
+        "description": "Mercados de contratos de eventos para negociar resultados do mundo real."
+      },
+      "aiByok": {
+        "label": "Provedores de IA",
+        "description": "Modelos de linguagem e busca na web com a sua própria chave."
+      },
+      "themes": {
+        "label": "Temas",
+        "description": "Temas visuais para a interface e a paleta do gráfico."
+      }
+    },
+    "familyToggleAria": "Ativar ou desativar todos os plugins de {{family}}",
+    "familyToggleFailed": "Alguns plugins de {{family}} não puderam ser alterados",
     "removePluginTitle": "Remover plugin",
     "removePluginDescription": "Isso vai desativar e remover o plugin. Quaisquer painéis que ele forneceu mostrarão um espaço reservado de recuperação. Você pode reinstalá-lo pela Plugin Store a qualquer momento.",
     "resetDefaultsTitle": "Redefinir para o Padrão",
@@ -2728,6 +2770,14 @@
         "title": "Alpaca Conector de Mercado",
         "description": "Ações e ETFs dos EUA via API de broker da Alpaca — dados de mercado em tempo real, negociação simulada e real"
       },
+      "kalshi-market-connector": {
+        "title": "Conector de mercado Kalshi",
+        "description": "Contratos de eventos na Kalshi, a bolsa de previsão regulada pela CFTC — negocie resultados, não ativos"
+      },
+      "polymarket-market-connector": {
+        "title": "Conector de mercado Polymarket",
+        "description": "Contratos de eventos no CLOB da Polymarket — ordens assinadas pela carteira, liquidadas em USDC"
+      },
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "Dados de mercado DEX fornecidos pela DexPaprika"
@@ -2759,6 +2809,10 @@
       "polygon-dex-connector": {
         "title": "Polygon Conector DEX",
         "description": "Swaps on-chain na Polygon — roteamento pelo melhor preço em todas as DEXs da Polygon via o agregador KyberSwap"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens Previsões",
+        "description": "Explorador de eventos e posições de contratos abertos em mercados de previsão"
       }
     }
   },
@@ -2868,7 +2922,14 @@
       "workflow": "Workflow",
       "notSupportedOn": "Não compatível com {{venue}}",
       "available": "Disponível: {{amount}}",
-      "slippage": "Slippage"
+      "slippage": "Slippage",
+      "contracts": "Contratos",
+      "maxLoss": "Perda máx.",
+      "priceCents": "Preço (¢)",
+      "thisOutcome": "Este resultado",
+      "decreaseContracts": "Um contrato a menos",
+      "increaseContracts": "Um contrato a mais",
+      "priceCentsRange": "Insira um preço entre 0¢ e 100¢"
     },
     "status": {
       "connecting": "Conectando…",
@@ -3915,7 +3976,11 @@
     "hoursAgo": "há {{n}} h",
     "daysAgo": "há {{n}} d",
     "today": "Hoje",
-    "yesterday": "Ontem"
+    "yesterday": "Ontem",
+    "closed": "fechado",
+    "inMinutes": "em {{n}} min",
+    "inHours": "em {{n}} h",
+    "inDays": "em {{n}} d"
   },
   "markets": {
     "title": "Mercados",
@@ -3937,7 +4002,8 @@
     "assetClass": {
       "all": "Todos",
       "crypto": "Cripto",
-      "stocks": "Ações"
+      "stocks": "Ações",
+      "prediction": "Previsões"
     },
     "category": {
       "all": "Todos",
@@ -3948,7 +4014,9 @@
       "ai": "IA",
       "gaming": "Gaming",
       "infrastructure": "Infra"
-    }
+    },
+    "predictionsEmptyTitle": "Os resultados de previsão ficam no painel Eventos",
+    "predictionsEmptyBody": "Os resultados são listados e liquidados diariamente, por isso são explorados no painel da própria plataforma, não em um catálogo."
   },
   "fearGreed": {
     "title": "Medo & Ganância",
@@ -4569,9 +4637,17 @@
         "label": "Livro de Ofertas",
         "description": "Streams ao vivo da profundidade do livro de ofertas"
       },
+      "trades": {
+        "label": "Negócios",
+        "description": "Fluxos ao vivo do histórico de negócios"
+      },
       "history": {
         "label": "Histórico",
         "description": "Preenchimento histórico de candles para gráficos"
+      },
+      "events": {
+        "label": "Eventos",
+        "description": "Explorar eventos de mercados de previsão e seus resultados"
       },
       "discovery": {
         "label": "Descoberta",
@@ -4613,6 +4689,10 @@
       "balances": {
         "label": "Saldos",
         "description": "Busca os saldos de ativos da conta na exchange conectada"
+      },
+      "positions": {
+        "label": "Posições",
+        "description": "Ler posições abertas e liquidações do mercado conectado"
       }
     },
     "workflow": {
@@ -4658,6 +4738,14 @@
     "broker": {
       "label": "Corretoras",
       "description": "Conexões com corretoras de ações para dados e negociação de ações"
+    },
+    "predictions": {
+      "label": "Mercados de previsão",
+      "description": "Mercados de contratos de eventos para negociar resultados do mundo real"
+    },
+    "dex": {
+      "label": "DEX on-chain",
+      "description": "Mercados de swap on-chain e provedores de dados DEX"
     },
     "ai": {
       "label": "Provedores de IA",
@@ -4896,11 +4984,45 @@
       "spot": "spot",
       "onChain": "on-chain",
       "equities": "ações",
+      "predictions": "previsões",
       "notListed": "não listado na {{venue}}",
       "notListedCallout": "{{pair}} não está listado na {{venue}}. Selecioná-lo vai mudar a corretora em foco para {{other}}.",
       "availableVenues": "Disponíveis",
       "desktopOnlyVenues": "Precisa do app de desktop",
-      "desktopOnlyVenue": "Somente desktop"
+      "desktopOnlyVenue": "Somente desktop",
+      "filterPredictions": "Previsões"
     }
+  },
+  "events": {
+    "searchPlaceholder": "Buscar eventos e perguntas",
+    "allCategories": "Todas",
+    "loading": "Carregando eventos…",
+    "failed": "Não foi possível carregar os eventos",
+    "tryLater": "A plataforma não respondeu. Tente novamente em instantes.",
+    "emptyTitle": "Nenhum evento aberto",
+    "emptyBody": "Esta plataforma não está listando nada no momento.",
+    "noMatchesTitle": "Nenhum evento corresponde",
+    "noMatchesBody": "Tente uma pergunta mais curta ou outra categoria.",
+    "noVenuesTitle": "Nenhuma plataforma de previsão conectada",
+    "noVenuesBody": "Instale Kalshi ou Polymarket na loja de plugins para explorar contratos de eventos.",
+    "desktopOnlyTitle": "Os eventos exigem o app para desktop",
+    "desktopOnlyDescription": "A API desta plataforma recusa origens de navegador, então seu painel de eventos só é acessível no app para desktop.",
+    "venueDesktopOnly": "Os eventos da {{venue}} exigem o app para desktop.",
+    "volume": "Vol. {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "Conectar uma conta",
+    "noAccountsTitle": "Nenhuma conta de previsão conectada",
+    "noAccountsBody": "Adicione chaves de API da Kalshi ou uma carteira Polygon para ver seus contratos.",
+    "loading": "Carregando posições…",
+    "emptyTitle": "Nenhum contrato aberto",
+    "emptyBody": "As posições aparecem aqui assim que uma ordem é executada.",
+    "colMarket": "Mercado",
+    "colOutcome": "Resultado",
+    "colContracts": "Contratos",
+    "colAvgPrice": "Méd.",
+    "colCost": "Custo",
+    "colResolves": "Resolve",
+    "resolved": "Resolvido"
   }
 }

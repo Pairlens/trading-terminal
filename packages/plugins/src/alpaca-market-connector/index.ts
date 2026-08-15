@@ -103,6 +103,7 @@ export const alpacaMarketConnectorManifest: PluginManifest = {
     },
   ],
   metadata: {
+    family: 'equities',
     assetClass: 'stocks',
     gradient: 'from-yellow-400 to-amber-500',
     abbr: 'ALP',

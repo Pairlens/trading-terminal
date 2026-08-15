@@ -136,6 +136,7 @@ export const sakuraBloomManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'sakura-bloom',

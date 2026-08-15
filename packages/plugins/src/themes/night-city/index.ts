@@ -137,6 +137,7 @@ export const nightCityManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'night-city',

@@ -2164,7 +2164,9 @@
     "web": "Web Paneli",
     "liquidityHeatmap": "Likidite Isı Haritası",
     "recentTickers": "Son Görülen Pariteler",
-    "empty": "Boş"
+    "empty": "Boş",
+    "events": "Olaylar",
+    "predictionPositions": "Tahmin pozisyonları"
   },
   "paneDescriptions": {
     "markets": "Borsalar genelindeki tüm mevcut işlem paritelerine göz at",
@@ -2190,7 +2192,9 @@
     "symbolNews": "Aktif işlem paritesi için haberler ve duyarlılık analizi",
     "web": "Herhangi bir web sitesini çalışma alanına panel olarak yerleştir",
     "liquidityHeatmap": "Zaman içinde fiyat seviyeleri genelinde derinliği gösteren emir defteri likidite ısı haritası",
-    "recentTickers": "Hızlı geçiş için canlı fiyatlarla son görüntülenen pariteler"
+    "recentTickers": "Hızlı geçiş için canlı fiyatlarla son görüntülenen pariteler",
+    "events": "Tahmin piyasası olaylarına göz atın ve bir sonucun grafiğini açın",
+    "predictionPositions": "Elinizdeki kontratlar, maliyetleri ve ne zaman sonuçlanacakları"
   },
   "multiPrice": {
     "venue": "Borsa",
@@ -2262,7 +2266,11 @@
     "paneUnavailable": {
       "title": "{{pair}} {{venue}} üzerinde yok",
       "titleAnyVenue": "{{pair}} bulunamadı",
-      "description": "Bu konektör bu parite için piyasa verisi döndürmedi. Pariteyi listeleyen başka bir konektör deneyin."
+      "description": "Bu konektör bu parite için piyasa verisi döndürmedi. Pariteyi listeleyen başka bir konektör deneyin.",
+      "predictionDescription": "Bir olay sonucu yalnızca tek bir platformda işlem görür, dolayısıyla denenecek başka yer yoktur. Platform yalnızca tek bir isteği reddetmiş olabilir.",
+      "retry": "Tekrar dene",
+      "desktopOnlyTitle": "Bu platform masaüstü uygulaması gerektirir",
+      "desktopOnlyDescription": "API'si tarayıcı kaynaklarını reddeder; bu çiftin piyasa verilerine yalnızca masaüstü sürümünden erişilebilir."
     },
     "paneTransition": {
       "switchingTo": "{{venue}} borsasına geçiliyor…",
@@ -2464,9 +2472,43 @@
     "needsFullTrustToRun": "Çalışması için tam güven gerekir",
     "pendingTrustDescription": "Arayüz sağlıyor ve sandbox içinde çalışamıyor — etkinleştirmek için tam güven verin ya da kaldırın.",
     "remove": "Kaldır",
-    "groupCore": "Çekirdek",
     "groupProvidersExtensions": "Sağlayıcılar ve Uzantılar",
-    "groupThemes": "Temalar",
+    "families": {
+      "core": {
+        "label": "Çekirdek",
+        "description": "Terminalin kendisi: grafikler, emir defteri, emir girişi ve çalışma alanı araçları."
+      },
+      "intelligence": {
+        "label": "Zeka",
+        "description": "Bulut tabanlı yapay zeka, enstrüman keşfi, haberler ve piyasa istihbaratı."
+      },
+      "cexSpot": {
+        "label": "Kripto Borsaları",
+        "description": "Kripto piyasa verisi ve işlem için merkezi spot borsalar."
+      },
+      "dex": {
+        "label": "Zincir Üstü DEX",
+        "description": "Zincir üstü takas borsaları ve DEX piyasa verisi sağlayıcıları."
+      },
+      "equities": {
+        "label": "Hisse Senetleri",
+        "description": "Hisse senedi verisi ve işlemi için aracı kurum bağlantıları."
+      },
+      "predictions": {
+        "label": "Tahmin Piyasaları",
+        "description": "Gerçek dünya sonuçlarını işlemek için olay sözleşmesi borsaları."
+      },
+      "aiByok": {
+        "label": "Yapay Zeka Sağlayıcıları",
+        "description": "Kendi anahtarınızla dil modelleri ve web araması."
+      },
+      "themes": {
+        "label": "Temalar",
+        "description": "Arayüz ve grafik paleti için görsel temalar."
+      }
+    },
+    "familyToggleAria": "Tüm {{family}} eklentilerini etkinleştir veya devre dışı bırak",
+    "familyToggleFailed": "Bazı {{family}} eklentileri değiştirilemedi",
     "removePluginTitle": "Eklentiyi Kaldır",
     "removePluginDescription": "Bu, eklentiyi devre dışı bırakıp kaldıracak. Eklentinin sağladığı paneller, kurtarma yer tutucusu gösterecek. Eklentiyi istediğin zaman Plugin Store'dan yeniden kurabilirsin.",
     "resetDefaultsTitle": "Varsayılanlara Sıfırla",
@@ -2728,6 +2770,14 @@
         "title": "Alpaca Piyasa Bağlayıcısı",
         "description": "Alpaca aracı kurum API'si üzerinden ABD hisseleri ve ETF'ler — gerçek zamanlı piyasa verisi, kağıt ve canlı işlem"
       },
+      "kalshi-market-connector": {
+        "title": "Kalshi Piyasa Bağlayıcısı",
+        "description": "CFTC düzenlemesindeki tahmin borsası Kalshi'de olay sözleşmeleri — varlık değil, sonuç işleyin"
+      },
+      "polymarket-market-connector": {
+        "title": "Polymarket Piyasa Bağlayıcısı",
+        "description": "Polymarket CLOB'unda olay sözleşmeleri — cüzdanla imzalanan emirler, USDC ile takas"
+      },
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "DexPaprika tarafından sağlanan DEX piyasa verisi"
@@ -2759,6 +2809,10 @@
       "polygon-dex-connector": {
         "title": "Polygon DEX Bağlayıcısı",
         "description": "Zincir üstü Polygon takasları — KyberSwap aggregator'ı üzerinden tüm Polygon DEX'lerinde en iyi fiyat yönlendirmesi"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens Tahminler",
+        "description": "Tahmin piyasaları için olay tarayıcısı ve açık kontrat pozisyonları"
       }
     }
   },
@@ -2868,7 +2922,14 @@
       "workflow": "İş akışı",
       "notSupportedOn": "{{venue}} üzerinde desteklenmiyor",
       "available": "Kullanılabilir: {{amount}}",
-      "slippage": "Kayma"
+      "slippage": "Kayma",
+      "contracts": "Kontrat",
+      "maxLoss": "Maks. kayıp",
+      "priceCents": "Fiyat (¢)",
+      "thisOutcome": "Bu sonuç",
+      "decreaseContracts": "Bir kontrat azalt",
+      "increaseContracts": "Bir kontrat artır",
+      "priceCentsRange": "0¢ ile 100¢ arasında bir fiyat girin"
     },
     "status": {
       "connecting": "Bağlanıyor…",
@@ -3915,7 +3976,11 @@
     "hoursAgo": "{{n}} sa önce",
     "daysAgo": "{{n}} gün önce",
     "today": "Bugün",
-    "yesterday": "Dün"
+    "yesterday": "Dün",
+    "closed": "kapandı",
+    "inMinutes": "{{n}} dk sonra",
+    "inHours": "{{n}} sa sonra",
+    "inDays": "{{n}} gün sonra"
   },
   "markets": {
     "title": "Piyasalar",
@@ -3937,7 +4002,8 @@
     "assetClass": {
       "all": "Tümü",
       "crypto": "Kripto",
-      "stocks": "Hisseler"
+      "stocks": "Hisseler",
+      "prediction": "Tahminler"
     },
     "category": {
       "all": "Tümü",
@@ -3948,7 +4014,9 @@
       "ai": "AI",
       "gaming": "Gaming",
       "infrastructure": "Altyapı"
-    }
+    },
+    "predictionsEmptyTitle": "Tahmin sonuçları Olaylar panelinde yer alır",
+    "predictionsEmptyBody": "Sonuçlar her gün listelenip sonuçlanır; bu yüzden bir katalogdan değil, platformun kendi panosundan taranır."
   },
   "fearGreed": {
     "title": "Korku ve Açgözlülük",
@@ -4569,9 +4637,17 @@
         "label": "Emir Defteri",
         "description": "Canlı emir defteri derinlik akışları"
       },
+      "trades": {
+        "label": "İşlemler",
+        "description": "Canlı işlem akışı yayınları"
+      },
       "history": {
         "label": "Geçmiş",
         "description": "Grafikler için geçmişe dönük mum doldurma"
+      },
+      "events": {
+        "label": "Olaylar",
+        "description": "Tahmin piyasası olaylarını ve sonuçlarını görüntüle"
       },
       "discovery": {
         "label": "Keşif",
@@ -4613,6 +4689,10 @@
       "balances": {
         "label": "Bakiyeler",
         "description": "Bağlı borsadan hesap varlık bakiyelerini getir"
+      },
+      "positions": {
+        "label": "Pozisyonlar",
+        "description": "Bağlı borsadaki açık pozisyonları ve mutabakatları oku"
       }
     },
     "workflow": {
@@ -4658,6 +4738,14 @@
     "broker": {
       "label": "Aracı Kurumlar",
       "description": "Hisse senedi verisi ve işlemi için aracı kurum bağlantıları"
+    },
+    "predictions": {
+      "label": "Tahmin Piyasaları",
+      "description": "Gerçek dünya sonuçlarını işlemek için olay sözleşmesi borsaları"
+    },
+    "dex": {
+      "label": "Zincir Üstü DEX",
+      "description": "Zincir üstü takas borsaları ve DEX piyasa verisi sağlayıcıları"
     },
     "ai": {
       "label": "AI Sağlayıcıları",
@@ -4896,11 +4984,45 @@
       "spot": "spot",
       "onChain": "zincir üstü",
       "equities": "hisse senedi",
+      "predictions": "tahmin",
       "notListed": "{{venue}}'de listede yok",
       "notListedCallout": "{{pair}}, {{venue}}'de listede yok. Seçmen, odaktaki borsayı {{other}} olarak değiştirir.",
       "availableVenues": "Kullanılabilir",
       "desktopOnlyVenues": "Masaüstü uygulaması gerekiyor",
-      "desktopOnlyVenue": "Yalnızca masaüstü"
+      "desktopOnlyVenue": "Yalnızca masaüstü",
+      "filterPredictions": "Tahminler"
     }
+  },
+  "events": {
+    "searchPlaceholder": "Olay ve soru ara",
+    "allCategories": "Tümü",
+    "loading": "Olaylar yükleniyor…",
+    "failed": "Olaylar yüklenemedi",
+    "tryLater": "Platform yanıt vermedi. Birazdan tekrar deneyin.",
+    "emptyTitle": "Açık olay yok",
+    "emptyBody": "Bu platformda şu anda listelenen bir şey yok.",
+    "noMatchesTitle": "Eşleşen olay yok",
+    "noMatchesBody": "Daha kısa bir soru ya da farklı bir kategori deneyin.",
+    "noVenuesTitle": "Bağlı tahmin platformu yok",
+    "noVenuesBody": "Olay kontratlarına göz atmak için Eklenti Mağazası'ndan Kalshi veya Polymarket'i kurun.",
+    "desktopOnlyTitle": "Olaylar için masaüstü uygulaması gerekir",
+    "desktopOnlyDescription": "Bu platformun API'si tarayıcı kaynaklarını reddeder; olay panosuna yalnızca masaüstü sürümünden erişilebilir.",
+    "venueDesktopOnly": "{{venue}} olayları için masaüstü uygulaması gerekir.",
+    "volume": "Hac. {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "Hesap bağla",
+    "noAccountsTitle": "Bağlı tahmin hesabı yok",
+    "noAccountsBody": "Elinizdeki kontratları görmek için Kalshi API anahtarı ya da bir Polygon cüzdanı ekleyin.",
+    "loading": "Pozisyonlar yükleniyor…",
+    "emptyTitle": "Açık kontrat yok",
+    "emptyBody": "Bir emir gerçekleştiğinde pozisyonlar burada görünür.",
+    "colMarket": "Piyasa",
+    "colOutcome": "Sonuç",
+    "colContracts": "Kontrat",
+    "colAvgPrice": "Ort.",
+    "colCost": "Maliyet",
+    "colResolves": "Sonuçlanma",
+    "resolved": "Sonuçlandı"
   }
 }

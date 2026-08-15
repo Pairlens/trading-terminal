@@ -9,10 +9,10 @@ readTime: 3 min read
 ---
 
 Pairlens is a source-available, local-first, AI-native trading terminal for
-crypto spot markets and US equities. Deterministic strategies generate signals,
-an AI co-pilot provides contextual analysis, and risk guardrails you configure
-are enforced by the order path itself. The AI augments your decisions. It never
-overrides your risk limits.
+crypto spot markets, US equities, and prediction markets. Deterministic
+strategies generate signals, an AI co-pilot provides contextual analysis, and
+risk guardrails you configure are enforced by the order path itself. The AI
+augments your decisions. It never overrides your risk limits.
 
 ## The one rule
 
@@ -24,12 +24,12 @@ word for it.
 ## No lock-in, anywhere
 
 Pairlens is not tied to one exchange, one broker, or one country. Connectors
-for 14 centralized exchanges, a US equities broker, and DEXs on Solana and five
-EVM chains ship in the box. Use whichever venues work where you live, switch
-between them freely, or run several side by side. Your accounts stay yours and
-your data stays on your machine. If you ever leave, there is nothing to cancel
-and nothing to export from our servers, because nothing of yours was ever on
-them.
+for 14 centralized exchanges, a US equities broker, two prediction markets, and
+DEXs on Solana and five EVM chains ship in the box. Use whichever venues work
+where you live, switch between them freely, or run several side by side. Your
+accounts stay yours and your data stays on your machine. If you ever leave,
+there is nothing to cancel and nothing to export from our servers, because
+nothing of yours was ever on them.
 
 ## What you get
 
@@ -40,6 +40,10 @@ replay, and symbol comparison, all rendered by our own WebGL2 engine. See
 **Trading.** Market, limit, and workflow-driven bracket orders routed straight
 to the venue, with [risk guardrails](/docs/risk-guardrails) checked before
 anything leaves your machine.
+
+**Prediction markets.** Event contracts on Kalshi and Polymarket, priced in
+cents, with the same chart, book, and ticket as everything else. See
+[prediction markets](/docs/prediction-markets).
 
 **Python.** Write indicators and strategies in real Python with numpy, running
 locally in an embedded runtime. See
@@ -67,14 +71,15 @@ five destinations and real order entry, not a shrunken dashboard. See
 [mobile terminal](/docs/mobile-terminal).
 
 **Desktop app.** A Tauri shell around the same terminal, with credentials in
-your OS keychain. It adds the four CORS-restricted venues, background bots, and
+your OS keychain. It adds the six CORS-restricted venues, background bots, and
 native windows, and it is the strongest home for live-trading secrets.
 
 **Terminal.** A React SPA. Market data streams directly from exchanges via
 connector plugins. There is no intermediate data server.
 
 **Connector plugins.** The only code that talks to exchange WebSockets and REST
-APIs. 14 CEXs, a US equities broker, and DEX connectors ship in the box.
+APIs. 14 CEXs, a US equities broker, two prediction markets, and DEX connectors
+ship in the box.
 
 **Strategy engine.** Pure TypeScript math: EMA, ATR, breakout, pullback,
 mean-reversion, regime detection. No I/O, no network.

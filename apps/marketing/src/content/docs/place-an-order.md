@@ -6,7 +6,7 @@ parent: trading
 order: 2
 eyebrow: For traders
 updated: AUG 2026
-readTime: 5 min read
+readTime: 6 min read
 ---
 
 The Trade Entry panel is the order ticket. Add it to any workspace, or use a
@@ -74,6 +74,16 @@ For a DEX market the ticket swaps the venue-specific bits: no Workflow tab, and
 a **Slippage** row with 0.1%, 0.5%, 1%, and 3% presets for market swaps. Limit
 orders, where the chain supports them, rest at your price and do not need a
 slippage tolerance. See [DEX and wallets](/docs/dex-trading).
+
+## Event contracts
+
+For a prediction-market outcome the ticket switches to contracts. The question
+replaces the ticker at the top, sizes are whole contracts rather than an amount
+of an asset, prices are typed in cents, and a max loss line above the submit
+button says what the order can cost you. When the question has exactly one other
+side, a switch beside it flips the whole ticket to that outcome. There is no
+Workflow tab, because neither prediction venue has trigger orders, and Kalshi
+offers Limit only. See [prediction markets](/docs/prediction-markets).
 
 ## Watching the order
 

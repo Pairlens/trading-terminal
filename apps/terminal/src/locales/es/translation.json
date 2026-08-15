@@ -2164,7 +2164,9 @@
     "web": "Panel Web",
     "liquidityHeatmap": "Mapa de Liquidez",
     "recentTickers": "Tickers Recientes",
-    "empty": "Vacío"
+    "empty": "Vacío",
+    "events": "Eventos",
+    "predictionPositions": "Posiciones de predicción"
   },
   "paneDescriptions": {
     "markets": "Explora todos los pares de trading disponibles en los exchanges",
@@ -2190,7 +2192,9 @@
     "symbolNews": "Noticias y análisis de sentimiento para el par de trading activo",
     "web": "Incrusta cualquier sitio web como panel en tu espacio de trabajo",
     "liquidityHeatmap": "Mapa de calor de liquidez del libro de órdenes a través de niveles de precio en el tiempo",
-    "recentTickers": "Pares vistos recientemente con precios en vivo para cambiar rápido"
+    "recentTickers": "Pares vistos recientemente con precios en vivo para cambiar rápido",
+    "events": "Explora eventos de mercados de predicción y abre el gráfico de un resultado",
+    "predictionPositions": "Contratos que tienes, su coste y cuándo se resuelven"
   },
   "multiPrice": {
     "venue": "Exchange",
@@ -2262,7 +2266,11 @@
     "paneUnavailable": {
       "title": "{{pair}} no está disponible en {{venue}}",
       "titleAnyVenue": "{{pair}} no está disponible",
-      "description": "Este conector no devolvió datos de mercado para este par. Prueba otro que lo tenga listado."
+      "description": "Este conector no devolvió datos de mercado para este par. Prueba otro que lo tenga listado.",
+      "predictionDescription": "Un resultado de evento se negocia en una sola plataforma, así que no hay otro sitio donde intentarlo. Puede que la plataforma solo haya rechazado una petición.",
+      "retry": "Reintentar",
+      "desktopOnlyTitle": "Esta plataforma requiere la app de escritorio",
+      "desktopOnlyDescription": "Su API rechaza los orígenes del navegador, así que los datos de mercado de este par solo son accesibles desde la app de escritorio."
     },
     "paneTransition": {
       "switchingTo": "Cambiando a {{venue}}…",
@@ -2464,9 +2472,43 @@
     "needsFullTrustToRun": "Necesita confianza total para ejecutarse",
     "pendingTrustDescription": "Aporta interfaz y no puede ejecutarse en el sandbox — concede confianza total para activarlo, o desinstálalo.",
     "remove": "Eliminar",
-    "groupCore": "Núcleo",
     "groupProvidersExtensions": "Proveedores y extensiones",
-    "groupThemes": "Temas",
+    "families": {
+      "core": {
+        "label": "Núcleo",
+        "description": "El terminal en sí: gráficos, libro de órdenes, entrada de órdenes y herramientas del espacio de trabajo."
+      },
+      "intelligence": {
+        "label": "Inteligencia",
+        "description": "IA alojada, descubrimiento de instrumentos, noticias e inteligencia de mercado."
+      },
+      "cexSpot": {
+        "label": "Exchanges de cripto",
+        "description": "Mercados spot centralizados para datos de mercado y trading de cripto."
+      },
+      "dex": {
+        "label": "DEX on-chain",
+        "description": "Mercados de swaps on-chain y proveedores de datos DEX."
+      },
+      "equities": {
+        "label": "Acciones",
+        "description": "Conexiones con brókers para datos y trading de acciones."
+      },
+      "predictions": {
+        "label": "Mercados de predicción",
+        "description": "Mercados de contratos de eventos para operar sobre resultados del mundo real."
+      },
+      "aiByok": {
+        "label": "Proveedores de IA",
+        "description": "Modelos de lenguaje y búsqueda web con tu propia clave."
+      },
+      "themes": {
+        "label": "Temas",
+        "description": "Temas visuales para la interfaz y la paleta del gráfico."
+      }
+    },
+    "familyToggleAria": "Activar o desactivar todos los plugins de {{family}}",
+    "familyToggleFailed": "Algunos plugins de {{family}} no se pudieron cambiar",
     "removePluginTitle": "Eliminar plugin",
     "removePluginDescription": "Esto desactivará y eliminará el plugin. Los paneles que haya aportado mostrarán un marcador de recuperación. Puedes reinstalarlo desde la Plugin Store cuando quieras.",
     "resetDefaultsTitle": "Restablecer valores predeterminados",
@@ -2728,6 +2770,14 @@
         "title": "Conector de mercado Alpaca",
         "description": "Acciones y ETFs de EE. UU. mediante la API de bróker de Alpaca — datos de mercado en tiempo real, trading paper y en vivo"
       },
+      "kalshi-market-connector": {
+        "title": "Conector de mercado Kalshi",
+        "description": "Contratos de eventos en Kalshi, la bolsa de predicción regulada por la CFTC — opera resultados, no activos"
+      },
+      "polymarket-market-connector": {
+        "title": "Conector de mercado Polymarket",
+        "description": "Contratos de eventos en el CLOB de Polymarket — órdenes firmadas con tu wallet, liquidadas en USDC"
+      },
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "Datos de mercado DEX impulsados por DexPaprika"
@@ -2759,6 +2809,10 @@
       "polygon-dex-connector": {
         "title": "Conector DEX Polygon",
         "description": "Swaps on-chain en Polygon — el mejor ruteo de precio en todos los DEXs de Polygon a través del agregador KyberSwap"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens Predicciones",
+        "description": "Explorador de eventos y posiciones de contratos abiertos para mercados de predicción"
       }
     }
   },
@@ -2868,7 +2922,14 @@
       "workflow": "Flujo de trabajo",
       "notSupportedOn": "No compatible con {{venue}}",
       "available": "Disponible: {{amount}}",
-      "slippage": "Deslizamiento"
+      "slippage": "Deslizamiento",
+      "contracts": "Contratos",
+      "maxLoss": "Pérdida máx.",
+      "priceCents": "Precio (¢)",
+      "thisOutcome": "Este resultado",
+      "decreaseContracts": "Un contrato menos",
+      "increaseContracts": "Un contrato más",
+      "priceCentsRange": "Introduce un precio entre 0¢ y 100¢"
     },
     "status": {
       "connecting": "Conectando…",
@@ -3915,7 +3976,11 @@
     "hoursAgo": "hace {{n}} h",
     "daysAgo": "hace {{n}} d",
     "today": "Hoy",
-    "yesterday": "Ayer"
+    "yesterday": "Ayer",
+    "closed": "cerrado",
+    "inMinutes": "en {{n}} min",
+    "inHours": "en {{n}} h",
+    "inDays": "en {{n}} d"
   },
   "markets": {
     "title": "Mercados",
@@ -3937,7 +4002,8 @@
     "assetClass": {
       "all": "Todos",
       "crypto": "Cripto",
-      "stocks": "Acciones"
+      "stocks": "Acciones",
+      "prediction": "Predicciones"
     },
     "category": {
       "all": "Todos",
@@ -3948,7 +4014,9 @@
       "ai": "IA",
       "gaming": "Gaming",
       "infrastructure": "Infra"
-    }
+    },
+    "predictionsEmptyTitle": "Los resultados de predicción están en el panel de Eventos",
+    "predictionsEmptyBody": "Los resultados se listan y se resuelven a diario, así que se exploran desde el tablero de la propia plataforma y no desde un catálogo."
   },
   "fearGreed": {
     "title": "Miedo y Codicia",
@@ -4569,9 +4637,17 @@
         "label": "Libro de Órdenes",
         "description": "Streams en vivo de profundidad del libro de órdenes"
       },
+      "trades": {
+        "label": "Operaciones",
+        "description": "Flujos en vivo del historial de operaciones"
+      },
       "history": {
         "label": "Historial",
         "description": "Relleno histórico de velas para gráficos"
+      },
+      "events": {
+        "label": "Eventos",
+        "description": "Explorar eventos de mercados de predicción y sus resultados"
       },
       "discovery": {
         "label": "Descubrimiento",
@@ -4613,6 +4689,10 @@
       "balances": {
         "label": "Balances",
         "description": "Obtiene los balances de activos de la cuenta desde el exchange conectado"
+      },
+      "positions": {
+        "label": "Posiciones",
+        "description": "Leer posiciones abiertas y liquidaciones del mercado conectado"
       }
     },
     "workflow": {
@@ -4658,6 +4738,14 @@
     "broker": {
       "label": "Brókers",
       "description": "Conexiones con brókers de acciones para datos bursátiles y trading"
+    },
+    "predictions": {
+      "label": "Mercados de predicción",
+      "description": "Mercados de contratos de eventos para operar sobre resultados del mundo real"
+    },
+    "dex": {
+      "label": "DEX on-chain",
+      "description": "Mercados de swaps on-chain y proveedores de datos DEX"
     },
     "ai": {
       "label": "Proveedores de IA",
@@ -4896,11 +4984,45 @@
       "spot": "spot",
       "onChain": "on-chain",
       "equities": "acciones",
+      "predictions": "predicciones",
       "notListed": "no cotiza en {{venue}}",
       "notListedCallout": "{{pair}} no cotiza en {{venue}}. Elegirlo cambiará el venue activo a {{other}}.",
       "availableVenues": "Disponibles",
       "desktopOnlyVenues": "Necesita la app de escritorio",
-      "desktopOnlyVenue": "Solo escritorio"
+      "desktopOnlyVenue": "Solo escritorio",
+      "filterPredictions": "Predicciones"
     }
+  },
+  "events": {
+    "searchPlaceholder": "Buscar eventos y preguntas",
+    "allCategories": "Todas",
+    "loading": "Cargando eventos…",
+    "failed": "No se pudieron cargar los eventos",
+    "tryLater": "La plataforma no respondió. Inténtalo de nuevo en un momento.",
+    "emptyTitle": "No hay eventos abiertos",
+    "emptyBody": "Esta plataforma no tiene nada listado ahora mismo.",
+    "noMatchesTitle": "Ningún evento coincide",
+    "noMatchesBody": "Prueba con una pregunta más corta o con otra categoría.",
+    "noVenuesTitle": "Ninguna plataforma de predicción conectada",
+    "noVenuesBody": "Instala Kalshi o Polymarket desde la tienda de plugins para explorar contratos de eventos.",
+    "desktopOnlyTitle": "Los eventos requieren la app de escritorio",
+    "desktopOnlyDescription": "La API de esta plataforma rechaza los orígenes del navegador, así que su tablero de eventos solo es accesible desde la app de escritorio.",
+    "venueDesktopOnly": "Los eventos de {{venue}} requieren la app de escritorio.",
+    "volume": "Vol. {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "Conectar una cuenta",
+    "noAccountsTitle": "Ninguna cuenta de predicción conectada",
+    "noAccountsBody": "Añade claves de API de Kalshi o una cartera de Polygon para ver los contratos que tienes.",
+    "loading": "Cargando posiciones…",
+    "emptyTitle": "Sin contratos abiertos",
+    "emptyBody": "Las posiciones aparecen aquí en cuanto se ejecuta una orden.",
+    "colMarket": "Mercado",
+    "colOutcome": "Resultado",
+    "colContracts": "Contratos",
+    "colAvgPrice": "Prom.",
+    "colCost": "Coste",
+    "colResolves": "Se resuelve",
+    "resolved": "Resuelto"
   }
 }

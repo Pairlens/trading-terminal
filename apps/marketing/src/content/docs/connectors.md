@@ -1,17 +1,17 @@
 ---
 title: Connectors
-description: Every exchange connector in the Pairlens crypto trading terminal, 14 CEXs, Alpaca for US equities, and DEX aggregators, plus how to build your own.
+description: Every exchange connector in the Pairlens crypto trading terminal, 14 CEXs, Alpaca for US equities, Kalshi and Polymarket for event contracts, and DEX aggregators.
 group: builders
 order: 4
 eyebrow: For builders
 updated: AUG 2026
-readTime: 2 min read
+readTime: 3 min read
 ---
 
 Market connectors are plugins that stream data and route orders directly
 between your machine and the venue. Pairlens ships with connectors for major
-centralized exchanges, a US equities broker, and DEX aggregators on Solana and
-EVM chains.
+centralized exchanges, a US equities broker, two prediction markets, and DEX
+aggregators on Solana and EVM chains.
 
 ## Bundled connectors
 
@@ -20,21 +20,29 @@ Gate, Bitget, Coinbase, Kraken, HTX, Crypto.com, Bitfinex, Upbit.
 
 **Brokers.** Alpaca, for US equities and ETFs.
 
+**Prediction markets.** Kalshi and Polymarket, for event contracts. See
+[prediction markets](/docs/prediction-markets).
+
 **DEX.** Jupiter on Solana, plus an EVM DEX connector spanning Ethereum, Base,
 Arbitrum, BNB Chain, and Polygon through the KyberSwap aggregator.
 
 **DEX data.** GeckoTerminal as primary and DexPaprika as fallback, both
 read-only.
 
-All 15 venues work in the desktop app. In a browser, 11 of them do: Coinbase,
-Gate, KuCoin, and MEXC serve REST without CORS headers and stream no candle
-history, so they require the desktop app and refuse cleanly with a clear
-message rather than presenting a dead chart.
+All 17 venues work in the desktop app. In a browser, 11 of them do: Coinbase,
+Gate, KuCoin, MEXC, Bitfinex, and Kalshi serve REST without CORS headers, so
+they require the desktop app and refuse cleanly with a clear message rather
+than presenting a dead chart.
 
-Most CEX connectors are built from one shared factory,
+Every CEX connector is built from one shared factory,
 `createCexConnectorPlugin`, which is a base class rather than a plugin itself.
 Upbit is the exception on trigger orders: it has none, so stop-loss steps are
 refused there rather than faked.
+
+The two prediction connectors ride a separate runtime with the same shape.
+Event contracts have no base and quote asset, no spot symbol, and a price that
+is a probability rather than an amount of money, so they get their own bridge
+instead of bending the spot one.
 
 ## Regional routing
 

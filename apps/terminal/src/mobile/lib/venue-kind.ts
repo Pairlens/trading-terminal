@@ -15,24 +15,32 @@
  */
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 
-export type VenueKind = 'cex' | 'dex' | 'equities'
+export type VenueKind = 'cex' | 'dex' | 'equities' | 'prediction'
 
 /** i18n key per kind. Static keys — the catalog audit cannot follow a template. */
 export const VENUE_KIND_KEY: Record<VenueKind, string> = {
   cex: 'mobile.pickers.spot',
   dex: 'mobile.pickers.onChain',
   equities: 'mobile.pickers.equities',
+  prediction: 'mobile.pickers.predictions',
 }
 
 /**
- * A DEX is whatever needs a wallet; equities is whatever declares the stocks
- * asset class; everything else is a centralized spot venue. An unknown market
- * reads as `cex`, which is what fourteen of the fifteen connectors are.
+ * Asset class first, wallet second. Polymarket signs with an EVM key and so
+ * declares a `walletChain`, but it is an event exchange, not a DEX — testing
+ * the wallet first would have labelled it "on-chain" and filed it with
+ * Jupiter. `walletChain` answers "what unlocks trading here", never "what is
+ * this venue".
+ *
+ * After that: equities is whatever declares the stocks asset class, a DEX is
+ * whatever else needs a wallet, everything else is a centralized spot venue.
+ * An unknown market reads as `cex`, which is what most connectors are.
  */
 export function venueKindFor(info: MarketAdapterInfo | undefined): VenueKind {
   if (!info) return 'cex'
-  if (info.walletChain) return 'dex'
+  if (info.assetClasses.includes('prediction')) return 'prediction'
   if (info.assetClasses.includes('stocks')) return 'equities'
+  if (info.walletChain) return 'dex'
   return 'cex'
 }
 

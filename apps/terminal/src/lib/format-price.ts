@@ -99,6 +99,84 @@ export function formatBookPrice(price: number): string {
   return price.toFixed(8)
 }
 
+// ── Prediction markets ───────────────────────────────────────────────
+//
+// A prediction outcome's price is a probability in collateral units: 0.53
+// means "53% and one contract pays $1". Every venue in the category quotes it
+// in cents, and so does every trader talking about one, so the terminal does
+// too — a book column reading "0.5300" is arithmetically identical and
+// unreadable next to a Kalshi screen.
+//
+// Callers decide which family to use; nothing here sniffs the instrument. The
+// signal is the active pair being a prediction outcome (`usePredictionPair`),
+// which the caller already knows.
+
+/** Cent granularity below which a venue's tick is a fraction of a cent. */
+const SUB_CENT_THRESHOLD = 10
+
+function centsOf(price: number): number {
+  return price * 100
+}
+
+/**
+ * A probability price as cents: `53¢`, `4.5¢`, `0.5¢`.
+ *
+ * One decimal below 10¢ and whenever the value is not a whole cent — Kalshi
+ * ticks at 1¢ but Polymarket quotes tenths, and rounding 0.5¢ to "1¢" doubles
+ * the price of the cheapest contracts on the board.
+ */
+export function formatPredictionPrice(price: number): string {
+  if (!Number.isFinite(price)) return '—'
+  const cents = centsOf(price)
+  if (cents === 0) return '0¢'
+  const abs = Math.abs(cents)
+  if (abs < SUB_CENT_THRESHOLD || Math.abs(cents - Math.round(cents)) > 1e-9) {
+    // toFixed(1) rather than a variable precision: a column of prices that
+    // disagree about their decimal count does not align, and the axis labels
+    // below share this formatter.
+    return `${cents.toFixed(1)}¢`
+  }
+  return `${Math.round(cents)}¢`
+}
+
+/**
+ * The same value for the chart's price axis and crosshair.
+ *
+ * It keeps the `¢`, unlike `formatChartPrice`, which drops the `$`: the unit
+ * IS the reading here. A prediction axis spans 0–100¢, so the longest label is
+ * four characters ("100¢") — comfortably inside the gutter the desktop pane
+ * (74px default) and the mobile chart (56px, ~5 digits) reserve.
+ */
+export function formatPredictionChartPrice(price: number): string {
+  return formatPredictionPrice(price)
+}
+
+/** Book/depth/trades columns — same reading, no separate rounding rule. */
+export function formatPredictionBookPrice(price: number): string {
+  return formatPredictionPrice(price)
+}
+
+/**
+ * A large USD figure at a glance: `$1.3B`, `$62.9M`, `$4.5K`.
+ *
+ * One shared `Intl.NumberFormat` because constructing one is the expensive
+ * part and three panes were each building their own identical instance —
+ * market caps in the heatmap and the top-coins table, event volume in the
+ * prediction browser. Pinned to `en-US` like the two it replaces: these are
+ * abbreviations, and a locale-following one would render a "B" the reader's
+ * own number formatting does not otherwise use.
+ */
+const compactUsdFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  notation: 'compact',
+  maximumFractionDigits: 1,
+})
+
+export function formatCompactUsd(value: number): string {
+  return Number.isFinite(value) ? compactUsdFormatter.format(value) : '—'
+}
+
 /**
  * Format a portfolio value with compact K/M notation and a currency symbol
  * prefix (e.g. "$1.23M", "€4.56K"). Used by the accounts page and the

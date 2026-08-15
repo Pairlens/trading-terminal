@@ -68,6 +68,13 @@ import { tradeHoldMs } from '@/lib/settings/trade-confirm'
 import { PluginBrandTile } from '@/components/plugins/plugin-icon'
 import { venuePluginId, venuePosterSrc } from '@/components/accounts/venue-art'
 import { CHAIN_NAME } from '@/components/terminal/wallet-selector'
+import {
+  centsToPrice,
+  normalizeContracts,
+  predictionMaxLoss,
+  priceToCents,
+} from '@/lib/predictions/ticket-math'
+import { predictionCollateral } from '@/lib/predictions/collateral'
 
 // ── Live price, without a per-tick render ─────────────────────────────
 
@@ -260,7 +267,11 @@ export default memo(function MobileTradePanel() {
   }, [loadCredentials, loadWallets])
 
   const marketInfo = availableMarkets.find((m) => m.marketId === focusedVenue)
-  const isDex = marketInfo?.walletChain != null
+  // Same split the desktop ticket makes: Polymarket signs with a chain wallet
+  // AND trades contracts, and only the first half is a DEX question.
+  const isPrediction = marketInfo?.assetClasses.includes('prediction') ?? false
+  const usesWallet = marketInfo?.walletChain != null
+  const isDex = usesWallet && !isPrediction
   const venueLabel =
     marketInfo?.walletChain != null
       ? CHAIN_NAME[marketInfo.walletChain]
@@ -274,19 +285,21 @@ export default memo(function MobileTradePanel() {
   )
   const chainWallets = useMemo(
     () =>
-      isDex ? wallets.filter((w) => w.chain === marketInfo?.walletChain) : [],
-    [isDex, wallets, marketInfo?.walletChain],
+      usesWallet
+        ? wallets.filter((w) => w.chain === marketInfo?.walletChain)
+        : [],
+    [usesWallet, wallets, marketInfo?.walletChain],
   )
 
   // The phone has no account switcher in the ticket: it trades from the
   // account the terminal already considers active, or from the venue's only
   // one. A venue with several accounts and none active picks the first —
   // choosing is a Settings › Accounts job, not a decision to block a trade on.
-  const selectedCred = isDex
+  const selectedCred = usesWallet
     ? undefined
     : (marketCreds.find((c) => c.id === activeWallet?.walletId) ??
       marketCreds[0])
-  const selectedWallet = isDex
+  const selectedWallet = usesWallet
     ? (chainWallets.find((w) => w.id === activeWallet?.walletId) ??
       chainWallets[0])
     : undefined
@@ -296,10 +309,10 @@ export default memo(function MobileTradePanel() {
   // excluded on purpose — the store is empty because it could not be read.
   const needsConnect =
     marketInfo != null &&
-    !(isDex ? walletsSealed : credentialsSealed) &&
-    (isDex ? walletsLoaded : credentialsLoaded) &&
+    !(usesWallet ? walletsSealed : credentialsSealed) &&
+    (usesWallet ? walletsLoaded : credentialsLoaded) &&
     (!marketInfo.capabilities.includes('trade') ||
-      (isDex ? chainWallets.length === 0 : marketCreds.length === 0))
+      (usesWallet ? chainWallets.length === 0 : marketCreds.length === 0))
 
   // Published for the chart's limit line: the draggable level only renders on
   // a ticket that can actually place an order (user-reported — the line was
@@ -309,22 +322,36 @@ export default memo(function MobileTradePanel() {
     setTradeReady(!needsConnect)
   }, [needsConnect, setTradeReady])
 
-  const balanceScope = isDex
+  const balanceScope = usesWallet
     ? selectedWallet
       ? dexBalanceCredentialKey(selectedWallet.id, focusedVenue)
       : undefined
     : selectedCred?.id
   const availableBase = useBalance(baseAsset, balanceScope)
   const availableQuote = useBalance(quoteAsset, balanceScope)
+  // A prediction pair key has no quote leg to read a balance for. Hooks cannot
+  // be called in a loop, so every candidate is read and the shared rule picks
+  // between them — the desktop ticket's own scan drifted from this list once.
+  const collateralBalances: Record<string, string> = {
+    USDC: useBalance('USDC', balanceScope),
+    USD: useBalance('USD', balanceScope),
+    USDT: useBalance('USDT', balanceScope),
+  }
+  const collateral = predictionCollateral((c) => collateralBalances[c])
 
   // ── Order-type availability ──
   const supportsLimit = !isDex || marketInfo?.dexLimitOrders === true
-  const supportsStop = !isDex && marketInfo?.triggerOrders === true
+  const supportsStop =
+    !isDex && !isPrediction && marketInfo?.triggerOrders === true
+  // Kalshi takes no market order at all; the segment is dropped rather than
+  // disabled, and the draft is coerced so a stale 'market' cannot submit.
+  const limitOnly = isPrediction && marketInfo?.limitOnly === true
 
   useEffect(() => {
+    if (limitOnly && orderType !== 'limit') setOrderType('limit')
     if (orderType === 'limit' && !supportsLimit) setOrderType('market')
     if (orderType === 'stop' && !supportsStop) setOrderType('market')
-  }, [orderType, supportsLimit, supportsStop, setOrderType])
+  }, [orderType, limitOnly, supportsLimit, supportsStop, setOrderType])
 
   // Seeding the price field from the live market is what puts the chart's
   // limit line where the user is looking instead of at zero. Seeded once per
@@ -343,14 +370,24 @@ export default memo(function MobileTradePanel() {
         (side === 'buy' ? live.bestAsk : live.bestBid) ?? live.last
       if (reference == null) return
       seedKeyRef.current = key
-      const seeded = String(Number(reference.toPrecision(8)))
+      const seeded = isPrediction
+        ? String(priceToCents(reference))
+        : String(Number(reference.toPrecision(8)))
       if (next === 'limit') {
         if (limitPrice === '') setLimitPrice(seeded)
       } else if (stopPrice === '') {
         setStopPrice(seeded)
       }
     },
-    [focusedPair, side, limitPrice, stopPrice, setLimitPrice, setStopPrice],
+    [
+      focusedPair,
+      isPrediction,
+      side,
+      limitPrice,
+      stopPrice,
+      setLimitPrice,
+      setStopPrice,
+    ],
   )
 
   // Covers the ticket that opens straight onto Limit: the probe's first sample
@@ -417,9 +454,34 @@ export default memo(function MobileTradePanel() {
 
   // ── Derived order figures ──
   const typedPrice = toNumber(orderType === 'limit' ? limitPrice : stopPrice)
-  const referencePrice =
-    orderType === 'market' ? (prices.last ?? null) : typedPrice || null
+  // Cents in the field, dollars everywhere else. One conversion, at the edge.
+  // Null for anything outside (0, 100) cents. Every consumer refuses on null
+  // rather than substituting a bound — a price left over from another
+  // instrument is not a price, and clamping it bought the venue's worst fill.
+  const predictionLimitPrice = isPrediction ? centsToPrice(limitPrice) : null
+  const predictionPriceInvalid =
+    isPrediction &&
+    orderType === 'limit' &&
+    limitPrice !== '' &&
+    predictionLimitPrice === null
+  const predictionPrice = isPrediction
+    ? orderType === 'limit'
+      ? predictionLimitPrice
+      : (prices.last ?? null)
+    : null
+  const referencePrice = isPrediction
+    ? predictionPrice
+    : orderType === 'market'
+      ? (prices.last ?? null)
+      : typedPrice || null
   const sizeNumber = toNumber(amount)
+  const maxLoss = isPrediction
+    ? predictionMaxLoss({
+        contracts: sizeNumber,
+        price: predictionPrice,
+        side,
+      })
+    : null
   const orderValue =
     sizeCcy === 'quote'
       ? sizeNumber
@@ -434,14 +496,16 @@ export default memo(function MobileTradePanel() {
   // and only when it changes.
   const [riskBlocks, setRiskBlocks] = useState(false)
 
-  const isLiveOrder = isDex || selectedCred?.mode === 'live'
+  const isLiveOrder = usesWallet || selectedCred?.mode === 'live'
   const canSubmit =
     !needsConnect &&
-    (isDex ? selectedWallet != null : selectedCred != null) &&
+    (usesWallet ? selectedWallet != null : selectedCred != null) &&
     mdStatus === 'connected' &&
     !submitting &&
     sizeNumber > 0 &&
-    (orderType === 'market' || typedPrice > 0) &&
+    (!isPrediction || Number.isInteger(sizeNumber)) &&
+    (orderType === 'market' ||
+      (isPrediction ? predictionLimitPrice !== null : typedPrice > 0)) &&
     !riskBlocks
 
   const handleSubmit = useCallback(async () => {
@@ -455,7 +519,23 @@ export default memo(function MobileTradePanel() {
         side,
       }
 
-      if (isDex) {
+      if (isPrediction) {
+        // Contracts at a probability price. Ordered before the wallet branch:
+        // Polymarket satisfies both tests and its orders are not swaps.
+        const account = usesWallet ? selectedWallet : selectedCred
+        if (!account) return
+        params['credentialId'] = account.id
+        params['size'] = normalizeContracts(amount)
+        if (orderType === 'limit') {
+          // Belt and braces behind the disabled slider: an out-of-range field
+          // must never reach the venue as a clamped worst-case price.
+          if (predictionLimitPrice === null) return
+          params['type'] = 'limit'
+          params['price'] = String(predictionLimitPrice)
+        } else {
+          params['type'] = 'market'
+        }
+      } else if (isDex) {
         if (!selectedWallet) return
         params['walletId'] = selectedWallet.id
         params['mode'] = 'live'
@@ -586,6 +666,9 @@ export default memo(function MobileTradePanel() {
     focusedPair,
     side,
     isDex,
+    isPrediction,
+    predictionLimitPrice,
+    usesWallet,
     selectedWallet,
     selectedCred,
     orderType,
@@ -658,17 +741,21 @@ export default memo(function MobileTradePanel() {
           label={t('terminal.trade.orderTypeLimit')}
           onPress={() => handleOrderType('limit')}
         />
-        <SegmentButton
-          active={orderType === 'market'}
-          label={t('terminal.trade.orderTypeMarket')}
-          onPress={() => handleOrderType('market')}
-        />
-        <SegmentButton
-          active={orderType === 'stop'}
-          disabled={!supportsStop}
-          label={t('mobile.trade.orderTypeStop')}
-          onPress={() => handleOrderType('stop')}
-        />
+        {!limitOnly && (
+          <SegmentButton
+            active={orderType === 'market'}
+            label={t('terminal.trade.orderTypeMarket')}
+            onPress={() => handleOrderType('market')}
+          />
+        )}
+        {!isPrediction && (
+          <SegmentButton
+            active={orderType === 'stop'}
+            disabled={!supportsStop}
+            label={t('mobile.trade.orderTypeStop')}
+            onPress={() => handleOrderType('stop')}
+          />
+        )}
       </div>
 
       {/* Fields */}
@@ -682,38 +769,55 @@ export default memo(function MobileTradePanel() {
           }
           locale={i18n.language}
           onChange={orderType === 'limit' ? setLimitPrice : setStopPrice}
-          unit={<FieldUnit>{quoteAsset}</FieldUnit>}
+          unit={<FieldUnit>{isPrediction ? '¢' : quoteAsset}</FieldUnit>}
           value={orderType === 'limit' ? limitPrice : stopPrice}
         />
       ) : null}
 
+      {predictionPriceInvalid && (
+        <p className="-mt-1 px-1 text-[11px] leading-snug text-destructive">
+          {t('terminal.trade.priceCentsRange')}
+        </p>
+      )}
+
       <NumericField
-        label={t('terminal.trade.amount')}
+        label={
+          isPrediction
+            ? t('terminal.trade.contracts')
+            : t('terminal.trade.amount')
+        }
         locale={i18n.language}
-        onChange={setAmount}
+        onChange={
+          isPrediction ? (v) => setAmount(normalizeContracts(v)) : setAmount
+        }
         unit={
-          <button
-            aria-label={t('mobile.trade.switchSizeCurrency')}
-            className="pl-hit-44 pl-press-soft -my-2 rounded-md px-1 py-2"
-            {...PRESS}
-            onClick={(event) => {
-              // The field is a <label>, so a click anywhere inside it focuses
-              // the input — switching BTC to USDT would open the keyboard as a
-              // side effect. Suppressing the label's default keeps the two
-              // gestures separate.
-              event.preventDefault()
-              setSizeCcy(sizeCcy === 'base' ? 'quote' : 'base')
-            }}
-            type="button"
-          >
-            <FieldUnit>{sizeAsset}</FieldUnit>
-          </button>
+          isPrediction ? (
+            <FieldUnit>{t('terminal.trade.contracts')}</FieldUnit>
+          ) : (
+            <button
+              aria-label={t('mobile.trade.switchSizeCurrency')}
+              className="pl-hit-44 pl-press-soft -my-2 rounded-md px-1 py-2"
+              {...PRESS}
+              onClick={(event) => {
+                // The field is a <label>, so a click anywhere inside it focuses
+                // the input — switching BTC to USDT would open the keyboard as a
+                // side effect. Suppressing the label's default keeps the two
+                // gestures separate.
+                event.preventDefault()
+                setSizeCcy(sizeCcy === 'base' ? 'quote' : 'base')
+              }}
+              type="button"
+            >
+              <FieldUnit>{sizeAsset}</FieldUnit>
+            </button>
+          )
         }
         value={amount}
       />
 
-      {/* Percent buttons */}
-      <div className="flex gap-2">
+      {/* Percent buttons. A share of a balance means nothing in contracts —
+          the prediction ticket steps whole counts instead. */}
+      <div className={cn('flex gap-2', isPrediction && 'hidden')}>
         {PERCENTS.map((pct) => (
           <button
             className="pl-press h-[31px] flex-1 rounded-[9px] border border-[color:var(--pl-edge)] font-mono text-[12px] tabular-nums text-muted-foreground"
@@ -729,22 +833,33 @@ export default memo(function MobileTradePanel() {
 
       {/* Summary */}
       <div className="flex flex-col gap-1 pt-0.5">
-        <SummaryRow
-          label={t('mobile.trade.orderValue')}
-          value={
-            orderValue == null
-              ? '—'
-              : `${orderValue.toLocaleString(i18n.language, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })} ${quoteAsset}`
-          }
-        />
+        {isPrediction ? (
+          <SummaryRow
+            label={t('terminal.trade.maxLoss')}
+            value={maxLoss == null ? '—' : `$${maxLoss.toFixed(2)}`}
+          />
+        ) : (
+          <SummaryRow
+            label={t('mobile.trade.orderValue')}
+            value={
+              orderValue == null
+                ? '—'
+                : `${orderValue.toLocaleString(i18n.language, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })} ${quoteAsset}`
+            }
+          />
+        )}
         <SummaryRow
           label={t('mobile.trade.available')}
-          value={`${formatAvailable(
-            side === 'sell' ? availableBase : availableQuote,
-          )} ${side === 'sell' ? baseAsset : quoteAsset}`}
+          value={
+            isPrediction
+              ? `${formatAvailable(collateral.total)} ${collateral.currency}`
+              : `${formatAvailable(
+                  side === 'sell' ? availableBase : availableQuote,
+                )} ${side === 'sell' ? baseAsset : quoteAsset}`
+          }
         />
         <TradeRiskRow
           credentialId={selectedCred?.id}

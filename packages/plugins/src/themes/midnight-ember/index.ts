@@ -136,6 +136,7 @@ export const midnightEmberManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'midnight-ember',

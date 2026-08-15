@@ -37,9 +37,12 @@ import { FullScreenOverlay } from '../primitives/full-screen-overlay'
 import { MobileScrim } from '../primitives/mobile-scrim'
 import { PRESS } from '../primitives/press'
 import { useMobileOrderbook } from '../lib/use-mobile-orderbook'
+import { useMobileFocus } from '../mobile-focus-context'
 import type { MobileBookRow } from '../lib/use-mobile-orderbook'
 import type { MobileOverlay } from '../mobile-focus-context'
 import type { BookMetric } from '@/hooks/use-orderbook-metric'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
+import { formatPredictionBookPrice } from '@/lib/format-price'
 import { useOrderbookMetric } from '@/hooks/use-orderbook-metric'
 import { useOptionalTickerData } from '@/lib/chart-terminal-context'
 import { formatAmount } from '@/components/terminal/orderbook-pane'
@@ -113,14 +116,20 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
   }, [])
 
   const lastPrice = ticker?.lastTradePrice ?? ticker?.midPrice ?? bestBid
+  const { focusedPair, focusedVenue } = useMobileFocus()
+  const prediction = useIsPredictionPair(focusedPair, focusedVenue)
 
   const formatPrice = useCallback(
     (price: number) =>
-      price.toLocaleString(i18n.language, {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-      }),
-    [i18n.language, decimals],
+      // A probability book is quoted in cents on both venues; the decimals
+      // inferred from the live tick would render 0.5300 instead.
+      prediction
+        ? formatPredictionBookPrice(price)
+        : price.toLocaleString(i18n.language, {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals,
+          }),
+    [i18n.language, decimals, prediction],
   )
 
   // The chip always names the grouping in force, even when Auto chose it —

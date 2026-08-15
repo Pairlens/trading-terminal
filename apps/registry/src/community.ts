@@ -42,6 +42,7 @@ export const MAX_COMMUNITY_MODULE_BYTES = 512 * 1024
 export const COMMUNITY_DENIED_CAPABILITIES: ReadonlyArray<string> = [
   'trading:orders',
   'trading:balances',
+  'trading:positions',
 ]
 
 /**
