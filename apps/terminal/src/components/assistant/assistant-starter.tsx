@@ -25,13 +25,56 @@ import type { FormEvent, KeyboardEvent } from 'react'
 import type { AssistantSurface } from '@/lib/assistant/assistant-tools'
 import { requestAssistant } from '@/lib/assistant/assistant-chat-cache'
 
+/** Three things worth asking for, per surface. */
+const IDEA_KEYS: Record<AssistantSurface, Array<string>> = {
+  indicators: [
+    'assistant.starterIdeaIndicator1',
+    'assistant.starterIdeaIndicator2',
+    'assistant.starterIdeaIndicator3',
+  ],
+  bots: [
+    'assistant.starterIdeaBot1',
+    'assistant.starterIdeaBot2',
+    'assistant.starterIdeaBot3',
+  ],
+  workflows: [
+    'assistant.starterIdeaWorkflow1',
+    'assistant.starterIdeaWorkflow2',
+    'assistant.starterIdeaWorkflow3',
+  ],
+  notifications: [
+    'assistant.starterIdeaAlert1',
+    'assistant.starterIdeaAlert2',
+    'assistant.starterIdeaAlert3',
+  ],
+}
+
+const BODY_KEY: Record<AssistantSurface, string> = {
+  indicators: 'assistant.starterBodyIndicators',
+  bots: 'assistant.starterBodyBots',
+  workflows: 'assistant.starterBodyWorkflows',
+  notifications: 'assistant.starterBodyNotifications',
+}
+
+const PLACEHOLDER_KEY: Record<AssistantSurface, string> = {
+  indicators: 'assistant.starterPlaceholderIndicators',
+  bots: 'assistant.starterPlaceholderBots',
+  workflows: 'assistant.starterPlaceholderWorkflows',
+  notifications: 'assistant.starterPlaceholderNotifications',
+}
+
 export function AssistantStarter({
   surface,
   onStarted,
 }: {
   surface: AssistantSurface
-  /** Open the rail — the conversation continues there, not here. */
-  onStarted: () => void
+  /**
+   * Open the rail — the conversation continues there, not here. Optional
+   * because queueing the request already wakes it: every page hosting the
+   * rail listens for an intent aimed at its surface. Pass it where the host
+   * has the state to hand anyway.
+   */
+  onStarted?: () => void
 }) {
   const { t } = useTranslation()
   const [value, setValue] = useState('')
@@ -42,7 +85,7 @@ export function AssistantStarter({
       if (!trimmed) return
       requestAssistant(surface, { prompt: trimmed })
       setValue('')
-      onStarted()
+      onStarted?.()
     },
     [surface, onStarted],
   )
@@ -63,18 +106,7 @@ export function AssistantStarter({
     start(value)
   }
 
-  const ideas =
-    surface === 'indicators'
-      ? [
-          t('assistant.starterIdeaIndicator1'),
-          t('assistant.starterIdeaIndicator2'),
-          t('assistant.starterIdeaIndicator3'),
-        ]
-      : [
-          t('assistant.starterIdeaBot1'),
-          t('assistant.starterIdeaBot2'),
-          t('assistant.starterIdeaBot3'),
-        ]
+  const ideas = IDEA_KEYS[surface].map((key) => t(key))
 
   return (
     <div className="relative w-full overflow-hidden rounded-xl border border-primary/25 bg-card/60 p-4 backdrop-blur-sm">
@@ -99,9 +131,7 @@ export function AssistantStarter({
             </span>
           </div>
           <p className="mt-1 text-[12.5px] leading-snug text-muted-foreground">
-            {surface === 'indicators'
-              ? t('assistant.starterBodyIndicators')
-              : t('assistant.starterBodyBots')}
+            {t(BODY_KEY[surface])}
           </p>
         </div>
       </div>
@@ -112,11 +142,7 @@ export function AssistantStarter({
           value={value}
           onChange={(event) => setValue(event.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={
-            surface === 'indicators'
-              ? t('assistant.starterPlaceholderIndicators')
-              : t('assistant.starterPlaceholderBots')
-          }
+          placeholder={t(PLACEHOLDER_KEY[surface])}
           className="min-h-[52px] flex-1 resize-none text-[13px]"
         />
         <Button

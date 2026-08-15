@@ -11,13 +11,13 @@ readTime: 6 min read
 There are five ways an agent can operate Pairlens, and they differ in one
 important respect: how close to an order they get, and who confirms it.
 
-| Surface                                                 | Runs where          | Can place orders               |
-| ------------------------------------------------------- | ------------------- | ------------------------------ |
-| [Co-pilot tools](/docs/copilot-tools)                   | Inside the terminal | As proposals you confirm       |
-| [Builder assistant](/docs/python-scripts#build-with-ai) | Inside the terminal | No. Creates paper bots you arm |
-| [Chart MCP tools](/docs/chart-mcp)                      | Any MCP client      | No. Chart control only         |
-| [CLI](/docs/cli-reference)                              | Your shell or CI    | Yes, headless and unattended   |
-| [Bots](/docs/bots)                                      | Your machine        | Yes, once you arm them         |
+| Surface                                                 | Runs where          | Can place orders                   |
+| ------------------------------------------------------- | ------------------- | ---------------------------------- |
+| [Co-pilot tools](/docs/copilot-tools)                   | Inside the terminal | As proposals you confirm           |
+| [Builder assistant](/docs/python-scripts#build-with-ai) | Inside the terminal | No. Builds what you commit and arm |
+| [Chart MCP tools](/docs/chart-mcp)                      | Any MCP client      | No. Chart control only             |
+| [CLI](/docs/cli-reference)                              | Your shell or CI    | Yes, headless and unattended       |
+| [Bots](/docs/bots)                                      | Your machine        | Yes, once you arm them             |
 
 ## Co-pilot tools
 
@@ -37,20 +37,30 @@ Full list in the [co-pilot tool reference](/docs/copilot-tools).
 
 ## Builder assistant
 
-The second in-app agent, hosted by the script workbench and the Bots page. Its
-tool surface is the build loop rather than the market: create, read, edit and
-delete Python script files (validated in the Pyodide runtime, tracebacks fed
-back to the model so it repairs its own code before it answers), move the
-preview onto the venue, pair, timeframe and depth a script needs, run
-backtests through the same engine live bots use, and create or tune bot
-deployments.
+The second in-app agent, hosted by all four builder pages. Its tool surface is
+the build loop rather than the market, and which tools it has depends on where
+it is.
+
+On **Indicators & Strategies** and **Bots**: create, read, edit and delete
+Python script files (validated in the Pyodide runtime, tracebacks fed back to
+the model so it repairs its own code before it answers), move the preview onto
+the venue, pair, timeframe and depth a script needs, run backtests through the
+same engine live bots use, and create or tune bot deployments.
+
+On **Workflows** and **Notifications**: read the installed step palette, then
+write a whole step graph in one call, laid out and validated. Workflow graphs
+and alert flows land in the open draft as pending changes, so the commit bar
+you already use is what makes them real; the assistant has no tool that
+commits. Simple price and percent-move alerts are the exception and arm on
+creation, because an alert nobody armed is not an alert.
 
 Two of its tools are conversational rather than mechanical. `ask_user` has no
 implementation at all: the model's turn ends on the call, the terminal renders
 the options, and the answer you tap becomes the tool result that resumes the
 run, which is how a decision that is yours stays yours. `handoff_to_builder`
-moves you between the two surfaces and briefs the assistant on the other side,
-so building a bot that needs a new indicator is one thread rather than two.
+moves you between the four surfaces and briefs the assistant on the other side,
+so building a bot that needs a new indicator, or an order plan that turned out
+to be an alert, is one thread rather than two.
 
 Its trading boundary is structural. A bot it creates is always paper mode and
 switched off, and its tools have no way to enable, arm, or retarget one; the

@@ -125,7 +125,7 @@ export interface AnalyticsEvents {
   assistant_message_sent: {
     provider: string
     model: string
-    surface: 'indicators' | 'bots'
+    surface: 'indicators' | 'bots' | 'workflows' | 'notifications'
   }
   /** One event per tool invocation in a builder-assistant run. */
   assistant_tool_used: { tool: string }

@@ -4,6 +4,7 @@ import { describe, expect, test } from 'bun:test'
 import { MockLanguageModelV3, simulateReadableStream } from 'ai/test'
 import { AssistantChatTransport } from '../assistant/assistant-transport'
 import { buildAssistantTools } from '../assistant/assistant-tools'
+import { buildAssistantSystemPrompt } from '../assistant/assistant-brain'
 import type { AssistantPromptContext } from '../assistant/assistant-brain'
 import type { UIMessage, UIMessageChunk } from 'ai'
 import type { PluginInstance, PluginManager } from '@pairlens/plugin-system'
@@ -43,7 +44,7 @@ function makeTransport(provider: PluginInstance | null) {
   return new AssistantChatTransport({
     pluginManager: fakeManager(provider),
     surface: 'indicators',
-    getPromptContext: promptContext,
+    getSystemPrompt: () => buildAssistantSystemPrompt(promptContext()),
     getTools: () =>
       buildAssistantTools({
         surface: 'indicators',
