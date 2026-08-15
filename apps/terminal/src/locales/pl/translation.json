@@ -4148,7 +4148,6 @@
       "botsPausedBody": "Odblokuj Pairlens, aby wznowić handel na żywo. Boty papierowe działają dalej.",
       "orderBlocked": "Twój sejf poświadczeń jest zablokowany — odblokuj Pairlens, aby składać zlecenia na żywo.",
       "insecureContext": "Szyfrowanie jest niedostępne na niezabezpieczonym połączeniu. Otwórz Pairlens przez HTTPS lub na localhost, aby skonfigurować sejf.",
-      "diverged": "Terminal jest odblokowany, ale to hasło nie otworzyło sejfu poświadczeń. Zmień hasło w Ustawieniach → Bezpieczeństwo, aby je ponownie zsynchronizować.",
       "botParkDetailSealed": "Twój sejf poświadczeń jest zablokowany. Ten bot wznowi handel na żywo, gdy tylko odblokujesz Pairlens. Boty papierowe działają dalej.",
       "botParkDetailError": "Nie udało się odczytać zapisanych poświadczeń na tym urządzeniu. Ten bot wznowi handel na żywo, gdy tylko się załadują. Boty papierowe działają dalej.",
       "onlyProtectorLeft": "To jedyny sposób na dostęp do Twojego sejfu. Dodaj kolejny, zanim go usuniesz.",

@@ -5,7 +5,7 @@ group: traders
 order: 10
 eyebrow: For traders
 updated: AUG 2026
-readTime: 14 min read
+readTime: 10 min read
 ---
 
 Open settings with <kbd>⌘,</kbd>, from the user menu, or by searching for a
@@ -179,10 +179,18 @@ The vault and the lock screen share one attempt limit. Five wrong passwords arm
 a doubling delay capped at five minutes, and it survives a reload and a second
 window, so a wrong vault password also delays the lock screen.
 
-On desktop your password check lives in the system keychain and never leaves
-the machine. In a browser it is in browser storage, which means clearing site
-data removes the lock. The command-line tool takes API keys as arguments and
-never reads the vault at all.
+**What checks your password depends on whether a vault stands behind it.** With
+a vault password enrolled, the lock screen answers by actually unwrapping your
+vault key: it either decrypts or it does not, so nothing an attacker can edit
+in browser storage makes it say yes. Without one, the check is a stored hash of
+your password, which is the only artifact there is. On desktop that hash sits
+in the system keychain and never leaves the machine. In a browser it is in
+browser storage, so clearing site data removes the lock, and someone who can
+edit that storage can get past the screen. They reach a terminal with no keys
+in it, because there were none to protect in that configuration.
+
+The command-line tool takes API keys as arguments and never reads the vault at
+all.
 
 For the guarantees behind all of this, and how each one is enforced, see the
 [security model](/docs/security-model).

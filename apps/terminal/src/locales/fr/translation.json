@@ -4112,7 +4112,6 @@
       "botsPausedBody": "Déverrouillez Pairlens pour reprendre le trading réel. Les bots en papier ne sont pas affectés.",
       "orderBlocked": "Votre coffre d'identifiants est verrouillé — déverrouillez Pairlens pour passer des ordres réels.",
       "insecureContext": "Le chiffrement est indisponible sur une connexion non sécurisée. Ouvrez Pairlens en HTTPS, ou sur localhost, pour configurer un coffre.",
-      "diverged": "Votre terminal est déverrouillé, mais ce mot de passe n'a pas ouvert votre coffre d'identifiants. Changez votre mot de passe dans Paramètres → Sécurité pour les resynchroniser.",
       "botParkDetailSealed": "Votre coffre d'identifiants est verrouillé. Ce bot reprend le trading réel dès que vous déverrouillez Pairlens. Les bots en papier ne sont pas affectés.",
       "botParkDetailError": "Vos identifiants enregistrés n'ont pas pu être lus sur cet appareil. Ce bot reprend le trading réel dès qu'ils sont chargés. Les bots en papier ne sont pas affectés.",
       "onlyProtectorLeft": "C'est le seul moyen d'entrer dans votre coffre. Ajoutez-en un autre avant de le retirer.",

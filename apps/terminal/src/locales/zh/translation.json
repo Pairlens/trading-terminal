@@ -4112,7 +4112,6 @@
       "botsPausedBody": "解锁 Pairlens 以恢复实盘交易。模拟机器人不受影响。",
       "orderBlocked": "你的凭证保险库已锁定 — 解锁 Pairlens 才能下实盘订单。",
       "insecureContext": "在不安全的连接上无法加密。请通过 HTTPS 或在 localhost 上打开 Pairlens 来设置保险库。",
-      "diverged": "终端已解锁，但该密码没能打开你的凭证保险库。请在 设置 → 安全 中更改密码，让两者重新一致。",
       "botParkDetailSealed": "你的凭证保险库已锁定。只要解锁 Pairlens，此机器人就会恢复实盘交易。模拟机器人不受影响。",
       "botParkDetailError": "你保存的凭证无法在此设备上读取。凭证一旦加载完成，此机器人就会恢复实盘交易。模拟机器人不受影响。",
       "onlyProtectorLeft": "这是进入你保险库的唯一方式。请先添加另一种方式，再移除它。",

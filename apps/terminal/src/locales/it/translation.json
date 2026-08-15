@@ -4112,7 +4112,6 @@
       "botsPausedBody": "Sblocca Pairlens per riprendere il trading live. I bot in paper non sono interessati.",
       "orderBlocked": "La tua cassaforte delle credenziali è bloccata: sblocca Pairlens per inviare ordini live.",
       "insecureContext": "La cifratura non è disponibile su una connessione non sicura. Apri Pairlens via HTTPS, o su localhost, per configurare una cassaforte.",
-      "diverged": "Il terminale è sbloccato, ma quella password non ha aperto la cassaforte delle credenziali. Cambia la password in Impostazioni → Sicurezza per riallinearle.",
       "botParkDetailSealed": "La tua cassaforte delle credenziali è bloccata. Questo bot riprende il trading live non appena sblocchi Pairlens. I bot in paper non sono interessati.",
       "botParkDetailError": "Le tue credenziali salvate non sono leggibili su questo dispositivo. Questo bot riprende il trading live non appena vengono caricate. I bot in paper non sono interessati.",
       "onlyProtectorLeft": "Questo è l'unico modo per accedere alla tua cassaforte. Aggiungine un altro prima di rimuoverlo.",

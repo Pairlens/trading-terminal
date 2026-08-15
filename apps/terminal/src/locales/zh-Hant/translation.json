@@ -4112,7 +4112,6 @@
       "botsPausedBody": "解鎖 Pairlens 以恢復實盤交易。模擬機器人不受影響。",
       "orderBlocked": "你的憑證保險庫已鎖定 — 解鎖 Pairlens 才能下實盤委託。",
       "insecureContext": "在不安全的連線上無法加密。請透過 HTTPS 或在 localhost 開啟 Pairlens 來設定保險庫。",
-      "diverged": "終端已解鎖，但該密碼沒能打開你的憑證保險庫。請在 設定 → 安全性 中變更密碼，讓兩者重新一致。",
       "botParkDetailSealed": "你的憑證保險庫已鎖定。只要解鎖 Pairlens，此機器人就會恢復實盤交易。模擬機器人不受影響。",
       "botParkDetailError": "你儲存的憑證無法在此裝置上讀取。憑證一旦載入完成，此機器人就會恢復實盤交易。模擬機器人不受影響。",
       "onlyProtectorLeft": "這是進入你保險庫的唯一方式。請先新增另一種方式，再移除它。",

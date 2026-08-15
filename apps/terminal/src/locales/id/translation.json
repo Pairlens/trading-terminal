@@ -4112,7 +4112,6 @@
       "botsPausedBody": "Buka Pairlens untuk melanjutkan trading live. Bot paper tidak terpengaruh.",
       "orderBlocked": "Brankas kredensial Anda terkunci — buka Pairlens untuk mengirim order live.",
       "insecureContext": "Enkripsi tidak tersedia pada koneksi yang tidak aman. Buka Pairlens melalui HTTPS, atau di localhost, untuk menyiapkan brankas.",
-      "diverged": "Terminal Anda terbuka, tetapi kata sandi itu tidak membuka brankas kredensial. Ubah kata sandi di Pengaturan → Keamanan agar keduanya selaras kembali.",
       "botParkDetailSealed": "Brankas kredensial Anda terkunci. Bot ini melanjutkan trading live begitu Anda membuka kunci Pairlens. Bot paper tidak terpengaruh.",
       "botParkDetailError": "Kredensial tersimpan Anda tidak dapat dibaca di perangkat ini. Bot ini melanjutkan trading live begitu kredensial berhasil dimuat. Bot paper tidak terpengaruh.",
       "onlyProtectorLeft": "Ini satu-satunya cara masuk ke brankas Anda. Tambahkan cara lain sebelum menghapus ini.",

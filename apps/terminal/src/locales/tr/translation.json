@@ -4112,7 +4112,6 @@
       "botsPausedBody": "Canlı işlemlere devam etmek için Pairlens'in kilidini aç. Kâğıt botlar etkilenmez.",
       "orderBlocked": "Kimlik bilgisi kasan kilitli — canlı emir göndermek için Pairlens'in kilidini aç.",
       "insecureContext": "Güvenli olmayan bir bağlantıda şifreleme kullanılamaz. Kasa kurmak için Pairlens'i HTTPS üzerinden veya localhost'ta aç.",
-      "diverged": "Terminalin açık, ama bu parola kimlik bilgisi kasanı açmadı. İkisini yeniden eşitlemek için parolanı Ayarlar → Güvenlik'ten değiştir.",
       "botParkDetailSealed": "Kimlik bilgisi kasan kilitli. Bu bot, Pairlens'in kilidini açar açmaz canlı işlem yapmaya devam eder. Kâğıt botlar etkilenmez.",
       "botParkDetailError": "Saklı kimlik bilgilerin bu cihazda okunamadı. Bu bot, kimlik bilgileri yüklenir yüklenmez canlı işlem yapmaya devam eder. Kâğıt botlar etkilenmez.",
       "onlyProtectorLeft": "Kasana girmenin tek yolu bu. Kaldırmadan önce bir tane daha ekle.",

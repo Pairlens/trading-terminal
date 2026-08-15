@@ -4112,7 +4112,6 @@
       "botsPausedBody": "Mở khóa Pairlens để tiếp tục giao dịch live. Bot paper không bị ảnh hưởng.",
       "orderBlocked": "Kho thông tin đăng nhập của bạn đang bị khóa — mở khóa Pairlens để đặt lệnh live.",
       "insecureContext": "Không thể mã hóa trên kết nối không an toàn. Hãy mở Pairlens qua HTTPS, hoặc trên localhost, để thiết lập kho.",
-      "diverged": "Terminal đã mở khóa, nhưng mật khẩu đó không mở được kho thông tin đăng nhập. Hãy đổi mật khẩu trong Cài đặt → Bảo mật để đồng bộ lại cả hai.",
       "botParkDetailSealed": "Kho thông tin đăng nhập của bạn đang bị khóa. Bot này sẽ tiếp tục giao dịch live ngay khi bạn mở khóa Pairlens. Bot paper không bị ảnh hưởng.",
       "botParkDetailError": "Không thể đọc thông tin đăng nhập đã lưu của bạn trên thiết bị này. Bot này sẽ tiếp tục giao dịch live ngay khi thông tin được tải. Bot paper không bị ảnh hưởng.",
       "onlyProtectorLeft": "Đây là cách duy nhất để vào kho của bạn. Hãy thêm một cách khác trước khi xóa cách này.",

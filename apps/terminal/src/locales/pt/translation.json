@@ -4112,7 +4112,6 @@
       "botsPausedBody": "Desbloqueie o Pairlens para retomar as operações reais. Bots em papel não são afetados.",
       "orderBlocked": "Seu cofre de credenciais está bloqueado — desbloqueie o Pairlens para enviar ordens reais.",
       "insecureContext": "A criptografia não está disponível em uma conexão insegura. Abra o Pairlens por HTTPS, ou em localhost, para configurar um cofre.",
-      "diverged": "Seu terminal está desbloqueado, mas essa senha não abriu o cofre de credenciais. Altere sua senha em Configurações → Segurança para sincronizar os dois novamente.",
       "botParkDetailSealed": "Seu cofre de credenciais está bloqueado. Este bot retoma as operações reais assim que você desbloquear o Pairlens. Bots em papel não são afetados.",
       "botParkDetailError": "Suas credenciais salvas não puderam ser lidas neste dispositivo. Este bot retoma as operações reais assim que elas forem carregadas. Bots em papel não são afetados.",
       "onlyProtectorLeft": "Esta é a única forma de acessar seu cofre. Adicione outra antes de removê-la.",

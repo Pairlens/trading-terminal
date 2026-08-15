@@ -4112,7 +4112,6 @@
       "botsPausedBody": "Desbloquea Pairlens para reanudar el trading en vivo. Los bots en papel no se ven afectados.",
       "orderBlocked": "Tu bóveda de credenciales está bloqueada: desbloquea Pairlens para enviar órdenes en vivo.",
       "insecureContext": "El cifrado no está disponible en una conexión insegura. Abre Pairlens por HTTPS, o en localhost, para configurar una bóveda.",
-      "diverged": "Tu terminal está desbloqueado, pero esa contraseña no abrió tu bóveda de credenciales. Cambia tu contraseña en Ajustes → Seguridad para volver a sincronizarlas.",
       "botParkDetailSealed": "Tu bóveda de credenciales está bloqueada. Este bot reanuda el trading en vivo en cuanto desbloquees Pairlens. Los bots en papel no se ven afectados.",
       "botParkDetailError": "Tus credenciales guardadas no se pudieron leer en este dispositivo. Este bot reanuda el trading en vivo en cuanto se carguen. Los bots en papel no se ven afectados.",
       "onlyProtectorLeft": "Esta es la única forma de entrar en tu bóveda. Añade otra antes de quitarla.",

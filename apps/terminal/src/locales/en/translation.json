@@ -4112,7 +4112,6 @@
       "botsPausedBody": "Unlock Pairlens to resume live trading. Paper bots are unaffected.",
       "orderBlocked": "Your credential vault is locked — unlock Pairlens to place live orders.",
       "insecureContext": "Encryption is unavailable over an insecure connection. Open Pairlens over HTTPS, or on localhost, to set up a vault.",
-      "diverged": "Your terminal is unlocked, but that password did not open your credential vault. Change your password in Settings → Security to bring the two back in sync.",
       "botParkDetailSealed": "Your credential vault is locked. This bot resumes live trading as soon as you unlock Pairlens. Paper bots are unaffected.",
       "botParkDetailError": "Your stored credentials could not be read on this device. This bot resumes live trading as soon as they load. Paper bots are unaffected.",
       "onlyProtectorLeft": "This is the only way into your vault. Add another before removing it.",
