@@ -5,7 +5,7 @@ group: builders
 order: 1
 eyebrow: For builders
 updated: AUG 2026
-readTime: 3 min read
+readTime: 4 min read
 ---
 
 Everything pluggable in Pairlens goes through the same capability-based plugin
@@ -38,7 +38,12 @@ the best plugin for each requested capability at runtime.
 | `workspace-store:catalog`      | A source of workspace templates  |
 
 Plugins also contribute **panels** through the manifest's `contributes` block,
-which is how a plugin adds a tile to the workspace grid.
+which is how a plugin adds a tile to the workspace grid, and **workspaces**,
+which is how a plugin ships whole ready-made layouts. A contributed workspace
+appears in the Workspace Store, and if it declares `routeMenu` it also appears
+in the Workspaces menu of the pair or Discovery route it targets. Both leave
+with the plugin: disable it and its layouts stop being offered, without a
+reload. That is how each asset class ships its own default pair layout.
 
 Chat and research are not separate capabilities. Both use `ai:inference` with a
 runtime `purpose` selector.

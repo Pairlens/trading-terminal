@@ -57,10 +57,10 @@ that way rather than listing forty entries alphabetically.
 | **Core**               | The terminal itself: charts, order book, trade entry, workspaces |
 | **Intelligence**       | Hosted AI, instrument discovery, news, market intelligence       |
 | **Crypto Exchanges**   | The 14 centralized spot venues                                   |
-| **Crypto Futures**     | Binance, KuCoin and Kraken perpetuals, and the positions panel   |
-| **On-Chain DEX**       | Swap venues and DEX data providers                               |
-| **Equities**           | Alpaca                                                           |
-| **Prediction Markets** | Kalshi, Polymarket, and the event panels                         |
+| **Crypto Futures**     | Binance, KuCoin and Kraken perpetuals, the positions panel, the perps desk |
+| **On-Chain DEX**       | Swap venues, DEX data providers, and the on-chain layouts        |
+| **Equities**           | Alpaca and the stock layouts                                     |
+| **Prediction Markets** | Kalshi, Polymarket, the event panels, the prediction layouts     |
 | **AI Providers**       | Bring-your-own-key models and web search                         |
 | **Themes**             | The eighteen bundled themes                                      |
 
@@ -73,6 +73,13 @@ Families are grouping and policy only. Nothing about a plugin's id, its
 capabilities, or your saved layouts depends on which family it is in, and
 plugins you installed yourself are grouped by where they came from rather than
 being swept into ours.
+
+What a family does take with it is its ready-made layouts. An asset-class
+plugin ships the workspaces built for its class, so disabling Prediction
+Markets removes the prediction desk and the event-market home board from the
+Workspace Store, the Workspaces menu, and Discovery on the spot. Layouts you
+have already saved are untouched, and enabling the family brings the ready-made
+ones back. See [workspaces](/docs/workspaces).
 
 A deployment can go further and exclude a family at build time, which is how a
 desk ships a terminal with no equities surfaces at all. See

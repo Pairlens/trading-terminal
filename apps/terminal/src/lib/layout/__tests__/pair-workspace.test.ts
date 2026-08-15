@@ -5,6 +5,10 @@
  * layout, seeds its own default preset, and offers only presets built for it.
  * These invariants are what keep a prediction page from ever rendering (or
  * suggesting) a spot execution desk.
+ *
+ * Every class beyond spot now takes its layouts from the family plugin that
+ * owns it, so the menu assertions run against the merge the route actually
+ * renders: the built-in base plus what the bundled plugins contribute.
  */
 import { describe, expect, test } from 'bun:test'
 
@@ -13,17 +17,46 @@ import { pairWorkspaceFor } from '../workspaces/pair-workspace'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 
 import type { TerminalLayout } from '../types'
+import type { WorkspaceTemplate } from '@/lib/workspace-store/types'
 import {
   BUILTIN_WORKSPACE_TEMPLATES,
+  mergeRoutePresets,
   routePresets,
   templateServesClass,
 } from '@/lib/workspace-store/catalog'
+import { contributedToTemplate } from '@/lib/workspace-store/workspace-template-registry'
+import { BOOTSTRAP_PLUGINS } from '@/lib/plugins/bootstrap-bundle'
 
 function paneTypes(layout: TerminalLayout): Set<string> {
   const types = new Set<string>()
   for (const col of layout.columns)
     for (const cell of col.cells) for (const p of cell.panes) types.add(p.type)
   return types
+}
+
+/** Every workspace the bundled plugins ship, mapped the way the app maps them. */
+const CONTRIBUTED: Array<WorkspaceTemplate> = BOOTSTRAP_PLUGINS.flatMap(
+  ({ manifest }) =>
+    (manifest.contributes?.workspaces ?? []).flatMap((entry) => {
+      const template = contributedToTemplate(entry, {
+        pluginId: manifest.id,
+        author: manifest.author,
+        trusted: true,
+      })
+      return template ? [template] : []
+    }),
+)
+
+const ALL_TEMPLATES = [...BUILTIN_WORKSPACE_TEMPLATES, ...CONTRIBUTED]
+
+/** The preset map a class's workspaces menu renders with every family active. */
+function menuFor(cls: InstrumentClass): Record<string, { label: string }> {
+  return mergeRoutePresets(
+    pairWorkspaceFor(cls).presets,
+    CONTRIBUTED,
+    'pair',
+    cls,
+  )
 }
 
 describe('pairWorkspaceFor', () => {
@@ -77,22 +110,58 @@ describe('pairWorkspaceFor', () => {
     )
   })
 
+  test('every class carries a preset context, so plugin layouts can join', () => {
+    for (const cls of INSTRUMENT_CLASSES) {
+      expect(pairWorkspaceFor(cls).presetContext).toBe('pair')
+    }
+  })
+
   test('each class menu leads with a Default preset matching its default layout', () => {
     for (const cls of INSTRUMENT_CLASSES) {
       const ws = pairWorkspaceFor(cls)
-      const defaults = Object.values(ws.presets).filter(
-        (p) => p.label === 'Default',
-      )
+      const menu = mergeRoutePresets(ws.presets, CONTRIBUTED, 'pair', cls)
+      const entries = Object.entries(menu)
+      const defaults = entries.filter(([, p]) => p.label === 'Default')
       expect(defaults.length).toBe(1)
-      expect(defaults[0].layout).toEqual(ws.defaultPreset)
+      expect(menu[defaults[0][0]].layout).toEqual(ws.defaultPreset)
+      // A menu that buried "Default" under the multi-chart layouts would read
+      // as broken, and for every class but spot it now arrives from a plugin.
+      expect(entries[0][0]).toBe(defaults[0][0])
+    }
+  })
+
+  test('the non-spot defaults come from their family plugin, not the catalog', () => {
+    const owners: Record<string, string> = {
+      perp: 'pairlens-cex-futures',
+      prediction: 'pairlens-predictions',
+      dex: 'pairlens-dex',
+      stocks: 'pairlens-equities',
+    }
+    for (const [cls, pluginId] of Object.entries(owners)) {
+      const plugin = BOOTSTRAP_PLUGINS.find((p) => p.manifest.id === pluginId)
+      expect(plugin, pluginId).toBeDefined()
+      const shipped = plugin!.manifest.contributes?.workspaces ?? []
+      const def = shipped.find((w) => w.menuLabel === 'Default')
+      expect(def, `${pluginId} ships a class default`).toBeDefined()
+      // The static class default and the plugin's copy are one source.
+      expect(contributedToTemplate(def, {
+        pluginId,
+        author: plugin!.manifest.author,
+        trusted: true,
+      })!.layout).toEqual(pairWorkspaceFor(cls as InstrumentClass).defaultPreset)
+      // ...and the catalog no longer double-serves it.
+      expect(
+        BUILTIN_WORKSPACE_TEMPLATES.some((t) => t.id === def!.id),
+        `${def!.id} must not also live in the built-in catalog`,
+      ).toBe(false)
     }
   })
 
   test('menus only offer presets whose facets serve the class', () => {
     for (const cls of INSTRUMENT_CLASSES) {
-      for (const id of Object.keys(pairWorkspaceFor(cls).presets)) {
-        const template = BUILTIN_WORKSPACE_TEMPLATES.find((t) => t.id === id)
-        expect(template).toBeDefined()
+      for (const id of Object.keys(menuFor(cls))) {
+        const template = ALL_TEMPLATES.find((t) => t.id === id)
+        expect(template, id).toBeDefined()
         expect(templateServesClass(template, cls)).toBe(true)
       }
     }
@@ -108,11 +177,15 @@ describe('pairWorkspaceFor', () => {
       'template:triple-charts',
       'template:quad-charts',
     ])
+    // No family plugin claims spot, so the merge changes nothing there.
+    expect(Object.keys(menuFor('spot'))).toEqual(
+      Object.keys(routePresets('pair', 'spot')),
+    )
   })
 
   test('non-spot menus never suggest the spot execution desks', () => {
     for (const cls of ['perp', 'dex', 'stocks', 'prediction'] as const) {
-      const ids = Object.keys(routePresets('pair', cls))
+      const ids = Object.keys(menuFor(cls))
       expect(ids).not.toContain('template:classic-terminal')
       expect(ids).not.toContain('template:trading')
       // The multi-chart layouts are universal and stay offered everywhere.
@@ -121,8 +194,7 @@ describe('pairWorkspaceFor', () => {
   })
 
   test('templateServesClass normalizes both vocabularies', () => {
-    const byId = (id: string) =>
-      BUILTIN_WORKSPACE_TEMPLATES.find((t) => t.id === id)!
+    const byId = (id: string) => ALL_TEMPLATES.find((t) => t.id === id)!
     // 'equities' facet ↔ 'stocks' slug, 'predictions' facet ↔ 'prediction'.
     expect(
       templateServesClass(byId('template:equities-terminal'), 'stocks'),

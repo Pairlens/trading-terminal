@@ -2836,6 +2836,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Vị thế vĩnh cửu đang mở kèm giá vào, giá mark và mức thanh lý"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Bố cục không gian làm việc on-chain: terminal DEX và bảng săn degen"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Cổ phiếu",
+        "description": "Bố cục không gian làm việc cổ phiếu: terminal cổ phiếu và bàn dẫn bởi bộ quét"
       }
     },
     "families": {
@@ -3351,6 +3359,12 @@
         "tagline": "Vẽ biểu đồ xác suất với toàn bộ sự kiện ngay bên cạnh.",
         "description": "Bố cục mặc định cho thị trường dự đoán: một biểu đồ xác suất với giao dịch và các hợp đồng đang mở của bạn bên dưới, sổ lệnh và phiếu đặt lệnh ở giữa, và trình duyệt sự kiện nằm cạnh AI Copilot, vì các kết quả lân cận chiếm một nửa phần phân tích.",
         "menuLabel": "Mặc định"
+      },
+      "prediction-discovery": {
+        "name": "Khám phá thị trường dự đoán",
+        "tagline": "Duyệt các thị trường sự kiện đang mở, không phải danh mục cặp giao dịch.",
+        "description": "Bảng chính dành cho hợp đồng sự kiện: trình duyệt sự kiện chiếm cột rộng, dòng tin tức chạy bên cạnh, và một dải hẹp đặt danh sách theo dõi phía trên chỉ báo tâm lý. Cài một sàn dự đoán như Kalshi hoặc Polymarket để lấp đầy bảng này.",
+        "menuLabel": "Dự đoán"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4118,6 +4132,8 @@
     },
     "predictionsEmptyTitle": "Kết quả dự đoán nằm trong bảng Sự kiện",
     "predictionsEmptyBody": "Các kết quả được niêm yết và tất toán hằng ngày, nên được duyệt từ bảng của chính sàn thay vì danh mục.",
+    "predictionsBrowse": "Mở bảng sự kiện",
+    "predictionsInstall": "Cài plugin dự đoán",
     "futuresEmptyTitle": "Kết nối một sàn futures để duyệt các hợp đồng vĩnh cửu",
     "futuresEmptyBody": "Danh sách hợp đồng lấy từ bảng thị trường của từng sàn, nên chỉ xuất hiện khi đã kết nối được sàn đó."
   },

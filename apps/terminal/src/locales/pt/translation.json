@@ -2836,6 +2836,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futuros",
         "description": "Posições perpétuas abertas com entrada, preço de marcação e nível de liquidação"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Modelos de espaço de trabalho on-chain: o terminal DEX e o painel degen"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Ações",
+        "description": "Modelos de espaço de trabalho de ações: o terminal de ações e a mesa com scanner"
       }
     },
     "families": {
@@ -3351,6 +3359,12 @@
         "tagline": "As probabilidades no gráfico, com o evento inteiro ao lado.",
         "description": "O layout padrão para mercados de previsão: um gráfico de probabilidade com os negócios e seus contratos abertos abaixo, o livro de ofertas e o painel de negociação no centro, e o navegador de eventos ao lado do copiloto de IA, porque os desfechos vizinhos são metade da análise.",
         "menuLabel": "Padrão"
+      },
+      "prediction-discovery": {
+        "name": "Descoberta de previsões",
+        "tagline": "Navegue por mercados de eventos ao vivo, não por um catálogo de pares.",
+        "description": "Um painel inicial feito para contratos de eventos: o navegador de eventos ocupa a coluna larga, o feed de notícias corre ao lado e uma faixa leve leva sua watchlist sobre o medidor de sentimento. Instale uma plataforma de previsões como Kalshi ou Polymarket para preencher o painel.",
+        "menuLabel": "Previsões"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4118,6 +4132,8 @@
     },
     "predictionsEmptyTitle": "Os resultados de previsão ficam no painel Eventos",
     "predictionsEmptyBody": "Os resultados são listados e liquidados diariamente, por isso são explorados no painel da própria plataforma, não em um catálogo.",
+    "predictionsBrowse": "Abrir o painel de eventos",
+    "predictionsInstall": "Instalar o plugin de previsões",
     "futuresEmptyTitle": "Conecte uma plataforma de futuros para explorar os perpétuos",
     "futuresEmptyBody": "As listas de contratos vêm da tabela de mercados de cada plataforma, por isso aparecem assim que ela responde."
   },

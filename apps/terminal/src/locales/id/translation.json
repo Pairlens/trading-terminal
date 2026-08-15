@@ -2836,6 +2836,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Posisi perpetual terbuka dengan harga masuk, harga mark dan level likuidasi"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Preset ruang kerja on-chain: terminal DEX dan papan berburu degen"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Saham",
+        "description": "Preset ruang kerja saham: terminal ekuitas dan meja dengan pemindai"
       }
     },
     "families": {
@@ -3351,6 +3359,12 @@
         "tagline": "Grafikkan peluangnya, dengan seluruh acara di sampingnya.",
         "description": "Tata letak default untuk market prediksi: chart probabilitas dengan transaksi dan kontrak terbuka Anda di bawahnya, order book dan tiket order di tengah, serta penjelajah acara di samping AI Copilot, karena hasil-hasil di sebelahnya adalah separuh dari analisisnya.",
         "menuLabel": "Default"
+      },
+      "prediction-discovery": {
+        "name": "Penjelajahan Prediksi",
+        "tagline": "Jelajahi pasar peristiwa langsung, bukan katalog pasangan.",
+        "description": "Papan beranda yang dibuat untuk kontrak peristiwa: penjelajah peristiwa mengisi kolom lebar, kabar berita berjalan di sampingnya, dan bilah ringan membawa daftar pantauan Anda di atas pengukur sentimen. Pasang venue prediksi seperti Kalshi atau Polymarket untuk mengisi papan ini.",
+        "menuLabel": "Prediksi"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4118,6 +4132,8 @@
     },
     "predictionsEmptyTitle": "Hasil prediksi ada di panel Acara",
     "predictionsEmptyBody": "Hasil dicatatkan dan diselesaikan setiap hari, jadi ditelusuri dari papan bursa itu sendiri, bukan katalog.",
+    "predictionsBrowse": "Buka papan peristiwa",
+    "predictionsInstall": "Pasang plugin prediksi",
     "futuresEmptyTitle": "Hubungkan bursa futures untuk menjelajahi kontrak perpetual",
     "futuresEmptyBody": "Daftar kontrak berasal dari tabel pasar masing-masing bursa, jadi muncul setelah bursa itu terjangkau."
   },

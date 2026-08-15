@@ -52,7 +52,10 @@ import {
   PaneRegistryContext,
   registerBuiltins,
 } from '@/lib/layout/pane-registry'
-import { BOOTSTRAP_PLUGINS } from '@/lib/plugins/bootstrap-bundle'
+import {
+  BOOTSTRAP_PLUGINS,
+  BOOTSTRAP_PLUGIN_IDS,
+} from '@/lib/plugins/bootstrap-bundle'
 import { isFamilyExcluded } from '@/lib/plugins/plugin-families'
 import {
   PluginFullTrustRequiredError,
@@ -87,6 +90,7 @@ import {
 import { registerChannelDeliveries } from '@/lib/notifications/channel-deliveries'
 import { registerEventMessages } from '@/lib/notifications/event-messages'
 import { customIndicatorRegistry } from '@/lib/indicators/custom-indicator-registry'
+import { workspaceTemplateRegistry } from '@/lib/workspace-store/workspace-template-registry'
 import { USER_INDICATORS_PLUGIN_ID } from '@/lib/indicators/user-indicators-plugin'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
 import { notificationRuntime } from '@/lib/notifications/notification-runtime'
@@ -664,6 +668,23 @@ export function PairlensProvider({
           )
         }
 
+        // ── Workspace preset registration ───────────────────────────
+        try {
+          const workspaces = plugin.manifest.contributes?.workspaces
+          if (workspaces?.length) {
+            workspaceTemplateRegistry.register(workspaces, {
+              pluginId: plugin.manifest.id,
+              author: plugin.manifest.author,
+              trusted: BOOTSTRAP_PLUGIN_IDS.has(plugin.manifest.id),
+            })
+          }
+        } catch (err) {
+          console.warn(
+            `[plugins] Failed to register workspaces for ${plugin.manifest.id}:`,
+            err,
+          )
+        }
+
         // ── Workflow step registration ──────────────────────────────
         const hasWorkflowCap = plugin.manifest.capabilities?.some(
           (c) => c.id === 'workflow:step-types',
@@ -798,6 +819,7 @@ export function PairlensProvider({
       },
       onDeactivated(pluginId) {
         registry.unregisterPluginPanes(pluginId)
+        workspaceTemplateRegistry.unregister(pluginId)
         getServiceRegistry().unregisterAll(pluginId)
         customIndicatorRegistry.removeProvider(pluginId)
         // Unregister workflow steps
@@ -815,6 +837,7 @@ export function PairlensProvider({
       },
       onUninstalled(pluginId) {
         registry.unregisterPluginPanes(pluginId)
+        workspaceTemplateRegistry.unregister(pluginId)
         getServiceRegistry().unregisterAll(pluginId)
         customIndicatorRegistry.removeProvider(pluginId)
         const stepTypes = wsr.getPluginStepTypes(pluginId)

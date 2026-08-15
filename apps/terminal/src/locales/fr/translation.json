@@ -2836,6 +2836,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Positions perpétuelles ouvertes avec entrée, prix de marquage et niveau de liquidation"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Modèles d'espace de travail on-chain : le terminal DEX et le tableau degen"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Actions",
+        "description": "Modèles d'espace de travail actions : le terminal actions et le bureau avec scanner"
       }
     },
     "families": {
@@ -3351,6 +3359,12 @@
         "tagline": "Le graphique des probabilités, tout l'événement à côté.",
         "description": "La mise en page par défaut pour les marchés de prédiction : un graphique de probabilité avec les transactions et vos contrats ouverts en dessous, le carnet d'ordres et le ticket au centre, et l'explorateur d'événements à côté du co-pilote IA, car les issues voisines font la moitié de l'analyse.",
         "menuLabel": "Par défaut"
+      },
+      "prediction-discovery": {
+        "name": "Découverte des prédictions",
+        "tagline": "Parcourez les marchés d'événements en direct, pas un catalogue de paires.",
+        "description": "Un tableau d'accueil conçu pour les contrats d'événements : l'explorateur d'événements occupe la colonne large, le fil d'actualité défile à côté, et une bande légère porte votre liste de suivi au-dessus de la jauge de sentiment. Installez une plateforme de prédiction comme Kalshi ou Polymarket pour remplir le tableau.",
+        "menuLabel": "Prédictions"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4118,6 +4132,8 @@
     },
     "predictionsEmptyTitle": "Les résultats de prédiction se trouvent dans le panneau Événements",
     "predictionsEmptyBody": "Les résultats sont listés et réglés chaque jour : ils se parcourent depuis le tableau de la plateforme, pas depuis un catalogue.",
+    "predictionsBrowse": "Ouvrir le tableau des événements",
+    "predictionsInstall": "Installer le plugin de prédictions",
     "futuresEmptyTitle": "Connectez une plateforme de futures pour parcourir les perpétuels",
     "futuresEmptyBody": "Les listes de contrats proviennent de la table des marchés de chaque plateforme et apparaissent dès qu’elle a répondu."
   },

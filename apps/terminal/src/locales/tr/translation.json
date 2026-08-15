@@ -2836,6 +2836,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Vadeli",
         "description": "Giriş, işaret fiyatı ve likidasyon seviyesiyle açık süresiz pozisyonlar"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Zincir üstü çalışma alanı şablonları: DEX terminali ve degen avı panosu"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Hisse",
+        "description": "Hisse çalışma alanı şablonları: hisse terminali ve tarayıcı öncelikli masa"
       }
     },
     "families": {
@@ -3351,6 +3359,12 @@
         "tagline": "Olasılıkları grafikte, olayın tamamı hemen yanında.",
         "description": "Tahmin piyasaları için varsayılan düzen: altında işlemler ve açık sözleşmelerin bulunduğu bir olasılık grafiği, ortada emir defteri ve işlem paneli, Yapay Zeka Co-pilotunun yanında ise olay tarayıcısı; çünkü komşu sonuçlar analizin yarısıdır.",
         "menuLabel": "Varsayılan"
+      },
+      "prediction-discovery": {
+        "name": "Tahmin Keşfi",
+        "tagline": "Parite listesi değil, canlı olay piyasalarına göz atın.",
+        "description": "Olay sözleşmeleri için tasarlanmış bir giriş panosu: olay tarayıcısı geniş sütunu alır, haber akışı yanında ilerler ve ince bir şerit izleme listenizi duyarlılık göstergesinin üzerinde taşır. Panoyu doldurmak için Kalshi veya Polymarket gibi bir tahmin borsası kurun.",
+        "menuLabel": "Tahminler"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4118,6 +4132,8 @@
     },
     "predictionsEmptyTitle": "Tahmin sonuçları Olaylar panelinde yer alır",
     "predictionsEmptyBody": "Sonuçlar her gün listelenip sonuçlanır; bu yüzden bir katalogdan değil, platformun kendi panosundan taranır.",
+    "predictionsBrowse": "Olay panosunu aç",
+    "predictionsInstall": "Tahmin eklentisini kur",
     "futuresEmptyTitle": "Süresiz sözleşmelere göz atmak için bir vadeli işlem borsası bağla",
     "futuresEmptyBody": "Sözleşme listeleri her borsanın kendi piyasa tablosundan gelir, bu yüzden o borsaya ulaşıldığında görünür."
   },

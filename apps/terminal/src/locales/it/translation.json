@@ -2836,6 +2836,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Posizioni perpetue aperte con ingresso, prezzo mark e livello di liquidazione"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Preset di workspace on-chain: il terminale DEX e la bacheca degen"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Azioni",
+        "description": "Preset di workspace azionari: il terminale equity e il desk con scanner"
       }
     },
     "families": {
@@ -3351,6 +3359,12 @@
         "tagline": "Il grafico delle probabilità con l'intero evento accanto.",
         "description": "Il layout predefinito per i mercati previsionali: un grafico di probabilità con le operazioni e i tuoi contratti aperti sotto, l'order book e il pannello di trading al centro, e il browser degli eventi accanto al co-pilota AI, perché gli esiti vicini sono metà dell'analisi.",
         "menuLabel": "Predefinito"
+      },
+      "prediction-discovery": {
+        "name": "Scoperta previsioni",
+        "tagline": "Sfoglia i mercati di eventi dal vivo, non un catalogo di coppie.",
+        "description": "Una bacheca iniziale pensata per i contratti su eventi: l'esploratore di eventi occupa la colonna larga, il flusso di notizie scorre accanto e una barra leggera porta la tua watchlist sopra l'indicatore di sentiment. Installa una piattaforma di previsioni come Kalshi o Polymarket per riempire la bacheca.",
+        "menuLabel": "Previsioni"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4118,6 +4132,8 @@
     },
     "predictionsEmptyTitle": "Gli esiti previsionali si trovano nel pannello Eventi",
     "predictionsEmptyBody": "Gli esiti vengono quotati e risolti ogni giorno, quindi si sfogliano dalla bacheca della piattaforma anziché da un catalogo.",
+    "predictionsBrowse": "Apri la bacheca eventi",
+    "predictionsInstall": "Installa il plugin previsioni",
     "futuresEmptyTitle": "Collega una piattaforma di futures per sfogliare i perpetui",
     "futuresEmptyBody": "Gli elenchi di contratti provengono dalla tabella dei mercati di ogni piattaforma e compaiono appena questa risponde."
   },

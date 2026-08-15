@@ -2836,6 +2836,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens 선물",
         "description": "진입가, 마크 가격, 청산가와 함께 보는 미결제 무기한 포지션"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "온체인 워크스페이스 프리셋: DEX 터미널과 디젠 탐색 보드"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens 주식",
+        "description": "주식 워크스페이스 프리셋: 주식 터미널과 스캐너 중심 데스크"
       }
     },
     "families": {
@@ -3351,6 +3359,12 @@
         "tagline": "확률을 차트로, 이벤트 전체를 그 옆에.",
         "description": "예측 시장 기본 레이아웃: 확률 차트 아래에 체결 내역과 보유 계약, 가운데에 호가창과 거래 티켓, 그리고 AI 렌즈 옆에 이벤트 브라우저. 옆에 놓인 결과들이 분석의 절반이기 때문입니다.",
         "menuLabel": "기본"
+      },
+      "prediction-discovery": {
+        "name": "예측 마켓 탐색",
+        "tagline": "페어 목록이 아니라, 진행 중인 이벤트 시장을 살펴보세요.",
+        "description": "이벤트 계약을 위한 홈 보드입니다. 이벤트 브라우저가 넓은 칸을 차지하고 그 옆으로 뉴스 피드가 흐르며, 좁은 레일에 관심목록과 심리 지표가 세로로 놓입니다. Kalshi나 Polymarket 같은 예측 거래소를 설치하면 보드가 채워집니다.",
+        "menuLabel": "예측"
       },
       "dex-degen": {
         "name": "DEX 디젠",
@@ -4118,6 +4132,8 @@
     },
     "predictionsEmptyTitle": "예측 결과는 이벤트 패널에 있습니다",
     "predictionsEmptyBody": "결과는 매일 상장되고 정산되므로 카탈로그가 아니라 거래소 자체 보드에서 둘러봅니다.",
+    "predictionsBrowse": "이벤트 보드 열기",
+    "predictionsInstall": "예측 플러그인 설치",
     "futuresEmptyTitle": "선물 거래소를 연결하면 무기한 종목을 탐색할 수 있습니다",
     "futuresEmptyBody": "계약 목록은 각 거래소의 마켓 테이블에서 가져오므로 해당 거래소에 연결된 뒤에 표시됩니다."
   },

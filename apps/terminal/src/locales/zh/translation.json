@@ -2836,6 +2836,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens 期货",
         "description": "未平仓永续合约仓位，含开仓价、标记价与强平价"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "链上工作区预设：DEX 终端与冲土狗看板"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens 股票",
+        "description": "股票工作区预设：股票终端与扫描器主导的交易台"
       }
     },
     "families": {
@@ -3351,6 +3359,12 @@
         "tagline": "把概率画成图表，整个事件就在旁边。",
         "description": "预测市场的默认布局：概率图表下方是成交记录和你的持仓合约，中间是订单簿与下单面板，AI 副驾驶旁边是事件浏览器，因为相邻结果就是分析的一半。",
         "menuLabel": "默认"
+      },
+      "prediction-discovery": {
+        "name": "预测市场发现",
+        "tagline": "浏览正在进行的事件市场，而不是交易对目录。",
+        "description": "为事件合约打造的首页看板：事件浏览器占据宽栏，新闻流在旁边滚动，窄栏把自选列表放在情绪指标之上。安装 Kalshi 或 Polymarket 等预测平台即可填满看板。",
+        "menuLabel": "预测"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4118,6 +4132,8 @@
     },
     "predictionsEmptyTitle": "预测结果位于「事件」面板中",
     "predictionsEmptyBody": "结果每天上架并结算，因此要从平台自己的看板浏览，而不是从目录中查找。",
+    "predictionsBrowse": "打开事件看板",
+    "predictionsInstall": "安装预测插件",
     "futuresEmptyTitle": "连接期货交易所后即可浏览永续合约",
     "futuresEmptyBody": "合约清单来自各交易所自己的市场表，因此在成功连接该交易所后才会出现。"
   },

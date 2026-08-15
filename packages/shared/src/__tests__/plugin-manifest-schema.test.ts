@@ -213,3 +213,118 @@ describe('validateManifest', () => {
     ).toBe(false)
   })
 })
+
+describe('contributes.workspaces', () => {
+  const LAYOUT = {
+    version: 1,
+    columns: [
+      {
+        id: 'c0',
+        widthPercent: 100,
+        cells: [
+          { id: 'e0', heightPercent: 100, panes: [{ id: 'p0', type: 'chart' }] },
+        ],
+      },
+    ],
+  }
+  const WORKSPACE = {
+    id: 'template:mine',
+    name: 'Mine',
+    tagline: 'A layout.',
+    description: 'A layout, at length.',
+    icon: 'Layers',
+    facets: { traderTypes: [], assetClasses: [], screenSizes: [] },
+    layout: LAYOUT,
+  }
+  const withWorkspaces = (workspaces: unknown) => ({
+    ...VALID,
+    contributes: { workspaces },
+  })
+
+  it('accepts a well-formed contribution', () => {
+    expect(validateManifest(withWorkspaces([WORKSPACE])).valid).toBe(true)
+  })
+
+  it('leaves manifests that declare no workspaces alone', () => {
+    expect(validateManifest({ ...VALID, contributes: {} }).valid).toBe(true)
+    expect(
+      validateManifest({
+        ...VALID,
+        contributes: { panels: [{ id: 'p', label: 'P', icon: 'X', category: 'trading' }] },
+      }).valid,
+    ).toBe(true)
+  })
+
+  it('requires an id, a name and a layout', () => {
+    for (const key of ['id', 'name', 'layout'] as const) {
+      const broken = { ...WORKSPACE }
+      delete (broken as Record<string, unknown>)[key]
+      expect(validateManifest(withWorkspaces([broken])).valid, key).toBe(false)
+    }
+  })
+
+  it('rejects a duplicate id within one manifest', () => {
+    expect(validateManifest(withWorkspaces([WORKSPACE, WORKSPACE])).valid).toBe(
+      false,
+    )
+  })
+
+  it('rejects layouts that could never render', () => {
+    const cases = [
+      { version: 1, columns: [] },
+      { version: 1, columns: [{ id: 'c', widthPercent: 100, cells: [] }] },
+      {
+        version: 1,
+        columns: [
+          {
+            id: 'c',
+            widthPercent: 100,
+            cells: [{ id: 'e', heightPercent: 100, panes: [] }],
+          },
+        ],
+      },
+      {
+        version: 1,
+        columns: [
+          {
+            id: 'c',
+            widthPercent: 100,
+            cells: [{ id: 'e', heightPercent: 100, panes: [{ id: 'p' }] }],
+          },
+        ],
+      },
+    ]
+    for (const layout of cases) {
+      expect(
+        validateManifest(withWorkspaces([{ ...WORKSPACE, layout }])).valid,
+      ).toBe(false)
+    }
+  })
+
+  it('caps how much geometry one manifest can carry', () => {
+    const wide = {
+      version: 1,
+      columns: Array.from({ length: 17 }, (_, i) => ({
+        id: `c${i}`,
+        widthPercent: 6,
+        cells: [
+          { id: `e${i}`, heightPercent: 100, panes: [{ id: `p${i}`, type: 'chart' }] },
+        ],
+      })),
+    }
+    expect(
+      validateManifest(withWorkspaces([{ ...WORKSPACE, layout: wide }])).valid,
+    ).toBe(false)
+    expect(
+      validateManifest(
+        withWorkspaces(
+          Array.from({ length: 25 }, (_, i) => ({ ...WORKSPACE, id: `t${i}` })),
+        ),
+      ).valid,
+    ).toBe(false)
+  })
+
+  it('rejects a non-array', () => {
+    expect(validateManifest(withWorkspaces({})).valid).toBe(false)
+  })
+})

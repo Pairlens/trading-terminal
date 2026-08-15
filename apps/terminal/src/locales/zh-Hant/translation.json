@@ -2836,6 +2836,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens 期貨",
         "description": "未平倉永續部位，含開倉價、標記價與強平價"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "鏈上工作區預設：DEX 終端與衝土狗看板"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens 股票",
+        "description": "股票工作區預設：股票終端與掃描器主導的交易台"
       }
     },
     "families": {
@@ -3351,6 +3359,12 @@
         "tagline": "把機率畫成圖表，整個事件就在旁邊。",
         "description": "預測市場的預設版面：機率圖表下方是成交紀錄與你持有的合約，中間是委託簿與下單面板，AI 副駕駛旁邊是事件瀏覽器，因為相鄰的結果就是分析的一半。",
         "menuLabel": "預設"
+      },
+      "prediction-discovery": {
+        "name": "預測市場探索",
+        "tagline": "瀏覽正在進行的事件市場，而不是交易對目錄。",
+        "description": "為事件合約打造的首頁看板：事件瀏覽器佔據寬欄，新聞流在旁邊捲動，窄欄把自選清單放在情緒指標之上。安裝 Kalshi 或 Polymarket 等預測平台即可填滿看板。",
+        "menuLabel": "預測"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4118,6 +4132,8 @@
     },
     "predictionsEmptyTitle": "預測結果位於「事件」面板中",
     "predictionsEmptyBody": "結果每天上架並結算，因此要從平台自己的看板瀏覽，而不是從目錄中查找。",
+    "predictionsBrowse": "開啟事件看板",
+    "predictionsInstall": "安裝預測外掛",
     "futuresEmptyTitle": "連接期貨交易所後即可瀏覽永續合約",
     "futuresEmptyBody": "合約清單來自各交易所自己的市場表，因此在成功連線該交易所後才會出現。"
   },

@@ -2862,6 +2862,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Otwarte pozycje wieczyste z ceną wejścia, ceną mark i poziomem likwidacji"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Gotowe układy on-chain: terminal DEX i tablica degen"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Akcje",
+        "description": "Gotowe układy akcyjne: terminal akcji i biurko ze skanerem"
       }
     },
     "families": {
@@ -3383,6 +3391,12 @@
         "tagline": "Wykres prawdopodobieństwa, a obok całe wydarzenie.",
         "description": "Domyślny układ dla rynków prognostycznych: wykres prawdopodobieństwa z transakcjami i Twoimi otwartymi kontraktami pod spodem, arkusz zleceń i panel transakcyjny na środku oraz przeglądarka wydarzeń obok copilota AI, bo sąsiednie wyniki to połowa analizy.",
         "menuLabel": "Domyślny"
+      },
+      "prediction-discovery": {
+        "name": "Odkrywanie predykcji",
+        "tagline": "Przeglądaj żywe rynki zdarzeń, a nie katalog par.",
+        "description": "Ekran startowy stworzony dla kontraktów na zdarzenia: przeglądarka zdarzeń zajmuje szeroką kolumnę, obok płynie kanał wiadomości, a wąski pas mieści listę obserwowanych nad wskaźnikiem nastrojów. Zainstaluj giełdę predykcji, taką jak Kalshi lub Polymarket, aby wypełnić ekran.",
+        "menuLabel": "Predykcje"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4152,6 +4166,8 @@
     },
     "predictionsEmptyTitle": "Wyniki prognoz znajdziesz w panelu Wydarzenia",
     "predictionsEmptyBody": "Wyniki są notowane i rozliczane codziennie, więc przegląda się je na tablicy samej giełdy, a nie w katalogu.",
+    "predictionsBrowse": "Otwórz tablicę zdarzeń",
+    "predictionsInstall": "Zainstaluj wtyczkę predykcji",
     "futuresEmptyTitle": "Połącz giełdę futures, aby przeglądać kontrakty wieczyste",
     "futuresEmptyBody": "Listy kontraktów pochodzą z tabeli rynków każdej giełdy, więc pojawiają się po nawiązaniu z nią połączenia."
   },

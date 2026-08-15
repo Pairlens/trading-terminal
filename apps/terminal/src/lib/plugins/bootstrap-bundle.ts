@@ -27,6 +27,14 @@ import {
   createPairlensCexFuturesPlugin,
   pairlensCexFuturesManifest,
 } from '@pairlens/plugins/pairlens-cex-futures'
+import {
+  createPairlensDexPlugin,
+  pairlensDexManifest,
+} from '@pairlens/plugins/pairlens-dex'
+import {
+  createPairlensEquitiesPlugin,
+  pairlensEquitiesManifest,
+} from '@pairlens/plugins/pairlens-equities'
 // Every CEX venue runs on the CCXT bridge. Same plugin ids, same manifests —
 // only the subpath moved, and the ccxt exchange class behind each one is a
 // dynamic import, so no venue's chunk is in the entry graph.
@@ -226,6 +234,11 @@ export const BOOTSTRAP_CORE_PLUGINS: Array<BootstrapPlugin> = [
     manifest: pairlensCexFuturesManifest,
     factory: createPairlensCexFuturesPlugin,
   },
+  // On-chain and stock workspace presets. Presets-only: every pane these
+  // layouts arrange already ships in pairlens-core, so what belongs to the
+  // family is the arrangement. Same generic activation pass as the two above.
+  { manifest: pairlensDexManifest, factory: createPairlensDexPlugin },
+  { manifest: pairlensEquitiesManifest, factory: createPairlensEquitiesPlugin },
 ]
 
 /** AI inference provider plugins. */

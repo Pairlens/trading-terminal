@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import {
   ArrowRight,
   Clock,
@@ -58,6 +58,11 @@ import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { useRecentPairs } from '@/lib/recent-tickers'
+import { track } from '@/lib/analytics-events'
+import { workspaceAnalyticsKind } from '@/lib/analytics-panels'
+import { useLayout } from '@/lib/layout/context'
+import { useWorkspace } from '@/lib/layout/workspace-context'
+import { useRoutePresets } from '@/lib/layout/use-route-presets'
 import {
   entryToInstrumentRef,
   entryToMarketRef,
@@ -77,6 +82,54 @@ import { PairQuote, quoteForPair } from '@/components/discovery/pair-quote'
  * catalogued under one.
  */
 const SECTORED_ASSET_CLASSES = new Set<AssetClassFilter>(['all', 'crypto'])
+
+/** The discovery board the predictions family ships, by id. */
+const PREDICTION_DISCOVERY_PRESET = 'template:prediction-discovery'
+
+/**
+ * The way out of the predictions empty state.
+ *
+ * Prediction outcomes are never in the catalog this pane reads, so the chip
+ * has always been a dead end: correct copy, nowhere to go. The event browser
+ * is where they live, and the predictions plugin ships a home board built
+ * around it — so offer that board when it is available, and the Plugin Store
+ * when the family is disabled or uninstalled and there is nothing to apply.
+ *
+ * Its own component so the hooks it needs only run when the empty state is on
+ * screen.
+ */
+function PredictionsEmptyAction() {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const { dispatch } = useLayout()
+  const workspace = useWorkspace()
+  const presets = useRoutePresets(workspace)
+  const preset = presets[PREDICTION_DISCOVERY_PRESET]
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      className="mt-4"
+      onClick={() => {
+        if (preset) {
+          track('preset_applied', {
+            preset: PREDICTION_DISCOVERY_PRESET,
+            workspace: workspaceAnalyticsKind(workspace.storageKey),
+          })
+          dispatch({
+            type: 'APPLY_PRESET',
+            layout: structuredClone(preset.layout),
+          })
+          return
+        }
+        void navigate({ to: '/plugins' })
+      }}
+    >
+      {preset ? t('markets.predictionsBrowse') : t('markets.predictionsInstall')}
+    </Button>
+  )
+}
 
 export function MarketsPane() {
   const { t } = useTranslation()
@@ -356,6 +409,7 @@ export function MarketsPane() {
                 <p className="mx-auto mt-1 max-w-xs text-xs leading-relaxed text-muted-foreground">
                   {t('markets.predictionsEmptyBody')}
                 </p>
+                <PredictionsEmptyAction />
               </div>
             )}
 

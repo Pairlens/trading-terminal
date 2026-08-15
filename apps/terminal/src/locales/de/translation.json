@@ -2836,6 +2836,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Offene Perpetual-Positionen mit Einstieg, Mark-Preis und Liquidationsschwelle"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "On-Chain-Workspace-Vorlagen: das DEX-Terminal und das Degen-Jagdboard"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Aktien",
+        "description": "Aktien-Workspace-Vorlagen: das Aktien-Terminal und der Scanner-Desk"
       }
     },
     "families": {
@@ -3351,6 +3359,12 @@
         "tagline": "Die Wahrscheinlichkeiten im Chart, das ganze Ereignis daneben.",
         "description": "Das Standard-Layout für Prognosemärkte: ein Wahrscheinlichkeits-Chart mit den Trades und deinen offenen Kontrakten darunter, Orderbuch und Ticket in der Mitte, und der Ereignis-Browser neben dem KI-Co-Piloten, denn die benachbarten Ergebnisse sind die halbe Analyse.",
         "menuLabel": "Standard"
+      },
+      "prediction-discovery": {
+        "name": "Prognose-Discovery",
+        "tagline": "Durchsuche laufende Event-Märkte statt einer Paarliste.",
+        "description": "Ein Startboard für Event-Kontrakte: Der Event-Browser bekommt die breite Spalte, daneben läuft der Nachrichtenticker, und eine schmale Leiste trägt deine Watchlist über der Stimmungsanzeige. Installiere eine Prognosebörse wie Kalshi oder Polymarket, um das Board zu füllen.",
+        "menuLabel": "Prognosen"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4118,6 +4132,8 @@
     },
     "predictionsEmptyTitle": "Prognoseergebnisse finden Sie im Ereignis-Panel",
     "predictionsEmptyBody": "Ergebnisse werden täglich gelistet und abgerechnet, daher durchsucht man sie über das Board der Handelsplattform statt über einen Katalog.",
+    "predictionsBrowse": "Event-Board öffnen",
+    "predictionsInstall": "Prognose-Plugin installieren",
     "futuresEmptyTitle": "Verbinde einen Futures-Handelsplatz, um Perpetuals zu durchsuchen",
     "futuresEmptyBody": "Kontraktlisten stammen aus der Markttabelle des jeweiligen Handelsplatzes und erscheinen, sobald dieser erreicht wurde."
   },

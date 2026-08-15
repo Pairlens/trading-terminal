@@ -16,6 +16,7 @@
  * and not a data source, so the boot path activates it in the generic
  * remaining-plugins pass, which is where a panels-only plugin belongs.
  */
+import { PREDICTIONS_WORKSPACES } from './workspaces'
 import type {
   PluginInstance,
   PluginManifest,
@@ -59,6 +60,10 @@ export const pairlensPredictionsManifest: PluginManifest = {
         minHeight: 120,
       },
     ],
+    // The prediction desk and the event-market home board ship with the family
+    // that owns them: uninstall this plugin and both layouts leave the store,
+    // the workspaces menu and Discovery with the panes.
+    workspaces: PREDICTIONS_WORKSPACES,
   },
 }
 

@@ -2836,6 +2836,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens 先物",
         "description": "未決済の無期限ポジション。建値、マーク価格、清算価格つき"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "オンチェーンのワークスペース: DEX ターミナルとデジェン探索ボード"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens 株式",
+        "description": "株式のワークスペース: 株式ターミナルとスキャナー主導のデスク"
       }
     },
     "families": {
@@ -3351,6 +3359,12 @@
         "tagline": "確率をチャートで、そのイベント全体を隣に。",
         "description": "予測市場のデフォルトレイアウト：確率チャートの下に約定履歴と保有中の契約、中央にオーダーブックと取引チケット、そしてAIレンズの隣にイベントブラウザ。隣り合う結果を見ることが分析の半分だからです。",
         "menuLabel": "デフォルト"
+      },
+      "prediction-discovery": {
+        "name": "予測マーケット探索",
+        "tagline": "ペア一覧ではなく、進行中のイベント市場を見渡す。",
+        "description": "イベント契約のためのホームボードです。イベントブラウザが広い列を占め、その隣にニュースフィードが流れ、細いレールがウォッチリストとセンチメント指標を縦に並べます。Kalshi や Polymarket などの予測取引所を追加するとボードが埋まります。",
+        "menuLabel": "予測"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4118,6 +4132,8 @@
     },
     "predictionsEmptyTitle": "予測の結果は「イベント」パネルにあります",
     "predictionsEmptyBody": "結果は毎日上場し決済されるため、カタログではなく取引所自身のボードから閲覧します。",
+    "predictionsBrowse": "イベントボードを開く",
+    "predictionsInstall": "予測プラグインをインストール",
     "futuresEmptyTitle": "先物取引所を接続すると無期限銘柄を閲覧できます",
     "futuresEmptyBody": "銘柄一覧は各取引所自身のマーケット表から取得するため、その取引所に接続できた時点で表示されます。"
   },

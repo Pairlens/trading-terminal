@@ -5,7 +5,7 @@ group: traders
 order: 8
 eyebrow: For traders
 updated: AUG 2026
-readTime: 6 min read
+readTime: 7 min read
 ---
 
 A workspace is a saved arrangement of panels. Scalping wants a book, a depth
@@ -43,6 +43,23 @@ The **Workspaces** menu follows the same rule: on a prediction market it
 suggests layouts built for prediction markets, not a spot execution desk, and
 **Browse Workspace Store** opens the store already filtered to that asset
 class.
+
+## Layouts ship with the plugin that owns them
+
+Those per-class layouts are not baked into the app. Each asset-class plugin
+carries its own: the perps desk comes from Pairlens Futures, the prediction
+desk and the event-market home board from Pairlens Predictions, the on-chain
+boards from Pairlens DEX, the stock boards from Pairlens Equities. Disable or
+uninstall one from the Plugins page and its layouts leave the Workspace Store,
+the Workspaces menu, and Discovery immediately. Enable it again and they come
+back.
+
+A layout you already saved keeps working either way. Only the ready-made
+entries come and go with the plugin.
+
+Third-party plugins ship workspaces the same way, through a `workspaces` block
+in the manifest. See the [Plugin SDK](/docs/plugin-sdk) for the
+declaration.
 
 ## Folders
 
@@ -105,8 +122,9 @@ plugins that already run with full access. If a template pulls in a plugin
 requiring full access, you are asked to approve it explicitly before it is
 activated, and told which plugin and why.
 
-Templates come from three sources: **Pairlens** (built in), **Community**
-(shared by other traders), and **Yours**.
+Templates come from three sources: **Pairlens** (bundled with the app or
+shipped by one of its plugins), **Community** (shared by other traders), and
+**Yours**.
 
 ## Sharing your own
 

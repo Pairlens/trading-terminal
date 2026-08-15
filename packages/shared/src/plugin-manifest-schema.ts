@@ -265,6 +265,137 @@ export function validateManifest(input: unknown): ManifestValidationResult {
     }
   }
 
+  // contributes.workspaces?: ContributedWorkspace[]
+  //
+  // Light structural + size checking only. The terminal sanitizes an untrusted
+  // contribution again on the way into its registry (facets are filtered to
+  // known values, geometry is capped, variables are derived); the point here is
+  // to reject a manifest that could never render rather than to police wording.
+  const contributes = m['contributes']
+  if (contributes !== undefined) {
+    if (!isPlainObject(contributes)) {
+      errors.push('"contributes" must be an object')
+    } else if (contributes['workspaces'] !== undefined) {
+      checkContributedWorkspaces(contributes['workspaces'], errors)
+    }
+  }
+
   if (errors.length > 0) return fail()
   return { valid: true, manifest: input as PluginManifest, errors: [] }
+}
+
+// ── contributes.workspaces ──────────────────────────────────────────
+
+/** Ceilings mirror the terminal's own untrusted-layout caps. */
+const MAX_WORKSPACES = 24
+const MAX_WORKSPACE_COLUMNS = 16
+const MAX_WORKSPACE_CELLS_PER_COLUMN = 24
+const MAX_WORKSPACE_PANES_PER_CELL = 16
+const MAX_WORKSPACE_PANES = 200
+
+function checkContributedWorkspaces(
+  value: unknown,
+  errors: Array<string>,
+): void {
+  if (!Array.isArray(value)) {
+    errors.push('"contributes.workspaces" must be an array')
+    return
+  }
+  if (value.length > MAX_WORKSPACES) {
+    errors.push(
+      `"contributes.workspaces" must not exceed ${MAX_WORKSPACES} entries`,
+    )
+    return
+  }
+
+  const seen = new Set<string>()
+  value.forEach((entry, i) => {
+    const path = `contributes.workspaces[${i}]`
+    if (!isPlainObject(entry)) {
+      errors.push(`${path} must be an object`)
+      return
+    }
+    for (const key of ['id', 'name'] as const) {
+      const field = entry[key]
+      if (typeof field !== 'string' || field.length === 0) {
+        errors.push(`${path}.${key} is required and must be a non-empty string`)
+      } else if (field.length > MAX_TEXT_LEN) {
+        errors.push(`${path}.${key} must be at most ${MAX_TEXT_LEN} characters`)
+      }
+    }
+    if (typeof entry['id'] === 'string') {
+      if (seen.has(entry['id'])) {
+        errors.push(`${path}.id "${entry['id']}" is declared more than once`)
+      }
+      seen.add(entry['id'])
+    }
+    checkWorkspaceLayout(entry['layout'], `${path}.layout`, errors)
+  })
+}
+
+function checkWorkspaceLayout(
+  value: unknown,
+  path: string,
+  errors: Array<string>,
+): void {
+  if (!isPlainObject(value)) {
+    errors.push(`"${path}" is required and must be a layout object`)
+    return
+  }
+  const columns = value['columns']
+  if (!Array.isArray(columns) || columns.length === 0) {
+    errors.push(`"${path}.columns" must be a non-empty array`)
+    return
+  }
+  if (columns.length > MAX_WORKSPACE_COLUMNS) {
+    errors.push(
+      `"${path}.columns" must not exceed ${MAX_WORKSPACE_COLUMNS} entries`,
+    )
+    return
+  }
+
+  let totalPanes = 0
+  for (const [ci, column] of columns.entries()) {
+    const cells = isPlainObject(column) ? column['cells'] : null
+    if (!Array.isArray(cells) || cells.length === 0) {
+      errors.push(`"${path}.columns[${ci}].cells" must be a non-empty array`)
+      return
+    }
+    if (cells.length > MAX_WORKSPACE_CELLS_PER_COLUMN) {
+      errors.push(
+        `"${path}.columns[${ci}].cells" must not exceed ${MAX_WORKSPACE_CELLS_PER_COLUMN} entries`,
+      )
+      return
+    }
+    for (const [ei, cell] of cells.entries()) {
+      const panes = isPlainObject(cell) ? cell['panes'] : null
+      if (!Array.isArray(panes) || panes.length === 0) {
+        errors.push(
+          `"${path}.columns[${ci}].cells[${ei}].panes" must be a non-empty array`,
+        )
+        return
+      }
+      if (panes.length > MAX_WORKSPACE_PANES_PER_CELL) {
+        errors.push(
+          `"${path}.columns[${ci}].cells[${ei}].panes" must not exceed ${MAX_WORKSPACE_PANES_PER_CELL} entries`,
+        )
+        return
+      }
+      totalPanes += panes.length
+      if (totalPanes > MAX_WORKSPACE_PANES) {
+        errors.push(
+          `"${path}" must not exceed ${MAX_WORKSPACE_PANES} panes in total`,
+        )
+        return
+      }
+      for (const [pi, pane] of panes.entries()) {
+        if (!isPlainObject(pane) || typeof pane['type'] !== 'string') {
+          errors.push(
+            `"${path}.columns[${ci}].cells[${ei}].panes[${pi}].type" must be a string`,
+          )
+          return
+        }
+      }
+    }
+  }
 }
