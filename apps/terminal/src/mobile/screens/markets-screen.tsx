@@ -255,9 +255,10 @@ export default memo(function MarketsScreen({
   const handleSelect = useCallback(
     (pair: PairEntry, market: string) => {
       haptic('selection')
+      const ref = entryToMarketRef(pair, market)
       if (market !== focusedVenue) setFocusedVenue(market)
-      setFocusedPair(pair.symbol)
-      trackRecent(entryToMarketRef(pair, market))
+      setFocusedPair(pair.symbol, ref.cls)
+      trackRecent(ref)
       // The whole stack, not one level: this screen was opened from a panel
       // the user is done with, and the point of the tap was the chart.
       closeOverlays()

@@ -254,9 +254,10 @@ export default memo(function PairPickerScreen({
       }
       // Picking a pair the focused venue does not list takes the venue with it
       // — the callout said so before the tap.
+      const ref = entryToMarketRef(entry, routing.market)
       if (routing.market !== focusedVenue) setFocusedVenue(routing.market)
-      setFocusedPair(entry.symbol)
-      trackRecent(entryToMarketRef(entry, routing.market))
+      setFocusedPair(entry.symbol, ref.cls)
+      trackRecent(ref)
       if (entry.assetClass) {
         setAssetClassMap((prev) => ({
           ...prev,
