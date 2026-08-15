@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import { describe, expect, test } from 'bun:test'
 import {
   assetClassFromQuoteLeg,
+  isPerpPairKey,
   normalizePairKey,
   splitPairAssets,
 } from '../pairs'
@@ -43,6 +44,71 @@ describe('splitPairAssets', () => {
   test('an explicit quote always wins over the fallback', () => {
     expect(splitPairAssets('AAPL-USD', { equity: true }).quote).toBe('USD')
     expect(splitPairAssets('BTC-EUR', { equity: false }).quote).toBe('EUR')
+  })
+
+  test('a perpetual key carries a third leg: the settle currency', () => {
+    expect(splitPairAssets('BTC-USDT-USDT')).toEqual({
+      base: 'BTC',
+      quote: 'USDT',
+      settle: 'USDT',
+    })
+    // Kraken's linear perps are USD-settled, so quote and settle agree there
+    // too but for a different reason. Both still have to survive the split.
+    expect(splitPairAssets('BTC-USD-USD')).toEqual({
+      base: 'BTC',
+      quote: 'USD',
+      settle: 'USD',
+    })
+  })
+
+  test('a spot key has no settle leg at all, not an empty one', () => {
+    // Callers branch on presence. An empty string would read as a perp whose
+    // settle currency could not be priced, which is a different bug.
+    expect(splitPairAssets('BTC-USDT').settle).toBeUndefined()
+    expect(splitPairAssets('AAPL', { equity: true }).settle).toBeUndefined()
+  })
+
+  test('a third segment that does not repeat the quote is not a settle leg', () => {
+    // Prediction outcome keys are dash-joined too, and "any third segment is
+    // the settle currency" routed a Kalshi ticker onto a futures venue. Every
+    // v1 futures venue lists LINEAR contracts, where settle IS the quote, so
+    // the repeat is the discriminator.
+    expect(splitPairAssets('KXBTCD-26AUG15-T53').settle).toBeUndefined()
+    // Inverse contracts share this shape and are out of scope until a venue
+    // ships one; when that happens this test learns their shape rather than
+    // loosening back to a segment count.
+    expect(splitPairAssets('BTC-USD-BTC').settle).toBeUndefined()
+  })
+})
+
+/**
+ * The segment count IS the type tag for the whole perp surface: the risk
+ * guard's contract-pricing branch, the mobile route sync's venue choice, and
+ * the position ledger staying uncorrupted all hang off it.
+ */
+describe('isPerpPairKey', () => {
+  test('three segments is a perpetual, two or one is not', () => {
+    expect(isPerpPairKey('BTC-USDT-USDT')).toBe(true)
+    expect(isPerpPairKey('BTC-USDT')).toBe(false)
+    expect(isPerpPairKey('AAPL')).toBe(false)
+  })
+
+  test('it normalises first, so a route-cased key is still recognised', () => {
+    expect(isPerpPairKey('btc/usdt/usdt')).toBe(true)
+    expect(isPerpPairKey(' eth_usdt_usdt ')).toBe(true)
+  })
+
+  test('a prediction outcome key is never a perpetual, whatever its shape', () => {
+    // The regression this exists for: a Kalshi ticker has three dash-joined
+    // segments and its NO side has four, and reading either as a contract sent
+    // the route correction to a futures venue that has never heard of it.
+    expect(isPerpPairKey('KXBTCD-26AUG15-T53')).toBe(false)
+    expect(isPerpPairKey('KXBTCD-26AUG15-T53-NO')).toBe(false)
+    expect(isPerpPairKey('KXPRESPARTY-28-DEM')).toBe(false)
+  })
+
+  test('four segments is not a perpetual either', () => {
+    expect(isPerpPairKey('BTC-USDT-USDT-USDT')).toBe(false)
   })
 })
 
@@ -107,6 +173,23 @@ describe('assetClassFromQuoteLeg', () => {
   test('a bare ticker carries no quote leg to read', () => {
     expect(assetClassFromQuoteLeg('AAPL')).toBeUndefined()
     expect(assetClassFromQuoteLeg('')).toBeUndefined()
+  })
+
+  // A settle leg answers confidently where the two-segment case cannot: no
+  // equity ticker and no spot pair is ever written with three segments, so
+  // 'BTC-USD-USD' is knowable even though 'BTC-USD' is not.
+  test('a settle leg makes the perpetual case unambiguous', () => {
+    expect(assetClassFromQuoteLeg('BTC-USDT-USDT')).toBe('crypto-perp')
+    expect(assetClassFromQuoteLeg('BTC-USD-USD')).toBe('crypto-perp')
+    expect(assetClassFromQuoteLeg('btc/usdt/usdt')).toBe('crypto-perp')
+  })
+
+  test('a dash-joined key whose third segment differs stays unknown', () => {
+    // A prediction outcome's shape. Answering 'crypto-perp' here is what put
+    // a Kalshi ticker on a futures venue; the directory pin names its venue
+    // explicitly, and undefined is what lets that pin win.
+    expect(assetClassFromQuoteLeg('KXBTCD-26AUG15-T53')).toBeUndefined()
+    expect(assetClassFromQuoteLeg('KXBTCD-26AUG15-T53-NO')).toBeUndefined()
   })
 })
 

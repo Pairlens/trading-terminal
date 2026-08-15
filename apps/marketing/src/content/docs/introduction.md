@@ -24,8 +24,9 @@ word for it.
 ## No lock-in, anywhere
 
 Pairlens is not tied to one exchange, one broker, or one country. Connectors
-for 14 centralized exchanges, a US equities broker, two prediction markets, and
-DEXs on Solana and five EVM chains ship in the box. Use whichever venues work
+for 14 centralized spot exchanges, three perpetual futures venues, a US
+equities broker, two prediction markets, and DEXs on Solana and five EVM chains
+ship in the box. Use whichever venues work
 where you live, switch between them freely, or run several side by side. Your
 accounts stay yours and your data stays on your machine. If you ever leave,
 there is nothing to cancel and nothing to export from our servers, because
@@ -71,15 +72,15 @@ five destinations and real order entry, not a shrunken dashboard. See
 [mobile terminal](/docs/mobile-terminal).
 
 **Desktop app.** A Tauri shell around the same terminal, with credentials in
-your OS keychain. It adds the six CORS-restricted venues, background bots, and
-native windows, and it is the strongest home for live-trading secrets.
+your OS keychain. It adds the eight CORS-restricted venues, background bots,
+and native windows, and it is the strongest home for live-trading secrets.
 
 **Terminal.** A React SPA. Market data streams directly from exchanges via
 connector plugins. There is no intermediate data server.
 
 **Connector plugins.** The only code that talks to exchange WebSockets and REST
-APIs. 14 CEXs, a US equities broker, two prediction markets, and DEX connectors
-ship in the box.
+APIs. 14 spot CEXs, three perpetual futures venues, a US equities broker, two
+prediction markets, and DEX connectors ship in the box.
 
 **Strategy engine.** Pure TypeScript math: EMA, ATR, breakout, pullback,
 mean-reversion, regime detection. No I/O, no network.

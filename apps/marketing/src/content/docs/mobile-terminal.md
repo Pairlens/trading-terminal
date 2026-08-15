@@ -123,11 +123,13 @@ chart rather than something broken. Those are workspaces and the workspace
 store, bots, workflows, notification rules, the Python indicator workbench, and
 the plugin store.
 
-Six venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex, and Kalshi) serve no CORS
-headers, so no browser can reach them, phone included. They are listed in the
-venue picker under **Needs the desktop app** rather than hidden, so you can see
-what you are missing. The other eleven work, Polymarket included, so
-[event contracts](/docs/prediction-markets) trade from a phone.
+Eight venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures,
+and Kraken Futures) serve no CORS headers, so no browser can reach them, phone
+included. They are listed in the venue picker under **Needs the desktop app**
+rather than hidden, so you can see what you are missing. The other twelve work,
+Polymarket and Binance Futures included, so
+[event contracts](/docs/prediction-markets) and
+[perpetual futures](/docs/cex-futures) both trade from a phone.
 
 The event browser is a panel, so it lives on the desktop grid. On a phone you
 reach an outcome through pair search instead, which matches on the question

@@ -13,7 +13,7 @@ import type { PluginManifest } from './plugin-types'
 
 /**
  * Reserved for later expansion (declare here when they ship, not before):
- * 'cex-futures' (crypto perps/derivatives), 'memes' (meme-coin surfaces).
+ * 'memes' (meme-coin surfaces).
  */
 export type PluginFamilyId =
   | 'core'
@@ -21,6 +21,7 @@ export type PluginFamilyId =
   | 'themes'
   | 'ai-byok'
   | 'cex-spot'
+  | 'cex-futures'
   | 'dex'
   | 'equities'
   | 'predictions'
@@ -63,38 +64,45 @@ export const PLUGIN_FAMILIES: Array<PluginFamilyMeta> = [
     required: false,
   },
   {
+    id: 'cex-futures',
+    labelKey: 'pluginStore.families.cexFutures.label',
+    descriptionKey: 'pluginStore.families.cexFutures.description',
+    order: 3,
+    required: false,
+  },
+  {
     id: 'dex',
     labelKey: 'pluginStore.families.dex.label',
     descriptionKey: 'pluginStore.families.dex.description',
-    order: 3,
+    order: 4,
     required: false,
   },
   {
     id: 'equities',
     labelKey: 'pluginStore.families.equities.label',
     descriptionKey: 'pluginStore.families.equities.description',
-    order: 4,
+    order: 5,
     required: false,
   },
   {
     id: 'predictions',
     labelKey: 'pluginStore.families.predictions.label',
     descriptionKey: 'pluginStore.families.predictions.description',
-    order: 5,
+    order: 6,
     required: false,
   },
   {
     id: 'ai-byok',
     labelKey: 'pluginStore.families.aiByok.label',
     descriptionKey: 'pluginStore.families.aiByok.description',
-    order: 6,
+    order: 7,
     required: false,
   },
   {
     id: 'themes',
     labelKey: 'pluginStore.families.themes.label',
     descriptionKey: 'pluginStore.families.themes.description',
-    order: 7,
+    order: 8,
     required: false,
   },
 ]
@@ -139,5 +147,6 @@ export function pluginFamilyOf(
   if (assetClass === 'stocks') return 'equities'
   if (assetClass === 'dex') return 'dex'
   if (assetClass === 'crypto-spot') return 'cex-spot'
+  if (assetClass === 'crypto-perp') return 'cex-futures'
   return null
 }

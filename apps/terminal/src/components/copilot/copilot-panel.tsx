@@ -47,6 +47,7 @@ import { useCapabilityAccess } from '@/hooks/use-capability-access'
 import { api, queryKeys } from '@/lib/api'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { useMarketData } from '@/lib/market-data-provider'
+import { credentialMarketFor } from '@/lib/venues/credential-alias'
 import { PluginChatTransport } from '@/lib/plugin-chat-transport'
 import { useCredentialsStore } from '@/stores/credentials-store'
 import {
@@ -574,9 +575,12 @@ function CopilotChatInner({
             error: i18n.t('security.vault.orderBlocked'),
           }
         }
+        // Alias-resolved: a futures venue signs with its spot sibling's key,
+        // so the raw market id finds nothing for `binance-futures` and live
+        // mode refused an account that is connected.
         const cred = useCredentialsStore
           .getState()
-          .getCredentialForMarket(req.market)
+          .getCredentialForMarket(credentialMarketFor(req.market))
         if (mode === 'live' && !cred) {
           return {
             success: false,
@@ -594,6 +598,9 @@ function CopilotChatInner({
           mode,
           analyticsSource: 'copilot',
         }
+        // Paper too, not only live: with no id the connector falls back to
+        // whichever slot it happened to fill first, which on a venue with two
+        // accounts routes the order to the wrong one without saying so.
         if (cred) params.credentialId = cred.id
         if (req.type === 'limit' && req.price != null) {
           params.price = String(req.price)
@@ -618,7 +625,7 @@ function CopilotChatInner({
           return { success: false, error: i18n.t('copilot.tradingUnavailable') }
         const cred = useCredentialsStore
           .getState()
-          .getCredentialForMarket(req.market)
+          .getCredentialForMarket(credentialMarketFor(req.market))
         try {
           const result = await md.cancelOrder(
             req.market,

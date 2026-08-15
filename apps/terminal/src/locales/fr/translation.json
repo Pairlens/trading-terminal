@@ -2188,7 +2188,8 @@
     "recentTickers": "Tickers récents",
     "empty": "Vide",
     "events": "Événements",
-    "predictionPositions": "Positions de prédiction"
+    "predictionPositions": "Positions de prédiction",
+    "futuresPositions": "Positions futures"
   },
   "paneDescriptions": {
     "markets": "Parcourez toutes les paires de trading disponibles sur les exchanges",
@@ -2216,7 +2217,8 @@
     "liquidityHeatmap": "Carte thermique de la liquidité du carnet d’ordres montrant la profondeur par niveau de prix dans le temps",
     "recentTickers": "Paires récemment consultées avec prix en direct pour un changement rapide",
     "events": "Parcourez les événements des marchés de prédiction et ouvrez le graphique d'un résultat",
-    "predictionPositions": "Les contrats que vous détenez, leur coût et leur échéance"
+    "predictionPositions": "Les contrats que vous détenez, leur coût et leur échéance",
+    "futuresPositions": "Positions perpétuelles ouvertes, leur prix de marquage et leur niveau de liquidation"
   },
   "multiPrice": {
     "venue": "Exchange",
@@ -2806,6 +2808,22 @@
       "pairlens-predictions": {
         "title": "Pairlens Prédictions",
         "description": "Explorateur d'événements et positions ouvertes sur les marchés de prédiction"
+      },
+      "binance-futures-market-connector": {
+        "title": "Connecteur de marché Binance Futures",
+        "description": "Futures perpétuels sur Binance Futures : positions longues et courtes avec levier, réglées en USDT"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "Connecteur de marché KuCoin Futures",
+        "description": "Futures perpétuels sur KuCoin Futures : positions longues et courtes avec levier, réglées en USDT"
+      },
+      "kraken-futures-market-connector": {
+        "title": "Connecteur de marché Kraken Futures",
+        "description": "Futures perpétuels sur Kraken Futures : positions longues et courtes avec levier, réglées en USD"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens Futures",
+        "description": "Positions perpétuelles ouvertes avec entrée, prix de marquage et niveau de liquidation"
       }
     },
     "families": {
@@ -2840,6 +2858,10 @@
       "themes": {
         "label": "Thèmes",
         "description": "Thèmes visuels pour l'interface et la palette du graphique."
+      },
+      "cexFutures": {
+        "label": "Futures crypto",
+        "description": "Plateformes de futures perpétuels pour des positions crypto avec levier."
       }
     },
     "familyToggleAria": "Activer ou désactiver tous les plugins {{family}}",
@@ -2960,7 +2982,12 @@
       "thisOutcome": "Ce résultat",
       "decreaseContracts": "Un contrat de moins",
       "increaseContracts": "Un contrat de plus",
-      "priceCentsRange": "Saisissez un prix entre 0¢ et 100¢"
+      "priceCentsRange": "Saisissez un prix entre 0¢ et 100¢",
+      "leverage": "Levier",
+      "reduceOnly": "Réduction seule",
+      "reduceOnlyHint": "Réduit une position ouverte et n’ouvre jamais le sens opposé.",
+      "notional": "Notionnel",
+      "estLiquidation": "Liquidation est."
     },
     "status": {
       "connecting": "Connexion…",
@@ -4034,7 +4061,8 @@
       "all": "Tous",
       "crypto": "Crypto",
       "stocks": "Actions",
-      "prediction": "Prédictions"
+      "prediction": "Prédictions",
+      "crypto-perp": "Futures"
     },
     "category": {
       "all": "Tous",
@@ -4047,7 +4075,9 @@
       "infrastructure": "Infra"
     },
     "predictionsEmptyTitle": "Les résultats de prédiction se trouvent dans le panneau Événements",
-    "predictionsEmptyBody": "Les résultats sont listés et réglés chaque jour : ils se parcourent depuis le tableau de la plateforme, pas depuis un catalogue."
+    "predictionsEmptyBody": "Les résultats sont listés et réglés chaque jour : ils se parcourent depuis le tableau de la plateforme, pas depuis un catalogue.",
+    "futuresEmptyTitle": "Connectez une plateforme de futures pour parcourir les perpétuels",
+    "futuresEmptyBody": "Les listes de contrats proviennent de la table des marchés de chaque plateforme et apparaissent dès qu’elle a répondu."
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -4910,7 +4940,8 @@
       "auto": "Auto",
       "bookLoading": "En attente du carnet…",
       "pressureBuy": "A {{pct}}%",
-      "pressureSell": "{{pct}}% V"
+      "pressureSell": "{{pct}}% V",
+      "baseEquivalent": "Équivalent en actif de base"
     },
     "chart": {
       "pinned": "Épinglé",
@@ -5024,7 +5055,9 @@
       "desktopOnlyVenues": "Nécessitent l’app de bureau",
       "desktopOnlyVenue": "Bureau uniquement",
       "predictions": "prédictions",
-      "filterPredictions": "Prédictions"
+      "filterPredictions": "Prédictions",
+      "futures": "futures",
+      "filterFutures": "Futures"
     }
   },
   "events": {
@@ -5058,5 +5091,28 @@
     "colCost": "Coût",
     "colResolves": "Échéance",
     "resolved": "Réglé"
+  },
+  "futuresPositions": {
+    "connect": "Connecter un compte",
+    "noAccountsTitle": "Aucun compte futures connecté",
+    "noAccountsBody": "Ajoutez des clés API Binance, KuCoin ou Kraken Futures pour voir vos positions ouvertes.",
+    "loading": "Chargement des positions…",
+    "emptyTitle": "Aucune position ouverte",
+    "emptyBody": "Les positions apparaissent ici dès qu’un ordre est exécuté.",
+    "colContract": "Contrat",
+    "colSide": "Sens",
+    "colSize": "Taille",
+    "colEntry": "Entrée",
+    "colMark": "Marquage",
+    "colLiquidation": "Liq.",
+    "colLeverage": "Levier",
+    "colPnl": "PnL",
+    "sideLong": "Long",
+    "sideShort": "Short",
+    "close": "Clôturer",
+    "closeTitle": "Clôturer cette position ?",
+    "closeBody": "Place un ordre au marché en réduction seule pour {{contracts}} contrats de {{pair}} sur {{venue}}.",
+    "closeConfirm": "Clôturer la position",
+    "closeSubmitted": "Ordre de clôture envoyé"
   }
 }

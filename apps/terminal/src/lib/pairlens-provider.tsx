@@ -214,6 +214,13 @@ const FIRST_PARTY_COMPONENTS: Record<
       ),
     ),
   },
+  'pairlens-cex-futures': {
+    'futures-positions': lazyChunk(() =>
+      import('@/components/futures/futures-positions-pane').then((m) => ({
+        default: m.FuturesPositionsPane,
+      })),
+    ),
+  },
   'pairlens-intelligence': {
     copilot: lazyChunk(() =>
       import('@/components/terminal/copilot-pane').then((m) => ({

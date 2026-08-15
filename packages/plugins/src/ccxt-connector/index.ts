@@ -24,9 +24,8 @@
  * that venue.
  */
 
-import { GeoRestrictedError } from '@pairlens/market-engine/errors'
 import { createCexConnectorPlugin } from '../cex-connector'
-import { CcxtExchangeHost } from './exchange-host'
+import { CcxtExchangeHost, classifyCcxtGeoError } from './exchange-host'
 import { CcxtMarketsProvider } from './markets'
 import { CcxtTradingRuntime } from './orders'
 import { createCcxtPrivateStream } from './private-stream'
@@ -264,32 +263,14 @@ class CcxtVenueRuntime {
   }
 
   /**
-   * Second line of defence for the geo signal.
-   *
-   * The FIRST is the transport: `withGeoClassification` inspects the HTTP
-   * status before ccxt sees the response, because most venues' `handleErrors`
-   * throws from the body alone and never mentions the status (ByBit answers a
-   * 451 with `ExchangeError('bybit {}')` — there is nothing left to parse).
-   *
-   * This still earns its place for the errors ccxt raises itself rather than
-   * from a response the bridge fetched: a `RestrictedLocation`, or a message
-   * that does carry the code. Same rule either way — 451 is unambiguous, 403
-   * only counts with body evidence.
+   * Second line of defence for the geo signal — the first is the transport's
+   * status-code classification inside `CcxtExchangeHost`. Shared with the
+   * futures runtime; see `classifyCcxtGeoError`.
    */
   private classify(error: unknown, country: string): unknown {
-    if (!(error instanceof Error)) return error
-    const message = error.message
-    if (error.name === 'RestrictedLocation' || /\b451\b/.test(message)) {
-      return new GeoRestrictedError(this.venue.displayName, country, 451)
-    }
-    if (/\b403\b/.test(message) && GEO_MARKERS.test(message)) {
-      return new GeoRestrictedError(this.venue.displayName, country, 403)
-    }
-    return error
+    return classifyCcxtGeoError(error, this.venue.displayName, country)
   }
 }
-
-const GEO_MARKERS = /restricted|region|country|location|unavailable in your/i
 
 export function createCcxtConnectorPlugin(
   venue: CcxtVenueConfig,

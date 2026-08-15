@@ -2188,7 +2188,8 @@
     "recentTickers": "近期行情",
     "empty": "空白",
     "events": "事件",
-    "predictionPositions": "預測部位"
+    "predictionPositions": "預測部位",
+    "futuresPositions": "期貨部位"
   },
   "paneDescriptions": {
     "markets": "瀏覽各交易所所有可用的交易對",
@@ -2216,7 +2217,8 @@
     "liquidityHeatmap": "委託簿流動性熱力圖，呈現各價位隨時間的深度變化",
     "recentTickers": "近期查看過的交易對即時報價，方便快速切換",
     "events": "瀏覽預測市場事件並開啟某個結果的圖表",
-    "predictionPositions": "你持有的合約、成本以及結算時間"
+    "predictionPositions": "你持有的合約、成本以及結算時間",
+    "futuresPositions": "未平倉永續部位、標記價格與強平價位"
   },
   "multiPrice": {
     "venue": "交易所",
@@ -2806,6 +2808,22 @@
       "pairlens-predictions": {
         "title": "Pairlens 預測",
         "description": "預測市場的事件瀏覽器與未平倉合約部位"
+      },
+      "binance-futures-market-connector": {
+        "title": "Binance Futures 市場連接器",
+        "description": "Binance Futures 的永續合約：可做多做空的槓桿部位，以 USDT 結算"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "KuCoin Futures 市場連接器",
+        "description": "KuCoin Futures 的永續合約：可做多做空的槓桿部位，以 USDT 結算"
+      },
+      "kraken-futures-market-connector": {
+        "title": "Kraken Futures 市場連接器",
+        "description": "Kraken Futures 的永續合約：可做多做空的槓桿部位，以 USD 結算"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens 期貨",
+        "description": "未平倉永續部位，含開倉價、標記價與強平價"
       }
     },
     "families": {
@@ -2840,6 +2858,10 @@
       "themes": {
         "label": "主題",
         "description": "介面與圖表配色的視覺主題。"
+      },
+      "cexFutures": {
+        "label": "加密期貨",
+        "description": "永續合約交易所，用於帶槓桿的加密貨幣部位。"
       }
     },
     "familyToggleAria": "啟用或停用所有{{family}}外掛",
@@ -2960,7 +2982,12 @@
       "thisOutcome": "目前結果",
       "decreaseContracts": "減少一份合約",
       "increaseContracts": "增加一份合約",
-      "priceCentsRange": "請輸入 0¢ 到 100¢ 之間的價格"
+      "priceCentsRange": "請輸入 0¢ 到 100¢ 之間的價格",
+      "leverage": "槓桿",
+      "reduceOnly": "只減倉",
+      "reduceOnlyHint": "僅減少既有部位，絕不會反向開倉。",
+      "notional": "名目價值",
+      "estLiquidation": "預估強平價"
     },
     "status": {
       "connecting": "連線中…",
@@ -4034,7 +4061,8 @@
       "all": "全部",
       "crypto": "加密貨幣",
       "stocks": "股票",
-      "prediction": "預測"
+      "prediction": "預測",
+      "crypto-perp": "期貨"
     },
     "category": {
       "all": "全部",
@@ -4047,7 +4075,9 @@
       "infrastructure": "基礎設施"
     },
     "predictionsEmptyTitle": "預測結果位於「事件」面板中",
-    "predictionsEmptyBody": "結果每天上架並結算，因此要從平台自己的看板瀏覽，而不是從目錄中查找。"
+    "predictionsEmptyBody": "結果每天上架並結算，因此要從平台自己的看板瀏覽，而不是從目錄中查找。",
+    "futuresEmptyTitle": "連接期貨交易所後即可瀏覽永續合約",
+    "futuresEmptyBody": "合約清單來自各交易所自己的市場表，因此在成功連線該交易所後才會出現。"
   },
   "fearGreed": {
     "title": "恐懼與貪婪指數",
@@ -4910,7 +4940,8 @@
       "auto": "自動",
       "bookLoading": "正在載入委託簿…",
       "pressureBuy": "買 {{pct}}%",
-      "pressureSell": "{{pct}}% 賣"
+      "pressureSell": "{{pct}}% 賣",
+      "baseEquivalent": "折合標的數量"
     },
     "chart": {
       "pinned": "已釘選",
@@ -5024,7 +5055,9 @@
       "desktopOnlyVenues": "需要桌面應用程式",
       "desktopOnlyVenue": "僅桌面版",
       "predictions": "預測",
-      "filterPredictions": "預測"
+      "filterPredictions": "預測",
+      "futures": "期貨",
+      "filterFutures": "期貨"
     }
   },
   "events": {
@@ -5058,5 +5091,28 @@
     "colCost": "成本",
     "colResolves": "結算",
     "resolved": "已結算"
+  },
+  "futuresPositions": {
+    "connect": "連接帳戶",
+    "noAccountsTitle": "尚未連接期貨帳戶",
+    "noAccountsBody": "新增 Binance、KuCoin 或 Kraken Futures 的 API 金鑰即可查看未平倉部位。",
+    "loading": "正在載入部位…",
+    "emptyTitle": "沒有未平倉部位",
+    "emptyBody": "訂單成交後，部位會立即顯示在這裡。",
+    "colContract": "合約",
+    "colSide": "方向",
+    "colSize": "數量",
+    "colEntry": "開倉價",
+    "colMark": "標記價",
+    "colLiquidation": "強平價",
+    "colLeverage": "槓桿",
+    "colPnl": "損益",
+    "sideLong": "做多",
+    "sideShort": "做空",
+    "close": "平倉",
+    "closeTitle": "要平掉這個部位嗎？",
+    "closeBody": "將在 {{venue}} 送出一筆只減倉市價單，數量為 {{pair}} 的 {{contracts}} 張合約。",
+    "closeConfirm": "平倉",
+    "closeSubmitted": "平倉訂單已送出"
   }
 }

@@ -37,6 +37,7 @@ import { track } from '@/lib/analytics-events'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { lookupPredictionOutcome } from '@/stores/prediction-directory-store'
+import { isPerpPairKey } from '@/lib/pairs'
 
 /** Routes the phone deliberately does not carry. */
 const DESKTOP_ONLY_PREFIXES = [
@@ -70,6 +71,25 @@ function servesPredictions(
       .find((m) => m.value === marketId)
       ?.assetClasses.includes('prediction') ?? false
   )
+}
+
+/** A venue listing ONLY perpetual contracts — like a prediction venue, it
+ *  reads as "not stocks" in the binary, which would leave a two-segment spot
+ *  pair charting against a venue with no spot markets. `$pair.tsx` mirrors. */
+function isPerpOnlyOption(m: MarketOption): boolean {
+  return (
+    m.assetClasses.includes('crypto-perp') &&
+    !m.assetClasses.includes('crypto-spot') &&
+    !m.assetClasses.includes('stocks')
+  )
+}
+
+function venueIsPerpOnly(
+  markets: Array<MarketOption>,
+  marketId: string,
+): boolean {
+  const option = markets.find((m) => m.value === marketId)
+  return option ? isPerpOnlyOption(option) : false
 }
 
 export function normalizePairKey(value: string): string {
@@ -222,6 +242,42 @@ export function useMobileRouteSync(): void {
   // venue. The binary split is immune to both: it reads the live venue, and it
   // only ever asks whether a venue is an equities venue.
   useEffect(() => {
+    // Perpetuals route off the KEY, before the assetClassMap is consulted at
+    // all. A three-segment key is a contract by construction — no directory
+    // pin, no catalogue entry and no map write is needed to know it — so a
+    // cold deep link to BTC-USDT-USDT lands on a futures venue even when
+    // nothing has ever recorded its class. Reachability, not just class: a
+    // desktop-only futures venue in a browser is a dead end, so the browser
+    // build prefers one it can actually stream.
+    // A registered prediction outcome is never a contract, whatever its key
+    // looks like — the directory pin is explicit and wins over shape
+    // inference.
+    if (isPerpPairKey(focusedPair) && !lookupPredictionOutcome(focusedPair)) {
+      const current = markets.find((m) => m.value === focusedVenue)
+      const onFuturesVenue =
+        current?.assetClasses.includes('crypto-perp') ?? false
+      if (onFuturesVenue && !current?.desktopOnly) return
+      const target =
+        markets.find(
+          (m) => !m.desktopOnly && m.assetClasses.includes('crypto-perp'),
+        ) ?? markets.find((m) => m.assetClasses.includes('crypto-perp'))
+      if (target && target.value !== focusedVenue) setFocusedVenue(target.value)
+      return
+    }
+    // The inverse needs no class entry either: a non-perp key on a venue that
+    // lists only contracts is a dead chart whatever the pair turns out to be.
+    // `$pair.tsx` mirrors.
+    if (!isPerpPairKey(focusedPair) && venueIsPerpOnly(markets, focusedVenue)) {
+      const target = markets.find(
+        (m) =>
+          !m.desktopOnly &&
+          !m.assetClasses.includes('prediction') &&
+          !isPerpOnlyOption(m),
+      )
+      if (target && target.value !== focusedVenue) setFocusedVenue(target.value)
+      return
+    }
+
     const assetClass = assetClassMap[focusedPair]
     if (!assetClass) return
     // Predictions are a third venue set, not the other half of the binary: an
@@ -258,6 +314,7 @@ export function useMobileRouteSync(): void {
     const wantStocks = assetClass === 'stocks'
     if (
       !servesPredictions(markets, focusedVenue) &&
+      !venueIsPerpOnly(markets, focusedVenue) &&
       servesStocks(markets, focusedVenue) === wantStocks
     )
       return
@@ -266,6 +323,7 @@ export function useMobileRouteSync(): void {
       (m) =>
         !m.desktopOnly &&
         !m.assetClasses.includes('prediction') &&
+        !isPerpOnlyOption(m) &&
         m.assetClasses.includes('stocks') === wantStocks,
     )
     if (target && target.value !== focusedVenue) setFocusedVenue(target.value)

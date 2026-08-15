@@ -2188,7 +2188,8 @@
     "recentTickers": "최근 티커",
     "empty": "비어 있음",
     "events": "이벤트",
-    "predictionPositions": "예측 포지션"
+    "predictionPositions": "예측 포지션",
+    "futuresPositions": "선물 포지션"
   },
   "paneDescriptions": {
     "markets": "거래소 전반의 모든 거래 페어를 탐색하세요",
@@ -2216,7 +2217,8 @@
     "liquidityHeatmap": "시간에 따른 가격대별 심도를 보여주는 호가창 유동성 히트맵",
     "recentTickers": "빠른 전환을 위한 최근 조회 페어와 실시간 가격",
     "events": "예측 시장 이벤트를 둘러보고 결과의 차트를 엽니다",
-    "predictionPositions": "보유 계약과 비용, 그리고 정산 시점"
+    "predictionPositions": "보유 계약과 비용, 그리고 정산 시점",
+    "futuresPositions": "미결제 무기한 포지션, 마크 가격과 청산 가격"
   },
   "multiPrice": {
     "venue": "거래소",
@@ -2806,6 +2808,22 @@
       "pairlens-predictions": {
         "title": "Pairlens 예측",
         "description": "예측 시장의 이벤트 브라우저와 미결제 계약 포지션"
+      },
+      "binance-futures-market-connector": {
+        "title": "Binance Futures 마켓 커넥터",
+        "description": "Binance Futures의 무기한 선물. 레버리지 롱/숏 포지션, USDT 정산"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "KuCoin Futures 마켓 커넥터",
+        "description": "KuCoin Futures의 무기한 선물. 레버리지 롱/숏 포지션, USDT 정산"
+      },
+      "kraken-futures-market-connector": {
+        "title": "Kraken Futures 마켓 커넥터",
+        "description": "Kraken Futures의 무기한 선물. 레버리지 롱/숏 포지션, USD 정산"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens 선물",
+        "description": "진입가, 마크 가격, 청산가와 함께 보는 미결제 무기한 포지션"
       }
     },
     "families": {
@@ -2840,6 +2858,10 @@
       "themes": {
         "label": "테마",
         "description": "인터페이스와 차트 색상을 위한 비주얼 테마."
+      },
+      "cexFutures": {
+        "label": "암호화폐 선물",
+        "description": "레버리지 암호화폐 포지션을 위한 무기한 선물 거래소."
       }
     },
     "familyToggleAria": "{{family}} 플러그인 전체 사용 또는 사용 안 함",
@@ -2960,7 +2982,12 @@
       "thisOutcome": "이 결과",
       "decreaseContracts": "계약 1개 줄이기",
       "increaseContracts": "계약 1개 늘리기",
-      "priceCentsRange": "0¢에서 100¢ 사이의 가격을 입력하세요"
+      "priceCentsRange": "0¢에서 100¢ 사이의 가격을 입력하세요",
+      "leverage": "레버리지",
+      "reduceOnly": "리듀스온리",
+      "reduceOnlyHint": "보유 포지션을 줄이기만 하며 반대 포지션은 열지 않습니다.",
+      "notional": "명목 가치",
+      "estLiquidation": "예상 청산가"
     },
     "status": {
       "connecting": "연결 중…",
@@ -4034,7 +4061,8 @@
       "all": "전체",
       "crypto": "암호화폐",
       "stocks": "주식",
-      "prediction": "예측"
+      "prediction": "예측",
+      "crypto-perp": "선물"
     },
     "category": {
       "all": "전체",
@@ -4047,7 +4075,9 @@
       "infrastructure": "인프라"
     },
     "predictionsEmptyTitle": "예측 결과는 이벤트 패널에 있습니다",
-    "predictionsEmptyBody": "결과는 매일 상장되고 정산되므로 카탈로그가 아니라 거래소 자체 보드에서 둘러봅니다."
+    "predictionsEmptyBody": "결과는 매일 상장되고 정산되므로 카탈로그가 아니라 거래소 자체 보드에서 둘러봅니다.",
+    "futuresEmptyTitle": "선물 거래소를 연결하면 무기한 종목을 탐색할 수 있습니다",
+    "futuresEmptyBody": "계약 목록은 각 거래소의 마켓 테이블에서 가져오므로 해당 거래소에 연결된 뒤에 표시됩니다."
   },
   "fearGreed": {
     "title": "공포 & 탐욕",
@@ -4910,7 +4940,8 @@
       "auto": "자동",
       "bookLoading": "호가창을 기다리는 중…",
       "pressureBuy": "매수 {{pct}}%",
-      "pressureSell": "{{pct}}% 매도"
+      "pressureSell": "{{pct}}% 매도",
+      "baseEquivalent": "기초자산 환산"
     },
     "chart": {
       "pinned": "고정됨",
@@ -5024,7 +5055,9 @@
       "desktopOnlyVenues": "데스크톱 앱이 필요합니다",
       "desktopOnlyVenue": "데스크톱 전용",
       "predictions": "예측",
-      "filterPredictions": "예측"
+      "filterPredictions": "예측",
+      "futures": "선물",
+      "filterFutures": "선물"
     }
   },
   "events": {
@@ -5058,5 +5091,28 @@
     "colCost": "비용",
     "colResolves": "정산",
     "resolved": "정산 완료"
+  },
+  "futuresPositions": {
+    "connect": "계정 연결",
+    "noAccountsTitle": "연결된 선물 계정이 없습니다",
+    "noAccountsBody": "Binance, KuCoin 또는 Kraken Futures API 키를 추가하면 미결제 포지션이 표시됩니다.",
+    "loading": "포지션 불러오는 중…",
+    "emptyTitle": "미결제 포지션 없음",
+    "emptyBody": "주문이 체결되면 바로 여기에 포지션이 표시됩니다.",
+    "colContract": "계약",
+    "colSide": "방향",
+    "colSize": "수량",
+    "colEntry": "진입가",
+    "colMark": "마크가",
+    "colLiquidation": "청산가",
+    "colLeverage": "레버리지",
+    "colPnl": "손익",
+    "sideLong": "롱",
+    "sideShort": "숏",
+    "close": "청산",
+    "closeTitle": "이 포지션을 청산할까요?",
+    "closeBody": "{{venue}}에서 {{pair}} {{contracts}}계약에 대해 리듀스온리 시장가 주문을 냅니다.",
+    "closeConfirm": "포지션 청산",
+    "closeSubmitted": "청산 주문을 보냈습니다"
   }
 }

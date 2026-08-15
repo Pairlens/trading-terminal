@@ -57,6 +57,7 @@ that way rather than listing forty entries alphabetically.
 | **Core**               | The terminal itself: charts, order book, trade entry, workspaces |
 | **Intelligence**       | Hosted AI, instrument discovery, news, market intelligence       |
 | **Crypto Exchanges**   | The 14 centralized spot venues                                   |
+| **Crypto Futures**     | Binance, KuCoin and Kraken perpetuals, and the positions panel   |
 | **On-Chain DEX**       | Swap venues and DEX data providers                               |
 | **Equities**           | Alpaca                                                           |
 | **Prediction Markets** | Kalshi, Polymarket, and the event panels                         |

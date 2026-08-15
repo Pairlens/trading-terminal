@@ -27,11 +27,11 @@ EU only. Polymarket serves market data everywhere but refuses an order from a US
 country setting. Others vary. This is the venue's rule, not ours, and no setting
 works around it.
 
-**Six venues need the desktop app.** Coinbase, Gate, KuCoin, MEXC, Bitfinex,
-and Kalshi serve REST without CORS headers, which a browser will not allow. In
-the hosted web terminal they refuse with a clear message rather than presenting
-a dead chart. [Install the desktop app](/docs/desktop-app) or use one of the
-other eleven.
+**Eight venues need the desktop app.** Coinbase, Gate, KuCoin, MEXC, Bitfinex,
+Kalshi, KuCoin Futures, and Kraken Futures serve REST without CORS headers,
+which a browser will not allow. In the hosted web terminal they refuse with a
+clear message rather than presenting a dead chart.
+[Install the desktop app](/docs/desktop-app) or use one of the other twelve.
 
 **Check the connection page.** [Settings → Connection](/docs/settings#connection)
 shows which sockets are actually up.

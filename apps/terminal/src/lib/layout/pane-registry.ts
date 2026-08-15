@@ -30,6 +30,7 @@ export const FIRST_PARTY_PLUGIN_IDS: ReadonlySet<string> = new Set([
   'pairlens-core',
   'pairlens-intelligence',
   'pairlens-predictions',
+  'pairlens-cex-futures',
 ])
 
 /** The one rule that turns (plugin, panel) into a saved-layout pane type. */

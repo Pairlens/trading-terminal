@@ -21,7 +21,9 @@ Find them in **Settings → Risk Management**.
 window, as a percentage of your portfolio.
 
 **Max position size (%).** The largest single position you will hold, as a
-percentage of your portfolio.
+percentage of your portfolio. On a [perpetual](/docs/cex-futures) this measures
+notional, not margin: one BTC contract is the same exposure at 1x as at 25x,
+and leverage changes only how much the venue holds against it.
 
 **Max trades.** How many trades you may place inside the reset window. This is
 the one that saves you from revenge trading.

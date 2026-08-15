@@ -2188,7 +2188,8 @@
     "recentTickers": "Ticker Terbaru",
     "empty": "Kosong",
     "events": "Acara",
-    "predictionPositions": "Posisi prediksi"
+    "predictionPositions": "Posisi prediksi",
+    "futuresPositions": "Posisi futures"
   },
   "paneDescriptions": {
     "markets": "Jelajahi semua pair trading yang tersedia di berbagai exchange",
@@ -2216,7 +2217,8 @@
     "liquidityHeatmap": "Heatmap likuiditas order book yang menampilkan kedalaman di berbagai level harga dari waktu ke waktu",
     "recentTickers": "Pair yang baru dilihat dengan harga live untuk beralih dengan cepat",
     "events": "Jelajahi acara pasar prediksi dan buka grafik sebuah hasil",
-    "predictionPositions": "Kontrak yang Anda pegang, biayanya, dan kapan diselesaikan"
+    "predictionPositions": "Kontrak yang Anda pegang, biayanya, dan kapan diselesaikan",
+    "futuresPositions": "Posisi perpetual terbuka, harga mark dan level likuidasi"
   },
   "multiPrice": {
     "venue": "Bursa",
@@ -2806,6 +2808,22 @@
       "pairlens-predictions": {
         "title": "Pairlens Prediksi",
         "description": "Penjelajah acara dan posisi kontrak terbuka untuk pasar prediksi"
+      },
+      "binance-futures-market-connector": {
+        "title": "Konektor Market Binance Futures",
+        "description": "Futures perpetual di Binance Futures: posisi long dan short dengan leverage, diselesaikan dalam USDT"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "Konektor Market KuCoin Futures",
+        "description": "Futures perpetual di KuCoin Futures: posisi long dan short dengan leverage, diselesaikan dalam USDT"
+      },
+      "kraken-futures-market-connector": {
+        "title": "Konektor Market Kraken Futures",
+        "description": "Futures perpetual di Kraken Futures: posisi long dan short dengan leverage, diselesaikan dalam USD"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens Futures",
+        "description": "Posisi perpetual terbuka dengan harga masuk, harga mark dan level likuidasi"
       }
     },
     "families": {
@@ -2840,6 +2858,10 @@
       "themes": {
         "label": "Tema",
         "description": "Tema visual untuk antarmuka dan palet grafik."
+      },
+      "cexFutures": {
+        "label": "Futures kripto",
+        "description": "Bursa futures perpetual untuk posisi kripto dengan leverage."
       }
     },
     "familyToggleAria": "Aktifkan atau nonaktifkan semua plugin {{family}}",
@@ -2960,7 +2982,12 @@
       "thisOutcome": "Hasil ini",
       "decreaseContracts": "Kurangi satu kontrak",
       "increaseContracts": "Tambah satu kontrak",
-      "priceCentsRange": "Masukkan harga antara 0¢ dan 100¢"
+      "priceCentsRange": "Masukkan harga antara 0¢ dan 100¢",
+      "leverage": "Leverage",
+      "reduceOnly": "Reduce only",
+      "reduceOnlyHint": "Mengecilkan posisi terbuka dan tidak pernah membuka sisi berlawanan.",
+      "notional": "Nosional",
+      "estLiquidation": "Perkiraan likuidasi"
     },
     "status": {
       "connecting": "Menghubungkan…",
@@ -4034,7 +4061,8 @@
       "all": "Semua",
       "crypto": "Kripto",
       "stocks": "Saham",
-      "prediction": "Prediksi"
+      "prediction": "Prediksi",
+      "crypto-perp": "Futures"
     },
     "category": {
       "all": "Semua",
@@ -4047,7 +4075,9 @@
       "infrastructure": "Infra"
     },
     "predictionsEmptyTitle": "Hasil prediksi ada di panel Acara",
-    "predictionsEmptyBody": "Hasil dicatatkan dan diselesaikan setiap hari, jadi ditelusuri dari papan bursa itu sendiri, bukan katalog."
+    "predictionsEmptyBody": "Hasil dicatatkan dan diselesaikan setiap hari, jadi ditelusuri dari papan bursa itu sendiri, bukan katalog.",
+    "futuresEmptyTitle": "Hubungkan bursa futures untuk menjelajahi kontrak perpetual",
+    "futuresEmptyBody": "Daftar kontrak berasal dari tabel pasar masing-masing bursa, jadi muncul setelah bursa itu terjangkau."
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -4910,7 +4940,8 @@
       "auto": "Otomatis",
       "bookLoading": "Menunggu order book…",
       "pressureBuy": "B {{pct}}%",
-      "pressureSell": "{{pct}}% J"
+      "pressureSell": "{{pct}}% J",
+      "baseEquivalent": "Setara aset dasar"
     },
     "chart": {
       "pinned": "Disematkan",
@@ -5024,7 +5055,9 @@
       "desktopOnlyVenues": "Butuh aplikasi desktop",
       "desktopOnlyVenue": "Hanya desktop",
       "predictions": "prediksi",
-      "filterPredictions": "Prediksi"
+      "filterPredictions": "Prediksi",
+      "futures": "futures",
+      "filterFutures": "Futures"
     }
   },
   "events": {
@@ -5058,5 +5091,28 @@
     "colCost": "Biaya",
     "colResolves": "Selesai",
     "resolved": "Selesai"
+  },
+  "futuresPositions": {
+    "connect": "Hubungkan akun",
+    "noAccountsTitle": "Belum ada akun futures terhubung",
+    "noAccountsBody": "Tambahkan kunci API Binance, KuCoin atau Kraken Futures untuk melihat posisi terbuka Anda.",
+    "loading": "Memuat posisi…",
+    "emptyTitle": "Tidak ada posisi terbuka",
+    "emptyBody": "Posisi muncul di sini begitu ada order yang terisi.",
+    "colContract": "Kontrak",
+    "colSide": "Sisi",
+    "colSize": "Ukuran",
+    "colEntry": "Masuk",
+    "colMark": "Mark",
+    "colLiquidation": "Likuidasi",
+    "colLeverage": "Leverage",
+    "colPnl": "PnL",
+    "sideLong": "Long",
+    "sideShort": "Short",
+    "close": "Tutup",
+    "closeTitle": "Tutup posisi ini?",
+    "closeBody": "Mengirim order pasar reduce-only untuk {{contracts}} kontrak {{pair}} di {{venue}}.",
+    "closeConfirm": "Tutup posisi",
+    "closeSubmitted": "Order penutupan terkirim"
   }
 }

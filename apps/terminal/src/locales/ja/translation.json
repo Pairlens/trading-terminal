@@ -2188,7 +2188,8 @@
     "recentTickers": "最近見たティッカー",
     "empty": "空",
     "events": "イベント",
-    "predictionPositions": "予測ポジション"
+    "predictionPositions": "予測ポジション",
+    "futuresPositions": "先物ポジション"
   },
   "paneDescriptions": {
     "markets": "全取引所の全取引ペアを閲覧",
@@ -2216,7 +2217,8 @@
     "liquidityHeatmap": "時間経過に伴う価格帯ごとの深さを示すオーダーブック流動性ヒートマップ",
     "recentTickers": "素早く切り替えられる、ライブ価格付きの最近見たペア",
     "events": "予測市場のイベントを閲覧し、結果のチャートを開きます",
-    "predictionPositions": "保有している契約、そのコスト、決済時期"
+    "predictionPositions": "保有している契約、そのコスト、決済時期",
+    "futuresPositions": "未決済の無期限ポジション、マーク価格と清算価格"
   },
   "multiPrice": {
     "venue": "取引所",
@@ -2806,6 +2808,22 @@
       "pairlens-predictions": {
         "title": "Pairlens 予測",
         "description": "予測市場のイベントブラウザと建玉ポジション"
+      },
+      "binance-futures-market-connector": {
+        "title": "Binance Futures マーケットコネクタ",
+        "description": "Binance Futures の無期限先物。レバレッジをかけたロング・ショート建玉、決済通貨は USDT"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "KuCoin Futures マーケットコネクタ",
+        "description": "KuCoin Futures の無期限先物。レバレッジをかけたロング・ショート建玉、決済通貨は USDT"
+      },
+      "kraken-futures-market-connector": {
+        "title": "Kraken Futures マーケットコネクタ",
+        "description": "Kraken Futures の無期限先物。レバレッジをかけたロング・ショート建玉、決済通貨は USD"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens 先物",
+        "description": "未決済の無期限ポジション。建値、マーク価格、清算価格つき"
       }
     },
     "families": {
@@ -2840,6 +2858,10 @@
       "themes": {
         "label": "テーマ",
         "description": "UI とチャート配色のビジュアルテーマ。"
+      },
+      "cexFutures": {
+        "label": "暗号資産先物",
+        "description": "レバレッジを使った暗号資産ポジション向けの無期限先物取引所。"
       }
     },
     "familyToggleAria": "{{family}}のプラグインをすべて有効または無効にする",
@@ -2960,7 +2982,12 @@
       "thisOutcome": "この結果",
       "decreaseContracts": "契約を1枚減らす",
       "increaseContracts": "契約を1枚増やす",
-      "priceCentsRange": "0¢ から 100¢ の価格を入力してください"
+      "priceCentsRange": "0¢ から 100¢ の価格を入力してください",
+      "leverage": "レバレッジ",
+      "reduceOnly": "リデュースオンリー",
+      "reduceOnlyHint": "既存ポジションを減らすだけで、反対側を建てることはありません。",
+      "notional": "想定元本",
+      "estLiquidation": "推定清算価格"
     },
     "status": {
       "connecting": "接続中…",
@@ -4034,7 +4061,8 @@
       "all": "すべて",
       "crypto": "暗号資産",
       "stocks": "株式",
-      "prediction": "予測"
+      "prediction": "予測",
+      "crypto-perp": "先物"
     },
     "category": {
       "all": "すべて",
@@ -4047,7 +4075,9 @@
       "infrastructure": "Infra"
     },
     "predictionsEmptyTitle": "予測の結果は「イベント」パネルにあります",
-    "predictionsEmptyBody": "結果は毎日上場し決済されるため、カタログではなく取引所自身のボードから閲覧します。"
+    "predictionsEmptyBody": "結果は毎日上場し決済されるため、カタログではなく取引所自身のボードから閲覧します。",
+    "futuresEmptyTitle": "先物取引所を接続すると無期限銘柄を閲覧できます",
+    "futuresEmptyBody": "銘柄一覧は各取引所自身のマーケット表から取得するため、その取引所に接続できた時点で表示されます。"
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -4910,7 +4940,8 @@
       "auto": "自動",
       "bookLoading": "板を読み込み中…",
       "pressureBuy": "買 {{pct}}%",
-      "pressureSell": "{{pct}}% 売"
+      "pressureSell": "{{pct}}% 売",
+      "baseEquivalent": "原資産換算"
     },
     "chart": {
       "pinned": "固定済み",
@@ -5024,7 +5055,9 @@
       "desktopOnlyVenues": "デスクトップアプリが必要です",
       "desktopOnlyVenue": "デスクトップのみ",
       "predictions": "予測",
-      "filterPredictions": "予測"
+      "filterPredictions": "予測",
+      "futures": "先物",
+      "filterFutures": "先物"
     }
   },
   "events": {
@@ -5058,5 +5091,28 @@
     "colCost": "コスト",
     "colResolves": "決済",
     "resolved": "決済済み"
+  },
+  "futuresPositions": {
+    "connect": "アカウントを接続",
+    "noAccountsTitle": "先物アカウントが接続されていません",
+    "noAccountsBody": "Binance、KuCoin、Kraken Futures の API キーを追加すると未決済ポジションが表示されます。",
+    "loading": "ポジションを読み込み中…",
+    "emptyTitle": "未決済ポジションはありません",
+    "emptyBody": "注文が約定するとすぐにポジションがここに表示されます。",
+    "colContract": "銘柄",
+    "colSide": "方向",
+    "colSize": "数量",
+    "colEntry": "平均建値",
+    "colMark": "マーク価格",
+    "colLiquidation": "清算価格",
+    "colLeverage": "レバレッジ",
+    "colPnl": "損益",
+    "sideLong": "ロング",
+    "sideShort": "ショート",
+    "close": "決済",
+    "closeTitle": "このポジションを決済しますか？",
+    "closeBody": "{{venue}} で {{pair}} を {{contracts}} 枚、リデュースオンリーの成行注文で決済します。",
+    "closeConfirm": "ポジションを決済",
+    "closeSubmitted": "決済注文を送信しました"
   }
 }

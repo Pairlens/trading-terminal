@@ -116,6 +116,10 @@ quoted in cents, so 53¢ reads as a 53% chance. See
 
 **Fill.** A completed execution. Partial fills are normal on limit orders.
 
+**Funding rate.** The periodic payment between longs and shorts on a
+[perpetual](/docs/cex-futures) that keeps its price pinned near spot. Positive
+means longs pay shorts.
+
 **Grouping / tick.** The price increment the [order book](/docs/order-book)
 buckets levels into. The venue's own tick is the floor.
 
@@ -123,6 +127,15 @@ buckets levels into. The venue's own tick is the floor.
 easily manufactured, because resting orders can be cancelled.
 
 **Limit order.** Executes only at your price or better. May not fill.
+
+**Leverage.** How much exposure you hold per unit of margin posted. It changes
+the margin a venue holds against a position, never the size of the position
+itself.
+
+**Liquidation price.** The price at which a leveraged position no longer has
+enough margin behind it and the venue closes it for you. Pairlens shows an
+estimate on the ticket; the venue's own number depends on your whole margin
+balance.
 
 **Liquidity.** How much can trade without moving price. Read it from depth and
 from the spread, not from volume alone.
@@ -137,6 +150,13 @@ guaranteed, price is not.
 
 **Notional.** Price times size: the money a level or a print represents. Usually
 the more useful reading of the two.
+
+**Perpetual (perp).** A futures contract with no expiry, held near spot by a
+funding rate. Sized in contracts, settled in a stablecoin or in dollars. See
+[perpetual futures](/docs/cex-futures).
+
+**Reduce-only.** An order flag that may shrink an open position but never open
+the opposite side. What makes closing a position safe to do twice.
 
 **Regime.** Whether the market is trending or ranging, as classified by the
 strategy engine. Strategies that work in one fail in the other.

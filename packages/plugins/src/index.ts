@@ -8,6 +8,10 @@ export {
   pairlensPredictionsManifest,
   createPairlensPredictionsPlugin,
 } from './pairlens-predictions/index.ts'
+export {
+  pairlensCexFuturesManifest,
+  createPairlensCexFuturesPlugin,
+} from './pairlens-cex-futures/index.ts'
 // Every CEX venue is served by the CCXT bridge (packages/plugins/src/
 // ccxt-connector). Same plugin ids, same manifests, same exported triple as the
 // hand-written connectors these replaced, so a saved workspace and a
@@ -82,6 +86,25 @@ export {
   createUpbitMarketConnectorPlugin,
   UPBIT_ADAPTER_INFO,
 } from './ccxt-connector/venues/upbit.ts'
+// Perpetual futures ride a parallel runtime (packages/plugins/src/
+// ccxt-futures-connector): pair keys carry a settlement leg, the markets table
+// filters and caches under its own namespace, and orders are contract counts —
+// all three of which the spot bridge is written against the opposite of.
+export {
+  binanceFuturesMarketConnectorManifest,
+  createBinanceFuturesMarketConnectorPlugin,
+  BINANCE_FUTURES_ADAPTER_INFO,
+} from './ccxt-futures-connector/venues/binance-futures.ts'
+export {
+  kucoinFuturesMarketConnectorManifest,
+  createKucoinFuturesMarketConnectorPlugin,
+  KUCOIN_FUTURES_ADAPTER_INFO,
+} from './ccxt-futures-connector/venues/kucoin-futures.ts'
+export {
+  krakenFuturesMarketConnectorManifest,
+  createKrakenFuturesMarketConnectorPlugin,
+  KRAKEN_FUTURES_ADAPTER_INFO,
+} from './ccxt-futures-connector/venues/kraken-futures.ts'
 export {
   alpacaMarketConnectorManifest,
   createAlpacaMarketConnectorPlugin,

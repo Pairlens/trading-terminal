@@ -66,14 +66,22 @@ describe('VITE_PAIRLENS_DISABLED_FAMILIES parsing', () => {
   })
 
   test('unknown ids are ignored with a single warning', () => {
+    // 'memes' and 'commodities' are reserved-but-unshipped family ids. When
+    // one of them becomes real, swap in another — the case being pinned is
+    // that a typo or a stale deployment variable is warned about once and
+    // then ignored, never that it silently disables a family that exists.
     const warnings: Array<string> = []
-    const excluded = parseDisabledFamilies('memes,cex-futures,dex', (m) =>
+    const excluded = parseDisabledFamilies('memes,commodities,dex', (m) =>
       warnings.push(m),
     )
     expect([...excluded]).toEqual(['dex'])
     expect(warnings).toHaveLength(1)
     expect(warnings[0]).toContain('memes')
-    expect(warnings[0]).toContain('cex-futures')
+    expect(warnings[0]).toContain('commodities')
+  })
+
+  test('the futures family is real and excludable', () => {
+    expect([...parseDisabledFamilies('cex-futures')]).toEqual(['cex-futures'])
   })
 
   test('required families refuse exclusion', () => {
@@ -152,6 +160,30 @@ describe('isFamilyExcluded', () => {
       )
       expect(
         isFamilyExcluded(bundled('binance-market-connector'), 'bootstrap'),
+      ).toBe(false)
+    })
+  })
+
+  test('dropping futures drops its venues AND its panels, but no spot venue', () => {
+    // The pane plugin is the whole reason `pairlens-cex-futures` exists as a
+    // separate bundle entry: kept in pairlens-core it would survive this and
+    // leave a positions pane with no venue to read.
+    withDisabledFamilies('cex-futures', () => {
+      for (const id of [
+        'binance-futures-market-connector',
+        'kucoin-futures-market-connector',
+        'kraken-futures-market-connector',
+        'pairlens-cex-futures',
+      ]) {
+        expect(isFamilyExcluded(bundled(id), 'bootstrap')).toBe(true)
+      }
+      // The spot venue that shares Binance's credential is untouched: the
+      // alias binds a KEY to two connectors, not two connectors to one fate.
+      expect(
+        isFamilyExcluded(bundled('binance-market-connector'), 'bootstrap'),
+      ).toBe(false)
+      expect(
+        isFamilyExcluded(bundled('kucoin-market-connector'), 'bootstrap'),
       ).toBe(false)
     })
   })

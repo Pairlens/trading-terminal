@@ -101,6 +101,25 @@ export type OrderParams = {
    * than silently dropping the flag.
    */
   extendedHours?: boolean
+  /**
+   * Perpetual futures: the order may only REDUCE an open position, never open
+   * or flip one. The venue rejects it outright if it would increase exposure,
+   * which is exactly the guarantee a "close position" control needs — a plain
+   * opposite-side order raced against a partial fill can leave the trader short
+   * where they meant to be flat.
+   *
+   * Opt-in per order like `extendedHours`: a venue that cannot express it must
+   * reject the order rather than drop the flag and send a plain one.
+   */
+  reduceOnly?: boolean
+  /**
+   * Perpetual futures: leverage to apply to this symbol before the order is
+   * placed. Not part of the order payload on any venue — it is account state,
+   * set per symbol by a separate call, so the connector applies it first and
+   * fails the order if it cannot. Absent leaves whatever the account already
+   * has; the venue's own maximum is published as `MarketAdapterInfo.maxLeverage`.
+   */
+  leverage?: number
   // Client-generated idempotency key. The exchange rejects a second order
   // carrying an id it has already seen, so a retried/double-clicked submit
   // cannot execute twice. Generated once per logical order by the caller and
@@ -161,6 +180,40 @@ export type NormalizedOrderUpdate = {
   /** Trigger price of a trigger order (display; price may be empty for
    * market-execution triggers). */
   triggerPrice?: string
+}
+
+/**
+ * An open perpetual-futures position, as `trading:positions` reports it.
+ *
+ * Numbers rather than strings, unlike `NormalizedOrderUpdate`: every field here
+ * is arithmetic input (notional, PnL, a liquidation distance) rather than a
+ * value the terminal echoes back to the venue at the venue's own precision, and
+ * the round-trip risk a string contract exists to avoid does not apply to a
+ * read-only snapshot.
+ *
+ * `pair` is the connector's own pair key, three segments on a perp
+ * (`BTC-USDT-USDT`). That is load-bearing: the position ledger is keyed by pair
+ * alone, so a two-segment perp key would let a perp fill overwrite the spot
+ * `BTC-USDT` slot.
+ *
+ * `contracts` is a CONTRACT COUNT and is always positive — the direction lives
+ * in `side`. Multiply by `contractSize` for the base-asset equivalent; the two
+ * are not the same number on any venue whose contract is not one unit of base
+ * (KuCoin's XBTUSDTM is 0.001 BTC).
+ */
+export type NormalizedPosition = {
+  pair: string
+  side: 'long' | 'short'
+  contracts: number
+  contractSize?: number
+  entryPrice?: number
+  markPrice?: number
+  liquidationPrice?: number
+  leverage?: number
+  unrealizedPnl?: number
+  notionalUsd?: number
+  marginMode?: 'cross' | 'isolated'
+  timestamp?: number
 }
 
 /** Normalized balance record — emitted by all connectors. */

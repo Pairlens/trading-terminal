@@ -27,6 +27,11 @@ import {
 } from '@/hooks/use-prediction-positions'
 import { formatPredictionPrice } from '@/lib/format-price'
 import { formatTimeUntil } from '@/lib/format-time'
+import {
+  PaneEmpty,
+  PaneErrorBanner,
+  Th,
+} from '@/components/panes/pane-primitives'
 
 export function PredictionPositionsPane() {
   const { t } = useTranslation()
@@ -35,7 +40,7 @@ export function PredictionPositionsPane() {
 
   if (accounts.length === 0) {
     return (
-      <Empty
+      <PaneEmpty
         action={
           <Link
             className="mt-3 text-xs text-primary hover:underline"
@@ -45,6 +50,7 @@ export function PredictionPositionsPane() {
           </Link>
         }
         body={t('predictionPositions.noAccountsBody')}
+        icon={Wallet}
         title={t('predictionPositions.noAccountsTitle')}
       />
     )
@@ -67,8 +73,9 @@ export function PredictionPositionsPane() {
 
   if (rowCount === 0 && errors.length === 0) {
     return (
-      <Empty
+      <PaneEmpty
         body={t('predictionPositions.emptyBody')}
+        icon={Wallet}
         title={t('predictionPositions.emptyTitle')}
       />
     )
@@ -78,13 +85,11 @@ export function PredictionPositionsPane() {
     <div className="h-full overflow-y-auto p-3">
       <div className="flex flex-col gap-2">
         {errors.map((result) => (
-          <p
-            className="rounded-md border border-amber-500/30 bg-amber-500/10 px-2.5 py-1.5 text-[11px] leading-relaxed text-amber-700 dark:text-amber-300"
+          <PaneErrorBanner
             key={`err:${result.account.market}:${result.account.accountId}`}
-          >
-            <span className="font-medium">{result.account.venueLabel}</span>{' '}
-            {result.error}
-          </p>
+            message={result.error ?? ''}
+            venue={result.account.venueLabel}
+          />
         ))}
 
         {rowCount > 0 && (
@@ -118,25 +123,6 @@ export function PredictionPositionsPane() {
 }
 
 // ── Pieces ────────────────────────────────────────────────────────────
-
-function Th({
-  children,
-  align = 'left',
-}: {
-  children: React.ReactNode
-  align?: 'left' | 'right'
-}) {
-  return (
-    <th
-      className={cn(
-        'pb-1.5 pr-3 font-mono text-[10px] font-medium uppercase tracking-[.14em] last:pr-0',
-        align === 'right' ? 'text-right' : 'text-left',
-      )}
-    >
-      {children}
-    </th>
-  )
-}
 
 function Row({
   result,
@@ -205,26 +191,5 @@ function Row({
         )}
       </td>
     </tr>
-  )
-}
-
-function Empty({
-  title,
-  body,
-  action,
-}: {
-  title: string
-  body: string
-  action?: React.ReactNode
-}) {
-  return (
-    <div className="flex h-full flex-col items-center justify-center px-6 text-center">
-      <Wallet className="mb-3 size-7 text-muted-foreground/40" />
-      <p className="text-sm font-medium">{title}</p>
-      <p className="mt-1 max-w-xs text-xs leading-relaxed text-muted-foreground">
-        {body}
-      </p>
-      {action}
-    </div>
   )
 }

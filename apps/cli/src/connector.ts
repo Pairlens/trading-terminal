@@ -8,6 +8,7 @@
 import { PluginManager } from '@pairlens/plugin-system/manager'
 import {
   alpacaMarketConnectorManifest,
+  binanceFuturesMarketConnectorManifest,
   binanceMarketConnectorManifest,
   bitfinexMarketConnectorManifest,
   bitgetMarketConnectorManifest,
@@ -15,6 +16,7 @@ import {
   bybitMarketConnectorManifest,
   coinbaseMarketConnectorManifest,
   createAlpacaMarketConnectorPlugin,
+  createBinanceFuturesMarketConnectorPlugin,
   createBinanceMarketConnectorPlugin,
   createBitfinexMarketConnectorPlugin,
   createBitgetMarketConnectorPlugin,
@@ -25,7 +27,9 @@ import {
   createGateMarketConnectorPlugin,
   createHtxMarketConnectorPlugin,
   createKalshiMarketConnectorPlugin,
+  createKrakenFuturesMarketConnectorPlugin,
   createKrakenMarketConnectorPlugin,
+  createKucoinFuturesMarketConnectorPlugin,
   createKucoinMarketConnectorPlugin,
   createMexcMarketConnectorPlugin,
   createOkxMarketConnectorPlugin,
@@ -35,7 +39,9 @@ import {
   gateMarketConnectorManifest,
   htxMarketConnectorManifest,
   kalshiMarketConnectorManifest,
+  krakenFuturesMarketConnectorManifest,
   krakenMarketConnectorManifest,
+  kucoinFuturesMarketConnectorManifest,
   kucoinMarketConnectorManifest,
   mexcMarketConnectorManifest,
   okxMarketConnectorManifest,
@@ -113,6 +119,20 @@ const CONNECTORS = [
   {
     manifest: polymarketMarketConnectorManifest,
     factory: createPolymarketMarketConnectorPlugin,
+  },
+  // Perpetual-futures venues. Reachable headlessly for the same reason: the
+  // two that refuse a browser do so over CORS, which bun is not subject to.
+  {
+    manifest: binanceFuturesMarketConnectorManifest,
+    factory: createBinanceFuturesMarketConnectorPlugin,
+  },
+  {
+    manifest: kucoinFuturesMarketConnectorManifest,
+    factory: createKucoinFuturesMarketConnectorPlugin,
+  },
+  {
+    manifest: krakenFuturesMarketConnectorManifest,
+    factory: createKrakenFuturesMarketConnectorPlugin,
   },
 ]
 

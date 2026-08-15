@@ -2188,7 +2188,8 @@
     "recentTickers": "Mã gần đây",
     "empty": "Trống",
     "events": "Sự kiện",
-    "predictionPositions": "Vị thế dự đoán"
+    "predictionPositions": "Vị thế dự đoán",
+    "futuresPositions": "Vị thế futures"
   },
   "paneDescriptions": {
     "markets": "Duyệt tất cả các cặp giao dịch khả dụng trên các sàn",
@@ -2216,7 +2217,8 @@
     "liquidityHeatmap": "Bản đồ nhiệt thanh khoản sổ lệnh thể hiện độ sâu theo mức giá theo thời gian",
     "recentTickers": "Các cặp xem gần đây với giá trực tiếp để chuyển đổi nhanh",
     "events": "Duyệt sự kiện thị trường dự đoán và mở biểu đồ của một kết quả",
-    "predictionPositions": "Hợp đồng bạn nắm giữ, chi phí và thời điểm tất toán"
+    "predictionPositions": "Hợp đồng bạn nắm giữ, chi phí và thời điểm tất toán",
+    "futuresPositions": "Vị thế vĩnh cửu đang mở, giá đánh dấu và mức thanh lý"
   },
   "multiPrice": {
     "venue": "Sàn",
@@ -2806,6 +2808,22 @@
       "pairlens-predictions": {
         "title": "Pairlens Dự đoán",
         "description": "Trình duyệt sự kiện và vị thế hợp đồng đang mở cho thị trường dự đoán"
+      },
+      "binance-futures-market-connector": {
+        "title": "Bộ kết nối Thị trường Binance Futures",
+        "description": "Hợp đồng tương lai vĩnh cửu trên Binance Futures: vị thế mua và bán có đòn bẩy, thanh toán bằng USDT"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "Bộ kết nối Thị trường KuCoin Futures",
+        "description": "Hợp đồng tương lai vĩnh cửu trên KuCoin Futures: vị thế mua và bán có đòn bẩy, thanh toán bằng USDT"
+      },
+      "kraken-futures-market-connector": {
+        "title": "Bộ kết nối Thị trường Kraken Futures",
+        "description": "Hợp đồng tương lai vĩnh cửu trên Kraken Futures: vị thế mua và bán có đòn bẩy, thanh toán bằng USD"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens Futures",
+        "description": "Vị thế vĩnh cửu đang mở kèm giá vào, giá mark và mức thanh lý"
       }
     },
     "families": {
@@ -2840,6 +2858,10 @@
       "themes": {
         "label": "Giao diện",
         "description": "Giao diện trực quan cho UI và bảng màu biểu đồ."
+      },
+      "cexFutures": {
+        "label": "Hợp đồng tương lai crypto",
+        "description": "Các sàn hợp đồng tương lai vĩnh cửu cho vị thế crypto có đòn bẩy."
       }
     },
     "familyToggleAria": "Bật hoặc tắt tất cả plugin {{family}}",
@@ -2960,7 +2982,12 @@
       "thisOutcome": "Kết quả này",
       "decreaseContracts": "Giảm một hợp đồng",
       "increaseContracts": "Tăng một hợp đồng",
-      "priceCentsRange": "Nhập giá từ 0¢ đến 100¢"
+      "priceCentsRange": "Nhập giá từ 0¢ đến 100¢",
+      "leverage": "Đòn bẩy",
+      "reduceOnly": "Chỉ giảm vị thế",
+      "reduceOnlyHint": "Chỉ giảm vị thế đang mở và không bao giờ mở chiều ngược lại.",
+      "notional": "Giá trị danh nghĩa",
+      "estLiquidation": "Thanh lý ước tính"
     },
     "status": {
       "connecting": "Đang kết nối…",
@@ -4034,7 +4061,8 @@
       "all": "Tất cả",
       "crypto": "Crypto",
       "stocks": "Cổ phiếu",
-      "prediction": "Dự đoán"
+      "prediction": "Dự đoán",
+      "crypto-perp": "Futures"
     },
     "category": {
       "all": "Tất cả",
@@ -4047,7 +4075,9 @@
       "infrastructure": "Infra"
     },
     "predictionsEmptyTitle": "Kết quả dự đoán nằm trong bảng Sự kiện",
-    "predictionsEmptyBody": "Các kết quả được niêm yết và tất toán hằng ngày, nên được duyệt từ bảng của chính sàn thay vì danh mục."
+    "predictionsEmptyBody": "Các kết quả được niêm yết và tất toán hằng ngày, nên được duyệt từ bảng của chính sàn thay vì danh mục.",
+    "futuresEmptyTitle": "Kết nối một sàn futures để duyệt các hợp đồng vĩnh cửu",
+    "futuresEmptyBody": "Danh sách hợp đồng lấy từ bảng thị trường của từng sàn, nên chỉ xuất hiện khi đã kết nối được sàn đó."
   },
   "fearGreed": {
     "title": "Sợ hãi & Tham lam",
@@ -4910,7 +4940,8 @@
       "auto": "Tự động",
       "bookLoading": "Đang chờ sổ lệnh…",
       "pressureBuy": "M {{pct}}%",
-      "pressureSell": "{{pct}}% B"
+      "pressureSell": "{{pct}}% B",
+      "baseEquivalent": "Quy đổi tài sản cơ sở"
     },
     "chart": {
       "pinned": "Đã ghim",
@@ -5024,7 +5055,9 @@
       "desktopOnlyVenues": "Cần ứng dụng máy tính",
       "desktopOnlyVenue": "Chỉ trên máy tính",
       "predictions": "dự đoán",
-      "filterPredictions": "Dự đoán"
+      "filterPredictions": "Dự đoán",
+      "futures": "futures",
+      "filterFutures": "Futures"
     }
   },
   "events": {
@@ -5058,5 +5091,28 @@
     "colCost": "Chi phí",
     "colResolves": "Tất toán",
     "resolved": "Đã tất toán"
+  },
+  "futuresPositions": {
+    "connect": "Kết nối tài khoản",
+    "noAccountsTitle": "Chưa kết nối tài khoản futures",
+    "noAccountsBody": "Thêm khoá API của Binance, KuCoin hoặc Kraken Futures để xem các vị thế đang mở.",
+    "loading": "Đang tải vị thế…",
+    "emptyTitle": "Không có vị thế đang mở",
+    "emptyBody": "Vị thế sẽ xuất hiện ở đây ngay khi có lệnh khớp.",
+    "colContract": "Hợp đồng",
+    "colSide": "Phía",
+    "colSize": "Khối lượng",
+    "colEntry": "Giá vào",
+    "colMark": "Giá mark",
+    "colLiquidation": "Thanh lý",
+    "colLeverage": "Đòn bẩy",
+    "colPnl": "PnL",
+    "sideLong": "Mua",
+    "sideShort": "Bán",
+    "close": "Đóng",
+    "closeTitle": "Đóng vị thế này?",
+    "closeBody": "Đặt lệnh thị trường chỉ giảm vị thế cho {{contracts}} hợp đồng {{pair}} trên {{venue}}.",
+    "closeConfirm": "Đóng vị thế",
+    "closeSubmitted": "Đã gửi lệnh đóng vị thế"
   }
 }

@@ -206,6 +206,22 @@ export const CREDENTIAL_SCHEMAS: Record<
     ],
     modes: ['paper', 'live'],
   },
+  // Kraken Futures is the ONE futures venue with its own entry. Binance
+  // Futures and KuCoin Futures ride the spot key through the connector's
+  // `credentialAlias`, so adding a schema for them would ask the user to paste
+  // the same key twice. Kraken issues futures keys separately from spot ones
+  // (a different account section on a different host), so the spot key cannot
+  // sign here and an alias would silently fail authentication.
+  //
+  // Paper signs against demo-futures.kraken.com, the venue's own sandbox.
+  'kraken-futures': {
+    label: 'Kraken Futures',
+    fields: [
+      { key: 'apiKey', label: 'API Key', required: true },
+      { key: 'apiSecret', label: 'API Secret', required: true },
+    ],
+    modes: ['paper', 'live'],
+  },
   alpaca: {
     label: 'Alpaca',
     kind: 'broker',

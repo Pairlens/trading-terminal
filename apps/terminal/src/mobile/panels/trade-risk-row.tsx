@@ -59,6 +59,14 @@ export type TradeRiskInput = {
   price: number | null
   /** Scopes the portfolio to the account this ticket would trade from. */
   credentialId?: string
+  /**
+   * Base units per contract, on a perp ticket. Absent for spot, and absent
+   * means the caller does not know — which is also right for every venue whose
+   * contract IS one unit of the base. Without it a KuCoin count of 0.001 BTC
+   * contracts is priced as if each were a whole BTC, and this row reports a
+   * thousand times the real exposure.
+   */
+  contractSize?: number
 }
 
 export function useTradeRisk(input: TradeRiskInput): TradeRiskVerdict {
@@ -72,6 +80,9 @@ export function useTradeRisk(input: TradeRiskInput): TradeRiskVerdict {
       size: input.size,
       quoteDenominated: input.quoteDenominated,
       price: input.price,
+      ...(input.contractSize != null
+        ? { contractSize: input.contractSize }
+        : {}),
     },
     priceUsd,
   )

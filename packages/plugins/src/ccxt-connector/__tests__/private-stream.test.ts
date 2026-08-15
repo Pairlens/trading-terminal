@@ -246,6 +246,50 @@ describe('CcxtPrivateStream', () => {
     stream.destroy()
   })
 
+  it('maps the order symbol through `symbolToPair` when one is supplied', async () => {
+    // The futures runtime's whole seam. Reversing a stripped settle leg
+    // downstream cannot work — a cold markets cache has nothing to reverse it
+    // with, and a perp fill keyed `BTC-USDT` merges into the SPOT pair's slot
+    // in the terminal's pair-keyed position ledger.
+    reset()
+    const orders: Array<NormalizedOrderUpdate> = []
+    const stream = makeStream({
+      symbolToPair: (symbol) => symbol.replace(/[/:]/g, '-').toUpperCase(),
+    })
+    stream.connect(
+      CREDENTIALS,
+      '',
+      false,
+      (update) => orders.push(update as NormalizedOrderUpdate),
+      () => {},
+    )
+
+    await waitFor(() => built.length > 0 && built[0].orderCalls > 0)
+    built[0].pushOrders([{ ...RAW_ORDER, symbol: 'BTC/USDT:USDT' }])
+    await waitFor(() => orders.length === 1)
+    expect(orders[0].pair).toBe('BTC-USDT-USDT')
+    stream.destroy()
+  })
+
+  it('defaults to the spot mapping, which every spot venue depends on', async () => {
+    reset()
+    const orders: Array<NormalizedOrderUpdate> = []
+    const stream = makeStream()
+    stream.connect(
+      CREDENTIALS,
+      '',
+      false,
+      (update) => orders.push(update as NormalizedOrderUpdate),
+      () => {},
+    )
+
+    await waitFor(() => built.length > 0 && built[0].orderCalls > 0)
+    built[0].pushOrders([{ ...RAW_ORDER, symbol: 'BTC/USDT:USDT' }])
+    await waitFor(() => orders.length === 1)
+    expect(orders[0].pair).toBe('BTC-USDT')
+    stream.destroy()
+  })
+
   it('never signs a public instance — credentials land only on this one', async () => {
     reset()
     const stream = makeStream()

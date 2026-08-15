@@ -75,6 +75,7 @@ const FILTERS: Array<{ id: PairFilter; labelKey: string }> = [
   { id: 'dex', labelKey: 'mobile.pickers.filterDex' },
   { id: 'equities', labelKey: 'mobile.pickers.filterEquities' },
   { id: 'prediction', labelKey: 'mobile.pickers.filterPredictions' },
+  { id: 'futures', labelKey: 'mobile.pickers.filterFutures' },
 ]
 
 const MAX_RESULTS = 24

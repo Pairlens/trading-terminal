@@ -40,6 +40,7 @@
 
 import { restFetch } from '@pairlens/market-engine/http'
 import {
+  GeoRestrictedError,
   assertResponseOk,
   isGeoRestrictedError,
 } from '@pairlens/market-engine/errors'
@@ -137,6 +138,39 @@ type FetchLike = (
   input: string | URL | Request,
   init?: RequestInit,
 ) => Promise<Response>
+
+/**
+ * Message markers that turn a bare 403 into a region refusal. A 403 alone is
+ * also a revoked key and a WAF ban, and sending a user to the region dialog for
+ * either is a dead end.
+ */
+const GEO_MARKERS = /restricted|region|country|location|unavailable in your/i
+
+/**
+ * Second line of defence for the geo signal, for the errors ccxt raises ITSELF
+ * rather than from a response the bridge fetched — a `RestrictedLocation`, or a
+ * message that does carry the code. The first line is `withGeoClassification`
+ * below, which reads the HTTP status before ccxt sees the body.
+ *
+ * Same rule at both layers: 451 is unambiguous, 403 only counts with body
+ * evidence. Shared by the spot and futures runtimes so the two cannot drift —
+ * the region dialog keys on the typed error and nothing else.
+ */
+export function classifyCcxtGeoError(
+  error: unknown,
+  displayName: string,
+  country: string,
+): unknown {
+  if (!(error instanceof Error)) return error
+  const message = error.message
+  if (error.name === 'RestrictedLocation' || /\b451\b/.test(message)) {
+    return new GeoRestrictedError(displayName, country, 451)
+  }
+  if (/\b403\b/.test(message) && GEO_MARKERS.test(message)) {
+    return new GeoRestrictedError(displayName, country, 403)
+  }
+  return error
+}
 
 /**
  * Wrap a transport so a geo-block HTTP status becomes a typed

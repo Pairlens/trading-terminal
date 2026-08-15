@@ -161,6 +161,16 @@ export type CcxtStreamHubOptions = {
   ) => Promise<Array<Candle>>
   /** Applied to a freshly built exchange before the first watch call. */
   primeMarkets?: (exchange: CcxtExchangeLike, pair: string) => void
+  /**
+   * Pairlens pair → ccxt unified symbol. Defaults to the spot mapping.
+   *
+   * The seam exists for the futures runtime, whose pairs carry a settlement
+   * leg (`BTC-USDT-USDT` → `BTC/USDT:USDT`) that the spot mapper cannot
+   * produce: `toCcxtSymbol` is `replace('-', '/')`, which rewrites only the
+   * FIRST dash. Everything downstream reads `sub.symbol`, so this one call
+   * site is the whole conversion.
+   */
+  toSymbol?: (pair: string) => string
   gracePeriodMs?: number
   baseBackoffMs?: number
   maxBackoffMs?: number
@@ -289,7 +299,7 @@ export class CcxtStreamHub {
         key,
         channel: request.channel,
         pair,
-        symbol: toCcxtSymbol(pair),
+        symbol: (this.opts.toSymbol ?? toCcxtSymbol)(pair),
         timeframe,
         callbacks: new Map(),
         buffer: request.channel === 'candles' ? new CandleBuffer() : null,

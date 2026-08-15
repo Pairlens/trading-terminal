@@ -24,7 +24,7 @@ import type {
 
 import { usePairlens } from '@/lib/pairlens-provider'
 import { getCountrySetting } from '@/lib/region-settings'
-import { predictionPluginsFor } from '@/lib/predictions/venue-plugins'
+import { predictionPluginsFor } from '@/lib/venues/venue-plugins'
 
 /** Events fetched per venue per browse. */
 const EVENTS_LIMIT = 30

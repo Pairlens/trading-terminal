@@ -25,7 +25,7 @@ import { useMarketData } from '@/lib/market-data-provider'
 import { useCredentialsStore } from '@/stores/credentials-store'
 import { useWalletsStore } from '@/stores/wallets-store'
 import { getCountrySetting } from '@/lib/region-settings'
-import { predictionPluginsFor } from '@/lib/predictions/venue-plugins'
+import { predictionPluginsFor } from '@/lib/venues/venue-plugins'
 
 export type PredictionAccount = {
   /** Venue market id. */

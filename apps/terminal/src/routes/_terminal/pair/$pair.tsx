@@ -31,6 +31,7 @@ import { PAIR_WORKSPACE } from '@/lib/layout/workspaces/pair-workspace'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { lookupPredictionOutcome } from '@/stores/prediction-directory-store'
+import { isPerpPairKey } from '@/lib/pairs'
 
 export const Route = createFileRoute('/_terminal/pair/$pair')({
   component: PairTerminalPage,
@@ -55,6 +56,19 @@ const marketsSupportPredictions = (
   markets
     .find((m) => m.value === marketId)
     ?.assetClasses.includes('prediction') ?? false
+
+/** A venue that lists ONLY perpetual contracts. Like a prediction venue, it
+ *  reads as "not stocks" in the binary below, which would leave a spot pair
+ *  charting against a venue that has no two-segment markets at all. */
+const isPerpOnlyOption = (m: MarketOption) =>
+  m.assetClasses.includes('crypto-perp') &&
+  !m.assetClasses.includes('crypto-spot') &&
+  !m.assetClasses.includes('stocks')
+
+const marketIsPerpOnly = (markets: Array<MarketOption>, marketId: string) => {
+  const option = markets.find((m) => m.value === marketId)
+  return option ? isPerpOnlyOption(option) : false
+}
 
 function PairTerminalPage() {
   const { t } = useTranslation()
@@ -185,6 +199,38 @@ function PairTerminalContent({
     })
   }, [pairKey, market, assetClass])
   useEffect(() => {
+    // Perpetuals route off the KEY, before the assetClassMap is consulted at
+    // all. A three-segment key is a contract by construction — no catalogue
+    // entry or map write is needed to know it — so a cold deep link to
+    // BTC-USDT-USDT lands on a futures venue even when nothing ever recorded
+    // its class. Reachability, not just class: a desktop-only futures venue in
+    // a browser is a dead end, so the browser build prefers one it can stream.
+    // Mirrors the mobile shell's use-mobile-route-sync block. A registered
+    // prediction outcome is never a contract, whatever its key looks like —
+    // the directory pin is explicit and wins over shape inference.
+    if (isPerpPairKey(pairKey) && !lookupPredictionOutcome(pairKey)) {
+      const current = markets.find((m) => m.value === market)
+      const onFuturesVenue =
+        current?.assetClasses.includes('crypto-perp') ?? false
+      if (onFuturesVenue && !current?.desktopOnly) return
+      const target =
+        markets.find(
+          (m) => !m.desktopOnly && m.assetClasses.includes('crypto-perp'),
+        ) ?? markets.find((m) => m.assetClasses.includes('crypto-perp'))
+      if (target && target.value !== market) setMarket(target.value)
+      return
+    }
+    // The inverse needs no class entry either: a non-perp key on a venue that
+    // lists only contracts is a dead chart whatever the pair turns out to be,
+    // so hop to a venue with spot markets before the class-driven binary
+    // (which is gated on a recorded class) gets its say.
+    if (!isPerpPairKey(pairKey) && marketIsPerpOnly(markets, market)) {
+      const target = markets.find(
+        (m) => !m.assetClasses.includes('prediction') && !isPerpOnlyOption(m),
+      )
+      if (target && target.value !== market) setMarket(target.value)
+      return
+    }
     if (!assetClass) return
     // Predictions are their own venue set, not the other half of a binary: an
     // outcome key streams from Kalshi or Polymarket and from nowhere else, and
@@ -235,12 +281,19 @@ function PairTerminalContent({
     const wantStocks = assetClass === 'stocks'
     // A prediction venue reads as "not stocks", so the binary alone would
     // leave a crypto pair sitting on Kalshi. Leaving one is always wrong for
-    // a non-prediction pair, whichever side of the binary it wants.
-    if (!marketsSupportPredictions(markets, market) && wantStocks === current)
+    // a non-prediction pair, whichever side of the binary it wants. The same
+    // holds for a perp-only venue: it has no two-segment markets, so a spot
+    // pair left there is a dead chart.
+    if (
+      !marketsSupportPredictions(markets, market) &&
+      !marketIsPerpOnly(markets, market) &&
+      wantStocks === current
+    )
       return
     const target = markets.find(
       (m) =>
         !m.assetClasses.includes('prediction') &&
+        !isPerpOnlyOption(m) &&
         m.assetClasses.includes('stocks') === wantStocks,
     )
     if (target) setMarket(target.value)

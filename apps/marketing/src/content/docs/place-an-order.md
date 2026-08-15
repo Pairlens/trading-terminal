@@ -6,7 +6,7 @@ parent: trading
 order: 2
 eyebrow: For traders
 updated: AUG 2026
-readTime: 6 min read
+readTime: 7 min read
 ---
 
 The Trade Entry panel is the order ticket. Add it to any workspace, or use a
@@ -123,6 +123,17 @@ button says what the order can cost you. When the question has exactly one other
 side, a switch beside it flips the whole ticket to that outcome. There is no
 Workflow tab, because neither prediction venue has trigger orders, and Kalshi
 offers Limit only. See [prediction markets](/docs/prediction-markets).
+
+## Perpetual futures
+
+For a perpetual the ticket grows a leverage row and a reduce-only toggle, and
+sizes in contracts rather than in the base asset. Under the size field it shows
+what the count is worth in the base asset on venues whose contract is a
+fraction of it, and above the submit button it shows the notional and an
+estimated liquidation price. Leverage is applied per order and never remembered
+between sessions. Reduce-only shrinks an open position and refuses to open the
+opposite side, which is what makes closing safe. See
+[perpetual futures](/docs/cex-futures).
 
 ## Watching the order
 

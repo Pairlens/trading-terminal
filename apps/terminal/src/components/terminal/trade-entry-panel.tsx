@@ -45,7 +45,23 @@ import type { OrderExecutor } from '@pairlens/workflow-engine/types'
 import type { BalanceRecord } from '@/stores/balances-store'
 import { track } from '@/lib/analytics-events'
 import { splitPairAssets } from '@/lib/pairs'
-import { formatPredictionPrice } from '@/lib/format-price'
+import {
+  formatAmount,
+  formatPredictionPrice,
+  formatPrice,
+} from '@/lib/format-price'
+import { useContractSize } from '@/lib/futures/contract-size'
+import {
+  balanceScopeFor,
+  credentialsForMarket,
+} from '@/lib/venues/credential-alias'
+import {
+  clampLeverage,
+  contractsToBase,
+  estimateLiquidationPrice,
+  leveragePresets,
+  perpNotional,
+} from '@/lib/futures/ticket-math'
 import {
   centsToPrice,
   normalizeContracts,
@@ -441,12 +457,28 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   // connector's declared asset classes rather than a venue allowlist, so a
   // second stock broker inherits the session controls for free.
   const isEquities = marketInfo?.assetClasses?.includes('stocks') === true
+  // Perpetual futures. Independent of every flag above: a perp venue is a CEX
+  // that takes API keys (so `usesWallet` stays false and the credential path
+  // is unchanged), it is not a swap, not an event contract and not an equity.
+  // What it adds is leverage, a reduce-only intent, and a size denominated in
+  // contracts rather than in the base asset.
+  const isPerp = marketInfo?.assetClasses.includes('crypto-perp') ?? false
+  const maxLeverage = marketInfo?.maxLeverage ?? 1
 
   // Derived here rather than beside the other pair state above, because a
   // stock's key is the bare ticker and its quote can only come from the venue.
   const { base: baseAsset, quote: quoteAsset } = splitPairAssets(pairKey, {
     equity: isEquities,
   })
+
+  // Base units per contract, for the base-equivalent hint and the risk guard.
+  // `known` is what decides whether the hint renders at all: on a venue whose
+  // contract IS one unit of the base, restating the count would be noise.
+  const { contractSize, known: contractSizeKnown } = useContractSize(
+    market,
+    pairKey,
+  )
+  const showBaseEquivalent = isPerp && contractSizeKnown && contractSize !== 1
 
   const [presets, setPresets] = usePersistedState<Array<number>>(
     `trade:presets:${quoteAsset}`,
@@ -496,7 +528,11 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     wfLoad()
   }, [load, loadWallets, wfLoad])
 
-  const marketCreds = credentials.filter((c) => c.market === market)
+  // Alias-resolved: a futures venue signs with its spot sibling's key, so a
+  // raw `c.market === market` filter finds nothing for `binance-futures` no
+  // matter how many Binance keys are stored, and the connect gate below then
+  // blurs a ticket for an account that is already connected.
+  const marketCreds = credentialsForMarket(credentials, market)
   const selectedCred =
     wallet && !usesWallet
       ? marketCreds.find((c) => c.id === wallet.walletId)
@@ -529,12 +565,16 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
 
   // Every wallet venue's balances are recorded under the namespaced key, not
   // the bare wallet id — the same wallet holds independent balances per venue.
+  // An aliased venue is the same shape: one exchange key holds a spot balance
+  // and a futures margin balance, and they are not the same number.
   const balanceMap = useBalanceMap(
     usesWallet
       ? wallet
         ? dexBalanceCredentialKey(wallet.walletId, market)
         : undefined
-      : wallet?.walletId,
+      : wallet
+        ? balanceScopeFor(wallet.walletId, market)
+        : undefined,
   )
 
   const [slippageBps, setSlippageBps] = usePersistedState<number>(
@@ -552,6 +592,30 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   useEffect(() => {
     if (!extendedHoursEligible && extendedHours) setExtendedHours(false)
   }, [extendedHoursEligible, extendedHours])
+
+  // Leverage and reduce-only. Deliberately NOT persisted, for the reason
+  // `extendedHours` is not: 25x left over from last night is a decision the
+  // trader stopped thinking about, and a reduce-only flag carried onto a
+  // market where nothing is open turns the next order into a rejection.
+  const [leverage, setLeverage] = useState(1)
+  // Whether the user MOVED the selector on this market and pair. Leverage is
+  // account state at the venue, not an order field: sending the ticket's
+  // default 1x would quietly rewrite a 20x symbol the trader set up elsewhere,
+  // and would do it on orders that are only closing a position. So it rides
+  // only on a deliberate choice, and never on a reduce-only order.
+  const [leverageDirty, setLeverageDirty] = useState(false)
+  const [reduceOnly, setReduceOnly] = useState(false)
+  useEffect(() => {
+    // Both reset on every venue or contract change. The clamp is separate
+    // from the reset because a venue switch can also LOWER the ceiling, and
+    // 100x silently surviving onto a 20x venue is a rejection at submit.
+    setLeverage((current) => clampLeverage(current, maxLeverage))
+  }, [maxLeverage])
+  useEffect(() => {
+    setLeverage(1)
+    setLeverageDirty(false)
+    setReduceOnly(false)
+  }, [market, pairKey])
 
   // A price is denominated in the instrument that is on screen. Moving to a
   // prediction outcome must therefore drop whatever the previous pair left in
@@ -598,10 +662,21 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   }, [isDex, selectedWalletId, market, pairKey, refreshWalletBalances])
 
   // Portfolio value + per-asset USD prices, for the maxPositionSize guard.
-  const { totalValueUsd, priceUsd } = usePortfolioValue(selectedCred?.id)
+  // Venue-scoped: a futures connector records its margin balances under its own
+  // namespace, so the bare credential id measures a futures order against a
+  // portfolio of zero — and a zero denominator turns the cap off entirely.
+  const { totalValueUsd, priceUsd } = usePortfolioValue(
+    selectedCred ? balanceScopeFor(selectedCred.id, market) : undefined,
+  )
 
+  // The connector's display name as the middle rung, matching the phone
+  // ticket. `CREDENTIAL_SCHEMAS` is keyed on the CREDENTIAL market, so a venue
+  // that borrows another's key has no entry of its own and the label fell
+  // straight through to the shouted market id, 'BINANCE-FUTURES'.
   const exchangeLabel =
-    CREDENTIAL_SCHEMAS[market]?.label ?? market.toUpperCase()
+    CREDENTIAL_SCHEMAS[market]?.label ??
+    marketInfo?.displayName ??
+    market.toUpperCase()
   const showRegionHint =
     !regionHintDismissed && marketCreds.length > 0 && !isRegionExplicitlySet()
 
@@ -638,6 +713,44 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     : null
   const maxLoss = isPrediction
     ? predictionMaxLoss({ contracts, price: predictionPrice, side })
+    : null
+
+  // ── Perp order figures ──
+  // The reference price is the limit price when there is one and the live last
+  // price otherwise, exactly as the risk guard picks it — so the notional this
+  // ticket shows is the notional the guard will measure.
+  //
+  // A market-order ticket reads that live price from a SAMPLE, not from the
+  // ref. The ref is written by the stream without waking this component, and
+  // on a desk whose holdings are all stablecoins nothing else re-renders the
+  // form — the notional and the liquidation estimate sat frozen at whatever
+  // the price was when the ticket last happened to repaint. `PerpPriceSampler`
+  // is the bounded fix, and it only mounts where the figure actually moves.
+  const [perpSample, setPerpSample] = useState<number | null>(null)
+  const perpSampling = isPerp && orderType === 'market'
+  const perpReferencePrice = !isPerp
+    ? null
+    : orderType === 'limit'
+      ? Number(limitPrice) || null
+      : (perpSample ?? pricesRef.current.latestPrice ?? null)
+  const perpContracts = isPerp ? Number(size) : 0
+  const perpBaseEquivalent =
+    showBaseEquivalent && perpContracts > 0
+      ? contractsToBase(perpContracts, contractSize)
+      : null
+  const perpNotionalValue = isPerp
+    ? perpNotional({
+        contracts: perpContracts,
+        contractSize,
+        price: perpReferencePrice,
+      })
+    : null
+  const perpLiquidation = isPerp
+    ? estimateLiquidationPrice({
+        entryPrice: perpReferencePrice,
+        leverage,
+        side,
+      })
     : null
 
   const canSubmit =
@@ -1071,6 +1184,10 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               size: Number(size),
               quoteDenominated: sizeCcy === 'quote',
               price: refPrice,
+              // Only when the venue actually told us. An unknown contract size
+              // passed as 1 is a claim, and on a 0.001 BTC contract it is a
+              // thousandfold overstatement — the guard resolves it itself.
+              ...(isPerp && contractSizeKnown ? { contractSize } : {}),
             },
             priceUsd,
           )
@@ -1106,6 +1223,14 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             orderSize = (Number(size) / Number(limitPrice)).toFixed(8)
           }
         }
+        // A perp size is a CONTRACT COUNT, which is what ccxt's unified
+        // interface takes for contract markets. There is no second leg to
+        // denominate it in, so `tgtCcy` — which is the spot venues' base/quote
+        // switch — must never ride along.
+        if (isPerp) {
+          orderSize = String(size)
+          tgtCcy = undefined
+        }
 
         const result = await placeOrder({
           market,
@@ -1119,6 +1244,14 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           ...(extendedHours && extendedHoursEligible
             ? { extendedHours: true }
             : {}),
+          // Leverage is applied per order (the connector sets it on the symbol
+          // first, idempotently), which is why it rides ONLY when the user
+          // moved the selector and never on a reduce-only order: it is account
+          // state at the venue, and a close should not rewrite it. Matches the
+          // positions pane, which closes without leverage for the same reason.
+          ...(isPerp && leverageDirty && !reduceOnly ? { leverage } : {}),
+          ...(isPerp && contractSizeKnown ? { contractSize } : {}),
+          ...(isPerp && reduceOnly ? { reduceOnly: true } : {}),
         })
 
         if (result.success) {
@@ -1402,17 +1535,64 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </div>
         )}
 
+        {/* Leverage. Presets rather than a free field: the venue accepts
+            integers within its own ceiling, and the row always ends at that
+            ceiling so the top of the range is visible rather than implied.
+            Never persisted — see the state declaration. */}
+        {isPerp && maxLeverage > 1 && (
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
+                {t('terminal.trade.leverage')}
+              </span>
+              <span className="font-mono text-[10px] tabular-nums text-muted-foreground">
+                {leverage}x
+              </span>
+            </div>
+            <div className="flex gap-1">
+              {leveragePresets(maxLeverage).map((lev) => (
+                <button
+                  key={lev}
+                  type="button"
+                  className={cn(
+                    'flex-1 rounded-md border px-1 py-0.5 font-mono text-[11.5px] tabular-nums transition-colors',
+                    leverage === lev
+                      ? 'border-primary text-foreground'
+                      : 'border-border text-muted-foreground hover:text-foreground',
+                  )}
+                  style={
+                    leverage === lev
+                      ? {
+                          backgroundColor:
+                            'color-mix(in oklch, var(--primary) 14%, transparent)',
+                        }
+                      : undefined
+                  }
+                  onClick={() => {
+                    setLeverage(lev)
+                    setLeverageDirty(true)
+                  }}
+                >
+                  {lev}x
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Amount input. A prediction ticket sizes in whole contracts, so it
             gets a stepper and no base/quote switch — there is no second leg to
             denominate in. */}
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-              {isPrediction
+              {isPrediction || isPerp
                 ? t('terminal.trade.contracts')
                 : t('terminal.trade.amount')}
             </span>
-            {!isPrediction && (
+            {/* No base/quote switch on a contract ticket: there is no second
+                leg to denominate the size in. */}
+            {!isPrediction && !isPerp && (
               <button
                 type="button"
                 onClick={() =>
@@ -1473,6 +1653,15 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               }}
             />
           )}
+          {/* What the contracts are worth in the base asset. Rendered only
+              where the venue's contract is NOT one unit of the base, which is
+              the only place the count is ambiguous — KuCoin's XBTUSDTM is
+              0.001 BTC, so "10" is 0.01 BTC and reads as ten without it. */}
+          {perpBaseEquivalent !== null && (
+            <div className="font-mono text-[10px] tabular-nums text-muted-foreground">
+              ≈ {formatAmount(perpBaseEquivalent)} {baseAsset}
+            </div>
+          )}
         </div>
 
         {/* Contract presets — counts, not amounts of money. */}
@@ -1503,45 +1692,50 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </div>
         )}
 
-        {/* Preset row (buy mode or quote-denominated sell) */}
-        {!isPrediction && (side === 'buy' || sizeCcy === 'quote') && (
-          <div className="flex items-center gap-1">
-            {presets.map((p) => (
+        {/* Preset row (buy mode or quote-denominated sell). Not for perps: the
+            presets are amounts of the quote currency, and a perp ticket sizes
+            in contracts, where "100" would mean a hundred contracts. */}
+        {!isPrediction &&
+          !isPerp &&
+          (side === 'buy' || sizeCcy === 'quote') && (
+            <div className="flex items-center gap-1">
+              {presets.map((p) => (
+                <button
+                  key={p}
+                  type="button"
+                  className={cn(
+                    'flex-1 rounded-md border px-1 py-1 font-mono text-[11.5px] tabular-nums transition-colors',
+                    size === String(p)
+                      ? 'border-primary text-foreground'
+                      : 'border-border bg-muted/30 text-muted-foreground hover:text-foreground',
+                  )}
+                  style={
+                    size === String(p)
+                      ? {
+                          backgroundColor:
+                            'color-mix(in oklch, var(--primary) 14%, transparent)',
+                        }
+                      : undefined
+                  }
+                  onClick={() => setSize(String(p))}
+                >
+                  {p}
+                </button>
+              ))}
               <button
-                key={p}
                 type="button"
-                className={cn(
-                  'flex-1 rounded-md border px-1 py-1 font-mono text-[11.5px] tabular-nums transition-colors',
-                  size === String(p)
-                    ? 'border-primary text-foreground'
-                    : 'border-border bg-muted/30 text-muted-foreground hover:text-foreground',
-                )}
-                style={
-                  size === String(p)
-                    ? {
-                        backgroundColor:
-                          'color-mix(in oklch, var(--primary) 14%, transparent)',
-                      }
-                    : undefined
-                }
-                onClick={() => setSize(String(p))}
+                className="ml-0.5 text-muted-foreground hover:text-foreground"
+                onClick={() => setPresetsConfigOpen(true)}
               >
-                {p}
+                <Settings2 className="size-3" />
               </button>
-            ))}
-            <button
-              type="button"
-              className="ml-0.5 text-muted-foreground hover:text-foreground"
-              onClick={() => setPresetsConfigOpen(true)}
-            >
-              <Settings2 className="size-3" />
-            </button>
-          </div>
-        )}
+            </div>
+          )}
 
-        {/* Sell % slider. Not for predictions: a sell is opening the opposite
-            exposure, not liquidating a base-asset balance. */}
-        {side === 'sell' && !isPrediction && (
+        {/* Sell % slider. Not for predictions or perps: on both, a sell is
+            opening the opposite exposure, not liquidating a base-asset
+            balance — there is no base balance to take a percentage of. */}
+        {side === 'sell' && !isPrediction && !isPerp && (
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
@@ -1672,6 +1866,61 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </div>
         )}
 
+        {/* Reduce-only. The intent flag that makes a closing order safe: the
+            venue shrinks the position and refuses to flip it, so a size larger
+            than what is open cannot open the opposite side by accident. */}
+        {isPerp && (
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <label
+                htmlFor="trade-reduce-only"
+                className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground"
+              >
+                {t('terminal.trade.reduceOnly')}
+              </label>
+              <p className="mt-0.5 text-[10.5px] leading-snug text-muted-foreground/70">
+                {t('terminal.trade.reduceOnlyHint')}
+              </p>
+            </div>
+            <Switch
+              id="trade-reduce-only"
+              aria-label={t('terminal.trade.reduceOnly')}
+              checked={reduceOnly}
+              onCheckedChange={setReduceOnly}
+              className="mt-0.5 shrink-0"
+            />
+          </div>
+        )}
+
+        {/* What this order commits and where it would die. The liquidation
+            level is explicitly an estimate: the real one depends on the whole
+            margin balance, the venue's maintenance tier and funding paid since
+            entry, none of which exist before the position does. */}
+        {perpSampling && <PerpPriceSampler onSample={setPerpSample} />}
+
+        {isPerp && (
+          <div className="flex flex-col gap-0.5 font-mono text-[10px] tabular-nums text-muted-foreground">
+            <div className="flex items-center justify-between">
+              <span className="uppercase tracking-[.16em]">
+                {t('terminal.trade.notional')}
+              </span>
+              <span className="text-foreground">
+                {perpNotionalValue === null
+                  ? '—'
+                  : `${perpNotionalValue.toFixed(2)} ${quoteAsset}`}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="uppercase tracking-[.16em]">
+                {t('terminal.trade.estLiquidation')}
+              </span>
+              <span className={perpLiquidation === null ? '' : 'text-down'}>
+                {perpLiquidation === null ? '—' : formatPrice(perpLiquidation)}
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* What this order can lose. A bought contract risks the premium; a
             sold one risks the rest of the dollar it may have to pay out. */}
         {isPrediction && (
@@ -1756,6 +2005,61 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
       />
     </div>
   )
+})
+
+// ── Perp price sampler ────────────────────────────────────────────────
+//
+// Renders null, subscribes to the two per-tick contexts, and wakes its parent
+// at most once a second. Same shape as the phone ticket's `LivePriceProbe`
+// (which cannot be imported: `src/mobile/` is a one-way dependency), and same
+// reason for existing — the tick reaches this function, not the 900-line form
+// whose fields the user is typing into.
+//
+// Mounted only while a perp market order is on screen. A limit ticket reads
+// its own typed price, and a spot ticket has no figure that moves on its own.
+const PERP_SAMPLE_MS = 1000
+
+const PerpPriceSampler = memo(function PerpPriceSampler({
+  onSample,
+}: {
+  onSample: (price: number | null) => void
+}) {
+  const ticker = useOptionalTickerData()
+  const candleData = useOptionalCandleData()
+  const latest =
+    ticker?.lastTradePrice ??
+    ticker?.midPrice ??
+    candleData?.latestCandle?.close ??
+    null
+
+  const latestRef = useRef(latest)
+  latestRef.current = latest
+  const lastEmit = useRef(0)
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    const now = Date.now()
+    const due = lastEmit.current + PERP_SAMPLE_MS
+    if (now >= due) {
+      lastEmit.current = now
+      onSample(latestRef.current)
+      return
+    }
+    if (timer.current) return
+    timer.current = setTimeout(() => {
+      timer.current = null
+      lastEmit.current = Date.now()
+      onSample(latestRef.current)
+    }, due - now)
+  })
+
+  useEffect(() => {
+    return () => {
+      if (timer.current) clearTimeout(timer.current)
+    }
+  }, [])
+
+  return null
 })
 
 // ── Limit price field ─────────────────────────────────────────────────

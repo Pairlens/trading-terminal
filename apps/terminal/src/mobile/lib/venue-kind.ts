@@ -15,7 +15,7 @@
  */
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 
-export type VenueKind = 'cex' | 'dex' | 'equities' | 'prediction'
+export type VenueKind = 'cex' | 'dex' | 'equities' | 'prediction' | 'futures'
 
 /** i18n key per kind. Static keys — the catalog audit cannot follow a template. */
 export const VENUE_KIND_KEY: Record<VenueKind, string> = {
@@ -23,6 +23,7 @@ export const VENUE_KIND_KEY: Record<VenueKind, string> = {
   dex: 'mobile.pickers.onChain',
   equities: 'mobile.pickers.equities',
   prediction: 'mobile.pickers.predictions',
+  futures: 'mobile.pickers.futures',
 }
 
 /**
@@ -32,14 +33,21 @@ export const VENUE_KIND_KEY: Record<VenueKind, string> = {
  * Jupiter. `walletChain` answers "what unlocks trading here", never "what is
  * this venue".
  *
- * After that: equities is whatever declares the stocks asset class, a DEX is
- * whatever else needs a wallet, everything else is a centralized spot venue.
- * An unknown market reads as `cex`, which is what most connectors are.
+ * After that: equities is whatever declares the stocks asset class, futures is
+ * whatever declares the perp one, a DEX is whatever else needs a wallet, and
+ * everything else is a centralized spot venue. An unknown market reads as
+ * `cex`, which is what most connectors are.
+ *
+ * Futures sits above the wallet test for the same reason predictions does, and
+ * above the spot fallback because a perp venue IS a centralized exchange —
+ * "Binance Futures spot · trading" is the line the fallback would have
+ * written.
  */
 export function venueKindFor(info: MarketAdapterInfo | undefined): VenueKind {
   if (!info) return 'cex'
   if (info.assetClasses.includes('prediction')) return 'prediction'
   if (info.assetClasses.includes('stocks')) return 'equities'
+  if (info.assetClasses.includes('crypto-perp')) return 'futures'
   if (info.walletChain) return 'dex'
   return 'cex'
 }

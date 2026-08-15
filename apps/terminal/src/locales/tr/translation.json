@@ -2188,7 +2188,8 @@
     "recentTickers": "Son Görülen Pariteler",
     "empty": "Boş",
     "events": "Olaylar",
-    "predictionPositions": "Tahmin pozisyonları"
+    "predictionPositions": "Tahmin pozisyonları",
+    "futuresPositions": "Vadeli pozisyonlar"
   },
   "paneDescriptions": {
     "markets": "Borsalar genelindeki tüm mevcut işlem paritelerine göz at",
@@ -2216,7 +2217,8 @@
     "liquidityHeatmap": "Zaman içinde fiyat seviyeleri genelinde derinliği gösteren emir defteri likidite ısı haritası",
     "recentTickers": "Hızlı geçiş için canlı fiyatlarla son görüntülenen pariteler",
     "events": "Tahmin piyasası olaylarına göz atın ve bir sonucun grafiğini açın",
-    "predictionPositions": "Elinizdeki kontratlar, maliyetleri ve ne zaman sonuçlanacakları"
+    "predictionPositions": "Elinizdeki kontratlar, maliyetleri ve ne zaman sonuçlanacakları",
+    "futuresPositions": "Açık süresiz pozisyonlar, işaret fiyatı ve likidasyon seviyesi"
   },
   "multiPrice": {
     "venue": "Borsa",
@@ -2806,6 +2808,22 @@
       "pairlens-predictions": {
         "title": "Pairlens Tahminler",
         "description": "Tahmin piyasaları için olay tarayıcısı ve açık kontrat pozisyonları"
+      },
+      "binance-futures-market-connector": {
+        "title": "Binance Futures Piyasa Bağlayıcısı",
+        "description": "Binance Futures üzerinde süresiz vadeli işlemler: kaldıraçlı uzun ve kısa pozisyonlar, USDT ile takas"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "KuCoin Futures Piyasa Bağlayıcısı",
+        "description": "KuCoin Futures üzerinde süresiz vadeli işlemler: kaldıraçlı uzun ve kısa pozisyonlar, USDT ile takas"
+      },
+      "kraken-futures-market-connector": {
+        "title": "Kraken Futures Piyasa Bağlayıcısı",
+        "description": "Kraken Futures üzerinde süresiz vadeli işlemler: kaldıraçlı uzun ve kısa pozisyonlar, USD ile takas"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens Vadeli",
+        "description": "Giriş, işaret fiyatı ve likidasyon seviyesiyle açık süresiz pozisyonlar"
       }
     },
     "families": {
@@ -2840,6 +2858,10 @@
       "themes": {
         "label": "Temalar",
         "description": "Arayüz ve grafik paleti için görsel temalar."
+      },
+      "cexFutures": {
+        "label": "Kripto vadeli işlemler",
+        "description": "Kaldıraçlı kripto pozisyonları için sürekli vadeli işlem borsaları."
       }
     },
     "familyToggleAria": "Tüm {{family}} eklentilerini etkinleştir veya devre dışı bırak",
@@ -2960,7 +2982,12 @@
       "thisOutcome": "Bu sonuç",
       "decreaseContracts": "Bir kontrat azalt",
       "increaseContracts": "Bir kontrat artır",
-      "priceCentsRange": "0¢ ile 100¢ arasında bir fiyat girin"
+      "priceCentsRange": "0¢ ile 100¢ arasında bir fiyat girin",
+      "leverage": "Kaldıraç",
+      "reduceOnly": "Yalnızca azalt",
+      "reduceOnlyHint": "Açık pozisyonu küçültür, ters yönde pozisyon açmaz.",
+      "notional": "Nominal",
+      "estLiquidation": "Tahmini likidasyon"
     },
     "status": {
       "connecting": "Bağlanıyor…",
@@ -4034,7 +4061,8 @@
       "all": "Tümü",
       "crypto": "Kripto",
       "stocks": "Hisseler",
-      "prediction": "Tahminler"
+      "prediction": "Tahminler",
+      "crypto-perp": "Vadeli"
     },
     "category": {
       "all": "Tümü",
@@ -4047,7 +4075,9 @@
       "infrastructure": "Altyapı"
     },
     "predictionsEmptyTitle": "Tahmin sonuçları Olaylar panelinde yer alır",
-    "predictionsEmptyBody": "Sonuçlar her gün listelenip sonuçlanır; bu yüzden bir katalogdan değil, platformun kendi panosundan taranır."
+    "predictionsEmptyBody": "Sonuçlar her gün listelenip sonuçlanır; bu yüzden bir katalogdan değil, platformun kendi panosundan taranır.",
+    "futuresEmptyTitle": "Süresiz sözleşmelere göz atmak için bir vadeli işlem borsası bağla",
+    "futuresEmptyBody": "Sözleşme listeleri her borsanın kendi piyasa tablosundan gelir, bu yüzden o borsaya ulaşıldığında görünür."
   },
   "fearGreed": {
     "title": "Korku ve Açgözlülük",
@@ -4910,7 +4940,8 @@
       "auto": "Otomatik",
       "bookLoading": "Defter bekleniyor…",
       "pressureBuy": "A %{{pct}}",
-      "pressureSell": "%{{pct}} S"
+      "pressureSell": "%{{pct}} S",
+      "baseEquivalent": "Dayanak varlık karşılığı"
     },
     "chart": {
       "pinned": "Sabitlendi",
@@ -5024,7 +5055,9 @@
       "desktopOnlyVenues": "Masaüstü uygulaması gerekiyor",
       "desktopOnlyVenue": "Yalnızca masaüstü",
       "predictions": "tahmin",
-      "filterPredictions": "Tahminler"
+      "filterPredictions": "Tahminler",
+      "futures": "vadeli",
+      "filterFutures": "Vadeli"
     }
   },
   "events": {
@@ -5058,5 +5091,28 @@
     "colCost": "Maliyet",
     "colResolves": "Sonuçlanma",
     "resolved": "Sonuçlandı"
+  },
+  "futuresPositions": {
+    "connect": "Hesap bağla",
+    "noAccountsTitle": "Bağlı vadeli işlem hesabı yok",
+    "noAccountsBody": "Açık pozisyonlarını görmek için Binance, KuCoin veya Kraken Futures API anahtarlarını ekle.",
+    "loading": "Pozisyonlar yükleniyor…",
+    "emptyTitle": "Açık pozisyon yok",
+    "emptyBody": "Bir emir gerçekleştiği anda pozisyonlar burada görünür.",
+    "colContract": "Sözleşme",
+    "colSide": "Yön",
+    "colSize": "Miktar",
+    "colEntry": "Giriş",
+    "colMark": "İşaret",
+    "colLiquidation": "Likid.",
+    "colLeverage": "Kaldıraç",
+    "colPnl": "K/Z",
+    "sideLong": "Uzun",
+    "sideShort": "Kısa",
+    "close": "Kapat",
+    "closeTitle": "Bu pozisyon kapatılsın mı?",
+    "closeBody": "{{venue}} üzerinde {{pair}} için {{contracts}} sözleşmelik yalnızca-azalt piyasa emri verir.",
+    "closeConfirm": "Pozisyonu kapat",
+    "closeSubmitted": "Kapatma emri gönderildi"
   }
 }
