@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { normalizeInstrumentClass } from '@pairlens/shared/market-ref'
 import type {
   LayoutCell,
   LayoutColumn,
@@ -14,6 +15,7 @@ import type {
   TraderType,
   WorkspaceTemplate,
 } from './types'
+import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import {
   FOURK_COMMAND_CENTER,
   LAPTOP_FOCUSED,
@@ -21,7 +23,11 @@ import {
   PRESET_ANALYSIS,
   PRESET_CHART_FOCUS,
   PRESET_DEFAULT,
+  PRESET_DEX_TERMINAL,
   PRESET_DUAL_CHARTS,
+  PRESET_EQUITIES_TERMINAL,
+  PRESET_PERPS_TERMINAL,
+  PRESET_PREDICTION_TERMINAL,
   PRESET_QUAD_CHARTS,
   PRESET_TRADING,
   PRESET_TRIPLE_CHARTS,
@@ -84,8 +90,10 @@ export const TRADER_TYPE_META: Record<
 
 export const ASSET_CLASSES: Array<AssetClass> = [
   'crypto-spot',
+  'crypto-perp',
   'dex',
   'equities',
+  'predictions',
   'multi-asset',
 ]
 
@@ -94,8 +102,10 @@ export const ASSET_CLASS_META: Record<
   { label: string; description: string }
 > = {
   'crypto-spot': { label: 'Crypto Spot', description: 'Centralised exchanges' },
+  'crypto-perp': { label: 'Perps', description: 'Perpetual futures' },
   dex: { label: 'DEX', description: 'On-chain / decentralised' },
   equities: { label: 'Equities', description: 'Stocks & ETFs' },
+  predictions: { label: 'Predictions', description: 'Event contracts' },
   'multi-asset': { label: 'Multi-Asset', description: 'Mixed markets' },
 }
 
@@ -225,11 +235,21 @@ function layoutPaneTypes(layout: TerminalLayout): Set<string> {
 /** Derive the variables a raw layout needs from the panes it contains. */
 function variablesForLayout(
   layout: TerminalLayout,
+  pairDefault?: { pairKey: string; market: string } | null,
 ): Array<WorkspaceVariableDefinition> {
   const types = layoutPaneTypes(layout)
   const vars: Array<WorkspaceVariableDefinition> = []
   if ([...types].some((t) => PANES_NEEDING_PAIR.has(t))) {
-    vars.push(pairVariable('BTC-USDT', 'okx'))
+    // `null` means "no default": a prediction contract expires, so seeding a
+    // copied workspace with one would chart a settled market next month.
+    vars.push(
+      pairDefault === null
+        ? { name: '$pair', label: 'Pair', type: 'pair' }
+        : pairVariable(
+            pairDefault?.pairKey ?? 'BTC-USDT',
+            pairDefault?.market ?? 'okx',
+          ),
+    )
   }
   if ([...types].some((t) => PANES_NEEDING_WALLET.has(t))) {
     vars.push(WALLET_VARIABLE)
@@ -703,12 +723,20 @@ const STANDALONE_TEMPLATES: Array<WorkspaceTemplate> = [
 // bound to the derived variables. `author`/`variables` are filled in for each.
 
 function presetTemplate(
-  input: Omit<WorkspaceTemplate, 'author' | 'variables'>,
+  input: Omit<WorkspaceTemplate, 'author' | 'variables'> & {
+    /**
+     * Seed for the derived `$pair` variable, so a copy of a class-specific
+     * layout opens on its own asset class instead of BTC-USDT on OKX.
+     * `null` derives the variable with no default at all.
+     */
+    pairDefault?: { pairKey: string; market: string } | null
+  },
 ): WorkspaceTemplate {
+  const { pairDefault, ...rest } = input
   return {
     author: 'Pairlens',
-    ...input,
-    variables: variablesForLayout(input.layout),
+    ...rest,
+    variables: variablesForLayout(rest.layout, pairDefault),
   }
 }
 
@@ -832,6 +860,95 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
     },
     tags: ['analysis', 'research'],
     layout: PRESET_ANALYSIS,
+  }),
+  // ── Per-asset-class pair defaults ──
+  //
+  // One canonical layout per instrument class beyond spot. Each is the
+  // `defaultPreset` of its class's pair workspace (see
+  // `lib/layout/workspaces/pair-workspace.ts`) and the "Default" entry in
+  // that class's workspaces menu — `routePresets('pair', cls)` matches them
+  // through their asset-class facet.
+  presetTemplate({
+    id: 'template:perps-terminal',
+    name: 'Perps Terminal',
+    menuLabel: 'Default',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'TrendingUp',
+    tagline: 'The futures desk: positions with mark and liquidation.',
+    description:
+      'The default perpetual-futures layout: a large chart with the tape, open contracts (entry, mark, liquidation), and market data tabbed below it, an order book and leverage-aware ticket in the middle, and the AI Copilot on the right.',
+    facets: {
+      traderTypes: ['day-trader', 'scalper'],
+      assetClasses: ['crypto-perp'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['futures', 'perps', 'leverage'],
+    layout: PRESET_PERPS_TERMINAL,
+    pairDefault: { pairKey: 'BTC-USDT-USDT', market: 'binance-futures' },
+  }),
+  presetTemplate({
+    id: 'template:prediction-terminal',
+    name: 'Prediction Terminal',
+    menuLabel: 'Default',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Scale',
+    tagline: 'Chart the odds with the whole event beside them.',
+    description:
+      'The default prediction-market layout: a probability chart with the tape and your open contracts below it, the order book and ticket in the middle, and the event browser beside the AI Copilot, because the neighbouring outcomes are half the analysis.',
+    facets: {
+      traderTypes: ['news-trader', 'swing-trader'],
+      assetClasses: ['predictions'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['predictions', 'events', 'contracts'],
+    layout: PRESET_PREDICTION_TERMINAL,
+    pairDefault: null,
+  }),
+  presetTemplate({
+    id: 'template:dex-terminal',
+    name: 'DEX Terminal',
+    menuLabel: 'Default',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Flame',
+    tagline: 'On-chain trading without the fake order book.',
+    description:
+      'The default on-chain layout: a chart with pool stats and the tape below it, a swap ticket over your recent tickers for catching new listings, and the AI Copilot above the social feed. There is no order book column: pool-quoted depth is synthetic, so it is not shown.',
+    facets: {
+      traderTypes: ['dex-degen', 'day-trader'],
+      assetClasses: ['dex'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['dex', 'onchain', 'swap'],
+    layout: PRESET_DEX_TERMINAL,
+    pairDefault: { pairKey: 'SOL-USDC', market: 'jupiter' },
+  }),
+  presetTemplate({
+    id: 'template:equities-terminal',
+    name: 'Equities Terminal',
+    menuLabel: 'Default',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'BarChart3',
+    tagline: 'Stocks with the ticket over the symbol news wire.',
+    description:
+      'The default stock layout: a chart with the tape, positions, and fundamentals below it, the order ticket above the symbol news wire (catalysts move stocks the way flow moves crypto), and the AI Copilot on the right.',
+    facets: {
+      traderTypes: ['day-trader', 'position-investor'],
+      assetClasses: ['equities'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['equities', 'stocks', 'news'],
+    layout: PRESET_EQUITIES_TERMINAL,
+    pairDefault: { pairKey: 'AAPL', market: 'alpaca' },
+    requiredPlugins: [
+      {
+        pluginId: 'alpaca-market-connector',
+        reason: 'Streams US equities data and routes stock orders',
+      },
+    ],
   }),
   multiChartPreset({
     id: 'template:dual-charts',
@@ -1084,19 +1201,53 @@ export const BUILTIN_WORKSPACE_TEMPLATES: Array<WorkspaceTemplate> = [
 export type RoutePreset = { label: string; layout: TerminalLayout }
 
 /**
+ * Whether a template is built for the given instrument class. Facet values
+ * and class slugs are two vocabularies, so both sides go through
+ * `normalizeInstrumentClass` — a raw `includes()` here is the exact bug that
+ * once made every crypto facet silently match nothing. `multi-asset` is
+ * universal by definition.
+ */
+export function templateServesClass(
+  template: WorkspaceTemplate,
+  cls: InstrumentClass,
+): boolean {
+  return template.facets.assetClasses.some(
+    (a) => a === 'multi-asset' || normalizeInstrumentClass(a) === cls,
+  )
+}
+
+/**
+ * The store facet an instrument class browses under — the inverse of the
+ * `normalizeInstrumentClass` direction `templateServesClass` uses. Drives the
+ * pre-filtered "Browse Workspace Store" link in a class's workspaces menu.
+ */
+export const STORE_ASSET_CLASS_FOR: Record<InstrumentClass, AssetClass> = {
+  spot: 'crypto-spot',
+  perp: 'crypto-perp',
+  dex: 'dex',
+  stocks: 'equities',
+  prediction: 'predictions',
+}
+
+/**
  * In-place layout presets for a route's ⌘⇧L menu, derived from the catalog —
  * the store is the single source. Returns the raw (unbound) layout; on the
  * pair/home routes those bindings would be inert anyway (no variables provider),
  * so panes resolve against the route's active pair.
+ *
+ * Pass `cls` to tailor the menu to an asset class: only templates whose
+ * asset-class facet serves it (or `multi-asset`) are offered, so a
+ * prediction page never suggests a spot execution desk.
  */
 export function routePresets(
   context: TemplateContext,
+  cls?: InstrumentClass,
 ): Record<string, RoutePreset> {
   const out: Record<string, RoutePreset> = {}
   for (const t of BUILTIN_WORKSPACE_TEMPLATES) {
-    if ((t.context ?? 'standalone') === context && t.routeMenu) {
-      out[t.id] = { label: t.menuLabel ?? t.name, layout: t.layout }
-    }
+    if ((t.context ?? 'standalone') !== context || !t.routeMenu) continue
+    if (cls && !templateServesClass(t, cls)) continue
+    out[t.id] = { label: t.menuLabel ?? t.name, layout: t.layout }
   }
   return out
 }

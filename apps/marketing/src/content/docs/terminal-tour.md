@@ -45,8 +45,10 @@ Info, Data Log.
 **AI and research.** AI Lens, Research, Social, Symbol News.
 
 Drag a separator to resize. Use the pane menu to split, replace, or close.
-Panels marked as singletons can only appear once per workspace. Full details in
-[panels](/docs/panels), and the layout model in
+Panels marked as singletons can only appear once per workspace. The pair page
+keeps a separate layout per asset class, each with a default built for what it
+trades: rearranging your perps desk leaves your spot desk alone. Full details
+in [panels](/docs/panels), and the layout model in
 [workspaces](/docs/workspaces).
 
 ## The pair header

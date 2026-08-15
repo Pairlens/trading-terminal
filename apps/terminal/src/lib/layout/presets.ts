@@ -81,6 +81,310 @@ export const PRESET_DEFAULT: TerminalLayout = {
   ],
 }
 
+/**
+ * Perps Terminal — the default pair layout for the `perp` asset class. Same
+ * skeleton as PRESET_DEFAULT so a spot trader feels at home, but the data
+ * strip carries `futures-positions` (entry, mark, liquidation, per-venue
+ * contracts) instead of the spot positions pane, which reads nothing from a
+ * futures account.
+ */
+export const PRESET_PERPS_TERMINAL: TerminalLayout = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-left',
+      widthPercent: 55,
+      cells: [
+        {
+          id: 'cell-chart',
+          heightPercent: 71,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chart', type: 'chart' }],
+        },
+        {
+          id: 'cell-bottom',
+          heightPercent: 24,
+          activeTabIndex: 0,
+          panes: [
+            { id: 'pane-trades', type: 'trades' },
+            { id: 'pane-futures-positions', type: 'futures-positions' },
+            { id: 'pane-data-log', type: 'data-log' },
+            { id: 'pane-depth', type: 'depth' },
+            { id: 'pane-pair-info', type: 'pair-info' },
+          ],
+        },
+        {
+          id: 'cell-risk',
+          heightPercent: 5,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-risk', type: 'risk' }],
+        },
+      ],
+    },
+    {
+      id: 'col-market',
+      widthPercent: 21,
+      cells: [
+        {
+          id: 'cell-orderbook',
+          heightPercent: 52,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-orderbook', type: 'orderbook' }],
+        },
+        {
+          id: 'cell-trade',
+          heightPercent: 48,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
+        },
+      ],
+    },
+    {
+      id: 'col-copilot',
+      widthPercent: 24,
+      cells: [
+        {
+          id: 'cell-copilot',
+          heightPercent: 100,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-copilot', type: 'copilot' }],
+        },
+      ],
+    },
+  ],
+}
+
+/**
+ * Prediction Terminal — the default pair layout for the `prediction` asset
+ * class. The Events browser gets a real column: on a prediction market the
+ * question next door (the other outcomes of the same event, the adjacent
+ * strikes) is half the analysis, where a spot desk would show a copilot
+ * conversation. The data strip opens on the tape and carries
+ * `prediction-positions` (open contracts) instead of the spot positions pane.
+ */
+export const PRESET_PREDICTION_TERMINAL: TerminalLayout = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-left',
+      widthPercent: 52,
+      cells: [
+        {
+          id: 'cell-chart',
+          heightPercent: 68,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chart', type: 'chart' }],
+        },
+        {
+          id: 'cell-bottom',
+          heightPercent: 27,
+          activeTabIndex: 0,
+          panes: [
+            { id: 'pane-trades', type: 'trades' },
+            {
+              id: 'pane-prediction-positions',
+              type: 'prediction-positions',
+            },
+            { id: 'pane-data-log', type: 'data-log' },
+          ],
+        },
+        {
+          id: 'cell-risk',
+          heightPercent: 5,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-risk', type: 'risk' }],
+        },
+      ],
+    },
+    {
+      id: 'col-market',
+      widthPercent: 22,
+      cells: [
+        {
+          id: 'cell-orderbook',
+          heightPercent: 55,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-orderbook', type: 'orderbook' }],
+        },
+        {
+          id: 'cell-trade',
+          heightPercent: 45,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
+        },
+      ],
+    },
+    {
+      id: 'col-events',
+      widthPercent: 26,
+      cells: [
+        {
+          id: 'cell-events',
+          heightPercent: 58,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-events', type: 'events' }],
+        },
+        {
+          id: 'cell-copilot',
+          heightPercent: 42,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-copilot', type: 'copilot' }],
+        },
+      ],
+    },
+  ],
+}
+
+/**
+ * DEX Terminal — the default pair layout for the `dex` asset class. No order
+ * book column: DEX data providers synthesize bid/ask from pool state, so a
+ * book pane would render fabricated depth. Pair Info leads the data strip
+ * (pool stats always stream from the data providers, while the tape depends
+ * on the venue), the swap ticket pairs with Recent Tickers for new listings,
+ * and the social feed rides next to the copilot.
+ */
+export const PRESET_DEX_TERMINAL: TerminalLayout = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-left',
+      widthPercent: 56,
+      cells: [
+        {
+          id: 'cell-chart',
+          heightPercent: 70,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chart', type: 'chart' }],
+        },
+        {
+          id: 'cell-bottom',
+          heightPercent: 25,
+          activeTabIndex: 0,
+          panes: [
+            { id: 'pane-pair-info', type: 'pair-info' },
+            { id: 'pane-trades', type: 'trades' },
+            { id: 'pane-data-log', type: 'data-log' },
+          ],
+        },
+        {
+          id: 'cell-risk',
+          heightPercent: 5,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-risk', type: 'risk' }],
+        },
+      ],
+    },
+    {
+      id: 'col-swap',
+      widthPercent: 20,
+      cells: [
+        {
+          id: 'cell-trade',
+          heightPercent: 45,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
+        },
+        {
+          id: 'cell-recent',
+          heightPercent: 55,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-recent-tickers', type: 'recent-tickers' }],
+        },
+      ],
+    },
+    {
+      id: 'col-right',
+      widthPercent: 24,
+      cells: [
+        {
+          id: 'cell-copilot',
+          heightPercent: 60,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-copilot', type: 'copilot' }],
+        },
+        {
+          id: 'cell-social',
+          heightPercent: 40,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-social', type: 'social' }],
+        },
+      ],
+    },
+  ],
+}
+
+/**
+ * Equities Terminal — the default pair layout for the `stocks` asset class.
+ * No order book column either: the broker feed quotes top-of-book, not
+ * depth. The ticket sits above the symbol's news wire — catalysts move
+ * stocks the way order flow moves crypto — and positions ride the data
+ * strip beside the tape.
+ */
+export const PRESET_EQUITIES_TERMINAL: TerminalLayout = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-left',
+      widthPercent: 55,
+      cells: [
+        {
+          id: 'cell-chart',
+          heightPercent: 66,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chart', type: 'chart' }],
+        },
+        {
+          id: 'cell-bottom',
+          heightPercent: 29,
+          activeTabIndex: 0,
+          panes: [
+            { id: 'pane-trades', type: 'trades' },
+            { id: 'pane-positions', type: 'positions' },
+            { id: 'pane-data-log', type: 'data-log' },
+            { id: 'pane-pair-info', type: 'pair-info' },
+          ],
+        },
+        {
+          id: 'cell-risk',
+          heightPercent: 5,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-risk', type: 'risk' }],
+        },
+      ],
+    },
+    {
+      id: 'col-market',
+      widthPercent: 21,
+      cells: [
+        {
+          id: 'cell-trade',
+          heightPercent: 45,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
+        },
+        {
+          id: 'cell-news',
+          heightPercent: 55,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-symbol-news', type: 'symbol-news' }],
+        },
+      ],
+    },
+    {
+      id: 'col-copilot',
+      widthPercent: 24,
+      cells: [
+        {
+          id: 'cell-copilot',
+          heightPercent: 100,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-copilot', type: 'copilot' }],
+        },
+      ],
+    },
+  ],
+}
+
 /** Chart Focus — Single column: Chart (77%) + Positions/Copilot tabs (18%) + Risk (5%) */
 export const PRESET_CHART_FOCUS: TerminalLayout = {
   version: 1,

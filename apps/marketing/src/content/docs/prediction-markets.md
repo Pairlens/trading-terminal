@@ -72,8 +72,10 @@ the rest somewhere else.
 
 ## Finding an event
 
-Add the **Events** panel from the Add Pane dialog, under Discovery. It queries
-every prediction venue you have connected and shows what is busy right now:
+The **Events** panel sits on the default prediction layout, beside the chart;
+on a custom workspace, add it from the Add Pane dialog, under Discovery. It
+queries every prediction venue you have connected and shows what is busy right
+now:
 category chips across the top, a search box that matches question text, and a
 card per event with how long until it closes, its volume, and a price for each
 outcome.
@@ -131,7 +133,8 @@ prediction venue has them.
 
 ## Positions and settlement
 
-Add the **Prediction Positions** panel from the Add Pane dialog, under Trading.
+The **Prediction Positions** panel rides the default prediction layout's data
+strip; on a custom workspace, add it from the Add Pane dialog, under Trading.
 It lists what you hold across your connected prediction venues: the market, the
 outcome, the number of contracts, your average price in cents, what it cost,
 and how long until it resolves. Once a market settles, the row reads

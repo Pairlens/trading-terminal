@@ -121,7 +121,9 @@ position margin control are not exposed yet.
 
 ## Positions
 
-Add the **Futures Positions** panel from the Add Pane dialog, under Trading. It
+The **Futures Positions** panel rides the default perps layout's data strip,
+in the tab row under the chart; on a custom workspace, add it from the Add
+Pane dialog, under Trading. It
 lists what you hold across every connected futures account: the contract, which
 way it leans, the size, your entry price, the current mark, the liquidation
 level, the leverage, and unrealized profit or loss with signed colouring.

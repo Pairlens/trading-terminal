@@ -3334,10 +3334,22 @@
         "tagline": "Guthaben, Positionen und Risiko auf einen Blick.",
         "description": "Ein kontozentriertes Cockpit: deine Portfolio-Aufschlüsselung, offene Positionen, laufende Risiko-Guardrails und eine Watchlist, um den Rest deines Bestands im Blick zu behalten. Für die Verwaltung dessen, was du bereits hältst."
       },
+      "prediction-terminal": {
+        "name": "Prognose-Terminal",
+        "tagline": "Die Wahrscheinlichkeiten im Chart, das ganze Ereignis daneben.",
+        "description": "Das Standard-Layout für Prognosemärkte: ein Wahrscheinlichkeits-Chart mit den Trades und deinen offenen Kontrakten darunter, Orderbuch und Ticket in der Mitte, und der Ereignis-Browser neben dem KI-Co-Piloten, denn die benachbarten Ergebnisse sind die halbe Analyse.",
+        "menuLabel": "Standard"
+      },
       "dex-degen": {
         "name": "DEX Degen",
         "tagline": "On-Chain-Charts, Swaps und der Social-Feed.",
         "description": "Gebaut für die On-Chain-Jagd: ein Chart mit Swap-Ticket, aktuelle Ticker, um neue Listings zu erwischen, und der Social-Feed für Alpha. Route Swaps über einen DEX-Connector wie Jupiter."
+      },
+      "dex-terminal": {
+        "name": "DEX-Terminal",
+        "tagline": "On-Chain handeln, ohne falsches Orderbuch.",
+        "description": "Das Standard-Layout für On-Chain: ein Chart mit Pool-Statistiken und den Trades darunter, ein Swap-Ticket über deinen zuletzt angesehenen Tickern, um neue Listings zu erwischen, und der KI-Co-Pilot über dem Social-Feed. Es gibt keine Orderbuch-Spalte: die aus dem Pool abgeleitete Tiefe ist synthetisch und wird deshalb nicht gezeigt.",
+        "menuLabel": "Standard"
       },
       "quant-signals": {
         "name": "Quant-Signale",
@@ -3348,6 +3360,12 @@
         "name": "Aktien-Desk",
         "tagline": "Handle Aktien mit Scanner, Chart und Positionen.",
         "description": "Ein Layout für den Aktienhandel: der Markt-Scanner, ein Chart, offene Positionen und der News-Ticker. Verbinde das Alpaca-Broker-Plugin, um US-Aktien zu streamen und Orders zu routen."
+      },
+      "equities-terminal": {
+        "name": "Aktien-Terminal",
+        "tagline": "Aktien mit dem Ticket über dem Symbol-News-Ticker.",
+        "description": "Das Standard-Layout für Aktien: ein Chart mit den Trades, Positionen und Fundamentaldaten darunter, das Order-Ticket über den Symbol-News (Katalysatoren bewegen Aktien so wie Flow die Kryptomärkte), und rechts der KI-Co-Pilot.",
+        "menuLabel": "Standard"
       },
       "ultrawide-trading-floor": {
         "name": "Ultrawide-Handelsparkett",
@@ -3450,6 +3468,12 @@
         "tagline": "Märkte neben Movern und dem News-Feed.",
         "description": "Der Markt-Scanner neben den Top-Movern und dem Live-News-Feed — eine Basis für katalysatorgetriebenes Trading.",
         "menuLabel": "News"
+      },
+      "perps-terminal": {
+        "name": "Perps-Terminal",
+        "tagline": "Das Futures-Setup: Positionen mit Mark-Preis und Liquidation.",
+        "description": "Das Standard-Layout für Perpetual Futures: ein großer Chart, darunter mit Reitern die Trades, offene Kontrakte (Einstieg, Mark-Preis, Liquidation) und Marktdaten, in der Mitte ein Orderbuch und ein Order-Ticket mit Hebel, und rechts der KI-Co-Pilot.",
+        "menuLabel": "Standard"
       }
     },
     "traderTypes": {
@@ -3486,11 +3510,17 @@
       "crypto-spot": {
         "label": "Krypto Spot"
       },
+      "crypto-perp": {
+        "label": "Perps"
+      },
       "dex": {
         "label": "DEX"
       },
       "equities": {
         "label": "Aktien"
+      },
+      "predictions": {
+        "label": "Prognosen"
       },
       "multi-asset": {
         "label": "Multi-Asset"

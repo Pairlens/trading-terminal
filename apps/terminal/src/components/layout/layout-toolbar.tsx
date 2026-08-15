@@ -37,11 +37,13 @@ import {
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
 
+import { normalizeInstrumentClass } from '@pairlens/shared/market-ref'
 import { PanesToolbar, PendingPanePlacementHint } from './panes-toolbar'
 import type { ScreenPresetGroup } from '@/lib/layout/types'
 import type { ShortcutDefinition } from '@/hooks/use-keyboard-shortcuts'
 import { workspaceAnalyticsKind } from '@/lib/analytics-panels'
 import { track } from '@/lib/analytics-events'
+import { STORE_ASSET_CLASS_FOR } from '@/lib/workspace-store/catalog'
 import { templateMenuLabel } from '@/lib/workspace-store/template-labels'
 import { normalizeLayout } from '@/lib/layout/utils'
 import { uniqueWorkspaceName } from '@/lib/layout/save-workspace'
@@ -227,7 +229,13 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
               aria-label={t('layout.browseStore', 'Browse Workspace Store')}
               onClick={() => {
                 onOpenChange?.(false)
-                void navigate({ to: '/workspace-store' })
+                // A pair workspace opens the store pre-filtered to its own
+                // asset class, so the suggestions match what is on screen.
+                const cls = normalizeInstrumentClass(workspace.pairClass)
+                void navigate({
+                  to: '/workspace-store',
+                  search: cls ? { assetClass: STORE_ASSET_CLASS_FOR[cls] } : {},
+                })
               }}
               className="group/store relative cursor-pointer gap-2.5 overflow-hidden rounded-[10px] border border-primary/15 bg-gradient-to-b from-primary/[0.09] via-primary/[0.03] to-transparent p-2 focus:border-primary/25 focus:bg-primary/[0.12] focus:text-foreground not-data-[variant=destructive]:focus:**:text-foreground"
             >

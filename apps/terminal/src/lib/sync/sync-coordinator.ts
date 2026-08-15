@@ -472,6 +472,11 @@ export class SyncCoordinator {
     } else if (key === 'terminal.layout') {
       endpoint = '/api/user/workspace/terminal-layout'
       body = { name: 'terminal-layout', panels: value }
+    } else if (key.startsWith('terminal.layout.')) {
+      // Per-asset-class pair layouts: terminal.layout.perp → terminal-layout-perp
+      const cls = key.slice('terminal.layout.'.length)
+      endpoint = `/api/user/workspace/terminal-layout-${encodeURIComponent(cls)}`
+      body = { name: `terminal-layout-${cls}`, panels: value }
     } else if (key === 'discovery.layout') {
       endpoint = '/api/user/workspace/discovery-layout'
       body = { name: 'discovery-layout', panels: value }

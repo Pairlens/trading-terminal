@@ -100,6 +100,8 @@ const CLASS_ALIASES: Readonly<Record<string, InstrumentClass>> = {
   crypto: 'spot',
   equities: 'stocks',
   stock: 'stocks',
+  // PluginFamilyId / workspace-store facet spelling
+  predictions: 'prediction',
 }
 
 /** The class a raw asset-class/kind string names, or undefined if unknown. */

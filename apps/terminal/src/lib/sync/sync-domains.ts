@@ -194,6 +194,8 @@ export function domainForSyncKey(key: string): SyncDomainId | null {
   if (CHART_KEYS.has(key) || key.startsWith('drawing-last-')) return 'charts'
   if (
     WORKSPACE_KEYS.has(key) ||
+    // Per-asset-class pair layouts: terminal.layout.perp, .dex, ...
+    key.startsWith('terminal.layout.') ||
     (key.startsWith('workspace.') && key.endsWith('.layout')) ||
     key.startsWith('workspace-vars:')
   ) {

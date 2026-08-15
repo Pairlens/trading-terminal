@@ -3334,10 +3334,22 @@
         "tagline": "Số dư, vị thế và rủi ro trong nháy mắt.",
         "description": "Một buồng lái lấy tài khoản làm trung tâm: phân bổ danh mục của bạn, vị thế mở, giới hạn rủi ro trực tiếp, và một danh sách theo dõi để để mắt tới phần còn lại của sổ lệnh. Dành cho việc quản lý những gì bạn đã nắm giữ."
       },
+      "prediction-terminal": {
+        "name": "Terminal Dự Đoán",
+        "tagline": "Vẽ biểu đồ xác suất với toàn bộ sự kiện ngay bên cạnh.",
+        "description": "Bố cục mặc định cho thị trường dự đoán: một biểu đồ xác suất với giao dịch và các hợp đồng đang mở của bạn bên dưới, sổ lệnh và phiếu đặt lệnh ở giữa, và trình duyệt sự kiện nằm cạnh AI Copilot, vì các kết quả lân cận chiếm một nửa phần phân tích.",
+        "menuLabel": "Mặc định"
+      },
       "dex-degen": {
         "name": "DEX Degen",
         "tagline": "Biểu đồ on-chain, swap và luồng mạng xã hội.",
         "description": "Được tạo ra để săn lùng on-chain: một biểu đồ với phiếu swap, các mã gần đây để bắt kịp niêm yết mới, và luồng mạng xã hội để tìm alpha. Định tuyến swap qua một bộ kết nối DEX như Jupiter."
+      },
+      "dex-terminal": {
+        "name": "Terminal DEX",
+        "tagline": "Giao dịch on-chain mà không cần sổ lệnh giả.",
+        "description": "Bố cục on-chain mặc định: một biểu đồ với thống kê pool và giao dịch bên dưới, phiếu swap nằm trên các mã gần đây để bắt kịp niêm yết mới, và AI Copilot phía trên luồng mạng xã hội. Không có cột sổ lệnh: độ sâu suy ra từ pool chỉ là con số tổng hợp nhân tạo nên không được hiển thị.",
+        "menuLabel": "Mặc định"
       },
       "quant-signals": {
         "name": "Tín Hiệu Quant",
@@ -3348,6 +3360,12 @@
         "name": "Bàn Cổ Phiếu",
         "tagline": "Giao dịch cổ phiếu với bộ quét, biểu đồ và vị thế.",
         "description": "Một bố cục giao dịch cổ phiếu: bộ quét thị trường, một biểu đồ, vị thế mở, và bảng tin. Kết nối plugin broker Alpaca để truyền trực tiếp cổ phiếu Mỹ và định tuyến lệnh."
+      },
+      "equities-terminal": {
+        "name": "Terminal Cổ Phiếu",
+        "tagline": "Cổ phiếu với phiếu đặt lệnh nằm trên bảng tin tức mã.",
+        "description": "Bố cục mặc định cho cổ phiếu: một biểu đồ với giao dịch, vị thế và dữ liệu cơ bản bên dưới, phiếu đặt lệnh nằm trên tin tức mã (chất xúc tác làm cổ phiếu chạy giống như dòng tiền làm crypto chạy), và AI Copilot bên phải.",
+        "menuLabel": "Mặc định"
       },
       "ultrawide-trading-floor": {
         "name": "Sàn Giao Dịch Ultrawide",
@@ -3450,6 +3468,12 @@
         "tagline": "Thị trường bên cạnh các mã biến động mạnh và luồng tin tức.",
         "description": "Bộ quét thị trường bên cạnh các mã biến động mạnh nhất và luồng tin tức trực tiếp — một căn cứ cho giao dịch theo sự kiện xúc tác.",
         "menuLabel": "Tin tức"
+      },
+      "perps-terminal": {
+        "name": "Terminal Perps",
+        "tagline": "Bàn futures: vị thế kèm giá mark và giá thanh lý.",
+        "description": "Bố cục mặc định cho hợp đồng tương lai vĩnh cửu: một biểu đồ lớn với các tab giao dịch, hợp đồng đang mở (giá vào, giá mark, giá thanh lý) và dữ liệu thị trường bên dưới, sổ lệnh cùng phiếu đặt lệnh có tính đòn bẩy ở giữa, và AI Copilot bên phải.",
+        "menuLabel": "Mặc định"
       }
     },
     "traderTypes": {
@@ -3486,11 +3510,17 @@
       "crypto-spot": {
         "label": "Crypto Spot"
       },
+      "crypto-perp": {
+        "label": "Perps"
+      },
       "dex": {
         "label": "DEX"
       },
       "equities": {
         "label": "Cổ phiếu"
+      },
+      "predictions": {
+        "label": "Dự đoán"
       },
       "multi-asset": {
         "label": "Đa Tài Sản"
