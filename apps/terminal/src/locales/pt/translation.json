@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} não está disponível",
       "description": "Este conector não retornou dados de mercado para este par. Tente outro que o liste."
     },
+    "paneCredentials": {
+      "sealedTitle": "Desbloqueie para carregar os dados da {{venue}}",
+      "sealedDescription": "A {{venue}} não tem feed público de preços. O gráfico, o livro e as cotações vêm das suas chaves de API, e elas estão bloqueadas agora.",
+      "missingTitle": "Conecte a {{venue}} para ver os preços",
+      "missingDescription": "A {{venue}} não tem feed público de preços. Conecte sua conta e o gráfico, o livro de ofertas e as cotações vêm direto dela.",
+      "connectAction": "Conectar {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "Mudando para {{venue}}…",
       "switching": "Mudando…"
@@ -2868,7 +2875,9 @@
       "workflow": "Workflow",
       "notSupportedOn": "Não compatível com {{venue}}",
       "available": "Disponível: {{amount}}",
-      "slippage": "Slippage"
+      "slippage": "Slippage",
+      "extendedHours": "Horário alargado",
+      "extendedHoursHint": "Execução nas sessões de pré-abertura e após o fecho. Livro mais fino, spreads mais largos."
     },
     "status": {
       "connecting": "Conectando…",
@@ -4094,12 +4103,16 @@
       "sealed": "Seu cofre de credenciais está bloqueado.",
       "sealedBanner_one": "1 bot ao vivo está pausado — desbloqueie o Pairlens para retomar as operações.",
       "sealedBanner_other": "{{count}} bots ao vivo estão pausados — desbloqueie o Pairlens para retomar as operações.",
+      "passkeyNudgeTitle": "Desbloqueie com um toque na próxima vez",
+      "passkeyNudgeBody": "A {{venue}} transmite os preços a partir das suas chaves, então um cofre bloqueado significa nenhum gráfico. Uma passkey abre o cofre e a tela de bloqueio num único toque, em vez de uma senha digitada.",
+      "passkeyNudgeAction": "Adicionar uma passkey",
+      "passkeyNudgeDismiss": "Agora não",
+      "proofRequired": "Confirme sua senha antes de mudar como este cofre é aberto.",
       "sealedBannerAction": "Desbloquear",
       "botsPausedTitle": "Bots ao vivo pausados",
       "botsPausedBody": "Desbloqueie o Pairlens para retomar as operações reais. Bots em papel não são afetados.",
       "orderBlocked": "Seu cofre de credenciais está bloqueado — desbloqueie o Pairlens para enviar ordens reais.",
       "insecureContext": "A criptografia não está disponível em uma conexão insegura. Abra o Pairlens por HTTPS, ou em localhost, para configurar um cofre.",
-      "diverged": "Seu terminal está desbloqueado, mas essa senha não abriu o cofre de credenciais. Altere sua senha em Configurações → Segurança para sincronizar os dois novamente.",
       "botParkDetailSealed": "Seu cofre de credenciais está bloqueado. Este bot retoma as operações reais assim que você desbloquear o Pairlens. Bots em papel não são afetados.",
       "botParkDetailError": "Suas credenciais salvas não puderam ser lidas neste dispositivo. Este bot retoma as operações reais assim que elas forem carregadas. Bots em papel não são afetados.",
       "onlyProtectorLeft": "Esta é a única forma de acessar seu cofre. Adicione outra antes de removê-la.",

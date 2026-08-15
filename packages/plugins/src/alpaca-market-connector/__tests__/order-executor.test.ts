@@ -268,6 +268,213 @@ describe('placeAlpacaOrder — request shape & routing', () => {
     expect(body['time_in_force']).toBe('gtc')
   })
 
+  // Alpaca rejects any fractional quantity carrying time_in_force 'gtc'
+  // ("fractional orders must be DAY orders"), and the trade panel's percentage
+  // sizing emits fractional share counts routinely. Verified against the paper
+  // API: qty 0.37 + gtc is rejected, qty 0.37 + day is accepted.
+  it('sends fractional limit orders as DAY rather than GTC', async () => {
+    const { calls } = stubFetch(REAL_ORDER)
+    const result = await placeAlpacaOrder(
+      {
+        market: 'alpaca',
+        pair: 'AAPL-USD',
+        side: 'sell',
+        type: 'limit',
+        size: '0.66',
+        price: '310.00',
+        mode: 'paper',
+      },
+      CREDS,
+    )
+    expect(result.success).toBe(true)
+    const body = JSON.parse(String(calls[0].init.body)) as Record<
+      string,
+      unknown
+    >
+    expect(body['qty']).toBe('0.66')
+    expect(body['limit_price']).toBe('310.00')
+    expect(body['time_in_force']).toBe('day')
+  })
+
+  it('keeps whole-share limit orders on GTC', async () => {
+    const { calls } = stubFetch(REAL_ORDER)
+    await placeAlpacaOrder(
+      {
+        market: 'alpaca',
+        pair: 'AAPL-USD',
+        side: 'sell',
+        type: 'limit',
+        size: '2',
+        price: '310.00',
+        mode: 'paper',
+      },
+      CREDS,
+    )
+    const body = JSON.parse(String(calls[0].init.body)) as Record<
+      string,
+      unknown
+    >
+    expect(body['time_in_force']).toBe('gtc')
+  })
+
+  // A fractional stop can only be a DAY order, which would expire at the
+  // close — refused rather than handed back as protection that silently ends.
+  it('refuses fractional trigger orders instead of downgrading them to DAY', async () => {
+    const { calls } = stubFetch(REAL_ORDER)
+    const result = await placeAlpacaOrder(
+      {
+        market: 'alpaca',
+        pair: 'AAPL-USD',
+        side: 'sell',
+        type: 'market',
+        size: '0.66',
+        trigger: { triggerType: 'sl', triggerPrice: '280' },
+        mode: 'paper',
+      },
+      CREDS,
+    )
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('whole number of shares')
+    // Refused locally — never reached the venue.
+    expect(calls).toHaveLength(0)
+  })
+
+  it('still accepts whole-share trigger orders as GTC', async () => {
+    const { calls } = stubFetch(REAL_ORDER)
+    const result = await placeAlpacaOrder(
+      {
+        market: 'alpaca',
+        pair: 'AAPL-USD',
+        side: 'sell',
+        type: 'market',
+        size: '3',
+        trigger: { triggerType: 'sl', triggerPrice: '280' },
+        mode: 'paper',
+      },
+      CREDS,
+    )
+    expect(result.success).toBe(true)
+    const body = JSON.parse(String(calls[0].init.body)) as Record<
+      string,
+      unknown
+    >
+    expect(body['type']).toBe('stop')
+    expect(body['time_in_force']).toBe('gtc')
+  })
+
+  // Extended-hours eligibility, confirmed against the paper API: limit orders
+  // qualify on either DAY or GTC, market orders answer "extended hours order
+  // must be DAY or GTC limit orders", stops answer "not eligible for extended
+  // hours trading". An identical aggressive GTC buy filled with the flag and
+  // sat unfilled without it, so the flag really does gate participation.
+  it('sends extended_hours on a whole-share limit order, keeping GTC', async () => {
+    const { calls } = stubFetch(REAL_ORDER)
+    const result = await placeAlpacaOrder(
+      {
+        market: 'alpaca',
+        pair: 'AAPL-USD',
+        side: 'buy',
+        type: 'limit',
+        size: '1',
+        price: '330',
+        extendedHours: true,
+        mode: 'paper',
+      },
+      CREDS,
+    )
+    expect(result.success).toBe(true)
+    const body = JSON.parse(String(calls[0].init.body)) as Record<
+      string,
+      unknown
+    >
+    expect(body['extended_hours']).toBe(true)
+    expect(body['time_in_force']).toBe('gtc')
+  })
+
+  it('composes extended hours with the fractional DAY rule', async () => {
+    const { calls } = stubFetch(REAL_ORDER)
+    await placeAlpacaOrder(
+      {
+        market: 'alpaca',
+        pair: 'AAPL-USD',
+        side: 'buy',
+        type: 'limit',
+        size: '0.37',
+        price: '330',
+        extendedHours: true,
+        mode: 'paper',
+      },
+      CREDS,
+    )
+    const body = JSON.parse(String(calls[0].init.body)) as Record<
+      string,
+      unknown
+    >
+    expect(body['extended_hours']).toBe(true)
+    expect(body['time_in_force']).toBe('day')
+  })
+
+  it('omits extended_hours entirely when not requested', async () => {
+    const { calls } = stubFetch(REAL_ORDER)
+    await placeAlpacaOrder(
+      {
+        market: 'alpaca',
+        pair: 'AAPL-USD',
+        side: 'buy',
+        type: 'limit',
+        size: '1',
+        price: '330',
+        mode: 'paper',
+      },
+      CREDS,
+    )
+    const body = JSON.parse(String(calls[0].init.body)) as Record<
+      string,
+      unknown
+    >
+    expect(body['extended_hours']).toBeUndefined()
+  })
+
+  it('refuses an extended-hours market order rather than sending it', async () => {
+    const { calls } = stubFetch(REAL_ORDER)
+    const result = await placeAlpacaOrder(
+      {
+        market: 'alpaca',
+        pair: 'AAPL-USD',
+        side: 'buy',
+        type: 'market',
+        size: '1',
+        extendedHours: true,
+        mode: 'paper',
+      },
+      CREDS,
+    )
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('limit order')
+    expect(calls).toHaveLength(0)
+  })
+
+  it('refuses an extended-hours trigger order rather than sending it', async () => {
+    const { calls } = stubFetch(REAL_ORDER)
+    const result = await placeAlpacaOrder(
+      {
+        market: 'alpaca',
+        pair: 'AAPL-USD',
+        side: 'sell',
+        type: 'limit',
+        size: '1',
+        price: '280',
+        trigger: { triggerType: 'sl', triggerPrice: '285' },
+        extendedHours: true,
+        mode: 'paper',
+      },
+      CREDS,
+    )
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('stop or take-profit')
+    expect(calls).toHaveLength(0)
+  })
+
   it('surfaces the API error message on rejection', async () => {
     stubFetch({ code: 40310000, message: 'insufficient buying power' }, 403)
     const result = await placeAlpacaOrder(
@@ -309,6 +516,35 @@ describe('normalizeAlpacaOrder — conformance & status mapping', () => {
     expect(order.avgPrice).toBe('178.12')
     expect(order.createdAt).toBe(Date.parse(REAL_ORDER.created_at))
     assertOrderConformant(order)
+  })
+
+  // Both records below are verbatim shapes from the paper API. A notional
+  // order keeps qty=null for its whole life — even after filling — so shares
+  // only ever appear in filled_qty.
+  it('leaves size empty for a pending notional order rather than reporting 0 shares', () => {
+    const order = normalizeAlpacaOrder({
+      ...REAL_ORDER,
+      status: 'accepted',
+      notional: '200',
+      qty: null,
+      filled_qty: '0',
+      filled_avg_price: null,
+    })
+    expect(order.size).toBe('')
+    expect(order.fillSize).toBe('0')
+  })
+
+  it('reports the filled share count for a filled notional order', () => {
+    const order = normalizeAlpacaOrder({
+      ...REAL_ORDER,
+      status: 'filled',
+      notional: '200',
+      qty: null,
+      filled_qty: '0.653991674',
+      filled_avg_price: '305.799',
+    })
+    expect(order.size).toBe('0.653991674')
+    expect(order.avgPrice).toBe('305.799')
   })
 
   it('maps the Alpaca status enum onto the 4-state contract', () => {

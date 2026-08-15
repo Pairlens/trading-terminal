@@ -35,6 +35,8 @@ import {
 } from '@/components/terminal/trade-tape-sort'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
+import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
+import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
 import { usePaneVenue } from '@/hooks/use-pane-venue'
 import { usePairUnavailable } from '@/stores/pair-availability-store'
 import { usePersistedState } from '@/hooks/use-persisted-state'
@@ -297,6 +299,7 @@ function TradesPaneInner({
 
   const venue = usePaneVenue(market)
   const unavailable = usePairUnavailable(market, pairKey)
+  const credentialGate = useMarketCredentialGate(market)
 
   const [storedSort, setStoredSort] = usePersistedState<TradeSort>(
     'trades.sort',
@@ -347,6 +350,20 @@ function TradesPaneInner({
       ? virtualizer.getTotalSize() -
         (virtualItems[virtualItems.length - 1]?.end ?? 0)
       : 0
+
+  // Before the pair-availability check, which cannot be trusted here: nothing
+  // was ever subscribed, so "the venue doesn't list this pair" would be a
+  // verdict on a request that was never made.
+  if (credentialGate.state !== 'ok') {
+    return (
+      <PaneCredentialsRequired
+        compact
+        state={credentialGate.state}
+        market={market}
+        venueLabel={credentialGate.venueLabel}
+      />
+    )
+  }
 
   // Ahead of the unsupported check: "the venue doesn't list this pair" is the
   // real answer, and telling someone to find a venue with a trade feed when the

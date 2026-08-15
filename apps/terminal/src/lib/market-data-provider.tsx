@@ -276,6 +276,10 @@ function getConnectorAdapterInfo(
   // connector's exported adapter info, because that export is never read —
   // this function builds MarketAdapterInfo from the manifest alone.
   const requiresDesktop = meta?.requiresDesktop === true
+  // Same manifest-only reasoning as `requiresDesktop`: the panes need to know
+  // a venue has no public feed BEFORE any subscribe is attempted, and the
+  // adapter that would tell them is exactly the thing that cannot start.
+  const credentialedMarketData = meta?.credentialedMarketData === true
 
   const hasTradingCap = plugin.manifest.capabilities.some(
     (c) => c.id === 'trading:orders',
@@ -305,6 +309,7 @@ function getConnectorAdapterInfo(
     dexLimitOrders,
     triggerOrders,
     requiresDesktop,
+    credentialedMarketData,
   }
 }
 
@@ -537,6 +542,18 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
           country: getCountrySetting(),
         })
         .then(() => {
+          // Connectors whose MARKET DATA needs credentials (Alpaca: no public
+          // feed) are subscribed to before the vault is unlocked, so their
+          // first subscribe threw and the pane has been spinning ever since.
+          // Nothing else re-runs those effects — unlocking a vault is not a
+          // pair, venue or timeframe change — so bump the version the stream
+          // hooks already watch for pause/resume and let them re-subscribe.
+          // Gated on the flag so unlocking a vault does NOT tear down and
+          // refetch every crypto chart, whose data never needed a key.
+          if (plugin.manifest.metadata?.['credentialedMarketData'] === true) {
+            setStreamVersion((v) => v + 1)
+          }
+
           const unsubs: Array<() => void> = []
 
           pluginManager.setContext({

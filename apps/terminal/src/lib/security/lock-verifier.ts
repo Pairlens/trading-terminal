@@ -7,6 +7,12 @@
  * (see the Security section copy). What we store is a salted PBKDF2 digest, so
  * the password itself is never at rest.
  *
+ * WHO STILL ASKS. Not the lock screen, when the vault has a password
+ * protector — `security/lock-unlock.ts` unwraps the DEK there instead, because
+ * that is the only check nothing on disk can be edited to pass. This module
+ * now answers for exactly the cases with no such protector behind the door: a
+ * desktop build with no vault, or a vault opened only by passkey or Touch ID.
+ *
  * WHERE it is stored is the one thing to get right before changing anything
  * here: this slot is the single credential the vault must never encrypt
  * (`VAULT_EXEMPT` in lib/keychain.ts), because the lock screen has to be
@@ -15,15 +21,13 @@
  * browser. That is a confidentiality argument only: there is nothing secret
  * in a PBKDF2 digest, but in the browser there is also nothing protecting its
  * INTEGRITY, so someone who can edit the profile on disk can plant a verifier
- * for a password they choose and walk past the lock screen.
+ * for a password they choose, or delete it, and walk past a screen that rests
+ * on this module.
  *
- * What makes that acceptable is the vault, and ONLY the vault: its DEK still
- * needs the real password, so a planted verifier opens an empty room and the
- * mismatch lands in terminal-lock's `vault-diverged` branch. This used to lean
- * on a second argument — that browser builds were dev/testing only — which
- * stopped being true when the hosted web terminal shipped. The remaining
- * argument still holds on its own, but it is now the whole of it: weakening
- * the vault's grip on the DEK would leave this slot with nothing behind it.
+ * What that is worth is bounded by what is behind it, which is now the point
+ * of the split above: on the paths that still reach here, no vault password
+ * wraps a DEK, so the screen is all there was to bypass. Where keys ARE at
+ * stake the screen no longer rests on this file at all.
  *
  * PBKDF2-HMAC-SHA256 because `SubtleCrypto` offers no scrypt or Argon2 and
  * this feature is not worth a WASM dependency. Iterations are stored with

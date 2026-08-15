@@ -96,7 +96,7 @@ describe('requireUnlockForTrade gains a vault precondition', () => {
 
   test('an unlocked vault does not change the answer', async () => {
     setVaultRecord(record(), { broadcast: false })
-    setDek(await fakeDek(), { broadcast: false })
+    setDek(await fakeDek(), { broadcast: false, proven: true })
     expect(await requireUnlockForTrade()).toBe(true)
   })
 
@@ -124,7 +124,7 @@ describe('a UI lock never seals the vault', () => {
   test('lockNow leaves the data key alive so automations keep trading', async () => {
     setLockEnabled(true)
     setVaultRecord(record(), { broadcast: false })
-    setDek(await fakeDek(), { broadcast: false })
+    setDek(await fakeDek(), { broadcast: false, proven: true })
 
     lockNow('manual')
 

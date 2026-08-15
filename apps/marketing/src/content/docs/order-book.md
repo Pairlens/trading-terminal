@@ -1,12 +1,12 @@
 ---
 title: The order book
-description: 'Reading the Pairlens order book panel: price grouping, size versus notional, cumulative depth bars, the spread row, and the buy-sell pressure gauge.'
+description: 'Reading the Pairlens order book panel: price grouping, size versus notional, cumulative depth bars, the spread row, the buy-sell pressure gauge, and why US stock books are one level deep.'
 group: traders
 parent: market-data
 order: 1
 eyebrow: For traders
 updated: AUG 2026
-readTime: 6 min read
+readTime: 7 min read
 ---
 
 The Order Book panel shows resting limit orders on both sides of the market,
@@ -122,6 +122,19 @@ Stream health is deliberately not shown per panel. The connection dot in the
 pair header owns that, because it is the only place that can distinguish
 "streaming" from "stalled" and say so. See
 [troubleshooting](/docs/troubleshooting#market-data-looks-frozen).
+
+## US stocks are one level deep
+
+A stock book looks almost empty next to a crypto one, and that is the data, not
+a fault. Alpaca's free market-data plan streams the IEX feed, which publishes
+only the best bid and the best offer, so the panel has exactly one row per side
+to draw. There is no depth behind it to group, and the cumulative bars and the
+pressure gauge have little to work with.
+
+Outside regular market hours it thins further. IEX often carries a bid with no
+matching offer once the session closes, so the book shows a single row until
+the next open. A stock chart keeps updating in that window because trades still
+print, while the book sits on one side.
 
 ## Order books on mobile
 

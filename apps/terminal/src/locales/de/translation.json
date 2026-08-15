@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} ist nicht verfügbar",
       "description": "Dieser Konnektor hat für dieses Paar keine Marktdaten geliefert. Probier einen anderen, der es listet."
     },
+    "paneCredentials": {
+      "sealedTitle": "Entsperren, um {{venue}}-Daten zu laden",
+      "sealedDescription": "{{venue}} hat keinen öffentlichen Kursfeed. Chart, Orderbuch und Kurse laufen über deine API-Schlüssel, und die sind gerade gesperrt.",
+      "missingTitle": "{{venue}} verbinden, um Kurse zu sehen",
+      "missingDescription": "{{venue}} hat keinen öffentlichen Kursfeed. Verbinde dein Konto, dann kommen Chart, Orderbuch und Kurse direkt von dort.",
+      "connectAction": "{{venue}} verbinden"
+    },
     "paneTransition": {
       "switchingTo": "Wechsel zu {{venue}}…",
       "switching": "Wechsel…"
@@ -2868,7 +2875,9 @@
       "workflow": "Workflow",
       "notSupportedOn": "Nicht unterstützt auf {{venue}}",
       "available": "Verfügbar: {{amount}}",
-      "slippage": "Slippage"
+      "slippage": "Slippage",
+      "extendedHours": "Erweiterte Handelszeiten",
+      "extendedHoursHint": "Ausführung im vor- und nachbörslichen Handel. Dünneres Orderbuch, größere Spreads."
     },
     "status": {
       "connecting": "Verbinde…",
@@ -4094,12 +4103,16 @@
       "sealed": "Dein Zugangsdaten-Tresor ist gesperrt.",
       "sealedBanner_one": "1 Live-Bot pausiert — entsperre Pairlens, um das Trading fortzusetzen.",
       "sealedBanner_other": "{{count}} Live-Bots pausieren — entsperre Pairlens, um das Trading fortzusetzen.",
+      "passkeyNudgeTitle": "Beim nächsten Mal mit einer Berührung entsperren",
+      "passkeyNudgeBody": "{{venue}} streamt Kurse über deine Schlüssel, ein gesperrter Tresor heißt also kein Chart. Ein Passkey öffnet Tresor und Sperrbildschirm mit einer Berührung statt mit einem getippten Passwort.",
+      "passkeyNudgeAction": "Passkey hinzufügen",
+      "passkeyNudgeDismiss": "Jetzt nicht",
+      "proofRequired": "Bestätige dein Passwort, bevor du änderst, wie sich dieser Tresor öffnet.",
       "sealedBannerAction": "Entsperren",
       "botsPausedTitle": "Live-Bots pausieren",
       "botsPausedBody": "Entsperre Pairlens, um das Live-Trading fortzusetzen. Paper-Bots sind nicht betroffen.",
       "orderBlocked": "Dein Zugangsdaten-Tresor ist gesperrt — entsperre Pairlens, um Live-Orders zu platzieren.",
       "insecureContext": "Verschlüsselung ist über eine unsichere Verbindung nicht verfügbar. Öffne Pairlens über HTTPS oder auf localhost, um einen Tresor einzurichten.",
-      "diverged": "Dein Terminal ist entsperrt, aber dieses Passwort hat deinen Zugangsdaten-Tresor nicht geöffnet. Ändere dein Passwort unter Einstellungen → Sicherheit, um beide wieder abzugleichen.",
       "botParkDetailSealed": "Dein Zugangsdaten-Tresor ist gesperrt. Dieser Bot setzt den Live-Handel fort, sobald du Pairlens entsperrst. Paper-Bots sind nicht betroffen.",
       "botParkDetailError": "Deine gespeicherten Zugangsdaten konnten auf diesem Gerät nicht gelesen werden. Dieser Bot setzt den Live-Handel fort, sobald sie geladen sind. Paper-Bots sind nicht betroffen.",
       "onlyProtectorLeft": "Das ist der einzige Weg in deinen Tresor. Füge einen weiteren hinzu, bevor du ihn entfernst.",

@@ -264,7 +264,7 @@ describe('a sealed vault parks live bots', () => {
     await flush()
     expect(run().status).toBe('waiting-unlock')
 
-    setDek(await fakeDek(), { broadcast: false })
+    setDek(await fakeDek(), { broadcast: false, proven: true })
     await flush()
 
     expect(feed).not.toBeNull()
@@ -290,7 +290,7 @@ describe('a sealed vault parks live bots', () => {
     })
     await flush()
 
-    setDek(await fakeDek(), { broadcast: false })
+    setDek(await fakeDek(), { broadcast: false, proven: true })
     await flush()
 
     // Halting here would clear `enabled`, and re-arming means typing ARM LIVE
@@ -325,7 +325,7 @@ describe('a sealed vault parks live bots', () => {
       sealed: false,
       reload: async () => {},
     })
-    setDek(await fakeDek(), { broadcast: false })
+    setDek(await fakeDek(), { broadcast: false, proven: true })
     await flush()
 
     expect(bot().enabled).toBe(true)
@@ -351,7 +351,7 @@ describe('a sealed vault parks live bots', () => {
 
   it('an unlocked vault is no obstacle at all', async () => {
     setVaultRecord(vaultRecord(), { broadcast: false })
-    setDek(await fakeDek(), { broadcast: false })
+    setDek(await fakeDek(), { broadcast: false, proven: true })
     runtime.start(manager)
     await flush()
 

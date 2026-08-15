@@ -6,7 +6,7 @@ parent: trading
 order: 1
 eyebrow: For traders
 updated: AUG 2026
-readTime: 4 min read
+readTime: 5 min read
 ---
 
 Open **Accounts** in the left nav and hit **Connect Account**. Everything you
@@ -62,6 +62,25 @@ first (a vault password, a passkey, or Touch ID on macOS).
 Either way it is never sent to a Pairlens server, not even while you are signed
 in. The **Local Only** badge on the Accounts page opens a panel explaining
 exactly this, with a link to the source so you can check for yourself.
+
+## Alpaca needs its key to show prices, not just to trade
+
+Every crypto venue streams candles, quotes, and depth from a public feed, so a
+missing key costs you the order ticket and nothing else. Alpaca is the
+exception: it has no public feed, and the chart stays empty until a credential
+reaches the connector.
+
+That has one consequence worth knowing in a browser. Credentials live in the
+vault there, the vault seals on every page reload, and a sealed vault means a
+blank stock chart until you unlock. The panes say so and carry the unlock
+button, so it is one click rather than a hunt through Settings.
+
+If you use Alpaca in a browser, enroll a passkey. It answers the lock screen and
+the vault in a single touch, where a vault password answers them one at a time.
+Pairlens offers this once, straight after you connect Alpaca. You can also add
+one any time in **Settings → Security**.
+
+On desktop this is a non-issue: keys sit in the OS keychain and load at startup.
 
 ## Regional endpoints
 

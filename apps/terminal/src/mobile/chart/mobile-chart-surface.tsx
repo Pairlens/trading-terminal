@@ -16,8 +16,8 @@
  * Those booleans are also what says whether the market on screen has arrived
  * yet — see `ChartSwitchIndicator` for the wait it draws.
  */
-import { memo, useCallback, useRef } from 'react'
-import { Monitor } from 'lucide-react'
+import { memo, useCallback, useRef, useState } from 'react'
+import { KeyRound, LockKeyhole, Monitor } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
@@ -26,11 +26,13 @@ import {
   advanceChartSwitch,
   initialChartSwitchState,
 } from '../lib/chart-switch'
-import { useMobileFocus } from '../mobile-focus-context'
+import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { MobileChart } from './mobile-chart'
 import { ChartSwitchIndicator } from './chart-switch-indicator'
 import type { ReactNode, PointerEvent as ReactPointerEvent } from 'react'
 import { useOptionalCandleData } from '@/lib/chart-terminal-context'
+import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
+import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
 
 export type MobileChartSurfaceProps = {
   /**
@@ -108,6 +110,7 @@ export function MobileChartSurface(props: MobileChartSurfaceProps) {
   // venue switch where the config object changes on every tool arm, timeframe
   // and drawing edit. Same value either way (see mobile-focus-context.tsx).
   const { focusedVenue } = useMobileFocus()
+  const credentialGate = useMarketCredentialGate(focusedVenue)
 
   // The venue-change bit has to be remembered by something that outlives the
   // indicator: the switch and the cleared snapshot happen in the SAME render,
@@ -125,6 +128,7 @@ export function MobileChartSurface(props: MobileChartSurfaceProps) {
   return (
     <MobileChartSurfaceInner
       {...props}
+      credentialState={credentialGate.state}
       desktopOnly={candleData?.desktopOnly ?? false}
       hasSnapshot={hasSnapshot}
       noData={candleData?.noData ?? false}
@@ -144,11 +148,13 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
   onSwitchVenue,
   venueLabel,
   footer,
+  credentialState,
   desktopOnly,
   noData,
   hasSnapshot,
   venueChanged,
 }: MobileChartSurfaceProps & {
+  credentialState: 'ok' | 'sealed' | 'missing'
   desktopOnly: boolean
   noData: boolean
   hasSnapshot: boolean
@@ -177,7 +183,11 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
     [onDismiss],
   )
 
-  const unavailable = desktopOnly || (noData && !hasSnapshot)
+  // Ahead of `noData` for the same reason as the desktop pane: with no key
+  // nothing was ever subscribed, so "no chart data" would blame the venue.
+  const credentialsBlocked = credentialState !== 'ok'
+  const unavailable =
+    credentialsBlocked || desktopOnly || (noData && !hasSnapshot)
   // Same test the desktop pane runs (`phase` in chart-pane.tsx): the buffer is
   // cleared the moment the request changes, so "no snapshot yet" IS "waiting".
   // It is bounded by the states above — a venue that never answers resolves to
@@ -192,7 +202,12 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
         bottom: 'var(--pl-tabbar-total)',
       }}
     >
-      {unavailable ? (
+      {credentialsBlocked ? (
+        <ChartCredentialsRequired
+          state={credentialState}
+          venueLabel={venueLabel}
+        />
+      ) : unavailable ? (
         <ChartUnavailable
           desktopOnly={desktopOnly}
           onSwitchVenue={onSwitchVenue}
@@ -337,6 +352,70 @@ const ChartUnavailable = memo(function ChartUnavailable({
       <Button className="mt-2 h-11 rounded-xl px-5" onClick={onSwitchVenue}>
         {t('mobile.shell.switchVenue')}
       </Button>
+    </div>
+  )
+})
+
+/**
+ * The venue has no public feed and we hold no usable key for it (Alpaca).
+ *
+ * Same split and the same copy as the desktop `PaneCredentialsRequired`, laid
+ * out for 402px with 44px targets — markup, not the component, for the reason
+ * `ChartUnavailable` above gives. Both buttons stay inside the chart band: the
+ * whole point is that the answer is one tap from where the user is stuck, and
+ * sending them to Settings to work out what happened is the state this
+ * replaces.
+ */
+const ChartCredentialsRequired = memo(function ChartCredentialsRequired({
+  state,
+  venueLabel,
+}: {
+  state: 'sealed' | 'missing'
+  venueLabel: string
+}) {
+  const { t } = useTranslation()
+  const { pushOverlay } = useMobileActions()
+  const { focusedVenue } = useMobileFocus()
+  const [unlockOpen, setUnlockOpen] = useState(false)
+  const sealed = state === 'sealed'
+  const Icon = sealed ? LockKeyhole : KeyRound
+
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-8 text-center">
+      <Icon className="size-8 text-muted-foreground/50" />
+      <p className="text-[15px] font-semibold text-foreground">
+        {t(
+          sealed
+            ? 'layout.paneCredentials.sealedTitle'
+            : 'layout.paneCredentials.missingTitle',
+          { venue: venueLabel },
+        )}
+      </p>
+      <p className="text-[12.5px] leading-relaxed text-muted-foreground">
+        {t(
+          sealed
+            ? 'layout.paneCredentials.sealedDescription'
+            : 'layout.paneCredentials.missingDescription',
+          { venue: venueLabel },
+        )}
+      </p>
+      {sealed ? (
+        <Button
+          className="mt-2 h-11 rounded-xl px-5"
+          onClick={() => setUnlockOpen(true)}
+        >
+          {t('security.vault.sealedBannerAction')}
+        </Button>
+      ) : (
+        <Button
+          className="mt-2 h-11 rounded-xl px-5"
+          onClick={() => pushOverlay({ kind: 'connect', market: focusedVenue })}
+        >
+          {t('layout.paneCredentials.connectAction', { venue: venueLabel })}
+        </Button>
+      )}
+
+      <VaultUnlockDialog open={unlockOpen} onOpenChange={setUnlockOpen} />
     </div>
   )
 })

@@ -54,10 +54,15 @@ import {
 } from '@/lib/security/vault/vault-session'
 import { removalStrandsVault } from '@/lib/security/vault/vault-record'
 import { MIN_PASSWORD_LENGTH } from '@/lib/security/vault/vault-policy'
+import { isVaultProofRequired } from '@/lib/security/vault/vault-errors'
 import { useLockBiometric } from '@/components/security/use-lock-biometric'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
 import { VaultCeiling } from '@/components/security/vault-ceiling'
+import {
+  useBiometricSupported,
+  usePasskeySupported,
+} from '@/hooks/use-protector-support'
 import { track } from '@/lib/analytics-events'
 import { isStandalone } from '@/lib/platform'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
@@ -431,6 +436,25 @@ function VaultCard() {
   const [disableOpen, setDisableOpen] = React.useState(false)
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  /**
+   * What to re-run once the user has proved a protector.
+   *
+   * An open vault is not consent to change who can open it, and a window that
+   * adopted its key from a sibling never proved anything (see
+   * `isVaultProven`). Without this the refusal would be a dead end on a vault
+   * the user can see is unlocked, which reads as a bug rather than a gate.
+   */
+  const pendingAdmin = React.useRef<(() => void) | null>(null)
+
+  /** Open the unlock prompt and queue `retry`, or report a real failure. */
+  const handleAdminError = (err: unknown, retry: () => void): void => {
+    if (isVaultProofRequired(err)) {
+      pendingAdmin.current = retry
+      setUnlockOpen(true)
+      return
+    }
+    setError(err instanceof Error ? err.message : String(err))
+  }
 
   const removeProtector = async (id: string) => {
     if (busy) return
@@ -446,7 +470,7 @@ function VaultCard() {
       await remove(id)
       if (kind) track('security_vault_removed', { protector: kind })
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err))
+      handleAdminError(err, () => void removeProtector(id))
     } finally {
       setBusy(false)
     }
@@ -686,6 +710,15 @@ function VaultCard() {
         // Unlocking to finish a migration should finish it, not hand the user
         // back to the same amber line they just acted on.
         onUnlocked={() => {
+          // The proof just landed, so whatever was refused for wanting one
+          // runs now. Ahead of the migration branch: an explicit action the
+          // user already asked for outranks the amber line.
+          const resume = pendingAdmin.current
+          pendingAdmin.current = null
+          if (resume) {
+            resume()
+            return
+          }
           if (vault.migrating) void finishMigration()
         }}
       />
@@ -752,46 +785,6 @@ function AddMethodButton({
 }
 
 /**
- * Whether this machine can actually raise a biometric prompt.
- *
- * The probe, never `isStandalone`: a Mac mini has no Touch ID sensor and the
- * Windows/Linux builds have no implementation, so offering "Add Touch ID"
- * there would be a button that cannot finish what it starts. The result is
- * cached at module level inside `isBiometricSupported`, so mounting the panel
- * repeatedly costs one IPC call in total.
- */
-function useBiometricSupported(): boolean {
-  const [supported, setSupported] = React.useState(false)
-  React.useEffect(() => {
-    let cancelled = false
-    void import('@/lib/security/vault/vault-biometric').then(async (m) => {
-      const ok = await m.isBiometricSupported().catch(() => false)
-      if (!cancelled) setSupported(ok)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [])
-  return supported
-}
-
-/** Same shape and same reasoning as `useBiometricSupported`, for passkeys. */
-function usePasskeySupported(): boolean {
-  const [supported, setSupported] = React.useState(false)
-  React.useEffect(() => {
-    let cancelled = false
-    void import('@/lib/security/vault/vault-passkey').then(async (m) => {
-      const ok = await m.isPasskeySupported().catch(() => false)
-      if (!cancelled) setSupported(ok)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [])
-  return supported
-}
-
-/**
  * The protector list needs the record, not just the summary state. Re-read on
  * every vault change — this is a settings panel, not a hot path.
  */
@@ -829,11 +822,13 @@ function DisableVaultDialog({
   const vault = useVaultState()
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  const [proveOpen, setProveOpen] = React.useState(false)
 
   React.useEffect(() => {
     if (!open) {
       setBusy(false)
       setError(null)
+      setProveOpen(false)
     }
   }, [open])
 
@@ -847,6 +842,14 @@ function DisableVaultDialog({
       track('security_vault_desktop_toggled', { enabled: false })
       onOpenChange(false)
     } catch (err) {
+      // Turning the vault off needs a proof, and an adopted session has none.
+      // Prompt in place: this dialog already holds the user's intent, and
+      // sending them back to the card to press the same button would lose it.
+      if (isVaultProofRequired(err)) {
+        setProveOpen(true)
+        setBusy(false)
+        return
+      }
       setError(err instanceof Error ? err.message : String(err))
       setBusy(false)
     }
@@ -887,6 +890,14 @@ function DisableVaultDialog({
           </Button>
         </DialogFooter>
       </DialogContent>
+
+      {/* Layered over this dialog rather than replacing it, so the confirm the
+          user already gave survives the proof and one more press finishes. */}
+      <VaultUnlockDialog
+        open={proveOpen}
+        onOpenChange={setProveOpen}
+        onUnlocked={() => void confirm()}
+      />
     </Dialog>
   )
 }

@@ -24,6 +24,8 @@ import {
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
+import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
+import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
 import { usePaneVenue } from '@/hooks/use-pane-venue'
 import { useSwitchTransition } from '@/hooks/use-switch-transition'
 import { usePairUnavailable } from '@/stores/pair-availability-store'
@@ -404,6 +406,7 @@ function OrderbookPaneInner({
   const market = chartConfig?.market ?? ''
   const venue = usePaneVenue(market)
   const unavailable = usePairUnavailable(market, pairKey)
+  const credentialGate = useMarketCredentialGate(market)
   const {
     phase,
     display: book,
@@ -546,6 +549,20 @@ function OrderbookPaneInner({
   const handleMetricToggle = useCallback(() => {
     setMetric((current) => (current === 'size' ? 'value' : 'size'))
   }, [setMetric])
+
+  // Before the pair-availability check, which cannot be trusted here: nothing
+  // was ever subscribed, so "the venue doesn't list this pair" would be a
+  // verdict on a request that was never made.
+  if (credentialGate.state !== 'ok') {
+    return (
+      <PaneCredentialsRequired
+        compact
+        state={credentialGate.state}
+        market={market}
+        venueLabel={credentialGate.venueLabel}
+      />
+    )
+  }
 
   // Ahead of the loading and error states: "this venue doesn't list the pair"
   // is the specific answer, and the book has nothing true left to show.

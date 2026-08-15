@@ -1,8 +1,13 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { stockSymbols } from '../catalog'
 import { AlpacaWsClient } from './ws-client'
 import { AlpacaOrderPoller } from './order-poller'
-import { fetchAlpacaCandles, missingCredentialsError } from './rest-client'
+import {
+  fetchAlpacaBulkTickers,
+  fetchAlpacaCandles,
+  missingCredentialsError,
+} from './rest-client'
 import {
   cancelAlpacaOrder,
   fetchAlpacaBalances,
@@ -88,6 +93,18 @@ export const alpacaMarketConnectorManifest: PluginManifest = {
     // Markets pane whenever Alpaca is the charted market. Stocks live in the
     // shared pairlens-core catalog instead (assetClass 'stocks').
     {
+      // Bulk quotes for the watchlist and discovery rows. markets: ['*']
+      // matches the CEX connectors: the snapshot serves the whole app whatever
+      // the charted venue is, so without it a stock row sits blank while every
+      // crypto row around it ticks. Stock symbols never collide with a CEX
+      // pair, so this only ever ADDS rows to the merged map.
+      id: 'market-data:ticker-snapshot',
+      singleton: false,
+      markets: ['*'],
+      priority: 20,
+      streaming: false,
+    },
+    {
       id: 'trading:orders',
       singleton: false,
       markets: ['alpaca'],
@@ -108,6 +125,15 @@ export const alpacaMarketConnectorManifest: PluginManifest = {
     abbr: 'ALP',
     logoUrl: ALPACA_ICON,
     triggerOrders: true,
+    /**
+     * Unlike every CEX, Alpaca gates MARKET DATA on API keys too — there is
+     * no public feed to fall back on. A browser vault is sealed on load, so
+     * the chart's first subscribe lands before any credential exists and
+     * fails; the terminal watches for this flag and re-subscribes market data
+     * once a credential is provisioned, instead of leaving the pane spinning
+     * for the rest of the session.
+     */
+    credentialedMarketData: true,
   },
   config: {},
 }
@@ -167,6 +193,22 @@ export function createAlpacaMarketConnectorPlugin(
       return fetchAlpacaCandles(pair, timeframe, limit, credentials, endTs)
     }
 
+    if (capability === 'market-data:ticker-snapshot') {
+      // Returns empty rather than throwing when the vault is still sealed:
+      // this feeds a merged, multi-venue map, and a rejection there would
+      // discard nothing but its own rows anyway. Once a credential lands the
+      // query refetches on its own 60s cadence.
+      const credentials = dataCredentials()
+      if (!credentials) {
+        return { market: 'alpaca', tickers: [], ts: Date.now() }
+      }
+      return {
+        market: 'alpaca',
+        tickers: await fetchAlpacaBulkTickers(stockSymbols(), credentials),
+        ts: Date.now(),
+      }
+    }
+
     if (capability === 'trading:orders') {
       const slot = getSlot(params)
       if (!slot) {
@@ -214,6 +256,7 @@ export function createAlpacaMarketConnectorPlugin(
         price: p['price'] ? String(p['price']) : undefined,
         trigger,
         mode: slot.mode,
+        extendedHours: p['extendedHours'] === true,
         tgtCcy: p['tgtCcy'] ? String(p['tgtCcy']) : undefined,
         clientOrderId: p['clientOrderId']
           ? String(p['clientOrderId'])

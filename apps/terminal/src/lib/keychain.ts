@@ -67,12 +67,16 @@ export const KEYCHAIN_STORAGE_PREFIX = 'pairlens:keychain:'
  * half of it: the digest is unauthenticated on disk. On desktop that is
  * unchanged — it was always plaintext in the OS keychain, which has its own
  * access control. In the browser it means someone editing the profile can
- * write a verifier for a password they choose and pass the lock screen. They
- * do NOT get the keys: the vault DEK is wrapped under the real password, so a
- * forged verifier lands in terminal-lock's `vault-diverged` branch with the
- * vault still sealed. A UI-lock bypass in a dev/testing build, not a
- * credential disclosure — but it is a real difference from the pre-vault
- * browser format, which encrypted this slot too.
+ * write a verifier for a password they choose, or simply delete it.
+ *
+ * That no longer opens anything where a vault password protector exists: the
+ * lock screen stopped reading this slot on that path and unwraps the DEK
+ * instead, which AES-GCM either authenticates or does not (see
+ * `security/lock-unlock.ts`). Where no such protector exists — a desktop build
+ * with no vault, or a vault opened only by passkey or Touch ID — this slot is
+ * still the only artifact, and forging or deleting it still passes the screen.
+ * It buys the UI lock and nothing behind it: the keys are ciphertext under a
+ * protector this file cannot forge.
  */
 const VAULT_EXEMPT: ReadonlySet<string> = new Set([
   LOCK_VERIFIER_KEY,

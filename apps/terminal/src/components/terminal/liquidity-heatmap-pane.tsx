@@ -25,6 +25,8 @@ import {
 } from '@/lib/chart-terminal-context'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
+import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
+import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
 import { usePairlensChartTheme } from '@/hooks/use-chart-theme'
 import { usePairUnavailable } from '@/stores/pair-availability-store'
 import {
@@ -319,9 +321,24 @@ export function LiquidityHeatmapPane() {
   const chartConfig = useOptionalChartConfig()
   const market = chartConfig?.market ?? activePair?.market ?? ''
   const unavailable = usePairUnavailable(market, activePair?.pairKey ?? '')
+  const credentialGate = useMarketCredentialGate(market)
 
   if (!activePair) {
     return <PanePairPicker />
+  }
+
+  // Before the pair-availability check, which cannot be trusted here: nothing
+  // was ever subscribed, so "the venue doesn't list this pair" would be a
+  // verdict on a request that was never made.
+  if (credentialGate.state !== 'ok') {
+    return (
+      <PaneCredentialsRequired
+        compact
+        state={credentialGate.state}
+        market={market}
+        venueLabel={credentialGate.venueLabel}
+      />
+    )
   }
 
   // Checked before the snapshot gate below, which would otherwise spin on

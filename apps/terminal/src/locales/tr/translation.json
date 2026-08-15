@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} bulunamadı",
       "description": "Bu konektör bu parite için piyasa verisi döndürmedi. Pariteyi listeleyen başka bir konektör deneyin."
     },
+    "paneCredentials": {
+      "sealedTitle": "{{venue}} verilerini yüklemek için kilidi açın",
+      "sealedDescription": "{{venue}} için herkese açık bir fiyat akışı yok. Grafik, emir defteri ve kotasyonlar API anahtarlarınızla geliyor ve anahtarlar şu anda kilitli.",
+      "missingTitle": "Fiyatları görmek için {{venue}} bağlayın",
+      "missingDescription": "{{venue}} için herkese açık bir fiyat akışı yok. Hesabınızı bağlayın; grafik, emir defteri ve kotasyonlar doğrudan oradan gelsin.",
+      "connectAction": "{{venue}} bağla"
+    },
     "paneTransition": {
       "switchingTo": "{{venue}} borsasına geçiliyor…",
       "switching": "Geçiliyor…"
@@ -2868,7 +2875,9 @@
       "workflow": "İş akışı",
       "notSupportedOn": "{{venue}} üzerinde desteklenmiyor",
       "available": "Kullanılabilir: {{amount}}",
-      "slippage": "Kayma"
+      "slippage": "Kayma",
+      "extendedHours": "Uzatılmış seans",
+      "extendedHoursHint": "Seans öncesi ve sonrası oturumlarda gerçekleşir. Daha ince emir defteri, daha geniş makas."
     },
     "status": {
       "connecting": "Bağlanıyor…",
@@ -4094,12 +4103,16 @@
       "sealed": "Kimlik bilgisi kasan kilitli.",
       "sealedBanner_one": "1 canlı bot duraklatıldı — işlemlere devam etmek için Pairlens'in kilidini aç.",
       "sealedBanner_other": "{{count}} canlı bot duraklatıldı — işlemlere devam etmek için Pairlens'in kilidini aç.",
+      "passkeyNudgeTitle": "Bir sonraki sefere tek dokunuşla açın",
+      "passkeyNudgeBody": "{{venue}} fiyatları anahtarlarınızdan akıtır, yani kilitli kasa grafik yok demektir. Passkey, yazılan bir parola yerine kasayı ve kilit ekranını tek dokunuşta açar.",
+      "passkeyNudgeAction": "Passkey ekle",
+      "passkeyNudgeDismiss": "Şimdi değil",
+      "proofRequired": "Bu kasanın nasıl açıldığını değiştirmeden önce parolanızı doğrulayın.",
       "sealedBannerAction": "Kilidi aç",
       "botsPausedTitle": "Canlı botlar duraklatıldı",
       "botsPausedBody": "Canlı işlemlere devam etmek için Pairlens'in kilidini aç. Kâğıt botlar etkilenmez.",
       "orderBlocked": "Kimlik bilgisi kasan kilitli — canlı emir göndermek için Pairlens'in kilidini aç.",
       "insecureContext": "Güvenli olmayan bir bağlantıda şifreleme kullanılamaz. Kasa kurmak için Pairlens'i HTTPS üzerinden veya localhost'ta aç.",
-      "diverged": "Terminalin açık, ama bu parola kimlik bilgisi kasanı açmadı. İkisini yeniden eşitlemek için parolanı Ayarlar → Güvenlik'ten değiştir.",
       "botParkDetailSealed": "Kimlik bilgisi kasan kilitli. Bu bot, Pairlens'in kilidini açar açmaz canlı işlem yapmaya devam eder. Kâğıt botlar etkilenmez.",
       "botParkDetailError": "Saklı kimlik bilgilerin bu cihazda okunamadı. Bu bot, kimlik bilgileri yüklenir yüklenmez canlı işlem yapmaya devam eder. Kâğıt botlar etkilenmez.",
       "onlyProtectorLeft": "Kasana girmenin tek yolu bu. Kaldırmadan önce bir tane daha ekle.",

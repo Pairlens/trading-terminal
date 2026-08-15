@@ -5,7 +5,7 @@ group: institutions
 order: 2
 eyebrow: For institutions
 updated: AUG 2026
-readTime: 5 min read
+readTime: 6 min read
 ---
 
 Pairlens is designed so that the sensitive parts of a trading setup, keys and
@@ -56,6 +56,9 @@ Community-tier plugins are clamped to the sandbox permanently. A community
 plugin that requests main-app privileges is refused at install rather than
 presented as a choice.
 
+The Python indicator runtime carries the same guard with a fixed allowlist
+instead of a manifest-derived one. See [Python execution](#python-execution).
+
 ## Package integrity
 
 **Guarantee.** Only packages signed by a pinned key will load.
@@ -99,14 +102,34 @@ you chose.
 
 ## Python execution
 
-User scripts run in Pyodide inside a dedicated Web Worker, with no filesystem
-access outside their own script directory and no host API surface beyond the
-candle arrays they are passed. Compute is capped at 10 seconds and package
-installs at 60. A runaway script terminates the worker, which respawns.
+**Guarantee.** An indicator script can reach the candles it is given and the
+package registries the runtime installs from, and nothing else on the network.
 
-Package installs reach PyPI and the Pyodide distribution, both of which are in
-the desktop CSP baseline. An environment that must not fetch wheels should
-restrict that at the network layer and rely on preinstalled packages.
+**Enforcement.** Scripts run in Pyodide inside a dedicated Web Worker with no
+filesystem access outside their own script directory. That worker installs the
+same network guard as the plugin sandbox, before Pyodide boots, over a fixed
+allowlist: the terminal's own origin for the runtime assets, the pyodide CDN,
+and PyPI's two hosts. Pyodide deliberately exposes the browser's APIs to Python
+through its `js` module, so `js.fetch` is an ordinary call from a script and
+has to be answered at this layer. There is no way to widen the list from a
+script and no setting that opens it. Storage globals are removed on the same
+pass, and sub-workers cannot be spawned, since a nested worker would start with
+fresh unguarded globals.
+
+This matters because indicators travel: a plugin can contribute them through
+the `chart:indicator` capability, and a script exported from the workbench is
+an installable plugin package. The code in that worker is not necessarily code
+the operator wrote.
+
+The desktop CSP is a second layer here, not the first one. `connect-src` is a
+single list for the whole webview, so it necessarily contains every venue,
+provider, and API the terminal talks to. It bounds the application; only the
+worker's own allowlist bounds the worker.
+
+Compute is capped at 10 seconds and package installs at 60. A runaway script
+terminates the worker, which respawns. An environment that must not fetch
+wheels at all should block the registries at the network layer and rely on the
+packages built into the runtime.
 
 ## Auditability
 

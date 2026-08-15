@@ -59,7 +59,7 @@ const record = {
 
 async function enrollAndUnlock(): Promise<void> {
   setVaultRecord(record, { broadcast: false })
-  setDek(await importDek(generateRawDek()), { broadcast: false })
+  setDek(await importDek(generateRawDek()), { broadcast: false, proven: true })
 }
 
 beforeEach(() => {

@@ -245,6 +245,18 @@ function getCatalog(): Array<Instrument> {
   return _catalog
 }
 
+/**
+ * Ticker symbols of every stock and ETF in the bundled catalog.
+ *
+ * This IS the stock universe the app surfaces, so it is also the right symbol
+ * set for a broker's bulk quote snapshot: Alpaca's snapshots endpoint takes an
+ * explicit list rather than returning every listing the way a CEX ticker
+ * endpoint does.
+ */
+export function stockSymbols(): Array<string> {
+  return STOCK_ASSETS.map((s) => s.symbol)
+}
+
 // ── Query engine (shared by pairlens-core + basic-symbols) ─────────
 
 export function toInstruments(market: string): Array<Instrument> {

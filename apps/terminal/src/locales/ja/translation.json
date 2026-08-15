@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} は取り扱いがありません",
       "description": "このコネクタはこのペアの市場データを返しませんでした。取り扱いのある別のコネクタをお試しください。"
     },
+    "paneCredentials": {
+      "sealedTitle": "{{venue}} のデータを読み込むにはロックを解除してください",
+      "sealedDescription": "{{venue}} には公開の価格フィードがありません。チャート、板情報、気配値はあなたの API キーで配信されますが、そのキーが今ロックされています。",
+      "missingTitle": "価格を表示するには {{venue}} を接続してください",
+      "missingDescription": "{{venue}} には公開の価格フィードがありません。アカウントを接続すると、チャート、板情報、気配値がそこから直接配信されます。",
+      "connectAction": "{{venue}} を接続"
+    },
     "paneTransition": {
       "switchingTo": "{{venue}} に切り替え中…",
       "switching": "切り替え中…"
@@ -2868,7 +2875,9 @@
       "workflow": "ワークフロー",
       "notSupportedOn": "{{venue}}では未対応です",
       "available": "利用可能: {{amount}}",
-      "slippage": "スリッページ"
+      "slippage": "スリッページ",
+      "extendedHours": "時間外取引",
+      "extendedHoursHint": "プレマーケットと時間外セッションで約定します。板が薄く、スプレッドは広がります。"
     },
     "status": {
       "connecting": "接続中…",
@@ -4094,12 +4103,16 @@
       "sealed": "資格情報の保管庫がロックされています。",
       "sealedBanner_one": "ライブボット 1 台が一時停止中 — 取引を再開するには Pairlens を解錠してください。",
       "sealedBanner_other": "ライブボット {{count}} 台が一時停止中 — 取引を再開するには Pairlens を解錠してください。",
+      "passkeyNudgeTitle": "次回はワンタッチでロック解除",
+      "passkeyNudgeBody": "{{venue}} はあなたのキーで価格を配信するため、保管庫がロックされているとチャートは表示されません。パスキーなら、パスワードを入力する代わりに保管庫とロック画面をワンタッチで開けます。",
+      "passkeyNudgeAction": "パスキーを追加",
+      "passkeyNudgeDismiss": "後で",
+      "proofRequired": "この保管庫の開き方を変更する前に、パスワードを確認してください。",
       "sealedBannerAction": "解錠",
       "botsPausedTitle": "ライブボットが一時停止中",
       "botsPausedBody": "ライブ取引を再開するには Pairlens を解錠してください。ペーパーボットには影響しません。",
       "orderBlocked": "資格情報の保管庫がロックされています — ライブ注文を出すには Pairlens を解錠してください。",
       "insecureContext": "安全でない接続では暗号化を利用できません。保管庫を設定するには HTTPS か localhost で Pairlens を開いてください。",
-      "diverged": "ターミナルは解錠されましたが、そのパスワードでは資格情報の保管庫を開けませんでした。設定 → セキュリティ でパスワードを変更し、両者を再び一致させてください。",
       "botParkDetailSealed": "資格情報の保管庫がロックされています。Pairlens を解錠すると、このボットはすぐにライブ取引を再開します。ペーパーボットには影響しません。",
       "botParkDetailError": "保存された資格情報をこのデバイスで読み込めませんでした。読み込みが完了すると、このボットはすぐにライブ取引を再開します。ペーパーボットには影響しません。",
       "onlyProtectorLeft": "これが保管庫を開ける唯一の方法です。削除する前に、もう一つ追加してください。",

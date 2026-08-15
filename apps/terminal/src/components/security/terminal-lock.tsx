@@ -32,15 +32,11 @@ import {
   cancelTradeChallenge,
   getLockState,
   passTradeChallenge,
-  recordFailedAttempt,
   unlockNow,
   useLockState,
 } from '@/lib/security/lock-store'
 import { setLockEnabled } from '@/lib/security/lock-config'
-import {
-  hasPasswordProtector,
-  useVaultState,
-} from '@/lib/security/vault/vault-session'
+import { useVaultState } from '@/lib/security/vault/vault-session'
 import { track } from '@/lib/analytics-events'
 
 /** The literal a user types to confirm the destructive reset. Not localized
@@ -88,14 +84,6 @@ type VerifyState =
   | 'checking'
   | 'wrong'
   | 'unavailable'
-  /**
-   * The password opened the screen but not the vault. Only reachable if the
-   * lock verifier and the vault's password protector disagree — a partially
-   * applied change-password. Distinct message on purpose: telling the user
-   * "wrong password" when it demonstrably was not would send them to the
-   * destructive reset.
-   */
-  | 'vault-diverged'
   /**
    * The OS key behind the Touch ID protector is gone — the fingerprint set on
    * this Mac changed. No retry will ever work, so this must not read as "wrong"
@@ -231,29 +219,14 @@ function LockOverlay({ reason }: { reason: string }) {
     if (status === 'checking' || blockedSeconds > 0 || !password) return
     setStatus('checking')
     try {
-      // PBKDF2 and the reset routine are both pulled on demand — neither
-      // belongs in the root bundle.
-      const { verifyPassword } = await import('@/lib/security/lock-verifier')
-      const result = await verifyPassword(password)
+      // PBKDF2, the vault unwrap and the reset routine are all pulled on
+      // demand — none of them belongs in the root bundle.
+      const { attemptLockUnlock } = await import('@/lib/security/lock-unlock')
+      const result = await attemptLockUnlock(password)
       if (result === 'ok') {
-        // One password, both doors. The vault is what actually protects the
-        // keys, so a screen unlock that left it sealed would silently stop
-        // live bots for a user who typed the right thing.
-        if (vault.enrolled && !vault.unlocked && vault.hasPassword) {
-          try {
-            const { unlockVault } =
-              await import('@/lib/security/vault/vault-protectors')
-            await unlockVault({ kind: 'password', password })
-          } catch {
-            // Verifier and protector disagree. Let them into the UI — they
-            // proved themselves against the artifact the lock screen owns —
-            // but say plainly that the keys are still sealed.
-            setPassword('')
-            setStatus('vault-diverged')
-            unlockNow()
-            return
-          }
-        }
+        // One password, both doors — and with a vault password protector the
+        // unwrap WAS the test, so there is no longer a second artifact that
+        // can disagree with the first.
         setPassword('')
         setStatus('idle')
         // Also clears the attempt counter, in every window.
@@ -261,30 +234,19 @@ function LockOverlay({ reason }: { reason: string }) {
         return
       }
       if (result === 'missing') {
-        // The keychain answered and there is nothing there: the entry was
-        // deleted out from under us (keychain reset, cleared browser
-        // storage). Anyone who can do that already owns the account, so
-        // bricking the app to spite them is the worse trade — self-heal.
-        //
-        // EXCEPT when a password protector is enrolled: then "no verifier" is
-        // storage damage, not an absent lock, and turning the lock off would
-        // leave the next boot with a vault and no prompt that can open it.
-        // Letting them into the UI with the vault still sealed is fine — the
-        // keys stay ciphertext either way.
-        //
-        // Asked of the RECORD, not `useVaultState()`: that snapshot answers
-        // from the untrusted UI mirror until the record has loaded, and a
-        // wrong `false` here disables the lock over a live vault. A backend
-        // that will not answer lands in the catch below, which stays locked.
-        if (!(await hasPasswordProtector())) {
-          setLockEnabled(false)
-        }
+        // Only reachable with no vault password protector behind this door
+        // (see `attemptLockUnlock`): the verifier is all there was, and it is
+        // gone — a keychain reset, cleared browser storage. Anyone who can do
+        // that already owns the account, so bricking the app to spite them is
+        // the worse trade. Self-heal.
+        setLockEnabled(false)
         setPassword('')
         setStatus('idle')
         unlockNow()
         return
       }
-      recordFailedAttempt()
+      // The attempt is already counted — `attemptLockUnlock` owns that, since
+      // the two paths behind it count differently.
       setStatus('wrong')
     } catch {
       // The keychain BACKEND failed (locked login keychain, D-Bus down).
@@ -379,11 +341,6 @@ function LockOverlay({ reason }: { reason: string }) {
               {status === 'unavailable' && (
                 <p className="text-destructive text-xs">
                   {t('security.lock.keychainUnavailable')}
-                </p>
-              )}
-              {status === 'vault-diverged' && (
-                <p className="text-destructive text-xs">
-                  {t('security.vault.diverged')}
                 </p>
               )}
               {status === 'biometric-invalidated' && (
@@ -583,17 +540,14 @@ function TradeChallengeDialog() {
     if (status === 'checking' || !password) return
     setStatus('checking')
     try {
-      const { verifyPassword } = await import('@/lib/security/lock-verifier')
-      const result = await verifyPassword(password)
+      const { attemptLockUnlock } = await import('@/lib/security/lock-unlock')
+      const result = await attemptLockUnlock(password)
       if (result === 'ok' || result === 'missing') {
         // 'missing' self-heals the same way the overlay does — a check with
-        // nothing to check against must not strand a pending order — and is
-        // suppressed under the same condition, for the same reason: an
-        // enrolled password protector makes a missing verifier storage damage
-        // rather than an absent lock.
-        if (result === 'missing' && !(await hasPasswordProtector())) {
-          setLockEnabled(false)
-        }
+        // nothing to check against must not strand a pending order — and it
+        // is only reachable at all when no vault password protector stands
+        // behind this prompt.
+        if (result === 'missing') setLockEnabled(false)
         setPassword('')
         setStatus('idle')
         passTradeChallenge()

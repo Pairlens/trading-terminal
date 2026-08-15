@@ -39,6 +39,13 @@ export class AlpacaOrderPoller {
   private destroyed = false
   // Last seen per-order state; an order re-emits only when it changes.
   private seen = new Map<string, string>()
+  /**
+   * Whether the baseline poll has run. Tracked separately from `seen.size`
+   * because a brand-new account has NO orders: keyed off the map alone, every
+   * poll would look like the baseline, and the first order a user ever places
+   * would be recorded silently instead of emitted.
+   */
+  private seeded = false
   private lastBalancesJson = ''
 
   connect(
@@ -63,6 +70,7 @@ export class AlpacaOrderPoller {
     if (this.timer) clearInterval(this.timer)
     this.timer = null
     this.seen.clear()
+    this.seeded = false
     this.lastBalancesJson = ''
   }
 
@@ -84,7 +92,8 @@ export class AlpacaOrderPoller {
       ])
 
       // First poll seeds the baseline silently — only CHANGES are updates.
-      const seeding = this.seen.size === 0
+      const seeding = !this.seeded
+      this.seeded = true
 
       for (const order of [...closed, ...open]) {
         if (!order.orderId) continue

@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} tidak tersedia",
       "description": "Konektor ini tidak mengembalikan data pasar untuk pasangan ini. Coba konektor lain yang mencantumkannya."
     },
+    "paneCredentials": {
+      "sealedTitle": "Buka kunci untuk memuat data {{venue}}",
+      "sealedDescription": "{{venue}} tidak punya umpan harga publik. Grafik, order book, dan kuotasi dialirkan lewat kunci API Anda, dan kunci itu sedang terkunci.",
+      "missingTitle": "Hubungkan {{venue}} untuk melihat harga",
+      "missingDescription": "{{venue}} tidak punya umpan harga publik. Hubungkan akun Anda dan grafik, order book, serta kuotasi akan mengalir langsung dari sana.",
+      "connectAction": "Hubungkan {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "Beralih ke {{venue}}…",
       "switching": "Beralih…"
@@ -2868,7 +2875,9 @@
       "workflow": "Workflow",
       "notSupportedOn": "Tidak didukung di {{venue}}",
       "available": "Tersedia: {{amount}}",
-      "slippage": "Slippage"
+      "slippage": "Slippage",
+      "extendedHours": "Jam diperpanjang",
+      "extendedHoursHint": "Eksekusi di sesi pra-pasar dan pasca-penutupan. Order book lebih tipis, spread lebih lebar."
     },
     "status": {
       "connecting": "Menghubungkan…",
@@ -4094,12 +4103,16 @@
       "sealed": "Brankas kredensial Anda terkunci.",
       "sealedBanner_one": "1 bot live dijeda — buka Pairlens untuk melanjutkan trading.",
       "sealedBanner_other": "{{count}} bot live dijeda — buka Pairlens untuk melanjutkan trading.",
+      "passkeyNudgeTitle": "Lain kali buka dengan satu sentuhan",
+      "passkeyNudgeBody": "{{venue}} mengalirkan harga dari kunci Anda, jadi brankas terkunci berarti tidak ada grafik. Passkey membuka brankas dan layar kunci dalam satu sentuhan, bukan kata sandi yang diketik.",
+      "passkeyNudgeAction": "Tambahkan passkey",
+      "passkeyNudgeDismiss": "Nanti saja",
+      "proofRequired": "Konfirmasi kata sandi Anda sebelum mengubah cara brankas ini dibuka.",
       "sealedBannerAction": "Buka",
       "botsPausedTitle": "Bot live dijeda",
       "botsPausedBody": "Buka Pairlens untuk melanjutkan trading live. Bot paper tidak terpengaruh.",
       "orderBlocked": "Brankas kredensial Anda terkunci — buka Pairlens untuk mengirim order live.",
       "insecureContext": "Enkripsi tidak tersedia pada koneksi yang tidak aman. Buka Pairlens melalui HTTPS, atau di localhost, untuk menyiapkan brankas.",
-      "diverged": "Terminal Anda terbuka, tetapi kata sandi itu tidak membuka brankas kredensial. Ubah kata sandi di Pengaturan → Keamanan agar keduanya selaras kembali.",
       "botParkDetailSealed": "Brankas kredensial Anda terkunci. Bot ini melanjutkan trading live begitu Anda membuka kunci Pairlens. Bot paper tidak terpengaruh.",
       "botParkDetailError": "Kredensial tersimpan Anda tidak dapat dibaca di perangkat ini. Bot ini melanjutkan trading live begitu kredensial berhasil dimuat. Bot paper tidak terpengaruh.",
       "onlyProtectorLeft": "Ini satu-satunya cara masuk ke brankas Anda. Tambahkan cara lain sebelum menghapus ini.",

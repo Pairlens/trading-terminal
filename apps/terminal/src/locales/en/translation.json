@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} isn’t available",
       "description": "This connector returned no market data for this pair. Try another connector that lists it."
     },
+    "paneCredentials": {
+      "sealedTitle": "Unlock to load {{venue}} data",
+      "sealedDescription": "{{venue}} has no public price feed. Your API keys are what stream the chart, the book and quotes, and they are locked right now.",
+      "missingTitle": "Connect {{venue}} to see prices",
+      "missingDescription": "{{venue}} has no public price feed. Connect your account and the chart, order book and quotes stream straight from it.",
+      "connectAction": "Connect {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "Switching to {{venue}}…",
       "switching": "Switching…"
@@ -2868,7 +2875,9 @@
       "workflow": "Workflow",
       "notSupportedOn": "Not supported on {{venue}}",
       "available": "Avail: {{amount}}",
-      "slippage": "Slippage"
+      "slippage": "Slippage",
+      "extendedHours": "Extended hours",
+      "extendedHoursHint": "Fill in the pre-market and after-hours sessions. Thinner book, wider spreads."
     },
     "status": {
       "connecting": "Connecting…",
@@ -4094,12 +4103,16 @@
       "sealed": "Your credential vault is locked.",
       "sealedBanner_one": "1 live bot is paused — unlock Pairlens to resume trading.",
       "sealedBanner_other": "{{count}} live bots are paused — unlock Pairlens to resume trading.",
+      "passkeyNudgeTitle": "Unlock with one tap next time",
+      "passkeyNudgeBody": "{{venue}} streams prices from your keys, so a locked vault means no chart. A passkey opens the vault and the lock screen in a single touch, instead of a typed password.",
+      "passkeyNudgeAction": "Add a passkey",
+      "passkeyNudgeDismiss": "Not now",
+      "proofRequired": "Confirm your password before changing how this vault opens.",
       "sealedBannerAction": "Unlock",
       "botsPausedTitle": "Live bots are paused",
       "botsPausedBody": "Unlock Pairlens to resume live trading. Paper bots are unaffected.",
       "orderBlocked": "Your credential vault is locked — unlock Pairlens to place live orders.",
       "insecureContext": "Encryption is unavailable over an insecure connection. Open Pairlens over HTTPS, or on localhost, to set up a vault.",
-      "diverged": "Your terminal is unlocked, but that password did not open your credential vault. Change your password in Settings → Security to bring the two back in sync.",
       "botParkDetailSealed": "Your credential vault is locked. This bot resumes live trading as soon as you unlock Pairlens. Paper bots are unaffected.",
       "botParkDetailError": "Your stored credentials could not be read on this device. This bot resumes live trading as soon as they load. Paper bots are unaffected.",
       "onlyProtectorLeft": "This is the only way into your vault. Add another before removing it.",

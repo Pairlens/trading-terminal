@@ -5,7 +5,7 @@ group: traders
 order: 10
 eyebrow: For traders
 updated: AUG 2026
-readTime: 14 min read
+readTime: 10 min read
 ---
 
 Open settings with <kbd>⌘,</kbd>, from the user menu, or by searching for a
@@ -162,8 +162,17 @@ them also opens the terminal lock screen.
 Touch ID cannot be your only way in: macOS invalidates the key whenever the
 fingerprints on the Mac change, and a vault with nothing else in it would be
 one System Settings visit from unopenable. You cannot remove the last method
-either, and removing any of them means unlocking the vault first. There is no
-recovery here.
+either. There is no recovery here.
+
+**Changing how the vault opens asks for your password, even when it is already
+open.** Adding a method always did, because the data key cannot be re-wrapped
+without recovering it first. Removing one and turning the vault off now ask
+too. The reason is the second window: open the terminal in another tab and it
+receives the key from the first, so it is unlocked without anyone having typed
+anything. That is what makes a second window useful, and it is exactly what you
+do not want standing behind "remove this passkey" on a machine you walked away
+from. Reading your keys still costs nothing there. Changing the locks costs one
+password.
 
 **Hard lock** seals the vault rather than just covering the screen. Live bots
 and automations stop trading until you unlock again; paper bots keep running.
@@ -179,10 +188,18 @@ The vault and the lock screen share one attempt limit. Five wrong passwords arm
 a doubling delay capped at five minutes, and it survives a reload and a second
 window, so a wrong vault password also delays the lock screen.
 
-On desktop your password check lives in the system keychain and never leaves
-the machine. In a browser it is in browser storage, which means clearing site
-data removes the lock. The command-line tool takes API keys as arguments and
-never reads the vault at all.
+**What checks your password depends on whether a vault stands behind it.** With
+a vault password enrolled, the lock screen answers by actually unwrapping your
+vault key: it either decrypts or it does not, so nothing an attacker can edit
+in browser storage makes it say yes. Without one, the check is a stored hash of
+your password, which is the only artifact there is. On desktop that hash sits
+in the system keychain and never leaves the machine. In a browser it is in
+browser storage, so clearing site data removes the lock, and someone who can
+edit that storage can get past the screen. They reach a terminal with no keys
+in it, because there were none to protect in that configuration.
+
+The command-line tool takes API keys as arguments and never reads the vault at
+all.
 
 For the guarantees behind all of this, and how each one is enforced, see the
 [security model](/docs/security-model).

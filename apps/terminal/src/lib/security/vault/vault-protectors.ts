@@ -22,6 +22,7 @@
 
 import {
   VaultConflictError,
+  VaultProofRequiredError,
   VaultProtectorError,
   VaultSealedError,
 } from './vault-errors'
@@ -52,6 +53,7 @@ import {
   ensureVaultLoaded,
   getDek,
   invalidateVaultRecord,
+  isVaultProven,
   isVaultUnlocked,
   sealVault,
   setDek,
@@ -259,7 +261,7 @@ export async function createVault(
     // Writes the record first, then re-encrypts — the wrapped DEK must exist
     // on disk before the first value that needs it.
     const { record, migrated } = await migrateStoredValues(rawDek, draft, null)
-    setDek(await importDek(rawDek), { broadcast: true })
+    setDek(await importDek(rawDek), { broadcast: true, proven: true })
     setVaultRecord(record, { broadcast: true })
     return { record, migrated }
   } catch (err) {
@@ -294,7 +296,7 @@ export async function addProtector(
     // Proving a protector is proving identity — an enrollment that left the
     // vault sealed would be a prompt for nothing.
     if (!isVaultUnlocked()) {
-      setDek(await importDek(rawDek), { broadcast: true })
+      setDek(await importDek(rawDek), { broadcast: true, proven: true })
     }
     return next
   } finally {
@@ -325,6 +327,19 @@ export async function removeProtector(
   // Otherwise someone who walks up to an unattended-but-locked terminal can
   // strip the passkey and leave only a password to guess.
   if (!isVaultUnlocked()) throw new VaultSealedError()
+  // And `unlocked` is not enough on its own: a window that adopted the key
+  // from a sibling never proved anything, so an unattended terminal with any
+  // other tab open would answer "yes" to that same attack. Reading keys off
+  // an adopted session is the point of the handoff; changing who can open the
+  // vault is not.
+  if (!isVaultProven()) {
+    throw new VaultProofRequiredError(
+      i18n.t('security.vault.proofRequired', {
+        defaultValue:
+          'Confirm your password before changing how this vault opens.',
+      }),
+    )
+  }
   if (!record.protectors.some((p) => p.id === id)) {
     throw new VaultProtectorError('No such protector', 'no-match')
   }
@@ -397,7 +412,7 @@ export async function unlockVault(unlock: UnlockInput): Promise<void> {
   }
   const raw = await recoverRawDek(record, unlock)
   try {
-    setDek(await importDek(raw), { broadcast: true })
+    setDek(await importDek(raw), { broadcast: true, proven: true })
   } finally {
     zero(raw)
   }
@@ -468,7 +483,7 @@ export async function finishPendingMigration(
     const dek = await importDek(raw)
     // Adopt the key BEFORE the migration: it re-reads what an earlier attempt
     // already converted, and a sealed session would fail those reads.
-    setDek(dek, { broadcast: true })
+    setDek(dek, { broadcast: true, proven: true })
     const { record: next } = await finishMigration(dek, record)
     setVaultRecord(next, { broadcast: true })
     return next

@@ -363,3 +363,121 @@ describe('AlpacaWsClient connection lifecycle', () => {
     expect(sockets.length).toBe(1)
   })
 })
+
+/**
+ * Two pair keys, one Alpaca symbol.
+ *
+ * 'AAPL' comes from the shared instruments catalog and 'AAPL-USD' is this
+ * connector's own pair form; both reduce to 'AAPL'. The subscription maps used
+ * to be keyed by that symbol, so the second subscriber overwrote the first's
+ * entry: the first went permanently silent, and whichever unsubscribed first
+ * tore down the other's subscription too. A workspace holding both chips in
+ * the recent-pairs strip hit this every time.
+ */
+describe('AlpacaWsClient — two pair keys sharing one symbol', () => {
+  it('feeds both subscribers from a single symbol', async () => {
+    const { state, connectFn } = fakeTransport()
+    const client = new AlpacaWsClient(getCreds, connectFn)
+    // A real snapshot response: the WS trade handler only patches a sub that
+    // already holds one, so an empty stub would make both lists empty for a
+    // reason that has nothing to do with the collision under test.
+    globalThis.fetch = mock(
+      async () =>
+        new Response(
+          JSON.stringify({
+            AAPL: {
+              latestTrade: { p: 190, t: '2026-06-30T14:00:00Z' },
+              latestQuote: { bp: 189, bs: 1, ap: 191, as: 1 },
+              dailyBar: { h: 195, l: 185, v: 1000, c: 190 },
+              prevDailyBar: { c: 188 },
+            },
+          }),
+          { status: 200 },
+        ),
+    ) as unknown as typeof fetch
+
+    const bare: Array<number> = []
+    const quoted: Array<number> = []
+    const unsubA = client.subscribeTicker('AAPL', (u) => {
+      if (u.type === 'ticker') bare.push(u.ticker.last)
+    })
+    const unsubB = client.subscribeTicker('AAPL-USD', (u) => {
+      if (u.type === 'ticker') quoted.push(u.ticker.last)
+    })
+    await tick(5)
+    authenticate(state)
+    await tick(5)
+
+    state.events!.onMessage(
+      JSON.stringify([{ T: 't', S: 'AAPL', p: 200, t: 2 }]),
+    )
+    await tick(5)
+
+    // Neither list may be empty: an empty one is the overwritten subscriber.
+    expect(bare.length).toBeGreaterThan(0)
+    expect(quoted.length).toBeGreaterThan(0)
+    expect(bare.at(-1)).toBe(200)
+    expect(quoted.at(-1)).toBe(200)
+
+    unsubA()
+    unsubB()
+    client.destroy()
+  })
+
+  it('unsubscribing one leaves the other subscribed to the symbol', async () => {
+    const { state, connectFn } = fakeTransport()
+    const client = new AlpacaWsClient(getCreds, connectFn)
+    stubBarsFetch([])
+
+    const unsubA = client.subscribeTicker('AAPL', () => {})
+    client.subscribeTicker('AAPL-USD', () => {})
+    await tick(5)
+    authenticate(state)
+    await tick(5)
+
+    unsubA()
+    await tick(5)
+
+    // The channel must survive: an unsubscribe frame dropping 'AAPL' here
+    // would silence the pair key that never asked to leave.
+    const unsubscribes = state.sent.filter((m) => m['action'] === 'unsubscribe')
+    for (const frame of unsubscribes) {
+      expect(frame['trades'] ?? []).not.toContain('AAPL')
+    }
+
+    client.destroy()
+  })
+})
+
+describe('AlpacaWsClient — pairs the venue cannot serve', () => {
+  // 'BTC-USDT' reduces to 'BTC', a real NYSE Arca ticker. Subscribing would
+  // stream a spot-bitcoin ETF under a crypto pair's label.
+  it('never opens a channel for a non-USD quote leg', async () => {
+    const { state, connectFn } = fakeTransport()
+    const client = new AlpacaWsClient(getCreds, connectFn)
+    stubBarsFetch([])
+
+    const ticks: Array<unknown> = []
+    const unsubTicker = client.subscribeTicker('BTC-USDT', (u) => ticks.push(u))
+    const unsubBook = client.subscribeOrderbook('BTC-USDT', (u) =>
+      ticks.push(u),
+    )
+    const unsubCandles = client.subscribeCandles('BTC-USDT', '15m', (u) =>
+      ticks.push(u),
+    )
+    await tick(5)
+
+    // Nothing subscribed means nothing to authenticate for: no socket work,
+    // and above all no callback carrying another instrument's price.
+    expect(ticks).toEqual([])
+    const subs = state.sent.filter((m) => m['action'] === 'subscribe')
+    for (const frame of subs) {
+      expect(JSON.stringify(frame)).not.toContain('BTC')
+    }
+
+    unsubTicker()
+    unsubBook()
+    unsubCandles()
+    client.destroy()
+  })
+})

@@ -6,7 +6,7 @@ parent: python-scripts
 order: 1
 eyebrow: For traders
 updated: AUG 2026
-readTime: 8 min read
+readTime: 9 min read
 ---
 
 Custom indicators in Pairlens work the way Pine Script does on TradingView, a
@@ -252,6 +252,24 @@ from the browser HTTP cache after that. All of this works identically in the
 desktop app and in the browser build, because scripts run in your own local
 Python runtime either way. Nothing about your code or its dependencies
 touches a Pairlens server.
+
+### Scripts cannot reach the network themselves
+
+Package installs are the only network the Python runtime does. A script that
+calls out on its own, through `js.fetch` or any other route into the browser's
+APIs, is refused with a message naming the reason, and the runtime's own
+allowlist holds three hosts: the pyodide CDN and PyPI's two.
+
+This is not about your own scripts, which can already read your candles by
+design. It is about the ones you did not write. Indicators travel: a plugin can
+contribute them, and any script exported from the workbench is a plugin zip
+somebody can install. Without the boundary, one of those could quietly ship
+your market data, your parameters, or anything else it can see to a server of
+its choosing, from inside a runtime that looks local.
+
+So there is no way to widen it from a script, and no setting that opens it. If
+you need outside data in an indicator, fetch it into a workspace variable or a
+workflow and pass it in.
 
 ## On the chart
 

@@ -1,12 +1,12 @@
 ---
 title: Place an order
-description: The order ticket, market and limit orders, bracket orders built from a workflow, and how the co-pilot proposes trades you approve.
+description: The order ticket, market and limit orders, bracket orders built from a workflow, US stock hours and fractional shares, and how the co-pilot proposes trades you approve.
 group: traders
 parent: trading
 order: 2
 eyebrow: For traders
 updated: AUG 2026
-readTime: 5 min read
+readTime: 6 min read
 ---
 
 The Trade Entry panel is the order ticket. Add it to any workspace, or use a
@@ -74,6 +74,45 @@ For a DEX market the ticket swaps the venue-specific bits: no Workflow tab, and
 a **Slippage** row with 0.1%, 0.5%, 1%, and 3% presets for market swaps. Limit
 orders, where the chain supports them, rest at your price and do not need a
 slippage tolerance. See [DEX and wallets](/docs/dex-trading).
+
+## US stocks
+
+Stocks trade on a schedule, so the ticket behaves a little differently on
+Alpaca.
+
+Orders placed outside regular market hours, 9:30am to 4:00pm Eastern on trading
+days, are accepted and queued for the next open rather than filled on the spot.
+They show up in Positions as live orders in the meantime, and a market order
+placed on a Friday evening sits until Monday morning.
+
+### Extended hours
+
+To trade before the open or after the close instead of waiting for it, switch
+the ticket to **Limit** and turn on **Extended hours**. The order then works
+the pre-market session from 4:00am and the after-hours session through 8:00pm
+Eastern. The toggle appears only on stock venues and only for limit orders. It
+stays on while you keep placing limit orders, clears the moment you switch to
+Market or Workflow, and is never carried over to your next session: those
+sessions are thin and spreads are wider, so routing into them should be a
+choice you still remember making, not one inherited from last night.
+
+Only limit orders are eligible. A market order has no continuous auction to
+fill against out of session, and stops and take-profits are not accepted at
+all, so the ticket refuses those combinations up front and tells you which one
+to change rather than sending an order the venue will bounce.
+
+Fractional shares work, and the percentage buttons in the ticket produce them
+routinely: selling 25% of a 7 share position is 1.75 shares. Alpaca accepts
+fractional quantities on market and limit orders only, and only for the current
+session, so a fractional limit order rests for the day instead of resting
+indefinitely. Stops and take-profits are the exception. Those need a whole
+number of shares, because the fractional version could only ever be a day
+order, and a stop-loss that quietly expires at the closing bell is worse than
+no stop at all. The ticket says so and asks you to round the size rather than
+placing one.
+
+You can also size a market order in dollars instead of shares by switching the
+size field to USD, which is how you buy $500 of a stock trading at $305.
 
 ## Watching the order
 

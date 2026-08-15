@@ -5,12 +5,17 @@ import { restFetch as fetch } from '@pairlens/market-engine/http'
 import {
   mapTimeframeToAlpacaInterval,
   parseAlpacaBar,
+  parseAlpacaQuoteBook,
   parseAlpacaSnapshot,
+  servesAlpacaPair,
   toAlpacaSymbol,
 } from './parser'
 import { ALPACA_DATA_REST } from './regions'
 import type { Candle } from '@pairlens/shared/types'
-import type { TickerSnapshot } from '@pairlens/market-engine/types'
+import type {
+  OrderbookLevel,
+  TickerSnapshot,
+} from '@pairlens/market-engine/types'
 
 export type AlpacaCredentials = {
   apiKey: string
@@ -53,6 +58,12 @@ export async function fetchAlpacaCandles(
 ): Promise<Array<Candle>> {
   const interval = mapTimeframeToAlpacaInterval(timeframe)
   if (!interval) throw new Error(`Unsupported timeframe: ${timeframe}`)
+
+  // No history for a pair this venue cannot serve, which is also what the
+  // terminal's availability probe asks: an empty answer here is what turns a
+  // crypto pair on Alpaca into "not available on this venue" rather than an
+  // unrelated equity's candles. See `servesAlpacaPair`.
+  if (!servesAlpacaPair(pair)) return []
 
   const symbol = toAlpacaSymbol(pair)
   const capped = Math.min(limit, 1000)
@@ -99,6 +110,9 @@ export async function fetchAlpacaSnapshot(
   pair: string,
   credentials: AlpacaCredentials,
 ): Promise<TickerSnapshot> {
+  if (!servesAlpacaPair(pair)) {
+    throw new Error(`Alpaca does not quote ${pair}`)
+  }
   const symbol = toAlpacaSymbol(pair)
   const url = `${ALPACA_DATA_REST}/v2/stocks/snapshots?symbols=${encodeURIComponent(symbol)}&feed=iex`
 
@@ -115,4 +129,79 @@ export async function fetchAlpacaSnapshot(
     throw new Error(`Alpaca snapshot: no data for ${symbol}`)
   }
   return snapshot
+}
+
+/**
+ * Top-of-book bid/ask WITH sizes for one symbol.
+ *
+ * Separate from `fetchAlpacaSnapshot` because `TickerSnapshot` carries only
+ * prices, and seeding the order book from it would report every level as size
+ * zero — a book that looks broken rather than thin. The IEX feed is
+ * top-of-book only, so this is one level per side by construction.
+ */
+export async function fetchAlpacaQuoteBook(
+  pair: string,
+  credentials: AlpacaCredentials,
+): Promise<{
+  bids: Array<OrderbookLevel>
+  asks: Array<OrderbookLevel>
+  ts: number
+} | null> {
+  if (!servesAlpacaPair(pair)) return null
+  const symbol = toAlpacaSymbol(pair)
+  const url = `${ALPACA_DATA_REST}/v2/stocks/snapshots?symbols=${encodeURIComponent(symbol)}&feed=iex`
+
+  const resp = await fetch(url, { headers: alpacaDataHeaders(credentials) })
+  if (!resp.ok) return null
+
+  const json = (await resp.json()) as Record<
+    string,
+    Record<string, unknown> | undefined
+  >
+  return parseAlpacaQuoteBook(json[symbol]?.['latestQuote'])
+}
+
+/**
+ * One bulk quote snapshot for the whole bundled stock catalog, shaped for the
+ * `market-data:ticker-snapshot` capability that feeds the watchlist and the
+ * discovery surfaces.
+ *
+ * A CEX answers this from a single "all tickers" endpoint; Alpaca's snapshots
+ * route wants an explicit symbol list, so the catalog supplies it. Symbols the
+ * feed has no data for are dropped rather than reported at zero.
+ *
+ * Entries are keyed by the BARE ticker, not a 'BASE-QUOTE' pair key. Consumers
+ * look a quote up by `instrument.symbol`, and a stock instrument's symbol is
+ * the bare ticker — the same key the App Server catalog serves, so a watchlist
+ * saved online still resolves against this. Emitting 'AAPL-USD' here misses
+ * every row silently: the price is simply never found and the cell stays
+ * blank, which looks exactly like the connector not implementing this at all.
+ */
+export async function fetchAlpacaBulkTickers(
+  symbols: Array<string>,
+  credentials: AlpacaCredentials,
+): Promise<Array<{ symbol: string; price: number; change24h: number }>> {
+  if (symbols.length === 0) return []
+
+  const url =
+    `${ALPACA_DATA_REST}/v2/stocks/snapshots` +
+    `?symbols=${encodeURIComponent(symbols.join(','))}&feed=iex`
+
+  const resp = await fetch(url, { headers: alpacaDataHeaders(credentials) })
+  if (!resp.ok) {
+    throw new Error(`Alpaca snapshots error ${resp.status}`)
+  }
+
+  const json = (await resp.json()) as Record<string, unknown>
+  const out: Array<{ symbol: string; price: number; change24h: number }> = []
+  for (const symbol of symbols) {
+    const snapshot = parseAlpacaSnapshot(json[symbol])
+    if (!snapshot || snapshot.last <= 0) continue
+    out.push({
+      symbol,
+      price: snapshot.last,
+      change24h: snapshot.change24h,
+    })
+  }
+  return out
 }

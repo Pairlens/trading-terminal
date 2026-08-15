@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "找不到 {{pair}}",
       "description": "该连接器没有返回这个交易对的行情数据。换一个上架了它的连接器试试。"
     },
+    "paneCredentials": {
+      "sealedTitle": "解锁以加载 {{venue}} 数据",
+      "sealedDescription": "{{venue}} 没有公开行情源。图表、订单簿和报价都由你的 API 密钥推送，而密钥目前处于锁定状态。",
+      "missingTitle": "连接 {{venue}} 以查看价格",
+      "missingDescription": "{{venue}} 没有公开行情源。连接你的账户后，图表、订单簿和报价将直接从中推送。",
+      "connectAction": "连接 {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "正在切换到 {{venue}}…",
       "switching": "正在切换…"
@@ -2868,7 +2875,9 @@
       "workflow": "工作流",
       "notSupportedOn": "{{venue}} 不支持",
       "available": "可用：{{amount}}",
-      "slippage": "滑点"
+      "slippage": "滑点",
+      "extendedHours": "盘前盘后交易",
+      "extendedHoursHint": "在盘前和盘后时段成交。盘口更薄，价差更大。"
     },
     "status": {
       "connecting": "连接中…",
@@ -4094,12 +4103,16 @@
       "sealed": "你的凭证保险库已锁定。",
       "sealedBanner_one": "1 个实盘机器人已暂停 — 解锁 Pairlens 以恢复交易。",
       "sealedBanner_other": "{{count}} 个实盘机器人已暂停 — 解锁 Pairlens 以恢复交易。",
+      "passkeyNudgeTitle": "下次一触即可解锁",
+      "passkeyNudgeBody": "{{venue}} 通过你的密钥推送行情，保险库锁上就没有图表。使用通行密钥，只需轻触一次即可同时打开保险库和锁屏，无需输入密码。",
+      "passkeyNudgeAction": "添加通行密钥",
+      "passkeyNudgeDismiss": "暂不",
+      "proofRequired": "更改此保险库的解锁方式前，请先确认你的密码。",
       "sealedBannerAction": "解锁",
       "botsPausedTitle": "实盘机器人已暂停",
       "botsPausedBody": "解锁 Pairlens 以恢复实盘交易。模拟机器人不受影响。",
       "orderBlocked": "你的凭证保险库已锁定 — 解锁 Pairlens 才能下实盘订单。",
       "insecureContext": "在不安全的连接上无法加密。请通过 HTTPS 或在 localhost 上打开 Pairlens 来设置保险库。",
-      "diverged": "终端已解锁，但该密码没能打开你的凭证保险库。请在 设置 → 安全 中更改密码，让两者重新一致。",
       "botParkDetailSealed": "你的凭证保险库已锁定。只要解锁 Pairlens，此机器人就会恢复实盘交易。模拟机器人不受影响。",
       "botParkDetailError": "你保存的凭证无法在此设备上读取。凭证一旦加载完成，此机器人就会恢复实盘交易。模拟机器人不受影响。",
       "onlyProtectorLeft": "这是进入你保险库的唯一方式。请先添加另一种方式，再移除它。",

@@ -9,11 +9,13 @@ import {
   parseAlpacaBar,
   parseAlpacaQuoteBook,
   parseTs,
+  servesAlpacaPair,
   timeframeToMs,
   toAlpacaSymbol,
 } from './parser'
 import {
   fetchAlpacaCandles,
+  fetchAlpacaQuoteBook,
   fetchAlpacaSnapshot,
   missingCredentialsError,
 } from './rest-client'
@@ -88,9 +90,16 @@ type BookSub = { pair: string; callback: OrderbookCallback }
  */
 export class AlpacaWsClient {
   private session: ReconnectingWsSession
-  private candleSubs = new Map<string, CandleSub>() // key: SYMBOL:tf
-  private tickerSubs = new Map<string, TickerSub>() // key: SYMBOL
-  private bookSubs = new Map<string, BookSub>() // key: SYMBOL
+  // Keyed by PAIR, never by Alpaca symbol. Several pair keys reduce to one
+  // symbol — 'AAPL' from the shared instruments catalog and 'AAPL-USD' from
+  // this connector's own pair form both become 'AAPL' — and a symbol-keyed
+  // map let the second subscriber overwrite the first's entry. The first then
+  // received nothing, and whichever unsubscribed first deleted the other's
+  // subscription. `sub.pair` still holds the SYMBOL, which is what the WS
+  // channel sets and the inbound dispatch match on.
+  private candleSubs = new Map<string, CandleSub>() // key: PAIR:tf
+  private tickerSubs = new Map<string, TickerSub>() // key: PAIR
+  private bookSubs = new Map<string, BookSub>() // key: PAIR
   private destroyed = false
   private authenticated = false
   private reconcileScheduled = false
@@ -158,10 +167,16 @@ export class AlpacaWsClient {
     const credentials = this.getCredentials()
     if (!credentials) throw missingCredentialsError()
 
+    // Refused rather than approximated — see `servesAlpacaPair`. Silence is
+    // the right answer here: the terminal's availability probe asks REST,
+    // which refuses the same pair, and the pane says the venue does not carry
+    // it instead of drawing an unrelated instrument's candles.
+    if (!servesAlpacaPair(pair)) return () => {}
+
     const symbol = toAlpacaSymbol(pair)
     const durationMs = timeframeToMs(timeframe)
     if (!durationMs) throw new Error(`Unsupported timeframe: ${timeframe}`)
-    const key = `${symbol}:${timeframe}`
+    const key = `${pair}:${timeframe}`
 
     const sub: CandleSub = {
       pair: symbol,
@@ -206,6 +221,8 @@ export class AlpacaWsClient {
     const credentials = this.getCredentials()
     if (!credentials) return () => {}
 
+    if (!servesAlpacaPair(pair)) return () => {}
+
     const symbol = toAlpacaSymbol(pair)
 
     const sub: TickerSub = {
@@ -214,14 +231,14 @@ export class AlpacaWsClient {
       snapshot: null,
       refreshTimer: null,
     }
-    this.tickerSubs.set(symbol, sub)
+    this.tickerSubs.set(pair, sub)
 
     const refresh = () => {
       const creds = this.getCredentials()
       if (!creds) return
       fetchAlpacaSnapshot(symbol, creds)
         .then((snapshot) => {
-          if (this.tickerSubs.get(symbol) !== sub) return
+          if (this.tickerSubs.get(pair) !== sub) return
           sub.snapshot = snapshot
           sub.callback({ type: 'ticker', ticker: snapshot })
         })
@@ -237,7 +254,7 @@ export class AlpacaWsClient {
 
     return () => {
       if (sub.refreshTimer) clearInterval(sub.refreshTimer)
-      this.tickerSubs.delete(symbol)
+      this.tickerSubs.delete(pair)
       this.scheduleReconcile()
       this.releaseIfIdle()
     }
@@ -249,31 +266,34 @@ export class AlpacaWsClient {
     const credentials = this.getCredentials()
     if (!credentials) return () => {}
 
+    if (!servesAlpacaPair(pair)) return () => {}
+
     const symbol = toAlpacaSymbol(pair)
-    this.bookSubs.set(symbol, { pair: symbol, callback: cb })
+    const sub: BookSub = { pair: symbol, callback: cb }
+    this.bookSubs.set(pair, sub)
     this.ensureAcquired()
     this.scheduleReconcile()
 
     // Seed with the REST quote so the book renders before the first WS tick.
-    fetchAlpacaSnapshot(symbol, credentials)
-      .then((snapshot) => {
-        const sub = this.bookSubs.get(symbol)
-        if (!sub) return
-        if (snapshot.bid > 0 || snapshot.ask > 0) {
-          sub.callback({
-            type: 'snapshot',
-            bids: snapshot.bid > 0 ? [[snapshot.bid, 0]] : [],
-            asks: snapshot.ask > 0 ? [[snapshot.ask, 0]] : [],
-            ts: snapshot.ts,
-          })
-        }
+    // Sizes come from the quote itself: seeding from a TickerSnapshot would
+    // report both levels at size zero, which reads as a broken book rather
+    // than a one-level one.
+    fetchAlpacaQuoteBook(symbol, credentials)
+      .then((book) => {
+        if (this.bookSubs.get(pair) !== sub || !book) return
+        sub.callback({
+          type: 'snapshot',
+          bids: book.bids,
+          asks: book.asks,
+          ts: book.ts,
+        })
       })
       .catch(() => {
         // WS quotes will populate the book.
       })
 
     return () => {
-      this.bookSubs.delete(symbol)
+      this.bookSubs.delete(pair)
       this.scheduleReconcile()
       this.releaseIfIdle()
     }
@@ -514,8 +534,10 @@ export class AlpacaWsClient {
     const book = parseAlpacaQuoteBook(msg)
     if (!book) return
 
-    const bookSub = this.bookSubs.get(symbol)
-    if (bookSub) {
+    // Fan out: one symbol can back several pair keys, and `handleBar` above
+    // has always matched this way.
+    for (const bookSub of this.bookSubs.values()) {
+      if (bookSub.pair !== symbol) continue
       bookSub.callback({
         type: 'snapshot',
         bids: book.bids,
@@ -524,8 +546,8 @@ export class AlpacaWsClient {
       })
     }
 
-    const tickerSub = this.tickerSubs.get(symbol)
-    if (tickerSub?.snapshot) {
+    for (const tickerSub of this.tickerSubs.values()) {
+      if (tickerSub.pair !== symbol || !tickerSub.snapshot) continue
       const next = {
         ...tickerSub.snapshot,
         bid: book.bids[0]?.[0] ?? tickerSub.snapshot.bid,
@@ -539,22 +561,22 @@ export class AlpacaWsClient {
 
   private handleTrade(msg: Record<string, unknown>): void {
     const symbol = String(msg['S'] ?? '').toUpperCase()
-    const sub = this.tickerSubs.get(symbol)
-    if (!sub?.snapshot) return
-
     const price = Number(msg['p'] ?? 0)
     if (!Number.isFinite(price) || price <= 0) return
     const ts = parseTs(msg['t']) ?? Date.now()
 
-    const next = {
-      ...sub.snapshot,
-      last: price,
-      high24h: Math.max(sub.snapshot.high24h, price),
-      low24h: Math.min(sub.snapshot.low24h, price),
-      ts,
+    for (const sub of this.tickerSubs.values()) {
+      if (sub.pair !== symbol || !sub.snapshot) continue
+      const next = {
+        ...sub.snapshot,
+        last: price,
+        high24h: Math.max(sub.snapshot.high24h, price),
+        low24h: Math.min(sub.snapshot.low24h, price),
+        ts,
+      }
+      sub.snapshot = next
+      sub.callback({ type: 'ticker', ticker: next })
     }
-    sub.snapshot = next
-    sub.callback({ type: 'ticker', ticker: next })
   }
 
   /** Close only after a grace period with no subscriptions. */

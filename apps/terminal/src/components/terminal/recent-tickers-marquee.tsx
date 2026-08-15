@@ -14,20 +14,38 @@ import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
 import { useLivePairPrice } from '@/hooks/use-live-pair-price'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useRecentPairs } from '@/lib/recent-tickers'
+import { assetClassFromQuoteLeg } from '@/lib/pairs'
 import { formatPrice } from '@/lib/format-price'
 
 // Horizontal scroll speed of the marquee track, px/s.
 const SCROLL_SPEED = 30
 
-/** Pick a venue that can actually stream the pair's asset class. */
+/**
+ * Pick a venue that can actually stream the pair's asset class.
+ *
+ * The asset class comes from the instruments index, which is an App Server
+ * read: standalone, offline, or simply not signed in, EVERY symbol comes back
+ * unknown. Falling back to the preferred venue there is how a crypto pair got
+ * priced by a stocks-only venue — Alpaca quoted 'BTC-USDT' as its base leg
+ * 'BTC', a real NYSE Arca spot-bitcoin ETF near $28, under the crypto pair's
+ * own label. The connector refuses that now, but the routing decision was
+ * wrong before it ever got there.
+ *
+ * So the quote leg is read off the pair key when the index has nothing to say.
+ * It is not a full asset-class inference and does not try to be: a quote leg
+ * that is not USD is not a US equity, which is the only call that has to be
+ * right here. Anything still unknown keeps the old assume-compatible rule.
+ */
 function resolveVenue(
+  symbol: string,
   preferred: string,
   markets: Array<MarketOption>,
   assetClass: string | undefined,
 ): string {
-  if (!assetClass) return preferred
+  const known = assetClass ?? assetClassFromQuoteLeg(symbol)
+  if (!known) return preferred
   const supports = (m: MarketOption) =>
-    (m.assetClasses as Array<string>).includes(assetClass)
+    (m.assetClasses as Array<string>).includes(known)
   const preferredOption = markets.find((m) => m.value === preferred)
   // Unknown markets are assumed compatible (mirrors market-asset-classes).
   if (!preferredOption || supports(preferredOption)) return preferred
@@ -155,6 +173,7 @@ export function RecentTickersMarquee({
       key={symbol}
       symbol={symbol}
       market={resolveVenue(
+        symbol,
         preferredMarket,
         markets,
         assetClassBySymbol.get(symbol),

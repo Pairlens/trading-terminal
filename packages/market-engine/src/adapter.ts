@@ -53,6 +53,14 @@ export type MarketAdapterInfo = {
    * Always reachable on desktop, which fetches from Rust and is CORS-exempt.
    */
   requiresDesktop?: boolean
+  /**
+   * Venue with no public market-data feed: candles, quotes and the book are
+   * all served from the user's own credentialed session (Alpaca). Without a
+   * key nothing streams, and the honest answer is "connect" or "unlock" — not
+   * a switching badge that never resolves. Panes read this to say so, and the
+   * terminal re-subscribes them when a credential is finally provisioned.
+   */
+  credentialedMarketData?: boolean
 }
 
 export interface MarketAdapter {
