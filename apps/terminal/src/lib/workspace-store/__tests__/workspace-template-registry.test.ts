@@ -11,7 +11,7 @@ import {
   WorkspaceTemplateRegistry,
   contributedToTemplate,
 } from '../workspace-template-registry'
-import { mergeRoutePresets } from '../catalog'
+import { BUILTIN_WORKSPACE_TEMPLATES, mergeRoutePresets } from '../catalog'
 import {
   analyzeTemplateDependencies,
   collectPaneTypes,
@@ -260,7 +260,7 @@ describe('WorkspaceTemplateRegistry', () => {
 
     expect(pairMenu()).toEqual([])
     expect(discoveryMenu()).toEqual([])
-    expect(registry.getTemplatesFor('pairlens-predictions')).toEqual([])
+    expect(registry.getTemplates()).toEqual([])
   })
 
   it('never leaks a pair layout into the discovery menu, or the reverse', () => {
@@ -343,6 +343,71 @@ describe('contributedToTemplate sanitization', () => {
   it('fills activeTabIndex so the layout reducer can read it', () => {
     const t = contributedToTemplate(base, untrusted)!
     expect(t.layout.columns[0].cells[0].activeTabIndex).toBe(0)
+  })
+
+  it('namespaces the id, so a third-party entry cannot shadow a built-in', () => {
+    const t = contributedToTemplate(
+      { ...base, id: 'template:classic-terminal' },
+      untrusted,
+    )!
+    expect(t.id).not.toBe('template:classic-terminal')
+    expect(t.id).toBe('plugin:x:template:classic-terminal')
+    // Even a plugin that names itself `template` cannot mint a built-in id.
+    const impostor = contributedToTemplate(
+      { ...base, id: 'classic-terminal' },
+      { pluginId: 'template', author: 'Anon', trusted: false },
+    )!
+    expect(impostor.id).not.toBe('template:classic-terminal')
+  })
+
+  it('cannot shadow the built-in board in the store list or the menus', () => {
+    const registry = new WorkspaceTemplateRegistry()
+    registry.register(
+      pluginFor('pairlens-predictions').manifest.contributes!.workspaces,
+      { pluginId: 'pairlens-predictions', author: 'Pairlens', trusted: true },
+    )
+    // A third-party plugin claiming the built-in ids, verbatim.
+    registry.register(
+      [
+        {
+          ...base,
+          id: 'template:prediction-discovery',
+          name: 'Impostor',
+          context: 'discovery',
+          routeMenu: true,
+        },
+        {
+          ...base,
+          id: 'template:classic-terminal',
+          name: 'Impostor Terminal',
+        },
+      ],
+      untrusted,
+    )
+
+    const builtin = registry
+      .getTemplates()
+      .filter((t) => t.id === 'template:prediction-discovery')
+    expect(builtin.length).toBe(1)
+    expect(builtin[0].name).toBe('Prediction Discovery')
+    expect(builtin[0].origin).toBe('builtin')
+
+    // The store list dedupes by id: the built-in copy survives the collision
+    // because the impostor never gets to claim the id in the first place.
+    const byId = new Map<string, WorkspaceTemplate>()
+    for (const t of [
+      ...BUILTIN_WORKSPACE_TEMPLATES,
+      ...registry.getTemplates(),
+    ]) {
+      byId.set(t.id, t)
+    }
+    expect(byId.get('template:classic-terminal')?.name).not.toBe(
+      'Impostor Terminal',
+    )
+
+    // And the discovery menu still applies the real board's layout.
+    const menu = mergeRoutePresets({}, registry.getTemplates(), 'discovery')
+    expect(menu['template:prediction-discovery'].label).toBe('Predictions')
   })
 
   it('caps tags and required plugins', () => {

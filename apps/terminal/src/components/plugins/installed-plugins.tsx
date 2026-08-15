@@ -48,6 +48,7 @@ import {
   pluginFamilyOf,
 } from '@pairlens/shared/plugin-families'
 import { cn } from '@pairlens/ui'
+import { ConfirmUninstallDialog } from './confirm-uninstall-dialog'
 import { useFullTrustConsent } from './full-trust-consent'
 import { useNetworkConsent } from './network-consent'
 import { useRegistrySettings } from './use-registry-settings'
@@ -58,7 +59,6 @@ import type {
   PluginFamilyMeta,
 } from '@pairlens/shared/plugin-families'
 import type { PluginInstance, PluginManifest } from '@pairlens/plugin-system'
-import type { RegistryPluginEntry } from '@pairlens/shared/registry-types'
 
 import type { FormEvent } from 'react'
 import type { PluginStateResponse } from '@/lib/api'
@@ -106,6 +106,7 @@ import {
   IRREDUCIBLE_PLUGIN_ID,
   uninstallPluginEverywhere,
 } from '@/lib/plugins/uninstall-plugin'
+import { manifestToEntry } from '@/lib/plugins/plugin-entry'
 import {
   clearPendingFullTrust,
   getPendingFullTrust,
@@ -123,16 +124,6 @@ function getContributedPanelCount(plugin: PluginInstance): number {
   return plugin.manifest.contributes?.panels?.length ?? 0
 }
 
-function manifestToEntry(manifest: PluginManifest): RegistryPluginEntry {
-  const isTheme = manifest.capabilities.some((c) => c.id === 'theme:override')
-  return {
-    manifest,
-    category: isTheme ? 'themes' : 'installed',
-    tagline: pluginDescription(manifest),
-    bundled: true,
-  }
-}
-
 export function InstalledPlugins() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
@@ -144,7 +135,9 @@ export function InstalledPlugins() {
   const { requestFullTrust, dialog: fullTrustDialog } = useFullTrustConsent()
   const { requestNetworkConsent, dialog: networkConsentDialog } =
     useNetworkConsent()
-  const [confirmRemove, setConfirmRemove] = useState<string | null>(null)
+  const [confirmRemove, setConfirmRemove] = useState<PluginManifest | null>(
+    null,
+  )
   const [confirmReset, setConfirmReset] = useState(false)
   const [busyId, setBusyId] = useState<string | null>(null)
   const [configPlugin, setConfigPlugin] = useState<PluginInstance | null>(null)
@@ -1125,7 +1118,7 @@ export function InstalledPlugins() {
                 update={availableUpdates.get(plugin.manifest.id)}
                 onToggle={(checked) => onToggleRow(plugin, checked)}
                 onConfigure={() => setConfigPlugin(plugin)}
-                onRemove={() => setConfirmRemove(plugin.manifest.id)}
+                onRemove={() => setConfirmRemove(plugin.manifest)}
                 onUpdate={handleUpdate}
                 removable={plugin.manifest.id !== CORE_ID}
               />
@@ -1150,7 +1143,7 @@ export function InstalledPlugins() {
               update={availableUpdates.get(plugin.manifest.id)}
               onToggle={(checked) => onToggleRow(plugin, checked)}
               onConfigure={() => setConfigPlugin(plugin)}
-              onRemove={() => setConfirmRemove(plugin.manifest.id)}
+              onRemove={() => setConfirmRemove(plugin.manifest)}
               onUpdate={handleUpdate}
               removable
             />
@@ -1174,7 +1167,7 @@ export function InstalledPlugins() {
               update={availableUpdates.get(plugin.manifest.id)}
               onToggle={(checked) => onToggleRow(plugin, checked)}
               onConfigure={() => setConfigPlugin(plugin)}
-              onRemove={() => setConfirmRemove(plugin.manifest.id)}
+              onRemove={() => setConfirmRemove(plugin.manifest)}
               onUpdate={handleUpdate}
               removable
             />
@@ -1188,32 +1181,14 @@ export function InstalledPlugins() {
         </p>
       )}
 
-      {/* Confirm remove dialog */}
-      <AlertDialog
-        open={!!confirmRemove}
+      {/* Confirm uninstall — the same dialog the Plugin Store uses */}
+      <ConfirmUninstallDialog
+        manifest={confirmRemove}
         onOpenChange={(open) => {
           if (!open) setConfirmRemove(null)
         }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('pluginStore.removePluginTitle')}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('pluginStore.removePluginDescription')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => confirmRemove && handleRemove(confirmRemove)}
-            >
-              {t('pluginStore.remove')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        onConfirm={(manifest) => void handleRemove(manifest.id)}
+      />
 
       {/* Confirm reset dialog */}
       <AlertDialog

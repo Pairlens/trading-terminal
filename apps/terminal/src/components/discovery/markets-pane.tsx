@@ -8,6 +8,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from '@tanstack/react-router'
@@ -37,6 +38,8 @@ import {
   ToggleGroupItem,
 } from '@pairlens/ui/components/ui/toggle-group'
 
+import { PREDICTION_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-predictions/workspaces'
+
 import { useVirtualizer } from '@tanstack/react-virtual'
 import type {
   AssetClassFilter,
@@ -63,6 +66,7 @@ import { workspaceAnalyticsKind } from '@/lib/analytics-panels'
 import { useLayout } from '@/lib/layout/context'
 import { useWorkspace } from '@/lib/layout/workspace-context'
 import { useRoutePresets } from '@/lib/layout/use-route-presets'
+import { workspaceTemplateRegistry } from '@/lib/workspace-store/workspace-template-registry'
 import {
   entryToInstrumentRef,
   entryToMarketRef,
@@ -83,17 +87,21 @@ import { PairQuote, quoteForPair } from '@/components/discovery/pair-quote'
  */
 const SECTORED_ASSET_CLASSES = new Set<AssetClassFilter>(['all', 'crypto'])
 
-/** The discovery board the predictions family ships, by id. */
-const PREDICTION_DISCOVERY_PRESET = 'template:prediction-discovery'
-
 /**
  * The way out of the predictions empty state.
  *
  * Prediction outcomes are never in the catalog this pane reads, so the chip
  * has always been a dead end: correct copy, nowhere to go. The event browser
  * is where they live, and the predictions plugin ships a home board built
- * around it — so offer that board when it is available, and the Plugin Store
- * when the family is disabled or uninstalled and there is nothing to apply.
+ * around it.
+ *
+ * Whether that board EXISTS is a question about the plugin registry, not about
+ * this route's menu: the board is a discovery preset, so on a pair route or a
+ * custom workspace it is filtered out of `useRoutePresets` and reading
+ * availability from there told the user to install a plugin they already had.
+ * So: apply in place when this workspace offers it, send them to Discovery
+ * with the board when it exists elsewhere, and only offer the Plugin Store
+ * when the family is genuinely gone.
  *
  * Its own component so the hooks it needs only run when the empty state is on
  * screen.
@@ -104,7 +112,22 @@ function PredictionsEmptyAction() {
   const { dispatch } = useLayout()
   const workspace = useWorkspace()
   const presets = useRoutePresets(workspace)
-  const preset = presets[PREDICTION_DISCOVERY_PRESET]
+  const preset = presets[PREDICTION_DISCOVERY_TEMPLATE_ID]
+
+  // The registry, not the route menu, is what knows the board is installed.
+  const registryVersion = useSyncExternalStore(
+    workspaceTemplateRegistry.subscribe,
+    workspaceTemplateRegistry.getSnapshot,
+    workspaceTemplateRegistry.getSnapshot,
+  )
+  const boardExists = useMemo(() => {
+    void registryVersion
+    return workspaceTemplateRegistry
+      .getTemplates()
+      .some((tpl) => tpl.id === PREDICTION_DISCOVERY_TEMPLATE_ID)
+  }, [registryVersion])
+
+  const available = Boolean(preset) || boardExists
 
   return (
     <Button
@@ -114,7 +137,7 @@ function PredictionsEmptyAction() {
       onClick={() => {
         if (preset) {
           track('preset_applied', {
-            preset: PREDICTION_DISCOVERY_PRESET,
+            preset: PREDICTION_DISCOVERY_TEMPLATE_ID,
             workspace: workspaceAnalyticsKind(workspace.storageKey),
           })
           dispatch({
@@ -123,10 +146,19 @@ function PredictionsEmptyAction() {
           })
           return
         }
+        if (boardExists) {
+          void navigate({
+            to: '/',
+            search: { preset: PREDICTION_DISCOVERY_TEMPLATE_ID },
+          })
+          return
+        }
         void navigate({ to: '/plugins' })
       }}
     >
-      {preset ? t('markets.predictionsBrowse') : t('markets.predictionsInstall')}
+      {available
+        ? t('markets.predictionsBrowse')
+        : t('markets.predictionsInstall')}
     </Button>
   )
 }

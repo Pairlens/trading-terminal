@@ -8,18 +8,9 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { Alert, AlertDescription } from '@pairlens/ui/components/ui/alert'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@pairlens/ui/components/ui/alert-dialog'
 
 import { StoreAurora, StoreShelf } from '../store/store-shell'
+import { ConfirmUninstallDialog } from './confirm-uninstall-dialog'
 import { useFullTrustConsent } from './full-trust-consent'
 import { useNetworkConsent } from './network-consent'
 import { useRegistrySettings } from './use-registry-settings'
@@ -50,7 +41,11 @@ import {
   upsertLedgerEntry,
 } from '@/lib/plugins/plugin-ledger'
 import { buildActivationConfig } from '@/lib/plugins/official-config'
-import { BOOTSTRAP_PLUGINS } from '@/lib/plugins/bootstrap-bundle'
+import {
+  findOfferableBundledManifest,
+  listOfferableBundledManifests,
+} from '@/lib/plugins/offerable-bundled'
+import { isThemeManifest, manifestToEntry } from '@/lib/plugins/plugin-entry'
 import {
   isReinstallableBundledPlugin,
   reinstallBundledPlugin,
@@ -78,10 +73,6 @@ import { pluginDescription, pluginTitle } from '@/lib/plugin-text'
 // Helpers
 // ---------------------------------------------------------------------------
 
-function isThemeManifest(manifest: PluginManifest): boolean {
-  return manifest.capabilities.some((c) => c.id === 'theme:override')
-}
-
 function isPlatformCompatible(_manifest: PluginManifest): boolean {
   return true
 }
@@ -90,34 +81,6 @@ function getPlatformBadgeKey(
   _manifest: PluginManifest,
 ): 'pluginStore.desktopOnly' | 'pluginStore.browserOnly' | null {
   return null
-}
-
-function isExchangeManifest(manifest: PluginManifest): boolean {
-  return manifest.capabilities.some((c) => c.id === 'market-data:candles')
-}
-
-/**
- * Local category inference for plugins the registry does not list. Asset class
- * is checked before the generic "has candles ⇒ exchange" rule so a prediction
- * or DEX venue lands on its own shelf instead of among the spot exchanges.
- */
-function manifestToEntry(manifest: PluginManifest): RegistryPluginEntry {
-  const assetClass = manifest.metadata?.['assetClass']
-  const category = isThemeManifest(manifest)
-    ? 'themes'
-    : assetClass === 'prediction'
-      ? 'predictions'
-      : assetClass === 'dex'
-        ? 'dex'
-        : isExchangeManifest(manifest)
-          ? 'exchange'
-          : 'installed'
-  return {
-    manifest,
-    category,
-    tagline: pluginDescription(manifest),
-    bundled: true,
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -180,15 +143,15 @@ export function PluginStore({
   // explanation, which is exactly the plugin the user asked to see.
   useEffect(() => {
     if (!autoOpenPluginId) return
-    const manifest =
-      pluginManager
-        .getInstalledPlugins()
-        .find((p) => p.manifest.id === autoOpenPluginId)?.manifest ??
-      BOOTSTRAP_PLUGINS.find((p) => p.manifest.id === autoOpenPluginId)
-        ?.manifest
-    if (manifest && !isFamilyExcluded(manifest)) {
-      setSelectedEntry(manifestToEntry(manifest))
-    }
+    const installedManifest = pluginManager
+      .getInstalledPlugins()
+      .find((p) => p.manifest.id === autoOpenPluginId)?.manifest
+    const manifest = installedManifest
+      ? isFamilyExcluded(installedManifest)
+        ? null
+        : installedManifest
+      : findOfferableBundledManifest(autoOpenPluginId)
+    if (manifest) setSelectedEntry(manifestToEntry(manifest))
   }, [autoOpenPluginId, pluginManager])
 
   // Plugin states from App Server persistence
@@ -232,9 +195,10 @@ export function PluginStore({
     Record<string, { type: 'error' | 'success'; message: string }>
   >({})
   const [busyPluginId, setBusyPluginId] = useState<string | null>(null)
-  const [confirmUninstallId, setConfirmUninstallId] = useState<string | null>(
-    null,
-  )
+  // The manifest, not an id: the product page behind the dialog can change
+  // while it is open, and confirming must remove what the user was looking at.
+  const [confirmUninstall, setConfirmUninstall] =
+    useState<PluginManifest | null>(null)
 
   // Helpers
   const isActive = useCallback(
@@ -270,6 +234,20 @@ export function PluginStore({
         saved[key] ?? field.default ?? (field.type === 'boolean' ? false : '')
     }
     return draft
+  }
+
+  /**
+   * A required field the user has not filled in yet. Activating in that state
+   * throws from inside the connector (an Alpaca install with no API keys), so
+   * the install flow stops and opens the config form instead of surfacing a
+   * raw error.
+   */
+  const needsConfigInput = (manifest: PluginManifest): boolean => {
+    if (!hasRequiredConfig(manifest)) return false
+    const draft = getConfigDraft(manifest.id, manifest)
+    return Object.entries(manifest.config).some(
+      ([key, field]) => field.required && !draft[key],
+    )
   }
 
   const updateDraft = (pluginId: string, key: string, value: unknown) => {
@@ -433,12 +411,25 @@ export function PluginStore({
           // the registry: downloading one would rewrite its ledger source to
           // 'registry' and it would stop being a built-in for good.
           if (isReinstallableBundledPlugin(manifest.id)) {
+            // A connector whose API keys are still missing comes back
+            // installed but not started: activating it would throw from
+            // inside the plugin. The config form takes it from there and
+            // activates on save, exactly like the enable path below.
+            const awaitingConfig = needsConfigInput(manifest)
             await reinstallBundledPlugin({
               manager: pluginManager,
               pluginId: manifest.id,
+              activate: !awaitingConfig,
               persistState: (data) => saveStateMutation.mutate(data),
             })
             notifyPluginStateChange()
+            if (awaitingConfig) {
+              setSelectedEntry(
+                findRegistryEntry(manifest.id) ?? manifestToEntry(manifest),
+              )
+              setBusyPluginId(null)
+              return
+            }
             setPluginFeedback(
               manifest.id,
               'success',
@@ -549,12 +540,8 @@ export function PluginStore({
     clearPluginFeedback(manifest.id)
     setBusyPluginId(manifest.id)
     try {
-      // A theme cannot be uninstalled while it paints the terminal — hand the
-      // palette back to the built-in look first.
-      if (isThemeManifest(manifest) && activeThemeId === manifest.id) {
-        selectTheme(null)
-        track('theme_changed', { theme: 'default' })
-      }
+      // A theme painting the terminal hands the palette back on the way out —
+      // `uninstallPluginEverywhere` owns that, so both surfaces get it.
       await uninstallPluginEverywhere({
         manager: pluginManager,
         pluginId: manifest.id,
@@ -577,7 +564,7 @@ export function PluginStore({
       )
     } finally {
       setBusyPluginId(null)
-      setConfirmUninstallId(null)
+      setConfirmUninstall(null)
     }
   }
 
@@ -731,15 +718,37 @@ export function PluginStore({
   // Families this deployment excluded are not offered: the registry still
   // advertises them (it is shared across deployments), so they are dropped
   // here. Only bundled plugins are ever family-filtered.
+  // The installed set as a stable primitive: `pluginStateVersion` bumps once
+  // per plugin during boot, and re-mapping all ~60 bundled manifests on each
+  // of those bumps is pure waste when the set of *ids* has not moved.
+  const installedIdsKey = useMemo(
+    () =>
+      pluginManager
+        .getInstalledPlugins()
+        .map((p) => p.manifest.id)
+        .sort()
+        .join(','),
+    // pluginStateVersion is the re-run trigger; pluginManager reads are non-reactive
+    [pluginManager, pluginStateVersion],
+  )
+
+  const offerableBundledEntries: Array<RegistryPluginEntry> = useMemo(() => {
+    const installedIds = new Set(
+      installedIdsKey.length > 0 ? installedIdsKey.split(',') : [],
+    )
+    return listOfferableBundledManifests({ excludeIds: installedIds }).map(
+      manifestToEntry,
+    )
+  }, [installedIdsKey])
+
   const entries: Array<RegistryPluginEntry> = useMemo(() => {
-    const installed = pluginManager.getInstalledPlugins()
-    const installedIds = new Set(installed.map((p) => p.manifest.id))
     const local = [
-      ...installed.map((p) => manifestToEntry(p.manifest)),
-      ...BOOTSTRAP_PLUGINS.filter((p) => !installedIds.has(p.manifest.id)).map(
-        (p) => manifestToEntry(p.manifest),
-      ),
-    ].filter((e) => !isFamilyExcluded(e.manifest))
+      ...pluginManager
+        .getInstalledPlugins()
+        .map((p) => manifestToEntry(p.manifest))
+        .filter((e) => !isFamilyExcluded(e.manifest)),
+      ...offerableBundledEntries,
+    ]
 
     if (registryOffline) return local
 
@@ -763,6 +772,7 @@ export function PluginStore({
     registryQuery.data,
     pluginManager,
     pluginStateVersion,
+    offerableBundledEntries,
     categoryFilter,
   ])
 
@@ -1028,7 +1038,7 @@ export function PluginStore({
             onToggle={(checked) =>
               void handleToggle(selectedEntry.manifest, checked)
             }
-            onUninstall={() => setConfirmUninstallId(selectedEntry.manifest.id)}
+            onUninstall={() => setConfirmUninstall(selectedEntry.manifest)}
             onApplyTheme={() => void handleApplyTheme(selectedEntry.manifest)}
             onRemoveTheme={() => handleRemoveTheme(selectedEntry.manifest)}
             onConfigChange={(key, value) =>
@@ -1041,37 +1051,14 @@ export function PluginStore({
         )}
       </AnimatePresence>
 
-      {/* Confirm uninstall — same wording as the Installed tab's trash button */}
-      <AlertDialog
-        open={!!confirmUninstallId}
+      {/* Confirm uninstall — the same dialog the Installed tab uses */}
+      <ConfirmUninstallDialog
+        manifest={confirmUninstall}
         onOpenChange={(open) => {
-          if (!open) setConfirmUninstallId(null)
+          if (!open) setConfirmUninstall(null)
         }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('pluginStore.removePluginTitle')}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('pluginStore.removePluginDescription')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                const manifest = selectedEntry?.manifest
-                if (manifest && manifest.id === confirmUninstallId) {
-                  void handleUninstall(manifest)
-                }
-              }}
-            >
-              {t('pluginStore.uninstall')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        onConfirm={(manifest) => void handleUninstall(manifest)}
+      />
 
       {fullTrustDialog}
       {networkConsentDialog}

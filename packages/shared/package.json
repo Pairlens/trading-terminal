@@ -35,6 +35,7 @@
     "./publisher-keys": "./src/publisher-keys.ts",
     "./pane-categories": "./src/pane-categories.ts",
     "./plugin-families": "./src/plugin-families.ts",
+    "./workspace-layout-caps": "./src/workspace-layout-caps.ts",
     "./capability-meta": "./src/capability-meta.ts",
     "./affiliates": "./src/affiliates.ts",
     "./billing-types": "./src/billing-types.ts",

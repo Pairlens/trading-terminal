@@ -6,9 +6,11 @@
  *
  * Uninstalling is not a single call: the plugin has to leave the manager, the
  * ledger, the module cache, the desktop network allowlist, the App Server
- * state table and any capability pin aimed at it. Three copies of that sequence
- * drifted apart before this file existed (the Store could only ever *disable* a
- * bundled plugin, and nobody cleared pins), so every caller goes through here.
+ * state table and any capability pin aimed at it, and a theme has to hand the
+ * palette back before it goes. Three copies of that sequence drifted apart
+ * before this file existed (the Store could only ever *disable* a bundled
+ * plugin, nobody cleared pins, and only one surface released the theme), so
+ * every caller goes through here.
  *
  * `pairlens-core` is refused here rather than in the UI: hiding the button is
  * presentation, and the terminal has no shell without the core panes.
@@ -20,6 +22,7 @@ import { api } from '@/lib/api'
 import { track } from '@/lib/analytics-events'
 import { removeFromLedger } from '@/lib/plugins/plugin-ledger'
 import { revokeNetworkGrant } from '@/lib/plugins/network-grants'
+import { releaseThemeIfActive } from '@/lib/plugins/theme-handoff'
 
 /** The plugin the terminal cannot run without — never uninstallable. */
 export const IRREDUCIBLE_PLUGIN_ID = 'pairlens-core'
@@ -62,9 +65,16 @@ export async function uninstallPluginEverywhere({
 
   // Read the pins BEFORE the resolver forgets the plugin: the server rows are
   // keyed by capability + market, and we still need those keys to delete them.
+  // This is the ONE place pins are cleaned up. The resolver deliberately keeps
+  // them across `unregisterPlugin`, because that is also how a plugin under
+  // development gets replaced by a fresh zip.
   const stalePins = manager
     .getUserPins()
     .filter((pin) => pin.pluginId === pluginId)
+
+  // A theme cannot be removed while it paints the terminal: the style tag and
+  // its cached CSS outlive the plugin.
+  releaseThemeIfActive(pluginId)
 
   const installed = manager
     .getInstalledPlugins()

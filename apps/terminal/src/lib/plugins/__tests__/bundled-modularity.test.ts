@@ -21,6 +21,10 @@ import {
   canUninstallPlugin,
   uninstallPluginEverywhere,
 } from '../uninstall-plugin'
+import {
+  findOfferableBundledManifest,
+  listOfferableBundledManifests,
+} from '../offerable-bundled'
 import { resetExcludedPluginFamiliesCache } from '../plugin-families'
 import { getLedgerEntry, seedBootstrap } from '../plugin-ledger'
 import type { PluginManager } from '@pairlens/plugin-system'
@@ -47,6 +51,30 @@ function stubManager(): PluginManager {
     getInstalledPlugins: () => [],
     getUserPins: () => [],
   } as unknown as PluginManager
+}
+
+/** A manager that records the lifecycle calls instead of running plugin code. */
+function recordingManager(options?: { activateThrows?: boolean }) {
+  const installed: Array<string> = []
+  const activated: Array<string> = []
+  const manager = {
+    getInstalledPlugins: () => [],
+    getUserPins: () => [],
+    installPlugin: async (manifest: { id: string }) => {
+      installed.push(manifest.id)
+    },
+    activatePlugin: async (pluginId: string) => {
+      activated.push(pluginId)
+      if (options?.activateThrows) throw new Error('missing API key')
+    },
+  } as unknown as PluginManager
+  return { manager, installed, activated }
+}
+
+type PersistedState = {
+  pluginId: string
+  enabled: boolean
+  config: Record<string, unknown>
 }
 
 beforeEach(() => {
@@ -115,9 +143,75 @@ describe('bundled reinstall refusals', () => {
       expect(isReinstallableBundledPlugin('binance-market-connector')).toBe(
         true,
       )
+      // The Store's offer list agrees with the guard — one seam, so a card can
+      // never advertise an install the reinstall path is going to refuse.
+      const offered = listOfferableBundledManifests().map((m) => m.id)
+      expect(offered).not.toContain('pairlens-cex-futures')
+      expect(offered).toContain('binance-market-connector')
+      expect(findOfferableBundledManifest('pairlens-cex-futures')).toBeNull()
     } finally {
       delete process.env['VITE_PAIRLENS_DISABLED_FAMILIES']
       resetExcludedPluginFamiliesCache()
     }
+  })
+
+  it('skips the ids already installed when listing what it can offer', () => {
+    const offered = listOfferableBundledManifests({
+      excludeIds: new Set(['binance-market-connector']),
+    }).map((m) => m.id)
+    expect(offered).not.toContain('binance-market-connector')
+    expect(offered).toContain('pairlens-cex-futures')
+  })
+})
+
+describe('bundled reinstall state', () => {
+  const PLUGIN_ID = 'pairlens-cex-futures'
+
+  it('reports installed-but-disabled everywhere when activation throws', async () => {
+    seedBootstrap([{ pluginId: PLUGIN_ID, version: '1.0.0' }])
+    const { manager, installed, activated } = recordingManager({
+      activateThrows: true,
+    })
+    const persisted: Array<PersistedState> = []
+
+    await expect(
+      reinstallBundledPlugin({
+        manager,
+        pluginId: PLUGIN_ID,
+        persistState: (data) => persisted.push(data),
+      }),
+    ).rejects.toThrow('missing API key')
+
+    expect(installed).toEqual([PLUGIN_ID])
+    expect(activated).toEqual([PLUGIN_ID])
+    // The code IS installed; only the run failed. Local and server state say
+    // the same thing, so a second signed-in device does not start it either.
+    expect(getLedgerEntry(PLUGIN_ID)?.enabled).toBe(false)
+    expect(getLedgerEntry(PLUGIN_ID)?.tombstoned).toBe(false)
+    expect(persisted).toEqual([
+      { pluginId: PLUGIN_ID, enabled: false, config: {} },
+    ])
+  })
+
+  it('installs without starting when the caller still needs config', async () => {
+    seedBootstrap([{ pluginId: PLUGIN_ID, version: '1.0.0' }])
+    const { manager, installed, activated } = recordingManager()
+    const persisted: Array<PersistedState> = []
+
+    const manifest = await reinstallBundledPlugin({
+      manager,
+      pluginId: PLUGIN_ID,
+      activate: false,
+      persistState: (data) => persisted.push(data),
+    })
+
+    expect(manifest.id).toBe(PLUGIN_ID)
+    expect(installed).toEqual([PLUGIN_ID])
+    expect(activated).toEqual([])
+    expect(getLedgerEntry(PLUGIN_ID)?.enabled).toBe(false)
+    expect(getLedgerEntry(PLUGIN_ID)?.tombstoned).toBe(false)
+    expect(persisted).toEqual([
+      { pluginId: PLUGIN_ID, enabled: false, config: {} },
+    ])
   })
 })

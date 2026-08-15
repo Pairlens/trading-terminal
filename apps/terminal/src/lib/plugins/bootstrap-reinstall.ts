@@ -19,6 +19,7 @@
  */
 
 import type { PluginManager, PluginManifest } from '@pairlens/plugin-system'
+import { findOfferableBundledManifest } from '@/lib/plugins/offerable-bundled'
 import { BOOTSTRAP_PLUGINS } from '@/lib/plugins/bootstrap-bundle'
 import { isFamilyExcluded } from '@/lib/plugins/plugin-families'
 import { buildActivationConfig } from '@/lib/plugins/official-config'
@@ -48,8 +49,7 @@ export class BundledPluginUnavailableError extends Error {
 
 /** True when this id can be installed straight from the compiled-in bundle. */
 export function isReinstallableBundledPlugin(pluginId: string): boolean {
-  const bundled = BOOTSTRAP_PLUGINS.find((p) => p.manifest.id === pluginId)
-  return !!bundled && !isFamilyExcluded(bundled.manifest, 'bootstrap')
+  return findOfferableBundledManifest(pluginId) !== null
 }
 
 export type ReinstallBundledPluginOptions = {
@@ -57,6 +57,13 @@ export type ReinstallBundledPluginOptions = {
   pluginId: string
   /** Overrides the config kept in the ledger row (rarely needed). */
   config?: Record<string, unknown>
+  /**
+   * Install without starting the plugin. Used when required config is still
+   * missing: the code comes back, the caller then collects the API keys and
+   * activates on save, instead of letting activation throw a raw error.
+   * The plugin is left installed-but-disabled, which is the honest state.
+   */
+  activate?: boolean
   /**
    * Push the new enabled state to the App Server. Components pass their own
    * mutation so the query cache stays in step; the default writes directly.
@@ -89,6 +96,7 @@ export async function reinstallBundledPlugin({
   manager,
   pluginId,
   config,
+  activate = true,
   persistState = defaultPersistState,
 }: ReinstallBundledPluginOptions): Promise<PluginManifest> {
   const bundled = BOOTSTRAP_PLUGINS.find((p) => p.manifest.id === pluginId)
@@ -109,6 +117,16 @@ export async function reinstallBundledPlugin({
   const entry = reviveBootstrapEntry(pluginId, bundled.manifest.version)
   const activationConfig = config ?? entry.config
 
+  if (!activate) {
+    // Installed, deliberately not started. Say so everywhere at once, or a
+    // signed-in second device rehydrates an "enabled" row and starts a plugin
+    // this one knows cannot run yet.
+    setLedgerEnabled(pluginId, false)
+    track('plugin_installed', { plugin_id: pluginId })
+    persistState({ pluginId, enabled: false, config: activationConfig })
+    return bundled.manifest
+  }
+
   if (existing?.status !== 'active') {
     try {
       await manager.activatePlugin(
@@ -117,8 +135,11 @@ export async function reinstallBundledPlugin({
       )
     } catch (err) {
       // Installed but not running (a connector missing its API key, say).
-      // Leave the row off rather than claiming an activation that failed.
+      // Leave the row off rather than claiming an activation that failed —
+      // locally AND on the server, so other devices see the same thing. The
+      // code IS installed; only the run failed.
       setLedgerEnabled(pluginId, false)
+      persistState({ pluginId, enabled: false, config: activationConfig })
       throw err
     }
   }

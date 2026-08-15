@@ -13,11 +13,18 @@
  * beat — no reload, no stale card that copies a layout whose panes are gone.
  *
  * Third-party plugins use the identical path. What differs is trust: a
- * bootstrap contribution is taken verbatim (it is TypeScript-typed at build
- * time and ships in this bundle), while anything else is sanitized with the
- * same ceilings the untrusted community-store path uses — unknown facets
- * dropped, list lengths and layout geometry capped.
+ * bootstrap contribution is taken verbatim — it is TypeScript-typed at build
+ * time, ships in this bundle, and keeps its bare template id. Anything else is
+ * sanitized with the same ceilings the untrusted community-store path uses
+ * (unknown facets dropped, list lengths and layout geometry capped) and gets
+ * its id namespaced by plugin, so a third-party entry can never shadow a
+ * built-in board and inherit its translations, menu slot or store card.
  */
+import {
+  WORKSPACE_LAYOUT_CAPS,
+  isUsableWorkspaceLayout,
+} from '@pairlens/shared/workspace-layout-caps'
+
 import {
   ASSET_CLASSES,
   SCREEN_SIZES,
@@ -44,49 +51,28 @@ const SCREEN_SET = new Set<string>(SCREEN_SIZES)
 
 const CONTEXTS = new Set<string>(['standalone', 'pair', 'discovery'])
 
-// Ceilings mirror `community-mapping.ts`: an untrusted plugin must not be able
-// to crash the store with a malformed layout or bloat localStorage on copy.
-const MAX_COLUMNS = 16
-const MAX_CELLS_PER_COLUMN = 24
-const MAX_PANES_PER_CELL = 16
-const MAX_TOTAL_PANES = 200
-const MAX_LAYOUT_BYTES = 256 * 1024
-const MAX_TAGS = 12
-const MAX_REQUIRED_PLUGINS = 24
-const MAX_WORKSPACES_PER_PLUGIN = 24
-const MAX_TEXT = 500
+// Ceilings are the shared ones (`@pairlens/shared/workspace-layout-caps`), the
+// same set the manifest schema and the community-store mapper enforce: an
+// untrusted plugin must not be able to crash the store with a malformed layout
+// or bloat localStorage on copy.
+const MAX_TAGS = WORKSPACE_LAYOUT_CAPS.maxTags
+const MAX_REQUIRED_PLUGINS = WORKSPACE_LAYOUT_CAPS.maxRequiredPlugins
+const MAX_WORKSPACES_PER_PLUGIN = WORKSPACE_LAYOUT_CAPS.maxWorkspaces
+const MAX_TEXT = WORKSPACE_LAYOUT_CAPS.maxTextLength
 
-/** The full column→cell→pane structure every consumer iterates unguarded. */
-function isUsableLayout(
-  layout: ContributedWorkspaceLayout | undefined,
-): boolean {
-  const columns = layout?.columns
-  if (!Array.isArray(columns) || columns.length === 0) return false
-  if (columns.length > MAX_COLUMNS) return false
-
-  let totalPanes = 0
-  for (const col of columns) {
-    const cells = col?.cells
-    if (!Array.isArray(cells) || cells.length === 0) return false
-    if (cells.length > MAX_CELLS_PER_COLUMN) return false
-    for (const cell of cells) {
-      const panes = cell?.panes
-      if (!Array.isArray(panes) || panes.length === 0) return false
-      if (panes.length > MAX_PANES_PER_CELL) return false
-      totalPanes += panes.length
-      if (totalPanes > MAX_TOTAL_PANES) return false
-      for (const pane of panes) {
-        if (!pane || typeof pane.type !== 'string') return false
-      }
-    }
-  }
-
-  try {
-    if (JSON.stringify(layout).length > MAX_LAYOUT_BYTES) return false
-  } catch {
-    return false
-  }
-  return true
+/**
+ * The id an untrusted contribution is filed under.
+ *
+ * Mirrors `paneTypeKey`'s rule (bare for first-party, prefixed for everyone
+ * else) with one extra guard: the prefix is a fixed `plugin:` segment rather
+ * than the bare plugin id, so a plugin that names itself `template` still
+ * cannot mint `template:classic-terminal` and shadow a built-in.
+ */
+export function contributedTemplateId(
+  pluginId: string,
+  templateId: string,
+): string {
+  return `plugin:${pluginId}:${templateId}`
 }
 
 /**
@@ -129,17 +115,55 @@ export type ContributionSource = {
   trusted: boolean
 }
 
+function contextOf(entry: ContributedWorkspace): TemplateContext {
+  const context = entry.context ?? 'standalone'
+  return CONTEXTS.has(context) ? (context as TemplateContext) : 'standalone'
+}
+
 /**
  * Map one contribution onto the `WorkspaceTemplate` the store, the dependency
  * analyzer and the route menus all already speak. Returns null when the
  * contribution could never render.
+ *
+ * A trusted contribution takes the fast path: it is a compiled-in object
+ * literal the `ContributedWorkspace` type already constrains, so re-deriving
+ * what the caps would allow only means a new first-party facet value gets
+ * silently dropped, and a family bulk toggle re-runs `JSON.stringify` over
+ * layouts that have been known-good since build time.
  */
 export function contributedToTemplate(
   entry: ContributedWorkspace,
   source: ContributionSource,
 ): WorkspaceTemplate | null {
   if (typeof entry?.id !== 'string' || entry.id.length === 0) return null
-  if (!isUsableLayout(entry.layout)) return null
+
+  if (source.trusted) {
+    const layout = toTerminalLayout(entry.layout)
+    return {
+      id: entry.id,
+      name: entry.name,
+      tagline: entry.tagline,
+      description: entry.description,
+      icon: entry.icon,
+      author: source.author,
+      featured: Boolean(entry.featured),
+      // The facet vocabularies are plain strings on the wire; a first-party
+      // contribution is written against the terminal's own union.
+      facets: entry.facets as WorkspaceTemplate['facets'],
+      tags: entry.tags ?? [],
+      // One rule for what `$pair` and `$wallet` mean, shared with the built-in
+      // catalog: derived from the panes, seeded by the declared default market.
+      variables: variablesForLayout(layout, entry.pairDefault),
+      layout,
+      requiredPlugins: entry.requiredPlugins ?? [],
+      context: contextOf(entry),
+      routeMenu: Boolean(entry.routeMenu),
+      ...(entry.menuLabel ? { menuLabel: entry.menuLabel } : {}),
+      origin: 'builtin' as const,
+    }
+  }
+
+  if (!isUsableWorkspaceLayout(entry.layout)) return null
 
   const layout = toTerminalLayout(entry.layout)
   const facets = entry.facets ?? {
@@ -147,18 +171,17 @@ export function contributedToTemplate(
     assetClasses: [],
     screenSizes: [],
   }
-  const context = CONTEXTS.has(entry.context ?? 'standalone')
-    ? ((entry.context ?? 'standalone') as TemplateContext)
-    : 'standalone'
 
   return {
-    id: entry.id,
+    // Namespaced, so an untrusted plugin cannot claim `template:...` and
+    // shadow a built-in board in the store list or a route menu.
+    id: contributedTemplateId(source.pluginId, entry.id),
     name: text(entry.name, entry.id),
     tagline: text(entry.tagline, text(entry.name, entry.id)),
     description: text(entry.description, text(entry.tagline, entry.id)),
     icon: text(entry.icon, 'Layers'),
     author: source.author,
-    featured: source.trusted ? Boolean(entry.featured) : false,
+    featured: false,
     facets: {
       traderTypes: (facets.traderTypes ?? []).filter((v) =>
         TRADER_SET.has(v),
@@ -171,22 +194,19 @@ export function contributedToTemplate(
       ) as Array<ScreenSize>,
     },
     tags: (entry.tags ?? []).slice(0, MAX_TAGS),
-    // One rule for what `$pair` and `$wallet` mean, shared with the built-in
-    // catalog: derived from the panes, seeded by the declared default market.
     variables: variablesForLayout(layout, entry.pairDefault),
     layout,
     requiredPlugins: (entry.requiredPlugins ?? []).slice(
       0,
       MAX_REQUIRED_PLUGINS,
     ),
-    context,
+    context: contextOf(entry),
     routeMenu: Boolean(entry.routeMenu),
     ...(entry.menuLabel ? { menuLabel: text(entry.menuLabel, entry.id) } : {}),
-    // Only a bundled contribution may claim to be part of the built-in
-    // catalog. Third-party entries stay unmarked: they are not community
-    // submissions either, and `origin: 'community'` would switch the store
-    // card into a submission it has no metadata for.
-    ...(source.trusted ? { origin: 'builtin' as const } : {}),
+    // A third-party entry stays unmarked: only a bundled contribution is part
+    // of the built-in catalog, and it is not a community submission either, so
+    // `origin: 'community'` would switch the store card into a submission it
+    // has no metadata for.
   }
 }
 
@@ -200,8 +220,11 @@ export class WorkspaceTemplateRegistry {
     workspaces: ReadonlyArray<ContributedWorkspace>,
     source: ContributionSource,
   ): void {
+    const entries = source.trusted
+      ? workspaces
+      : workspaces.slice(0, MAX_WORKSPACES_PER_PLUGIN)
     const templates: Array<WorkspaceTemplate> = []
-    for (const entry of workspaces.slice(0, MAX_WORKSPACES_PER_PLUGIN)) {
+    for (const entry of entries) {
       const template = contributedToTemplate(entry, source)
       if (template) templates.push(template)
     }
@@ -222,10 +245,6 @@ export class WorkspaceTemplateRegistry {
     for (const templates of this.byPlugin.values()) out.push(...templates)
     this.flatCache = out
     return out
-  }
-
-  getTemplatesFor(pluginId: string): Array<WorkspaceTemplate> {
-    return this.byPlugin.get(pluginId) ?? []
   }
 
   // ── useSyncExternalStore ──────────────────────────────────────────

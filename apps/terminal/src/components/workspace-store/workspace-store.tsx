@@ -28,7 +28,10 @@ import { useFullTrustConsent } from '@/components/plugins/full-trust-consent'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { setPluginTrust } from '@/lib/plugins/plugin-ledger'
-import { reinstallBundledPlugin } from '@/lib/plugins/bootstrap-reinstall'
+import {
+  BundledPluginUnavailableError,
+  reinstallBundledPlugin,
+} from '@/lib/plugins/bootstrap-reinstall'
 import { analyzeTemplateDependencies } from '@/lib/workspace-store/dependency-analysis'
 import {
   ASSET_CLASSES,
@@ -47,7 +50,7 @@ import {
 } from '@/lib/workspace-store/template-labels'
 import { useWorkspaceTemplates } from '@/lib/workspace-store/use-workspace-templates'
 import { useCustomWorkspacesStore } from '@/stores/custom-workspaces-store'
-import { queryKeys } from '@/lib/api'
+import { api, queryKeys } from '@/lib/api'
 
 type SourceFilter = 'all' | 'builtin' | 'community' | 'mine'
 
@@ -314,6 +317,19 @@ export function WorkspaceStore({
   const { requestFullTrust, dialog: consentDialog } = useFullTrustConsent()
   const queryClient = useQueryClient()
 
+  // Restoring a plugin for a template writes the same server state the Plugin
+  // Store reads, so it goes through a mutation rather than a bare API call —
+  // otherwise the Store keeps showing the plugin as uninstalled until a reload.
+  const saveStateMutation = useMutation({
+    mutationFn: (data: {
+      pluginId: string
+      enabled: boolean
+      config: Record<string, unknown>
+    }) => api.setPluginState(data),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: queryKeys.pluginStates() }),
+  })
+
   // Guard against clobbering the persisted list before it's hydrated.
   useEffect(() => {
     loadWorkspaces()
@@ -420,15 +436,24 @@ export function WorkspaceStore({
     async (template: WorkspaceTemplate) => {
       if (applyInFlight.current) return
       applyInFlight.current = true
-      const report = reports.get(template.id)
       setApplying(true)
       try {
+        // Recomputed at click time, not read from the memo: a plugin can be
+        // disabled or removed from another surface after the card rendered,
+        // and applying against a stale report silently skips the plugin the
+        // workspace actually needs.
+        const report = analyzeTemplateDependencies(
+          template,
+          pluginManager.getInstalledPlugins(),
+          (paneType) => registry.getPluginForPane(paneType),
+        )
+
         // Security gate: every full-access plugin that isn't already trusted must
         // be explicitly approved before we adopt a workspace that relies on it.
         // Gather all approvals first and commit the grants only once every one
         // succeeds — so declining a later plugin never leaves an earlier one
         // silently granted full access to credentials and trades.
-        const toTrust = report?.untrustedFullTrust ?? []
+        const toTrust = report.untrustedFullTrust
         for (const plugin of toTrust) {
           const granted = await requestFullTrust({ name: plugin.name })
           if (!granted) return
@@ -438,33 +463,54 @@ export function WorkspaceStore({
         }
         if (toTrust.length > 0) notifyPluginStateChange()
 
-        // Bundled plugins this workspace needs but the user uninstalled come
-        // straight back from the binary — first-party code, already trusted,
-        // no download. Registry plugins still have to be fetched by hand from
-        // the Plugin Store, which is what the "missing" toast below is about.
-        const bundledMissing = (report?.plugins ?? []).filter(
-          (p) => p.status === 'missing-bundled',
+        // Bundled plugins this workspace needs come straight back from the
+        // binary — first-party code, already trusted, no download. Uninstalled
+        // and merely switched-off take the same call: `reinstallBundledPlugin`
+        // revives the ledger row and activates either way, and a workspace
+        // whose panels are dark because the connector is disabled is just as
+        // broken as one whose connector is gone. Registry plugins still have to
+        // be fetched by hand from the Plugin Store, which is what the "missing"
+        // toast below is about.
+        const bundledToRestore = report.plugins.filter(
+          (p) =>
+            p.bootstrap &&
+            (p.status === 'missing-bundled' || p.status === 'disabled'),
         )
-        const reinstalled: Array<string> = []
-        const failed: Array<string> = []
-        for (const plugin of bundledMissing) {
-          try {
-            const manifest = await reinstallBundledPlugin({
+        const outcomes = await Promise.allSettled(
+          bundledToRestore.map((p) =>
+            reinstallBundledPlugin({
               manager: pluginManager,
-              pluginId: plugin.pluginId,
-            })
-            reinstalled.push(manifest.name)
-          } catch {
+              pluginId: p.pluginId,
+              // Through the mutation, so the Plugin Store's cached states do
+              // not go stale behind a workspace the user just adopted.
+              persistState: (data) => saveStateMutation.mutate(data),
+            }),
+          ),
+        )
+
+        const restored: Array<string> = []
+        // Failed to start (bad config, the connector threw): voiced once, by
+        // the error toast below, and never counted again further down.
+        const failed: Array<string> = []
+        // Refused outright, because this deployment does not ship the family.
+        // Nothing to install, so it belongs with the plugins that stay missing.
+        const unavailableIds = new Set<string>()
+        outcomes.forEach((outcome, i) => {
+          const plugin = bundledToRestore[i]
+          if (outcome.status === 'fulfilled') {
+            restored.push(outcome.value.name)
+          } else if (outcome.reason instanceof BundledPluginUnavailableError) {
+            unavailableIds.add(plugin.pluginId)
+          } else {
             failed.push(plugin.name)
           }
-        }
-        if (reinstalled.length > 0 || failed.length > 0) {
-          notifyPluginStateChange()
-        }
-        if (reinstalled.length > 0) {
+        })
+
+        if (outcomes.length > 0) notifyPluginStateChange()
+        if (restored.length > 0) {
           toast.success(
             t('workspaceStore.bundledInstalled', {
-              names: reinstalled.join(', '),
+              names: restored.join(', '),
             }),
           )
         }
@@ -494,7 +540,17 @@ export function WorkspaceStore({
             .catch(() => {})
         }
         setSelectedId(null)
-        const stillMissing = (report?.missingCount ?? 0) - reinstalled.length
+        // What is still unmet: plugins this surface cannot install for the user
+        // — registry downloads, unknown ids, and families this deployment
+        // dropped. A plugin that came back but would not start is deliberately
+        // absent: it already had its own toast, and counting it here would say
+        // the same failure twice in two different words.
+        const stillMissing = report.plugins.filter(
+          (p) =>
+            p.status === 'missing-remote' ||
+            p.status === 'unknown' ||
+            unavailableIds.has(p.pluginId),
+        ).length
         if (stillMissing > 0) {
           toast.info(
             t('workspaceStore.addedWithMissing', {
@@ -521,10 +577,11 @@ export function WorkspaceStore({
       }
     },
     [
-      reports,
+      registry,
       requestFullTrust,
       pluginManager,
       notifyPluginStateChange,
+      saveStateMutation,
       createWorkspace,
       navigate,
       queryClient,

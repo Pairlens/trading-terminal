@@ -7,8 +7,12 @@
  * the pair and discovery routes boot deterministically. The rest arrives from
  * whichever plugins are active: an asset-class family ships its own layouts
  * through `contributes.workspaces`, so the perp menu's "Default" is the futures
- * plugin's and disappears the moment that plugin is disabled. Subscribing to
- * the registry is what makes it disappear without a reload.
+ * plugin's and goes the moment that plugin is disabled. Subscribing to the
+ * registry is what makes it go without a reload.
+ *
+ * The route still boots on `defaultPreset` either way, so `mergeRoutePresets`
+ * synthesizes the Default entry from it when no plugin offers one. Losing a
+ * family must not leave the layout the page opened on unreachable.
  *
  * Custom workspaces carry no `presetContext` and get the base untouched, which
  * for them is empty.
@@ -30,7 +34,7 @@ export function useRoutePresets(
     workspaceTemplateRegistry.getSnapshot,
   )
 
-  const { presets, presetContext, pairClass } = workspace
+  const { presets, presetContext, pairClass, defaultPreset } = workspace
 
   return useMemo(() => {
     if (!presetContext) return presets
@@ -43,6 +47,7 @@ export function useRoutePresets(
       workspaceTemplateRegistry.getTemplates(),
       presetContext,
       cls,
+      defaultPreset,
     )
-  }, [presets, presetContext, pairClass, version])
+  }, [presets, presetContext, pairClass, defaultPreset, version])
 }

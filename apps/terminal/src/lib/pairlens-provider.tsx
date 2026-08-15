@@ -23,10 +23,7 @@ import { CORE_NOTIFICATION_STEPS } from '@pairlens/notification-engine/core-step
 import { toast } from 'sonner'
 import type { ComponentType, LazyExoticComponent } from 'react'
 
-import type {
-  CapabilityId,
-  PluginLifecycleListener,
-} from '@pairlens/plugin-system'
+import type { PluginLifecycleListener } from '@pairlens/plugin-system'
 import type { PersistenceAdapter } from '@pairlens/persistence'
 
 import type { WorkflowStepTypeDefinition } from '@pairlens/workflow-engine/step-registry'
@@ -40,7 +37,6 @@ import type { PluginModule } from '@/lib/plugins/plugin-module-loader'
 import { startInstrumentIndexFill } from '@/lib/instruments/ttl-fill'
 import { ensureLocalInstrumentIndex } from '@/lib/instruments/local-index'
 import { syncInstrumentsSnapshot } from '@/lib/instruments/snapshot-sync'
-import { deepSearchSetting } from '@/lib/instruments/deep-search-setting'
 import i18n from '@/lib/i18n'
 import { lazyChunk } from '@/lib/lazy-chunk'
 import { api, appServerUrl, getSessionToken } from '@/lib/api'
@@ -57,6 +53,8 @@ import {
   BOOTSTRAP_PLUGIN_IDS,
 } from '@/lib/plugins/bootstrap-bundle'
 import { isFamilyExcluded } from '@/lib/plugins/plugin-families'
+import { applyServerPins } from '@/lib/plugins/apply-pins'
+import { buildActivationConfig } from '@/lib/plugins/official-config'
 import {
   PluginFullTrustRequiredError,
   PluginModuleLoader,
@@ -570,14 +568,7 @@ export function PairlensProvider({
       api
         .getPluginPins()
         .then((pins) => {
-          for (const pin of pins) {
-            manager.pinPlugin(
-              pin.capability as CapabilityId,
-              pin.market,
-              pin.pluginId,
-            )
-          }
-          if (pins.length > 0) notifyPluginStateChange()
+          if (applyServerPins(manager, pins) > 0) notifyPluginStateChange()
         })
         .catch(() => {
           // Offline or App Server unavailable — pins stay local-only
@@ -1102,18 +1093,16 @@ export function PairlensProvider({
       const cfgOf = (id: string): Record<string, unknown> =>
         ledgerSnapshot[id]?.config ?? {}
 
-      const officialConfig = {
-        appServerUrl: appServerUrl,
-        authToken: fetchAuthToken,
-        // The deep-search consent choke point: a live getter, so a settings
-        // flip applies to the very next request without re-activation.
-        discoverySearchAllowed: () => deepSearchSetting.get(),
-      }
-
+      // Boot activates through the same `buildActivationConfig` as every other
+      // path (toggles, config saves, bundled reinstall), so a plugin brought
+      // back at runtime gets the identical host config it would get at startup.
       // pairlens-core
       if (isEnabled('pairlens-core')) {
         try {
-          await manager.activatePlugin('pairlens-core', cfgOf('pairlens-core'))
+          await manager.activatePlugin(
+            'pairlens-core',
+            buildActivationConfig('pairlens-core', cfgOf('pairlens-core')),
+          )
         } catch {
           // Activation failed — leave installed
         }
@@ -1123,14 +1112,13 @@ export function PairlensProvider({
       // pairlens-intelligence
       if (isEnabled('pairlens-intelligence')) {
         try {
-          await manager.activatePlugin('pairlens-intelligence', {
-            ...officialConfig,
-            ...cfgOf('pairlens-intelligence'),
-            // Re-applied after the ledger spread: a persisted config must
-            // never clobber the auth accessor or the consent gate.
-            authToken: fetchAuthToken,
-            discoverySearchAllowed: officialConfig.discoverySearchAllowed,
-          })
+          await manager.activatePlugin(
+            'pairlens-intelligence',
+            buildActivationConfig(
+              'pairlens-intelligence',
+              cfgOf('pairlens-intelligence'),
+            ),
+          )
         } catch {
           // Activation failed — leave installed
         }
@@ -1140,10 +1128,13 @@ export function PairlensProvider({
       // pairlens-community — the first-party workspace store (workspace-store:catalog)
       if (isEnabled('pairlens-community')) {
         try {
-          await manager.activatePlugin('pairlens-community', {
-            ...officialConfig,
-            ...cfgOf('pairlens-community'),
-          })
+          await manager.activatePlugin(
+            'pairlens-community',
+            buildActivationConfig(
+              'pairlens-community',
+              cfgOf('pairlens-community'),
+            ),
+          )
         } catch {
           // Activation failed — leave installed
         }
@@ -1183,14 +1174,7 @@ export function PairlensProvider({
       }
 
       // ── 6. Apply pins ─────────────────────────────────────────────
-      const savedPins = await pinsPromise
-      for (const pin of savedPins) {
-        manager.pinPlugin(
-          pin.capability as CapabilityId,
-          pin.market,
-          pin.pluginId,
-        )
-      }
+      applyServerPins(manager, await pinsPromise)
 
       // ── 7. Wire AccessProvider ────────────────────────────────────
       const { entitlements } = await entitlementsPromise

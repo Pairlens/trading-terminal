@@ -1097,6 +1097,15 @@ export function routePresets(
   return out
 }
 
+/** Menu label that marks the entry a route opens on. */
+export const DEFAULT_PRESET_LABEL = 'Default'
+
+/**
+ * Id of the synthesized Default entry — the workspace's own `defaultPreset`,
+ * offered when no plugin is around to offer it.
+ */
+export const CLASS_DEFAULT_PRESET_ID = 'preset:class-default'
+
 /**
  * Fold plugin-contributed templates into a route's built-in preset base.
  *
@@ -1108,6 +1117,11 @@ export function routePresets(
  * entries trail in registration order. Object key order is insertion order for
  * string keys, which is what the menu renders from.
  *
+ * `defaultLayout` is the workspace's own `defaultPreset`. Disabling the family
+ * plugin takes the contributed Default with it, but the route still BOOTS on
+ * that layout, so a menu with no way back to it is a dead end. When nothing
+ * carries the Default slot, it is synthesized and leads.
+ *
  * Pure and synchronous — `useRoutePresets` is the React wrapper that feeds it
  * the live registry.
  */
@@ -1116,6 +1130,7 @@ export function mergeRoutePresets(
   contributed: ReadonlyArray<WorkspaceTemplate>,
   context: TemplateContext,
   cls?: InstrumentClass,
+  defaultLayout?: TerminalLayout,
 ): Record<string, RoutePreset> {
   const leading: Record<string, RoutePreset> = {}
   const trailing: Record<string, RoutePreset> = {}
@@ -1124,9 +1139,21 @@ export function mergeRoutePresets(
     if ((t.context ?? 'standalone') !== context || !t.routeMenu) continue
     if (cls && !templateServesClass(t, cls)) continue
     const label = t.menuLabel ?? t.name
-    const bucket = t.menuLabel === 'Default' ? leading : trailing
+    const bucket = t.menuLabel === DEFAULT_PRESET_LABEL ? leading : trailing
     bucket[t.id] = { label, layout: t.layout }
   }
 
-  return { ...leading, ...base, ...trailing }
+  const merged = { ...leading, ...base, ...trailing }
+  const hasDefault = Object.values(merged).some(
+    (p) => p.label === DEFAULT_PRESET_LABEL,
+  )
+  if (hasDefault || !defaultLayout) return merged
+
+  return {
+    [CLASS_DEFAULT_PRESET_ID]: {
+      label: DEFAULT_PRESET_LABEL,
+      layout: defaultLayout,
+    },
+    ...merged,
+  }
 }

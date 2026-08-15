@@ -17,22 +17,16 @@ export class PluginResolver {
     this.plugins.set(plugin.manifest.id, plugin)
   }
 
+  /**
+   * Forget a plugin. Pins are deliberately left alone: unregistering is also
+   * how a plugin is *replaced* (the dev zip re-import path uninstalls and
+   * reinstalls the same id), so dropping pins here would silently discard the
+   * user's routing choice on every reload of a plugin under development.
+   * A real uninstall clears the pin locally and on the server through
+   * `uninstallPluginEverywhere`, which is the one owner of that cleanup.
+   */
   unregisterPlugin(pluginId: string): void {
     this.plugins.delete(pluginId)
-    // A pin naming a plugin that is gone is worse than no pin: resolution
-    // silently falls through to priority order while the UI still reports an
-    // override, and reinstalling the plugin would resurrect a choice the user
-    // made before uninstalling it.
-    this.removeUserPinsFor(pluginId)
-  }
-
-  /** Drop every pin that names this plugin. Returns the pins removed. */
-  removeUserPinsFor(pluginId: string): Array<UserPluginPin> {
-    const removed = this.getUserPins().filter((p) => p.pluginId === pluginId)
-    for (const pin of removed) {
-      this.userPins.delete(`${pin.capability}|${pin.market}`)
-    }
-    return removed
   }
 
   setUserPin(capability: CapabilityId, market: string, pluginId: string): void {

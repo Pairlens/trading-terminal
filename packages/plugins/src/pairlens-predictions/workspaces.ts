@@ -149,6 +149,13 @@ export const PREDICTION_DISCOVERY_LAYOUT = {
   ],
 } satisfies ContributedWorkspaceLayout
 
+/**
+ * Id of the event-market home board. Exported because the terminal's markets
+ * pane offers this exact board as the way out of its predictions empty state,
+ * and a bare string in a core pane is a rename waiting to break silently.
+ */
+export const PREDICTION_DISCOVERY_TEMPLATE_ID = 'template:prediction-discovery'
+
 export const PREDICTIONS_WORKSPACES: Array<ContributedWorkspace> = [
   {
     id: 'template:prediction-terminal',
@@ -172,7 +179,7 @@ export const PREDICTIONS_WORKSPACES: Array<ContributedWorkspace> = [
     pairDefault: null,
   },
   {
-    id: 'template:prediction-discovery',
+    id: PREDICTION_DISCOVERY_TEMPLATE_ID,
     name: 'Prediction Discovery',
     menuLabel: 'Predictions',
     context: 'discovery',

@@ -144,16 +144,58 @@ describe('pairWorkspaceFor', () => {
       const def = shipped.find((w) => w.menuLabel === 'Default')
       expect(def, `${pluginId} ships a class default`).toBeDefined()
       // The static class default and the plugin's copy are one source.
-      expect(contributedToTemplate(def, {
-        pluginId,
-        author: plugin!.manifest.author,
-        trusted: true,
-      })!.layout).toEqual(pairWorkspaceFor(cls as InstrumentClass).defaultPreset)
+      expect(
+        contributedToTemplate(def, {
+          pluginId,
+          author: plugin!.manifest.author,
+          trusted: true,
+        })!.layout,
+      ).toEqual(pairWorkspaceFor(cls as InstrumentClass).defaultPreset)
       // ...and the catalog no longer double-serves it.
       expect(
         BUILTIN_WORKSPACE_TEMPLATES.some((t) => t.id === def!.id),
         `${def!.id} must not also live in the built-in catalog`,
       ).toBe(false)
+    }
+  })
+
+  test('a class keeps a Default entry when its family plugin is disabled', () => {
+    // Disabling `pairlens-cex-futures` takes the contributed perps desk out of
+    // the registry, but the perp route still BOOTS on the class default, so a
+    // menu with no way back to it would strand the user on a layout they can
+    // change but never restore.
+    const withoutFutures = CONTRIBUTED.filter(
+      (t) => t.id !== 'template:perps-terminal',
+    )
+    const ws = pairWorkspaceFor('perp')
+    const menu = mergeRoutePresets(
+      ws.presets,
+      withoutFutures,
+      'pair',
+      'perp',
+      ws.defaultPreset,
+    )
+    const entries = Object.entries(menu)
+    const defaults = entries.filter(([, p]) => p.label === 'Default')
+    expect(defaults.length).toBe(1)
+    expect(defaults[0][1].layout).toEqual(ws.defaultPreset)
+    expect(entries[0][0]).toBe(defaults[0][0])
+  })
+
+  test('the synthesized Default never doubles the plugin one', () => {
+    for (const cls of INSTRUMENT_CLASSES) {
+      const ws = pairWorkspaceFor(cls)
+      const menu = mergeRoutePresets(
+        ws.presets,
+        CONTRIBUTED,
+        'pair',
+        cls,
+        ws.defaultPreset,
+      )
+      expect(
+        Object.values(menu).filter((p) => p.label === 'Default').length,
+        cls,
+      ).toBe(1)
     }
   })
 
