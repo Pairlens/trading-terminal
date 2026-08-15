@@ -1042,6 +1042,18 @@
       }
     }
   },
+  "growth": {
+    "eyebrow": "Pairlens unterstützen",
+    "later": "Vielleicht später",
+    "never": "Nicht mehr fragen",
+    "githubStar": {
+      "title": "Gefällt dir das Terminal?",
+      "description": "Pairlens ist quelloffen und wächst durch Weiterempfehlung, nicht durch Werbebudgets. Wenn es sich einen Platz in deinem Workflow verdient hat, ist ein Stern auf GitHub die schnellste Art zu helfen.",
+      "note": "Es dauert zehn Sekunden, und genau so findet uns der nächste Trader.",
+      "cta": "Stern auf GitHub geben",
+      "thanks": "Danke. Das hilft wirklich."
+    }
+  },
   "userMenu": {
     "accountMenu": "Kontomenü",
     "settings": "Einstellungen",

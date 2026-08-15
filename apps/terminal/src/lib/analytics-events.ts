@@ -21,6 +21,7 @@
 
 import type { LockReason } from '@/lib/security/lock-config'
 import { captureEvent } from '@/lib/analytics'
+import { recordGrowthSignal } from '@/lib/growth/engagement'
 
 /**
  * Which kind of vault protector answered. The kind only — never how many are
@@ -276,6 +277,19 @@ export interface AnalyticsEvents {
   desktop_nudge_shown: { surface: string }
   desktop_nudge_clicked: { surface: string }
 
+  // ── Growth prompts ────────────────────────────────────────────────
+  /**
+   * A support-us prompt (GitHub star today, review sites later) was shown to
+   * an engaged user. `action` names the ask, `asks` is the lifetime count on
+   * this device — shown/clicked/dismissed together measure whether the
+   * eligibility heuristic finds the right people at the right moment.
+   */
+  growth_prompt_shown: { action: string; asks: number }
+  /** The prompt's CTA was clicked (the star page was opened). */
+  growth_prompt_cta_clicked: { action: string; asks: number }
+  /** The prompt was declined: `later` snoozes, `never` is permanent. */
+  growth_prompt_dismissed: { action: string; kind: 'later' | 'never' }
+
   // ── User-submitted feedback ───────────────────────────────────────
   /**
    * A bug report / idea the user deliberately typed and sent from the
@@ -333,5 +347,9 @@ export function track<TEvent extends keyof AnalyticsEvents>(
     ? []
     : [properties: AnalyticsEvents[TEvent]]
 ): void {
-  captureEvent(event, args[0] as Record<string, unknown> | undefined)
+  const properties = args[0] as Record<string, unknown> | undefined
+  // Local engagement tally for the growth prompts (lib/growth). Not
+  // analytics: device-local counters, independent of consent, never sent.
+  recordGrowthSignal(event, properties)
+  captureEvent(event, properties)
 }

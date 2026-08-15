@@ -1042,6 +1042,18 @@
       }
     }
   },
+  "growth": {
+    "eyebrow": "支持 Pairlens",
+    "later": "以後再說",
+    "never": "不再詢問",
+    "githubStar": {
+      "title": "終端機用得還順手嗎？",
+      "description": "Pairlens 公開原始碼，靠口碑成長，而不是廣告預算。如果它已經在你的工作流程中站穩了位置，到 GitHub 按一顆星就是最快的支持。",
+      "note": "只需十秒，下一位交易者就是這樣找到我們的。",
+      "cta": "到 GitHub 按星標",
+      "thanks": "謝謝，這真的很有幫助。"
+    }
+  },
   "userMenu": {
     "accountMenu": "帳戶選單",
     "settings": "設定",

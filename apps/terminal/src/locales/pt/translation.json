@@ -1042,6 +1042,18 @@
       }
     }
   },
+  "growth": {
+    "eyebrow": "Apoie o Pairlens",
+    "later": "Talvez depois",
+    "never": "Não perguntar de novo",
+    "githubStar": {
+      "title": "Está gostando do terminal?",
+      "description": "O Pairlens tem código disponível e cresce pelo boca a boca, não por orçamento de publicidade. Se ele conquistou um lugar no seu fluxo de trabalho, uma estrela no GitHub é o jeito mais rápido de ajudar.",
+      "note": "Leva dez segundos, e é assim que o próximo trader nos encontra.",
+      "cta": "Dar estrela no GitHub",
+      "thanks": "Obrigado. Ajuda de verdade."
+    }
+  },
   "userMenu": {
     "accountMenu": "Menu da conta",
     "settings": "Configurações",
