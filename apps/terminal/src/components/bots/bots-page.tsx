@@ -3,6 +3,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@pairlens/ui/components/ui/resizable'
+
 import { ArmLiveDialog } from './arm-live-dialog'
 import { BotDetail } from './bot-detail'
 import { BotList } from './bot-list'
@@ -10,9 +16,11 @@ import { BotsEmptyState } from './bots-empty-state'
 import { CreateBotDialog } from './create-bot-dialog'
 
 import type { BotDefinition } from '@pairlens/bot-engine/types'
+import { AssistantPanel } from '@/components/assistant/assistant-panel'
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 
 /**
  * The bots surface, as master-detail: the deployments down the left, one bot's
@@ -45,6 +53,10 @@ export function BotsPage({
   const [createOpen, setCreateOpen] = useState(false)
   const [createScriptId, setCreateScriptId] = useState<string | null>(null)
   const [armTarget, setArmTarget] = useState<BotDefinition | null>(null)
+  const [assistantOpen, setAssistantOpen] = usePersistedState<boolean>(
+    'assistant.bots.open',
+    false,
+  )
 
   useEffect(() => {
     loadBots()
@@ -85,22 +97,39 @@ export function BotsPage({
         onSelect={setSelectedId}
         onCreate={() => setCreateOpen(true)}
         onRequestArm={setArmTarget}
+        onToggleAssistant={() => setAssistantOpen(!assistantOpen)}
+        assistantOpen={assistantOpen}
       />
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        {selected ? (
-          <BotDetail
-            key={selected.id}
-            bot={selected}
-            onRequestArm={setArmTarget}
-          />
-        ) : (
-          <BotsEmptyState
-            onCreate={() => setCreateOpen(true)}
-            onCreated={setSelectedId}
-          />
+      <ResizablePanelGroup orientation="horizontal" className="min-w-0 flex-1">
+        <ResizablePanel id="bots-main" defaultSize={72} minSize={40}>
+          <div className="flex h-full min-w-0 flex-1 flex-col">
+            {selected ? (
+              <BotDetail
+                key={selected.id}
+                bot={selected}
+                onRequestArm={setArmTarget}
+              />
+            ) : (
+              <BotsEmptyState
+                onCreate={() => setCreateOpen(true)}
+                onCreated={setSelectedId}
+              />
+            )}
+          </div>
+        </ResizablePanel>
+        {assistantOpen && (
+          <>
+            <ResizableHandle />
+            <ResizablePanel id="bots-assistant" defaultSize={28} minSize={18}>
+              <AssistantPanel
+                surface="bots"
+                onClose={() => setAssistantOpen(false)}
+              />
+            </ResizablePanel>
+          </>
         )}
-      </div>
+      </ResizablePanelGroup>
 
       <CreateBotDialog
         open={createOpen}

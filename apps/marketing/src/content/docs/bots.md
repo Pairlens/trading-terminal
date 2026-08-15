@@ -5,7 +5,7 @@ group: traders
 order: 6
 eyebrow: For traders
 updated: AUG 2026
-readTime: 6 min read
+readTime: 7 min read
 ---
 
 A bot is one of your [strategy scripts](/docs/strategies-and-backtests)
@@ -53,6 +53,15 @@ dead-ends:
   workbench where strategies are written. A strategy script there has a
   **Deploy as bot** button that lands back in this dialog with the script
   preselected.
+
+There is also a fourth way that skips the dialog entirely: the sparkle button
+above the bot list opens the AI assistant, and "deploy my breakout strategy on
+OKX BTC-USDT, 1h" creates the bot in one exchange. Anything it creates arrives
+in paper mode and switched off, exactly as if you had walked the steps
+yourself, and it can never arm a bot. It can also rename bots, tune strategy
+params, and set guards on your behalf when you ask. See
+[Build with AI](/docs/python-scripts#build-with-ai) for how the assistant
+works and which AI providers it uses.
 
 ### 2. Market
 

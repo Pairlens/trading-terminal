@@ -1224,6 +1224,28 @@
     "restartNow": "지금 재시작",
     "later": "나중에"
   },
+  "assistant": {
+    "title": "AI 어시스턴트",
+    "buildWithAi": "AI로 만들기",
+    "placeholder": "무엇을 만들지 설명하세요...",
+    "close": "어시스턴트 닫기",
+    "clearChat": "대화 지우기",
+    "emptyTitle": "무엇을 만들까요?",
+    "emptyHintIndicators": "지표나 전략을 설명하면 어시스턴트가 에디터에 작성하고, 검증하고, 미리보기를 실행합니다.",
+    "emptyHintBots": "전략을 모의 봇으로 배포하거나, 파라미터를 조정하거나, 리스크 가드를 설정해 달라고 요청하세요. 봇을 실전으로 전환하는 결정은 당신의 몫입니다.",
+    "genericError": "어시스턴트에 오류가 발생했습니다 — 다시 보내 보세요.",
+    "authRequiredTitle": "AI로 만들기",
+    "authRequiredDescription": "지표, 전략, 봇을 평소 말로 설명하면 어시스턴트가 Python을 작성하고, 검증하고, 함께 백테스트합니다.",
+    "upgradeRequiredDescription": "빌더 어시스턴트는 지표, 전략, 봇을 당신과 함께 작성합니다. Pairlens Intelligence를 구독하거나 직접 AI 키를 연결하세요 — 무료입니다.",
+    "unavailableTitle": "어시스턴트 사용 불가",
+    "unavailableDescription": "Plugins 페이지에서 AI 제공자를 활성화하면 채팅으로 지표, 전략, 봇을 만들 수 있습니다.",
+    "quickNewIndicator": "RSI 다이버전스 지표 만들어 줘",
+    "quickNewStrategy": "백테스트할 수 있는 돌파 전략을 써 줘",
+    "quickImprove": "이 스크립트를 검토하고 개선점을 제안해 줘",
+    "quickCreateBot": "내 전략 하나를 모의 봇으로 배포해 줘",
+    "quickGuards": "내 봇에 쓸 리스크 가드를 제안해 줘",
+    "quickReview": "내 봇들은 성과가 어때?"
+  },
   "copilot": {
     "aiLens": "AI 렌즈",
     "thinking": "생각 중...",

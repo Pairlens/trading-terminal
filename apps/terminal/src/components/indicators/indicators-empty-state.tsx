@@ -12,10 +12,11 @@
  * teaches that this one workbench writes both kinds of script.
  */
 import { useCallback, useMemo, useState } from 'react'
-import { SquareFunction } from 'lucide-react'
+import { Sparkles, SquareFunction } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
+import { Button } from '@pairlens/ui/components/ui/button'
 import { StarterEmptyState } from '../starter-empty-state'
 import { botTemplates, ensureBotTemplateScript } from '../bots/bot-templates'
 import {
@@ -26,7 +27,12 @@ import type { StarterTemplate } from '../starter-empty-state'
 import { BLANK_SCRIPT } from '@/lib/python/examples'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
 
-export function IndicatorsEmptyState() {
+export function IndicatorsEmptyState({
+  onOpenAssistant,
+}: {
+  /** Opens the builder-assistant rail — the third way to a first script. */
+  onOpenAssistant?: () => void
+} = {}) {
   const { t } = useTranslation()
   const scripts = useIndicatorScriptsStore((s) => s.scripts)
   const loaded = useIndicatorScriptsStore((s) => s.loaded)
@@ -96,6 +102,18 @@ export function IndicatorsEmptyState() {
       blankLabel={t('indicatorsPage.startFromScratch')}
       onCreateBlank={handleBlank}
       footnote={t('indicatorsPage.emptyFootnote')}
+      extraAction={
+        onOpenAssistant ? (
+          <Button
+            variant="outline"
+            className="gap-1.5"
+            onClick={onOpenAssistant}
+          >
+            <Sparkles className="size-4" style={{ color: 'var(--magic-1)' }} />
+            {t('assistant.buildWithAi')}
+          </Button>
+        ) : undefined
+      }
     />
   )
 }

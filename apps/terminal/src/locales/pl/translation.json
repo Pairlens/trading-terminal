@@ -1232,6 +1232,28 @@
     "pluginUpdatesReady_few": "{{count}} aktualizacje wtyczek gotowe do instalacji",
     "pluginUpdatesReady_many": "{{count}} aktualizacji wtyczek gotowych do instalacji"
   },
+  "assistant": {
+    "title": "Asystent AI",
+    "buildWithAi": "Buduj z AI",
+    "placeholder": "Opisz, co zbudować...",
+    "close": "Zamknij asystenta",
+    "clearChat": "Wyczyść rozmowę",
+    "emptyTitle": "Co budujemy?",
+    "emptyHintIndicators": "Opisz wskaźnik albo strategię — asystent zapisze je w edytorze, zweryfikuje i uruchomi podgląd.",
+    "emptyHintBots": "Poproś go o wdrożenie strategii jako bota na papierze, dostrojenie parametrów albo ustawienie guardów ryzyka. Uzbrojenie bota zostaje w twoich rękach.",
+    "genericError": "Asystent napotkał błąd — spróbuj wysłać wiadomość ponownie.",
+    "authRequiredTitle": "Buduj z AI",
+    "authRequiredDescription": "Opisz wskaźnik, strategię albo bota zwykłymi słowami — asystent napisze Pythona, zweryfikuje go i zrobi z tobą backtest.",
+    "upgradeRequiredDescription": "Asystent-budowniczy pisze z tobą wskaźniki, strategie i boty. Zasubskrybuj Pairlens Intelligence lub podłącz własny klucz AI — za darmo.",
+    "unavailableTitle": "Asystent niedostępny",
+    "unavailableDescription": "Włącz dostawcę AI na stronie Plugins, aby budować wskaźniki, strategie i boty przez czat.",
+    "quickNewIndicator": "Zbuduj wskaźnik dywergencji RSI",
+    "quickNewStrategy": "Napisz strategię wybicia, dla której mogę zrobić backtest",
+    "quickImprove": "Przejrzyj ten skrypt i zaproponuj ulepszenia",
+    "quickCreateBot": "Wdróż jedną z moich strategii jako bota na papierze",
+    "quickGuards": "Zaproponuj guardy ryzyka dla jednego z moich botów",
+    "quickReview": "Jak radzą sobie moje boty?"
+  },
   "copilot": {
     "aiLens": "AI Lens",
     "thinking": "Myślę...",

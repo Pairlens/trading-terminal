@@ -1224,6 +1224,28 @@
     "restartNow": "Mulai ulang sekarang",
     "later": "Nanti"
   },
+  "assistant": {
+    "title": "Asisten AI",
+    "buildWithAi": "Bangun dengan AI",
+    "placeholder": "Jelaskan apa yang ingin dibangun...",
+    "close": "Tutup asisten",
+    "clearChat": "Hapus percakapan",
+    "emptyTitle": "Mau bangun apa?",
+    "emptyHintIndicators": "Jelaskan sebuah indikator atau strategi — asisten menuliskannya ke editor, memvalidasinya, dan menjalankan pratinjau.",
+    "emptyHintBots": "Minta ia memasang strategi sebagai bot paper, menyetel parameter, atau mengatur pengaman risiko. Mengaktifkan bot ke live tetap di tangan Anda.",
+    "genericError": "Asisten mengalami error — coba kirim ulang pesan itu.",
+    "authRequiredTitle": "Bangun dengan AI",
+    "authRequiredDescription": "Jelaskan indikator, strategi, atau bot dengan kata-kata biasa — asisten menulis Python-nya, memvalidasinya, dan mem-backtest-nya bersama Anda.",
+    "upgradeRequiredDescription": "Asisten builder menulis indikator, strategi, dan bot bersama Anda. Berlangganan Pairlens Intelligence, atau hubungkan kunci AI Anda sendiri — gratis.",
+    "unavailableTitle": "Asisten tidak tersedia",
+    "unavailableDescription": "Aktifkan penyedia AI di halaman Plugins untuk membangun indikator, strategi, dan bot lewat chat.",
+    "quickNewIndicator": "Buat indikator divergensi RSI",
+    "quickNewStrategy": "Tulis strategi breakout yang bisa saya backtest",
+    "quickImprove": "Tinjau skrip ini dan sarankan perbaikan",
+    "quickCreateBot": "Pasang salah satu strategi saya sebagai bot paper",
+    "quickGuards": "Sarankan pengaman risiko untuk salah satu bot saya",
+    "quickReview": "Bagaimana performa bot saya?"
+  },
   "copilot": {
     "aiLens": "AI Lens",
     "thinking": "Berpikir...",

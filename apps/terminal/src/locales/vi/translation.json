@@ -1224,6 +1224,28 @@
     "restartNow": "Khởi động lại ngay",
     "later": "Để sau"
   },
+  "assistant": {
+    "title": "Trợ lý AI",
+    "buildWithAi": "Xây dựng với AI",
+    "placeholder": "Mô tả thứ bạn muốn xây...",
+    "close": "Đóng trợ lý",
+    "clearChat": "Xóa cuộc trò chuyện",
+    "emptyTitle": "Chúng ta xây gì đây?",
+    "emptyHintIndicators": "Mô tả một chỉ báo hoặc chiến lược — trợ lý sẽ viết vào trình soạn thảo, kiểm tra tính hợp lệ và chạy bản xem trước.",
+    "emptyHintBots": "Hãy nhờ nó triển khai một chiến lược thành bot giả lập, tinh chỉnh tham số, hoặc đặt giới hạn rủi ro. Việc kích hoạt bot thật vẫn nằm trong tay bạn.",
+    "genericError": "Trợ lý gặp lỗi — hãy thử gửi lại.",
+    "authRequiredTitle": "Xây dựng với AI",
+    "authRequiredDescription": "Mô tả một chỉ báo, chiến lược hay bot bằng lời thường — trợ lý sẽ viết Python, kiểm tra và backtest cùng bạn.",
+    "upgradeRequiredDescription": "Trợ lý xây dựng viết chỉ báo, chiến lược và bot cùng bạn. Đăng ký Pairlens Intelligence hoặc kết nối khóa AI của riêng bạn — miễn phí.",
+    "unavailableTitle": "Trợ lý không khả dụng",
+    "unavailableDescription": "Bật một nhà cung cấp AI trên trang Plugins để xây chỉ báo, chiến lược và bot qua chat.",
+    "quickNewIndicator": "Xây một chỉ báo phân kỳ RSI",
+    "quickNewStrategy": "Viết một chiến lược breakout mà tôi có thể backtest",
+    "quickImprove": "Xem lại script này và gợi ý cải thiện",
+    "quickCreateBot": "Triển khai một chiến lược của tôi thành bot giả lập",
+    "quickGuards": "Gợi ý giới hạn rủi ro cho một bot của tôi",
+    "quickReview": "Các bot của tôi đang hoạt động thế nào?"
+  },
   "copilot": {
     "aiLens": "AI Lens",
     "thinking": "Đang suy nghĩ...",

@@ -71,6 +71,8 @@ type CopilotInputProps = {
   status: string
   onStop: () => void
   quickActions: Array<string>
+  /** Composer placeholder — other hosts (the builder assistant) pass their own. */
+  placeholder?: string
 }
 
 export function CopilotInput({
@@ -78,6 +80,7 @@ export function CopilotInput({
   status,
   onStop,
   quickActions,
+  placeholder,
 }: CopilotInputProps) {
   const { t } = useTranslation()
   const [value, setValue] = useState('')
@@ -165,7 +168,7 @@ export function CopilotInput({
           onFocus={() => {
             userEngagedRef.current = true
           }}
-          placeholder={t('copilot.placeholder')}
+          placeholder={placeholder ?? t('copilot.placeholder')}
           disabled={!isReady}
           className="field-sizing-fixed min-h-8 flex-1 resize-none overflow-y-auto px-2.5 py-1 leading-5"
         />

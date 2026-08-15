@@ -1224,6 +1224,28 @@
     "restartNow": "Şimdi yeniden başlat",
     "later": "Daha sonra"
   },
+  "assistant": {
+    "title": "Yapay zekâ asistanı",
+    "buildWithAi": "Yapay zekâ ile oluştur",
+    "placeholder": "Ne oluşturmak istediğini anlat...",
+    "close": "Asistanı kapat",
+    "clearChat": "Konuşmayı temizle",
+    "emptyTitle": "Ne oluşturalım?",
+    "emptyHintIndicators": "Bir gösterge ya da strateji anlat; asistan onu editöre yazar, doğrular ve önizlemeyi çalıştırır.",
+    "emptyHintBots": "Ondan bir stratejiyi kağıt bot olarak kurmasını, parametreleri ayarlamasını ya da risk sınırları koymasını iste. Botu canlıya alma kararı senin elinde kalır.",
+    "genericError": "Asistan bir hatayla karşılaştı — mesajı yeniden göndermeyi dene.",
+    "authRequiredTitle": "Yapay zekâ ile oluştur",
+    "authRequiredDescription": "Bir göstergeyi, stratejiyi ya da botu kendi kelimelerinle anlat — asistan Python'ı yazar, doğrular ve seninle birlikte geriye dönük test eder.",
+    "upgradeRequiredDescription": "Oluşturucu asistan göstergeleri, stratejileri ve botları seninle birlikte yazar. Pairlens Intelligence'a abone ol veya kendi yapay zekâ anahtarını bağla — ücretsiz.",
+    "unavailableTitle": "Asistan kullanılamıyor",
+    "unavailableDescription": "Sohbetle gösterge, strateji ve bot oluşturmak için Plugins sayfasından bir yapay zekâ sağlayıcısı etkinleştir.",
+    "quickNewIndicator": "RSI uyumsuzluğu göstergesi oluştur",
+    "quickNewStrategy": "Geriye dönük test edebileceğim bir kırılma stratejisi yaz",
+    "quickImprove": "Bu betiği incele ve iyileştirmeler öner",
+    "quickCreateBot": "Stratejilerimden birini kağıt bot olarak kur",
+    "quickGuards": "Botlarımdan biri için risk sınırları öner",
+    "quickReview": "Botlarım nasıl performans gösteriyor?"
+  },
   "copilot": {
     "aiLens": "Yapay Zeka Merceği",
     "thinking": "Düşünüyor...",

@@ -16,6 +16,7 @@ import {
   Package,
   Play,
   Save,
+  Sparkles,
   SquareFunction,
   Wand2,
 } from 'lucide-react'
@@ -74,6 +75,7 @@ import type {
   IndicatorScript,
 } from '@/stores/indicator-scripts-store'
 import type { BacktestResult, BacktestSignals } from '@/lib/indicators/backtest'
+import type { AssistantWorkbenchBridge } from '@/lib/assistant/assistant-tools'
 import { runBacktest } from '@/lib/indicators/backtest'
 import { fetchHistoryDepth } from '@/lib/indicators/fetch-depth'
 import {
@@ -92,8 +94,10 @@ import {
 } from '@/lib/python/python-runtime'
 import { useMarketData } from '@/lib/market-data-provider'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 import { usePythonConsole } from '@/hooks/use-python-console'
 import { MarketPicker } from '@/components/terminal/market-picker'
+import { AssistantPanel } from '@/components/assistant/assistant-panel'
 
 /**
  * How much history the preview pulls. A long moving average needs real depth
@@ -469,6 +473,60 @@ export function IndicatorWorkbench({
   const [importOpen, setImportOpen] = useState(false)
   const [referenceOpen, setReferenceOpen] = useState(false)
   const [librariesOpen, setLibrariesOpen] = useState(false)
+  const [assistantOpen, setAssistantOpen] = usePersistedState<boolean>(
+    'assistant.workbench.open',
+    false,
+  )
+
+  // ── Builder assistant bridge ──
+  // Send-time getters read refs, so assistant tool calls always see the
+  // editor buffers and preview target as they are NOW, not as they were
+  // when the chat transport was constructed.
+  const selectedIdRef = useRef(selectedId)
+  selectedIdRef.current = selectedId
+  const draftsRef = useRef(drafts)
+  draftsRef.current = drafts
+  const previewTargetRef = useRef({ market, pair, timeframe })
+  previewTargetRef.current = { market, pair, timeframe }
+
+  /** A script's files with unsaved editor buffers overlaid — what Run uses. */
+  const overlaidFiles = useCallback((scriptId: string) => {
+    const script = useIndicatorScriptsStore
+      .getState()
+      .scripts.find((s) => s.id === scriptId)
+    if (!script) return null
+    return scriptFiles(script).map((file) => ({
+      path: file.path,
+      source: draftsRef.current[draftKey(scriptId, file.path)] ?? file.source,
+    }))
+  }, [])
+
+  const assistantBridge = useMemo<AssistantWorkbenchBridge>(
+    () => ({
+      getSelectedScriptId: () => selectedIdRef.current,
+      selectScript: (id) => setSelectedId(id),
+      getFiles: overlaidFiles,
+      applyEdit: (scriptId, path, source) => {
+        // Persist like a user save (version history included) and drop any
+        // stale buffer so the editor shows the assistant's edit, not a draft
+        // that predates it.
+        useIndicatorScriptsStore
+          .getState()
+          .setFileSource(scriptId, path, source)
+        forgetDraft(scriptId, path)
+      },
+      runPreview: (scriptId) => {
+        const script = useIndicatorScriptsStore
+          .getState()
+          .scripts.find((s) => s.id === scriptId)
+        const next = overlaidFiles(scriptId)
+        if (!script || !next) return
+        void run(script, next)
+      },
+      getPreviewTarget: () => previewTargetRef.current,
+    }),
+    [overlaidFiles, forgetDraft, run],
+  )
   /** Set by the editor once CodeMirror is live; null while it is not. */
   const insertRef = useRef<((text: string) => void) | null>(null)
 
@@ -607,354 +665,398 @@ export function IndicatorWorkbench({
         onImport={() => setImportOpen(true)}
       />
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        {selected ? (
-          <>
-            {/* Editor header */}
-            <div className="flex items-center gap-2 border-b border-border px-3 py-1.5">
-              {selected.meta?.strategy ? (
-                <Bot className="size-4 shrink-0 text-muted-foreground" />
-              ) : (
-                <SquareFunction className="size-4 shrink-0 text-muted-foreground" />
-              )}
-              <span className="truncate text-sm font-medium">
-                {selected.name}
-              </span>
-              {/* Which kind this is decides whether it can be deployed as a
+      {/* The assistant is a full-height rail beside everything (header,
+          editor and preview included) so it survives having no script
+          selected — creating the first script IS one of its jobs. */}
+      <ResizablePanelGroup orientation="horizontal" className="min-w-0 flex-1">
+        <ResizablePanel id="workbench-main" defaultSize={72} minSize={40}>
+          <div className="flex h-full min-w-0 flex-col">
+            {selected ? (
+              <>
+                {/* Editor header */}
+                <div className="flex items-center gap-2 border-b border-border px-3 py-1.5">
+                  {selected.meta?.strategy ? (
+                    <Bot className="size-4 shrink-0 text-muted-foreground" />
+                  ) : (
+                    <SquareFunction className="size-4 shrink-0 text-muted-foreground" />
+                  )}
+                  <span className="truncate text-sm font-medium">
+                    {selected.name}
+                  </span>
+                  {/* Which kind this is decides whether it can be deployed as a
                   bot, and nothing on screen used to say so — a user with a
                   perfectly good indicator had no way to see why /bots wouldn't
                   take it. The tooltip carries the fix, not just the label. */}
-              {selected.meta && (
-                <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <Badge
-                        variant={
-                          selected.meta.strategy ? 'default' : 'secondary'
+                  {selected.meta && (
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          <Badge
+                            variant={
+                              selected.meta.strategy ? 'default' : 'secondary'
+                            }
+                            className="cursor-default text-[10px]"
+                          />
                         }
-                        className="cursor-default text-[10px]"
-                      />
-                    }
-                  >
-                    {selected.meta.strategy
-                      ? t('indicatorsPage.kindStrategy')
-                      : t('indicatorsPage.kindIndicator')}
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    {selected.meta.strategy
-                      ? t('indicatorsPage.strategyBadgeHint')
-                      : t('indicatorsPage.indicatorBadgeHint')}
-                  </TooltipContent>
-                </Tooltip>
-              )}
-              {dirty && (
-                <Badge variant="outline" className="gap-1 text-[10px]">
-                  <CircleDot className="size-2.5" />
-                  {t('indicatorsPage.unsaved')}
-                </Badge>
-              )}
-              {runtimeBadge && (
-                <Badge variant="secondary" className="gap-1.5 text-[10px]">
-                  <Spinner className="size-2.5" />
-                  {runtimeBadge}
-                </Badge>
-              )}
-              <div className="ml-auto flex items-center gap-1.5">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 gap-1.5 text-xs"
-                  onClick={() => setExportScript(selected)}
-                  disabled={!selected.meta}
-                >
-                  <Package className="size-3.5" />
-                  {t('indicatorsPage.export')}
-                </Button>
-                <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-7"
-                        onClick={() => setReferenceOpen(true)}
-                        aria-label={t('indicatorsPage.sdkRefTitle')}
-                      />
-                    }
-                  >
-                    <BookOpen className="size-3.5" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {t('indicatorsPage.sdkRefTitle')}
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-7"
-                        onClick={() => setLibrariesOpen(true)}
-                        aria-label={t('indicatorsPage.librariesTitle')}
-                      />
-                    }
-                  >
-                    <Library className="size-3.5" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {t('indicatorsPage.librariesTitle')}
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-7"
-                        onClick={() => void handleFormat()}
-                        disabled={formatting || runtimeBusy}
-                        aria-label={t('indicatorsPage.format')}
-                      />
-                    }
-                  >
-                    {formatting ? (
-                      <Spinner className="size-3.5" />
-                    ) : (
-                      <Wand2 className="size-3.5" />
-                    )}
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {t('indicatorsPage.formatHint')}
-                  </TooltipContent>
-                </Tooltip>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 gap-1.5 text-xs"
-                  onClick={handleSave}
-                  disabled={!dirty}
-                >
-                  <Save className="size-3.5" />
-                  {t('indicatorsPage.save')}
-                </Button>
-                <Button
-                  size="sm"
-                  className="h-7 gap-1.5 text-xs"
-                  onClick={handleRun}
-                  disabled={running || runtimeBusy}
-                >
-                  {running ? (
-                    <Spinner className="size-3.5" />
-                  ) : (
-                    <Play className="size-3.5" />
+                      >
+                        {selected.meta.strategy
+                          ? t('indicatorsPage.kindStrategy')
+                          : t('indicatorsPage.kindIndicator')}
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        {selected.meta.strategy
+                          ? t('indicatorsPage.strategyBadgeHint')
+                          : t('indicatorsPage.indicatorBadgeHint')}
+                      </TooltipContent>
+                    </Tooltip>
                   )}
-                  {t('indicatorsPage.run')}
-                </Button>
-                {/* The payoff move for a strategy script, right where the
-                    badge says "can be deployed": one click lands in the
-                    bots page's create flow with this script preselected. */}
-                {selected.meta?.strategy && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-7 gap-1.5 text-xs"
-                    onClick={() =>
-                      void navigate({
-                        to: '/bots',
-                        search: { create: selected.id },
-                      })
-                    }
-                  >
-                    <Bot className="size-3.5" />
-                    {t('indicatorsPage.deployAsBot')}
-                  </Button>
-                )}
-              </div>
-            </div>
-
-            <ResizablePanelGroup
-              orientation="horizontal"
-              className="min-h-0 flex-1"
-            >
-              <ResizablePanel defaultSize={55} minSize={30}>
-                <div className="flex h-full min-h-0 flex-col">
-                  <FileTabs
-                    files={files}
-                    activePath={activePath}
-                    dirtyPaths={dirtyPaths}
-                    onSelect={selectFile}
-                    onAdd={(path) => addModule(selected.id, path)}
-                    onRename={(from, to) => {
-                      // Carry an unsaved buffer over to the new path.
-                      const buffer = drafts[draftKey(selected.id, from)]
-                      renameModule(selected.id, from, to)
-                      forgetDraft(selected.id, from)
-                      if (buffer !== undefined) {
-                        setDrafts((d) => ({
-                          ...d,
-                          [draftKey(selected.id, to)]: buffer,
-                        }))
-                      }
-                    }}
-                    onDelete={(path) => {
-                      deleteModule(selected.id, path)
-                      forgetDraft(selected.id, path)
-                    }}
-                  />
-                  <CodeEditor
-                    key={`${selected.id}:${activePath}`}
-                    value={draft}
-                    filePath={activePath}
-                    onChange={handleDraftChange}
-                    onSave={handleSave}
-                    onRun={handleRun}
-                    onInsertReady={(insert) => {
-                      insertRef.current = insert
-                    }}
-                    className="min-h-0 flex-1"
-                  />
-                </div>
-              </ResizablePanel>
-              <ResizableHandle />
-              <ResizablePanel defaultSize={45} minSize={25}>
-                <div className="flex h-full min-h-0 flex-col">
-                  {/* Preview target controls — wraps rather than clipping
-                      Re-run when the pane is narrow. Same py-1.5 + h-7 recipe
-                      as the editor's file tabs, so both rows line up. */}
-                  <div className="flex flex-wrap items-center gap-1.5 border-b border-border px-3 py-1.5">
-                    <MarketPicker
-                      market={market}
-                      marketOptions={marketOptions}
-                      onMarketChange={(value) => value && setMarket(value)}
-                      className="h-7"
-                      aria-label={t('indicatorsPage.market')}
-                    />
-                    <PreviewPairPicker
-                      market={market}
-                      pair={pair}
-                      onPairChange={setPair}
-                      onSubmit={handleRun}
-                    />
-                    <Select
-                      value={timeframe}
-                      onValueChange={(tf) =>
-                        tf && setTimeframe(tf as Timeframe)
-                      }
-                    >
-                      <SelectTrigger
-                        size="sm"
-                        className="h-7 w-auto min-w-16 text-xs"
-                        aria-label={t('indicatorsPage.timeframe')}
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {timeframes.map((tf) => (
-                          <SelectItem key={tf} value={tf}>
-                            {tf}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Select
-                      value={String(barCount)}
-                      onValueChange={(value) => {
-                        if (!value) return
-                        setBarCount(Number(value))
-                        // Depth changes what gets fetched, so this is a full
-                        // run rather than a params-only recompute.
-                        if (selected) {
-                          barCountRef.current = Number(value)
-                          void run(selected, files)
-                        }
-                      }}
-                    >
-                      <SelectTrigger
-                        size="sm"
-                        className="h-7 w-auto min-w-16 text-xs"
-                        aria-label={t('indicatorsPage.barDepth')}
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {BAR_COUNTS.map((count) => (
-                          <SelectItem key={count} value={String(count)}>
-                            {t('indicatorsPage.barCount', { count })}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {/* Icon-only: the toolbar is narrow and the editor
-                        header already carries a labelled Run. */}
+                  {dirty && (
+                    <Badge variant="outline" className="gap-1 text-[10px]">
+                      <CircleDot className="size-2.5" />
+                      {t('indicatorsPage.unsaved')}
+                    </Badge>
+                  )}
+                  {runtimeBadge && (
+                    <Badge variant="secondary" className="gap-1.5 text-[10px]">
+                      <Spinner className="size-2.5" />
+                      {runtimeBadge}
+                    </Badge>
+                  )}
+                  <div className="ml-auto flex items-center gap-1.5">
                     <Tooltip>
                       <TooltipTrigger
                         render={
                           <Button
-                            variant="outline"
+                            variant={assistantOpen ? 'secondary' : 'ghost'}
                             size="icon"
-                            className="size-7 shrink-0"
-                            onClick={handleRun}
-                            disabled={running || runtimeBusy}
-                            aria-label={t('indicatorsPage.rerun')}
+                            className="size-7"
+                            onClick={() => setAssistantOpen(!assistantOpen)}
+                            aria-label={t('assistant.title')}
                           />
                         }
                       >
-                        <Play className="size-3" />
+                        <Sparkles
+                          className="size-3.5"
+                          style={{ color: 'var(--magic-1)' }}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>{t('assistant.title')}</TooltipContent>
+                    </Tooltip>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 gap-1.5 text-xs"
+                      onClick={() => setExportScript(selected)}
+                      disabled={!selected.meta}
+                    >
+                      <Package className="size-3.5" />
+                      {t('indicatorsPage.export')}
+                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-7"
+                            onClick={() => setReferenceOpen(true)}
+                            aria-label={t('indicatorsPage.sdkRefTitle')}
+                          />
+                        }
+                      >
+                        <BookOpen className="size-3.5" />
                       </TooltipTrigger>
                       <TooltipContent>
-                        {t('indicatorsPage.rerun')}
+                        {t('indicatorsPage.sdkRefTitle')}
                       </TooltipContent>
                     </Tooltip>
-                  </div>
-
-                  {selectedRun && !selectedError && (
-                    <PreviewParamsBar
-                      meta={selectedRun.meta}
-                      params={
-                        previewParams[selected.id] ??
-                        defaultPreviewParams(selectedRun.meta)
-                      }
-                      onChange={handleParamsChange}
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-7"
+                            onClick={() => setLibrariesOpen(true)}
+                            aria-label={t('indicatorsPage.librariesTitle')}
+                          />
+                        }
+                      >
+                        <Library className="size-3.5" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {t('indicatorsPage.librariesTitle')}
+                      </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-7"
+                            onClick={() => void handleFormat()}
+                            disabled={formatting || runtimeBusy}
+                            aria-label={t('indicatorsPage.format')}
+                          />
+                        }
+                      >
+                        {formatting ? (
+                          <Spinner className="size-3.5" />
+                        ) : (
+                          <Wand2 className="size-3.5" />
+                        )}
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {t('indicatorsPage.formatHint')}
+                      </TooltipContent>
+                    </Tooltip>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 gap-1.5 text-xs"
+                      onClick={handleSave}
+                      disabled={!dirty}
+                    >
+                      <Save className="size-3.5" />
+                      {t('indicatorsPage.save')}
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="h-7 gap-1.5 text-xs"
+                      onClick={handleRun}
                       disabled={running || runtimeBusy}
-                    />
-                  )}
-
-                  <div className="min-h-0 flex-1">
-                    <IndicatorPreview
-                      run={selectedRun}
-                      error={selectedError}
-                      onHoverTsChange={setHoverTs}
-                    />
+                    >
+                      {running ? (
+                        <Spinner className="size-3.5" />
+                      ) : (
+                        <Play className="size-3.5" />
+                      )}
+                      {t('indicatorsPage.run')}
+                    </Button>
+                    {/* The payoff move for a strategy script, right where the
+                    badge says "can be deployed": one click lands in the
+                    bots page's create flow with this script preselected. */}
+                    {selected.meta?.strategy && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 gap-1.5 text-xs"
+                        onClick={() =>
+                          void navigate({
+                            to: '/bots',
+                            search: { create: selected.id },
+                          })
+                        }
+                      >
+                        <Bot className="size-3.5" />
+                        {t('indicatorsPage.deployAsBot')}
+                      </Button>
+                    )}
                   </div>
-
-                  {selectedRun?.backtest && !selectedError && (
-                    <BacktestPanel result={selectedRun.backtest} />
-                  )}
-
-                  {selectedRun && !selectedError && (
-                    <DataWindow run={selectedRun} hoverTs={hoverTs} />
-                  )}
-
-                  {selected.meta && !selectedError && (
-                    <MetaInspector meta={selected.meta} />
-                  )}
-
-                  <ConsolePanel
-                    lines={consoleLines}
-                    open={consoleOpen}
-                    onOpenChange={setConsoleOpen}
-                    onClear={clearConsole}
-                  />
                 </div>
-              </ResizablePanel>
-            </ResizablePanelGroup>
+
+                <ResizablePanelGroup
+                  orientation="horizontal"
+                  className="min-h-0 flex-1"
+                >
+                  <ResizablePanel defaultSize={55} minSize={30}>
+                    <div className="flex h-full min-h-0 flex-col">
+                      <FileTabs
+                        files={files}
+                        activePath={activePath}
+                        dirtyPaths={dirtyPaths}
+                        onSelect={selectFile}
+                        onAdd={(path) => addModule(selected.id, path)}
+                        onRename={(from, to) => {
+                          // Carry an unsaved buffer over to the new path.
+                          const buffer = drafts[draftKey(selected.id, from)]
+                          renameModule(selected.id, from, to)
+                          forgetDraft(selected.id, from)
+                          if (buffer !== undefined) {
+                            setDrafts((d) => ({
+                              ...d,
+                              [draftKey(selected.id, to)]: buffer,
+                            }))
+                          }
+                        }}
+                        onDelete={(path) => {
+                          deleteModule(selected.id, path)
+                          forgetDraft(selected.id, path)
+                        }}
+                      />
+                      <CodeEditor
+                        key={`${selected.id}:${activePath}`}
+                        value={draft}
+                        filePath={activePath}
+                        onChange={handleDraftChange}
+                        onSave={handleSave}
+                        onRun={handleRun}
+                        onInsertReady={(insert) => {
+                          insertRef.current = insert
+                        }}
+                        className="min-h-0 flex-1"
+                      />
+                    </div>
+                  </ResizablePanel>
+                  <ResizableHandle />
+                  <ResizablePanel defaultSize={45} minSize={25}>
+                    <div className="flex h-full min-h-0 flex-col">
+                      {/* Preview target controls — wraps rather than clipping
+                      Re-run when the pane is narrow. Same py-1.5 + h-7 recipe
+                      as the editor's file tabs, so both rows line up. */}
+                      <div className="flex flex-wrap items-center gap-1.5 border-b border-border px-3 py-1.5">
+                        <MarketPicker
+                          market={market}
+                          marketOptions={marketOptions}
+                          onMarketChange={(value) => value && setMarket(value)}
+                          className="h-7"
+                          aria-label={t('indicatorsPage.market')}
+                        />
+                        <PreviewPairPicker
+                          market={market}
+                          pair={pair}
+                          onPairChange={setPair}
+                          onSubmit={handleRun}
+                        />
+                        <Select
+                          value={timeframe}
+                          onValueChange={(tf) =>
+                            tf && setTimeframe(tf as Timeframe)
+                          }
+                        >
+                          <SelectTrigger
+                            size="sm"
+                            className="h-7 w-auto min-w-16 text-xs"
+                            aria-label={t('indicatorsPage.timeframe')}
+                          >
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {timeframes.map((tf) => (
+                              <SelectItem key={tf} value={tf}>
+                                {tf}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <Select
+                          value={String(barCount)}
+                          onValueChange={(value) => {
+                            if (!value) return
+                            setBarCount(Number(value))
+                            // Depth changes what gets fetched, so this is a full
+                            // run rather than a params-only recompute.
+                            if (selected) {
+                              barCountRef.current = Number(value)
+                              void run(selected, files)
+                            }
+                          }}
+                        >
+                          <SelectTrigger
+                            size="sm"
+                            className="h-7 w-auto min-w-16 text-xs"
+                            aria-label={t('indicatorsPage.barDepth')}
+                          >
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {BAR_COUNTS.map((count) => (
+                              <SelectItem key={count} value={String(count)}>
+                                {t('indicatorsPage.barCount', { count })}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {/* Icon-only: the toolbar is narrow and the editor
+                        header already carries a labelled Run. */}
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="size-7 shrink-0"
+                                onClick={handleRun}
+                                disabled={running || runtimeBusy}
+                                aria-label={t('indicatorsPage.rerun')}
+                              />
+                            }
+                          >
+                            <Play className="size-3" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {t('indicatorsPage.rerun')}
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+
+                      {selectedRun && !selectedError && (
+                        <PreviewParamsBar
+                          meta={selectedRun.meta}
+                          params={
+                            previewParams[selected.id] ??
+                            defaultPreviewParams(selectedRun.meta)
+                          }
+                          onChange={handleParamsChange}
+                          disabled={running || runtimeBusy}
+                        />
+                      )}
+
+                      <div className="min-h-0 flex-1">
+                        <IndicatorPreview
+                          run={selectedRun}
+                          error={selectedError}
+                          onHoverTsChange={setHoverTs}
+                        />
+                      </div>
+
+                      {selectedRun?.backtest && !selectedError && (
+                        <BacktestPanel result={selectedRun.backtest} />
+                      )}
+
+                      {selectedRun && !selectedError && (
+                        <DataWindow run={selectedRun} hoverTs={hoverTs} />
+                      )}
+
+                      {selected.meta && !selectedError && (
+                        <MetaInspector meta={selected.meta} />
+                      )}
+
+                      <ConsolePanel
+                        lines={consoleLines}
+                        open={consoleOpen}
+                        onOpenChange={setConsoleOpen}
+                        onClear={clearConsole}
+                      />
+                    </div>
+                  </ResizablePanel>
+                </ResizablePanelGroup>
+              </>
+            ) : (
+              <IndicatorsEmptyState
+                onOpenAssistant={() => setAssistantOpen(true)}
+              />
+            )}
+          </div>
+        </ResizablePanel>
+        {assistantOpen && (
+          <>
+            <ResizableHandle />
+            <ResizablePanel
+              id="workbench-assistant"
+              defaultSize={28}
+              minSize={18}
+            >
+              <AssistantPanel
+                surface="indicators"
+                workbench={assistantBridge}
+                onClose={() => setAssistantOpen(false)}
+              />
+            </ResizablePanel>
           </>
-        ) : (
-          <IndicatorsEmptyState />
         )}
-      </div>
+      </ResizablePanelGroup>
 
       <ExportPluginDialog
         script={exportScript}

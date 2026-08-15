@@ -1224,6 +1224,28 @@
     "restartNow": "立即重启",
     "later": "稍后"
   },
+  "assistant": {
+    "title": "AI 助手",
+    "buildWithAi": "用 AI 构建",
+    "placeholder": "描述你想构建什么……",
+    "close": "关闭助手",
+    "clearChat": "清空对话",
+    "emptyTitle": "我们来构建点什么？",
+    "emptyHintIndicators": "描述一个指标或策略，助手会把它写进编辑器、完成校验并运行预览。",
+    "emptyHintBots": "让它把策略部署为模拟机器人、调整参数或设置风控。是否让机器人上实盘，决定权始终在你手里。",
+    "genericError": "助手遇到了错误——请再发送一次。",
+    "authRequiredTitle": "用 AI 构建",
+    "authRequiredDescription": "用平常的话描述一个指标、策略或机器人——助手会写好 Python、完成校验，并和你一起回测。",
+    "upgradeRequiredDescription": "构建助手会和你一起编写指标、策略和机器人。订阅 Pairlens Intelligence，或连接你自己的 AI 密钥——免费。",
+    "unavailableTitle": "助手不可用",
+    "unavailableDescription": "在插件页面启用一个 AI 提供方，即可通过聊天构建指标、策略和机器人。",
+    "quickNewIndicator": "构建一个 RSI 背离指标",
+    "quickNewStrategy": "写一个我可以回测的突破策略",
+    "quickImprove": "审查这个脚本并提出改进建议",
+    "quickCreateBot": "把我的一个策略部署为模拟机器人",
+    "quickGuards": "为我的一个机器人推荐风控设置",
+    "quickReview": "我的机器人表现如何？"
+  },
   "copilot": {
     "aiLens": "AI 透镜",
     "thinking": "思考中……",
