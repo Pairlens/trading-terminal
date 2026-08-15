@@ -45,11 +45,19 @@ import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import type { MobileOverlay } from '../mobile-focus-context'
 import type { VenueKind } from '../lib/venue-kind'
 import { SnapshotAgeFooter } from '@/components/pair-picker/snapshot-age-footer'
-import { pinSelectedEntry } from '@/components/pair-picker/pair-picker-data'
+import {
+  pinSelectedEntry,
+  predictionQuestionOf,
+} from '@/components/pair-picker/pair-picker-data'
 import { haptic } from '@/lib/haptics'
 import { isSearchInFlight } from '@/components/pair-picker/search-progress'
 import { usePairSearchData } from '@/components/pair-picker/pair-search-results'
-import { PairAvatar } from '@/components/pair-picker/pair-avatar'
+import {
+  PairAvatar,
+  PairSymbol,
+  PredictionAvatar,
+} from '@/components/pair-picker/pair-avatar'
+import { usePairDisplayLabel } from '@/hooks/use-prediction-pair'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { useBulkTickerSnapshots } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
@@ -292,6 +300,11 @@ export default memo(function PairPickerScreen({
     ({ routing }) =>
       routing.unlistedOn !== null && routing.market !== focusedVenue,
   )
+  // The callout names the pair inside a translated sentence, so it needs the
+  // plain-text reading rather than the component one. Called unconditionally
+  // (a hook cannot hide behind `callout`); an empty key is not pinned and
+  // returns itself.
+  const calloutPair = usePairDisplayLabel(callout?.entry.symbol ?? '')
 
   return (
     <MobileSheet
@@ -399,7 +412,7 @@ export default memo(function PairPickerScreen({
             <TriangleAlert className="mt-px size-4 shrink-0 text-amber-500" />
             <p className="text-[12px] leading-[1.45] text-amber-200/90">
               {t('mobile.pickers.notListedCallout', {
-                pair: callout.entry.symbol,
+                pair: calloutPair,
                 venue: callout.routing.unlistedOn,
                 other: callout.routing.label,
               })}
@@ -542,31 +555,56 @@ const PairResultRow = memo(function PairResultRow({
         ? t('mobile.panels.trading')
         : t('mobile.shell.readOnly')
 
+  // A prediction outcome has no ticker: its routing key is an event slug, so
+  // every outcome of one event read `DEMOCRATIC-PRESIDE…` and every avatar
+  // lettered `DEM`. The row keeps the symbol-first shape the rest of the phone
+  // uses (the watchlist and markets rows this picker feeds are built the same
+  // way) and lets the two components that know how to read an outcome do it:
+  // `PairSymbol` resolves the pin to subject + side, `PredictionAvatar` draws
+  // the class mark instead of three letters of slug.
+  const isPrediction = entry.assetClass === 'prediction'
+  // The title already carries the side, so the line under it carries the
+  // question ALONE — `entry.name` is `"<question> - <outcome>"`, and printing
+  // the outcome twice is what the row has room for least.
+  const description = isPrediction ? predictionQuestionOf(entry) : entry.name
+
   return (
     <MobileRow
       leading={
-        <PairAvatar
-          assetClass={entry.assetClass}
-          base={entry.base}
-          className="size-8"
-          size="md"
-        />
+        isPrediction ? (
+          <PredictionAvatar className="size-8" size="md" />
+        ) : (
+          <PairAvatar
+            assetClass={entry.assetClass}
+            base={entry.base}
+            className="size-8"
+            size="md"
+          />
+        )
       }
       onPress={() => onSelect(entry, routing)}
       selected={focused}
       subtitle={
         routing.unlistedOn ? (
           <>
-            {entry.name}
+            {description}
             <span className="pl-2 text-amber-500/90">
               {t('mobile.pickers.notListed', { venue: routing.unlistedOn })}
             </span>
           </>
         ) : (
-          `${entry.name} · ${routing.label} · ${capability}`
+          `${description} · ${routing.label} · ${capability}`
         )
       }
-      title={<span className="font-mono">{entry.symbol}</span>}
+      title={
+        // Mono is the ticker face and a subject is prose — the context bar
+        // makes the same swap on the pair chip.
+        <PairSymbol
+          assetClass={entry.assetClass}
+          className={isPrediction ? undefined : 'font-mono'}
+          symbol={entry.symbol}
+        />
+      }
       trailing={
         watched ? (
           <Star className="size-4 fill-amber-400 text-amber-400" />

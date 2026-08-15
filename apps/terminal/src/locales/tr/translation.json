@@ -403,6 +403,7 @@
     "description": "Profil ayarlarını ve tercihlerini güncelle.",
     "nav": {
       "profile": "Profil",
+      "ai": "Asistan",
       "plugins": "Eklentiler",
       "cloudSync": "Bulut Eşitleme",
       "notifications": "Bildirimler",
@@ -424,6 +425,16 @@
       "noResults": "\"{{query}}\" için sonuç bulunamadı"
     },
     "comingSoon": "Bu bölüm yakında geliyor.",
+    "ai": {
+      "placement": "Asistan konumu",
+      "placementDescription": "Sen çalışırken asistanın beklediği yer. Sohbet penceresi asistanın durduğu yerden açılır, oradan da istediğin yere sürükleyebilirsin.",
+      "placementFloating": "Yüzen",
+      "placementFloatingDescription": "Terminalin sağ altında, panellerinin önüne geçmeden durur ve önerisi her zaman okunur. Fark etmesi en kolay olanı.",
+      "placementSidebar": "Kenar çubuğu",
+      "placementSidebarDescription": "Soldaki çubukta, diğer araçlarınla birlikte. Öneri, üzerine geldiğinde ya da asistan çalışırken görünür. Daha sessiz ve hep aynı yerde.",
+      "persona": "Kişilik",
+      "personaDescription": "Asistanın yanıt verirken ne kadar açıkladığı. Değişiklik bir sonraki mesajından itibaren geçerli olur."
+    },
     "privacy": {
       "title": "Kullanım analitiği",
       "description": "Anonim kullanım verisi ve çökme raporları paylaşarak Pairlens'i geliştirmeye yardım et. Asla işlemlerin, API anahtarların veya bakiyelerin değil.",
@@ -1310,10 +1321,15 @@
     "approvalApprove": "Onayla",
     "approvalDecline": "Reddet",
     "approvalApproved": "Onaylandı",
-    "approvalDeclined": "Reddedildi"
+    "approvalDeclined": "Reddedildi",
+    "resetPosition": "Konumu sıfırla"
   },
   "copilot": {
     "placeholder": "Merceğine sor...",
+    "send": "Gönder",
+    "stop": "Durdur",
+    "copyMessage": "Mesajı kopyala",
+    "messageCopied": "Mesaj kopyalandı",
     "lensPersona": "Mercek Kişiliği",
     "persona": {
       "mentor": "Rehber",

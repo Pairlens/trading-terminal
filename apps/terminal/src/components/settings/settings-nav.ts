@@ -25,6 +25,7 @@ import {
   Keyboard,
   Lock,
   MapPin,
+  Orbit,
   Paintbrush,
   Puzzle,
   ShieldCheck,
@@ -53,6 +54,10 @@ export const PROFILE_NAV_ITEM = {
  */
 export const SETTINGS_NAV_GROUPS = [
   [
+    // Assistant sits above Intelligence on purpose: one configures where the
+    // assistant lives and how it talks, the next what powers it. Read top to
+    // bottom they are the same subject twice.
+    { id: 'ai', nameKey: 'settings.nav.ai', icon: Orbit },
     { id: 'billing', nameKey: 'settings.nav.billing', icon: Sparkles },
     { id: 'cloud-sync', nameKey: 'settings.nav.cloudSync', icon: Cloud },
   ],

@@ -403,6 +403,7 @@
     "description": "Update your profile settings and preferences.",
     "nav": {
       "profile": "Profile",
+      "ai": "Assistant",
       "plugins": "Plugins",
       "cloudSync": "Cloud Sync",
       "notifications": "Notifications",
@@ -424,6 +425,16 @@
       "noResults": "Nothing matches \"{{query}}\""
     },
     "comingSoon": "This section is coming soon.",
+    "ai": {
+      "placement": "Assistant placement",
+      "placementDescription": "Where the assistant waits while you work. The chat window opens from wherever the orb sits, and you can drag it anywhere from there.",
+      "placementFloating": "Floating",
+      "placementFloatingDescription": "Bottom right of the terminal, clear of your panes, with its suggestion always readable. The easiest one to notice.",
+      "placementSidebar": "Sidebar",
+      "placementSidebarDescription": "In the left rail with your other tools. The suggestion appears on hover, or while the assistant is working. Quieter, and always in the same place.",
+      "persona": "Persona",
+      "personaDescription": "How much the assistant explains when it answers. Changing it applies to your next message."
+    },
     "privacy": {
       "title": "Usage analytics",
       "description": "Help improve Pairlens by sharing anonymous usage data and crash reports. Never your trades, API keys, or balances.",
@@ -1310,10 +1321,15 @@
     "approvalApprove": "Approve",
     "approvalDecline": "Decline",
     "approvalApproved": "Approved",
-    "approvalDeclined": "Declined"
+    "approvalDeclined": "Declined",
+    "resetPosition": "Reset position"
   },
   "copilot": {
     "placeholder": "Ask your lens...",
+    "send": "Send",
+    "stop": "Stop",
+    "copyMessage": "Copy message",
+    "messageCopied": "Message copied",
     "lensPersona": "Lens Persona",
     "persona": {
       "mentor": "Mentor",

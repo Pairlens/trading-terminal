@@ -9,9 +9,9 @@
  * trader actually works in. A prediction-market trader who never touches perps
  * should be able to put Predictions first and forget the rest exist.
  *
- * They LOOK like the line tabs used elsewhere but they are a group of toggle
- * buttons, not a `tablist`. Each one also carries a context menu, and Base UI's
- * context-menu trigger owns the role of whatever element it renders: composed
+ * They read as tabs but they are a group of toggle buttons, not a `tablist`.
+ * Each one also carries a context menu, and Base UI's context-menu trigger
+ * owns the role of whatever element it renders: composed
  * with `TabsTrigger` in either direction it produces `role="button"` children
  * inside a `role="tablist"`, which is a broken control to a screen reader. A
  * button group with `aria-pressed` describes what this actually is.
@@ -67,9 +67,20 @@ const SECTION_ICONS: Record<string, LucideIcon> = {
   Vote,
 }
 
-/** Line-tab treatment: muted until active, underlined when it is. */
+/**
+ * Segmented treatment: muted until active, a filled pill when it is.
+ *
+ * Not the underline the line tabs elsewhere use. The strip scrolls
+ * (`overflow-x-auto`, which computes `overflow-y: auto` too), so an underline
+ * hung below the tab box is clipped away and the tab you are on looks exactly
+ * like the four you are not. A pill paints inside the box, so it survives.
+ *
+ * The active text colour has to be qualified with `dark:` as well: a bare
+ * `data-active:text-foreground` loses to `dark:text-muted-foreground` in the
+ * cascade, which left every tab the identical grey in the default theme.
+ */
 const TAB_CLASS =
-  'group/section-tab relative inline-flex h-full shrink-0 cursor-grab items-center gap-1.5 rounded-md px-2 text-xs font-medium whitespace-nowrap transition-colors outline-none select-none active:cursor-grabbing text-foreground/60 hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground data-active:text-foreground after:absolute after:inset-x-0 after:-bottom-[7px] after:h-0.5 after:bg-foreground after:opacity-0 after:transition-opacity data-active:after:opacity-100 focus-visible:ring-[3px] focus-visible:ring-ring/50'
+  'group/section-tab relative inline-flex h-full shrink-0 cursor-grab items-center gap-1.5 rounded-md px-2 text-xs font-medium whitespace-nowrap transition-colors outline-none select-none active:cursor-grabbing text-foreground/60 hover:bg-muted/60 hover:text-foreground dark:text-muted-foreground dark:hover:bg-muted/30 dark:hover:text-foreground data-active:bg-muted data-active:text-foreground data-active:hover:bg-muted dark:data-active:text-foreground dark:data-active:hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50'
 
 type DiscoverySectionTabsProps = {
   sections: Array<DiscoverySection>

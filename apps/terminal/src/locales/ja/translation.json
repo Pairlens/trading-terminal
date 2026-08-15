@@ -403,6 +403,7 @@
     "description": "プロフィール設定と各種設定を更新します。",
     "nav": {
       "profile": "プロフィール",
+      "ai": "アシスタント",
       "plugins": "プラグイン",
       "cloudSync": "クラウド同期",
       "notifications": "通知",
@@ -424,6 +425,16 @@
       "noResults": "「{{query}}」に一致する項目はありません"
     },
     "comingSoon": "このセクションは近日公開予定です。",
+    "ai": {
+      "placement": "アシスタントの表示位置",
+      "placementDescription": "作業中にアシスタントが待機する場所です。チャットウィンドウはアシスタントのある位置から開き、そこから好きな場所へドラッグできます。",
+      "placementFloating": "フローティング",
+      "placementFloatingDescription": "ターミナルの右下、ペインを邪魔しない位置に表示され、提案は常に読めます。いちばん気づきやすい配置です。",
+      "placementSidebar": "サイドバー",
+      "placementSidebarDescription": "左のバーに他のツールと並びます。提案はホバーしたとき、またはアシスタントの作業中に表示されます。控えめで、いつも同じ場所にあります。",
+      "persona": "ペルソナ",
+      "personaDescription": "アシスタントが回答でどこまで説明するかを決めます。変更は次のメッセージから反映されます。"
+    },
     "privacy": {
       "title": "利用状況分析",
       "description": "匿名の利用データとクラッシュレポートを共有してPairlensの改善にご協力ください。取引内容、APIキー、残高は一切含まれません。",
@@ -1310,10 +1321,15 @@
     "approvalApprove": "承認",
     "approvalDecline": "却下",
     "approvalApproved": "承認しました",
-    "approvalDeclined": "却下しました"
+    "approvalDeclined": "却下しました",
+    "resetPosition": "位置をリセット"
   },
   "copilot": {
     "placeholder": "レンズに質問する...",
+    "send": "送信",
+    "stop": "停止",
+    "copyMessage": "メッセージをコピー",
+    "messageCopied": "メッセージをコピーしました",
     "lensPersona": "レンズのペルソナ",
     "persona": {
       "mentor": "メンター",

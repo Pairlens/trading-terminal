@@ -403,6 +403,7 @@
     "description": "Actualiza tu perfil y preferencias.",
     "nav": {
       "profile": "Perfil",
+      "ai": "Asistente",
       "plugins": "Plugins",
       "cloudSync": "Sincronización",
       "notifications": "Notificaciones",
@@ -424,6 +425,16 @@
       "noResults": "No hay resultados para «{{query}}»"
     },
     "comingSoon": "Esta sección estará disponible próximamente.",
+    "ai": {
+      "placement": "Ubicación del asistente",
+      "placementDescription": "Dónde espera el asistente mientras trabajas. La ventana de chat se abre desde donde esté el asistente, y desde ahí puedes arrastrarla a cualquier parte.",
+      "placementFloating": "Flotante",
+      "placementFloatingDescription": "Abajo a la derecha del terminal, sin tapar tus paneles, con su sugerencia siempre legible. La opción más fácil de ver.",
+      "placementSidebar": "Barra lateral",
+      "placementSidebarDescription": "En la barra izquierda, junto a tus otras herramientas. La sugerencia aparece al pasar el cursor, o mientras el asistente trabaja. Más discreta, y siempre en el mismo sitio.",
+      "persona": "Persona",
+      "personaDescription": "Cuánto explica el asistente al responder. El cambio se aplica a tu siguiente mensaje."
+    },
     "privacy": {
       "title": "Analítica de uso",
       "description": "Ayuda a mejorar Pairlens compartiendo datos de uso anónimos e informes de errores. Nunca tus operaciones, llaves API ni balances.",
@@ -1310,10 +1321,15 @@
     "approvalApprove": "Aprobar",
     "approvalDecline": "Rechazar",
     "approvalApproved": "Aprobada",
-    "approvalDeclined": "Rechazada"
+    "approvalDeclined": "Rechazada",
+    "resetPosition": "Restablecer posición"
   },
   "copilot": {
     "placeholder": "Pregunta a tu lens...",
+    "send": "Enviar",
+    "stop": "Detener",
+    "copyMessage": "Copiar mensaje",
+    "messageCopied": "Mensaje copiado",
     "lensPersona": "Persona del Lens",
     "persona": {
       "mentor": "Mentor",

@@ -403,6 +403,7 @@
     "description": "Zaktualizuj ustawienia profilu i preferencje.",
     "nav": {
       "profile": "Profil",
+      "ai": "Asystent",
       "plugins": "Wtyczki",
       "cloudSync": "Synchronizacja",
       "notifications": "Powiadomienia",
@@ -424,6 +425,16 @@
       "noResults": "Brak wyników dla „{{query}}”"
     },
     "comingSoon": "Ta sekcja pojawi się wkrótce.",
+    "ai": {
+      "placement": "Położenie asystenta",
+      "placementDescription": "Miejsce, w którym asystent czeka podczas twojej pracy. Okno czatu otwiera się tam, gdzie stoi asystent, a stamtąd możesz je przeciągnąć w dowolne miejsce.",
+      "placementFloating": "Pływający",
+      "placementFloatingDescription": "W prawym dolnym rogu terminala, z dala od twoich paneli, z zawsze czytelną podpowiedzią. Najłatwiej go zauważyć.",
+      "placementSidebar": "Pasek boczny",
+      "placementSidebarDescription": "W lewym pasku, razem z innymi narzędziami. Podpowiedź pojawia się po najechaniu kursorem albo gdy asystent pracuje. Spokojniej i zawsze w tym samym miejscu.",
+      "persona": "Osobowość",
+      "personaDescription": "Jak dużo asystent tłumaczy w odpowiedziach. Zmiana obowiązuje od następnej wiadomości."
+    },
     "privacy": {
       "title": "Analityka użytkowania",
       "description": "Pomóż ulepszyć Pairlens, udostępniając anonimowe dane użytkowania i raporty awarii. Nigdy Twoich transakcji, kluczy API ani sald.",
@@ -1318,10 +1329,15 @@
     "approvalApprove": "Zatwierdź",
     "approvalDecline": "Odrzuć",
     "approvalApproved": "Zatwierdzone",
-    "approvalDeclined": "Odrzucone"
+    "approvalDeclined": "Odrzucone",
+    "resetPosition": "Przywróć pozycję"
   },
   "copilot": {
     "placeholder": "Zapytaj swój lens...",
+    "send": "Wyślij",
+    "stop": "Zatrzymaj",
+    "copyMessage": "Kopiuj wiadomość",
+    "messageCopied": "Skopiowano wiadomość",
     "lensPersona": "Osobowość Lens",
     "persona": {
       "mentor": "Mentor",

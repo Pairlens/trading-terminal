@@ -1,6 +1,6 @@
 ---
 title: The AI assistant
-description: One assistant for the whole terminal, docked bottom-right. 94 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
+description: One assistant for the whole terminal, at the bottom right or in the nav rail, in a window you can drag anywhere. 94 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
 group: traders
 order: 4
 eyebrow: For traders
@@ -8,14 +8,70 @@ updated: 16 AUG 2026
 readTime: 8 min read
 ---
 
-The assistant sits in the bottom-right corner of the terminal, outside the
-content area: a line of text and an orb. The text tells you what it would do
-here. On a chart it reads **Analyze the chart of BTC/USDT**. On the workflows
-page, **Build a workflow**. On Discovery, **Find me something to trade**.
+The assistant sits outside the content area: an orb, and a line of text that
+tells you what it would do here. On a chart it reads **Analyze the chart of
+BTC/USDT**. On the workflows page, **Build a workflow**. On Discovery, **Find me
+something to trade**.
 
 Click the orb and a chat window opens over the terminal. Click it again and the
 window folds back into the orb. <kbd>⌘J</kbd> (<kbd>Ctrl</kbd>+<kbd>J</kbd>
-on Windows and Linux) does the same from the keyboard.
+on Windows and Linux) does the same from the keyboard, and it works while you
+are typing in a field, because reaching the assistant should not cost you the
+sentence you were in the middle of.
+
+## Two placements
+
+Where the orb waits is a setting, in **Settings → Assistant**.
+
+**Floating** is the default. The orb sits at the bottom right of the terminal,
+clear of your panes, with its suggestion line always readable beside it. It is
+the placement that makes the assistant impossible to miss, which is why it ships
+as the default.
+
+**Sidebar** moves the orb into the left nav rail, under the charts icon and
+above the first divider, so it is a tool among tools and always in the same
+place. The rail is 60px wide, so the suggestion cannot sit beside it. It flies
+out to the right instead: on hover, on keyboard focus, and unprompted whenever
+the assistant is working. That last case is the one that matters. Tucked into
+the rail the orb is easy to forget, so a run in progress announces itself
+without being asked for.
+
+Switching moves the orb immediately, no reload. The choice is per device, so a
+rail on your desktop does not follow you to the laptop.
+
+## Drag the window anywhere
+
+Grab the chat window's header, anywhere that is not a control, and move it. It
+tracks mouse, trackpad and pen, and a fast drag that outruns the cursor keeps
+following rather than dropping the window. Where you let go is where it stays,
+across reloads and across sessions.
+
+The window is clamped so you can never lose it: enough of the header always
+stays on screen to grab again, and if you shrink the terminal or unplug a
+display, a window that would be stranded off screen is pulled back in.
+
+Until you drag it, the window is anchored to the orb's placement, bottom right
+when floating and beside the rail in sidebar mode, which is why it stays put
+when you resize. Once it has been moved, a reset button appears in the header
+next to the persona menu and puts it back on that anchor.
+
+## The chat window
+
+It is a glass panel, not a solid card. The terminal underneath stays visible
+through it, blurred, so the chat reads as something floating over your workspace
+rather than a hole punched in it. The fill has a floor: whatever runs behind it,
+candles, a book, a tape, body text keeps its contrast.
+
+The header repeats the same contextual line the collapsed orb showed, so opening
+the window never costs you the context that made you open it. While a run is
+going the line becomes the status and shimmers. The persona dropdown and the
+eraser that clears the thread sit on the right of it.
+
+On an empty thread the window offers three starters for whatever screen you are
+on: on a chart they name the pair, on the workflows page they name a workflow.
+Click one to send it. Hover any answer the assistant writes and a copy button
+appears under it, which is the fastest way to get a level or a size out of the
+chat and into an order ticket.
 
 ## One assistant, one conversation
 
@@ -26,13 +82,13 @@ to know which one you were talking to. Now there is one, and it follows you.
 Because it is mounted above the routed content, none of the following interrupt
 it: navigating to another page, switching pair, minimizing the window. Ask for a
 backtest on the workbench, minimize the orb, go read the order book, and the run
-is still going when you come back. While it works, the line beside the orb
-becomes the status: **Thinking...**, **Using tools...**, **Looking on the
-web...**, so a collapsed assistant is never a black box.
+is still going when you come back. While it works, the orb reports what it is
+doing in place of the suggestion: **Thinking...**, **Using tools...**, **Looking
+on the web...**, so a collapsed assistant is never a black box.
 
-The history is one thread, not one per pair. The window header carries the two
-controls that act on it: the persona dropdown and an eraser that clears the
-conversation.
+The history is one thread, not one per pair. The window header carries the
+controls that act on it: the persona dropdown, an eraser that clears the
+conversation, and the reset button once you have dragged the window somewhere.
 
 ## What it can do
 
@@ -75,10 +131,12 @@ Full list in the [assistant tool reference](/docs/copilot-tools).
 
 ## Personas
 
-Three modes, switchable from the dropdown in the chat window's header, next to
-the clear button. Your choice sticks across sessions and syncs to your other
-devices when sync is on. It carries over from the old co-pilot, so a persona you
-picked back then is still the one you get.
+Three modes. Switch them from the dropdown in the chat window's header, next to
+the clear button, or from **Settings → Assistant**, which is the same setting
+written from two places and the only way to reach it on a phone. A change
+applies to your next message. Your choice sticks across sessions and syncs to
+your other devices when sync is on. It carries over from the old co-pilot, so a
+persona you picked back then is still the one you get.
 
 **Mentor.** Explains its reasoning step by step, with analogies. Best when you
 are learning why a setup is a setup.
@@ -171,9 +229,10 @@ read by the connector signing a request.
 
 The [mobile terminal](/docs/mobile-terminal) has no room for a floating window,
 so the assistant is one of the five destinations instead of a dock. Same
-conversation, same tools, same confirm cards. The phone has no window header, so
-it uses the persona you picked on the desktop rather than offering the
-dropdown.
+conversation, same tools, same confirm cards. Placement and window dragging are
+desktop-shell settings and do nothing here: on a phone the assistant is a tab
+whatever they say. There is no window header either, so the persona is set in
+**Settings → Assistant**, which the phone reaches like every other section.
 
 ## Choosing a model
 

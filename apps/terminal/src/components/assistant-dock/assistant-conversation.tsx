@@ -15,8 +15,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useChat } from '@ai-sdk/react'
 import { lastAssistantMessageIsCompleteWithToolCalls } from 'ai'
-import { Brain, Loader2 } from 'lucide-react'
+import { ArrowUpRight, Brain, Loader2, Sparkles } from 'lucide-react'
 
+import { AiOrb } from '@pairlens/ui/components/ui/ai-orb'
 import { Button } from '@pairlens/ui/components/ui/button'
 import {
   Empty,
@@ -571,13 +572,19 @@ function AssistantConversationInner({
         messages={messages}
         status={status}
         renderToolPart={renderToolPart}
+        // The starters live on the empty screen, not above the composer:
+        // they were only ever shown on an empty thread anyway, and there
+        // they are an invitation rather than another strip of chrome.
+        quickActions={quickActions}
+        onQuickAction={handleSend}
+        starterContext={chart ? 'chart' : 'global'}
       />
       {error ? (
-        <div className="px-3 pb-1">
+        <div className="shrink-0 px-3 pb-1">
           {billingErrorCode ? (
             <BillingErrorNotice code={billingErrorCode} />
           ) : (
-            <p className="text-destructive border-destructive/30 bg-destructive/5 rounded-lg border px-3 py-2 text-xs">
+            <p className="text-destructive border-destructive/30 bg-destructive/5 rounded-xl border px-3 py-2 text-xs">
               {t('assistantDock.genericError')}
             </p>
           )}
@@ -587,9 +594,6 @@ function AssistantConversationInner({
         onSend={handleSend}
         status={status}
         onStop={stop}
-        // Only on an empty thread: mid-conversation the chips are noise,
-        // and the user already knows what to type.
-        quickActions={messages.length === 0 ? quickActions : []}
         seedText={composerSeed.text}
         seedSignal={composerSeed.signal}
         placeholder={
@@ -608,10 +612,16 @@ function AssistantMessageList({
   messages,
   status,
   renderToolPart,
+  quickActions,
+  onQuickAction,
+  starterContext,
 }: {
   messages: Array<UIMessage>
   status: string
   renderToolPart: (tool: ReturnType<typeof asToolPart>) => React.ReactNode
+  quickActions: Array<string>
+  onQuickAction: (text: string) => void
+  starterContext: 'chart' | 'global'
 }) {
   const { t } = useTranslation()
   const isStreaming = status === 'streaming' || status === 'submitted'
@@ -619,18 +629,56 @@ function AssistantMessageList({
 
   if (messages.length === 0) {
     return (
-      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 p-6 text-center">
-        <p className="text-sm font-medium">{t('assistantDock.emptyTitle')}</p>
-        <p className="text-muted-foreground max-w-[28ch] text-xs">
-          {t('assistantDock.emptyDescription')}
-        </p>
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 overflow-y-auto px-5 py-6 text-center">
+        <AiOrb size="46px" animationDuration={22} state="idle" />
+        <div>
+          <p className="font-serif text-[15px] font-medium">
+            {t('assistantDock.emptyTitle')}
+          </p>
+          <p className="text-muted-foreground mx-auto mt-1.5 max-w-[34ch] text-xs leading-relaxed">
+            {t('assistantDock.emptyDescription')}
+          </p>
+        </div>
+        {/* The starters name what THIS screen can do — a pair on a chart, a
+            workflow on the workflows page. Full-width rows rather than the
+            old scrolling chips: three readable sentences beat six truncated
+            ones, and nothing here has to be dragged into view. */}
+        <div className="flex w-full max-w-[320px] flex-col gap-1.5">
+          {quickActions.map((action, position) => (
+            <button
+              key={action}
+              type="button"
+              onClick={() => {
+                // Position and context only. The text names the pair on a
+                // chart, and a per-user record of which instruments someone
+                // asks about is not what this measures.
+                track('assistant_starter_used', {
+                  position,
+                  context: starterContext,
+                })
+                onQuickAction(action)
+              }}
+              className="ai-tile group/starter flex items-center gap-2 rounded-xl px-3 py-2 text-left text-xs"
+            >
+              <Sparkles
+                className="size-3 shrink-0"
+                style={{ color: 'var(--magic-1)' }}
+              />
+              <span className="min-w-0 flex-1 truncate">{action}</span>
+              <ArrowUpRight className="text-muted-foreground size-3 shrink-0 opacity-0 transition-opacity group-hover/starter:opacity-100" />
+            </button>
+          ))}
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto" ref={contentRef}>
-      <div className="flex flex-col gap-2 p-3">
+    <div
+      className="ai-fade-y min-h-0 flex-1 overflow-y-auto overscroll-contain"
+      ref={contentRef}
+    >
+      <div className="flex flex-col gap-3.5 px-3.5 py-3">
         {messages.map((message) => (
           <CopilotChatMessage
             key={message.id}
@@ -639,12 +687,27 @@ function AssistantMessageList({
             renderToolPart={renderToolPart}
           />
         ))}
-        {isStreaming ? (
-          <div className="text-muted-foreground flex items-center gap-1.5 px-1 text-xs">
-            <Loader2 className="size-3 animate-spin" />
-          </div>
-        ) : null}
+        {isStreaming ? <TypingIndicator /> : null}
       </div>
+    </div>
+  )
+}
+
+/** Three drifting dots in the AI colour: the thread's own "still working". */
+function TypingIndicator() {
+  return (
+    <div className="flex items-center gap-1 px-0.5 py-1" aria-hidden>
+      {[0, 220, 440].map((delay) => (
+        <span
+          key={delay}
+          className="size-1.5 animate-pulse rounded-full"
+          style={{
+            background: 'var(--magic-1)',
+            animationDelay: `${delay}ms`,
+            animationDuration: '1.4s',
+          }}
+        />
+      ))}
     </div>
   )
 }

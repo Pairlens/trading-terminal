@@ -403,6 +403,7 @@
     "description": "프로필 설정과 환경설정을 업데이트하세요.",
     "nav": {
       "profile": "프로필",
+      "ai": "어시스턴트",
       "plugins": "플러그인",
       "cloudSync": "클라우드 동기화",
       "notifications": "알림",
@@ -424,6 +425,16 @@
       "noResults": "\"{{query}}\"에 대한 결과가 없습니다"
     },
     "comingSoon": "이 섹션은 곧 제공됩니다.",
+    "ai": {
+      "placement": "어시스턴트 위치",
+      "placementDescription": "작업하는 동안 어시스턴트가 대기하는 자리입니다. 채팅 창은 어시스턴트가 있는 자리에서 열리고, 거기서 원하는 곳으로 끌어 옮길 수 있습니다.",
+      "placementFloating": "플로팅",
+      "placementFloatingDescription": "터미널 오른쪽 아래, 패널을 가리지 않는 자리에 있고 제안이 항상 보입니다. 가장 눈에 잘 띕니다.",
+      "placementSidebar": "사이드바",
+      "placementSidebarDescription": "왼쪽 바에서 다른 도구들과 함께 있습니다. 제안은 마우스를 올리거나 어시스턴트가 작업 중일 때 나타납니다. 더 조용하고, 항상 같은 자리에 있습니다.",
+      "persona": "페르소나",
+      "personaDescription": "어시스턴트가 답할 때 얼마나 설명할지 정합니다. 변경은 다음 메시지부터 적용됩니다."
+    },
     "privacy": {
       "title": "사용 분석",
       "description": "익명 사용 데이터와 충돌 리포트를 공유해 Pairlens 개선에 도움을 주세요. 거래 내역, API 키, 잔고는 절대 포함되지 않습니다.",
@@ -1310,10 +1321,15 @@
     "approvalApprove": "승인",
     "approvalDecline": "거절",
     "approvalApproved": "승인함",
-    "approvalDeclined": "거절함"
+    "approvalDeclined": "거절함",
+    "resetPosition": "위치 재설정"
   },
   "copilot": {
     "placeholder": "렌즈에 물어보세요...",
+    "send": "보내기",
+    "stop": "중지",
+    "copyMessage": "메시지 복사",
+    "messageCopied": "메시지를 복사했습니다",
     "lensPersona": "렌즈 페르소나",
     "persona": {
       "mentor": "멘토",
