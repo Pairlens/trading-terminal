@@ -35,11 +35,14 @@ import {
   kalshiPredictionVenue,
 } from '../venues/kalshi'
 import { fakeEvent } from './fake-exchange'
+import { pinCliPlatform } from './platform-pin'
 import type {
   PluginExecuteParams,
   PluginInstance,
 } from '@pairlens/plugin-system/types'
 import type { PredictionExchangeCtor, PredictionOhlcvRow } from '../types'
+
+pinCliPlatform()
 
 const MINUTE = 60_000
 const NOW = 1_800_000_000_000

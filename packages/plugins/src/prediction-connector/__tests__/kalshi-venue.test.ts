@@ -25,7 +25,10 @@ import { fetchPredictionEvents } from '../events'
 import { OutcomeKeyMap, sanitizeOutcomeKey } from '../outcome-keys'
 import { OutcomeResolver } from '../outcomes'
 import { fakeExchange, memoryStorage } from './fake-exchange'
+import { pinCliPlatform } from './platform-pin'
 import type { PredictionSlot } from '../types'
+
+pinCliPlatform()
 
 const manifest = kalshiMarketConnectorManifest
 

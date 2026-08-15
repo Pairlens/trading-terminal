@@ -21,7 +21,7 @@
  *     imported, and no loop is started before the checks run.
  */
 
-import { afterEach, describe, expect, it } from 'bun:test'
+import { afterAll, afterEach, beforeEach, describe, expect, it } from 'bun:test'
 import {
   isGeoRestrictedError,
   isPlatformRestrictedError,
@@ -40,17 +40,31 @@ import type {
 } from '@pairlens/plugin-system/types'
 
 // `isCorsConstrained` reads `globalThis.window`: present means a browser build.
+// The baseline for every test is the CLI shape (no `window`) — asserted by
+// deletion rather than by restoring "whatever the process had", because under
+// a repo-root glob another package's suite may have left a browser-shaped
+// `window` behind, and restoring THAT between tests made the credential
+// refusals under test read as platform refusals. The true module-load value
+// goes back once the file is done.
 const g = globalThis as { window?: unknown }
 const hadWindow = 'window' in g
 const originalWindow = g.window
 
 let plugins: Array<PluginInstance> = []
 
+beforeEach(() => {
+  delete g.window
+})
+
 afterEach(async () => {
-  if (hadWindow) g.window = originalWindow
-  else delete g.window
+  delete g.window
   await Promise.all(plugins.map((plugin) => plugin.destroy?.()))
   plugins = []
+})
+
+afterAll(() => {
+  if (hadWindow) g.window = originalWindow
+  else delete g.window
 })
 
 function kalshi(): PluginInstance {

@@ -6,7 +6,18 @@
  * So these have to be in place BEFORE the modules under test are imported —
  * every test file here calls `installBrowserGlobals()` and then `await
  * import(...)`s what it needs.
+ *
+ * The install is scoped to the CALLING FILE, not the process: an `afterAll`
+ * registered here removes the globals once the file's tests finish. Connector
+ * suites in other packages decide platform behavior from `typeof window` at
+ * call time (packages/market-engine/src/platform.ts), so a `window` leaked
+ * past this package's files made Kalshi think it was in a browser and refuse
+ * with "needs the desktop app" whenever every workspace was globbed into one
+ * bun process (`bun test src/` from the repo root). Per-file re-install is
+ * already the norm — each file calls this helper itself — so the restore
+ * costs nothing under `bun run test` and per-package runs.
  */
+import { afterAll } from 'bun:test'
 
 class MemoryStorage {
   private map = new Map<string, string>()
@@ -49,6 +60,9 @@ const globals = globalThis as unknown as {
   navigator?: unknown
 }
 
+/** One restore per file: repeat installs in the same file reuse the hook. */
+let restorePending = false
+
 /**
  * Install a browser-shaped environment. `window` deliberately has no
  * `__TAURI_INTERNALS__`, so `isStandalone` resolves to false.
@@ -63,6 +77,30 @@ const globals = globalThis as unknown as {
  */
 export function installBrowserGlobals(): TestStorage {
   const storage = new MemoryStorage()
+  const hadWindow = 'window' in globals
+  const priorWindow = globals.window
+  const hadStorage = 'localStorage' in globals
+  const priorStorage = globals.localStorage
+  const navBefore = globals.navigator as Record<string, unknown> | undefined
+  const hadNavLanguage = typeof navBefore?.['language'] === 'string'
+  if (!restorePending) {
+    restorePending = true
+    afterAll(() => {
+      restorePending = false
+      if (hadWindow) globals.window = priorWindow
+      else delete globals.window
+      if (hadStorage) globals.localStorage = priorStorage
+      else delete globals.localStorage
+      if (!hadNavLanguage) {
+        const nav = globals.navigator as Record<string, unknown> | undefined
+        try {
+          if (nav) delete nav['language']
+        } catch {
+          // A frozen navigator was never modified in the first place.
+        }
+      }
+    })
+  }
   globals.localStorage = storage
   const existing = (globals.window ?? {}) as Record<string, unknown>
   existing.isSecureContext ??= true
