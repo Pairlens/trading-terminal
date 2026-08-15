@@ -4,7 +4,7 @@ description: What Pairlens is, a source-available, local-first, AI-native crypto
 group: get-started
 order: 1
 eyebrow: Get started
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 3 min read
 ---
 
@@ -57,8 +57,8 @@ live. See [bots](/docs/bots).
 conditions; [alerts](/docs/alerts-notifications) watch price levels, percent
 moves, signals, and candle closes.
 
-**AI.** One [assistant](/docs/ai-copilot), docked in the corner of every page,
-with 94 tools over markets, charts, your portfolio, scripts, bots and
+**AI.** One [assistant](/docs/ai-copilot), docked in the corner or in the nav
+rail and mounted above every page, with 94 tools over markets, charts, your portfolio, scripts, bots and
 automation, plus sourced [research reports](/docs/research-reports) on demand.
 Bring your own provider key or subscribe to hosted Intelligence.
 

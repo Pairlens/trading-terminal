@@ -40,6 +40,11 @@ export type AssistantChatWindowProps = {
   footer?: ReactNode
   /** Optional error/notice strip rendered between children and footer. */
   notice?: ReactNode
+  /** Measured by the drag hook to keep the window inside the viewport. */
+  windowRef?: React.Ref<HTMLDivElement>
+  /** Spread onto the header, which doubles as the title bar. */
+  dragHandleProps?: React.HTMLAttributes<HTMLElement>
+  dragging?: boolean
 }
 
 export function AssistantChatWindow({
@@ -52,6 +57,9 @@ export function AssistantChatWindow({
   children,
   footer,
   notice,
+  windowRef,
+  dragHandleProps,
+  dragging = false,
 }: AssistantChatWindowProps) {
   const reduceMotion = useReducedMotion() ?? false
 
@@ -66,6 +74,7 @@ export function AssistantChatWindow({
 
   return (
     <motion.div
+      ref={windowRef}
       role="dialog"
       data-assistant-window=""
       data-open={open ? '' : undefined}
@@ -104,7 +113,15 @@ export function AssistantChatWindow({
       {/* Decorative seam, the same one the copilot and builder panels wear. */}
       <div className="magic-gradient pointer-events-none absolute inset-x-0 top-0 z-20 h-[3px]" />
 
-      <div className="border-border/60 flex shrink-0 items-center gap-2 border-b px-3 py-2">
+      {/* The header is the title bar: grab anywhere on it that is not a
+          control and the window follows. `select-none` so a drag does
+          not smear a text selection across the title. */}
+      <div
+        {...dragHandleProps}
+        className={`border-border/60 flex shrink-0 items-center gap-2 border-b px-3 py-2 select-none ${
+          dragging ? 'cursor-grabbing' : 'cursor-grab'
+        }`}
+      >
         <Sparkles
           className="size-3.5 shrink-0"
           style={{ color: 'var(--magic-1)' }}

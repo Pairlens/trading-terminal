@@ -4,7 +4,7 @@ description: The left nav, the workspace grid, the pair header, and the search p
 group: get-started
 order: 3
 eyebrow: Get started
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 6 min read
 ---
 
@@ -63,12 +63,17 @@ instance after your laptop wakes from sleep.
 Turn on the recent-tickers marquee in **Settings → Appearance** if you want a
 running strip of live prices for the pairs you have been looking at.
 
-## The assistant, bottom-right
+## The assistant
 
-An orb sits in the bottom-right corner with a line of text beside it, and the
-text is contextual: **Analyze the chart of BTC/USDT** on a chart, **Build a
-workflow** on the workflows page, **Write an indicator** in the workbench. Click
-the orb, or press <kbd>⌘J</kbd>, and the chat opens over the terminal.
+An orb sits at the bottom right with a line of text beside it, and the text is
+contextual: **Analyze the chart of BTC/USDT** on a chart, **Build a workflow**
+on the workflows page, **Write an indicator** in the workbench. Click the orb,
+or press <kbd>⌘J</kbd>, and the chat opens over the terminal.
+
+If you would rather it were quieter, **Settings → Assistant** moves the orb into
+the left nav rail, where the suggestion appears on hover and while a run is
+going. The chat window itself drags anywhere you like by its header, and stays
+where you drop it.
 
 It lives outside the workspace grid, so it takes no layout space and it does not
 reset when you change page, pair or workspace. Minimizing it does not stop a run

@@ -403,6 +403,7 @@
     "description": "更新你的個人資料設定與偏好設定。",
     "nav": {
       "profile": "個人資料",
+      "ai": "助理",
       "plugins": "外掛",
       "cloudSync": "雲端同步",
       "notifications": "通知",
@@ -424,6 +425,16 @@
       "noResults": "沒有符合「{{query}}」的結果"
     },
     "comingSoon": "此區塊即將推出。",
+    "ai": {
+      "placement": "助理位置",
+      "placementDescription": "你工作時助理待著的地方。聊天視窗會從助理所在的位置打開，之後可以拖到任何地方。",
+      "placementFloating": "浮動",
+      "placementFloatingDescription": "在終端機右下角，不會擋住你的面板，建議始終清楚可讀。最容易注意到。",
+      "placementSidebar": "側邊欄",
+      "placementSidebarDescription": "在左側欄裡，和其他工具放在一起。建議會在滑鼠懸停時，或助理工作時出現。更安靜，位置也始終不變。",
+      "persona": "人格",
+      "personaDescription": "助理回答時解釋得多詳細。變更會從你的下一則訊息開始生效。"
+    },
     "privacy": {
       "title": "使用分析",
       "description": "透過分享匿名使用資料與當機報告協助改善 Pairlens。絕不包含你的交易紀錄、API 金鑰或餘額。",
@@ -1307,7 +1318,8 @@
     "approvalApprove": "核准",
     "approvalDecline": "拒絕",
     "approvalApproved": "已核准",
-    "approvalDeclined": "已拒絕"
+    "approvalDeclined": "已拒絕",
+    "resetPosition": "重設位置"
   },
   "copilot": {
     "placeholder": "詢問你的 AI 透鏡…",

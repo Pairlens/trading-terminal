@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { create } from 'zustand'
 
+import type { AssistantRunPhase } from '@/lib/assistant-core/run-status'
+
 /**
  * The assistant dock's open/closed state, plus the one-shot bus any
  * surface uses to hand the assistant a prompt.
@@ -21,16 +23,57 @@ export type AssistantSeed = {
   send?: boolean
 }
 
+/** Top-left corner of the chat window, in viewport pixels. */
+export type AssistantWindowPosition = { x: number; y: number }
+
+const POSITION_KEY = 'pairlens:assistant.windowPosition'
+
+/**
+ * A dragged window outlives the session: someone who moved it onto their
+ * second monitor's half of the screen meant it. Read synchronously at
+ * store creation so the first paint is already in the right place.
+ */
+function readStoredPosition(): AssistantWindowPosition | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem(POSITION_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as Partial<AssistantWindowPosition>
+    if (typeof parsed?.x !== 'number' || typeof parsed?.y !== 'number') {
+      return null
+    }
+    return { x: parsed.x, y: parsed.y }
+  } catch {
+    return null
+  }
+}
+
 type AssistantStore = {
   isOpen: boolean
   /** Consumed once by the dock, then cleared. */
   seed: AssistantSeed | null
   /** Bumped to pull focus into the composer. */
   focusSignal: number
+  /**
+   * Where the user dragged the window, or null to sit at whichever
+   * anchor the current placement implies.
+   */
+  windowPosition: AssistantWindowPosition | null
+  /**
+   * What the run is doing, published by the conversation so the orb can
+   * report it. It lives here rather than in a context because the orb
+   * may be rendered in the nav rail, far from the chat, and a context
+   * high enough to reach both would re-render the terminal on every
+   * phase change.
+   */
+  runPhase: AssistantRunPhase
+  runToolName: string | null
   open: (seed?: AssistantSeed) => void
   close: () => void
   toggle: () => void
   consumeSeed: () => AssistantSeed | null
+  setWindowPosition: (position: AssistantWindowPosition | null) => void
+  setRunStatus: (phase: AssistantRunPhase, toolName: string | null) => void
 }
 
 export const useAssistantStore = create<AssistantStore>((set, get) => ({
@@ -50,10 +93,27 @@ export const useAssistantStore = create<AssistantStore>((set, get) => ({
         ? { isOpen: false }
         : { isOpen: true, focusSignal: state.focusSignal + 1 },
     ),
+  windowPosition: readStoredPosition(),
+  runPhase: 'idle',
+  runToolName: null,
+  setRunStatus: (runPhase, runToolName) => set({ runPhase, runToolName }),
   consumeSeed: () => {
     const { seed } = get()
     if (seed) set({ seed: null })
     return seed
+  },
+  setWindowPosition: (position) => {
+    set({ windowPosition: position })
+    try {
+      if (position) {
+        localStorage.setItem(POSITION_KEY, JSON.stringify(position))
+      } else {
+        localStorage.removeItem(POSITION_KEY)
+      }
+    } catch {
+      // Private mode, quota, a locked-down profile: the window still
+      // moves for this session, it just will not be there next time.
+    }
   },
 }))
 
