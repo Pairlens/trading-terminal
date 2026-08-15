@@ -1,6 +1,6 @@
 ---
 title: The AI assistant
-description: One assistant for the whole terminal, at the bottom right or in the nav rail, in a window you can drag anywhere. 94 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
+description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 94 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
 group: traders
 order: 4
 eyebrow: For traders
@@ -11,7 +11,7 @@ readTime: 8 min read
 The assistant sits outside the content area: an orb, and a line of text that
 tells you what it would do here. On a chart it reads **Analyze the chart of
 BTC/USDT**. On the workflows page, **Build a workflow**. On Discovery, **Find me
-something to trade**.
+something to trade**. Where that line lives depends on the placement, below.
 
 Click the orb and a chat window opens over the terminal. Click it again and the
 window folds back into the orb. <kbd>⌘J</kbd> (<kbd>Ctrl</kbd>+<kbd>J</kbd>
@@ -19,22 +19,28 @@ on Windows and Linux) does the same from the keyboard, and it works while you
 are typing in a field, because reaching the assistant should not cost you the
 sentence you were in the middle of.
 
-## Two placements
+## Three placements
 
 Where the orb waits is a setting, in **Settings → Assistant**.
 
-**Floating** is the default. The orb sits at the bottom right of the terminal,
-clear of your panes, with its suggestion line always readable beside it. It is
-the placement that makes the assistant impossible to miss, which is why it ships
-as the default.
+**Sidebar** is the default. The orb docks in the left nav rail, under the charts
+icon and above the first divider, so it is a tool among tools and always in the
+same place. The rail is 60px wide, so the suggestion cannot sit beside it. It
+flies out to the right instead: on hover, on keyboard focus, and unprompted
+whenever the assistant is working. That last case is the one that matters.
+Tucked into the rail the orb is easy to forget, so a run in progress announces
+itself without being asked for. It ships as the default because it is the only
+placement that can never land on top of something you were reading.
 
-**Sidebar** moves the orb into the left nav rail, under the charts icon and
-above the first divider, so it is a tool among tools and always in the same
-place. The rail is 60px wide, so the suggestion cannot sit beside it. It flies
-out to the right instead: on hover, on keyboard focus, and unprompted whenever
-the assistant is working. That last case is the one that matters. Tucked into
-the rail the orb is easy to forget, so a run in progress announces itself
-without being asked for.
+**Bottom bar** puts the orb back in the bottom-right corner, suggestion readable
+beside it, in a strip the terminal reserves underneath the workspace. The rail is
+chrome beside your panes; this is chrome below them. Same corner as floating with
+none of the overlap: the panes and the status bar shrink by the height of the
+strip, so nothing ever ends up under it.
+
+**Floating** is the loudest of the three. The orb and its suggestion sit over the
+bottom right of the workspace, always readable, easiest to notice, and the only
+placement that covers part of your layout.
 
 Switching moves the orb immediately, no reload. The choice is per device, so a
 rail on your desktop does not follow you to the laptop.
@@ -50,10 +56,10 @@ The window is clamped so you can never lose it: enough of the header always
 stays on screen to grab again, and if you shrink the terminal or unplug a
 display, a window that would be stranded off screen is pulled back in.
 
-Until you drag it, the window is anchored to the orb's placement, bottom right
-when floating and beside the rail in sidebar mode, which is why it stays put
-when you resize. Once it has been moved, a reset button appears in the header
-next to the persona menu and puts it back on that anchor.
+Until you drag it, the window is anchored to the orb's placement: beside the rail
+in sidebar mode, bottom right for the other two. That is why it stays put when
+you resize. Once it has been moved, a reset button appears in the header next to
+the persona menu and puts it back on that anchor.
 
 ## The chat window
 

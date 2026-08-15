@@ -8,11 +8,12 @@
 // in flight keeps running, which is the whole reason it does not live
 // in a pane.
 //
-// Two placements. Floating, the orb and its suggestion sit at the
-// bottom-right and the window grows out of them. In the nav rail, the
-// shell renders the orb instead (see AssistantSidebarOrb) and only the
-// window lives here, anchored beside the rail. Either way the user can
-// drag the window wherever they want it.
+// Three placements, and this file owns two of them. Floating puts the
+// orb and its suggestion over the bottom-right of the workspace; bottom
+// puts the same pair in a reserved strip below it (see
+// AssistantBottomBar). For the nav rail the shell renders the orb
+// itself (see AssistantSidebarOrb) and only the window lives here.
+// Either way the user can drag the window wherever they want it.
 //
 // Mobile renders none of this. The phone has no room for a floating
 // window and already has an Assistant tab, which mounts the same
@@ -30,6 +31,7 @@ import {
 } from '@pairlens/ui/components/ui/tooltip'
 
 import { AssistantOrbButton } from './assistant-orb-button'
+import { AssistantBottomBar } from './assistant-bottom-bar'
 import { AssistantChatWindow } from './assistant-chat-window'
 import { AssistantConversation } from './assistant-conversation'
 import type { Persona } from '@/components/copilot/persona-menu'
@@ -37,20 +39,13 @@ import type { AssistantRunStatus } from '@/lib/assistant-core/run-status'
 import type { AssistantConversationHandle } from './assistant-conversation'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { PersonaMenu } from '@/components/copilot/persona-menu'
-import { useAssistantPlacement } from '@/lib/assistant-core/placement'
+import {
+  ASSISTANT_WINDOW_ANCHOR,
+  useAssistantPlacement,
+} from '@/lib/assistant-core/placement'
 import { useAssistantOrbLabel } from '@/lib/assistant-core/use-orb-label'
 import { useWindowDrag } from '@/lib/assistant-core/use-window-drag'
 import { useAssistantStore } from '@/stores/assistant-store'
-
-/**
- * Where the window sits before anyone drags it. Floating, it grows out
- * of the orb at the bottom-right. In rail mode the orb is near the top
- * of a 60px rail, so the window hangs just outside it, top-aligned.
- */
-const WINDOW_ANCHOR = {
-  floating: 'right-4 bottom-[3.75rem]',
-  sidebar: 'left-[4.25rem] top-4',
-} as const
 
 export function AssistantDock() {
   const { t } = useTranslation()
@@ -79,11 +74,22 @@ export function AssistantDock() {
     [setRunStatus],
   )
 
+  // The same orb whichever of the two placements below renders it. Only
+  // the surface it sits on differs, and that is the bar's business.
+  const orbProps = {
+    label,
+    busy,
+    open: isOpen,
+    openLabel: t('assistantDock.open'),
+    closeLabel: t('assistantDock.close'),
+    onClick: toggle,
+  }
+
   return (
     <>
       <div
         className={`pointer-events-none fixed z-40 ${
-          drag.style ? 'top-0 left-0' : WINDOW_ANCHOR[placement]
+          drag.style ? 'top-0 left-0' : ASSISTANT_WINDOW_ANCHOR[placement]
         }`}
         style={drag.style}
       >
@@ -164,17 +170,12 @@ export function AssistantDock() {
       {placement === 'floating' ? (
         <div className="pointer-events-none fixed right-4 bottom-4 z-40 flex justify-end">
           <div className="pointer-events-auto">
-            <AssistantOrbButton
-              label={label}
-              busy={busy}
-              open={isOpen}
-              openLabel={t('assistantDock.open')}
-              closeLabel={t('assistantDock.close')}
-              onClick={toggle}
-            />
+            <AssistantOrbButton {...orbProps} />
           </div>
         </div>
       ) : null}
+
+      {placement === 'bottom' ? <AssistantBottomBar {...orbProps} /> : null}
     </>
   )
 }

@@ -65,15 +65,17 @@ running strip of live prices for the pairs you have been looking at.
 
 ## The assistant
 
-An orb sits at the bottom right with a line of text beside it, and the text is
-contextual: **Analyze the chart of BTC/USDT** on a chart, **Build a workflow**
-on the workflows page, **Write an indicator** in the workbench. Click the orb,
-or press <kbd>⌘J</kbd>, and the chat opens over the terminal.
+An orb sits in the left nav rail, under the charts icon, and it has a line of
+text that is contextual: **Analyze the chart of BTC/USDT** on a chart, **Build a
+workflow** on the workflows page, **Write an indicator** in the workbench. The
+line flies out when you hover the orb, and on its own while the assistant is
+working. Click the orb, or press <kbd>⌘J</kbd>, and the chat opens over the
+terminal.
 
-If you would rather it were quieter, **Settings → Assistant** moves the orb into
-the left nav rail, where the suggestion appears on hover and while a run is
-going. The chat window itself drags anywhere you like by its header, and stays
-where you drop it.
+If you would rather have it in the corner with its suggestion always readable,
+**Settings → Assistant** moves the orb to the bottom right, either in a strip
+below the workspace or floating over it. The chat window itself drags anywhere
+you like by its header, and stays where you drop it.
 
 It lives outside the workspace grid, so it takes no layout space and it does not
 reset when you change page, pair or workspace. Minimizing it does not stop a run

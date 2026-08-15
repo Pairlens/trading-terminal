@@ -428,10 +428,12 @@
     "ai": {
       "placement": "Posição do assistente",
       "placementDescription": "Onde o assistente espera enquanto trabalha. A janela de chat abre a partir do sítio onde o assistente está e, a partir daí, pode arrastá-la para onde quiser.",
-      "placementFloating": "Flutuante",
-      "placementFloatingDescription": "No canto inferior direito do terminal, longe dos seus painéis, com a sugestão sempre legível. A opção mais fácil de notar.",
       "placementSidebar": "Barra lateral",
       "placementSidebarDescription": "Na barra da esquerda, junto às suas outras ferramentas. A sugestão aparece ao passar o cursor, ou enquanto o assistente trabalha. Mais discreta e sempre no mesmo sítio.",
+      "placementBottom": "Barra inferior",
+      "placementBottomDescription": "Numa faixa por baixo do terminal, ao lado dos seus painéis em vez de por cima. O mesmo canto da flutuante, e a sugestão continua legível.",
+      "placementFloating": "Flutuante",
+      "placementFloatingDescription": "Uma pastilha por cima do canto inferior direito dos seus painéis, com a sugestão sempre legível. A mais fácil de notar e a única que tapa parte do seu layout.",
       "persona": "Persona",
       "personaDescription": "Quanto o assistente explica quando responde. A alteração aplica-se à sua próxima mensagem."
     },

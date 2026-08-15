@@ -428,10 +428,12 @@
     "ai": {
       "placement": "Position des Assistenten",
       "placementDescription": "Wo der Assistent wartet, während du arbeitest. Das Chatfenster öffnet sich dort, wo der Assistent sitzt, und du kannst es von dort überallhin ziehen.",
-      "placementFloating": "Schwebend",
-      "placementFloatingDescription": "Unten rechts im Terminal, abseits deiner Bereiche, mit immer lesbarem Vorschlag. Am leichtesten zu bemerken.",
       "placementSidebar": "Seitenleiste",
       "placementSidebarDescription": "In der linken Leiste bei deinen anderen Werkzeugen. Der Vorschlag erscheint beim Daraufzeigen oder während der Assistent arbeitet. Ruhiger, und immer am selben Ort.",
+      "placementBottom": "Untere Leiste",
+      "placementBottomDescription": "In einem Streifen unter dem Terminal, neben deinen Bereichen statt darüber. Dieselbe Ecke wie schwebend, und der Vorschlag bleibt lesbar.",
+      "placementFloating": "Schwebend",
+      "placementFloatingDescription": "Eine Pille über der unteren rechten Ecke deiner Bereiche, Vorschlag immer lesbar. Am leichtesten zu bemerken, und die einzige Option, die einen Teil deines Layouts verdeckt.",
       "persona": "Persona",
       "personaDescription": "Wie viel der Assistent erklärt, wenn er antwortet. Die Änderung gilt ab deiner nächsten Nachricht."
     },

@@ -428,10 +428,12 @@
     "ai": {
       "placement": "アシスタントの表示位置",
       "placementDescription": "作業中にアシスタントが待機する場所です。チャットウィンドウはアシスタントのある位置から開き、そこから好きな場所へドラッグできます。",
-      "placementFloating": "フローティング",
-      "placementFloatingDescription": "ターミナルの右下、ペインを邪魔しない位置に表示され、提案は常に読めます。いちばん気づきやすい配置です。",
       "placementSidebar": "サイドバー",
       "placementSidebarDescription": "左のバーに他のツールと並びます。提案はホバーしたとき、またはアシスタントの作業中に表示されます。控えめで、いつも同じ場所にあります。",
+      "placementBottom": "下部バー",
+      "placementBottomDescription": "ターミナルの下に細い帯として表示され、ペインの上ではなく横に並びます。フローティングと同じ角で、提案もそのまま読めます。",
+      "placementFloating": "フローティング",
+      "placementFloatingDescription": "ペインの右下に重なる小さなピルとして表示され、提案は常に読めます。いちばん気づきやすい一方で、レイアウトの一部を覆う唯一の配置です。",
       "persona": "ペルソナ",
       "personaDescription": "アシスタントが回答でどこまで説明するかを決めます。変更は次のメッセージから反映されます。"
     },

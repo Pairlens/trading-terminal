@@ -91,6 +91,10 @@ import { BillingStateSync } from '@/components/billing/billing-state-sync'
 import { AssistantProvider } from '@/lib/assistant-core/assistant-provider'
 import { AssistantDock } from '@/components/assistant-dock/assistant-dock'
 import { AssistantSidebarOrbItem } from '@/components/assistant-dock/assistant-sidebar-orb'
+import {
+  ASSISTANT_BAR,
+  useAssistantPlacement,
+} from '@/lib/assistant-core/placement'
 import { useAssistantStore } from '@/stores/assistant-store'
 import { SectionTour } from '@/components/onboarding/section-tour'
 import { isOnboardingComplete } from '@/lib/onboarding-state'
@@ -216,6 +220,7 @@ function TerminalLayout() {
   const { t } = useTranslation()
   const viewport = useViewportMode()
   const perfMode = usePerformanceModeState()
+  const [assistantPlacement] = useAssistantPlacement()
   const [workspaceTreeOpen, setWorkspaceTreeOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   // Store rather than local state: the Notifications/Bots nudge opens this
@@ -427,6 +432,13 @@ function TerminalLayout() {
                       className={cn(
                         'h-svh overflow-hidden',
                         needsTitlebar && 'pt-8',
+                        // The bottom placement hangs the orb in a strip
+                        // under the shell. Padding here is what keeps it
+                        // OUTSIDE the panes: the rail and the inset both
+                        // shrink by exactly the bar's height, so nothing
+                        // ever ends up underneath it.
+                        assistantPlacement === 'bottom' &&
+                          ASSISTANT_BAR.reserve,
                       )}
                       defaultOpen
                     >
@@ -463,10 +475,9 @@ function TerminalLayout() {
                                 <ChartsNavItem
                                   isActive={activeItem === 'charts'}
                                 />
-                                {/* Renders only when the user has moved
-                                    the assistant into the rail; floating
-                                    is the default and lives in the dock
-                                    below. */}
+                                {/* The default placement, and the only
+                                    one the shell hosts itself. The other
+                                    two live in the dock below. */}
                                 <AssistantSidebarOrbItem />
                                 <SidebarSeparator className="my-1" />
                                 <SidebarMenuItem>
