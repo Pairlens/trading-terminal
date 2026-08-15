@@ -11,18 +11,36 @@ import {
   CopilotPlaceOrderCard,
 } from './copilot-order-card'
 import { asToolPart } from './tool-part'
+import type { NormalizedToolPart } from './tool-part'
 import type {
   CopilotCancelRequest,
   CopilotOrderRequest,
 } from './copilot-order-card'
+import type { ReactNode } from 'react'
 import type { UIMessage } from 'ai'
+import type { ToolLabelMap } from '@/lib/copilot/tool-labels'
 import { formatToolLabel } from '@/lib/copilot/tool-labels'
 
 type CopilotChatMessageProps = {
   message: UIMessage
+  /**
+   * Tool-id → label table. Defaults to the copilot's; other chats that reuse
+   * this component (the builder assistant) pass their own.
+   */
+  toolLabels?: ToolLabelMap
+  /**
+   * Render a tool part yourself. Return null to fall through to the standard
+   * status chip. The builder assistant uses it for `ask_user`, whose whole
+   * point is a card the user answers rather than a chip they watch.
+   */
+  renderToolPart?: (tool: NormalizedToolPart) => ReactNode | null
 }
 
-export function CopilotChatMessage({ message }: CopilotChatMessageProps) {
+export function CopilotChatMessage({
+  message,
+  toolLabels,
+  renderToolPart,
+}: CopilotChatMessageProps) {
   const { t } = useTranslation()
   const isUser = message.role === 'user'
 
@@ -67,6 +85,8 @@ export function CopilotChatMessage({ message }: CopilotChatMessageProps) {
           const tool = asToolPart(part)
           if (tool) {
             const { toolName, state, output } = tool
+            const custom = renderToolPart?.(tool)
+            if (custom) return <div key={i}>{custom}</div>
             // Trading tools render an interactive confirmation card instead of
             // a status chip — the order only executes when the user confirms.
             if (toolName === 'place_order' && output?.order) {
@@ -123,6 +143,7 @@ export function CopilotChatMessage({ message }: CopilotChatMessageProps) {
                   {formatToolLabel(
                     toolName,
                     isError ? 'error' : isComplete ? 'done' : 'running',
+                    toolLabels,
                   )}
                   {errorText ? ` — ${errorText}` : ''}
                 </span>

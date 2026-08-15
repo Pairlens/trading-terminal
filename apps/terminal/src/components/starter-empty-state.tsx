@@ -82,6 +82,19 @@ type StarterEmptyStateProps = {
   /** Optional extra control beside the blank-slate button — a surface's
    * second way in (the workbench renders its "Build with AI" here). */
   extraAction?: React.ReactNode
+  /**
+   * The headline way in, above the template shelf. Indicators and Bots put
+   * the assistant's composer here: describing what you want beats picking a
+   * template that is nearly it, so it gets the top slot and the shelf keeps
+   * its role as the "show me the shape of one" option.
+   */
+  hero?: React.ReactNode
+  /**
+   * How loudly to offer the blank slate. `quiet` demotes it to a plain link,
+   * for surfaces where starting from an empty file is the expert route rather
+   * than the expected one.
+   */
+  blankTone?: 'default' | 'quiet'
 }
 
 export function StarterEmptyState({
@@ -100,6 +113,8 @@ export function StarterEmptyState({
   secondaryTemplates,
   onPickSecondary,
   extraAction,
+  hero,
+  blankTone = 'default',
 }: StarterEmptyStateProps) {
   const { t } = useTranslation()
   const shelfHeading = shelfLabel ?? t('common.startFromTemplate')
@@ -160,6 +175,8 @@ export function StarterEmptyState({
           </EmptyHeader>
 
           <EmptyContent className="max-w-none gap-3">
+            {hero}
+
             <div className="flex w-full items-center gap-3">
               <span className="h-px flex-1 bg-border" />
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
@@ -208,12 +225,19 @@ export function StarterEmptyState({
                 label that reads as a caption. */}
             <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
               <Button
-                variant="outline"
-                className="gap-1.5"
+                variant={blankTone === 'quiet' ? 'ghost' : 'outline'}
+                size={blankTone === 'quiet' ? 'sm' : undefined}
+                className={cn(
+                  'gap-1.5',
+                  blankTone === 'quiet' &&
+                    'text-muted-foreground hover:text-foreground',
+                )}
                 disabled={pendingId !== null}
                 onClick={onCreateBlank}
               >
-                <Plus className="size-4" />
+                <Plus
+                  className={blankTone === 'quiet' ? 'size-3.5' : 'size-4'}
+                />
                 {blankLabel}
               </Button>
               {extraAction}

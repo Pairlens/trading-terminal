@@ -5,7 +5,7 @@ group: traders
 order: 5
 eyebrow: For traders
 updated: AUG 2026
-readTime: 5 min read
+readTime: 6 min read
 ---
 
 Pairlens runs your Python. Not a scripting dialect that looks like Python: an
@@ -69,18 +69,43 @@ before a chart tells you.
 
 ## Build with AI
 
-The sparkle button in the editor header opens the assistant: a chat that
-writes scripts with you. Describe what you want in plain words ("an RSI that
-colours red above 70", "a breakout strategy with a 3% stop") and it writes the
-Python straight into your editor, validates it in the runtime, and re-runs the
-preview so the result is on the chart before you reply.
+The assistant is the rail on the right of the workbench, open by default, and
+the composer on the empty page is the same thing: a chat that writes scripts
+with you. Describe what you want in plain words ("an RSI that colours red
+above 70", "a breakout strategy with a 3% stop") and it writes the Python
+straight into your editor, validates it in the runtime, and re-runs the
+preview so the result is on the chart before you reply. **Build with AI** in
+the **+** menu above the script list starts the same conversation.
 
-It works on existing scripts too. It reads the open file, so "make the bands
-adaptive" or "why does this throw?" needs no copy-pasting. Every edit is saved
-through the normal path with version history, so anything it does can be
-rolled back from the script's history. When you ask, it can also run a
-backtest and read the stats back critically, or deploy a finished strategy as
-a paper bot.
+It checks its own work. Every write goes through the Python runtime, and when
+the runtime rejects it the traceback comes back to the assistant, not to you:
+it reads the error, fixes the code, and runs it again. What you see is the
+attempt and the repair, and the script is validated by the time it says it is
+done. For a strategy it goes one step further and backtests it, then reads the
+stats back critically rather than selling them to you.
+
+It works on existing scripts too. It reads every file of the open script, so
+"make the bands adaptive" or "why does this throw?" needs no copy-pasting, and
+it can add a helper module, rewrite one, or delete one it no longer imports.
+Asking for something new gets a new script rather than an overwrite of the one
+you are looking at. Every edit is saved through the normal path with version
+history, so anything it does can be rolled back from the script's history.
+
+The data under the preview is its to move as well. It can list the venues you
+have connected and re-point the preview at another venue, pair, timeframe or
+history depth when the script needs it, because a 4h breakout judged on 300
+bars is not judged at all.
+
+When a decision is yours rather than its, it asks. Questions arrive as a small
+card with two to four options you tap, and you can always type something else
+instead. It is the difference between a builder that picks your timeframe and
+one that asks which you meant.
+
+The two builders are one workflow. From here, a finished strategy you want
+running goes to [Bots](/docs/bots) with a tap, and the assistant there picks
+up the thread with the context already written down. It works the other way
+too: ask the Bots assistant for something that needs real code and it brings
+you back here.
 
 The assistant uses whatever AI provider the terminal resolves: Pairlens
 Intelligence when you are signed in with a plan, or any bring-your-own-key

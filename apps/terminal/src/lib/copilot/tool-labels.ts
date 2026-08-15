@@ -20,6 +20,7 @@ export type ToolPhase = 'running' | 'done' | 'error'
 /** [present participle, past tense] for every verb used in the label table. */
 const VERB_FORMS = {
   add: ['Adding', 'Added'],
+  ask: ['Asking', 'Asked'],
   capture: ['Capturing', 'Captured'],
   check: ['Checking', 'Checked'],
   clear: ['Clearing', 'Cleared'],
@@ -30,10 +31,12 @@ const VERB_FORMS = {
   exit: ['Exiting', 'Exited'],
   fit: ['Fitting', 'Fitted'],
   list: ['Listing', 'Listed'],
+  open: ['Opening', 'Opened'],
   propose: ['Preparing', 'Prepared'],
   read: ['Reading', 'Read'],
   redo: ['Redoing', 'Redid'],
   remove: ['Removing', 'Removed'],
+  run: ['Running', 'Ran'],
   schedule: ['Scheduling', 'Scheduled'],
   scroll: ['Scrolling to', 'Scrolled to'],
   search: ['Searching', 'Searched'],
@@ -42,10 +45,18 @@ const VERB_FORMS = {
   switch: ['Switching', 'Switched'],
   undo: ['Undoing', 'Undid'],
   update: ['Updating', 'Updated'],
+  validate: ['Validating', 'Validated'],
   wait: ['Waiting', 'Waited'],
 } as const satisfies Record<string, readonly [string, string]>
 
-type Verb = keyof typeof VERB_FORMS
+export type ToolVerb = keyof typeof VERB_FORMS
+
+/**
+ * A chat's tool id → label table. The copilot's is below; other chats (the
+ * builder assistant) pass their own to `formatToolLabel` rather than adding
+ * their tools here, so each surface's table stays exactly its own tool set.
+ */
+export type ToolLabelMap = Record<string, readonly [ToolVerb, string]>
 
 /** tool id → [verb, object]. An empty object renders the verb alone. */
 export const COPILOT_TOOL_LABELS = {
@@ -131,7 +142,7 @@ export const COPILOT_TOOL_LABELS = {
   switch_market: ['switch', 'exchange'],
   set_timeframe: ['set', 'the timeframe'],
   switch_pair: ['switch', 'pair'],
-} as const satisfies Record<string, readonly [Verb, string]>
+} as const satisfies ToolLabelMap
 
 /**
  * Best-effort label for a tool id we don't know: strips the AI SDK `tool-`
@@ -164,10 +175,11 @@ export function humanizeToolName(raw: string): string {
 export function formatToolLabel(
   toolName: string,
   phase: ToolPhase = 'done',
+  labels: ToolLabelMap = COPILOT_TOOL_LABELS,
 ): string {
-  const entry = (
-    COPILOT_TOOL_LABELS as Record<string, readonly [Verb, string] | undefined>
-  )[toolName.replace(/^tool-/, '')]
+  const entry = (labels as Record<string, readonly [ToolVerb, string]>)[
+    toolName.replace(/^tool-/, '')
+  ] as readonly [ToolVerb, string] | undefined
   if (!entry) {
     const human = humanizeToolName(toolName)
     return phase === 'running' ? `${human}…` : human

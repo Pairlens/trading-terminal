@@ -54,12 +54,22 @@ dead-ends:
   **Deploy as bot** button that lands back in this dialog with the script
   preselected.
 
-There is also a fourth way that skips the dialog entirely: the sparkle button
-above the bot list opens the AI assistant, and "deploy my breakout strategy on
-OKX BTC-USDT, 1h" creates the bot in one exchange. Anything it creates arrives
-in paper mode and switched off, exactly as if you had walked the steps
-yourself, and it can never arm a bot. It can also rename bots, tune strategy
-params, and set guards on your behalf when you ask. See
+There is also a fourth way that skips the dialog entirely: the assistant rail
+beside the bot list, open by default and also reachable from the sparkle
+button above the list. "Deploy my breakout strategy on OKX BTC-USDT, 1h"
+creates the bot in one exchange.
+
+It can start further back than that. A bot is a strategy on a market, so
+asking for one you have no script for ("a bot that buys pullbacks in an
+uptrend on the 4h") gets both: it writes the strategy, validates it, backtests
+it, and deploys the result. When the code needs real work, it hands you to the
+workbench with the conversation already carried over rather than making you
+explain it twice.
+
+Anything it creates arrives in paper mode and switched off, exactly as if you
+had walked the steps yourself, and it can never arm a bot. It can also rename
+bots, tune strategy params, and set guards on your behalf when you ask, and it
+asks you back when a choice is yours to make. See
 [Build with AI](/docs/python-scripts#build-with-ai) for how the assistant
 works and which AI providers it uses.
 

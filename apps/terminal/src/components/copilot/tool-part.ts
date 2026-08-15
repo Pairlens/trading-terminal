@@ -4,7 +4,11 @@ import type { UIMessage } from 'ai'
 
 export type NormalizedToolPart = {
   toolName: string
+  /** Needed to answer a tool the UI resolves itself (the assistant's ask_user). */
+  toolCallId: string | undefined
   state: string | undefined
+  /** The model's arguments. Partial while the call is still streaming in. */
+  input: Record<string, unknown> | undefined
   output: Record<string, unknown> | undefined
   errorText: string | undefined
 }
@@ -29,7 +33,9 @@ export function asToolPart(
   const p = part as {
     type: string
     toolName?: string
+    toolCallId?: string
     state?: string
+    input?: unknown
     output?: unknown
     errorText?: string
   }
@@ -38,5 +44,12 @@ export function asToolPart(
     p.state === 'output-available'
       ? (p.output as Record<string, unknown> | undefined)
       : undefined
-  return { toolName, state: p.state, output, errorText: p.errorText }
+  return {
+    toolName,
+    toolCallId: p.toolCallId,
+    state: p.state,
+    input: (p.input as Record<string, unknown> | undefined) ?? undefined,
+    output,
+    errorText: p.errorText,
+  }
 }

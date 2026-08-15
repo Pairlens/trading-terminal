@@ -7,17 +7,19 @@
  * so a returning user is never pitched at), scripts exist but none is open
  * (a one-line nudge), otherwise the full panel with the starter shelf.
  *
- * Two shelves, ranked: indicator templates on top (this is where indicators
- * live), the deployable strategies below them — so a first visit already
- * teaches that this one workbench writes both kinds of script.
+ * Three ways in, ranked by how likely each is to produce the script the user
+ * actually wants: describe it to the assistant, adapt a template, or open an
+ * empty file. Two shelves under the assistant, indicator templates above the
+ * deployable strategies — so a first visit still teaches that this one
+ * workbench writes both kinds of script.
  */
 import { useCallback, useMemo, useState } from 'react'
-import { Sparkles, SquareFunction } from 'lucide-react'
+import { SquareFunction } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
-import { Button } from '@pairlens/ui/components/ui/button'
 import { StarterEmptyState } from '../starter-empty-state'
+import { AssistantStarter } from '../assistant/assistant-starter'
 import { botTemplates, ensureBotTemplateScript } from '../bots/bot-templates'
 import {
   applyIndicatorTemplate,
@@ -30,7 +32,7 @@ import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
 export function IndicatorsEmptyState({
   onOpenAssistant,
 }: {
-  /** Opens the builder-assistant rail — the third way to a first script. */
+  /** Opens the builder-assistant rail, where the starter's request lands. */
   onOpenAssistant?: () => void
 } = {}) {
   const { t } = useTranslation()
@@ -101,17 +103,11 @@ export function IndicatorsEmptyState({
       onPickSecondary={handlePickStrategy}
       blankLabel={t('indicatorsPage.startFromScratch')}
       onCreateBlank={handleBlank}
+      blankTone="quiet"
       footnote={t('indicatorsPage.emptyFootnote')}
-      extraAction={
+      hero={
         onOpenAssistant ? (
-          <Button
-            variant="outline"
-            className="gap-1.5"
-            onClick={onOpenAssistant}
-          >
-            <Sparkles className="size-4" style={{ color: 'var(--magic-1)' }} />
-            {t('assistant.buildWithAi')}
-          </Button>
+          <AssistantStarter surface="indicators" onStarted={onOpenAssistant} />
         ) : undefined
       }
     />

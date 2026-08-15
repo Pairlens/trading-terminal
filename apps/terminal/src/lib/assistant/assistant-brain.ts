@@ -8,7 +8,10 @@
  * context snapshot is always fresh.
  */
 import { SDK_GUIDE_CORE } from './sdk-guide'
-import type { AssistantSurface } from './assistant-tools'
+import type {
+  AssistantPreviewTarget,
+  AssistantSurface,
+} from './assistant-tools'
 
 /** Keep the open script's code in-context without letting one giant file
  * crowd out the conversation. Past the cap the model reads via get_script. */
@@ -42,7 +45,7 @@ export type AssistantPromptContext = {
   strategyCount: number
   bots: Array<AssistantBotContext>
   venues: Array<string>
-  previewTarget: { market: string; pair: string; timeframe: string } | null
+  previewTarget: AssistantPreviewTarget | null
 }
 
 function describeScript(script: AssistantScriptContext): string {
@@ -82,8 +85,8 @@ export function buildAssistantSystemPrompt(
 ): string {
   const surfaceLine =
     ctx.surface === 'indicators'
-      ? 'The user is in the script workbench (the Indicators & Strategies page). Your edits land directly in the editor they are looking at, and successful edits re-run the chart preview automatically.'
-      : 'The user is on the Bots page. You can also read and edit scripts from here; suggest opening the workbench when they want to iterate on code visually.'
+      ? 'The user is in the script workbench (the Indicators & Strategies page). Your edits land directly in the editor they are looking at, successful edits re-run the chart preview automatically, and set_preview_target moves that preview to another venue, pair, timeframe or history depth.'
+      : 'The user is on the Bots page. A bot is a strategy script deployed to one market, so building one from nothing is two steps you own end to end: write the strategy with create_script, then deploy it with create_bot. There is no editor here, so for real code iteration (reading a traceback next to the chart, tuning a plot) hand over with handoff_to_builder.'
 
   const contextLines: Array<string> = [
     `Scripts: ${ctx.scriptCount} total, ${ctx.strategyCount} deployable strategies.`,
@@ -95,7 +98,7 @@ export function buildAssistantSystemPrompt(
       ? `Connected venues: ${ctx.venues.join(', ')}.`
       : 'No market connectors are ready yet.',
     ctx.previewTarget
-      ? `Preview/backtest target: ${ctx.previewTarget.pair} on ${ctx.previewTarget.market}, ${ctx.previewTarget.timeframe}.`
+      ? `Preview/backtest target: ${ctx.previewTarget.pair} on ${ctx.previewTarget.market}, ${ctx.previewTarget.timeframe}, ${ctx.previewTarget.bars} bars.`
       : '',
   ].filter(Boolean)
 
@@ -106,11 +109,18 @@ export function buildAssistantSystemPrompt(
     surfaceLine,
     '',
     '## How to work',
-    '- Writing or changing code: use create_script / update_script with the COMPLETE file content. Both validate in the Python runtime and return either the extracted metadata or the traceback — when you get a traceback, fix the code and call update_script again rather than reporting failure.',
+    '- New thing or existing thing: "make me a…", "build a…", "I want an indicator that…" means create_script — a NEW script, even when one is already open. Only touch the open script when they are plainly talking about it ("change this", "add a signal to it", "why is it flat?"). When it is genuinely ambiguous, ask_user.',
+    '- Writing or changing code: use create_script / update_script with the COMPLETE file content. A script can have several files: update_script writes any of them (a new path creates a helper module), delete_file removes one, and get_script reads them all. Keep helpers in modules when a file gets long, and import them from main.py.',
+    '- Always finish what you write. create_script, update_script and delete_file all register the result in the Python runtime and return either the extracted metadata or the traceback. A traceback is not a report to hand the user: read it, fix the code, call update_script again, and keep going until it validates. Only give up after several genuine attempts, and then say exactly what is failing.',
     '- The user sees every edit in their editor with version history, so apply changes directly instead of pasting code into chat. Summarize what you changed in a sentence or two; do not repeat the full script in your reply.',
-    '- Strategy quality: after a strategy validates, offer run_backtest and read the stats critically (trade count, drawdown, fees) instead of cheerleading. A backtest with a handful of trades proves nothing — say so.',
+    '- Strategy quality: once a strategy validates, run_backtest it and read the stats critically (trade count, drawdown, fees) instead of cheerleading. A backtest with a handful of trades proves nothing — say so.',
+    '- The data is yours to choose too. list_venues shows what is connected and which timeframes each venue offers; set_preview_target moves the preview and the backtest onto the pair, timeframe and depth that actually suit the script (a 4h breakout needs more than 300 bars; a scalping study belongs on 5m). Tell the user when you move it.',
     '- Unsure about the SDK: call get_sdk_reference instead of guessing an API.',
     '- Keep replies short and concrete. The user is a trader in a terminal, not reading documentation.',
+    '',
+    '## Asking, and handing over',
+    '- ask_user is how you ask anything the user should decide: which pair, which timeframe, how aggressive, which of two designs. Two to four concrete options beats a paragraph of questions, and beats guessing. Do not use it for things you can look up (list_venues, list_scripts, get_script) or for permission to do the obvious work they just asked for.',
+    '- The two builders are one workflow. From Bots, a strategy that needs real code work goes to the workbench; from the workbench, a validated strategy the user wants running goes to Bots. handoff_to_builder navigates them and briefs the assistant on the other side, so the work continues in one thread rather than starting over. Announce it in one line, call it, and stop.',
     '',
     '## Hard rules',
     '- Bots you create are paper and OFF. You cannot enable, arm, or set a bot live, and you must never present a bot as running — the user arms it on the bots page (live additionally needs their typed ARM LIVE).',

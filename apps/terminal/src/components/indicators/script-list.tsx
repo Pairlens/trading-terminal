@@ -12,6 +12,7 @@ import {
   Package,
   Pencil,
   Plus,
+  Sparkles,
   SquareFunction,
   Trash2,
 } from 'lucide-react'
@@ -76,6 +77,12 @@ type ScriptListProps = {
   onShowHistory: (script: IndicatorScript) => void
   /** Open the import/fork dialog. */
   onImport: () => void
+  /**
+   * Open the assistant rail with the composer focused. First in the create
+   * menu because "describe it" is the fastest of the three ways to a script,
+   * and a menu that only offered blank files and templates hid that.
+   */
+  onBuildWithAi: () => void
 }
 
 /**
@@ -146,6 +153,7 @@ export function ScriptList({
   onExport,
   onShowHistory,
   onImport,
+  onBuildWithAi,
 }: ScriptListProps) {
   const { t } = useTranslation()
   const scripts = useIndicatorScriptsStore((s) => s.scripts)
@@ -239,6 +247,19 @@ export function ScriptList({
             <Plus className="size-3.5" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={onBuildWithAi}>
+              <Sparkles
+                className="size-3.5"
+                style={{ color: 'var(--magic-1)' }}
+              />
+              <span className="flex min-w-0 flex-col">
+                <span className="truncate">{t('assistant.buildWithAi')}</span>
+                <span className="truncate text-[10px] text-muted-foreground">
+                  {t('assistant.buildWithAiHint')}
+                </span>
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() =>
                 handleCreate(t('indicatorsPage.blankName'), BLANK_SCRIPT)

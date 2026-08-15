@@ -73,6 +73,12 @@ type CopilotInputProps = {
   quickActions: Array<string>
   /** Composer placeholder — other hosts (the builder assistant) pass their own. */
   placeholder?: string
+  /**
+   * Bump to put the cursor in the composer. A counter rather than a boolean so
+   * the same request twice still focuses twice (the assistant's "Build with
+   * AI" entry points, when the rail is already open).
+   */
+  focusSignal?: number
 }
 
 export function CopilotInput({
@@ -81,6 +87,7 @@ export function CopilotInput({
   onStop,
   quickActions,
   placeholder,
+  focusSignal = 0,
 }: CopilotInputProps) {
   const { t } = useTranslation()
   const [value, setValue] = useState('')
@@ -93,6 +100,10 @@ export function CopilotInput({
   useEffect(() => {
     if (isReady && userEngagedRef.current) inputRef.current?.focus()
   }, [isReady])
+
+  useEffect(() => {
+    if (focusSignal > 0) inputRef.current?.focus()
+  }, [focusSignal])
 
   // Grow the composer with its content so a long message wraps into a block
   // instead of scrolling away on one endless line. Measured rather than left to
