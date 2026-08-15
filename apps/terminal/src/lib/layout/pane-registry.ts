@@ -16,12 +16,28 @@ export type PaneRegistryEntry = {
   pluginId: string | null // null = builtin ('empty'), string = owning plugin
 }
 
-// First-party plugin IDs whose panel IDs are used directly as pane type keys
-// (no namespace prefix), preserving saved layouts.
-const FIRST_PARTY_PLUGIN_IDS = new Set([
+/**
+ * First-party plugin IDs whose panel IDs are used directly as pane type keys
+ * (no namespace prefix), preserving saved layouts.
+ *
+ * Exported, with `paneTypeKey` below, because the workspace-store dependency
+ * analyzer has to key pane types EXACTLY the way this registry does or a
+ * template's panes resolve to no owner. It kept its own copy of both until the
+ * set grew a third member and only one copy learned about it — silently, since
+ * the mismatch shows up as a missing icon rather than an error.
+ */
+export const FIRST_PARTY_PLUGIN_IDS: ReadonlySet<string> = new Set([
   'pairlens-core',
   'pairlens-intelligence',
+  'pairlens-predictions',
 ])
+
+/** The one rule that turns (plugin, panel) into a saved-layout pane type. */
+export function paneTypeKey(pluginId: string, panelId: string): string {
+  return FIRST_PARTY_PLUGIN_IDS.has(pluginId)
+    ? panelId
+    : `${pluginId}:${panelId}`
+}
 
 // ── DynamicPaneRegistry ─────────────────────────────────────────────
 
@@ -50,9 +66,7 @@ export class DynamicPaneRegistry {
     const keys = new Set<string>()
 
     for (const panel of panels) {
-      const typeKey = FIRST_PARTY_PLUGIN_IDS.has(pluginId)
-        ? panel.id
-        : `${pluginId}:${panel.id}`
+      const typeKey = paneTypeKey(pluginId, panel.id)
 
       const component = components[panel.id] as
         | LazyExoticComponent<ComponentType>

@@ -47,7 +47,11 @@ const INTEL = BOOTSTRAP_PLUGINS.find(
 )!
 
 // Pane types that structurally require an active pair, per the real manifests.
-const FIRST_PARTY = new Set(['pairlens-core', 'pairlens-intelligence'])
+const FIRST_PARTY = new Set([
+  'pairlens-core',
+  'pairlens-intelligence',
+  'pairlens-predictions',
+])
 function typeKey(pluginId: string, panelId: string): string {
   return FIRST_PARTY.has(pluginId) ? panelId : `${pluginId}:${panelId}`
 }

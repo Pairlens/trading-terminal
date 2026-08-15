@@ -106,6 +106,13 @@ export type PredictionInstrument = InstrumentCommon & {
   kind: 'prediction'
   predictionMarketId: string
   outcome: string
+  /** Venue event grouping this market belongs to (Kalshi event ticker, Polymarket event id). */
+  eventId?: string
+  /** Event headline, when it differs from the market question in `name`. */
+  eventTitle?: string
+  /** Expected resolution/close timestamp in ms. */
+  endMs?: number
+  status?: 'open' | 'closed' | 'resolved'
 }
 
 export type Instrument =
@@ -147,6 +154,69 @@ export type InstrumentPage = {
   items: Array<Instrument>
   total: number
   hasMore: boolean
+}
+
+// ── Prediction-market event browsing (`market-data:events`) ───────────
+//
+// The typed payload of the `market-data:events` capability. Prediction
+// connectors serve their venue's event hierarchy for browsing surfaces; the
+// leaf outcomes carry the same pair keys the connector's streaming and
+// trading capabilities accept, so a browser row can pivot straight into a
+// chart or an order ticket without symbol parsing.
+
+export type PredictionOutcomeSummary = {
+  /** Route-safe pair key the serving connector resolves (see rule 1 above). */
+  pairKey: string
+  /** Outcome display label, e.g. 'Yes' / 'No' / a candidate name. */
+  label: string
+  /** Last/mark probability price in collateral units (0..1). */
+  price?: number
+  bid?: number
+  ask?: number
+}
+
+export type PredictionMarketSummary = {
+  /** Venue-native market id (Kalshi ticker, Polymarket condition id). */
+  id: string
+  /** The market question. */
+  title: string
+  outcomes: Array<PredictionOutcomeSummary>
+  volume?: number
+  liquidity?: number
+  openInterest?: number
+  /** Expected resolution/close timestamp in ms. */
+  endMs?: number
+  status?: 'open' | 'closed' | 'resolved'
+}
+
+export type PredictionEventSummary = {
+  /** Venue-native event id (Kalshi event ticker, Polymarket event id/slug). */
+  id: string
+  /** The connector's marketId ('kalshi', 'polymarket'). */
+  market: string
+  title: string
+  category?: string
+  imageUrl?: string
+  markets: Array<PredictionMarketSummary>
+  volume?: number
+  liquidity?: number
+  endMs?: number
+}
+
+/** Params accepted by `market-data:events` execute calls. */
+export type PredictionEventsQuery = {
+  /** Free-text search; venue-required when no category is given. */
+  query?: string
+  category?: string
+  limit?: number
+  cursor?: string
+}
+
+export type PredictionEventsResponse = {
+  market: string
+  events: Array<PredictionEventSummary>
+  cursor?: string
+  ts: number
 }
 
 // ── Instruments index snapshot (App Server → terminal) ────────────────

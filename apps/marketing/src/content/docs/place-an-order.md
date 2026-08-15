@@ -114,6 +114,16 @@ placing one.
 You can also size a market order in dollars instead of shares by switching the
 size field to USD, which is how you buy $500 of a stock trading at $305.
 
+## Event contracts
+
+For a prediction-market outcome the ticket switches to contracts. The question
+replaces the ticker at the top, sizes are whole contracts rather than an amount
+of an asset, prices are typed in cents, and a max loss line above the submit
+button says what the order can cost you. When the question has exactly one other
+side, a switch beside it flips the whole ticket to that outcome. There is no
+Workflow tab, because neither prediction venue has trigger orders, and Kalshi
+offers Limit only. See [prediction markets](/docs/prediction-markets).
+
 ## Watching the order
 
 Add the **Positions** panel and you get three tabs: **Positions** for what you

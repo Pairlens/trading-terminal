@@ -124,6 +124,7 @@ export const zenTradingManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'zen-trading',

@@ -16,18 +16,11 @@ import type {
   HeatmapResponse,
 } from '@pairlens/shared/instrument-types'
 
-import { formatPrice } from '@/lib/format-price'
+import { formatCompactUsd, formatPrice } from '@/lib/format-price'
 import { formatRelativeTime } from '@/lib/format-time'
 import { fetchHeatmapWithFallback } from '@/lib/public-market-data'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { chartLinkProps } from '@/lib/market-ref/link'
-
-const capFormatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  notation: 'compact',
-  maximumFractionDigits: 1,
-})
 
 function formatPercent(value: number): string {
   const sign = value >= 0 ? '+' : ''
@@ -234,13 +227,9 @@ function HeatmapTooltip({
           {formatPercent(item.percentChange24h)}
         </span>
         <span className="text-muted-foreground">{t('topCoins.colMktCap')}</span>
-        <span className="text-right">
-          {capFormatter.format(item.marketCap)}
-        </span>
+        <span className="text-right">{formatCompactUsd(item.marketCap)}</span>
         <span className="text-muted-foreground">{t('heatmap.volume')}</span>
-        <span className="text-right">
-          {capFormatter.format(item.volume24h)}
-        </span>
+        <span className="text-right">{formatCompactUsd(item.volume24h)}</span>
       </div>
     </div>
   )

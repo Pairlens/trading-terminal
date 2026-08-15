@@ -3,7 +3,7 @@ title: Positions and portfolio
 description: The Positions, Portfolio, and Risk panels. Open orders, fill history, balances, allocation, and the guardrail state, read straight from the venue.
 group: traders
 parent: trading
-order: 6
+order: 7
 eyebrow: For traders
 updated: AUG 2026
 readTime: 4 min read
@@ -40,6 +40,10 @@ statement.
 
 If no account is selected, each tab says which one it needs rather than
 rendering blank. Connect one under [Accounts](/docs/connect-an-exchange).
+
+Event contracts get their own panel instead of a tab here, because a contract
+that expires against a real-world outcome needs different columns. See
+[prediction markets](/docs/prediction-markets).
 
 ## Portfolio
 

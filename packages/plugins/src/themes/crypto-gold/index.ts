@@ -138,6 +138,7 @@ export const cryptoGoldManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'crypto-gold',

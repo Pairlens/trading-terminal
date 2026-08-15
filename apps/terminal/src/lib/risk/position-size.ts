@@ -9,6 +9,8 @@
 // tickers, stablecoins = $1). The ratio is currency-invariant, so we compute it
 // in USD regardless of the user's display currency.
 
+import { lookupPredictionOutcome } from '@/stores/prediction-directory-store'
+
 export const USD_PEGGED = new Set([
   'USDT',
   'USDC',
@@ -49,8 +51,24 @@ export function orderNotionalUsd(
   input: OrderNotionalInput,
   priceUsd: Map<string, number>,
 ): number | null {
+  if (!(input.size > 0)) return null
+
+  // Prediction outcomes are not BASE-QUOTE: the pair key is an opaque outcome
+  // id whose dash-split yields garbage "currencies", which made this guard
+  // fail open for every prediction order. The directory pin identifies them,
+  // collateral is USD/USDC ($1), size is a contract count, and a contract
+  // never costs more than $1 — so an unknown price uses $1 as the notional's
+  // upper bound rather than skipping the check.
+  if (lookupPredictionOutcome(input.pair)) {
+    const perContract =
+      input.price != null && input.price > 0 && input.price <= 1
+        ? input.price
+        : 1
+    return input.size * perContract
+  }
+
   const [base, quote] = input.pair.toUpperCase().split('-')
-  if (!base || !quote || !(input.size > 0)) return null
+  if (!base || !quote) return null
 
   const quoteUsd = priceUsdFor(quote, priceUsd)
 

@@ -19,7 +19,7 @@ import type {
   TradeSortColumn,
 } from '@/components/terminal/trade-tape-sort'
 import { useTradesStream } from '@/hooks/use-trades-stream'
-import { formatBookPrice } from '@/lib/format-price'
+import { formatBookPrice, formatPredictionBookPrice } from '@/lib/format-price'
 import {
   computeMagnitudeReference,
   intensityFromStep,
@@ -38,6 +38,7 @@ import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
 import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
 import { usePaneVenue } from '@/hooks/use-pane-venue'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
 import { usePairUnavailable } from '@/stores/pair-availability-store'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 
@@ -163,10 +164,12 @@ const TradeRow = memo(
     trade,
     intensityStep,
     sideLabels,
+    predictionPrices,
   }: {
     trade: Trade
     intensityStep: number
     sideLabels: SideLabels
+    predictionPrices: boolean
   }) {
     const direction = trade.side === 'buy' ? 'up' : 'down'
     const intensity = intensityFromStep(intensityStep)
@@ -194,7 +197,9 @@ const TradeRow = memo(
             trade.side === 'buy' ? 'text-up' : 'text-down',
           )}
         >
-          {formatBookPrice(trade.price)}
+          {predictionPrices
+            ? formatPredictionBookPrice(trade.price)
+            : formatBookPrice(trade.price)}
         </span>
         <span
           className="relative z-10 text-right"
@@ -228,6 +233,7 @@ const TradeRow = memo(
   (prev, next) =>
     prev.trade.id === next.trade.id &&
     prev.intensityStep === next.intensityStep &&
+    prev.predictionPrices === next.predictionPrices &&
     prev.sideLabels === next.sideLabels,
 )
 
@@ -298,6 +304,7 @@ function TradesPaneInner({
   const { trades, status } = useTradesStream({ market, pairKey })
 
   const venue = usePaneVenue(market)
+  const predictionPrices = useIsPredictionPair(pairKey, market)
   const unavailable = usePairUnavailable(market, pairKey)
   const credentialGate = useMarketCredentialGate(market)
 
@@ -465,6 +472,7 @@ function TradesPaneInner({
                   trade.size,
                   sizeReference,
                 )}
+                predictionPrices={predictionPrices}
                 sideLabels={sideLabels}
               />
             )

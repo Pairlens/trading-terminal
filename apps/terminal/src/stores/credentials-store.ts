@@ -194,6 +194,18 @@ export const CREDENTIAL_SCHEMAS: Record<
     ],
     modes: ['live'],
   },
+  // Kalshi is an exchange, not a broker, so it takes the default 'exchange'
+  // copy. The PEM rides in `apiSecret` — the same slot Coinbase's does, which
+  // is what lets the wizard describe it without a new field type. Paper signs
+  // against the venue's own demo endpoint set, not a simulation.
+  kalshi: {
+    label: 'Kalshi',
+    fields: [
+      { key: 'apiKey', label: 'API Key ID', required: true },
+      { key: 'apiSecret', label: 'RSA Private Key (PEM)', required: true },
+    ],
+    modes: ['paper', 'live'],
+  },
   alpaca: {
     label: 'Alpaca',
     kind: 'broker',

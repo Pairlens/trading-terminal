@@ -4,6 +4,10 @@ export {
   pairlensCoreManifest,
   createPairlensCorePlugin,
 } from './pairlens-core/index.ts'
+export {
+  pairlensPredictionsManifest,
+  createPairlensPredictionsPlugin,
+} from './pairlens-predictions/index.ts'
 // Every CEX venue is served by the CCXT bridge (packages/plugins/src/
 // ccxt-connector). Same plugin ids, same manifests, same exported triple as the
 // hand-written connectors these replaced, so a saved workspace and a
@@ -83,6 +87,20 @@ export {
   createAlpacaMarketConnectorPlugin,
   ALPACA_ADAPTER_INFO,
 } from './alpaca-market-connector/index.ts'
+// Prediction venues ride a parallel runtime (packages/plugins/src/
+// prediction-connector): ccxt's PredictionExchange is outcome-addressed and
+// its market rows carry no symbol at all, which the spot bridge's markets
+// pipeline, parser and order builder are all written against.
+export {
+  kalshiMarketConnectorManifest,
+  createKalshiMarketConnectorPlugin,
+  KALSHI_ADAPTER_INFO,
+} from './prediction-connector/venues/kalshi.ts'
+export {
+  polymarketMarketConnectorManifest,
+  createPolymarketMarketConnectorPlugin,
+  POLYMARKET_ADAPTER_INFO,
+} from './prediction-connector/venues/polymarket.ts'
 export {
   groqInferenceManifest,
   createGroqInferencePlugin,

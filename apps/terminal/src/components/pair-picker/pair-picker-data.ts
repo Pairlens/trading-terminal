@@ -11,13 +11,15 @@ import {
   Server,
   Star,
   TrendingUp,
+  Vote,
 } from 'lucide-react'
 import { registerToken } from '@pairlens/market-engine/token-directory'
 import type { LucideIcon } from 'lucide-react'
 
 import type { Instrument } from '@pairlens/shared/instrument-types'
+import { registerPredictionOutcome } from '@/stores/prediction-directory-store'
 
-export type AssetClassFilter = 'all' | 'crypto' | 'stocks'
+export type AssetClassFilter = 'all' | 'crypto' | 'stocks' | 'prediction'
 
 export interface AssetClassTab {
   id: AssetClassFilter
@@ -25,10 +27,14 @@ export interface AssetClassTab {
   icon: LucideIcon
 }
 
+// The id IS the instrument `assetClass` the discovery filter is called with
+// (except 'all'), so 'prediction' is singular even though the tab reads
+// "Predictions" — a plural id would filter for a class no instrument carries.
 export const ASSET_CLASSES: Array<AssetClassTab> = [
   { id: 'all', label: 'All', icon: LayoutGrid },
   { id: 'crypto', label: 'Crypto', icon: Bitcoin },
   { id: 'stocks', label: 'Stocks', icon: TrendingUp },
+  { id: 'prediction', label: 'Predictions', icon: Vote },
 ]
 
 export type PairCategory =
@@ -66,6 +72,19 @@ export interface PairEntry {
   chain?: string
   address?: string
   decimals?: number
+  /**
+   * Prediction-arm identity (kind === 'prediction' rows only). An outcome is
+   * `venue + marketId + outcome`, none of which the pair key carries, so
+   * selection pins exactly this triple into the prediction directory before
+   * navigating — same see-what-you-trade rule as the token arm.
+   */
+  predictionMarketId?: string
+  outcome?: string
+  eventId?: string
+  eventTitle?: string
+  endMs?: number
+  /** Venue the outcome lives on. Prediction rows only; keys are per-venue. */
+  market?: string
 }
 
 export interface CategoryTab {
@@ -130,21 +149,74 @@ export function instrumentToPairEntry(inst: Instrument): PairEntry {
     ...(inst.kind === 'token'
       ? { chain: inst.chain, address: inst.address, decimals: inst.decimals }
       : {}),
+    ...(inst.kind === 'prediction'
+      ? {
+          predictionMarketId: inst.predictionMarketId,
+          outcome: inst.outcome,
+          market: inst.market,
+          ...(inst.eventId ? { eventId: inst.eventId } : {}),
+          ...(inst.eventTitle ? { eventTitle: inst.eventTitle } : {}),
+          ...(typeof inst.endMs === 'number' ? { endMs: inst.endMs } : {}),
+        }
+      : {}),
   }
 }
 
+/** True for rows that name a prediction-market outcome. */
+export function isPredictionEntry(entry: PairEntry): boolean {
+  return Boolean(entry.predictionMarketId && entry.outcome)
+}
+
 /**
- * Pin a selected token row's exact chain+address into the token directory,
- * so downstream resolution (pool lookups, swaps) uses what the user SAW,
- * never a fresh symbol match. No-op for non-token rows.
+ * The question alone, without the outcome the connector appends to `name`.
+ *
+ * Connectors build `name` as `"<question> - <outcome>"` because a categorical
+ * market's rows would otherwise all read identically. A row that shows both
+ * lines separately has to undo exactly that join, and only that one — a name
+ * that does not end in its own outcome is left alone rather than trimmed on a
+ * guess.
+ */
+export function predictionQuestionOf(entry: {
+  name: string
+  outcome?: string
+}): string {
+  const suffix = ` - ${entry.outcome}`
+  return entry.outcome && entry.name.endsWith(suffix)
+    ? entry.name.slice(0, -suffix.length)
+    : entry.name
+}
+
+/**
+ * Pin a selected row's exact identity before navigation, so downstream
+ * resolution uses what the user SAW rather than a fresh symbol match.
+ *
+ * Two arms, one rule: a token pins chain+address into the token directory
+ * (pool lookups, swaps), a prediction outcome pins venue+market+outcome and
+ * its question into the prediction directory (watchlist and recents display,
+ * ticket labelling). Every other row kind is a no-op.
  */
 export function pinSelectedEntry(entry: PairEntry): void {
-  if (!entry.chain || !entry.address) return
-  registerToken({
-    network: entry.chain,
-    symbol: entry.base,
-    address: entry.address,
-    ...(typeof entry.decimals === 'number' ? { decimals: entry.decimals } : {}),
-    name: entry.name,
-  })
+  if (entry.chain && entry.address) {
+    registerToken({
+      network: entry.chain,
+      symbol: entry.base,
+      address: entry.address,
+      ...(typeof entry.decimals === 'number'
+        ? { decimals: entry.decimals }
+        : {}),
+      name: entry.name,
+    })
+    return
+  }
+  if (entry.predictionMarketId && entry.outcome && entry.market) {
+    registerPredictionOutcome(entry.symbol, {
+      market: entry.market,
+      predictionMarketId: entry.predictionMarketId,
+      outcome: entry.outcome,
+      name: entry.name,
+      ...(entry.eventTitle ? { eventTitle: entry.eventTitle } : {}),
+      ...(entry.eventId ? { eventId: entry.eventId } : {}),
+      ...(typeof entry.endMs === 'number' ? { endMs: entry.endMs } : {}),
+    })
+  }
 }

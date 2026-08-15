@@ -1224,6 +1224,28 @@
     "restartNow": "Restart now",
     "later": "Later"
   },
+  "assistant": {
+    "title": "AI assistant",
+    "buildWithAi": "Build with AI",
+    "placeholder": "Describe what to build...",
+    "close": "Close assistant",
+    "clearChat": "Clear conversation",
+    "emptyTitle": "What should we build?",
+    "emptyHintIndicators": "Describe an indicator or a strategy and the assistant writes it into the editor, validates it, and runs the preview.",
+    "emptyHintBots": "Ask it to deploy a strategy as a paper bot, tune params, or set risk guards. Arming a bot stays in your hands.",
+    "genericError": "The assistant hit an error — try sending that again.",
+    "authRequiredTitle": "Build with AI",
+    "authRequiredDescription": "Describe an indicator, a strategy, or a bot in plain words — the assistant writes the Python, validates it, and backtests it with you.",
+    "upgradeRequiredDescription": "The builder assistant writes indicators, strategies and bots with you. Subscribe to Pairlens Intelligence, or connect your own AI key — free.",
+    "unavailableTitle": "Assistant unavailable",
+    "unavailableDescription": "Enable an AI provider on the Plugins page to build indicators, strategies and bots by chat.",
+    "quickNewIndicator": "Build an RSI divergence indicator",
+    "quickNewStrategy": "Write a breakout strategy I can backtest",
+    "quickImprove": "Review this script and suggest improvements",
+    "quickCreateBot": "Deploy one of my strategies as a paper bot",
+    "quickGuards": "Suggest risk guards for one of my bots",
+    "quickReview": "How are my bots performing?"
+  },
   "copilot": {
     "aiLens": "AI Lens",
     "thinking": "Thinking...",
@@ -2164,7 +2186,9 @@
     "web": "Web Panel",
     "liquidityHeatmap": "Liquidity Heatmap",
     "recentTickers": "Recent Tickers",
-    "empty": "Empty"
+    "empty": "Empty",
+    "events": "Events",
+    "predictionPositions": "Prediction Positions"
   },
   "paneDescriptions": {
     "markets": "Browse all available trading pairs across exchanges",
@@ -2190,7 +2214,9 @@
     "symbolNews": "News and sentiment analysis for the active trading pair",
     "web": "Embed any website as a panel in your workspace",
     "liquidityHeatmap": "Orderbook liquidity heatmap showing depth across price levels over time",
-    "recentTickers": "Recently viewed pairs with live prices for quick switching"
+    "recentTickers": "Recently viewed pairs with live prices for quick switching",
+    "events": "Browse prediction-market events and open an outcome's chart",
+    "predictionPositions": "Contracts you hold, their cost and when they resolve"
   },
   "multiPrice": {
     "venue": "Venue",
@@ -2262,7 +2288,11 @@
     "paneUnavailable": {
       "title": "{{pair}} isn’t available on {{venue}}",
       "titleAnyVenue": "{{pair}} isn’t available",
-      "description": "This connector returned no market data for this pair. Try another connector that lists it."
+      "description": "This connector returned no market data for this pair. Try another connector that lists it.",
+      "predictionDescription": "An event outcome trades on one venue only, so there is nowhere else to try. The venue may simply have refused a single request.",
+      "retry": "Try again",
+      "desktopOnlyTitle": "This venue needs the desktop app",
+      "desktopOnlyDescription": "Its API refuses browser origins, so market data for this pair is only reachable from the desktop build."
     },
     "paneCredentials": {
       "sealedTitle": "Unlock to load {{venue}} data",
@@ -2471,9 +2501,7 @@
     "needsFullTrustToRun": "Needs full trust to run",
     "pendingTrustDescription": "Contributes UI and can't run in the sandbox — grant full trust to enable it, or uninstall it.",
     "remove": "Remove",
-    "groupCore": "Core",
     "groupProvidersExtensions": "Providers & Extensions",
-    "groupThemes": "Themes",
     "removePluginTitle": "Remove Plugin",
     "removePluginDescription": "This will deactivate and remove the plugin. Any panels it contributed will show a recovery placeholder. You can reinstall it from the Plugin Store at any time.",
     "resetDefaultsTitle": "Reset to Defaults",
@@ -2766,8 +2794,56 @@
       "polygon-dex-connector": {
         "title": "Polygon DEX Connector",
         "description": "On-chain Polygon swaps — best price routing across all Polygon DEXs via the KyberSwap aggregator"
+      },
+      "kalshi-market-connector": {
+        "title": "Kalshi Market Connector",
+        "description": "Event contracts on Kalshi, the CFTC-regulated prediction exchange — trade outcomes, not assets"
+      },
+      "polymarket-market-connector": {
+        "title": "Polymarket Market Connector",
+        "description": "Event contracts on the Polymarket CLOB — wallet-signed orders, settled in USDC"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens Predictions",
+        "description": "Event browser and open contract positions for prediction markets"
       }
-    }
+    },
+    "families": {
+      "core": {
+        "label": "Core",
+        "description": "The terminal itself: charts, order book, trade entry, and workspace tools."
+      },
+      "intelligence": {
+        "label": "Intelligence",
+        "description": "Hosted AI, instrument discovery, news, and market intelligence."
+      },
+      "cexSpot": {
+        "label": "Crypto Exchanges",
+        "description": "Centralized spot venues for crypto market data and trading."
+      },
+      "dex": {
+        "label": "On-Chain DEX",
+        "description": "On-chain swap venues and DEX market data providers."
+      },
+      "equities": {
+        "label": "Equities",
+        "description": "Stock broker connections for equities data and trading."
+      },
+      "predictions": {
+        "label": "Prediction Markets",
+        "description": "Event contract venues for trading real-world outcomes."
+      },
+      "aiByok": {
+        "label": "AI Providers",
+        "description": "Bring-your-own-key language models and web search."
+      },
+      "themes": {
+        "label": "Themes",
+        "description": "Visual themes for the interface and chart palette."
+      }
+    },
+    "familyToggleAria": "Enable or disable all {{family}} plugins",
+    "familyToggleFailed": "Some {{family}} plugins could not be changed"
   },
   "search": {
     "placeholder": "Search anything...",
@@ -2877,7 +2953,14 @@
       "available": "Avail: {{amount}}",
       "slippage": "Slippage",
       "extendedHours": "Extended hours",
-      "extendedHoursHint": "Fill in the pre-market and after-hours sessions. Thinner book, wider spreads."
+      "extendedHoursHint": "Fill in the pre-market and after-hours sessions. Thinner book, wider spreads.",
+      "contracts": "Contracts",
+      "maxLoss": "Max loss",
+      "priceCents": "Price (¢)",
+      "thisOutcome": "This outcome",
+      "decreaseContracts": "One contract fewer",
+      "increaseContracts": "One contract more",
+      "priceCentsRange": "Enter a price between 0¢ and 100¢"
     },
     "status": {
       "connecting": "Connecting…",
@@ -3924,7 +4007,11 @@
     "hoursAgo": "{{n}}h ago",
     "daysAgo": "{{n}}d ago",
     "today": "Today",
-    "yesterday": "Yesterday"
+    "yesterday": "Yesterday",
+    "closed": "closed",
+    "inMinutes": "in {{n}}m",
+    "inHours": "in {{n}}h",
+    "inDays": "in {{n}}d"
   },
   "markets": {
     "title": "Markets",
@@ -3946,7 +4033,8 @@
     "assetClass": {
       "all": "All",
       "crypto": "Crypto",
-      "stocks": "Stocks"
+      "stocks": "Stocks",
+      "prediction": "Predictions"
     },
     "category": {
       "all": "All",
@@ -3957,7 +4045,9 @@
       "ai": "AI",
       "gaming": "Gaming",
       "infrastructure": "Infra"
-    }
+    },
+    "predictionsEmptyTitle": "Prediction outcomes live in the Events panel",
+    "predictionsEmptyBody": "Outcomes are listed and resolved daily, so they are browsed from the venue's own board rather than a catalog."
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -4609,6 +4699,14 @@
       "symbol-logo": {
         "label": "Symbol Logo",
         "description": "Logo/icon images for trading symbols"
+      },
+      "trades": {
+        "label": "Trades",
+        "description": "Live time-and-sales trade tape streams"
+      },
+      "events": {
+        "label": "Events",
+        "description": "Browse prediction-market events and their outcomes"
       }
     },
     "domains": {
@@ -4638,6 +4736,10 @@
       "balances": {
         "label": "Balances",
         "description": "Fetch account asset balances from the connected exchange"
+      },
+      "positions": {
+        "label": "Positions",
+        "description": "Read open positions and settlements from the connected venue"
       }
     },
     "workflow": {
@@ -4699,6 +4801,14 @@
     "themes": {
       "label": "Themes",
       "description": "Visual themes that override colors, chart palette, and UI styling"
+    },
+    "predictions": {
+      "label": "Prediction Markets",
+      "description": "Event contract venues for trading real-world outcomes"
+    },
+    "dex": {
+      "label": "On-Chain DEX",
+      "description": "On-chain swap venues and DEX market data providers"
     }
   },
   "mobile": {
@@ -4838,7 +4948,6 @@
       "textLabel": "Label text",
       "textPlaceholder": "Add a label"
     },
-    "copilot": {},
     "settings": {
       "accountsHeader": "Accounts & connections",
       "accountHeader": "Account",
@@ -4925,7 +5034,41 @@
       "notListedCallout": "{{pair}} is not listed on {{venue}}. Picking it will switch the focused venue to {{other}}.",
       "availableVenues": "Available",
       "desktopOnlyVenues": "Needs the desktop app",
-      "desktopOnlyVenue": "Desktop only"
+      "desktopOnlyVenue": "Desktop only",
+      "predictions": "predictions",
+      "filterPredictions": "Predictions"
     }
+  },
+  "events": {
+    "searchPlaceholder": "Search events and questions",
+    "allCategories": "All",
+    "loading": "Loading events…",
+    "failed": "Could not load events",
+    "tryLater": "The venue did not answer. Try again in a moment.",
+    "emptyTitle": "No open events",
+    "emptyBody": "This venue is not listing anything right now.",
+    "noMatchesTitle": "No events match",
+    "noMatchesBody": "Try a shorter question or a different category.",
+    "noVenuesTitle": "No prediction venue connected",
+    "noVenuesBody": "Install Kalshi or Polymarket from the Plugin Store to browse event contracts.",
+    "desktopOnlyTitle": "Events need the desktop app",
+    "desktopOnlyDescription": "This venue's API refuses browser origins, so its event board is only reachable from the desktop build.",
+    "venueDesktopOnly": "{{venue}} events need the desktop app.",
+    "volume": "Vol {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "Connect an account",
+    "noAccountsTitle": "No prediction account connected",
+    "noAccountsBody": "Add Kalshi API keys or a Polygon wallet to see the contracts you hold.",
+    "loading": "Loading positions…",
+    "emptyTitle": "No open contracts",
+    "emptyBody": "Positions appear here as soon as an order fills.",
+    "colMarket": "Market",
+    "colOutcome": "Outcome",
+    "colContracts": "Contracts",
+    "colAvgPrice": "Avg",
+    "colCost": "Cost",
+    "colResolves": "Resolves",
+    "resolved": "Resolved"
   }
 }

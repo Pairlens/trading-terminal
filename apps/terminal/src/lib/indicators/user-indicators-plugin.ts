@@ -29,6 +29,7 @@ export const userIndicatorsManifest: PluginManifest = {
   description:
     'Your custom Python indicators, created in the Indicators editor.',
   icon: 'SquareFunction',
+  metadata: { family: 'core' },
   capabilities: [
     {
       id: 'chart:indicator',

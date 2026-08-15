@@ -1232,6 +1232,28 @@
     "pluginUpdatesReady_few": "{{count}} aktualizacje wtyczek gotowe do instalacji",
     "pluginUpdatesReady_many": "{{count}} aktualizacji wtyczek gotowych do instalacji"
   },
+  "assistant": {
+    "title": "Asystent AI",
+    "buildWithAi": "Buduj z AI",
+    "placeholder": "Opisz, co zbudować...",
+    "close": "Zamknij asystenta",
+    "clearChat": "Wyczyść rozmowę",
+    "emptyTitle": "Co budujemy?",
+    "emptyHintIndicators": "Opisz wskaźnik albo strategię — asystent zapisze je w edytorze, zweryfikuje i uruchomi podgląd.",
+    "emptyHintBots": "Poproś go o wdrożenie strategii jako bota na papierze, dostrojenie parametrów albo ustawienie guardów ryzyka. Uzbrojenie bota zostaje w twoich rękach.",
+    "genericError": "Asystent napotkał błąd — spróbuj wysłać wiadomość ponownie.",
+    "authRequiredTitle": "Buduj z AI",
+    "authRequiredDescription": "Opisz wskaźnik, strategię albo bota zwykłymi słowami — asystent napisze Pythona, zweryfikuje go i zrobi z tobą backtest.",
+    "upgradeRequiredDescription": "Asystent-budowniczy pisze z tobą wskaźniki, strategie i boty. Zasubskrybuj Pairlens Intelligence lub podłącz własny klucz AI — za darmo.",
+    "unavailableTitle": "Asystent niedostępny",
+    "unavailableDescription": "Włącz dostawcę AI na stronie Plugins, aby budować wskaźniki, strategie i boty przez czat.",
+    "quickNewIndicator": "Zbuduj wskaźnik dywergencji RSI",
+    "quickNewStrategy": "Napisz strategię wybicia, dla której mogę zrobić backtest",
+    "quickImprove": "Przejrzyj ten skrypt i zaproponuj ulepszenia",
+    "quickCreateBot": "Wdróż jedną z moich strategii jako bota na papierze",
+    "quickGuards": "Zaproponuj guardy ryzyka dla jednego z moich botów",
+    "quickReview": "Jak radzą sobie moje boty?"
+  },
   "copilot": {
     "aiLens": "AI Lens",
     "thinking": "Myślę...",
@@ -2186,7 +2208,9 @@
     "web": "Panel WWW",
     "liquidityHeatmap": "Mapa cieplna płynności",
     "recentTickers": "Ostatnie tickery",
-    "empty": "Puste"
+    "empty": "Puste",
+    "events": "Wydarzenia",
+    "predictionPositions": "Pozycje prognoz"
   },
   "paneDescriptions": {
     "markets": "Przeglądaj wszystkie dostępne pary handlowe na giełdach",
@@ -2212,7 +2236,9 @@
     "symbolNews": "Wiadomości i analiza nastrojów dla aktywnej pary handlowej",
     "web": "Osadź dowolną stronę jako panel w obszarze roboczym",
     "liquidityHeatmap": "Mapa cieplna płynności arkusza zleceń pokazująca głębokość na poziomach cenowych w czasie",
-    "recentTickers": "Ostatnio przeglądane pary z cenami na żywo do szybkiego przełączania"
+    "recentTickers": "Ostatnio przeglądane pary z cenami na żywo do szybkiego przełączania",
+    "events": "Przeglądaj wydarzenia rynków prognoz i otwieraj wykres wyniku",
+    "predictionPositions": "Kontrakty, które posiadasz, ich koszt i termin rozliczenia"
   },
   "multiPrice": {
     "venue": "Giełda",
@@ -2284,7 +2310,11 @@
     "paneUnavailable": {
       "title": "{{pair}} nie jest dostępna na {{venue}}",
       "titleAnyVenue": "{{pair}} nie jest dostępna",
-      "description": "Ten konektor nie zwrócił danych rynkowych dla tej pary. Spróbuj innego, który ją notuje."
+      "description": "Ten konektor nie zwrócił danych rynkowych dla tej pary. Spróbuj innego, który ją notuje.",
+      "predictionDescription": "Wynik wydarzenia jest notowany tylko na jednej giełdzie, więc nie ma gdzie indziej próbować. Możliwe, że giełda odrzuciła tylko jedno żądanie.",
+      "retry": "Spróbuj ponownie",
+      "desktopOnlyTitle": "Ta giełda wymaga aplikacji desktopowej",
+      "desktopOnlyDescription": "Jej API odrzuca żądania z przeglądarki, więc dane rynkowe tej pary są dostępne tylko w wersji desktopowej."
     },
     "paneCredentials": {
       "sealedTitle": "Odblokuj, aby wczytać dane {{venue}}",
@@ -2493,9 +2523,7 @@
     "needsFullTrustToRun": "Wymaga pełnego zaufania, aby działać",
     "pendingTrustDescription": "Dostarcza interfejs i nie może działać w piaskownicy — przyznaj pełne zaufanie, aby go włączyć, albo go odinstaluj.",
     "remove": "Usuń",
-    "groupCore": "Podstawowe",
     "groupProvidersExtensions": "Dostawcy i rozszerzenia",
-    "groupThemes": "Motywy",
     "removePluginTitle": "Usuń wtyczkę",
     "removePluginDescription": "To wyłączy i usunie wtyczkę. Wszelkie panele, które dostarczała, pokażą zastępczy element odzyskiwania. Możesz ją ponownie zainstalować ze Sklepu z wtyczkami w każdej chwili.",
     "resetDefaultsTitle": "Przywróć ustawienia domyślne",
@@ -2792,8 +2820,56 @@
       "polygon-dex-connector": {
         "title": "Polygon Konektor DEX",
         "description": "Swapy on-chain w sieci Polygon — routing po najlepszej cenie na wszystkich DEX-ach Polygon przez agregator KyberSwap"
+      },
+      "kalshi-market-connector": {
+        "title": "Konektor rynku Kalshi",
+        "description": "Kontrakty na zdarzenia na Kalshi, giełdzie prognoz regulowanej przez CFTC — handluj wynikami, nie aktywami"
+      },
+      "polymarket-market-connector": {
+        "title": "Konektor rynku Polymarket",
+        "description": "Kontrakty na zdarzenia na CLOB Polymarket — zlecenia podpisywane portfelem, rozliczane w USDC"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens Prognozy",
+        "description": "Przeglądarka wydarzeń i otwarte pozycje kontraktowe na rynkach prognoz"
       }
-    }
+    },
+    "families": {
+      "core": {
+        "label": "Podstawowe",
+        "description": "Sam terminal: wykresy, arkusz zleceń, składanie zleceń i narzędzia obszaru roboczego."
+      },
+      "intelligence": {
+        "label": "Analityka",
+        "description": "AI w chmurze, wyszukiwanie instrumentów, wiadomości i analityka rynku."
+      },
+      "cexSpot": {
+        "label": "Giełdy krypto",
+        "description": "Scentralizowane giełdy spot dla danych rynkowych i handlu kryptowalutami."
+      },
+      "dex": {
+        "label": "DEX on-chain",
+        "description": "Giełdy swapów on-chain i dostawcy danych DEX."
+      },
+      "equities": {
+        "label": "Akcje",
+        "description": "Połączenia z brokerami dla danych i handlu akcjami."
+      },
+      "predictions": {
+        "label": "Rynki predykcyjne",
+        "description": "Giełdy kontraktów na zdarzenia do handlu rzeczywistymi wynikami."
+      },
+      "aiByok": {
+        "label": "Dostawcy AI",
+        "description": "Modele językowe i wyszukiwanie w sieci z własnym kluczem."
+      },
+      "themes": {
+        "label": "Motywy",
+        "description": "Motywy wizualne interfejsu i palety wykresu."
+      }
+    },
+    "familyToggleAria": "Włącz lub wyłącz wszystkie wtyczki {{family}}",
+    "familyToggleFailed": "Nie udało się zmienić niektórych wtyczek {{family}}"
   },
   "search": {
     "placeholder": "Szukaj czegokolwiek...",
@@ -2903,7 +2979,14 @@
       "available": "Dostępne: {{amount}}",
       "slippage": "Poślizg cenowy",
       "extendedHours": "Handel poza sesją",
-      "extendedHoursHint": "Realizacja na sesjach przed otwarciem i po zamknięciu. Cieńszy arkusz, szersze spready."
+      "extendedHoursHint": "Realizacja na sesjach przed otwarciem i po zamknięciu. Cieńszy arkusz, szersze spready.",
+      "contracts": "Kontrakty",
+      "maxLoss": "Maks. strata",
+      "priceCents": "Cena (¢)",
+      "thisOutcome": "Ten wynik",
+      "decreaseContracts": "Jeden kontrakt mniej",
+      "increaseContracts": "Jeden kontrakt więcej",
+      "priceCentsRange": "Podaj cenę między 0¢ a 100¢"
     },
     "status": {
       "connecting": "Łączenie…",
@@ -3956,7 +4039,11 @@
     "hoursAgo": "{{n}} godz. temu",
     "daysAgo": "{{n}} dni temu",
     "today": "Dzisiaj",
-    "yesterday": "Wczoraj"
+    "yesterday": "Wczoraj",
+    "closed": "zamknięte",
+    "inMinutes": "za {{n}} min",
+    "inHours": "za {{n}} godz",
+    "inDays": "za {{n}} dni"
   },
   "markets": {
     "title": "Rynki",
@@ -3980,7 +4067,8 @@
     "assetClass": {
       "all": "Wszystkie",
       "crypto": "Krypto",
-      "stocks": "Akcje"
+      "stocks": "Akcje",
+      "prediction": "Prognozy"
     },
     "category": {
       "all": "Wszystkie",
@@ -3991,7 +4079,9 @@
       "ai": "AI",
       "gaming": "Gaming",
       "infrastructure": "Infra"
-    }
+    },
+    "predictionsEmptyTitle": "Wyniki prognoz znajdziesz w panelu Wydarzenia",
+    "predictionsEmptyBody": "Wyniki są notowane i rozliczane codziennie, więc przegląda się je na tablicy samej giełdy, a nie w katalogu."
   },
   "fearGreed": {
     "title": "Strach i chciwość",
@@ -4645,6 +4735,14 @@
       "symbol-logo": {
         "label": "Logo symbolu",
         "description": "Obrazy logo/ikony dla symboli handlowych"
+      },
+      "trades": {
+        "label": "Transakcje",
+        "description": "Strumienie taśmy transakcji na żywo"
+      },
+      "events": {
+        "label": "Zdarzenia",
+        "description": "Przeglądaj zdarzenia rynków predykcyjnych i ich wyniki"
       }
     },
     "domains": {
@@ -4674,6 +4772,10 @@
       "balances": {
         "label": "Salda",
         "description": "Pobiera salda aktywów konta z podłączonej giełdy"
+      },
+      "positions": {
+        "label": "Pozycje",
+        "description": "Odczyt otwartych pozycji i rozliczeń z podłączonej giełdy"
       }
     },
     "workflow": {
@@ -4735,6 +4837,14 @@
     "themes": {
       "label": "Motywy",
       "description": "Motywy wizualne, które nadpisują kolory, paletę wykresu i styl interfejsu"
+    },
+    "predictions": {
+      "label": "Rynki predykcyjne",
+      "description": "Giełdy kontraktów na zdarzenia do handlu rzeczywistymi wynikami"
+    },
+    "dex": {
+      "label": "DEX on-chain",
+      "description": "Giełdy swapów on-chain i dostawcy danych DEX"
     }
   },
   "mobile": {
@@ -4882,7 +4992,6 @@
       "textLabel": "Tekst etykiety",
       "textPlaceholder": "Dodaj etykietę"
     },
-    "copilot": {},
     "settings": {
       "accountsHeader": "Konta i połączenia",
       "terminalHeader": "Terminal",
@@ -4969,7 +5078,41 @@
       "notListedCallout": "{{pair}} nie jest notowana na {{venue}}. Wybranie jej przełączy aktywną giełdę na {{other}}.",
       "availableVenues": "Dostępne",
       "desktopOnlyVenues": "Wymaga aplikacji na komputer",
-      "desktopOnlyVenue": "Tylko desktop"
+      "desktopOnlyVenue": "Tylko desktop",
+      "predictions": "prognozy",
+      "filterPredictions": "Prognozy"
     }
+  },
+  "events": {
+    "searchPlaceholder": "Szukaj wydarzeń i pytań",
+    "allCategories": "Wszystkie",
+    "loading": "Ładowanie wydarzeń…",
+    "failed": "Nie udało się załadować wydarzeń",
+    "tryLater": "Giełda nie odpowiedziała. Spróbuj ponownie za chwilę.",
+    "emptyTitle": "Brak otwartych wydarzeń",
+    "emptyBody": "Ta giełda nic teraz nie notuje.",
+    "noMatchesTitle": "Brak pasujących wydarzeń",
+    "noMatchesBody": "Spróbuj krótszego pytania lub innej kategorii.",
+    "noVenuesTitle": "Brak podłączonej giełdy prognoz",
+    "noVenuesBody": "Zainstaluj Kalshi lub Polymarket ze sklepu wtyczek, aby przeglądać kontrakty na wydarzenia.",
+    "desktopOnlyTitle": "Wydarzenia wymagają aplikacji desktopowej",
+    "desktopOnlyDescription": "API tej giełdy odrzuca żądania z przeglądarki, więc jej tablica wydarzeń jest dostępna tylko w wersji desktopowej.",
+    "venueDesktopOnly": "Wydarzenia {{venue}} wymagają aplikacji desktopowej.",
+    "volume": "Wol. {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "Podłącz konto",
+    "noAccountsTitle": "Brak podłączonego konta prognoz",
+    "noAccountsBody": "Dodaj klucze API Kalshi lub portfel Polygon, aby zobaczyć swoje kontrakty.",
+    "loading": "Ładowanie pozycji…",
+    "emptyTitle": "Brak otwartych kontraktów",
+    "emptyBody": "Pozycje pojawią się tutaj zaraz po realizacji zlecenia.",
+    "colMarket": "Rynek",
+    "colOutcome": "Wynik",
+    "colContracts": "Kontrakty",
+    "colAvgPrice": "Śr.",
+    "colCost": "Koszt",
+    "colResolves": "Rozliczenie",
+    "resolved": "Rozliczone"
   }
 }

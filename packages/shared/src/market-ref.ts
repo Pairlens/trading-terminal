@@ -304,11 +304,17 @@ export function toInstrumentRef(inst: {
       }
     }
     case 'prediction':
-      if (!inst.predictionMarketId || !inst.outcome) return null
+      // Venue-bound like a token, but keyed by the CONNECTOR's own pair key
+      // rather than by `marketId + outcome`. Those two are the catalog's
+      // identity for dedupe; the id here is what gets handed to a subscribe,
+      // and prediction keys are already scoped per venue. Requiring the
+      // triple is still right for `instrumentIdentityKey`, which is asking a
+      // different question.
+      if (!inst.market || !inst.symbol) return null
       return {
         cls,
         market: inst.market.toLowerCase(),
-        id: `${inst.predictionMarketId}~${inst.outcome}`,
+        id: normalizeInstrumentId(cls, inst.symbol),
       }
     case 'perp':
       // ccxt's unified scheme distinguishes the linear perp from spot by its

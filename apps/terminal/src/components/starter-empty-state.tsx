@@ -79,6 +79,9 @@ type StarterEmptyStateProps = {
   secondaryLabel?: string
   secondaryTemplates?: Array<StarterTemplate>
   onPickSecondary?: (template: StarterTemplate) => void
+  /** Optional extra control beside the blank-slate button — a surface's
+   * second way in (the workbench renders its "Build with AI" here). */
+  extraAction?: React.ReactNode
 }
 
 export function StarterEmptyState({
@@ -96,6 +99,7 @@ export function StarterEmptyState({
   secondaryLabel,
   secondaryTemplates,
   onPickSecondary,
+  extraAction,
 }: StarterEmptyStateProps) {
   const { t } = useTranslation()
   const shelfHeading = shelfLabel ?? t('common.startFromTemplate')
@@ -202,15 +206,18 @@ export function StarterEmptyState({
             {/* The escape hatch has to survive sitting under a wall of
                 template cards — outline chrome and an icon, not a ghost
                 label that reads as a caption. */}
-            <Button
-              variant="outline"
-              className="mt-1 gap-1.5"
-              disabled={pendingId !== null}
-              onClick={onCreateBlank}
-            >
-              <Plus className="size-4" />
-              {blankLabel}
-            </Button>
+            <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
+              <Button
+                variant="outline"
+                className="gap-1.5"
+                disabled={pendingId !== null}
+                onClick={onCreateBlank}
+              >
+                <Plus className="size-4" />
+                {blankLabel}
+              </Button>
+              {extraAction}
+            </div>
 
             {footnote && (
               <p className="max-w-[60ch] text-center text-[11px] leading-relaxed text-muted-foreground">

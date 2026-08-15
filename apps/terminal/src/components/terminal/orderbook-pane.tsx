@@ -14,7 +14,7 @@ import {
   useOptionalChartConfig,
   useOptionalOrderbookData,
 } from '@/lib/chart-terminal-context'
-import { formatBookPrice } from '@/lib/format-price'
+import { formatBookPrice, formatPredictionBookPrice } from '@/lib/format-price'
 import {
   computeMagnitudeReference,
   magnitudeFillColor,
@@ -27,6 +27,7 @@ import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
 import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
 import { usePaneVenue } from '@/hooks/use-pane-venue'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
 import { useSwitchTransition } from '@/hooks/use-switch-transition'
 import { usePairUnavailable } from '@/stores/pair-availability-store'
 // Market data now comes through plugin-based connectors
@@ -195,10 +196,12 @@ const OrderBookRow = memo(
     amountReference,
     metric,
     side,
+    predictionPrices,
   }: {
     row: RowWithCumulative
     maxCumulative: number
     amountReference: number
+    predictionPrices: boolean
     metric: BookMetric
     side: 'bid' | 'ask'
   }) {
@@ -229,7 +232,9 @@ const OrderBookRow = memo(
             side === 'bid' ? 'text-up' : 'text-down',
           )}
         >
-          {formatBookPrice(row.price)}
+          {predictionPrices
+            ? formatPredictionBookPrice(row.price)
+            : formatBookPrice(row.price)}
         </span>
         <span
           className="relative z-10 text-right"
@@ -253,6 +258,7 @@ const OrderBookRow = memo(
     prev.maxCumulative === next.maxCumulative &&
     prev.amountReference === next.amountReference &&
     prev.metric === next.metric &&
+    prev.predictionPrices === next.predictionPrices &&
     prev.side === next.side,
 )
 
@@ -404,6 +410,8 @@ function OrderbookPaneInner({
   // snapshot arrives (`book` is the retained payload we actually render).
   const chartConfig = useOptionalChartConfig()
   const market = chartConfig?.market ?? ''
+  // A probability book reads in cents, same rule as the chart's axis.
+  const predictionPrices = useIsPredictionPair(pairKey, market)
   const venue = usePaneVenue(market)
   const unavailable = usePairUnavailable(market, pairKey)
   const credentialGate = useMarketCredentialGate(market)
@@ -624,6 +632,7 @@ function OrderbookPaneInner({
             maxCumulative={maxCumulative}
             amountReference={amountReference}
             metric={metric}
+            predictionPrices={predictionPrices}
             side="ask"
           />
         ))}
@@ -636,7 +645,9 @@ function OrderbookPaneInner({
             Spread
           </span>
           <span className="font-mono text-[12.5px] font-medium text-foreground">
-            {formatBookPrice(spread.value)}
+            {predictionPrices
+              ? formatPredictionBookPrice(spread.value)
+              : formatBookPrice(spread.value)}
           </span>
           <span className="font-mono text-[11px] text-muted-foreground">
             · {spread.pct.toFixed(3)}%
@@ -653,6 +664,7 @@ function OrderbookPaneInner({
             maxCumulative={maxCumulative}
             amountReference={amountReference}
             metric={metric}
+            predictionPrices={predictionPrices}
             side="bid"
           />
         ))}

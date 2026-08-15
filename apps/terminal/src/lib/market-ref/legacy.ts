@@ -18,6 +18,7 @@ import type {
   InstrumentClass,
   InstrumentRef,
 } from '@pairlens/shared/market-ref'
+import { lookupPredictionOutcome } from '@/stores/prediction-directory-store'
 
 /**
  * `pair-picker.assetClassMap` — the persisted symbol → asset-class side table
@@ -42,6 +43,17 @@ export function legacySymbolToInstrumentRef(
   assetClassMap?: LegacyAssetClassMap,
 ): InstrumentRef {
   const key = normalizeInstrumentId('spot', symbol)
+
+  // A prediction outcome first, because it is the one legacy key whose venue
+  // is part of its identity: the directory pinned the venue that lists it
+  // when the user picked the row, and class-level routing would happily chart
+  // a Polymarket key against Kalshi. Read non-reactively — this runs inside
+  // a memo, and the pin does not change under it.
+  const pinned = lookupPredictionOutcome(key)
+  if (pinned?.market) {
+    return { cls: 'prediction', market: pinned.market.toLowerCase(), id: key }
+  }
+
   const cls =
     normalizeInstrumentClass(assetClassMap?.[key]) ??
     normalizeInstrumentClass(assetClassMap?.[symbol]) ??

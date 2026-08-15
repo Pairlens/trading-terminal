@@ -20,7 +20,10 @@ import type {
   PriceScaleMode,
   Timeframe,
 } from '@pairlens/fast-financial-charts/types'
-import { formatChartPrice } from '@/lib/format-price'
+import {
+  formatChartPrice,
+  formatPredictionChartPrice,
+} from '@/lib/format-price'
 import { usePairlensChartTheme } from '@/hooks/use-chart-theme'
 
 const noop = () => undefined
@@ -38,6 +41,12 @@ type TerminalChartProps = {
   activeTool: DrawingToolType | null
   drawingStyleDefaults?: DrawingStyleDefaults
   pairKey: string
+  /**
+   * The series is a probability, so the axis reads in cents. Passed in rather
+   * than derived here: the pane above already holds the venue and the pair,
+   * and this component is memoized precisely so it subscribes to nothing.
+   */
+  predictionPrices?: boolean
   onContextMenu: (
     payload: ChartContextMenuPayload & { clientX: number; clientY: number },
   ) => void
@@ -69,6 +78,7 @@ export const TerminalChart = memo(function TerminalChart({
   activeTool,
   drawingStyleDefaults,
   pairKey,
+  predictionPrices = false,
   onContextMenu,
   onRemoveIndicator,
   onActiveToolChange,
@@ -115,7 +125,14 @@ export const TerminalChart = memo(function TerminalChart({
     [],
   )
 
-  const localization = useMemo(() => ({ priceFormatter: formatChartPrice }), [])
+  const localization = useMemo(
+    () => ({
+      priceFormatter: predictionPrices
+        ? formatPredictionChartPrice
+        : formatChartPrice,
+    }),
+    [predictionPrices],
+  )
 
   const interaction = useMemo(
     () => ({

@@ -17,6 +17,7 @@ export const groqInferenceManifest: PluginManifest = {
   description: 'AI inference via Groq API (ultra-fast LLM completions)',
   homepage: 'https://groq.com',
   icon: 'https://groq.com/favicon.ico',
+  metadata: { family: 'ai-byok' },
   capabilities: [
     {
       id: 'ai:inference',

@@ -325,3 +325,40 @@ describe('dex ids keep an address intact and a quote leg attached', () => {
     expect(parseMarketRefPath(marketRefToPath(ref))).toEqual(ref)
   })
 })
+
+/**
+ * A prediction outcome is venue-bound like a token, but keyed by the
+ * connector's own pair key rather than by `marketId + outcome`. Those two
+ * remain `instrumentIdentityKey`'s business: it wants maximum discrimination
+ * for dedupe, while a routing ref wants the string a subscribe accepts.
+ */
+describe('prediction refs bind their venue', () => {
+  const row = {
+    kind: 'prediction' as const,
+    symbol: 'KXBTCD-26AUG15-T53',
+    market: 'kalshi',
+    predictionMarketId: 'KXBTCD-26AUG15',
+    outcome: 'Yes',
+  }
+
+  test('the venue is identity, and the id is the connector key', () => {
+    expect(toInstrumentRef(row)).toEqual({
+      cls: 'prediction',
+      market: 'kalshi',
+      id: 'KXBTCD-26AUG15-T53',
+    })
+  })
+
+  test('venue-bound, so resolution never substitutes another venue', () => {
+    expect(isVenueBoundClass('prediction')).toBe(true)
+  })
+
+  test('the path round-trips', () => {
+    const ref = toInstrumentRef(row)!
+    const market = { cls: ref.cls, market: ref.market!, id: ref.id }
+    expect(marketRefToPath(market)).toBe(
+      '/prediction/kalshi/KXBTCD-26AUG15-T53',
+    )
+    expect(parseMarketRefPath(marketRefToPath(market))).toEqual(market)
+  })
+})

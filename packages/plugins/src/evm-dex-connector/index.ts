@@ -41,6 +41,7 @@ function createEvmDexManifest(chain: EvmChainConfig): PluginManifest {
     homepage: 'https://kyberswap.com',
     icon: chain.iconUrl,
     metadata: {
+      family: 'dex',
       assetClass: 'dex',
       walletChain: 'ethereum',
       dexLimitOrders: true,

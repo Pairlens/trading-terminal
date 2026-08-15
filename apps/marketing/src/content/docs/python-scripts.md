@@ -5,7 +5,7 @@ group: traders
 order: 5
 eyebrow: For traders
 updated: AUG 2026
-readTime: 4 min read
+readTime: 5 min read
 ---
 
 Pairlens runs your Python. Not a scripting dialect that looks like Python: an
@@ -66,6 +66,29 @@ own frames so you are not reading Pyodide internals.
 
 **Compute time.** Shown after every run. If your script is slow, you will know
 before a chart tells you.
+
+## Build with AI
+
+The sparkle button in the editor header opens the assistant: a chat that
+writes scripts with you. Describe what you want in plain words ("an RSI that
+colours red above 70", "a breakout strategy with a 3% stop") and it writes the
+Python straight into your editor, validates it in the runtime, and re-runs the
+preview so the result is on the chart before you reply.
+
+It works on existing scripts too. It reads the open file, so "make the bands
+adaptive" or "why does this throw?" needs no copy-pasting. Every edit is saved
+through the normal path with version history, so anything it does can be
+rolled back from the script's history. When you ask, it can also run a
+backtest and read the stats back critically, or deploy a finished strategy as
+a paper bot.
+
+The assistant uses whatever AI provider the terminal resolves: Pairlens
+Intelligence when you are signed in with a plan, or any bring-your-own-key
+provider (Groq, OpenAI, Anthropic, OpenRouter) from the Plugins page. The
+whole loop runs in the terminal. Your prompt and the open script go to the
+provider you chose (through the Pairlens inference proxy when that provider is
+Pairlens Intelligence, which only forwards the request and streams the
+response), and the tools it calls execute on your machine.
 
 ## Multiple files
 

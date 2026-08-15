@@ -1,6 +1,6 @@
 ---
 title: The chart
-description: 16 chart types, 11 timeframes, four price-scale modes, bar replay, symbol comparison, screenshots, and CSV export. Everything the chart panel can do.
+description: 16 chart types, up to 11 timeframes, four price-scale modes, bar replay, symbol comparison, screenshots, and CSV export. Everything the chart panel can do.
 group: traders
 order: 1
 eyebrow: For traders
@@ -25,7 +25,8 @@ Everything below lives in the toolbar strip along the top of the chart panel.
 ### Timeframes
 
 Eleven timeframes, ten with a single-key shortcut. Press the digit anywhere in
-the app and the active chart switches.
+the app and the active chart switches. Every centralized exchange serves all
+eleven.
 
 | Key | Timeframe | Key | Timeframe |
 | --- | --------- | --- | --------- |
@@ -36,6 +37,16 @@ the app and the active chart switches.
 | 5   | 1h        | 0   | 3D        |
 
 Monthly (1M) is in the menu without a shortcut.
+
+**Not every venue serves every interval.** A connector declares the intervals
+it has, and the picker shows only those. Kalshi has three (1m, 1h, 1D) and
+Polymarket four (1m, 5m, 1h, 1D), because that is what their OHLCV endpoints
+accept. See [prediction markets](/docs/prediction-markets).
+
+Your choice is remembered rather than rewritten. Point a chart pinned to 15m at
+a venue without it and you get the nearest shorter interval that venue does
+serve, because a finer bar still shows you the window you asked for. Switch
+back to an exchange that has 15m and the chart is on 15m again.
 
 ### Chart types
 

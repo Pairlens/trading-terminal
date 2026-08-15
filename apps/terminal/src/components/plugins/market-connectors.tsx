@@ -16,6 +16,7 @@ import type { RegistryPluginEntry } from '@pairlens/shared/registry-types'
 import type { PluginStateResponse } from '@/lib/api'
 import { api, queryKeys } from '@/lib/api'
 import { buildActivationConfig } from '@/lib/plugins/official-config'
+import { isFamilyExcluded } from '@/lib/plugins/plugin-families'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { pluginDescription, pluginTitle } from '@/lib/plugin-text'
 
@@ -112,12 +113,13 @@ export function MarketConnectors() {
 
   const activeCount = connectors.filter((c) => c.status === 'active').length
 
-  // Registry exchange plugins not yet installed
+  // Registry exchange plugins not yet installed. Bundled connectors whose
+  // family this deployment excluded are not offered here either.
   const registryQuery = useRegistryPlugins('exchange')
   const registryExtras = useMemo(() => {
     if (!registryQuery.data?.plugins) return []
     return registryQuery.data.plugins.filter(
-      (e) => !installedIds.has(e.manifest.id),
+      (e) => !installedIds.has(e.manifest.id) && !isFamilyExcluded(e.manifest),
     )
   }, [registryQuery.data, installedIds])
 

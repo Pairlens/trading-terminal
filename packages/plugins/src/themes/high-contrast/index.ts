@@ -138,6 +138,7 @@ export const highContrastManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'high-contrast',

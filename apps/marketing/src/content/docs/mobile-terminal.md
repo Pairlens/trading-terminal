@@ -123,10 +123,15 @@ chart rather than something broken. Those are workspaces and the workspace
 store, bots, workflows, notification rules, the Python indicator workbench, and
 the plugin store.
 
-Four venues (Coinbase, Gate, KuCoin, and MEXC) serve no CORS headers, so no
-browser can reach them, phone included. They are listed in the venue picker
-under **Needs the desktop app** rather than hidden, so you can see what you are
-missing. The other eleven work.
+Six venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex, and Kalshi) serve no CORS
+headers, so no browser can reach them, phone included. They are listed in the
+venue picker under **Needs the desktop app** rather than hidden, so you can see
+what you are missing. The other eleven work, Polymarket included, so
+[event contracts](/docs/prediction-markets) trade from a phone.
+
+The event browser is a panel, so it lives on the desktop grid. On a phone you
+reach an outcome through pair search instead, which matches on the question
+text, and the chart, the book, and the ticket all quote it in cents.
 
 Two smaller things are desktop-only on purpose: editing an existing indicator's
 parameters, and reordering a watchlist.

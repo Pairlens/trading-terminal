@@ -6,6 +6,7 @@ import {
   orderNotionalUsd,
   priceUsdFor,
 } from '../position-size'
+import { registerPredictionOutcome } from '@/stores/prediction-directory-store'
 
 const prices = new Map<string, number>([
   ['BTC', 60000],
@@ -54,6 +55,30 @@ describe('orderNotionalUsd', () => {
       prices,
     )
     expect(n).toBeNull()
+  })
+
+  it('prices a pinned prediction outcome as contracts × price, never null', () => {
+    const pairKey = 'KXBTCD-26AUG15-T53'
+    registerPredictionOutcome(pairKey, {
+      market: 'kalshi',
+      predictionMarketId: 'KXBTCD-26AUG15-T53',
+      outcome: 'Yes',
+      name: 'Will BTC close above $53,000?',
+    })
+    // 10,000 contracts at 90¢ = $9,000 — the dash-split "quote" (26AUG15)
+    // must never make this fail open.
+    const n = orderNotionalUsd(
+      { pair: pairKey, size: 10_000, quoteDenominated: false, price: 0.9 },
+      prices,
+    )
+    expect(n).toBe(9000)
+    // Unknown price: a contract is bounded by $1, so the guard uses the
+    // conservative upper bound instead of skipping.
+    const upper = orderNotionalUsd(
+      { pair: pairKey, size: 10_000, quoteDenominated: false, price: null },
+      prices,
+    )
+    expect(upper).toBe(10_000)
   })
 })
 

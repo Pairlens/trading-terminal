@@ -1224,6 +1224,28 @@
     "restartNow": "立即重新啟動",
     "later": "稍後"
   },
+  "assistant": {
+    "title": "AI 助理",
+    "buildWithAi": "用 AI 打造",
+    "placeholder": "描述你想打造什麼…",
+    "close": "關閉助理",
+    "clearChat": "清除對話",
+    "emptyTitle": "我們來打造什麼？",
+    "emptyHintIndicators": "描述一個指標或策略，助理會把它寫進編輯器、完成驗證並執行預覽。",
+    "emptyHintBots": "請它把策略部署為模擬機器人、調整參數或設定風控。是否讓機器人上實盤，決定權始終在你手上。",
+    "genericError": "助理遇到了錯誤——請再傳送一次。",
+    "authRequiredTitle": "用 AI 打造",
+    "authRequiredDescription": "用平常的話描述一個指標、策略或機器人——助理會寫好 Python、完成驗證，並和你一起回測。",
+    "upgradeRequiredDescription": "建構助理會和你一起撰寫指標、策略和機器人。訂閱 Pairlens Intelligence，或連接你自己的 AI 金鑰——免費。",
+    "unavailableTitle": "助理無法使用",
+    "unavailableDescription": "在外掛頁面啟用一個 AI 供應商，即可透過聊天打造指標、策略和機器人。",
+    "quickNewIndicator": "打造一個 RSI 背離指標",
+    "quickNewStrategy": "寫一個我可以回測的突破策略",
+    "quickImprove": "檢視這個腳本並提出改進建議",
+    "quickCreateBot": "把我的一個策略部署為模擬機器人",
+    "quickGuards": "為我的一個機器人建議風控設定",
+    "quickReview": "我的機器人表現如何？"
+  },
   "copilot": {
     "aiLens": "AI 透鏡",
     "thinking": "思考中…",
@@ -2164,7 +2186,9 @@
     "web": "網頁面板",
     "liquidityHeatmap": "流動性熱力圖",
     "recentTickers": "近期行情",
-    "empty": "空白"
+    "empty": "空白",
+    "events": "事件",
+    "predictionPositions": "預測部位"
   },
   "paneDescriptions": {
     "markets": "瀏覽各交易所所有可用的交易對",
@@ -2190,7 +2214,9 @@
     "symbolNews": "目前交易對的新聞與情緒分析",
     "web": "在工作區中嵌入任何網站作為面板",
     "liquidityHeatmap": "委託簿流動性熱力圖，呈現各價位隨時間的深度變化",
-    "recentTickers": "近期查看過的交易對即時報價，方便快速切換"
+    "recentTickers": "近期查看過的交易對即時報價，方便快速切換",
+    "events": "瀏覽預測市場事件並開啟某個結果的圖表",
+    "predictionPositions": "你持有的合約、成本以及結算時間"
   },
   "multiPrice": {
     "venue": "交易所",
@@ -2262,7 +2288,11 @@
     "paneUnavailable": {
       "title": "{{venue}} 上沒有 {{pair}}",
       "titleAnyVenue": "找不到 {{pair}}",
-      "description": "這個連接器沒有回傳這個交易對的行情資料。換一個有上架它的連接器試試。"
+      "description": "這個連接器沒有回傳這個交易對的行情資料。換一個有上架它的連接器試試。",
+      "predictionDescription": "事件結果只在一個平台交易，因此沒有別處可試。該平台可能只是拒絕了一次請求。",
+      "retry": "重試",
+      "desktopOnlyTitle": "該平台需要桌面應用程式",
+      "desktopOnlyDescription": "其 API 拒絕瀏覽器來源，因此該交易對的行情資料只能透過桌面版取得。"
     },
     "paneCredentials": {
       "sealedTitle": "解鎖以載入 {{venue}} 資料",
@@ -2471,9 +2501,7 @@
     "needsFullTrustToRun": "需要完全信任才能執行",
     "pendingTrustDescription": "該外掛提供介面，無法在沙箱中執行——請授予完全信任以啟用它，或將其解除安裝。",
     "remove": "移除",
-    "groupCore": "核心",
     "groupProvidersExtensions": "提供方與擴充功能",
-    "groupThemes": "主題",
     "removePluginTitle": "移除外掛",
     "removePluginDescription": "此操作將停用並移除該外掛。它貢獻的所有面板會顯示一個復原佔位符。你可以隨時從外掛商店重新安裝。",
     "resetDefaultsTitle": "重設為預設值",
@@ -2766,8 +2794,56 @@
       "polygon-dex-connector": {
         "title": "Polygon DEX 連接器",
         "description": "鏈上 Polygon 兌換——透過 KyberSwap 聚合器,在所有 Polygon DEX 中路由至最優價格"
+      },
+      "kalshi-market-connector": {
+        "title": "Kalshi 市場連接器",
+        "description": "Kalshi 上的事件合約，受 CFTC 監管的預測交易所 — 交易結果而非資產"
+      },
+      "polymarket-market-connector": {
+        "title": "Polymarket 市場連接器",
+        "description": "Polymarket CLOB 上的事件合約 — 由錢包簽名下單，以 USDC 結算"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens 預測",
+        "description": "預測市場的事件瀏覽器與未平倉合約部位"
       }
-    }
+    },
+    "families": {
+      "core": {
+        "label": "核心",
+        "description": "終端本身：圖表、委託簿、下單與工作區工具。"
+      },
+      "intelligence": {
+        "label": "智慧",
+        "description": "託管 AI、標的探索、新聞與市場情報。"
+      },
+      "cexSpot": {
+        "label": "加密貨幣交易所",
+        "description": "中心化現貨交易所，提供加密貨幣行情與交易。"
+      },
+      "dex": {
+        "label": "鏈上 DEX",
+        "description": "鏈上兌換場所與 DEX 行情資料提供方。"
+      },
+      "equities": {
+        "label": "股票",
+        "description": "股票券商連線，提供股票行情與交易。"
+      },
+      "predictions": {
+        "label": "預測市場",
+        "description": "事件合約場所，用於交易真實世界的結果。"
+      },
+      "aiByok": {
+        "label": "AI 提供方",
+        "description": "自備金鑰的語言模型與網頁搜尋。"
+      },
+      "themes": {
+        "label": "主題",
+        "description": "介面與圖表配色的視覺主題。"
+      }
+    },
+    "familyToggleAria": "啟用或停用所有{{family}}外掛",
+    "familyToggleFailed": "部分{{family}}外掛無法變更"
   },
   "search": {
     "placeholder": "搜尋任何內容…",
@@ -2877,7 +2953,14 @@
       "available": "可用：{{amount}}",
       "slippage": "滑價",
       "extendedHours": "盤前盤後交易",
-      "extendedHoursHint": "在盤前與盤後時段成交。盤口較薄，價差較大。"
+      "extendedHoursHint": "在盤前與盤後時段成交。盤口較薄，價差較大。",
+      "contracts": "合約",
+      "maxLoss": "最大虧損",
+      "priceCents": "價格（¢）",
+      "thisOutcome": "目前結果",
+      "decreaseContracts": "減少一份合約",
+      "increaseContracts": "增加一份合約",
+      "priceCentsRange": "請輸入 0¢ 到 100¢ 之間的價格"
     },
     "status": {
       "connecting": "連線中…",
@@ -3924,7 +4007,11 @@
     "hoursAgo": "{{n}}小時前",
     "daysAgo": "{{n}}天前",
     "today": "今天",
-    "yesterday": "昨天"
+    "yesterday": "昨天",
+    "closed": "已關閉",
+    "inMinutes": "{{n}}分鐘後",
+    "inHours": "{{n}}小時後",
+    "inDays": "{{n}}天後"
   },
   "markets": {
     "title": "市場",
@@ -3946,7 +4033,8 @@
     "assetClass": {
       "all": "全部",
       "crypto": "加密貨幣",
-      "stocks": "股票"
+      "stocks": "股票",
+      "prediction": "預測"
     },
     "category": {
       "all": "全部",
@@ -3957,7 +4045,9 @@
       "ai": "AI",
       "gaming": "遊戲",
       "infrastructure": "基礎設施"
-    }
+    },
+    "predictionsEmptyTitle": "預測結果位於「事件」面板中",
+    "predictionsEmptyBody": "結果每天上架並結算，因此要從平台自己的看板瀏覽，而不是從目錄中查找。"
   },
   "fearGreed": {
     "title": "恐懼與貪婪指數",
@@ -4609,6 +4699,14 @@
       "symbol-logo": {
         "label": "商品圖示",
         "description": "交易商品的圖示圖片"
+      },
+      "trades": {
+        "label": "成交",
+        "description": "即時逐筆成交串流"
+      },
+      "events": {
+        "label": "事件",
+        "description": "瀏覽預測市場的事件及其結果"
       }
     },
     "domains": {
@@ -4638,6 +4736,10 @@
       "balances": {
         "label": "餘額",
         "description": "從已連接的交易所取得帳戶資產餘額"
+      },
+      "positions": {
+        "label": "持倉",
+        "description": "讀取已連線交易所的未平倉部位與結算"
       }
     },
     "workflow": {
@@ -4699,6 +4801,14 @@
     "themes": {
       "label": "主題",
       "description": "覆蓋顏色、圖表配色和介面樣式的視覺主題"
+    },
+    "predictions": {
+      "label": "預測市場",
+      "description": "事件合約場所，用於交易真實世界的結果"
+    },
+    "dex": {
+      "label": "鏈上 DEX",
+      "description": "鏈上兌換場所與 DEX 行情資料提供方"
     }
   },
   "mobile": {
@@ -4838,7 +4948,6 @@
       "textLabel": "標籤文字",
       "textPlaceholder": "新增標籤"
     },
-    "copilot": {},
     "settings": {
       "accountsHeader": "帳戶與連線",
       "terminalHeader": "終端機",
@@ -4925,7 +5034,41 @@
       "notListedCallout": "{{pair}} 未在 {{venue}} 上架。選擇它會將目前使用中的交易所切換為 {{other}}。",
       "availableVenues": "可用",
       "desktopOnlyVenues": "需要桌面應用程式",
-      "desktopOnlyVenue": "僅桌面版"
+      "desktopOnlyVenue": "僅桌面版",
+      "predictions": "預測",
+      "filterPredictions": "預測"
     }
+  },
+  "events": {
+    "searchPlaceholder": "搜尋事件與問題",
+    "allCategories": "全部",
+    "loading": "正在載入事件…",
+    "failed": "無法載入事件",
+    "tryLater": "該平台沒有回應，請稍後重試。",
+    "emptyTitle": "沒有進行中的事件",
+    "emptyBody": "該平台目前沒有任何上架的事件。",
+    "noMatchesTitle": "沒有符合的事件",
+    "noMatchesBody": "試試更短的問題或換一個類別。",
+    "noVenuesTitle": "尚未連接預測平台",
+    "noVenuesBody": "從外掛商店安裝 Kalshi 或 Polymarket，即可瀏覽事件合約。",
+    "desktopOnlyTitle": "事件瀏覽需要桌面應用程式",
+    "desktopOnlyDescription": "該平台的 API 拒絕瀏覽器來源，因此只能透過桌面版存取其事件看板。",
+    "venueDesktopOnly": "{{venue}} 的事件需要桌面應用程式。",
+    "volume": "成交額 {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "連接帳戶",
+    "noAccountsTitle": "尚未連接預測帳戶",
+    "noAccountsBody": "新增 Kalshi API 金鑰或 Polygon 錢包，即可查看你持有的合約。",
+    "loading": "正在載入部位…",
+    "emptyTitle": "沒有未平倉合約",
+    "emptyBody": "訂單成交後，部位會立即顯示在這裡。",
+    "colMarket": "市場",
+    "colOutcome": "結果",
+    "colContracts": "合約",
+    "colAvgPrice": "均價",
+    "colCost": "成本",
+    "colResolves": "結算",
+    "resolved": "已結算"
   }
 }

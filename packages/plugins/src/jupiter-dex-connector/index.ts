@@ -56,6 +56,7 @@ export const jupiterDexConnectorManifest: PluginManifest = {
   homepage: 'https://jup.ag',
   icon: 'https://cryptologos.cc/logos/jupiter-ag-jup-logo.png?v=040',
   metadata: {
+    family: 'dex',
     assetClass: 'dex',
     walletChain: 'solana',
     dexLimitOrders: true,

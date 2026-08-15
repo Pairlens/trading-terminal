@@ -35,13 +35,15 @@ import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
+import { useMobileFocus } from '../mobile-focus-context'
 import type { Candle } from '@pairlens/shared/types'
 import {
   useOptionalCandleData,
   useOptionalTickerData,
 } from '@/lib/chart-terminal-context'
 import { usePriceTick } from '@/hooks/use-price-tick'
-import { formatBookPrice } from '@/lib/format-price'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
+import { formatBookPrice, formatPredictionPrice } from '@/lib/format-price'
 
 export type PriceReadoutProps = {
   className?: string
@@ -101,6 +103,9 @@ export const PriceReadout = memo(function PriceReadout({
   const { t } = useTranslation()
   const ticker = useOptionalTickerData()
   const candleData = useOptionalCandleData()
+  // Low-churn reads (focus + directory), permitted beside the tick streams.
+  const { focusedPair, focusedVenue } = useMobileFocus()
+  const isPrediction = useIsPredictionPair(focusedPair, focusedVenue)
 
   const candles = candleData?.candles ?? []
   const price =
@@ -111,7 +116,12 @@ export const PriceReadout = memo(function PriceReadout({
     null
   const direction = usePriceTick(price)
   const change = change24h(candles, price)
-  const text = price == null ? '—' : formatBookPrice(price)
+  const text =
+    price == null
+      ? '—'
+      : isPrediction
+        ? formatPredictionPrice(price)
+        : formatBookPrice(price)
   const percent = change
     ? `${change.percent >= 0 ? '+' : ''}${change.percent.toFixed(2)}%`
     : null
@@ -149,7 +159,11 @@ export const PriceReadout = memo(function PriceReadout({
             )}
           >
             {t('mobile.shell.priceChange', {
-              absolute: `${change.absolute >= 0 ? '+' : ''}${change.absolute.toLocaleString(undefined, { maximumFractionDigits: 2 })}`,
+              // A probability's absolute move is sub-unit by definition, so the
+              // 2dp dollar rounding prints "-0"; state it in cents instead.
+              absolute: isPrediction
+                ? `${change.absolute >= 0 ? '+' : '-'}${formatPredictionPrice(Math.abs(change.absolute))}`
+                : `${change.absolute >= 0 ? '+' : ''}${change.absolute.toLocaleString(undefined, { maximumFractionDigits: 2 })}`,
               percent: percent ?? '',
             })}
           </span>

@@ -17,6 +17,7 @@ export const pairlensCoreManifest: PluginManifest = {
     'Core trading terminal — charts, order books, trade entry, market discovery, and watchlists',
   homepage: 'https://pairlens.finance',
   icon: 'https://pairlens.finance/favicon.svg',
+  metadata: { family: 'core' },
   capabilities: [
     {
       id: 'market-data:discovery',

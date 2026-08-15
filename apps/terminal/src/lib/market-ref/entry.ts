@@ -24,6 +24,10 @@ export type RefSource = {
   quote?: string
   chain?: string
   address?: string
+  /** Prediction rows: the venue that lists this outcome. Part of identity. */
+  market?: string
+  predictionMarketId?: string
+  outcome?: string
 }
 
 /**
@@ -46,6 +50,16 @@ export function classFromSymbolShape(symbol: string): InstrumentClass {
  * one the user just looked at is the one in this row.
  */
 export function entryToInstrumentRef(entry: RefSource): InstrumentRef {
+  // A prediction outcome IS its venue plus the connector's key. Class-level
+  // routing can chart a Polymarket key against Kalshi, which is why this is
+  // bound rather than resolved.
+  if (entry.predictionMarketId && entry.outcome && entry.market) {
+    return {
+      cls: 'prediction',
+      market: entry.market.toLowerCase(),
+      id: normalizeInstrumentId('prediction', entry.symbol),
+    }
+  }
   if (entry.chain && entry.address) {
     // Address as the base, the row's own quote leg after it: the address is
     // the identity, and the quote is what the pool resolvers pair it against.

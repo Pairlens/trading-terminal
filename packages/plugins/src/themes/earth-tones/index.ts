@@ -136,6 +136,7 @@ export const earthTonesManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'earth-tones',

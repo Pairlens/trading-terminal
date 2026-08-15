@@ -282,9 +282,10 @@ export function MarketsPane() {
               className="gap-1"
               onClick={() => {
                 setAssetClassFilter(ac.id)
-                // Reset category when switching to stocks (crypto categories don't apply)
+                // Reset category when switching to a class the crypto sector
+                // taxonomy doesn't describe (equities, prediction outcomes)
                 if (
-                  ac.id === 'stocks' &&
+                  (ac.id === 'stocks' || ac.id === 'prediction') &&
                   activeCategory !== 'all' &&
                   activeCategory !== 'watchlists'
                 ) {
@@ -298,8 +299,9 @@ export function MarketsPane() {
           ))}
         </div>
 
-        {/* Category tabs (hidden when stocks selected — crypto-specific categories don't apply) */}
-        {assetClassFilter !== 'stocks' && (
+        {/* Category tabs (hidden for classes the crypto sector taxonomy doesn't
+            describe — equities and prediction outcomes) */}
+        {assetClassFilter !== 'stocks' && assetClassFilter !== 'prediction' && (
           <div className="flex flex-wrap gap-1">
             {CATEGORIES.map((cat) => (
               <Button
@@ -327,6 +329,20 @@ export function MarketsPane() {
           </div>
         ) : (
           <>
+            {/* Prediction outcomes are never in the catalog this pane reads —
+                they are born and resolved daily. Saying where they ARE beats
+                an empty grid that reads as "no prediction markets exist". */}
+            {assetClassFilter === 'prediction' && sortedPairs.length === 0 && (
+              <div className="px-4 py-10 text-center">
+                <p className="text-sm font-medium">
+                  {t('markets.predictionsEmptyTitle')}
+                </p>
+                <p className="mx-auto mt-1 max-w-xs text-xs leading-relaxed text-muted-foreground">
+                  {t('markets.predictionsEmptyBody')}
+                </p>
+              </div>
+            )}
+
             {/* Recent strip */}
             {recentPairEntries.length > 0 && (
               <div className="flex items-center gap-2 border-b px-4 py-2">
@@ -415,8 +431,10 @@ export function MarketsPane() {
               </div>
             )}
 
-            {/* Empty states */}
-            {sortedPairs.length === 0 ? (
+            {/* Empty states. The prediction hint above already explains an
+                empty prediction list; "No pairs found · show all" under it
+                would send the user back to a category that never had any. */}
+            {sortedPairs.length === 0 && assetClassFilter !== 'prediction' ? (
               <div className="flex flex-col items-center justify-center px-4 py-16 text-center">
                 {activeCategory === 'watchlists' ? (
                   <>

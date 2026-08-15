@@ -19,6 +19,10 @@ import {
   createPairlensIntelligencePlugin,
   pairlensIntelligenceManifest,
 } from '@pairlens/plugins/pairlens-intelligence'
+import {
+  createPairlensPredictionsPlugin,
+  pairlensPredictionsManifest,
+} from '@pairlens/plugins/pairlens-predictions'
 // Every CEX venue runs on the CCXT bridge. Same plugin ids, same manifests —
 // only the subpath moved, and the ccxt exchange class behind each one is a
 // dynamic import, so no venue's chunk is in the entry graph.
@@ -82,6 +86,17 @@ import {
   alpacaMarketConnectorManifest,
   createAlpacaMarketConnectorPlugin,
 } from '@pairlens/plugins/alpaca-market-connector'
+// Prediction venues ride their own runtime (prediction-connector), not the
+// ccxt spot bridge — same `-market-connector` id suffix, so the credential
+// binding and the marketId fallback regex keep working.
+import {
+  createKalshiMarketConnectorPlugin,
+  kalshiMarketConnectorManifest,
+} from '@pairlens/plugins/prediction-connector/kalshi'
+import {
+  createPolymarketMarketConnectorPlugin,
+  polymarketMarketConnectorManifest,
+} from '@pairlens/plugins/prediction-connector/polymarket'
 import {
   createDexpaprikaDataProviderPlugin,
   dexpaprikaDataProviderManifest,
@@ -179,6 +194,13 @@ export const BOOTSTRAP_CORE_PLUGINS: Array<BootstrapPlugin> = [
   { manifest: communityStoreManifest, factory: createCommunityStorePlugin },
   // The user's own Python indicators, provided through chart:indicator.
   { manifest: userIndicatorsManifest, factory: createUserIndicatorsPlugin },
+  // Prediction-market panels. Panels-only, so it declares no capabilities and
+  // activates in the generic remaining-plugins pass rather than the connector
+  // or theme ones.
+  {
+    manifest: pairlensPredictionsManifest,
+    factory: createPairlensPredictionsPlugin,
+  },
 ]
 
 /** AI inference provider plugins. */
@@ -320,6 +342,14 @@ export const BOOTSTRAP_MARKET_CONNECTOR_PLUGINS: Array<BootstrapPlugin> = [
   {
     manifest: alpacaMarketConnectorManifest,
     factory: createAlpacaMarketConnectorPlugin,
+  },
+  {
+    manifest: kalshiMarketConnectorManifest,
+    factory: createKalshiMarketConnectorPlugin,
+  },
+  {
+    manifest: polymarketMarketConnectorManifest,
+    factory: createPolymarketMarketConnectorPlugin,
   },
 ]
 

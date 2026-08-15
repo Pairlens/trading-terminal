@@ -17,6 +17,7 @@ export const anthropicInferenceManifest: PluginManifest = {
   description: 'AI inference via Anthropic Claude API',
   homepage: 'https://anthropic.com',
   icon: 'https://anthropic.com/favicon.ico',
+  metadata: { family: 'ai-byok' },
   capabilities: [
     {
       id: 'ai:inference',

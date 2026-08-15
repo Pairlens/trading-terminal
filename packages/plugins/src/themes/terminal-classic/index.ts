@@ -135,6 +135,7 @@ export const terminalClassicManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'terminal-classic',

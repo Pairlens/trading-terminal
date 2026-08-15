@@ -26,17 +26,10 @@ import type { TopCoinsResponse } from '@pairlens/shared/instrument-types'
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
-import { formatPrice } from '@/lib/format-price'
+import { formatCompactUsd, formatPrice } from '@/lib/format-price'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { formatRelativeTime } from '@/lib/format-time'
 import { fetchTopCoinsWithFallback } from '@/lib/public-market-data'
-
-const capFormatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  notation: 'compact',
-  maximumFractionDigits: 1,
-})
 
 function formatPercent(value: number): string {
   const sign = value >= 0 ? '+' : ''
@@ -293,7 +286,7 @@ export function TopCoinsPane() {
                               {...chartLinkProps(coinRef)}
                               className="flex h-9 items-center justify-end px-2 text-xs text-muted-foreground"
                             >
-                              {capFormatter.format(coin.marketCap)}
+                              {formatCompactUsd(coin.marketCap)}
                             </Link>
                           </TableCell>
                         </TableRow>
