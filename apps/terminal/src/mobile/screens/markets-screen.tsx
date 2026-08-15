@@ -71,7 +71,7 @@ import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
-import { PairAvatar } from '@/components/pair-picker/pair-avatar'
+import { PairAvatar, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import { quoteForPair } from '@/components/discovery/pair-quote'
 import { useRecentPairs } from '@/lib/recent-tickers'
 
@@ -401,7 +401,13 @@ const MarketRow = memo(function MarketRow({
       onPress={handlePress}
       selected={focused}
       subtitle={pair.name}
-      title={<span className="font-mono">{pair.symbol}</span>}
+      title={
+        <PairSymbol
+          assetClass={pair.assetClass}
+          className="font-mono"
+          symbol={pair.symbol}
+        />
+      }
       trailing={
         <TrendQuoteCell market={market} pair={pair.symbol} quote={quote} />
       }

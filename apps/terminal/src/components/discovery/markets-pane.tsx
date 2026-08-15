@@ -484,7 +484,11 @@ export function MarketsPane() {
                         size="sm"
                         className="mr-0.5"
                       />
-                      <PairSymbol symbol={pair.symbol} className="text-xs" />
+                      <PairSymbol
+                        symbol={pair.symbol}
+                        assetClass={pair.assetClass}
+                        className="min-w-0 text-xs"
+                      />
                     </Link>
                   ))}
                 </div>
@@ -522,6 +526,7 @@ export function MarketsPane() {
                         {/* A ticker never wraps — it truncates or it fits. */}
                         <PairSymbol
                           symbol={pair.symbol}
+                          assetClass={pair.assetClass}
                           className="block truncate text-sm"
                         />
                         <p className="truncate text-xs text-muted-foreground">
@@ -737,8 +742,12 @@ const PairTableRow = memo(function PairTableRow({
             assetClass={pair.assetClass}
             size="sm"
           />
-          <div>
-            <PairSymbol symbol={pair.symbol} className="text-sm" />
+          <div className="min-w-0">
+            <PairSymbol
+              symbol={pair.symbol}
+              assetClass={pair.assetClass}
+              className="text-sm"
+            />
             <p className="text-xs text-muted-foreground">{pair.name}</p>
           </div>
         </Link>
@@ -821,6 +830,7 @@ const PairCard = memo(function PairCard({
           <div className="min-w-0">
             <PairSymbol
               symbol={pair.symbol}
+              assetClass={pair.assetClass}
               className="block truncate text-sm"
             />
             <p className="truncate text-xs text-muted-foreground">

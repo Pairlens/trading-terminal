@@ -25,6 +25,7 @@ import {
   formatPredictionChartPrice,
 } from '@/lib/format-price'
 import { usePairlensChartTheme } from '@/hooks/use-chart-theme'
+import { usePairDisplayLabel } from '@/hooks/use-prediction-pair'
 
 const noop = () => undefined
 
@@ -106,9 +107,13 @@ export const TerminalChart = memo(function TerminalChart({
     [invertedScale],
   )
 
+  // The display label, not the routing key: a prediction key is a hundred
+  // characters of event slug and the watermark paints it at 48px across the
+  // whole canvas.
+  const watermarkText = usePairDisplayLabel(pairKey)
   const watermark = useMemo(
-    () => ({ text: pairKey, color: '#ffffff06', fontSize: 48 }),
-    [pairKey],
+    () => ({ text: watermarkText, color: '#ffffff06', fontSize: 48 }),
+    [watermarkText],
   )
 
   const timeScale = useMemo(

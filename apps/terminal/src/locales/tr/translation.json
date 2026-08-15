@@ -5191,7 +5191,16 @@
     "desktopOnlyTitle": "Olaylar için masaüstü uygulaması gerekir",
     "desktopOnlyDescription": "Bu platformun API'si tarayıcı kaynaklarını reddeder; olay panosuna yalnızca masaüstü sürümünden erişilebilir.",
     "venueDesktopOnly": "{{venue}} olayları için masaüstü uygulaması gerekir.",
-    "volume": "Hac. {{value}}"
+    "volume": "Hac. {{value}}",
+    "moreMarkets_one": "1 piyasa daha göster",
+    "moreMarkets_other": "{{count}} piyasa daha göster",
+    "moreOutcomes_one": "+1 daha",
+    "moreOutcomes_other": "+{{count}} daha",
+    "closes": "Kapanış",
+    "volumeLabel": "Hacim",
+    "liquidityLabel": "Likidite",
+    "marketsLabel": "Piyasalar",
+    "noMarketsBody": "Bu etkinliğin şu anda açık piyasası yok."
   },
   "predictionPositions": {
     "connect": "Hesap bağla",

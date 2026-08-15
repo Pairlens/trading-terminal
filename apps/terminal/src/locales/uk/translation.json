@@ -5235,7 +5235,20 @@
     "desktopOnlyTitle": "Для подій потрібен застосунок для комп'ютера",
     "desktopOnlyDescription": "API цього майданчика відхиляє запити з браузера, тож його дошка подій доступна лише в застосунку для комп'ютера.",
     "venueDesktopOnly": "Події {{venue}} доступні лише в застосунку для комп'ютера.",
-    "volume": "Обсяг {{value}}"
+    "volume": "Обсяг {{value}}",
+    "moreMarkets_one": "Показати ще 1 ринок",
+    "moreMarkets_few": "Показати ще {{count}} ринки",
+    "moreMarkets_many": "Показати ще {{count}} ринків",
+    "moreMarkets_other": "Показати ще {{count}} ринку",
+    "moreOutcomes_one": "Ще 1",
+    "moreOutcomes_few": "Ще {{count}}",
+    "moreOutcomes_many": "Ще {{count}}",
+    "moreOutcomes_other": "Ще {{count}}",
+    "closes": "Закриття",
+    "volumeLabel": "Обсяг",
+    "liquidityLabel": "Ліквідність",
+    "marketsLabel": "Ринки",
+    "noMarketsBody": "Ця подія зараз не має відкритих ринків."
   },
   "predictionPositions": {
     "connect": "Підключити акаунт",

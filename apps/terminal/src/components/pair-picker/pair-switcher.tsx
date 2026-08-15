@@ -110,6 +110,7 @@ function synthesizeEntry(symbol: string): PairEntry {
       predictionMarketId: pinned.predictionMarketId,
       outcome: pinned.outcome,
       market: pinned.market,
+      ...(pinned.shortTitle ? { shortTitle: pinned.shortTitle } : {}),
       ...(pinned.eventTitle ? { eventTitle: pinned.eventTitle } : {}),
       ...(pinned.eventId ? { eventId: pinned.eventId } : {}),
       ...(typeof pinned.endMs === 'number' ? { endMs: pinned.endMs } : {}),
@@ -140,6 +141,12 @@ export function PairSwitcher({
   const [searchValue, setSearchValue] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
   const listRef = useRef<HTMLDivElement>(null)
+
+  // The class the TRIGGER renders with. The prop is empty for a pair opened
+  // from a shared link, and the avatar and the title both need to know a
+  // prediction from a pair — `classOf` asks the directory, which the row that
+  // opened this pair wrote before it navigated.
+  const triggerClass = classOf(pairKey, assetClass)
 
   const watchedSymbols = useWatchlistsStore((s) => s.allSymbolsSet)
   const [, setAssetClassMap] = usePersistedState<Record<string, string>>(
@@ -350,7 +357,10 @@ export function PairSwitcher({
         render={
           <button
             type="button"
-            className="-ml-1 flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-1 py-0.5 transition-colors hover:bg-accent data-[popup-open]:bg-accent"
+            // `min-w-0` + `max-w`, not `shrink-0`: a prediction title is as
+            // long as its question, and a title that refuses to shrink pushes
+            // the venue picker, the live badge and the panes menu off the bar.
+            className="-ml-1 flex min-w-0 max-w-[min(28rem,45vw)] items-center gap-1.5 whitespace-nowrap rounded-md px-1 py-0.5 transition-colors hover:bg-accent data-[popup-open]:bg-accent"
             aria-label={t('pairPicker.switchPair')}
           />
         }
@@ -358,11 +368,15 @@ export function PairSwitcher({
         <PairLogo
           base={pairKey.split('-')[0] ?? ''}
           quote={pairKey.split('-')[1] ?? ''}
-          assetClass={assetClass}
+          assetClass={triggerClass}
           size="sm"
         />
-        <PairSymbol symbol={pairKey} className="text-base tracking-tight" />
-        <ChevronDown className="size-3 text-muted-foreground" />
+        <PairSymbol
+          symbol={pairKey}
+          assetClass={triggerClass}
+          className="min-w-0 text-base tracking-tight"
+        />
+        <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
       </PopoverTrigger>
 
       <PopoverContent align="start" className="w-80 gap-0 p-0">
@@ -463,8 +477,15 @@ const PairSwitcherRow = memo(function PairSwitcherRow({
         assetClass={pair.assetClass}
         size="sm"
       />
-      <PairSymbol symbol={pair.symbol} className="text-sm" />
-      <span className="flex-1 truncate text-xs text-muted-foreground">
+      {/* Both halves are bounded: a prediction's subject and its question are
+          each free to be a sentence, and an unbounded one pushed the venue
+          badge and the current-pair check clean out of the popover. */}
+      <PairSymbol
+        symbol={pair.symbol}
+        assetClass={pair.assetClass}
+        className="min-w-0 max-w-[55%] text-sm"
+      />
+      <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
         {pair.name}
       </span>
       <VenueBadge symbol={pair.symbol} />

@@ -5191,7 +5191,16 @@
     "desktopOnlyTitle": "Sự kiện cần ứng dụng máy tính",
     "desktopOnlyDescription": "API của sàn này từ chối origin từ trình duyệt, nên bảng sự kiện chỉ truy cập được từ bản máy tính.",
     "venueDesktopOnly": "Sự kiện {{venue}} cần ứng dụng máy tính.",
-    "volume": "KL {{value}}"
+    "volume": "KL {{value}}",
+    "moreMarkets_one": "Xem thêm 1 thị trường",
+    "moreMarkets_other": "Xem thêm {{count}} thị trường",
+    "moreOutcomes_one": "+1 nữa",
+    "moreOutcomes_other": "+{{count}} nữa",
+    "closes": "Đóng",
+    "volumeLabel": "Khối lượng",
+    "liquidityLabel": "Thanh khoản",
+    "marketsLabel": "Thị trường",
+    "noMarketsBody": "Sự kiện này hiện chưa có thị trường nào đang mở."
   },
   "predictionPositions": {
     "connect": "Kết nối tài khoản",

@@ -5191,7 +5191,16 @@
     "desktopOnlyTitle": "Acara memerlukan aplikasi desktop",
     "desktopOnlyDescription": "API bursa ini menolak origin browser, sehingga papan acaranya hanya bisa diakses dari versi desktop.",
     "venueDesktopOnly": "Acara {{venue}} memerlukan aplikasi desktop.",
-    "volume": "Vol {{value}}"
+    "volume": "Vol {{value}}",
+    "moreMarkets_one": "Lihat 1 pasar lagi",
+    "moreMarkets_other": "Lihat {{count}} pasar lagi",
+    "moreOutcomes_one": "+1 lagi",
+    "moreOutcomes_other": "+{{count}} lagi",
+    "closes": "Ditutup",
+    "volumeLabel": "Volume",
+    "liquidityLabel": "Likuiditas",
+    "marketsLabel": "Pasar",
+    "noMarketsBody": "Acara ini belum memiliki pasar terbuka saat ini."
   },
   "predictionPositions": {
     "connect": "Hubungkan akun",

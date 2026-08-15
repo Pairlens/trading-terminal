@@ -16,8 +16,15 @@ import { cn } from '@pairlens/ui'
 import { useMobileFocus } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
 import { PRESS } from './press'
-import { PairAvatar } from '@/components/pair-picker/pair-avatar'
+import {
+  PairAvatar,
+  PredictionAvatar,
+} from '@/components/pair-picker/pair-avatar'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import {
+  useIsPredictionPair,
+  usePairDisplayLabel,
+} from '@/hooks/use-prediction-pair'
 import { useMarketData } from '@/lib/market-data-provider'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useOptimisticSession } from '@/lib/session'
@@ -130,6 +137,9 @@ export const ContextBar = memo(function ContextBar({
   )
 
   const base = focusedPair.split('-')[0] ?? focusedPair
+  const pairClass = assetClassMap[focusedPair]
+  const pairLabel = usePairDisplayLabel(focusedPair)
+  const isPrediction = useIsPredictionPair(focusedPair, focusedVenue)
   const venue = markets.find((m) => m.value === focusedVenue)
   const venueLabel = venue?.label ?? focusedVenue.toUpperCase()
   const liveState: VenueLiveState =
@@ -181,14 +191,28 @@ export const ContextBar = memo(function ContextBar({
             everything it is NOT has to be one group — three loose children
             would spread the avatar away from the symbol instead. */}
         <span className="flex min-w-0 items-center gap-[5px]">
-          <PairAvatar
-            assetClass={assetClassMap[focusedPair]}
-            base={base}
-            className="size-[30px] text-[9px]"
-            size="sm"
-          />
-          <span className="min-w-0 truncate font-mono text-[15px] font-semibold text-foreground">
-            {focusedPair}
+          {isPrediction ? (
+            <PredictionAvatar className="size-[30px]" size="sm" />
+          ) : (
+            <PairAvatar
+              assetClass={pairClass}
+              base={base}
+              className="size-[30px] text-[9px]"
+              size="sm"
+            />
+          )}
+          {/* The chip shows what the user picked. A prediction's routing key
+              is an event slug — truncated into 120px it reads as the first two
+              words of a headline, identical across every outcome of the same
+              event. `usePairDisplayLabel` gives it the subject and the side
+              instead, which is what actually tells two of them apart. */}
+          <span
+            className={cn(
+              'min-w-0 truncate text-[15px] font-semibold text-foreground',
+              isPrediction ? 'font-sans' : 'font-mono',
+            )}
+          >
+            {pairLabel}
           </span>
         </span>
         <ChevronDown className="size-3 shrink-0 text-muted-foreground" />

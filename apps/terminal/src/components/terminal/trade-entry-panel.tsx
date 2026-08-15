@@ -202,10 +202,10 @@ function TradeToast({
           initial={{ x: -8, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.25 }}
-          className="mt-0.5 flex items-center gap-1.5"
+          className="mt-0.5 flex min-w-0 items-center gap-1.5"
         >
-          <PairSymbol symbol={pairKey} className="text-xs" />
-          <span className="rounded bg-muted px-1 py-0.5 text-[9px] font-medium uppercase text-muted-foreground">
+          <PairSymbol symbol={pairKey} className="min-w-0 text-xs" />
+          <span className="shrink-0 rounded bg-muted px-1 py-0.5 text-[9px] font-medium uppercase text-muted-foreground">
             {market}
           </span>
         </motion.div>

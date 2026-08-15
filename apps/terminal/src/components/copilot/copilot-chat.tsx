@@ -11,6 +11,7 @@ import { CopilotChatMessage } from './copilot-chat-message'
 import { PersonaMenu } from './persona-menu'
 import type { Persona } from './persona-menu'
 import type { UIMessage } from 'ai'
+import { usePairDisplayLabel } from '@/hooks/use-prediction-pair'
 import { useStickToBottom } from '@/hooks/use-stick-to-bottom'
 
 type CopilotChatProps = {
@@ -29,6 +30,8 @@ export function CopilotChat({
   onPersonaChange,
 }: CopilotChatProps) {
   const { t } = useTranslation()
+  // The heading says what the user is looking at, not how it is routed.
+  const pairLabel = usePairDisplayLabel(pairKey ?? '')
   const isStreaming = status === 'streaming' || status === 'submitted'
   const { contentRef, scrollToBottom } = useStickToBottom({
     enabled: isStreaming,
@@ -53,7 +56,7 @@ export function CopilotChat({
         <div className="max-w-[200px] space-y-1.5">
           <p className="font-serif text-base font-medium leading-snug">
             {pairKey
-              ? t('copilot.analyzePair', { pair: pairKey })
+              ? t('copilot.analyzePair', { pair: pairLabel })
               : t('copilot.startConversation')}
           </p>
           <p className="text-muted-foreground text-xs">

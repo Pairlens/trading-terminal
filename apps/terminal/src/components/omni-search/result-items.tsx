@@ -209,8 +209,12 @@ export const PairResultItem = memo(function PairResultItem({
         assetClass={pair.assetClass}
         size="sm"
       />
-      <PairSymbol symbol={pair.symbol} className="text-sm" />
-      <span className="flex-1 truncate text-xs text-muted-foreground">
+      <PairSymbol
+        symbol={pair.symbol}
+        assetClass={pair.assetClass}
+        className="min-w-0 max-w-[55%] text-sm"
+      />
+      <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
         {pair.name}
       </span>
       {isWatched && (

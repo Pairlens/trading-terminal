@@ -18,14 +18,15 @@ import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Loader2, Search, Vote } from 'lucide-react'
 
-import { cn } from '@pairlens/ui'
 import { Button } from '@pairlens/ui/components/ui/button'
 import { Input } from '@pairlens/ui/components/ui/input'
+
+import { EventDialog } from './event-dialog'
+import { EventThumbnail, MarketRow } from './event-pieces'
 import type {
   PredictionEventSummary,
   PredictionMarketSummary,
 } from '@pairlens/shared/instrument-types'
-
 import type { PredictionVenueResult } from '@/hooks/use-prediction-events'
 import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import {
@@ -33,15 +34,26 @@ import {
   usePredictionEvents,
   usePredictionVenues,
 } from '@/hooks/use-prediction-events'
-import { formatCompactUsd, formatPredictionPrice } from '@/lib/format-price'
-import {
-  marketSubtitle,
-  predictionOutcomeName,
-} from '@/lib/predictions/event-labels'
+import { formatCompactUsd } from '@/lib/format-price'
+import { predictionEntryFor } from '@/lib/predictions/pin'
 import { formatTimeUntil } from '@/lib/format-time'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { registerPredictionOutcome } from '@/stores/prediction-directory-store'
 import { chartLinkProps } from '@/lib/market-ref/link'
+
+/**
+ * Markets a card shows before it defers to the dialog.
+ *
+ * "Democratic Presidential Nominee 2028" carries thirty candidates, each its
+ * own market with a Yes and a No. Rendered in full, one event was four
+ * screens of buttons and the board below it may as well not have existed —
+ * which is the whole point of a board. Four is enough to see what an event is
+ * about and to trade the front-runner without opening anything.
+ */
+const MAX_MARKETS_PER_CARD = 4
+
+/** Outcomes a card shows per market. Binary markets are unaffected. */
+const MAX_OUTCOMES_PER_MARKET = 4
 
 export function EventsPane() {
   const { t } = useTranslation()
@@ -50,6 +62,13 @@ export function EventsPane() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<string | null>(null)
   const [venueFilter, setVenueFilter] = useState<string | null>(null)
+  // The open event, captured with the venue it came from. Held by value
+  // rather than by id: the payload behind it refetches on a 60s stale timer,
+  // and an id would leave the dialog resolving against a list that had moved.
+  const [openEvent, setOpenEvent] = useState<{
+    venue: PredictionVenueResult
+    event: PredictionEventSummary
+  } | null>(null)
   const [, setAssetClassMap] = usePersistedState<Record<string, string>>(
     'pair-picker.assetClassMap',
     {},
@@ -76,24 +95,12 @@ export function EventsPane() {
       pairKey: string,
       label: string,
     ) => {
-      registerPredictionOutcome(pairKey, {
-        market: venue.market,
-        predictionMarketId: market.id,
-        outcome: label,
-        // The same `<question> - <outcome>` join the connectors build `name`
-        // from, so the picker's question/outcome split still works — but with
-        // the venue's opaque market id resolved to something readable first.
-        name: predictionOutcomeName(
-          market.title,
-          event.title,
-          label,
-          event.markets.length,
-        ),
-        eventTitle: event.title,
-        eventId: event.id,
-        ...(market.endMs !== undefined ? { endMs: market.endMs } : {}),
-      })
+      registerPredictionOutcome(
+        pairKey,
+        predictionEntryFor(venue.market, event, market, label),
+      )
       setAssetClassMap((prev) => ({ ...prev, [pairKey]: 'prediction' }))
+      setOpenEvent(null)
       // The venue is in the address, so the card's own venue travels with the
       // link. This used to need a venue switch as a side effect because
       // the route could only re-home the pair onto "the first venue that
@@ -107,6 +114,12 @@ export function EventsPane() {
       )
     },
     [navigate, setAssetClassMap],
+  )
+
+  const handleOpenEvent = useCallback(
+    (venue: PredictionVenueResult, event: PredictionEventSummary) =>
+      setOpenEvent({ venue, event }),
+    [],
   )
 
   if (venues.length === 0) {
@@ -201,6 +214,7 @@ export function EventsPane() {
             {results.map((venue) => (
               <VenueBlock
                 key={venue.market}
+                onOpenEvent={handleOpenEvent}
                 onOutcome={handleOutcome}
                 showHeading={results.length > 1}
                 venue={venue}
@@ -217,6 +231,19 @@ export function EventsPane() {
           </div>
         )}
       </div>
+
+      <EventDialog
+        event={openEvent?.event ?? null}
+        onOpenChange={(next) => {
+          if (!next) setOpenEvent(null)
+        }}
+        onSelect={(event, market, pairKey, label) => {
+          if (openEvent) {
+            handleOutcome(openEvent.venue, event, market, pairKey, label)
+          }
+        }}
+        venueLabel={openEvent?.venue.label ?? ''}
+      />
     </div>
   )
 }
@@ -268,10 +295,15 @@ function VenueBlock({
   venue,
   showHeading,
   onOutcome,
+  onOpenEvent,
 }: {
   venue: PredictionVenueResult
   showHeading: boolean
   onOutcome: OutcomeHandler
+  onOpenEvent: (
+    venue: PredictionVenueResult,
+    event: PredictionEventSummary,
+  ) => void
 }) {
   const { t } = useTranslation()
 
@@ -309,6 +341,7 @@ function VenueBlock({
         <EventCard
           event={event}
           key={`${venue.market}:${event.id}`}
+          onOpenEvent={onOpenEvent}
           onOutcome={onOutcome}
           venue={venue}
         />
@@ -321,20 +354,40 @@ const EventCard = memo(function EventCard({
   venue,
   event,
   onOutcome,
+  onOpenEvent,
 }: {
   venue: PredictionVenueResult
   event: PredictionEventSummary
   onOutcome: OutcomeHandler
+  onOpenEvent: (
+    venue: PredictionVenueResult,
+    event: PredictionEventSummary,
+  ) => void
 }) {
   const { t } = useTranslation()
   const endMs = event.endMs ?? event.markets[0]?.endMs
+  const shownMarkets = event.markets.slice(0, MAX_MARKETS_PER_CARD)
+  const hiddenMarkets = event.markets.length - shownMarkets.length
+  const openEvent = () => onOpenEvent(venue, event)
 
   return (
     <article className="rounded-lg border p-3 transition-colors hover:border-primary/40">
-      <header className="flex items-start justify-between gap-3">
-        <h3 className="min-w-0 text-sm font-medium leading-snug">
-          {event.title}
-        </h3>
+      <header className="flex items-start gap-2.5">
+        {/* The heading opens the event rather than a chart. An event is not
+            tradeable — its markets are — so the one thing a click on the title
+            can mean is "show me this whole thing". The artwork is inside the
+            button: it is the largest thing on the row and pointing at it and
+            getting nothing is the worse surprise. */}
+        <button
+          className="group/evt flex min-w-0 flex-1 items-start gap-2.5 text-left"
+          onClick={openEvent}
+          type="button"
+        >
+          <EventThumbnail className="size-9" imageUrl={event.imageUrl} />
+          <h3 className="min-w-0 text-sm font-medium leading-snug group-hover/evt:underline">
+            {event.title}
+          </h3>
+        </button>
         <div className="shrink-0 text-right">
           {endMs !== undefined && (
             <p className="font-mono text-[10px] tabular-nums text-muted-foreground">
@@ -350,55 +403,35 @@ const EventCard = memo(function EventCard({
       </header>
 
       <div className="mt-2 flex flex-col gap-1.5">
-        {event.markets.map((market) => {
-          // A single-market event repeats its own title as the question;
-          // showing it twice adds a line and no information. And a venue that
-          // publishes no per-market question falls back to its condition id —
-          // see `marketSubtitle` for what happens to that.
-          const subtitle = marketSubtitle(
-            market.title,
-            event.title,
-            event.markets.length,
-          )
-          return (
-            <div key={market.id} className="flex flex-col gap-1">
-              {subtitle && (
-                <p className="text-xs leading-snug text-muted-foreground">
-                  {subtitle}
-                </p>
-              )}
-              <div className="flex flex-wrap gap-1">
-                {market.outcomes.map((outcome) => (
-                  <button
-                    className={cn(
-                      'flex min-w-24 flex-1 items-center justify-between gap-2 rounded-md border px-2 py-1',
-                      'text-xs transition-colors hover:border-primary/50 hover:bg-accent/40',
-                    )}
-                    key={outcome.pairKey}
-                    onClick={() =>
-                      onOutcome(
-                        venue,
-                        event,
-                        market,
-                        outcome.pairKey,
-                        outcome.label,
-                      )
-                    }
-                    type="button"
-                  >
-                    <span className="truncate">{outcome.label}</span>
-                    <span className="shrink-0 font-mono tabular-nums text-muted-foreground">
-                      {outcome.price !== undefined
-                        ? formatPredictionPrice(outcome.price)
-                        : '—'}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )
-        })}
+        {shownMarkets.map((market) => (
+          <MarketRow
+            eventTitle={event.title}
+            key={market.id}
+            market={market}
+            marketCount={event.markets.length}
+            maxOutcomes={MAX_OUTCOMES_PER_MARKET}
+            onOverflow={openEvent}
+            onSelect={(picked, label) => {
+              const outcome = picked.outcomes.find((o) => o.label === label)
+              if (outcome) {
+                onOutcome(venue, event, picked, outcome.pairKey, label)
+              }
+            }}
+          />
+        ))}
       </div>
+
+      {/* Never silent: a board that quietly showed four of sixty questions
+          reads as an event with four questions. */}
+      {hiddenMarkets > 0 && (
+        <button
+          className="mt-2 w-full rounded-md border border-dashed px-2 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+          onClick={openEvent}
+          type="button"
+        >
+          {t('events.moreMarkets', { count: hiddenMarkets })}
+        </button>
+      )}
     </article>
   )
 })

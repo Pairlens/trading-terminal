@@ -22,6 +22,7 @@ import {
   lookupPredictionOutcome,
   registerPredictionOutcome,
 } from '@/stores/prediction-directory-store'
+import { stripOutcomeSuffix } from '@/lib/predictions/event-labels'
 import {
   lookupDisplayToken,
   registerDisplayToken,
@@ -95,6 +96,8 @@ export interface PairEntry {
    */
   predictionMarketId?: string
   outcome?: string
+  /** The market's short label within its event — what a ticker slot renders. */
+  shortTitle?: string
   eventId?: string
   eventTitle?: string
   endMs?: number
@@ -169,6 +172,7 @@ export function instrumentToPairEntry(inst: Instrument): PairEntry {
           predictionMarketId: inst.predictionMarketId,
           outcome: inst.outcome,
           market: inst.market,
+          ...(inst.shortTitle ? { shortTitle: inst.shortTitle } : {}),
           ...(inst.eventId ? { eventId: inst.eventId } : {}),
           ...(inst.eventTitle ? { eventTitle: inst.eventTitle } : {}),
           ...(typeof inst.endMs === 'number' ? { endMs: inst.endMs } : {}),
@@ -195,10 +199,7 @@ export function predictionQuestionOf(entry: {
   name: string
   outcome?: string
 }): string {
-  const suffix = ` - ${entry.outcome}`
-  return entry.outcome && entry.name.endsWith(suffix)
-    ? entry.name.slice(0, -suffix.length)
-    : entry.name
+  return stripOutcomeSuffix(entry.name, entry.outcome ?? '')
 }
 
 /**
@@ -242,6 +243,7 @@ export function pinSelectedEntry(entry: PairEntry): void {
       predictionMarketId: entry.predictionMarketId,
       outcome: entry.outcome,
       name: entry.name,
+      ...(entry.shortTitle ? { shortTitle: entry.shortTitle } : {}),
       ...(entry.eventTitle ? { eventTitle: entry.eventTitle } : {}),
       ...(entry.eventId ? { eventId: entry.eventId } : {}),
       ...(typeof entry.endMs === 'number' ? { endMs: entry.endMs } : {}),
@@ -321,6 +323,7 @@ export function pairEntryForRef(
       predictionMarketId: pinned.predictionMarketId,
       outcome: pinned.outcome,
       market: pinned.market,
+      ...(pinned.shortTitle ? { shortTitle: pinned.shortTitle } : {}),
       ...(pinned.eventTitle ? { eventTitle: pinned.eventTitle } : {}),
       ...(pinned.eventId ? { eventId: pinned.eventId } : {}),
       ...(typeof pinned.endMs === 'number' ? { endMs: pinned.endMs } : {}),

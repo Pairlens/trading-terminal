@@ -5191,7 +5191,16 @@
     "desktopOnlyTitle": "Ereignisse benötigen die Desktop-App",
     "desktopOnlyDescription": "Die API dieser Handelsplattform lehnt Browser-Ursprünge ab, daher ist ihr Ereignis-Board nur im Desktop-Build erreichbar.",
     "venueDesktopOnly": "{{venue}}-Ereignisse benötigen die Desktop-App.",
-    "volume": "Vol. {{value}}"
+    "volume": "Vol. {{value}}",
+    "moreMarkets_one": "1 weiteren Markt anzeigen",
+    "moreMarkets_other": "{{count}} weitere Märkte anzeigen",
+    "moreOutcomes_one": "+1 weiterer",
+    "moreOutcomes_other": "+{{count}} weitere",
+    "closes": "Schließt",
+    "volumeLabel": "Volumen",
+    "liquidityLabel": "Liquidität",
+    "marketsLabel": "Märkte",
+    "noMarketsBody": "Dieses Ereignis hat derzeit keine offenen Märkte."
   },
   "predictionPositions": {
     "connect": "Konto verbinden",

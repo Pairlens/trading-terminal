@@ -106,6 +106,12 @@ export type PredictionInstrument = InstrumentCommon & {
   kind: 'prediction'
   predictionMarketId: string
   outcome: string
+  /**
+   * The market's own short label within its event: 'Gavin Newsom',
+   * 'Above 13.5M'. What a ticker slot shows in place of a 100-character
+   * routing key. See `shortTitle` on `PredictionMarketSummary`.
+   */
+  shortTitle?: string
   /** Venue event grouping this market belongs to (Kalshi event ticker, Polymarket event id). */
   eventId?: string
   /** Event headline, when it differs from the market question in `name`. */
@@ -180,6 +186,16 @@ export type PredictionMarketSummary = {
   id: string
   /** The market question. */
   title: string
+  /**
+   * The market's short label within its event, when the venue publishes one:
+   * Polymarket's `groupItemTitle` ('Gavin Newsom'), Kalshi's `yes_sub_title`
+   * ('Above 13.5M'). It is the one field that separates siblings of a
+   * categorical event without repeating the question, which is what makes it
+   * the right thing to show wherever a ticker used to go.
+   */
+  shortTitle?: string
+  /** Per-market artwork, when the venue publishes one (Polymarket icons). */
+  imageUrl?: string
   outcomes: Array<PredictionOutcomeSummary>
   volume?: number
   liquidity?: number

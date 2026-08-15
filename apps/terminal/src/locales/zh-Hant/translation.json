@@ -5191,7 +5191,16 @@
     "desktopOnlyTitle": "事件瀏覽需要桌面應用程式",
     "desktopOnlyDescription": "該平台的 API 拒絕瀏覽器來源，因此只能透過桌面版存取其事件看板。",
     "venueDesktopOnly": "{{venue}} 的事件需要桌面應用程式。",
-    "volume": "成交額 {{value}}"
+    "volume": "成交額 {{value}}",
+    "moreMarkets_one": "再顯示 1 個市場",
+    "moreMarkets_other": "再顯示 {{count}} 個市場",
+    "moreOutcomes_one": "另有 1 項",
+    "moreOutcomes_other": "另有 {{count}} 項",
+    "closes": "結束",
+    "volumeLabel": "成交量",
+    "liquidityLabel": "流動性",
+    "marketsLabel": "市場",
+    "noMarketsBody": "此事件目前沒有開放的市場。"
   },
   "predictionPositions": {
     "connect": "連接帳戶",

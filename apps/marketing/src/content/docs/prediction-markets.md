@@ -6,7 +6,7 @@ parent: trading
 order: 6
 eyebrow: For traders
 updated: AUG 2026
-readTime: 7 min read
+readTime: 8 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -83,25 +83,52 @@ listed and resolved daily.
 The **Events** panel also sits on the default prediction layout, beside the
 chart; on a custom workspace, add it from the Add Pane dialog, under Discovery. It
 queries every prediction venue you have connected and shows what is busy right
-now:
-category chips across the top, a search box that matches question text, and a
-card per event with how long until it closes, its volume, and a price for each
-outcome.
-Click an outcome and it opens in the chart terminal. A venue that needs the
+now: category chips across the top, a search box that matches question text, and
+a card per event with its artwork, how long until it closes, its volume, and a
+price for each outcome. Yes is green and No is red, the same two colours the
+terminal uses for long and short everywhere else, because taking Yes is the long
+side. Click an outcome and it opens in the chart terminal. A venue that needs the
 desktop app says so in place of its results rather than returning nothing.
+
+Cards are deliberately short. An event like "Democratic Presidential Nominee
+2028" carries thirty candidate markets with two sides each, and drawn in full it
+would be four screens of buttons with the rest of the board stranded below it. A
+card shows the first four questions and up to four outcomes each, and counts the
+rest: **Show 26 more markets**.
+
+Click that count, or the event's own title, and the **event dialog** opens with
+everything: the artwork, the category, volume, liquidity, how many markets the
+event has, when it closes, and then every question with every outcome priced.
+Each one still opens its chart, so the dialog is the way in for a market that
+did not fit on the card. It costs no extra request; the whole event was already
+in the payload the board fetched.
 
 On a phone the board is in **Discover**, under **Prediction markets**: a few
 live events with their outcome prices, and **All events** for the full list
 with the same search and venue filter. Tapping an outcome opens its chart, the
-way clicking a card does on the desktop. The section is only there when a
-prediction connector is installed and enabled. See
+way clicking a card does on the desktop; tapping the event heading opens the
+same full event as its own screen. The section is only there when a prediction
+connector is installed and enabled. See
 [Mobile terminal](/docs/mobile-terminal).
 
 Search works from the pair picker too. It grows a **Predictions** tab beside
 Crypto and Stocks, and prediction rows are rendered as the question rather than
-as a ticker, because `KXBTCD-26AUG15-T53` is not something you scan. Once you
-have opened an outcome, the watchlist and the recent-pairs list show its
-question as well.
+as a ticker, because `KXBTCD-26AUG15-T53` is not something you scan.
+
+## What a prediction is called
+
+An outcome's routing key can be a hundred characters of event slug. Nothing in
+the terminal shows you one. Wherever a ticker would go, a prediction renders as
+a subject and a side instead: **Gavin Newsom · Yes**, with the whole question on
+hover. The subject is the venue's own short label for that market inside its
+event, which is the one thing that separates two candidates in the same race;
+where a venue publishes none, it falls back to the question, then to the event
+heading.
+
+That reading is what the recent-pairs strip, the pair switcher in the top bar,
+the watchlist, the chart watermark, the co-pilot's heading and the phone's pair
+chip all show. It is also why a prediction never breaks a row built for six
+characters.
 
 ## Reading a price in cents
 

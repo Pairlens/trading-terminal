@@ -5191,7 +5191,16 @@
     "desktopOnlyTitle": "事件浏览需要桌面应用",
     "desktopOnlyDescription": "该平台的 API 拒绝浏览器来源，因此只能通过桌面版访问其事件看板。",
     "venueDesktopOnly": "{{venue}} 的事件需要桌面应用。",
-    "volume": "成交额 {{value}}"
+    "volume": "成交额 {{value}}",
+    "moreMarkets_one": "再显示 1 个市场",
+    "moreMarkets_other": "再显示 {{count}} 个市场",
+    "moreOutcomes_one": "另有 1 项",
+    "moreOutcomes_other": "另有 {{count}} 项",
+    "closes": "结束",
+    "volumeLabel": "成交量",
+    "liquidityLabel": "流动性",
+    "marketsLabel": "市场",
+    "noMarketsBody": "该事件目前没有开放的市场。"
   },
   "predictionPositions": {
     "connect": "连接账户",

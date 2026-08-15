@@ -122,10 +122,17 @@ featured pairs, prediction markets, then the news feed. The two cards and the
 two lists each open out into a full screen, so the sheet stays a summary.
 
 **Prediction markets** sit between the featured pairs and the news. A handful
-of live events, each with its question, how long until it resolves, and a price
-button per outcome in cents. Tap an outcome and it becomes the chart, with the
-ticket and the book quoting the same side. **All events** opens the full board,
+of live events, each with its artwork, its question, how long until it resolves,
+and a price button per outcome in cents, Yes in green and No in red. Tap an
+outcome and it becomes the chart, with the ticket and the book quoting the same
+side. Tap the event heading and the whole event opens as its own screen: every
+question it carries, every outcome priced. **All events** opens the full board,
 where you can search question text and filter by venue.
+
+Cards are bounded on both surfaces. A race with thirty candidates would
+otherwise be sixty buttons deep and push the rest of Discover off the screen, so
+a card shows the leading questions and counts the rest into a tap that opens the
+event.
 
 The section only exists when a connected plugin serves event contracts. Disable
 Kalshi and Polymarket in the Plugin Store, or ship a build without the
