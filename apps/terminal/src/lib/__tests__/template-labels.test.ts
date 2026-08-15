@@ -10,6 +10,7 @@ import {
   SCREEN_SIZE_META,
   TRADER_TYPE_META,
 } from '@/lib/workspace-store/catalog'
+import { BOOTSTRAP_PLUGINS } from '@/lib/plugins/bootstrap-bundle'
 
 /**
  * Coverage for the derived keys in `lib/workspace-store/template-labels.ts`.
@@ -45,10 +46,23 @@ function templateSlug(id: string): string {
   return id.startsWith('template:') ? id.slice('template:'.length) : id
 }
 
+/**
+ * Bundled plugins ship workspace presets of their own (`contributes.
+ * workspaces`), and the store renders them through the same derived keys. They
+ * are exactly as easy to forget as a catalog entry, and easier: the plugin
+ * lives in another package.
+ */
+const CONTRIBUTED = BOOTSTRAP_PLUGINS.flatMap(
+  ({ manifest }) => manifest.contributes?.workspaces ?? [],
+)
+
+const ALL_TEMPLATES = [...BUILTIN_WORKSPACE_TEMPLATES, ...CONTRIBUTED]
+
 describe('derived catalog keys resolve in en', () => {
   test('workspace templates', () => {
     expect(BUILTIN_WORKSPACE_TEMPLATES.length).toBeGreaterThan(0)
-    const keys = BUILTIN_WORKSPACE_TEMPLATES.flatMap((tpl) => {
+    expect(CONTRIBUTED.length).toBeGreaterThan(0)
+    const keys = ALL_TEMPLATES.flatMap((tpl) => {
       const base = `workspaceStore.templates.${templateSlug(tpl.id)}`
       const fieldKeys = [
         `${base}.name`,
@@ -62,10 +76,17 @@ describe('derived catalog keys resolve in en', () => {
     expect(missing).toEqual([])
   })
 
+  test('template ids are unique across the catalog and the plugins', () => {
+    // A plugin id that collided with a catalog id would share translations and
+    // fight for the same store card.
+    const ids = ALL_TEMPLATES.map((t) => t.id)
+    expect(new Set(ids).size).toBe(ids.length)
+  })
+
   test('template ids are namespace-safe once slugged', () => {
     // i18next reads ':' as its namespace separator by default — a raw
     // `template:foo` id embedded in a key would silently fail to resolve.
-    for (const tpl of BUILTIN_WORKSPACE_TEMPLATES) {
+    for (const tpl of ALL_TEMPLATES) {
       expect(templateSlug(tpl.id)).not.toContain(':')
     }
   })

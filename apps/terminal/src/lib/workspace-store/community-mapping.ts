@@ -1,5 +1,10 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import {
+  WORKSPACE_LAYOUT_CAPS,
+  isUsableWorkspaceLayout,
+} from '@pairlens/shared/workspace-layout-caps'
+
 import { ASSET_CLASSES, SCREEN_SIZES, TRADER_TYPES } from './catalog'
 import type {
   AssetClass,
@@ -7,7 +12,6 @@ import type {
   TraderType,
   WorkspaceTemplate,
 } from './types'
-import type { TerminalLayout } from '@/lib/layout/types'
 import type { CommunityWorkspaceDto } from '@/lib/api'
 
 // Pure mapping from an App Server community submission to a WorkspaceTemplate —
@@ -17,17 +21,12 @@ const TRADER_SET = new Set<string>(TRADER_TYPES)
 const ASSET_SET = new Set<string>(ASSET_CLASSES)
 const SCREEN_SET = new Set<string>(SCREEN_SIZES)
 
-// Structural + size ceilings mirror the App Server's sanitizeSubmission caps
-// so an untrusted third-party store plugin can't crash the store with a
-// malformed layout or bloat localStorage with a huge one.
-const MAX_COLUMNS = 16
-const MAX_CELLS_PER_COLUMN = 24
-const MAX_PANES_PER_CELL = 16
-const MAX_TOTAL_PANES = 200
-const MAX_LAYOUT_BYTES = 256 * 1024
-const MAX_TAGS = 12
-const MAX_VARIABLES = 24
-const MAX_REQUIRED_PLUGINS = 24
+// Structural + size ceilings live in `@pairlens/shared/workspace-layout-caps`,
+// shared with the manifest schema and the contributed-workspace registry, so an
+// untrusted store can't crash the store with a malformed layout or bloat
+// localStorage with a huge one — and one cap change reaches all three.
+const { maxTags: MAX_TAGS, maxVariables: MAX_VARIABLES } = WORKSPACE_LAYOUT_CAPS
+const MAX_REQUIRED_PLUGINS = WORKSPACE_LAYOUT_CAPS.maxRequiredPlugins
 
 /**
  * A store layout is only usable if it has the full column→cell→pane structure
@@ -36,35 +35,7 @@ const MAX_REQUIRED_PLUGINS = 24
  * plugin path — and, applied uniformly, hardens both against malformed data.
  */
 export function hasUsableLayout(dto: CommunityWorkspaceDto): boolean {
-  const layout: TerminalLayout | undefined = dto.layout
-  const columns = layout?.columns
-  if (!Array.isArray(columns) || columns.length === 0) return false
-  if (columns.length > MAX_COLUMNS) return false
-
-  let totalPanes = 0
-  for (const col of columns) {
-    const cells = col?.cells
-    if (!Array.isArray(cells) || cells.length === 0) return false
-    if (cells.length > MAX_CELLS_PER_COLUMN) return false
-    for (const cell of cells) {
-      const panes = cell?.panes
-      if (!Array.isArray(panes) || panes.length === 0) return false
-      if (panes.length > MAX_PANES_PER_CELL) return false
-      totalPanes += panes.length
-      if (totalPanes > MAX_TOTAL_PANES) return false
-      for (const pane of panes) {
-        if (!pane || typeof pane.type !== 'string') return false
-      }
-    }
-  }
-
-  // Bound the serialized size so a plugin can't bloat local storage on copy.
-  try {
-    if (JSON.stringify(layout).length > MAX_LAYOUT_BYTES) return false
-  } catch {
-    return false
-  }
-  return true
+  return isUsableWorkspaceLayout(dto.layout)
 }
 
 /**

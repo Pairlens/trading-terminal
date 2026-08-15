@@ -213,3 +213,141 @@ describe('validateManifest', () => {
     ).toBe(false)
   })
 })
+
+describe('contributes.workspaces', () => {
+  const LAYOUT = {
+    version: 1,
+    columns: [
+      {
+        id: 'c0',
+        widthPercent: 100,
+        cells: [
+          {
+            id: 'e0',
+            heightPercent: 100,
+            panes: [{ id: 'p0', type: 'chart' }],
+          },
+        ],
+      },
+    ],
+  }
+  const WORKSPACE = {
+    id: 'template:mine',
+    name: 'Mine',
+    tagline: 'A layout.',
+    description: 'A layout, at length.',
+    icon: 'Layers',
+    facets: { traderTypes: [], assetClasses: [], screenSizes: [] },
+    layout: LAYOUT,
+  }
+  const withWorkspaces = (workspaces: unknown) => ({
+    ...VALID,
+    contributes: { workspaces },
+  })
+
+  it('accepts a well-formed contribution, with nothing to warn about', () => {
+    const result = validateManifest(withWorkspaces([WORKSPACE]))
+    expect(result.valid).toBe(true)
+    expect(result.warnings).toEqual([])
+  })
+
+  it('leaves manifests that declare no workspaces alone', () => {
+    expect(validateManifest({ ...VALID, contributes: {} }).valid).toBe(true)
+    expect(
+      validateManifest({
+        ...VALID,
+        contributes: {
+          panels: [{ id: 'p', label: 'P', icon: 'X', category: 'trading' }],
+        },
+      }).valid,
+    ).toBe(true)
+  })
+
+  it('warns about a missing id, name or layout without failing the manifest', () => {
+    for (const key of ['id', 'name', 'layout'] as const) {
+      const broken = { ...WORKSPACE }
+      delete (broken as Record<string, unknown>)[key]
+      const result = validateManifest(withWorkspaces([broken]))
+      expect(result.valid, key).toBe(true)
+      expect(result.warnings.length, key).toBeGreaterThan(0)
+    }
+  })
+
+  it('warns about a duplicate id within one manifest', () => {
+    const result = validateManifest(withWorkspaces([WORKSPACE, WORKSPACE]))
+    expect(result.valid).toBe(true)
+    expect(result.warnings.join(' ')).toContain('declared more than once')
+  })
+
+  it('warns about layouts that could never render', () => {
+    const cases = [
+      { version: 1, columns: [] },
+      { version: 1, columns: [{ id: 'c', widthPercent: 100, cells: [] }] },
+      {
+        version: 1,
+        columns: [
+          {
+            id: 'c',
+            widthPercent: 100,
+            cells: [{ id: 'e', heightPercent: 100, panes: [] }],
+          },
+        ],
+      },
+      {
+        version: 1,
+        columns: [
+          {
+            id: 'c',
+            widthPercent: 100,
+            cells: [{ id: 'e', heightPercent: 100, panes: [{ id: 'p' }] }],
+          },
+        ],
+      },
+    ]
+    for (const layout of cases) {
+      const result = validateManifest(
+        withWorkspaces([{ ...WORKSPACE, layout }]),
+      )
+      expect(result.valid).toBe(true)
+      expect(result.warnings.join(' ')).toContain('will be ignored')
+    }
+  })
+
+  it('warns when one manifest carries more geometry than the caps allow', () => {
+    const wide = {
+      version: 1,
+      columns: Array.from({ length: 17 }, (_, i) => ({
+        id: `c${i}`,
+        widthPercent: 6,
+        cells: [
+          {
+            id: `e${i}`,
+            heightPercent: 100,
+            panes: [{ id: `p${i}`, type: 'chart' }],
+          },
+        ],
+      })),
+    }
+    expect(
+      validateManifest(withWorkspaces([{ ...WORKSPACE, layout: wide }]))
+        .warnings.length,
+    ).toBeGreaterThan(0)
+    expect(
+      validateManifest(
+        withWorkspaces(
+          Array.from({ length: 25 }, (_, i) => ({ ...WORKSPACE, id: `t${i}` })),
+        ),
+      ).warnings.length,
+    ).toBeGreaterThan(0)
+  })
+
+  it('never fails a manifest over its workspace contributions', () => {
+    // A manifest installed before contributes.workspaces was validated at all
+    // must keep loading: the host ignores what it cannot use.
+    for (const contributes of [{ workspaces: {} }, 'nope', 42]) {
+      const result = validateManifest({ ...VALID, contributes })
+      expect(result.valid, JSON.stringify(contributes)).toBe(true)
+      expect(result.warnings.length).toBeGreaterThan(0)
+    }
+  })
+})

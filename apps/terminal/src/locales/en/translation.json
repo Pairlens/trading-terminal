@@ -2476,7 +2476,6 @@
     "panels": "Included panels",
     "permissions": "Permissions",
     "preview": "Preview",
-    "removeTheme": "Remove",
     "resetToDefaults": "Reset to defaults",
     "saveActivate": "Save & Activate",
     "size": "Size",
@@ -2492,6 +2491,8 @@
     "tier": "Tier",
     "uninstall": "Uninstall",
     "uninstalled": "Uninstalled",
+    "uninstalledToast": "Uninstalled",
+    "uninstallRefusedCore": "Pairlens Core cannot be uninstalled. The terminal has no panels without it.",
     "updateReactivate": "Update & Reactivate",
     "version": "Version",
     "visit": "Visit",
@@ -2537,8 +2538,8 @@
     "pendingTrustDescription": "Contributes UI and can't run in the sandbox — grant full trust to enable it, or uninstall it.",
     "remove": "Remove",
     "groupProvidersExtensions": "Providers & Extensions",
-    "removePluginTitle": "Remove Plugin",
-    "removePluginDescription": "This will deactivate and remove the plugin. Any panels it contributed will show a recovery placeholder. You can reinstall it from the Plugin Store at any time.",
+    "uninstallPluginTitle": "Uninstall Plugin",
+    "uninstallPluginDescription": "This uninstalls the plugin from this device. Any panels it contributed will show a recovery placeholder, and a theme it was painting hands the palette back. You can install it again from the Plugin Store at any time.",
     "resetDefaultsTitle": "Reset to Defaults",
     "resetDefaultsDescription": "This will remove all non-bundled plugins, clear staged and available updates, and reload the terminal. Bundled plugins will remain installed.",
     "reset": "Reset",
@@ -2857,6 +2858,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Open perpetual positions with entry, mark price and liquidation level"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "On-chain workspace presets: the DEX terminal and the degen hunting board"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Equities",
+        "description": "Stock workspace presets: the equities terminal and the scanner-led desk"
       }
     },
     "families": {
@@ -3238,6 +3247,8 @@
     "picksAccount": "Prompts you to pick an account",
     "added": "“{{name}}” added to your workspaces.",
     "addedWithMissing": "“{{name}}” added. Install the missing plugins to fill every panel.",
+    "bundledInstalled": "Installed {{names}} for this workspace.",
+    "bundledInstallFailed": "Could not install {{names}}. Add them from the Plugin Store.",
     "facet": {
       "trader": "Trader",
       "asset": "Asset",
@@ -3453,6 +3464,12 @@
         "tagline": "Chart the odds with the whole event beside them.",
         "description": "The default prediction-market layout: a probability chart with the tape and your open contracts below it, the order book and ticket in the middle, and the event browser beside the AI Copilot, because the neighbouring outcomes are half the analysis.",
         "menuLabel": "Default"
+      },
+      "prediction-discovery": {
+        "name": "Prediction Discovery",
+        "tagline": "Browse live event markets, not a catalog of pairs.",
+        "description": "A home board built for event contracts: the event browser takes the wide column, the news wire runs beside it, and a light rail carries your watchlist over the sentiment gauge. Install a prediction venue such as Kalshi or Polymarket to fill the board.",
+        "menuLabel": "Predictions"
       },
       "quad-charts": {
         "name": "Quad Charts",
@@ -4139,6 +4156,8 @@
     },
     "predictionsEmptyTitle": "Prediction outcomes live in the Events panel",
     "predictionsEmptyBody": "Outcomes are listed and resolved daily, so they are browsed from the venue's own board rather than a catalog.",
+    "predictionsBrowse": "Open the events board",
+    "predictionsInstall": "Install the predictions plugin",
     "futuresEmptyTitle": "Connect a futures venue to browse perpetuals",
     "futuresEmptyBody": "Contract lists come from each venue's own market table, so they appear once that venue has been reached."
   },
@@ -4956,7 +4975,9 @@
       "venuesCount_other": "{{count}} venues"
     },
     "discover": {
-      "featured": "Featured"
+      "featured": "Featured",
+      "predictions": "Prediction markets",
+      "allEvents": "All events"
     },
     "fearGreed": {
       "historyLabel_one": "Last day",

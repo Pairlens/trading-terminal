@@ -2476,7 +2476,6 @@
     "panels": "Panel đi kèm",
     "permissions": "Quyền hạn",
     "preview": "Xem trước",
-    "removeTheme": "Xóa",
     "resetToDefaults": "Đặt lại về mặc định",
     "saveActivate": "Lưu & Kích hoạt",
     "size": "Kích thước",
@@ -2492,6 +2491,8 @@
     "tier": "Cấp độ",
     "uninstall": "Gỡ cài đặt",
     "uninstalled": "Đã gỡ cài đặt",
+    "uninstalledToast": "Đã gỡ cài đặt",
+    "uninstallRefusedCore": "Không thể gỡ cài đặt Pairlens Core. Không có nó, terminal sẽ không còn bảng nào.",
     "updateReactivate": "Cập nhật & Kích hoạt lại",
     "version": "Phiên bản",
     "visit": "Truy cập",
@@ -2537,8 +2538,8 @@
     "pendingTrustDescription": "Đóng góp giao diện nên không thể chạy trong sandbox — hãy cấp toàn quyền để bật, hoặc gỡ cài đặt.",
     "remove": "Gỡ bỏ",
     "groupProvidersExtensions": "Nhà cung cấp & Tiện ích mở rộng",
-    "removePluginTitle": "Gỡ bỏ Plugin",
-    "removePluginDescription": "Thao tác này sẽ tắt và gỡ bỏ plugin. Mọi panel mà plugin này đóng góp sẽ hiển thị vùng giữ chỗ để khôi phục. Bạn có thể cài đặt lại từ Plugin Store bất cứ lúc nào.",
+    "uninstallPluginTitle": "Gỡ cài đặt Plugin",
+    "uninstallPluginDescription": "Thao tác này sẽ gỡ cài đặt plugin khỏi thiết bị này. Mọi panel mà plugin này đóng góp sẽ hiển thị vùng giữ chỗ để khôi phục, và chủ đề đang áp dụng sẽ trả lại bảng màu. Bạn có thể cài đặt lại từ Plugin Store bất cứ lúc nào.",
     "resetDefaultsTitle": "Đặt lại về Mặc định",
     "resetDefaultsDescription": "Thao tác này sẽ gỡ bỏ tất cả plugin không đi kèm sẵn, xóa các bản cập nhật đã chuẩn bị và có sẵn, rồi tải lại terminal. Các plugin đi kèm sẵn sẽ vẫn được cài đặt.",
     "reset": "Đặt lại",
@@ -2857,6 +2858,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Vị thế vĩnh cửu đang mở kèm giá vào, giá mark và mức thanh lý"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Bố cục không gian làm việc on-chain: terminal DEX và bảng săn degen"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Cổ phiếu",
+        "description": "Bố cục không gian làm việc cổ phiếu: terminal cổ phiếu và bàn dẫn bởi bộ quét"
       }
     },
     "families": {
@@ -3238,6 +3247,8 @@
     "picksAccount": "Yêu cầu bạn chọn một tài khoản",
     "added": "\"{{name}}\" đã được thêm vào không gian làm việc của bạn.",
     "addedWithMissing": "\"{{name}}\" đã được thêm. Cài đặt các plugin còn thiếu để lấp đầy mọi panel.",
+    "bundledInstalled": "Đã cài đặt {{names}} cho không gian làm việc này.",
+    "bundledInstallFailed": "Không thể cài đặt {{names}}. Hãy thêm từ Plugin Store.",
     "facet": {
       "trader": "Trader",
       "asset": "Tài sản",
@@ -3372,6 +3383,12 @@
         "tagline": "Vẽ biểu đồ xác suất với toàn bộ sự kiện ngay bên cạnh.",
         "description": "Bố cục mặc định cho thị trường dự đoán: một biểu đồ xác suất với giao dịch và các hợp đồng đang mở của bạn bên dưới, sổ lệnh và phiếu đặt lệnh ở giữa, và trình duyệt sự kiện nằm cạnh AI Copilot, vì các kết quả lân cận chiếm một nửa phần phân tích.",
         "menuLabel": "Mặc định"
+      },
+      "prediction-discovery": {
+        "name": "Khám phá thị trường dự đoán",
+        "tagline": "Duyệt các thị trường sự kiện đang mở, không phải danh mục cặp giao dịch.",
+        "description": "Bảng chính dành cho hợp đồng sự kiện: trình duyệt sự kiện chiếm cột rộng, dòng tin tức chạy bên cạnh, và một dải hẹp đặt danh sách theo dõi phía trên chỉ báo tâm lý. Cài một sàn dự đoán như Kalshi hoặc Polymarket để lấp đầy bảng này.",
+        "menuLabel": "Dự đoán"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4139,6 +4156,8 @@
     },
     "predictionsEmptyTitle": "Kết quả dự đoán nằm trong bảng Sự kiện",
     "predictionsEmptyBody": "Các kết quả được niêm yết và tất toán hằng ngày, nên được duyệt từ bảng của chính sàn thay vì danh mục.",
+    "predictionsBrowse": "Mở bảng sự kiện",
+    "predictionsInstall": "Cài plugin dự đoán",
     "futuresEmptyTitle": "Kết nối một sàn futures để duyệt các hợp đồng vĩnh cửu",
     "futuresEmptyBody": "Danh sách hợp đồng lấy từ bảng thị trường của từng sàn, nên chỉ xuất hiện khi đã kết nối được sàn đó."
   },
@@ -4956,7 +4975,9 @@
       "venuesCount_other": "{{count}} sàn"
     },
     "discover": {
-      "featured": "Nổi bật"
+      "featured": "Nổi bật",
+      "predictions": "Thị trường dự đoán",
+      "allEvents": "Tất cả sự kiện"
     },
     "fearGreed": {
       "historyLabel_one": "Ngày gần nhất",

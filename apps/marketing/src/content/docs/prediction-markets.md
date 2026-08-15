@@ -6,7 +6,7 @@ parent: trading
 order: 6
 eyebrow: For traders
 updated: AUG 2026
-readTime: 5 min read
+readTime: 7 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -72,8 +72,16 @@ the rest somewhere else.
 
 ## Finding an event
 
-The **Events** panel sits on the default prediction layout, beside the chart;
-on a custom workspace, add it from the Add Pane dialog, under Discovery. It
+Start from **Prediction Discovery**, the home board the predictions plugin
+ships: the event browser takes the wide column, the news wire runs beside it,
+and a light rail carries your watchlist over the sentiment gauge. Pick it from
+the **Workspaces** menu on the home page, or from the Predictions filter in the
+Markets panel, which now offers the board instead of an empty grid. Prediction
+outcomes are never in the pair catalog that panel reads, because they are
+listed and resolved daily.
+
+The **Events** panel also sits on the default prediction layout, beside the
+chart; on a custom workspace, add it from the Add Pane dialog, under Discovery. It
 queries every prediction venue you have connected and shows what is busy right
 now:
 category chips across the top, a search box that matches question text, and a
@@ -81,6 +89,13 @@ card per event with how long until it closes, its volume, and a price for each
 outcome.
 Click an outcome and it opens in the chart terminal. A venue that needs the
 desktop app says so in place of its results rather than returning nothing.
+
+On a phone the board is in **Discover**, under **Prediction markets**: a few
+live events with their outcome prices, and **All events** for the full list
+with the same search and venue filter. Tapping an outcome opens its chart, the
+way clicking a card does on the desktop. The section is only there when a
+prediction connector is installed and enabled. See
+[Mobile terminal](/docs/mobile-terminal).
 
 Search works from the pair picker too. It grows a **Predictions** tab beside
 Crypto and Stocks, and prediction rows are rendered as the question rather than

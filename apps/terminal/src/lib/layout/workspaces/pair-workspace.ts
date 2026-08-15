@@ -12,15 +12,25 @@
  * `spot` keeps the original storage key: it was the only pair layout before
  * classes split, so whatever a user has tuned there is, definitionally, their
  * spot layout.
+ *
+ * ## Where the non-spot defaults come from
+ *
+ * Every class beyond spot has a family plugin that ships its layouts through
+ * `contributes.workspaces`, and the store entry, the "Default" menu item and
+ * Discovery all read them from the workspace-template registry — so disabling
+ * the family takes them away. The class DEFAULT below is the one thing that
+ * cannot be reactive: it seeds the layout reducer on first paint, before any
+ * plugin has activated. So it imports the same geometry the plugin ships,
+ * statically, from a leaf data module in the plugin package. One source, two
+ * paths in. Without the connectors the class is unreachable anyway, and a
+ * layout the user already saved still boots.
  */
 import { INSTRUMENT_CLASSES } from '@pairlens/shared/market-ref'
-import {
-  PRESET_DEFAULT,
-  PRESET_DEX_TERMINAL,
-  PRESET_EQUITIES_TERMINAL,
-  PRESET_PERPS_TERMINAL,
-  PRESET_PREDICTION_TERMINAL,
-} from '../presets'
+import { PERPS_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-cex-futures/workspaces'
+import { PREDICTION_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-predictions/workspaces'
+import { DEX_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-dex/workspaces'
+import { EQUITIES_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-equities/workspaces'
+import { PRESET_DEFAULT } from '../presets'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 
 import type { TerminalLayout, WorkspaceConfig } from '../types'
@@ -28,10 +38,10 @@ import { routePresets } from '@/lib/workspace-store/catalog'
 
 const DEFAULT_PRESETS: Record<InstrumentClass, TerminalLayout> = {
   spot: PRESET_DEFAULT,
-  perp: PRESET_PERPS_TERMINAL,
-  dex: PRESET_DEX_TERMINAL,
-  stocks: PRESET_EQUITIES_TERMINAL,
-  prediction: PRESET_PREDICTION_TERMINAL,
+  perp: PERPS_TERMINAL_LAYOUT,
+  dex: DEX_TERMINAL_LAYOUT,
+  stocks: EQUITIES_TERMINAL_LAYOUT,
+  prediction: PREDICTION_TERMINAL_LAYOUT,
 }
 
 function storageKeyFor(cls: InstrumentClass): string {
@@ -48,9 +58,11 @@ const PAIR_WORKSPACES: Record<InstrumentClass, WorkspaceConfig> =
       {
         storageKey: storageKeyFor(cls),
         pairClass: cls,
+        presetContext: 'pair',
         defaultPreset: DEFAULT_PRESETS[cls],
-        // Quick-apply layouts derived from the Workspace Store (single
-        // source), narrowed to what this asset class can actually use.
+        // The built-in quick-apply base, narrowed to what this asset class can
+        // actually use. Plugin-contributed layouts join it at render time —
+        // see `useRoutePresets` — so the menu tracks what is installed.
         presets: routePresets('pair', cls),
       } satisfies WorkspaceConfig,
     ]),

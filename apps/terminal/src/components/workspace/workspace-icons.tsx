@@ -22,6 +22,7 @@ import {
   Star,
   Target,
   TrendingUp,
+  Vote,
   Zap,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -49,6 +50,7 @@ export const WORKSPACE_ICONS: Record<string, LucideIcon> = {
   Radio,
   Scan,
   Scale,
+  Vote,
 }
 
 export const DEFAULT_WORKSPACE_ICON = 'Layers'

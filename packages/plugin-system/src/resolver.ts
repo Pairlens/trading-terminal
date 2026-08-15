@@ -17,6 +17,14 @@ export class PluginResolver {
     this.plugins.set(plugin.manifest.id, plugin)
   }
 
+  /**
+   * Forget a plugin. Pins are deliberately left alone: unregistering is also
+   * how a plugin is *replaced* (the dev zip re-import path uninstalls and
+   * reinstalls the same id), so dropping pins here would silently discard the
+   * user's routing choice on every reload of a plugin under development.
+   * A real uninstall clears the pin locally and on the server through
+   * `uninstallPluginEverywhere`, which is the one owner of that cleanup.
+   */
   unregisterPlugin(pluginId: string): void {
     this.plugins.delete(pluginId)
   }

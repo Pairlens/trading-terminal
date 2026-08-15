@@ -2476,7 +2476,6 @@
     "panels": "包含的面板",
     "permissions": "權限",
     "preview": "預覽",
-    "removeTheme": "移除",
     "resetToDefaults": "重設為預設值",
     "saveActivate": "儲存並啟用",
     "size": "大小",
@@ -2492,6 +2491,8 @@
     "tier": "等級",
     "uninstall": "解除安裝",
     "uninstalled": "已解除安裝",
+    "uninstalledToast": "已解除安裝",
+    "uninstallRefusedCore": "無法解除安裝 Pairlens Core。沒有它，終端機將沒有任何面板。",
     "updateReactivate": "更新並重新啟用",
     "version": "版本",
     "visit": "前往",
@@ -2537,8 +2538,8 @@
     "pendingTrustDescription": "該外掛提供介面，無法在沙箱中執行——請授予完全信任以啟用它，或將其解除安裝。",
     "remove": "移除",
     "groupProvidersExtensions": "提供方與擴充功能",
-    "removePluginTitle": "移除外掛",
-    "removePluginDescription": "此操作將停用並移除該外掛。它貢獻的所有面板會顯示一個復原佔位符。你可以隨時從外掛商店重新安裝。",
+    "uninstallPluginTitle": "解除安裝外掛",
+    "uninstallPluginDescription": "此操作會從這台裝置解除安裝該外掛。它貢獻的所有面板會顯示一個復原佔位符，正在使用的佈景主題會交還配色。你可以隨時從外掛商店重新安裝。",
     "resetDefaultsTitle": "重設為預設值",
     "resetDefaultsDescription": "此操作將移除所有非內建外掛，清除已暫存和可用的更新，並重新載入終端機。內建外掛將保持已安裝狀態。",
     "reset": "重設",
@@ -2857,6 +2858,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens 期貨",
         "description": "未平倉永續部位，含開倉價、標記價與強平價"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "鏈上工作區預設：DEX 終端與衝土狗看板"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens 股票",
+        "description": "股票工作區預設：股票終端與掃描器主導的交易台"
       }
     },
     "families": {
@@ -3238,6 +3247,8 @@
     "picksAccount": "會提示你選擇帳戶",
     "added": "「{{name}}」已加入你的工作區。",
     "addedWithMissing": "「{{name}}」已加入。請安裝缺少的外掛以顯示所有面板。",
+    "bundledInstalled": "已為此工作區安裝 {{names}}。",
+    "bundledInstallFailed": "無法安裝 {{names}}。請從外掛商店新增。",
     "facet": {
       "trader": "交易者類型",
       "asset": "資產",
@@ -3372,6 +3383,12 @@
         "tagline": "把機率畫成圖表，整個事件就在旁邊。",
         "description": "預測市場的預設版面：機率圖表下方是成交紀錄與你持有的合約，中間是委託簿與下單面板，AI 副駕駛旁邊是事件瀏覽器，因為相鄰的結果就是分析的一半。",
         "menuLabel": "預設"
+      },
+      "prediction-discovery": {
+        "name": "預測市場探索",
+        "tagline": "瀏覽正在進行的事件市場，而不是交易對目錄。",
+        "description": "為事件合約打造的首頁看板：事件瀏覽器佔據寬欄，新聞流在旁邊捲動，窄欄把自選清單放在情緒指標之上。安裝 Kalshi 或 Polymarket 等預測平台即可填滿看板。",
+        "menuLabel": "預測"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4139,6 +4156,8 @@
     },
     "predictionsEmptyTitle": "預測結果位於「事件」面板中",
     "predictionsEmptyBody": "結果每天上架並結算，因此要從平台自己的看板瀏覽，而不是從目錄中查找。",
+    "predictionsBrowse": "開啟事件看板",
+    "predictionsInstall": "安裝預測外掛",
     "futuresEmptyTitle": "連接期貨交易所後即可瀏覽永續合約",
     "futuresEmptyBody": "合約清單來自各交易所自己的市場表，因此在成功連線該交易所後才會出現。"
   },
@@ -4956,7 +4975,9 @@
       "venuesCount_other": "{{count}} 個交易所"
     },
     "discover": {
-      "featured": "精選"
+      "featured": "精選",
+      "predictions": "預測市場",
+      "allEvents": "所有事件"
     },
     "fearGreed": {
       "historyLabel_one": "最近一天",

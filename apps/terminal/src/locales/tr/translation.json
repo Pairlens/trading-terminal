@@ -2476,7 +2476,6 @@
     "panels": "Dahil edilen paneller",
     "permissions": "İzinler",
     "preview": "Önizleme",
-    "removeTheme": "Kaldır",
     "resetToDefaults": "Varsayılanlara sıfırla",
     "saveActivate": "Kaydet ve Etkinleştir",
     "size": "Boyut",
@@ -2492,6 +2491,8 @@
     "tier": "Katman",
     "uninstall": "Kaldır",
     "uninstalled": "Kaldırıldı",
+    "uninstalledToast": "Kaldırıldı",
+    "uninstallRefusedCore": "Pairlens Core kaldırılamaz. O olmadan terminalde hiçbir panel kalmaz.",
     "updateReactivate": "Güncelle ve Yeniden Etkinleştir",
     "version": "Sürüm",
     "visit": "Ziyaret et",
@@ -2537,8 +2538,8 @@
     "pendingTrustDescription": "Arayüz sağlıyor ve sandbox içinde çalışamıyor — etkinleştirmek için tam güven verin ya da kaldırın.",
     "remove": "Kaldır",
     "groupProvidersExtensions": "Sağlayıcılar ve Uzantılar",
-    "removePluginTitle": "Eklentiyi Kaldır",
-    "removePluginDescription": "Bu, eklentiyi devre dışı bırakıp kaldıracak. Eklentinin sağladığı paneller, kurtarma yer tutucusu gösterecek. Eklentiyi istediğin zaman Plugin Store'dan yeniden kurabilirsin.",
+    "uninstallPluginTitle": "Eklentiyi Kaldır",
+    "uninstallPluginDescription": "Bu, eklentiyi bu cihazdan kaldıracak. Eklentinin sağladığı paneller kurtarma yer tutucusu gösterecek, uygulanmış bir tema ise paleti geri verecek. Eklentiyi istediğin zaman Plugin Store'dan yeniden kurabilirsin.",
     "resetDefaultsTitle": "Varsayılanlara Sıfırla",
     "resetDefaultsDescription": "Bu, pakete dahil olmayan tüm eklentileri kaldıracak, hazırlanmış ve mevcut güncellemeleri temizleyecek ve terminali yeniden yükleyecek. Pakete dahil eklentiler kurulu kalacak.",
     "reset": "Sıfırla",
@@ -2857,6 +2858,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Vadeli",
         "description": "Giriş, işaret fiyatı ve likidasyon seviyesiyle açık süresiz pozisyonlar"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Zincir üstü çalışma alanı şablonları: DEX terminali ve degen avı panosu"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Hisse",
+        "description": "Hisse çalışma alanı şablonları: hisse terminali ve tarayıcı öncelikli masa"
       }
     },
     "families": {
@@ -3238,6 +3247,8 @@
     "picksAccount": "Bir hesap seçmeni ister",
     "added": "\"{{name}}\" çalışma alanlarına eklendi.",
     "addedWithMissing": "\"{{name}}\" eklendi. Her paneli doldurmak için eksik eklentileri kur.",
+    "bundledInstalled": "Bu çalışma alanı için {{names}} kuruldu.",
+    "bundledInstallFailed": "{{names}} kurulamadı. Plugin Store üzerinden ekleyin.",
     "facet": {
       "trader": "Trader",
       "asset": "Varlık",
@@ -3372,6 +3383,12 @@
         "tagline": "Olasılıkları grafikte, olayın tamamı hemen yanında.",
         "description": "Tahmin piyasaları için varsayılan düzen: altında işlemler ve açık sözleşmelerin bulunduğu bir olasılık grafiği, ortada emir defteri ve işlem paneli, Yapay Zeka Co-pilotunun yanında ise olay tarayıcısı; çünkü komşu sonuçlar analizin yarısıdır.",
         "menuLabel": "Varsayılan"
+      },
+      "prediction-discovery": {
+        "name": "Tahmin Keşfi",
+        "tagline": "Parite listesi değil, canlı olay piyasalarına göz atın.",
+        "description": "Olay sözleşmeleri için tasarlanmış bir giriş panosu: olay tarayıcısı geniş sütunu alır, haber akışı yanında ilerler ve ince bir şerit izleme listenizi duyarlılık göstergesinin üzerinde taşır. Panoyu doldurmak için Kalshi veya Polymarket gibi bir tahmin borsası kurun.",
+        "menuLabel": "Tahminler"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4139,6 +4156,8 @@
     },
     "predictionsEmptyTitle": "Tahmin sonuçları Olaylar panelinde yer alır",
     "predictionsEmptyBody": "Sonuçlar her gün listelenip sonuçlanır; bu yüzden bir katalogdan değil, platformun kendi panosundan taranır.",
+    "predictionsBrowse": "Olay panosunu aç",
+    "predictionsInstall": "Tahmin eklentisini kur",
     "futuresEmptyTitle": "Süresiz sözleşmelere göz atmak için bir vadeli işlem borsası bağla",
     "futuresEmptyBody": "Sözleşme listeleri her borsanın kendi piyasa tablosundan gelir, bu yüzden o borsaya ulaşıldığında görünür."
   },
@@ -4956,7 +4975,9 @@
       "venuesCount_other": "{{count}} borsa"
     },
     "discover": {
-      "featured": "Öne çıkanlar"
+      "featured": "Öne çıkanlar",
+      "predictions": "Tahmin piyasaları",
+      "allEvents": "Tüm olaylar"
     },
     "fearGreed": {
       "historyLabel_one": "Son gün",

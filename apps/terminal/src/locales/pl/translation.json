@@ -2498,7 +2498,6 @@
     "panels": "Dołączone panele",
     "permissions": "Uprawnienia",
     "preview": "Podgląd",
-    "removeTheme": "Usuń",
     "resetToDefaults": "Przywróć domyślne",
     "saveActivate": "Zapisz i aktywuj",
     "size": "Rozmiar",
@@ -2514,6 +2513,8 @@
     "tier": "Poziom",
     "uninstall": "Odinstaluj",
     "uninstalled": "Odinstalowano",
+    "uninstalledToast": "Odinstalowano",
+    "uninstallRefusedCore": "Nie można odinstalować Pairlens Core. Bez niego terminal nie ma żadnych paneli.",
     "updateReactivate": "Zaktualizuj i reaktywuj",
     "version": "Wersja",
     "visit": "Odwiedź",
@@ -2559,8 +2560,8 @@
     "pendingTrustDescription": "Dostarcza interfejs i nie może działać w piaskownicy — przyznaj pełne zaufanie, aby go włączyć, albo go odinstaluj.",
     "remove": "Usuń",
     "groupProvidersExtensions": "Dostawcy i rozszerzenia",
-    "removePluginTitle": "Usuń wtyczkę",
-    "removePluginDescription": "To wyłączy i usunie wtyczkę. Wszelkie panele, które dostarczała, pokażą zastępczy element odzyskiwania. Możesz ją ponownie zainstalować ze Sklepu z wtyczkami w każdej chwili.",
+    "uninstallPluginTitle": "Odinstaluj wtyczkę",
+    "uninstallPluginDescription": "To odinstaluje wtyczkę z tego urządzenia. Panele, które dostarczała, pokażą zastępczy element odzyskiwania, a używany motyw odda paletę. Możesz zainstalować ją ponownie ze Sklepu z wtyczkami w każdej chwili.",
     "resetDefaultsTitle": "Przywróć ustawienia domyślne",
     "resetDefaultsDescription": "To usunie wszystkie wtyczki niewbudowane, wyczyści przygotowane i dostępne aktualizacje oraz przeładuje terminal. Wbudowane wtyczki pozostaną zainstalowane.",
     "reset": "Zresetuj",
@@ -2883,6 +2884,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Otwarte pozycje wieczyste z ceną wejścia, ceną mark i poziomem likwidacji"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Gotowe układy on-chain: terminal DEX i tablica degen"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Akcje",
+        "description": "Gotowe układy akcyjne: terminal akcji i biurko ze skanerem"
       }
     },
     "families": {
@@ -3268,6 +3277,8 @@
     "picksAccount": "Poprosi Cię o wybór konta",
     "added": "„{{name}}” dodano do Twoich obszarów roboczych.",
     "addedWithMissing": "„{{name}}” dodano. Zainstaluj brakujące wtyczki, aby wypełnić każdy panel.",
+    "bundledInstalled": "Zainstalowano {{names}} dla tego obszaru roboczego.",
+    "bundledInstallFailed": "Nie udało się zainstalować {{names}}. Dodaj ze sklepu z pluginami.",
     "facet": {
       "trader": "Trader",
       "asset": "Aktywo",
@@ -3404,6 +3415,12 @@
         "tagline": "Wykres prawdopodobieństwa, a obok całe wydarzenie.",
         "description": "Domyślny układ dla rynków prognostycznych: wykres prawdopodobieństwa z transakcjami i Twoimi otwartymi kontraktami pod spodem, arkusz zleceń i panel transakcyjny na środku oraz przeglądarka wydarzeń obok copilota AI, bo sąsiednie wyniki to połowa analizy.",
         "menuLabel": "Domyślny"
+      },
+      "prediction-discovery": {
+        "name": "Odkrywanie predykcji",
+        "tagline": "Przeglądaj żywe rynki zdarzeń, a nie katalog par.",
+        "description": "Ekran startowy stworzony dla kontraktów na zdarzenia: przeglądarka zdarzeń zajmuje szeroką kolumnę, obok płynie kanał wiadomości, a wąski pas mieści listę obserwowanych nad wskaźnikiem nastrojów. Zainstaluj giełdę predykcji, taką jak Kalshi lub Polymarket, aby wypełnić ekran.",
+        "menuLabel": "Predykcje"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4173,6 +4190,8 @@
     },
     "predictionsEmptyTitle": "Wyniki prognoz znajdziesz w panelu Wydarzenia",
     "predictionsEmptyBody": "Wyniki są notowane i rozliczane codziennie, więc przegląda się je na tablicy samej giełdy, a nie w katalogu.",
+    "predictionsBrowse": "Otwórz tablicę zdarzeń",
+    "predictionsInstall": "Zainstaluj wtyczkę predykcji",
     "futuresEmptyTitle": "Połącz giełdę futures, aby przeglądać kontrakty wieczyste",
     "futuresEmptyBody": "Listy kontraktów pochodzą z tabeli rynków każdej giełdy, więc pojawiają się po nawiązaniu z nią połączenia."
   },
@@ -4992,7 +5011,9 @@
       "venuesCount_other": "{{count}} giełd"
     },
     "discover": {
-      "featured": "Polecane"
+      "featured": "Polecane",
+      "predictions": "Rynki prognoz",
+      "allEvents": "Wszystkie wydarzenia"
     },
     "fearGreed": {
       "historyLabel_one": "Ostatni dzień",

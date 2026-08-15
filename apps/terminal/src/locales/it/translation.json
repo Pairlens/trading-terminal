@@ -2476,7 +2476,6 @@
     "panels": "Pannelli inclusi",
     "permissions": "Permessi",
     "preview": "Anteprima",
-    "removeTheme": "Rimuovi",
     "resetToDefaults": "Ripristina predefiniti",
     "saveActivate": "Salva e attiva",
     "size": "Dimensione",
@@ -2492,6 +2491,8 @@
     "tier": "Livello",
     "uninstall": "Disinstalla",
     "uninstalled": "Disinstallato",
+    "uninstalledToast": "Disinstallato",
+    "uninstallRefusedCore": "Pairlens Core non può essere disinstallato. Senza di esso il terminale resta senza pannelli.",
     "updateReactivate": "Aggiorna e riattiva",
     "version": "Versione",
     "visit": "Visita",
@@ -2537,8 +2538,8 @@
     "pendingTrustDescription": "Fornisce interfaccia e non può funzionare nel sandbox — concedi fiducia totale per attivarlo, oppure disinstallalo.",
     "remove": "Rimuovi",
     "groupProvidersExtensions": "Provider ed estensioni",
-    "removePluginTitle": "Rimuovi plugin",
-    "removePluginDescription": "Questo disattiverà e rimuoverà il plugin. I pannelli che ha contribuito mostreranno un segnaposto di ripristino. Puoi reinstallarlo dal Plugin Store in qualsiasi momento.",
+    "uninstallPluginTitle": "Disinstalla plugin",
+    "uninstallPluginDescription": "Questo disinstallerà il plugin da questo dispositivo. I pannelli che ha contribuito mostreranno un segnaposto di ripristino e un tema attivo restituirà la palette. Puoi installarlo di nuovo dal Plugin Store in qualsiasi momento.",
     "resetDefaultsTitle": "Ripristina valori predefiniti",
     "resetDefaultsDescription": "Questo rimuoverà tutti i plugin non integrati, cancellerà gli aggiornamenti preparati e disponibili, e ricaricherà il terminale. I plugin integrati rimarranno installati.",
     "reset": "Ripristina",
@@ -2857,6 +2858,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Posizioni perpetue aperte con ingresso, prezzo mark e livello di liquidazione"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Preset di workspace on-chain: il terminale DEX e la bacheca degen"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Azioni",
+        "description": "Preset di workspace azionari: il terminale equity e il desk con scanner"
       }
     },
     "families": {
@@ -3238,6 +3247,8 @@
     "picksAccount": "Ti chiede di scegliere un account",
     "added": "\"{{name}}\" aggiunto ai tuoi spazi di lavoro.",
     "addedWithMissing": "\"{{name}}\" aggiunto. Installa i plugin mancanti per completare ogni pannello.",
+    "bundledInstalled": "{{names}} installato per questo spazio di lavoro.",
+    "bundledInstallFailed": "Impossibile installare {{names}}. Aggiungilo dallo store dei plugin.",
     "facet": {
       "trader": "Trader",
       "asset": "Asset",
@@ -3372,6 +3383,12 @@
         "tagline": "Il grafico delle probabilità con l'intero evento accanto.",
         "description": "Il layout predefinito per i mercati previsionali: un grafico di probabilità con le operazioni e i tuoi contratti aperti sotto, l'order book e il pannello di trading al centro, e il browser degli eventi accanto al co-pilota AI, perché gli esiti vicini sono metà dell'analisi.",
         "menuLabel": "Predefinito"
+      },
+      "prediction-discovery": {
+        "name": "Scoperta previsioni",
+        "tagline": "Sfoglia i mercati di eventi dal vivo, non un catalogo di coppie.",
+        "description": "Una bacheca iniziale pensata per i contratti su eventi: l'esploratore di eventi occupa la colonna larga, il flusso di notizie scorre accanto e una barra leggera porta la tua watchlist sopra l'indicatore di sentiment. Installa una piattaforma di previsioni come Kalshi o Polymarket per riempire la bacheca.",
+        "menuLabel": "Previsioni"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4139,6 +4156,8 @@
     },
     "predictionsEmptyTitle": "Gli esiti previsionali si trovano nel pannello Eventi",
     "predictionsEmptyBody": "Gli esiti vengono quotati e risolti ogni giorno, quindi si sfogliano dalla bacheca della piattaforma anziché da un catalogo.",
+    "predictionsBrowse": "Apri la bacheca eventi",
+    "predictionsInstall": "Installa il plugin previsioni",
     "futuresEmptyTitle": "Collega una piattaforma di futures per sfogliare i perpetui",
     "futuresEmptyBody": "Gli elenchi di contratti provengono dalla tabella dei mercati di ogni piattaforma e compaiono appena questa risponde."
   },
@@ -4956,7 +4975,9 @@
       "venuesCount_other": "{{count}} piattaforme"
     },
     "discover": {
-      "featured": "In evidenza"
+      "featured": "In evidenza",
+      "predictions": "Mercati previsionali",
+      "allEvents": "Tutti gli eventi"
     },
     "fearGreed": {
       "historyLabel_one": "Ultimo giorno",

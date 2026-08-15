@@ -2476,7 +2476,6 @@
     "panels": "含まれるパネル",
     "permissions": "権限",
     "preview": "プレビュー",
-    "removeTheme": "削除",
     "resetToDefaults": "デフォルトに戻す",
     "saveActivate": "保存して有効化",
     "size": "サイズ",
@@ -2492,6 +2491,8 @@
     "tier": "階層",
     "uninstall": "アンインストール",
     "uninstalled": "アンインストール済み",
+    "uninstalledToast": "アンインストール済み",
+    "uninstallRefusedCore": "Pairlens Core はアンインストールできません。これがないとターミナルにパネルが表示されません。",
     "updateReactivate": "更新して再有効化",
     "version": "バージョン",
     "visit": "訪問",
@@ -2537,8 +2538,8 @@
     "pendingTrustDescription": "UI を提供するためサンドボックス内では動作できません — 有効にするには完全な信頼を付与するか、アンインストールしてください。",
     "remove": "削除",
     "groupProvidersExtensions": "プロバイダーと拡張機能",
-    "removePluginTitle": "プラグインを削除",
-    "removePluginDescription": "プラグインを無効化して削除します。このプラグインが提供していたパネルには復元用のプレースホルダーが表示されます。いつでも Plugin Store から再インストールできます。",
+    "uninstallPluginTitle": "プラグインをアンインストール",
+    "uninstallPluginDescription": "このデバイスからプラグインをアンインストールします。このプラグインが提供していたパネルには復元用のプレースホルダーが表示され、適用中だったテーマは配色を元に戻します。いつでも Plugin Store から再インストールできます。",
     "resetDefaultsTitle": "デフォルトにリセット",
     "resetDefaultsDescription": "これにより、同梱されていないすべてのプラグインが削除され、準備中および利用可能な更新がクリアされ、ターミナルが再読み込みされます。同梱プラグインはインストールされたままです。",
     "reset": "リセット",
@@ -2857,6 +2858,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens 先物",
         "description": "未決済の無期限ポジション。建値、マーク価格、清算価格つき"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "オンチェーンのワークスペース: DEX ターミナルとデジェン探索ボード"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens 株式",
+        "description": "株式のワークスペース: 株式ターミナルとスキャナー主導のデスク"
       }
     },
     "families": {
@@ -3238,6 +3247,8 @@
     "picksAccount": "アカウントの選択を求められます",
     "added": "「{{name}}」をワークスペースに追加しました。",
     "addedWithMissing": "「{{name}}」を追加しました。すべてのパネルを表示するには、不足しているプラグインをインストールしてください。",
+    "bundledInstalled": "このワークスペース用に {{names}} をインストールしました。",
+    "bundledInstallFailed": "{{names}} をインストールできませんでした。プラグインストアから追加してください。",
     "facet": {
       "trader": "トレーダー",
       "asset": "資産",
@@ -3372,6 +3383,12 @@
         "tagline": "確率をチャートで、そのイベント全体を隣に。",
         "description": "予測市場のデフォルトレイアウト：確率チャートの下に約定履歴と保有中の契約、中央にオーダーブックと取引チケット、そしてAIレンズの隣にイベントブラウザ。隣り合う結果を見ることが分析の半分だからです。",
         "menuLabel": "デフォルト"
+      },
+      "prediction-discovery": {
+        "name": "予測マーケット探索",
+        "tagline": "ペア一覧ではなく、進行中のイベント市場を見渡す。",
+        "description": "イベント契約のためのホームボードです。イベントブラウザが広い列を占め、その隣にニュースフィードが流れ、細いレールがウォッチリストとセンチメント指標を縦に並べます。Kalshi や Polymarket などの予測取引所を追加するとボードが埋まります。",
+        "menuLabel": "予測"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4139,6 +4156,8 @@
     },
     "predictionsEmptyTitle": "予測の結果は「イベント」パネルにあります",
     "predictionsEmptyBody": "結果は毎日上場し決済されるため、カタログではなく取引所自身のボードから閲覧します。",
+    "predictionsBrowse": "イベントボードを開く",
+    "predictionsInstall": "予測プラグインをインストール",
     "futuresEmptyTitle": "先物取引所を接続すると無期限銘柄を閲覧できます",
     "futuresEmptyBody": "銘柄一覧は各取引所自身のマーケット表から取得するため、その取引所に接続できた時点で表示されます。"
   },
@@ -4956,7 +4975,9 @@
       "venuesCount_other": "{{count}}件の取引所"
     },
     "discover": {
-      "featured": "注目"
+      "featured": "注目",
+      "predictions": "予測市場",
+      "allEvents": "すべてのイベント"
     },
     "fearGreed": {
       "historyLabel_one": "直近1日",

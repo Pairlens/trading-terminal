@@ -354,6 +354,99 @@ export type ContributedPanel = {
   requiresDesktop?: boolean
 }
 
+// ── Workspace contributions ─────────────────────────────────────────
+//
+// A plugin ships the workspace presets of the surface it owns: the perps desk
+// belongs to the futures plugin, the prediction desk to the predictions
+// plugin. Uninstall the plugin and its layouts leave the Workspace Store, the
+// workspaces menu and Discovery with it.
+//
+// The layout shape below is a structural mirror of the terminal's own
+// `TerminalLayout`, restated here so `packages/shared` stays the client/server
+// contract without pulling terminal internals in. It is deliberately minimal:
+// a plugin describes geometry (columns → cells → panes) and nothing about how
+// the terminal renders it.
+
+export type ContributedWorkspacePane = {
+  id: string
+  /** Pane type key, exactly as a saved layout names it (e.g. 'chart'). */
+  type: string
+  /** slot → workspace variable name, e.g. 'active-pair' → '$pair'. */
+  bindings?: Record<string, string>
+  /** slot → literal value, overriding any binding. */
+  overrides?: Record<string, unknown>
+}
+
+export type ContributedWorkspaceCell = {
+  id: string
+  /** One pane renders bare; more than one renders as a tab strip. */
+  panes: Array<ContributedWorkspacePane>
+  activeTabIndex?: number
+  heightPercent: number
+}
+
+export type ContributedWorkspaceColumn = {
+  id: string
+  cells: Array<ContributedWorkspaceCell>
+  widthPercent: number
+}
+
+export type ContributedWorkspaceLayout = {
+  version: 1
+  columns: Array<ContributedWorkspaceColumn>
+}
+
+/** Where a contributed workspace is offered (default `standalone`). */
+export type ContributedWorkspaceContext = 'standalone' | 'pair' | 'discovery'
+
+/**
+ * The three browse facets of the Workspace Store. Kept as plain strings: the
+ * terminal owns the vocabularies and filters unknown values out, so a plugin
+ * built against an older terminal never breaks the filter bar.
+ */
+export type ContributedWorkspaceFacets = {
+  traderTypes: Array<string>
+  assetClasses: Array<string>
+  screenSizes: Array<string>
+}
+
+/**
+ * A workspace preset shipped by a plugin. The terminal derives the workspace
+ * variables from the layout's panes, so a contribution declares only the
+ * market a copy should open on (`pairDefault`) rather than restating them.
+ */
+export type ContributedWorkspace = {
+  /**
+   * Stable id. First-party contributions keep their historical `template:`
+   * ids so translations, deep links and popularity survive the move out of
+   * the terminal's catalog.
+   */
+  id: string
+  name: string
+  /** One-line hook shown on the store card. */
+  tagline: string
+  /** Longer prose shown in the store detail page. */
+  description: string
+  /** lucide icon name. */
+  icon: string
+  facets: ContributedWorkspaceFacets
+  tags?: Array<string>
+  context?: ContributedWorkspaceContext
+  /** Offered as an in-place quick-apply preset in its route's layout menu. */
+  routeMenu?: boolean
+  /** Short label for that menu (falls back to `name`). */
+  menuLabel?: string
+  /**
+   * Market a copy of this workspace opens on. `null` means "derive the pair
+   * variable with no default" — the right answer for contracts that expire.
+   */
+  pairDefault?: { pairKey: string; market: string } | null
+  /** Plugins this workspace needs beyond the ones its panes already imply. */
+  requiredPlugins?: Array<{ pluginId: string; reason?: string }>
+  featured?: boolean
+  layout: ContributedWorkspaceLayout
+}
+
 // Command contribution declared in plugin manifest
 export type ContributedCommand = {
   id: string // unique within plugin
@@ -437,6 +530,8 @@ export type PluginManifest = {
   metadata?: Record<string, unknown>
   contributes?: {
     panels?: Array<ContributedPanel>
+    /** Workspace presets this plugin ships (store templates + route menus). */
+    workspaces?: Array<ContributedWorkspace>
     commands?: Array<ContributedCommand>
     statusBarItems?: Array<ContributedStatusBarItem>
     /** @experimental Reserved for future use — settings pages are not yet rendered in the terminal UI. */

@@ -120,6 +120,10 @@ export type WorkspaceConfig = {
   // Workspace Store links this workspace's menus emit. Absent on
   // discovery/custom workspaces.
   pairClass?: string
+  // Which route menu this workspace draws quick-apply presets for. Set on the
+  // pair and discovery routes so plugin-contributed workspaces can join
+  // `presets` reactively; absent on custom workspaces, which offer none.
+  presetContext?: 'pair' | 'discovery'
 }
 
 export type CustomWorkspaceDefinition = {

@@ -2476,7 +2476,6 @@
     "panels": "Panel termasuk",
     "permissions": "Izin",
     "preview": "Pratinjau",
-    "removeTheme": "Hapus",
     "resetToDefaults": "Reset ke default",
     "saveActivate": "Simpan & Aktifkan",
     "size": "Ukuran",
@@ -2492,6 +2491,8 @@
     "tier": "Tingkat",
     "uninstall": "Copot pemasangan",
     "uninstalled": "Dihapus",
+    "uninstalledToast": "Dihapus",
+    "uninstallRefusedCore": "Pairlens Core tidak dapat dicopot. Tanpa plugin ini, terminal tidak punya panel sama sekali.",
     "updateReactivate": "Perbarui & Aktifkan Ulang",
     "version": "Versi",
     "visit": "Kunjungi",
@@ -2537,8 +2538,8 @@
     "pendingTrustDescription": "Menyumbang UI dan tidak bisa berjalan di sandbox — beri kepercayaan penuh untuk mengaktifkannya, atau hapus.",
     "remove": "Hapus",
     "groupProvidersExtensions": "Penyedia & Ekstensi",
-    "removePluginTitle": "Hapus Plugin",
-    "removePluginDescription": "Ini akan menonaktifkan dan menghapus plugin. Panel apa pun yang disumbangkannya akan menampilkan placeholder pemulihan. Anda bisa memasangnya lagi dari Plugin Store kapan saja.",
+    "uninstallPluginTitle": "Copot Pemasangan Plugin",
+    "uninstallPluginDescription": "Ini akan mencopot pemasangan plugin dari perangkat ini. Panel apa pun yang disumbangkannya akan menampilkan placeholder pemulihan, dan tema yang sedang dipakai akan mengembalikan paletnya. Anda bisa memasangnya lagi dari Plugin Store kapan saja.",
     "resetDefaultsTitle": "Reset ke Default",
     "resetDefaultsDescription": "Ini akan menghapus semua plugin non-bawaan, menghapus pembaruan yang disiapkan dan tersedia, lalu memuat ulang terminal. Plugin bawaan akan tetap terpasang.",
     "reset": "Reset",
@@ -2857,6 +2858,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Posisi perpetual terbuka dengan harga masuk, harga mark dan level likuidasi"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Preset ruang kerja on-chain: terminal DEX dan papan berburu degen"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Saham",
+        "description": "Preset ruang kerja saham: terminal ekuitas dan meja dengan pemindai"
       }
     },
     "families": {
@@ -3238,6 +3247,8 @@
     "picksAccount": "Meminta Anda memilih akun",
     "added": "“{{name}}” ditambahkan ke ruang kerja Anda.",
     "addedWithMissing": "“{{name}}” ditambahkan. Pasang plugin yang belum ada untuk mengisi setiap panel.",
+    "bundledInstalled": "{{names}} dipasang untuk ruang kerja ini.",
+    "bundledInstallFailed": "Tidak dapat memasang {{names}}. Tambahkan dari Plugin Store.",
     "facet": {
       "trader": "Trader",
       "asset": "Aset",
@@ -3372,6 +3383,12 @@
         "tagline": "Grafikkan peluangnya, dengan seluruh acara di sampingnya.",
         "description": "Tata letak default untuk market prediksi: chart probabilitas dengan transaksi dan kontrak terbuka Anda di bawahnya, order book dan tiket order di tengah, serta penjelajah acara di samping AI Copilot, karena hasil-hasil di sebelahnya adalah separuh dari analisisnya.",
         "menuLabel": "Default"
+      },
+      "prediction-discovery": {
+        "name": "Penjelajahan Prediksi",
+        "tagline": "Jelajahi pasar peristiwa langsung, bukan katalog pasangan.",
+        "description": "Papan beranda yang dibuat untuk kontrak peristiwa: penjelajah peristiwa mengisi kolom lebar, kabar berita berjalan di sampingnya, dan bilah ringan membawa daftar pantauan Anda di atas pengukur sentimen. Pasang venue prediksi seperti Kalshi atau Polymarket untuk mengisi papan ini.",
+        "menuLabel": "Prediksi"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4139,6 +4156,8 @@
     },
     "predictionsEmptyTitle": "Hasil prediksi ada di panel Acara",
     "predictionsEmptyBody": "Hasil dicatatkan dan diselesaikan setiap hari, jadi ditelusuri dari papan bursa itu sendiri, bukan katalog.",
+    "predictionsBrowse": "Buka papan peristiwa",
+    "predictionsInstall": "Pasang plugin prediksi",
     "futuresEmptyTitle": "Hubungkan bursa futures untuk menjelajahi kontrak perpetual",
     "futuresEmptyBody": "Daftar kontrak berasal dari tabel pasar masing-masing bursa, jadi muncul setelah bursa itu terjangkau."
   },
@@ -4956,7 +4975,9 @@
       "venuesCount_other": "{{count}} venue"
     },
     "discover": {
-      "featured": "Unggulan"
+      "featured": "Unggulan",
+      "predictions": "Pasar prediksi",
+      "allEvents": "Semua acara"
     },
     "fearGreed": {
       "historyLabel_one": "Hari terakhir",

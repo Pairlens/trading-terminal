@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useSyncExternalStore } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { RESERVED_PLUGIN_IDS } from '@pairlens/shared/plugin-manifest-schema'
 
@@ -9,6 +9,7 @@ import {
   builtinProvider,
   createPluginStoreProvider,
 } from './providers'
+import { workspaceTemplateRegistry } from './workspace-template-registry'
 import type {
   WorkspaceStoreListQuery,
   WorkspaceStoreProvider,
@@ -110,7 +111,27 @@ export function useWorkspaceTemplates(): WorkspaceTemplateList {
     if (isFetched) void refetch()
   }, [pluginStateVersion, isFetched, refetch])
 
-  const templates = query.data ?? []
+  // Plugin-contributed workspaces are not fetched — they are already in the
+  // process, registered on activation. Merging them here rather than behind
+  // another provider keeps the store's single list, and the id-dedupe favours
+  // the registry copy: a plugin that ships a layout the bundled catalog also
+  // carries is the one that owns it.
+  const contributed = useSyncExternalStore(
+    workspaceTemplateRegistry.subscribe,
+    workspaceTemplateRegistry.getSnapshot,
+    workspaceTemplateRegistry.getSnapshot,
+  )
+
+  const fetched = query.data
+  const templates = useMemo(() => {
+    void contributed
+    const registryTemplates = workspaceTemplateRegistry.getTemplates()
+    if (registryTemplates.length === 0) return fetched ?? []
+    const byId = new Map<string, WorkspaceTemplate>()
+    for (const t of fetched ?? []) byId.set(t.id, t)
+    for (const t of registryTemplates) byId.set(t.id, t)
+    return [...byId.values()]
+  }, [fetched, contributed])
 
   return { templates, isLoading: query.isLoading, registry }
 }

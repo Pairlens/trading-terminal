@@ -120,6 +120,3 @@ export type CommunityTemplateMeta = {
   /** Submission time (epoch ms). */
   createdAt: number
 }
-
-/** Where a template list came from — local catalog today; remote/plugin in M2. */
-export type WorkspaceTemplateSource = 'builtin' | 'remote' | 'plugin'

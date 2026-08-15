@@ -1,15 +1,19 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Discover (design screen 6) — sentiment, top tickers and news over the same
- * chart and price as every other panel.
+ * Discover (design screen 6) — sentiment, top tickers, event contracts and
+ * news over the same chart and price as every other panel.
  *
- * Four data sources, none of them a pane: the discovery panes all want a
+ * Five data sources, none of them a pane: the discovery panes all want a
  * `@container/pane` ancestor and draw at desk widths. What is reused is the
  * layer underneath them — `fetchFearGreedWithFallback`, the Markets pane's
- * featured selection and quote cell, and the desktop's news paging kit — so
- * the phone is a second layout over the same data rather than a second data
- * path.
+ * featured selection and quote cell, the `market-data:events` fan-out behind
+ * the desktop event browser, and the desktop's news paging kit — so the phone
+ * is a second layout over the same data rather than a second data path.
+ *
+ * The prediction section is the one that can vanish: it gates itself on an
+ * active plugin serving `market-data:events` and renders nothing, heading
+ * included, when there is none. See `prediction-markets-section.tsx`.
  *
  * The featured strip is the Markets pane's, symbol for symbol: the same
  * `featured` instruments out of the discovery catalog, the same
@@ -30,6 +34,8 @@ import { DiscoverPnlCard } from './discover-pnl-card'
 import { useMobileNewsFeed } from './use-mobile-news-feed'
 import { TrendQuoteCell } from './trend-quote-cell'
 import { orderFeatured } from './featured-order'
+import { SectionHeader } from './section-header'
+import { PredictionMarketsSection } from './prediction-markets-section'
 import type { NewsArticle } from '@pairlens/shared/instrument-types'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import { haptic } from '@/lib/haptics'
@@ -136,6 +142,11 @@ export default memo(function MobileDiscoverPanel() {
             />
           ))}
 
+      {/* Gates itself off, heading and all, when no active plugin serves
+          `market-data:events` — so a build without the predictions family
+          shows Featured straight into the news feed. */}
+      <PredictionMarketsSection />
+
       <SectionHeader title={t('news.title')} />
 
       {news.articles.length === 0 ? (
@@ -222,32 +233,6 @@ const FeaturedRow = memo(function FeaturedRow({
     />
   )
 })
-
-function SectionHeader({
-  title,
-  action,
-  onAction,
-}: {
-  title: string
-  action?: string
-  onAction?: () => void
-}) {
-  return (
-    <div className="flex items-baseline justify-between gap-3 px-4 pb-1.5 pt-5">
-      <h3 className="text-[15px] font-semibold text-foreground">{title}</h3>
-      {action && onAction ? (
-        <button
-          className="pl-hit-44 pl-press-text shrink-0 text-[12px] font-medium text-primary"
-          onClick={onAction}
-          type="button"
-          {...PRESS}
-        >
-          {action}
-        </button>
-      ) : null}
-    </div>
-  )
-}
 
 const NewsRow = memo(function NewsRow({
   article,

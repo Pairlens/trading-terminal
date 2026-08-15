@@ -9,6 +9,7 @@ import {
   getLedgerEntry,
   isTombstoned,
   removeFromLedger,
+  reviveBootstrapEntry,
   seedBootstrap,
   setLedgerConfig,
   setLedgerEnabled,
@@ -98,6 +99,49 @@ describe('plugin-ledger', () => {
       expect(isTombstoned('theme-midnight')).toBe(false)
       expect(getLedgerEntry('theme-midnight')?.enabled).toBe(true)
       expect(getLedgerEntry('remote-x')).toBeNull()
+    })
+  })
+
+  describe('reviveBootstrapEntry', () => {
+    it('lifts the tombstone and switches the plugin back on', () => {
+      seedBootstrap(BOOTSTRAP)
+      removeFromLedger('theme-midnight')
+      reviveBootstrapEntry('theme-midnight', '1.2.0')
+      expect(isTombstoned('theme-midnight')).toBe(false)
+      const entry = getLedgerEntry('theme-midnight')
+      expect(entry?.enabled).toBe(true)
+      expect(entry?.source).toBe('bootstrap')
+      expect(entry?.version).toBe('1.2.0')
+      expect(getInstallableEntries().map((e) => e.pluginId)).toContain(
+        'theme-midnight',
+      )
+    })
+
+    it('keeps the config the row already carried', () => {
+      seedBootstrap(BOOTSTRAP)
+      setLedgerConfig('theme-midnight', { accent: 'iris' })
+      removeFromLedger('theme-midnight')
+      reviveBootstrapEntry('theme-midnight', '1.0.0')
+      expect(getLedgerEntry('theme-midnight')?.config).toEqual({
+        accent: 'iris',
+      })
+    })
+
+    it('seeds a row when none exists', () => {
+      reviveBootstrapEntry('theme-later', '3.0.0')
+      const entry = getLedgerEntry('theme-later')
+      expect(entry?.source).toBe('bootstrap')
+      expect(entry?.enabled).toBe(true)
+      expect(entry?.tombstoned).toBe(false)
+    })
+
+    it('survives a boot: seedBootstrap leaves the revived row enabled', () => {
+      seedBootstrap(BOOTSTRAP)
+      removeFromLedger('theme-midnight')
+      reviveBootstrapEntry('theme-midnight', '1.0.0')
+      seedBootstrap(BOOTSTRAP) // next boot
+      expect(getLedgerEntry('theme-midnight')?.enabled).toBe(true)
+      expect(isTombstoned('theme-midnight')).toBe(false)
     })
   })
 

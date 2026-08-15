@@ -8,9 +8,10 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import {
   ArrowRight,
   Clock,
@@ -37,6 +38,8 @@ import {
   ToggleGroupItem,
 } from '@pairlens/ui/components/ui/toggle-group'
 
+import { PREDICTION_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-predictions/workspaces'
+
 import { useVirtualizer } from '@tanstack/react-virtual'
 import type {
   AssetClassFilter,
@@ -58,6 +61,12 @@ import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { useRecentPairs } from '@/lib/recent-tickers'
+import { track } from '@/lib/analytics-events'
+import { workspaceAnalyticsKind } from '@/lib/analytics-panels'
+import { useLayout } from '@/lib/layout/context'
+import { useWorkspace } from '@/lib/layout/workspace-context'
+import { useRoutePresets } from '@/lib/layout/use-route-presets'
+import { workspaceTemplateRegistry } from '@/lib/workspace-store/workspace-template-registry'
 import {
   entryToInstrumentRef,
   entryToMarketRef,
@@ -77,6 +86,82 @@ import { PairQuote, quoteForPair } from '@/components/discovery/pair-quote'
  * catalogued under one.
  */
 const SECTORED_ASSET_CLASSES = new Set<AssetClassFilter>(['all', 'crypto'])
+
+/**
+ * The way out of the predictions empty state.
+ *
+ * Prediction outcomes are never in the catalog this pane reads, so the chip
+ * has always been a dead end: correct copy, nowhere to go. The event browser
+ * is where they live, and the predictions plugin ships a home board built
+ * around it.
+ *
+ * Whether that board EXISTS is a question about the plugin registry, not about
+ * this route's menu: the board is a discovery preset, so on a pair route or a
+ * custom workspace it is filtered out of `useRoutePresets` and reading
+ * availability from there told the user to install a plugin they already had.
+ * So: apply in place when this workspace offers it, send them to Discovery
+ * with the board when it exists elsewhere, and only offer the Plugin Store
+ * when the family is genuinely gone.
+ *
+ * Its own component so the hooks it needs only run when the empty state is on
+ * screen.
+ */
+function PredictionsEmptyAction() {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const { dispatch } = useLayout()
+  const workspace = useWorkspace()
+  const presets = useRoutePresets(workspace)
+  const preset = presets[PREDICTION_DISCOVERY_TEMPLATE_ID]
+
+  // The registry, not the route menu, is what knows the board is installed.
+  const registryVersion = useSyncExternalStore(
+    workspaceTemplateRegistry.subscribe,
+    workspaceTemplateRegistry.getSnapshot,
+    workspaceTemplateRegistry.getSnapshot,
+  )
+  const boardExists = useMemo(() => {
+    void registryVersion
+    return workspaceTemplateRegistry
+      .getTemplates()
+      .some((tpl) => tpl.id === PREDICTION_DISCOVERY_TEMPLATE_ID)
+  }, [registryVersion])
+
+  const available = Boolean(preset) || boardExists
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      className="mt-4"
+      onClick={() => {
+        if (preset) {
+          track('preset_applied', {
+            preset: PREDICTION_DISCOVERY_TEMPLATE_ID,
+            workspace: workspaceAnalyticsKind(workspace.storageKey),
+          })
+          dispatch({
+            type: 'APPLY_PRESET',
+            layout: structuredClone(preset.layout),
+          })
+          return
+        }
+        if (boardExists) {
+          void navigate({
+            to: '/',
+            search: { preset: PREDICTION_DISCOVERY_TEMPLATE_ID },
+          })
+          return
+        }
+        void navigate({ to: '/plugins' })
+      }}
+    >
+      {available
+        ? t('markets.predictionsBrowse')
+        : t('markets.predictionsInstall')}
+    </Button>
+  )
+}
 
 export function MarketsPane() {
   const { t } = useTranslation()
@@ -356,6 +441,7 @@ export function MarketsPane() {
                 <p className="mx-auto mt-1 max-w-xs text-xs leading-relaxed text-muted-foreground">
                   {t('markets.predictionsEmptyBody')}
                 </p>
+                <PredictionsEmptyAction />
               </div>
             )}
 

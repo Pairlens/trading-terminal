@@ -2476,7 +2476,6 @@
     "panels": "Enthaltene Panels",
     "permissions": "Berechtigungen",
     "preview": "Vorschau",
-    "removeTheme": "Entfernen",
     "resetToDefaults": "Auf Standard zurücksetzen",
     "saveActivate": "Speichern & aktivieren",
     "size": "Größe",
@@ -2492,6 +2491,8 @@
     "tier": "Stufe",
     "uninstall": "Deinstallieren",
     "uninstalled": "Deinstalliert",
+    "uninstalledToast": "Deinstalliert",
+    "uninstallRefusedCore": "Pairlens Core kann nicht deinstalliert werden. Ohne dieses Plugin hat das Terminal keine Panels.",
     "updateReactivate": "Aktualisieren & reaktivieren",
     "version": "Version",
     "visit": "Besuchen",
@@ -2537,8 +2538,8 @@
     "pendingTrustDescription": "Liefert UI und kann nicht in der Sandbox laufen — gewähre vollen Zugriff, um es zu aktivieren, oder deinstalliere es.",
     "remove": "Entfernen",
     "groupProvidersExtensions": "Anbieter & Erweiterungen",
-    "removePluginTitle": "Plugin entfernen",
-    "removePluginDescription": "Dadurch wird das Plugin deaktiviert und entfernt. Panels, die es beigesteuert hat, zeigen einen Wiederherstellungsplatzhalter. Du kannst es jederzeit über den Plugin Store neu installieren.",
+    "uninstallPluginTitle": "Plugin deinstallieren",
+    "uninstallPluginDescription": "Damit wird das Plugin von diesem Gerät deinstalliert. Panels, die es beigesteuert hat, zeigen einen Wiederherstellungsplatzhalter, und ein gerade aktives Theme gibt die Farbpalette zurück. Du kannst es jederzeit über den Plugin Store wieder installieren.",
     "resetDefaultsTitle": "Auf Standard zurücksetzen",
     "resetDefaultsDescription": "Dadurch werden alle nicht mitgelieferten Plugins entfernt, vorbereitete und verfügbare Updates gelöscht und das Terminal neu geladen. Mitgelieferte Plugins bleiben installiert.",
     "reset": "Zurücksetzen",
@@ -2857,6 +2858,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
         "description": "Offene Perpetual-Positionen mit Einstieg, Mark-Preis und Liquidationsschwelle"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "On-Chain-Workspace-Vorlagen: das DEX-Terminal und das Degen-Jagdboard"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Aktien",
+        "description": "Aktien-Workspace-Vorlagen: das Aktien-Terminal und der Scanner-Desk"
       }
     },
     "families": {
@@ -3238,6 +3247,8 @@
     "picksAccount": "Fordert dich auf, ein Konto zu wählen",
     "added": "„{{name}}“ zu deinen Workspaces hinzugefügt.",
     "addedWithMissing": "„{{name}}“ hinzugefügt. Installiere die fehlenden Plugins, um jedes Panel zu füllen.",
+    "bundledInstalled": "{{names}} für diesen Workspace installiert.",
+    "bundledInstallFailed": "{{names}} konnte nicht installiert werden. Füge es über den Plugin Store hinzu.",
     "facet": {
       "trader": "Trader",
       "asset": "Asset",
@@ -3372,6 +3383,12 @@
         "tagline": "Die Wahrscheinlichkeiten im Chart, das ganze Ereignis daneben.",
         "description": "Das Standard-Layout für Prognosemärkte: ein Wahrscheinlichkeits-Chart mit den Trades und deinen offenen Kontrakten darunter, Orderbuch und Ticket in der Mitte, und der Ereignis-Browser neben dem KI-Co-Piloten, denn die benachbarten Ergebnisse sind die halbe Analyse.",
         "menuLabel": "Standard"
+      },
+      "prediction-discovery": {
+        "name": "Prognose-Discovery",
+        "tagline": "Durchsuche laufende Event-Märkte statt einer Paarliste.",
+        "description": "Ein Startboard für Event-Kontrakte: Der Event-Browser bekommt die breite Spalte, daneben läuft der Nachrichtenticker, und eine schmale Leiste trägt deine Watchlist über der Stimmungsanzeige. Installiere eine Prognosebörse wie Kalshi oder Polymarket, um das Board zu füllen.",
+        "menuLabel": "Prognosen"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4139,6 +4156,8 @@
     },
     "predictionsEmptyTitle": "Prognoseergebnisse finden Sie im Ereignis-Panel",
     "predictionsEmptyBody": "Ergebnisse werden täglich gelistet und abgerechnet, daher durchsucht man sie über das Board der Handelsplattform statt über einen Katalog.",
+    "predictionsBrowse": "Event-Board öffnen",
+    "predictionsInstall": "Prognose-Plugin installieren",
     "futuresEmptyTitle": "Verbinde einen Futures-Handelsplatz, um Perpetuals zu durchsuchen",
     "futuresEmptyBody": "Kontraktlisten stammen aus der Markttabelle des jeweiligen Handelsplatzes und erscheinen, sobald dieser erreicht wurde."
   },
@@ -4956,7 +4975,9 @@
       "venuesCount_other": "{{count}} Venues"
     },
     "discover": {
-      "featured": "Empfohlen"
+      "featured": "Empfohlen",
+      "predictions": "Prognosemärkte",
+      "allEvents": "Alle Ereignisse"
     },
     "fearGreed": {
       "historyLabel_one": "Letzter Tag",

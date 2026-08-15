@@ -2476,7 +2476,6 @@
     "panels": "Paneles incluidos",
     "permissions": "Permisos",
     "preview": "Vista previa",
-    "removeTheme": "Quitar",
     "resetToDefaults": "Restablecer valores predeterminados",
     "saveActivate": "Guardar y activar",
     "size": "Tamaño",
@@ -2492,6 +2491,8 @@
     "tier": "Nivel",
     "uninstall": "Desinstalar",
     "uninstalled": "Desinstalado",
+    "uninstalledToast": "Desinstalado",
+    "uninstallRefusedCore": "Pairlens Core no se puede desinstalar. Sin él, el terminal se queda sin paneles.",
     "updateReactivate": "Actualizar y reactivar",
     "version": "Versión",
     "visit": "Visitar",
@@ -2537,8 +2538,8 @@
     "pendingTrustDescription": "Aporta interfaz y no puede ejecutarse en el sandbox — concede confianza total para activarlo, o desinstálalo.",
     "remove": "Eliminar",
     "groupProvidersExtensions": "Proveedores y extensiones",
-    "removePluginTitle": "Eliminar plugin",
-    "removePluginDescription": "Esto desactivará y eliminará el plugin. Los paneles que haya aportado mostrarán un marcador de recuperación. Puedes reinstalarlo desde la Plugin Store cuando quieras.",
+    "uninstallPluginTitle": "Desinstalar plugin",
+    "uninstallPluginDescription": "Esto desinstalará el plugin de este dispositivo. Los paneles que haya aportado mostrarán un marcador de recuperación, y un tema que estuviera aplicado devolverá la paleta. Puedes volver a instalarlo desde la Plugin Store cuando quieras.",
     "resetDefaultsTitle": "Restablecer valores predeterminados",
     "resetDefaultsDescription": "Esto eliminará todos los plugins no incluidos, borrará las actualizaciones preparadas y disponibles, y recargará el terminal. Los plugins incluidos permanecerán instalados.",
     "reset": "Restablecer",
@@ -2857,6 +2858,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens Futuros",
         "description": "Posiciones perpetuas abiertas con entrada, precio marcado y nivel de liquidación"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "Plantillas de espacio de trabajo on-chain: el terminal DEX y el tablero degen"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens Acciones",
+        "description": "Plantillas de espacio de trabajo bursátil: el terminal de acciones y la mesa con escáner"
       }
     },
     "families": {
@@ -3238,6 +3247,8 @@
     "picksAccount": "Te pide elegir una cuenta",
     "added": "“{{name}}” añadido a tus espacios de trabajo.",
     "addedWithMissing": "“{{name}}” añadido. Instala los plugins que faltan para completar todos los paneles.",
+    "bundledInstalled": "Se instaló {{names}} para este espacio de trabajo.",
+    "bundledInstallFailed": "No se pudo instalar {{names}}. Añádelo desde la tienda de plugins.",
     "facet": {
       "trader": "Operador",
       "asset": "Activo",
@@ -3372,6 +3383,12 @@
         "tagline": "Grafica las probabilidades con todo el evento al lado.",
         "description": "El diseño predeterminado para mercados de predicción: un gráfico de probabilidad con las operaciones y tus contratos abiertos debajo, el libro de órdenes y el ticket en el centro, y el explorador de eventos junto al copiloto de IA, porque los desenlaces vecinos son la mitad del análisis.",
         "menuLabel": "Predeterminado"
+      },
+      "prediction-discovery": {
+        "name": "Descubrimiento de predicciones",
+        "tagline": "Explora mercados de eventos en vivo, no un catálogo de pares.",
+        "description": "Un tablero de inicio hecho para contratos de eventos: el explorador de eventos ocupa la columna ancha, el hilo de noticias corre a su lado y una franja ligera lleva tu lista de seguimiento sobre el indicador de sentimiento. Instala una plataforma de predicciones como Kalshi o Polymarket para llenar el tablero.",
+        "menuLabel": "Predicciones"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4139,6 +4156,8 @@
     },
     "predictionsEmptyTitle": "Los resultados de predicción están en el panel de Eventos",
     "predictionsEmptyBody": "Los resultados se listan y se resuelven a diario, así que se exploran desde el tablero de la propia plataforma y no desde un catálogo.",
+    "predictionsBrowse": "Abrir el tablero de eventos",
+    "predictionsInstall": "Instalar el plugin de predicciones",
     "futuresEmptyTitle": "Conecta una plataforma de futuros para explorar los perpetuos",
     "futuresEmptyBody": "Las listas de contratos vienen de la tabla de mercados de cada plataforma, así que aparecen en cuanto se contacta con ella."
   },
@@ -4956,7 +4975,9 @@
       "venuesCount_other": "{{count}} venues"
     },
     "discover": {
-      "featured": "Destacados"
+      "featured": "Destacados",
+      "predictions": "Mercados de predicción",
+      "allEvents": "Todos los eventos"
     },
     "fearGreed": {
       "historyLabel_one": "Último día",

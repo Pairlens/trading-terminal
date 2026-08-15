@@ -12,6 +12,16 @@ export {
   pairlensCexFuturesManifest,
   createPairlensCexFuturesPlugin,
 } from './pairlens-cex-futures/index.ts'
+// Presets-only family plugins: every pane they arrange already ships in
+// pairlens-core, so what they carry is the arrangement.
+export {
+  pairlensDexManifest,
+  createPairlensDexPlugin,
+} from './pairlens-dex/index.ts'
+export {
+  pairlensEquitiesManifest,
+  createPairlensEquitiesPlugin,
+} from './pairlens-equities/index.ts'
 // Every CEX venue is served by the CCXT bridge (packages/plugins/src/
 // ccxt-connector). Same plugin ids, same manifests, same exported triple as the
 // hand-written connectors these replaced, so a saved workspace and a

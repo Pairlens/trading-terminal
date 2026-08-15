@@ -2476,7 +2476,6 @@
     "panels": "包含的面板",
     "permissions": "权限",
     "preview": "预览",
-    "removeTheme": "移除",
     "resetToDefaults": "恢复默认设置",
     "saveActivate": "保存并启用",
     "size": "大小",
@@ -2492,6 +2491,8 @@
     "tier": "等级",
     "uninstall": "卸载",
     "uninstalled": "已卸载",
+    "uninstalledToast": "已卸载",
+    "uninstallRefusedCore": "无法卸载 Pairlens Core。没有它，终端将没有任何面板。",
     "updateReactivate": "更新并重新启用",
     "version": "版本",
     "visit": "访问",
@@ -2537,8 +2538,8 @@
     "pendingTrustDescription": "该插件提供界面，无法在沙箱中运行——请授予完全信任以启用它，或将其卸载。",
     "remove": "移除",
     "groupProvidersExtensions": "提供方与扩展",
-    "removePluginTitle": "移除插件",
-    "removePluginDescription": "此操作将停用并移除该插件。它贡献的所有面板会显示一个恢复占位符。你可以随时从插件商店重新安装。",
+    "uninstallPluginTitle": "卸载插件",
+    "uninstallPluginDescription": "此操作会从这台设备卸载该插件。它贡献的所有面板会显示一个恢复占位符，正在使用的主题会交还配色。你可以随时从插件商店重新安装。",
     "resetDefaultsTitle": "恢复默认设置",
     "resetDefaultsDescription": "此操作将移除所有非内置插件，清除已暂存和可用的更新，并重新加载终端。内置插件将保持已安装状态。",
     "reset": "重置",
@@ -2857,6 +2858,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens 期货",
         "description": "未平仓永续合约仓位，含开仓价、标记价与强平价"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "链上工作区预设：DEX 终端与冲土狗看板"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens 股票",
+        "description": "股票工作区预设：股票终端与扫描器主导的交易台"
       }
     },
     "families": {
@@ -3238,6 +3247,8 @@
     "picksAccount": "提示你选择一个账户",
     "added": "“{{name}}”已添加到你的工作区。",
     "addedWithMissing": "“{{name}}”已添加。安装缺失的插件以填满每个面板。",
+    "bundledInstalled": "已为此工作区安装 {{names}}。",
+    "bundledInstallFailed": "无法安装 {{names}}。请从插件商店添加。",
     "facet": {
       "trader": "交易者",
       "asset": "资产",
@@ -3372,6 +3383,12 @@
         "tagline": "把概率画成图表，整个事件就在旁边。",
         "description": "预测市场的默认布局：概率图表下方是成交记录和你的持仓合约，中间是订单簿与下单面板，AI 副驾驶旁边是事件浏览器，因为相邻结果就是分析的一半。",
         "menuLabel": "默认"
+      },
+      "prediction-discovery": {
+        "name": "预测市场发现",
+        "tagline": "浏览正在进行的事件市场，而不是交易对目录。",
+        "description": "为事件合约打造的首页看板：事件浏览器占据宽栏，新闻流在旁边滚动，窄栏把自选列表放在情绪指标之上。安装 Kalshi 或 Polymarket 等预测平台即可填满看板。",
+        "menuLabel": "预测"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -4139,6 +4156,8 @@
     },
     "predictionsEmptyTitle": "预测结果位于「事件」面板中",
     "predictionsEmptyBody": "结果每天上架并结算，因此要从平台自己的看板浏览，而不是从目录中查找。",
+    "predictionsBrowse": "打开事件看板",
+    "predictionsInstall": "安装预测插件",
     "futuresEmptyTitle": "连接期货交易所后即可浏览永续合约",
     "futuresEmptyBody": "合约清单来自各交易所自己的市场表，因此在成功连接该交易所后才会出现。"
   },
@@ -4956,7 +4975,9 @@
       "venuesCount_other": "{{count}} 个交易所"
     },
     "discover": {
-      "featured": "精选"
+      "featured": "精选",
+      "predictions": "预测市场",
+      "allEvents": "全部事件"
     },
     "fearGreed": {
       "historyLabel_one": "最近一天",

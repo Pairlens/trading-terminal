@@ -29,7 +29,7 @@ You get a ready-to-build folder: a `manifest.json`, a sample panel built with
 
 The manifest is the contract. It carries your plugin's id, version, the
 `capabilities` it provides, the network `hosts` it needs, and a `contributes`
-block for panels.
+block for panels and workspaces.
 
 What you implement depends on what you declared:
 
@@ -38,6 +38,9 @@ What you implement depends on what you declared:
 - An AI provider exposes `getLanguageModel()`
 - A theme provides `theme:override`
 - A panel exports a React component named in `contributes.panels`
+- A ready-made layout is a `contributes.workspaces` entry: an id, store copy,
+  browse facets, and a column/cell/pane layout. No code, and no capability to
+  declare, since a layout only arranges panels the user already has
 - An indicator provider ships `chart:indicator`
 
 Declare the minimum. Every capability and every host is something a user has to

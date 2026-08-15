@@ -81,6 +81,8 @@ export type MobileOverlay =
   | { kind: 'news'; index: number }
   /** Discover's "All markets" — the full list as its own screen. */
   | { kind: 'markets' }
+  /** Discover's "All events" — every open prediction contract, as a screen. */
+  | { kind: 'events' }
   /** Discover's Fear & Greed card, opened out into the index's history. */
   | { kind: 'fearGreed' }
   /** Discover's P&L card, opened out into the window and the holdings. */
@@ -435,6 +437,17 @@ export function MobileFocusProvider({
       })
       if (decision.type === 'consumed') {
         pendingEventsRef.current -= 1
+        // Re-arm the stale-URL latch, because THIS is the moment it exists
+        // for. `consumeEntries` arms it before `go(-n)`, but the traversal is
+        // asynchronous: the focus change that triggered the close commits
+        // first, the route sync spends the latch re-asserting the canonical
+        // URL, and only then does this popstate land — on an entry whose href
+        // still names the pair the user was on BEFORE they picked one in the
+        // sheet. Without a second arming that href is adopted and the pick is
+        // silently undone (measured: a Discover row selecting ETH-USDT, or a
+        // prediction outcome bringing its venue with it, both reverted within
+        // a frame).
+        suppressPairAdoption()
         return
       }
       if (decision.type === 'settled') return

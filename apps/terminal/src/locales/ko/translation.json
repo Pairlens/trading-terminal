@@ -2476,7 +2476,6 @@
     "panels": "포함된 패널",
     "permissions": "권한",
     "preview": "미리보기",
-    "removeTheme": "제거",
     "resetToDefaults": "기본값으로 재설정",
     "saveActivate": "저장 & 활성화",
     "size": "크기",
@@ -2492,6 +2491,8 @@
     "tier": "등급",
     "uninstall": "제거",
     "uninstalled": "제거됨",
+    "uninstalledToast": "제거됨",
+    "uninstallRefusedCore": "Pairlens Core는 제거할 수 없습니다. 이 플러그인이 없으면 터미널에 패널이 남지 않습니다.",
     "updateReactivate": "업데이트 & 재활성화",
     "version": "버전",
     "visit": "방문",
@@ -2537,8 +2538,8 @@
     "pendingTrustDescription": "UI를 제공하므로 샌드박스 안에서는 실행할 수 없습니다 — 활성화하려면 전체 신뢰를 부여하거나 삭제하세요.",
     "remove": "제거",
     "groupProvidersExtensions": "제공자 및 확장 기능",
-    "removePluginTitle": "플러그인 제거",
-    "removePluginDescription": "플러그인을 비활성화하고 제거합니다. 이 플러그인이 제공한 패널에는 복구용 자리표시자가 표시됩니다. 언제든지 Plugin Store에서 다시 설치할 수 있습니다.",
+    "uninstallPluginTitle": "플러그인 제거",
+    "uninstallPluginDescription": "이 기기에서 플러그인을 제거합니다. 이 플러그인이 제공한 패널에는 복구용 자리표시자가 표시되고, 적용 중이던 테마는 색상을 되돌립니다. 언제든지 Plugin Store에서 다시 설치할 수 있습니다.",
     "resetDefaultsTitle": "기본값으로 재설정",
     "resetDefaultsDescription": "이 작업은 번들에 포함되지 않은 모든 플러그인을 제거하고, 준비된 업데이트와 사용 가능한 업데이트를 지우고, 터미널을 다시 불러옵니다. 번들 플러그인은 계속 설치된 상태로 유지됩니다.",
     "reset": "재설정",
@@ -2857,6 +2858,14 @@
       "pairlens-cex-futures": {
         "title": "Pairlens 선물",
         "description": "진입가, 마크 가격, 청산가와 함께 보는 미결제 무기한 포지션"
+      },
+      "pairlens-dex": {
+        "title": "Pairlens DEX",
+        "description": "온체인 워크스페이스 프리셋: DEX 터미널과 디젠 탐색 보드"
+      },
+      "pairlens-equities": {
+        "title": "Pairlens 주식",
+        "description": "주식 워크스페이스 프리셋: 주식 터미널과 스캐너 중심 데스크"
       }
     },
     "families": {
@@ -3238,6 +3247,8 @@
     "picksAccount": "계정을 선택하도록 안내합니다",
     "added": "“{{name}}”이(가) 워크스페이스에 추가되었습니다.",
     "addedWithMissing": "“{{name}}”이(가) 추가되었습니다. 모든 패널을 채우려면 누락된 플러그인을 설치하세요.",
+    "bundledInstalled": "이 워크스페이스를 위해 {{names}}을(를) 설치했습니다.",
+    "bundledInstallFailed": "{{names}}을(를) 설치하지 못했습니다. 플러그인 스토어에서 추가하세요.",
     "facet": {
       "trader": "트레이더",
       "asset": "자산",
@@ -3372,6 +3383,12 @@
         "tagline": "확률을 차트로, 이벤트 전체를 그 옆에.",
         "description": "예측 시장 기본 레이아웃: 확률 차트 아래에 체결 내역과 보유 계약, 가운데에 호가창과 거래 티켓, 그리고 AI 렌즈 옆에 이벤트 브라우저. 옆에 놓인 결과들이 분석의 절반이기 때문입니다.",
         "menuLabel": "기본"
+      },
+      "prediction-discovery": {
+        "name": "예측 마켓 탐색",
+        "tagline": "페어 목록이 아니라, 진행 중인 이벤트 시장을 살펴보세요.",
+        "description": "이벤트 계약을 위한 홈 보드입니다. 이벤트 브라우저가 넓은 칸을 차지하고 그 옆으로 뉴스 피드가 흐르며, 좁은 레일에 관심목록과 심리 지표가 세로로 놓입니다. Kalshi나 Polymarket 같은 예측 거래소를 설치하면 보드가 채워집니다.",
+        "menuLabel": "예측"
       },
       "dex-degen": {
         "name": "DEX 디젠",
@@ -4139,6 +4156,8 @@
     },
     "predictionsEmptyTitle": "예측 결과는 이벤트 패널에 있습니다",
     "predictionsEmptyBody": "결과는 매일 상장되고 정산되므로 카탈로그가 아니라 거래소 자체 보드에서 둘러봅니다.",
+    "predictionsBrowse": "이벤트 보드 열기",
+    "predictionsInstall": "예측 플러그인 설치",
     "futuresEmptyTitle": "선물 거래소를 연결하면 무기한 종목을 탐색할 수 있습니다",
     "futuresEmptyBody": "계약 목록은 각 거래소의 마켓 테이블에서 가져오므로 해당 거래소에 연결된 뒤에 표시됩니다."
   },
@@ -4956,7 +4975,9 @@
       "venuesCount_other": "거래소 {{count}}개"
     },
     "discover": {
-      "featured": "추천"
+      "featured": "추천",
+      "predictions": "예측 시장",
+      "allEvents": "전체 이벤트"
     },
     "fearGreed": {
       "historyLabel_one": "최근 1일",

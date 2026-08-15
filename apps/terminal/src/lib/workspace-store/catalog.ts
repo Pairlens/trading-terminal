@@ -23,11 +23,7 @@ import {
   PRESET_ANALYSIS,
   PRESET_CHART_FOCUS,
   PRESET_DEFAULT,
-  PRESET_DEX_TERMINAL,
   PRESET_DUAL_CHARTS,
-  PRESET_EQUITIES_TERMINAL,
-  PRESET_PERPS_TERMINAL,
-  PRESET_PREDICTION_TERMINAL,
   PRESET_QUAD_CHARTS,
   PRESET_TRADING,
   PRESET_TRIPLE_CHARTS,
@@ -232,8 +228,15 @@ function layoutPaneTypes(layout: TerminalLayout): Set<string> {
   return types
 }
 
-/** Derive the variables a raw layout needs from the panes it contains. */
-function variablesForLayout(
+/**
+ * Derive the variables a raw layout needs from the panes it contains.
+ *
+ * Exported because plugin-contributed workspaces go through the same rule:
+ * a contribution declares only the market a copy opens on (`pairDefault`),
+ * never the variable list, so there is one place that decides what `$pair`
+ * and `$wallet` mean.
+ */
+export function variablesForLayout(
   layout: TerminalLayout,
   pairDefault?: { pairKey: string; market: string } | null,
 ): Array<WorkspaceVariableDefinition> {
@@ -559,48 +562,6 @@ const STANDALONE_TEMPLATES: Array<WorkspaceTemplate> = [
     ),
   },
   {
-    id: 'template:dex-degen',
-    name: 'DEX Degen',
-    tagline: 'On-chain charts, swaps, and the social feed.',
-    description:
-      'Built for on-chain hunting: a chart with a swap ticket, recent tickers to catch new listings, and the social feed for alpha. Route swaps through a DEX connector such as Jupiter.',
-    icon: 'Rocket',
-    author: 'Pairlens',
-    facets: {
-      traderTypes: ['dex-degen', 'scalper'],
-      assetClasses: ['dex'],
-      screenSizes: ['compact', 'standard'],
-    },
-    tags: ['dex', 'onchain', 'memecoins'],
-    variables: [pairVariable('SOL-USDC', 'jupiter'), WALLET_VARIABLE],
-    requiredPlugins: [
-      {
-        pluginId: 'jupiter-dex-connector',
-        reason: 'Routes Solana swaps and streams on-chain prices',
-      },
-    ],
-    layout: buildLayout(
-      'dex',
-      [
-        {
-          w: 60,
-          cells: [
-            { h: 68, panes: ['chart'] },
-            { h: 32, panes: ['trade-entry'] },
-          ],
-        },
-        {
-          w: 40,
-          cells: [
-            { h: 50, panes: ['recent-tickers'] },
-            { h: 50, panes: ['social'] },
-          ],
-        },
-      ],
-      { pairVar: PAIR, walletVar: WALLET },
-    ),
-  },
-  {
     id: 'template:quant-signals',
     name: 'Quant Signals',
     tagline: 'Data log, heatmap, and risk for signal-driven trading.',
@@ -635,43 +596,6 @@ const STANDALONE_TEMPLATES: Array<WorkspaceTemplate> = [
         },
       ],
       { pairVar: PAIR },
-    ),
-  },
-  {
-    id: 'template:equities-desk',
-    name: 'Equities Desk',
-    tagline: 'Trade stocks with a scanner, chart, and positions.',
-    description:
-      'A stock-trading layout: the markets scanner, a chart, open positions, and the news wire. Connect the Alpaca broker plugin to stream US equities and route orders.',
-    icon: 'BarChart3',
-    author: 'Pairlens',
-    facets: {
-      traderTypes: ['day-trader', 'position-investor'],
-      assetClasses: ['equities'],
-      screenSizes: ['standard'],
-    },
-    tags: ['equities', 'stocks', 'broker'],
-    variables: [pairVariable('AAPL', 'alpaca'), WALLET_VARIABLE],
-    requiredPlugins: [
-      {
-        pluginId: 'alpaca-market-connector',
-        reason: 'Streams US equities data and routes stock orders',
-      },
-    ],
-    layout: buildLayout(
-      'equities',
-      [
-        { w: 28, cells: [{ h: 100, panes: ['markets'] }] },
-        {
-          w: 46,
-          cells: [
-            { h: 68, panes: ['chart'] },
-            { h: 32, panes: ['positions'] },
-          ],
-        },
-        { w: 26, cells: [{ h: 100, panes: ['news'] }] },
-      ],
-      { pairVar: PAIR, walletVar: WALLET },
     ),
   },
   {
@@ -861,95 +785,16 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
     tags: ['analysis', 'research'],
     layout: PRESET_ANALYSIS,
   }),
-  // ── Per-asset-class pair defaults ──
+  // ── Per-asset-class pair defaults live in their family plugins ──
   //
-  // One canonical layout per instrument class beyond spot. Each is the
-  // `defaultPreset` of its class's pair workspace (see
-  // `lib/layout/workspaces/pair-workspace.ts`) and the "Default" entry in
-  // that class's workspaces menu — `routePresets('pair', cls)` matches them
-  // through their asset-class facet.
-  presetTemplate({
-    id: 'template:perps-terminal',
-    name: 'Perps Terminal',
-    menuLabel: 'Default',
-    context: 'pair',
-    routeMenu: true,
-    icon: 'TrendingUp',
-    tagline: 'The futures desk: positions with mark and liquidation.',
-    description:
-      'The default perpetual-futures layout: a large chart with the tape, open contracts (entry, mark, liquidation), and market data tabbed below it, an order book and leverage-aware ticket in the middle, and the AI Copilot on the right.',
-    facets: {
-      traderTypes: ['day-trader', 'scalper'],
-      assetClasses: ['crypto-perp'],
-      screenSizes: ['standard', 'wide'],
-    },
-    tags: ['futures', 'perps', 'leverage'],
-    layout: PRESET_PERPS_TERMINAL,
-    pairDefault: { pairKey: 'BTC-USDT-USDT', market: 'binance-futures' },
-  }),
-  presetTemplate({
-    id: 'template:prediction-terminal',
-    name: 'Prediction Terminal',
-    menuLabel: 'Default',
-    context: 'pair',
-    routeMenu: true,
-    icon: 'Scale',
-    tagline: 'Chart the odds with the whole event beside them.',
-    description:
-      'The default prediction-market layout: a probability chart with the tape and your open contracts below it, the order book and ticket in the middle, and the event browser beside the AI Copilot, because the neighbouring outcomes are half the analysis.',
-    facets: {
-      traderTypes: ['news-trader', 'swing-trader'],
-      assetClasses: ['predictions'],
-      screenSizes: ['standard', 'wide'],
-    },
-    tags: ['predictions', 'events', 'contracts'],
-    layout: PRESET_PREDICTION_TERMINAL,
-    pairDefault: null,
-  }),
-  presetTemplate({
-    id: 'template:dex-terminal',
-    name: 'DEX Terminal',
-    menuLabel: 'Default',
-    context: 'pair',
-    routeMenu: true,
-    icon: 'Flame',
-    tagline: 'On-chain trading without the fake order book.',
-    description:
-      'The default on-chain layout: a chart with pool stats and the tape below it, a swap ticket over your recent tickers for catching new listings, and the AI Copilot above the social feed. There is no order book column: pool-quoted depth is synthetic, so it is not shown.',
-    facets: {
-      traderTypes: ['dex-degen', 'day-trader'],
-      assetClasses: ['dex'],
-      screenSizes: ['standard', 'wide'],
-    },
-    tags: ['dex', 'onchain', 'swap'],
-    layout: PRESET_DEX_TERMINAL,
-    pairDefault: { pairKey: 'SOL-USDC', market: 'jupiter' },
-  }),
-  presetTemplate({
-    id: 'template:equities-terminal',
-    name: 'Equities Terminal',
-    menuLabel: 'Default',
-    context: 'pair',
-    routeMenu: true,
-    icon: 'BarChart3',
-    tagline: 'Stocks with the ticket over the symbol news wire.',
-    description:
-      'The default stock layout: a chart with the tape, positions, and fundamentals below it, the order ticket above the symbol news wire (catalysts move stocks the way flow moves crypto), and the AI Copilot on the right.',
-    facets: {
-      traderTypes: ['day-trader', 'position-investor'],
-      assetClasses: ['equities'],
-      screenSizes: ['standard', 'wide'],
-    },
-    tags: ['equities', 'stocks', 'news'],
-    layout: PRESET_EQUITIES_TERMINAL,
-    pairDefault: { pairKey: 'AAPL', market: 'alpaca' },
-    requiredPlugins: [
-      {
-        pluginId: 'alpaca-market-connector',
-        reason: 'Streams US equities data and routes stock orders',
-      },
-    ],
-  }),
+  // `template:perps-terminal`, `template:prediction-terminal`,
+  // `template:dex-terminal` and `template:equities-terminal` used to sit here.
+  // Each is now shipped by the plugin whose asset class it serves, through
+  // `contributes.workspaces`, and reaches the store and the route menus via
+  // the workspace-template registry — so disabling the family takes its
+  // layouts with it. The same move carried `template:dex-degen` and
+  // `template:equities-desk` out of the standalone list above. Ids are
+  // unchanged, so translations, deep links and popularity survive.
   multiChartPreset({
     id: 'template:dual-charts',
     name: 'Dual Charts',
@@ -1250,4 +1095,65 @@ export function routePresets(
     out[t.id] = { label: t.menuLabel ?? t.name, layout: t.layout }
   }
   return out
+}
+
+/** Menu label that marks the entry a route opens on. */
+export const DEFAULT_PRESET_LABEL = 'Default'
+
+/**
+ * Id of the synthesized Default entry — the workspace's own `defaultPreset`,
+ * offered when no plugin is around to offer it.
+ */
+export const CLASS_DEFAULT_PRESET_ID = 'preset:class-default'
+
+/**
+ * Fold plugin-contributed templates into a route's built-in preset base.
+ *
+ * The class default now arrives from a plugin (the perps desk from
+ * `pairlens-cex-futures`, the prediction desk from `pairlens-predictions`),
+ * and a menu that opened with "Dual Charts" and buried "Default" at the bottom
+ * would read as broken. So contributed entries labelled `Default` lead, the
+ * built-in base follows in its own order, and the rest of the contributed
+ * entries trail in registration order. Object key order is insertion order for
+ * string keys, which is what the menu renders from.
+ *
+ * `defaultLayout` is the workspace's own `defaultPreset`. Disabling the family
+ * plugin takes the contributed Default with it, but the route still BOOTS on
+ * that layout, so a menu with no way back to it is a dead end. When nothing
+ * carries the Default slot, it is synthesized and leads.
+ *
+ * Pure and synchronous — `useRoutePresets` is the React wrapper that feeds it
+ * the live registry.
+ */
+export function mergeRoutePresets(
+  base: Record<string, RoutePreset>,
+  contributed: ReadonlyArray<WorkspaceTemplate>,
+  context: TemplateContext,
+  cls?: InstrumentClass,
+  defaultLayout?: TerminalLayout,
+): Record<string, RoutePreset> {
+  const leading: Record<string, RoutePreset> = {}
+  const trailing: Record<string, RoutePreset> = {}
+
+  for (const t of contributed) {
+    if ((t.context ?? 'standalone') !== context || !t.routeMenu) continue
+    if (cls && !templateServesClass(t, cls)) continue
+    const label = t.menuLabel ?? t.name
+    const bucket = t.menuLabel === DEFAULT_PRESET_LABEL ? leading : trailing
+    bucket[t.id] = { label, layout: t.layout }
+  }
+
+  const merged = { ...leading, ...base, ...trailing }
+  const hasDefault = Object.values(merged).some(
+    (p) => p.label === DEFAULT_PRESET_LABEL,
+  )
+  if (hasDefault || !defaultLayout) return merged
+
+  return {
+    [CLASS_DEFAULT_PRESET_ID]: {
+      label: DEFAULT_PRESET_LABEL,
+      layout: defaultLayout,
+    },
+    ...merged,
+  }
 }

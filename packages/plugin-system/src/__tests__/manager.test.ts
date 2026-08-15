@@ -577,6 +577,34 @@ describe('PluginManager', () => {
       const result = await manager.execute('market-data:discovery', {})
       expect((result as { source: string }).source).toBe('p-high')
     })
+
+    it('keeps a pin across an uninstall/reinstall of the same plugin', async () => {
+      // Uninstalling is also how a plugin gets *replaced* (re-importing a zip
+      // under development). The manager must not treat that as the user
+      // changing their mind: pin cleanup belongs to the terminal's uninstall
+      // flow, which knows the difference.
+      const mHigh = makeManifest('p-high', 'market-data:discovery', ['okx'], 5)
+      const mLow = makeManifest('p-low', 'market-data:discovery', ['okx'], 50)
+
+      await manager.installPlugin(mHigh, (m) => makeInstance(m))
+      await manager.installPlugin(mLow, (m) => makeInstance(m))
+      await manager.activatePlugin('p-high', {})
+      await manager.activatePlugin('p-low', {})
+
+      manager.pinPlugin('market-data:discovery', 'okx', 'p-low')
+      await manager.uninstallPlugin('p-low')
+
+      // The pin no longer resolves while the plugin is gone…
+      const whileGone = await manager.execute('market-data:discovery', {})
+      expect((whileGone as { source: string }).source).toBe('p-high')
+      // …but it survives, so reinstalling restores the user's choice.
+      expect(manager.isPinned('market-data:discovery', 'okx')).toBe('p-low')
+
+      await manager.installPlugin(mLow, (m) => makeInstance(m))
+      await manager.activatePlugin('p-low', {})
+      const result = await manager.execute('market-data:discovery', {})
+      expect((result as { source: string }).source).toBe('p-low')
+    })
   })
 
   // -------------------------------------------------------------------------

@@ -48,6 +48,7 @@ import { templateMenuLabel } from '@/lib/workspace-store/template-labels'
 import { normalizeLayout } from '@/lib/layout/utils'
 import { uniqueWorkspaceName } from '@/lib/layout/save-workspace'
 import { useLayout } from '@/lib/layout/context'
+import { useRoutePresets } from '@/lib/layout/use-route-presets'
 import { useWorkspace } from '@/lib/layout/workspace-context'
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
@@ -78,7 +79,10 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
   const navigate = useNavigate()
   const { layout, dispatch } = useLayout()
   const workspace = useWorkspace()
-  const { presets, screenPresets } = workspace
+  const { screenPresets } = workspace
+  // Built-in base plus whatever the active plugins contribute — a family that
+  // ships its class's layouts takes them back out of this menu when disabled.
+  const presets = useRoutePresets(workspace)
 
   const [saveOpen, setSaveOpen] = useState(false)
 

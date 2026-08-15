@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { SUPPORTED_LOCALES } from './localized-text'
+import {
+  WORKSPACE_LAYOUT_CAPS,
+  checkWorkspaceLayoutShape,
+} from './workspace-layout-caps'
 import type { CapabilityId, PluginManifest } from './plugin-types'
 
 /**
@@ -97,9 +101,19 @@ function checkLocalizedText(
   }
 }
 
+/**
+ * `errors` fail the manifest. `warnings` do not: they name something the host
+ * will ignore at runtime (a malformed `contributes.workspaces` entry, say)
+ * without taking the whole plugin down with it.
+ */
 export type ManifestValidationResult =
-  | { valid: true; manifest: PluginManifest; errors: [] }
-  | { valid: false; manifest: null; errors: Array<string> }
+  | {
+      valid: true
+      manifest: PluginManifest
+      errors: []
+      warnings: Array<string>
+    }
+  | { valid: false; manifest: null; errors: Array<string>; warnings: [] }
 
 function isPlainObject(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v)
@@ -127,14 +141,17 @@ const VALID_PERMISSIONS = ['network', 'market-data', 'credentials', 'storage']
 
 /**
  * Validate an unknown value as a PluginManifest. Returns the typed manifest on
- * success, or a list of human-readable errors on failure.
+ * success, or a list of human-readable errors on failure. Non-fatal problems
+ * come back as `warnings` on a manifest that is still valid.
  */
 export function validateManifest(input: unknown): ManifestValidationResult {
   const errors: Array<string> = []
+  const warnings: Array<string> = []
   const fail = (): ManifestValidationResult => ({
     valid: false,
     manifest: null,
     errors,
+    warnings: [],
   })
 
   if (!isPlainObject(input)) {
@@ -265,6 +282,74 @@ export function validateManifest(input: unknown): ManifestValidationResult {
     }
   }
 
+  // contributes.workspaces?: ContributedWorkspace[]
+  //
+  // Warnings, never errors. `contributes` went unvalidated until these layouts
+  // existed, so an installed manifest that predates the check must not brick at
+  // boot re-validation because one entry is malformed. The host drops the bad
+  // entry and keeps the plugin: the terminal sanitizes every untrusted
+  // contribution again on the way into its registry (facets filtered to known
+  // values, geometry capped, variables derived), so nothing unusable renders.
+  const contributes = m['contributes']
+  if (contributes !== undefined) {
+    if (!isPlainObject(contributes)) {
+      warnings.push('"contributes" is not an object and will be ignored')
+    } else if (contributes['workspaces'] !== undefined) {
+      checkContributedWorkspaces(contributes['workspaces'], warnings)
+    }
+  }
+
   if (errors.length > 0) return fail()
-  return { valid: true, manifest: input as PluginManifest, errors: [] }
+  return {
+    valid: true,
+    manifest: input as PluginManifest,
+    errors: [],
+    warnings,
+  }
+}
+
+// ── contributes.workspaces ──────────────────────────────────────────
+
+function checkContributedWorkspaces(
+  value: unknown,
+  warnings: Array<string>,
+): void {
+  if (!Array.isArray(value)) {
+    warnings.push(
+      '"contributes.workspaces" is not an array and will be ignored',
+    )
+    return
+  }
+  if (value.length > WORKSPACE_LAYOUT_CAPS.maxWorkspaces) {
+    warnings.push(
+      `"contributes.workspaces" carries more than ${WORKSPACE_LAYOUT_CAPS.maxWorkspaces} entries; the rest will be ignored`,
+    )
+  }
+
+  const seen = new Set<string>()
+  value.forEach((entry, i) => {
+    const path = `contributes.workspaces[${i}]`
+    if (!isPlainObject(entry)) {
+      warnings.push(`${path} is not an object and will be ignored`)
+      return
+    }
+    for (const key of ['id', 'name'] as const) {
+      const field = entry[key]
+      if (typeof field !== 'string' || field.length === 0) {
+        warnings.push(`${path}.${key} must be a non-empty string`)
+      } else if (field.length > MAX_TEXT_LEN) {
+        warnings.push(
+          `${path}.${key} is longer than ${MAX_TEXT_LEN} characters and will be truncated`,
+        )
+      }
+    }
+    if (typeof entry['id'] === 'string') {
+      if (seen.has(entry['id'])) {
+        warnings.push(`${path}.id "${entry['id']}" is declared more than once`)
+      }
+      seen.add(entry['id'])
+    }
+    const problem = checkWorkspaceLayoutShape(entry['layout'], `${path}.layout`)
+    if (problem) warnings.push(`${problem}; the entry will be ignored`)
+  })
 }

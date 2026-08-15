@@ -16,6 +16,7 @@
  * and not a data source, so the boot path activates it in the generic
  * remaining-plugins pass, which is where a panels-only plugin belongs.
  */
+import { CEX_FUTURES_WORKSPACES } from './workspaces'
 import type {
   PluginInstance,
   PluginManifest,
@@ -49,6 +50,9 @@ export const pairlensCexFuturesManifest: PluginManifest = {
         minHeight: 120,
       },
     ],
+    // The perps desk ships with the family that owns it: uninstall this plugin
+    // and the layout leaves the store and the workspaces menu with the pane.
+    workspaces: CEX_FUTURES_WORKSPACES,
   },
 }
 

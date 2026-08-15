@@ -5,7 +5,7 @@ group: traders
 order: 9
 eyebrow: For traders
 updated: AUG 2026
-readTime: 5 min read
+readTime: 7 min read
 ---
 
 Almost everything in Pairlens is a plugin, including the parts that shipped
@@ -45,24 +45,65 @@ works too.
 
 Installed plugins can be enabled, disabled, configured, or removed at any time.
 Disabling Pairlens Core is possible and will empty most of your terminal, so
-the app asks twice.
+the app asks twice. Uninstalling it is not possible at all.
+
+## Uninstalling and reinstalling built-ins
+
+The plugins that shipped with Pairlens are install units like any other. Open a
+plugin's store page and **Uninstall** removes it: it stops loading at boot, its
+panels go, its venue disappears from the pair picker, and any capability
+override pointing at it is dropped.
+
+The code still lives in the app, so getting it back costs nothing. The plugin
+keeps its place in the store, now labelled **Install**, and one click brings it
+back from the binary with its old configuration intact. No download, no
+network, and it stays a built-in rather than being rewritten as a registry
+plugin.
+
+Two related actions that are not the same thing:
+
+**Disable** keeps the plugin installed and configured, just dormant. Use it
+when you want a venue out of the way for a week.
+
+**Uninstall** removes it. Use it when you want the thing gone.
+
+## Dropping an asset class
+
+Uninstall the family's plugins and the asset class is gone from your terminal:
+no venues, no panels, nothing in search. Prediction markets, for example, are
+three plugins:
+
+1. **Pairlens Predictions** (the events browser and the positions panel)
+2. **Kalshi**
+3. **Polymarket**
+
+Uninstall those three and there is no prediction surface left anywhere in the
+app. The same pattern works for any class: **Crypto Futures** is Pairlens CEX
+Futures plus Binance, KuCoin and Kraken perpetuals; **Equities** is Alpaca plus
+Pairlens Equities, which ships the stock layouts; **On-Chain DEX** is the chain
+connectors plus the DEX data providers and Pairlens DEX, which ships the
+on-chain layouts. The Installed tab's family groups tell you exactly which
+plugins are in each one.
+
+If you only want them out of the way rather than gone, the family switch on the
+Installed tab disables every member in one click.
 
 ## Families
 
 Every plugin we ship belongs to a family, and the **Installed** tab groups them
 that way rather than listing forty entries alphabetically.
 
-| Family                 | What is in it                                                    |
-| ---------------------- | ---------------------------------------------------------------- |
-| **Core**               | The terminal itself: charts, order book, trade entry, workspaces |
-| **Intelligence**       | Hosted AI, instrument discovery, news, market intelligence       |
-| **Crypto Exchanges**   | The 14 centralized spot venues                                   |
-| **Crypto Futures**     | Binance, KuCoin and Kraken perpetuals, and the positions panel   |
-| **On-Chain DEX**       | Swap venues and DEX data providers                               |
-| **Equities**           | Alpaca                                                           |
-| **Prediction Markets** | Kalshi, Polymarket, and the event panels                         |
-| **AI Providers**       | Bring-your-own-key models and web search                         |
-| **Themes**             | The eighteen bundled themes                                      |
+| Family                 | What is in it                                                              |
+| ---------------------- | -------------------------------------------------------------------------- |
+| **Core**               | The terminal itself: charts, order book, trade entry, workspaces           |
+| **Intelligence**       | Hosted AI, instrument discovery, news, market intelligence                 |
+| **Crypto Exchanges**   | The 14 centralized spot venues                                             |
+| **Crypto Futures**     | Binance, KuCoin and Kraken perpetuals, the positions panel, the perps desk |
+| **On-Chain DEX**       | Swap venues, DEX data providers, and Pairlens DEX for the on-chain layouts |
+| **Equities**           | Alpaca, and Pairlens Equities for the stock layouts                        |
+| **Prediction Markets** | Kalshi, Polymarket, the event panels, the prediction layouts               |
+| **AI Providers**       | Bring-your-own-key models and web search                                   |
+| **Themes**             | The eighteen bundled themes                                                |
 
 Each group carries one switch that enables or disables everything inside it, so
 turning off an asset class you never trade is one click rather than fourteen.
@@ -74,8 +115,18 @@ capabilities, or your saved layouts depends on which family it is in, and
 plugins you installed yourself are grouped by where they came from rather than
 being swept into ours.
 
-A deployment can go further and exclude a family at build time, which is how a
-desk ships a terminal with no equities surfaces at all. See
+What a family does take with it is its ready-made layouts. An asset-class
+plugin ships the workspaces built for its class, so disabling Prediction
+Markets removes the prediction desk and the event-market home board from the
+Workspace Store, the Workspaces menu, and Discovery on the spot. Layouts you
+have already saved are untouched, and enabling the family brings the ready-made
+ones back. See [workspaces](/docs/workspaces).
+
+Deciding which asset classes you see is yours: install and uninstall the
+family's plugins in the store, in any combination you like. An organization
+shipping its own build can take the decision away entirely and exclude a family
+at build time, which is how a desk ships a terminal with no equities surfaces
+at all and no way to add them. See
 [self-hosting](/docs/self-hosting#excluding-plugin-families).
 
 ## Trust tiers
