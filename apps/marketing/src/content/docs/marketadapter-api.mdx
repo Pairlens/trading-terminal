@@ -85,6 +85,18 @@ type MarketAdapterInfo = {
   dexLimitOrders?: boolean
   /** Exchange-native trigger (TP/SL) orders via OrderParams.trigger. */
   triggerOrders?: boolean
+  /**
+   * How a market order reaches the book: 'native' (the venue accepts a
+   * priceless order) or 'none' (every order carries a price). Absent means
+   * the CEX default, native.
+   */
+  marketOrders?: 'none' | 'native'
+  /**
+   * The venue rests limit orders only, so the ticket hides the market and
+   * limit toggle instead of letting the submit be rejected. Derived from
+   * marketOrders: 'none' when it is not declared.
+   */
+  limitOnly?: boolean
 }
 ```
 
@@ -121,6 +133,12 @@ correctly in the terminal without you having to click through it.
   from that factory instead of the raw interface. It handles the parts that are
   the same everywhere.
 </Callout>
+
+The two [prediction-market](/docs/prediction-markets) connectors run on a
+separate factory of the same shape. An event contract has no base and quote
+asset and its price is a probability, so bending the spot factory around it
+would have cost both. If your venue prices outcomes rather than assets, that is
+the one to copy.
 
 ## Credentials at runtime
 

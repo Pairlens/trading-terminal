@@ -12,6 +12,7 @@ import {
 
 import { StreamThrottle } from '@pairlens/market-engine'
 import { feedEventTs, latencyMonitor } from '@pairlens/market-engine/latency'
+import { TIMEFRAMES, isTimeframe } from '@pairlens/shared/timeframe'
 import { usePairlens } from './pairlens-provider'
 import { getCountrySetting } from './region-settings'
 import { streamHealth } from './stream-health'
@@ -19,7 +20,7 @@ import { setIndicatorHistorySource } from './indicators/request-data'
 import { setBotOrderSource } from './bots/bot-order-source'
 import { PositionLedger } from './risk/position-ledger'
 import type { ThrottleMode, ThrottleStream } from '@pairlens/market-engine'
-import type { Candle } from '@pairlens/shared/types'
+import type { Candle, Timeframe } from '@pairlens/shared/types'
 import type {
   AssetClass,
   MarketAdapterInfo,
@@ -36,6 +37,7 @@ import type {
   PluginLifecycleListener,
 } from '@pairlens/plugin-system/types'
 import type { TradeEventProps, TradeFailReason } from '@/lib/analytics-events'
+import { clampTimeframeToVenue } from '@/lib/chart-timeframes'
 import { getOrderEvents, upsertOrderEvent } from '@/stores/order-events-store'
 import {
   clearBalancesForCredential,
@@ -246,7 +248,35 @@ type MarketDataContextValue = {
 
 const MarketDataContext = createContext<MarketDataContextValue | null>(null)
 
-function getConnectorAdapterInfo(
+/**
+ * The list a CEX venue is assumed to serve when its manifest says nothing.
+ * Every ccxt-bridge connector accepts all nine, so silence means "the usual".
+ */
+// The full shared union, in chart-toolbar order. This is the fallback for
+// venues that declare no `metadata.timeframes`, and it must stay the FULL
+// list: the toolbar now filters its chips by `supportedTimeframes`, so a
+// shorter default here would silently remove 3d/1M from every CEX venue —
+// a regression against the pre-declaration behavior where all eleven were
+// offered everywhere.
+const DEFAULT_TIMEFRAMES: Array<Timeframe> = TIMEFRAMES
+
+/**
+ * `metadata.timeframes`, validated against the shared `Timeframe` union.
+ *
+ * Load-bearing for prediction venues: Kalshi's OHLCV endpoint accepts three
+ * intervals and 400s on the rest, so offering the CEX nine would draw an empty
+ * chart and blame the network. A manifest that declares nothing, or declares
+ * only strings outside the union, falls back to the CEX list rather than
+ * leaving a venue with no timeframes at all.
+ */
+function readManifestTimeframes(value: unknown): Array<Timeframe> {
+  if (!Array.isArray(value)) return DEFAULT_TIMEFRAMES
+  const valid = value.filter(isTimeframe)
+  return valid.length > 0 ? valid : DEFAULT_TIMEFRAMES
+}
+
+/** Exported for the manifest-walking test; not part of the provider's API. */
+export function getConnectorAdapterInfo(
   plugin: PluginInstance,
 ): MarketAdapterInfo | null {
   // A market venue plugin declares at least one market-specific (non-wildcard)
@@ -263,23 +293,34 @@ function getConnectorAdapterInfo(
     venueCapabilities[0].markets[0] ??
     plugin.manifest.id.replace(/-(?:market|dex)-connector$/, '')
 
-  const meta = plugin.manifest.metadata as
-    | Record<string, string | boolean>
-    | undefined
-  const assetClass = ((meta?.assetClass as string) ??
-    'crypto-spot') as AssetClass
-  const walletChain = meta?.walletChain as WalletChain | undefined
-  const dexLimitOrders = meta?.dexLimitOrders === true
-  const triggerOrders = meta?.triggerOrders === true
+  const meta = plugin.manifest.metadata
+  const rawAssetClass = meta?.['assetClass']
+  const assetClass = (
+    typeof rawAssetClass === 'string' ? rawAssetClass : 'crypto-spot'
+  ) as AssetClass
+  const walletChain = meta?.['walletChain'] as WalletChain | undefined
+  const dexLimitOrders = meta?.['dexLimitOrders'] === true
+  const triggerOrders = meta?.['triggerOrders'] === true
+  // Prediction venues: Kalshi refuses a priceless order outright, so the
+  // ticket has to know before the submit rather than after the rejection.
+  const rawMarketOrders = meta?.['marketOrders']
+  const marketOrders =
+    rawMarketOrders === 'none' || rawMarketOrders === 'native'
+      ? rawMarketOrders
+      : undefined
+  // One fact, so one answer: a venue that declares only `marketOrders: 'none'`
+  // is limit-only whether or not it also set the flag, and the two can never
+  // disagree for whichever surface happens to read the other field.
+  const limitOnly = meta?.['limitOnly'] === true || marketOrders === 'none'
   // Declared by the four venues a browser cannot reach (see the connector
   // spec's requiresDesktop). It has to come off the MANIFEST rather than the
   // connector's exported adapter info, because that export is never read —
   // this function builds MarketAdapterInfo from the manifest alone.
-  const requiresDesktop = meta?.requiresDesktop === true
+  const requiresDesktop = meta?.['requiresDesktop'] === true
   // Same manifest-only reasoning as `requiresDesktop`: the panes need to know
   // a venue has no public feed BEFORE any subscribe is attempted, and the
   // adapter that would tell them is exactly the thing that cannot start.
-  const credentialedMarketData = meta?.credentialedMarketData === true
+  const credentialedMarketData = meta?.['credentialedMarketData'] === true
 
   const hasTradingCap = plugin.manifest.capabilities.some(
     (c) => c.id === 'trading:orders',
@@ -294,20 +335,12 @@ function getConnectorAdapterInfo(
     capabilities: hasTradingCap ? ['read', 'trade'] : ['read'],
     credentialSchema: [],
     iconUrl: plugin.manifest.icon,
-    supportedTimeframes: [
-      '1m',
-      '5m',
-      '15m',
-      '30m',
-      '1h',
-      '2h',
-      '4h',
-      '1d',
-      '1w',
-    ],
+    supportedTimeframes: readManifestTimeframes(meta?.['timeframes']),
     walletChain,
     dexLimitOrders,
     triggerOrders,
+    limitOnly,
+    ...(marketOrders ? { marketOrders } : {}),
     requiresDesktop,
     credentialedMarketData,
   }
@@ -409,6 +442,38 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
   const [availableMarkets, setAvailableMarkets] = useState<
     Array<MarketAdapterInfo>
   >([])
+  /**
+   * The venue table, readable from a callback without becoming a dependency
+   * of one. `subscribe` is memoized on `[pluginManager, multiplex]` on
+   * purpose — taking `availableMarkets` as a dep would rebuild every stream
+   * closure each time a plugin activates.
+   */
+  const adaptersRef = useRef<Array<MarketAdapterInfo>>(availableMarkets)
+  adaptersRef.current = availableMarkets
+
+  /**
+   * The venue's own interval, for a caller who asked for one it does not
+   * serve. Every path out of this provider that names a timeframe goes
+   * through here, because the alternative was a per-consumer fix: the chart
+   * had one, and the keyboard shortcuts, the copilot's `get_candles` and the
+   * indicator workbench's `request.security` each found their own way to a
+   * venue that answers 400. A prediction venue serves three or four intervals
+   * where a CEX serves eleven.
+   *
+   * It never writes anything back. What the user chose stays chosen — leaving
+   * the venue restores it — so this is a translation at the wire, not a
+   * correction of intent.
+   */
+  const clampForMarket = useCallback(
+    (market: string, timeframe: string): string =>
+      clampTimeframeToVenue(
+        timeframe,
+        adaptersRef.current.find((m) => m.marketId === market)
+          ?.supportedTimeframes ?? [],
+      ),
+    [],
+  )
+
   const throttleRef = useRef(new StreamThrottle())
   const pausedRef = useRef(false)
   const activeUnsubs = useRef<Set<() => void>>(new Set())
@@ -980,10 +1045,14 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
     (
       market: string,
       pair: string,
-      timeframe: string,
+      requestedTimeframe: string,
       cb: (data: unknown) => void,
-    ): (() => void) =>
-      multiplex(
+    ): (() => void) => {
+      // Clamped before the multiplex key is built, so two consumers asking a
+      // three-interval venue for 15m and 30m share the single 1m stream they
+      // both actually get rather than opening two.
+      const timeframe = clampForMarket(market, requestedTimeframe)
+      return multiplex(
         `candles:${market}:${pair}:${timeframe}`,
         'candles',
         (dispatch) => {
@@ -1001,8 +1070,9 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         },
         (d) => (d as { type?: string })?.type === 'snapshot',
         cb,
-      ),
-    [pluginManager, multiplex],
+      )
+    },
+    [pluginManager, multiplex, clampForMarket],
   )
 
   const subscribeTicker = useCallback(
@@ -1134,7 +1204,11 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
   )
 
   const warmupMarket = useCallback(
-    (market: string, pair: string, timeframe: string) => {
+    (market: string, pair: string, requestedTimeframe: string) => {
+      // `subscribe` clamps too, so this is about the warmup's OWN dedupe key:
+      // hovering a three-interval venue at 15m and then switching to it must
+      // find the warm stream, not open a second one under a different key.
+      const timeframe = clampForMarket(market, requestedTimeframe)
       const key = `${market}:${pair}:${timeframe}`
       const warmups = warmupsRef.current
       const existing = warmups.get(key)
@@ -1184,7 +1258,13 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         }, WARMUP_TTL_MS),
       })
     },
-    [subscribe, subscribeTicker, subscribeOrderbook, subscribeTrades],
+    [
+      subscribe,
+      subscribeTicker,
+      subscribeOrderbook,
+      subscribeTrades,
+      clampForMarket,
+    ],
   )
 
   // Release outstanding warmups on unmount.
@@ -1203,10 +1283,14 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
     async (
       market: string,
       pair: string,
-      timeframe: string,
+      requestedTimeframe: string,
       limit: number,
       endTs?: number,
     ): Promise<Array<Candle>> => {
+      // Covers the copilot's candle tools and the Python indicators'
+      // `request.security`, both of which name a timeframe the user never
+      // saw on a venue picker.
+      const timeframe = clampForMarket(market, requestedTimeframe)
       pluginManager.setContext({
         market,
         pair,
@@ -1221,16 +1305,21 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       })
       return result as Array<Candle>
     },
-    [pluginManager],
+    [pluginManager, clampForMarket],
   )
 
   const probeVenueHistory = useCallback(
     (
       market: string,
       pair: string,
-      timeframe: string,
+      requestedTimeframe: string,
       limit: number,
     ): Promise<Array<Candle>> | null => {
+      // Clamped like every other egress. This probe decides whether a pair is
+      // published as UNLISTED, so asking a venue for an interval it does not
+      // serve would answer "this pair does not exist here" about a pair that
+      // does — and take the order book, the tape and the ticket down with it.
+      const timeframe = clampForMarket(market, requestedTimeframe)
       // The venue's OWN history provider, resolved by an explicit (non-'*')
       // market declaration. `fetchHistory` goes through pluginManager.execute,
       // which walks a fallback chain when the primary errors — right for
@@ -1261,7 +1350,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         },
       }) as Promise<Array<Candle>>
     },
-    [pluginManager],
+    [pluginManager, clampForMarket],
   )
 
   const placeOrderGuarded = useCallback(

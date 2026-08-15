@@ -1,9 +1,16 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { memo, useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import {
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 import {
   AlertTriangle,
@@ -38,6 +45,21 @@ import type { OrderExecutor } from '@pairlens/workflow-engine/types'
 import type { BalanceRecord } from '@/stores/balances-store'
 import { track } from '@/lib/analytics-events'
 import { splitPairAssets } from '@/lib/pairs'
+import { formatPredictionPrice } from '@/lib/format-price'
+import {
+  centsToPrice,
+  normalizeContracts,
+  predictionMaxLoss,
+  predictionSibling,
+  priceToCents,
+} from '@/lib/predictions/ticket-math'
+import { predictionCollateral } from '@/lib/predictions/collateral'
+import { predictionQuestionOf } from '@/components/pair-picker/pair-picker-data'
+import {
+  registerPredictionOutcome,
+  usePredictionDirectoryStore,
+  usePredictionOutcome,
+} from '@/stores/prediction-directory-store'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 
 import { useMarketData } from '@/lib/market-data-provider'
@@ -355,6 +377,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   pricesRef,
 }: TradeEntryPanelProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [side, setSide] = useState<'buy' | 'sell'>('buy')
   const [orderType, setOrderType] = useState<'market' | 'limit' | 'workflow'>(
     'market',
@@ -373,6 +396,11 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   const [presetsConfigOpen, setPresetsConfigOpen] = useState(false)
   const [regionHintDismissed, setRegionHintDismissed] = useState(false)
   const [unlockOpen, setUnlockOpen] = useState(false)
+
+  const [, setAssetClassMap] = usePersistedState<Record<string, string>>(
+    'pair-picker.assetClassMap',
+    {},
+  )
 
   const {
     placeOrder,
@@ -399,7 +427,14 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   // DEX markets trade from a crypto wallet (on-chain swaps); CEX markets
   // trade from exchange API credentials.
   const marketInfo = availableMarkets.find((m) => m.marketId === market)
-  const isDex = marketInfo?.walletChain != null
+  // Polymarket is BOTH: it signs with an EVM key AND it is an event exchange.
+  // Only the first half is a DEX question, so the two are separate flags —
+  // `usesWallet` gates which credential store this ticket reads, `isDex` gates
+  // the swap paths (slippage, input-leg sizing, on-chain journaling). Reading
+  // one for the other is what would have sent a contract order down a swap.
+  const isPrediction = marketInfo?.assetClasses.includes('prediction') ?? false
+  const usesWallet = marketInfo?.walletChain != null
+  const isDex = usesWallet && !isPrediction
   // Resting limit orders (Jupiter Trigger / KyberSwap LO) where supported
   const dexSupportsLimit = isDex && marketInfo?.dexLimitOrders === true
   // Equities trade on a session clock, which crypto does not. Read off the
@@ -417,6 +452,32 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     `trade:presets:${quoteAsset}`,
     [10, 25, 50, 100],
   )
+  // A separate slot rather than a swapped key: `usePersistedState` binds its
+  // key at mount, and a prediction pair's "quote" is a date fragment
+  // (`KXBTCD-26AUG15-T53`) that would name a nonsense preset bucket.
+  const [contractPresets, setContractPresets] = usePersistedState<
+    Array<number>
+  >('trade:presets:contracts', [1, 5, 10, 25])
+
+  // ── Prediction identity ──
+  // The pair key is a venue ticker; what it MEANS was pinned by the row that
+  // opened it. Splitting it on '-' (which the spot path above does) would read
+  // `KXBTCD-26AUG15-T53` as the pair KXBTCD/26AUG15.
+  const pinnedOutcome = usePredictionOutcome(pairKey)
+  const directoryEntries = usePredictionDirectoryStore((s) => s.entries)
+  const outcomeLabel = pinnedOutcome?.outcome ?? ''
+  const question = pinnedOutcome ? predictionQuestionOf(pinnedOutcome) : pairKey
+  const sibling = useMemo(
+    () =>
+      isPrediction
+        ? predictionSibling(pairKey, market, directoryEntries)
+        : null,
+    [isPrediction, pairKey, market, directoryEntries],
+  )
+  // Kalshi takes no market order at all — every order carries a price. The
+  // toggle is hidden rather than disabled: an order type this venue never
+  // accepts is not a choice the user declined, it is one that does not exist.
+  const limitOnly = isPrediction && marketInfo?.limitOnly === true
 
   // Steps in the selected workflow this venue cannot execute (e.g. a
   // stop-loss on an exchange without native trigger orders). Blocks
@@ -437,17 +498,17 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
 
   const marketCreds = credentials.filter((c) => c.market === market)
   const selectedCred =
-    wallet && !isDex
+    wallet && !usesWallet
       ? marketCreds.find((c) => c.id === wallet.walletId)
       : undefined
   const selectedWallet =
-    wallet && isDex
+    wallet && usesWallet
       ? cryptoWallets.find((w) => w.id === wallet.walletId)
       : undefined
 
   // Wallets that can sign for this venue. One EVM key covers every EVM chain,
   // so the match is on the chain, not the market.
-  const chainWallets = isDex
+  const chainWallets = usesWallet
     ? cryptoWallets.filter((w) => w.chain === marketInfo?.walletChain)
     : []
 
@@ -461,13 +522,15 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   // would send a user who already has keys off to enter them a second time.
   const needsConnect =
     marketInfo != null &&
-    !(isDex ? walletsSealed : credentialsSealed) &&
-    (isDex ? walletsLoaded : loaded) &&
+    !(usesWallet ? walletsSealed : credentialsSealed) &&
+    (usesWallet ? walletsLoaded : loaded) &&
     (!marketInfo.capabilities.includes('trade') ||
-      (isDex ? chainWallets.length === 0 : marketCreds.length === 0))
+      (usesWallet ? chainWallets.length === 0 : marketCreds.length === 0))
 
+  // Every wallet venue's balances are recorded under the namespaced key, not
+  // the bare wallet id — the same wallet holds independent balances per venue.
   const balanceMap = useBalanceMap(
-    isDex
+    usesWallet
       ? wallet
         ? dexBalanceCredentialKey(wallet.walletId, market)
         : undefined
@@ -489,6 +552,30 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   useEffect(() => {
     if (!extendedHoursEligible && extendedHours) setExtendedHours(false)
   }, [extendedHoursEligible, extendedHours])
+
+  // A price is denominated in the instrument that is on screen. Moving to a
+  // prediction outcome must therefore drop whatever the previous pair left in
+  // the field: `60000` from a BTC-USDT draft is a valid-looking number that
+  // the cents converter now refuses, but an empty field is what lets the price
+  // field re-seed itself from this venue's own book.
+  const pricedPairRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (!isPrediction) {
+      pricedPairRef.current = null
+      return
+    }
+    if (pricedPairRef.current === pairKey) return
+    pricedPairRef.current = pairKey
+    setLimitPrice('')
+  }, [isPrediction, pairKey])
+
+  // Prediction venues never run workflows (the step catalogue is spot-shaped),
+  // and a limit-only venue is coerced the same way the DEX branch below does.
+  useEffect(() => {
+    if (!isPrediction) return
+    if (limitOnly && orderType !== 'limit') setOrderType('limit')
+    else if (orderType === 'workflow') setOrderType('market')
+  }, [isPrediction, limitOnly, orderType])
 
   // DEX venues support market swaps and (where the venue offers it) resting
   // limit orders — never workflows.
@@ -521,25 +608,56 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   const sizeAsset = sizeCcy === 'base' ? baseAsset : quoteAsset
   const availableBase = balanceMap.get(baseAsset)?.total ?? '0'
   const availableQuote = balanceMap.get(quoteAsset)?.total ?? '0'
-  const availableDisplay =
-    side === 'sell'
+  // One shared rule with the phone's ticket — see `predictionCollateral`.
+  const collateral = predictionCollateral((c) => balanceMap.get(c)?.total)
+  const availableDisplay = isPrediction
+    ? `${formatAvailable(collateral.total)} ${collateral.currency}`
+    : side === 'sell'
       ? `${formatAvailable(availableBase)} ${baseAsset}`
       : `${formatAvailable(availableQuote)} ${quoteAsset}`
 
+  // ── Prediction order figures ──
+  // Cents in the field, dollars on the wire. The conversion happens here and
+  // in `handleSubmit`, nowhere else.
+  //
+  // `predictionLimitPrice` is null for anything outside (0, 100) cents, and
+  // every consumer below refuses on null rather than substituting a bound: a
+  // price left over from another instrument is not a price, and clamping it
+  // silently bought contracts at the venue's worst offer.
+  const contracts = isPrediction ? Number(size) : 0
+  const predictionLimitPrice = isPrediction ? centsToPrice(limitPrice) : null
+  const predictionPriceInvalid =
+    isPrediction &&
+    orderType === 'limit' &&
+    limitPrice !== '' &&
+    predictionLimitPrice === null
+  const predictionPrice = isPrediction
+    ? orderType === 'limit'
+      ? predictionLimitPrice
+      : (pricesRef.current.latestPrice ?? null)
+    : null
+  const maxLoss = isPrediction
+    ? predictionMaxLoss({ contracts, price: predictionPrice, side })
+    : null
+
   const canSubmit =
-    (isDex ? selectedWallet : selectedCred) &&
+    (usesWallet ? selectedWallet : selectedCred) &&
     mdStatus === 'connected' &&
     !submitting &&
     Number(size) > 0 &&
+    (!isPrediction || Number.isInteger(Number(size))) &&
     (orderType === 'market' ||
-      (orderType === 'limit' && Number(limitPrice) > 0) ||
+      (orderType === 'limit' &&
+        (isPrediction
+          ? predictionLimitPrice !== null
+          : Number(limitPrice) > 0)) ||
       (orderType === 'workflow' &&
         selectedWorkflowId !== null &&
         workflowCompatIssues.length === 0))
 
   // Live funds (DEX swaps are always on-chain; CEX honors the credential mode)
   // get a longer hold + an explicit "funds commit" note.
-  const isLiveOrder = isDex || selectedCred?.mode === 'live'
+  const isLiveOrder = usesWallet || selectedCred?.mode === 'live'
 
   // Press & hold by default, single click if the user asked for one. The
   // button applies the gesture; the note under it has to say which one is on,
@@ -573,8 +691,81 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     setSizeCcy('base')
   }
 
+  // Taking the other side of the same question is a pair switch, not a form
+  // toggle: the two outcomes are two instruments with two books. Pin first, so
+  // the destination knows what it is before the route resolves it.
+  const handleSwitchOutcome = () => {
+    if (!sibling) return
+    if (!directoryEntries[sibling.pairKey] && pinnedOutcome) {
+      registerPredictionOutcome(sibling.pairKey, {
+        ...pinnedOutcome,
+        outcome: sibling.label,
+        name: `${question} - ${sibling.label}`,
+      })
+    }
+    setAssetClassMap((prev) => ({ ...prev, [sibling.pairKey]: 'prediction' }))
+    void navigate({ to: '/pair/$pair', params: { pair: sibling.pairKey } })
+  }
+
   const handleSubmit = async () => {
     if (!canSubmit) return
+
+    // ── Prediction path: contracts at a probability price ──
+    //
+    // Ordered before the wallet branch on purpose: Polymarket satisfies both
+    // tests and its orders are contracts, not swaps.
+    if (isPrediction) {
+      const account = usesWallet ? selectedWallet : selectedCred
+      if (!account) return
+      const priceDollars = predictionLimitPrice
+      // Belt and braces behind the disabled button: an out-of-range field
+      // must never reach the venue as a clamped worst-case price.
+      if (orderType === 'limit' && priceDollars === null) return
+      setSubmitting(true)
+      try {
+        const result = await placeOrder({
+          market,
+          pair: pairKey,
+          side,
+          type: orderType === 'limit' ? 'limit' : 'market',
+          // Contracts, whole. The venue counts them; nothing is converted.
+          size: normalizeContracts(size),
+          ...(orderType === 'limit' && priceDollars !== null
+            ? { price: String(priceDollars) }
+            : {}),
+          // The connector keys its slots by whatever provisioned them — a
+          // credential id for Kalshi, a wallet id for Polymarket — and reads
+          // both out of this one param.
+          credentialId: account.id,
+        })
+        if (result.success) {
+          showTradeToast({
+            side,
+            orderType: orderType === 'limit' ? 'limit' : 'market',
+            size,
+            sizeAsset: t('terminal.trade.contracts'),
+            pairKey,
+            market,
+            price:
+              orderType === 'limit' && priceDollars !== null
+                ? formatPredictionPrice(priceDollars)
+                : undefined,
+          })
+          setSize('')
+        } else {
+          toast.error(t('terminal.trade.orderRejected'), {
+            description: result.error ?? t('common.unknownError'),
+          })
+        }
+      } catch (err) {
+        toast.error(t('terminal.trade.orderFailed'), {
+          description: String(err),
+        })
+      } finally {
+        setSubmitting(false)
+      }
+      return
+    }
 
     // ── DEX path: on-chain swap / resting limit order from a wallet ──
     if (isDex) {
@@ -957,7 +1148,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     }
   }
 
-  const modeBadge = isDex ? (
+  const modeBadge = usesWallet ? (
     <Badge
       variant="outline"
       className="h-4 border-primary/30 bg-primary/10 px-1.5 font-mono text-[10px] tracking-[.08em] text-primary"
@@ -979,7 +1170,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         {/* Wallet status. The "nothing connected here" case belongs to the
             connect gate below — what's left is a vault that can't be read, and
             an account that exists but hasn't been picked for this pane. */}
-        {(isDex ? walletsSealed : credentialsSealed) ? (
+        {(usesWallet ? walletsSealed : credentialsSealed) ? (
           <button
             type="button"
             className="text-center text-xs text-amber-600 hover:underline dark:text-amber-400"
@@ -988,7 +1179,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             {i18n.t('security.vault.sealed')}{' '}
             {i18n.t('security.vault.sealedBannerAction')} →
           </button>
-        ) : isDex ? (
+        ) : usesWallet ? (
           walletsLoaded &&
           !selectedWallet &&
           chainWallets.length > 0 && (
@@ -1034,6 +1225,35 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             >
               ✕
             </button>
+          </div>
+        )}
+
+        {/* What this ticket is actually betting on. The pair key says
+            KXBTCD-26AUG15-T53; the question is the only readable identity. */}
+        {isPrediction && (
+          <div className="space-y-1.5">
+            <p className="text-xs font-medium leading-snug">{question}</p>
+            {sibling ? (
+              <div className="flex gap-1 rounded-xl bg-secondary p-1">
+                <span className="flex-1 rounded-lg bg-background py-1 text-center text-xs font-semibold">
+                  {outcomeLabel || t('terminal.trade.thisOutcome')}
+                </span>
+                <button
+                  className="flex-1 rounded-lg py-1 text-center text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+                  onClick={handleSwitchOutcome}
+                  type="button"
+                >
+                  {sibling.label}
+                </button>
+              </div>
+            ) : outcomeLabel ? (
+              <Badge
+                className="h-4 px-1.5 font-mono text-[10px] tracking-[.08em]"
+                variant="outline"
+              >
+                {outcomeLabel}
+              </Badge>
+            ) : null}
           </div>
         )}
 
@@ -1087,7 +1307,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
 
         {/* Order type tabs — DEX venues get Market + Limit (when the venue
             supports resting orders); CEX venues additionally get Workflow */}
-        {(!isDex || dexSupportsLimit) && (
+        {(!isDex || dexSupportsLimit) && !limitOnly && (
           <Tabs
             value={orderType}
             onValueChange={(v) =>
@@ -1101,7 +1321,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               <TabsTrigger value="limit" className="flex-1 rounded-lg text-xs">
                 {t('terminal.trade.orderTypeLimit')}
               </TabsTrigger>
-              {!isDex && (
+              {!isDex && !isPrediction && (
                 <TabsTrigger
                   value="workflow"
                   className="flex-1 rounded-lg text-xs"
@@ -1182,39 +1402,109 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </div>
         )}
 
-        {/* Amount input */}
+        {/* Amount input. A prediction ticket sizes in whole contracts, so it
+            gets a stepper and no base/quote switch — there is no second leg to
+            denominate in. */}
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-              {t('terminal.trade.amount')}
+              {isPrediction
+                ? t('terminal.trade.contracts')
+                : t('terminal.trade.amount')}
             </span>
-            <button
-              type="button"
-              onClick={() =>
-                setSizeCcy((c) => (c === 'base' ? 'quote' : 'base'))
-              }
-              className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[10px] font-medium text-foreground hover:bg-accent transition-colors"
-            >
-              {sizeAsset}
-            </button>
+            {!isPrediction && (
+              <button
+                type="button"
+                onClick={() =>
+                  setSizeCcy((c) => (c === 'base' ? 'quote' : 'base'))
+                }
+                className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[10px] font-medium text-foreground hover:bg-accent transition-colors"
+              >
+                {sizeAsset}
+              </button>
+            )}
           </div>
           <div className="font-mono text-[10px] tabular-nums text-muted-foreground">
             {t('terminal.trade.available', { amount: availableDisplay })}
           </div>
-          <Input
-            type="number"
-            placeholder="0.00"
-            className="h-8 rounded-lg font-mono text-sm tabular-nums"
-            value={size}
-            onChange={(e) => {
-              setSize(e.target.value)
-              setSellPct(0)
-            }}
-          />
+          {isPrediction ? (
+            <div className="flex items-center gap-1">
+              <Button
+                aria-label={t('terminal.trade.decreaseContracts')}
+                className="size-8 shrink-0 rounded-lg"
+                onClick={() =>
+                  setSize(normalizeContracts(Math.max(0, contracts - 1)))
+                }
+                size="icon"
+                type="button"
+                variant="outline"
+              >
+                −
+              </Button>
+              <Input
+                className="h-8 rounded-lg text-center font-mono text-sm tabular-nums"
+                inputMode="numeric"
+                onChange={(e) => setSize(normalizeContracts(e.target.value))}
+                placeholder="0"
+                step={1}
+                type="number"
+                value={size}
+              />
+              <Button
+                aria-label={t('terminal.trade.increaseContracts')}
+                className="size-8 shrink-0 rounded-lg"
+                onClick={() => setSize(normalizeContracts(contracts + 1))}
+                size="icon"
+                type="button"
+                variant="outline"
+              >
+                +
+              </Button>
+            </div>
+          ) : (
+            <Input
+              type="number"
+              placeholder="0.00"
+              className="h-8 rounded-lg font-mono text-sm tabular-nums"
+              value={size}
+              onChange={(e) => {
+                setSize(e.target.value)
+                setSellPct(0)
+              }}
+            />
+          )}
         </div>
 
+        {/* Contract presets — counts, not amounts of money. */}
+        {isPrediction && (
+          <div className="flex items-center gap-1">
+            {contractPresets.map((p) => (
+              <button
+                key={p}
+                type="button"
+                className={cn(
+                  'flex-1 rounded-md border px-1 py-1 font-mono text-[11.5px] tabular-nums transition-colors',
+                  size === String(p)
+                    ? 'border-primary text-foreground'
+                    : 'border-border bg-muted/30 text-muted-foreground hover:text-foreground',
+                )}
+                onClick={() => setSize(String(p))}
+              >
+                {p}
+              </button>
+            ))}
+            <button
+              type="button"
+              className="ml-0.5 text-muted-foreground hover:text-foreground"
+              onClick={() => setPresetsConfigOpen(true)}
+            >
+              <Settings2 className="size-3" />
+            </button>
+          </div>
+        )}
+
         {/* Preset row (buy mode or quote-denominated sell) */}
-        {(side === 'buy' || sizeCcy === 'quote') && (
+        {!isPrediction && (side === 'buy' || sizeCcy === 'quote') && (
           <div className="flex items-center gap-1">
             {presets.map((p) => (
               <button
@@ -1249,8 +1539,9 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </div>
         )}
 
-        {/* Sell % slider */}
-        {side === 'sell' && (
+        {/* Sell % slider. Not for predictions: a sell is opening the opposite
+            exposure, not liquidating a base-asset balance. */}
+        {side === 'sell' && !isPrediction && (
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
@@ -1341,10 +1632,13 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         {/* Limit price (only for limit orders) */}
         {orderType === 'limit' && (
           <LimitPriceField
+            cents={isPrediction}
+            invalid={predictionPriceInvalid}
+            onChange={setLimitPrice}
+            pairKey={pairKey}
+            pricesRef={pricesRef}
             side={side}
             value={limitPrice}
-            onChange={setLimitPrice}
-            pricesRef={pricesRef}
           />
         )}
 
@@ -1378,6 +1672,21 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </div>
         )}
 
+        {/* What this order can lose. A bought contract risks the premium; a
+            sold one risks the rest of the dollar it may have to pay out. */}
+        {isPrediction && (
+          <div className="flex items-center justify-between font-mono text-[10px] tabular-nums text-muted-foreground">
+            <span className="uppercase tracking-[.16em]">
+              {t('terminal.trade.maxLoss')}
+            </span>
+            {/* A dash, not a stale figure: an unusable price has no worst
+                case, and the last valid one would read as this order's. */}
+            <span className="text-foreground">
+              {maxLoss === null ? '—' : `$${maxLoss.toFixed(2)}`}
+            </span>
+          </div>
+        )}
+
         {/* Submit — press & hold to commit (single click if the user set that
             in settings). Conveys the criticality of the moment (a fuller hold
             for live funds); the toast is the confirmation. */}
@@ -1394,8 +1703,16 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               {orderType === 'workflow'
                 ? t('terminal.trade.runWorkflow')
                 : side === 'buy'
-                  ? t('terminal.trade.buyAsset', { asset: baseAsset })
-                  : t('terminal.trade.sellAsset', { asset: baseAsset })}
+                  ? t('terminal.trade.buyAsset', {
+                      asset: isPrediction
+                        ? outcomeLabel || t('terminal.trade.contracts')
+                        : baseAsset,
+                    })
+                  : t('terminal.trade.sellAsset', {
+                      asset: isPrediction
+                        ? outcomeLabel || t('terminal.trade.contracts')
+                        : baseAsset,
+                    })}
               {modeBadge}
             </span>
           }
@@ -1404,11 +1721,11 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
 
       {/* Presets config dialog */}
       <PresetsConfigDialog
-        presets={presets}
-        onChange={setPresets}
+        presets={isPrediction ? contractPresets : presets}
+        onChange={isPrediction ? setContractPresets : setPresets}
         open={presetsConfigOpen}
         onOpenChange={setPresetsConfigOpen}
-        quoteAsset={quoteAsset}
+        quoteAsset={isPrediction ? t('terminal.trade.contracts') : quoteAsset}
       />
     </div>
   )
@@ -1451,11 +1768,19 @@ function LimitPriceField({
   value,
   onChange,
   pricesRef,
+  pairKey,
+  cents = false,
+  invalid = false,
 }: {
   side: 'buy' | 'sell'
   value: string
   onChange: (value: string) => void
   pricesRef: RefObject<LivePrices>
+  pairKey: string
+  /** Probability venue: the field reads and writes CENTS, not dollars. */
+  cents?: boolean
+  /** The typed value is not a price this venue can take. */
+  invalid?: boolean
 }) {
   const { t } = useTranslation()
   const tickerData = useOptionalTickerData()
@@ -1464,24 +1789,56 @@ function LimitPriceField({
   const bestAsk = tickerData?.bestAsk ?? pricesRef.current.bestAsk
   const latestPrice =
     candleData?.latestCandle?.close ?? pricesRef.current.latestPrice
+  const reference =
+    side === 'buy' ? (bestAsk ?? latestPrice) : (bestBid ?? latestPrice)
+
+  // Seeding happens HERE, and only for a probability venue, because this is
+  // the one component in the ticket that already subscribes to the live book —
+  // the panel above deliberately holds prices in a ref so a moving market
+  // cannot re-render the fields being typed into.
+  //
+  // Keyed on "did the user touch this field for THIS pair", not on "have we
+  // seeded once". The panel clears the field when the pair changes, and child
+  // effects run before parent ones, so a once-only guard would spend its one
+  // shot before the clear landed and leave the field empty forever. This
+  // converges instead: it re-seeds an empty field until the user types in it,
+  // and then leaves a field they deliberately emptied alone.
+  const touchedFor = useRef<string | null>(null)
+  useEffect(() => {
+    if (!cents || reference == null) return
+    if (value !== '' || touchedFor.current === pairKey) return
+    onChange(String(priceToCents(reference)))
+  }, [cents, pairKey, reference, value, onChange])
 
   return (
     <div className="space-y-1">
       <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-        {t('terminal.trade.price')}
+        {cents ? t('terminal.trade.priceCents') : t('terminal.trade.price')}
       </span>
       <Input
         type="number"
         placeholder={
-          (side === 'buy'
-            ? (bestAsk ?? latestPrice)
-            : (bestBid ?? latestPrice)
-          )?.toString() ?? '—'
+          reference == null
+            ? '—'
+            : cents
+              ? String(priceToCents(reference))
+              : reference.toString()
         }
-        className="h-8 rounded-lg font-mono text-sm tabular-nums"
+        className={cn(
+          'h-8 rounded-lg font-mono text-sm tabular-nums',
+          invalid && 'border-destructive focus-visible:ring-destructive/40',
+        )}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          touchedFor.current = pairKey
+          onChange(e.target.value)
+        }}
       />
+      {invalid && (
+        <p className="text-[10px] leading-snug text-destructive">
+          {t('terminal.trade.priceCentsRange')}
+        </p>
+      )}
     </div>
   )
 }

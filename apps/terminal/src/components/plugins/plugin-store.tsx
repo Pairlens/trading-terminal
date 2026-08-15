@@ -46,6 +46,7 @@ import {
   requestAndApplyNetworkConsent,
 } from '@/lib/plugins/network-grants'
 import { isCommunityEntry } from '@/lib/plugins/community-tier'
+import { isFamilyExcluded } from '@/lib/plugins/plugin-families'
 import {
   PluginFullTrustRequiredError,
   PluginModuleLoader,
@@ -76,12 +77,22 @@ function isExchangeManifest(manifest: PluginManifest): boolean {
   return manifest.capabilities.some((c) => c.id === 'market-data:candles')
 }
 
+/**
+ * Local category inference for plugins the registry does not list. Asset class
+ * is checked before the generic "has candles ⇒ exchange" rule so a prediction
+ * or DEX venue lands on its own shelf instead of among the spot exchanges.
+ */
 function manifestToEntry(manifest: PluginManifest): RegistryPluginEntry {
+  const assetClass = manifest.metadata?.['assetClass']
   const category = isThemeManifest(manifest)
     ? 'themes'
-    : isExchangeManifest(manifest)
-      ? 'exchange'
-      : 'installed'
+    : assetClass === 'prediction'
+      ? 'predictions'
+      : assetClass === 'dex'
+        ? 'dex'
+        : isExchangeManifest(manifest)
+          ? 'exchange'
+          : 'installed'
   return {
     manifest,
     category,
@@ -620,22 +631,29 @@ export function PluginStore({
     }
   }
 
-  // Build plugin entries list — merge registry with installed
+  // Build plugin entries list — merge registry with installed.
+  // Families this deployment excluded are not offered: the registry still
+  // advertises them (it is shared across deployments), so they are dropped
+  // here. Only bundled plugins are ever family-filtered.
   const entries: Array<RegistryPluginEntry> = useMemo(() => {
     if (registryOffline) {
       // Fallback: show installed plugins as synthetic entries
       return pluginManager
         .getInstalledPlugins()
         .map((p) => manifestToEntry(p.manifest))
+        .filter((e) => !isFamilyExcluded(e.manifest))
     }
 
-    const registryPlugins = registryQuery.data?.plugins ?? []
+    const registryPlugins = (registryQuery.data?.plugins ?? []).filter(
+      (e) => !isFamilyExcluded(e.manifest),
+    )
 
     const registryIds = new Set(registryPlugins.map((e) => e.manifest.id))
     const installed = pluginManager.getInstalledPlugins()
     const extras = installed
       .filter((p) => !registryIds.has(p.manifest.id))
       .map((p) => manifestToEntry(p.manifest))
+      .filter((e) => !isFamilyExcluded(e.manifest))
 
     // When a category filter is active, only include extras that match it
     if (categoryFilter) {
@@ -667,7 +685,10 @@ export function PluginStore({
 
   const categories = registryQuery.data?.categories ?? []
   const featured = useMemo(
-    () => (featuredQuery.data?.plugins ?? []).slice(0, 4),
+    () =>
+      (featuredQuery.data?.plugins ?? [])
+        .filter((e) => !isFamilyExcluded(e.manifest))
+        .slice(0, 4),
     [featuredQuery.data],
   )
 

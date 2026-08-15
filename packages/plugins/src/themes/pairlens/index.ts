@@ -151,6 +151,7 @@ export const pairlensThemeManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'pairlens',

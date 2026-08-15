@@ -1,11 +1,16 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { SearchX } from 'lucide-react'
+import { RotateCw, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui/lib/utils'
 import { Button } from '@pairlens/ui/components/ui/button'
+import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { usePredictionOutcome } from '@/stores/prediction-directory-store'
+import { usePairAvailabilityStore } from '@/stores/pair-availability-store'
+import { predictionQuestionOf } from '@/components/pair-picker/pair-picker-data'
+import { isOpaqueTitle, shortenId } from '@/lib/predictions/event-labels'
 
 /**
  * Graceful empty state shown when a connector carries no data for the active
@@ -23,6 +28,14 @@ import { useAvailableMarkets } from '@/hooks/use-available-markets'
  * is the common recovery path (e.g. BTC-USDT not on Coinbase → try OKX). We
  * don't claim a specific reason since connectors don't expose an authoritative
  * instrument list; "no data" is the honest, useful message.
+ *
+ * That recovery is WRONG for a prediction outcome and is suppressed for one.
+ * `BTC-USDT` is the same asset on fifteen venues; `KXBTCD-26AUG15-T53` is one
+ * contract on one venue, so offering "try OKX / Binance" is not a lesser
+ * suggestion, it is a nonsensical one — no other venue has ever heard of that
+ * key. What replaces it is what the user can actually act on: the question
+ * they picked, the venue it lives on, and a retry, since a single refused
+ * request is the likeliest reason an outcome that exists reported no data.
  */
 export function PaneDataUnavailable({
   pairKey,
@@ -39,11 +52,40 @@ export function PaneDataUnavailable({
 }) {
   const { t } = useTranslation()
   const { markets } = useAvailableMarkets()
+  const clearVerdict = usePairAvailabilityStore((s) => s.clear)
   const current = markets.find((m) => m.value === market)
+
+  // The pin, then the venue's own asset class: a shared link arrives with no
+  // pin, and the venue still knows what it trades.
+  const pinned = usePredictionOutcome(pairKey)
+  const isPrediction =
+    pinned !== null || (current?.assetClasses.includes('prediction') ?? false)
+
   // Skip venues this build cannot reach, or the recovery just moves the wall.
-  const alternatives = onSelectMarket
-    ? markets.filter((m) => m.value !== market && !m.desktopOnly).slice(0, 4)
-    : []
+  // An outcome has no alternatives at all — see the header.
+  const alternatives =
+    onSelectMarket && !isPrediction
+      ? markets.filter((m) => m.value !== market && !m.desktopOnly).slice(0, 4)
+      : []
+
+  // A venue this build cannot reach is a platform statement, not a listing
+  // one, and it has its own card. Compact panes keep the sentence instead:
+  // the chart beside them is already carrying the download CTA.
+  if (isPrediction && current?.desktopOnly && !compact) {
+    return (
+      <PaneDesktopOnly
+        descriptionKey="layout.paneUnavailable.desktopOnlyDescription"
+        titleKey="layout.paneUnavailable.desktopOnlyTitle"
+      />
+    )
+  }
+
+  // What the user picked, not the routing key they never typed. The event
+  // heading is the backstop for a pin made before the label rules landed, or
+  // by a venue that publishes no question at all.
+  const label = pinned
+    ? readablePinLabel(predictionQuestionOf(pinned), pinned.eventTitle)
+    : pairKey
 
   return (
     // `flex-1`, not just `h-full`: the parent is a flex ROW, so without it this
@@ -75,10 +117,10 @@ export function PaneDataUnavailable({
         >
           {current
             ? t('layout.paneUnavailable.title', {
-                pair: pairKey,
+                pair: label,
                 venue: current.label,
               })
-            : t('layout.paneUnavailable.titleAnyVenue', { pair: pairKey })}
+            : t('layout.paneUnavailable.titleAnyVenue', { pair: label })}
         </p>
         <p
           className={cn(
@@ -86,8 +128,25 @@ export function PaneDataUnavailable({
             compact ? 'text-[10px] leading-snug' : 'text-xs',
           )}
         >
-          {t('layout.paneUnavailable.description')}
+          {isPrediction
+            ? t('layout.paneUnavailable.predictionDescription')
+            : t('layout.paneUnavailable.description')}
         </p>
+
+        {/* Retry, not "try another venue": dropping this session's verdict is
+            what makes the stream probe the venue again. Only where the pane
+            has room for a control — compact panes carry no CTA by design. */}
+        {isPrediction && !compact && (
+          <Button
+            className="mt-4 h-7 gap-1.5 px-2 text-xs"
+            onClick={() => clearVerdict(market, pairKey)}
+            size="sm"
+            variant="outline"
+          >
+            <RotateCw className="size-3.5" />
+            {t('layout.paneUnavailable.retry')}
+          </Button>
+        )}
 
         {alternatives.length > 0 && (
           <div className="mt-4 flex flex-wrap justify-center gap-1.5">
@@ -114,4 +173,10 @@ export function PaneDataUnavailable({
       </div>
     </div>
   )
+}
+
+/** Prefer the question; fall back to the event heading; shorten a bare id. */
+function readablePinLabel(question: string, eventTitle?: string): string {
+  if (!isOpaqueTitle(question)) return question
+  return eventTitle || shortenId(question)
 }

@@ -18,7 +18,7 @@ export const geckoterminalDataProviderManifest: PluginManifest = {
   description:
     'DEX market data powered by GeckoTerminal (CoinGecko) — deep history, native 4h candles',
   homepage: 'https://www.geckoterminal.com',
-  metadata: { assetClass: 'dex' },
+  metadata: { family: 'dex', assetClass: 'dex' },
   // Priority 5 — the PRIMARY wildcard DEX data provider. GeckoTerminal sends
   // Access-Control-Allow-Origin: * so it works from the webview; DexPaprika
   // (priority 6) is CORS-closed and only serves non-browser contexts (CLI).

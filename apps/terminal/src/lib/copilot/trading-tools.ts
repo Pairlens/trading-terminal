@@ -27,18 +27,25 @@ export function buildTradingTools(deps: CopilotToolDeps) {
   return {
     place_order: tool({
       description:
-        'Prepare a spot order for the user to confirm. This does NOT place the order — it returns a proposal that the user must explicitly approve (paper or live) in the chat. Every order is enforced against the user’s risk guardrails. Use get_risk_limits / get_portfolio first when sizing.',
+        'Prepare an order for the user to confirm, on whichever venue is active (exchange, on-chain or prediction market). This does NOT place the order — it returns a proposal that the user must explicitly approve (paper or live) in the chat. Every order is enforced against the user’s risk guardrails. Use get_risk_limits / get_portfolio first when sizing.',
       inputSchema: z.object({
         pair: z.string().optional(),
         market: z.string().optional(),
         side: z.enum(['buy', 'sell']),
         type: z.enum(['market', 'limit']).default('market'),
-        size: z.number().positive().describe('Order size in the base asset'),
+        size: z
+          .number()
+          .positive()
+          .describe(
+            'Order size: base asset amount, or contract count on prediction venues',
+          ),
         price: z
           .number()
           .positive()
           .optional()
-          .describe('Limit price (required for limit orders)'),
+          .describe(
+            'Limit price in quote currency (required for limit orders). On a prediction venue this is the probability price in collateral units, 0 to 1.',
+          ),
         reason: z
           .string()
           .optional()

@@ -2186,7 +2186,9 @@
     "web": "Panel web",
     "liquidityHeatmap": "Bản đồ nhiệt thanh khoản",
     "recentTickers": "Mã gần đây",
-    "empty": "Trống"
+    "empty": "Trống",
+    "events": "Sự kiện",
+    "predictionPositions": "Vị thế dự đoán"
   },
   "paneDescriptions": {
     "markets": "Duyệt tất cả các cặp giao dịch khả dụng trên các sàn",
@@ -2212,7 +2214,9 @@
     "symbolNews": "Tin tức và phân tích tâm lý cho cặp giao dịch đang hoạt động",
     "web": "Nhúng bất kỳ trang web nào làm panel trong không gian làm việc của bạn",
     "liquidityHeatmap": "Bản đồ nhiệt thanh khoản sổ lệnh thể hiện độ sâu theo mức giá theo thời gian",
-    "recentTickers": "Các cặp xem gần đây với giá trực tiếp để chuyển đổi nhanh"
+    "recentTickers": "Các cặp xem gần đây với giá trực tiếp để chuyển đổi nhanh",
+    "events": "Duyệt sự kiện thị trường dự đoán và mở biểu đồ của một kết quả",
+    "predictionPositions": "Hợp đồng bạn nắm giữ, chi phí và thời điểm tất toán"
   },
   "multiPrice": {
     "venue": "Sàn",
@@ -2284,7 +2288,11 @@
     "paneUnavailable": {
       "title": "{{pair}} không có trên {{venue}}",
       "titleAnyVenue": "{{pair}} không khả dụng",
-      "description": "Connector này không trả về dữ liệu thị trường cho cặp này. Hãy thử connector khác có niêm yết cặp đó."
+      "description": "Connector này không trả về dữ liệu thị trường cho cặp này. Hãy thử connector khác có niêm yết cặp đó.",
+      "predictionDescription": "Một kết quả sự kiện chỉ giao dịch trên một sàn, nên không còn nơi nào khác để thử. Có thể sàn chỉ từ chối một yêu cầu.",
+      "retry": "Thử lại",
+      "desktopOnlyTitle": "Sàn này cần ứng dụng máy tính",
+      "desktopOnlyDescription": "API của sàn từ chối origin từ trình duyệt, nên dữ liệu thị trường của cặp này chỉ truy cập được từ bản máy tính."
     },
     "paneCredentials": {
       "sealedTitle": "Mở khóa để tải dữ liệu {{venue}}",
@@ -2493,9 +2501,7 @@
     "needsFullTrustToRun": "Cần toàn quyền để chạy",
     "pendingTrustDescription": "Đóng góp giao diện nên không thể chạy trong sandbox — hãy cấp toàn quyền để bật, hoặc gỡ cài đặt.",
     "remove": "Gỡ bỏ",
-    "groupCore": "Cốt lõi",
     "groupProvidersExtensions": "Nhà cung cấp & Tiện ích mở rộng",
-    "groupThemes": "Giao diện",
     "removePluginTitle": "Gỡ bỏ Plugin",
     "removePluginDescription": "Thao tác này sẽ tắt và gỡ bỏ plugin. Mọi panel mà plugin này đóng góp sẽ hiển thị vùng giữ chỗ để khôi phục. Bạn có thể cài đặt lại từ Plugin Store bất cứ lúc nào.",
     "resetDefaultsTitle": "Đặt lại về Mặc định",
@@ -2788,8 +2794,56 @@
       "polygon-dex-connector": {
         "title": "Bộ kết nối DEX Polygon",
         "description": "Swap on-chain trên Polygon — định tuyến giá tốt nhất qua mọi DEX Polygon, thông qua aggregator KyberSwap"
+      },
+      "kalshi-market-connector": {
+        "title": "Trình kết nối thị trường Kalshi",
+        "description": "Hợp đồng sự kiện trên Kalshi, sàn dự đoán do CFTC quản lý — giao dịch kết quả, không phải tài sản"
+      },
+      "polymarket-market-connector": {
+        "title": "Trình kết nối thị trường Polymarket",
+        "description": "Hợp đồng sự kiện trên CLOB Polymarket — lệnh ký bằng ví, thanh toán bằng USDC"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens Dự đoán",
+        "description": "Trình duyệt sự kiện và vị thế hợp đồng đang mở cho thị trường dự đoán"
       }
-    }
+    },
+    "families": {
+      "core": {
+        "label": "Cốt lõi",
+        "description": "Bản thân terminal: biểu đồ, sổ lệnh, đặt lệnh và công cụ không gian làm việc."
+      },
+      "intelligence": {
+        "label": "Trí tuệ",
+        "description": "AI lưu trữ đám mây, tìm kiếm công cụ, tin tức và thông tin thị trường."
+      },
+      "cexSpot": {
+        "label": "Sàn crypto",
+        "description": "Sàn giao ngay tập trung cho dữ liệu thị trường và giao dịch crypto."
+      },
+      "dex": {
+        "label": "DEX on-chain",
+        "description": "Sàn hoán đổi on-chain và nhà cung cấp dữ liệu DEX."
+      },
+      "equities": {
+        "label": "Cổ phiếu",
+        "description": "Kết nối môi giới cho dữ liệu và giao dịch cổ phiếu."
+      },
+      "predictions": {
+        "label": "Thị trường dự đoán",
+        "description": "Sàn hợp đồng sự kiện để giao dịch kết quả thực tế."
+      },
+      "aiByok": {
+        "label": "Nhà cung cấp AI",
+        "description": "Mô hình ngôn ngữ và tìm kiếm web dùng khóa của bạn."
+      },
+      "themes": {
+        "label": "Giao diện",
+        "description": "Giao diện trực quan cho UI và bảng màu biểu đồ."
+      }
+    },
+    "familyToggleAria": "Bật hoặc tắt tất cả plugin {{family}}",
+    "familyToggleFailed": "Không thể thay đổi một số plugin {{family}}"
   },
   "search": {
     "placeholder": "Tìm bất cứ gì...",
@@ -2899,7 +2953,14 @@
       "available": "Khả dụng: {{amount}}",
       "slippage": "Trượt giá",
       "extendedHours": "Ngoài giờ giao dịch",
-      "extendedHoursHint": "Khớp lệnh trong phiên trước và sau giờ chính. Sổ lệnh mỏng hơn, chênh lệch giá rộng hơn."
+      "extendedHoursHint": "Khớp lệnh trong phiên trước và sau giờ chính. Sổ lệnh mỏng hơn, chênh lệch giá rộng hơn.",
+      "contracts": "Hợp đồng",
+      "maxLoss": "Lỗ tối đa",
+      "priceCents": "Giá (¢)",
+      "thisOutcome": "Kết quả này",
+      "decreaseContracts": "Giảm một hợp đồng",
+      "increaseContracts": "Tăng một hợp đồng",
+      "priceCentsRange": "Nhập giá từ 0¢ đến 100¢"
     },
     "status": {
       "connecting": "Đang kết nối…",
@@ -3946,7 +4007,11 @@
     "hoursAgo": "{{n}} giờ trước",
     "daysAgo": "{{n}} ngày trước",
     "today": "Hôm nay",
-    "yesterday": "Hôm qua"
+    "yesterday": "Hôm qua",
+    "closed": "đã đóng",
+    "inMinutes": "sau {{n}} phút",
+    "inHours": "sau {{n}} giờ",
+    "inDays": "sau {{n}} ngày"
   },
   "markets": {
     "title": "Thị trường",
@@ -3968,7 +4033,8 @@
     "assetClass": {
       "all": "Tất cả",
       "crypto": "Crypto",
-      "stocks": "Cổ phiếu"
+      "stocks": "Cổ phiếu",
+      "prediction": "Dự đoán"
     },
     "category": {
       "all": "Tất cả",
@@ -3979,7 +4045,9 @@
       "ai": "AI",
       "gaming": "Gaming",
       "infrastructure": "Infra"
-    }
+    },
+    "predictionsEmptyTitle": "Kết quả dự đoán nằm trong bảng Sự kiện",
+    "predictionsEmptyBody": "Các kết quả được niêm yết và tất toán hằng ngày, nên được duyệt từ bảng của chính sàn thay vì danh mục."
   },
   "fearGreed": {
     "title": "Sợ hãi & Tham lam",
@@ -4619,6 +4687,14 @@
       "symbol-logo": {
         "label": "Logo mã",
         "description": "Hình ảnh logo/biểu tượng cho các mã giao dịch"
+      },
+      "trades": {
+        "label": "Giao dịch",
+        "description": "Luồng lịch sử khớp lệnh thời gian thực"
+      },
+      "events": {
+        "label": "Sự kiện",
+        "description": "Duyệt các sự kiện của thị trường dự đoán và kết quả của chúng"
       }
     },
     "domains": {
@@ -4648,6 +4724,10 @@
       "balances": {
         "label": "Số dư",
         "description": "Lấy số dư tài sản tài khoản từ sàn đã kết nối"
+      },
+      "positions": {
+        "label": "Vị thế",
+        "description": "Đọc vị thế mở và thanh toán từ sàn đã kết nối"
       }
     },
     "workflow": {
@@ -4709,6 +4789,14 @@
     "themes": {
       "label": "Giao diện",
       "description": "Giao diện hình ảnh ghi đè màu sắc, bảng màu biểu đồ và phong cách UI"
+    },
+    "predictions": {
+      "label": "Thị trường dự đoán",
+      "description": "Sàn hợp đồng sự kiện để giao dịch kết quả thực tế"
+    },
+    "dex": {
+      "label": "DEX on-chain",
+      "description": "Sàn hoán đổi on-chain và nhà cung cấp dữ liệu DEX"
     }
   },
   "mobile": {
@@ -4848,7 +4936,6 @@
       "textLabel": "Nội dung nhãn",
       "textPlaceholder": "Thêm nhãn"
     },
-    "copilot": {},
     "settings": {
       "accountsHeader": "Tài khoản & kết nối",
       "terminalHeader": "Terminal",
@@ -4935,7 +5022,41 @@
       "notListedCallout": "{{pair}} không niêm yết trên {{venue}}. Chọn nó sẽ chuyển sàn đang chọn sang {{other}}.",
       "availableVenues": "Khả dụng",
       "desktopOnlyVenues": "Cần ứng dụng máy tính",
-      "desktopOnlyVenue": "Chỉ trên máy tính"
+      "desktopOnlyVenue": "Chỉ trên máy tính",
+      "predictions": "dự đoán",
+      "filterPredictions": "Dự đoán"
     }
+  },
+  "events": {
+    "searchPlaceholder": "Tìm sự kiện và câu hỏi",
+    "allCategories": "Tất cả",
+    "loading": "Đang tải sự kiện…",
+    "failed": "Không thể tải sự kiện",
+    "tryLater": "Sàn không phản hồi. Hãy thử lại sau giây lát.",
+    "emptyTitle": "Không có sự kiện nào đang mở",
+    "emptyBody": "Sàn này hiện chưa niêm yết gì.",
+    "noMatchesTitle": "Không có sự kiện nào khớp",
+    "noMatchesBody": "Thử câu hỏi ngắn hơn hoặc danh mục khác.",
+    "noVenuesTitle": "Chưa kết nối sàn dự đoán nào",
+    "noVenuesBody": "Cài Kalshi hoặc Polymarket từ Plugin Store để duyệt hợp đồng sự kiện.",
+    "desktopOnlyTitle": "Sự kiện cần ứng dụng máy tính",
+    "desktopOnlyDescription": "API của sàn này từ chối origin từ trình duyệt, nên bảng sự kiện chỉ truy cập được từ bản máy tính.",
+    "venueDesktopOnly": "Sự kiện {{venue}} cần ứng dụng máy tính.",
+    "volume": "KL {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "Kết nối tài khoản",
+    "noAccountsTitle": "Chưa kết nối tài khoản dự đoán",
+    "noAccountsBody": "Thêm khóa API Kalshi hoặc ví Polygon để xem hợp đồng bạn đang giữ.",
+    "loading": "Đang tải vị thế…",
+    "emptyTitle": "Không có hợp đồng đang mở",
+    "emptyBody": "Vị thế sẽ hiện ở đây ngay khi lệnh khớp.",
+    "colMarket": "Thị trường",
+    "colOutcome": "Kết quả",
+    "colContracts": "Hợp đồng",
+    "colAvgPrice": "TB",
+    "colCost": "Chi phí",
+    "colResolves": "Tất toán",
+    "resolved": "Đã tất toán"
   }
 }

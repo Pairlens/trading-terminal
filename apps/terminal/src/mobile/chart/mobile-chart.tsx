@@ -20,10 +20,15 @@ import { Suspense, memo, useMemo, useRef } from 'react'
 import { FastFinancialChart } from '@pairlens/fast-financial-charts/react'
 
 import { CHART_TIME_AXIS_HEIGHT } from '../lib/mobile-geometry'
+import { useMobileFocus } from '../mobile-focus-context'
 import { isPlaceableTool } from './drawing-placement'
 import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
 import { usePairlensChartTheme } from '@/hooks/use-chart-theme'
-import { formatChartPrice } from '@/lib/format-price'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
+import {
+  formatChartPrice,
+  formatPredictionChartPrice,
+} from '@/lib/format-price'
 import { lazyChunk } from '@/lib/lazy-chunk'
 
 /**
@@ -129,7 +134,19 @@ export const MobileChart = memo(function MobileChart({
     [],
   )
 
-  const localization = useMemo(() => ({ priceFormatter: formatChartPrice }), [])
+  // Focus, not a stream: the pair and the venue change on navigation, which
+  // already repaints this component. Nothing here ticks.
+  const { focusedPair, focusedVenue } = useMobileFocus()
+  const predictionPrices = useIsPredictionPair(focusedPair, focusedVenue)
+
+  const localization = useMemo(
+    () => ({
+      priceFormatter: predictionPrices
+        ? formatPredictionChartPrice
+        : formatChartPrice,
+    }),
+    [predictionPrices],
+  )
 
   const interaction = useMemo(
     () => ({

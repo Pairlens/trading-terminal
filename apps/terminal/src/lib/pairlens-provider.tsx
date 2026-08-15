@@ -53,6 +53,7 @@ import {
   registerBuiltins,
 } from '@/lib/layout/pane-registry'
 import { BOOTSTRAP_PLUGINS } from '@/lib/plugins/bootstrap-bundle'
+import { isFamilyExcluded } from '@/lib/plugins/plugin-families'
 import {
   PluginFullTrustRequiredError,
   PluginModuleLoader,
@@ -197,6 +198,20 @@ const FIRST_PARTY_COMPONENTS: Record<
       import('@/components/terminal/recent-tickers-pane').then((m) => ({
         default: m.RecentTickersPane,
       })),
+    ),
+  },
+  'pairlens-predictions': {
+    events: lazyChunk(() =>
+      import('@/components/predictions/events-pane').then((m) => ({
+        default: m.EventsPane,
+      })),
+    ),
+    'prediction-positions': lazyChunk(() =>
+      import('@/components/predictions/prediction-positions-pane').then(
+        (m) => ({
+          default: m.PredictionPositionsPane,
+        }),
+      ),
     ),
   },
   'pairlens-intelligence': {
@@ -840,16 +855,23 @@ export function PairlensProvider({
       // ── 1. Seed the ledger with bootstrap plugins (first-run UX) ──
       // Built-in plugins are installed like any other plugin: seeded on first
       // run, uninstallable thereafter (a tombstone keeps them from reappearing).
+      // Families this deployment excluded are not part of the product at all,
+      // so they never reach the ledger.
+      const shippedBootstrap = BOOTSTRAP_PLUGINS.filter(
+        (p) => !isFamilyExcluded(p.manifest, 'bootstrap'),
+      )
       seedBootstrap(
-        BOOTSTRAP_PLUGINS.map((p) => ({
+        shippedBootstrap.map((p) => ({
           pluginId: p.manifest.id,
           version: p.manifest.version,
         })),
       )
 
       // ── 1a. Install installable bootstrap plugins from compiled code ──
+      // Keyed on the shipped set: a ledger row left behind by a build that did
+      // ship an excluded family is skipped rather than re-installed.
       const bootstrapById = new Map(
-        BOOTSTRAP_PLUGINS.map((p) => [p.manifest.id, p]),
+        shippedBootstrap.map((p) => [p.manifest.id, p]),
       )
       for (const entry of getInstallableEntries()) {
         if (entry.source !== 'bootstrap') continue

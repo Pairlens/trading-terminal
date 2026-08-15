@@ -288,6 +288,16 @@ export function IndicatorWorkbench({
     return filtered.length > 0 ? filtered : CHART_TIMEFRAMES
   }, [marketData, market])
 
+  // Keep the timeframe legal for the chosen venue — the same effect the bot
+  // dialog carries. Local state here, not a persisted preference, so it is
+  // corrected outright rather than clamped at the consumer: leaving the
+  // selector on an interval the picker no longer lists would preview a
+  // different series than the one named above it.
+  useEffect(() => {
+    const first = timeframes[0]
+    if (first && !timeframes.includes(timeframe)) setTimeframe(first)
+  }, [timeframes, timeframe])
+
   // The script's files with unsaved editor buffers overlaid — what Run uses.
   const files: Array<IndicatorFile> = useMemo(() => {
     if (!selected) return []

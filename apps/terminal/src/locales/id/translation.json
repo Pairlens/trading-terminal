@@ -2186,7 +2186,9 @@
     "web": "Panel Web",
     "liquidityHeatmap": "Heatmap Likuiditas",
     "recentTickers": "Ticker Terbaru",
-    "empty": "Kosong"
+    "empty": "Kosong",
+    "events": "Acara",
+    "predictionPositions": "Posisi prediksi"
   },
   "paneDescriptions": {
     "markets": "Jelajahi semua pair trading yang tersedia di berbagai exchange",
@@ -2212,7 +2214,9 @@
     "symbolNews": "Berita dan analisis sentimen untuk pair trading aktif",
     "web": "Sematkan situs web apa pun sebagai panel di ruang kerja Anda",
     "liquidityHeatmap": "Heatmap likuiditas order book yang menampilkan kedalaman di berbagai level harga dari waktu ke waktu",
-    "recentTickers": "Pair yang baru dilihat dengan harga live untuk beralih dengan cepat"
+    "recentTickers": "Pair yang baru dilihat dengan harga live untuk beralih dengan cepat",
+    "events": "Jelajahi acara pasar prediksi dan buka grafik sebuah hasil",
+    "predictionPositions": "Kontrak yang Anda pegang, biayanya, dan kapan diselesaikan"
   },
   "multiPrice": {
     "venue": "Bursa",
@@ -2284,7 +2288,11 @@
     "paneUnavailable": {
       "title": "{{pair}} tidak tersedia di {{venue}}",
       "titleAnyVenue": "{{pair}} tidak tersedia",
-      "description": "Konektor ini tidak mengembalikan data pasar untuk pasangan ini. Coba konektor lain yang mencantumkannya."
+      "description": "Konektor ini tidak mengembalikan data pasar untuk pasangan ini. Coba konektor lain yang mencantumkannya.",
+      "predictionDescription": "Sebuah hasil acara hanya diperdagangkan di satu bursa, jadi tidak ada tempat lain untuk dicoba. Bursa mungkin hanya menolak satu permintaan.",
+      "retry": "Coba lagi",
+      "desktopOnlyTitle": "Bursa ini memerlukan aplikasi desktop",
+      "desktopOnlyDescription": "API-nya menolak origin browser, sehingga data pasar untuk pasangan ini hanya bisa diakses dari versi desktop."
     },
     "paneCredentials": {
       "sealedTitle": "Buka kunci untuk memuat data {{venue}}",
@@ -2493,9 +2501,7 @@
     "needsFullTrustToRun": "Butuh kepercayaan penuh untuk berjalan",
     "pendingTrustDescription": "Menyumbang UI dan tidak bisa berjalan di sandbox — beri kepercayaan penuh untuk mengaktifkannya, atau hapus.",
     "remove": "Hapus",
-    "groupCore": "Inti",
     "groupProvidersExtensions": "Penyedia & Ekstensi",
-    "groupThemes": "Tema",
     "removePluginTitle": "Hapus Plugin",
     "removePluginDescription": "Ini akan menonaktifkan dan menghapus plugin. Panel apa pun yang disumbangkannya akan menampilkan placeholder pemulihan. Anda bisa memasangnya lagi dari Plugin Store kapan saja.",
     "resetDefaultsTitle": "Reset ke Default",
@@ -2788,8 +2794,56 @@
       "polygon-dex-connector": {
         "title": "Konektor DEX Polygon",
         "description": "Swap Polygon on-chain — routing harga terbaik di semua DEX Polygon via agregator KyberSwap"
+      },
+      "kalshi-market-connector": {
+        "title": "Konektor Pasar Kalshi",
+        "description": "Kontrak peristiwa di Kalshi, bursa prediksi yang diatur CFTC — perdagangkan hasil, bukan aset"
+      },
+      "polymarket-market-connector": {
+        "title": "Konektor Pasar Polymarket",
+        "description": "Kontrak peristiwa di CLOB Polymarket — order ditandatangani dompet, diselesaikan dalam USDC"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens Prediksi",
+        "description": "Penjelajah acara dan posisi kontrak terbuka untuk pasar prediksi"
       }
-    }
+    },
+    "families": {
+      "core": {
+        "label": "Inti",
+        "description": "Terminal itu sendiri: grafik, order book, entri order, dan alat ruang kerja."
+      },
+      "intelligence": {
+        "label": "Inteligensi",
+        "description": "AI terkelola, penemuan instrumen, berita, dan inteligensi pasar."
+      },
+      "cexSpot": {
+        "label": "Bursa Kripto",
+        "description": "Bursa spot terpusat untuk data pasar dan perdagangan kripto."
+      },
+      "dex": {
+        "label": "DEX On-Chain",
+        "description": "Bursa swap on-chain dan penyedia data pasar DEX."
+      },
+      "equities": {
+        "label": "Saham",
+        "description": "Koneksi broker untuk data dan perdagangan saham."
+      },
+      "predictions": {
+        "label": "Pasar Prediksi",
+        "description": "Bursa kontrak peristiwa untuk memperdagangkan hasil dunia nyata."
+      },
+      "aiByok": {
+        "label": "Penyedia AI",
+        "description": "Model bahasa dan pencarian web dengan kunci Anda sendiri."
+      },
+      "themes": {
+        "label": "Tema",
+        "description": "Tema visual untuk antarmuka dan palet grafik."
+      }
+    },
+    "familyToggleAria": "Aktifkan atau nonaktifkan semua plugin {{family}}",
+    "familyToggleFailed": "Beberapa plugin {{family}} tidak dapat diubah"
   },
   "search": {
     "placeholder": "Cari apa saja...",
@@ -2899,7 +2953,14 @@
       "available": "Tersedia: {{amount}}",
       "slippage": "Slippage",
       "extendedHours": "Jam diperpanjang",
-      "extendedHoursHint": "Eksekusi di sesi pra-pasar dan pasca-penutupan. Order book lebih tipis, spread lebih lebar."
+      "extendedHoursHint": "Eksekusi di sesi pra-pasar dan pasca-penutupan. Order book lebih tipis, spread lebih lebar.",
+      "contracts": "Kontrak",
+      "maxLoss": "Rugi maks.",
+      "priceCents": "Harga (¢)",
+      "thisOutcome": "Hasil ini",
+      "decreaseContracts": "Kurangi satu kontrak",
+      "increaseContracts": "Tambah satu kontrak",
+      "priceCentsRange": "Masukkan harga antara 0¢ dan 100¢"
     },
     "status": {
       "connecting": "Menghubungkan…",
@@ -3946,7 +4007,11 @@
     "hoursAgo": "{{n}} jam lalu",
     "daysAgo": "{{n}} hari lalu",
     "today": "Hari ini",
-    "yesterday": "Kemarin"
+    "yesterday": "Kemarin",
+    "closed": "ditutup",
+    "inMinutes": "dalam {{n}} mnt",
+    "inHours": "dalam {{n}} jam",
+    "inDays": "dalam {{n}} hr"
   },
   "markets": {
     "title": "Market",
@@ -3968,7 +4033,8 @@
     "assetClass": {
       "all": "Semua",
       "crypto": "Kripto",
-      "stocks": "Saham"
+      "stocks": "Saham",
+      "prediction": "Prediksi"
     },
     "category": {
       "all": "Semua",
@@ -3979,7 +4045,9 @@
       "ai": "AI",
       "gaming": "Gaming",
       "infrastructure": "Infra"
-    }
+    },
+    "predictionsEmptyTitle": "Hasil prediksi ada di panel Acara",
+    "predictionsEmptyBody": "Hasil dicatatkan dan diselesaikan setiap hari, jadi ditelusuri dari papan bursa itu sendiri, bukan katalog."
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -4619,6 +4687,14 @@
       "symbol-logo": {
         "label": "Logo Simbol",
         "description": "Gambar logo/ikon untuk simbol trading"
+      },
+      "trades": {
+        "label": "Transaksi",
+        "description": "Aliran rekaman transaksi langsung"
+      },
+      "events": {
+        "label": "Peristiwa",
+        "description": "Jelajahi peristiwa pasar prediksi dan hasilnya"
       }
     },
     "domains": {
@@ -4648,6 +4724,10 @@
       "balances": {
         "label": "Saldo",
         "description": "Ambil saldo aset akun dari exchange yang terhubung"
+      },
+      "positions": {
+        "label": "Posisi",
+        "description": "Baca posisi terbuka dan penyelesaian dari bursa yang terhubung"
       }
     },
     "workflow": {
@@ -4709,6 +4789,14 @@
     "themes": {
       "label": "Tema",
       "description": "Tema visual yang menggantikan warna, palet chart, dan gaya UI"
+    },
+    "predictions": {
+      "label": "Pasar Prediksi",
+      "description": "Bursa kontrak peristiwa untuk memperdagangkan hasil dunia nyata"
+    },
+    "dex": {
+      "label": "DEX On-Chain",
+      "description": "Bursa swap on-chain dan penyedia data pasar DEX"
     }
   },
   "mobile": {
@@ -4848,7 +4936,6 @@
       "textLabel": "Teks label",
       "textPlaceholder": "Tambahkan label"
     },
-    "copilot": {},
     "settings": {
       "accountsHeader": "Akun & koneksi",
       "terminalHeader": "Terminal",
@@ -4935,7 +5022,41 @@
       "notListedCallout": "{{pair}} tidak terdaftar di {{venue}}. Memilihnya akan mengalihkan venue yang difokuskan ke {{other}}.",
       "availableVenues": "Tersedia",
       "desktopOnlyVenues": "Butuh aplikasi desktop",
-      "desktopOnlyVenue": "Hanya desktop"
+      "desktopOnlyVenue": "Hanya desktop",
+      "predictions": "prediksi",
+      "filterPredictions": "Prediksi"
     }
+  },
+  "events": {
+    "searchPlaceholder": "Cari acara dan pertanyaan",
+    "allCategories": "Semua",
+    "loading": "Memuat acara…",
+    "failed": "Tidak dapat memuat acara",
+    "tryLater": "Bursa tidak merespons. Coba lagi sebentar.",
+    "emptyTitle": "Tidak ada acara terbuka",
+    "emptyBody": "Bursa ini sedang tidak mencantumkan apa pun.",
+    "noMatchesTitle": "Tidak ada acara yang cocok",
+    "noMatchesBody": "Coba pertanyaan yang lebih pendek atau kategori lain.",
+    "noVenuesTitle": "Belum ada bursa prediksi yang terhubung",
+    "noVenuesBody": "Pasang Kalshi atau Polymarket dari Plugin Store untuk menjelajahi kontrak acara.",
+    "desktopOnlyTitle": "Acara memerlukan aplikasi desktop",
+    "desktopOnlyDescription": "API bursa ini menolak origin browser, sehingga papan acaranya hanya bisa diakses dari versi desktop.",
+    "venueDesktopOnly": "Acara {{venue}} memerlukan aplikasi desktop.",
+    "volume": "Vol {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "Hubungkan akun",
+    "noAccountsTitle": "Belum ada akun prediksi yang terhubung",
+    "noAccountsBody": "Tambahkan kunci API Kalshi atau dompet Polygon untuk melihat kontrak yang Anda pegang.",
+    "loading": "Memuat posisi…",
+    "emptyTitle": "Tidak ada kontrak terbuka",
+    "emptyBody": "Posisi muncul di sini begitu order terisi.",
+    "colMarket": "Pasar",
+    "colOutcome": "Hasil",
+    "colContracts": "Kontrak",
+    "colAvgPrice": "Rata",
+    "colCost": "Biaya",
+    "colResolves": "Selesai",
+    "resolved": "Selesai"
   }
 }

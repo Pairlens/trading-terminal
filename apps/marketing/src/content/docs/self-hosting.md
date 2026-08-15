@@ -5,7 +5,7 @@ group: institutions
 order: 1
 eyebrow: For institutions
 updated: AUG 2026
-readTime: 4 min read
+readTime: 6 min read
 ---
 
 Pairlens is source-available under the Functional Source License (FSL), which
@@ -44,6 +44,37 @@ OpenAI, Anthropic, OpenRouter for inference; Tavily or Exa for search) through
 the AI plugins, and inference calls go directly from the terminal to your
 chosen provider. See [AI providers](/docs/ai-providers).
 
+## Excluding plugin families
+
+Not every desk wants every asset class. A bank may have no business showing
+memecoin surfaces, and a crypto fund has no use for an equities broker. Set
+`VITE_PAIRLENS_DISABLED_FAMILIES` at build time to a comma-separated list of
+family ids and those plugins are never seeded, never installed, and never
+listed in the Plugin Store. A stale ledger row from an earlier build is skipped
+too, so flipping the switch on an existing install takes effect on the next
+boot.
+
+| Id            | Family             |
+| ------------- | ------------------ |
+| `cex-spot`    | Crypto Exchanges   |
+| `dex`         | On-Chain DEX       |
+| `equities`    | Equities           |
+| `predictions` | Prediction Markets |
+| `ai-byok`     | AI Providers       |
+| `themes`      | Themes             |
+
+```bash
+VITE_PAIRLENS_DISABLED_FAMILIES=predictions,dex
+```
+
+Two limits are deliberate. Core and Intelligence cannot be excluded, and asking
+for them logs a warning and is ignored, because the shell does not boot without
+them. And exclusion applies only to the plugins we ship: a third-party plugin
+that happens to share a family is never uninstalled by a deployment switch,
+because it is the user's, not ours. Traders can still turn families on and off
+for themselves in the Plugin Store. See
+[plugins](/docs/plugins-for-traders#families).
+
 ## Your own plugin registry
 
 The plugin registry ships in the same repo (`apps/registry`). Run a private
@@ -73,6 +104,17 @@ them as a plugin: export a Python script from the workbench, or package several
 together, sign with your own key, and serve it from your private registry. Each
 trader installs it, and each trader's copy still runs locally against their own
 credentials.
+
+## Build-time environment
+
+Everything that shapes a deployment is set when you build the terminal:
+
+| Variable                          | What it does                                                                         |
+| --------------------------------- | ------------------------------------------------------------------------------------ |
+| `VITE_APP_SERVER_URL`             | The App Server to talk to. Explicitly empty means standalone                         |
+| `VITE_REGISTRY_URL`               | The plugin registry terminals install from                                           |
+| `VITE_PAIRLENS_DISABLED_FAMILIES` | Comma-separated plugin families this build refuses to ship                           |
+| `PAIRLENS_STANDALONE`             | Set to `1` in dev for a fully offline terminal: no auth, no cloud panels, local only |
 
 ## Where to look next
 

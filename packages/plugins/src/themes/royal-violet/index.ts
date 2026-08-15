@@ -135,6 +135,7 @@ export const royalVioletManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'royal-violet',

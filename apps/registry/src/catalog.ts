@@ -20,6 +20,7 @@ import {
   groqInferenceManifest,
   htxMarketConnectorManifest,
   infraredManifest,
+  kalshiMarketConnectorManifest,
   krakenMarketConnectorManifest,
   kucoinMarketConnectorManifest,
   mexcMarketConnectorManifest,
@@ -28,6 +29,8 @@ import {
   openaiInferenceManifest,
   pairlensCoreManifest,
   pairlensIntelligenceManifest,
+  pairlensPredictionsManifest,
+  polymarketMarketConnectorManifest,
   royalVioletManifest,
   sakuraBloomManifest,
   terminalClassicManifest,
@@ -61,6 +64,12 @@ export const CATEGORIES: Array<RegistryCategory> = [
     label: 'Brokers',
     description: 'Stock broker connections for equities data and trading',
     iconName: 'landmark',
+  },
+  {
+    id: 'predictions',
+    label: 'Prediction Markets',
+    description: 'Event contract venues for trading real-world outcomes',
+    iconName: 'target',
   },
   {
     id: 'ai',
@@ -278,6 +287,36 @@ export const CATALOG: Array<RegistryPluginEntry> = [
     featuredTitle: 'Trade US equities, commission-free',
     featuredText:
       'US stocks and ETFs through Alpaca with first-class paper trading and real-time IEX market data. Requires a free Alpaca account — API keys stay on your device.',
+    bundled: true,
+  },
+  // --- Prediction markets ---
+  {
+    manifest: pairlensPredictionsManifest,
+    category: 'predictions',
+    tagline: 'Event browser and contract positions for prediction markets',
+    longDescription:
+      "The surfaces that make an event contract findable and holdable: an Events panel that browses every connected prediction venue's board by category and question, and a Positions panel that shows the contracts you hold, what they cost, when they resolve and what they paid. Contributes panels only — the prices and the trading come from whichever prediction connector you have installed.",
+    bundled: true,
+  },
+  {
+    manifest: kalshiMarketConnectorManifest,
+    category: 'predictions',
+    tagline:
+      'Event contracts on Kalshi, the CFTC-regulated prediction exchange',
+    longDescription:
+      "Trade the outcome instead of the asset. Kalshi lists regulated event contracts on rates, inflation, elections, weather and more, each settling at $1 or $0. Streams prices, books and the tape, places limit orders on either side of a market, and reports open positions with their resolution dates. Needs the desktop app: Kalshi's API refuses browser origins. API keys stay on your device.",
+    featured: true,
+    featuredTitle: 'Trade what happens next',
+    featuredText:
+      'Regulated event contracts on rates, inflation, elections and weather — charted, booked and traded in the same terminal as your spot pairs.',
+    bundled: true,
+  },
+  {
+    manifest: polymarketMarketConnectorManifest,
+    category: 'predictions',
+    tagline: 'Event contracts on the Polymarket CLOB, settled in USDC',
+    longDescription:
+      'The largest prediction market, wired straight into the terminal. Streams live outcome prices, order books and trades over WebSocket, and signs orders with your own Polygon wallet — no exchange account and no API keys. Positions and USDC collateral report alongside the rest of your portfolio. Not available for US persons to trade.',
     bundled: true,
   },
   // --- Themes ---

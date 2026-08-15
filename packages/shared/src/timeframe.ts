@@ -2,7 +2,16 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import type { Candle, Timeframe } from './types'
 
-const TIMEFRAME_TO_MS: Record<Timeframe, number> = {
+/**
+ * Duration of every interval in the `Timeframe` union, ascending.
+ *
+ * Exported because "which intervals exist and how long is each" was being
+ * re-declared wherever it was needed (the terminal's venue clamp, the
+ * provider's default list, the indicator request cache). A `Timeframe` added
+ * to the union without a row here is a type error, which is the point: a copy
+ * would just silently not know about it.
+ */
+export const TIMEFRAME_TO_MS: Record<Timeframe, number> = {
   '1m': 60_000,
   '5m': 5 * 60_000,
   '15m': 15 * 60_000,
@@ -17,6 +26,13 @@ const TIMEFRAME_TO_MS: Record<Timeframe, number> = {
   // for bucketing/labels — exchanges own the true monthly candle boundaries.
   '1M': 30 * 24 * 60 * 60_000,
 }
+
+/** Every interval in the union, shortest first. Derived, never hand-listed. */
+export const TIMEFRAMES = Object.keys(TIMEFRAME_TO_MS) as Array<Timeframe>
+
+/** True when a loose string is one of the union's intervals. */
+export const isTimeframe = (value: unknown): value is Timeframe =>
+  typeof value === 'string' && value in TIMEFRAME_TO_MS
 
 const isFiniteNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value)

@@ -43,12 +43,20 @@ import {
 import { Input } from '@pairlens/ui/components/ui/input'
 import { Switch } from '@pairlens/ui/components/ui/switch'
 import { unpackPlugin } from '@pairlens/shared/plugin-package'
+import {
+  PLUGIN_FAMILIES,
+  pluginFamilyOf,
+} from '@pairlens/shared/plugin-families'
 import { cn } from '@pairlens/ui'
 import { useFullTrustConsent } from './full-trust-consent'
 import { useNetworkConsent } from './network-consent'
 import { useRegistrySettings } from './use-registry-settings'
 import { PluginDetailDialog } from './plugin-detail-dialog'
 import { PluginIcon } from './plugin-icon'
+import type {
+  PluginFamilyId,
+  PluginFamilyMeta,
+} from '@pairlens/shared/plugin-families'
 import type { PluginInstance, PluginManifest } from '@pairlens/plugin-system'
 import type { RegistryPluginEntry } from '@pairlens/shared/registry-types'
 
@@ -65,6 +73,8 @@ import { missingConfigHint } from '@/lib/plugins/config-requirements'
 import { api, queryKeys } from '@/lib/api'
 import { authClient } from '@/lib/auth-client'
 import { usePairlens } from '@/lib/pairlens-provider'
+import { useThemePluginContext } from '@/hooks/use-theme-plugin'
+import { orderForBulkToggle } from '@/lib/plugins/family-toggle-order'
 import { BOOTSTRAP_PLUGIN_IDS } from '@/lib/plugins/bootstrap-bundle'
 import {
   PluginFullTrustRequiredError,
@@ -125,6 +135,9 @@ export function InstalledPlugins() {
   const queryClient = useQueryClient()
   const { pluginManager, pluginStateVersion, notifyPluginStateChange } =
     usePairlens()
+  // Read only: the family bulk toggle needs to know which theme the user
+  // picked so it can order the loop around it, never to change the selection.
+  const { activeThemeId } = useThemePluginContext()
   const { requestFullTrust, dialog: fullTrustDialog } = useFullTrustConsent()
   const { requestNetworkConsent, dialog: networkConsentDialog } =
     useNetworkConsent()
@@ -195,8 +208,17 @@ export function InstalledPlugins() {
       queryClient.invalidateQueries({ queryKey: queryKeys.pluginStates() }),
   })
 
+  /**
+   * Toggle one plugin. Returns whether it worked so a bulk caller can report
+   * once instead of stacking a toast per member; `quiet` suppresses the
+   * per-plugin error for exactly that case.
+   */
   const handleToggle = useCallback(
-    async (plugin: PluginInstance, checked: boolean) => {
+    async (
+      plugin: PluginInstance,
+      checked: boolean,
+      quiet = false,
+    ): Promise<boolean> => {
       setBusyId(plugin.manifest.id)
       try {
         if (checked) {
@@ -232,16 +254,20 @@ export function InstalledPlugins() {
           })
         }
         notifyPluginStateChange()
+        return true
       } catch (err) {
-        toast.error(
-          t(
-            checked
-              ? 'pluginStore.toggleFailedEnable'
-              : 'pluginStore.toggleFailedDisable',
-            { name: plugin.manifest.name },
-          ),
-          { description: err instanceof Error ? err.message : String(err) },
-        )
+        if (!quiet) {
+          toast.error(
+            t(
+              checked
+                ? 'pluginStore.toggleFailedEnable'
+                : 'pluginStore.toggleFailedDisable',
+              { name: plugin.manifest.name },
+            ),
+            { description: err instanceof Error ? err.message : String(err) },
+          )
+        }
+        return false
       } finally {
         setBusyId(null)
       }
@@ -834,10 +860,12 @@ export function InstalledPlugins() {
     [pluginStateVersion],
   )
 
-  // Group: core, themes, "my plugins" (user-provided local/url), other
+  // Group by plugin family. User-provided plugins (imported folder / URL) keep
+  // their own group ahead of family membership — where a plugin came from is
+  // what the user is looking for there. Anything unfamilied (a third-party
+  // plugin whose shape matches nothing) falls into the trailing group.
   const grouped = useMemo(() => {
-    const core: Array<PluginInstance> = []
-    const themes: Array<PluginInstance> = []
+    const byFamily = new Map<PluginFamilyId, Array<PluginInstance>>()
     const local: Array<PluginInstance> = []
     const other: Array<PluginInstance> = []
 
@@ -845,21 +873,19 @@ export function InstalledPlugins() {
       const src = sourceOf(p.manifest.id)
       if (src === 'local' || src === 'url') {
         local.push(p)
-      } else if (
-        p.manifest.capabilities.some((c) => c.id === 'theme:override')
-      ) {
-        themes.push(p)
-      } else if (
-        p.manifest.id === 'pairlens-core' ||
-        p.manifest.id === 'pairlens-intelligence'
-      ) {
-        core.push(p)
-      } else {
-        other.push(p)
+        continue
       }
+      const family = pluginFamilyOf(p.manifest)
+      if (!family) {
+        other.push(p)
+        continue
+      }
+      const members = byFamily.get(family)
+      if (members) members.push(p)
+      else byFamily.set(family, [p])
     }
 
-    return { core, themes, local, other }
+    return { byFamily, local, other }
   }, [plugins, sourceOf])
 
   const CORE_ID = 'pairlens-core'
@@ -874,6 +900,41 @@ export function InstalledPlugins() {
       void handleToggle(plugin, checked)
     },
     [handleToggle],
+  )
+
+  // Family-level enable/disable. Required families carry no switch, so this
+  // never reaches pairlens-core and never bypasses its confirm dialog (pinned
+  // by lib/__tests__/plugin-families.test.ts). It is exactly the per-plugin
+  // toggle applied to each member that needs it — no separate persistence.
+  //
+  // Order matters: see lib/plugins/family-toggle-order.ts. Every step of the
+  // loop is a rendered state, and one of them would otherwise wipe the user's
+  // theme selection.
+  const [familyBusy, setFamilyBusy] = useState<PluginFamilyId | null>(null)
+  const handleFamilyToggle = useCallback(
+    async (
+      family: PluginFamilyMeta,
+      members: Array<PluginInstance>,
+      checked: boolean,
+    ) => {
+      setFamilyBusy(family.id)
+      let failed = 0
+      try {
+        const ordered = orderForBulkToggle(members, activeThemeId, checked)
+        for (const plugin of ordered) {
+          if ((plugin.status === 'active') === checked) continue
+          if (!(await handleToggle(plugin, checked, true))) failed++
+        }
+      } finally {
+        setFamilyBusy(null)
+      }
+      if (failed > 0) {
+        toast.error(
+          t('pluginStore.familyToggleFailed', { family: t(family.labelKey) }),
+        )
+      }
+    },
+    [handleToggle, activeThemeId, t],
   )
 
   return (
@@ -1024,27 +1085,51 @@ export function InstalledPlugins() {
         </div>
       )}
 
-      {/* Core plugins (pairlens-core is irreducible: disable with confirm,
-          not removable; intelligence is fully removable) */}
-      {grouped.core.length > 0 && (
-        <PluginGroup label={t('pluginStore.groupCore')} plugins={grouped.core}>
-          {(plugin) => (
-            <InstalledPluginRow
-              key={plugin.manifest.id}
-              plugin={plugin}
-              source={sourceOf(plugin.manifest.id)}
-              busy={busyId === plugin.manifest.id}
-              panelCount={getContributedPanelCount(plugin)}
-              update={availableUpdates.get(plugin.manifest.id)}
-              onToggle={(checked) => onToggleRow(plugin, checked)}
-              onConfigure={() => setConfigPlugin(plugin)}
-              onRemove={() => setConfirmRemove(plugin.manifest.id)}
-              onUpdate={handleUpdate}
-              removable={plugin.manifest.id !== CORE_ID}
-            />
-          )}
-        </PluginGroup>
-      )}
+      {/* Family groups, in declared order. pairlens-core is irreducible:
+          disabled only through its confirm dialog, never removable. */}
+      {PLUGIN_FAMILIES.map((family) => {
+        const members = grouped.byFamily.get(family.id)
+        if (!members || members.length === 0) return null
+        const familyLabel = t(family.labelKey)
+        return (
+          <PluginGroup
+            key={family.id}
+            label={familyLabel}
+            description={t(family.descriptionKey)}
+            plugins={members}
+            toggle={
+              family.required
+                ? undefined
+                : {
+                    // "On" while anything in the family still runs.
+                    checked: members.some((p) => p.status === 'active'),
+                    busy: familyBusy !== null,
+                    ariaLabel: t('pluginStore.familyToggleAria', {
+                      family: familyLabel,
+                    }),
+                    onCheckedChange: (checked) =>
+                      void handleFamilyToggle(family, members, checked),
+                  }
+            }
+          >
+            {(plugin) => (
+              <InstalledPluginRow
+                key={plugin.manifest.id}
+                plugin={plugin}
+                source={sourceOf(plugin.manifest.id)}
+                busy={busyId === plugin.manifest.id}
+                panelCount={getContributedPanelCount(plugin)}
+                update={availableUpdates.get(plugin.manifest.id)}
+                onToggle={(checked) => onToggleRow(plugin, checked)}
+                onConfigure={() => setConfigPlugin(plugin)}
+                onRemove={() => setConfirmRemove(plugin.manifest.id)}
+                onUpdate={handleUpdate}
+                removable={plugin.manifest.id !== CORE_ID}
+              />
+            )}
+          </PluginGroup>
+        )
+      })}
 
       {/* My Plugins — user-provided (local folder / imported / URL) */}
       {grouped.local.length > 0 && (
@@ -1070,7 +1155,7 @@ export function InstalledPlugins() {
         </PluginGroup>
       )}
 
-      {/* Other plugins (inference, etc.) */}
+      {/* Unfamilied plugins — nothing in the manifest places them. */}
       {grouped.other.length > 0 && (
         <PluginGroup
           label={t('pluginStore.groupProvidersExtensions')}
@@ -1084,29 +1169,6 @@ export function InstalledPlugins() {
               busy={busyId === plugin.manifest.id}
               panelCount={getContributedPanelCount(plugin)}
               update={availableUpdates.get(plugin.manifest.id)}
-              onToggle={(checked) => onToggleRow(plugin, checked)}
-              onConfigure={() => setConfigPlugin(plugin)}
-              onRemove={() => setConfirmRemove(plugin.manifest.id)}
-              onUpdate={handleUpdate}
-              removable
-            />
-          )}
-        </PluginGroup>
-      )}
-
-      {/* Theme plugins */}
-      {grouped.themes.length > 0 && (
-        <PluginGroup
-          label={t('pluginStore.groupThemes')}
-          plugins={grouped.themes}
-        >
-          {(plugin) => (
-            <InstalledPluginRow
-              key={plugin.manifest.id}
-              plugin={plugin}
-              source={sourceOf(plugin.manifest.id)}
-              busy={busyId === plugin.manifest.id}
-              panelCount={0}
               onToggle={(checked) => onToggleRow(plugin, checked)}
               onConfigure={() => setConfigPlugin(plugin)}
               onRemove={() => setConfirmRemove(plugin.manifest.id)}
@@ -1328,21 +1390,50 @@ export function InstalledPlugins() {
 
 // ── Sub-components ──────────────────────────────────────────────────
 
+/** Header switch for a whole family — absent for groups that cannot be bulk-toggled. */
+type GroupToggle = {
+  checked: boolean
+  busy: boolean
+  ariaLabel: string
+  onCheckedChange: (checked: boolean) => void
+}
+
 function PluginGroup({
   label,
+  description,
   plugins,
+  toggle,
   children,
 }: {
   label: string
+  description?: string
   plugins: Array<PluginInstance>
+  toggle?: GroupToggle
   children: (plugin: PluginInstance) => React.ReactNode
 }) {
   return (
     <section className="mb-6">
-      <h3 className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-        {label}{' '}
-        <span className="text-muted-foreground/50">({plugins.length})</span>
-      </h3>
+      <div className="mb-2 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            {label}{' '}
+            <span className="text-muted-foreground/50">({plugins.length})</span>
+          </h3>
+          {description && (
+            <p className="mt-0.5 text-xs text-muted-foreground/70">
+              {description}
+            </p>
+          )}
+        </div>
+        {toggle && (
+          <Switch
+            checked={toggle.checked}
+            disabled={toggle.busy}
+            onCheckedChange={toggle.onCheckedChange}
+            aria-label={toggle.ariaLabel}
+          />
+        )}
+      </div>
       <div className="space-y-1">{plugins.map(children)}</div>
     </section>
   )

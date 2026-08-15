@@ -31,6 +31,7 @@ import {
   customIndicatorSourceKey,
 } from '@/lib/indicators/custom-indicator-registry'
 import { useMarketData } from '@/lib/market-data-provider'
+import { clampTimeframeToVenue } from '@/lib/chart-timeframes'
 import { useNotificationStore } from '@/stores/notification-store'
 import { useCandleStream } from '@/hooks/use-candle-stream'
 import { useOrderbookStream } from '@/hooks/use-orderbook-stream'
@@ -243,7 +244,26 @@ export function useChartTerminalState(
   // When a workspace variable provides a timeframe, use it as the active value.
   // The user can still change it via the chart toolbar (which updates the
   // persisted value), but the variable acts as the initial/default timeframe.
-  const timeframe = options?.defaultTimeframe ?? persistedTimeframe
+  const requestedTimeframe = options?.defaultTimeframe ?? persistedTimeframe
+
+  // What the ACTIVE venue serves, and the interval to actually chart.
+  //
+  // Not every venue serves the nine the toolbar draws: a prediction venue
+  // publishes three or four, and asking one for an interval it does not have
+  // fails the history probe — which is also the availability probe, so the
+  // pair would then be published as unlisted and every pane would follow the
+  // chart into an empty state. The clamp lands BEFORE the subscription; the
+  // stored preference is deliberately left alone, so leaving the venue
+  // restores the user's own choice rather than the one it was narrowed to.
+  const { getTimeframes } = useMarketData()
+  const supportedTimeframes = useMemo(
+    () => getTimeframes(market),
+    [getTimeframes, market],
+  )
+  const timeframe = useMemo(
+    () => clampTimeframeToVenue(requestedTimeframe, supportedTimeframes),
+    [requestedTimeframe, supportedTimeframes],
+  )
   const setTimeframe = useCallback(
     (tf: string) => {
       track('timeframe_changed', { timeframe: tf })
@@ -1301,6 +1321,8 @@ export function useChartTerminalState(
     setMarket,
     timeframe,
     setTimeframe,
+    /** The active venue's own intervals — what the pickers may offer. */
+    supportedTimeframes,
     chartType,
     setChartType,
     crosshairMode,

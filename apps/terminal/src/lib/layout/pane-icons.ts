@@ -25,6 +25,8 @@ import {
   Star,
   Terminal,
   TrendingUp,
+  Vote,
+  Wallet,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -57,6 +59,8 @@ const PANE_ICONS: Record<string, LucideIcon> = {
   PieChart,
   Flame,
   Scale,
+  Vote,
+  Wallet,
 }
 
 export function getPaneIcon(name?: string): LucideIcon {

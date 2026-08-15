@@ -289,6 +289,10 @@ function QuoteMenu({
     const matches = items
       .filter((item) => item.base === base)
       .map((item) => item.quote)
+      // A prediction outcome has no quote at all — its "pair" is one contract
+      // settling in collateral — and an empty string would render as a blank,
+      // unlabelled and unselectable menu row.
+      .filter((candidate) => candidate !== '')
     const unique = Array.from(new Set(matches))
     return unique.length > 0 ? unique.slice(0, MAX_OPTIONS) : FALLBACK_QUOTES
   }, [items, base])

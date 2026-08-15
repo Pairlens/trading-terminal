@@ -90,7 +90,8 @@ local storage under one data key, wrapped by each protector you enrol. On
 desktop, credentials live in the OS keychain instead. See
 [the security model](/docs/security-model).
 
-**Venue.** An exchange, broker, or on-chain aggregator. Fifteen ship in the box.
+**Venue.** An exchange, broker, event exchange, or on-chain aggregator.
+Seventeen ship in the box, plus the on-chain connectors.
 
 **Workspace.** A saved arrangement of panes, with variables that bind them to a
 pair, venue, and account. See [workspaces](/docs/workspaces).
@@ -107,6 +108,11 @@ book.
 
 **Depth.** How much size rests between the touch and a given price. What the
 [depth curve](/docs/depth-and-liquidity) plots.
+
+**Event contract.** An instrument that pays one unit of collateral if its
+outcome resolves true and nothing if it does not. Priced between 0 and 1 and
+quoted in cents, so 53¢ reads as a 53% chance. See
+[prediction markets](/docs/prediction-markets).
 
 **Fill.** A completed execution. Partial fills are normal on limit orders.
 
@@ -137,6 +143,10 @@ strategy engine. Strategies that work in one fail in the other.
 
 **Slippage.** The gap between the price you expected and the price you got. A
 function of depth and order size.
+
+**Outcome.** One side of an event contract, Yes or No on a binary question, or
+one of several on a categorical one. Each outcome is its own instrument with its
+own book, and you can buy or sell either side.
 
 **Spot.** Buying the asset itself, settled immediately. Pairlens trades spot.
 There are no margin positions, which is why the Positions tab is empty by

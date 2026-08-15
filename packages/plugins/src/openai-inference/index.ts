@@ -17,6 +17,7 @@ export const openaiInferenceManifest: PluginManifest = {
   description: 'AI inference via OpenAI API',
   homepage: 'https://openai.com',
   icon: 'https://openai.com/favicon.ico',
+  metadata: { family: 'ai-byok' },
   capabilities: [
     {
       id: 'ai:inference',

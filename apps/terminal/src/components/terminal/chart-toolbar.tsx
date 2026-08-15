@@ -24,7 +24,7 @@ import {
   TrendingUp,
 } from 'lucide-react'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -145,6 +145,30 @@ export const TIMEFRAME_OPTIONS: Array<TimeframeOption> = [
   },
 ]
 
+/**
+ * The subset of the list a venue can actually draw.
+ *
+ * A venue that declares nothing keeps all eleven — that is every CEX, and
+ * assuming capability is what the terminal's other unknown-venue checks do.
+ * An intersection that comes back empty also falls back to the full list
+ * rather than rendering a picker with no rows: a connector spelling its
+ * intervals in a way this build does not recognise is a reason to offer the
+ * usual chips, not to offer none.
+ *
+ * Exported for the mobile popover, which presents the same subset in a
+ * different shape.
+ */
+export function supportedTimeframeOptions(
+  supported: Array<string>,
+): Array<TimeframeOption> {
+  if (supported.length === 0) return TIMEFRAME_OPTIONS
+  const allowed = new Set(supported)
+  const filtered = TIMEFRAME_OPTIONS.filter((option) =>
+    allowed.has(option.value),
+  )
+  return filtered.length > 0 ? filtered : TIMEFRAME_OPTIONS
+}
+
 const CHART_TYPE_OPTIONS: Array<{
   value: ChartType
   labelKey: string
@@ -244,6 +268,7 @@ export function ChartToolbar() {
   const {
     market,
     timeframe,
+    supportedTimeframes,
     chartType,
     crosshairMode,
     priceScaleMode,
@@ -313,6 +338,16 @@ export function ChartToolbar() {
     [chartRef, chartSeries, t, timeframe],
   )
 
+  // Offer only what the venue being charted can actually draw. A prediction
+  // venue publishes three or four intervals, and one it does not have fails
+  // the history probe — which is also the availability probe, so the whole
+  // pair would then read as unlisted. A venue that declares nothing keeps the
+  // full list, which is every CEX.
+  const timeframeOptions = useMemo(
+    () => supportedTimeframeOptions(supportedTimeframes),
+    [supportedTimeframes],
+  )
+
   // Re-render on rebind so every shortcut label below stays truthful.
   useKeybindingsVersion()
   const indicatorsShortcut = useKeybindingLabel('chart.indicators')
@@ -350,7 +385,7 @@ export function ChartToolbar() {
             </MenubarGroup>
             <MenubarSeparator />
             <MenubarRadioGroup value={timeframe} onValueChange={setTimeframe}>
-              {TIMEFRAME_OPTIONS.map((option) => (
+              {timeframeOptions.map((option) => (
                 <MenubarRadioItem key={option.value} value={option.value}>
                   <span className="w-7 font-mono font-medium">
                     {option.short}

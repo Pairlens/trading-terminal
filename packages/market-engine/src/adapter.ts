@@ -46,11 +46,30 @@ export type MarketAdapterInfo = {
   /** Exchange-native trigger (TP/SL) orders via OrderParams.trigger. */
   triggerOrders?: boolean
   /**
-   * Venue that cannot work in a browser build: its public REST host sends no
-   * `Access-Control-Allow-Origin` and its WS carries no usable candle history.
-   * The venue picker marks it, and the connector refuses with a
-   * PlatformRestrictedError rather than presenting a chart that never seeds.
-   * Always reachable on desktop, which fetches from Rust and is CORS-exempt.
+   * The venue's book cannot honour a `type: 'market'` order at all — every
+   * order carries a price (Kalshi). The ticket hides the market/limit toggle
+   * on the strength of it rather than letting the venue reject the submit.
+   *
+   * Equivalent to `marketOrders === 'none'`, and derived from it when a venue
+   * declares only that one: two fields that can disagree about the same fact
+   * is a bug waiting for whichever surface reads the other one.
+   */
+  limitOnly?: boolean
+  /**
+   * How a market order reaches the book, when the venue declares it: `'none'`
+   * (limit-only — the `limitOnly` case) or `'native'` (the venue accepts a
+   * priceless order). Absent means the CEX default, which is native.
+   */
+  marketOrders?: 'none' | 'native'
+  /**
+   * Venue that cannot work in a browser build, because its public REST host
+   * refuses cross-origin requests — either by sending no
+   * `Access-Control-Allow-Origin` at all, or by answering a foreign `Origin`
+   * with an outright 403 (Kalshi, which does serve candle history and simply
+   * will not serve it to a browser). The venue picker marks it, and the
+   * connector refuses with a PlatformRestrictedError rather than presenting a
+   * chart that never seeds. Always reachable on desktop, which fetches from
+   * Rust and is CORS-exempt.
    */
   requiresDesktop?: boolean
   /**

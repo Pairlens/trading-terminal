@@ -10,8 +10,8 @@ readTime: 4 min read
 ---
 
 Panels are contributed by plugins, which is why the catalogue grows when you
-install one. Everything below ships in the box, from **Pairlens Core** or
-**Pairlens Intelligence**.
+install one. Everything below ships in the box, from **Pairlens Core**,
+**Pairlens Intelligence**, or **Pairlens Predictions**.
 
 ## Charting and data
 
@@ -38,12 +38,13 @@ around it.
 
 ## Trading
 
-| Panel           | What it shows                                                |
-| --------------- | ------------------------------------------------------------ |
-| **Trade Entry** | The order ticket. See [place an order](/docs/place-an-order) |
-| **Positions**   | Positions, orders, fills, and balances, in four tabs         |
-| **Portfolio**   | Account holdings with an allocation breakdown                |
-| **Risk**        | Current window P&L, trade count, and guardrail state         |
+| Panel                    | What it shows                                                                                                   |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| **Trade Entry**          | The order ticket. See [place an order](/docs/place-an-order)                                                    |
+| **Positions**            | Positions, orders, fills, and balances, in four tabs                                                            |
+| **Portfolio**            | Account holdings with an allocation breakdown                                                                   |
+| **Risk**                 | Current window P&L, trade count, and guardrail state                                                            |
+| **Prediction Positions** | Event contracts you hold, their cost, and when they resolve. See [prediction markets](/docs/prediction-markets) |
 
 Trading panels get their own page: see
 [positions and portfolio](/docs/positions-and-portfolio).
@@ -54,14 +55,15 @@ glance. See [risk guardrails](/docs/risk-guardrails).
 
 ## Discovery
 
-| Panel              | What it shows                                                             |
-| ------------------ | ------------------------------------------------------------------------- |
-| **Markets**        | Every pair your connectors reach. See [discovery](/docs/market-discovery) |
-| **Watchlist**      | Tracked pairs, starting with Top Crypto and Top Equities                  |
-| **Recent Tickers** | Recently viewed pairs with live prices, for quick switching               |
-| **Top Coins**      | Coins ranked by volume, market cap, and price change                      |
-| **Heatmap**        | Market performance across sectors at a glance                             |
-| **Web**            | Any website, embedded as a panel (desktop app only)                       |
+| Panel              | What it shows                                                                            |
+| ------------------ | ---------------------------------------------------------------------------------------- |
+| **Markets**        | Every pair your connectors reach. See [discovery](/docs/market-discovery)                |
+| **Events**         | Prediction-market events by category. See [prediction markets](/docs/prediction-markets) |
+| **Watchlist**      | Tracked pairs, starting with Top Crypto and Top Equities                                 |
+| **Recent Tickers** | Recently viewed pairs with live prices, for quick switching                              |
+| **Top Coins**      | Coins ranked by volume, market cap, and price change                                     |
+| **Heatmap**        | Market performance across sectors at a glance                                            |
+| **Web**            | Any website, embedded as a panel (desktop app only)                                      |
 
 The Web panel is a genuine escape hatch. Put your exchange's own page, a
 TradingView idea, a Dune dashboard, or your notes app next to your chart.
@@ -103,10 +105,10 @@ follows.
 
 ## Singletons
 
-Chart, Trade Entry, Portfolio, Risk, Markets, Liquidity Heatmap, and Recent
-Tickers are singletons: one per workspace. Everything else can appear as many
-times as you like, which is how you get four order books for four venues side
-by side.
+Chart, Trade Entry, Portfolio, Risk, Markets, Events, Liquidity Heatmap, and
+Recent Tickers are singletons: one per workspace. Everything else can appear as
+many times as you like, which is how you get four order books for four venues
+side by side.
 
 ## Panels from plugins
 

@@ -2186,7 +2186,9 @@
     "web": "웹 패널",
     "liquidityHeatmap": "유동성 히트맵",
     "recentTickers": "최근 티커",
-    "empty": "비어 있음"
+    "empty": "비어 있음",
+    "events": "이벤트",
+    "predictionPositions": "예측 포지션"
   },
   "paneDescriptions": {
     "markets": "거래소 전반의 모든 거래 페어를 탐색하세요",
@@ -2212,7 +2214,9 @@
     "symbolNews": "활성 거래 페어에 대한 뉴스 및 심리 분석",
     "web": "워크스페이스에 패널로 웹사이트를 삽입하세요",
     "liquidityHeatmap": "시간에 따른 가격대별 심도를 보여주는 호가창 유동성 히트맵",
-    "recentTickers": "빠른 전환을 위한 최근 조회 페어와 실시간 가격"
+    "recentTickers": "빠른 전환을 위한 최근 조회 페어와 실시간 가격",
+    "events": "예측 시장 이벤트를 둘러보고 결과의 차트를 엽니다",
+    "predictionPositions": "보유 계약과 비용, 그리고 정산 시점"
   },
   "multiPrice": {
     "venue": "거래소",
@@ -2284,7 +2288,11 @@
     "paneUnavailable": {
       "title": "{{venue}}에는 {{pair}}이(가) 없습니다",
       "titleAnyVenue": "{{pair}}을(를) 찾을 수 없습니다",
-      "description": "이 커넥터는 이 페어의 시장 데이터를 반환하지 않았습니다. 이 페어를 지원하는 다른 커넥터를 사용해 보세요."
+      "description": "이 커넥터는 이 페어의 시장 데이터를 반환하지 않았습니다. 이 페어를 지원하는 다른 커넥터를 사용해 보세요.",
+      "predictionDescription": "이벤트 결과는 한 거래소에서만 거래되므로 다른 곳에서 시도할 수 없습니다. 거래소가 요청 한 건만 거부했을 수도 있습니다.",
+      "retry": "다시 시도",
+      "desktopOnlyTitle": "이 거래소는 데스크톱 앱이 필요합니다",
+      "desktopOnlyDescription": "해당 API는 브라우저 출처를 거부하므로 이 페어의 시장 데이터는 데스크톱 빌드에서만 이용할 수 있습니다."
     },
     "paneCredentials": {
       "sealedTitle": "{{venue}} 데이터를 불러오려면 잠금을 해제하세요",
@@ -2493,9 +2501,7 @@
     "needsFullTrustToRun": "실행하려면 전체 신뢰가 필요합니다",
     "pendingTrustDescription": "UI를 제공하므로 샌드박스 안에서는 실행할 수 없습니다 — 활성화하려면 전체 신뢰를 부여하거나 삭제하세요.",
     "remove": "제거",
-    "groupCore": "코어",
     "groupProvidersExtensions": "제공자 및 확장 기능",
-    "groupThemes": "테마",
     "removePluginTitle": "플러그인 제거",
     "removePluginDescription": "플러그인을 비활성화하고 제거합니다. 이 플러그인이 제공한 패널에는 복구용 자리표시자가 표시됩니다. 언제든지 Plugin Store에서 다시 설치할 수 있습니다.",
     "resetDefaultsTitle": "기본값으로 재설정",
@@ -2788,8 +2794,56 @@
       "polygon-dex-connector": {
         "title": "Polygon DEX 커넥터",
         "description": "온체인 Polygon 스왑 — KyberSwap 애그리게이터를 통해 모든 Polygon DEX에서 최적가로 라우팅"
+      },
+      "kalshi-market-connector": {
+        "title": "Kalshi 마켓 커넥터",
+        "description": "CFTC 규제 예측 거래소 Kalshi의 이벤트 계약 — 자산이 아니라 결과를 거래"
+      },
+      "polymarket-market-connector": {
+        "title": "Polymarket 마켓 커넥터",
+        "description": "Polymarket CLOB의 이벤트 계약 — 지갑으로 서명한 주문, USDC 정산"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens 예측",
+        "description": "예측 시장의 이벤트 브라우저와 미결제 계약 포지션"
       }
-    }
+    },
+    "families": {
+      "core": {
+        "label": "코어",
+        "description": "터미널 자체: 차트, 호가창, 주문 입력, 워크스페이스 도구."
+      },
+      "intelligence": {
+        "label": "인텔리전스",
+        "description": "호스팅 AI, 종목 검색, 뉴스, 마켓 인텔리전스."
+      },
+      "cexSpot": {
+        "label": "암호화폐 거래소",
+        "description": "암호화폐 시세와 거래를 제공하는 중앙화 현물 거래소."
+      },
+      "dex": {
+        "label": "온체인 DEX",
+        "description": "온체인 스왑 거래소와 DEX 시세 데이터 제공자."
+      },
+      "equities": {
+        "label": "주식",
+        "description": "주식 시세와 거래를 위한 증권사 연결."
+      },
+      "predictions": {
+        "label": "예측 시장",
+        "description": "실제 결과를 거래하는 이벤트 계약 거래소."
+      },
+      "aiByok": {
+        "label": "AI 제공자",
+        "description": "직접 키를 사용하는 언어 모델과 웹 검색."
+      },
+      "themes": {
+        "label": "테마",
+        "description": "인터페이스와 차트 색상을 위한 비주얼 테마."
+      }
+    },
+    "familyToggleAria": "{{family}} 플러그인 전체 사용 또는 사용 안 함",
+    "familyToggleFailed": "일부 {{family}} 플러그인을 변경하지 못했습니다"
   },
   "search": {
     "placeholder": "무엇이든 검색...",
@@ -2899,7 +2953,14 @@
       "available": "사용 가능: {{amount}}",
       "slippage": "슬리피지",
       "extendedHours": "시간 외 거래",
-      "extendedHoursHint": "프리마켓과 애프터마켓 세션에서 체결됩니다. 호가가 얇고 스프레드가 넓습니다."
+      "extendedHoursHint": "프리마켓과 애프터마켓 세션에서 체결됩니다. 호가가 얇고 스프레드가 넓습니다.",
+      "contracts": "계약 수",
+      "maxLoss": "최대 손실",
+      "priceCents": "가격(¢)",
+      "thisOutcome": "이 결과",
+      "decreaseContracts": "계약 1개 줄이기",
+      "increaseContracts": "계약 1개 늘리기",
+      "priceCentsRange": "0¢에서 100¢ 사이의 가격을 입력하세요"
     },
     "status": {
       "connecting": "연결 중…",
@@ -3946,7 +4007,11 @@
     "hoursAgo": "{{n}}시간 전",
     "daysAgo": "{{n}}일 전",
     "today": "오늘",
-    "yesterday": "어제"
+    "yesterday": "어제",
+    "closed": "마감",
+    "inMinutes": "{{n}}분 후",
+    "inHours": "{{n}}시간 후",
+    "inDays": "{{n}}일 후"
   },
   "markets": {
     "title": "마켓",
@@ -3968,7 +4033,8 @@
     "assetClass": {
       "all": "전체",
       "crypto": "암호화폐",
-      "stocks": "주식"
+      "stocks": "주식",
+      "prediction": "예측"
     },
     "category": {
       "all": "전체",
@@ -3979,7 +4045,9 @@
       "ai": "AI",
       "gaming": "게이밍",
       "infrastructure": "인프라"
-    }
+    },
+    "predictionsEmptyTitle": "예측 결과는 이벤트 패널에 있습니다",
+    "predictionsEmptyBody": "결과는 매일 상장되고 정산되므로 카탈로그가 아니라 거래소 자체 보드에서 둘러봅니다."
   },
   "fearGreed": {
     "title": "공포 & 탐욕",
@@ -4619,6 +4687,14 @@
       "symbol-logo": {
         "label": "심볼 로고",
         "description": "거래 심볼용 로고/아이콘 이미지"
+      },
+      "trades": {
+        "label": "체결",
+        "description": "실시간 체결 내역 스트림"
+      },
+      "events": {
+        "label": "이벤트",
+        "description": "예측 시장의 이벤트와 결과 탐색"
       }
     },
     "domains": {
@@ -4648,6 +4724,10 @@
       "balances": {
         "label": "잔고",
         "description": "연결된 거래소에서 계정 자산 잔고를 가져옵니다"
+      },
+      "positions": {
+        "label": "포지션",
+        "description": "연결된 거래소의 보유 포지션과 정산 조회"
       }
     },
     "workflow": {
@@ -4709,6 +4789,14 @@
     "themes": {
       "label": "테마",
       "description": "색상, 차트 팔레트, UI 스타일을 재정의하는 비주얼 테마"
+    },
+    "predictions": {
+      "label": "예측 시장",
+      "description": "실제 결과를 거래하는 이벤트 계약 거래소"
+    },
+    "dex": {
+      "label": "온체인 DEX",
+      "description": "온체인 스왑 거래소와 DEX 시세 데이터 제공자"
     }
   },
   "mobile": {
@@ -4848,7 +4936,6 @@
       "textLabel": "라벨 텍스트",
       "textPlaceholder": "라벨 추가"
     },
-    "copilot": {},
     "settings": {
       "accountsHeader": "계정 & 연결",
       "terminalHeader": "터미널",
@@ -4935,7 +5022,41 @@
       "notListedCallout": "{{pair}}은(는) {{venue}}에 상장되어 있지 않습니다. 선택하면 포커스 거래소가 {{other}}(으)로 전환됩니다.",
       "availableVenues": "사용 가능",
       "desktopOnlyVenues": "데스크톱 앱이 필요합니다",
-      "desktopOnlyVenue": "데스크톱 전용"
+      "desktopOnlyVenue": "데스크톱 전용",
+      "predictions": "예측",
+      "filterPredictions": "예측"
     }
+  },
+  "events": {
+    "searchPlaceholder": "이벤트와 질문 검색",
+    "allCategories": "전체",
+    "loading": "이벤트 불러오는 중…",
+    "failed": "이벤트를 불러오지 못했습니다",
+    "tryLater": "거래소가 응답하지 않았습니다. 잠시 후 다시 시도하세요.",
+    "emptyTitle": "진행 중인 이벤트가 없습니다",
+    "emptyBody": "이 거래소에는 지금 상장된 항목이 없습니다.",
+    "noMatchesTitle": "일치하는 이벤트가 없습니다",
+    "noMatchesBody": "더 짧은 질문이나 다른 카테고리를 시도해 보세요.",
+    "noVenuesTitle": "연결된 예측 거래소가 없습니다",
+    "noVenuesBody": "플러그인 스토어에서 Kalshi 또는 Polymarket을 설치하면 이벤트 계약을 둘러볼 수 있습니다.",
+    "desktopOnlyTitle": "이벤트를 보려면 데스크톱 앱이 필요합니다",
+    "desktopOnlyDescription": "이 거래소의 API는 브라우저 출처를 거부하므로 이벤트 보드는 데스크톱 빌드에서만 이용할 수 있습니다.",
+    "venueDesktopOnly": "{{venue}} 이벤트는 데스크톱 앱이 필요합니다.",
+    "volume": "거래대금 {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "계정 연결",
+    "noAccountsTitle": "연결된 예측 계정이 없습니다",
+    "noAccountsBody": "Kalshi API 키나 Polygon 지갑을 추가하면 보유 계약이 표시됩니다.",
+    "loading": "포지션 불러오는 중…",
+    "emptyTitle": "미결제 계약이 없습니다",
+    "emptyBody": "주문이 체결되면 여기에 포지션이 표시됩니다.",
+    "colMarket": "마켓",
+    "colOutcome": "결과",
+    "colContracts": "계약 수",
+    "colAvgPrice": "평균",
+    "colCost": "비용",
+    "colResolves": "정산",
+    "resolved": "정산 완료"
   }
 }

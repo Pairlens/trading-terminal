@@ -8,7 +8,9 @@ import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import {
   instrumentToPairEntry,
+  isPredictionEntry,
   pinSelectedEntry,
+  predictionQuestionOf,
 } from '@/components/pair-picker/pair-picker-data'
 import { VenueBadge } from '@/components/pair-picker/venue-badge'
 import { useInstrumentSearch } from '@/hooks/use-instrument-search'
@@ -208,15 +210,50 @@ const PairResultItem = memo(function PairResultItem({
   isWatched: boolean
   onSelect: (symbol: string, assetClass?: string) => void
 }) {
+  // Pin BEFORE navigation: the selected row's exact identity — a token's
+  // address, an outcome's venue+market — must be in its directory before
+  // anything downstream resolves the symbol.
+  const select = () => {
+    pinSelectedEntry(pair)
+    onSelect(pair.symbol, pair.assetClass)
+  }
+
+  // A prediction row is read, not scanned: its identity is a question and its
+  // "symbol" is a venue ticker nobody recognises. So the question leads and
+  // the outcome plus the venue sit under it, rather than the symbol-first
+  // layout every other asset class wants.
+  if (isPredictionEntry(pair)) {
+    return (
+      <button
+        className="flex w-full items-start gap-2 px-3 py-1.5 text-left hover:bg-accent transition-colors rounded-sm"
+        onClick={select}
+      >
+        <PairLogo
+          base={pair.base}
+          quote={pair.quote}
+          assetClass={pair.assetClass}
+          size="sm"
+        />
+        <span className="flex min-w-0 flex-1 flex-col">
+          <span className="truncate text-sm leading-5">
+            {predictionQuestionOf(pair)}
+          </span>
+          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span className="truncate">{pair.outcome}</span>
+            <VenueBadge symbol={pair.symbol} market={pair.market} />
+          </span>
+        </span>
+        {isWatched && (
+          <Star className="mt-0.5 size-3 shrink-0 fill-amber-400 text-amber-400" />
+        )}
+      </button>
+    )
+  }
+
   return (
     <button
       className="flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-accent transition-colors rounded-sm"
-      onClick={() => {
-        // Pin BEFORE navigation: the selected token's exact address must be
-        // in the directory before anything downstream resolves the symbol.
-        pinSelectedEntry(pair)
-        onSelect(pair.symbol, pair.assetClass)
-      }}
+      onClick={select}
     >
       <PairLogo
         base={pair.base}

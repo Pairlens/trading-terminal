@@ -20,11 +20,28 @@ import { getSymbolListings } from '@/lib/instruments/local-index'
 import { useLocalIndexVersion } from '@/lib/instruments/use-local-index'
 import { useMarketData } from '@/lib/market-data-provider'
 
-export function VenueBadge({ symbol }: { symbol: string }) {
+export function VenueBadge({
+  symbol,
+  market,
+}: {
+  symbol: string
+  /**
+   * Name this venue instead of consulting the listings index. For rows whose
+   * identity already carries its venue and whose symbol the index will never
+   * hold — a prediction outcome key is per-venue and born the same day.
+   */
+  market?: string
+}) {
   const indexVersion = useLocalIndexVersion()
   const { availableMarkets } = useMarketData()
 
   const label = useMemo(() => {
+    if (market) {
+      return (
+        availableMarkets.find((m) => m.marketId === market)?.displayName ??
+        market.toUpperCase()
+      )
+    }
     const listings = getSymbolListings(symbol)
     if (!listings) return null
     const known = new Set([...listings.local, ...listings.snapshot])
@@ -39,7 +56,7 @@ export function VenueBadge({ symbol }: { symbol: string }) {
     if (!primary) return `+${extra}`
     return extra > 0 ? `${primary.displayName} +${extra}` : primary.displayName
     // indexVersion re-derives when the index (re)builds
-  }, [symbol, availableMarkets, indexVersion])
+  }, [symbol, market, availableMarkets, indexVersion])
 
   if (!label) return null
   return (

@@ -2186,7 +2186,9 @@
     "web": "Web-Panel",
     "liquidityHeatmap": "Liquiditäts-Heatmap",
     "recentTickers": "Zuletzt angesehene Ticker",
-    "empty": "Leer"
+    "empty": "Leer",
+    "events": "Ereignisse",
+    "predictionPositions": "Prognosepositionen"
   },
   "paneDescriptions": {
     "markets": "Durchsuche alle verfügbaren Handelspaare über alle Exchanges hinweg",
@@ -2212,7 +2214,9 @@
     "symbolNews": "News und Stimmungsanalyse für das aktive Handelspaar",
     "web": "Bette jede beliebige Website als Panel in deinem Workspace ein",
     "liquidityHeatmap": "Orderbuch-Liquiditäts-Heatmap, die die Tiefe über Preisniveaus im Zeitverlauf zeigt",
-    "recentTickers": "Zuletzt angesehene Paare mit Live-Kursen zum schnellen Wechseln"
+    "recentTickers": "Zuletzt angesehene Paare mit Live-Kursen zum schnellen Wechseln",
+    "events": "Ereignisse der Prognosemärkte durchsuchen und den Chart eines Ergebnisses öffnen",
+    "predictionPositions": "Ihre gehaltenen Kontrakte, deren Kosten und Abrechnungstermin"
   },
   "multiPrice": {
     "venue": "Börse",
@@ -2284,7 +2288,11 @@
     "paneUnavailable": {
       "title": "{{pair}} ist auf {{venue}} nicht verfügbar",
       "titleAnyVenue": "{{pair}} ist nicht verfügbar",
-      "description": "Dieser Konnektor hat für dieses Paar keine Marktdaten geliefert. Probier einen anderen, der es listet."
+      "description": "Dieser Konnektor hat für dieses Paar keine Marktdaten geliefert. Probier einen anderen, der es listet.",
+      "predictionDescription": "Ein Ereignisergebnis wird nur auf einer Handelsplattform gehandelt, es gibt also nichts anderes zu versuchen. Vielleicht hat die Plattform nur eine einzelne Anfrage abgelehnt.",
+      "retry": "Erneut versuchen",
+      "desktopOnlyTitle": "Diese Handelsplattform benötigt die Desktop-App",
+      "desktopOnlyDescription": "Ihre API lehnt Browser-Ursprünge ab, daher sind Marktdaten für dieses Paar nur im Desktop-Build erreichbar."
     },
     "paneCredentials": {
       "sealedTitle": "Entsperren, um {{venue}}-Daten zu laden",
@@ -2493,9 +2501,7 @@
     "needsFullTrustToRun": "Benötigt vollen Zugriff, um zu laufen",
     "pendingTrustDescription": "Liefert UI und kann nicht in der Sandbox laufen — gewähre vollen Zugriff, um es zu aktivieren, oder deinstalliere es.",
     "remove": "Entfernen",
-    "groupCore": "Kern",
     "groupProvidersExtensions": "Anbieter & Erweiterungen",
-    "groupThemes": "Themes",
     "removePluginTitle": "Plugin entfernen",
     "removePluginDescription": "Dadurch wird das Plugin deaktiviert und entfernt. Panels, die es beigesteuert hat, zeigen einen Wiederherstellungsplatzhalter. Du kannst es jederzeit über den Plugin Store neu installieren.",
     "resetDefaultsTitle": "Auf Standard zurücksetzen",
@@ -2788,8 +2794,56 @@
       "polygon-dex-connector": {
         "title": "Polygon DEX-Connector",
         "description": "On-Chain-Swaps auf Polygon — optimales Preis-Routing über alle Polygon-DEXs via KyberSwap-Aggregator"
+      },
+      "kalshi-market-connector": {
+        "title": "Kalshi Market Connector",
+        "description": "Event-Kontrakte auf Kalshi, der CFTC-regulierten Prognosebörse — handle Ergebnisse statt Assets"
+      },
+      "polymarket-market-connector": {
+        "title": "Polymarket Market Connector",
+        "description": "Event-Kontrakte auf dem Polymarket-CLOB — Orders per Wallet signiert, Abwicklung in USDC"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens Prognosen",
+        "description": "Ereignis-Browser und offene Kontraktpositionen für Prognosemärkte"
       }
-    }
+    },
+    "families": {
+      "core": {
+        "label": "Kern",
+        "description": "Das Terminal selbst: Charts, Orderbuch, Ordereingabe und Workspace-Werkzeuge."
+      },
+      "intelligence": {
+        "label": "Intelligence",
+        "description": "Gehostete KI, Instrumentensuche, Nachrichten und Marktintelligenz."
+      },
+      "cexSpot": {
+        "label": "Krypto-Börsen",
+        "description": "Zentralisierte Spot-Handelsplätze für Krypto-Marktdaten und Handel."
+      },
+      "dex": {
+        "label": "On-Chain-DEX",
+        "description": "On-Chain-Swap-Handelsplätze und DEX-Marktdatenanbieter."
+      },
+      "equities": {
+        "label": "Aktien",
+        "description": "Broker-Verbindungen für Aktiendaten und Aktienhandel."
+      },
+      "predictions": {
+        "label": "Prognosemärkte",
+        "description": "Handelsplätze für Ereigniskontrakte auf reale Ergebnisse."
+      },
+      "aiByok": {
+        "label": "KI-Anbieter",
+        "description": "Sprachmodelle und Websuche mit eigenem Schlüssel."
+      },
+      "themes": {
+        "label": "Themes",
+        "description": "Visuelle Themes für Oberfläche und Chart-Palette."
+      }
+    },
+    "familyToggleAria": "Alle {{family}}-Plugins aktivieren oder deaktivieren",
+    "familyToggleFailed": "Einige {{family}}-Plugins konnten nicht geändert werden"
   },
   "search": {
     "placeholder": "Alles durchsuchen...",
@@ -2899,7 +2953,14 @@
       "available": "Verfügbar: {{amount}}",
       "slippage": "Slippage",
       "extendedHours": "Erweiterte Handelszeiten",
-      "extendedHoursHint": "Ausführung im vor- und nachbörslichen Handel. Dünneres Orderbuch, größere Spreads."
+      "extendedHoursHint": "Ausführung im vor- und nachbörslichen Handel. Dünneres Orderbuch, größere Spreads.",
+      "contracts": "Kontrakte",
+      "maxLoss": "Max. Verlust",
+      "priceCents": "Preis (¢)",
+      "thisOutcome": "Dieses Ergebnis",
+      "decreaseContracts": "Ein Kontrakt weniger",
+      "increaseContracts": "Ein Kontrakt mehr",
+      "priceCentsRange": "Preis zwischen 0¢ und 100¢ eingeben"
     },
     "status": {
       "connecting": "Verbinde…",
@@ -3946,7 +4007,11 @@
     "hoursAgo": "vor {{n}} Std.",
     "daysAgo": "vor {{n}} T.",
     "today": "Heute",
-    "yesterday": "Gestern"
+    "yesterday": "Gestern",
+    "closed": "geschlossen",
+    "inMinutes": "in {{n}} Min",
+    "inHours": "in {{n}} Std",
+    "inDays": "in {{n}} Tg"
   },
   "markets": {
     "title": "Märkte",
@@ -3968,7 +4033,8 @@
     "assetClass": {
       "all": "Alle",
       "crypto": "Krypto",
-      "stocks": "Aktien"
+      "stocks": "Aktien",
+      "prediction": "Prognosen"
     },
     "category": {
       "all": "Alle",
@@ -3979,7 +4045,9 @@
       "ai": "KI",
       "gaming": "Gaming",
       "infrastructure": "Infra"
-    }
+    },
+    "predictionsEmptyTitle": "Prognoseergebnisse finden Sie im Ereignis-Panel",
+    "predictionsEmptyBody": "Ergebnisse werden täglich gelistet und abgerechnet, daher durchsucht man sie über das Board der Handelsplattform statt über einen Katalog."
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -4619,6 +4687,14 @@
       "symbol-logo": {
         "label": "Symbol-Logo",
         "description": "Logo-/Icon-Bilder für Handelssymbole"
+      },
+      "trades": {
+        "label": "Trades",
+        "description": "Live-Streams der Time-and-Sales-Liste"
+      },
+      "events": {
+        "label": "Ereignisse",
+        "description": "Ereignisse von Prognosemärkten und ihre Ergebnisse durchsuchen"
       }
     },
     "domains": {
@@ -4648,6 +4724,10 @@
       "balances": {
         "label": "Guthaben",
         "description": "Kontoguthaben von der verbundenen Exchange abrufen"
+      },
+      "positions": {
+        "label": "Positionen",
+        "description": "Offene Positionen und Abrechnungen des verbundenen Handelsplatzes lesen"
       }
     },
     "workflow": {
@@ -4709,6 +4789,14 @@
     "themes": {
       "label": "Designs",
       "description": "Visuelle Designs, die Farben, Chart-Palette und UI-Styling überschreiben"
+    },
+    "predictions": {
+      "label": "Prognosemärkte",
+      "description": "Handelsplätze für Ereigniskontrakte auf reale Ergebnisse"
+    },
+    "dex": {
+      "label": "On-Chain-DEX",
+      "description": "On-Chain-Swap-Handelsplätze und DEX-Marktdatenanbieter"
     }
   },
   "mobile": {
@@ -4848,7 +4936,6 @@
       "textLabel": "Beschriftung",
       "textPlaceholder": "Beschriftung hinzufügen"
     },
-    "copilot": {},
     "settings": {
       "accountsHeader": "Konten & Verbindungen",
       "terminalHeader": "Terminal",
@@ -4935,7 +5022,41 @@
       "notListedCallout": "{{pair}} ist nicht auf {{venue}} gelistet. Bei Auswahl wechselt die fokussierte Venue zu {{other}}.",
       "availableVenues": "Verfügbar",
       "desktopOnlyVenues": "Braucht die Desktop-App",
-      "desktopOnlyVenue": "Nur Desktop"
+      "desktopOnlyVenue": "Nur Desktop",
+      "predictions": "Prognosen",
+      "filterPredictions": "Prognosen"
     }
+  },
+  "events": {
+    "searchPlaceholder": "Ereignisse und Fragen suchen",
+    "allCategories": "Alle",
+    "loading": "Ereignisse werden geladen…",
+    "failed": "Ereignisse konnten nicht geladen werden",
+    "tryLater": "Die Handelsplattform hat nicht geantwortet. Versuchen Sie es gleich erneut.",
+    "emptyTitle": "Keine offenen Ereignisse",
+    "emptyBody": "Diese Handelsplattform listet derzeit nichts.",
+    "noMatchesTitle": "Keine passenden Ereignisse",
+    "noMatchesBody": "Versuchen Sie eine kürzere Frage oder eine andere Kategorie.",
+    "noVenuesTitle": "Keine Prognoseplattform verbunden",
+    "noVenuesBody": "Installieren Sie Kalshi oder Polymarket aus dem Plugin-Store, um Ereigniskontrakte zu durchsuchen.",
+    "desktopOnlyTitle": "Ereignisse benötigen die Desktop-App",
+    "desktopOnlyDescription": "Die API dieser Handelsplattform lehnt Browser-Ursprünge ab, daher ist ihr Ereignis-Board nur im Desktop-Build erreichbar.",
+    "venueDesktopOnly": "{{venue}}-Ereignisse benötigen die Desktop-App.",
+    "volume": "Vol. {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "Konto verbinden",
+    "noAccountsTitle": "Kein Prognosekonto verbunden",
+    "noAccountsBody": "Fügen Sie Kalshi-API-Schlüssel oder eine Polygon-Wallet hinzu, um Ihre Kontrakte zu sehen.",
+    "loading": "Positionen werden geladen…",
+    "emptyTitle": "Keine offenen Kontrakte",
+    "emptyBody": "Positionen erscheinen hier, sobald eine Order ausgeführt wird.",
+    "colMarket": "Markt",
+    "colOutcome": "Ergebnis",
+    "colContracts": "Kontrakte",
+    "colAvgPrice": "Ø",
+    "colCost": "Kosten",
+    "colResolves": "Abrechnung",
+    "resolved": "Abgerechnet"
   }
 }

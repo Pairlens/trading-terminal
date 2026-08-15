@@ -15,7 +15,8 @@ import { MarketPicker } from '@/components/terminal/market-picker'
 import { WalletSelector } from '@/components/terminal/wallet-selector'
 import { AlertBell } from '@/components/notifications/alert-bell'
 import { PairSwitcher } from '@/components/pair-picker/pair-switcher'
-import { formatPrice } from '@/lib/format-price'
+import { formatPredictionPrice, formatPrice } from '@/lib/format-price'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
 import { useOptionalTickerData } from '@/lib/chart-terminal-context'
 
 type TerminalTopBarProps = {
@@ -48,6 +49,9 @@ export function TerminalTopBar({
   onWorkspacesOpenChange,
 }: TerminalTopBarProps) {
   const { t } = useTranslation()
+  // A probability quote reads in cents everywhere else on the screen; the one
+  // readout still saying $0.229 would be the odd number out.
+  const predictionPrices = useIsPredictionPair(pairKey, market)
 
   return (
     <PageHeader
@@ -94,7 +98,7 @@ export function TerminalTopBar({
 
       <WalletSelector market={market} />
 
-      <LivePriceTicker />
+      <LivePriceTicker prediction={predictionPrices} />
 
       <ConnectionIndicator />
 
@@ -112,8 +116,9 @@ export function TerminalTopBar({
 // Isolated in its own component so per-tick ticker context updates only
 // re-render this small readout — not the whole top bar (market dropdown,
 // layout toolbar, wallet selector, ...).
-function LivePriceTicker() {
+function LivePriceTicker({ prediction }: { prediction: boolean }) {
   const tickerData = useOptionalTickerData()
+  const format = prediction ? formatPredictionPrice : formatPrice
   const bestBid = tickerData?.bestBid ?? null
   const bestAsk = tickerData?.bestAsk ?? null
   const spread = tickerData?.spread ?? null
@@ -124,13 +129,11 @@ function LivePriceTicker() {
     <>
       <Separator orientation="vertical" className="mx-1 self-stretch" />
       <div className="flex items-center gap-1.5 font-mono text-xs">
-        <span className="text-green-400">{formatPrice(bestBid)}</span>
+        <span className="text-green-400">{format(bestBid)}</span>
         <span className="text-muted-foreground/50">/</span>
-        <span className="text-red-400">{formatPrice(bestAsk)}</span>
+        <span className="text-red-400">{format(bestAsk)}</span>
         {spread != null && (
-          <span className="text-muted-foreground/60">
-            ({formatPrice(spread)})
-          </span>
+          <span className="text-muted-foreground/60">({format(spread)})</span>
         )}
       </div>
     </>

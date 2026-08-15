@@ -9,9 +9,9 @@ updated: AUG 2026
 readTime: 6 min read
 ---
 
-Fifteen venues, tens of thousands of spot pairs, and an unbounded tail of
-on-chain tokens. Finding the instrument is its own problem, and Pairlens solves
-it locally first.
+Seventeen venues, tens of thousands of spot pairs, an unbounded tail of
+on-chain tokens, and a rolling set of event contracts. Finding the instrument is
+its own problem, and Pairlens solves it locally first.
 
 ## Where to search from
 
@@ -21,9 +21,15 @@ it locally first.
 | **Markets panel** | Browsing what your connectors reach, by venue and category |
 | **Pair picker**   | Switching the pair a single panel is bound to              |
 | **Watchlist**     | The pairs you already care about                           |
+| **Events panel**  | Prediction-market events, by category and question         |
 
 They all sit on the same index and the same search, so a token you find in one
 is findable in the others.
+
+The pair picker filters by asset class, and prediction outcomes get their own
+**Predictions** tab. Those rows read as the question rather than the ticker,
+because a Kalshi outcome key is not something you scan. See
+[prediction markets](/docs/prediction-markets).
 
 ## Search in three waves
 
@@ -34,9 +40,11 @@ keystroke, from an in-memory index built from a curated catalog, the venue
 tables your connectors have already cached, and the cloud snapshot if you have
 one. No network, no spinner.
 
-**Wave 2 fans out to DEX connectors.** Jupiter on Solana and the EVM chains are
-queried in parallel for long-tail tokens and memecoins that no centralized venue
-lists.
+**Wave 2 fans out to the venues that hold their own catalog.** Jupiter on Solana
+and the EVM chains are queried in parallel for long-tail tokens and memecoins
+that no centralized venue lists, and Kalshi and Polymarket for the event
+contracts open right now. A prediction venue is sent your raw text rather than a
+normalized ticker, because what it matches on is the question.
 
 **Wave 3 is server deep search**, and it only runs if you have allowed it. See
 the consent gate below.

@@ -31,10 +31,10 @@ live-trading secrets.
 
 ## What desktop adds
 
-**Direct venue access.** Four exchanges (Coinbase, Gate, KuCoin, and MEXC)
-serve no CORS headers, so a browser cannot reach them. On desktop, connector
-REST calls route through the native HTTP plugin, so all 15 venues work without
-a proxy.
+**Direct venue access.** Six venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex,
+and Kalshi) serve no CORS headers, so a browser cannot reach them. On desktop,
+connector REST calls route through the native HTTP plugin, so all 17 venues
+work without a proxy.
 
 **Multiple windows.** <kbd>⌘N</kbd> duplicates the current view into its own
 window. State stays in sync, and one window is elected leader so notifications

@@ -2186,7 +2186,9 @@
     "web": "网页面板",
     "liquidityHeatmap": "流动性热力图",
     "recentTickers": "最近行情",
-    "empty": "空"
+    "empty": "空",
+    "events": "事件",
+    "predictionPositions": "预测持仓"
   },
   "paneDescriptions": {
     "markets": "浏览各交易所所有可交易的交易对",
@@ -2212,7 +2214,9 @@
     "symbolNews": "当前交易对的资讯与情绪分析",
     "web": "在工作区中嵌入任意网站作为面板",
     "liquidityHeatmap": "展示不同价位随时间变化深度的订单簿流动性热力图",
-    "recentTickers": "最近查看的交易对及其实时价格,便于快速切换"
+    "recentTickers": "最近查看的交易对及其实时价格,便于快速切换",
+    "events": "浏览预测市场事件并打开某个结果的图表",
+    "predictionPositions": "你持有的合约、成本以及结算时间"
   },
   "multiPrice": {
     "venue": "交易所",
@@ -2284,7 +2288,11 @@
     "paneUnavailable": {
       "title": "{{venue}} 上没有 {{pair}}",
       "titleAnyVenue": "找不到 {{pair}}",
-      "description": "该连接器没有返回这个交易对的行情数据。换一个上架了它的连接器试试。"
+      "description": "该连接器没有返回这个交易对的行情数据。换一个上架了它的连接器试试。",
+      "predictionDescription": "事件结果只在一个平台交易，因此没有别处可试。该平台可能只是拒绝了一次请求。",
+      "retry": "重试",
+      "desktopOnlyTitle": "该平台需要桌面应用",
+      "desktopOnlyDescription": "其 API 拒绝浏览器来源，因此该交易对的行情数据只能通过桌面版获取。"
     },
     "paneCredentials": {
       "sealedTitle": "解锁以加载 {{venue}} 数据",
@@ -2493,9 +2501,7 @@
     "needsFullTrustToRun": "需要完全信任才能运行",
     "pendingTrustDescription": "该插件提供界面，无法在沙箱中运行——请授予完全信任以启用它，或将其卸载。",
     "remove": "移除",
-    "groupCore": "核心",
     "groupProvidersExtensions": "提供方与扩展",
-    "groupThemes": "主题",
     "removePluginTitle": "移除插件",
     "removePluginDescription": "此操作将停用并移除该插件。它贡献的所有面板会显示一个恢复占位符。你可以随时从插件商店重新安装。",
     "resetDefaultsTitle": "恢复默认设置",
@@ -2788,8 +2794,56 @@
       "polygon-dex-connector": {
         "title": "Polygon DEX 连接器",
         "description": "链上 Polygon 兑换 —— 通过 KyberSwap 聚合器,在所有 Polygon DEX 中路由至最优价格"
+      },
+      "kalshi-market-connector": {
+        "title": "Kalshi 市场连接器",
+        "description": "Kalshi 上的事件合约，受 CFTC 监管的预测交易所 — 交易结果而非资产"
+      },
+      "polymarket-market-connector": {
+        "title": "Polymarket 市场连接器",
+        "description": "Polymarket CLOB 上的事件合约 — 由钱包签名下单，以 USDC 结算"
+      },
+      "pairlens-predictions": {
+        "title": "Pairlens 预测",
+        "description": "预测市场的事件浏览器与未平仓合约持仓"
       }
-    }
+    },
+    "families": {
+      "core": {
+        "label": "核心",
+        "description": "终端本身：图表、订单簿、下单和工作区工具。"
+      },
+      "intelligence": {
+        "label": "智能",
+        "description": "托管 AI、标的发现、新闻和市场情报。"
+      },
+      "cexSpot": {
+        "label": "加密货币交易所",
+        "description": "中心化现货交易所，提供加密货币行情与交易。"
+      },
+      "dex": {
+        "label": "链上 DEX",
+        "description": "链上兑换场所与 DEX 行情数据提供方。"
+      },
+      "equities": {
+        "label": "股票",
+        "description": "股票券商连接，提供股票行情与交易。"
+      },
+      "predictions": {
+        "label": "预测市场",
+        "description": "事件合约场所，用于交易现实世界的结果。"
+      },
+      "aiByok": {
+        "label": "AI 提供方",
+        "description": "自带密钥的语言模型与网页搜索。"
+      },
+      "themes": {
+        "label": "主题",
+        "description": "界面与图表配色的视觉主题。"
+      }
+    },
+    "familyToggleAria": "启用或停用所有{{family}}插件",
+    "familyToggleFailed": "部分{{family}}插件无法更改"
   },
   "search": {
     "placeholder": "搜索任意内容……",
@@ -2899,7 +2953,14 @@
       "available": "可用：{{amount}}",
       "slippage": "滑点",
       "extendedHours": "盘前盘后交易",
-      "extendedHoursHint": "在盘前和盘后时段成交。盘口更薄，价差更大。"
+      "extendedHoursHint": "在盘前和盘后时段成交。盘口更薄，价差更大。",
+      "contracts": "合约",
+      "maxLoss": "最大亏损",
+      "priceCents": "价格（¢）",
+      "thisOutcome": "当前结果",
+      "decreaseContracts": "减少一份合约",
+      "increaseContracts": "增加一份合约",
+      "priceCentsRange": "请输入 0¢ 到 100¢ 之间的价格"
     },
     "status": {
       "connecting": "连接中…",
@@ -3946,7 +4007,11 @@
     "hoursAgo": "{{n}}小时前",
     "daysAgo": "{{n}}天前",
     "today": "今天",
-    "yesterday": "昨天"
+    "yesterday": "昨天",
+    "closed": "已关闭",
+    "inMinutes": "{{n}}分钟后",
+    "inHours": "{{n}}小时后",
+    "inDays": "{{n}}天后"
   },
   "markets": {
     "title": "市场",
@@ -3968,7 +4033,8 @@
     "assetClass": {
       "all": "全部",
       "crypto": "加密货币",
-      "stocks": "股票"
+      "stocks": "股票",
+      "prediction": "预测"
     },
     "category": {
       "all": "全部",
@@ -3979,7 +4045,9 @@
       "ai": "AI",
       "gaming": "游戏",
       "infrastructure": "基础设施"
-    }
+    },
+    "predictionsEmptyTitle": "预测结果位于「事件」面板中",
+    "predictionsEmptyBody": "结果每天上架并结算，因此要从平台自己的看板浏览，而不是从目录中查找。"
   },
   "fearGreed": {
     "title": "恐慌与贪婪指数",
@@ -4619,6 +4687,14 @@
       "symbol-logo": {
         "label": "标的图标",
         "description": "交易标的的图标图片"
+      },
+      "trades": {
+        "label": "成交",
+        "description": "实时逐笔成交流"
+      },
+      "events": {
+        "label": "事件",
+        "description": "浏览预测市场的事件及其结果"
       }
     },
     "domains": {
@@ -4648,6 +4724,10 @@
       "balances": {
         "label": "余额",
         "description": "从已连接的交易所获取账户资产余额"
+      },
+      "positions": {
+        "label": "持仓",
+        "description": "读取已连接交易所的未平仓头寸与结算"
       }
     },
     "workflow": {
@@ -4709,6 +4789,14 @@
     "themes": {
       "label": "主题",
       "description": "覆盖颜色、图表配色和界面样式的视觉主题"
+    },
+    "predictions": {
+      "label": "预测市场",
+      "description": "事件合约场所，用于交易现实世界的结果"
+    },
+    "dex": {
+      "label": "链上 DEX",
+      "description": "链上兑换场所与 DEX 行情数据提供方"
     }
   },
   "mobile": {
@@ -4848,7 +4936,6 @@
       "textLabel": "标签文字",
       "textPlaceholder": "添加标签"
     },
-    "copilot": {},
     "settings": {
       "accountsHeader": "账户与连接",
       "terminalHeader": "终端",
@@ -4935,7 +5022,41 @@
       "notListedCallout": "{{pair}} 未在 {{venue}} 上架。选择它将把当前交易所切换为 {{other}}。",
       "availableVenues": "可用",
       "desktopOnlyVenues": "需要桌面应用",
-      "desktopOnlyVenue": "仅桌面端"
+      "desktopOnlyVenue": "仅桌面端",
+      "predictions": "预测",
+      "filterPredictions": "预测"
     }
+  },
+  "events": {
+    "searchPlaceholder": "搜索事件与问题",
+    "allCategories": "全部",
+    "loading": "正在加载事件…",
+    "failed": "无法加载事件",
+    "tryLater": "该平台没有响应，请稍后重试。",
+    "emptyTitle": "没有进行中的事件",
+    "emptyBody": "该平台目前没有任何上架的事件。",
+    "noMatchesTitle": "没有匹配的事件",
+    "noMatchesBody": "试试更短的问题或换一个类别。",
+    "noVenuesTitle": "尚未连接预测平台",
+    "noVenuesBody": "从插件商店安装 Kalshi 或 Polymarket，即可浏览事件合约。",
+    "desktopOnlyTitle": "事件浏览需要桌面应用",
+    "desktopOnlyDescription": "该平台的 API 拒绝浏览器来源，因此只能通过桌面版访问其事件看板。",
+    "venueDesktopOnly": "{{venue}} 的事件需要桌面应用。",
+    "volume": "成交额 {{value}}"
+  },
+  "predictionPositions": {
+    "connect": "连接账户",
+    "noAccountsTitle": "尚未连接预测账户",
+    "noAccountsBody": "添加 Kalshi API 密钥或 Polygon 钱包，即可查看你持有的合约。",
+    "loading": "正在加载持仓…",
+    "emptyTitle": "没有未平仓合约",
+    "emptyBody": "订单成交后，持仓会立即显示在这里。",
+    "colMarket": "市场",
+    "colOutcome": "结果",
+    "colContracts": "合约",
+    "colAvgPrice": "均价",
+    "colCost": "成本",
+    "colResolves": "结算",
+    "resolved": "已结算"
   }
 }

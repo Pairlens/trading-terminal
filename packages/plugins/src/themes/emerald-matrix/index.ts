@@ -135,6 +135,7 @@ export const emeraldMatrixManifest: PluginManifest = {
       streaming: false,
     },
   ],
+  metadata: { family: 'themes' },
   config: {},
   theme: {
     entry: 'emerald-matrix',

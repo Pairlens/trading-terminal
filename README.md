@@ -6,7 +6,7 @@
 
 **The local-first AI trading terminal. Your keys. Your machine. Your rules.**
 
-The kind of trading desk that usually costs thousands of dollars a year: free, private, and entirely yours. 14 crypto exchanges, US equities, and on-chain DEX trading in one desk, with professional charts, an AI co-pilot, and your keys on your machine.
+The kind of trading desk that usually costs thousands of dollars a year: free, private, and entirely yours. 14 crypto exchanges, US equities, prediction markets, and on-chain DEX trading in one desk, with professional charts, an AI co-pilot, and your keys on your machine.
 
 [Website](https://pairlens.finance) · [Launch Web Terminal](https://terminal.pairlens.finance) · [Docs](https://pairlens.finance/docs) · [Download](https://github.com/Pairlens/trading-terminal/releases) · [Charts Engine](https://github.com/Pairlens/fast-financial-charts) · [X](https://x.com/pairlens)
 
@@ -21,12 +21,12 @@ The kind of trading desk that usually costs thousands of dollars a year: free, p
 
 ## Why Pairlens
 
-- **Every market on one desk.** Trade spot on OKX, Binance, Coinbase, Kraken, and 10 more exchanges, US equities through Alpaca, and on-chain DEXs across Solana, Ethereum, Base, Arbitrum, BNB Chain, and Polygon, side by side in the same interface.
+- **Every market on one desk.** Trade spot on OKX, Binance, Coinbase, Kraken, and 10 more exchanges, US equities through Alpaca, event contracts on Kalshi and Polymarket, and on-chain DEXs across Solana, Ethereum, Base, Arbitrum, BNB Chain, and Polygon, side by side in the same interface.
 - **Your keys never leave your machine.** Market data streams directly from exchanges to you. API keys and wallet secrets live in your OS keychain on desktop, or in an encrypted local vault in the browser. There is no server between you and your exchange, and nothing to trust but your own machine.
 - **An AI co-pilot, on your terms.** It reads your charts, portfolio, and market context, runs research, and proposes trades that you explicitly confirm. It never overrides your risk guardrails, which are enforced below the AI, not by it. Bring your own AI key (Groq, OpenAI, Anthropic, OpenRouter) or subscribe to the hosted Pairlens Intelligence plan.
 - **Professional charts, no paywall.** Powered by [Fast Financial Charts](https://github.com/Pairlens/fast-financial-charts), our own MIT-licensed WebGL2 engine: 90 indicators, 42 drawing tools, multi-pane layouts, and buttery live streaming. Write your own indicators in real Python, with pip packages, running locally in the terminal.
 - **Automation with guardrails.** Deterministic strategy signals, price and indicator alerts, and user-defined workflows. Everything that can place an order goes through the same guarded path with your risk limits.
-- **Make it yours.** Panels, workspaces, and 18 themes compose into whatever desk you want. Connectors, AI providers, data sources, and themes are plugins with a public SDK: install from the Plugin Store, build your own, or run a private registry for your team. Anything you can't change in config, you can change in code. The full source is in the open, no watermark, no "contact sales".
+- **Make it yours.** Panels, workspaces, and 18 themes compose into whatever desk you want. Connectors, AI providers, data sources, and themes are plugins with a public SDK: install from the Plugin Store, build your own, or run a private registry for your team. Everything official is grouped into families (crypto exchanges, DEX, equities, prediction markets, AI providers, themes) you can switch off per user, or exclude from a build entirely. Anything you can't change in config, you can change in code. The full source is in the open, no watermark, no "contact sales".
 
 <table>
   <tr>
@@ -43,7 +43,7 @@ The kind of trading desk that usually costs thousands of dollars a year: free, p
 
 Three ways in, no account required for any of them:
 
-- **In your browser, right now.** [terminal.pairlens.finance](https://terminal.pairlens.finance) runs the full terminal with nothing to install. On a phone, the same URL becomes a chart-centric mobile trading terminal. Five venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex) don't serve browsers and need the desktop app; the other ten plus DEXs work everywhere.
+- **In your browser, right now.** [terminal.pairlens.finance](https://terminal.pairlens.finance) runs the full terminal with nothing to install. On a phone, the same URL becomes a chart-centric mobile trading terminal. Six venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex, Kalshi) don't serve browsers and need the desktop app; the other eleven plus DEXs work everywhere.
 - **On your desktop.** The Tauri app for macOS, Windows, and Linux is the primary distribution: OS-keychain credential storage, background bots, and automatic updates. Builds are published on the [Releases page](https://github.com/Pairlens/trading-terminal/releases) as they ship.
 - **From source, in about two minutes.** The only requirement is [Bun](https://bun.sh) ≥ 1.3 (plus the Rust toolchain for the desktop shell):
 
@@ -79,6 +79,7 @@ Bundled on a fresh install. All 14 crypto exchanges support both market data and
 | ------------------ | ------------------------------------------------------------------------------------------------------------ |
 | Crypto exchanges   | OKX, Binance, ByBit, Coinbase, Kraken, KuCoin, Gate, Bitget, MEXC, HTX, Crypto.com, Bitfinex, Upbit, Bitvavo |
 | US equities broker | Alpaca                                                                                                       |
+| Prediction markets | Kalshi (desktop app only), Polymarket                                                                        |
 | DEX trading        | Jupiter (Solana), EVM DEX connector (Ethereum, Base, Arbitrum, BSC, Polygon)                                 |
 | DEX market data    | GeckoTerminal, DexPaprika                                                                                    |
 | AI inference       | Groq, OpenAI, Anthropic, OpenRouter (bring your own key)                                                     |

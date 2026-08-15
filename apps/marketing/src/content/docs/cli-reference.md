@@ -104,11 +104,14 @@ shell history.
 
 ### markets
 
-List the connectors available in this build.
+List the connectors available in this build, the prediction venues included.
 
 ```bash
 bun apps/cli/src/index.ts markets
 ```
+
+Nothing here runs in a browser, so the venues that need the desktop app in the
+terminal are reachable from the CLI on any machine.
 
 ## What the CLI does not do
 

@@ -47,12 +47,28 @@ export const CAPABILITY_META: Array<CapabilityMeta> = [
     description: 'Live order book depth streams',
   },
   {
+    id: 'market-data:trades',
+    label: 'Trades',
+    domain: 'market-data',
+    domainLabel: 'Market Data',
+    singleton: false,
+    description: 'Live time-and-sales trade tape streams',
+  },
+  {
     id: 'market-data:history',
     label: 'History',
     domain: 'market-data',
     domainLabel: 'Market Data',
     singleton: false,
     description: 'Historical candle backfill for charts',
+  },
+  {
+    id: 'market-data:events',
+    label: 'Events',
+    domain: 'market-data',
+    domainLabel: 'Market Data',
+    singleton: false,
+    description: 'Browse prediction-market events and their outcomes',
   },
   {
     id: 'market-data:discovery',
@@ -111,6 +127,14 @@ export const CAPABILITY_META: Array<CapabilityMeta> = [
     domainLabel: 'Trading',
     singleton: false,
     description: 'Fetch account asset balances from the connected exchange',
+  },
+  {
+    id: 'trading:positions',
+    label: 'Positions',
+    domain: 'trading',
+    domainLabel: 'Trading',
+    singleton: false,
+    description: 'Read open positions and settlements from the connected venue',
   },
   // Automation
   {

@@ -11,6 +11,7 @@ import {
 } from '../test-utils/golden-scenarios'
 
 import * as ccxt from '../ccxt-connector/parser'
+import * as prediction from '../prediction-connector/parser'
 import type {
   OrderbookLevel,
   TickerSnapshot,
@@ -81,6 +82,41 @@ const ADAPTERS: Array<ConnectorGolden> = [
       encodeBids: () => B.bids.map(([p, s]) => [p, s]),
       encodeAsks: () => B.asks.map(([p, s]) => [p, s]),
       parse: (raw: any) => ccxt.parseCcxtBookLevels(raw),
+    },
+  },
+  {
+    // The prediction bridge's unified row — a second parser, so a second row.
+    // Kalshi and Polymarket both reach it, the way all fourteen CEXs reach the
+    // one above.
+    //
+    // No book adapter: the canonical scenario prices around 100, and a
+    // prediction level outside (0, 1) is not a price on either venue, so the
+    // parser drops it by design. That side is pinned against a probability-
+    // scaled scenario in prediction-connector/__tests__/parser.test.ts.
+    name: 'ccxt prediction (unified)',
+    candle: {
+      encode: () => [C.ts, C.open, String(C.high), C.low, C.close, C.volume],
+      parse: (raw: any) => prediction.parsePredictionOhlcv(raw),
+    },
+    // Same trap as the spot row: ccxt has already converted the venue's native
+    // unit into `percentage`, a percent, and multiplying it again ships a
+    // 100x-wrong 24 h change.
+    ticker: {
+      encode: () => ({
+        outcome: 'FED_CUT_25BPS:YES',
+        label: 'Yes',
+        last: T.last,
+        close: T.last,
+        bid: T.bid,
+        ask: T.ask,
+        high: T.high24h,
+        low: T.low24h,
+        baseVolume: T.volume24h,
+        open: T.prevPrice,
+        percentage: T.changePct,
+        timestamp: C.ts,
+      }),
+      parse: (raw: any) => prediction.parsePredictionTicker(raw),
     },
   },
 ]
