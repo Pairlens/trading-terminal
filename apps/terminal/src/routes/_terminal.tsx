@@ -93,7 +93,11 @@ import { AssistantDock } from '@/components/assistant-dock/assistant-dock'
 import { useAssistantStore } from '@/stores/assistant-store'
 import { SectionTour } from '@/components/onboarding/section-tour'
 import { isOnboardingComplete } from '@/lib/onboarding-state'
-import { PairAvatar } from '@/components/pair-picker/pair-avatar'
+import {
+  PairAvatar,
+  PairSymbol,
+  PredictionAvatar,
+} from '@/components/pair-picker/pair-avatar'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useRecentPairs } from '@/lib/recent-tickers'
 import { chartLinkProps } from '@/lib/market-ref/link'
@@ -785,7 +789,9 @@ function ChartsNavItem({ isActive }: { isActive: boolean }) {
           side="right"
           align="start"
           sideOffset={12}
-          className="w-52"
+          // Fixed width, and wide enough that a prediction's subject + side
+          // has somewhere to land before the ellipsis takes over.
+          className="w-64"
         >
           <DropdownMenuGroup>
             <DropdownMenuLabel>{t('nav.recentPairs')}</DropdownMenuLabel>
@@ -805,14 +811,30 @@ function ChartsNavItem({ isActive }: { isActive: boolean }) {
                   key={formatInstrumentRef(inst)}
                   onClick={() => void navigate(chartTargetFor(inst))}
                 >
-                  <PairAvatar
-                    base={base}
+                  {/* A prediction's routing key has no base leg: splitting it
+                      yields the first word of an event slug, so every outcome
+                      of one event gets the same lettered circle. The class
+                      icon says more than "DEM" three times over. */}
+                  {inst.cls === 'prediction' ? (
+                    <PredictionAvatar size="sm" className="size-5" />
+                  ) : (
+                    <PairAvatar
+                      base={base}
+                      assetClass={inst.cls}
+                      size="sm"
+                      className="size-5 text-[8px]"
+                    />
+                  )}
+                  {/* The one ticker renderer, and `min-w-0` is this row's half
+                      of the deal: without it the flex item refuses to be
+                      narrower than its text and a prediction key wraps the
+                      menu into a wall instead of eliding. */}
+                  <PairSymbol
+                    symbol={symbol}
                     assetClass={inst.cls}
-                    size="sm"
-                    className="size-5 text-[8px]"
+                    className="min-w-0 flex-1 text-xs"
                   />
-                  <span className="flex-1 font-mono text-xs">{symbol}</span>
-                  <ArrowRight className="size-3 text-muted-foreground" />
+                  <ArrowRight className="size-3 shrink-0 text-muted-foreground" />
                 </DropdownMenuItem>
               )
             })
