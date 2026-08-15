@@ -26,10 +26,15 @@ its own problem, and Pairlens solves it locally first.
 They all sit on the same index and the same search, so a token you find in one
 is findable in the others.
 
-The pair picker filters by asset class, and prediction outcomes get their own
-**Predictions** tab. Those rows read as the question rather than the ticker,
-because a Kalshi outcome key is not something you scan. See
-[prediction markets](/docs/prediction-markets).
+The pair picker filters by asset class, and two classes get their own tab.
+**Predictions** rows read as the question rather than the ticker, because a
+Kalshi outcome key is not something you scan. **Futures** rows are perpetual
+contracts, keyed with a third segment for the settle currency so
+`BTC-USDT-USDT` can never be confused with the spot `BTC-USDT`. Contract lists
+come from each futures venue's own market table rather than a catalog, so the
+tab is empty until you have connected one. See
+[prediction markets](/docs/prediction-markets) and
+[perpetual futures](/docs/cex-futures).
 
 ## Search in three waves
 

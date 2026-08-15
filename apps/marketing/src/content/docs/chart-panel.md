@@ -41,7 +41,9 @@ Monthly (1M) is in the menu without a shortcut.
 **Not every venue serves every interval.** A connector declares the intervals
 it has, and the picker shows only those. Kalshi has three (1m, 1h, 1D) and
 Polymarket four (1m, 5m, 1h, 1D), because that is what their OHLCV endpoints
-accept. See [prediction markets](/docs/prediction-markets).
+accept, and the futures venues each publish their own shorter list. See
+[prediction markets](/docs/prediction-markets) and
+[perpetual futures](/docs/cex-futures).
 
 Your choice is remembered rather than rewritten. Point a chart pinned to 15m at
 a venue without it and you get the nearest shorter interval that venue does

@@ -2188,7 +2188,8 @@
     "recentTickers": "最近行情",
     "empty": "空",
     "events": "事件",
-    "predictionPositions": "预测持仓"
+    "predictionPositions": "预测持仓",
+    "futuresPositions": "期货持仓"
   },
   "paneDescriptions": {
     "markets": "浏览各交易所所有可交易的交易对",
@@ -2216,7 +2217,8 @@
     "liquidityHeatmap": "展示不同价位随时间变化深度的订单簿流动性热力图",
     "recentTickers": "最近查看的交易对及其实时价格,便于快速切换",
     "events": "浏览预测市场事件并打开某个结果的图表",
-    "predictionPositions": "你持有的合约、成本以及结算时间"
+    "predictionPositions": "你持有的合约、成本以及结算时间",
+    "futuresPositions": "未平仓永续合约仓位、标记价格和强平价位"
   },
   "multiPrice": {
     "venue": "交易所",
@@ -2806,6 +2808,22 @@
       "pairlens-predictions": {
         "title": "Pairlens 预测",
         "description": "预测市场的事件浏览器与未平仓合约持仓"
+      },
+      "binance-futures-market-connector": {
+        "title": "Binance Futures 市场连接器",
+        "description": "Binance Futures 的永续合约：可做多做空的杠杆仓位，以 USDT 结算"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "KuCoin Futures 市场连接器",
+        "description": "KuCoin Futures 的永续合约：可做多做空的杠杆仓位，以 USDT 结算"
+      },
+      "kraken-futures-market-connector": {
+        "title": "Kraken Futures 市场连接器",
+        "description": "Kraken Futures 的永续合约：可做多做空的杠杆仓位，以 USD 结算"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens 期货",
+        "description": "未平仓永续合约仓位，含开仓价、标记价与强平价"
       }
     },
     "families": {
@@ -2840,6 +2858,10 @@
       "themes": {
         "label": "主题",
         "description": "界面与图表配色的视觉主题。"
+      },
+      "cexFutures": {
+        "label": "加密期货",
+        "description": "永续合约交易所，用于带杠杆的加密货币仓位。"
       }
     },
     "familyToggleAria": "启用或停用所有{{family}}插件",
@@ -2960,7 +2982,12 @@
       "thisOutcome": "当前结果",
       "decreaseContracts": "减少一份合约",
       "increaseContracts": "增加一份合约",
-      "priceCentsRange": "请输入 0¢ 到 100¢ 之间的价格"
+      "priceCentsRange": "请输入 0¢ 到 100¢ 之间的价格",
+      "leverage": "杠杆",
+      "reduceOnly": "只减仓",
+      "reduceOnlyHint": "仅减少已有仓位，绝不会反向开仓。",
+      "notional": "名义价值",
+      "estLiquidation": "预估强平价"
     },
     "status": {
       "connecting": "连接中…",
@@ -4034,7 +4061,8 @@
       "all": "全部",
       "crypto": "加密货币",
       "stocks": "股票",
-      "prediction": "预测"
+      "prediction": "预测",
+      "crypto-perp": "期货"
     },
     "category": {
       "all": "全部",
@@ -4047,7 +4075,9 @@
       "infrastructure": "基础设施"
     },
     "predictionsEmptyTitle": "预测结果位于「事件」面板中",
-    "predictionsEmptyBody": "结果每天上架并结算，因此要从平台自己的看板浏览，而不是从目录中查找。"
+    "predictionsEmptyBody": "结果每天上架并结算，因此要从平台自己的看板浏览，而不是从目录中查找。",
+    "futuresEmptyTitle": "连接期货交易所后即可浏览永续合约",
+    "futuresEmptyBody": "合约清单来自各交易所自己的市场表，因此在成功连接该交易所后才会出现。"
   },
   "fearGreed": {
     "title": "恐慌与贪婪指数",
@@ -4922,7 +4952,8 @@
       "auto": "自动",
       "bookLoading": "等待订单簿…",
       "pressureBuy": "买 {{pct}}%",
-      "pressureSell": "{{pct}}% 卖"
+      "pressureSell": "{{pct}}% 卖",
+      "baseEquivalent": "折合标的数量"
     },
     "chart": {
       "pinned": "已固定",
@@ -5036,7 +5067,9 @@
       "desktopOnlyVenues": "需要桌面应用",
       "desktopOnlyVenue": "仅桌面端",
       "predictions": "预测",
-      "filterPredictions": "预测"
+      "filterPredictions": "预测",
+      "futures": "期货",
+      "filterFutures": "期货"
     }
   },
   "events": {
@@ -5070,5 +5103,28 @@
     "colCost": "成本",
     "colResolves": "结算",
     "resolved": "已结算"
+  },
+  "futuresPositions": {
+    "connect": "连接账户",
+    "noAccountsTitle": "尚未连接期货账户",
+    "noAccountsBody": "添加 Binance、KuCoin 或 Kraken Futures 的 API 密钥即可查看未平仓仓位。",
+    "loading": "正在加载持仓…",
+    "emptyTitle": "没有未平仓仓位",
+    "emptyBody": "订单成交后，仓位会立即显示在这里。",
+    "colContract": "合约",
+    "colSide": "方向",
+    "colSize": "数量",
+    "colEntry": "开仓价",
+    "colMark": "标记价",
+    "colLiquidation": "强平价",
+    "colLeverage": "杠杆",
+    "colPnl": "盈亏",
+    "sideLong": "做多",
+    "sideShort": "做空",
+    "close": "平仓",
+    "closeTitle": "要平掉该仓位吗？",
+    "closeBody": "将在 {{venue}} 提交一笔只减仓市价单，数量为 {{pair}} 的 {{contracts}} 张合约。",
+    "closeConfirm": "平仓",
+    "closeSubmitted": "平仓订单已提交"
   }
 }

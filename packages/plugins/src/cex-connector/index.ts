@@ -281,6 +281,14 @@ export type CexConnectorSpec<TCredentials extends CexCredentials> = {
     slot: CexSlot<TCredentials>,
   ) => Promise<unknown>
   fetchBalances: (slot: CexSlot<TCredentials>) => Promise<unknown>
+  /**
+   * Open derivatives positions for this credential, as
+   * `Array<NormalizedPosition>`. Present only on venues whose manifest declares
+   * `trading:positions` — a spot venue has no position concept beyond its
+   * balances, and an empty array there would read as "flat" rather than "not
+   * applicable".
+   */
+  fetchPositions?: (slot: CexSlot<TCredentials>) => Promise<unknown>
 }
 
 // ---------------------------------------------------------------------------
@@ -404,6 +412,14 @@ export function createCexConnectorPlugin<TCredentials extends CexCredentials>(
         trigger,
         mode: slot.mode,
         tgtCcy: p['tgtCcy'] ? String(p['tgtCcy']) : undefined,
+        // Perp-only, and only when the caller asked. Passed through rather
+        // than defaulted: `reduceOnly: false` is a different request from no
+        // flag at all on venues that reject the field outright, and a
+        // leverage of 0 would be a real change to account state.
+        ...(p['reduceOnly'] === true ? { reduceOnly: true } : {}),
+        ...(typeof p['leverage'] === 'number' && p['leverage'] > 0
+          ? { leverage: p['leverage'] }
+          : {}),
         clientOrderId: p['clientOrderId']
           ? String(p['clientOrderId'])
           : undefined,
@@ -415,6 +431,15 @@ export function createCexConnectorPlugin<TCredentials extends CexCredentials>(
       const slot = getSlot(params)
       if (!slot) return []
       return spec.fetchBalances(slot)
+    }
+
+    if (capability === 'trading:positions') {
+      if (!spec.fetchPositions) {
+        throw new Error(`${spec.id}: positions not implemented`)
+      }
+      const slot = getSlot(params)
+      if (!slot) return []
+      return spec.fetchPositions(slot)
     }
 
     throw new Error(

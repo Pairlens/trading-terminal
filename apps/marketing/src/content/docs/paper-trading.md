@@ -24,11 +24,15 @@ exchange really matches them, and you find out whether your key permissions,
 symbol precision, and minimum order sizes are right before real money is
 involved. Alpaca is the easiest place to start: free paper keys in minutes.
 Kalshi has a demo environment too, so
-[event contracts](/docs/prediction-markets) can be rehearsed the same way.
+[event contracts](/docs/prediction-markets) can be rehearsed the same way, and
+so do Binance Futures and Kraken Futures for
+[perpetuals](/docs/cex-futures).
 
 Not every venue offers a demo environment. Where one exists, Pairlens tells you
-which endpoint the mode uses. On-chain wallets and Polymarket are live only,
-because the contracts being signed against are the real ones.
+which endpoint the mode uses. On-chain wallets, Polymarket, and KuCoin Futures
+are live only, because the contracts being signed against are the real ones. A
+paper credential on one of those is refused with a message rather than quietly
+routed to production.
 
 The ticket shows a **PAPER** badge on the submit button whenever the selected
 account is a paper credential.

@@ -46,6 +46,16 @@ describe('venueKindFor', () => {
     ).toBe('prediction')
   })
 
+  test('a perp venue is futures, not the spot fallback', () => {
+    // Every futures venue IS a centralized exchange, so the `cex` fallback
+    // would happily claim it and the phone would read "Binance Futures spot".
+    expect(
+      venueKindFor(
+        info({ marketId: 'binance-futures', assetClasses: ['crypto-perp'] }),
+      ),
+    ).toBe('futures')
+  })
+
   test('the existing three kinds are unchanged', () => {
     expect(venueKindFor(info({ assetClasses: ['stocks'] }))).toBe('equities')
     expect(

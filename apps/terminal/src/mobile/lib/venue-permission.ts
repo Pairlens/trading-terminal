@@ -19,6 +19,7 @@
  * already has keys off to enter them a second time.
  */
 import { useMarketData } from '@/lib/market-data-provider'
+import { hasCredentialForMarket } from '@/lib/venues/credential-alias'
 import { useCredentialsStore } from '@/stores/credentials-store'
 import { useWalletsStore } from '@/stores/wallets-store'
 
@@ -43,7 +44,7 @@ export function useVenueTradePermission(market: string): VenueTradePermission {
   // than on the market id.
   const hasKey = info.walletChain
     ? wallets.some((w) => w.chain === info.walletChain)
-    : credentials.some((c) => c.market === market)
+    : hasCredentialForMarket(credentials, market)
 
   return hasKey ? 'trade' : 'read'
 }

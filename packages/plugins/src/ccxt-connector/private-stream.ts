@@ -67,6 +67,17 @@ export type CcxtPrivateStreamOptions = {
   venue: CcxtVenueConfig
   /** Give the authed instance a market table without a signed `loadMarkets`. */
   ensureMarkets: (exchange: CcxtExchangeLike) => Promise<void>
+  /**
+   * ccxt unified symbol → Pairlens pair key on an order update. Defaults to the
+   * spot mapping, which drops the `:SETTLE` leg.
+   *
+   * The seam mirrors the watch driver's `toSymbol`, and for the same reason: a
+   * perp fill reported as `BTC-USDT` lands in the SPOT pair's slot in the
+   * terminal's pair-keyed position ledger. Reversing the key downstream cannot
+   * work — the mapping is one-way and a cold markets cache has nothing to
+   * reverse it with.
+   */
+  symbolToPair?: (symbol: string) => string
   onError?: (scope: string, error: unknown) => void
   /** Injectable so the lifecycle suite can drive a fake exchange. */
   createHost?: (
@@ -204,7 +215,9 @@ export class CcxtPrivateStream implements CexPrivateWsClient<CexCredentials> {
         this.noteInbound()
         this.noteSuccess(state)
         for (const raw of rows) {
-          this.onOrderUpdate?.(normalizeCcxtOrder(raw))
+          this.onOrderUpdate?.(
+            normalizeCcxtOrder(raw, '', this.opts.symbolToPair),
+          )
         }
       } catch (error) {
         if (!this.isCurrent(host)) return

@@ -19,16 +19,52 @@ export function normalizePairKey(pairKey: string): string {
  * lookup is keyed on, so a US equity defaulting to USDT reads "0 USDT" beside
  * an account holding dollars, and sends order presets to the wrong bucket.
  *
+ * A perpetual future adds a THIRD segment, the settle currency
+ * ('BTC-USDT-USDT', 'BTC-USD-USD'), which is what the position and margin are
+ * denominated in. The settle leg is the discriminator for the whole perp
+ * surface: it is what tells the risk guard to price a contract count rather
+ * than a base amount, and it is what keeps a perp fill out of the spot
+ * position ledger's 'BTC-USDT' slot, since that ledger is keyed by pair alone.
+ *
+ * Segment count alone is NOT that discriminator. Prediction outcome keys are
+ * dash-joined too — a Kalshi ticker is 'KXBTCD-26AUG15-T53', its NO side has
+ * four segments — and treating any third segment as a settle leg routed those
+ * onto futures venues. Every v1 futures venue lists linear contracts, where
+ * the settle currency IS the quote currency, so a settle leg is emitted only
+ * when the third segment repeats the second. Inverse contracts
+ * ('BTC-USD-BTC') are out of scope until a venue ships them; when one does,
+ * this test must learn their shape rather than loosen back to "any third
+ * segment".
+ *
  * `equity` should come from the connector's declared asset classes rather than
  * a venue allowlist, so a second stock broker behaves correctly for free.
  */
 export function splitPairAssets(
   pairKey: string,
   opts?: { equity?: boolean },
-): { base: string; quote: string } {
-  const [base, quote] = pairKey.split('-')
+): { base: string; quote: string; settle?: string } {
+  const parts = pairKey.split('-')
+  const [base, quote] = parts
+  const settle = parts.length === 3 && parts[2] === quote ? parts[2] : undefined
   return {
     base: base || pairKey,
     quote: quote || (opts?.equity ? 'USD' : 'USDT'),
+    ...(settle ? { settle } : {}),
   }
+}
+
+/**
+ * True when a pair key names a perpetual future (BASE-QUOTE-SETTLE).
+ *
+ * The connectors mint these keys from ccxt's `BASE/QUOTE:SETTLE` symbols, so
+ * a genuine perp key always carries the settle leg — and on the linear
+ * contracts every v1 venue lists, that leg repeats the quote. The repeat is
+ * what `splitPairAssets` tests, and it is what keeps prediction outcome keys
+ * (also dash-joined, 'KXBTCD-26AUG15-T53') from reading as contracts. Callers
+ * routing on this should still let a prediction-directory pin win first: a
+ * registered outcome names its one venue explicitly, and explicit beats
+ * inferred.
+ */
+export function isPerpPairKey(pairKey: string): boolean {
+  return Boolean(splitPairAssets(normalizePairKey(pairKey)).settle)
 }

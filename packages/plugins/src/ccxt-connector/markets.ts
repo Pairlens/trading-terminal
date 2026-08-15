@@ -600,7 +600,11 @@ export async function writeCcxtKv(key: string, value: unknown): Promise<void> {
 
 // ── Helpers ──────────────────────────────────────────────────────────────
 
-function asNumberRecord(value: unknown): { amount?: number; price?: number } {
+/** Shared with the futures trim, which stores the same two precision fields. */
+export function asNumberRecord(value: unknown): {
+  amount?: number
+  price?: number
+} {
   if (!value || typeof value !== 'object') return {}
   const record = value as Record<string, unknown>
   const out: { amount?: number; price?: number } = {}
@@ -609,7 +613,8 @@ function asNumberRecord(value: unknown): { amount?: number; price?: number } {
   return out
 }
 
-function asLimits(
+/** Shared with the futures trim — same bounds, same storage shape. */
+export function asLimits(
   value: unknown,
 ): Record<string, { min?: number; max?: number }> {
   if (!value || typeof value !== 'object') return {}

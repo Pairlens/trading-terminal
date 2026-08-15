@@ -26,6 +26,7 @@
 import type { CredentialsStatus } from '@/stores/credentials-store'
 import { useCredentialsStore } from '@/stores/credentials-store'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { credentialMarketFor } from '@/lib/venues/credential-alias'
 
 /** 'ok' also covers "still loading" — a brief spinner is honest. */
 export type CredentialGateState = 'ok' | 'sealed' | 'missing'
@@ -65,8 +66,12 @@ export function useMarketCredentialGate(market: string): MarketCredentialGate {
   // Selecting the boolean, not the array: this runs in every market pane, and
   // a new array identity on every credentials write would re-render all of
   // them for a key that has nothing to do with the venue they are bound to.
+  // Alias-resolved before the compare: a futures venue authenticates with its
+  // spot sibling's key, and matching the raw market id would tell a connected
+  // user to connect.
+  const credentialMarket = credentialMarketFor(market)
   const hasCredential = useCredentialsStore((s) =>
-    s.credentials.some((c) => c.market === market),
+    s.credentials.some((c) => c.market === credentialMarket),
   )
 
   const venue = markets.find((m) => m.value === market)

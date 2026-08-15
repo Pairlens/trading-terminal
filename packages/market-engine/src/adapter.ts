@@ -80,6 +80,16 @@ export type MarketAdapterInfo = {
    * terminal re-subscribes them when a credential is finally provisioned.
    */
   credentialedMarketData?: boolean
+  /**
+   * Perpetual-futures venues: the highest leverage the venue will accept on any
+   * of its linear perps. The ticket clamps its selector to this rather than
+   * offering a number the venue rejects at submit time.
+   *
+   * A venue-wide ceiling, not a per-instrument one — the real cap is per symbol
+   * and per position tier, and only the venue knows it. So this is the top of
+   * the selector, and the venue still owns the final refusal.
+   */
+  maxLeverage?: number
 }
 
 export interface MarketAdapter {

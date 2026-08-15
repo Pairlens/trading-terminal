@@ -69,6 +69,15 @@ import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 // the same tick flash as this pane instead of a second implementation.
 import { PairQuote, quoteForPair } from '@/components/discovery/pair-quote'
 
+/**
+ * Asset classes the crypto SECTOR taxonomy (Layer 1, DeFi, meme, …) actually
+ * describes. Everything else hides the category row: an equity has no sector
+ * in this vocabulary, a prediction outcome is a question rather than an asset,
+ * and a perpetual contract inherits its base asset's sector but is not
+ * catalogued under one.
+ */
+const SECTORED_ASSET_CLASSES = new Set<AssetClassFilter>(['all', 'crypto'])
+
 export function MarketsPane() {
   const { t } = useTranslation()
   const [assetClassFilter, setAssetClassFilter] =
@@ -289,9 +298,10 @@ export function MarketsPane() {
               onClick={() => {
                 setAssetClassFilter(ac.id)
                 // Reset category when switching to a class the crypto sector
-                // taxonomy doesn't describe (equities, prediction outcomes)
+                // taxonomy doesn't describe (equities, prediction outcomes,
+                // perpetual contracts)
                 if (
-                  (ac.id === 'stocks' || ac.id === 'prediction') &&
+                  !SECTORED_ASSET_CLASSES.has(ac.id) &&
                   activeCategory !== 'all' &&
                   activeCategory !== 'watchlists'
                 ) {
@@ -306,8 +316,8 @@ export function MarketsPane() {
         </div>
 
         {/* Category tabs (hidden for classes the crypto sector taxonomy doesn't
-            describe — equities and prediction outcomes) */}
-        {assetClassFilter !== 'stocks' && assetClassFilter !== 'prediction' && (
+            describe — equities, prediction outcomes, perpetual contracts) */}
+        {SECTORED_ASSET_CLASSES.has(assetClassFilter) && (
           <div className="flex flex-wrap gap-1">
             {CATEGORIES.map((cat) => (
               <Button
@@ -345,6 +355,22 @@ export function MarketsPane() {
                 </p>
                 <p className="mx-auto mt-1 max-w-xs text-xs leading-relaxed text-muted-foreground">
                   {t('markets.predictionsEmptyBody')}
+                </p>
+              </div>
+            )}
+
+            {/* Perpetuals are not in the curated catalog either: the contract
+                list comes off each futures connector's own market table, which
+                exists only once that venue has been reached. An empty grid
+                would read as "no perpetual markets exist" when the truth is
+                that no futures venue is connected yet. */}
+            {assetClassFilter === 'crypto-perp' && sortedPairs.length === 0 && (
+              <div className="px-4 py-10 text-center">
+                <p className="text-sm font-medium">
+                  {t('markets.futuresEmptyTitle')}
+                </p>
+                <p className="mx-auto mt-1 max-w-xs text-xs leading-relaxed text-muted-foreground">
+                  {t('markets.futuresEmptyBody')}
                 </p>
               </div>
             )}
@@ -437,10 +463,13 @@ export function MarketsPane() {
               </div>
             )}
 
-            {/* Empty states. The prediction hint above already explains an
-                empty prediction list; "No pairs found · show all" under it
-                would send the user back to a category that never had any. */}
-            {sortedPairs.length === 0 && assetClassFilter !== 'prediction' ? (
+            {/* Empty states. The hints above already explain an empty
+                prediction or futures list; "No pairs found · show all" under
+                one would send the user back to a category that never had
+                any. */}
+            {sortedPairs.length === 0 &&
+            assetClassFilter !== 'prediction' &&
+            assetClassFilter !== 'crypto-perp' ? (
               <div className="flex flex-col items-center justify-center px-4 py-16 text-center">
                 {activeCategory === 'watchlists' ? (
                   <>

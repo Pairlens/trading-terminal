@@ -27,6 +27,7 @@ import {
 import type { WalletChain } from '@pairlens/market-engine/adapter'
 import { useActiveWallet } from '@/lib/active-wallet-context'
 import { useMarketData } from '@/lib/market-data-provider'
+import { credentialsForMarket } from '@/lib/venues/credential-alias'
 import {
   CREDENTIAL_SCHEMAS,
   useCredentialsStore,
@@ -75,9 +76,8 @@ export function WalletSelector({ market }: WalletSelectorProps) {
 
   // For DEX: show crypto wallets matching the chain
   // For CEX: show exchange credentials
-  const marketCreds = isDex
-    ? []
-    : credentials.filter((c) => c.market === market)
+  // Alias-resolved: a futures venue's account is its spot sibling's key.
+  const marketCreds = isDex ? [] : credentialsForMarket(credentials, market)
   const chainWallets = isDex
     ? wallets.filter((w) => w.chain === marketInfo?.walletChain)
     : []
@@ -132,7 +132,13 @@ export function WalletSelector({ market }: WalletSelectorProps) {
         ? t('terminal.wallet.connectHintWallet', { chain: CHAIN_NAME[chain] })
         : t('terminal.wallet.connectHintWalletAny')
       : t('terminal.wallet.connectHintAccount', {
-          venue: CREDENTIAL_SCHEMAS[market]?.label ?? market.toUpperCase(),
+          // `CREDENTIAL_SCHEMAS` is keyed on the CREDENTIAL market, so a
+          // venue that borrows another's key has no entry of its own and this
+          // fell through to the shouted market id, 'BINANCE-FUTURES'.
+          venue:
+            CREDENTIAL_SCHEMAS[market]?.label ??
+            marketInfo?.displayName ??
+            market.toUpperCase(),
         })
 
     return (

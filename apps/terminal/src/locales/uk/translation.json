@@ -2210,7 +2210,8 @@
     "recentTickers": "Нещодавні тікери",
     "empty": "Порожньо",
     "events": "Події",
-    "predictionPositions": "Позиції за прогнозами"
+    "predictionPositions": "Позиції за прогнозами",
+    "futuresPositions": "Ф’ючерсні позиції"
   },
   "paneDescriptions": {
     "markets": "Переглядайте всі доступні торгові пари на біржах",
@@ -2238,7 +2239,8 @@
     "liquidityHeatmap": "Теплова карта ліквідності книги ордерів, що показує глибину за ціновими рівнями в часі",
     "recentTickers": "Нещодавно переглянуті пари з живими цінами для швидкого перемикання",
     "events": "Переглядайте події ринків прогнозів і відкривайте графік результату",
-    "predictionPositions": "Контракти, якими ви володієте, їх вартість і термін розрахунку"
+    "predictionPositions": "Контракти, якими ви володієте, їх вартість і термін розрахунку",
+    "futuresPositions": "Відкриті безстрокові позиції, їхня маркувальна ціна та рівень ліквідації"
   },
   "multiPrice": {
     "venue": "Біржа",
@@ -2832,6 +2834,22 @@
       "pairlens-predictions": {
         "title": "Pairlens Прогнози",
         "description": "Огляд подій і відкриті позиції за контрактами на ринках прогнозів"
+      },
+      "binance-futures-market-connector": {
+        "title": "Binance Futures Ринковий конектор",
+        "description": "Безстрокові ф’ючерси на Binance Futures: довгі та короткі позиції з плечем, розрахунок у USDT"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "KuCoin Futures Ринковий конектор",
+        "description": "Безстрокові ф’ючерси на KuCoin Futures: довгі та короткі позиції з плечем, розрахунок у USDT"
+      },
+      "kraken-futures-market-connector": {
+        "title": "Kraken Futures Ринковий конектор",
+        "description": "Безстрокові ф’ючерси на Kraken Futures: довгі та короткі позиції з плечем, розрахунок у USD"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens Ф’ючерси",
+        "description": "Відкриті безстрокові позиції з ціною входу, маркувальною ціною та рівнем ліквідації"
       }
     },
     "families": {
@@ -2866,6 +2884,10 @@
       "themes": {
         "label": "Теми",
         "description": "Візуальні теми для інтерфейсу та палітри графіка."
+      },
+      "cexFutures": {
+        "label": "Крипто-ф’ючерси",
+        "description": "Майданчики безстрокових ф’ючерсів для позицій із плечем."
       }
     },
     "familyToggleAria": "Увімкнути або вимкнути всі плагіни категорії {{family}}",
@@ -2986,7 +3008,12 @@
       "thisOutcome": "Цей результат",
       "decreaseContracts": "На один контракт менше",
       "increaseContracts": "На один контракт більше",
-      "priceCentsRange": "Вкажіть ціну від 0¢ до 100¢"
+      "priceCentsRange": "Вкажіть ціну від 0¢ до 100¢",
+      "leverage": "Плече",
+      "reduceOnly": "Лише зменшення",
+      "reduceOnlyHint": "Зменшує відкриту позицію і ніколи не відкриває протилежну.",
+      "notional": "Номінал",
+      "estLiquidation": "Оцінка ліквідації"
     },
     "status": {
       "connecting": "Підключення…",
@@ -4068,7 +4095,8 @@
       "all": "Усі",
       "crypto": "Крипто",
       "stocks": "Акції",
-      "prediction": "Прогнози"
+      "prediction": "Прогнози",
+      "crypto-perp": "Ф’ючерси"
     },
     "category": {
       "all": "Усі",
@@ -4081,7 +4109,9 @@
       "infrastructure": "Інфраструктура"
     },
     "predictionsEmptyTitle": "Результати прогнозів — у панелі «Події»",
-    "predictionsEmptyBody": "Результати з'являються й розраховуються щодня, тож їх переглядають на дошці самого майданчика, а не в каталозі."
+    "predictionsEmptyBody": "Результати з'являються й розраховуються щодня, тож їх переглядають на дошці самого майданчика, а не в каталозі.",
+    "futuresEmptyTitle": "Підключіть ф’ючерсний майданчик, щоб переглядати безстрокові контракти",
+    "futuresEmptyBody": "Списки контрактів беруться з таблиці ринків кожного майданчика й з’являються, щойно він відповість."
   },
   "fearGreed": {
     "title": "Страх і жадібність",
@@ -4964,7 +4994,8 @@
       "auto": "Авто",
       "bookLoading": "Очікування книги ордерів…",
       "pressureBuy": "К {{pct}}%",
-      "pressureSell": "{{pct}}% П"
+      "pressureSell": "{{pct}}% П",
+      "baseEquivalent": "Еквівалент у базовому активі"
     },
     "chart": {
       "pinned": "Закріплено",
@@ -5080,7 +5111,9 @@
       "desktopOnlyVenues": "Потрібен десктоп-застосунок",
       "desktopOnlyVenue": "Лише десктоп",
       "predictions": "прогнози",
-      "filterPredictions": "Прогнози"
+      "filterPredictions": "Прогнози",
+      "futures": "ф’ючерси",
+      "filterFutures": "Ф’ючерси"
     }
   },
   "events": {
@@ -5114,5 +5147,28 @@
     "colCost": "Вартість",
     "colResolves": "Розрахунок",
     "resolved": "Розраховано"
+  },
+  "futuresPositions": {
+    "connect": "Підключити акаунт",
+    "noAccountsTitle": "Ф’ючерсний акаунт не підключено",
+    "noAccountsBody": "Додайте API-ключі Binance, KuCoin або Kraken Futures, щоб побачити відкриті позиції.",
+    "loading": "Завантаження позицій…",
+    "emptyTitle": "Відкритих позицій немає",
+    "emptyBody": "Позиції з’являться тут, щойно виконається ордер.",
+    "colContract": "Контракт",
+    "colSide": "Сторона",
+    "colSize": "Розмір",
+    "colEntry": "Вхід",
+    "colMark": "Марк",
+    "colLiquidation": "Лікв.",
+    "colLeverage": "Плече",
+    "colPnl": "PnL",
+    "sideLong": "Лонг",
+    "sideShort": "Шорт",
+    "close": "Закрити",
+    "closeTitle": "Закрити цю позицію?",
+    "closeBody": "Надішле ринковий ордер лише на зменшення на {{contracts}} контрактів {{pair}} на {{venue}}.",
+    "closeConfirm": "Закрити позицію",
+    "closeSubmitted": "Ордер на закриття надіслано"
   }
 }

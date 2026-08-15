@@ -27,7 +27,12 @@ import {
   registerDisplayToken,
 } from '@/stores/token-directory-store'
 
-export type AssetClassFilter = 'all' | 'crypto' | 'stocks' | 'prediction'
+export type AssetClassFilter =
+  | 'all'
+  | 'crypto'
+  | 'stocks'
+  | 'prediction'
+  | 'crypto-perp'
 
 export interface AssetClassTab {
   id: AssetClassFilter
@@ -38,9 +43,11 @@ export interface AssetClassTab {
 // The id IS the instrument `assetClass` the discovery filter is called with
 // (except 'all'), so 'prediction' is singular even though the tab reads
 // "Predictions" — a plural id would filter for a class no instrument carries.
+// 'crypto-perp' is spelled the connectors' way for exactly the same reason.
 export const ASSET_CLASSES: Array<AssetClassTab> = [
   { id: 'all', label: 'All', icon: LayoutGrid },
   { id: 'crypto', label: 'Crypto', icon: Bitcoin },
+  { id: 'crypto-perp', label: 'Futures', icon: Layers },
   { id: 'stocks', label: 'Stocks', icon: TrendingUp },
   { id: 'prediction', label: 'Predictions', icon: Vote },
 ]

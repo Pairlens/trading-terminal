@@ -6,7 +6,7 @@ parent: trading
 order: 7
 eyebrow: For traders
 updated: AUG 2026
-readTime: 4 min read
+readTime: 5 min read
 ---
 
 Three panels answer "what do I actually hold and what is still working". All
@@ -24,10 +24,18 @@ Four tabs, bound to whichever connected account you select in the panel header.
 | **Fills**     | Trade history: side, pair, price, size, fee, and time             |
 | **Balances**  | Every asset on the account, with a total in your display currency |
 
-**The Positions tab is empty on purpose.** Pairlens trades spot. Spot has no
-margin positions, so rather than showing a plausible-looking table with nothing
-in it, the tab says "Spot mode, no margin positions". What you hold is under
-Balances.
+**The Positions tab is empty on purpose.** This panel reads a spot account,
+and spot has no margin positions, so rather than showing a plausible-looking
+table with nothing in it, the tab says "Spot mode, no margin positions". What
+you hold is under Balances.
+
+Leveraged positions live in their own panel. **Futures Positions** lists your
+open perpetuals with entry price, mark, liquidation level and unrealized P&L,
+and **Prediction Positions** lists event contracts. Both are separate panels
+rather than tabs here, because a position with a liquidation price and a
+contract that expires against a real-world event have different columns than a
+spot balance. See [perpetual futures](/docs/cex-futures) and
+[prediction markets](/docs/prediction-markets).
 
 **Orders can be cancelled from the row.** A confirmation names the side and the
 pair before anything is sent, because a misclick here is not recoverable. Order

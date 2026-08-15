@@ -41,9 +41,11 @@ import { clampTimeframeToVenue } from '@/lib/chart-timeframes'
 import { getOrderEvents, upsertOrderEvent } from '@/stores/order-events-store'
 import {
   clearBalancesForCredential,
+  clearBalancesForScope,
   dexBalanceCredentialKey,
   getBalances,
   upsertBalance,
+  venueBalanceCredentialKey,
 } from '@/stores/balances-store'
 import {
   USD_PEGGED,
@@ -52,6 +54,13 @@ import {
   priceUsdFor,
 } from '@/lib/risk/position-size'
 import { normalizePairKey } from '@/lib/pairs'
+import { contractSizeFor } from '@/lib/futures/contract-size'
+import {
+  balanceScopeFor,
+  credentialAliasEntries,
+  setCredentialAliasSource,
+  setCredentialAliases,
+} from '@/lib/venues/credential-alias'
 import { track } from '@/lib/analytics-events'
 import {
   CREDENTIAL_SCHEMAS,
@@ -322,6 +331,18 @@ export function getConnectorAdapterInfo(
   // adapter that would tell them is exactly the thing that cannot start.
   const credentialedMarketData = meta?.['credentialedMarketData'] === true
 
+  // Perpetual-futures venues: how far the leverage selector may go. Validated
+  // the way `marketOrders` is — a nonsense value is dropped rather than handed
+  // to a control that would build a slider out of it, because "max leverage
+  // NaN" is how a ticket ends up offering 0x or Infinity.
+  const rawMaxLeverage = meta?.['maxLeverage']
+  const maxLeverage =
+    typeof rawMaxLeverage === 'number' &&
+    Number.isFinite(rawMaxLeverage) &&
+    rawMaxLeverage > 0
+      ? rawMaxLeverage
+      : undefined
+
   const hasTradingCap = plugin.manifest.capabilities.some(
     (c) => c.id === 'trading:orders',
   )
@@ -341,9 +362,34 @@ export function getConnectorAdapterInfo(
     triggerOrders,
     limitOnly,
     ...(marketOrders ? { marketOrders } : {}),
+    ...(maxLeverage !== undefined ? { maxLeverage } : {}),
     requiresDesktop,
     credentialedMarketData,
   }
+}
+
+/**
+ * Every installed connector one credential provisions.
+ *
+ * Historically exactly one: `${market}-market-connector`. A futures venue may
+ * also declare `metadata.credentialAlias` naming the SPOT venue whose key it
+ * shares — Binance Futures rides the Binance key, KuCoin Futures the KuCoin
+ * one — so a single entry in Accounts lights up both. Two connector slots and
+ * two authenticated instances, unavoidably, but one thing for the user to
+ * paste. Kraken Futures deliberately declares no alias: its API keys are
+ * issued separately from spot Kraken's, so it carries its own credential
+ * schema instead.
+ */
+function connectorsForCredential(
+  installed: Array<PluginInstance>,
+  market: string,
+): Array<PluginInstance> {
+  const primaryId = `${market}-market-connector`
+  return installed.filter(
+    (p) =>
+      p.manifest.id === primaryId ||
+      p.manifest.metadata?.['credentialAlias'] === market,
+  )
 }
 
 /** Map a normalized connector order update into the local order journal. */
@@ -437,8 +483,23 @@ type MarketDataProviderProps = {
   children: React.ReactNode
 }
 
+/** What one (credential, connector) pair currently holds open. */
+type ProvisionSlot = {
+  signature: string
+  /** The balance namespace this connector writes to. */
+  balanceScope: string
+  unsubs: Array<() => void>
+}
+
 export function MarketDataProvider({ children }: MarketDataProviderProps) {
-  const { pluginManager, pluginsReady } = usePairlens()
+  const { pluginManager, pluginsReady, pluginStateVersion } = usePairlens()
+  // Registered during render, not from the effect below: every consumer of the
+  // alias map is a DESCENDANT of this provider, so their first render lands
+  // before any effect here could have filled it, and a cold map answers "no
+  // account here" for a venue the user has already connected.
+  setCredentialAliasSource(() =>
+    credentialAliasEntries(pluginManager.getActivePlugins()),
+  )
   const [availableMarkets, setAvailableMarkets] = useState<
     Array<MarketAdapterInfo>
   >([])
@@ -483,14 +544,59 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
 
   // Derive available markets from active connector plugins
   const refreshMarkets = useCallback(() => {
-    const active = pluginManager.getActivePlugins()
     const markets: Array<MarketAdapterInfo> = []
-    for (const p of active) {
+    // Same pass, same manifests, same resolved market id: which venue borrows
+    // which venue's credential is collected here so that a lookup anywhere
+    // else is always at least as fresh as the venue table rendered beside it.
+    const aliases: Array<[string, string]> = []
+    for (const p of pluginManager.getActivePlugins()) {
       const info = getConnectorAdapterInfo(p)
-      if (info) markets.push(info)
+      if (!info) continue
+      markets.push(info)
+      const alias = p.manifest.metadata?.['credentialAlias']
+      if (typeof alias === 'string' && alias.length > 0) {
+        aliases.push([info.marketId, alias])
+      }
     }
+    setCredentialAliases(aliases)
     setAvailableMarkets(markets)
   }, [pluginManager])
+
+  /**
+   * credentialId → pluginId → what that connector currently holds.
+   *
+   * Two levels, because one credential now provisions more than one connector
+   * and they come and go independently: a futures connector can be disabled in
+   * the Plugin Store while its spot sibling keeps streaming from the same key.
+   * Flat, the teardown for either took both down.
+   *
+   * The signature is everything the connector reads at initialize that decides
+   * routing. Not a plain "provisioned" flag: a credential can be EDITED in
+   * place (its account entity, its mode, a rotated key), and keyed by identity
+   * alone that edit would sit in the store while every order kept going to the
+   * old endpoint until a reload. It carries no secret the store does not
+   * already hold in memory.
+   *
+   * `balanceScope` rides along because teardown has to clear the namespace
+   * this connector wrote to, and for an aliased venue that is not the bare
+   * credential id.
+   */
+  const provisionedRef = useRef(new Map<string, Map<string, ProvisionSlot>>())
+
+  /** Drop one connector's streams and balances; nothing else the key reaches. */
+  const teardownPlugin = useCallback((credId: string, pluginId: string) => {
+    const byPlugin = provisionedRef.current.get(credId)
+    const entry = byPlugin?.get(pluginId)
+    if (!byPlugin || !entry) return
+    for (const unsub of entry.unsubs) unsub()
+    byPlugin.delete(pluginId)
+    if (byPlugin.size === 0) provisionedRef.current.delete(credId)
+    // A venue that borrows this key records its balances under its OWN
+    // namespace (a futures margin balance is not the spot balance), and until
+    // this cleared them a disabled futures connector left stale margin figures
+    // on screen with nothing behind them.
+    clearBalancesForScope(entry.balanceScope)
+  }, [])
 
   // Listen for plugin lifecycle events
   useEffect(() => {
@@ -500,15 +606,15 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       onActivated: () => refreshMarkets(),
       onDeactivated: (pluginId) => {
         refreshMarkets()
-        // Clean up credential subscriptions for deactivated plugin
-        const currentCredentials = useCredentialsStore.getState().credentials
-        for (const [credId, unsubs] of credentialUnsubsRef.current) {
-          const cred = currentCredentials.find((c) => c.id === credId)
-          if (cred && `${cred.market}-market-connector` === pluginId) {
-            for (const u of unsubs) u()
-            credentialUnsubsRef.current.delete(credId)
-            provisionedIdsRef.current.delete(credId)
-          }
+        // Only THIS plugin's streams. A credential now provisions more than
+        // one connector, and tearing down the whole credential took the
+        // surviving sibling's order and balance sockets down with it, with
+        // nothing to wire them back: the provisioning effect skips a
+        // credential whose signature it already holds. Dropping the entry
+        // per plugin is what lets the effect re-provision exactly the one
+        // that came back.
+        for (const credId of [...provisionedRef.current.keys()]) {
+          teardownPlugin(credId, pluginId)
         }
         // Clean up wallet provision keys for deactivated plugin
         for (const key of walletProvisionedRef.current) {
@@ -521,10 +627,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
     }
     pluginManager.addLifecycleListener(listener)
     return () => pluginManager.removeLifecycleListener(listener)
-  }, [pluginManager, refreshMarkets])
-
-  // Per-credential unsub functions (trading:orders WS + trading:balances WS)
-  const credentialUnsubsRef = useRef(new Map<string, Array<() => void>>())
+  }, [pluginManager, refreshMarkets, teardownPlugin])
 
   // Auto-provision ALL credentials to their connector plugins.
   // Each credential gets its own private WS connection for order updates
@@ -532,16 +635,6 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
   const credentials = useCredentialsStore((s) => s.credentials)
   const credentialsLoaded = useCredentialsStore((s) => s.loaded)
   const loadCredentials = useCredentialsStore((s) => s.load)
-  /**
-   * credentialId → the provisioning signature the connector currently holds.
-   *
-   * Not a Set of ids: a credential can be EDITED in place (its account entity,
-   * its mode, a rotated key), and those decide which host the connector signs
-   * and streams against. Keyed by id alone, an edit would sit in the store
-   * while every order kept going to the old endpoint until a reload. The
-   * signature carries no secret the store doesn't already hold in memory.
-   */
-  const provisionedIdsRef = useRef(new Map<string, string>())
 
   useEffect(() => {
     loadCredentials()
@@ -556,57 +649,120 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
     const signatureOf = (cred: (typeof credentials)[number]) =>
       `${cred.market}|${cred.mode}|${cred.entity ?? ''}|${cred.apiKey}`
 
-    /** Drop this credential's streams; the slot is about to go or be rebuilt. */
-    const teardown = (id: string) => {
+    // Deprovision removed credentials. The balance clear is by credential
+    // rather than by scope: every venue this key reached goes with it, and the
+    // credential is already out of the store, so its aliases cannot be derived
+    // from it any more.
+    for (const [id, byPlugin] of [...provisionedRef.current]) {
+      if (currentIds.has(id)) continue
+      for (const entry of byPlugin.values()) {
+        for (const unsub of entry.unsubs) unsub()
+      }
+      provisionedRef.current.delete(id)
       clearBalancesForCredential(id)
-      const unsubs = credentialUnsubsRef.current.get(id)
-      if (unsubs) {
-        for (const u of unsubs) u()
-        credentialUnsubsRef.current.delete(id)
-      }
-    }
-
-    // Deprovision removed credentials
-    for (const id of [...provisionedIdsRef.current.keys()]) {
-      if (!currentIds.has(id)) {
-        provisionedIdsRef.current.delete(id)
-        teardown(id)
-      }
     }
 
     for (const cred of credentials) {
       const signature = signatureOf(cred)
-      const provisioned = provisionedIdsRef.current.get(cred.id)
-      if (provisioned === signature) continue
+      const connectors = connectorsForCredential(
+        pluginManager.getInstalledPlugins(),
+        cred.market,
+      ).filter((p) => p.initialize)
+      const byPlugin =
+        provisionedRef.current.get(cred.id) ?? new Map<string, ProvisionSlot>()
 
-      const connectorId = `${cred.market}-market-connector`
-      const plugin = pluginManager
-        .getInstalledPlugins()
-        .find((p) => p.manifest.id === connectorId)
-      if (!plugin?.initialize) continue
+      // A connector that no longer serves this credential (uninstalled, or the
+      // credential's own market was edited) keeps neither its streams nor its
+      // balances.
+      const serving = new Set(connectors.map((p) => p.manifest.id))
+      for (const pluginId of [...byPlugin.keys()]) {
+        if (!serving.has(pluginId)) teardownPlugin(cred.id, pluginId)
+      }
+      if (connectors.length === 0) continue
 
-      // An edited credential is re-provisioned, not provisioned twice: drop
-      // the sockets opened against the previous endpoint first. The connector
-      // destroys the old private WS itself when the slot is rebuilt, but the
-      // unsub closures held here would otherwise leak and double-subscribe.
-      if (provisioned !== undefined) teardown(cred.id)
+      for (const plugin of connectors) {
+        if (byPlugin.get(plugin.manifest.id)?.signature === signature) continue
 
-      provisionedIdsRef.current.set(cred.id, signature)
+        // The venue this connector IS, which for an aliased futures venue is
+        // not `cred.market`. Everything downstream is scoped by it: the
+        // capability context that decides which plugin answers, the market
+        // stamped on order journal entries, and the balance namespace.
+        const venueMarket =
+          getConnectorAdapterInfo(plugin)?.marketId ?? cred.market
+        const aliased = venueMarket !== cred.market
 
-      plugin
-        .initialize({
-          ...plugin.config,
-          credentialId: cred.id,
-          apiKey: cred.apiKey,
-          apiSecret: cred.apiSecret,
-          passphrase: cred.passphrase ?? '',
-          // Account-entity override (e.g. OKX) — the connector routes this
-          // credential's calls to its home entity instead of by country.
-          entity: cred.entity ?? '',
-          mode: cred.mode,
-          country: getCountrySetting(),
-        })
+        // An edited credential is re-provisioned, not provisioned twice: drop
+        // the sockets opened against the previous endpoint first. The connector
+        // destroys the old private WS itself when the slot is rebuilt, but the
+        // unsub closures held here would otherwise leak and double-subscribe.
+        // Before the paper check below, not after, so that switching a
+        // credential to paper actually CLOSES a live-mode alias connector
+        // rather than leaving it streaming under a stale signature.
+        teardownPlugin(cred.id, plugin.manifest.id)
+
+        // A venue with no sandbox of its own cannot serve a paper account, and
+        // the alias fan-out would otherwise provision it against the venue's
+        // PRODUCTION host from a credential the user labelled paper. Nothing
+        // to show for that venue in paper mode is the honest outcome; real
+        // money behind a paper label is not. The primary connector is
+        // unaffected: `mode` is its own credential's, chosen deliberately.
+        if (
+          aliased &&
+          cred.mode === 'paper' &&
+          plugin.manifest.metadata?.['paperTrading'] === false
+        ) {
+          continue
+        }
+
+        const entry: ProvisionSlot = {
+          signature,
+          balanceScope: aliased
+            ? venueBalanceCredentialKey(cred.id, venueMarket)
+            : cred.id,
+          unsubs: [],
+        }
+        const slots =
+          provisionedRef.current.get(cred.id) ??
+          new Map<string, ProvisionSlot>()
+        slots.set(plugin.manifest.id, entry)
+        provisionedRef.current.set(cred.id, slots)
+
+        provisionConnector(plugin, cred, venueMarket, entry)
+      }
+    }
+
+    /** One connector, one credential — initialize, then wire its streams. */
+    function provisionConnector(
+      plugin: PluginInstance,
+      cred: (typeof credentials)[number],
+      venueMarket: string,
+      slot: ProvisionSlot,
+    ): void {
+      const { balanceScope } = slot
+      plugin.initialize!({
+        ...plugin.config,
+        credentialId: cred.id,
+        apiKey: cred.apiKey,
+        apiSecret: cred.apiSecret,
+        passphrase: cred.passphrase ?? '',
+        // Account-entity override (e.g. OKX) — the connector routes this
+        // credential's calls to its home entity instead of by country.
+        entity: cred.entity ?? '',
+        mode: cred.mode,
+        country: getCountrySetting(),
+      })
         .then(() => {
+          // A teardown that landed while `initialize` was in flight — a second
+          // credential edit, or the connector being disabled — already dropped
+          // this slot. Wiring it now would open sockets that nothing holds an
+          // unsubscribe for.
+          if (
+            provisionedRef.current.get(cred.id)?.get(plugin.manifest.id) !==
+            slot
+          ) {
+            return
+          }
+
           // Connectors whose MARKET DATA needs credentials (Alpaca: no public
           // feed) are subscribed to before the vault is unlocked, so their
           // first subscribe threw and the pane has been spinning ever since.
@@ -622,7 +778,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
           const unsubs: Array<() => void> = []
 
           pluginManager.setContext({
-            market: cred.market,
+            market: venueMarket,
             mode: cred.mode as 'paper' | 'live',
             country: getCountrySetting(),
           })
@@ -637,7 +793,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
                 if (!order?.orderId) return
                 recordOrderEvent(
                   order,
-                  cred.market,
+                  venueMarket,
                   cred.mode as 'paper' | 'live',
                 )
 
@@ -681,20 +837,20 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
                 if (!order.orderId) continue
                 recordOrderEvent(
                   order,
-                  cred.market,
+                  venueMarket,
                   cred.mode as 'paper' | 'live',
                 )
               }
             })
             .catch((err) =>
               console.warn(
-                `[market-data] Order history backfill failed for ${cred.market}:`,
+                `[market-data] Order history backfill failed for ${venueMarket}:`,
                 err,
               ),
             )
 
           // REST backfill — fetch account balances
-          fetchBalancesForCredential(cred.market, cred.id)
+          fetchBalancesForCredential(venueMarket, cred.id, balanceScope)
 
           // Subscribe to real-time balance updates via private WS
           try {
@@ -713,8 +869,8 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
                     available: b.available,
                     frozen: b.frozen,
                     total: b.total,
-                    market: cred.market,
-                    credentialId: cred.id,
+                    market: venueMarket,
+                    credentialId: balanceScope,
                     updatedAt: Date.now(),
                   })
                 }
@@ -725,16 +881,32 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
             // Plugin doesn't support streaming trading:balances
           }
 
-          credentialUnsubsRef.current.set(cred.id, unsubs)
+          // Into this connector's own slot, which was created empty for THIS
+          // provisioning. Appending to a per-credential list is what let two
+          // rapid credential edits leave the first edit's subscription live
+          // alongside the second's.
+          slot.unsubs.push(...unsubs)
         })
         .catch((err) =>
           console.warn(
-            `[market-data] Credential provisioning failed for ${cred.market}:`,
+            `[market-data] Credential provisioning failed for ${venueMarket}:`,
             err,
           ),
         )
     }
-  }, [credentials, credentialsLoaded, pluginsReady, pluginManager]) // deps intentionally scoped: re-provision only when credentials/readiness change
+    // `pluginStateVersion` is what re-runs this after a connector is enabled
+    // or disabled in the Plugin Store. Without it the teardown above was
+    // one-way: the deactivated plugin's slot was dropped and nothing ever
+    // provisioned it again, so re-enabling a connector left it authenticated
+    // by nothing until a reload.
+  }, [
+    credentials,
+    credentialsLoaded,
+    pluginsReady,
+    pluginManager,
+    pluginStateVersion,
+    teardownPlugin,
+  ])
 
   // ── Wallet provisioning (DEX) ───────────────────────────────────────
   // For each crypto wallet, find all active DEX plugins that match its
@@ -1416,19 +1588,43 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
             type === 'limit' && priceParam > 0
               ? priceParam
               : cachedLastPrice(muxRef.current, market, pair)
+          // Base units per contract, for a perp venue whose contract is not
+          // one unit of the base (KuCoin's XBTUSDTM is 0.001 BTC). The ticket
+          // sends it as a hint, but the copilot and the bot runtime do not —
+          // and an order priced as if a 0.001 BTC contract were a whole one
+          // overstates its notional a thousandfold, which turns the position
+          // cap into a refusal of every legitimate KuCoin order. So the hint
+          // is preferred and the terminal's own lookup fills the gap.
+          const hinted = Number(params['contractSize'])
+          const contractSize =
+            Number.isFinite(hinted) && hinted > 0
+              ? hinted
+              : contractSizeFor(market, pair)
           const notionalUsd = orderNotionalUsd(
-            { pair, size: orderSize, quoteDenominated, price: refPrice },
+            {
+              pair,
+              size: orderSize,
+              quoteDenominated,
+              price: refPrice,
+              ...(contractSize > 0 ? { contractSize } : {}),
+            },
             priceUsd,
           )
           const credentialId =
             typeof params['credentialId'] === 'string'
               ? params['credentialId']
               : undefined
+          // Venue-scoped, because a futures connector records its margin
+          // balances under `${credentialId}@${venue}`. Measured against the
+          // bare id, a futures-only account's portfolio reads as zero, and a
+          // zero denominator disables the cap entirely — the guard fails open
+          // exactly where leverage makes it matter most.
           const balanceScope =
-            credentialId ??
-            (walletId != null
-              ? dexBalanceCredentialKey(walletId, market)
-              : undefined)
+            credentialId != null
+              ? balanceScopeFor(credentialId, market)
+              : walletId != null
+                ? dexBalanceCredentialKey(walletId, market)
+                : undefined
           const { exceeds, ratioPct } = evaluatePositionSize(
             notionalUsd,
             portfolioValueUsdFor(balanceScope, priceUsd),
@@ -1451,10 +1647,12 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         const clientOrderId =
           (params['clientOrderId'] as string | undefined) ??
           crypto.randomUUID().replace(/-/g, '')
-        // `analyticsSource` is client-side telemetry routing — never forward
-        // it to connector plugins.
+        // `analyticsSource` is client-side telemetry routing and
+        // `contractSize` is the risk guard's own hint — neither is an order
+        // parameter, so neither is forwarded to connector plugins.
         const orderParams = { ...params }
         delete orderParams['analyticsSource']
+        delete orderParams['contractSize']
         const result = (await pluginManager.execute('trading:orders', {
           ...orderParams,
           clientOrderId,
@@ -1535,14 +1733,21 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
   )
 
   const fetchBalancesForCredential = useCallback(
-    (market: string, credentialId: string) => {
+    /**
+     * `credentialId` addresses the connector's slot; `scope` is where the
+     * records land in the store, and defaults to the same value. They differ
+     * only for an aliased venue, whose margin balances must not overwrite the
+     * spot balances held under the same key.
+     */
+    (market: string, credentialId: string, scope?: string) => {
+      const balanceScope = scope ?? credentialId
       pluginManager.setContext({ market, country: getCountrySetting() })
       pluginManager
         .execute('trading:balances', { action: 'fetch', credentialId })
         .then((result) => {
           const records = result as Array<NormalizedBalance>
           if (!Array.isArray(records)) return
-          clearBalancesForCredential(credentialId)
+          clearBalancesForCredential(balanceScope)
           for (const b of records) {
             upsertBalance({
               currency: b.currency,
@@ -1550,7 +1755,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
               frozen: b.frozen,
               total: b.total,
               market,
-              credentialId,
+              credentialId: balanceScope,
               updatedAt: Date.now(),
             })
           }

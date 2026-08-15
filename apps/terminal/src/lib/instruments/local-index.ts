@@ -18,6 +18,7 @@ import {
   readCachedVenueListings,
   readCcxtKv,
 } from '@pairlens/plugins/ccxt-connector'
+import { readCachedFuturesListings } from '@pairlens/plugins/ccxt-futures-connector'
 import type {
   Instrument,
   InstrumentPage,
@@ -95,12 +96,20 @@ export function rebuildLocalInstrumentIndex(
   if (building) return building
   building = (async () => {
     try {
-      const [catalog, venueTables, snapshot] = await Promise.all([
-        fetchCatalog(manager),
-        readCachedVenueListings().catch(() => []),
-        readSnapshot(),
-      ])
-      publish(buildIndex(catalog, venueTables, snapshot))
+      // Perpetual contracts come only from the futures venues' own cached
+      // market tables: the curated catalog is spot-shaped and the server
+      // snapshot's schema is spot-only, so a perp that is not in a locally
+      // cached futures table is genuinely not searchable yet. Their keys carry
+      // a settle leg, so they can never collide with a spot row.
+      const [catalog, venueTables, futuresTables, snapshot] = await Promise.all(
+        [
+          fetchCatalog(manager),
+          readCachedVenueListings().catch(() => []),
+          readCachedFuturesListings().catch(() => []),
+          readSnapshot(),
+        ],
+      )
+      publish(buildIndex(catalog, venueTables, futuresTables, snapshot))
     } finally {
       building = null
     }
@@ -139,6 +148,7 @@ async function readSnapshot(): Promise<InstrumentsIndexSnapshot | null> {
 function buildIndex(
   catalog: Array<Instrument>,
   venueTables: Awaited<ReturnType<typeof readCachedVenueListings>>,
+  futuresTables: Awaited<ReturnType<typeof readCachedFuturesListings>>,
   snapshot: InstrumentsIndexSnapshot | null,
 ): LocalInstrumentIndex {
   const bySymbol = new Map<string, IndexedInstrument>()
@@ -223,6 +233,37 @@ function buildIndex(
       // The local table is authoritative for its venue: drop any snapshot
       // claim so the merged view never double-counts or contradicts it.
       delete entry.snapshotVenues[table.venue]
+    }
+  }
+
+  // Perpetual contracts. Same merge, one difference that matters: the row is
+  // created with `assetClass: 'crypto-perp'` and its symbol is the
+  // three-segment key, so the picker's futures tab has something to filter on
+  // and a perp never lands on the spot row for the same base asset.
+  for (const table of futuresTables) {
+    venueSavedAt[table.venue] = table.savedAt
+    for (const row of table.listings) {
+      let entry = bySymbol.get(row.symbol)
+      if (!entry) {
+        entry = add(
+          {
+            id: row.symbol,
+            kind: 'cex-pair',
+            market: '',
+            symbol: row.symbol,
+            name: `${row.base} perpetual`,
+            base: row.base,
+            quote: row.quote,
+            assetClass: 'crypto-perp',
+            categories: [],
+            rank: 1_000_000,
+            featured: false,
+          },
+          false,
+        )
+      }
+      if (entry.inst.kind !== 'cex-pair') continue
+      entry.venues[table.venue] = row.marketId
     }
   }
 

@@ -2188,7 +2188,8 @@
     "recentTickers": "เหรียญล่าสุด",
     "empty": "ว่างเปล่า",
     "events": "เหตุการณ์",
-    "predictionPositions": "สถานะการคาดการณ์"
+    "predictionPositions": "สถานะการคาดการณ์",
+    "futuresPositions": "สถานะฟิวเจอร์ส"
   },
   "paneDescriptions": {
     "markets": "เรียกดูคู่เทรดทั้งหมดที่มีในทุกตลาดแลกเปลี่ยน",
@@ -2216,7 +2217,8 @@
     "liquidityHeatmap": "ฮีตแมปสภาพคล่องของสมุดคำสั่งที่แสดงความลึกในแต่ละระดับราคาตามเวลา",
     "recentTickers": "คู่เทรดที่ดูล่าสุดพร้อมราคาสดสำหรับสลับดูได้อย่างรวดเร็ว",
     "events": "เรียกดูเหตุการณ์ในตลาดคาดการณ์และเปิดกราฟของผลลัพธ์",
-    "predictionPositions": "สัญญาที่คุณถืออยู่ ต้นทุน และเวลาที่จะรู้ผล"
+    "predictionPositions": "สัญญาที่คุณถืออยู่ ต้นทุน และเวลาที่จะรู้ผล",
+    "futuresPositions": "สถานะถาวรที่เปิดอยู่ ราคามาร์กและระดับการบังคับปิด"
   },
   "multiPrice": {
     "venue": "ตลาด",
@@ -2806,6 +2808,22 @@
       "pairlens-predictions": {
         "title": "Pairlens การคาดการณ์",
         "description": "ตัวเรียกดูเหตุการณ์และสถานะสัญญาที่เปิดอยู่สำหรับตลาดคาดการณ์"
+      },
+      "binance-futures-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Binance Futures",
+        "description": "สัญญาฟิวเจอร์สถาวรบน Binance Futures สถานะซื้อและขายแบบมีเลเวอเรจ ชำระราคาด้วย USDT"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด KuCoin Futures",
+        "description": "สัญญาฟิวเจอร์สถาวรบน KuCoin Futures สถานะซื้อและขายแบบมีเลเวอเรจ ชำระราคาด้วย USDT"
+      },
+      "kraken-futures-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด Kraken Futures",
+        "description": "สัญญาฟิวเจอร์สถาวรบน Kraken Futures สถานะซื้อและขายแบบมีเลเวอเรจ ชำระราคาด้วย USD"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens ฟิวเจอร์ส",
+        "description": "สถานะถาวรที่เปิดอยู่ พร้อมราคาเข้า ราคามาร์ก และระดับบังคับปิด"
       }
     },
     "families": {
@@ -2840,6 +2858,10 @@
       "themes": {
         "label": "ธีม",
         "description": "ธีมภาพสำหรับอินเทอร์เฟซและชุดสีกราฟ"
+      },
+      "cexFutures": {
+        "label": "ฟิวเจอร์สคริปโท",
+        "description": "ตลาดสัญญาฟิวเจอร์สถาวรสำหรับสถานะคริปโทแบบมีเลเวอเรจ"
       }
     },
     "familyToggleAria": "เปิดหรือปิดปลั๊กอิน{{family}}ทั้งหมด",
@@ -2960,7 +2982,12 @@
       "thisOutcome": "ผลลัพธ์นี้",
       "decreaseContracts": "ลดหนึ่งสัญญา",
       "increaseContracts": "เพิ่มหนึ่งสัญญา",
-      "priceCentsRange": "กรอกราคาระหว่าง 0¢ ถึง 100¢"
+      "priceCentsRange": "กรอกราคาระหว่าง 0¢ ถึง 100¢",
+      "leverage": "เลเวอเรจ",
+      "reduceOnly": "ลดสถานะเท่านั้น",
+      "reduceOnlyHint": "ลดสถานะที่เปิดอยู่เท่านั้น และจะไม่เปิดฝั่งตรงข้าม",
+      "notional": "มูลค่าตามสัญญา",
+      "estLiquidation": "ราคาบังคับปิดโดยประมาณ"
     },
     "status": {
       "connecting": "กำลังเชื่อมต่อ…",
@@ -4034,7 +4061,8 @@
       "all": "ทั้งหมด",
       "crypto": "คริปโต",
       "stocks": "หุ้น",
-      "prediction": "การคาดการณ์"
+      "prediction": "การคาดการณ์",
+      "crypto-perp": "ฟิวเจอร์ส"
     },
     "category": {
       "all": "ทั้งหมด",
@@ -4047,7 +4075,9 @@
       "infrastructure": "โครงสร้างพื้นฐาน"
     },
     "predictionsEmptyTitle": "ผลลัพธ์การคาดการณ์อยู่ในแผง เหตุการณ์",
-    "predictionsEmptyBody": "ผลลัพธ์ถูกเปิดและปิดทุกวัน จึงเรียกดูจากกระดานของแพลตฟอร์มเองแทนที่จะเป็นแค็ตตาล็อก"
+    "predictionsEmptyBody": "ผลลัพธ์ถูกเปิดและปิดทุกวัน จึงเรียกดูจากกระดานของแพลตฟอร์มเองแทนที่จะเป็นแค็ตตาล็อก",
+    "futuresEmptyTitle": "เชื่อมต่อตลาดฟิวเจอร์สเพื่อเรียกดูสัญญาถาวร",
+    "futuresEmptyBody": "รายการสัญญามาจากตารางตลาดของแต่ละตลาดเอง จึงจะปรากฏเมื่อเชื่อมต่อกับตลาดนั้นได้แล้ว"
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -4922,7 +4952,8 @@
       "auto": "อัตโนมัติ",
       "bookLoading": "กำลังรอสมุดคำสั่ง…",
       "pressureBuy": "B {{pct}}%",
-      "pressureSell": "{{pct}}% S"
+      "pressureSell": "{{pct}}% S",
+      "baseEquivalent": "เทียบเท่าสินทรัพย์อ้างอิง"
     },
     "chart": {
       "pinned": "ปักหมุดแล้ว",
@@ -5036,7 +5067,9 @@
       "desktopOnlyVenues": "ต้องใช้แอปเดสก์ท็อป",
       "desktopOnlyVenue": "เดสก์ท็อปเท่านั้น",
       "predictions": "พยากรณ์",
-      "filterPredictions": "การคาดการณ์"
+      "filterPredictions": "การคาดการณ์",
+      "futures": "ฟิวเจอร์ส",
+      "filterFutures": "ฟิวเจอร์ส"
     }
   },
   "events": {
@@ -5070,5 +5103,28 @@
     "colCost": "ต้นทุน",
     "colResolves": "รู้ผล",
     "resolved": "รู้ผลแล้ว"
+  },
+  "futuresPositions": {
+    "connect": "เชื่อมต่อบัญชี",
+    "noAccountsTitle": "ยังไม่ได้เชื่อมต่อบัญชีฟิวเจอร์ส",
+    "noAccountsBody": "เพิ่มคีย์ API ของ Binance, KuCoin หรือ Kraken Futures เพื่อดูสถานะที่เปิดอยู่",
+    "loading": "กำลังโหลดสถานะ…",
+    "emptyTitle": "ไม่มีสถานะที่เปิดอยู่",
+    "emptyBody": "สถานะจะแสดงที่นี่ทันทีที่คำสั่งถูกจับคู่",
+    "colContract": "สัญญา",
+    "colSide": "ทิศทาง",
+    "colSize": "ขนาด",
+    "colEntry": "ราคาเข้า",
+    "colMark": "ราคามาร์ก",
+    "colLiquidation": "บังคับปิด",
+    "colLeverage": "เลเวอเรจ",
+    "colPnl": "กำไร/ขาดทุน",
+    "sideLong": "ลอง",
+    "sideShort": "ช็อต",
+    "close": "ปิด",
+    "closeTitle": "ปิดสถานะนี้หรือไม่",
+    "closeBody": "ส่งคำสั่งตลาดแบบลดสถานะเท่านั้นจำนวน {{contracts}} สัญญาของ {{pair}} บน {{venue}}",
+    "closeConfirm": "ปิดสถานะ",
+    "closeSubmitted": "ส่งคำสั่งปิดสถานะแล้ว"
   }
 }

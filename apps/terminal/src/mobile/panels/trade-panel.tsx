@@ -46,6 +46,19 @@ import type { MobileOrderType } from '../lib/order-draft-store'
 import type { ReactNode, RefObject } from 'react'
 import { haptic } from '@/lib/haptics'
 import { splitPairAssets } from '@/lib/pairs'
+import { formatAmount, formatPrice } from '@/lib/format-price'
+import { useContractSize } from '@/lib/futures/contract-size'
+import {
+  balanceScopeFor,
+  credentialsForMarket,
+} from '@/lib/venues/credential-alias'
+import {
+  clampLeverage,
+  contractsToBase,
+  estimateLiquidationPrice,
+  leveragePresets,
+  perpNotional,
+} from '@/lib/futures/ticket-math'
 import {
   useOptionalCandleData,
   useOptionalTickerData,
@@ -273,12 +286,23 @@ export default memo(function MobileTradePanel() {
   // allowlist, so a second stock broker inherits both the session controls
   // below and the USD quote here for free.
   const isEquities = marketInfo?.assetClasses?.includes('stocks') === true
+  // Perpetual futures. Independent of every flag above, exactly as on the
+  // desktop ticket: a perp venue is a CEX that takes API keys, so `usesWallet`
+  // stays false and the credential path is untouched. What it adds is
+  // leverage, a reduce-only intent and a size counted in contracts.
+  const isPerp = marketInfo?.assetClasses.includes('crypto-perp') ?? false
+  const maxLeverage = marketInfo?.maxLeverage ?? 1
 
   // Derived after the venue is known: a stock's key is the bare ticker, so its
   // quote cannot come from the string.
   const { base: baseAsset, quote: quoteAsset } = splitPairAssets(focusedPair, {
     equity: isEquities,
   })
+  const { contractSize, known: contractSizeKnown } = useContractSize(
+    focusedVenue,
+    focusedPair,
+  )
+  const showBaseEquivalent = isPerp && contractSizeKnown && contractSize !== 1
   const sizeAsset = sizeCcy === 'base' ? baseAsset : quoteAsset
   const venueLabel =
     marketInfo?.walletChain != null
@@ -287,8 +311,11 @@ export default memo(function MobileTradePanel() {
         marketInfo?.displayName ??
         focusedVenue.toUpperCase())
 
+  // Alias-resolved, like the desktop ticket: a futures venue signs with its
+  // spot sibling's key, so a raw market match finds nothing for
+  // `binance-futures` and the connect gate below fires on a connected account.
   const marketCreds = useMemo(
-    () => credentials.filter((c) => c.market === focusedVenue),
+    () => credentialsForMarket(credentials, focusedVenue),
     [credentials, focusedVenue],
   )
   const chainWallets = useMemo(
@@ -334,7 +361,9 @@ export default memo(function MobileTradePanel() {
     ? selectedWallet
       ? dexBalanceCredentialKey(selectedWallet.id, focusedVenue)
       : undefined
-    : selectedCred?.id
+    : selectedCred
+      ? balanceScopeFor(selectedCred.id, focusedVenue)
+      : undefined
   const availableBase = useBalance(baseAsset, balanceScope)
   const availableQuote = useBalance(quoteAsset, balanceScope)
   // A prediction pair key has no quote leg to read a balance for. Hooks cannot
@@ -371,6 +400,29 @@ export default memo(function MobileTradePanel() {
   useEffect(() => {
     if (!extendedHoursEligible && extendedHours) setExtendedHours(false)
   }, [extendedHoursEligible, extendedHours])
+
+  // ── Leverage + reduce-only (perps) ──
+  // Local state and never persisted, for the same reason extended hours is
+  // not: 25x inherited from last night is a decision nobody is making now,
+  // and a reduce-only flag carried onto a market with nothing open turns the
+  // next order into a rejection.
+  const [leverage, setLeverage] = useState(1)
+  // Whether the user MOVED the selector on this market and pair. Leverage is
+  // account state at the venue, not an order field: sending the ticket's
+  // default 1x would quietly rewrite a 20x symbol set up elsewhere, and would
+  // do it on orders that are only closing a position.
+  const [leverageDirty, setLeverageDirty] = useState(false)
+  const [reduceOnly, setReduceOnly] = useState(false)
+  useEffect(() => {
+    // Separate from the reset below: a venue switch can LOWER the ceiling, and
+    // a leverage above it is a rejection at submit rather than a UI problem.
+    setLeverage((current) => clampLeverage(current, maxLeverage))
+  }, [maxLeverage])
+  useEffect(() => {
+    setLeverage(1)
+    setLeverageDirty(false)
+    setReduceOnly(false)
+  }, [focusedVenue, focusedPair])
 
   // Seeding the price field from the live market is what puts the chart's
   // limit line where the user is looking instead of at zero. Seeded once per
@@ -508,6 +560,26 @@ export default memo(function MobileTradePanel() {
         ? sizeNumber * referencePrice
         : null
 
+  // ── Perp order figures ──
+  const perpBaseEquivalent =
+    showBaseEquivalent && sizeNumber > 0
+      ? contractsToBase(sizeNumber, contractSize)
+      : null
+  const perpNotionalValue = isPerp
+    ? perpNotional({
+        contracts: sizeNumber,
+        contractSize,
+        price: referencePrice,
+      })
+    : null
+  const perpLiquidation = isPerp
+    ? estimateLiquidationPrice({
+        entryPrice: referencePrice,
+        leverage,
+        side,
+      })
+    : null
+
   // The risk verdict is computed inside `TradeRiskRow`, not here: the hook
   // behind it subscribes a ticker per held asset and re-renders on each tick,
   // which in this fiber would wake the whole ticket at socket rate and undo
@@ -588,6 +660,32 @@ export default memo(function MobileTradePanel() {
               : sizeCcy === 'quote'
                 ? baseSizeAt(sizeNumber, price ?? 1)
                 : amount
+        }
+      } else if (isPerp) {
+        // Contracts, not base units, and no tgtCcy: ccxt's unified interface
+        // takes a contract count for contract markets, and there is no second
+        // leg to denominate the size in. Leverage rides per order (the
+        // connector sets it on the symbol first, idempotently); reduce-only
+        // only when asked for, so an opening order never carries it.
+        if (!selectedCred) return
+        params['credentialId'] = selectedCred.id
+        params['size'] = amount
+        // Leverage only on a deliberate choice, and never on a close: it is
+        // account state at the venue, not an order field. The contract size is
+        // the risk guard's hint and is sent only when the venue published one
+        // — passed as 1 on an unknown it would overstate a 0.001 BTC contract
+        // a thousandfold.
+        if (leverageDirty && !reduceOnly) params['leverage'] = leverage
+        if (contractSizeKnown) params['contractSize'] = contractSize
+        if (reduceOnly) params['reduceOnly'] = true
+        if (orderType === 'limit') {
+          params['type'] = 'limit'
+          params['price'] = limitPrice
+        } else if (orderType === 'stop') {
+          params['type'] = 'market'
+          params['trigger'] = { triggerPrice: stopPrice, triggerType: 'sl' }
+        } else {
+          params['type'] = 'market'
         }
       } else {
         if (!selectedCred) return
@@ -689,6 +787,12 @@ export default memo(function MobileTradePanel() {
     side,
     isDex,
     isPrediction,
+    isPerp,
+    leverage,
+    leverageDirty,
+    reduceOnly,
+    contractSize,
+    contractSizeKnown,
     predictionLimitPrice,
     usesWallet,
     selectedWallet,
@@ -802,9 +906,37 @@ export default memo(function MobileTradePanel() {
         </p>
       )}
 
+      {/* Leverage. Presets rather than a free field: the venue takes integers
+          inside its own ceiling, and the row ends AT that ceiling so the top
+          of the range is visible rather than implied. */}
+      {isPerp && maxLeverage > 1 ? (
+        <div className="flex gap-2">
+          {leveragePresets(maxLeverage).map((lev) => (
+            <button
+              className={cn(
+                'pl-press h-[31px] flex-1 rounded-[9px] border font-mono text-[12px] tabular-nums',
+                leverage === lev
+                  ? 'border-[color:var(--pl-edge-strong)] bg-[color:var(--pl-wash-heavy)] text-foreground'
+                  : 'border-[color:var(--pl-edge)] text-muted-foreground',
+              )}
+              key={lev}
+              onClick={() => {
+                haptic('selection')
+                setLeverage(lev)
+                setLeverageDirty(true)
+              }}
+              type="button"
+              {...PRESS}
+            >
+              {lev}x
+            </button>
+          ))}
+        </div>
+      ) : null}
+
       <NumericField
         label={
-          isPrediction
+          isPrediction || isPerp
             ? t('terminal.trade.contracts')
             : t('terminal.trade.amount')
         }
@@ -813,7 +945,7 @@ export default memo(function MobileTradePanel() {
           isPrediction ? (v) => setAmount(normalizeContracts(v)) : setAmount
         }
         unit={
-          isPrediction ? (
+          isPrediction || isPerp ? (
             <FieldUnit>{t('terminal.trade.contracts')}</FieldUnit>
           ) : (
             <button
@@ -838,8 +970,9 @@ export default memo(function MobileTradePanel() {
       />
 
       {/* Percent buttons. A share of a balance means nothing in contracts —
-          the prediction ticket steps whole counts instead. */}
-      <div className={cn('flex gap-2', isPrediction && 'hidden')}>
+          on a prediction ticket, and on a perp, where a sell opens a short
+          rather than spending a base balance. */}
+      <div className={cn('flex gap-2', (isPrediction || isPerp) && 'hidden')}>
         {PERCENTS.map((pct) => (
           <button
             className="pl-press h-[31px] flex-1 rounded-[9px] border border-[color:var(--pl-edge)] font-mono text-[12px] tabular-nums text-muted-foreground"
@@ -887,9 +1020,64 @@ export default memo(function MobileTradePanel() {
         </button>
       ) : null}
 
+      {/* Reduce-only. Same gesture-first haptic as the toggle above. The flag
+          the venue reads to shrink a position and refuse to flip it. */}
+      {isPerp ? (
+        <button
+          aria-pressed={reduceOnly}
+          className={cn(
+            'pl-press flex h-[31px] w-full items-center justify-between rounded-[9px] border px-2.5 text-[12px]',
+            reduceOnly
+              ? 'border-[color:var(--pl-edge-strong)] bg-[color:var(--pl-wash-heavy)] text-foreground'
+              : 'border-[color:var(--pl-edge)] text-muted-foreground',
+          )}
+          onClick={() => {
+            haptic('selection')
+            setReduceOnly(!reduceOnly)
+          }}
+          type="button"
+          {...PRESS}
+        >
+          <span>{t('terminal.trade.reduceOnly')}</span>
+          <span
+            className={cn(
+              'flex size-[15px] items-center justify-center rounded-[5px] border',
+              reduceOnly
+                ? 'border-transparent bg-foreground text-background'
+                : 'border-[color:var(--pl-edge-strong)]',
+            )}
+          >
+            {reduceOnly ? <Check className="size-2.5" strokeWidth={3} /> : null}
+          </span>
+        </button>
+      ) : null}
+
       {/* Summary */}
       <div className="flex flex-col gap-1 pt-0.5">
-        {isPrediction ? (
+        {isPerp ? (
+          <>
+            {perpBaseEquivalent !== null && (
+              <SummaryRow
+                label={t('mobile.trade.baseEquivalent')}
+                value={`${formatAmount(perpBaseEquivalent)} ${baseAsset}`}
+              />
+            )}
+            <SummaryRow
+              label={t('terminal.trade.notional')}
+              value={
+                perpNotionalValue == null
+                  ? '—'
+                  : `${perpNotionalValue.toFixed(2)} ${quoteAsset}`
+              }
+            />
+            <SummaryRow
+              label={t('terminal.trade.estLiquidation')}
+              value={
+                perpLiquidation == null ? '—' : formatPrice(perpLiquidation)
+              }
+            />
+          </>
+        ) : isPrediction ? (
           <SummaryRow
             label={t('terminal.trade.maxLoss')}
             value={maxLoss == null ? '—' : `$${maxLoss.toFixed(2)}`}
@@ -912,13 +1100,21 @@ export default memo(function MobileTradePanel() {
           value={
             isPrediction
               ? `${formatAvailable(collateral.total)} ${collateral.currency}`
-              : `${formatAvailable(
-                  side === 'sell' ? availableBase : availableQuote,
-                )} ${side === 'sell' ? baseAsset : quoteAsset}`
+              : isPerp
+                ? // Margin, not a base balance: a perp position is collateral
+                  // in the settle currency, and the base asset is never held.
+                  `${formatAvailable(availableQuote)} ${quoteAsset}`
+                : `${formatAvailable(
+                    side === 'sell' ? availableBase : availableQuote,
+                  )} ${side === 'sell' ? baseAsset : quoteAsset}`
           }
         />
         <TradeRiskRow
-          credentialId={selectedCred?.id}
+          contractSize={isPerp && contractSizeKnown ? contractSize : undefined}
+          // The venue-scoped key, not the bare id: a futures connector records
+          // its margin balances under its own namespace, and measured against
+          // the bare id a futures-only account reads as a portfolio of zero.
+          credentialId={usesWallet ? undefined : balanceScope}
           onBlocksChange={setRiskBlocks}
           pairKey={focusedPair}
           price={referencePrice}

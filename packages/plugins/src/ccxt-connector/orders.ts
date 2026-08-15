@@ -112,10 +112,16 @@ export function mapCcxtOrderStatus(
  * `takeProfitPrice` fields rather than from which endpoint the row arrived on,
  * so the tag is right whether the venue keeps trigger orders in a separate id
  * space or mixes them into the regular list.
+ *
+ * `symbolToPair` is the futures runtime's one seam. The spot default splits on
+ * `':'` and keeps the head, which is right for fourteen spot venues and wrong
+ * for a perp: a `BTC/USDT:USDT` fill reported as `BTC-USDT` merges into the
+ * SPOT pair's slot in the terminal's pair-keyed position ledger.
  */
 export function normalizeCcxtOrder(
   raw: CcxtOrderLike,
   fallbackPair = '',
+  symbolToPair: (symbol: string) => string = spotPairOf,
 ): NormalizedOrderUpdate {
   const filled = numberOf(raw['filled']) ?? 0
   const symbol = typeof raw['symbol'] === 'string' ? raw['symbol'] : ''
@@ -138,7 +144,7 @@ export function normalizeCcxtOrder(
   return {
     ...(triggerPrice ? { triggerOrder: true, triggerPrice } : {}),
     orderId: stringOf(raw['id']),
-    pair: symbol ? normalizePair(symbol.split(':')[0] ?? symbol) : fallbackPair,
+    pair: symbol ? symbolToPair(symbol) : fallbackPair,
     side: raw['side'] === 'sell' ? 'sell' : 'buy',
     type: raw['type'] === 'market' ? 'market' : 'limit',
     size: stringOf(raw['amount']),
@@ -151,6 +157,11 @@ export function normalizeCcxtOrder(
     ts: updated ?? timestamp ?? Date.now(),
     createdAt,
   }
+}
+
+/** The spot symbol→pair mapping: settlement suffixes dropped. */
+function spotPairOf(symbol: string): string {
+  return normalizePair(symbol.split(':')[0] ?? symbol)
 }
 
 /**
@@ -858,7 +869,12 @@ function slotSymbol(slot: CexSlot<CexCredentials>): string | undefined {
   return slot.currentPair ? toCcxtSymbol(slot.currentPair) : undefined
 }
 
-function callOrThrow<T extends (...args: Array<never>) => unknown>(
+/**
+ * Bind a ccxt method, or a thrower naming the venue. Shared with the futures
+ * runtime: the whole point is that a missing method comes back through the
+ * caller's try/catch as an `OrderResult`, never as an undefined call.
+ */
+export function callOrThrow<T extends (...args: Array<never>) => unknown>(
   method: T | undefined,
   self: unknown,
   message: string,
@@ -881,7 +897,8 @@ function asRecord(value: unknown): Record<string, unknown> {
     : {}
 }
 
-function numberOf(value: unknown): number | null {
+/** Finite number or null. Strings accepted — ccxt is not uniformly numeric. */
+export function numberOf(value: unknown): number | null {
   if (typeof value === 'number') return Number.isFinite(value) ? value : null
   if (typeof value === 'string' && value.trim() !== '') {
     const parsed = Number(value)
@@ -896,7 +913,7 @@ function numberOf(value: unknown): number | null {
  * real zero for the latter, and "no average fill price yet" is not "filled at
  * zero".
  */
-function stringOf(value: unknown): string {
+export function stringOf(value: unknown): string {
   if (value === undefined || value === null) return ''
   if (typeof value === 'string') return value
   if (typeof value === 'number')

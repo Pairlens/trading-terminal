@@ -5,7 +5,7 @@ group: traders
 order: 3
 eyebrow: For traders
 updated: AUG 2026
-readTime: 2 min read
+readTime: 3 min read
 ---
 
 Trading in Pairlens always follows the same path: your machine signs the
@@ -25,8 +25,12 @@ anything.
   without money at stake.
 - **[DEX and wallets](/docs/dex-trading).** Swapping on-chain on Solana and
   five EVM chains.
+- **[Prediction markets](/docs/prediction-markets).** Event contracts on Kalshi
+  and Polymarket, priced in cents.
 - **[Positions and portfolio](/docs/positions-and-portfolio).** Open orders,
   fills, balances, allocation, and the guardrail readout.
+- **[Perpetual futures](/docs/cex-futures).** Leverage, reduce-only orders and
+  contract sizing on three futures venues.
 
 ## The golden rule
 

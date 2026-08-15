@@ -54,9 +54,15 @@ describe('credential-gated market data recovers after unlock', () => {
 
   test('bumping cannot re-trigger provisioning', () => {
     // streamVersion in the provisioning effect's deps would loop: bump →
-    // re-provision → bump.
-    expect(provider).toContain(
-      '}, [credentials, credentialsLoaded, pluginsReady, pluginManager])',
+    // re-provision → bump. Read off the deps list itself rather than pinned to
+    // one spelling of it, because that list legitimately grows (it gained
+    // `pluginStateVersion`, which is what re-wires a connector the user
+    // re-enabled in the Plugin Store).
+    const deps = provider.match(
+      /\}, \[\s*credentials,\s*credentialsLoaded,[\s\S]*?\]\)/,
     )
+    expect(deps).not.toBeNull()
+    expect(deps![0]).not.toContain('streamVersion')
+    expect(deps![0]).toContain('pluginStateVersion')
   })
 })

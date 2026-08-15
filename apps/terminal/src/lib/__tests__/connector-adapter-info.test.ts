@@ -180,6 +180,96 @@ describe('getConnectorAdapterInfo — prediction venues', () => {
   })
 })
 
+describe('getConnectorAdapterInfo — futures venues', () => {
+  test('the perp asset class reaches assetClasses', () => {
+    for (const id of [
+      'binance-futures-market-connector',
+      'kucoin-futures-market-connector',
+      'kraken-futures-market-connector',
+    ]) {
+      expect(infoFor(id).assetClasses).toEqual(['crypto-perp'])
+    }
+  })
+
+  test('the venue id and display name survive the -market-connector strip', () => {
+    // The marketId is what the pair key, the credential alias and the
+    // positions fan-out all address the venue by, so a drift here is not
+    // cosmetic — it silently unlists the venue from every one of them.
+    expect(infoFor('binance-futures-market-connector').marketId).toBe(
+      'binance-futures',
+    )
+    expect(infoFor('kucoin-futures-market-connector').marketId).toBe(
+      'kucoin-futures',
+    )
+    expect(infoFor('kraken-futures-market-connector').marketId).toBe(
+      'kraken-futures',
+    )
+    expect(infoFor('binance-futures-market-connector').displayName).toBe(
+      'Binance Futures',
+    )
+  })
+
+  test('every futures venue publishes a leverage ceiling the ticket can clamp to', () => {
+    // Without it the leverage row would offer 1x only, which is not what any
+    // of these venues allow — and with a bad one it would offer 0x or
+    // Infinity, which is why the reader validates rather than trusts.
+    for (const id of [
+      'binance-futures-market-connector',
+      'kucoin-futures-market-connector',
+      'kraken-futures-market-connector',
+    ]) {
+      const max = infoFor(id).maxLeverage
+      expect(typeof max).toBe('number')
+      expect(max).toBeGreaterThan(1)
+    }
+    expect(infoFor('binance-futures-market-connector').maxLeverage).toBe(125)
+  })
+
+  test('a spot venue declares none, so no ticket grows a leverage row', () => {
+    expect(infoFor('binance-market-connector').maxLeverage).toBeUndefined()
+  })
+
+  test('maxLeverage is dropped when it is nonsense', () => {
+    // A stale connector value or a typo must not reach a control that builds
+    // a preset row out of it: `leveragePresets(NaN)` would render nothing and
+    // `leveragePresets(Infinity)` would never terminate its top entry.
+    for (const bogus of [0, -5, Number.NaN, Number.POSITIVE_INFINITY, '125']) {
+      expect(
+        getConnectorAdapterInfo(
+          asPlugin({ ...infoManifest(), metadata: { maxLeverage: bogus } }),
+        )?.maxLeverage,
+      ).toBeUndefined()
+    }
+  })
+
+  test('the two venues a browser cannot reach say so', () => {
+    // fapi.binance.com serves a wildcard CORS header; api-futures.kucoin.com
+    // sends none, and futures.kraken.com omits the origin header on both the
+    // preflight and the GET. Measured, not assumed.
+    expect(infoFor('binance-futures-market-connector').requiresDesktop).toBe(
+      false,
+    )
+    expect(infoFor('kucoin-futures-market-connector').requiresDesktop).toBe(
+      true,
+    )
+    expect(infoFor('kraken-futures-market-connector').requiresDesktop).toBe(
+      true,
+    )
+  })
+
+  test('the credential alias binds a futures venue to the spot key, where one exists', () => {
+    const alias = (id: string) =>
+      BOOTSTRAP_PLUGINS.find((p) => p.manifest.id === id)!.manifest.metadata?.[
+        'credentialAlias'
+      ]
+    expect(alias('binance-futures-market-connector')).toBe('binance')
+    expect(alias('kucoin-futures-market-connector')).toBe('kucoin')
+    // Kraken issues futures keys separately from spot, so an alias would
+    // silently sign with a key that cannot authenticate on futures.kraken.com.
+    expect(alias('kraken-futures-market-connector')).toBeUndefined()
+  })
+})
+
 /** A minimal venue manifest to vary one metadata field at a time. */
 function infoManifest(): PluginManifest {
   return {

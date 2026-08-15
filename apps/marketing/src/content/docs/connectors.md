@@ -1,22 +1,25 @@
 ---
 title: Connectors
-description: Every exchange connector in the Pairlens crypto trading terminal, 14 CEXs, Alpaca for US equities, Kalshi and Polymarket for event contracts, and DEX aggregators.
+description: Every exchange connector in the Pairlens crypto trading terminal, 14 spot CEXs, three perpetual futures venues, Alpaca for US equities, Kalshi and Polymarket for event contracts, and DEX aggregators.
 group: builders
 order: 4
 eyebrow: For builders
 updated: AUG 2026
-readTime: 3 min read
+readTime: 4 min read
 ---
 
 Market connectors are plugins that stream data and route orders directly
 between your machine and the venue. Pairlens ships with connectors for major
-centralized exchanges, a US equities broker, two prediction markets, and DEX
-aggregators on Solana and EVM chains.
+centralized exchanges, three perpetual futures venues, a US equities broker,
+two prediction markets, and DEX aggregators on Solana and EVM chains.
 
 ## Bundled connectors
 
 **Centralized exchanges (14).** OKX, Binance, ByBit, Bitvavo, MEXC, KuCoin,
-Gate, Bitget, Coinbase, Kraken, HTX, Crypto.com, Bitfinex, Upbit.
+Gate, Bitget, Coinbase, Kraken, HTX, Crypto.com, Bitfinex, Upbit. Spot only.
+
+**Perpetual futures (3).** Binance Futures, KuCoin Futures, Kraken Futures, for
+linear perpetual swaps. See [perpetual futures](/docs/cex-futures).
 
 **Brokers.** Alpaca, for US equities and ETFs.
 
@@ -29,15 +32,22 @@ Arbitrum, BNB Chain, and Polygon through the KyberSwap aggregator.
 **DEX data.** GeckoTerminal as primary and DexPaprika as fallback, both
 read-only.
 
-All 17 venues work in the desktop app. In a browser, 11 of them do: Coinbase,
-Gate, KuCoin, MEXC, Bitfinex, and Kalshi serve REST without CORS headers, so
-they require the desktop app and refuse cleanly with a clear message rather
-than presenting a dead chart.
+All 20 venues work in the desktop app. In a browser, 12 of them do: Coinbase,
+Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures, and Kraken Futures serve
+REST without CORS headers, so they require the desktop app and refuse cleanly
+with a clear message rather than presenting a dead chart. Binance Futures is
+the one perpetual venue a browser can reach.
 
 Every CEX connector is built from one shared factory,
 `createCexConnectorPlugin`, which is a base class rather than a plugin itself.
 Upbit is the exception on trigger orders: it has none, so stop-loss steps are
 refused there rather than faked.
+
+The three futures connectors ride a sibling factory,
+`createCcxtFuturesConnectorPlugin`, which reuses the same shell but forks
+symbol mapping, the market table and order building. A perpetual symbol carries
+a settle currency the spot mapper would drop, and a perpetual order is sized in
+contracts rather than in the base asset.
 
 The two prediction connectors ride a separate runtime with the same shape.
 Event contracts have no base and quote asset, no spot symbol, and a price that

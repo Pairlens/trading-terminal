@@ -23,6 +23,10 @@ import {
   createPairlensPredictionsPlugin,
   pairlensPredictionsManifest,
 } from '@pairlens/plugins/pairlens-predictions'
+import {
+  createPairlensCexFuturesPlugin,
+  pairlensCexFuturesManifest,
+} from '@pairlens/plugins/pairlens-cex-futures'
 // Every CEX venue runs on the CCXT bridge. Same plugin ids, same manifests —
 // only the subpath moved, and the ccxt exchange class behind each one is a
 // dynamic import, so no venue's chunk is in the entry graph.
@@ -97,6 +101,22 @@ import {
   createPolymarketMarketConnectorPlugin,
   polymarketMarketConnectorManifest,
 } from '@pairlens/plugins/prediction-connector/polymarket'
+// Perpetual-futures venues ride a sibling ccxt factory (ccxt-futures-
+// connector), not the spot bridge — the spot one assumes symbols, base/quote
+// and spot markets throughout. Same `-market-connector` id suffix, so the
+// credential binding and the marketId fallback regex keep working.
+import {
+  binanceFuturesMarketConnectorManifest,
+  createBinanceFuturesMarketConnectorPlugin,
+} from '@pairlens/plugins/ccxt-futures-connector/binance-futures'
+import {
+  createKucoinFuturesMarketConnectorPlugin,
+  kucoinFuturesMarketConnectorManifest,
+} from '@pairlens/plugins/ccxt-futures-connector/kucoin-futures'
+import {
+  createKrakenFuturesMarketConnectorPlugin,
+  krakenFuturesMarketConnectorManifest,
+} from '@pairlens/plugins/ccxt-futures-connector/kraken-futures'
 import {
   createDexpaprikaDataProviderPlugin,
   dexpaprikaDataProviderManifest,
@@ -200,6 +220,11 @@ export const BOOTSTRAP_CORE_PLUGINS: Array<BootstrapPlugin> = [
   {
     manifest: pairlensPredictionsManifest,
     factory: createPairlensPredictionsPlugin,
+  },
+  // Perpetual-futures panels. Panels-only for the same reason.
+  {
+    manifest: pairlensCexFuturesManifest,
+    factory: createPairlensCexFuturesPlugin,
   },
 ]
 
@@ -350,6 +375,18 @@ export const BOOTSTRAP_MARKET_CONNECTOR_PLUGINS: Array<BootstrapPlugin> = [
   {
     manifest: polymarketMarketConnectorManifest,
     factory: createPolymarketMarketConnectorPlugin,
+  },
+  {
+    manifest: binanceFuturesMarketConnectorManifest,
+    factory: createBinanceFuturesMarketConnectorPlugin,
+  },
+  {
+    manifest: kucoinFuturesMarketConnectorManifest,
+    factory: createKucoinFuturesMarketConnectorPlugin,
+  },
+  {
+    manifest: krakenFuturesMarketConnectorManifest,
+    factory: createKrakenFuturesMarketConnectorPlugin,
   },
 ]
 

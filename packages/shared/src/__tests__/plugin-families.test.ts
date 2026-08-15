@@ -40,9 +40,9 @@ describe('family table', () => {
 
   test('isPluginFamilyId accepts only declared ids', () => {
     expect(isPluginFamilyId('predictions')).toBe(true)
+    expect(isPluginFamilyId('cex-futures')).toBe(true)
     // Reserved but not shipped yet.
     expect(isPluginFamilyId('memes')).toBe(false)
-    expect(isPluginFamilyId('cex-futures')).toBe(false)
     expect(isPluginFamilyId(undefined)).toBe(false)
     expect(isPluginFamilyId(3)).toBe(false)
   })
@@ -112,8 +112,14 @@ describe('pluginFamilyOf', () => {
     expect(of('stocks')).toBe('equities')
     expect(of('dex')).toBe('dex')
     expect(of('crypto-spot')).toBe('cex-spot')
-    // Declared in the AssetClass union but with no family of its own yet.
-    expect(of('crypto-perp')).toBeNull()
+    // Perps are their own family: same venues, different instrument, and a
+    // deployment drops one without dropping the other.
+    expect(of('crypto-perp')).toBe('cex-futures')
+  })
+
+  test('cex-futures sorts directly after cex-spot in the Store', () => {
+    const ids = PLUGIN_FAMILIES.map((f) => f.id)
+    expect(ids.indexOf('cex-futures')).toBe(ids.indexOf('cex-spot') + 1)
   })
 
   test('an unrecognisable manifest is unfamilied, never filtered', () => {

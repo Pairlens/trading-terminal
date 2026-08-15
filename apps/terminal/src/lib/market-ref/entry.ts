@@ -16,6 +16,7 @@ import type {
   InstrumentRef,
   MarketRef,
 } from '@pairlens/shared/market-ref'
+import { isPerpPairKey } from '@/lib/pairs'
 
 /** The subset of `PairEntry`/`Instrument` this needs. Kept structural so both fit. */
 export type RefSource = {
@@ -33,12 +34,17 @@ export type RefSource = {
 
 /**
  * What a symbol's SHAPE says when nothing else does. Equities are bare tickers
- * (AAPL); every crypto pair carries its quote (BTC-USDT). This is the rule the
- * pair switcher has always used, kept because it is right more often than a
- * blanket default and because it is the one that gets a direct link to a stock
- * onto a stocks venue.
+ * (AAPL); every crypto pair carries its quote (BTC-USDT); a perpetual carries
+ * a THIRD leg that repeats the quote (BTC-USDT-USDT — the settle currency of
+ * a linear contract, and the repeat is what keeps a dash-joined prediction
+ * ticker like KXBTCD-26AUG15-T53 out of this arm; `splitPairAssets` owns that
+ * rule). This is the rule the pair switcher has always used, kept because it
+ * is right more often than a blanket default and because it is the one that
+ * gets a direct link to a stock onto a stocks venue and a cold
+ * `/pair/BTC-USDT-USDT` link onto a futures venue.
  */
 export function classFromSymbolShape(symbol: string): InstrumentClass {
+  if (isPerpPairKey(symbol)) return 'perp'
   return symbol.includes('-') ? 'spot' : 'stocks'
 }
 

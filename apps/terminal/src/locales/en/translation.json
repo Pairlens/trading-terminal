@@ -2188,7 +2188,8 @@
     "recentTickers": "Recent Tickers",
     "empty": "Empty",
     "events": "Events",
-    "predictionPositions": "Prediction Positions"
+    "predictionPositions": "Prediction Positions",
+    "futuresPositions": "Futures Positions"
   },
   "paneDescriptions": {
     "markets": "Browse all available trading pairs across exchanges",
@@ -2216,7 +2217,8 @@
     "liquidityHeatmap": "Orderbook liquidity heatmap showing depth across price levels over time",
     "recentTickers": "Recently viewed pairs with live prices for quick switching",
     "events": "Browse prediction-market events and open an outcome's chart",
-    "predictionPositions": "Contracts you hold, their cost and when they resolve"
+    "predictionPositions": "Contracts you hold, their cost and when they resolve",
+    "futuresPositions": "Open perpetual positions, their mark price and liquidation level"
   },
   "multiPrice": {
     "venue": "Venue",
@@ -2806,6 +2808,22 @@
       "pairlens-predictions": {
         "title": "Pairlens Predictions",
         "description": "Event browser and open contract positions for prediction markets"
+      },
+      "binance-futures-market-connector": {
+        "title": "Binance Futures Market Connector",
+        "description": "Perpetual futures on Binance Futures: leveraged long and short positions, settled in USDT"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "KuCoin Futures Market Connector",
+        "description": "Perpetual futures on KuCoin Futures: leveraged long and short positions, settled in USDT"
+      },
+      "kraken-futures-market-connector": {
+        "title": "Kraken Futures Market Connector",
+        "description": "Perpetual futures on Kraken Futures: leveraged long and short positions, settled in USD"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens Futures",
+        "description": "Open perpetual positions with entry, mark price and liquidation level"
       }
     },
     "families": {
@@ -2840,6 +2858,10 @@
       "themes": {
         "label": "Themes",
         "description": "Visual themes for the interface and chart palette."
+      },
+      "cexFutures": {
+        "label": "Crypto Futures",
+        "description": "Perpetual futures venues for leveraged crypto positions."
       }
     },
     "familyToggleAria": "Enable or disable all {{family}} plugins",
@@ -2960,7 +2982,12 @@
       "thisOutcome": "This outcome",
       "decreaseContracts": "One contract fewer",
       "increaseContracts": "One contract more",
-      "priceCentsRange": "Enter a price between 0¢ and 100¢"
+      "priceCentsRange": "Enter a price between 0¢ and 100¢",
+      "leverage": "Leverage",
+      "reduceOnly": "Reduce only",
+      "reduceOnlyHint": "Shrinks an open position and never opens the opposite side.",
+      "notional": "Notional",
+      "estLiquidation": "Est. liquidation"
     },
     "status": {
       "connecting": "Connecting…",
@@ -4034,7 +4061,8 @@
       "all": "All",
       "crypto": "Crypto",
       "stocks": "Stocks",
-      "prediction": "Predictions"
+      "prediction": "Predictions",
+      "crypto-perp": "Futures"
     },
     "category": {
       "all": "All",
@@ -4047,7 +4075,9 @@
       "infrastructure": "Infra"
     },
     "predictionsEmptyTitle": "Prediction outcomes live in the Events panel",
-    "predictionsEmptyBody": "Outcomes are listed and resolved daily, so they are browsed from the venue's own board rather than a catalog."
+    "predictionsEmptyBody": "Outcomes are listed and resolved daily, so they are browsed from the venue's own board rather than a catalog.",
+    "futuresEmptyTitle": "Connect a futures venue to browse perpetuals",
+    "futuresEmptyBody": "Contract lists come from each venue's own market table, so they appear once that venue has been reached."
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -4922,7 +4952,8 @@
       "auto": "Auto",
       "bookLoading": "Waiting for the book…",
       "pressureBuy": "B {{pct}}%",
-      "pressureSell": "{{pct}}% S"
+      "pressureSell": "{{pct}}% S",
+      "baseEquivalent": "Base equivalent"
     },
     "chart": {
       "pinned": "Pinned",
@@ -5036,7 +5067,9 @@
       "desktopOnlyVenues": "Needs the desktop app",
       "desktopOnlyVenue": "Desktop only",
       "predictions": "predictions",
-      "filterPredictions": "Predictions"
+      "filterPredictions": "Predictions",
+      "futures": "futures",
+      "filterFutures": "Futures"
     }
   },
   "events": {
@@ -5070,5 +5103,28 @@
     "colCost": "Cost",
     "colResolves": "Resolves",
     "resolved": "Resolved"
+  },
+  "futuresPositions": {
+    "connect": "Connect an account",
+    "noAccountsTitle": "No futures account connected",
+    "noAccountsBody": "Add Binance, KuCoin or Kraken Futures API keys to see your open positions.",
+    "loading": "Loading positions…",
+    "emptyTitle": "No open positions",
+    "emptyBody": "Positions appear here as soon as an order fills.",
+    "colContract": "Contract",
+    "colSide": "Side",
+    "colSize": "Size",
+    "colEntry": "Entry",
+    "colMark": "Mark",
+    "colLiquidation": "Liq.",
+    "colLeverage": "Lev.",
+    "colPnl": "PnL",
+    "sideLong": "Long",
+    "sideShort": "Short",
+    "close": "Close",
+    "closeTitle": "Close this position?",
+    "closeBody": "Places a reduce-only market order for {{contracts}} contracts of {{pair}} on {{venue}}.",
+    "closeConfirm": "Close position",
+    "closeSubmitted": "Close order submitted"
   }
 }

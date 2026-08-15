@@ -27,6 +27,7 @@
         { "url": "https://*.binance.com/*" },
         { "url": "https://*.binance.us/*" },
         { "url": "https://testnet.binance.vision/*" },
+        { "url": "https://*.binancefuture.com/*" },
         { "url": "https://*.bybit.com/*" },
         { "url": "https://*.bybit.nl/*" },
         { "url": "https://*.bitvavo.com/*" },

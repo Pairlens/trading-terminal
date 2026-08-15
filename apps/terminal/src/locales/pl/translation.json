@@ -2210,7 +2210,8 @@
     "recentTickers": "Ostatnie tickery",
     "empty": "Puste",
     "events": "Wydarzenia",
-    "predictionPositions": "Pozycje prognoz"
+    "predictionPositions": "Pozycje prognoz",
+    "futuresPositions": "Pozycje futures"
   },
   "paneDescriptions": {
     "markets": "Przeglądaj wszystkie dostępne pary handlowe na giełdach",
@@ -2238,7 +2239,8 @@
     "liquidityHeatmap": "Mapa cieplna płynności arkusza zleceń pokazująca głębokość na poziomach cenowych w czasie",
     "recentTickers": "Ostatnio przeglądane pary z cenami na żywo do szybkiego przełączania",
     "events": "Przeglądaj wydarzenia rynków prognoz i otwieraj wykres wyniku",
-    "predictionPositions": "Kontrakty, które posiadasz, ich koszt i termin rozliczenia"
+    "predictionPositions": "Kontrakty, które posiadasz, ich koszt i termin rozliczenia",
+    "futuresPositions": "Otwarte pozycje wieczyste, ich cena mark i poziom likwidacji"
   },
   "multiPrice": {
     "venue": "Giełda",
@@ -2832,6 +2834,22 @@
       "pairlens-predictions": {
         "title": "Pairlens Prognozy",
         "description": "Przeglądarka wydarzeń i otwarte pozycje kontraktowe na rynkach prognoz"
+      },
+      "binance-futures-market-connector": {
+        "title": "Binance Futures Konektor Rynkowy",
+        "description": "Kontrakty wieczyste na Binance Futures: pozycje długie i krótkie z dźwignią, rozliczane w USDT"
+      },
+      "kucoin-futures-market-connector": {
+        "title": "KuCoin Futures Konektor Rynkowy",
+        "description": "Kontrakty wieczyste na KuCoin Futures: pozycje długie i krótkie z dźwignią, rozliczane w USDT"
+      },
+      "kraken-futures-market-connector": {
+        "title": "Kraken Futures Konektor Rynkowy",
+        "description": "Kontrakty wieczyste na Kraken Futures: pozycje długie i krótkie z dźwignią, rozliczane w USD"
+      },
+      "pairlens-cex-futures": {
+        "title": "Pairlens Futures",
+        "description": "Otwarte pozycje wieczyste z ceną wejścia, ceną mark i poziomem likwidacji"
       }
     },
     "families": {
@@ -2866,6 +2884,10 @@
       "themes": {
         "label": "Motywy",
         "description": "Motywy wizualne interfejsu i palety wykresu."
+      },
+      "cexFutures": {
+        "label": "Kontrakty futures",
+        "description": "Giełdy kontraktów wieczystych dla pozycji kryptowalutowych z dźwignią."
       }
     },
     "familyToggleAria": "Włącz lub wyłącz wszystkie wtyczki {{family}}",
@@ -2986,7 +3008,12 @@
       "thisOutcome": "Ten wynik",
       "decreaseContracts": "Jeden kontrakt mniej",
       "increaseContracts": "Jeden kontrakt więcej",
-      "priceCentsRange": "Podaj cenę między 0¢ a 100¢"
+      "priceCentsRange": "Podaj cenę między 0¢ a 100¢",
+      "leverage": "Dźwignia",
+      "reduceOnly": "Tylko redukcja",
+      "reduceOnlyHint": "Zmniejsza otwartą pozycję i nigdy nie otwiera przeciwnej strony.",
+      "notional": "Nominał",
+      "estLiquidation": "Szac. likwidacja"
     },
     "status": {
       "connecting": "Łączenie…",
@@ -4068,7 +4095,8 @@
       "all": "Wszystkie",
       "crypto": "Krypto",
       "stocks": "Akcje",
-      "prediction": "Prognozy"
+      "prediction": "Prognozy",
+      "crypto-perp": "Futures"
     },
     "category": {
       "all": "Wszystkie",
@@ -4081,7 +4109,9 @@
       "infrastructure": "Infra"
     },
     "predictionsEmptyTitle": "Wyniki prognoz znajdziesz w panelu Wydarzenia",
-    "predictionsEmptyBody": "Wyniki są notowane i rozliczane codziennie, więc przegląda się je na tablicy samej giełdy, a nie w katalogu."
+    "predictionsEmptyBody": "Wyniki są notowane i rozliczane codziennie, więc przegląda się je na tablicy samej giełdy, a nie w katalogu.",
+    "futuresEmptyTitle": "Połącz giełdę futures, aby przeglądać kontrakty wieczyste",
+    "futuresEmptyBody": "Listy kontraktów pochodzą z tabeli rynków każdej giełdy, więc pojawiają się po nawiązaniu z nią połączenia."
   },
   "fearGreed": {
     "title": "Strach i chciwość",
@@ -4964,7 +4994,8 @@
       "auto": "Auto",
       "bookLoading": "Czekam na arkusz zleceń…",
       "pressureBuy": "K {{pct}}%",
-      "pressureSell": "{{pct}}% S"
+      "pressureSell": "{{pct}}% S",
+      "baseEquivalent": "Równowartość w aktywie bazowym"
     },
     "chart": {
       "pinned": "Przypięte",
@@ -5080,7 +5111,9 @@
       "desktopOnlyVenues": "Wymaga aplikacji na komputer",
       "desktopOnlyVenue": "Tylko desktop",
       "predictions": "prognozy",
-      "filterPredictions": "Prognozy"
+      "filterPredictions": "Prognozy",
+      "futures": "futures",
+      "filterFutures": "Futures"
     }
   },
   "events": {
@@ -5114,5 +5147,28 @@
     "colCost": "Koszt",
     "colResolves": "Rozliczenie",
     "resolved": "Rozliczone"
+  },
+  "futuresPositions": {
+    "connect": "Połącz konto",
+    "noAccountsTitle": "Nie połączono konta futures",
+    "noAccountsBody": "Dodaj klucze API Binance, KuCoin lub Kraken Futures, aby zobaczyć otwarte pozycje.",
+    "loading": "Wczytywanie pozycji…",
+    "emptyTitle": "Brak otwartych pozycji",
+    "emptyBody": "Pozycje pojawią się tutaj, gdy tylko zlecenie zostanie wykonane.",
+    "colContract": "Kontrakt",
+    "colSide": "Strona",
+    "colSize": "Wielkość",
+    "colEntry": "Wejście",
+    "colMark": "Mark",
+    "colLiquidation": "Likw.",
+    "colLeverage": "Dźwignia",
+    "colPnl": "PnL",
+    "sideLong": "Długa",
+    "sideShort": "Krótka",
+    "close": "Zamknij",
+    "closeTitle": "Zamknąć tę pozycję?",
+    "closeBody": "Wysyła zlecenie rynkowe tylko redukujące na {{contracts}} kontraktów {{pair}} na {{venue}}.",
+    "closeConfirm": "Zamknij pozycję",
+    "closeSubmitted": "Zlecenie zamknięcia wysłane"
   }
 }

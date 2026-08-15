@@ -57,6 +57,7 @@ boot.
 | Id            | Family             |
 | ------------- | ------------------ |
 | `cex-spot`    | Crypto Exchanges   |
+| `cex-futures` | Crypto Futures     |
 | `dex`         | On-Chain DEX       |
 | `equities`    | Equities           |
 | `predictions` | Prediction Markets |

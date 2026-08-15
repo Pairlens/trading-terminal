@@ -45,6 +45,7 @@ around it.
 | **Portfolio**            | Account holdings with an allocation breakdown                                                                   |
 | **Risk**                 | Current window P&L, trade count, and guardrail state                                                            |
 | **Prediction Positions** | Event contracts you hold, their cost, and when they resolve. See [prediction markets](/docs/prediction-markets) |
+| **Futures Positions**    | Open perpetuals with entry, mark, liquidation and P&L. See [perpetual futures](/docs/cex-futures)               |
 
 Trading panels get their own page: see
 [positions and portfolio](/docs/positions-and-portfolio).

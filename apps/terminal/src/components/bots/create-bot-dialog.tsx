@@ -110,7 +110,24 @@ export function CreateBotDialog({
   const loadScripts = useIndicatorScriptsStore((s) => s.load)
   const createBot = useBotsStore((s) => s.createBot)
   const marketData = useMarketData()
-  const { markets, defaultMarket } = useAvailableMarkets()
+  const { markets, defaultMarket: allVenuesDefault } = useAvailableMarkets()
+
+  // Perpetual-futures venues are deliberately absent from this list, for two
+  // reasons that both have to be fixed before a bot can run on one: the bot
+  // engine sizes in base units and refuses leverage outright, and the arm
+  // dialog resolves credentials by raw market id, so it finds no account for a
+  // venue that borrows its spot sibling's key.
+  const botMarkets = useMemo(
+    () => markets.filter((m) => !m.assetClasses.includes('crypto-perp')),
+    [markets],
+  )
+  const defaultMarket = useMemo(
+    () =>
+      botMarkets.some((m) => m.value === allVenuesDefault)
+        ? allVenuesDefault
+        : (botMarkets[0]?.value ?? allVenuesDefault),
+    [botMarkets, allVenuesDefault],
+  )
 
   const [step, setStep] = useState<Step>('strategy')
   const [scriptId, setScriptId] = useState<string | null>(null)
@@ -420,7 +437,7 @@ export function CreateBotDialog({
                 <div className="flex flex-wrap items-center gap-1.5">
                   <MarketPicker
                     market={market}
-                    marketOptions={markets}
+                    marketOptions={botMarkets}
                     onMarketChange={(value) => value && setMarket(value)}
                     className="h-7"
                     aria-label={t('botsPage.venue')}
