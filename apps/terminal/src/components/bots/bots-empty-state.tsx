@@ -4,7 +4,9 @@
  * What the bots surface shows before the first deployment exists.
  *
  * Same three states as the other builders: not hydrated yet (blank), bots
- * exist but none is selected (a one-line nudge), otherwise the full panel.
+ * exist but none is selected (a one-line nudge), otherwise the full panel —
+ * assistant first, ready-made deployments under it, the manual create flow
+ * demoted to a link.
  *
  * The "runs on this machine" caveat moved into the footnote. It still has to
  * be read once, before the first bot exists — it just no longer needs a box of
@@ -16,6 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { StarterEmptyState } from '../starter-empty-state'
+import { AssistantStarter } from '../assistant/assistant-starter'
 import { applyBotTemplate, botTemplates } from './bot-templates'
 import type { StarterTemplate } from '../starter-empty-state'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
@@ -24,11 +27,18 @@ import { useBotsStore } from '@/stores/bots-store'
 export function BotsEmptyState({
   onCreate,
   onCreated,
+  onStartAssistant,
 }: {
   /** Open the ordinary create dialog — the "skip the templates" hatch. */
   onCreate: () => void
   /** Select the bot a template just produced. */
   onCreated: (botId: string) => void
+  /**
+   * Open the assistant rail, where the starter's request lands. A bot from
+   * nothing is two steps (write the strategy, deploy it) and the assistant is
+   * the only way in here that does both.
+   */
+  onStartAssistant?: () => void
 }) {
   const { t } = useTranslation()
   const bots = useBotsStore((s) => s.bots)
@@ -82,6 +92,12 @@ export function BotsEmptyState({
       shelfLabel={t('botsPage.groupTemplates')}
       blankLabel={t('botsPage.newBot')}
       onCreateBlank={onCreate}
+      blankTone="quiet"
+      hero={
+        onStartAssistant ? (
+          <AssistantStarter surface="bots" onStarted={onStartAssistant} />
+        ) : undefined
+      }
       // The "runs on this machine" caveat, in the one slot the panel has for
       // small print. It has to be read once, before the first bot exists.
       footnote={t('botsPage.localBody')}

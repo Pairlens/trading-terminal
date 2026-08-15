@@ -1,8 +1,9 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * The builder assistant's tool set: create, read, edit and validate Python
- * scripts, run backtests, and configure bots.
+ * The builder assistant's tool set: create, read, edit, delete and validate
+ * Python script files, drive the preview target, run backtests, configure
+ * bots, ask the user a question, and hand the work to the other surface.
  *
  * Same execution split as the copilot: every tool here executes in the
  * transport, client-side, against the same stores and the same Pyodide
@@ -22,6 +23,7 @@ import { tool } from 'ai'
 import { z } from 'zod'
 
 import { SDK_REFERENCE_SECTIONS, SDK_REFERENCE_TOPICS } from './sdk-guide'
+import { requestAssistant } from './assistant-chat-cache'
 import type {
   IndicatorFile,
   IndicatorScript,
@@ -95,6 +97,15 @@ export type AssistantMarketDataHandle = {
   ) => Promise<Array<ChartBar>>
 }
 
+/** What the workbench preview (and its backtest) is pointed at. */
+export type AssistantPreviewTarget = {
+  market: string
+  pair: string
+  timeframe: string
+  /** How much history the preview pulls. */
+  bars: number
+}
+
 /**
  * Callbacks the workbench hands the assistant when it hosts the panel, so
  * edits land in the editor the user is looking at (unsaved buffers respected,
@@ -107,9 +118,13 @@ export type AssistantWorkbenchBridge = {
   getFiles: (scriptId: string) => Array<IndicatorFile> | null
   /** Persist an edit and drop any stale unsaved buffer for that file. */
   applyEdit: (scriptId: string, path: string, source: string) => void
+  /** Remove a helper module and forget its buffer. Never the entry file. */
+  deleteFile: (scriptId: string, path: string) => void
   /** Re-run the preview so the user sees the change immediately. */
   runPreview: (scriptId: string) => void
-  getPreviewTarget: () => { market: string; pair: string; timeframe: string }
+  getPreviewTarget: () => AssistantPreviewTarget
+  /** Re-point the preview and re-run it against the new target. */
+  setPreviewTarget: (patch: Partial<AssistantPreviewTarget>) => void
 }
 
 export type AssistantSurface = 'indicators' | 'bots'
@@ -119,6 +134,11 @@ export type AssistantToolDeps = {
   getWorkbench: () => AssistantWorkbenchBridge | null
   getMarketData: () => AssistantMarketDataHandle | null
   getPython: () => AssistantPythonRuntime
+  /**
+   * Take the user to the other builder. Injected rather than imported so this
+   * module stays free of the router (and loadable in bun tests).
+   */
+  navigate: (route: { to: AssistantSurface; scriptId?: string }) => void
 }
 
 // ---------------------------------------------------------------------------
@@ -249,6 +269,19 @@ async function validateFiles(
   }
 }
 
+/**
+ * Venue pairs are upper case. A DEX pool id carries a raw token address, and
+ * upper-casing one is how you hand a connector a market it cannot find.
+ */
+function normalizePair(pair: string): string {
+  return pair.startsWith('0x') ? pair : pair.toUpperCase()
+}
+
+/** BASE-QUOTE, one separator. Loose enough for `0xabc…-USDC`. */
+function isPairShaped(pair: string): boolean {
+  return /^[^\s-]+-[^\s-]+$/.test(pair)
+}
+
 function backtestTarget(
   deps: AssistantToolDeps,
   overrides: { market?: string; pair?: string; timeframe?: string },
@@ -261,7 +294,7 @@ function backtestTarget(
       : venues[0].marketId
   return {
     market: overrides.market ?? preview?.market ?? fallback,
-    pair: (overrides.pair ?? preview?.pair ?? 'BTC-USDT').toUpperCase(),
+    pair: normalizePair(overrides.pair ?? preview?.pair ?? 'BTC-USDT'),
     timeframe: overrides.timeframe ?? preview?.timeframe ?? '1h',
   }
 }
@@ -425,6 +458,56 @@ export function buildAssistantTools(deps: AssistantToolDeps) {
       },
     }),
 
+    delete_file: tool({
+      description:
+        'Delete one helper module from a script and re-validate what is left. Use it when a module you added is no longer imported. main.py is the entry point and can only be rewritten, never removed.',
+      inputSchema: z.object({
+        scriptId: z
+          .string()
+          .optional()
+          .describe('Defaults to the script open in the workbench'),
+        path: z.string().describe("Module file, e.g. 'helpers.py'"),
+      }),
+      execute: async ({ scriptId, path }) => {
+        const script = resolveScript(deps, scriptId)
+        if ('error' in script) return script
+        if (path === ENTRY_FILE) {
+          return {
+            error: `${ENTRY_FILE} is the entry point and cannot be deleted. Rewrite it with update_script instead.`,
+          }
+        }
+        const files = scriptFiles(script)
+        if (!files.some((f) => f.path === path)) {
+          return {
+            error: `'${path}' is not a file of this script. It has: ${files.map((f) => f.path).join(', ')}.`,
+          }
+        }
+
+        const workbench = deps.getWorkbench()
+        if (workbench) workbench.deleteFile(script.id, path)
+        else useIndicatorScriptsStore.getState().deleteModule(script.id, path)
+
+        const updated = findScript(script.id)
+        if (!updated) return { error: 'Script disappeared while editing.' }
+        // Deleting a module that something still imports breaks the script,
+        // and the user should hear that from the traceback, not at run time.
+        const result = await validateFiles(
+          deps,
+          script.id,
+          currentFiles(deps, updated),
+        )
+        if ('error' in result) {
+          return { scriptId: script.id, deleted: path, ...result }
+        }
+        workbench?.runPreview(script.id)
+        return {
+          scriptId: script.id,
+          deleted: path,
+          meta: summarizeMeta(result.meta),
+        }
+      },
+    }),
+
     validate_script: tool({
       description:
         'Run a script through the Python runtime without changing it: extracts metadata on success, returns the traceback on failure. Needs no market data.',
@@ -493,7 +576,7 @@ export function buildAssistantTools(deps: AssistantToolDeps) {
                   limit,
                   endTs,
                 ),
-              bars ?? 500,
+              bars ?? deps.getWorkbench()?.getPreviewTarget().bars ?? 500,
             ),
             resolveRequestSeries(meta.requests, target),
           ])
@@ -536,6 +619,100 @@ export function buildAssistantTools(deps: AssistantToolDeps) {
         } catch (err) {
           return toolError(err)
         }
+      },
+    }),
+
+    list_venues: tool({
+      description:
+        'List the venues connected right now and the timeframes each one offers. Call it before set_preview_target or create_bot rather than guessing a venue id — what is connected is the user’s choice, not a fixed list.',
+      inputSchema: z.object({}),
+      execute: async () => {
+        const marketData = deps.getMarketData()
+        if (!marketData) return { error: 'Market data is not available yet.' }
+        if (marketData.availableMarkets.length === 0) {
+          return {
+            venues: [],
+            note: 'No connectors are ready yet. The user connects venues on the Accounts page; public market data needs no keys.',
+          }
+        }
+        return {
+          venues: marketData.availableMarkets.map((venue) => ({
+            id: venue.marketId,
+            timeframes: marketData.getTimeframes(venue.marketId),
+          })),
+        }
+      },
+    }),
+
+    set_preview_target: tool({
+      description:
+        'Re-point the workbench preview (venue, pair, timeframe, history depth) and re-run it. This is the chart the user is looking at and the data a backtest reads, so change it when the script needs different data, and say why. Workbench only: from the Bots page pass market/pair/timeframe to run_backtest instead.',
+      inputSchema: z.object({
+        market: z.string().optional().describe('Venue id, e.g. okx'),
+        pair: z.string().optional().describe('BASE-QUOTE, e.g. SOL-USDT'),
+        timeframe: timeframeSchema.optional(),
+        bars: z
+          .number()
+          .int()
+          .min(100)
+          .max(2000)
+          .optional()
+          .describe('How many candles to load'),
+      }),
+      execute: async ({ market, pair, timeframe, bars }) => {
+        const workbench = deps.getWorkbench()
+        if (!workbench) {
+          return {
+            error:
+              'The preview only exists in the script workbench. From the Bots page, pass market, pair and timeframe to run_backtest, or hand the user over with handoff_to_builder.',
+          }
+        }
+        if (
+          market === undefined &&
+          pair === undefined &&
+          timeframe === undefined &&
+          bars === undefined
+        ) {
+          return { error: 'Nothing to change — pass at least one field.' }
+        }
+
+        const marketData = deps.getMarketData()
+        const venues = marketData?.availableMarkets.map((m) => m.marketId) ?? []
+        if (market !== undefined && venues.length > 0) {
+          if (!venues.includes(market)) {
+            return {
+              error: `'${market}' is not a connected venue. Available: ${venues.join(', ')}.`,
+            }
+          }
+        }
+
+        const current = workbench.getPreviewTarget()
+        const nextMarket = market ?? current.market
+        if (timeframe !== undefined && marketData) {
+          const supported = marketData.getTimeframes(nextMarket)
+          if (supported.length > 0 && !supported.includes(timeframe)) {
+            return {
+              error: `${nextMarket} does not offer ${timeframe}. It offers: ${supported.join(', ')}.`,
+            }
+          }
+        }
+
+        const patch: Partial<AssistantPreviewTarget> = {}
+        if (market !== undefined) patch.market = market
+        if (timeframe !== undefined) patch.timeframe = timeframe
+        if (bars !== undefined) patch.bars = bars
+        if (pair !== undefined) {
+          const normalized = normalizePair(pair)
+          if (!isPairShaped(normalized)) {
+            return {
+              error: `'${pair}' is not a BASE-QUOTE pair like BTC-USDT.`,
+            }
+          }
+          patch.pair = normalized
+        }
+
+        workbench.setPreviewTarget(patch)
+        return { target: { ...current, ...patch }, note: 'Preview re-running.' }
       },
     }),
 
@@ -667,8 +844,8 @@ export function buildAssistantTools(deps: AssistantToolDeps) {
             error: `'${market}' is not an available venue. Available: ${marketData.availableMarkets.map((m) => m.marketId).join(', ')}.`,
           }
         }
-        const normalizedPair = pair.toUpperCase()
-        if (!/^[A-Z0-9]+-[A-Z0-9]+$/.test(normalizedPair)) {
+        const normalizedPair = normalizePair(pair)
+        if (!isPairShaped(normalizedPair)) {
           return { error: `'${pair}' is not a BASE-QUOTE pair like BTC-USDT.` }
         }
 
@@ -733,6 +910,63 @@ export function buildAssistantTools(deps: AssistantToolDeps) {
           note: bot.enabled
             ? 'The bot is running — params and guards take effect on the next bar.'
             : undefined,
+        }
+      },
+    }),
+
+    /**
+     * The one tool with no `execute`: the panel renders the choices and
+     * answers it, which is what makes the answer the user's rather than the
+     * model's guess at what the user would have said.
+     */
+    ask_user: tool({
+      description:
+        'Ask the user one question and let them answer by tapping an option. Use it whenever the decision is theirs and not yours: which venue and pair, which timeframe, how much risk, which of two designs to build. Give 2 to 4 concrete options (they can always type something else instead). Ask ONE question at a time — this tool ends your turn, so do not stack it with other work.',
+      inputSchema: z.object({
+        question: z.string().min(1).max(300),
+        options: z
+          .array(
+            z.object({
+              label: z.string().min(1).max(60),
+              description: z
+                .string()
+                .max(120)
+                .optional()
+                .describe('One short line on what this choice means'),
+            }),
+          )
+          .min(2)
+          .max(4)
+          .optional()
+          .describe('Omit for an open question the user types the answer to'),
+      }),
+    }),
+
+    handoff_to_builder: tool({
+      description:
+        "Move the user to the other builder and brief its assistant. 'indicators' is the script workbench: writing and fixing Python with the editor and the chart preview side by side. 'bots' is where a finished strategy is deployed and its sizing and guards are tuned. Write `message` as the request the other assistant should start from — it arrives as the user's next message there, so carry the context: what exists already, the script id, and what is still missing. Say what you are doing before you call it, and stop afterwards.",
+      inputSchema: z.object({
+        target: z.enum(['indicators', 'bots']),
+        message: z.string().min(1).max(600),
+        scriptId: z
+          .string()
+          .optional()
+          .describe('Opens this script in the workbench on arrival'),
+      }),
+      execute: async ({ target, message, scriptId }) => {
+        if (target === deps.surface) {
+          return {
+            error: `You are already on the ${target} surface. Do the work here.`,
+          }
+        }
+        if (scriptId !== undefined && !findScript(scriptId)) {
+          return { error: `No script with id '${scriptId}'. Use list_scripts.` }
+        }
+        requestAssistant(target, { prompt: message })
+        deps.navigate({ to: target, scriptId })
+        return {
+          handedOff: target,
+          note: 'The user is on that page now and its assistant has your message. Stop here — it takes over.',
         }
       },
     }),

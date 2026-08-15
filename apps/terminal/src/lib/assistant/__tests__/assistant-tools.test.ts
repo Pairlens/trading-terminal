@@ -5,6 +5,8 @@ import {
   buildAssistantTools,
   collectAssistantPromptContext,
 } from '../assistant-tools'
+import { consumeAssistantIntent } from '../assistant-chat-cache'
+import { ASSISTANT_TOOL_LABELS } from '../assistant-tool-labels'
 import type {
   AssistantPythonRuntime,
   AssistantToolDeps,
@@ -12,6 +14,7 @@ import type {
 } from '../assistant-tools'
 import type { CustomIndicatorMeta } from '@pairlens/shared/plugin-types'
 import type { ToolCallOptions } from 'ai'
+import { formatToolLabel } from '@/lib/copilot/tool-labels'
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
@@ -63,6 +66,29 @@ function makeDeps(
     getWorkbench: () => null,
     getMarketData: () => null,
     getPython: () => fakePython(),
+    navigate: () => {},
+    ...overrides,
+  }
+}
+
+/** A workbench bridge whose defaults are inert, so each test states its own. */
+function makeBridge(
+  overrides: Partial<AssistantWorkbenchBridge> = {},
+): AssistantWorkbenchBridge {
+  return {
+    getSelectedScriptId: () => null,
+    selectScript: () => {},
+    getFiles: () => null,
+    applyEdit: () => {},
+    deleteFile: () => {},
+    runPreview: () => {},
+    getPreviewTarget: () => ({
+      market: 'okx',
+      pair: 'BTC-USDT',
+      timeframe: '1h',
+      bars: 500,
+    }),
+    setPreviewTarget: () => {},
     ...overrides,
   }
 }
@@ -197,18 +223,10 @@ describe('update_bot', () => {
 describe('script tools', () => {
   test('create_script registers, caches meta, and selects in the workbench', async () => {
     const selected: Array<string> = []
-    const bridge: AssistantWorkbenchBridge = {
-      getSelectedScriptId: () => null,
+    const bridge = makeBridge({
       selectScript: (id) => selected.push(id),
-      getFiles: () => null,
-      applyEdit: () => {},
       runPreview: (id) => selected.push(`preview:${id}`),
-      getPreviewTarget: () => ({
-        market: 'okx',
-        pair: 'BTC-USDT',
-        timeframe: '1h',
-      }),
-    }
+    })
     const tools = buildAssistantTools(makeDeps({ getWorkbench: () => bridge }))
     const result = (await tools.create_script.execute!(
       { name: 'AI Indicator', source: 'meta = ...' },
@@ -257,9 +275,8 @@ describe('script tools', () => {
   test('update_script writes through the workbench bridge for live edits', async () => {
     const scriptId = seedScript(indicatorMeta('s5'))
     const edits: Array<[string, string, string]> = []
-    const bridge: AssistantWorkbenchBridge = {
+    const bridge = makeBridge({
       getSelectedScriptId: () => scriptId,
-      selectScript: () => {},
       getFiles: (id) => {
         const script = useIndicatorScriptsStore
           .getState()
@@ -270,13 +287,7 @@ describe('script tools', () => {
         edits.push([id, path, source])
         useIndicatorScriptsStore.getState().setFileSource(id, path, source)
       },
-      runPreview: () => {},
-      getPreviewTarget: () => ({
-        market: 'okx',
-        pair: 'BTC-USDT',
-        timeframe: '1h',
-      }),
-    }
+    })
     const tools = buildAssistantTools(makeDeps({ getWorkbench: () => bridge }))
     const result = (await tools.update_script.execute!(
       { source: 'meta = better' },
@@ -313,18 +324,15 @@ describe('collectAssistantPromptContext', () => {
       pair: 'BTC-USDT',
       timeframe: '1h',
     })
-    const bridge = {
+    const bridge = makeBridge({
       getSelectedScriptId: () => strategyId,
-      selectScript: () => {},
-      getFiles: () => null,
-      applyEdit: () => {},
-      runPreview: () => {},
       getPreviewTarget: () => ({
         market: 'okx',
         pair: 'ETH-USDT',
         timeframe: '4h',
+        bars: 1000,
       }),
-    }
+    })
     const ctx = collectAssistantPromptContext(
       makeDeps({ getWorkbench: () => bridge }),
     )
@@ -339,6 +347,197 @@ describe('collectAssistantPromptContext', () => {
       market: 'okx',
       pair: 'ETH-USDT',
       timeframe: '4h',
+      bars: 1000,
     })
+  })
+})
+
+describe('delete_file', () => {
+  test('removes a module and re-validates what is left', async () => {
+    const store = useIndicatorScriptsStore.getState()
+    const scriptId = store.createScript('Multi', 'import helpers')
+    store.addModule(scriptId, 'helpers.py', 'X = 1')
+    const deleted: Array<[string, string]> = []
+    const tools = buildAssistantTools(
+      makeDeps({
+        getWorkbench: () =>
+          makeBridge({
+            getSelectedScriptId: () => scriptId,
+            deleteFile: (id, path) => {
+              deleted.push([id, path])
+              useIndicatorScriptsStore.getState().deleteModule(id, path)
+            },
+          }),
+      }),
+    )
+
+    const result = (await tools.delete_file.execute!(
+      { path: 'helpers.py' },
+      callOpts,
+    )) as { deleted?: string; error?: string }
+
+    expect(result.error).toBeUndefined()
+    expect(result.deleted).toBe('helpers.py')
+    expect(deleted).toEqual([[scriptId, 'helpers.py']])
+    const script = useIndicatorScriptsStore
+      .getState()
+      .scripts.find((s) => s.id === scriptId)!
+    expect(script.modules ?? []).toHaveLength(0)
+  })
+
+  test('refuses the entry file and files that are not there', async () => {
+    const scriptId = seedScript(indicatorMeta('d1'))
+    const tools = buildAssistantTools(
+      makeDeps({
+        getWorkbench: () => makeBridge({ getSelectedScriptId: () => scriptId }),
+      }),
+    )
+
+    const entry = (await tools.delete_file.execute!(
+      { path: 'main.py' },
+      callOpts,
+    )) as { error?: string }
+    expect(entry.error).toContain('main.py')
+
+    const missing = (await tools.delete_file.execute!(
+      { path: 'nope.py' },
+      callOpts,
+    )) as { error?: string }
+    expect(missing.error).toContain('not a file')
+  })
+})
+
+describe('set_preview_target', () => {
+  const marketData = {
+    availableMarkets: [{ marketId: 'okx' }, { marketId: 'binance' }],
+    getTimeframes: () => ['1h', '4h', '1d'],
+    fetchHistory: async () => [],
+  }
+
+  test('applies the patch and normalizes the pair', async () => {
+    const patches: Array<Record<string, unknown>> = []
+    const tools = buildAssistantTools(
+      makeDeps({
+        getMarketData: () => marketData,
+        getWorkbench: () =>
+          makeBridge({ setPreviewTarget: (patch) => patches.push(patch) }),
+      }),
+    )
+    const result = (await tools.set_preview_target.execute!(
+      { market: 'binance', pair: 'sol-usdt', timeframe: '4h', bars: 1000 },
+      callOpts,
+    )) as { target?: Record<string, unknown>; error?: string }
+
+    expect(result.error).toBeUndefined()
+    expect(patches).toEqual([
+      { market: 'binance', timeframe: '4h', bars: 1000, pair: 'SOL-USDT' },
+    ])
+    expect(result.target).toEqual({
+      market: 'binance',
+      pair: 'SOL-USDT',
+      timeframe: '4h',
+      bars: 1000,
+    })
+  })
+
+  test('rejects venues and timeframes the terminal does not have', async () => {
+    const tools = buildAssistantTools(
+      makeDeps({
+        getMarketData: () => marketData,
+        getWorkbench: () => makeBridge(),
+      }),
+    )
+
+    const venue = (await tools.set_preview_target.execute!(
+      { market: 'nope' },
+      callOpts,
+    )) as { error?: string }
+    expect(venue.error).toContain('binance')
+
+    const timeframe = (await tools.set_preview_target.execute!(
+      { timeframe: '5m' },
+      callOpts,
+    )) as { error?: string }
+    expect(timeframe.error).toContain('1h')
+  })
+
+  test('says so when there is no workbench to point', async () => {
+    const tools = buildAssistantTools(makeDeps({ surface: 'bots' }))
+    const result = (await tools.set_preview_target.execute!(
+      { timeframe: '4h' },
+      callOpts,
+    )) as { error?: string }
+    expect(result.error).toContain('run_backtest')
+  })
+})
+
+describe('handoff_to_builder', () => {
+  test('queues the message for the other surface and navigates there', async () => {
+    const scriptId = seedScript(strategyMeta('h1'))
+    const routes: Array<{ to: string; scriptId?: string }> = []
+    const tools = buildAssistantTools(
+      makeDeps({ surface: 'bots', navigate: (route) => routes.push(route) }),
+    )
+
+    const result = (await tools.handoff_to_builder.execute!(
+      {
+        target: 'indicators',
+        message: 'Add a volume filter to this strategy.',
+        scriptId,
+      },
+      callOpts,
+    )) as { handedOff?: string; error?: string }
+
+    expect(result.error).toBeUndefined()
+    expect(result.handedOff).toBe('indicators')
+    expect(routes).toEqual([{ to: 'indicators', scriptId }])
+    expect(consumeAssistantIntent('indicators')).toEqual({
+      prompt: 'Add a volume filter to this strategy.',
+    })
+    // Consumed once: a remount must not replay it.
+    expect(consumeAssistantIntent('indicators')).toBeNull()
+  })
+
+  test('refuses to hand over to the surface it is already on', async () => {
+    const routes: Array<unknown> = []
+    const tools = buildAssistantTools(
+      makeDeps({ navigate: (route) => routes.push(route) }),
+    )
+    const result = (await tools.handoff_to_builder.execute!(
+      { target: 'indicators', message: 'go' },
+      callOpts,
+    )) as { error?: string }
+
+    expect(result.error).toContain('already')
+    expect(routes).toHaveLength(0)
+    expect(consumeAssistantIntent('indicators')).toBeNull()
+  })
+})
+
+describe('ask_user', () => {
+  test('has no execute — only the user can answer it', () => {
+    const tools = buildAssistantTools(makeDeps())
+    expect(tools.ask_user.execute).toBeUndefined()
+  })
+})
+
+describe('tool labels', () => {
+  test('every assistant tool has one, and none is left behind', () => {
+    const tools = Object.keys(buildAssistantTools(makeDeps()))
+    expect(tools.filter((name) => !(name in ASSISTANT_TOOL_LABELS))).toEqual([])
+    expect(
+      Object.keys(ASSISTANT_TOOL_LABELS).filter(
+        (name) => !tools.includes(name),
+      ),
+    ).toEqual([])
+  })
+
+  test('phrases a builder call for its phase', () => {
+    expect(
+      formatToolLabel('create_script', 'running', ASSISTANT_TOOL_LABELS),
+    ).toBe('Creating a new script…')
+    expect(formatToolLabel('run_backtest', 'done', ASSISTANT_TOOL_LABELS)).toBe(
+      'Ran a backtest',
+    )
   })
 })

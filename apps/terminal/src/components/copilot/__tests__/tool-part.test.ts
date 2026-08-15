@@ -19,7 +19,9 @@ describe('asToolPart', () => {
     } as unknown as Part
     expect(asToolPart(part)).toEqual({
       toolName: 'get_market_snapshot',
+      toolCallId: 'c1',
       state: 'output-available',
+      input: undefined,
       output: { latestPrice: 42 },
       errorText: undefined,
     })
@@ -35,7 +37,9 @@ describe('asToolPart', () => {
     } as unknown as Part
     expect(asToolPart(part)).toEqual({
       toolName: 'some_mcp_tool',
+      toolCallId: 'c2',
       state: 'output-available',
+      input: undefined,
       output: { ok: true },
       errorText: undefined,
     })
@@ -52,6 +56,10 @@ describe('asToolPart', () => {
     expect(result?.toolName).toBe('get_orderbook')
     expect(result?.state).toBe('input-available')
     expect(result?.output).toBeUndefined()
+    // The arguments are readable before the result is: that window is where
+    // the assistant's ask_user card reads its question and options from.
+    expect(result?.input).toEqual({ pair: 'BTC-USDT' })
+    expect(result?.toolCallId).toBe('c3')
   })
 
   test('surfaces errorText on a failed tool call', () => {

@@ -30,7 +30,12 @@ function promptContext(): AssistantPromptContext {
     strategyCount: 1,
     bots: [],
     venues: ['okx'],
-    previewTarget: { market: 'okx', pair: 'BTC-USDT', timeframe: '1h' },
+    previewTarget: {
+      market: 'okx',
+      pair: 'BTC-USDT',
+      timeframe: '1h',
+      bars: 500,
+    },
   }
 }
 
@@ -50,6 +55,7 @@ function makeTransport(provider: PluginInstance | null) {
           },
           compute: async () => ({ outputs: {} }),
         }),
+        navigate: () => {},
       }),
   })
 }
@@ -124,13 +130,18 @@ describe('AssistantChatTransport', () => {
       'get_script',
       'create_script',
       'update_script',
+      'delete_file',
       'validate_script',
       'run_backtest',
       'get_sdk_reference',
+      'list_venues',
+      'set_preview_target',
       'list_bots',
       'get_bot',
       'create_bot',
       'update_bot',
+      'ask_user',
+      'handoff_to_builder',
     ]) {
       expect(toolNames).toContain(name)
     }
@@ -143,6 +154,9 @@ describe('AssistantChatTransport', () => {
     expect(system).toContain('My Strategy')
     // Arming is out of bounds by prompt as well as by tool schema
     expect(system).toContain('paper')
+    // The preview depth reaches the model, so it can judge whether a backtest
+    // has enough history behind it
+    expect(system).toContain('500 bars')
   })
 
   test('throws when no provider resolves ai:inference', () => {

@@ -75,7 +75,10 @@ import type {
   IndicatorScript,
 } from '@/stores/indicator-scripts-store'
 import type { BacktestResult, BacktestSignals } from '@/lib/indicators/backtest'
-import type { AssistantWorkbenchBridge } from '@/lib/assistant/assistant-tools'
+import type {
+  AssistantPreviewTarget,
+  AssistantWorkbenchBridge,
+} from '@/lib/assistant/assistant-tools'
 import { runBacktest } from '@/lib/indicators/backtest'
 import { fetchHistoryDepth } from '@/lib/indicators/fetch-depth'
 import {
@@ -98,6 +101,11 @@ import { usePersistedState } from '@/hooks/use-persisted-state'
 import { usePythonConsole } from '@/hooks/use-python-console'
 import { MarketPicker } from '@/components/terminal/market-picker'
 import { AssistantPanel } from '@/components/assistant/assistant-panel'
+import {
+  hasAssistantIntent,
+  requestAssistant,
+  subscribeAssistantIntents,
+} from '@/lib/assistant/assistant-chat-cache'
 
 /**
  * How much history the preview pulls. A long moving average needs real depth
@@ -371,11 +379,29 @@ export function IndicatorWorkbench({
   previewParamsRef.current = previewParams
 
   const run = useCallback(
-    async (script: IndicatorScript, next: Array<IndicatorFile>) => {
+    async (
+      script: IndicatorScript,
+      next: Array<IndicatorFile>,
+      /**
+       * Run against a target the state has not caught up with yet. React
+       * setters are async, so an assistant that re-points the preview and
+       * re-runs in one act would otherwise fetch the OLD pair.
+       */
+      override?: Partial<{
+        market: string
+        pair: string
+        timeframe: string
+        bars: number
+      }>,
+    ) => {
       if (runningRef.current) return
       runningRef.current = true
       setRunning(true)
       setRunError(null)
+      const runMarket = override?.market ?? market
+      const runPair = override?.pair ?? pair
+      const runTimeframe = (override?.timeframe ?? timeframe) as Timeframe
+      const runBars = override?.bars ?? barCountRef.current
       // Console output belongs to the run that produced it.
       clearConsole()
       try {
@@ -397,13 +423,28 @@ export function IndicatorWorkbench({
           // for real depth means walking backwards a page at a time.
           fetchHistoryDepth(
             (limit, endTs) =>
-              marketData.fetchHistory(market, pair, timeframe, limit, endTs),
-            barCountRef.current,
+              marketData.fetchHistory(
+                runMarket,
+                runPair,
+                runTimeframe,
+                limit,
+                endTs,
+              ),
+            runBars,
           ),
-          resolveRequestSeries(meta.requests, { market, pair, timeframe }),
+          resolveRequestSeries(meta.requests, {
+            market: runMarket,
+            pair: runPair,
+            timeframe: runTimeframe,
+          }),
         ])
         if (bars.length === 0) {
-          throw new Error(t('indicatorsPage.noCandles', { pair, market }))
+          throw new Error(
+            t('indicatorsPage.noCandles', {
+              pair: runPair,
+              market: runMarket,
+            }),
+          )
         }
 
         // 4. Compute over fresh (transferable) buffers, keeping whatever the
@@ -417,8 +458,8 @@ export function IndicatorWorkbench({
           script.id,
           toCandleArrays(bars),
           params,
-          pair,
-          timeframe,
+          runPair,
+          runTimeframe,
           requestData,
         )
 
@@ -427,7 +468,7 @@ export function IndicatorWorkbench({
           bars,
           points: buildValuePoints(bars, result.outputs),
           meta,
-          timeframe,
+          timeframe: runTimeframe,
           palettes: result.palettes,
           durationMs: result.durationMs,
           backtest: runPreviewBacktest(meta, bars, result.outputs),
@@ -473,10 +514,24 @@ export function IndicatorWorkbench({
   const [importOpen, setImportOpen] = useState(false)
   const [referenceOpen, setReferenceOpen] = useState(false)
   const [librariesOpen, setLibrariesOpen] = useState(false)
+  // Open by default: the assistant is the fastest way into a script, and a
+  // rail nobody opens teaches nobody that. Still persisted, so closing it is
+  // permanent for that user.
   const [assistantOpen, setAssistantOpen] = usePersistedState<boolean>(
     'assistant.workbench.open',
-    false,
+    true,
   )
+
+  // Something outside the panel wants this surface's assistant (the empty
+  // state's composer, the create menu, a handoff from the Bots page). The
+  // panel consumes the request; this only has to make sure it is mounted.
+  useEffect(() => {
+    const open = () => {
+      if (hasAssistantIntent('indicators')) setAssistantOpen(true)
+    }
+    open()
+    return subscribeAssistantIntents(open)
+  }, [setAssistantOpen])
 
   // ── Builder assistant bridge ──
   // Send-time getters read refs, so assistant tool calls always see the
@@ -486,8 +541,13 @@ export function IndicatorWorkbench({
   selectedIdRef.current = selectedId
   const draftsRef = useRef(drafts)
   draftsRef.current = drafts
-  const previewTargetRef = useRef({ market, pair, timeframe })
-  previewTargetRef.current = { market, pair, timeframe }
+  const previewTargetRef = useRef<AssistantPreviewTarget>({
+    market,
+    pair,
+    timeframe,
+    bars: barCount,
+  })
+  previewTargetRef.current = { market, pair, timeframe, bars: barCount }
 
   /** A script's files with unsaved editor buffers overlaid — what Run uses. */
   const overlaidFiles = useCallback((scriptId: string) => {
@@ -515,6 +575,10 @@ export function IndicatorWorkbench({
           .setFileSource(scriptId, path, source)
         forgetDraft(scriptId, path)
       },
+      deleteFile: (scriptId, path) => {
+        useIndicatorScriptsStore.getState().deleteModule(scriptId, path)
+        forgetDraft(scriptId, path)
+      },
       runPreview: (scriptId) => {
         const script = useIndicatorScriptsStore
           .getState()
@@ -524,6 +588,29 @@ export function IndicatorWorkbench({
         void run(script, next)
       },
       getPreviewTarget: () => previewTargetRef.current,
+      setPreviewTarget: (patch) => {
+        const next = { ...previewTargetRef.current, ...patch }
+        previewTargetRef.current = next
+        if (patch.market !== undefined) setMarket(patch.market)
+        if (patch.pair !== undefined) setPair(patch.pair)
+        if (patch.timeframe !== undefined) {
+          setTimeframe(patch.timeframe as Timeframe)
+        }
+        if (patch.bars !== undefined) {
+          setBarCount(patch.bars)
+          barCountRef.current = patch.bars
+        }
+        // Re-run against the new target explicitly: `run` reads the state
+        // this render closed over, which is still the old target.
+        const scriptId = selectedIdRef.current
+        if (!scriptId) return
+        const script = useIndicatorScriptsStore
+          .getState()
+          .scripts.find((s) => s.id === scriptId)
+        const nextFiles = overlaidFiles(scriptId)
+        if (!script || !nextFiles) return
+        void run(script, nextFiles, next)
+      },
     }),
     [overlaidFiles, forgetDraft, run],
   )
@@ -663,6 +750,13 @@ export function IndicatorWorkbench({
         onExport={setExportScript}
         onShowHistory={setHistoryScript}
         onImport={() => setImportOpen(true)}
+        onBuildWithAi={() => {
+          setAssistantOpen(true)
+          // Focus rather than send: the menu says "build with AI", it does not
+          // know what they want built. The rail may already be open, so this
+          // has to do something visible either way.
+          requestAssistant('indicators', { focus: true })
+        }}
       />
 
       {/* The assistant is a full-height rail beside everything (header,

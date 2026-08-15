@@ -17,6 +17,10 @@ import { CreateBotDialog } from './create-bot-dialog'
 
 import type { BotDefinition } from '@pairlens/bot-engine/types'
 import { AssistantPanel } from '@/components/assistant/assistant-panel'
+import {
+  hasAssistantIntent,
+  subscribeAssistantIntents,
+} from '@/lib/assistant/assistant-chat-cache'
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
 import { useIndicatorScriptsStore } from '@/stores/indicator-scripts-store'
@@ -53,10 +57,23 @@ export function BotsPage({
   const [createOpen, setCreateOpen] = useState(false)
   const [createScriptId, setCreateScriptId] = useState<string | null>(null)
   const [armTarget, setArmTarget] = useState<BotDefinition | null>(null)
+  // Open by default, like the workbench: building a bot from nothing is a
+  // conversation (which strategy, which market, how big), and the rail is
+  // where that happens. Persisted, so closing it sticks.
   const [assistantOpen, setAssistantOpen] = usePersistedState<boolean>(
     'assistant.bots.open',
-    false,
+    true,
   )
+
+  // The empty state's composer, or a handoff arriving from the workbench.
+  // The panel consumes the request; this makes sure it is mounted to do so.
+  useEffect(() => {
+    const open = () => {
+      if (hasAssistantIntent('bots')) setAssistantOpen(true)
+    }
+    open()
+    return subscribeAssistantIntents(open)
+  }, [setAssistantOpen])
 
   useEffect(() => {
     loadBots()
@@ -114,6 +131,7 @@ export function BotsPage({
               <BotsEmptyState
                 onCreate={() => setCreateOpen(true)}
                 onCreated={setSelectedId}
+                onStartAssistant={() => setAssistantOpen(true)}
               />
             )}
           </div>

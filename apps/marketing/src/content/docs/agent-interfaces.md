@@ -38,10 +38,19 @@ Full list in the [co-pilot tool reference](/docs/copilot-tools).
 ## Builder assistant
 
 The second in-app agent, hosted by the script workbench and the Bots page. Its
-tool surface is the build loop rather than the market: create, read, and edit
-Python scripts (validated in the Pyodide runtime, tracebacks fed back to the
-model), run backtests through the same engine live bots use, and create or
-tune bot deployments.
+tool surface is the build loop rather than the market: create, read, edit and
+delete Python script files (validated in the Pyodide runtime, tracebacks fed
+back to the model so it repairs its own code before it answers), move the
+preview onto the venue, pair, timeframe and depth a script needs, run
+backtests through the same engine live bots use, and create or tune bot
+deployments.
+
+Two of its tools are conversational rather than mechanical. `ask_user` has no
+implementation at all: the model's turn ends on the call, the terminal renders
+the options, and the answer you tap becomes the tool result that resumes the
+run, which is how a decision that is yours stays yours. `handoff_to_builder`
+moves you between the two surfaces and briefs the assistant on the other side,
+so building a bot that needs a new indicator is one thread rather than two.
 
 Its trading boundary is structural. A bot it creates is always paper mode and
 switched off, and its tools have no way to enable, arm, or retarget one; the
