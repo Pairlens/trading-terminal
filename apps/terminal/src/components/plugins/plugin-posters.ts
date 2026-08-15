@@ -24,6 +24,7 @@ export const BUNDLED_POSTERS: Record<string, string> = {
   'groq-inference': '/posters/groq-inference.png',
   'htx-market-connector': '/posters/htx-market-connector.png',
   'jupiter-dex-connector': '/posters/jupiter-dex-connector.png',
+  'kalshi-market-connector': '/posters/kalshi-market-connector.png',
   'kraken-market-connector': '/posters/kraken-market-connector.png',
   'kucoin-market-connector': '/posters/kucoin-market-connector.png',
   'mexc-market-connector': '/posters/mexc-market-connector.png',
@@ -33,5 +34,6 @@ export const BUNDLED_POSTERS: Record<string, string> = {
   'pairlens-core': '/logo512.png',
   'pairlens-intelligence': '/logo512.png',
   'polygon-dex-connector': '/posters/polygon-dex-connector.png',
+  'polymarket-market-connector': '/posters/polymarket-market-connector.png',
   'upbit-market-connector': '/posters/upbit-market-connector.png',
 }
