@@ -49,6 +49,9 @@ const LazyPrivacySection = lazyChunk(() =>
 const LazyIntelligenceSection = lazyChunk(() =>
   loadSections().then((m) => ({ default: m.IntelligenceSection })),
 )
+const LazyAiSection = lazyChunk(() =>
+  loadSections().then((m) => ({ default: m.AiSection })),
+)
 // Keyboard lives in its own chunk: it pulls in the whole command catalog and
 // almost nobody opens it, so it shouldn't ride along with the common sections.
 const LazyKeyboardSection = lazyChunk(() =>
@@ -127,6 +130,8 @@ export function SettingsSectionBody({ section }: { section: SettingsNavId }) {
         <LazyCloudSyncSection />
       ) : section === 'billing' ? (
         <LazyIntelligenceSection />
+      ) : section === 'ai' ? (
+        <LazyAiSection />
       ) : (
         <div className="max-w-4xl rounded-xl border border-dashed p-5">
           <h3 className="font-medium">{t(settingsSectionNameKey(section))}</h3>

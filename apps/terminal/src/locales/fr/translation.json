@@ -403,6 +403,7 @@
     "description": "Mettez à jour les paramètres et préférences de votre profil.",
     "nav": {
       "profile": "Profil",
+      "ai": "Assistant",
       "plugins": "Plugins",
       "cloudSync": "Synchronisation",
       "notifications": "Notifications",
@@ -424,6 +425,16 @@
       "noResults": "Aucun résultat pour « {{query}} »"
     },
     "comingSoon": "Cette section arrive bientôt.",
+    "ai": {
+      "placement": "Emplacement de l’assistant",
+      "placementDescription": "L’endroit où l’assistant attend pendant que vous travaillez. La fenêtre de chat s’ouvre là où se trouve l’assistant, et vous pouvez ensuite la déplacer où vous voulez.",
+      "placementFloating": "Flottant",
+      "placementFloatingDescription": "En bas à droite du terminal, à l’écart de vos panneaux, avec sa suggestion toujours lisible. Le plus facile à repérer.",
+      "placementSidebar": "Barre latérale",
+      "placementSidebarDescription": "Dans la barre de gauche, avec vos autres outils. La suggestion apparaît au survol, ou pendant que l’assistant travaille. Plus discret, et toujours au même endroit.",
+      "persona": "Personnalité",
+      "personaDescription": "À quel point l’assistant détaille ses réponses. Le changement s’applique à votre prochain message."
+    },
     "privacy": {
       "title": "Analytique d’utilisation",
       "description": "Aidez à améliorer Pairlens en partageant des données d’utilisation anonymes et des rapports de plantage. Jamais vos trades, clés API ou soldes.",
@@ -1307,7 +1318,8 @@
     "approvalApprove": "Approuver",
     "approvalDecline": "Refuser",
     "approvalApproved": "Approuvé",
-    "approvalDeclined": "Refusé"
+    "approvalDeclined": "Refusé",
+    "resetPosition": "Réinitialiser la position"
   },
   "copilot": {
     "placeholder": "Interrogez votre lens...",

@@ -90,6 +90,7 @@ import {
 import { BillingStateSync } from '@/components/billing/billing-state-sync'
 import { AssistantProvider } from '@/lib/assistant-core/assistant-provider'
 import { AssistantDock } from '@/components/assistant-dock/assistant-dock'
+import { AssistantSidebarOrbItem } from '@/components/assistant-dock/assistant-sidebar-orb'
 import { useAssistantStore } from '@/stores/assistant-store'
 import { SectionTour } from '@/components/onboarding/section-tour'
 import { isOnboardingComplete } from '@/lib/onboarding-state'
@@ -462,6 +463,11 @@ function TerminalLayout() {
                                 <ChartsNavItem
                                   isActive={activeItem === 'charts'}
                                 />
+                                {/* Renders only when the user has moved
+                                    the assistant into the rail; floating
+                                    is the default and lives in the dock
+                                    below. */}
+                                <AssistantSidebarOrbItem />
                                 <SidebarSeparator className="my-1" />
                                 <SidebarMenuItem>
                                   <SidebarMenuButton

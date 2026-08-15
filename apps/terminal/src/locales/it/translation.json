@@ -403,6 +403,7 @@
     "description": "Aggiorna le impostazioni del profilo e le preferenze.",
     "nav": {
       "profile": "Profilo",
+      "ai": "Assistente",
       "plugins": "Plugin",
       "cloudSync": "Sincronizzazione",
       "notifications": "Notifiche",
@@ -424,6 +425,16 @@
       "noResults": "Nessun risultato per \"{{query}}\""
     },
     "comingSoon": "Questa sezione è in arrivo.",
+    "ai": {
+      "placement": "Posizione dell’assistente",
+      "placementDescription": "Dove l’assistente aspetta mentre lavori. La finestra della chat si apre dal punto in cui si trova l’assistente, e da lì puoi trascinarla ovunque.",
+      "placementFloating": "Fluttuante",
+      "placementFloatingDescription": "In basso a destra nel terminale, lontano dai tuoi pannelli, con il suggerimento sempre leggibile. La più facile da notare.",
+      "placementSidebar": "Barra laterale",
+      "placementSidebarDescription": "Nella barra di sinistra, insieme agli altri strumenti. Il suggerimento compare al passaggio del mouse, o mentre l’assistente lavora. Più discreta, e sempre nello stesso punto.",
+      "persona": "Personalità",
+      "personaDescription": "Quanto l’assistente spiega quando risponde. La modifica vale dal tuo prossimo messaggio."
+    },
     "privacy": {
       "title": "Analisi di utilizzo",
       "description": "Aiuta a migliorare Pairlens condividendo dati di utilizzo anonimi e report di crash. Mai le tue operazioni, chiavi API o saldi.",
@@ -1307,7 +1318,8 @@
     "approvalApprove": "Approva",
     "approvalDecline": "Rifiuta",
     "approvalApproved": "Approvato",
-    "approvalDeclined": "Rifiutato"
+    "approvalDeclined": "Rifiutato",
+    "resetPosition": "Ripristina posizione"
   },
   "copilot": {
     "placeholder": "Chiedi alla tua lente...",
