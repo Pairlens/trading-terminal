@@ -3086,10 +3086,6 @@
       "ascending": "เรียงตาม {{column}} จากน้อยไปมาก",
       "descending": "เรียงตาม {{column}} จากมากไปน้อย"
     },
-    "panel": {
-      "expand": "ขยายแผง",
-      "collapse": "ย่อแผง"
-    },
     "recentlyViewed": "ดูล่าสุด",
     "noMarketsFound": "ไม่พบตลาด",
     "modeLive": "จริง",

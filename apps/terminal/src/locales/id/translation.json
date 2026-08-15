@@ -3086,10 +3086,6 @@
       "ascending": "Diurutkan menurut {{column}}, menaik",
       "descending": "Diurutkan menurut {{column}}, menurun"
     },
-    "panel": {
-      "expand": "Buka panel",
-      "collapse": "Tutup panel"
-    },
     "recentlyViewed": "Baru dilihat",
     "noMarketsFound": "Tidak ada pasar ditemukan",
     "modeLive": "LIVE",

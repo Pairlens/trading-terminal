@@ -3086,10 +3086,6 @@
       "ascending": "{{column}} ölçütüne göre artan sırada sıralandı",
       "descending": "{{column}} ölçütüne göre azalan sırada sıralandı"
     },
-    "panel": {
-      "expand": "Paneli genişlet",
-      "collapse": "Paneli daralt"
-    },
     "recentlyViewed": "Son görüntülenenler",
     "noMarketsFound": "Piyasa bulunamadı",
     "modeLive": "CANLI",

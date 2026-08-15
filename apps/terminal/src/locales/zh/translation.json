@@ -3086,10 +3086,6 @@
       "ascending": "已按{{column}}升序排序",
       "descending": "已按{{column}}降序排序"
     },
-    "panel": {
-      "expand": "展开面板",
-      "collapse": "折叠面板"
-    },
     "recentlyViewed": "最近查看",
     "noMarketsFound": "未找到市场",
     "modeLive": "实盘",

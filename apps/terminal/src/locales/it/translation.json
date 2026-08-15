@@ -3086,10 +3086,6 @@
       "ascending": "Ordinato per {{column}}, crescente",
       "descending": "Ordinato per {{column}}, decrescente"
     },
-    "panel": {
-      "expand": "Espandi pannello",
-      "collapse": "Comprimi pannello"
-    },
     "recentlyViewed": "Visti di recente",
     "noMarketsFound": "Nessun mercato trovato",
     "modeLive": "LIVE",

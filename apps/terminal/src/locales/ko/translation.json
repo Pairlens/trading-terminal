@@ -3086,10 +3086,6 @@
       "ascending": "{{column}} 기준 오름차순 정렬됨",
       "descending": "{{column}} 기준 내림차순 정렬됨"
     },
-    "panel": {
-      "expand": "패널 펼치기",
-      "collapse": "패널 접기"
-    },
     "recentlyViewed": "최근 본 종목",
     "noMarketsFound": "마켓을 찾을 수 없습니다",
     "modeLive": "실거래",

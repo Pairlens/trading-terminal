@@ -3112,10 +3112,6 @@
       "ascending": "Posortowano według: {{column}}, rosnąco",
       "descending": "Posortowano według: {{column}}, malejąco"
     },
-    "panel": {
-      "expand": "Rozwiń panel",
-      "collapse": "Zwiń panel"
-    },
     "recentlyViewed": "Ostatnio oglądane",
     "noMarketsFound": "Nie znaleziono rynków",
     "modeLive": "LIVE",

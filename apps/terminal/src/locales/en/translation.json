@@ -3086,10 +3086,6 @@
       "ascending": "Sorted by {{column}}, ascending",
       "descending": "Sorted by {{column}}, descending"
     },
-    "panel": {
-      "expand": "Expand panel",
-      "collapse": "Collapse panel"
-    },
     "recentlyViewed": "Recently viewed",
     "noMarketsFound": "No markets found",
     "modeLive": "LIVE",

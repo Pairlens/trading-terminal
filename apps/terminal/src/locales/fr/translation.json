@@ -3086,10 +3086,6 @@
       "ascending": "Trié par {{column}}, croissant",
       "descending": "Trié par {{column}}, décroissant"
     },
-    "panel": {
-      "expand": "Déplier le panneau",
-      "collapse": "Replier le panneau"
-    },
     "recentlyViewed": "Vus récemment",
     "noMarketsFound": "Aucun marché trouvé",
     "modeLive": "RÉEL",

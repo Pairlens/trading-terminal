@@ -3086,10 +3086,6 @@
       "ascending": "已依{{column}}遞增排序",
       "descending": "已依{{column}}遞減排序"
     },
-    "panel": {
-      "expand": "展開面板",
-      "collapse": "收合面板"
-    },
     "recentlyViewed": "最近檢視",
     "noMarketsFound": "未找到市場",
     "modeLive": "實盤",
