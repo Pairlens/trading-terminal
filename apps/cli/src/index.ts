@@ -57,7 +57,7 @@ function flag(
 }
 
 const HELP = `
-Pairlens CLI — interact with markets from the command line.
+Pairlens CLI: interact with markets from the command line.
 
 Commands:
   candles     Fetch historical OHLCV candles

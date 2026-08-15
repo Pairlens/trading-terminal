@@ -14,7 +14,7 @@
     "welcome": {
       "eyebrow": "Chào mừng",
       "title": "Gặp gỡ Pairlens",
-      "sub": "Terminal AI-native cho giao dịch spot — riêng tư, cục bộ và hoàn toàn của bạn. Hãy thiết lập trong khoảng một phút.",
+      "sub": "Terminal AI-native cho giao dịch spot: riêng tư, cục bộ và hoàn toàn của bạn. Hãy thiết lập trong khoảng một phút.",
       "label": "Chào mừng"
     },
     "oneTerminal": {
@@ -22,7 +22,7 @@
       "title": "Một terminal. Mọi thị trường.",
       "sub": "Giao dịch spot tập trung và on-chain song song, cùng một trợ lý AI duy nhất đọc từng setup.",
       "points": {
-        "0": "Spot tập trung — OKX, Binance, Coinbase",
+        "0": "Spot tập trung: OKX, Binance, Coinbase",
         "1": "Swap DEX on-chain, định tuyến thông minh",
         "2": "Cổ phiếu & ETF Mỹ"
       },
@@ -37,16 +37,16 @@
     "country": {
       "status": "Đang tinh chỉnh định tuyến khu vực",
       "title": "Bạn đang giao dịch từ quốc gia nào?",
-      "sub": "Một số sàn bị giới hạn theo khu vực hoặc dùng endpoint khu vực riêng — lựa chọn này giúp connector trỏ đến đúng nơi.",
+      "sub": "Một số sàn bị giới hạn theo khu vực hoặc dùng endpoint khu vực riêng. Lựa chọn này giúp connector trỏ đến đúng nơi.",
       "searchPlaceholder": "Tìm quốc gia…",
       "noResults": "Không có quốc gia nào khớp với tìm kiếm của bạn",
       "global": "Không muốn tiết lộ",
-      "globalSub": "Không khuyến nghị — dùng endpoint và mặc định toàn cầu",
+      "globalSub": "Không khuyến nghị: dùng endpoint và mặc định toàn cầu",
       "label": "Quốc gia",
-      "localNote": "Chỉ lưu trên thiết bị này — không bao giờ gửi đến máy chủ Pairlens.",
+      "localNote": "Chỉ lưu trên thiết bị này, không bao giờ gửi đến máy chủ Pairlens.",
       "globalConfirm": {
         "title": "Tiếp tục mà không đặt vị trí?",
-        "body": "Khi chưa chọn quốc gia, lệnh và dữ liệu thị trường dùng endpoint toàn cầu. Trên các sàn có giới hạn khu vực, tính năng có thể không hoạt động và lệnh có thể không được khớp. Chúng tôi khuyên bạn đặt vị trí — chỉ lưu trên thiết bị này.",
+        "body": "Khi chưa chọn quốc gia, lệnh và dữ liệu thị trường dùng endpoint toàn cầu. Trên các sàn có giới hạn khu vực, tính năng có thể không hoạt động và lệnh có thể không được khớp. Chúng tôi khuyên bạn đặt vị trí. Chỉ lưu trên thiết bị này.",
         "ack": "Tôi hiểu hậu quả của việc không thiết lập vị trí",
         "cancel": "Chọn quốc gia",
         "confirm": "Tiếp tục không vị trí"
@@ -55,10 +55,10 @@
     "privacy": {
       "eyebrow": "Riêng tư theo thiết kế",
       "title": "Khóa của bạn. Thiết bị của bạn. Chấm hết.",
-      "sub": "Pairlens vận hành local-first. Thông tin đăng nhập và dữ liệu của bạn ở lại trên máy này — không bao giờ trên máy chủ của chúng tôi.",
+      "sub": "Pairlens vận hành local-first. Thông tin đăng nhập và dữ liệu của bạn ở lại trên máy này, không bao giờ trên máy chủ của chúng tôi.",
       "points": {
         "0": "Khóa và số dư không bao giờ rời khỏi thiết bị này",
-        "1": "Không lưu ký (non-custodial) — Pairlens không thể di chuyển quỹ của bạn",
+        "1": "Không lưu ký (non-custodial): Pairlens không thể di chuyển quỹ của bạn",
         "2": "Không cần email, không cần KYC để bắt đầu"
       },
       "scene": {
@@ -77,7 +77,7 @@
     "routing": {
       "eyebrow": "Định tuyến trực tiếp",
       "title": "Thẳng tới các sàn giao dịch.",
-      "sub": "Kết nối các sàn bạn đã dùng. Lệnh được định tuyến trực tiếp tới đó — không trung gian, không lưu ký, không bán order flow.",
+      "sub": "Kết nối các sàn bạn đã dùng. Lệnh được định tuyến trực tiếp tới đó: không trung gian, không lưu ký, không bán order flow.",
       "points": {
         "0": "Lệnh gửi thẳng tới các sàn bạn kết nối",
         "1": "Chúng tôi không bao giờ lưu ký tài sản của bạn",
@@ -106,7 +106,7 @@
     "themeStep": {
       "status": "Đang điều chỉnh ánh sáng",
       "title": "Bạn muốn giao diện thế nào?",
-      "sub": "Pairlens được tinh chỉnh cho cả sáng và tối. Chọn một chế độ và một bảng màu — bạn có thể đổi lại sau.",
+      "sub": "Pairlens được tinh chỉnh cho cả sáng và tối. Chọn một chế độ và một bảng màu. Bạn có thể đổi lại sau.",
       "light": "Sáng",
       "dark": "Tối",
       "system": "Tự động",
@@ -117,15 +117,15 @@
     "legal": {
       "status": "Trước khi bắt đầu",
       "title": "Vài điều cần xác nhận",
-      "sub": "Pairlens là công cụ giao dịch cổ phiếu và crypto — vui lòng xác nhận từng mục để tiếp tục.",
+      "sub": "Pairlens là công cụ giao dịch cổ phiếu và crypto. Vui lòng xác nhận từng mục để tiếp tục.",
       "items": {
         "0": "Tôi hiểu giao dịch có rủi ro và tôi có thể mất một phần hoặc toàn bộ số vốn của mình.",
         "1": "Tôi chịu trách nhiệm tuân thủ luật pháp tại quốc gia cư trú và/hoặc quốc tịch của mình.",
         "2": "Hoạt động của tôi có thể có ảnh hưởng về thuế, và việc kê khai là trách nhiệm của tôi.",
-        "3": "Pairlens bao gồm các công cụ nâng cao — không phải công cụ nào cũng phù hợp cho người mới.",
+        "3": "Pairlens bao gồm các công cụ nâng cao. Không phải công cụ nào cũng phù hợp cho người mới.",
         "4": "Crypto và cổ phiếu là tài sản thực; giá trị của chúng có thể biến động và thay đổi thường xuyên.",
         "5": "Khi kết nối một sàn giao dịch hoặc broker, tôi dùng tài khoản của chính mình và chấp nhận điều khoản dịch vụ của họ, kể cả mọi phí họ tính trên lệnh hoặc số dư của tôi.",
-        "6": "Theo thiết kế, Pairlens không sao lưu API key hoặc ví của tôi. Chỉ tôi mới giữ bản sao lưu, và Pairlens không thể khôi phục quỹ đã mất — đặc biệt là ví crypto.",
+        "6": "Theo thiết kế, Pairlens không sao lưu API key hoặc ví của tôi. Chỉ tôi mới giữ bản sao lưu, và Pairlens không thể khôi phục quỹ đã mất, đặc biệt là ví crypto.",
         "7": "Pairlens là bản xem trước sớm (Beta), có thể chứa lỗi, và được cung cấp \"nguyên trạng\" không bảo hành hay trách nhiệm pháp lý. Tôi sẽ báo cáo các vấn đề tôi phát hiện."
       },
       "hintFirst": "Xác nhận cả bốn mục để tiếp tục",
@@ -137,22 +137,22 @@
     "workspaces": {
       "eyebrow": "Tùy chỉnh hoàn toàn",
       "title": "Terminal của bạn, bố cục của bạn.",
-      "sub": "Không gian làm việc tùy chỉnh hoàn toàn — xây dựng trải nghiệm bạn muốn, bao nhiêu tùy thích, từ giao diện đơn giản đến bảng điều khiển chuyên nghiệp đầy đủ.",
+      "sub": "Không gian làm việc tùy chỉnh hoàn toàn: xây dựng trải nghiệm bạn muốn, bao nhiêu tùy thích, từ giao diện đơn giản đến bảng điều khiển chuyên nghiệp đầy đủ.",
       "points": {
         "0": "Sắp xếp biểu đồ, sổ lệnh và bảng điều khiển theo ý bạn",
         "1": "Tạo bao nhiêu không gian làm việc tùy thích",
-        "2": "Giao diện đơn giản cho người mới — bàn làm việc đầy đủ cho dân chuyên"
+        "2": "Giao diện đơn giản cho người mới, bàn làm việc đầy đủ cho dân chuyên"
       },
       "label": "Không gian làm việc"
     },
     "analytics": {
       "status": "Dữ liệu của bạn, quyết định của bạn",
       "title": "Giúp cải thiện Pairlens?",
-      "sub": "Chia sẻ dữ liệu sử dụng ẩn danh và báo cáo lỗi để chúng tôi biết cần sửa gì. Không bao giờ bao gồm lệnh giao dịch, khóa hay số dư của bạn — và bạn có thể đổi bất cứ lúc nào trong cài đặt.",
+      "sub": "Chia sẻ dữ liệu sử dụng ẩn danh và báo cáo lỗi để chúng tôi biết cần sửa gì. Không bao giờ bao gồm lệnh giao dịch, khóa hay số dư của bạn, và bạn có thể đổi bất cứ lúc nào trong cài đặt.",
       "options": {
         "enabled": {
           "label": "Chia sẻ dữ liệu sử dụng ẩn danh",
-          "sub": "Mẫu sử dụng và báo cáo lỗi — không gì liên quan đến giao dịch của bạn"
+          "sub": "Mẫu sử dụng và báo cáo lỗi, không gì liên quan đến giao dịch của bạn"
         },
         "disabled": {
           "label": "Không, cảm ơn",
@@ -174,7 +174,7 @@
         },
         "sync": {
           "title": "Đồng bộ đám mây",
-          "sub": "Cài đặt & bố cục trên mọi thiết bị — khóa vẫn ở cục bộ"
+          "sub": "Cài đặt & bố cục trên mọi thiết bị, khóa vẫn ở cục bộ"
         },
         "community": {
           "title": "Không gian làm việc cộng đồng",
@@ -182,7 +182,7 @@
         }
       },
       "create": "Tạo tài khoản",
-      "skip": "Bỏ qua — giữ mọi thứ trên thiết bị này",
+      "skip": "Bỏ qua: giữ mọi thứ trên thiết bị này",
       "signedIn": "Đã đăng nhập với {{email}}",
       "label": "Tài khoản",
       "otpSendFailed": "Gửi mã OTP thất bại",
@@ -228,7 +228,7 @@
       "eyebrow": "Biểu đồ",
       "overview": {
         "title": "Nến trực tiếp từ sàn giao dịch",
-        "description": "Nến thời gian thực truyền trực tiếp từ sàn giao dịch — không trung gian. Chuyển khung thời gian, di chuột để xem giá trị chính xác, và đào sâu vào diễn biến giá."
+        "description": "Nến thời gian thực truyền trực tiếp từ sàn giao dịch, không trung gian. Chuyển khung thời gian, di chuột để xem giá trị chính xác, và đào sâu vào diễn biến giá."
       },
       "signals": {
         "title": "Tín hiệu ở mỗi lần đóng nến",
@@ -239,18 +239,18 @@
       "eyebrow": "Cảnh báo",
       "intro": {
         "title": "Cảnh báo theo dõi thay bạn",
-        "description": "Đặt một mức giá và rời đi — khi giá vượt qua nó, Pairlens sẽ báo cho bạn ngay trong ứng dụng và trên màn hình desktop ngay khoảnh khắc đó."
+        "description": "Đặt một mức giá và rời đi. Khi giá vượt qua nó, Pairlens sẽ báo cho bạn ngay trong ứng dụng và trên màn hình desktop ngay khoảnh khắc đó."
       },
       "build": {
         "title": "Tự soạn kích hoạt của riêng bạn",
-        "description": "Kết hợp các cặp, điều kiện và hành động thành quy tắc chính xác — mức giá, tín hiệu kích hoạt, biến động phần trăm — và quyết định chính xác cách bạn được thông báo."
+        "description": "Kết hợp các cặp, điều kiện và hành động thành quy tắc chính xác (mức giá, tín hiệu kích hoạt, biến động phần trăm) và quyết định chính xác cách bạn được thông báo."
       }
     },
     "workflows": {
       "eyebrow": "Quy trình",
       "intro": {
         "title": "Tự động hóa việc thường ngày",
-        "description": "Kết nối kích hoạt, điều kiện và hành động thành các luồng có thể lặp lại — một tín hiệu breakout có thể tự kiểm tra khối lượng, cảnh báo bạn, và ghi lại setup vào nhật ký."
+        "description": "Kết nối kích hoạt, điều kiện và hành động thành các luồng có thể lặp lại: một tín hiệu breakout có thể tự kiểm tra khối lượng, cảnh báo bạn, và ghi lại setup vào nhật ký."
       },
       "runs": {
         "title": "Mỗi lần chạy đều được ghi lại",
@@ -261,40 +261,40 @@
       "eyebrow": "Chỉ báo & Chiến lược",
       "code": {
         "title": "Viết chỉ báo bằng Python thực thụ",
-        "description": "Lập trình bất kỳ chỉ báo nào với Python và NumPy thực thụ — biên dịch và chạy cục bộ ngay khi bạn gõ, với bản xem trước trực tiếp cho từng chuỗi dữ liệu."
+        "description": "Lập trình bất kỳ chỉ báo nào với Python và NumPy thực thụ. Biên dịch và chạy cục bộ ngay khi bạn gõ, với bản xem trước trực tiếp cho từng chuỗi dữ liệu."
       },
       "chart": {
         "title": "Thêm vào bất kỳ biểu đồ nào",
-        "description": "Các script đã lưu xuất hiện trong mục Custom ở bộ chọn chỉ báo của mọi biểu đồ — thêm vào bất kỳ cặp nào dưới dạng overlay hoặc khung phụ, kèm cả tham số đầu vào."
+        "description": "Các script đã lưu xuất hiện trong mục Custom ở bộ chọn chỉ báo của mọi biểu đồ. Thêm vào bất kỳ cặp nào dưới dạng overlay hoặc khung phụ, kèm cả tham số đầu vào."
       }
     },
     "accounts": {
       "eyebrow": "Tài khoản",
       "intro": {
         "title": "Kết nối các sàn của bạn",
-        "description": "Liên kết sàn giao dịch, ví và broker. API key đi thẳng vào keychain hệ điều hành của bạn — lưu trên thiết bị này, không bao giờ trên máy chủ của chúng tôi."
+        "description": "Liên kết sàn giao dịch, ví và broker. API key đi thẳng vào keychain hệ điều hành của bạn: lưu trên thiết bị này, không bao giờ trên máy chủ của chúng tôi."
       },
       "balances": {
         "title": "Một góc nhìn cho tất cả",
-        "description": "Số dư trên mọi sàn đã kết nối gộp lại thành một bức tranh duy nhất — spot, on-chain và cổ phiếu cùng nhau."
+        "description": "Số dư trên mọi sàn đã kết nối gộp lại thành một bức tranh duy nhất: spot, on-chain và cổ phiếu cùng nhau."
       }
     },
     "plugins": {
       "eyebrow": "Plugin",
       "intro": {
         "title": "Mở rộng terminal",
-        "description": "Connector thị trường, giao diện, tín hiệu và bot cài đặt từ Plugin Store chỉ với một cú nhấp — terminal của bạn phát triển cùng bạn."
+        "description": "Connector thị trường, giao diện, tín hiệu và bot cài đặt từ Plugin Store chỉ với một cú nhấp. Terminal của bạn phát triển cùng bạn."
       },
       "sandbox": {
         "title": "An toàn theo mặc định",
-        "description": "Plugin bên thứ ba chạy trong sandbox với mã đã ký và phê duyệt mạng theo từng host — bạn luôn kiểm soát những gì chúng có thể chạm tới."
+        "description": "Plugin bên thứ ba chạy trong sandbox với mã đã ký và phê duyệt mạng theo từng host. Bạn luôn kiểm soát những gì chúng có thể chạm tới."
       }
     },
     "workspaces": {
       "eyebrow": "Không gian làm việc",
       "intro": {
         "title": "Bàn làm việc của bạn, đã lưu",
-        "description": "Sắp xếp biểu đồ, sổ lệnh và bảng điều khiển thành bố cục phù hợp với cách bạn giao dịch — rồi chuyển đổi ngay giữa các bàn làm việc đã lưu."
+        "description": "Sắp xếp biểu đồ, sổ lệnh và bảng điều khiển thành bố cục phù hợp với cách bạn giao dịch, rồi chuyển đổi ngay giữa các bàn làm việc đã lưu."
       }
     },
     "workspaceStore": {
@@ -308,7 +308,7 @@
       "eyebrow": "Bot",
       "strategy": {
         "title": "Backtest xong rồi để nó giao dịch",
-        "description": "Bot chạy đúng chiến lược Python bạn đã kiểm thử — cùng tín hiệu, cùng điểm dừng, cùng đoạn mã — nên những con số trong backtest mô tả chính xác điều nó sẽ làm."
+        "description": "Bot chạy đúng chiến lược Python bạn đã kiểm thử (cùng tín hiệu, cùng điểm dừng, cùng đoạn mã), nên những con số trong backtest mô tả chính xác điều nó sẽ làm."
       },
       "running": {
         "title": "Máy của bạn, khóa của bạn",
@@ -323,7 +323,7 @@
       "onClose": "khi đóng nến",
       "crossedAbovePrice": "vượt lên trên {{price}}",
       "conditionCrossesAbove": "vượt lên trên",
-      "notifyMeDesktopInApp": "Thông báo cho tôi — desktop + trong ứng dụng",
+      "notifyMeDesktopInApp": "Thông báo cho tôi: desktop + trong ứng dụng",
       "nodeTrigger": "Trigger",
       "nodeSignalLabel": "Tín hiệu: {{signal}}",
       "nodeCondition": "Điều kiện",
@@ -335,19 +335,19 @@
       "runStopLossGuard": "Canh stop-loss",
       "ranAt": "{{time}} · đã chạy",
       "runsLocally": "Chạy cục bộ",
-      "storedOnDevice": "Lưu trên thiết bị này — không bao giờ trên máy chủ của chúng tôi",
+      "storedOnDevice": "Lưu trên thiết bị này, không bao giờ trên máy chủ của chúng tôi",
       "osKeychain": "Keychain của hệ điều hành",
       "pluginKindMarketData": "Dữ liệu thị trường",
       "pluginKindTheme": "Giao diện",
       "pluginKindAutomation": "Tự động hóa",
       "sandboxedByDefault": "Chạy trong sandbox theo mặc định",
       "signedVerified": "Đã ký và xác minh",
-      "networkAccessApproveHost": "Truy cập mạng — bạn phê duyệt từng host",
+      "networkAccessApproveHost": "Truy cập mạng: bạn phê duyệt từng host",
       "copiedToWorkspaces": "Đã sao chép vào không gian làm việc của bạn",
       "statNet": "Lợi nhuận ròng",
       "statMaxDd": "DD tối đa",
       "sameCodeGoesLive": "Cùng một đoạn mã chạy ở chế độ thật",
-      "runsOnYourMachine": "Chạy trên máy của bạn — hãy giữ máy thức",
+      "runsOnYourMachine": "Chạy trên máy của bạn, hãy giữ máy thức",
       "botMeanReversion": "Hồi quy về trung bình",
       "chainWallet": "Ví {{chain}}"
     }
@@ -378,7 +378,7 @@
     "ordersLockedRiskLimit": "Lệnh bị khóa do vi phạm giới hạn rủi ro. Mở khóa tại Cài đặt > Quản lý rủi ro.",
     "buyOrdersLockedRiskLimit": "Lệnh mua bị khóa do vi phạm giới hạn rủi ro. Mở khóa tại Cài đặt > Quản lý rủi ro.",
     "positionSizeExceeded": "Lệnh bị chặn do giới hạn rủi ro: vị thế chiếm {{ratioPct}}% danh mục, vượt mức tối đa {{maxPositionSize}}% của bạn. Điều chỉnh tại Cài đặt > Quản lý rủi ro.",
-    "sessionExpired": "Phiên đăng nhập của bạn đã hết hạn — vui lòng đăng nhập lại.",
+    "sessionExpired": "Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.",
     "startFromTemplate": "Bắt đầu từ mẫu",
     "chips": {
       "osNotification": "Thông báo hệ thống",
@@ -439,7 +439,7 @@
       "title": "Phân tích sử dụng",
       "description": "Giúp cải thiện Pairlens bằng cách chia sẻ dữ liệu sử dụng ẩn danh và báo cáo lỗi. Không bao giờ bao gồm lệnh giao dịch, API key hay số dư của bạn.",
       "toggleDescription": "Chỉ áp dụng cho thiết bị này. Tắt sẽ dừng mọi phân tích ngay lập tức.",
-      "notConfigured": "Bản dựng này chưa cấu hình khóa phân tích — không có gì được thu thập.",
+      "notConfigured": "Bản dựng này chưa cấu hình khóa phân tích: không có gì được thu thập.",
       "dataTitle": "Dữ liệu tài khoản của bạn",
       "dataSignedOut": "Bạn chưa đăng nhập nên máy chủ của chúng tôi không có dữ liệu tài khoản nào. Mọi thứ Pairlens biết về bạn đều nằm trên thiết bị này.",
       "exportTitle": "Xuất dữ liệu của bạn",
@@ -480,7 +480,7 @@
       "title": "Những gì được đồng bộ lên tài khoản",
       "description": "Chọn thứ mà một thiết bị khác nên nhận được. Mọi thứ bị tắt sẽ ở lại thiết bị này.",
       "deviceOnly": "Các công tắc này chỉ áp dụng cho thiết bị này và bản thân chúng không bao giờ được đồng bộ.",
-      "nothingDeleted": "Tắt một mục không bao giờ xoá gì cả. Nó vẫn ở lại thiết bị này, và bản sao đã có trong tài khoản của bạn được giữ nguyên — chỉ là ngừng cập nhật và trở nên cũ.",
+      "nothingDeleted": "Tắt một mục không bao giờ xoá gì cả. Nó vẫn ở lại thiết bị này, và bản sao đã có trong tài khoản của bạn được giữ nguyên: chỉ là ngừng cập nhật và trở nên cũ.",
       "resumeNote": "Bật lại thì hai bên sẽ hợp nhất, thay đổi mới nhất thắng. Thứ bạn đã xoá trong lúc tắt có thể quay lại nếu tài khoản vẫn còn giữ.",
       "cloudOnlyWarning": "Mục này chỉ được lưu trong tài khoản, nên tắt đi nghĩa là nó không được ghi lại ở đâu cả.",
       "signedOutTitle": "Chưa đăng nhập",
@@ -564,16 +564,16 @@
       "thirdPartyAcknowledge": "Tôi hiểu rằng registry bên thứ ba có thể chứa plugin chưa được xác minh và tôi chấp nhận rủi ro.",
       "invalidUrl": "Vui lòng nhập URL hợp lệ (ví dụ: https://registry.example.com).",
       "desktopEgressTitle": "Truy cập mạng trên desktop",
-      "desktopEgressDescription": "Ứng dụng desktop chặn các yêu cầu mạng đến những host chưa được cho phép. Để truy cập registry này, hãy cấp quyền truy cập mạng — terminal sẽ tải lại để áp dụng.",
+      "desktopEgressDescription": "Ứng dụng desktop chặn các yêu cầu mạng đến những host chưa được cho phép. Để truy cập registry này, hãy cấp quyền truy cập mạng. Terminal sẽ tải lại để áp dụng.",
       "desktopEgressGranted": "Host của registry này đã có quyền truy cập mạng.",
       "desktopEgressGrant": "Cho phép truy cập mạng & tải lại",
       "publisherKeys": "Khóa nhà phát hành đáng tin cậy",
-      "publisherKeysDescription": "Plugin chỉ được cài đặt khi chữ ký khớp với khóa nhà phát hành đáng tin cậy. Thêm khóa tại đây để tin tưởng plugin từ registry tự lưu trữ hoặc của công ty. Chỉ thêm khóa từ nguồn bạn tin tưởng — bất kỳ ai giữ khóa riêng tương ứng đều có thể phát hành plugin yêu cầu toàn quyền truy cập terminal của bạn.",
+      "publisherKeysDescription": "Plugin chỉ được cài đặt khi chữ ký khớp với khóa nhà phát hành đáng tin cậy. Thêm khóa tại đây để tin tưởng plugin từ registry tự lưu trữ hoặc của công ty. Chỉ thêm khóa từ nguồn bạn tin tưởng: bất kỳ ai giữ khóa riêng tương ứng đều có thể phát hành plugin yêu cầu toàn quyền truy cập terminal của bạn.",
       "publisherKeysEmpty": "Không có khóa tùy chỉnh nào. Các nhà phát hành Pairlens chính thức luôn được tin tưởng.",
       "publisherKeyIdLabel": "ID khóa",
       "publisherKeyIdPlaceholder": "acme-plugins-2026",
       "publisherKeyValueLabel": "Khóa công khai (base64 Ed25519)",
-      "publisherKeyIdInvalid": "ID khóa gồm chữ thường, chữ số và dấu gạch ngang (2–64 ký tự).",
+      "publisherKeyIdInvalid": "ID khóa gồm chữ thường, chữ số và dấu gạch ngang (2-64 ký tự).",
       "publisherKeyIdReserved": "ID này được dành riêng cho một khóa Pairlens tích hợp sẵn.",
       "publisherKeyIdDuplicate": "Đã có khóa với ID này được tin tưởng.",
       "publisherKeyValueInvalid": "Không phải khóa công khai Ed25519 hợp lệ (yêu cầu 32 byte, mã hóa base64).",
@@ -581,7 +581,7 @@
       "publisherKeyRemove": "Xóa",
       "publisherKeyFingerprint": "Dấu vân tay",
       "publisherKeyConsentTitle": "Tin tưởng nhà phát hành này?",
-      "publisherKeyConsentBody": "Plugin ký bằng khóa này sẽ có thể cài đặt trên thiết bị này. Một nhà phát hành độc hại có thể phát hành plugin yêu cầu toàn quyền — với quyền truy cập dữ liệu của các plugin khác, thông tin đăng nhập sàn giao dịch đã lưu, và giao dịch. So sánh dấu vân tay với nhà phát hành qua một kênh bạn tin tưởng trước khi tiếp tục.",
+      "publisherKeyConsentBody": "Plugin ký bằng khóa này sẽ có thể cài đặt trên thiết bị này. Một nhà phát hành độc hại có thể phát hành plugin yêu cầu toàn quyền, với quyền truy cập dữ liệu của các plugin khác, thông tin đăng nhập sàn giao dịch đã lưu, và giao dịch. So sánh dấu vân tay với nhà phát hành qua một kênh bạn tin tưởng trước khi tiếp tục.",
       "publisherKeyConsentConfirm": "Tin tưởng khóa này",
       "publisherKeyConsentCancel": "Hủy",
       "updatesTitle": "Cập nhật Plugin",
@@ -659,7 +659,7 @@
     },
     "connection": {
       "title": "Kết nối dữ liệu thị trường",
-      "description": "Dữ liệu thị trường truyền trực tiếp từ các sàn giao dịch qua các plugin connector đã cài đặt — không có máy chủ trung gian.",
+      "description": "Dữ liệu thị trường truyền trực tiếp từ các sàn giao dịch qua các plugin connector đã cài đặt, không có máy chủ trung gian.",
       "status": {
         "connected": "Đã kết nối",
         "connecting": "Đang kết nối…",
@@ -709,13 +709,13 @@
       "confirmHoldDescription": "Giữ nút gửi cho đến khi đầy. Lệnh tiền thật giữ lâu hơn lệnh giả lập một chút.",
       "confirmClick": "Nhấp một lần",
       "confirmClickDescription": "Nhấp đầu tiên là gửi lệnh. Không còn gì ngăn giữa một cú nhấp nhầm và một lệnh thật.",
-      "confirmGestureNote": "Giới hạn rủi ro vẫn áp dụng như nhau — chỉ thay đổi thao tác, không thay đổi lớp bảo vệ.",
+      "confirmGestureNote": "Giới hạn rủi ro vẫn áp dụng như nhau. Chỉ thay đổi thao tác, không thay đổi lớp bảo vệ.",
       "aiPermissions": "Quyền giao dịch của AI",
       "aiPermissionsDescription": "Những gì trợ lý AI có thể làm mà không cần hỏi. Lệnh nằm ngoài các quyền này luôn cần bạn xác nhận trên thẻ trong khung chat, và mọi lệnh, dù tự động duyệt hay không, đều được kiểm soát theo các giới hạn rủi ro ở trên.",
       "aiPaperAuto": "Tự động duyệt lệnh giả lập",
       "aiPaperAutoDescription": "Chỉ dùng quỹ giả lập. Trợ lý đặt lệnh giả lập mà không cần thẻ xác nhận.",
       "aiLiveAuto": "Tự động duyệt lệnh thật",
-      "aiLiveAutoEmpty": "Chưa cấp quyền cho sàn giao dịch nào — mọi lệnh thật đều cần bạn xác nhận. Cấp quyền cho một sàn giao dịch từ thẻ lệnh bằng \"Không hỏi lại\".",
+      "aiLiveAutoEmpty": "Chưa cấp quyền cho sàn giao dịch nào: mọi lệnh thật đều cần bạn xác nhận. Cấp quyền cho một sàn giao dịch từ thẻ lệnh bằng \"Không hỏi lại\".",
       "aiLiveAutoDescription": "Quỹ thật. Trợ lý đặt lệnh thật trên các sàn giao dịch này mà không cần thẻ xác nhận:",
       "aiLiveAutoRevoke": "Thu hồi {{market}}"
     },
@@ -723,32 +723,32 @@
       "title": "Pairlens Intelligence",
       "description": "Trợ lý AI được lưu trữ sẵn, kèm nghiên cứu chuyên sâu và tìm kiếm web. Không cần khóa API.",
       "signInFirst": "Đăng nhập để quản lý gói Pairlens Intelligence của bạn.",
-      "selfHosted": "Máy chủ này chưa cấu hình thanh toán — các tính năng AI được lưu trữ hoạt động không cần gói đăng ký.",
+      "selfHosted": "Máy chủ này chưa cấu hình thanh toán. Các tính năng AI được lưu trữ hoạt động không cần gói đăng ký.",
       "loadError": "Không thể tải trạng thái thanh toán. Vui lòng thử lại.",
       "freePlan": "Miễn phí",
-      "active": "Đang hoạt động — tự động gia hạn.",
-      "complimentary": "Quyền truy cập miễn phí — cộng tác viên nòng cốt. Mức sử dụng không bị tính phí.",
-      "endsOn": "Đã hủy — quyền truy cập kết thúc vào {{date}}.",
+      "active": "Đang hoạt động. Tự động gia hạn.",
+      "complimentary": "Quyền truy cập miễn phí: cộng tác viên nòng cốt. Mức sử dụng không bị tính phí.",
+      "endsOn": "Đã hủy: quyền truy cập kết thúc vào {{date}}.",
       "planCredits": "{{credits}} tín dụng / tháng",
       "perMonth": "/tháng",
       "manage": "Quản lý gói đăng ký",
       "upgradeToMax": "Nâng cấp lên Max",
       "usageTitle": "Ngân sách sử dụng hằng tháng",
-      "usageDescription": "Trò chuyện AI, nghiên cứu và tìm kiếm web dùng chung một ngân sách tín dụng. Ngân sách được đặt lại mỗi chu kỳ thanh toán — tín dụng chưa dùng không được cộng dồn.",
+      "usageDescription": "Trò chuyện AI, nghiên cứu và tìm kiếm web dùng chung một ngân sách tín dụng. Ngân sách được đặt lại mỗi chu kỳ thanh toán. Tín dụng chưa dùng không được cộng dồn.",
       "creditsUsed": "Đã dùng {{used}} / {{granted}} tín dụng",
       "resetsOn": "Đặt lại vào {{date}}",
       "webResearchNote": "Mỗi lần tìm kiếm web được lưu trữ tốn {{credits}} tín dụng cộng với token của yêu cầu kích hoạt nó.",
-      "byokNote": "Muốn dùng nhà cung cấp AI riêng? Các plugin dùng khóa riêng (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) luôn miễn phí — kết nối tại trang Plugin.",
+      "byokNote": "Muốn dùng nhà cung cấp AI riêng? Các plugin dùng khóa riêng (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) luôn miễn phí. Kết nối tại trang Plugin.",
       "checkoutOpened": "Đã mở trang thanh toán trong trình duyệt",
       "checkoutOpenedDescription": "Gói đăng ký sẽ được kích hoạt tại đây ngay khi thanh toán hoàn tất.",
-      "checkoutFailed": "Không thể bắt đầu thanh toán — vui lòng thử lại.",
+      "checkoutFailed": "Không thể bắt đầu thanh toán. Vui lòng thử lại.",
       "portalFailed": "Không thể mở cổng thanh toán.",
-      "taxNote": "Giá chưa bao gồm thuế — thuế được tính khi thanh toán dựa trên vị trí của bạn.",
+      "taxNote": "Giá chưa bao gồm thuế: thuế được tính khi thanh toán dựa trên vị trí của bạn.",
       "packsTitle": "Tín dụng bổ sung",
       "packsDescription": "Gói nạp một lần cộng thêm vào ngân sách hằng tháng. Tín dụng của gói nạp hết hạn 30 ngày sau khi mua và không gia hạn.",
-      "packActive": "{{credits}} tín dụng bổ sung — hết hạn {{date}}",
+      "packActive": "{{credits}} tín dụng bổ sung, hết hạn {{date}}",
       "packAddedToastTitle": "Đã thêm tín dụng bổ sung",
-      "packAddedToastDescription": "Gói tín dụng của bạn đã cộng vào số dư — tín dụng của gói hết hạn 30 ngày sau khi mua."
+      "packAddedToastDescription": "Gói tín dụng của bạn đã cộng vào số dư. Tín dụng của gói hết hạn 30 ngày sau khi mua."
     },
     "about": {
       "desktop": "Máy tính",
@@ -814,14 +814,14 @@
         "sendTest": "Gửi thông báo thử",
         "testTitle": "Pairlens",
         "testBody": "Cảnh báo sẽ trông như thế này.",
-        "testSent": "Đã gửi — hãy xem trung tâm thông báo.",
+        "testSent": "Đã gửi. Hãy xem trung tâm thông báo.",
         "testFailed": "Không hiển thị được thông báo."
       },
       "telegram": {
         "title": "Telegram",
         "description": "Gửi cảnh báo tới một cuộc trò chuyện Telegram để chúng đến điện thoại của bạn khi bạn không ngồi trước terminal.",
         "runningNote": "Cảnh báo chỉ kích hoạt khi Pairlens đang chạy. Trên desktop, ứng dụng có thể tiếp tục chạy nền sau khi bạn đóng cửa sổ.",
-        "privacyNote": "Token của bot chỉ nằm trên thiết bị này — trong keychain của hệ điều hành trên desktop và trong kho mã hóa trên trình duyệt. Nó không bao giờ được gửi tới Pairlens.",
+        "privacyNote": "Token của bot chỉ nằm trên thiết bị này: trong keychain của hệ điều hành trên desktop và trong kho mã hóa trên trình duyệt. Nó không bao giờ được gửi tới Pairlens.",
         "setup": {
           "step1": "Mở cuộc trò chuyện với @BotFather và gửi /newbot.",
           "step2": "Chọn tên và username cho bot của bạn.",
@@ -866,9 +866,9 @@
       "setPassword": "Đặt mật khẩu",
       "changePassword": "Đổi mật khẩu",
       "biometricUnlockTitle": "Mở khoá sinh trắc học",
-      "biometricUnlockDescription": "Mở màn hình khoá bằng chính cách mở khoá của thiết bị — Face ID, Touch ID, vân tay, Windows Hello — thay vì gõ mật khẩu.",
+      "biometricUnlockDescription": "Mở màn hình khoá bằng chính cách mở khoá của thiết bị (Face ID, Touch ID, vân tay, Windows Hello) thay vì gõ mật khẩu.",
       "biometricUnlockScreenOnly": "Mật khẩu vẫn dùng được, và vẫn là lối vào duy nhất nếu cảm biến không còn nhận ra bạn.",
-      "biometricUnlockVaultNote": "Việc này chỉ mở màn hình. Các khoá đã lưu vẫn hỏi mật khẩu riêng của chúng — thêm một passkey vào két bên dưới để mở cả hai bằng một thao tác.",
+      "biometricUnlockVaultNote": "Việc này chỉ mở màn hình. Các khoá đã lưu vẫn hỏi mật khẩu riêng của chúng. Thêm một passkey vào két bên dưới để mở cả hai bằng một thao tác.",
       "biometricUnlockCoveredByVault": "Két của bạn đã mở được bằng passkey hoặc Touch ID, và thứ đó cũng mở màn hình khoá. Thêm một lối nữa ở đây sẽ làm được ít hơn.",
       "turnOff": "Tắt khoá",
       "turnOffDescription": "Nhập mật khẩu hiện tại để gỡ khoá khỏi thiết bị này.",
@@ -905,30 +905,30 @@
       "lockNow": "Khoá",
       "resetButton": "Đặt lại và xoá",
       "resetConfirmTitle": "Xoá thiết bị này?",
-      "resetConfirmBody": "Thao tác này xoá mọi khoá API sàn, khoá ví, không gian làm việc, bố cục biểu đồ và cuộc trò chuyện trên máy này. Không thể hoàn tác và không có khôi phục mật khẩu. Nếu bạn đã đăng nhập, các cài đặt đồng bộ sẽ trở lại khi đăng nhập lại — khoá API và khoá ví thì không bao giờ, vì chúng chỉ được lưu ở đây.",
+      "resetConfirmBody": "Thao tác này xoá mọi khoá API sàn, khoá ví, không gian làm việc, bố cục biểu đồ và cuộc trò chuyện trên máy này. Không thể hoàn tác và không có khôi phục mật khẩu. Nếu bạn đã đăng nhập, các cài đặt đồng bộ sẽ trở lại khi đăng nhập lại. Khoá API và khoá ví thì không bao giờ, vì chúng chỉ được lưu ở đây.",
       "resetConfirmPhrase": "Gõ {{phrase}} để xác nhận.",
       "vaultTitle": "Kho thông tin đăng nhập",
       "vaultDescription": "Mã hóa khóa API sàn và khóa ví của bạn bằng mật khẩu hoặc passkey.",
       "vaultWaysTitle": "Cách mở khoá",
-      "vaultAlsoUnlocks": "Mỗi cách đều mở được cả màn hình khoá terminal — một mật khẩu dùng cho cả hai.",
-      "biometricNeedsVault": "Hãy thiết lập kho với mật khẩu trước — sau đó mới thêm được Touch ID.",
+      "vaultAlsoUnlocks": "Mỗi cách đều mở được cả màn hình khoá terminal: một mật khẩu dùng cho cả hai.",
+      "biometricNeedsVault": "Hãy thiết lập kho với mật khẩu trước. Sau đó mới thêm được Touch ID.",
       "vaultStatusNone": "Chưa thiết lập.",
       "vaultStatusReady_one": "Được bảo vệ bởi 1 cách mở khóa.",
       "vaultStatusReady_other": "Được bảo vệ bởi {{count}} cách mở khóa.",
       "vaultSetUp": "Thiết lập kho",
       "vaultRemoveProtector": "Xóa",
       "vaultRemoveLastBlocked": "Đây là cách duy nhất vào kho của bạn. Hãy thêm cách khác trước khi xóa nó.",
-      "vaultRemoveBiometricOnlyBlocked": "Touch ID không thể là cách duy nhất để vào — vân tay trên máy Mac này có thể thay đổi. Hãy giữ lại mật khẩu hoặc passkey.",
-      "vaultProtectsBody": "Với kho, khóa API và khóa ví của bạn được lưu ở dạng mã hóa. Ai sao chép hồ sơ trình duyệt này — hoặc bộ nhớ của thiết bị này — chỉ nhận được bản mã mà họ không mở nổi nếu không có mật khẩu hay passkey của bạn.",
+      "vaultRemoveBiometricOnlyBlocked": "Touch ID không thể là cách duy nhất để vào: vân tay trên máy Mac này có thể thay đổi. Hãy giữ lại mật khẩu hoặc passkey.",
+      "vaultProtectsBody": "Với kho, khóa API và khóa ví của bạn được lưu ở dạng mã hóa. Ai sao chép hồ sơ trình duyệt này (hoặc bộ nhớ của thiết bị này) chỉ nhận được bản mã mà họ không mở nổi nếu không có mật khẩu hay passkey của bạn.",
       "vaultCeiling": "Nó không bảo vệ khóa trong lúc bạn đang dùng. Bất cứ thứ gì chạy trong trang này đều có thể xin khóa từ kho đã mở, đúng như cách ứng dụng làm. Với những khóa giá trị nhất, ứng dụng desktop vẫn là lựa chọn được khuyến nghị.",
-      "vaultNoRecovery": "Không có khôi phục. Mất hết mọi cách vào thì khóa đã mã hóa cũng mất — cách duy nhất quay lại ứng dụng sẽ xóa dữ liệu của thiết bị này.",
+      "vaultNoRecovery": "Không có khôi phục. Mất hết mọi cách vào thì khóa đã mã hóa cũng mất: cách duy nhất quay lại ứng dụng sẽ xóa dữ liệu của thiết bị này.",
       "vaultDesktopToggleHint": "Khóa của bạn đã nằm trong keychain hệ thống. Bật mục này để thêm một mật khẩu hoặc passkey lên trên.",
       "vaultDesktopOptOutTitle": "Tắt kho thông tin đăng nhập?",
       "vaultDesktopOptOutBody": "Khóa của bạn quay lại chỉ được keychain hệ thống bảo vệ. Không có gì bị xóa, và bạn có thể bật lại kho sau.",
       "vaultDesktopOptOutConfirm": "Tắt kho",
       "vaultMigrated_one": "Đã chuyển 1 khóa sẵn có vào kho.",
       "vaultMigrated_other": "Đã chuyển {{count}} khóa sẵn có vào kho.",
-      "vaultMigrationFailed": "Thiết lập kho chưa hoàn tất. Khóa của bạn vẫn đọc được — hãy mở kho để hoàn tất.",
+      "vaultMigrationFailed": "Thiết lập kho chưa hoàn tất. Khóa của bạn vẫn đọc được. Hãy mở kho để hoàn tất.",
       "vaultSharedBackoff": "Kho và màn hình khóa dùng chung một giới hạn số lần thử, nên quá nhiều mật khẩu sai sẽ làm chậm cả hai.",
       "vaultCliNote": "Công cụ dòng lệnh nhận khóa API qua tham số và không bao giờ đọc kho.",
       "hardLockTitle": "Khóa cứng",
@@ -969,7 +969,7 @@
     "submit": "Gửi báo cáo",
     "sent": "Đã gửi báo cáo. Cảm ơn bạn.",
     "attached": "Gửi kèm v{{version}} · {{platform}} · {{route}}",
-    "consentNotice": "Báo cáo đi qua phân tích sử dụng, hiện đang tắt trên thiết bị này. Gửi sẽ bật nó — bạn có thể tắt lại trong cài đặt Quyền riêng tư.",
+    "consentNotice": "Báo cáo đi qua phân tích sử dụng, hiện đang tắt trên thiết bị này. Gửi sẽ bật nó, bạn có thể tắt lại trong cài đặt Quyền riêng tư.",
     "consentEnabledNotice": "Đã bật trên thiết bị này nên báo cáo của bạn sẽ tới được chúng tôi. Bạn có thể tắt lại bất cứ lúc nào trong cài đặt Quyền riêng tư.",
     "enableAndSend": "Bật phân tích và gửi",
     "unavailableNotice": "Bản dựng này không có khóa phân tích nên không gửi được báo cáo từ ứng dụng. Hãy sao chép và mở issue trên GitHub.",
@@ -980,7 +980,7 @@
     "tabSurvey": "Gửi phản hồi",
     "optional": "(không bắt buộc)",
     "surveySubmit": "Gửi phản hồi",
-    "surveySent": "Cảm ơn bạn — điều này rất hữu ích.",
+    "surveySent": "Cảm ơn bạn, điều này rất hữu ích.",
     "surveyOpenPlaceholder": "Điều bạn muốn thay đổi, thêm hoặc bỏ đi",
     "surveyOtherPlaceholder": "Kể thêm cho chúng tôi"
   },
@@ -1198,7 +1198,7 @@
     "benefits": {
       "cloud": {
         "title": "Tùy chọn trên đám mây",
-        "description": "Cài đặt của bạn sống trong tài khoản — bất kỳ máy nào cũng cảm giác như của bạn chỉ trong vài giây."
+        "description": "Cài đặt của bạn sống trong tài khoản: bất kỳ máy nào cũng cảm giác như của bạn chỉ trong vài giây."
       },
       "sync": {
         "title": "Đồng bộ đa thiết bị",
@@ -1340,7 +1340,7 @@
     "autoApprovedNote": "Đã tự động duyệt ({{mode}} · đang bật không hỏi lại)",
     "turnOff": "Tắt",
     "autoApproving": "Đang tự động duyệt lệnh {{mode}}…",
-    "liveOrderWarning": "Lệnh thật — tiền thật, được áp dụng theo giới hạn rủi ro của bạn.",
+    "liveOrderWarning": "Lệnh thật: tiền thật, được áp dụng theo giới hạn rủi ro của bạn.",
     "dontAskAgainPaper": "Không hỏi lại cho giao dịch giả lập",
     "dontAskAgainLive": "Không hỏi lại cho giao dịch thật trên {{market}}",
     "placing": "Đang đặt lệnh…",
@@ -1355,7 +1355,7 @@
     "keep": "Giữ lại",
     "tradingUnavailable": "Giao dịch hiện không khả dụng.",
     "noCredentialsForMarket": "Chưa có thông tin xác thực nào được kết nối cho {{market}}. Thêm API key trong Accounts để giao dịch thật.",
-    "scheduledCheckPrefix": "[Kiểm tra theo lịch — được đặt cách đây {{minutes}} phút]",
+    "scheduledCheckPrefix": "[Kiểm tra theo lịch: được đặt cách đây {{minutes}} phút]",
     "toolFailed": "Công cụ thất bại"
   },
   "chart": {
@@ -1590,8 +1590,8 @@
     "keepAwakeIdle": "Chế độ ngủ tự động sẽ bị chặn khi bạn bật một bot.",
     "keepAwakeOff": "Máy này có thể ngủ, và bot của bạn sẽ dừng theo.",
     "keepAwakeUnsupported": "Chỉ ứng dụng desktop mới chặn được chế độ ngủ.",
-    "localBody": "Chiến lược của bạn chạy ở đây, bên trong Pairlens — không phải trên máy chủ do chúng tôi vận hành. Đó là điều giữ cho khóa và logic của bạn vẫn là của bạn. Đánh đổi là có thật: thoát Pairlens hoặc để máy này ngủ thì bot cũng dừng theo, và vị thế đang mở sẽ không có ai trông chừng cho đến khi bạn quay lại.",
-    "emptyDescription": "Bot chạy một script chiến lược của bạn trên một thị trường. Bắt đầu từ chiến lược có sẵn, hoặc tự viết bằng Python — mỗi bot mới giao dịch giả lập cho đến khi bạn kích hoạt thật.",
+    "localBody": "Chiến lược của bạn chạy ở đây, bên trong Pairlens, không phải trên máy chủ do chúng tôi vận hành. Đó là điều giữ cho khóa và logic của bạn vẫn là của bạn. Đánh đổi là có thật: thoát Pairlens hoặc để máy này ngủ thì bot cũng dừng theo, và vị thế đang mở sẽ không có ai trông chừng cho đến khi bạn quay lại.",
+    "emptyDescription": "Bot chạy một script chiến lược của bạn trên một thị trường. Bắt đầu từ chiến lược có sẵn, hoặc tự viết bằng Python. Mỗi bot mới giao dịch giả lập cho đến khi bạn kích hoạt thật.",
     "emptyHeadline": "Để một chiến lược canh biểu đồ thay bạn",
     "templateEmaCross": "Bám xu hướng cả hai chiều: mua trên điểm cắt, bán dưới điểm cắt.",
     "templateRsiReversion": "Mua các nhịp giảm quá bán, nhưng chỉ khi giá còn giữ trên xu hướng dài.",
@@ -1665,8 +1665,8 @@
     "createBot": "Tạo bot",
     "back": "Quay lại",
     "next": "Tiếp",
-    "stepProgress": "Bước {{current}}/{{total}} — {{title}}",
-    "strategyIntro": "Bot chạy một script chiến lược — mã Python khai báo khi nào vào lệnh và khi nào thoát. Chọn một chiến lược có sẵn bên dưới để bắt đầu; mã là của bạn, mở và chỉnh sửa bất cứ lúc nào.",
+    "stepProgress": "Bước {{current}}/{{total}}: {{title}}",
+    "strategyIntro": "Bot chạy một script chiến lược: mã Python khai báo khi nào vào lệnh và khi nào thoát. Chọn một chiến lược có sẵn bên dưới để bắt đầu; mã là của bạn, mở và chỉnh sửa bất cứ lúc nào.",
     "stepStrategy": "Chiến lược",
     "stepMarket": "Thị trường",
     "stepSizing": "Khối lượng",
@@ -1676,8 +1676,8 @@
     "groupTemplates": "Chiến lược có sẵn",
     "groupUndeployable": "Chưa chạy được như bot",
     "writeYourOwn": "Tự viết chiến lược của bạn bằng Python",
-    "reasonIndicator": "Chỉ báo — cần meta strategy(...) để chạy như bot",
-    "reasonNotRun": "Chưa chạy lần nào — mở trong Chỉ báo & Chiến lược và chạy một lần",
+    "reasonIndicator": "Chỉ báo: cần meta strategy(...) để chạy như bot",
+    "reasonNotRun": "Chưa chạy lần nào: mở trong Chỉ báo & Chiến lược và chạy một lần",
     "openIndicators": "Mở Chỉ báo & Chiến lược",
     "marketHint": "Bot đánh giá trên các nến đã đóng của cặp này ở khung thời gian này.",
     "sizingKind": "Tính khối lượng vào lệnh theo",
@@ -1702,7 +1702,7 @@
     "armDescription": "Từ giờ \"{{name}}\" sẽ đặt lệnh {{pair}} thật trên {{venue}}, không hỏi xác nhận từng giao dịch.",
     "armVenueLabel": "Sàn giao dịch",
     "armCredentialLabel": "Thông tin đăng nhập",
-    "armMachineCaveat": "Pairlens phải luôn mở trên máy này. Nếu ứng dụng thoát hoặc máy tính ngủ, bot sẽ dừng — còn vị thế nó đã mở thì vẫn để mở, không ai quản lý, cho đến khi bạn quay lại.",
+    "armMachineCaveat": "Pairlens phải luôn mở trên máy này. Nếu ứng dụng thoát hoặc máy tính ngủ, bot sẽ dừng, còn vị thế nó đã mở thì vẫn để mở, không ai quản lý, cho đến khi bạn quay lại.",
     "armConfirmLabel": "Nhập {{phrase}} để xác nhận",
     "armConfirmPhrase": "GIAO DỊCH THẬT",
     "armConfirm": "Bật giao dịch thật",
@@ -1718,14 +1718,14 @@
     "deployAsBot": "Triển khai thành bot",
     "kindDraft": "Bản nháp",
     "templatesIndicators": "Mẫu chỉ báo",
-    "templatesStrategies": "Mẫu chiến lược — chạy được như bot",
+    "templatesStrategies": "Mẫu chiến lược: chạy được như bot",
     "strategyBadgeHint": "Khai báo điểm vào và thoát nên có thể backtest và triển khai thành bot.",
     "indicatorBadgeHint": "Chỉ vẽ giá trị. Thêm meta strategy(...) có điểm vào và thoát để triển khai thành bot.",
     "startFromScratch": "Bắt đầu từ đầu",
     "blankName": "Script mới",
-    "sidebarEmpty": "Chưa có script nào — bắt đầu từ đầu hoặc từ mẫu",
+    "sidebarEmpty": "Chưa có script nào: bắt đầu từ đầu hoặc từ mẫu",
     "entryFile": "đầu vào",
-    "entryFileHint": "Mô-đun đầu vào — định nghĩa meta và compute(ctx)",
+    "entryFileHint": "Mô-đun đầu vào: định nghĩa meta và compute(ctx)",
     "fileActions": "Hành động cho {{file}}",
     "newFile": "Tệp mới",
     "newFileTitle": "Tệp Python mới",
@@ -1737,7 +1737,7 @@
     "deleteFileTitle": "Xóa tệp?",
     "deleteFileDescription": "Thao tác này sẽ xóa vĩnh viễn \"{{file}}\".",
     "scriptActions": "Hành động script",
-    "statusReady": "Sẵn sàng — đang được biểu đồ sử dụng",
+    "statusReady": "Sẵn sàng: đang được biểu đồ sử dụng",
     "statusError": "Lần chạy gần nhất thất bại",
     "neverRun": "Chưa chạy lần nào",
     "updated": "Đã cập nhật {{time}}",
@@ -1784,7 +1784,7 @@
     "errorTitle": "Lỗi script",
     "noCandles": "Không có nến nào trả về cho {{pair}} trên {{market}}",
     "previewEmptyTitle": "Chạy để xem trước",
-    "previewEmptyDescription": "Chạy script để xem trên biểu đồ trực tiếp. Lần chạy đầu tiên sẽ khởi động runtime Python — mất vài giây.",
+    "previewEmptyDescription": "Chạy script để xem trên biểu đồ trực tiếp. Lần chạy đầu tiên sẽ khởi động runtime Python, mất vài giây.",
     "metaPaneOverlay": "Chồng lớp",
     "metaPaneSeparate": "Panel phụ",
     "metaMinBars": "tối thiểu {{count}} nến",
@@ -1823,21 +1823,21 @@
     "exportDescription": "Đóng gói chỉ báo này thành file zip plugin Pairlens mà bạn có thể chia sẻ. Bất kỳ ai cũng có thể cài đặt từ trang Plugin.",
     "exportName": "Tên plugin",
     "exportId": "ID plugin",
-    "exportIdHint": "Chữ thường, chữ số và dấu gạch ngang (2–64 ký tự).",
+    "exportIdHint": "Chữ thường, chữ số và dấu gạch ngang (2-64 ký tự).",
     "exportLocationHint": "Được lưu vào thư mục Tải xuống của bạn",
     "exportDownload": "Tải xuống zip",
     "exportSuccess": "Đã xuất {{file}}",
     "exportSavedTo": "Đã lưu vào {{folder}}. Cài đặt qua Plugin → Nhập plugin.",
     "exportSavedToDownloads": "Đã lưu vào thư mục Tải xuống của bạn. Cài đặt qua Plugin → Nhập plugin.",
     "emptyTitle": "Viết chỉ báo và chiến lược giao dịch",
-    "emptyDescription": "Viết chỉ báo biểu đồ và chiến lược bot bằng Python — chạy trên dữ liệu thị trường trực tiếp, dùng trên biểu đồ của bạn, và biến chiến lược thành bot giao dịch.",
+    "emptyDescription": "Viết chỉ báo biểu đồ và chiến lược bot bằng Python. Chạy trên dữ liệu thị trường trực tiếp, dùng trên biểu đồ của bạn, và biến chiến lược thành bot giao dịch.",
     "templateSma": "Một đường trung bình động trên nguồn bạn chọn. Script nhỏ nhất mà vẫn có ích.",
     "templateRsi": "Chỉ báo dao động ở khung phụ với vùng quá mua, quá bán và điều kiện cảnh báo.",
     "templateMacd": "Hai đường và một biểu đồ cột tự đổi màu theo động lượng của chính nó.",
     "templateBollinger": "Dải băng có tô giữa, tách làm hai tệp để minh hoạ cách import.",
     "templateSupertrend": "Đường đổi màu theo xu hướng và đánh dấu điểm vào lệnh ngay trên nến.",
     "templateHtf": "EMA khung ngày vẽ trên mọi khung thời gian, giữ nguyên đến khi nến lớn đóng.",
-    "emptyFootnote": "Python chạy cục bộ trong trình duyệt — mã của bạn không bao giờ rời máy này. Script chiến lược có thể triển khai thành bot ngay khi đã chạy một lần.",
+    "emptyFootnote": "Python chạy cục bộ trong trình duyệt: mã của bạn không bao giờ rời máy này. Script chiến lược có thể triển khai thành bot ngay khi đã chạy một lần.",
     "pickScript": "Chọn một script ở bên trái để mở.",
     "versionHistory": "Lịch sử phiên bản",
     "versionHistoryDescription": "Mọi thay đổi đều chụp lại các tệp trước khi ghi đè, nên những gì bạn ghi đè không thực sự mất đi.",
@@ -1862,7 +1862,7 @@
     "versionClearTitle": "Xóa lịch sử phiên bản?",
     "versionClearDescription": "Thao tác này sẽ xóa vĩnh viễn mọi phiên bản đã lưu của \"{{name}}\". Các tệp hiện tại không bị ảnh hưởng.",
     "sdkRefTitle": "Tài liệu SDK",
-    "sdkRefDescription": "Mọi thứ SDK Python của pairlens cung cấp — tìm theo tên hoặc theo công dụng.",
+    "sdkRefDescription": "Mọi thứ SDK Python của pairlens cung cấp. Tìm theo tên hoặc theo công dụng.",
     "sdkRefSearchPlaceholder": "Tìm hàm và tài liệu…",
     "sdkRefAll": "Tất cả",
     "sdkRefApi": "API",
@@ -1877,14 +1877,14 @@
     "sdkRefTaPrice": "Tiện ích nến và giá",
     "sdkRefInsert": "Chèn",
     "sdkRefEmpty": "Không có gì khớp với “{{query}}”",
-    "sdkRefEmptyHint": "Tìm kiếm đọc cả tên lẫn mô tả — thử một từ ngắn hơn.",
+    "sdkRefEmptyHint": "Tìm kiếm đọc cả tên lẫn mô tả. Thử một từ ngắn hơn.",
     "librariesTitle": "Thư viện Python",
-    "librariesDescription": "Những gì script có thể import — danh sách chọn lọc, các gói tích hợp sẵn trong runtime và mọi wheel Python thuần từ PyPI.",
+    "librariesDescription": "Những gì script có thể import: danh sách chọn lọc, các gói tích hợp sẵn trong runtime và mọi wheel Python thuần từ PyPI.",
     "librariesSearchPlaceholder": "Tìm thư viện…",
     "librariesCurated": "Chọn lọc",
     "librariesRuntime": "Tích hợp trong runtime",
     "librariesLoading": "Đang tải danh sách gói…",
-    "librariesError": "Không tải được danh sách gói — kiểm tra kết nối và thử lại.",
+    "librariesError": "Không tải được danh sách gói. Kiểm tra kết nối và thử lại.",
     "librariesEmpty": "Không có gì khớp với “{{query}}”",
     "librariesPreloadedBadge": "Nạp sẵn",
     "librariesRuntimeBadge": "Runtime",
@@ -1899,7 +1899,7 @@
     "importNameLabel": "Tên",
     "importPasteLabel": "Mã Python",
     "importPastePlaceholder": "Dán script chỉ báo vào đây…",
-    "importNotIndicator": "Cái này không giống chỉ báo Pairlens — nó phải định nghĩa meta = indicator(…) và compute(ctx). Bạn vẫn có thể nhập rồi sửa trong trình soạn thảo.",
+    "importNotIndicator": "Cái này không giống chỉ báo Pairlens: nó phải định nghĩa meta = indicator(…) và compute(ctx). Bạn vẫn có thể nhập rồi sửa trong trình soạn thảo.",
     "importFileHint": "Một script .py, hoặc gói plugin .zip xuất từ Pairlens.",
     "importChooseFile": "Chọn tệp",
     "importForkHint": "Sao chép một chỉ báo từ plugin đã cài thành script của riêng bạn để chỉnh sửa.",
@@ -1911,20 +1911,20 @@
     "importError": {
       "empty": "Không có gì để nhập.",
       "binary": "Tệp đó không phải mã Python.",
-      "tooLarge": "Quá lớn — chỉ báo giới hạn {{limit}} KB.",
-      "tooManyFiles": "Quá nhiều tệp — một chỉ báo chứa tối đa {{limit}}.",
+      "tooLarge": "Quá lớn: chỉ báo giới hạn {{limit}} KB.",
+      "tooManyFiles": "Quá nhiều tệp: một chỉ báo chứa tối đa {{limit}}.",
       "badZip": "Không đọc được tệp đó dưới dạng zip.",
       "invalidPath": "“{{path}}” không phải đường dẫn mô-đun hợp lệ. Hãy dùng tên mô-đun Python kết thúc bằng .py, nằm trong thư mục chỉ báo.",
       "duplicatePath": "Hai tệp trùng đường dẫn “{{path}}”.",
-      "noEntry": "Không xác định được tệp nào là mô-đun chính — hãy đặt tên {{entry}}.",
+      "noEntry": "Không xác định được tệp nào là mô-đun chính. Hãy đặt tên {{entry}}.",
       "noIndicators": "Plugin đó không mang script chỉ báo có thể nhập. Hãy cài từ trang Plugin rồi fork ở đó.",
       "unsupportedLanguage": "Chỉ báo viết bằng {{language}} không thể nhập.",
       "malformedDescriptor": "Dữ liệu của chỉ báo đó bị lỗi.",
       "unknown": "Nhập thất bại."
     },
     "syntaxErrorDiagnostic": "Lỗi cú pháp",
-    "missingMetaDiagnostic": "main.py không khai báo `meta = indicator(...)` ở cấp cao nhất — biểu đồ không có gì để vẽ.",
-    "missingComputeDiagnostic": "main.py không khai báo `def compute(ctx)` ở cấp cao nhất — script sẽ không tải được."
+    "missingMetaDiagnostic": "main.py không khai báo `meta = indicator(...)` ở cấp cao nhất, biểu đồ không có gì để vẽ.",
+    "missingComputeDiagnostic": "main.py không khai báo `def compute(ctx)` ở cấp cao nhất, script sẽ không tải được."
   },
   "indicators": {
     "title": "Thêm chỉ báo",
@@ -2129,7 +2129,7 @@
     "selectWalletOrders": "Chọn ví để xem lệnh",
     "selectWalletFills": "Chọn ví để xem khớp lệnh",
     "selectWalletBalances": "Chọn ví để xem số dư",
-    "spotNoPositions": "Chế độ giao ngay — không có vị thế ký quỹ",
+    "spotNoPositions": "Chế độ giao ngay: không có vị thế ký quỹ",
     "balances": "Số dư",
     "noBalances": "Không có dữ liệu số dư",
     "total": "Tổng",
@@ -2196,19 +2196,19 @@
     "choppy": "Giằng co",
     "upsell": {
       "priceMonthly": "${{price}}/tháng",
-      "taxNotice": "Giá chưa bao gồm thuế — thuế được tính khi thanh toán.",
+      "taxNotice": "Giá chưa bao gồm thuế, thuế được tính khi thanh toán.",
       "defaultTitle": "Mở khóa Pairlens Intelligence",
       "defaultDescription": "Trợ lý AI được lưu trữ sẵn, kèm nghiên cứu chuyên sâu và tìm kiếm web, và không có khóa API nào để bạn phải quản lý. Mỗi gói đi kèm ngân sách sử dụng hằng tháng dùng chung cho trò chuyện, nghiên cứu và tìm kiếm web.",
-      "byokNote": "Muốn dùng nhà cung cấp riêng? Kết nối khóa Anthropic, OpenAI, Groq hoặc OpenRouter tại <plugins>Plugin</plugins> — AI dùng khóa riêng luôn miễn phí.",
+      "byokNote": "Muốn dùng nhà cung cấp riêng? Kết nối khóa Anthropic, OpenAI, Groq hoặc OpenRouter tại <plugins>Plugin</plugins>. AI dùng khóa riêng luôn miễn phí.",
       "checkoutOpenedTitle": "Đã mở trang thanh toán trong trình duyệt",
       "checkoutActivates": "Gói đăng ký của bạn sẽ kích hoạt tại đây ngay khi thanh toán hoàn tất.",
-      "checkoutStartError": "Không thể bắt đầu thanh toán — vui lòng thử lại.",
+      "checkoutStartError": "Không thể bắt đầu thanh toán. Vui lòng thử lại.",
       "subscriptionRequiredTitle": "Cần đăng ký Pairlens Intelligence",
       "subscriptionRequiredBody": "AI lưu trữ sẵn hoạt động theo gói Intelligence. Đăng ký bên dưới, hoặc kết nối khóa nhà cung cấp AI của riêng bạn trong Plugin.",
       "budgetUsedUpTitle": "Đã dùng hết ngân sách hằng tháng",
       "budgetUsedBody": "Bạn đã dùng hết credit Intelligence của chu kỳ này.",
       "budgetResetsOn": "Ngân sách của bạn sẽ được đặt lại vào {{date}}.",
-      "topUpHint": "Nạp thêm bằng gói credit để tiếp tục — credit của gói hết hạn sau 30 ngày kể từ khi mua.",
+      "topUpHint": "Nạp thêm bằng gói credit để tiếp tục. Credit của gói hết hạn sau 30 ngày kể từ khi mua.",
       "upgradeToMaxHint": "Nâng cấp lên {{label}} để nhận {{credits}} credit mỗi tháng.",
       "manageSubscription": "Quản lý gói đăng ký",
       "portalError": "Không thể mở cổng thanh toán.",
@@ -2453,16 +2453,16 @@
     "disableCoreDescription": "Pairlens Core cung cấp biểu đồ, sổ lệnh, thị trường và hầu hết các panel tích hợp sẵn. Tắt nó sẽ ẩn các panel này và để terminal gần như trống cho đến khi bạn bật lại. Tiếp tục?",
     "disableAnyway": "Vẫn tắt",
     "buildOwnTitle": "Xây dựng plugin của riêng bạn",
-    "buildOwnDescription": "Pairlens là nền tảng mở. Tạo khung plugin, xây dựng, và tải cục bộ — không cần registry.",
+    "buildOwnDescription": "Pairlens là nền tảng mở. Tạo khung plugin, xây dựng, và tải cục bộ, không cần registry.",
     "buildStepScaffold": "Tạo khung plugin mới",
     "buildStepScaffoldNote": "Trong monorepo này, dùng: bun run create:plugin my-plugin",
     "buildStepBuild": "Build & đóng gói",
     "buildStepBuildNote": "Tạo ra một file .zip duy nhất (manifest.json + module.js + styles.css tùy chọn).",
     "buildStepInstall": "Cài đặt nó",
     "buildStepInstallNote": "Vào tab Đã cài đặt và dùng",
-    "buildStepInstallNote2": "— hoặc, trên desktop, kéo thư mục vào thư mục plugin.",
+    "buildStepInstallNote2": "Hoặc, trên desktop, kéo thư mục vào thư mục plugin.",
     "buildRuntimeTitle": "Những gì plugin có thể dùng",
-    "buildRuntimeNote": "Host cung cấp React, @pairlens/plugin-sdk (hooks), hệ thống thiết kế @pairlens/ui (import từ package gốc), và @pairlens/fast-financial-charts tại runtime — đánh dấu chúng là external trong build của bạn. Các component của hệ thống thiết kế được host tạo kiểu; để dùng CSS tùy chỉnh, kèm theo styles.css với plugin của bạn.",
+    "buildRuntimeNote": "Host cung cấp React, @pairlens/plugin-sdk (hooks), hệ thống thiết kế @pairlens/ui (import từ package gốc), và @pairlens/fast-financial-charts tại runtime. Đánh dấu chúng là external trong build của bạn. Các component của hệ thống thiết kế được host tạo kiểu; để dùng CSS tùy chỉnh, kèm theo styles.css với plugin của bạn.",
     "buildExamplesNote": "Xem ví dụ dev-starter và dev-sync trong repo để tham khảo cách hoạt động.",
     "applied": "Đã áp dụng",
     "applyTheme": "Áp dụng giao diện",
@@ -2475,7 +2475,7 @@
     "communityBadge": "Cộng đồng",
     "communityFullTrustBlocked": "Plugin cộng đồng luôn chạy trong sandbox. \"{{name}}\" yêu cầu quyền đặc quyền ứng dụng chính, nên không thể cài đặt.",
     "communityMaintainer": "Duy trì bởi",
-    "communityNotice": "Plugin cộng đồng — được cộng đồng gửi lên và chỉ được Pairlens kiểm duyệt sơ bộ. Nó luôn chạy trong sandbox plugin: chỉ có thể truy cập các host mạng đã khai báo và không bao giờ đọc được khóa sàn giao dịch, ví, hay đặt lệnh của bạn.",
+    "communityNotice": "Plugin cộng đồng: được cộng đồng gửi lên và chỉ được Pairlens kiểm duyệt sơ bộ. Nó luôn chạy trong sandbox plugin: chỉ có thể truy cập các host mạng đã khai báo và không bao giờ đọc được khóa sàn giao dịch, ví, hay đặt lệnh của bạn.",
     "communityViewSource": "Xem mã nguồn",
     "configuration": "Cấu hình",
     "curated": "Chọn lọc tuần này",
@@ -2499,7 +2499,7 @@
     "networkAccess": "Truy cập mạng",
     "noInstalledPlugins": "Chưa cài đặt plugin nào.",
     "noMatches": "Không có plugin nào khớp với tìm kiếm của bạn",
-    "noNetworkAccess": "Không có quyền truy cập mạng bên ngoài — chạy hoàn toàn trên thiết bị.",
+    "noNetworkAccess": "Không có quyền truy cập mạng bên ngoài. Chạy hoàn toàn trên thiết bị.",
     "overview": "Tổng quan",
     "palette": "Bảng màu",
     "panels": "Panel đi kèm",
@@ -2538,7 +2538,7 @@
     },
     "network": {
       "title": "Cho phép “{{name}}” kết nối?",
-      "description": "Plugin này cần truy cập máy chủ bên ngoài Pairlens. Terminal của bạn sẽ gửi yêu cầu mạng tới các host bên dưới. Chỉ cho phép nếu bạn tin plugin này — bạn có thể gỡ bất cứ lúc nào để thu hồi quyền.",
+      "description": "Plugin này cần truy cập máy chủ bên ngoài Pairlens. Terminal của bạn sẽ gửi yêu cầu mạng tới các host bên dưới. Chỉ cho phép nếu bạn tin plugin này. Bạn có thể gỡ bất cứ lúc nào để thu hồi quyền.",
       "hostsIntro": "Nó sẽ có thể kết nối tới:",
       "reloadNote": "Chấp thuận sẽ tải lại terminal để áp dụng thay đổi.",
       "deny": "Không cho phép",
@@ -2546,17 +2546,17 @@
     },
     "toggleFailedEnable": "Không thể bật {{name}}",
     "toggleFailedDisable": "Không thể tắt {{name}}",
-    "updateStagedToast": "Đã chuẩn bị bản cập nhật — khởi động lại để áp dụng",
+    "updateStagedToast": "Đã chuẩn bị bản cập nhật: khởi động lại để áp dụng",
     "restartNow": "Khởi động lại ngay",
     "updateStageFailedToast": "Không thể chuẩn bị bản cập nhật: {{error}}",
-    "resetStagedToast": "Đã đặt lại về mặc định — khởi động lại để hoàn tất",
-    "networkGrantedToast": "Đã cấp quyền truy cập mạng cho \"{{name}}\" — đang tải lại…",
-    "networkDeniedToast": "\"{{name}}\" đã được cài đặt mà không có quyền truy cập mạng — có thể không hoạt động cho đến khi bạn cho phép.",
-    "installCancelledNoTrust": "Đã hủy cài đặt — chưa cấp toàn quyền",
+    "resetStagedToast": "Đã đặt lại về mặc định: khởi động lại để hoàn tất",
+    "networkGrantedToast": "Đã cấp quyền truy cập mạng cho \"{{name}}\", đang tải lại…",
+    "networkDeniedToast": "\"{{name}}\" đã được cài đặt mà không có quyền truy cập mạng, có thể không hoạt động cho đến khi bạn cho phép.",
+    "installCancelledNoTrust": "Đã hủy cài đặt: chưa cấp toàn quyền",
     "installedVersionToast": "Đã cài đặt \"{{name}}\" v{{version}}",
     "installFailedToast": "Không thể cài đặt plugin: {{error}}",
     "localFilesNotFound": "Không tìm thấy tệp plugin cục bộ",
-    "pluginCodeNotFound": "Không tìm thấy mã plugin — hãy cài đặt lại",
+    "pluginCodeNotFound": "Không tìm thấy mã plugin. Hãy cài đặt lại",
     "fullTrustGrantedNameToast": "Đã cấp toàn quyền cho \"{{name}}\"",
     "loadPluginFailedToast": "Không thể tải plugin: {{error}}",
     "importFailedToast": "Không thể nhập plugin: {{error}}",
@@ -2564,7 +2564,7 @@
     "configSaved": "Đã lưu cấu hình",
     "configurationFailed": "Cấu hình thất bại",
     "needsFullTrustToRun": "Cần toàn quyền để chạy",
-    "pendingTrustDescription": "Đóng góp giao diện nên không thể chạy trong sandbox — hãy cấp toàn quyền để bật, hoặc gỡ cài đặt.",
+    "pendingTrustDescription": "Đóng góp giao diện nên không thể chạy trong sandbox. Hãy cấp toàn quyền để bật, hoặc gỡ cài đặt.",
     "remove": "Gỡ bỏ",
     "groupProvidersExtensions": "Nhà cung cấp & Tiện ích mở rộng",
     "uninstallPluginTitle": "Gỡ cài đặt Plugin",
@@ -2581,8 +2581,8 @@
     "sourceRegistry": "Registry",
     "sourceUrl": "URL",
     "sourceLocal": "Cục bộ",
-    "fullTrustGrantedRestartToast": "Đã cấp toàn quyền — khởi động lại để chạy plugin này trong ứng dụng chính",
-    "sandboxedRestartToast": "Plugin sẽ chạy trong sandbox — khởi động lại để áp dụng",
+    "fullTrustGrantedRestartToast": "Đã cấp toàn quyền: khởi động lại để chạy plugin này trong ứng dụng chính",
+    "sandboxedRestartToast": "Plugin sẽ chạy trong sandbox: khởi động lại để áp dụng",
     "requiresFullTrustTitle": "Plugin này đóng góp giao diện và phải chạy ở chế độ toàn quyền.",
     "trustBadgeFullRequired": "Toàn quyền (bắt buộc)",
     "trustBadgeFull": "Toàn quyền",
@@ -2592,8 +2592,8 @@
     "update": "Cập nhật",
     "revokeFullTrustAria": "Thu hồi toàn quyền của {{name}}",
     "grantFullTrustAria": "Cấp toàn quyền cho {{name}}",
-    "fullTrustActiveTitle": "Toàn quyền — chạy trong ứng dụng chính. Nhấp để chuyển sang sandbox.",
-    "sandboxedTitle": "Sandbox — worker cách ly, mạng giới hạn ở các host đã khai báo. Nhấp để cấp toàn quyền.",
+    "fullTrustActiveTitle": "Toàn quyền: chạy trong ứng dụng chính. Nhấp để chuyển sang sandbox.",
+    "sandboxedTitle": "Sandbox: worker cách ly, mạng giới hạn ở các host đã khai báo. Nhấp để cấp toàn quyền.",
     "configureAria": "Cấu hình {{name}}",
     "toggleAria": "Bật/tắt {{name}}",
     "capabilityProvidersTitle": "Nhà cung cấp Tính năng",
@@ -2601,13 +2601,13 @@
     "resetAllOverrides": "Đặt lại tất cả ghi đè",
     "noProviderInstalled": "Không có plugin nào đã cài đặt cung cấp tính năng này",
     "browseStore": "Duyệt Store",
-    "installedNeedsKeySingle": "Đã cài đặt — cần API key",
-    "installedNeedsKeyPlural": "Đã cài đặt {{count}} — tất cả đều cần API key",
+    "installedNeedsKeySingle": "Đã cài đặt: cần API key",
+    "installedNeedsKeyPlural": "Đã cài đặt {{count}}: tất cả đều cần API key",
     "installedDisabledSingle": "Đã cài 1 plugin, nhưng đang tắt",
     "installedDisabledPlural": "Đã cài {{count}} plugin, tất cả đều đang tắt",
     "manage": "Quản lý",
-    "pinnedActiveNote": "Đã ghim — ghi đè thứ tự tự động",
-    "pinnedInactiveNote": "Plugin đã ghim đang tắt — áp dụng thứ tự tự động",
+    "pinnedActiveNote": "Đã ghim: ghi đè thứ tự tự động",
+    "pinnedInactiveNote": "Plugin đã ghim đang tắt: áp dụng thứ tự tự động",
     "autoOrderLabel": "Thứ tự tự động: {{chain}}",
     "chainMore_one": "{{chain}} +{{count}} nữa",
     "chainMore_other": "{{chain}} +{{count}} nữa",
@@ -2658,7 +2658,7 @@
     "manifests": {
       "pairlens-core": {
         "title": "Pairlens Core",
-        "description": "Terminal giao dịch cốt lõi — biểu đồ, sổ lệnh, vào lệnh, khám phá thị trường và danh sách theo dõi"
+        "description": "Terminal giao dịch cốt lõi: biểu đồ, sổ lệnh, vào lệnh, khám phá thị trường và danh sách theo dõi"
       },
       "pairlens-intelligence": {
         "title": "Pairlens Intelligence",
@@ -2686,7 +2686,7 @@
       },
       "openrouter-inference": {
         "title": "OpenRouter",
-        "description": "Suy luận AI qua OpenRouter — một API key dùng cho hàng trăm model từ nhiều nhà cung cấp (dùng key riêng)"
+        "description": "Suy luận AI qua OpenRouter: một API key dùng cho hàng trăm model từ nhiều nhà cung cấp (dùng key riêng)"
       },
       "tavily-search": {
         "title": "Tavily Search",
@@ -2698,7 +2698,7 @@
       },
       "pairlens": {
         "title": "Pairlens",
-        "description": "Giao diện đặc trưng của Pairlens — đen trắng sắc nét với điểm nhấn lăng kính cầu vồng"
+        "description": "Giao diện đặc trưng của Pairlens: đen trắng sắc nét với điểm nhấn lăng kính cầu vồng"
       },
       "zen-trading": {
         "title": "Zen Trading",
@@ -2754,7 +2754,7 @@
       },
       "night-city": {
         "title": "Night City",
-        "description": "Lấy cảm hứng từ Cyberpunk 2077 — vàng điện trên nền xám thép tối, thiết kế sắc cạnh"
+        "description": "Lấy cảm hứng từ Cyberpunk 2077: vàng điện trên nền xám thép tối, thiết kế sắc cạnh"
       },
       "eye-comfort": {
         "title": "Eye Comfort",
@@ -2766,7 +2766,7 @@
       },
       "boomerg": {
         "title": "Boomerg",
-        "description": "Sắc hổ phách trên nền đen, gợi nhớ terminal Bloomberg kinh điển — giao diện đơn cách, góc vuông và màu phím chức năng"
+        "description": "Sắc hổ phách trên nền đen, gợi nhớ terminal Bloomberg kinh điển: giao diện đơn cách, góc vuông và màu phím chức năng"
       },
       "okx-market-connector": {
         "title": "Bộ kết nối Thị trường OKX",
@@ -2826,7 +2826,7 @@
       },
       "alpaca-market-connector": {
         "title": "Bộ kết nối Thị trường Alpaca",
-        "description": "Cổ phiếu & ETF Mỹ qua API broker Alpaca — dữ liệu thị trường thời gian thực, giao dịch cả paper và live"
+        "description": "Cổ phiếu & ETF Mỹ qua API broker Alpaca: dữ liệu thị trường thời gian thực, giao dịch cả paper và live"
       },
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
@@ -2834,39 +2834,39 @@
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",
-        "description": "Dữ liệu thị trường DEX cung cấp bởi GeckoTerminal (CoinGecko) — lịch sử sâu, nến 4 giờ gốc"
+        "description": "Dữ liệu thị trường DEX cung cấp bởi GeckoTerminal (CoinGecko): lịch sử sâu, nến 4 giờ gốc"
       },
       "jupiter-dex-connector": {
         "title": "Bộ kết nối DEX Jupiter",
-        "description": "Aggregator DEX trên Solana — định tuyến giá tốt nhất qua mọi DEX trên Solana"
+        "description": "Aggregator DEX trên Solana: định tuyến giá tốt nhất qua mọi DEX trên Solana"
       },
       "ethereum-dex-connector": {
         "title": "Bộ kết nối DEX Ethereum",
-        "description": "Swap on-chain trên Ethereum — định tuyến giá tốt nhất qua mọi DEX Ethereum, thông qua aggregator KyberSwap"
+        "description": "Swap on-chain trên Ethereum: định tuyến giá tốt nhất qua mọi DEX Ethereum, thông qua aggregator KyberSwap"
       },
       "base-dex-connector": {
         "title": "Bộ kết nối DEX Base",
-        "description": "Swap on-chain trên Base — định tuyến giá tốt nhất qua mọi DEX Base, thông qua aggregator KyberSwap"
+        "description": "Swap on-chain trên Base: định tuyến giá tốt nhất qua mọi DEX Base, thông qua aggregator KyberSwap"
       },
       "arbitrum-dex-connector": {
         "title": "Bộ kết nối DEX Arbitrum",
-        "description": "Swap on-chain trên Arbitrum — định tuyến giá tốt nhất qua mọi DEX Arbitrum, thông qua aggregator KyberSwap"
+        "description": "Swap on-chain trên Arbitrum: định tuyến giá tốt nhất qua mọi DEX Arbitrum, thông qua aggregator KyberSwap"
       },
       "bsc-dex-connector": {
         "title": "Bộ kết nối DEX BNB Chain",
-        "description": "Swap on-chain trên BNB Chain — định tuyến giá tốt nhất qua mọi DEX BNB Chain, thông qua aggregator KyberSwap"
+        "description": "Swap on-chain trên BNB Chain: định tuyến giá tốt nhất qua mọi DEX BNB Chain, thông qua aggregator KyberSwap"
       },
       "polygon-dex-connector": {
         "title": "Bộ kết nối DEX Polygon",
-        "description": "Swap on-chain trên Polygon — định tuyến giá tốt nhất qua mọi DEX Polygon, thông qua aggregator KyberSwap"
+        "description": "Swap on-chain trên Polygon: định tuyến giá tốt nhất qua mọi DEX Polygon, thông qua aggregator KyberSwap"
       },
       "kalshi-market-connector": {
         "title": "Trình kết nối thị trường Kalshi",
-        "description": "Hợp đồng sự kiện trên Kalshi, sàn dự đoán do CFTC quản lý — giao dịch kết quả, không phải tài sản"
+        "description": "Hợp đồng sự kiện trên Kalshi, sàn dự đoán do CFTC quản lý: giao dịch kết quả, không phải tài sản"
       },
       "polymarket-market-connector": {
         "title": "Trình kết nối thị trường Polymarket",
-        "description": "Hợp đồng sự kiện trên CLOB Polymarket — lệnh ký bằng ví, thanh toán bằng USDC"
+        "description": "Hợp đồng sự kiện trên CLOB Polymarket: lệnh ký bằng ví, thanh toán bằng USDC"
       },
       "pairlens-predictions": {
         "title": "Pairlens Dự đoán",
@@ -3105,12 +3105,12 @@
     "connectBroker": "Kết nối Broker",
     "selectBroker": "Chọn broker để kết nối",
     "brokerAccountsTitle": "Broker chứng khoán",
-    "brokerAccountsDesc": "Tài khoản broker chứng khoán (Alpaca…) kết nối qua API key — giao dịch cổ phiếu và ETF Mỹ với quỹ giả lập hoặc thật.",
+    "brokerAccountsDesc": "Tài khoản broker chứng khoán (Alpaca…) kết nối qua API key. Giao dịch cổ phiếu và ETF Mỹ với quỹ giả lập hoặc thật.",
     "noBrokerAccounts": "Chưa kết nối broker chứng khoán nào",
     "noBrokerAccountsDesc": "Kết nối một tài khoản broker để giao dịch cổ phiếu. Alpaca cung cấp key giao dịch giả lập miễn phí chỉ trong vài phút.",
     "comingSoon": "Sắp ra mắt",
     "exchangeAccountsTitle": "Sàn giao dịch Crypto",
-    "exchangeAccountsDesc": "Tài khoản sàn giao dịch tập trung (Binance, OKX…) kết nối qua API key — quỹ của bạn ở lại trên sàn.",
+    "exchangeAccountsDesc": "Tài khoản sàn giao dịch tập trung (Binance, OKX…) kết nối qua API key. Quỹ của bạn ở lại trên sàn.",
     "cryptoWalletsTitle": "Ví Crypto",
     "cryptoWalletsDesc": "Private key để giao dịch on-chain qua các sàn giao dịch phi tập trung.",
     "addWallet": "Thêm ví",
@@ -3159,7 +3159,7 @@
       "osBodyBrowser": "Mọi giá trị đều được niêm phong bằng AES-256-GCM trước khi chạm vào bộ nhớ trình duyệt. Một khóa dữ liệu duy nhất mã hóa tất cả, và khóa đó không bao giờ được ghi ra dưới dạng đọc được.",
       "unlockTitle": "Chỉ bạn mới mở được",
       "unlockBody": "Một mật khẩu, gia cố bằng 600.000 vòng PBKDF2-SHA256; một passkey trên điện thoại hoặc khóa bảo mật của bạn; hoặc Touch ID. Mỗi cách đều bọc cùng một khóa dữ liệu, nên bạn có thể giữ nhiều hơn một lối vào. Pairlens không nhận bất kỳ cách nào trong số đó.",
-      "openSourceTitle": "Mã nguồn công khai — tự mình xác minh",
+      "openSourceTitle": "Mã nguồn công khai, tự mình xác minh",
       "openSourceBody": "Mã nguồn của Pairlens là công khai. Bạn, một người bạn lập trình viên, hoặc thậm chí một AI có thể đọc nó và xác nhận khóa của bạn thực sự ở yên tại chỗ.",
       "limitsTitle": "Những gì cơ chế này không bảo vệ",
       "limitsRunning": "Khi ứng dụng đang mở và đã mở khóa, nó đọc được khóa của bạn. Đó chính là cách nó đặt lệnh cho bạn. Mã hóa bảo vệ một ổ đĩa hay hồ sơ trình duyệt bị sao chép đi, chứ không bảo vệ một máy đã có người ngồi trước mặt.",
@@ -3177,7 +3177,7 @@
     "hero": {
       "eyebrow": "Sàn giao dịch của bạn",
       "title": "Giao dịch với khóa của riêng bạn",
-      "subtitle": "Kết nối sàn giao dịch, broker và ví on-chain bằng API key không bao giờ rời khỏi thiết bị này. Pairlens giao tiếp trực tiếp với từng sàn — không lưu ký, không trung gian."
+      "subtitle": "Kết nối sàn giao dịch, broker và ví on-chain bằng API key không bao giờ rời khỏi thiết bị này. Pairlens giao tiếp trực tiếp với từng sàn: không lưu ký, không trung gian."
     },
     "portfolioEyebrow": "Danh mục",
     "openAccountShelfTitle": "Mở một tài khoản mới",
@@ -3193,8 +3193,8 @@
     "hasAccountNoDesc": "Mở tài khoản {{exchange}} miễn phí",
     "importKey": "Nhập private key",
     "affiliateDisclosure": "Một số liên kết đăng ký có thể mang lại hoa hồng cho Pairlens, không phát sinh thêm chi phí cho bạn.",
-    "vaultSealedBody": "Kho thông tin đăng nhập của bạn đang bị khóa. Các tài khoản của bạn vẫn còn đây — hãy mở khóa để xem và sử dụng.",
-    "credentialsUnreadable": "Không đọc được các khoá đã lưu trên thiết bị này. Không mất gì cả — thử lại hoặc khởi động lại Pairlens.",
+    "vaultSealedBody": "Kho thông tin đăng nhập của bạn đang bị khóa. Các tài khoản của bạn vẫn còn đây, hãy mở khóa để xem và sử dụng.",
+    "credentialsUnreadable": "Không đọc được các khoá đã lưu trên thiết bị này. Không mất gì cả. Thử lại hoặc khởi động lại Pairlens.",
     "addWalletDialogTitle": "Thêm ví crypto",
     "addWalletDialogDescription": "Nhập private key của ví để giao dịch on-chain",
     "blockchainLabel": "Blockchain",
@@ -3207,7 +3207,7 @@
     "disconnect": "Ngắt kết nối",
     "localBadge": "Cục bộ",
     "unknownDate": "Không rõ",
-    "keyExpiredWarning": "Có thể đã hết hạn — không hoạt động {{daysInactive}} ngày (giới hạn {{limitDays}} ngày). Hãy tạo lại API key trên sàn.",
+    "keyExpiredWarning": "Có thể đã hết hạn: không hoạt động {{daysInactive}} ngày (giới hạn {{limitDays}} ngày). Hãy tạo lại API key trên sàn.",
     "keyInactiveWarning": "Không hoạt động {{daysInactive}}/{{limitDays}} ngày. Key sẽ hết hạn sau {{limitDays}} ngày không sử dụng.",
     "exchangeAccountAriaLabel": "Tài khoản sàn {{label}}",
     "cryptoWalletAriaLabel": "Ví crypto {{label}}",
@@ -3297,11 +3297,11 @@
       "enableTitle": "Một số plugin bị tắt",
       "enableBody": "Không gian làm việc này dùng các plugin bạn đã cài nhưng đang tắt. Bật chúng từ trang Plugin để xem mọi panel.",
       "installTitle": "Cần thêm plugin",
-      "installBody": "Một số panel phụ thuộc vào các plugin bạn chưa có. Bạn vẫn có thể thêm không gian làm việc — những panel đó sẽ trống cho đến khi bạn cài đặt các plugin từ Plugin Store."
+      "installBody": "Một số panel phụ thuộc vào các plugin bạn chưa có. Bạn vẫn có thể thêm không gian làm việc, những panel đó sẽ trống cho đến khi bạn cài đặt các plugin từ Plugin Store."
     },
     "security": {
       "trusted": "Toàn quyền truy cập · đi kèm với Pairlens",
-      "needsApproval": "Yêu cầu toàn quyền truy cập — bạn sẽ được yêu cầu phê duyệt",
+      "needsApproval": "Yêu cầu toàn quyền truy cập: bạn sẽ được yêu cầu phê duyệt",
       "gateTitle": "Plugin toàn quyền truy cập",
       "gateBody": "{{names}} chạy với toàn quyền truy cập thông tin đăng nhập và lệnh giao dịch của bạn. Bạn sẽ được yêu cầu phê duyệt từng plugin trước khi kích hoạt."
     },
@@ -3370,7 +3370,7 @@
     "templates": {
       "scalpers-cockpit": {
         "name": "Buồng Lái Scalper",
-        "tagline": "Biểu đồ, sổ lệnh và vào lệnh một chạm — không gì khác.",
+        "tagline": "Biểu đồ, sổ lệnh và vào lệnh một chạm. Không gì khác.",
         "description": "Buồng lái hai cột tối giản cho thực thi nhanh: một biểu đồ bên cạnh sổ lệnh trực tiếp, độ sâu thị trường và một phiếu đặt lệnh. Được tạo ra cho tốc độ trên một màn hình duy nhất."
       },
       "day-trader-pro": {
@@ -3396,7 +3396,7 @@
       "market-discovery": {
         "name": "Khám Phá Thị Trường",
         "tagline": "Tìm ra thứ đang biến động trước khi bạn vào lệnh.",
-        "description": "Một bảng khám phá thuần túy: bộ quét thị trường, các mã biến động mạnh nhất, bản đồ nhiệt theo lĩnh vực, danh sách theo dõi của bạn, và đồng hồ đo Sợ hãi & Tham lam. Không biểu đồ, không phiếu đặt lệnh — chỉ để săn tìm cơ hội tiếp theo."
+        "description": "Một bảng khám phá thuần túy: bộ quét thị trường, các mã biến động mạnh nhất, bản đồ nhiệt theo lĩnh vực, danh sách theo dõi của bạn, và đồng hồ đo Sợ hãi & Tham lam. Không biểu đồ, không phiếu đặt lệnh, chỉ để săn tìm cơ hội tiếp theo."
       },
       "portfolio-command": {
         "name": "Chỉ Huy Danh Mục",
@@ -3444,7 +3444,7 @@
       },
       "ultrawide-trading-floor": {
         "name": "Sàn Giao Dịch Ultrawide",
-        "tagline": "Mọi thứ, ở khắp mọi nơi — cho màn hình lớn.",
+        "tagline": "Mọi thứ, ở khắp mọi nơi, cho màn hình lớn.",
         "description": "Một trung tâm chỉ huy bốn cột lấp đầy màn hình ultrawide hoặc màn hình phụ: bộ quét, biểu đồ, sổ lệnh và độ sâu, và một phiếu đặt lệnh nằm trên các vị thế đang mở của bạn. Bố cục tối đa nhất."
       },
       "classic-terminal": {
@@ -3474,19 +3474,19 @@
       "dual-charts": {
         "name": "Biểu Đồ Đôi",
         "tagline": "Hai biểu đồ cạnh nhau.",
-        "description": "Hai khung biểu đồ độc lập cạnh nhau — mỗi khung giữ riêng thị trường, khung thời gian và loại biểu đồ của mình. Đặt một cặp khác cho mỗi khung bằng bộ chọn cặp của nó.",
+        "description": "Hai khung biểu đồ độc lập cạnh nhau. Mỗi khung giữ riêng thị trường, khung thời gian và loại biểu đồ của mình. Đặt một cặp khác cho mỗi khung bằng bộ chọn cặp của nó.",
         "menuLabel": "Biểu Đồ Đôi"
       },
       "triple-charts": {
         "name": "Ba Biểu Đồ",
         "tagline": "Một biểu đồ lớn với hai biểu đồ xếp chồng bên cạnh.",
-        "description": "Một biểu đồ chính lớn với hai biểu đồ nhỏ hơn xếp chồng bên phải — mỗi biểu đồ độc lập, để theo dõi một cặp dẫn đầu so với hai cặp khác.",
+        "description": "Một biểu đồ chính lớn với hai biểu đồ nhỏ hơn xếp chồng bên phải, mỗi biểu đồ độc lập, để theo dõi một cặp dẫn đầu so với hai cặp khác.",
         "menuLabel": "Ba Biểu Đồ"
       },
       "quad-charts": {
         "name": "Bốn Biểu Đồ",
         "tagline": "Lưới biểu đồ 2×2.",
-        "description": "Bốn biểu đồ độc lập trong một lưới 2×2 — một buồng lái đa biểu đồ đầy đủ để theo dõi nhiều thị trường cùng lúc.",
+        "description": "Bốn biểu đồ độc lập trong một lưới 2×2, một buồng lái đa biểu đồ đầy đủ để theo dõi nhiều thị trường cùng lúc.",
         "menuLabel": "Bốn Biểu Đồ"
       },
       "laptop-focus": {
@@ -3517,19 +3517,19 @@
       "home-pulse": {
         "name": "Trang chủ",
         "tagline": "Bảng mặc định: bộ quét, tâm lý, mã biến động và tin tức.",
-        "description": "Bảng trang chủ mặc định — bộ quét thị trường, một dải nhịp đập thị trường với đồng hồ đo Sợ hãi & Tham lam và coin hàng đầu xếp tab cùng danh sách theo dõi của bạn, và một cột tin tức cao suốt trang. Mọi thứ trên đó hoạt động mà không cần tài khoản.",
+        "description": "Bảng trang chủ mặc định: bộ quét thị trường, một dải nhịp đập thị trường với đồng hồ đo Sợ hãi & Tham lam và coin hàng đầu xếp tab cùng danh sách theo dõi của bạn, và một cột tin tức cao suốt trang. Mọi thứ trên đó hoạt động mà không cần tài khoản.",
         "menuLabel": "Mặc định"
       },
       "markets-board": {
         "name": "Bảng Thị Trường",
         "tagline": "Chỉ bộ quét thị trường, toàn màn hình.",
-        "description": "Bộ quét thị trường rộng hết cỡ — cách đơn giản nhất để duyệt và sắp xếp mọi cặp có thể giao dịch.",
+        "description": "Bộ quét thị trường rộng hết cỡ, cách đơn giản nhất để duyệt và sắp xếp mọi cặp có thể giao dịch.",
         "menuLabel": "Thị trường"
       },
       "markets-overview": {
         "name": "Tổng Quan Thị Trường",
         "tagline": "Bộ quét bên cạnh các mã biến động mạnh và danh sách theo dõi của bạn.",
-        "description": "Bộ quét thị trường cùng với các mã biến động mạnh nhất và danh sách theo dõi của bạn — một trang chủ cân bằng để tìm và theo dõi cơ hội.",
+        "description": "Bộ quét thị trường cùng với các mã biến động mạnh nhất và danh sách theo dõi của bạn, một trang chủ cân bằng để tìm và theo dõi cơ hội.",
         "menuLabel": "Tổng quan"
       },
       "sector-analysis": {
@@ -3541,7 +3541,7 @@
       "news-board": {
         "name": "Bảng Tin Tức",
         "tagline": "Thị trường bên cạnh các mã biến động mạnh và luồng tin tức.",
-        "description": "Bộ quét thị trường bên cạnh các mã biến động mạnh nhất và luồng tin tức trực tiếp — một căn cứ cho giao dịch theo sự kiện xúc tác.",
+        "description": "Bộ quét thị trường bên cạnh các mã biến động mạnh nhất và luồng tin tức trực tiếp, một căn cứ cho giao dịch theo sự kiện xúc tác.",
         "menuLabel": "Tin tức"
       },
       "perps-terminal": {
@@ -3654,7 +3654,7 @@
         "sendTest": "Gửi thử",
         "testing": "Đang thử…",
         "pairAlreadyBound": "Cặp giao dịch này đã được liên kết với quy tắc",
-        "noBindings": "Chưa liên kết với cặp giao dịch nào — quy tắc sẽ không kích hoạt cho đến khi bạn thêm một cặp.",
+        "noBindings": "Chưa liên kết với cặp giao dịch nào. Quy tắc sẽ không kích hoạt cho đến khi bạn thêm một cặp.",
         "testSent": "Đã gửi thông báo thử nghiệm",
         "testFailed": "Không gửi được thử nghiệm",
         "noActivity": "Chưa có thông báo nào được kích hoạt",
@@ -3676,7 +3676,7 @@
         "cannotSaveTitle": "Không thể lưu quy tắc",
         "cycleError": "Quy tắc này chứa một phụ thuộc vòng tròn. Hãy loại bỏ vòng lặp (các cạnh màu đỏ) trước khi lưu.",
         "saved": "Đã lưu quy tắc",
-        "webhookHostAllowed": "Đã cho phép truy cập {{hosts}} — tải lại để bắt đầu gửi webhook",
+        "webhookHostAllowed": "Đã cho phép truy cập {{hosts}}: tải lại để bắt đầu gửi webhook",
         "webhookHostFailed": "Không thể cho phép máy chủ webhook",
         "reload": "Tải lại"
       },
@@ -3711,7 +3711,7 @@
         "untitledRule": "Quy tắc chưa đặt tên",
         "eyebrow": "Thông báo",
         "title": "Theo dõi thị trường để bạn không phải làm điều đó",
-        "description": "Một cảnh báo gói gọn trong một dòng: một mốc để vượt qua, hoặc một biến động đáng chú ý — chọn cặp là nó đã sẵn sàng. Luồng dành cho phần còn lại: điều kiện, lệnh khớp, cảnh báo chỉ báo và nơi chúng được gửi tới.",
+        "description": "Một cảnh báo gói gọn trong một dòng: một mốc để vượt qua, hoặc một biến động đáng chú ý. Chọn cặp là nó đã sẵn sàng. Luồng dành cho phần còn lại: điều kiện, lệnh khớp, cảnh báo chỉ báo và nơi chúng được gửi tới.",
         "startBlank": "Bắt đầu từ khung vẽ trống",
         "footnote": "Mẫu có hiệu lực ngay, gắn với {{pair}} trên {{market}}. Sửa các bước hoặc đổi cặp bên dưới danh sách quy tắc, rồi lưu thay đổi. Quy tắc chỉ chạy khi Pairlens đang mở."
       },
@@ -4024,11 +4024,11 @@
       "unknownPair": "không rõ",
       "priceAlert": {
         "title": "Cảnh báo giá: {{pair}}",
-        "body": "{{pair}} hiện đang ở mức {{direction}} {{price}} — hiện tại: {{current}}"
+        "body": "{{pair}} hiện đang ở mức {{direction}} {{price}}, hiện tại: {{current}}"
       },
       "orderExecuted": {
         "title": "Lệnh khớp",
-        "body": "{{side}} {{pair}} — {{status}}"
+        "body": "{{side}} {{pair}}: {{status}}"
       },
       "signalGenerated": {
         "title": "Tín hiệu được tạo",
@@ -4339,7 +4339,7 @@
       "biometricPromptReason": "Mở khóa kho thông tin đăng nhập Pairlens của bạn",
       "biometricLabel": "Touch ID trên máy Mac này",
       "biometricCancelled": "Lời nhắc Touch ID đã bị bỏ qua.",
-      "biometricInvalidated": "Touch ID không còn mở được kho của bạn — vân tay trên máy Mac này đã thay đổi. Hãy xóa trong Cài đặt → Bảo mật và thiết lập lại.",
+      "biometricInvalidated": "Touch ID không còn mở được kho của bạn: vân tay trên máy Mac này đã thay đổi. Hãy xóa trong Cài đặt → Bảo mật và thiết lập lại.",
       "useExistingPassword": "Dùng mật khẩu bạn đã đặt cho terminal này.",
       "unlockTitle": "Mở khóa các khóa của bạn",
       "unlockSubtitle": "Khóa API và khóa ví của bạn đang được mã hóa. Mở khóa để sử dụng.",
@@ -4347,8 +4347,8 @@
       "unlockWithPassword": "Mở khóa",
       "unlocking": "Đang mở khóa…",
       "sealed": "Kho thông tin đăng nhập của bạn đang bị khóa.",
-      "sealedBanner_one": "1 bot live đang tạm dừng — mở khóa Pairlens để tiếp tục giao dịch.",
-      "sealedBanner_other": "{{count}} bot live đang tạm dừng — mở khóa Pairlens để tiếp tục giao dịch.",
+      "sealedBanner_one": "1 bot live đang tạm dừng. Mở khóa Pairlens để tiếp tục giao dịch.",
+      "sealedBanner_other": "{{count}} bot live đang tạm dừng. Mở khóa Pairlens để tiếp tục giao dịch.",
       "passkeyNudgeTitle": "Lần sau mở khóa chỉ bằng một chạm",
       "passkeyNudgeBody": "{{venue}} truyền giá từ khóa của bạn, nên két bị khóa nghĩa là không có biểu đồ. Passkey mở cả két lẫn màn hình khóa chỉ bằng một chạm, thay vì gõ mật khẩu.",
       "passkeyNudgeAction": "Thêm passkey",
@@ -4357,7 +4357,7 @@
       "sealedBannerAction": "Mở khóa",
       "botsPausedTitle": "Bot live đang tạm dừng",
       "botsPausedBody": "Mở khóa Pairlens để tiếp tục giao dịch live. Bot paper không bị ảnh hưởng.",
-      "orderBlocked": "Kho thông tin đăng nhập của bạn đang bị khóa — mở khóa Pairlens để đặt lệnh live.",
+      "orderBlocked": "Kho thông tin đăng nhập của bạn đang bị khóa. Mở khóa Pairlens để đặt lệnh live.",
       "insecureContext": "Không thể mã hóa trên kết nối không an toàn. Hãy mở Pairlens qua HTTPS, hoặc trên localhost, để thiết lập kho.",
       "botParkDetailSealed": "Kho thông tin đăng nhập của bạn đang bị khóa. Bot này sẽ tiếp tục giao dịch live ngay khi bạn mở khóa Pairlens. Bot paper không bị ảnh hưởng.",
       "botParkDetailError": "Không thể đọc thông tin đăng nhập đã lưu của bạn trên thiết bị này. Bot này sẽ tiếp tục giao dịch live ngay khi thông tin được tải. Bot paper không bị ảnh hưởng.",
@@ -4377,7 +4377,7 @@
     "authDescription": "Tính năng này hoạt động thông qua tài khoản Pairlens của bạn.",
     "signInFree": "Đăng nhập miễn phí",
     "or": "hoặc",
-    "intelligenceNote": "Khuyến nghị — chạy trên máy chủ, không cần thiết lập. Đăng nhập miễn phí; Pairlens Intelligence là gói trả phí.",
+    "intelligenceNote": "Khuyến nghị: chạy trên máy chủ, không cần thiết lập. Đăng nhập miễn phí; Pairlens Intelligence là gói trả phí.",
     "authNote": "Chỉ mất 30 giây. Khóa sàn giao dịch của bạn không bao giờ rời khỏi thiết bị này.",
     "upgradeRequired": "Cần nâng cấp",
     "upgradeDescriptionLevel": "Tính năng này yêu cầu cấp độ truy cập <b>{{level}}</b>.",
@@ -4390,7 +4390,7 @@
     "useOwnKey": "Thiết lập AI của riêng bạn",
     "connect": "Kết nối",
     "connected": "Đã kết nối",
-    "connectedToast": "Đã kết nối {{provider}} — AI đã sẵn sàng.",
+    "connectedToast": "Đã kết nối {{provider}}. AI đã sẵn sàng.",
     "getKey": "Lấy khóa",
     "keyStorageNote": "Khóa của bạn nằm trên thiết bị này và chỉ được gửi tới nhà cung cấp đó. Pairlens không bao giờ nhận nó.",
     "noneInstalled": "Chưa cài plugin nhà cung cấp nào cho bước này. Thêm một plugin từ trang Plugin.",
@@ -4399,7 +4399,7 @@
     "required": "bắt buộc",
     "optional": "tùy chọn",
     "modelHint": "Nhà cung cấp viết ra câu trả lời. Chọn một và dán khóa của họ.",
-    "searchHint": "Tùy chọn. Neo phần nghiên cứu và câu trả lời vào nguồn web trực tiếp — AI vẫn hoạt động khi không có.",
+    "searchHint": "Tùy chọn. Neo phần nghiên cứu và câu trả lời vào nguồn web trực tiếp. AI vẫn hoạt động khi không có.",
     "done": "Xong",
     "notConnected": "chưa kết nối",
     "manage": "Quản lý nhà cung cấp"
@@ -4466,7 +4466,7 @@
       "titlePack": "Đã nạp {{credits}} tín dụng bổ sung.",
       "titlePlan": "{{label}} giờ đã là của bạn.",
       "titleDefault": "Pairlens Intelligence giờ đã là của bạn.",
-      "bodyPack": "Số tín dụng này cộng thêm vào ngân sách hằng tháng của bạn và hết hạn sau {{days}} ngày. Quay lại ứng dụng Pairlens — số dư của bạn sẽ cập nhật trong vài giây.",
+      "bodyPack": "Số tín dụng này cộng thêm vào ngân sách hằng tháng của bạn và hết hạn sau {{days}} ngày. Quay lại ứng dụng Pairlens, số dư của bạn sẽ cập nhật trong vài giây.",
       "bodyPlanWithCredits": "Trợ lý AI được lưu trữ sẵn của bạn đã mở khóa, kèm nghiên cứu chuyên sâu và tìm kiếm web, cùng {{credits}} tín dụng mỗi tháng. Quay lại ứng dụng Pairlens: ứng dụng sẽ nhận diện gói đăng ký của bạn trong vài giây.",
       "bodyPlanNoCredits": "Trợ lý AI được lưu trữ sẵn của bạn đã mở khóa, kèm nghiên cứu chuyên sâu và tìm kiếm web. Quay lại ứng dụng Pairlens: ứng dụng sẽ nhận diện gói đăng ký của bạn trong vài giây.",
       "openTerminal": "Mở terminal",
@@ -4491,7 +4491,7 @@
       "renameButton": "Đổi tên",
       "deleteTitle": "Xóa quy trình",
       "deleteDescription": "Hành động này không thể hoàn tác. Quy trình sẽ bị xóa vĩnh viễn.",
-      "runsEmpty": "Chưa có lượt chạy nào — hãy chạy một lượt từ bảng giao dịch",
+      "runsEmpty": "Chưa có lượt chạy nào: hãy chạy một lượt từ bảng giao dịch",
       "clearHistory": "Xóa lịch sử",
       "runOutcome": "{{executed}} thành công",
       "runOutcomeWithFailed": "{{executed}} thành công, {{failed}} thất bại"
@@ -4539,7 +4539,7 @@
       "pickWorkflow": "Chọn một quy trình bên trái để mở nó trên canvas.",
       "eyebrow": "Quy trình",
       "title": "Mọi lệnh đều có thể mang theo kế hoạch riêng",
-      "description": "Một quy trình gắn liền với lệnh bạn đặt từ bảng giao dịch. Ngay khi lệnh khớp, các bước bên dưới nó tự chạy — bracket, thang lệnh, thoát lệnh theo từng giai đoạn, kiểm tra theo thời gian — nên kế hoạch đã sẵn sàng từ trước, thay vì là điều bạn phải tự nhớ để làm sau.",
+      "description": "Một quy trình gắn liền với lệnh bạn đặt từ bảng giao dịch. Ngay khi lệnh khớp, các bước bên dưới nó tự chạy (bracket, thang lệnh, thoát lệnh theo từng giai đoạn, kiểm tra theo thời gian), nên kế hoạch đã sẵn sàng từ trước, thay vì là điều bạn phải tự nhớ để làm sau.",
       "blankLabel": "Bắt đầu từ canvas trống",
       "footnote": "Mẫu mở ra ở dạng bản nháp: chỉnh sửa bất kỳ bước nào, sau đó nhấn Áp dụng để lưu. Gắn một quy trình đã lưu vào lệnh từ bảng giao dịch để chạy nó.",
       "untitledWorkflow": "Quy trình chưa đặt tên"
@@ -5054,7 +5054,7 @@
       "riskUsedNoCap": "{{used}} của danh mục",
       "slideToBuy": "Trượt để mua trên {{venue}}",
       "slideToSell": "Trượt để bán trên {{venue}}",
-      "connectBody": "Giá và sổ lệnh vẫn cập nhật trực tiếp mà không cần nó — đặt lệnh cần một API key có quyền giao dịch.",
+      "connectBody": "Giá và sổ lệnh vẫn cập nhật trực tiếp mà không cần nó. Đặt lệnh cần một API key có quyền giao dịch.",
       "noPrice": "Không có giá trực tiếp để xác định khối lượng cho swap này",
       "auto": "Tự động",
       "bookLoading": "Đang chờ sổ lệnh…",

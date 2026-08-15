@@ -14,7 +14,7 @@
     "welcome": {
       "eyebrow": "Hoş geldin",
       "title": "Pairlens ile tanış",
-      "sub": "Spot işlemler için yapay zeka destekli terminal — özel, yerel ve tamamen senin. Yaklaşık bir dakikada kuralım.",
+      "sub": "Spot işlemler için yapay zeka destekli terminal: özel, yerel ve tamamen senin. Yaklaşık bir dakikada kuralım.",
       "label": "Hoş geldin"
     },
     "oneTerminal": {
@@ -22,7 +22,7 @@
       "title": "Tek terminal. Her piyasa.",
       "sub": "Merkezi ve zincir üstü spot işlemleri yan yana yap; her kurulumu okuyan tek bir yapay zekâ asistanı eşliğinde.",
       "points": {
-        "0": "Merkezi spot — OKX, Binance, Coinbase",
+        "0": "Merkezi spot: OKX, Binance, Coinbase",
         "1": "Zincir üstü DEX takasları, akıllı yönlendirmeli",
         "2": "ABD hisse senetleri ve ETF'ler"
       },
@@ -37,16 +37,16 @@
     "country": {
       "status": "Bölgesel yönlendirme ayarlanıyor",
       "title": "Hangi ülkeden işlem yapıyorsun?",
-      "sub": "Bazı borsalar bölge kısıtlamalı ya da ayrı bölgesel uç noktalar kullanıyor — bu seçim bağlayıcılarını doğru olanlara yönlendirir.",
+      "sub": "Bazı borsalar bölge kısıtlamalı ya da ayrı bölgesel uç noktalar kullanıyor. Bu seçim bağlayıcılarını doğru olanlara yönlendirir.",
       "searchPlaceholder": "Ülke ara…",
       "noResults": "Aramanla eşleşen ülke yok",
       "global": "Belirtmek istemiyorum",
-      "globalSub": "Önerilmez — global uç noktaları ve varsayılanları kullanır",
+      "globalSub": "Önerilmez: global uç noktaları ve varsayılanları kullanır",
       "label": "Ülke",
-      "localNote": "Yalnızca bu cihazda saklanır — Pairlens sunucularına asla gönderilmez.",
+      "localNote": "Yalnızca bu cihazda saklanır, Pairlens sunucularına asla gönderilmez.",
       "globalConfirm": {
         "title": "Konum belirtmeden devam edilsin mi?",
-        "body": "Ülke seçilmediğinde emirler ve piyasa verileri global uç noktaları kullanır. Bölgesel veya coğrafi kısıtlamalı borsalarda özellikler çalışmayabilir ve işlemler gerçekleşmeyebilir. Konumunu ayarlamanı öneririz — yalnızca bu cihazda saklanır.",
+        "body": "Ülke seçilmediğinde emirler ve piyasa verileri global uç noktaları kullanır. Bölgesel veya coğrafi kısıtlamalı borsalarda özellikler çalışmayabilir ve işlemler gerçekleşmeyebilir. Konumunu ayarlamanı öneririz. Yalnızca bu cihazda saklanır.",
         "ack": "Konumumu ayarlamamanın sonuçlarını anlıyorum",
         "cancel": "Ülke seç",
         "confirm": "Konumsuz devam et"
@@ -55,10 +55,10 @@
     "privacy": {
       "eyebrow": "Tasarımdan gelen gizlilik",
       "title": "Anahtarların. Cihazın. Nokta.",
-      "sub": "Pairlens öncelikle yerel çalışır. Kimlik bilgilerin ve verilerin bu makinede kalır — sunucularımızda asla.",
+      "sub": "Pairlens öncelikle yerel çalışır. Kimlik bilgilerin ve verilerin bu makinede kalır, sunucularımızda asla.",
       "points": {
         "0": "Anahtarlar ve bakiyeler bu cihazdan asla çıkmaz",
-        "1": "Emanetsiz — Pairlens fonlarını hareket ettiremez",
+        "1": "Emanetsiz: Pairlens fonlarını hareket ettiremez",
         "2": "Başlamak için e-posta veya KYC gerekmez"
       },
       "scene": {
@@ -77,7 +77,7 @@
     "routing": {
       "eyebrow": "Doğrudan yönlendirme",
       "title": "Doğrudan borsalara.",
-      "sub": "Zaten kullandığın borsaları bağla. Emirler doğrudan onlara yönlendirilir — aracı yok, emanet yok, emir akışı satışı yok.",
+      "sub": "Zaten kullandığın borsaları bağla. Emirler doğrudan onlara yönlendirilir: aracı yok, emanet yok, emir akışı satışı yok.",
       "points": {
         "0": "Emirler doğrudan bağladığın borsalara gönderilir",
         "1": "Varlıklarının emanetini asla üstlenmeyiz",
@@ -106,7 +106,7 @@
     "themeStep": {
       "status": "Işık ayarlanıyor",
       "title": "Nasıl görünsün?",
-      "sub": "Pairlens hem açık hem koyu için ayarlandı. Bir mod ve bir palet seç — ikisini de sonra değiştirebilirsin.",
+      "sub": "Pairlens hem açık hem koyu için ayarlandı. Bir mod ve bir palet seç. İkisini de sonra değiştirebilirsin.",
       "light": "Açık",
       "dark": "Koyu",
       "system": "Otomatik",
@@ -117,15 +117,15 @@
     "legal": {
       "status": "Başlamadan önce",
       "title": "Onaylanması gereken birkaç şey",
-      "sub": "Pairlens, hisse senedi ve kripto işlemleri için bir araçtır — devam etmek için her maddeyi onayla.",
+      "sub": "Pairlens, hisse senedi ve kripto işlemleri için bir araçtır. Devam etmek için her maddeyi onayla.",
       "items": {
         "0": "İşlem yapmanın riskli olduğunu ve fonlarımın bir kısmını veya tamamını kaybedebileceğimi anlıyorum.",
         "1": "İkamet ve/veya vatandaşlık ülkemin yasalarına uymaktan ben sorumluyum.",
         "2": "Faaliyetlerimin vergisel sonuçları olabilir ve bunları bildirmek benim sorumluluğumdadır.",
-        "3": "Pairlens gelişmiş araçlar içerir — hepsi yeni başlayanlara uygun değildir.",
+        "3": "Pairlens gelişmiş araçlar içerir. Hepsi yeni başlayanlara uygun değildir.",
         "4": "Kripto ve hisse senetleri gerçek varlıklardır; değerleri oynak olabilir ve sık sık değişebilir.",
         "5": "Bir borsa veya aracı kurum bağladığımda kendi hesabımı kullanırım ve işlemlerim veya varlıklarım üzerinden alacakları ücretler dahil hizmet şartlarını kabul ederim.",
-        "6": "Pairlens tasarım gereği API anahtarlarımı veya cüzdanlarımı yedeklemez. Yedekleri yalnızca ben tutarım ve Pairlens kaybolan fonları — özellikle kripto cüzdanlarını — kurtaramaz.",
+        "6": "Pairlens tasarım gereği API anahtarlarımı veya cüzdanlarımı yedeklemez. Yedekleri yalnızca ben tutarım ve Pairlens kaybolan fonları, özellikle kripto cüzdanlarını, kurtaramaz.",
         "7": "Pairlens erken bir önizlemedir (Beta), hatalar içerebilir ve hiçbir garanti veya sorumluluk olmaksızın \"olduğu gibi\" sunulur. Bulduğum sorunları bildireceğim."
       },
       "hintFirst": "Devam etmek için dördünü de onayla",
@@ -137,22 +137,22 @@
     "workspaces": {
       "eyebrow": "Tamamen özelleştirilebilir",
       "title": "Terminalin, senin düzenin.",
-      "sub": "Çalışma alanları tamamen özelleştirilebilir — istediğin deneyimi, istediğin sayıda oluştur; sade bir görünümden tam kapsamlı bir profesyonel panele kadar.",
+      "sub": "Çalışma alanları tamamen özelleştirilebilir: istediğin deneyimi, istediğin sayıda oluştur; sade bir görünümden tam kapsamlı bir profesyonel panele kadar.",
       "points": {
         "0": "Grafikleri, emir defterlerini ve panelleri istediğin gibi düzenle",
         "1": "İstediğin kadar çalışma alanı oluştur",
-        "2": "Yeni başlayanlar için sade görünümler — profesyoneller için tam kapsamlı masalar"
+        "2": "Yeni başlayanlar için sade görünümler, profesyoneller için tam kapsamlı masalar"
       },
       "label": "Çalışma alanları"
     },
     "analytics": {
       "status": "Verin, senin kararın",
       "title": "Pairlens'i geliştirmeye yardım et?",
-      "sub": "Neyi düzeltmemiz gerektiğini bilmemiz için anonim kullanım verisi ve çökme raporları paylaş. Asla işlemlerin, anahtarların veya bakiyelerin — ve bunu istediğin zaman ayarlardan değiştirebilirsin.",
+      "sub": "Neyi düzeltmemiz gerektiğini bilmemiz için anonim kullanım verisi ve çökme raporları paylaş. Asla işlemlerin, anahtarların veya bakiyelerin, ve bunu istediğin zaman ayarlardan değiştirebilirsin.",
       "options": {
         "enabled": {
           "label": "Anonim kullanım verisi paylaş",
-          "sub": "Kullanım kalıpları ve çökme raporları — işlemlerinle ilgili hiçbir şey değil"
+          "sub": "Kullanım kalıpları ve çökme raporları, işlemlerinle ilgili hiçbir şey değil"
         },
         "disabled": {
           "label": "Hayır, teşekkürler",
@@ -174,7 +174,7 @@
         },
         "sync": {
           "title": "Bulut senkronizasyonu",
-          "sub": "Ayarlar ve düzenler cihazlar arasında — anahtarlar yerel kalır"
+          "sub": "Ayarlar ve düzenler cihazlar arasında, anahtarlar yerel kalır"
         },
         "community": {
           "title": "Topluluk çalışma alanları",
@@ -182,7 +182,7 @@
         }
       },
       "create": "Hesap oluştur",
-      "skip": "Atla — her şeyi bu cihazda tut",
+      "skip": "Atla: her şeyi bu cihazda tut",
       "signedIn": "{{email}} olarak giriş yapıldı",
       "label": "Hesap",
       "otpSendFailed": "OTP gönderilemedi",
@@ -228,7 +228,7 @@
       "eyebrow": "Grafikler",
       "overview": {
         "title": "Doğrudan borsadan gelen mumlar",
-        "description": "Gerçek zamanlı mumlar doğrudan borsadan akar — aracı yok. Zaman dilimlerini değiştir, tam değerler için üzerine gel ve fiyat hareketini incele."
+        "description": "Gerçek zamanlı mumlar doğrudan borsadan akar, aracı yok. Zaman dilimlerini değiştir, tam değerler için üzerine gel ve fiyat hareketini incele."
       },
       "signals": {
         "title": "Her kapanışta sinyaller",
@@ -239,18 +239,18 @@
       "eyebrow": "Uyarılar",
       "intro": {
         "title": "Senin yerine bekleyen uyarılar",
-        "description": "Bir seviye belirle ve uzaklaş — fiyat onu geçtiğinde Pairlens seni anında uygulama içinde ve masaüstünde bilgilendirir."
+        "description": "Bir seviye belirle ve uzaklaş. Fiyat onu geçtiğinde Pairlens seni anında uygulama içinde ve masaüstünde bilgilendirir."
       },
       "build": {
         "title": "Kendi tetikleyicilerini oluştur",
-        "description": "Pariteleri, koşulları ve eylemleri zincirleyerek hassas kurallar oluştur — fiyat seviyeleri, sinyal tetiklemeleri, yüzde hareketleri — ve nasıl bildirim alacağına tam olarak sen karar ver."
+        "description": "Pariteleri, koşulları ve eylemleri zincirleyerek hassas kurallar oluştur (fiyat seviyeleri, sinyal tetiklemeleri, yüzde hareketleri) ve nasıl bildirim alacağına tam olarak sen karar ver."
       }
     },
     "workflows": {
       "eyebrow": "İş akışları",
       "intro": {
         "title": "Rutini otomatikleştir",
-        "description": "Tetikleyicileri, koşulları ve eylemleri tekrarlanabilir akışlara bağla — bir kırılım sinyali hacmi kontrol edebilir, seni uyarabilir ve kurulumu kendi başına günlüğe kaydedebilir."
+        "description": "Tetikleyicileri, koşulları ve eylemleri tekrarlanabilir akışlara bağla: bir kırılım sinyali hacmi kontrol edebilir, seni uyarabilir ve kurulumu kendi başına günlüğe kaydedebilir."
       },
       "runs": {
         "title": "Her çalıştırma kayıt altında",
@@ -261,40 +261,40 @@
       "eyebrow": "Göstergeler ve Stratejiler",
       "code": {
         "title": "Göstergeleri gerçek Python ile yazın",
-        "description": "Herhangi bir göstergeyi gerçek Python ve NumPy ile programlayın — siz yazarken yerel olarak derlenir ve çalışır, her seri için canlı önizleme sunar."
+        "description": "Herhangi bir göstergeyi gerçek Python ve NumPy ile programlayın. Siz yazarken yerel olarak derlenir ve çalışır, her seri için canlı önizleme sunar."
       },
       "chart": {
         "title": "Her grafiğe ekleyin",
-        "description": "Kaydedilen betikler her grafiğin gösterge seçicisinde Custom altında görünür — girdileriyle birlikte herhangi bir pariteye overlay veya alt panel olarak ekleyin."
+        "description": "Kaydedilen betikler her grafiğin gösterge seçicisinde Custom altında görünür. Girdileriyle birlikte herhangi bir pariteye overlay veya alt panel olarak ekleyin."
       }
     },
     "accounts": {
       "eyebrow": "Hesaplar",
       "intro": {
         "title": "Borsalarını bağla",
-        "description": "Borsaları, cüzdanları ve aracı kurumları bağla. API anahtarları doğrudan işletim sistemi anahtarlığına gider — bu cihazda saklanır, sunucularımızda asla."
+        "description": "Borsaları, cüzdanları ve aracı kurumları bağla. API anahtarları doğrudan işletim sistemi anahtarlığına gider: bu cihazda saklanır, sunucularımızda asla."
       },
       "balances": {
         "title": "Her şeyin tek görünümü",
-        "description": "Bağlı her borsadaki bakiyeler tek bir resimde toplanır — spot, zincir üstü ve hisse senetleri bir arada."
+        "description": "Bağlı her borsadaki bakiyeler tek bir resimde toplanır: spot, zincir üstü ve hisse senetleri bir arada."
       }
     },
     "plugins": {
       "eyebrow": "Eklentiler",
       "intro": {
         "title": "Terminali genişlet",
-        "description": "Piyasa bağlayıcıları, temalar, sinyaller ve botlar Eklenti Mağazası'ndan tek tıkla kurulur — terminalin seninle birlikte büyür."
+        "description": "Piyasa bağlayıcıları, temalar, sinyaller ve botlar Eklenti Mağazası'ndan tek tıkla kurulur. Terminalin seninle birlikte büyür."
       },
       "sandbox": {
         "title": "Varsayılan olarak güvenli",
-        "description": "Üçüncü taraf eklentiler imzalı kod ve ana bilgisayar başına ağ onayı ile korumalı alanda çalışır — dokunabildikleri şeyin kontrolü sende kalır."
+        "description": "Üçüncü taraf eklentiler imzalı kod ve ana bilgisayar başına ağ onayı ile korumalı alanda çalışır. Dokunabildikleri şeyin kontrolü sende kalır."
       }
     },
     "workspaces": {
       "eyebrow": "Çalışma alanları",
       "intro": {
         "title": "Masan, kayıtlı",
-        "description": "Grafikleri, emir defterlerini ve panelleri nasıl işlem yaptığına uyan düzenlere yerleştir — ardından kayıtlı masalar arasında anında geç."
+        "description": "Grafikleri, emir defterlerini ve panelleri nasıl işlem yaptığına uyan düzenlere yerleştir, ardından kayıtlı masalar arasında anında geç."
       }
     },
     "workspaceStore": {
@@ -308,7 +308,7 @@
       "eyebrow": "Botlar",
       "strategy": {
         "title": "Önce test et, sonra işlemi ona bırak",
-        "description": "Bot, test ettiğin Python stratejisinin aynısını çalıştırır — aynı sinyaller, aynı stoplar, aynı kod — böylece test sonuçlarındaki sayılar botun gerçekte ne yapacağını anlatır."
+        "description": "Bot, test ettiğin Python stratejisinin aynısını çalıştırır (aynı sinyaller, aynı stoplar, aynı kod), böylece test sonuçlarındaki sayılar botun gerçekte ne yapacağını anlatır."
       },
       "running": {
         "title": "Senin makinen, senin anahtarların",
@@ -323,7 +323,7 @@
       "onClose": "kapanışta",
       "crossedAbovePrice": "{{price}} üzerine çıktı",
       "conditionCrossesAbove": "yukarı keser",
-      "notifyMeDesktopInApp": "Beni bilgilendirin — masaüstü + uygulama içi",
+      "notifyMeDesktopInApp": "Beni bilgilendirin: masaüstü + uygulama içi",
       "nodeTrigger": "Tetikleyici",
       "nodeSignalLabel": "Sinyal: {{signal}}",
       "nodeCondition": "Koşul",
@@ -335,19 +335,19 @@
       "runStopLossGuard": "Stop-loss bekçisi",
       "ranAt": "{{time}} · çalıştı",
       "runsLocally": "Yerelde çalışır",
-      "storedOnDevice": "Bu cihazda saklanır — sunucularımızda asla",
+      "storedOnDevice": "Bu cihazda saklanır, sunucularımızda asla",
       "osKeychain": "Sistem anahtarlığı",
       "pluginKindMarketData": "Piyasa verisi",
       "pluginKindTheme": "Tema",
       "pluginKindAutomation": "Otomasyon",
       "sandboxedByDefault": "Varsayılan olarak korumalı alanda",
       "signedVerified": "İmzalı ve doğrulanmış",
-      "networkAccessApproveHost": "Ağ erişimi — her sunucuyu sen onaylarsın",
+      "networkAccessApproveHost": "Ağ erişimi: her sunucuyu sen onaylarsın",
       "copiedToWorkspaces": "Çalışma alanlarınıza kopyalandı",
       "statNet": "Net",
       "statMaxDd": "Maks. DD",
       "sameCodeGoesLive": "Aynı kod canlıya geçer",
-      "runsOnYourMachine": "Cihazınızda çalışır — uyanık tutun",
+      "runsOnYourMachine": "Cihazınızda çalışır, uyanık tutun",
       "botMeanReversion": "Ortalamaya Dönüş",
       "chainWallet": "{{chain}} cüzdanı"
     }
@@ -378,7 +378,7 @@
     "ordersLockedRiskLimit": "Bir risk sınırı ihlali nedeniyle emirler kilitlendi. Ayarlar > Risk Yönetimi bölümünden kilidi açın.",
     "buyOrdersLockedRiskLimit": "Bir risk sınırı ihlali nedeniyle alış emirleri kilitlendi. Ayarlar > Risk Yönetimi bölümünden kilidi açın.",
     "positionSizeExceeded": "Emir risk sınırı tarafından engellendi: pozisyon, portföyünüzün %{{ratioPct}}'i olup %{{maxPositionSize}} olan maksimumunuzu aşıyor. Ayarlar > Risk Yönetimi bölümünden düzenleyin.",
-    "sessionExpired": "Oturumunuzun süresi doldu — lütfen tekrar giriş yapın.",
+    "sessionExpired": "Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.",
     "startFromTemplate": "Bir şablondan başla",
     "chips": {
       "osNotification": "Sistem Bildirimi",
@@ -439,7 +439,7 @@
       "title": "Kullanım analitiği",
       "description": "Anonim kullanım verisi ve çökme raporları paylaşarak Pairlens'i geliştirmeye yardım et. Asla işlemlerin, API anahtarların veya bakiyelerin değil.",
       "toggleDescription": "Yalnızca bu cihaz için geçerlidir. Kapatmak tüm analitiği anında durdurur.",
-      "notConfigured": "Bu derlemede yapılandırılmış bir analitik anahtarı yok — hiçbir şey toplanmıyor.",
+      "notConfigured": "Bu derlemede yapılandırılmış bir analitik anahtarı yok: hiçbir şey toplanmıyor.",
       "dataTitle": "Hesap verileriniz",
       "dataSignedOut": "Oturum açmadınız, bu yüzden sunucularımızda hesap verisi yok. Pairlens’in sizinle ilgili bildiği her şey bu cihazda duruyor.",
       "exportTitle": "Verilerinizi dışa aktarın",
@@ -564,16 +564,16 @@
       "thirdPartyAcknowledge": "Üçüncü taraf kayıt defterlerinin doğrulanmamış eklentiler içerebileceğini anlıyorum ve riskleri kabul ediyorum.",
       "invalidUrl": "Lütfen geçerli bir URL girin (ör. https://registry.example.com).",
       "desktopEgressTitle": "Masaüstü ağ erişimi",
-      "desktopEgressDescription": "Masaüstü uygulaması, izin verilmeyen ana bilgisayarlara yapılan ağ isteklerini engeller. Bu kayıt defterine ulaşmak için ona ağ erişimi ver — terminal bunu uygulamak için yeniden yüklenir.",
+      "desktopEgressDescription": "Masaüstü uygulaması, izin verilmeyen ana bilgisayarlara yapılan ağ isteklerini engeller. Bu kayıt defterine ulaşmak için ona ağ erişimi ver. Terminal bunu uygulamak için yeniden yüklenir.",
       "desktopEgressGranted": "Bu kayıt defterinin ana bilgisayarının ağ erişimi var.",
       "desktopEgressGrant": "Ağ erişimine izin ver ve yeniden yükle",
       "publisherKeys": "Güvenilen yayıncı anahtarları",
-      "publisherKeysDescription": "Eklentiler yalnızca imzaları güvenilen bir yayıncı anahtarıyla eşleştiğinde kurulur. Kendi sunucunda barındırılan veya bir şirket kayıt defterindeki eklentilere güvenmek için buraya bir anahtar ekle. Yalnızca güvendiğin bir kaynaktan aldığın anahtarları ekle — eşleşen özel anahtara sahip herkes terminaline tam erişim isteyen eklentiler yayınlayabilir.",
+      "publisherKeysDescription": "Eklentiler yalnızca imzaları güvenilen bir yayıncı anahtarıyla eşleştiğinde kurulur. Kendi sunucunda barındırılan veya bir şirket kayıt defterindeki eklentilere güvenmek için buraya bir anahtar ekle. Yalnızca güvendiğin bir kaynaktan aldığın anahtarları ekle: eşleşen özel anahtara sahip herkes terminaline tam erişim isteyen eklentiler yayınlayabilir.",
       "publisherKeysEmpty": "Özel anahtar yok. Resmi Pairlens yayıncıları her zaman güvenilirdir.",
       "publisherKeyIdLabel": "Anahtar Kimliği",
       "publisherKeyIdPlaceholder": "acme-plugins-2026",
       "publisherKeyValueLabel": "Genel anahtar (base64 Ed25519)",
-      "publisherKeyIdInvalid": "Anahtar kimlikleri küçük harf, rakam ve tire içerir (2–64 karakter).",
+      "publisherKeyIdInvalid": "Anahtar kimlikleri küçük harf, rakam ve tire içerir (2-64 karakter).",
       "publisherKeyIdReserved": "Bu kimlik yerleşik bir Pairlens anahtarı için ayrılmıştır.",
       "publisherKeyIdDuplicate": "Bu kimliğe sahip bir anahtar zaten güveniliyor.",
       "publisherKeyValueInvalid": "Geçerli bir Ed25519 genel anahtarı değil (32 bayt, base64 kodlu bekleniyor).",
@@ -659,7 +659,7 @@
     },
     "connection": {
       "title": "Piyasa Verisi Bağlantısı",
-      "description": "Piyasa verisi, kurulu bağlayıcı eklentiler aracılığıyla doğrudan borsalardan akar — aracı sunucu yok.",
+      "description": "Piyasa verisi, kurulu bağlayıcı eklentiler aracılığıyla doğrudan borsalardan akar, aracı sunucu yok.",
       "status": {
         "connected": "Bağlı",
         "connecting": "Bağlanıyor…",
@@ -709,13 +709,13 @@
       "confirmHoldDescription": "Düğme dolana kadar basılı tut. Gerçek emirler kağıt emirlerden biraz daha uzun sürer.",
       "confirmClick": "Tek tıklama",
       "confirmClickDescription": "İlk tıklama emri gönderir. Yanlış bir tıklama ile gerçek bir emir arasında hiçbir şey kalmaz.",
-      "confirmGestureNote": "Risk sınırları her iki durumda da geçerli — değişen hareket, koruma değil.",
+      "confirmGestureNote": "Risk sınırları her iki durumda da geçerli. Değişen hareket, koruma değil.",
       "aiPermissions": "Yapay zeka işlem izinleri",
       "aiPermissionsDescription": "Yapay zekâ asistanının sormadan yapabilecekleri. Bu izinlerin dışındaki emirler her zaman sohbetteki bir kartla onayını gerektirir ve otomatik onaylı olsun ya da olmasın her emir yukarıdaki risk sınırlarına göre uygulanır.",
       "aiPaperAuto": "Kağıt üzerinde işlemleri otomatik onayla",
       "aiPaperAutoDescription": "Yalnızca simüle edilmiş fonlar. Asistan, onay kartı olmadan kağıt üzerinde emirler verir.",
       "aiLiveAuto": "Gerçek işlemleri otomatik onayla",
-      "aiLiveAutoEmpty": "İzin verilen borsa yok — her gerçek işlem onayını gerektirir. Bir emir kartından \"Bir daha sorma\" ile bir borsaya izin ver.",
+      "aiLiveAutoEmpty": "İzin verilen borsa yok: her gerçek işlem onayını gerektirir. Bir emir kartından \"Bir daha sorma\" ile bir borsaya izin ver.",
       "aiLiveAutoDescription": "Gerçek fonlar. Asistan, onay kartı olmadan bu borsalarda gerçek emirler verir:",
       "aiLiveAutoRevoke": "{{market}} iznini iptal et"
     },
@@ -723,32 +723,32 @@
       "title": "Pairlens Intelligence",
       "description": "Barındırılan yapay zekâ asistanı, derinlemesine araştırma ve web aramasıyla birlikte. API anahtarı gerekmez.",
       "signInFirst": "Pairlens Intelligence aboneliğinizi yönetmek için giriş yapın.",
-      "selfHosted": "Bu sunucuda faturalandırma yapılandırılmamış — barındırılan yapay zeka özellikleri aboneliksiz çalışır.",
+      "selfHosted": "Bu sunucuda faturalandırma yapılandırılmamış. Barındırılan yapay zeka özellikleri aboneliksiz çalışır.",
       "loadError": "Faturalandırma durumunuz yüklenemedi. Lütfen tekrar deneyin.",
       "freePlan": "Ücretsiz",
-      "active": "Etkin — otomatik olarak yenilenir.",
-      "complimentary": "Ücretsiz erişim — çekirdek katkıda bulunan. Kullanım faturalandırılmaz.",
-      "endsOn": "İptal edildi — erişim {{date}} tarihinde sona erecek.",
+      "active": "Etkin. Otomatik olarak yenilenir.",
+      "complimentary": "Ücretsiz erişim: çekirdek katkıda bulunan. Kullanım faturalandırılmaz.",
+      "endsOn": "İptal edildi: erişim {{date}} tarihinde sona erecek.",
       "planCredits": "Ayda {{credits}} kredi",
       "perMonth": "/ay",
       "manage": "Aboneliği yönet",
       "upgradeToMax": "Max'e yükselt",
       "usageTitle": "Aylık kullanım bütçesi",
-      "usageDescription": "Yapay zeka sohbeti, araştırma ve web aramaları aynı kredi bütçesinden harcar. Her fatura döneminde sıfırlanır — kullanılmayan krediler devretmez.",
+      "usageDescription": "Yapay zeka sohbeti, araştırma ve web aramaları aynı kredi bütçesinden harcar. Her fatura döneminde sıfırlanır. Kullanılmayan krediler devretmez.",
       "creditsUsed": "{{granted}} kredinin {{used}} kadarı kullanıldı",
       "resetsOn": "{{date}} tarihinde sıfırlanır",
       "webResearchNote": "Her barındırılan web araması {{credits}} kredi artı onu tetikleyen isteğin tokenlarını harcar.",
-      "byokNote": "Kendi yapay zeka sağlayıcınızı mı tercih ediyorsunuz? Kendi anahtarınızı kullanan eklentiler (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) her zaman ücretsizdir — Eklentiler sayfasından bağlayın.",
+      "byokNote": "Kendi yapay zeka sağlayıcınızı mı tercih ediyorsunuz? Kendi anahtarınızı kullanan eklentiler (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) her zaman ücretsizdir. Eklentiler sayfasından bağlayın.",
       "checkoutOpened": "Ödeme tarayıcınızda açıldı",
       "checkoutOpenedDescription": "Ödeme tamamlanır tamamlanmaz aboneliğiniz burada etkinleşir.",
-      "checkoutFailed": "Ödeme başlatılamadı — lütfen tekrar deneyin.",
+      "checkoutFailed": "Ödeme başlatılamadı. Lütfen tekrar deneyin.",
       "portalFailed": "Faturalandırma portalı açılamadı.",
-      "taxNote": "Fiyatlara vergi dahil değildir — vergi, ödeme sırasında konumunuza göre hesaplanır.",
+      "taxNote": "Fiyatlara vergi dahil değildir: vergi, ödeme sırasında konumunuza göre hesaplanır.",
       "packsTitle": "Ekstra krediler",
       "packsDescription": "Aylık bütçenizin üzerine eklenen tek seferlik yüklemeler. Yükleme kredileri satın alımdan 30 gün sonra sona erer ve yenilenmez.",
-      "packActive": "{{credits}} ekstra kredi — {{date}} tarihinde sona erer",
+      "packActive": "{{credits}} ekstra kredi, {{date}} tarihinde sona erer",
       "packAddedToastTitle": "Ekstra kredi eklendi",
-      "packAddedToastDescription": "Kredi paketiniz bakiyeye eklendi — paket kredileri satın alımdan 30 gün sonra sona erer."
+      "packAddedToastDescription": "Kredi paketiniz bakiyeye eklendi. Paket kredileri satın alımdan 30 gün sonra sona erer."
     },
     "about": {
       "desktop": "Masaüstü",
@@ -814,14 +814,14 @@
         "sendTest": "Test bildirimi gönder",
         "testTitle": "Pairlens",
         "testBody": "Bir uyarı böyle görünecek.",
-        "testSent": "Gönderildi — bildirim merkezine bak.",
+        "testSent": "Gönderildi. Bildirim merkezine bak.",
         "testFailed": "Bildirim gösterilemedi."
       },
       "telegram": {
         "title": "Telegram",
         "description": "Uyarıları bir Telegram sohbetine gönderin; terminale bakmadığınız zamanlarda telefonunuza ulaşsınlar.",
         "runningNote": "Uyarılar yalnızca Pairlens çalışırken tetiklenir. Masaüstünde pencereyi kapattıktan sonra arka planda çalışmaya devam edebilir.",
-        "privacyNote": "Bot anahtarı bu cihazda kalır — masaüstünde işletim sisteminin anahtar zincirinde, tarayıcıda şifreli kasanızda. Pairlens'e asla gönderilmez.",
+        "privacyNote": "Bot anahtarı bu cihazda kalır: masaüstünde işletim sisteminin anahtar zincirinde, tarayıcıda şifreli kasanızda. Pairlens'e asla gönderilmez.",
         "setup": {
           "step1": "@BotFather ile bir sohbet açın ve /newbot gönderin.",
           "step2": "Botunuz için bir ad ve kullanıcı adı seçin.",
@@ -866,9 +866,9 @@
       "setPassword": "Parola belirle",
       "changePassword": "Parolayı değiştir",
       "biometricUnlockTitle": "Biyometrik kilit açma",
-      "biometricUnlockDescription": "Kilit ekranını parola yazmak yerine cihazın kendi kilit açma yöntemiyle aç — Face ID, Touch ID, parmak izi, Windows Hello.",
+      "biometricUnlockDescription": "Kilit ekranını parola yazmak yerine cihazın kendi kilit açma yöntemiyle aç: Face ID, Touch ID, parmak izi, Windows Hello.",
       "biometricUnlockScreenOnly": "Parolan çalışmaya devam eder ve sensör seni tanımaz olursa geri dönmenin tek yolu odur.",
-      "biometricUnlockVaultNote": "Bu yalnızca ekranı açar. Saklanan anahtarların hâlâ kendi parolasını ister — ikisini tek hareketle açmak için aşağıda kasana bir passkey ekle.",
+      "biometricUnlockVaultNote": "Bu yalnızca ekranı açar. Saklanan anahtarların hâlâ kendi parolasını ister. İkisini tek hareketle açmak için aşağıda kasana bir passkey ekle.",
       "biometricUnlockCoveredByVault": "Kasan zaten passkey ya da Touch ID ile açılıyor ve bu kilit ekranını da açıyor. Buradaki ikinci yol daha azını yapardı.",
       "turnOff": "Kilidi kapat",
       "turnOffDescription": "Kilidi bu cihazdan kaldırmak için mevcut parolanı gir.",
@@ -905,30 +905,30 @@
       "lockNow": "Kilitle",
       "resetButton": "Sıfırla ve sil",
       "resetConfirmTitle": "Bu cihaz silinsin mi?",
-      "resetConfirmBody": "Bu, bu bilgisayardaki tüm borsa API anahtarlarını, cüzdan anahtarlarını, çalışma alanlarını, grafik düzenlerini ve sohbetleri siler. Geri alınamaz ve parola kurtarma yoktur. Oturum açtıysan buluta eşitlenen ayarlar tekrar giriş yapınca geri gelir — API ve cüzdan anahtarları asla, çünkü sadece burada tutulur.",
+      "resetConfirmBody": "Bu, bu bilgisayardaki tüm borsa API anahtarlarını, cüzdan anahtarlarını, çalışma alanlarını, grafik düzenlerini ve sohbetleri siler. Geri alınamaz ve parola kurtarma yoktur. Oturum açtıysan buluta eşitlenen ayarlar tekrar giriş yapınca geri gelir. API ve cüzdan anahtarları asla, çünkü sadece burada tutulur.",
       "resetConfirmPhrase": "Onaylamak için {{phrase}} yaz.",
       "vaultTitle": "Kimlik bilgisi kasası",
       "vaultDescription": "Borsa API anahtarlarını ve cüzdan anahtarlarını bir parola veya passkey ile şifrele.",
       "vaultWaysTitle": "Kilit açma yöntemleri",
-      "vaultAlsoUnlocks": "Bunların her biri terminal kilit ekranını da açar — tek parola ikisine de yeter.",
-      "biometricNeedsVault": "Önce kasayı bir parolayla kur — Touch ID daha sonra üzerine eklenir.",
+      "vaultAlsoUnlocks": "Bunların her biri terminal kilit ekranını da açar: tek parola ikisine de yeter.",
+      "biometricNeedsVault": "Önce kasayı bir parolayla kur. Touch ID daha sonra üzerine eklenir.",
       "vaultStatusNone": "Kurulmadı.",
       "vaultStatusReady_one": "1 kilit açma yöntemiyle korunuyor.",
       "vaultStatusReady_other": "{{count}} kilit açma yöntemiyle korunuyor.",
       "vaultSetUp": "Kasayı kur",
       "vaultRemoveProtector": "Kaldır",
       "vaultRemoveLastBlocked": "Bu, kasana giren tek yol. Kaldırmadan önce bir tane daha ekle.",
-      "vaultRemoveBiometricOnlyBlocked": "Touch ID tek giriş yolu olamaz — bu Mac’teki parmak izleri değişebilir. Bir parola ya da passkey bırak.",
-      "vaultProtectsBody": "Kasa ile API ve cüzdan anahtarların şifreli olarak saklanır. Bu tarayıcı profilini — ya da bu cihazın depolama alanını — kopyalayan biri, parolan veya passkey'in olmadan açamayacağı şifreli metin elde eder.",
+      "vaultRemoveBiometricOnlyBlocked": "Touch ID tek giriş yolu olamaz: bu Mac’teki parmak izleri değişebilir. Bir parola ya da passkey bırak.",
+      "vaultProtectsBody": "Kasa ile API ve cüzdan anahtarların şifreli olarak saklanır. Bu tarayıcı profilini (ya da bu cihazın depolama alanını) kopyalayan biri, parolan veya passkey'in olmadan açamayacağı şifreli metin elde eder.",
       "vaultCeiling": "Anahtarları kullanırken korumaz. Bu sayfada çalışan her şey, tıpkı uygulamanın yaptığı gibi açık kasadan bir anahtar isteyebilir. En değerli anahtarların için önerimiz hâlâ masaüstü uygulaması.",
-      "vaultNoRecovery": "Kurtarma yoktur. Tüm giriş yollarını kaybedersen şifreli anahtarlar da gider — uygulamaya geri dönmenin tek yolu bu cihazın verilerini siler.",
+      "vaultNoRecovery": "Kurtarma yoktur. Tüm giriş yollarını kaybedersen şifreli anahtarlar da gider: uygulamaya geri dönmenin tek yolu bu cihazın verilerini siler.",
       "vaultDesktopToggleHint": "Anahtarların zaten sistem anahtar zincirinde. Üstüne bir parola veya passkey eklemek için bunu aç.",
       "vaultDesktopOptOutTitle": "Kimlik bilgisi kasası kapatılsın mı?",
       "vaultDesktopOptOutBody": "Anahtarların yeniden yalnızca sistem anahtar zinciriyle korunur. Hiçbir şey silinmez ve kasayı daha sonra tekrar açabilirsin.",
       "vaultDesktopOptOutConfirm": "Kasayı kapat",
       "vaultMigrated_one": "Zaten sahip olduğun 1 anahtar kasaya taşındı.",
       "vaultMigrated_other": "Zaten sahip olduğun {{count}} anahtar kasaya taşındı.",
-      "vaultMigrationFailed": "Kasa kurulumu tamamlanmadı. Anahtarların hâlâ okunabilir — tamamlamak için kasayı aç.",
+      "vaultMigrationFailed": "Kasa kurulumu tamamlanmadı. Anahtarların hâlâ okunabilir. Tamamlamak için kasayı aç.",
       "vaultSharedBackoff": "Kasa ve kilit ekranı tek bir deneme sınırını paylaşır, bu yüzden çok fazla yanlış parola ikisini birden geciktirir.",
       "vaultCliNote": "Komut satırı aracı API anahtarlarını argüman olarak alır ve kasayı hiç okumaz.",
       "hardLockTitle": "Sert kilit",
@@ -980,7 +980,7 @@
     "tabSurvey": "Görüşünü paylaş",
     "optional": "(isteğe bağlı)",
     "surveySubmit": "Gönder",
-    "surveySent": "Teşekkürler — bu gerçekten yardımcı oluyor.",
+    "surveySent": "Teşekkürler, bu gerçekten yardımcı oluyor.",
     "surveyOpenPlaceholder": "Neyi değiştirir, ekler ya da çıkarırdın",
     "surveyOtherPlaceholder": "Biraz daha anlat"
   },
@@ -1198,7 +1198,7 @@
     "benefits": {
       "cloud": {
         "title": "Bulut tercihleri",
-        "description": "Ayarların hesabında yaşar — her makine saniyeler içinde senin gibi hissettirir."
+        "description": "Ayarların hesabında yaşar: her makine saniyeler içinde senin gibi hissettirir."
       },
       "sync": {
         "title": "Cihazlar arası senkronizasyon",
@@ -1340,7 +1340,7 @@
     "autoApprovedNote": "Otomatik onaylandı ({{mode}} · bir daha sorma açık)",
     "turnOff": "Kapat",
     "autoApproving": "{{mode}} emri otomatik onaylanıyor…",
-    "liveOrderWarning": "Gerçek emir — gerçek fonlar, risk sınırlarınıza göre uygulanır.",
+    "liveOrderWarning": "Gerçek emir: gerçek fonlar, risk sınırlarınıza göre uygulanır.",
     "dontAskAgainPaper": "Kağıt işlemler için bir daha sorma",
     "dontAskAgainLive": "{{market}} üzerindeki gerçek işlemler için bir daha sorma",
     "placing": "Emir veriliyor…",
@@ -1355,7 +1355,7 @@
     "keep": "Koru",
     "tradingUnavailable": "İşlem yapılamıyor.",
     "noCredentialsForMarket": "{{market}} için bağlı bir kimlik bilgisi yok. Gerçek işlem yapmak için Hesaplar bölümünden API anahtarı ekleyin.",
-    "scheduledCheckPrefix": "[Zamanlanmış kontrol — {{minutes}} dk önce ayarlandı]",
+    "scheduledCheckPrefix": "[Zamanlanmış kontrol: {{minutes}} dk önce ayarlandı]",
     "toolFailed": "Araç başarısız oldu"
   },
   "chart": {
@@ -1590,8 +1590,8 @@
     "keepAwakeIdle": "Bir bot açıldığında otomatik uyku engellenecek.",
     "keepAwakeOff": "Bu bilgisayar uyuyabilir ve o zaman botların durur.",
     "keepAwakeUnsupported": "Uykuyu yalnızca masaüstü uygulaması engelleyebilir.",
-    "localBody": "Stratejilerin burada, Pairlens içinde çalışır — bizim işlettiğimiz bir sunucuda değil. Anahtarlarını ve mantığını sana ait tutan da bu. Bedeli gerçek: Pairlens’i kapatırsan ya da bu bilgisayar uykuya geçerse botların da onunla birlikte durur ve açık bir pozisyon sen dönene kadar izlenmeden kalır.",
-    "emptyDescription": "Bot, strateji betiklerinden birini bir piyasada çalıştırır. Hazır bir stratejiyle başla ya da Python ile kendininkini yaz — her yeni bot, canlıya alana kadar kağıt üzerinde işlem yapar.",
+    "localBody": "Stratejilerin burada, Pairlens içinde çalışır, bizim işlettiğimiz bir sunucuda değil. Anahtarlarını ve mantığını sana ait tutan da bu. Bedeli gerçek: Pairlens’i kapatırsan ya da bu bilgisayar uykuya geçerse botların da onunla birlikte durur ve açık bir pozisyon sen dönene kadar izlenmeden kalır.",
+    "emptyDescription": "Bot, strateji betiklerinden birini bir piyasada çalıştırır. Hazır bir stratejiyle başla ya da Python ile kendininkini yaz. Her yeni bot, canlıya alana kadar kağıt üzerinde işlem yapar.",
     "emptyHeadline": "Grafiği senin yerine bir strateji izlesin",
     "templateEmaCross": "Trendi iki yönde de takip eder: kesişimin üstünde long, altında short.",
     "templateRsiReversion": "Aşırı satım geri çekilmelerini alır, ama yalnızca fiyat uzun trendin üstünde kaldığı sürece.",
@@ -1665,8 +1665,8 @@
     "createBot": "Bot oluştur",
     "back": "Geri",
     "next": "İleri",
-    "stepProgress": "Adım {{current}}/{{total}} — {{title}}",
-    "strategyIntro": "Bot bir strateji betiği çalıştırır — ne zaman girip ne zaman çıkılacağını bildiren Python kodu. Başlamak için aşağıdan hazır bir strateji seç; kodu senindir, istediğin an açıp düzenleyebilirsin.",
+    "stepProgress": "Adım {{current}}/{{total}}: {{title}}",
+    "strategyIntro": "Bot bir strateji betiği çalıştırır: ne zaman girip ne zaman çıkılacağını bildiren Python kodu. Başlamak için aşağıdan hazır bir strateji seç; kodu senindir, istediğin an açıp düzenleyebilirsin.",
     "stepStrategy": "Strateji",
     "stepMarket": "Piyasa",
     "stepSizing": "Büyüklük",
@@ -1676,8 +1676,8 @@
     "groupTemplates": "Hazır stratejiler",
     "groupUndeployable": "Henüz bot olarak çalışmaz",
     "writeYourOwn": "Python ile kendi stratejini yaz",
-    "reasonIndicator": "Gösterge — bot olarak çalışması için strategy(...) meta'sı gerekir",
-    "reasonNotRun": "Henüz çalıştırılmadı — Göstergeler ve Stratejiler'de aç ve bir kez çalıştır",
+    "reasonIndicator": "Gösterge: bot olarak çalışması için strategy(...) meta'sı gerekir",
+    "reasonNotRun": "Henüz çalıştırılmadı: Göstergeler ve Stratejiler'de aç ve bir kez çalıştır",
     "openIndicators": "Göstergeler ve Stratejiler'i aç",
     "marketHint": "Bot, bu paritenin bu zaman dilimindeki kapanmış mumları üzerinde değerlendirme yapar.",
     "sizingKind": "Giriş büyüklüğü ölçütü",
@@ -1702,7 +1702,7 @@
     "armDescription": "\"{{name}}\" bundan sonra {{venue}} üzerinde gerçek {{pair}} emirleri verecek, her işlem için ayrı onay istenmeyecek.",
     "armVenueLabel": "Borsa",
     "armCredentialLabel": "Kimlik bilgisi",
-    "armMachineCaveat": "Pairlens bu makinede açık kalmalı. Uygulama kapanırsa ya da bilgisayar uykuya geçerse bot durur — açtığı pozisyon ise sen dönene kadar yönetilmeden açık kalır.",
+    "armMachineCaveat": "Pairlens bu makinede açık kalmalı. Uygulama kapanırsa ya da bilgisayar uykuya geçerse bot durur, açtığı pozisyon ise sen dönene kadar yönetilmeden açık kalır.",
     "armConfirmLabel": "Onaylamak için {{phrase}} yaz",
     "armConfirmPhrase": "CANLI MOD",
     "armConfirm": "Gerçek işlemi aç",
@@ -1718,14 +1718,14 @@
     "deployAsBot": "Bot olarak kur",
     "kindDraft": "Taslak",
     "templatesIndicators": "Gösterge şablonları",
-    "templatesStrategies": "Strateji şablonları — bot olarak çalışabilir",
+    "templatesStrategies": "Strateji şablonları: bot olarak çalışabilir",
     "strategyBadgeHint": "Giriş ve çıkışları tanımlar; geriye dönük test edilebilir ve bot olarak kurulabilir.",
     "indicatorBadgeHint": "Yalnızca değer çizer. Bot olarak kurmak için giriş ve çıkışları olan bir strategy(...) meta'sı ekle.",
     "startFromScratch": "Sıfırdan başla",
     "blankName": "Yeni Betik",
-    "sidebarEmpty": "Henüz betik yok — sıfırdan ya da bir şablondan başla",
+    "sidebarEmpty": "Henüz betik yok: sıfırdan ya da bir şablondan başla",
     "entryFile": "giriş",
-    "entryFileHint": "Giriş modülü — meta ve compute(ctx) tanımlar",
+    "entryFileHint": "Giriş modülü: meta ve compute(ctx) tanımlar",
     "fileActions": "{{file}} eylemleri",
     "newFile": "Yeni dosya",
     "newFileTitle": "Yeni Python dosyası",
@@ -1737,7 +1737,7 @@
     "deleteFileTitle": "Dosya silinsin mi?",
     "deleteFileDescription": "Bu, \"{{file}}\" dosyasını kalıcı olarak siler.",
     "scriptActions": "Betik eylemleri",
-    "statusReady": "Hazır — grafikler tarafından kullanılıyor",
+    "statusReady": "Hazır: grafikler tarafından kullanılıyor",
     "statusError": "Son çalıştırma başarısız oldu",
     "neverRun": "Henüz çalıştırılmadı",
     "updated": "{{time}} güncellendi",
@@ -1784,7 +1784,7 @@
     "errorTitle": "Betik hatası",
     "noCandles": "{{market}} üzerinde {{pair}} için mum verisi döndürülmedi",
     "previewEmptyTitle": "Önizlemek için çalıştır",
-    "previewEmptyDescription": "Canlı grafikte görmek için betiği çalıştır. İlk çalıştırma Python çalışma zamanını başlatır — birkaç saniye sürer.",
+    "previewEmptyDescription": "Canlı grafikte görmek için betiği çalıştır. İlk çalıştırma Python çalışma zamanını başlatır, birkaç saniye sürer.",
     "metaPaneOverlay": "Bindirme",
     "metaPaneSeparate": "Alt panel",
     "metaMinBars": "min {{count}} mum",
@@ -1823,21 +1823,21 @@
     "exportDescription": "Bu göstergeyi paylaşabileceğin bir Pairlens eklenti zip dosyası olarak paketler. Herkes bunu Eklentiler sayfasından kurabilir.",
     "exportName": "Eklenti adı",
     "exportId": "Eklenti Kimliği",
-    "exportIdHint": "Küçük harfler, rakamlar ve tireler (2–64 karakter).",
+    "exportIdHint": "Küçük harfler, rakamlar ve tireler (2-64 karakter).",
     "exportLocationHint": "İndirilenler klasörüne kaydedilir",
     "exportDownload": "Zip indir",
     "exportSuccess": "{{file}} dışa aktarıldı",
     "exportSavedTo": "{{folder}} klasörüne kaydedildi. Eklentiler → Eklenti içe aktar üzerinden kur.",
     "exportSavedToDownloads": "İndirilenler klasörüne kaydedildi. Eklentiler → Eklenti içe aktar üzerinden kur.",
     "emptyTitle": "Gösterge ve alım satım stratejileri yaz",
-    "emptyDescription": "Python ile grafik göstergeleri ve bot stratejileri yaz — canlı piyasa verisiyle çalıştır, grafiklerinde kullan ve stratejileri alım satım botlarına dönüştür.",
+    "emptyDescription": "Python ile grafik göstergeleri ve bot stratejileri yaz. Canlı piyasa verisiyle çalıştır, grafiklerinde kullan ve stratejileri alım satım botlarına dönüştür.",
     "templateSma": "Seçtiğin kaynak üzerinde tek bir hareketli ortalama. İşe yarayan en küçük betik.",
     "templateRsi": "Aşırı alım ve aşırı satım bölgeleri ve alarm koşulları olan alt panel osilatörü.",
     "templateMacd": "İki çizgi ve kendi momentumuna göre renklenen bir histogram.",
     "templateBollinger": "Ortası gölgeli bantlar; import mantığını göstermek için iki dosyaya bölünmüş.",
     "templateSupertrend": "Trendle birlikte renk değiştiren ve mumun üzerine giriş işaretleri basan bir çizgi.",
     "templateHtf": "Herhangi bir zaman diliminde çizilen günlük EMA; üst mum kapanana kadar sabit tutulur.",
-    "emptyFootnote": "Python tarayıcında yerel olarak çalışır — kodun bu makineden hiç çıkmaz. Bir strateji betiği bir kez çalıştığı anda bot olarak kurulabilir.",
+    "emptyFootnote": "Python tarayıcında yerel olarak çalışır: kodun bu makineden hiç çıkmaz. Bir strateji betiği bir kez çalıştığı anda bot olarak kurulabilir.",
     "pickScript": "Açmak için soldan bir betik seç.",
     "versionHistory": "Sürüm geçmişi",
     "versionHistoryDescription": "Her değişiklik, dosyaların üzerine yazmadan önce anlık görüntüsünü alır; böylece üzerine yazdığın hiçbir şey gerçekten kaybolmaz.",
@@ -1862,7 +1862,7 @@
     "versionClearTitle": "Sürüm geçmişi temizlensin mi?",
     "versionClearDescription": "Bu, \"{{name}}\" göstergesinin kaydedilmiş tüm sürümlerini kalıcı olarak siler. Mevcut dosyalara dokunulmaz.",
     "sdkRefTitle": "SDK referansı",
-    "sdkRefDescription": "pairlens Python SDK'sının sunduğu her şey — ada göre ya da ne yaptığına göre arayın.",
+    "sdkRefDescription": "pairlens Python SDK'sının sunduğu her şey. Ada göre ya da ne yaptığına göre arayın.",
     "sdkRefSearchPlaceholder": "İşlevlerde ve belgelerde ara…",
     "sdkRefAll": "Tümü",
     "sdkRefApi": "API",
@@ -1877,14 +1877,14 @@
     "sdkRefTaPrice": "Mum ve fiyat yardımcıları",
     "sdkRefInsert": "Ekle",
     "sdkRefEmpty": "“{{query}}” ile eşleşen bir şey yok",
-    "sdkRefEmptyHint": "Arama adları ve açıklamaları tarar — daha kısa bir sözcük deneyin.",
+    "sdkRefEmptyHint": "Arama adları ve açıklamaları tarar. Daha kısa bir sözcük deneyin.",
     "librariesTitle": "Python kitaplıkları",
-    "librariesDescription": "Betiklerin içe aktarabildikleri — seçilmiş kitaplıklar, çalışma zamanına gömülü paketler ve PyPI'daki her saf Python wheel'i.",
+    "librariesDescription": "Betiklerin içe aktarabildikleri: seçilmiş kitaplıklar, çalışma zamanına gömülü paketler ve PyPI'daki her saf Python wheel'i.",
     "librariesSearchPlaceholder": "Kitaplık ara…",
     "librariesCurated": "Seçilmiş",
     "librariesRuntime": "Çalışma zamanına gömülü",
     "librariesLoading": "Paket listesi yükleniyor…",
-    "librariesError": "Paket listesi yüklenemedi — bağlantınızı kontrol edip yeniden deneyin.",
+    "librariesError": "Paket listesi yüklenemedi. Bağlantınızı kontrol edip yeniden deneyin.",
     "librariesEmpty": "“{{query}}” ile eşleşen bir şey yok",
     "librariesPreloadedBadge": "Önceden yüklü",
     "librariesRuntimeBadge": "Çalışma zamanı",
@@ -1899,7 +1899,7 @@
     "importNameLabel": "Ad",
     "importPasteLabel": "Python kaynağı",
     "importPastePlaceholder": "Gösterge betiğini buraya yapıştır…",
-    "importNotIndicator": "Bu bir Pairlens göstergesine benzemiyor — meta = indicator(…) ve compute(ctx) tanımlamalı. Yine de içe aktarıp düzenleyicide düzeltebilirsin.",
+    "importNotIndicator": "Bu bir Pairlens göstergesine benzemiyor: meta = indicator(…) ve compute(ctx) tanımlamalı. Yine de içe aktarıp düzenleyicide düzeltebilirsin.",
     "importFileHint": "Bir .py betiği ya da Pairlens’ten dışa aktarılmış bir .zip eklenti paketi.",
     "importChooseFile": "Dosya seç",
     "importForkHint": "Kurulu bir eklentideki göstergeyi kendi düzenlenebilir betiğine kopyala.",
@@ -1911,20 +1911,20 @@
     "importError": {
       "empty": "İçe aktarılacak bir şey yok.",
       "binary": "Bu dosya Python kaynağı değil.",
-      "tooLarge": "Çok büyük — göstergeler en fazla {{limit}} KB olabilir.",
-      "tooManyFiles": "Çok fazla dosya — bir gösterge en fazla {{limit}} dosya tutabilir.",
+      "tooLarge": "Çok büyük: göstergeler en fazla {{limit}} KB olabilir.",
+      "tooManyFiles": "Çok fazla dosya: bir gösterge en fazla {{limit}} dosya tutabilir.",
       "badZip": "Bu dosya zip arşivi olarak okunamadı.",
       "invalidPath": "“{{path}}” geçerli bir modül yolu değil. Gösterge klasörünün içinde, .py ile biten Python modül adları kullan.",
       "duplicatePath": "İki dosya aynı “{{path}}” yolunu paylaşıyor.",
-      "noEntry": "Hangi dosyanın giriş modülü olduğu anlaşılamadı — adını {{entry}} yap.",
+      "noEntry": "Hangi dosyanın giriş modülü olduğu anlaşılamadı. Adını {{entry}} yap.",
       "noIndicators": "Bu eklenti içe aktarılabilir bir gösterge betiği taşımıyor. Eklentiler sayfasından kur ve oradan çatalla.",
       "unsupportedLanguage": "{{language}} ile yazılmış göstergeler içe aktarılamaz.",
       "malformedDescriptor": "Bu göstergenin verisi bozuk.",
       "unknown": "İçe aktarma başarısız oldu."
     },
     "syntaxErrorDiagnostic": "Söz dizimi hatası",
-    "missingMetaDiagnostic": "main.py üst düzeyde bir `meta = indicator(...)` tanımlamıyor — grafiğin çizecek bir şeyi yok.",
-    "missingComputeDiagnostic": "main.py üst düzeyde bir `def compute(ctx)` tanımlamıyor — script yüklenemeyecek."
+    "missingMetaDiagnostic": "main.py üst düzeyde bir `meta = indicator(...)` tanımlamıyor, grafiğin çizecek bir şeyi yok.",
+    "missingComputeDiagnostic": "main.py üst düzeyde bir `def compute(ctx)` tanımlamıyor, script yüklenemeyecek."
   },
   "indicators": {
     "title": "Gösterge Ekle",
@@ -2129,7 +2129,7 @@
     "selectWalletOrders": "Emirleri görüntülemek için bir cüzdan seç",
     "selectWalletFills": "Gerçekleşmeleri görüntülemek için bir cüzdan seç",
     "selectWalletBalances": "Bakiyeleri görüntülemek için bir cüzdan seç",
-    "spotNoPositions": "Spot mod — marj pozisyonu yok",
+    "spotNoPositions": "Spot mod: marj pozisyonu yok",
     "balances": "Bakiyeler",
     "noBalances": "Bakiye verisi yok",
     "total": "Toplam",
@@ -2199,16 +2199,16 @@
       "taxNotice": "Fiyatlara vergi dahil değildir; ödeme sırasında hesaplanır.",
       "defaultTitle": "Pairlens Intelligence'ın kilidini açın",
       "defaultDescription": "Barındırılan yapay zekâ asistanı, derinlemesine araştırma ve web aramasıyla birlikte, uğraşacağın bir API anahtarı olmadan. Her planda sohbet, araştırma ve web aramaları arasında paylaşılan aylık kullanım bütçesi bulunur.",
-      "byokNote": "Kendi sağlayıcını mı tercih edersin? <plugins>Eklentiler</plugins> sayfasında bir Anthropic, OpenAI, Groq veya OpenRouter anahtarı bağla — kendi anahtarınla yapay zekâ her zaman ücretsizdir.",
+      "byokNote": "Kendi sağlayıcını mı tercih edersin? <plugins>Eklentiler</plugins> sayfasında bir Anthropic, OpenAI, Groq veya OpenRouter anahtarı bağla. Kendi anahtarınla yapay zekâ her zaman ücretsizdir.",
       "checkoutOpenedTitle": "Ödeme tarayıcınızda açıldı",
       "checkoutActivates": "Ödeme tamamlanır tamamlanmaz aboneliğin burada etkinleşir.",
-      "checkoutStartError": "Ödeme başlatılamadı — lütfen tekrar deneyin.",
+      "checkoutStartError": "Ödeme başlatılamadı. Lütfen tekrar deneyin.",
       "subscriptionRequiredTitle": "Pairlens Intelligence aboneliği gerekiyor",
       "subscriptionRequiredBody": "Barındırılan AI, bir Intelligence planıyla çalışır. Aşağıdan abone olun veya Eklentiler'de kendi AI sağlayıcı anahtarınızı bağlayın.",
       "budgetUsedUpTitle": "Aylık kullanım bütçesi tükendi",
       "budgetUsedBody": "Bu döngünün Intelligence kredilerini kullandın.",
       "budgetResetsOn": "Bütçeniz {{date}} tarihinde sıfırlanır.",
-      "topUpHint": "Devam etmek için bir kredi paketiyle yükleme yapın — paket kredileri satın alımdan 30 gün sonra sona erer.",
+      "topUpHint": "Devam etmek için bir kredi paketiyle yükleme yapın. Paket kredileri satın alımdan 30 gün sonra sona erer.",
       "upgradeToMaxHint": "Ayda {{credits}} kredi için {{label}}'a yükseltin.",
       "manageSubscription": "Aboneliği yönet",
       "portalError": "Faturalandırma portalı açılamadı.",
@@ -2453,16 +2453,16 @@
     "disableCoreDescription": "Pairlens Core; grafiği, emir defterini, piyasaları ve çoğu yerleşik paneli sağlar. Devre dışı bırakmak bu panelleri gizler ve sen yeniden etkinleştirene kadar terminali neredeyse boş bırakır. Devam edilsin mi?",
     "disableAnyway": "Yine de devre dışı bırak",
     "buildOwnTitle": "Kendi eklentini oluştur",
-    "buildOwnDescription": "Pairlens açık bir platformdur. Bir eklenti iskeleti oluştur, derle ve yerel olarak yükle — kayıt defteri gerekmez.",
+    "buildOwnDescription": "Pairlens açık bir platformdur. Bir eklenti iskeleti oluştur, derle ve yerel olarak yükle, kayıt defteri gerekmez.",
     "buildStepScaffold": "Yeni bir eklenti iskeleti oluştur",
     "buildStepScaffoldNote": "Bu monorepo içinde şunu kullan: bun run create:plugin my-plugin",
     "buildStepBuild": "Derle ve paketle",
     "buildStepBuildNote": "Tek bir .zip üretir (manifest.json + module.js + isteğe bağlı styles.css).",
     "buildStepInstall": "Kur",
     "buildStepInstallNote": "Kurulu sekmesine git ve şunu kullan",
-    "buildStepInstallNote2": "— ya da masaüstünde, klasörü eklentiler dizinine bırak.",
+    "buildStepInstallNote2": "Ya da masaüstünde, klasörü eklentiler dizinine bırak.",
     "buildRuntimeTitle": "Eklentilerin kullanabilecekleri",
-    "buildRuntimeNote": "Ana uygulama çalışma zamanında React, @pairlens/plugin-sdk (hook'lar), @pairlens/ui tasarım sistemi (paket kökünden içe aktarılır) ve @pairlens/fast-financial-charts sağlar — bunları derlemende harici olarak işaretle. Tasarım sistemi bileşenleri ana uygulama tarafından stillendirilir; özel CSS için eklentinle birlikte bir styles.css gönder.",
+    "buildRuntimeNote": "Ana uygulama çalışma zamanında React, @pairlens/plugin-sdk (hook'lar), @pairlens/ui tasarım sistemi (paket kökünden içe aktarılır) ve @pairlens/fast-financial-charts sağlar. Bunları derlemende harici olarak işaretle. Tasarım sistemi bileşenleri ana uygulama tarafından stillendirilir; özel CSS için eklentinle birlikte bir styles.css gönder.",
     "buildExamplesNote": "Çalışan referanslar için repodaki dev-starter ve dev-sync örneklerine bak.",
     "applied": "Uygulandı",
     "applyTheme": "Temayı uygula",
@@ -2475,7 +2475,7 @@
     "communityBadge": "Topluluk",
     "communityFullTrustBlocked": "Topluluk eklentileri her zaman korumalı alanda çalışır. \"{{name}}\" ana uygulama ayrıcalıkları gerektirdiğinden kurulamaz.",
     "communityMaintainer": "Bakımını yapan",
-    "communityNotice": "Topluluk eklentisi — topluluk tarafından gönderildi ve Pairlens tarafından yalnızca hafifçe incelendi. Her zaman eklenti korumalı alanı içinde çalışır: yalnızca beyan ettiği ağ ana bilgisayarlarına ulaşabilir ve borsa anahtarlarını, cüzdanlarını asla okuyamaz veya işlem yapamaz.",
+    "communityNotice": "Topluluk eklentisi: topluluk tarafından gönderildi ve Pairlens tarafından yalnızca hafifçe incelendi. Her zaman eklenti korumalı alanı içinde çalışır: yalnızca beyan ettiği ağ ana bilgisayarlarına ulaşabilir ve borsa anahtarlarını, cüzdanlarını asla okuyamaz veya işlem yapamaz.",
     "communityViewSource": "Kaynağı görüntüle",
     "configuration": "Yapılandırma",
     "curated": "Bu hafta seçildi",
@@ -2499,7 +2499,7 @@
     "networkAccess": "Ağ erişimi",
     "noInstalledPlugins": "Kurulu eklenti yok.",
     "noMatches": "Aramanla eşleşen eklenti yok",
-    "noNetworkAccess": "Harici ağ erişimi yok — tamamen cihaz üzerinde çalışır.",
+    "noNetworkAccess": "Harici ağ erişimi yok. Tamamen cihaz üzerinde çalışır.",
     "overview": "Genel Bakış",
     "palette": "Palet",
     "panels": "Dahil edilen paneller",
@@ -2538,7 +2538,7 @@
     },
     "network": {
       "title": "“{{name}}” bağlanabilsin mi?",
-      "description": "Bu eklentinin Pairlens dışındaki sunuculara erişmesi gerekiyor. Terminalin aşağıdaki adreslere ağ isteği gönderecek. Yalnızca bu eklentiye güveniyorsan izin ver — erişimi kaldırmak için istediğin zaman silebilirsin.",
+      "description": "Bu eklentinin Pairlens dışındaki sunuculara erişmesi gerekiyor. Terminalin aşağıdaki adreslere ağ isteği gönderecek. Yalnızca bu eklentiye güveniyorsan izin ver. Erişimi kaldırmak için istediğin zaman silebilirsin.",
       "hostsIntro": "Şunlara bağlanabilecek:",
       "reloadNote": "Onaylamak, değişikliği uygulamak için terminali yeniden yükler.",
       "deny": "İzin verme",
@@ -2546,17 +2546,17 @@
     },
     "toggleFailedEnable": "{{name}} etkinleştirilemedi",
     "toggleFailedDisable": "{{name}} devre dışı bırakılamadı",
-    "updateStagedToast": "Güncelleme hazırlandı — uygulamak için yeniden başlatın",
+    "updateStagedToast": "Güncelleme hazırlandı: uygulamak için yeniden başlatın",
     "restartNow": "Şimdi yeniden başlat",
     "updateStageFailedToast": "Güncelleme hazırlanamadı: {{error}}",
-    "resetStagedToast": "Varsayılanlara sıfırlandı — tamamlamak için yeniden başlatın",
-    "networkGrantedToast": "\"{{name}}\" için ağ erişimi verildi — yeniden yükleniyor…",
-    "networkDeniedToast": "\"{{name}}\" ağ erişimi olmadan kuruldu — izin verene kadar çalışmayabilir.",
-    "installCancelledNoTrust": "Kurulum iptal edildi — tam güven verilmedi",
+    "resetStagedToast": "Varsayılanlara sıfırlandı: tamamlamak için yeniden başlatın",
+    "networkGrantedToast": "\"{{name}}\" için ağ erişimi verildi, yeniden yükleniyor…",
+    "networkDeniedToast": "\"{{name}}\" ağ erişimi olmadan kuruldu, izin verene kadar çalışmayabilir.",
+    "installCancelledNoTrust": "Kurulum iptal edildi: tam güven verilmedi",
     "installedVersionToast": "\"{{name}}\" v{{version}} kuruldu",
     "installFailedToast": "Eklenti kurulamadı: {{error}}",
     "localFilesNotFound": "Yerel eklenti dosyaları bulunamadı",
-    "pluginCodeNotFound": "Eklenti kodu bulunamadı — yeniden kurun",
+    "pluginCodeNotFound": "Eklenti kodu bulunamadı. Yeniden kurun",
     "fullTrustGrantedNameToast": "\"{{name}}\" için tam güven verildi",
     "loadPluginFailedToast": "Eklenti yüklenemedi: {{error}}",
     "importFailedToast": "Eklenti içe aktarılamadı: {{error}}",
@@ -2564,7 +2564,7 @@
     "configSaved": "Yapılandırma kaydedildi",
     "configurationFailed": "Yapılandırma başarısız oldu",
     "needsFullTrustToRun": "Çalışması için tam güven gerekir",
-    "pendingTrustDescription": "Arayüz sağlıyor ve sandbox içinde çalışamıyor — etkinleştirmek için tam güven verin ya da kaldırın.",
+    "pendingTrustDescription": "Arayüz sağlıyor ve sandbox içinde çalışamıyor. Etkinleştirmek için tam güven verin ya da kaldırın.",
     "remove": "Kaldır",
     "groupProvidersExtensions": "Sağlayıcılar ve Uzantılar",
     "uninstallPluginTitle": "Eklentiyi Kaldır",
@@ -2581,8 +2581,8 @@
     "sourceRegistry": "Kayıt Defteri",
     "sourceUrl": "URL",
     "sourceLocal": "Yerel",
-    "fullTrustGrantedRestartToast": "Tam güven verildi — bu eklentiyi ana uygulamada çalıştırmak için yeniden başlatın",
-    "sandboxedRestartToast": "Eklenti sandbox içinde çalışacak — uygulamak için yeniden başlatın",
+    "fullTrustGrantedRestartToast": "Tam güven verildi: bu eklentiyi ana uygulamada çalıştırmak için yeniden başlatın",
+    "sandboxedRestartToast": "Eklenti sandbox içinde çalışacak: uygulamak için yeniden başlatın",
     "requiresFullTrustTitle": "Bu eklenti arayüz sağlıyor ve tam güvenle çalışmalıdır.",
     "trustBadgeFullRequired": "Tam güven (zorunlu)",
     "trustBadgeFull": "Tam güven",
@@ -2592,8 +2592,8 @@
     "update": "Güncelle",
     "revokeFullTrustAria": "{{name}} için tam güveni geri al",
     "grantFullTrustAria": "{{name}} için tam güven ver",
-    "fullTrustActiveTitle": "Tam güven — ana uygulamada çalışır. Sandbox'a almak için tıklayın.",
-    "sandboxedTitle": "Sandbox — izole edilmiş worker, ağ yalnızca beyan edilen sunuculara sınırlı. Tam güven vermek için tıklayın.",
+    "fullTrustActiveTitle": "Tam güven: ana uygulamada çalışır. Sandbox'a almak için tıklayın.",
+    "sandboxedTitle": "Sandbox: izole edilmiş worker, ağ yalnızca beyan edilen sunuculara sınırlı. Tam güven vermek için tıklayın.",
     "configureAria": "{{name}} yapılandır",
     "toggleAria": "{{name}} değiştir",
     "capabilityProvidersTitle": "Yetenek Sağlayıcıları",
@@ -2601,13 +2601,13 @@
     "resetAllOverrides": "Tüm geçersiz kılmaları sıfırla",
     "noProviderInstalled": "Kurulu hiçbir eklenti bunu sağlamıyor",
     "browseStore": "Mağazaya göz at",
-    "installedNeedsKeySingle": "Kuruldu — API anahtarı gerekiyor",
-    "installedNeedsKeyPlural": "{{count}} kuruldu — hepsi API anahtarı gerektiriyor",
+    "installedNeedsKeySingle": "Kuruldu: API anahtarı gerekiyor",
+    "installedNeedsKeyPlural": "{{count}} kuruldu: hepsi API anahtarı gerektiriyor",
     "installedDisabledSingle": "1 eklenti kurulu ama devre dışı",
     "installedDisabledPlural": "{{count}} eklenti kurulu, hepsi devre dışı",
     "manage": "Yönet",
-    "pinnedActiveNote": "Sabitlendi — otomatik sırayı geçersiz kılar",
-    "pinnedInactiveNote": "Sabitlenen eklenti devre dışı — otomatik sıra uygulanır",
+    "pinnedActiveNote": "Sabitlendi: otomatik sırayı geçersiz kılar",
+    "pinnedInactiveNote": "Sabitlenen eklenti devre dışı: otomatik sıra uygulanır",
     "autoOrderLabel": "Otomatik sıra: {{chain}}",
     "chainMore_one": "{{chain}} +{{count}} tane daha",
     "chainMore_other": "{{chain}} +{{count}} tane daha",
@@ -2658,7 +2658,7 @@
     "manifests": {
       "pairlens-core": {
         "title": "Pairlens Core",
-        "description": "Ana işlem terminali — grafikler, emir defterleri, işlem girişi, piyasa keşfi ve izleme listeleri"
+        "description": "Ana işlem terminali: grafikler, emir defterleri, işlem girişi, piyasa keşfi ve izleme listeleri"
       },
       "pairlens-intelligence": {
         "title": "Pairlens Intelligence",
@@ -2686,7 +2686,7 @@
       },
       "openrouter-inference": {
         "title": "OpenRouter",
-        "description": "OpenRouter üzerinden AI çıkarımı — tek bir API anahtarıyla farklı sağlayıcılardan yüzlerce modele erişim (kendi anahtarınla)"
+        "description": "OpenRouter üzerinden AI çıkarımı: tek bir API anahtarıyla farklı sağlayıcılardan yüzlerce modele erişim (kendi anahtarınla)"
       },
       "tavily-search": {
         "title": "Tavily Arama",
@@ -2698,7 +2698,7 @@
       },
       "pairlens": {
         "title": "Pairlens",
-        "description": "Pairlens'in imza teması — canlı siyah beyaz üzerine gökkuşağı prizma vurguları"
+        "description": "Pairlens'in imza teması: canlı siyah beyaz üzerine gökkuşağı prizma vurguları"
       },
       "zen-trading": {
         "title": "Zen Trading",
@@ -2754,7 +2754,7 @@
       },
       "night-city": {
         "title": "Night City",
-        "description": "Cyberpunk 2077'den ilham alındı — koyu gunmetal üzerinde elektrik sarısı ve keskin hatlar"
+        "description": "Cyberpunk 2077'den ilham alındı: koyu gunmetal üzerinde elektrik sarısı ve keskin hatlar"
       },
       "eye-comfort": {
         "title": "Eye Comfort",
@@ -2766,7 +2766,7 @@
       },
       "boomerg": {
         "title": "Boomerg",
-        "description": "Klasik Bloomberg terminaline selam duran siyah üzerine kehribar — eş aralıklı arayüz, keskin köşeler ve fonksiyon tuşu renkleri"
+        "description": "Klasik Bloomberg terminaline selam duran siyah üzerine kehribar: eş aralıklı arayüz, keskin köşeler ve fonksiyon tuşu renkleri"
       },
       "okx-market-connector": {
         "title": "OKX Piyasa Bağlayıcısı",
@@ -2826,7 +2826,7 @@
       },
       "alpaca-market-connector": {
         "title": "Alpaca Piyasa Bağlayıcısı",
-        "description": "Alpaca aracı kurum API'si üzerinden ABD hisseleri ve ETF'ler — gerçek zamanlı piyasa verisi, kağıt ve canlı işlem"
+        "description": "Alpaca aracı kurum API'si üzerinden ABD hisseleri ve ETF'ler: gerçek zamanlı piyasa verisi, kağıt ve canlı işlem"
       },
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
@@ -2834,39 +2834,39 @@
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",
-        "description": "GeckoTerminal (CoinGecko) tarafından sağlanan DEX piyasa verisi — derin geçmiş, yerel 4 saatlik mumlar"
+        "description": "GeckoTerminal (CoinGecko) tarafından sağlanan DEX piyasa verisi: derin geçmiş, yerel 4 saatlik mumlar"
       },
       "jupiter-dex-connector": {
         "title": "Jupiter DEX Bağlayıcısı",
-        "description": "Solana DEX aggregator'ı — tüm Solana DEX'lerinde en iyi fiyat yönlendirmesi"
+        "description": "Solana DEX aggregator'ı: tüm Solana DEX'lerinde en iyi fiyat yönlendirmesi"
       },
       "ethereum-dex-connector": {
         "title": "Ethereum DEX Bağlayıcısı",
-        "description": "Zincir üstü Ethereum takasları — KyberSwap aggregator'ı üzerinden tüm Ethereum DEX'lerinde en iyi fiyat yönlendirmesi"
+        "description": "Zincir üstü Ethereum takasları: KyberSwap aggregator'ı üzerinden tüm Ethereum DEX'lerinde en iyi fiyat yönlendirmesi"
       },
       "base-dex-connector": {
         "title": "Base DEX Bağlayıcısı",
-        "description": "Zincir üstü Base takasları — KyberSwap aggregator'ı üzerinden tüm Base DEX'lerinde en iyi fiyat yönlendirmesi"
+        "description": "Zincir üstü Base takasları: KyberSwap aggregator'ı üzerinden tüm Base DEX'lerinde en iyi fiyat yönlendirmesi"
       },
       "arbitrum-dex-connector": {
         "title": "Arbitrum DEX Bağlayıcısı",
-        "description": "Zincir üstü Arbitrum takasları — KyberSwap aggregator'ı üzerinden tüm Arbitrum DEX'lerinde en iyi fiyat yönlendirmesi"
+        "description": "Zincir üstü Arbitrum takasları: KyberSwap aggregator'ı üzerinden tüm Arbitrum DEX'lerinde en iyi fiyat yönlendirmesi"
       },
       "bsc-dex-connector": {
         "title": "BNB Chain DEX Bağlayıcısı",
-        "description": "Zincir üstü BNB Chain takasları — KyberSwap aggregator'ı üzerinden tüm BNB Chain DEX'lerinde en iyi fiyat yönlendirmesi"
+        "description": "Zincir üstü BNB Chain takasları: KyberSwap aggregator'ı üzerinden tüm BNB Chain DEX'lerinde en iyi fiyat yönlendirmesi"
       },
       "polygon-dex-connector": {
         "title": "Polygon DEX Bağlayıcısı",
-        "description": "Zincir üstü Polygon takasları — KyberSwap aggregator'ı üzerinden tüm Polygon DEX'lerinde en iyi fiyat yönlendirmesi"
+        "description": "Zincir üstü Polygon takasları: KyberSwap aggregator'ı üzerinden tüm Polygon DEX'lerinde en iyi fiyat yönlendirmesi"
       },
       "kalshi-market-connector": {
         "title": "Kalshi Piyasa Bağlayıcısı",
-        "description": "CFTC düzenlemesindeki tahmin borsası Kalshi'de olay sözleşmeleri — varlık değil, sonuç işleyin"
+        "description": "CFTC düzenlemesindeki tahmin borsası Kalshi'de olay sözleşmeleri: varlık değil, sonuç işleyin"
       },
       "polymarket-market-connector": {
         "title": "Polymarket Piyasa Bağlayıcısı",
-        "description": "Polymarket CLOB'unda olay sözleşmeleri — cüzdanla imzalanan emirler, USDC ile takas"
+        "description": "Polymarket CLOB'unda olay sözleşmeleri: cüzdanla imzalanan emirler, USDC ile takas"
       },
       "pairlens-predictions": {
         "title": "Pairlens Tahminler",
@@ -3105,12 +3105,12 @@
     "connectBroker": "Aracı Kurum Bağla",
     "selectBroker": "Bağlanacak aracı kurumu seç",
     "brokerAccountsTitle": "Aracı Kurumlar",
-    "brokerAccountsDesc": "API anahtarıyla bağlanan aracı kurum hesapları (Alpaca…) — kağıt üzerinde veya gerçek fonlarla ABD hisse senedi ve ETF işlemi yap.",
+    "brokerAccountsDesc": "API anahtarıyla bağlanan aracı kurum hesapları (Alpaca…). Kağıt üzerinde veya gerçek fonlarla ABD hisse senedi ve ETF işlemi yap.",
     "noBrokerAccounts": "Henüz bağlı aracı kurum yok",
     "noBrokerAccountsDesc": "Hisse senedi işlemi yapmak için bir aracı kurum hesabı bağla. Alpaca dakikalar içinde ücretsiz kağıt üzerinde işlem anahtarları sunar.",
     "comingSoon": "Yakında",
     "exchangeAccountsTitle": "Kripto Borsaları",
-    "exchangeAccountsDesc": "API anahtarıyla bağlanan merkezi borsa hesapları (Binance, OKX…) — fonların borsada kalır.",
+    "exchangeAccountsDesc": "API anahtarıyla bağlanan merkezi borsa hesapları (Binance, OKX…). Fonların borsada kalır.",
     "cryptoWalletsTitle": "Kripto Cüzdanları",
     "cryptoWalletsDesc": "Merkeziyetsiz borsalar üzerinden zincir üstü işlem yapmak için özel anahtarlar.",
     "addWallet": "Cüzdan Ekle",
@@ -3146,7 +3146,7 @@
       "badge": "Yalnızca Yerel",
       "badgeAria": "Anahtarlarının nasıl gizli tutulduğunu öğren",
       "title": "Anahtarların bu cihazdan asla çıkmaz",
-      "subtitle": "Eklediğin API anahtarlarına ve cüzdan anahtarlarına tam olarak ne olduğu burada — bunun neyi koruyamadığı da dahil.",
+      "subtitle": "Eklediğin API anahtarlarına ve cüzdan anahtarlarına tam olarak ne olduğu burada, bunun neyi koruyamadığı da dahil.",
       "statusDesktop": "Şu anda: anahtarların {{vault}} içinde, yalnızca bu bilgisayarda.",
       "statusDesktopVault": "Şu anda: {{vault}}, üstüne kendi kasan her anahtarı şifreliyor.",
       "statusBrowserVault": "Şu anda: her anahtar kasanda şifreli, yalnızca bu tarayıcıda.",
@@ -3159,7 +3159,7 @@
       "osBodyBrowser": "Her değer, tarayıcı deposuna dokunmadan önce AES-256-GCM ile mühürlenir. Tek bir veri anahtarı hepsini şifreler ve o anahtar hiçbir zaman açık metin olarak yazılmaz.",
       "unlockTitle": "Onu yalnızca sen açabilirsin",
       "unlockBody": "600.000 tur PBKDF2-SHA256 ile güçlendirilmiş bir şifre; telefonundaki ya da güvenlik anahtarındaki bir passkey; veya Touch ID. Her biri aynı veri anahtarını sarar, yani birden fazla giriş yolun olabilir. Pairlens bunların hiçbirini almaz.",
-      "openSourceTitle": "Herkese açık kaynak kodu — kendin doğrula",
+      "openSourceTitle": "Herkese açık kaynak kodu, kendin doğrula",
       "openSourceBody": "Pairlens'in kodu herkese açıktır. Sen, geliştirici bir arkadaşın ya da bir yapay zeka bile onu okuyup anahtarlarının gerçekten yerinde kaldığını doğrulayabilir.",
       "limitsTitle": "Bunun korumadıkları",
       "limitsRunning": "Uygulama açık ve kilidi açıkken anahtarlarını okuyabilir. Emirlerini böyle iletir. Şifreleme, kopyalanmış bir diski veya tarayıcı profilini savunur; başkasının zaten başında oturduğu bir makineyi değil.",
@@ -3177,7 +3177,7 @@
     "hero": {
       "eyebrow": "Borsaların",
       "title": "Kendi anahtarlarınla işlem yap",
-      "subtitle": "Bu cihazdan asla çıkmayan API anahtarlarıyla borsaları, aracı kurumları ve zincir üstü cüzdanları bağla. Pairlens her borsayla doğrudan konuşur — emanet yok, aracı yok."
+      "subtitle": "Bu cihazdan asla çıkmayan API anahtarlarıyla borsaları, aracı kurumları ve zincir üstü cüzdanları bağla. Pairlens her borsayla doğrudan konuşur: emanet yok, aracı yok."
     },
     "portfolioEyebrow": "Portföy",
     "openAccountShelfTitle": "Yeni bir hesap aç",
@@ -3193,8 +3193,8 @@
     "hasAccountNoDesc": "Ücretsiz bir {{exchange}} hesabı aç",
     "importKey": "Bir özel anahtar içe aktar",
     "affiliateDisclosure": "Bazı kayıt bağlantıları, sana ek maliyet çıkarmadan Pairlens'e komisyon kazandırabilir.",
-    "vaultSealedBody": "Kimlik bilgisi kasan kilitli. Hesapların hâlâ burada — görmek ve kullanmak için kilidi aç.",
-    "credentialsUnreadable": "Bu cihazda saklanan anahtarlar okunamadı. Hiçbir şey kaybolmadı — tekrar dene ya da Pairlens’i yeniden başlat.",
+    "vaultSealedBody": "Kimlik bilgisi kasan kilitli. Hesapların hâlâ burada, görmek ve kullanmak için kilidi aç.",
+    "credentialsUnreadable": "Bu cihazda saklanan anahtarlar okunamadı. Hiçbir şey kaybolmadı. Tekrar dene ya da Pairlens’i yeniden başlat.",
     "addWalletDialogTitle": "Kripto Cüzdanı Ekle",
     "addWalletDialogDescription": "Zincir üstü işlem yapmak için bir cüzdan özel anahtarı içe aktarın",
     "blockchainLabel": "Blok zinciri",
@@ -3207,7 +3207,7 @@
     "disconnect": "Bağlantıyı Kes",
     "localBadge": "Yerel",
     "unknownDate": "Bilinmiyor",
-    "keyExpiredWarning": "Muhtemelen süresi doldu — {{daysInactive}} gündür etkin değil ({{limitDays}} günlük sınır). Borsada API anahtarını yeniden oluşturun.",
+    "keyExpiredWarning": "Muhtemelen süresi doldu: {{daysInactive}} gündür etkin değil ({{limitDays}} günlük sınır). Borsada API anahtarını yeniden oluşturun.",
     "keyInactiveWarning": "{{daysInactive}}/{{limitDays}} gündür etkin değil. Anahtarlar {{limitDays}} gün kullanılmadığında süresi dolar.",
     "exchangeAccountAriaLabel": "{{label}} borsa hesabı",
     "cryptoWalletAriaLabel": "{{label}} kripto cüzdanı",
@@ -3297,11 +3297,11 @@
       "enableTitle": "Bazı eklentiler devre dışı",
       "enableBody": "Bu çalışma alanı kurulu ama kapalı olan eklentileri kullanıyor. Her paneli görmek için bunları Eklentiler sayfasından etkinleştir.",
       "installTitle": "Ekstra eklenti gerekli",
-      "installBody": "Bazı paneller henüz sahip olmadığın eklentilere dayanıyor. Çalışma alanını yine de ekleyebilirsin — Eklenti Mağazası'ndan eklentileri kurana kadar o paneller boş kalır."
+      "installBody": "Bazı paneller henüz sahip olmadığın eklentilere dayanıyor. Çalışma alanını yine de ekleyebilirsin, Eklenti Mağazası'ndan eklentileri kurana kadar o paneller boş kalır."
     },
     "security": {
       "trusted": "Tam erişim · Pairlens ile birlikte gelir",
-      "needsApproval": "Tam erişim gerektirir — onaylaman istenecek",
+      "needsApproval": "Tam erişim gerektirir: onaylaman istenecek",
       "gateTitle": "Tam erişimli eklentiler",
       "gateBody": "{{names}} kimlik bilgilerine ve işlemlerine tam erişimle çalışır. Etkinleştirilmeden önce her birini onaylaman istenecek."
     },
@@ -3370,7 +3370,7 @@
     "templates": {
       "scalpers-cockpit": {
         "name": "Scalper Kokpiti",
-        "tagline": "Grafik, defter ve tek tıkla emir girişi — başka hiçbir şey yok.",
+        "tagline": "Grafik, defter ve tek tıkla emir girişi. Başka hiçbir şey yok.",
         "description": "Hızlı işlem için minimal iki sütunlu bir kokpit: canlı bir emir defteri, piyasa derinliği ve bir işlem paneli eşliğinde bir grafik. Tek ekranda hız için tasarlandı."
       },
       "day-trader-pro": {
@@ -3396,7 +3396,7 @@
       "market-discovery": {
         "name": "Piyasa Keşfi",
         "tagline": "Taahhüt etmeden önce nelerin hareket ettiğini bul.",
-        "description": "Saf bir keşif panosu: piyasa tarayıcısı, en çok hareket edenler, bir sektör ısı haritası, izleme listen ve Korku ve Açgözlülük göstergesi. Grafik yok, işlem paneli yok — yalnızca bir sonraki kurulumu avlamak için."
+        "description": "Saf bir keşif panosu: piyasa tarayıcısı, en çok hareket edenler, bir sektör ısı haritası, izleme listen ve Korku ve Açgözlülük göstergesi. Grafik yok, işlem paneli yok, yalnızca bir sonraki kurulumu avlamak için."
       },
       "portfolio-command": {
         "name": "Portföy Komutası",
@@ -3444,7 +3444,7 @@
       },
       "ultrawide-trading-floor": {
         "name": "Ultra Geniş İşlem Katı",
-        "tagline": "Her şey, her yerde — büyük ekran için.",
+        "tagline": "Her şey, her yerde, büyük ekran için.",
         "description": "Ultra geniş veya ikinci bir monitörü dolduran dört sütunlu bir komuta merkezi: tarayıcı, grafik, emir defteri ve derinlik, ve açık pozisyonlarının üzerinde bir işlem paneli. Maksimalist düzen."
       },
       "classic-terminal": {
@@ -3474,19 +3474,19 @@
       "dual-charts": {
         "name": "Çift Grafik",
         "tagline": "Yan yana iki grafik.",
-        "description": "Yan yana iki bağımsız grafik panosu — her biri kendi piyasasını, zaman dilimini ve grafik türünü korur. Parite seçicisiyle her pano için farklı bir parite ayarla.",
+        "description": "Yan yana iki bağımsız grafik panosu. Her biri kendi piyasasını, zaman dilimini ve grafik türünü korur. Parite seçicisiyle her pano için farklı bir parite ayarla.",
         "menuLabel": "Çift Grafik"
       },
       "triple-charts": {
         "name": "Üçlü Grafik",
         "tagline": "Yanında iki tane üst üste olan büyük bir grafik.",
-        "description": "Sağda üst üste iki küçük grafik olan büyük bir ana grafik — her biri bağımsız, bir öncü pariteyi diğer ikisine karşı izlemek için.",
+        "description": "Sağda üst üste iki küçük grafik olan büyük bir ana grafik, her biri bağımsız, bir öncü pariteyi diğer ikisine karşı izlemek için.",
         "menuLabel": "Üçlü Grafik"
       },
       "quad-charts": {
         "name": "Dörtlü Grafik",
         "tagline": "2×2'lik bir grafik ızgarası.",
-        "description": "2×2'lik bir ızgarada dört bağımsız grafik — birden çok piyasayı aynı anda izlemek için tam bir çoklu grafik kokpiti.",
+        "description": "2×2'lik bir ızgarada dört bağımsız grafik, birden çok piyasayı aynı anda izlemek için tam bir çoklu grafik kokpiti.",
         "menuLabel": "Dörtlü Grafik"
       },
       "laptop-focus": {
@@ -3517,19 +3517,19 @@
       "home-pulse": {
         "name": "Ana Sayfa",
         "tagline": "Varsayılan pano: tarayıcı, duyarlılık, hareket edenler ve haberler.",
-        "description": "Varsayılan ana sayfa panosu — piyasa tarayıcısı, Korku ve Açgözlülük göstergesi ile en iyi coinlerin izleme listenle sekmelendiği bir piyasa nabzı rayı ve tam yükseklikte bir haber sütunu. Üzerindeki her şey hesap olmadan çalışır.",
+        "description": "Varsayılan ana sayfa panosu: piyasa tarayıcısı, Korku ve Açgözlülük göstergesi ile en iyi coinlerin izleme listenle sekmelendiği bir piyasa nabzı rayı ve tam yükseklikte bir haber sütunu. Üzerindeki her şey hesap olmadan çalışır.",
         "menuLabel": "Varsayılan"
       },
       "markets-board": {
         "name": "Piyasalar Panosu",
         "tagline": "Yalnızca piyasa tarayıcısı, tam ekran.",
-        "description": "Tam genişlikte piyasa tarayıcısı — işlem yapılabilir her pariteye göz atmanın ve sıralamanın en basit yolu.",
+        "description": "Tam genişlikte piyasa tarayıcısı, işlem yapılabilir her pariteye göz atmanın ve sıralamanın en basit yolu.",
         "menuLabel": "Piyasalar"
       },
       "markets-overview": {
         "name": "Piyasalar Genel Bakış",
         "tagline": "En çok hareket edenlerin ve izleme listenin yanında tarayıcı.",
-        "description": "Piyasa tarayıcısı, en çok hareket edenler ve izleme listenle birlikte — kurulum bulmak ve izlemek için dengeli bir ana sayfa.",
+        "description": "Piyasa tarayıcısı, en çok hareket edenler ve izleme listenle birlikte, kurulum bulmak ve izlemek için dengeli bir ana sayfa.",
         "menuLabel": "Genel Bakış"
       },
       "sector-analysis": {
@@ -3541,7 +3541,7 @@
       "news-board": {
         "name": "Haberler Panosu",
         "tagline": "En çok hareket edenlerin ve haber akışının yanında piyasalar.",
-        "description": "En çok hareket edenlerin ve canlı haber akışının yanında piyasa tarayıcısı — katalizör odaklı işlemler için bir ana üs.",
+        "description": "En çok hareket edenlerin ve canlı haber akışının yanında piyasa tarayıcısı, katalizör odaklı işlemler için bir ana üs.",
         "menuLabel": "Haberler"
       },
       "perps-terminal": {
@@ -3654,7 +3654,7 @@
         "sendTest": "Test gönder",
         "testing": "Test ediliyor…",
         "pairAlreadyBound": "Bu parite zaten kurala bağlı",
-        "noBindings": "Henüz hiçbir pariteye bağlı değil — sen bir tane eklemeden kural tetiklenmez.",
+        "noBindings": "Henüz hiçbir pariteye bağlı değil. Sen bir tane eklemeden kural tetiklenmez.",
         "testSent": "Test bildirimi gönderildi",
         "testFailed": "Test iletilemedi",
         "noActivity": "Henüz tetiklenen bildirim yok",
@@ -3676,7 +3676,7 @@
         "cannotSaveTitle": "Kural kaydedilemiyor",
         "cycleError": "Kural döngüsel bir bağımlılık içeriyor. Kaydetmeden önce döngüyü (kırmızı kenarlar) kaldır.",
         "saved": "Kural kaydedildi",
-        "webhookHostAllowed": "{{hosts}} erişimine izin verildi — webhook göndermeye başlamak için yeniden yükleyin",
+        "webhookHostAllowed": "{{hosts}} erişimine izin verildi: webhook göndermeye başlamak için yeniden yükleyin",
         "webhookHostFailed": "Webhook sunucusuna izin verilemedi",
         "reload": "Yeniden yükle"
       },
@@ -3711,7 +3711,7 @@
         "untitledRule": "Adsız kural",
         "eyebrow": "Bildirimler",
         "title": "Piyasayı sen izlemeden Pairlens izlesin",
-        "description": "Bir uyarı tek satırdır: geçilecek bir seviye ya da dikkate değer bir hareket — pariteyi seç, devreye girsin. Akışlar gerisi için: koşullar, gerçekleşen emirler, gösterge uyarıları ve nereye iletileceği.",
+        "description": "Bir uyarı tek satırdır: geçilecek bir seviye ya da dikkate değer bir hareket. Pariteyi seç, devreye girsin. Akışlar gerisi için: koşullar, gerçekleşen emirler, gösterge uyarıları ve nereye iletileceği.",
         "startBlank": "Boş bir tuvalden başla",
         "footnote": "Şablonlar {{market}} üzerindeki {{pair}} çiftine bağlı olarak hazır gelir. Adımları düzenleyin ya da kural listesinin altından çifti değiştirin, sonra değişikliklerinizi kaydedin. Kurallar yalnızca Pairlens açıkken çalışır."
       },
@@ -4024,11 +4024,11 @@
       "unknownPair": "bilinmiyor",
       "priceAlert": {
         "title": "Fiyat Alarmı: {{pair}}",
-        "body": "{{pair}} artık {{price}} {{direction}} — güncel: {{current}}"
+        "body": "{{pair}} artık {{price}} {{direction}}, güncel: {{current}}"
       },
       "orderExecuted": {
         "title": "Emir Gerçekleşti",
-        "body": "{{side}} {{pair}} — {{status}}"
+        "body": "{{side}} {{pair}}: {{status}}"
       },
       "signalGenerated": {
         "title": "Sinyal Oluştu",
@@ -4339,7 +4339,7 @@
       "biometricPromptReason": "Pairlens kimlik bilgisi kasanın kilidini aç",
       "biometricLabel": "Bu Mac’te Touch ID",
       "biometricCancelled": "Touch ID istemi kapatıldı.",
-      "biometricInvalidated": "Touch ID artık kasanı açamıyor — bu Mac’teki parmak izleri değişti. Ayarlar → Güvenlik bölümünden kaldırıp yeniden kur.",
+      "biometricInvalidated": "Touch ID artık kasanı açamıyor: bu Mac’teki parmak izleri değişti. Ayarlar → Güvenlik bölümünden kaldırıp yeniden kur.",
       "useExistingPassword": "Bu terminal için zaten belirlediğin parolayı kullan.",
       "unlockTitle": "Anahtarlarının kilidini aç",
       "unlockSubtitle": "API ve cüzdan anahtarların şifreli. Kullanmak için kilidi aç.",
@@ -4347,8 +4347,8 @@
       "unlockWithPassword": "Kilidi aç",
       "unlocking": "Açılıyor…",
       "sealed": "Kimlik bilgisi kasan kilitli.",
-      "sealedBanner_one": "1 canlı bot duraklatıldı — işlemlere devam etmek için Pairlens'in kilidini aç.",
-      "sealedBanner_other": "{{count}} canlı bot duraklatıldı — işlemlere devam etmek için Pairlens'in kilidini aç.",
+      "sealedBanner_one": "1 canlı bot duraklatıldı. İşlemlere devam etmek için Pairlens'in kilidini aç.",
+      "sealedBanner_other": "{{count}} canlı bot duraklatıldı. İşlemlere devam etmek için Pairlens'in kilidini aç.",
       "passkeyNudgeTitle": "Bir sonraki sefere tek dokunuşla açın",
       "passkeyNudgeBody": "{{venue}} fiyatları anahtarlarınızdan akıtır, yani kilitli kasa grafik yok demektir. Passkey, yazılan bir parola yerine kasayı ve kilit ekranını tek dokunuşta açar.",
       "passkeyNudgeAction": "Passkey ekle",
@@ -4357,7 +4357,7 @@
       "sealedBannerAction": "Kilidi aç",
       "botsPausedTitle": "Canlı botlar duraklatıldı",
       "botsPausedBody": "Canlı işlemlere devam etmek için Pairlens'in kilidini aç. Kâğıt botlar etkilenmez.",
-      "orderBlocked": "Kimlik bilgisi kasan kilitli — canlı emir göndermek için Pairlens'in kilidini aç.",
+      "orderBlocked": "Kimlik bilgisi kasan kilitli. Canlı emir göndermek için Pairlens'in kilidini aç.",
       "insecureContext": "Güvenli olmayan bir bağlantıda şifreleme kullanılamaz. Kasa kurmak için Pairlens'i HTTPS üzerinden veya localhost'ta aç.",
       "botParkDetailSealed": "Kimlik bilgisi kasan kilitli. Bu bot, Pairlens'in kilidini açar açmaz canlı işlem yapmaya devam eder. Kâğıt botlar etkilenmez.",
       "botParkDetailError": "Saklı kimlik bilgilerin bu cihazda okunamadı. Bu bot, kimlik bilgileri yüklenir yüklenmez canlı işlem yapmaya devam eder. Kâğıt botlar etkilenmez.",
@@ -4377,7 +4377,7 @@
     "authDescription": "Bu özellik Pairlens hesabın üzerinden çalışır.",
     "signInFree": "Ücretsiz giriş yap",
     "or": "veya",
-    "intelligenceNote": "Önerilen — barındırılan, kurulum gerektirmez. Giriş ücretsizdir; Pairlens Intelligence ücretli bir plandır.",
+    "intelligenceNote": "Önerilen: barındırılan, kurulum gerektirmez. Giriş ücretsizdir; Pairlens Intelligence ücretli bir plandır.",
     "authNote": "30 saniye sürer. Borsa anahtarların bu cihazdan asla çıkmaz.",
     "upgradeRequired": "Yükseltme gerekli",
     "upgradeDescriptionLevel": "Bu özellik <b>{{level}}</b> erişim düzeyi gerektirir.",
@@ -4390,7 +4390,7 @@
     "useOwnKey": "Kendi yapay zekânı kur",
     "connect": "Bağla",
     "connected": "Bağlı",
-    "connectedToast": "{{provider}} bağlandı — yapay zekâ hazır.",
+    "connectedToast": "{{provider}} bağlandı. Yapay zekâ hazır.",
     "getKey": "Anahtar al",
     "keyStorageNote": "Anahtarın bu cihazda kalır ve yalnızca o sağlayıcıya gönderilir. Pairlens anahtarını asla almaz.",
     "noneInstalled": "Bu adım için yüklü sağlayıcı eklentisi yok. Eklentiler sayfasından bir tane ekle.",
@@ -4399,7 +4399,7 @@
     "required": "gerekli",
     "optional": "isteğe bağlı",
     "modelHint": "Yanıtları yazan sağlayıcı. Birini seç ve anahtarını yapıştır.",
-    "searchHint": "İsteğe bağlı. Research'ü ve yanıtları canlı web kaynaklarına dayandırır — yapay zekâ onsuz da çalışır.",
+    "searchHint": "İsteğe bağlı. Research'ü ve yanıtları canlı web kaynaklarına dayandırır. Yapay zekâ onsuz da çalışır.",
     "done": "Bitti",
     "notConnected": "bağlı değil",
     "manage": "Sağlayıcıları yönet"
@@ -4466,7 +4466,7 @@
       "titlePack": "{{credits}} ekstra kredi yüklendi.",
       "titlePlan": "{{label}} artık sizin.",
       "titleDefault": "Pairlens Intelligence artık sizin.",
-      "bodyPack": "Bunlar aylık bütçenize eklenir ve {{days}} gün sonra sona erer. Pairlens uygulamasına dönün — bakiyeniz birkaç saniye içinde güncellenir.",
+      "bodyPack": "Bunlar aylık bütçenize eklenir ve {{days}} gün sonra sona erer. Pairlens uygulamasına dönün, bakiyeniz birkaç saniye içinde güncellenir.",
       "bodyPlanWithCredits": "Barındırılan yapay zekâ asistanın açıldı; derinlemesine araştırma ve web araması dahil, ayda {{credits}} kredi ile. Pairlens uygulamasına dön: aboneliğini birkaç saniye içinde tanır.",
       "bodyPlanNoCredits": "Barındırılan yapay zekâ asistanın açıldı; derinlemesine araştırma ve web araması dahil. Pairlens uygulamasına dön: aboneliğini birkaç saniye içinde tanır.",
       "openTerminal": "Terminali aç",
@@ -4491,7 +4491,7 @@
       "renameButton": "Yeniden Adlandır",
       "deleteTitle": "İş Akışını Silin",
       "deleteDescription": "Bu işlem geri alınamaz. İş akışı kalıcı olarak silinecektir.",
-      "runsEmpty": "Henüz çalıştırma yok — işlem panelinden bir tane başlatabilirsin",
+      "runsEmpty": "Henüz çalıştırma yok: işlem panelinden bir tane başlatabilirsin",
       "clearHistory": "Geçmişi temizle",
       "runOutcome": "{{executed}} başarılı",
       "runOutcomeWithFailed": "{{executed}} başarılı, {{failed}} başarısız"
@@ -4539,7 +4539,7 @@
       "pickWorkflow": "Kanvasta açmak için soldan bir iş akışı seçin.",
       "eyebrow": "İş Akışları",
       "title": "Her emir kendi planını taşıyabilir",
-      "description": "Bir iş akışı, işlem panelinden verdiğin bir emre bağlanır. Emir gerçekleştiği anda altındaki adımlar kendiliğinden çalışır — bracket'lar, kademeli emirler, aşamalı çıkışlar, zamanlı kontroller — böylece plan, sonradan hatırlaman gereken bir şey olmak yerine baştan hazır olur.",
+      "description": "Bir iş akışı, işlem panelinden verdiğin bir emre bağlanır. Emir gerçekleştiği anda altındaki adımlar kendiliğinden çalışır (bracket'lar, kademeli emirler, aşamalı çıkışlar, zamanlı kontroller), böylece plan, sonradan hatırlaman gereken bir şey olmak yerine baştan hazır olur.",
       "blankLabel": "Boş kanvastan başla",
       "footnote": "Şablonlar taslak olarak açılır: herhangi bir adımı düzenleyin, ardından kaydetmek için Uygula'ya tıklayın. Kaydedilen bir iş akışını çalıştırmak için işlem panelinden bir emre bağlayın.",
       "untitledWorkflow": "Adsız iş akışı"
@@ -5054,7 +5054,7 @@
       "riskUsedNoCap": "Portföyün {{used}}'i",
       "slideToBuy": "{{venue}} üzerinde almak için kaydır",
       "slideToSell": "{{venue}} üzerinde satmak için kaydır",
-      "connectBody": "Fiyatlar ve defter bu olmadan da canlı — emir vermek işlem izni olan bir API anahtarı gerektirir.",
+      "connectBody": "Fiyatlar ve defter bu olmadan da canlı. Emir vermek işlem izni olan bir API anahtarı gerektirir.",
       "noPrice": "Bu takasın büyüklüğünü hesaplamak için canlı fiyat yok",
       "auto": "Otomatik",
       "bookLoading": "Defter bekleniyor…",
@@ -5140,7 +5140,7 @@
         "title": "Birden fazla pencere",
         "body": "Bir piyasayı kendi penceresine çıkar ve ikinci ekrana taşı."
       },
-      "where": "Bilgisayarında terminal.pairlens.finance adresini aç, yukarıdakilerin hepsi bir pencere uzağında. Bir de masaüstü uygulaması var — macOS, Windows ve Linux için — son dördünü açan o."
+      "where": "Bilgisayarında terminal.pairlens.finance adresini aç, yukarıdakilerin hepsi bir pencere uzağında. Bir de masaüstü uygulaması var (macOS, Windows ve Linux için), son dördünü açan o."
     },
     "accounts": {
       "permissionsLabel": "İzinler",

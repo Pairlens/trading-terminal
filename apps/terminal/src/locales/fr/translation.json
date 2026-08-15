@@ -14,7 +14,7 @@
     "welcome": {
       "eyebrow": "Bienvenue",
       "title": "Découvrez Pairlens",
-      "sub": "Le terminal natif IA pour le trading spot — privé, local et entièrement à vous. Configurons-le en une minute environ.",
+      "sub": "Le terminal natif IA pour le trading spot : privé, local et entièrement à vous. Configurons-le en une minute environ.",
       "label": "Bienvenue"
     },
     "oneTerminal": {
@@ -22,7 +22,7 @@
       "title": "Un seul terminal. Tous les marchés.",
       "sub": "Tradez le spot centralisé et on-chain côte à côte, avec un seul assistant IA qui analyse chaque configuration.",
       "points": {
-        "0": "Spot centralisé — OKX, Binance, Coinbase",
+        "0": "Spot centralisé : OKX, Binance, Coinbase",
         "1": "Swaps DEX on-chain, routés intelligemment",
         "2": "Actions et ETF américains"
       },
@@ -37,16 +37,16 @@
     "country": {
       "status": "Ajustement du routage régional",
       "title": "Depuis quel pays tradez-vous ?",
-      "sub": "Certaines plateformes sont géo-restreintes ou utilisent des endpoints régionaux distincts — ceci oriente vos connecteurs vers les bons.",
+      "sub": "Certaines plateformes sont géo-restreintes ou utilisent des endpoints régionaux distincts. Ceci oriente vos connecteurs vers les bons.",
       "searchPlaceholder": "Rechercher des pays…",
       "noResults": "Aucun pays ne correspond à votre recherche",
       "global": "Préférer ne pas préciser",
-      "globalSub": "Déconseillé — utilise les endpoints et réglages globaux",
+      "globalSub": "Déconseillé : utilise les endpoints et réglages globaux",
       "label": "Pays",
-      "localNote": "Stocké uniquement sur cet appareil — jamais envoyé aux serveurs Pairlens.",
+      "localNote": "Stocké uniquement sur cet appareil, jamais envoyé aux serveurs Pairlens.",
       "globalConfirm": {
         "title": "Continuer sans localisation ?",
-        "body": "Sans pays défini, les ordres et les données de marché passent par les endpoints globaux. Sur les plateformes à accès régional ou géo-restreint, des fonctionnalités peuvent ne pas marcher et des ordres peuvent échouer. Nous recommandons de définir votre localisation — elle n'est stockée que sur cet appareil.",
+        "body": "Sans pays défini, les ordres et les données de marché passent par les endpoints globaux. Sur les plateformes à accès régional ou géo-restreint, des fonctionnalités peuvent ne pas marcher et des ordres peuvent échouer. Nous recommandons de définir votre localisation. Elle n'est stockée que sur cet appareil.",
         "ack": "Je comprends les conséquences de ne pas configurer ma localisation",
         "cancel": "Choisir un pays",
         "confirm": "Continuer sans localisation"
@@ -55,10 +55,10 @@
     "privacy": {
       "eyebrow": "Privé par conception",
       "title": "Vos clés. Votre appareil. Un point c’est tout.",
-      "sub": "Pairlens fonctionne local-first. Vos identifiants et données restent sur cette machine — jamais sur nos serveurs.",
+      "sub": "Pairlens fonctionne local-first. Vos identifiants et données restent sur cette machine, jamais sur nos serveurs.",
       "points": {
         "0": "Les clés et soldes ne quittent jamais cet appareil",
-        "1": "Non-custodial — Pairlens ne peut pas déplacer vos fonds",
+        "1": "Non-custodial : Pairlens ne peut pas déplacer vos fonds",
         "2": "Aucun email, aucun KYC pour démarrer"
       },
       "scene": {
@@ -77,7 +77,7 @@
     "routing": {
       "eyebrow": "Routage direct",
       "title": "Directement vers les exchanges.",
-      "sub": "Connectez les places de marché que vous utilisez déjà. Les ordres sont routés directement vers elles — sans intermédiaire, sans conservation de fonds, sans revente de flux d’ordres.",
+      "sub": "Connectez les places de marché que vous utilisez déjà. Les ordres sont routés directement vers elles : sans intermédiaire, sans conservation de fonds, sans revente de flux d’ordres.",
       "points": {
         "0": "Ordres envoyés directement aux places de marché que vous connectez",
         "1": "Nous ne prenons jamais la garde de vos actifs",
@@ -106,7 +106,7 @@
     "themeStep": {
       "status": "Réglage de la luminosité",
       "title": "À quoi doit-il ressembler ?",
-      "sub": "Pairlens est calibré pour le clair comme pour le sombre. Choisissez un mode et une palette — vous pourrez tout changer plus tard.",
+      "sub": "Pairlens est calibré pour le clair comme pour le sombre. Choisissez un mode et une palette. Vous pourrez tout changer plus tard.",
       "light": "Clair",
       "dark": "Sombre",
       "system": "Automatique",
@@ -117,15 +117,15 @@
     "legal": {
       "status": "Avant de commencer",
       "title": "Quelques points à confirmer",
-      "sub": "Pairlens est un outil de trading d’actions et de cryptomonnaies — veuillez confirmer chaque point pour continuer.",
+      "sub": "Pairlens est un outil de trading d’actions et de cryptomonnaies. Veuillez confirmer chaque point pour continuer.",
       "items": {
         "0": "Je comprends que le trading comporte des risques et que je peux perdre tout ou partie de mes fonds.",
         "1": "Il m’incombe de respecter les lois de mon pays de résidence et/ou de citoyenneté.",
         "2": "Mon activité peut avoir des implications fiscales, et leur déclaration relève de ma responsabilité.",
-        "3": "Pairlens inclut des outils avancés — ils ne sont pas tous adaptés aux débutants.",
+        "3": "Pairlens inclut des outils avancés. Ils ne sont pas tous adaptés aux débutants.",
         "4": "Les cryptomonnaies et les actions sont des actifs réels ; leur valeur peut être volatile et changer fréquemment.",
         "5": "Lorsque je connecte un exchange ou un courtier, j’utilise mon propre compte et j’accepte leurs conditions d’utilisation, y compris les frais qu’ils appliquent sur mes trades ou avoirs.",
-        "6": "Pairlens ne sauvegarde pas mes clés API ni mes wallets par conception. Je suis seul responsable des sauvegardes, et Pairlens ne peut pas récupérer les fonds perdus — en particulier les wallets crypto.",
+        "6": "Pairlens ne sauvegarde pas mes clés API ni mes wallets par conception. Je suis seul responsable des sauvegardes, et Pairlens ne peut pas récupérer les fonds perdus, en particulier les wallets crypto.",
         "7": "Pairlens est un aperçu anticipé (Bêta), peut contenir des bugs, et est fourni « en l’état » sans garantie ni responsabilité. Je signalerai les problèmes que je rencontre."
       },
       "hintFirst": "Confirmez les quatre points pour continuer",
@@ -137,22 +137,22 @@
     "workspaces": {
       "eyebrow": "Entièrement personnalisable",
       "title": "Votre terminal, votre mise en page.",
-      "sub": "Les espaces de travail sont entièrement personnalisables — créez l’expérience que vous voulez, et autant que vous le souhaitez, d’une vue simple et épurée à un tableau de bord professionnel complet.",
+      "sub": "Les espaces de travail sont entièrement personnalisables : créez l’expérience que vous voulez, et autant que vous le souhaitez, d’une vue simple et épurée à un tableau de bord professionnel complet.",
       "points": {
         "0": "Disposez graphiques, carnets d’ordres et panneaux à votre façon",
         "1": "Créez autant d’espaces de travail que vous le souhaitez",
-        "2": "Vues simples pour débuter — postes complets pour les pros"
+        "2": "Vues simples pour débuter, postes complets pour les pros"
       },
       "label": "Espaces de travail"
     },
     "analytics": {
       "status": "Vos données, votre choix",
       "title": "Aider à améliorer Pairlens ?",
-      "sub": "Partagez des données d’utilisation anonymes et des rapports de plantage pour nous aider à savoir quoi corriger. Jamais vos trades, clés ou soldes — et vous pouvez modifier ce choix à tout moment dans les paramètres.",
+      "sub": "Partagez des données d’utilisation anonymes et des rapports de plantage pour nous aider à savoir quoi corriger. Jamais vos trades, clés ou soldes, et vous pouvez modifier ce choix à tout moment dans les paramètres.",
       "options": {
         "enabled": {
           "label": "Partager des données d’utilisation anonymes",
-          "sub": "Habitudes d’utilisation et rapports de plantage — rien sur votre trading"
+          "sub": "Habitudes d’utilisation et rapports de plantage, rien sur votre trading"
         },
         "disabled": {
           "label": "Non merci",
@@ -174,7 +174,7 @@
         },
         "sync": {
           "title": "Synchronisation cloud",
-          "sub": "Paramètres et mises en page sur tous les appareils — les clés restent locales"
+          "sub": "Paramètres et mises en page sur tous les appareils, les clés restent locales"
         },
         "community": {
           "title": "Espaces de travail communautaires",
@@ -182,7 +182,7 @@
         }
       },
       "create": "Créer un compte",
-      "skip": "Passer — tout garder sur cet appareil",
+      "skip": "Passer : tout garder sur cet appareil",
       "signedIn": "Connecté en tant que {{email}}",
       "label": "Compte",
       "otpSendFailed": "Échec de l’envoi du code",
@@ -228,7 +228,7 @@
       "eyebrow": "Graphiques",
       "overview": {
         "title": "Des bougies directement depuis la place de marché",
-        "description": "Les bougies en temps réel proviennent directement de l’exchange — sans intermédiaire. Changez de période, survolez pour les valeurs exactes, et analysez l’évolution des prix."
+        "description": "Les bougies en temps réel proviennent directement de l’exchange, sans intermédiaire. Changez de période, survolez pour les valeurs exactes, et analysez l’évolution des prix."
       },
       "signals": {
         "title": "Des signaux à chaque clôture",
@@ -239,18 +239,18 @@
       "eyebrow": "Alertes",
       "intro": {
         "title": "Des alertes qui veillent pour vous",
-        "description": "Définissez un niveau et vaquez à vos occupations — quand le prix le franchit, Pairlens vous prévient dans l’application et sur votre bureau, à l’instant même."
+        "description": "Définissez un niveau et vaquez à vos occupations. Quand le prix le franchit, Pairlens vous prévient dans l’application et sur votre bureau, à l’instant même."
       },
       "build": {
         "title": "Composez vos propres déclencheurs",
-        "description": "Enchaînez paires, conditions et actions en règles précises — niveaux de prix, déclenchements de signaux, variations en pourcentage — et décidez exactement comment être notifié."
+        "description": "Enchaînez paires, conditions et actions en règles précises (niveaux de prix, déclenchements de signaux, variations en pourcentage) et décidez exactement comment être notifié."
       }
     },
     "workflows": {
       "eyebrow": "Workflows",
       "intro": {
         "title": "Automatisez la routine",
-        "description": "Enchaînez déclencheurs, conditions et actions en flux reproductibles — un signal de breakout peut vérifier le volume, vous alerter, et journaliser la configuration tout seul."
+        "description": "Enchaînez déclencheurs, conditions et actions en flux reproductibles : un signal de breakout peut vérifier le volume, vous alerter, et journaliser la configuration tout seul."
       },
       "runs": {
         "title": "Chaque exécution, tracée",
@@ -261,40 +261,40 @@
       "eyebrow": "Indicateurs et stratégies",
       "code": {
         "title": "Écrivez des indicateurs en vrai Python",
-        "description": "Scriptez n'importe quel indicateur avec du vrai Python et NumPy — compilé et exécuté localement pendant que vous tapez, avec un aperçu en direct de chaque série."
+        "description": "Scriptez n'importe quel indicateur avec du vrai Python et NumPy. Compilé et exécuté localement pendant que vous tapez, avec un aperçu en direct de chaque série."
       },
       "chart": {
         "title": "Déposez-le sur n'importe quel graphique",
-        "description": "Les scripts enregistrés apparaissent sous Custom dans le sélecteur d'indicateurs de chaque graphique — ajoutez-les à n'importe quelle paire en overlay ou sous-panneau, entrées comprises."
+        "description": "Les scripts enregistrés apparaissent sous Custom dans le sélecteur d'indicateurs de chaque graphique. Ajoutez-les à n'importe quelle paire en overlay ou sous-panneau, entrées comprises."
       }
     },
     "accounts": {
       "eyebrow": "Comptes",
       "intro": {
         "title": "Connectez vos places de marché",
-        "description": "Liez exchanges, wallets et courtiers. Les clés API vont directement dans le trousseau de votre système — stockées sur cet appareil, jamais sur nos serveurs."
+        "description": "Liez exchanges, wallets et courtiers. Les clés API vont directement dans le trousseau de votre système : stockées sur cet appareil, jamais sur nos serveurs."
       },
       "balances": {
         "title": "Une vue d’ensemble de tout",
-        "description": "Les soldes de toutes les places de marché connectées se regroupent en une seule vue — spot, on-chain et actions réunis."
+        "description": "Les soldes de toutes les places de marché connectées se regroupent en une seule vue : spot, on-chain et actions réunis."
       }
     },
     "plugins": {
       "eyebrow": "Plugins",
       "intro": {
         "title": "Étendez le terminal",
-        "description": "Connecteurs de marché, thèmes, signaux et bots s’installent depuis le Plugin Store en un clic — votre terminal évolue avec vous."
+        "description": "Connecteurs de marché, thèmes, signaux et bots s’installent depuis le Plugin Store en un clic. Votre terminal évolue avec vous."
       },
       "sandbox": {
         "title": "Sécurisé par défaut",
-        "description": "Les plugins tiers s’exécutent en sandbox avec du code signé et une approbation réseau par hôte — vous gardez le contrôle de ce à quoi ils accèdent."
+        "description": "Les plugins tiers s’exécutent en sandbox avec du code signé et une approbation réseau par hôte. Vous gardez le contrôle de ce à quoi ils accèdent."
       }
     },
     "workspaces": {
       "eyebrow": "Espaces de travail",
       "intro": {
         "title": "Votre poste, sauvegardé",
-        "description": "Disposez graphiques, carnets d’ordres et panneaux en mises en page qui correspondent à votre façon de trader — puis basculez instantanément entre vos postes enregistrés."
+        "description": "Disposez graphiques, carnets d’ordres et panneaux en mises en page qui correspondent à votre façon de trader, puis basculez instantanément entre vos postes enregistrés."
       }
     },
     "workspaceStore": {
@@ -308,7 +308,7 @@
       "eyebrow": "Bots",
       "strategy": {
         "title": "Backtestez, puis laissez-le trader",
-        "description": "Un bot exécute exactement la stratégie Python que vous avez testée — mêmes signaux, mêmes stops, le même code — donc les chiffres du testeur décrivent ce qu’il fera réellement."
+        "description": "Un bot exécute exactement la stratégie Python que vous avez testée (mêmes signaux, mêmes stops, le même code), donc les chiffres du testeur décrivent ce qu’il fera réellement."
       },
       "running": {
         "title": "Votre machine, vos clés",
@@ -323,7 +323,7 @@
       "onClose": "à la clôture",
       "crossedAbovePrice": "a franchi {{price}} à la hausse",
       "conditionCrossesAbove": "franchit à la hausse",
-      "notifyMeDesktopInApp": "Me notifier — bureau + dans l’app",
+      "notifyMeDesktopInApp": "Me notifier : bureau + dans l’app",
       "nodeTrigger": "Déclencheur",
       "nodeSignalLabel": "Signal : {{signal}}",
       "nodeCondition": "Condition",
@@ -335,19 +335,19 @@
       "runStopLossGuard": "Garde stop-loss",
       "ranAt": "{{time}} · exécuté",
       "runsLocally": "S’exécute localement",
-      "storedOnDevice": "Stocké sur cet appareil — jamais sur nos serveurs",
+      "storedOnDevice": "Stocké sur cet appareil, jamais sur nos serveurs",
       "osKeychain": "Trousseau du système",
       "pluginKindMarketData": "Données de marché",
       "pluginKindTheme": "Thème",
       "pluginKindAutomation": "Automatisation",
       "sandboxedByDefault": "En sandbox par défaut",
       "signedVerified": "Signé et vérifié",
-      "networkAccessApproveHost": "Accès réseau — vous approuvez chaque hôte",
+      "networkAccessApproveHost": "Accès réseau : vous approuvez chaque hôte",
       "copiedToWorkspaces": "Copié dans vos espaces de travail",
       "statNet": "Net",
       "statMaxDd": "DD max.",
       "sameCodeGoesLive": "Le même code passe en production",
-      "runsOnYourMachine": "S’exécute sur votre machine — gardez-la éveillée",
+      "runsOnYourMachine": "S’exécute sur votre machine, gardez-la éveillée",
       "botMeanReversion": "Retour à la moyenne",
       "chainWallet": "Wallet {{chain}}"
     }
@@ -378,7 +378,7 @@
     "ordersLockedRiskLimit": "Les ordres sont verrouillés suite au dépassement d’une limite de risque. Déverrouillez-les dans Paramètres > Gestion du risque.",
     "buyOrdersLockedRiskLimit": "Les achats sont verrouillés suite au dépassement d’une limite de risque. Déverrouillez-les dans Paramètres > Gestion du risque.",
     "positionSizeExceeded": "Ordre bloqué par la limite de risque : la position représente {{ratioPct}} % de votre portefeuille, au-delà de votre maximum de {{maxPositionSize}} %. Ajustez cela dans Paramètres > Gestion du risque.",
-    "sessionExpired": "Votre session a expiré — veuillez vous reconnecter.",
+    "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
     "startFromTemplate": "Partir d'un modèle",
     "chips": {
       "osNotification": "Notification système",
@@ -439,7 +439,7 @@
       "title": "Analytique d’utilisation",
       "description": "Aidez à améliorer Pairlens en partageant des données d’utilisation anonymes et des rapports de plantage. Jamais vos trades, clés API ou soldes.",
       "toggleDescription": "S’applique uniquement à cet appareil. La désactiver arrête immédiatement toute l’analytique.",
-      "notConfigured": "Cette version n’a aucune clé d’analytique configurée — rien n’est jamais collecté.",
+      "notConfigured": "Cette version n’a aucune clé d’analytique configurée : rien n’est jamais collecté.",
       "dataTitle": "Les données de votre compte",
       "dataSignedOut": "Vous n'êtes pas connecté, il n'y a donc aucune donnée de compte sur nos serveurs. Tout ce que Pairlens sait de vous reste sur cet appareil.",
       "exportTitle": "Exporter vos données",
@@ -564,11 +564,11 @@
       "thirdPartyAcknowledge": "Je comprends que les registres tiers peuvent contenir des plugins non vérifiés et j’accepte les risques.",
       "invalidUrl": "Veuillez saisir une URL valide (par ex. https://registry.example.com).",
       "desktopEgressTitle": "Accès réseau du bureau",
-      "desktopEgressDescription": "L’application de bureau bloque les requêtes réseau vers les hôtes non autorisés. Pour atteindre ce registre, accordez-lui l’accès réseau — le terminal se recharge pour l’appliquer.",
+      "desktopEgressDescription": "L’application de bureau bloque les requêtes réseau vers les hôtes non autorisés. Pour atteindre ce registre, accordez-lui l’accès réseau. Le terminal se recharge pour l’appliquer.",
       "desktopEgressGranted": "L’hôte de ce registre a accès au réseau.",
       "desktopEgressGrant": "Autoriser l’accès réseau et recharger",
       "publisherKeys": "Clés d’éditeurs de confiance",
-      "publisherKeysDescription": "Les plugins ne s’installent que lorsque leur signature correspond à une clé d’éditeur de confiance. Ajoutez une clé ici pour faire confiance aux plugins d’un registre auto-hébergé ou d’entreprise. N’ajoutez que des clés reçues d’une source en qui vous avez confiance — quiconque détient la clé privée correspondante peut publier des plugins susceptibles de demander un accès complet à votre terminal.",
+      "publisherKeysDescription": "Les plugins ne s’installent que lorsque leur signature correspond à une clé d’éditeur de confiance. Ajoutez une clé ici pour faire confiance aux plugins d’un registre auto-hébergé ou d’entreprise. N’ajoutez que des clés reçues d’une source en qui vous avez confiance : quiconque détient la clé privée correspondante peut publier des plugins susceptibles de demander un accès complet à votre terminal.",
       "publisherKeysEmpty": "Aucune clé personnalisée. Les éditeurs officiels Pairlens sont toujours de confiance.",
       "publisherKeyIdLabel": "ID de clé",
       "publisherKeyIdPlaceholder": "acme-plugins-2026",
@@ -581,7 +581,7 @@
       "publisherKeyRemove": "Retirer",
       "publisherKeyFingerprint": "Empreinte",
       "publisherKeyConsentTitle": "Faire confiance à cet éditeur ?",
-      "publisherKeyConsentBody": "Les plugins signés avec cette clé pourront être installés sur cet appareil. Un éditeur malveillant peut publier des plugins demandant une confiance totale — avec accès aux données de vos autres plugins, à vos identifiants d’exchange stockés et au trading. Comparez l’empreinte avec l’éditeur via un canal de confiance avant de continuer.",
+      "publisherKeyConsentBody": "Les plugins signés avec cette clé pourront être installés sur cet appareil. Un éditeur malveillant peut publier des plugins demandant une confiance totale, avec accès aux données de vos autres plugins, à vos identifiants d’exchange stockés et au trading. Comparez l’empreinte avec l’éditeur via un canal de confiance avant de continuer.",
       "publisherKeyConsentConfirm": "Faire confiance à cette clé",
       "publisherKeyConsentCancel": "Annuler",
       "updatesTitle": "Mises à jour des plugins",
@@ -659,7 +659,7 @@
     },
     "connection": {
       "title": "Connexion aux données de marché",
-      "description": "Les données de marché proviennent directement des exchanges via les plugins connecteurs installés — sans serveur intermédiaire.",
+      "description": "Les données de marché proviennent directement des exchanges via les plugins connecteurs installés, sans serveur intermédiaire.",
       "status": {
         "connected": "Connecté",
         "connecting": "Connexion…",
@@ -709,13 +709,13 @@
       "confirmHoldDescription": "Maintenez le bouton jusqu'à ce qu'il se remplisse. Les ordres réels se maintiennent un peu plus longtemps que les ordres papier.",
       "confirmClick": "Simple clic",
       "confirmClickDescription": "Le premier clic envoie l'ordre. Plus rien ne sépare un clic malheureux d'un ordre réel.",
-      "confirmGestureNote": "Les limites de risque s'appliquent dans les deux cas — cela change le geste, pas les garde-fous.",
+      "confirmGestureNote": "Les limites de risque s'appliquent dans les deux cas. Cela change le geste, pas les garde-fous.",
       "aiPermissions": "Autorisations de trading IA",
       "aiPermissionsDescription": "Ce que l'assistant IA peut faire sans demander. Les ordres hors de ces autorisations nécessitent toujours votre confirmation sur une carte dans le chat, et chaque ordre, auto-approuvé ou non, est soumis aux limites de risque ci-dessus.",
       "aiPaperAuto": "Auto-approuver les trades papier",
       "aiPaperAutoDescription": "Fonds simulés uniquement. L'assistant passe les ordres papier sans carte de confirmation.",
       "aiLiveAuto": "Auto-approuver les trades en direct",
-      "aiLiveAutoEmpty": "Aucun exchange autorisé — chaque trade en direct nécessite votre confirmation. Autorisez un exchange depuis une carte d’ordre avec « Ne plus demander ».",
+      "aiLiveAutoEmpty": "Aucun exchange autorisé : chaque trade en direct nécessite votre confirmation. Autorisez un exchange depuis une carte d’ordre avec « Ne plus demander ».",
       "aiLiveAutoDescription": "Fonds réels. L'assistant passe des ordres en direct sur ces exchanges sans carte de confirmation :",
       "aiLiveAutoRevoke": "Révoquer {{market}}"
     },
@@ -723,32 +723,32 @@
       "title": "Pairlens Intelligence",
       "description": "L'assistant IA hébergé, avec recherche approfondie et recherche web. Sans clés API.",
       "signInFirst": "Connectez-vous pour gérer votre abonnement Pairlens Intelligence.",
-      "selfHosted": "La facturation n’est pas configurée sur ce serveur — les fonctions IA hébergées fonctionnent sans abonnement.",
+      "selfHosted": "La facturation n’est pas configurée sur ce serveur. Les fonctions IA hébergées fonctionnent sans abonnement.",
       "loadError": "Impossible de charger votre état de facturation. Veuillez réessayer.",
       "freePlan": "Gratuit",
-      "active": "Actif — renouvellement automatique.",
-      "complimentary": "Accès offert — contributeur principal. L’utilisation n’est pas facturée.",
-      "endsOn": "Annulé — l’accès prend fin le {{date}}.",
+      "active": "Actif. Renouvellement automatique.",
+      "complimentary": "Accès offert : contributeur principal. L’utilisation n’est pas facturée.",
+      "endsOn": "Annulé : l’accès prend fin le {{date}}.",
       "planCredits": "{{credits}} crédits / mois",
       "perMonth": "/mois",
       "manage": "Gérer l’abonnement",
       "upgradeToMax": "Passer à Max",
       "usageTitle": "Budget d’utilisation mensuel",
-      "usageDescription": "Le chat IA, la recherche et les recherches web puisent dans le même budget de crédits. Il est réinitialisé à chaque cycle de facturation — les crédits non utilisés ne sont pas reportés.",
+      "usageDescription": "Le chat IA, la recherche et les recherches web puisent dans le même budget de crédits. Il est réinitialisé à chaque cycle de facturation. Les crédits non utilisés ne sont pas reportés.",
       "creditsUsed": "{{used}} crédits utilisés sur {{granted}}",
       "resetsOn": "Réinitialisation le {{date}}",
       "webResearchNote": "Chaque recherche web hébergée coûte {{credits}} crédits plus les tokens de la requête qui la déclenche.",
-      "byokNote": "Vous préférez votre propre fournisseur d’IA ? Les plugins avec votre propre clé (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) sont toujours gratuits — connectez-les depuis la page Plugins.",
+      "byokNote": "Vous préférez votre propre fournisseur d’IA ? Les plugins avec votre propre clé (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) sont toujours gratuits. Connectez-les depuis la page Plugins.",
       "checkoutOpened": "Paiement ouvert dans votre navigateur",
       "checkoutOpenedDescription": "Votre abonnement s’activera ici dès que le paiement sera terminé.",
-      "checkoutFailed": "Impossible de démarrer le paiement — veuillez réessayer.",
+      "checkoutFailed": "Impossible de démarrer le paiement. Veuillez réessayer.",
       "portalFailed": "Impossible d’ouvrir le portail de facturation.",
-      "taxNote": "Prix hors taxes — elles sont calculées au moment du paiement selon votre localisation.",
+      "taxNote": "Prix hors taxes : elles sont calculées au moment du paiement selon votre localisation.",
       "packsTitle": "Crédits supplémentaires",
       "packsDescription": "Recharges ponctuelles qui s’ajoutent à votre budget mensuel. Les crédits de recharge expirent 30 jours après l’achat et ne se renouvellent pas.",
-      "packActive": "{{credits}} crédits supplémentaires — expirent le {{date}}",
+      "packActive": "{{credits}} crédits supplémentaires, expirent le {{date}}",
       "packAddedToastTitle": "Crédits supplémentaires ajoutés",
-      "packAddedToastDescription": "Votre pack de crédits est ajouté à votre solde — les crédits du pack expirent 30 jours après l'achat."
+      "packAddedToastDescription": "Votre pack de crédits est ajouté à votre solde. Les crédits du pack expirent 30 jours après l'achat."
     },
     "about": {
       "desktop": "Bureau",
@@ -814,14 +814,14 @@
         "sendTest": "Envoyer une notification test",
         "testTitle": "Pairlens",
         "testBody": "Voilà à quoi ressemblera une alerte.",
-        "testSent": "Envoyée — regardez votre centre de notifications.",
+        "testSent": "Envoyée. Regardez votre centre de notifications.",
         "testFailed": "Impossible d'afficher une notification."
       },
       "telegram": {
         "title": "Telegram",
         "description": "Envoyez les alertes dans une discussion Telegram : elles arrivent sur votre téléphone quand vous n'êtes pas devant le terminal.",
         "runningNote": "Les alertes ne se déclenchent que pendant que Pairlens tourne. Sur bureau, l'app peut continuer en arrière-plan après la fermeture de la fenêtre.",
-        "privacyNote": "Le token du bot reste sur cet appareil — dans le trousseau du système sur bureau, dans votre coffre chiffré dans le navigateur. Il n'est jamais transmis à Pairlens.",
+        "privacyNote": "Le token du bot reste sur cet appareil : dans le trousseau du système sur bureau, dans votre coffre chiffré dans le navigateur. Il n'est jamais transmis à Pairlens.",
         "setup": {
           "step1": "Ouvrez une discussion avec @BotFather et envoyez /newbot.",
           "step2": "Choisissez un nom et un identifiant pour votre bot.",
@@ -868,7 +868,7 @@
       "biometricUnlockTitle": "Déverrouillage biométrique",
       "biometricUnlockDescription": "Ouvre l'écran de verrouillage avec le déverrouillage de l'appareil lui-même (Face ID, Touch ID, empreinte, Windows Hello) au lieu de saisir le mot de passe.",
       "biometricUnlockScreenOnly": "Ton mot de passe fonctionne toujours, et il reste le seul moyen de revenir si le capteur ne te reconnaît plus.",
-      "biometricUnlockVaultNote": "Cela n'ouvre que l'écran. Tes clés stockées demandent toujours leur propre mot de passe — ajoute une passkey à ton coffre ci-dessous pour ouvrir les deux d'un seul geste.",
+      "biometricUnlockVaultNote": "Cela n'ouvre que l'écran. Tes clés stockées demandent toujours leur propre mot de passe. Ajoute une passkey à ton coffre ci-dessous pour ouvrir les deux d'un seul geste.",
       "biometricUnlockCoveredByVault": "Ton coffre se déverrouille déjà avec une passkey ou Touch ID, et cela ouvre aussi l'écran de verrouillage. Une seconde option ici en ferait moins.",
       "turnOff": "Désactiver le verrouillage",
       "turnOffDescription": "Saisis ton mot de passe actuel pour retirer le verrouillage de cet appareil.",
@@ -905,13 +905,13 @@
       "lockNow": "Verrouiller",
       "resetButton": "Réinitialiser et effacer",
       "resetConfirmTitle": "Effacer cet appareil ?",
-      "resetConfirmBody": "Cela efface toutes les clés API, clés de portefeuille, espaces de travail, dispositions de graphique et conversations de cet ordinateur. Aucun retour en arrière, aucune récupération de mot de passe. Si tu es connecté, les réglages synchronisés reviennent à la prochaine connexion — jamais les clés API ni les clés de portefeuille, car elles ne sont stockées qu'ici.",
+      "resetConfirmBody": "Cela efface toutes les clés API, clés de portefeuille, espaces de travail, dispositions de graphique et conversations de cet ordinateur. Aucun retour en arrière, aucune récupération de mot de passe. Si tu es connecté, les réglages synchronisés reviennent à la prochaine connexion. Jamais les clés API ni les clés de portefeuille, car elles ne sont stockées qu'ici.",
       "resetConfirmPhrase": "Tape {{phrase}} pour confirmer.",
       "vaultTitle": "Coffre d'identifiants",
       "vaultDescription": "Chiffrez vos clés API d'exchange et vos clés de wallet avec un mot de passe ou une passkey.",
       "vaultWaysTitle": "Moyens de déverrouillage",
-      "vaultAlsoUnlocks": "Chacun d'eux déverrouille aussi l'écran de verrouillage du terminal — un seul mot de passe pour les deux.",
-      "biometricNeedsVault": "Configurez d'abord le coffre avec un mot de passe — Touch ID s'ajoute ensuite par-dessus.",
+      "vaultAlsoUnlocks": "Chacun d'eux déverrouille aussi l'écran de verrouillage du terminal : un seul mot de passe pour les deux.",
+      "biometricNeedsVault": "Configurez d'abord le coffre avec un mot de passe. Touch ID s'ajoute ensuite par-dessus.",
       "vaultStatusNone": "Non configuré.",
       "vaultStatusReady_one": "Protégé par 1 moyen de déverrouillage.",
       "vaultStatusReady_other": "Protégé par {{count}} moyens de déverrouillage.",
@@ -919,16 +919,16 @@
       "vaultRemoveProtector": "Retirer",
       "vaultRemoveLastBlocked": "C'est le seul moyen d'entrer dans votre coffre. Ajoutez-en un autre avant de le retirer.",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID ne peut pas être le seul moyen d'entrer : les empreintes de ce Mac peuvent changer. Gardez un mot de passe ou un passkey.",
-      "vaultProtectsBody": "Avec un coffre, vos clés API et de wallet sont stockées chiffrées. Qui copie ce profil de navigateur — ou le stockage de cet appareil — obtient un texte chiffré qu'il ne peut pas ouvrir sans votre mot de passe ou votre passkey.",
+      "vaultProtectsBody": "Avec un coffre, vos clés API et de wallet sont stockées chiffrées. Qui copie ce profil de navigateur (ou le stockage de cet appareil) obtient un texte chiffré qu'il ne peut pas ouvrir sans votre mot de passe ou votre passkey.",
       "vaultCeiling": "Cela ne protège pas les clés pendant que vous les utilisez. Tout ce qui s'exécute dans cette page peut demander une clé au coffre déverrouillé, exactement comme le fait l'application. L'application de bureau reste la recommandation pour vos clés les plus précieuses.",
-      "vaultNoRecovery": "Il n'y a aucune récupération. Perdez tous les moyens d'entrer et les clés chiffrées sont perdues — le seul retour dans l'application efface les données de cet appareil.",
+      "vaultNoRecovery": "Il n'y a aucune récupération. Perdez tous les moyens d'entrer et les clés chiffrées sont perdues : le seul retour dans l'application efface les données de cet appareil.",
       "vaultDesktopToggleHint": "Vos clés sont déjà dans le trousseau du système. Activez ceci pour ajouter par-dessus un mot de passe ou une passkey.",
       "vaultDesktopOptOutTitle": "Désactiver le coffre d'identifiants ?",
       "vaultDesktopOptOutBody": "Vos clés redeviennent protégées par le seul trousseau du système. Rien n'est supprimé, et vous pourrez réactiver le coffre plus tard.",
       "vaultDesktopOptOutConfirm": "Désactiver le coffre",
       "vaultMigrated_one": "1 clé que vous aviez déjà a été déplacée dans le coffre.",
       "vaultMigrated_other": "{{count}} clés que vous aviez déjà ont été déplacées dans le coffre.",
-      "vaultMigrationFailed": "La configuration du coffre ne s'est pas terminée. Vos clés restent lisibles — ouvrez le coffre pour la finir.",
+      "vaultMigrationFailed": "La configuration du coffre ne s'est pas terminée. Vos clés restent lisibles. Ouvrez le coffre pour la finir.",
       "vaultSharedBackoff": "Le coffre et l'écran de verrouillage partagent une même limite de tentatives : trop de mots de passe erronés retardent les deux.",
       "vaultCliNote": "L'outil en ligne de commande reçoit les clés API en arguments et ne lit jamais le coffre.",
       "hardLockTitle": "Verrouillage total",
@@ -1198,7 +1198,7 @@
     "benefits": {
       "cloud": {
         "title": "Préférences dans le cloud",
-        "description": "Vos paramètres vivent dans votre compte — chaque machine ressemble à la vôtre en quelques secondes."
+        "description": "Vos paramètres vivent dans votre compte : chaque machine ressemble à la vôtre en quelques secondes."
       },
       "sync": {
         "title": "Synchronisation multi-appareils",
@@ -1340,7 +1340,7 @@
     "autoApprovedNote": "Approuvé automatiquement ({{mode}} · ne plus demander est activé)",
     "turnOff": "Désactiver",
     "autoApproving": "Approbation automatique de l’ordre {{mode}}…",
-    "liveOrderWarning": "Ordre réel — fonds réels, appliqué selon vos limites de risque.",
+    "liveOrderWarning": "Ordre réel : fonds réels, appliqué selon vos limites de risque.",
     "dontAskAgainPaper": "Ne plus demander pour les ordres paper",
     "dontAskAgainLive": "Ne plus demander pour les ordres réels sur {{market}}",
     "placing": "Passage en cours…",
@@ -1355,7 +1355,7 @@
     "keep": "Conserver",
     "tradingUnavailable": "Le trading n’est pas disponible.",
     "noCredentialsForMarket": "Aucun identifiant connecté pour {{market}}. Ajoutez des clés API dans Comptes pour trader en réel.",
-    "scheduledCheckPrefix": "[Vérification planifiée — programmée il y a {{minutes}} min]",
+    "scheduledCheckPrefix": "[Vérification planifiée : programmée il y a {{minutes}} min]",
     "toolFailed": "Échec de l’outil"
   },
   "chart": {
@@ -1590,8 +1590,8 @@
     "keepAwakeIdle": "La mise en veille automatique sera bloquée dès qu’un bot tournera.",
     "keepAwakeOff": "Cet ordinateur peut se mettre en veille, et vos bots s’arrêtent avec lui.",
     "keepAwakeUnsupported": "Seule l’application de bureau peut empêcher la mise en veille.",
-    "localBody": "Vos stratégies s’exécutent ici, dans Pairlens — pas sur un serveur que nous exploitons. C’est ce qui garde vos clés et votre logique chez vous. Le compromis est réel : quittez Pairlens ou laissez cet ordinateur se mettre en veille, et vos bots s’arrêtent avec lui, laissant une position ouverte sans surveillance jusqu’à votre retour.",
-    "emptyDescription": "Un bot exécute un de vos scripts de stratégie sur un marché. Partez d’une stratégie prête à l’emploi, ou écrivez la vôtre en Python — chaque nouveau bot trade en papier jusqu’à ce que vous l’armiez en réel.",
+    "localBody": "Vos stratégies s’exécutent ici, dans Pairlens, pas sur un serveur que nous exploitons. C’est ce qui garde vos clés et votre logique chez vous. Le compromis est réel : quittez Pairlens ou laissez cet ordinateur se mettre en veille, et vos bots s’arrêtent avec lui, laissant une position ouverte sans surveillance jusqu’à votre retour.",
+    "emptyDescription": "Un bot exécute un de vos scripts de stratégie sur un marché. Partez d’une stratégie prête à l’emploi, ou écrivez la vôtre en Python. Chaque nouveau bot trade en papier jusqu’à ce que vous l’armiez en réel.",
     "emptyHeadline": "Laissez une stratégie surveiller le graphique à votre place",
     "templateEmaCross": "Suit la tendance dans les deux sens : long au-dessus du croisement, short en dessous.",
     "templateRsiReversion": "Achète les replis en survente, mais seulement tant que le prix tient au-dessus de sa tendance longue.",
@@ -1665,8 +1665,8 @@
     "createBot": "Créer le bot",
     "back": "Retour",
     "next": "Suivant",
-    "stepProgress": "Étape {{current}} sur {{total}} — {{title}}",
-    "strategyIntro": "Un bot exécute un script de stratégie — du Python qui déclare quand entrer et quand sortir. Choisissez ci-dessous une stratégie prête à l’emploi pour commencer ; son code est à vous, à ouvrir et modifier à tout moment.",
+    "stepProgress": "Étape {{current}} sur {{total}} : {{title}}",
+    "strategyIntro": "Un bot exécute un script de stratégie : du Python qui déclare quand entrer et quand sortir. Choisissez ci-dessous une stratégie prête à l’emploi pour commencer ; son code est à vous, à ouvrir et modifier à tout moment.",
     "stepStrategy": "Stratégie",
     "stepMarket": "Marché",
     "stepSizing": "Taille",
@@ -1676,8 +1676,8 @@
     "groupTemplates": "Stratégies prêtes à l’emploi",
     "groupUndeployable": "Pas encore utilisable comme bot",
     "writeYourOwn": "Écrivez votre propre stratégie en Python",
-    "reasonIndicator": "Indicateur — il lui faut un meta strategy(...) pour tourner comme bot",
-    "reasonNotRun": "Jamais exécuté — ouvrez-le dans Indicateurs et stratégies et exécutez-le une fois",
+    "reasonIndicator": "Indicateur : il lui faut un meta strategy(...) pour tourner comme bot",
+    "reasonNotRun": "Jamais exécuté : ouvrez-le dans Indicateurs et stratégies et exécutez-le une fois",
     "openIndicators": "Ouvrir Indicateurs et stratégies",
     "marketHint": "Le bot évalue les bougies clôturées de cette paire sur cette période.",
     "sizingKind": "Dimensionner chaque entrée par",
@@ -1702,7 +1702,7 @@
     "armDescription": "« {{name}} » passera désormais de vrais ordres {{pair}} sur {{venue}}, sans confirmation à chaque transaction.",
     "armVenueLabel": "Place de marché",
     "armCredentialLabel": "Identifiants",
-    "armMachineCaveat": "Pairlens doit rester ouvert sur cette machine. S’il se ferme ou si l’ordinateur se met en veille, le bot s’arrête — et toute position qu’il a ouverte le reste, sans gestion, jusqu’à votre retour.",
+    "armMachineCaveat": "Pairlens doit rester ouvert sur cette machine. S’il se ferme ou si l’ordinateur se met en veille, le bot s’arrête, et toute position qu’il a ouverte le reste, sans gestion, jusqu’à votre retour.",
     "armConfirmLabel": "Tapez {{phrase}} pour confirmer",
     "armConfirmPhrase": "ARMER LIVE",
     "armConfirm": "Armer en réel",
@@ -1718,14 +1718,14 @@
     "deployAsBot": "Déployer comme bot",
     "kindDraft": "Brouillon",
     "templatesIndicators": "Modèles d’indicateur",
-    "templatesStrategies": "Modèles de stratégie — utilisables comme bots",
+    "templatesStrategies": "Modèles de stratégie : utilisables comme bots",
     "strategyBadgeHint": "Déclare des entrées et des sorties : il peut donc être backtesté et déployé comme bot.",
     "indicatorBadgeHint": "Trace seulement des valeurs. Ajoutez un meta strategy(...) avec entrées et sorties pour le déployer comme bot.",
     "startFromScratch": "Partir de zéro",
     "blankName": "Nouveau script",
-    "sidebarEmpty": "Aucun script pour l’instant — partez de zéro ou d’un modèle",
+    "sidebarEmpty": "Aucun script pour l’instant : partez de zéro ou d’un modèle",
     "entryFile": "entrée",
-    "entryFileHint": "Le module d’entrée — il définit meta et compute(ctx)",
+    "entryFileHint": "Le module d’entrée : il définit meta et compute(ctx)",
     "fileActions": "Actions pour {{file}}",
     "newFile": "Nouveau fichier",
     "newFileTitle": "Nouveau fichier Python",
@@ -1737,7 +1737,7 @@
     "deleteFileTitle": "Supprimer le fichier ?",
     "deleteFileDescription": "Ceci supprime définitivement « {{file}} ».",
     "scriptActions": "Actions du script",
-    "statusReady": "Prêt — utilisé par les graphiques",
+    "statusReady": "Prêt : utilisé par les graphiques",
     "statusError": "La dernière exécution a échoué",
     "neverRun": "Jamais exécuté",
     "updated": "Mis à jour {{time}}",
@@ -1784,7 +1784,7 @@
     "errorTitle": "Erreur de script",
     "noCandles": "Aucune bougie renvoyée pour {{pair}} sur {{market}}",
     "previewEmptyTitle": "Exécutez pour prévisualiser",
-    "previewEmptyDescription": "Exécutez le script pour le voir sur un graphique en direct. Le premier lancement démarre l’environnement Python — cela prend quelques secondes.",
+    "previewEmptyDescription": "Exécutez le script pour le voir sur un graphique en direct. Le premier lancement démarre l’environnement Python, cela prend quelques secondes.",
     "metaPaneOverlay": "Superposition",
     "metaPaneSeparate": "Sous-panneau",
     "metaMinBars": "min {{count}} bougies",
@@ -1830,14 +1830,14 @@
     "exportSavedTo": "Enregistré dans {{folder}}. Installez-le via Plugins → Importer un plugin.",
     "exportSavedToDownloads": "Enregistré dans votre dossier Téléchargements. Installez-le via Plugins → Importer un plugin.",
     "emptyTitle": "Écrivez des indicateurs et des stratégies de trading",
-    "emptyDescription": "Écrivez des indicateurs de graphique et des stratégies de bot en Python — exécutez-les sur des données de marché en direct, utilisez-les sur vos graphiques, et transformez vos stratégies en bots de trading.",
+    "emptyDescription": "Écrivez des indicateurs de graphique et des stratégies de bot en Python. Exécutez-les sur des données de marché en direct, utilisez-les sur vos graphiques, et transformez vos stratégies en bots de trading.",
     "templateSma": "Une moyenne mobile sur la source de votre choix. Le plus petit script qui serve à quelque chose.",
     "templateRsi": "Un oscillateur en sous-panneau avec zones de surachat et survente, et des conditions d’alerte.",
     "templateMacd": "Deux lignes et un histogramme qui se colore selon son propre momentum.",
     "templateBollinger": "Des bandes avec le centre ombré, réparties sur deux fichiers pour montrer les imports.",
     "templateSupertrend": "Une ligne qui change de couleur avec la tendance et marque les entrées sur la bougie.",
     "templateHtf": "Une EMA journalière tracée sur n’importe quelle unité de temps, tenue jusqu’à la clôture de la bougie supérieure.",
-    "emptyFootnote": "Python s’exécute localement dans votre navigateur — votre code ne quitte jamais cette machine. Un script de stratégie peut être déployé comme bot dès qu’il a été exécuté.",
+    "emptyFootnote": "Python s’exécute localement dans votre navigateur : votre code ne quitte jamais cette machine. Un script de stratégie peut être déployé comme bot dès qu’il a été exécuté.",
     "pickScript": "Choisissez un script à gauche pour l’ouvrir.",
     "versionHistory": "Historique des versions",
     "versionHistoryDescription": "Chaque modification capture vos fichiers avant de les écraser : rien de ce que vous écrasez n’est vraiment perdu.",
@@ -1862,7 +1862,7 @@
     "versionClearTitle": "Effacer l’historique des versions ?",
     "versionClearDescription": "Ceci supprime définitivement toutes les versions enregistrées de « {{name}} ». Les fichiers actuels ne sont pas modifiés.",
     "sdkRefTitle": "Référence du SDK",
-    "sdkRefDescription": "Tout ce qu'expose le SDK Python de pairlens — cherchez par nom ou par usage.",
+    "sdkRefDescription": "Tout ce qu'expose le SDK Python de pairlens. Cherchez par nom ou par usage.",
     "sdkRefSearchPlaceholder": "Rechercher fonctions et docs…",
     "sdkRefAll": "Tout",
     "sdkRefApi": "API",
@@ -1877,14 +1877,14 @@
     "sdkRefTaPrice": "Utilitaires de bougies et de prix",
     "sdkRefInsert": "Insérer",
     "sdkRefEmpty": "Aucun résultat pour « {{query}} »",
-    "sdkRefEmptyHint": "La recherche parcourt les noms et les descriptions — essayez un mot plus court.",
+    "sdkRefEmptyHint": "La recherche parcourt les noms et les descriptions. Essayez un mot plus court.",
     "librariesTitle": "Bibliothèques Python",
-    "librariesDescription": "Ce que les scripts peuvent importer — sélection organisée, les paquets intégrés au runtime et n'importe quel wheel Python pur de PyPI.",
+    "librariesDescription": "Ce que les scripts peuvent importer : sélection organisée, les paquets intégrés au runtime et n'importe quel wheel Python pur de PyPI.",
     "librariesSearchPlaceholder": "Rechercher des bibliothèques…",
     "librariesCurated": "Sélection",
     "librariesRuntime": "Intégrées au runtime",
     "librariesLoading": "Chargement de la liste des paquets…",
-    "librariesError": "Impossible de charger la liste des paquets — vérifiez votre connexion et réessayez.",
+    "librariesError": "Impossible de charger la liste des paquets. Vérifiez votre connexion et réessayez.",
     "librariesEmpty": "Aucun résultat pour « {{query}} »",
     "librariesPreloadedBadge": "Préchargée",
     "librariesRuntimeBadge": "Runtime",
@@ -1899,7 +1899,7 @@
     "importNameLabel": "Nom",
     "importPasteLabel": "Code Python",
     "importPastePlaceholder": "Collez le script de l’indicateur ici…",
-    "importNotIndicator": "Cela ne ressemble pas à un indicateur Pairlens — il devrait définir meta = indicator(…) et compute(ctx). Vous pouvez l’importer quand même et le corriger dans l’éditeur.",
+    "importNotIndicator": "Cela ne ressemble pas à un indicateur Pairlens : il devrait définir meta = indicator(…) et compute(ctx). Vous pouvez l’importer quand même et le corriger dans l’éditeur.",
     "importFileHint": "Un script .py, ou un zip de plugin exporté depuis Pairlens.",
     "importChooseFile": "Choisir un fichier",
     "importForkHint": "Copiez un indicateur d’un plugin installé dans votre propre script modifiable.",
@@ -1911,20 +1911,20 @@
     "importError": {
       "empty": "Il n’y a rien à importer.",
       "binary": "Ce fichier n’est pas du code Python.",
-      "tooLarge": "C’est trop volumineux — les indicateurs sont limités à {{limit}} Ko.",
-      "tooManyFiles": "Trop de fichiers — un indicateur en accepte {{limit}} au maximum.",
+      "tooLarge": "C’est trop volumineux : les indicateurs sont limités à {{limit}} Ko.",
+      "tooManyFiles": "Trop de fichiers : un indicateur en accepte {{limit}} au maximum.",
       "badZip": "Ce fichier n’a pas pu être lu comme une archive zip.",
       "invalidPath": "« {{path}} » n’est pas un chemin de module valide. Utilisez des noms de modules Python terminés par .py, à l’intérieur du dossier de l’indicateur.",
       "duplicatePath": "Deux fichiers partagent le chemin « {{path}} ».",
-      "noEntry": "Impossible de déterminer le module d’entrée — nommez-le {{entry}}.",
+      "noEntry": "Impossible de déterminer le module d’entrée. Nommez-le {{entry}}.",
       "noIndicators": "Ce plugin ne contient aucun script d’indicateur importable. Installez-le depuis la page Plugins et dupliquez-le là-bas.",
       "unsupportedLanguage": "Les indicateurs écrits en {{language}} ne peuvent pas être importés.",
       "malformedDescriptor": "Les données de cet indicateur sont invalides.",
       "unknown": "L’importation a échoué."
     },
     "syntaxErrorDiagnostic": "Erreur de syntaxe",
-    "missingMetaDiagnostic": "main.py ne définit aucun `meta = indicator(...)` de premier niveau — le graphique n'a rien à dessiner.",
-    "missingComputeDiagnostic": "main.py ne définit aucun `def compute(ctx)` de premier niveau — le script ne pourra pas se charger."
+    "missingMetaDiagnostic": "main.py ne définit aucun `meta = indicator(...)` de premier niveau, le graphique n'a rien à dessiner.",
+    "missingComputeDiagnostic": "main.py ne définit aucun `def compute(ctx)` de premier niveau, le script ne pourra pas se charger."
   },
   "indicators": {
     "title": "Ajouter un indicateur",
@@ -2129,7 +2129,7 @@
     "selectWalletOrders": "Sélectionnez un wallet pour voir les ordres",
     "selectWalletFills": "Sélectionnez un wallet pour voir les exécutions",
     "selectWalletBalances": "Sélectionnez un wallet pour voir les soldes",
-    "spotNoPositions": "Mode spot — aucune position sur marge",
+    "spotNoPositions": "Mode spot : aucune position sur marge",
     "balances": "Soldes",
     "noBalances": "Aucune donnée de solde",
     "total": "Total",
@@ -2199,16 +2199,16 @@
       "taxNotice": "Les prix s'entendent hors taxes ; elles sont calculées lors du paiement.",
       "defaultTitle": "Débloquez Pairlens Intelligence",
       "defaultDescription": "L'assistant IA hébergé, avec recherche approfondie et recherche web, sans clé API à fournir. Chaque forfait inclut un budget d'utilisation mensuel partagé entre le chat, la recherche et les recherches web.",
-      "byokNote": "Vous préférez votre propre fournisseur ? Connectez une clé Anthropic, OpenAI, Groq ou OpenRouter dans <plugins>Plugins</plugins> — l'IA avec votre propre clé est toujours gratuite.",
+      "byokNote": "Vous préférez votre propre fournisseur ? Connectez une clé Anthropic, OpenAI, Groq ou OpenRouter dans <plugins>Plugins</plugins>. L'IA avec votre propre clé est toujours gratuite.",
       "checkoutOpenedTitle": "Paiement ouvert dans votre navigateur",
       "checkoutActivates": "Votre abonnement s'active ici dès que le paiement est finalisé.",
-      "checkoutStartError": "Impossible de démarrer le paiement — veuillez réessayer.",
+      "checkoutStartError": "Impossible de démarrer le paiement. Veuillez réessayer.",
       "subscriptionRequiredTitle": "Abonnement Pairlens Intelligence requis",
       "subscriptionRequiredBody": "L'IA hébergée fonctionne avec un forfait Intelligence. Abonnez-vous ci-dessous, ou connectez votre propre clé de fournisseur IA dans les Plugins.",
       "budgetUsedUpTitle": "Budget d'utilisation mensuel épuisé",
       "budgetUsedBody": "Vous avez épuisé les crédits Intelligence de ce cycle.",
       "budgetResetsOn": "Votre budget est réinitialisé le {{date}}.",
-      "topUpHint": "Rechargez avec un pack de crédits pour continuer — les crédits d'un pack expirent 30 jours après l'achat.",
+      "topUpHint": "Rechargez avec un pack de crédits pour continuer. Les crédits d'un pack expirent 30 jours après l'achat.",
       "upgradeToMaxHint": "Passez à {{label}} pour {{credits}} crédits par mois.",
       "manageSubscription": "Gérer l'abonnement",
       "portalError": "Impossible d'ouvrir le portail de facturation.",
@@ -2453,16 +2453,16 @@
     "disableCoreDescription": "Pairlens Core fournit le graphique, le carnet d’ordres, les marchés, et la plupart des panneaux intégrés. Le désactiver masquera ces panneaux et laissera le terminal presque vide jusqu’à ce que vous le réactiviez. Continuer ?",
     "disableAnyway": "Désactiver quand même",
     "buildOwnTitle": "Créez votre propre plugin",
-    "buildOwnDescription": "Pairlens est une plateforme ouverte. Générez un plugin, construisez-le, et chargez-le localement — aucun registre requis.",
+    "buildOwnDescription": "Pairlens est une plateforme ouverte. Générez un plugin, construisez-le, et chargez-le localement, aucun registre requis.",
     "buildStepScaffold": "Générer un nouveau plugin",
     "buildStepScaffoldNote": "Dans ce monorepo, utilisez : bun run create:plugin my-plugin",
     "buildStepBuild": "Construire et empaqueter",
     "buildStepBuildNote": "Produit un seul .zip (manifest.json + module.js + styles.css optionnel).",
     "buildStepInstall": "Installez-le",
     "buildStepInstallNote": "Allez dans l’onglet Installés et utilisez",
-    "buildStepInstallNote2": "— ou, sur le bureau, déposez le dossier dans le répertoire des plugins.",
+    "buildStepInstallNote2": "Ou, sur le bureau, déposez le dossier dans le répertoire des plugins.",
     "buildRuntimeTitle": "Ce que les plugins peuvent utiliser",
-    "buildRuntimeNote": "L’hôte fournit React, @pairlens/plugin-sdk (hooks), le design system @pairlens/ui (importé depuis la racine du package), et @pairlens/fast-financial-charts au runtime — marquez-les comme externes dans votre build. Les composants du design system sont stylisés par l’hôte ; pour du CSS personnalisé, fournissez un styles.css avec votre plugin.",
+    "buildRuntimeNote": "L’hôte fournit React, @pairlens/plugin-sdk (hooks), le design system @pairlens/ui (importé depuis la racine du package), et @pairlens/fast-financial-charts au runtime. Marquez-les comme externes dans votre build. Les composants du design system sont stylisés par l’hôte ; pour du CSS personnalisé, fournissez un styles.css avec votre plugin.",
     "buildExamplesNote": "Consultez les exemples dev-starter et dev-sync dans le dépôt pour des références fonctionnelles.",
     "applied": "Appliqué",
     "applyTheme": "Appliquer le thème",
@@ -2475,7 +2475,7 @@
     "communityBadge": "Communauté",
     "communityFullTrustBlocked": "Les plugins communautaires s’exécutent toujours en sandbox. « {{name}} » nécessite des privilèges d’application principale et ne peut donc pas être installé.",
     "communityMaintainer": "Maintenu par",
-    "communityNotice": "Plugin communautaire — soumis par la communauté et revu seulement légèrement par Pairlens. Il s’exécute toujours dans le sandbox des plugins : il ne peut atteindre que les hôtes réseau qu’il déclare et ne peut jamais lire vos clés d’exchange, vos wallets, ni passer d’ordres.",
+    "communityNotice": "Plugin communautaire : soumis par la communauté et revu seulement légèrement par Pairlens. Il s’exécute toujours dans le sandbox des plugins : il ne peut atteindre que les hôtes réseau qu’il déclare et ne peut jamais lire vos clés d’exchange, vos wallets, ni passer d’ordres.",
     "communityViewSource": "Voir le code source",
     "configuration": "Configuration",
     "curated": "Sélection de la semaine",
@@ -2499,7 +2499,7 @@
     "networkAccess": "Accès réseau",
     "noInstalledPlugins": "Aucun plugin installé.",
     "noMatches": "Aucun plugin ne correspond à votre recherche",
-    "noNetworkAccess": "Aucun accès réseau externe — s’exécute entièrement sur l’appareil.",
+    "noNetworkAccess": "Aucun accès réseau externe. S’exécute entièrement sur l’appareil.",
     "overview": "Vue d’ensemble",
     "palette": "Palette",
     "panels": "Panneaux inclus",
@@ -2538,7 +2538,7 @@
     },
     "network": {
       "title": "Autoriser « {{name}} » à se connecter ?",
-      "description": "Ce plugin doit joindre des serveurs hors de Pairlens. Votre terminal enverra des requêtes réseau aux hôtes ci-dessous. N’autorisez que si vous faites confiance à ce plugin — vous pouvez le désinstaller à tout moment pour révoquer l’accès.",
+      "description": "Ce plugin doit joindre des serveurs hors de Pairlens. Votre terminal enverra des requêtes réseau aux hôtes ci-dessous. N’autorisez que si vous faites confiance à ce plugin. Vous pouvez le désinstaller à tout moment pour révoquer l’accès.",
       "hostsIntro": "Il pourra se connecter à :",
       "reloadNote": "L’approbation recharge le terminal pour appliquer le changement.",
       "deny": "Ne pas autoriser",
@@ -2546,17 +2546,17 @@
     },
     "toggleFailedEnable": "Impossible d'activer {{name}}",
     "toggleFailedDisable": "Impossible de désactiver {{name}}",
-    "updateStagedToast": "Mise à jour prête — redémarrez pour l'appliquer",
+    "updateStagedToast": "Mise à jour prête : redémarrez pour l'appliquer",
     "restartNow": "Redémarrer maintenant",
     "updateStageFailedToast": "Impossible de préparer la mise à jour : {{error}}",
-    "resetStagedToast": "Réinitialisé aux valeurs par défaut — redémarrez pour terminer",
-    "networkGrantedToast": "Accès réseau accordé à « {{name}} » — rechargement…",
-    "networkDeniedToast": "« {{name}} » a été installé sans accès réseau — il pourrait ne pas fonctionner tant que vous ne l'autorisez pas.",
-    "installCancelledNoTrust": "Installation annulée — confiance totale non accordée",
+    "resetStagedToast": "Réinitialisé aux valeurs par défaut : redémarrez pour terminer",
+    "networkGrantedToast": "Accès réseau accordé à « {{name}} », rechargement…",
+    "networkDeniedToast": "« {{name}} » a été installé sans accès réseau, il pourrait ne pas fonctionner tant que vous ne l'autorisez pas.",
+    "installCancelledNoTrust": "Installation annulée : confiance totale non accordée",
     "installedVersionToast": "« {{name}} » v{{version}} installé",
     "installFailedToast": "Impossible d'installer le plugin : {{error}}",
     "localFilesNotFound": "Fichiers locaux du plugin introuvables",
-    "pluginCodeNotFound": "Code du plugin introuvable — réinstallez-le",
+    "pluginCodeNotFound": "Code du plugin introuvable. Réinstallez-le",
     "fullTrustGrantedNameToast": "Confiance totale accordée à « {{name}} »",
     "loadPluginFailedToast": "Impossible de charger le plugin : {{error}}",
     "importFailedToast": "Impossible d'importer le plugin : {{error}}",
@@ -2564,7 +2564,7 @@
     "configSaved": "Configuration enregistrée",
     "configurationFailed": "Échec de la configuration",
     "needsFullTrustToRun": "Nécessite une confiance totale pour s'exécuter",
-    "pendingTrustDescription": "Fournit de l'interface et ne peut pas s'exécuter dans le sandbox — accordez une confiance totale pour l'activer, ou désinstallez-le.",
+    "pendingTrustDescription": "Fournit de l'interface et ne peut pas s'exécuter dans le sandbox. Accordez une confiance totale pour l'activer, ou désinstallez-le.",
     "remove": "Supprimer",
     "groupProvidersExtensions": "Fournisseurs et extensions",
     "uninstallPluginTitle": "Désinstaller le plugin",
@@ -2581,8 +2581,8 @@
     "sourceRegistry": "Registre",
     "sourceUrl": "URL",
     "sourceLocal": "Local",
-    "fullTrustGrantedRestartToast": "Confiance totale accordée — redémarrez pour exécuter ce plugin dans l'app principale",
-    "sandboxedRestartToast": "Le plugin s'exécutera dans le sandbox — redémarrez pour appliquer",
+    "fullTrustGrantedRestartToast": "Confiance totale accordée : redémarrez pour exécuter ce plugin dans l'app principale",
+    "sandboxedRestartToast": "Le plugin s'exécutera dans le sandbox : redémarrez pour appliquer",
     "requiresFullTrustTitle": "Ce plugin fournit de l'interface et doit s'exécuter en confiance totale.",
     "trustBadgeFullRequired": "Confiance totale (requise)",
     "trustBadgeFull": "Confiance totale",
@@ -2592,8 +2592,8 @@
     "update": "Mettre à jour",
     "revokeFullTrustAria": "Révoquer la confiance totale pour {{name}}",
     "grantFullTrustAria": "Accorder une confiance totale à {{name}}",
-    "fullTrustActiveTitle": "Confiance totale — s'exécute dans l'app principale. Cliquez pour passer en sandbox.",
-    "sandboxedTitle": "Sandbox — worker isolé, réseau limité aux hôtes déclarés. Cliquez pour accorder une confiance totale.",
+    "fullTrustActiveTitle": "Confiance totale : s'exécute dans l'app principale. Cliquez pour passer en sandbox.",
+    "sandboxedTitle": "Sandbox : worker isolé, réseau limité aux hôtes déclarés. Cliquez pour accorder une confiance totale.",
     "configureAria": "Configurer {{name}}",
     "toggleAria": "Activer/désactiver {{name}}",
     "capabilityProvidersTitle": "Fournisseurs de capacités",
@@ -2601,13 +2601,13 @@
     "resetAllOverrides": "Réinitialiser tous les remplacements",
     "noProviderInstalled": "Aucun plugin installé ne fournit ceci",
     "browseStore": "Parcourir le Store",
-    "installedNeedsKeySingle": "Installé — nécessite une clé API",
-    "installedNeedsKeyPlural": "{{count}} installés — tous nécessitent une clé API",
+    "installedNeedsKeySingle": "Installé : nécessite une clé API",
+    "installedNeedsKeyPlural": "{{count}} installés : tous nécessitent une clé API",
     "installedDisabledSingle": "1 plugin installé, mais désactivé",
     "installedDisabledPlural": "{{count}} plugins installés, tous désactivés",
     "manage": "Gérer",
-    "pinnedActiveNote": "Épinglé — remplace l'ordre automatique",
-    "pinnedInactiveNote": "Le plugin épinglé est désactivé — l'ordre automatique s'applique",
+    "pinnedActiveNote": "Épinglé : remplace l'ordre automatique",
+    "pinnedInactiveNote": "Le plugin épinglé est désactivé : l'ordre automatique s'applique",
     "autoOrderLabel": "Ordre automatique : {{chain}}",
     "chainMore_one": "{{chain}} +{{count}} de plus",
     "chainMore_other": "{{chain}} +{{count}} de plus",
@@ -2658,7 +2658,7 @@
     "manifests": {
       "pairlens-core": {
         "title": "Pairlens Core",
-        "description": "Terminal de trading central — graphiques, carnets d'ordres, saisie d'ordres, découverte de marché et listes de suivi"
+        "description": "Terminal de trading central : graphiques, carnets d'ordres, saisie d'ordres, découverte de marché et listes de suivi"
       },
       "pairlens-intelligence": {
         "title": "Pairlens Intelligence",
@@ -2686,7 +2686,7 @@
       },
       "openrouter-inference": {
         "title": "OpenRouter",
-        "description": "Inférence IA via OpenRouter — une seule clé API pour des centaines de modèles chez différents fournisseurs (votre propre clé)"
+        "description": "Inférence IA via OpenRouter : une seule clé API pour des centaines de modèles chez différents fournisseurs (votre propre clé)"
       },
       "tavily-search": {
         "title": "Recherche Tavily",
@@ -2698,7 +2698,7 @@
       },
       "pairlens": {
         "title": "Pairlens",
-        "description": "Le thème emblématique de Pairlens — noir et blanc épuré avec des accents prismatiques arc-en-ciel"
+        "description": "Le thème emblématique de Pairlens : noir et blanc épuré avec des accents prismatiques arc-en-ciel"
       },
       "zen-trading": {
         "title": "Zen Trading",
@@ -2754,7 +2754,7 @@
       },
       "night-city": {
         "title": "Night City",
-        "description": "Inspiré de Cyberpunk 2077 — jaune électrique sur gris anthracite foncé avec des arêtes vives"
+        "description": "Inspiré de Cyberpunk 2077 : jaune électrique sur gris anthracite foncé avec des arêtes vives"
       },
       "eye-comfort": {
         "title": "Eye Comfort",
@@ -2766,7 +2766,7 @@
       },
       "boomerg": {
         "title": "Boomerg",
-        "description": "Hommage ambre sur noir au terminal Bloomberg classique — interface à chasse fixe, angles droits et couleurs des touches de fonction"
+        "description": "Hommage ambre sur noir au terminal Bloomberg classique : interface à chasse fixe, angles droits et couleurs des touches de fonction"
       },
       "okx-market-connector": {
         "title": "Connecteur de marché OKX",
@@ -2826,7 +2826,7 @@
       },
       "alpaca-market-connector": {
         "title": "Connecteur de marché Alpaca",
-        "description": "Actions et ETF américains via l'API de courtier Alpaca — données de marché en temps réel, trading papier et en direct"
+        "description": "Actions et ETF américains via l'API de courtier Alpaca : données de marché en temps réel, trading papier et en direct"
       },
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
@@ -2834,39 +2834,39 @@
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",
-        "description": "Données de marché DEX propulsées par GeckoTerminal (CoinGecko) — historique approfondi, bougies natives de 4 h"
+        "description": "Données de marché DEX propulsées par GeckoTerminal (CoinGecko) : historique approfondi, bougies natives de 4 h"
       },
       "jupiter-dex-connector": {
         "title": "Connecteur DEX Jupiter",
-        "description": "Agrégateur DEX Solana — meilleur routage de prix parmi tous les DEX Solana"
+        "description": "Agrégateur DEX Solana : meilleur routage de prix parmi tous les DEX Solana"
       },
       "ethereum-dex-connector": {
         "title": "Connecteur DEX Ethereum",
-        "description": "Swaps on-chain sur Ethereum — meilleur routage de prix parmi tous les DEX Ethereum via l'agrégateur KyberSwap"
+        "description": "Swaps on-chain sur Ethereum : meilleur routage de prix parmi tous les DEX Ethereum via l'agrégateur KyberSwap"
       },
       "base-dex-connector": {
         "title": "Connecteur DEX Base",
-        "description": "Swaps on-chain sur Base — meilleur routage de prix parmi tous les DEX Base via l'agrégateur KyberSwap"
+        "description": "Swaps on-chain sur Base : meilleur routage de prix parmi tous les DEX Base via l'agrégateur KyberSwap"
       },
       "arbitrum-dex-connector": {
         "title": "Connecteur DEX Arbitrum",
-        "description": "Swaps on-chain sur Arbitrum — meilleur routage de prix parmi tous les DEX Arbitrum via l'agrégateur KyberSwap"
+        "description": "Swaps on-chain sur Arbitrum : meilleur routage de prix parmi tous les DEX Arbitrum via l'agrégateur KyberSwap"
       },
       "bsc-dex-connector": {
         "title": "Connecteur DEX BNB Chain",
-        "description": "Swaps on-chain sur la BNB Chain — meilleur routage de prix parmi tous les DEX BNB Chain via l'agrégateur KyberSwap"
+        "description": "Swaps on-chain sur la BNB Chain : meilleur routage de prix parmi tous les DEX BNB Chain via l'agrégateur KyberSwap"
       },
       "polygon-dex-connector": {
         "title": "Connecteur DEX Polygon",
-        "description": "Swaps on-chain sur Polygon — meilleur routage de prix parmi tous les DEX Polygon via l'agrégateur KyberSwap"
+        "description": "Swaps on-chain sur Polygon : meilleur routage de prix parmi tous les DEX Polygon via l'agrégateur KyberSwap"
       },
       "kalshi-market-connector": {
         "title": "Connecteur de marché Kalshi",
-        "description": "Contrats d'événements sur Kalshi, la bourse de prédiction régulée par la CFTC — tradez des résultats, pas des actifs"
+        "description": "Contrats d'événements sur Kalshi, la bourse de prédiction régulée par la CFTC : tradez des résultats, pas des actifs"
       },
       "polymarket-market-connector": {
         "title": "Connecteur de marché Polymarket",
-        "description": "Contrats d'événements sur le CLOB Polymarket — ordres signés par votre wallet, réglés en USDC"
+        "description": "Contrats d'événements sur le CLOB Polymarket : ordres signés par votre wallet, réglés en USDC"
       },
       "pairlens-predictions": {
         "title": "Pairlens Prédictions",
@@ -3105,12 +3105,12 @@
     "connectBroker": "Connecter un courtier",
     "selectBroker": "Sélectionnez le courtier à connecter",
     "brokerAccountsTitle": "Courtiers boursiers",
-    "brokerAccountsDesc": "Comptes de courtiers boursiers (Alpaca…) connectés via clé API — tradez des actions et ETF américains avec des fonds papier ou réels.",
+    "brokerAccountsDesc": "Comptes de courtiers boursiers (Alpaca…) connectés via clé API. Tradez des actions et ETF américains avec des fonds papier ou réels.",
     "noBrokerAccounts": "Aucun courtier boursier connecté pour l’instant",
     "noBrokerAccountsDesc": "Connectez un compte de courtier pour trader des actions. Alpaca propose des clés de trading papier gratuites en quelques minutes.",
     "comingSoon": "Bientôt disponible",
     "exchangeAccountsTitle": "Exchanges crypto",
-    "exchangeAccountsDesc": "Comptes d’exchanges centralisés (Binance, OKX…) connectés via clé API — vos fonds restent sur l’exchange.",
+    "exchangeAccountsDesc": "Comptes d’exchanges centralisés (Binance, OKX…) connectés via clé API. Vos fonds restent sur l’exchange.",
     "cryptoWalletsTitle": "Wallets crypto",
     "cryptoWalletsDesc": "Clés privées pour trader on-chain via des exchanges décentralisés.",
     "addWallet": "Ajouter un wallet",
@@ -3159,7 +3159,7 @@
       "osBodyBrowser": "Chaque valeur est scellée en AES-256-GCM avant de toucher le stockage du navigateur. Une seule clé de données les chiffre toutes, et cette clé n’est jamais écrite en clair.",
       "unlockTitle": "Vous seul pouvez l’ouvrir",
       "unlockBody": "Un mot de passe, renforcé par 600 000 tours de PBKDF2-SHA256 ; une passkey sur votre téléphone ou clé de sécurité ; ou Touch ID. Chacun enveloppe la même clé de données, vous pouvez donc garder plusieurs façons d’entrer. Pairlens n’en reçoit aucune.",
-      "openSourceTitle": "Code source public — vérifiez par vous-même",
+      "openSourceTitle": "Code source public, vérifiez par vous-même",
       "openSourceBody": "Le code de Pairlens est public. Vous, un ami développeur, ou même une IA pouvez le lire et confirmer que vos clés restent bien en place.",
       "limitsTitle": "Ce que cela ne protège pas",
       "limitsRunning": "Tant que l’application est ouverte et déverrouillée, elle peut lire vos clés. C’est ainsi qu’elle passe vos ordres. Le chiffrement défend un disque ou un profil de navigateur copié, pas une machine devant laquelle quelqu’un est déjà assis.",
@@ -3177,7 +3177,7 @@
     "hero": {
       "eyebrow": "Vos places de marché",
       "title": "Tradez avec vos propres clés",
-      "subtitle": "Connectez exchanges, courtiers et wallets on-chain avec des clés API qui ne quittent jamais cet appareil. Pairlens communique directement avec chaque place de marché — sans garde, sans intermédiaire."
+      "subtitle": "Connectez exchanges, courtiers et wallets on-chain avec des clés API qui ne quittent jamais cet appareil. Pairlens communique directement avec chaque place de marché : sans garde, sans intermédiaire."
     },
     "portfolioEyebrow": "Portefeuille",
     "openAccountShelfTitle": "Ouvrir un nouveau compte",
@@ -3193,7 +3193,7 @@
     "hasAccountNoDesc": "Ouvrir un compte {{exchange}} gratuit",
     "importKey": "Importer une clé privée",
     "affiliateDisclosure": "Certains liens d’inscription peuvent rapporter une commission à Pairlens, sans coût supplémentaire pour vous.",
-    "vaultSealedBody": "Votre coffre d'identifiants est verrouillé. Vos comptes sont toujours là — déverrouillez pour les voir et les utiliser.",
+    "vaultSealedBody": "Votre coffre d'identifiants est verrouillé. Vos comptes sont toujours là, déverrouillez pour les voir et les utiliser.",
     "credentialsUnreadable": "Impossible de lire les clés enregistrées sur cet appareil. Rien n’est perdu : réessaie ou redémarre Pairlens.",
     "addWalletDialogTitle": "Ajouter un wallet crypto",
     "addWalletDialogDescription": "Importez la clé privée d'un wallet pour trader on-chain",
@@ -3207,7 +3207,7 @@
     "disconnect": "Déconnecter",
     "localBadge": "Local",
     "unknownDate": "Inconnue",
-    "keyExpiredWarning": "Probablement expirée — {{daysInactive}} jours d'inactivité (limite de {{limitDays}} jours). Recréez la clé API sur l'exchange.",
+    "keyExpiredWarning": "Probablement expirée : {{daysInactive}} jours d'inactivité (limite de {{limitDays}} jours). Recréez la clé API sur l'exchange.",
     "keyInactiveWarning": "{{daysInactive}}/{{limitDays}} jours d'inactivité. Les clés expirent après {{limitDays}} jours sans utilisation.",
     "exchangeAccountAriaLabel": "Compte d'exchange {{label}}",
     "cryptoWalletAriaLabel": "Wallet crypto {{label}}",
@@ -3297,11 +3297,11 @@
       "enableTitle": "Certains plugins sont désactivés",
       "enableBody": "Cet espace de travail utilise des plugins que vous avez installés mais désactivés. Activez-les depuis la page Plugins pour voir chaque panneau.",
       "installTitle": "Plugins supplémentaires nécessaires",
-      "installBody": "Certains panneaux dépendent de plugins que vous n’avez pas encore. Vous pouvez tout de même ajouter l’espace de travail — ces panneaux resteront vides jusqu’à ce que vous installiez les plugins depuis le Plugin Store."
+      "installBody": "Certains panneaux dépendent de plugins que vous n’avez pas encore. Vous pouvez tout de même ajouter l’espace de travail, ces panneaux resteront vides jusqu’à ce que vous installiez les plugins depuis le Plugin Store."
     },
     "security": {
       "trusted": "Accès complet · fourni avec Pairlens",
-      "needsApproval": "Nécessite un accès complet — vous devrez l’approuver",
+      "needsApproval": "Nécessite un accès complet : vous devrez l’approuver",
       "gateTitle": "Plugins à accès complet",
       "gateBody": "{{names}} s’exécutent avec un accès complet à vos identifiants et vos trades. Vous devrez approuver chacun avant son activation."
     },
@@ -3370,7 +3370,7 @@
     "templates": {
       "scalpers-cockpit": {
         "name": "Cockpit du Scalper",
-        "tagline": "Graphique, carnet et entrée en un clic — rien d'autre.",
+        "tagline": "Graphique, carnet et entrée en un clic. Rien d'autre.",
         "description": "Un cockpit minimaliste à deux colonnes pour une exécution rapide : un graphique à côté d'un carnet d'ordres en direct, de la profondeur de marché et d'un ticket d'ordre. Conçu pour la rapidité sur un seul écran."
       },
       "day-trader-pro": {
@@ -3396,7 +3396,7 @@
       "market-discovery": {
         "name": "Découverte de marché",
         "tagline": "Trouvez ce qui bouge avant de vous engager.",
-        "description": "Un tableau de découverte pur : le scanner de marchés, les principaux mouvements, une carte thermique sectorielle, votre liste de suivi, et la jauge Peur & Avidité. Pas de graphique, pas de ticket — juste pour chasser la prochaine configuration."
+        "description": "Un tableau de découverte pur : le scanner de marchés, les principaux mouvements, une carte thermique sectorielle, votre liste de suivi, et la jauge Peur & Avidité. Pas de graphique, pas de ticket, juste pour chasser la prochaine configuration."
       },
       "portfolio-command": {
         "name": "Pilotage du portefeuille",
@@ -3444,7 +3444,7 @@
       },
       "ultrawide-trading-floor": {
         "name": "Salle des marchés Ultrawide",
-        "tagline": "Tout, partout — pour le grand écran.",
+        "tagline": "Tout, partout, pour le grand écran.",
         "description": "Un centre de commande à quatre colonnes qui remplit un écran ultrawide ou un second écran : scanner, graphique, carnet d'ordres et profondeur, et un ticket d'ordre au-dessus de vos positions ouvertes. La mise en page maximaliste."
       },
       "classic-terminal": {
@@ -3474,19 +3474,19 @@
       "dual-charts": {
         "name": "Doubles Graphiques",
         "tagline": "Deux graphiques côte à côte.",
-        "description": "Deux panneaux de graphique indépendants côte à côte — chacun garde son propre marché, sa période et son type de graphique. Définissez une paire différente par panneau avec son sélecteur de paire.",
+        "description": "Deux panneaux de graphique indépendants côte à côte. Chacun garde son propre marché, sa période et son type de graphique. Définissez une paire différente par panneau avec son sélecteur de paire.",
         "menuLabel": "Doubles Graphiques"
       },
       "triple-charts": {
         "name": "Triples Graphiques",
         "tagline": "Un grand graphique avec deux empilés à côté.",
-        "description": "Un grand graphique principal avec deux graphiques plus petits empilés à droite — chacun indépendant, pour surveiller une paire de référence face à deux autres.",
+        "description": "Un grand graphique principal avec deux graphiques plus petits empilés à droite, chacun indépendant, pour surveiller une paire de référence face à deux autres.",
         "menuLabel": "Triples Graphiques"
       },
       "quad-charts": {
         "name": "Quadruples Graphiques",
         "tagline": "Une grille de graphiques 2×2.",
-        "description": "Quatre graphiques indépendants dans une grille 2×2 — un cockpit multi-graphiques complet pour suivre plusieurs marchés à la fois.",
+        "description": "Quatre graphiques indépendants dans une grille 2×2, un cockpit multi-graphiques complet pour suivre plusieurs marchés à la fois.",
         "menuLabel": "Quadruples Graphiques"
       },
       "laptop-focus": {
@@ -3517,19 +3517,19 @@
       "home-pulse": {
         "name": "Accueil",
         "tagline": "Le tableau par défaut : scanner, sentiment, mouvements et actualités.",
-        "description": "Le tableau d'accueil par défaut — scanner de marchés, un bandeau de pouls du marché avec la jauge Peur & Avidité et Top coins en onglet avec votre liste de suivi, et une colonne d'actualités pleine hauteur. Tout y fonctionne sans compte.",
+        "description": "Le tableau d'accueil par défaut : scanner de marchés, un bandeau de pouls du marché avec la jauge Peur & Avidité et Top coins en onglet avec votre liste de suivi, et une colonne d'actualités pleine hauteur. Tout y fonctionne sans compte.",
         "menuLabel": "Par défaut"
       },
       "markets-board": {
         "name": "Tableau des marchés",
         "tagline": "Juste le scanner de marchés, en plein écran.",
-        "description": "Le scanner de marchés en pleine largeur — la façon la plus simple de parcourir et trier chaque paire négociable.",
+        "description": "Le scanner de marchés en pleine largeur, la façon la plus simple de parcourir et trier chaque paire négociable.",
         "menuLabel": "Marchés"
       },
       "markets-overview": {
         "name": "Vue d'ensemble des marchés",
         "tagline": "Scanner à côté de vos mouvements et de votre liste de suivi.",
-        "description": "Le scanner de marchés aux côtés des principaux mouvements et de votre liste de suivi — une base équilibrée pour trouver et suivre des configurations.",
+        "description": "Le scanner de marchés aux côtés des principaux mouvements et de votre liste de suivi, une base équilibrée pour trouver et suivre des configurations.",
         "menuLabel": "Vue d'ensemble"
       },
       "sector-analysis": {
@@ -3541,7 +3541,7 @@
       "news-board": {
         "name": "Tableau d'actualités",
         "tagline": "Marchés aux côtés des mouvements et du flux d'actualités.",
-        "description": "Le scanner de marchés aux côtés des principaux mouvements et du flux d'actualités en direct — une base pour le trading piloté par les catalyseurs.",
+        "description": "Le scanner de marchés aux côtés des principaux mouvements et du flux d'actualités en direct, une base pour le trading piloté par les catalyseurs.",
         "menuLabel": "Actualités"
       },
       "perps-terminal": {
@@ -3654,7 +3654,7 @@
         "sendTest": "Envoyer un test",
         "testing": "Test en cours…",
         "pairAlreadyBound": "Cette paire est déjà associée à la règle",
-        "noBindings": "Associée à aucune paire pour l'instant — la règle ne se déclenchera pas tant que vous n'en ajoutez pas une.",
+        "noBindings": "Associée à aucune paire pour l'instant. La règle ne se déclenchera pas tant que vous n'en ajoutez pas une.",
         "testSent": "Notification de test envoyée",
         "testFailed": "Le test n'a pas été livré",
         "noActivity": "Aucune notification déclenchée pour l'instant",
@@ -3676,7 +3676,7 @@
         "cannotSaveTitle": "Impossible d'enregistrer la règle",
         "cycleError": "La règle contient une dépendance circulaire. Supprimez le cycle (arêtes rouges) avant d'enregistrer.",
         "saved": "Règle enregistrée",
-        "webhookHostAllowed": "Accès autorisé à {{hosts}} — rechargez pour envoyer les webhooks",
+        "webhookHostAllowed": "Accès autorisé à {{hosts}} : rechargez pour envoyer les webhooks",
         "webhookHostFailed": "Impossible d'autoriser l'hôte du webhook",
         "reload": "Recharger"
       },
@@ -3711,7 +3711,7 @@
         "untitledRule": "Règle sans titre",
         "eyebrow": "Notifications",
         "title": "Surveillez le marché pour ne pas avoir à le faire vous-même",
-        "description": "Une alerte tient en une ligne : un seuil à franchir, ou une variation à ne pas manquer — vous nommez une paire et c'est armé. Les flux servent au reste : conditions, ordres exécutés, alertes d'indicateurs et canaux de livraison.",
+        "description": "Une alerte tient en une ligne : un seuil à franchir, ou une variation à ne pas manquer. Vous nommez une paire et c'est armé. Les flux servent au reste : conditions, ordres exécutés, alertes d'indicateurs et canaux de livraison.",
         "startBlank": "Partir d'un canevas vierge",
         "footnote": "Les modèles arrivent déjà actifs, liés à {{pair}} sur {{market}}. Modifiez les étapes ou changez la paire sous la liste des règles, puis enregistrez vos modifications. Les règles ne se déclenchent que si Pairlens est ouvert."
       },
@@ -4024,11 +4024,11 @@
       "unknownPair": "inconnu",
       "priceAlert": {
         "title": "Alerte de prix : {{pair}}",
-        "body": "{{pair}} est maintenant {{direction}} {{price}} — actuel : {{current}}"
+        "body": "{{pair}} est maintenant {{direction}} {{price}}, actuel : {{current}}"
       },
       "orderExecuted": {
         "title": "Ordre exécuté",
-        "body": "{{side}} {{pair}} — {{status}}"
+        "body": "{{side}} {{pair}} : {{status}}"
       },
       "signalGenerated": {
         "title": "Signal généré",
@@ -4347,8 +4347,8 @@
       "unlockWithPassword": "Déverrouiller",
       "unlocking": "Déverrouillage…",
       "sealed": "Votre coffre d'identifiants est verrouillé.",
-      "sealedBanner_one": "1 bot en réel est en pause — déverrouillez Pairlens pour reprendre le trading.",
-      "sealedBanner_other": "{{count}} bots en réel sont en pause — déverrouillez Pairlens pour reprendre le trading.",
+      "sealedBanner_one": "1 bot en réel est en pause. Déverrouillez Pairlens pour reprendre le trading.",
+      "sealedBanner_other": "{{count}} bots en réel sont en pause. Déverrouillez Pairlens pour reprendre le trading.",
       "passkeyNudgeTitle": "Déverrouillez d’une seule touche la prochaine fois",
       "passkeyNudgeBody": "{{venue}} diffuse les prix depuis vos clés : coffre verrouillé, pas de graphique. Une passkey ouvre le coffre et l’écran de verrouillage d’un seul geste, au lieu d’un mot de passe saisi.",
       "passkeyNudgeAction": "Ajouter une passkey",
@@ -4357,7 +4357,7 @@
       "sealedBannerAction": "Déverrouiller",
       "botsPausedTitle": "Les bots en réel sont en pause",
       "botsPausedBody": "Déverrouillez Pairlens pour reprendre le trading réel. Les bots en papier ne sont pas affectés.",
-      "orderBlocked": "Votre coffre d'identifiants est verrouillé — déverrouillez Pairlens pour passer des ordres réels.",
+      "orderBlocked": "Votre coffre d'identifiants est verrouillé. Déverrouillez Pairlens pour passer des ordres réels.",
       "insecureContext": "Le chiffrement est indisponible sur une connexion non sécurisée. Ouvrez Pairlens en HTTPS, ou sur localhost, pour configurer un coffre.",
       "botParkDetailSealed": "Votre coffre d'identifiants est verrouillé. Ce bot reprend le trading réel dès que vous déverrouillez Pairlens. Les bots en papier ne sont pas affectés.",
       "botParkDetailError": "Vos identifiants enregistrés n'ont pas pu être lus sur cet appareil. Ce bot reprend le trading réel dès qu'ils sont chargés. Les bots en papier ne sont pas affectés.",
@@ -4377,7 +4377,7 @@
     "authDescription": "Cette fonctionnalité fonctionne via votre compte Pairlens.",
     "signInFree": "Se connecter gratuitement",
     "or": "ou",
-    "intelligenceNote": "Recommandé — hébergé, rien à configurer. La connexion est gratuite ; Pairlens Intelligence est une formule payante.",
+    "intelligenceNote": "Recommandé : hébergé, rien à configurer. La connexion est gratuite ; Pairlens Intelligence est une formule payante.",
     "authNote": "Cela prend 30 secondes. Vos clés d'échange ne quittent jamais cet appareil.",
     "upgradeRequired": "Mise à niveau requise",
     "upgradeDescriptionLevel": "Cette fonctionnalité nécessite le niveau d'accès <b>{{level}}</b>.",
@@ -4390,7 +4390,7 @@
     "useOwnKey": "Configurer votre propre IA",
     "connect": "Connecter",
     "connected": "Connecté",
-    "connectedToast": "{{provider}} connecté — l'IA est prête.",
+    "connectedToast": "{{provider}} connecté. L'IA est prête.",
     "getKey": "Obtenir une clé",
     "keyStorageNote": "Votre clé reste sur cet appareil et n'est envoyée qu'à ce fournisseur. Pairlens ne la reçoit jamais.",
     "noneInstalled": "Aucun plugin de fournisseur n'est installé pour cette étape. Ajoutez-en un depuis la page Plugins.",
@@ -4399,7 +4399,7 @@
     "required": "requis",
     "optional": "facultatif",
     "modelHint": "Le fournisseur qui rédige les réponses. Choisissez-en un et collez sa clé.",
-    "searchHint": "Facultatif. Ancre le research et les réponses dans des sources web en direct — l'IA fonctionne sans.",
+    "searchHint": "Facultatif. Ancre le research et les réponses dans des sources web en direct. L'IA fonctionne sans.",
     "done": "Terminé",
     "notConnected": "non connecté",
     "manage": "Gérer les fournisseurs"
@@ -4466,7 +4466,7 @@
       "titlePack": "{{credits}} crédits supplémentaires ajoutés.",
       "titlePlan": "{{label}} est désormais à vous.",
       "titleDefault": "Pairlens Intelligence est désormais à vous.",
-      "bodyPack": "Ils s’ajoutent à votre budget mensuel et expirent dans {{days}} jours. Retournez sur l’application Pairlens — votre solde se met à jour en quelques secondes.",
+      "bodyPack": "Ils s’ajoutent à votre budget mensuel et expirent dans {{days}} jours. Retournez sur l’application Pairlens, votre solde se met à jour en quelques secondes.",
       "bodyPlanWithCredits": "Votre assistant IA hébergé est débloqué, recherche approfondie et recherche web comprises, avec {{credits}} crédits chaque mois. Retournez sur l’application Pairlens : elle détectera votre abonnement en quelques secondes.",
       "bodyPlanNoCredits": "Votre assistant IA hébergé est débloqué, recherche approfondie et recherche web comprises. Retournez sur l’application Pairlens : elle détectera votre abonnement en quelques secondes.",
       "openTerminal": "Ouvrir le terminal",
@@ -4491,7 +4491,7 @@
       "renameButton": "Renommer",
       "deleteTitle": "Supprimer le workflow",
       "deleteDescription": "Cette action est irréversible. Le workflow sera supprimé définitivement.",
-      "runsEmpty": "Aucune exécution pour le moment — lancez-en une depuis le panneau de trading",
+      "runsEmpty": "Aucune exécution pour le moment : lancez-en une depuis le panneau de trading",
       "clearHistory": "Effacer l'historique",
       "runOutcome": "{{executed}} ok",
       "runOutcomeWithFailed": "{{executed}} ok, {{failed}} échouées"
@@ -4539,7 +4539,7 @@
       "pickWorkflow": "Choisissez un workflow à gauche pour l'ouvrir sur le canevas.",
       "eyebrow": "Workflows",
       "title": "Chaque ordre peut avoir son propre plan",
-      "description": "Un workflow se rattache à un ordre que vous placez depuis le panneau de trading. Dès son exécution, les étapes qui en dépendent se déclenchent d'elles-mêmes — brackets, échelles, sorties échelonnées, vérifications programmées — le plan est donc déjà en place, plutôt qu'une chose à faire vous-même plus tard.",
+      "description": "Un workflow se rattache à un ordre que vous placez depuis le panneau de trading. Dès son exécution, les étapes qui en dépendent se déclenchent d'elles-mêmes (brackets, échelles, sorties échelonnées, vérifications programmées), le plan est donc déjà en place, plutôt qu'une chose à faire vous-même plus tard.",
       "blankLabel": "Partir d'un canevas vierge",
       "footnote": "Les modèles s'ouvrent en brouillon : modifiez une étape, puis cliquez sur Valider pour enregistrer. Associez un workflow enregistré à un ordre depuis le panneau de trading pour l'exécuter.",
       "untitledWorkflow": "Workflow sans titre"
@@ -5054,7 +5054,7 @@
       "riskUsedNoCap": "{{used}} du portefeuille",
       "slideToBuy": "Glissez pour acheter sur {{venue}}",
       "slideToSell": "Glissez pour vendre sur {{venue}}",
-      "connectBody": "Les prix et le carnet sont en direct sans cela — passer des ordres nécessite une clé API avec l’autorisation de trading.",
+      "connectBody": "Les prix et le carnet sont en direct sans cela. Passer des ordres nécessite une clé API avec l’autorisation de trading.",
       "noPrice": "Aucun prix en direct pour dimensionner ce swap",
       "auto": "Auto",
       "bookLoading": "En attente du carnet…",

@@ -14,7 +14,7 @@
     "welcome": {
       "eyebrow": "Selamat datang",
       "title": "Kenalan dengan Pairlens",
-      "sub": "Terminal AI-native untuk trading spot — privat, lokal, dan sepenuhnya milik Anda. Mari atur dalam waktu sekitar satu menit.",
+      "sub": "Terminal AI-native untuk trading spot: privat, lokal, dan sepenuhnya milik Anda. Mari atur dalam waktu sekitar satu menit.",
       "label": "Selamat datang"
     },
     "oneTerminal": {
@@ -22,7 +22,7 @@
       "title": "Satu terminal. Semua market.",
       "sub": "Trading spot centralized dan on-chain berdampingan, dengan satu asisten AI yang membaca setiap setup.",
       "points": {
-        "0": "Spot centralized — OKX, Binance, Coinbase",
+        "0": "Spot centralized: OKX, Binance, Coinbase",
         "1": "Swap DEX on-chain, dengan smart routing",
         "2": "Saham & ETF AS"
       },
@@ -37,16 +37,16 @@
     "country": {
       "status": "Menyesuaikan routing regional",
       "title": "Anda trading dari negara mana?",
-      "sub": "Beberapa venue dibatasi secara geografis atau memakai endpoint regional terpisah — pilihan ini mengarahkan konektor Anda ke yang tepat.",
+      "sub": "Beberapa venue dibatasi secara geografis atau memakai endpoint regional terpisah. Pilihan ini mengarahkan konektor Anda ke yang tepat.",
       "searchPlaceholder": "Cari negara…",
       "noResults": "Tidak ada negara yang cocok dengan pencarian Anda",
       "global": "Lebih baik tidak disebutkan",
-      "globalSub": "Tidak disarankan — memakai endpoint dan pengaturan global",
+      "globalSub": "Tidak disarankan: memakai endpoint dan pengaturan global",
       "label": "Negara",
-      "localNote": "Disimpan hanya di perangkat ini — tidak pernah dikirim ke server Pairlens.",
+      "localNote": "Disimpan hanya di perangkat ini, tidak pernah dikirim ke server Pairlens.",
       "globalConfirm": {
         "title": "Lanjut tanpa lokasi?",
-        "body": "Tanpa negara yang dipilih, order dan data market memakai endpoint global. Pada venue dengan akses regional atau pembatasan geografis, fitur bisa tidak berfungsi dan trade bisa gagal dieksekusi. Kami sarankan mengatur lokasi Anda — hanya disimpan di perangkat ini.",
+        "body": "Tanpa negara yang dipilih, order dan data market memakai endpoint global. Pada venue dengan akses regional atau pembatasan geografis, fitur bisa tidak berfungsi dan trade bisa gagal dieksekusi. Kami sarankan mengatur lokasi Anda. Hanya disimpan di perangkat ini.",
         "ack": "Saya memahami konsekuensi tidak mengatur lokasi saya",
         "cancel": "Pilih negara",
         "confirm": "Lanjut tanpa lokasi"
@@ -55,10 +55,10 @@
     "privacy": {
       "eyebrow": "Privat sejak dirancang",
       "title": "Kunci Anda. Perangkat Anda. Titik.",
-      "sub": "Pairlens berjalan local-first. Kredensial dan data Anda tetap di perangkat ini — tidak pernah di server kami.",
+      "sub": "Pairlens berjalan local-first. Kredensial dan data Anda tetap di perangkat ini, tidak pernah di server kami.",
       "points": {
         "0": "Kunci dan saldo tidak pernah meninggalkan perangkat ini",
-        "1": "Non-custodial — Pairlens tidak bisa memindahkan dana Anda",
+        "1": "Non-custodial: Pairlens tidak bisa memindahkan dana Anda",
         "2": "Tanpa email, tanpa KYC untuk memulai"
       },
       "scene": {
@@ -77,7 +77,7 @@
     "routing": {
       "eyebrow": "Routing langsung",
       "title": "Langsung ke exchange.",
-      "sub": "Hubungkan venue yang sudah Anda gunakan. Order dirutekan langsung ke sana — tanpa perantara, tanpa custody, tanpa order flow yang dijual.",
+      "sub": "Hubungkan venue yang sudah Anda gunakan. Order dirutekan langsung ke sana: tanpa perantara, tanpa custody, tanpa order flow yang dijual.",
       "points": {
         "0": "Order dikirim langsung ke venue yang Anda hubungkan",
         "1": "Kami tidak pernah memegang custody aset Anda",
@@ -106,7 +106,7 @@
     "themeStep": {
       "status": "Menyesuaikan pencahayaan",
       "title": "Mau tampil seperti apa?",
-      "sub": "Pairlens disetel untuk mode terang dan gelap. Pilih mode dan palet — keduanya bisa diubah nanti.",
+      "sub": "Pairlens disetel untuk mode terang dan gelap. Pilih mode dan palet. Keduanya bisa diubah nanti.",
       "light": "Terang",
       "dark": "Gelap",
       "system": "Otomatis",
@@ -117,15 +117,15 @@
     "legal": {
       "status": "Sebelum Anda mulai",
       "title": "Beberapa hal untuk dikonfirmasi",
-      "sub": "Pairlens adalah alat untuk trading saham dan kripto — mohon konfirmasi setiap poin untuk melanjutkan.",
+      "sub": "Pairlens adalah alat untuk trading saham dan kripto. Mohon konfirmasi setiap poin untuk melanjutkan.",
       "items": {
         "0": "Saya memahami bahwa trading berisiko dan saya bisa kehilangan sebagian atau seluruh dana saya.",
         "1": "Saya bertanggung jawab untuk mematuhi hukum negara tempat tinggal dan/atau kewarganegaraan saya.",
         "2": "Aktivitas saya dapat memiliki implikasi pajak, dan melaporkannya adalah tanggung jawab saya.",
-        "3": "Pairlens menyertakan alat lanjutan — tidak semuanya cocok untuk pemula.",
+        "3": "Pairlens menyertakan alat lanjutan. Tidak semuanya cocok untuk pemula.",
         "4": "Kripto dan saham adalah aset nyata; nilainya bisa volatil dan berubah dengan cepat.",
         "5": "Saat saya menghubungkan exchange atau broker, saya menggunakan akun saya sendiri dan menerima ketentuan layanan mereka, termasuk biaya apa pun yang mereka kenakan pada trade atau kepemilikan saya.",
-        "6": "Pairlens secara sengaja tidak mencadangkan API key atau dompet saya. Hanya saya yang menyimpan cadangannya, dan Pairlens tidak dapat memulihkan dana yang hilang — terutama dompet kripto.",
+        "6": "Pairlens secara sengaja tidak mencadangkan API key atau dompet saya. Hanya saya yang menyimpan cadangannya, dan Pairlens tidak dapat memulihkan dana yang hilang, terutama dompet kripto.",
         "7": "Pairlens adalah pratinjau awal (Beta), mungkin mengandung bug, dan disediakan “apa adanya” tanpa jaminan atau tanggung jawab. Saya akan melaporkan masalah yang saya temukan."
       },
       "hintFirst": "Konfirmasi keempatnya untuk melanjutkan",
@@ -137,22 +137,22 @@
     "workspaces": {
       "eyebrow": "Sepenuhnya dapat disesuaikan",
       "title": "Terminal Anda, tata letak Anda.",
-      "sub": "Ruang kerja sepenuhnya dapat disesuaikan — bangun pengalaman yang Anda inginkan, sebanyak yang Anda mau, dari tampilan sederhana hingga dashboard pro lengkap.",
+      "sub": "Ruang kerja sepenuhnya dapat disesuaikan: bangun pengalaman yang Anda inginkan, sebanyak yang Anda mau, dari tampilan sederhana hingga dashboard pro lengkap.",
       "points": {
         "0": "Susun chart, order book, dan panel sesuai keinginan Anda",
         "1": "Buat ruang kerja sebanyak yang Anda mau",
-        "2": "Tampilan sederhana untuk pemula — meja kerja lengkap untuk pro"
+        "2": "Tampilan sederhana untuk pemula, meja kerja lengkap untuk pro"
       },
       "label": "Ruang Kerja"
     },
     "analytics": {
       "status": "Data Anda, keputusan Anda",
       "title": "Bantu tingkatkan Pairlens?",
-      "sub": "Bagikan data penggunaan anonim dan laporan crash agar kami tahu apa yang perlu diperbaiki. Tidak pernah trade, kunci, atau saldo Anda — dan Anda bisa mengubah ini kapan saja di pengaturan.",
+      "sub": "Bagikan data penggunaan anonim dan laporan crash agar kami tahu apa yang perlu diperbaiki. Tidak pernah trade, kunci, atau saldo Anda, dan Anda bisa mengubah ini kapan saja di pengaturan.",
       "options": {
         "enabled": {
           "label": "Bagikan data penggunaan anonim",
-          "sub": "Pola penggunaan dan laporan crash — tidak ada apa pun tentang trading Anda"
+          "sub": "Pola penggunaan dan laporan crash, tidak ada apa pun tentang trading Anda"
         },
         "disabled": {
           "label": "Tidak, terima kasih",
@@ -174,7 +174,7 @@
         },
         "sync": {
           "title": "Sinkronisasi cloud",
-          "sub": "Pengaturan & tata letak lintas perangkat — kunci tetap lokal"
+          "sub": "Pengaturan & tata letak lintas perangkat, kunci tetap lokal"
         },
         "community": {
           "title": "Ruang kerja komunitas",
@@ -182,7 +182,7 @@
         }
       },
       "create": "Buat akun",
-      "skip": "Lewati — simpan semuanya di perangkat ini",
+      "skip": "Lewati: simpan semuanya di perangkat ini",
       "signedIn": "Masuk sebagai {{email}}",
       "label": "Akun",
       "otpSendFailed": "Gagal mengirim OTP",
@@ -228,7 +228,7 @@
       "eyebrow": "Chart",
       "overview": {
         "title": "Candle langsung dari venue",
-        "description": "Candle real-time mengalir langsung dari exchange — tanpa perantara. Ganti timeframe, arahkan kursor untuk nilai persis, dan telusuri pergerakan harga."
+        "description": "Candle real-time mengalir langsung dari exchange, tanpa perantara. Ganti timeframe, arahkan kursor untuk nilai persis, dan telusuri pergerakan harga."
       },
       "signals": {
         "title": "Sinyal di setiap penutupan",
@@ -239,18 +239,18 @@
       "eyebrow": "Alert",
       "intro": {
         "title": "Alert yang memantau untuk Anda",
-        "description": "Atur level lalu tinggalkan — saat harga melewatinya, Pairlens memberi tahu Anda di dalam aplikasi dan di desktop begitu itu terjadi."
+        "description": "Atur level lalu tinggalkan. Saat harga melewatinya, Pairlens memberi tahu Anda di dalam aplikasi dan di desktop begitu itu terjadi."
       },
       "build": {
         "title": "Susun trigger Anda sendiri",
-        "description": "Rangkai pair, kondisi, dan aksi menjadi aturan yang presisi — level harga, sinyal terpicu, pergerakan persen — dan tentukan persis bagaimana Anda diberi tahu."
+        "description": "Rangkai pair, kondisi, dan aksi menjadi aturan yang presisi (level harga, sinyal terpicu, pergerakan persen) dan tentukan persis bagaimana Anda diberi tahu."
       }
     },
     "workflows": {
       "eyebrow": "Workflow",
       "intro": {
         "title": "Otomatiskan rutinitas",
-        "description": "Rangkai trigger, kondisi, dan aksi menjadi alur yang bisa diulang — sinyal breakout dapat memeriksa volume, memberi tahu Anda, dan mencatat setup secara otomatis."
+        "description": "Rangkai trigger, kondisi, dan aksi menjadi alur yang bisa diulang: sinyal breakout dapat memeriksa volume, memberi tahu Anda, dan mencatat setup secara otomatis."
       },
       "runs": {
         "title": "Setiap eksekusi, tercatat",
@@ -261,40 +261,40 @@
       "eyebrow": "Indikator & Strategi",
       "code": {
         "title": "Tulis indikator dengan Python sungguhan",
-        "description": "Skrip indikator apa pun dengan Python dan NumPy sungguhan — dikompilasi dan berjalan secara lokal saat Anda mengetik, dengan pratinjau langsung setiap seri."
+        "description": "Skrip indikator apa pun dengan Python dan NumPy sungguhan. Dikompilasi dan berjalan secara lokal saat Anda mengetik, dengan pratinjau langsung setiap seri."
       },
       "chart": {
         "title": "Terapkan ke chart mana pun",
-        "description": "Skrip tersimpan muncul di bawah Custom di pemilih indikator setiap chart — tambahkan ke pasangan mana pun sebagai overlay atau sub-panel, lengkap dengan input."
+        "description": "Skrip tersimpan muncul di bawah Custom di pemilih indikator setiap chart. Tambahkan ke pasangan mana pun sebagai overlay atau sub-panel, lengkap dengan input."
       }
     },
     "accounts": {
       "eyebrow": "Akun",
       "intro": {
         "title": "Hubungkan venue Anda",
-        "description": "Tautkan exchange, dompet, dan broker. API key langsung masuk ke OS keychain Anda — tersimpan di perangkat ini, tidak pernah di server kami."
+        "description": "Tautkan exchange, dompet, dan broker. API key langsung masuk ke OS keychain Anda: tersimpan di perangkat ini, tidak pernah di server kami."
       },
       "balances": {
         "title": "Satu tampilan untuk semuanya",
-        "description": "Saldo di setiap venue yang terhubung digabung menjadi satu gambaran — spot, on-chain, dan saham bersama-sama."
+        "description": "Saldo di setiap venue yang terhubung digabung menjadi satu gambaran: spot, on-chain, dan saham bersama-sama."
       }
     },
     "plugins": {
       "eyebrow": "Plugin",
       "intro": {
         "title": "Perluas terminal",
-        "description": "Connector market, tema, sinyal, dan bot terpasang dari Plugin Store dengan satu klik — terminal Anda berkembang bersama Anda."
+        "description": "Connector market, tema, sinyal, dan bot terpasang dari Plugin Store dengan satu klik. Terminal Anda berkembang bersama Anda."
       },
       "sandbox": {
         "title": "Aman secara default",
-        "description": "Plugin pihak ketiga berjalan dalam sandbox dengan kode yang ditandatangani dan persetujuan jaringan per-host — Anda tetap mengendalikan apa yang bisa mereka akses."
+        "description": "Plugin pihak ketiga berjalan dalam sandbox dengan kode yang ditandatangani dan persetujuan jaringan per-host. Anda tetap mengendalikan apa yang bisa mereka akses."
       }
     },
     "workspaces": {
       "eyebrow": "Ruang Kerja",
       "intro": {
         "title": "Meja kerja Anda, tersimpan",
-        "description": "Susun chart, order book, dan panel menjadi tata letak yang sesuai dengan cara Anda trading — lalu beralih antar meja kerja tersimpan secara instan."
+        "description": "Susun chart, order book, dan panel menjadi tata letak yang sesuai dengan cara Anda trading, lalu beralih antar meja kerja tersimpan secara instan."
       }
     },
     "workspaceStore": {
@@ -308,7 +308,7 @@
       "eyebrow": "Bot",
       "strategy": {
         "title": "Backtest dulu, baru biarkan bot trading",
-        "description": "Bot menjalankan strategi Python yang sama persis dengan yang Anda uji — sinyal yang sama, stop yang sama, kode yang sama — jadi angka dari backtest menggambarkan apa yang benar-benar akan bot lakukan."
+        "description": "Bot menjalankan strategi Python yang sama persis dengan yang Anda uji (sinyal yang sama, stop yang sama, kode yang sama), jadi angka dari backtest menggambarkan apa yang benar-benar akan bot lakukan."
       },
       "running": {
         "title": "Perangkat Anda, kunci Anda",
@@ -323,7 +323,7 @@
       "onClose": "saat penutupan",
       "crossedAbovePrice": "naik melewati {{price}}",
       "conditionCrossesAbove": "naik melewati",
-      "notifyMeDesktopInApp": "Beri tahu aku — desktop + dalam aplikasi",
+      "notifyMeDesktopInApp": "Beri tahu aku: desktop + dalam aplikasi",
       "nodeTrigger": "Pemicu",
       "nodeSignalLabel": "Sinyal: {{signal}}",
       "nodeCondition": "Kondisi",
@@ -335,19 +335,19 @@
       "runStopLossGuard": "Penjaga stop-loss",
       "ranAt": "{{time}} · berjalan",
       "runsLocally": "Berjalan secara lokal",
-      "storedOnDevice": "Disimpan di perangkat ini — tidak pernah di server kami",
+      "storedOnDevice": "Disimpan di perangkat ini, tidak pernah di server kami",
       "osKeychain": "Keychain OS",
       "pluginKindMarketData": "Data pasar",
       "pluginKindTheme": "Tema",
       "pluginKindAutomation": "Otomasi",
       "sandboxedByDefault": "Sandboxed secara default",
       "signedVerified": "Ditandatangani & terverifikasi",
-      "networkAccessApproveHost": "Akses jaringan — Anda menyetujui setiap host",
+      "networkAccessApproveHost": "Akses jaringan: Anda menyetujui setiap host",
       "copiedToWorkspaces": "Disalin ke workspace Anda",
       "statNet": "Net",
       "statMaxDd": "Max DD",
       "sameCodeGoesLive": "Kode yang sama dijalankan live",
-      "runsOnYourMachine": "Berjalan di perangkat Anda — jaga agar tetap menyala",
+      "runsOnYourMachine": "Berjalan di perangkat Anda, jaga agar tetap menyala",
       "botMeanReversion": "Mean Reversion",
       "chainWallet": "Wallet {{chain}}"
     }
@@ -378,7 +378,7 @@
     "ordersLockedRiskLimit": "Order terkunci karena pelanggaran batas risiko. Buka kunci di Pengaturan > Manajemen Risiko.",
     "buyOrdersLockedRiskLimit": "Order beli terkunci karena pelanggaran batas risiko. Buka kunci di Pengaturan > Manajemen Risiko.",
     "positionSizeExceeded": "Order diblokir oleh batas risiko: posisi mencapai {{ratioPct}}% dari portofolio Anda, melebihi batas maksimum {{maxPositionSize}}%. Sesuaikan di Pengaturan > Manajemen Risiko.",
-    "sessionExpired": "Sesi Anda telah berakhir — silakan masuk kembali.",
+    "sessionExpired": "Sesi Anda telah berakhir. Silakan masuk kembali.",
     "startFromTemplate": "Mulai dari template",
     "chips": {
       "osNotification": "Notifikasi Sistem",
@@ -439,7 +439,7 @@
       "title": "Analitik penggunaan",
       "description": "Bantu tingkatkan Pairlens dengan membagikan data penggunaan anonim dan laporan crash. Tidak pernah trade, API key, atau saldo Anda.",
       "toggleDescription": "Hanya berlaku untuk perangkat ini. Menonaktifkannya langsung menghentikan semua analitik.",
-      "notConfigured": "Build ini tidak memiliki kunci analitik yang dikonfigurasi — tidak ada yang pernah dikumpulkan.",
+      "notConfigured": "Build ini tidak memiliki kunci analitik yang dikonfigurasi: tidak ada yang pernah dikumpulkan.",
       "dataTitle": "Data akun Anda",
       "dataSignedOut": "Anda belum masuk, jadi tidak ada data akun di server kami. Semua yang Pairlens ketahui tentang Anda ada di perangkat ini.",
       "exportTitle": "Ekspor data Anda",
@@ -480,7 +480,7 @@
       "title": "Yang disinkronkan ke akunmu",
       "description": "Pilih apa yang harus ditemukan perangkat kedua. Apa pun yang dimatikan tetap di perangkat ini.",
       "deviceOnly": "Sakelar ini hanya berlaku untuk perangkat ini dan tidak pernah ikut disinkronkan.",
-      "nothingDeleted": "Mematikan sesuatu tidak pernah menghapus apa pun. Datanya tetap di perangkat ini, dan salinan yang sudah ada di akunmu dibiarkan utuh — hanya berhenti diperbarui dan menjadi usang.",
+      "nothingDeleted": "Mematikan sesuatu tidak pernah menghapus apa pun. Datanya tetap di perangkat ini, dan salinan yang sudah ada di akunmu dibiarkan utuh: hanya berhenti diperbarui dan menjadi usang.",
       "resumeNote": "Nyalakan lagi dan kedua sisi digabung, perubahan terbaru yang menang. Sesuatu yang kamu hapus saat mati bisa muncul lagi kalau akunmu masih menyimpannya.",
       "cloudOnlyWarning": "Yang ini hanya disimpan di akunmu, jadi mematikannya berarti tidak tercatat di mana pun.",
       "signedOutTitle": "Belum masuk",
@@ -564,16 +564,16 @@
       "thirdPartyAcknowledge": "Saya memahami bahwa registri pihak ketiga mungkin mengandung plugin yang tidak diverifikasi dan saya menerima risikonya.",
       "invalidUrl": "Masukkan URL yang valid (mis. https://registry.example.com).",
       "desktopEgressTitle": "Akses jaringan desktop",
-      "desktopEgressDescription": "Aplikasi desktop memblokir permintaan jaringan ke host yang tidak ada di allow-list. Untuk menjangkau registri ini, berikan akses jaringan — terminal akan dimuat ulang untuk menerapkannya.",
+      "desktopEgressDescription": "Aplikasi desktop memblokir permintaan jaringan ke host yang tidak ada di allow-list. Untuk menjangkau registri ini, berikan akses jaringan. Terminal akan dimuat ulang untuk menerapkannya.",
       "desktopEgressGranted": "Host registri ini memiliki akses jaringan.",
       "desktopEgressGrant": "Izinkan akses jaringan & muat ulang",
       "publisherKeys": "Kunci penerbit tepercaya",
-      "publisherKeysDescription": "Plugin hanya terpasang jika tanda tangannya cocok dengan kunci penerbit tepercaya. Tambahkan kunci di sini untuk mempercayai plugin dari registri self-hosted atau perusahaan. Tambahkan hanya kunci yang Anda terima dari sumber yang Anda percayai — siapa pun yang memegang private key yang cocok dapat menerbitkan plugin yang mungkin meminta akses penuh ke terminal Anda.",
+      "publisherKeysDescription": "Plugin hanya terpasang jika tanda tangannya cocok dengan kunci penerbit tepercaya. Tambahkan kunci di sini untuk mempercayai plugin dari registri self-hosted atau perusahaan. Tambahkan hanya kunci yang Anda terima dari sumber yang Anda percayai: siapa pun yang memegang private key yang cocok dapat menerbitkan plugin yang mungkin meminta akses penuh ke terminal Anda.",
       "publisherKeysEmpty": "Tidak ada kunci kustom. Penerbit resmi Pairlens selalu dipercaya.",
       "publisherKeyIdLabel": "ID Kunci",
       "publisherKeyIdPlaceholder": "acme-plugins-2026",
       "publisherKeyValueLabel": "Kunci publik (Ed25519 base64)",
-      "publisherKeyIdInvalid": "ID kunci berupa huruf kecil, angka, dan tanda hubung (2–64 karakter).",
+      "publisherKeyIdInvalid": "ID kunci berupa huruf kecil, angka, dan tanda hubung (2-64 karakter).",
       "publisherKeyIdReserved": "ID ini dicadangkan untuk kunci bawaan Pairlens.",
       "publisherKeyIdDuplicate": "Kunci dengan ID ini sudah dipercaya.",
       "publisherKeyValueInvalid": "Bukan kunci publik Ed25519 yang valid (diharapkan 32 byte, dikodekan base64).",
@@ -581,7 +581,7 @@
       "publisherKeyRemove": "Hapus",
       "publisherKeyFingerprint": "Fingerprint",
       "publisherKeyConsentTitle": "Percayai penerbit ini?",
-      "publisherKeyConsentBody": "Plugin yang ditandatangani dengan kunci ini akan dapat dipasang di perangkat ini. Penerbit yang berniat jahat dapat mengirim plugin yang meminta kepercayaan penuh — dengan akses ke data plugin lain Anda, kredensial exchange yang tersimpan, dan trading. Bandingkan fingerprint dengan penerbit melalui saluran yang Anda percayai sebelum melanjutkan.",
+      "publisherKeyConsentBody": "Plugin yang ditandatangani dengan kunci ini akan dapat dipasang di perangkat ini. Penerbit yang berniat jahat dapat mengirim plugin yang meminta kepercayaan penuh, dengan akses ke data plugin lain Anda, kredensial exchange yang tersimpan, dan trading. Bandingkan fingerprint dengan penerbit melalui saluran yang Anda percayai sebelum melanjutkan.",
       "publisherKeyConsentConfirm": "Percayai kunci ini",
       "publisherKeyConsentCancel": "Batal",
       "updatesTitle": "Pembaruan Plugin",
@@ -659,7 +659,7 @@
     },
     "connection": {
       "title": "Koneksi Data Market",
-      "description": "Data market mengalir langsung dari exchange melalui plugin connector yang terpasang — tanpa server perantara.",
+      "description": "Data market mengalir langsung dari exchange melalui plugin connector yang terpasang, tanpa server perantara.",
       "status": {
         "connected": "Terhubung",
         "connecting": "Menghubungkan…",
@@ -709,13 +709,13 @@
       "confirmHoldDescription": "Tahan tombol kirim sampai terisi penuh. Order live ditahan sedikit lebih lama daripada order paper.",
       "confirmClick": "Sekali klik",
       "confirmClickDescription": "Klik pertama langsung mengirim. Tidak ada jeda antara salah klik dan order sungguhan.",
-      "confirmGestureNote": "Batas risiko tetap berlaku — yang berubah caranya, bukan pengamannya.",
+      "confirmGestureNote": "Batas risiko tetap berlaku. Yang berubah caranya, bukan pengamannya.",
       "aiPermissions": "Izin trading AI",
       "aiPermissionsDescription": "Apa yang boleh dilakukan asisten AI tanpa bertanya. Order di luar izin ini selalu memerlukan konfirmasi Anda pada kartu di chat, dan setiap order, disetujui otomatis atau tidak, tetap diberlakukan sesuai batas risiko di atas.",
       "aiPaperAuto": "Setujui otomatis trade paper",
       "aiPaperAutoDescription": "Hanya dana simulasi. Asisten menempatkan order paper tanpa kartu konfirmasi.",
       "aiLiveAuto": "Setujui otomatis trade live",
-      "aiLiveAutoEmpty": "Tidak ada exchange yang diberi izin — setiap trade live memerlukan konfirmasi Anda. Berikan izin exchange dari kartu order dengan “Jangan tanya lagi”.",
+      "aiLiveAutoEmpty": "Tidak ada exchange yang diberi izin: setiap trade live memerlukan konfirmasi Anda. Berikan izin exchange dari kartu order dengan “Jangan tanya lagi”.",
       "aiLiveAutoDescription": "Dana nyata. Asisten menempatkan order live di exchange berikut tanpa kartu konfirmasi:",
       "aiLiveAutoRevoke": "Cabut {{market}}"
     },
@@ -723,32 +723,32 @@
       "title": "Pairlens Intelligence",
       "description": "Asisten AI terkelola, dengan riset mendalam dan pencarian web. Tanpa kunci API.",
       "signInFirst": "Masuk untuk mengelola langganan Pairlens Intelligence Anda.",
-      "selfHosted": "Penagihan tidak dikonfigurasi di server ini — fitur AI terkelola berjalan tanpa langganan.",
+      "selfHosted": "Penagihan tidak dikonfigurasi di server ini. Fitur AI terkelola berjalan tanpa langganan.",
       "loadError": "Tidak dapat memuat status penagihan Anda. Silakan coba lagi.",
       "freePlan": "Gratis",
-      "active": "Aktif — diperpanjang otomatis.",
-      "complimentary": "Akses gratis — kontributor inti. Pemakaian tidak ditagih.",
-      "endsOn": "Dibatalkan — akses berakhir pada {{date}}.",
+      "active": "Aktif. Diperpanjang otomatis.",
+      "complimentary": "Akses gratis: kontributor inti. Pemakaian tidak ditagih.",
+      "endsOn": "Dibatalkan: akses berakhir pada {{date}}.",
       "planCredits": "{{credits}} kredit / bulan",
       "perMonth": "/bln",
       "manage": "Kelola langganan",
       "upgradeToMax": "Tingkatkan ke Max",
       "usageTitle": "Anggaran pemakaian bulanan",
-      "usageDescription": "Obrolan AI, riset, dan pencarian web memakai anggaran kredit yang sama. Anggaran direset setiap siklus penagihan — kredit yang tidak terpakai tidak dibawa ke bulan berikutnya.",
+      "usageDescription": "Obrolan AI, riset, dan pencarian web memakai anggaran kredit yang sama. Anggaran direset setiap siklus penagihan. Kredit yang tidak terpakai tidak dibawa ke bulan berikutnya.",
       "creditsUsed": "{{used}} dari {{granted}} kredit terpakai",
       "resetsOn": "Direset {{date}}",
       "webResearchNote": "Setiap pencarian web terkelola memakai {{credits}} kredit ditambah token dari permintaan yang memicunya.",
-      "byokNote": "Lebih suka penyedia AI sendiri? Plugin dengan kunci sendiri (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) selalu gratis — hubungkan dari halaman Plugin.",
+      "byokNote": "Lebih suka penyedia AI sendiri? Plugin dengan kunci sendiri (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) selalu gratis. Hubungkan dari halaman Plugin.",
       "checkoutOpened": "Pembayaran dibuka di browser Anda",
       "checkoutOpenedDescription": "Langganan Anda akan aktif di sini begitu pembayaran selesai.",
-      "checkoutFailed": "Tidak dapat memulai pembayaran — silakan coba lagi.",
+      "checkoutFailed": "Tidak dapat memulai pembayaran. Silakan coba lagi.",
       "portalFailed": "Tidak dapat membuka portal penagihan.",
-      "taxNote": "Harga belum termasuk pajak — dihitung saat pembayaran berdasarkan lokasi Anda.",
+      "taxNote": "Harga belum termasuk pajak: dihitung saat pembayaran berdasarkan lokasi Anda.",
       "packsTitle": "Kredit ekstra",
       "packsDescription": "Isi ulang sekali beli yang ditambahkan ke anggaran bulanan Anda. Kredit isi ulang kedaluwarsa 30 hari setelah pembelian dan tidak diperpanjang.",
-      "packActive": "{{credits}} kredit ekstra — kedaluwarsa {{date}}",
+      "packActive": "{{credits}} kredit ekstra, kedaluwarsa {{date}}",
       "packAddedToastTitle": "Kredit ekstra ditambahkan",
-      "packAddedToastDescription": "Paket kredit Anda sudah masuk ke saldo — kredit paket kedaluwarsa 30 hari setelah pembelian."
+      "packAddedToastDescription": "Paket kredit Anda sudah masuk ke saldo. Kredit paket kedaluwarsa 30 hari setelah pembelian."
     },
     "about": {
       "desktop": "Desktop",
@@ -814,14 +814,14 @@
         "sendTest": "Kirim notifikasi uji",
         "testTitle": "Pairlens",
         "testBody": "Beginilah tampilan sebuah peringatan.",
-        "testSent": "Terkirim — periksa pusat notifikasi Anda.",
+        "testSent": "Terkirim. Periksa pusat notifikasi Anda.",
         "testFailed": "Tidak dapat menampilkan notifikasi."
       },
       "telegram": {
         "title": "Telegram",
         "description": "Kirim peringatan ke obrolan Telegram agar sampai ke ponsel Anda saat Anda tidak sedang melihat terminal.",
         "runningNote": "Peringatan hanya berjalan selama Pairlens berjalan. Di desktop, aplikasi bisa tetap berjalan di latar belakang setelah jendelanya ditutup.",
-        "privacyNote": "Token bot tetap di perangkat ini — di keychain sistem pada desktop, dan di brankas terenkripsi pada peramban. Token tidak pernah dikirim ke Pairlens.",
+        "privacyNote": "Token bot tetap di perangkat ini: di keychain sistem pada desktop, dan di brankas terenkripsi pada peramban. Token tidak pernah dikirim ke Pairlens.",
         "setup": {
           "step1": "Buka obrolan dengan @BotFather lalu kirim /newbot.",
           "step2": "Pilih nama dan username untuk bot Anda.",
@@ -866,9 +866,9 @@
       "setPassword": "Atur kata sandi",
       "changePassword": "Ubah kata sandi",
       "biometricUnlockTitle": "Buka dengan biometrik",
-      "biometricUnlockDescription": "Buka layar kunci dengan cara buka kunci perangkat itu sendiri — Face ID, Touch ID, sidik jari, Windows Hello — alih-alih mengetik kata sandi.",
+      "biometricUnlockDescription": "Buka layar kunci dengan cara buka kunci perangkat itu sendiri (Face ID, Touch ID, sidik jari, Windows Hello) alih-alih mengetik kata sandi.",
       "biometricUnlockScreenOnly": "Kata sandimu tetap berlaku, dan tetap satu-satunya jalan masuk kalau sensor berhenti mengenalimu.",
-      "biometricUnlockVaultNote": "Ini hanya membuka layar. Kunci yang tersimpan tetap meminta kata sandinya sendiri — tambahkan passkey ke brankasmu di bawah agar keduanya terbuka dengan satu gerakan.",
+      "biometricUnlockVaultNote": "Ini hanya membuka layar. Kunci yang tersimpan tetap meminta kata sandinya sendiri. Tambahkan passkey ke brankasmu di bawah agar keduanya terbuka dengan satu gerakan.",
       "biometricUnlockCoveredByVault": "Brankasmu sudah bisa dibuka dengan passkey atau Touch ID, dan itu membuka layar kunci juga. Jalan kedua di sini justru lebih sedikit.",
       "turnOff": "Matikan kunci",
       "turnOffDescription": "Masukkan kata sandi saat ini untuk melepas kunci dari perangkat ini.",
@@ -905,30 +905,30 @@
       "lockNow": "Kunci",
       "resetButton": "Setel ulang dan hapus",
       "resetConfirmTitle": "Hapus perangkat ini?",
-      "resetConfirmBody": "Ini menghapus setiap kunci API bursa, kunci dompet, ruang kerja, tata letak grafik, dan obrolan di komputer ini. Tidak bisa dibatalkan dan tidak ada pemulihan kata sandi. Kalau kamu masuk akun, pengaturan yang tersinkron kembali saat kamu masuk lagi — kunci API dan dompet tidak pernah, karena hanya tersimpan di sini.",
+      "resetConfirmBody": "Ini menghapus setiap kunci API bursa, kunci dompet, ruang kerja, tata letak grafik, dan obrolan di komputer ini. Tidak bisa dibatalkan dan tidak ada pemulihan kata sandi. Kalau kamu masuk akun, pengaturan yang tersinkron kembali saat kamu masuk lagi. Kunci API dan dompet tidak pernah, karena hanya tersimpan di sini.",
       "resetConfirmPhrase": "Ketik {{phrase}} untuk konfirmasi.",
       "vaultTitle": "Brankas kredensial",
       "vaultDescription": "Enkripsi kunci API bursa dan kunci dompet Anda dengan kata sandi atau passkey.",
       "vaultWaysTitle": "Cara membuka kunci",
-      "vaultAlsoUnlocks": "Semuanya juga membuka layar kunci terminal — satu kata sandi untuk keduanya.",
-      "biometricNeedsVault": "Siapkan brankas dengan kata sandi terlebih dahulu — Touch ID ditambahkan setelahnya.",
+      "vaultAlsoUnlocks": "Semuanya juga membuka layar kunci terminal: satu kata sandi untuk keduanya.",
+      "biometricNeedsVault": "Siapkan brankas dengan kata sandi terlebih dahulu. Touch ID ditambahkan setelahnya.",
       "vaultStatusNone": "Belum disiapkan.",
       "vaultStatusReady_one": "Dilindungi oleh 1 cara membuka.",
       "vaultStatusReady_other": "Dilindungi oleh {{count}} cara membuka.",
       "vaultSetUp": "Siapkan brankas",
       "vaultRemoveProtector": "Hapus",
       "vaultRemoveLastBlocked": "Ini satu-satunya cara masuk ke brankas Anda. Tambahkan yang lain sebelum menghapusnya.",
-      "vaultRemoveBiometricOnlyBlocked": "Touch ID tidak boleh jadi satu-satunya cara masuk — sidik jari di Mac ini bisa berubah. Simpan kata sandi atau passkey.",
-      "vaultProtectsBody": "Dengan brankas, kunci API dan dompet Anda disimpan terenkripsi. Siapa pun yang menyalin profil peramban ini — atau penyimpanan perangkat ini — hanya mendapat teks tersandi yang tidak bisa dibuka tanpa kata sandi atau passkey Anda.",
+      "vaultRemoveBiometricOnlyBlocked": "Touch ID tidak boleh jadi satu-satunya cara masuk: sidik jari di Mac ini bisa berubah. Simpan kata sandi atau passkey.",
+      "vaultProtectsBody": "Dengan brankas, kunci API dan dompet Anda disimpan terenkripsi. Siapa pun yang menyalin profil peramban ini (atau penyimpanan perangkat ini) hanya mendapat teks tersandi yang tidak bisa dibuka tanpa kata sandi atau passkey Anda.",
       "vaultCeiling": "Ini tidak melindungi kunci saat Anda memakainya. Apa pun yang berjalan di dalam halaman ini bisa meminta kunci pada brankas yang terbuka, persis seperti aplikasi. Untuk kunci paling berharga, aplikasi desktop tetap rekomendasinya.",
-      "vaultNoRecovery": "Tidak ada pemulihan. Kehilangan semua cara masuk berarti kunci terenkripsi hilang — satu-satunya jalan kembali ke aplikasi menghapus data perangkat ini.",
+      "vaultNoRecovery": "Tidak ada pemulihan. Kehilangan semua cara masuk berarti kunci terenkripsi hilang: satu-satunya jalan kembali ke aplikasi menghapus data perangkat ini.",
       "vaultDesktopToggleHint": "Kunci Anda sudah ada di keychain sistem. Aktifkan ini untuk menambahkan kata sandi atau passkey di atasnya.",
       "vaultDesktopOptOutTitle": "Matikan brankas kredensial?",
       "vaultDesktopOptOutBody": "Kunci Anda kembali dilindungi oleh keychain sistem saja. Tidak ada yang dihapus, dan Anda bisa mengaktifkan brankas lagi nanti.",
       "vaultDesktopOptOutConfirm": "Matikan brankas",
       "vaultMigrated_one": "1 kunci yang sudah ada dipindahkan ke brankas.",
       "vaultMigrated_other": "{{count}} kunci yang sudah ada dipindahkan ke brankas.",
-      "vaultMigrationFailed": "Penyiapan brankas belum selesai. Kunci Anda masih bisa dibaca — buka brankas untuk menyelesaikannya.",
+      "vaultMigrationFailed": "Penyiapan brankas belum selesai. Kunci Anda masih bisa dibaca. Buka brankas untuk menyelesaikannya.",
       "vaultSharedBackoff": "Brankas dan layar kunci berbagi satu batas percobaan, jadi terlalu banyak kata sandi salah menunda keduanya.",
       "vaultCliNote": "Alat baris perintah menerima kunci API sebagai argumen dan tidak pernah membaca brankas.",
       "hardLockTitle": "Kunci penuh",
@@ -969,7 +969,7 @@
     "submit": "Kirim laporan",
     "sent": "Laporan terkirim. Terima kasih.",
     "attached": "Dikirim dengan v{{version}} · {{platform}} · {{route}}",
-    "consentNotice": "Laporan dikirim lewat analitik penggunaan, yang mati di perangkat ini. Mengirim akan menyalakannya — bisa dimatikan lagi di pengaturan Privasi.",
+    "consentNotice": "Laporan dikirim lewat analitik penggunaan, yang mati di perangkat ini. Mengirim akan menyalakannya, bisa dimatikan lagi di pengaturan Privasi.",
     "consentEnabledNotice": "Sekarang aktif di perangkat ini, jadi laporanmu bisa sampai ke kami. Bisa dimatikan lagi kapan saja di pengaturan Privasi.",
     "enableAndSend": "Nyalakan analitik & kirim",
     "unavailableNotice": "Build ini tidak punya kunci analitik, jadi laporan tidak bisa dikirim dari aplikasi. Salin laporanmu dan buka issue di GitHub.",
@@ -980,7 +980,7 @@
     "tabSurvey": "Beri masukan",
     "optional": "(opsional)",
     "surveySubmit": "Kirim masukan",
-    "surveySent": "Terima kasih — ini sangat membantu.",
+    "surveySent": "Terima kasih, ini sangat membantu.",
     "surveyOpenPlaceholder": "Apa yang ingin kamu ubah, tambah, atau hapus",
     "surveyOtherPlaceholder": "Ceritakan lebih lanjut"
   },
@@ -1198,7 +1198,7 @@
     "benefits": {
       "cloud": {
         "title": "Preferensi cloud",
-        "description": "Pengaturan Anda tersimpan di akun Anda — perangkat apa pun terasa seperti milik Anda dalam hitungan detik."
+        "description": "Pengaturan Anda tersimpan di akun Anda: perangkat apa pun terasa seperti milik Anda dalam hitungan detik."
       },
       "sync": {
         "title": "Sinkronisasi lintas perangkat",
@@ -1340,7 +1340,7 @@
     "autoApprovedNote": "Disetujui otomatis ({{mode}} · jangan tanya lagi aktif)",
     "turnOff": "Matikan",
     "autoApproving": "Menyetujui order {{mode}} secara otomatis…",
-    "liveOrderWarning": "Order live — dana sungguhan, ditegakkan sesuai batas risiko Anda.",
+    "liveOrderWarning": "Order live: dana sungguhan, ditegakkan sesuai batas risiko Anda.",
     "dontAskAgainPaper": "Jangan tanya lagi untuk trading paper",
     "dontAskAgainLive": "Jangan tanya lagi untuk trading live di {{market}}",
     "placing": "Memasang…",
@@ -1355,7 +1355,7 @@
     "keep": "Simpan",
     "tradingUnavailable": "Trading tidak tersedia.",
     "noCredentialsForMarket": "Tidak ada kredensial yang terhubung untuk {{market}}. Tambahkan API key di Accounts untuk trading live.",
-    "scheduledCheckPrefix": "[Pemeriksaan terjadwal — Anda mengatur ini {{minutes}} menit lalu]",
+    "scheduledCheckPrefix": "[Pemeriksaan terjadwal: Anda mengatur ini {{minutes}} menit lalu]",
     "toolFailed": "Tool gagal"
   },
   "chart": {
@@ -1590,8 +1590,8 @@
     "keepAwakeIdle": "Tidur otomatis akan diblokir begitu ada bot yang aktif.",
     "keepAwakeOff": "Komputer ini boleh tidur, dan bot Anda ikut berhenti saat itu.",
     "keepAwakeUnsupported": "Hanya aplikasi desktop yang bisa mencegah tidur.",
-    "localBody": "Strategi Anda dieksekusi di sini, di dalam Pairlens — bukan di server yang kami operasikan. Itulah yang membuat kunci dan logika Anda tetap milik Anda. Konsekuensinya nyata: tutup Pairlens atau biarkan komputer ini tidur, bot ikut berhenti, dan posisi yang sedang terbuka dibiarkan tanpa pengawasan sampai Anda kembali.",
-    "emptyDescription": "Bot menjalankan salah satu skrip strategi Anda di sebuah market. Mulai dari strategi siap pakai, atau tulis sendiri dalam Python — setiap bot baru trading di mode paper sampai Anda mengaktifkannya live.",
+    "localBody": "Strategi Anda dieksekusi di sini, di dalam Pairlens, bukan di server yang kami operasikan. Itulah yang membuat kunci dan logika Anda tetap milik Anda. Konsekuensinya nyata: tutup Pairlens atau biarkan komputer ini tidur, bot ikut berhenti, dan posisi yang sedang terbuka dibiarkan tanpa pengawasan sampai Anda kembali.",
+    "emptyDescription": "Bot menjalankan salah satu skrip strategi Anda di sebuah market. Mulai dari strategi siap pakai, atau tulis sendiri dalam Python. Setiap bot baru trading di mode paper sampai Anda mengaktifkannya live.",
     "emptyHeadline": "Biarkan strategi yang mengawasi grafik untukmu",
     "templateEmaCross": "Mengikuti tren dua arah: long di atas persilangan, short di bawahnya.",
     "templateRsiReversion": "Membeli koreksi jenuh jual, tapi hanya selama harga bertahan di atas tren panjangnya.",
@@ -1665,8 +1665,8 @@
     "createBot": "Buat bot",
     "back": "Kembali",
     "next": "Berikutnya",
-    "stepProgress": "Langkah {{current}} dari {{total}} — {{title}}",
-    "strategyIntro": "Bot menjalankan skrip strategi — Python yang menyatakan kapan masuk dan kapan keluar. Pilih strategi siap pakai di bawah untuk memulai; kodenya milik Anda, bisa dibuka dan diedit kapan saja.",
+    "stepProgress": "Langkah {{current}} dari {{total}}: {{title}}",
+    "strategyIntro": "Bot menjalankan skrip strategi: Python yang menyatakan kapan masuk dan kapan keluar. Pilih strategi siap pakai di bawah untuk memulai; kodenya milik Anda, bisa dibuka dan diedit kapan saja.",
     "stepStrategy": "Strategi",
     "stepMarket": "Market",
     "stepSizing": "Ukuran",
@@ -1676,8 +1676,8 @@
     "groupTemplates": "Strategi siap pakai",
     "groupUndeployable": "Belum bisa jalan sebagai bot",
     "writeYourOwn": "Tulis strategi Anda sendiri dalam Python",
-    "reasonIndicator": "Indikator — butuh meta strategy(...) agar bisa jalan sebagai bot",
-    "reasonNotRun": "Belum pernah dijalankan — buka di Indikator & Strategi dan jalankan sekali",
+    "reasonIndicator": "Indikator: butuh meta strategy(...) agar bisa jalan sebagai bot",
+    "reasonNotRun": "Belum pernah dijalankan: buka di Indikator & Strategi dan jalankan sekali",
     "openIndicators": "Buka Indikator & Strategi",
     "marketHint": "Bot mengevaluasi candle yang sudah tertutup pada pair ini di timeframe tersebut.",
     "sizingKind": "Ukuran tiap entri berdasarkan",
@@ -1702,7 +1702,7 @@
     "armDescription": "“{{name}}” akan mengirim order {{pair}} sungguhan di {{venue}} mulai sekarang, tanpa konfirmasi per transaksi.",
     "armVenueLabel": "Venue",
     "armCredentialLabel": "Kredensial",
-    "armMachineCaveat": "Pairlens harus tetap terbuka di perangkat ini. Jika ditutup atau komputer tidur, bot berhenti — dan posisi yang sudah dibukanya tetap terbuka tanpa pengelolaan sampai Anda kembali.",
+    "armMachineCaveat": "Pairlens harus tetap terbuka di perangkat ini. Jika ditutup atau komputer tidur, bot berhenti, dan posisi yang sudah dibukanya tetap terbuka tanpa pengelolaan sampai Anda kembali.",
     "armConfirmLabel": "Ketik {{phrase}} untuk konfirmasi",
     "armConfirmPhrase": "AKTIFKAN LIVE",
     "armConfirm": "Aktifkan live",
@@ -1718,14 +1718,14 @@
     "deployAsBot": "Pasang sebagai bot",
     "kindDraft": "Draf",
     "templatesIndicators": "Template indikator",
-    "templatesStrategies": "Template strategi — bisa jalan sebagai bot",
+    "templatesStrategies": "Template strategi: bisa jalan sebagai bot",
     "strategyBadgeHint": "Mendeklarasikan titik masuk dan keluar, jadi bisa di-backtest dan dipasang sebagai bot.",
     "indicatorBadgeHint": "Hanya menggambar nilai. Tambahkan meta strategy(...) dengan titik masuk dan keluar untuk memasangnya sebagai bot.",
     "startFromScratch": "Mulai dari nol",
     "blankName": "Skrip Baru",
-    "sidebarEmpty": "Belum ada skrip — mulai dari nol atau dari template",
+    "sidebarEmpty": "Belum ada skrip: mulai dari nol atau dari template",
     "entryFile": "utama",
-    "entryFileHint": "Modul utama — mendefinisikan meta dan compute(ctx)",
+    "entryFileHint": "Modul utama: mendefinisikan meta dan compute(ctx)",
     "fileActions": "Aksi untuk {{file}}",
     "newFile": "File baru",
     "newFileTitle": "File Python baru",
@@ -1737,7 +1737,7 @@
     "deleteFileTitle": "Hapus file?",
     "deleteFileDescription": "Ini akan menghapus permanen “{{file}}”.",
     "scriptActions": "Aksi skrip",
-    "statusReady": "Siap — digunakan oleh chart",
+    "statusReady": "Siap: digunakan oleh chart",
     "statusError": "Eksekusi terakhir gagal",
     "neverRun": "Belum pernah dijalankan",
     "updated": "Diperbarui {{time}}",
@@ -1784,7 +1784,7 @@
     "errorTitle": "Kesalahan skrip",
     "noCandles": "Tidak ada candle yang dikembalikan untuk {{pair}} di {{market}}",
     "previewEmptyTitle": "Jalankan untuk pratinjau",
-    "previewEmptyDescription": "Jalankan skrip untuk melihatnya di chart live. Eksekusi pertama akan memulai runtime Python — butuh beberapa detik.",
+    "previewEmptyDescription": "Jalankan skrip untuk melihatnya di chart live. Eksekusi pertama akan memulai runtime Python, butuh beberapa detik.",
     "metaPaneOverlay": "Overlay",
     "metaPaneSeparate": "Sub-panel",
     "metaMinBars": "min {{count}} bar",
@@ -1823,21 +1823,21 @@
     "exportDescription": "Mengemas indikator ini sebagai zip plugin Pairlens yang dapat Anda bagikan. Siapa pun dapat memasangnya dari halaman Plugin.",
     "exportName": "Nama plugin",
     "exportId": "ID Plugin",
-    "exportIdHint": "Huruf kecil, angka, dan tanda hubung (2–64 karakter).",
+    "exportIdHint": "Huruf kecil, angka, dan tanda hubung (2-64 karakter).",
     "exportLocationHint": "Disimpan ke folder Unduhan Anda",
     "exportDownload": "Unduh zip",
     "exportSuccess": "Diekspor {{file}}",
     "exportSavedTo": "Disimpan di {{folder}}. Pasang melalui Plugin → Impor plugin.",
     "exportSavedToDownloads": "Disimpan ke folder Unduhan Anda. Pasang melalui Plugin → Impor plugin.",
     "emptyTitle": "Tulis indikator dan strategi trading",
-    "emptyDescription": "Tulis indikator chart dan strategi bot dalam Python — jalankan pada data market live, gunakan pada chart Anda, dan jadikan strategi sebagai bot trading.",
+    "emptyDescription": "Tulis indikator chart dan strategi bot dalam Python. Jalankan pada data market live, gunakan pada chart Anda, dan jadikan strategi sebagai bot trading.",
     "templateSma": "Satu moving average pada sumber pilihanmu. Skrip terkecil yang tetap berguna.",
     "templateRsi": "Osilator di panel bawah dengan zona jenuh beli dan jenuh jual, plus kondisi alert.",
     "templateMacd": "Dua garis dan histogram yang mewarnai dirinya sesuai momentumnya sendiri.",
     "templateBollinger": "Pita dengan bagian tengah berarsir, dipecah ke dua berkas agar import masuk akal.",
     "templateSupertrend": "Garis yang berganti warna mengikuti tren dan menandai titik masuk di candle.",
     "templateHtf": "EMA harian yang digambar di timeframe mana pun, ditahan sampai candle atasnya tutup.",
-    "emptyFootnote": "Python berjalan lokal di browser — kode Anda tidak pernah meninggalkan mesin ini. Skrip strategi bisa dipasang sebagai bot begitu selesai dijalankan.",
+    "emptyFootnote": "Python berjalan lokal di browser: kode Anda tidak pernah meninggalkan mesin ini. Skrip strategi bisa dipasang sebagai bot begitu selesai dijalankan.",
     "pickScript": "Pilih skrip di sebelah kiri untuk membukanya.",
     "versionHistory": "Riwayat versi",
     "versionHistoryDescription": "Setiap perubahan membuat snapshot file Anda sebelum menimpanya, jadi apa pun yang tertimpa tidak benar-benar hilang.",
@@ -1862,7 +1862,7 @@
     "versionClearTitle": "Hapus riwayat versi?",
     "versionClearDescription": "Ini menghapus permanen setiap versi tersimpan dari “{{name}}”. File saat ini tidak diubah.",
     "sdkRefTitle": "Referensi SDK",
-    "sdkRefDescription": "Semua yang disediakan SDK Python pairlens — cari berdasarkan nama atau fungsinya.",
+    "sdkRefDescription": "Semua yang disediakan SDK Python pairlens. Cari berdasarkan nama atau fungsinya.",
     "sdkRefSearchPlaceholder": "Cari fungsi dan dokumentasi…",
     "sdkRefAll": "Semua",
     "sdkRefApi": "API",
@@ -1877,14 +1877,14 @@
     "sdkRefTaPrice": "Pembantu candle dan harga",
     "sdkRefInsert": "Sisipkan",
     "sdkRefEmpty": "Tidak ada yang cocok dengan “{{query}}”",
-    "sdkRefEmptyHint": "Pencarian membaca nama dan deskripsi — coba kata yang lebih pendek.",
+    "sdkRefEmptyHint": "Pencarian membaca nama dan deskripsi. Coba kata yang lebih pendek.",
     "librariesTitle": "Pustaka Python",
-    "librariesDescription": "Yang dapat diimpor skrip — pilihan terkurasi, paket bawaan runtime, dan wheel Python murni apa pun dari PyPI.",
+    "librariesDescription": "Yang dapat diimpor skrip: pilihan terkurasi, paket bawaan runtime, dan wheel Python murni apa pun dari PyPI.",
     "librariesSearchPlaceholder": "Cari pustaka…",
     "librariesCurated": "Terkurasi",
     "librariesRuntime": "Bawaan runtime",
     "librariesLoading": "Memuat daftar paket…",
-    "librariesError": "Tidak dapat memuat daftar paket — periksa koneksi Anda dan coba lagi.",
+    "librariesError": "Tidak dapat memuat daftar paket. Periksa koneksi Anda dan coba lagi.",
     "librariesEmpty": "Tidak ada yang cocok dengan “{{query}}”",
     "librariesPreloadedBadge": "Dimuat awal",
     "librariesRuntimeBadge": "Runtime",
@@ -1899,7 +1899,7 @@
     "importNameLabel": "Nama",
     "importPasteLabel": "Kode Python",
     "importPastePlaceholder": "Tempel skrip indikator di sini…",
-    "importNotIndicator": "Ini tidak terlihat seperti indikator Pairlens — seharusnya mendefinisikan meta = indicator(…) dan compute(ctx). Anda tetap bisa mengimpornya dan memperbaikinya di editor.",
+    "importNotIndicator": "Ini tidak terlihat seperti indikator Pairlens: seharusnya mendefinisikan meta = indicator(…) dan compute(ctx). Anda tetap bisa mengimpornya dan memperbaikinya di editor.",
     "importFileHint": "Skrip .py, atau paket plugin .zip yang diekspor dari Pairlens.",
     "importChooseFile": "Pilih berkas",
     "importForkHint": "Salin indikator dari plugin terpasang ke skrip Anda sendiri yang bisa diedit.",
@@ -1911,20 +1911,20 @@
     "importError": {
       "empty": "Tidak ada yang bisa diimpor.",
       "binary": "Berkas itu bukan kode Python.",
-      "tooLarge": "Terlalu besar — indikator dibatasi {{limit}} KB.",
-      "tooManyFiles": "Terlalu banyak berkas — sebuah indikator maksimal {{limit}}.",
+      "tooLarge": "Terlalu besar: indikator dibatasi {{limit}} KB.",
+      "tooManyFiles": "Terlalu banyak berkas: sebuah indikator maksimal {{limit}}.",
       "badZip": "Berkas itu tidak bisa dibaca sebagai zip.",
       "invalidPath": "“{{path}}” bukan jalur modul yang valid. Gunakan nama modul Python berakhiran .py, di dalam folder indikator.",
       "duplicatePath": "Dua berkas memakai jalur “{{path}}” yang sama.",
-      "noEntry": "Tidak bisa menentukan berkas mana yang jadi modul utama — beri nama {{entry}}.",
+      "noEntry": "Tidak bisa menentukan berkas mana yang jadi modul utama. Beri nama {{entry}}.",
       "noIndicators": "Plugin itu tidak membawa skrip indikator yang bisa diimpor. Pasang dari halaman Plugin lalu fork di sana.",
       "unsupportedLanguage": "Indikator yang ditulis dalam {{language}} tidak bisa diimpor.",
       "malformedDescriptor": "Data indikator itu rusak.",
       "unknown": "Impor gagal."
     },
     "syntaxErrorDiagnostic": "Error sintaks",
-    "missingMetaDiagnostic": "main.py tidak mendefinisikan `meta = indicator(...)` di level teratas — chart tidak punya apa pun untuk digambar.",
-    "missingComputeDiagnostic": "main.py tidak mendefinisikan `def compute(ctx)` di level teratas — script akan gagal dimuat."
+    "missingMetaDiagnostic": "main.py tidak mendefinisikan `meta = indicator(...)` di level teratas, chart tidak punya apa pun untuk digambar.",
+    "missingComputeDiagnostic": "main.py tidak mendefinisikan `def compute(ctx)` di level teratas, script akan gagal dimuat."
   },
   "indicators": {
     "title": "Tambah Indikator",
@@ -2129,7 +2129,7 @@
     "selectWalletOrders": "Pilih dompet untuk melihat order",
     "selectWalletFills": "Pilih dompet untuk melihat fill",
     "selectWalletBalances": "Pilih dompet untuk melihat saldo",
-    "spotNoPositions": "Mode spot — tidak ada posisi margin",
+    "spotNoPositions": "Mode spot: tidak ada posisi margin",
     "balances": "Saldo",
     "noBalances": "Tidak ada data saldo",
     "total": "Total",
@@ -2196,19 +2196,19 @@
     "choppy": "Bergejolak",
     "upsell": {
       "priceMonthly": "${{price}}/bln",
-      "taxNotice": "Harga belum termasuk pajak — dihitung saat checkout.",
+      "taxNotice": "Harga belum termasuk pajak, dihitung saat checkout.",
       "defaultTitle": "Buka Pairlens Intelligence",
       "defaultDescription": "Asisten AI terkelola, dengan riset mendalam dan pencarian web, tanpa perlu mengurus kunci API. Setiap paket mencakup kuota penggunaan bulanan yang dibagi antara chat, riset, dan pencarian web.",
-      "byokNote": "Lebih suka penyedia sendiri? Hubungkan kunci Anthropic, OpenAI, Groq, atau OpenRouter di <plugins>Plugin</plugins> — AI dengan kunci sendiri selalu gratis.",
+      "byokNote": "Lebih suka penyedia sendiri? Hubungkan kunci Anthropic, OpenAI, Groq, atau OpenRouter di <plugins>Plugin</plugins>. AI dengan kunci sendiri selalu gratis.",
       "checkoutOpenedTitle": "Checkout dibuka di browser Anda",
       "checkoutActivates": "Langganan Anda aktif di sini begitu pembayaran selesai.",
-      "checkoutStartError": "Checkout gagal dimulai — coba lagi.",
+      "checkoutStartError": "Checkout gagal dimulai. Coba lagi.",
       "subscriptionRequiredTitle": "Perlu langganan Pairlens Intelligence",
       "subscriptionRequiredBody": "AI yang dihosting berjalan dengan paket Intelligence. Berlangganan di bawah, atau hubungkan kunci penyedia AI-mu sendiri di Plugin.",
       "budgetUsedUpTitle": "Kuota penggunaan bulanan habis",
       "budgetUsedBody": "Kredit Intelligence untuk siklus ini sudah habis.",
       "budgetResetsOn": "Kuota Anda akan direset pada {{date}}.",
-      "topUpHint": "Isi ulang dengan paket kredit untuk melanjutkan — kredit paket kedaluwarsa 30 hari setelah pembelian.",
+      "topUpHint": "Isi ulang dengan paket kredit untuk melanjutkan. Kredit paket kedaluwarsa 30 hari setelah pembelian.",
       "upgradeToMaxHint": "Tingkatkan ke {{label}} untuk {{credits}} kredit per bulan.",
       "manageSubscription": "Kelola langganan",
       "portalError": "Portal penagihan gagal dibuka.",
@@ -2453,16 +2453,16 @@
     "disableCoreDescription": "Pairlens Core menyediakan chart, order book, market, dan sebagian besar panel bawaan. Menonaktifkannya akan menyembunyikan panel-panel tersebut dan meninggalkan terminal hampir kosong sampai Anda mengaktifkannya kembali. Lanjutkan?",
     "disableAnyway": "Tetap nonaktifkan",
     "buildOwnTitle": "Bangun plugin Anda sendiri",
-    "buildOwnDescription": "Pairlens adalah platform terbuka. Buat scaffold plugin, build, dan muat secara lokal — tanpa registri diperlukan.",
+    "buildOwnDescription": "Pairlens adalah platform terbuka. Buat scaffold plugin, build, dan muat secara lokal, tanpa registri diperlukan.",
     "buildStepScaffold": "Scaffold plugin baru",
     "buildStepScaffoldNote": "Di dalam monorepo ini, gunakan: bun run create:plugin my-plugin",
     "buildStepBuild": "Build & kemas",
     "buildStepBuildNote": "Menghasilkan satu file .zip (manifest.json + module.js + styles.css opsional).",
     "buildStepInstall": "Pasang",
     "buildStepInstallNote": "Buka tab Terpasang dan gunakan",
-    "buildStepInstallNote2": "— atau, di desktop, seret folder ke direktori plugin.",
+    "buildStepInstallNote2": "Atau, di desktop, seret folder ke direktori plugin.",
     "buildRuntimeTitle": "Apa yang bisa digunakan plugin",
-    "buildRuntimeNote": "Host menyediakan React, @pairlens/plugin-sdk (hooks), design system @pairlens/ui (impor dari root paket), dan @pairlens/fast-financial-charts saat runtime — tandai sebagai external pada build Anda. Komponen design system distyle oleh host; untuk CSS kustom, sertakan styles.css dengan plugin Anda.",
+    "buildRuntimeNote": "Host menyediakan React, @pairlens/plugin-sdk (hooks), design system @pairlens/ui (impor dari root paket), dan @pairlens/fast-financial-charts saat runtime. Tandai sebagai external pada build Anda. Komponen design system distyle oleh host; untuk CSS kustom, sertakan styles.css dengan plugin Anda.",
     "buildExamplesNote": "Lihat contoh dev-starter dan dev-sync di repo untuk referensi yang berfungsi.",
     "applied": "Diterapkan",
     "applyTheme": "Terapkan tema",
@@ -2475,7 +2475,7 @@
     "communityBadge": "Komunitas",
     "communityFullTrustBlocked": "Plugin komunitas selalu berjalan dalam sandbox. \"{{name}}\" memerlukan hak istimewa main-app, sehingga tidak dapat dipasang.",
     "communityMaintainer": "Dikelola oleh",
-    "communityNotice": "Plugin komunitas — dikirim oleh komunitas dan hanya ditinjau ringan oleh Pairlens. Selalu berjalan di dalam sandbox plugin: hanya dapat menjangkau host jaringan yang dideklarasikannya dan tidak pernah dapat membaca kunci exchange, dompet, atau menempatkan trade Anda.",
+    "communityNotice": "Plugin komunitas: dikirim oleh komunitas dan hanya ditinjau ringan oleh Pairlens. Selalu berjalan di dalam sandbox plugin: hanya dapat menjangkau host jaringan yang dideklarasikannya dan tidak pernah dapat membaca kunci exchange, dompet, atau menempatkan trade Anda.",
     "communityViewSource": "Lihat sumber",
     "configuration": "Konfigurasi",
     "curated": "Dikurasi minggu ini",
@@ -2499,7 +2499,7 @@
     "networkAccess": "Akses jaringan",
     "noInstalledPlugins": "Tidak ada plugin terpasang.",
     "noMatches": "Tidak ada plugin yang cocok dengan pencarian Anda",
-    "noNetworkAccess": "Tanpa akses jaringan eksternal — berjalan sepenuhnya di perangkat.",
+    "noNetworkAccess": "Tanpa akses jaringan eksternal. Berjalan sepenuhnya di perangkat.",
     "overview": "Ikhtisar",
     "palette": "Palet",
     "panels": "Panel termasuk",
@@ -2538,7 +2538,7 @@
     },
     "network": {
       "title": "Izinkan “{{name}}” terhubung?",
-      "description": "Plugin ini perlu menjangkau server di luar Pairlens. Terminalmu akan mengirim permintaan jaringan ke host di bawah. Izinkan hanya jika kamu percaya plugin ini — kamu bisa menghapusnya kapan saja untuk mencabut akses.",
+      "description": "Plugin ini perlu menjangkau server di luar Pairlens. Terminalmu akan mengirim permintaan jaringan ke host di bawah. Izinkan hanya jika kamu percaya plugin ini. Kamu bisa menghapusnya kapan saja untuk mencabut akses.",
       "hostsIntro": "Plugin ini akan bisa terhubung ke:",
       "reloadNote": "Menyetujui akan memuat ulang terminal untuk menerapkan perubahan.",
       "deny": "Jangan izinkan",
@@ -2546,17 +2546,17 @@
     },
     "toggleFailedEnable": "Gagal mengaktifkan {{name}}",
     "toggleFailedDisable": "Gagal menonaktifkan {{name}}",
-    "updateStagedToast": "Pembaruan disiapkan — mulai ulang untuk menerapkan",
+    "updateStagedToast": "Pembaruan disiapkan: mulai ulang untuk menerapkan",
     "restartNow": "Mulai ulang sekarang",
     "updateStageFailedToast": "Gagal menyiapkan pembaruan: {{error}}",
-    "resetStagedToast": "Direset ke default — mulai ulang untuk menyelesaikan",
-    "networkGrantedToast": "Akses jaringan diberikan ke \"{{name}}\" — memuat ulang…",
-    "networkDeniedToast": "\"{{name}}\" dipasang tanpa akses jaringan — mungkin tidak berfungsi sampai Anda mengizinkannya.",
-    "installCancelledNoTrust": "Instalasi dibatalkan — kepercayaan penuh tidak diberikan",
+    "resetStagedToast": "Direset ke default: mulai ulang untuk menyelesaikan",
+    "networkGrantedToast": "Akses jaringan diberikan ke \"{{name}}\", memuat ulang…",
+    "networkDeniedToast": "\"{{name}}\" dipasang tanpa akses jaringan, mungkin tidak berfungsi sampai Anda mengizinkannya.",
+    "installCancelledNoTrust": "Instalasi dibatalkan: kepercayaan penuh tidak diberikan",
     "installedVersionToast": "\"{{name}}\" v{{version}} terpasang",
     "installFailedToast": "Gagal memasang plugin: {{error}}",
     "localFilesNotFound": "File plugin lokal tidak ditemukan",
-    "pluginCodeNotFound": "Kode plugin tidak ditemukan — pasang ulang",
+    "pluginCodeNotFound": "Kode plugin tidak ditemukan. Pasang ulang",
     "fullTrustGrantedNameToast": "Kepercayaan penuh diberikan ke \"{{name}}\"",
     "loadPluginFailedToast": "Gagal memuat plugin: {{error}}",
     "importFailedToast": "Gagal mengimpor plugin: {{error}}",
@@ -2564,7 +2564,7 @@
     "configSaved": "Konfigurasi disimpan",
     "configurationFailed": "Konfigurasi gagal",
     "needsFullTrustToRun": "Butuh kepercayaan penuh untuk berjalan",
-    "pendingTrustDescription": "Menyumbang UI dan tidak bisa berjalan di sandbox — beri kepercayaan penuh untuk mengaktifkannya, atau hapus.",
+    "pendingTrustDescription": "Menyumbang UI dan tidak bisa berjalan di sandbox. Beri kepercayaan penuh untuk mengaktifkannya, atau hapus.",
     "remove": "Hapus",
     "groupProvidersExtensions": "Penyedia & Ekstensi",
     "uninstallPluginTitle": "Copot Pemasangan Plugin",
@@ -2581,8 +2581,8 @@
     "sourceRegistry": "Registry",
     "sourceUrl": "URL",
     "sourceLocal": "Lokal",
-    "fullTrustGrantedRestartToast": "Kepercayaan penuh diberikan — mulai ulang untuk menjalankan plugin ini di aplikasi utama",
-    "sandboxedRestartToast": "Plugin akan berjalan di sandbox — mulai ulang untuk menerapkan",
+    "fullTrustGrantedRestartToast": "Kepercayaan penuh diberikan: mulai ulang untuk menjalankan plugin ini di aplikasi utama",
+    "sandboxedRestartToast": "Plugin akan berjalan di sandbox: mulai ulang untuk menerapkan",
     "requiresFullTrustTitle": "Plugin ini menyumbang UI dan harus berjalan dengan kepercayaan penuh.",
     "trustBadgeFullRequired": "Kepercayaan penuh (wajib)",
     "trustBadgeFull": "Kepercayaan penuh",
@@ -2592,8 +2592,8 @@
     "update": "Perbarui",
     "revokeFullTrustAria": "Cabut kepercayaan penuh untuk {{name}}",
     "grantFullTrustAria": "Beri kepercayaan penuh ke {{name}}",
-    "fullTrustActiveTitle": "Kepercayaan penuh — berjalan di aplikasi utama. Klik untuk memasukkan ke sandbox.",
-    "sandboxedTitle": "Sandbox — worker terisolasi, jaringan terbatas pada host yang dideklarasikan. Klik untuk memberi kepercayaan penuh.",
+    "fullTrustActiveTitle": "Kepercayaan penuh: berjalan di aplikasi utama. Klik untuk memasukkan ke sandbox.",
+    "sandboxedTitle": "Sandbox: worker terisolasi, jaringan terbatas pada host yang dideklarasikan. Klik untuk memberi kepercayaan penuh.",
     "configureAria": "Konfigurasi {{name}}",
     "toggleAria": "Alihkan {{name}}",
     "capabilityProvidersTitle": "Penyedia Kapabilitas",
@@ -2601,13 +2601,13 @@
     "resetAllOverrides": "Reset semua penggantian",
     "noProviderInstalled": "Tidak ada plugin terpasang yang menyediakan ini",
     "browseStore": "Jelajahi Store",
-    "installedNeedsKeySingle": "Terpasang — butuh API key",
-    "installedNeedsKeyPlural": "{{count}} terpasang — semua butuh API key",
+    "installedNeedsKeySingle": "Terpasang: butuh API key",
+    "installedNeedsKeyPlural": "{{count}} terpasang: semua butuh API key",
     "installedDisabledSingle": "1 plugin terpasang, tapi nonaktif",
     "installedDisabledPlural": "{{count}} plugin terpasang, semua nonaktif",
     "manage": "Kelola",
-    "pinnedActiveNote": "Disematkan — menggantikan urutan otomatis",
-    "pinnedInactiveNote": "Plugin yang disematkan nonaktif — urutan otomatis berlaku",
+    "pinnedActiveNote": "Disematkan: menggantikan urutan otomatis",
+    "pinnedInactiveNote": "Plugin yang disematkan nonaktif: urutan otomatis berlaku",
     "autoOrderLabel": "Urutan otomatis: {{chain}}",
     "chainMore_one": "{{chain}} +{{count}} lainnya",
     "chainMore_other": "{{chain}} +{{count}} lainnya",
@@ -2658,7 +2658,7 @@
     "manifests": {
       "pairlens-core": {
         "title": "Pairlens Core",
-        "description": "Terminal trading inti — chart, order book, entry trade, penemuan market, dan watchlist"
+        "description": "Terminal trading inti: chart, order book, entry trade, penemuan market, dan watchlist"
       },
       "pairlens-intelligence": {
         "title": "Pairlens Intelligence",
@@ -2686,7 +2686,7 @@
       },
       "openrouter-inference": {
         "title": "OpenRouter",
-        "description": "Inferensi AI via OpenRouter — satu API key untuk ratusan model dari berbagai provider (bawa key sendiri)"
+        "description": "Inferensi AI via OpenRouter: satu API key untuk ratusan model dari berbagai provider (bawa key sendiri)"
       },
       "tavily-search": {
         "title": "Tavily Search",
@@ -2698,7 +2698,7 @@
       },
       "pairlens": {
         "title": "Pairlens",
-        "description": "Tema khas Pairlens — hitam putih tegas dengan aksen prisma pelangi"
+        "description": "Tema khas Pairlens: hitam putih tegas dengan aksen prisma pelangi"
       },
       "zen-trading": {
         "title": "Zen Trading",
@@ -2754,7 +2754,7 @@
       },
       "night-city": {
         "title": "Night City",
-        "description": "Terinspirasi Cyberpunk 2077 — kuning elektrik di atas gunmetal gelap dengan sudut yang tajam"
+        "description": "Terinspirasi Cyberpunk 2077: kuning elektrik di atas gunmetal gelap dengan sudut yang tajam"
       },
       "eye-comfort": {
         "title": "Eye Comfort",
@@ -2766,7 +2766,7 @@
       },
       "boomerg": {
         "title": "Boomerg",
-        "description": "Nuansa amber di atas hitam sebagai penghormatan pada terminal Bloomberg klasik — antarmuka monospace, sudut siku, dan warna tombol fungsi"
+        "description": "Nuansa amber di atas hitam sebagai penghormatan pada terminal Bloomberg klasik: antarmuka monospace, sudut siku, dan warna tombol fungsi"
       },
       "okx-market-connector": {
         "title": "Konektor Market OKX",
@@ -2826,7 +2826,7 @@
       },
       "alpaca-market-connector": {
         "title": "Konektor Market Alpaca",
-        "description": "Saham & ETF AS via API broker Alpaca — data market real-time, trading paper dan live"
+        "description": "Saham & ETF AS via API broker Alpaca: data market real-time, trading paper dan live"
       },
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
@@ -2834,39 +2834,39 @@
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",
-        "description": "Data market DEX yang didukung oleh GeckoTerminal (CoinGecko) — riwayat data mendalam, candle 4 jam native"
+        "description": "Data market DEX yang didukung oleh GeckoTerminal (CoinGecko): riwayat data mendalam, candle 4 jam native"
       },
       "jupiter-dex-connector": {
         "title": "Konektor DEX Jupiter",
-        "description": "Agregator DEX Solana — routing harga terbaik di semua DEX Solana"
+        "description": "Agregator DEX Solana: routing harga terbaik di semua DEX Solana"
       },
       "ethereum-dex-connector": {
         "title": "Konektor DEX Ethereum",
-        "description": "Swap Ethereum on-chain — routing harga terbaik di semua DEX Ethereum via agregator KyberSwap"
+        "description": "Swap Ethereum on-chain: routing harga terbaik di semua DEX Ethereum via agregator KyberSwap"
       },
       "base-dex-connector": {
         "title": "Konektor DEX Base",
-        "description": "Swap Base on-chain — routing harga terbaik di semua DEX Base via agregator KyberSwap"
+        "description": "Swap Base on-chain: routing harga terbaik di semua DEX Base via agregator KyberSwap"
       },
       "arbitrum-dex-connector": {
         "title": "Konektor DEX Arbitrum",
-        "description": "Swap Arbitrum on-chain — routing harga terbaik di semua DEX Arbitrum via agregator KyberSwap"
+        "description": "Swap Arbitrum on-chain: routing harga terbaik di semua DEX Arbitrum via agregator KyberSwap"
       },
       "bsc-dex-connector": {
         "title": "Konektor DEX BNB Chain",
-        "description": "Swap BNB Chain on-chain — routing harga terbaik di semua DEX BNB Chain via agregator KyberSwap"
+        "description": "Swap BNB Chain on-chain: routing harga terbaik di semua DEX BNB Chain via agregator KyberSwap"
       },
       "polygon-dex-connector": {
         "title": "Konektor DEX Polygon",
-        "description": "Swap Polygon on-chain — routing harga terbaik di semua DEX Polygon via agregator KyberSwap"
+        "description": "Swap Polygon on-chain: routing harga terbaik di semua DEX Polygon via agregator KyberSwap"
       },
       "kalshi-market-connector": {
         "title": "Konektor Pasar Kalshi",
-        "description": "Kontrak peristiwa di Kalshi, bursa prediksi yang diatur CFTC — perdagangkan hasil, bukan aset"
+        "description": "Kontrak peristiwa di Kalshi, bursa prediksi yang diatur CFTC: perdagangkan hasil, bukan aset"
       },
       "polymarket-market-connector": {
         "title": "Konektor Pasar Polymarket",
-        "description": "Kontrak peristiwa di CLOB Polymarket — order ditandatangani dompet, diselesaikan dalam USDC"
+        "description": "Kontrak peristiwa di CLOB Polymarket: order ditandatangani dompet, diselesaikan dalam USDC"
       },
       "pairlens-predictions": {
         "title": "Pairlens Prediksi",
@@ -3105,12 +3105,12 @@
     "connectBroker": "Hubungkan Broker",
     "selectBroker": "Pilih broker untuk dihubungkan",
     "brokerAccountsTitle": "Broker Saham",
-    "brokerAccountsDesc": "Akun broker saham (Alpaca…) dihubungkan melalui API key — trading saham dan ETF AS dengan dana paper atau live.",
+    "brokerAccountsDesc": "Akun broker saham (Alpaca…) dihubungkan melalui API key. Trading saham dan ETF AS dengan dana paper atau live.",
     "noBrokerAccounts": "Belum ada broker saham yang terhubung",
     "noBrokerAccountsDesc": "Hubungkan akun broker untuk trading saham. Alpaca menawarkan API key paper-trading gratis dalam hitungan menit.",
     "comingSoon": "Segera hadir",
     "exchangeAccountsTitle": "Exchange Kripto",
-    "exchangeAccountsDesc": "Akun exchange terpusat (Binance, OKX…) dihubungkan melalui API key — dana Anda tetap di exchange.",
+    "exchangeAccountsDesc": "Akun exchange terpusat (Binance, OKX…) dihubungkan melalui API key. Dana Anda tetap di exchange.",
     "cryptoWalletsTitle": "Dompet Kripto",
     "cryptoWalletsDesc": "Private key untuk trading on-chain melalui exchange terdesentralisasi.",
     "addWallet": "Tambah Dompet",
@@ -3159,7 +3159,7 @@
       "osBodyBrowser": "Setiap nilai disegel dengan AES-256-GCM sebelum menyentuh penyimpanan peramban. Satu kunci data mengenkripsi semuanya, dan kunci itu tidak pernah ditulis dalam bentuk terbuka.",
       "unlockTitle": "Hanya Anda yang bisa membukanya",
       "unlockBody": "Kata sandi, diperkuat dengan 600.000 putaran PBKDF2-SHA256; passkey di ponsel atau kunci keamanan Anda; atau Touch ID. Masing-masing membungkus kunci data yang sama, jadi Anda bisa punya lebih dari satu cara masuk. Pairlens tidak pernah menerima satu pun.",
-      "openSourceTitle": "Kode sumber publik — verifikasi sendiri",
+      "openSourceTitle": "Kode sumber publik, verifikasi sendiri",
       "openSourceBody": "Kode Pairlens bersifat publik. Anda, teman developer, atau bahkan AI dapat membacanya dan memastikan kunci Anda benar-benar tetap di tempatnya.",
       "limitsTitle": "Yang tidak dilindungi",
       "limitsRunning": "Selama aplikasi terbuka dan tidak terkunci, aplikasi bisa membaca kunci Anda. Begitulah cara ia menempatkan order. Enkripsi melindungi disk atau profil peramban yang disalin, bukan komputer yang sudah diduduki orang lain.",
@@ -3177,7 +3177,7 @@
     "hero": {
       "eyebrow": "Venue Anda",
       "title": "Trading dengan kunci Anda sendiri",
-      "subtitle": "Hubungkan exchange, broker, dan dompet on-chain dengan API key yang tidak pernah meninggalkan perangkat ini. Pairlens berkomunikasi langsung dengan setiap venue — tanpa custody, tanpa perantara."
+      "subtitle": "Hubungkan exchange, broker, dan dompet on-chain dengan API key yang tidak pernah meninggalkan perangkat ini. Pairlens berkomunikasi langsung dengan setiap venue: tanpa custody, tanpa perantara."
     },
     "portfolioEyebrow": "Portofolio",
     "openAccountShelfTitle": "Buka akun baru",
@@ -3193,8 +3193,8 @@
     "hasAccountNoDesc": "Buka akun {{exchange}} gratis",
     "importKey": "Impor private key",
     "affiliateDisclosure": "Beberapa tautan pendaftaran dapat memberikan komisi kepada Pairlens, tanpa biaya tambahan bagi Anda.",
-    "vaultSealedBody": "Brankas kredensial Anda terkunci. Akun Anda masih ada — buka untuk melihat dan menggunakannya.",
-    "credentialsUnreadable": "Kunci yang tersimpan di perangkat ini tidak bisa dibaca. Tidak ada yang hilang — coba lagi atau mulai ulang Pairlens.",
+    "vaultSealedBody": "Brankas kredensial Anda terkunci. Akun Anda masih ada, buka untuk melihat dan menggunakannya.",
+    "credentialsUnreadable": "Kunci yang tersimpan di perangkat ini tidak bisa dibaca. Tidak ada yang hilang. Coba lagi atau mulai ulang Pairlens.",
     "addWalletDialogTitle": "Tambah Wallet Kripto",
     "addWalletDialogDescription": "Impor private key wallet untuk trading on-chain",
     "blockchainLabel": "Blockchain",
@@ -3207,7 +3207,7 @@
     "disconnect": "Putuskan",
     "localBadge": "Lokal",
     "unknownDate": "Tidak diketahui",
-    "keyExpiredWarning": "Kemungkinan kedaluwarsa — {{daysInactive}} hari tidak aktif (batas {{limitDays}} hari). Buat ulang API key di exchange.",
+    "keyExpiredWarning": "Kemungkinan kedaluwarsa: {{daysInactive}} hari tidak aktif (batas {{limitDays}} hari). Buat ulang API key di exchange.",
     "keyInactiveWarning": "{{daysInactive}}/{{limitDays}} hari tidak aktif. Key kedaluwarsa setelah {{limitDays}} hari tanpa digunakan.",
     "exchangeAccountAriaLabel": "Akun exchange {{label}}",
     "cryptoWalletAriaLabel": "Wallet kripto {{label}}",
@@ -3297,11 +3297,11 @@
       "enableTitle": "Beberapa plugin dinonaktifkan",
       "enableBody": "Ruang kerja ini menggunakan plugin yang sudah Anda pasang tapi dinonaktifkan. Aktifkan dari halaman Plugin untuk melihat setiap panel.",
       "installTitle": "Diperlukan plugin tambahan",
-      "installBody": "Beberapa panel bergantung pada plugin yang belum Anda miliki. Anda tetap bisa menambahkan ruang kerja ini — panel tersebut akan tetap kosong sampai Anda memasang plugin dari Plugin Store."
+      "installBody": "Beberapa panel bergantung pada plugin yang belum Anda miliki. Anda tetap bisa menambahkan ruang kerja ini, panel tersebut akan tetap kosong sampai Anda memasang plugin dari Plugin Store."
     },
     "security": {
       "trusted": "Akses penuh · disertakan dengan Pairlens",
-      "needsApproval": "Memerlukan akses penuh — Anda akan diminta untuk menyetujui",
+      "needsApproval": "Memerlukan akses penuh: Anda akan diminta untuk menyetujui",
       "gateTitle": "Plugin akses penuh",
       "gateBody": "{{names}} berjalan dengan akses penuh ke kredensial dan trade Anda. Anda akan diminta menyetujui masing-masing sebelum diaktifkan."
     },
@@ -3370,7 +3370,7 @@
     "templates": {
       "scalpers-cockpit": {
         "name": "Kokpit Scalper",
-        "tagline": "Chart, order book, dan entry satu klik — tidak ada yang lain.",
+        "tagline": "Chart, order book, dan entry satu klik. Tidak ada yang lain.",
         "description": "Kokpit dua kolom minimal untuk eksekusi cepat: chart bersebelahan dengan order book langsung, kedalaman market, dan tiket order. Dibuat untuk kecepatan dalam satu layar."
       },
       "day-trader-pro": {
@@ -3396,7 +3396,7 @@
       "market-discovery": {
         "name": "Penemuan Market",
         "tagline": "Temukan apa yang bergerak sebelum Anda berkomitmen.",
-        "description": "Papan penemuan murni: scanner market, para penggerak teratas, heatmap sektor, daftar pantauan Anda, dan pengukur Fear & Greed. Tanpa chart, tanpa tiket order — hanya untuk memburu setup berikutnya."
+        "description": "Papan penemuan murni: scanner market, para penggerak teratas, heatmap sektor, daftar pantauan Anda, dan pengukur Fear & Greed. Tanpa chart, tanpa tiket order, hanya untuk memburu setup berikutnya."
       },
       "portfolio-command": {
         "name": "Komando Portofolio",
@@ -3444,7 +3444,7 @@
       },
       "ultrawide-trading-floor": {
         "name": "Lantai Trading Ultrawide",
-        "tagline": "Semuanya, di mana-mana — untuk layar besar.",
+        "tagline": "Semuanya, di mana-mana, untuk layar besar.",
         "description": "Pusat komando empat kolom yang memenuhi monitor ultrawide atau kedua: scanner, chart, order book dan kedalaman, serta tiket order di atas posisi terbuka Anda. Tata letak paling maksimal."
       },
       "classic-terminal": {
@@ -3474,19 +3474,19 @@
       "dual-charts": {
         "name": "Chart Ganda",
         "tagline": "Dua chart berdampingan.",
-        "description": "Dua panel chart independen berdampingan — masing-masing mempertahankan market, timeframe, dan jenis chart sendiri. Atur pair berbeda per panel dengan pemilih pair-nya.",
+        "description": "Dua panel chart independen berdampingan. Masing-masing mempertahankan market, timeframe, dan jenis chart sendiri. Atur pair berbeda per panel dengan pemilih pair-nya.",
         "menuLabel": "Chart Ganda"
       },
       "triple-charts": {
         "name": "Tiga Chart",
         "tagline": "Satu chart besar dengan dua bertumpuk di sampingnya.",
-        "description": "Satu chart utama besar dengan dua chart lebih kecil bertumpuk di kanan — masing-masing independen, untuk mengawasi satu pair utama terhadap dua lainnya.",
+        "description": "Satu chart utama besar dengan dua chart lebih kecil bertumpuk di kanan, masing-masing independen, untuk mengawasi satu pair utama terhadap dua lainnya.",
         "menuLabel": "Tiga Chart"
       },
       "quad-charts": {
         "name": "Empat Chart",
         "tagline": "Grid chart 2×2.",
-        "description": "Empat chart independen dalam grid 2×2 — kokpit multi-chart lengkap untuk memantau beberapa market sekaligus.",
+        "description": "Empat chart independen dalam grid 2×2, kokpit multi-chart lengkap untuk memantau beberapa market sekaligus.",
         "menuLabel": "Empat Chart"
       },
       "laptop-focus": {
@@ -3517,19 +3517,19 @@
       "home-pulse": {
         "name": "Beranda",
         "tagline": "Papan default: scanner, sentimen, penggerak, dan berita.",
-        "description": "Papan beranda default — scanner market, rel denyut market dengan pengukur Fear & Greed dan koin teratas bertab dengan daftar pantauan Anda, serta kolom berita setinggi penuh. Semua di dalamnya berfungsi tanpa akun.",
+        "description": "Papan beranda default: scanner market, rel denyut market dengan pengukur Fear & Greed dan koin teratas bertab dengan daftar pantauan Anda, serta kolom berita setinggi penuh. Semua di dalamnya berfungsi tanpa akun.",
         "menuLabel": "Default"
       },
       "markets-board": {
         "name": "Papan Market",
         "tagline": "Hanya scanner market, layar penuh.",
-        "description": "Scanner market selebar penuh — cara termudah untuk menjelajahi dan mengurutkan setiap pair yang dapat diperdagangkan.",
+        "description": "Scanner market selebar penuh, cara termudah untuk menjelajahi dan mengurutkan setiap pair yang dapat diperdagangkan.",
         "menuLabel": "Market"
       },
       "markets-overview": {
         "name": "Ringkasan Market",
         "tagline": "Scanner bersebelahan dengan para penggerak dan daftar pantauan Anda.",
-        "description": "Scanner market bersebelahan dengan para penggerak teratas dan daftar pantauan Anda — beranda yang seimbang untuk menemukan dan melacak setup.",
+        "description": "Scanner market bersebelahan dengan para penggerak teratas dan daftar pantauan Anda, beranda yang seimbang untuk menemukan dan melacak setup.",
         "menuLabel": "Ringkasan"
       },
       "sector-analysis": {
@@ -3541,7 +3541,7 @@
       "news-board": {
         "name": "Papan Berita",
         "tagline": "Market bersebelahan dengan para penggerak dan feed berita.",
-        "description": "Scanner market bersebelahan dengan para penggerak teratas dan feed berita langsung — basis utama untuk trading yang digerakkan katalis.",
+        "description": "Scanner market bersebelahan dengan para penggerak teratas dan feed berita langsung, basis utama untuk trading yang digerakkan katalis.",
         "menuLabel": "Berita"
       },
       "perps-terminal": {
@@ -3654,7 +3654,7 @@
         "sendTest": "Kirim tes",
         "testing": "Menguji…",
         "pairAlreadyBound": "Pair ini sudah terikat ke aturan",
-        "noBindings": "Belum terikat ke pair mana pun — aturan tidak akan aktif sampai Anda menambahkan satu.",
+        "noBindings": "Belum terikat ke pair mana pun. Aturan tidak akan aktif sampai Anda menambahkan satu.",
         "testSent": "Notifikasi tes terkirim",
         "testFailed": "Tes tidak terkirim",
         "noActivity": "Belum ada notifikasi yang terpicu",
@@ -3676,7 +3676,7 @@
         "cannotSaveTitle": "Aturan tidak dapat disimpan",
         "cycleError": "Aturan ini mengandung dependensi melingkar. Hapus siklusnya (garis merah) sebelum menyimpan.",
         "saved": "Aturan disimpan",
-        "webhookHostAllowed": "Akses ke {{hosts}} diizinkan — muat ulang untuk mulai mengirim webhook",
+        "webhookHostAllowed": "Akses ke {{hosts}} diizinkan: muat ulang untuk mulai mengirim webhook",
         "webhookHostFailed": "Tidak dapat mengizinkan host webhook",
         "reload": "Muat ulang"
       },
@@ -3711,7 +3711,7 @@
         "untitledRule": "Aturan tanpa judul",
         "eyebrow": "Notifikasi",
         "title": "Pantau market agar Anda tidak perlu melakukannya sendiri",
-        "description": "Satu peringatan cukup satu baris: level yang dilewati, atau pergerakan yang layak diperhatikan — sebut pasangannya dan langsung aktif. Alur untuk sisanya: kondisi, order terisi, peringatan indikator, dan ke mana dikirimnya.",
+        "description": "Satu peringatan cukup satu baris: level yang dilewati, atau pergerakan yang layak diperhatikan. Sebut pasangannya dan langsung aktif. Alur untuk sisanya: kondisi, order terisi, peringatan indikator, dan ke mana dikirimnya.",
         "startBlank": "Mulai dari kanvas kosong",
         "footnote": "Templat langsung aktif, terikat ke {{pair}} di {{market}}. Ubah langkahnya atau ganti pasangan di bawah daftar aturan, lalu Simpan perubahannya. Aturan hanya berjalan selama Pairlens terbuka."
       },
@@ -4024,11 +4024,11 @@
       "unknownPair": "tidak diketahui",
       "priceAlert": {
         "title": "Alert Harga: {{pair}}",
-        "body": "{{pair}} sekarang {{direction}} {{price}} — saat ini: {{current}}"
+        "body": "{{pair}} sekarang {{direction}} {{price}}, saat ini: {{current}}"
       },
       "orderExecuted": {
         "title": "Order Tereksekusi",
-        "body": "{{side}} {{pair}} — {{status}}"
+        "body": "{{side}} {{pair}}: {{status}}"
       },
       "signalGenerated": {
         "title": "Sinyal Terbentuk",
@@ -4339,7 +4339,7 @@
       "biometricPromptReason": "Buka kunci brankas kredensial Pairlens kamu",
       "biometricLabel": "Touch ID di Mac ini",
       "biometricCancelled": "Permintaan Touch ID ditutup.",
-      "biometricInvalidated": "Touch ID tidak bisa lagi membuka brankasmu — sidik jari di Mac ini berubah. Hapus di Pengaturan → Keamanan lalu siapkan ulang.",
+      "biometricInvalidated": "Touch ID tidak bisa lagi membuka brankasmu: sidik jari di Mac ini berubah. Hapus di Pengaturan → Keamanan lalu siapkan ulang.",
       "useExistingPassword": "Gunakan kata sandi yang sudah Anda setel untuk terminal ini.",
       "unlockTitle": "Buka kunci Anda",
       "unlockSubtitle": "Kunci API dan dompet Anda terenkripsi. Buka untuk menggunakannya.",
@@ -4347,8 +4347,8 @@
       "unlockWithPassword": "Buka",
       "unlocking": "Membuka…",
       "sealed": "Brankas kredensial Anda terkunci.",
-      "sealedBanner_one": "1 bot live dijeda — buka Pairlens untuk melanjutkan trading.",
-      "sealedBanner_other": "{{count}} bot live dijeda — buka Pairlens untuk melanjutkan trading.",
+      "sealedBanner_one": "1 bot live dijeda. Buka Pairlens untuk melanjutkan trading.",
+      "sealedBanner_other": "{{count}} bot live dijeda. Buka Pairlens untuk melanjutkan trading.",
       "passkeyNudgeTitle": "Lain kali buka dengan satu sentuhan",
       "passkeyNudgeBody": "{{venue}} mengalirkan harga dari kunci Anda, jadi brankas terkunci berarti tidak ada grafik. Passkey membuka brankas dan layar kunci dalam satu sentuhan, bukan kata sandi yang diketik.",
       "passkeyNudgeAction": "Tambahkan passkey",
@@ -4357,7 +4357,7 @@
       "sealedBannerAction": "Buka",
       "botsPausedTitle": "Bot live dijeda",
       "botsPausedBody": "Buka Pairlens untuk melanjutkan trading live. Bot paper tidak terpengaruh.",
-      "orderBlocked": "Brankas kredensial Anda terkunci — buka Pairlens untuk mengirim order live.",
+      "orderBlocked": "Brankas kredensial Anda terkunci. Buka Pairlens untuk mengirim order live.",
       "insecureContext": "Enkripsi tidak tersedia pada koneksi yang tidak aman. Buka Pairlens melalui HTTPS, atau di localhost, untuk menyiapkan brankas.",
       "botParkDetailSealed": "Brankas kredensial Anda terkunci. Bot ini melanjutkan trading live begitu Anda membuka kunci Pairlens. Bot paper tidak terpengaruh.",
       "botParkDetailError": "Kredensial tersimpan Anda tidak dapat dibaca di perangkat ini. Bot ini melanjutkan trading live begitu kredensial berhasil dimuat. Bot paper tidak terpengaruh.",
@@ -4377,7 +4377,7 @@
     "authDescription": "Fitur ini berjalan melalui akun Pairlens Anda.",
     "signInFree": "Masuk gratis",
     "or": "atau",
-    "intelligenceNote": "Direkomendasikan — terkelola, tanpa pengaturan. Masuk itu gratis; Pairlens Intelligence adalah paket berbayar.",
+    "intelligenceNote": "Direkomendasikan: terkelola, tanpa pengaturan. Masuk itu gratis; Pairlens Intelligence adalah paket berbayar.",
     "authNote": "Hanya butuh 30 detik. Kunci exchange Anda tidak pernah meninggalkan perangkat ini.",
     "upgradeRequired": "Perlu peningkatan",
     "upgradeDescriptionLevel": "Fitur ini memerlukan tingkat akses <b>{{level}}</b>.",
@@ -4390,7 +4390,7 @@
     "useOwnKey": "Siapkan AI Anda sendiri",
     "connect": "Hubungkan",
     "connected": "Terhubung",
-    "connectedToast": "{{provider}} terhubung — AI siap digunakan.",
+    "connectedToast": "{{provider}} terhubung. AI siap digunakan.",
     "getKey": "Dapatkan kunci",
     "keyStorageNote": "Kunci Anda tetap di perangkat ini dan hanya dikirim ke penyedia tersebut. Pairlens tidak pernah menerimanya.",
     "noneInstalled": "Belum ada plugin penyedia untuk langkah ini. Tambahkan satu dari halaman Plugin.",
@@ -4399,7 +4399,7 @@
     "required": "wajib",
     "optional": "opsional",
     "modelHint": "Penyedia yang menulis jawabannya. Pilih satu lalu tempel kuncinya.",
-    "searchHint": "Opsional. Mendasarkan riset dan jawaban pada sumber web langsung — AI tetap bekerja tanpanya.",
+    "searchHint": "Opsional. Mendasarkan riset dan jawaban pada sumber web langsung. AI tetap bekerja tanpanya.",
     "done": "Selesai",
     "notConnected": "belum terhubung",
     "manage": "Kelola penyedia"
@@ -4466,7 +4466,7 @@
       "titlePack": "{{credits}} kredit ekstra sudah ditambahkan.",
       "titlePlan": "{{label}} kini milik Anda.",
       "titleDefault": "Pairlens Intelligence kini milik Anda.",
-      "bodyPack": "Kredit ini bertumpuk di atas anggaran bulanan Anda dan kedaluwarsa dalam {{days}} hari. Kembali ke aplikasi Pairlens — saldo Anda akan diperbarui dalam beberapa detik.",
+      "bodyPack": "Kredit ini bertumpuk di atas anggaran bulanan Anda dan kedaluwarsa dalam {{days}} hari. Kembali ke aplikasi Pairlens, saldo Anda akan diperbarui dalam beberapa detik.",
       "bodyPlanWithCredits": "Asisten AI terkelola Anda kini terbuka, lengkap dengan riset mendalam dan pencarian web, plus {{credits}} kredit setiap bulan. Kembali ke aplikasi Pairlens: langganan Anda akan terdeteksi dalam beberapa detik.",
       "bodyPlanNoCredits": "Asisten AI terkelola Anda kini terbuka, lengkap dengan riset mendalam dan pencarian web. Kembali ke aplikasi Pairlens: langganan Anda akan terdeteksi dalam beberapa detik.",
       "openTerminal": "Buka terminal",
@@ -4491,7 +4491,7 @@
       "renameButton": "Ganti Nama",
       "deleteTitle": "Hapus Workflow",
       "deleteDescription": "Tindakan ini tidak bisa dibatalkan. Workflow akan dihapus secara permanen.",
-      "runsEmpty": "Belum ada eksekusi workflow — jalankan satu dari panel trading",
+      "runsEmpty": "Belum ada eksekusi workflow: jalankan satu dari panel trading",
       "clearHistory": "Hapus riwayat",
       "runOutcome": "{{executed}} ok",
       "runOutcomeWithFailed": "{{executed}} ok, {{failed}} gagal"
@@ -4539,7 +4539,7 @@
       "pickWorkflow": "Pilih workflow di sebelah kiri untuk membukanya di kanvas.",
       "eyebrow": "Workflow",
       "title": "Setiap order bisa punya rencananya sendiri",
-      "description": "Workflow menempel pada order yang Anda pasang dari panel trading. Begitu order terisi, langkah-langkah di bawahnya langsung berjalan sendiri — bracket, tangga harga, exit bertahap, pengecekan terjadwal — jadi rencananya sudah siap, bukan sesuatu yang harus Anda ingat lagi nanti.",
+      "description": "Workflow menempel pada order yang Anda pasang dari panel trading. Begitu order terisi, langkah-langkah di bawahnya langsung berjalan sendiri (bracket, tangga harga, exit bertahap, pengecekan terjadwal), jadi rencananya sudah siap, bukan sesuatu yang harus Anda ingat lagi nanti.",
       "blankLabel": "Mulai dari kanvas kosong",
       "footnote": "Template terbuka sebagai draf: edit langkah mana pun, lalu klik Terapkan untuk menyimpannya. Kaitkan workflow tersimpan ke sebuah order dari panel trading untuk menjalankannya.",
       "untitledWorkflow": "Workflow tanpa judul"
@@ -5054,7 +5054,7 @@
       "riskUsedNoCap": "{{used}} dari portofolio",
       "slideToBuy": "Geser untuk membeli di {{venue}}",
       "slideToSell": "Geser untuk menjual di {{venue}}",
-      "connectBody": "Harga dan order book tetap live tanpanya — mengirim order membutuhkan kunci API dengan izin trading.",
+      "connectBody": "Harga dan order book tetap live tanpanya. Mengirim order membutuhkan kunci API dengan izin trading.",
       "noPrice": "Tidak ada harga live untuk menentukan ukuran swap ini",
       "auto": "Otomatis",
       "bookLoading": "Menunggu order book…",

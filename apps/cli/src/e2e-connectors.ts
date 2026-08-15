@@ -188,7 +188,7 @@ async function checkMarket(market: string): Promise<Array<CheckResult>> {
 
 async function main() {
   console.log(
-    `\nE2E connector check — pair=${PAIR} timeframe=${TIMEFRAME} timeout=${TIMEOUT}ms\n`,
+    `\nE2E connector check: pair=${PAIR} timeframe=${TIMEFRAME} timeout=${TIMEOUT}ms\n`,
   )
   let anyFail = false
   for (const market of MARKETS) {
@@ -206,8 +206,8 @@ async function main() {
 
   console.log(
     anyFail
-      ? '✗ FAIL — one or more checks failed'
-      : '✓ PASS — all connectors healthy',
+      ? '✗ FAIL: one or more checks failed'
+      : '✓ PASS: all connectors healthy',
   )
   process.exit(anyFail ? 1 : 0)
 }

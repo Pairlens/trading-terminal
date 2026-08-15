@@ -22,7 +22,7 @@
       "title": "1つのターミナルで、あらゆる市場を。",
       "sub": "中央集権型とオンチェーンの現物取引を並べて行い、1つのAIアシスタントがすべてのセットアップを読み取ります。",
       "points": {
-        "0": "中央集権型現物取引 — OKX、Binance、Coinbase",
+        "0": "中央集権型現物取引：OKX、Binance、Coinbase",
         "1": "スマートルーティングされたオンチェーンDEXスワップ",
         "2": "米国株式・ETF"
       },
@@ -41,12 +41,12 @@
       "searchPlaceholder": "国を検索…",
       "noResults": "該当する国が見つかりません",
       "global": "回答しない",
-      "globalSub": "非推奨 — グローバルなエンドポイントと既定値を使用",
+      "globalSub": "非推奨：グローバルなエンドポイントと既定値を使用",
       "label": "国",
       "localNote": "この端末にのみ保存され、Pairlens のサーバーへ送信されることはありません。",
       "globalConfirm": {
         "title": "地域を設定せずに続けますか？",
-        "body": "国が未設定の場合、注文とマーケットデータはグローバルのエンドポイントを使います。地域制限のある取引所では機能が動かなかったり、注文が執行されないことがあります。地域の設定をおすすめします — 保存先はこの端末のみです。",
+        "body": "国が未設定の場合、注文とマーケットデータはグローバルのエンドポイントを使います。地域制限のある取引所では機能が動かなかったり、注文が執行されないことがあります。地域の設定をおすすめします。保存先はこの端末のみです。",
         "ack": "地域を設定しないことによる影響を理解しました",
         "cancel": "国を選ぶ",
         "confirm": "設定せずに続行"
@@ -58,7 +58,7 @@
       "sub": "Pairlensはローカルファーストで動作します。認証情報とデータはこのマシンにのみ保存され、当社のサーバーには一切保存されません。",
       "points": {
         "0": "鍵と残高はこのデバイスから外に出ません",
-        "1": "ノンカストディアル — Pairlensはあなたの資金を動かせません",
+        "1": "ノンカストディアル：Pairlensはあなたの資金を動かせません",
         "2": "メール登録もKYCも不要で始められます"
       },
       "scene": {
@@ -106,7 +106,7 @@
     "themeStep": {
       "status": "明るさを調整しています",
       "title": "どんな見た目にしますか？",
-      "sub": "Pairlens はライトにもダークにも最適化されています。モードとパレットを選んでください — あとから変更できます。",
+      "sub": "Pairlens はライトにもダークにも最適化されています。モードとパレットを選んでください。あとから変更できます。",
       "light": "ライト",
       "dark": "ダーク",
       "system": "自動",
@@ -117,7 +117,7 @@
     "legal": {
       "status": "始める前に",
       "title": "確認事項",
-      "sub": "Pairlensは株式・暗号資産の取引ツールです — 続けるには各項目にご同意ください。",
+      "sub": "Pairlensは株式・暗号資産の取引ツールです。続けるには各項目にご同意ください。",
       "items": {
         "0": "取引にはリスクが伴い、資金の一部または全部を失う可能性があることを理解しています。",
         "1": "自身の居住国および/または国籍国の法律を遵守する責任は自分にあります。",
@@ -137,7 +137,7 @@
     "workspaces": {
       "eyebrow": "完全カスタマイズ可能",
       "title": "あなたのターミナル、あなたのレイアウト。",
-      "sub": "ワークスペースは完全にカスタマイズ可能です — シンプルな画面からフル装備のプロ仕様ダッシュボードまで、思い通りの構成をいくつでも作れます。",
+      "sub": "ワークスペースは完全にカスタマイズ可能です：シンプルな画面からフル装備のプロ仕様ダッシュボードまで、思い通りの構成をいくつでも作れます。",
       "points": {
         "0": "チャート、板、パネルを自由に配置",
         "1": "好きなだけワークスペースを作成",
@@ -148,11 +148,11 @@
     "analytics": {
       "status": "あなたのデータ、あなたの選択",
       "title": "Pairlensの改善に協力しますか？",
-      "sub": "匿名の利用データとクラッシュレポートを共有し、改善に役立てます。取引内容、鍵、残高は一切含まれません — この設定はいつでも設定画面から変更できます。",
+      "sub": "匿名の利用データとクラッシュレポートを共有し、改善に役立てます。取引内容、鍵、残高は一切含まれません、この設定はいつでも設定画面から変更できます。",
       "options": {
         "enabled": {
           "label": "匿名の利用データを共有する",
-          "sub": "利用パターンとクラッシュレポートのみ — 取引内容は含まれません"
+          "sub": "利用パターンとクラッシュレポートのみ、取引内容は含まれません"
         },
         "disabled": {
           "label": "共有しない",
@@ -174,7 +174,7 @@
         },
         "sync": {
           "title": "クラウド同期",
-          "sub": "設定やレイアウトをデバイス間で同期 — 鍵はローカルのまま"
+          "sub": "設定やレイアウトをデバイス間で同期、鍵はローカルのまま"
         },
         "community": {
           "title": "コミュニティワークスペース",
@@ -182,7 +182,7 @@
         }
       },
       "create": "アカウントを作成",
-      "skip": "スキップ — すべてこのデバイスに保存",
+      "skip": "スキップ：すべてこのデバイスに保存",
       "signedIn": "{{email}} でサインイン中",
       "label": "アカウント",
       "otpSendFailed": "OTPの送信に失敗しました",
@@ -239,18 +239,18 @@
       "eyebrow": "アラート",
       "intro": {
         "title": "あなたに代わって見張るアラート",
-        "description": "レベルを設定して離れましょう — 価格がそのレベルを超えた瞬間、Pairlensはアプリ内とデスクトップで通知します。"
+        "description": "レベルを設定して離れましょう。価格がそのレベルを超えた瞬間、Pairlensはアプリ内とデスクトップで通知します。"
       },
       "build": {
         "title": "独自のトリガーを組み立てる",
-        "description": "ペア、条件、アクションを連結して精密なルールを作成 — 価格レベル、シグナル発火、パーセント変動 — 通知方法も自由に決められます。"
+        "description": "ペア、条件、アクションを連結して精密なルールを作成（価格レベル、シグナル発火、パーセント変動）通知方法も自由に決められます。"
       }
     },
     "workflows": {
       "eyebrow": "ワークフロー",
       "intro": {
         "title": "日常作業を自動化",
-        "description": "トリガー、条件、アクションを組み合わせて繰り返し使えるフローを構築 — ブレイクアウトシグナルが出来高を確認し、あなたに通知し、セットアップを自動で記録します。"
+        "description": "トリガー、条件、アクションを組み合わせて繰り返し使えるフローを構築：ブレイクアウトシグナルが出来高を確認し、あなたに通知し、セットアップを自動で記録します。"
       },
       "runs": {
         "title": "すべての実行を記録",
@@ -261,33 +261,33 @@
       "eyebrow": "インジケーターとストラテジー",
       "code": {
         "title": "本物のPythonでインジケーターを書く",
-        "description": "本物のPythonとNumPyで任意のインジケーターをスクリプト化 — 入力しながらローカルでコンパイル・実行され、各シリーズをライブプレビューできます。"
+        "description": "本物のPythonとNumPyで任意のインジケーターをスクリプト化。入力しながらローカルでコンパイル・実行され、各シリーズをライブプレビューできます。"
       },
       "chart": {
         "title": "どのチャートにも追加",
-        "description": "保存したスクリプトは各チャートのインジケーターピッカーのCustomに表示されます — オーバーレイまたはサブペインとして任意のペアに追加でき、入力項目も引き継がれます。"
+        "description": "保存したスクリプトは各チャートのインジケーターピッカーのCustomに表示されます。オーバーレイまたはサブペインとして任意のペアに追加でき、入力項目も引き継がれます。"
       }
     },
     "accounts": {
       "eyebrow": "アカウント",
       "intro": {
         "title": "取引所を接続",
-        "description": "取引所、ウォレット、ブローカーをリンクします。APIキーはOSキーチェーンに直接保存されます — このデバイス上のみで、当社のサーバーには一切保存されません。"
+        "description": "取引所、ウォレット、ブローカーをリンクします。APIキーはOSキーチェーンに直接保存されます：このデバイス上のみで、当社のサーバーには一切保存されません。"
       },
       "balances": {
         "title": "すべてを1つのビューで",
-        "description": "接続済みのすべての取引所の残高が1つのビューに集約されます — 現物、オンチェーン、株式をまとめて。"
+        "description": "接続済みのすべての取引所の残高が1つのビューに集約されます：現物、オンチェーン、株式をまとめて。"
       }
     },
     "plugins": {
       "eyebrow": "プラグイン",
       "intro": {
         "title": "ターミナルを拡張",
-        "description": "マーケットコネクタ、テーマ、シグナル、ボットをプラグインストアからワンクリックでインストール — ターミナルはあなたと共に成長します。"
+        "description": "マーケットコネクタ、テーマ、シグナル、ボットをプラグインストアからワンクリックでインストール。ターミナルはあなたと共に成長します。"
       },
       "sandbox": {
         "title": "デフォルトで安全",
-        "description": "サードパーティのプラグインは、署名されたコードとホストごとのネットワーク承認によりサンドボックス内で実行されます — 何にアクセスできるかは常にあなたの管理下にあります。"
+        "description": "サードパーティのプラグインは、署名されたコードとホストごとのネットワーク承認によりサンドボックス内で実行されます。何にアクセスできるかは常にあなたの管理下にあります。"
       }
     },
     "workspaces": {
@@ -323,7 +323,7 @@
       "onClose": "確定時",
       "crossedAbovePrice": "{{price}} を上抜けました",
       "conditionCrossesAbove": "上抜けたら",
-      "notifyMeDesktopInApp": "通知する — デスクトップ + アプリ内",
+      "notifyMeDesktopInApp": "通知する：デスクトップ + アプリ内",
       "nodeTrigger": "トリガー",
       "nodeSignalLabel": "シグナル: {{signal}}",
       "nodeCondition": "条件",
@@ -335,19 +335,19 @@
       "runStopLossGuard": "ストップロス監視",
       "ranAt": "{{time}} · 実行済み",
       "runsLocally": "ローカルで実行",
-      "storedOnDevice": "この端末に保存 — サーバーには保存されません",
+      "storedOnDevice": "この端末に保存、サーバーには保存されません",
       "osKeychain": "OSキーチェーン",
       "pluginKindMarketData": "マーケットデータ",
       "pluginKindTheme": "テーマ",
       "pluginKindAutomation": "自動化",
       "sandboxedByDefault": "デフォルトでサンドボックス",
       "signedVerified": "署名済み & 検証済み",
-      "networkAccessApproveHost": "ネットワークアクセス — ホストごとに承認します",
+      "networkAccessApproveHost": "ネットワークアクセス：ホストごとに承認します",
       "copiedToWorkspaces": "ワークスペースにコピーしました",
       "statNet": "純損益",
       "statMaxDd": "最大DD",
       "sameCodeGoesLive": "同じコードがそのまま本番稼働",
-      "runsOnYourMachine": "お使いの端末で実行 — スリープさせないでください",
+      "runsOnYourMachine": "お使いの端末で実行、スリープさせないでください",
       "botMeanReversion": "平均回帰",
       "chainWallet": "{{chain}}ウォレット"
     }
@@ -439,7 +439,7 @@
       "title": "利用状況分析",
       "description": "匿名の利用データとクラッシュレポートを共有してPairlensの改善にご協力ください。取引内容、APIキー、残高は一切含まれません。",
       "toggleDescription": "このデバイスのみに適用されます。オフにすると、すべての分析が即座に停止します。",
-      "notConfigured": "このビルドには分析キーが設定されていません — データは一切収集されません。",
+      "notConfigured": "このビルドには分析キーが設定されていません：データは一切収集されません。",
       "dataTitle": "アカウントのデータ",
       "dataSignedOut": "サインインしていないため、サーバーにアカウントデータはありません。Pairlens が知っている情報はすべてこの端末に保存されています。",
       "exportTitle": "データをエクスポート",
@@ -564,11 +564,11 @@
       "thirdPartyAcknowledge": "サードパーティレジストリには未検証のプラグインが含まれる可能性があることを理解し、そのリスクを受け入れます。",
       "invalidUrl": "有効なURLを入力してください（例：https://registry.example.com）。",
       "desktopEgressTitle": "デスクトップのネットワークアクセス",
-      "desktopEgressDescription": "デスクトップアプリは許可リストにないホストへのネットワークリクエストをブロックします。このレジストリにアクセスするにはネットワークアクセスを許可してください — 適用にはターミナルの再読み込みが必要です。",
+      "desktopEgressDescription": "デスクトップアプリは許可リストにないホストへのネットワークリクエストをブロックします。このレジストリにアクセスするにはネットワークアクセスを許可してください。適用にはターミナルの再読み込みが必要です。",
       "desktopEgressGranted": "このレジストリのホストはネットワークアクセスを許可されています。",
       "desktopEgressGrant": "ネットワークアクセスを許可して再読み込み",
       "publisherKeys": "信頼済みの発行者キー",
-      "publisherKeysDescription": "プラグインは、署名が信頼済みの発行者キーと一致した場合のみインストールされます。セルフホストや自社レジストリのプラグインを信頼するには、ここにキーを追加してください。信頼できる相手から受け取ったキーのみを追加してください — 対応する秘密鍵を持つ人物は誰でも、ターミナルへのフルアクセスを要求するプラグインを公開できます。",
+      "publisherKeysDescription": "プラグインは、署名が信頼済みの発行者キーと一致した場合のみインストールされます。セルフホストや自社レジストリのプラグインを信頼するには、ここにキーを追加してください。信頼できる相手から受け取ったキーのみを追加してください：対応する秘密鍵を持つ人物は誰でも、ターミナルへのフルアクセスを要求するプラグインを公開できます。",
       "publisherKeysEmpty": "カスタムキーはありません。Pairlens公式の発行者は常に信頼されます。",
       "publisherKeyIdLabel": "キーID",
       "publisherKeyIdPlaceholder": "acme-plugins-2026",
@@ -659,7 +659,7 @@
     },
     "connection": {
       "title": "マーケットデータ接続",
-      "description": "マーケットデータは、インストール済みのコネクタプラグインを通じて取引所から直接ストリーミングされます — 仲介サーバーは介在しません。",
+      "description": "マーケットデータは、インストール済みのコネクタプラグインを通じて取引所から直接ストリーミングされます、仲介サーバーは介在しません。",
       "status": {
         "connected": "接続済み",
         "connecting": "接続中…",
@@ -715,7 +715,7 @@
       "aiPaperAuto": "ペーパー取引を自動承認",
       "aiPaperAutoDescription": "シミュレーション資金のみ。アシスタントは確認カードなしでペーパー注文を出します。",
       "aiLiveAuto": "ライブ取引を自動承認",
-      "aiLiveAutoEmpty": "許可された取引所はありません — すべてのライブ取引に確認が必要です。注文カードの「今後は確認しない」から取引所を許可してください。",
+      "aiLiveAutoEmpty": "許可された取引所はありません：すべてのライブ取引に確認が必要です。注文カードの「今後は確認しない」から取引所を許可してください。",
       "aiLiveAutoDescription": "実際の資金です。アシスタントは、これらの取引所で確認カードなしでライブ注文を出します：",
       "aiLiveAutoRevoke": "{{market}}を取り消す"
     },
@@ -723,12 +723,12 @@
       "title": "Pairlens Intelligence",
       "description": "ホスト型AIアシスタント。ディープリサーチとウェブ検索つきで、APIキーは不要です。",
       "signInFirst": "Pairlens Intelligence のサブスクリプションを管理するにはサインインしてください。",
-      "selfHosted": "このサーバーでは課金が設定されていません — ホスト型AI機能はサブスクリプションなしで動作します。",
+      "selfHosted": "このサーバーでは課金が設定されていません。ホスト型AI機能はサブスクリプションなしで動作します。",
       "loadError": "課金状況を読み込めませんでした。もう一度お試しください。",
       "freePlan": "無料",
-      "active": "有効 — 自動的に更新されます。",
-      "complimentary": "無償アクセス — コア貢献者。利用は課金されません。",
-      "endsOn": "キャンセル済み — {{date}} にアクセスが終了します。",
+      "active": "有効。自動的に更新されます。",
+      "complimentary": "無償アクセス：コア貢献者。利用は課金されません。",
+      "endsOn": "キャンセル済み：{{date}} にアクセスが終了します。",
       "planCredits": "毎月 {{credits}} クレジット",
       "perMonth": "/月",
       "manage": "サブスクリプションを管理",
@@ -738,17 +738,17 @@
       "creditsUsed": "{{granted}} クレジット中 {{used}} 使用",
       "resetsOn": "{{date}} にリセット",
       "webResearchNote": "ホスト型ウェブ検索1回につき {{credits}} クレジットと、それを呼び出すリクエストのトークン分を消費します。",
-      "byokNote": "独自のAIプロバイダーを使いたい場合は、自分のキーを使うプラグイン（Anthropic、OpenAI、Groq、OpenRouter、Tavily、Exa）が常に無料です — プラグインページから接続できます。",
+      "byokNote": "独自のAIプロバイダーを使いたい場合は、自分のキーを使うプラグイン（Anthropic、OpenAI、Groq、OpenRouter、Tavily、Exa）が常に無料です。プラグインページから接続できます。",
       "checkoutOpened": "ブラウザで決済ページを開きました",
       "checkoutOpenedDescription": "支払いが完了すると、ここでサブスクリプションが有効になります。",
-      "checkoutFailed": "決済を開始できませんでした — もう一度お試しください。",
+      "checkoutFailed": "決済を開始できませんでした。もう一度お試しください。",
       "portalFailed": "請求ポータルを開けませんでした。",
-      "taxNote": "価格は税抜きです — 税額はお住まいの地域に基づき決済時に計算されます。",
+      "taxNote": "価格は税抜きです：税額はお住まいの地域に基づき決済時に計算されます。",
       "packsTitle": "追加クレジット",
       "packsDescription": "月間バジェットに上乗せされる単発チャージです。チャージ分のクレジットは購入から30日で失効し、更新されません。",
-      "packActive": "追加クレジット {{credits}} — {{date}} に失効",
+      "packActive": "追加クレジット {{credits}}、{{date}} に失効",
       "packAddedToastTitle": "追加クレジットが加算されました",
-      "packAddedToastDescription": "クレジットパックが残高に反映されました — パッククレジットは購入から30日で失効します。"
+      "packAddedToastDescription": "クレジットパックが残高に反映されました。パッククレジットは購入から30日で失効します。"
     },
     "about": {
       "desktop": "デスクトップ",
@@ -919,16 +919,16 @@
       "vaultRemoveProtector": "削除",
       "vaultRemoveLastBlocked": "これが保管庫への唯一の入口です。削除する前に別の入口を追加してください。",
       "vaultRemoveBiometricOnlyBlocked": "Touch ID を唯一の入口にはできません。この Mac の指紋は変更される可能性があります。パスワードかパスキーを残してください。",
-      "vaultProtectsBody": "保管庫があれば、API キーとウォレット鍵は暗号化されて保存されます。このブラウザプロファイル — あるいはこのデバイスのストレージ — をコピーした人が手にするのは、あなたのパスワードかパスキーなしでは開けない暗号文だけです。",
+      "vaultProtectsBody": "保管庫があれば、API キーとウォレット鍵は暗号化されて保存されます。このブラウザプロファイル（あるいはこのデバイスのストレージ）をコピーした人が手にするのは、あなたのパスワードかパスキーなしでは開けない暗号文だけです。",
       "vaultCeiling": "使用中の鍵は保護しません。このページ内で動くものはすべて、アプリと同じように解錠済みの保管庫へ鍵を要求できます。もっとも価値の高い鍵には、引き続きデスクトップアプリをおすすめします。",
-      "vaultNoRecovery": "復旧手段はありません。すべての入口を失えば暗号化された鍵も失われます — アプリに戻る唯一の方法はこのデバイスのデータを消去することです。",
+      "vaultNoRecovery": "復旧手段はありません。すべての入口を失えば暗号化された鍵も失われます：アプリに戻る唯一の方法はこのデバイスのデータを消去することです。",
       "vaultDesktopToggleHint": "鍵はすでにシステムのキーチェーンにあります。その上にパスワードやパスキーを重ねるにはこれをオンにしてください。",
       "vaultDesktopOptOutTitle": "資格情報の保管庫をオフにしますか？",
       "vaultDesktopOptOutBody": "鍵の保護はシステムのキーチェーンだけに戻ります。何も削除されず、保管庫は後からまたオンにできます。",
       "vaultDesktopOptOutConfirm": "保管庫をオフにする",
       "vaultMigrated_one": "既存の鍵 1 つを保管庫へ移動しました。",
       "vaultMigrated_other": "既存の鍵 {{count}} つを保管庫へ移動しました。",
-      "vaultMigrationFailed": "保管庫の設定が完了しませんでした。鍵はまだ読み取れます — 保管庫を開いて完了させてください。",
+      "vaultMigrationFailed": "保管庫の設定が完了しませんでした。鍵はまだ読み取れます。保管庫を開いて完了させてください。",
       "vaultSharedBackoff": "保管庫とロック画面は試行回数の上限を共有するため、パスワードを間違えすぎると両方が遅延します。",
       "vaultCliNote": "コマンドラインツールは API キーを引数で受け取り、保管庫を読むことはありません。",
       "hardLockTitle": "ハードロック",
@@ -1340,7 +1340,7 @@
     "autoApprovedNote": "自動承認済み({{mode}} · 次回から確認しない が有効)",
     "turnOff": "オフにする",
     "autoApproving": "{{mode}}注文を自動承認しています…",
-    "liveOrderWarning": "実注文 — 実際の資金が動きます。リスク上限に基づいて強制されます。",
+    "liveOrderWarning": "実注文：実際の資金が動きます。リスク上限に基づいて強制されます。",
     "dontAskAgainPaper": "ペーパー取引では次回から確認しない",
     "dontAskAgainLive": "{{market}} の実取引では次回から確認しない",
     "placing": "発注中…",
@@ -1355,7 +1355,7 @@
     "keep": "そのままにする",
     "tradingUnavailable": "取引は利用できません。",
     "noCredentialsForMarket": "{{market}} に接続された認証情報がありません。実取引を行うにはAccountsでAPIキーを追加してください。",
-    "scheduledCheckPrefix": "[予約チェック — {{minutes}}分前に設定]",
+    "scheduledCheckPrefix": "[予約チェック：{{minutes}}分前に設定]",
     "toolFailed": "ツールが失敗しました"
   },
   "chart": {
@@ -1591,7 +1591,7 @@
     "keepAwakeOff": "このコンピューターはスリープでき、その際ボットも停止します。",
     "keepAwakeUnsupported": "スリープを抑止できるのはデスクトップアプリだけです。",
     "localBody": "あなたのストラテジーは、当社が運用するサーバーではなく、ここPairlensの中で実行されます。だからこそAPIキーもロジックもあなたのものであり続けます。ただしトレードオフは現実です。Pairlensを終了したり、このコンピューターをスリープさせたりすれば、ボットも一緒に停止し、保有中のポジションはあなたが戻るまで見張られないまま残ります。",
-    "emptyDescription": "ボットは、あなたのストラテジースクリプトをマーケット上で実行します。既製のストラテジーから始めるか、Python で自作してください — 新しいボットはライブに切り替えるまでペーパー取引で動きます。",
+    "emptyDescription": "ボットは、あなたのストラテジースクリプトをマーケット上で実行します。既製のストラテジーから始めるか、Python で自作してください。新しいボットはライブに切り替えるまでペーパー取引で動きます。",
     "emptyHeadline": "チャートの監視はストラテジーに任せる",
     "templateEmaCross": "トレンドを両方向に追随：クロスの上でロング、下でショート。",
     "templateRsiReversion": "売られすぎの押し目を買います。ただし価格が長期トレンドの上にある間だけ。",
@@ -1665,8 +1665,8 @@
     "createBot": "ボットを作成",
     "back": "戻る",
     "next": "次へ",
-    "stepProgress": "ステップ {{current}}/{{total}} — {{title}}",
-    "strategyIntro": "ボットはストラテジースクリプト — いつ入っていつ出るかを宣言する Python — を実行します。まずは下の既製ストラテジーから始めましょう。コードはあなたのもので、いつでも開いて編集できます。",
+    "stepProgress": "ステップ {{current}}/{{total}}：{{title}}",
+    "strategyIntro": "ボットはストラテジースクリプト（いつ入っていつ出るかを宣言する Python）を実行します。まずは下の既製ストラテジーから始めましょう。コードはあなたのもので、いつでも開いて編集できます。",
     "stepStrategy": "ストラテジー",
     "stepMarket": "マーケット",
     "stepSizing": "数量",
@@ -1676,8 +1676,8 @@
     "groupTemplates": "既製のストラテジー",
     "groupUndeployable": "まだボットにできません",
     "writeYourOwn": "Python で独自のストラテジーを書く",
-    "reasonIndicator": "インジケーター — ボットとして動かすには strategy(...) メタが必要です",
-    "reasonNotRun": "未実行 — インジケーターとストラテジーで開いて一度実行してください",
+    "reasonIndicator": "インジケーター：ボットとして動かすには strategy(...) メタが必要です",
+    "reasonNotRun": "未実行：インジケーターとストラテジーで開いて一度実行してください",
     "openIndicators": "インジケーターとストラテジーを開く",
     "marketHint": "ボットはこの時間足で確定したこのペアのローソク足を使って評価します。",
     "sizingKind": "エントリー数量の基準",
@@ -1718,14 +1718,14 @@
     "deployAsBot": "ボットとしてデプロイ",
     "kindDraft": "下書き",
     "templatesIndicators": "インジケーターのテンプレート",
-    "templatesStrategies": "ストラテジーのテンプレート — ボットとして動かせます",
+    "templatesStrategies": "ストラテジーのテンプレート：ボットとして動かせます",
     "strategyBadgeHint": "エントリーと決済を宣言するので、バックテストしてボットとしてデプロイできます。",
     "indicatorBadgeHint": "値を描画するだけです。ボットとしてデプロイするには、エントリーと決済を含む strategy(...) メタを追加してください。",
     "startFromScratch": "ゼロから作成",
     "blankName": "新しいスクリプト",
-    "sidebarEmpty": "スクリプトはまだありません — ゼロから、またはテンプレートから作成しましょう",
+    "sidebarEmpty": "スクリプトはまだありません：ゼロから、またはテンプレートから作成しましょう",
     "entryFile": "エントリ",
-    "entryFileHint": "エントリモジュール — meta と compute(ctx) を定義します",
+    "entryFileHint": "エントリモジュール：meta と compute(ctx) を定義します",
     "fileActions": "{{file}} の操作",
     "newFile": "新しいファイル",
     "newFileTitle": "新しい Python ファイル",
@@ -1737,7 +1737,7 @@
     "deleteFileTitle": "ファイルを削除しますか？",
     "deleteFileDescription": "「{{file}}」を完全に削除します。",
     "scriptActions": "スクリプトの操作",
-    "statusReady": "準備完了 — チャートで使用中",
+    "statusReady": "準備完了：チャートで使用中",
     "statusError": "前回の実行が失敗しました",
     "neverRun": "未実行",
     "updated": "{{time}}に更新",
@@ -1830,14 +1830,14 @@
     "exportSavedTo": "{{folder}} に保存しました。プラグイン → プラグインをインポート、からインストールできます。",
     "exportSavedToDownloads": "ダウンロードフォルダに保存しました。プラグイン → プラグインをインポート、からインストールできます。",
     "emptyTitle": "インジケーターとトレード戦略を書く",
-    "emptyDescription": "Python でチャートインジケーターとボットのストラテジーを記述 — ライブマーケットデータで実行し、チャートで使用し、ストラテジーはトレーディングボットとしてデプロイできます。",
+    "emptyDescription": "Python でチャートインジケーターとボットのストラテジーを記述。ライブマーケットデータで実行し、チャートで使用し、ストラテジーはトレーディングボットとしてデプロイできます。",
     "templateSma": "選んだソースに移動平均を1本。役に立つ最小のスクリプトです。",
     "templateRsi": "買われすぎ・売られすぎゾーンとアラート条件を備えたサブペインのオシレーター。",
     "templateMacd": "2本のラインと、自身のモメンタムで色が変わるヒストグラム。",
     "templateBollinger": "中央を塗った帯を、インポートの例として2ファイルに分けたもの。",
     "templateSupertrend": "トレンドに合わせて色が反転し、ローソク足に参入マーカーを打つライン。",
     "templateHtf": "日足EMAを任意の時間軸に描画し、上位足が確定するまで値を保持します。",
-    "emptyFootnote": "Python はブラウザ内でローカルに動きます — コードがこのマシンを離れることはありません。ストラテジースクリプトは一度実行すればすぐボットとしてデプロイできます。",
+    "emptyFootnote": "Python はブラウザ内でローカルに動きます：コードがこのマシンを離れることはありません。ストラテジースクリプトは一度実行すればすぐボットとしてデプロイできます。",
     "pickScript": "左側からスクリプトを選ぶと開きます。",
     "versionHistory": "バージョン履歴",
     "versionHistoryDescription": "変更のたびに上書き前のファイルがスナップショットとして保存されるため、上書きした内容も失われません。",
@@ -1879,7 +1879,7 @@
     "sdkRefEmpty": "「{{query}}」に一致するものはありません",
     "sdkRefEmptyHint": "検索は名前と説明の両方を見ます。短い語で試してください。",
     "librariesTitle": "Python ライブラリ",
-    "librariesDescription": "スクリプトがインポートできるもの — 厳選ライブラリ、ランタイムに組み込まれたパッケージ、そして PyPI の純 Python wheel すべて。",
+    "librariesDescription": "スクリプトがインポートできるもの：厳選ライブラリ、ランタイムに組み込まれたパッケージ、そして PyPI の純 Python wheel すべて。",
     "librariesSearchPlaceholder": "ライブラリを検索…",
     "librariesCurated": "厳選",
     "librariesRuntime": "ランタイム組み込み",
@@ -1899,7 +1899,7 @@
     "importNameLabel": "名前",
     "importPasteLabel": "Python ソース",
     "importPastePlaceholder": "インジケーターのスクリプトをここに貼り付けてください…",
-    "importNotIndicator": "Pairlens のインジケーターには見えません — meta = indicator(…) と compute(ctx) を定義する必要があります。そのままインポートしてエディターで修正することもできます。",
+    "importNotIndicator": "Pairlens のインジケーターには見えません：meta = indicator(…) と compute(ctx) を定義する必要があります。そのままインポートしてエディターで修正することもできます。",
     "importFileHint": ".py スクリプト、または Pairlens からエクスポートした .zip プラグインパッケージ。",
     "importChooseFile": "ファイルを選択",
     "importForkHint": "インストール済みプラグインのインジケーターを、編集できる自分のスクリプトにコピーします。",
@@ -1911,20 +1911,20 @@
     "importError": {
       "empty": "インポートするものがありません。",
       "binary": "そのファイルは Python のソースではありません。",
-      "tooLarge": "大きすぎます — インジケーターは {{limit}} KB までです。",
-      "tooManyFiles": "ファイルが多すぎます — インジケーターは最大 {{limit}} ファイルまでです。",
+      "tooLarge": "大きすぎます：インジケーターは {{limit}} KB までです。",
+      "tooManyFiles": "ファイルが多すぎます：インジケーターは最大 {{limit}} ファイルまでです。",
       "badZip": "そのファイルを zip として読み取れませんでした。",
       "invalidPath": "「{{path}}」は有効なモジュールパスではありません。インジケーターのフォルダー内で、.py で終わる Python のモジュール名を使ってください。",
       "duplicatePath": "2 つのファイルがパス「{{path}}」を共有しています。",
-      "noEntry": "どのファイルがエントリーモジュールか判別できませんでした — {{entry}} という名前にしてください。",
+      "noEntry": "どのファイルがエントリーモジュールか判別できませんでした。{{entry}} という名前にしてください。",
       "noIndicators": "そのプラグインにはインポートできるインジケーターのスクリプトがありません。プラグインページからインストールして、そこでフォークしてください。",
       "unsupportedLanguage": "{{language}} で書かれたインジケーターはインポートできません。",
       "malformedDescriptor": "そのインジケーターのデータが不正です。",
       "unknown": "インポートに失敗しました。"
     },
     "syntaxErrorDiagnostic": "構文エラー",
-    "missingMetaDiagnostic": "main.py にトップレベルの `meta = indicator(...)` が定義されていません — チャートに描画するものがありません。",
-    "missingComputeDiagnostic": "main.py にトップレベルの `def compute(ctx)` が定義されていません — スクリプトの読み込みに失敗します。"
+    "missingMetaDiagnostic": "main.py にトップレベルの `meta = indicator(...)` が定義されていません、チャートに描画するものがありません。",
+    "missingComputeDiagnostic": "main.py にトップレベルの `def compute(ctx)` が定義されていません、スクリプトの読み込みに失敗します。"
   },
   "indicators": {
     "title": "インジケーターを追加",
@@ -2129,7 +2129,7 @@
     "selectWalletOrders": "注文を表示するにはウォレットを選択してください",
     "selectWalletFills": "約定を表示するにはウォレットを選択してください",
     "selectWalletBalances": "残高を表示するにはウォレットを選択してください",
-    "spotNoPositions": "現物モード — 証拠金ポジションなし",
+    "spotNoPositions": "現物モード：証拠金ポジションなし",
     "balances": "残高",
     "noBalances": "残高データがありません",
     "total": "合計",
@@ -2199,16 +2199,16 @@
       "taxNotice": "価格には税金が含まれません。税金はチェックアウト時に計算されます。",
       "defaultTitle": "Pairlens Intelligence を利用する",
       "defaultDescription": "ホスト型AIアシスタントに、ディープリサーチとウェブ検索がついて、APIキーの管理は不要です。各プランには、チャット・リサーチ・ウェブ検索で共有される月間利用予算が含まれます。",
-      "byokNote": "独自のプロバイダーをお使いになりたい場合は、<plugins>プラグイン</plugins>で Anthropic、OpenAI、Groq、OpenRouter のいずれかのキーを接続してください — 自分のキーを使うAIは常に無料です。",
+      "byokNote": "独自のプロバイダーをお使いになりたい場合は、<plugins>プラグイン</plugins>で Anthropic、OpenAI、Groq、OpenRouter のいずれかのキーを接続してください。自分のキーを使うAIは常に無料です。",
       "checkoutOpenedTitle": "ブラウザでチェックアウトを開きました",
       "checkoutActivates": "お支払いが完了すると、ここでサブスクリプションが有効になります。",
-      "checkoutStartError": "チェックアウトを開始できませんでした — もう一度お試しください。",
+      "checkoutStartError": "チェックアウトを開始できませんでした。もう一度お試しください。",
       "subscriptionRequiredTitle": "Pairlens Intelligence の購読が必要です",
       "subscriptionRequiredBody": "ホスト型AIは Intelligence プランで動作します。下記から購読するか、プラグインで独自のAIプロバイダーキーを接続してください。",
       "budgetUsedUpTitle": "月間利用予算を使い切りました",
       "budgetUsedBody": "今サイクルの Intelligence クレジットを使い切りました。",
       "budgetResetsOn": "予算は{{date}}にリセットされます。",
-      "topUpHint": "クレジットパックでチャージして続けられます — パックのクレジットは購入から30日で失効します。",
+      "topUpHint": "クレジットパックでチャージして続けられます。パックのクレジットは購入から30日で失効します。",
       "upgradeToMaxHint": "{{label}}にアップグレードすると、月に{{credits}}クレジットが利用できます。",
       "manageSubscription": "サブスクリプションを管理",
       "portalError": "請求ポータルを開けませんでした。",
@@ -2453,16 +2453,16 @@
     "disableCoreDescription": "Pairlens Coreはチャート、オーダーブック、マーケット、その他の主要な組み込みパネルを提供しています。無効化すると、これらのパネルは非表示になり、再度有効化するまでターミナルはほぼ空になります。続行しますか？",
     "disableAnyway": "それでも無効化する",
     "buildOwnTitle": "自分のプラグインを作る",
-    "buildOwnDescription": "Pairlensはオープンなプラットフォームです。プラグインをスキャフォールドし、ビルドして、ローカルで読み込めます — レジストリは不要です。",
+    "buildOwnDescription": "Pairlensはオープンなプラットフォームです。プラグインをスキャフォールドし、ビルドして、ローカルで読み込めます、レジストリは不要です。",
     "buildStepScaffold": "新しいプラグインをスキャフォールド",
     "buildStepScaffoldNote": "このモノレポ内で使用：bun run create:plugin my-plugin",
     "buildStepBuild": "ビルド＆パッケージ化",
     "buildStepBuildNote": "1つの.zipファイル（manifest.json + module.js + 任意のstyles.css）を生成します。",
     "buildStepInstall": "インストール",
     "buildStepInstallNote": "「インストール済み」タブに移動して使用",
-    "buildStepInstallNote2": "— またはデスクトップの場合、フォルダをプラグインディレクトリにドロップします。",
+    "buildStepInstallNote2": "またはデスクトップの場合、フォルダをプラグインディレクトリにドロップします。",
     "buildRuntimeTitle": "プラグインが使用できるもの",
-    "buildRuntimeNote": "ホストはReact、@pairlens/plugin-sdk（フック）、@pairlens/uiデザインシステム（パッケージルートからインポート）、そして@pairlens/fast-financial-chartsをランタイムで提供します — ビルド時にexternal指定してください。デザインシステムのコンポーネントはホストによってスタイル付けされます。カスタムCSSが必要な場合は、プラグインにstyles.cssを同梱してください。",
+    "buildRuntimeNote": "ホストはReact、@pairlens/plugin-sdk（フック）、@pairlens/uiデザインシステム（パッケージルートからインポート）、そして@pairlens/fast-financial-chartsをランタイムで提供します。ビルド時にexternal指定してください。デザインシステムのコンポーネントはホストによってスタイル付けされます。カスタムCSSが必要な場合は、プラグインにstyles.cssを同梱してください。",
     "buildExamplesNote": "動作するリファレンスについては、リポジトリ内のdev-starterおよびdev-syncのサンプルをご覧ください。",
     "applied": "適用済み",
     "applyTheme": "テーマを適用",
@@ -2475,7 +2475,7 @@
     "communityBadge": "コミュニティ",
     "communityFullTrustBlocked": "コミュニティプラグインは常にサンドボックス内で実行されます。「{{name}}」はメインアプリ権限を必要とするため、インストールできません。",
     "communityMaintainer": "メンテナー",
-    "communityNotice": "コミュニティプラグイン — コミュニティによって提出され、Pairlensによる軽微なレビューのみを受けています。常にプラグインサンドボックス内で実行され、宣言されたネットワークホストのみにアクセスでき、取引所の鍵、ウォレット、取引情報には決してアクセスできません。",
+    "communityNotice": "コミュニティプラグイン：コミュニティによって提出され、Pairlensによる軽微なレビューのみを受けています。常にプラグインサンドボックス内で実行され、宣言されたネットワークホストのみにアクセスでき、取引所の鍵、ウォレット、取引情報には決してアクセスできません。",
     "communityViewSource": "ソースを見る",
     "configuration": "設定",
     "curated": "今週のおすすめ",
@@ -2499,7 +2499,7 @@
     "networkAccess": "ネットワークアクセス",
     "noInstalledPlugins": "インストール済みのプラグインはありません。",
     "noMatches": "検索条件に一致するプラグインがありません",
-    "noNetworkAccess": "外部ネットワークアクセスなし — 完全にデバイス上で動作します。",
+    "noNetworkAccess": "外部ネットワークアクセスなし。完全にデバイス上で動作します。",
     "overview": "概要",
     "palette": "パレット",
     "panels": "含まれるパネル",
@@ -2546,17 +2546,17 @@
     },
     "toggleFailedEnable": "{{name}} を有効化できませんでした",
     "toggleFailedDisable": "{{name}} を無効化できませんでした",
-    "updateStagedToast": "更新の準備ができました — 適用するには再起動してください",
+    "updateStagedToast": "更新の準備ができました：適用するには再起動してください",
     "restartNow": "今すぐ再起動",
     "updateStageFailedToast": "更新の準備に失敗しました: {{error}}",
-    "resetStagedToast": "デフォルトにリセットしました — 完了するには再起動してください",
-    "networkGrantedToast": "「{{name}}」にネットワークアクセスを許可しました — 再読み込み中…",
-    "networkDeniedToast": "「{{name}}」はネットワークアクセスなしでインストールされました — 許可するまで正しく動作しない場合があります。",
-    "installCancelledNoTrust": "インストールをキャンセルしました — 完全な信頼は付与されていません",
+    "resetStagedToast": "デフォルトにリセットしました：完了するには再起動してください",
+    "networkGrantedToast": "「{{name}}」にネットワークアクセスを許可しました、再読み込み中…",
+    "networkDeniedToast": "「{{name}}」はネットワークアクセスなしでインストールされました、許可するまで正しく動作しない場合があります。",
+    "installCancelledNoTrust": "インストールをキャンセルしました：完全な信頼は付与されていません",
     "installedVersionToast": "「{{name}}」v{{version}} をインストールしました",
     "installFailedToast": "プラグインをインストールできませんでした: {{error}}",
     "localFilesNotFound": "ローカルのプラグインファイルが見つかりません",
-    "pluginCodeNotFound": "プラグインのコードが見つかりません — 再インストールしてください",
+    "pluginCodeNotFound": "プラグインのコードが見つかりません。再インストールしてください",
     "fullTrustGrantedNameToast": "「{{name}}」に完全な信頼を付与しました",
     "loadPluginFailedToast": "プラグインを読み込めませんでした: {{error}}",
     "importFailedToast": "プラグインをインポートできませんでした: {{error}}",
@@ -2564,7 +2564,7 @@
     "configSaved": "設定を保存しました",
     "configurationFailed": "設定に失敗しました",
     "needsFullTrustToRun": "実行には完全な信頼が必要です",
-    "pendingTrustDescription": "UI を提供するためサンドボックス内では動作できません — 有効にするには完全な信頼を付与するか、アンインストールしてください。",
+    "pendingTrustDescription": "UI を提供するためサンドボックス内では動作できません。有効にするには完全な信頼を付与するか、アンインストールしてください。",
     "remove": "削除",
     "groupProvidersExtensions": "プロバイダーと拡張機能",
     "uninstallPluginTitle": "プラグインをアンインストール",
@@ -2581,8 +2581,8 @@
     "sourceRegistry": "レジストリ",
     "sourceUrl": "URL",
     "sourceLocal": "ローカル",
-    "fullTrustGrantedRestartToast": "完全な信頼を付与しました — このプラグインをメインアプリで実行するには再起動してください",
-    "sandboxedRestartToast": "プラグインはサンドボックスで実行されます — 適用するには再起動してください",
+    "fullTrustGrantedRestartToast": "完全な信頼を付与しました：このプラグインをメインアプリで実行するには再起動してください",
+    "sandboxedRestartToast": "プラグインはサンドボックスで実行されます：適用するには再起動してください",
     "requiresFullTrustTitle": "このプラグインは UI を提供するため、完全な信頼のもとで実行する必要があります。",
     "trustBadgeFullRequired": "完全な信頼（必須）",
     "trustBadgeFull": "完全な信頼",
@@ -2592,8 +2592,8 @@
     "update": "更新",
     "revokeFullTrustAria": "{{name}} の完全な信頼を取り消す",
     "grantFullTrustAria": "{{name}} に完全な信頼を付与",
-    "fullTrustActiveTitle": "完全な信頼 — メインアプリで実行中です。クリックするとサンドボックスに切り替わります。",
-    "sandboxedTitle": "サンドボックス — 分離された Worker で実行され、ネットワークは宣言済みのホストに限定されます。クリックすると完全な信頼を付与します。",
+    "fullTrustActiveTitle": "完全な信頼：メインアプリで実行中です。クリックするとサンドボックスに切り替わります。",
+    "sandboxedTitle": "サンドボックス：分離された Worker で実行され、ネットワークは宣言済みのホストに限定されます。クリックすると完全な信頼を付与します。",
     "configureAria": "{{name}} を設定",
     "toggleAria": "{{name}} を切り替え",
     "capabilityProvidersTitle": "機能プロバイダー",
@@ -2601,13 +2601,13 @@
     "resetAllOverrides": "すべてのオーバーライドをリセット",
     "noProviderInstalled": "これを提供するインストール済みプラグインはありません",
     "browseStore": "ストアを見る",
-    "installedNeedsKeySingle": "インストール済み — API キーが必要です",
-    "installedNeedsKeyPlural": "{{count}}件インストール済み — すべて API キーが必要です",
+    "installedNeedsKeySingle": "インストール済み：API キーが必要です",
+    "installedNeedsKeyPlural": "{{count}}件インストール済み：すべて API キーが必要です",
     "installedDisabledSingle": "プラグインが1つインストールされていますが、無効です",
     "installedDisabledPlural": "プラグインが{{count}}件インストールされていますが、すべて無効です",
     "manage": "管理",
-    "pinnedActiveNote": "固定済み — 自動順序を上書きします",
-    "pinnedInactiveNote": "固定されたプラグインは無効です — 自動順序が適用されます",
+    "pinnedActiveNote": "固定済み：自動順序を上書きします",
+    "pinnedInactiveNote": "固定されたプラグインは無効です：自動順序が適用されます",
     "autoOrderLabel": "自動順序: {{chain}}",
     "chainMore_one": "{{chain}} 他{{count}}件",
     "chainMore_other": "{{chain}} 他{{count}}件",
@@ -2658,7 +2658,7 @@
     "manifests": {
       "pairlens-core": {
         "title": "Pairlens Core",
-        "description": "コアトレーディングターミナル — チャート、オーダーブック、エントリー、マーケットディスカバリー、ウォッチリスト"
+        "description": "コアトレーディングターミナル：チャート、オーダーブック、エントリー、マーケットディスカバリー、ウォッチリスト"
       },
       "pairlens-intelligence": {
         "title": "Pairlens Intelligence",
@@ -2686,7 +2686,7 @@
       },
       "openrouter-inference": {
         "title": "OpenRouter",
-        "description": "OpenRouter による AI 推論 — 1つの API キーで各プロバイダーの数百のモデルを利用可能(自前のキーを使用)"
+        "description": "OpenRouter による AI 推論：1つの API キーで各プロバイダーの数百のモデルを利用可能(自前のキーを使用)"
       },
       "tavily-search": {
         "title": "Tavily 検索",
@@ -2698,7 +2698,7 @@
       },
       "pairlens": {
         "title": "Pairlens",
-        "description": "Pairlens のシグネチャーテーマ — クリーンな白黒配色にレインボープリズムのアクセント"
+        "description": "Pairlens のシグネチャーテーマ：クリーンな白黒配色にレインボープリズムのアクセント"
       },
       "zen-trading": {
         "title": "Zen Trading",
@@ -2826,7 +2826,7 @@
       },
       "alpaca-market-connector": {
         "title": "Alpaca マーケットコネクタ",
-        "description": "Alpaca ブローカー API による米国株式・ETF — リアルタイムのマーケットデータ、ペーパー・ライブ両対応の取引"
+        "description": "Alpaca ブローカー API による米国株式・ETF：リアルタイムのマーケットデータ、ペーパー・ライブ両対応の取引"
       },
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
@@ -2834,39 +2834,39 @@
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",
-        "description": "GeckoTerminal(CoinGecko)が提供する DEX マーケットデータ — 深い履歴と 4 時間足のネイティブ対応"
+        "description": "GeckoTerminal(CoinGecko)が提供する DEX マーケットデータ：深い履歴と 4 時間足のネイティブ対応"
       },
       "jupiter-dex-connector": {
         "title": "Jupiter DEXコネクタ",
-        "description": "Solana DEXアグリゲーター — 全 Solana DEX から最良価格をルーティング"
+        "description": "Solana DEXアグリゲーター：全 Solana DEX から最良価格をルーティング"
       },
       "ethereum-dex-connector": {
         "title": "Ethereum DEXコネクタ",
-        "description": "オンチェーンEthereumスワップ — KyberSwapアグリゲーター経由で全 Ethereum DEX から最良価格をルーティング"
+        "description": "オンチェーンEthereumスワップ：KyberSwapアグリゲーター経由で全 Ethereum DEX から最良価格をルーティング"
       },
       "base-dex-connector": {
         "title": "Base DEXコネクタ",
-        "description": "オンチェーンBaseスワップ — KyberSwapアグリゲーター経由で全 Base DEX から最良価格をルーティング"
+        "description": "オンチェーンBaseスワップ：KyberSwapアグリゲーター経由で全 Base DEX から最良価格をルーティング"
       },
       "arbitrum-dex-connector": {
         "title": "Arbitrum DEXコネクタ",
-        "description": "オンチェーンArbitrumスワップ — KyberSwapアグリゲーター経由で全 Arbitrum DEX から最良価格をルーティング"
+        "description": "オンチェーンArbitrumスワップ：KyberSwapアグリゲーター経由で全 Arbitrum DEX から最良価格をルーティング"
       },
       "bsc-dex-connector": {
         "title": "BNB Chain DEXコネクタ",
-        "description": "オンチェーンBNB Chainスワップ — KyberSwapアグリゲーター経由で全 BNB Chain DEX から最良価格をルーティング"
+        "description": "オンチェーンBNB Chainスワップ：KyberSwapアグリゲーター経由で全 BNB Chain DEX から最良価格をルーティング"
       },
       "polygon-dex-connector": {
         "title": "Polygon DEXコネクタ",
-        "description": "オンチェーンPolygonスワップ — KyberSwapアグリゲーター経由で全 Polygon DEX から最良価格をルーティング"
+        "description": "オンチェーンPolygonスワップ：KyberSwapアグリゲーター経由で全 Polygon DEX から最良価格をルーティング"
       },
       "kalshi-market-connector": {
         "title": "Kalshi マーケットコネクタ",
-        "description": "CFTC 規制の予測取引所 Kalshi のイベント契約 — 資産ではなく結果を取引"
+        "description": "CFTC 規制の予測取引所 Kalshi のイベント契約：資産ではなく結果を取引"
       },
       "polymarket-market-connector": {
         "title": "Polymarket マーケットコネクタ",
-        "description": "Polymarket CLOB のイベント契約 — ウォレット署名で発注、USDC で決済"
+        "description": "Polymarket CLOB のイベント契約：ウォレット署名で発注、USDC で決済"
       },
       "pairlens-predictions": {
         "title": "Pairlens 予測",
@@ -3105,12 +3105,12 @@
     "connectBroker": "ブローカーを接続",
     "selectBroker": "接続するブローカーを選択",
     "brokerAccountsTitle": "証券ブローカー",
-    "brokerAccountsDesc": "APIキーで接続された証券ブローカーアカウント（Alpacaなど） — ペーパーまたはライブ資金で米国株式・ETFを取引できます。",
+    "brokerAccountsDesc": "APIキーで接続された証券ブローカーアカウント（Alpacaなど）。ペーパーまたはライブ資金で米国株式・ETFを取引できます。",
     "noBrokerAccounts": "証券ブローカーはまだ接続されていません",
     "noBrokerAccountsDesc": "ブローカーアカウントを接続して株式を取引しましょう。Alpacaは数分で無料のペーパー取引キーを発行します。",
     "comingSoon": "近日公開",
     "exchangeAccountsTitle": "暗号資産取引所",
-    "exchangeAccountsDesc": "APIキーで接続された中央集権型取引所アカウント（Binance、OKXなど） — 資金は取引所に保管されたままです。",
+    "exchangeAccountsDesc": "APIキーで接続された中央集権型取引所アカウント（Binance、OKXなど）。資金は取引所に保管されたままです。",
     "cryptoWalletsTitle": "暗号資産ウォレット",
     "cryptoWalletsDesc": "分散型取引所でオンチェーン取引を行うための秘密鍵。",
     "addWallet": "ウォレットを追加",
@@ -3159,7 +3159,7 @@
       "osBodyBrowser": "各値はブラウザーのストレージに触れる前にAES-256-GCMで封印されます。1つのデータキーがそのすべてを暗号化し、そのキーが平文で書き出されることはありません。",
       "unlockTitle": "開けられるのはあなただけ",
       "unlockBody": "PBKDF2-SHA256を600,000回繰り返して強化したパスワード、スマートフォンやセキュリティキーのパスキー、またはTouch ID。いずれも同じデータキーを包むため、入口を複数持てます。Pairlensがそのどれかを受け取ることはありません。",
-      "openSourceTitle": "ソースコード公開 — 自分で確認できます",
+      "openSourceTitle": "ソースコード公開、自分で確認できます",
       "openSourceBody": "Pairlensのコードは公開されています。あなた自身、開発者の友人、あるいはAIでも、コードを読んで鍵が本当にそこに留まっていることを確認できます。",
       "limitsTitle": "これで守れないこと",
       "limitsRunning": "アプリが開いていてロックが解除されている間は、アプリはあなたの鍵を読み取れます。注文を出すための仕組みそのものだからです。この暗号化が守るのは複製されたディスクやブラウザープロファイルであって、誰かがすでに向かっているマシンではありません。",
@@ -3177,7 +3177,7 @@
     "hero": {
       "eyebrow": "あなたの取引所",
       "title": "自分の鍵で取引する",
-      "subtitle": "このデバイスから外に出ないAPIキーで、取引所、ブローカー、オンチェーンウォレットを接続します。Pairlensは仲介なしで各取引所と直接やり取りします — 資産の保管も仲介も一切ありません。"
+      "subtitle": "このデバイスから外に出ないAPIキーで、取引所、ブローカー、オンチェーンウォレットを接続します。Pairlensは仲介なしで各取引所と直接やり取りします：資産の保管も仲介も一切ありません。"
     },
     "portfolioEyebrow": "ポートフォリオ",
     "openAccountShelfTitle": "新しいアカウントを開設",
@@ -3193,7 +3193,7 @@
     "hasAccountNoDesc": "無料の{{exchange}}アカウントを開設",
     "importKey": "秘密鍵をインポート",
     "affiliateDisclosure": "一部の登録リンクは、あなたに追加費用なしでPairlensに紹介料が発生する場合があります。",
-    "vaultSealedBody": "資格情報の保管庫がロックされています。アカウントはそのまま残っています — 解錠すれば表示・利用できます。",
+    "vaultSealedBody": "資格情報の保管庫がロックされています。アカウントはそのまま残っています、解錠すれば表示・利用できます。",
     "credentialsUnreadable": "このデバイスに保存された鍵を読み取れませんでした。データは失われていません。再試行するか、Pairlens を再起動してください。",
     "addWalletDialogTitle": "暗号資産ウォレットを追加",
     "addWalletDialogDescription": "オンチェーン取引のためにウォレットの秘密鍵をインポートします",
@@ -3207,7 +3207,7 @@
     "disconnect": "切断",
     "localBadge": "ローカル",
     "unknownDate": "不明",
-    "keyExpiredWarning": "期限切れの可能性があります — {{daysInactive}}日間未使用（上限{{limitDays}}日）。取引所でAPIキーを再作成してください。",
+    "keyExpiredWarning": "期限切れの可能性があります：{{daysInactive}}日間未使用（上限{{limitDays}}日）。取引所でAPIキーを再作成してください。",
     "keyInactiveWarning": "{{daysInactive}}/{{limitDays}}日間未使用です。キーは{{limitDays}}日間未使用のまま経過すると失効します。",
     "exchangeAccountAriaLabel": "{{label}} 取引所アカウント",
     "cryptoWalletAriaLabel": "{{label}} 暗号資産ウォレット",
@@ -3301,7 +3301,7 @@
     },
     "security": {
       "trusted": "フルアクセス・Pairlens同梱",
-      "needsApproval": "フルアクセスが必要 — 承認を求められます",
+      "needsApproval": "フルアクセスが必要：承認を求められます",
       "gateTitle": "フルアクセス・プラグイン",
       "gateBody": "{{names}}は、あなたの認証情報と取引へのフルアクセス権で動作します。有効化される前に、それぞれの承認を求められます。"
     },
@@ -3370,23 +3370,23 @@
     "templates": {
       "scalpers-cockpit": {
         "name": "スキャルパーズ・コックピット",
-        "tagline": "チャート、板、ワンクリック発注 — それだけ。",
-        "description": "素早い執行のためのミニマルな2カラム構成 — チャートの隣にライブのオーダーブック、マーケットデプス、取引チケットを配置。1画面のスピードのために作られています。"
+        "tagline": "チャート、板、ワンクリック発注。それだけ。",
+        "description": "素早い執行のためのミニマルな2カラム構成：チャートの隣にライブのオーダーブック、マーケットデプス、取引チケットを配置。1画面のスピードのために作られています。"
       },
       "day-trader-pro": {
         "name": "デイトレーダー Pro",
         "tagline": "スキャンして、チャートを見て、日中セッションを取引する。",
-        "description": "バランス型の3カラムデスク — 左にマーケットスキャナー、中央に大きなチャート、右にオーダーブックと取引チケット、保有ポジション。アクティブな暗号資産取引の日常ドライバーです。"
+        "description": "バランス型の3カラムデスク：左にマーケットスキャナー、中央に大きなチャート、右にオーダーブックと取引チケット、保有ポジション。アクティブな暗号資産取引の日常ドライバーです。"
       },
       "cross-venue-desk": {
         "name": "マルチ取引所デスク",
         "tagline": "1つのペア、すべての取引所、最安値が一番上に。",
-        "description": "マルチプライスパネルを中心に組んだレイアウト — アクティブなペアを扱うすべての取引所の気配値を価格順に並べ、最良の約定が一番上の行に来ます。隣にはチャートと約定履歴、さらにオーダーブックと注文チケットを備え、価格差にすぐ動けます。"
+        "description": "マルチプライスパネルを中心に組んだレイアウト：アクティブなペアを扱うすべての取引所の気配値を価格順に並べ、最良の約定が一番上の行に来ます。隣にはチャートと約定履歴、さらにオーダーブックと注文チケットを備え、価格差にすぐ動けます。"
       },
       "swing-overview": {
         "name": "スイングオーバービュー",
         "tagline": "ウォッチリストと値動き上位で掴む、トレンドの文脈。",
-        "description": "複数日ポジション向けの落ち着いたレイアウト — フルサイズのチャートにウォッチリスト、値動き上位、ペアのファンダメンタルズを添えて。執行デスクの喧騒なしに、スイングのサイズを判断するための十分な文脈です。"
+        "description": "複数日ポジション向けの落ち着いたレイアウト：フルサイズのチャートにウォッチリスト、値動き上位、ペアのファンダメンタルズを添えて。執行デスクの喧騒なしに、スイングのサイズを判断するための十分な文脈です。"
       },
       "ai-research-desk": {
         "name": "AIリサーチデスク",
@@ -3396,12 +3396,12 @@
       "market-discovery": {
         "name": "マーケットディスカバリー",
         "tagline": "動く前に、動いているものを見つける。",
-        "description": "純粋なディスカバリーボード — マーケットスキャナー、値動き上位、セクターヒートマップ、ウォッチリスト、Fear & Greedゲージ。チャートもチケットもなし、次のセットアップを探すためだけに。"
+        "description": "純粋なディスカバリーボード、マーケットスキャナー、値動き上位、セクターヒートマップ、ウォッチリスト、Fear & Greedゲージ。チャートもチケットもなし、次のセットアップを探すためだけに。"
       },
       "portfolio-command": {
         "name": "ポートフォリオコマンド",
         "tagline": "残高、ポジション、リスクをひと目で。",
-        "description": "アカウント中心のコックピット — ポートフォリオの内訳、保有ポジション、リアルタイムのリスクガードレール、そして残りの銘柄を見張るウォッチリスト。すでに保有しているものを管理するために。"
+        "description": "アカウント中心のコックピット：ポートフォリオの内訳、保有ポジション、リアルタイムのリスクガードレール、そして残りの銘柄を見張るウォッチリスト。すでに保有しているものを管理するために。"
       },
       "prediction-terminal": {
         "name": "予測市場ターミナル",
@@ -3418,7 +3418,7 @@
       "dex-degen": {
         "name": "DEX Degen",
         "tagline": "オンチェーンチャート、スワップ、ソーシャルフィード。",
-        "description": "オンチェーンハンティングのために作られています — スワップチケット付きチャート、新規上場を捉える最近見たティッカー、アルファのためのソーシャルフィード。Jupiterのような DEX コネクタでスワップをルーティング。"
+        "description": "オンチェーンハンティングのために作られています：スワップチケット付きチャート、新規上場を捉える最近見たティッカー、アルファのためのソーシャルフィード。Jupiterのような DEX コネクタでスワップをルーティング。"
       },
       "dex-terminal": {
         "name": "DEXターミナル",
@@ -3428,13 +3428,13 @@
       },
       "quant-signals": {
         "name": "クオンツシグナル",
-        "tagline": "データログ、ヒートマップ、リスク — シグナル主導のトレードに。",
-        "description": "データファーストのデスク — 生のデータログ、流動性ヒートマップ、リアルタイムのリスク状態、マーケットスキャナーを組み合わせたチャート。値動きをローソク足ではなく数字として読むトレーダーのために。"
+        "tagline": "データログ、ヒートマップ、リスク：シグナル主導のトレードに。",
+        "description": "データファーストのデスク：生のデータログ、流動性ヒートマップ、リアルタイムのリスク状態、マーケットスキャナーを組み合わせたチャート。値動きをローソク足ではなく数字として読むトレーダーのために。"
       },
       "equities-desk": {
         "name": "株式デスク",
         "tagline": "スキャナー、チャート、ポジションで株式を取引。",
-        "description": "株式取引向けのレイアウト — マーケットスキャナー、チャート、保有ポジション、ニュースフィード。Alpacaブローカープラグインを接続して米国株式をストリーミングし、注文をルーティングします。"
+        "description": "株式取引向けのレイアウト：マーケットスキャナー、チャート、保有ポジション、ニュースフィード。Alpacaブローカープラグインを接続して米国株式をストリーミングし、注文をルーティングします。"
       },
       "equities-terminal": {
         "name": "株式ターミナル",
@@ -3444,7 +3444,7 @@
       },
       "ultrawide-trading-floor": {
         "name": "ウルトラワイド・トレーディングフロア",
-        "tagline": "すべてを、あらゆる場所に — 大画面のために。",
+        "tagline": "すべてを、あらゆる場所に、大画面のために。",
         "description": "ウルトラワイドまたはセカンドモニターを埋め尽くす4カラムのコマンドセンター：スキャナー、チャート、オーダーブックと板の厚み、そして保有ポジションの上に置いた取引チケット。最大主義のレイアウトです。"
       },
       "classic-terminal": {
@@ -3474,25 +3474,25 @@
       "dual-charts": {
         "name": "デュアルチャート",
         "tagline": "2つのチャートを並べて。",
-        "description": "2つの独立したチャートペインを並べて表示 — それぞれが独自のマーケット、時間足、チャートタイプを保持します。ペア選択でペインごとに異なるペアを設定できます。",
+        "description": "2つの独立したチャートペインを並べて表示。それぞれが独自のマーケット、時間足、チャートタイプを保持します。ペア選択でペインごとに異なるペアを設定できます。",
         "menuLabel": "デュアルチャート"
       },
       "triple-charts": {
         "name": "トリプルチャート",
         "tagline": "大きなチャート1つと、その横に積み重なる2つ。",
-        "description": "大きなメインチャートと、右側に積み重なる2つの小さなチャート — それぞれ独立していて、主軸のペアを他の2つと見比べられます。",
+        "description": "大きなメインチャートと、右側に積み重なる2つの小さなチャート、それぞれ独立していて、主軸のペアを他の2つと見比べられます。",
         "menuLabel": "トリプルチャート"
       },
       "quad-charts": {
         "name": "クアッドチャート",
         "tagline": "2×2グリッドのチャート。",
-        "description": "2×2グリッドに並ぶ4つの独立したチャート — 複数のマーケットを同時に追う、フル装備のマルチチャートコックピットです。",
+        "description": "2×2グリッドに並ぶ4つの独立したチャート、複数のマーケットを同時に追う、フル装備のマルチチャートコックピットです。",
         "menuLabel": "クアッドチャート"
       },
       "laptop-focus": {
         "name": "ラップトップフォーカス",
         "tagline": "ノートPC向けに調整した縦型シングルカラム。",
-        "description": "ノートPCの画面に収まる、コンパクトな縦型レイアウト — 上部にチャート、データタブストリップ、細めのリスクバー。"
+        "description": "ノートPCの画面に収まる、コンパクトな縦型レイアウト：上部にチャート、データタブストリップ、細めのリスクバー。"
       },
       "laptop-split": {
         "name": "ラップトップスプリット",
@@ -3516,32 +3516,32 @@
       },
       "home-pulse": {
         "name": "ホーム",
-        "tagline": "デフォルトのボード — スキャナー、センチメント、値動き上位、ニュース。",
-        "description": "デフォルトのホームボード — マーケットスキャナー、Fear & Greedゲージとトップコインをウォッチリストとタブ切り替えできるマーケットパルスレール、そしてフル高さのニュースカラム。すべてアカウントなしで動作します。",
+        "tagline": "デフォルトのボード：スキャナー、センチメント、値動き上位、ニュース。",
+        "description": "デフォルトのホームボード：マーケットスキャナー、Fear & Greedゲージとトップコインをウォッチリストとタブ切り替えできるマーケットパルスレール、そしてフル高さのニュースカラム。すべてアカウントなしで動作します。",
         "menuLabel": "デフォルト"
       },
       "markets-board": {
         "name": "マーケットボード",
         "tagline": "マーケットスキャナーだけを、フルスクリーンで。",
-        "description": "フル幅のマーケットスキャナー — 取引可能な全ペアを閲覧・並べ替えする最もシンプルな方法。",
+        "description": "フル幅のマーケットスキャナー、取引可能な全ペアを閲覧・並べ替えする最もシンプルな方法。",
         "menuLabel": "マーケット"
       },
       "markets-overview": {
         "name": "マーケットオーバービュー",
         "tagline": "スキャナーの横に値動き上位とウォッチリスト。",
-        "description": "マーケットスキャナーと値動き上位、ウォッチリストを並べて表示 — セットアップを見つけて追うためのバランスの取れたホームです。",
+        "description": "マーケットスキャナーと値動き上位、ウォッチリストを並べて表示、セットアップを見つけて追うためのバランスの取れたホームです。",
         "menuLabel": "概要"
       },
       "sector-analysis": {
         "name": "セクター分析",
         "tagline": "スキャナー、ヒートマップ、値動き上位、ウォッチリスト。",
-        "description": "中央にセクターヒートマップを配したディスカバリーボード — 左にスキャナー、中央にヒートマップ、右にウォッチリストの上に値動き上位。",
+        "description": "中央にセクターヒートマップを配したディスカバリーボード：左にスキャナー、中央にヒートマップ、右にウォッチリストの上に値動き上位。",
         "menuLabel": "分析"
       },
       "news-board": {
         "name": "ニュースボード",
         "tagline": "マーケットと値動き上位、ニュースフィードを並べて。",
-        "description": "マーケットスキャナーと値動き上位、ライブのニュースフィードを並べて表示 — カタリスト主導のトレードのホームベースです。",
+        "description": "マーケットスキャナーと値動き上位、ライブのニュースフィードを並べて表示、カタリスト主導のトレードのホームベースです。",
         "menuLabel": "ニュース"
       },
       "perps-terminal": {
@@ -3654,7 +3654,7 @@
         "sendTest": "テスト送信",
         "testing": "テスト中…",
         "pairAlreadyBound": "このペアはすでにルールに紐付けられています",
-        "noBindings": "まだどのペアにも紐付けられていません — ペアを追加するまでルールは発火しません。",
+        "noBindings": "まだどのペアにも紐付けられていません。ペアを追加するまでルールは発火しません。",
         "testSent": "テスト通知を送信しました",
         "testFailed": "テストを配信できませんでした",
         "noActivity": "まだ通知は発火していません",
@@ -3711,7 +3711,7 @@
         "untitledRule": "無題のルール",
         "eyebrow": "通知",
         "title": "マーケットの監視はPairlensにおまかせ",
-        "description": "アラートは一行で済みます。超えるべき水準か、見逃せない値動きか — ペアを指定すればすぐ有効です。フローはそれ以外のため: 条件、約定、インジケーターのアラート、そして届け先。",
+        "description": "アラートは一行で済みます。超えるべき水準か、見逃せない値動きか。ペアを指定すればすぐ有効です。フローはそれ以外のため: 条件、約定、インジケーターのアラート、そして届け先。",
         "startBlank": "空のキャンバスから始める",
         "footnote": "テンプレートは{{market}}の{{pair}}に紐づいた状態で、すぐに有効になります。ステップを編集したり、ルール一覧の下でペアを変更したら、保存してください。ルールはPairlensの起動中のみ動作します。"
       },
@@ -4024,11 +4024,11 @@
       "unknownPair": "不明",
       "priceAlert": {
         "title": "価格アラート: {{pair}}",
-        "body": "{{pair}}が{{price}}{{direction}}になりました — 現在値: {{current}}"
+        "body": "{{pair}}が{{price}}{{direction}}になりました、現在値: {{current}}"
       },
       "orderExecuted": {
         "title": "注文約定",
-        "body": "{{side}} {{pair}} — {{status}}"
+        "body": "{{side}} {{pair}}：{{status}}"
       },
       "signalGenerated": {
         "title": "シグナル発生",
@@ -4347,8 +4347,8 @@
       "unlockWithPassword": "解錠",
       "unlocking": "解錠中…",
       "sealed": "資格情報の保管庫がロックされています。",
-      "sealedBanner_one": "ライブボット 1 台が一時停止中 — 取引を再開するには Pairlens を解錠してください。",
-      "sealedBanner_other": "ライブボット {{count}} 台が一時停止中 — 取引を再開するには Pairlens を解錠してください。",
+      "sealedBanner_one": "ライブボット 1 台が一時停止中。取引を再開するには Pairlens を解錠してください。",
+      "sealedBanner_other": "ライブボット {{count}} 台が一時停止中。取引を再開するには Pairlens を解錠してください。",
       "passkeyNudgeTitle": "次回はワンタッチでロック解除",
       "passkeyNudgeBody": "{{venue}} はあなたのキーで価格を配信するため、保管庫がロックされているとチャートは表示されません。パスキーなら、パスワードを入力する代わりに保管庫とロック画面をワンタッチで開けます。",
       "passkeyNudgeAction": "パスキーを追加",
@@ -4357,7 +4357,7 @@
       "sealedBannerAction": "解錠",
       "botsPausedTitle": "ライブボットが一時停止中",
       "botsPausedBody": "ライブ取引を再開するには Pairlens を解錠してください。ペーパーボットには影響しません。",
-      "orderBlocked": "資格情報の保管庫がロックされています — ライブ注文を出すには Pairlens を解錠してください。",
+      "orderBlocked": "資格情報の保管庫がロックされています。ライブ注文を出すには Pairlens を解錠してください。",
       "insecureContext": "安全でない接続では暗号化を利用できません。保管庫を設定するには HTTPS か localhost で Pairlens を開いてください。",
       "botParkDetailSealed": "資格情報の保管庫がロックされています。Pairlens を解錠すると、このボットはすぐにライブ取引を再開します。ペーパーボットには影響しません。",
       "botParkDetailError": "保存された資格情報をこのデバイスで読み込めませんでした。読み込みが完了すると、このボットはすぐにライブ取引を再開します。ペーパーボットには影響しません。",
@@ -4377,7 +4377,7 @@
     "authDescription": "この機能はPairlensアカウントを通じて利用します。",
     "signInFree": "無料でサインイン",
     "or": "または",
-    "intelligenceNote": "おすすめ — ホスト型で設定不要です。サインインは無料ですが、Pairlens Intelligence は有料プランです。",
+    "intelligenceNote": "おすすめ：ホスト型で設定不要です。サインインは無料ですが、Pairlens Intelligence は有料プランです。",
     "authNote": "所要時間は30秒です。取引所のキーはこの端末から外部に出ることはありません。",
     "upgradeRequired": "アップグレードが必要です",
     "upgradeDescriptionLevel": "この機能には<b>{{level}}</b>のアクセスレベルが必要です。",
@@ -4466,7 +4466,7 @@
       "titlePack": "追加クレジット{{credits}}を追加しました。",
       "titlePlan": "{{label}}をご利用いただけます。",
       "titleDefault": "Pairlens Intelligenceをご利用いただけます。",
-      "bodyPack": "月々の予算に上乗せされ、{{days}}日後に失効します。Pairlensアプリに戻ってください — 残高は数秒以内に更新されます。",
+      "bodyPack": "月々の予算に上乗せされ、{{days}}日後に失効します。Pairlensアプリに戻ってください、残高は数秒以内に更新されます。",
       "bodyPlanWithCredits": "ホスト型AIアシスタントが、ディープリサーチとウェブ検索つき、毎月{{credits}}クレジット付きで利用可能になりました。Pairlensアプリに戻ってください。数秒以内にサブスクリプションが反映されます。",
       "bodyPlanNoCredits": "ホスト型AIアシスタントが、ディープリサーチとウェブ検索つきで利用可能になりました。Pairlensアプリに戻ってください。数秒以内にサブスクリプションが反映されます。",
       "openTerminal": "ターミナルを開く",
@@ -4539,7 +4539,7 @@
       "pickWorkflow": "左側からワークフローを選ぶと、キャンバスに表示されます。",
       "eyebrow": "ワークフロー",
       "title": "どの注文にも、その注文専用のプランを持たせられます",
-      "description": "ワークフローはトレードパネルから出す注文にひも付きます。約定した瞬間、その下にあるステップが自動で動き出します — ブラケット、階段状の指値、段階的なイグジット、時間による確認など。プランはあらかじめ組み込まれているので、後で自分で覚えておく必要がありません。",
+      "description": "ワークフローはトレードパネルから出す注文にひも付きます。約定した瞬間、その下にあるステップが自動で動き出します（ブラケット、階段状の指値、段階的なイグジット、時間による確認など）。プランはあらかじめ組み込まれているので、後で自分で覚えておく必要がありません。",
       "blankLabel": "空のキャンバスから始める",
       "footnote": "テンプレートは下書きとして開きます。各ステップを編集してから「確定」を押すと保存されます。保存したワークフローはトレードパネルから注文に紐付けると実行されます。",
       "untitledWorkflow": "無題のワークフロー"
@@ -4782,7 +4782,7 @@
     "templates": {
       "bracket": {
         "title": "約定をブラケットで囲む",
-        "description": "すべてのポジションが求めるもの — 上に一つ、下に一つの決済を、約定した瞬間に板へ残します。"
+        "description": "すべてのポジションが求めるもの：上に一つ、下に一つの決済を、約定した瞬間に板へ残します。"
       },
       "scale-out": {
         "title": "3段階で分割決済",
@@ -5054,7 +5054,7 @@
       "riskUsedNoCap": "ポートフォリオの{{used}}",
       "slideToBuy": "スライドして{{venue}}で買い",
       "slideToSell": "スライドして{{venue}}で売り",
-      "connectBody": "APIキーがなくても価格とオーダーブックはライブで確認できます — 注文を出すには取引権限のあるAPIキーが必要です。",
+      "connectBody": "APIキーがなくても価格とオーダーブックはライブで確認できます。注文を出すには取引権限のあるAPIキーが必要です。",
       "noPrice": "このスワップをサイズ計算するためのライブ価格がありません",
       "auto": "自動",
       "bookLoading": "板を読み込み中…",

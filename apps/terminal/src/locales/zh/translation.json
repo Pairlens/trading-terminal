@@ -14,7 +14,7 @@
     "welcome": {
       "eyebrow": "欢迎",
       "title": "认识 Pairlens",
-      "sub": "AI 原生的现货交易终端 —— 私密、本地、完全属于你。让我们用一分钟左右完成设置。",
+      "sub": "AI 原生的现货交易终端：私密、本地、完全属于你。让我们用一分钟左右完成设置。",
       "label": "欢迎"
     },
     "oneTerminal": {
@@ -22,7 +22,7 @@
       "title": "一个终端，覆盖所有市场。",
       "sub": "并肩交易中心化和链上现货，由一个 AI 助手实时解读每个行情。",
       "points": {
-        "0": "中心化现货 —— OKX、Binance、Coinbase",
+        "0": "中心化现货：OKX、Binance、Coinbase",
         "1": "链上 DEX 兑换,智能路由",
         "2": "美股与 ETF"
       },
@@ -37,16 +37,16 @@
     "country": {
       "status": "调整区域路由",
       "title": "你在哪个国家交易？",
-      "sub": "部分交易所有地区限制或使用独立的区域接入点 —— 这个选择让连接器指向正确的接入点。",
+      "sub": "部分交易所有地区限制或使用独立的区域接入点。这个选择让连接器指向正确的接入点。",
       "searchPlaceholder": "搜索国家……",
       "noResults": "没有匹配的国家",
       "global": "不愿透露",
-      "globalSub": "不推荐 —— 使用全局接入点和默认设置",
+      "globalSub": "不推荐：使用全局接入点和默认设置",
       "label": "国家",
       "localNote": "仅保存在本设备上，绝不会发送到 Pairlens 服务器。",
       "globalConfirm": {
         "title": "不设置位置就继续？",
-        "body": "未设置国家时，订单和行情数据将使用全局接入点。在有地区限制的交易所上，部分功能可能无法使用，交易可能无法执行。建议设置你的位置 —— 它仅保存在本设备上。",
+        "body": "未设置国家时，订单和行情数据将使用全局接入点。在有地区限制的交易所上，部分功能可能无法使用，交易可能无法执行。建议设置你的位置。它仅保存在本设备上。",
         "ack": "我了解不配置位置可能带来的后果",
         "cancel": "选择国家",
         "confirm": "不设置位置并继续"
@@ -55,10 +55,10 @@
     "privacy": {
       "eyebrow": "设计上就注重隐私",
       "title": "你的密钥,你的设备,仅此而已。",
-      "sub": "Pairlens 本地优先运行。你的凭证和数据都保留在这台设备上 —— 绝不会上传到我们的服务器。",
+      "sub": "Pairlens 本地优先运行。你的凭证和数据都保留在这台设备上，绝不会上传到我们的服务器。",
       "points": {
         "0": "密钥和余额永不离开这台设备",
-        "1": "非托管 —— Pairlens 无法转移你的资金",
+        "1": "非托管：Pairlens 无法转移你的资金",
         "2": "无需邮箱,无需 KYC 即可开始"
       },
       "scene": {
@@ -77,7 +77,7 @@
     "routing": {
       "eyebrow": "直连路由",
       "title": "直达交易所。",
-      "sub": "连接你已经在用的交易场所。订单直接路由到它们 —— 没有中间人,没有托管,不出售订单流。",
+      "sub": "连接你已经在用的交易场所。订单直接路由到它们：没有中间人,没有托管,不出售订单流。",
       "points": {
         "0": "订单直接发送到你连接的交易场所",
         "1": "我们绝不托管你的资产",
@@ -106,7 +106,7 @@
     "themeStep": {
       "status": "调整亮度",
       "title": "想要什么样子？",
-      "sub": "Pairlens 对浅色和深色都做了打磨。选一个模式和一套配色 — 之后随时可以更改。",
+      "sub": "Pairlens 对浅色和深色都做了打磨。选一个模式和一套配色。之后随时可以更改。",
       "light": "浅色",
       "dark": "深色",
       "system": "跟随系统",
@@ -117,15 +117,15 @@
     "legal": {
       "status": "开始之前",
       "title": "需要确认的几件事",
-      "sub": "Pairlens 是用于交易股票和加密货币的工具 —— 请逐条确认后继续。",
+      "sub": "Pairlens 是用于交易股票和加密货币的工具。请逐条确认后继续。",
       "items": {
         "0": "我理解交易存在风险,可能损失部分或全部资金。",
         "1": "我有责任遵守我所居住和/或所属国家的法律法规。",
         "2": "我的交易活动可能涉及税务影响,申报是我自己的责任。",
-        "3": "Pairlens 包含高级工具 —— 并非所有工具都适合新手。",
+        "3": "Pairlens 包含高级工具。并非所有工具都适合新手。",
         "4": "加密货币和股票都是真实资产;其价值可能波动剧烈且频繁变化。",
         "5": "当我连接交易所或经纪商时,使用的是我自己的账户,并接受其服务条款,包括其对我的交易或持仓收取的任何费用。",
-        "6": "Pairlens 在设计上不会备份我的 API 密钥或钱包。备份完全由我自己负责,Pairlens 无法找回丢失的资金 —— 尤其是加密钱包。",
+        "6": "Pairlens 在设计上不会备份我的 API 密钥或钱包。备份完全由我自己负责,Pairlens 无法找回丢失的资金，尤其是加密钱包。",
         "7": "Pairlens 目前处于早期预览版(测试版),可能存在错误,按“现状”提供,不附带任何担保或责任。我会报告发现的问题。"
       },
       "hintFirst": "全部四项确认后继续",
@@ -137,22 +137,22 @@
     "workspaces": {
       "eyebrow": "完全可定制",
       "title": "你的终端,你的布局。",
-      "sub": "工作区完全可定制 —— 打造你想要的体验,想建多少个都可以,从简洁的入门视图到全功能的专业面板。",
+      "sub": "工作区完全可定制：打造你想要的体验,想建多少个都可以,从简洁的入门视图到全功能的专业面板。",
       "points": {
         "0": "按你的方式排列图表、订单簿和面板",
         "1": "创建任意数量的工作区",
-        "2": "新手用简洁视图 —— 专业玩家用全功能桌面"
+        "2": "新手用简洁视图，专业玩家用全功能桌面"
       },
       "label": "工作区"
     },
     "analytics": {
       "status": "你的数据,你做主",
       "title": "帮助改进 Pairlens？",
-      "sub": "分享匿名使用数据和崩溃报告,让我们知道该修复什么。绝不包含你的交易、密钥或余额 —— 你可以随时在设置中更改。",
+      "sub": "分享匿名使用数据和崩溃报告,让我们知道该修复什么。绝不包含你的交易、密钥或余额，你可以随时在设置中更改。",
       "options": {
         "enabled": {
           "label": "分享匿名使用数据",
-          "sub": "使用模式和崩溃报告 —— 不涉及你的交易信息"
+          "sub": "使用模式和崩溃报告，不涉及你的交易信息"
         },
         "disabled": {
           "label": "不用了",
@@ -174,7 +174,7 @@
         },
         "sync": {
           "title": "云同步",
-          "sub": "跨设备同步设置与布局 —— 密钥始终保留在本地"
+          "sub": "跨设备同步设置与布局，密钥始终保留在本地"
         },
         "community": {
           "title": "社区工作区",
@@ -182,7 +182,7 @@
         }
       },
       "create": "创建账户",
-      "skip": "跳过 —— 一切保留在本设备上",
+      "skip": "跳过：一切保留在本设备上",
       "signedIn": "已以 {{email}} 登录",
       "label": "账户",
       "otpSendFailed": "验证码发送失败",
@@ -228,7 +228,7 @@
       "eyebrow": "图表",
       "overview": {
         "title": "K线直接来自交易场所",
-        "description": "实时K线直接从交易所推送 —— 没有中间人。切换周期、悬停查看精确数值,深入研究价格走势。"
+        "description": "实时K线直接从交易所推送，没有中间人。切换周期、悬停查看精确数值,深入研究价格走势。"
       },
       "signals": {
         "title": "每根K线收盘都有信号",
@@ -239,18 +239,18 @@
       "eyebrow": "提醒",
       "intro": {
         "title": "替你盯盘的提醒",
-        "description": "设一个价位就可以放心离开 —— 一旦价格触及,Pairlens 会立即通过应用内和桌面通知提醒你。"
+        "description": "设一个价位就可以放心离开。一旦价格触及,Pairlens 会立即通过应用内和桌面通知提醒你。"
       },
       "build": {
         "title": "组合你自己的触发条件",
-        "description": "将交易对、条件和动作串联成精确的规则 —— 价位、信号触发、涨跌幅 —— 并决定通知的具体方式。"
+        "description": "将交易对、条件和动作串联成精确的规则（价位、信号触发、涨跌幅）并决定通知的具体方式。"
       }
     },
     "workflows": {
       "eyebrow": "工作流",
       "intro": {
         "title": "让常规操作自动化",
-        "description": "将触发器、条件和动作组合成可重复的流程 —— 一个突破信号可以自动检查成交量、提醒你,并记录到交易日志。"
+        "description": "将触发器、条件和动作组合成可重复的流程：一个突破信号可以自动检查成交量、提醒你,并记录到交易日志。"
       },
       "runs": {
         "title": "每次运行都有记录",
@@ -261,40 +261,40 @@
       "eyebrow": "指标与策略",
       "code": {
         "title": "用真正的 Python 编写指标",
-        "description": "使用真正的 Python 和 NumPy 编写任意指标 — 边输入边在本地编译运行，每个序列都有实时预览。"
+        "description": "使用真正的 Python 和 NumPy 编写任意指标。边输入边在本地编译运行，每个序列都有实时预览。"
       },
       "chart": {
         "title": "拖放到任意图表",
-        "description": "保存的脚本会出现在每个图表指标选择器的 Custom 分类下 — 可作为叠加层或子面板添加到任意交易对，输入参数一并生效。"
+        "description": "保存的脚本会出现在每个图表指标选择器的 Custom 分类下。可作为叠加层或子面板添加到任意交易对，输入参数一并生效。"
       }
     },
     "accounts": {
       "eyebrow": "账户",
       "intro": {
         "title": "连接你的交易场所",
-        "description": "关联交易所、钱包和经纪商。API 密钥直接存入操作系统密钥链 —— 保存在本设备,绝不上传到我们的服务器。"
+        "description": "关联交易所、钱包和经纪商。API 密钥直接存入操作系统密钥链：保存在本设备,绝不上传到我们的服务器。"
       },
       "balances": {
         "title": "一览无余的整体视图",
-        "description": "所有已连接场所的余额汇总成一个整体视图 —— 现货、链上和股票一目了然。"
+        "description": "所有已连接场所的余额汇总成一个整体视图：现货、链上和股票一目了然。"
       }
     },
     "plugins": {
       "eyebrow": "插件",
       "intro": {
         "title": "扩展你的终端",
-        "description": "市场连接器、主题、信号和机器人可一键从插件商店安装 —— 让你的终端随你成长。"
+        "description": "市场连接器、主题、信号和机器人可一键从插件商店安装。让你的终端随你成长。"
       },
       "sandbox": {
         "title": "默认安全",
-        "description": "第三方插件在沙盒中运行,代码经过签名,并需按主机逐一批准网络访问 —— 由你掌控它们能触及的一切。"
+        "description": "第三方插件在沙盒中运行,代码经过签名,并需按主机逐一批准网络访问。由你掌控它们能触及的一切。"
       }
     },
     "workspaces": {
       "eyebrow": "工作区",
       "intro": {
         "title": "你的桌面,已保存",
-        "description": "将图表、订单簿和面板排列成符合你交易习惯的布局 —— 然后在保存的桌面之间即时切换。"
+        "description": "将图表、订单簿和面板排列成符合你交易习惯的布局，然后在保存的桌面之间即时切换。"
       }
     },
     "workspaceStore": {
@@ -308,7 +308,7 @@
       "eyebrow": "机器人",
       "strategy": {
         "title": "先回测,再让它交易",
-        "description": "机器人跑的就是你测试过的那套 Python 策略 —— 同样的信号、同样的止损、同样的代码,所以回测器给出的数字描述的正是它接下来会做的事。"
+        "description": "机器人跑的就是你测试过的那套 Python 策略：同样的信号、同样的止损、同样的代码,所以回测器给出的数字描述的正是它接下来会做的事。"
       },
       "running": {
         "title": "你的机器,你的密钥",
@@ -323,7 +323,7 @@
       "onClose": "收盘时",
       "crossedAbovePrice": "向上突破 {{price}}",
       "conditionCrossesAbove": "向上突破",
-      "notifyMeDesktopInApp": "通知我 —— 桌面 + 应用内",
+      "notifyMeDesktopInApp": "通知我：桌面 + 应用内",
       "nodeTrigger": "触发器",
       "nodeSignalLabel": "信号:{{signal}}",
       "nodeCondition": "条件",
@@ -335,19 +335,19 @@
       "runStopLossGuard": "止损守护",
       "ranAt": "{{time}} · 已运行",
       "runsLocally": "在本地运行",
-      "storedOnDevice": "保存在本设备 —— 绝不上传我们的服务器",
+      "storedOnDevice": "保存在本设备，绝不上传我们的服务器",
       "osKeychain": "系统钥匙串",
       "pluginKindMarketData": "市场数据",
       "pluginKindTheme": "主题",
       "pluginKindAutomation": "自动化",
       "sandboxedByDefault": "默认在沙盒中运行",
       "signedVerified": "已签名并通过验证",
-      "networkAccessApproveHost": "网络访问 —— 由你逐一批准每个主机",
+      "networkAccessApproveHost": "网络访问：由你逐一批准每个主机",
       "copiedToWorkspaces": "已复制到你的工作区",
       "statNet": "净收益",
       "statMaxDd": "最大回撤",
       "sameCodeGoesLive": "实盘运行的是同一套代码",
-      "runsOnYourMachine": "在你的设备上运行 —— 请让它保持唤醒",
+      "runsOnYourMachine": "在你的设备上运行，请让它保持唤醒",
       "botMeanReversion": "均值回归",
       "chainWallet": "{{chain}} 钱包"
     }
@@ -378,7 +378,7 @@
     "ordersLockedRiskLimit": "由于触发风险限额,订单已被锁定。请在设置 > 风险管理中解锁。",
     "buyOrdersLockedRiskLimit": "由于触发风险限额,买单已被锁定。请在设置 > 风险管理中解锁。",
     "positionSizeExceeded": "订单因风险限额被阻止:该仓位占投资组合的 {{ratioPct}}%,超过了你设置的 {{maxPositionSize}}% 上限。请在设置 > 风险管理中调整。",
-    "sessionExpired": "你的会话已过期 — 请重新登录。",
+    "sessionExpired": "你的会话已过期。请重新登录。",
     "startFromTemplate": "从模板开始",
     "chips": {
       "osNotification": "系统通知",
@@ -439,7 +439,7 @@
       "title": "使用情况分析",
       "description": "通过分享匿名使用数据和崩溃报告帮助改进 Pairlens。绝不包含你的交易、API 密钥或余额。",
       "toggleDescription": "仅适用于本设备。关闭后会立即停止所有数据分析。",
-      "notConfigured": "此构建版本未配置分析密钥 —— 不会收集任何数据。",
+      "notConfigured": "此构建版本未配置分析密钥：不会收集任何数据。",
       "dataTitle": "你的账户数据",
       "dataSignedOut": "你尚未登录，因此我们的服务器上没有任何账户数据。Pairlens 关于你的一切都保存在这台设备上。",
       "exportTitle": "导出你的数据",
@@ -564,16 +564,16 @@
       "thirdPartyAcknowledge": "我理解第三方注册表可能包含未经验证的插件,并接受由此产生的风险。",
       "invalidUrl": "请输入有效的网址(例如 https://registry.example.com)。",
       "desktopEgressTitle": "桌面网络访问",
-      "desktopEgressDescription": "桌面应用会阻止对未加入白名单主机的网络请求。要访问此注册表,请授予其网络访问权限 —— 终端将重新加载以使其生效。",
+      "desktopEgressDescription": "桌面应用会阻止对未加入白名单主机的网络请求。要访问此注册表,请授予其网络访问权限。终端将重新加载以使其生效。",
       "desktopEgressGranted": "该注册表的主机已获得网络访问权限。",
       "desktopEgressGrant": "允许网络访问并重新加载",
       "publisherKeys": "受信任的发布者密钥",
-      "publisherKeysDescription": "只有签名与受信任发布者密钥匹配的插件才能安装。在此添加密钥以信任来自自托管或企业注册表的插件。请只添加来自你信任的来源的密钥 —— 任何持有对应私钥的人都可以发布请求完全访问你终端的插件。",
+      "publisherKeysDescription": "只有签名与受信任发布者密钥匹配的插件才能安装。在此添加密钥以信任来自自托管或企业注册表的插件。请只添加来自你信任的来源的密钥：任何持有对应私钥的人都可以发布请求完全访问你终端的插件。",
       "publisherKeysEmpty": "没有自定义密钥。Pairlens 官方发布者始终受信任。",
       "publisherKeyIdLabel": "密钥 ID",
       "publisherKeyIdPlaceholder": "acme-plugins-2026",
       "publisherKeyValueLabel": "公钥(base64 编码的 Ed25519)",
-      "publisherKeyIdInvalid": "密钥 ID 只能包含小写字母、数字和短横线(2–64 个字符)。",
+      "publisherKeyIdInvalid": "密钥 ID 只能包含小写字母、数字和短横线(2-64 个字符)。",
       "publisherKeyIdReserved": "此 ID 已保留给内置的 Pairlens 密钥。",
       "publisherKeyIdDuplicate": "已存在使用此 ID 的受信任密钥。",
       "publisherKeyValueInvalid": "不是有效的 Ed25519 公钥(应为 32 字节,base64 编码)。",
@@ -581,7 +581,7 @@
       "publisherKeyRemove": "移除",
       "publisherKeyFingerprint": "指纹",
       "publisherKeyConsentTitle": "信任此发布者？",
-      "publisherKeyConsentBody": "使用此密钥签名的插件将可在本设备上安装。恶意发布者可能会发布请求完全信任的插件 —— 从而访问你其他插件的数据、已存储的交易所凭证及交易权限。请在继续之前,通过你信任的渠道与发布者核对指纹。",
+      "publisherKeyConsentBody": "使用此密钥签名的插件将可在本设备上安装。恶意发布者可能会发布请求完全信任的插件，从而访问你其他插件的数据、已存储的交易所凭证及交易权限。请在继续之前,通过你信任的渠道与发布者核对指纹。",
       "publisherKeyConsentConfirm": "信任此密钥",
       "publisherKeyConsentCancel": "取消",
       "updatesTitle": "插件更新",
@@ -659,7 +659,7 @@
     },
     "connection": {
       "title": "市场数据连接",
-      "description": "市场数据通过已安装的连接器插件直接从交易所流式传输 —— 没有中间服务器。",
+      "description": "市场数据通过已安装的连接器插件直接从交易所流式传输，没有中间服务器。",
       "status": {
         "connected": "已连接",
         "connecting": "连接中……",
@@ -715,7 +715,7 @@
       "aiPaperAuto": "自动批准模拟交易",
       "aiPaperAutoDescription": "仅限模拟资金。助手下达模拟订单时无需确认卡片。",
       "aiLiveAuto": "自动批准实盘交易",
-      "aiLiveAutoEmpty": "未授权任何交易所 —— 每笔实盘交易都需要你确认。可在订单卡片上通过“不再询问”授权某个交易所。",
+      "aiLiveAutoEmpty": "未授权任何交易所：每笔实盘交易都需要你确认。可在订单卡片上通过“不再询问”授权某个交易所。",
       "aiLiveAutoDescription": "真实资金。助手在以下交易所下达实盘订单时无需确认卡片:",
       "aiLiveAutoRevoke": "撤销 {{market}}"
     },
@@ -723,32 +723,32 @@
       "title": "Pairlens Intelligence",
       "description": "托管 AI 助手，附带深度研究与网页搜索，无需 API 密钥。",
       "signInFirst": "登录以管理你的 Pairlens Intelligence 订阅。",
-      "selfHosted": "此服务器未配置计费 — 托管 AI 功能无需订阅即可使用。",
+      "selfHosted": "此服务器未配置计费。托管 AI 功能无需订阅即可使用。",
       "loadError": "无法加载你的计费状态,请重试。",
       "freePlan": "免费",
-      "active": "已激活 — 自动续订。",
-      "complimentary": "免费访问 — 核心贡献者。用量不计费。",
-      "endsOn": "已取消 — 访问将于 {{date}} 结束。",
+      "active": "已激活。自动续订。",
+      "complimentary": "免费访问：核心贡献者。用量不计费。",
+      "endsOn": "已取消：访问将于 {{date}} 结束。",
       "planCredits": "每月 {{credits}} 积分",
       "perMonth": "/月",
       "manage": "管理订阅",
       "upgradeToMax": "升级到 Max",
       "usageTitle": "每月用量预算",
-      "usageDescription": "AI 聊天、研究和网页搜索共用同一积分预算。每个计费周期重置 — 未使用的积分不会结转。",
+      "usageDescription": "AI 聊天、研究和网页搜索共用同一积分预算。每个计费周期重置。未使用的积分不会结转。",
       "creditsUsed": "已使用 {{used}} / {{granted}} 积分",
       "resetsOn": "{{date}} 重置",
       "webResearchNote": "每次托管网页搜索消耗 {{credits}} 积分,外加触发该搜索的请求所用的 token。",
-      "byokNote": "想用自己的 AI 服务商?使用自有密钥的插件(Anthropic、OpenAI、Groq、OpenRouter、Tavily、Exa)始终免费 — 在插件页面连接。",
+      "byokNote": "想用自己的 AI 服务商?使用自有密钥的插件(Anthropic、OpenAI、Groq、OpenRouter、Tavily、Exa)始终免费。在插件页面连接。",
       "checkoutOpened": "已在浏览器中打开支付页面",
       "checkoutOpenedDescription": "付款完成后,订阅将在此处立即激活。",
-      "checkoutFailed": "无法启动支付 — 请重试。",
+      "checkoutFailed": "无法启动支付。请重试。",
       "portalFailed": "无法打开计费门户。",
-      "taxNote": "价格不含税 — 税费将在结账时根据你的所在地计算。",
+      "taxNote": "价格不含税：税费将在结账时根据你的所在地计算。",
       "packsTitle": "额外积分",
       "packsDescription": "一次性充值,叠加在每月预算之上。充值积分自购买起 30 天后过期,不会续期。",
-      "packActive": "{{credits}} 额外积分 — {{date}} 过期",
+      "packActive": "{{credits}} 额外积分，{{date}} 过期",
       "packAddedToastTitle": "额外积分已添加",
-      "packAddedToastDescription": "你的积分包已计入余额 — 充值积分自购买起 30 天后过期。"
+      "packAddedToastDescription": "你的积分包已计入余额。充值积分自购买起 30 天后过期。"
     },
     "about": {
       "desktop": "桌面版",
@@ -866,9 +866,9 @@
       "setPassword": "设置密码",
       "changePassword": "修改密码",
       "biometricUnlockTitle": "生物识别解锁",
-      "biometricUnlockDescription": "用设备自身的解锁方式打开锁屏——Face ID、Touch ID、指纹、Windows Hello——而不用输入密码。",
+      "biometricUnlockDescription": "用设备自身的解锁方式打开锁屏（Face ID、Touch ID、指纹、Windows Hello）而不用输入密码。",
       "biometricUnlockScreenOnly": "密码依然有效，而且在传感器不再认得你时，它仍是唯一的回来的路。",
-      "biometricUnlockVaultNote": "这只打开屏幕。存放的密钥仍会索取自己的密码——在下方的保险库里添加一个通行密钥，就能一次手势打开两道门。",
+      "biometricUnlockVaultNote": "这只打开屏幕。存放的密钥仍会索取自己的密码。在下方的保险库里添加一个通行密钥，就能一次手势打开两道门。",
       "biometricUnlockCoveredByVault": "你的保险库已经可以用通行密钥或 Touch ID 打开，而那同样能打开锁屏。这里再加一道，能做的反而更少。",
       "turnOff": "关闭锁定",
       "turnOffDescription": "输入当前密码以从本设备移除锁定。",
@@ -910,7 +910,7 @@
       "vaultTitle": "凭证保险库",
       "vaultDescription": "用密码或通行密钥加密你的交易所 API 密钥和钱包密钥。",
       "vaultWaysTitle": "解锁方式",
-      "vaultAlsoUnlocks": "以上任意方式也能解锁终端锁屏——一个密码同时用于两者。",
+      "vaultAlsoUnlocks": "以上任意方式也能解锁终端锁屏：一个密码同时用于两者。",
       "biometricNeedsVault": "请先用密码设置保险库，然后再添加 Touch ID。",
       "vaultStatusNone": "尚未设置。",
       "vaultStatusReady_one": "受 1 种解锁方式保护。",
@@ -918,17 +918,17 @@
       "vaultSetUp": "设置保险库",
       "vaultRemoveProtector": "移除",
       "vaultRemoveLastBlocked": "这是进入保险库的唯一方式。移除前请先添加另一种。",
-      "vaultRemoveBiometricOnlyBlocked": "触控 ID 不能是唯一的进入方式——这台 Mac 上的指纹可能会变。请保留密码或通行密钥。",
-      "vaultProtectsBody": "有了保险库，你的 API 密钥和钱包密钥以加密形式保存。复制这个浏览器配置文件 — 或这台设备的存储 — 的人只会拿到没有你的密码或通行密钥就打不开的密文。",
+      "vaultRemoveBiometricOnlyBlocked": "触控 ID 不能是唯一的进入方式：这台 Mac 上的指纹可能会变。请保留密码或通行密钥。",
+      "vaultProtectsBody": "有了保险库，你的 API 密钥和钱包密钥以加密形式保存。复制这个浏览器配置文件（或这台设备的存储）的人只会拿到没有你的密码或通行密钥就打不开的密文。",
       "vaultCeiling": "它不保护正在使用中的密钥。这个页面里运行的任何代码都能像应用本身一样，向已解锁的保险库索取密钥。对最贵重的密钥，我们仍然推荐桌面应用。",
-      "vaultNoRecovery": "没有找回途径。失去全部进入方式，加密的密钥就没了 — 回到应用的唯一办法会清除本设备的数据。",
+      "vaultNoRecovery": "没有找回途径。失去全部进入方式，加密的密钥就没了：回到应用的唯一办法会清除本设备的数据。",
       "vaultDesktopToggleHint": "你的密钥已经在系统钥匙串里。开启此项可在其上再加一层密码或通行密钥。",
       "vaultDesktopOptOutTitle": "关闭凭证保险库？",
       "vaultDesktopOptOutBody": "你的密钥将重新只由系统钥匙串保护。不会删除任何内容，之后你也可以重新开启保险库。",
       "vaultDesktopOptOutConfirm": "关闭保险库",
       "vaultMigrated_one": "已将你原有的 1 个密钥移入保险库。",
       "vaultMigrated_other": "已将你原有的 {{count}} 个密钥移入保险库。",
-      "vaultMigrationFailed": "保险库设置未完成。你的密钥仍可读取 — 打开保险库以完成设置。",
+      "vaultMigrationFailed": "保险库设置未完成。你的密钥仍可读取。打开保险库以完成设置。",
       "vaultSharedBackoff": "保险库和锁屏共用同一个尝试次数上限，因此密码错误过多会同时延迟两者。",
       "vaultCliNote": "命令行工具通过参数接收 API 密钥，从不读取保险库。",
       "hardLockTitle": "强锁定",
@@ -1198,7 +1198,7 @@
     "benefits": {
       "cloud": {
         "title": "云端偏好设置",
-        "description": "你的设置保存在账户中 —— 任何设备几秒钟内就能变成你熟悉的样子。"
+        "description": "你的设置保存在账户中：任何设备几秒钟内就能变成你熟悉的样子。"
       },
       "sync": {
         "title": "跨设备同步",
@@ -1340,7 +1340,7 @@
     "autoApprovedNote": "已自动批准({{mode}} · 已开启不再询问)",
     "turnOff": "关闭",
     "autoApproving": "正在自动批准 {{mode}} 订单……",
-    "liveOrderWarning": "实盘订单 —— 真实资金,将按你的风险限额强制执行。",
+    "liveOrderWarning": "实盘订单：真实资金,将按你的风险限额强制执行。",
     "dontAskAgainPaper": "模拟交易不再询问",
     "dontAskAgainLive": "{{market}} 上的实盘交易不再询问",
     "placing": "正在提交……",
@@ -1355,7 +1355,7 @@
     "keep": "保留",
     "tradingUnavailable": "交易当前不可用。",
     "noCredentialsForMarket": "尚未连接 {{market}} 的凭证。请在“账户”中添加 API 密钥以进行实盘交易。",
-    "scheduledCheckPrefix": "[定时检查 —— 于 {{minutes}} 分钟前设置]",
+    "scheduledCheckPrefix": "[定时检查：于 {{minutes}} 分钟前设置]",
     "toolFailed": "工具执行失败"
   },
   "chart": {
@@ -1591,7 +1591,7 @@
     "keepAwakeOff": "这台电脑可能进入睡眠,机器人也会随之停止。",
     "keepAwakeUnsupported": "只有桌面应用能阻止睡眠。",
     "localBody": "你的策略在这里、在 Pairlens 内执行,而不是在我们运营的服务器上。正因如此,你的密钥和你的逻辑始终属于你。代价也很真实:退出 Pairlens 或让这台电脑进入睡眠,机器人就会随之停止,而已经持有的仓位会一直无人看管,直到你回来。",
-    "emptyDescription": "机器人在某个市场上运行你的一个策略脚本。从现成策略开始，或用 Python 自己写一个 —— 每个新机器人都先模拟交易，直到你切换到实盘。",
+    "emptyDescription": "机器人在某个市场上运行你的一个策略脚本。从现成策略开始，或用 Python 自己写一个。每个新机器人都先模拟交易，直到你切换到实盘。",
     "emptyHeadline": "让策略替你盯盘",
     "templateEmaCross": "双向跟随趋势：金叉做多，死叉做空。",
     "templateRsiReversion": "在超卖回调时买入，但仅限价格仍站在长期趋势之上。",
@@ -1665,8 +1665,8 @@
     "createBot": "创建机器人",
     "back": "返回",
     "next": "下一步",
-    "stepProgress": "第 {{current}}/{{total}} 步 — {{title}}",
-    "strategyIntro": "机器人运行的是策略脚本 —— 用 Python 声明何时进场、何时离场。先从下面的现成策略开始；代码归你所有，随时可以打开编辑。",
+    "stepProgress": "第 {{current}}/{{total}} 步：{{title}}",
+    "strategyIntro": "机器人运行的是策略脚本：用 Python 声明何时进场、何时离场。先从下面的现成策略开始；代码归你所有，随时可以打开编辑。",
     "stepStrategy": "策略",
     "stepMarket": "市场",
     "stepSizing": "仓位规模",
@@ -1676,8 +1676,8 @@
     "groupTemplates": "现成策略",
     "groupUndeployable": "还不能作为机器人运行",
     "writeYourOwn": "用 Python 编写你自己的策略",
-    "reasonIndicator": "指标 —— 需要 strategy(...) meta 才能作为机器人运行",
-    "reasonNotRun": "尚未运行 —— 在指标与策略里打开并运行一次",
+    "reasonIndicator": "指标：需要 strategy(...) meta 才能作为机器人运行",
+    "reasonNotRun": "尚未运行：在指标与策略里打开并运行一次",
     "openIndicators": "打开指标与策略",
     "marketHint": "机器人会按这个周期,在该交易对已收盘的K线上进行评估。",
     "sizingKind": "每次开仓的规模依据",
@@ -1702,7 +1702,7 @@
     "armDescription": "从现在起,“{{name}}”将在 {{venue}} 下达真实的 {{pair}} 订单,每笔交易都不再单独确认。",
     "armVenueLabel": "交易所",
     "armCredentialLabel": "凭证",
-    "armMachineCaveat": "Pairlens 必须在这台设备上保持开启。一旦退出或电脑进入睡眠,机器人就会停止 —— 而它已开出的仓位仍然敞着,无人管理,直到你回来。",
+    "armMachineCaveat": "Pairlens 必须在这台设备上保持开启。一旦退出或电脑进入睡眠,机器人就会停止，而它已开出的仓位仍然敞着,无人管理,直到你回来。",
     "armConfirmLabel": "输入 {{phrase}} 以确认",
     "armConfirmPhrase": "ARM LIVE",
     "armConfirm": "启用实盘",
@@ -1718,14 +1718,14 @@
     "deployAsBot": "部署为机器人",
     "kindDraft": "草稿",
     "templatesIndicators": "指标模板",
-    "templatesStrategies": "策略模板 —— 可作为机器人运行",
+    "templatesStrategies": "策略模板：可作为机器人运行",
     "strategyBadgeHint": "声明了开仓与平仓,因此可以回测,也可以部署为机器人。",
     "indicatorBadgeHint": "只绘制数值。添加带开仓和平仓的 strategy(...) meta,就能把它部署为机器人。",
     "startFromScratch": "从零开始",
     "blankName": "新脚本",
-    "sidebarEmpty": "还没有脚本 —— 从零开始或从模板创建",
+    "sidebarEmpty": "还没有脚本：从零开始或从模板创建",
     "entryFile": "入口",
-    "entryFileHint": "入口模块 —— 定义 meta 和 compute(ctx)",
+    "entryFileHint": "入口模块：定义 meta 和 compute(ctx)",
     "fileActions": "{{file}} 的操作",
     "newFile": "新建文件",
     "newFileTitle": "新建 Python 文件",
@@ -1737,7 +1737,7 @@
     "deleteFileTitle": "删除文件？",
     "deleteFileDescription": "此操作将永久删除“{{file}}”。",
     "scriptActions": "脚本操作",
-    "statusReady": "已就绪 —— 正在被图表使用",
+    "statusReady": "已就绪：正在被图表使用",
     "statusError": "上次运行失败",
     "neverRun": "尚未运行",
     "updated": "更新于 {{time}}",
@@ -1784,7 +1784,7 @@
     "errorTitle": "脚本错误",
     "noCandles": "{{market}} 上的 {{pair}} 未返回任何K线数据",
     "previewEmptyTitle": "运行以预览",
-    "previewEmptyDescription": "运行脚本即可在实时图表中查看效果。首次运行会启动 Python 运行时 —— 需要几秒钟。",
+    "previewEmptyDescription": "运行脚本即可在实时图表中查看效果。首次运行会启动 Python 运行时，需要几秒钟。",
     "metaPaneOverlay": "叠加显示",
     "metaPaneSeparate": "独立子图",
     "metaMinBars": "最少 {{count}} 根K线",
@@ -1823,14 +1823,14 @@
     "exportDescription": "将此指标打包为可分享的 Pairlens 插件压缩包。任何人都可以从插件页面安装它。",
     "exportName": "插件名称",
     "exportId": "插件 ID",
-    "exportIdHint": "小写字母、数字和短横线(2–64 个字符)。",
+    "exportIdHint": "小写字母、数字和短横线(2-64 个字符)。",
     "exportLocationHint": "将保存到你的下载文件夹",
     "exportDownload": "下载压缩包",
     "exportSuccess": "已导出 {{file}}",
     "exportSavedTo": "已保存到 {{folder}}。通过“插件 → 导入插件”进行安装。",
     "exportSavedToDownloads": "已保存到你的下载文件夹。通过“插件 → 导入插件”进行安装。",
     "emptyTitle": "编写指标与交易策略",
-    "emptyDescription": "用 Python 编写图表指标和机器人策略 —— 用实时市场数据运行，应用到你的图表，并把策略部署为交易机器人。",
+    "emptyDescription": "用 Python 编写图表指标和机器人策略。用实时市场数据运行，应用到你的图表，并把策略部署为交易机器人。",
     "templateSma": "对所选数据源计算一条移动平均线。能做事的最小脚本。",
     "templateRsi": "子窗口振荡指标，带超买超卖区域和告警条件。",
     "templateMacd": "两条线和一根按自身动能着色的柱状图。",
@@ -1862,7 +1862,7 @@
     "versionClearTitle": "要清除版本历史吗？",
     "versionClearDescription": "此操作将永久删除“{{name}}”的所有已保存版本。当前文件不受影响。",
     "sdkRefTitle": "SDK 参考",
-    "sdkRefDescription": "pairlens Python SDK 提供的全部接口 — 可按名称或用途搜索。",
+    "sdkRefDescription": "pairlens Python SDK 提供的全部接口。可按名称或用途搜索。",
     "sdkRefSearchPlaceholder": "搜索函数和文档…",
     "sdkRefAll": "全部",
     "sdkRefApi": "API",
@@ -1877,14 +1877,14 @@
     "sdkRefTaPrice": "K 线与价格辅助",
     "sdkRefInsert": "插入",
     "sdkRefEmpty": "没有与“{{query}}”匹配的内容",
-    "sdkRefEmptyHint": "搜索会匹配名称和说明 — 换个更短的关键词试试。",
+    "sdkRefEmptyHint": "搜索会匹配名称和说明。换个更短的关键词试试。",
     "librariesTitle": "Python 库",
-    "librariesDescription": "脚本可以导入的内容 — 精选库、运行时内置的软件包，以及 PyPI 上任何纯 Python wheel。",
+    "librariesDescription": "脚本可以导入的内容：精选库、运行时内置的软件包，以及 PyPI 上任何纯 Python wheel。",
     "librariesSearchPlaceholder": "搜索库…",
     "librariesCurated": "精选",
     "librariesRuntime": "运行时内置",
     "librariesLoading": "正在加载软件包列表…",
-    "librariesError": "无法加载软件包列表 — 请检查网络连接后重试。",
+    "librariesError": "无法加载软件包列表。请检查网络连接后重试。",
     "librariesEmpty": "没有与“{{query}}”匹配的内容",
     "librariesPreloadedBadge": "已预加载",
     "librariesRuntimeBadge": "运行时",
@@ -1899,7 +1899,7 @@
     "importNameLabel": "名称",
     "importPasteLabel": "Python 源码",
     "importPastePlaceholder": "在此粘贴指标脚本…",
-    "importNotIndicator": "这看起来不像 Pairlens 指标 —— 它应当定义 meta = indicator(…) 和 compute(ctx)。你仍可以先导入，再到编辑器里修改。",
+    "importNotIndicator": "这看起来不像 Pairlens 指标：它应当定义 meta = indicator(…) 和 compute(ctx)。你仍可以先导入，再到编辑器里修改。",
     "importFileHint": ".py 脚本，或从 Pairlens 导出的 .zip 插件包。",
     "importChooseFile": "选择文件",
     "importForkHint": "把已安装插件里的指标复制成你自己可编辑的脚本。",
@@ -1911,20 +1911,20 @@
     "importError": {
       "empty": "没有可导入的内容。",
       "binary": "该文件不是 Python 源码。",
-      "tooLarge": "太大了 —— 指标上限为 {{limit}} KB。",
-      "tooManyFiles": "文件太多 —— 一个指标最多 {{limit}} 个文件。",
+      "tooLarge": "太大了：指标上限为 {{limit}} KB。",
+      "tooManyFiles": "文件太多：一个指标最多 {{limit}} 个文件。",
       "badZip": "无法将该文件读取为 zip 压缩包。",
       "invalidPath": "“{{path}}”不是有效的模块路径。请在指标文件夹内使用以 .py 结尾的 Python 模块名。",
       "duplicatePath": "两个文件的路径相同：“{{path}}”。",
-      "noEntry": "无法判断哪个文件是入口模块 —— 请把它命名为 {{entry}}。",
+      "noEntry": "无法判断哪个文件是入口模块。请把它命名为 {{entry}}。",
       "noIndicators": "该插件不包含可导入的指标脚本。请从插件页面安装后在那里复刻。",
       "unsupportedLanguage": "用 {{language}} 编写的指标无法导入。",
       "malformedDescriptor": "该指标的数据格式有误。",
       "unknown": "导入失败。"
     },
     "syntaxErrorDiagnostic": "语法错误",
-    "missingMetaDiagnostic": "main.py 没有在顶层定义 `meta = indicator(...)` —— 图表没有可绘制的内容。",
-    "missingComputeDiagnostic": "main.py 没有在顶层定义 `def compute(ctx)` —— 脚本将无法加载。"
+    "missingMetaDiagnostic": "main.py 没有在顶层定义 `meta = indicator(...)`，图表没有可绘制的内容。",
+    "missingComputeDiagnostic": "main.py 没有在顶层定义 `def compute(ctx)`，脚本将无法加载。"
   },
   "indicators": {
     "title": "添加指标",
@@ -2129,7 +2129,7 @@
     "selectWalletOrders": "选择一个钱包以查看订单",
     "selectWalletFills": "选择一个钱包以查看成交记录",
     "selectWalletBalances": "选择一个钱包以查看余额",
-    "spotNoPositions": "现货模式 —— 无保证金仓位",
+    "spotNoPositions": "现货模式：无保证金仓位",
     "balances": "余额",
     "noBalances": "没有余额数据",
     "total": "总计",
@@ -2199,16 +2199,16 @@
       "taxNotice": "价格不含税，税费将在结账时计算。",
       "defaultTitle": "解锁 Pairlens Intelligence",
       "defaultDescription": "托管 AI 助手，附带深度研究与网页搜索，没有 API 密钥要管。每个套餐都包含在聊天、研究和网页搜索之间共享的每月用量额度。",
-      "byokNote": "更想用自己的服务商？在<plugins>插件</plugins>中连接 Anthropic、OpenAI、Groq 或 OpenRouter 密钥——使用自有密钥的 AI 始终免费。",
+      "byokNote": "更想用自己的服务商？在<plugins>插件</plugins>中连接 Anthropic、OpenAI、Groq 或 OpenRouter 密钥。使用自有密钥的 AI 始终免费。",
       "checkoutOpenedTitle": "已在浏览器中打开结账页面",
       "checkoutActivates": "付款完成后，订阅会立即在此激活。",
-      "checkoutStartError": "无法启动结账流程 — 请重试。",
+      "checkoutStartError": "无法启动结账流程。请重试。",
       "subscriptionRequiredTitle": "需要 Pairlens Intelligence 订阅",
       "subscriptionRequiredBody": "托管式 AI 需要 Intelligence 套餐才能运行。请在下方订阅，或在插件中连接你自己的 AI 服务商密钥。",
       "budgetUsedUpTitle": "本月用量额度已用完",
       "budgetUsedBody": "本周期的 Intelligence 额度已用完。",
       "budgetResetsOn": "额度将于 {{date}} 重置。",
-      "topUpHint": "购买额度包以继续使用 — 额度包内的额度将在购买后 30 天过期。",
+      "topUpHint": "购买额度包以继续使用。额度包内的额度将在购买后 30 天过期。",
       "upgradeToMaxHint": "升级到 {{label}}，每月可获得 {{credits}} 点额度。",
       "manageSubscription": "管理订阅",
       "portalError": "无法打开账单门户。",
@@ -2453,16 +2453,16 @@
     "disableCoreDescription": "Pairlens Core 提供图表、订单簿、市场和大多数内置面板。禁用它会隐藏这些面板,终端将几乎为空,直到你重新启用它。是否继续？",
     "disableAnyway": "仍要禁用",
     "buildOwnTitle": "构建你自己的插件",
-    "buildOwnDescription": "Pairlens 是一个开放平台。搭建插件脚手架、构建它,然后本地加载 —— 无需注册表。",
+    "buildOwnDescription": "Pairlens 是一个开放平台。搭建插件脚手架、构建它,然后本地加载，无需注册表。",
     "buildStepScaffold": "搭建新插件脚手架",
     "buildStepScaffoldNote": "在此单体仓库中,使用:bun run create:plugin my-plugin",
     "buildStepBuild": "构建并打包",
     "buildStepBuildNote": "生成一个单独的 .zip 文件(manifest.json + module.js + 可选的 styles.css)。",
     "buildStepInstall": "安装它",
     "buildStepInstallNote": "前往“已安装”标签页并使用",
-    "buildStepInstallNote2": "—— 或者在桌面端,将文件夹拖入插件目录。",
+    "buildStepInstallNote2": "或者在桌面端,将文件夹拖入插件目录。",
     "buildRuntimeTitle": "插件可以使用的资源",
-    "buildRuntimeNote": "宿主环境在运行时提供 React、@pairlens/plugin-sdk(hooks)、@pairlens/ui 设计系统(从包根目录导入)以及 @pairlens/fast-financial-charts —— 请在构建时将它们标记为外部依赖。设计系统组件的样式由宿主控制;如需自定义 CSS,请随插件一起提供 styles.css。",
+    "buildRuntimeNote": "宿主环境在运行时提供 React、@pairlens/plugin-sdk(hooks)、@pairlens/ui 设计系统(从包根目录导入)以及 @pairlens/fast-financial-charts。请在构建时将它们标记为外部依赖。设计系统组件的样式由宿主控制;如需自定义 CSS,请随插件一起提供 styles.css。",
     "buildExamplesNote": "参见仓库中的 dev-starter 和 dev-sync 示例以获取可运行的参考。",
     "applied": "已应用",
     "applyTheme": "应用主题",
@@ -2475,7 +2475,7 @@
     "communityBadge": "社区",
     "communityFullTrustBlocked": "社区插件始终在沙盒中运行。“{{name}}”需要主应用权限,因此无法安装。",
     "communityMaintainer": "维护者",
-    "communityNotice": "社区插件 —— 由社区提交,仅经过 Pairlens 的轻度审核。它始终在插件沙盒内运行:只能访问其声明的网络主机,永远无法读取你的交易所密钥、钱包或下单交易。",
+    "communityNotice": "社区插件：由社区提交,仅经过 Pairlens 的轻度审核。它始终在插件沙盒内运行:只能访问其声明的网络主机,永远无法读取你的交易所密钥、钱包或下单交易。",
     "communityViewSource": "查看源码",
     "configuration": "配置",
     "curated": "本周精选",
@@ -2499,7 +2499,7 @@
     "networkAccess": "网络访问",
     "noInstalledPlugins": "尚未安装任何插件。",
     "noMatches": "没有插件匹配你的搜索",
-    "noNetworkAccess": "无外部网络访问 —— 完全在本地设备运行。",
+    "noNetworkAccess": "无外部网络访问。完全在本地设备运行。",
     "overview": "概览",
     "palette": "调色板",
     "panels": "包含的面板",
@@ -2538,7 +2538,7 @@
     },
     "network": {
       "title": "允许“{{name}}”联网？",
-      "description": "该插件需要访问 Pairlens 之外的服务器。你的终端会向下列主机发送网络请求。只有在信任该插件时才允许——你可以随时卸载它以撤销访问。",
+      "description": "该插件需要访问 Pairlens 之外的服务器。你的终端会向下列主机发送网络请求。只有在信任该插件时才允许。你可以随时卸载它以撤销访问。",
       "hostsIntro": "它将可以连接到：",
       "reloadNote": "批准后终端会重新加载以应用更改。",
       "deny": "不允许",
@@ -2546,17 +2546,17 @@
     },
     "toggleFailedEnable": "无法启用 {{name}}",
     "toggleFailedDisable": "无法停用 {{name}}",
-    "updateStagedToast": "更新已就绪——重启以应用",
+    "updateStagedToast": "更新已就绪：重启以应用",
     "restartNow": "立即重启",
     "updateStageFailedToast": "准备更新失败：{{error}}",
-    "resetStagedToast": "已恢复默认设置——重启以完成",
-    "networkGrantedToast": "已授予“{{name}}”网络访问权限——正在重新加载……",
-    "networkDeniedToast": "“{{name}}”在未获得网络访问权限的情况下完成安装——在你允许之前可能无法正常运作。",
-    "installCancelledNoTrust": "已取消安装——未授予完全信任",
+    "resetStagedToast": "已恢复默认设置：重启以完成",
+    "networkGrantedToast": "已授予“{{name}}”网络访问权限，正在重新加载……",
+    "networkDeniedToast": "“{{name}}”在未获得网络访问权限的情况下完成安装，在你允许之前可能无法正常运作。",
+    "installCancelledNoTrust": "已取消安装：未授予完全信任",
     "installedVersionToast": "已安装“{{name}}” v{{version}}",
     "installFailedToast": "插件安装失败：{{error}}",
     "localFilesNotFound": "未找到本地插件文件",
-    "pluginCodeNotFound": "未找到插件代码——请重新安装",
+    "pluginCodeNotFound": "未找到插件代码。请重新安装",
     "fullTrustGrantedNameToast": "已向“{{name}}”授予完全信任",
     "loadPluginFailedToast": "插件加载失败：{{error}}",
     "importFailedToast": "插件导入失败：{{error}}",
@@ -2564,7 +2564,7 @@
     "configSaved": "配置已保存",
     "configurationFailed": "配置失败",
     "needsFullTrustToRun": "需要完全信任才能运行",
-    "pendingTrustDescription": "该插件提供界面，无法在沙箱中运行——请授予完全信任以启用它，或将其卸载。",
+    "pendingTrustDescription": "该插件提供界面，无法在沙箱中运行。请授予完全信任以启用它，或将其卸载。",
     "remove": "移除",
     "groupProvidersExtensions": "提供方与扩展",
     "uninstallPluginTitle": "卸载插件",
@@ -2581,8 +2581,8 @@
     "sourceRegistry": "注册表",
     "sourceUrl": "URL",
     "sourceLocal": "本地",
-    "fullTrustGrantedRestartToast": "已授予完全信任——重启以在主应用中运行此插件",
-    "sandboxedRestartToast": "插件将在沙箱中运行——重启以应用",
+    "fullTrustGrantedRestartToast": "已授予完全信任：重启以在主应用中运行此插件",
+    "sandboxedRestartToast": "插件将在沙箱中运行：重启以应用",
     "requiresFullTrustTitle": "该插件提供界面，必须在完全信任下运行。",
     "trustBadgeFullRequired": "完全信任（必需）",
     "trustBadgeFull": "完全信任",
@@ -2592,8 +2592,8 @@
     "update": "更新",
     "revokeFullTrustAria": "撤销对 {{name}} 的完全信任",
     "grantFullTrustAria": "向 {{name}} 授予完全信任",
-    "fullTrustActiveTitle": "完全信任——在主应用中运行。点击以切换为沙箱。",
-    "sandboxedTitle": "沙箱——隔离的工作线程，网络仅限于已声明的主机。点击以授予完全信任。",
+    "fullTrustActiveTitle": "完全信任：在主应用中运行。点击以切换为沙箱。",
+    "sandboxedTitle": "沙箱：隔离的工作线程，网络仅限于已声明的主机。点击以授予完全信任。",
     "configureAria": "配置 {{name}}",
     "toggleAria": "切换 {{name}}",
     "capabilityProvidersTitle": "能力提供方",
@@ -2601,13 +2601,13 @@
     "resetAllOverrides": "重置所有覆盖设置",
     "noProviderInstalled": "没有已安装的插件提供此功能",
     "browseStore": "浏览商店",
-    "installedNeedsKeySingle": "已安装——需要 API 密钥",
-    "installedNeedsKeyPlural": "已安装 {{count}} 个——均需要 API 密钥",
+    "installedNeedsKeySingle": "已安装：需要 API 密钥",
+    "installedNeedsKeyPlural": "已安装 {{count}} 个：均需要 API 密钥",
     "installedDisabledSingle": "已安装 1 个插件，但已停用",
     "installedDisabledPlural": "已安装 {{count}} 个插件，均已停用",
     "manage": "管理",
-    "pinnedActiveNote": "已固定——覆盖自动顺序",
-    "pinnedInactiveNote": "已固定的插件已停用——将使用自动顺序",
+    "pinnedActiveNote": "已固定：覆盖自动顺序",
+    "pinnedInactiveNote": "已固定的插件已停用：将使用自动顺序",
     "autoOrderLabel": "自动顺序：{{chain}}",
     "chainMore_one": "{{chain}} 还有 {{count}} 个",
     "chainMore_other": "{{chain}} 还有 {{count}} 个",
@@ -2658,7 +2658,7 @@
     "manifests": {
       "pairlens-core": {
         "title": "Pairlens Core",
-        "description": "核心交易终端 —— 图表、订单簿、开仓、市场发现和自选列表"
+        "description": "核心交易终端：图表、订单簿、开仓、市场发现和自选列表"
       },
       "pairlens-intelligence": {
         "title": "Pairlens Intelligence",
@@ -2686,7 +2686,7 @@
       },
       "openrouter-inference": {
         "title": "OpenRouter",
-        "description": "通过 OpenRouter 进行 AI 推理 —— 一个 API 密钥即可访问跨服务商的数百个模型(自带密钥)"
+        "description": "通过 OpenRouter 进行 AI 推理：一个 API 密钥即可访问跨服务商的数百个模型(自带密钥)"
       },
       "tavily-search": {
         "title": "Tavily 搜索",
@@ -2698,7 +2698,7 @@
       },
       "pairlens": {
         "title": "Pairlens",
-        "description": "Pairlens 的标志性主题 —— 干净的黑白配色搭配彩虹棱镜点缀"
+        "description": "Pairlens 的标志性主题：干净的黑白配色搭配彩虹棱镜点缀"
       },
       "zen-trading": {
         "title": "Zen Trading",
@@ -2754,7 +2754,7 @@
       },
       "night-city": {
         "title": "Night City",
-        "description": "赛博朋克 2077 风格 —— 电光黄搭配深色枪灰,棱角锐利"
+        "description": "赛博朋克 2077 风格：电光黄搭配深色枪灰,棱角锐利"
       },
       "eye-comfort": {
         "title": "Eye Comfort",
@@ -2766,7 +2766,7 @@
       },
       "boomerg": {
         "title": "Boomerg",
-        "description": "向经典彭博终端致敬的黑底琥珀色配色——等宽界面、直角边框与功能键配色"
+        "description": "向经典彭博终端致敬的黑底琥珀色配色：等宽界面、直角边框与功能键配色"
       },
       "okx-market-connector": {
         "title": "OKX 市场连接器",
@@ -2826,7 +2826,7 @@
       },
       "alpaca-market-connector": {
         "title": "Alpaca 市场连接器",
-        "description": "通过 Alpaca 经纪商 API 交易美股与 ETF —— 实时市场数据,支持模拟与实盘交易"
+        "description": "通过 Alpaca 经纪商 API 交易美股与 ETF：实时市场数据,支持模拟与实盘交易"
       },
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
@@ -2834,39 +2834,39 @@
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",
-        "description": "由 GeckoTerminal(CoinGecko)提供支持的 DEX 市场数据 —— 历史数据深、原生 4 小时 K 线"
+        "description": "由 GeckoTerminal(CoinGecko)提供支持的 DEX 市场数据：历史数据深、原生 4 小时 K 线"
       },
       "jupiter-dex-connector": {
         "title": "Jupiter DEX 连接器",
-        "description": "Solana DEX 聚合器 —— 在所有 Solana DEX 中路由至最优价格"
+        "description": "Solana DEX 聚合器：在所有 Solana DEX 中路由至最优价格"
       },
       "ethereum-dex-connector": {
         "title": "Ethereum DEX 连接器",
-        "description": "链上 Ethereum 兑换 —— 通过 KyberSwap 聚合器,在所有 Ethereum DEX 中路由至最优价格"
+        "description": "链上 Ethereum 兑换：通过 KyberSwap 聚合器,在所有 Ethereum DEX 中路由至最优价格"
       },
       "base-dex-connector": {
         "title": "Base DEX 连接器",
-        "description": "链上 Base 兑换 —— 通过 KyberSwap 聚合器,在所有 Base DEX 中路由至最优价格"
+        "description": "链上 Base 兑换：通过 KyberSwap 聚合器,在所有 Base DEX 中路由至最优价格"
       },
       "arbitrum-dex-connector": {
         "title": "Arbitrum DEX 连接器",
-        "description": "链上 Arbitrum 兑换 —— 通过 KyberSwap 聚合器,在所有 Arbitrum DEX 中路由至最优价格"
+        "description": "链上 Arbitrum 兑换：通过 KyberSwap 聚合器,在所有 Arbitrum DEX 中路由至最优价格"
       },
       "bsc-dex-connector": {
         "title": "BNB Chain DEX 连接器",
-        "description": "链上 BNB Chain 兑换 —— 通过 KyberSwap 聚合器,在所有 BNB Chain DEX 中路由至最优价格"
+        "description": "链上 BNB Chain 兑换：通过 KyberSwap 聚合器,在所有 BNB Chain DEX 中路由至最优价格"
       },
       "polygon-dex-connector": {
         "title": "Polygon DEX 连接器",
-        "description": "链上 Polygon 兑换 —— 通过 KyberSwap 聚合器,在所有 Polygon DEX 中路由至最优价格"
+        "description": "链上 Polygon 兑换：通过 KyberSwap 聚合器,在所有 Polygon DEX 中路由至最优价格"
       },
       "kalshi-market-connector": {
         "title": "Kalshi 市场连接器",
-        "description": "Kalshi 上的事件合约，受 CFTC 监管的预测交易所 — 交易结果而非资产"
+        "description": "Kalshi 上的事件合约，受 CFTC 监管的预测交易所：交易结果而非资产"
       },
       "polymarket-market-connector": {
         "title": "Polymarket 市场连接器",
-        "description": "Polymarket CLOB 上的事件合约 — 由钱包签名下单，以 USDC 结算"
+        "description": "Polymarket CLOB 上的事件合约：由钱包签名下单，以 USDC 结算"
       },
       "pairlens-predictions": {
         "title": "Pairlens 预测",
@@ -3105,12 +3105,12 @@
     "connectBroker": "连接经纪商",
     "selectBroker": "选择要连接的经纪商",
     "brokerAccountsTitle": "股票经纪商",
-    "brokerAccountsDesc": "通过 API 密钥连接的股票经纪商账户(Alpaca 等)—— 用模拟或实盘资金交易美股和 ETF。",
+    "brokerAccountsDesc": "通过 API 密钥连接的股票经纪商账户(Alpaca 等)。用模拟或实盘资金交易美股和 ETF。",
     "noBrokerAccounts": "尚未连接任何股票经纪商",
     "noBrokerAccountsDesc": "连接一个经纪商账户以交易股票。Alpaca 可在几分钟内提供免费的模拟交易密钥。",
     "comingSoon": "即将推出",
     "exchangeAccountsTitle": "加密货币交易所",
-    "exchangeAccountsDesc": "通过 API 密钥连接的中心化交易所账户(Binance、OKX 等)—— 你的资金保留在交易所。",
+    "exchangeAccountsDesc": "通过 API 密钥连接的中心化交易所账户(Binance、OKX 等)。你的资金保留在交易所。",
     "cryptoWalletsTitle": "加密钱包",
     "cryptoWalletsDesc": "用于通过去中心化交易所进行链上交易的私钥。",
     "addWallet": "添加钱包",
@@ -3159,10 +3159,10 @@
       "osBodyBrowser": "每个值在接触浏览器存储之前都会用 AES-256-GCM 封装。一把数据密钥加密全部内容,而这把密钥从不以明文写下。",
       "unlockTitle": "只有你能打开",
       "unlockBody": "一个用 600,000 轮 PBKDF2-SHA256 强化过的密码;手机或安全密钥上的通行密钥;或者 Touch ID。每一种都包裹着同一把数据密钥,所以你可以保留不止一种进入方式。Pairlens 一种也不会收到。",
-      "openSourceTitle": "代码公开 —— 自行验证",
+      "openSourceTitle": "代码公开，自行验证",
       "openSourceBody": "Pairlens 的代码是公开的。你、你的开发者朋友,甚至 AI 都可以阅读它,确认你的密钥确实原地未动。",
       "limitsTitle": "这套机制保护不了什么",
-      "limitsRunning": "只要应用处于打开且已解锁的状态,它就能读取你的密钥 —— 下单靠的正是这一点。加密防的是被复制走的磁盘或浏览器配置,而不是有人已经坐在前面的这台机器。",
+      "limitsRunning": "只要应用处于打开且已解锁的状态,它就能读取你的密钥：下单靠的正是这一点。加密防的是被复制走的磁盘或浏览器配置,而不是有人已经坐在前面的这台机器。",
       "limitsNoRecovery": "没有找回机制。一旦失去全部进入方式,加密的密钥就永久消失了。",
       "openSecurity": "安全设置",
       "viewSource": "在 GitHub 上阅读源代码",
@@ -3177,7 +3177,7 @@
     "hero": {
       "eyebrow": "你的交易场所",
       "title": "用你自己的密钥交易",
-      "subtitle": "使用永不离开本设备的 API 密钥连接交易所、经纪商和链上钱包。Pairlens 直接与每个交易场所通信 —— 没有托管,没有中间人。"
+      "subtitle": "使用永不离开本设备的 API 密钥连接交易所、经纪商和链上钱包。Pairlens 直接与每个交易场所通信：没有托管,没有中间人。"
     },
     "portfolioEyebrow": "投资组合",
     "openAccountShelfTitle": "开设一个新账户",
@@ -3193,7 +3193,7 @@
     "hasAccountNoDesc": "开设一个免费的 {{exchange}} 账户",
     "importKey": "导入私钥",
     "affiliateDisclosure": "部分注册链接可能会为 Pairlens 带来佣金,不会给你带来任何额外费用。",
-    "vaultSealedBody": "你的凭证保险库已锁定。你的账户仍在这里 — 解锁即可查看和使用。",
+    "vaultSealedBody": "你的凭证保险库已锁定。你的账户仍在这里，解锁即可查看和使用。",
     "credentialsUnreadable": "无法读取此设备上保存的密钥。数据没有丢失，请重试或重启 Pairlens。",
     "addWalletDialogTitle": "添加加密钱包",
     "addWalletDialogDescription": "导入钱包私钥以进行链上交易",
@@ -3207,7 +3207,7 @@
     "disconnect": "断开连接",
     "localBadge": "本地",
     "unknownDate": "未知",
-    "keyExpiredWarning": "可能已过期 — 已 {{daysInactive}} 天未使用（上限为 {{limitDays}} 天）。请在交易所重新生成 API 密钥。",
+    "keyExpiredWarning": "可能已过期：已 {{daysInactive}} 天未使用（上限为 {{limitDays}} 天）。请在交易所重新生成 API 密钥。",
     "keyInactiveWarning": "已 {{daysInactive}}/{{limitDays}} 天未使用。密钥将在连续 {{limitDays}} 天未使用后过期。",
     "exchangeAccountAriaLabel": "{{label}} 交易所账户",
     "cryptoWalletAriaLabel": "{{label}} 加密钱包",
@@ -3297,11 +3297,11 @@
       "enableTitle": "部分插件已禁用",
       "enableBody": "此工作区使用了你已安装但已关闭的插件。请在插件页面启用它们以查看每个面板。",
       "installTitle": "需要额外的插件",
-      "installBody": "部分面板依赖你尚未安装的插件。你仍然可以添加此工作区 —— 这些面板在你从插件商店安装相应插件之前将保持为空。"
+      "installBody": "部分面板依赖你尚未安装的插件。你仍然可以添加此工作区，这些面板在你从插件商店安装相应插件之前将保持为空。"
     },
     "security": {
       "trusted": "完全访问权限 · 随 Pairlens 内置",
-      "needsApproval": "需要完全访问权限 —— 系统会要求你批准",
+      "needsApproval": "需要完全访问权限：系统会要求你批准",
       "gateTitle": "完全访问权限插件",
       "gateBody": "{{names}} 将以完全访问权限运行,可访问你的凭证和交易。在其被启用之前,系统会要求你逐一批准。"
     },
@@ -3370,7 +3370,7 @@
     "templates": {
       "scalpers-cockpit": {
         "name": "剥头皮驾驶舱",
-        "tagline": "图表、订单簿与一键下单——仅此而已。",
+        "tagline": "图表、订单簿与一键下单。仅此而已。",
         "description": "极简双栏驾驶舱，专为快速执行打造：图表旁是实时订单簿、市场深度和下单面板。为单屏幕上的速度而生。"
       },
       "day-trader-pro": {
@@ -3396,7 +3396,7 @@
       "market-discovery": {
         "name": "市场发现",
         "tagline": "在下单之前，先找到正在动的行情。",
-        "description": "纯粹的发现看板：市场扫描器、涨跌幅榜、板块热力图、你的自选列表和恐慌与贪婪指数。没有图表，没有下单面板——只为猎寻下一个机会。"
+        "description": "纯粹的发现看板：市场扫描器、涨跌幅榜、板块热力图、你的自选列表和恐慌与贪婪指数。没有图表，没有下单面板，只为猎寻下一个机会。"
       },
       "portfolio-command": {
         "name": "投资组合控制台",
@@ -3474,19 +3474,19 @@
       "dual-charts": {
         "name": "双图表",
         "tagline": "两张图表并排显示。",
-        "description": "两个独立图表面板并排——各自保留自己的市场、周期和图表类型。用面板自带的交易对选择器为每个面板设置不同的交易对。",
+        "description": "两个独立图表面板并排。各自保留自己的市场、周期和图表类型。用面板自带的交易对选择器为每个面板设置不同的交易对。",
         "menuLabel": "双图表"
       },
       "triple-charts": {
         "name": "三图表",
         "tagline": "一张大图表，旁边叠放两张小图表。",
-        "description": "一张大的主图表，右侧叠放两张较小的图表——彼此独立，方便你对照领先交易对与另外两个交易对。",
+        "description": "一张大的主图表，右侧叠放两张较小的图表，彼此独立，方便你对照领先交易对与另外两个交易对。",
         "menuLabel": "三图表"
       },
       "quad-charts": {
         "name": "四图表",
         "tagline": "2×2 网格图表。",
-        "description": "2×2 网格中的四张独立图表——完整的多图驾驶舱，同时追踪多个市场。",
+        "description": "2×2 网格中的四张独立图表，完整的多图驾驶舱，同时追踪多个市场。",
         "menuLabel": "四图表"
       },
       "laptop-focus": {
@@ -3517,19 +3517,19 @@
       "home-pulse": {
         "name": "首页",
         "tagline": "默认看板：扫描器、情绪、涨跌幅榜与资讯。",
-        "description": "默认首页看板——市场扫描器、带恐慌与贪婪指数和热门币种的市场脉搏栏（与你的自选列表同标签页），以及通栏资讯栏。全部功能无需账户即可使用。",
+        "description": "默认首页看板：市场扫描器、带恐慌与贪婪指数和热门币种的市场脉搏栏（与你的自选列表同标签页），以及通栏资讯栏。全部功能无需账户即可使用。",
         "menuLabel": "默认"
       },
       "markets-board": {
         "name": "市场看板",
         "tagline": "只有市场扫描器，全屏铺开。",
-        "description": "全宽市场扫描器——浏览和排序所有可交易对的最简单方式。",
+        "description": "全宽市场扫描器，浏览和排序所有可交易对的最简单方式。",
         "menuLabel": "市场"
       },
       "markets-overview": {
         "name": "市场概览",
         "tagline": "扫描器旁边是涨跌幅榜与自选列表。",
-        "description": "市场扫描器搭配涨跌幅榜和你的自选列表——寻找与追踪交易机会的均衡首页。",
+        "description": "市场扫描器搭配涨跌幅榜和你的自选列表，寻找与追踪交易机会的均衡首页。",
         "menuLabel": "概览"
       },
       "sector-analysis": {
@@ -3541,7 +3541,7 @@
       "news-board": {
         "name": "资讯看板",
         "tagline": "市场行情搭配涨跌幅榜与资讯流。",
-        "description": "市场扫描器搭配涨跌幅榜和实时资讯流——催化剂驱动交易的大本营。",
+        "description": "市场扫描器搭配涨跌幅榜和实时资讯流，催化剂驱动交易的大本营。",
         "menuLabel": "资讯"
       },
       "perps-terminal": {
@@ -3654,7 +3654,7 @@
         "sendTest": "发送测试",
         "testing": "测试中…",
         "pairAlreadyBound": "该交易对已绑定到此规则",
-        "noBindings": "尚未绑定任何交易对 —— 添加一个之前规则不会触发。",
+        "noBindings": "尚未绑定任何交易对。添加一个之前规则不会触发。",
         "testSent": "已发送测试通知",
         "testFailed": "测试未送达",
         "noActivity": "暂无已触发的通知",
@@ -3711,7 +3711,7 @@
         "untitledRule": "未命名规则",
         "eyebrow": "通知",
         "title": "让 Pairlens 替你盯盘",
-        "description": "一条提醒只有一句话：穿越一个价位，或出现值得注意的波动 — 选好交易对就已生效。流程留给其余情况：条件判断、订单成交、指标提醒，以及送达方式。",
+        "description": "一条提醒只有一句话：穿越一个价位，或出现值得注意的波动。选好交易对就已生效。流程留给其余情况：条件判断、订单成交、指标提醒，以及送达方式。",
         "startBlank": "从空白画布开始",
         "footnote": "模板创建后立即生效，绑定到 {{market}} 的 {{pair}}。你可以修改步骤，或在规则列表下方更换交易对，然后保存改动。规则只在 Pairlens 运行时触发。"
       },
@@ -4024,11 +4024,11 @@
       "unknownPair": "未知",
       "priceAlert": {
         "title": "价格提醒：{{pair}}",
-        "body": "{{pair}} 现在{{direction}} {{price}} —— 当前：{{current}}"
+        "body": "{{pair}} 现在{{direction}} {{price}}，当前：{{current}}"
       },
       "orderExecuted": {
         "title": "订单成交",
-        "body": "{{side}} {{pair}} —— {{status}}"
+        "body": "{{side}} {{pair}}：{{status}}"
       },
       "signalGenerated": {
         "title": "信号生成",
@@ -4339,7 +4339,7 @@
       "biometricPromptReason": "解锁你的 Pairlens 凭据保险库",
       "biometricLabel": "这台 Mac 上的触控 ID",
       "biometricCancelled": "触控 ID 提示已被取消。",
-      "biometricInvalidated": "触控 ID 已无法打开保险库——这台 Mac 上的指纹发生了变化。请在“设置 → 安全”中移除并重新设置。",
+      "biometricInvalidated": "触控 ID 已无法打开保险库：这台 Mac 上的指纹发生了变化。请在“设置 → 安全”中移除并重新设置。",
       "useExistingPassword": "使用你已为此终端设置的密码。",
       "unlockTitle": "解锁你的密钥",
       "unlockSubtitle": "你的 API 密钥和钱包密钥已加密。解锁后即可使用。",
@@ -4347,8 +4347,8 @@
       "unlockWithPassword": "解锁",
       "unlocking": "正在解锁…",
       "sealed": "你的凭证保险库已锁定。",
-      "sealedBanner_one": "1 个实盘机器人已暂停 — 解锁 Pairlens 以恢复交易。",
-      "sealedBanner_other": "{{count}} 个实盘机器人已暂停 — 解锁 Pairlens 以恢复交易。",
+      "sealedBanner_one": "1 个实盘机器人已暂停。解锁 Pairlens 以恢复交易。",
+      "sealedBanner_other": "{{count}} 个实盘机器人已暂停。解锁 Pairlens 以恢复交易。",
       "passkeyNudgeTitle": "下次一触即可解锁",
       "passkeyNudgeBody": "{{venue}} 通过你的密钥推送行情，保险库锁上就没有图表。使用通行密钥，只需轻触一次即可同时打开保险库和锁屏，无需输入密码。",
       "passkeyNudgeAction": "添加通行密钥",
@@ -4357,7 +4357,7 @@
       "sealedBannerAction": "解锁",
       "botsPausedTitle": "实盘机器人已暂停",
       "botsPausedBody": "解锁 Pairlens 以恢复实盘交易。模拟机器人不受影响。",
-      "orderBlocked": "你的凭证保险库已锁定 — 解锁 Pairlens 才能下实盘订单。",
+      "orderBlocked": "你的凭证保险库已锁定。解锁 Pairlens 才能下实盘订单。",
       "insecureContext": "在不安全的连接上无法加密。请通过 HTTPS 或在 localhost 上打开 Pairlens 来设置保险库。",
       "botParkDetailSealed": "你的凭证保险库已锁定。只要解锁 Pairlens，此机器人就会恢复实盘交易。模拟机器人不受影响。",
       "botParkDetailError": "你保存的凭证无法在此设备上读取。凭证一旦加载完成，此机器人就会恢复实盘交易。模拟机器人不受影响。",
@@ -4377,7 +4377,7 @@
     "authDescription": "此功能通过你的 Pairlens 账户运行。",
     "signInFree": "免费登录",
     "or": "或",
-    "intelligenceNote": "推荐 —— 托管服务，无需配置。登录免费；Pairlens Intelligence 是付费套餐。",
+    "intelligenceNote": "推荐：托管服务，无需配置。登录免费；Pairlens Intelligence 是付费套餐。",
     "authNote": "只需 30 秒。你的交易所密钥永远不会离开这台设备。",
     "upgradeRequired": "需要升级",
     "upgradeDescriptionLevel": "此功能需要 <b>{{level}}</b> 访问级别。",
@@ -4390,7 +4390,7 @@
     "useOwnKey": "配置你自己的 AI",
     "connect": "连接",
     "connected": "已连接",
-    "connectedToast": "已连接 {{provider}}——AI 已就绪。",
+    "connectedToast": "已连接 {{provider}}。AI 已就绪。",
     "getKey": "获取密钥",
     "keyStorageNote": "你的密钥保存在这台设备上，只会发送给该服务商。Pairlens 永远不会收到它。",
     "noneInstalled": "此步骤尚未安装服务商插件。可在插件页面添加。",
@@ -4399,7 +4399,7 @@
     "required": "必需",
     "optional": "可选",
     "modelHint": "负责生成回答的服务商。选择一个并粘贴密钥。",
-    "searchHint": "可选。让研究报告和回答基于实时网络来源——没有它 AI 也能工作。",
+    "searchHint": "可选。让研究报告和回答基于实时网络来源。没有它 AI 也能工作。",
     "done": "完成",
     "notConnected": "未连接",
     "manage": "管理服务商"
@@ -4466,7 +4466,7 @@
       "titlePack": "已充值 {{credits}} 额外积分。",
       "titlePlan": "{{label}} 已属于你。",
       "titleDefault": "Pairlens Intelligence 已属于你。",
-      "bodyPack": "这些积分叠加在你的每月额度之上,将在 {{days}} 天后过期。回到 Pairlens 应用 — 你的余额会在几秒内更新。",
+      "bodyPack": "这些积分叠加在你的每月额度之上,将在 {{days}} 天后过期。回到 Pairlens 应用，你的余额会在几秒内更新。",
       "bodyPlanWithCredits": "你的托管 AI 助手已解锁，深度研究与网页搜索一并奉上，每月还有 {{credits}} 积分。回到 Pairlens 应用：它会在几秒内识别你的订阅。",
       "bodyPlanNoCredits": "你的托管 AI 助手已解锁，深度研究与网页搜索一并奉上。回到 Pairlens 应用：它会在几秒内识别你的订阅。",
       "openTerminal": "打开终端",
@@ -4491,7 +4491,7 @@
       "renameButton": "重命名",
       "deleteTitle": "删除工作流",
       "deleteDescription": "此操作无法撤销，工作流将被永久删除。",
-      "runsEmpty": "还没有运行记录 — 从交易面板执行一次",
+      "runsEmpty": "还没有运行记录：从交易面板执行一次",
       "clearHistory": "清除记录",
       "runOutcome": "{{executed}} 成功",
       "runOutcomeWithFailed": "{{executed}} 成功，{{failed}} 失败"
@@ -4539,7 +4539,7 @@
       "pickWorkflow": "在左侧选择一个工作流，即可在画布中打开它。",
       "eyebrow": "工作流",
       "title": "每一笔订单都可以带上自己的计划",
-      "description": "工作流挂在你从交易面板下的订单上。订单一旦成交，下面的步骤就会自动运行 — 括号单、阶梯单、分批离场、定时检查 — 计划早已就位，而不是留到以后再靠自己记住去做。",
+      "description": "工作流挂在你从交易面板下的订单上。订单一旦成交，下面的步骤就会自动运行（括号单、阶梯单、分批离场、定时检查）计划早已就位，而不是留到以后再靠自己记住去做。",
       "blankLabel": "从空白画布开始",
       "footnote": "模板会以草稿形式打开：编辑任意步骤，然后点击提交保存。从交易面板把已保存的工作流关联到某笔订单即可运行它。",
       "untitledWorkflow": "未命名工作流"
@@ -5054,7 +5054,7 @@
       "riskUsedNoCap": "占投资组合 {{used}}",
       "slideToBuy": "滑动以在 {{venue}} 买入",
       "slideToSell": "滑动以在 {{venue}} 卖出",
-      "connectBody": "价格和订单簿无需连接账户即可实时更新——下单需要具备交易权限的 API 密钥。",
+      "connectBody": "价格和订单簿无需连接账户即可实时更新。下单需要具备交易权限的 API 密钥。",
       "noPrice": "没有可用于计算此次兑换数量的实时价格",
       "auto": "自动",
       "bookLoading": "等待订单簿…",
