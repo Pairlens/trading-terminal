@@ -49,7 +49,7 @@ export function AssistantApprovalCard({
   )
 
   return (
-    <div className="border-border/60 bg-muted/30 rounded-lg border p-2.5 text-xs">
+    <div className="ai-tile rounded-xl p-3 text-xs">
       <div className="flex items-center gap-1.5">
         <ShieldQuestion
           className="size-3.5 shrink-0"
@@ -58,10 +58,12 @@ export function AssistantApprovalCard({
         <span className="font-medium">{title}</span>
       </div>
 
-      <p className="text-muted-foreground mt-1 leading-snug">{description}</p>
+      <p className="text-muted-foreground mt-1 leading-relaxed">
+        {description}
+      </p>
 
       {argEntries.length > 0 ? (
-        <dl className="border-border/60 mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 border-t pt-2 font-mono text-[10px]">
+        <dl className="mt-2.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 border-t border-[var(--ai-edge-soft)] pt-2.5 font-mono text-[10px]">
           {argEntries.map(([key, value]) => (
             <div key={key} className="contents">
               <dt className="text-muted-foreground">{key}</dt>

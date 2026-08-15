@@ -60,6 +60,7 @@ import { ScriptList } from './script-list'
 import { SdkReferenceDialog } from './sdk-reference'
 import { VersionHistoryDialog } from './version-history'
 
+import { IndicatorsAssistantSurface } from './indicators-assistant-surface'
 import type { PreviewRun } from './indicator-preview'
 import type { PreviewParams } from './preview-params'
 import type {
@@ -102,6 +103,7 @@ import {
 } from '@/lib/assistant-core/workbench-service'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { usePythonConsole } from '@/hooks/use-python-console'
+import { useSearchSelection } from '@/hooks/use-search-selection'
 import { MarketPicker } from '@/components/terminal/market-picker'
 
 /**
@@ -208,9 +210,10 @@ export function IndicatorWorkbench({
   focusScriptId = null,
 }: {
   /**
-   * Script to open on arrival — the deep link a bot's Strategy stat follows.
-   * Applied once per value, so it never fights a selection the user makes
-   * afterwards.
+   * The script the URL names. Not a one-shot deep link any more: the
+   * workbench writes its selection back, so `?script=` is the durable
+   * record of which script is open rather than an instruction that
+   * evaporates on arrival.
    */
   focusScriptId?: string | null
 } = {}) {
@@ -270,15 +273,33 @@ export function IndicatorWorkbench({
     setSelectedId(scripts[0]?.id ?? null)
   }, [loaded, scripts, selectedId])
 
-  // Deep link: open the script the URL names, once it exists in the store.
-  const appliedFocusRef = useRef<string | null>(null)
-  useEffect(() => {
-    if (!focusScriptId || !loaded) return
-    if (appliedFocusRef.current === focusScriptId) return
-    if (!scripts.some((s) => s.id === focusScriptId)) return
-    appliedFocusRef.current = focusScriptId
-    setSelectedId(focusScriptId)
-  }, [focusScriptId, loaded, scripts])
+  // The URL and the selection are one thing: a link opens that script, and
+  // picking another one in the list rewrites the address.
+  const selectScriptFromUrl = useCallback((id: string) => {
+    if (!useIndicatorScriptsStore.getState().scripts.some((s) => s.id === id))
+      return false
+    setSelectedId(id)
+    return true
+  }, [])
+
+  const writeScriptToUrl = useCallback(
+    (id: string | null, { replace }: { replace: boolean }) => {
+      void navigate({
+        to: '/indicators',
+        search: id ? { script: id } : {},
+        replace,
+      })
+    },
+    [navigate],
+  )
+
+  useSearchSelection({
+    param: focusScriptId,
+    selected: selectedId,
+    select: selectScriptFromUrl,
+    write: writeScriptToUrl,
+    ready: loaded,
+  })
 
   // Default the market to the first available venue when okx isn't around.
   useEffect(() => {
@@ -749,6 +770,14 @@ export function IndicatorWorkbench({
 
   return (
     <div className="flex h-full min-h-0">
+      <IndicatorsAssistantSurface
+        script={selected}
+        activePath={activePath}
+        files={files.map((file) => file.path)}
+        dirty={dirty}
+        count={scripts.length}
+        preview={{ market, pair, timeframe }}
+      />
       <ScriptList
         selectedId={selectedId}
         onSelect={setSelectedId}

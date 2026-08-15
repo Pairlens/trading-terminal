@@ -1311,6 +1311,9 @@
       "bots": "Запусти торгового бота",
       "indicators": "Напиши индикатор",
       "indicatorsScript": "Улучши {{name}}",
+      "workflowSelected": "Улучши сценарий {{name}}",
+      "alertSelected": "Настрой оповещение {{name}}",
+      "botSelected": "Проверь {{name}}",
       "accounts": "Проверь мои аккаунты",
       "plugins": "Найди мне плагин",
       "workspaceStore": "Спроектируй моё рабочее пространство"
@@ -1333,6 +1336,10 @@
   },
   "copilot": {
     "placeholder": "Спросите свою линзу...",
+    "send": "Отправить",
+    "stop": "Остановить",
+    "copyMessage": "Скопировать сообщение",
+    "messageCopied": "Сообщение скопировано",
     "lensPersona": "Персона линзы",
     "persona": {
       "mentor": "Наставник",

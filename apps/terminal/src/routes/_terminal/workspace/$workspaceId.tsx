@@ -17,6 +17,7 @@ import { LayoutShell } from '@/components/layout/layout-shell'
 import { LayoutToolbar } from '@/components/layout/layout-toolbar'
 import { PageHeader } from '@/components/page-header'
 import { EditWorkspaceDialog } from '@/components/workspace/edit-workspace-dialog'
+import { WorkspaceAssistantSurface } from '@/components/workspace/workspace-assistant-surface'
 import { WorkspaceVariableBar } from '@/components/layout/workspace-variable-bar'
 import { useMarketData } from '@/lib/market-data-provider'
 import { ActivePairProvider } from '@/lib/active-pair-context'
@@ -116,6 +117,7 @@ function CustomWorkspacePage() {
               <PaneStreamRegistry>
                 <LayoutProvider key={workspace.id}>
                   <VariableBindingsReconciler />
+                  <WorkspaceAssistantSurface workspace={workspace} />
                   <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
                     <CustomWorkspaceTopBar
                       workspace={workspace}

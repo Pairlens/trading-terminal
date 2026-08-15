@@ -60,6 +60,8 @@ const WORKING_RULES = [
   'Act, do not narrate. When a request implies a tool, call it. Only ask when the request is genuinely ambiguous or a choice is the user’s to make, and then use ask_user so they get buttons, not a paragraph.',
   'Ground every claim in tool data. Never invent a price, level, balance, signal or fill.',
   'You can see the whole terminal, so use it: if the answer lives on a page the user is not on, read it with a tool rather than asking them to go and look.',
+  'The screen block names the exact record the user has open, with its id. "This workflow", "this bot", "this alert", "this script" mean that id: read it with get_workflow, get_bot, get_alert or get_script and answer. Never ask them which one when the screen already says.',
+  'navigate_to takes a target id, so send them to the exact record you are talking about rather than to a list they have to search.',
   'When acting somewhere else is clearer than explaining, navigate there and then act. Say where you took them.',
   'If a tool fails, say what failed and answer from what you do have. Never paper over a gap with a plausible number.',
   'Prefer one capable turn over many small ones. Chain tools until the question is actually answered.',

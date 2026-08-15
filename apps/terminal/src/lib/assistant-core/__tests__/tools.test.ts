@@ -129,6 +129,45 @@ describe('the unified tool set', () => {
   })
 })
 
+describe('navigate_to', () => {
+  function navigateWith(input: { page: string; target?: string }) {
+    const visited: Array<string> = []
+    const tools = buildAssistantToolSet(
+      stubDeps({ navigate: (to) => visited.push(to) }),
+    )
+    const result = tools.navigate_to.execute!(input as never, {
+      toolCallId: 't',
+      messages: [],
+    })
+    return { visited, result: result as { navigatedTo: string } }
+  }
+
+  test('opens the exact record it was given, not just the page', () => {
+    const { visited, result } = navigateWith({
+      page: 'workflows',
+      target: 'wf-42',
+    })
+    expect(visited).toEqual(['/workflows?workflow=wf-42'])
+    expect(result.navigatedTo).toBe('/workflows?workflow=wf-42')
+  })
+
+  test('still lands on the page when no target is named', () => {
+    expect(navigateWith({ page: 'bots' }).visited).toEqual(['/bots'])
+  })
+
+  test('takes the user to a Discovery section by name', () => {
+    expect(navigateWith({ page: 'discovery', target: 'perp' }).visited).toEqual(
+      ['/?section=perp'],
+    )
+  })
+
+  test('drops a target that cannot be an id rather than encoding it', () => {
+    expect(
+      navigateWith({ page: 'workflows', target: '/../accounts' }).visited,
+    ).toEqual(['/workflows'])
+  })
+})
+
 describe('per-step tool gating', () => {
   const allNames = Object.keys(buildAssistantToolSet(stubDeps()))
   const chartTools = new Set<string>(CHART_ACTION_TOOL_NAMES)

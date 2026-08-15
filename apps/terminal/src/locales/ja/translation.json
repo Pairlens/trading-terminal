@@ -1303,6 +1303,9 @@
       "bots": "トレーディングボットを稼働させて",
       "indicators": "インジケーターを書いて",
       "indicatorsScript": "{{name}} を改善して",
+      "workflowSelected": "{{name}} ワークフローを改善して",
+      "alertSelected": "{{name}} アラートを調整して",
+      "botSelected": "{{name}} を確認して",
       "accounts": "アカウントを確認して",
       "plugins": "プラグインを探して",
       "workspaceStore": "ワークスペースを設計して"
@@ -1325,6 +1328,10 @@
   },
   "copilot": {
     "placeholder": "レンズに質問する...",
+    "send": "送信",
+    "stop": "停止",
+    "copyMessage": "メッセージをコピー",
+    "messageCopied": "メッセージをコピーしました",
     "lensPersona": "レンズのペルソナ",
     "persona": {
       "mentor": "メンター",

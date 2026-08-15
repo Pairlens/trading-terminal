@@ -1311,6 +1311,9 @@
       "bots": "Wdróż bota tradingowego",
       "indicators": "Napisz wskaźnik",
       "indicatorsScript": "Popraw {{name}}",
+      "workflowSelected": "Ulepsz przepływ {{name}}",
+      "alertSelected": "Dostrój alert {{name}}",
+      "botSelected": "Sprawdź {{name}}",
       "accounts": "Przejrzyj moje konta",
       "plugins": "Znajdź mi wtyczkę",
       "workspaceStore": "Zaprojektuj mój obszar roboczy"
@@ -1333,6 +1336,10 @@
   },
   "copilot": {
     "placeholder": "Zapytaj swój lens...",
+    "send": "Wyślij",
+    "stop": "Zatrzymaj",
+    "copyMessage": "Kopiuj wiadomość",
+    "messageCopied": "Skopiowano wiadomość",
     "lensPersona": "Osobowość Lens",
     "persona": {
       "mentor": "Mentor",

@@ -1311,6 +1311,9 @@
       "bots": "Запусти торгового бота",
       "indicators": "Напиши індикатор",
       "indicatorsScript": "Покращ {{name}}",
+      "workflowSelected": "Покращ сценарій {{name}}",
+      "alertSelected": "Налаштуй сповіщення {{name}}",
+      "botSelected": "Перевір {{name}}",
       "accounts": "Переглянь мої облікові записи",
       "plugins": "Знайди мені плагін",
       "workspaceStore": "Спроєктуй мій робочий простір"
@@ -1333,6 +1336,10 @@
   },
   "copilot": {
     "placeholder": "Запитайте свою лінзу...",
+    "send": "Надіслати",
+    "stop": "Зупинити",
+    "copyMessage": "Копіювати повідомлення",
+    "messageCopied": "Повідомлення скопійовано",
     "lensPersona": "Стиль AI-лінзи",
     "persona": {
       "mentor": "Ментор",

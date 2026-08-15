@@ -1303,6 +1303,9 @@
       "bots": "Triển khai một bot giao dịch",
       "indicators": "Viết một chỉ báo",
       "indicatorsScript": "Cải thiện {{name}}",
+      "workflowSelected": "Cải thiện quy trình {{name}}",
+      "alertSelected": "Tinh chỉnh cảnh báo {{name}}",
+      "botSelected": "Xem lại {{name}}",
       "accounts": "Xem lại tài khoản của tôi",
       "plugins": "Tìm cho tôi một plugin",
       "workspaceStore": "Thiết kế không gian làm việc của tôi"
@@ -1325,6 +1328,10 @@
   },
   "copilot": {
     "placeholder": "Hỏi lens của bạn...",
+    "send": "Gửi",
+    "stop": "Dừng",
+    "copyMessage": "Sao chép tin nhắn",
+    "messageCopied": "Đã sao chép tin nhắn",
     "lensPersona": "Phong cách Lens",
     "persona": {
       "mentor": "Người hướng dẫn",

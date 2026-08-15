@@ -1,31 +1,21 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Collapsed affordance for the unified assistant dock: a floating pill with a
+ * Collapsed affordance for the unified assistant dock: a glass pill with a
  * short companion line on the left and the orb on the right, one click target.
+ *
+ * While a run is in flight the pill takes a magic ring. The orb alone is 28px
+ * of signal in a corner, and a collapsed assistant that is working has to be
+ * legible from the other side of a four-pane layout.
  *
  * Purely presentational. Every string arrives translated from the caller, and
  * the parent owns placement (this component never positions itself).
  */
 import { AnimatePresence, motion } from 'motion/react'
 
-import { cn } from '@pairlens/ui'
 import { AiOrb } from '@pairlens/ui/components/ui/ai-orb'
 import { Button } from '@pairlens/ui/components/ui/button'
 import { ShimmeringText } from '@pairlens/ui/components/ui/shimmering-text'
-
-/**
- * Floating sits over the panes and has to lift off whatever is behind
- * it: its own bordered, blurred surface with a shadow. In the bottom
- * strip there is nothing behind it, and that same treatment reads as a
- * pill stuck onto the wallpaper, so the bar variant borrows the rail's
- * hover styling instead and lets the chrome show through.
- */
-const SURFACE_CLASS = {
-  floating:
-    'hover-lift border-border/60 bg-card/80 hover:bg-card/90 aria-expanded:bg-card/90 border shadow-lg backdrop-blur-md',
-  bar: 'hover:bg-sidebar-accent aria-expanded:bg-sidebar-accent',
-} as const
 
 export type AssistantOrbButtonProps = {
   /** Companion line. Already translated by the caller. */
@@ -39,8 +29,6 @@ export type AssistantOrbButtonProps = {
   /** Accessible name while the window is open. Already translated. */
   closeLabel: string
   onClick: () => void
-  /** Which surface it is sitting on. Defaults to over the panes. */
-  variant?: keyof typeof SURFACE_CLASS
 }
 
 export function AssistantOrbButton({
@@ -50,7 +38,6 @@ export function AssistantOrbButton({
   openLabel,
   closeLabel,
   onClick,
-  variant = 'floating',
 }: AssistantOrbButtonProps) {
   // The label changes as the user moves around the terminal, so the key carries
   // the text itself: a new companion line cross-fades instead of swapping.
@@ -60,18 +47,16 @@ export function AssistantOrbButton({
     <Button
       variant="ghost"
       data-assistant-orb=""
+      data-busy={busy ? '' : undefined}
       aria-expanded={open}
       aria-label={open ? closeLabel : openLabel}
       onClick={onClick}
-      className={cn(
-        'text-muted-foreground hover:text-foreground aria-expanded:text-foreground h-9 gap-2 rounded-full py-0 pr-1 pl-3 text-xs',
-        SURFACE_CLASS[variant],
-      )}
+      className="ai-glass-pill hover-lift text-muted-foreground hover:text-foreground aria-expanded:text-foreground hover:bg-[var(--ai-glass)] h-10 gap-2.5 rounded-full py-0 pr-1 pl-3.5 text-xs"
     >
       <span
         className={
           open
-            ? 'relative flex min-w-0 items-center opacity-60'
+            ? 'relative flex min-w-0 items-center opacity-55'
             : 'relative flex min-w-0 items-center'
         }
       >
@@ -103,7 +88,7 @@ export function AssistantOrbButton({
       </span>
 
       <AiOrb
-        size="28px"
+        size="30px"
         animationDuration={15}
         state={busy ? 'thinking' : 'idle'}
         className="shrink-0"

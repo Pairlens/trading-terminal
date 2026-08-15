@@ -138,6 +138,14 @@ export interface AnalyticsEvents {
     tool_calls: number
     duration_ms: number
   }
+  /** A starter on the assistant's empty screen was clicked instead of the
+   * user writing their own opener. Answers whether the suggestions earn
+   * their space, and which of the two sets does the work. The starter's
+   * text is deliberately not sent: on a chart it names the pair. */
+  assistant_starter_used: { position: number; context: 'chart' | 'global' }
+  /** An answer was copied out of the thread. The one signal that the chat
+   * is producing something the user takes elsewhere. */
+  assistant_answer_copied: Record<string, never>
   /** User pinned a provider plugin for a capability ('auto' = unpinned). */
   ai_provider_selected: { capability: string; plugin_id: string }
   /** A bring-your-own-key AI provider (model or web search) was activated

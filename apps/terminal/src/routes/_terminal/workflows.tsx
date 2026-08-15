@@ -8,6 +8,7 @@ import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
 import { PageHeader } from '@/components/page-header'
 import { lazyChunk } from '@/lib/lazy-chunk'
+import { parseEntityId } from '@/lib/routing/pages'
 
 const WorkflowBuilder = lazyChunk(() =>
   import('@/components/workflows/workflow-builder').then((m) => ({
@@ -15,12 +16,24 @@ const WorkflowBuilder = lazyChunk(() =>
   })),
 )
 
+/**
+ * `?workflow=<id>` is which order plan is open on the canvas. The page
+ * writes it on every selection, so the address is always the answer to
+ * "which workflow am I looking at" — for a shared link, for the back
+ * button, and for the assistant.
+ */
+type WorkflowsSearch = { workflow?: string }
+
 export const Route = createFileRoute('/_terminal/workflows')({
   component: WorkflowsPage,
+  validateSearch: (search: Record<string, unknown>): WorkflowsSearch => ({
+    workflow: parseEntityId(search.workflow),
+  }),
 })
 
 function WorkflowsPage() {
   const { t } = useTranslation()
+  const { workflow } = Route.useSearch()
   return (
     <SidebarInset className="overflow-hidden">
       <PageHeader>
@@ -37,7 +50,7 @@ function WorkflowsPage() {
             </div>
           }
         >
-          <WorkflowBuilder />
+          <WorkflowBuilder workflowId={workflow ?? null} />
         </Suspense>
       </div>
     </SidebarInset>

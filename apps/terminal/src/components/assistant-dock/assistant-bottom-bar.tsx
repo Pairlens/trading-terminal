@@ -13,6 +13,11 @@
 // The strip runs the full width but only the pill takes clicks. The
 // rest stays inert so a chat window dragged down here is still the
 // thing you hit.
+//
+// It is the same glass pill the floating placement uses, unchanged. The
+// glass reads as a defined control against the flat shell background,
+// the way the rail's own flyout does, and keeping one pill means the
+// busy halo works in every placement.
 
 import { cn } from '@pairlens/ui'
 
@@ -20,9 +25,7 @@ import { AssistantOrbButton } from './assistant-orb-button'
 import type { AssistantOrbButtonProps } from './assistant-orb-button'
 import { ASSISTANT_BAR } from '@/lib/assistant-core/placement'
 
-export function AssistantBottomBar(
-  props: Omit<AssistantOrbButtonProps, 'variant'>,
-) {
+export function AssistantBottomBar(props: AssistantOrbButtonProps) {
   return (
     <div
       data-assistant-bar=""
@@ -34,7 +37,7 @@ export function AssistantBottomBar(
       )}
     >
       <div className="pointer-events-auto">
-        <AssistantOrbButton {...props} variant="bar" />
+        <AssistantOrbButton {...props} />
       </div>
     </div>
   )

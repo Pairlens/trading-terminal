@@ -1303,6 +1303,9 @@
       "bots": "部署一个交易机器人",
       "indicators": "写一个指标",
       "indicatorsScript": "改进 {{name}}",
+      "workflowSelected": "改进 {{name}} 工作流",
+      "alertSelected": "调整 {{name}} 提醒",
+      "botSelected": "查看 {{name}}",
       "accounts": "检查我的账户",
       "plugins": "帮我找一个插件",
       "workspaceStore": "设计我的工作区"
@@ -1325,6 +1328,10 @@
   },
   "copilot": {
     "placeholder": "问问你的透镜……",
+    "send": "发送",
+    "stop": "停止",
+    "copyMessage": "复制消息",
+    "messageCopied": "已复制消息",
     "lensPersona": "透镜人格",
     "persona": {
       "mentor": "导师型",

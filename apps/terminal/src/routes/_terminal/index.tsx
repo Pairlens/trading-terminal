@@ -16,6 +16,7 @@ import {
 import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
 import type { DiscoverySectionId } from '@/lib/layout/workspaces/discovery-sections'
+import { DiscoveryAssistantSurface } from '@/components/discovery/discovery-assistant-surface'
 import { DiscoveryTopBar } from '@/components/discovery/discovery-top-bar'
 import { LayoutShell } from '@/components/layout/layout-shell'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
@@ -160,6 +161,20 @@ function DiscoveryBoard() {
     if (active !== remembered) setRemembered(active)
   }, [active, remembered, setRemembered])
 
+  // And the address says which desk that is, always — not only after the
+  // user clicks a tab. A bare `/` is ambiguous the moment Discovery has
+  // more than one section, to a shared link and to the assistant alike.
+  //
+  // Only ever FILLS IN a missing section, never corrects one. A link to a
+  // section whose plugin has not activated yet resolves to the default for
+  // a beat, and rewriting the address in that beat would burn the link
+  // before the board it names ever appeared. Held back while a preset is
+  // in flight too: that effect owns the URL until it has stripped itself.
+  useEffect(() => {
+    if (preset || requestedSection !== undefined) return
+    void navigate({ to: '/', search: { section: active }, replace: true })
+  }, [preset, requestedSection, active, navigate])
+
   const selectSection = useCallback(
     (id: DiscoverySectionId) => {
       setRemembered(id)
@@ -175,6 +190,10 @@ function DiscoveryBoard() {
     <DiscoverySectionProvider section={active}>
       <WorkspaceProvider config={workspace}>
         <LayoutProvider key={active}>
+          <DiscoveryAssistantSurface
+            section={active}
+            sections={sections.map((entry) => entry.id)}
+          />
           {preset ? <PresetFromSearch /> : null}
           <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <DiscoveryTopBar

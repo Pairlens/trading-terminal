@@ -29,6 +29,7 @@ import type { AutomationToolDeps } from '@/lib/assistant/automation-tools'
 import type { ChartServiceHandle } from './chart-service'
 import type { AssistantSurfaceRegistry } from './surface-registry'
 import { getPythonRuntime } from '@/lib/python/python-runtime'
+import { pageLink } from '@/lib/routing/pages'
 
 /** Where the assistant should act when the user does not name a target. */
 export type AssistantFocus = CopilotContextInfo
@@ -97,10 +98,6 @@ export function toAutomationDeps(deps: AssistantDeps): AutomationToolDeps {
 }
 
 function routeForBuilder(route: { to: string; scriptId?: string }): string {
-  if (route.to === 'indicators') {
-    return route.scriptId
-      ? `/indicators?script=${route.scriptId}`
-      : '/indicators'
-  }
+  if (route.to === 'indicators') return pageLink('indicators', route.scriptId)
   return `/${route.to}`
 }

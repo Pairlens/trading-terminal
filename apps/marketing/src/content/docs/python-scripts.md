@@ -4,7 +4,7 @@ description: The workbench where you write indicators and strategies in real Pyt
 group: traders
 order: 5
 eyebrow: For traders
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 6 min read
 ---
 
@@ -146,6 +146,9 @@ and they install it from **Plugins → Import plugin**.
 To distribute through the in-app Plugin Store, submit it to the community tier
 by pull request. See
 [custom Python indicators](/docs/custom-python-indicators#publish-to-the-community-registry).
+
+The script you have open is in the address, as `/indicators?script=<id>`, so a
+link opens the workbench on that script rather than on whatever you had last.
 
 ## In this section
 

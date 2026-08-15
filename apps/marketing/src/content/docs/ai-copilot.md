@@ -61,6 +61,24 @@ in sidebar mode, bottom right for the other two. That is why it stays put when
 you resize. Once it has been moved, a reset button appears in the header next to
 the persona menu and puts it back on that anchor.
 
+## The chat window
+
+It is a glass panel, not a solid card. The terminal underneath stays visible
+through it, blurred, so the chat reads as something floating over your workspace
+rather than a hole punched in it. The fill has a floor: whatever runs behind it,
+candles, a book, a tape, body text keeps its contrast.
+
+The header repeats the same contextual line the collapsed orb showed, so opening
+the window never costs you the context that made you open it. While a run is
+going the line becomes the status and shimmers. The persona dropdown and the
+eraser that clears the thread sit on the right of it.
+
+On an empty thread the window offers three starters for whatever screen you are
+on: on a chart they name the pair, on the workflows page they name a workflow.
+Click one to send it. Hover any answer the assistant writes and a copy button
+appears under it, which is the fastest way to get a level or a size out of the
+chat and into an order ticket.
+
 ## One assistant, one conversation
 
 There used to be four AI chats in Pairlens: a co-pilot pane scoped to one pair,
@@ -143,9 +161,28 @@ three.
 
 Every mounted surface publishes what it is showing, and the assistant is handed
 that description on every turn. A chart reports its pair, venue, timeframe,
-indicators and drawing count. A page reports which page it is. So "is this
-overbought" is a complete question, and "add an order book to this" has a
-referent.
+indicators and drawing count. So "is this overbought" is a complete question,
+and "add an order book to this" has a referent.
+
+Pages report the record they have open, not just their own name. Ask "what am I
+looking at" on Workflows and the answer is the workflow: its name, its id, how
+many steps it has, and whether the canvas is holding uncommitted edits. On Bots
+it is the deployment, with its mode, market and current run status, so an answer
+about "this bot" can never come back about the wrong one. Alerts report the rule,
+whether it is armed and which pairs it watches. The workbench reports the script
+and the file open in the editor. Discovery reports which asset-class section you
+are on, because that decides what every pane on it is listing.
+
+That means "tighten the stop on this" needs no follow-up question. The assistant
+already has the id, so it reads the record with `get_workflow`, `get_bot`,
+`get_alert` or `get_script` and gets on with it.
+
+Each of those records lives in the address too. `/workflows?workflow=…`,
+`/bots?bot=…`, `/notifications?alert=…`, `/indicators?script=…` and
+`/?section=…` are written as you click, so a link you send someone opens what
+you were looking at, and the back button walks between records instead of
+jumping straight off the page. A link to something you have since deleted drops
+the dead id rather than showing an empty screen.
 
 Some surfaces publish **actions** as well, and those become tools only while the
 surface is mounted. The workspace board is the clearest example: it publishes

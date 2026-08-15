@@ -54,10 +54,13 @@ export const DEFAULT_ASSISTANT_PLACEMENT: AssistantPlacement = 'sidebar'
  * Literal Tailwind classes, so the JIT can see them.
  */
 export const ASSISTANT_BAR = {
-  /** The strip itself. 2.75rem: a 2.25rem orb button plus its padding. */
-  height: 'h-11',
+  /**
+   * The strip itself. 3rem: the 2.5rem glass pill plus 4px either side,
+   * which is exactly the room its busy halo needs.
+   */
+  height: 'h-12',
   /** What the shell reserves for it. Must match `height`. */
-  reserve: 'pb-11',
+  reserve: 'pb-12',
 } as const
 
 /**
@@ -68,9 +71,9 @@ export const ASSISTANT_WINDOW_ANCHOR: Record<AssistantPlacement, string> = {
   // The orb is near the top of the rail, so the window hangs just
   // outside it, top-aligned.
   sidebar: 'left-[4.25rem] top-4',
-  // Clear of the strip: 2.75rem of bar plus the same 0.5rem breathing
-  // room the other two leave.
-  bottom: 'right-4 bottom-[3.25rem]',
+  // Clear of the strip: 3rem of bar plus the same 0.5rem breathing room
+  // the other two leave.
+  bottom: 'right-4 bottom-[3.5rem]',
   // Grows straight out of the orb it sits above.
   floating: 'right-4 bottom-[3.75rem]',
 }
