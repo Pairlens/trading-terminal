@@ -1224,6 +1224,28 @@
     "restartNow": "Jetzt neu starten",
     "later": "Später"
   },
+  "assistant": {
+    "title": "KI-Assistent",
+    "buildWithAi": "Mit KI bauen",
+    "placeholder": "Beschreib, was gebaut werden soll...",
+    "close": "Assistent schließen",
+    "clearChat": "Unterhaltung löschen",
+    "emptyTitle": "Was bauen wir?",
+    "emptyHintIndicators": "Beschreib einen Indikator oder eine Strategie — der Assistent schreibt sie in den Editor, validiert sie und startet die Vorschau.",
+    "emptyHintBots": "Bitte ihn, eine Strategie als Paper-Bot einzusetzen, Parameter zu tunen oder Risiko-Guards zu setzen. Das Scharfschalten eines Bots bleibt in deiner Hand.",
+    "genericError": "Der Assistent ist auf einen Fehler gestoßen — schick die Nachricht einfach noch einmal.",
+    "authRequiredTitle": "Mit KI bauen",
+    "authRequiredDescription": "Beschreib einen Indikator, eine Strategie oder einen Bot in eigenen Worten — der Assistent schreibt das Python, validiert es und backtestet es mit dir.",
+    "upgradeRequiredDescription": "Der Builder-Assistent schreibt Indikatoren, Strategien und Bots mit dir. Abonniere Pairlens Intelligence oder verbinde deinen eigenen KI-Key — kostenlos.",
+    "unavailableTitle": "Assistent nicht verfügbar",
+    "unavailableDescription": "Aktiviere einen KI-Anbieter auf der Plugins-Seite, um Indikatoren, Strategien und Bots per Chat zu bauen.",
+    "quickNewIndicator": "Bau einen RSI-Divergenz-Indikator",
+    "quickNewStrategy": "Schreib eine Breakout-Strategie, die ich backtesten kann",
+    "quickImprove": "Prüf dieses Skript und schlag Verbesserungen vor",
+    "quickCreateBot": "Setz eine meiner Strategien als Paper-Bot ein",
+    "quickGuards": "Schlag Risiko-Guards für einen meiner Bots vor",
+    "quickReview": "Wie schlagen sich meine Bots?"
+  },
   "copilot": {
     "aiLens": "KI-Lens",
     "thinking": "Denkt nach...",

@@ -1224,6 +1224,28 @@
     "restartNow": "今すぐ再起動",
     "later": "後で"
   },
+  "assistant": {
+    "title": "AIアシスタント",
+    "buildWithAi": "AIで作る",
+    "placeholder": "作りたいものを説明する...",
+    "close": "アシスタントを閉じる",
+    "clearChat": "会話をクリア",
+    "emptyTitle": "何を作りましょうか？",
+    "emptyHintIndicators": "インジケーターやストラテジーを説明すると、アシスタントがエディターに書き込み、検証してプレビューを実行します。",
+    "emptyHintBots": "ストラテジーをペーパーボットとしてデプロイしたり、パラメータを調整したり、リスクガードを設定するよう頼めます。ボットを本稼働させる判断はあなたの手に残ります。",
+    "genericError": "アシスタントでエラーが発生しました。もう一度送信してみてください。",
+    "authRequiredTitle": "AIで作る",
+    "authRequiredDescription": "インジケーター、ストラテジー、ボットを普通の言葉で説明するだけ。アシスタントが Python を書き、検証し、一緒にバックテストします。",
+    "upgradeRequiredDescription": "ビルダーアシスタントは、インジケーター・ストラテジー・ボットをあなたと一緒に書き上げます。Pairlens Intelligenceを購読するか、ご自身のAIキーを接続してください（無料）。",
+    "unavailableTitle": "アシスタントを利用できません",
+    "unavailableDescription": "Pluginsページで AI プロバイダーを有効にすると、チャットでインジケーター、ストラテジー、ボットを作れます。",
+    "quickNewIndicator": "RSI ダイバージェンスのインジケーターを作って",
+    "quickNewStrategy": "バックテストできるブレイクアウトストラテジーを書いて",
+    "quickImprove": "このスクリプトをレビューして改善案を出して",
+    "quickCreateBot": "私のストラテジーをペーパーボットとしてデプロイして",
+    "quickGuards": "私のボットにリスクガードを提案して",
+    "quickReview": "私のボットの調子はどう？"
+  },
   "copilot": {
     "aiLens": "AIレンズ",
     "thinking": "思考中...",

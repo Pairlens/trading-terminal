@@ -1224,6 +1224,28 @@
     "restartNow": "Riavvia ora",
     "later": "Più tardi"
   },
+  "assistant": {
+    "title": "Assistente IA",
+    "buildWithAi": "Crea con l’IA",
+    "placeholder": "Descrivi cosa costruire...",
+    "close": "Chiudi assistente",
+    "clearChat": "Cancella conversazione",
+    "emptyTitle": "Cosa costruiamo?",
+    "emptyHintIndicators": "Descrivi un indicatore o una strategia: l’assistente lo scrive nell’editor, lo valida ed esegue l’anteprima.",
+    "emptyHintBots": "Chiedigli di distribuire una strategia come bot in paper, regolare i parametri o impostare guard di rischio. Armare un bot resta nelle tue mani.",
+    "genericError": "L’assistente ha incontrato un errore — prova a inviare di nuovo.",
+    "authRequiredTitle": "Crea con l’IA",
+    "authRequiredDescription": "Descrivi un indicatore, una strategia o un bot a parole tue — l’assistente scrive il Python, lo valida e lo backtesta con te.",
+    "upgradeRequiredDescription": "L’assistente builder scrive indicatori, strategie e bot con te. Abbonati a Pairlens Intelligence oppure collega la tua chiave IA — gratis.",
+    "unavailableTitle": "Assistente non disponibile",
+    "unavailableDescription": "Attiva un provider IA nella pagina Plugin per creare indicatori, strategie e bot via chat.",
+    "quickNewIndicator": "Crea un indicatore di divergenza RSI",
+    "quickNewStrategy": "Scrivi una strategia di breakout che posso backtestare",
+    "quickImprove": "Rivedi questo script e suggerisci miglioramenti",
+    "quickCreateBot": "Distribuisci una delle mie strategie come bot in paper",
+    "quickGuards": "Suggerisci guard di rischio per uno dei miei bot",
+    "quickReview": "Come stanno andando i miei bot?"
+  },
   "copilot": {
     "aiLens": "AI Lens",
     "thinking": "Elaborazione in corso...",

@@ -120,6 +120,21 @@ export interface AnalyticsEvents {
     cached: boolean
     duration_ms: number
   }
+  /** A builder-assistant chat request reached the transport (content is
+   * never captured). `surface` is which page hosts the chat. */
+  assistant_message_sent: {
+    provider: string
+    model: string
+    surface: 'indicators' | 'bots'
+  }
+  /** One event per tool invocation in a builder-assistant run. */
+  assistant_tool_used: { tool: string }
+  /** A builder-assistant run finished. */
+  assistant_run_completed: {
+    outcome: 'success' | 'error'
+    tool_calls: number
+    duration_ms: number
+  }
   /** User pinned a provider plugin for a capability ('auto' = unpinned). */
   ai_provider_selected: { capability: string; plugin_id: string }
   /** A bring-your-own-key AI provider (model or web search) was activated

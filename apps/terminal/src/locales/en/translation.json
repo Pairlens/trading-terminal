@@ -1224,6 +1224,28 @@
     "restartNow": "Restart now",
     "later": "Later"
   },
+  "assistant": {
+    "title": "AI assistant",
+    "buildWithAi": "Build with AI",
+    "placeholder": "Describe what to build...",
+    "close": "Close assistant",
+    "clearChat": "Clear conversation",
+    "emptyTitle": "What should we build?",
+    "emptyHintIndicators": "Describe an indicator or a strategy and the assistant writes it into the editor, validates it, and runs the preview.",
+    "emptyHintBots": "Ask it to deploy a strategy as a paper bot, tune params, or set risk guards. Arming a bot stays in your hands.",
+    "genericError": "The assistant hit an error — try sending that again.",
+    "authRequiredTitle": "Build with AI",
+    "authRequiredDescription": "Describe an indicator, a strategy, or a bot in plain words — the assistant writes the Python, validates it, and backtests it with you.",
+    "upgradeRequiredDescription": "The builder assistant writes indicators, strategies and bots with you. Subscribe to Pairlens Intelligence, or connect your own AI key — free.",
+    "unavailableTitle": "Assistant unavailable",
+    "unavailableDescription": "Enable an AI provider on the Plugins page to build indicators, strategies and bots by chat.",
+    "quickNewIndicator": "Build an RSI divergence indicator",
+    "quickNewStrategy": "Write a breakout strategy I can backtest",
+    "quickImprove": "Review this script and suggest improvements",
+    "quickCreateBot": "Deploy one of my strategies as a paper bot",
+    "quickGuards": "Suggest risk guards for one of my bots",
+    "quickReview": "How are my bots performing?"
+  },
   "copilot": {
     "aiLens": "AI Lens",
     "thinking": "Thinking...",

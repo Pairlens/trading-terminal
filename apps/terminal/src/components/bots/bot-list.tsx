@@ -9,7 +9,15 @@
  * has learned one should not have to learn the other.
  */
 import { useEffect, useState } from 'react'
-import { Copy, MoreHorizontal, Pencil, Plus, Power, Trash2 } from 'lucide-react'
+import {
+  Copy,
+  MoreHorizontal,
+  Pencil,
+  Plus,
+  Power,
+  Sparkles,
+  Trash2,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -73,6 +81,9 @@ type BotListProps = {
   onCreate: () => void
   /** Arming a live bot is the page's dialog, not something a row decides. */
   onRequestArm: (bot: BotDefinition) => void
+  /** Toggles the builder-assistant rail the page hosts. */
+  onToggleAssistant?: () => void
+  assistantOpen?: boolean
 }
 
 /** Pick a name that doesn't collide with an existing bot ("EMA cross 2", ...). */
@@ -89,6 +100,8 @@ export function BotList({
   onSelect,
   onCreate,
   onRequestArm,
+  onToggleAssistant,
+  assistantOpen = false,
 }: BotListProps) {
   const { t } = useTranslation()
   const bots = useBotsStore((s) => s.bots)
@@ -130,22 +143,45 @@ export function BotList({
         <span className="text-xs font-semibold uppercase tracking-wider">
           {t('botsPage.sidebarTitle')}
         </span>
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-6"
-                onClick={onCreate}
-                aria-label={t('botsPage.newBot')}
-              />
-            }
-          >
-            <Plus className="size-3.5" />
-          </TooltipTrigger>
-          <TooltipContent>{t('botsPage.newBot')}</TooltipContent>
-        </Tooltip>
+        <div className="flex items-center gap-0.5">
+          {onToggleAssistant && (
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant={assistantOpen ? 'secondary' : 'ghost'}
+                    size="icon"
+                    className="size-6"
+                    onClick={onToggleAssistant}
+                    aria-label={t('assistant.title')}
+                  />
+                }
+              >
+                <Sparkles
+                  className="size-3.5"
+                  style={{ color: 'var(--magic-1)' }}
+                />
+              </TooltipTrigger>
+              <TooltipContent>{t('assistant.title')}</TooltipContent>
+            </Tooltip>
+          )}
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-6"
+                  onClick={onCreate}
+                  aria-label={t('botsPage.newBot')}
+                />
+              }
+            >
+              <Plus className="size-3.5" />
+            </TooltipTrigger>
+            <TooltipContent>{t('botsPage.newBot')}</TooltipContent>
+          </Tooltip>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-1.5">

@@ -1224,6 +1224,28 @@
     "restartNow": "Redémarrer maintenant",
     "later": "Plus tard"
   },
+  "assistant": {
+    "title": "Assistant IA",
+    "buildWithAi": "Créer avec l’IA",
+    "placeholder": "Décrivez ce qu’il faut créer...",
+    "close": "Fermer l’assistant",
+    "clearChat": "Effacer la conversation",
+    "emptyTitle": "Qu’est-ce qu’on construit ?",
+    "emptyHintIndicators": "Décrivez un indicateur ou une stratégie : l’assistant l’écrit dans l’éditeur, le valide et lance l’aperçu.",
+    "emptyHintBots": "Demandez-lui de déployer une stratégie comme bot en papier, d’ajuster les paramètres ou de poser des garde-fous de risque. Armer un bot reste entre vos mains.",
+    "genericError": "L’assistant a rencontré une erreur — réessayez d’envoyer votre message.",
+    "authRequiredTitle": "Créer avec l’IA",
+    "authRequiredDescription": "Décrivez un indicateur, une stratégie ou un bot avec vos mots — l’assistant écrit le Python, le valide et le backteste avec vous.",
+    "upgradeRequiredDescription": "L’assistant de création écrit des indicateurs, des stratégies et des bots avec vous. Abonnez-vous à Pairlens Intelligence ou connectez votre propre clé IA — gratuitement.",
+    "unavailableTitle": "Assistant indisponible",
+    "unavailableDescription": "Activez un fournisseur d’IA sur la page Plugins pour créer des indicateurs, des stratégies et des bots par chat.",
+    "quickNewIndicator": "Créer un indicateur de divergence RSI",
+    "quickNewStrategy": "Écrire une stratégie de cassure que je peux backtester",
+    "quickImprove": "Relire ce script et suggérer des améliorations",
+    "quickCreateBot": "Déployer une de mes stratégies comme bot en papier",
+    "quickGuards": "Suggérer des garde-fous de risque pour un de mes bots",
+    "quickReview": "Comment se portent mes bots ?"
+  },
   "copilot": {
     "aiLens": "AI Lens",
     "thinking": "Réflexion en cours...",

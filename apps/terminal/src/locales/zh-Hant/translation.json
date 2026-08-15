@@ -1224,6 +1224,28 @@
     "restartNow": "立即重新啟動",
     "later": "稍後"
   },
+  "assistant": {
+    "title": "AI 助理",
+    "buildWithAi": "用 AI 打造",
+    "placeholder": "描述你想打造什麼…",
+    "close": "關閉助理",
+    "clearChat": "清除對話",
+    "emptyTitle": "我們來打造什麼？",
+    "emptyHintIndicators": "描述一個指標或策略，助理會把它寫進編輯器、完成驗證並執行預覽。",
+    "emptyHintBots": "請它把策略部署為模擬機器人、調整參數或設定風控。是否讓機器人上實盤，決定權始終在你手上。",
+    "genericError": "助理遇到了錯誤——請再傳送一次。",
+    "authRequiredTitle": "用 AI 打造",
+    "authRequiredDescription": "用平常的話描述一個指標、策略或機器人——助理會寫好 Python、完成驗證，並和你一起回測。",
+    "upgradeRequiredDescription": "建構助理會和你一起撰寫指標、策略和機器人。訂閱 Pairlens Intelligence，或連接你自己的 AI 金鑰——免費。",
+    "unavailableTitle": "助理無法使用",
+    "unavailableDescription": "在外掛頁面啟用一個 AI 供應商，即可透過聊天打造指標、策略和機器人。",
+    "quickNewIndicator": "打造一個 RSI 背離指標",
+    "quickNewStrategy": "寫一個我可以回測的突破策略",
+    "quickImprove": "檢視這個腳本並提出改進建議",
+    "quickCreateBot": "把我的一個策略部署為模擬機器人",
+    "quickGuards": "為我的一個機器人建議風控設定",
+    "quickReview": "我的機器人表現如何？"
+  },
   "copilot": {
     "aiLens": "AI 透鏡",
     "thinking": "思考中…",

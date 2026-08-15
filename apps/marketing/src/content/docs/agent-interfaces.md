@@ -1,22 +1,23 @@
 ---
 title: Agent interfaces
-description: 'Every way an AI agent can drive Pairlens: the in-app co-pilot tool surface, the chart MCP tools, the headless CLI, and deployed Python bots. What each can do, and where the trading boundary sits.'
+description: 'Every way an AI agent can drive Pairlens: the in-app co-pilot tool surface, the builder assistant, the chart MCP tools, the headless CLI, and deployed Python bots. What each can do, and where the trading boundary sits.'
 group: builders
 order: 2
 eyebrow: For builders
 updated: AUG 2026
-readTime: 5 min read
+readTime: 6 min read
 ---
 
-There are four ways an agent can operate Pairlens, and they differ in one
+There are five ways an agent can operate Pairlens, and they differ in one
 important respect: how close to an order they get, and who confirms it.
 
-| Surface                               | Runs where          | Can place orders             |
-| ------------------------------------- | ------------------- | ---------------------------- |
-| [Co-pilot tools](/docs/copilot-tools) | Inside the terminal | As proposals you confirm     |
-| [Chart MCP tools](/docs/chart-mcp)    | Any MCP client      | No. Chart control only       |
-| [CLI](/docs/cli-reference)            | Your shell or CI    | Yes, headless and unattended |
-| [Bots](/docs/bots)                    | Your machine        | Yes, once you arm them       |
+| Surface                                                 | Runs where          | Can place orders               |
+| ------------------------------------------------------- | ------------------- | ------------------------------ |
+| [Co-pilot tools](/docs/copilot-tools)                   | Inside the terminal | As proposals you confirm       |
+| [Builder assistant](/docs/python-scripts#build-with-ai) | Inside the terminal | No. Creates paper bots you arm |
+| [Chart MCP tools](/docs/chart-mcp)                      | Any MCP client      | No. Chart control only         |
+| [CLI](/docs/cli-reference)                              | Your shell or CI    | Yes, headless and unattended   |
+| [Bots](/docs/bots)                                      | Your machine        | Yes, once you arm them         |
 
 ## Co-pilot tools
 
@@ -33,6 +34,20 @@ included. An AI cannot raise its own limit, and it cannot route around the
 ticket.
 
 Full list in the [co-pilot tool reference](/docs/copilot-tools).
+
+## Builder assistant
+
+The second in-app agent, hosted by the script workbench and the Bots page. Its
+tool surface is the build loop rather than the market: create, read, and edit
+Python scripts (validated in the Pyodide runtime, tracebacks fed back to the
+model), run backtests through the same engine live bots use, and create or
+tune bot deployments.
+
+Its trading boundary is structural. A bot it creates is always paper mode and
+switched off, and its tools have no way to enable, arm, or retarget one; the
+ARM LIVE gate stays yours. Same inference resolution as the co-pilot: Pairlens
+Intelligence or any bring-your-own-key provider. See
+[Build with AI](/docs/python-scripts#build-with-ai).
 
 ## Chart MCP tools
 
