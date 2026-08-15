@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 6
 eyebrow: For traders
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 8 min read
 ---
 
@@ -127,9 +127,9 @@ where a venue publishes none, it falls back to the question, then to the event
 heading.
 
 That reading is what the recent-pairs strip, the pair switcher in the top bar,
-the watchlist, the chart watermark, the order ticket and the phone's pair
-chip all show. It is also why a prediction never breaks a row built for six
-characters.
+the watchlist, the chart watermark, the order ticket and the phone's pair chip
+and pair picker all show. It is also why a prediction never breaks a row built
+for six characters.
 
 ## Reading a price in cents
 
