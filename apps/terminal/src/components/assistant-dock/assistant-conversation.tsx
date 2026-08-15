@@ -577,6 +577,7 @@ function AssistantConversationInner({
         // they are an invitation rather than another strip of chrome.
         quickActions={quickActions}
         onQuickAction={handleSend}
+        starterContext={chart ? 'chart' : 'global'}
       />
       {error ? (
         <div className="shrink-0 px-3 pb-1">
@@ -613,12 +614,14 @@ function AssistantMessageList({
   renderToolPart,
   quickActions,
   onQuickAction,
+  starterContext,
 }: {
   messages: Array<UIMessage>
   status: string
   renderToolPart: (tool: ReturnType<typeof asToolPart>) => React.ReactNode
   quickActions: Array<string>
   onQuickAction: (text: string) => void
+  starterContext: 'chart' | 'global'
 }) {
   const { t } = useTranslation()
   const isStreaming = status === 'streaming' || status === 'submitted'
@@ -641,11 +644,20 @@ function AssistantMessageList({
             old scrolling chips: three readable sentences beat six truncated
             ones, and nothing here has to be dragged into view. */}
         <div className="flex w-full max-w-[320px] flex-col gap-1.5">
-          {quickActions.map((action) => (
+          {quickActions.map((action, position) => (
             <button
               key={action}
               type="button"
-              onClick={() => onQuickAction(action)}
+              onClick={() => {
+                // Position and context only. The text names the pair on a
+                // chart, and a per-user record of which instruments someone
+                // asks about is not what this measures.
+                track('assistant_starter_used', {
+                  position,
+                  context: starterContext,
+                })
+                onQuickAction(action)
+              }}
               className="ai-tile group/starter flex items-center gap-2 rounded-xl px-3 py-2 text-left text-xs"
             >
               <Sparkles
