@@ -87,7 +87,16 @@ export function AssistantDock() {
         }`}
         style={drag.style}
       >
-        <div className="pointer-events-auto">
+        {/*
+          No `pointer-events-auto` here. The window is hidden, never
+          unmounted, so its 420x620 box stays in the layout while
+          collapsed: enabling hits on this wrapper parks an invisible
+          target over the workspace and eats wheel events aimed at the
+          pane underneath (the news column on the Discovery board). The
+          window sets its own pointer-events from `open`, so the
+          collapsed box stays inert and the open one does not.
+        */}
+        <div>
           <AssistantChatWindow
             windowRef={drag.windowRef}
             open={isOpen}
