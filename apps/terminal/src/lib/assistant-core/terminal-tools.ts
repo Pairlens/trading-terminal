@@ -21,6 +21,7 @@ import {
   pageLink,
 } from '@/lib/routing/pages'
 import { runResearch } from '@/lib/research-brain'
+import { track } from '@/lib/analytics-events'
 import { normalizePair, toOldestFirst } from '@/lib/copilot/tool-deps'
 
 // ── Navigation ───────────────────────────────────────────────────────
@@ -59,10 +60,15 @@ export function buildNavigationTools(deps: AssistantDeps) {
       }),
       execute: ({ page, target }) => {
         const path = pageLink(page, target)
+        // Whether a target actually landed, not whether one was passed:
+        // an unusable id is dropped, and counting it would report a
+        // precision the user never got.
+        const opened = path.includes('=') ? (target ?? null) : null
         deps.navigate(path)
+        track('assistant_navigated', { page, with_target: opened !== null })
         return {
           navigatedTo: path,
-          openedTarget: target && path.includes('=') ? target : null,
+          openedTarget: opened,
           note: 'The user is now on this page. Actions that page offers become available on your next turn.',
         }
       },
