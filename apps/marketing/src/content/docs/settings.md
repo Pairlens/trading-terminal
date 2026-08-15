@@ -299,6 +299,13 @@ balances. The setting applies to this device only, and turning it off stops
 collection immediately. Builds without an analytics key configured collect
 nothing at all and say so.
 
+**Support prompts.** After the terminal has earned its keep, it may ask you to
+support Pairlens, currently with a star on the GitHub repository. Whether and
+when to ask is decided from counters that never leave this device: days
+active, pairs explored, orders placed, things built. It appears at most once
+every two weeks, "Maybe later" pauses it for three weeks, and "Don't ask
+again" is permanent.
+
 **Export your data.** Downloads everything held for your account as one JSON
 file: profile, workspaces, chart layouts, AI conversations, trade journal,
 workflows, alerts, plugin settings, and billing history. Exchange API keys and

@@ -1042,6 +1042,18 @@
       }
     }
   },
+  "growth": {
+    "eyebrow": "Pairlens'i destekle",
+    "later": "Belki sonra",
+    "never": "Bir daha sorma",
+    "githubStar": {
+      "title": "Terminali beğendin mi?",
+      "description": "Pairlens kaynağı açık bir proje ve reklam bütçesiyle değil, tavsiyeyle büyüyor. İş akışında bir yer edindiyse, GitHub'da bir yıldız yardım etmenin en hızlı yolu.",
+      "note": "On saniye sürüyor ve bir sonraki trader bizi tam olarak böyle buluyor.",
+      "cta": "GitHub'da yıldız ver",
+      "thanks": "Teşekkürler. Gerçekten işe yarıyor."
+    }
+  },
   "userMenu": {
     "accountMenu": "Hesap menüsü",
     "settings": "Ayarlar",

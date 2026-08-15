@@ -1042,6 +1042,18 @@
       }
     }
   },
+  "growth": {
+    "eyebrow": "Pairlens 응원하기",
+    "later": "다음에",
+    "never": "다시 묻지 않기",
+    "githubStar": {
+      "title": "터미널이 마음에 드시나요?",
+      "description": "Pairlens는 소스가 공개되어 있고, 광고 예산이 아니라 입소문으로 성장합니다. 여러분의 워크플로에 자리를 잡았다면, GitHub 스타가 가장 빠른 응원입니다.",
+      "note": "10초면 충분하고, 다음 트레이더는 그렇게 저희를 찾습니다.",
+      "cta": "GitHub에서 스타 누르기",
+      "thanks": "감사합니다. 정말 큰 힘이 됩니다."
+    }
+  },
   "userMenu": {
     "accountMenu": "계정 메뉴",
     "settings": "설정",

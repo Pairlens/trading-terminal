@@ -1042,6 +1042,18 @@
       }
     }
   },
+  "growth": {
+    "eyebrow": "Dukung Pairlens",
+    "later": "Mungkin nanti",
+    "never": "Jangan tanya lagi",
+    "githubStar": {
+      "title": "Suka dengan terminalnya?",
+      "description": "Sumber Pairlens terbuka dan ia tumbuh lewat cerita dari mulut ke mulut, bukan anggaran iklan. Kalau ia sudah punya tempat di alur kerja Anda, bintang di GitHub adalah cara tercepat untuk membantu.",
+      "note": "Cuma sepuluh detik, dan begitulah trader berikutnya menemukan kami.",
+      "cta": "Beri bintang di GitHub",
+      "thanks": "Terima kasih. Itu sangat membantu."
+    }
+  },
   "userMenu": {
     "accountMenu": "Menu akun",
     "settings": "Pengaturan",

@@ -1042,6 +1042,18 @@
       }
     }
   },
+  "growth": {
+    "eyebrow": "Ủng hộ Pairlens",
+    "later": "Để sau",
+    "never": "Đừng hỏi lại",
+    "githubStar": {
+      "title": "Bạn thấy terminal ổn chứ?",
+      "description": "Pairlens mở mã nguồn và lớn lên nhờ truyền miệng, không phải ngân sách quảng cáo. Nếu nó đã có chỗ đứng trong quy trình của bạn, một sao trên GitHub là cách giúp nhanh nhất.",
+      "note": "Chỉ mất mười giây, và đó là cách trader tiếp theo tìm thấy chúng tôi.",
+      "cta": "Gắn sao trên GitHub",
+      "thanks": "Cảm ơn bạn. Điều đó thật sự hữu ích."
+    }
+  },
   "userMenu": {
     "accountMenu": "Menu tài khoản",
     "settings": "Cài đặt",
