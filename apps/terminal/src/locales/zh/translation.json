@@ -4290,6 +4290,18 @@
       "description": "需要市场连接器插件才能流式传输实时数据。启用或安装一个连接器即可开始。",
       "manage": "管理市场连接器"
     },
+    "unknownClass": {
+      "title": "未知的市场类型",
+      "description": "“{{cls}}”不是 Pairlens 会绘制的市场类型。请检查链接，或从搜索中选择一个市场。"
+    },
+    "unknownVenue": {
+      "title": "交易所未连接",
+      "description": "此链接指向 {{venue}}，它不在你的连接器之中。安装后即可打开该链接，或改选其他交易所。"
+    },
+    "unresolvedPair": {
+      "title": "无法绘制此标的",
+      "description": "已连接的交易所都不提供 {{pair}}。请为该市场类型安装连接器，或从搜索中选择交易对。"
+    },
     "workspace": {
       "notFound": "未找到工作区",
       "edit": "编辑"

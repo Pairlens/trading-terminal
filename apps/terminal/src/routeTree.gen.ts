@@ -24,6 +24,7 @@ import { Route as TerminalBotsRouteImport } from './routes/_terminal/bots'
 import { Route as TerminalAccountsRouteImport } from './routes/_terminal/accounts'
 import { Route as TerminalWorkspaceWorkspaceIdRouteImport } from './routes/_terminal/workspace/$workspaceId'
 import { Route as TerminalPairPairRouteImport } from './routes/_terminal/pair/$pair'
+import { Route as TerminalClsMarketIdRouteImport } from './routes/_terminal/$cls/$market/$id'
 
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
@@ -100,6 +101,11 @@ const TerminalPairPairRoute = TerminalPairPairRouteImport.update({
   path: '/pair/$pair',
   getParentRoute: () => TerminalRoute,
 } as any)
+const TerminalClsMarketIdRoute = TerminalClsMarketIdRouteImport.update({
+  id: '/$cls/$market/$id',
+  path: '/$cls/$market/$id',
+  getParentRoute: () => TerminalRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof TerminalIndexRoute
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/checkout/success': typeof CheckoutSuccessRoute
   '/pair/$pair': typeof TerminalPairPairRoute
   '/workspace/$workspaceId': typeof TerminalWorkspaceWorkspaceIdRoute
+  '/$cls/$market/$id': typeof TerminalClsMarketIdRoute
 }
 export interface FileRoutesByTo {
   '/chart-test': typeof ChartTestRoute
@@ -132,6 +139,7 @@ export interface FileRoutesByTo {
   '/': typeof TerminalIndexRoute
   '/pair/$pair': typeof TerminalPairPairRoute
   '/workspace/$workspaceId': typeof TerminalWorkspaceWorkspaceIdRoute
+  '/$cls/$market/$id': typeof TerminalClsMarketIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -150,6 +158,7 @@ export interface FileRoutesById {
   '/_terminal/': typeof TerminalIndexRoute
   '/_terminal/pair/$pair': typeof TerminalPairPairRoute
   '/_terminal/workspace/$workspaceId': typeof TerminalWorkspaceWorkspaceIdRoute
+  '/_terminal/$cls/$market/$id': typeof TerminalClsMarketIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/checkout/success'
     | '/pair/$pair'
     | '/workspace/$workspaceId'
+    | '/$cls/$market/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/chart-test'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/'
     | '/pair/$pair'
     | '/workspace/$workspaceId'
+    | '/$cls/$market/$id'
   id:
     | '__root__'
     | '/_terminal'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/_terminal/'
     | '/_terminal/pair/$pair'
     | '/_terminal/workspace/$workspaceId'
+    | '/_terminal/$cls/$market/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -318,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TerminalPairPairRouteImport
       parentRoute: typeof TerminalRoute
     }
+    '/_terminal/$cls/$market/$id': {
+      id: '/_terminal/$cls/$market/$id'
+      path: '/$cls/$market/$id'
+      fullPath: '/$cls/$market/$id'
+      preLoaderRoute: typeof TerminalClsMarketIdRouteImport
+      parentRoute: typeof TerminalRoute
+    }
   }
 }
 
@@ -332,6 +351,7 @@ interface TerminalRouteChildren {
   TerminalIndexRoute: typeof TerminalIndexRoute
   TerminalPairPairRoute: typeof TerminalPairPairRoute
   TerminalWorkspaceWorkspaceIdRoute: typeof TerminalWorkspaceWorkspaceIdRoute
+  TerminalClsMarketIdRoute: typeof TerminalClsMarketIdRoute
 }
 
 const TerminalRouteChildren: TerminalRouteChildren = {
@@ -345,6 +365,7 @@ const TerminalRouteChildren: TerminalRouteChildren = {
   TerminalIndexRoute: TerminalIndexRoute,
   TerminalPairPairRoute: TerminalPairPairRoute,
   TerminalWorkspaceWorkspaceIdRoute: TerminalWorkspaceWorkspaceIdRoute,
+  TerminalClsMarketIdRoute: TerminalClsMarketIdRoute,
 }
 
 const TerminalRouteWithChildren = TerminalRoute._addFileChildren(

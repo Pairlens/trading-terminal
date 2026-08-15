@@ -32,26 +32,3 @@ export function splitPairAssets(
     quote: quote || (opts?.equity ? 'USD' : 'USDT'),
   }
 }
-
-/**
- * What the pair key alone says about the asset class, for the times the
- * instruments index says nothing.
- *
- * That index is an App Server read, so standalone, offline, or merely signed
- * out, EVERY symbol comes back unknown — and a caller that falls back to the
- * user's preferred venue then routes a crypto pair to whatever they happened
- * to be looking at. It routed 'BTC-USDT' to Alpaca exactly that way, and
- * Alpaca answered: its base leg 'BTC' is a real NYSE Arca spot-bitcoin ETF,
- * so a ~$28 equity price appeared under a crypto pair's label.
- *
- * Deliberately narrow. A quote leg that is not USD is not a US equity, and
- * that is the only call this makes. Everything else stays `undefined` rather
- * than guessing, because a wrong confident answer here is worse than none:
- * 'BTC-USD' is a real pair on both a crypto venue and (as an ETF) a stock
- * venue, and only the index can tell those apart.
- */
-export function assetClassFromQuoteLeg(pairKey: string): string | undefined {
-  const [, quote] = normalizePairKey(pairKey).split('-')
-  if (!quote) return undefined
-  return quote === 'USD' ? undefined : 'crypto-spot'
-}

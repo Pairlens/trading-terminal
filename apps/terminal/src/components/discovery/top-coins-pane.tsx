@@ -27,6 +27,7 @@ import { PairAvatar } from '@/components/pair-picker/pair-avatar'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { formatCompactUsd, formatPrice } from '@/lib/format-price'
+import { chartLinkProps } from '@/lib/market-ref/link'
 import { formatRelativeTime } from '@/lib/format-time'
 import { fetchTopCoinsWithFallback } from '@/lib/public-market-data'
 
@@ -202,6 +203,11 @@ export function TopCoinsPane() {
                     )}
                     {virtualItems.map((virtualRow) => {
                       const coin = coins[virtualRow.index]
+                      const coinRef = {
+                        cls: 'spot' as const,
+                        market: cryptoMarket,
+                        id: `${coin.symbol}-USDT`,
+                      }
                       return (
                         <TableRow
                           key={coin.rank}
@@ -209,8 +215,7 @@ export function TopCoinsPane() {
                         >
                           <TableCell className="p-0">
                             <Link
-                              to="/pair/$pair"
-                              params={{ pair: `${coin.symbol}-USDT` }}
+                              {...chartLinkProps(coinRef)}
                               className="flex h-9 items-center px-2 text-xs text-muted-foreground"
                             >
                               {coin.rank}
@@ -218,8 +223,7 @@ export function TopCoinsPane() {
                           </TableCell>
                           <TableCell className="p-0">
                             <Link
-                              to="/pair/$pair"
-                              params={{ pair: `${coin.symbol}-USDT` }}
+                              {...chartLinkProps(coinRef)}
                               className="flex h-9 items-center gap-2 px-2"
                             >
                               <PairAvatar
@@ -246,8 +250,7 @@ export function TopCoinsPane() {
                           </TableCell>
                           <TableCell className="hidden @min-[352px]/pane:table-cell p-0">
                             <Link
-                              to="/pair/$pair"
-                              params={{ pair: `${coin.symbol}-USDT` }}
+                              {...chartLinkProps(coinRef)}
                               className="flex h-9 items-center px-2"
                             >
                               <MiniPriceChart
@@ -259,8 +262,7 @@ export function TopCoinsPane() {
                           </TableCell>
                           <TableCell className="p-0">
                             <Link
-                              to="/pair/$pair"
-                              params={{ pair: `${coin.symbol}-USDT` }}
+                              {...chartLinkProps(coinRef)}
                               className="flex h-9 items-center justify-end px-2 text-xs"
                             >
                               {formatPrice(coin.price)}
@@ -268,8 +270,7 @@ export function TopCoinsPane() {
                           </TableCell>
                           <TableCell className="p-0">
                             <Link
-                              to="/pair/$pair"
-                              params={{ pair: `${coin.symbol}-USDT` }}
+                              {...chartLinkProps(coinRef)}
                               className={cn(
                                 'flex h-9 items-center justify-end px-2 text-xs',
                                 coin.percentChange24h >= 0
@@ -282,8 +283,7 @@ export function TopCoinsPane() {
                           </TableCell>
                           <TableCell className="hidden @lg/pane:table-cell p-0">
                             <Link
-                              to="/pair/$pair"
-                              params={{ pair: `${coin.symbol}-USDT` }}
+                              {...chartLinkProps(coinRef)}
                               className="flex h-9 items-center justify-end px-2 text-xs text-muted-foreground"
                             >
                               {formatCompactUsd(coin.marketCap)}

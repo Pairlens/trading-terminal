@@ -19,6 +19,8 @@ import type {
 import { formatCompactUsd, formatPrice } from '@/lib/format-price'
 import { formatRelativeTime } from '@/lib/format-time'
 import { fetchHeatmapWithFallback } from '@/lib/public-market-data'
+import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
+import { chartLinkProps } from '@/lib/market-ref/link'
 
 function formatPercent(value: number): string {
   const sign = value >= 0 ? '+' : ''
@@ -283,11 +285,21 @@ export function HeatmapPane() {
     [items],
   )
 
+  // Every tile is a USDT spot pair, so the venue is resolved once for the
+  // grid rather than guessed per tile.
+  const resolveMarket = usePreferredMarketResolver()
+  const cryptoMarket = resolveMarket('crypto-spot')
   const handleTileClick = useCallback(
     (symbol: string) => {
-      void navigate({ to: '/pair/$pair', params: { pair: `${symbol}-USDT` } })
+      void navigate(
+        chartLinkProps({
+          cls: 'spot',
+          market: cryptoMarket,
+          id: `${symbol}-USDT`,
+        }),
+      )
     },
-    [navigate],
+    [navigate, cryptoMarket],
   )
 
   const handleTileHover = useCallback((item: HeatmapItem | null): void => {

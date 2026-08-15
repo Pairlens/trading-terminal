@@ -29,9 +29,9 @@ import {
 import type { CompareMode } from '@pairlens/fast-financial-charts/types'
 import type { Instrument } from '@pairlens/shared/instrument-types'
 import { compareSeriesId } from '@/hooks/use-chart-terminal-state'
-import { useMarketData } from '@/lib/market-data-provider'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
-import { resolveMarketForAssetClass } from '@/lib/market-asset-classes'
+import { useMarketRefWithPreferred } from '@/lib/market-ref/use-market-ref'
+import { entryToInstrumentRef } from '@/lib/market-ref/entry'
 import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
 
 const SCALE_MODE_OPTIONS: Array<{ value: CompareMode; labelKey: string }> = [
@@ -125,22 +125,22 @@ function CompareSymbolDialog({
   const { items, isLoading } = useMarketInstruments({
     q: query.trim() || undefined,
   })
-  const { availableMarkets } = useMarketData()
   const { market, compareSymbols, chartSeries } = useChartConfig()
   const { addCompareSymbol } = useChartActions()
+  // The chart's own venue is the preference here: a comparison series
+  // should ride along with what is being charted when it can.
+  const resolveWithPreferred = useMarketRefWithPreferred()
 
   const mainPairKey = chartSeries[0]?.id
 
   const handleSelect = (inst: Instrument) => {
-    // Route the instrument to a venue serving its asset class (stocks pairs
-    // can't stream from a crypto exchange and vice versa).
-    const target = resolveMarketForAssetClass(
-      market,
-      availableMarkets.map((m) => m.marketId),
-      inst.assetClass,
-      availableMarkets,
-    )
-    addCompareSymbol({ pairKey: inst.symbol, market: target })
+    // Route the instrument to a venue serving its asset class (a stocks row
+    // can't stream from a crypto exchange and vice versa). Nothing serving it
+    // means there is no comparison to draw, so the row does nothing rather
+    // than adding a series that can never seed.
+    const ref = resolveWithPreferred(entryToInstrumentRef(inst), market)
+    if (!ref) return
+    addCompareSymbol({ pairKey: ref.id, market: ref.market })
     setQuery('')
     onOpenChange(false)
   }

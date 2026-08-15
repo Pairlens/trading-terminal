@@ -4290,6 +4290,18 @@
       "description": "Market connector plugins are required to stream live data. Enable or install a connector to get started.",
       "manage": "Manage Market Connectors"
     },
+    "unknownClass": {
+      "title": "Unknown market type",
+      "description": "\"{{cls}}\" is not a market type Pairlens charts. Check the link, or pick a market from the search."
+    },
+    "unknownVenue": {
+      "title": "Venue not connected",
+      "description": "This link charts {{venue}}, which is not among your connectors. Install it to open the link, or pick another venue."
+    },
+    "unresolvedPair": {
+      "title": "Nothing can chart this",
+      "description": "No connected venue serves {{pair}}. Install a connector for its market type, or pick a pair from the search."
+    },
     "workspace": {
       "notFound": "Workspace not found",
       "edit": "Edit"

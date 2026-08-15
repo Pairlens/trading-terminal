@@ -127,6 +127,13 @@ export type Instrument =
  * Tokens key by chain+address; everything else keys by kind + the fields
  * that make the instrument unique within its arm. Two assets sharing a
  * ticker are two rows.
+ *
+ * Deliberately NOT the same as `toInstrumentRef` in `./market-ref`, which
+ * looks similar and answers a different question. This key wants maximum
+ * discrimination so a merge never fuses two assets: it keeps the MIC, so
+ * AAPL on two exchanges stays two rows. A routing ref wants what a connector
+ * will actually accept, and a broker resolves a bare ticker itself. Merging
+ * them would silently weaken this one.
  */
 export function instrumentIdentityKey(inst: Instrument): string {
   switch (inst.kind) {

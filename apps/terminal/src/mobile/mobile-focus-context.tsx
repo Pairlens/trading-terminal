@@ -47,6 +47,7 @@ import {
   truncateShell,
 } from './lib/mobile-history'
 import { stackWithOverlay } from './lib/overlay-stack'
+import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import type { ShellEntries } from './lib/mobile-history'
 import type { AnyRouter } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
@@ -91,6 +92,12 @@ export type MobileOverlayKind = MobileOverlay['kind']
 
 export type MobileFocusValue = {
   focusedPair: string
+  /**
+   * The focused market's asset class. Half of what decides which venue may
+   * serve it, and part of the canonical URL, so it travels with the pair
+   * rather than being looked up from a side table after the fact.
+   */
+  focusedClass: InstrumentClass
   focusedVenue: string
 }
 
@@ -100,7 +107,7 @@ export type MobileNavValue = {
 }
 
 export type MobileActionsValue = {
-  setFocusedPair: (pairKey: string) => void
+  setFocusedPair: (pairKey: string, cls?: InstrumentClass) => void
   setFocusedVenue: (market: string) => void
   /**
    * Sets the tab WITHOUT claiming a history entry — the seed path, for a URL
@@ -212,12 +219,18 @@ function restampShellEntry(router: AnyRouter, depth: number): void {
 
 export function MobileFocusProvider({
   focusedPair,
+  focusedClass,
   onFocusPair,
   children,
 }: {
   focusedPair: string
-  /** Owned by MobileTerminalRoot: sets the pair AND rewrites the URL. */
-  onFocusPair: (pairKey: string) => void
+  focusedClass: InstrumentClass
+  /**
+   * Owned by MobileTerminalRoot: sets the pair and its class. The URL is
+   * `useMobileRouteSync`'s job, because the venue lives in chart config below
+   * the root and a rewrite from up there could only guess at it.
+   */
+  onFocusPair: (pairKey: string, cls?: InstrumentClass) => void
   children: ReactNode
 }) {
   const { market } = useChartConfig()
@@ -445,8 +458,8 @@ export function MobileFocusProvider({
   useEffect(() => () => window.clearTimeout(disarmRef.current), [])
 
   const focus = useMemo<MobileFocusValue>(
-    () => ({ focusedPair, focusedVenue: market }),
-    [focusedPair, market],
+    () => ({ focusedPair, focusedClass, focusedVenue: market }),
+    [focusedPair, focusedClass, market],
   )
 
   const nav = useMemo<MobileNavValue>(

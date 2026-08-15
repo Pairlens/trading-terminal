@@ -43,6 +43,9 @@ import { useInstrumentSearch } from '@/hooks/use-instrument-search'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useRecentPairs } from '@/lib/recent-tickers'
+import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
+import { entryToMarketRef } from '@/lib/market-ref/entry'
+import { chartLinkProps } from '@/lib/market-ref/link'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { lookupPredictionOutcome } from '@/stores/prediction-directory-store'
@@ -144,6 +147,7 @@ export function PairSwitcher({
     {},
   )
   const [recentSymbols] = useRecentPairs()
+  const resolveMarket = usePreferredMarketResolver()
 
   // Same react-query key the search hook reads, so this is a cache hit rather
   // than a second discovery fetch.
@@ -190,6 +194,7 @@ export function PairSwitcher({
   const recentEntries = useMemo(
     () =>
       recentSymbols
+        .map((ref) => ref.id)
         .filter((s) => s !== pairKey)
         .slice(0, MAX_RECENT)
         .map((s) => pairsBySymbol.get(s) ?? synthesizeEntry(s)),
@@ -298,7 +303,9 @@ export function PairSwitcher({
       setSearchValue('')
       // The route records the visit itself (every entry point must feed the
       // recents history, not just this one), so no tracking call here.
-      void navigate({ to: '/pair/$pair', params: { pair: pair.symbol } })
+      void navigate(
+        chartLinkProps(entryToMarketRef(pair, resolveMarket(pair.assetClass))),
+      )
     },
     [navigate, setAssetClassMap],
   )

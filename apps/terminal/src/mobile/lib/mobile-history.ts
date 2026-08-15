@@ -32,7 +32,8 @@
  *      `go(-1)` is asynchronous, so a push chasing it lands on the entry the
  *      traversal has not walked off yet and the stack tears.
  *   3. The entry we land on may name an older pair than the one in focus.
- *      `/pair/$pair` is rewritten with `replace: true` on every focus change,
+ *      the canonical `/{class}/{venue}/{id}` is rewritten with `replace: true`
+ *      on every focus change,
  *      so a pair picked while a sheet was up replaces the SHEET's entry and
  *      leaves the one below it pointing at the previous pair. Adopting that
  *      URL would silently undo the user's pick, so a shell-driven history move

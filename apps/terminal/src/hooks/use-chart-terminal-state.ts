@@ -227,15 +227,40 @@ export function useChartTerminalState(
      * (crosshair, drawing mode, bid/ask) stay global regardless.
      */
     scope?: string
+    /**
+     * The venue, when something above owns it. The chart route passes the one
+     * in its URL, because a chart is of a specific tape and that has to be in
+     * the address: a shared link used to hand the recipient whichever venue
+     * they happened to prefer, and switching venue changed the drawing set
+     * (keyed `market:pair`) with no history entry, so back could not undo it.
+     *
+     * Unset for workspace panes, which keep owning their own venue.
+     */
+    marketOverride?: string
+    /** Called on every venue change so the owner can move the URL. */
+    onMarketChange?: (market: string) => void
   },
 ) {
   const defaultMarket = options?.defaultMarket ?? 'okx'
   const scope = options?.scope
+  const onMarketChange = options?.onMarketChange
   // Stable per mount — panes never change their id while mounted.
   const scopedKey = (base: string) => (scope ? `${base}::${scope}` : base)
-  const [market, setMarket] = usePersistedState<string>(
+  const [persistedMarket, setPersistedMarket] = usePersistedState<string>(
     scopedKey('terminal.market'),
     defaultMarket,
+  )
+  const market = options?.marketOverride ?? persistedMarket
+  // The persisted value is still written under an override: it is the user's
+  // venue PREFERENCE, which discovery panes and pickers read to decide where
+  // to price a row they have no venue for. Only the chart's own venue moved
+  // into the URL.
+  const setMarket = useCallback(
+    (next: string) => {
+      setPersistedMarket(next)
+      onMarketChange?.(next)
+    },
+    [setPersistedMarket, onMarketChange],
   )
   const [persistedTimeframe, setPersistedTimeframe] = usePersistedState<string>(
     scopedKey('terminal.timeframe'),

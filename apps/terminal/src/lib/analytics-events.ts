@@ -282,7 +282,8 @@ export interface AnalyticsEvents {
    * feedback dialog. The one sanctioned exception to the no-free-text rule
    * above: the text IS the payload, the user wrote it knowing it is sent,
    * and the dialog says so before it goes. `route` is the matched route
-   * template (`/_terminal/pair/$pair`), never a resolved path with ids in it.
+   * template (`/_terminal/$cls/$market/$id`), never a resolved path with ids
+   * in it.
    */
   bug_report: {
     category: 'bug' | 'idea' | 'other'

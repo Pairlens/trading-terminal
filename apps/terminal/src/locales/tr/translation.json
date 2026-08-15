@@ -4290,6 +4290,18 @@
       "description": "Canlı veri akışı için piyasa bağlayıcı eklentileri gerekir. Başlamak için bir bağlayıcıyı etkinleştirin veya yükleyin.",
       "manage": "Piyasa Bağlayıcılarını Yönet"
     },
+    "unknownClass": {
+      "title": "Bilinmeyen piyasa türü",
+      "description": "\"{{cls}}\", Pairlens’in grafiğini çizdiği bir piyasa türü değil. Bağlantıyı kontrol edin veya aramadan bir piyasa seçin."
+    },
+    "unknownVenue": {
+      "title": "Borsa bağlı değil",
+      "description": "Bu bağlantı {{venue}} borsasını açıyor, ancak o bağlayıcılarınız arasında değil. Bağlantıyı açmak için kurun veya başka bir borsa seçin."
+    },
+    "unresolvedPair": {
+      "title": "Bunun grafiği çizilemiyor",
+      "description": "Bağlı hiçbir borsa {{pair}} sunmuyor. Bu piyasa türü için bir bağlayıcı kurun veya aramadan bir parite seçin."
+    },
     "workspace": {
       "notFound": "Çalışma alanı bulunamadı",
       "edit": "Düzenle"

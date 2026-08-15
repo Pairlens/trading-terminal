@@ -56,6 +56,9 @@ import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
+import { useRecentPairs } from '@/lib/recent-tickers'
+import { entryToMarketRef } from '@/lib/market-ref/entry'
+import { chartLinkProps } from '@/lib/market-ref/link'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 // Extracted verbatim so the mobile lists render the same reserved column and
 // the same tick flash as this pane instead of a second implementation.
@@ -79,10 +82,11 @@ export function MarketsPane() {
   // Trend lines come from candles, which need a venue — an equity row can't
   // ask a crypto exchange, so each row resolves its own.
   const resolveMarket = usePreferredMarketResolver()
-  const [recentPairs, setRecentPairs] = usePersistedState<Array<string>>(
-    'pair-picker.recent',
-    [],
-  )
+  // The shared store, not a second `pair-picker.recent` writer. This pane
+  // used to write raw symbols straight to that key while the marquee wrote
+  // qualified refs to the same one, so whichever surface wrote last decided
+  // what the other could read.
+  const [recentPairs, trackRecentRef] = useRecentPairs()
   const [, setAssetClassMap] = usePersistedState<Record<string, string>>(
     'pair-picker.assetClassMap',
     {},
@@ -139,22 +143,22 @@ export function MarketsPane() {
   const showFeatured = activeCategory === 'all' && featuredPairs.length > 0
 
   const trackRecent = useCallback(
-    (symbol: string, assetClass?: string) => {
-      setRecentPairs((prev) => {
-        const deduped = prev.filter((s) => s !== symbol)
-        return [symbol, ...deduped].slice(0, 10)
-      })
-      if (assetClass) {
-        setAssetClassMap((prev) => ({ ...prev, [symbol]: assetClass }))
+    (pair: PairEntry) => {
+      trackRecentRef(entryToMarketRef(pair, resolveMarket(pair.assetClass)))
+      if (pair.assetClass) {
+        setAssetClassMap((prev) => ({
+          ...prev,
+          [pair.symbol]: pair.assetClass as string,
+        }))
       }
     },
-    [setRecentPairs, setAssetClassMap],
+    [trackRecentRef, resolveMarket, setAssetClassMap],
   )
 
   const recentPairEntries = useMemo(
     () =>
       recentPairs
-        .map((s) => pairsBySymbol.get(s))
+        .map((ref) => pairsBySymbol.get(ref.id))
         .filter((p): p is PairEntry => p !== undefined),
     [recentPairs, pairsBySymbol],
   )
@@ -351,8 +355,9 @@ export function MarketsPane() {
                     <Link
                       key={pair.symbol}
                       className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs transition-colors hover:bg-accent/40"
-                      params={{ pair: pair.symbol }}
-                      to="/pair/$pair"
+                      {...chartLinkProps(
+                        entryToMarketRef(pair, resolveMarket(pair.assetClass)),
+                      )}
                     >
                       <PairLogo
                         base={pair.base}
@@ -384,9 +389,10 @@ export function MarketsPane() {
                       // wide that tile ended up, which the pane's width alone
                       // no longer tells us.
                       className="@container/tile group flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border p-3 transition-colors hover:border-primary/40 hover:bg-accent/40"
-                      params={{ pair: pair.symbol }}
-                      to="/pair/$pair"
-                      onClick={() => trackRecent(pair.symbol, pair.assetClass)}
+                      {...chartLinkProps(
+                        entryToMarketRef(pair, resolveMarket(pair.assetClass)),
+                      )}
+                      onClick={() => trackRecent(pair)}
                     >
                       <PairLogo
                         base={pair.base}
@@ -566,7 +572,7 @@ const PairTableRow = memo(function PairTableRow({
   market: string
   isWatched: boolean
   onStarClick: (symbol: string) => void
-  onNavigate: (symbol: string, assetClass?: string) => void
+  onNavigate: (pair: PairEntry) => void
 }) {
   const { t } = useTranslation()
   const categoryLabels = CATEGORIES.filter(
@@ -601,9 +607,8 @@ const PairTableRow = memo(function PairTableRow({
       <TableCell>
         <Link
           className="flex items-center gap-2.5"
-          params={{ pair: pair.symbol }}
-          to="/pair/$pair"
-          onClick={() => onNavigate(pair.symbol, pair.assetClass)}
+          {...chartLinkProps(entryToMarketRef(pair, market))}
+          onClick={() => onNavigate(pair)}
         >
           <PairLogo
             base={pair.base}
@@ -620,9 +625,8 @@ const PairTableRow = memo(function PairTableRow({
       <TableCell className="hidden @lg/pane:table-cell">
         <Link
           className="block"
-          params={{ pair: pair.symbol }}
-          to="/pair/$pair"
-          onClick={() => onNavigate(pair.symbol, pair.assetClass)}
+          {...chartLinkProps(entryToMarketRef(pair, market))}
+          onClick={() => onNavigate(pair)}
         >
           <MiniPriceChart
             market={market}
@@ -645,9 +649,8 @@ const PairTableRow = memo(function PairTableRow({
       </TableCell>
       <TableCell>
         <Link
-          params={{ pair: pair.symbol }}
-          to="/pair/$pair"
-          onClick={() => onNavigate(pair.symbol, pair.assetClass)}
+          {...chartLinkProps(entryToMarketRef(pair, market))}
+          onClick={() => onNavigate(pair)}
         >
           <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
         </Link>
@@ -670,7 +673,7 @@ const PairCard = memo(function PairCard({
   market: string
   isWatched: boolean
   onStarClick: (symbol: string) => void
-  onNavigate: (symbol: string, assetClass?: string) => void
+  onNavigate: (pair: PairEntry) => void
 }) {
   const { t } = useTranslation()
   const categoryLabels = CATEGORIES.filter(
@@ -683,9 +686,8 @@ const PairCard = memo(function PairCard({
   return (
     <Link
       className="group flex items-start gap-3 rounded-lg border p-3 transition-colors hover:border-primary/40 hover:bg-accent/40"
-      params={{ pair: pair.symbol }}
-      to="/pair/$pair"
-      onClick={() => onNavigate(pair.symbol, pair.assetClass)}
+      {...chartLinkProps(entryToMarketRef(pair, market))}
+      onClick={() => onNavigate(pair)}
     >
       <PairLogo
         base={pair.base}

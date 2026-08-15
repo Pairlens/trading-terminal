@@ -127,6 +127,9 @@ type ChartTerminalProviderProps = {
   defaultTimeframe?: string
   /** Per-pane persistence scope — see useChartTerminalState options.scope. */
   stateScope?: string
+  /** Venue owned from above (the chart route's URL) — see the same options. */
+  marketOverride?: string
+  onMarketChange?: (market: string) => void
   children: ReactNode
 }
 
@@ -136,6 +139,8 @@ export function ChartTerminalProvider({
   defaultMarket,
   defaultTimeframe,
   stateScope,
+  marketOverride,
+  onMarketChange,
   children,
 }: ChartTerminalProviderProps) {
   const state = useChartTerminalState(pairKey, {
@@ -143,6 +148,8 @@ export function ChartTerminalProvider({
     defaultMarket,
     defaultTimeframe,
     scope: stateScope,
+    marketOverride,
+    onMarketChange,
   })
 
   const tickerStream = useMemo<TickerStreamValue>(

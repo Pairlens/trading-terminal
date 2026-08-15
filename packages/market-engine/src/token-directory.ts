@@ -42,20 +42,14 @@ export function clearTokenDirectory(): void {
   directory.clear()
 }
 
-/** True if the string looks like an EVM contract address. */
-export function isEvmAddress(value: string): boolean {
-  return /^0x[0-9a-fA-F]{40}$/.test(value)
-}
-
 /**
- * True if the string looks like a Solana mint address (base58, 32–44 chars).
- * Short uppercase tickers are excluded by the length floor.
+ * Address shape predicates live in `@pairlens/shared/market-ref`, because the
+ * routing layer needs them to decide whether a `/dex/...` id segment is an
+ * address or a symbol, and a second copy of these regexes is a second thing to
+ * get wrong. Re-exported here so connectors keep their existing import.
  */
-export function isSolanaAddress(value: string): boolean {
-  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(value)
-}
-
-/** True if the string looks like a token address on any supported chain. */
-export function isTokenAddress(value: string): boolean {
-  return isEvmAddress(value) || isSolanaAddress(value)
-}
+export {
+  isEvmAddress,
+  isSolanaAddress,
+  isTokenAddress,
+} from '@pairlens/shared/market-ref'

@@ -4290,6 +4290,18 @@
       "description": "Plugin konektor pasar diperlukan untuk streaming data langsung. Aktifkan atau instal konektor untuk memulai.",
       "manage": "Kelola Konektor Pasar"
     },
+    "unknownClass": {
+      "title": "Jenis pasar tidak dikenal",
+      "description": "\"{{cls}}\" bukan jenis pasar yang ditampilkan Pairlens. Periksa tautannya atau pilih pasar dari pencarian."
+    },
+    "unknownVenue": {
+      "title": "Bursa belum terhubung",
+      "description": "Tautan ini membuka {{venue}}, yang tidak ada di antara konektor Anda. Pasang konektornya untuk membuka tautan, atau pilih bursa lain."
+    },
+    "unresolvedPair": {
+      "title": "Tidak ada yang bisa menampilkan ini",
+      "description": "Tidak ada bursa terhubung yang menyediakan {{pair}}. Pasang konektor untuk jenis pasar itu, atau pilih pasangan dari pencarian."
+    },
     "workspace": {
       "notFound": "Ruang kerja tidak ditemukan",
       "edit": "Edit"

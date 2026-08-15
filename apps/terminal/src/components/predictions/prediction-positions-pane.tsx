@@ -27,6 +27,7 @@ import {
 } from '@/hooks/use-prediction-positions'
 import { formatPredictionPrice } from '@/lib/format-price'
 import { formatTimeUntil } from '@/lib/format-time'
+import { chartLinkProps } from '@/lib/market-ref/link'
 
 export function PredictionPositionsPane() {
   const { t } = useTranslation()
@@ -164,8 +165,11 @@ function Row({
       >
         <Link
           className="hover:underline"
-          params={{ pair: position.pairKey }}
-          to="/pair/$pair"
+          {...chartLinkProps({
+            cls: 'prediction',
+            market: result.account.market,
+            id: position.pairKey,
+          })}
         >
           {position.marketTitle || position.pairKey}
         </Link>

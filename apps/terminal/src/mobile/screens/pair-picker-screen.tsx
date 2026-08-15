@@ -61,6 +61,7 @@ import { normalizePairKey } from '@/lib/pairs'
 import { useInstrumentSearch } from '@/hooks/use-instrument-search'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { usePairlens } from '@/lib/pairlens-provider'
+import { entryToMarketRef } from '@/lib/market-ref/entry'
 
 type PairPickerScreenProps = {
   overlay: Extract<MobileOverlay, { kind: 'pairPicker' }>
@@ -254,7 +255,7 @@ export default memo(function PairPickerScreen({
       // — the callout said so before the tap.
       if (routing.market !== focusedVenue) setFocusedVenue(routing.market)
       setFocusedPair(entry.symbol)
-      trackRecent(entry.symbol)
+      trackRecent(entryToMarketRef(entry, routing.market))
       if (entry.assetClass) {
         setAssetClassMap((prev) => ({
           ...prev,

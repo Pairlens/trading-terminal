@@ -97,6 +97,7 @@ import { requireUnlockForTrade } from '@/lib/security/lock-store'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
 import i18n from '@/lib/i18n'
 import { stepCompatReason, stepTypeLabelById } from '@/lib/registry-labels'
+import { chartLinkProps } from '@/lib/market-ref/link'
 
 // ── Trade toast ───────────────────────────────────────────────────────
 
@@ -704,7 +705,13 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
       })
     }
     setAssetClassMap((prev) => ({ ...prev, [sibling.pairKey]: 'prediction' }))
-    void navigate({ to: '/pair/$pair', params: { pair: sibling.pairKey } })
+    // The venue rides in the address, so the sibling opens on the SAME venue
+    // this outcome came from. Both outcomes of one market are two books on
+    // one venue; resolving by class could land the other one elsewhere.
+    const venue = pinnedOutcome?.market ?? market
+    void navigate(
+      chartLinkProps({ cls: 'prediction', market: venue, id: sibling.pairKey }),
+    )
   }
 
   const handleSubmit = async () => {

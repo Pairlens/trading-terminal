@@ -4290,6 +4290,18 @@
       "description": "Plugins de conector de mercado são necessários para transmitir dados em tempo real. Ative ou instale um conector para começar.",
       "manage": "Gerenciar conectores de mercado"
     },
+    "unknownClass": {
+      "title": "Tipo de mercado desconhecido",
+      "description": "\"{{cls}}\" não é um tipo de mercado que a Pairlens exibe. Verifique o link ou escolha um mercado na busca."
+    },
+    "unknownVenue": {
+      "title": "Corretora não conectada",
+      "description": "Este link abre {{venue}}, que não está entre seus conectores. Instale-o para abrir o link ou escolha outra corretora."
+    },
+    "unresolvedPair": {
+      "title": "Nada pode exibir isto",
+      "description": "Nenhuma corretora conectada oferece {{pair}}. Instale um conector para esse tipo de mercado ou escolha um par na busca."
+    },
     "workspace": {
       "notFound": "Workspace não encontrado",
       "edit": "Editar"

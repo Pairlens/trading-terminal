@@ -69,13 +69,14 @@ import type { DragEndEvent } from '@dnd-kit/core'
 
 import type { Instrument } from '@pairlens/shared/instrument-types'
 import { formatPrice } from '@/lib/format-price'
-import { resolveMarketForAssetClass } from '@/lib/market-asset-classes'
+import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
+import { entryToMarketRef } from '@/lib/market-ref/entry'
+import { chartLinkProps } from '@/lib/market-ref/link'
 import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useTickerStream } from '@/hooks/use-ticker-stream'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useActivePair } from '@/lib/active-pair-context'
-import { useMarketData } from '@/lib/market-data-provider'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import { PairSearchResults } from '@/components/pair-picker/pair-search-results'
@@ -121,30 +122,21 @@ export function WatchlistPane() {
   )
     ? preferredMarket
     : defaultMarket
-  const availableMarketValues = useMemo(
-    () => availableMarkets.map((m) => m.value),
-    [availableMarkets],
-  )
 
   // Resolve each row's venue up front: a stocks instrument can't stream from a
   // crypto exchange, so it has to leave the sticky market for one that serves
-  // its asset class. That decision needs the adapters' declared asset classes —
-  // without them every venue looks compatible and stock rows never reprice.
-  const { availableMarkets: adapterInfos } = useMarketData()
+  // its asset class. The shared resolver owns that decision now, including the
+  // class-spelling normalization that used to make every crypto row miss.
+  const resolveMarket = usePreferredMarketResolver()
   const marketBySymbol = useMemo(
     () =>
       new Map(
         watchlistItems.map((inst) => [
           inst.symbol,
-          resolveMarketForAssetClass(
-            validPreferred,
-            availableMarketValues,
-            inst.assetClass,
-            adapterInfos,
-          ),
+          resolveMarket(inst.assetClass),
         ]),
       ),
-    [watchlistItems, validPreferred, availableMarketValues, adapterInfos],
+    [watchlistItems, resolveMarket],
   )
 
   // Connector-switch transition: every row re-resolves and re-subscribes its
@@ -661,8 +653,8 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
 
   const handleClick = useCallback(() => {
     if (justDraggedRef.current) return
-    void navigate({ to: '/pair/$pair', params: { pair: inst.symbol } })
-  }, [justDraggedRef, navigate, inst.symbol])
+    void navigate(chartLinkProps(entryToMarketRef(inst, market)))
+  }, [justDraggedRef, navigate, inst, market])
 
   // Rows are focusable (dnd-kit adds tabIndex/role) but divs have no native
   // key activation — wire Enter/Space to open and arrows to move focus.

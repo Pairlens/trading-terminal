@@ -19,6 +19,7 @@ import { CopilotChat } from './copilot-chat'
 import { CopilotHeader } from './copilot-header'
 import { CopilotInput } from './copilot-input'
 import { CopilotOrderActionsProvider } from './copilot-order-card'
+import type { InstrumentRef, MarketRef } from '@pairlens/shared/market-ref'
 import type {
   CopilotCancelRequest,
   CopilotOrderActions,
@@ -39,6 +40,9 @@ import type {
   CopilotChartSnapshot,
   CopilotMarketDataHandle,
 } from '@/lib/copilot/tool-deps'
+import { chartLinkProps } from '@/lib/market-ref/link'
+import { legacySymbolToInstrumentRef } from '@/lib/market-ref/legacy'
+import { useMarketRefWithPreferred } from '@/lib/market-ref/use-market-ref'
 import { track } from '@/lib/analytics-events'
 import { useCandleStream } from '@/hooks/use-candle-stream'
 import { useTickerStream } from '@/hooks/use-ticker-stream'
@@ -199,6 +203,11 @@ type ClientToolContext = {
   indicatorActions?: IndicatorActions
   chartActions?: ChartActions
   navigate: ReturnType<typeof useNavigate>
+  /** Instrument → venue, the shared policy. Null when nothing serves it. */
+  resolveMarketRef: (
+    inst: InstrumentRef,
+    preferred?: string,
+  ) => MarketRef | null
   currentMarket: string
   /** Arm a deferred copilot check (schedule_check tool). */
   scheduleCheck?: (delayMinutes: number, instruction: string) => void
@@ -255,10 +264,17 @@ function executeClientTool(
     }
     if (toolName === 'switch_pair') {
       const pair = normalizePair(String(p.pair ?? ''))
-      if (p.market) ctx.chartActions?.setMarket(String(p.market).toLowerCase())
-      if (pair) {
-        void ctx.navigate({ to: '/pair/$pair', params: { pair } })
-      }
+      if (!pair) return
+      // The tool may name a venue; when it does not, the ref resolves the way
+      // every other surface does rather than inheriting whatever the chart
+      // happens to be on, which for a cross-class switch was the wrong tape.
+      const named = p.market ? String(p.market).toLowerCase() : undefined
+      const resolved = ctx.resolveMarketRef(
+        legacySymbolToInstrumentRef(pair),
+        named,
+      )
+      if (!resolved) return
+      void ctx.navigate(chartLinkProps(resolved))
       return
     }
 
@@ -456,6 +472,7 @@ function CopilotChatInner({
 
   const { pluginManager } = usePairlens()
   const navigate = useNavigate()
+  const resolveMarketRef = useMarketRefWithPreferred()
 
   const marketRef = useRef(market)
   marketRef.current = market
@@ -536,6 +553,7 @@ function CopilotChatInner({
           indicatorActions,
           chartActions: chartActionsRef.current,
           navigate,
+          resolveMarketRef,
           currentMarket: marketRef.current,
           scheduleCheck,
         },

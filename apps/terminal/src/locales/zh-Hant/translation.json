@@ -4290,6 +4290,18 @@
       "description": "需要市場連接器外掛才能串流即時資料。啟用或安裝一個連接器即可開始。",
       "manage": "管理市場連接器"
     },
+    "unknownClass": {
+      "title": "未知的市場類型",
+      "description": "「{{cls}}」不是 Pairlens 會繪製的市場類型。請檢查連結，或從搜尋中選擇一個市場。"
+    },
+    "unknownVenue": {
+      "title": "交易所未連接",
+      "description": "此連結指向 {{venue}}，它不在你的連接器之中。安裝後即可開啟該連結，或改選其他交易所。"
+    },
+    "unresolvedPair": {
+      "title": "無法繪製此標的",
+      "description": "已連接的交易所都不提供 {{pair}}。請為該市場類型安裝連接器，或從搜尋中選擇交易對。"
+    },
     "workspace": {
       "notFound": "找不到工作區",
       "edit": "編輯"

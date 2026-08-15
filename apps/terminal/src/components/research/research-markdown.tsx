@@ -6,8 +6,13 @@ import remarkGfm from 'remark-gfm'
 import { Link } from '@tanstack/react-router'
 import { TrendingDown, TrendingUp } from 'lucide-react'
 
+import { cn } from '@pairlens/ui'
+
 import { ResearchInlineCitation } from './research-inline-citation'
 import type { ReactNode } from 'react'
+import { useMarketRefOrNull } from '@/lib/market-ref/use-market-ref'
+import { legacySymbolToInstrumentRef } from '@/lib/market-ref/legacy'
+import { chartLinkProps } from '@/lib/market-ref/link'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -38,13 +43,27 @@ function slugify(text: string): string {
 const COLORIZE_RE =
   /(\$[\d,]+(?:\.\d+)?)|(\+\d+(?:\.\d+)?%)|(-\d+(?:\.\d+)?%)|\b([A-Z0-9]{2,10}-[A-Z]{2,6})\b/g
 
-/** Inline clickable pair chip — opens the pair in the active chart. */
+/**
+ * Inline clickable pair chip.
+ *
+ * The one place a symbol arrives with no context at all: it was matched out of
+ * AI prose by a regex, so there is no row, no class and no venue behind it. If
+ * nothing connected can serve it the chip renders as plain text rather than as
+ * a link into a chart that cannot load.
+ */
 function TickerChip({ pair }: { pair: string }) {
+  const resolveRef = useMarketRefOrNull()
+  const ref = resolveRef(legacySymbolToInstrumentRef(pair))
+
+  const className =
+    'mx-0.5 inline-flex items-baseline rounded bg-primary/10 px-1 font-mono text-[11px] font-medium text-primary no-underline transition-colors'
+
+  if (!ref) return <span className={className}>{pair}</span>
+
   return (
     <Link
-      to="/pair/$pair"
-      params={{ pair }}
-      className="mx-0.5 inline-flex items-baseline rounded bg-primary/10 px-1 font-mono text-[11px] font-medium text-primary no-underline transition-colors hover:bg-primary/20"
+      {...chartLinkProps(ref)}
+      className={cn(className, 'hover:bg-primary/20')}
     >
       {pair}
     </Link>
