@@ -428,10 +428,12 @@
     "ai": {
       "placement": "어시스턴트 위치",
       "placementDescription": "작업하는 동안 어시스턴트가 대기하는 자리입니다. 채팅 창은 어시스턴트가 있는 자리에서 열리고, 거기서 원하는 곳으로 끌어 옮길 수 있습니다.",
-      "placementFloating": "플로팅",
-      "placementFloatingDescription": "터미널 오른쪽 아래, 패널을 가리지 않는 자리에 있고 제안이 항상 보입니다. 가장 눈에 잘 띕니다.",
       "placementSidebar": "사이드바",
       "placementSidebarDescription": "왼쪽 바에서 다른 도구들과 함께 있습니다. 제안은 마우스를 올리거나 어시스턴트가 작업 중일 때 나타납니다. 더 조용하고, 항상 같은 자리에 있습니다.",
+      "placementBottom": "하단 바",
+      "placementBottomDescription": "터미널 아래 띠에 자리합니다. 패널 위가 아니라 패널 옆이며, 플로팅과 같은 모서리에서 제안도 계속 보입니다.",
+      "placementFloating": "플로팅",
+      "placementFloatingDescription": "패널 오른쪽 아래에 겹쳐지는 작은 알약 모양입니다. 제안이 항상 보이고 가장 눈에 잘 띄지만, 레이아웃 일부를 가리는 유일한 배치입니다.",
       "persona": "페르소나",
       "personaDescription": "어시스턴트가 답할 때 얼마나 설명할지 정합니다. 변경은 다음 메시지부터 적용됩니다."
     },
@@ -1301,6 +1303,9 @@
       "bots": "트레이딩 봇을 배포해 줘",
       "indicators": "지표를 작성해 줘",
       "indicatorsScript": "{{name}} 개선해 줘",
+      "workflowSelected": "{{name}} 워크플로 개선하기",
+      "alertSelected": "{{name}} 알림 조정하기",
+      "botSelected": "{{name}} 살펴보기",
       "accounts": "내 계정을 점검해 줘",
       "plugins": "플러그인을 찾아 줘",
       "workspaceStore": "내 워크스페이스를 설계해 줘"
@@ -1323,6 +1328,10 @@
   },
   "copilot": {
     "placeholder": "렌즈에 물어보세요...",
+    "send": "보내기",
+    "stop": "중지",
+    "copyMessage": "메시지 복사",
+    "messageCopied": "메시지를 복사했습니다",
     "lensPersona": "렌즈 페르소나",
     "persona": {
       "mentor": "멘토",

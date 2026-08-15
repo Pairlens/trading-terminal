@@ -5,7 +5,7 @@ group: builders
 parent: agent-interfaces
 order: 1
 eyebrow: For builders
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 8 min read
 ---
 
@@ -129,15 +129,23 @@ through `update_alert_flow` below.
 
 ## Terminal
 
-| Tool          | What it does                                                                                                        |
-| ------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `navigate_to` | Open a page: Discovery, Accounts, Bots, Indicators, Workflows, Notifications, the Plugin Store, the Workspace Store |
-| `get_screen`  | Read what is mounted right now, what each surface is showing, and which surface actions are available               |
+| Tool          | What it does                                                                                                                                  |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `navigate_to` | Open a page, optionally on one record: Discovery, Accounts, Bots, Indicators, Workflows, Notifications, the Plugin Store, the Workspace Store |
+| `get_screen`  | Read what is mounted right now, what each surface is showing (with real record ids), and which surface actions are available                  |
 
 `navigate_to` takes a page id from a closed list, not a free path, so it cannot
-send you to a route that does not exist. It is how the assistant acts somewhere
-else instead of telling you to go there: the page's own tools become available
-on its next step.
+send you to a route that does not exist. It also takes a `target`: a workflow
+id, a bot id, an alert rule id, a script id, a plugin id, a template id, or a
+Discovery section. So it opens the thing it was just talking about rather than
+dropping you on a list to find it yourself. A target that is not a usable id is
+dropped and you land on the page. It is how the assistant acts somewhere else
+instead of telling you to go there: the page's own tools become available on its
+next step.
+
+`get_screen` returns ids, not just prose. A workflow id from it goes straight
+into `get_workflow`, a bot id into `get_bot`, and so on, which is what makes
+"explain this alert" a single question rather than a game of twenty.
 
 ## Scripts and bots
 

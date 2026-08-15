@@ -1,8 +1,12 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Collapsed affordance for the unified assistant dock: a floating pill with a
+ * Collapsed affordance for the unified assistant dock: a glass pill with a
  * short companion line on the left and the orb on the right, one click target.
+ *
+ * While a run is in flight the pill takes a magic ring. The orb alone is 28px
+ * of signal in a corner, and a collapsed assistant that is working has to be
+ * legible from the other side of a four-pane layout.
  *
  * Purely presentational. Every string arrives translated from the caller, and
  * the parent owns placement (this component never positions itself).
@@ -43,15 +47,16 @@ export function AssistantOrbButton({
     <Button
       variant="ghost"
       data-assistant-orb=""
+      data-busy={busy ? '' : undefined}
       aria-expanded={open}
       aria-label={open ? closeLabel : openLabel}
       onClick={onClick}
-      className="hover-lift border-border/60 bg-card/80 hover:bg-card/90 aria-expanded:bg-card/90 text-muted-foreground hover:text-foreground aria-expanded:text-foreground h-9 gap-2 rounded-full border py-0 pr-1 pl-3 text-xs shadow-lg backdrop-blur-md"
+      className="ai-glass-pill hover-lift text-muted-foreground hover:text-foreground aria-expanded:text-foreground hover:bg-[var(--ai-glass)] h-10 gap-2.5 rounded-full py-0 pr-1 pl-3.5 text-xs"
     >
       <span
         className={
           open
-            ? 'relative flex min-w-0 items-center opacity-60'
+            ? 'relative flex min-w-0 items-center opacity-55'
             : 'relative flex min-w-0 items-center'
         }
       >
@@ -83,7 +88,7 @@ export function AssistantOrbButton({
       </span>
 
       <AiOrb
-        size="28px"
+        size="30px"
         animationDuration={15}
         state={busy ? 'thinking' : 'idle'}
         className="shrink-0"

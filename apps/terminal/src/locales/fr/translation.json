@@ -428,10 +428,12 @@
     "ai": {
       "placement": "Emplacement de l’assistant",
       "placementDescription": "L’endroit où l’assistant attend pendant que vous travaillez. La fenêtre de chat s’ouvre là où se trouve l’assistant, et vous pouvez ensuite la déplacer où vous voulez.",
-      "placementFloating": "Flottant",
-      "placementFloatingDescription": "En bas à droite du terminal, à l’écart de vos panneaux, avec sa suggestion toujours lisible. Le plus facile à repérer.",
       "placementSidebar": "Barre latérale",
       "placementSidebarDescription": "Dans la barre de gauche, avec vos autres outils. La suggestion apparaît au survol, ou pendant que l’assistant travaille. Plus discret, et toujours au même endroit.",
+      "placementBottom": "Barre du bas",
+      "placementBottomDescription": "Dans un bandeau sous le terminal, à côté de vos panneaux plutôt que par-dessus. Le même coin que le mode flottant, et la suggestion reste lisible.",
+      "placementFloating": "Flottant",
+      "placementFloatingDescription": "Une pastille par-dessus le coin inférieur droit de vos panneaux, suggestion toujours lisible. Le plus facile à repérer, et le seul qui recouvre une partie de votre disposition.",
       "persona": "Personnalité",
       "personaDescription": "À quel point l’assistant détaille ses réponses. Le changement s’applique à votre prochain message."
     },
@@ -1301,6 +1303,9 @@
       "bots": "Déploie un bot de trading",
       "indicators": "Écris un indicateur",
       "indicatorsScript": "Améliore {{name}}",
+      "workflowSelected": "Améliore le workflow {{name}}",
+      "alertSelected": "Ajuste l’alerte {{name}}",
+      "botSelected": "Analyse {{name}}",
       "accounts": "Passe en revue mes comptes",
       "plugins": "Trouve-moi un plugin",
       "workspaceStore": "Conçois mon espace de travail"
@@ -1323,6 +1328,10 @@
   },
   "copilot": {
     "placeholder": "Interrogez votre lens...",
+    "send": "Envoyer",
+    "stop": "Arrêter",
+    "copyMessage": "Copier le message",
+    "messageCopied": "Message copié",
     "lensPersona": "Personnalité du Lens",
     "persona": {
       "mentor": "Mentor",

@@ -1,0 +1,256 @@
+/*
+ * Copyright (c) 2026 Juan Ignacio Molina Estrada
+ * SPDX-License-Identifier: FSL-1.1-Apache-2.0
+ *
+ * Assistant surface paint — the glass the chat floats on.
+ *
+ * The dock hangs over a live terminal: candles, a book, a tape, all of it
+ * moving. An opaque card parked on top reads as a hole punched in the screen,
+ * and a fully transparent one is unreadable the moment a green candle runs
+ * under a line of text. So the panel is glass with a floor: the fill never
+ * drops below the point where body text keeps its contrast against the card
+ * colour, and the blur does the rest of the work.
+ *
+ * Everything derives from the shadcn tokens a `theme:override` plugin sets, so
+ * all eighteen themes and both colour modes repaint for free. Three rules
+ * decide which variable a colour becomes, the same three the mobile shell
+ * uses: an opaque fill is a surface step, a 1px division is an edge, a tint
+ * over another surface is a wash.
+ *
+ * Utilities rather than a <Glass> component: these are pure paint, and a
+ * wrapper div around them would fight the flex column it sits in.
+ */
+
+@layer components {
+  :root {
+    /* The slab. Light themes are already at the top of the elevation ladder
+       (paper cannot get brighter), so the step there is carried by the edge
+       and the shadow instead of a lift. */
+    --ai-surface: var(--card);
+
+    /* 88% over a blurred backdrop: measured as the point where 13px body text
+       still clears 7:1 against every bundled theme's chart paint. Do not thin
+       it without re-measuring — this is the legibility floor, not a taste
+       knob. */
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 88%, transparent);
+    /* Chrome that sits ON the slab (composer capsule, chips): lighter, because
+       it is already backed by the fill above. */
+    --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
+    --ai-inset-strong: color-mix(in oklab, var(--foreground) 8%, transparent);
+
+    /* Light needs more of itself than dark does to read at 1px: the panel sits
+       on paper, and a hairline that works over charcoal disappears here. */
+    --ai-edge: color-mix(in oklab, var(--foreground) 15%, transparent);
+    --ai-edge-soft: color-mix(in oklab, var(--foreground) 11%, transparent);
+    /* Inset top line. Foreground-relative, so it is a sheen on a dark theme
+       and a crisp edge on a light one — the same declaration reads correctly
+       either way. */
+    --ai-sheen: color-mix(in oklab, var(--foreground) 10%, transparent);
+
+    /* The AI tint. Reserved for this surface and the orb, per the design
+       rule that the magic gradient is never decoration elsewhere. */
+    --ai-glow: color-mix(in oklab, var(--magic-1) 22%, transparent);
+    --ai-ring: color-mix(in oklab, var(--magic-1) 45%, transparent);
+    --ai-ring-halo: color-mix(in oklab, var(--magic-1) 13%, transparent);
+
+    --ai-shadow:
+      0 32px 64px -24px rgb(0 0 0 / 0.3), 0 10px 26px -14px rgb(0 0 0 / 0.22);
+    --ai-shadow-pill: 0 14px 30px -10px rgb(0 0 0 / 0.26);
+  }
+
+  :root.dark {
+    /* Dark themes elevate by adding light. The lift is what separates the
+       panel from the terminal behind it before the blur is noticed. */
+    --ai-surface: color-mix(in oklab, var(--card) 88%, var(--foreground) 12%);
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 84%, transparent);
+    --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
+    --ai-inset-strong: color-mix(in oklab, var(--foreground) 9%, transparent);
+
+    --ai-edge: color-mix(in oklab, var(--foreground) 10%, transparent);
+    --ai-edge-soft: color-mix(in oklab, var(--foreground) 6%, transparent);
+    --ai-sheen: color-mix(in oklab, var(--foreground) 13%, transparent);
+
+    --ai-shadow:
+      0 40px 80px -28px rgb(0 0 0 / 0.7), 0 10px 28px -16px rgb(0 0 0 / 0.55);
+    --ai-shadow-pill: 0 14px 30px -12px rgb(0 0 0 / 0.6);
+  }
+
+  /* ── Surfaces ─────────────────────────────────────────────────── */
+
+  .ai-glass {
+    background: var(--ai-glass);
+    backdrop-filter: blur(28px) saturate(170%);
+    -webkit-backdrop-filter: blur(28px) saturate(170%);
+    box-shadow:
+      inset 0 1px 0 var(--ai-sheen),
+      inset 0 0 0 1px var(--ai-edge),
+      var(--ai-shadow);
+  }
+
+  .ai-glass-pill {
+    background: var(--ai-glass);
+    backdrop-filter: blur(20px) saturate(170%);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    box-shadow:
+      inset 0 1px 0 var(--ai-sheen),
+      inset 0 0 0 1px var(--ai-edge),
+      var(--ai-shadow-pill);
+  }
+
+  /* A magic halo around the collapsed pill while a run is in flight. The orb
+     alone is 28px of signal in a corner; this makes "it is working" legible
+     from across a four-pane layout. */
+  .ai-glass-pill[data-busy] {
+    box-shadow:
+      inset 0 1px 0 var(--ai-sheen),
+      inset 0 0 0 1px var(--ai-ring),
+      0 0 0 4px var(--ai-ring-halo),
+      var(--ai-shadow-pill);
+  }
+
+  /* The light the panel gives off, painted INSIDE its own rounded box so it
+     cannot bleed past the corners. Sits under the header, which is where the
+     orb is, so the glow reads as coming from the orb. */
+  .ai-aura::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 160px;
+    background: radial-gradient(
+      118% 100% at 50% 0%,
+      var(--ai-glow),
+      transparent 72%
+    );
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  /* The seam. Same drift as `.magic-gradient`, but masked to nothing at both
+     ends so it reads as light caught on the panel's top edge rather than a
+     progress bar someone forgot to remove. */
+  .ai-seam {
+    background: linear-gradient(
+      120deg,
+      var(--magic-1),
+      var(--magic-2),
+      var(--magic-3),
+      var(--magic-1)
+    );
+    background-size: 200% 100%;
+    animation: magic-drift 7s linear infinite;
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent,
+      black 22%,
+      black 78%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      black 22%,
+      black 78%,
+      transparent
+    );
+  }
+
+  /* ── Chrome on the slab ───────────────────────────────────────── */
+
+  /* The composer capsule. Quiet until focused, then it takes the magic ring —
+     the one place in the terminal where the AI colour marks an input. */
+  .ai-field {
+    background: var(--ai-inset);
+    box-shadow: inset 0 0 0 1px var(--ai-edge-soft);
+    transition:
+      box-shadow var(--dur-base) var(--ease-soft),
+      background-color var(--dur-base) ease;
+  }
+
+  .ai-field:focus-within {
+    background: var(--ai-inset-strong);
+    box-shadow:
+      inset 0 0 0 1px var(--ai-ring),
+      0 0 0 3px var(--ai-ring-halo);
+  }
+
+  /* Everything raised a step off the slab: suggestion rows, tool activity
+     pills, approval and research cards, the persona control.
+
+     The lift on hover is scoped to elements that actually do something.
+     A card is a tile too, and a card that brightens under the cursor is
+     promising a click it does not have. */
+  .ai-tile {
+    background: var(--ai-inset);
+    box-shadow: inset 0 0 0 1px var(--ai-edge-soft);
+    transition:
+      background-color var(--dur-fast) ease,
+      box-shadow var(--dur-fast) ease;
+  }
+
+  :is(a, button, [role='button']).ai-tile:hover {
+    background: var(--ai-inset-strong);
+    box-shadow: inset 0 0 0 1px var(--ai-edge);
+  }
+
+  /* The user's own turn. A tint rather than a filled bubble: a solid block
+     every other message is a lot of weight in a 440px column, and the tint
+     keeps `--foreground` on `--card` so nothing about contrast changes. */
+  .ai-bubble-user {
+    background: color-mix(in oklab, var(--primary) 15%, transparent);
+    box-shadow: inset 0 0 0 1px
+      color-mix(in oklab, var(--primary) 18%, transparent);
+  }
+
+  /* The scroll region dissolves into the header and the composer instead of
+     being cut off by them. Short distances on purpose: a deep fade would eat
+     the first line of a one-message thread. */
+  .ai-fade-y {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 12px,
+      black calc(100% - 14px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 12px,
+      black calc(100% - 14px),
+      transparent 100%
+    );
+  }
+
+  /* ── Fallbacks ────────────────────────────────────────────────── */
+
+  /* Two ways to end up without a backdrop blur: an engine that cannot do it,
+     and a user who has asked the OS for less transparency. Both get the fill
+     opaque — the panel loses its depth, never its readability. */
+  @supports not (
+    (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+  ) {
+    .ai-glass,
+    .ai-glass-pill {
+      background: var(--ai-surface);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .ai-glass,
+    .ai-glass-pill {
+      background: var(--ai-surface);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ai-seam {
+      animation: none;
+    }
+    .ai-field,
+    .ai-tile {
+      transition: none;
+    }
+  }
+}

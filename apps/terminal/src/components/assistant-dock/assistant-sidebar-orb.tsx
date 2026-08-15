@@ -106,7 +106,7 @@ export function AssistantSidebarOrb({
                 : 'pointer-events-none absolute top-1/2 left-[calc(100%+0.5rem)] z-50 hidden -translate-y-1/2 group-hover/assistant:block group-focus-within/assistant:block'
             }
           >
-            <span className="border-border/60 bg-card/95 text-muted-foreground block max-w-[26ch] truncate rounded-md border px-2 py-1 text-xs shadow-md backdrop-blur-md">
+            <span className="ai-glass-pill text-muted-foreground block max-w-[26ch] truncate rounded-lg px-2.5 py-1 text-xs">
               {busy ? <ShimmeringText text={label} duration={1.6} /> : label}
             </span>
           </motion.div>

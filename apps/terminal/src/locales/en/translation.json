@@ -428,10 +428,12 @@
     "ai": {
       "placement": "Assistant placement",
       "placementDescription": "Where the assistant waits while you work. The chat window opens from wherever the orb sits, and you can drag it anywhere from there.",
-      "placementFloating": "Floating",
-      "placementFloatingDescription": "Bottom right of the terminal, clear of your panes, with its suggestion always readable. The easiest one to notice.",
       "placementSidebar": "Sidebar",
       "placementSidebarDescription": "In the left rail with your other tools. The suggestion appears on hover, or while the assistant is working. Quieter, and always in the same place.",
+      "placementBottom": "Bottom bar",
+      "placementBottomDescription": "In a strip under the terminal, beside your panes rather than over them. Same corner as floating, and the suggestion stays readable.",
+      "placementFloating": "Floating",
+      "placementFloatingDescription": "A pill over the bottom right of your panes, suggestion always readable. The easiest one to notice, and the only one that covers part of your layout.",
       "persona": "Persona",
       "personaDescription": "How much the assistant explains when it answers. Changing it applies to your next message."
     },
@@ -1301,6 +1303,9 @@
       "bots": "Deploy a trading bot",
       "indicators": "Write an indicator",
       "indicatorsScript": "Improve {{name}}",
+      "workflowSelected": "Improve the {{name}} workflow",
+      "alertSelected": "Tune the {{name}} alert",
+      "botSelected": "Review {{name}}",
       "accounts": "Review my accounts",
       "plugins": "Find me a plugin",
       "workspaceStore": "Design my workspace"
@@ -1323,6 +1328,10 @@
   },
   "copilot": {
     "placeholder": "Ask your lens...",
+    "send": "Send",
+    "stop": "Stop",
+    "copyMessage": "Copy message",
+    "messageCopied": "Message copied",
     "lensPersona": "Lens Persona",
     "persona": {
       "mentor": "Mentor",

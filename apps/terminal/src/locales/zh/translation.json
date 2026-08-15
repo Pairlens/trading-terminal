@@ -428,10 +428,12 @@
     "ai": {
       "placement": "助手位置",
       "placementDescription": "你工作时助手待着的地方。聊天窗口从助手所在的位置打开，之后可以拖到任何地方。",
-      "placementFloating": "浮动",
-      "placementFloatingDescription": "在终端右下角，不挡住你的面板，建议始终清晰可读。最容易注意到。",
       "placementSidebar": "侧边栏",
       "placementSidebarDescription": "在左侧栏里，和其他工具放在一起。建议在悬停时或助手工作时出现。更安静，位置也始终不变。",
+      "placementBottom": "底部栏",
+      "placementBottomDescription": "在终端下方的一条窄栏里，位于面板旁边而不是上面。和浮动同一个角落，建议依然清晰可读。",
+      "placementFloating": "浮动",
+      "placementFloatingDescription": "浮在面板右下角的一个小胶囊，建议始终清晰可读。最容易注意到，也是唯一会挡住部分布局的方式。",
       "persona": "人格",
       "personaDescription": "助手回答时解释得有多详细。改动会从你的下一条消息开始生效。"
     },
@@ -1301,6 +1303,9 @@
       "bots": "部署一个交易机器人",
       "indicators": "写一个指标",
       "indicatorsScript": "改进 {{name}}",
+      "workflowSelected": "改进 {{name}} 工作流",
+      "alertSelected": "调整 {{name}} 提醒",
+      "botSelected": "查看 {{name}}",
       "accounts": "检查我的账户",
       "plugins": "帮我找一个插件",
       "workspaceStore": "设计我的工作区"
@@ -1323,6 +1328,10 @@
   },
   "copilot": {
     "placeholder": "问问你的透镜……",
+    "send": "发送",
+    "stop": "停止",
+    "copyMessage": "复制消息",
+    "messageCopied": "已复制消息",
     "lensPersona": "透镜人格",
     "persona": {
       "mentor": "导师型",

@@ -58,11 +58,11 @@ export function AssistantResearchCard({
   const [expanded, setExpanded] = useState(false)
 
   return (
-    <div className="border-border/60 bg-muted/30 overflow-hidden rounded-lg border">
+    <div className="ai-tile overflow-hidden rounded-xl">
       <button
         type="button"
         onClick={() => setExpanded((value) => !value)}
-        className="hover:bg-muted/50 flex w-full items-center gap-2 px-2.5 py-2 text-left text-xs"
+        className="hover:bg-[var(--ai-inset-strong)] flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs"
         aria-expanded={expanded}
       >
         {expanded ? (
@@ -85,7 +85,7 @@ export function AssistantResearchCard({
       </button>
 
       {expanded ? (
-        <div className="border-border/60 border-t px-2.5 py-2">
+        <div className="border-t border-[var(--ai-edge-soft)] px-3 py-2.5">
           {/* The same structured renderers the research pane used: an
               executive summary, price action with sparklines, catalysts,
               trade setup, risk factors. A plain markdown dump would have

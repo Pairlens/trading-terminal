@@ -62,12 +62,16 @@ export function PersonaMenu({
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="ai-tile text-muted-foreground hover:text-foreground h-7 gap-1 rounded-full px-2.5 text-[11px]"
+          />
         }
       >
-        <activePersona.icon className="size-3.5" />
+        <activePersona.icon className="size-3" />
         {t(activePersona.labelKey)}
-        <ChevronDown className="size-3" />
+        <ChevronDown className="size-2.5 opacity-60" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align={align} className="w-56">
         <DropdownMenuGroup>

@@ -4,7 +4,7 @@ description: Deploy a Python strategy to a market and let it trade. Sizing, guar
 group: traders
 order: 6
 eyebrow: For traders
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 7 min read
 ---
 
@@ -170,6 +170,11 @@ that your strategies were not written for.
 
 Duplicating a bot copies its configuration, which makes running the same
 strategy across three pairs a thirty-second job.
+
+The bot you have open is in the address, as `/bots?bot=<id>`. Copy it and you
+have a link straight to that deployment, the back button walks between the bots
+you looked at, and the assistant knows which one you mean when you ask about
+"this bot".
 
 ## Deleting
 

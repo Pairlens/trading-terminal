@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { DesktopSurfaceNudge } from '@/components/feedback/desktop-nudge'
 import { PageHeader } from '@/components/page-header'
 import { lazyChunk } from '@/lib/lazy-chunk'
+import { parseEntityId } from '@/lib/routing/pages'
 
 // Lazy: the create flow pulls in the venue/pair pickers and the params
 // editors, none of which the rest of the terminal needs on first paint.
@@ -18,22 +19,30 @@ const BotsPage = lazyChunk(() =>
   })),
 )
 
-/** `create` deep-links into the create flow with a strategy preselected —
- *  the workbench's "Deploy as bot" button sends the user here. */
+/**
+ * `bot` is which deployment the page is showing, written on every selection
+ * so the address names the bot the user is watching.
+ *
+ * `create` deep-links into the create flow with a strategy preselected —
+ * the workbench's "Deploy as bot" button sends the user here. It is consumed
+ * once and stripped, because a cancelled dialog should stay cancelled.
+ */
 type BotsSearch = {
+  bot?: string
   create?: string
 }
 
 export const Route = createFileRoute('/_terminal/bots')({
   component: BotsRoute,
   validateSearch: (search: Record<string, unknown>): BotsSearch => ({
+    bot: parseEntityId(search.bot),
     create: typeof search.create === 'string' ? search.create : undefined,
   }),
 })
 
 function BotsRoute() {
   const { t } = useTranslation()
-  const { create } = Route.useSearch()
+  const { bot, create } = Route.useSearch()
   return (
     <SidebarInset className="overflow-hidden">
       {/* Browser build only, once per device: a bot runs in this tab, and a
@@ -53,7 +62,7 @@ function BotsRoute() {
             </div>
           }
         >
-          <BotsPage deployScriptId={create ?? null} />
+          <BotsPage botId={bot ?? null} deployScriptId={create ?? null} />
         </Suspense>
       </div>
     </SidebarInset>

@@ -1,6 +1,6 @@
 ---
 title: The AI assistant
-description: One assistant for the whole terminal, at the bottom right or in the nav rail, in a window you can drag anywhere. 94 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
+description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 94 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
 group: traders
 order: 4
 eyebrow: For traders
@@ -11,7 +11,7 @@ readTime: 8 min read
 The assistant sits outside the content area: an orb, and a line of text that
 tells you what it would do here. On a chart it reads **Analyze the chart of
 BTC/USDT**. On the workflows page, **Build a workflow**. On Discovery, **Find me
-something to trade**.
+something to trade**. Where that line lives depends on the placement, below.
 
 Click the orb and a chat window opens over the terminal. Click it again and the
 window folds back into the orb. <kbd>⌘J</kbd> (<kbd>Ctrl</kbd>+<kbd>J</kbd>
@@ -19,22 +19,28 @@ on Windows and Linux) does the same from the keyboard, and it works while you
 are typing in a field, because reaching the assistant should not cost you the
 sentence you were in the middle of.
 
-## Two placements
+## Three placements
 
 Where the orb waits is a setting, in **Settings → Assistant**.
 
-**Floating** is the default. The orb sits at the bottom right of the terminal,
-clear of your panes, with its suggestion line always readable beside it. It is
-the placement that makes the assistant impossible to miss, which is why it ships
-as the default.
+**Sidebar** is the default. The orb docks in the left nav rail, under the charts
+icon and above the first divider, so it is a tool among tools and always in the
+same place. The rail is 60px wide, so the suggestion cannot sit beside it. It
+flies out to the right instead: on hover, on keyboard focus, and unprompted
+whenever the assistant is working. That last case is the one that matters.
+Tucked into the rail the orb is easy to forget, so a run in progress announces
+itself without being asked for. It ships as the default because it is the only
+placement that can never land on top of something you were reading.
 
-**Sidebar** moves the orb into the left nav rail, under the charts icon and
-above the first divider, so it is a tool among tools and always in the same
-place. The rail is 60px wide, so the suggestion cannot sit beside it. It flies
-out to the right instead: on hover, on keyboard focus, and unprompted whenever
-the assistant is working. That last case is the one that matters. Tucked into
-the rail the orb is easy to forget, so a run in progress announces itself
-without being asked for.
+**Bottom bar** puts the orb back in the bottom-right corner, suggestion readable
+beside it, in a strip the terminal reserves underneath the workspace. The rail is
+chrome beside your panes; this is chrome below them. Same corner as floating with
+none of the overlap: the panes and the status bar shrink by the height of the
+strip, so nothing ever ends up under it.
+
+**Floating** is the loudest of the three. The orb and its suggestion sit over the
+bottom right of the workspace, always readable, easiest to notice, and the only
+placement that covers part of your layout.
 
 Switching moves the orb immediately, no reload. The choice is per device, so a
 rail on your desktop does not follow you to the laptop.
@@ -50,10 +56,28 @@ The window is clamped so you can never lose it: enough of the header always
 stays on screen to grab again, and if you shrink the terminal or unplug a
 display, a window that would be stranded off screen is pulled back in.
 
-Until you drag it, the window is anchored to the orb's placement, bottom right
-when floating and beside the rail in sidebar mode, which is why it stays put
-when you resize. Once it has been moved, a reset button appears in the header
-next to the persona menu and puts it back on that anchor.
+Until you drag it, the window is anchored to the orb's placement: beside the rail
+in sidebar mode, bottom right for the other two. That is why it stays put when
+you resize. Once it has been moved, a reset button appears in the header next to
+the persona menu and puts it back on that anchor.
+
+## The chat window
+
+It is a glass panel, not a solid card. The terminal underneath stays visible
+through it, blurred, so the chat reads as something floating over your workspace
+rather than a hole punched in it. The fill has a floor: whatever runs behind it,
+candles, a book, a tape, body text keeps its contrast.
+
+The header repeats the same contextual line the collapsed orb showed, so opening
+the window never costs you the context that made you open it. While a run is
+going the line becomes the status and shimmers. The persona dropdown and the
+eraser that clears the thread sit on the right of it.
+
+On an empty thread the window offers three starters for whatever screen you are
+on: on a chart they name the pair, on the workflows page they name a workflow.
+Click one to send it. Hover any answer the assistant writes and a copy button
+appears under it, which is the fastest way to get a level or a size out of the
+chat and into an order ticket.
 
 ## One assistant, one conversation
 
@@ -137,9 +161,28 @@ three.
 
 Every mounted surface publishes what it is showing, and the assistant is handed
 that description on every turn. A chart reports its pair, venue, timeframe,
-indicators and drawing count. A page reports which page it is. So "is this
-overbought" is a complete question, and "add an order book to this" has a
-referent.
+indicators and drawing count. So "is this overbought" is a complete question,
+and "add an order book to this" has a referent.
+
+Pages report the record they have open, not just their own name. Ask "what am I
+looking at" on Workflows and the answer is the workflow: its name, its id, how
+many steps it has, and whether the canvas is holding uncommitted edits. On Bots
+it is the deployment, with its mode, market and current run status, so an answer
+about "this bot" can never come back about the wrong one. Alerts report the rule,
+whether it is armed and which pairs it watches. The workbench reports the script
+and the file open in the editor. Discovery reports which asset-class section you
+are on, because that decides what every pane on it is listing.
+
+That means "tighten the stop on this" needs no follow-up question. The assistant
+already has the id, so it reads the record with `get_workflow`, `get_bot`,
+`get_alert` or `get_script` and gets on with it.
+
+Each of those records lives in the address too. `/workflows?workflow=…`,
+`/bots?bot=…`, `/notifications?alert=…`, `/indicators?script=…` and
+`/?section=…` are written as you click, so a link you send someone opens what
+you were looking at, and the back button walks between records instead of
+jumping straight off the page. A link to something you have since deleted drops
+the dead id rather than showing an empty screen.
 
 Some surfaces publish **actions** as well, and those become tools only while the
 surface is mounted. The workspace board is the clearest example: it publishes
