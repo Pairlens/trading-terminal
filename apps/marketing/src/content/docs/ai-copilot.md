@@ -4,8 +4,8 @@ description: One assistant for the whole terminal, docked bottom-right. 94 tools
 group: traders
 order: 4
 eyebrow: For traders
-updated: 15 AUG 2026
-readTime: 7 min read
+updated: 16 AUG 2026
+readTime: 8 min read
 ---
 
 The assistant sits in the bottom-right corner of the terminal, outside the
@@ -16,6 +16,24 @@ page, **Build a workflow**. On Discovery, **Find me something to trade**.
 Click the orb and a chat window opens over the terminal. Click it again and the
 window folds back into the orb. <kbd>⌘J</kbd> (<kbd>Ctrl</kbd>+<kbd>J</kbd>
 on Windows and Linux) does the same from the keyboard.
+
+## The chat window
+
+It is a glass panel, not a solid card. The terminal underneath stays visible
+through it, blurred, so the chat reads as something floating over your workspace
+rather than a hole punched in it. The fill has a floor: whatever runs behind it,
+candles, a book, a tape, body text keeps its contrast.
+
+The header repeats the same contextual line the collapsed orb showed, so opening
+the window never costs you the context that made you open it. While a run is
+going the line becomes the status and shimmers. The persona dropdown and the
+eraser that clears the thread sit on the right of it.
+
+On an empty thread the window offers three starters for whatever screen you are
+on: on a chart they name the pair, on the workflows page they name a workflow.
+Click one to send it. Hover any answer the assistant writes and a copy button
+appears under it, which is the fastest way to get a level or a size out of the
+chat and into an order ticket.
 
 ## One assistant, one conversation
 

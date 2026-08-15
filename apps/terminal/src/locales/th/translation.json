@@ -1311,6 +1311,10 @@
   },
   "copilot": {
     "placeholder": "ถาม lens ของคุณ...",
+    "send": "ส่ง",
+    "stop": "หยุด",
+    "copyMessage": "คัดลอกข้อความ",
+    "messageCopied": "คัดลอกข้อความแล้ว",
     "lensPersona": "บุคลิกของ Lens",
     "persona": {
       "mentor": "พี่เลี้ยง",

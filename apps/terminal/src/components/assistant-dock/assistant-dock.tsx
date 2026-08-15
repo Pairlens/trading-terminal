@@ -69,13 +69,23 @@ export function AssistantDock() {
       : t('assistantDock.defaultSuggestion')
 
   return (
-    <div className="pointer-events-none fixed right-4 bottom-4 z-40 flex flex-col items-end gap-2">
+    <div className="pointer-events-none fixed right-4 bottom-4 z-40 flex flex-col items-end gap-2.5">
       <div className="pointer-events-auto">
         <AssistantChatWindow
           open={isOpen}
           onClose={close}
           title={t('assistantDock.title')}
-          subtitle={busy ? statusLabel(runStatus, t) : null}
+          // Idle, the header carries the same companion line the collapsed
+          // pill shows, so opening the window never loses the context that
+          // made the user open it.
+          subtitle={
+            busy
+              ? statusLabel(runStatus, t)
+              : suggestion
+                ? t(suggestion.key, suggestion.values)
+                : null
+          }
+          busy={busy}
           closeLabel={t('assistantDock.close')}
           headerActions={
             <>
@@ -86,7 +96,7 @@ export function AssistantDock() {
                     <Button
                       variant="ghost"
                       size="icon-sm"
-                      className="size-7"
+                      className="text-muted-foreground hover:text-foreground size-7 rounded-full"
                       aria-label={t('assistantDock.clear')}
                       onClick={() => controlsRef.current?.clear()}
                     >

@@ -1311,6 +1311,10 @@
   },
   "copilot": {
     "placeholder": "Tanyakan lens Anda...",
+    "send": "Kirim",
+    "stop": "Hentikan",
+    "copyMessage": "Salin pesan",
+    "messageCopied": "Pesan disalin",
     "lensPersona": "Persona Lens",
     "persona": {
       "mentor": "Mentor",

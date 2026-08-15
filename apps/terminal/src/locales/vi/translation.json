@@ -1311,6 +1311,10 @@
   },
   "copilot": {
     "placeholder": "Hỏi lens của bạn...",
+    "send": "Gửi",
+    "stop": "Dừng",
+    "copyMessage": "Sao chép tin nhắn",
+    "messageCopied": "Đã sao chép tin nhắn",
     "lensPersona": "Phong cách Lens",
     "persona": {
       "mentor": "Người hướng dẫn",
