@@ -146,6 +146,12 @@ export interface AnalyticsEvents {
   /** An answer was copied out of the thread. The one signal that the chat
    * is producing something the user takes elsewhere. */
   assistant_answer_copied: Record<string, never>
+  /** The assistant took the user to a page. `with_target` is the question
+   * this event exists for: pages now accept the id of the record to open,
+   * and a run that keeps navigating without one is dropping people on a
+   * list to search by hand. `page` is one of our own page ids, never a
+   * URL, so no record id and nothing the user typed is captured. */
+  assistant_navigated: { page: string; with_target: boolean }
   /** User pinned a provider plugin for a capability ('auto' = unpinned). */
   ai_provider_selected: { capability: string; plugin_id: string }
   /** A bring-your-own-key AI provider (model or web search) was activated
