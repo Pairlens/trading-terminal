@@ -235,7 +235,7 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
                 onOpenChange?.(false)
                 // A pair workspace opens the store pre-filtered to its own
                 // asset class, so the suggestions match what is on screen.
-                const cls = normalizeInstrumentClass(workspace.pairClass)
+                const cls = normalizeInstrumentClass(workspace.assetClass)
                 void navigate({
                   to: '/workspace-store',
                   search: cls ? { assetClass: STORE_ASSET_CLASS_FOR[cls] } : {},

@@ -2424,7 +2424,17 @@
     "deleteDescription": "Sei sicuro di voler eliminare {{name}}? Tutti i simboli in questo elenco verranno rimossi."
   },
   "discovery": {
-    "title": "Scoperta"
+    "title": "Scoperta",
+    "sections": {
+      "label": "Sezioni per classe di attività",
+      "spot": "CEX Spot",
+      "perp": "CEX Futures",
+      "dex": "DEX",
+      "stocks": "Azioni",
+      "prediction": "Previsioni",
+      "moveLeft": "Sposta a sinistra",
+      "moveRight": "Sposta a destra"
+    }
   },
   "pluginStore": {
     "registryOffline": "Il registro plugin è offline. Vengono mostrati solo i plugin installati.",
@@ -3408,7 +3418,7 @@
         "name": "Scoperta previsioni",
         "tagline": "Sfoglia i mercati di eventi dal vivo, non un catalogo di coppie.",
         "description": "Una bacheca iniziale pensata per i contratti su eventi: l'esploratore di eventi occupa la colonna larga, il flusso di notizie scorre accanto e una barra leggera porta la tua watchlist sopra l'indicatore di sentiment. Installa una piattaforma di previsioni come Kalshi o Polymarket per riempire la bacheca.",
-        "menuLabel": "Previsioni"
+        "menuLabel": "Predefinito"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -3513,7 +3523,7 @@
         "name": "Home",
         "tagline": "La dashboard predefinita: scanner, sentiment, mover e notizie.",
         "description": "La dashboard di partenza — scanner dei mercati, una barra del battito del mercato con l'indicatore Paura e Avidità e le top coin in scheda con la tua watchlist, e una colonna notizie a tutta altezza. Tutto funziona anche senza account.",
-        "menuLabel": "Home"
+        "menuLabel": "Predefinito"
       },
       "markets-board": {
         "name": "Dashboard dei Mercati",
@@ -3543,6 +3553,24 @@
         "name": "Terminal Perpetui",
         "tagline": "Il desk dei futures: posizioni con prezzo mark e liquidazione.",
         "description": "Il layout predefinito per i futures perpetui: un grande grafico con operazioni, contratti aperti (ingresso, mark, liquidazione) e dati di mercato a schede sotto di esso, un order book e un pannello di trading che tiene conto della leva al centro, e il co-pilota AI a destra.",
+        "menuLabel": "Predefinito"
+      },
+      "perps-discovery": {
+        "name": "Scoperta perpetui",
+        "tagline": "Scansiona i perp con i contratti aperti accanto.",
+        "description": "La board iniziale dei futures: lo scanner di mercato filtrato sui contratti perpetui, le tue posizioni aperte con prezzo mark e liquidazione accanto, sopra una barra multi-prezzo, e il sentiment sopra il feed di notizie.",
+        "menuLabel": "Predefinito"
+      },
+      "dex-discovery": {
+        "name": "Scoperta DEX",
+        "tagline": "Nuovi listing on-chain, feed social e watchlist.",
+        "description": "La board iniziale on-chain: lo scanner di mercato filtrato sulle coppie DEX, i ticker recenti sopra il feed social per intercettare i nuovi listing, e la tua watchlist sopra il feed di notizie.",
+        "menuLabel": "Predefinito"
+      },
+      "equities-discovery": {
+        "name": "Scoperta azioni",
+        "tagline": "Lo scanner azionario accanto al paniere e alle notizie.",
+        "description": "La board iniziale azionaria: lo scanner di mercato filtrato sulle azioni, la tua watchlist sopra una barra multi-prezzo e una colonna di notizie a tutta altezza, perché le azioni si muovono sulle notizie.",
         "menuLabel": "Predefinito"
       }
     },
@@ -4162,7 +4190,8 @@
       "crypto": "Crypto",
       "stocks": "Azioni",
       "prediction": "Previsioni",
-      "crypto-perp": "Futures"
+      "crypto-perp": "Futures",
+      "dex": "DEX"
     },
     "category": {
       "all": "Tutte",

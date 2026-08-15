@@ -2424,7 +2424,17 @@
     "deleteDescription": "Are you sure you want to delete {{name}}? All symbols in this list will be removed."
   },
   "discovery": {
-    "title": "Discovery"
+    "title": "Discovery",
+    "sections": {
+      "label": "Asset class sections",
+      "spot": "CEX Spot",
+      "perp": "CEX Futures",
+      "dex": "DEX",
+      "stocks": "Equities",
+      "prediction": "Predictions",
+      "moveLeft": "Move left",
+      "moveRight": "Move right"
+    }
   },
   "pluginStore": {
     "registryOffline": "Plugin registry is offline. Showing installed plugins only.",
@@ -3433,7 +3443,7 @@
         "name": "Home",
         "tagline": "The default board: scanner, sentiment, movers, and news.",
         "description": "The default home board — markets scanner, a market-pulse rail with the Fear & Greed gauge and top coins tabbed with your watchlist, and a full-height news column. Everything on it works without an account.",
-        "menuLabel": "Home"
+        "menuLabel": "Default"
       },
       "laptop-focus": {
         "name": "Laptop Focus",
@@ -3489,7 +3499,7 @@
         "name": "Prediction Discovery",
         "tagline": "Browse live event markets, not a catalog of pairs.",
         "description": "A home board built for event contracts: the event browser takes the wide column, the news wire runs beside it, and a light rail carries your watchlist over the sentiment gauge. Install a prediction venue such as Kalshi or Polymarket to fill the board.",
-        "menuLabel": "Predictions"
+        "menuLabel": "Default"
       },
       "quad-charts": {
         "name": "Quad Charts",
@@ -3544,6 +3554,24 @@
         "name": "Ultrawide Trading Floor",
         "tagline": "Everything, everywhere — for the big screen.",
         "description": "A four-column command center that fills an ultrawide or second monitor: scanner, chart, order book and depth, a trade ticket with positions, and the AI Copilot. The maximalist layout."
+      },
+      "perps-discovery": {
+        "name": "Perps Discovery",
+        "tagline": "Scan perps with your open contracts beside them.",
+        "description": "The futures home board: the markets scanner filtered to perpetual contracts, your open positions with mark and liquidation next to it over a multi-price rail, and sentiment above the news wire.",
+        "menuLabel": "Default"
+      },
+      "dex-discovery": {
+        "name": "DEX Discovery",
+        "tagline": "On-chain listings, the social feed, and your watchlist.",
+        "description": "The on-chain home board: the markets scanner filtered to DEX pairs, recent tickers over the social feed for catching what just listed, and your watchlist above the news wire.",
+        "menuLabel": "Default"
+      },
+      "equities-discovery": {
+        "name": "Equities Discovery",
+        "tagline": "The stock scanner beside your basket and the wire.",
+        "description": "The stock home board: the markets scanner filtered to equities, your watchlist over a multi-price rail, and a full-height news column, because stocks move on filings and headlines.",
+        "menuLabel": "Default"
       }
     },
     "traderTypes": {
@@ -4162,7 +4190,8 @@
       "crypto": "Crypto",
       "stocks": "Stocks",
       "prediction": "Predictions",
-      "crypto-perp": "Futures"
+      "crypto-perp": "Futures",
+      "dex": "DEX"
     },
     "category": {
       "all": "All",

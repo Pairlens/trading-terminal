@@ -2446,7 +2446,17 @@
     "deleteDescription": "Czy na pewno chcesz usunąć {{name}}? Wszystkie symbole z tej listy zostaną usunięte."
   },
   "discovery": {
-    "title": "Odkrywanie"
+    "title": "Odkrywanie",
+    "sections": {
+      "label": "Sekcje klas aktywów",
+      "spot": "CEX Spot",
+      "perp": "CEX Futures",
+      "dex": "DEX",
+      "stocks": "Akcje",
+      "prediction": "Prognozy",
+      "moveLeft": "Przesuń w lewo",
+      "moveRight": "Przesuń w prawo"
+    }
   },
   "pluginStore": {
     "registryOffline": "Rejestr wtyczek jest offline. Wyświetlane są tylko zainstalowane wtyczki.",
@@ -3440,7 +3450,7 @@
         "name": "Odkrywanie predykcji",
         "tagline": "Przeglądaj żywe rynki zdarzeń, a nie katalog par.",
         "description": "Ekran startowy stworzony dla kontraktów na zdarzenia: przeglądarka zdarzeń zajmuje szeroką kolumnę, obok płynie kanał wiadomości, a wąski pas mieści listę obserwowanych nad wskaźnikiem nastrojów. Zainstaluj giełdę predykcji, taką jak Kalshi lub Polymarket, aby wypełnić ekran.",
-        "menuLabel": "Predykcje"
+        "menuLabel": "Domyślny"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -3545,7 +3555,7 @@
         "name": "Home",
         "tagline": "Domyślny pulpit: skaner, nastroje, liderzy rynku i wiadomości.",
         "description": "Domyślny pulpit startowy — skaner rynków, pasek pulsu rynku ze wskaźnikiem Strachu i Chciwości oraz najlepszymi monetami w zakładce z Twoją listą obserwowanych, i pełnowymiarowa kolumna wiadomości. Wszystko na nim działa bez konta.",
-        "menuLabel": "Home"
+        "menuLabel": "Domyślny"
       },
       "markets-board": {
         "name": "Pulpit Rynków",
@@ -3575,6 +3585,24 @@
         "name": "Terminal Perps",
         "tagline": "Desk futures: pozycje z ceną mark i poziomem likwidacji.",
         "description": "Domyślny układ dla wieczystych kontraktów futures: duży wykres, a pod nim w zakładkach transakcje, otwarte kontrakty (wejście, mark, likwidacja) i dane rynkowe, na środku arkusz zleceń i panel transakcyjny uwzględniający dźwignię, a po prawej copilot AI.",
+        "menuLabel": "Domyślny"
+      },
+      "perps-discovery": {
+        "name": "Odkrywanie perps",
+        "tagline": "Skanuj perpy z otwartymi kontraktami obok.",
+        "description": "Startowa tablica futures: skaner rynków zawężony do kontraktów wieczystych, obok otwarte pozycje z ceną mark i likwidacji nad paskiem wielu cen, a nastroje nad kanałem wiadomości.",
+        "menuLabel": "Domyślny"
+      },
+      "dex-discovery": {
+        "name": "Odkrywanie DEX",
+        "tagline": "Listingi on-chain, kanał społecznościowy i lista.",
+        "description": "Startowa tablica on-chain: skaner rynków zawężony do par DEX, ostatnie tickery nad kanałem społecznościowym, by wyłapać świeże listingi, i twoja lista obserwowanych nad kanałem wiadomości.",
+        "menuLabel": "Domyślny"
+      },
+      "equities-discovery": {
+        "name": "Odkrywanie akcji",
+        "tagline": "Skaner akcji obok koszyka i wiadomości.",
+        "description": "Startowa tablica akcji: skaner rynków zawężony do akcji, lista obserwowanych nad paskiem wielu cen i pełnej wysokości kolumna wiadomości, bo akcjami poruszają komunikaty.",
         "menuLabel": "Domyślny"
       }
     },
@@ -4196,7 +4224,8 @@
       "crypto": "Krypto",
       "stocks": "Akcje",
       "prediction": "Prognozy",
-      "crypto-perp": "Futures"
+      "crypto-perp": "Futures",
+      "dex": "DEX"
     },
     "category": {
       "all": "Wszystkie",

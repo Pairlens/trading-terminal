@@ -2424,7 +2424,17 @@
     "deleteDescription": "確定要刪除 {{name}} 嗎？此清單中的所有商品都將被移除。"
   },
   "discovery": {
-    "title": "探索"
+    "title": "探索",
+    "sections": {
+      "label": "資產類別分頁",
+      "spot": "CEX 現貨",
+      "perp": "CEX 合約",
+      "dex": "DEX",
+      "stocks": "股票",
+      "prediction": "預測市場",
+      "moveLeft": "左移",
+      "moveRight": "右移"
+    }
   },
   "pluginStore": {
     "registryOffline": "外掛登錄庫目前離線，僅顯示已安裝的外掛。",
@@ -3408,7 +3418,7 @@
         "name": "預測市場探索",
         "tagline": "瀏覽正在進行的事件市場，而不是交易對目錄。",
         "description": "為事件合約打造的首頁看板：事件瀏覽器佔據寬欄，新聞流在旁邊捲動，窄欄把自選清單放在情緒指標之上。安裝 Kalshi 或 Polymarket 等預測平台即可填滿看板。",
-        "menuLabel": "預測"
+        "menuLabel": "預設"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -3513,7 +3523,7 @@
         "name": "首頁",
         "tagline": "預設看板：掃描器、情緒、漲跌幅排行榜與新聞。",
         "description": "預設首頁看板——市場掃描器、帶恐懼與貪婪指數和熱門幣種的市場脈動欄（與你的自選清單同標籤頁），以及通欄新聞欄。全部功能無需帳戶即可使用。",
-        "menuLabel": "首頁"
+        "menuLabel": "預設"
       },
       "markets-board": {
         "name": "市場看板",
@@ -3543,6 +3553,24 @@
         "name": "永續合約終端",
         "tagline": "期貨工作台：帶標記價格與強平價的部位。",
         "description": "永續合約的預設版面：一張大圖表，下方以標籤頁顯示成交紀錄、持有合約（進場價、標記價格、強平價）與市場資料，中間是委託簿和支援槓桿的下單面板，右側是 AI 副駕駛。",
+        "menuLabel": "預設"
+      },
+      "perps-discovery": {
+        "name": "永續合約探索",
+        "tagline": "掃描永續合約，未平倉部位就在旁邊。",
+        "description": "合約首頁看板：依永續合約篩選的市場掃描器，旁邊是帶標記價與強平價的部位，下方為多價格列，情緒指標位於新聞牆之上。",
+        "menuLabel": "預設"
+      },
+      "dex-discovery": {
+        "name": "DEX 探索",
+        "tagline": "鏈上新幣、社群動態與自選清單。",
+        "description": "鏈上首頁看板：依 DEX 交易對篩選的市場掃描器，社群動態之上是最近查看的代幣，用來抓剛上架的新幣，自選清單位於新聞牆之上。",
+        "menuLabel": "預設"
+      },
+      "equities-discovery": {
+        "name": "股票探索",
+        "tagline": "股票掃描器、自選清單與新聞並排。",
+        "description": "股票首頁看板：依股票篩選的市場掃描器，多價格列之上是自選清單，再加一整列新聞，因為股票靠公告與頭條驅動。",
         "menuLabel": "預設"
       }
     },
@@ -4162,7 +4190,8 @@
       "crypto": "加密貨幣",
       "stocks": "股票",
       "prediction": "預測",
-      "crypto-perp": "期貨"
+      "crypto-perp": "期貨",
+      "dex": "DEX"
     },
     "category": {
       "all": "全部",

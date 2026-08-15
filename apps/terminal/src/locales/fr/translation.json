@@ -2424,7 +2424,17 @@
     "deleteDescription": "Voulez-vous vraiment supprimer {{name}} ? Tous les symboles de cette liste seront retirés."
   },
   "discovery": {
-    "title": "Découverte"
+    "title": "Découverte",
+    "sections": {
+      "label": "Sections par classe d'actifs",
+      "spot": "CEX Spot",
+      "perp": "CEX Futures",
+      "dex": "DEX",
+      "stocks": "Actions",
+      "prediction": "Prédictions",
+      "moveLeft": "Déplacer vers la gauche",
+      "moveRight": "Déplacer vers la droite"
+    }
   },
   "pluginStore": {
     "registryOffline": "Le registre de plugins est hors ligne. Affichage des plugins installés uniquement.",
@@ -3408,7 +3418,7 @@
         "name": "Découverte des prédictions",
         "tagline": "Parcourez les marchés d'événements en direct, pas un catalogue de paires.",
         "description": "Un tableau d'accueil conçu pour les contrats d'événements : l'explorateur d'événements occupe la colonne large, le fil d'actualité défile à côté, et une bande légère porte votre liste de suivi au-dessus de la jauge de sentiment. Installez une plateforme de prédiction comme Kalshi ou Polymarket pour remplir le tableau.",
-        "menuLabel": "Prédictions"
+        "menuLabel": "Par défaut"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -3513,7 +3523,7 @@
         "name": "Accueil",
         "tagline": "Le tableau par défaut : scanner, sentiment, mouvements et actualités.",
         "description": "Le tableau d'accueil par défaut — scanner de marchés, un bandeau de pouls du marché avec la jauge Peur & Avidité et Top coins en onglet avec votre liste de suivi, et une colonne d'actualités pleine hauteur. Tout y fonctionne sans compte.",
-        "menuLabel": "Accueil"
+        "menuLabel": "Par défaut"
       },
       "markets-board": {
         "name": "Tableau des marchés",
@@ -3543,6 +3553,24 @@
         "name": "Terminal Perpétuels",
         "tagline": "Le poste futures : positions avec prix de marquage et liquidation.",
         "description": "La mise en page par défaut pour les futures perpétuels : un grand graphique avec, en onglets en dessous, les transactions, les contrats ouverts (entrée, marquage, liquidation) et les données de marché, un carnet d'ordres et un ticket tenant compte du levier au centre, et le co-pilote IA à droite.",
+        "menuLabel": "Par défaut"
+      },
+      "perps-discovery": {
+        "name": "Découverte des perpétuels",
+        "tagline": "Scannez les perps, positions ouvertes à côté.",
+        "description": "Le tableau d'accueil des futures : le scanner de marchés filtré sur les contrats perpétuels, vos positions ouvertes avec prix de marque et liquidation à côté, au-dessus d'un bandeau multi-prix, et le sentiment au-dessus du fil d'actualité.",
+        "menuLabel": "Par défaut"
+      },
+      "dex-discovery": {
+        "name": "Découverte DEX",
+        "tagline": "Listings on-chain, fil social et votre watchlist.",
+        "description": "Le tableau d'accueil on-chain : le scanner de marchés filtré sur les paires DEX, les tickers récents au-dessus du fil social pour repérer les nouveautés, et votre watchlist au-dessus du fil d'actualité.",
+        "menuLabel": "Par défaut"
+      },
+      "equities-discovery": {
+        "name": "Découverte Actions",
+        "tagline": "Le scanner actions à côté de votre panier et des news.",
+        "description": "Le tableau d'accueil actions : le scanner de marchés filtré sur les actions, votre watchlist au-dessus d'un bandeau multi-prix et une colonne d'actualités pleine hauteur, car les actions bougent sur les annonces.",
         "menuLabel": "Par défaut"
       }
     },
@@ -4162,7 +4190,8 @@
       "crypto": "Crypto",
       "stocks": "Actions",
       "prediction": "Prédictions",
-      "crypto-perp": "Futures"
+      "crypto-perp": "Futures",
+      "dex": "DEX"
     },
     "category": {
       "all": "Tous",

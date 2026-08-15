@@ -116,10 +116,11 @@ export type WorkspaceConfig = {
   presets: Record<string, { label: string; layout: TerminalLayout }>
   screenPresets?: Array<ScreenPresetGroup>
   variables?: Array<WorkspaceVariableDefinition>
-  // The instrument class a pair-route workspace serves — tailors the
-  // Workspace Store links this workspace's menus emit. Absent on
-  // discovery/custom workspaces.
-  pairClass?: string
+  // The instrument class this workspace serves — narrows its preset menu to
+  // layouts built for that class and tailors the Workspace Store link its
+  // menus emit. Set on every pair workspace and on every Discovery section.
+  // Absent on custom workspaces, which span whatever the user puts in them.
+  assetClass?: string
   // Which route menu this workspace draws quick-apply presets for. Set on the
   // pair and discovery routes so plugin-contributed workspaces can join
   // `presets` reactively; absent on custom workspaces, which offer none.

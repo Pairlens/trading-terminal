@@ -2424,7 +2424,17 @@
     "deleteDescription": "确定要删除 {{name}} 吗？此列表中的所有标的都将被移除。"
   },
   "discovery": {
-    "title": "发现"
+    "title": "发现",
+    "sections": {
+      "label": "资产类别分区",
+      "spot": "CEX 现货",
+      "perp": "CEX 合约",
+      "dex": "DEX",
+      "stocks": "股票",
+      "prediction": "预测市场",
+      "moveLeft": "左移",
+      "moveRight": "右移"
+    }
   },
   "pluginStore": {
     "registryOffline": "插件注册表离线。仅显示已安装的插件。",
@@ -3408,7 +3418,7 @@
         "name": "预测市场发现",
         "tagline": "浏览正在进行的事件市场，而不是交易对目录。",
         "description": "为事件合约打造的首页看板：事件浏览器占据宽栏，新闻流在旁边滚动，窄栏把自选列表放在情绪指标之上。安装 Kalshi 或 Polymarket 等预测平台即可填满看板。",
-        "menuLabel": "预测"
+        "menuLabel": "默认"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -3513,7 +3523,7 @@
         "name": "首页",
         "tagline": "默认看板：扫描器、情绪、涨跌幅榜与资讯。",
         "description": "默认首页看板——市场扫描器、带恐慌与贪婪指数和热门币种的市场脉搏栏（与你的自选列表同标签页），以及通栏资讯栏。全部功能无需账户即可使用。",
-        "menuLabel": "首页"
+        "menuLabel": "默认"
       },
       "markets-board": {
         "name": "市场看板",
@@ -3543,6 +3553,24 @@
         "name": "永续合约终端",
         "tagline": "期货工作台：带标记价格与强平价的持仓。",
         "description": "永续合约的默认布局：一张大图表，下方以标签页显示成交记录、持仓合约（开仓价、标记价格、强平价）与市场数据，中间是订单簿和支持杠杆的下单面板，右侧是 AI 副驾驶。",
+        "menuLabel": "默认"
+      },
+      "perps-discovery": {
+        "name": "永续合约发现",
+        "tagline": "扫描永续合约，持仓就在旁边。",
+        "description": "合约首页看板：按永续合约筛选的市场扫描器，旁边是带标记价和强平价的持仓，下方是多价格栏，情绪指标位于新闻流之上。",
+        "menuLabel": "默认"
+      },
+      "dex-discovery": {
+        "name": "DEX 发现",
+        "tagline": "链上新币、社交动态和自选列表。",
+        "description": "链上首页看板：按 DEX 交易对筛选的市场扫描器，社交动态之上是最近查看的代币，方便抓住刚上线的新币，自选列表位于新闻流之上。",
+        "menuLabel": "默认"
+      },
+      "equities-discovery": {
+        "name": "股票发现",
+        "tagline": "股票扫描器、自选列表和新闻并排。",
+        "description": "股票首页看板：按股票筛选的市场扫描器，多价格栏之上是自选列表，还有一整列新闻，因为股票靠公告和头条驱动。",
         "menuLabel": "默认"
       }
     },
@@ -4162,7 +4190,8 @@
       "crypto": "加密货币",
       "stocks": "股票",
       "prediction": "预测",
-      "crypto-perp": "期货"
+      "crypto-perp": "期货",
+      "dex": "DEX"
     },
     "category": {
       "all": "全部",

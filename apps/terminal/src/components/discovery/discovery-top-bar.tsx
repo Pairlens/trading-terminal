@@ -3,10 +3,27 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import type {
+  DiscoverySection,
+  DiscoverySectionId,
+} from '@/lib/layout/workspaces/discovery-sections'
 import { LayoutToolbar } from '@/components/layout/layout-toolbar'
 import { PageHeader } from '@/components/page-header'
+import { DiscoverySectionTabs } from '@/components/discovery/discovery-section-tabs'
 
-export function DiscoveryTopBar() {
+type DiscoveryTopBarProps = {
+  sections: Array<DiscoverySection>
+  activeSection: DiscoverySectionId
+  onSelectSection: (id: DiscoverySectionId) => void
+  onReorderSections: (fromId: string, toId: string) => void
+}
+
+export function DiscoveryTopBar({
+  sections,
+  activeSection,
+  onSelectSection,
+  onReorderSections,
+}: DiscoveryTopBarProps) {
   const { t } = useTranslation()
   const [workspacesOpen, setWorkspacesOpen] = useState(false)
 
@@ -16,7 +33,13 @@ export function DiscoveryTopBar() {
         <LayoutToolbar open={workspacesOpen} onOpenChange={setWorkspacesOpen} />
       }
     >
-      <h1 className="text-sm font-semibold">{t('discovery.title')}</h1>
+      <h1 className="shrink-0 text-sm font-semibold">{t('discovery.title')}</h1>
+      <DiscoverySectionTabs
+        sections={sections}
+        active={activeSection}
+        onSelect={onSelectSection}
+        onReorder={onReorderSections}
+      />
     </PageHeader>
   )
 }

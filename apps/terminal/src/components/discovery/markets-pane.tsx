@@ -53,9 +53,11 @@ import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import {
   ASSET_CLASSES,
+  ASSET_CLASS_FILTER_FOR,
   CATEGORIES,
   instrumentToPairEntry,
 } from '@/components/pair-picker/pair-picker-data'
+import { useDiscoverySection } from '@/lib/discovery-section-context'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
@@ -147,10 +149,9 @@ function PredictionsEmptyAction() {
           return
         }
         if (boardExists) {
-          void navigate({
-            to: '/',
-            search: { preset: PREDICTION_DISCOVERY_TEMPLATE_ID },
-          })
+          // The board is the Predictions section's default, so send the user
+          // to the section rather than stamping the board over this one.
+          void navigate({ to: '/', search: { section: 'prediction' } })
           return
         }
         void navigate({ to: '/plugins' })
@@ -165,8 +166,17 @@ function PredictionsEmptyAction() {
 
 export function MarketsPane() {
   const { t } = useTranslation()
+  // Inside a Discovery section the scanner opens on that section's asset
+  // class, and remembers its own chip per section: widening the perps board to
+  // "All" is a decision about the perps board, not about every board. Off
+  // Discovery (a pair route, a custom workspace) there is no section and the
+  // pane keeps the single global chip it always had.
+  const section = useDiscoverySection()
   const [assetClassFilter, setAssetClassFilter] =
-    usePersistedState<AssetClassFilter>('pair-picker.assetClass', 'all')
+    usePersistedState<AssetClassFilter>(
+      section ? `pair-picker.assetClass.${section}` : 'pair-picker.assetClass',
+      section ? ASSET_CLASS_FILTER_FOR[section] : 'all',
+    )
   const [activeCategory, setActiveCategory] = usePersistedState<
     PairCategory | 'all' | 'watchlists'
   >('pair-picker.category', 'all')

@@ -272,10 +272,17 @@ describe('WorkspaceTemplateRegistry', () => {
         trusted: true,
       })
     }
+    // Every family ships a discovery board now — one per Discovery section —
+    // and none of them may show up as a pair-route preset.
     const discovery = Object.keys(
       mergeRoutePresets({}, registry.getTemplates(), 'discovery'),
-    )
-    expect(discovery).toEqual(['template:prediction-discovery'])
+    ).sort()
+    expect(discovery).toEqual([
+      'template:dex-discovery',
+      'template:equities-discovery',
+      'template:perps-discovery',
+      'template:prediction-discovery',
+    ])
     // Standalone store templates are never quick-apply presets.
     const perpMenu = Object.keys(
       mergeRoutePresets({}, registry.getTemplates(), 'pair', 'perp'),
@@ -407,7 +414,7 @@ describe('contributedToTemplate sanitization', () => {
 
     // And the discovery menu still applies the real board's layout.
     const menu = mergeRoutePresets({}, registry.getTemplates(), 'discovery')
-    expect(menu['template:prediction-discovery'].label).toBe('Predictions')
+    expect(menu['template:prediction-discovery'].label).toBe('Default')
   })
 
   it('caps tags and required plugins', () => {

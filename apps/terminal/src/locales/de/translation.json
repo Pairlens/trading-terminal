@@ -2424,7 +2424,17 @@
     "deleteDescription": "Möchtest du {{name}} wirklich löschen? Alle Symbole in dieser Liste werden entfernt."
   },
   "discovery": {
-    "title": "Entdecken"
+    "title": "Entdecken",
+    "sections": {
+      "label": "Anlageklassen-Bereiche",
+      "spot": "CEX Spot",
+      "perp": "CEX Futures",
+      "dex": "DEX",
+      "stocks": "Aktien",
+      "prediction": "Prognosen",
+      "moveLeft": "Nach links verschieben",
+      "moveRight": "Nach rechts verschieben"
+    }
   },
   "pluginStore": {
     "registryOffline": "Die Plugin-Registry ist offline. Es werden nur installierte Plugins angezeigt.",
@@ -3408,7 +3418,7 @@
         "name": "Prognose-Discovery",
         "tagline": "Durchsuche laufende Event-Märkte statt einer Paarliste.",
         "description": "Ein Startboard für Event-Kontrakte: Der Event-Browser bekommt die breite Spalte, daneben läuft der Nachrichtenticker, und eine schmale Leiste trägt deine Watchlist über der Stimmungsanzeige. Installiere eine Prognosebörse wie Kalshi oder Polymarket, um das Board zu füllen.",
-        "menuLabel": "Prognosen"
+        "menuLabel": "Standard"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -3513,7 +3523,7 @@
         "name": "Startseite",
         "tagline": "Das Standard-Board: Scanner, Stimmung, Movers und News.",
         "description": "Das Standard-Home-Board — Markt-Scanner, eine Marktpuls-Leiste mit der Angst-&-Gier-Anzeige und Top Coins im Tab mit deiner Watchlist, sowie eine News-Spalte in voller Höhe. Alles darauf funktioniert ohne Konto.",
-        "menuLabel": "Start"
+        "menuLabel": "Standard"
       },
       "markets-board": {
         "name": "Märkte-Board",
@@ -3543,6 +3553,24 @@
         "name": "Perps-Terminal",
         "tagline": "Das Futures-Setup: Positionen mit Mark-Preis und Liquidation.",
         "description": "Das Standard-Layout für Perpetual Futures: ein großer Chart, darunter mit Reitern die Trades, offene Kontrakte (Einstieg, Mark-Preis, Liquidation) und Marktdaten, in der Mitte ein Orderbuch und ein Order-Ticket mit Hebel, und rechts der KI-Co-Pilot.",
+        "menuLabel": "Standard"
+      },
+      "perps-discovery": {
+        "name": "Perps-Discovery",
+        "tagline": "Perps scannen, offene Kontrakte gleich daneben.",
+        "description": "Das Futures-Startboard: der Markt-Scanner gefiltert auf Perpetual-Kontrakte, daneben deine offenen Positionen mit Mark- und Liquidationspreis über einer Multi-Preis-Leiste, dazu die Stimmung über dem News-Feed.",
+        "menuLabel": "Standard"
+      },
+      "dex-discovery": {
+        "name": "DEX-Discovery",
+        "tagline": "On-Chain-Listings, Social-Feed und deine Watchlist.",
+        "description": "Das On-Chain-Startboard: der Markt-Scanner gefiltert auf DEX-Paare, zuletzt gesehene Ticker über dem Social-Feed für frische Listings, und deine Watchlist über dem News-Feed.",
+        "menuLabel": "Standard"
+      },
+      "equities-discovery": {
+        "name": "Aktien-Discovery",
+        "tagline": "Aktien-Scanner neben Watchlist und News.",
+        "description": "Das Aktien-Startboard: der Markt-Scanner gefiltert auf Aktien, deine Watchlist über einer Multi-Preis-Leiste und eine News-Spalte über die volle Höhe, denn Aktien bewegen sich mit Meldungen.",
         "menuLabel": "Standard"
       }
     },
@@ -4162,7 +4190,8 @@
       "crypto": "Krypto",
       "stocks": "Aktien",
       "prediction": "Prognosen",
-      "crypto-perp": "Futures"
+      "crypto-perp": "Futures",
+      "dex": "DEX"
     },
     "category": {
       "all": "Alle",

@@ -88,8 +88,12 @@ describe('isTier1', () => {
   test('covers the flat preference set plus the drawing-style prefix', () => {
     expect(isTier1('language')).toBe(true)
     expect(isTier1('drawing-last-fibonacci')).toBe(true)
+    expect(isTier1('pair-picker.assetClass.dex')).toBe(true)
+    expect(isTier1('discovery.sectionOrder')).toBe(true)
     expect(isTier1('custom-workspaces')).toBe(false)
     expect(isTier1('terminal.indicators')).toBe(false)
+    // A per-section board is a layout, not a preference — tier 2.
+    expect(isTier1('discovery.layout.perp')).toBe(false)
   })
 })
 

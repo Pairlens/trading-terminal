@@ -2424,7 +2424,17 @@
     "deleteDescription": "¿Seguro que quieres eliminar {{name}}? Se quitarán todos los símbolos de esta lista."
   },
   "discovery": {
-    "title": "Descubrimiento"
+    "title": "Descubrimiento",
+    "sections": {
+      "label": "Secciones por clase de activo",
+      "spot": "CEX Spot",
+      "perp": "CEX Futuros",
+      "dex": "DEX",
+      "stocks": "Acciones",
+      "prediction": "Predicciones",
+      "moveLeft": "Mover a la izquierda",
+      "moveRight": "Mover a la derecha"
+    }
   },
   "pluginStore": {
     "registryOffline": "El registro de plugins está sin conexión. Mostrando solo plugins instalados.",
@@ -3408,7 +3418,7 @@
         "name": "Descubrimiento de predicciones",
         "tagline": "Explora mercados de eventos en vivo, no un catálogo de pares.",
         "description": "Un tablero de inicio hecho para contratos de eventos: el explorador de eventos ocupa la columna ancha, el hilo de noticias corre a su lado y una franja ligera lleva tu lista de seguimiento sobre el indicador de sentimiento. Instala una plataforma de predicciones como Kalshi o Polymarket para llenar el tablero.",
-        "menuLabel": "Predicciones"
+        "menuLabel": "Predeterminado"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -3513,7 +3523,7 @@
         "name": "Inicio",
         "tagline": "El tablero predeterminado: escáner, sentimiento, movers y noticias.",
         "description": "El tablero de inicio predeterminado — escáner de mercados, un carril de pulso de mercado con el indicador de Miedo y Codicia y Top Monedas en pestaña con tu watchlist, y una columna de noticias a toda altura. Todo en él funciona sin cuenta.",
-        "menuLabel": "Inicio"
+        "menuLabel": "Predeterminado"
       },
       "markets-board": {
         "name": "Tablero de Mercados",
@@ -3543,6 +3553,24 @@
         "name": "Terminal de Perpetuos",
         "tagline": "El escritorio de futuros: posiciones con precio de marca y liquidación.",
         "description": "El diseño predeterminado para futuros perpetuos: un gráfico grande con las operaciones, los contratos abiertos (entrada, marca, liquidación) y los datos de mercado en pestañas debajo, un libro de órdenes y un ticket con apalancamiento en el centro, y el copiloto de IA a la derecha.",
+        "menuLabel": "Predeterminado"
+      },
+      "perps-discovery": {
+        "name": "Descubrimiento de perpetuos",
+        "tagline": "Escanea perps con tus contratos abiertos al lado.",
+        "description": "El tablero de inicio de futuros: el escáner de mercados filtrado a contratos perpetuos, tus posiciones abiertas con precio de marca y liquidación al lado sobre un panel multiprecio, y el sentimiento sobre el muro de noticias.",
+        "menuLabel": "Predeterminado"
+      },
+      "dex-discovery": {
+        "name": "Descubrimiento DEX",
+        "tagline": "Listados on-chain, feed social y tu watchlist.",
+        "description": "El tablero de inicio on-chain: el escáner de mercados filtrado a pares DEX, los tickers recientes sobre el feed social para cazar lo recién listado, y tu watchlist sobre el muro de noticias.",
+        "menuLabel": "Predeterminado"
+      },
+      "equities-discovery": {
+        "name": "Descubrimiento de acciones",
+        "tagline": "El escáner de acciones junto a tu cesta y las noticias.",
+        "description": "El tablero de inicio de acciones: el escáner de mercados filtrado a renta variable, tu watchlist sobre un panel multiprecio y una columna de noticias a altura completa, porque las acciones se mueven con los titulares.",
         "menuLabel": "Predeterminado"
       }
     },
@@ -4162,7 +4190,8 @@
       "crypto": "Cripto",
       "stocks": "Acciones",
       "prediction": "Predicciones",
-      "crypto-perp": "Futuros"
+      "crypto-perp": "Futuros",
+      "dex": "DEX"
     },
     "category": {
       "all": "Todos",

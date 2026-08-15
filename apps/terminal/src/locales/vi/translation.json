@@ -2424,7 +2424,17 @@
     "deleteDescription": "Bạn có chắc muốn xóa {{name}}? Tất cả các mã trong danh sách này sẽ bị xóa."
   },
   "discovery": {
-    "title": "Khám phá"
+    "title": "Khám phá",
+    "sections": {
+      "label": "Các mục theo loại tài sản",
+      "spot": "CEX Giao ngay",
+      "perp": "CEX Hợp đồng tương lai",
+      "dex": "DEX",
+      "stocks": "Cổ phiếu",
+      "prediction": "Dự đoán",
+      "moveLeft": "Chuyển sang trái",
+      "moveRight": "Chuyển sang phải"
+    }
   },
   "pluginStore": {
     "registryOffline": "Registry plugin ngoại tuyến. Chỉ hiển thị các plugin đã cài đặt.",
@@ -3408,7 +3418,7 @@
         "name": "Khám phá thị trường dự đoán",
         "tagline": "Duyệt các thị trường sự kiện đang mở, không phải danh mục cặp giao dịch.",
         "description": "Bảng chính dành cho hợp đồng sự kiện: trình duyệt sự kiện chiếm cột rộng, dòng tin tức chạy bên cạnh, và một dải hẹp đặt danh sách theo dõi phía trên chỉ báo tâm lý. Cài một sàn dự đoán như Kalshi hoặc Polymarket để lấp đầy bảng này.",
-        "menuLabel": "Dự đoán"
+        "menuLabel": "Mặc định"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -3513,7 +3523,7 @@
         "name": "Trang chủ",
         "tagline": "Bảng mặc định: bộ quét, tâm lý, mã biến động và tin tức.",
         "description": "Bảng trang chủ mặc định — bộ quét thị trường, một dải nhịp đập thị trường với đồng hồ đo Sợ hãi & Tham lam và coin hàng đầu xếp tab cùng danh sách theo dõi của bạn, và một cột tin tức cao suốt trang. Mọi thứ trên đó hoạt động mà không cần tài khoản.",
-        "menuLabel": "Trang chủ"
+        "menuLabel": "Mặc định"
       },
       "markets-board": {
         "name": "Bảng Thị Trường",
@@ -3543,6 +3553,24 @@
         "name": "Terminal Perps",
         "tagline": "Bàn futures: vị thế kèm giá mark và giá thanh lý.",
         "description": "Bố cục mặc định cho hợp đồng tương lai vĩnh cửu: một biểu đồ lớn với các tab giao dịch, hợp đồng đang mở (giá vào, giá mark, giá thanh lý) và dữ liệu thị trường bên dưới, sổ lệnh cùng phiếu đặt lệnh có tính đòn bẩy ở giữa, và AI Copilot bên phải.",
+        "menuLabel": "Mặc định"
+      },
+      "perps-discovery": {
+        "name": "Khám phá Perps",
+        "tagline": "Quét perps với hợp đồng đang mở ngay bên cạnh.",
+        "description": "Bảng chính cho phái sinh: bộ quét thị trường lọc theo hợp đồng vĩnh cửu, vị thế đang mở kèm giá mark và giá thanh lý ngay bên cạnh, phía dưới là dải nhiều giá, và tâm lý thị trường trên bảng tin.",
+        "menuLabel": "Mặc định"
+      },
+      "dex-discovery": {
+        "name": "Khám phá DEX",
+        "tagline": "Token mới on-chain, dòng mạng xã hội và danh mục.",
+        "description": "Bảng chính on-chain: bộ quét thị trường lọc theo cặp DEX, các mã vừa xem phía trên dòng mạng xã hội để bắt token vừa niêm yết, và danh mục theo dõi phía trên bảng tin.",
+        "menuLabel": "Mặc định"
+      },
+      "equities-discovery": {
+        "name": "Khám phá Cổ phiếu",
+        "tagline": "Bộ quét cổ phiếu cạnh danh mục và bảng tin.",
+        "description": "Bảng chính cổ phiếu: bộ quét thị trường lọc theo cổ phiếu, danh mục theo dõi phía trên dải nhiều giá, và một cột tin tức cao hết bảng, vì cổ phiếu chạy theo tin.",
         "menuLabel": "Mặc định"
       }
     },
@@ -4162,7 +4190,8 @@
       "crypto": "Crypto",
       "stocks": "Cổ phiếu",
       "prediction": "Dự đoán",
-      "crypto-perp": "Futures"
+      "crypto-perp": "Futures",
+      "dex": "DEX"
     },
     "category": {
       "all": "Tất cả",
