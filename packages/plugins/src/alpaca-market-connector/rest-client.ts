@@ -7,6 +7,7 @@ import {
   parseAlpacaBar,
   parseAlpacaQuoteBook,
   parseAlpacaSnapshot,
+  servesAlpacaPair,
   toAlpacaSymbol,
 } from './parser'
 import { ALPACA_DATA_REST } from './regions'
@@ -58,6 +59,12 @@ export async function fetchAlpacaCandles(
   const interval = mapTimeframeToAlpacaInterval(timeframe)
   if (!interval) throw new Error(`Unsupported timeframe: ${timeframe}`)
 
+  // No history for a pair this venue cannot serve, which is also what the
+  // terminal's availability probe asks: an empty answer here is what turns a
+  // crypto pair on Alpaca into "not available on this venue" rather than an
+  // unrelated equity's candles. See `servesAlpacaPair`.
+  if (!servesAlpacaPair(pair)) return []
+
   const symbol = toAlpacaSymbol(pair)
   const capped = Math.min(limit, 1000)
   // With sort=desc the newest bars come back first, so the start bound only
@@ -103,6 +110,9 @@ export async function fetchAlpacaSnapshot(
   pair: string,
   credentials: AlpacaCredentials,
 ): Promise<TickerSnapshot> {
+  if (!servesAlpacaPair(pair)) {
+    throw new Error(`Alpaca does not quote ${pair}`)
+  }
   const symbol = toAlpacaSymbol(pair)
   const url = `${ALPACA_DATA_REST}/v2/stocks/snapshots?symbols=${encodeURIComponent(symbol)}&feed=iex`
 
@@ -137,6 +147,7 @@ export async function fetchAlpacaQuoteBook(
   asks: Array<OrderbookLevel>
   ts: number
 } | null> {
+  if (!servesAlpacaPair(pair)) return null
   const symbol = toAlpacaSymbol(pair)
   const url = `${ALPACA_DATA_REST}/v2/stocks/snapshots?symbols=${encodeURIComponent(symbol)}&feed=iex`
 

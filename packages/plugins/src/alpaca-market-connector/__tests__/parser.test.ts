@@ -14,6 +14,7 @@ import {
   parseAlpacaQuoteBook,
   parseAlpacaSnapshot,
   parseTs,
+  servesAlpacaPair,
   timeframeToMs,
   toAlpacaSymbol,
   toPairKey,
@@ -250,5 +251,38 @@ describe('alpaca parser — timestamps', () => {
     expect(parseTs(1_782_833_000_000)).toBe(1_782_833_000_000)
     expect(parseTs('garbage')).toBeNull()
     expect(parseTs(undefined)).toBeNull()
+  })
+})
+
+/**
+ * The guard that stops a stocks-only venue answering about a crypto pair.
+ *
+ * `toAlpacaSymbol` keeps the base leg, so 'BTC-USDT' reduces to 'BTC' — which
+ * is a real NYSE Arca ticker for a spot-bitcoin ETF trading near $28. Without
+ * this check the connector answered that ETF's price under the crypto pair's
+ * own label, and it reached the recent-pairs strip exactly that way.
+ */
+describe('alpaca parser — what the venue will serve', () => {
+  it('serves a bare ticker and an explicit USD quote', () => {
+    expect(servesAlpacaPair('AAPL')).toBe(true)
+    expect(servesAlpacaPair('AAPL-USD')).toBe(true)
+    expect(servesAlpacaPair('aapl-usd')).toBe(true)
+    expect(servesAlpacaPair('AAPL/USD')).toBe(true)
+  })
+
+  it('refuses every other quote leg rather than truncating to it', () => {
+    expect(servesAlpacaPair('BTC-USDT')).toBe(false)
+    expect(servesAlpacaPair('ETH-USDC')).toBe(false)
+    expect(servesAlpacaPair('BTC-EUR')).toBe(false)
+    // The dangerous one, spelled out: this pair HAS a valid-looking symbol.
+    expect(toAlpacaSymbol('BTC-USDT')).toBe('BTC')
+    expect(servesAlpacaPair('BTC-USDT')).toBe(false)
+  })
+
+  it('refuses malformed and empty keys', () => {
+    expect(servesAlpacaPair('')).toBe(false)
+    expect(servesAlpacaPair('  ')).toBe(false)
+    expect(servesAlpacaPair('-USD')).toBe(false)
+    expect(servesAlpacaPair('A-B-C')).toBe(false)
   })
 })

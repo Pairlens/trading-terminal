@@ -21,6 +21,29 @@ export function toPairKey(symbol: string): string {
   return `${symbol.trim().toUpperCase()}-USD`
 }
 
+/**
+ * Whether Alpaca can serve this pair at all. Check BEFORE `toAlpacaSymbol`.
+ *
+ * That function keeps the base leg and drops the rest, which is a conversion
+ * for 'AAPL-USD' and a coincidence for anything else. 'BTC-USDT' reduces to
+ * 'BTC', and BTC is a real NYSE Arca ticker — a spot-bitcoin ETF trading near
+ * $28. Asked for a crypto pair, the connector would answer confidently with an
+ * equity's price under the crypto pair's own label: a number from a different
+ * instrument on a different tape, indistinguishable from the right one. It
+ * reached the recent-pairs strip exactly that way, because the caller picks a
+ * venue by asset class and falls back to the preferred venue when it does not
+ * recognise a symbol.
+ *
+ * Alpaca is `assetClasses: ['stocks']`. Every stock trades against USD, so the
+ * quote leg is USD or absent, and everything else is refused rather than
+ * approximated.
+ */
+export function servesAlpacaPair(pair: string): boolean {
+  const parts = pair.trim().toUpperCase().split(/[-/]/)
+  if (parts.length === 1) return (parts[0]?.length ?? 0) > 0
+  return parts.length === 2 && parts[1] === 'USD' && parts[0].length > 0
+}
+
 // ── Timeframe mapping ──
 
 const TF_TO_ALPACA: Record<string, string> = {

@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { restFetch as fetch } from '@pairlens/market-engine/http'
-import { parseTs, toAlpacaSymbol, toPairKey } from './parser'
+import { parseTs, servesAlpacaPair, toAlpacaSymbol, toPairKey } from './parser'
 import { resolveAlpacaTradingUrls } from './regions'
 import type {
   NormalizedBalance,
@@ -115,6 +115,14 @@ export async function placeAlpacaOrder(
   credentials: AlpacaCredentials,
 ): Promise<OrderResult> {
   const urls = resolveAlpacaTradingUrls(params.mode === 'paper')
+
+  // Refuse before signing anything. `toAlpacaSymbol('BTC-USDT')` is 'BTC',
+  // a real NYSE Arca ticker, so an order routed here by mistake would fill
+  // against a spot-bitcoin ETF rather than being rejected. See
+  // `servesAlpacaPair`.
+  if (!servesAlpacaPair(params.pair)) {
+    return { success: false, error: `Alpaca does not trade ${params.pair}` }
+  }
   const symbol = toAlpacaSymbol(params.pair)
 
   // Trigger (TP/SL) orders: stop-losses use Alpaca's native stop /

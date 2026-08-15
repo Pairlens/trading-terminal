@@ -3,7 +3,11 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, test } from 'bun:test'
-import { normalizePairKey, splitPairAssets } from '../pairs'
+import {
+  assetClassFromQuoteLeg,
+  normalizePairKey,
+  splitPairAssets,
+} from '../pairs'
 
 describe('normalizePairKey', () => {
   test('canonicalises separators and case', () => {
@@ -75,4 +79,56 @@ describe('both tickets derive the quote from the venue', () => {
       )
     })
   }
+})
+
+/**
+ * The index that normally answers this is an App Server read, so standalone,
+ * offline, or signed out it answers for nothing — and a caller that then falls
+ * back to the preferred venue routed 'BTC-USDT' to Alpaca, which quoted its
+ * base leg 'BTC' (a real NYSE Arca spot-bitcoin ETF) at ~$28 under the crypto
+ * pair's own label.
+ */
+describe('assetClassFromQuoteLeg', () => {
+  test('a non-USD quote leg is not a US equity', () => {
+    expect(assetClassFromQuoteLeg('BTC-USDT')).toBe('crypto-spot')
+    expect(assetClassFromQuoteLeg('ETH-USDC')).toBe('crypto-spot')
+    expect(assetClassFromQuoteLeg('BTC-EUR')).toBe('crypto-spot')
+    expect(assetClassFromQuoteLeg('btc/usdt')).toBe('crypto-spot')
+  })
+
+  // Both a crypto pair and a spot-bitcoin ETF can be written 'BTC-USD', and
+  // only the index can tell them apart. A confident wrong answer here would
+  // be worse than none, so it declines.
+  test('a USD quote leg is ambiguous and stays unknown', () => {
+    expect(assetClassFromQuoteLeg('BTC-USD')).toBeUndefined()
+    expect(assetClassFromQuoteLeg('AAPL-USD')).toBeUndefined()
+  })
+
+  test('a bare ticker carries no quote leg to read', () => {
+    expect(assetClassFromQuoteLeg('AAPL')).toBeUndefined()
+    expect(assetClassFromQuoteLeg('')).toBeUndefined()
+  })
+})
+
+/**
+ * The strip is where the mis-routing was seen, so pin that it asks.
+ */
+describe('the recent-pairs strip routes on the pair key too', () => {
+  const src = readFileSync(
+    join(
+      import.meta.dir,
+      '..',
+      '..',
+      'components/terminal/recent-tickers-marquee.tsx',
+    ),
+    'utf8',
+  )
+
+  test('resolveVenue falls back to the quote leg, not to the preferred venue', () => {
+    expect(src).toMatch(/assetClass \?\? assetClassFromQuoteLeg\(symbol\)/)
+  })
+
+  test('the symbol is threaded through to it', () => {
+    expect(src).toMatch(/resolveVenue\(\s*\n?\s*symbol,/)
+  })
 })
