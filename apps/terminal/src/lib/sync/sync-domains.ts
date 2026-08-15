@@ -28,6 +28,10 @@ export const TIER1_KEYS: ReadonlySet<string> = new Set([
   'copilot.persona',
   'pair-picker.assetClass',
   'pair-picker.category',
+  // The order of Discovery's asset-class tabs. Tier-1 transport (it is a short
+  // array of ids), workspaces domain (see WORKSPACE_KEYS) — the two are
+  // independent, exactly as they are for the chart keys above.
+  'discovery.sectionOrder',
   'pair-picker.viewMode',
   'pair-picker.recent',
   'pair-picker.assetClassMap',
@@ -40,6 +44,10 @@ export function isTier1(key: string): boolean {
   if (TIER1_KEYS.has(key)) return true
   // drawing-last-* prefix match
   if (key.startsWith('drawing-last-')) return true
+  // The scanner's chip, per Discovery section: pair-picker.assetClass.perp, …
+  // The trailing dot is load-bearing — `pair-picker.assetClassMap` is a
+  // different key with its own entry above.
+  if (key.startsWith('pair-picker.assetClass.')) return true
   return false
 }
 
@@ -178,6 +186,7 @@ const WORKSPACE_KEYS = new Set([
   'custom-workspaces',
   'terminal.layout',
   'discovery.layout',
+  'discovery.sectionOrder',
 ])
 
 const AUTOMATION_KEYS = new Set([
@@ -196,13 +205,17 @@ export function domainForSyncKey(key: string): SyncDomainId | null {
     WORKSPACE_KEYS.has(key) ||
     // Per-asset-class pair layouts: terminal.layout.perp, .dex, ...
     key.startsWith('terminal.layout.') ||
+    // Per-section Discovery boards: discovery.layout.perp, .dex, ...
+    key.startsWith('discovery.layout.') ||
     (key.startsWith('workspace.') && key.endsWith('.layout')) ||
     key.startsWith('workspace-vars:')
   ) {
     return 'workspaces'
   }
   if (AUTOMATION_KEYS.has(key)) return 'automation'
-  if (TIER1_KEYS.has(key)) return 'preferences'
+  if (TIER1_KEYS.has(key) || key.startsWith('pair-picker.assetClass.')) {
+    return 'preferences'
+  }
   return null
 }
 

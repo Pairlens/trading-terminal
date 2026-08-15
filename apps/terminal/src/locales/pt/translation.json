@@ -2424,7 +2424,17 @@
     "deleteDescription": "Tem certeza de que deseja excluir {{name}}? Todos os símbolos desta lista serão removidos."
   },
   "discovery": {
-    "title": "Descoberta"
+    "title": "Descoberta",
+    "sections": {
+      "label": "Seções por classe de ativo",
+      "spot": "CEX Spot",
+      "perp": "CEX Futuros",
+      "dex": "DEX",
+      "stocks": "Ações",
+      "prediction": "Previsões",
+      "moveLeft": "Mover para a esquerda",
+      "moveRight": "Mover para a direita"
+    }
   },
   "pluginStore": {
     "registryOffline": "O registro de plugins está offline. Mostrando apenas plugins instalados.",
@@ -3408,7 +3418,7 @@
         "name": "Descoberta de previsões",
         "tagline": "Navegue por mercados de eventos ao vivo, não por um catálogo de pares.",
         "description": "Um painel inicial feito para contratos de eventos: o navegador de eventos ocupa a coluna larga, o feed de notícias corre ao lado e uma faixa leve leva sua watchlist sobre o medidor de sentimento. Instale uma plataforma de previsões como Kalshi ou Polymarket para preencher o painel.",
-        "menuLabel": "Previsões"
+        "menuLabel": "Padrão"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -3513,7 +3523,7 @@
         "name": "Home",
         "tagline": "O painel padrão: scanner, sentimento, movers e notícias.",
         "description": "O painel inicial padrão — scanner de mercados, uma barra de pulso do mercado com o medidor de Medo e Ganância e as principais moedas em aba com sua watchlist, e uma coluna de notícias em altura total. Tudo nele funciona sem conta.",
-        "menuLabel": "Home"
+        "menuLabel": "Padrão"
       },
       "markets-board": {
         "name": "Painel de Mercados",
@@ -3543,6 +3553,24 @@
         "name": "Terminal de Perpétuos",
         "tagline": "A mesa de futuros: posições com preço de marcação e liquidação.",
         "description": "O layout padrão para futuros perpétuos: um grande gráfico com os negócios, os contratos abertos (entrada, marcação, liquidação) e os dados de mercado em abas abaixo dele, um livro de ofertas e um painel de negociação com alavancagem no centro, e o copiloto de IA à direita.",
+        "menuLabel": "Padrão"
+      },
+      "perps-discovery": {
+        "name": "Descoberta de perpétuos",
+        "tagline": "Escaneie perps com seus contratos abertos ao lado.",
+        "description": "O painel inicial de futuros: o scanner de mercados filtrado por contratos perpétuos, suas posições abertas com preço de marca e liquidação ao lado, sobre uma faixa multipreço, e o sentimento acima do mural de notícias.",
+        "menuLabel": "Padrão"
+      },
+      "dex-discovery": {
+        "name": "Descoberta DEX",
+        "tagline": "Listagens on-chain, feed social e sua watchlist.",
+        "description": "O painel inicial on-chain: o scanner de mercados filtrado por pares DEX, os tickers recentes sobre o feed social para pegar o que acabou de listar, e sua watchlist acima do mural de notícias.",
+        "menuLabel": "Padrão"
+      },
+      "equities-discovery": {
+        "name": "Descoberta de ações",
+        "tagline": "O scanner de ações ao lado da sua cesta e das notícias.",
+        "description": "O painel inicial de ações: o scanner de mercados filtrado por ações, sua watchlist sobre uma faixa multipreço e uma coluna de notícias em altura total, porque ações se movem com anúncios.",
         "menuLabel": "Padrão"
       }
     },
@@ -4162,7 +4190,8 @@
       "crypto": "Cripto",
       "stocks": "Ações",
       "prediction": "Previsões",
-      "crypto-perp": "Futuros"
+      "crypto-perp": "Futuros",
+      "dex": "DEX"
     },
     "category": {
       "all": "Todos",

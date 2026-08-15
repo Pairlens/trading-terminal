@@ -5,7 +5,7 @@ group: traders
 order: 8
 eyebrow: For traders
 updated: AUG 2026
-readTime: 7 min read
+readTime: 8 min read
 ---
 
 A workspace is a saved arrangement of panels. Scalping wants a book, a depth
@@ -24,6 +24,33 @@ workspace, which is why you cannot end up with two Portfolio panels quietly
 disagreeing.
 
 Rename a workspace, change its icon, or delete it from its context menu.
+
+## Discovery is one board per asset class
+
+Discovery carries tabs beside its title, one per asset class: **CEX Spot**,
+**CEX Futures**, **DEX**, **Equities**, **Predictions**. Each tab is a full
+workspace of its own. Rearrange the futures board and the spot board has not
+moved, and each one remembers its own arrangement between sessions.
+
+Every tab opens on a board built for what it trades. Spot keeps the scanner
+over the sentiment rail and the news column. Futures puts your open contracts
+and a multi-price rail beside the scanner. DEX runs recent tickers over the
+social feed, because on-chain discovery is a flow problem. Equities is the
+scanner, your watchlist, and a full-height news column, with no crypto
+sentiment gauge on it. Predictions swaps the pair scanner for the event
+browser, since outcomes are listed and resolved daily and never sit in a
+catalog of pairs.
+
+The markets scanner opens on the tab's asset class and remembers its own filter
+per tab, so widening the futures board to every market is a decision about that
+board alone.
+
+Drag a tab to reorder it, or right-click one and move it left or right. If you
+trade event contracts and nothing else, put Predictions first. The
+**Workspaces** menu and **Browse Workspace Store** follow the open tab, so the
+suggestions match the markets in front of you. A tab appears only while the
+plugin that owns its board is installed, which makes uninstalling Pairlens
+Predictions the way to remove predictions from Discovery entirely.
 
 ## One pair layout per asset class
 
@@ -47,12 +74,12 @@ class.
 ## Layouts ship with the plugin that owns them
 
 Those per-class layouts are not baked into the app. Each asset-class plugin
-carries its own: the perps desk comes from Pairlens Futures, the prediction
-desk and the event-market home board from Pairlens Predictions, the on-chain
-boards from Pairlens DEX, the stock boards from Pairlens Equities. Disable or
-uninstall one from the Plugins page and its layouts leave the Workspace Store,
-the Workspaces menu, and Discovery immediately. Enable it again and they come
-back.
+carries its own: the perps desk and the futures Discovery board come from
+Pairlens Futures, the prediction desk and the event-market board from Pairlens
+Predictions, the on-chain boards from Pairlens DEX, the stock boards from
+Pairlens Equities. Disable or uninstall one from the Plugins page and its
+layouts leave the Workspace Store, the Workspaces menu, and Discovery (its
+tab included) immediately. Enable it again and they come back.
 
 A layout you already saved keeps working either way. Only the ready-made
 entries come and go with the plugin.

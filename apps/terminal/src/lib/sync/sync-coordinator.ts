@@ -480,6 +480,11 @@ export class SyncCoordinator {
     } else if (key === 'discovery.layout') {
       endpoint = '/api/user/workspace/discovery-layout'
       body = { name: 'discovery-layout', panels: value }
+    } else if (key.startsWith('discovery.layout.')) {
+      // Per-section Discovery boards: discovery.layout.perp → discovery-layout-perp
+      const cls = key.slice('discovery.layout.'.length)
+      endpoint = `/api/user/workspace/discovery-layout-${encodeURIComponent(cls)}`
+      body = { name: `discovery-layout-${cls}`, panels: value }
     } else if (key.startsWith('workspace.') && key.endsWith('.layout')) {
       const id = key.replace('workspace.', '').replace('.layout', '')
       endpoint = `/api/user/workspace/${encodeURIComponent(id)}-layout`

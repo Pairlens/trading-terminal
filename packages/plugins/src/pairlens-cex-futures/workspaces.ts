@@ -87,6 +87,70 @@ export const PERPS_TERMINAL_LAYOUT = {
   ],
 } satisfies ContributedWorkspaceLayout
 
+/**
+ * Perps Discovery — the home board for the futures section. A perp trader
+ * browses with exposure already on: the scanner takes the wide column and open
+ * contracts sit right beside it, over a multi-price rail for the majors the
+ * whole market trades off. Sentiment and the news wire close the board, because
+ * funding follows the same headlines spot does.
+ */
+export const PERPS_DISCOVERY_LAYOUT = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-markets',
+      widthPercent: 48,
+      cells: [
+        {
+          id: 'cell-markets',
+          heightPercent: 100,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-markets', type: 'markets' }],
+        },
+      ],
+    },
+    {
+      id: 'col-desk',
+      widthPercent: 28,
+      cells: [
+        {
+          id: 'cell-positions',
+          heightPercent: 45,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-futures-positions', type: 'futures-positions' }],
+        },
+        {
+          id: 'cell-multi-price',
+          heightPercent: 55,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-multi-price', type: 'multi-price' }],
+        },
+      ],
+    },
+    {
+      id: 'col-pulse',
+      widthPercent: 24,
+      cells: [
+        {
+          id: 'cell-sentiment',
+          heightPercent: 38,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-fear-greed', type: 'fear-greed' }],
+        },
+        {
+          id: 'cell-news',
+          heightPercent: 62,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-news', type: 'news' }],
+        },
+      ],
+    },
+  ],
+} satisfies ContributedWorkspaceLayout
+
+/** Id of the futures home board — the CEX Futures section opens on it. */
+export const PERPS_DISCOVERY_TEMPLATE_ID = 'template:perps-discovery'
+
 export const CEX_FUTURES_WORKSPACES: Array<ContributedWorkspace> = [
   {
     id: 'template:perps-terminal',
@@ -106,5 +170,23 @@ export const CEX_FUTURES_WORKSPACES: Array<ContributedWorkspace> = [
     tags: ['futures', 'perps', 'leverage'],
     layout: PERPS_TERMINAL_LAYOUT,
     pairDefault: { pairKey: 'BTC-USDT-USDT', market: 'binance-futures' },
+  },
+  {
+    id: PERPS_DISCOVERY_TEMPLATE_ID,
+    name: 'Perps Discovery',
+    menuLabel: 'Default',
+    context: 'discovery',
+    routeMenu: true,
+    icon: 'TrendingUp',
+    tagline: 'Scan perps with your open contracts beside them.',
+    description:
+      'The futures home board: the markets scanner filtered to perpetual contracts, your open positions with mark and liquidation next to it over a multi-price rail, and sentiment above the news wire.',
+    facets: {
+      traderTypes: ['day-trader', 'scalper'],
+      assetClasses: ['crypto-perp'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['discovery', 'futures', 'perps'],
+    layout: PERPS_DISCOVERY_LAYOUT,
   },
 ]

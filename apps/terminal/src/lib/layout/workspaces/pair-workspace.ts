@@ -57,7 +57,7 @@ const PAIR_WORKSPACES: Record<InstrumentClass, WorkspaceConfig> =
       cls,
       {
         storageKey: storageKeyFor(cls),
-        pairClass: cls,
+        assetClass: cls,
         presetContext: 'pair',
         defaultPreset: DEFAULT_PRESETS[cls],
         // The built-in quick-apply base, narrowed to what this asset class can

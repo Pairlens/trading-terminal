@@ -17,7 +17,10 @@ import { registerToken } from '@pairlens/market-engine/token-directory'
 import type { LucideIcon } from 'lucide-react'
 
 import type { Instrument } from '@pairlens/shared/instrument-types'
-import type { InstrumentRef } from '@pairlens/shared/market-ref'
+import type {
+  InstrumentClass,
+  InstrumentRef,
+} from '@pairlens/shared/market-ref'
 import {
   lookupPredictionOutcome,
   registerPredictionOutcome,
@@ -34,6 +37,7 @@ export type AssetClassFilter =
   | 'stocks'
   | 'prediction'
   | 'crypto-perp'
+  | 'dex'
 
 export interface AssetClassTab {
   id: AssetClassFilter
@@ -49,9 +53,25 @@ export const ASSET_CLASSES: Array<AssetClassTab> = [
   { id: 'all', label: 'All', icon: LayoutGrid },
   { id: 'crypto', label: 'Crypto', icon: Bitcoin },
   { id: 'crypto-perp', label: 'Futures', icon: Layers },
+  { id: 'dex', label: 'DEX', icon: Flame },
   { id: 'stocks', label: 'Stocks', icon: TrendingUp },
   { id: 'prediction', label: 'Predictions', icon: Vote },
 ]
+
+/**
+ * The chip a Discovery section opens on. Instrument classes and the scanner's
+ * filter ids are two vocabularies for the same thing — `spot` instruments are
+ * catalogued as `crypto` — so the translation lives here, next to the ids it
+ * has to agree with, rather than at each call site.
+ */
+export const ASSET_CLASS_FILTER_FOR: Record<InstrumentClass, AssetClassFilter> =
+  {
+    spot: 'crypto',
+    perp: 'crypto-perp',
+    dex: 'dex',
+    stocks: 'stocks',
+    prediction: 'prediction',
+  }
 
 export type PairCategory =
   | 'layer1'

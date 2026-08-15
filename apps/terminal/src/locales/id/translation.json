@@ -2424,7 +2424,17 @@
     "deleteDescription": "Yakin ingin menghapus {{name}}? Semua simbol dalam daftar ini akan dihapus."
   },
   "discovery": {
-    "title": "Penemuan"
+    "title": "Penemuan",
+    "sections": {
+      "label": "Bagian kelas aset",
+      "spot": "CEX Spot",
+      "perp": "CEX Futures",
+      "dex": "DEX",
+      "stocks": "Saham",
+      "prediction": "Prediksi",
+      "moveLeft": "Pindahkan ke kiri",
+      "moveRight": "Pindahkan ke kanan"
+    }
   },
   "pluginStore": {
     "registryOffline": "Registri plugin sedang offline. Hanya menampilkan plugin yang terpasang.",
@@ -3408,7 +3418,7 @@
         "name": "Penjelajahan Prediksi",
         "tagline": "Jelajahi pasar peristiwa langsung, bukan katalog pasangan.",
         "description": "Papan beranda yang dibuat untuk kontrak peristiwa: penjelajah peristiwa mengisi kolom lebar, kabar berita berjalan di sampingnya, dan bilah ringan membawa daftar pantauan Anda di atas pengukur sentimen. Pasang venue prediksi seperti Kalshi atau Polymarket untuk mengisi papan ini.",
-        "menuLabel": "Prediksi"
+        "menuLabel": "Default"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -3513,7 +3523,7 @@
         "name": "Beranda",
         "tagline": "Papan default: scanner, sentimen, penggerak, dan berita.",
         "description": "Papan beranda default — scanner market, rel denyut market dengan pengukur Fear & Greed dan koin teratas bertab dengan daftar pantauan Anda, serta kolom berita setinggi penuh. Semua di dalamnya berfungsi tanpa akun.",
-        "menuLabel": "Beranda"
+        "menuLabel": "Default"
       },
       "markets-board": {
         "name": "Papan Market",
@@ -3543,6 +3553,24 @@
         "name": "Terminal Perps",
         "tagline": "Meja futures: posisi dengan harga mark dan likuidasi.",
         "description": "Tata letak default untuk perpetual futures: chart besar dengan transaksi, kontrak terbuka (entry, mark, likuidasi), dan data market dalam tab di bawahnya, order book serta tiket order yang memperhitungkan leverage di tengah, dan AI Copilot di kanan.",
+        "menuLabel": "Default"
+      },
+      "perps-discovery": {
+        "name": "Penjelajahan Perps",
+        "tagline": "Pindai perps dengan kontrak terbuka di sampingnya.",
+        "description": "Papan awal futures: pemindai pasar disaring ke kontrak perpetual, posisi terbuka Anda dengan harga mark dan likuidasi di sampingnya di atas panel multi-harga, serta sentimen di atas kabar berita.",
+        "menuLabel": "Default"
+      },
+      "dex-discovery": {
+        "name": "Penjelajahan DEX",
+        "tagline": "Listing on-chain, feed sosial, dan watchlist Anda.",
+        "description": "Papan awal on-chain: pemindai pasar disaring ke pasangan DEX, ticker terbaru di atas feed sosial untuk menangkap listing baru, dan watchlist Anda di atas kabar berita.",
+        "menuLabel": "Default"
+      },
+      "equities-discovery": {
+        "name": "Penjelajahan Saham",
+        "tagline": "Pemindai saham di samping keranjang dan berita.",
+        "description": "Papan awal saham: pemindai pasar disaring ke saham, watchlist Anda di atas panel multi-harga, dan kolom berita setinggi penuh, karena saham bergerak mengikuti berita.",
         "menuLabel": "Default"
       }
     },
@@ -4162,7 +4190,8 @@
       "crypto": "Kripto",
       "stocks": "Saham",
       "prediction": "Prediksi",
-      "crypto-perp": "Futures"
+      "crypto-perp": "Futures",
+      "dex": "DEX"
     },
     "category": {
       "all": "Semua",

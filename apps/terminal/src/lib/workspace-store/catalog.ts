@@ -949,7 +949,7 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
   presetTemplate({
     id: 'template:home-pulse',
     name: 'Home',
-    menuLabel: 'Home',
+    menuLabel: 'Default',
     context: 'discovery',
     routeMenu: true,
     icon: 'Home',
@@ -958,7 +958,7 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
       'The default home board — markets scanner, a market-pulse rail with the Fear & Greed gauge and top coins tabbed with your watchlist, and a full-height news column. Everything on it works without an account.',
     facets: {
       traderTypes: ['day-trader', 'swing-trader', 'news-trader'],
-      assetClasses: ['crypto-spot', 'multi-asset'],
+      assetClasses: ['crypto-spot'],
       screenSizes: ['standard', 'wide'],
     },
     tags: ['discovery', 'home', 'news'],
@@ -976,7 +976,7 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
       'The full-width markets scanner — the simplest way to browse and sort every tradable pair.',
     facets: {
       traderTypes: ['day-trader', 'swing-trader'],
-      assetClasses: ['crypto-spot', 'multi-asset'],
+      assetClasses: ['multi-asset'],
       screenSizes: ['compact', 'standard'],
     },
     tags: ['discovery', 'scanner'],
@@ -994,7 +994,7 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
       'The markets scanner alongside the top movers and your watchlist — a balanced home for finding and tracking setups.',
     facets: {
       traderTypes: ['swing-trader', 'day-trader'],
-      assetClasses: ['crypto-spot', 'multi-asset'],
+      assetClasses: ['crypto-spot', 'crypto-perp', 'dex'],
       screenSizes: ['standard'],
     },
     tags: ['discovery', 'watchlist'],
@@ -1012,7 +1012,7 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
       'A discovery board with a sector heatmap in the middle: scanner on the left, heatmap in the center, and movers over your watchlist on the right.',
     facets: {
       traderTypes: ['swing-trader'],
-      assetClasses: ['crypto-spot', 'multi-asset'],
+      assetClasses: ['crypto-spot', 'crypto-perp', 'dex'],
       screenSizes: ['standard', 'wide'],
     },
     tags: ['discovery', 'heatmap'],
@@ -1030,7 +1030,7 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
       'The markets scanner beside the top movers and the live news feed — a home base for catalyst-driven trading.',
     facets: {
       traderTypes: ['news-trader'],
-      assetClasses: ['crypto-spot', 'multi-asset'],
+      assetClasses: ['crypto-spot', 'crypto-perp', 'dex'],
       screenSizes: ['standard'],
     },
     tags: ['discovery', 'news'],

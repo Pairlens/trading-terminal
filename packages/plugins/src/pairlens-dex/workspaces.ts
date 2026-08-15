@@ -134,6 +134,69 @@ export const DEX_DEGEN_LAYOUT = {
   ],
 } satisfies ContributedWorkspaceLayout
 
+/**
+ * DEX Discovery — the home board for on-chain markets. On-chain discovery is a
+ * flow problem rather than a table problem: what just listed, what people are
+ * posting about. So the scanner shares the board with recent tickers over the
+ * social feed, and the right rail keeps the watchlist above the news wire.
+ */
+export const DEX_DISCOVERY_LAYOUT = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-markets',
+      widthPercent: 46,
+      cells: [
+        {
+          id: 'cell-markets',
+          heightPercent: 100,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-markets', type: 'markets' }],
+        },
+      ],
+    },
+    {
+      id: 'col-flow',
+      widthPercent: 30,
+      cells: [
+        {
+          id: 'cell-recent',
+          heightPercent: 45,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-recent-tickers', type: 'recent-tickers' }],
+        },
+        {
+          id: 'cell-social',
+          heightPercent: 55,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-social', type: 'social' }],
+        },
+      ],
+    },
+    {
+      id: 'col-pulse',
+      widthPercent: 24,
+      cells: [
+        {
+          id: 'cell-watchlist',
+          heightPercent: 50,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-watchlist', type: 'watchlist' }],
+        },
+        {
+          id: 'cell-news',
+          heightPercent: 50,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-news', type: 'news' }],
+        },
+      ],
+    },
+  ],
+} satisfies ContributedWorkspaceLayout
+
+/** Id of the on-chain home board — the DEX section opens on it. */
+export const DEX_DISCOVERY_TEMPLATE_ID = 'template:dex-discovery'
+
 export const DEX_WORKSPACES: Array<ContributedWorkspace> = [
   {
     id: 'template:dex-terminal',
@@ -175,5 +238,23 @@ export const DEX_WORKSPACES: Array<ContributedWorkspace> = [
         reason: 'Routes Solana swaps and streams on-chain prices',
       },
     ],
+  },
+  {
+    id: DEX_DISCOVERY_TEMPLATE_ID,
+    name: 'DEX Discovery',
+    menuLabel: 'Default',
+    context: 'discovery',
+    routeMenu: true,
+    icon: 'Flame',
+    tagline: 'On-chain listings, the social feed, and your watchlist.',
+    description:
+      'The on-chain home board: the markets scanner filtered to DEX pairs, recent tickers over the social feed for catching what just listed, and your watchlist above the news wire.',
+    facets: {
+      traderTypes: ['dex-degen', 'day-trader'],
+      assetClasses: ['dex'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['discovery', 'dex', 'onchain'],
+    layout: DEX_DISCOVERY_LAYOUT,
   },
 ]

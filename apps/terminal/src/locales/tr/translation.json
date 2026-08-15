@@ -2424,7 +2424,17 @@
     "deleteDescription": "{{name}} öğesini silmek istediğine emin misin? Bu listedeki tüm semboller kaldırılacak."
   },
   "discovery": {
-    "title": "Keşif"
+    "title": "Keşif",
+    "sections": {
+      "label": "Varlık sınıfı bölümleri",
+      "spot": "CEX Spot",
+      "perp": "CEX Vadeli",
+      "dex": "DEX",
+      "stocks": "Hisse Senetleri",
+      "prediction": "Tahminler",
+      "moveLeft": "Sola taşı",
+      "moveRight": "Sağa taşı"
+    }
   },
   "pluginStore": {
     "registryOffline": "Eklenti kayıt defteri çevrimdışı. Yalnızca kurulu eklentiler gösteriliyor.",
@@ -3408,7 +3418,7 @@
         "name": "Tahmin Keşfi",
         "tagline": "Parite listesi değil, canlı olay piyasalarına göz atın.",
         "description": "Olay sözleşmeleri için tasarlanmış bir giriş panosu: olay tarayıcısı geniş sütunu alır, haber akışı yanında ilerler ve ince bir şerit izleme listenizi duyarlılık göstergesinin üzerinde taşır. Panoyu doldurmak için Kalshi veya Polymarket gibi bir tahmin borsası kurun.",
-        "menuLabel": "Tahminler"
+        "menuLabel": "Varsayılan"
       },
       "dex-degen": {
         "name": "DEX Degen",
@@ -3513,7 +3523,7 @@
         "name": "Ana Sayfa",
         "tagline": "Varsayılan pano: tarayıcı, duyarlılık, hareket edenler ve haberler.",
         "description": "Varsayılan ana sayfa panosu — piyasa tarayıcısı, Korku ve Açgözlülük göstergesi ile en iyi coinlerin izleme listenle sekmelendiği bir piyasa nabzı rayı ve tam yükseklikte bir haber sütunu. Üzerindeki her şey hesap olmadan çalışır.",
-        "menuLabel": "Ana Sayfa"
+        "menuLabel": "Varsayılan"
       },
       "markets-board": {
         "name": "Piyasalar Panosu",
@@ -3543,6 +3553,24 @@
         "name": "Perp Terminali",
         "tagline": "Vadeli işlem masası: mark fiyatı ve likidasyonla birlikte pozisyonlar.",
         "description": "Sürekli vadeli işlemler için varsayılan düzen: altında sekmeler halinde işlemler, açık sözleşmeler (giriş, mark, likidasyon) ve piyasa verileri bulunan büyük bir grafik, ortada emir defteri ve kaldıracı hesaba katan bir işlem paneli, sağda ise Yapay Zeka Co-pilotu.",
+        "menuLabel": "Varsayılan"
+      },
+      "perps-discovery": {
+        "name": "Perp Keşfi",
+        "tagline": "Açık kontratlarınız yanınızdayken perpleri tarayın.",
+        "description": "Vadeli işlemler ana panosu: kalıcı kontratlara göre süzülmüş piyasa tarayıcısı, yanında işaret ve tasfiye fiyatlı açık pozisyonlarınız, altında çoklu fiyat şeridi ve haber akışının üstünde piyasa duyarlılığı.",
+        "menuLabel": "Varsayılan"
+      },
+      "dex-discovery": {
+        "name": "DEX Keşfi",
+        "tagline": "Zincir üstü listelemeler, sosyal akış ve listeniz.",
+        "description": "Zincir üstü ana pano: DEX çiftlerine göre süzülmüş piyasa tarayıcısı, yeni listelemeleri yakalamak için sosyal akışın üstünde son tickerlar ve haber akışının üstünde izleme listeniz.",
+        "menuLabel": "Varsayılan"
+      },
+      "equities-discovery": {
+        "name": "Hisse Keşfi",
+        "tagline": "Hisse tarayıcısı, listeniz ve haber akışı yan yana.",
+        "description": "Hisse ana panosu: hisselere göre süzülmüş piyasa tarayıcısı, çoklu fiyat şeridinin üstünde izleme listeniz ve tam boy bir haber sütunu, çünkü hisseler bildirimlerle hareket eder.",
         "menuLabel": "Varsayılan"
       }
     },
@@ -4162,7 +4190,8 @@
       "crypto": "Kripto",
       "stocks": "Hisseler",
       "prediction": "Tahminler",
-      "crypto-perp": "Vadeli"
+      "crypto-perp": "Vadeli",
+      "dex": "DEX"
     },
     "category": {
       "all": "Tümü",

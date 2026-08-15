@@ -233,6 +233,8 @@ export interface AnalyticsEvents {
    * pixels. Flushed periodically, on tab-hide, and on workspace switch. */
   panel_dwell: { pane_type: string; seconds: number; workspace: WorkspaceKind }
   preset_applied: { preset: string; workspace: WorkspaceKind }
+  /** Which asset-class desk traders actually work from on Discovery. */
+  discovery_section_selected: { section: string }
   workspace_opened: { workspace: WorkspaceKind }
   workspace_created: { workspace_count: number }
   workspace_deleted: { workspace_count: number }

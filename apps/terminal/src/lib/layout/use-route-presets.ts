@@ -34,14 +34,15 @@ export function useRoutePresets(
     workspaceTemplateRegistry.getSnapshot,
   )
 
-  const { presets, presetContext, pairClass, defaultPreset } = workspace
+  const { presets, presetContext, assetClass, defaultPreset } = workspace
 
   return useMemo(() => {
     if (!presetContext) return presets
     // Touch the version so the menu rebuilds when a plugin activates or goes.
     void version
-    const cls =
-      presetContext === 'pair' ? normalizeInstrumentClass(pairClass) : undefined
+    // Both routes are class-scoped now: a pair page serves one instrument
+    // class, and so does each Discovery section.
+    const cls = normalizeInstrumentClass(assetClass)
     return mergeRoutePresets(
       presets,
       workspaceTemplateRegistry.getTemplates(),
@@ -49,5 +50,5 @@ export function useRoutePresets(
       cls,
       defaultPreset,
     )
-  }, [presets, presetContext, pairClass, defaultPreset, version])
+  }, [presets, presetContext, assetClass, defaultPreset, version])
 }

@@ -139,6 +139,64 @@ export const EQUITIES_DESK_LAYOUT = {
   ],
 } satisfies ContributedWorkspaceLayout
 
+/**
+ * Equities Discovery — the home board for stocks. The scanner leads, the
+ * watchlist sits over a multi-price rail so a basket reads at a glance, and
+ * the news wire takes its own column: equities move on filings and headlines.
+ * No sentiment gauge and no heatmap here — both read a crypto index and would
+ * be quietly wrong above a list of tickers.
+ */
+export const EQUITIES_DISCOVERY_LAYOUT = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-markets',
+      widthPercent: 46,
+      cells: [
+        {
+          id: 'cell-markets',
+          heightPercent: 100,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-markets', type: 'markets' }],
+        },
+      ],
+    },
+    {
+      id: 'col-watch',
+      widthPercent: 28,
+      cells: [
+        {
+          id: 'cell-watchlist',
+          heightPercent: 55,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-watchlist', type: 'watchlist' }],
+        },
+        {
+          id: 'cell-multi-price',
+          heightPercent: 45,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-multi-price', type: 'multi-price' }],
+        },
+      ],
+    },
+    {
+      id: 'col-news',
+      widthPercent: 26,
+      cells: [
+        {
+          id: 'cell-news',
+          heightPercent: 100,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-news', type: 'news' }],
+        },
+      ],
+    },
+  ],
+} satisfies ContributedWorkspaceLayout
+
+/** Id of the stock home board — the Equities section opens on it. */
+export const EQUITIES_DISCOVERY_TEMPLATE_ID = 'template:equities-discovery'
+
 export const EQUITIES_WORKSPACES: Array<ContributedWorkspace> = [
   {
     id: 'template:equities-terminal',
@@ -175,6 +233,25 @@ export const EQUITIES_WORKSPACES: Array<ContributedWorkspace> = [
     tags: ['equities', 'stocks', 'broker'],
     layout: EQUITIES_DESK_LAYOUT,
     pairDefault: { pairKey: 'AAPL', market: 'alpaca' },
+    requiredPlugins: [ALPACA_REQUIREMENT],
+  },
+  {
+    id: EQUITIES_DISCOVERY_TEMPLATE_ID,
+    name: 'Equities Discovery',
+    menuLabel: 'Default',
+    context: 'discovery',
+    routeMenu: true,
+    icon: 'BarChart3',
+    tagline: 'The stock scanner beside your basket and the wire.',
+    description:
+      'The stock home board: the markets scanner filtered to equities, your watchlist over a multi-price rail, and a full-height news column, because stocks move on filings and headlines.',
+    facets: {
+      traderTypes: ['day-trader', 'position-investor'],
+      assetClasses: ['equities'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['discovery', 'equities', 'stocks'],
+    layout: EQUITIES_DISCOVERY_LAYOUT,
     requiredPlugins: [ALPACA_REQUIREMENT],
   },
 ]

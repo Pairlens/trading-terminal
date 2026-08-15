@@ -181,7 +181,9 @@ export const PREDICTIONS_WORKSPACES: Array<ContributedWorkspace> = [
   {
     id: PREDICTION_DISCOVERY_TEMPLATE_ID,
     name: 'Prediction Discovery',
-    menuLabel: 'Predictions',
+    // The Predictions section of Discovery opens on this board, so it is that
+    // section's Default entry rather than one option among many.
+    menuLabel: 'Default',
     context: 'discovery',
     routeMenu: true,
     icon: 'Vote',

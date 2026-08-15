@@ -72,11 +72,12 @@ the rest somewhere else.
 
 ## Finding an event
 
-Start from **Prediction Discovery**, the home board the predictions plugin
-ships: the event browser takes the wide column, the news wire runs beside it,
-and a light rail carries your watchlist over the sentiment gauge. Pick it from
-the **Workspaces** menu on the home page, or from the Predictions filter in the
-Markets panel, which now offers the board instead of an empty grid. Prediction
+Start from the **Predictions** tab on Discovery, the board the predictions
+plugin ships: the event browser takes the wide column, the news wire runs
+beside it, and a light rail carries your watchlist over the sentiment gauge.
+The tab is its own workspace, so what you arrange there stays there. The
+Predictions filter in the Markets panel sends you to it rather than showing an
+empty grid. Prediction
 outcomes are never in the pair catalog that panel reads, because they are
 listed and resolved daily.
 
