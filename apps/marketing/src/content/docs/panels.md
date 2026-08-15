@@ -5,7 +5,7 @@ group: traders
 parent: workspaces
 order: 1
 eyebrow: For traders
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 4 min read
 ---
 
@@ -87,9 +87,9 @@ site.
 ## The AI is not a panel
 
 There is no AI Lens panel and no Research panel to add. The
-[assistant](/docs/ai-copilot) is docked in the bottom-right corner of the
-terminal, outside the workspace grid, so it costs you no layout space and stays
-with you when you change workspace, page or pair. Research is one of its tools
+[assistant](/docs/ai-copilot) is docked outside the workspace grid, at the
+bottom right or in the left nav rail depending on what you set, so it costs you
+no layout space and stays with you when you change workspace, page or pair. Research is one of its tools
 rather than a pane. See [research reports](/docs/research-reports).
 
 ## Requirements

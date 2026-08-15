@@ -4,8 +4,8 @@ description: Every setting in the terminal, from the terminal lock and credentia
 group: traders
 order: 10
 eyebrow: For traders
-updated: 15 AUG 2026
-readTime: 10 min read
+updated: 16 AUG 2026
+readTime: 11 min read
 ---
 
 Open settings with <kbd>⌘,</kbd>, from the user menu, or by searching for a
@@ -14,6 +14,28 @@ section in omni-search.
 ## Profile
 
 Display name and profile image, when you are signed in. Purely cosmetic.
+
+## Assistant
+
+Where the assistant waits while you work, and how it talks. What powers it is
+the next section down.
+
+**Placement.** **Floating**, the default, puts the orb at the bottom right of
+the terminal, clear of your panes, with its suggestion line always readable.
+**Sidebar** moves it into the left nav rail with your other tools, where the
+suggestion flies out on hover or keyboard focus and appears on its own while a
+run is going. The orb moves as soon as you pick, no reload. Either way the chat
+window drags anywhere you want it by its header. See
+[the AI assistant](/docs/ai-copilot).
+
+**Persona.** Mentor, Balanced, or Technical: how much the assistant explains
+when it answers. The dropdown in the chat window's header writes the same
+setting, and a change applies to your next message. On a phone this is the only
+place it can be set.
+
+The persona rides the **Settings and preferences** sync domain below. The
+placement and wherever you dragged the window do not: they describe this screen,
+so every device keeps its own.
 
 ## Intelligence
 

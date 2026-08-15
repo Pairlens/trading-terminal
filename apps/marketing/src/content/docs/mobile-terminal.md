@@ -4,7 +4,7 @@ description: The Pairlens Mobile Trading Terminal. The same URL below 768px, wit
 group: get-started
 order: 5
 eyebrow: Get started
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 9 min read
 ---
 
@@ -35,9 +35,8 @@ sheets that slide over it, so switching destination is not a page load and the
 chart behind never redraws from scratch. Drag a sheet up to expand it, down to
 dismiss it, or just tap the chart.
 
-The [assistant](/docs/ai-copilot) gets a tab rather than the desktop's
-bottom-right dock, because a phone has no room for a floating window over a
-chart. It is the same conversation underneath: it draws on the live chart under
+The [assistant](/docs/ai-copilot) gets a tab rather than the desktop's docked
+orb, because a phone has no room for a floating window over a chart. It is the same conversation underneath: it draws on the live chart under
 the sheet, prepares orders on the same confirm cards, and asks its questions on
 the same tappable option cards.
 

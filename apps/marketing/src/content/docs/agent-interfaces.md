@@ -4,7 +4,7 @@ description: 'Every way an AI agent can drive Pairlens: the in-app assistant, th
 group: builders
 order: 2
 eyebrow: For builders
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 6 min read
 ---
 
@@ -20,8 +20,9 @@ important respect: how close to an order they get, and who confirms it.
 
 ## The assistant
 
-One in-app agent, docked bottom-right, mounted above the routed content so it is
-the same conversation on a chart, on the bots page and in the script workbench.
+One in-app agent, docked in the terminal chrome rather than in a pane and
+mounted above the routed content, so it is the same conversation on a chart, on
+the bots page and in the script workbench.
 The agentic loop runs client-side over 94 tools: market data, research, chart
 control, portfolio reads, watchlists and alerts, Python scripts and backtests,
 bots, workflows, navigation, and two trading tools. One turn runs up to 28

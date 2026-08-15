@@ -43,6 +43,39 @@ export const SETTINGS_SEARCH_INDEX: ReadonlyArray<SettingsSearchEntry> = [
     descriptionKey: 'settings.profile.resetTutorialDescription',
     keywords: ['onboarding', 'tutorial', 'tour', 'getting started', 'replay'],
   },
+  // Assistant
+  {
+    section: 'ai',
+    titleKey: 'settings.ai.placement',
+    descriptionKey: 'settings.ai.placementDescription',
+    keywords: [
+      'assistant',
+      'ai',
+      'orb',
+      'copilot',
+      'placement',
+      'floating',
+      'sidebar',
+      'dock',
+      'position',
+    ],
+  },
+  {
+    section: 'ai',
+    titleKey: 'settings.ai.persona',
+    descriptionKey: 'settings.ai.personaDescription',
+    keywords: [
+      'persona',
+      'assistant',
+      'ai',
+      'copilot',
+      'tone',
+      'voice',
+      'mentor',
+      'balanced',
+      'technical',
+    ],
+  },
   // Intelligence (billing)
   {
     section: 'billing',

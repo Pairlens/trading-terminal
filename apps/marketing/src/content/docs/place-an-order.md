@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 2
 eyebrow: For traders
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 7 min read
 ---
 
@@ -144,8 +144,8 @@ The **Portfolio** panel shows holdings and allocation across the account.
 
 ## Assistant proposals
 
-The [assistant](/docs/ai-copilot) in the bottom-right corner can propose a
-trade. It fills a card in the chat showing the pair, side, size, and limit
+The [assistant](/docs/ai-copilot) can propose a trade from wherever you keep
+it. It fills a card in the chat showing the pair, side, size, and limit
 price, along with its reasoning, and nothing happens until you confirm. The card
 lets you choose paper or live at the moment of approval, with paper preselected.
 Spot, perpetual and prediction-market orders all work this way.

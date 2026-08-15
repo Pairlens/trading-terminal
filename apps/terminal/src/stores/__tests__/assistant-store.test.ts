@@ -5,7 +5,14 @@ import { beforeEach, describe, expect, test } from 'bun:test'
 import { askAssistant, useAssistantStore } from '../assistant-store'
 
 beforeEach(() => {
-  useAssistantStore.setState({ isOpen: false, seed: null, focusSignal: 0 })
+  useAssistantStore.setState({
+    isOpen: false,
+    seed: null,
+    focusSignal: 0,
+    windowPosition: null,
+    runPhase: 'idle',
+    runToolName: null,
+  })
 })
 
 describe('the assistant dock store', () => {
@@ -59,5 +66,35 @@ describe('the assistant dock store', () => {
     askAssistant('Deploy a bot')
     useAssistantStore.getState().open()
     expect(useAssistantStore.getState().seed?.prompt).toBe('Deploy a bot')
+  })
+})
+
+describe('the chat window position', () => {
+  test('starts unset, so the window sits at its placement anchor', () => {
+    expect(useAssistantStore.getState().windowPosition).toBeNull()
+  })
+
+  test('a drop is remembered, and resetting clears it', () => {
+    const { setWindowPosition } = useAssistantStore.getState()
+    setWindowPosition({ x: 320, y: 180 })
+    expect(useAssistantStore.getState().windowPosition).toEqual({
+      x: 320,
+      y: 180,
+    })
+    // Null is the reset: it hands positioning back to CSS rather than
+    // freezing the window at whatever the anchor happened to be.
+    setWindowPosition(null)
+    expect(useAssistantStore.getState().windowPosition).toBeNull()
+  })
+})
+
+describe('the published run phase', () => {
+  test('starts idle and carries the tool in flight', () => {
+    expect(useAssistantStore.getState().runPhase).toBe('idle')
+    useAssistantStore.getState().setRunStatus('tool', 'get_candles')
+    expect(useAssistantStore.getState().runPhase).toBe('tool')
+    // The nav-rail orb reads this to decide whether to show its label
+    // unprompted, which is the only way a run announces itself there.
+    expect(useAssistantStore.getState().runToolName).toBe('get_candles')
   })
 })

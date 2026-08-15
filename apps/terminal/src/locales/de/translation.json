@@ -403,6 +403,7 @@
     "description": "Aktualisiere deine Profileinstellungen und Präferenzen.",
     "nav": {
       "profile": "Profil",
+      "ai": "Assistent",
       "plugins": "Plugins",
       "cloudSync": "Cloud-Sync",
       "notifications": "Benachrichtigungen",
@@ -424,6 +425,16 @@
       "noResults": "Keine Treffer für „{{query}}“"
     },
     "comingSoon": "Dieser Bereich kommt bald.",
+    "ai": {
+      "placement": "Position des Assistenten",
+      "placementDescription": "Wo der Assistent wartet, während du arbeitest. Das Chatfenster öffnet sich dort, wo der Assistent sitzt, und du kannst es von dort überallhin ziehen.",
+      "placementFloating": "Schwebend",
+      "placementFloatingDescription": "Unten rechts im Terminal, abseits deiner Bereiche, mit immer lesbarem Vorschlag. Am leichtesten zu bemerken.",
+      "placementSidebar": "Seitenleiste",
+      "placementSidebarDescription": "In der linken Leiste bei deinen anderen Werkzeugen. Der Vorschlag erscheint beim Daraufzeigen oder während der Assistent arbeitet. Ruhiger, und immer am selben Ort.",
+      "persona": "Persona",
+      "personaDescription": "Wie viel der Assistent erklärt, wenn er antwortet. Die Änderung gilt ab deiner nächsten Nachricht."
+    },
     "privacy": {
       "title": "Nutzungsanalyse",
       "description": "Hilf mit, Pairlens zu verbessern, indem du anonyme Nutzungsdaten und Absturzberichte teilst. Niemals deine Trades, API-Keys oder Guthaben.",
@@ -1307,7 +1318,8 @@
     "approvalApprove": "Freigeben",
     "approvalDecline": "Ablehnen",
     "approvalApproved": "Freigegeben",
-    "approvalDeclined": "Abgelehnt"
+    "approvalDeclined": "Abgelehnt",
+    "resetPosition": "Position zurücksetzen"
   },
   "copilot": {
     "placeholder": "Frag deine Lens...",

@@ -49,6 +49,11 @@ export type AssistantChatWindowProps = {
   footer?: ReactNode
   /** Optional error/notice strip rendered between children and footer. */
   notice?: ReactNode
+  /** Measured by the drag hook to keep the window inside the viewport. */
+  windowRef?: React.Ref<HTMLDivElement>
+  /** Spread onto the header, which doubles as the title bar. */
+  dragHandleProps?: React.HTMLAttributes<HTMLElement>
+  dragging?: boolean
 }
 
 export function AssistantChatWindow({
@@ -62,6 +67,9 @@ export function AssistantChatWindow({
   children,
   footer,
   notice,
+  windowRef,
+  dragHandleProps,
+  dragging = false,
 }: AssistantChatWindowProps) {
   const reduceMotion = useReducedMotion() ?? false
 
@@ -76,6 +84,7 @@ export function AssistantChatWindow({
 
   return (
     <motion.div
+      ref={windowRef}
       role="dialog"
       data-assistant-window=""
       data-open={open ? '' : undefined}
@@ -115,7 +124,15 @@ export function AssistantChatWindow({
           a highlight and not a progress bar. */}
       <div className="ai-seam pointer-events-none absolute inset-x-0 top-0 z-20 h-px" />
 
-      <header className="relative z-10 flex shrink-0 items-center gap-2.5 px-3.5 pt-3 pb-2.5">
+      {/* The header is the title bar: grab anywhere on it that is not a
+          control and the window follows. `select-none` so a drag does
+          not smear a text selection across the title. */}
+      <header
+        {...dragHandleProps}
+        className={`relative z-10 flex shrink-0 items-center gap-2.5 px-3.5 pt-3 pb-2.5 select-none ${
+          dragging ? 'cursor-grabbing' : 'cursor-grab'
+        }`}
+      >
         <AiOrb
           size="26px"
           animationDuration={15}
@@ -159,7 +176,7 @@ export function AssistantChatWindow({
 
       {/* Hairline under the header. A `border-b` would inherit the panel's own
           edge colour; the assistant's edges are its own token. */}
-      <div className="bg-[var(--ai-edge-soft)] pointer-events-none mx-3.5 h-px shrink-0" />
+      <div className="pointer-events-none mx-3.5 h-px shrink-0 bg-[var(--ai-edge-soft)]" />
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden">
         {children}

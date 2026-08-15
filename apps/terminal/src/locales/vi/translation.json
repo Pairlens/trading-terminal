@@ -403,6 +403,7 @@
     "description": "Cập nhật cài đặt hồ sơ và tùy chọn của bạn.",
     "nav": {
       "profile": "Hồ sơ",
+      "ai": "Trợ lý",
       "plugins": "Plugin",
       "cloudSync": "Đồng bộ đám mây",
       "notifications": "Thông báo",
@@ -424,6 +425,16 @@
       "noResults": "Không có kết quả cho \"{{query}}\""
     },
     "comingSoon": "Phần này sắp ra mắt.",
+    "ai": {
+      "placement": "Vị trí trợ lý",
+      "placementDescription": "Nơi trợ lý chờ trong lúc bạn làm việc. Cửa sổ trò chuyện mở ra từ chỗ trợ lý đang đứng, và từ đó bạn có thể kéo nó đi bất cứ đâu.",
+      "placementFloating": "Nổi",
+      "placementFloatingDescription": "Góc dưới bên phải terminal, không che các khung của bạn, gợi ý luôn đọc được. Dễ nhận ra nhất.",
+      "placementSidebar": "Thanh bên",
+      "placementSidebarDescription": "Ở thanh bên trái, cùng với các công cụ khác. Gợi ý hiện ra khi bạn di chuột vào, hoặc trong lúc trợ lý đang làm việc. Kín đáo hơn, và luôn ở cùng một chỗ.",
+      "persona": "Phong cách",
+      "personaDescription": "Trợ lý giải thích nhiều đến đâu khi trả lời. Thay đổi sẽ áp dụng từ tin nhắn tiếp theo của bạn."
+    },
     "privacy": {
       "title": "Phân tích sử dụng",
       "description": "Giúp cải thiện Pairlens bằng cách chia sẻ dữ liệu sử dụng ẩn danh và báo cáo lỗi. Không bao giờ bao gồm lệnh giao dịch, API key hay số dư của bạn.",
@@ -1307,7 +1318,8 @@
     "approvalApprove": "Chấp nhận",
     "approvalDecline": "Từ chối",
     "approvalApproved": "Đã chấp nhận",
-    "approvalDeclined": "Đã từ chối"
+    "approvalDeclined": "Đã từ chối",
+    "resetPosition": "Đặt lại vị trí"
   },
   "copilot": {
     "placeholder": "Hỏi lens của bạn...",

@@ -403,6 +403,7 @@
     "description": "更新你的个人资料设置和偏好。",
     "nav": {
       "profile": "个人资料",
+      "ai": "助手",
       "plugins": "插件",
       "cloudSync": "云同步",
       "notifications": "通知",
@@ -424,6 +425,16 @@
       "noResults": "没有与“{{query}}”匹配的结果"
     },
     "comingSoon": "此部分即将推出。",
+    "ai": {
+      "placement": "助手位置",
+      "placementDescription": "你工作时助手待着的地方。聊天窗口从助手所在的位置打开，之后可以拖到任何地方。",
+      "placementFloating": "浮动",
+      "placementFloatingDescription": "在终端右下角，不挡住你的面板，建议始终清晰可读。最容易注意到。",
+      "placementSidebar": "侧边栏",
+      "placementSidebarDescription": "在左侧栏里，和其他工具放在一起。建议在悬停时或助手工作时出现。更安静，位置也始终不变。",
+      "persona": "人格",
+      "personaDescription": "助手回答时解释得有多详细。改动会从你的下一条消息开始生效。"
+    },
     "privacy": {
       "title": "使用情况分析",
       "description": "通过分享匿名使用数据和崩溃报告帮助改进 Pairlens。绝不包含你的交易、API 密钥或余额。",
@@ -1307,7 +1318,8 @@
     "approvalApprove": "批准",
     "approvalDecline": "拒绝",
     "approvalApproved": "已批准",
-    "approvalDeclined": "已拒绝"
+    "approvalDeclined": "已拒绝",
+    "resetPosition": "重置位置"
   },
   "copilot": {
     "placeholder": "问问你的透镜……",
