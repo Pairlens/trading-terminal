@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} non è disponibile",
       "description": "Questo connettore non ha restituito dati di mercato per questa coppia. Provane un altro che la elenchi."
     },
+    "paneCredentials": {
+      "sealedTitle": "Sblocca per caricare i dati di {{venue}}",
+      "sealedDescription": "{{venue}} non ha un feed di prezzi pubblico. Grafico, book e quotazioni passano dalle tue chiavi API, che al momento sono bloccate.",
+      "missingTitle": "Collega {{venue}} per vedere i prezzi",
+      "missingDescription": "{{venue}} non ha un feed di prezzi pubblico. Collega il tuo account e grafico, book e quotazioni arriveranno direttamente da lì.",
+      "connectAction": "Collega {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "Passaggio a {{venue}}…",
       "switching": "Passaggio…"
@@ -4096,6 +4103,10 @@
       "sealed": "La tua cassaforte delle credenziali è bloccata.",
       "sealedBanner_one": "1 bot live è in pausa: sblocca Pairlens per riprendere a fare trading.",
       "sealedBanner_other": "{{count}} bot live sono in pausa: sblocca Pairlens per riprendere a fare trading.",
+      "passkeyNudgeTitle": "La prossima volta sblocca con un tocco",
+      "passkeyNudgeBody": "{{venue}} trasmette i prezzi dalle tue chiavi, quindi con la cassaforte bloccata non c’è grafico. Una passkey apre cassaforte e schermata di blocco con un solo tocco, invece di una password digitata.",
+      "passkeyNudgeAction": "Aggiungi una passkey",
+      "passkeyNudgeDismiss": "Non ora",
       "sealedBannerAction": "Sblocca",
       "botsPausedTitle": "I bot live sono in pausa",
       "botsPausedBody": "Sblocca Pairlens per riprendere il trading live. I bot in paper non sono interessati.",

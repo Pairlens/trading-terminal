@@ -38,7 +38,9 @@ import {
   useCredentialsStore,
 } from '@/stores/credentials-store'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { usePasskeySupported } from '@/hooks/use-protector-support'
 import { useMarketData } from '@/lib/market-data-provider'
+import { useVaultState } from '@/lib/security/vault/vault-session'
 import {
   isVaultEnrollmentRequired,
   isVaultSealed,
@@ -62,6 +64,8 @@ export function useConnectWizardState({
   const { t } = useTranslation()
   const { availableMarkets: adapterInfos } = useMarketData()
   const { markets } = useAvailableMarkets()
+  const vault = useVaultState()
+  const passkeySupported = usePasskeySupported()
 
   const { load, addCredential } = useCredentialsStore()
   const {
@@ -116,6 +120,18 @@ export function useConnectWizardState({
    * the wizard opened into an unmounted tree.
    */
   const [gateBusy, setGateBusy] = useState(false)
+
+  /**
+   * The one-tap-unlock offer, and the venue that earned it.
+   *
+   * Only venues with no public feed do: connecting one of those is the moment
+   * a sealed vault starts costing a password to look at a CHART, not just to
+   * place an order. Every other venue streams fine sealed, and offering this
+   * there would be a security prompt with no problem behind it.
+   */
+  const [passkeyNudgeVenue, setPasskeyNudgeVenue] = useState<string | null>(
+    null,
+  )
 
   useEffect(() => {
     void load()
@@ -266,6 +282,25 @@ export function useConnectWizardState({
     [withVault, availableChains],
   )
 
+  /**
+   * Offer the passkey, if it would buy anything.
+   *
+   * Every condition is a way it would not. No vault (desktop, where keys live
+   * in the OS keychain) and there is nothing to seal; a passkey already
+   * enrolled and the tap already exists; no PRF support and the button cannot
+   * finish what it starts — which is also why the packaged desktop app never
+   * reaches this, `tauri://localhost` being no WebAuthn origin.
+   */
+  const maybeOfferPasskey = useCallback(
+    (market: string) => {
+      if (!vault.enrolled || vault.hasPasskey || !passkeySupported) return
+      const venue = markets.find((m) => m.value === market)
+      if (!venue?.credentialedMarketData) return
+      setPasskeyNudgeVenue(venue.label)
+    },
+    [markets, passkeySupported, vault.enrolled, vault.hasPasskey],
+  )
+
   // Annotated because the vault retry closes over `handleSubmit` itself, and
   // an unannotated const referenced inside its own initializer infers `any`.
   const handleSubmit: (event: FormEvent) => Promise<void> = useCallback(
@@ -304,6 +339,7 @@ export function useConnectWizardState({
           entity: formFields['entity'] || undefined,
         })
         track('venue_connected', { venue: resolvedMarket })
+        maybeOfferPasskey(resolvedMarket)
         setFeedback({
           type: 'success',
           message: t('accounts.accountConnectedFeedback', {
@@ -508,5 +544,8 @@ export function useConnectWizardState({
     unlockOpen,
     setUnlockOpen,
     resumePending,
+    // One-tap-unlock offer
+    passkeyNudgeVenue,
+    setPasskeyNudgeVenue,
   }
 }

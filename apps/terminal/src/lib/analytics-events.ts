@@ -178,6 +178,13 @@ export interface AnalyticsEvents {
   security_vault_unlocked: { protector: VaultProtectorKind }
   /** The vault was sealed by the explicit hard lock. */
   security_vault_hard_locked: Record<string, never>
+  /**
+   * The one-tap-unlock offer made after connecting a venue whose market data
+   * needs the vault open. Whether it was taken, never anything about the
+   * vault it was offered for — the point is to learn if the prompt lands at
+   * the right moment, which the answer alone tells us.
+   */
+  security_passkey_nudge: { action: 'accepted' | 'dismissed' }
   /** Desktop only: the opt-in app-level vault was turned on or off. */
   security_vault_desktop_toggled: { enabled: boolean }
 

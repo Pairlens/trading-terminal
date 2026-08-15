@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "找不到 {{pair}}",
       "description": "该连接器没有返回这个交易对的行情数据。换一个上架了它的连接器试试。"
     },
+    "paneCredentials": {
+      "sealedTitle": "解锁以加载 {{venue}} 数据",
+      "sealedDescription": "{{venue}} 没有公开行情源。图表、订单簿和报价都由你的 API 密钥推送，而密钥目前处于锁定状态。",
+      "missingTitle": "连接 {{venue}} 以查看价格",
+      "missingDescription": "{{venue}} 没有公开行情源。连接你的账户后，图表、订单簿和报价将直接从中推送。",
+      "connectAction": "连接 {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "正在切换到 {{venue}}…",
       "switching": "正在切换…"
@@ -4096,6 +4103,10 @@
       "sealed": "你的凭证保险库已锁定。",
       "sealedBanner_one": "1 个实盘机器人已暂停 — 解锁 Pairlens 以恢复交易。",
       "sealedBanner_other": "{{count}} 个实盘机器人已暂停 — 解锁 Pairlens 以恢复交易。",
+      "passkeyNudgeTitle": "下次一触即可解锁",
+      "passkeyNudgeBody": "{{venue}} 通过你的密钥推送行情，保险库锁上就没有图表。使用通行密钥，只需轻触一次即可同时打开保险库和锁屏，无需输入密码。",
+      "passkeyNudgeAction": "添加通行密钥",
+      "passkeyNudgeDismiss": "暂不",
       "sealedBannerAction": "解锁",
       "botsPausedTitle": "实盘机器人已暂停",
       "botsPausedBody": "解锁 Pairlens 以恢复实盘交易。模拟机器人不受影响。",

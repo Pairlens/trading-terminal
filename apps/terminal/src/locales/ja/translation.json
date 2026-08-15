@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} は取り扱いがありません",
       "description": "このコネクタはこのペアの市場データを返しませんでした。取り扱いのある別のコネクタをお試しください。"
     },
+    "paneCredentials": {
+      "sealedTitle": "{{venue}} のデータを読み込むにはロックを解除してください",
+      "sealedDescription": "{{venue}} には公開の価格フィードがありません。チャート、板情報、気配値はあなたの API キーで配信されますが、そのキーが今ロックされています。",
+      "missingTitle": "価格を表示するには {{venue}} を接続してください",
+      "missingDescription": "{{venue}} には公開の価格フィードがありません。アカウントを接続すると、チャート、板情報、気配値がそこから直接配信されます。",
+      "connectAction": "{{venue}} を接続"
+    },
     "paneTransition": {
       "switchingTo": "{{venue}} に切り替え中…",
       "switching": "切り替え中…"
@@ -4096,6 +4103,10 @@
       "sealed": "資格情報の保管庫がロックされています。",
       "sealedBanner_one": "ライブボット 1 台が一時停止中 — 取引を再開するには Pairlens を解錠してください。",
       "sealedBanner_other": "ライブボット {{count}} 台が一時停止中 — 取引を再開するには Pairlens を解錠してください。",
+      "passkeyNudgeTitle": "次回はワンタッチでロック解除",
+      "passkeyNudgeBody": "{{venue}} はあなたのキーで価格を配信するため、保管庫がロックされているとチャートは表示されません。パスキーなら、パスワードを入力する代わりに保管庫とロック画面をワンタッチで開けます。",
+      "passkeyNudgeAction": "パスキーを追加",
+      "passkeyNudgeDismiss": "後で",
       "sealedBannerAction": "解錠",
       "botsPausedTitle": "ライブボットが一時停止中",
       "botsPausedBody": "ライブ取引を再開するには Pairlens を解錠してください。ペーパーボットには影響しません。",

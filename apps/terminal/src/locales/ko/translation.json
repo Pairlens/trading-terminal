@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}}을(를) 찾을 수 없습니다",
       "description": "이 커넥터는 이 페어의 시장 데이터를 반환하지 않았습니다. 이 페어를 지원하는 다른 커넥터를 사용해 보세요."
     },
+    "paneCredentials": {
+      "sealedTitle": "{{venue}} 데이터를 불러오려면 잠금을 해제하세요",
+      "sealedDescription": "{{venue}}에는 공개 시세 피드가 없습니다. 차트와 호가창, 시세는 모두 사용자의 API 키로 전송되는데 지금은 그 키가 잠겨 있습니다.",
+      "missingTitle": "가격을 보려면 {{venue}}를 연결하세요",
+      "missingDescription": "{{venue}}에는 공개 시세 피드가 없습니다. 계정을 연결하면 차트와 호가창, 시세가 계정에서 바로 전송됩니다.",
+      "connectAction": "{{venue}} 연결"
+    },
     "paneTransition": {
       "switchingTo": "{{venue}}(으)로 전환 중…",
       "switching": "전환 중…"
@@ -4096,6 +4103,10 @@
       "sealed": "자격 증명 보관함이 잠겨 있습니다.",
       "sealedBanner_one": "실거래 봇 1개가 일시 중지됨 — 거래를 재개하려면 Pairlens 잠금을 해제하세요.",
       "sealedBanner_other": "실거래 봇 {{count}}개가 일시 중지됨 — 거래를 재개하려면 Pairlens 잠금을 해제하세요.",
+      "passkeyNudgeTitle": "다음부터는 한 번의 터치로 잠금 해제",
+      "passkeyNudgeBody": "{{venue}}는 사용자의 키로 시세를 전송하므로 보관함이 잠겨 있으면 차트도 없습니다. 패스키를 쓰면 비밀번호를 입력하는 대신 보관함과 잠금 화면이 한 번의 터치로 열립니다.",
+      "passkeyNudgeAction": "패스키 추가",
+      "passkeyNudgeDismiss": "나중에",
       "sealedBannerAction": "잠금 해제",
       "botsPausedTitle": "실거래 봇 일시 중지됨",
       "botsPausedBody": "실거래를 재개하려면 Pairlens 잠금을 해제하세요. 모의 봇은 영향을 받지 않습니다.",

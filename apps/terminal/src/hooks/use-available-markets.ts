@@ -19,6 +19,12 @@ export type MarketOption = {
    * false, because desktop reaches all fifteen.
    */
   desktopOnly: boolean
+  /**
+   * The venue serves no market data without the user's own API key. Unlike
+   * `desktopOnly` this is not platform-dependent — it is true everywhere,
+   * because the venue simply has no public feed.
+   */
+  credentialedMarketData: boolean
 }
 
 export function useAvailableMarkets(): {
@@ -35,6 +41,7 @@ export function useAvailableMarkets(): {
       iconUrl: m.iconUrl,
       assetClasses: m.assetClasses,
       desktopOnly: Boolean(m.requiresDesktop) && corsConstrained,
+      credentialedMarketData: Boolean(m.credentialedMarketData),
     }))
 
     // Never default into a venue this build cannot reach — that would open the

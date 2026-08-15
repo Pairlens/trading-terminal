@@ -58,6 +58,10 @@ import { useLockBiometric } from '@/components/security/use-lock-biometric'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
 import { VaultCeiling } from '@/components/security/vault-ceiling'
+import {
+  useBiometricSupported,
+  usePasskeySupported,
+} from '@/hooks/use-protector-support'
 import { track } from '@/lib/analytics-events'
 import { isStandalone } from '@/lib/platform'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
@@ -749,46 +753,6 @@ function AddMethodButton({
       {t('common.add')}
     </Button>
   )
-}
-
-/**
- * Whether this machine can actually raise a biometric prompt.
- *
- * The probe, never `isStandalone`: a Mac mini has no Touch ID sensor and the
- * Windows/Linux builds have no implementation, so offering "Add Touch ID"
- * there would be a button that cannot finish what it starts. The result is
- * cached at module level inside `isBiometricSupported`, so mounting the panel
- * repeatedly costs one IPC call in total.
- */
-function useBiometricSupported(): boolean {
-  const [supported, setSupported] = React.useState(false)
-  React.useEffect(() => {
-    let cancelled = false
-    void import('@/lib/security/vault/vault-biometric').then(async (m) => {
-      const ok = await m.isBiometricSupported().catch(() => false)
-      if (!cancelled) setSupported(ok)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [])
-  return supported
-}
-
-/** Same shape and same reasoning as `useBiometricSupported`, for passkeys. */
-function usePasskeySupported(): boolean {
-  const [supported, setSupported] = React.useState(false)
-  React.useEffect(() => {
-    let cancelled = false
-    void import('@/lib/security/vault/vault-passkey').then(async (m) => {
-      const ok = await m.isPasskeySupported().catch(() => false)
-      if (!cancelled) setSupported(ok)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [])
-  return supported
 }
 
 /**

@@ -36,8 +36,10 @@ import { matchCommand } from '@/lib/keybindings/store'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
+import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
 import { DesktopOnlyState } from '@/components/layout/desktop-only-state'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
 import { useNotificationStore } from '@/stores/notification-store'
 
 /** Command-id prefixes the chart dispatches generically. */
@@ -90,6 +92,7 @@ const ChartPaneInner = memo(function ChartPaneInner({
   const marketLabel =
     markets.find((m) => m.value === chartConfig.market)?.label ??
     chartConfig.market
+  const credentialGate = useMarketCredentialGate(chartConfig.market)
 
   const {
     activeTool,
@@ -274,6 +277,17 @@ const ChartPaneInner = memo(function ChartPaneInner({
             onSelectMarket={setMarket}
           />
         </div>
+      ) : /* Ahead of `noData`, because it is the CAUSE of it: nothing was ever
+            subscribed, so "this venue has no data for the pair" would blame
+            the venue for a locked keychain and offer to switch away from it. */
+      credentialGate.state !== 'ok' ? (
+        <div className="relative flex min-h-0 flex-1">
+          <PaneCredentialsRequired
+            state={credentialGate.state}
+            market={chartConfig.market}
+            venueLabel={credentialGate.venueLabel}
+          />
+        </div>
       ) : noData && !hasSnapshot ? (
         <div className="relative flex min-h-0 flex-1">
           <PaneDataUnavailable
@@ -333,9 +347,9 @@ const ChartPaneInner = memo(function ChartPaneInner({
       )}
       {/* No candles will ever arrive, so the strip's "Analyzing market…" would
           spin under an empty state that has already given the verdict. */}
-      {!desktopOnly && !(noData && !hasSnapshot) && (
-        <IntelligenceStrip scan={signalScan} />
-      )}
+      {!desktopOnly &&
+        credentialGate.state === 'ok' &&
+        !(noData && !hasSnapshot) && <IntelligenceStrip scan={signalScan} />}
     </div>
   )
 

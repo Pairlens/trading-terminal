@@ -21,6 +21,8 @@ import { formatBookPrice } from '@/lib/format-price'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
+import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
+import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useSwitchTransition } from '@/hooks/use-switch-transition'
 import { usePairUnavailable } from '@/stores/pair-availability-store'
@@ -65,6 +67,7 @@ function DepthPaneInner({
   const { markets } = useAvailableMarkets()
   const marketLabel = markets.find((m) => m.value === market)?.label ?? market
   const unavailable = usePairUnavailable(market, pairKey)
+  const credentialGate = useMarketCredentialGate(market)
   const {
     phase,
     display: book,
@@ -143,6 +146,20 @@ function DepthPaneInner({
       ts: book.ts,
     }
   }, [book])
+
+  // Before the pair-availability check, which cannot be trusted here: nothing
+  // was ever subscribed, so "the venue doesn't list this pair" would be a
+  // verdict on a request that was never made.
+  if (credentialGate.state !== 'ok') {
+    return (
+      <PaneCredentialsRequired
+        compact
+        state={credentialGate.state}
+        market={market}
+        venueLabel={credentialGate.venueLabel}
+      />
+    )
+  }
 
   if (unavailable) {
     return <PaneDataUnavailable compact pairKey={pairKey} market={market} />

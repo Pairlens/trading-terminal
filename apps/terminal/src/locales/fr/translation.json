@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} n’est pas disponible",
       "description": "Ce connecteur n’a renvoyé aucune donnée de marché pour cette paire. Essayez-en un autre qui la référence."
     },
+    "paneCredentials": {
+      "sealedTitle": "Déverrouillez pour charger les données {{venue}}",
+      "sealedDescription": "{{venue}} n’a pas de flux de prix public. Le graphique, le carnet et les cotations passent par vos clés API, et elles sont verrouillées pour le moment.",
+      "missingTitle": "Connectez {{venue}} pour voir les prix",
+      "missingDescription": "{{venue}} n’a pas de flux de prix public. Connectez votre compte et le graphique, le carnet d’ordres et les cotations en proviendront directement.",
+      "connectAction": "Connecter {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "Passage à {{venue}}…",
       "switching": "Changement…"
@@ -4096,6 +4103,10 @@
       "sealed": "Votre coffre d'identifiants est verrouillé.",
       "sealedBanner_one": "1 bot en réel est en pause — déverrouillez Pairlens pour reprendre le trading.",
       "sealedBanner_other": "{{count}} bots en réel sont en pause — déverrouillez Pairlens pour reprendre le trading.",
+      "passkeyNudgeTitle": "Déverrouillez d’une seule touche la prochaine fois",
+      "passkeyNudgeBody": "{{venue}} diffuse les prix depuis vos clés : coffre verrouillé, pas de graphique. Une passkey ouvre le coffre et l’écran de verrouillage d’un seul geste, au lieu d’un mot de passe saisi.",
+      "passkeyNudgeAction": "Ajouter une passkey",
+      "passkeyNudgeDismiss": "Plus tard",
       "sealedBannerAction": "Déverrouiller",
       "botsPausedTitle": "Les bots en réel sont en pause",
       "botsPausedBody": "Déverrouillez Pairlens pour reprendre le trading réel. Les bots en papier ne sont pas affectés.",

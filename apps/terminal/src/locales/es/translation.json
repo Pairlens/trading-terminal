@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} no está disponible",
       "description": "Este conector no devolvió datos de mercado para este par. Prueba otro que lo tenga listado."
     },
+    "paneCredentials": {
+      "sealedTitle": "Desbloquea para cargar los datos de {{venue}}",
+      "sealedDescription": "{{venue}} no tiene un feed de precios público. Tus claves API son las que transmiten el gráfico, el libro y las cotizaciones, y ahora mismo están bloqueadas.",
+      "missingTitle": "Conecta {{venue}} para ver los precios",
+      "missingDescription": "{{venue}} no tiene un feed de precios público. Conecta tu cuenta y el gráfico, el libro de órdenes y las cotizaciones llegarán directamente desde ella.",
+      "connectAction": "Conectar {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "Cambiando a {{venue}}…",
       "switching": "Cambiando…"
@@ -4096,6 +4103,10 @@
       "sealed": "Tu bóveda de credenciales está bloqueada.",
       "sealedBanner_one": "1 bot en vivo está en pausa: desbloquea Pairlens para reanudar el trading.",
       "sealedBanner_other": "{{count}} bots en vivo están en pausa: desbloquea Pairlens para reanudar el trading.",
+      "passkeyNudgeTitle": "Desbloquea con un toque la próxima vez",
+      "passkeyNudgeBody": "{{venue}} transmite los precios desde tus claves, así que una bóveda bloqueada significa que no hay gráfico. Una passkey abre la bóveda y la pantalla de bloqueo con un solo toque, en lugar de una contraseña escrita.",
+      "passkeyNudgeAction": "Añadir una passkey",
+      "passkeyNudgeDismiss": "Ahora no",
       "sealedBannerAction": "Desbloquear",
       "botsPausedTitle": "Los bots en vivo están en pausa",
       "botsPausedBody": "Desbloquea Pairlens para reanudar el trading en vivo. Los bots en papel no se ven afectados.",

@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} không khả dụng",
       "description": "Connector này không trả về dữ liệu thị trường cho cặp này. Hãy thử connector khác có niêm yết cặp đó."
     },
+    "paneCredentials": {
+      "sealedTitle": "Mở khóa để tải dữ liệu {{venue}}",
+      "sealedDescription": "{{venue}} không có nguồn giá công khai. Biểu đồ, sổ lệnh và báo giá đều chạy qua khóa API của bạn, và khóa đang bị khóa lúc này.",
+      "missingTitle": "Kết nối {{venue}} để xem giá",
+      "missingDescription": "{{venue}} không có nguồn giá công khai. Kết nối tài khoản của bạn và biểu đồ, sổ lệnh cùng báo giá sẽ chạy thẳng từ đó.",
+      "connectAction": "Kết nối {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "Đang chuyển sang {{venue}}…",
       "switching": "Đang chuyển…"
@@ -4096,6 +4103,10 @@
       "sealed": "Kho thông tin đăng nhập của bạn đang bị khóa.",
       "sealedBanner_one": "1 bot live đang tạm dừng — mở khóa Pairlens để tiếp tục giao dịch.",
       "sealedBanner_other": "{{count}} bot live đang tạm dừng — mở khóa Pairlens để tiếp tục giao dịch.",
+      "passkeyNudgeTitle": "Lần sau mở khóa chỉ bằng một chạm",
+      "passkeyNudgeBody": "{{venue}} truyền giá từ khóa của bạn, nên két bị khóa nghĩa là không có biểu đồ. Passkey mở cả két lẫn màn hình khóa chỉ bằng một chạm, thay vì gõ mật khẩu.",
+      "passkeyNudgeAction": "Thêm passkey",
+      "passkeyNudgeDismiss": "Để sau",
       "sealedBannerAction": "Mở khóa",
       "botsPausedTitle": "Bot live đang tạm dừng",
       "botsPausedBody": "Mở khóa Pairlens để tiếp tục giao dịch live. Bot paper không bị ảnh hưởng.",

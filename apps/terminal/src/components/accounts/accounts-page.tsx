@@ -49,6 +49,7 @@ import { usePortfolioValue } from '@/hooks/use-portfolio-value'
 import { PageHeader } from '@/components/page-header'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
+import { VaultPasskeyNudgeDialog } from '@/components/security/vault-passkey-nudge-dialog'
 
 // ---------------------------------------------------------------------------
 // Empty section panel — dashed storefront-style placeholder
@@ -246,6 +247,8 @@ export function AccountsPage() {
     unlockOpen,
     setUnlockOpen,
     resumePending,
+    passkeyNudgeVenue,
+    setPasskeyNudgeVenue,
   } = useConnectWizardState()
 
   // Full-screen "all venues" page (opened from the section rails)
@@ -485,6 +488,16 @@ export function AccountsPage() {
                   open={unlockOpen}
                   onOpenChange={setUnlockOpen}
                   onUnlocked={resumePending}
+                />
+                {/* Offered after the save, never before it: the key is stored
+                    either way, and a security prompt in front of the Save
+                    button is how people abandon the connect flow. */}
+                <VaultPasskeyNudgeDialog
+                  open={passkeyNudgeVenue !== null}
+                  onOpenChange={(next) =>
+                    setPasskeyNudgeVenue(next ? passkeyNudgeVenue : null)
+                  }
+                  venueLabel={passkeyNudgeVenue ?? ''}
                 />
 
                 {/* A sealed vault is NOT an empty account list. Saying so is

@@ -5,7 +5,7 @@ group: reference
 order: 2
 eyebrow: Reference
 updated: AUG 2026
-readTime: 7 min read
+readTime: 8 min read
 ---
 
 Most problems in Pairlens have one of five causes: the wrong country is set,
@@ -46,6 +46,30 @@ venue is likely having an incident.
 If the dot is green but nothing moves, check
 [Data Rate](/docs/settings#data-rate): Energy Saver caps the book and ticker at
 one update per second, which on a quiet pair genuinely looks static.
+
+## A stock chart asks me to unlock or connect
+
+Alpaca has no public price feed. Its candles, quotes, and order book are all
+served from your own credentialed session, so unlike every crypto venue it
+shows nothing at all until a key reaches the connector. The panes say which of
+the two things is missing:
+
+**Connect Alpaca to see prices** means no Alpaca key is stored on this device.
+The button opens the wizard on Alpaca directly.
+
+**Unlock to load Alpaca data** means a key is probably there but the credential
+vault is sealed, which is what happens in a browser after every reload. One
+unlock and the chart, the book, and the watchlist quotes fill in without a
+refresh.
+
+In a browser you can make that unlock a single touch by enrolling a passkey in
+**Settings → Security**. A passkey answers the lock screen and the vault in one
+gesture, where a password answers them one at a time. Pairlens offers this once,
+right after you connect Alpaca, because that is the moment a sealed vault starts
+costing you a chart rather than just an order ticket.
+
+On desktop none of this applies: keys live in the OS keychain and load at
+startup.
 
 ## A stock chart has gaps in it
 

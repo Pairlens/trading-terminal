@@ -30,6 +30,7 @@ import { AddCryptoWalletDialog } from '@/components/accounts/add-crypto-wallet-d
 import { ConnectExchangeWizard } from '@/components/accounts/connect-wizard'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
+import { VaultPasskeyNudgeDialog } from '@/components/security/vault-passkey-nudge-dialog'
 
 type ConnectAccountSheetProps = {
   overlay: Extract<MobileOverlay, { kind: 'connect' }>
@@ -189,6 +190,17 @@ export default memo(function ConnectAccountSheet({
         onOpenChange={setUnlockOpen}
         onUnlocked={resumePending}
         open={unlockOpen}
+      />
+
+      {/* Offered after the save, never before it: the key is stored either
+          way, and a security prompt in front of Save is how people abandon
+          the connect flow. */}
+      <VaultPasskeyNudgeDialog
+        onOpenChange={(next) =>
+          wizard.setPasskeyNudgeVenue(next ? wizard.passkeyNudgeVenue : null)
+        }
+        open={wizard.passkeyNudgeVenue !== null}
+        venueLabel={wizard.passkeyNudgeVenue ?? ''}
       />
     </>
   )

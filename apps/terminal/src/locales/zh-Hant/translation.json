@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "找不到 {{pair}}",
       "description": "這個連接器沒有回傳這個交易對的行情資料。換一個有上架它的連接器試試。"
     },
+    "paneCredentials": {
+      "sealedTitle": "解鎖以載入 {{venue}} 資料",
+      "sealedDescription": "{{venue}} 沒有公開行情來源。圖表、掛單簿與報價都由你的 API 金鑰推送，而金鑰目前處於鎖定狀態。",
+      "missingTitle": "連接 {{venue}} 以查看價格",
+      "missingDescription": "{{venue}} 沒有公開行情來源。連接你的帳戶後，圖表、掛單簿與報價將直接從中推送。",
+      "connectAction": "連接 {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "正在切換到 {{venue}}…",
       "switching": "正在切換…"
@@ -4096,6 +4103,10 @@
       "sealed": "你的憑證保險庫已鎖定。",
       "sealedBanner_one": "1 個實盤機器人已暫停 — 解鎖 Pairlens 以恢復交易。",
       "sealedBanner_other": "{{count}} 個實盤機器人已暫停 — 解鎖 Pairlens 以恢復交易。",
+      "passkeyNudgeTitle": "下次一觸即可解鎖",
+      "passkeyNudgeBody": "{{venue}} 透過你的金鑰推送行情，保險庫鎖上就沒有圖表。使用通行密鑰，只需輕觸一次即可同時開啟保險庫與鎖定畫面，無須輸入密碼。",
+      "passkeyNudgeAction": "新增通行密鑰",
+      "passkeyNudgeDismiss": "暫不",
       "sealedBannerAction": "解鎖",
       "botsPausedTitle": "實盤機器人已暫停",
       "botsPausedBody": "解鎖 Pairlens 以恢復實盤交易。模擬機器人不受影響。",

@@ -2286,6 +2286,13 @@
       "titleAnyVenue": "{{pair}} nie jest dostępna",
       "description": "Ten konektor nie zwrócił danych rynkowych dla tej pary. Spróbuj innego, który ją notuje."
     },
+    "paneCredentials": {
+      "sealedTitle": "Odblokuj, aby wczytać dane {{venue}}",
+      "sealedDescription": "{{venue}} nie ma publicznego strumienia cen. Wykres, arkusz zleceń i notowania płyną z Twoich kluczy API, a te są w tej chwili zablokowane.",
+      "missingTitle": "Połącz {{venue}}, aby zobaczyć ceny",
+      "missingDescription": "{{venue}} nie ma publicznego strumienia cen. Połącz konto, a wykres, arkusz zleceń i notowania popłyną prosto z niego.",
+      "connectAction": "Połącz {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "Przełączanie na {{venue}}…",
       "switching": "Przełączanie…"
@@ -4132,6 +4139,10 @@
       "sealedBanner_few": "Boty na żywo wstrzymane: {{count}} — odblokuj Pairlens, aby wznowić handel.",
       "sealedBanner_many": "Boty na żywo wstrzymane: {{count}} — odblokuj Pairlens, aby wznowić handel.",
       "sealedBanner_other": "Boty na żywo wstrzymane: {{count}} — odblokuj Pairlens, aby wznowić handel.",
+      "passkeyNudgeTitle": "Następnym razem odblokuj jednym dotknięciem",
+      "passkeyNudgeBody": "{{venue}} przesyła ceny z Twoich kluczy, więc zablokowany sejf oznacza brak wykresu. Passkey otwiera sejf i ekran blokady jednym dotknięciem, zamiast wpisywanego hasła.",
+      "passkeyNudgeAction": "Dodaj passkey",
+      "passkeyNudgeDismiss": "Nie teraz",
       "sealedBannerAction": "Odblokuj",
       "botsPausedTitle": "Boty na żywo są wstrzymane",
       "botsPausedBody": "Odblokuj Pairlens, aby wznowić handel na żywo. Boty papierowe działają dalej.",

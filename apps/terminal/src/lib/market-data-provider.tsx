@@ -276,6 +276,10 @@ function getConnectorAdapterInfo(
   // connector's exported adapter info, because that export is never read —
   // this function builds MarketAdapterInfo from the manifest alone.
   const requiresDesktop = meta?.requiresDesktop === true
+  // Same manifest-only reasoning as `requiresDesktop`: the panes need to know
+  // a venue has no public feed BEFORE any subscribe is attempted, and the
+  // adapter that would tell them is exactly the thing that cannot start.
+  const credentialedMarketData = meta?.credentialedMarketData === true
 
   const hasTradingCap = plugin.manifest.capabilities.some(
     (c) => c.id === 'trading:orders',
@@ -305,6 +309,7 @@ function getConnectorAdapterInfo(
     dexLimitOrders,
     triggerOrders,
     requiresDesktop,
+    credentialedMarketData,
   }
 }
 

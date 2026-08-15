@@ -2264,6 +2264,13 @@
       "titleAnyVenue": "{{pair}} não está disponível",
       "description": "Este conector não retornou dados de mercado para este par. Tente outro que o liste."
     },
+    "paneCredentials": {
+      "sealedTitle": "Desbloqueie para carregar os dados da {{venue}}",
+      "sealedDescription": "A {{venue}} não tem feed público de preços. O gráfico, o livro e as cotações vêm das suas chaves de API, e elas estão bloqueadas agora.",
+      "missingTitle": "Conecte a {{venue}} para ver os preços",
+      "missingDescription": "A {{venue}} não tem feed público de preços. Conecte sua conta e o gráfico, o livro de ofertas e as cotações vêm direto dela.",
+      "connectAction": "Conectar {{venue}}"
+    },
     "paneTransition": {
       "switchingTo": "Mudando para {{venue}}…",
       "switching": "Mudando…"
@@ -4096,6 +4103,10 @@
       "sealed": "Seu cofre de credenciais está bloqueado.",
       "sealedBanner_one": "1 bot ao vivo está pausado — desbloqueie o Pairlens para retomar as operações.",
       "sealedBanner_other": "{{count}} bots ao vivo estão pausados — desbloqueie o Pairlens para retomar as operações.",
+      "passkeyNudgeTitle": "Desbloqueie com um toque na próxima vez",
+      "passkeyNudgeBody": "A {{venue}} transmite os preços a partir das suas chaves, então um cofre bloqueado significa nenhum gráfico. Uma passkey abre o cofre e a tela de bloqueio num único toque, em vez de uma senha digitada.",
+      "passkeyNudgeAction": "Adicionar uma passkey",
+      "passkeyNudgeDismiss": "Agora não",
       "sealedBannerAction": "Desbloquear",
       "botsPausedTitle": "Bots ao vivo pausados",
       "botsPausedBody": "Desbloqueie o Pairlens para retomar as operações reais. Bots em papel não são afetados.",
