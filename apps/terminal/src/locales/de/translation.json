@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}} streamt Kurse über deine Schlüssel, ein gesperrter Tresor heißt also kein Chart. Ein Passkey öffnet Tresor und Sperrbildschirm mit einer Berührung statt mit einem getippten Passwort.",
       "passkeyNudgeAction": "Passkey hinzufügen",
       "passkeyNudgeDismiss": "Jetzt nicht",
+      "proofRequired": "Bestätige dein Passwort, bevor du änderst, wie sich dieser Tresor öffnet.",
       "sealedBannerAction": "Entsperren",
       "botsPausedTitle": "Live-Bots pausieren",
       "botsPausedBody": "Entsperre Pairlens, um das Live-Trading fortzusetzen. Paper-Bots sind nicht betroffen.",

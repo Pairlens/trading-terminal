@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}} streams prices from your keys, so a locked vault means no chart. A passkey opens the vault and the lock screen in a single touch, instead of a typed password.",
       "passkeyNudgeAction": "Add a passkey",
       "passkeyNudgeDismiss": "Not now",
+      "proofRequired": "Confirm your password before changing how this vault opens.",
       "sealedBannerAction": "Unlock",
       "botsPausedTitle": "Live bots are paused",
       "botsPausedBody": "Unlock Pairlens to resume live trading. Paper bots are unaffected.",

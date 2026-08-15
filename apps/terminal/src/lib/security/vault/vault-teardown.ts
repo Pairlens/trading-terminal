@@ -29,12 +29,17 @@
  */
 
 import { CIPHER_V2 } from './vault-crypto'
-import { VaultProtectorError, VaultSealedError } from './vault-errors'
+import {
+  VaultProofRequiredError,
+  VaultProtectorError,
+  VaultSealedError,
+} from './vault-errors'
 import { listIndexedKeys } from './vault-values'
 import { removeAllBiometricMaterial } from './vault-biometric'
 import { deleteVaultRecord } from './vault-storage'
 import {
   ensureVaultLoaded,
+  isVaultProven,
   isVaultUnlocked,
   sealVault,
   setVaultRecord,
@@ -46,6 +51,7 @@ import {
   writeStoredValue,
 } from '@/lib/keychain'
 import { isStandalone } from '@/lib/platform'
+import i18n from '@/lib/i18n'
 
 /**
  * Every slot the vault currently owns.
@@ -90,6 +96,17 @@ export async function disableVault(): Promise<TeardownResult> {
   const record = await ensureVaultLoaded()
   if (!record) return { restored: 0 }
   if (!isVaultUnlocked()) throw new VaultSealedError()
+  // Turning the vault OFF is the largest change to how it opens there is, so
+  // it takes the same proof as removing a protector: an adopted session from a
+  // sibling window is not somebody saying yes.
+  if (!isVaultProven()) {
+    throw new VaultProofRequiredError(
+      i18n.t('security.vault.proofRequired', {
+        defaultValue:
+          'Confirm your password before changing how this vault opens.',
+      }),
+    )
+  }
 
   // 1-2. Everything readable, before anything is written.
   const keys = await listVaultedKeys()

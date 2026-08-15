@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}} 透過你的金鑰推送行情，保險庫鎖上就沒有圖表。使用通行密鑰，只需輕觸一次即可同時開啟保險庫與鎖定畫面，無須輸入密碼。",
       "passkeyNudgeAction": "新增通行密鑰",
       "passkeyNudgeDismiss": "暫不",
+      "proofRequired": "變更此保險庫的解鎖方式前，請先確認你的密碼。",
       "sealedBannerAction": "解鎖",
       "botsPausedTitle": "實盤機器人已暫停",
       "botsPausedBody": "解鎖 Pairlens 以恢復實盤交易。模擬機器人不受影響。",

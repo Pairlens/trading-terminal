@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}} fiyatları anahtarlarınızdan akıtır, yani kilitli kasa grafik yok demektir. Passkey, yazılan bir parola yerine kasayı ve kilit ekranını tek dokunuşta açar.",
       "passkeyNudgeAction": "Passkey ekle",
       "passkeyNudgeDismiss": "Şimdi değil",
+      "proofRequired": "Bu kasanın nasıl açıldığını değiştirmeden önce parolanızı doğrulayın.",
       "sealedBannerAction": "Kilidi aç",
       "botsPausedTitle": "Canlı botlar duraklatıldı",
       "botsPausedBody": "Canlı işlemlere devam etmek için Pairlens'in kilidini aç. Kâğıt botlar etkilenmez.",

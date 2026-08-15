@@ -120,7 +120,7 @@ beforeEach(async () => {
   seedVaultedDevice()
   session.__resetVaultSessionForTests()
   session.setVaultRecord(record, { broadcast: false })
-  session.setDek(await fakeDek(), { broadcast: false })
+  session.setDek(await fakeDek(), { broadcast: false, proven: true })
 })
 
 describe('listVaultedKeys on desktop', () => {

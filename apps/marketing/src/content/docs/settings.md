@@ -162,8 +162,17 @@ them also opens the terminal lock screen.
 Touch ID cannot be your only way in: macOS invalidates the key whenever the
 fingerprints on the Mac change, and a vault with nothing else in it would be
 one System Settings visit from unopenable. You cannot remove the last method
-either, and removing any of them means unlocking the vault first. There is no
-recovery here.
+either. There is no recovery here.
+
+**Changing how the vault opens asks for your password, even when it is already
+open.** Adding a method always did, because the data key cannot be re-wrapped
+without recovering it first. Removing one and turning the vault off now ask
+too. The reason is the second window: open the terminal in another tab and it
+receives the key from the first, so it is unlocked without anyone having typed
+anything. That is what makes a second window useful, and it is exactly what you
+do not want standing behind "remove this passkey" on a machine you walked away
+from. Reading your keys still costs nothing there. Changing the locks costs one
+password.
 
 **Hard lock** seals the vault rather than just covering the screen. Live bots
 and automations stop trading until you unlock again; paper bots keep running.

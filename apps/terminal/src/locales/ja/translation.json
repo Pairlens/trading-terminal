@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}} はあなたのキーで価格を配信するため、保管庫がロックされているとチャートは表示されません。パスキーなら、パスワードを入力する代わりに保管庫とロック画面をワンタッチで開けます。",
       "passkeyNudgeAction": "パスキーを追加",
       "passkeyNudgeDismiss": "後で",
+      "proofRequired": "この保管庫の開き方を変更する前に、パスワードを確認してください。",
       "sealedBannerAction": "解錠",
       "botsPausedTitle": "ライブボットが一時停止中",
       "botsPausedBody": "ライブ取引を再開するには Pairlens を解錠してください。ペーパーボットには影響しません。",

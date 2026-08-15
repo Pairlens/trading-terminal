@@ -38,7 +38,24 @@ import type { VaultRecord } from './vault-record'
 /** How long a joining window waits for a sibling to hand over the DEK. */
 export const KEY_REQUEST_TIMEOUT_MS = 500
 
-type Session = { dek: CryptoKey; unlockedAt: number }
+type Session = {
+  dek: CryptoKey
+  unlockedAt: number
+  /**
+   * Somebody answered a protector IN THIS WINDOW to get this key.
+   *
+   * False for a session adopted over the lock channel, which is the ordinary
+   * multi-window case and deliberately costs nothing: a second window has the
+   * keys because the first one is open, and that is the whole point.
+   *
+   * It stops being fine the moment the question is not "may I read a key" but
+   * "may I change who can open this vault". A terminal left unattended with a
+   * sibling window open hands every new window an unlocked vault, so a
+   * passkey could be stripped off it by anyone at the keyboard without ever
+   * proving a secret — see `removeProtector`.
+   */
+  proven: boolean
+}
 
 let session: Session | null = null
 let record: VaultRecord | null = null
@@ -217,8 +234,10 @@ export function requestDekFromSiblings(
     pendingKeyRequests.set(nonce, (key) => {
       clearTimeout(timer)
       pendingKeyRequests.delete(nonce)
-      // Adopted, not announced: the sibling already knows.
-      setDek(key, { broadcast: false })
+      // Adopted, not announced: the sibling already knows. And not proven —
+      // nobody answered anything here, the key arrived because another window
+      // happens to be open.
+      setDek(key, { broadcast: false, proven: false })
       resolve(true)
     })
     postLock({ type: 'vault:key-request', nonce })
@@ -313,6 +332,18 @@ export function isVaultUnlocked(): boolean {
 }
 
 /**
+ * Stronger than `isVaultUnlocked`: a protector was answered in THIS window.
+ *
+ * The gate for changing who can open the vault. Reading keys is fine on an
+ * adopted session — that is what makes a second window usable — but "remove
+ * this passkey" is a different question, and an unattended terminal must not
+ * answer it on the strength of another tab being open.
+ */
+export function isVaultProven(): boolean {
+  return session?.proven === true
+}
+
+/**
  * Authoritative "is a password protector enrolled?" — awaits the record, and
  * propagates a backend failure rather than answering `false`.
  *
@@ -367,9 +398,17 @@ export function getUnlockedAt(): number | null {
   return session?.unlockedAt ?? null
 }
 
-export function setDek(dek: CryptoKey, opts: { broadcast: boolean }): void {
+/**
+ * `proven` is required rather than defaulted on purpose: a new way to obtain
+ * the DEK has to say which kind it is, and the compiler asks. A default would
+ * make "somebody proved a secret" the thing you get by forgetting.
+ */
+export function setDek(
+  dek: CryptoKey,
+  opts: { broadcast: boolean; proven: boolean },
+): void {
   ensureBridge()
-  session = { dek, unlockedAt: Date.now() }
+  session = { dek, unlockedAt: Date.now(), proven: opts.proven }
   notify()
   if (opts.broadcast) postLock({ type: 'vault:unlocked', at: Date.now() })
 }

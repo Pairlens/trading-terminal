@@ -49,9 +49,14 @@ const {
   getDekOrThrow,
   isVaultUnlocked,
   sealVault,
+  setDek,
 } = await import('../vault-session')
-const { VaultConflictError, VaultProtectorError, VaultSealedError } =
-  await import('../vault-errors')
+const {
+  VaultConflictError,
+  VaultProofRequiredError,
+  VaultProtectorError,
+  VaultSealedError,
+} = await import('../vault-errors')
 const {
   CIPHER_V2,
   decryptWithDek,
@@ -256,6 +261,30 @@ describe('removeProtector', () => {
     await expect(
       removeProtector(record.protectors[0].id),
     ).rejects.toBeInstanceOf(VaultSealedError)
+  })
+
+  /**
+   * The attack this closes: a terminal left unattended with a second tab
+   * open. That tab hands every new window the key over the lock channel, so
+   * the vault reads as unlocked without anyone answering anything — and
+   * `isVaultUnlocked()` alone would let whoever is at the keyboard strip the
+   * passkey and leave only a password to guess.
+   */
+  test('refuses on a session adopted from a sibling window', async () => {
+    const { record } = await createVault(pw('alpha'))
+    const dek = getDekOrThrow()
+    sealVault({ broadcast: false })
+    // Exactly what `requestDekFromSiblings` does on a key offer.
+    setDek(dek, { broadcast: false, proven: false })
+
+    expect(isVaultUnlocked()).toBe(true)
+    await expect(
+      removeProtector(record.protectors[0].id),
+    ).rejects.toBeInstanceOf(VaultProofRequiredError)
+
+    // And answering a protector is what lifts it — no second gate to satisfy.
+    await unlockVault({ kind: 'password', password: 'alpha' })
+    expect(await removeProtector(record.protectors[0].id)).toBeNull()
   })
 
   test('an unknown id is a no-match', async () => {

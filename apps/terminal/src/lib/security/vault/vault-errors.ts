@@ -26,6 +26,23 @@ export class VaultSealedError extends Error {
 }
 
 /**
+ * The vault is open, but nobody proved a secret in THIS window to open it —
+ * the key was adopted from a sibling over the lock channel. Fine for reading
+ * keys, not for changing who can open the vault.
+ *
+ * Distinct from `VaultSealedError` because the remedy the user sees differs:
+ * sealed means "unlock", this means "confirm it is you", over a vault that is
+ * demonstrably already open. Callers prompt for a protector and retry.
+ */
+export class VaultProofRequiredError extends Error {
+  readonly code = 'vault-proof-required'
+  constructor(message = 'Confirm your password to change how the vault opens') {
+    super(message)
+    this.name = 'VaultProofRequiredError'
+  }
+}
+
+/**
  * A credential write was attempted before any protector exists, on a platform
  * where the vault is mandatory (the browser). Callers open enrollment and
  * retry rather than surfacing this as a failure.
@@ -111,4 +128,10 @@ export function isVaultEnrollmentRequired(
   err: unknown,
 ): err is VaultEnrollmentRequiredError {
   return err instanceof VaultEnrollmentRequiredError
+}
+
+export function isVaultProofRequired(
+  err: unknown,
+): err is VaultProofRequiredError {
+  return err instanceof VaultProofRequiredError
 }

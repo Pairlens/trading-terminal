@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}} 通过你的密钥推送行情，保险库锁上就没有图表。使用通行密钥，只需轻触一次即可同时打开保险库和锁屏，无需输入密码。",
       "passkeyNudgeAction": "添加通行密钥",
       "passkeyNudgeDismiss": "暂不",
+      "proofRequired": "更改此保险库的解锁方式前，请先确认你的密码。",
       "sealedBannerAction": "解锁",
       "botsPausedTitle": "实盘机器人已暂停",
       "botsPausedBody": "解锁 Pairlens 以恢复实盘交易。模拟机器人不受影响。",

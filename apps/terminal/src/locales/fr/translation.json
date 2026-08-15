@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}} diffuse les prix depuis vos clés : coffre verrouillé, pas de graphique. Une passkey ouvre le coffre et l’écran de verrouillage d’un seul geste, au lieu d’un mot de passe saisi.",
       "passkeyNudgeAction": "Ajouter une passkey",
       "passkeyNudgeDismiss": "Plus tard",
+      "proofRequired": "Confirmez votre mot de passe avant de modifier la façon dont ce coffre s’ouvre.",
       "sealedBannerAction": "Déverrouiller",
       "botsPausedTitle": "Les bots en réel sont en pause",
       "botsPausedBody": "Déverrouillez Pairlens pour reprendre le trading réel. Les bots en papier ne sont pas affectés.",

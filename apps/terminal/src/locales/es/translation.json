@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}} transmite los precios desde tus claves, así que una bóveda bloqueada significa que no hay gráfico. Una passkey abre la bóveda y la pantalla de bloqueo con un solo toque, en lugar de una contraseña escrita.",
       "passkeyNudgeAction": "Añadir una passkey",
       "passkeyNudgeDismiss": "Ahora no",
+      "proofRequired": "Confirma tu contraseña antes de cambiar cómo se abre esta bóveda.",
       "sealedBannerAction": "Desbloquear",
       "botsPausedTitle": "Los bots en vivo están en pausa",
       "botsPausedBody": "Desbloquea Pairlens para reanudar el trading en vivo. Los bots en papel no se ven afectados.",

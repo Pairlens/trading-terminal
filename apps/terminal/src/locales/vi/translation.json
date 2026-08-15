@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}} truyền giá từ khóa của bạn, nên két bị khóa nghĩa là không có biểu đồ. Passkey mở cả két lẫn màn hình khóa chỉ bằng một chạm, thay vì gõ mật khẩu.",
       "passkeyNudgeAction": "Thêm passkey",
       "passkeyNudgeDismiss": "Để sau",
+      "proofRequired": "Xác nhận mật khẩu của bạn trước khi thay đổi cách mở két này.",
       "sealedBannerAction": "Mở khóa",
       "botsPausedTitle": "Bot live đang tạm dừng",
       "botsPausedBody": "Mở khóa Pairlens để tiếp tục giao dịch live. Bot paper không bị ảnh hưởng.",

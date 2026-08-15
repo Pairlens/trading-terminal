@@ -54,6 +54,7 @@ import {
 } from '@/lib/security/vault/vault-session'
 import { removalStrandsVault } from '@/lib/security/vault/vault-record'
 import { MIN_PASSWORD_LENGTH } from '@/lib/security/vault/vault-policy'
+import { isVaultProofRequired } from '@/lib/security/vault/vault-errors'
 import { useLockBiometric } from '@/components/security/use-lock-biometric'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
@@ -435,6 +436,25 @@ function VaultCard() {
   const [disableOpen, setDisableOpen] = React.useState(false)
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  /**
+   * What to re-run once the user has proved a protector.
+   *
+   * An open vault is not consent to change who can open it, and a window that
+   * adopted its key from a sibling never proved anything (see
+   * `isVaultProven`). Without this the refusal would be a dead end on a vault
+   * the user can see is unlocked, which reads as a bug rather than a gate.
+   */
+  const pendingAdmin = React.useRef<(() => void) | null>(null)
+
+  /** Open the unlock prompt and queue `retry`, or report a real failure. */
+  const handleAdminError = (err: unknown, retry: () => void): void => {
+    if (isVaultProofRequired(err)) {
+      pendingAdmin.current = retry
+      setUnlockOpen(true)
+      return
+    }
+    setError(err instanceof Error ? err.message : String(err))
+  }
 
   const removeProtector = async (id: string) => {
     if (busy) return
@@ -450,7 +470,7 @@ function VaultCard() {
       await remove(id)
       if (kind) track('security_vault_removed', { protector: kind })
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err))
+      handleAdminError(err, () => void removeProtector(id))
     } finally {
       setBusy(false)
     }
@@ -690,6 +710,15 @@ function VaultCard() {
         // Unlocking to finish a migration should finish it, not hand the user
         // back to the same amber line they just acted on.
         onUnlocked={() => {
+          // The proof just landed, so whatever was refused for wanting one
+          // runs now. Ahead of the migration branch: an explicit action the
+          // user already asked for outranks the amber line.
+          const resume = pendingAdmin.current
+          pendingAdmin.current = null
+          if (resume) {
+            resume()
+            return
+          }
           if (vault.migrating) void finishMigration()
         }}
       />
@@ -793,11 +822,13 @@ function DisableVaultDialog({
   const vault = useVaultState()
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  const [proveOpen, setProveOpen] = React.useState(false)
 
   React.useEffect(() => {
     if (!open) {
       setBusy(false)
       setError(null)
+      setProveOpen(false)
     }
   }, [open])
 
@@ -811,6 +842,14 @@ function DisableVaultDialog({
       track('security_vault_desktop_toggled', { enabled: false })
       onOpenChange(false)
     } catch (err) {
+      // Turning the vault off needs a proof, and an adopted session has none.
+      // Prompt in place: this dialog already holds the user's intent, and
+      // sending them back to the card to press the same button would lose it.
+      if (isVaultProofRequired(err)) {
+        setProveOpen(true)
+        setBusy(false)
+        return
+      }
       setError(err instanceof Error ? err.message : String(err))
       setBusy(false)
     }
@@ -851,6 +890,14 @@ function DisableVaultDialog({
           </Button>
         </DialogFooter>
       </DialogContent>
+
+      {/* Layered over this dialog rather than replacing it, so the confirm the
+          user already gave survives the proof and one more press finishes. */}
+      <VaultUnlockDialog
+        open={proveOpen}
+        onOpenChange={setProveOpen}
+        onUnlocked={() => void confirm()}
+      />
     </Dialog>
   )
 }

@@ -4143,6 +4143,7 @@
       "passkeyNudgeBody": "{{venue}} przesyła ceny z Twoich kluczy, więc zablokowany sejf oznacza brak wykresu. Passkey otwiera sejf i ekran blokady jednym dotknięciem, zamiast wpisywanego hasła.",
       "passkeyNudgeAction": "Dodaj passkey",
       "passkeyNudgeDismiss": "Nie teraz",
+      "proofRequired": "Potwierdź hasło, zanim zmienisz sposób otwierania tego sejfu.",
       "sealedBannerAction": "Odblokuj",
       "botsPausedTitle": "Boty na żywo są wstrzymane",
       "botsPausedBody": "Odblokuj Pairlens, aby wznowić handel na żywo. Boty papierowe działają dalej.",

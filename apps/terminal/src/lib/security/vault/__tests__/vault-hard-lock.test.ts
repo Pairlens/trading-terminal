@@ -33,7 +33,7 @@ beforeEach(() => {
 })
 
 async function openVault(): Promise<void> {
-  setDek(await importDek(generateRawDek()), { broadcast: false })
+  setDek(await importDek(generateRawDek()), { broadcast: false, proven: true })
 }
 
 describe('hardLock', () => {

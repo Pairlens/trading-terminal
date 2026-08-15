@@ -26,8 +26,10 @@ export {
   VaultEnrollmentRequiredError,
   VaultMigrationError,
   VaultProtectorError,
+  VaultProofRequiredError,
   VaultSealedError,
   isVaultEnrollmentRequired,
+  isVaultProofRequired,
   isVaultSealed,
 } from './vault-errors'
 export type { VaultProtectorErrorKind } from './vault-errors'
@@ -62,6 +64,7 @@ export {
   hasPasswordProtector,
   initVaultSession,
   isVaultEnrolled,
+  isVaultProven,
   isVaultUnlocked,
   requestDekFromSiblings,
   sealVault,

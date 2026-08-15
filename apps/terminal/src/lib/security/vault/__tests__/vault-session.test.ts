@@ -27,6 +27,7 @@ const {
   getVaultState,
   initVaultSession,
   isVaultEnrolled,
+  isVaultProven,
   isVaultUnlocked,
   requestDekFromSiblings,
   sealVault,
@@ -105,7 +106,7 @@ describe('sealed / unlocked', () => {
 
   test('setDek opens it and sealVault closes it', async () => {
     const key = await dek()
-    setDek(key, { broadcast: false })
+    setDek(key, { broadcast: false, proven: true })
     expect(isVaultUnlocked()).toBe(true)
     expect(getDekOrThrow()).toBe(key)
 
@@ -119,19 +120,19 @@ describe('sealed / unlocked', () => {
     const unsubscribe = subscribeVault(() => {
       calls++
     })
-    setDek(await dek(), { broadcast: false })
+    setDek(await dek(), { broadcast: false, proven: true })
     sealVault({ broadcast: false })
     // Sealing an already-sealed vault is a no-op, not another notification.
     sealVault({ broadcast: false })
     unsubscribe()
-    setDek(await dek(), { broadcast: false })
+    setDek(await dek(), { broadcast: false, proven: true })
     expect(calls).toBe(2)
   })
 
   test('the snapshot is referentially stable between changes', async () => {
     const first = getVaultState()
     expect(getVaultState()).toBe(first)
-    setDek(await dek(), { broadcast: false })
+    setDek(await dek(), { broadcast: false, proven: true })
     expect(getVaultState()).not.toBe(first)
     expect(getVaultState().unlocked).toBe(true)
   })
@@ -233,6 +234,12 @@ describe('cross-window key sharing', () => {
     // Structured clone preserves non-extractability — that is the whole
     // reason the key can travel at all.
     expect(getDekOrThrow().extractable).toBe(false)
+
+    // But nobody proved anything here. Reading keys off this session is the
+    // point of the handoff; changing who can open the vault is not, and an
+    // unattended terminal with any other tab open would otherwise answer yes
+    // to "strip this passkey".
+    expect(isVaultProven()).toBe(false)
   })
 
   test('an offer for a different request is ignored', async () => {
@@ -267,7 +274,7 @@ describe('cross-window key sharing', () => {
   })
 
   test('this window answers a sibling asking for the key', async () => {
-    setDek(await dek(), { broadcast: false })
+    setDek(await dek(), { broadcast: false, proven: true })
     const peer = sibling()
     const offers: Array<unknown> = []
     peer.onmessage = (event: MessageEvent) => {
@@ -296,7 +303,7 @@ describe('cross-window key sharing', () => {
   })
 
   test('a hard lock in another window drops this window key', async () => {
-    setDek(await dek(), { broadcast: false })
+    setDek(await dek(), { broadcast: false, proven: true })
     expect(isVaultUnlocked()).toBe(true)
 
     sibling().postMessage({ type: 'vault:sealed', at: Date.now() })
@@ -307,7 +314,7 @@ describe('cross-window key sharing', () => {
   test('a device erase clears both the key and the cached record', async () => {
     storage.setItem(RECORD_KEY, JSON.stringify(record))
     await ensureVaultLoaded()
-    setDek(await dek(), { broadcast: false })
+    setDek(await dek(), { broadcast: false, proven: true })
 
     sibling().postMessage({ type: 'reset', at: Date.now() })
     await tick(80)
@@ -369,7 +376,7 @@ describe('initVaultSession', () => {
 
   test('an already-unlocked window skips the handshake', async () => {
     storage.setItem(RECORD_KEY, JSON.stringify(record))
-    setDek(await dek(), { broadcast: false })
+    setDek(await dek(), { broadcast: false, proven: true })
     const asked: Array<unknown> = []
     const peer = sibling()
     peer.onmessage = (event: MessageEvent) => {
@@ -404,5 +411,37 @@ describe('initVaultSession', () => {
     await tick(40)
     expect(requests).toHaveLength(1)
     expect(isVaultUnlocked()).toBe(true)
+  })
+})
+
+/**
+ * `unlocked` and `proven` answer two different questions, and conflating them
+ * is what let an adopted session administer the vault.
+ */
+describe('proven vs merely unlocked', () => {
+  test('a real unlock is proven', async () => {
+    setDek(await dek(), { broadcast: false, proven: true })
+    expect(isVaultUnlocked()).toBe(true)
+    expect(isVaultProven()).toBe(true)
+  })
+
+  test('an adopted session is unlocked but not proven', async () => {
+    setDek(await dek(), { broadcast: false, proven: false })
+    expect(isVaultUnlocked()).toBe(true)
+    expect(isVaultProven()).toBe(false)
+  })
+
+  test('sealing drops the proof with the key', async () => {
+    setDek(await dek(), { broadcast: false, proven: true })
+    sealVault({ broadcast: false })
+    expect(isVaultProven()).toBe(false)
+  })
+
+  // Adopting on top of a proven session must not keep the old answer: the
+  // proof belonged to the key that was replaced.
+  test('a later adoption downgrades an earlier proof', async () => {
+    setDek(await dek(), { broadcast: false, proven: true })
+    setDek(await dek(), { broadcast: false, proven: false })
+    expect(isVaultProven()).toBe(false)
   })
 })

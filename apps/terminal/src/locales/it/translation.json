@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}} trasmette i prezzi dalle tue chiavi, quindi con la cassaforte bloccata non c’è grafico. Una passkey apre cassaforte e schermata di blocco con un solo tocco, invece di una password digitata.",
       "passkeyNudgeAction": "Aggiungi una passkey",
       "passkeyNudgeDismiss": "Non ora",
+      "proofRequired": "Conferma la tua password prima di cambiare come si apre questa cassaforte.",
       "sealedBannerAction": "Sblocca",
       "botsPausedTitle": "I bot live sono in pausa",
       "botsPausedBody": "Sblocca Pairlens per riprendere il trading live. I bot in paper non sono interessati.",

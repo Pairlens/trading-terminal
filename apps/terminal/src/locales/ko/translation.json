@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}}는 사용자의 키로 시세를 전송하므로 보관함이 잠겨 있으면 차트도 없습니다. 패스키를 쓰면 비밀번호를 입력하는 대신 보관함과 잠금 화면이 한 번의 터치로 열립니다.",
       "passkeyNudgeAction": "패스키 추가",
       "passkeyNudgeDismiss": "나중에",
+      "proofRequired": "이 보관함을 여는 방법을 변경하려면 먼저 비밀번호를 확인하세요.",
       "sealedBannerAction": "잠금 해제",
       "botsPausedTitle": "실거래 봇 일시 중지됨",
       "botsPausedBody": "실거래를 재개하려면 Pairlens 잠금을 해제하세요. 모의 봇은 영향을 받지 않습니다.",

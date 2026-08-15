@@ -4107,6 +4107,7 @@
       "passkeyNudgeBody": "{{venue}} mengalirkan harga dari kunci Anda, jadi brankas terkunci berarti tidak ada grafik. Passkey membuka brankas dan layar kunci dalam satu sentuhan, bukan kata sandi yang diketik.",
       "passkeyNudgeAction": "Tambahkan passkey",
       "passkeyNudgeDismiss": "Nanti saja",
+      "proofRequired": "Konfirmasi kata sandi Anda sebelum mengubah cara brankas ini dibuka.",
       "sealedBannerAction": "Buka",
       "botsPausedTitle": "Bot live dijeda",
       "botsPausedBody": "Buka Pairlens untuk melanjutkan trading live. Bot paper tidak terpengaruh.",
