@@ -70,7 +70,15 @@ export function AssistantDock() {
 
   return (
     <div className="pointer-events-none fixed right-4 bottom-4 z-40 flex flex-col items-end gap-2">
-      <div className="pointer-events-auto">
+      {/*
+        No `pointer-events-auto` here. The window is hidden, never unmounted,
+        so its 420x620 box stays in the layout while collapsed — enabling hits
+        on this wrapper parks an invisible target over the bottom-right of the
+        workspace and eats wheel events aimed at the pane underneath (the news
+        column on the Discovery board). The window sets its own pointer-events
+        from `open`, so the collapsed box stays inert and the open one doesn't.
+      */}
+      <div>
         <AssistantChatWindow
           open={isOpen}
           onClose={close}
