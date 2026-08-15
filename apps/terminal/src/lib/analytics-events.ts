@@ -146,6 +146,21 @@ export interface AnalyticsEvents {
   /** An answer was copied out of the thread. The one signal that the chat
    * is producing something the user takes elsewhere. */
   assistant_answer_copied: Record<string, never>
+  /** A fenced code block was copied. `language` is the fence's own tag, so
+   * it answers what the assistant is actually being asked to write. Never
+   * the code. */
+  assistant_code_copied: { language: string }
+  /** A Python block was sent straight into the workbench as a script. The
+   * completion of "write me an indicator": anything short of this ends on
+   * the clipboard. */
+  assistant_code_opened_in_workbench: Record<string, never>
+  /** The user asked for another answer to the same prompt. A rate worth
+   * watching: regeneration is the cheapest signal that a persona or a model
+   * is not landing. `after_error` separates a genuine retry from a redo. */
+  assistant_regenerated: { after_error: boolean }
+  /** A message was typed during a run and queued rather than lost. Tells us
+   * whether unlocking the composer mattered. */
+  assistant_message_queued: Record<string, never>
   /** The assistant took the user to a page. `with_target` is the question
    * this event exists for: pages now accept the id of the record to open,
    * and a run that keeps navigating without one is dropping people on a

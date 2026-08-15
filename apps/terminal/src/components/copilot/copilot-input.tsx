@@ -7,6 +7,12 @@
 // live on the empty screen instead — they were only ever shown on an
 // empty thread, and a row of 6px-tall pills stapled to the top of the
 // composer read as chrome rather than as an invitation.
+//
+// It never locks. A turn can run 28 steps and take minutes, and the field
+// used to be disabled for every one of them, so a user who thought of a
+// correction halfway through could not even write it down. Now the text
+// is always typeable and a message sent mid-run is handed to the host to
+// queue; only the send BUTTON changes, into a stop control.
 
 import {
   useCallback,
@@ -26,9 +32,12 @@ import type { FormEvent, KeyboardEvent } from 'react'
 const MAX_COMPOSER_HEIGHT = 132
 
 type CopilotInputProps = {
+  /** The host decides whether this sends now or queues — see `queued`. */
   onSend: (message: string) => void
   status: string
   onStop: () => void
+  /** A message already waiting for the current run to finish. */
+  queued?: boolean
   /** Composer placeholder — other hosts (the builder assistant) pass their own. */
   placeholder?: string
   /**
@@ -51,6 +60,7 @@ export function CopilotInput({
   onSend,
   status,
   onStop,
+  queued = false,
   placeholder,
   focusSignal = 0,
   seedText,
@@ -97,10 +107,12 @@ export function CopilotInput({
 
   const submit = useCallback(() => {
     const trimmed = value.trim()
-    if (!trimmed || !isReady) return
+    // One queued message, not a backlog: the second one would be answered
+    // with context the user wrote three minutes and one answer ago.
+    if (!trimmed || queued) return
     onSend(trimmed)
     setValue('')
-  }, [value, isReady, onSend])
+  }, [value, queued, onSend])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -130,8 +142,12 @@ export function CopilotInput({
           onFocus={() => {
             userEngagedRef.current = true
           }}
-          placeholder={placeholder ?? t('copilot.placeholder')}
-          disabled={!isReady}
+          placeholder={
+            queued
+              ? t('copilot.queuedHint')
+              : (placeholder ?? t('copilot.placeholder'))
+          }
+          disabled={queued}
           // The capsule owns the border, the fill and the focus ring, so the
           // field itself is stripped back to type on a transparent ground.
           className="field-sizing-fixed min-h-8 flex-1 resize-none overflow-y-auto border-0 bg-transparent px-2 py-1.5 text-[13px] leading-5 shadow-none focus-visible:border-0 focus-visible:ring-0 disabled:bg-transparent md:text-[13px] dark:bg-transparent dark:disabled:bg-transparent"
@@ -152,7 +168,7 @@ export function CopilotInput({
             type="submit"
             size="icon-sm"
             variant="ghost"
-            disabled={!isReady || !value.trim()}
+            disabled={queued || !value.trim()}
             aria-label={t('copilot.send')}
             className="hover-lift text-primary-foreground hover:text-primary-foreground size-8 shrink-0 rounded-full shadow-sm disabled:opacity-30 disabled:shadow-none"
             style={{
