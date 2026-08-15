@@ -21,8 +21,14 @@
 import { tool } from 'ai'
 import { z } from 'zod'
 
-import { getAllStepTypes as getWorkflowStepTypes } from '@pairlens/workflow-engine/step-registry'
-import { getAllStepTypes as getNotificationStepTypes } from '@pairlens/notification-engine/step-registry'
+import {
+  getStepType as getWorkflowStepType,
+  getAllStepTypes as getWorkflowStepTypes,
+} from '@pairlens/workflow-engine/step-registry'
+import {
+  getStepType as getNotificationStepType,
+  getAllStepTypes as getNotificationStepTypes,
+} from '@pairlens/notification-engine/step-registry'
 import { validateWorkflow } from '@pairlens/workflow-engine/validator'
 import { validateRule } from '@pairlens/notification-engine/validator'
 import {
@@ -37,6 +43,8 @@ import type {
   AssistantSharedDeps,
   AssistantSurface,
 } from './assistant-shared-tools'
+import type { WorkflowStepTypeDefinition } from '@pairlens/workflow-engine/step-registry'
+import type { NotificationStepTypeDefinition } from '@pairlens/notification-engine/step-registry'
 import type { AutomationPromptContext } from './automation-brain'
 import type { DesiredEdge, DesiredStep, GraphDraftAccess } from './graph-apply'
 import type { SimpleAlertSpec } from '@pairlens/notification-engine/simple-alerts'
@@ -104,40 +112,42 @@ function toDesiredEdges(
   }))
 }
 
+/**
+ * A registered step type from either engine. Typed off the real definitions
+ * on purpose: the first version described the shape by hand, spelled
+ * `configSchema` as `configFields`, and structurally still accepted the real
+ * definition — so every step reported an empty config and the model had no
+ * choice but to guess key names off the display labels.
+ */
+type AnyStepDefinition =
+  | WorkflowStepTypeDefinition
+  | NotificationStepTypeDefinition
+
 /** What the model needs about a step type: what it is and what it takes. */
-function describeStepType(def: {
-  type: string
-  label: string
-  category: string
-  handles?: { inputs?: Array<{ id: string }>; outputs?: Array<{ id: string }> }
-  configFields?: Array<{
-    key: string
-    type: string
-    label: string
-    default: unknown
-    options?: Array<{ value: string; label: string }>
-    min?: number
-    max?: number
-  }>
-  marketCompat?: { requires: string }
-}) {
+function describeStepType(def: AnyStepDefinition) {
+  const compat = 'compat' in def ? def.compat : undefined
   return {
     type: def.type,
     label: def.label,
     category: def.category,
-    outputs: def.handles?.outputs?.map((handle) => handle.id) ?? [],
-    acceptsInput: (def.handles?.inputs?.length ?? 0) > 0,
-    requires: def.marketCompat?.requires,
-    config:
-      def.configFields?.map((field) => ({
-        key: field.key,
-        type: field.type,
-        label: field.label,
-        default: field.default,
-        options: field.options?.map((option) => option.value),
-        min: field.min,
-        max: field.max,
-      })) ?? [],
+    outputs: def.handles.outputs.map((handle) => handle.id),
+    acceptsInput: def.handles.inputs.length > 0,
+    requires: compat?.requires,
+    // A complete, valid data object to start from: every key the step needs,
+    // spelled the way the runtime spells it.
+    defaults: def.defaultData(),
+    config: def.configSchema.map((field) => ({
+      key: field.key,
+      type: field.type,
+      label: field.label,
+      options: field.options?.map((option) => option.value),
+      min: field.min,
+      max: field.max,
+      onlyWhen:
+        'showWhen' in field && field.showWhen
+          ? `${field.showWhen.key} is ${JSON.stringify(field.showWhen.equals)}`
+          : undefined,
+    })),
   }
 }
 
@@ -147,6 +157,30 @@ function validationSummary(
   return errors.map((error) =>
     error.stepId ? `${error.stepId}: ${error.message}` : error.message,
   )
+}
+
+/**
+ * The step types behind a failed validation, described. Returning these with
+ * the errors turns "that field name is wrong" from a guessing loop into one
+ * more call.
+ */
+function expectedConfigFor(
+  errors: Array<{ stepId?: string; message: string }>,
+  steps: Array<{ id: string; type: string }>,
+  lookup: (type: string) => AnyStepDefinition | undefined,
+) {
+  const failing = new Set(
+    errors.map((error) => error.stepId).filter((id): id is string => !!id),
+  )
+  const described = [
+    ...new Set(
+      steps.filter((step) => failing.has(step.id)).map((step) => step.type),
+    ),
+  ]
+    .map(lookup)
+    .filter((def): def is AnyStepDefinition => def !== undefined)
+    .map(describeStepType)
+  return described.length > 0 ? described : undefined
 }
 
 // ---------------------------------------------------------------------------
@@ -199,12 +233,19 @@ function validateWorkflowDraft(workflowId: string) {
   const workflow = store.workflows.find((entry) => entry.id === workflowId)
   if (!workflow) return { valid: false, errors: ['Workflow disappeared.'] }
   const draft = store.draft?.workflowId === workflowId ? store.draft : null
+  const steps = draft?.currentSteps ?? workflow.steps
   const result = validateWorkflow({
     ...workflow,
-    steps: draft?.currentSteps ?? workflow.steps,
+    steps,
     edges: draft?.currentEdges ?? workflow.edges,
   })
-  return { valid: result.valid, errors: validationSummary(result.errors) }
+  return {
+    valid: result.valid,
+    errors: validationSummary(result.errors),
+    expectedConfig: result.valid
+      ? undefined
+      : expectedConfigFor(result.errors, steps, getWorkflowStepType),
+  }
 }
 
 /** Workflow tools need nothing from deps: the graph is entirely local. */
@@ -262,7 +303,7 @@ function buildWorkflowTools() {
 
     get_step_reference: tool({
       description:
-        'List every step type this terminal can run, with its category, its outputs and the exact config keys it takes. Call it before writing a graph: the available steps come from the installed plugins, so guessing a type id is guessing.',
+        'List every step type this terminal can run: its category, its outputs, a complete `defaults` data object, and every config key with its allowed values. Call it before writing a graph and copy `defaults` for each step you add, changing only the keys you mean to change. The available steps come from the installed plugins, and both the type ids and the config keys are exact — a display label is not a key.',
       inputSchema: z.object({}),
       execute: async () => {
         const types = getWorkflowStepTypes()
@@ -432,12 +473,19 @@ function validateRuleDraft(ruleId: string) {
   const rule = store.rules.find((entry) => entry.id === ruleId)
   if (!rule) return { valid: false, errors: ['Alert disappeared.'] }
   const draft = store.draft?.ruleId === ruleId ? store.draft : null
+  const steps = draft?.currentSteps ?? rule.steps
   const result = validateRule({
     ...rule,
-    steps: draft?.currentSteps ?? rule.steps,
+    steps,
     edges: draft?.currentEdges ?? rule.edges,
   })
-  return { valid: result.valid, errors: validationSummary(result.errors) }
+  return {
+    valid: result.valid,
+    errors: validationSummary(result.errors),
+    expectedConfig: result.valid
+      ? undefined
+      : expectedConfigFor(result.errors, steps, getNotificationStepType),
+  }
 }
 
 /** A pair the connectors will recognise. DEX ids carry a raw address. */
@@ -529,7 +577,7 @@ function buildNotificationTools(deps: AutomationToolDeps) {
 
     get_step_reference: tool({
       description:
-        'List every alert step type available: the events that can fire a rule, the conditions that filter them, and the channels that deliver. Call it before writing a flow — what is installed decides what exists.',
+        'List every alert step type available: the events that can fire a rule, the conditions that filter them, and the channels that deliver, each with a complete `defaults` data object and its exact config keys. Call it before writing a flow and copy `defaults` for each step, changing only what you mean to change. What is installed decides what exists, and a display label is not a key.',
       inputSchema: z.object({}),
       execute: async () => {
         const types = getNotificationStepTypes()

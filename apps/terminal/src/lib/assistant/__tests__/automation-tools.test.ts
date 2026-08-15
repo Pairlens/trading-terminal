@@ -96,6 +96,117 @@ describe('layoutGraph', () => {
   })
 })
 
+describe('get_step_reference', () => {
+  test('reports the real config keys, not just the display labels', async () => {
+    const tools = buildAutomationTools(makeDeps())
+    const result = (await tools.get_step_reference.execute!({}, callOpts)) as {
+      steps: Array<{
+        type: string
+        defaults: Record<string, unknown>
+        config: Array<{ key: string; options?: Array<string> }>
+      }>
+    }
+
+    const takeProfit = result.steps.find((step) => step.type === 'take-profit')!
+    // The exact keys the runtime validates. Reading these off the wrong
+    // property once left the model guessing them from "Close %" and friends.
+    expect(takeProfit.config.map((field) => field.key)).toEqual([
+      'triggerMode',
+      'triggerValue',
+      'sizePercent',
+      'orderType',
+      'limitPrice',
+    ])
+    expect(takeProfit.config[0].options).toEqual(['percent', 'absolute'])
+    // And a complete data object to copy, which validates as-is.
+    expect(Object.keys(takeProfit.defaults)).toContain('sizePercent')
+  })
+
+  test('a graph built from the reference validates as-is', async () => {
+    const tools = buildAutomationTools(makeDeps())
+    const reference = (await tools.get_step_reference.execute!(
+      {},
+      callOpts,
+    )) as { steps: Array<{ type: string; defaults: Record<string, unknown> }> }
+    const defaultsFor = (type: string) =>
+      reference.steps.find((step) => step.type === type)!.defaults
+
+    const result = (await tools.create_workflow.execute!(
+      {
+        name: 'From the reference',
+        steps: [
+          { id: 'trigger', type: 'trigger', data: defaultsFor('trigger') },
+          {
+            id: 'tp',
+            type: 'take-profit',
+            data: { ...defaultsFor('take-profit'), triggerValue: 10 },
+          },
+          {
+            id: 'sl',
+            type: 'stop-loss',
+            data: { ...defaultsFor('stop-loss'), triggerValue: 2 },
+          },
+        ],
+        edges: [
+          { source: 'trigger', target: 'tp' },
+          { source: 'trigger', target: 'sl' },
+        ],
+      },
+      callOpts,
+    )) as { validation: { valid: boolean; errors: Array<string> } }
+
+    expect(result.validation.errors).toEqual([])
+    expect(result.validation.valid).toBe(true)
+  })
+
+  test('no step type on either surface loses its config on the way out', async () => {
+    // The general form of the bug: a step whose definition declares config
+    // must never be described as taking none, on either engine.
+    for (const [deps, registry] of [
+      [makeDeps(), getCoreStepTypes()],
+      [makeDeps({ surface: 'notifications' }), CORE_NOTIFICATION_STEPS],
+    ] as const) {
+      const tools = buildAutomationTools(deps)
+      const result = (await tools.get_step_reference.execute!(
+        {},
+        callOpts,
+      )) as { steps: Array<{ type: string; config: Array<unknown> }> }
+      const described = new Map(
+        result.steps.map((step) => [step.type, step.config.length]),
+      )
+      for (const def of registry) {
+        expect(described.get(def.type)).toBe(def.configSchema.length)
+      }
+    }
+  })
+
+  test('a failing step comes back with the config it expected', async () => {
+    const tools = buildAutomationTools(makeDeps())
+    const result = (await tools.create_workflow.execute!(
+      {
+        name: 'Wrong keys',
+        steps: [
+          { id: 'trigger', type: 'trigger' },
+          // The label-derived spelling the model reached for before.
+          { id: 'tp', type: 'take-profit', data: { closePercent: 100 } },
+        ],
+        edges: [{ source: 'trigger', target: 'tp' }],
+      },
+      callOpts,
+    )) as {
+      validation: {
+        valid: boolean
+        expectedConfig?: Array<{ type: string; config: Array<{ key: string }> }>
+      }
+    }
+
+    expect(result.validation.valid).toBe(false)
+    const help = result.validation.expectedConfig!
+    expect(help.map((entry) => entry.type)).toEqual(['take-profit'])
+    expect(help[0].config.map((field) => field.key)).toContain('sizePercent')
+  })
+})
+
 describe('create_workflow', () => {
   test('writes the graph as uncommitted changes, never as a saved workflow', async () => {
     const tools = buildAutomationTools(makeDeps())
