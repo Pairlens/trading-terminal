@@ -6,7 +6,7 @@ parent: automation
 order: 1
 eyebrow: For traders
 updated: AUG 2026
-readTime: 5 min read
+readTime: 6 min read
 ---
 
 A workflow is a graph of steps on a canvas. Open **Workflows** in the left nav,
@@ -16,6 +16,26 @@ the right.
 The point of a workflow is the bracket order: one action that places an entry
 and arms its exits, so you are never sitting in a position you meant to protect
 and forgot to.
+
+## Describe it instead
+
+The rail on the right of the canvas is the same assistant that writes Python
+indicators and deploys bots, and here it wires steps. "After my entry fills,
+take profit at +5% and stop out at -3%" gets you the graph, laid out and
+connected, in one message. It reads the installed step palette first, so it
+uses the steps this terminal actually has rather than inventing one, and it
+reads the validator back: a missing trigger or a dangling edge is its problem
+to fix before it answers.
+
+What it cannot do is commit. Everything it writes lands as pending changes on
+the canvas, exactly as if you had dragged the steps in yourself, and the commit
+bar is still where a workflow becomes real. Ask it to change the plan and it
+rewrites the graph; the diff shows you what moved.
+
+The empty page leads with the same box, and the composer under it takes one
+sentence. When a request is really an alert (something that fires on its own
+rather than off your order), it says so and hands you to
+[Notifications](/docs/alerts-notifications) with the conversation carried over.
 
 ## The step palette
 

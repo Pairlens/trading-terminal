@@ -1,7 +1,14 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, Pencil, Plus, Trash2, Workflow } from 'lucide-react'
+import {
+  ChevronDown,
+  Pencil,
+  Plus,
+  Sparkles,
+  Trash2,
+  Workflow,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { cn } from '@pairlens/ui'
@@ -24,7 +31,13 @@ import { useWorkflowStore } from '@/stores/workflow-store'
 import { useWorkflowRunStore } from '@/stores/workflow-run-store'
 import { stepTypeLabelById } from '@/lib/registry-labels'
 
-export function WorkflowSidebar() {
+export function WorkflowSidebar({
+  assistantOpen = false,
+  onToggleAssistant,
+}: {
+  assistantOpen?: boolean
+  onToggleAssistant?: () => void
+} = {}) {
   const { t } = useTranslation()
   const workflows = useWorkflowStore((s) => s.workflows)
   const activeWorkflowId = useWorkflowStore((s) => s.activeWorkflowId)
@@ -101,14 +114,30 @@ export function WorkflowSidebar() {
           </button>
         </div>
         {tab === 'workflows' && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-6"
-            onClick={() => setCreateOpen(true)}
-          >
-            <Plus className="size-3.5" />
-          </Button>
+          <div className="flex items-center gap-0.5">
+            {/* Describing a plan beats dragging one, so the assistant sits
+                beside the plain "+" rather than under it. */}
+            <Button
+              variant={assistantOpen ? 'secondary' : 'ghost'}
+              size="icon"
+              className="size-6"
+              onClick={onToggleAssistant}
+              aria-label={t('assistant.title')}
+            >
+              <Sparkles
+                className="size-3.5"
+                style={{ color: 'var(--magic-1)' }}
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-6"
+              onClick={() => setCreateOpen(true)}
+            >
+              <Plus className="size-3.5" />
+            </Button>
+          </div>
         )}
       </div>
 

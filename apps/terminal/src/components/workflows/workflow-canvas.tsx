@@ -31,6 +31,7 @@ import type { DragEvent } from 'react'
 import type { Connection, Edge, Node } from '@xyflow/react'
 import { useWorkflowStore } from '@/stores/workflow-store'
 import { useWorkflowStepRegistry } from '@/lib/workflows/workflow-step-registry'
+import { onExternalGraphWrite } from '@/lib/assistant/graph-apply'
 
 // ── Stable wrapped step types (defined once, never recreated) ─────────
 // Disconnected / new-animation state is passed via node data so the
@@ -251,6 +252,21 @@ export function WorkflowCanvas() {
       setRfEdges(dslToRfEdges(draft.currentEdges))
     }
   }, [draft, setRfNodes, setRfEdges])
+
+  // A rewrite that did not come from this canvas (the assistant writing a
+  // graph) has to be pulled in explicitly: the effect above only fires on a
+  // workflow switch, so without this the edit would be invisible here and the
+  // next drag would push this stale state back over it.
+  useEffect(
+    () =>
+      onExternalGraphWrite(() => {
+        const current = useWorkflowStore.getState().draft
+        if (!current) return
+        setRfNodes(dslToRfNodes(current.currentSteps))
+        setRfEdges(dslToRfEdges(current.currentEdges))
+      }),
+    [setRfNodes, setRfEdges],
+  )
 
   // Detect disconnected nodes
   const disconnectedIds = useMemo(

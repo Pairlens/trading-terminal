@@ -8,6 +8,7 @@ import {
   FlaskConical,
   Pencil,
   Plus,
+  Sparkles,
   Trash2,
   Workflow,
   X,
@@ -44,7 +45,13 @@ import { useNotificationLogStore } from '@/stores/notification-log-store'
 /** Firings shown under the rule list. The rest are one click away. */
 const RECENT_ACTIVITY = 4
 
-export function NotificationsSidebar() {
+export function NotificationsSidebar({
+  assistantOpen = false,
+  onToggleAssistant,
+}: {
+  assistantOpen?: boolean
+  onToggleAssistant?: () => void
+} = {}) {
   const { t } = useTranslation()
   const rules = useNotificationStore((s) => s.rules)
   const activeRuleId = useNotificationStore((s) => s.activeRuleId)
@@ -99,15 +106,31 @@ export function NotificationsSidebar() {
         <span className="text-xs font-semibold uppercase tracking-wider">
           {t('notifications.builder.sidebar.tabRules')}
         </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-6"
-          aria-label={t('notifications.simple.newTitle')}
-          onClick={() => setAlertOpen(true)}
-        >
-          <Plus className="size-3.5" />
-        </Button>
+        <div className="flex items-center gap-0.5">
+          {/* One sentence beats the two-field dialog when the alert is not
+              one of the two the dialog covers, so the assistant leads. */}
+          <Button
+            variant={assistantOpen ? 'secondary' : 'ghost'}
+            size="icon"
+            className="size-6"
+            onClick={onToggleAssistant}
+            aria-label={t('assistant.title')}
+          >
+            <Sparkles
+              className="size-3.5"
+              style={{ color: 'var(--magic-1)' }}
+            />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-6"
+            aria-label={t('notifications.simple.newTitle')}
+            onClick={() => setAlertOpen(true)}
+          >
+            <Plus className="size-3.5" />
+          </Button>
+        </div>
       </div>
 
       {/* List */}

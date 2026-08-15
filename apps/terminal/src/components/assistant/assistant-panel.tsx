@@ -40,16 +40,29 @@ import { AssistantQuestionCard, readQuestion } from './assistant-question-card'
 import type { UIMessage } from 'ai'
 import type { ReactNode } from 'react'
 import type { NormalizedToolPart } from '@/components/copilot/tool-part'
+import type { ToolLabelMap } from '@/lib/copilot/tool-labels'
 import type { AssistantQuestionOption } from './assistant-question-card'
 import type {
   AssistantSurface,
+  AssistantToolDeps,
   AssistantWorkbenchBridge,
 } from '@/lib/assistant/assistant-tools'
+import type {
+  AutomationSurface,
+  AutomationToolDeps,
+} from '@/lib/assistant/automation-tools'
 import { AssistantChatTransport } from '@/lib/assistant/assistant-transport'
 import {
   buildAssistantTools,
   collectAssistantPromptContext,
 } from '@/lib/assistant/assistant-tools'
+import {
+  buildAutomationTools,
+  collectAutomationPromptContext,
+} from '@/lib/assistant/automation-tools'
+import { buildAssistantSystemPrompt } from '@/lib/assistant/assistant-brain'
+import { buildAutomationSystemPrompt } from '@/lib/assistant/automation-brain'
+import { AUTOMATION_TOOL_LABELS } from '@/lib/assistant/automation-tool-labels'
 import {
   clearCachedAssistantMessages,
   consumeAssistantIntent,
@@ -79,6 +92,52 @@ type AssistantPanelProps = {
   /** Editor bridge, only when the workbench hosts the panel. */
   workbench?: AssistantWorkbenchBridge | null
   onClose: () => void
+}
+
+/** The two graph builders, narrowed. Null for the script and bot surfaces. */
+function asAutomationSurface(
+  surface: AssistantSurface,
+): AutomationSurface | null {
+  return surface === 'workflows' || surface === 'notifications' ? surface : null
+}
+
+const HANDOFF_TOAST_KEY: Record<AssistantSurface, string> = {
+  indicators: 'assistant.handoffToIndicators',
+  bots: 'assistant.handoffToBots',
+  workflows: 'assistant.handoffToWorkflows',
+  notifications: 'assistant.handoffToNotifications',
+}
+
+/** Chips under the composer, per surface. */
+const QUICK_ACTION_KEYS: Record<AssistantSurface, Array<string>> = {
+  indicators: [
+    'assistant.quickNewIndicator',
+    'assistant.quickNewStrategy',
+    'assistant.quickImprove',
+  ],
+  bots: [
+    'assistant.quickBotFromScratch',
+    'assistant.quickCreateBot',
+    'assistant.quickGuards',
+    'assistant.quickReview',
+  ],
+  workflows: [
+    'assistant.quickBracket',
+    'assistant.quickScaleOut',
+    'assistant.quickExplainWorkflow',
+  ],
+  notifications: [
+    'assistant.quickPriceAlert',
+    'assistant.quickMoveAlert',
+    'assistant.quickAlertReview',
+  ],
+}
+
+const EMPTY_HINT_KEY: Record<AssistantSurface, string> = {
+  indicators: 'assistant.emptyHintIndicators',
+  bots: 'assistant.emptyHintBots',
+  workflows: 'assistant.emptyHintWorkflows',
+  notifications: 'assistant.emptyHintNotifications',
 }
 
 export function AssistantPanel(props: AssistantPanelProps) {
@@ -157,49 +216,65 @@ function AssistantChatInner({
   const navigateRef = useRef(navigate)
   navigateRef.current = navigate
 
-  const deps = useMemo(
+  // The handoff: the target page's assistant already has the message (queued
+  // through the intent cache), this just takes the user there. The toast is
+  // what stops the navigation reading as a misclick.
+  const handoffNavigate = useCallback(
+    ({ to, scriptId }: { to: AssistantSurface; scriptId?: string }) => {
+      toast(t(HANDOFF_TOAST_KEY[to]))
+      void navigateRef.current(
+        to === 'indicators'
+          ? { to: '/indicators', search: scriptId ? { script: scriptId } : {} }
+          : to === 'bots'
+            ? { to: '/bots', search: {} }
+            : { to: to === 'workflows' ? '/workflows' : '/notifications' },
+      )
+    },
+    [t],
+  )
+
+  const builderDeps = useMemo<AssistantToolDeps>(
     () => ({
       surface,
       getWorkbench: () => workbenchRef.current,
       getMarketData: () => marketDataRef.current,
       getPython: () => getPythonRuntime(),
-      // The handoff: the other page's assistant already has the message
-      // (queued through the intent cache), this just takes the user there.
-      // The toast is what stops the navigation reading as a misclick.
-      navigate: ({
-        to,
-        scriptId,
-      }: {
-        to: AssistantSurface
-        scriptId?: string
-      }) => {
-        toast(
-          to === 'indicators'
-            ? t('assistant.handoffToIndicators')
-            : t('assistant.handoffToBots'),
-        )
-        void navigateRef.current(
-          to === 'indicators'
-            ? {
-                to: '/indicators',
-                search: scriptId ? { script: scriptId } : {},
-              }
-            : { to: '/bots', search: {} },
-        )
-      },
+      navigate: handoffNavigate,
     }),
-    [surface, t],
+    [surface, handoffNavigate],
   )
+
+  // Non-null only on Workflows and Notifications, which is what picks the
+  // tool set and the prompt below. Two builders, one panel, no third mode.
+  const automationDeps = useMemo<AutomationToolDeps | null>(() => {
+    const automation = asAutomationSurface(surface)
+    if (!automation) return null
+    return {
+      surface: automation,
+      getMarketData: () => marketDataRef.current,
+      navigate: handoffNavigate,
+    }
+  }, [surface, handoffNavigate])
 
   const transport = useMemo(
     () =>
       new AssistantChatTransport({
         pluginManager,
         surface,
-        getPromptContext: () => collectAssistantPromptContext(deps),
-        getTools: () => buildAssistantTools(deps),
+        getSystemPrompt: () =>
+          automationDeps
+            ? buildAutomationSystemPrompt(
+                collectAutomationPromptContext(automationDeps),
+              )
+            : buildAssistantSystemPrompt(
+                collectAssistantPromptContext(builderDeps),
+              ),
+        getTools: () =>
+          automationDeps
+            ? buildAutomationTools(automationDeps)
+            : buildAssistantTools(builderDeps),
       }),
-    [pluginManager, surface, deps],
+    [pluginManager, surface, builderDeps, automationDeps],
   )
 
   // Per-run analytics: tool-call count + latency, never content.
@@ -325,19 +400,7 @@ function AssistantChatInner({
   )
 
   const quickActions = useMemo(
-    () =>
-      surface === 'indicators'
-        ? [
-            t('assistant.quickNewIndicator'),
-            t('assistant.quickNewStrategy'),
-            t('assistant.quickImprove'),
-          ]
-        : [
-            t('assistant.quickBotFromScratch'),
-            t('assistant.quickCreateBot'),
-            t('assistant.quickGuards'),
-            t('assistant.quickReview'),
-          ],
+    () => QUICK_ACTION_KEYS[surface].map((key) => t(key)),
     [surface, t],
   )
 
@@ -388,11 +451,10 @@ function AssistantChatInner({
           messages={messages}
           status={status}
           renderToolPart={renderToolPart}
-          emptyHint={
-            surface === 'indicators'
-              ? t('assistant.emptyHintIndicators')
-              : t('assistant.emptyHintBots')
+          toolLabels={
+            automationDeps ? AUTOMATION_TOOL_LABELS : ASSISTANT_TOOL_LABELS
           }
+          emptyHint={t(EMPTY_HINT_KEY[surface])}
         />
         {error ? (
           <div className="px-3 pb-1">
@@ -452,11 +514,13 @@ function AssistantMessages({
   status,
   emptyHint,
   renderToolPart,
+  toolLabels,
 }: {
   messages: Array<UIMessage>
   status: string
   emptyHint: string
   renderToolPart: (tool: NormalizedToolPart) => ReactNode | null
+  toolLabels: ToolLabelMap
 }) {
   const { t } = useTranslation()
   const isStreaming = status === 'streaming' || status === 'submitted'
@@ -493,7 +557,7 @@ function AssistantMessages({
           <CopilotChatMessage
             key={msg.id}
             message={msg}
-            toolLabels={ASSISTANT_TOOL_LABELS}
+            toolLabels={toolLabels}
             renderToolPart={renderToolPart}
           />
         ))}

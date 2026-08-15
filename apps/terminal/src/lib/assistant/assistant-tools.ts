@@ -23,7 +23,8 @@ import { tool } from 'ai'
 import { z } from 'zod'
 
 import { SDK_REFERENCE_SECTIONS, SDK_REFERENCE_TOPICS } from './sdk-guide'
-import { requestAssistant } from './assistant-chat-cache'
+import { buildSharedAssistantTools } from './assistant-shared-tools'
+import type { AssistantSurface } from './assistant-shared-tools'
 import type {
   IndicatorFile,
   IndicatorScript,
@@ -127,9 +128,13 @@ export type AssistantWorkbenchBridge = {
   setPreviewTarget: (patch: Partial<AssistantPreviewTarget>) => void
 }
 
-export type AssistantSurface = 'indicators' | 'bots'
+/** Re-exported so the surfaces that only build scripts and bots can keep
+ *  importing it from here. Defined with the shared tools, which every
+ *  surface's tool set spreads in. */
+export type { AssistantSurface }
 
 export type AssistantToolDeps = {
+  /** Only 'indicators' or 'bots' host this tool set. */
   surface: AssistantSurface
   getWorkbench: () => AssistantWorkbenchBridge | null
   getMarketData: () => AssistantMarketDataHandle | null
@@ -349,6 +354,8 @@ const guardsSchema = z
 
 export function buildAssistantTools(deps: AssistantToolDeps) {
   return {
+    ...buildSharedAssistantTools(deps),
+
     list_scripts: tool({
       description:
         "List the user's Python scripts (indicators and strategies). Drafts have not registered successfully yet — they cannot chart or deploy until validated.",
@@ -910,63 +917,6 @@ export function buildAssistantTools(deps: AssistantToolDeps) {
           note: bot.enabled
             ? 'The bot is running — params and guards take effect on the next bar.'
             : undefined,
-        }
-      },
-    }),
-
-    /**
-     * The one tool with no `execute`: the panel renders the choices and
-     * answers it, which is what makes the answer the user's rather than the
-     * model's guess at what the user would have said.
-     */
-    ask_user: tool({
-      description:
-        'Ask the user one question and let them answer by tapping an option. Use it whenever the decision is theirs and not yours: which venue and pair, which timeframe, how much risk, which of two designs to build. Give 2 to 4 concrete options (they can always type something else instead). Ask ONE question at a time — this tool ends your turn, so do not stack it with other work.',
-      inputSchema: z.object({
-        question: z.string().min(1).max(300),
-        options: z
-          .array(
-            z.object({
-              label: z.string().min(1).max(60),
-              description: z
-                .string()
-                .max(120)
-                .optional()
-                .describe('One short line on what this choice means'),
-            }),
-          )
-          .min(2)
-          .max(4)
-          .optional()
-          .describe('Omit for an open question the user types the answer to'),
-      }),
-    }),
-
-    handoff_to_builder: tool({
-      description:
-        "Move the user to the other builder and brief its assistant. 'indicators' is the script workbench: writing and fixing Python with the editor and the chart preview side by side. 'bots' is where a finished strategy is deployed and its sizing and guards are tuned. Write `message` as the request the other assistant should start from — it arrives as the user's next message there, so carry the context: what exists already, the script id, and what is still missing. Say what you are doing before you call it, and stop afterwards.",
-      inputSchema: z.object({
-        target: z.enum(['indicators', 'bots']),
-        message: z.string().min(1).max(600),
-        scriptId: z
-          .string()
-          .optional()
-          .describe('Opens this script in the workbench on arrival'),
-      }),
-      execute: async ({ target, message, scriptId }) => {
-        if (target === deps.surface) {
-          return {
-            error: `You are already on the ${target} surface. Do the work here.`,
-          }
-        }
-        if (scriptId !== undefined && !findScript(scriptId)) {
-          return { error: `No script with id '${scriptId}'. Use list_scripts.` }
-        }
-        requestAssistant(target, { prompt: message })
-        deps.navigate({ to: target, scriptId })
-        return {
-          handedOff: target,
-          note: 'The user is on that page now and its assistant has your message. Stop here — it takes over.',
         }
       },
     }),

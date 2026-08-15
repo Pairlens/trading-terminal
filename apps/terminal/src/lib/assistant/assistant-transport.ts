@@ -14,10 +14,8 @@
  * getLanguageModel, so this only refuses exotic third-party providers.
  */
 import { convertToModelMessages, stepCountIs, streamText } from 'ai'
-import { buildAssistantSystemPrompt } from './assistant-brain'
-import type { AssistantPromptContext } from './assistant-brain'
-import type { AssistantSurface, AssistantToolSet } from './assistant-tools'
-import type { ChatTransport, LanguageModel, UIMessage } from 'ai'
+import type { AssistantSurface } from './assistant-shared-tools'
+import type { ChatTransport, LanguageModel, ToolSet, UIMessage } from 'ai'
 import type { PluginManager } from '@pairlens/plugin-system'
 import { track } from '@/lib/analytics-events'
 
@@ -26,9 +24,14 @@ export class AssistantChatTransport implements ChatTransport<UIMessage> {
     private readonly opts: {
       pluginManager: PluginManager
       surface: AssistantSurface
-      /** Read at send time so the script/bot snapshot is always fresh. */
-      getPromptContext: () => AssistantPromptContext
-      getTools: () => AssistantToolSet
+      /**
+       * Both read at send time, so the snapshot the model sees is the page as
+       * it is now. Which prompt and which tool set is the panel's call: the
+       * builder surfaces write Python, the automation surfaces write graphs,
+       * and this transport only runs the loop.
+       */
+      getSystemPrompt: () => string
+      getTools: () => ToolSet
     },
   ) {}
 
@@ -58,7 +61,7 @@ export class AssistantChatTransport implements ChatTransport<UIMessage> {
 
     const result = streamText({
       model: model as LanguageModel,
-      system: buildAssistantSystemPrompt(this.opts.getPromptContext()),
+      system: this.opts.getSystemPrompt(),
       messages: await convertToModelMessages(options.messages),
       tools: this.opts.getTools(),
       // Higher than the copilot's 16: a write → traceback → fix → validate →

@@ -29,6 +29,7 @@ import { NotificationsEmptyState } from './notifications-empty-state'
 import { StepPalette } from './step-palette'
 import type { Connection, Edge, Node } from '@xyflow/react'
 import { useNotificationStore } from '@/stores/notification-store'
+import { onExternalGraphWrite } from '@/lib/assistant/graph-apply'
 import { useNotificationStepRegistry } from '@/lib/notifications/notification-step-registry'
 
 // ── Helpers to convert between DSL <-> ReactFlow nodes ─────────────────
@@ -254,6 +255,21 @@ export function NotificationCanvas() {
       setRfEdges(dslToRfEdges(draft.currentEdges))
     }
   }, [draft, setRfNodes, setRfEdges])
+
+  // A rewrite that did not come from this canvas (the assistant writing a
+  // flow) has to be pulled in explicitly: the effect above only fires when
+  // you switch rules, so without this the edit would be invisible here and
+  // the next drag would push this stale state back over it.
+  useEffect(
+    () =>
+      onExternalGraphWrite(() => {
+        const current = useNotificationStore.getState().draft
+        if (!current) return
+        setRfNodes(dslToRfNodes(current.currentSteps))
+        setRfEdges(dslToRfEdges(current.currentEdges))
+      }),
+    [setRfNodes, setRfEdges],
+  )
 
   // Detect disconnected nodes
   const disconnectedIds = useMemo(

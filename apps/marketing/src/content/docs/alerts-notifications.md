@@ -6,13 +6,28 @@ parent: automation
 order: 2
 eyebrow: For traders
 updated: AUG 2026
-readTime: 6 min read
+readTime: 7 min read
 ---
 
 Most alerts are one line: tell me when BTC crosses 100,000, or tell me when it
 moves 5% in an hour. Both take two fields and no setup. Flows, with conditions
 and branches on a canvas, are still there for everything else, one click away
 and never in your way.
+
+## Or just say it
+
+The rail on the right of the Notifications page takes the sentence directly.
+"Tell me when BTC crosses 100,000 on OKX" creates the alert, picks a cooldown
+that suits the kind, and arms it on that pair, and you can see the result in
+the list before you reply. It knows which of the two shapes it is building: a
+level or a percent move stays a two-field alert, and only a request the simple
+form cannot express (a condition, an order filling, a webhook) becomes a flow
+on the canvas.
+
+A flow it builds lands as pending changes for you to commit, the same as one
+you drew. Delivery stays conservative: in-app and OS notifications by default,
+Telegram only when you ask and only when you have already connected a bot
+token, and never a webhook URL it made up.
 
 ## Set one in two fields
 
