@@ -15,7 +15,12 @@ import {
   DialogTitle,
 } from '@pairlens/ui/components/ui/dialog'
 
-import { useWatchlistsStore } from '@/stores/watchlists-store'
+import { formatInstrumentRef } from '@pairlens/shared/market-ref'
+
+import {
+  readWatchlistEntry,
+  useWatchlistsStore,
+} from '@/stores/watchlists-store'
 
 export function AddToWatchlistDialog() {
   const { t } = useTranslation()
@@ -29,28 +34,32 @@ export function AddToWatchlistDialog() {
   const [newName, setNewName] = useState('')
   const [isCreating, setIsCreating] = useState(false)
 
-  const symbol = dialog.symbol
+  const target = dialog.target
+  // The ticker is for the copy; every mutation goes through the ref, so a
+  // token is added and removed by address rather than by the name it shows.
+  const symbol = target?.id ?? ''
+  const targetKey = target ? formatInstrumentRef(target) : null
 
   const handleToggle = useCallback(
     (listId: string, checked: boolean) => {
-      if (!symbol) return
+      if (!target) return
       if (checked) {
-        addToWatchlist(symbol, [listId])
+        addToWatchlist(target, [listId])
       } else {
-        removeFromWatchlist(symbol, listId)
+        removeFromWatchlist(target, listId)
       }
     },
-    [symbol, addToWatchlist, removeFromWatchlist],
+    [target, addToWatchlist, removeFromWatchlist],
   )
 
   const handleCreate = useCallback(() => {
     const name = newName.trim()
-    if (!name || !symbol) return
+    if (!name || !target) return
     const id = createList(name)
-    addToWatchlist(symbol, [id])
+    addToWatchlist(target, [id])
     setNewName('')
     setIsCreating(false)
-  }, [newName, symbol, createList, addToWatchlist])
+  }, [newName, target, createList, addToWatchlist])
 
   return (
     <Dialog
@@ -73,7 +82,13 @@ export function AddToWatchlistDialog() {
 
         <div className="space-y-1 py-2">
           {lists.map((list) => {
-            const isChecked = symbol ? list.symbols.includes(symbol) : false
+            const isChecked = targetKey
+              ? list.symbols.some(
+                  (entry) =>
+                    formatInstrumentRef(readWatchlistEntry(entry)) ===
+                    targetKey,
+                )
+              : false
             return (
               <label
                 key={list.id}

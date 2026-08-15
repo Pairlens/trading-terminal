@@ -6,7 +6,7 @@ parent: market-data
 order: 5
 eyebrow: For traders
 updated: AUG 2026
-readTime: 6 min read
+readTime: 7 min read
 ---
 
 Seventeen venues, tens of thousands of spot pairs, an unbounded tail of
@@ -114,6 +114,13 @@ pair to add it to a watchlist without leaving the panel.
 The Watchlist panel holds as many named lists as you want. Two ship populated,
 Top Crypto and Top Equities, and you can create, rename, and delete your own.
 Rows carry live prices and flash on change.
+
+**A row saves the asset, not the ticker.** A crypto pair or an equity is stored
+without a venue, so starring BTC-USDT while charting Binance stars it on OKX
+too. A token is stored by its contract address and chain, which is what stops a
+saved row from quietly becoming a different token: dozens of tokens share a
+ticker, and the one you starred is the one you looked at. A prediction outcome
+keeps the venue that lists it for the same reason.
 
 Watchlists sync across your devices when you are signed in and cloud sync is on
 for workspaces. See [settings](/docs/settings#cloud-sync).

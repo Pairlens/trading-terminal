@@ -29,6 +29,7 @@ import {
 
 import { Input } from '@pairlens/ui/components/ui/input'
 import type { WorkspaceVariableDefinition } from '@/lib/layout/types'
+import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import {
   DEFAULT_TIMEFRAME,
   VARIABLE_TIMEFRAME_OPTIONS,
@@ -160,9 +161,10 @@ function PairVariableDropdown({
   )
 
   const handleSelect = useCallback(
-    (symbol: string, assetClass?: string) => {
-      if (assetClass) {
-        setAssetClassMap((prev) => ({ ...prev, [symbol]: assetClass }))
+    (entry: PairEntry) => {
+      const symbol = entry.symbol
+      if (entry.assetClass) {
+        setAssetClassMap((prev) => ({ ...prev, [symbol]: entry.assetClass! }))
       }
       onChange({ pairKey: symbol, market: selectedMarket })
       setOpen(false)

@@ -14,6 +14,7 @@ import {
   parseMarketRef,
   parseMarketRefPath,
   toInstrumentRef,
+  toWatchlistRef,
 } from '../market-ref'
 
 describe('class normalization absorbs three vocabularies', () => {
@@ -360,5 +361,55 @@ describe('prediction refs bind their venue', () => {
       '/prediction/kalshi/KXBTCD-26AUG15-T53',
     )
     expect(parseMarketRefPath(marketRefToPath(market))).toEqual(market)
+  })
+})
+
+/**
+ * A watchlist entry is an instrument, not a tape. Formatting a `MarketRef`
+ * straight into a watchlist key produced `spot:binance:BTC-USDT`, which
+ * matches nothing a watchlist ever wrote, so the star sat unlit on a pair the
+ * user had definitely starred.
+ */
+describe('watchlist keys drop the venue, except where it is identity', () => {
+  test('a spot pair is watched regardless of which venue is charted', () => {
+    const onBinance = toWatchlistRef({
+      cls: 'spot',
+      market: 'binance',
+      id: 'BTC-USDT',
+    })
+    const onOkx = toWatchlistRef({
+      cls: 'spot',
+      market: 'okx',
+      id: 'BTC-USDT',
+    })
+    expect(formatInstrumentRef(onBinance)).toBe('spot:BTC-USDT')
+    expect(formatInstrumentRef(onBinance)).toBe(formatInstrumentRef(onOkx))
+  })
+
+  test('an equity likewise', () => {
+    expect(
+      formatInstrumentRef(
+        toWatchlistRef({ cls: 'stocks', market: 'alpaca', id: 'AAPL' }),
+      ),
+    ).toBe('stocks:AAPL')
+  })
+
+  // A token on Base and the same address on Arbitrum are two assets, so the
+  // chain survives and the two get their own stars.
+  test('a token keeps its chain', () => {
+    const addr = '0x532f27101965dd16442e59d40670faf5ebb142e4'
+    expect(
+      formatInstrumentRef(
+        toWatchlistRef({ cls: 'dex', market: 'base', id: `${addr}-WETH` }),
+      ),
+    ).toBe(`dex:base:${addr}-WETH`)
+  })
+
+  test('a prediction outcome keeps its venue', () => {
+    expect(
+      formatInstrumentRef(
+        toWatchlistRef({ cls: 'prediction', market: 'kalshi', id: 'KX-T53' }),
+      ),
+    ).toBe('prediction:kalshi:KX-T53')
   })
 })

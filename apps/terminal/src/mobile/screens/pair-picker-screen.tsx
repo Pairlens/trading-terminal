@@ -61,7 +61,7 @@ import { normalizePairKey } from '@/lib/pairs'
 import { useInstrumentSearch } from '@/hooks/use-instrument-search'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { usePairlens } from '@/lib/pairlens-provider'
-import { entryToMarketRef } from '@/lib/market-ref/entry'
+import { entryToInstrumentRef, entryToMarketRef } from '@/lib/market-ref/entry'
 
 type PairPickerScreenProps = {
   overlay: Extract<MobileOverlay, { kind: 'pairPicker' }>
@@ -248,7 +248,7 @@ export default memo(function PairPickerScreen({
       // the directory before anything downstream resolves the symbol.
       pinSelectedEntry(entry)
       if (isAdd) {
-        addToWatchlist(entry.symbol, [activeListId])
+        addToWatchlist(entryToInstrumentRef(entry), [activeListId])
         return
       }
       // Picking a pair the focused venue does not list takes the venue with it

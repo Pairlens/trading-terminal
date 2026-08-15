@@ -4,23 +4,29 @@ import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Star } from 'lucide-react'
 
+import { parseInstrumentRef } from '@pairlens/shared/market-ref'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
+import type { InstrumentRef } from '@pairlens/shared/market-ref'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import {
   instrumentToPairEntry,
   isPredictionEntry,
+  pairEntryForRef,
   pinSelectedEntry,
   predictionQuestionOf,
 } from '@/components/pair-picker/pair-picker-data'
 import { VenueBadge } from '@/components/pair-picker/venue-badge'
 import { useInstrumentSearch } from '@/hooks/use-instrument-search'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
-import { usePersistedState } from '@/hooks/use-persisted-state'
+import { useRecentPairs } from '@/lib/recent-tickers'
+import { useWatchlistsStore } from '@/stores/watchlists-store'
 
 export type PairSearchResultsProps = {
   searchValue: string
   watchedSymbols: Set<string>
-  onSelect: (symbol: string, assetClass?: string) => void
+  /** The whole row. A token's identity is its chain+address, which a
+   * symbol string cannot carry, so callers get the entry. */
+  onSelect: (entry: PairEntry) => void
   maxResults?: number
 }
 
@@ -31,10 +37,10 @@ export function usePairSearchData(
   const { items: instruments } = useMarketInstruments()
   const { data: searchResults, isSearchActive } =
     useInstrumentSearch(searchValue)
-  const [recentPairs] = usePersistedState<Array<string>>(
-    'pair-picker.recent',
-    [],
-  )
+  const [recentPairs] = useRecentPairs()
+  // The watchlist's own refs, not the symbol set the caller passes: a token is
+  // stored by address, so a symbol-keyed lookup would drop it from this list.
+  const watchedEntryKeys = useWatchlistsStore((s) => s.watchedRefs)
 
   const allPairs: Array<PairEntry> = useMemo(() => {
     if (instruments && instruments.length > 0) {
@@ -83,19 +89,21 @@ export function usePairSearchData(
   const recentEntries = useMemo(
     () =>
       recentPairs
-        .map((s) => pairsBySymbol.get(s))
-        .filter((p): p is PairEntry => p !== undefined)
+        .map((ref) => pairEntryForRef(ref, pairsBySymbol))
+        .filter((p): p is PairEntry => p !== null)
         .slice(0, 8),
     [recentPairs, pairsBySymbol],
   )
 
   const watchedEntries = useMemo(
     () =>
-      [...watchedSymbols]
-        .map((s) => pairsBySymbol.get(s))
-        .filter((p): p is PairEntry => p !== undefined)
+      [...watchedEntryKeys]
+        .map((key) => parseInstrumentRef(key))
+        .filter((ref): ref is InstrumentRef => ref !== null)
+        .map((ref) => pairEntryForRef(ref, pairsBySymbol))
+        .filter((p): p is PairEntry => p !== null)
         .slice(0, 8),
-    [watchedSymbols, pairsBySymbol],
+    [watchedEntryKeys, pairsBySymbol],
   )
 
   const hasQuery = searchValue.trim().length > 0
@@ -208,14 +216,16 @@ const PairResultItem = memo(function PairResultItem({
 }: {
   pair: PairEntry
   isWatched: boolean
-  onSelect: (symbol: string, assetClass?: string) => void
+  /** The whole row. A token's identity is its chain+address, which a
+   * symbol string cannot carry, so callers get the entry. */
+  onSelect: (entry: PairEntry) => void
 }) {
   // Pin BEFORE navigation: the selected row's exact identity — a token's
   // address, an outcome's venue+market — must be in its directory before
   // anything downstream resolves the symbol.
   const select = () => {
     pinSelectedEntry(pair)
-    onSelect(pair.symbol, pair.assetClass)
+    onSelect(pair)
   }
 
   // A prediction row is read, not scanned: its identity is a question and its
