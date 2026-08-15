@@ -301,7 +301,18 @@ Before considering any user-visible work complete:
 
 If a change genuinely has no user-visible surface (an internal refactor, a type-only change, a test), say so in the commit body rather than skipping this silently.
 
-### Voice and tone (all copy and UI text)
+### Product metrics ship with the change (PostHog)
+
+When you build a new feature or make a significant UI change, decide whether it needs product metrics before considering the work complete. If we cannot tell whether anyone uses the new surface, we cannot decide whether to invest in it or cut it.
+
+Every product event lives in the typed taxonomy in `apps/terminal/src/lib/analytics-events.ts`: an event and its exact allowed properties are declared there, and call sites emit through `track()` — never `captureEvent()` directly — so an event cannot grow an undeclared property without touching that file. That file is also where the privacy review happens, so read its header rules before adding anything (no PII, no financial exposure, no instrument symbols on trade events; identifiers that name our product surface are fine).
+
+The checklist:
+
+1. Ask what question the new surface raises: "do people find it", "do they finish the flow", "which variant do they pick". If there is a question worth answering, there is an event worth adding. Not every change needs one — a metric nobody will look at is noise; say so in the commit body when you deliberately skip it.
+2. Check whether an existing event already covers it before declaring a new one: `grep -n "track(" <files you touched>` and scan `AnalyticsEvents` for a matching name. Extending an existing event's properties beats a near-duplicate event.
+3. Declare the event and its property type in `analytics-events.ts` with a doc comment saying what it measures, then call `track()` from the feature code. Follow the existing naming style (`snake_case`, funnel stages as `<thing>_<verb>`).
+4. Remember analytics is opt-in and consent-gated — `track()` already no-ops without consent, so never add your own consent check or a second capture path around it.
 
 These rules apply to every string a user reads, not just docs: terminal UI text (translation keys, toasts, dialogs, tooltips, empty states, error messages, onboarding), docs pages, marketing copy, READMEs, release notes, plugin store listings, CLI output. If a user sees it, it follows these rules.
 
