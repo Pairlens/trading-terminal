@@ -156,7 +156,7 @@ export async function placeAlpacaOrder(
       return {
         success: false,
         error:
-          'Extended-hours trading needs a limit order — those sessions have no continuous auction to fill a market order against. Switch to Limit and set your price.',
+          'Extended-hours trading needs a limit order. Those sessions have no continuous auction to fill a market order against, so switch to Limit and set your price.',
       }
     }
   }
@@ -193,7 +193,7 @@ export async function placeAlpacaOrder(
       return {
         success: false,
         error:
-          'Alpaca requires a whole number of shares for stop and take-profit orders — fractional quantities can only be day orders, which would expire at the close. Round the size to whole shares.',
+          'Alpaca requires a whole number of shares for stop and take-profit orders. Fractional quantities can only be day orders, which would expire at the close, so round the size to whole shares.',
       }
     }
     if (trigger.triggerType === 'sl') {

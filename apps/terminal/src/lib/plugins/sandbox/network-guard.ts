@@ -64,7 +64,7 @@ export class PluginNetworkDeniedError extends Error {
     url: string,
     reason = "not in the plugin's declared network.hosts allowlist",
   ) {
-    super(`[sandbox] Network access to "${url}" denied — ${reason}`)
+    super(`[sandbox] Network access to "${url}" denied: ${reason}`)
     this.name = 'PluginNetworkDeniedError'
   }
 }
