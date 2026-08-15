@@ -4954,7 +4954,9 @@
       "venuesCount_other": "{{count}} ตลาด"
     },
     "discover": {
-      "featured": "แนะนำพิเศษ"
+      "featured": "แนะนำพิเศษ",
+      "predictions": "ตลาดการคาดการณ์",
+      "allEvents": "เหตุการณ์ทั้งหมด"
     },
     "fearGreed": {
       "historyLabel_one": "วันล่าสุด",

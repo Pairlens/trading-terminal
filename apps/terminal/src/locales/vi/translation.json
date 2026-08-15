@@ -4954,7 +4954,9 @@
       "venuesCount_other": "{{count}} sàn"
     },
     "discover": {
-      "featured": "Nổi bật"
+      "featured": "Nổi bật",
+      "predictions": "Thị trường dự đoán",
+      "allEvents": "Tất cả sự kiện"
     },
     "fearGreed": {
       "historyLabel_one": "Ngày gần nhất",

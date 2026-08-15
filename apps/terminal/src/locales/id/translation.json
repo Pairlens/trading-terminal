@@ -4954,7 +4954,9 @@
       "venuesCount_other": "{{count}} venue"
     },
     "discover": {
-      "featured": "Unggulan"
+      "featured": "Unggulan",
+      "predictions": "Pasar prediksi",
+      "allEvents": "Semua acara"
     },
     "fearGreed": {
       "historyLabel_one": "Hari terakhir",

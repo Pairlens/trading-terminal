@@ -4990,7 +4990,9 @@
       "venuesCount_other": "{{count}} giełd"
     },
     "discover": {
-      "featured": "Polecane"
+      "featured": "Polecane",
+      "predictions": "Rynki prognoz",
+      "allEvents": "Wszystkie wydarzenia"
     },
     "fearGreed": {
       "historyLabel_one": "Ostatni dzień",

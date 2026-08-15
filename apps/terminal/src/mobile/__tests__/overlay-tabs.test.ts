@@ -39,6 +39,6 @@ describe('litTab', () => {
     }
     // The `Record<MobileOverlayKind, …>` type is the real guard; this count
     // only catches a kind deleted from the union and left in the table.
-    expect(Object.keys(OVERLAY_OWNING_TAB).length).toBe(10)
+    expect(Object.keys(OVERLAY_OWNING_TAB).length).toBe(11)
   })
 })

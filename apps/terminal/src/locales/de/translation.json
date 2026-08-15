@@ -4954,7 +4954,9 @@
       "venuesCount_other": "{{count}} Venues"
     },
     "discover": {
-      "featured": "Empfohlen"
+      "featured": "Empfohlen",
+      "predictions": "Prognosemärkte",
+      "allEvents": "Alle Ereignisse"
     },
     "fearGreed": {
       "historyLabel_one": "Letzter Tag",

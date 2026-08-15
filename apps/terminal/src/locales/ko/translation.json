@@ -4954,7 +4954,9 @@
       "venuesCount_other": "거래소 {{count}}개"
     },
     "discover": {
-      "featured": "추천"
+      "featured": "추천",
+      "predictions": "예측 시장",
+      "allEvents": "전체 이벤트"
     },
     "fearGreed": {
       "historyLabel_one": "최근 1일",

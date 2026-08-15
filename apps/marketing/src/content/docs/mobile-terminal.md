@@ -5,7 +5,7 @@ group: get-started
 order: 5
 eyebrow: Get started
 updated: AUG 2026
-readTime: 8 min read
+readTime: 9 min read
 ---
 
 Open [terminal.pairlens.finance](https://terminal.pairlens.finance) on a phone
@@ -28,7 +28,7 @@ connections, your sockets or your watchlist.
 | **Trade**     | Order entry, with the order book above it                                              |
 | **Chart**     | The chart on its own, with the drawing toolbar                                         |
 | **Co-pilot**  | The full co-pilot, same tools and same confirm cards as the desktop                    |
-| **Discover**  | Featured pairs, news, Fear and Greed, and today's P&L                                  |
+| **Discover**  | Featured pairs, prediction markets, news, Fear and Greed, and today's P&L              |
 
 The chart is underneath all five and never unmounts. The other four are bottom
 sheets that slide over it, so switching destination is not a page load and the
@@ -115,6 +115,24 @@ If you have no key for the venue, the ticket blurs behind a card that offers to
 connect one, and the order book above it stays live. A venue that is read-only
 for you says that instead, with no button, because there is nothing to fix.
 
+## Discover
+
+Discover is the browse sheet: Fear and Greed and today's P&L as two cards,
+featured pairs, prediction markets, then the news feed. The two cards and the
+two lists each open out into a full screen, so the sheet stays a summary.
+
+**Prediction markets** sit between the featured pairs and the news. A handful
+of live events, each with its question, how long until it resolves, and a price
+button per outcome in cents. Tap an outcome and it becomes the chart, with the
+ticket and the book quoting the same side. **All events** opens the full board,
+where you can search question text and filter by venue.
+
+The section only exists when a connected plugin serves event contracts. Disable
+Kalshi and Polymarket in the Plugin Store, or ship a build without the
+predictions family, and the heading goes with them rather than standing over an
+empty list. In a browser Kalshi cannot answer at all, so on a phone the board
+lists what Polymarket has and names Kalshi once, in a line, instead of failing.
+
 ## What the phone does not do
 
 Some screens are desktop-only. Open a link to one on a phone and you get a
@@ -131,9 +149,10 @@ Polymarket and Binance Futures included, so
 [event contracts](/docs/prediction-markets) and
 [perpetual futures](/docs/cex-futures) both trade from a phone.
 
-The event browser is a panel, so it lives on the desktop grid. On a phone you
-reach an outcome through pair search instead, which matches on the question
-text, and the chart, the book, and the ticket all quote it in cents.
+The desktop's Prediction Discovery workspace is a pane layout, so it stays on
+the desktop grid. The phone carries the part that matters, the event board
+itself, in Discover (above), and pair search finds an outcome by its question
+text as well.
 
 Two smaller things are desktop-only on purpose: editing an existing indicator's
 parameters, and reordering a watchlist.

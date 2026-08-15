@@ -4954,7 +4954,9 @@
       "venuesCount_other": "{{count}} places de marché"
     },
     "discover": {
-      "featured": "En vedette"
+      "featured": "En vedette",
+      "predictions": "Marchés de prédiction",
+      "allEvents": "Tous les événements"
     },
     "fearGreed": {
       "historyLabel_one": "Dernier jour",

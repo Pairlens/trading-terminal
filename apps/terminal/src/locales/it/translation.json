@@ -4954,7 +4954,9 @@
       "venuesCount_other": "{{count}} piattaforme"
     },
     "discover": {
-      "featured": "In evidenza"
+      "featured": "In evidenza",
+      "predictions": "Mercati previsionali",
+      "allEvents": "Tutti gli eventi"
     },
     "fearGreed": {
       "historyLabel_one": "Ultimo giorno",

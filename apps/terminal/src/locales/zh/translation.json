@@ -4954,7 +4954,9 @@
       "venuesCount_other": "{{count}} 个交易所"
     },
     "discover": {
-      "featured": "精选"
+      "featured": "精选",
+      "predictions": "预测市场",
+      "allEvents": "全部事件"
     },
     "fearGreed": {
       "historyLabel_one": "最近一天",

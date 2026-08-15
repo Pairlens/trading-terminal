@@ -6,7 +6,7 @@ parent: trading
 order: 6
 eyebrow: For traders
 updated: AUG 2026
-readTime: 6 min read
+readTime: 7 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -89,6 +89,13 @@ card per event with how long until it closes, its volume, and a price for each
 outcome.
 Click an outcome and it opens in the chart terminal. A venue that needs the
 desktop app says so in place of its results rather than returning nothing.
+
+On a phone the board is in **Discover**, under **Prediction markets**: a few
+live events with their outcome prices, and **All events** for the full list
+with the same search and venue filter. Tapping an outcome opens its chart, the
+way clicking a card does on the desktop. The section is only there when a
+prediction connector is installed and enabled. See
+[Mobile terminal](/docs/mobile-terminal).
 
 Search works from the pair picker too. It grows a **Predictions** tab beside
 Crypto and Stocks, and prediction rows are rendered as the question rather than

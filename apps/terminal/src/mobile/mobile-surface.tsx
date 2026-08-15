@@ -143,6 +143,7 @@ const importConnectAccountSheet = () =>
   import('./screens/connect-account-sheet')
 const importNewsReaderSheet = () => import('./screens/news-reader-sheet')
 const importMarketsScreen = () => import('./screens/markets-screen')
+const importEventsScreen = () => import('./screens/events-screen')
 const importAccountDetailScreen = () =>
   import('./screens/account-detail-screen')
 const importFearGreedScreen = () => import('./screens/fear-greed-screen')
@@ -155,6 +156,7 @@ const SettingsScreen = lazyChunk(importSettingsScreen)
 const ConnectAccountSheet = lazyChunk(importConnectAccountSheet)
 const NewsReaderSheet = lazyChunk(importNewsReaderSheet)
 const MarketsScreen = lazyChunk(importMarketsScreen)
+const EventsScreen = lazyChunk(importEventsScreen)
 const AccountDetailScreen = lazyChunk(importAccountDetailScreen)
 const FearGreedScreen = lazyChunk(importFearGreedScreen)
 const PnlScreen = lazyChunk(importPnlScreen)
@@ -196,10 +198,14 @@ const PREFETCH: Array<() => Promise<unknown>> = [
   importNewsReaderSheet,
   importConnectAccountSheet,
   importAccountDetailScreen,
-  // Last tier: both are one tap deep from a Discover card, and neither is on
-  // the path to a trade.
+  // Last tier: each is one tap deep from a Discover card or section, and none
+  // is on the path to a trade. The events board is warmed unconditionally
+  // rather than behind the venue check — the chunk is small, and reading the
+  // plugin ledger from a prefetch list would put a gate in the one place that
+  // must not care what is installed.
   importFearGreedScreen,
   importPnlScreen,
+  importEventsScreen,
 ]
 
 /** `requestIdleCallback`, with the timeout every Safari release still needs. */
@@ -544,6 +550,8 @@ const OverlayHost = memo(function OverlayHost({
       return <NewsReaderSheet onClose={onClose} overlay={overlay} />
     case 'markets':
       return <MarketsScreen onClose={onClose} overlay={overlay} />
+    case 'events':
+      return <EventsScreen onClose={onClose} overlay={overlay} />
     case 'accountDetail':
       return <AccountDetailScreen onClose={onClose} overlay={overlay} />
     case 'fearGreed':

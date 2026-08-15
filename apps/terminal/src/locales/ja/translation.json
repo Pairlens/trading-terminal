@@ -4954,7 +4954,9 @@
       "venuesCount_other": "{{count}}件の取引所"
     },
     "discover": {
-      "featured": "注目"
+      "featured": "注目",
+      "predictions": "予測市場",
+      "allEvents": "すべてのイベント"
     },
     "fearGreed": {
       "historyLabel_one": "直近1日",

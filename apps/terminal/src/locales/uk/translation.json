@@ -4990,7 +4990,9 @@
       "venuesCount_other": "{{count}} майданчиків"
     },
     "discover": {
-      "featured": "Добірка"
+      "featured": "Добірка",
+      "predictions": "Ринки прогнозів",
+      "allEvents": "Усі події"
     },
     "fearGreed": {
       "historyLabel_one": "Останній день",

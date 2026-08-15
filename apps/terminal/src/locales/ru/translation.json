@@ -4990,7 +4990,9 @@
       "venuesCount_other": "{{count}} площадки"
     },
     "discover": {
-      "featured": "Рекомендуемые"
+      "featured": "Рекомендуемые",
+      "predictions": "Рынки прогнозов",
+      "allEvents": "Все события"
     },
     "fearGreed": {
       "historyLabel_one": "Последний день",

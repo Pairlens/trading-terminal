@@ -4954,7 +4954,9 @@
       "venuesCount_other": "{{count}} borsa"
     },
     "discover": {
-      "featured": "Öne çıkanlar"
+      "featured": "Öne çıkanlar",
+      "predictions": "Tahmin piyasaları",
+      "allEvents": "Tüm olaylar"
     },
     "fearGreed": {
       "historyLabel_one": "Son gün",

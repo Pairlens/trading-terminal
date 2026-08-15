@@ -4954,7 +4954,9 @@
       "venuesCount_other": "{{count}} corretoras"
     },
     "discover": {
-      "featured": "Em destaque"
+      "featured": "Em destaque",
+      "predictions": "Mercados de previsão",
+      "allEvents": "Todos os eventos"
     },
     "fearGreed": {
       "historyLabel_one": "Último dia",
