@@ -6,11 +6,15 @@ import { SquareFunction } from 'lucide-react'
 import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
 
+import {
+  MasterDetailSkeleton,
+  PendingAfter,
+} from '@/components/master-detail-skeleton'
 import { PageHeader } from '@/components/page-header'
-import { lazyChunk } from '@/lib/lazy-chunk'
+import { lazyPageChunk } from '@/lib/pending-pacing'
 
 // Lazy: keeps the code editor and Python runtime out of the main bundle.
-const IndicatorWorkbench = lazyChunk(() =>
+const IndicatorWorkbench = lazyPageChunk(() =>
   import('@/components/indicators/indicator-workbench').then((m) => ({
     default: m.IndicatorWorkbench,
   })),
@@ -43,9 +47,12 @@ function IndicatorsPage() {
       <div className="overflow-hidden" style={{ height: 'calc(100% - 40px)' }}>
         <Suspense
           fallback={
-            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              {t('indicators.loading')}
-            </div>
+            <PendingAfter>
+              <MasterDetailSkeleton
+                body="editor"
+                label={t('indicators.loading')}
+              />
+            </PendingAfter>
           }
         >
           <IndicatorWorkbench focusScriptId={script ?? null} />

@@ -6,11 +6,15 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Workflow } from 'lucide-react'
 import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
+import {
+  MasterDetailSkeleton,
+  PendingAfter,
+} from '@/components/master-detail-skeleton'
 import { PageHeader } from '@/components/page-header'
-import { lazyChunk } from '@/lib/lazy-chunk'
+import { lazyPageChunk } from '@/lib/pending-pacing'
 import { parseEntityId } from '@/lib/routing/pages'
 
-const WorkflowBuilder = lazyChunk(() =>
+const WorkflowBuilder = lazyPageChunk(() =>
   import('@/components/workflows/workflow-builder').then((m) => ({
     default: m.WorkflowBuilder,
   })),
@@ -45,9 +49,12 @@ function WorkflowsPage() {
       <div className="overflow-hidden" style={{ height: 'calc(100% - 40px)' }}>
         <Suspense
           fallback={
-            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              {t('routes.workflows.loading')}
-            </div>
+            <PendingAfter>
+              <MasterDetailSkeleton
+                body="canvas"
+                label={t('routes.workflows.loading')}
+              />
+            </PendingAfter>
           }
         >
           <WorkflowBuilder workflowId={workflow ?? null} />
