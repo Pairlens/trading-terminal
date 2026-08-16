@@ -715,7 +715,7 @@ function AssistantMessageList({
 }) {
   const { t } = useTranslation()
   const isStreaming = status === 'streaming' || status === 'submitted'
-  const { contentRef, scrollToBottom, isPinned } = useStickToBottom({
+  const { contentRef, scrollToBottom, isPinned, hasUnseen } = useStickToBottom({
     enabled: isStreaming,
   })
   const lastId = messages[messages.length - 1]?.id
@@ -770,11 +770,13 @@ function AssistantMessageList({
     // `relative` so the jump-to-latest button can hang over the scroller
     // without a second wrapper in the flex chain.
     <div className="relative flex min-h-0 flex-1 flex-col">
-      <div
-        className="ai-fade-y min-h-0 flex-1 overflow-y-auto overscroll-contain"
-        ref={contentRef}
-      >
-        <div className="flex flex-col gap-3.5 px-3.5 py-3">
+      <div className="ai-fade-y min-h-0 flex-1 overflow-y-auto overscroll-contain">
+        {/* The ref belongs on THIS element, the one that grows, not on the
+            scroller above it. The hook walks up from here to find the
+            scroller and watches this box for height changes, so putting it
+            one level up breaks the follow silently: the observer ends up on
+            a flex-sized box that never changes height. */}
+        <div className="flex flex-col gap-3.5 px-3.5 py-3" ref={contentRef}>
           {messages.map((message) => (
             <CopilotChatMessage
               key={message.id}
@@ -795,17 +797,27 @@ function AssistantMessageList({
         </div>
       </div>
 
-      {/* Scrolling up during a long run parks the view, which is the
-          point — but then the answer lands off screen with nothing to say
-          so. The hook already tracked this; nothing had ever asked it. */}
+      {/* Scrolling up during a long run parks the view, which is the point.
+          The pill is what stops that from costing you the answer, and it
+          says which of the two situations you are in: the thread simply
+          moved on without you, or something new is waiting down there. The
+          second reads louder because it is the one worth interrupting for. */}
       {!isPinned && messages.length > 0 ? (
         <button
           type="button"
-          onClick={() => scrollToBottom()}
-          className="ai-glass-pill text-muted-foreground hover:text-foreground absolute inset-x-0 bottom-2 mx-auto flex h-7 w-fit items-center gap-1.5 rounded-full px-3 text-[11px]"
+          onClick={() => scrollToBottom('smooth')}
+          data-unseen={hasUnseen ? '' : undefined}
+          className="ai-glass-pill text-muted-foreground hover:text-foreground data-unseen:text-foreground absolute inset-x-0 bottom-2 mx-auto flex h-7 w-fit items-center gap-1.5 rounded-full px-3 text-[11px]"
         >
-          <ArrowDown className="size-3" />
-          {t('copilot.jumpToLatest')}
+          {hasUnseen ? (
+            <span
+              className="size-1.5 shrink-0 rounded-full"
+              style={{ background: 'var(--magic-1)' }}
+            />
+          ) : (
+            <ArrowDown className="size-3" />
+          )}
+          {hasUnseen ? t('copilot.newMessages') : t('copilot.jumpToLatest')}
         </button>
       ) : null}
     </div>

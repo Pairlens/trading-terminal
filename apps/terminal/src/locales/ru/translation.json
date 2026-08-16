@@ -1361,6 +1361,7 @@
     "queued": "В очереди",
     "queuedHint": "Ожидание текущего ответа...",
     "jumpToLatest": "К последнему",
+    "newMessages": "Новые сообщения",
     "chartScreenshot": "Снимок графика",
     "lensPersona": "Персона линзы",
     "persona": {

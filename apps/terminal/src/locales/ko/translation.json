@@ -1353,6 +1353,7 @@
     "queued": "대기 중",
     "queuedHint": "현재 답변을 기다리는 중...",
     "jumpToLatest": "최신으로 이동",
+    "newMessages": "새 메시지",
     "chartScreenshot": "차트 스크린샷",
     "lensPersona": "렌즈 페르소나",
     "persona": {

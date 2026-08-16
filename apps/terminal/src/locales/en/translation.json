@@ -1353,6 +1353,7 @@
     "queued": "Queued",
     "queuedHint": "Waiting for the current answer...",
     "jumpToLatest": "Jump to latest",
+    "newMessages": "New messages",
     "chartScreenshot": "Chart screenshot",
     "lensPersona": "Lens Persona",
     "persona": {

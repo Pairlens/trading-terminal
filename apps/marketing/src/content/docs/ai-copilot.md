@@ -120,10 +120,17 @@ the current answer is finished. One message waits, not a backlog, because a
 second one would be answered with context from before an answer you have not
 read yet.
 
-Scrolling up parks the view so you can read while it writes, and a **Jump to
-latest** button appears to get you back. If a run fails, the error carries a
-**Retry** rather than making you retype the prompt, and every finished answer has
-a regenerate button beside its copy button.
+The thread follows the answer while you are at the bottom of it, so a run you
+are watching never scrolls out from under you. Scroll up and it lets go
+immediately, because reading something further back is a decision, not an
+accident. A button appears to take you down again, and it tells you which of
+the two you are in: **Jump to latest** if the thread simply moved on, or **New
+messages** with a dot if something has landed below you since you scrolled
+away. Scrolling back down yourself clears it just the same.
+
+If a run fails, the error carries a **Retry** rather than making you retype the
+prompt, and every finished answer has a regenerate button beside its copy
+button.
 
 ## One assistant, one conversation
 
