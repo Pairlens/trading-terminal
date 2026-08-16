@@ -104,7 +104,6 @@
   .ai-glass {
     background: var(--ai-glass);
     backdrop-filter: blur(72px) var(--ai-frost);
-    -webkit-backdrop-filter: blur(72px) var(--ai-frost);
     box-shadow:
       inset 0 1px 0 var(--ai-sheen),
       inset 0 0 0 1px var(--ai-edge),
@@ -117,7 +116,6 @@
   .ai-glass-pill {
     background: var(--ai-glass);
     backdrop-filter: blur(36px) var(--ai-frost);
-    -webkit-backdrop-filter: blur(36px) var(--ai-frost);
     box-shadow:
       inset 0 1px 0 var(--ai-sheen),
       inset 0 0 0 1px var(--ai-edge),
@@ -250,6 +248,14 @@
 
   /* ── Fallbacks ────────────────────────────────────────────────── */
 
+  /* NEVER hand-write `-webkit-backdrop-filter` in this repo. The build
+     prefixes for you, and writing the pair yourself makes it emit ONLY the
+     prefixed property: Chrome dropped that alias, so the blur silently
+     stopped existing in production while dev, which does not minify, looked
+     perfect. It shipped that way and was diagnosed from the built bundle,
+     not from the source. The @supports condition below is a different thing
+     and correctly names both. */
+
   /* Two ways to end up without a backdrop blur: an engine that cannot do it,
      and a user who has asked the OS for less transparency. Both get the fill
      opaque — the panel loses its depth, never its readability. */
@@ -267,7 +273,6 @@
     .ai-glass-pill {
       background: var(--ai-surface);
       backdrop-filter: none;
-      -webkit-backdrop-filter: none;
     }
   }
 
