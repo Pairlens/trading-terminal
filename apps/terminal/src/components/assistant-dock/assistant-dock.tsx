@@ -46,6 +46,7 @@ import {
 } from '@/lib/assistant-core/placement'
 import { useAssistantOrbLabel } from '@/lib/assistant-core/use-orb-label'
 import { useWindowDrag } from '@/lib/assistant-core/use-window-drag'
+import { useAssistantWindowOrigin } from '@/lib/assistant-core/use-window-origin'
 import {
   toggleAssistantFrom,
   useAssistantStore,
@@ -70,6 +71,9 @@ export function AssistantDock() {
   )
 
   const drag = useWindowDrag()
+  // Read off the wrapper below rather than the window itself, which
+  // carries the transform this is computing.
+  const { frameRef, origin } = useAssistantWindowOrigin(placement, isOpen)
 
   // Straight into the store, so the nav-rail orb sees the same phase
   // without the shell that hosts it re-rendering per token.
@@ -107,9 +111,10 @@ export function AssistantDock() {
           window sets its own pointer-events from `open`, so the
           collapsed box stays inert and the open one does not.
         */}
-        <div>
+        <div ref={frameRef}>
           <AssistantChatWindow
             windowRef={drag.windowRef}
+            origin={origin}
             open={isOpen}
             onClose={close}
             title={t('assistantDock.title')}

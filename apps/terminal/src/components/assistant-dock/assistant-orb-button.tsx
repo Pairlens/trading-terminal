@@ -91,12 +91,16 @@ export function AssistantOrbButton({
         </AnimatePresence>
       </span>
 
-      <AiOrb
-        size="30px"
-        animationDuration={15}
-        state={busy ? 'thinking' : 'idle'}
-        className="shrink-0"
-      />
+      {/* Marked so the chat window can grow out of the glyph rather than
+          out of the middle of the suggestion beside it. */}
+      <span data-assistant-orb-core="" className="flex shrink-0">
+        <AiOrb
+          size="30px"
+          animationDuration={15}
+          state={busy ? 'thinking' : 'idle'}
+          className="shrink-0"
+        />
+      </span>
       {/* Invisible until a modifier is held, so the pill stays a label and
           an orb and the chord is still there to be found. */}
       <ShortcutHint keys={shortcut ?? ''} />

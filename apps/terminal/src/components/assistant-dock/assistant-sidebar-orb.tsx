@@ -90,11 +90,15 @@ export function AssistantSidebarOrb({
         onClick={onClick}
         type="button"
       >
-        <AiOrb
-          size="20px"
-          animationDuration={15}
-          state={busy ? 'thinking' : 'idle'}
-        />
+        {/* Marked for the chat window's transform origin: the panel flies
+            out of the glyph, not out of the rail button around it. */}
+        <span data-assistant-orb-core="" className="flex">
+          <AiOrb
+            size="20px"
+            animationDuration={15}
+            state={busy ? 'thinking' : 'idle'}
+          />
+        </span>
         <span className="sr-only">{t('assistantDock.title')}</span>
         {/* Every other item in the rail advertises its chord on hold-⌘; the
             orb was the one that did not, which is most of why the shortcut

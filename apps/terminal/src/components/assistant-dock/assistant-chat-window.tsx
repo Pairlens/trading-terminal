@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
  * Floating glass panel for the unified assistant dock. It grows out of the orb
- * (transform origin bottom right), holds a header, a body, an optional notice
- * strip and an optional footer.
+ * that opened it — the caller measures where that is and passes the origin in
+ * — and holds a header, a body, an optional notice strip and an optional
+ * footer.
  *
  * It is ALWAYS mounted and only animates between shown and hidden. Unmounting
  * on close would tear down the conversation inside it, and the whole point of
@@ -25,6 +26,8 @@ import { Button } from '@pairlens/ui/components/ui/button'
 import { ShimmeringText } from '@pairlens/ui/components/ui/shimmering-text'
 
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
+import type { AssistantWindowOrigin } from '@/lib/assistant-core/use-window-origin'
+import { ASSISTANT_ORIGIN_FALLBACK } from '@/lib/assistant-core/use-window-origin'
 
 export type AssistantChatWindowProps = {
   open: boolean
@@ -54,6 +57,12 @@ export type AssistantChatWindowProps = {
   /** Spread onto the header, which doubles as the title bar. */
   dragHandleProps?: React.HTMLAttributes<HTMLElement>
   dragging?: boolean
+  /**
+   * Where the panel grows from and folds back into: the live position of
+   * the orb that opens it, measured by the dock. Defaults to the corner
+   * the floating orb sits in.
+   */
+  origin?: AssistantWindowOrigin
 }
 
 export function AssistantChatWindow({
@@ -70,6 +79,7 @@ export function AssistantChatWindow({
   windowRef,
   dragHandleProps,
   dragging = false,
+  origin = ASSISTANT_ORIGIN_FALLBACK.floating,
 }: AssistantChatWindowProps) {
   const reduceMotion = useReducedMotion() ?? false
 
@@ -104,18 +114,29 @@ export function AssistantChatWindow({
               closed: { opacity: 0, visibility: 'hidden' },
             }
           : {
-              open: { opacity: 1, scale: 1, y: 0, visibility: 'visible' },
+              // Out of the orb on the way in, and a shorter, plainer
+              // curve on the way back: an opening panel is worth
+              // watching, a closing one is in the way.
+              open: {
+                opacity: 1,
+                scale: 1,
+                x: 0,
+                y: 0,
+                visibility: 'visible',
+                transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] },
+              },
               closed: {
                 opacity: 0,
-                scale: 0.94,
-                y: 12,
+                scale: 0.9,
+                x: origin.offset.x,
+                y: origin.offset.y,
                 visibility: 'hidden',
+                transition: { duration: 0.17, ease: [0.4, 0, 0.9, 0.4] },
               },
             }
       }
-      transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
       style={{
-        transformOrigin: 'bottom right',
+        transformOrigin: origin.transformOrigin,
         pointerEvents: open ? 'auto' : 'none',
       }}
       className="ai-glass ai-aura text-card-foreground relative flex h-[min(660px,calc(100svh-7.5rem))] w-[440px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[20px]"
