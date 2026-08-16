@@ -3,10 +3,12 @@
 import type { ImgHTMLAttributes } from 'react'
 
 /**
- * Pairlens terminal logo from /public/logo.svg.
- * Uses CSS filter to adapt to the current theme — slightly dimmed in dark
- * mode, darkened in light mode so it blends with the titlebar.
+ * The Pairlens wordmark from /public/wordmark.webp (1919x627, transparent).
+ * White letters with a black outline and a spectrum underline, so it reads
+ * on dark and light surfaces alike without a theme swap.
  */
 export function PairlensLogo(props: ImgHTMLAttributes<HTMLImageElement>) {
-  return <img src="/logo.svg" alt="Pairlens" draggable={false} {...props} />
+  return (
+    <img src="/wordmark.webp" alt="Pairlens" draggable={false} {...props} />
+  )
 }

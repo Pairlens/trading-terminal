@@ -69,7 +69,7 @@ An orb sits in the left nav rail, under the charts icon, and it has a line of
 text that is contextual: **Analyze the chart of BTC/USDT** on a chart, **Build a
 workflow** on the workflows page, **Write an indicator** in the workbench. The
 line flies out when you hover the orb, and on its own while the assistant is
-working. Click the orb, or press <kbd>⌘J</kbd>, and the chat opens over the
+working. Click the orb, or press <kbd>⌘/</kbd>, and the chat opens over the
 terminal.
 
 If you would rather have it in the corner with its suggestion always readable,

@@ -27,7 +27,18 @@ const statuePhone = await getImage({
 <section id="top" class="zhero">
   <div aria-hidden="true" class="pl-glow zhero-glow"></div>
 
-  <h1 class="zhero-word" data-par="-34">Pairlens</h1>
+  <h1 class="zhero-word" data-par="-34">
+    <img
+      src="/wordmark.webp"
+      alt="Pairlens"
+      width="1919"
+      height="627"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      draggable="false"
+    />
+  </h1>
 
   <picture>
     <source media="(max-width: 720px)" srcset={statuePhone.src} />
@@ -175,20 +186,27 @@ const statuePhone = await getImage({
     z-index: 1;
     left: 0;
     right: 0;
-    /* 0.3485 puts the cap-band's centre (translateY(50%)) on the statue's
-       mouth — measured from the reference composition. */
-    bottom: calc(0.3485 * var(--zs));
+    /* Seats the wordmark's letter band (translateY(50%)) on the statue's
+       mouth — measured against the reference composition. The image carries
+       the rainbow underline below the letters, so its seat sits lower than
+       the old text wordmark's 0.3485 to keep the caps on the same band. */
+    bottom: calc(0.315 * var(--zs));
     margin: 0;
     transform: translateY(50%);
     text-align: center;
-    font-family: var(--font-serif);
-    font-weight: 700;
-    font-size: min(calc(0.355 * var(--zs)), 26.5vw, 28rem);
-    line-height: 0.8;
-    letter-spacing: -0.045em;
-    color: #fff;
+    line-height: 0;
     animation: zs-word 1.1s var(--ease-out) both;
     translate: var(--hx, 0px) calc(var(--par-y, 0px) + var(--hy, 0px));
+  }
+  .zhero-word img {
+    display: inline-block;
+    /* Matches the width the serif text wordmark used to span at each clamp
+       stop. Tailwind preflight's max-width: 100% would crop the overshoot on
+       narrow viewports, same as the statue below. */
+    width: min(calc(1.31 * var(--zs)), 98vw, 102rem);
+    max-width: none;
+    height: auto;
+    user-select: none;
   }
 
   .zhero :global(.zhero-statue) {
@@ -478,6 +496,15 @@ const statuePhone = await getImage({
       top: 88px;
       align-items: flex-start;
       padding: 0 20px;
+    }
+    /* In this crop the wordmark straddles the statue box's top edge, and the
+       mask clips the drop shadow at that edge (mask-clip: border-box), so the
+       blurred silhouette ends in a hard seam right across the glyphs: white
+       dims below the line, not above it. Coarse pointers already run without
+       the filter; drop it for every pointer in this layout — on the pure-black
+       ground the shadow buys nothing here. */
+    .zhero :global(.zhero-statue) {
+      filter: none;
     }
   }
 

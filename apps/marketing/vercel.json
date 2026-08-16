@@ -11,7 +11,7 @@
       ]
     },
     {
-      "source": "/(logo.svg|splash.svg|og.png)",
+      "source": "/(logo.svg|splash.svg|og.png|wordmark.webp)",
       "headers": [
         {
           "key": "Cache-Control",

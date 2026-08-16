@@ -32,6 +32,9 @@ export type VaultProtectorKind = 'password' | 'passkey' | 'biometric'
 /** Coarse trading mode — never mixes with amounts. */
 export type TradeMode = 'paper' | 'live'
 
+/** How the user reached the assistant. Names our own affordances only. */
+export type AssistantOpenSource = 'orb' | 'shortcut' | 'palette'
+
 /** Where an order originated: manual panel, copilot proposal, or workflow. */
 export type TradeSource = 'trade_panel' | 'copilot' | 'workflow'
 
@@ -138,6 +141,13 @@ export interface AnalyticsEvents {
     tool_calls: number
     duration_ms: number
   }
+  /** The chat went from collapsed to open, and how. The reason it carries
+   * `via`: the assistant is reachable by chord, by palette row and by
+   * clicking the orb, and only the orb is visible without knowing it
+   * exists. If the chord stays near zero after being advertised on the orb
+   * and in the palette, the chord is not the answer and the surface needs a
+   * different affordance. */
+  assistant_opened: { via: AssistantOpenSource }
   /** A starter on the assistant's empty screen was clicked instead of the
    * user writing their own opener. Answers whether the suggestions earn
    * their space, and which of the two sets does the work. The starter's
