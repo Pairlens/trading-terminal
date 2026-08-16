@@ -42,11 +42,12 @@
        light theme cannot drag the composite down under the text. */
     --ai-frost: saturate(120%) brightness(1.1);
 
-    /* 92%. Legibility wins over depth: at 84% a bright pane behind the panel
-       was still tinting body text, and text you have to work at is not worth
-       a nicer-looking card. What is left is a suggestion of tone from what is
-       behind, not a picture of it, and the frost below flattens even that. */
-    --ai-glass: color-mix(in oklab, var(--ai-surface) 92%, transparent);
+    /* 86%. The two passes that pushed this to 92 were compensating for a blur
+       that was being stripped out of the build and never ran (see the note by
+       the fallbacks). With 72px of frost actually applied, the fill no longer
+       has to do that work alone, so it can come back down and let a little of
+       the terminal read through as tone. */
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 86%, transparent);
     /* Chrome that sits ON the slab (composer capsule, chips): lighter, because
        it is already backed by the fill above. */
     --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
@@ -81,7 +82,10 @@
        label bleeding up through a dark slab, so the backdrop is dimmed instead
        of lifted. */
     --ai-frost: saturate(120%) brightness(0.7);
-    --ai-glass: color-mix(in oklab, var(--ai-surface) 90%, transparent);
+    /* Two points under light: a dark slab hides a bright backdrop less well
+       than a light slab hides a dark one, and the brightness clamp above is
+       already dimming what comes through. */
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 84%, transparent);
     --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
     --ai-inset-strong: color-mix(in oklab, var(--foreground) 9%, transparent);
 
