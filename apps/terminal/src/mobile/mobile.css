@@ -234,10 +234,14 @@
      The 99px radius is PINNED, here and on the tab bar and the sheet's top
      corners: the shell's silhouette stays the same shape under every theme,
      `--radius` or not. Themes get to recolour the phone, not restyle it. */
+  /* Unprefixed only, here and everywhere below. The build adds
+     `-webkit-backdrop-filter` itself; hand-writing the pair makes it emit the
+     prefixed property ALONE, which Chrome no longer understands. That is how
+     the phone's glass lost its blur in production while dev looked right.
+     See the same note in assistant-glass.css. */
   .pl-glass {
     background: color-mix(in oklab, var(--pl-surface-float) 86%, transparent);
     backdrop-filter: blur(18px) saturate(180%);
-    -webkit-backdrop-filter: blur(18px) saturate(180%);
     box-shadow:
       inset 0 1px 0 var(--pl-wash-strong),
       inset 0 0 0 1px var(--pl-edge);
@@ -466,14 +470,12 @@
   .pl-toolbar {
     background: color-mix(in oklab, var(--pl-surface-raised) 92%, transparent);
     backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-top: 1px solid var(--pl-hairline);
   }
 
   .pl-tabbar-float {
     background: color-mix(in oklab, var(--pl-surface) 92%, transparent);
     backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-top: 1px solid var(--pl-hairline);
   }
 
@@ -488,7 +490,6 @@
   .pl-popover {
     background: color-mix(in oklab, var(--pl-surface-overlay) 98%, transparent);
     backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow:
       0 18px 48px rgb(0 0 0 / var(--pl-shadow-a)),
       inset 0 1px 0 var(--pl-wash-strong),
