@@ -334,7 +334,14 @@ export type Keymap = {
  */
 const PAIRLENS_BINDINGS: Record<string, Array<string>> = {
   'general.commandPalette': ['Mod+K'],
-  'general.toggleAssistant': ['Mod+J'],
+  // Two chords, and the order matters: everything that renders a shortcut
+  // label shows the first one, so the one that works everywhere has to lead.
+  // Off Apple `Mod` is Ctrl, and Ctrl+J is the Downloads panel in both Chrome
+  // and Firefox, so on the hosted web terminal ⌘J's counterpart can be gone
+  // before the page sees the keydown. Mod+/ is claimed by no browser on any
+  // platform and reads as "ask", the way / does in every chat surface the
+  // user already types in. Mod+J stays bound for the muscle memory it built.
+  'general.toggleAssistant': ['Mod+/', 'Mod+J'],
   'general.settings': ['Mod+,'],
   // Shipped unbound on purpose: ⌘⇧L is the workspace menu, ⌘L is the
   // browser's focus-address-bar, and ⌃⌘Q is the macOS system lock. The

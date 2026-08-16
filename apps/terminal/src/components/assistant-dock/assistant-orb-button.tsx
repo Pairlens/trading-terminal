@@ -16,6 +16,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { AiOrb } from '@pairlens/ui/components/ui/ai-orb'
 import { Button } from '@pairlens/ui/components/ui/button'
 import { ShimmeringText } from '@pairlens/ui/components/ui/shimmering-text'
+import { ShortcutHint } from '@/components/shortcut-hints'
 
 export type AssistantOrbButtonProps = {
   /** Companion line. Already translated by the caller. */
@@ -28,6 +29,8 @@ export type AssistantOrbButtonProps = {
   openLabel: string
   /** Accessible name while the window is open. Already translated. */
   closeLabel: string
+  /** Display label for the toggle chord, or `''` when unbound. */
+  shortcut?: string
   onClick: () => void
 }
 
@@ -37,6 +40,7 @@ export function AssistantOrbButton({
   open,
   openLabel,
   closeLabel,
+  shortcut,
   onClick,
 }: AssistantOrbButtonProps) {
   // The label changes as the user moves around the terminal, so the key carries
@@ -93,6 +97,9 @@ export function AssistantOrbButton({
         state={busy ? 'thinking' : 'idle'}
         className="shrink-0"
       />
+      {/* Invisible until a modifier is held, so the pill stays a label and
+          an orb and the chord is still there to be found. */}
+      <ShortcutHint keys={shortcut ?? ''} />
     </Button>
   )
 }

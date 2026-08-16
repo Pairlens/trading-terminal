@@ -14,10 +14,15 @@ BTC/USDT**. On the workflows page, **Build a workflow**. On Discovery, **Find me
 something to trade**. Where that line lives depends on the placement, below.
 
 Click the orb and a chat window opens over the terminal. Click it again and the
-window folds back into the orb. <kbd>⌘J</kbd> (<kbd>Ctrl</kbd>+<kbd>J</kbd>
-on Windows and Linux) does the same from the keyboard, and it works while you
-are typing in a field, because reaching the assistant should not cost you the
-sentence you were in the middle of.
+window folds back into the orb. <kbd>⌘/</kbd> does the same from the keyboard,
+and it works while you are typing in a field, because reaching the assistant
+should not cost you the sentence you were in the middle of.
+
+<kbd>⌘J</kbd> is bound to it too. On the desktop app either one is fine; on the
+web terminal prefer <kbd>⌘/</kbd>, since <kbd>Ctrl</kbd>+<kbd>J</kbd> is the
+Downloads panel in Chrome and Firefox on Windows and Linux and the browser can
+take it before the page ever sees it. Both are rebindable in **Settings →
+Keyboard**.
 
 ## Three placements
 

@@ -4,7 +4,7 @@ description: Every keyboard shortcut in the Pairlens trading terminal, from time
 group: reference
 order: 3
 eyebrow: Reference
-updated: 15 AUG 2026
+updated: 16 AUG 2026
 readTime: 2 min read
 ---
 
@@ -16,11 +16,18 @@ macOS uses <kbd>⌘</kbd> and <kbd>⌥</kbd>. Windows and Linux use
 | Chord         | Action               |
 | ------------- | -------------------- |
 | <kbd>⌘K</kbd> | Open omni-search     |
+| <kbd>⌘/</kbd> | Open the assistant   |
 | <kbd>⌘J</kbd> | Open the assistant   |
 | <kbd>⌘,</kbd> | Open settings        |
 | <kbd>⌘N</kbd> | New window (desktop) |
 | <kbd>⌘[</kbd> | Back                 |
 | <kbd>⌘]</kbd> | Forward              |
+
+The assistant answers to both chords. Prefer <kbd>⌘/</kbd> on the web
+terminal: on Windows and Linux the other one is <kbd>Ctrl</kbd>+<kbd>J</kbd>,
+which Chrome and Firefox spend on their own Downloads panel. Hold <kbd>⌘</kbd>
+for a beat anywhere in the terminal and every control that has a chord
+shows it, the orb included.
 
 ## Timeframes
 

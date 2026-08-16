@@ -95,7 +95,7 @@ import {
   ASSISTANT_BAR,
   useAssistantPlacement,
 } from '@/lib/assistant-core/placement'
-import { useAssistantStore } from '@/stores/assistant-store'
+import { toggleAssistantFrom } from '@/stores/assistant-store'
 import { SectionTour } from '@/components/onboarding/section-tour'
 import { isOnboardingComplete } from '@/lib/onboarding-state'
 import {
@@ -333,7 +333,7 @@ function TerminalLayout() {
       },
       {
         commandId: 'general.toggleAssistant',
-        action: () => useAssistantStore.getState().toggle(),
+        action: () => toggleAssistantFrom('shortcut'),
         // Fires while a field has focus: the whole point is to reach the
         // assistant without leaving whatever you were typing in.
         allowInInput: true,
