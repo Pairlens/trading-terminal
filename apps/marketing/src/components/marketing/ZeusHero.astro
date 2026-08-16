@@ -479,6 +479,15 @@ const statuePhone = await getImage({
       align-items: flex-start;
       padding: 0 20px;
     }
+    /* In this crop the wordmark straddles the statue box's top edge, and the
+       mask clips the drop shadow at that edge (mask-clip: border-box), so the
+       blurred silhouette ends in a hard seam right across the glyphs: white
+       dims below the line, not above it. Coarse pointers already run without
+       the filter; drop it for every pointer in this layout — on the pure-black
+       ground the shadow buys nothing here. */
+    .zhero :global(.zhero-statue) {
+      filter: none;
+    }
   }
 
   /* On phones the statue IS the page: a 1.5s fade after the bytes arrive
