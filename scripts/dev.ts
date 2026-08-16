@@ -105,7 +105,10 @@ function printBanner(appServerUrl: string | null): void {
   ]
 
   if (appServerUrl) {
-    const label = isCloud ? ' (cloud)' : isLocal ? ' (local)' : ''
+    // "already running" is load-bearing: this script only probes for an App
+    // Server, it never spawns one. Without it the row reads like a service
+    // the dev command just brought up.
+    const label = isCloud ? ' (cloud)' : isLocal ? ' (already running)' : ''
     lines.push(
       boxLine(
         `${pad('App Server', 18)}${CYAN}${appServerUrl}${RESET}${DIM}${label}${RESET}`,
@@ -148,7 +151,7 @@ function printBanner(appServerUrl: string | null): void {
   } else {
     lines.push(
       boxLine(
-        `${BOLD}Auth${RESET}         ${DIM}Off — local persistence only${RESET}`,
+        `${BOLD}Auth${RESET}         ${DIM}Off (local persistence only)${RESET}`,
       ),
     )
   }
@@ -162,6 +165,7 @@ function printBanner(appServerUrl: string | null): void {
       boxLine(`${DIM}Offline / standalone: PAIRLENS_STANDALONE=1${RESET}`),
     )
   } else if (appServerUrl) {
+    lines.push(boxLine(`${DIM}Detected, not started by this script${RESET}`))
     lines.push(
       boxLine(
         `${DIM}Sign in with${RESET} ${YELLOW}ai.agent@pairlens.finance${RESET}`,
@@ -174,7 +178,7 @@ function printBanner(appServerUrl: string | null): void {
       ),
     )
   }
-  lines.push(boxLine(`${DIM}Ctrl+C to stop all services${RESET}`))
+  lines.push(boxLine(`${DIM}Ctrl+C to stop the dev server${RESET}`))
   lines.push(boxLine(''))
 
   lines.push(boxBottom())
