@@ -7,13 +7,17 @@ import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
 
 import { DesktopSurfaceNudge } from '@/components/feedback/desktop-nudge'
+import {
+  MasterDetailSkeleton,
+  PendingAfter,
+} from '@/components/master-detail-skeleton'
 import { PageHeader } from '@/components/page-header'
-import { lazyChunk } from '@/lib/lazy-chunk'
+import { lazyPageChunk } from '@/lib/pending-pacing'
 import { parseEntityId } from '@/lib/routing/pages'
 
 // Lazy: the create flow pulls in the venue/pair pickers and the params
 // editors, none of which the rest of the terminal needs on first paint.
-const BotsPage = lazyChunk(() =>
+const BotsPage = lazyPageChunk(() =>
   import('@/components/bots/bots-page').then((m) => ({
     default: m.BotsPage,
   })),
@@ -57,9 +61,12 @@ function BotsRoute() {
       <div className="overflow-hidden" style={{ height: 'calc(100% - 40px)' }}>
         <Suspense
           fallback={
-            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              {t('botsPage.loading')}
-            </div>
+            <PendingAfter>
+              <MasterDetailSkeleton
+                body="detail"
+                label={t('botsPage.loading')}
+              />
+            </PendingAfter>
           }
         >
           <BotsPage botId={bot ?? null} deployScriptId={create ?? null} />

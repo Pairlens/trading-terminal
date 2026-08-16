@@ -7,11 +7,15 @@ import { Bell } from 'lucide-react'
 import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
 import { DesktopSurfaceNudge } from '@/components/feedback/desktop-nudge'
+import {
+  MasterDetailSkeleton,
+  PendingAfter,
+} from '@/components/master-detail-skeleton'
 import { PageHeader } from '@/components/page-header'
-import { lazyChunk } from '@/lib/lazy-chunk'
+import { lazyPageChunk } from '@/lib/pending-pacing'
 import { parseEntityId } from '@/lib/routing/pages'
 
-const NotificationsBuilder = lazyChunk(() =>
+const NotificationsBuilder = lazyPageChunk(() =>
   import('@/components/notifications/notifications-builder').then((m) => ({
     default: m.NotificationsBuilder,
   })),
@@ -47,9 +51,12 @@ function NotificationsPage() {
       <div className="overflow-hidden" style={{ height: 'calc(100% - 40px)' }}>
         <Suspense
           fallback={
-            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              {t('routes.notifications.loading')}
-            </div>
+            <PendingAfter>
+              <MasterDetailSkeleton
+                body="canvas"
+                label={t('routes.notifications.loading')}
+              />
+            </PendingAfter>
           }
         >
           <NotificationsBuilder ruleId={alert ?? null} />
