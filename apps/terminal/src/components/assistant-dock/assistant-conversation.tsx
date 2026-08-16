@@ -327,10 +327,21 @@ function AssistantConversationInner({
     [addToolResult],
   )
 
+  /**
+   * Bumped whenever the user puts something into the thread. Scrolling up
+   * parks the view, and that is right for reading, but it must not outlive
+   * the user's own send: writing a message is as explicit as it gets that
+   * they want to see what happens next. Re-pinning here is also what makes
+   * the answer follow, because the pin is what the growth observer checks.
+   */
+  const [jumpSignal, setJumpSignal] = useState(0)
+  const jumpToLatest = useCallback(() => setJumpSignal((n) => n + 1), [])
+
   const send = useCallback(
     (text: string) => {
       runStartRef.current = Date.now()
       runToolCallsRef.current = 0
+      jumpToLatest()
       sendMessage({ text })
       api
         .saveAiMessage(HISTORY_MARKET, HISTORY_KEY, {
@@ -358,17 +369,22 @@ function AssistantConversationInner({
       // fresh turn instead would leave the tool call dangling, and a
       // conversation with a dangling call cannot be continued at all.
       if (pendingQuestion) {
+        jumpToLatest()
         answerQuestion(pendingQuestion.toolCallId, text)
         return
       }
       if (status !== 'ready') {
         track('assistant_message_queued')
+        // The queued turn renders at the end of the thread. Parking the
+        // view above it would show nothing for the message they just
+        // typed, which reads as the composer having swallowed it.
+        jumpToLatest()
         setQueued(text)
         return
       }
       send(text)
     },
-    [send, status, pendingQuestion, answerQuestion],
+    [send, status, pendingQuestion, answerQuestion, jumpToLatest],
   )
   handleSendRef.current = handleSend
 
@@ -648,6 +664,7 @@ function AssistantConversationInner({
         onQuickAction={handleSend}
         starterContext={chart ? 'chart' : 'global'}
         queued={queued}
+        jumpSignal={jumpSignal}
         onRegenerate={status === 'ready' ? handleRegenerate : undefined}
       />
       {error ? (
@@ -701,6 +718,7 @@ function AssistantMessageList({
   onQuickAction,
   starterContext,
   queued,
+  jumpSignal,
   onRegenerate,
 }: {
   messages: Array<UIMessage>
@@ -711,6 +729,9 @@ function AssistantMessageList({
   starterContext: 'chart' | 'global'
   /** Text waiting for the current run to finish, shown as a pending turn. */
   queued: string | null
+  /** Bumped when the user sends: go to the bottom and re-pin, whatever
+   * they had scrolled to. */
+  jumpSignal: number
   onRegenerate?: () => void
 }) {
   const { t } = useTranslation()
@@ -719,6 +740,20 @@ function AssistantMessageList({
     enabled: isStreaming,
   })
   const lastId = messages[messages.length - 1]?.id
+
+  // Runs after the render that added the message, so the height it scrolls
+  // to already includes it. Skips the initial value so opening a thread
+  // does not yank a restored scroll position.
+  const seenJump = useRef(jumpSignal)
+  useEffect(() => {
+    if (seenJump.current === jumpSignal) return
+    seenJump.current = jumpSignal
+    // Instant, not smooth. A smooth scroll fires scroll events all the way
+    // down, and every one of them is read as "not at the bottom" while the
+    // answer is already streaming in, which unpins the view and flashes the
+    // chip at the user for the whole animation.
+    scrollToBottom()
+  }, [jumpSignal, scrollToBottom])
 
   if (messages.length === 0) {
     return (
@@ -805,7 +840,7 @@ function AssistantMessageList({
       {!isPinned && messages.length > 0 ? (
         <button
           type="button"
-          onClick={() => scrollToBottom('smooth')}
+          onClick={() => scrollToBottom()}
           data-unseen={hasUnseen ? '' : undefined}
           className="ai-glass-pill text-muted-foreground hover:text-foreground data-unseen:text-foreground absolute inset-x-0 bottom-2 mx-auto flex h-7 w-fit items-center gap-1.5 rounded-full px-3 text-[11px]"
         >
