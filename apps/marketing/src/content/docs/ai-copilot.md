@@ -128,6 +128,10 @@ the two you are in: **Jump to latest** if the thread simply moved on, or **New
 messages** with a dot if something has landed below you since you scrolled
 away. Scrolling back down yourself clears it just the same.
 
+Sending overrides all of that. Type a message from anywhere in the thread and
+the view returns to the bottom and starts following again, because writing
+something is about as clear as it gets that you want to see what happens next.
+
 If a run fails, the error carries a **Retry** rather than making you retype the
 prompt, and every finished answer has a regenerate button beside its copy
 button.
