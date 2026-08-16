@@ -72,8 +72,16 @@ export type PluginInstance = {
    * copilot vs 'research' report writing); plugins with a single model
    * ignore it. Returns unknown to keep this package free of an `ai`
    * dependency; the host casts to the AI SDK LanguageModel type.
+   *
+   * May return a promise, and the bundled providers do: an AI SDK provider
+   * factory is 55-207 KB plus zod behind it, and a plugin that is installed
+   * but never asked for a model should not make everyone download that at
+   * boot. Load the SDK here rather than in `initialize`, which for an
+   * always-on provider runs on every launch. Hosts must await the result.
    */
-  getLanguageModel?: (purpose?: 'chat' | 'research') => unknown
+  getLanguageModel?: (
+    purpose?: 'chat' | 'research',
+  ) => unknown | Promise<unknown>
   initialize?: (config: Record<string, unknown>) => Promise<void>
   destroy?: () => Promise<void>
   // UI panel components — values are framework-specific (e.g. React lazy components)

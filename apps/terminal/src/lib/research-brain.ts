@@ -367,7 +367,9 @@ export async function runResearch(
     formatSearchContext(results),
   )
 
-  const model = inferenceProvider.getLanguageModel?.('research')
+  // Awaited: the bundled providers load their AI SDK on first use rather
+  // than at boot, so the model arrives a promise the first time round.
+  const model = await inferenceProvider.getLanguageModel?.('research')
   const report = model
     ? await streamReport(model as LanguageModel, system, prompt, opts)
     : await streamReportViaPlugin(inferenceProvider, system, prompt, opts)

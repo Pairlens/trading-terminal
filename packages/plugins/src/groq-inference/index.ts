@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
+import { loadOpenAiCompatible } from '../lib/ai-sdk-lazy'
 import { streamOpenAiCompatible } from '../lib/inference-sse'
 import type { InferenceMessage } from '@pairlens/shared/plugin-types'
 import type {
@@ -160,7 +160,8 @@ export function createGroqInferencePlugin(
 
   // AI SDK model for the host-run agentic loop (tools, multi-step). Groq's
   // API is OpenAI-compatible and allows direct browser/webview requests.
-  function getLanguageModel(): unknown {
+  async function getLanguageModel(): Promise<unknown> {
+    const createOpenAICompatible = await loadOpenAiCompatible()
     return createOpenAICompatible({
       name: 'groq',
       baseURL: 'https://api.groq.com/openai/v1',
