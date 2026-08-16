@@ -13,9 +13,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  * instead: it only auto-scrolls when `pinned`, and pins/unpins from real scroll
  * events.
  *
- * Attach `contentRef` (a callback ref) to the growing content element. The
- * scrollable ancestor — a plain `overflow-y-auto` div or a base-ui ScrollArea
- * viewport — is resolved automatically, so this works with both.
+ * Attach `contentRef` (a callback ref) to the growing content element — the
+ * INNER element whose height changes, never the scroller itself. The
+ * scrollable ancestor (a plain `overflow-y-auto` div or a base-ui ScrollArea
+ * viewport) is resolved by walking up from there, so putting the ref on the
+ * scroller silently breaks both halves: the walk starts above it and finds
+ * the wrong element, and the ResizeObserver watches a flex-sized box whose
+ * height never changes, so growth never fires.
  */
 export function useStickToBottom<T extends HTMLElement = HTMLDivElement>({
   enabled,
@@ -33,6 +37,9 @@ export function useStickToBottom<T extends HTMLElement = HTMLDivElement>({
   const pinnedRef = useRef(true)
   const enabledRef = useRef(enabled)
   const [isPinned, setIsPinned] = useState(true)
+  /** Content arrived below the fold while the user was reading further up. */
+  const [hasUnseen, setHasUnseen] = useState(false)
+  const lastHeightRef = useRef(0)
 
   // Distance-from-bottom (px) still counted as "parked at the bottom".
   const THRESHOLD = 48
@@ -62,6 +69,7 @@ export function useStickToBottom<T extends HTMLElement = HTMLDivElement>({
       if (!el) return
       pinnedRef.current = true
       setIsPinned(true)
+      setHasUnseen(false)
       el.scrollTo({ top: el.scrollHeight, behavior })
     },
     [resolveScrollEl],
@@ -78,6 +86,8 @@ export function useStickToBottom<T extends HTMLElement = HTMLDivElement>({
       const pinned = dist <= THRESHOLD
       pinnedRef.current = pinned
       setIsPinned(pinned)
+      // Scrolling back down IS reading it, however they got there.
+      if (pinned) setHasUnseen(false)
     }
     el.addEventListener('scroll', onScroll, { passive: true })
     return () => el.removeEventListener('scroll', onScroll)
@@ -88,14 +98,32 @@ export function useStickToBottom<T extends HTMLElement = HTMLDivElement>({
   // so late-loading content (sparklines, favicons) stays in view too.
   useEffect(() => {
     if (!contentEl) return
+    lastHeightRef.current = contentEl.scrollHeight
     const obs = new ResizeObserver(() => {
-      if (!enabledRef.current || !pinnedRef.current) return
-      const el = resolveScrollEl()
-      if (el) el.scrollTop = el.scrollHeight
+      const height = contentEl.scrollHeight
+      const grew = height > lastHeightRef.current
+      lastHeightRef.current = height
+
+      if (pinnedRef.current) {
+        // Follow, but only while something is actually arriving. A
+        // completed thread that reflows (a window resize, a card
+        // expanding) should stay where the reader left it.
+        if (enabledRef.current) {
+          const el = resolveScrollEl()
+          if (el) el.scrollTop = el.scrollHeight
+        }
+        return
+      }
+
+      // Parked up the thread and the answer landed below them. Growth is
+      // the signal rather than message count: an answer streams in as one
+      // message that keeps getting taller, so counting messages would
+      // announce the turn once and then go quiet for the whole answer.
+      if (grew) setHasUnseen(true)
     })
     obs.observe(contentEl)
     return () => obs.disconnect()
   }, [contentEl, resolveScrollEl])
 
-  return { contentRef, scrollToBottom, isPinned }
+  return { contentRef, scrollToBottom, isPinned, hasUnseen }
 }

@@ -112,7 +112,13 @@ export function useWindowDrag() {
       if (event.currentTarget.hasPointerCapture(event.pointerId)) {
         event.currentTarget.releasePointerCapture(event.pointerId)
       }
+      // Hand the position over to the store and DROP the live copy in the
+      // same commit. `position` below reads `live ?? stored`, so a live value
+      // that outlives its drag shadows the store permanently: reset would
+      // null the store, the button would correctly disappear, and the window
+      // would not move an inch. Both settle in one render, so nothing jumps.
       if (live) setStored(live)
+      setLive(null)
     },
     [dragging, live, setStored],
   )
@@ -148,6 +154,10 @@ export function useWindowDrag() {
       : undefined,
     /** True once the user has moved it, so the UI can offer a reset. */
     isCustom: stored !== null,
-    reset: useCallback(() => setStored(null), [setStored]),
+    /** Back to the CSS anchor. Clears both sources or it does nothing. */
+    reset: useCallback(() => {
+      setLive(null)
+      setStored(null)
+    }, [setStored]),
   }
 }
