@@ -68,10 +68,11 @@ the persona menu and puts it back on that anchor.
 
 ## The chat window
 
-It is frosted glass, not a solid card. The terminal underneath comes through as
-a soft wash of colour, never as something you could read, so the chat floats
-over your workspace instead of punching a hole in it. The fill has a floor:
-whatever runs behind it, candles, a book, a tape, body text keeps its contrast.
+It is frosted glass, and the frost is heavy. The terminal underneath is blurred
+past the point where anything of it survives as shape or text, leaving the
+faintest sense of tone, so the chat reads as floating over your workspace
+without ever competing with it. Legibility settles that trade: whatever runs
+behind the panel, candles, a book, a tape, body text keeps its contrast.
 
 The header repeats the same contextual line the collapsed orb showed, so opening
 the window never costs you the context that made you open it. While a run is
