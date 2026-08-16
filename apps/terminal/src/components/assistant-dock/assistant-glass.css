@@ -12,10 +12,12 @@
  * toward the panel's own tone, and the fill sits on top with a floor under it.
  * What survives is a hint of what is behind, never a picture of it.
  *
- * The frost does most of the work, which is why the fill can stay thin. Read
- * `--ai-frost` and `--ai-glass` as one setting: thinning the fill without the
- * blur and the brightness clamp puts live chart paint straight under body
- * text.
+ * Read `--ai-frost`, the blur radius and `--ai-glass` as ONE setting. They were
+ * tuned together against the same question, which is not "how much glass is
+ * there" but "can you read a line of 13px text with a book running under it".
+ * Depth loses that argument every time: this panel has been thinned twice and
+ * walked back both times, so treat a thinner fill as a change that needs the
+ * text checked over a bright pane, not a taste knob.
  *
  * Everything derives from the shadcn tokens a `theme:override` plugin sets, so
  * all eighteen themes and both colour modes repaint for free. Three rules
@@ -38,14 +40,13 @@
        fill goes over it. `saturate` keeps the backdrop from going grey at this
        blur radius; `brightness` pulls it toward paper so a dark chart under a
        light theme cannot drag the composite down under the text. */
-    --ai-frost: saturate(125%) brightness(1.06);
+    --ai-frost: saturate(120%) brightness(1.1);
 
-    /* 84% over a frosted backdrop. Worst realistic case in a light theme is a
-       dark candle body sitting under 44px of blur, which averages well above
-       the chart's own paint: the composite lands within a couple of points of
-       `--ai-surface`, so 13px body text keeps its 7:1. Thinner than this and
-       the backdrop stops being a hint and starts being content. */
-    --ai-glass: color-mix(in oklab, var(--ai-surface) 84%, transparent);
+    /* 92%. Legibility wins over depth: at 84% a bright pane behind the panel
+       was still tinting body text, and text you have to work at is not worth
+       a nicer-looking card. What is left is a suggestion of tone from what is
+       behind, not a picture of it, and the frost below flattens even that. */
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 92%, transparent);
     /* Chrome that sits ON the slab (composer capsule, chips): lighter, because
        it is already backed by the fill above. */
     --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
@@ -79,8 +80,8 @@
     /* Same frost, inverted clamp: here the danger is a bright pane or a white
        label bleeding up through a dark slab, so the backdrop is dimmed instead
        of lifted. */
-    --ai-frost: saturate(125%) brightness(0.78);
-    --ai-glass: color-mix(in oklab, var(--ai-surface) 80%, transparent);
+    --ai-frost: saturate(120%) brightness(0.7);
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 90%, transparent);
     --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
     --ai-inset-strong: color-mix(in oklab, var(--foreground) 9%, transparent);
 
@@ -95,26 +96,28 @@
 
   /* ── Surfaces ─────────────────────────────────────────────────── */
 
-  /* 44px is the point where 11px order-book digits running under the panel
-     stop resolving as glyphs and become a wash. Below it you get a smeared
-     screenshot of the terminal; at it you get frosted glass. */
+  /* 72px. Past the radius where 11px order-book digits stop resolving as
+     glyphs, and far enough that even a hard edge running under the panel (a
+     pane divider, the boundary between a red book and a green one) arrives as
+     a gradient rather than a line. Structure behind the text is what the eye
+     tries to read; this is what removes it. */
   .ai-glass {
     background: var(--ai-glass);
-    backdrop-filter: blur(44px) var(--ai-frost);
-    -webkit-backdrop-filter: blur(44px) var(--ai-frost);
+    backdrop-filter: blur(72px) var(--ai-frost);
+    -webkit-backdrop-filter: blur(72px) var(--ai-frost);
     box-shadow:
       inset 0 1px 0 var(--ai-sheen),
       inset 0 0 0 1px var(--ai-edge),
       var(--ai-shadow);
   }
 
-  /* The pill is 40px tall, so it takes a shorter radius: a 44px blur on a
+  /* The pill is 40px tall, so it takes a shorter radius: a 72px blur on a
      40px box samples mostly from outside itself and the frost stops tracking
      what it is actually sitting on. */
   .ai-glass-pill {
     background: var(--ai-glass);
-    backdrop-filter: blur(30px) var(--ai-frost);
-    -webkit-backdrop-filter: blur(30px) var(--ai-frost);
+    backdrop-filter: blur(36px) var(--ai-frost);
+    -webkit-backdrop-filter: blur(36px) var(--ai-frost);
     box-shadow:
       inset 0 1px 0 var(--ai-sheen),
       inset 0 0 0 1px var(--ai-edge),
