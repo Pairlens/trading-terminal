@@ -21,6 +21,50 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  * the wrong element, and the ResizeObserver watches a flex-sized box whose
  * height never changes, so growth never fires.
  */
+/** Distance-from-bottom (px) still counted as "parked at the bottom". */
+const THRESHOLD = 48
+
+/**
+ * The scroll handler's whole decision, as a pure function so it can be
+ * tested. It has been wrong twice in ways no synthetic growth test caught,
+ * so the reasoning lives here with it:
+ *
+ * `keep` is the case that matters. Being far from the bottom is NOT enough
+ * to conclude the reader walked away, because this hook's own jump produces
+ * exactly that reading: it scrolls to the bottom as it stands, React commits
+ * another few hundred pixels of message, and the resulting scroll event is
+ * measured against the taller content. Only a scroll that actually went UP
+ * is a reader leaving.
+ */
+export function decideScrollPin({
+  top,
+  lastTop,
+  scrollHeight,
+  clientHeight,
+}: {
+  top: number
+  lastTop: number
+  scrollHeight: number
+  clientHeight: number
+}): 'pin' | 'unpin' | 'keep' {
+  const dist = scrollHeight - top - clientHeight
+  if (dist <= THRESHOLD) return 'pin'
+  // 1px of slack: sub-pixel positions must not read as intent.
+  return top < lastTop - 1 ? 'unpin' : 'keep'
+}
+
+/**
+ * The furthest an element can actually be scrolled. Recording anything
+ * larger than this as a previous position (`scrollHeight`, say) leaves the
+ * next scroll event looking like a viewport-sized jump upwards.
+ */
+export function maxScrollTop(el: {
+  scrollHeight: number
+  clientHeight: number
+}): number {
+  return Math.max(0, el.scrollHeight - el.clientHeight)
+}
+
 export function useStickToBottom<T extends HTMLElement = HTMLDivElement>({
   enabled,
 }: {
@@ -42,9 +86,6 @@ export function useStickToBottom<T extends HTMLElement = HTMLDivElement>({
   const lastHeightRef = useRef(0)
   /** Previous scrollTop, so a scroll event knows which way it went. */
   const lastTopRef = useRef(0)
-
-  // Distance-from-bottom (px) still counted as "parked at the bottom".
-  const THRESHOLD = 48
 
   enabledRef.current = enabled
 
@@ -72,8 +113,11 @@ export function useStickToBottom<T extends HTMLElement = HTMLDivElement>({
       pinnedRef.current = true
       setIsPinned(true)
       setHasUnseen(false)
-      lastTopRef.current = el.scrollHeight
-      el.scrollTo({ top: el.scrollHeight, behavior })
+      // The CLAMPED target, not scrollHeight: see maxScrollTop. `scrollTo`
+      // clamps for us anyway; the point is that both agree on the number.
+      const target = maxScrollTop(el)
+      lastTopRef.current = target
+      el.scrollTo({ top: target, behavior })
     },
     [resolveScrollEl],
   )
@@ -87,34 +131,19 @@ export function useStickToBottom<T extends HTMLElement = HTMLDivElement>({
     lastTopRef.current = el.scrollTop
     const onScroll = () => {
       const top = el.scrollTop
-      const dist = el.scrollHeight - top - el.clientHeight
-      // 1px of slack: sub-pixel scroll positions must not read as intent.
-      const movedUp = top < lastTopRef.current - 1
+      const verdict = decideScrollPin({
+        top,
+        lastTop: lastTopRef.current,
+        scrollHeight: el.scrollHeight,
+        clientHeight: el.clientHeight,
+      })
       lastTopRef.current = top
-
-      // At the bottom is pinned, whatever brought us here.
-      if (dist <= THRESHOLD) {
-        pinnedRef.current = true
-        setIsPinned(true)
-        // Scrolling back down IS reading it, however they got there.
-        setHasUnseen(false)
-        return
-      }
-
-      // Away from the bottom only counts as leaving if the user actually
-      // went UP. Distance alone cannot tell the difference between someone
-      // scrolling back to read and this hook's own jump to the bottom, and
-      // that ambiguity was the bug: `scrollToBottom` scrolls to the height
-      // as it stands, React commits another hundred pixels of message in
-      // the same frame, and the scroll event WE caused is then measured
-      // against the taller content and reads as the user walking away. The
-      // view then froze exactly where the jump left it while the whole
-      // answer streamed past below. Growth can never unpin now; only a
-      // deliberate upward scroll can.
-      if (movedUp) {
-        pinnedRef.current = false
-        setIsPinned(false)
-      }
+      if (verdict === 'keep') return
+      const pinned = verdict === 'pin'
+      pinnedRef.current = pinned
+      setIsPinned(pinned)
+      // Scrolling back down IS reading it, however they got there.
+      if (pinned) setHasUnseen(false)
     }
     el.addEventListener('scroll', onScroll, { passive: true })
     return () => el.removeEventListener('scroll', onScroll)
