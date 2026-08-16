@@ -44,7 +44,7 @@
        trick behind the frosted materials this is modelled on. `brightness`
        only nudges the average toward the panel's own tone, enough to protect
        text, not enough to launder the colour back out. */
-    --ai-frost: saturate(180%) brightness(1.05);
+    --ai-frost: saturate(190%) brightness(1.12);
 
     /* 80%. The fill's job is legibility, not concealment: blur removes the
        structure, saturation keeps the colour, and this only has to hold the
@@ -52,13 +52,12 @@
        Anything higher and the colour the frost worked to preserve is buried
        under the very fill that was supposed to let it show.
 
-       The floor, worked out rather than eyeballed. Take the absolute worst
-       backdrop, a solid black pane under a light theme, which no blurred
-       terminal ever actually produces: composite L = 0.8 x 0.993 + 0.2 x 0
-       = 0.79, against `--foreground` near L 0.25. That is about 8:1, so
-       body text clears 7:1 with the real worst case nowhere near it. Dark
-       runs the same sum against solid white and lands near 7.5:1. */
-    --ai-glass: color-mix(in oklab, var(--ai-surface) 80%, transparent);
+       Light lifts too, it just has less far to go: paper is already near the
+       top, so 1.12 is enough to keep a dark chart from dragging the composite
+       down. Worst case is a solid black pane, which 72px of blur never
+       actually yields: composite L = 0.72 x 0.993 + 0.28 x 0.25 = 0.79
+       against `--foreground` near L 0.25, roughly 8:1. */
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 72%, transparent);
     /* Chrome that sits ON the slab (composer capsule, chips): lighter, because
        it is already backed by the fill above. */
     --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
@@ -89,15 +88,22 @@
        panel from the terminal behind it before the blur is noticed. */
     --ai-surface: color-mix(in oklab, var(--card) 88%, var(--foreground) 12%);
 
-    /* Same saturation, inverted clamp: the danger here is a bright pane or a
-       white label bleeding up through a dark slab, so the backdrop is dimmed
-       rather than lifted. 0.82 rather than the 0.7 this carried before, which
-       was crushing the reds and greens of a book down to a grey haze. */
-    --ai-frost: saturate(180%) brightness(0.82);
-    /* Two points under light. A dark slab hides a bright backdrop less well
-       than a light slab hides a dark one, so dark pays a little more of the
-       legibility cost in fill. */
-    --ai-glass: color-mix(in oklab, var(--ai-surface) 78%, transparent);
+    /* Dark LIFTS. This clamp was below 1 for three passes, and that was the
+       thing making the panel read as a hole: over a terminal that is already
+       dark, dimming the backdrop puts the panel BELOW its own surroundings,
+       and no amount of thinning the fill rescues a layer that is darker than
+       what it floats on. Frosted materials in a dark UI add light. So does
+       this now, and the panel reads as a lifted sheet rather than a cutout.
+
+       It is also what finally makes colour visible: an orange gauge or a
+       green tape behind the panel has to survive a 72px average, and dimming
+       what little is left is how it became grey. */
+    --ai-frost: saturate(200%) brightness(1.35);
+    /* Thinner than light, because a lifted backdrop is doing more of the work
+       here than a fill could. Checked over the brightest thing the terminal
+       has, a full order book, with the muted text as the thing to watch: it
+       is the first to go, well before body copy. */
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 70%, transparent);
     --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
     --ai-inset-strong: color-mix(in oklab, var(--foreground) 9%, transparent);
 
