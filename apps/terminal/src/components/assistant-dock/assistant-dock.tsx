@@ -37,6 +37,7 @@ import { AssistantConversation } from './assistant-conversation'
 import type { Persona } from '@/components/copilot/persona-menu'
 import type { AssistantRunStatus } from '@/lib/assistant-core/run-status'
 import type { AssistantConversationHandle } from './assistant-conversation'
+import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { PersonaMenu } from '@/components/copilot/persona-menu'
 import {
@@ -45,18 +46,21 @@ import {
 } from '@/lib/assistant-core/placement'
 import { useAssistantOrbLabel } from '@/lib/assistant-core/use-orb-label'
 import { useWindowDrag } from '@/lib/assistant-core/use-window-drag'
-import { useAssistantStore } from '@/stores/assistant-store'
+import {
+  toggleAssistantFrom,
+  useAssistantStore,
+} from '@/stores/assistant-store'
 
 export function AssistantDock() {
   const { t } = useTranslation()
   const isOpen = useAssistantStore((state) => state.isOpen)
   const close = useAssistantStore((state) => state.close)
-  const toggle = useAssistantStore((state) => state.toggle)
   const setRunStatus = useAssistantStore((state) => state.setRunStatus)
   const [placement] = useAssistantPlacement()
 
   const controlsRef = useRef<AssistantConversationHandle | null>(null)
   const { label, busy } = useAssistantOrbLabel()
+  const shortcut = useKeybindingLabel('general.toggleAssistant')
   // Owned here rather than in the conversation: the control that changes
   // it sits in this window's header. The key is the copilot's old one,
   // so a user's existing choice carries over.
@@ -82,7 +86,8 @@ export function AssistantDock() {
     open: isOpen,
     openLabel: t('assistantDock.open'),
     closeLabel: t('assistantDock.close'),
-    onClick: toggle,
+    shortcut,
+    onClick: () => toggleAssistantFrom('orb'),
   }
 
   return (

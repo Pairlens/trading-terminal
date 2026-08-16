@@ -20,9 +20,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@pairlens/ui/components/ui/sidebar'
+import { ShortcutHint } from '@/components/shortcut-hints'
+import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { useAssistantPlacement } from '@/lib/assistant-core/placement'
 import { useAssistantOrbLabel } from '@/lib/assistant-core/use-orb-label'
-import { useAssistantStore } from '@/stores/assistant-store'
+import {
+  toggleAssistantFrom,
+  useAssistantStore,
+} from '@/stores/assistant-store'
 
 /**
  * What the shell drops into the nav rail. Renders nothing unless the
@@ -33,8 +38,8 @@ export function AssistantSidebarOrbItem() {
   const { t } = useTranslation()
   const [placement] = useAssistantPlacement()
   const isOpen = useAssistantStore((state) => state.isOpen)
-  const toggle = useAssistantStore((state) => state.toggle)
   const { label, busy } = useAssistantOrbLabel()
+  const shortcut = useKeybindingLabel('general.toggleAssistant')
 
   if (placement !== 'sidebar') return null
 
@@ -45,7 +50,8 @@ export function AssistantSidebarOrbItem() {
       open={isOpen}
       openLabel={t('assistantDock.open')}
       closeLabel={t('assistantDock.close')}
-      onClick={toggle}
+      shortcut={shortcut}
+      onClick={() => toggleAssistantFrom('orb')}
     />
   )
 }
@@ -57,6 +63,8 @@ export type AssistantSidebarOrbProps = {
   open: boolean
   openLabel: string
   closeLabel: string
+  /** Display label for the toggle chord, or `''` when unbound. */
+  shortcut?: string
   onClick: () => void
 }
 
@@ -66,6 +74,7 @@ export function AssistantSidebarOrb({
   open,
   openLabel,
   closeLabel,
+  shortcut,
   onClick,
 }: AssistantSidebarOrbProps) {
   const { t } = useTranslation()
@@ -87,6 +96,10 @@ export function AssistantSidebarOrb({
           state={busy ? 'thinking' : 'idle'}
         />
         <span className="sr-only">{t('assistantDock.title')}</span>
+        {/* Every other item in the rail advertises its chord on hold-⌘; the
+            orb was the one that did not, which is most of why the shortcut
+            read as missing. */}
+        <ShortcutHint keys={shortcut ?? ''} />
       </SidebarMenuButton>
 
       {/* Flies out over the content rather than widening the rail, which

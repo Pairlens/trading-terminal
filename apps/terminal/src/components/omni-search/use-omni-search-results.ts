@@ -29,6 +29,7 @@ import {
 } from '@/components/pair-picker/pair-picker-data'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useInstrumentSearch } from '@/hooks/use-instrument-search'
+import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useThemePluginContext } from '@/hooks/use-theme-plugin'
@@ -41,6 +42,7 @@ import { isStandalone, openTerminalWindow } from '@/lib/platform'
 import { manualUpdateCheck } from '@/lib/update-check'
 import { useOptimisticSession } from '@/lib/session'
 import { authClient, hasAppServer } from '@/lib/auth-client'
+import { openAssistantFrom } from '@/stores/assistant-store'
 import { useCreateWorkspaceDialogStore } from '@/stores/create-workspace-dialog-store'
 import { useCustomWorkspacesStore } from '@/stores/custom-workspaces-store'
 import { useNotificationStore } from '@/stores/notification-store'
@@ -94,6 +96,9 @@ export function useOmniSearchResults(
   const openSettings = useSettingsDialogStore((s) => s.open)
   const { availableThemes, activeThemeId, selectTheme } =
     useThemePluginContext()
+  // Read live rather than hardcoded: rebind the assistant in Keyboard
+  // settings and the palette row relabels itself.
+  const assistantShortcut = useKeybindingLabel('general.toggleAssistant')
 
   // ── Query parsing ───────────────────────────────────────────────────
   // A leading prefix character scopes the search to one category.
@@ -459,6 +464,18 @@ export function useOmniSearchResults(
   const actionDefs = useMemo<Array<ActionResult>>(() => {
     const isDark = resolvedTheme === 'dark'
     const items: Array<ActionResult> = [
+      // First in the list on purpose. The assistant is the one surface with
+      // no icon in the shell chrome to click when the orb sits collapsed in
+      // the rail, so the palette is where most people will meet its chord.
+      {
+        type: 'action',
+        id: 'open-assistant',
+        label: t('assistantDock.open'),
+        icon: 'Sparkles',
+        shortcut: assistantShortcut,
+        keywords: ['ai', 'assistant', 'copilot', 'chat', 'ask', 'agent'],
+        execute: () => openAssistantFrom('palette'),
+      },
       {
         type: 'action',
         id: isDark ? 'toggle-theme' : 'toggle-theme-dark',
@@ -727,6 +744,7 @@ export function useOmniSearchResults(
     availableThemes,
     activeThemeId,
     selectTheme,
+    assistantShortcut,
     t,
   ])
 

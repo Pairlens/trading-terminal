@@ -3,6 +3,8 @@
 import { create } from 'zustand'
 
 import type { AssistantRunPhase } from '@/lib/assistant-core/run-status'
+import type { AssistantOpenSource } from '@/lib/analytics-events'
+import { track } from '@/lib/analytics-events'
 
 /**
  * The assistant dock's open/closed state, plus the one-shot bus any
@@ -124,4 +126,24 @@ export const useAssistantStore = create<AssistantStore>((set, get) => ({
  */
 export function askAssistant(prompt: string, options?: { send?: boolean }) {
   useAssistantStore.getState().open({ prompt, send: options?.send ?? true })
+}
+
+/**
+ * Toggle from one of the three affordances that exist only to reach the
+ * assistant: the orb, the chord, the palette row. The counting lives here
+ * rather than in each caller so the collapsed→open transition is recorded
+ * once, in one place, and a toggle that only collapses the window is never
+ * counted as an open.
+ */
+export function toggleAssistantFrom(via: AssistantOpenSource) {
+  const { isOpen, toggle } = useAssistantStore.getState()
+  if (!isOpen) track('assistant_opened', { via })
+  toggle()
+}
+
+/** Same accounting, for the callers that only ever open. */
+export function openAssistantFrom(via: AssistantOpenSource) {
+  const { isOpen, open } = useAssistantStore.getState()
+  if (!isOpen) track('assistant_opened', { via })
+  open()
 }
