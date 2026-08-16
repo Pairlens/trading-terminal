@@ -91,6 +91,32 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
       crossorigin
       href={jetbrainsWoff2}
     />
+    <!-- The hosted terminal is the site's primary CTA and lives on another
+         origin, so the click starts with a cold DNS + TCP + TLS handshake.
+         Opening it up front costs no bytes and buys back the whole round
+         trip; Safari honours this even though it ships neither of the two
+         speculative loads below. -->
+    <link rel="preconnect" href={SITE.launchUrl} />
+    <link rel="dns-prefetch" href={SITE.launchUrl} />
+    <!-- Prefetch the terminal's shell document on hover ("moderate"), not on
+         load. Same-site cross-origin prefetch needs no opt-in header from the
+         target, and unlike a plain `rel=prefetch` this lands in the browser's
+         prefetch cache, which activates without revalidating. The shell's
+         ~170 chunks are the other 99% of the boot and are warmed separately
+         by scripts/terminal-prefetch.ts. -->
+    <script
+      type="speculationrules"
+      is:inline
+      set:html={JSON.stringify({
+        prefetch: [
+          {
+            source: 'document',
+            where: { selector_matches: 'a[data-launch-terminal]' },
+            eagerness: 'moderate',
+          },
+        ],
+      })}
+    />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#161719" />
@@ -152,6 +178,9 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
       // Pulls in analytics.ts (consent + init) and arms the delegated
       // product-event listeners on top of it.
       import '@/scripts/analytics-events.ts'
+      // Warms the hosted terminal's chunks on CTA hover. Imported after
+      // analytics because it reports through the same taxonomy.
+      import '@/scripts/terminal-prefetch.ts'
     </script>
   </body>
 </html>

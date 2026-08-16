@@ -63,6 +63,11 @@ export interface MarketingAnalyticsEvents {
   /** An anchor into the hosted terminal was clicked. `surface` is the
    * placement, so the funnel reads per CTA rather than as one lump. */
   terminal_launched: { surface: string }
+  /** The visitor showed intent on a launch CTA and we spent ~2 MB warming
+   * the terminal's chunks for them. Fires at most once per page load, so the
+   * ratio against `terminal_launched` is the honest read on whether the
+   * bandwidth is buying anything. */
+  terminal_prefetched: Record<string, never>
   /** A desktop release download started. `os` is the build that was asked
    * for; the `visitor_os` super property is the machine that asked, and the
    * gap between them is the interesting part. */
