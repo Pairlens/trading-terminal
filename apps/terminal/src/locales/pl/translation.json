@@ -1281,7 +1281,11 @@
     "starterIdeaWorkflow3": "Wejście drabinką na spadku",
     "starterIdeaAlert1": "BTC przecina poziom",
     "starterIdeaAlert2": "Ruch 5% w godzinę",
-    "starterIdeaAlert3": "Daj znać, gdy bot zawrze transakcję"
+    "starterIdeaAlert3": "Daj znać, gdy bot zawrze transakcję",
+    "spotlight": {
+      "shell": "Terminal",
+      "scriptEditor": "Edytor skryptów"
+    }
   },
   "assistantDock": {
     "title": "Asystent",

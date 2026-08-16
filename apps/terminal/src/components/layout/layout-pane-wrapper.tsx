@@ -26,6 +26,7 @@ import {
 } from '@pairlens/ui/components/ui/context-menu'
 
 import { LayoutPaneRenderer } from './layout-pane-renderer'
+import { AiSpotlight } from '@/components/assistant-dock/ai-spotlight'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
 import { useLayout } from '@/lib/layout/context'
 import {
@@ -100,7 +101,10 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
   return (
     <div
       ref={setNodeRef}
-      className="flex h-full flex-col overflow-hidden"
+      // `relative` is the spotlight's anchor: the glow is drawn inside
+      // this box precisely because the box clips, so a pane the
+      // assistant points at cannot bleed over its neighbours.
+      className="relative flex h-full flex-col overflow-hidden"
       style={{ opacity: isDragging ? 0.3 : 1 }}
       {...attributes}
     >
@@ -229,6 +233,16 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
       <div className="@container/pane flex min-h-0 flex-1 flex-col overflow-hidden">
         <LayoutPaneRenderer type={paneType} paneId={paneId} />
       </div>
+      {/* One line here is what makes EVERY pane something the assistant
+          can point at, current ones and any a plugin adds later. The id
+          is the pane type rather than the instance: `pane:chart` is
+          what the model reads and reasons about, and two chart panes
+          are one answer to "show me the chart". */}
+      <AiSpotlight
+        id={`pane:${paneType}`}
+        label={def ? t(def.labelKey) : paneType}
+        description={`The ${def ? t(def.labelKey) : paneType} pane.`}
+      />
     </div>
   )
 })

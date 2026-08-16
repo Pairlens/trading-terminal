@@ -22,7 +22,7 @@ proxy, and cloud panels. The terminal is fully functional without one. It never
 sees exchange credentials and is never in the order path.
 
 **Assistant.** The one AI chat in the terminal, docked at the bottom right or in
-the left nav rail, your choice, and mounted above every page. Its loop runs client-side over 94 tools. It can propose
+the left nav rail, your choice, and mounted above every page. Its loop runs client-side over 95 tools. It can propose
 trades. It cannot execute them unattended. See
 [the AI assistant](/docs/ai-copilot).
 

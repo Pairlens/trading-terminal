@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "Masuk bertahap saat turun",
     "starterIdeaAlert1": "BTC melewati sebuah level",
     "starterIdeaAlert2": "Gerak 5% dalam sejam",
-    "starterIdeaAlert3": "Beri tahu saat bot saya bertransaksi"
+    "starterIdeaAlert3": "Beri tahu saat bot saya bertransaksi",
+    "spotlight": {
+      "shell": "Terminal",
+      "scriptEditor": "Editor skrip"
+    }
   },
   "assistantDock": {
     "title": "Asisten",

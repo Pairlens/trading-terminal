@@ -1281,7 +1281,11 @@
     "starterIdeaWorkflow3": "Драбинкою на просадці",
     "starterIdeaAlert1": "BTC перетинає рівень",
     "starterIdeaAlert2": "Рух 5% за годину",
-    "starterIdeaAlert3": "Повідом, коли торгує бот"
+    "starterIdeaAlert3": "Повідом, коли торгує бот",
+    "spotlight": {
+      "shell": "Термінал",
+      "scriptEditor": "Редактор скриптів"
+    }
   },
   "assistantDock": {
     "title": "Асистент",

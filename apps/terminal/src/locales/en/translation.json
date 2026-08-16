@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "Ladder into a dip",
     "starterIdeaAlert1": "BTC crosses a level",
     "starterIdeaAlert2": "A 5% move in an hour",
-    "starterIdeaAlert3": "Tell me when my bot trades"
+    "starterIdeaAlert3": "Tell me when my bot trades",
+    "spotlight": {
+      "shell": "Terminal",
+      "scriptEditor": "Script editor"
+    }
   },
   "assistantDock": {
     "title": "Assistant",

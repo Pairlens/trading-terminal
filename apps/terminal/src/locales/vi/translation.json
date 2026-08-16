@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "Vào từng phần khi giá giảm",
     "starterIdeaAlert1": "BTC vượt một mức",
     "starterIdeaAlert2": "Biến động 5% trong một giờ",
-    "starterIdeaAlert3": "Báo khi bot của tôi giao dịch"
+    "starterIdeaAlert3": "Báo khi bot của tôi giao dịch",
+    "spotlight": {
+      "shell": "Terminal",
+      "scriptEditor": "Trình soạn thảo script"
+    }
   },
   "assistantDock": {
     "title": "Trợ lý",

@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "ทยอยเก็บตอนย่อ",
     "starterIdeaAlert1": "BTC ผ่านระดับราคา",
     "starterIdeaAlert2": "ขยับ 5% ในหนึ่งชั่วโมง",
-    "starterIdeaAlert3": "เตือนเมื่อบอทเข้าเทรด"
+    "starterIdeaAlert3": "เตือนเมื่อบอทเข้าเทรด",
+    "spotlight": {
+      "shell": "เทอร์มินัล",
+      "scriptEditor": "ตัวแก้ไขสคริปต์"
+    }
   },
   "assistantDock": {
     "title": "ผู้ช่วย",

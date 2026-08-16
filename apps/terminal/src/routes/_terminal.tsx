@@ -90,6 +90,8 @@ import {
 import { BillingStateSync } from '@/components/billing/billing-state-sync'
 import { AssistantProvider } from '@/lib/assistant-core/assistant-provider'
 import { AssistantDock } from '@/components/assistant-dock/assistant-dock'
+import { AiSpotlight } from '@/components/assistant-dock/ai-spotlight'
+import { SHELL_SPOTLIGHT_ID } from '@/stores/ai-spotlight-store'
 import { AssistantSidebarOrbItem } from '@/components/assistant-dock/assistant-sidebar-orb'
 import {
   ASSISTANT_BAR,
@@ -699,7 +701,18 @@ function TerminalLayout() {
                           ) : null}
                         </SidebarFooter>
                       </Sidebar>
-                      <div className="bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2 flex min-h-0 flex-1 flex-col overflow-hidden">
+                      <div className="bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2 relative flex min-h-0 flex-1 flex-col overflow-hidden">
+                        {/* The frame itself, and the one target that is
+                            always mounted. That is what makes it the
+                            landing spot for a navigation: whatever page
+                            the assistant just opened, this is here to
+                            catch the glow on the other side and say
+                            "this changed because of me". */}
+                        <AiSpotlight
+                          id={SHELL_SPOTLIGHT_ID}
+                          label={t('assistant.spotlight.shell')}
+                          description="The whole terminal frame. Use it to draw the eye after moving the user to another page."
+                        />
                         <div className="flex min-h-0 flex-1 overflow-hidden">
                           {/* Workspace tree panel — inside inset container */}
                           <div

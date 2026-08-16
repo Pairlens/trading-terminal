@@ -18,6 +18,7 @@ import { buildSurfaceTools } from './surface-tools'
 import { toAutomationDeps, toCopilotDeps, toScriptDeps } from './tool-deps'
 import type { AssistantDeps } from './tool-deps'
 import type { ToolSet } from 'ai'
+import { listSpotlightTargets } from '@/stores/ai-spotlight-store'
 import { buildMarketTools } from '@/lib/copilot/market-tools'
 import { buildContextTools } from '@/lib/copilot/context-tools'
 import { buildPortfolioTools } from '@/lib/copilot/portfolio-tools'
@@ -97,10 +98,16 @@ export function activeToolsFor(
 ): Array<string> {
   const hasChart = deps.getChart() !== null
   const hasWorkbench = deps.getWorkbench() !== null
+  // The phone publishes no spotlight targets: its shell is a different
+  // tree, and there is nothing on a five-tab surface a glow would tell
+  // you that the tab bar does not. Offering a tool with nowhere to
+  // point invites the model to narrate a glow nobody saw.
+  const hasSpotlightTargets = listSpotlightTargets().length > 0
 
   return allToolNames.filter((name) => {
     if (!hasChart && chartToolNames.has(name)) return false
     if (!hasWorkbench && WORKBENCH_TOOL_NAMES.has(name)) return false
+    if (!hasSpotlightTargets && name === 'highlight_ui') return false
     return true
   })
 }

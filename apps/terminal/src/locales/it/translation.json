@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "Entra a scaglioni sul ribasso",
     "starterIdeaAlert1": "BTC supera un livello",
     "starterIdeaAlert2": "Un 5% in un’ora",
-    "starterIdeaAlert3": "Avvisami quando opera il mio bot"
+    "starterIdeaAlert3": "Avvisami quando opera il mio bot",
+    "spotlight": {
+      "shell": "Terminale",
+      "scriptEditor": "Editor di script"
+    }
   },
   "assistantDock": {
     "title": "Assistente",

@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "Düşüşte kademeli giriş",
     "starterIdeaAlert1": "BTC bir seviyeyi geçiyor",
     "starterIdeaAlert2": "Bir saatte %5 hareket",
-    "starterIdeaAlert3": "Botum işlem yapınca haber ver"
+    "starterIdeaAlert3": "Botum işlem yapınca haber ver",
+    "spotlight": {
+      "shell": "Terminal",
+      "scriptEditor": "Betik düzenleyici"
+    }
   },
   "assistantDock": {
     "title": "Asistan",

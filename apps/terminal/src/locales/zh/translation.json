@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "回调时分批建仓",
     "starterIdeaAlert1": "BTC 突破关键位",
     "starterIdeaAlert2": "一小时内波动 5%",
-    "starterIdeaAlert3": "机器人成交时提醒我"
+    "starterIdeaAlert3": "机器人成交时提醒我",
+    "spotlight": {
+      "shell": "终端",
+      "scriptEditor": "脚本编辑器"
+    }
   },
   "assistantDock": {
     "title": "助手",
