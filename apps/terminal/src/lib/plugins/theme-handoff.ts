@@ -18,7 +18,7 @@
  */
 
 import { STORAGE_PREFIX } from '@/hooks/use-persisted-state'
-import { applyTheme } from '@/hooks/use-theme-plugin'
+import { applyTheme } from '@/lib/theme/apply-theme'
 import { emitWrite } from '@/lib/sync/sync-channel'
 import { track } from '@/lib/analytics-events'
 

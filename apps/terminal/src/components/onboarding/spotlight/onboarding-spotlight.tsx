@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useReducedMotion } from 'motion/react'
 import { useTheme } from 'next-themes'
 import { useTranslation } from 'react-i18next'
@@ -77,6 +77,7 @@ import { analyticsSetting } from '@/lib/analytics'
 import { track } from '@/lib/analytics-events'
 import { setCountrySetting } from '@/lib/region-settings'
 import { emitWrite } from '@/lib/sync/sync-channel'
+import { warmTerminalRoutes } from '@/lib/warm-terminal'
 import { lazyChunk } from '@/lib/lazy-chunk'
 
 // Story-step vignettes pull in remotion — loaded only once the user moves
@@ -159,6 +160,15 @@ export function OnboardingSpotlight() {
 
   const step = STEPS[stepIndex]
   const isNarrative = step.kind === 'welcome' || step.kind === 'story'
+
+  // One step from the end, start pulling the terminal down. Onboarding has
+  // exactly one exit and it is `/`, so by here the chunks are not a guess.
+  // Earlier than this would compete with the steps the visitor is actually
+  // reading; later would leave nothing but the splash delay to hide it.
+  const router = useRouter()
+  useEffect(() => {
+    if (stepIndex >= STEPS.length - 2) warmTerminalRoutes(router)
+  }, [router, stepIndex])
 
   useEffect(() => {
     const timers = timersRef.current
