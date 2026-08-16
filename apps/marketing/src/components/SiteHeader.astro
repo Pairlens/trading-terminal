@@ -14,15 +14,14 @@ const stars = await getRepoStars()
     <div class="pl-hdr-pill" data-nav-loc="header">
       <a href="/" class="pl-hdr-brand" aria-label="Pairlens home">
         <img
-          src="/logo.svg"
-          alt=""
-          width="54"
-          height="25"
+          src="/wordmark.webp"
+          alt={SITE.name}
+          width="1919"
+          height="627"
           loading="eager"
           decoding="async"
           draggable="false"
         />
-        <span class="pl-hdr-word">{SITE.name}</span>
       </a>
 
       <span aria-hidden="true" class="pl-hdr-div"></span>
@@ -239,20 +238,12 @@ const stars = await getRepoStars()
   .pl-hdr-brand {
     display: inline-flex;
     align-items: center;
-    gap: 9px;
   }
   .pl-hdr-brand img {
     display: block;
-    height: 25px;
+    height: 28px;
     width: auto;
     user-select: none;
-  }
-  .pl-hdr-word {
-    font-family: var(--font-serif);
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    font-size: 19.5px;
-    color: var(--ml-fg);
   }
 
   .pl-hdr-div {
