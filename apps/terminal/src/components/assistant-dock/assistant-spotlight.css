@@ -1,0 +1,135 @@
+/*
+ * Copyright (c) 2026 Juan Ignacio Molina Estrada
+ * SPDX-License-Identifier: FSL-1.1-Apache-2.0
+ *
+ * The spotlight: the glow the assistant puts on the thing it just did
+ * something to.
+ *
+ * Built out of the magic tokens the AI surfaces already use, so it is
+ * unmistakably the assistant speaking rather than a generic selection
+ * highlight, and so all eighteen themes and both colour modes repaint
+ * for free.
+ *
+ * Two constraints shaped it. It has to survive a clip: panes tile, and
+ * the pane wrapper is `overflow-hidden`, so an outward bloom would be
+ * shaved off on three sides and would bleed over its neighbours on the
+ * fourth. Everything is therefore drawn INSIDE the target's own box.
+ * And it has to be free: this sits on top of a chart pushing frames,
+ * so the whole thing is CSS on the compositor. No React state ticks, no
+ * JS interpolating a gradient string sixty times a second.
+ *
+ * The lifecycle is one animation, not a state machine. `--ai-spot-life`
+ * is handed in from the store's own duration, and the keyframes fade in
+ * at the head and back out at the tail, so the element unmounting at
+ * expiry lands exactly on opacity 0. Nothing to sequence and nothing
+ * that can drift out of step.
+ */
+
+@layer components {
+  :root {
+    /* The ring reads at 1.5px because it is drawn inside the box, over
+       content, rather than as a border that pushes layout. */
+    --ai-spot-ring: 1.5px;
+    --ai-spot-bloom: color-mix(in oklab, var(--magic-1) 42%, transparent);
+    --ai-spot-wash: color-mix(in oklab, var(--magic-1) 7%, transparent);
+  }
+
+  :root.dark {
+    /* Dark themes carry a glow further, so the same bloom reads twice
+       as loud. Pulled back until it is a presence rather than a lamp. */
+    --ai-spot-bloom: color-mix(in oklab, var(--magic-1) 30%, transparent);
+    --ai-spot-wash: color-mix(in oklab, var(--magic-1) 5%, transparent);
+  }
+
+  /* The overlay. Sits last in its parent and takes no hits: the user
+     must be able to keep trading through a pane the assistant is
+     pointing at. */
+  .ai-spotlight {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    border-radius: inherit;
+    pointer-events: none;
+    animation: ai-spot-life var(--ai-spot-life, 6000ms) var(--ease-soft)
+      forwards;
+  }
+
+  /* The ring. A gradient masked down to its own padding box, which is
+     how you animate a border without animating a border. */
+  .ai-spotlight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: var(--ai-spot-ring);
+    background: linear-gradient(
+      120deg,
+      var(--magic-1),
+      var(--magic-2),
+      var(--magic-3),
+      var(--magic-1)
+    );
+    background-size: 200% 100%;
+    animation: magic-drift 7s linear infinite;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+
+  /* The bloom, and a wash so wide flat panes do not read as an empty
+     picture frame. Both inset, both under the ring. */
+  .ai-spotlight::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--ai-spot-wash);
+    box-shadow: inset 0 0 36px -8px var(--ai-spot-bloom);
+  }
+
+  /* In fast, hold, out slow. The tail is long because the exit is the
+     part that reads as "and now we are done": a glow that vanishes on a
+     frame looks like a render bug. */
+  @keyframes ai-spot-life {
+    0% {
+      opacity: 0;
+    }
+    6% {
+      opacity: 1;
+    }
+    72% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Reduced motion keeps the ring and drops the movement. This is
+     information, not decoration: someone who asked the OS for less
+     animation still needs to see which pane was meant. */
+  @media (prefers-reduced-motion: reduce) {
+    .ai-spotlight {
+      animation: ai-spot-fade var(--ai-spot-life, 6000ms) linear forwards;
+    }
+    .ai-spotlight::before {
+      animation: none;
+      background: var(--magic-1);
+    }
+    @keyframes ai-spot-fade {
+      0%,
+      100% {
+        opacity: 0;
+      }
+      2%,
+      88% {
+        opacity: 1;
+      }
+    }
+  }
+}

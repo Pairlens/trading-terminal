@@ -30,6 +30,7 @@ const VERB_FORMS = {
   draw: ['Drawing', 'Drew'],
   exit: ['Exiting', 'Exited'],
   fit: ['Fitting', 'Fitted'],
+  highlight: ['Highlighting', 'Highlighted'],
   list: ['Listing', 'Listed'],
   open: ['Opening', 'Opened'],
   propose: ['Preparing', 'Prepared'],

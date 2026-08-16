@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "回檔時分批建倉",
     "starterIdeaAlert1": "BTC 突破關鍵價位",
     "starterIdeaAlert2": "一小時內波動 5%",
-    "starterIdeaAlert3": "機器人成交時提醒我"
+    "starterIdeaAlert3": "機器人成交時提醒我",
+    "spotlight": {
+      "shell": "終端機",
+      "scriptEditor": "腳本編輯器"
+    }
   },
   "assistantDock": {
     "title": "助理",

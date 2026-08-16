@@ -1,6 +1,6 @@
 ---
 title: Assistant tool reference
-description: All 94 tools the Pairlens assistant can call, by category, with what each one reads or does, which are gated on what is mounted, and which need your confirmation.
+description: All 95 tools the Pairlens assistant can call, by category, with what each one reads or does, which are gated on what is mounted, and which need your confirmation.
 group: builders
 parent: agent-interfaces
 order: 1
@@ -16,7 +16,7 @@ your connectors already hold or your credentials can reach.
 Tool calls are visible in the chat as labelled chips, so you can always see what
 was read and in what order. A turn runs up to 28 steps before it stops.
 
-Two rules govern which of the 94 are actually on the table for a given step, and
+Two rules govern which of the 95 are actually on the table for a given step, and
 both are re-read on every step rather than fixed when the turn started:
 
 - The 27 chart tools that change something are offered only while a chart is
@@ -133,10 +133,11 @@ through `update_alert_flow` below.
 
 ## Terminal
 
-| Tool          | What it does                                                                                                                                  |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `navigate_to` | Open a page, optionally on one record: Discovery, Accounts, Bots, Indicators, Workflows, Notifications, the Plugin Store, the Workspace Store |
-| `get_screen`  | Read what is mounted right now, what each surface is showing (with real record ids), and which surface actions are available                  |
+| Tool           | What it does                                                                                                                                         |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `navigate_to`  | Open a page, optionally on one record: Discovery, Accounts, Bots, Indicators, Workflows, Notifications, the Plugin Store, the Workspace Store        |
+| `get_screen`   | Read what is mounted right now, what each surface is showing (with real record ids), which surface actions are available, and what can be pointed at |
+| `highlight_ui` | Glow a pane, the script editor or the whole terminal frame for six seconds, to show you where something just happened                                |
 
 `navigate_to` takes a page id from a closed list, not a free path, so it cannot
 send you to a route that does not exist. It also takes a `target`: a workflow
@@ -150,6 +151,14 @@ next step.
 `get_screen` returns ids, not just prose. A workflow id from it goes straight
 into `get_workflow`, a bot id into `get_bot`, and so on, which is what makes
 "explain this alert" a single question rather than a game of twenty.
+
+`highlight_ui` is the pointing finger described in
+[the assistant's page](/docs/ai-copilot). Targets are published by whatever is
+mounted, so every pane in your workspace is one, under its own name, including
+panes that arrive with a plugin. Pointing at something that is not on screen is
+refused and handed back with the list of what is, rather than silently doing
+nothing and letting the answer claim otherwise. `navigate_to` glows the terminal
+frame on its own, so a page change you did not make is always attributable.
 
 ## Scripts and bots
 
@@ -242,7 +251,7 @@ be gated behind the terminal lock.
 
 ## Surface actions
 
-The 94 above are the fixed set. Anything mounted can publish tools of its own,
+The 95 above are the fixed set. Anything mounted can publish tools of its own,
 and they exist for exactly as long as it is on screen.
 
 The workspace board is the built-in example. It publishes

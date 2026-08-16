@@ -79,6 +79,8 @@ import type {
   AssistantPreviewTarget,
   AssistantWorkbenchBridge,
 } from '@/lib/assistant/assistant-tools'
+import { SCRIPT_EDITOR_SPOTLIGHT_ID } from '@/stores/ai-spotlight-store'
+import { AiSpotlight } from '@/components/assistant-dock/ai-spotlight'
 import { runBacktest } from '@/lib/indicators/backtest'
 import { fetchHistoryDepth } from '@/lib/indicators/fetch-depth'
 import {
@@ -958,7 +960,17 @@ export function IndicatorWorkbench({
               className="min-h-0 flex-1"
             >
               <ResizablePanel defaultSize={55} minSize={30}>
-                <div className="flex h-full min-h-0 flex-col">
+                {/* The spotlight rides the wrapper, not CodeEditor: that
+                    component hands its container to CodeMirror, which
+                    owns everything inside it. Wrapping the tabs too is
+                    the right frame anyway — "here is the code" means the
+                    file you are in, not just the text area. */}
+                <div className="relative flex h-full min-h-0 flex-col">
+                  <AiSpotlight
+                    id={SCRIPT_EDITOR_SPOTLIGHT_ID}
+                    label={t('assistant.spotlight.scriptEditor')}
+                    description="The script editor in the indicator workbench. Point here after writing or changing code the user should read."
+                  />
                   <FileTabs
                     files={files}
                     activePath={activePath}

@@ -9,6 +9,9 @@
 /* Assistant glass — the dock's panel, pill, composer and bubbles. Shared with
    the mobile Assistant tab, which mounts the same conversation. */
 @import './components/assistant-dock/assistant-glass.css';
+/* Assistant spotlight — the glow it puts on a pane, the shell or an editor to
+   point at what it just did. Attached anywhere via <AiSpotlight>. */
+@import './components/assistant-dock/assistant-spotlight.css';
 @source "./**/*.{ts,tsx}";
 
 @utility no-scrollbar {

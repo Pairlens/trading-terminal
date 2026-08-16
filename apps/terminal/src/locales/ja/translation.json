@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "押し目を分割で拾う",
     "starterIdeaAlert1": "BTCが節目を超えたら",
     "starterIdeaAlert2": "1時間で5%の変動",
-    "starterIdeaAlert3": "ボットの約定を通知"
+    "starterIdeaAlert3": "ボットの約定を通知",
+    "spotlight": {
+      "shell": "ターミナル",
+      "scriptEditor": "スクリプトエディタ"
+    }
   },
   "assistantDock": {
     "title": "アシスタント",

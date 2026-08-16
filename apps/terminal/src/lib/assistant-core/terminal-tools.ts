@@ -22,6 +22,12 @@ import {
 } from '@/lib/routing/pages'
 import { runResearch } from '@/lib/research-brain'
 import { track } from '@/lib/analytics-events'
+import {
+  SHELL_SPOTLIGHT_ID,
+  listSpotlightTargets,
+  requestPendingSpotlight,
+  useAiSpotlightStore,
+} from '@/stores/ai-spotlight-store'
 import { normalizePair, toOldestFirst } from '@/lib/copilot/tool-deps'
 
 // ── Navigation ───────────────────────────────────────────────────────
@@ -65,18 +71,66 @@ export function buildNavigationTools(deps: AssistantDeps) {
         // precision the user never got.
         const opened = path.includes('=') ? (target ?? null) : null
         deps.navigate(path)
+        // The screen just changed under someone who was reading it. The
+        // frame glows so the change is attributable: it says the
+        // assistant did this, rather than leaving the user to wonder
+        // what they clicked. Pending, because the page being navigated
+        // to has not mounted its own targets yet.
+        requestPendingSpotlight(SHELL_SPOTLIGHT_ID)
         track('assistant_navigated', { page, with_target: opened !== null })
         return {
           navigatedTo: path,
           openedTarget: opened,
-          note: 'The user is now on this page. Actions that page offers become available on your next turn.',
+          note: 'The user is now on this page, and the terminal frame is glowing to show it changed. Actions that page offers become available on your next turn, as do its highlight targets.',
+        }
+      },
+    }),
+
+    highlight_ui: tool({
+      description:
+        'Put a glow on part of the terminal for a few seconds, to show the user WHERE something you just did landed. Use it right after acting somewhere they may not be looking: adding indicators to a chart, writing a script, opening a record. Say what you did in your reply as well; the glow points, it does not explain. Do not use it to decorate an answer that changed nothing, and do not point at the same thing twice in a row. Call get_screen if you are unsure what is on screen.',
+      inputSchema: z.object({
+        target: z
+          .string()
+          .describe(
+            'Id of the thing to glow. Use the exact id from the list this tool returns when it fails, from get_screen, or a pane id like "pane:chart". "shell" is the whole terminal frame and is always available.',
+          ),
+      }),
+      execute: ({ target }) => {
+        // A live list rather than a zod enum on purpose. The tool set is
+        // fixed for the whole run, but the model navigates mid-run — the
+        // "show me the script" case opens the workbench and then points
+        // at an editor that did not exist when the run started. An enum
+        // frozen at turn start would reject exactly the call that
+        // matters most.
+        const landed = useAiSpotlightStore.getState().highlight(target)
+        track('assistant_highlighted', { target, landed })
+
+        if (!landed) {
+          const available = listSpotlightTargets()
+          return {
+            error: `Nothing called '${target}' is on screen, so nothing was highlighted.`,
+            availableTargets: available.map((entry) => ({
+              id: entry.id,
+              name: entry.label,
+              what: entry.description,
+            })),
+            note: available.length
+              ? 'Pick one of these, or navigate first and try again.'
+              : 'Nothing is offering a highlight target right now. Move on without pointing.',
+          }
+        }
+
+        return {
+          highlighted: target,
+          note: 'The user can see it glowing. Tell them what changed there.',
         }
       },
     }),
 
     get_screen: tool({
       description:
-        'Read what the user is currently looking at: the exact page and which record is open on it, which panes are mounted, what each is showing, and which screen-specific actions are available. Use it when the user says "this", "here" or "what I am looking at" and the answer is not already obvious. The detail carries real ids, so follow up with get_workflow, get_alert, get_bot or get_script to read the record itself.',
+        'Read what the user is currently looking at: the exact page and which record is open on it, which panes are mounted, what each is showing, which screen-specific actions are available, and what can be pointed at with highlight_ui. Use it when the user says "this", "here" or "what I am looking at" and the answer is not already obvious. The detail carries real ids, so follow up with get_workflow, get_alert, get_bot or get_script to read the record itself.',
       inputSchema: z.object({}),
       execute: () => {
         const contexts = deps.registry.getContexts()
@@ -93,6 +147,14 @@ export function buildNavigationTools(deps: AssistantDeps) {
             detail: context.detail ?? null,
           })),
           availableActions: deps.registry.getActions().map((a) => a.name),
+          // What can be pointed at, listed here rather than in a tool of
+          // its own: whether to point is a question about the screen,
+          // and this is already the tool that answers those.
+          highlightTargets: listSpotlightTargets().map((entry) => ({
+            id: entry.id,
+            name: entry.label,
+            what: entry.description,
+          })),
         }
       },
     }),

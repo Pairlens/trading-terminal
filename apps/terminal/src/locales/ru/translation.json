@@ -1281,7 +1281,11 @@
     "starterIdeaWorkflow3": "Лесенкой на просадке",
     "starterIdeaAlert1": "BTC пересекает уровень",
     "starterIdeaAlert2": "Движение 5% за час",
-    "starterIdeaAlert3": "Сообщи, когда торгует бот"
+    "starterIdeaAlert3": "Сообщи, когда торгует бот",
+    "spotlight": {
+      "shell": "Терминал",
+      "scriptEditor": "Редактор скриптов"
+    }
   },
   "assistantDock": {
     "title": "Ассистент",

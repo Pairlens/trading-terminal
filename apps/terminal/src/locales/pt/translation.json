@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "Entrar escalonado na queda",
     "starterIdeaAlert1": "BTC cruza um nível",
     "starterIdeaAlert2": "Um 5% em uma hora",
-    "starterIdeaAlert3": "Me avise quando meu bot operar"
+    "starterIdeaAlert3": "Me avise quando meu bot operar",
+    "spotlight": {
+      "shell": "Terminal",
+      "scriptEditor": "Editor de scripts"
+    }
   },
   "assistantDock": {
     "title": "Assistente",

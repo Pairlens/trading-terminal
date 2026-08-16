@@ -177,6 +177,13 @@ export interface AnalyticsEvents {
    * list to search by hand. `page` is one of our own page ids, never a
    * URL, so no record id and nothing the user typed is captured. */
   assistant_navigated: { page: string; with_target: boolean }
+  /** The assistant put a spotlight on part of the terminal. The question is
+   * whether it points at all, and at what: a run that only ever glows the
+   * shell after navigating is not really using this, and a target nobody is
+   * ever pointed at is one we can stop publishing. `target` is one of our own
+   * surface ids (`pane:chart`, `shell`), never a record id. `landed` is false
+   * when the target was not on screen, which is the failure worth counting. */
+  assistant_highlighted: { target: string; landed: boolean }
   /** User pinned a provider plugin for a capability ('auto' = unpinned). */
   ai_provider_selected: { capability: string; plugin_id: string }
   /** A bring-your-own-key AI provider (model or web search) was activated

@@ -1,11 +1,11 @@
 ---
 title: The AI assistant
-description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 94 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
+description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 95 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
 group: traders
 order: 4
 eyebrow: For traders
 updated: 16 AUG 2026
-readTime: 9 min read
+readTime: 10 min read
 ---
 
 The assistant sits outside the content area: an orb, and a line of text that
@@ -143,7 +143,7 @@ conversation, and the reset button once you have dragged the window somewhere.
 
 ## What it can do
 
-94 tools. One turn runs up to 28 tool-calling steps, which is enough to read the
+95 tools. One turn runs up to 28 tool-calling steps, which is enough to read the
 chart, pull two more timeframes, write a strategy, backtest it and deploy it
 without coming back to you in between.
 
@@ -198,7 +198,7 @@ are learning why a setup is a setup.
 percentages, one sentence per insight. Best when you already know what you are
 looking at and want numbers.
 
-The persona changes how it writes, not what it can do. All 94 tools are
+The persona changes how it writes, not what it can do. All 95 tools are
 available in every mode, and the safety rules below hold identically in all
 three.
 
@@ -240,6 +240,34 @@ The same gating runs the other way for tools that need somewhere to land. The
 and the three that write into the script editor only while the workbench is
 open. The gate is re-read at every step, so if the assistant navigates to a
 chart in step 2 it can draw on it in step 3.
+
+## It can point at things
+
+Reading the screen is half of it. The other half is being able to say **there**.
+
+When the assistant does something you were not looking at, it can put a glow on
+the thing it changed: a ring in the AI colours, held for six seconds, then gone.
+Ask it to add indicators to your chart and the chart pane lights up. Ask to see
+the code of an indicator and the script editor does. It is a pointing finger,
+not an explanation, so the reply still tells you what changed.
+
+Everything mounted publishes itself as somewhere that can be pointed at, the
+same way surfaces publish context and actions. Every pane in every workspace is
+covered by one seam in the pane frame, so a pane a plugin adds next month is
+pointable the day it ships, with the pane's own translated name. `get_screen`
+lists what is currently available, and pointing at something that is not on
+screen is refused and handed back with the real list rather than quietly doing
+nothing.
+
+Navigation lights the terminal frame by itself. The screen changing under
+someone who was reading it is the moment attribution matters most, and the glow
+is what separates "the assistant moved me here" from "what did I just click".
+
+The glow is drawn inside the target's own bounds, so a pane cannot bleed over
+its neighbours, and it is CSS on the compositor rather than JavaScript, so it
+costs nothing on a terminal that is already pushing frames. If you have asked
+your OS for reduced motion the ring holds still instead of drifting: which pane
+was meant is information, not decoration.
 
 ## Order proposals
 
@@ -297,7 +325,7 @@ and never sees your exchange credentials. See
 
 ## Related
 
-- [Assistant tool reference](/docs/copilot-tools) for all 94 tools
+- [Assistant tool reference](/docs/copilot-tools) for all 95 tools
 - [Research reports](/docs/research-reports) for the long-form sourced write-up
 - [AI providers](/docs/ai-providers) for keys, plans, and credits
 - [Risk guardrails](/docs/risk-guardrails) for the limits the AI cannot move

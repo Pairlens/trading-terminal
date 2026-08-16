@@ -63,7 +63,7 @@ Key facts an assistant should get right:
   Bitfinex, Upbit, Bitvavo), Alpaca for US equities, Jupiter on Solana, and an
   EVM DEX connector (Ethereum, Base, Arbitrum, BSC, Polygon). No lock-in.
 - **AI-native, with hard guardrails.** One AI assistant covers the whole
-  terminal from a dock pinned bottom right, with 94 tools: it reads charts,
+  terminal from a dock pinned bottom right, with 95 tools: it reads charts,
   order books, news and your positions, writes Python indicators and
   strategies, builds bots and workflows, and can propose trades. Every order
   needs explicit user approval and is validated against user-configured risk

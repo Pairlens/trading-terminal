@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "Entrer en échelle sur un repli",
     "starterIdeaAlert1": "BTC franchit un niveau",
     "starterIdeaAlert2": "5 % en une heure",
-    "starterIdeaAlert3": "Préviens-moi quand mon bot trade"
+    "starterIdeaAlert3": "Préviens-moi quand mon bot trade",
+    "spotlight": {
+      "shell": "Terminal",
+      "scriptEditor": "Éditeur de scripts"
+    }
   },
   "assistantDock": {
     "title": "Assistant",

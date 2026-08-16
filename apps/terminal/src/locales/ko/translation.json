@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "하락에 분할 매수",
     "starterIdeaAlert1": "BTC가 기준선 돌파",
     "starterIdeaAlert2": "한 시간에 5% 변동",
-    "starterIdeaAlert3": "봇이 거래하면 알림"
+    "starterIdeaAlert3": "봇이 거래하면 알림",
+    "spotlight": {
+      "shell": "터미널",
+      "scriptEditor": "스크립트 편집기"
+    }
   },
   "assistantDock": {
     "title": "어시스턴트",

@@ -17,6 +17,7 @@ import { AUTOMATION_TOOL_LABELS } from '@/lib/assistant/automation-tool-labels'
 const TERMINAL_TOOL_LABELS = {
   navigate_to: ['open', 'the page'],
   get_screen: ['read', 'the screen'],
+  highlight_ui: ['highlight', 'it on screen'],
   deep_research: ['run', 'deep research'],
   get_alert_step_reference: ['read', 'the alert step reference'],
 } as const satisfies ToolLabelMap

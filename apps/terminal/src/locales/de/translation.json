@@ -1273,7 +1273,11 @@
     "starterIdeaWorkflow3": "Gestaffelt in einen Rücksetzer",
     "starterIdeaAlert1": "BTC überschreitet ein Level",
     "starterIdeaAlert2": "5 % Bewegung in einer Stunde",
-    "starterIdeaAlert3": "Sag mir, wenn mein Bot handelt"
+    "starterIdeaAlert3": "Sag mir, wenn mein Bot handelt",
+    "spotlight": {
+      "shell": "Terminal",
+      "scriptEditor": "Skript-Editor"
+    }
   },
   "assistantDock": {
     "title": "Assistent",
