@@ -275,15 +275,27 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     // is itself a dynamic import, so a tab left open across a deploy needs
     // this listening before it asks for a chunk that no longer exists.
     initChunkRecovery()
-    void import('@/lib/desktop-menu').then((m) => m.initDesktopMenu())
-    void import('@/lib/menu-shortcuts').then((m) => m.initMenuShortcuts())
-    // Hide/show signal for background mode — must be listening before the
-    // user can close a window, which is immediately.
-    void import('@/lib/window-visibility').then((m) => m.initWindowVisibility())
-    // Auto-update checks (desktop only; no-op in browsers).
-    void import('@/lib/updater').then((m) => m.initUpdater())
-    // New-deploy refresh prompt (browsers only; no-op on desktop and in dev).
-    void import('@/lib/web-updater').then((m) => m.initWebUpdater())
+    // Split by runtime at the IMPORT, not inside the module. Each of these
+    // already returns early on the wrong platform, but a browser still had to
+    // download the chunk to find that out — and `desktop-menu` reaches the
+    // menu model, which reaches `use-performance-mode`, which reaches
+    // `MarketDataProvider` and the ~500 KB of plugin machinery behind it. The
+    // web terminal was fetching all of that to run four no-ops. The guards
+    // inside each module stay: other callers reach them by other paths.
+    if (isStandalone) {
+      void import('@/lib/desktop-menu').then((m) => m.initDesktopMenu())
+      void import('@/lib/menu-shortcuts').then((m) => m.initMenuShortcuts())
+      // Hide/show signal for background mode — must be listening before the
+      // user can close a window, which is immediately.
+      void import('@/lib/window-visibility').then((m) =>
+        m.initWindowVisibility(),
+      )
+      // Auto-update checks.
+      void import('@/lib/updater').then((m) => m.initUpdater())
+    } else {
+      // New-deploy refresh prompt (browsers only; no-op in dev).
+      void import('@/lib/web-updater').then((m) => m.initWebUpdater())
+    }
     // Opt-in analytics (no-op until the user consents; inert without a key).
     void import('@/lib/analytics').then((m) => m.initAnalytics())
     // Idle / periodic / wake lock triggers. Inert until a password is set.

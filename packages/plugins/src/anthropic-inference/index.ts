@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { createAnthropic } from '@ai-sdk/anthropic'
+import { loadAnthropic } from '../lib/ai-sdk-lazy'
 import { streamAnthropic } from '../lib/inference-sse'
 import type { InferenceMessage } from '@pairlens/shared/plugin-types'
 import type {
@@ -174,7 +174,8 @@ export function createAnthropicInferencePlugin(
 
   // AI SDK model for the host-run agentic loop (tools, multi-step). The
   // extra header opts into direct browser/webview access with a user key.
-  function getLanguageModel(): unknown {
+  async function getLanguageModel(): Promise<unknown> {
+    const createAnthropic = await loadAnthropic()
     return createAnthropic({
       apiKey: String(config['apiKey'] ?? ''),
       headers: { 'anthropic-dangerous-direct-browser-access': 'true' },

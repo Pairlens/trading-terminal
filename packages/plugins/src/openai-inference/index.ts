@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
+import { loadOpenAiCompatible } from '../lib/ai-sdk-lazy'
 import { streamOpenAiCompatible } from '../lib/inference-sse'
 import type { InferenceMessage } from '@pairlens/shared/plugin-types'
 import type {
@@ -164,7 +164,8 @@ export function createOpenaiInferencePlugin(
   // api.openai.com does not send CORS headers, so direct browser calls only
   // work where CORS is not enforced (e.g. permissive webviews); the Tauri
   // desktop app is the supported home for this connector.
-  function getLanguageModel(): unknown {
+  async function getLanguageModel(): Promise<unknown> {
+    const createOpenAICompatible = await loadOpenAiCompatible()
     return createOpenAICompatible({
       name: 'openai',
       baseURL: 'https://api.openai.com/v1',

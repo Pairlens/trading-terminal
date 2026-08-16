@@ -87,6 +87,37 @@ function versionManifest(): Plugin {
   }
 }
 
+// Module-level attribution for the client chunks, written to
+// dist/chunk-report.json when PAIRLENS_CHUNK_REPORT is set. Chunk NAMES lie
+// about their contents: Rollup names a shared chunk after one arbitrary module
+// in it, so a 780 KB chunk of plugin machinery can be called `legacy` after a
+// 40-line symbol helper. This reports what is actually inside.
+function chunkReport(): Plugin {
+  return {
+    name: 'pairlens:chunk-report',
+    apply: 'build',
+    applyToEnvironment: (env) => env.name === 'client',
+    generateBundle(_options, bundle) {
+      if (!process.env.PAIRLENS_CHUNK_REPORT) return
+      const chunks = Object.values(bundle)
+        .filter((c) => c.type === 'chunk')
+        .map((c) => ({
+          file: c.fileName,
+          isEntry: c.isEntry,
+          bytes: c.code.length,
+          modules: Object.entries(c.modules)
+            .map(([id, m]) => ({ id, bytes: m.renderedLength }))
+            .sort((a, b) => b.bytes - a.bytes),
+        }))
+        .sort((a, b) => b.bytes - a.bytes)
+      writeFileSync(
+        join(import.meta.dirname, 'dist/chunk-report.json'),
+        JSON.stringify(chunks, null, 1),
+      )
+    },
+  }
+}
+
 const config = defineConfig({
   resolve: {
     alias: {
@@ -256,6 +287,7 @@ const config = defineConfig({
   },
   plugins: [
     pyodideAssets(),
+    chunkReport(),
     versionManifest(),
     devtools({
       eventBusConfig: {

@@ -1,11 +1,11 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
 import {
   formatBillingErrorMessage,
   isBillingErrorCode,
 } from '@pairlens/shared/billing-types'
 import { queryInstruments } from '../catalog'
+import { loadOpenAiCompatible } from '../lib/ai-sdk-lazy'
 import type {
   PluginExecuteParams,
   PluginInstance,
@@ -455,7 +455,9 @@ export function createPairlensIntelligencePlugin(
   // OpenAI-compatible inference proxy — the server decides the real model,
   // so the id here is a placeholder the server maps per workload. Auth is
   // injected per request since the session token rotates.
-  function getLanguageModel(purpose?: 'chat' | 'research'): unknown {
+  async function getLanguageModel(
+    purpose?: 'chat' | 'research',
+  ): Promise<unknown> {
     const appUrl = getAppServerUrl()
     if (!appUrl) {
       throw new Error(
@@ -474,6 +476,7 @@ export function createPairlensIntelligencePlugin(
       await throwIfBillingError(response)
       return response
     }
+    const createOpenAICompatible = await loadOpenAiCompatible()
     return createOpenAICompatible({
       name: 'pairlens-intelligence',
       baseURL: `${appUrl}/api/ai/v1`,

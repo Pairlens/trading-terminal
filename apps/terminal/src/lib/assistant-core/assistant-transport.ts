@@ -67,7 +67,9 @@ export class AssistantTransport implements ChatTransport<UIMessage> {
       )
     }
 
-    const model = provider.getLanguageModel?.()
+    // Awaited: the bundled providers load their AI SDK on first use rather
+    // than at boot, so the model arrives a promise the first time round.
+    const model = await provider.getLanguageModel?.()
     if (!model) {
       // No silent text-only degradation. An assistant that can see the
       // terminal but cannot act in it would narrate work it never did,
