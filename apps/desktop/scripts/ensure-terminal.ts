@@ -38,7 +38,7 @@ async function isReachable(url: string): Promise<boolean> {
 }
 
 if (await isReachable(devUrl)) {
-  console.log(`[desktop] Terminal already running at ${devUrl} — skipping`)
+  console.log(`[desktop] Terminal already running at ${devUrl}, skipping`)
   // Keep process alive so Tauri doesn't think beforeDevCommand crashed
   setInterval(() => {}, 1 << 30)
 } else {
@@ -57,14 +57,19 @@ if (await isReachable(devUrl)) {
   }
   if (process.env.PAIRLENS_STANDALONE === '1') effectiveAppServerUrl = ''
 
+  // This script never starts an App Server, it only points the terminal at
+  // one that is already serving (or at Pairlens Cloud). Keep the wording on
+  // "using" so the log can't be read as "the dev command spawned a backend".
   if (effectiveAppServerUrl) {
     console.log(
-      `[desktop] App Server at ${effectiveAppServerUrl} — starting terminal with auth`,
+      effectiveAppServerUrl === appServerUrl
+        ? `[desktop] Using the App Server already running at ${effectiveAppServerUrl}`
+        : `[desktop] Using App Server ${effectiveAppServerUrl}`,
     )
+    console.log('[desktop] Starting terminal (auth enabled)')
   } else {
-    console.log(
-      `[desktop] Standalone — starting terminal without cloud features (no auth)`,
-    )
+    console.log('[desktop] No App Server configured')
+    console.log('[desktop] Starting terminal (standalone, no auth)')
   }
   const child = spawn('bunx', ['vite', 'dev', '--port', terminalPort], {
     stdio: 'inherit',
