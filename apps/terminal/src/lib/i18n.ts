@@ -111,4 +111,24 @@ if (!(await loadCatalog(initial)) && initial !== 'en') {
   await i18n.changeLanguage('en')
 }
 
+/**
+ * Stamp `<html lang>` with the language we actually resolved.
+ *
+ * `__root.tsx` renders `lang={i18n.language}`, but the shell is prerendered
+ * (`ssr: false`) with English and React does not repair an attribute mismatch
+ * on the existing `<html>` during hydration. A visitor whose stored or
+ * detected language was Japanese therefore read a fully Japanese UI inside
+ * `<html lang="en">` until they opened settings and switched by hand, which
+ * mispronounces every string for a screen reader, misfires the browser's
+ * translate prompt, and picks the wrong font and line-breaking rules for CJK.
+ *
+ * At module scope on purpose: `router.tsx` imports this file, so the attribute
+ * is right before the first translated character is painted. `applyLanguage`
+ * in `hooks/use-language.ts` does the same on every runtime switch, so boot
+ * and the switcher agree.
+ */
+if (typeof document !== 'undefined') {
+  document.documentElement.lang = i18n.language
+}
+
 export default i18n
