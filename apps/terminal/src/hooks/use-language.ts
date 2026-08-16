@@ -3,7 +3,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { STORAGE_PREFIX } from './use-persisted-state'
-import i18n from '@/lib/i18n'
+import i18n, { loadCatalog } from '@/lib/i18n'
 import { emitWrite } from '@/lib/sync/sync-channel'
 import { registerAnalyticsProperties } from '@/lib/analytics'
 import { track } from '@/lib/analytics-events'
@@ -126,7 +126,11 @@ export const LANGUAGE_KEY = 'language'
  * the desktop OS menu so the two layers stay identical.
  */
 export function applyLanguage(code: string): void {
-  void i18n.changeLanguage(code)
+  // Catalogs ship one chunk per language, so the bundle has to land before
+  // the switch: `changeLanguage` on a language i18next has never seen swaps
+  // the UI to raw keys. Everything else here is local and applies at once, so
+  // only the i18next hand-off waits.
+  void loadCatalog(code).then(() => i18n.changeLanguage(code))
   track('language_changed', { language: code })
   registerAnalyticsProperties({ app_language: code })
   try {

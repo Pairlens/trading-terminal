@@ -11,8 +11,8 @@
   "scripts": {
     "dev": "bun ../../scripts/env/with-worktree-env.ts -- vite dev",
     "build": "bun ../../scripts/env/with-worktree-env.ts -- bun run build:internal",
-    "build:internal": "vite build",
-    "build:app": "vite build",
+    "build:internal": "vite build && bun run scripts/strip-shell-preloads.ts",
+    "build:app": "vite build && bun run scripts/strip-shell-preloads.ts",
     "preview": "bun ../../scripts/env/with-worktree-env.ts -- vite preview",
     "test": "bun test src/",
     "typecheck": "bun ../../scripts/env/with-worktree-env.ts -- tsc --noEmit",

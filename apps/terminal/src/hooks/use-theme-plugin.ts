@@ -17,9 +17,12 @@ import type {
 
 import { usePairlens } from '@/lib/pairlens-provider'
 import { usePersistedState } from '@/hooks/use-persisted-state'
+import { applyTheme } from '@/lib/theme/apply-theme'
 
-const STYLE_ID = 'pairlens-theme-override'
-const CSS_CACHE_KEY = 'pairlens:theme.cachedCss'
+// Re-exported so existing callers keep one import path. New code outside the
+// terminal shell should import `@/lib/theme/apply-theme` directly: reaching it
+// through this module pulls the plugin provider in with it.
+export { applyTheme }
 
 type ThemePluginInfo = {
   id: string
@@ -58,51 +61,6 @@ export const ThemePluginContext = createContext<UseThemePluginReturn>(
 
 export function useThemePluginContext() {
   return useContext(ThemePluginContext)
-}
-
-function injectStyleTag(vars: Record<string, string>, selector: string) {
-  const entries = Object.entries(vars)
-  if (entries.length === 0) return ''
-  const rules = entries.map(([k, v]) => `  ${k}: ${v};`).join('\n')
-  return `${selector} {\n${rules}\n}`
-}
-
-/**
- * Swap the `theme:override` style tag (and the cache the blocking script in
- * `__root` restores on next load). Exported so the onboarding route — which
- * mounts outside the terminal shell and its plugin manager — applies a theme
- * through this exact path instead of a parallel one.
- */
-export function applyTheme(theme: ThemeDefinition | null) {
-  let tag = document.getElementById(STYLE_ID) as HTMLStyleElement | null
-
-  if (!theme) {
-    tag?.remove()
-    try {
-      localStorage.removeItem(CSS_CACHE_KEY)
-    } catch {
-      /* ignore */
-    }
-    return
-  }
-
-  if (!tag) {
-    tag = document.createElement('style')
-    tag.id = STYLE_ID
-    document.head.appendChild(tag)
-  }
-
-  const lightCss = injectStyleTag(theme.light, ':root')
-  const darkCss = injectStyleTag(theme.dark, '.dark')
-  const css = `${lightCss}\n${darkCss}`
-  tag.textContent = css
-
-  // Cache for the blocking script to restore on next page load
-  try {
-    localStorage.setItem(CSS_CACHE_KEY, css)
-  } catch {
-    /* ignore */
-  }
 }
 
 export function useThemePlugin(): UseThemePluginReturn {

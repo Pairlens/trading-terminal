@@ -36,6 +36,12 @@ export const getRouter = () => {
   const router = createRouter({
     routeTree,
     scrollRestoration: true,
+    // Route chunks are split per route, so the first visit to any nav entry
+    // used to start with a download. Hovering a `Link` now fetches it, which
+    // is the same trick the marketing site plays on the terminal itself.
+    // `defaultPreloadStaleTime: 0` keeps this to chunks and fresh loaders: a
+    // preloaded route still refetches its data on the real navigation.
+    defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
     defaultNotFoundComponent: NotFound,
     context: {

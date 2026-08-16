@@ -22,7 +22,7 @@ import type {
 } from '@pairlens/plugin-system/types'
 import type * as themeExports from '@pairlens/plugins/themes'
 import type { ThemeDefinition } from '@pairlens/plugins/themes'
-import { applyTheme } from '@/hooks/use-theme-plugin'
+import { applyTheme } from '@/lib/theme/apply-theme'
 import { STORAGE_PREFIX } from '@/hooks/use-persisted-state'
 import { emitWrite } from '@/lib/sync/sync-channel'
 

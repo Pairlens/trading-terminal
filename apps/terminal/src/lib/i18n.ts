@@ -5,27 +5,43 @@ import { initReactI18next } from 'react-i18next'
 
 import { SUPPORTED_LOCALES, pickLocale } from '@pairlens/shared/localized-text'
 
-import de from '@/locales/de/translation.json'
-import en from '@/locales/en/translation.json'
-import es from '@/locales/es/translation.json'
-import fr from '@/locales/fr/translation.json'
-import id from '@/locales/id/translation.json'
-import it from '@/locales/it/translation.json'
-import ja from '@/locales/ja/translation.json'
-import ko from '@/locales/ko/translation.json'
-import pl from '@/locales/pl/translation.json'
-import pt from '@/locales/pt/translation.json'
-import ru from '@/locales/ru/translation.json'
-import th from '@/locales/th/translation.json'
-import tr from '@/locales/tr/translation.json'
-import uk from '@/locales/uk/translation.json'
-import vi from '@/locales/vi/translation.json'
-import zh from '@/locales/zh/translation.json'
-import zhHant from '@/locales/zh-Hant/translation.json'
-
 const STORAGE_KEY = 'pairlens:language'
 
 const SUPPORTED = SUPPORTED_LOCALES
+
+/**
+ * One dynamic import per shipped catalog, written out rather than globbed.
+ *
+ * The seventeen catalogs are 4.5 MB of JSON. Statically imported they landed
+ * in the entry chunk, so every visitor downloaded sixteen languages they do
+ * not read: roughly 950 KB brotli, which was most of the bundle. Each entry
+ * here is its own chunk and exactly one of them is ever fetched.
+ *
+ * Written out one line per locale, and not `import.meta.glob`, for two
+ * reasons: the map is the shipped list (adding a folder does not silently
+ * ship it, and `i18n-catalog.test.ts` walks the same set), and glob is a Vite
+ * transform that would leave this module unloadable under `bun test`, where
+ * plenty of stores pull it in transitively.
+ */
+const CATALOG_LOADERS: Record<string, () => Promise<unknown>> = {
+  en: () => import('@/locales/en/translation.json'),
+  es: () => import('@/locales/es/translation.json'),
+  zh: () => import('@/locales/zh/translation.json'),
+  'zh-Hant': () => import('@/locales/zh-Hant/translation.json'),
+  ru: () => import('@/locales/ru/translation.json'),
+  uk: () => import('@/locales/uk/translation.json'),
+  fr: () => import('@/locales/fr/translation.json'),
+  pt: () => import('@/locales/pt/translation.json'),
+  de: () => import('@/locales/de/translation.json'),
+  it: () => import('@/locales/it/translation.json'),
+  pl: () => import('@/locales/pl/translation.json'),
+  ja: () => import('@/locales/ja/translation.json'),
+  ko: () => import('@/locales/ko/translation.json'),
+  vi: () => import('@/locales/vi/translation.json'),
+  th: () => import('@/locales/th/translation.json'),
+  tr: () => import('@/locales/tr/translation.json'),
+  id: () => import('@/locales/id/translation.json'),
+}
 
 /**
  * Map a BCP-47 browser language to a supported locale (or 'en').
@@ -50,30 +66,49 @@ function getStoredLanguage(): string {
   return detectLanguage(navigator.language)
 }
 
-i18n.use(initReactI18next).init({
-  resources: {
-    en: { translation: en },
-    es: { translation: es },
-    zh: { translation: zh },
-    'zh-Hant': { translation: zhHant },
-    ru: { translation: ru },
-    uk: { translation: uk },
-    fr: { translation: fr },
-    pt: { translation: pt },
-    de: { translation: de },
-    it: { translation: it },
-    pl: { translation: pl },
-    ja: { translation: ja },
-    ko: { translation: ko },
-    vi: { translation: vi },
-    th: { translation: th },
-    tr: { translation: tr },
-    id: { translation: id },
-  },
-  lng: getStoredLanguage(),
+/**
+ * Fetch a catalog and hand it to i18next, once. Safe to call for a language
+ * that is already loaded or was never shipped.
+ *
+ * Every caller must await this BEFORE `changeLanguage`: switching to a
+ * language whose bundle has not arrived renders raw keys until it does.
+ */
+export async function loadCatalog(language: string): Promise<boolean> {
+  if (i18n.hasResourceBundle(language, 'translation')) return true
+  const load = CATALOG_LOADERS[language]
+  if (!load) return false
+  try {
+    const module = (await load()) as { default: Record<string, unknown> }
+    i18n.addResourceBundle(language, 'translation', module.default, true, true)
+    return true
+  } catch {
+    // A missing chunk (stale deploy, offline) must not take the app down.
+    // i18next falls back to whatever is loaded, which is the previous
+    // language rather than nothing.
+    return false
+  }
+}
+
+const initial = getStoredLanguage()
+
+await i18n.use(initReactI18next).init({
+  // Deliberately empty: `loadCatalog` below fills in the one language this
+  // visitor reads. There is no `en` preload alongside it, because
+  // `i18n-catalog.test.ts` fails the build if any locale is missing a key
+  // that English has, so the `fallbackLng` chain has nothing to do.
+  resources: {},
+  lng: initial,
   fallbackLng: 'en',
   supportedLngs: [...SUPPORTED],
   interpolation: { escapeValue: false },
 })
+
+// Awaited at module scope: `router.tsx` imports this file, so the router (and
+// therefore the first render) cannot exist before the catalog does. That is
+// what buys the split for free instead of a frame of untranslated keys.
+if (!(await loadCatalog(initial)) && initial !== 'en') {
+  await loadCatalog('en')
+  await i18n.changeLanguage('en')
+}
 
 export default i18n
