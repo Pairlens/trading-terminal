@@ -36,18 +36,29 @@
        and the shadow instead of a lift. */
     --ai-surface: var(--card);
 
-    /* The frost itself, applied to whatever is behind the panel before the
-       fill goes over it. `saturate` keeps the backdrop from going grey at this
-       blur radius; `brightness` pulls it toward paper so a dark chart under a
-       light theme cannot drag the composite down under the text. */
-    --ai-frost: saturate(120%) brightness(1.1);
+    /* The frost, applied to the backdrop before the fill goes over it. The
+       saturation is the important half and it is deliberately high: a wide
+       blur averages colour toward grey, and a grey smear behind a panel reads
+       as dirt rather than as the terminal. Pushing saturation back up is what
+       makes the little that survives arrive as COLOUR, which is the whole
+       trick behind the frosted materials this is modelled on. `brightness`
+       only nudges the average toward the panel's own tone, enough to protect
+       text, not enough to launder the colour back out. */
+    --ai-frost: saturate(180%) brightness(1.05);
 
-    /* 86%. The two passes that pushed this to 92 were compensating for a blur
-       that was being stripped out of the build and never ran (see the note by
-       the fallbacks). With 72px of frost actually applied, the fill no longer
-       has to do that work alone, so it can come back down and let a little of
-       the terminal read through as tone. */
-    --ai-glass: color-mix(in oklab, var(--ai-surface) 86%, transparent);
+    /* 80%. The fill's job is legibility, not concealment: blur removes the
+       structure, saturation keeps the colour, and this only has to hold the
+       composite close enough to `--ai-surface` that body text stays crisp.
+       Anything higher and the colour the frost worked to preserve is buried
+       under the very fill that was supposed to let it show.
+
+       The floor, worked out rather than eyeballed. Take the absolute worst
+       backdrop, a solid black pane under a light theme, which no blurred
+       terminal ever actually produces: composite L = 0.8 x 0.993 + 0.2 x 0
+       = 0.79, against `--foreground` near L 0.25. That is about 8:1, so
+       body text clears 7:1 with the real worst case nowhere near it. Dark
+       runs the same sum against solid white and lands near 7.5:1. */
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 80%, transparent);
     /* Chrome that sits ON the slab (composer capsule, chips): lighter, because
        it is already backed by the fill above. */
     --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
@@ -78,14 +89,15 @@
        panel from the terminal behind it before the blur is noticed. */
     --ai-surface: color-mix(in oklab, var(--card) 88%, var(--foreground) 12%);
 
-    /* Same frost, inverted clamp: here the danger is a bright pane or a white
-       label bleeding up through a dark slab, so the backdrop is dimmed instead
-       of lifted. */
-    --ai-frost: saturate(120%) brightness(0.7);
-    /* Two points under light: a dark slab hides a bright backdrop less well
-       than a light slab hides a dark one, and the brightness clamp above is
-       already dimming what comes through. */
-    --ai-glass: color-mix(in oklab, var(--ai-surface) 84%, transparent);
+    /* Same saturation, inverted clamp: the danger here is a bright pane or a
+       white label bleeding up through a dark slab, so the backdrop is dimmed
+       rather than lifted. 0.82 rather than the 0.7 this carried before, which
+       was crushing the reds and greens of a book down to a grey haze. */
+    --ai-frost: saturate(180%) brightness(0.82);
+    /* Two points under light. A dark slab hides a bright backdrop less well
+       than a light slab hides a dark one, so dark pays a little more of the
+       legibility cost in fill. */
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 78%, transparent);
     --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
     --ai-inset-strong: color-mix(in oklab, var(--foreground) 9%, transparent);
 
