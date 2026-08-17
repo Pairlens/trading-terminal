@@ -174,7 +174,15 @@ export const useOrderDraftStore = create<OrderDraftState>()((set) => ({
     })),
 }))
 
-/** The price field that matters for the current order type, as a number. */
+/**
+ * The price field that matters for the current order type, as a number.
+ *
+ * RAW, in whatever unit the field holds — which on a probability venue is CENTS,
+ * not the price the chart plots or the connector takes. Anything that means "the
+ * price this order would fill at" has to convert (`centsToPrice`, or the
+ * chart-side `limit-line-scale`); handing this number straight to a price axis
+ * is the bug the limit line shipped with.
+ */
 export function draftPrice(state: OrderDraftState): number | null {
   const raw =
     state.orderType === 'limit'

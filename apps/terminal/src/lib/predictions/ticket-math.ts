@@ -49,6 +49,32 @@ export function priceToCents(price: number): number {
   return Math.round(price * 1000) / 10
 }
 
+/** The tradable interior of (0, 100), at the field's tenth-of-a-cent step. */
+const MIN_TRADABLE_CENTS = 0.1
+const MAX_TRADABLE_CENTS = 99.9
+
+/**
+ * A cents value the USER just produced with a gesture, forced into the range
+ * the venue can take.
+ *
+ * Deliberately the opposite rule to `centsToPrice`'s refusal, and the deciding
+ * question is where the number came from. A field value may be inherited from
+ * another instrument, so it is rejected rather than reinterpreted. A drag on
+ * THIS outcome's own price axis is a statement about this book: the finger asked
+ * for the top of the range, and the honest answer is the top of the range, not
+ * "no order". It is the same discipline as clamping the drag's pixel to the
+ * visible strip instead of extrapolating a price nobody can see.
+ *
+ * The ceiling is load-bearing rather than defensive. `priceToCents` rounds to
+ * tenths, so a chart price of 0.9999 — well inside an auto-scaled axis on a 97¢
+ * outcome — rounds to exactly 100 cents, and 100 is not a probability.
+ */
+export function clampPriceCents(cents: number): number {
+  if (!Number.isFinite(cents)) return MIN_TRADABLE_CENTS
+  const stepped = Math.round(cents * 10) / 10
+  return Math.min(MAX_TRADABLE_CENTS, Math.max(MIN_TRADABLE_CENTS, stepped))
+}
+
 /**
  * Contracts are whole. A stepper cannot produce a fraction, but a pasted value
  * can, and a venue rejecting `1.5` after the hold gesture is the worst place

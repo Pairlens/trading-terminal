@@ -68,6 +68,7 @@ import {
 } from '@/lib/futures/ticket-math'
 import {
   centsToPrice,
+  clampPriceCents,
   contractsForAmount,
   normalizeContracts,
   predictionFillPrice,
@@ -2281,7 +2282,9 @@ function LimitPriceField({
   useEffect(() => {
     if (!cents || reference == null) return
     if (value !== '' || touchedFor.current === pairKey) return
-    onChange(String(priceToCents(reference)))
+    // Clamped: priceToCents(0.9996) is exactly 100, which is not a tradeable
+    // probability, and outcomes really do quote above 99.95 cents near resolve.
+    onChange(String(clampPriceCents(priceToCents(reference))))
   }, [cents, pairKey, reference, value, onChange])
 
   return (
@@ -2295,7 +2298,7 @@ function LimitPriceField({
           reference == null
             ? '—'
             : cents
-              ? String(priceToCents(reference))
+              ? String(clampPriceCents(priceToCents(reference)))
               : reference.toString()
         }
         className={cn(
