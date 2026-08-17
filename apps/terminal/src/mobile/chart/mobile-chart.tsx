@@ -74,6 +74,7 @@ export const MobileChart = memo(function MobileChart({
     chartSeries,
     chartTimeframe,
     chartType,
+    compareScaleMode,
     crosshairMode,
     priceScaleMode,
     invertedScale,
@@ -163,6 +164,13 @@ export const MobileChart = memo(function MobileChart({
     [crosshairMode, drawingToolMode],
   )
 
+  // `compareMode` below is not decoration. The phone has no compare UI, but
+  // compare symbols persist per pair key and this provider is mounted without a
+  // `stateScope`, so one added on the laptop is drawn here too. Left unset, the
+  // engine fell back to its own `indexed` default: a prediction outcome with a
+  // compare on it read `10099.5¢` up the axis on the phone while the same chart
+  // read cents on the desktop, because only the desktop pane passed the prop.
+  //
   // The wrapper exists so the placement layer can measure the chart's exact
   // box: it paints from a body portal (the band's scrim would swallow a
   // reticle rendered inside this stacking context) and has to be told where
@@ -173,6 +181,7 @@ export const MobileChart = memo(function MobileChart({
         activeTool={activeTool}
         chartType={chartType}
         className="h-full w-full"
+        compareMode={compareScaleMode}
         crosshairConfig={crosshairConfig}
         defaultViewport={defaultViewport}
         drawingStyleDefaults={drawingStyleDefaults}

@@ -6,7 +6,7 @@ parent: trading
 order: 6
 eyebrow: For traders
 updated: 17 AUG 2026
-readTime: 13 min read
+readTime: 14 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -161,8 +161,15 @@ On a phone the board is in **Discover**, under **Prediction markets**: a few
 live events with their outcome prices, and **All events** for the full list
 with the same search and venue filter. Tapping an outcome opens its chart, the
 way clicking a card does on the desktop; tapping the event heading opens the
-same full event as its own screen. The section is only there when a prediction
-connector is installed and enabled. The phone's ticket sizes in dollars too,
+same full event as its own screen, with each question's resolution rules behind
+a disclosure. The section is only there when a prediction connector is installed
+and enabled.
+
+The phone does not lose the event once you are on a chart. A prediction chart
+carries a strip under the price with the question, the resolution date and the
+outcome's probability, and it opens the event again in one tap. A race adds a
+ranked ladder of the whole field, with the sum of every Yes price, reachable
+from that strip and from the event screen. The phone's ticket sizes in dollars too,
 with the same presets, the same payout card and the same conversion to whole
 contracts; what it does not carry is the preset editor, the outcome and race
 switches, and the basket. See [Mobile terminal](/docs/mobile-terminal).
@@ -198,6 +205,29 @@ Each outcome is its own instrument. Yes and No are two separate contracts on
 the same question, and you can buy or sell either one. Selling Yes at 53¢ and
 buying No at 47¢ are close cousins, not the same order, and the book will tell
 you which is cheaper.
+
+## The chart is a probability, not a candle
+
+Outcomes trade sparsely. A contract can go an hour without a print, and drawn as
+candles that hour becomes a row of doji ticks on an index axis that quietly
+skips the time nobody traded. So a prediction outcome opens as a **step line of
+close** on the cents axis, which says the honest thing: the price was 34¢ until
+it was 41¢.
+
+Buckets that never traded carry the last known price forward, so the line is
+continuous and the time axis stays true to the clock. Three limits on that:
+
+- **It stops at the last real print.** A quiet market ends where its tape ends
+  rather than growing a flat line out to now.
+- **Volume stays at zero** on a carried bucket, so the volume pane leaves it
+  empty and a quiet stretch is still visible as one.
+- **Nothing else sees it.** The fill is drawn, not recorded. Signals, the CSV
+  export, alerts, and anything the assistant reads work off the real bars, and a
+  connector will never invent a candle.
+
+Every chart type stays available, and whichever you pick is remembered for
+prediction charts on their own, so switching to candles here leaves your crypto
+charts alone. See [the chart](/docs/chart-panel) for the rest of the toolbar.
 
 ## The event page
 

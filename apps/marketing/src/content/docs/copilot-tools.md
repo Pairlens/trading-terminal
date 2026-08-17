@@ -1,12 +1,12 @@
 ---
 title: Assistant tool reference
-description: All 95 tools the Pairlens assistant can call, by category, with what each one reads or does, which are gated on what is mounted, and which need your confirmation.
+description: All 105 tools the Pairlens assistant can call, by category, with what each one reads or does, which are gated on what is mounted, and which need your confirmation.
 group: builders
 parent: agent-interfaces
 order: 1
 eyebrow: For builders
-updated: 16 AUG 2026
-readTime: 8 min read
+updated: 17 AUG 2026
+readTime: 9 min read
 ---
 
 The assistant's agentic loop runs in the terminal, not on a server. These are
@@ -16,7 +16,7 @@ your connectors already hold or your credentials can reach.
 Tool calls are visible in the chat as labelled chips, so you can always see what
 was read and in what order. A turn runs up to 28 steps before it stops.
 
-Two rules govern which of the 95 are actually on the table for a given step, and
+Two rules govern which of the 105 are actually on the table for a given step, and
 both are re-read on every step rather than fixed when the turn started:
 
 - The 27 chart tools that change something are offered only while a chart is
@@ -71,6 +71,51 @@ or hosted Intelligence). Whatever it finds is attributed: an answer built on a
 search carries a source count under it that opens into the list of pages. The
 rest of this family reads from the App Server and is unavailable in
 [standalone mode](/docs/self-hosting#standalone-mode).
+
+## Calendars, filings and market structure
+
+Ten reads over the data layers behind the calendar, fundamentals, funding,
+liquidation, pool and bridge panes. Each is one call, so "what is on the
+calendar this week" no longer means finding the pane first.
+
+The five below go through the App Server.
+
+| Tool                       | What it does                                                                                      |
+| -------------------------- | ------------------------------------------------------------------------------------------------- |
+| `get_economic_calendar`    | US macro releases ahead (CPI, payrolls, FOMC), with consensus and prior where published           |
+| `get_earnings_calendar`    | Who reports inside a window, with the EPS estimate and the stated before-open or after-close slot |
+| `get_company_fundamentals` | One listed company: market cap, margins, growth, multiples, analyst ratings, next report          |
+| `get_ipo_calendar`         | Upcoming listings with expected date, exchange and price range                                    |
+| `get_insider_activity`     | Recent Form 4 filings, with a buy against sell summary over the span actually on file             |
+
+These five go to your connectors instead, so they keep working on a build with
+no App Server. `get_new_listings` uses both and degrades to the on-chain half.
+
+| Tool                       | What it does                                                                           |
+| -------------------------- | -------------------------------------------------------------------------------------- |
+| `get_funding_rates`        | Funding and open interest across every active perpetual venue, or named contracts      |
+| `get_liquidation_clusters` | Forced liquidations collapsed onto price buckets, long and short sides kept apart      |
+| `get_pool_stats`           | One pool's price, 1h and 24h moves, volume, value locked, fee tier and who measured it |
+| `get_new_listings`         | Pairs that started trading recently: venue listings merged with newly created pools    |
+| `get_bridge_quote`         | Prices a cross-chain transfer: what lands, the guaranteed floor, fee, gas and ETA      |
+
+**`get_bridge_quote` prices, it never sends.** There is no execution tool. A
+transfer is signed by you in the Bridge pane, and the assistant points you there.
+
+Three honesty rules these follow, because a confident wrong answer about a
+calendar is worse than no answer:
+
+- An empty result is never used for a missing provider. A standalone build, a
+  deployment with no fundamentals key, a throttled provider and an upstream
+  failure each come back as themselves, and the assistant relays the reason.
+- Liquidation coverage is per venue, read from the collector's own venue list. Ask
+  about a venue nobody collects and it says so and names the ones it has, rather
+  than drawing a map from someone else's data.
+- A venue that refuses funding is reported as refusing. KuCoin Futures needing
+  the desktop app is a fact about your build, not a zero funding rate.
+
+Results are capped so a venue-wide sweep does not crowd out the rest of the
+turn, and a capped list always states the total it was cut from.
 
 ## Portfolio
 
@@ -251,7 +296,7 @@ be gated behind the terminal lock.
 
 ## Surface actions
 
-The 95 above are the fixed set. Anything mounted can publish tools of its own,
+The 105 above are the fixed set. Anything mounted can publish tools of its own,
 and they exist for exactly as long as it is on screen.
 
 The workspace board is the built-in example. It publishes

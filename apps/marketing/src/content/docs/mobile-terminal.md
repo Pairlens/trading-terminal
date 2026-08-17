@@ -5,7 +5,7 @@ group: get-started
 order: 5
 eyebrow: Get started
 updated: 17 AUG 2026
-readTime: 9 min read
+readTime: 10 min read
 ---
 
 Open [terminal.pairlens.finance](https://terminal.pairlens.finance) on a phone
@@ -22,13 +22,13 @@ connections, your sockets or your watchlist.
 
 ## Five destinations, one chart
 
-| Tab           | What it is                                                                             |
-| ------------- | -------------------------------------------------------------------------------------- |
-| **Watchlist** | Your lists, each row with a live price and a trend line. Tapping one switches the pair |
-| **Trade**     | Order entry, with the order book above it                                              |
-| **Chart**     | The chart on its own, with the drawing toolbar                                         |
-| **Assistant** | The full assistant, same 95 tools and same confirm cards as the desktop                |
-| **Discover**  | Featured pairs, prediction markets, news, Fear and Greed, and today's P&L              |
+| Tab           | What it is                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Watchlist** | Your lists, each row with a live price and a trend line. Tapping one switches the pair, bringing its venue with it |
+| **Trade**     | Order entry, with the order book above it                                                                          |
+| **Chart**     | The chart on its own, with the drawing toolbar                                                                     |
+| **Assistant** | The full assistant, same 105 tools and same confirm cards as the desktop                                           |
+| **Discover**  | Featured pairs, prediction markets, news, Fear and Greed, and today's P&L                                          |
 
 The chart is underneath all five and never unmounts. The other four are bottom
 sheets that slide over it, so switching destination is not a page load and the
@@ -86,6 +86,16 @@ candle, in Free they land where you put them.
 Undo is the chart engine's own history, so it undoes the drawing you just made
 rather than approximating it. Clear asks first.
 
+**On an event contract the chart gains a strip.** A prediction routing key is a
+venue ticker, so under the price you get the question in full, the date it
+resolves, and what the outcome is being paid. On a race the reading is the
+leader instead, because a field of 128 candidates has no single probability.
+Tap the strip and the whole event opens: every question it carries, every
+outcome priced, and the venue's resolution rules. On a race the strip also
+carries a second button that ranks the field (below). The strip prices come
+from the venue's board, not the live socket, so nothing on it flickers while you
+read it; the number that moves is the price above it.
+
 ## Trading
 
 The Trade sheet is a real ticket, not a shortcut to one.
@@ -101,10 +111,13 @@ do are visibly disabled rather than hidden, so a DEX without limit support says
 so. The limit price is seeded from the live book the first time, which puts the
 line where you are already looking.
 
-**On an event contract the ticket takes dollars.** The question and its
-resolution date sit at the top, the amount is collateral with **$25**, **$50**,
-**$100** and **Max** as presets, and the count it buys is stated under the
-field, floored to whole contracts. Above the confirm bar is the payout card:
+**On an event contract the ticket takes dollars.** The question, its resolution
+date and a **Resolution rules** disclosure sit above the ticket, beside the
+order book rather than inside it, so they stay readable when the ticket is
+behind a connect card: what a market asks and how it settles is not something a
+missing API key should hide. Tap the question to open the whole event. The
+amount is collateral with **$25**, **$50**, **$100** and **Max** as presets, and
+the count it buys is stated under the field, floored to whole contracts. Above the confirm bar is the payout card:
 what the order returns if it is right, split against what it costs, with the
 stake, the profit and the return. The limit field takes cents, 53 for 53¢. It is
 the desktop ticket's arithmetic, and the presets are the same list, so a stake
@@ -146,6 +159,21 @@ outcome and it becomes the chart, with the ticket and the book quoting the same
 side. Tap the event heading and the whole event opens as its own screen: every
 question it carries, every outcome priced. **All events** opens the full board,
 where you can search question text and filter by venue.
+
+**Every market carries its rules.** On the event screen each question has a
+**Resolution rules** disclosure holding the venue's own criteria, verbatim.
+They are per market and not per event, because a race's questions each settle on
+their own terms. Collapsed by default: it is what you check once before staking,
+not on every glance.
+
+**A race gets a ladder.** An event with more than two tradeable answers shows
+**Rank all N outcomes** at the top of its screen, which opens the field as one
+ranked list: probability order, the 24h move, a colour per runner that matches
+the one the desktop panes use, and the sum of every Yes price so you can see
+whether the field is priced above or below a fair 100%. Filter it by name or by
+question, and tap a row to make that runner the chart. It exists because reading
+a 128-candidate race market by market answers "what is in this event" and never
+answers "who is winning".
 
 Cards are bounded on both surfaces. A race with thirty candidates would
 otherwise be sixty buttons deep and push the rest of Discover off the screen, so

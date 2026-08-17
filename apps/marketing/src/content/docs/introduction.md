@@ -58,7 +58,7 @@ conditions; [alerts](/docs/alerts-notifications) watch price levels, percent
 moves, signals, and candle closes.
 
 **AI.** One [assistant](/docs/ai-copilot), docked in the corner or in the nav
-rail and mounted above every page, with 95 tools over markets, charts, your portfolio, scripts, bots and
+rail and mounted above every page, with 105 tools over markets, charts, your portfolio, scripts, bots and
 automation, plus sourced [research reports](/docs/research-reports) on demand.
 Bring your own provider key or subscribe to hosted Intelligence.
 

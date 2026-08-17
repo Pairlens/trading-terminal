@@ -16,7 +16,7 @@
  * Those booleans are also what says whether the market on screen has arrived
  * yet — see `ChartSwitchIndicator` for the wait it draws.
  */
-import { memo, useCallback, useRef, useState } from 'react'
+import { Suspense, memo, useCallback, useRef, useState } from 'react'
 import { KeyRound, LockKeyhole, Monitor } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -30,9 +30,18 @@ import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { MobileChart } from './mobile-chart'
 import { ChartSwitchIndicator } from './chart-switch-indicator'
 import type { ReactNode, PointerEvent as ReactPointerEvent } from 'react'
+import { lazyChunk } from '@/lib/lazy-chunk'
 import { useOptionalCandleData } from '@/lib/chart-terminal-context'
 import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
+
+/**
+ * The event header for a prediction pair. Lazy AND gated on the pair actually
+ * being one, so a chart of BTC-USDT never downloads the event-browsing hooks:
+ * the gate below is what makes the split worth having.
+ */
+const PredictionEventStrip = lazyChunk(() => import('./prediction-event-strip'))
 
 export type MobileChartSurfaceProps = {
   /**
@@ -109,8 +118,12 @@ export function MobileChartSurface(props: MobileChartSurfaceProps) {
   // the chart config this needs, and the focus context changes on a pair or
   // venue switch where the config object changes on every tool arm, timeframe
   // and drawing edit. Same value either way (see mobile-focus-context.tsx).
-  const { focusedVenue } = useMobileFocus()
+  const { focusedPair, focusedVenue } = useMobileFocus()
   const credentialGate = useMarketCredentialGate(focusedVenue)
+  // Directory pin first, venue asset class second — neither reads a stream.
+  // It is the gate on the event strip's whole chunk, so a crypto chart never
+  // pays for the event-browsing hooks.
+  const isPrediction = useIsPredictionPair(focusedPair, focusedVenue)
 
   // The venue-change bit has to be remembered by something that outlives the
   // indicator: the switch and the cleared snapshot happen in the SAME render,
@@ -132,6 +145,10 @@ export function MobileChartSurface(props: MobileChartSurfaceProps) {
       desktopOnly={candleData?.desktopOnly ?? false}
       hasSnapshot={hasSnapshot}
       noData={candleData?.noData ?? false}
+      // Bare chart only. Under a docked panel the readout has compacted into
+      // the band this would occupy, and the Trade ticket already carries the
+      // question over its own fields.
+      showEventStrip={isPrediction && props.band === 'full'}
       venueChanged={switchRef.current.venueChanged}
     />
   )
@@ -152,12 +169,14 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
   desktopOnly,
   noData,
   hasSnapshot,
+  showEventStrip,
   venueChanged,
 }: MobileChartSurfaceProps & {
   credentialState: 'ok' | 'sealed' | 'missing'
   desktopOnly: boolean
   noData: boolean
   hasSnapshot: boolean
+  showEventStrip: boolean
   venueChanged: boolean
 }) {
   const tapRef = useRef<{ x: number; y: number; t: number } | null>(null)
@@ -266,6 +285,18 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
           </div>
         ) : null}
       </div>
+
+      {/* What the chart is ABOUT, when the chart is an event contract. Sits
+          under the hero readout at a fixed offset (see the strip's own
+          `STRIP_TOP_PX`) rather than displacing it: the readout cross-fades
+          between two sizes on the sheet's live position, and a box that moved
+          it would jump mid-drag. Fallback null — a spinner over a chart for a
+          3KB chunk is worse than the strip arriving a frame late. */}
+      {showEventStrip ? (
+        <Suspense fallback={null}>
+          <PredictionEventStrip />
+        </Suspense>
+      ) : null}
 
       {/* Tap-to-dismiss. Mounted only while something is docked over the
           chart. `pointer-events-auto` is load-bearing: vaul nulls the body's

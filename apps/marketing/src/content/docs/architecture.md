@@ -40,9 +40,9 @@ aggregated liquidation clusters. It never stores exchange credentials.
 Two of those touch exchange data, and both are narrow and deliberate. The
 listings sweeper reads public, unauthenticated venue metadata to compile the
 discovery snapshot, which pairs each venue lists and nothing else. The
-liquidation collector holds Binance Futures' public force-order stream open and
-buckets the prints. Neither carries a credential, neither acts on anyone's
-behalf, and neither ever handles prices, books, candles or trades. Everything
+liquidation collector holds the public liquidation streams of Binance Futures and
+Bybit open and buckets the prints. Neither carries a credential, neither acts on
+anyone's behalf, and neither ever handles prices, books, candles or trades. Everything
 you actually trade against streams from the venue straight to your machine.
 
 ## Where data lives

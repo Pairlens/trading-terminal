@@ -338,9 +338,9 @@ function PositionDetail({
           value={view.quoteFees === null ? '' : formatAmount(view.quoteFees)}
           tone={view.quoteFees !== null && view.quoteFees > 0 ? 'up' : 'muted'}
         />
-        {/* Solana's CLMMs settle fees into the position when it is next
-            touched, so the figure is a floor rather than what a claim would
-            pay now. Labelled, because an unlabelled floor reads as the whole
+        {/* This position's boundary tick accounts could not be read, so its
+            fee growth could not be replayed and only the settled amount is
+            known. Labelled, because an unlabelled floor reads as the whole
             claim. */}
         {entry.feesAsOf === 'last-touch' ? (
           <p className="text-[10px] leading-relaxed text-muted-foreground">

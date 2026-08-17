@@ -151,6 +151,12 @@
     "providerBusyTitle": "财报数据被限流",
     "providerErrorBody": "提供方返回了无法使用的内容。与你的账户和连接器无关。",
     "providerErrorTitle": "财报日程未加载",
+    "reportTime": {
+      "amc": "盘后",
+      "amcLabel": "收盘后发布",
+      "bmo": "盘前",
+      "bmoLabel": "开盘前发布"
+    },
     "scopeLabel": "财报时间范围",
     "scopes": {
       "today": "今天",
@@ -174,6 +180,9 @@
     "emptyTitle": "没有宏观日历",
     "emptyBody": "发布日程来自 App Server。此版本以独立模式运行，没有可汇编的来源。",
     "columns": {
+      "actual": "实际",
+      "implied": "隐含 (Kalshi)",
+      "prior": "前值",
       "source": "机构",
       "time": "时间（{{zone}}）",
       "event": "发布"
@@ -186,6 +195,8 @@
     "impactAll": "全部",
     "impactHigh": "高影响",
     "impactLabel": "影响筛选",
+    "impliedFrom": "由 {{source}} 合约价格推出，不是分析师一致预期。",
+    "impliedHint": "由 Kalshi 合约价格推出的市场预期。这是实时的市场价格，不是分析师一致预期。",
     "noneHighBody": "该时间范围内没有高影响发布。切换到「全部」查看其余日程。",
     "noneInWindowBody": {
       "week": "未来七天没有美国数据发布。",
@@ -203,7 +214,7 @@
       "fortnight": "两周",
       "month": "一个月"
     },
-    "sourceNote": "汇编自 BLS、BEA、美联储与 Census 的发布日程。时间为美国东部时间，与各机构公布的一致。",
+    "sourceNote": "汇编自 BLS、BEA、美联储和 Census 的数据发布日程。实际值与前值来自这些机构本身，隐含值由 Kalshi 合约价格推出。时间为美国东部时间，与机构公布的一致。",
     "title": "宏观",
     "today": "今天",
     "tomorrow": "明天"
@@ -278,7 +289,7 @@
     "emptyBody": "{{wallet}} 没有可累计手续费的仓位。在一条已连接的链上提供流动性后，金额就会显示在这里。",
     "noChainsTitle": "没有链连接器",
     "noChainsBody": "安装一个链上连接器，这个面板就会读取它的池欠你钱包多少。",
-    "footnote": "按仓位列出两条腿：在 EVM 链上是本区块执行 collect 会支付的金额，在 Solana 上是资金池已经计入的金额。已领取的手续费在链上不留痕迹，所以手续费 APR、区间内时长以及相对持有的损益都需要索引器，暂不显示。"
+    "footnote": "按仓位列出两侧：EVM 链上是一次 collect 在当前区块会支付的金额，Solana 上是同一个金额，由池子的手续费增长回放算出。已领取的手续费不会在链上留下痕迹，所以手续费 APR、区间内时长以及相对单纯持有的亏损都需要索引器，这里不显示。"
   },
   "funding": {
     "loading": "正在读取资金费率…",
@@ -397,29 +408,34 @@
     "statusTrading": "交易中"
   },
   "liquidationMap": {
-    "clusterHint": "{{price}}：{{notional}} 的{{side}}仓位在 {{count}} 笔成交中被强平",
-    "clustersCaption": "阴影色带是交易所在过去 {{window}} 小时内实际强平的量，红色为多头，绿色为空头。",
-    "clustersErrorCaption": "无法加载交易所的强平历史。价格轴上的其他内容不受影响。",
+    "alternateSourcePrompt": "在上方选择 {{venue}}，即可在这张图上读另一家交易所的成交。数据源永不合并：它们的推送内容并不相同。",
+    "clustersErrorCaption": "无法加载该交易所的强平历史。采集器每分钟应答一次，可能会自行恢复。",
     "clustersLoadingCaption": "正在加载交易所的强平历史。",
     "collectingCaption": "市场聚集区仍在积累。自 {{since}} 起开始采集。",
     "collectingJustStarted": "刚刚",
+    "collectingTitle": "仍在积累",
+    "errorTitle": "强平历史未能加载",
+    "feedComplete": "完整数据流",
+    "feedSampled": "抽样数据流",
     "legendLong": "多头 {{value}}",
     "legendPrints": "{{count}} 笔",
     "legendShort": "空头 {{value}}",
-    "noClustersCaption": "过去 {{window}} 小时内该合约没有发生强平。",
+    "mapCaption": "阴影单元格是 {{venue}} 在最近{{window}}内真正强平的金额，按发生的时间和价格摆放。名义金额越大，单元格越深。",
+    "noCandlesBody": "该交易所没有提供此合约的价格历史，强平数据无处附着。",
+    "noCandlesTitle": "没有可对照的K线",
+    "noClustersCaption": "最近{{window}}内该合约没有发生强平。",
+    "noFeedTitle": "这里没有实测强平",
+    "noneInWindow": "最近{{window}}内没有强平",
     "notTrackedCaption": "该交易所不发布聚合强平数据，因此不绘制市场聚集区。",
-    "standaloneCaption": "市场聚集区来自 Pairlens 云端，而此版本未启用云端。",
-    "subtitle": "市场在哪些价位被强平，以及你自己的仓位会落在哪里",
-    "estimateBadge": "估算",
-    "sideLong": "多头",
-    "sideShort": "空头",
-    "referenceHint": "按当前价格开仓的 {{leverage}} 倍{{side}}将在 {{price}} 附近被强平",
-    "caption": "柱形是各交易所报告的你自己的强平价格。细刻度表示按当前价格开仓在 5x、10x、25x 下的强平位置。",
-    "noPositionsCaption": "细线标出按当前价格开仓在 5 倍、10 倍和 25 倍杠杆下的强平位置。你自己的强平价格会在持有仓位后以柱形显示。",
-    "noPriceTitle": "没有可参照的价格",
-    "noPriceBody": "该图需要合约的实时价格。旁边的图表一有价格就会填充。",
-    "emptyTitle": "没有可绘制的内容",
-    "emptyBody": "开一个永续仓位，或选择一个合约，价格轴就会填充。",
+    "planRequiredAction": "管理 Coinglass 插件",
+    "planRequiredCaption": "该交易所的聚集区来自 Coinglass 密钥。添加一个密钥，或改用包含强平订单的 Coinglass 套餐，地图便会填满。",
+    "planRequiredTitle": "这里需要供应商密钥",
+    "positionsCaption": "虚线是各交易所报告的你自己的强平价格，线宽按在险名义金额加权。",
+    "sampledNote": "该交易所每个交易对每秒最多推送一笔强平，因此金额只是抽样，在连环强平时会明显偏低。",
+    "sourceLabel": "数据来源",
+    "sourceLine": "{{venue}} · {{feed}}",
+    "standaloneCaption": "市场聚集区来自本版本未使用的 Pairlens 云，或来自你尚未添加的数据供应商密钥。",
+    "noPositionsCaption": "在该合约上持仓后，你自己的强平价格会以虚线加入图表。",
     "windowLabel": "时间范围",
     "windows": {
       "h1": "1小时",
@@ -446,7 +462,7 @@
     "wouldRead": "将读取 {{chain}} 上 {{pool}} 的 {{wallet}}"
   },
   "lpPosition": {
-    "feesLastTouch": "按该仓位上一次被触碰时结算。Orca 与 Raydium 只在仓位下一次被触碰时才计入手续费，因此实际可领取的金额可能更高。",
+    "feesLastTouch": "只是已结清的金额。这个仓位边界的 tick 数据读不到，因此上次变动以来累积的手续费未计入，实际可领金额可能更高。",
     "title": "LP 仓位",
     "subtitle_one": "{{wallet}} · {{count}} 个区间",
     "subtitle_other": "{{wallet}} · {{count}} 个区间",
@@ -475,6 +491,9 @@
     "footnote": "从链上读取：价格区间、流动性当前的价值，以及尚未领取的手续费。仓位不记录成本，所以没有与单纯持有的对比数值。"
   },
   "manageLiquidity": {
+    "confirmAddNoteSolana": "一笔交易，无需代币授权。存入金额以上面的数额为上限。",
+    "confirmCollectNoteSolana": "发送到上面的程序。手续费在同一笔交易中结清并支付到本钱包，不会去别处。",
+    "rowProgram": "程序",
     "title": "管理流动性",
     "subtitle_one": "{{wallet}} · {{count}} 个仓位",
     "subtitle_other": "{{wallet}} · {{count}} 个仓位",
@@ -530,17 +549,13 @@
     "lockedBody": "这笔交易需要你的钱包私钥。请解锁 Pairlens 后重试。",
     "noConnectorTitle": "未安装连接器",
     "noConnectorBody": "这个仓位所在的链没有安装连接器，无法为它签名。",
-    "evmOnlyTitle": "仅限 EVM 仓位",
-    "evmOnlyBody": "这些操作调用的是 Uniswap v3 仓位管理合约，属于 EVM 合约。Solana 仓位可以在其他 LP 面板中查看，但在这里无法签名。在 EVM 链上提供流动性后即可在本面板管理。",
-    "readOnlyElsewhere_one": "另一签名体系的 {{count}} 个仓位在这里只读。",
-    "readOnlyElsewhere_other": "另一签名体系的 {{count}} 个仓位在这里只读。",
     "noSigner": "已连接的钱包中没有能在该仓位所在链上签名的。",
     "noChainsTitle": "没有链连接器",
     "noChainsBody": "安装链上连接器后，本面板即可领取手续费并调整找到的区间。",
     "loadingTitle": "正在读取仓位",
-    "loadingBody": "正在向每条已连接链的仓位管理合约询问这个钱包持有什么。",
+    "loadingBody": "正在向每条已连接的链查询本钱包持有什么。",
     "emptyTitle": "没有流动性仓位",
-    "emptyBody": "{{wallet}} 在已连接的链上没有 Uniswap v3 或 PancakeSwap v3 仓位。在其中一条链上提供流动性后即可在这里管理。",
+    "emptyBody": "{{wallet}} 在已连接的链上没有集中流动性仓位：EVM 上没有 Uniswap v3 或 PancakeSwap v3 区间，Solana 上没有 Orca 或 Raydium 区间。在其中任意一条链上提供流动性，就能在这里管理。",
     "footnote": "领取和移除各是一笔交易，移除会把手续费一起带走。移动区间不是编辑：它会销毁原仓位并铸造新的，因此这里不提供。"
   },
   "marginHealth": {
@@ -1016,17 +1031,19 @@
     "resumeOrders": "恢复"
   },
   "routeBridge": {
+    "confirmDestination": "将到账 {{chain}}，进入你的钱包 {{wallet}}。",
+    "needsDestinationWallet": "连接一个 {{chain}} 钱包来接收这笔转账。上面的报价是真实的，只是还没有收款地址。",
     "title": "跨链",
     "subtitle": "把一种资产从 {{chain}} 转出",
     "provider": "LI.FI",
-    "notEvmTitle": "该链暂不支持跨链",
-    "notEvmBody": "转账在 Ethereum、Base、Arbitrum、BNB Chain 和 Polygon 之间进行。{{chain}} 的交易签名方式不同，跨链连接器还没有对应的签名器。",
     "noConnectorTitle": "未安装跨链连接器",
     "noConnectorBody": "在插件商店安装 LI.FI Bridge 插件，即可报价并发起跨链转账。",
     "amountLabel": "跨链数量",
     "amountPlaceholder": "{{asset}} 数量",
     "destination": "目标链",
     "quoting": "正在为路线报价",
+    "unsupportedChainBody": "转账在 Ethereum、Base、Arbitrum、BNB Chain、Polygon 和 Solana 之间进行，{{chain}} 不在其中。",
+    "unsupportedChainTitle": "该链不支持跨链",
     "youReceive": "到账链",
     "minReceived": "保底到账",
     "bridgeFee": "跨链费",
@@ -1046,7 +1063,7 @@
     "sentBody": "已发起转账，正在追踪：",
     "sendFailed": "转账未能发出。",
     "refusal": {
-      "non-evm-chain": "暂不支持与 {{chain}} 之间的跨链。转账仅在 EVM 链之间进行。",
+      "non-evm-chain": "{{chain}} 签名的交易类型，这座跨链桥还不支持。",
       "same-chain": "这就是你当前所在的链。要兑换请用旁边的面板。",
       "unknown-market": "{{chain}} 不在该跨链桥覆盖的链之内。",
       "unknown-token": "{{asset}} 在 {{chain}} 上找不到对应合约，没有可跨链的资产。",
@@ -2426,6 +2443,8 @@
       }
     },
     "toolbar": {
+      "chartTypesAll": "全部图表类型",
+      "chartTypesForProbabilities": "概率图表类型",
       "timeframe": "周期",
       "chartType": "图表类型",
       "crosshairMode": "十字光标模式",
@@ -3300,7 +3319,7 @@
     "openInterest": "每个合约的持仓量及 24 小时变化，让资金拥挤先于价格显现",
     "fundingExtremes": "当前资金费率最高和最低的合约，以及各自所在的交易所",
     "fundingBelt": "距离下次资金费结算的倒计时、当前与预测费率，以及你的仓位规模要支付或赚取的金额",
-    "liquidationMap": "在价格轴上呈现交易所实际强平的量，并叠加你自己的强平价格与杠杆刻度",
+    "liquidationMap": "把交易所真正强平的金额画成时间×价格热力图，衬在合约K线之后，并把你自己的强平价格叠在上面",
     "marginHealth": "保证金率、维持保证金对权益、距离强平的空间，以及一次反向波动会对这三者做什么",
     "riskControls": "每日亏损上限、交易笔数、仓位规模和紧急停止开关，就在交易发生的地方直接编辑",
     "categories": "所有事件分类均附带实时合约数量，一键即可缩小看板范围",
@@ -3323,10 +3342,10 @@
     "manageLiquidity": "无需离开图表即可调整区间、增减流动性并领取手续费",
     "chainLadder": "同一代币在每条链上的报价，已计入 Gas 费，比拼的是总成本而不是表面报价",
     "routeBridge": "源链、目标链、使用的跨链桥及其手续费与所需时间，一切就绪即可执行",
-    "inFlight": "仍在确认中的转账，附带各自等待的区块确认数",
+    "inFlight": "仍在确认中的转账，附带各自当前的阶段",
     "session": "依据券商自身日历显示当前交易日所处的时段，包含假期与半日市",
-    "earningsCalendar": "谁在什么时候发财报、要超过的预期是多少，再加上即将上市的公司",
-    "economicCalendar": "宏观数据按发布时间排列，附带重要性、前值与市场预期",
+    "earningsCalendar": "谁在何时发财报、盘前还是盘后，要超越的预期是多少，以及即将上市的标的",
+    "economicCalendar": "按时间排列的宏观数据，含影响程度、前值和市场隐含预期",
     "sessionClock": "用一行显示交易日状态的时钟，盘后下单不会再让你措手不及",
     "level1": "买卖报价及其挂单量、点差、当日区间，以及交易所宣布停牌时的状态行",
     "company": "估值、增长率、利润率、下一个催化剂，以及分析师的看法，全部集中在一个面板",
@@ -3722,13 +3741,17 @@
     "apiKeyRequiredHint": "需要 API 密钥",
     "setupRequiredHint": "需要设置",
     "manifests": {
+      "coinglass-liquidations": {
+        "description": "用你自己的 Coinglass 密钥获取真实爆仓成交，覆盖 Pairlens 自己不采集的永续合约交易所。历史窗口是七天，而不是三天。仅限桌面端，因为 Coinglass 不返回 CORS 头；它读取的接口需要 Coinglass Standard 及以上套餐。",
+        "title": "Coinglass 爆仓数据"
+      },
       "helius-rpc-provider": {
         "title": "Helius Solana RPC",
         "description": "Solana 上每一次读取和每一次发送都会经过的节点：余额、流动性仓位、兑换提交。填入你自己的 Helius 密钥可获得稳定的接入点；没有密钥时会回退到公共 RPC，而它会在无预警的情况下丢弃请求。"
       },
       "lifi-bridge-connector": {
         "title": "LI.FI Bridge",
-        "description": "在 Ethereum、Base、Arbitrum、BNB Chain 和 Polygon 之间转移资产：按金额挑选最合适的跨链桥，给出手续费和到账时间，并一路追踪到入账"
+        "description": "在 Ethereum、Base、Arbitrum、BNB Chain、Polygon 和 Solana 之间转移资产：按数量挑选最优跨链桥，列出费用和到账时间，并跟踪到账为止"
       },
       "pairlens-core": {
         "title": "Pairlens Core",
@@ -4686,7 +4709,7 @@
       "dex-cross-chain": {
         "name": "DEX 跨链",
         "tagline": "同一枚代币，每条链都有，Gas 费全部算进去。",
-        "description": "用于跨链转移的看板：跨链阶梯以计入 Gas 费的总成本，在每条链上为代币报价，跨链路由注明手续费与所需时间，旁边并列着仍在确认中的转账及其区块确认数。",
+        "description": "用于跨链转移的看板：跨链阶梯以计入 Gas 费的总成本，在每条链上为代币报价，跨链路由注明手续费与所需时间，旁边并列着仍在确认中的转账及其当前阶段。",
         "menuLabel": "跨链"
       },
       "equities-company": {
@@ -6111,6 +6134,15 @@
     }
   },
   "mobile": {
+    "predictions": {
+      "rankOutcomes_one": "查看结果排名",
+      "rankOutcomes_other": "查看全部 {{count}} 个结果排名",
+      "resolvesShort": "{{date}} 结算",
+      "runnerCount_one": "{{count}} 个结果",
+      "runnerCount_other": "{{count}} 个结果",
+      "tailBelow_one": "再显示 1 个，低于 {{price}}",
+      "tailBelow_other": "再显示 {{count}} 个，全部低于 {{price}}"
+    },
     "shell": {
       "tabs": {
         "label": "导航",

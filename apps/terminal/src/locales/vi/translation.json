@@ -151,6 +151,12 @@
     "providerBusyTitle": "Lịch báo cáo đang bị giới hạn tần suất",
     "providerErrorBody": "Nhà cung cấp trả về nội dung không dùng được. Tài khoản và connector của bạn không có vấn đề gì.",
     "providerErrorTitle": "Không tải được lịch báo cáo",
+    "reportTime": {
+      "amc": "SAU",
+      "amcLabel": "Công bố sau giờ đóng cửa",
+      "bmo": "TRƯỚC",
+      "bmoLabel": "Công bố trước giờ mở cửa"
+    },
     "scopeLabel": "Khoảng thời gian công bố",
     "scopes": {
       "today": "Hôm nay",
@@ -174,6 +180,9 @@
     "emptyTitle": "Không có lịch vĩ mô",
     "emptyBody": "Lịch công bố đến từ App Server. Bản dựng này chạy độc lập nên không có nguồn để tổng hợp.",
     "columns": {
+      "actual": "Thực tế",
+      "implied": "Hàm ý (Kalshi)",
+      "prior": "Trước",
       "source": "Cơ quan",
       "time": "Giờ ({{zone}})",
       "event": "Công bố"
@@ -186,6 +195,8 @@
     "impactAll": "Tất cả",
     "impactHigh": "Tác động lớn",
     "impactLabel": "Bộ lọc tác động",
+    "impliedFrom": "Suy ra từ giá hợp đồng của {{source}}, không phải đồng thuận của giới phân tích.",
+    "impliedHint": "Kỳ vọng hàm ý từ giá hợp đồng trên Kalshi. Đây là giá thị trường trực tiếp, không phải đồng thuận của giới phân tích.",
     "noneHighBody": "Không có công bố tác động lớn trong khoảng này. Chuyển sang Tất cả để xem phần còn lại của lịch.",
     "noneInWindowBody": {
       "week": "Không có công bố nào của Hoa Kỳ trong bảy ngày tới.",
@@ -203,7 +214,7 @@
       "fortnight": "2 tuần",
       "month": "1 tháng"
     },
-    "sourceNote": "Tổng hợp từ lịch công bố của BLS, BEA, Cục Dự trữ Liên bang và Census. Giờ theo múi giờ miền Đông Hoa Kỳ, đúng như các cơ quan công bố.",
+    "sourceNote": "Tổng hợp từ lịch công bố của BLS, BEA, Cục Dự trữ Liên bang và Census. Số thực tế và số trước lấy từ chính các cơ quan; số hàm ý được suy ra từ giá hợp đồng trên Kalshi. Giờ theo múi giờ miền Đông Hoa Kỳ, đúng như các cơ quan công bố.",
     "title": "Vĩ mô",
     "today": "Hôm nay",
     "tomorrow": "Ngày mai"
@@ -278,7 +289,7 @@
     "emptyBody": "{{wallet}} không giữ vị thế nào để tích lũy phí. Cung cấp thanh khoản trên một chain đã kết nối và số tiền sẽ xuất hiện ở đây.",
     "noChainsTitle": "Chưa có connector chain",
     "noChainsBody": "Cài một connector on-chain và bảng này sẽ đọc số phí mà các pool của nó đang nợ ví của bạn.",
-    "footnote": "Cả hai chân, theo từng vị thế: trên chain EVM là số tiền một lệnh collect sẽ trả ở block này, trên Solana là số tiền pool đã ghi nhận. Phí đã thu không để lại dấu vết on-chain, nên APR phí, thời gian trong biên và mức lỗ so với nắm giữ đều cần indexer và không được hiển thị."
+    "footnote": "Cả hai chân, theo từng vị thế: số tiền một lệnh collect sẽ trả trong block này trên các chain EVM, và cùng con số đó trên Solana được tính lại từ fee growth của pool. Phí đã thu không để lại dấu vết on-chain, nên APR phí, thời gian trong khoảng giá và mức lỗ so với chỉ giữ đều cần indexer và không được hiển thị."
   },
   "funding": {
     "loading": "Đang đọc phí funding…",
@@ -397,29 +408,34 @@
     "statusTrading": "Đang giao dịch"
   },
   "liquidationMap": {
-    "clusterHint": "{{price}}: {{notional}} vị thế {{side}} bị thanh lý qua {{count}} lệnh khớp",
-    "clustersCaption": "Các cột đổ bóng là những gì sàn thực sự đã thanh lý trong {{window}} giờ qua, đỏ cho long và xanh cho short.",
-    "clustersErrorCaption": "Không tải được lịch sử thanh lý của sàn. Mọi thứ còn lại trên trục giá không bị ảnh hưởng.",
+    "alternateSourcePrompt": "Chọn {{venue}} ở trên để đọc dữ liệu khớp lệnh của một sàn khác trên đồ thị này. Các nguồn không bao giờ được gộp: luồng của chúng mang nội dung khác nhau.",
+    "clustersErrorCaption": "Không tải được lịch sử thanh lý của sàn. Bộ thu thập trả lời mỗi phút một lần, nên việc này có thể tự hết.",
     "clustersLoadingCaption": "Đang tải lịch sử thanh lý của sàn.",
     "collectingCaption": "Cụm thị trường vẫn đang được tích lũy. Thu thập từ {{since}}.",
     "collectingJustStarted": "vừa xong",
+    "collectingTitle": "Vẫn đang thu thập",
+    "errorTitle": "Lịch sử thanh lý không tải được",
+    "feedComplete": "luồng đầy đủ",
+    "feedSampled": "luồng lấy mẫu",
     "legendLong": "{{value}} long",
     "legendPrints": "{{count}} lệnh khớp",
     "legendShort": "{{value}} short",
-    "noClustersCaption": "Không có gì bị thanh lý trên hợp đồng này trong {{window}} giờ qua.",
+    "mapCaption": "Các ô tô đậm là những gì {{venue}} thực sự đã thanh lý trong {{window}} vừa qua, đặt đúng thời điểm và mức giá xảy ra. Giá trị danh nghĩa càng lớn, ô càng đậm.",
+    "noCandlesBody": "Sàn này không trả về lịch sử giá cho hợp đồng, nên không có gì để gắn dữ liệu thanh lý lên.",
+    "noCandlesTitle": "Không có nến để đối chiếu",
+    "noClustersCaption": "Không có gì bị thanh lý ở hợp đồng này trong {{window}} vừa qua.",
+    "noFeedTitle": "Ở đây không có thanh lý đo được",
+    "noneInWindow": "Không có thanh lý trong {{window}} vừa qua",
     "notTrackedCaption": "Sàn này không công bố nguồn dữ liệu thanh lý tổng hợp, nên không vẽ cụm thị trường.",
-    "standaloneCaption": "Cụm thị trường đến từ đám mây Pairlens, mà bản dựng này không sử dụng.",
-    "subtitle": "Nơi thị trường bị thanh lý và nơi vị thế của bạn sẽ nằm",
-    "estimateBadge": "ƯỚC TÍNH",
-    "sideLong": "long",
-    "sideShort": "short",
-    "referenceHint": "Vị thế {{side}} đòn bẩy {{leverage}}x mở tại giá hiện tại sẽ bị thanh lý quanh {{price}}",
-    "caption": "Các thanh là giá thanh lý của chính bạn, theo báo cáo của từng sàn. Vạch mảnh cho biết vị thế mở ở giá hiện tại sẽ bị thanh lý ở đâu với 5x, 10x và 25x.",
-    "noPositionsCaption": "Vạch mảnh cho biết vị thế mở tại giá hiện tại sẽ bị thanh lý ở đâu với đòn bẩy 5x, 10x và 25x. Giá thanh lý của bạn sẽ hiện thành cột ngay khi có vị thế mở.",
-    "noPriceTitle": "Không có giá để đối chiếu",
-    "noPriceBody": "Bản đồ cần giá trực tiếp của hợp đồng. Nó sẽ hiện ngay khi biểu đồ bên cạnh có giá.",
-    "emptyTitle": "Không có gì để vẽ",
-    "emptyBody": "Mở một vị thế vĩnh cửu, hoặc chọn một hợp đồng, trục giá sẽ được lấp đầy.",
+    "planRequiredAction": "Quản lý plugin Coinglass",
+    "planRequiredCaption": "Cụm thanh lý của sàn này đến qua khóa Coinglass. Hãy thêm một khóa, hoặc chuyển sang gói Coinglass có bao gồm lệnh thanh lý, rồi bản đồ sẽ đầy lên.",
+    "planRequiredTitle": "Chỗ này cần khóa của nhà cung cấp",
+    "positionsCaption": "Các đường nét đứt là giá thanh lý của chính bạn, theo báo cáo của từng sàn, độ dày tính theo giá trị danh nghĩa đang chịu rủi ro.",
+    "sampledNote": "Sàn này chỉ công bố tối đa một lệnh thanh lý mỗi mã mỗi giây, nên các con số là mẫu và thấp hơn thực tế đúng lúc xảy ra thanh lý chuỗi.",
+    "sourceLabel": "Nguồn dữ liệu",
+    "sourceLine": "{{venue}} · {{feed}}",
+    "standaloneCaption": "Cụm thanh lý thị trường đến từ cloud Pairlens, thứ mà bản dựng này không dùng, hoặc từ khóa nhà cung cấp dữ liệu mà bạn chưa thêm.",
+    "noPositionsCaption": "Giá thanh lý của bạn sẽ xuất hiện trên đồ thị dưới dạng đường nét đứt ngay khi bạn mở vị thế ở hợp đồng này.",
     "windowLabel": "Khoảng thời gian",
     "windows": {
       "h1": "1 giờ",
@@ -446,7 +462,7 @@
     "wouldRead": "Sẽ đọc {{wallet}} trên {{pool}}, {{chain}}"
   },
   "lpPosition": {
-    "feesLastTouch": "Được chốt vào lần chạm gần nhất của vị thế này. Orca và Raydium chỉ ghi nhận phí khi vị thế được chạm lần kế tiếp, nên khoản thực nhận có thể cao hơn.",
+    "feesLastTouch": "Chỉ là số đã chốt. Không đọc được dữ liệu tick ở hai biên của vị thế này, nên phí phát sinh từ lần cập nhật cuối chưa được tính và số thực nhận có thể cao hơn.",
     "title": "Vị thế LP",
     "subtitle_one": "{{wallet}} · {{count}} khoảng",
     "subtitle_other": "{{wallet}} · {{count}} khoảng",
@@ -475,6 +491,9 @@
     "footnote": "Đọc từ chain: dải giá, giá trị thanh khoản hiện tại và phí chưa thu. Vị thế không lưu giá vốn, nên không có con số so với việc chỉ nắm giữ."
   },
   "manageLiquidity": {
+    "confirmAddNoteSolana": "Một giao dịch, không cần approve token. Số tiền nạp bị giới hạn ở các mức trên.",
+    "confirmCollectNoteSolana": "Gửi tới chương trình ở trên. Phí được chốt và trả về ví này trong cùng một giao dịch, không đi đâu khác.",
+    "rowProgram": "Chương trình",
     "title": "Quản lý thanh khoản",
     "subtitle_one": "{{wallet}} · {{count}} vị thế",
     "subtitle_other": "{{wallet}} · {{count}} vị thế",
@@ -530,17 +549,13 @@
     "lockedBody": "Giao dịch này cần khóa ví của bạn. Hãy mở khóa Pairlens rồi thử lại.",
     "noConnectorTitle": "Chưa cài connector",
     "noConnectorBody": "Chuỗi của vị thế này chưa có connector nào được cài nên không có gì ký thay nó.",
-    "evmOnlyTitle": "Chỉ vị thế EVM",
-    "evmOnlyBody": "Các hành động này gọi position manager của Uniswap v3, tức một hợp đồng EVM. Vị thế Solana đọc được ở các panel LP khác nhưng không ký được ở đây. Hãy cung cấp thanh khoản trên chuỗi EVM để quản lý từ panel này.",
-    "readOnlyElsewhere_one": "{{count}} vị thế thuộc họ chữ ký khác chỉ đọc được ở đây.",
-    "readOnlyElsewhere_other": "{{count}} vị thế thuộc họ chữ ký khác chỉ đọc được ở đây.",
     "noSigner": "Không có ví nào đang kết nối ký được trên chuỗi của vị thế này.",
     "noChainsTitle": "Không có connector chuỗi",
     "noChainsBody": "Cài một connector on-chain để panel này thu phí và thay đổi kích thước các dải nó tìm thấy.",
     "loadingTitle": "Đang đọc vị thế",
-    "loadingBody": "Đang hỏi position manager của từng chuỗi đã kết nối xem ví này đang giữ gì.",
+    "loadingBody": "Đang hỏi từng chain đã kết nối xem ví này đang giữ gì.",
     "emptyTitle": "Không có vị thế thanh khoản",
-    "emptyBody": "{{wallet}} không giữ vị thế Uniswap v3 hay PancakeSwap v3 nào trên các chuỗi đã kết nối. Cung cấp thanh khoản trên một chuỗi và bạn có thể quản lý ở đây.",
+    "emptyBody": "{{wallet}} không có vị thế thanh khoản tập trung nào trên các chain đã kết nối: không có khoảng giá Uniswap v3 hay PancakeSwap v3 trên EVM, không có Orca hay Raydium trên Solana. Cung cấp thanh khoản ở một trong số đó và bạn có thể quản lý tại đây.",
     "footnote": "Thu phí và rút mỗi thứ một giao dịch, và khoản rút mang phí đi theo. Dời dải giá không phải là chỉnh sửa: nó đốt vị thế và đúc một vị thế mới, nên ở đây không có."
   },
   "marginHealth": {
@@ -1016,17 +1031,19 @@
     "resumeOrders": "Tiếp tục"
   },
   "routeBridge": {
+    "confirmDestination": "Sẽ về {{chain}}, vào ví {{wallet}} của bạn.",
+    "needsDestinationWallet": "Kết nối một ví {{chain}} để nhận khoản chuyển này. Giá phía trên là thật, chỉ là chưa có nơi để gửi.",
     "title": "Cầu nối",
     "subtitle": "Chuyển một tài sản ra khỏi {{chain}}",
     "provider": "LI.FI",
-    "notEvmTitle": "Chuỗi chưa bắc cầu được",
-    "notEvmBody": "Giao dịch chuyển chạy giữa Ethereum, Base, Arbitrum, BNB Chain và Polygon. {{chain}} ký một loại giao dịch khác, và connector cầu nối chưa có bộ ký đó.",
     "noConnectorTitle": "Chưa cài connector cầu nối",
     "noConnectorBody": "Cài plugin LI.FI Bridge trong Plugin Store để báo giá và gửi giao dịch chuyển giữa các chuỗi.",
     "amountLabel": "Số lượng cần chuyển",
     "amountPlaceholder": "Số lượng tính bằng {{asset}}",
     "destination": "Chuỗi đích",
     "quoting": "Đang báo giá tuyến",
+    "unsupportedChainBody": "Chuyển tiền chạy giữa Ethereum, Base, Arbitrum, BNB Chain, Polygon và Solana. {{chain}} không nằm trong số đó.",
+    "unsupportedChainTitle": "Chuỗi chưa có cầu nối",
     "youReceive": "Bạn nhận trên",
     "minReceived": "Bảo đảm tối thiểu",
     "bridgeFee": "Phí cầu nối",
@@ -1046,7 +1063,7 @@
     "sentBody": "Đã gửi. Đang theo dõi:",
     "sendFailed": "Không gửi được giao dịch chuyển.",
     "refusal": {
-      "non-evm-chain": "Chưa hỗ trợ bắc cầu tới và từ {{chain}}. Giao dịch chuyển chỉ chạy giữa các chuỗi EVM.",
+      "non-evm-chain": "{{chain}} ký loại giao dịch mà cầu nối này chưa xử lý được.",
       "same-chain": "Đó là chuỗi bạn đang đứng. Muốn hoán đổi thì dùng khung bên cạnh.",
       "unknown-market": "{{chain}} không nằm trong các chuỗi mà cầu nối này phục vụ.",
       "unknown-token": "{{asset}} không khớp hợp đồng nào trên {{chain}}, nên không có gì để chuyển.",
@@ -2426,6 +2443,8 @@
       }
     },
     "toolbar": {
+      "chartTypesAll": "Tất cả loại biểu đồ",
+      "chartTypesForProbabilities": "Loại biểu đồ cho xác suất",
       "timeframe": "Khung thời gian",
       "chartType": "Loại biểu đồ",
       "crosshairMode": "Chế độ con trỏ chữ thập",
@@ -3300,7 +3319,7 @@
     "openInterest": "Open Interest theo từng hợp đồng cùng mức thay đổi 24 giờ, để sự chen chúc lộ ra trước khi giá phản ứng",
     "fundingExtremes": "Tỷ lệ funding dương cao nhất và âm sâu nhất ngay lúc này, cùng sàn đang trả mỗi mức đó",
     "fundingBelt": "Đếm ngược đến lần thu funding tiếp theo, tỷ lệ hiện tại và dự đoán, và khối lượng của bạn phải trả hay được nhận bao nhiêu",
-    "liquidationMap": "Những gì sàn thực sự đã thanh lý trên trục giá, cùng giá thanh lý của bạn và các vạch đòn bẩy ở trên",
+    "liquidationMap": "Bản đồ nhiệt theo thời gian và giá của những gì sàn thực sự đã thanh lý, vẽ phía sau nến của hợp đồng, với giá thanh lý của chính bạn nằm trên",
     "marginHealth": "Tỷ lệ ký quỹ, ký quỹ duy trì so với vốn, khoảng cách tới thanh lý, và một cú đi ngược sẽ tác động thế nào tới cả ba",
     "riskControls": "Hạn mức lỗ hằng ngày, số lệnh, quy mô vị thế và công tắc ngắt khẩn cấp của bạn, chỉnh sửa được ngay tại nơi giao dịch diễn ra",
     "categories": "Mọi danh mục sự kiện cùng số hợp đồng đang hoạt động, để bảng thu hẹp chỉ trong một cú nhấp",
@@ -3323,10 +3342,10 @@
     "manageLiquidity": "Di chuyển khoảng giá, thêm hoặc rút thanh khoản, và nhận phí mà không cần rời khỏi biểu đồ",
     "chainLadder": "Cùng một token được định giá trên mọi chuỗi, đã gồm cả phí gas, để tổng chi phí tốt nhất thắng thay vì báo giá tốt nhất",
     "routeBridge": "Chuỗi nguồn, chuỗi đích, cầu nối, phí của nó và mất bao lâu, sẵn sàng để thực hiện",
-    "inFlight": "Các giao dịch chuyển tiền vẫn đang được xác nhận, mỗi giao dịch kèm bộ đếm khối mà nó đang chờ",
+    "inFlight": "Các giao dịch chuyển tiền vẫn đang được xác nhận, mỗi giao dịch kèm giai đoạn hiện tại của nó",
     "session": "Phiên giao dịch hiện đang ở đâu, theo đúng lịch riêng của sàn môi giới, đã tính cả ngày lễ và ngày làm nửa buổi",
-    "earningsCalendar": "Ai công bố kết quả và khi nào, kèm mức dự báo phải vượt qua, cùng những mã sắp niêm yết",
-    "economicCalendar": "Các số liệu vĩ mô theo giờ công bố, kèm mức độ quan trọng, số liệu kỳ trước và mức đồng thuận",
+    "earningsCalendar": "Ai báo cáo và khi nào, trước hay sau phiên, kèm mức dự phóng phải vượt, cùng những mã sắp lên sàn",
+    "economicCalendar": "Số liệu macro theo giờ, kèm mức tác động, số kỳ trước và kỳ vọng thị trường",
     "sessionClock": "Một chiếc đồng hồ một dòng cho phiên giao dịch, để một lệnh ngoài giờ không bao giờ là một bất ngờ",
     "level1": "Giá mua và giá bán kèm khối lượng, chênh lệch, biên độ trong ngày, và một dòng trạng thái khi sàn tạm dừng giao dịch",
     "company": "Định giá, tăng trưởng, biên lợi nhuận, chất xúc tác tiếp theo, và quan điểm của các nhà phân tích, trong một panel",
@@ -3722,13 +3741,17 @@
     "apiKeyRequiredHint": "Cần khóa API",
     "setupRequiredHint": "Cần thiết lập",
     "manifests": {
+      "coinglass-liquidations": {
+        "description": "Dữ liệu thanh lý thật từ khóa Coinglass của riêng bạn, cho các sàn hợp đồng vĩnh cửu mà Pairlens không tự thu thập. Bảy ngày lịch sử thay vì ba. Chỉ dùng trên desktop, vì Coinglass không gửi header CORS, và endpoint nó đọc bắt đầu từ gói Standard của Coinglass.",
+        "title": "Thanh lý Coinglass"
+      },
       "helius-rpc-provider": {
         "title": "Helius Solana RPC",
         "description": "Node Solana mà mọi lượt đọc và mọi lượt gửi trên Solana đều đi qua: số dư, vị thế thanh khoản, gửi lệnh swap. Thêm khóa Helius của bạn để có điểm truy cập ổn định; nếu không có khóa, ứng dụng dùng RPC công cộng, vốn từ chối tải mà không báo trước."
       },
       "lifi-bridge-connector": {
         "title": "LI.FI Bridge",
-        "description": "Chuyển một tài sản giữa Ethereum, Base, Arbitrum, BNB Chain và Polygon: chọn cầu nối tốt nhất cho quy mô đó, kèm phí, thời gian tới nơi và theo dõi cho tới khi tiền vào"
+        "description": "Chuyển một tài sản giữa Ethereum, Base, Arbitrum, BNB Chain, Polygon và Solana: cầu nối tốt nhất cho khối lượng đó, phí và thời gian về, kèm theo dõi đến khi tiền tới"
       },
       "pairlens-core": {
         "title": "Pairlens Core",
@@ -4686,7 +4709,7 @@
       "dex-cross-chain": {
         "name": "DEX Đa Chuỗi",
         "tagline": "Cùng một token, mọi chuỗi, đã gồm cả gas.",
-        "description": "Một bảng để di chuyển giữa các chuỗi: bảng xếp hạng chuỗi định giá token ở mọi nơi với phí gas đã gộp vào tổng, tuyến cầu nối nêu rõ phí và mất bao lâu, và các giao dịch chuyển tiền vẫn đang xác nhận nằm bên cạnh cùng bộ đếm khối của chúng.",
+        "description": "Một bảng để di chuyển giữa các chuỗi: bảng xếp hạng chuỗi định giá token ở mọi nơi với phí gas đã gộp vào tổng, tuyến cầu nối nêu rõ phí và mất bao lâu, và các giao dịch chuyển tiền vẫn đang xác nhận nằm bên cạnh cùng giai đoạn hiện tại của chúng.",
         "menuLabel": "Đa chuỗi"
       },
       "equities-company": {
@@ -6111,6 +6134,15 @@
     }
   },
   "mobile": {
+    "predictions": {
+      "rankOutcomes_one": "Xếp hạng kết quả",
+      "rankOutcomes_other": "Xếp hạng cả {{count}} kết quả",
+      "resolvesShort": "Chốt {{date}}",
+      "runnerCount_one": "{{count}} kết quả",
+      "runnerCount_other": "{{count}} kết quả",
+      "tailBelow_one": "Hiện thêm 1, dưới {{price}}",
+      "tailBelow_other": "Hiện thêm {{count}}, tất cả dưới {{price}}"
+    },
     "shell": {
       "tabs": {
         "label": "Điều hướng",

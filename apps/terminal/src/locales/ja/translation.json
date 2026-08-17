@@ -151,6 +151,12 @@
     "providerBusyTitle": "決算フィードがレート制限中です",
     "providerErrorBody": "提供元が使えない応答を返しました。口座やコネクターの問題ではありません。",
     "providerErrorTitle": "決算フィードを読み込めませんでした",
+    "reportTime": {
+      "amc": "引け後",
+      "amcLabel": "引け後に発表",
+      "bmo": "寄付前",
+      "bmoLabel": "寄り付き前に発表"
+    },
     "scopeLabel": "決算の対象期間",
     "scopes": {
       "today": "今日",
@@ -174,6 +180,9 @@
     "emptyTitle": "マクロカレンダーがありません",
     "emptyBody": "発表予定は App Server から取得します。このビルドはスタンドアロンで動作しているため、集計する元がありません。",
     "columns": {
+      "actual": "結果",
+      "implied": "織り込み (Kalshi)",
+      "prior": "前回",
       "source": "機関",
       "time": "時刻 ({{zone}})",
       "event": "発表"
@@ -186,6 +195,8 @@
     "impactAll": "すべて",
     "impactHigh": "影響大",
     "impactLabel": "影響度フィルター",
+    "impliedFrom": "{{source}} の契約価格から算出。アナリスト予想ではありません。",
+    "impliedHint": "Kalshi の契約価格から算出した市場の織り込み。アナリスト予想ではなく、いま付いている市場価格です。",
     "noneHighBody": "この期間に影響大の発表はありません。「すべて」に切り替えると残りの予定を表示します。",
     "noneInWindowBody": {
       "week": "今後7日間に米国の発表予定はありません。",
@@ -203,7 +214,7 @@
       "fortnight": "2週間",
       "month": "1か月"
     },
-    "sourceNote": "BLS、BEA、連邦準備制度、Census の発表予定から作成しています。時刻は各機関の公表どおり米国東部時間です。",
+    "sourceNote": "BLS、BEA、連邦準備制度、Census の公表スケジュールから作成。結果と前回は各機関の発表そのもの、織り込みは Kalshi の契約価格から算出しています。時刻は各機関の公表どおり米国東部時間です。",
     "title": "マクロ",
     "today": "今日",
     "tomorrow": "明日"
@@ -278,7 +289,7 @@
     "emptyBody": "{{wallet}} には手数料が積み上がるポジションがありません。接続済みチェーンで流動性を提供するとここに表示されます。",
     "noChainsTitle": "チェーンコネクタなし",
     "noChainsBody": "オンチェーンコネクタを入れると、このパネルがそのプールからウォレットへの未払い額を読み取ります。",
-    "footnote": "ポジションごとに両サイドを表示します。EVM チェーンではこのブロックで collect した場合の受取額、Solana ではプールがすでに計上した額です。回収済みの手数料はオンチェーンに痕跡が残らないため、手数料 APR、レンジ内滞在時間、保有との比較損益はインデクサが必要で、ここには表示しません。"
+    "footnote": "ポジションごとに両方のトークン。EVM チェーンでは collect がこのブロックで支払う額、Solana ではプールの手数料成長から同じ額を再計算しています。すでに回収した手数料はオンチェーンに痕跡が残らないため、手数料 APR、レンジ内時間、ホールドとの差はインデクサーが必要で表示していません。"
   },
   "funding": {
     "loading": "ファンディングレートを読み込み中…",
@@ -397,29 +408,34 @@
     "statusTrading": "取引中"
   },
   "liquidationMap": {
-    "clusterHint": "{{price}}：{{side}}ポジション {{notional}} 分が {{count}} 件の約定で清算されました",
-    "clustersCaption": "網掛けの縦帯は、直近 {{window}} 時間に取引所が実際に清算した量です。赤がロング、緑がショートです。",
-    "clustersErrorCaption": "取引所の清算履歴を読み込めませんでした。軸上のそれ以外の表示に影響はありません。",
+    "alternateSourcePrompt": "上で {{venue}} を選ぶと、別の取引所の約定をこのチャートに重ねて読めます。ソースは決して統合されません。フィードの内容が異なるためです。",
+    "clustersErrorCaption": "取引所の清算履歴を読み込めませんでした。コレクタは1分ごとに応答するため、そのまま解消することもあります。",
     "clustersLoadingCaption": "取引所の清算履歴を読み込んでいます。",
     "collectingCaption": "市場クラスターはまだ蓄積中です。{{since}} から収集しています。",
     "collectingJustStarted": "たった今",
+    "collectingTitle": "収集中です",
+    "errorTitle": "清算履歴を読み込めませんでした",
+    "feedComplete": "全件フィード",
+    "feedSampled": "サンプリングフィード",
     "legendLong": "ロング {{value}}",
     "legendPrints": "{{count}} 件",
     "legendShort": "ショート {{value}}",
-    "noClustersCaption": "直近 {{window}} 時間、この銘柄では清算が発生していません。",
+    "mapCaption": "網掛けのセルは、{{venue}} が直近{{window}}に実際に清算した額を、発生した時刻と価格に置いたものです。想定元本が大きいほどセルは濃くなります。",
+    "noCandlesBody": "この取引所は当銘柄の価格履歴を返さなかったため、清算を重ねる土台がありません。",
+    "noCandlesTitle": "重ねるローソク足がありません",
+    "noClustersCaption": "直近{{window}}、この銘柄で清算は発生していません。",
+    "noFeedTitle": "ここには実測の清算がありません",
+    "noneInWindow": "直近{{window}}に清算なし",
     "notTrackedCaption": "この取引所は集計清算フィードを公開していないため、市場クラスターは描画されません。",
-    "standaloneCaption": "市場クラスターは Pairlens クラウドから取得しますが、このビルドはクラウドを使用しません。",
-    "subtitle": "市場が清算された価格帯と、自分のポジションが置かれる位置",
-    "estimateBadge": "推定",
-    "sideLong": "ロング",
-    "sideShort": "ショート",
-    "referenceHint": "現在価格で建てた{{leverage}}倍の{{side}}は {{price}} 付近で強制決済",
-    "caption": "バーは各取引所が報告したあなた自身の清算価格です。細い目盛りは、現在価格で建てたポジションが 5x、10x、25x で清算される位置を示します。",
-    "noPositionsCaption": "細い線は、現在価格で建てたポジションが5倍・10倍・25倍で強制決済される水準を示します。自分の強制決済価格はポジションを持つとバーで表示されます。",
-    "noPriceTitle": "基準となる価格がありません",
-    "noPriceBody": "このマップには契約のライブ価格が必要です。隣のチャートに価格が入ると同時に表示されます。",
-    "emptyTitle": "描画するものがありません",
-    "emptyBody": "無期限先物のポジションを建てるか契約を選ぶと、価格軸が埋まります。",
+    "planRequiredAction": "Coinglass プラグインを管理",
+    "planRequiredCaption": "この取引所のクラスタは Coinglass のキー経由で届きます。キーを追加するか、清算注文を含む Coinglass プランに変更すると、マップが埋まります。",
+    "planRequiredTitle": "ベンダーキーが必要です",
+    "positionsCaption": "破線は各取引所が報告したあなた自身の清算価格で、リスク額に応じて太さが変わります。",
+    "sampledNote": "この取引所は1銘柄につき1秒あたり最大1件しか清算を配信しないため、金額はサンプルであり、連鎖清算では実際より少なく出ます。",
+    "sourceLabel": "データソース",
+    "sourceLine": "{{venue}} · {{feed}}",
+    "standaloneCaption": "市場クラスタは、このビルドが使わない Pairlens クラウド、またはまだ追加していないデータベンダーのキーから届きます。",
+    "noPositionsCaption": "この銘柄でポジションを持つと、あなた自身の清算価格が破線としてチャートに加わります。",
     "windowLabel": "期間",
     "windows": {
       "h1": "1時間",
@@ -446,7 +462,7 @@
     "wouldRead": "{{chain}} の {{pool}} で {{wallet}} を読み取ります"
   },
   "lpPosition": {
-    "feesLastTouch": "このポジションに最後に触れた時点で確定した額です。Orca と Raydium は次にポジションが操作されたときに手数料を計上するため、実際の請求額はこれより大きくなることがあります。",
+    "feesLastTouch": "確定済みの金額のみです。このポジションの上下端のティックデータを読めなかったため、最終更新以降の手数料は含まれておらず、実際の請求額はこれより大きい可能性があります。",
     "title": "LPポジション",
     "subtitle_one": "{{wallet}} · レンジ {{count}} 件",
     "subtitle_other": "{{wallet}} · レンジ {{count}} 件",
@@ -475,6 +491,9 @@
     "footnote": "チェーンから取得: バンド、現在の流動性の価値、未回収の手数料。ポジションは取得コストを保存しないため、単純保有との比較値はありません。"
   },
   "manageLiquidity": {
+    "confirmAddNoteSolana": "トランザクションは1件、トークンの承認は不要です。入金は上の金額が上限です。",
+    "confirmCollectNoteSolana": "上のプログラムに送信します。手数料は同じトランザクションで確定し、このウォレットにのみ支払われます。",
+    "rowProgram": "プログラム",
     "title": "流動性の管理",
     "subtitle_one": "{{wallet}} · ポジション {{count}} 件",
     "subtitle_other": "{{wallet}} · ポジション {{count}} 件",
@@ -530,17 +549,13 @@
     "lockedBody": "この取引にはウォレットの鍵が必要です。Pairlens のロックを解除して再試行してください。",
     "noConnectorTitle": "コネクタ未インストール",
     "noConnectorBody": "このポジションのチェーンにコネクタが入っていないため、署名できるものがありません。",
-    "evmOnlyTitle": "EVM ポジションのみ",
-    "evmOnlyBody": "これらの操作は EVM コントラクトである Uniswap v3 のポジションマネージャーを呼び出します。Solana のポジションは他の LP パネルで閲覧できますが、ここでは署名できません。EVM チェーンで流動性を提供すればこのパネルから管理できます。",
-    "readOnlyElsewhere_one": "別の署名系のポジション {{count}} 件はここでは閲覧のみです。",
-    "readOnlyElsewhere_other": "別の署名系のポジション {{count}} 件はここでは閲覧のみです。",
     "noSigner": "接続中のウォレットにこのポジションのチェーンで署名できるものがありません。",
     "noChainsTitle": "チェーンコネクタなし",
     "noChainsBody": "オンチェーンコネクタを入れると、このパネルで手数料の回収とレンジの増減ができます。",
     "loadingTitle": "ポジションを読み取り中",
-    "loadingBody": "接続中の各チェーンのポジションマネージャーに、このウォレットの保有内容を問い合わせています。",
+    "loadingBody": "接続中の各チェーンに、このウォレットの保有内容を問い合わせています。",
     "emptyTitle": "流動性ポジションなし",
-    "emptyBody": "{{wallet}} は接続中のチェーンで Uniswap v3 / PancakeSwap v3 のポジションを保有していません。どれかで流動性を提供するとここで管理できます。",
+    "emptyBody": "{{wallet}} は接続中のチェーンに集中流動性ポジションを保有していません。EVM 側に Uniswap v3 と PancakeSwap v3 のレンジはなく、Solana 側に Orca と Raydium のレンジもありません。どこかで流動性を提供すれば、ここで管理できます。",
     "footnote": "回収と引き出しはそれぞれ 1 件の取引で、引き出しは手数料も一緒に回収します。レンジの移動は編集ではありません。ポジションをバーンして新しく発行するため、ここでは提供していません。"
   },
   "marginHealth": {
@@ -1016,17 +1031,19 @@
     "resumeOrders": "再開"
   },
   "routeBridge": {
+    "confirmDestination": "{{chain}} のウォレット {{wallet}} に着金します。",
+    "needsDestinationWallet": "この送金を受け取るには {{chain}} のウォレットを接続してください。上の価格は実際のものですが、送り先がまだありません。",
     "title": "ブリッジ",
     "subtitle": "{{chain}} から資産を移動",
     "provider": "LI.FI",
-    "notEvmTitle": "ブリッジ対象外のチェーン",
-    "notEvmBody": "送金は Ethereum、Base、Arbitrum、BNB Chain、Polygon の間で行えます。{{chain}} は署名するトランザクションの形式が異なり、ブリッジコネクタはまだその署名手段を持っていません。",
     "noConnectorTitle": "ブリッジコネクタが未インストール",
     "noConnectorBody": "クロスチェーン送金の見積もりと実行には、プラグインストアから LI.FI Bridge を追加してください。",
     "amountLabel": "ブリッジする数量",
     "amountPlaceholder": "{{asset}} の数量",
     "destination": "送金先チェーン",
     "quoting": "ルートを見積もり中",
+    "unsupportedChainBody": "送金は Ethereum、Base、Arbitrum、BNB Chain、Polygon、Solana の間で行われます。{{chain}} はその中にありません。",
+    "unsupportedChainTitle": "ブリッジ非対応のチェーン",
     "youReceive": "受け取り先",
     "minReceived": "最低保証",
     "bridgeFee": "ブリッジ手数料",
@@ -1046,7 +1063,7 @@
     "sentBody": "送金しました。追跡中です:",
     "sendFailed": "送金できませんでした。",
     "refusal": {
-      "non-evm-chain": "{{chain}} との間のブリッジはまだ対応していません。送金は EVM チェーン間のみです。",
+      "non-evm-chain": "{{chain}} はこのブリッジがまだ扱えない形式のトランザクションに署名します。",
       "same-chain": "いま使っているチェーンです。交換は隣のペインで行えます。",
       "unknown-market": "{{chain}} はこのブリッジの対象チェーンではありません。",
       "unknown-token": "{{asset}} は {{chain}} 上のコントラクトに解決できないため、送るものがありません。",
@@ -2426,6 +2443,8 @@
       }
     },
     "toolbar": {
+      "chartTypesAll": "すべてのチャートタイプ",
+      "chartTypesForProbabilities": "確率向けチャートタイプ",
       "timeframe": "時間足",
       "chartType": "チャートタイプ",
       "crosshairMode": "十字線モード",
@@ -3300,7 +3319,7 @@
     "openInterest": "各契約の建玉と24時間変化を表示し、価格が動く前にポジションの集中を捉えます",
     "fundingExtremes": "現在最も高いファンディングレートと最も低いファンディングレート、それぞれの取引所とともに表示",
     "fundingBelt": "次回のファンディング精算までのカウントダウン、現在と予測のレート、そしてあなたのサイズが支払う額または受け取る額",
-    "liquidationMap": "価格軸上で取引所が実際に清算した量に、自分の清算価格とレバレッジ目盛りを重ねて表示",
+    "liquidationMap": "取引所が実際に清算した額を時間×価格のヒートマップにし、銘柄のローソク足の背後に描画。あなた自身の清算価格を重ねて表示します",
     "marginHealth": "証拠金比率、維持証拠金と有効証拠金、清算までの距離、そして逆行時にその3つがどう動くか",
     "riskControls": "日次損失の上限、取引回数、ポジションサイズ、緊急停止スイッチを、取引が行われるその場で編集可能",
     "categories": "全イベントカテゴリーをリアルタイムの契約数とともに表示し、ワンクリックでボードを絞り込めます",
@@ -3323,10 +3342,10 @@
     "manageLiquidity": "チャートを離れることなく、レンジの変更、流動性の追加・引き出し、手数料の請求ができます",
     "chainLadder": "同じトークンを全チェーンで価格比較、ガス代を織り込んだ上で、見かけの価格ではなく総額で最良を選べます",
     "routeBridge": "移動元チェーン、移動先チェーン、使用するブリッジ、その手数料と所要時間を表示、そのまま実行可能",
-    "inFlight": "まだ確定していない送金を、待機中のブロック確認数とともに表示",
+    "inFlight": "まだ確定していない送金を、現在のステージとともに表示",
     "session": "ブローカー自身のカレンダーに基づく、今まさにどの取引セッションにあるか。祝日や短縮取引日も反映",
-    "earningsCalendar": "誰がいつ決算を出すか、超えるべき予想付き。加えて上場を控えている銘柄",
-    "economicCalendar": "経済指標を発表時刻順に、重要度・前回値・市場予想とともに表示",
+    "earningsCalendar": "どの銘柄がいつ、寄り付き前か引け後に決算を出すか。超えるべき予想と、上場間近の銘柄も",
+    "economicCalendar": "時刻順のマクロ指標。影響度、前回値、市場の織り込みつき",
     "sessionClock": "取引日の状態を1行で示すクロックで、時間外の注文で驚くことがなくなります",
     "level1": "気配値と数量、スプレッド、当日レンジ、そして取引所が売買を停止したときの状態行",
     "company": "バリュエーション、成長率、利益率、次のカタリスト、そしてアナリストの見立てを1つのペインに集約",
@@ -3722,13 +3741,17 @@
     "apiKeyRequiredHint": "APIキーが必要",
     "setupRequiredHint": "セットアップが必要",
     "manifests": {
+      "coinglass-liquidations": {
+        "description": "自分の Coinglass キーで取得する実際の清算約定。Pairlens が自前で収集していない無期限先物の取引所に対応します。履歴は3日ではなく7日。Coinglass は CORS ヘッダーを返さないためデスクトップ専用で、読み込むエンドポイントは Coinglass の Standard プラン以上が必要です。",
+        "title": "Coinglass 清算データ"
+      },
       "helius-rpc-provider": {
         "title": "Helius Solana RPC",
         "description": "Solana の読み取りと送信がすべて経由するノードです。残高、流動性ポジション、スワップの送信に使われます。自分の Helius キーを登録すると安定したエンドポイントになります。キーがない場合は公開 RPC を使いますが、こちらは予告なく負荷を切り捨てます。"
       },
       "lifi-bridge-connector": {
         "title": "LI.FI Bridge",
-        "description": "Ethereum、Base、Arbitrum、BNB Chain、Polygon の間で資産を移動。数量に最適なブリッジを選び、手数料と到着時間を示し、着金まで追跡します"
+        "description": "Ethereum、Base、Arbitrum、BNB Chain、Polygon、Solana の間で資産を移動。数量に最適なブリッジ、手数料、着金までの時間を提示し、到着まで追跡します"
       },
       "pairlens-core": {
         "title": "Pairlens Core",
@@ -4686,7 +4709,7 @@
       "dex-cross-chain": {
         "name": "DEXクロスチェーン",
         "tagline": "同じトークンを、全チェーンで、ガス代込みで。",
-        "description": "チェーン間の移動のためのボード：チェーンラダーがガス代を織り込んだ総額でトークンをあらゆるチェーンで価格表示し、ブリッジルートが手数料と所要時間を明示、その隣に確認待ちの送金がブロック確認数とともに並びます。",
+        "description": "チェーン間の移動のためのボード：チェーンラダーがガス代を織り込んだ総額でトークンをあらゆるチェーンで価格表示し、ブリッジルートが手数料と所要時間を明示、その隣に確認待ちの送金が現在のステージとともに並びます。",
         "menuLabel": "クロスチェーン"
       },
       "equities-company": {
@@ -6111,6 +6134,15 @@
     }
   },
   "mobile": {
+    "predictions": {
+      "rankOutcomes_one": "アウトカムをランキング表示",
+      "rankOutcomes_other": "{{count}} 件すべてをランキング表示",
+      "resolvesShort": "{{date}} に決着",
+      "runnerCount_one": "{{count}} 件のアウトカム",
+      "runnerCount_other": "{{count}} 件のアウトカム",
+      "tailBelow_one": "{{price}} 未満をあと 1 件表示",
+      "tailBelow_other": "{{price}} 未満をあと {{count}} 件表示"
+    },
     "shell": {
       "tabs": {
         "label": "ナビゲーション",

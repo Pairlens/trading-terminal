@@ -1,6 +1,6 @@
 ---
 title: The AI assistant
-description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 95 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
+description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 105 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
 group: traders
 order: 4
 eyebrow: For traders
@@ -155,7 +155,7 @@ conversation, and the reset button once you have dragged the window somewhere.
 
 ## What it can do
 
-95 tools. One turn runs up to 28 tool-calling steps, which is enough to read the
+105 tools. One turn runs up to 28 tool-calling steps, which is enough to read the
 chart, pull two more timeframes, write a strategy, backtest it and deploy it
 without coming back to you in between.
 
@@ -210,7 +210,7 @@ are learning why a setup is a setup.
 percentages, one sentence per insight. Best when you already know what you are
 looking at and want numbers.
 
-The persona changes how it writes, not what it can do. All 95 tools are
+The persona changes how it writes, not what it can do. All 105 tools are
 available in every mode, and the safety rules below hold identically in all
 three.
 
@@ -337,7 +337,7 @@ and never sees your exchange credentials. See
 
 ## Related
 
-- [Assistant tool reference](/docs/copilot-tools) for all 95 tools
+- [Assistant tool reference](/docs/copilot-tools) for all 105 tools
 - [Research reports](/docs/research-reports) for the long-form sourced write-up
 - [AI providers](/docs/ai-providers) for keys, plans, and credits
 - [Risk guardrails](/docs/risk-guardrails) for the limits the AI cannot move

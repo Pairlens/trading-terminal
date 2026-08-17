@@ -58,7 +58,8 @@
         { "url": "https://*.geckoterminal.com/*" },
         { "url": "https://*.publicnode.com/*" },
         { "url": "https://*.solana.com/*" },
-        { "url": "https://mainnet.helius-rpc.com/*" }
+        { "url": "https://mainnet.helius-rpc.com/*" },
+        { "url": "https://open-api-v4.coinglass.com/*" }
       ]
     }
   ]

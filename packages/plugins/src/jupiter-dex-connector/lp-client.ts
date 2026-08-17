@@ -17,11 +17,13 @@
  *      positions, and the account's owner program says which protocol,
  *   4. `getMultipleAccounts` for the distinct pools (price, tick, mints) and
  *      for Raydium's shared fee-rate configs,
- *   5. `getMultipleParsedAccounts` for the distinct token mints, which is where
+ *   5. `getMultipleAccounts` for the boundary tick arrays of every position
+ *      that still holds liquidity, deduped — the accounts the fee replay needs,
+ *   6. `getMultipleParsedAccounts` for the distinct token mints, which is where
  *      decimals come from,
- *   6. token symbols from the Jupiter registry, best effort.
+ *   7. token symbols from the Jupiter registry, best effort.
  *
- * Six batched calls for a wallet of any size, and a wallet holding no NFTs
+ * Seven batched calls for a wallet of any size, and a wallet holding no NFTs
  * stops after the first two.
  *
  * READ ONLY, structurally. Nothing here takes a `getPrivateKey`, builds an
@@ -31,14 +33,24 @@
  * ── What the fee numbers mean, and why they are labelled ────────────────────
  *
  * The EVM client simulates a `collect` and reports what a claim would pay THIS
- * block. Neither Solana program offers that: fees are settled into
- * `feeOwed`/`tokenFeesOwed` when the position is next touched, and computing
- * the unsettled remainder means replaying the pool's fee growth across both
- * tick arrays — several more accounts per position and a second copy of the
- * protocol's arithmetic to get wrong. So these positions report the settled
- * figure and say so: `feesAsOf: 'last-touch'`, which both panes render as a
- * caption. A number that is a floor and is labelled a floor is useful; the same
- * number presented as live is a lie about money.
+ * block. Neither Solana program offers a simulation like that, because neither
+ * settles fees until the position is next touched: `feeOwed`/`tokenFeesOwed`
+ * are a receipt for the last touch, not a balance. So the remainder is REPLAYED
+ * here from the pool's fee growth and the position's two boundary ticks
+ * (`lp-fees.ts`), which is what step 5 pays for and what lets these rows carry
+ * `feesAsOf: 'live'`.
+ *
+ * The difference is not cosmetic. The Orca fixture in `__tests__` had 0.0136
+ * SOL settled against 1.0856 SOL actually claimable — eighty times the number
+ * the old path printed, on a position that had simply not been touched in a
+ * while.
+ *
+ * The label is still per position and still real. A tick array the node would
+ * not return, an account layout this build does not recognise, a boundary tick
+ * the pool has since deinitialized: each of those drops THAT row back to
+ * `'last-touch'` with its settled figure, and leaves every other row live. A
+ * number that is a floor and is labelled a floor is useful; the same number
+ * presented as live is a lie about money.
  */
 import bs58 from 'bs58'
 
@@ -52,6 +64,7 @@ import {
 } from '../evm-dex-connector/lp-math'
 import {
   ORCA_POSITION_SIZE,
+  ORCA_TICKS_PER_ARRAY,
   ORCA_WHIRLPOOL_PROGRAM_ID,
   ORCA_WHIRLPOOL_SIZE,
   POSITION_PDA_SEED,
@@ -60,17 +73,25 @@ import {
   RAYDIUM_CLMM_PROGRAM_ID,
   RAYDIUM_POOL_SIZE,
   RAYDIUM_POSITION_SIZE,
+  RAYDIUM_TICKS_PER_ARRAY,
+  TICK_ARRAY_PDA_SEED,
   TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
   decodeOrcaPosition,
+  decodeOrcaTick,
   decodeOrcaWhirlpool,
   decodeRaydiumAmmConfigFee,
   decodeRaydiumPool,
   decodeRaydiumPosition,
+  decodeRaydiumTick,
+  i32ToBigEndianBytes,
   sqrtPriceX64ToX96,
+  tickArrayStartIndex,
 } from './lp-layouts'
+import { liveFeesForPosition } from './lp-fees'
 import { lookupTokenByMint, resolvePairMints } from './token-registry'
-import type { SolanaLpProtocol } from './lp-layouts'
+import type { LiveFees } from './lp-fees'
+import type { SolanaLpProtocol, TickFeeGrowth } from './lp-layouts'
 import type {
   LpPositionEntry,
   LpPositionToken,
@@ -118,6 +139,9 @@ export type RawSolanaLpPosition = {
   /** Settled fees in raw units, as of the position's last touch. */
   feesOwed0: bigint
   feesOwed1: bigint
+  /** Fee growth inside the band at that touch. The replay's starting point. */
+  checkpoint0: bigint
+  checkpoint1: bigint
 }
 
 /** Live pool state, converted to the v3 fixed-point the shared math expects. */
@@ -128,6 +152,11 @@ export type SolanaPoolState = {
   mint1: string
   /** Hundredths of a bip. Null while Raydium's config account is unresolved. */
   fee: number | null
+  /** Needed to place a tick on its array's grid, so it rides along. */
+  tickSpacing: number
+  /** Lifetime fees per unit of liquidity, Q64.64, both tokens. */
+  feeGrowthGlobal0: bigint
+  feeGrowthGlobal1: bigint
 }
 
 /**
@@ -194,6 +223,8 @@ export function decodePositionAccount(opts: {
       tickUpper: decoded.tickUpper,
       feesOwed0: decoded.feeOwedA,
       feesOwed1: decoded.feeOwedB,
+      checkpoint0: decoded.feeGrowthCheckpointA,
+      checkpoint1: decoded.feeGrowthCheckpointB,
     }
   }
   if (
@@ -211,6 +242,8 @@ export function decodePositionAccount(opts: {
       tickUpper: decoded.tickUpper,
       feesOwed0: decoded.tokenFeesOwed0,
       feesOwed1: decoded.tokenFeesOwed1,
+      checkpoint0: decoded.feeGrowthInside0Last,
+      checkpoint1: decoded.feeGrowthInside1Last,
     }
   }
   return null
@@ -232,6 +265,9 @@ export function decodePoolAccount(data: Uint8Array): {
         mint1: bs58.encode(pool.mintB),
         // Orca keeps the rate on the pool, in the same unit Uniswap v3 uses.
         fee: pool.feeRate,
+        tickSpacing: pool.tickSpacing,
+        feeGrowthGlobal0: pool.feeGrowthGlobalA,
+        feeGrowthGlobal1: pool.feeGrowthGlobalB,
       },
       ammConfig: null,
     }
@@ -245,11 +281,65 @@ export function decodePoolAccount(data: Uint8Array): {
         mint0: bs58.encode(pool.mint0),
         mint1: bs58.encode(pool.mint1),
         fee: null,
+        tickSpacing: pool.tickSpacing,
+        feeGrowthGlobal0: pool.feeGrowthGlobal0,
+        feeGrowthGlobal1: pool.feeGrowthGlobal1,
       },
       ammConfig: bs58.encode(pool.ammConfig),
     }
   }
   return null
+}
+
+/** Ticks one array covers on each protocol's grid. */
+export const TICKS_PER_ARRAY: Record<SolanaLpProtocol, number> = {
+  'orca-whirlpool': ORCA_TICKS_PER_ARRAY,
+  'raydium-clmm': RAYDIUM_TICKS_PER_ARRAY,
+}
+
+/**
+ * The third PDA seed of a tick array, which the two programs disagree about.
+ *
+ * Orca seeds with the DECIMAL STRING of the start index (`"-26048"`, six ASCII
+ * bytes). Raydium seeds with the same number as four BIG-endian bytes. Neither
+ * is derivable from the other and both are wrong for the other program, so this
+ * is one of the few places where a copied line silently reads a stranger's
+ * account: the derived address exists, it belongs to the right program, and it
+ * holds a different band's ticks.
+ */
+export function tickArrayStartSeed(
+  protocol: SolanaLpProtocol,
+  startIndex: number,
+): Uint8Array {
+  return protocol === 'orca-whirlpool'
+    ? new TextEncoder().encode(String(startIndex))
+    : i32ToBigEndianBytes(startIndex)
+}
+
+/** The two arrays holding a position's boundary ticks. Often the same one. */
+export function boundaryTickArrayStarts(opts: {
+  protocol: SolanaLpProtocol
+  tickLower: number
+  tickUpper: number
+  tickSpacing: number
+}): { lower: number; upper: number } {
+  const perArray = TICKS_PER_ARRAY[opts.protocol]
+  return {
+    lower: tickArrayStartIndex(opts.tickLower, opts.tickSpacing, perArray),
+    upper: tickArrayStartIndex(opts.tickUpper, opts.tickSpacing, perArray),
+  }
+}
+
+/** Read one boundary tick out of whichever array layout the protocol uses. */
+export function decodeTickFor(
+  protocol: SolanaLpProtocol,
+  data: Uint8Array,
+  tick: number,
+  tickSpacing: number,
+): TickFeeGrowth | null {
+  return protocol === 'orca-whirlpool'
+    ? decodeOrcaTick(data, tick, tickSpacing)
+    : decodeRaydiumTick(data, tick, tickSpacing)
 }
 
 /**
@@ -267,8 +357,17 @@ export function buildSolanaPositionEntry(opts: {
   token1: LpPositionToken
   /** The pane's pair as mints, or null when it did not resolve. */
   pairMints: readonly [string, string] | null
+  /**
+   * Replayed claimable fees, or null when this position's boundary ticks could
+   * not be read. Per position, never per page: one unreadable tick array must
+   * not relabel every other row as stale.
+   */
+  liveFees?: LiveFees | null
 }): LpPositionEntry {
   const { raw, pool, token0, token1 } = opts
+  const live = opts.liveFees ?? null
+  const fees0 = live ? live.fees0 : raw.feesOwed0
+  const fees1 = live ? live.fees1 : raw.feesOwed1
   const amounts = pool
     ? positionAmounts({
         liquidity: raw.liquidity,
@@ -304,10 +403,10 @@ export function buildSolanaPositionEntry(opts: {
     inRange: pool ? isInRange(pool.tick, raw.tickLower, raw.tickUpper) : null,
     amount0: amounts?.amount0 ?? null,
     amount1: amounts?.amount1 ?? null,
-    fees0: descaleAmount(raw.feesOwed0, token0.decimals),
-    fees1: descaleAmount(raw.feesOwed1, token1.decimals),
-    // The whole reason the field exists. See the module header.
-    feesAsOf: 'last-touch',
+    fees0: descaleAmount(fees0, token0.decimals),
+    fees1: descaleAmount(fees1, token1.decimals),
+    // Per position, and honest either way. See the module header.
+    feesAsOf: live ? 'live' : 'last-touch',
     priceLower: tickToPrice(raw.tickLower, token0.decimals, token1.decimals),
     priceUpper: tickToPrice(raw.tickUpper, token0.decimals, token1.decimals),
     priceCurrent: pool
@@ -510,6 +609,64 @@ export async function fetchSolanaLpPositions(opts: {
       })
     }
 
+    // ── 4b. Boundary tick arrays, for the fees the position has NOT settled ──
+    // Two more addresses per position, deduped: a band whose bounds share an
+    // array (common on wide tick spacings) costs one, and two positions on the
+    // same pool routinely share both. Positions with no liquidity are skipped
+    // entirely — they earn nothing, so their settled figure is already live.
+    const tickArrayAddresses = new Map<string, InstanceType<typeof PublicKey>>()
+    /** Position mint → the two array keys its bounds live in. */
+    const positionArrays = new Map<string, { lower: string; upper: string }>()
+    for (const raw of priced) {
+      const pool = pools.get(raw.pool)
+      if (!pool || raw.liquidity <= 0n) continue
+      let poolKey: InstanceType<typeof PublicKey>
+      try {
+        poolKey = new PublicKey(raw.pool)
+      } catch {
+        continue
+      }
+      const starts = boundaryTickArrayStarts({
+        protocol: raw.protocol,
+        tickLower: raw.tickLower,
+        tickUpper: raw.tickUpper,
+        tickSpacing: pool.tickSpacing,
+      })
+      const keys: Record<'lower' | 'upper', string> = { lower: '', upper: '' }
+      for (const side of ['lower', 'upper'] as const) {
+        const [pda] = PublicKey.findProgramAddressSync(
+          [
+            Buffer.from(TICK_ARRAY_PDA_SEED),
+            poolKey.toBuffer(),
+            Buffer.from(tickArrayStartSeed(raw.protocol, starts[side])),
+          ],
+          new PublicKey(PROTOCOL_PROGRAM[raw.protocol]),
+        )
+        const key = pda.toBase58()
+        keys[side] = key
+        tickArrayAddresses.set(key, pda)
+      }
+      positionArrays.set(raw.positionMint, keys)
+    }
+
+    const tickArrays = new Map<string, Uint8Array>()
+    for (const chunk of chunked(
+      [...tickArrayAddresses.keys()],
+      ACCOUNT_BATCH,
+    )) {
+      try {
+        const infos = await connection.getMultipleAccountsInfo(
+          chunk.map((key) => tickArrayAddresses.get(key)!),
+        )
+        infos.forEach((info, index) => {
+          if (info) tickArrays.set(chunk[index], new Uint8Array(info.data))
+        })
+      } catch {
+        // A batch that will not read costs the LIVE label on the positions it
+        // covered, and nothing else: they fall back to their settled figure.
+      }
+    }
+
     // ── 5. Token decimals from the chain, symbols from the registry ──
     const mintIds = [
       ...new Set(
@@ -554,6 +711,7 @@ export async function fetchSolanaLpPositions(opts: {
         token0: tokenOf(tokens, pool?.mint0),
         token1: tokenOf(tokens, pool?.mint1),
         pairMints,
+        liveFees: replayFees(raw, pool, positionArrays, tickArrays),
       })
     })
 
@@ -573,6 +731,58 @@ export async function fetchSolanaLpPositions(opts: {
       ts: Date.now(),
     }
   }
+}
+
+/**
+ * Claimable fees for one position, or null when it has to stay at last-touch.
+ *
+ * Every way this can fail returns null rather than a number: an unread pool, a
+ * tick array the node did not return, an array in a layout this build does not
+ * know, a boundary tick that is not initialized. A fee figure assembled from a
+ * missing account is not a smaller number, it is a wrong one.
+ */
+export function replayFees(
+  raw: RawSolanaLpPosition,
+  pool: SolanaPoolState | null,
+  positionArrays: Map<string, { lower: string; upper: string }>,
+  tickArrays: Map<string, Uint8Array>,
+): LiveFees | null {
+  if (!pool) return null
+  if (raw.liquidity <= 0n) {
+    // Nothing is accruing, so the settled figure IS the live one.
+    return { fees0: raw.feesOwed0, fees1: raw.feesOwed1 }
+  }
+  const keys = positionArrays.get(raw.positionMint)
+  if (!keys) return null
+  const lowerData = tickArrays.get(keys.lower)
+  const upperData = tickArrays.get(keys.upper)
+  if (!lowerData || !upperData) return null
+  const lower = decodeTickFor(
+    raw.protocol,
+    lowerData,
+    raw.tickLower,
+    pool.tickSpacing,
+  )
+  const upper = decodeTickFor(
+    raw.protocol,
+    upperData,
+    raw.tickUpper,
+    pool.tickSpacing,
+  )
+  if (!lower || !upper) return null
+  return liveFeesForPosition({
+    liquidity: raw.liquidity,
+    tickLower: raw.tickLower,
+    tickUpper: raw.tickUpper,
+    tickCurrent: pool.tick,
+    feesOwed0: raw.feesOwed0,
+    feesOwed1: raw.feesOwed1,
+    checkpoint0: raw.checkpoint0,
+    checkpoint1: raw.checkpoint1,
+    feeGrowthGlobal0: pool.feeGrowthGlobal0,
+    feeGrowthGlobal1: pool.feeGrowthGlobal1,
+    ticks: { lower, upper },
+  })
 }
 
 /**

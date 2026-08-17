@@ -96,6 +96,18 @@ export type MobileOverlay =
       venueLabel: string
       event: PredictionEventSummary
     }
+  /**
+   * The same event read as a FIELD: every runner, ranked by probability. It
+   * carries the event for the reason above, and because the two surfaces that
+   * open it (the chart's event strip and the event screen) both already hold
+   * it — a second fetch could only disagree with what they are showing.
+   */
+  | {
+      kind: 'predictionLadder'
+      venue: string
+      venueLabel: string
+      event: PredictionEventSummary
+    }
   /** Discover's Fear & Greed card, opened out into the index's history. */
   | { kind: 'fearGreed' }
   /** Discover's P&L card, opened out into the window and the holdings. */

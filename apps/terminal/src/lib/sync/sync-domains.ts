@@ -48,6 +48,8 @@ export function isTier1(key: string): boolean {
   // The trailing dot is load-bearing — `pair-picker.assetClassMap` is a
   // different key with its own entry above.
   if (key.startsWith('pair-picker.assetClass.')) return true
+  // Per-asset-class chart presentation: terminal.chartType.prediction, …
+  if (key.startsWith('terminal.chartType.')) return true
   return false
 }
 
@@ -200,7 +202,14 @@ const AUTOMATION_KEYS = new Set([
  * wouldn't have synced it anyway (an unknown tier-2 key it silently drops).
  */
 export function domainForSyncKey(key: string): SyncDomainId | null {
-  if (CHART_KEYS.has(key) || key.startsWith('drawing-last-')) return 'charts'
+  if (
+    CHART_KEYS.has(key) ||
+    key.startsWith('drawing-last-') ||
+    // Per-asset-class chart type: terminal.chartType.prediction, …
+    key.startsWith('terminal.chartType.')
+  ) {
+    return 'charts'
+  }
   if (
     WORKSPACE_KEYS.has(key) ||
     // Per-asset-class pair layouts: terminal.layout.perp, .dex, ...

@@ -22,7 +22,13 @@ const CALLDATA = `0x9e75aa95${'0'.repeat(64)}`
 
 function input(over: Record<string, unknown> = {}) {
   return {
-    tx: { to: DIAMOND, data: CALLDATA, value: '0x0', chainId: 8453 },
+    tx: {
+      kind: 'evm' as const,
+      to: DIAMOND,
+      data: CALLDATA,
+      value: '0x0',
+      chainId: 8453,
+    },
     approvalAddress: DIAMOND,
     expectedChainId: 8453,
     fromAmountRaw: 100_000_000n,
@@ -74,6 +80,7 @@ describe('validateBridgeTransaction', () => {
         isNativeSend: true,
         fromAmountRaw: 100_000_000_000_000_000n,
         tx: {
+          kind: 'evm' as const,
           to: DIAMOND,
           data: CALLDATA,
           value: '0x16345785d8a0000',
@@ -88,6 +95,7 @@ describe('validateBridgeTransaction', () => {
     const result = validateBridgeTransaction(
       input({
         tx: {
+          kind: 'evm' as const,
           to: '0x00000000000000000000000000000000000000ff',
           data: CALLDATA,
           value: '0x0',
@@ -113,7 +121,13 @@ describe('validateBridgeTransaction', () => {
         isNativeSend: true,
         approvalAddress: '0x0000000000000000000000000000000000000000',
         fromAmountRaw: 5n,
-        tx: { to: DIAMOND, data: CALLDATA, value: '5', chainId: 8453 },
+        tx: {
+          kind: 'evm' as const,
+          to: DIAMOND,
+          data: CALLDATA,
+          value: '5',
+          chainId: 8453,
+        },
       }),
     )
     expect(result.ok).toBe(true)
@@ -122,7 +136,15 @@ describe('validateBridgeTransaction', () => {
   it('refuses malformed calldata', () => {
     for (const data of ['not-hex', '0x', '0xzz', '0x1234']) {
       const result = validateBridgeTransaction(
-        input({ tx: { to: DIAMOND, data, value: '0x0', chainId: 8453 } }),
+        input({
+          tx: {
+            kind: 'evm' as const,
+            to: DIAMOND,
+            data,
+            value: '0x0',
+            chainId: 8453,
+          },
+        }),
       )
       expect(result.ok).toBe(false)
     }
@@ -130,7 +152,15 @@ describe('validateBridgeTransaction', () => {
 
   it('refuses a route built for another chain', () => {
     const result = validateBridgeTransaction(
-      input({ tx: { to: DIAMOND, data: CALLDATA, value: '0x0', chainId: 1 } }),
+      input({
+        tx: {
+          kind: 'evm' as const,
+          to: DIAMOND,
+          data: CALLDATA,
+          value: '0x0',
+          chainId: 1,
+        },
+      }),
     )
     expect(result.ok).toBe(false)
     expect(!result.ok && result.error).toContain('chain 1')
@@ -139,7 +169,13 @@ describe('validateBridgeTransaction', () => {
   it('accepts a route that states no chain id', () => {
     const result = validateBridgeTransaction(
       input({
-        tx: { to: DIAMOND, data: CALLDATA, value: '0x0', chainId: null },
+        tx: {
+          kind: 'evm' as const,
+          to: DIAMOND,
+          data: CALLDATA,
+          value: '0x0',
+          chainId: null,
+        },
       }),
     )
     expect(result.ok).toBe(true)
@@ -147,10 +183,37 @@ describe('validateBridgeTransaction', () => {
 
   it('refuses native value attached to a token transfer', () => {
     const result = validateBridgeTransaction(
-      input({ tx: { to: DIAMOND, data: CALLDATA, value: '1', chainId: 8453 } }),
+      input({
+        tx: {
+          kind: 'evm' as const,
+          to: DIAMOND,
+          data: CALLDATA,
+          value: '1',
+          chainId: 8453,
+        },
+      }),
     )
     expect(result.ok).toBe(false)
     expect(!result.ok && result.error).toContain('alongside a token transfer')
+  })
+
+  it('refuses a Solana transaction handed to the EVM validator', () => {
+    // Every rule below reads `to`, `value` or `chainId`, none of which a Solana
+    // transaction has. Refusing on the discriminant is what stops three absent
+    // fields from reading as three passing checks.
+    const result = validateBridgeTransaction(
+      input({
+        tx: { kind: 'svm' as const, serializedTransaction: 'AQAAAA==' },
+      }),
+    )
+    expect(result.ok).toBe(false)
+    expect(!result.ok && result.error).toContain('non-EVM transaction')
+  })
+
+  it('refuses a token transfer that names no allowance spender', () => {
+    const result = validateBridgeTransaction(input({ approvalAddress: null }))
+    expect(result.ok).toBe(false)
+    expect(!result.ok && result.error).toContain('unrecognised spender')
   })
 
   it('refuses a native transfer whose value is not the amount', () => {
@@ -161,7 +224,13 @@ describe('validateBridgeTransaction', () => {
         input({
           isNativeSend: true,
           fromAmountRaw: 100_000_000_000_000_000n,
-          tx: { to: DIAMOND, data: CALLDATA, value, chainId: 8453 },
+          tx: {
+            kind: 'evm' as const,
+            to: DIAMOND,
+            data: CALLDATA,
+            value,
+            chainId: 8453,
+          },
         }),
       )
       expect(result.ok).toBe(false)

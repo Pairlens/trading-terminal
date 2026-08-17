@@ -4,38 +4,35 @@
  * Which (from, to) pairs this connector will quote, and the refusal for the
  * ones it will not.
  *
- * EVM to EVM only. LI.FI does route Solana, but a Solana leg needs a Solana
- * signer, a different transaction shape and a different address for the same
- * user — none of which this connector has. So a route with Solana on either
- * side comes back as a typed refusal the pane can put a sentence to, rather
- * than as a quote that would fail at signing time or, worse, an empty panel
- * that reads as "this asset cannot be bridged".
+ * Six chains now, across two signing families: the five EVM chains and Solana.
+ * Solana used to be refused here, not because LI.FI could not route it but
+ * because this connector had no Solana signer and no place to put one. It has
+ * both now (`solana-executor.ts`, and a manifest that asks for the Solana
+ * wallet alongside the EVM one), so the refusal is gone and a Solana leg is a
+ * route like any other.
  *
- * Chain facts come from the EVM connector's own config: same package, one
- * table, so the chain id a bridge quote is built for is the chain id a swap on
- * that market would use.
+ * What survives is the shape of the answer. A route that cannot be quoted comes
+ * back as a typed refusal naming the side at fault, because a pane renders a
+ * different sentence for "that is the chain you are already on" than for "this
+ * asset does not exist over there", and both beat an empty panel that reads as
+ * "this asset cannot be bridged".
  */
-import { EVM_CHAINS } from '../evm-dex-connector/chains'
-import type { EvmChainConfig } from '../evm-dex-connector/chains'
+import { BRIDGE_CHAINS, bridgeChain } from './chains'
+import type { BridgeChain } from './chains'
 import type { BridgeRouteRefused } from '@pairlens/shared/instrument-types'
 
-/** The markets this connector declares. Ordered as the chain rail orders them. */
-export const BRIDGE_MARKETS: Array<string> = [
-  'ethereum',
-  'base',
-  'arbitrum',
-  'bsc',
-  'polygon',
-]
-
 /**
- * Markets that are chains the terminal draws but this connector cannot sign
- * for. `jupiter` is the Solana connector's market id; 'solana' is accepted too
- * because that is the name a saved layout or an assistant call may use.
+ * The markets this connector declares, ordered as the chain rail orders them.
+ *
+ * Solana is declared under `jupiter`, the market id the rest of the terminal
+ * already uses for it. `solana` is accepted as an alias by `bridgeChain` but is
+ * deliberately NOT declared: a capability market list is what the plugin
+ * manager routes on, and two ids for one chain would make a route resolvable
+ * twice.
  */
-const NON_EVM_MARKETS: ReadonlySet<string> = new Set(['jupiter', 'solana'])
+export const BRIDGE_MARKETS: Array<string> = BRIDGE_CHAINS.map((c) => c.market)
 
-export type BridgeRoute = { from: EvmChainConfig; to: EvmChainConfig }
+export type BridgeRoute = { from: BridgeChain; to: BridgeChain }
 
 export function refuse(
   reason: BridgeRouteRefused['reason'],
@@ -56,28 +53,26 @@ export function isRefused(value: unknown): value is BridgeRouteRefused {
 /**
  * Resolve both legs, or say which one is the problem.
  *
- * The order of the checks is what makes the message useful: a Solana leg is
- * named as non-EVM rather than as an unknown market, and a same-chain request
- * is called out as a swap rather than quoted as a zero-distance bridge.
+ * Order still matters: an unknown market is named before a same-chain request
+ * is diagnosed, so `okx → base` says "okx is not a chain this bridge covers"
+ * rather than something about swapping.
  */
 export function resolveBridgeRoute(
   fromMarket: string,
   toMarket: string,
 ): BridgeRoute | BridgeRouteRefused {
-  for (const market of [fromMarket, toMarket]) {
-    if (NON_EVM_MARKETS.has(market)) return refuse('non-evm-chain', market)
-  }
-  const from = EVM_CHAINS[fromMarket]
+  const from = bridgeChain(fromMarket)
   if (!from) return refuse('unknown-market', fromMarket)
-  const to = EVM_CHAINS[toMarket]
+  const to = bridgeChain(toMarket)
   if (!to) return refuse('unknown-market', toMarket)
+  // Compared on the resolved market, not the requested one, so `solana → jupiter`
+  // is correctly the same chain twice rather than a zero-distance bridge.
   if (from.market === to.market) return refuse('same-chain', fromMarket)
   return { from, to }
 }
 
 /** Chains a transfer out of `fromMarket` can land on. */
-export function bridgeDestinations(fromMarket: string): Array<EvmChainConfig> {
-  return BRIDGE_MARKETS.filter((market) => market !== fromMarket)
-    .map((market) => EVM_CHAINS[market])
-    .filter((chain): chain is EvmChainConfig => Boolean(chain))
+export function bridgeDestinations(fromMarket: string): Array<BridgeChain> {
+  const from = bridgeChain(fromMarket)
+  return BRIDGE_CHAINS.filter((chain) => chain.market !== from?.market)
 }

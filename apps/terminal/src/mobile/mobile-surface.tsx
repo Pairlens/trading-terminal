@@ -147,6 +147,8 @@ const importMarketsScreen = () => import('./screens/markets-screen')
 const importEventsScreen = () => import('./screens/events-screen')
 const importPredictionEventScreen = () =>
   import('./screens/prediction-event-screen')
+const importOutcomeLadderScreen = () =>
+  import('./screens/outcome-ladder-screen')
 const importAccountDetailScreen = () =>
   import('./screens/account-detail-screen')
 const importFearGreedScreen = () => import('./screens/fear-greed-screen')
@@ -161,6 +163,7 @@ const NewsReaderSheet = lazyChunk(importNewsReaderSheet)
 const MarketsScreen = lazyChunk(importMarketsScreen)
 const EventsScreen = lazyChunk(importEventsScreen)
 const PredictionEventScreen = lazyChunk(importPredictionEventScreen)
+const OutcomeLadderScreen = lazyChunk(importOutcomeLadderScreen)
 const AccountDetailScreen = lazyChunk(importAccountDetailScreen)
 const FearGreedScreen = lazyChunk(importFearGreedScreen)
 const PnlScreen = lazyChunk(importPnlScreen)
@@ -210,6 +213,13 @@ const PREFETCH: Array<() => Promise<unknown>> = [
   importFearGreedScreen,
   importPnlScreen,
   importEventsScreen,
+  // Both are one tap from a prediction CHART now (the event strip), not only
+  // from a Discover card, so they are warmed for the same reason the panels
+  // are. Same unconditional treatment as the events board above: reading the
+  // plugin ledger from a prefetch list would put a gate in the one place that
+  // must not care what is installed.
+  importPredictionEventScreen,
+  importOutcomeLadderScreen,
 ]
 
 /** `requestIdleCallback`, with the timeout every Safari release still needs. */
@@ -566,6 +576,8 @@ const OverlayHost = memo(function OverlayHost({
       return <EventsScreen onClose={onClose} overlay={overlay} />
     case 'predictionEvent':
       return <PredictionEventScreen onClose={onClose} overlay={overlay} />
+    case 'predictionLadder':
+      return <OutcomeLadderScreen onClose={onClose} overlay={overlay} />
     case 'accountDetail':
       return <AccountDetailScreen onClose={onClose} overlay={overlay} />
     case 'fearGreed':

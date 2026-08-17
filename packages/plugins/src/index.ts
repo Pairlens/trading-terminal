@@ -221,6 +221,10 @@ export {
   createHeliusRpcProviderPlugin,
 } from './helius-rpc-provider/index.ts'
 export {
+  coinglassLiquidationsManifest,
+  createCoinglassLiquidationsPlugin,
+} from './coinglass-liquidations/index.ts'
+export {
   jupiterDexConnectorManifest,
   createJupiterDexConnectorPlugin,
 } from './jupiter-dex-connector/index.ts'

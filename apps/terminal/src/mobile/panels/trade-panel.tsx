@@ -34,7 +34,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import { Check, KeyRound, Lock, Wallet } from 'lucide-react'
+import { Check, ChevronRight, KeyRound, Lock, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 
@@ -42,12 +42,16 @@ import { cn } from '@pairlens/ui'
 import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { useOrderDraftStore } from '../lib/order-draft-store'
 import { PRESS } from '../primitives/press'
+import { predictionIdentity } from '../lib/prediction-identity'
 import { TradeOrderbookStrip } from './trade-orderbook-strip'
 import { TradePayoutCard } from './trade-payout-card'
 import { TradeRiskRow } from './trade-risk-row'
 import { TradeSlideConfirm } from './trade-slide-confirm'
+import { PredictionRules } from './prediction-rules'
+import type { PredictionIdentity } from '../lib/prediction-identity'
 import type { MobileOrderType } from '../lib/order-draft-store'
 import type { ReactNode, RefObject } from 'react'
+import { track } from '@/lib/analytics-events'
 import { haptic } from '@/lib/haptics'
 import { splitPairAssets } from '@/lib/pairs'
 import {
@@ -102,8 +106,7 @@ import {
   priceToCents,
 } from '@/lib/predictions/ticket-math'
 import { predictionCollateral } from '@/lib/predictions/collateral'
-import { predictionQuestionOf } from '@/components/pair-picker/pair-picker-data'
-import { usePredictionOutcome } from '@/stores/prediction-directory-store'
+import { usePredictionEventContext } from '@/hooks/use-prediction-event'
 
 // ── Live price, without a per-tick render ─────────────────────────────
 
@@ -413,10 +416,24 @@ export default memo(function MobileTradePanel() {
   // carries the subject and the side, so what the ticket adds is the question
   // itself and the date the collateral comes back — a 68¢ price a month out and
   // the same price an hour out are different bets, and the key carries neither.
-  const pinnedOutcome = usePredictionOutcome(focusedPair)
-  const outcomeLabel = pinnedOutcome?.outcome ?? ''
-  const question = pinnedOutcome ? predictionQuestionOf(pinnedOutcome) : ''
-  const resolvesAt = pinnedOutcome?.endMs
+  //
+  // The pin alone was not enough. A shared `/pair/…` link opened on a fresh
+  // profile has no pin at all, and the ticket used to render a bare Buy/Sell
+  // form over an unnamed contract — money committed to a question nobody
+  // printed. `usePredictionEventContext` re-reads the event from the venue and
+  // fills every field the pin would have carried, so a cold link and a warm one
+  // say the same thing. It costs nothing on a non-prediction venue: with no
+  // prediction connector for `focusedVenue` the query is disabled outright.
+  //
+  // The preference order between the two sources lives in
+  // `lib/prediction-identity.ts`, shared with the chart's event strip — the
+  // ticket and the strip are one screen apart and must not name the same
+  // contract differently.
+  const eventContext = usePredictionEventContext(focusedPair, focusedVenue)
+  const identity = predictionIdentity(eventContext)
+  const outcomeLabel = identity?.outcomeLabel ?? ''
+  const predictionEvent = identity?.event ?? null
+  const predictionVenueLabel = identity?.venueLabel ?? ''
 
   // ── Order-type availability ──
   const supportsLimit = !isDex || marketInfo?.dexLimitOrders === true
@@ -910,6 +927,24 @@ export default memo(function MobileTradePanel() {
     () => pushOverlay({ kind: 'orderbook' }),
     [pushOverlay],
   )
+  // The way back to the question this ticket is a leg of: every sibling
+  // outcome, every price, the resolution criteria. Only when the venue
+  // actually returned the event — a control that opens nothing is worse than
+  // no control, so the card renders as a heading in the states where it did
+  // not (loading, not found, a venue this build cannot reach).
+  const openPredictionEvent = useCallback(() => {
+    if (!predictionEvent) return
+    track('mobile_prediction_surface_opened', {
+      surface: 'event',
+      source: 'trade_ticket',
+    })
+    pushOverlay({
+      kind: 'predictionEvent',
+      event: predictionEvent,
+      venue: focusedVenue,
+      venueLabel: predictionVenueLabel,
+    })
+  }, [focusedVenue, predictionEvent, predictionVenueLabel, pushOverlay])
   // A DEX signs with a chain wallet, a CEX or broker with an API key. Sending
   // the venue id for both is what used to drop a DEX user into the exchange
   // wizard, which has no wallet form behind it — the desktop gate makes the
@@ -934,28 +969,55 @@ export default memo(function MobileTradePanel() {
         ? t('terminal.trade.clickToConfirmLive')
         : t('terminal.trade.clickToPlace')
 
+  /**
+   * What this ticket is about, and when it settles.
+   *
+   * Rendered OUTSIDE `ticket` on purpose, beside the order-book strip. The
+   * connect gate blurs the ticket behind a card, and the question is not a
+   * trading control: someone with no key can still read what the market is
+   * asking, when it resolves and how it resolves, and can still open the whole
+   * event. Same principle the order-book strip above it already follows.
+   *
+   * Renders nothing when neither the pin nor the venue can name the contract
+   * (see `predictionIdentity`) — a bare ticker restated in a card would be a
+   * heading with no content.
+   */
+  const questionCard =
+    isPrediction && identity ? (
+      <div className="flex flex-col gap-1 rounded-xl bg-[color:var(--pl-wash-strong)] px-3 py-2">
+        {/* Tappable once the event is in hand: the ticket states one leg, and
+            the sibling outcomes are the context that says whether this leg is
+            the one worth taking. */}
+        {predictionEvent ? (
+          <button
+            className="pl-press-soft -mx-1 flex items-start gap-2 rounded-lg px-1 text-left"
+            onClick={openPredictionEvent}
+            type="button"
+            {...PRESS}
+          >
+            <span className="flex min-w-0 flex-1 flex-col gap-1">
+              <PredictionQuestionLines identity={identity} />
+            </span>
+            <ChevronRight
+              aria-hidden
+              className="mt-[1px] size-3.5 shrink-0 text-muted-foreground"
+            />
+          </button>
+        ) : (
+          <PredictionQuestionLines identity={identity} />
+        )}
+        {/* Collapsed by default, one row tall. It is what a probability is
+            worth reading against, and this is the last surface before the
+            money moves. */}
+        <PredictionRules
+          rules={identity.rules}
+          venueLabel={identity.venueLabel}
+        />
+      </div>
+    ) : null
+
   const ticket = (
     <div className="flex flex-col gap-2.5 px-4 pb-2 pt-1">
-      {/* What this ticket is actually betting on, and when it settles. Renders
-          nothing on a cold link the directory has never seen — a bare ticker
-          restated in a card would be a heading with no content. */}
-      {isPrediction && (question !== '' || resolvesAt !== undefined) ? (
-        <div className="flex flex-col gap-1 rounded-xl bg-[color:var(--pl-wash-strong)] px-3 py-2">
-          {question !== '' ? (
-            <p className="line-clamp-2 text-[12.5px] font-medium leading-snug text-foreground">
-              {question}
-            </p>
-          ) : null}
-          {resolvesAt !== undefined ? (
-            <span className="text-[11px] leading-none text-muted-foreground">
-              {t('terminal.trade.resolvesOn', {
-                date: formatResolutionDate(resolvesAt),
-              })}
-            </span>
-          ) : null}
-        </div>
-      ) : null}
-
       {/* Buy / Sell */}
       <div className="flex gap-2">
         <SideButton
@@ -1345,9 +1407,11 @@ export default memo(function MobileTradePanel() {
       <LivePriceProbe onSample={setPrices} target={pricesRef} />
 
       {/* Sharp in both states: nothing about the market is hidden from someone
-          who has no key — only the part that needs one. */}
-      <div className="px-4">
+          who has no key — only the part that needs one. The prediction question
+          card sits here for the same reason. */}
+      <div className="flex flex-col gap-2.5 px-4">
         <TradeOrderbookStrip onOpen={openOrderbook} />
+        {questionCard}
       </div>
 
       {needsConnect ? (
@@ -1445,6 +1509,34 @@ function SegmentButton({
     >
       {label}
     </button>
+  )
+}
+
+/**
+ * The two lines the question card is made of, so the tappable and the
+ * non-tappable card cannot drift into printing different things.
+ */
+function PredictionQuestionLines({
+  identity,
+}: {
+  identity: PredictionIdentity
+}) {
+  const { t } = useTranslation()
+  return (
+    <>
+      {identity.question !== '' ? (
+        <p className="line-clamp-2 text-[12.5px] font-medium leading-snug text-foreground">
+          {identity.question}
+        </p>
+      ) : null}
+      {identity.resolvesAt !== undefined ? (
+        <span className="text-[11px] leading-none text-muted-foreground">
+          {t('terminal.trade.resolvesOn', {
+            date: formatResolutionDate(identity.resolvesAt),
+          })}
+        </span>
+      ) : null}
+    </>
   )
 }
 

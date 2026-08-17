@@ -151,6 +151,12 @@
     "providerBusyTitle": "Flux de résultats limité en débit",
     "providerErrorBody": "Le fournisseur a répondu quelque chose d'inutilisable. Tes comptes et tes connecteurs ne sont pas en cause.",
     "providerErrorTitle": "Flux de résultats non chargé",
+    "reportTime": {
+      "amc": "POST",
+      "amcLabel": "Publie après la clôture",
+      "bmo": "PRÉ",
+      "bmoLabel": "Publie avant l'ouverture"
+    },
     "scopeLabel": "Fenêtre de publication",
     "scopes": {
       "today": "Aujourd'hui",
@@ -174,6 +180,9 @@
     "emptyTitle": "Pas de calendrier macro",
     "emptyBody": "Le calendrier de publication vient de l'App Server. Cette version fonctionne en autonome, il n'y a donc rien à compiler.",
     "columns": {
+      "actual": "Publié",
+      "implied": "Implicite (Kalshi)",
+      "prior": "Précédent",
       "source": "Agence",
       "time": "Heure ({{zone}})",
       "event": "Publication"
@@ -186,6 +195,8 @@
     "impactAll": "Tout",
     "impactHigh": "Fort impact",
     "impactLabel": "Filtre d'impact",
+    "impliedFrom": "Implicite dans les prix des contrats {{source}}, pas un consensus d'analystes.",
+    "impliedHint": "Anticipation implicite dans les prix des contrats Kalshi. C'est un prix de marché en direct, pas un consensus d'analystes.",
     "noneHighBody": "Aucune publication à fort impact dans cette fenêtre. Passez sur Tout pour voir le reste du calendrier.",
     "noneInWindowBody": {
       "week": "Aucune publication américaine prévue dans les sept prochains jours.",
@@ -203,7 +214,7 @@
       "fortnight": "2 semaines",
       "month": "Mois"
     },
-    "sourceNote": "Compilé à partir des calendriers de publication du BLS, du BEA, de la Réserve fédérale et du Census. Heures de l'Est des États-Unis, telles que les agences les publient.",
+    "sourceNote": "Compilé à partir des calendriers de publication du BLS, du BEA, de la Réserve fédérale et du Census. Les chiffres publié et précédent viennent des agences elles-mêmes, l'implicite des prix des contrats Kalshi. Heures de l'Est américain, telles que les agences les publient.",
     "title": "Macro",
     "today": "Aujourd'hui",
     "tomorrow": "Demain"
@@ -278,7 +289,7 @@
     "emptyBody": "{{wallet}} ne détient aucune position susceptible d'accumuler des frais. Fournissez de la liquidité sur une chaîne connectée et le montant apparaîtra ici.",
     "noChainsTitle": "Aucun connecteur de chaîne",
     "noChainsBody": "Installez un connecteur on-chain et ce panneau lira ce que ses pools doivent à votre portefeuille.",
-    "footnote": "Les deux jambes, par position : sur les chaînes EVM, ce qu'un collect paierait sur ce bloc ; sur Solana, ce que le pool a déjà crédité. Les frais déjà encaissés ne laissent aucune trace on-chain, donc l'APR des frais, le temps dans la fourchette et la perte face à la détention exigent un indexeur et ne sont pas affichés."
+    "footnote": "Les deux jambes, par position : ce qu'un collect paierait sur ce bloc sur les chaînes EVM, et le même chiffre recalculé sur Solana à partir du fee growth du pool. Les frais déjà encaissés ne laissent aucune trace on-chain, donc l'APR des frais, le temps dans la plage et la perte face à la simple détention exigent un indexeur et ne sont pas affichés."
   },
   "funding": {
     "loading": "Lecture des taux de financement…",
@@ -397,29 +408,34 @@
     "statusTrading": "En cotation"
   },
   "liquidationMap": {
-    "clusterHint": "{{price}} : {{notional}} de positions {{side}} liquidées sur {{count}} exécutions",
-    "clustersCaption": "Les colonnes ombrées correspondent à ce que la plateforme a réellement liquidé sur les {{window}} dernières heures, rouge pour les longs et vert pour les shorts.",
-    "clustersErrorCaption": "L'historique des liquidations de la plateforme n'a pas pu être chargé. Le reste de l'axe n'est pas affecté.",
+    "alternateSourcePrompt": "Choisis {{venue}} ci-dessus pour lire les exécutions d'une autre plateforme sur ce graphique. Les sources ne sont jamais fusionnées : leurs flux ne transportent pas la même chose.",
+    "clustersErrorCaption": "L'historique des liquidations n'a pas pu être chargé. Le collecteur répond une fois par minute, cela peut donc se régler tout seul.",
     "clustersLoadingCaption": "Chargement de l'historique des liquidations de la plateforme.",
     "collectingCaption": "Les clusters de marché se remplissent encore. Collecte depuis {{since}}.",
     "collectingJustStarted": "à l'instant",
+    "collectingTitle": "Encore en cours de remplissage",
+    "errorTitle": "Historique des liquidations non chargé",
+    "feedComplete": "flux complet",
+    "feedSampled": "flux échantillonné",
     "legendLong": "{{value}} en longs",
     "legendPrints": "{{count}} exécutions",
     "legendShort": "{{value}} en shorts",
-    "noClustersCaption": "Rien n'a été liquidé sur ce contrat au cours des {{window}} dernières heures.",
+    "mapCaption": "Les cellules ombrées correspondent à ce que {{venue}} a réellement liquidé sur les {{window}} écoulées, placées à l'heure et au prix où cela s'est produit. Plus le notionnel est lourd, plus la cellule est sombre.",
+    "noCandlesBody": "Cette plateforme n'a fourni aucun historique de prix pour le contrat : il n'y a rien sur quoi accrocher les liquidations.",
+    "noCandlesTitle": "Aucune bougie sur laquelle s'appuyer",
+    "noClustersCaption": "Rien n'a été liquidé sur ce contrat sur les {{window}} écoulées.",
+    "noFeedTitle": "Aucune liquidation mesurée ici",
+    "noneInWindow": "Rien de liquidé sur les {{window}} écoulées",
     "notTrackedCaption": "Cette plateforme ne publie aucun flux agrégé de liquidations, aucun cluster de marché n'est donc tracé.",
-    "standaloneCaption": "Les clusters de marché proviennent du cloud Pairlens, que cette version n'utilise pas.",
-    "subtitle": "Où le marché a été liquidé, et où votre propre position se situerait",
-    "estimateBadge": "ESTIMATION",
-    "sideLong": "long",
-    "sideShort": "short",
-    "referenceHint": "Un {{side}} à {{leverage}}x ouvert au prix actuel se liquide vers {{price}}",
-    "caption": "Les barres sont vos propres prix de liquidation, tels que chaque plateforme les communique. Les fines marques indiquent où une position ouverte au prix actuel serait liquidée à 5x, 10x et 25x.",
-    "noPositionsCaption": "Les traits fins indiquent où une position ouverte au prix actuel serait liquidée à 5x, 10x et 25x. Vos propres prix de liquidation apparaissent en barres dès qu'une position est ouverte.",
-    "noPriceTitle": "Aucun prix de référence",
-    "noPriceBody": "La carte a besoin d'un prix en direct pour le contrat. Elle se remplit dès que le graphique voisin en a un.",
-    "emptyTitle": "Rien à tracer",
-    "emptyBody": "Ouvrez une position perpétuelle, ou choisissez un contrat, et l'axe des prix se remplit.",
+    "planRequiredAction": "Gérer le plugin Coinglass",
+    "planRequiredCaption": "Les clusters de cette plateforme passent par une clé Coinglass. Ajoutes-en une, ou passe à une offre Coinglass qui couvre les ordres de liquidation, et la carte se remplit.",
+    "planRequiredTitle": "Une clé fournisseur est requise ici",
+    "positionsCaption": "Les lignes en pointillés sont tes propres prix de liquidation, tels que chaque plateforme les déclare, épaissis selon le notionnel exposé.",
+    "sampledNote": "Cette plateforme publie au plus une liquidation par symbole et par seconde : les montants sont donc un échantillon et sous-estiment les cascades.",
+    "sourceLabel": "Source de données",
+    "sourceLine": "{{venue}} · {{feed}}",
+    "standaloneCaption": "Les clusters de marché viennent du cloud Pairlens, que ce build n'utilise pas, ou d'une clé fournisseur de données que tu n'as pas ajoutée.",
+    "noPositionsCaption": "Tes propres prix de liquidation rejoignent le graphique en pointillés dès qu'une position est ouverte sur ce contrat.",
     "windowLabel": "Fenêtre",
     "windows": {
       "h1": "1 h",
@@ -446,7 +462,7 @@
     "wouldRead": "Lirait {{wallet}} sur {{pool}}, {{chain}}"
   },
   "lpPosition": {
-    "feesLastTouch": "Réglées lors du dernier mouvement de cette position. Orca et Raydium ne créditent les frais qu'au prochain contact avec la position, la créance réelle peut donc être plus élevée.",
+    "feesLastTouch": "Montant soldé uniquement. Les données de ticks aux bornes de cette position n'ont pas pu être lues, donc les frais accumulés depuis son dernier mouvement ne sont pas comptés et le montant réel peut être plus élevé.",
     "title": "Position LP",
     "subtitle_one": "{{wallet}} · {{count}} plage",
     "subtitle_other": "{{wallet}} · {{count}} plages",
@@ -475,6 +491,9 @@
     "footnote": "Lu sur la chaîne : la bande, ce que vaut la liquidité maintenant, et les frais non collectés. Une position ne stocke pas son prix de revient, il n'y a donc pas de chiffre face à une simple détention."
   },
   "manageLiquidity": {
+    "confirmAddNoteSolana": "Une seule transaction, sans approbation de jetons. Le dépôt est plafonné aux montants ci-dessus.",
+    "confirmCollectNoteSolana": "Envoyé au programme ci-dessus. Les frais sont soldés et versés à ce portefeuille dans la même transaction, et à aucun autre.",
+    "rowProgram": "Programme",
     "title": "Gérer la liquidité",
     "subtitle_one": "{{wallet}} · {{count}} position",
     "subtitle_other": "{{wallet}} · {{count}} positions",
@@ -530,17 +549,13 @@
     "lockedBody": "Cette transaction a besoin de la clé de votre wallet. Déverrouillez Pairlens et réessayez.",
     "noConnectorTitle": "Connecteur non installé",
     "noConnectorBody": "La chaîne de cette position n'a aucun connecteur installé, rien ne peut donc signer pour elle.",
-    "evmOnlyTitle": "Positions EVM uniquement",
-    "evmOnlyBody": "Ces actions appellent un position manager Uniswap v3, un contrat EVM. Les positions Solana se lisent dans les autres panneaux LP mais ne peuvent pas être signées ici. Fournissez de la liquidité sur une chaîne EVM et vous pourrez la gérer depuis ce panneau.",
-    "readOnlyElsewhere_one": "{{count}} position d'une autre famille de signature est en lecture seule ici.",
-    "readOnlyElsewhere_other": "{{count}} positions d'une autre famille de signature sont en lecture seule ici.",
     "noSigner": "Aucun wallet connecté ne signe sur la chaîne de cette position.",
     "noChainsTitle": "Aucun connecteur de chaîne",
     "noChainsBody": "Installez un connecteur on-chain et ce panneau pourra percevoir les frais et redimensionner les bandes qu'il trouve.",
     "loadingTitle": "Lecture des positions",
-    "loadingBody": "On demande au position manager de chaque chaîne connectée ce que ce wallet détient.",
+    "loadingBody": "Interrogation de chaque chaîne connectée sur ce que détient ce portefeuille.",
     "emptyTitle": "Aucune position de liquidité",
-    "emptyBody": "{{wallet}} ne détient aucune position Uniswap v3 ou PancakeSwap v3 sur les chaînes connectées. Fournissez de la liquidité sur l'une d'elles et vous pourrez la gérer ici.",
+    "emptyBody": "{{wallet}} ne détient aucune position de liquidité concentrée sur les chaînes connectées : aucune plage Uniswap v3 ou PancakeSwap v3 sur EVM, aucune plage Orca ou Raydium sur Solana. Apportez de la liquidité sur l'une d'elles et vous pourrez la gérer ici.",
     "footnote": "Percevoir et retirer font une transaction chacun, et un retrait emporte les frais avec lui. Déplacer une bande n'est pas une modification : cela burn la position et en frappe une nouvelle, ce n'est donc pas proposé ici."
   },
   "marginHealth": {
@@ -1016,17 +1031,19 @@
     "resumeOrders": "Reprendre"
   },
   "routeBridge": {
+    "confirmDestination": "Arrive sur {{chain}}, dans votre portefeuille {{wallet}}.",
+    "needsDestinationWallet": "Connectez un portefeuille {{chain}} pour recevoir ce transfert. Le prix ci-dessus est réel, il manque juste une destination.",
     "title": "Pont",
     "subtitle": "Déplacer un actif depuis {{chain}}",
     "provider": "LI.FI",
-    "notEvmTitle": "Chaîne non pontable",
-    "notEvmBody": "Les transferts circulent entre Ethereum, Base, Arbitrum, BNB Chain et Polygon. {{chain}} signe un autre type de transaction, et le connecteur de pont n'embarque pas encore ce signataire.",
     "noConnectorTitle": "Aucun connecteur de pont installé",
     "noConnectorBody": "Installez le plugin LI.FI Bridge depuis la boutique de plugins pour chiffrer et envoyer des transferts entre chaînes.",
     "amountLabel": "Montant à transférer",
     "amountPlaceholder": "Montant en {{asset}}",
     "destination": "Chaîne de destination",
     "quoting": "Calcul de la route",
+    "unsupportedChainBody": "Les transferts circulent entre Ethereum, Base, Arbitrum, BNB Chain, Polygon et Solana. {{chain}} n'en fait pas partie.",
+    "unsupportedChainTitle": "Chaîne non prise en charge par le pont",
     "youReceive": "Vous recevez sur",
     "minReceived": "Garanti",
     "bridgeFee": "Frais du pont",
@@ -1046,7 +1063,7 @@
     "sentBody": "Transfert envoyé. Suivi en cours :",
     "sendFailed": "Le transfert n'a pas pu être envoyé.",
     "refusal": {
-      "non-evm-chain": "Le pont vers et depuis {{chain}} n'est pas encore pris en charge. Les transferts ne circulent qu'entre chaînes EVM.",
+      "non-evm-chain": "{{chain}} signe un type de transaction que ce pont ne gère pas encore.",
       "same-chain": "C'est la chaîne sur laquelle vous êtes déjà. Pour échanger, utilisez le panneau voisin.",
       "unknown-market": "{{chain}} n'est pas une chaîne couverte par ce pont.",
       "unknown-token": "{{asset}} ne correspond à aucun contrat sur {{chain}} : il n'y a rien à transférer.",
@@ -2426,6 +2443,8 @@
       }
     },
     "toolbar": {
+      "chartTypesAll": "Tous les types de graphique",
+      "chartTypesForProbabilities": "Type de graphique pour probabilités",
       "timeframe": "Période",
       "chartType": "Type de graphique",
       "crosshairMode": "Mode réticule",
@@ -3300,7 +3319,7 @@
     "openInterest": "L’open interest par contrat avec sa variation sur 24h, pour que le crowding apparaisse avant le prix",
     "fundingExtremes": "Les taux de financement les plus positif et les plus négatif en ce moment, avec l’exchange qui paie chacun",
     "fundingBelt": "Le compte à rebours jusqu’au prochain paiement de financement, le taux actuel et prévu, et ce que votre position paie ou gagne",
-    "liquidationMap": "Ce que la plateforme a réellement liquidé sur l'axe des prix, avec votre propre prix de liquidation et les repères de levier par-dessus",
+    "liquidationMap": "Une carte de chaleur temps par prix de ce que la plateforme a réellement liquidé, peinte derrière les bougies du contrat, avec tes propres prix de liquidation par-dessus",
     "marginHealth": "Ratio de marge, maintenance face aux capitaux, distance à la liquidation, et l'effet d'un mouvement défavorable sur les trois",
     "riskControls": "Votre plafond de perte quotidien, le nombre de trades, la taille de position et le coupe-circuit, modifiables là où le trade a lieu",
     "categories": "Chaque catégorie d’événement avec un nombre de contrats en direct, pour que le tableau se resserre en un clic",
@@ -3323,10 +3342,10 @@
     "manageLiquidity": "Déplacez la range, ajoutez ou retirez de la liquidité, et réclamez les frais sans quitter le graphique",
     "chainLadder": "Le même token coté sur chaque blockchain, gas inclus, pour que le meilleur total l’emporte plutôt que la meilleure cotation",
     "routeBridge": "Chaîne source, chaîne cible, le bridge, ses frais et le temps que ça prend, prêt à exécuter",
-    "inFlight": "Les transferts encore en cours de confirmation, chacun avec le compteur de blocs qu’il attend",
+    "inFlight": "Les transferts encore en cours de confirmation, chacun avec l’étape où il se trouve",
     "session": "Où en est la journée de trading en ce moment, selon le calendrier propre au broker, jours fériés et demi-journées inclus",
-    "earningsCalendar": "Qui publie et quand, avec l'estimation à battre, plus ce qui va bientôt être coté",
-    "economicCalendar": "Les publications macro à l’heure près, avec l’importance, la précédente valeur et le consensus",
+    "earningsCalendar": "Qui publie et quand, avant ou après la cloche, avec l'estimation à battre, et ce qui va être coté",
+    "economicCalendar": "Les publications macro à l'heure près, avec leur impact, le chiffre précédent et l'anticipation du marché",
     "sessionClock": "Une horloge en une ligne pour la journée de trading, pour qu’un ticket hors séance ne soit jamais une surprise",
     "level1": "Achat et vente avec leurs tailles, le spread, l'amplitude du jour, et une ligne de statut quand la cotation est suspendue",
     "company": "Valorisation, croissance, marges, le prochain catalyseur et où se situent les analystes, dans un seul panneau",
@@ -3722,13 +3741,17 @@
     "apiKeyRequiredHint": "Clé API requise",
     "setupRequiredHint": "Configuration requise",
     "manifests": {
+      "coinglass-liquidations": {
+        "description": "Les liquidations réelles via votre propre clé Coinglass, pour les plateformes de perpétuels que Pairlens ne collecte pas elle-même. Sept jours d'historique au lieu de trois. Bureau uniquement, car Coinglass n'envoie aucun en-tête CORS, et l'endpoint utilisé démarre au forfait Standard de Coinglass.",
+        "title": "Liquidations Coinglass"
+      },
       "helius-rpc-provider": {
         "title": "Helius Solana RPC",
         "description": "Le nœud Solana par lequel passent toutes les lectures et tous les envois sur Solana : soldes, positions de liquidité, soumission des swaps. Ajoutez votre propre clé Helius pour un point d'accès fiable ; sans clé, le RPC public prend le relais et il rejette du trafic sans prévenir."
       },
       "lifi-bridge-connector": {
         "title": "LI.FI Bridge",
-        "description": "Déplacez un actif entre Ethereum, Base, Arbitrum, BNB Chain et Polygon : le meilleur pont pour la taille, avec frais, temps d'arrivée et suivi jusqu'à réception"
+        "description": "Déplacez un actif entre Ethereum, Base, Arbitrum, BNB Chain, Polygon et Solana : le meilleur pont pour la taille, les frais et le délai d'arrivée, avec suivi jusqu'à réception"
       },
       "pairlens-core": {
         "title": "Pairlens Core",
@@ -4686,7 +4709,7 @@
       "dex-cross-chain": {
         "name": "DEX Cross-Chain",
         "tagline": "Le même token, chaque blockchain, gas inclus.",
-        "description": "Un tableau pour se déplacer entre les blockchains : l’échelle des blockchains cote le token partout avec le gas inclus dans le total, la route du bridge indique ses frais et le temps que ça prend, et les transferts encore en cours de confirmation se trouvent à côté avec leurs compteurs de blocs.",
+        "description": "Un tableau pour se déplacer entre les blockchains : l’échelle des blockchains cote le token partout avec le gas inclus dans le total, la route du bridge indique ses frais et le temps que ça prend, et les transferts encore en cours de confirmation se trouvent à côté avec leur étape actuelle.",
         "menuLabel": "Cross-Chain"
       },
       "equities-company": {
@@ -6111,6 +6134,15 @@
     }
   },
   "mobile": {
+    "predictions": {
+      "rankOutcomes_one": "Classer l'issue",
+      "rankOutcomes_other": "Classer les {{count}} issues",
+      "resolvesShort": "Dénouement le {{date}}",
+      "runnerCount_one": "{{count}} issue",
+      "runnerCount_other": "{{count}} issues",
+      "tailBelow_one": "Afficher 1 de plus, sous {{price}}",
+      "tailBelow_other": "Afficher {{count}} de plus, toutes sous {{price}}"
+    },
     "shell": {
       "tabs": {
         "label": "Destinations",

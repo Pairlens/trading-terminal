@@ -7,13 +7,24 @@
  * own publication schedules (BLS, BEA, the FOMC calendar, Census), so the
  * rows are the government's, not a vendor's copy of them.
  *
- * That is also why there is no actual, consensus or prior column. No agency
- * publishes a forecast of itself and none of them publish the street's, so
- * three columns of dashes would be the pane pretending to a feed it does not
- * have. What it does have is what a trader plans around: the day, the clock,
- * who publishes, and how hard it usually hits. The impact filter earns its
- * place from the data, not the design: two thirds of a federal calendar is
- * county employment tables that nobody repositions on.
+ * There is still no CONSENSUS column, and there will not be one until someone
+ * licenses that data: the street's forecast is a paid product and no free
+ * source publishes it. What the server can fill, it does. Actual and prior come
+ * from the agencies' own APIs after the print, and the third figure is a
+ * market-implied expectation derived from Kalshi contract pricing, which is a
+ * live price rather than a survey median taken days earlier. It is labelled
+ * Implied and names Kalshi, never Consensus, because a reader who knows the
+ * difference would be misled by the wrong word.
+ *
+ * The figure columns appear only when the window actually carries figures. A
+ * deployment whose server cannot fill them gets the schedule alone rather than
+ * three columns of dashes, which was the original reason this pane had none.
+ * Absent stays blank: no zero, no dash, no placeholder.
+ *
+ * The rest is what a trader plans around: the day, the clock, who publishes,
+ * and how hard it usually hits. The impact filter earns its place from the
+ * data, not the design: two thirds of a federal calendar is county employment
+ * tables that nobody repositions on.
  *
  * Times are Eastern, labelled as Eastern, because '08:30 ET' is how every
  * headline quotes CPI. The reader's own clock rides in the row's tooltip
@@ -39,8 +50,9 @@ import type {
 } from '@pairlens/shared/instrument-types'
 
 import type { FundamentalsUnavailable } from '@/hooks/use-equity-fundamentals'
-import { PaneEmpty, Th } from '@/components/panes/pane-primitives'
+import { PaneEmpty } from '@/components/panes/pane-primitives'
 import { useEconomicCalendar } from '@/hooks/use-economic-calendar'
+import { hasEconomicFigures } from '@/lib/equities/calendar-figures'
 import {
   ECONOMIC_ZONE,
   economicDayKind,
@@ -84,6 +96,10 @@ export function EconomicCalendarPane() {
     [all, highOnly],
   )
   const groups = useMemo(() => groupEconomicByDate(entries), [entries])
+  // Figures are a server capability, not a given. Showing the columns when
+  // nothing can fill them is the "columns of dashes" this pane was built to
+  // avoid, so the header follows the data.
+  const hasFigures = useMemo(() => hasEconomicFigures(entries), [entries])
   const nextId = useMemo(
     () => nextEconomicRelease(entries, nowMs),
     [entries, nowMs],
@@ -136,9 +152,30 @@ export function EconomicCalendarPane() {
       <table className="w-full shrink-0 px-3 text-xs">
         <thead>
           <tr className="border-b border-border/50 text-muted-foreground">
-            <Th>{t('economicCalendar.columns.time', { zone })}</Th>
-            <Th>{t('economicCalendar.columns.event')}</Th>
-            <Th align="right">{t('economicCalendar.columns.source')}</Th>
+            <HeadCell className={TIME_COL}>
+              {t('economicCalendar.columns.time', { zone })}
+            </HeadCell>
+            <HeadCell>{t('economicCalendar.columns.event')}</HeadCell>
+            {hasFigures && (
+              <>
+                <HeadCell align="right" className={FIGURE_COL}>
+                  {t('economicCalendar.columns.actual')}
+                </HeadCell>
+                <HeadCell align="right" className={PRIOR_COL}>
+                  {t('economicCalendar.columns.prior')}
+                </HeadCell>
+                <HeadCell
+                  align="right"
+                  className={IMPLIED_COL}
+                  title={t('economicCalendar.impliedHint')}
+                >
+                  {t('economicCalendar.columns.implied')}
+                </HeadCell>
+              </>
+            )}
+            <HeadCell align="right" className={SOURCE_COL}>
+              {t('economicCalendar.columns.source')}
+            </HeadCell>
           </tr>
         </thead>
       </table>
@@ -167,6 +204,7 @@ export function EconomicCalendarPane() {
                 key={group.date}
                 locale={i18n.language}
                 nextId={nextId}
+                showFigures={hasFigures}
                 windowStart={windowStart}
               />
             ))}
@@ -177,6 +215,91 @@ export function EconomicCalendarPane() {
         )}
       </div>
     </div>
+  )
+}
+
+/**
+ * Column widths, shared by the header table and every day's body table.
+ *
+ * The header is its own <table> so it can stay put while the days scroll, which
+ * means the two tables size independently: every column except the flexible
+ * release title has to state the same width on both sides or the labels drift
+ * off the values they name.
+ *
+ * The narrow-pane behaviour is deliberate rather than a media-query afterthought.
+ * A pane in a dense grid can be 20rem wide, and six columns do not fit in that,
+ * so the figures drop in order of how much a reader needs them: the actual print
+ * survives longest, the prior goes first. `@container/pane` is declared by the
+ * pane wrapper, so this reacts to the PANE's width, not the window's.
+ */
+const TIME_COL = 'w-[4.5rem]'
+const FIGURE_COL = 'w-[3.75rem]'
+const PRIOR_COL = 'hidden w-[3.75rem] @[30rem]/pane:table-cell'
+const IMPLIED_COL = 'hidden w-[5.25rem] @[24rem]/pane:table-cell'
+const SOURCE_COL = 'w-[4.25rem]'
+
+/**
+ * A header cell that can carry a width and a hint. The shared `Th` primitive
+ * takes neither, and both are load-bearing here: the width keeps the two tables
+ * aligned, and the hint is where "implied is not consensus" gets said.
+ */
+function HeadCell({
+  align = 'left',
+  children,
+  className,
+  title,
+}: {
+  align?: 'left' | 'right'
+  children: React.ReactNode
+  className?: string
+  title?: string
+}) {
+  return (
+    <th
+      className={cn(
+        'pb-1.5 pr-3 font-mono text-[10px] font-medium uppercase tracking-[.14em] last:pr-0',
+        align === 'right' ? 'text-right' : 'text-left',
+        className,
+      )}
+      title={title}
+    >
+      {children}
+    </th>
+  )
+}
+
+/**
+ * One figure, or an empty cell.
+ *
+ * Empty means empty: no dash, no zero, no em-space placeholder. A calendar that
+ * renders '0.0%' where it has nothing has told the reader something false about
+ * the economy, and '-' reads as a value in a column of numbers.
+ */
+function FigureCell({
+  className,
+  strong,
+  title,
+  value,
+}: {
+  className?: string
+  strong?: boolean
+  title?: string
+  value?: string
+}) {
+  return (
+    <td className={cn(className, 'py-1.5 pr-3 text-right')}>
+      {value ? (
+        <span
+          className={cn(
+            'font-mono text-[11px] tabular-nums',
+            strong ? 'font-medium text-foreground' : 'text-muted-foreground',
+          )}
+          title={title}
+        >
+          {value}
+        </span>
+      ) : null}
+    </td>
   )
 }
 
@@ -195,12 +318,14 @@ function DayGroup({
   entries,
   locale,
   nextId,
+  showFigures,
   windowStart,
 }: {
   date: string
   entries: Array<EconomicCalendarEntry>
   locale: string
   nextId: string | null
+  showFigures: boolean
   windowStart: string
 }) {
   const { t } = useTranslation()
@@ -238,6 +363,7 @@ function DayGroup({
               entry={entry}
               isNext={entry.id === nextId}
               key={entry.id}
+              showFigures={showFigures}
             />
           ))}
         </tbody>
@@ -261,9 +387,11 @@ function importanceBar(importance: EconomicEventImportance): string {
 function ReleaseRow({
   entry,
   isNext,
+  showFigures,
 }: {
   entry: EconomicCalendarEntry
   isNext: boolean
+  showFigures: boolean
 }) {
   const { t } = useTranslation()
 
@@ -283,7 +411,7 @@ function ReleaseRow({
         isNext && 'bg-[color-mix(in_oklch,var(--primary)_7%,transparent)]',
       )}
     >
-      <td className="w-[4.5rem] py-1.5 pl-3 pr-3">
+      <td className={cn(TIME_COL, 'py-1.5 pl-3 pr-3')}>
         <span
           className={cn(
             'font-mono text-[11.5px] tabular-nums',
@@ -313,7 +441,26 @@ function ReleaseRow({
           </span>
         </span>
       </td>
-      <td className="whitespace-nowrap py-1.5 pr-3 text-right">
+      {showFigures && (
+        <>
+          <FigureCell className={FIGURE_COL} strong value={entry.actual} />
+          <FigureCell className={PRIOR_COL} value={entry.prior} />
+          <FigureCell
+            className={IMPLIED_COL}
+            title={
+              entry.implied && entry.impliedSource
+                ? t('economicCalendar.impliedFrom', {
+                    source: entry.impliedSource,
+                  })
+                : undefined
+            }
+            value={entry.implied}
+          />
+        </>
+      )}
+      <td
+        className={cn(SOURCE_COL, 'whitespace-nowrap py-1.5 pr-3 text-right')}
+      >
         <span className="rounded-md bg-secondary px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[.06em] text-muted-foreground">
           {entry.source}
         </span>

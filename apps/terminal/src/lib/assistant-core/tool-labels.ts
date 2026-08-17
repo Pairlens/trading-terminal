@@ -9,6 +9,7 @@
 // A tool with no entry still renders — `formatToolLabel` humanizes the
 // raw name — so a plugin-published action is never a blank chip.
 
+import { DATA_TOOL_LABELS } from './data-tools'
 import type { ToolLabelMap } from '@/lib/copilot/tool-labels'
 import { COPILOT_TOOL_LABELS } from '@/lib/copilot/tool-labels'
 import { ASSISTANT_TOOL_LABELS } from '@/lib/assistant/assistant-tool-labels'
@@ -27,4 +28,5 @@ export const ASSISTANT_ALL_TOOL_LABELS: ToolLabelMap = {
   ...ASSISTANT_TOOL_LABELS,
   ...AUTOMATION_TOOL_LABELS,
   ...TERMINAL_TOOL_LABELS,
+  ...DATA_TOOL_LABELS,
 }

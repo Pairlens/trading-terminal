@@ -151,6 +151,12 @@
     "providerBusyTitle": "財報資料被限流",
     "providerErrorBody": "提供方回傳了無法使用的內容。與你的帳戶和連接器無關。",
     "providerErrorTitle": "財報日程未載入",
+    "reportTime": {
+      "amc": "盤後",
+      "amcLabel": "收盤後發布",
+      "bmo": "盤前",
+      "bmoLabel": "開盤前發布"
+    },
     "scopeLabel": "財報時間範圍",
     "scopes": {
       "today": "今天",
@@ -174,6 +180,9 @@
     "emptyTitle": "沒有總經行事曆",
     "emptyBody": "發布時程來自 App Server。此版本以獨立模式執行，沒有可彙整的來源。",
     "columns": {
+      "actual": "實際",
+      "implied": "隱含 (Kalshi)",
+      "prior": "前值",
       "source": "機構",
       "time": "時間（{{zone}}）",
       "event": "發布"
@@ -186,6 +195,8 @@
     "impactAll": "全部",
     "impactHigh": "高影響",
     "impactLabel": "影響篩選",
+    "impliedFrom": "由 {{source}} 合約價格推算，不是分析師一致預期。",
+    "impliedHint": "由 Kalshi 合約價格推算的市場預期。這是即時的市場價格，不是分析師一致預期。",
     "noneHighBody": "此時間範圍內沒有高影響發布。切換到「全部」可查看其餘時程。",
     "noneInWindowBody": {
       "week": "未來七天沒有美國數據發布。",
@@ -203,7 +214,7 @@
       "fortnight": "兩週",
       "month": "一個月"
     },
-    "sourceNote": "彙整自 BLS、BEA、聯準會與 Census 的發布時程。時間為美國東部時間，與各機構公布的一致。",
+    "sourceNote": "彙編自 BLS、BEA、聯準會與 Census 的資料發布行程。實際值與前值來自這些機構本身，隱含值由 Kalshi 合約價格推算。時間為美國東部時間，與機構公布的一致。",
     "title": "總經",
     "today": "今天",
     "tomorrow": "明天"
@@ -278,7 +289,7 @@
     "emptyBody": "{{wallet}} 沒有可累積手續費的部位。在一條已連接的鏈上提供流動性後，金額就會顯示在這裡。",
     "noChainsTitle": "沒有鏈連接器",
     "noChainsBody": "安裝一個鏈上連接器，這個面板就會讀取它的池欠你錢包多少。",
-    "footnote": "依部位列出兩條腿：在 EVM 鏈上是本區塊執行 collect 會支付的金額，在 Solana 上是資金池已經計入的金額。已領取的手續費在鏈上不留痕跡，所以手續費 APR、區間內時長以及相對持有的損益都需要索引器，暫不顯示。"
+    "footnote": "依倉位列出兩側：EVM 鏈上是一次 collect 在當前區塊會支付的金額，Solana 上是同一個金額，由池子的手續費成長回放算出。已領取的手續費不會在鏈上留下痕跡，因此手續費 APR、在區間內的時間以及相對單純持有的虧損都需要索引器，這裡不顯示。"
   },
   "funding": {
     "loading": "正在讀取資金費率…",
@@ -397,29 +408,34 @@
     "statusTrading": "交易中"
   },
   "liquidationMap": {
-    "clusterHint": "{{price}}：{{notional}} 的{{side}}部位在 {{count}} 筆成交中被強平",
-    "clustersCaption": "陰影色帶是交易所在過去 {{window}} 小時內實際強平的量，紅色為多方，綠色為空方。",
-    "clustersErrorCaption": "無法載入交易所的強平歷史。價格軸上的其他內容不受影響。",
+    "alternateSourcePrompt": "在上方選擇 {{venue}}，即可在這張圖上讀另一家交易所的成交。資料來源永不合併：它們推送的內容並不相同。",
+    "clustersErrorCaption": "無法載入該交易所的強平歷史。採集器每分鐘回應一次，可能會自行恢復。",
     "clustersLoadingCaption": "正在載入交易所的強平歷史。",
     "collectingCaption": "市場聚集區仍在累積。自 {{since}} 起開始收集。",
     "collectingJustStarted": "剛剛",
+    "collectingTitle": "仍在累積",
+    "errorTitle": "強平歷史未能載入",
+    "feedComplete": "完整資料流",
+    "feedSampled": "抽樣資料流",
     "legendLong": "多方 {{value}}",
     "legendPrints": "{{count}} 筆",
     "legendShort": "空方 {{value}}",
-    "noClustersCaption": "過去 {{window}} 小時內此合約沒有發生強平。",
+    "mapCaption": "陰影格是 {{venue}} 在最近{{window}}內真正強平的金額，按發生的時間與價格擺放。名目金額越大，格子越深。",
+    "noCandlesBody": "該交易所沒有提供此合約的價格歷史，強平資料無處附著。",
+    "noCandlesTitle": "沒有可對照的K線",
+    "noClustersCaption": "最近{{window}}內該合約沒有發生強平。",
+    "noFeedTitle": "這裡沒有實測強平",
+    "noneInWindow": "最近{{window}}內沒有強平",
     "notTrackedCaption": "此交易所不發布彙總強平資料，因此不繪製市場聚集區。",
-    "standaloneCaption": "市場聚集區來自 Pairlens 雲端，而此版本未啟用雲端。",
-    "subtitle": "市場在哪些價位被強平，以及你自己的部位會落在哪裡",
-    "estimateBadge": "估算",
-    "sideLong": "多頭",
-    "sideShort": "空頭",
-    "referenceHint": "以目前價格開倉的 {{leverage}} 倍{{side}}將在 {{price}} 附近被強制平倉",
-    "caption": "柱形是各交易所回報的你自己的強平價格。細刻度表示以目前價格開倉在 5x、10x、25x 下的強平位置。",
-    "noPositionsCaption": "細線標出以目前價格開倉在 5 倍、10 倍與 25 倍槓桿下的強制平倉位置。你自己的強制平倉價格會在持有部位後以長條顯示。",
-    "noPriceTitle": "沒有可對照的價格",
-    "noPriceBody": "這張圖需要合約的即時價格。旁邊的圖表一有價格就會填入。",
-    "emptyTitle": "沒有可繪製的內容",
-    "emptyBody": "開一個永續部位，或選擇一個合約，價格軸就會填入。",
+    "planRequiredAction": "管理 Coinglass 外掛",
+    "planRequiredCaption": "該交易所的聚集區來自 Coinglass 金鑰。新增一組金鑰，或改用包含強平委託的 Coinglass 方案，地圖就會填滿。",
+    "planRequiredTitle": "這裡需要供應商金鑰",
+    "positionsCaption": "虛線是各交易所回報的你自己的強平價格，線寬依在險名目金額加權。",
+    "sampledNote": "該交易所每個交易對每秒最多推送一筆強平，因此金額只是抽樣，連環強平時會明顯偏低。",
+    "sourceLabel": "資料來源",
+    "sourceLine": "{{venue}} · {{feed}}",
+    "standaloneCaption": "市場聚集區來自本版本未使用的 Pairlens 雲端，或來自你尚未新增的資料供應商金鑰。",
+    "noPositionsCaption": "在該合約上持倉後，你自己的強平價格會以虛線加入圖表。",
     "windowLabel": "時間範圍",
     "windows": {
       "h1": "1小時",
@@ -446,7 +462,7 @@
     "wouldRead": "將讀取 {{chain}} 上 {{pool}} 的 {{wallet}}"
   },
   "lpPosition": {
-    "feesLastTouch": "以該部位上一次被觸碰時結算。Orca 與 Raydium 只在部位下一次被觸碰時才計入手續費，因此實際可領取的金額可能更高。",
+    "feesLastTouch": "只是已結清的金額。這個倉位邊界的 tick 資料讀不到，因此上次變動以來累積的手續費未計入，實際可領金額可能更高。",
     "title": "LP 部位",
     "subtitle_one": "{{wallet}} · {{count}} 個區間",
     "subtitle_other": "{{wallet}} · {{count}} 個區間",
@@ -475,6 +491,9 @@
     "footnote": "從鏈上讀取：價格區間、流動性目前的價值，以及尚未領取的手續費。部位不記錄成本，所以沒有與單純持有的對比數值。"
   },
   "manageLiquidity": {
+    "confirmAddNoteSolana": "一筆交易，不需代幣授權。存入金額以上方的數額為上限。",
+    "confirmCollectNoteSolana": "送往上方的程式。手續費會在同一筆交易中結清並支付到本錢包，不會流向別處。",
+    "rowProgram": "程式",
     "title": "管理流動性",
     "subtitle_one": "{{wallet}} · {{count}} 個倉位",
     "subtitle_other": "{{wallet}} · {{count}} 個倉位",
@@ -530,17 +549,13 @@
     "lockedBody": "這筆交易需要你的錢包私鑰。請解鎖 Pairlens 後再試一次。",
     "noConnectorTitle": "未安裝連接器",
     "noConnectorBody": "這個倉位所在的鏈沒有安裝連接器，無法為它簽名。",
-    "evmOnlyTitle": "僅限 EVM 倉位",
-    "evmOnlyBody": "這些操作呼叫的是 Uniswap v3 倉位管理合約，屬於 EVM 合約。Solana 倉位可以在其他 LP 面板檢視，但在這裡無法簽名。在 EVM 鏈上提供流動性後即可在本面板管理。",
-    "readOnlyElsewhere_one": "另一簽名體系的 {{count}} 個倉位在這裡唯讀。",
-    "readOnlyElsewhere_other": "另一簽名體系的 {{count}} 個倉位在這裡唯讀。",
     "noSigner": "已連接的錢包中沒有能在該倉位所在鏈上簽名的。",
     "noChainsTitle": "沒有鏈連接器",
     "noChainsBody": "安裝鏈上連接器後，本面板即可領取手續費並調整找到的區間。",
     "loadingTitle": "正在讀取倉位",
-    "loadingBody": "正在向每條已連接鏈的倉位管理合約詢問這個錢包持有什麼。",
+    "loadingBody": "正在向每條已連線的鏈查詢本錢包持有什麼。",
     "emptyTitle": "沒有流動性倉位",
-    "emptyBody": "{{wallet}} 在已連接的鏈上沒有 Uniswap v3 或 PancakeSwap v3 倉位。在其中一條鏈上提供流動性後即可在這裡管理。",
+    "emptyBody": "{{wallet}} 在已連線的鏈上沒有集中流動性倉位：EVM 上沒有 Uniswap v3 或 PancakeSwap v3 區間，Solana 上沒有 Orca 或 Raydium 區間。在其中任一條鏈上提供流動性，就能在這裡管理。",
     "footnote": "領取與移除各是一筆交易，移除會把手續費一起帶走。移動區間不是編輯：它會銷毀原倉位並鑄造新的，因此這裡不提供。"
   },
   "marginHealth": {
@@ -1016,17 +1031,19 @@
     "resumeOrders": "恢復"
   },
   "routeBridge": {
+    "confirmDestination": "將到帳 {{chain}}，進入你的錢包 {{wallet}}。",
+    "needsDestinationWallet": "連接一個 {{chain}} 錢包來接收這筆轉帳。上面的報價是真實的，只是還沒有收款地址。",
     "title": "跨鏈",
     "subtitle": "把一種資產從 {{chain}} 轉出",
     "provider": "LI.FI",
-    "notEvmTitle": "此鏈尚未支援跨鏈",
-    "notEvmBody": "轉帳在 Ethereum、Base、Arbitrum、BNB Chain 與 Polygon 之間進行。{{chain}} 的交易簽章方式不同，跨鏈連接器還沒有對應的簽章器。",
     "noConnectorTitle": "未安裝跨鏈連接器",
     "noConnectorBody": "在外掛商店安裝 LI.FI Bridge 外掛，即可報價並送出跨鏈轉帳。",
     "amountLabel": "跨鏈數量",
     "amountPlaceholder": "{{asset}} 數量",
     "destination": "目標鏈",
     "quoting": "正在為路線報價",
+    "unsupportedChainBody": "轉帳在 Ethereum、Base、Arbitrum、BNB Chain、Polygon 與 Solana 之間進行，{{chain}} 不在其中。",
+    "unsupportedChainTitle": "此鏈不支援跨鏈",
     "youReceive": "入帳鏈",
     "minReceived": "保底入帳",
     "bridgeFee": "跨鏈費",
@@ -1046,7 +1063,7 @@
     "sentBody": "已送出轉帳，追蹤中：",
     "sendFailed": "轉帳未能送出。",
     "refusal": {
-      "non-evm-chain": "尚未支援與 {{chain}} 之間的跨鏈。轉帳僅在 EVM 鏈之間進行。",
+      "non-evm-chain": "{{chain}} 簽署的交易類型，這座跨鏈橋還不支援。",
       "same-chain": "這就是你目前所在的鏈。要兌換請用旁邊的面板。",
       "unknown-market": "{{chain}} 不在此跨鏈橋涵蓋的鏈之內。",
       "unknown-token": "{{asset}} 在 {{chain}} 上找不到對應合約，沒有可跨鏈的資產。",
@@ -2426,6 +2443,8 @@
       }
     },
     "toolbar": {
+      "chartTypesAll": "全部圖表類型",
+      "chartTypesForProbabilities": "機率圖表類型",
       "timeframe": "時間週期",
       "chartType": "圖表類型",
       "crosshairMode": "十字游標模式",
@@ -3300,7 +3319,7 @@
     "openInterest": "每個合約的未平倉量及 24 小時變化，讓資金擁擠先於價格顯現",
     "fundingExtremes": "目前資金費率最高和最低的合約，以及各自所在的交易所",
     "fundingBelt": "距離下次資金費結算的倒數、目前與預測費率，以及你的部位規模要支付或賺取的金額",
-    "liquidationMap": "在價格軸上呈現交易所實際強平的量，並疊加你自己的強平價格與槓桿刻度",
+    "liquidationMap": "把交易所真正強平的金額畫成時間×價格熱力圖，襯在合約K線之後，並把你自己的強平價格疊在上面",
     "marginHealth": "保證金率、維持保證金對權益、距離強制平倉的空間，以及一次逆向波動會對這三者造成什麼",
     "riskControls": "每日虧損上限、交易筆數、部位規模和緊急停止開關，就在交易發生的地方直接編輯",
     "categories": "所有事件分類均附帶即時合約數量，一鍵即可縮小看板範圍",
@@ -3323,10 +3342,10 @@
     "manageLiquidity": "無需離開圖表即可調整區間、增減流動性並領取手續費",
     "chainLadder": "同一代幣在每條鏈上的報價，已計入 Gas 費，比拼的是總成本而不是表面報價",
     "routeBridge": "來源鏈、目標鏈、使用的跨鏈橋及其手續費與所需時間，一切就緒即可執行",
-    "inFlight": "仍在確認中的轉帳，附帶各自等待的區塊確認數",
+    "inFlight": "仍在確認中的轉帳，附帶各自目前的階段",
     "session": "依據券商自身日曆顯示目前交易日所處的時段，包含假期與半日市",
-    "earningsCalendar": "誰在什麼時候公布財報、要超越的預期是多少，再加上即將掛牌的公司",
-    "economicCalendar": "總體經濟數據按發布時間排列，附帶重要性、前值與市場預期",
+    "earningsCalendar": "誰在何時發財報、盤前還是盤後，要超越的預期是多少，以及即將掛牌的標的",
+    "economicCalendar": "依時間排列的總經數據，含影響程度、前值與市場隱含預期",
     "sessionClock": "用一行顯示交易日狀態的時鐘，盤後下單不會再讓你措手不及",
     "level1": "買賣報價及其掛單量、價差、當日區間，以及交易所宣布停牌時的狀態列",
     "company": "估值、成長率、利潤率、下一個催化劑，以及分析師的看法，全部集中在一個面板",
@@ -3722,13 +3741,17 @@
     "apiKeyRequiredHint": "需要 API 金鑰",
     "setupRequiredHint": "需要設定",
     "manifests": {
+      "coinglass-liquidations": {
+        "description": "用你自己的 Coinglass 金鑰取得真實爆倉成交，涵蓋 Pairlens 自己不採集的永續合約交易所。歷史視窗是七天，而不是三天。僅限桌面版，因為 Coinglass 不回傳 CORS 標頭；它讀取的介面需要 Coinglass Standard 以上方案。",
+        "title": "Coinglass 爆倉數據"
+      },
       "helius-rpc-provider": {
         "title": "Helius Solana RPC",
         "description": "Solana 上每一次讀取與每一次發送都會經過的節點：餘額、流動性部位、兌換提交。填入你自己的 Helius 金鑰可取得穩定的連線端點；沒有金鑰時會退回公用 RPC，而它會在毫無預警的情況下丟棄請求。"
       },
       "lifi-bridge-connector": {
         "title": "LI.FI Bridge",
-        "description": "在 Ethereum、Base、Arbitrum、BNB Chain 與 Polygon 之間移動資產：依金額挑選最合適的跨鏈橋，列出手續費與入帳時間，並一路追蹤到款項入帳"
+        "description": "在 Ethereum、Base、Arbitrum、BNB Chain、Polygon 與 Solana 之間移轉資產：依數量挑選最佳跨鏈橋，列出費用與到帳時間，並追蹤到帳為止"
       },
       "pairlens-core": {
         "title": "Pairlens Core",
@@ -4686,7 +4709,7 @@
       "dex-cross-chain": {
         "name": "DEX 跨鏈",
         "tagline": "同一枚代幣，每條鏈都有，Gas 費全部算進去。",
-        "description": "用於跨鏈轉移的看板：跨鏈階梯以計入 Gas 費的總成本，在每條鏈上為代幣報價，跨鏈路由註明手續費與所需時間，旁邊並列著仍在確認中的轉帳及其區塊確認數。",
+        "description": "用於跨鏈轉移的看板：跨鏈階梯以計入 Gas 費的總成本，在每條鏈上為代幣報價，跨鏈路由註明手續費與所需時間，旁邊並列著仍在確認中的轉帳及其目前階段。",
         "menuLabel": "跨鏈"
       },
       "equities-company": {
@@ -6111,6 +6134,15 @@
     }
   },
   "mobile": {
+    "predictions": {
+      "rankOutcomes_one": "查看結果排名",
+      "rankOutcomes_other": "查看全部 {{count}} 個結果排名",
+      "resolvesShort": "{{date}} 結算",
+      "runnerCount_one": "{{count}} 個結果",
+      "runnerCount_other": "{{count}} 個結果",
+      "tailBelow_one": "再顯示 1 個，低於 {{price}}",
+      "tailBelow_other": "再顯示 {{count}} 個，全部低於 {{price}}"
+    },
     "shell": {
       "tabs": {
         "label": "導覽",

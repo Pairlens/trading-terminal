@@ -3,13 +3,16 @@
 /**
  * What the wallet's ranges have earned and not yet taken out.
  *
- * The figure comes from the chain itself, and what "claimable" means depends on
- * what the chain can be asked. On EVM chains it is exact: a static `collect`
- * against the position manager, sent from the owner's address, returning what a
- * real collect would pay this block. Solana's CLMMs offer no such simulation
- * and settle fees into the position when it is next touched, so those rows
- * carry `feesAsOf: 'last-touch'` and are labelled as the floor they are. Both
- * legs, per position, plus the totals.
+ * The figure comes from the chain itself, and both families now report what a
+ * claim would actually pay. On EVM chains that is a static `collect` against the
+ * position manager, sent from the owner's address. On Solana neither program
+ * offers such a simulation, so the connector replays the pool's fee growth
+ * across the position's two boundary ticks instead and arrives at the same
+ * thing. Both legs, per position, plus the totals.
+ *
+ * A row can still fall back. When a boundary tick array cannot be read, THAT
+ * position keeps `feesAsOf: 'last-touch'` and its settled figure, and is
+ * labelled as the floor it is while every other row stays live.
  *
  * What is NOT here, and why the footnote says so. Fees ALREADY collected leave
  * no trace in state, so there is no fees-to-date figure and therefore no fee
@@ -236,8 +239,9 @@ function FeeRow({
                 ? ''
                 : `${formatAmount(view.quoteFees)} ${view.quoteSymbol}`}
             </span>
-            {/* A floor, not a live claim: Solana's CLMMs only settle fees into
-                the position when it is next touched. */}
+            {/* A floor, not a live claim. Rare now that the Solana connector
+                replays fee growth: it means this position's boundary ticks
+                could not be read, so only the settled amount is known. */}
             {entry.feesAsOf === 'last-touch' ? (
               <span className="block text-[9.5px] font-normal text-muted-foreground">
                 {t('feeAccrual.lastTouch')}
