@@ -23,7 +23,7 @@ important respect: how close to an order they get, and who confirms it.
 One in-app agent, docked in the terminal chrome rather than in a pane and
 mounted above the routed content, so it is the same conversation on a chart, on
 the bots page and in the script workbench.
-The agentic loop runs client-side over 95 tools: market data, research, chart
+The agentic loop runs client-side over 105 tools: market data, research, chart
 control, portfolio reads, watchlists and alerts, Python scripts and backtests,
 bots, workflows, navigation, and two trading tools. One turn runs up to 28
 tool-calling steps. The App Server, when you use one, is nothing but an
@@ -145,7 +145,7 @@ which one is driving. See [risk guardrails](/docs/risk-guardrails).
 
 ## Where to next
 
-- [Assistant tool reference](/docs/copilot-tools) for all 95 tools
+- [Assistant tool reference](/docs/copilot-tools) for all 105 tools
 - [CLI reference](/docs/cli-reference) for every flag
 - [The MCP tool surface](/docs/chart-mcp) for chart control
 - [Plugin SDK](/docs/plugin-sdk) to add a surface of your own

@@ -310,7 +310,11 @@ export function getConnectorAdapterInfo(
   const assetClass = (
     typeof rawAssetClass === 'string' ? rawAssetClass : 'crypto-spot'
   ) as AssetClass
-  const walletChain = meta?.['walletChain'] as WalletChain | undefined
+  // First declared family only: this shape feeds every UI surface that reads
+  // a venue's wallet chain as a single string. A dual-family manifest (the
+  // bridge) never reaches here today because it declares no venue capability,
+  // but an array must not be castable into a string field if one ever does.
+  const walletChain = manifestWalletChains(meta)[0] as WalletChain | undefined
   const dexLimitOrders = meta?.['dexLimitOrders'] === true
   const triggerOrders = meta?.['triggerOrders'] === true
   // Prediction venues: Kalshi refuses a priceless order outright, so the
@@ -369,6 +373,26 @@ export function getConnectorAdapterInfo(
     requiresDesktop,
     credentialedMarketData,
   }
+}
+
+/**
+ * The wallet families a manifest asks to be provisioned with.
+ *
+ * Almost every connector signs on one chain family and declares a bare string.
+ * A connector that spans two declares an array, and the bridge is the reason a
+ * connector ever would: a transfer out of Solana into Base needs the Solana key
+ * to sign the send AND the EVM address to receive it, and no single-family
+ * manifest can ask for both. Normalising here keeps the provisioning loop one
+ * comparison, and a manifest declaring neither shape gets no wallet at all
+ * rather than a coerced one.
+ */
+export function manifestWalletChains(
+  metadata: Record<string, unknown> | undefined,
+): Array<string> {
+  const declared = metadata?.['walletChain']
+  if (typeof declared === 'string') return [declared]
+  if (!Array.isArray(declared)) return []
+  return declared.filter((chain): chain is string => typeof chain === 'string')
 }
 
 /**
@@ -983,10 +1007,9 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       if (endpoint.url === solanaRpcRef.current) return
       solanaRpcRef.current = endpoint.url
       for (const plugin of pluginManager.getActivePlugins()) {
-        const meta = plugin.manifest.metadata as
-          | Record<string, string>
-          | undefined
-        if (meta?.walletChain !== 'solana' || !plugin.initialize) continue
+        const chains = manifestWalletChains(plugin.manifest.metadata)
+        if (!chains.includes('solana')) continue
+        if (!plugin.initialize) continue
         // Endpoint only. No wallet id, no key accessor — a connector's existing
         // slots keep the accessor they were provisioned with.
         plugin.initialize({ rpcUrl: endpoint.url }).catch((err) => {
@@ -1022,10 +1045,11 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         const provisionKey = `${wallet.id}:${plugin.manifest.id}`
         if (walletProvisionedRef.current.has(provisionKey)) continue
 
-        const meta = plugin.manifest.metadata as
-          | Record<string, string>
-          | undefined
-        if (meta?.walletChain !== wallet.chain) continue
+        // A connector may declare one wallet family or several: the bridge asks
+        // for both the EVM and the Solana key, because a transfer that crosses
+        // families needs one to sign and the other to receive.
+        const chains = manifestWalletChains(plugin.manifest.metadata)
+        if (!chains.includes(wallet.chain)) continue
         if (!plugin.initialize) continue
 
         walletProvisionedRef.current.add(provisionKey)

@@ -37,6 +37,7 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 
 import { cn } from '@pairlens/ui'
 import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
+import { watchEntriesFrom } from '../lib/watch-entries'
 import { useVenueTradePermission } from '../lib/venue-permission'
 import { VENUE_KIND_KEY, venueKindOf } from '../lib/venue-kind'
 import { MobileRow } from '../primitives/mobile-row'
@@ -44,15 +45,21 @@ import { useSheetScrollRef } from '../primitives/mobile-sheet'
 import { PRESS } from '../primitives/press'
 import { TrendQuoteCell } from './trend-quote-cell'
 import type { Instrument } from '@pairlens/shared/instrument-types'
+import type { InstrumentRef } from '@pairlens/shared/market-ref'
 import { haptic } from '@/lib/haptics'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
-import { entryToInstrumentRef } from '@/lib/market-ref/entry'
 import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useMarketData } from '@/lib/market-data-provider'
-import { PairAvatar, PairSymbol } from '@/components/pair-picker/pair-avatar'
+import {
+  PairAvatar,
+  PairSymbol,
+  PredictionAvatar,
+} from '@/components/pair-picker/pair-avatar'
+import { predictionQuestionOf } from '@/components/pair-picker/pair-picker-data'
+import { usePredictionOutcome } from '@/stores/prediction-directory-store'
 
 /** Lists at or below this length render as a plain map. */
 const VIRTUALIZE_ABOVE = 30
@@ -76,10 +83,17 @@ export default memo(function MobileWatchlistPanel() {
   const lists = state.lists
   const activeList = lists.find((l) => l.id === state.activeListId) ?? lists[0]
 
+  // A stored entry is a QUALIFIED ref, not a bare symbol. See
+  // `lib/watch-entries.ts` for what that broke and why the split lives there.
+  const entries = useMemo(
+    () => watchEntriesFrom(activeList?.symbols ?? []),
+    [activeList?.symbols],
+  )
+
   // Sorted for the query key so reordering on the desktop does not refetch.
   const sortedSymbols = useMemo(
-    () => [...(activeList?.symbols ?? [])].sort(),
-    [activeList?.symbols],
+    () => entries.map((entry) => entry.symbol).sort(),
+    [entries],
   )
   const { items: instruments } = useInstrumentsBySymbols(sortedSymbols)
   const quotes = useBulkTickerQuotes()
@@ -87,10 +101,13 @@ export default memo(function MobileWatchlistPanel() {
 
   const rows = useMemo(() => {
     const bySymbol = new Map(instruments.map((i) => [i.symbol, i]))
-    return (activeList?.symbols ?? []).map(
-      (symbol) => bySymbol.get(symbol) ?? fallbackInstrument(symbol),
-    )
-  }, [activeList?.symbols, instruments])
+    return entries.map((entry) => ({
+      ...entry,
+      instrument:
+        bySymbol.get(entry.symbol) ??
+        fallbackInstrument(entry.symbol, entry.ref),
+    }))
+  }, [entries, instruments])
 
   // Windowing rides the sheet's scroll container — the panel has none of its
   // own, and giving it one would nest a second scroller inside the sheet.
@@ -212,15 +229,19 @@ export default memo(function MobileWatchlistPanel() {
                   <>
                     {padTop > 0 ? <div style={{ height: padTop }} /> : null}
                     {items.map((item) => {
-                      const instrument = rows[item.index]
-                      if (!instrument) return null
+                      const row = rows[item.index]
+                      if (!row) return null
                       return (
                         <WatchlistRow
-                          focused={instrument.symbol === focusedPair}
-                          instrument={instrument}
-                          key={instrument.symbol}
-                          market={resolveMarket(instrument.assetClass)}
-                          quote={quotes.get(instrument.symbol) ?? null}
+                          focused={row.symbol === focusedPair}
+                          instrument={row.instrument}
+                          key={row.key}
+                          market={
+                            row.ref?.market ??
+                            resolveMarket(row.instrument.assetClass)
+                          }
+                          quote={quotes.get(row.symbol) ?? null}
+                          refClass={row.ref?.cls}
                         />
                       )
                     })}
@@ -230,13 +251,16 @@ export default memo(function MobileWatchlistPanel() {
                   </>
                 )
               })()
-            : rows.map((instrument) => (
+            : rows.map((row) => (
                 <WatchlistRow
-                  focused={instrument.symbol === focusedPair}
-                  instrument={instrument}
-                  key={instrument.symbol}
-                  market={resolveMarket(instrument.assetClass)}
-                  quote={quotes.get(instrument.symbol) ?? null}
+                  focused={row.symbol === focusedPair}
+                  instrument={row.instrument}
+                  key={row.key}
+                  market={
+                    row.ref?.market ?? resolveMarket(row.instrument.assetClass)
+                  }
+                  quote={quotes.get(row.symbol) ?? null}
+                  refClass={row.ref?.cls}
                 />
               ))}
         </div>
@@ -248,23 +272,27 @@ export default memo(function MobileWatchlistPanel() {
 /**
  * A symbol the discovery provider has no metadata for still gets a row: the
  * user put it on the list, and dropping it would look like data loss.
+ *
+ * The parsed ref's class is carried through when there is one. Without it the
+ * market resolver reads "no constraint" and keeps the focused venue, which
+ * charted a stock on a crypto exchange and a prediction key on OKX.
  */
-function fallbackInstrument(symbol: string): Instrument {
+function fallbackInstrument(
+  symbol: string,
+  ref: InstrumentRef | null,
+): Instrument {
   const [base = symbol, quote = ''] = symbol.split('-')
   return {
     id: symbol,
     // 'cex-pair' as the neutral default for an unknown watchlist symbol: the
     // pair-shaped arm carries no extra identity fields to fabricate.
     kind: 'cex-pair',
-    market: '',
+    market: ref?.market ?? '',
     symbol,
     name: symbol,
     base,
     quote,
-    // Empty, not guessed: the market resolver reads a missing asset class as
-    // "no constraint" and keeps the focused venue, which is the right answer
-    // for a symbol we know nothing about.
-    assetClass: '',
+    assetClass: ref?.cls ?? '',
     categories: [],
     rank: Number.MAX_SAFE_INTEGER,
     featured: false,
@@ -276,17 +304,27 @@ const WatchlistRow = memo(function WatchlistRow({
   market,
   quote,
   focused,
+  refClass,
 }: {
   instrument: Instrument
+  /** Already venue-resolved: the ref's own venue, else the class resolver's. */
   market: string
   quote: { price: number; change24h: number } | null
   focused: boolean
+  /** The stored ref's class, when the entry carried one. */
+  refClass?: InstrumentRef['cls']
 }) {
   const { t } = useTranslation()
   const { focusedVenue } = useMobileFocus()
   const { setFocusedPair, setFocusedVenue, dismissPanel } = useMobileActions()
   const { markets } = useAvailableMarkets()
   const { availableMarkets } = useMarketData()
+  // The instruments index carries no prediction rows, so a watched outcome
+  // arrives here as `fallbackInstrument` — a bare key with no name. The
+  // directory pin is what the row was BUILT from, and it is the only thing
+  // that knows what the user was actually looking at when they starred it.
+  const pinned = usePredictionOutcome(instrument.symbol)
+  const isPrediction = refClass === 'prediction' || pinned !== null
   const permission = useVenueTradePermission(market)
 
   const venueLabel =
@@ -298,7 +336,13 @@ const WatchlistRow = memo(function WatchlistRow({
     // An equity cannot stream from a crypto exchange, so a row whose venue was
     // resolved away from the focused one takes the venue with it.
     if (market !== focusedVenue) setFocusedVenue(market)
-    setFocusedPair(instrument.symbol, entryToInstrumentRef(instrument).cls)
+    // The stored ref's class first: it is what the row was written as, and it
+    // is right for the arms whose symbol shape cannot be read back (a bare
+    // prediction ticker looks like a three-segment futures key).
+    setFocusedPair(
+      instrument.symbol,
+      refClass ?? (pinned ? 'prediction' : undefined),
+    )
     // Then get out of the way: picking is the errand, and the chart the row
     // just changed is the half of the screen the sheet is sitting on.
     dismissPanel()
@@ -309,6 +353,8 @@ const WatchlistRow = memo(function WatchlistRow({
     setFocusedPair,
     dismissPanel,
     instrument,
+    pinned,
+    refClass,
   ])
 
   return (
@@ -321,27 +367,44 @@ const WatchlistRow = memo(function WatchlistRow({
         ) : undefined
       }
       leading={
-        <PairAvatar
-          assetClass={instrument.assetClass}
-          base={instrument.base}
-          className="size-8"
-          size="md"
-        />
+        // Three letters of an event slug lettered every outcome of one event
+        // the same way ("DEM", "WIL"). The class mark says what it is; the
+        // question under the title says which one.
+        isPrediction ? (
+          <PredictionAvatar className="size-8" size="md" />
+        ) : (
+          <PairAvatar
+            assetClass={instrument.assetClass}
+            base={instrument.base}
+            className="size-8"
+            size="md"
+          />
+        )
       }
       onPress={handlePress}
       selected={focused}
-      subtitle={t('mobile.panels.venueLine', {
-        venue: venueLabel,
-        kind: t(VENUE_KIND_KEY[kind]),
-        permission:
-          permission === 'trade'
-            ? t('mobile.panels.trading')
-            : t('mobile.shell.readOnly'),
-      })}
+      subtitle={
+        // The question, not the venue line. The title above is already
+        // subject + side, so the one line the row has left is better spent on
+        // what is actually being asked than on repeating a venue name the
+        // context bar prints whenever this pair is in focus.
+        pinned
+          ? predictionQuestionOf(pinned)
+          : t('mobile.panels.venueLine', {
+              venue: venueLabel,
+              kind: t(VENUE_KIND_KEY[kind]),
+              permission:
+                permission === 'trade'
+                  ? t('mobile.panels.trading')
+                  : t('mobile.shell.readOnly'),
+            })
+      }
       title={
+        // Mono is the ticker face and a subject is prose — the context bar and
+        // the pair picker make the same swap.
         <PairSymbol
-          assetClass={instrument.assetClass}
-          className="font-mono"
+          assetClass={isPrediction ? 'prediction' : instrument.assetClass}
+          className={isPrediction ? undefined : 'font-mono'}
           symbol={instrument.symbol}
         />
       }

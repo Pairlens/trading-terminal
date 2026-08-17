@@ -388,7 +388,7 @@ export const DEX_WORKSPACES: Array<ContributedWorkspace> = [
     icon: 'Waypoints',
     tagline: 'The same token, every chain, gas included.',
     description:
-      'A board for moving between chains: the chain ladder prices the token everywhere with gas folded into the total, the bridge route states its fee and how long it takes, and transfers still confirming sit beside them with their block counters.',
+      'A board for moving between chains: the chain ladder prices the token everywhere with gas folded into the total, the bridge route states its fee and how long it takes, and transfers still confirming sit beside them with their current stage.',
     facets: {
       traderTypes: ['dex-degen', 'quant'],
       assetClasses: ['dex'],

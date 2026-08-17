@@ -75,26 +75,32 @@ export function useLiquidationClusters(
 
   // The plugin that declares this venue by name. A wildcard declaration is a
   // data source that claims everything, which for a per-venue collector would
-  // be a claim it cannot keep.
+  // be a claim it cannot keep. Lowest priority number wins, as everywhere else
+  // in the plugin system: two plugins can claim one venue now (the App
+  // Server's free collector at 5, a BYOK vendor at 20), and picking by
+  // registration order made the answer depend on ledger insertion order.
   const provider = useMemo(() => {
     if (!market) return null
-    return (
-      pluginManager
-        .getActivePlugins()
-        .find((plugin: PluginInstance) =>
-          plugin.manifest.capabilities.some(
-            (capability) =>
-              capability.id === 'market-data:liquidations' &&
-              capability.markets.includes(market),
-          ),
-        ) ?? null
-    )
+    let best: PluginInstance | null = null
+    let bestPriority = Number.POSITIVE_INFINITY
+    for (const plugin of pluginManager.getActivePlugins()) {
+      for (const capability of plugin.manifest.capabilities) {
+        if (capability.id !== 'market-data:liquidations') continue
+        if (!capability.markets.includes(market)) continue
+        if (capability.priority < bestPriority) {
+          bestPriority = capability.priority
+          best = plugin
+        }
+      }
+    }
+    return best
     // pluginStateVersion is the re-run trigger; pluginManager reads are non-reactive
   }, [pluginManager, pluginStateVersion, market])
 
-  const active = Boolean(
-    enabled && pluginsReady && hasAppServer && provider && pairKey,
-  )
+  // No hasAppServer gate: a BYOK provider (Coinglass) needs no App Server, so
+  // whether a build is standalone says nothing about whether a provider can
+  // answer. The distinction returns below, where no provider exists at all.
+  const active = Boolean(enabled && pluginsReady && provider && pairKey)
 
   const query = useQuery({
     queryKey: ['liquidation-clusters', market, pairKey, hours],
@@ -120,12 +126,17 @@ export function useLiquidationClusters(
   })
 
   return useMemo(() => {
-    if (!hasAppServer) return { ...NO_CLUSTERS, unavailable: 'standalone' }
     // No contract on screen is no claim either way: "this venue is not tracked"
     // would be a statement about a venue nobody named.
     if (!pairKey || !market) return NO_CLUSTERS
     if (pluginsReady && !provider) {
-      return { ...NO_CLUSTERS, unavailable: 'not_tracked' }
+      // 'standalone' is a claim about the cloud collector; 'not_tracked' is a
+      // claim about the venue. A BYOK provider needs no App Server, so which
+      // one is true depends on whether this build has one at all.
+      return {
+        ...NO_CLUSTERS,
+        unavailable: hasAppServer ? 'not_tracked' : 'standalone',
+      }
     }
     if (!active) return { ...NO_CLUSTERS, isLoading: enabled }
 

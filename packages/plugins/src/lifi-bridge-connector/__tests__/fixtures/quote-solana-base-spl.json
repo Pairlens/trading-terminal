@@ -1,0 +1,148 @@
+{
+  "type": "lifi",
+  "id": "7de48e1c-b797-4d58-a15a-8c29f3953617:0",
+  "tool": "layerswap",
+  "toolDetails": {
+    "key": "layerswap",
+    "name": "Layerswap",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/bridges/layerswap.svg"
+  },
+  "action": {
+    "fromToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "chainId": 1151111081099710,
+      "symbol": "USDC",
+      "decimals": 6,
+      "name": "USD Coin",
+      "coinKey": "USDC",
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+      "priceUSD": "0.9988727017",
+      "tags": ["stablecoin"],
+      "verificationStatus": "unverified",
+      "verificationStatusBreakdown": []
+    },
+    "fromAmount": "10000000",
+    "toToken": {
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "chainId": 8453,
+      "symbol": "USDC",
+      "decimals": 6,
+      "name": "USD Coin",
+      "coinKey": "USDC",
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+      "priceUSD": "0.9972743146",
+      "tags": ["stablecoin"],
+      "verificationStatus": "verified",
+      "verificationStatusBreakdown": [
+        {
+          "provider": "hypernative",
+          "result": "verified",
+          "providerResult": "accept"
+        }
+      ]
+    },
+    "fromChainId": 1151111081099710,
+    "toChainId": 8453,
+    "slippage": 0.001,
+    "fromAddress": "1nc1nerator11111111111111111111111111111111",
+    "toAddress": "0x000000000000000000000000000000000000dEaD",
+    "destinationGasConsumption": "",
+    "destinationCallData": "0x00",
+    "jitoBundle": false
+  },
+  "estimate": {
+    "tool": "layerswap",
+    "approvalAddress": "0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE",
+    "toAmountMin": "9906982",
+    "toAmount": "9906982",
+    "fromAmount": "10000000",
+    "feeCosts": [
+      {
+        "name": "LIFI Fixed Fee",
+        "description": "Fixed LIFI fee, independent of any other fee",
+        "token": {
+          "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "chainId": 1151111081099710,
+          "symbol": "USDC",
+          "decimals": 6,
+          "name": "USD Coin",
+          "coinKey": "USDC",
+          "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+          "priceUSD": "0.9988727017",
+          "tags": ["stablecoin"],
+          "verificationStatus": "unverified",
+          "verificationStatusBreakdown": []
+        },
+        "amount": "25000",
+        "amountUSD": "0.0250",
+        "percentage": "0.0025",
+        "included": true,
+        "feeSplit": {
+          "lifiFee": "25000",
+          "integratorFee": "0",
+          "recipients": [
+            {
+              "name": "lifi",
+              "type": "FIXED",
+              "fee": "25000"
+            }
+          ]
+        }
+      },
+      {
+        "name": "LayerSwap fee",
+        "description": "LayerSwap bridge fee",
+        "percentage": "0.0068",
+        "token": {
+          "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "chainId": 1151111081099710,
+          "symbol": "USDC",
+          "decimals": 6,
+          "name": "USD Coin",
+          "coinKey": "USDC",
+          "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+          "priceUSD": "0.9988727017",
+          "tags": ["stablecoin"],
+          "verificationStatus": "unverified",
+          "verificationStatusBreakdown": []
+        },
+        "amount": "68018",
+        "amountUSD": "0.067991",
+        "included": true
+      }
+    ],
+    "gasCosts": [
+      {
+        "token": {
+          "address": "11111111111111111111111111111111",
+          "chainId": 1151111081099710,
+          "symbol": "SOL",
+          "decimals": 9,
+          "name": "SOL",
+          "coinKey": "SOL",
+          "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
+          "priceUSD": "75.90034332170819",
+          "tags": ["major_asset"],
+          "verificationStatus": "unverified",
+          "verificationStatusBreakdown": []
+        },
+        "amount": "63608",
+        "amountUSD": "0.004827869038007215",
+        "estimate": "63608",
+        "limit": "63608",
+        "price": "1",
+        "type": "SEND"
+      }
+    ],
+    "executionDuration": 6,
+    "fromAmountUSD": "9.9887",
+    "toAmountUSD": "9.8800",
+    "skipPermit": false
+  },
+  "integrator": "lifi-api",
+  "executionType": "transaction",
+  "transactionRequest": {
+    "data": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAQAHCwAzkHKNNBFgeb3JEb//ANvUTS7NzPecpuEAOOEAAAAA8iF0pwlnnkwk0j/yflDPwmt04zEq7ysre0ShtUrLHpNy9EWzoZrASNKpKP4HdM97i176fGRXy8y8guzw6sk8eTwc7VyaYPKhA79OgDw58SDAbhXBRc6OxbpdVHG1YS91AwZGb+UhFzL/7K26csOb57yM5bvF9xJrLEObOkAAAAAoPQ3SgjVP7wrjsOIn03zYnKJm+xfd+PfLfM775OvcVQan1RcYx3TJKFZjmGkdXraLXrijm0ttXHNVWyEAAAAAHF5+oHR1d2PCh/MTqiyLebHl7t98nRPagB6sS0+C3OQG3fbh12Whk9nL4UbO63msHLSF7V9bN5E6jPWFfv8Aqcb6evO+2606PWXzaqvJdDGxu+TC0vbg5HymAgNFL11hBUpTUPhdyILWFKVWcniKKW3fHqur0KYGeIhJMvTu9qAfQ6GmNdnTQT6/IHpdcymHHCQ0cP23iYMYkaZThA1jngYEAAUCEOsJAAQACQM3YAEAAAAAAAUCBgcJABjLAaz5rf0ACAQBCQIACgyoYQAAAAAAAAYIBAEJAwAKDNg0mAAAAAAABgoBAA80MjAwMDAwMTM5MjQwMjYA"
+  },
+  "transactionId": "0x18cb01acf9adfd00"
+}

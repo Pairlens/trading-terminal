@@ -50,10 +50,11 @@ import {
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
 import type {
+  ChartType,
   CrosshairMode,
   PriceScaleMode,
 } from '@pairlens/fast-financial-charts/types'
-import type { ChartType } from '@/hooks/use-chart-terminal-state'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
 import { CompareMenu } from '@/components/terminal/compare-symbol-menu'
 import { ChartExportDataDialog } from '@/components/terminal/chart-export-data-dialog'
 import { ShortcutHint } from '@/components/shortcut-hints'
@@ -220,6 +221,16 @@ const CHART_TYPE_OPTIONS: Array<{
   },
 ]
 
+/**
+ * What a probability wants to be drawn as, best first.
+ *
+ * Outcomes trade sparsely, so candles come out as a row of doji ticks with
+ * nothing between them. A step line of close says the same thing honestly: the
+ * price was 34¢ until it was 41¢. All sixteen types stay one scroll away — a
+ * user who wants Renko on an election market gets Renko.
+ */
+const PROBABILITY_CHART_TYPES: ReadonlyArray<ChartType> = ['stepLine', 'line']
+
 const CROSSHAIR_MODE_OPTIONS: Array<{
   value: CrosshairMode
   labelKey: string
@@ -348,6 +359,32 @@ export function ChartToolbar() {
     [supportedTimeframes],
   )
 
+  // The main series id IS the pair key (see the chartSeries memo). Resolved
+  // here rather than threaded through the config context: both signals this
+  // reads (the prediction directory, the venue's declared classes) are user
+  // actions, never ticks.
+  const isPrediction = useIsPredictionPair(chartSeries[0]?.id ?? '', market)
+
+  // Two lists on a prediction, one everywhere else. Nothing is removed in
+  // either case — the split only decides what the user reads first.
+  const { probabilityTypes, otherTypes } = useMemo(() => {
+    if (!isPrediction) {
+      return {
+        probabilityTypes: [] as typeof CHART_TYPE_OPTIONS,
+        otherTypes: CHART_TYPE_OPTIONS,
+      }
+    }
+    const preferred = new Set<ChartType>(PROBABILITY_CHART_TYPES)
+    return {
+      probabilityTypes: PROBABILITY_CHART_TYPES.flatMap((value) =>
+        CHART_TYPE_OPTIONS.filter((option) => option.value === value),
+      ),
+      otherTypes: CHART_TYPE_OPTIONS.filter(
+        (option) => !preferred.has(option.value),
+      ),
+    }
+  }, [isPrediction])
+
   // Re-render on rebind so every shortcut label below stays truthful.
   useKeybindingsVersion()
   const indicatorsShortcut = useKeybindingLabel('chart.indicators')
@@ -417,14 +454,39 @@ export function ChartToolbar() {
           </Tooltip>
           <MenubarContent className="w-48">
             <MenubarGroup>
-              <MenubarLabel>{t('chart.toolbar.chartType')}</MenubarLabel>
+              <MenubarLabel>
+                {isPrediction
+                  ? t('chart.toolbar.chartTypesForProbabilities')
+                  : t('chart.toolbar.chartType')}
+              </MenubarLabel>
             </MenubarGroup>
             <MenubarSeparator />
+            {probabilityTypes.length > 0 ? (
+              <>
+                <MenubarRadioGroup
+                  value={chartType}
+                  onValueChange={(v) => setChartType(v as ChartType)}
+                >
+                  {probabilityTypes.map((option) => (
+                    <MenubarRadioItem key={option.value} value={option.value}>
+                      <option.icon className="size-4" />
+                      {t(option.labelKey)}
+                    </MenubarRadioItem>
+                  ))}
+                </MenubarRadioGroup>
+                <MenubarSeparator />
+                <MenubarGroup>
+                  <MenubarLabel>
+                    {t('chart.toolbar.chartTypesAll')}
+                  </MenubarLabel>
+                </MenubarGroup>
+              </>
+            ) : null}
             <MenubarRadioGroup
               value={chartType}
               onValueChange={(v) => setChartType(v as ChartType)}
             >
-              {CHART_TYPE_OPTIONS.map((option) => (
+              {otherTypes.map((option) => (
                 <MenubarRadioItem key={option.value} value={option.value}>
                   <option.icon className="size-4" />
                   {t(option.labelKey)}

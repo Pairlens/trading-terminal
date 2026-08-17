@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type {
   ChartCommand,
   ChartContextMenuPayload,
+  ChartType,
   CompareMode,
   CrosshairMode,
   DrawingObject,
@@ -18,10 +19,21 @@ import type {
   PriceScaleMode,
   Timeframe,
 } from '@pairlens/fast-financial-charts/types'
+import type { AssetClass } from '@pairlens/market-engine'
 import type { PluginCandle } from '@/hooks/use-candle-stream'
 import { track } from '@/lib/analytics-events'
 import { trackDrawingToolUse } from '@/lib/chart-drawing-tools'
-import { emitWrite } from '@/lib/sync/sync-channel'
+import { emitWrite, onHydrate, onWrite } from '@/lib/sync/sync-channel'
+import {
+  chartBucketMs,
+  classScopedChartKey,
+  defaultChartTypeForAssetClass,
+  defaultCompareModeForAssetClass,
+  fillPredictionBars,
+  primaryAssetClass,
+} from '@/lib/chart-defaults'
+import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { usePredictionOutcome } from '@/stores/prediction-directory-store'
 import {
   buildCustomIndicatorDefinition,
   setCustomIndicatorMarketContext,
@@ -37,25 +49,7 @@ import { useCandleStream } from '@/hooks/use-candle-stream'
 import { useOrderbookStream } from '@/hooks/use-orderbook-stream'
 import { useTickerStream } from '@/hooks/use-ticker-stream'
 import { CandleCache, candleCache } from '@/lib/candle-cache'
-import { usePersistedState } from '@/hooks/use-persisted-state'
-
-export type ChartType =
-  | 'candles'
-  | 'heikinAshi'
-  | 'hollowCandles'
-  | 'line'
-  | 'stepLine'
-  | 'area'
-  | 'hlcArea'
-  | 'bar'
-  | 'highLow'
-  | 'baseline'
-  | 'histogram'
-  | 'column'
-  | 'renko'
-  | 'lineBreak'
-  | 'kagi'
-  | 'pointFigure'
+import { STORAGE_PREFIX, usePersistedState } from '@/hooks/use-persisted-state'
 
 const toChartTimeframe = (timeframe: string): Timeframe =>
   timeframe as Timeframe
@@ -213,6 +207,102 @@ function saveCompareSymbolsForPair(
   }
 }
 
+// ── Asset class ──────────────────────────────────────────────────────
+
+/**
+ * Which class of thing this chart is drawing.
+ *
+ * Same two signals, in the same order, as the formatter path
+ * (`use-prediction-pair.ts`): a pinned outcome IS a prediction, whatever the
+ * terminal currently thinks of the venue, and otherwise the venue's own
+ * declaration answers. Neither reads a streaming context, so this is safe
+ * everywhere including mobile chrome.
+ *
+ * On a cold load the venue list is still empty for a beat, which is why the
+ * preference hook below re-resolves on a class change rather than trusting
+ * the first paint.
+ */
+function useChartAssetClass(pairKey: string, market: string): AssetClass {
+  const pinnedOutcome = usePredictionOutcome(pairKey)
+  const { markets } = useAvailableMarkets()
+
+  return useMemo(() => {
+    if (pinnedOutcome) return 'prediction'
+    const venue = markets.find((m) => m.value === market)
+    return primaryAssetClass(venue?.assetClasses)
+  }, [pinnedOutcome, market, markets])
+}
+
+/**
+ * A persisted preference whose storage key AND default both move when the
+ * asset class does.
+ *
+ * `usePersistedState` cannot do this. Its state survives a key change with no
+ * stored value behind the new key, which is exactly the case here: a cold
+ * `/pair/KXBTCD-…` load resolves as crypto-spot for one paint (the plugin
+ * manager has not published its venues yet), then flips to prediction. Without
+ * the re-resolve below, the chart would sit on the spot default forever and
+ * the whole class default would only work on a second visit.
+ *
+ * Everything else matches `usePersistedState`: same `pairlens:` prefix, same
+ * cross-instance write bus, same cloud-hydrate channel.
+ */
+function useClassScopedPreference<T>(
+  key: string,
+  defaultValue: T,
+): [T, (value: T) => void] {
+  const storageKey = `${STORAGE_PREFIX}${key}`
+
+  const readStored = useCallback((): T | null => {
+    if (typeof window === 'undefined') return null
+    try {
+      const stored = localStorage.getItem(storageKey)
+      if (stored !== null) return JSON.parse(stored) as T
+    } catch {
+      // Unreadable or unparseable — treat as missing.
+    }
+    return null
+  }, [storageKey])
+
+  const [state, setStateRaw] = useState<T>(() => readStored() ?? defaultValue)
+
+  // Key or class changed: adopt what is stored under the NEW key, or fall back
+  // to the new class default. No write — a class the user never configured
+  // should not gain a stored row just from being looked at.
+  useEffect(() => {
+    setStateRaw(readStored() ?? defaultValue)
+  }, [readStored, defaultValue])
+
+  useEffect(() => {
+    return onHydrate((hydratedKey, value) => {
+      if (hydratedKey === key) setStateRaw(value as T)
+    })
+  }, [key])
+
+  useEffect(() => {
+    return onWrite((writtenKey, value) => {
+      if (writtenKey === key) setStateRaw(value as T)
+    })
+  }, [key])
+
+  const setState = useCallback(
+    (value: T) => {
+      setStateRaw(value)
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(value))
+      } catch {
+        // Quota or private browsing — the in-memory value still applies.
+      }
+      // Deferred for the same reason usePersistedState defers it: emitWrite
+      // synchronously setStates every sibling instance sharing the key.
+      queueMicrotask(() => emitWrite(key, value))
+    },
+    [storageKey, key],
+  )
+
+  return [state, setState]
+}
+
 export function useChartTerminalState(
   pairKey: string,
   options?: {
@@ -296,16 +386,27 @@ export function useChartTerminalState(
     },
     [setPersistedTimeframe],
   )
-  const [chartType, setPersistedChartType] = usePersistedState<ChartType>(
-    scopedKey('terminal.chartType'),
-    'candles',
-  )
+  // What this chart is drawing, which decides how it opens.
+  const assetClass = useChartAssetClass(pairKey, market)
+  const isPredictionInstrument = assetClass === 'prediction'
+
+  // Chart type persists PER CLASS: `terminal.chartType.prediction`,
+  // `terminal.chartType.crypto-spot`, and so on, with the pane scope appended
+  // as before. One user, two habits — candles on BTC, a probability line on an
+  // election outcome — and neither setting overwrites the other. The old
+  // unscoped `terminal.chartType` row is simply never read again; nothing
+  // migrates it, by house rule.
+  const [chartType, setPersistedChartType] =
+    useClassScopedPreference<ChartType>(
+      classScopedChartKey('terminal.chartType', assetClass, scope),
+      defaultChartTypeForAssetClass(assetClass),
+    )
   const setChartType = useCallback(
     (type: ChartType) => {
-      track('chart_type_changed', { chart_type: type })
+      track('chart_type_changed', { chart_type: type, asset_class: assetClass })
       setPersistedChartType(type)
     },
-    [setPersistedChartType],
+    [assetClass, setPersistedChartType],
   )
   const [crosshairMode, setCrosshairMode] = usePersistedState<CrosshairMode>(
     'terminal.crosshairMode',
@@ -348,8 +449,17 @@ export function useChartTerminalState(
   const [compareSymbols, setCompareSymbols] = useState<Array<CompareSymbol>>(
     () => loadCompareSymbolsForPair(chartStorageKey),
   )
+  // Class-scoped for the same reason, and it fixes a real misreading:
+  // `indexed` rebases every series to 100, and on an outcome that number then
+  // went through the cents formatter and drew `10000¢` up the axis. Outcomes
+  // of one event share a single 0..1 domain, so predictions open on the shared
+  // price axis. The control itself keeps working on every class — this is the
+  // value it starts at, not a lock.
   const [compareScaleMode, setCompareScaleMode] =
-    usePersistedState<CompareMode>(scopedKey('terminal.compareMode'), 'indexed')
+    useClassScopedPreference<CompareMode>(
+      classScopedChartKey('terminal.compareMode', assetClass, scope),
+      defaultCompareModeForAssetClass(assetClass),
+    )
   // Seed candles per compare seriesId; live updates flow through applyTicks.
   const [compareSeeds, setCompareSeeds] = useState<
     Record<string, Array<PluginCandle>>
@@ -1144,20 +1254,35 @@ export function useChartTerminalState(
       replayBaseIndex !== null
         ? seedCandles.slice(0, Math.max(replayBaseIndex, replayPosRef.current))
         : seedCandles
+    const rawBars = mainCandles.map((c) => ({
+      ts: c.ts,
+      open: c.open,
+      high: c.high,
+      low: c.low,
+      close: c.close,
+      volume: c.volume,
+    }))
+    // Presentation-layer forward fill, predictions only. The connector's own
+    // aggregator refuses to synthesise bars and it is right to (its
+    // `rollIfExpired` note: "a flat bar invented from the last close is a lie
+    // the chart would draw") — that refusal protects the candle buffer, the
+    // signal scan, the CSV export and every consumer downstream of it. None of
+    // those see this array. What the chart draws is a probability, and an
+    // outcome that last traded at 34¢ is still worth 34¢ in a way a spot price
+    // never is, so carrying it across untraded buckets is the truthful
+    // rendering rather than a fabrication. Filled buckets carry volume 0, so
+    // the volume pane leaves them empty and the quiet stretch stays legible.
+    // See `lib/chart-defaults.ts` for the bounds, including the 5000-bucket cap.
+    const bars = isPredictionInstrument
+      ? fillPredictionBars(rawBars, chartBucketMs(timeframe))
+      : rawBars
     const main = {
       id: pairKey,
       label: pairKey,
       color: '#4aa8ff',
       pricePrecision: 8,
       priceLines: alertPriceLines,
-      bars: mainCandles.map((c) => ({
-        ts: c.ts,
-        open: c.open,
-        high: c.high,
-        low: c.low,
-        close: c.close,
-        volume: c.volume,
-      })),
+      bars,
     }
     const compares = compareSymbols.flatMap((entry) => {
       const seriesId = compareSeriesId(entry)
@@ -1188,6 +1313,8 @@ export function useChartTerminalState(
     compareSeeds,
     alertPriceLines,
     replayBaseIndex,
+    isPredictionInstrument,
+    timeframe,
   ])
 
   const chartTimeframe = toChartTimeframe(timeframe)

@@ -15,6 +15,7 @@
  * program changes its account layout, and update the expectations from the new
  * bytes rather than adjusting an offset until a test passes.
  */
+import { gunzipSync } from 'node:zlib'
 
 /** Orca Whirlpools `Position`, 216 bytes. A live SOL/USDC range with fees owed. */
 export const ORCA_POSITION_FIXTURE = {
@@ -118,4 +119,273 @@ export const USDC_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
 /** Base64 to bytes, the shape the decoders take. */
 export function fixtureBytes(fixture: { base64: string }): Uint8Array {
   return new Uint8Array(Buffer.from(fixture.base64, 'base64'))
+}
+
+// ── Fee replay: one slot, real bytes, and the program's own answer ──────────
+//
+// Captured at mainnet slot 439916163. Position, pool and tick array are the
+// EXACT SAME SLOT, which is what makes them a usable vector: fee growth moves
+// every block, so three accounts fetched a minute apart do not describe one
+// state of the world and cannot be replayed against each other.
+//
+// `expectedFeeA/B` is not this repo's arithmetic. It is what the Orca program
+// wrote into the position when `update_fees_and_rewards` was simulated against
+// these very bytes, read back out of the simulation. So the test compares the
+// replay against the protocol rather than against itself, and the settled
+// figures below show why it matters: 0.0136 SOL owed, 1.1078 SOL claimable.
+export const ORCA_FEE_REPLAY_FIXTURE = {
+  slot: 439916163,
+  position: {
+    address: 'EgbNG2x3Lu377grW5pLd9856xJZxsRC9yD9hmJwUoPv',
+    base64:
+      'qryP5HpA99CyNpDX0HWNHV2LiVDOx6m018ea6P+1xroNvWKhmDeTW36DjgQ6cP/pyVBe1DOS' +
+      'NH67xEOdtUFYrqMzakSBZwLtLtR/QIE3AAAAAAAAAAAAABSb//90m///W5qBLA13mAQAAAAA' +
+      'AAAAAKApzwAAAAAAJB5/3tvCaAAAAAAAAAAAALt1AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+  },
+  pool: {
+    address: 'Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE',
+    base64:
+      'P5XRDOGAYwkT5EH4ORPKaLBjT7Al/eqohzfoQRDRJV41ezN33e4czf8EAAQAkAEUBWV3hAHt' +
+      'EAUAAAAAAAAAAABRUsBsPXpwRgAAAAAAAAAALpv//2R/TxQAAAAABfM5AAAAAAAGm4hX/quB' +
+      'hPtof2NGGMA12sQ53BrrO1WYoPAAAAAAAchN8kM4mDvkqFswl7r0C8lXEQjSiawAs2jfF11E' +
+      'dc96oL2jkEyw37QAAAAAAAAAAMb6evO+2606PWXzaqvJdDGxu+TC0vbg5HymAgNFL11hFl+V' +
+      'csWpaqUC3VEQVKJqbSWO98HW1sGu4SkZFNxRAjJgJX/J0s00FwAAAAAAAAAAtWqDagAAAAAM' +
+      'ANCv64YU2n8Zq6AtQPGMaSWF9lAg387T1eX5qcDE4Q8bkJQIzrVDfhKReyB9qZTQ6FenQB4S' +
+      'LAPfa/fG1/wqui6/LwKaI7GKR1R798LZ7CubYjLuw+NoR9dh+omDPGYAAAAAAAAAAAAAAAAA' +
+      'AAAAIxHh3tFPDkQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAA=',
+  },
+  /** Both bounds sit in one array on this pool (tick spacing 4, 352 per array). */
+  tickArray: {
+    address: 'ChxrcGgr1UNLhgE6bge26EQRwDzbv9Q6co5ea12no6JP',
+    gzipBase64:
+      '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' +
+      'JwAA',
+  },
+  /** Program-computed. The number the replay has to reproduce exactly. */
+  expectedFeeA: 1107784779n,
+  expectedFeeB: 77577813n,
+  /** What the old last-touch path reported for the same position. */
+  settledFeeA: 13576608n,
+  settledFeeB: 30139n,
+} as const
+
+// Orca's SECOND tick-array layout, live on mainnet at the same PDA seeds as the
+// fixed one. 932 bytes = 148 + 112 x 7 initialized ticks. Decoding it at the
+// fixed layout's offsets does not throw, it just returns another tick's fee
+// growth, which is the entire reason the decoder branches on the discriminator.
+export const ORCA_DYNAMIC_TICK_ARRAY_FIXTURE = {
+  address: '29HtRrzNre1dhJWVBxzX5EjTbWJNwzUTWywd5KTKfNUv',
+  pool: 'C1MgLojNLWBKADvu9BHdtgzz1oZX4dZ5zGdGcgvvW8Wz',
+  tickSpacing: 8,
+  startTickIndex: 1408,
+  /** Slot numbers within the array that carry a body, from its own bitmap. */
+  initializedSlots: [41, 49, 50, 51, 65, 73, 85],
+  base64:
+    'Edj2juHH2jiABQAAo4fv7aH7gxqBrkFPntZrW+FSYyAnLuDZ6WMK75Nxpf8AAAAAAAIOAAIC' +
+    'IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA2n+KAAA' +
+    'AAAAAAAAAAAAAANp/igAAAAAAAAAAAAAAACXO31D68WQEwAAAAAAAAAAI7SnlC8qbkYAAAAA' +
+    'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+    'AAAAAAABY2f1DAAAAAAAAAAAAAAAAGNn9QwAAAAAAAAAAAAAAAB1TgOK3yWWEgAAAAAAAAAA' +
+    '8SS+s75uqkMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+    'AAAAAAAAAAAAAAGuqBbcAwAAAAAAAAAAAAAArqgW3AMAAAAAAAAAAAAAAISof4aZCKsOAAAA' +
+    'AAAAAADr6TrCXRcRPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+    'AAAAAAAAAAAAAAAAAAAAAQ15kKANAAAAAAAAAAAAAAANeZCgDQAAAAAAAAAAAAAA3PRwrpBM' +
+    'cg0AAAAAAAAAAIJrDY1hqLI5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+    'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVqsT0gAAAAAAAAAAAAAAABarE9I' +
+    'AAAAAAAAAAAAAAAAjecS9O0fLg4AAAAAAAAAALDDLFHfgTo7AAAAAAAAAAAAAAAAAAAAAAAA' +
+    'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAX11xt8AAAAA' +
+    'AAAAAAAAAAB9dcbfAAAAAAAAAAAAAAAAkdtpUtFAiw4AAAAAAAAAAIlSFcTqQ987AAAAAAAA' +
+    'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+    'AAAAAAAAAAElW7yDAAAAAAAAAAAAAAAAJVu8gwAAAAAAAAAAAAAAAHBLKYPf4XQQAAAAAAAA' +
+    'AACRgy8RHFoaPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+    'AAAAAAAAAAAAAAAAAAA=',
+} as const
+
+// Raydium, same slot discipline. No program-computed expectation here: Raydium
+// has no permissionless fee-settling instruction to simulate, so `expectedFee0/1`
+// is this module's own output pinned as a REGRESSION, and the structural checks
+// (each tick slot carries its own tick index, and it must match) are what stand
+// in for ground truth. Flagged as such rather than dressed up as verified.
+export const RAYDIUM_FEE_REPLAY_FIXTURE = {
+  slot: 439916163,
+  position: {
+    address: '61w9LnqxwJeakEnviTFb3nr4Gjd6Y3SM17h7w6w8ta1R',
+    base64:
+      'Rm+WfuYPGXX+5kla4QCjwzCtHaXYayWJ3CIYzfuu01n1rQgm6Ua0X0MrMZNgv6LOy5LEsKRg' +
+      'QJoPBCgDP2ATALiz/Pmc82Auh96a//9/m///rYb+KwMTAAAAAAAAAAAAAF3GUkqhAQAAAAAA' +
+      'AAAAAABmr6XCkAAAAAAAAAAAAAAAR/wZAAAAAAD6dgUAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'APoDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAA=',
+  },
+  pool: {
+    address: '3ucNos4NbumPLZNWztqGHNFFgkHeRMBQAVemeeomsUxv',
+    base64:
+      '9+3j9dfD3kb/J/h1kZHXDyshRTJ1cBKA+75w9IwihSFNbCJrm2AsTU2n4L9mLmKyVEpBQSbs' +
+      'ZYZslSyLgLfqrjxPjwNPsqt58AabiFf+q4GE+2h/Y0YYwDXaxDncGus7VZig8AAAAAABxvp6' +
+      '877brTo9ZfNqq8l0MbG75MLS9uDkfKYCA0UvXWE1xC8EegCgoA4uXlAv1Mq8Ujt5easRI0mT' +
+      '0Kd5/M0SaUYpXTwujyqOjii0GtMaFsBn/mlkafyZcZXVyvv1WhbIJa4wmFjRjYV3XU2tkbL5' +
+      'lj49adulPU/iZbZpnkdbsRkJBgEAQHIr5Tw3AQAAAAAAAAAAAP93qPMlrHBGAAAAAAAAAAAu' +
+      'm///AAAAAFeQuG75oWRVAAAAAAAAAAAEH7+NeOqzDAAAAAAAAAAAL6sVBAAAAAAg+CoAAAAA' +
+      'AEqLn9KvziUBAAAAAAAAAAAKh7aUYfUuAAAAAAAAAAAAuetoMG0GLwAAAAAAAAAAADo7fnFD' +
+      '+SUBAAAAAAAAAAAAAAAAAAAAAANwIOdpAAAAAPBEFWoAAAAA8EQVagAAAAAwyQYXG1xscHUG' +
+      'AAAAAAAAKGiFqw4AAAAT7vB6DgAAADeZjMvy0EWLYVy8xrGjZ8R0np/vcwZiLhsbWJEBILya' +
+      '+pXh4ovnMzhpJU3xedI1MncwmjtmCSjpjg8cFTiY+PQFbi5biuhaxy9JKpHBKlrVCfYFdU9E' +
+      '3Cnfqc2Lz1DJmLz+AFQXhK4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAp+C/Zi5islRKQUEm7GWG' +
+      'bJUsi4C36q48T48DT7KrefAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKfgv2YuYrJU' +
+      'SkFBJuxlhmyVLIuAt+quPE+PA0+yq3nwAAAAAAAAAAAAAAAAAAAAALe3X/v/////////////' +
+      '/////////////////////////////////7/f/f50won7BAgYABAIDEAAkgAhBABQAAATAABA' +
+      'AAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAQJZ2Nq0UZAAARbOJ9vBgAAG6nKoALBAAAJ7FPafkDAACXHdAEAAAAACovOAAAAAAA' +
+      'tnezZgAAAAD6AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=',
+  },
+  tickArrayLower: {
+    address: 'EpZdFLNpsAqfa9ZXmjbMpbsdTjcdwGvK7iJxbwAExTMH',
+    gzipBase64:
+      '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',
+  },
+  tickArrayUpper: {
+    address: '12EagwvkiBz5wiRaPZg2rViGSuZF344ff4FiTAfE79z2',
+    gzipBase64:
+      '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',
+  },
+  expectedFee0: 1255340551n,
+  expectedFee1: 97334812n,
+  settledFee0: 1702983n,
+  settledFee1: 358138n,
+} as const
+
+/**
+ * Tick arrays are 10 KB of mostly zeroes, so they are stored compressed: raw
+ * base64 would add 40 KB of noise to this file for no extra fidelity.
+ */
+export function gzipFixtureBytes(fixture: { gzipBase64: string }): Uint8Array {
+  return new Uint8Array(gunzipSync(Buffer.from(fixture.gzipBase64, 'base64')))
 }

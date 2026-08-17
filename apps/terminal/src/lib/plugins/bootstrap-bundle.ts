@@ -142,6 +142,10 @@ import {
   heliusRpcProviderManifest,
 } from '@pairlens/plugins/helius-rpc-provider'
 import {
+  coinglassLiquidationsManifest,
+  createCoinglassLiquidationsPlugin,
+} from '@pairlens/plugins/coinglass-liquidations'
+import {
   createJupiterDexConnectorPlugin,
   jupiterDexConnectorManifest,
 } from '@pairlens/plugins/jupiter-dex-connector'
@@ -430,6 +434,15 @@ export const BOOTSTRAP_MARKET_CONNECTOR_PLUGINS: Array<BootstrapPlugin> = [
   {
     manifest: krakenFuturesMarketConnectorManifest,
     factory: createKrakenFuturesMarketConnectorPlugin,
+  },
+  // Not a connector: it streams nothing and charts nothing, it answers
+  // `market-data:liquidations` for the perpetual venues the App Server does
+  // not collect. It sits with the futures venues because that is the family it
+  // belongs to, and it activates through the generic pass rather than the
+  // connector pass, which keys off candles/discovery and finds neither here.
+  {
+    manifest: coinglassLiquidationsManifest,
+    factory: createCoinglassLiquidationsPlugin,
   },
 ]
 

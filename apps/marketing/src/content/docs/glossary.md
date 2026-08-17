@@ -22,7 +22,7 @@ proxy, and cloud panels. The terminal is fully functional without one. It never
 sees exchange credentials and is never in the order path.
 
 **Assistant.** The one AI chat in the terminal, docked at the bottom right or in
-the left nav rail, your choice, and mounted above every page. Its loop runs client-side over 95 tools. It can propose
+the left nav rail, your choice, and mounted above every page. Its loop runs client-side over 105 tools. It can propose
 trades. It cannot execute them unattended. See
 [the AI assistant](/docs/ai-copilot).
 
@@ -30,8 +30,10 @@ trades. It cannot execute them unattended. See
 and acting on its own. Not an LLM. See [bots](/docs/bots).
 
 **Bridge.** Moving one asset from one chain to another. Pairlens quotes and
-tracks EVM-to-EVM transfers through the LI.FI aggregator, signed with the wallet
-you already connected. See [DEX and wallets](/docs/dex-trading#bridging).
+tracks transfers between the five EVM chains and Solana through the LI.FI
+aggregator, signed with the wallets you already connected. A Solana send is
+simulated against the chain before your key is fetched. See
+[DEX and wallets](/docs/dex-trading#bridging).
 
 **Capability.** What a plugin declares it provides, such as
 `market-data:candles`, `trading:orders`, `ai:inference`, or `theme:override`.

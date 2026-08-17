@@ -6,11 +6,26 @@
  * The response is untrusted input on the read path and load-bearing on the
  * signing path, so the parse and the anchor are one step. Anchoring means the
  * quote is only accepted when the aggregator echoed back the SAME two chains,
- * the SAME two token contracts, the SAME amount and the SAME address the
- * connector asked about. Everything downstream (the fee shown, the floor a
- * transfer is checked against, the calldata that gets signed) then describes
- * the transfer the user is looking at rather than whatever the API felt like
+ * the SAME two tokens, the SAME amount and the SAME two addresses the connector
+ * asked about. Everything downstream (the fee shown, the floor a transfer is
+ * checked against, the transaction that gets signed) then describes the
+ * transfer the user is looking at rather than whatever the API felt like
  * answering.
+ *
+ * Two addresses, not one, since Solana joined. An EVM-to-EVM transfer sends to
+ * itself and both ends are the same key, but a Solana leg is a different key
+ * with a different address, so `fromAddress` and `toAddress` are anchored
+ * separately and each is compared the way its own chain compares addresses:
+ * EVM hex is case-insensitive, Solana base58 is NOT, and lowercasing a base58
+ * pubkey before comparing it would let a different address pass.
+ *
+ * The transaction comes back in one of two shapes and the parse commits to
+ * which one BEFORE reading it, from the anchored source family rather than from
+ * whatever fields the response happens to carry. An EVM leg is
+ * `{to, data, value, chainId}`; a Solana leg is a base64 serialized
+ * `VersionedTransaction` in `transactionRequest.data` and nothing else. A
+ * response that answers in the other family's shape is a mismatch, not
+ * something to reinterpret.
  *
  * The parse is a pure function over the raw JSON: it is the piece worth testing
  * against recorded fixtures, and it must never reach for the network or the
@@ -18,10 +33,10 @@
  */
 import { scaleAmount } from '@pairlens/market-engine/amount'
 import { LIFI_PROVIDER, lifiFetch } from './rate-limiter'
-import { LIFI_NATIVE_ADDRESS } from './tokens'
+import { LIFI_NATIVE_ADDRESS, LIFI_SOLANA_NATIVE_ADDRESS } from './tokens'
 import { refuse } from './routes'
+import type { BridgeChain, BridgeChainFamily } from './chains'
 import type { BridgeToken } from './tokens'
-import type { EvmChainConfig } from '../evm-dex-connector/chains'
 import type {
   BridgeQuote,
   BridgeRouteRefused,
@@ -59,36 +74,58 @@ export type LifiQuoteRaw = {
 
 /** What the request pinned. Every field here is re-checked in the response. */
 export type QuoteAnchor = {
-  fromMarket: string
-  toMarket: string
-  fromChainId: number
-  toChainId: number
+  fromChain: BridgeChain
+  toChain: BridgeChain
   fromToken: BridgeToken
   toToken: BridgeToken
   /** Raw source-token units the connector asked to send. */
   fromAmountRaw: bigint
-  /** Sender and recipient, as the connector asked for them. */
-  address: string
+  /** Sender on the source chain, as the connector asked for it. */
+  fromAddress: string
+  /** Recipient on the destination chain. The same key only within a family. */
+  toAddress: string
   /** Epoch ms to stamp the quote with. Injected so the parse stays pure. */
   quotedAt: number
 }
 
 /**
+ * The transaction a route wants signed, in the shape of the chain that signs it.
+ *
+ * Discriminated rather than optional-everything so a Solana leg can never reach
+ * the EVM validator with three nulls and pass whichever checks happen to be
+ * written as "if present".
+ */
+export type LifiTransaction =
+  | {
+      kind: 'evm'
+      to: string
+      data: string
+      /** As the API sent it: hex or decimal string. Validated before signing. */
+      value: string | null
+      chainId: number | null
+    }
+  | {
+      kind: 'svm'
+      /** base64 `VersionedTransaction`, exactly as the aggregator serialized it. */
+      serializedTransaction: string
+    }
+
+/**
  * A parsed route: the part a pane may see, and the part only the signing path
- * may. They are separated here rather than downstream because calldata that
- * travels through React state is calldata that can be swapped between the
- * confirm and the send.
+ * may. They are separated here rather than downstream because a transaction
+ * that travels through React state is a transaction that can be swapped between
+ * the confirm and the send.
  */
 export type LifiRoute = {
   quote: BridgeQuote
-  tx: {
-    to: string
-    data: string
-    /** As the API sent it: hex or decimal string. Validated before signing. */
-    value: string | null
-    chainId: number | null
-  }
-  approvalAddress: string
+  tx: LifiTransaction
+  /**
+   * The spender an ERC-20 allowance would name. Null on a Solana source leg:
+   * Solana has no allowance model, and LI.FI still fills the field with an EVM
+   * address that means nothing there. Carrying it would be an invitation to
+   * approve something on the wrong chain.
+   */
+  approvalAddress: string | null
   fromToken: BridgeToken
   fromAmountRaw: bigint
 }
@@ -108,8 +145,37 @@ function num(value: unknown): number | null {
   return null
 }
 
-function sameAddress(a: unknown, b: string): boolean {
-  return typeof a === 'string' && a.toLowerCase() === b.toLowerCase()
+/**
+ * Address equality, by the rules of the chain the address belongs to.
+ *
+ * EVM addresses are hex and case carries only a checksum, so they compare
+ * case-insensitively. Solana addresses are base58, whose alphabet contains both
+ * cases as DISTINCT symbols: `case`-folding one before comparing would make
+ * two different pubkeys look equal, which on the signing path is the difference
+ * between sending to the user and sending to somebody else.
+ */
+export function addressesMatch(
+  family: BridgeChainFamily,
+  a: unknown,
+  b: string,
+): boolean {
+  if (typeof a !== 'string') return false
+  return family === 'evm' ? a.toLowerCase() === b.toLowerCase() : a === b
+}
+
+/** Token identity, compared the same way addresses on that chain are. */
+function sameToken(family: BridgeChainFamily, a: unknown, b: string): boolean {
+  return addressesMatch(family, a, b)
+}
+
+/** Strict base64: the only shape a serialized Solana transaction arrives in. */
+export function isBase64Payload(value: unknown): value is string {
+  return (
+    typeof value === 'string' &&
+    value.length >= 4 &&
+    value.length % 4 === 0 &&
+    /^[A-Za-z0-9+/]+={0,2}$/.test(value)
+  )
 }
 
 /**
@@ -145,6 +211,48 @@ function sumUsd(
   return seen ? total : null
 }
 
+/** True when a token is the source chain's native coin under either sentinel. */
+export function isNativeToken(token: BridgeToken): boolean {
+  return (
+    token.native ||
+    token.address.toLowerCase() === LIFI_NATIVE_ADDRESS.toLowerCase() ||
+    token.address === LIFI_SOLANA_NATIVE_ADDRESS
+  )
+}
+
+/**
+ * Pull the transaction out of a response, in the family the anchor committed to.
+ *
+ * Committing first is the point. Deciding "it has a `to`, so it must be EVM"
+ * would let a response choose which validator it faces.
+ */
+function parseTransaction(
+  family: BridgeChainFamily,
+  tx: LifiQuoteRaw['transactionRequest'],
+): { tx: LifiTransaction } | { problem: string } {
+  if (family === 'svm') {
+    if (str(tx?.to) !== null) {
+      return { problem: 'Solana leg answered with an EVM transaction' }
+    }
+    if (!isBase64Payload(tx?.data)) {
+      return { problem: 'Solana leg carries no serialized transaction' }
+    }
+    return { tx: { kind: 'svm', serializedTransaction: tx.data } }
+  }
+  const to = str(tx?.to)
+  const data = str(tx?.data)
+  if (!to || !data) return { problem: 'no transaction request' }
+  return {
+    tx: {
+      kind: 'evm',
+      to,
+      data,
+      value: str(tx?.value),
+      chainId: num(tx?.chainId),
+    },
+  }
+}
+
 /**
  * Parse and anchor. Returns a `problem` string rather than throwing so the
  * caller can log exactly which field disagreed: "the aggregator changed the
@@ -157,19 +265,23 @@ export function parseLifiQuote(raw: unknown, anchor: QuoteAnchor): ParseResult {
   const quote = raw as LifiQuoteRaw
   const action = quote.action
   const estimate = quote.estimate
-  const tx = quote.transactionRequest
   if (!action || !estimate) return { problem: 'missing action or estimate' }
 
-  if (num(action.fromChainId) !== anchor.fromChainId) {
+  const fromFamily = anchor.fromChain.family
+  const toFamily = anchor.toChain.family
+
+  if (num(action.fromChainId) !== anchor.fromChain.lifiChainId) {
     return { problem: `source chain is ${String(action.fromChainId)}` }
   }
-  if (num(action.toChainId) !== anchor.toChainId) {
+  if (num(action.toChainId) !== anchor.toChain.lifiChainId) {
     return { problem: `destination chain is ${String(action.toChainId)}` }
   }
-  if (!sameAddress(action.fromToken?.address, anchor.fromToken.address)) {
+  if (
+    !sameToken(fromFamily, action.fromToken?.address, anchor.fromToken.address)
+  ) {
     return { problem: `source token is ${String(action.fromToken?.address)}` }
   }
-  if (!sameAddress(action.toToken?.address, anchor.toToken.address)) {
+  if (!sameToken(toFamily, action.toToken?.address, anchor.toToken.address)) {
     return {
       problem: `destination token is ${String(action.toToken?.address)}`,
     }
@@ -179,12 +291,13 @@ export function parseLifiQuote(raw: unknown, anchor: QuoteAnchor): ParseResult {
     return { problem: `amount is ${String(echoedAmount)}` }
   }
   // Recipient is the field a compromised or confused response would move funds
-  // with, and it is encoded inside calldata this connector cannot decode. What
-  // it CAN do is refuse a route whose stated recipient is not the sender.
-  if (!sameAddress(action.fromAddress, anchor.address)) {
+  // with, and it is encoded inside a payload this connector cannot decode. What
+  // it CAN do is refuse a route whose stated sender or recipient is not the
+  // wallet that asked. Each side is checked against ITS OWN chain's address.
+  if (!addressesMatch(fromFamily, action.fromAddress, anchor.fromAddress)) {
     return { problem: `sender is ${String(action.fromAddress)}` }
   }
-  if (!sameAddress(action.toAddress, anchor.address)) {
+  if (!addressesMatch(toFamily, action.toAddress, anchor.toAddress)) {
     return { problem: `recipient is ${String(action.toAddress)}` }
   }
 
@@ -197,17 +310,24 @@ export function parseLifiQuote(raw: unknown, anchor: QuoteAnchor): ParseResult {
   const toAmountRaw = str(estimate.toAmount)
   const toAmountMinRaw = str(estimate.toAmountMin)
   const feeCosts = estimate.feeCosts
-  const approvalAddress = str(estimate.approvalAddress)
-  if (!approvalAddress) return { problem: 'no approval address' }
-  const to = str(tx?.to)
-  const data = str(tx?.data)
-  if (!to || !data) return { problem: 'no transaction request' }
+
+  // An EVM source pulls ERC-20s through an allowance, so the spender has to be
+  // named and checked. A Solana source has no allowance to grant, and the field
+  // LI.FI fills in for it is an EVM address on the wrong chain.
+  const approvalAddress =
+    fromFamily === 'evm' ? str(estimate.approvalAddress) : null
+  if (fromFamily === 'evm' && !approvalAddress) {
+    return { problem: 'no approval address' }
+  }
+
+  const parsedTx = parseTransaction(fromFamily, quote.transactionRequest)
+  if ('problem' in parsedTx) return parsedTx
 
   return {
     route: {
       quote: {
-        fromMarket: anchor.fromMarket,
-        toMarket: anchor.toMarket,
+        fromMarket: anchor.fromChain.market,
+        toMarket: anchor.toChain.market,
         symbol: anchor.fromToken.symbol,
         toSymbol: str(action.toToken?.symbol) ?? anchor.toToken.symbol,
         amount,
@@ -232,12 +352,7 @@ export function parseLifiQuote(raw: unknown, anchor: QuoteAnchor): ParseResult {
         provider: LIFI_PROVIDER,
         quotedAt: anchor.quotedAt,
       },
-      tx: {
-        to,
-        data,
-        value: str(tx?.value),
-        chainId: num(tx?.chainId),
-      },
+      tx: parsedTx.tx,
       approvalAddress,
       fromToken: anchor.fromToken,
       fromAmountRaw: anchor.fromAmountRaw,
@@ -246,7 +361,7 @@ export function parseLifiQuote(raw: unknown, anchor: QuoteAnchor): ParseResult {
 }
 
 /**
- * Fetch a route for one (chain, chain, asset, amount, address).
+ * Fetch a route for one (chain, chain, asset, amount, sender, recipient).
  *
  * `refused` covers the two cases a pane must be able to say out loud: the
  * aggregator has no route for this size (404), and the asset does not exist on
@@ -254,26 +369,29 @@ export function parseLifiQuote(raw: unknown, anchor: QuoteAnchor): ParseResult {
  * throttle or a 500 is a failure to retry, not an answer.
  */
 export async function fetchBridgeRoute(opts: {
-  from: EvmChainConfig
-  to: EvmChainConfig
+  from: BridgeChain
+  to: BridgeChain
   fromToken: BridgeToken
   toToken: BridgeToken
   amount: string
-  address: string
+  /** Sender on the source chain. */
+  fromAddress: string
+  /** Recipient on the destination chain. Equal to `fromAddress` within a family. */
+  toAddress: string
   now?: () => number
 }): Promise<LifiRoute | BridgeRouteRefused> {
-  const { from, to, fromToken, toToken, amount, address } = opts
+  const { from, to, fromToken, toToken, amount, fromAddress, toAddress } = opts
   const fromAmountRaw = scaleAmount(amount, fromToken.decimals)
   if (fromAmountRaw <= 0n) return refuse('no-route', from.market)
 
   const params = new URLSearchParams({
-    fromChain: String(from.chainId),
-    toChain: String(to.chainId),
+    fromChain: String(from.lifiChainId),
+    toChain: String(to.lifiChainId),
     fromToken: fromToken.address,
     toToken: toToken.address,
     fromAmount: fromAmountRaw.toString(),
-    fromAddress: address,
-    toAddress: address,
+    fromAddress,
+    toAddress,
   })
   const res = await lifiFetch(`/quote?${params.toString()}`)
   if (res.status === 404) return refuse('no-route', from.market)
@@ -285,14 +403,13 @@ export async function fetchBridgeRoute(opts: {
   }
 
   const parsed = parseLifiQuote(await res.json(), {
-    fromMarket: from.market,
-    toMarket: to.market,
-    fromChainId: from.chainId,
-    toChainId: to.chainId,
+    fromChain: from,
+    toChain: to,
     fromToken,
     toToken,
     fromAmountRaw,
-    address,
+    fromAddress,
+    toAddress,
     quotedAt: (opts.now ?? Date.now)(),
   })
   if ('problem' in parsed) {
@@ -306,5 +423,5 @@ export async function fetchBridgeRoute(opts: {
   return parsed.route
 }
 
-/** The native sentinel, re-exported so the executor's rules read in one place. */
-export { LIFI_NATIVE_ADDRESS }
+/** The native sentinels, re-exported so the executors' rules read in one place. */
+export { LIFI_NATIVE_ADDRESS, LIFI_SOLANA_NATIVE_ADDRESS }

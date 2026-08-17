@@ -4,8 +4,8 @@ description: 16 chart types, up to 11 timeframes, four price-scale modes, bar re
 group: traders
 order: 1
 eyebrow: For traders
-updated: AUG 2026
-readTime: 6 min read
+updated: 17 AUG 2026
+readTime: 7 min read
 ---
 
 The chart is the centre of the terminal. It is rendered by
@@ -64,6 +64,13 @@ Sixteen of them, all GPU-rendered:
 
 Renko, Kagi, Line Break, and Point and Figure redraw price without a fixed time
 axis, which is what makes them useful for filtering noise out of a trend.
+
+**Predictions open on Step Line.** A prediction outcome is a probability, and it
+trades sparsely: candles come out as a row of doji ticks with nothing between
+them, which reads as a flat market when the market is only quiet. So a
+[prediction outcome](/docs/prediction-markets) opens as a step line of close on
+the cents axis, and the menu puts Step Line and Line at the top. All sixteen
+types are still there, one scroll down, and whichever you pick is remembered.
 
 ### Crosshair
 
@@ -141,6 +148,13 @@ in a similar range.
 **Dual axis.** Each series gets its own scale. Good for pairing an asset
 against something on a different order of magnitude.
 
+A prediction outcome starts on Dual axis rather than Percentage, because it is
+already the extreme case of a different order of magnitude: a contract priced at
+47¢ next to BTC at 64,000 on one axis leaves the outcome as a flat line along
+the bottom, and rebasing both to 100 puts an index number through the cents
+formatter. On dual axis the outcome keeps its own cents axis whatever is drawn
+over it. Switch it if you want the other reading.
+
 ## Right-click menu
 
 Right-clicking the chart gives you the fast path to the things you do most:
@@ -159,6 +173,11 @@ Chart state is saved per pair: chart type, timeframe, scale mode, indicators
 and their parameters, and your drawings. Reopen a pair a week later and it
 looks the way you left it. Locally by default, synced across devices when you
 are signed in.
+
+Chart type and compare scale mode are saved per asset class, not per pair.
+Candles on BTC and a step line on an election outcome hold at the same time, and
+picking Line on a stock does not turn your crypto charts into lines. Everything
+else stays per pair.
 
 ## Multiple charts
 

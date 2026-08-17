@@ -33,7 +33,7 @@ dialog with it. That is the user-level way to drop a whole asset class. See
 | **Pair Dossier**      | The stats that decide a size: range, volume, liquidity within one percent, and where the pair trades best                            |
 | **Data Log**          | The raw signal and event feed                                                                                                        |
 | **Funding Belt**      | The countdown to the next funding stamp, the current and predicted rate, and what your size pays or earns                            |
-| **Liquidation Map**   | Measured liquidation clusters on the price axis, with your own liquidation levels and leverage marks over them                       |
+| **Liquidation Map**   | A time-by-price heatmap of measured liquidations, painted behind the contract's candles, with your own liquidation levels over it    |
 | **Pool Stats**        | Reserves, value locked, a day's volume, the fee tier, and quoted price impact at $1k, $10k and $100k                                 |
 | **On-chain Trades**   | Every swap through the pool as it confirms, with the signing address and a link to the transaction                                   |
 | **Chain Ladder**      | The same token priced on every chain with gas folded in, so the best total wins rather than the best quote                           |
@@ -63,12 +63,15 @@ an AMM: the on-chain pair layout ships with no book and no depth pane, because a
 data provider's bid and ask are synthesized around the pool price, and the impact
 rows are live aggregator quotes at three real sizes rather than curve math.
 
-The Liquidation Map layers three claims over one price axis and labels each in
-the pane. Measured clusters are the venue's own force-order prints, collected for
-Binance Futures. Your own liquidation levels come from each venue's position
-payload. The 5x, 10x and 25x marks are estimates from the same model the ticket
-uses. Time is a selector rather than a second axis: chips pick 1h, 6h, 24h or
-72h. See [perpetual futures](/docs/cex-futures#reading-the-risk).
+The Liquidation Map is a heatmap over time and price, and every cell in it is a
+print. It hosts its own candles of the contract and paints the venue's force-order
+history behind them: a column per candle, a row per price bucket, coloured by the
+side that was liquidated and darkened by the notional. Your own liquidation levels
+ride over the cells as dashed lines from each venue's position payload. Chips pick
+1h, 6h, 24h or 72h and the candle interval follows, from 1m up to 1h. A source
+control switches between the collectors that answer for the contract and never
+blends them, because a sampled feed and a complete one are not comparable by
+magnitude. See [perpetual futures](/docs/cex-futures#reading-the-risk).
 
 ## Trading
 

@@ -91,7 +91,9 @@ export interface AnalyticsEvents {
 
   // ── Chart engagement (the core loop) ──────────────────────────────
   timeframe_changed: { timeframe: string }
-  chart_type_changed: { chart_type: string }
+  /** Which type was picked, and on which asset class — the class is what
+   * says whether the per-class default was accepted or rejected. */
+  chart_type_changed: { chart_type: string; asset_class: string }
   drawing_tool_selected: { tool: string }
   /** Chart bars were exported to CSV. Shape of the export only — never the
    * instrument, the row count, or anything priced. */
@@ -313,6 +315,11 @@ export interface AnalyticsEvents {
     chain: string
   }
 
+  /** The liquidation map's data source was switched. Which collector (and
+   * window) a trader actually reads decides whether a second collected venue
+   * or a BYOK vendor earns further investment. Venue ids name our surface. */
+  liquidation_map_source_changed: { venue: string; window_hours: number }
+
   // ── Discovery ─────────────────────────────────────────────────────
   /** Movers pane tab switch — answers whether the New listings tab (and the
    * long-tail tabs) are found at all. The tab id names our surface. */
@@ -403,6 +410,15 @@ export interface AnalyticsEvents {
    */
   mobile_tab_changed: {
     tab: 'watchlist' | 'trade' | 'chart' | 'copilot' | 'discover'
+  }
+  /**
+   * A prediction event surface opened on the phone. Answers whether the
+   * clarity work is used: does anyone walk from a chart back to the event, and
+   * does the race ladder earn its screen. Names our own surfaces only.
+   */
+  mobile_prediction_surface_opened: {
+    surface: 'event' | 'ladder'
+    source: 'chart_strip' | 'event_screen' | 'trade_ticket' | 'events_board'
   }
 }
 

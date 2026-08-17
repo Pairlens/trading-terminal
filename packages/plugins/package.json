@@ -34,6 +34,7 @@
     "./dexscreener-data-provider": "./src/dexscreener-data-provider/index.ts",
     "./geckoterminal-data-provider": "./src/geckoterminal-data-provider/index.ts",
     "./helius-rpc-provider": "./src/helius-rpc-provider/index.ts",
+    "./coinglass-liquidations": "./src/coinglass-liquidations/index.ts",
     "./jupiter-dex-connector": "./src/jupiter-dex-connector/index.ts",
     "./evm-dex-connector": "./src/evm-dex-connector/index.ts",
     "./lifi-bridge-connector": "./src/lifi-bridge-connector/index.ts",

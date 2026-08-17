@@ -1,12 +1,12 @@
 ---
 title: Perpetual futures
-description: Trade perpetual swaps on Binance Futures, KuCoin Futures and Kraken Futures from the same terminal, with funding and basis scanners, a leverage selector, reduce-only orders, measured liquidation clusters and margin health.
+description: Trade perpetual swaps on Binance Futures, KuCoin Futures and Kraken Futures from the same terminal, with funding and basis scanners, a leverage selector, reduce-only orders, measured liquidation clusters from two collected venues, and margin health.
 group: traders
 parent: trading
 order: 8
 eyebrow: For traders
 updated: 17 AUG 2026
-readTime: 11 min read
+readTime: 14 min read
 ---
 
 A perpetual future is a contract that tracks a spot price without ever
@@ -206,33 +206,108 @@ liquidation price has different columns than a spot balance.
 The **Risk** board pairs the chart with three panels that answer "how much room
 is left", and each of them is careful about what it does not know.
 
-**Liquidation Map.** Three layers over one price axis, each with a different
-claim behind it, and the caption says which is which in the pane rather than in
-a tooltip.
+**Liquidation Map.** A heatmap over time and price. The pane hosts its own
+candles of the contract and paints the venue's liquidation history behind them: a
+column per candle, a row per price bucket, coloured by the side that was
+liquidated and darkened by the notional that went with it. The caption says what
+each layer is claiming, in the pane rather than in a tooltip.
 
-**Measured clusters** are what the venue actually liquidated. Binance Futures
-publishes a force-order stream, the App Server holds it open and buckets the
-prints by minute and by price, and the pane draws the result. These are prints,
-not a model. That distinction is the whole point: the vendors who sell a
-liquidation heatmap are inferring one from open interest and assumed leverage,
-and bars that look like measured depth but are not are the most confident kind of
-wrong.
+**Every cell is a print, and the prints are what the venue actually liquidated.** Binance Futures and
+Bybit both publish public liquidation streams, the App Server holds them open and
+buckets the prints by minute and by price, and the pane draws the result. These
+are prints, not a model. That distinction is the whole point: the vendors who sell
+a liquidation heatmap are inferring one from open interest and assumed leverage,
+and cells that look like measured depth but are not are the most confident kind
+of wrong.
 
-Retention is 72 hours, and the window is a selector rather than a second axis:
-chips pick 1h, 6h, 24h or 72h, and the minutes inside the window are summed per
-price bucket. A two-dimensional time-by-price heatmap belongs over the chart,
-where there is already a time axis to hang it on.
+**The two streams are not the same kind of feed, and every response says which
+one it is.** Binance's own documentation is explicit that it pushes at most one
+liquidation per symbol per second, so its figures undercount exactly when it
+matters most, during a cascade, when hundreds arrive in seconds and we keep one.
+Bybit pushes every liquidation, including the sub-hundred-dollar ones Binance's
+sampling drops. So the response carries a completeness flag, `sampled` for
+Binance and `complete` for Bybit, and the two must never be added into one
+cross-venue total without it. Notional is the axis that survives the comparison;
+the print count does not, and runs an order of magnitude higher on Bybit for the
+same market activity.
 
-**KuCoin Futures and Kraken Futures stay estimate-only.** Neither publishes a
-public liquidation print stream, so there is nothing to collect and the pane says
-the venue is uncovered rather than filling the strip from a model. A terminal
-running [standalone](/docs/self-hosting#standalone-mode) has no collector at all
-and says that instead.
+One more difference worth a footnote if you ever compare the price axes: Binance
+publishes both an order price and an average fill, and we take the fill, which is
+what the position actually closed at. Bybit publishes the bankruptcy price, so
+its buckets sit a little further past the liquidation level. The gap is small,
+systematic and always in the same direction.
 
-Over the clusters sit **your own liquidation prices**, straight from each venue's
-position payload and sized by the notional at risk, and **leverage reference
-marks** for where a position opened at the current price would liquidate at 5x,
-10x and 25x, from the same estimator the ticket uses and labelled as an estimate.
+Bybit appears here as a **data source**, not as a venue you trade. Whether
+Pairlens can route an order to a venue and whether the server holds its public
+prints are separate questions.
+
+Retention is 72 hours. Chips pick 1h, 6h, 24h or 72h and the candle interval
+follows, 1m through 1h, so any window lands near a hundred columns instead of
+4,320 sub-pixel slivers, and the wire's minute buckets fold onto whichever column
+contains them. Intensity scales by square root against the heaviest single cell:
+liquidated notional is heavy-tailed, and a linear ramp against one cascade minute
+renders every other cell invisible.
+
+Where more than one collector answers for the contract, a **source control**
+switches between them. It switches, it never blends, and a line beside the totals
+names the venue and whether its feed is a census or a sample. A source that comes
+from a vendor key you have not added says so and links to the plugin, rather than
+drawing a blank map. A window a mature collector genuinely has nothing for renders
+the candles with a note: an illiquid contract liquidates nobody for hours, and
+that is data.
+
+**KuCoin Futures and Kraken Futures stay estimate-only** out of the box. Neither
+publishes a public liquidation print stream we can hold open, so there is nothing
+to collect and the pane reports the venue as uncovered, offering the collected
+venues as an explicit alternate source rather than substituting one silently. A terminal running
+[standalone](/docs/self-hosting#standalone-mode) has no collector at all and says
+that instead. A Coinglass key covers those venues; see below.
+
+### Bringing your own Coinglass key
+
+The bundled **Coinglass Liquidations** plugin draws the same measured clusters
+for venues Pairlens does not collect, paid for with your own Coinglass API key.
+Add the key in the Plugin Store and the map fills in for Binance, Bybit, KuCoin
+and Kraken perpetuals, with seven days of history instead of three.
+
+It reads exactly one endpoint, `/api/futures/liquidation/order`, which is the
+venue's real prints: a price, a side and a size on each one. Coinglass also
+publishes liquidation heatmaps, and those are a different thing. They are
+projected leverage levels, with no counts, no realised notional and no side
+label at all, and mapping them into a pane captioned "what the venue actually
+liquidated" would be the exact confident wrong the measured layer exists to
+avoid. The plugin does not map them.
+
+Three things to know before you buy a key.
+
+**Desktop only.** `open-api-v4.coinglass.com` answers a CORS preflight with 403
+and sends no `access-control-allow-origin` header at all, so a browser tab
+cannot reach it under any arrangement. The plugin refuses in a browser with the
+same typed message the desktop-only venues use, rather than spinning.
+
+**The Standard plan is the real floor.** Liquidation orders are not included
+below it, so a Hobbyist or Startup key will not power the pane. The plugin can
+tell that apart from a wrong key, because it first calls an endpoint every plan
+can reach, and it says which one happened.
+
+**You see the tail above a cutoff.** Coinglass requires a minimum liquidation
+size on every request and caps a response at 200 rows. The plugin defaults the
+cutoff to $1,000, exposes it as a setting, and splits a window that comes back
+at the cap into narrower ones. What survives that is still a lower bound,
+especially the print counts, and the response says whether it is a full feed or
+a sample so the pane can repeat it.
+
+Where both can answer, the App Server's collector wins. It is measured straight
+from the venue's own stream, it costs you nothing, and the paid source is there
+for the venues the collector does not hold.
+
+Over the cells sit **your own liquidation prices**, straight from each venue's
+position payload, as dashed lines thickened by the notional at risk and labelled
+with the venue and the distance from the last price. The 5x, 10x and 25x reference
+marks the old price-axis strip carried are gone: they were an estimator standing
+in for an axis that had nothing else on it, and the ticket already shows an
+estimated liquidation price while you size a position, which is where the question
+is actually asked.
 
 **Margin Health.** One section per connected futures account, because a margin
 ratio is an account fact: cross margin pools every position against one balance
@@ -266,9 +341,11 @@ exactly as they do on a spot venue.
 ## What is not here yet
 
 Funding and mark price are panels rather than chart overlays, so neither is
-plotted on the candles yet, and the measured liquidation clusters are a strip
-over price rather than a heatmap over the candles. Also missing: liquidation
-clusters on KuCoin and Kraken (neither publishes a print stream), an ADL
+plotted on the candles yet, and the liquidation heatmap hosts its own chart rather
+than painting onto the main one. Hovering a cell shows no per-cell readout: the
+totals row states the window, and the tooltip that would name one cell has not
+been built. Also missing: liquidation prints from KuCoin and Kraken themselves
+(neither publishes a stream, so those venues need a vendor key), an ADL
 indicator (no venue returns an ADL rank, and a five-bar gauge inferred from
 margin health would look exactly like the venue's own and mean nothing), funding
 history as a series rather than a snapshot, isolated margin, a per position

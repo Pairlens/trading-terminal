@@ -8,10 +8,12 @@
  * sorted by symbol makes them scan for tomorrow. Today's group is named, so the
  * row that matters most needs no arithmetic.
  *
- * There is no before-the-bell column on the earnings view, and that is the feed
- * rather than a design choice: the provider publishes a report DATE and no
- * time. A BMO/AMC badge would be a guess about the one detail a trader
- * positions on, so the pane says nothing instead of something plausible.
+ * A row carries a BMO or AMC badge when a source states the slot, and nothing
+ * at all when none does. Two sources feed it: the provider's calendar states a
+ * time of day for reports inside about thirty days, and beyond that the App
+ * Server reads the company's own habit off its past Item 2.02 filings. Neither
+ * is a guess, and the absence is not padded with a placeholder, because the
+ * slot is the one detail a trader positions on.
  *
  * Three scopes on earnings, because the whole market reports about four hundred
  * times a week and nobody reads that: today, the week, and the one that is
@@ -48,6 +50,7 @@ import {
   useIpoCalendar,
 } from '@/hooks/use-equity-fundamentals'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
+import { reportTimeBadge } from '@/lib/equities/calendar-figures'
 import { useSymbolLogo } from '@/hooks/use-symbol-logo'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { entryToMarketRef } from '@/lib/market-ref/entry'
@@ -381,19 +384,22 @@ function EarningsRow({ entry }: { entry: EarningsCalendarEntry }) {
   return (
     <tr className="border-b border-border/40 last:border-0 hover:bg-accent/40">
       <td className="py-1.5 pl-3 pr-3">
-        <Link
-          {...chartLinkProps(target)}
-          className="flex items-center gap-1.5 font-mono text-[11.5px] font-medium hover:underline"
-        >
-          {logoUrl ? (
-            <img alt="" className="size-[18px] rounded-full" src={logoUrl} />
-          ) : (
-            <span className="flex size-[18px] items-center justify-center rounded-full bg-muted text-[8px] text-muted-foreground">
-              {entry.symbol.slice(0, 2)}
-            </span>
-          )}
-          {entry.symbol}
-        </Link>
+        <span className="flex items-center gap-1.5">
+          <Link
+            {...chartLinkProps(target)}
+            className="flex items-center gap-1.5 font-mono text-[11.5px] font-medium hover:underline"
+          >
+            {logoUrl ? (
+              <img alt="" className="size-[18px] rounded-full" src={logoUrl} />
+            ) : (
+              <span className="flex size-[18px] items-center justify-center rounded-full bg-muted text-[8px] text-muted-foreground">
+                {entry.symbol.slice(0, 2)}
+              </span>
+            )}
+            {entry.symbol}
+          </Link>
+          <ReportTimeBadge reportTime={entry.reportTime} />
+        </span>
       </td>
       <td className="max-w-[10rem] truncate pr-3 text-[11px] text-muted-foreground">
         {entry.name ?? ''}
@@ -413,6 +419,48 @@ function EarningsRow({ entry }: { entry: EarningsCalendarEntry }) {
         )}
       </td>
     </tr>
+  )
+}
+
+/**
+ * Before the open or after the close, when a source actually says so.
+ *
+ * Two sources feed this and neither guesses. The provider states the slot for
+ * reports inside about thirty days, and past that the App Server classifies the
+ * company's habit from its own Item 2.02 8-K filings, which is what it has done
+ * every quarter for years. Absent renders NOTHING: no badge, no dash, no
+ * "unknown" chip. The slot is the one detail a trader positions on, and a pane
+ * that filled it with a plausible guess would be worse than a pane that says
+ * nothing.
+ *
+ * BMO and AMC rather than icons, because those are the words a desk uses. The
+ * long form rides in the tooltip and in screen-reader text.
+ */
+function ReportTimeBadge({
+  reportTime,
+}: {
+  reportTime?: EarningsCalendarEntry['reportTime']
+}) {
+  const { t } = useTranslation()
+  const badge = reportTimeBadge(reportTime)
+  if (!badge) return null
+
+  const label = t(badge.shortKey)
+  const full = t(badge.labelKey)
+
+  return (
+    <span
+      className={cn(
+        'shrink-0 rounded px-1 py-px font-mono text-[8.5px] font-medium uppercase tracking-[.08em]',
+        reportTime === 'bmo'
+          ? 'bg-[color-mix(in_oklch,var(--chart-4)_18%,transparent)] text-[var(--chart-4)]'
+          : 'bg-secondary text-muted-foreground',
+      )}
+      title={full}
+    >
+      {label}
+      <span className="sr-only"> {full}</span>
+    </span>
   )
 }
 

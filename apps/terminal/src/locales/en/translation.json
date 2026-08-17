@@ -1486,6 +1486,8 @@
     "toolbar": {
       "timeframe": "Timeframe",
       "chartType": "Chart Type",
+      "chartTypesForProbabilities": "Chart type for probabilities",
+      "chartTypesAll": "All chart types",
       "crosshairMode": "Crosshair Mode",
       "crosshair": "Crosshair",
       "priceScale": "Price Scale",
@@ -2357,7 +2359,7 @@
     "openInterest": "Open interest per contract with its 24h change, so crowding shows up before price does",
     "fundingExtremes": "The most positive and most negative funding rates right now, with the venue paying each one",
     "fundingBelt": "The countdown to the next funding stamp, the current and predicted rate, and what your size pays or earns",
-    "liquidationMap": "What the venue actually liquidated on the price axis, with your own liquidation price and leverage marks over it",
+    "liquidationMap": "A time-by-price heatmap of what the venue actually liquidated, painted behind the contract's candles with your own liquidation prices over it",
     "marginHealth": "Margin ratio, maintenance against equity, liquidation distance, and what an adverse move would do to all three",
     "riskControls": "Your daily loss cap, trade count, position size and kill switch, editable where the trade happens",
     "categories": "Every event category with a live contract count, so the board narrows in one click",
@@ -2380,10 +2382,10 @@
     "manageLiquidity": "Move the range, add or pull liquidity, and claim fees without leaving the chart",
     "chainLadder": "The same token priced on every chain, with gas folded in, so the best total wins rather than the best quote",
     "routeBridge": "Source chain, target chain, the bridge, its fee and how long it takes, ready to execute",
-    "inFlight": "Transfers still confirming, each with the block counter it is waiting on",
+    "inFlight": "Transfers still confirming, each with the stage it has reached",
     "session": "Where the trading day is right now, from the broker's own calendar, holidays and half days included",
-    "earningsCalendar": "Who reports and when with the estimate they have to beat, plus what is about to list",
-    "economicCalendar": "Macro releases by the clock, with importance, the prior print and consensus",
+    "earningsCalendar": "Who reports and when, before or after the bell, with the estimate they have to beat, plus what is about to list",
+    "economicCalendar": "Macro releases by the clock, with impact, the prior print and the market-implied figure",
     "sessionClock": "A one-line clock for the trading day, so an out-of-hours ticket is never a surprise",
     "level1": "Bid, ask and sizes, the spread, the day's range, and a halt row when the tape calls one",
     "company": "Valuation, growth, margins, the next catalyst and where the analysts sit, in one pane",
@@ -3079,6 +3081,10 @@
         "title": "GeckoTerminal",
         "description": "DEX market data powered by GeckoTerminal (CoinGecko): deep history, native 4h candles"
       },
+      "coinglass-liquidations": {
+        "title": "Coinglass Liquidations",
+        "description": "Liquidation prints from your own Coinglass key, for the perpetual venues Pairlens does not collect itself. Seven days of history instead of three. Desktop only, because Coinglass sends no CORS headers, and the endpoint it reads starts at the Coinglass Standard plan."
+      },
       "helius-rpc-provider": {
         "title": "Helius Solana RPC",
         "description": "The Solana node every Solana read and send goes through: balances, liquidity positions, swap submission. Add your own Helius key for a reliable endpoint; without one it falls back to the public RPC, which sheds load without warning."
@@ -3109,7 +3115,7 @@
       },
       "lifi-bridge-connector": {
         "title": "LI.FI Bridge",
-        "description": "Move one asset between Ethereum, Base, Arbitrum, BNB Chain and Polygon: the best bridge for the size, the fee and the time to land, and tracking until it arrives"
+        "description": "Move one asset between Ethereum, Base, Arbitrum, BNB Chain, Polygon and Solana: the best bridge for the size, the fee and the time to land, and tracking until it arrives"
       },
       "kalshi-market-connector": {
         "title": "Kalshi Market Connector",
@@ -3859,7 +3865,7 @@
       "dex-cross-chain": {
         "name": "DEX Cross-Chain",
         "tagline": "The same token, every chain, gas included.",
-        "description": "A board for moving between chains: the chain ladder prices the token everywhere with gas folded into the total, the bridge route states its fee and how long it takes, and transfers still confirming sit beside them with their block counters.",
+        "description": "A board for moving between chains: the chain ladder prices the token everywhere with gas folded into the total, the bridge route states its fee and how long it takes, and transfers still confirming sit beside them with their current stage.",
         "menuLabel": "Cross-Chain"
       },
       "equities-company": {
@@ -5267,7 +5273,7 @@
     "bandWithHeadroom": "±{{band}}% band · {{headroom}}% of headroom before the upper bound",
     "composition": "Composition",
     "uncollected": "Uncollected fees",
-    "feesLastTouch": "Settled at this position's last touch. Orca and Raydium credit fees only when a position is next touched, so the live claim can be higher.",
+    "feesLastTouch": "Settled amount only. This position's boundary tick data could not be read, so fees earned since its last touch are not counted and the live claim can be higher.",
     "tokenId": "Position",
     "pool": "Pool",
     "feeTier": "{{value}}% fee",
@@ -5302,7 +5308,7 @@
     "emptyBody": "{{wallet}} holds no positions to accrue fees on. Provide liquidity on a connected chain and the claim shows up here.",
     "noChainsTitle": "No chain connectors",
     "noChainsBody": "Install an on-chain connector and this pane reads what its pools owe your wallet.",
-    "footnote": "Both legs, per position: what a collect would pay this block on EVM chains, and what the pool has already credited on Solana. Fees already collected leave no trace on chain, so fee APR, time in range and loss versus holding need an indexer and are not shown."
+    "footnote": "Both legs, per position: what a collect would pay this block on EVM chains, and the same figure replayed from pool fee growth on Solana. Fees already collected leave no trace on chain, so fee APR, time in range and loss versus holding need an indexer and are not shown."
   },
   "manageLiquidity": {
     "title": "Manage liquidity",
@@ -5336,6 +5342,7 @@
     "rowPosition": "Position",
     "rowChain": "Chain",
     "rowManager": "Manager",
+    "rowProgram": "Program",
     "rowCollecting": "Collecting",
     "rowRemoving": "Removing",
     "rowReceive": "You receive",
@@ -5343,8 +5350,10 @@
     "rowDepositing": "Depositing",
     "rowMinimum": "Minimum",
     "confirmCollectNote": "Sent to the position manager above. Fees go to this wallet and nowhere else.",
+    "confirmCollectNoteSolana": "Sent to the program above. Fees are settled and paid to this wallet in the same transaction, and nowhere else.",
     "confirmRemoveNote": "Burn and collect in one transaction. The minimums are recomputed from the pool price at signing, {{slippage}} under it.",
     "confirmAddNote": "Each token needs an approval to the manager first, so this can be two or three transactions.",
+    "confirmAddNoteSolana": "One transaction, and no token approvals. The deposit is capped at the amounts above.",
     "back": "Back",
     "sign": "Sign and send",
     "pendingTitle": "Waiting for the receipt",
@@ -5360,17 +5369,13 @@
     "lockedBody": "This transaction needs your wallet key. Unlock Pairlens and try again.",
     "noConnectorTitle": "Connector not installed",
     "noConnectorBody": "This position's chain has no connector installed, so nothing can sign for it.",
-    "evmOnlyTitle": "EVM positions only",
-    "evmOnlyBody": "These actions call a Uniswap v3 position manager, which is an EVM contract. Solana positions are readable in the other LP panes but cannot be signed for here. Provide liquidity on an EVM chain and you can manage it from this pane.",
-    "readOnlyElsewhere_one": "{{count}} position on another signing family is read-only here.",
-    "readOnlyElsewhere_other": "{{count}} positions on another signing family are read-only here.",
     "noSigner": "No connected wallet signs on this position's chain.",
     "noChainsTitle": "No chain connectors",
     "noChainsBody": "Install an on-chain connector and this pane can collect fees and resize the ranges it finds.",
     "loadingTitle": "Reading positions",
-    "loadingBody": "Asking each connected chain's position manager what this wallet holds.",
+    "loadingBody": "Asking every connected chain what this wallet holds.",
     "emptyTitle": "No liquidity positions",
-    "emptyBody": "{{wallet}} holds no Uniswap v3 or PancakeSwap v3 positions on the connected chains. Provide liquidity on one and you can manage it here.",
+    "emptyBody": "{{wallet}} holds no concentrated-liquidity positions on the connected chains: no Uniswap v3 or PancakeSwap v3 range on EVM, no Orca or Raydium range on Solana. Provide liquidity on one and you can manage it here.",
     "footnote": "Collect and remove are one transaction each, and a removal sweeps the fees with it. Range moves are not edits: they burn the position and mint a new one, so they are not offered here."
   },
   "lpPanes": {
@@ -5381,8 +5386,8 @@
     "title": "Bridge",
     "subtitle": "Move one asset out of {{chain}}",
     "provider": "LI.FI",
-    "notEvmTitle": "Not a bridgeable chain",
-    "notEvmBody": "Transfers run between Ethereum, Base, Arbitrum, BNB Chain and Polygon. {{chain}} signs a different kind of transaction, and the bridge connector does not carry that signer yet.",
+    "unsupportedChainTitle": "Not a bridgeable chain",
+    "unsupportedChainBody": "Transfers run between Ethereum, Base, Arbitrum, BNB Chain, Polygon and Solana. {{chain}} is not one of them.",
     "noConnectorTitle": "No bridge connector installed",
     "noConnectorBody": "Install the LI.FI Bridge plugin from the Plugin Store to price and send cross-chain transfers.",
     "amountLabel": "Amount to bridge",
@@ -5403,12 +5408,14 @@
     "expired": "Expired",
     "confirmBody": "Send {{amount}} {{asset}} from {{from}} to {{to}} over {{tool}}. You receive at least {{min}}.",
     "confirmCost": "Bridge fee {{fee}}, network gas {{gas}}, signed by {{wallet}}.",
+    "confirmDestination": "Lands on {{chain}} in your wallet {{wallet}}.",
+    "needsDestinationWallet": "Connect a {{chain}} wallet to receive this transfer. The price above is real; there is just nowhere to send it yet.",
     "confirmAction": "Confirm and sign",
     "cancel": "Cancel",
     "sentBody": "Transfer sent. Tracking it in flight:",
     "sendFailed": "The transfer could not be sent.",
     "refusal": {
-      "non-evm-chain": "Bridging to and from {{chain}} is not supported yet. Transfers run between EVM chains only.",
+      "non-evm-chain": "{{chain}} signs a kind of transaction this bridge does not carry yet.",
       "same-chain": "That is the chain you are already on. Swapping is the pane next door.",
       "unknown-market": "{{chain}} is not a chain this bridge covers.",
       "unknown-token": "{{asset}} does not resolve to a contract on {{chain}}, so there is nothing to bridge.",
@@ -5709,6 +5716,15 @@
       "close": "Close news",
       "positionLabel": "Story {{current}} of {{total}}",
       "swipeHint": "Swipe up for the next story"
+    },
+    "predictions": {
+      "resolvesShort": "Resolves {{date}}",
+      "runnerCount_one": "{{count}} outcome",
+      "runnerCount_other": "{{count}} outcomes",
+      "rankOutcomes_one": "Rank the outcome",
+      "rankOutcomes_other": "Rank all {{count}} outcomes",
+      "tailBelow_one": "Show 1 more, under {{price}}",
+      "tailBelow_other": "Show {{count}} more, all under {{price}}"
     },
     "trade": {
       "openBook": "Open the order book",
@@ -6143,10 +6159,7 @@
     "noRateBody": "{{venue}} returned no funding rate for this contract."
   },
   "liquidationMap": {
-    "subtitle": "Where the market was liquidated, and where your own position would be",
-    "estimateBadge": "ESTIMATE",
-    "sideLong": "long",
-    "sideShort": "short",
+    "sourceLabel": "Data source",
     "windowLabel": "Window",
     "windows": {
       "h1": "1h",
@@ -6154,25 +6167,33 @@
       "h24": "24h",
       "h72": "72h"
     },
-    "referenceHint": "A {{leverage}}x {{side}} opened at the current price liquidates near {{price}}",
-    "clusterHint": "{{price}}: {{notional}} of {{side}} positions liquidated across {{count}} prints",
+    "sourceLine": "{{venue}} · {{feed}}",
+    "feedComplete": "complete feed",
+    "feedSampled": "sampled feed",
     "legendLong": "{{value}} longs",
     "legendShort": "{{value}} shorts",
     "legendPrints": "{{count}} prints",
-    "caption": "Bars are your own liquidation prices, reported by each venue. The thin marks are where a position opened at the current price would liquidate at 5x, 10x and 25x.",
-    "noPositionsCaption": "The thin marks show where a position opened at the current price would liquidate at 5x, 10x and 25x. Your own liquidation prices appear as bars once a position is open.",
-    "clustersCaption": "The shaded columns are what the venue actually liquidated over the last {{window}} hours, red for longs and green for shorts.",
-    "noClustersCaption": "Nothing was liquidated on this contract in the last {{window}} hours.",
+    "mapCaption": "Shaded cells are what {{venue}} actually liquidated in the last {{window}}, placed at the time and the price it happened. The heavier the notional, the darker the cell.",
+    "positionsCaption": "The dashed lines are your own liquidation prices, reported by each venue and thickened by the notional at risk.",
+    "noPositionsCaption": "Your own liquidation prices join the chart as dashed lines once a position is open on this contract.",
+    "sampledNote": "This venue publishes at most one liquidation per symbol per second, so the magnitudes are a sample and undercount cascades.",
+    "noneInWindow": "Nothing liquidated in the last {{window}}",
+    "noClustersCaption": "Nothing was liquidated on this contract in the last {{window}}.",
     "clustersLoadingCaption": "Loading the venue's liquidation history.",
+    "clustersErrorCaption": "The venue's liquidation history could not be loaded. The collector answers once a minute, so this may clear on its own.",
+    "errorTitle": "The liquidation history did not load",
+    "noFeedTitle": "No measured liquidations here",
     "notTrackedCaption": "This venue publishes no aggregate liquidation feed, so no market clusters are drawn.",
+    "planRequiredTitle": "A vendor key is needed here",
+    "planRequiredCaption": "This venue's clusters come from a Coinglass key. Add one, or move to a Coinglass plan that covers liquidation orders, and the map fills in.",
+    "planRequiredAction": "Manage the Coinglass plugin",
+    "alternateSourcePrompt": "Pick {{venue}} above to read another exchange’s prints against this chart. Sources are never merged: they differ in what their feeds carry.",
+    "standaloneCaption": "Market clusters come from the Pairlens cloud, which this build does not use, or from a data vendor key you have not added.",
+    "collectingTitle": "Still filling in",
     "collectingCaption": "Market clusters are still filling in. Collecting since {{since}}.",
     "collectingJustStarted": "just now",
-    "standaloneCaption": "Market clusters come from the Pairlens cloud, which this build does not use.",
-    "clustersErrorCaption": "The venue's liquidation history could not be loaded. Everything else on the axis is unaffected.",
-    "noPriceTitle": "No price to map against",
-    "noPriceBody": "The map needs a live price for the contract. It fills in as soon as the chart beside it has one.",
-    "emptyTitle": "Nothing to plot",
-    "emptyBody": "Open a perpetual position, or pick a contract, and the price axis fills in."
+    "noCandlesTitle": "No candles to map against",
+    "noCandlesBody": "This venue served no price history for the contract, so there is nothing to hang the liquidations on."
   },
   "marginHealth": {
     "title": "Margin health",
@@ -6245,6 +6266,12 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "noEstimate": "no estimate",
+    "reportTime": {
+      "bmo": "BMO",
+      "bmoLabel": "Reports before the open",
+      "amc": "AMC",
+      "amcLabel": "Reports after the close"
+    },
     "capped": "Showing the first {{shown}} of {{total}} reports.",
     "emptyTitle": "No earnings feed",
     "emptyBody": "This build has no earnings provider. The schedule comes from the App Server; a broker publishes its own session hours, not who reports this week.",
@@ -6302,7 +6329,9 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "allDay": "All day",
-    "sourceNote": "Compiled from the BLS, BEA, Federal Reserve and Census release schedules. Times are US Eastern, as the agencies publish them.",
+    "sourceNote": "Compiled from the BLS, BEA, Federal Reserve and Census release schedules. Actual and prior come from the agencies themselves; the implied figure is derived from Kalshi contract pricing. Times are US Eastern, as the agencies publish them.",
+    "impliedHint": "Market-implied expectation from Kalshi contract pricing. This is a live market price, not an analyst consensus.",
+    "impliedFrom": "Implied by {{source}} contract pricing, not an analyst consensus.",
     "emptyTitle": "No macro calendar",
     "emptyBody": "The release schedule comes from the App Server. This build runs standalone, so there is nothing to compile it from.",
     "providerBusyTitle": "Macro calendar is rate limited",
@@ -6319,6 +6348,9 @@
     "columns": {
       "time": "Time ({{zone}})",
       "event": "Release",
+      "actual": "Actual",
+      "prior": "Prior",
+      "implied": "Implied (Kalshi)",
       "source": "Agency"
     }
   },

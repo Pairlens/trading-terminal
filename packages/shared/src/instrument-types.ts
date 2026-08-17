@@ -600,13 +600,17 @@ export type CompanyFundamentals = {
   analystRatings: CompanyAnalystRatings | null
 }
 
+/** Before the open or after the close, as sources state it. */
+export type EarningsReportTime = 'bmo' | 'amc'
+
 /**
  * One scheduled earnings report.
  *
- * There is no before-the-bell / after-the-close field, deliberately: the
- * provider's calendar publishes a date and no time. Inventing a slot would
- * invent the one detail a trader acts on, so the pane groups by date and says
- * nothing about the bell.
+ * `reportTime` is present only when a source actually states the slot: the
+ * provider's calendar carries a time-of-day column for near reports, and a
+ * company's own past Item 2.02 filings establish its habitual slot. Absent
+ * means unknown, and the pane groups by date and says nothing about the bell
+ * rather than inventing the one detail a trader acts on.
  */
 export type EarningsCalendarEntry = {
   /** Bare ticker, uppercase. */
@@ -619,6 +623,8 @@ export type EarningsCalendarEntry = {
   /** Consensus EPS in `currency`; null when no estimate was published. */
   epsEstimate: number | null
   currency: string | null
+  /** Stated report slot; absent when no source commits to one. */
+  reportTime?: EarningsReportTime
 }
 
 /** `/api/company-overview?symbol=NVDA` */
@@ -1105,11 +1111,12 @@ export type LpWriteResult = {
 //
 // A forward US macro release schedule compiled on the App Server from the
 // agencies' own published calendars (BLS, BEA, the Fed, Census), not bought
-// from a data vendor. That origin sets what the shape can honestly carry:
-// titles, times and importance exist; consensus and actual prints do not,
-// because the agencies do not publish forecasts of themselves. The fields stay
-// optional rather than absent so a future paid provider can fill them without
-// a new shape.
+// from a data vendor. Actual and prior prints come from the agencies' own
+// public APIs after release; street consensus does not exist here because no
+// legitimate free source publishes one — `consensus` stays reserved for a
+// future paid provider. What CAN be stated today is the market-implied figure
+// derived from prediction-market pricing, carried in `implied` and always
+// labeled as implied, never presented as a survey consensus.
 
 export type EconomicEventImportance = 'high' | 'medium' | 'low'
 
@@ -1135,6 +1142,14 @@ export type EconomicCalendarEntry = {
   actual?: string
   consensus?: string
   prior?: string
+  /**
+   * Market-implied expectation derived from prediction-market pricing, same
+   * unit formatting as `actual`. Not a survey consensus; the UI must label it
+   * as implied and name `impliedSource`.
+   */
+  implied?: string
+  /** Venue the implied figure is derived from, as displayed: 'Kalshi'. */
+  impliedSource?: string
 }
 
 /** `/api/economic-calendar?days=14` */
@@ -1179,6 +1194,15 @@ export type LiquidationBucket = {
   count: number
 }
 
+/**
+ * Whether the source stream carries every print or a sample. Binance's
+ * !forceOrder feed pushes at most one order per symbol per second, so its
+ * magnitudes undercount exactly during cascades; Bybit's allLiquidation
+ * pushes everything. Venues with different completeness must not be summed
+ * or compared by magnitude, and the UI must say so.
+ */
+export type LiquidationCompleteness = 'complete' | 'sampled'
+
 export type LiquidationClustersResponse = {
   venue: string
   /** Futures pair key, 'BASE-QUOTE-SETTLE'. */
@@ -1191,6 +1215,8 @@ export type LiquidationClustersResponse = {
   retentionMs: number
   /** When the collector began tracking this pair — history before this cannot exist. */
   trackedSince: number
+  /** Whether the underlying venue stream is a full feed or a sample. */
+  completeness: LiquidationCompleteness
   buckets: Array<LiquidationBucket>
   fetchedAt: string
 }
@@ -1198,6 +1224,10 @@ export type LiquidationClustersResponse = {
 export type LiquidationsUnavailableReason =
   | 'not_tracked' // the collector does not watch this venue or pair
   | 'collecting' // watched, but too young to draw
+  // The provider for this venue is a BYOK vendor and the configured key cannot
+  // reach the data: no key, a rejected key, or a plan that excludes the
+  // endpoint. A fact about the credential, not about the venue.
+  | 'plan_required'
 
 export type LiquidationsUnavailableResponse = {
   error: 'liquidations_unavailable'

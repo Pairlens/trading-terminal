@@ -3,18 +3,26 @@
 /**
  * Claim the fees, take part of the range back, or put more into it.
  *
- * Three transactions against the position manager that issued the NFT, and
- * every one of them goes through the same two steps: a section that says what
- * would happen, then a confirmation card that states exactly what will be
- * signed — the action, the position, the chain, the manager contract, the
- * amounts and the minimum those amounts may not fall below. Nothing here
- * submits from a single click, because nothing here is reversible.
+ * Three transactions against whatever issued the position NFT, and every one of
+ * them goes through the same two steps: a section that says what would happen,
+ * then a confirmation card that states exactly what will be signed. The action,
+ * the position, the chain, what will execute it, the amounts, and the minimum
+ * those amounts may not fall below. Nothing here submits from a single click,
+ * because nothing here is reversible.
+ *
+ * BOTH SIGNING FAMILIES, one pane. On EVM the counterparty is a
+ * position-manager CONTRACT and its address is what a reader should check. On
+ * Solana it is a PROGRAM, Orca Whirlpool or Raydium CLMM, whose base58 id says
+ * nothing its name does not, so the card leads with the name. That is the only
+ * branch in here: the sections, the previews and the confirm card are shared,
+ * and each connector owns the difference between an approval-then-deposit and a
+ * single instruction.
  *
  * WHAT IS DELIBERATELY ABSENT. There is no "re-centre" and no range editor.
  * Moving a band is not an edit: it burns the position and mints a new one at
- * new ticks, which is a different NFT, a different token id and a fresh set of
- * approvals. Shipping it as a slider next to these three would make an
- * irreversible replacement look like an adjustment.
+ * new ticks, which is a different NFT and a different position id. Shipping it
+ * as a slider next to these three would make an irreversible replacement look
+ * like an adjustment.
  *
  * AMOUNTS ARE IN THE POOL'S OWN ORDER. `token0` and `token1` here are exactly
  * the manager's `amount0Desired` / `amount1Desired`, so a reader can check the
@@ -121,17 +129,11 @@ function ManageLiquidityPaneInner({
     () => sortLpPositions(positions, pair?.market),
     [positions, pair?.market],
   )
-  // Position reads now span both signing families, and only one of them has a
-  // position manager to call. Solana ranges stay visible in the LP panes and
-  // are filtered OUT of the picker here rather than listed and then refused.
-  const writable = useMemo(
-    () =>
-      sorted.filter(
-        (entry) => dexChain(entry.market)?.walletChain === 'ethereum',
-      ),
-    [sorted],
-  )
-  const readOnly = sorted.length - writable.length
+  // Every position read here is now signable. Both families arrive at the same
+  // three actions through their own connector: EVM through a position manager
+  // contract, Solana through the Orca and Raydium programs directly. Nothing is
+  // filtered out of the picker, which is what the filter here used to do.
+  const writable = sorted
 
   const [selectedKey, setSelectedKey] = useState<string | null>(null)
   const selected =
@@ -151,17 +153,6 @@ function ManageLiquidityPaneInner({
     )
     return match?.id ?? null
   }, [chains, selected, wallet.address, wallets])
-
-  // Every position the wallet holds is on a chain with no manager to call.
-  if (!selected && readOnly > 0) {
-    return (
-      <PaneEmpty
-        icon={SlidersHorizontal}
-        title={t('manageLiquidity.evmOnlyTitle')}
-        body={t('manageLiquidity.evmOnlyBody')}
-      />
-    )
-  }
 
   if (chains.length === 0) {
     return (
@@ -224,11 +215,7 @@ function ManageLiquidityPaneInner({
           // position it happened on.
           disabled={write.state.status !== 'idle'}
           onSelect={setSelectedKey}
-          note={
-            readOnly > 0
-              ? t('manageLiquidity.readOnlyElsewhere', { count: readOnly })
-              : null
-          }
+          note={null}
         />
         {/* Remounted per position: a percentage or an amount typed for one
             range must never be inherited by the next one. */}
@@ -841,6 +828,11 @@ function ConfirmCard({
   const { t } = useTranslation()
   const chain = dexChain(entry.market)
   const unread = t('manageLiquidity.unread')
+  // What signs differs by family, and the card has to say which one honestly. On
+  // EVM the counterparty is a position-manager CONTRACT and its address is the
+  // thing worth checking. On Solana it is a PROGRAM, and its base58 id tells a
+  // reader nothing the name does not, so the name leads.
+  const isSolana = chain?.walletChain === 'solana'
   const actionLabel =
     section === 'collect'
       ? t('manageLiquidity.tabCollect')
@@ -860,15 +852,27 @@ function ConfirmCard({
         />
         <ConfirmRow
           label={t('manageLiquidity.rowPosition')}
-          value={`#${entry.tokenId}`}
+          // A Solana position is named by its NFT mint, not a numeric id, so the
+          // `#` that reads correctly for an ERC-721 token id would be noise.
+          value={
+            isSolana ? shortWalletLabel(entry.tokenId) : `#${entry.tokenId}`
+          }
         />
         <ConfirmRow
           label={t('manageLiquidity.rowChain')}
           value={`${chain?.displayName ?? entry.market} · ${entry.dexName}`}
         />
         <ConfirmRow
-          label={t('manageLiquidity.rowManager')}
-          value={shortWalletLabel(entry.managerAddress)}
+          label={
+            isSolana
+              ? t('manageLiquidity.rowProgram')
+              : t('manageLiquidity.rowManager')
+          }
+          value={
+            isSolana
+              ? `${entry.dexName} · ${shortWalletLabel(entry.managerAddress)}`
+              : shortWalletLabel(entry.managerAddress)
+          }
         />
 
         {section === 'collect' ? (
@@ -930,12 +934,16 @@ function ConfirmCard({
 
       <p className="text-[10.5px] leading-relaxed text-muted-foreground">
         {section === 'collect'
-          ? t('manageLiquidity.confirmCollectNote')
+          ? isSolana
+            ? t('manageLiquidity.confirmCollectNoteSolana')
+            : t('manageLiquidity.confirmCollectNote')
           : section === 'remove'
             ? t('manageLiquidity.confirmRemoveNote', {
                 slippage: formatBps(slippageBps),
               })
-            : t('manageLiquidity.confirmAddNote')}
+            : isSolana
+              ? t('manageLiquidity.confirmAddNoteSolana')
+              : t('manageLiquidity.confirmAddNote')}
       </p>
 
       <div className="flex gap-2">

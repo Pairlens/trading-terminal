@@ -31,9 +31,10 @@ linear perpetual swaps. See [perpetual futures](/docs/cex-futures).
 **DEX.** Jupiter on Solana, plus an EVM DEX connector spanning Ethereum, Base,
 Arbitrum, BNB Chain, and Polygon through the KyberSwap aggregator.
 
-**Bridge.** LI.FI, for moving one asset between the five EVM chains. It quotes
-routes and tracks transfers as public reads, and signs with the EVM wallet the
-DEX connectors already use. See [DEX and wallets](/docs/dex-trading#bridging).
+**Bridge.** LI.FI, for moving one asset between the five EVM chains and Solana.
+It quotes routes and tracks transfers as public reads, and signs with the wallets
+the DEX connectors already use: the EVM key for an EVM leg, the Solana key for a
+Solana one. See [DEX and wallets](/docs/dex-trading#bridging).
 
 **Solana RPC.** Helius, answering the `rpc:solana` capability that every Solana
 read and send in the terminal goes through. Bring your own key, or run keyless

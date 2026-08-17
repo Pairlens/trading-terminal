@@ -28,9 +28,9 @@
  */
 import { ERC20_ABI } from '../evm-dex-connector/swap-executor'
 import { getViemChain } from '../evm-dex-connector/chains'
-import { LIFI_NATIVE_ADDRESS } from './tokens'
+import { isNativeToken } from './quote-client'
 import type { EvmChainConfig } from '../evm-dex-connector/chains'
-import type { LifiRoute } from './quote-client'
+import type { LifiRoute, LifiTransaction } from './quote-client'
 import type { BridgeExecutionResult } from '@pairlens/shared/instrument-types'
 
 /**
@@ -71,8 +71,9 @@ export function parseTxValue(value: string | null | undefined): bigint | null {
 }
 
 export type TxValidationInput = {
-  tx: { to: string; data: string; value: string | null; chainId: number | null }
-  approvalAddress: string
+  tx: LifiTransaction
+  /** The spender an allowance would name. Null is a refusal on a token send. */
+  approvalAddress: string | null
   expectedChainId: number
   /** Raw source-token units the user is sending. */
   fromAmountRaw: bigint
@@ -97,6 +98,17 @@ export function validateBridgeTransaction(
   const { tx, approvalAddress, expectedChainId, fromAmountRaw, isNativeSend } =
     input
 
+  // A Solana transaction has no `to`, no `value` and no chain id, so none of
+  // the rules below would fire on one. Refusing here rather than reading three
+  // absent fields as three passing checks is what keeps the two families from
+  // ever validating each other's work.
+  if (tx.kind !== 'evm') {
+    return {
+      ok: false,
+      error:
+        'Route returned a non-EVM transaction for an EVM chain. Refusing to sign.',
+    }
+  }
   if (!isAllowedLifiContract(tx.to)) {
     return {
       ok: false,
@@ -206,10 +218,7 @@ export async function executeBridgeTransfer(
 ): Promise<BridgeExecutionResult> {
   const { chain, route, walletAddress, getPrivateKey, rpcUrl } = opts
   try {
-    const isNativeSend =
-      route.fromToken.native ||
-      route.fromToken.address.toLowerCase() ===
-        LIFI_NATIVE_ADDRESS.toLowerCase()
+    const isNativeSend = isNativeToken(route.fromToken)
 
     const validation = validateBridgeTransaction({
       tx: route.tx,
@@ -250,6 +259,12 @@ export async function executeBridgeTransfer(
 
     if (!isNativeSend) {
       const tokenAddress = route.fromToken.address as `0x${string}`
+      // Non-null past `validateBridgeTransaction`, which refuses a token send
+      // whose spender is not a pinned contract. Re-stated rather than asserted
+      // so the guarantee survives someone reordering the two.
+      if (!route.approvalAddress) {
+        return { success: false, error: 'Route names no allowance spender' }
+      }
       const spender = route.approvalAddress as `0x${string}`
       const allowance = await publicClient.readContract({
         address: tokenAddress,

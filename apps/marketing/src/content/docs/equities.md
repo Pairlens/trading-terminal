@@ -1,12 +1,12 @@
 ---
 title: US equities
-description: Trade US stocks and ETFs through Alpaca from the same terminal, with a session clock off the broker's own calendar, Level 1 quotes with a halt row, an out-of-hours ticket that goes limit-only, insider filings, and the earnings, IPO and macro calendars.
+description: Trade US stocks and ETFs through Alpaca from the same terminal, with a session clock off the broker's own calendar, Level 1 quotes with a halt row, an out-of-hours ticket that goes limit-only, insider filings, BMO/AMC badges on earnings, and a macro calendar carrying actual, prior and the market-implied figure.
 group: traders
 parent: trading
 order: 9
 eyebrow: For traders
 updated: 17 AUG 2026
-readTime: 13 min read
+readTime: 15 min read
 ---
 
 A stock is the one instrument in Pairlens that keeps office hours. Everything
@@ -251,9 +251,24 @@ ahead and shows the next report for each stock you watch. The whole market
 reports a few hundred times a week, so beyond a cap the pane stops drawing rows
 and says how many it left out.
 
-There is no before-the-bell or after-the-close column. The provider publishes a
-report date and no time, and that badge would be a guess about the one detail
-you would position on.
+A row carries a small **BMO** or **AMC** badge when a source states the slot,
+and nothing at all when none does. Two sources feed it, and neither guesses. The
+provider's calendar states a time of day for reports inside about thirty days,
+which covers most of the names you would trade the print on. Past that it states
+nothing, so the App Server reads the company's own habit off its SEC filings
+instead: an earnings release is an 8-K under Item 2.02, the SEC publishes the
+exact moment it received each one, and a company that has filed after the close
+for the last eight quarters will do it again. That classification is
+date-aligned, which matters more than it sounds: Tesla files its production and
+delivery numbers under the same item, in the morning, weeks before its
+after-close earnings, so a plain "most common time" reading of its filings is a
+coin flip. Matching each filing to the quarter it belongs to picks the earnings
+one.
+
+A company whose timing genuinely moves, or that files as a foreign private
+issuer (a 6-K carries no item codes at all), gets no badge. There is no
+during-market-hours state either: that is real but rare, and it is not something
+this schedule can say, so those rows stay blank too.
 
 **A source toggle switches the pane to IPOs**: the forward pipeline, with the
 symbol, the company, the exchange it will list on, the expected date and the
@@ -280,11 +295,44 @@ replacing it. Some rows carry no clock at all, which is the feed rather than a
 gap: FOMC minutes and the Census indicators are published as a date, and those
 rows say so instead of inheriting a plausible time nobody can check.
 
-**There is no consensus, actual or prior column, and there will not be one from
-this source.** No agency forecasts itself and none of them publish the street's
-number. Three columns of dashes would be the pane pretending to a feed it does
-not have. What it does have is what a trader actually plans around: the day, the
-clock, the publisher, and the weight.
+### Actual, prior, and what the market implies
+
+Rows for the releases a desk stops for carry figures, and each column is exactly
+what it says.
+
+**Actual and prior come from the agencies' own APIs**, filled within minutes of
+the print by a poller that starts watching when a row's clock passes. CPI, PPI
+and payrolls come from the BLS public API, which needs no key at all; the FOMC
+target range comes from the New York Fed's markets API, which carries the range
+as a field rather than as prose to parse; core PCE and retail sales come from
+FRED, and GDP from BEA's own percent-change table. Two details worth knowing
+because they are where this usually goes wrong elsewhere: a month-over-month
+figure is computed from the seasonally adjusted series and a year-over-year one
+from the unadjusted series, which is the convention the agencies publish under,
+and payrolls is the first difference of a level in thousands. Get either wrong
+and the number looks plausible while being an order of magnitude off.
+
+**A figure appears only when the period it belongs to has actually been
+published.** The clock passing is not enough. Reading "the latest observation"
+the moment 08:30 ticks over would republish last month's print as this month's,
+which would be a completely believable wrong number, so the row waits for the
+period it is about.
+
+**The third column is Implied, and it names Kalshi.** It is not a consensus and
+is never labelled as one. Kalshi runs regulated markets on these exact releases,
+its market data needs no authentication, and reading the ladder of "above X"
+contracts gives a live distribution: the strike where the market prices even odds
+is the implied figure. For the FOMC row it is simpler, because the contracts are
+already a probability distribution over outcomes, so the row shows the target
+range the market favours and how strongly. A thin book produces a confident
+number out of three stale quotes, so a ladder has to clear a minimum open
+interest and be quoted tightly before anything is shown.
+
+**There is still no consensus column.** The street's forecast is a licensed
+product and no free source publishes one, so PPI and retail sales, which have no
+Kalshi market either, carry no expectation at all. An empty cell is empty: no
+dash, no zero, no placeholder. And if your App Server cannot fill any figures,
+the columns do not appear, which is the schedule this pane shipped as.
 
 ## What is not here yet
 
@@ -294,7 +342,9 @@ the touch is a data question rather than a UI one: the entitlement behind the
 connector quotes top of book, so there is no ladder to draw until a feed that
 carries one is connected. The macro calendar covers US federal releases; other
 jurisdictions and the street's consensus both need a provider nobody here
-subscribes to.
+subscribes to. A rate decision shows its prior range and the implied outcome but
+not its own actual, because the new range takes effect the day after the meeting
+and the row has left the window by then.
 
 ## Next
 

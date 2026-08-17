@@ -9,6 +9,11 @@ import {
 } from './token-registry'
 import { executeSwap, getQuote } from './swap-executor'
 import { fetchSolanaLpPositions, isSolanaLpAddress } from './lp-client'
+import {
+  executeSolanaLpWrite,
+  isLpWriteAction,
+  lpWriteFailure,
+} from './lp-writer'
 import { quoteSwapRoute } from './route-preview'
 import {
   cancelTriggerOrder,
@@ -61,6 +66,9 @@ export const JUPITER_ORDER_ACTIONS: ReadonlySet<string> = new Set([
   'list',
   'cancel',
   'lp-positions',
+  'lp-collect',
+  'lp-decrease',
+  'lp-increase',
 ])
 
 export const jupiterDexConnectorManifest: PluginManifest = {
@@ -224,6 +232,47 @@ export function createJupiterDexConnectorPlugin(
           rpcUrl: slot?.rpcUrl ?? rpcUrl,
           pair: typeof p['pair'] === 'string' ? p['pair'] : null,
           cap: typeof p['cap'] === 'number' ? p['cap'] : undefined,
+        })
+      }
+
+      // The three signed liquidity writes. Transactions against a CLMM program,
+      // not orders: none of them has a side, a pair or a price, so each is its
+      // own action rather than a shape `OrderParams` would grow a branch for.
+      //
+      // Self-contained and placed before the swap fall-through, exactly like
+      // `cancel`: the position is named by (program, position mint), and both
+      // are validated inside the writer against the two pinned program ids
+      // before anything reaches a key. See `lp-writer.ts` for the refusal order.
+      if (isLpWriteAction(action)) {
+        const lpSlot = getSlot(params)
+        if (!lpSlot) {
+          return lpWriteFailure(
+            action,
+            String(p['tokenId'] ?? ''),
+            p['walletId']
+              ? `Unknown wallet '${String(p['walletId'])}'`
+              : 'No wallet configured',
+          )
+        }
+        const lpKey = lpSlot.getPrivateKey
+        if (!lpKey) {
+          return lpWriteFailure(
+            action,
+            String(p['tokenId'] ?? ''),
+            'Wallet key retriever not configured',
+          )
+        }
+        return executeSolanaLpWrite({
+          action,
+          manager: p['manager'],
+          tokenId: p['tokenId'],
+          walletAddress: lpSlot.address,
+          getPrivateKey: lpKey,
+          rpcUrl: lpSlot.rpcUrl,
+          slippageBps: p['slippageBps'],
+          liquidityPct: p['liquidityPct'],
+          amount0Desired: p['amount0Desired'],
+          amount1Desired: p['amount1Desired'],
         })
       }
 

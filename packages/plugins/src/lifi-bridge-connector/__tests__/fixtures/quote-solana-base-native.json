@@ -1,0 +1,169 @@
+{
+  "type": "lifi",
+  "id": "373e8288-1c30-4d53-ab5e-797849060da7:0",
+  "tool": "relaydepository",
+  "toolDetails": {
+    "key": "relaydepository",
+    "name": "Relay",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/bridges/relay.svg"
+  },
+  "action": {
+    "fromToken": {
+      "address": "11111111111111111111111111111111",
+      "chainId": 1151111081099710,
+      "symbol": "SOL",
+      "decimals": 9,
+      "name": "SOL",
+      "coinKey": "SOL",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
+      "priceUSD": "75.90034332170819",
+      "tags": ["major_asset"],
+      "verificationStatus": "unverified",
+      "verificationStatusBreakdown": []
+    },
+    "fromAmount": "100000000",
+    "toToken": {
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "chainId": 8453,
+      "symbol": "USDC",
+      "decimals": 6,
+      "name": "USD Coin",
+      "coinKey": "USDC",
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+      "priceUSD": "0.9972743146",
+      "tags": ["stablecoin"],
+      "verificationStatus": "verified",
+      "verificationStatusBreakdown": [
+        {
+          "provider": "hypernative",
+          "result": "verified",
+          "providerResult": "accept"
+        }
+      ]
+    },
+    "fromChainId": 1151111081099710,
+    "toChainId": 8453,
+    "slippage": 0.005,
+    "fromAddress": "1nc1nerator11111111111111111111111111111111",
+    "toAddress": "0x000000000000000000000000000000000000dEaD",
+    "destinationGasConsumption": "",
+    "destinationCallData": "0x00",
+    "jitoBundle": false
+  },
+  "estimate": {
+    "tool": "relaydepository",
+    "approvalAddress": "0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE",
+    "toAmountMin": "7449097",
+    "toAmount": "7486530",
+    "fromAmount": "100000000",
+    "feeCosts": [
+      {
+        "name": "LIFI Fixed Fee",
+        "description": "Fixed LIFI fee, independent of any other fee",
+        "token": {
+          "address": "11111111111111111111111111111111",
+          "chainId": 1151111081099710,
+          "symbol": "SOL",
+          "decimals": 9,
+          "name": "SOL",
+          "coinKey": "SOL",
+          "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
+          "priceUSD": "75.90034332170819",
+          "tags": ["major_asset"],
+          "verificationStatus": "unverified",
+          "verificationStatusBreakdown": []
+        },
+        "amount": "250000",
+        "amountUSD": "0.0190",
+        "percentage": "0.0025",
+        "included": true,
+        "feeSplit": {
+          "lifiFee": "250000",
+          "integratorFee": "0",
+          "recipients": [
+            {
+              "name": "lifi",
+              "type": "FIXED",
+              "fee": "250000"
+            }
+          ]
+        }
+      },
+      {
+        "name": "Relayer Gas fee",
+        "description": "Relay bridge gas fee",
+        "token": {
+          "address": "11111111111111111111111111111111",
+          "chainId": 1151111081099710,
+          "symbol": "SOL",
+          "decimals": 9,
+          "name": "SOL",
+          "coinKey": "SOL",
+          "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
+          "priceUSD": "75.90034332170819",
+          "tags": ["major_asset"],
+          "verificationStatus": "unverified",
+          "verificationStatusBreakdown": []
+        },
+        "amount": "10134",
+        "amountUSD": "0.0008",
+        "percentage": "0.0001",
+        "included": true
+      },
+      {
+        "name": "Relayer Service fee",
+        "description": "Relay bridge service fee",
+        "token": {
+          "address": "11111111111111111111111111111111",
+          "chainId": 1151111081099710,
+          "symbol": "SOL",
+          "decimals": 9,
+          "name": "SOL",
+          "coinKey": "SOL",
+          "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
+          "priceUSD": "75.90034332170819",
+          "tags": ["major_asset"],
+          "verificationStatus": "unverified",
+          "verificationStatusBreakdown": []
+        },
+        "amount": "572678",
+        "amountUSD": "0.0435",
+        "percentage": "0.0057",
+        "included": true
+      }
+    ],
+    "gasCosts": [
+      {
+        "token": {
+          "address": "11111111111111111111111111111111",
+          "chainId": 1151111081099710,
+          "symbol": "SOL",
+          "decimals": 9,
+          "name": "SOL",
+          "coinKey": "SOL",
+          "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
+          "priceUSD": "75.90034332170819",
+          "tags": ["major_asset"],
+          "verificationStatus": "unverified",
+          "verificationStatusBreakdown": []
+        },
+        "amount": "63608",
+        "amountUSD": "0.004827869038007215",
+        "estimate": "63608",
+        "limit": "63608",
+        "price": "1",
+        "type": "SEND"
+      }
+    ],
+    "executionDuration": 4,
+    "fromAmountUSD": "7.5900",
+    "toAmountUSD": "7.4661",
+    "skipPermit": false
+  },
+  "integrator": "lifi-api",
+  "executionType": "transaction",
+  "transactionRequest": {
+    "data": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAQAGCAAzkHKNNBFgeb3JEb//ANvUTS7NzPecpuEAOOEAAAAAHoxPq4mUSUyPHlwSh0RbKRfWDEPHmqlZFi9dYABZjTIDBkZv5SEXMv/srbpyw5vnvIzlu8X3EmssQ5s6QAAAACg9DdKCNU/vCuOw4ifTfNicomb7F93498t8zvvk69xVBqfVFxjHdMkoVmOYaR1etoteuKObS21cc1VbIQAAAAAcXn6gdHV3Y8KH8xOqLIt5seXu33ydE9qAHqxLT4Lc5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeSaJN47NUdgEBusMqjtieVvrELbF3Ja8Lg3wPL/uGr8fQ6GmNdnTQT6/IHpdcymHHCQ0cP23iYMYkaZThA1jngUCAAUCEOsJAAIACQM3YAEAAAAAAAMCBAUJAD6TASGezcsABgIAAQwCAAAAkNADAAAAAAAHBQkAAAgGMA2eDd9f1RwGcBDyBQAAAADp6WdmsWByofbjRNI8JbTyN/mQ6avDwsTmrwN2mfkKywH5CleX0p1W2E0BwNC64/nFjEaXTuuVyg5P1Sf64f/vAgECAQE="
+  },
+  "transactionId": "0x3e9301219ecdcb00"
+}

@@ -13,11 +13,15 @@
  * re-price, and "Bridge" on a stale panel is consent to a number that has moved.
  * So the pane freezes the terms it is asking about, states them one more time,
  * and the connector re-quotes at signing time and refuses anything worse than
- * what was confirmed. Calldata never travels through this component.
+ * what was confirmed. No transaction ever travels through this component.
  *
- * What it will not do is quote a Solana leg. That needs a Solana signer and a
- * different transaction shape, so the route comes back as a typed refusal and
- * the pane says so, rather than pricing a transfer it cannot send.
+ * Solana is one of the six chains now, and it is the reason the pane has a
+ * second wallet check. A transfer between EVM chains lands back on the key that
+ * sent it, so there is nothing to ask about. A transfer that crosses families
+ * lands on a DIFFERENT key, and if the user has not connected one there is no
+ * address to receive it. That is worth saying before the amount is typed, not
+ * after the confirm, so the destination rail states it and the button stays
+ * down until there is somewhere for the money to go.
  */
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -65,11 +69,6 @@ export function RouteBridgePane() {
   )
 }
 
-/** EVM chains a transfer can leave from or land on, in rail order. */
-function evmChains(): Array<DexChain> {
-  return DEX_CHAINS.filter((chain) => chain.walletChain === 'ethereum')
-}
-
 function RouteBridgePaneInner({
   market,
   pairKey,
@@ -84,7 +83,10 @@ function RouteBridgePaneInner({
   const { t } = useTranslation()
   const plugin = useBridgePlugin()
   const touchWallet = useWalletsStore((s) => s.touchWallet)
-  const chains = evmChains()
+  const wallets = useWalletsStore((s) => s.wallets)
+  // Every chain the bridge covers, both signing families. The source is the
+  // pane's own market; the destination rail offers all the others.
+  const chains = DEX_CHAINS
   const from = dexChain(market)
 
   // Assets offered without asking anyone to paste an address: the chain's own
@@ -145,14 +147,25 @@ function RouteBridgePaneInner({
   const priced = response && !isBridgeRefusal(response) ? response : null
   const stale = priced !== null && Date.now() - priced.quotedAt > QUOTE_STALE_MS
 
-  if (!from || from.walletChain !== 'ethereum') {
+  const to = dexChain(destination ?? undefined)
+  // A transfer that crosses signing families lands on the OTHER key, so the
+  // pane has to know that key exists before it offers to send anything. Within
+  // one family the source wallet is also the recipient and there is nothing to
+  // check. The connector resolves the same slot itself at signing time; what is
+  // resolved here is only what to say about it.
+  const crossFamily =
+    to !== null && from !== null && to.walletChain !== from.walletChain
+  const destinationWallet = crossFamily
+    ? (wallets.find((wallet) => wallet.chain === to.walletChain) ?? null)
+    : null
+  const needsDestinationWallet = crossFamily && destinationWallet === null
+
+  if (!from) {
     return (
       <PaneEmpty
         icon={Waypoints}
-        title={t('routeBridge.notEvmTitle')}
-        body={t('routeBridge.notEvmBody', {
-          chain: from?.displayName ?? market,
-        })}
+        title={t('routeBridge.unsupportedChainTitle')}
+        body={t('routeBridge.unsupportedChainBody', { chain: market })}
       />
     )
   }
@@ -321,6 +334,14 @@ function RouteBridgePaneInner({
             </p>
           ) : null}
 
+          {needsDestinationWallet && to ? (
+            <p className="rounded-md border border-border/70 bg-muted/40 px-2.5 py-1.5 text-[11px] leading-relaxed text-muted-foreground">
+              {t('routeBridge.needsDestinationWallet', {
+                chain: to.displayName,
+              })}
+            </p>
+          ) : null}
+
           {sent ? (
             <p className="rounded-md border border-up/30 bg-up/10 px-2.5 py-1.5 text-[11px] leading-relaxed">
               {t('routeBridge.sentBody')}{' '}
@@ -381,9 +402,20 @@ function RouteBridgePaneInner({
                   confirming.gasUsd === null
                     ? '—'
                     : formatCompactUsd(confirming.gasUsd),
-                wallet: `${walletAddress.slice(0, 6)}…${walletAddress.slice(-4)}`,
+                wallet: shortAddress(walletAddress),
               })}
             </p>
+            {destinationWallet ? (
+              // Only when the families differ. Within one family the recipient
+              // IS the sender, and repeating the address would read as a second
+              // account being involved.
+              <p className="text-[10px] leading-relaxed text-muted-foreground">
+                {t('routeBridge.confirmDestination', {
+                  chain: to?.displayName ?? confirming.toMarket,
+                  wallet: shortAddress(destinationWallet.address),
+                })}
+              </p>
+            ) : null}
             <div className="flex gap-1.5">
               <Button
                 size="sm"
@@ -412,7 +444,7 @@ function RouteBridgePaneInner({
           <Button
             size="sm"
             className="h-7 w-full text-[11px]"
-            disabled={!priced || quote.isFetching}
+            disabled={!priced || quote.isFetching || needsDestinationWallet}
             onClick={() => {
               if (!priced) return
               // A stale quote is refreshed rather than confirmed: the pane must
@@ -493,6 +525,13 @@ function QuoteReadout({
       </p>
     </div>
   )
+}
+
+/** `0x1234…abcd`, and the same treatment for a base58 pubkey. */
+function shortAddress(address: string): string {
+  return address.length > 12
+    ? `${address.slice(0, 6)}…${address.slice(-4)}`
+    : address
 }
 
 function Row({ label, value }: { label: string; value: string }) {

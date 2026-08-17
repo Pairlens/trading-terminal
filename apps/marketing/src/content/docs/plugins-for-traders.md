@@ -98,7 +98,7 @@ that way rather than listing sixty-odd entries alphabetically.
 | **Core**               | The terminal itself: charts, order book, trade entry, workspaces                                                      |
 | **Intelligence**       | Hosted AI, instrument discovery, news, market intelligence                                                            |
 | **Crypto Exchanges**   | The 14 centralized spot venues                                                                                        |
-| **Crypto Futures**     | Binance, KuCoin and Kraken perpetuals, the positions panel, the perps desk                                            |
+| **Crypto Futures**     | Binance, KuCoin and Kraken perpetuals, the positions panel, the perps desk, Coinglass Liquidations                    |
 | **On-Chain DEX**       | Swap venues, the LI.FI bridge, the Solana RPC provider, DEX data providers, and Pairlens DEX for the on-chain layouts |
 | **Equities**           | Alpaca, and Pairlens Equities for the stock layouts                                                                   |
 | **Prediction Markets** | Kalshi, Polymarket, the event panels, the prediction layouts                                                          |

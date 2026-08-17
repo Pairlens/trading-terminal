@@ -33,6 +33,7 @@ export const OVERLAY_OWNING_TAB: Record<MobileOverlayKind, MobileTab | null> = {
   markets: 'discover',
   events: 'discover',
   predictionEvent: 'discover',
+  predictionLadder: 'discover',
   // Both Discover cards open out into a screen that is still Discover: the
   // user tapped a tile on that panel and the way back is the panel they came
   // from, so dimming the bar would be the lie this table exists to prevent.

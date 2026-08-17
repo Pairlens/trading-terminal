@@ -23,6 +23,20 @@ describe('litTab', () => {
     expect(litTab('chart', overlays)).toBe('trade')
   })
 
+  it('keeps Discover lit across the whole prediction drill-down', () => {
+    // Board → event → ladder is one browse, and the tab bar answering "you are
+    // nowhere" three screens deep is the lie this table exists to prevent.
+    const event = { id: 'evt', market: 'polymarket', title: 'X', markets: [] }
+    const stack: Array<MobileOverlay> = [
+      { kind: 'events' },
+      { kind: 'predictionEvent', venue: 'polymarket', venueLabel: 'P', event },
+      { kind: 'predictionLadder', venue: 'polymarket', venueLabel: 'P', event },
+    ]
+    expect(litTab('chart', stack.slice(0, 1))).toBe('discover')
+    expect(litTab('chart', stack.slice(0, 2))).toBe('discover')
+    expect(litTab('chart', stack)).toBe('discover')
+  })
+
   it('follows the TOP of the stack', () => {
     const overlays: Array<MobileOverlay> = [
       { kind: 'orderbook' },
@@ -39,6 +53,6 @@ describe('litTab', () => {
     }
     // The `Record<MobileOverlayKind, …>` type is the real guard; this count
     // only catches a kind deleted from the union and left in the table.
-    expect(Object.keys(OVERLAY_OWNING_TAB).length).toBe(12)
+    expect(Object.keys(OVERLAY_OWNING_TAB).length).toBe(13)
   })
 })

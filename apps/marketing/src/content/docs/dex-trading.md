@@ -1,12 +1,12 @@
 ---
 title: DEX and wallets
-description: Swap on-chain from the same crypto trading terminal, on Solana via Jupiter and five EVM chains via KyberSwap, bridge between chains through LI.FI, read and manage concentrated-liquidity positions, and keep your private key on your own device.
+description: Swap on-chain from the same crypto trading terminal, on Solana via Jupiter and five EVM chains via KyberSwap, bridge between Solana and every EVM chain through LI.FI, read and manage concentrated-liquidity positions, and keep your private key on your own device.
 group: traders
 parent: trading
 order: 5
 eyebrow: For traders
 updated: 17 AUG 2026
-readTime: 14 min read
+readTime: 18 min read
 ---
 
 On-chain markets work like any other market in Pairlens. Same chart, same
@@ -183,18 +183,33 @@ the fee tier, and what is owed in fees. The composition figures are computed fro
 the pool's own state each refresh, so they are what a burn would return right now
 rather than what was deposited.
 
-**The fee figure means two different things, and the pane says which.** On EVM it
-is a static `collect` simulation sent from your address: the exact number the real
-call would pay this block. On Solana neither program offers that simulation, so
-the panes report the settled figure, the fees the position banked the last time it
-was touched, captioned _as of last pool touch_. That is a floor rather than a
-live number, and a floor labelled as one is useful in a way that the same number
-presented as live is not.
+**The fee figure is what a claim would actually pay, on both families.** On EVM
+that is a static `collect` simulation sent from your address: the exact number the
+real call would pay this block. Neither Solana program offers such a simulation,
+and neither settles fees until the position is next touched, so the connector
+replays the pool's fee growth instead. It reads the pool's lifetime fee growth and
+the two ticks at the edges of your band, works out the growth that accumulated
+inside the band, and multiplies the part since the position's own checkpoint by
+its liquidity. That is the same arithmetic the programs run, and it is verified
+against them: the test vector for it is a real mainnet position whose expected
+value came out of Orca's own `update_fees_and_rewards`, simulated over the same
+bytes, and the replay reproduces it exactly.
 
-Reading a Solana position is six batched RPC calls for a wallet of any size: the
+It is worth knowing how large that gap was. The fixture position had 0.0136 SOL
+settled and 1.0856 SOL actually claimable, eighty times the number the old path
+printed, on a range that had simply not been touched in a while.
+
+**A single position can still report a floor**, and it says so when it does. If a
+boundary tick account cannot be read, that row keeps its settled figure with the
+_as of last touch_ caption while every other row stays live. Per position, not per
+page: one unreadable account does not relabel a whole wallet.
+
+Reading a Solana position is seven batched RPC calls for a wallet of any size: the
 position NFTs, the program accounts derived from their mints, the pools behind
-them, and the token mints for decimals. A wallet holding no position NFTs stops
-after the first two.
+them, the boundary tick arrays of every position still holding liquidity, and the
+token mints for decimals. A wallet holding no position NFTs stops after the first
+two, and a position with no liquidity skips the tick reads entirely, because
+nothing is accruing to it.
 
 Only the address is involved. A position read is public chain state, so it works
 with a sealed vault and never asks for a key, and nothing on that path can sign.
@@ -209,8 +224,9 @@ impermanent-loss figure is a number somebody closes a real position on.
 
 ## Managing a position
 
-**Manage Liquidity** does the three things you can do to an EVM position without
-replacing it, on Uniswap v3 and PancakeSwap v3.
+**Manage Liquidity** does the three things you can do to a position without
+replacing it, on Uniswap v3 and PancakeSwap v3 across the EVM chains and on Orca
+Whirlpool and Raydium CLMM on Solana.
 
 **Collect** claims the fees the position has earned, both tokens, straight to
 your wallet.
@@ -226,10 +242,13 @@ collect leg takes everything the position owes.
 
 Every one of them is two steps. A section states what would happen, then a
 confirmation card restates exactly what will be signed: the action, the position,
-the chain, the manager contract, the amounts and the minimum those amounts may
-not fall below. Slippage is a chip on the card, 0.1%, 0.5%, 1% or 3%, and it is
-what sets that minimum. Nothing here submits from a single click, because nothing
-here is reversible.
+the chain, what will execute it, the amounts and the minimum those amounts may
+not fall below. On EVM that last one is a position-manager contract and the card
+shows its address, because the address is the thing worth checking. On Solana it
+is a program, so the card names it, Orca Whirlpool or Raydium CLMM, with its
+pinned id beside the name. Slippage is a chip on the card, 0.1%, 0.5%, 1% or 3%,
+and it is what sets that minimum. Nothing here submits from a single click,
+because nothing here is reversible.
 
 **There is no range editor, on purpose.** Moving a band is not an edit. It burns
 the position and mints a new one at new ticks, which is a different NFT, a
@@ -237,13 +256,38 @@ different token id and a fresh set of approvals. Shipping that as a slider besid
 the other three would make an irreversible replacement look like an adjustment.
 Do it as a remove and a re-add and you can see both halves.
 
-Solana positions are read-only for now: Orca and Raydium build their instructions
-differently enough that the writer is its own piece of work.
+**Solana differs in three ways worth knowing before you sign.**
+
+There are no token approvals. An EVM deposit needs one per token before the
+manager can pull them, which is why adding liquidity there can be two or three
+transactions; a Solana deposit is one.
+
+A collect settles first. `collect_fees_v2` pays out what the position has banked,
+and that figure is stale until something touches the position, so Pairlens sends
+`update_fees_and_rewards` ahead of it in the same transaction. Without that leg a
+claim would pay the settled number and leave the rest in the pool, which is the
+same gap the fee panes exist to close. Raydium ships no collect instruction at
+all, so a claim there is a `decrease_liquidity_v2` that burns nothing.
+
+**Every transaction is simulated before it is sent, and a simulation that fails
+is a refusal.** The instructions are built by hand, from each program's published
+IDL rather than from an SDK, and the program itself is the only thing that can
+confirm they are right. When simulation fails you get the program's own log line
+and nothing goes out, so a mistake costs you a message rather than a fee and a
+confusing explorer page.
+
+Before any of that, and before your key is ever fetched: the program you named
+has to be one of the two pinned ids, the position account has to exist at the
+address derived from its mint under that program, and the position NFT has to be
+in your wallet's associated token account under the token program the mint itself
+declares. That last read is both the ownership proof and what decides which token
+program goes into the instruction, so the two cannot disagree. Every one of those
+checks runs before the vault is opened.
 
 ## Bridging
 
-**Bridge Route** and **In Flight** move one asset between the five EVM chains,
-quoted and routed through the LI.FI aggregator.
+**Bridge Route** and **In Flight** move one asset between the five EVM chains
+and Solana, quoted and routed through the LI.FI aggregator.
 
 **Bridge Route** takes a source chain, a target chain and a size, and answers
 with a live route: what lands, the guaranteed floor under it, the bridge's own
@@ -254,9 +298,43 @@ next to the estimate because the floor is the number a transfer executes against
 The confirm step matters more here than anywhere else in the app. A bridge quote
 goes stale in about a minute and bridges re-price, so the pane freezes the terms
 it is asking about, restates them, and the connector re-quotes at signing time
-and refuses anything worse than what you confirmed. It signs with the EVM wallet
-you already connected, so there is no second connect step and no second copy of
-the key.
+and refuses anything worse than what you confirmed. It signs with the wallets you
+already connected, so there is no second connect step and no second copy of a
+key.
+
+### Solana legs
+
+Solana is one of the six chains, on both sides. SOL or an SPL token can leave
+Solana for any EVM chain, and any EVM asset can land on Solana.
+
+A transfer that crosses between the two families is the one case where two
+wallets are involved: the Solana key signs the send and the EVM key receives it,
+or the other way round. Connect both and nothing changes about the flow. Connect
+only one and the pane still prices the route, then says which wallet is missing
+rather than letting you confirm a transfer with nowhere to land.
+
+The safety check is different on Solana, because the transaction is different. An
+EVM transfer can be checked against a pinned contract address, a fixed value and
+one recipient. A Solana transaction is a bundle of instructions across programs
+that change with whichever bridge won the quote, so instead of asking who it
+calls, the terminal asks what it does: every transfer is **simulated against the
+chain before your key is ever fetched**, and the simulated result has to show the
+wallet spending exactly what it agreed to. An SPL send must move exactly the
+quoted amount of exactly that token. A native send is measured across SOL and
+wrapped SOL together, because some bridges unwrap your wrapped SOL to fund the
+send. Nothing else of yours may fall, no token account may change owner, and none
+may come away with a spending delegate or a close authority it did not already
+have, which is the Solana shape of the standing claim an unlimited token approval
+would leave behind. A failing simulation is a refusal that quotes what the chain
+said, not a spinner.
+
+Two more refusals worth knowing about. The transaction has to be paid for by your
+wallet, and your signature has to be the only one still missing: bridges that
+build a two-signer transaction have to have signed their half already, so nobody
+can change the transaction after you sign it. And a transfer that touches an
+account of yours under a token program the connector does not recognise is
+refused rather than skipped, because an account it cannot decode is an account it
+cannot prove was left alone.
 
 **In Flight** tracks what is still crossing. A bridge send outlives the tab it
 was made in, so the rows come from a local transfer ledger and the poller keeps
@@ -266,9 +344,8 @@ transaction"), not a block count, and a bar drawn from that would advance
 smoothly on a transfer that is stuck. Each row states the stage, the elapsed time
 against the quoted estimate, and links both transactions so you can go and look.
 
-Solana legs are refused rather than quoted. A Solana transfer needs a Solana
-signer and a different transaction shape, so the route comes back as a typed
-refusal and the pane says so.
+A Solana send is tracked exactly like an EVM one: the base58 signature is what
+the aggregator's status endpoint is polled with, and the row links it on Solscan.
 
 ## The Solana endpoint
 
