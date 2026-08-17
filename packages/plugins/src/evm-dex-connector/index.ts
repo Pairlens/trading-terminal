@@ -9,6 +9,7 @@ import {
 } from './token-client'
 import { executeSwap, getRoute, scaleAmount } from './swap-executor'
 import { fetchGasPriceWei, quoteSwapRoute } from './route-preview'
+import { fetchLpPositions, isEvmAddress } from './lp-client'
 import {
   cancelLimitOrder,
   createLimitOrder,
@@ -212,6 +213,31 @@ export function createEvmDexConnectorPlugin(
           nativeSymbol: chain.nativeSymbol,
           gasPriceWei: wei === null ? null : wei.toString(),
         }
+      }
+
+      // Concentrated-liquidity positions for an address. An action rather than
+      // the `trading:positions` capability on purpose: every consumer of that
+      // id reads a `NormalizedPosition` (entry price, leverage, liquidation),
+      // and an LP position has none of those — declaring it would make the next
+      // generic positions pane wrong instead of empty. See the wire types in
+      // `@pairlens/shared/instrument-types`.
+      //
+      // The owner is a parameter and falls back to the wallet slot. Only the
+      // ADDRESS is involved either way: public chain state, no key, and the
+      // panes have to work while the vault is still sealed.
+      if (action === 'lp-positions') {
+        const requested = p['owner']
+        const slot = getSlot(params)
+        const owner = isEvmAddress(requested)
+          ? requested
+          : (slot?.address ?? '')
+        return fetchLpPositions({
+          chain,
+          owner,
+          rpcUrl: slot?.rpcUrl ?? rpcUrl,
+          pair: typeof p['pair'] === 'string' ? p['pair'] : null,
+          cap: typeof p['cap'] === 'number' ? p['cap'] : undefined,
+        })
       }
 
       if (action === 'list') {

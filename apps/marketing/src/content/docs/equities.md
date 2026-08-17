@@ -6,7 +6,7 @@ parent: trading
 order: 9
 eyebrow: For traders
 updated: 17 AUG 2026
-readTime: 9 min read
+readTime: 10 min read
 ---
 
 A stock is the one instrument in Pairlens that keeps office hours. Everything
@@ -187,24 +187,61 @@ is already streaming the price.
 
 ## The company behind the ticker
 
-The **Company** panel, and the **Company** board it leads, draw the identity
-the installed connectors can stand behind: the ticker, the company name, the
-market identifier code where the venue published one, and the venue. Then they
-say plainly that valuation, growth, margins, the next catalyst and the analyst
-range need a fundamentals provider.
+The **Company** panel, and the **Company** board it leads, open with the
+identity the connectors can stand behind: the ticker, the company name, the
+market identifier code where the venue published one, and the venue. Under that
+sits the business, from the App Server's fundamentals provider.
 
-A broker quotes and fills; it does not publish a P/E, a float or a revenue
-trend, and nothing bundled serves fundamentals. The alternative was a grid of
-eight labelled cells full of dashes, which reads as a pane that is still
-loading and never stops.
+**Next report first**, because a print three days out changes what every other
+number on the panel is worth: the date, how long there is, and the consensus EPS
+the street is looking for. Then **valuation** (market cap, trailing and forward
+P/E, PEG, EPS, revenue, EBITDA), **growth** (revenue and earnings against the
+same quarter last year, coloured by direction), **margins** (profit, operating,
+return on equity), **context** (dividend yield, beta, the 52-week range, shares
+outstanding) and the **analysts** (target price, and the buy/hold/sell split as
+a bar with its counts).
+
+A figure the provider did not publish takes its cell with it, and a section with
+no cells left disappears too. That is deliberate: the alternative was a grid of
+eight labelled cells full of dashes, which reads as a pane still loading and
+never stopping. So a name with no analyst coverage shows no analyst row rather
+than three zeros, and an ETF with no filings behind it says so in a sentence.
+
+Two figures a US mockup would show are absent because no provider here publishes
+them: free float (the panel labels what it has as shares outstanding, which is a
+larger number) and short interest.
+
+A broker quotes and fills; it does not publish a P/E. So a build with nowhere to
+ask keeps the old honest seam: a standalone terminal, a self-hosted App Server
+with no provider key, or one older than the route all say that fundamentals need
+a provider instead of drawing an empty grid.
+
+## The earnings calendar
+
+**Earnings** answers who reports and when, grouped by day, with today's group
+named so the row that matters needs no arithmetic. Each row carries the symbol
+and its logo, the company, the fiscal quarter ending, and the consensus EPS
+where the street published one. Rows link straight to the chart.
+
+Three scopes: **Today**, **This week**, and **Watchlist**, which looks a quarter
+ahead and shows the next report for each stock you watch. The whole market
+reports a few hundred times a week, so beyond a cap the pane stops drawing rows
+and says how many it left out.
+
+There is no before-the-bell or after-the-close column. The provider publishes a
+report date and no time, and that badge would be a guess about the one detail
+you would position on.
 
 ## What is not here yet
 
-Halt status, fundamentals, an earnings feed, a macro feed, market breadth on
-the session strip, options, and market orders in extended hours (the venue does
-not accept them). Depth beyond the touch is a data question rather than a UI
-one: the entitlement behind the connector quotes top of book, so there is no
-ladder to draw until a feed that carries one is connected.
+Halt status, a macro feed with consensus (the fundamentals provider covers
+company filings and earnings dates, not forward macro releases, so the
+**Economic Calendar** panel still shows its seam), market breadth on the session
+strip, options, free float and short interest, and market orders in extended
+hours (the venue does not accept them). Depth beyond the touch is a data
+question rather than a UI one: the entitlement behind the connector quotes top
+of book, so there is no ladder to draw until a feed that carries one is
+connected.
 
 ## Next
 

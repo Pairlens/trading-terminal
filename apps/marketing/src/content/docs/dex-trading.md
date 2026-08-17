@@ -6,7 +6,7 @@ parent: trading
 order: 5
 eyebrow: For traders
 updated: 17 AUG 2026
-readTime: 9 min read
+readTime: 10 min read
 ---
 
 On-chain markets work like any other market in Pairlens. Same chart, same
@@ -21,8 +21,10 @@ signs it.
 routed through the KyberSwap aggregator, which quotes across every DEX on that
 chain and picks the best path.
 
-Price and liquidity data for on-chain pairs comes from read-only data
-providers, GeckoTerminal first with DexPaprika as a fallback.
+Price and liquidity data for on-chain pairs comes from three read-only data
+providers: GeckoTerminal answers first, DexPaprika is the fallback on desktop,
+and DexScreener fills in the pool figures neither of the first two can deliver
+to a browser. All three are keyless, and none of them ever sees a key of yours.
 
 ## Adding a wallet
 
@@ -150,20 +152,56 @@ rate limited and keeps retrying: a limit is never reported as a pair the venue
 does not carry.
 
 **Providers disagree on what they publish.** GeckoTerminal reports value locked
-as one USD figure and nothing per side; DexPaprika reports both reserves and
-the buy and sell split. Every field a provider does not publish reads as absent
-rather than as zero, because halving a USD figure to fake two reserves would be
-inventing a constant-product pool that a concentrated-liquidity venue is not.
+as one USD figure and nothing per side. DexPaprika reports both reserves and the
+buy and sell split, but its API sends no CORS header, so only the desktop app
+can reach it. DexScreener reports both reserves too and is reachable from a
+browser, so **Pool Stats** shows both sides of a pool on the web terminal and on
+your phone as well: when the pool DexScreener lists matches the one the primary
+provider resolved, its reserves are filled in behind the primary answer and the
+reserves cell names where they came from. Fields nobody publishes still read as
+absent rather than as zero, because halving a USD figure to fake two reserves
+would be inventing a constant-product pool that a concentrated-liquidity venue
+is not. DexScreener publishes no candles and no ranked pool listing, so it never
+answers the chart or the pool map.
+
+## LP positions
+
+**LP Position** and **Fee Accrual** read your concentrated-liquidity positions
+straight off the chain, on all five EVM chains. Connect an EVM wallet and the
+panels ask each chain's position manager what that address holds: Uniswap v3
+everywhere, plus PancakeSwap v3 on BNB Chain, where most of that chain's
+concentrated liquidity sits.
+
+What you get per position is measured, not modelled. The band in prices rather
+than ticks, whether the pool is trading inside it, how much headroom is left
+before the upper bound, the two token amounts the liquidity currently stands for,
+the fee tier, and what a collect would pay you this block. The composition
+figures are computed from the pool's own `slot0` each refresh, so they are what a
+burn would return right now rather than what was deposited. Fees come from a
+static `collect` simulation sent from your address, which is the exact number the
+real call would pay.
+
+Only the address is involved. A position read is public chain state, so it works
+with a sealed vault and never asks for a key, and nothing on that path can sign.
+
+Four things chain state does not carry, and the panels say so rather than
+estimating them: **cost basis** (a position stores its liquidity and its bounds,
+never what it cost), **fees earned to date** and therefore **fee APR** (collected
+fees leave no trace in state), **time in range** (the pool publishes its current
+tick, not its history), and **loss versus simply holding**, which needs the first
+two. Each needs an indexer or a fee-growth snapshot diffed over time. An invented
+impermanent-loss figure is a number somebody closes a real position on.
+
+Solana is still pending: Orca and Raydium keep positions in program accounts
+rather than in an ERC-721, so it needs its own reader.
 
 ## What is not here yet
 
-The LP side of a pool is a frame, not a feature. **LP Position**, **Fee
-Accrual** and **Manage Liquidity** ship as panels and the **Liquidity** board
-arranges them, but no DEX connector can read a wallet's pool position and none
-exposes a liquidity action, so all three say what they would show and name the
-source that would fill them. A range, a time-in-range percentage and an
-impermanent-loss figure are numbers people close real positions on, and an
-invented one is worse than an empty pane.
+**Manage Liquidity** is still a frame. Moving a range, adding or pulling
+liquidity and claiming fees are signed transactions against a position manager,
+and no connector builds one yet, so the panel renders no controls rather than a
+greyed-out editor that teaches you a feature exists and then does nothing. When
+it lands it goes through the same guarded order path an order does.
 
 Bridging is the same story. **Bridge Route** and **In Flight** are frames: the
 DEX connectors route within one chain, KyberSwap across a chain's pools and

@@ -64,9 +64,54 @@
     "noChainsBody": "オンチェーンコネクタをインストールすると、そのチェーンがこのラダーに加わります。"
   },
   "company": {
+    "analystBuy": "買い {{count}}",
+    "analystCoverage_one": "アナリスト {{count}} 名",
+    "analystCoverage_other": "アナリスト {{count}} 名",
+    "analystHold": "中立 {{count}}",
+    "analystSell": "売り {{count}}",
+    "beta": "ベータ",
+    "consensusEps": "予想 EPS",
+    "dividendYield": "配当利回り",
+    "earningsGrowth": "利益 前年比",
+    "ebitda": "EBITDA",
+    "epsTtm": "EPS TTM",
+    "groups": {
+      "valuation": "バリュエーション",
+      "growth": "成長率",
+      "margins": "利益率",
+      "context": "参考指標",
+      "analyst": "アナリスト"
+    },
+    "marketCap": "時価総額",
+    "nextReport": "次回決算",
+    "noCoverageBody": "提供元がカバーするのは上場している事業会社です。ETF や클로즈드エンド型ファンド、上場したばかりの銘柄には決算資料がないことが多いです。",
+    "noCoverageTitle": "{{symbol}} のファンダメンタルズはありません",
+    "noFiguresBody": "提供元はこの銘柄を認識していますが、このペインが表示する数値をまだ公表していません。",
+    "noFiguresTitle": "まだ何も公表されていません",
+    "notEquityBody": "このペインは上場企業を扱います。{{venue}} は株式市場ではなく、同じティッカーでも別の資産を指します。",
+    "notEquityTitle": "ファンダメンタルズには株式が必要です",
+    "operatingMargin": "営業利益率",
+    "pe": "PER",
+    "peForward": "PER · 予想",
+    "peg": "PEG",
+    "profitMargin": "純利益率",
+    "providerBusyBody": "データ提供元が制限をかけています。制限枠がリセットされれば数値は自動的に戻ります。",
+    "providerBusyTitle": "ファンダメンタルズがレート制限中です",
+    "providerErrorBody": "提供元が使えない応答を返しました。口座やコネクターの問題ではありません。",
+    "providerErrorTitle": "ファンダメンタルズを読み込めませんでした",
+    "reportsInDays_one": "{{count}} 日後",
+    "reportsInDays_other": "{{count}} 日後",
+    "reportsToday": "本日決算",
+    "reportsTomorrow": "明日決算",
+    "returnOnEquity": "ROE",
+    "revenueGrowth": "売上 前年比",
+    "revenueTtm": "売上 TTM",
+    "sharesOutstanding": "発行済株式数",
+    "targetPrice": "目標株価",
     "unknownName": "会社名を取得できません",
     "needsProviderTitle": "ファンダメンタルズにはプロバイダーが必要です",
-    "needsProviderBody": "ブローカーは気配と約定を扱いますが、バリュエーション・成長率・利益率は公開しません。ファンダメンタルズのプラグインを導入するとこのペインが埋まります。"
+    "needsProviderBody": "このビルドにはファンダメンタルズの取得元がありません。バリュエーション・成長率・利益率は App Server から届き、ブローカーのコネクターは気配と約定だけを扱います。",
+    "week52": "52週 安値 · 高値"
   },
   "dexChains": {
     "title": "資金が流れている場所",
@@ -83,17 +128,37 @@
     "emptyBody": "このビルドにはオンチェーンコネクタが含まれていないため、プールを並べられるチェーンがありません。"
   },
   "earningsCalendar": {
+    "capped": "{{total}} 件のうち最初の {{shown}} 件を表示しています。",
+    "noEstimate": "予想なし",
+    "noneInWindowBody": {
+      "today": "本日決算を発表する企業はカレンダーにありません。",
+      "week": "今後 7 日間に決算を発表する企業はありません。",
+      "watchlist": "ウォッチ中の銘柄で次の四半期に決算を発表するものはありません。"
+    },
+    "noneInWindowTitle": "予定はありません",
+    "noWatchedBody": "銘柄をウォッチリストに追加すると、この表示で次回決算が見えます。他の表示は市場全体を対象にします。",
+    "noWatchedTitle": "ウォッチ中の銘柄がありません",
+    "providerBusyBody": "データ提供元が制限をかけています。制限枠がリセットされれば日程は自動的に戻ります。",
+    "providerBusyTitle": "決算フィードがレート制限中です",
+    "providerErrorBody": "提供元が使えない応答を返しました。口座やコネクターの問題ではありません。",
+    "providerErrorTitle": "決算フィードを読み込めませんでした",
+    "scopeLabel": "決算の対象期間",
+    "scopes": {
+      "today": "今日",
+      "week": "今週",
+      "watchlist": "ウォッチリスト"
+    },
     "title": "決算",
-    "subtitle": "寄り付き前と引け後",
-    "emptyTitle": "決算フィードが未導入です",
-    "emptyBody": "このカレンダーはファンダメンタルズ提供プラグインが埋めます。ブローカーが公開するのは自社のセッション時間であり、今週の決算予定ではありません。",
+    "emptyTitle": "決算フィードがありません",
+    "emptyBody": "このビルドには決算データの提供元がありません。日程は App Server から届きます。ブローカーが公開するのは自社のセッション時間で、今週の決算予定ではありません。",
     "columns": {
+      "company": "企業名",
+      "quarterEnd": "決算期末",
       "symbol": "銘柄",
-      "when": "時間帯",
-      "epsEstimate": "EPS予想",
-      "revenueEstimate": "売上予想",
-      "impliedMove": "予想変動率"
-    }
+      "epsEstimate": "EPS予想"
+    },
+    "today": "今日",
+    "tomorrow": "明日"
   },
   "economicCalendar": {
     "emptyTitle": "マクロフィードが未導入です",
@@ -154,6 +219,26 @@
     "basisLast_other": "{{count}} 件の最終値を合計",
     "basisMissing_one": "値付けなしの候補 1 件",
     "basisMissing_other": "値付けなしの候補 {{count}} 件"
+  },
+  "feeAccrual": {
+    "title": "手数料の蓄積",
+    "subtitle_one": "{{wallet}} · レンジ {{count}} 件",
+    "subtitle_other": "{{wallet}} · レンジ {{count}} 件",
+    "claimableLabel": "現在受け取れる額",
+    "nothingClaimable": "これらのレンジで受け取れるものはまだありません。",
+    "notRead": "プール未取得",
+    "columns": {
+      "position": "ポジション",
+      "fee": "手数料",
+      "claimable": "受取可能"
+    },
+    "loadingTitle": "手数料を読み取り中",
+    "loadingBody": "各ポジションに対して collect をシミュレートし、いま支払われる額を確認しています。",
+    "emptyTitle": "流動性ポジションなし",
+    "emptyBody": "{{wallet}} には手数料が積み上がるポジションがありません。接続済みチェーンで流動性を提供するとここに表示されます。",
+    "noChainsTitle": "チェーンコネクタなし",
+    "noChainsBody": "オンチェーンコネクタを入れると、このパネルがそのプールからウォレットへの未払い額を読み取ります。",
+    "footnote": "このブロックで collect が支払う額を、両サイド・ポジションごとに表示します。すでに回収した手数料はチェーン上に痕跡が残らないため、手数料APR、レンジ内滞在時間、単純保有との損益にはインデクサが必要で、表示しません。"
   },
   "funding": {
     "loading": "ファンディングレートを読み込み中…",
@@ -242,14 +327,38 @@
     "biggestLabel": "最大のスワップ"
   },
   "lpPanes": {
-    "positionTitle": "LPポジションにはポジション取得元が必要です",
-    "positionBody": "接続済みのどれも、まだ流動性ポジションを読めません。読むにはチェーンのポジションマネージャにこのウォレットのレンジを問い合わせる必要があり、現在それを行うコネクタはありません。",
-    "feesTitle": "手数料の履歴にはポジション取得元が必要です",
-    "feesBody": "日ごとの獲得手数料は、インデクサか、時間をかけて測った fee growth から得ます。どちらも接続されておらず、推計のチャートは実測のように見えてしまいます。",
     "manageTitle": "レンジ変更には流動性アクションが必要です",
     "manageBody": "流動性の追加・引き出し・レンジ再設定はいずれも署名付きトランザクションで、まだどのコネクタも組み立てられません。実際に機能するまで操作要素は出しません。",
     "venueFallback": "このチェーン",
     "wouldRead": "{{chain}} の {{pool}} で {{wallet}} を読み取ります"
+  },
+  "lpPosition": {
+    "title": "LPポジション",
+    "subtitle_one": "{{wallet}} · レンジ {{count}} 件",
+    "subtitle_other": "{{wallet}} · レンジ {{count}} 件",
+    "capped": "{{count}} 件は非表示",
+    "value": "ポジション評価額",
+    "poolUnread": "プール未取得",
+    "range": "レンジ",
+    "ticks": "ティック {{lower}} 〜 {{upper}}",
+    "band": "±{{band}}% のバンド",
+    "bandWithHeadroom": "±{{band}}% のバンド · 上限まで残り {{headroom}}%",
+    "composition": "構成",
+    "uncollected": "未回収の手数料",
+    "tokenId": "ポジション",
+    "pool": "プール",
+    "feeTier": "手数料 {{value}}%",
+    "inRange": "レンジ内",
+    "outOfRange": "レンジ外",
+    "rangeUnknown": "プール未取得",
+    "otherPositions": "その他のポジション",
+    "loadingTitle": "ポジションを読み取り中",
+    "loadingBody": "接続済みの各チェーンの position manager に、このウォレットの保有内容を問い合わせています。",
+    "emptyTitle": "流動性ポジションなし",
+    "emptyBody": "{{wallet}} は接続済みチェーンに Uniswap v3 と PancakeSwap v3 のポジションを保有していません。いずれかで流動性を提供するとここに表示されます。",
+    "noChainsTitle": "チェーンコネクタなし",
+    "noChainsBody": "オンチェーンコネクタを入れると、このパネルがそのチェーンの position manager をウォレット向けに読み取ります。",
+    "footnote": "チェーンから取得: バンド、現在の流動性の価値、未回収の手数料。ポジションは取得コストを保存しないため、単純保有との比較値はありません。"
   },
   "marginHealth": {
     "title": "証拠金の健全性",
@@ -668,7 +777,8 @@
     "feeTier": "手数料ティア",
     "feeTierUnknown": "この venue は非公開",
     "reserves": "リザーブ",
-    "reservesUnavailable": "両サイドはデスクトップのみ",
+    "reservesUnavailable": "このプールでは非公開",
+    "reservesSource": "リザーブの出典: {{provider}}",
     "trades24h": "取引数24時間",
     "tradersSub_one": "トレーダー {{count}} 人",
     "tradersSub_other": "トレーダー {{count}} 人",
@@ -2973,14 +3083,14 @@
     "poolStats": "両サイドの準備金、預入資産総額(TVL)、24時間出来高、手数料ティア、そして3段階のサイズでの価格インパクト",
     "onchainTrades": "プールを通過する全スワップを確定ごとに表示し、ウォレットとトランザクションへのリンクを添えて",
     "route": "アグリゲーターがスワップを複数のプールにどう分割したか、スリッページの原因を明示します",
-    "feeAccrual": "あなたのポジションが積み上げた手数料収益、そこから導かれるAPR、そして今すぐ請求可能な金額",
-    "lpPosition": "設定したレンジと現在価格の位置関係、レンジ内滞在時間、そして単純保有と比較したインパーマネントロス",
+    "feeAccrual": "今コレクトすればウォレットに支払われる額を、両レッグ・ポジション別・合計で表示",
+    "lpPosition": "ライブのプール価格に対するレンジ、流動性の内訳、未回収の手数料を表示",
     "manageLiquidity": "チャートを離れることなく、レンジの変更、流動性の追加・引き出し、手数料の請求ができます",
     "chainLadder": "同じトークンを全チェーンで価格比較、ガス代を織り込んだ上で、見かけの価格ではなく総額で最良を選べます",
     "routeBridge": "移動元チェーン、移動先チェーン、使用するブリッジ、その手数料と所要時間を表示、そのまま実行可能",
     "inFlight": "まだ確定していない送金を、待機中のブロック確認数とともに表示",
     "session": "ブローカー自身のカレンダーに基づく、今まさにどの取引セッションにあるか。祝日や短縮取引日も反映",
-    "earningsCalendar": "誰がいつ決算を発表するか、寄り付き前か引け後か、そして上回るべき市場予想とともに",
+    "earningsCalendar": "どこがいつ決算を出すかを日付ごとにまとめ、超えるべき市場予想も添えて表示",
     "economicCalendar": "経済指標を発表時刻順に、重要度・前回値・市場予想とともに表示",
     "sessionClock": "取引日の状態を1行で示すクロックで、時間外の注文で驚くことがなくなります",
     "level1": "気配値とそのサイズ、スプレッド、当日のレンジをブローカーのフィードから表示",
@@ -3549,6 +3659,10 @@
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "DexPaprika が提供する DEX マーケットデータ"
+      },
+      "dexscreener-data-provider": {
+        "title": "DexScreener",
+        "description": "DexScreener によるプールのリザーブとプール統計。APIキー不要で CORS も開いているため、両サイドのリザーブがブラウザでも読めます。ローソク足とプールのランキング一覧はありません。他のプロバイダーを置き換えるのではなく補完します。"
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",

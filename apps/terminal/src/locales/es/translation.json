@@ -64,9 +64,54 @@
     "noChainsBody": "Instala un conector on-chain y su cadena se suma a la escalera."
   },
   "company": {
+    "analystBuy": "{{count}} compra",
+    "analystCoverage_one": "{{count}} analista",
+    "analystCoverage_other": "{{count}} analistas",
+    "analystHold": "{{count}} mantener",
+    "analystSell": "{{count}} venta",
+    "beta": "Beta",
+    "consensusEps": "BPA consenso",
+    "dividendYield": "Rent. dividendo",
+    "earningsGrowth": "Beneficio interanual",
+    "ebitda": "EBITDA",
+    "epsTtm": "BPA TTM",
+    "groups": {
+      "valuation": "Valoración",
+      "growth": "Crecimiento",
+      "margins": "Márgenes",
+      "context": "Contexto",
+      "analyst": "Analistas"
+    },
+    "marketCap": "Capitalización",
+    "nextReport": "Próximo informe",
+    "noCoverageBody": "El proveedor cubre empresas operativas cotizadas. Un ETF, un fondo cerrado o una cotización muy reciente a menudo no tiene informes detrás.",
+    "noCoverageTitle": "Sin fundamentales para {{symbol}}",
+    "noFiguresBody": "El proveedor conoce esta cotización pero no ha publicado ninguna de las cifras que muestra este panel.",
+    "noFiguresTitle": "Todavía no hay nada publicado",
+    "notEquityBody": "Este panel describe una empresa cotizada. {{venue}} no es un mercado de acciones, y el mismo ticker allí es otro activo.",
+    "notEquityTitle": "Los fundamentales necesitan una acción",
+    "operatingMargin": "Margen operativo",
+    "pe": "PER",
+    "peForward": "PER · fwd",
+    "peg": "PEG",
+    "profitMargin": "Margen neto",
+    "providerBusyBody": "El proveedor de datos nos está limitando. Las cifras vuelven solas cuando se reinicia la ventana.",
+    "providerBusyTitle": "Fundamentales con límite de consultas",
+    "providerErrorBody": "El proveedor respondió con algo inservible. No es problema de tus cuentas ni de tus conectores.",
+    "providerErrorTitle": "Los fundamentales no cargaron",
+    "reportsInDays_one": "En {{count}} día",
+    "reportsInDays_other": "En {{count}} días",
+    "reportsToday": "Presenta hoy",
+    "reportsTomorrow": "Presenta mañana",
+    "returnOnEquity": "ROE",
+    "revenueGrowth": "Ingresos interanual",
+    "revenueTtm": "Ingresos TTM",
+    "sharesOutstanding": "Acciones en circ.",
+    "targetPrice": "Precio objetivo",
     "unknownName": "Nombre de la empresa no disponible",
     "needsProviderTitle": "Los fundamentales necesitan un proveedor",
-    "needsProviderBody": "Un bróker cotiza y ejecuta; no publica valoración, crecimiento ni márgenes. Instala un plugin de fundamentales para llenar este panel."
+    "needsProviderBody": "Esta compilación no tiene fuente de fundamentales. Valoración, crecimiento y márgenes vienen del App Server; un conector de bróker solo cotiza y ejecuta.",
+    "week52": "52 semanas mín. · máx."
   },
   "dexChains": {
     "title": "Dónde está el flujo",
@@ -83,17 +128,37 @@
     "emptyBody": "Esta compilación no incluye conectores on-chain, así que no hay ninguna cadena cuyos pools clasificar."
   },
   "earningsCalendar": {
+    "capped": "Mostrando los primeros {{shown}} de {{total}} informes.",
+    "noEstimate": "sin estimación",
+    "noneInWindowBody": {
+      "today": "Hoy no presenta resultados ninguna empresa del calendario.",
+      "week": "Nadie presenta en los próximos siete días.",
+      "watchlist": "Ninguna de las acciones que sigues presenta en el próximo trimestre."
+    },
+    "noneInWindowTitle": "Nada programado",
+    "noWatchedBody": "Marca una acción y esta vista mostrará su próximo informe. Las demás vistas cubren todo el mercado.",
+    "noWatchedTitle": "Sin acciones seguidas",
+    "providerBusyBody": "El proveedor de datos nos está limitando. El calendario vuelve solo cuando se reinicia la ventana.",
+    "providerBusyTitle": "Feed de resultados con límite de consultas",
+    "providerErrorBody": "El proveedor respondió con algo inservible. No es problema de tus cuentas ni de tus conectores.",
+    "providerErrorTitle": "El feed de resultados no cargó",
+    "scopeLabel": "Ventana de resultados",
+    "scopes": {
+      "today": "Hoy",
+      "week": "Esta semana",
+      "watchlist": "Watchlist"
+    },
     "title": "Resultados",
-    "subtitle": "Antes de la apertura y tras el cierre",
-    "emptyTitle": "Sin fuente de resultados instalada",
-    "emptyBody": "Un plugin de fundamentales llena este calendario. Un bróker publica sus propios horarios, no quién presenta resultados esta semana.",
+    "emptyTitle": "Sin feed de resultados",
+    "emptyBody": "Esta compilación no tiene proveedor de resultados. El calendario viene del App Server; un bróker publica sus propios horarios, no quién presenta esta semana.",
     "columns": {
+      "company": "Empresa",
+      "quarterEnd": "Fin de trimestre",
       "symbol": "Símbolo",
-      "when": "Cuándo",
-      "epsEstimate": "BPA est.",
-      "revenueEstimate": "Ingresos est.",
-      "impliedMove": "Movimiento implícito"
-    }
+      "epsEstimate": "BPA est."
+    },
+    "today": "Hoy",
+    "tomorrow": "Mañana"
   },
   "economicCalendar": {
     "emptyTitle": "Sin fuente macro instalada",
@@ -154,6 +219,26 @@
     "basisLast_other": "Sumado sobre {{count}} últimos precios",
     "basisMissing_one": "1 participante sin cotizar",
     "basisMissing_other": "{{count}} participantes sin cotizar"
+  },
+  "feeAccrual": {
+    "title": "Comisiones acumuladas",
+    "subtitle_one": "{{wallet}} · {{count}} rango",
+    "subtitle_other": "{{wallet}} · {{count}} rangos",
+    "claimableLabel": "Reclamable ahora",
+    "nothingClaimable": "Todavía no hay nada que reclamar en estos rangos.",
+    "notRead": "Pool sin leer",
+    "columns": {
+      "position": "Posición",
+      "fee": "Comisión",
+      "claimable": "Reclamable"
+    },
+    "loadingTitle": "Leyendo comisiones",
+    "loadingBody": "Simulando un collect en cada posición para ver qué pagaría ahora mismo.",
+    "emptyTitle": "Sin posiciones de liquidez",
+    "emptyBody": "{{wallet}} no tiene posiciones que acumulen comisiones. Aporta liquidez en una cadena conectada y el importe aparecerá aquí.",
+    "noChainsTitle": "Sin conectores de cadena",
+    "noChainsBody": "Instala un conector on-chain y este panel leerá lo que sus pools deben a tu wallet.",
+    "footnote": "Lo que pagaría un collect en este bloque, en ambas patas y por posición. Las comisiones ya cobradas no dejan rastro en la cadena, así que el APR, el tiempo en rango y la pérdida frente a mantener necesitan un indexador y no se muestran."
   },
   "funding": {
     "loading": "Leyendo tasas de financiación…",
@@ -242,14 +327,38 @@
     "biggestLabel": "Swaps más grandes"
   },
   "lpPanes": {
-    "positionTitle": "Las posiciones LP necesitan una fuente de posiciones",
-    "positionBody": "Nada de lo conectado puede leer todavía una posición de liquidez. Eso implica preguntar al position manager de la cadena por los rangos de esta billetera, cosa que hoy ningún conector hace.",
-    "feesTitle": "El historial de comisiones necesita una fuente de posiciones",
-    "feesBody": "Las comisiones diarias salen de un indexador, o del fee growth medido a lo largo del tiempo. Ninguno está conectado, y un gráfico estimado parecería medido.",
     "manageTitle": "Editar el rango necesita una acción de liquidez",
     "manageBody": "Añadir, retirar y recentrar liquidez son transacciones firmadas que ningún conector construye todavía. Los controles no aparecen hasta que hagan algo.",
     "venueFallback": "esta cadena",
     "wouldRead": "Leería {{wallet}} en {{pool}}, {{chain}}"
+  },
+  "lpPosition": {
+    "title": "Posición de liquidez",
+    "subtitle_one": "{{wallet}} · {{count}} rango",
+    "subtitle_other": "{{wallet}} · {{count}} rangos",
+    "capped": "{{count}} sin mostrar",
+    "value": "Valor de la posición",
+    "poolUnread": "Pool sin leer",
+    "range": "Rango",
+    "ticks": "ticks {{lower}} a {{upper}}",
+    "band": "banda de ±{{band}}%",
+    "bandWithHeadroom": "banda de ±{{band}}% · {{headroom}}% de margen hasta el límite superior",
+    "composition": "Composición",
+    "uncollected": "Comisiones sin cobrar",
+    "tokenId": "Posición",
+    "pool": "Pool",
+    "feeTier": "comisión del {{value}}%",
+    "inRange": "En rango",
+    "outOfRange": "Fuera de rango",
+    "rangeUnknown": "Pool sin leer",
+    "otherPositions": "Tus otras posiciones",
+    "loadingTitle": "Leyendo posiciones",
+    "loadingBody": "Preguntando al position manager de cada cadena conectada qué tiene esta wallet.",
+    "emptyTitle": "Sin posiciones de liquidez",
+    "emptyBody": "{{wallet}} no tiene posiciones de Uniswap v3 ni de PancakeSwap v3 en las cadenas conectadas. Aporta liquidez en una y aparecerá aquí.",
+    "noChainsTitle": "Sin conectores de cadena",
+    "noChainsBody": "Instala un conector on-chain y este panel leerá el position manager de esa cadena para tu wallet.",
+    "footnote": "Leído de la cadena: la banda, lo que vale la liquidez ahora y las comisiones sin cobrar. Una posición no guarda lo que costó, así que no hay una cifra frente a mantener."
   },
   "marginHealth": {
     "title": "Salud del margen",
@@ -668,7 +777,8 @@
     "feeTier": "Nivel de comisión",
     "feeTierUnknown": "No publicado por esta venue",
     "reserves": "Reservas",
-    "reservesUnavailable": "Ambos lados solo en escritorio",
+    "reservesUnavailable": "No publicado para este pool",
+    "reservesSource": "Reservas de {{provider}}",
     "trades24h": "Operaciones 24h",
     "tradersSub_one": "{{count}} trader",
     "tradersSub_other": "{{count}} traders",
@@ -2973,14 +3083,14 @@
     "poolStats": "Reservas de ambos lados, valor bloqueado, volumen de 24h, el nivel de comisión, y el impacto de precio en tres tamaños",
     "onchainTrades": "Cada swap a través del pool según se confirma, con la wallet y un enlace a la transacción",
     "route": "Cómo el agregador reparte tu swap entre pools, para que el slippage tenga una causa declarada",
-    "feeAccrual": "Comisiones que tu posición ganó con el tiempo, la APR que implican, y lo reclamable ahora",
-    "lpPosition": "Tu rango contra el precio en vivo, tiempo en rango, e impermanent loss medido contra simplemente mantener",
+    "feeAccrual": "Lo que un collect pagaría a tu wallet ahora mismo, ambas patas, por posición y en total",
+    "lpPosition": "Tu rango frente al precio del pool en vivo, la composición de la liquidez y las comisiones aún sin cobrar",
     "manageLiquidity": "Mueve el rango, añade o retira liquidez, y reclama comisiones sin salir del gráfico",
     "chainLadder": "El mismo token cotizado en cada blockchain, con el gas incluido, para que gane el mejor total y no la mejor cotización",
     "routeBridge": "Cadena de origen, cadena de destino, el bridge, su comisión y cuánto tarda, listo para ejecutar",
     "inFlight": "Transferencias que aún se confirman, cada una con el contador de bloques que espera",
     "session": "Dónde está la jornada de trading ahora mismo, según el propio calendario del bróker, festivos y medias jornadas incluidos",
-    "earningsCalendar": "Quién reporta y cuándo, antes o después de la campana, con la estimación que tiene que superar",
+    "earningsCalendar": "Quién presenta y cuándo, agrupado por día, con la estimación de consenso que hay que batir",
     "economicCalendar": "Publicaciones macro por el reloj, con importancia, el dato previo y el consenso",
     "sessionClock": "Un reloj de una línea para la jornada de trading, para que un ticket fuera de horario nunca sea una sorpresa",
     "level1": "El bid y el ask con sus tamaños, el spread y el rango del día desde el feed del bróker",
@@ -3549,6 +3659,10 @@
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "Datos de mercado DEX impulsados por DexPaprika"
+      },
+      "dexscreener-data-provider": {
+        "title": "DexScreener",
+        "description": "Reservas y métricas de pools desde DexScreener. Sin clave y con CORS abierto, así que las reservas de ambos lados funcionan en el navegador. Sin velas y sin listados de pools por ranking: este proveedor complementa a los otros, no los reemplaza."
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",

@@ -31,6 +31,7 @@
     "./themes": "./src/themes/index.ts",
     "./alpaca-market-connector": "./src/alpaca-market-connector/index.ts",
     "./dexpaprika-data-provider": "./src/dexpaprika-data-provider/index.ts",
+    "./dexscreener-data-provider": "./src/dexscreener-data-provider/index.ts",
     "./geckoterminal-data-provider": "./src/geckoterminal-data-provider/index.ts",
     "./jupiter-dex-connector": "./src/jupiter-dex-connector/index.ts",
     "./evm-dex-connector": "./src/evm-dex-connector/index.ts",

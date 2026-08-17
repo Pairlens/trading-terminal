@@ -209,6 +209,10 @@ export {
   createDexpaprikaDataProviderPlugin,
 } from './dexpaprika-data-provider/index.ts'
 export {
+  dexscreenerDataProviderManifest,
+  createDexscreenerDataProviderPlugin,
+} from './dexscreener-data-provider/index.ts'
+export {
   geckoterminalDataProviderManifest,
   createGeckoterminalDataProviderPlugin,
 } from './geckoterminal-data-provider/index.ts'

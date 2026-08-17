@@ -9,6 +9,13 @@
  * replacement — value locked, both reserves where a provider publishes them,
  * a day's volume, the fee tier, and what three real order sizes actually cost.
  *
+ * "Where a provider publishes them" used to mean the desktop app: the primary
+ * provider reports value locked in USD and nothing per side, and the only source
+ * that reported both sides was CORS-closed. DexScreener publishes them keyless
+ * and over open CORS, so the browser gets them too, filled in behind the primary
+ * answer (see `usePoolStats`). When a cell came from a different provider than
+ * the rest of the row, the reserves cell says which one.
+ *
  * The impact column is quoted, not modelled. Each row is a live aggregator
  * quote at that notional, which is why it can beat the pool's own curve: the
  * router may split across pools this pane never read. Reserve math would be
@@ -19,12 +26,18 @@ import { Droplets } from 'lucide-react'
 
 import { cn } from '@pairlens/ui/lib/utils'
 import { usePanePair } from '@pairlens/plugin-sdk'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@pairlens/ui/components/ui/tooltip'
 
 import type { ImpactTierRow } from '@/hooks/use-price-impact-tiers'
 import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { StatCell } from '@/components/dex/dex-pane-primitives'
+import { providerLabel } from '@/lib/dex/pool-stats-merge'
 import { usePoolStats } from '@/hooks/use-pool-stats'
 import { usePriceImpactTiers } from '@/hooks/use-price-impact-tiers'
 import { dexChain } from '@/lib/dex/chain-catalog'
@@ -56,7 +69,10 @@ function PoolStatsPaneInner({
 }) {
   const { t } = useTranslation()
   const chain = dexChain(market)
-  const { stats, isLoading, noPool, error } = usePoolStats(market, pairKey)
+  const { stats, isLoading, noPool, error, filledBy, filled } = usePoolStats(
+    market,
+    pairKey,
+  )
   const tiers = usePriceImpactTiers(market, pairKey, stats)
 
   // A pane bound to a CEX pair by an override has nothing to say: there is no
@@ -93,6 +109,13 @@ function PoolStatsPaneInner({
   const baseSymbol = stats.baseSymbol ?? ''
   const quoteSymbol = stats.quoteSymbol ?? ''
   const hasReserves = stats.baseReserve !== null || stats.quoteReserve !== null
+  // Who measured the reserves, when it was not whoever measured the rest of the
+  // row. Null on the common path, where one provider published everything.
+  const reservesFilledBy =
+    filledBy &&
+    (filled.includes('baseReserve') || filled.includes('quoteReserve'))
+      ? providerLabel(filledBy)
+      : null
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -136,8 +159,7 @@ function PoolStatsPaneInner({
             }
             sub={stats.feeTier === null ? t('poolStats.feeTierUnknown') : null}
           />
-          <StatCell
-            className="border-b border-border"
+          <ReservesCell
             label={t('poolStats.reserves')}
             value={
               hasReserves && stats.baseReserve !== null
@@ -151,6 +173,7 @@ function PoolStatsPaneInner({
                   : null
                 : t('poolStats.reservesUnavailable')
             }
+            source={reservesFilledBy}
           />
           <StatCell
             className="border-r border-border"
@@ -193,6 +216,52 @@ function PoolStatsPaneInner({
         </div>
       </div>
     </div>
+  )
+}
+
+/**
+ * The reserves cell, with provenance when a second provider filled it.
+ *
+ * A tooltip rather than a fourth line of text: the cell already carries a label,
+ * a value and the other side's balance, and the grid is three rows tall at any
+ * width. The tooltip only exists when the answer is mixed, so on the common path
+ * this renders exactly the plain cell every neighbour renders.
+ */
+function ReservesCell({
+  label,
+  value,
+  sub,
+  source,
+}: {
+  label: string
+  value: string
+  sub: string | null
+  source: string | null
+}) {
+  const { t } = useTranslation()
+  if (!source) {
+    return (
+      <StatCell
+        className="border-b border-border"
+        label={label}
+        value={value}
+        sub={sub}
+      />
+    )
+  }
+  return (
+    <Tooltip>
+      {/* The grid cell IS the trigger, so the borders stay on the item the grid
+          lays out rather than on a wrapper inside it. */}
+      <TooltipTrigger
+        render={<div className="min-w-0 border-b border-border" />}
+      >
+        <StatCell label={label} value={value} sub={sub} />
+      </TooltipTrigger>
+      <TooltipContent>
+        {t('poolStats.reservesSource', { provider: source })}
+      </TooltipContent>
+    </Tooltip>
   )
 }
 

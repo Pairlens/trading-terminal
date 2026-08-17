@@ -64,9 +64,54 @@
     "noChainsBody": "Cài một connector on-chain và chuỗi của nó sẽ vào bậc thang này."
   },
   "company": {
+    "analystBuy": "{{count}} mua",
+    "analystCoverage_one": "{{count}} chuyên viên",
+    "analystCoverage_other": "{{count}} chuyên viên",
+    "analystHold": "{{count}} giữ",
+    "analystSell": "{{count}} bán",
+    "beta": "Beta",
+    "consensusEps": "EPS đồng thuận",
+    "dividendYield": "Tỷ suất cổ tức",
+    "earningsGrowth": "Lợi nhuận YoY",
+    "ebitda": "EBITDA",
+    "epsTtm": "EPS TTM",
+    "groups": {
+      "valuation": "Định giá",
+      "growth": "Tăng trưởng",
+      "margins": "Biên lợi nhuận",
+      "context": "Bối cảnh",
+      "analyst": "Chuyên viên phân tích"
+    },
+    "marketCap": "Vốn hóa",
+    "nextReport": "Báo cáo tới",
+    "noCoverageBody": "Nhà cung cấp bao phủ các công ty niêm yết đang hoạt động. ETF, quỹ đóng hay mã vừa lên sàn thường không có báo cáo phía sau.",
+    "noCoverageTitle": "Không có dữ liệu cơ bản cho {{symbol}}",
+    "noFiguresBody": "Nhà cung cấp biết mã này nhưng chưa công bố bất kỳ con số nào mà khung này hiển thị.",
+    "noFiguresTitle": "Chưa công bố gì",
+    "notEquityBody": "Khung này mô tả một công ty niêm yết. {{venue}} không phải sàn cổ phiếu, và cùng mã ở đó là một tài sản khác.",
+    "notEquityTitle": "Dữ liệu cơ bản cần một cổ phiếu",
+    "operatingMargin": "Biên lợi nhuận hoạt động",
+    "pe": "P/E",
+    "peForward": "P/E · dự phóng",
+    "peg": "PEG",
+    "profitMargin": "Biên lợi nhuận ròng",
+    "providerBusyBody": "Nhà cung cấp dữ liệu đang chặn bớt yêu cầu. Các con số sẽ tự trở lại khi cửa sổ giới hạn đặt lại.",
+    "providerBusyTitle": "Dữ liệu cơ bản đang bị giới hạn tần suất",
+    "providerErrorBody": "Nhà cung cấp trả về nội dung không dùng được. Tài khoản và connector của bạn không có vấn đề gì.",
+    "providerErrorTitle": "Không tải được dữ liệu cơ bản",
+    "reportsInDays_one": "Sau {{count}} ngày",
+    "reportsInDays_other": "Sau {{count}} ngày",
+    "reportsToday": "Công bố hôm nay",
+    "reportsTomorrow": "Công bố ngày mai",
+    "returnOnEquity": "ROE",
+    "revenueGrowth": "Doanh thu YoY",
+    "revenueTtm": "Doanh thu TTM",
+    "sharesOutstanding": "CP lưu hành",
+    "targetPrice": "Giá mục tiêu",
     "unknownName": "Không có tên công ty",
     "needsProviderTitle": "Dữ liệu cơ bản cần một nhà cung cấp",
-    "needsProviderBody": "Nhà môi giới báo giá và khớp lệnh; họ không công bố định giá, tăng trưởng hay biên lợi nhuận. Cài plugin dữ liệu cơ bản để lấp đầy khung này."
+    "needsProviderBody": "Bản dựng này không có nguồn dữ liệu cơ bản. Định giá, tăng trưởng và biên lợi nhuận đến từ App Server; connector của nhà môi giới chỉ báo giá và khớp lệnh.",
+    "week52": "52 tuần thấp · cao"
   },
   "dexChains": {
     "title": "Dòng tiền đang ở đâu",
@@ -83,17 +128,37 @@
     "emptyBody": "Bản dựng này không kèm connector on-chain, nên không có chuỗi nào để xếp hạng pool."
   },
   "earningsCalendar": {
+    "capped": "Đang hiển thị {{shown}} trong {{total}} báo cáo đầu tiên.",
+    "noEstimate": "không có dự phóng",
+    "noneInWindowBody": {
+      "today": "Hôm nay không doanh nghiệp nào trong lịch công bố báo cáo.",
+      "week": "Bảy ngày tới không ai công bố báo cáo.",
+      "watchlist": "Không mã nào bạn theo dõi công bố báo cáo trong quý tới."
+    },
+    "noneInWindowTitle": "Không có lịch nào",
+    "noWatchedBody": "Đánh dấu một cổ phiếu và mục này sẽ hiện báo cáo tới của nó. Các mục khác bao phủ toàn thị trường.",
+    "noWatchedTitle": "Chưa theo dõi cổ phiếu nào",
+    "providerBusyBody": "Nhà cung cấp dữ liệu đang chặn bớt yêu cầu. Lịch sẽ tự trở lại khi cửa sổ giới hạn đặt lại.",
+    "providerBusyTitle": "Lịch báo cáo đang bị giới hạn tần suất",
+    "providerErrorBody": "Nhà cung cấp trả về nội dung không dùng được. Tài khoản và connector của bạn không có vấn đề gì.",
+    "providerErrorTitle": "Không tải được lịch báo cáo",
+    "scopeLabel": "Khoảng thời gian công bố",
+    "scopes": {
+      "today": "Hôm nay",
+      "week": "Tuần này",
+      "watchlist": "Danh mục theo dõi"
+    },
     "title": "Kết quả kinh doanh",
-    "subtitle": "Trước giờ mở cửa và sau giờ đóng cửa",
-    "emptyTitle": "Chưa cài nguồn dữ liệu kết quả kinh doanh",
-    "emptyBody": "Một plugin dữ liệu cơ bản sẽ lấp đầy lịch này. Nhà môi giới công bố giờ phiên của chính họ, không phải danh sách doanh nghiệp báo cáo tuần này.",
+    "emptyTitle": "Không có nguồn lịch báo cáo",
+    "emptyBody": "Bản dựng này không có nhà cung cấp lịch báo cáo. Lịch đến từ App Server; nhà môi giới công bố giờ phiên của chính họ, không phải ai báo cáo tuần này.",
     "columns": {
+      "company": "Doanh nghiệp",
+      "quarterEnd": "Kết thúc quý",
       "symbol": "Mã",
-      "when": "Thời điểm",
-      "epsEstimate": "EPS dự báo",
-      "revenueEstimate": "Doanh thu dự báo",
-      "impliedMove": "Biến động hàm ý"
-    }
+      "epsEstimate": "EPS dự báo"
+    },
+    "today": "Hôm nay",
+    "tomorrow": "Ngày mai"
   },
   "economicCalendar": {
     "emptyTitle": "Chưa cài nguồn dữ liệu vĩ mô",
@@ -154,6 +219,26 @@
     "basisLast_other": "Cộng từ {{count}} giá khớp gần nhất",
     "basisMissing_one": "1 ứng viên chưa có giá",
     "basisMissing_other": "{{count}} ứng viên chưa có giá"
+  },
+  "feeAccrual": {
+    "title": "Phí tích lũy",
+    "subtitle_one": "{{wallet}} · {{count}} khoảng",
+    "subtitle_other": "{{wallet}} · {{count}} khoảng",
+    "claimableLabel": "Có thể thu ngay",
+    "nothingClaimable": "Chưa có gì để thu ở các khoảng này.",
+    "notRead": "Chưa đọc được pool",
+    "columns": {
+      "position": "Vị thế",
+      "fee": "Phí",
+      "claimable": "Có thể thu"
+    },
+    "loadingTitle": "Đang đọc phí",
+    "loadingBody": "Đang mô phỏng lệnh collect trên từng vị thế để xem hiện tại sẽ trả bao nhiêu.",
+    "emptyTitle": "Không có vị thế thanh khoản",
+    "emptyBody": "{{wallet}} không giữ vị thế nào để tích lũy phí. Cung cấp thanh khoản trên một chain đã kết nối và số tiền sẽ xuất hiện ở đây.",
+    "noChainsTitle": "Chưa có connector chain",
+    "noChainsBody": "Cài một connector on-chain và bảng này sẽ đọc số phí mà các pool của nó đang nợ ví của bạn.",
+    "footnote": "Số tiền một lệnh collect sẽ trả ở block này, cả hai chân, theo từng vị thế. Phí đã thu không để lại dấu vết trên chain, nên APR phí, thời gian trong khoảng và mức lỗ so với nắm giữ cần một indexer và không được hiển thị."
   },
   "funding": {
     "loading": "Đang đọc phí funding…",
@@ -242,14 +327,38 @@
     "biggestLabel": "Swap lớn nhất"
   },
   "lpPanes": {
-    "positionTitle": "Vị thế LP cần một nguồn vị thế",
-    "positionBody": "Chưa có thứ nào đang kết nối đọc được vị thế thanh khoản. Việc đó cần hỏi position manager của chuỗi về các dải giá của ví này, và hiện chưa connector nào làm.",
-    "feesTitle": "Lịch sử phí cần một nguồn vị thế",
-    "feesBody": "Phí kiếm được theo ngày đến từ một indexer, hoặc từ fee growth đo theo thời gian. Cả hai đều chưa kết nối, và một biểu đồ ước lượng sẽ trông như số liệu đo thật.",
     "manageTitle": "Sửa dải giá cần một thao tác thanh khoản",
     "manageBody": "Thêm, rút và căn lại thanh khoản đều là giao dịch có chữ ký mà chưa connector nào dựng được. Các điều khiển sẽ chưa xuất hiện cho tới khi chúng thực sự làm được việc.",
     "venueFallback": "chuỗi này",
     "wouldRead": "Sẽ đọc {{wallet}} trên {{pool}}, {{chain}}"
+  },
+  "lpPosition": {
+    "title": "Vị thế LP",
+    "subtitle_one": "{{wallet}} · {{count}} khoảng",
+    "subtitle_other": "{{wallet}} · {{count}} khoảng",
+    "capped": "{{count}} chưa hiển thị",
+    "value": "Giá trị vị thế",
+    "poolUnread": "Chưa đọc được pool",
+    "range": "Khoảng giá",
+    "ticks": "tick {{lower}} đến {{upper}}",
+    "band": "dải ±{{band}}%",
+    "bandWithHeadroom": "dải ±{{band}}% · còn {{headroom}}% trước biên trên",
+    "composition": "Thành phần",
+    "uncollected": "Phí chưa thu",
+    "tokenId": "Vị thế",
+    "pool": "Pool",
+    "feeTier": "phí {{value}}%",
+    "inRange": "Trong khoảng",
+    "outOfRange": "Ngoài khoảng",
+    "rangeUnknown": "Chưa đọc được pool",
+    "otherPositions": "Các vị thế khác của bạn",
+    "loadingTitle": "Đang đọc vị thế",
+    "loadingBody": "Đang hỏi position manager của từng chain đã kết nối xem ví này đang giữ gì.",
+    "emptyTitle": "Không có vị thế thanh khoản",
+    "emptyBody": "{{wallet}} không giữ vị thế Uniswap v3 hay PancakeSwap v3 nào trên các chain đã kết nối. Cung cấp thanh khoản trên một chain và vị thế sẽ xuất hiện ở đây.",
+    "noChainsTitle": "Chưa có connector chain",
+    "noChainsBody": "Cài một connector on-chain và bảng này sẽ đọc position manager của chain đó cho ví của bạn.",
+    "footnote": "Đọc từ chain: dải giá, giá trị thanh khoản hiện tại và phí chưa thu. Vị thế không lưu giá vốn, nên không có con số so với việc chỉ nắm giữ."
   },
   "marginHealth": {
     "title": "Sức khỏe ký quỹ",
@@ -668,7 +777,8 @@
     "feeTier": "Bậc phí",
     "feeTierUnknown": "Sàn này không công bố",
     "reserves": "Dự trữ",
-    "reservesUnavailable": "Cả hai phía chỉ có trên máy tính",
+    "reservesUnavailable": "Không được công bố cho pool này",
+    "reservesSource": "Dự trữ từ {{provider}}",
     "trades24h": "Giao dịch 24h",
     "tradersSub_one": "{{count}} trader",
     "tradersSub_other": "{{count}} trader",
@@ -2973,14 +3083,14 @@
     "poolStats": "Dự trữ ở cả hai phía, giá trị khóa, khối lượng 24 giờ, mức phí, và tác động giá ở ba quy mô",
     "onchainTrades": "Mọi lệnh swap qua pool ngay khi được xác nhận, cùng ví thực hiện và liên kết đến giao dịch",
     "route": "Cách bộ tổng hợp chia lệnh swap của bạn qua các pool, để mức trượt giá có một nguyên nhân được nêu rõ",
-    "feeAccrual": "Phí mà vị thế của bạn đã kiếm được theo thời gian, mức APR mà nó ngụ ý, và những gì có thể nhận ngay bây giờ",
-    "lpPosition": "Khoảng giá của bạn so với giá hiện tại, thời gian nằm trong khoảng, và tổn thất tạm thời đo so với việc chỉ nắm giữ đơn thuần",
+    "feeAccrual": "Số tiền một lần collect sẽ trả vào ví của bạn ngay bây giờ, cả hai chân, theo từng vị thế và tổng cộng",
+    "lpPosition": "Phạm vi của bạn so với giá pool trực tiếp, cấu trúc thanh khoản và phí chưa thu",
     "manageLiquidity": "Di chuyển khoảng giá, thêm hoặc rút thanh khoản, và nhận phí mà không cần rời khỏi biểu đồ",
     "chainLadder": "Cùng một token được định giá trên mọi chuỗi, đã gồm cả phí gas, để tổng chi phí tốt nhất thắng thay vì báo giá tốt nhất",
     "routeBridge": "Chuỗi nguồn, chuỗi đích, cầu nối, phí của nó và mất bao lâu, sẵn sàng để thực hiện",
     "inFlight": "Các giao dịch chuyển tiền vẫn đang được xác nhận, mỗi giao dịch kèm bộ đếm khối mà nó đang chờ",
     "session": "Phiên giao dịch hiện đang ở đâu, theo đúng lịch riêng của sàn môi giới, đã tính cả ngày lễ và ngày làm nửa buổi",
-    "earningsCalendar": "Ai báo cáo và khi nào, trước hay sau giờ đóng cửa, cùng mức ước tính họ phải vượt qua",
+    "earningsCalendar": "Ai công bố và khi nào, nhóm theo ngày, kèm mức đồng thuận phải vượt qua",
     "economicCalendar": "Các số liệu vĩ mô theo giờ công bố, kèm mức độ quan trọng, số liệu kỳ trước và mức đồng thuận",
     "sessionClock": "Một chiếc đồng hồ một dòng cho phiên giao dịch, để một lệnh ngoài giờ không bao giờ là một bất ngờ",
     "level1": "Giá mua và bán cùng khối lượng, mức chênh lệch giá, và biên độ trong ngày từ nguồn dữ liệu của nhà môi giới",
@@ -3549,6 +3659,10 @@
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "Dữ liệu thị trường DEX cung cấp bởi DexPaprika"
+      },
+      "dexscreener-data-provider": {
+        "title": "DexScreener",
+        "description": "Dự trữ pool và số liệu pool từ DexScreener. Không cần khóa API và mở CORS, nên dự trữ cả hai phía đọc được trong trình duyệt. Không có nến và không có danh sách pool xếp hạng: nhà cung cấp này bổ trợ cho các nhà cung cấp khác, không thay thế."
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",

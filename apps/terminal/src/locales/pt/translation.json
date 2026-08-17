@@ -64,9 +64,54 @@
     "noChainsBody": "Instale um conector on-chain e a rede dele entra na escada."
   },
   "company": {
+    "analystBuy": "{{count}} compra",
+    "analystCoverage_one": "{{count}} analista",
+    "analystCoverage_other": "{{count}} analistas",
+    "analystHold": "{{count}} neutro",
+    "analystSell": "{{count}} venda",
+    "beta": "Beta",
+    "consensusEps": "LPA consenso",
+    "dividendYield": "Div. yield",
+    "earningsGrowth": "Lucro A/A",
+    "ebitda": "EBITDA",
+    "epsTtm": "LPA TTM",
+    "groups": {
+      "valuation": "Valuation",
+      "growth": "Crescimento",
+      "margins": "Margens",
+      "context": "Contexto",
+      "analyst": "Analistas"
+    },
+    "marketCap": "Valor de mercado",
+    "nextReport": "Próximo balanço",
+    "noCoverageBody": "O provedor cobre empresas operacionais listadas. Um ETF, um fundo fechado ou uma listagem muito nova costuma não ter demonstrações por trás.",
+    "noCoverageTitle": "Sem fundamentos para {{symbol}}",
+    "noFiguresBody": "O provedor conhece esta listagem, mas não publicou nenhum dos números que este painel mostra.",
+    "noFiguresTitle": "Nada publicado ainda",
+    "notEquityBody": "Este painel descreve uma empresa listada. {{venue}} não é um mercado de ações, e o mesmo ticker lá é outro ativo.",
+    "notEquityTitle": "Fundamentos precisam de uma ação",
+    "operatingMargin": "Margem operacional",
+    "pe": "P/L",
+    "peForward": "P/L · proj.",
+    "peg": "PEG",
+    "profitMargin": "Margem líquida",
+    "providerBusyBody": "O provedor de dados está nos limitando. Os números voltam sozinhos quando a janela reinicia.",
+    "providerBusyTitle": "Fundamentos com limite de requisições",
+    "providerErrorBody": "O provedor respondeu com algo inutilizável. Não é problema das suas contas nem dos seus conectores.",
+    "providerErrorTitle": "Fundamentos não carregaram",
+    "reportsInDays_one": "Em {{count}} dia",
+    "reportsInDays_other": "Em {{count}} dias",
+    "reportsToday": "Divulga hoje",
+    "reportsTomorrow": "Divulga amanhã",
+    "returnOnEquity": "ROE",
+    "revenueGrowth": "Receita A/A",
+    "revenueTtm": "Receita TTM",
+    "sharesOutstanding": "Ações em circ.",
+    "targetPrice": "Preço-alvo",
     "unknownName": "Nome da empresa indisponível",
     "needsProviderTitle": "Os fundamentos precisam de um provedor",
-    "needsProviderBody": "Uma corretora cota e executa; ela não publica valuation, crescimento ou margens. Instale um plugin de fundamentos para preencher este painel."
+    "needsProviderBody": "Esta build não tem fonte de fundamentos. Valuation, crescimento e margens vêm do App Server; um conector de corretora apenas cota e executa.",
+    "week52": "52 semanas mín. · máx."
   },
   "dexChains": {
     "title": "Onde está o fluxo",
@@ -83,17 +128,37 @@
     "emptyBody": "Esta build não traz conectores on-chain, então não há rede cujas pools possam ser ranqueadas."
   },
   "earningsCalendar": {
+    "capped": "Mostrando os primeiros {{shown}} de {{total}} balanços.",
+    "noEstimate": "sem estimativa",
+    "noneInWindowBody": {
+      "today": "Nenhuma empresa do calendário divulga hoje.",
+      "week": "Ninguém divulga nos próximos sete dias.",
+      "watchlist": "Nenhuma das ações que você acompanha divulga no próximo trimestre."
+    },
+    "noneInWindowTitle": "Nada agendado",
+    "noWatchedBody": "Favorite uma ação e esta visão mostra o próximo balanço dela. As outras visões cobrem todo o mercado.",
+    "noWatchedTitle": "Nenhuma ação acompanhada",
+    "providerBusyBody": "O provedor de dados está nos limitando. O calendário volta sozinho quando a janela reinicia.",
+    "providerBusyTitle": "Feed de balanços com limite de requisições",
+    "providerErrorBody": "O provedor respondeu com algo inutilizável. Não é problema das suas contas nem dos seus conectores.",
+    "providerErrorTitle": "Feed de balanços não carregou",
+    "scopeLabel": "Janela de divulgação",
+    "scopes": {
+      "today": "Hoje",
+      "week": "Esta semana",
+      "watchlist": "Watchlist"
+    },
     "title": "Resultados",
-    "subtitle": "Antes da abertura e após o fechamento",
-    "emptyTitle": "Nenhuma fonte de resultados instalada",
-    "emptyBody": "Um plugin de dados fundamentalistas preenche este calendário. A corretora publica os próprios horários, não quem divulga resultados nesta semana.",
+    "emptyTitle": "Sem feed de balanços",
+    "emptyBody": "Esta build não tem provedor de balanços. O calendário vem do App Server; a corretora publica os próprios horários, não quem divulga nesta semana.",
     "columns": {
+      "company": "Empresa",
+      "quarterEnd": "Fim do trimestre",
       "symbol": "Símbolo",
-      "when": "Quando",
-      "epsEstimate": "LPA est.",
-      "revenueEstimate": "Receita est.",
-      "impliedMove": "Movimento implícito"
-    }
+      "epsEstimate": "LPA est."
+    },
+    "today": "Hoje",
+    "tomorrow": "Amanhã"
   },
   "economicCalendar": {
     "emptyTitle": "Nenhuma fonte macro instalada",
@@ -154,6 +219,26 @@
     "basisLast_other": "Somado sobre {{count}} últimos preços",
     "basisMissing_one": "1 concorrente sem cotação",
     "basisMissing_other": "{{count}} concorrentes sem cotação"
+  },
+  "feeAccrual": {
+    "title": "Taxas acumuladas",
+    "subtitle_one": "{{wallet}} · {{count}} faixa",
+    "subtitle_other": "{{wallet}} · {{count}} faixas",
+    "claimableLabel": "Disponível para saque",
+    "nothingClaimable": "Ainda não há nada a sacar nessas faixas.",
+    "notRead": "Pool não lida",
+    "columns": {
+      "position": "Posição",
+      "fee": "Taxa",
+      "claimable": "A sacar"
+    },
+    "loadingTitle": "Lendo taxas",
+    "loadingBody": "Simulando um collect em cada posição para ver quanto ele pagaria agora.",
+    "emptyTitle": "Nenhuma posição de liquidez",
+    "emptyBody": "{{wallet}} não tem posições para acumular taxas. Forneça liquidez em uma rede conectada e o valor aparece aqui.",
+    "noChainsTitle": "Nenhum conector de rede",
+    "noChainsBody": "Instale um conector on-chain e este painel lê o que as pools dele devem à sua carteira.",
+    "footnote": "O que um collect pagaria neste bloco, nas duas pernas, por posição. Taxas já coletadas não deixam rastro on-chain, então APR de taxas, tempo na faixa e perda em relação a manter precisam de um indexador e não são exibidos."
   },
   "funding": {
     "loading": "A ler taxas de financiamento…",
@@ -242,14 +327,38 @@
     "biggestLabel": "Maiores swaps"
   },
   "lpPanes": {
-    "positionTitle": "Posições de LP precisam de uma fonte de posições",
-    "positionBody": "Nada do que está conectado consegue ler uma posição de liquidez ainda. Seria preciso perguntar ao position manager da rede pelas faixas desta carteira, e nenhum conector faz isso hoje.",
-    "feesTitle": "O histórico de taxas precisa de uma fonte de posições",
-    "feesBody": "As taxas ganhas por dia vêm de um indexador, ou do fee growth medido ao longo do tempo. Nenhum dos dois está conectado, e um gráfico estimado pareceria medido.",
     "manageTitle": "Editar a faixa precisa de uma ação de liquidez",
     "manageBody": "Adicionar, retirar e recentralizar liquidez são transações assinadas que nenhum conector constrói ainda. Os controles ficam de fora até que façam alguma coisa.",
     "venueFallback": "esta rede",
     "wouldRead": "Leria {{wallet}} em {{pool}}, {{chain}}"
+  },
+  "lpPosition": {
+    "title": "Posição de liquidez",
+    "subtitle_one": "{{wallet}} · {{count}} faixa",
+    "subtitle_other": "{{wallet}} · {{count}} faixas",
+    "capped": "{{count}} não exibidas",
+    "value": "Valor da posição",
+    "poolUnread": "Pool não lida",
+    "range": "Faixa",
+    "ticks": "ticks {{lower}} a {{upper}}",
+    "band": "faixa de ±{{band}}%",
+    "bandWithHeadroom": "faixa de ±{{band}}% · {{headroom}}% de folga até o limite superior",
+    "composition": "Composição",
+    "uncollected": "Taxas não coletadas",
+    "tokenId": "Posição",
+    "pool": "Pool",
+    "feeTier": "taxa de {{value}}%",
+    "inRange": "Na faixa",
+    "outOfRange": "Fora da faixa",
+    "rangeUnknown": "Pool não lida",
+    "otherPositions": "Suas outras posições",
+    "loadingTitle": "Lendo posições",
+    "loadingBody": "Perguntando ao position manager de cada rede conectada o que esta carteira tem.",
+    "emptyTitle": "Nenhuma posição de liquidez",
+    "emptyBody": "{{wallet}} não tem posições da Uniswap v3 nem da PancakeSwap v3 nas redes conectadas. Forneça liquidez em uma delas e ela aparece aqui.",
+    "noChainsTitle": "Nenhum conector de rede",
+    "noChainsBody": "Instale um conector on-chain e este painel lê o position manager dessa rede para a sua carteira.",
+    "footnote": "Lido da rede: a faixa, quanto a liquidez vale agora e as taxas ainda não coletadas. Uma posição não guarda quanto custou, então não há um número em relação a simplesmente manter."
   },
   "marginHealth": {
     "title": "Saúde da margem",
@@ -668,7 +777,8 @@
     "feeTier": "Faixa de taxa",
     "feeTierUnknown": "Não publicada por esta venue",
     "reserves": "Reservas",
-    "reservesUnavailable": "Os dois lados só no desktop",
+    "reservesUnavailable": "Não publicado para esta pool",
+    "reservesSource": "Reservas de {{provider}}",
     "trades24h": "Negócios 24h",
     "tradersSub_one": "{{count}} trader",
     "tradersSub_other": "{{count}} traders",
@@ -2973,14 +3083,14 @@
     "poolStats": "Reservas dos dois lados, valor bloqueado, volume de 24h, a faixa de taxa, e o impacto no preço em três tamanhos",
     "onchainTrades": "Cada swap pelo pool conforme confirma, com a wallet e um link para a transação",
     "route": "Como o agregador divide seu swap entre pools, para que o slippage tenha uma causa declarada",
-    "feeAccrual": "Taxas que sua posição ganhou ao longo do tempo, o APR que isso implica, e o que é resgatável agora",
-    "lpPosition": "Sua faixa contra o preço ao vivo, tempo dentro da faixa, e a perda impermanente medida contra simplesmente manter",
+    "feeAccrual": "O que um collect pagaria à sua carteira agora, ambas as pernas, por posição e no total",
+    "lpPosition": "Seu intervalo contra o preço do pool ao vivo, a composição da liquidez e as taxas ainda não coletadas",
     "manageLiquidity": "Mova a faixa, adicione ou retire liquidez, e resgate taxas sem sair do gráfico",
     "chainLadder": "O mesmo token precificado em cada blockchain, com o gas incluído, para que o melhor total vença em vez da melhor cotação",
     "routeBridge": "Blockchain de origem, blockchain de destino, a ponte, sua taxa e quanto tempo leva, pronto para executar",
     "inFlight": "Transferências ainda confirmando, cada uma com o contador de blocos que está aguardando",
     "session": "Onde o dia de negociação está agora, pelo próprio calendário da corretora, com feriados e meios expedientes incluídos",
-    "earningsCalendar": "Quem divulga resultados e quando, antes ou depois do pregão, com a estimativa que precisam superar",
+    "earningsCalendar": "Quem divulga e quando, agrupado por dia, com a estimativa de consenso a ser batida",
     "economicCalendar": "Divulgações macroeconômicas no horário certo, com a importância, a leitura anterior e o consenso",
     "sessionClock": "Um relógio de uma linha para o dia de negociação, para que um ticket fora do horário nunca seja surpresa",
     "level1": "Bid e ask com seus tamanhos, o spread e a variação do dia a partir do feed da corretora",
@@ -3549,6 +3659,10 @@
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "Dados de mercado DEX fornecidos pela DexPaprika"
+      },
+      "dexscreener-data-provider": {
+        "title": "DexScreener",
+        "description": "Reservas e métricas de pools pela DexScreener. Sem chave e com CORS aberto, então as reservas dos dois lados funcionam no navegador. Sem candles e sem listagem de pools por ranking: este provedor complementa os outros, não os substitui."
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",

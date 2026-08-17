@@ -35,6 +35,7 @@
     "./staleness": "./src/staleness.ts",
     "./errors": "./src/errors.ts",
     "./provider-throttle": "./src/provider-throttle.ts",
+    "./request-limiter": "./src/request-limiter.ts",
     "./token-directory": "./src/token-directory.ts",
     "./amount": "./src/amount.ts"
   },

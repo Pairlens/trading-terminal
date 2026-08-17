@@ -64,9 +64,54 @@
     "noChainsBody": "安裝一個鏈上連接器，它的鏈就會加入這張階梯。"
   },
   "company": {
+    "analystBuy": "買進 {{count}}",
+    "analystCoverage_one": "{{count}} 位分析師",
+    "analystCoverage_other": "{{count}} 位分析師",
+    "analystHold": "中立 {{count}}",
+    "analystSell": "賣出 {{count}}",
+    "beta": "Beta",
+    "consensusEps": "市場預期 EPS",
+    "dividendYield": "股息殖利率",
+    "earningsGrowth": "獲利年增",
+    "ebitda": "EBITDA",
+    "epsTtm": "EPS TTM",
+    "groups": {
+      "valuation": "估值",
+      "growth": "成長",
+      "margins": "利潤率",
+      "context": "參考",
+      "analyst": "分析師"
+    },
+    "marketCap": "市值",
+    "nextReport": "下次財報",
+    "noCoverageBody": "提供方涵蓋的是上市的營運公司。ETF、封閉式基金或剛上市的標的往往沒有財報支撐。",
+    "noCoverageTitle": "沒有 {{symbol}} 的基本面資料",
+    "noFiguresBody": "提供方認得這檔標的，但還沒有揭露本面板顯示的任何數字。",
+    "noFiguresTitle": "尚未揭露任何數據",
+    "notEquityBody": "本面板描述的是上市公司。{{venue}} 不是股票市場，同一代碼在那裡是另一種資產。",
+    "notEquityTitle": "基本面資料需要一檔股票",
+    "operatingMargin": "營業利益率",
+    "pe": "本益比",
+    "peForward": "本益比 · 預估",
+    "peg": "PEG",
+    "profitMargin": "淨利率",
+    "providerBusyBody": "資料提供方正在限流。額度視窗重置後數字會自己回來。",
+    "providerBusyTitle": "基本面資料被限流",
+    "providerErrorBody": "提供方回傳了無法使用的內容。與你的帳戶和連接器無關。",
+    "providerErrorTitle": "基本面資料未載入",
+    "reportsInDays_one": "{{count}} 天後",
+    "reportsInDays_other": "{{count}} 天後",
+    "reportsToday": "今天發財報",
+    "reportsTomorrow": "明天發財報",
+    "returnOnEquity": "股東權益報酬率",
+    "revenueGrowth": "營收年增",
+    "revenueTtm": "營收 TTM",
+    "sharesOutstanding": "流通股數",
+    "targetPrice": "分析師目標價",
     "unknownName": "尚無公司名稱",
     "needsProviderTitle": "基本面資料需要資料供應者",
-    "needsProviderBody": "券商負責報價與成交，不發布估值、成長與利潤率。安裝基本面外掛即可填入此面板。"
+    "needsProviderBody": "此版本沒有基本面資料來源。估值、成長與利潤率來自 App Server，券商連接器只負責報價與成交。",
+    "week52": "52 週 最低 · 最高"
   },
   "dexChains": {
     "title": "資金流向何處",
@@ -83,17 +128,37 @@
     "emptyBody": "此版本未包含鏈上連接器，因此沒有可以排序池子的鏈。"
   },
   "earningsCalendar": {
+    "capped": "共 {{total}} 份財報，顯示前 {{shown}} 份。",
+    "noEstimate": "無預估",
+    "noneInWindowBody": {
+      "today": "今天日曆上沒有公司發財報。",
+      "week": "未來七天沒有公司發財報。",
+      "watchlist": "你自選的股票下一季都不發財報。"
+    },
+    "noneInWindowTitle": "暫無安排",
+    "noWatchedBody": "把股票加入自選，這裡就會顯示它的下次財報。其他範圍涵蓋整個市場。",
+    "noWatchedTitle": "還沒有自選股票",
+    "providerBusyBody": "資料提供方正在限流。額度視窗重置後日程會自己回來。",
+    "providerBusyTitle": "財報資料被限流",
+    "providerErrorBody": "提供方回傳了無法使用的內容。與你的帳戶和連接器無關。",
+    "providerErrorTitle": "財報日程未載入",
+    "scopeLabel": "財報時間範圍",
+    "scopes": {
+      "today": "今天",
+      "week": "本週",
+      "watchlist": "自選"
+    },
     "title": "財報",
-    "subtitle": "開盤前與收盤後",
-    "emptyTitle": "未安裝財報資料來源",
-    "emptyBody": "填入這份日曆的是基本面資料外掛。券商只公布自己的交易時段，不提供本週誰發財報。",
+    "emptyTitle": "沒有財報資料來源",
+    "emptyBody": "此版本沒有財報資料提供方。日程來自 App Server；券商只公布自己的交易時段，不提供本週誰發財報。",
     "columns": {
+      "company": "公司",
+      "quarterEnd": "財季結束",
       "symbol": "代號",
-      "when": "時段",
-      "epsEstimate": "預估每股盈餘",
-      "revenueEstimate": "預估營收",
-      "impliedMove": "隱含波動幅度"
-    }
+      "epsEstimate": "預估每股盈餘"
+    },
+    "today": "今天",
+    "tomorrow": "明天"
   },
   "economicCalendar": {
     "emptyTitle": "未安裝總體經濟資料來源",
@@ -154,6 +219,26 @@
     "basisLast_other": "由 {{count}} 個最新價求和",
     "basisMissing_one": "1 位候選無報價",
     "basisMissing_other": "{{count}} 位候選無報價"
+  },
+  "feeAccrual": {
+    "title": "手續費累積",
+    "subtitle_one": "{{wallet}} · {{count}} 個區間",
+    "subtitle_other": "{{wallet}} · {{count}} 個區間",
+    "claimableLabel": "目前可領取",
+    "nothingClaimable": "這些區間目前還沒有可領取的金額。",
+    "notRead": "未讀取到池",
+    "columns": {
+      "position": "部位",
+      "fee": "費率",
+      "claimable": "可領取"
+    },
+    "loadingTitle": "正在讀取手續費",
+    "loadingBody": "正在對每個部位模擬 collect，看現在會付出多少。",
+    "emptyTitle": "沒有流動性部位",
+    "emptyBody": "{{wallet}} 沒有可累積手續費的部位。在一條已連接的鏈上提供流動性後，金額就會顯示在這裡。",
+    "noChainsTitle": "沒有鏈連接器",
+    "noChainsBody": "安裝一個鏈上連接器，這個面板就會讀取它的池欠你錢包多少。",
+    "footnote": "這一區塊內 collect 會支付的金額，兩側代幣、按部位列出。已領取的手續費不會在鏈上留下痕跡，所以手續費 APR、區間內時長和相對持有的損失都需要索引器，這裡不展示。"
   },
   "funding": {
     "loading": "正在讀取資金費率…",
@@ -242,14 +327,38 @@
     "biggestLabel": "最大兌換"
   },
   "lpPanes": {
-    "positionTitle": "LP 部位需要部位資料來源",
-    "positionBody": "目前已連線的元件都還讀不到流動性部位。那需要向鏈上的 position manager 查詢這個錢包自己的價格區間，而今天沒有連接器這樣做。",
-    "feesTitle": "手續費歷史需要部位資料來源",
-    "feesBody": "每日賺取的手續費來自索引器，或來自隨時間量測的 fee growth。兩者都尚未連線，而估算出的圖表看起來會像實測資料。",
     "manageTitle": "調整區間需要流動性操作",
     "manageBody": "加入、撤出與重新置中流動性都是需要簽章的交易，目前沒有連接器能建構。這些控制項在真正可用之前不會出現。",
     "venueFallback": "這條鏈",
     "wouldRead": "將讀取 {{chain}} 上 {{pool}} 的 {{wallet}}"
+  },
+  "lpPosition": {
+    "title": "LP 部位",
+    "subtitle_one": "{{wallet}} · {{count}} 個區間",
+    "subtitle_other": "{{wallet}} · {{count}} 個區間",
+    "capped": "{{count}} 個未顯示",
+    "value": "部位價值",
+    "poolUnread": "未讀取到池",
+    "range": "價格區間",
+    "ticks": "tick {{lower}} 至 {{upper}}",
+    "band": "±{{band}}% 區間",
+    "bandWithHeadroom": "±{{band}}% 區間 · 距上界還有 {{headroom}}%",
+    "composition": "組成",
+    "uncollected": "未領取的手續費",
+    "tokenId": "部位",
+    "pool": "池",
+    "feeTier": "{{value}}% 費率",
+    "inRange": "區間內",
+    "outOfRange": "區間外",
+    "rangeUnknown": "未讀取到池",
+    "otherPositions": "你的其他部位",
+    "loadingTitle": "正在讀取部位",
+    "loadingBody": "正在向每條已連接鏈的 position manager 查詢這個錢包持有什麼。",
+    "emptyTitle": "沒有流動性部位",
+    "emptyBody": "{{wallet}} 在已連接的鏈上沒有 Uniswap v3 或 PancakeSwap v3 部位。在其中一條鏈上提供流動性後就會顯示在這裡。",
+    "noChainsTitle": "沒有鏈連接器",
+    "noChainsBody": "安裝一個鏈上連接器，這個面板就會為你的錢包讀取該鏈的 position manager。",
+    "footnote": "從鏈上讀取：價格區間、流動性目前的價值，以及尚未領取的手續費。部位不記錄成本，所以沒有與單純持有的對比數值。"
   },
   "marginHealth": {
     "title": "保證金狀況",
@@ -668,7 +777,8 @@
     "feeTier": "費率級距",
     "feeTierUnknown": "該平台未公布",
     "reserves": "儲備",
-    "reservesUnavailable": "兩側僅在桌面版可見",
+    "reservesUnavailable": "此池未公開",
+    "reservesSource": "儲備資料來自 {{provider}}",
     "trades24h": "24 小時成交筆數",
     "tradersSub_one": "{{count}} 位交易者",
     "tradersSub_other": "{{count}} 位交易者",
@@ -2973,14 +3083,14 @@
     "poolStats": "兩側儲備量、鎖倉價值(TVL)、24 小時成交量、手續費檔位，以及三種規模下的價格影響",
     "onchainTrades": "資金池中每一筆兌換在確認時即時顯示，附帶錢包地址與交易連結",
     "route": "聚合器如何把你的兌換拆分到各個資金池，讓滑點有據可查",
-    "feeAccrual": "你的部位隨時間累積的手續費收益、由此推算的 APR，以及現在可領取的金額",
-    "lpPosition": "你的價格區間與即時價格的對比、區間內停留時間，以及相對於單純持有測算的無常損失",
+    "feeAccrual": "現在執行領取會付入你錢包的金額，兩條腿，按倉位和總計顯示",
+    "lpPosition": "你的區間與即時池價的對比、流動性組成以及尚未領取的手續費",
     "manageLiquidity": "無需離開圖表即可調整區間、增減流動性並領取手續費",
     "chainLadder": "同一代幣在每條鏈上的報價，已計入 Gas 費，比拼的是總成本而不是表面報價",
     "routeBridge": "來源鏈、目標鏈、使用的跨鏈橋及其手續費與所需時間，一切就緒即可執行",
     "inFlight": "仍在確認中的轉帳，附帶各自等待的區塊確認數",
     "session": "依據券商自身日曆顯示目前交易日所處的時段，包含假期與半日市",
-    "earningsCalendar": "誰將在何時發布財報，盤前還是盤後，以及需要超越的市場預期",
+    "earningsCalendar": "誰在什麼時候發財報，按日期分組，並附上要超越的市場預期",
     "economicCalendar": "總體經濟數據按發布時間排列，附帶重要性、前值與市場預期",
     "sessionClock": "用一行顯示交易日狀態的時鐘，盤後下單不會再讓你措手不及",
     "level1": "來自券商行情的買賣報價及其數量、價差和當日波動區間",
@@ -3549,6 +3659,10 @@
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "由 DexPaprika 提供支援的 DEX 市場資料"
+      },
+      "dexscreener-data-provider": {
+        "title": "DexScreener",
+        "description": "來自 DexScreener 的資金池儲備與池統計。免金鑰且開放 CORS，因此瀏覽器也能讀到兩側儲備。沒有K線，也沒有依排名的資金池清單：它補足其他資料來源，而非取代。"
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",

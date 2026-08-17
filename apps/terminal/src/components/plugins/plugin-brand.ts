@@ -125,6 +125,7 @@ const BRANDS: Record<string, BrandSeed> = {
     fg: '#0a1704',
   },
   'dexpaprika-data-provider': { mono: 'DXP', tint: '#e11d48', fg: '#ffffff' },
+  'dexscreener-data-provider': { mono: 'DXS', tint: '#5c7cfa', fg: '#04091a' },
   'exa-search': { mono: 'EXA', tint: '#1f6feb', fg: '#ffffff' },
   'tavily-search': { mono: 'TVL', tint: '#0ea5e9', fg: '#04121a' },
   'basic-symbols': { mono: 'SYM', tint: '#64748b', fg: '#ffffff' },

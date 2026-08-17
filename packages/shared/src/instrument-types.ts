@@ -513,6 +513,143 @@ export type FearGreedResponse = {
   fetchedAt: string
 }
 
+// ── Equity fundamentals and the earnings calendar ─────────────────────
+//
+// What the App Server serves the equities Company and Earnings panes from its
+// fundamentals provider. Two routes, two caches: `/api/company-overview`
+// answers for one symbol (and carries that symbol's next scheduled report so
+// the pane needs a single round trip), `/api/earnings-calendar` answers for a
+// window of the whole market.
+//
+// Every figure is nullable, and absent means "the provider published nothing"
+// rather than zero. The provider states missing numbers as the strings 'None'
+// and '-', so a parser that coerced them would turn an unpublished P/E into a
+// company that earns nothing. Panes collapse a null cell instead of printing a
+// dash grid.
+//
+// Ratios and rates travel as FRACTIONS, matching the rest of this file: 0.259
+// is a 25.9% margin, so no consumer has to guess the scale.
+
+/** Analyst opinion counts, as many buckets as the provider published. */
+export type CompanyAnalystRatings = {
+  strongBuy: number | null
+  buy: number | null
+  hold: number | null
+  sell: number | null
+  strongSell: number | null
+}
+
+/**
+ * One listed company as its fundamentals provider describes it.
+ *
+ * `sector` and `industry` are verbatim provider labels, which arrive shouting
+ * ('TECHNOLOGY'): the wire keeps what the provider said and the pane does the
+ * casing, because a server that title-cased everything would also rewrite
+ * 'NVIDIA CORP' into something no ticker page shows.
+ *
+ * `sharesOutstanding` is the share count, NOT free float. No provider here
+ * publishes float or short interest, and a pane must label it as what it is.
+ */
+export type CompanyFundamentals = {
+  /** Bare ticker, uppercase, as the equity instrument carries it. */
+  symbol: string
+  name: string | null
+  exchange: string | null
+  sector: string | null
+  industry: string | null
+  /** Reporting currency of every money figure below, ISO 4217. */
+  currency: string | null
+
+  // Valuation
+  marketCap: number | null
+  peRatio: number | null
+  /** P/E on the street's forward estimate, where the provider carries one. */
+  forwardPe: number | null
+  pegRatio: number | null
+  epsTtm: number | null
+  ebitda: number | null
+  revenueTtm: number | null
+
+  // Growth, year over year on the most recently reported quarter
+  revenueGrowthYoy: number | null
+  earningsGrowthYoy: number | null
+
+  // Margins and returns
+  profitMargin: number | null
+  operatingMargin: number | null
+  returnOnEquity: number | null
+
+  // Distribution, risk, range
+  dividendYield: number | null
+  beta: number | null
+  week52High: number | null
+  week52Low: number | null
+  sharesOutstanding: number | null
+
+  // Analyst context
+  analystTargetPrice: number | null
+  /** Null when the provider published no ratings at all. */
+  analystRatings: CompanyAnalystRatings | null
+}
+
+/**
+ * One scheduled earnings report.
+ *
+ * There is no before-the-bell / after-the-close field, deliberately: the
+ * provider's calendar publishes a date and no time. Inventing a slot would
+ * invent the one detail a trader acts on, so the pane groups by date and says
+ * nothing about the bell.
+ */
+export type EarningsCalendarEntry = {
+  /** Bare ticker, uppercase. */
+  symbol: string
+  name: string | null
+  /** Report date in the exchange's own calendar, ISO 'YYYY-MM-DD'. */
+  reportDate: string
+  /** Fiscal period end being reported, ISO 'YYYY-MM-DD'. */
+  fiscalDateEnding: string | null
+  /** Consensus EPS in `currency`; null when no estimate was published. */
+  epsEstimate: number | null
+  currency: string | null
+}
+
+/** `/api/company-overview?symbol=NVDA` */
+export type CompanyOverviewResponse = {
+  /** Null when the provider covers no such symbol. */
+  fundamentals: CompanyFundamentals | null
+  /** The symbol's next report on or after today, when the calendar has one. */
+  nextEarnings: EarningsCalendarEntry | null
+  fetchedAt: string
+}
+
+/** `/api/earnings-calendar?days=7&symbols=NVDA,AAPL` */
+export type EarningsCalendarResponse = {
+  /** Ascending by report date, then symbol. */
+  entries: Array<EarningsCalendarEntry>
+  /** Window covered, inclusive, ISO 'YYYY-MM-DD'. */
+  start: string
+  end: string
+  fetchedAt: string
+}
+
+/**
+ * Why fundamentals or the calendar could not be served. Same three reasons the
+ * news feed uses, for the same reason: an empty window is a fact about the
+ * calendar, and these are facts about the provider, which is a different thing
+ * to tell the user.
+ */
+export type EquityFundamentalsUnavailableReason =
+  | 'not_configured' // this server has no fundamentals provider key
+  | 'rate_limited' // the provider is refusing us for now
+  | 'upstream_error' // the provider errored, or answered with something unusable
+
+/** Error body served with a 5xx when the fundamentals provider fails us. */
+export type EquityFundamentalsUnavailableResponse = {
+  error: 'company_overview_unavailable' | 'earnings_calendar_unavailable'
+  reason: EquityFundamentalsUnavailableReason
+  fetchedAt: string
+}
+
 // ── Trading-day clock and calendar (`market-data:session`) ────────────
 //
 // What a broker connector answers when a surface asks where the trading day
@@ -711,8 +848,19 @@ export type PoolStats = {
   /** ISO timestamp the pool was created. */
   createdAt: string | null
   fdvUsd: number | null
-  source: 'geckoterminal' | 'dexpaprika'
+  source: PoolStatsSource
 }
+
+/**
+ * Which provider a pool read came from.
+ *
+ * Three, not two, and the third one is why the browser has reserves at all:
+ * DexScreener publishes `liquidity.base` / `liquidity.quote` with an open CORS
+ * header, where DexPaprika publishes the same numbers behind none. It answers
+ * pool state and nothing else, so it appears in `PoolStats.source` and not in
+ * the listing or chain-aggregate sources below.
+ */
+export type PoolStatsSource = 'geckoterminal' | 'dexpaprika' | 'dexscreener'
 
 /** One confirmed swap through a pool. `side` is the aggressor on the base leg. */
 export type PoolTrade = {
@@ -779,4 +927,103 @@ export type ChainPoolStats = {
   /** Pools behind the figures when `coverage` is `top-pools`. */
   sampledPools: number | null
   source: 'geckoterminal' | 'dexpaprika'
+}
+
+// ── DEX liquidity positions (`trading:orders`, action `lp-positions`) ────────
+// A concentrated-liquidity position as the chain itself reports it, read from
+// the v3-family NonfungiblePositionManager for one wallet address.
+//
+// This rides an ACTION on `trading:orders` rather than the `trading:positions`
+// capability, deliberately. Every consumer of that capability id (futures,
+// equities, predictions) reads `NormalizedPosition`, which describes a directional
+// position with an entry price, leverage and liquidation level — none of which
+// an LP position has. Declaring the id with a different payload would make the
+// next generic positions consumer wrong instead of empty. `quote` and `gas` set
+// the precedent: a read that needs no account is an action on the venue's own
+// surface, and this one never touches a wallet slot or a private key either.
+//
+// Everything chain state cannot answer is absent rather than guessed. There is
+// no cost basis, no fee history and therefore no fee APR, no time-in-range and
+// no impermanent loss in here: a position stores its liquidity and its bounds,
+// not what it was worth when it was opened.
+
+/** One leg of a position's pool, resolved to what a row can print. */
+export type LpPositionToken = {
+  address: string
+  symbol: string
+  decimals: number
+}
+
+/** A single v3-family liquidity position, priced against live pool state. */
+export type LpPositionEntry = {
+  /** Pairlens market id of the chain the position lives on. */
+  market: string
+  /** Position manager holding the NFT — half of the position's identity. */
+  managerAddress: string
+  /** ERC-721 token id, decimal string. The other half. */
+  tokenId: string
+  /** Venue that deployed the manager, e.g. `Uniswap v3`. */
+  dexName: string
+  /** Pool the position belongs to, null when the factory lookup failed. */
+  poolAddress: string | null
+  /** Fee in hundredths of a bip, as the pool stores it (3000 = 0.30%). */
+  fee: number
+  /** The same fee as a fraction of notional, or null when it is unreadable. */
+  feeTier: number | null
+  /** Sorted by address, exactly as the pool orders them. */
+  token0: LpPositionToken
+  token1: LpPositionToken
+  /** Position liquidity, `uint128` as a decimal string. */
+  liquidity: string
+  tickLower: number
+  tickUpper: number
+  /** Pool's current tick. Null when the pool state could not be read. */
+  currentTick: number | null
+  /** Pool's `sqrtPriceX96`, decimal string. Null with `currentTick`. */
+  sqrtPriceX96: string | null
+  /** Whether the pool trades inside the band. Null when the pool is unread. */
+  inRange: boolean | null
+  /** Token amounts the liquidity stands for now, human units. */
+  amount0: number | null
+  amount1: number | null
+  /**
+   * Uncollected fees in human units, from a static `collect` simulation with
+   * max amounts. Null when the simulation could not be run, which is NOT the
+   * same as zero and must not be printed as one.
+   */
+  fees0: number | null
+  fees1: number | null
+  /** Band and current price, token1 per token0, decimal-corrected. */
+  priceLower: number | null
+  priceUpper: number | null
+  priceCurrent: number | null
+  /**
+   * True when the caller passed a pair whose two legs resolved to exactly this
+   * position's tokens. Null when no pair was passed or a leg did not resolve —
+   * "undeterminable", which a pane shows as an unfiltered list rather than as
+   * "no positions on this pool".
+   */
+  matchesPair: boolean | null
+}
+
+export type LpPositionsResponse = {
+  market: string
+  /** The address that was read. Echoed so a row can never be misattributed. */
+  owner: string
+  positions: Array<LpPositionEntry>
+  /**
+   * Position NFTs the wallet holds on this chain, spent receipts included. A
+   * closed position keeps its token until it is burned, so this is routinely far
+   * larger than the number of live ranges and is NOT what a pane should count.
+   */
+  totalFound: number
+  /** How many of those were inspected, bounded by the enumeration cap. */
+  enumerated: number
+  /** Live positions found among them: liquidity, or fees still owed. */
+  listable: number
+  /** Cap on live positions priced, so a pane can say it is showing a subset. */
+  cap: number
+  /** Managers that could not be read at all, and why. Data, not a throw. */
+  errors: Array<{ manager: string; message: string }>
+  ts: number
 }

@@ -39,7 +39,7 @@ dialog with it. That is the user-level way to drop a whole asset class. See
 | **Chain Ladder**      | The same token priced on every chain with gas folded in, so the best total wins rather than the best quote   |
 | **Session Clock**     | A one-line clock for the trading day, so an out-of-hours ticket is never a surprise                          |
 | **Level 1**           | Bid and ask with their sizes, the spread in price and basis points, and where the last print sits in the day |
-| **Company**           | The listing behind the ticker: name, market identifier code, venue. Valuation and growth await a provider    |
+| **Company**           | The ticker as a business: next report, valuation, growth, margins, the range and the analyst split           |
 | **Event Header**      | The question, when and how it resolves, and the probability the market is paying right now                   |
 
 The Liquidity Heatmap is the one people miss. It renders where resting
@@ -61,25 +61,25 @@ aggregator quotes at three real sizes rather than curve math.
 
 ## Trading
 
-| Panel                    | What it shows                                                                                                       |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| **Trade Entry**          | The order ticket. See [place an order](/docs/place-an-order)                                                        |
-| **Positions**            | Positions, orders, fills, and balances, in four tabs                                                                |
-| **Portfolio**            | Account holdings with an allocation breakdown                                                                       |
-| **Risk**                 | Current window P&L, trade count, and guardrail state                                                                |
-| **Futures Positions**    | Open perpetuals with entry, mark, liquidation and P&L. See [perpetual futures](/docs/cex-futures)                   |
-| **Margin Health**        | Margin ratio and maintenance against available, one section per connected futures account                           |
-| **Risk Controls**        | Your daily loss cap, trade count, position size and kill switch, editable where the trade happens                   |
-| **Prediction Positions** | Event contracts you hold, their cost, and when they resolve. See [prediction markets](/docs/prediction-markets)     |
-| **Outcome Ladder**       | Every runner in the event priced in cents, sortable and searchable, with a stake button on each row                 |
-| **Basket Ticket**        | Stake several outcomes at once, with the total cost, the stated overround and your worst case before you submit     |
-| **Your Position**        | What you hold in this symbol: shares, average cost, mark, market value, and both the open and the day figure        |
-| **Route**                | How the aggregator would split a swap across pools, so the slippage on the ticket has a stated cause                |
-| **Fee Accrual**          | The frame for fees a liquidity position has earned. Awaiting an indexer, and it says so                             |
-| **LP Position**          | The frame for your range, time in range and impermanent loss. Awaiting a source that can read a position            |
-| **Manage Liquidity**     | The frame for moving a range, adding or pulling liquidity and claiming fees. No connector exposes those actions yet |
-| **Bridge Route**         | The frame for a cross-chain transfer: source, target, bridge, fee, duration. No bridge provider is connected        |
-| **In Flight**            | The frame for transfers still confirming. Nothing tracks one today                                                  |
+| Panel                    | What it shows                                                                                                                  |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Trade Entry**          | The order ticket. See [place an order](/docs/place-an-order)                                                                   |
+| **Positions**            | Positions, orders, fills, and balances, in four tabs                                                                           |
+| **Portfolio**            | Account holdings with an allocation breakdown                                                                                  |
+| **Risk**                 | Current window P&L, trade count, and guardrail state                                                                           |
+| **Futures Positions**    | Open perpetuals with entry, mark, liquidation and P&L. See [perpetual futures](/docs/cex-futures)                              |
+| **Margin Health**        | Margin ratio and maintenance against available, one section per connected futures account                                      |
+| **Risk Controls**        | Your daily loss cap, trade count, position size and kill switch, editable where the trade happens                              |
+| **Prediction Positions** | Event contracts you hold, their cost, and when they resolve. See [prediction markets](/docs/prediction-markets)                |
+| **Outcome Ladder**       | Every runner in the event priced in cents, sortable and searchable, with a stake button on each row                            |
+| **Basket Ticket**        | Stake several outcomes at once, with the total cost, the stated overround and your worst case before you submit                |
+| **Your Position**        | What you hold in this symbol: shares, average cost, mark, market value, and both the open and the day figure                   |
+| **Route**                | How the aggregator would split a swap across pools, so the slippage on the ticket has a stated cause                           |
+| **Fee Accrual**          | What a collect would pay your wallet right now, both legs, per position and in total. See [DEX and wallets](/docs/dex-trading) |
+| **LP Position**          | Your concentrated-liquidity band against the live pool price, the two amounts behind it, and fees not yet collected            |
+| **Manage Liquidity**     | The frame for moving a range, adding or pulling liquidity and claiming fees. No connector exposes those actions yet            |
+| **Bridge Route**         | The frame for a cross-chain transfer: source, target, bridge, fee, duration. No bridge provider is connected                   |
+| **In Flight**            | The frame for transfers still confirming. Nothing tracks one today                                                             |
 
 Trading panels get their own page: see
 [positions and portfolio](/docs/positions-and-portfolio).
@@ -91,14 +91,16 @@ store the guarded order path reads before every placement, so the two can never
 disagree and a cap set there is live on the next order without a save button.
 See [risk guardrails](/docs/risk-guardrails).
 
-Five panels in that table are frames without a feed, and each says so on its
-own face rather than drawing a plausible number. Fee Accrual, LP Position and
-Manage Liquidity need a source that can read a wallet's pool position, which no
-bundled connector provides. Bridge Route and In Flight need a bridge provider,
-and nothing in the app quotes or watches a cross-chain transfer. Every one of
-them names what would fill it, because a fabricated impermanent loss, or a
-progress bar advancing on a transfer that is actually stuck, is worse than an
-empty pane.
+Three panels in that table are frames without a feed, and each says so on its
+own face rather than drawing a plausible number. Manage Liquidity needs a
+connector that can BUILD a liquidity transaction; reading a position is done,
+moving one is not. Bridge Route and In Flight need a bridge provider, and nothing
+in the app quotes or watches a cross-chain transfer. Every one of them names what
+would fill it, because a progress bar advancing on a transfer that is actually
+stuck is worse than an empty pane. The LP panels read live chain state, and the
+figures chain state cannot carry (cost basis, fee APR, time in range, loss versus
+holding) are called out in their own footnotes rather than estimated. See
+[DEX and wallets](/docs/dex-trading).
 
 ## Discovery
 
@@ -124,7 +126,7 @@ empty pane.
 | **Liquidity Flow**    | Net taker flow through the pool in five-minute buckets, with the biggest single swaps beside it       |
 | **Pool Detail**       | The selected pool at a glance, one click from its chart and a swap                                    |
 | **Session**           | Where the trading day is right now, from the broker's own calendar, holidays and half days included   |
-| **Earnings Calendar** | The frame for who reports and when. No bundled connector serves an earnings feed                      |
+| **Earnings Calendar** | Who reports and when, grouped by day, with the consensus estimate and a scope for your watchlist      |
 | **Economic Calendar** | The frame for macro releases by the clock. Nothing bundled serves a macro feed                        |
 | **Events**            | Prediction-market events by category. See [prediction markets](/docs/prediction-markets)              |
 | **Categories**        | Every event category with a live contract count, so the board narrows in one click                    |
