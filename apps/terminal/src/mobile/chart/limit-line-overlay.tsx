@@ -55,18 +55,27 @@
  * element regardless of what it painted. The portal lands the line at `z-35`:
  * above that canvas, below the sheet (40) and the tab bar (50). An in-place
  * anchor keeps the band's geometry, and the portal is positioned from its rect.
+ *
+ * One thing this file deliberately does NOT know: what unit the draft's price
+ * field is in. On a probability venue it is cents against a chart that plots
+ * 0..1, so every crossing goes through `./limit-line-scale` — `toChartPrice` on
+ * the way in, `toField` on the way out, `formatTag` for the reading. Between
+ * those calls every price here is a CHART price.
  */
-import { memo, useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { ChevronDown, GripVertical } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useOrderDraftStore } from '../lib/order-draft-store'
 import { CHART_TIME_AXIS_HEIGHT } from '../lib/mobile-geometry'
+import { useMobileFocus } from '../mobile-focus-context'
 import { clampLimitDragY, placeLimitLine } from './limit-line-geometry'
+import { limitLineScale } from './limit-line-scale'
 import type { FastFinancialChartRef } from '@pairlens/fast-financial-charts/types'
 import type { PointerEvent as ReactPointerEvent, RefObject } from 'react'
 import { useChartConfig } from '@/lib/chart-terminal-context'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
 
 /**
  * How often the overlay checks it is still listening to the LIVE engine. A
@@ -94,26 +103,6 @@ const DRAG_SLOP_PX = 4
 function markPinned(line: HTMLDivElement, pinned: boolean): void {
   if (pinned) line.dataset.pinned = 'below'
   else line.removeAttribute('data-pinned')
-}
-
-/** Decimals a price of this magnitude is quoted in — mirrors formatChartPrice. */
-function priceDecimals(price: number): number {
-  if (price >= 1000) return 2
-  if (price >= 1) return 4
-  if (price >= 0.01) return 6
-  return 8
-}
-
-/** Drag output → a parseable field value, at the pair's own precision. */
-function roundPrice(price: number): string {
-  return String(Number(price.toFixed(priceDecimals(price))))
-}
-
-function formatTag(price: number, locale: string): string {
-  return price.toLocaleString(locale, {
-    minimumFractionDigits: Math.min(2, priceDecimals(price)),
-    maximumFractionDigits: priceDecimals(price),
-  })
 }
 
 function chartToY(
@@ -159,10 +148,23 @@ const LimitLine = memo(function LimitLine({
   const limitPrice = useOrderDraftStore((s) => s.limitPrice)
   const setLimitPrice = useOrderDraftStore((s) => s.setLimitPrice)
 
+  // Which unit the one price field is in. Read off the FOCUS, the same signal
+  // `MobileChart` picks its price formatter from, because the conversion has to
+  // agree with the axis this line is drawn against — not with the draft, which
+  // keeps its numbers across a venue switch. Neither hook touches a streaming
+  // context, so this stays out of the per-tick budget.
+  const { focusedPair, focusedVenue } = useMobileFocus()
+  const isPrediction = useIsPredictionPair(focusedPair, focusedVenue)
+  const scale = useMemo(() => limitLineScale(isPrediction), [isPrediction])
+
   const anchorRef = useRef<HTMLDivElement | null>(null)
   const lineRef = useRef<HTMLDivElement | null>(null)
   const tagRef = useRef<HTMLSpanElement | null>(null)
-  /** The price the line is drawn at, kept out of render on purpose. */
+  /**
+   * The CHART price the line is drawn at, kept out of render on purpose. Chart
+   * price, never the field's own value: past this ref everything in this file is
+   * in the unit the engine maps, and `scaleRef` is the only crossing.
+   */
   const priceRef = useRef<number | null>(null)
   /**
    * Latest PLOT rect, refreshed by `paint` — the portal's frame and the drag's
@@ -192,10 +194,16 @@ const LimitLine = memo(function LimitLine({
    */
   const stripRef = useRef(stripHeight)
   stripRef.current = stripHeight
+  /**
+   * The scale, reachable from the rAF paint path and the drag handlers. A ref
+   * for exactly the reason `stripRef` is one: those callbacks are stable and the
+   * engine subscription is bound to them, so taking `scale` as a dependency
+   * would re-attach the listener on a venue switch.
+   */
+  const scaleRef = useRef(scale)
+  scaleRef.current = scale
 
-  const parsed = Number(limitPrice)
-  priceRef.current =
-    limitPrice !== '' && Number.isFinite(parsed) && parsed > 0 ? parsed : null
+  priceRef.current = scale.toChartPrice(limitPrice)
 
   /** Price → pixels. Writes the DOM directly; never sets React state. */
   const paint = useCallback(() => {
@@ -275,7 +283,13 @@ const LimitLine = memo(function LimitLine({
   }, [chartRef, schedulePaint])
 
   // Field → line. The other direction is the drag below; both read and write
-  // the one number in the draft store, so they cannot disagree.
+  // the one number in the draft store through the one scale, so they cannot
+  // disagree about either the level or its unit.
+  //
+  // `scale` is a dependency, not just a ref read: switching from a spot venue to
+  // a probability one reinterprets the SAME field value (the draft keeps its
+  // numbers when only the venue changes), so the line has to be redrawn and
+  // relabelled without the field having been touched.
   useEffect(() => {
     if (draggingRef.current) return
     const tag = tagRef.current
@@ -283,10 +297,10 @@ const LimitLine = memo(function LimitLine({
       tag.textContent =
         priceRef.current == null
           ? '—'
-          : formatTag(priceRef.current, localeRef.current)
+          : scale.formatTag(priceRef.current, localeRef.current)
     }
     schedulePaint()
-  }, [limitPrice, schedulePaint])
+  }, [limitPrice, scale, schedulePaint])
 
   // The sheet settled on its other snap. The strip changed size, so a level
   // that was pinned may now be free (or the reverse) — one repaint per snap
@@ -354,12 +368,26 @@ const LimitLine = memo(function LimitLine({
 
       const next = chart.coordinateToPrice(y)
       if (next == null || !Number.isFinite(next) || next <= 0) return
+      // `toField` is where the engine's price becomes the field's own unit:
+      // cents on a probability venue, the pair's quote everywhere else.
+      const active = scaleRef.current
+      const written = active.toField(next)
+      // The tag reads the value that will be WRITTEN, not the raw finger price.
+      // The pixel is the gesture and stays exactly where the finger is (above);
+      // the tag is the order, and on a probability venue `toField` clamps the top
+      // of the range, so a tag showing `100¢` would name a price the field is
+      // about to refuse to hold.
       const tag = tagRef.current
-      if (tag) tag.textContent = formatTag(next, localeRef.current)
+      if (tag) {
+        tag.textContent = active.formatTag(
+          active.toChartPrice(written) ?? next,
+          localeRef.current,
+        )
+      }
 
       // One store write per frame at most: the field, the risk row and the
       // order value all re-render off it.
-      pendingPriceRef.current = roundPrice(next)
+      pendingPriceRef.current = written
       if (writeFrameRef.current == null) {
         writeFrameRef.current = requestAnimationFrame(() => {
           writeFrameRef.current = null

@@ -115,7 +115,10 @@ edited on the desk is the stake offered here. See
 Move the line and the field follows, type in the field and the line follows. It
 is an order line, not a drawing, so it never turns up on your desktop chart.
 If the level is below the part of the chart the sheet leaves visible, the line
-pins to the bottom edge with a chevron rather than disappearing.
+pins to the bottom edge with a chevron rather than disappearing. On an event
+contract the tag reads in cents, the same unit as the price axis beside it, and
+a level the venue cannot take (a price left over from another instrument) draws
+no line at all rather than one parked at the edge of the chart.
 
 **Confirming is a press and hold.** The bar at the bottom fills as you hold and
 commits at the end: 720ms for live funds, 480ms for paper. If you have set

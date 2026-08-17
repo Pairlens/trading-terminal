@@ -93,6 +93,7 @@ import { venuePluginId, venuePosterSrc } from '@/components/accounts/venue-art'
 import { CHAIN_NAME } from '@/components/terminal/wallet-selector'
 import {
   centsToPrice,
+  clampPriceCents,
   contractsForAmount,
   formatCollateral,
   normalizeContracts,
@@ -482,8 +483,12 @@ export default memo(function MobileTradePanel() {
         (side === 'buy' ? live.bestAsk : live.bestBid) ?? live.last
       if (reference == null) return
       seedKeyRef.current = key
+      // Clamped, because the terminal produced this number rather than the user:
+      // `priceToCents` rounds to tenths, so a 99.96¢ ask seeds exactly 100,
+      // which is not a probability — the ticket would open on its own range
+      // error and the chart's limit line would refuse to draw it.
       const seeded = isPrediction
-        ? String(priceToCents(reference))
+        ? String(clampPriceCents(priceToCents(reference)))
         : String(Number(reference.toPrecision(8)))
       if (next === 'limit') {
         if (limitPrice === '') setLimitPrice(seeded)
